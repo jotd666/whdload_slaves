@@ -1,0 +1,313 @@
+ Introduction
+  ------------
+
+	You've just arrived in the United States with your heart set on
+becoming a millionaire.
+
+	As your only skill is advanced race-driver training, you decide
+to enter the Saturday Night Races tournament of illegal highway challenges.
+
+
+	As chance would have it, you run into an old friend down on his
+luck. In order to recoup some of his lost wealth, he sells you his prized
+Lamborghini Diablo at a rock-bottom price. This uses up all but a few 
+thousand dollars of your life savings.
+
+	
+	Despite your lack of funds, your sights are firmly set on reaching 
+the first division of this competition. To do this, you must start by 
+winning easy races in Division 4, until you have enough skill and money 
+to enter more difficult ones.
+	
+	When you feel confident enough in your driving abilities, you may
+try the Division Challenge. If you succeed, you will progress to the next 
+diviison. Races become more challenging as you progress, but you can buy 
+more sophisticated equipment and win greater prices.
+
+
+
+  Loading
+  -------
+
+ 	Switch off your Amiga, then remove external drives if you have 
+512K. Then switch it on again and insert the first disk in DF0.
+	
+	When prompted, insert disk 2 in DF0.
+
+
+  Save/Load Game
+  --------------
+
+	If you succeed in the Division Challenge, you may save your
+game. You can restore the game later by selection of the CONTINUE SAVED
+GAME option.
+
+
+  Getting started
+  ---------------
+
+	You may begin the game by selecting the TRAINING or CHAMPIONSHIP
+mode.
+
+	The TRAINING mode enables you to practice driving your car and 
+select several options. You may choose between regular tyres or super
+tyres, 4 or 5 gear box, police or no police.
+
+	By selecting the CHAMPIONSHIP mode, you begin competing in real
+races with bets, prizes and tough opponents.
+
+	You may choose between 3 racers: Joe, Sly or Val
+
+	You may also restore a saved game.
+
+
+  Controls
+  --------
+
+	F5 = Quit race
+	F10 = Pause
+	RETURN = Turn on boost
+	N = Turn on night vision glasses
+
+
+  Joystick controls
+  -----------------
+
+	You can control your Diablo with the joystick in 2 possible modes
+
+	Mode 1: press the fire button to accelerate
+	Mode 2: push the joystick up to accelerate
+
+	You also have the choice between MANUAL or AUTOMATIC gears.
+
+
+  Divisions
+  ---------
+
+	The division ranking screen displays the rank of all competitors
+including yourself. The ranking order depends on the number of division
+points each competitor has earned.
+
+	You get 3 points each time you finish a race in first position, 
+2 points if you finish second and 1 point if you finish third.
+
+	You may scroll down the list and get information on each competitor.
+	
+	This includes the name of the competitor, the number of races 
+completed, the number of races won, the number of Division points and the
+vehicle class.
+
+	In order to advance to the next division, you must win the 
+Division Challenge which is represented on the map by a large star. You 
+will need to buy a set of passes to attempt this challenge.
+
+
+  Vehicle class
+  -------------
+
+	The vehicle class reflects the performance of the car. A car 
+with few add-ons will be in class 1 or 2. A car with many add-ons will be
+in class 4 or 5.
+
+
+  The map of the United States
+  ----------------------------
+
+	There are 15 races available in each division. These races are
+represented by red or yellow stars. A yellow star indicates that you 
+have sufficient funds to enter the race. A red star indicates you cannot
+pay the entry fee for that race and must win more money before you can
+participate.
+
+	The indicator on the right-hand side of the screen shows your 
+current division. You will begin in division 4.
+
+	When you move the pointer to a star, the characteristics of
+the race appear:
+
+	- the name of the race
+	- the entrance fee
+	- the price
+	- the skill level of local participants
+	- the probability of police on the course
+	- the weather condition
+	- the picture of professional drivers that compete in the race
+
+
+  The Dashboard
+  -------------
+
+	From left to right and up to down:
+
+	- Picture of you, a nearby cop or a professional driver
+	- Boost: seconds remaining for the current boost (when in use)
+	  and number of boost remaining
+	- Damage: percentage of car damage
+	- Score: current score
+	- Distance: distance to the finish line
+	- Radar detector
+	- Super breaks	
+	- Super tyres
+	- Night vision glasses
+	- Snow tyres
+	- Radar Jammer
+
+
+  The shop
+  --------
+
+	The shops contains new equipment you can add to your car to
+improve its performance.
+
+	- Division 4:	* Super tyres for dry and rainy weather
+			* Radar detector to warn of police up ahead
+			* Speed up 1. Top speed 288 km/h
+			* 5-speed auto. Top speed 304 km/h
+			* 5-speed manual. Top speed 304 km/h
+
+	- Division 3: 	* Snow tyres for icy weather
+			* Super brakes to slow down fast
+			* Speed up 2. Top speed 320 km/h
+
+	 
+	- Division 2: 	* 6-speed auto. Top speed 336 km/h
+			* 6-speed manual. Top speed 336 km/h
+			* Roadster: better road-holding
+
+	- Division 1:  	* Night vision glasses to see in the dark
+			* Nitrous Oxide speed up. Top speed 352 km/h
+			* Radar Jammer to foil road-side police
+
+	- All divisions: Turbo boost: gives you an adrenalin-pumping
+	speed for 10 seconds.
+
+
+  The garage
+  ----------
+
+	After a turbulent race, your car will probably be damaged.
+
+	If the damage exceeds 50%, your car's performance will be
+reduced.
+
+	Caution: having a collision when damage is at 100% will disable
+your car.
+
+	- Damage indicator: percentage of car damage.
+	  (Cost to repair 10% of damage = 100$)
+	- Money indicator: the amount of money available
+	- Speed indicator: Top speed at current damage level
+	- Speed loss indicator: percentage of speed loss
+
+	
+  The betting system
+  ------------------
+
+	If there are professional racers in the race you have chosen, 
+you may bet on the outcome of the race.
+
+	If you feel confident that you can finish the race in first position,
+you can wage your bet with the other racers who willbet on their own
+performance.
+
+	Participants will take turn to either match the current bet (highest
+bet so far) or stand (finish betting).
+
+	The pot is the total amount of money bet by the players so far.
+
+	The money indicator displays the amount of cash you have.
+
+	The current bet is displayed in the top left corner of the betting
+screen. Each player must match this amount in order to continue betting.
+
+	After one turn, each player has 2 choices:
+
+	- increase his stake: BET
+	- decide he has reached his limit and quit: DONE
+
+	You will not lose your money by exiting the betting process 
+even if the other players have bet more than you. Howeevr, if you should
+win, the other players only owe you an amount equal to your wager.
+
+	If you are feeling confident in your driving abilities, and
+you car's performance, you can 'raise' your opponents by increasing 
+your wager by an amount greater than that of the current bet. This will 
+force them to either match your bet or pull out.
+
+
+  The police
+  ----------
+
+	Saturday Night races are not ordinary races.
+
+	First of all, they are illegal, so you may encounter a wide range
+of individuals, whether they are family types looking for some action, or
+convicts eager to chase cops, every participant is motivated by the great
+amounts of money involved.
+
+	Since state regulations prohibit these races on public roads, 
+police are sent to enforce the speed limits. The police can use 3 tactics:
+
+	- Speed traps: the police looks for anyone going a margin over
+	the speed limit (110 km/h). You may encounter police cars on the
+	side of the road scanning passing traffic.
+	- Highway patrol mode: the police drives down the highway,
+	radar active, looking for offenders.
+	Recommandation: buy a radar detector. Overtake slowly, while
+	avoiding collisions with police vehicles.
+	- Radar Cameras: these cameras are set up by the side of the 
+	road. Triggering them will result in a fine, the amount
+	depending on your speed at the time of the photo.
+
+	
+	If you get marked as an OFFENDER by the police, you have 2
+options:
+
+	- stop your car and pay a fine (you automatically quit the race)
+	- try to finish the race despite the attempts of the police to
+	destroy your car.
+
+	If the policemanages to stop you, they will throw you in the 
+lock-up and you will have to pay a heavy fine to get out.
+
+	
+	
+  Hints
+  -----
+
+	Keep a close watch on your rivals' car class. You may want to
+avoid racing against opponenets who are better equipped than you.
+
+	You will frequently have to choose between buying speed-up 
+options and other additions to your car. Before opting for extras such
+as super brakes, snow tyres, consider the 'LOCAL RACER' skills in the
+remaining available races. You may find yourself up against better 
+opponents without the engine power to beat them.
+
+	Beware of racers suddently betting large amounts. They may
+well feel confident that their vehicles' performance is superior to
+yours. You may have to resort to dirty tactics to beat them!!
+
+	If your are feeling confident in your driving abilities, 
+refraining from improving your vehicle's top speed may actually be
+more profitable. If the other racers see your car as less of a threat,
+they will bet more money on themselves winning. Snatching victory will be
+very rewarding.
+
+	If a rival has a higher top speed than you, there are several ways 
+to tackle him. On a course with many sharp bends, you can wear down his 
+lead by skillful cornering. If you can steer around highway traffic and have
+fewer collisions than your opponent, victory is even more likely. If
+circumstances get out of hand, you may have to resort to pushing your 
+opponents off the road. This will damage their vehicle adn reduce their 
+performance.
+
+	If you come across police cars on highway patrol, pushing other 
+racers cars into the patrol vehicles will make them instant OFFENDERS.
+
+	If racers are slowing down in front of you to get through a radar
+speed trap, driving into the back of their car may catapult them through
+the radar at high speed.
+
+---
+Typed by BATHORY/CRACK INC

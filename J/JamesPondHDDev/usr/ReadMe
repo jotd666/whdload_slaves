@@ -1,0 +1,117 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "James Pond - Underwater Agent" © 1990 Millenium, 1 disk.
+
+ Thanks to Chris Vella for re-release disk, Christoph Gleisberg for a non-SPS MFM version
+
+ This install requires WHDLoad and RawDIC to be in the path. Both can be found
+ in the WHDLoad package.
+ To install from a different drive than DF0: select installation mode Expert.
+
+ The installed program requires 0.5 MB ChipMem and 0.5 MB / 1MB OtherMem
+ (depending on the installed version, since there's a version that requires 512k expmem)
+ 
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ History:
+ 
+ version 2.3 (20.08.2020) done by JOTD:
+ - 1MB version supported, with animated intro
+  (provided by Christoph Gleisberg, issue #0004389)
+ - trainer: infinite time
+ 
+ version 2.2 (16.08.2020) done by JOTD:
+ - fixed music replay
+ - trainer: level selection
+ - trainer: infinite lives & invincibility
+ - support for another version, SPS 3016 (issue #0004389)
+ - CUSTOM5 disables blitter fixes & sound fixes (for slow 68000 machines)
+ 
+ version 2.1 (09.11.2010) done by JOTD:
+ - added CUSTOM2 switch to remove blitter patches. Use it on slow machines only to speedup game
+
+ version 2.0 (14.03.2005) done by JOTD:
+ - complete slave rewrite
+ - complete install rewrite
+ - support for original (MFM) version & re-release (DOS) version
+ - RawDIC imager adapted from Mr Larmer "The Blues Brothers" islave
+ - unnecessary delays removed
+ - keyboard timer fixed
+ - fast decrunch
+ - nasty blitter bugs fixed (now game works on all amigas & WinUAE without glitches!!)
+ - a zillion blitter waits inserted
+ - CUSTOM1=1 enables cheat keys & invincibility (TAB key is no more)
+ - copylock-like disk protection removed for MFM version
+ - highscores load/save to HD (saves only if CUSTOM1 is not set)
+ - SNOOP bugs removed
+ - QUITKEY also works for 68000 users (no need for VBR)
+ - lots of icons included
+ - source code included
+
+ version 1.1 (2001) done by JOTD:
+ - removed disk DMA access (thanks Bert)
+
+ version 1.0 (2001) done by JOTD:
+ - initial release, only supports re-release
+ - Blitter errors fixed (there were a lot)
+ - Hint file included
+ - Trainer: TAB toggles infinite lives CUSTOM5=1 (WHDload)
+ - Save scores (if trainer is off)
+
+ version 0.x (1997)
+ - JST release
+
+ Cheat keys:
+ - D: opens exit (press it twice)
+ - N: warps to level 8
+
+ Other keys:
+ - F6: PAL
+ - F7: NTSC
+ - ESC/numerical Enter: quit current game
+
+ Notes:
+
+ This one was not easy because of all the problems (DMA, blitter, disk accesses,
+ disk format). Thanks to WHDLoad developper team, especially Bert & Girv for advice
+ on that point.
+ The MFM decoding was not a piece of cake either. But recently, as
+ I took the job to adapt another version of "The Blues Brothers" install by
+ Mr Larmer, I noticed that the track length of the Titus game was special: $1400
+ bytes, which is rather odd because custom formats are usually longer than DOS
+ tracks (DOS: $1600 bytes). I tried the imager on the James Pond warp file just
+ for fun and ... it worked!!! I just had to adapt the imager to the disk map.
+ A strange fact since both games (Blues Brothers & James Pond) are not linked by
+ coder or by company. (I heard that Thalion used this format too).
+
+ The "mystery" was solved in 2020, when I noticed that SPS release 3137 (Atari ST)
+ can be read partially with the .islave file, which means that this $1400-len tracks
+ is actually native Atari-ST track :)
+ 
+ There are 2 different slaves in the archive. The "JamesPond1MB.slave" can run all 4 versions
+ but requires 512k more fast/chip memory. The "JamesPond.slave" one requires only 512k chip and no
+ extra memory but won't run the 1MB version.
+ If you install the 1MB version by mistake, you get an explicit error when running whdload, just replace
+ the slave by the file "JamesPond1MB.slave".
+ 
+ 

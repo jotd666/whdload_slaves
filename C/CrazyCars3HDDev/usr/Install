@@ -1,0 +1,216 @@
+(set #sub-dir "data")		;sub directory containing data files
+(set #readme "README")		;name of readme file
+(set #man-file "Instructions")	;name of manual file
+(set #hint-file "Hints")	;name of hint file
+(set #sol-file "Solution")	;name of solution file
+(set #highs-file "anim")	;name of high scores file
+(set #prefix "CrazyCars3")		;name of slave, directory
+
+(procedure P_Install
+ (
+  (set #fullname "Crazy Cars III")
+
+  (set #intro
+   (askbool
+	(prompt ("\nWould you like to install the Intro Animation of %s ?\n" #fullname))
+	(default 1)
+	(choices "Install" "Skip")
+	(help @askbool-help)
+  ))
+  (set #AD_disk "CCIII") (set #num 1) (P_disk)
+
+  (if	(= #intro 1)
+	(copyfiles
+		(source "CCIII:")
+		(dest #dest)
+		(pattern "(intr#?|anim)")
+	)
+  )
+  (set #AD_disk "CCDAT") (set #num 2) (P_disk)
+
+))
+
+;--
+; checks if given program is installed, if not abort install
+; #program - to check
+
+(procedure P_ChkRun
+ (if (= 0 (run ("cd SYS:\nWhich %s" #program)))
+     ("")
+     (abort (cat "You must install \"" #program "\" first!\nIt must be accessible via the path.\nYou can find it in the \"" #program "\" package."))
+))
+
+;--
+; Wait for inserting disk
+; IN:  #AD_disk - name of disk
+; OUT: -
+
+(procedure P_disk
+ ((askdisk
+	(prompt ("\n\n\nInsert \"%s\" disk %ld in any drive." #fullname #num))
+	(help ("Insert disk \"%s\" in any drive." #AD_disk))
+	(dest #AD_disk)
+	(assigns)
+  )
+  (copyfiles
+	(source ("%s:" #AD_disk))
+	(dest #dest)
+	(pattern "~(c|s|system-configuration|#?.info|#?int#?|anim)")
+)))
+
+;--
+; copy file including icon if exist
+; #copy-file - name of file to copy
+
+(procedure P_CopyFile
+ (if (exists #copy-file)
+     (	(copyfiles
+		(source #copy-file)
+		(dest #dest)	
+	)
+	(if (exists ("%s.info" #copy-file))
+	    (	(copyfiles
+			(source ("%s.info" #copy-file))
+			(dest #dest)
+		)
+		(tooltype
+			(dest (tackon #dest #copy-file))
+			(noposition)
+		)
+            )
+	)
+     )
+))
+
+(procedure P_Icon
+ ((copyfiles
+	(source ("%s.%s" #prefix #icon-suf))
+	(dest #icon-dir)
+	(newname ("%s.info" #icon-name))
+  )
+  (tooltype
+	(dest (tackon #icon-dir #icon-name))
+	(noposition)
+)))
+
+(if (< @installer-version (+ (* 44 65536) 10))
+    (	(message (cat "Warning: your installer is outdated.\nAll features of this installation won't be available, such as icon show and drawer opening.\nYou have version " (/ @installer-version 65536) "." (BITAND @installer-version 65535) ", needed is at least version 44.10. The 'installer' 44.10 comes with OS 3.5 but is also contained in the NDK 3.9. You may also use the InstallerNG by Jens Tröger.\n\nThe installers can be obtained from the net:\nhttp://www.amiga.com/3.9/download/NDK3.9.lha\naminet:util/sys/InstallerNG.lha"))
+	(set #newstuff 0)
+    )
+    (set #newstuff 1)
+)
+(if (exists #readme)
+    (if	(= 0 (run ("SYS:Utilities/Multiview %s" #readme)))
+	("")
+	(run ("SYS:Utilities/More %s" #readme))
+  )
+)
+(set #program "WHDLoad")
+(P_ChkRun)
+
+
+(if (getenv "WHDLInstPath")
+    (set @default-dest (getenv "WHDLInstPath"))
+)
+(set #dest
+ (askdir
+	(prompt (cat "Where should \"" #prefix "\" installed ?\nA drawer \"" #prefix "\" will automatically created."))
+	(help @askdir-help)
+	(default @default-dest)
+	(disk)
+))
+(run ("setenv WHDLInstPath \"%s\"\ncopy ENV:WHDLInstPath ENVARC:" #dest))
+
+(set @default-dest (tackon #dest #prefix))
+
+(set #dest @default-dest)
+(if (exists #dest)
+    ((set #choice
+	(askbool
+	 (prompt (cat "\nDirectory \"" #dest "\" already exists.\nShould it be deleted ?"))
+	 (default 1)
+	 (choices "Delete" "Skip")
+	 (help @askbool-help)
+	)
+     )
+     (if (= #choice 1)
+	 (run ("Delete \"%s\" \"%s.info\" All" #dest #dest))
+    ))
+)
+(if (exists ("%s.glowexot"  #prefix)) ((set #icon 7)(set #icnt (+ 1 #icnt))(set #icon-gex "Exotic GlowIcon"))	(set #icon-gex ""))
+(if (exists ("%s.newexot"   #prefix)) ((set #icon 6)(set #icnt (+ 1 #icnt))(set #icon-nex "Exotic NewIcon"))	(set #icon-nex ""))
+(if (exists ("%s.magicwb"   #prefix)) ((set #icon 5)(set #icnt (+ 1 #icnt))(set #icon-exo "MagicWB"))		(set #icon-exo ""))
+(if (exists ("%s.glowicon"  #prefix)) ((set #icon 4)(set #icnt (+ 1 #icnt))(set #icon-glo "Glow Icon"))		(set #icon-glo ""))
+(if (exists ("%s.coloricon" #prefix)) ((set #icon 3)(set #icnt (+ 1 #icnt))(set #icon-col "OS3.5 Icon"))	(set #icon-col ""))
+(if (exists ("%s.newicon"   #prefix)) ((set #icon 2)(set #icnt (+ 1 #icnt))(set #icon-new "NewIcon"))		(set #icon-new ""))
+(if (exists ("%s.romicon"   #prefix)) ((set #icon 1)(set #icnt (+ 1 #icnt))(set #icon-rom "RomIcon"))		(set #icon-rom ""))
+(if (exists ("%s.inf"       #prefix)) ((set #icon 0)(set #icnt (+ 1 #icnt))(set #icon-nor "Normal"))		(set #icon-nor ""))
+
+(if (> #icnt 1)
+    (	(set #icon-dir ("T:%s Icons" #prefix)) (makedir #icon-dir)
+	(if #icon-nor ((set #icon-suf "inf")      (set #icon-name "Normal")		(P_Icon)))
+	(if #icon-rom ((set #icon-suf "romicon")  (set #icon-name "RomIcon")		(P_Icon)))
+	(if #icon-new ((set #icon-suf "newicon")  (set #icon-name "NewIcon")		(P_Icon)))
+	(if #icon-col ((set #icon-suf "coloricon")(set #icon-name "OS3.5 Icon")		(P_Icon)))
+	(if #icon-glo ((set #icon-suf "glowicon") (set #icon-name "Glow Icon")		(P_Icon)))
+	(if #icon-exo ((set #icon-suf "magicwb")  (set #icon-name "MagicWB")		(P_Icon)))
+	(if #icon-nex ((set #icon-suf "newexot")  (set #icon-name "Exotic NewIcon")	(P_Icon)))
+	(if #icon-gex ((set #icon-suf "glowexot") (set #icon-name "Exotic GlowIcon")	(P_Icon)))
+	(if (= #newstuff 1)
+	    (openwbobject #icon-dir)
+	)
+	(set #icon
+	 (askchoice
+		(prompt "\nWhich icon would you like to install ?\n")
+		(choices #icon-nor #icon-rom #icon-new #icon-col #icon-glo #icon-exo #icon-nex #icon-gex)
+		(default #icon)
+		(help @askchoice-help)
+	))
+	(if (= #newstuff 1)
+	    (closewbobject #icon-dir)
+	)
+	(delete #icon-dir (all))
+    )
+)
+(select #icon
+	(set #icon "inf")
+	(set #icon "romicon")
+	(set #icon "newicon")
+	(set #icon "coloricon")
+	(set #icon "glowicon")
+	(set #icon "magicwb")
+	(set #icon "newexot")
+	(set #icon "glowexot")
+)
+(makedir #dest (infos))
+
+(copyfiles
+	(source ("%s.%s" #prefix #icon))
+	(dest #dest)
+	(newname ("%s.info" #prefix))
+)
+(tooltype
+	(dest (tackon #dest #prefix))
+	(setdefaulttool "WHDLoad")
+	(setstack 10240)
+	(noposition)
+)
+(copyfiles
+	(source ("%s.slave" #prefix))
+	(dest #dest)
+)
+(set #copy-file #readme)	(P_CopyFile)
+(set #copy-file #man-file)	(P_CopyFile)
+(set #copy-file #hint-file)	(P_CopyFile)
+(set #copy-file #sol-file)	(P_CopyFile)
+
+(if (= #sub-dir "")
+    ("")
+    ((set #dest (tackon #dest #sub-dir)) (makedir #dest))
+)
+(set #copy-file #highs-file) (P_CopyFile) (P_Install)
+
+(if (= #newstuff 1)
+    (openwbobject @default-dest)
+)
+(exit)

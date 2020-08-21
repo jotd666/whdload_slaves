@@ -1,0 +1,81 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Crazy Cars 3" © 1992 Titus
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ The installed program requires 0.5 MB ChipMem and 0.5 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ The game requires an installed A500 Kickstart 1.3 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick346.lha" on aminet.
+
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page.
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 2.1 (21.08.2020) done by JOTD:
+ - fixed wrong blitterwait routines that could create graphical corruption on some machines
+   during the game (issue #0000892)
+   
+ version 2.0 (10.08.2020) done by JOTD:
+ - fixed broken map display (missing blitterwait)
+ - added CD32 joypad controls, game fully playable from joypad
+ - adapted for whdload v17
+ - uses kickemu instead of OSEmu
+ - uses fast memory
+ - ability to skip the introduction from whdload splash screen
+ - SNOOP / floppy accesses now fixed
+ - trainer: start with 9.000.000$
+ - trainer: infinite boosts
+ - trainer: no damage
+ - trainer: always have night vision
+ - trainer: select start division 1-4
+ - no need to run The Patcher to modify "GUNN" file, game is properly
+   cracked now from the .slave file (but with modified "GUNN" file it still works)
+ - changed "ccdat" directory to more standard "data" (rename it if you have an old distribution)
+ - package fully reworked
+ - source code included
+
+ version 1.0 (October 1998/October 1999/July 2002) done by Harry / Dr Zarkov:
+ - initial release
+ - option to allow to install intro or not
+ - disk protection removed
+ - Original quit menu still active
+ - uses OSemu for os-emulation
+
+joypad controls:
+
+- blue/second button: trigger turbo boost (RETURN)
+- play button: pause (F10)
+- reverse+forward: quit race (F5)
+- yellow+reverse+forward: quit to workbench (only during race)
+- green: toggle night vision glasses (when option is available) (N)
+
+note: with fast winuae config, drivers screen is still flashing/shows
+corrupt graphics, even with "immediate blitter" on. Could not fix the issue,
+hoping it doesn't happen on a real amiga.

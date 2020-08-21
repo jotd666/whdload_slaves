@@ -1,0 +1,71 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ That install applies to "Heimdall" © 1991 Core Design.
+
+ This install requires WHDLoad and RawDIC to be in the path. Both can be found
+ in the WHDLoad package.
+ To install from a different drive than DF0: select installation mode Expert.
+
+ The installed program requires 1.0 MB ChipMem and 2.0 MB OtherMem (5 MB with PRELOAD).
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 2.2 (13.04.2020) done by JOTD:
+ - fixed crash at startup on real machines (WTF??) (issue #0004471)
+ - relocated decruncher in fast memory for better loading speed
+ - improved quitkey on 68000
+ 
+ version 2.1 (08.04.2020) done by JOTD:
+ - support for spanish version added (more recent, different, and
+   full of bugs, read the end of the readme)
+ - password protection screen completely skipped
+ - fixed music & sound for fast CPUs
+ 
+ version 2.0 (21.08.2018) done by JOTD:
+ - support for 2 english versions, 1 german version and 1 french version
+ - resourced from v1.x slave (no source available), fully rewritten
+ - adapted to whdload 17 (selectable savedisk from splash screen)
+ - reduced OS flashes when saving a game
+ - changed CUSTOM1 value: 0 is valid and reads "disk.5"
+ - added quitkey for 68000 users
+ - install script rewritten
+ - manual & solution included
+ - source code included
+ 
+ version 1.x (1999) done by John Sleck
+ - disk & password protection removed
+ - Games can be saved to HD, use the CUSTOM1 tooltype to choose
+   a virtual savedisk.
+
+notes on spanish version:
+
+- disk 4 (5th disk) seems to have a corrupt sector. Since it's only 512
+  bytes long, I included the correct data in the slave and fix the data
+  when loading.
+- load & save are swapped. Be careful! Since those are images and not text
+  it's rather time-consuming to fix that, only for spanish version.
+
+
+
+	
+
+
