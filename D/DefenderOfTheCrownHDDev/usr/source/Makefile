@@ -1,0 +1,12 @@
+PROGNAME = DefenderOfTheCrown
+WHDLOADER = $(PROGNAME).slave
+SOURCE = $(PROGNAME)HD.asm
+CDTV_SOURCE = DOTC_CDTV_HD.asm
+
+all :  $(WHDLOADER) $(PROGNAME)CDTV.slave
+
+$(WHDLOADER) : $(SOURCE)
+	basm $(SOURCE)
+
+$(PROGNAME)CDTV.slave : $(CDTV_SOURCE)
+	basm $(CDTV_SOURCE)

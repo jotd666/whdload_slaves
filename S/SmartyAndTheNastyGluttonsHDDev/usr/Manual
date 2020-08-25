@@ -1,0 +1,28 @@
+Here's what I could figure out so far about this unreleased game
+
+Fire your weapon to freeze the nasties. Then you can push the nasties over the edge.
+If you push the nasty over another nasty you get bonus & a key.
+
+Jumping on a nasty doesn't kill it but makes it drop by one platform.
+
+After a while nasties change color from green to brown and are more aggressive. When they are red
+they're super aggressive. Shooting them calms them down to green.
+
+5 keys get you to the next level.
+
+Keep fire pressed to get access to special items menu
+
+- shoe: invincibility & run very fast
+- earthquake: freezes all nasties
+- dog: ?
+
+You can regain specials or lives at the end of each world with special subgame parts.
+
+In higher levels there's a worm that you can shoot and kills all nasties it encounters
+(a bit like the water in Bubble Bobble), giving away a lot of keys in the process.
+
+There are also teleports. I couldn't figure how they worked yet.
+
+Good luck completing each of the 5 levels of all 5 worlds.
+
+Press P to pause the game (added by me, there were no keyboard handler)

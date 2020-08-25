@@ -91,7 +91,7 @@ _config
 
 
 DECL_VERSION:MACRO
-	dc.b	"2.3"
+	dc.b	"2.4"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -228,6 +228,8 @@ start	;	A0 = resident loader
 	beq.b	.sps_3016
 	cmp.w	#$E456,d0
 	beq.b	.rerel
+	cmp.w	#$85E5,d0
+	beq	.mfm_non_sps_512k
     cmp.w   #$9821,d0
 	bne	wrong_version
 
@@ -236,10 +238,7 @@ start	;	A0 = resident loader
 	pea	(TDREASON_FAILMSG).w
 	move.l	_resload(pc),a0
 	jmp	resload_Abort(a0)
-	    
-    
-    
-	bra	wrong_version
+
     
 .rerel
 	lea	version(pc),a0
@@ -288,6 +287,28 @@ start	;	A0 = resident loader
 
 	jmp	$12768
     
+.mfm_non_sps_512k
+	bsr	patch_blits
+
+    lea load_routine(pc),a0
+    move.l #$1260e,(a0)
+    lea scores_address(pc),a0
+    move.l  #$115ee,(a0)
+
+
+	bsr	read_scores
+	
+	lea	pl_main_mfm512k(pc),a0
+	sub.l	A1,A1
+	jsr	resload_Patch(a2)
+
+    
+	move.w	#$2700,sr
+	move.w	#$7FFF,$dff09a
+	move.w	#$7FFF,$dff09c
+
+	jmp	$1276c
+     
 .needs_other_slave
     dc.b    "This game version requires the other slave: JamesPond1MB.slave",0
     even
@@ -622,6 +643,44 @@ pl_blitter_3015:
     PL_ENDIF
 	PL_NEXT pl_blitter
     
+pl_blitter_mfm512k:
+    PL_START
+    PL_IFC5
+    PL_ELSE
+	PL_PSS	$0c6c0,blitwait_0_dff066,2
+	PL_PS	$0c6d6,blitter_force_dma_3
+	PL_PS	$0c6f0,blitter_dma_end
+	PL_PS	$0ccbe,blitter_dma_end
+	PL_PSS	$0eca0,move_d5_64_clr_66,2
+	PL_L	$0ecd6,$4EB800B6
+	PL_L	$0ece8,$4EB800B6
+	PL_L	$0ecf4,$4EB800B6
+	PL_L	$0ed00,$4EB800B6
+	PL_PS	$0ed1a,move_d5_a6_swap
+
+	PL_L	$0ed64,$4EB800AA
+	PL_L	$0ed7c,$4EB800AA
+	PL_L	$0EDA4,$4EB800AA
+	
+
+	PL_PS	$0edcc,blitter_force_dma
+	PL_PS	$0ee32,blitter_dma_end
+	PL_PS	$0ee70,move_ffff_dff044
+	PL_PS	$0ee94,blitter_force_dma_2
+	PL_L	$0eeac,$4EB800B0
+	PL_L	$0eeb8,$4EB800B0
+	PL_P	$0eec4,patch_eeec
+	PL_PS	$0eecc,blitter_dma_end_2
+	PL_PS	$11922,blitter_force_dma
+	PL_PS	$11956,move_d0_dff054
+	PL_PS	$11968,move_d1_dff054
+	PL_P	$11976,blitter_dma_end
+	PL_PS	$11b74,blitter_dma_end
+	PL_PS	$11baa,blitter_dma_end
+
+    PL_ENDIF
+	PL_NEXT pl_blitter
+    
 pl_blitter_3016:
     PL_START
     PL_IFC5
@@ -835,8 +894,93 @@ pl_main_mfmalt
 
 	PL_PSS	$11ee2,write_scores,2
 
+    ; empty dbf for dma soundtracker loop
+    PL_P    $0e974,soundtracker_loop
+
 	PL_NEXT pl_blitter_mfmalt
     
+pl_main_mfm512k
+	PL_START
+
+    PL_IFC1X    0
+    PL_NOP  $09ae8,6
+    PL_ENDIF
+    
+    PL_IFC1X    1
+    PL_NOP	$B238,2
+    PL_ENDIF
+    
+
+    PL_IFC1X    2
+    PL_S    $0a874,$96-$84
+    PL_ENDIF
+
+	; keyboard interrupt & timer fix
+
+	PL_PS	$C346,kb_int
+	PL_PS	$C2F0,kb_delay
+	; copperlist
+
+	PL_PS	$C1A2,set_copperlist_3015
+    
+    PL_PS  $0b0fe,set_start_level
+    
+    ; load & fix module player routine
+    PL_PSS  $0b0c8,load_music_code_game,6
+
+	; protection (ripped by comparing original -> rerelease)
+
+	PL_NOP	$0000b0a0,$2
+	PL_NOP	$00012908,$4
+	PL_L	$0001290c,$4e712a3c
+	PL_L	$00012910,$00000002
+    
+    ;;;; different from 3015 from now
+    PL_PS   $0fe3c,load_music_code_title
+    
+
+	; extra stuff (protection + speedup)
+
+;	PL_I	$1054Axx
+;	PL_I	$128A0xx
+;	PL_I	$C1B2xx
+
+	PL_S	$127aa,$c8-$aa	; skip disk & clr mem stuff
+	PL_S	$129b4,$BC-$5C
+
+
+	; remove disk accesses
+
+	PL_R	$10836
+	PL_R	$107e4
+	PL_R	$10824
+	PL_R	$108c4
+	PL_R	$10878
+	PL_R	$108e6
+	PL_R	$107aa
+	PL_W	$12818,$6006
+	PL_L	$129b0,$600000B2
+
+	; load
+
+	PL_P	$104a4,read_sectors_game
+
+	; remove a delay
+
+	PL_NOP	$12804,$4
+
+	; decrunch
+	
+	PL_P	$0c8ac,decrunch
+
+	; hiscore save
+
+	PL_PSS	$11c84,write_scores,2
+
+    ; empty dbf for dma soundtracker loop
+    PL_P    $0e716,soundtracker_loop
+
+    PL_NEXT pl_blitter_mfm512k
     
 pl_main_3015
 	PL_START
@@ -915,6 +1059,9 @@ pl_main_3015
 
 	PL_PSS	$11B4E,write_scores,2
 
+    ; empty dbf for dma soundtracker loop
+    PL_P    $0e73e,soundtracker_loop
+    
 	PL_NEXT pl_blitter_3015
 
 pl_main_3016
@@ -991,6 +1138,9 @@ pl_main_3016
 	; hiscore save
 
 	PL_PSS	$11c6e,write_scores,2
+    
+    ; empty dbf for dma soundtracker loop
+    PL_P    $0e71a,soundtracker_loop
 
 	PL_NEXT pl_blitter_3016
     

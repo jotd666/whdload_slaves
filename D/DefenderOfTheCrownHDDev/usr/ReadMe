@@ -1,0 +1,93 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Defender Of The Crown" © 1985-1991 Cinemaware
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ The installed program requires 0.5 MB ChipMem and 1.0 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ The game requires an installed A500 Kickstart 1.3 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick346.lha" on aminet.
+
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page.
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 3.3 (2020) done by JOTD:
+ - adapted to whdload 17
+ - another trainer added: start with 1024 knights (issue #0004411)
+ - option to load screens as fast as possible (cancels screen display delay)
+ 
+ version 3.2 (13.01.08) done by JOTD:
+ - added more delays to some screens
+ 
+ version 3.1 (01.01.08) done by JOTD:
+ - added delays to some screens which were impossible to see due to the fast loading
+   (press mouse button to skip them)
+ - CUSTOM1=1 gives infinite money
+ - reduced memory usage
+
+ version 3.0-B (26.01.06) done by JOTD:
+ - fixed install script
+
+ version 3.0 (15.01.06) done by JOTD:
+ - 1991 CDTV version supported (this is not CD³² version, which is bigger)
+ - adapted for WHDLoad v16
+ - nice icons included
+ - source code included
+ - install script rewritten
+ - readme file rewritten
+
+ version 2.1 (2003)
+ - now uses 512K of chipmem and 512K of fastmem instead of 1MB of chipmem
+
+ version 2.0 (2002)
+ - update, using Bert doslib support in KickEmu (removed KickDOS)
+ - corrected install script so it copies devs/system-configuration (better mouse pointer)
+ - fixed a game fault which triggers access faults (undetected before).
+
+ version 1.0-C
+ - Re-assembled with Bert's new kickemu (maybe it will be a bit better)
+
+ version 1.0-B
+ - updated. Bored Seal completed the game with it, so I think it works better.
+
+ version 1.0 (2001)
+ - first release. Reported to lock up from time to time
+
+Notes:
+
+- I'm awfully sorry about including a cracked executable, but the thing which
+  interested me was not the protection removal but the fact that in this
+  release executable there is not encryption anymore. I've got the original,
+  with encryption, and it's a lot of work for the same result (and possibly
+  the re-release has less bugs). The other files are 100% the same, so the
+  install should work with all versions.
+- Thanks to Bored Seal for testing the game through the end. He completed it, so
+  I think it works rather well.
+- Game is fully downloadable at www.cinemaware.com (it's a cracked version too :) )

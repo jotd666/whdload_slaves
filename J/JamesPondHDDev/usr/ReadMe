@@ -35,6 +35,10 @@
 
  History:
  
+ version 2.4 (25.08.2020) done by JOTD:
+ - another 512k MFM version supported (now 5 versions supported!)
+ - fixed more active cpu loops
+ 
  version 2.3 (20.08.2020) done by JOTD:
  - 1MB version supported, with animated intro
   (provided by Christoph Gleisberg, issue #0004389)

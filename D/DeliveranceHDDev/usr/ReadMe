@@ -1,0 +1,81 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Deliverance" © 1993 21st Century Entertainment
+
+ This install requires WHDLoad and The Patcher to be in the path. Both can be
+ found in the WHDLoad package.
+
+ The installed program requires 1.0 MB ChipMem and 0.5 MB OtherMem.
+ There's an alternate lo-spec .slave file which requires only 0.5 MB ChipMem
+ and 1.0 MB 24-bit other mem.
+ 
+ It can be quit by pressing F10 (key can be changed with Tooltype "QuitKey=").
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 2.0 (19.04.2020) done by JOTD:
+ - added in-game trainer keys (1-6 to select section, HELP or CD32 fwd+yellow to skip level)
+ - blue/second button disabled on flying level (use up!)
+ - added another trainer (infinite energy)
+ - added alternate slave for 512k chip only. Doesn't work with 32-bit fast memory, but on a
+   machine with 24-bit expansion memory and 512k chipmem it will work.
+ - more compatible controller read
+ 
+ version 1.5 (26.05.2019) done by JOTD:
+ - adapted to whdload v17
+ - removed F9 key to enable trainer. Now done in startup menu / CUSTOM1=1
+ - joypad support for pause/ESC
+ - CUSTOM2=1 makes blue/2nd button act like UP.
+   It's not perfect (pressing the button makes the character climb the ladder, also UP still jumps)
+   but that's too much work to improve the controls further given the way the game is coded
+   
+ version 1.4 (08.05.2014)
+ - fixed keyboard even more (rewritten all keyboard handling): issue #003010
+ 
+ version 1.3 (30.04.2014)
+ - fixed keyboard (most visible in highscore section): issue #002565
+
+ version 1.2 (09.10.2006)
+ - RawDIC imager (Patcher imager was defective)
+
+ version 1.1 (06.10.2006) done by JOTD
+ - fixed TRAP #2 exception with later versions of WHDLoad
+ - rewritten install script & readme
+ - added nice icons
+ - added manual
+ - source code included
+
+ version 1.0 (09.07.1998) done by Harry
+ - initial release
+ - sound fixed
+ - quit key
+ - F9: toggles infinite lives
+
+ Notes:
+ 
+ - There's a cheat (fly mode) mentionned: [Right Amiga] + [Right Alt] + [Right Shift] + [Backspace] but
+   it doesn't work, and no trace of the code activating it has been found in the game
+ - Level skip doesn't work on last level (flying level) else it crashes the game
+ - In inferno boss stage, jumping on the rotating hands triggers a nasty palette/instant game over
+   bug. Conclusion: do not do that.
+ - there's no end sequence like *at all*. On completing the last level, the highscore entry appears...
+   That's cheap! When I think I had bought the original at the time...
+   

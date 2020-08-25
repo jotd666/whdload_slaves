@@ -1,0 +1,54 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ That install applies to "Smarty and the nasty gluttons" © 2020 Eero xxx
+ 
+ That install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ You need 0.5 MB ChipMem and 0.5 FastMem
+ 
+ You can quit the game by pressing F10 (key can be changed with	Tooltype 
+ "QuitKey=").
+ 
+ If you have problems with this installation please try first to get a newer
+ version of this package from the WHDLoad's WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also doesn't succeeds inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad's WWW-Page.
+
+ For full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 1.0 (16.08.2020):
+ - initial release
+ - CUSTOM2 to use second/blue button to jump
+ - CUSTOM1 bits to enable trainer:
+   * infinite lives
+   * one key completes level
+   * infinite special items 
+ - CUSTOM5 to skip introduction
+ - added P key for pause
+ - fixed broken map display on fast machines
+ - joypad controls: play for pause, rev+fwd+yellow quit to WB
+ - quitkey works on 68000 in most parts of the game
+ - highscores saved & loaded to/from file (unless you cheat)
+ - nice icon by coldacid
+
+TODO: not done yet, but planned
+
+ - TODO: quit current game (esc)
+ - TODO: level select: load proper tileset
+ - TODO: quit in end sequence
+
+
+

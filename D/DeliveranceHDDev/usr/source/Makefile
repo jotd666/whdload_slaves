@@ -1,0 +1,13 @@
+PROGNAME = Deliverance
+WHDLOADER = $(PROGNAME).slave
+SOURCE = $(PROGNAME)HD.asm
+RAWDICSLAVE = $(PROGNAME).islave
+
+all :  $(WHDLOADER) $(RAWDICSLAVE)
+
+
+$(RAWDICSLAVE) : $(RAWDICSLAVE).s
+	basm $<
+
+$(WHDLOADER) : $(SOURCE)
+	basm $(SOURCE)
