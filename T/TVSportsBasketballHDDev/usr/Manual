@@ -1,0 +1,864 @@
+<div class="moz-text-flowed" style="font-family: -moz-fixed">TV Sports Basketball
+© 1990 Cinemaware
+
+Manual 
+                            INTRODUCTION
+
+Welcome to TV Sports: Basketball, the most realistic and exciting
+basketball simulation ever created!
+
+TV Sports: Basketball has something for everyone.  The arcade action is
+fast-paced and authentic, with all the slam-dunks, three-pointers, and
+fast breaks of the real thing.  Play through hot streaks when you can't
+miss a shot, and struggle through droughts when you go 0-for-9 at the foul
+line.  Hear the home crowd roar as you make your patented 360 ,
+behind-the-back slam.  Witness the height differences as your 7'6" center
+defends their 6'2" guard.  Use that home court advantage to squeak out a w
+point, come-from-behind upset against the defending league champions. 
+Will your team come through in the clutch?
+
+With the Clipboard, you can view complete league statistics in over 135
+categories.  Use the Exhibition mode to set up games that last from 12 to
+18 minutes, with two to five players on each team.  And through it all, the
+CWTV cameras are there: from the pre-game show to the post-game wrap-up!
+
+GETTING STARTED (AMIGA VERSION)
+
+Note: Before using the LEAGUE option, make a copy of the disk labelled
+"Reel 2."  This disk is not copy protected and contains league and season
+data.  Make a backup copy of this disk before playing any league games. 
+Remember to leave your original disk write protected.
+
+SYSTEM REQUIREMENTS
+
+1. An Amiga 500, 1000, 2000, or 2500 with 512K of RAM.
+2. A joystick connected to port 2.
+
+OPTIONAL EQUIPMENT
+
+1. Additional RAM.  Users whose Amigas have 1Mb or more of RAM will
+   enjoy enhanced sound.
+2. A second joystick.  For all options involving more than one   
+   player, connect a second joystick to port 1.
+3. A Parallel Port Joystick Adapter, with a third and fourth   
+   joystick.  Up to four players may play in exhibition games with
+   this adapter.
+
+HARD DISK INSTALLATION
+
+You can install TV Sports: Basketball on your hard disk.  There is a file,
+TVSBB.INSTALL on Reel 1 that explains the procedure.
+
+LOADING THE GAME
+
+If needed, boot your Amiga with Kickstart 1.2 or above.  At the Workbench
+prompt insert "REEL 1" in the internal drive (df0:) and "REEL 2" in the
+external drive (df1:).  The game loads automatically.  One drive users
+should follow the on-screen prompts to exchange disks.
+
+Note: Never exchange disks unless the program requests it.
+
+                                1
+
+                                2
+
+THE ORIGIN OF THE SPORT OF BASKETBALL
+
+Most modern sports are derived from games that have existed for centuries. 
+Basketball, on the other hand, was invented late in the 19th century (1891)
+by a young Canadian clergyman, Dr. James Naismith.  Naismith was working as
+a physical education instructor at a YMCA school in Springfield, Mass.,
+when he was asked to come up with some type of activity which could be
+played indoors during the cold winter months.  He wanted to design a game
+which involved a great deal of aerobic activity and developed coordination,
+with a minimum of physical contact (since the game had to be played
+indoors.  He decided to use a large ball so no other equipment would be
+needed, and to use an elevated goal so scoring would depend more upon skill
+than brute strength.  Naismith used old peach baskets as goals which were
+nailed to the balconies at each end of the gym.  Someone had to climb up
+and get the ball every time a goal was scored.
+
+RULES OF THE GAME
+
+>From this humble beginning, basketball has become one of the most popular
+and exciting sports in the world.  Below is a summary of the official rules
+of the game, as laid out by the Cinemaware Basketball Association (CWBA).
+
+OBJECT
+
+The object of the game of basketball is to throw a large inflated ball
+through one of two elevated goals.  When this is accomplished during the
+normal course of play it is called a field goal, or basket, and is worth
+two points.  After certain violations of the rules, called fouls, the
+fouled team may be awarded free throws, which are worth one point.  The
+team scoring the most points wins.
+
+THE COURT
+
+The game is played on a basketball court, which measures 94 feet long and
+50 feet wide.  The lines running the length of the court are called
+sidelines; the lines running the width of the court are called baselines;
+everything else is out-of-bounds.  A mid-court line is drawn across the
+court exactly halfway down its length.  On each end of the court is a
+rectangular area called the key, which is centered along the baseline,
+extends 19 feet into the court, and is 12 feet wide.  The side of the key
+that runs parallel to the baseline is called the free throw line; it is
+from this line that penalty throws are taken.
+
+The goals, also called baskets or hoops, are placed at either end of the
+court, and are mounted on a 6 ft. by 4 ft. backboard that is suspended 9
+feet above the key and 4 feet in from the baseline.  The basket itself is a
+metal ring 18 inches in diameter with white netting hanging from it, placed
+10 feet above the floor.
+
+                                3
+
+PLAYING BASKETBALL
+
+When a team receives the ball, they attempt to move the ball downcourt
+(toward the basket their opponents are defending) to score.  A player may
+only advance the ball by passing it to a teammate or by bouncing
+(dribbling) it while running or walking.  The player may not run or walk
+with the ball unless he is dribbling.
+
+When a player tries to shoot a field goal, two things may happen.  If the
+shot is good, that team scores and a player from the other team takes the
+ball out-of-bounds and throws it in to a teammate, who advances the ball to
+their basket.  if the shot is missed, the ball bounces off the basket and
+the players try to get the rebound.  Once the defensive team gets the ball,
+they become the offense and try to advance the ball downcourt to score.
+
+SKILLS OF MODERN BASKETBALL
+
+Basketball involves several key skills related to manipulating the ball. 
+Most important of these are passing, shooting, and rebounding.
+
+Passing means throwing the ball to another player.  Passes may be thrown to
+any player, including the opposition if you are not careful!  Any pass
+which leads directly to a player making a basket is called an assist.
+
+Shooting refers to throwing the ball at the basket.  One of the most
+important skills is the ability to shoot accurately.  A typical basketball
+game will include such shots as the one or two- handed lay-up, the
+one-handed jump shot, the pivot or hook shot, and even the slam-dunk.
+
+Rebounding is gaining possession of the ball when a shot is missed.
+
+                                4
+
+PLAYERS
+
+A full roster on a basketball team is 12 players, plus the coach.  In a
+standard game, five players for each team are in the game at all times; a
+center, two guards and two forwards.  Although every team member must be
+able to pass, shoot, and rebound with some degree of skill, each position
+required some specialized skills.  Taller players are often better
+rebounders and more effective shooters from the inside (within about 10
+feet of the basket), while shorter players are generally quicker and more
+accurate at shooting form outside.
+
+Guards:  The two guards, or backcourt men, are usually the smallest and
+quickest men on the team.  Facing downcourt, the left guard (called the
+point guard) usually brings the ball from the backcourt (where the
+opponent's basket is located) to the forecourt (the team's own basket). 
+The right guard is sometimes called the shooting guard.  The guards handle
+the ball more than the other players.  The guards' most important function
+is to make things happen on the court by getting the ball to an open player
+and making sure the forwards and center remain effective throughout the
+game.
+
+Forwards:  The forwards try to position themselves near the corners of the
+forecourt so they are in position to shoot or rebound.  A forward should be
+a good defensive player who can prevent the player he is guarding from
+taking an effective shot.  Most teams use a small forward who is a quick,
+accurate outside shooter, and a powerful forward who can make a large
+number of rebounds.
+
+Centers: The center is usually the tallest member of the team.  He plays
+near the key and is primarily responsible for getting rebounds.  Most of
+the shots taken by a center are from inside.
+
+PENALTIES
+
+There are two types of penalties in the CWBA: violations and fouls.
+
+Violations:  When a player commits a violation, the ball is given (turned
+over) the other team, who must throw it in from the baseline.  There are
+five violations called in the CWBA.  Travelling is called when a player
+presses his button to take a jump shot, but does not release the button
+before he lands on the ground.  A three-second violation is called when an
+offensive player stays in the key for more than 3 consecutive seconds.  A
+five-second violation is called if he does not make the in-bounds pass to
+one of his teammates in 5 seconds or less.  A ten-second violation is
+called if the offense does not get the ball over the mid-court line within
+ten seconds of being inbounded.  A 24-second violation is called if the
+offensive team does not attempt a field goal within 24 seconds.
+
+                                5
+
+Fouls: Personal fouls are violations of the rules involving personal
+contact between players.  Each player is allowed a limited number of fouls
+per game before he is disqualified (fouls out) and forced to sit out the
+remainder of the game on the bench.  (The number of fouls allowed depends
+on the length of the game - see Fouling Out, page 16.)
+
+The result of most fouls is to award the fouled player one or two free
+throws. Charging, when the ballhandler runs into a defender who has
+established position, is not punished with free throws in the CWBA; the
+ball is given to the other team.  Some free throws are awarded on a
+one-and-one basis: if the player makes the first free throw, he gets a
+second shot.  If a player is fouled in the act of shooting and the ball
+goes into the basket, he is awarded one throw (a potential three point
+play).  If the ball does not go into the basket, he is awarded two free
+throws.  When a player fouls out, he is automatically replaced by the
+highest-rated player (in the same position) from the bench.
+
+GAME MENUS
+
+The main menu has three options: EXHIBITION, LEAGUE PLAY, and CLIPBOARD. 
+To select an option, move the joystick up or down until the basketball icon
+is next to your choice, then press the button.
+
+EXHIBITION GAMES
+
+TV Sports: Basketball allows you to choose any two teams and have them
+play. The game does not count in the league standings (see League Games,
+page 7), nor are statistics from exhibition games added to the team stats
+display (see The Clipboard, page 9).  You may play exhibition games as one
+player vs. the computer, two players in head-to-head competition, or with
+two players as teammates. Exhibition mode also allows the player to play
+with two to five players per team, and with quarters that last from three
+to twelve minutes.
+
+Starting an exhibition game: Select EXHIBITION from the main menu, then
+select ONE PLAYER, TWO PLAYERS or TEAMMATES.  When the clipboard appears,
+change the number of players on each team, the length of the quarters, or
+both, then choose two teams by moving the pencil to the desired teams and
+pressing the button.  Your selection is highlighted.  The first team you
+select (highlighted in red) is the home team; the second team (highlighted
+in blue) is the visitor.  The joystick in port 2 is always the home team. 
+In two-player games, port 1 is always the visitor.  When both teams are
+chosen, the game begins.
+
+Teammates: In order to play as Teammates, you must have a joystick plugged
+into both ports one and two.  Make your selections as described above to
+start the game.  All Teammates games use the Roleplaying option (see
+Roleplaying, page 18).  In Teammates games, joysticks 1 and 2 control
+players on the home team.
+
+                                6
+
+Three and four players (Amiga version):  TV Sports: Basketball allows up to
+4 players to play simultaneously during exhibition games. To play with more
+than 2 players, you must plug a Parallel port joystick Adapter into your
+parallel port. You may use the F6 key to toggle joysticks three and four on
+and off during the substitution screen. Activating the third and fourth
+joysticks automatically turns on the Roleplaying option.
+
+The first press of the F6 key places these new players in the available
+spaces on the home team. The next press places them on the visiting team,
+and the third press removes them. For example, in a three-on-three
+Teammates game the first press places J3 (joystick three) on the home team.
+The second press places both J4 and J4 on the visiting team, and the third
+press eliminates them.
+
+LEAGUE GAMES
+
+The CWBA consists of 28 teams divided into two conferences and four
+divisions.  Each team may have a human or computer owner.  If you want
+to play in a league by yourself, simply change one of the teams from COMP to
+HUMAN (see Changing Ownership, page 19).  In order to participate in the
+arcade sequences during a league game, at least one team must be
+human-owned.  You can compete in a league with up to 27 other people, with
+each person selecting a team to own.
+
+To start a new season, select NEW SEASON.  If you wish to edit one or more
+teams (for example, to change a team's ownership), select EDIT TEAM (see
+Editing a Team, page 19).  When you are finished, or if you choose not to
+edit a team, select SAVE LEAGUE.  (Note: Even if you do not want to edit a
+team, you must use SAVE LEAGUE to begin a new season.)  When you are ready
+to play a game, select LEAGUE PLAY from the main menu, then CONTINUE SEASON
+from the league menu.  All league games are five-on-five player games, with
+twelve-minute quarters.
+
+Warning:  SAVE LEAGUE permanently erases from your league disk all games
+played in an existing season, including all statistics!  You are allowed
+only ONE season and ONE league per disk.  To play more than one season at a
+time, simply make additional copies of Reel 2.
+
+				7
+
+The weekly schedule: When you choose CONTINUE SEASON, you see a schedule of
+the current week's games.  A blue C indicates a computer-owned team and a
+red H marks the teams which are human-owned.  (If your team does not have a
+red H, you forgot to change the ownership and must go back and edit the
+team).  Move the pencil to the center of the clipboard over the game which
+features your team and press the button.  This game is now highlighted.  To
+start the game, move the pencil to PLAY and press the button.  If you do
+not wish to play a game, select CLIPBOARD to exit.
+
+Hold and Auto modes:  The right side of the schedule screen has a status
+column which indicates whether a game is in Hold or Auto mode.  All games
+default to Auto unless they involve human teams, in which case they are put
+on Hold.  Games in Auto mode are played automatically when PLAY is chosen. 
+Games in Hold mode are not played until they are selected as described
+above, or changed to Auto mode.  While you play your league game onscreen,
+all the games in the Auto mode are decided play-by-play offscreen.  If you
+don't select a game before you select PLAY, all the games in the Auto mode
+are resolved.
+
+To toggle games between the two modes, move the pencil to the status column
+of the appropriate game and press the button.  This allows you to either
+hold a computer vs. computer game and watch it later, or auto-play a human
+team's game if that player is not available to play.  This second option is
+useful because no one can advance to the next week until all of the games
+for the current week have been resolved.
+
+The playoffs:  The top two teams from each of the four divisions, eight
+teams in all, go to the playoffs.  Each divisional champion plays up to
+three games (a best-of-three series) against the runner-up from their
+conference's other division; a team must win two games to advance.  The two
+teams remaining from each conference play for the conference championship,
+which is a best-of-five series.  The conference champions play a
+best-of-seven series to decide the CWBA Championship.
+
+Ties between two teams for runner-up in a division are settled as follows.
+
+1.  If the teams have played head-to-head, then the team with the winning
+    record from that matchup is sent to the playoffs.
+
+2.  If the teams each have won an equal number of games in head-to-head
+    matchups, the team with the best point differential (points-for minus
+    points-against) over the entire season is sent to the playoffs.
+
+Three way ties are decided by point differential, so it pays to score as
+many points as possible in each game.
+
+Note: After one team becomes the CWBA Champion, the other teams get "up for
+the game" by playing tougher against the defending champion.  If you win
+the championship, be prepared for a tough season to follow.
+
+				8
+
+THE CLIPBOARD
+
+The CLIPBOARD option offers complete statistics for the league in progress
+on your league disk.  (Statistics generated during exhibition games are not
+included.)  In the screens described below, the pencil moves around to
+various selections.  move the pencil to the selection of your choice and
+press the button.  The Clipboard menu gives you the following choices.
+
+VIEW SCHEDULES:  This is a weekly schedule of the league games.  The + and
+- icons at the top of the screen allow you to go forward or backward in the
+schedule.  Scores of games that have already been played appear; the blue
+scores are the winners.
+
+VIEW STANDINGS: The Standings screen allows you to analyze the record of
+every team in every division.  From left to right you can see: win/loss
+record (W, L); average points for the team per game (PF/G); and average
+points against the team per game (PA/G).  Each team can be selected; click
+on one to view its schedule (a complete list of opponents and scores of
+games that have already been played).
+
+LEAGUE LEADERS: The best and worst performances in the league are
+represented here in up to 69 different categories.  Choose from the four
+options at the bottom left to view leaders in twenty-four different
+combinations: the TOP 10 or BOTTOM 10 performers in the league; INDIVIDUAL,
+TEAM or TEAM DEF. (team defense) performances; SCORING or MISC.
+(miscellaneous) statistics; and AVERAGES or TOTALS. Each category can be
+selected; the column in red shows the current stat.  For example, to see
+the best scorers, click on TOP 10, INDIVIDUAL, SCORING, TOTAL, and PTS.
+
+				9
+
+STATS BY TEAM: Complete stats are kept for each member of every team in the
+CWBA.  Select a team from the team menu.  The first screen you see gives a
+comprehensive analysis of the team's scoring ability broken down by field
+goals, three point shots, and points per game.  You may also access the
+team roster from this screen.  (You cannot make any changes to the player's
+abilities on this screen; it is for information only).  The last two lines
+of each column give totals for the team and its opponents.
+
+Both LEAGUE LEADERS and STATS BY TEAM display these statistics.
+
+	* MISC. AVERAGES and TOTALS:
+	  Rebounds (REB), Assists (AST), Blocked shots (BLK), Steals (STL),
+	  Turnovers (TRN), and Personal fouls (PF).
+
+	* SCORING TOTALS:
+	  Field goals made and attempted (FGM, FGA), Three-point shots made
+          and attempted (3PM, 3PA), Free throws made and attempted (FTM, 
+          FTA), and Total points scored (PTS).
+
+	* SCORING AVERAGES:
+	  Field goal percentage (FG%), Three-point shot percentage (3PT%),
+	  Free throw percentage (FT%), and Average points per game (PTS/G).
+
+You may also print statistics with a printer; see Printing Statistics, page
+21.
+
+				10
+
+THE ARCADE GAME
+
+Once you have selected a game, either exhibition or league, the telecast
+begins live and direct from courtside with Max McGill on CWTV.  However, if
+you want to skip the pre-game show and go straight to the substitution
+screen to see the starting lineup (to the tipoff in five-on-five games),
+just press your button again within two seconds of selecting the visiting
+team (Exhibition) or pressing play (League).
+
+Each team in the league has its own team color.  Home teams wear jerseys in
+their team color; visiting teams wear blue jerseys.
+
+During the game, you control the player whose jersey is darker than those
+of his teammates.  When not in Roleplaying mode, you change players as the
+game progresses.  On offense, you are always the man with the ball.  When
+you are on defense, you control the last player on your team to have the
+ball, until you tap the button, which switches you to the man closest to
+the ball.
+
+After the action begins, you may pause the game by pressing the spacebar.
+
+TIPOFFS
+  
+At the beginning of all five-on-five, full-length games, the tipoff
+appears. The jumper on the left is on the home team; the one on the right
+is from the visiting team., Press your button to crouch and release it to
+jump for the ball. In a two-player game, the referee does not throw the
+ball until at least one player crouches. If you do not release the button,
+the computer will eventually jump for you, but you are unlikely to win the
+tipoff.
+
+THE SUBSTITUTION SCREEN
+
+The substitution screen gives game statistics and vital information
+regarding the condition of your players.  It appears automatically at the
+beginning of the game and at the end of each quarter.  If you want to make
+a substitution at other times, you may call a time-out (see Time-outs, page
+16), or press the spacebar during a dead ball situation (the time between a
+score or violation by your opponent and the following in-bounds pass).
+
+When your computer opponent calls for a substitution during a dead ball,
+you have 30 seconds to make substitutions as well.  If you call for the
+dead ball substitution, you have 60 seconds.  You also have one minute
+between quarters and during a computer opponent's time-out.
+
+The top half of the screen shows each team's score and the status of the
+players in the game.  The pictures of the players show their fatigue
+levels; as they get more tired, they hunch over more.  The boxes underneath
+show their positions, names, points (PTS), personal fouls (PF), and the
+time left on the substitution clock, the quarter, the time remaining in the
+quarter, the number of time-outs remaining for each team, the players
+sitting on each team's bench, and the current game options (see Game
+Options, page 17).
+
+Note: In games with less than five players on the court for each team, only
+the next seven highest-ranked players appear on the bench.  For example,
+in a two-on-two game, the three lowest-ranked players do not appear.
+
+				11
+
+
+To make substitutions: Move the basketball cursor to the player you want to
+rest and press the button. This player is now highlighted. Move the cursor
+to the player on the bench you wish to put in the game and press the button
+again. The two players switch places.
+
+To change defensive assignments: Use the cursor to select your player,then
+move it to the other team and select the opponent you wish your player to
+guard. You may use this method to double-team an opponent, or just to
+switch the assignments of your players.
+
+To have players trade positions: Use the cursor to select one player, then
+select another player. The two players trade positions. You may, for
+example, have your forwards switch sides or have the center and a guard
+trade positions.
+
+To change the player your joystick controls: When using the Roleplaying
+option, select the player you want to control and press the button, then
+move the basketball back to him and press the button again. The joystick
+indicator appears in the box under that player. 
+
+Each change take effect as soon as you make it. If you finish making
+changes before the time-out ends, select DONE to continue the game (in
+two-player mode, each player must select DONE to exit).  If you do not
+
+				12
+
+press DONE within the time allotted (as shown in the lower half of the
+screen), the computer exits back to the game.  If the time-out expires
+before you complete a change, that change does not take effect.
+
+THE PLAYCALLING SCREEN
+   
+The playcalling screen appears during the game whenever the players are
+crossing mid-court. During this screen, you do not control the players, but
+are setting up the next play. At the top center of the screen is a small
+half-court diagram that represents the offensive players' positions; it
+does not show their actual positions on the court. On either side of this
+diagram is a roster of the players in the game for each team. One side is
+highlighted; that team is on offense. The basketball icon is positioned
+next to the current ballhandler between his points (PTS) and personal fouls
+(PF).
+
+For each offensive player, there is a red arrow or dot located between
+their number and their name on the roster. These show the direction to push
+the joystick (the doc indicates a button press) to select that player. The
+offensive team selects a player to try to get open, and the defensive team
+chooses an opponent to guard move closely. When you choose a player, your
+team's name flashes to confirm that you have made a selection.
+
+				13
+
+PLAYING OFFENSE
+
+When you are on offense, you are trying to pass the ball in to a teammate,
+bring it across mid-court within ten seconds, and then put the ball through
+the hoop before the 24-second shot clock runs out.  You may advance the
+ball by dribbling or passing.
+
+Dribbling: A player starts dribbling as soon as he gets the ball and
+continues until a defender makes him stop.  Once a player picks up his
+dribble (stops dribbling), he may not dribble again; he must either pass or
+shoot.
+
+Passing: Passing is the fastest way to move the ball around the court,
+although it is a bit more risky than dribbling. When one of your teammates
+thinks he is open he will raise his hands to signal for the pass. (You
+always have one player that is at least partially open). Tap your button to
+throw the ball to him. Time your passes carefully to avoid having the ball
+stolen. (For more details on passing, see Game Options, page 17).
+
+Shooting: Shooting basically involves two moves: jumping up and releasing
+the ball. Holding down the button causes your player to jump up and
+releasing the button him to release the ball. Release the button when he
+reaches the top of his jump to shoot most effectively. If you do not
+release the ball, you  will be called for traveling and the ball is turned
+over to the other team. Remember to hold the button while the player is
+going up; if you just tap the button you pass the ball whether there is a
+safe pass or not.  Note: If some of your opponent's players are directly
+between you and the basket, do not push the joystick toward the basket when
+you shoot or you may be called for charging.
+
+Free Throws: If an opponent fouls you, you may be awarded one or more free
+throws.  Shooting a free throw is similar to shooting a field goal, except
+that you have to time the shot using a small green line that moves back and
+forth across the backboard. Push and hold the button then release when the
+green line is centered. You have only a few seconds to release the ball
+before the computer does it for you.  The closer the line is to being
+centered, the more successful your shot will be. Another factor in making
+free throws is the player's shooting ability.  A good shooter may make the
+shot even if the bar is off to one side; a poor shooter may miss even if
+the bar is in the center of the backboard.
+
+Offensive Strategy: If you get the ball by rebounding, try to pass it
+quickly to the man farthest downcourt.  This kind of high-speed offensive
+attack down the length of the court is called a fast break, and is used to
+outrace the defenders for a quick score.
+
+If you cannot use a fast break, try to set up a screen once the ball is
+downcourt.  In a screen play, an offensive player tries to position a
+teammate between himself and the defender guarding him to get an open shot.
+
+				14
+
+PLAYING DEFENSE
+
+The goal of the defense is to prevent the offense from scoring.  More often
+than not in basketball, the offense does score.  However, if the defense is
+successful at least part of the time, your team can win.  Remember the old
+adage: "Offense sells tickets; defense wins games."
+
+Quickness is the key to good defense.  In a man-to-man defense, players
+generally defend opponents in the same position (guards defend guards and
+forwards defend forwards).  The primary goal of the defender is to prevent
+the player he is guarding from getting the ball, or to force him to shoot
+from a bad position.
+
+While playing defense, try to do three things. First, when guarding the
+ballhandler, try to force him to pick up his dribble. To do this, keep
+getting in his way. Once he picks it up, he must pass or shoot. Stay close
+to him and stay in front of him. Make him go around you. If he gets by you
+press your button to switch to the player closest to him (unless of course,
+you are in Roleplaying mode)
+
+Also, try for the turnover. There are several ways you can take the ball
+away from the other team. When guarding the ballhandler, press the button
+to attempt to steal. If you can force a violation, your team gets the ball.
+If your attempts fail, you may be called for a foul.
+
+Finally, when the man shoots, try to block his shot. To do this, press the
+button when he goes up for the shot. Timing is a big factor - if you can
+jump at the same time as your opponent, your chances increase. As in
+stealing, unsuccessful block attempts often result in foul calls.
+
+				15
+
+TIME-OUTS
+
+Only the team in possession of the ball can call a time-out.First you must
+press the spacebar (pausing the game), then press your button. You are
+prompted to press a button so a time-out is not called by mistake. The game
+can be paused at any time by pressing the spacebar. The number of time-outs
+each team gets depends on the length of the game.
+
+   Length of each quarter | 3 mins  | 6 mins  | 9 mins | 12 mins       
+--------------------------|---------|---------|--------|----------  
+   Timeouts per half      |    2    |    3    |    4   |    5
+                    
+GAME CLOCKS
+
+During the game, two clocks may appear.  The 24-second clock is shown in
+the upper right corner of the screen when you have five seconds left to
+shoot.  The game clock appears in the lower left corner of the screen
+during the last ten seconds of each quarter.
+
+FOULING OUT
+  
+A player is allowed to commit a limited number of personal fouls before he 
+fouls out of the game. The number of fouls permitted depends on the length
+of the game.
+
+   Length of each quarter  | 3 mins  | 6 mins  | 9 mins  | 12 mins 
+---------------------------|---------|---------|---------|----------
+   Fouls to foul out       |   3     |    4    |    5    |    6     
+
+OVERTIME
+
+Basketball games cannot end in ties. In 9 and 12-minute exhibition games
+and all league games, overtime periods lasting 5 minutes are added until
+there is a winner. In 3 and 6-minute exhibition games, the overtime period
+lasts for 2 minutes.
+
+INSTANT REPLAY
+
+During play, you may press the F10 key to view an instant replay of the
+last sequence. Your joystick controls the action just like the buttons on a
+VCR. Push forward on with joystick to replay forward at normal speed. Pull
+back to reverse at normal speed. Right will play forward at double speed,
+while left will reverse at double speed. Press the button and move the
+joystick forward to see the replay in slow motion forward, or pull the
+joystick back with the button depressed to see the slow motion replay in
+reverse. Press F10 again to resume play. Pressing F10 in the middle of a
+play temporarily suspends that play.  When you resume play, the play
+will continue as if it were not interrupted.
+
+                 Forward,                            Slow
+               Normal Speed                         Forward
+                   /|\                                /|\
+                    |                                  |
+      Fast        Fire        Fast                    Fire
+   Reverse ----- Button ----- Forward                Button
+                   UP                                 DOWN
+                    |                                  |
+                   \|/                                \|/
+                 Reverse                              Slow
+               Normal Speed                          Reverse
+
+				16
+
+GAME OPTIONS
+
+In order to make the game enjoyable for players at all levels of ability,
+several options have been added to change the difficulty of the game. 
+These game options are on the bottom of the substitution screen and are
+printed in red or grey.  Red indicates that the option is on and grey means
+it is turned off.  Some game modes do not allow access to all the options,
+so if one does not appear at the bottom of the screen, you cannot change
+it.  For example, Fatigue cannot be turned off during a league game, so it
+will now show on the substitution screen.  The default modes are:
+Player-controlled passing, Cursor on, Roleplaying off, and Fatigue on.  The
+default modes are set for a moderately difficult level of play.  To toggle
+the functions on and off, press the appropriate function key.
+
+Passing F2: This lets you toggle between Player-controlled Passing and the
+simpler computer-assisted passing. If player-controlled passing is selected,
+you have complete control of the passing game. When one of your teammates
+gets open, he raises his hands. Move your joystick in the direction you
+want to pass the ball and tap the button. The computer 
+
+				17
+
+selects the safest pass to a player in the direction you're facing.
+Player-controlled passing is more difficult than computer-assisted passing
+and should only be used by advanced players. Turn on the cursor (see below)
+for help in selected a safe pass.
+
+If Computer-assisted Passing is selected, the computer cycles the cursor
+through the open players one at a time.  When you tap the button to pass,
+the computer passes the ball to the player with the cursor on his jersey. 
+Because the computer moves the cursor for you, you may have to wait if you
+are trying to pass to a particular individual.
+
+Cursor F3: When you are using Player-controlled Passing, turning the cursor
+on makes passing easier. (The cursor is always on when using
+computer-assisted passing.) The passing cursor is an orange circle that
+appears on the player who is most open, and the cursor has that player's
+number on it. The color of the number inside the cursor indicates the
+relative safety of the pass. A green number in the cursor represents a safe
+pass. A red number marks a pass which is somewhat risky.  A white number
+represents a very risky pass. Players also indicate they are open by
+raising their hands. If the cursor is off, this is your primary method of
+determining whether a pass is safe. A green cursor does not stay green for
+long; it can change to red or white or even disappear altogether.
+Therefore, pass the ball as soon as you can.
+
+Roleplaying F4: The Roleplaying function lets you select a player and
+"become" that player. You control only the selected player. On the
+substitution screen, move the basketball cursor to the player you want to
+control and press the button once. The cursor moves to DONE, so move it
+back to the player and press the button again. The joystick indicator is
+now on this player. When you return to the game and think you are open for
+the pass, tap the button to call for the ball.
+
+Fatigue F5: As the game progresses, players get tired and their
+effectiveness is hampered, necessitating changes in the line-up.  Players
+recover during time-outs, between quarters, and while on the bench.  The
+players can be fresh, tired, exhausted, or injured.  Any player who is
+injured is out for the rest of the game. The players on the bench have
+their fatigue levels listed by their name.  The fatigue levels of the
+players in the game are depicted by their posture as shown on the
+substitution screen.  Monitor your players' conditions in order to get the
+best performance from each member of your team.  For example, any player
+left in for an entire 48-minute game is exhausted by the end and could
+easily be injured.  Every player has a different amount of stamina.  If you
+are playing an exhibition game, you may turn the Fatigue function off and
+your players will remain fresh throughout the game.
+
+				18
+
+EDITING A TEAM
+
+Whenever you start a new season, you have the option of editing a team. 
+You can change the team name (and choose a 4-letter abbreviation for that
+team), the players' names, their rankings and ratings, and the team
+ownership (HUMAN or COMP).  Just move the pencil to the item you want to
+change and press the button.
+
+Changing ownership: Move the pencil to the upper right corner and change
+the owner from COMP to HUMAN by pressing the button.
+
+Changing names: Move the pencil to the item you want to change and press
+the button.  A flashing red cursor appears in the first column of the input
+area and moves to the right as you enter a name.  Team names may be up to
+13 characters long; abbreviations up to 4 characters.  Players' names must
+be entered as a first and last name only and may be up to 17 characters
+long.  Last names longer then 9 characters may be abbreviated on the
+substitution screen and some statistical screens.
+
+Changing rankings and ratings: Move the pencil to the ranking you wish to
+change and press the button.  When you change a player's rank, you must
+enter leading zeros (08, for example) since the computer
+
+				19
+
+will only accept two digits.  The players ranked from 1 to 13 and the
+rankings determine the total number of "talent points" that a player is
+allocated.  The best player (ranked #1) is given 32 total talent points and
+the worst player (ranked #13) is given 20 talent points.  The talent points
+are divided among six categories: Shooting, Passing, Defense, Rebounding,
+Quickness, and Jumping (see Ratings, below, for an explanation of these
+categories).  To change the distribution of talent points, move the pencil
+to the player's Shooting rating and press the button.  The maximum number
+of talent points a player may have in any one category is eight and the
+minimum is one.  When you change a player's ranking, the old rank, along
+with its distribution of talent points, is traded to the player who
+formerly held the new rank.
+
+Example: A guard is ranked 13 and his points are placed as follows: S:5,
+P:4, D:4, R:1, Q:5, J:1.  A forward on the same team is ranked 4, and his
+points are S:7, P:3, D:6, R:6, Q:2, J:5.  When the owner of the team
+decides to improve his guard to the 4th-ranked player on his team, the
+forward becomes number 13, with S:5, P:4, etc.
+
+Once you have completed editing your team select SAVE CHANGES from the
+bottom of the screen.  This is a temporary save function which allows you
+to go on to edit other teams if you wish.  In order to save the changes
+permanently for later use, you must select SAVE LEAGUE from the NEW SEASON
+menu.  Once you have done this, you have permanently modified your league
+disk.  Several editing sessions may be used to create a multiplayer league.
+When all the players are satisfied with their teams, select CONTINUE SEASON
+to begin league play.
+
+Note: The Cinemaware team cannot be edited.  You can select it as your team
+in both exhibition and league play (you can change the ownership), but you
+cannot make changes to any player.
+
+RATINGS
+
+As you edit your team, keep in mind that all of the areas a player is rated
+in are interrelated, and a low or high rating in any area will affect
+performance in other areas.
+
+Shooting: The Shooting rating refers to outside shooting. Whether a shot is
+made is determined by shooting ability, proximity of a defender and his
+defensive ability, jumping, momentum, and the timing of the button release.
+
+Passing/ballhandling: The Passing rating affects the number of passes
+stolen, the chance of the defender to stop you while you are dribbling, and
+the number of passes showed as safe (green). A player with good passing
+rating has more opportunities to make safe passes.
+
+Defense: The defense rating affects the player's ability to force the
+ballhandler to pick up the dribble, to steal passes, and the number of
+fouls called against the player.
+
+				20
+
+Rebounding: The higher the Rebounding rating, the more likely player is to
+get a rebound. Rebounding is also affected by height and jumping ability.
+ 
+Quickness: The Quickness rating does not have any direct correlation to a
+particular skill, but affects how fast a player moves around on court, how
+often he gets open for passes, how effective he is on the fast break, and
+how closely he can guard a opponent.
+
+Jumping: Overall, this determines how high a player jumps, but also has an
+impact on rebounding, blocking shots, and shooting. Better jumpers are more
+effective in these areas.
+
+The ranking of a team's coach has a subtle effect on the game. A
+well-coached team shoots free throw more accurately, makes more steals, and
+turns the ball over less frequently.
+
+PRINTING STATISTICS
+
+You may print out statistics for the last game player and for the current
+league season, as well as the team rosters.  Reel 2 contains three files:
+GAMESTATS.PRT, SEASONSTATS.PRT and ROSTERS.PRT. These are normal text files.
+To print them, you may use any word processing program or the following
+AmigaDOS command:
+
+   copy REEL2:(filename) prt:
+
+				21
+
+SUMMARY OF GAME KEYS
+
+    F2:   At substitution screen, TOGGLES BETWEEN player-controlled and 
+          computer-assisted PASSING MODES.
+
+    F3:   At substitution screen, TOGGLES PASSING CURSOR on and
+          off.
+
+    F4:   At substitution screen, TOGGLES ROLEPLAYING MODE on and
+          off.
+
+    F5:   At substitution screen, TOGGLES FATIGUE on and off.
+
+    F6:   At substitution screen, TOGGLES JOYSTICKS 3 AND 4 from
+          home team to visiting team to off.
+
+    F10:   During play, cuts to INSTANT REPLAY. During instant
+           replay, returns to game.
+
+    SPACEBAR: During play, PAUSES GAME.
+
+				22
+
+---
+Provided by THE SOUTHERN STAR  for M.A.A.D.
+For more Amiga documents, visit www.lemonamiga.com
+
+</div>

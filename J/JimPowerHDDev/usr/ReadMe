@@ -1,0 +1,111 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Jim Power"  © 1992 Loriciel - 2 disks
+
+ This install requires WHDLoad and DIC to be in the path. Both can be found in
+ the WHDLoad package.
+ To install from a different drive than DF0: select installation mode Expert.
+
+ The installed program requires 0.5 MB ChipMem and 0.5 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 3.0-B (04.05.2020) done by JOTD:
+ - fixed install script which was broken since a few releases
+ 
+ version 3.0 (02.05.2020) done by Stingray & JOTD:
+ - fixes flashing independently on all levels (issue #0001095) 
+ - complete rewrite of the slave by Stingray
+ - better levelskip & cheat options
+ - automatic blitterwait patch depending on the processor type
+ - merged back & fixed joypad controls from JOTD slave
+ - option to disable the flashing fix (just in case)
+ - source code included
+ 
+ version 2.2 (21.07.2019) done by JOTD:
+ - added CUSTOM3 to avoid fixing blitter waits on slow machines (issue #0002696)
+ 
+ version 2.1 (21.06.2019) done by JOTD:
+ - missing joystick/joypad automatic detection (issue #0004125)
+ 
+ version 2.0 (21.05.2019) done by JOTD:
+ - adapted to WHDLoad v17
+ - CUSTOM2 enables second button for jump
+ - added CD32 controls:
+   play to pause, reverse+forward+green to quit, forward+yellow: levelskip
+ - rewrote readme file
+ - 2nd button joystick fix
+ - manual included
+ - source code included
+   (from a mix between original Mr Larmer source & resourced MicK slave)
+
+ version 1.1 (2001) done by MicK
+ - One bug fixed (at start of level 1)
+ - Interrupts fixed for 040/060 processors 
+ - Keyboard routine rewritten 
+ - Decrunch routine relocated into fastmem 
+ - Ingame keys 
+ 
+ version 1.0 done by Mr Larmer
+ - Initial release
+ - Blitter waits inserted
+
+  --------------------------------------------------------------------------
+ INGAME KEYS
+ -----------
+
+ N: skip levels
+ L: toggle unlimited lives
+ T: toggle unlimited time
+ B: toggle unlimited bombs
+ K: get a key
+ I: toggle invincibility
+ P: pause
+ ESC: quit
+ 
+ JOYPAD CONTROLS
+ ---------------
+ 
+ reverse+forward: quit current game
+ blue/second button: jump (if option is set)
+ forward+yellow: skip level
+ play: pause
+ 
+ --------------------------------------------------------------------------
+
+ Thanks to : - Chris Vella for original disk images.
+             - Mr.Larmer, Harry & Jean-François Fabre for their help.
+
+ 
+ Notes:
+ 
+ - the smart bomb wasn't remapped to another CD32 button
+   it could have been done, but I didn't dig further into it
+ - the music seems to go faster during the intro (first 2 screens)
+   & game over sequence at least on WinUAE on fast processors
+ - the first level music is reportedly "inspired" by "A Searing Struggle".
+   I'd also say it's inspired by Pet Shop Boys "it's a sin".
+ - the graphical flashes were finally overcome by adapting Stingray
+   vertical position fix to all levels by testing all of them visually
+   and adapting the beam wait value individually until all of the are
+   okay on a CD32. Also reported to be okay on a 68030.
+   
