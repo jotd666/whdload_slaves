@@ -1,0 +1,127 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Elite" © 1989 Mr Micro
+
+ Check SPSID file to see which version is supported
+
+ This install requires WHDLoad and RawDIC to be in the path. Both can be found
+ in the WHDLoad package.
+ To install from a different drive than DF0: select installation mode Expert.
+
+ The installed program requires 0.5 MB ChipMem and 0.5 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 2.0 (31.12.07) done by JOTD
+ - quit key works on 68000 & NOVBRMOVE
+ - keyboard routine fixed
+ - self-modifying code fixed and does not use flushcache anymore
+ - crash while saving mission data removed (removal of flushcache usage)
+ - removed registered users only restriction
+ - RawDIC imager (check NOTES below)
+ - full rewrite of the install script
+ - added documentation & cheat information
+ - added icon by Exotica
+
+ version 1.0 (13.02.03) done by Dark Angel
+ - initial release
+ - Selfmodifying code fixed
+ - Protection removed
+ - Buttonwait added
+ - Saves to HD
+ - Return to OS (Numl)
+
+
+NOTES:
+
+The imager asks you for 2 disks, in fact, leave the only disk in the drive (or for IPF file users
+just press "Start" again). The reason for this is that v1.0 install used 2 disk images for 1 disk,
+and the simplest way to make this happen with RawDIC was to ask for 2 disks.
+
+CHEAT:
+
+When you get the prompt to enter your code, type in SUZANNE (on old versions it was SARA) and then return.
+Now, anytime you wish, you can enter the hidden modification program and edit your ship and cargo!
+To enter this program, hit the HELP key or the * key on the keypad.
+To exit, hit the ESC key.
+When you enter, you will be asked for the byte you wish to change, and then you will be asked for the replacement
+value, below is a chart to help you become elite:
+
+Note: you have to set CUSTOM1=1 to enable this feature, or protection will be completely skipped
+
+BYTE       NAME                            VALUE
+----------------------------------------------------------
+1a          Credits                          HEX 2 digits
+1f          FuelMax                          45
+21          Missiles                         Max 4
+23          Large Cargo Bay                  0none - 1Equip
+25          ECM System                       0/1
+2b          Fuel Scoop                       0/1
+2d          Energy Bomb                      0/1
+2f          Escape Capsule                   0/1
+31          Energy Unit                      0/1
+33          Docking Computer                 0/1
+35          Galactic Hyperdrive              0/1
+3b          Retro Rocket                     0/1
+3d          ECM Jammer                       0/1
+3f          Cloaking Device                  0/1
+----------------------------------------------------------
+27          Pulse Laser                     1 = Front
+29          Beam Laser                      2 = Rear
+37          Mining Laser                    4 = Left
+39          Military Laser                  8 = Right
+----------------------------------------------------------
+90=1 91=0                                   Clean
+90=0 91=1          STATUS                   Offender
+90=1 91=1                                   Fugitive
+----------------------------------------------------------
+97                Rank                  0 = Harmless
+                                        1 = Mostly Harmless
+                                        2 = Poor
+                                        3 = Average
+                                        4 = Above Average
+                                        5 = Competent
+                                        6 = Dangerous 
+                                        7 = Deadly
+                                        8 = E-L-I-T-E
+----------------------------------------------------------
+40..43            Food                   HEX
+44..47            Textiles
+48..4b            Radioactives
+4c..4f            Slaves
+50..53            Liquor & Wines
+54..57            Luxuries
+58..5b            Narcotics
+5c..5f            Computers
+60..63            Machinery
+64..67            Alloys
+68..6b            Firearms
+6c..6f            Furs
+70..73            Minerals
+74..77            Gold
+78..7b            Platinum
+7c..7f            Gem-Stones
+80..83            Alien Items
+84..87            Medical Supplies
+88..8b            Unhappy Refugees
+8c..8f            Thargoid Documents 

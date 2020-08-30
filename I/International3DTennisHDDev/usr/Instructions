@@ -1,0 +1,424 @@
+
+            ________  ________  ________  ____  ________  ________
+           _)       \_)       \_)       \_)   \_)       \_)       \
+  __ ____ /___/     /   /_____/\  /     /     /   /     /   /     /
+ /_//___// \___    /   /     /CT\/     /     /   /     /   /     /
+      ::/___/     /___      /:::/     /_____/___      /___/     /___ __
+       :T:::\____/::::\____/::::\____/::::::::::\____/::::\____//__//_/
+       :|::::::::::  ::::::::  ::::::::        ::::::::  :::::::T::::
+       :|:                                                     :|:
+        |             Codetapper of Action presents             |
+        |                                                       |
+        |                                                       |
+        |                International 3D Tennis!               |
+        |                                                       |
+        |     .                                           .     |
+        | ..::                                             ::.. |
+        | :.:        Another fine Action production!        :.: |
+        l______/\  ___________________________________  /\______|
+                 \/                                   \/
+
+
+INTRODUCTION
+------------
+Nine months of research went into developing the most playable and most
+realistic method of game control yet devised for a computer tennis game.
+Combined with this is an accurate simulation of a season of professional
+tennis tournaments.
+
+The revolutionary 3D system allows realistic player movement and the
+ability to change the camera angle from which the game is viewed.  Computer
+assistance of your movement will have you playing the game within seconds,
+while the skill levels provide a flexibility of control that take months to
+master.
+
+International Tennis can be played in three ways:
+
+First, as a simple one or two player game in which you practice playing
+either a friend or a computer-controlled opponent.
+
+Secondly, when you feel up to the challenge you can enter a tournament,
+playing, the ultimate challenge.  If you feel really confident then prove
+yourself in a full season of International Tennis tournaments.
+
+Thirdly, as a complete season, allowing you to make a living in a series of
+tournaments.  Every few weeks you are offered a selection of tournaments to
+enter; remember that the higher the prize money, the stiffer the
+competition will be.
+
+
+THE MENU SYSTEM
+---------------
+International Tennis menus are simple to operate.  Move the highlight
+around the screen with the joystick to choose the item that you are
+interested in.  Press fire on a coloured title such as PLAY MATCH or EXIT
+will do just that, whereas pressing fire on a white option such as SKILL
+LEVEL will change its setting.
+
+
+LESSON ONE: PLAYING THE GAME FOR THE FIRST TIME
+-----------------------------------------------
+From the main menu select 1 PLAYER and press fire.  On the next screen
+ignore all the options for now and press fire on PLAY MATCH.  Press fire
+twice more to get past the pre-match panorama and the scoreboard.
+
+On this 1 PLAYER game you control the BLACK PLAYER and the computer
+controls the WHITE PLAYER.  You are on AMATEUR skill level, the easiest to
+control.
+
+On the first game you are serving; press fire to hit the ball.  When the
+computer serves, it will do so automatically.
+
+    Run Towards Net                         Run Away From Net
+
+          \|/                                     \|/
+    Left --|-- Right                        Left --|-- Right
+          /|\                                     /|\
+
+    Run Away From Net                        Run Towards Net
+
+          _______                                  _*_____
+         /       \                                //|\    \
+        /         \                              / / \     \
+       /___________\          These Are         /___________\
+      |_____________|    <-- Supposed To -->   |_____________|
+     /               \        Be Tennis       /               \
+    /           _*_   \        Courts!       /                 \
+   /             |     \                    /                   \
+  /_____________/_\_____\                  /_____________________\
+
+ Players Facing Away From Camera         Players Facing Towards Camera
+
+You have full joystick control over your player's movement until your
+opponent hits the ball.  The computer then automatically lines your player
+up the ball's trajectory.  You can still move towards and away from the
+net, but you should always be able to return the shot.  This is designed to
+make the game easy to learn and give you the best possible gameplay.
+
+When the ball is within range, your player will flash.  This is your cue to
+press fire and hit the ball.  You may miss to start with, but you will soon
+learn to use the flashing to time your shots.
+
+This is all you need to play some games, although you may find yourself
+thrashed.  Press the camera keys (F1 to F10) to view the game from
+different camera angles.
+
+
+LESSON TWO: BALL CONTROL
+------------------------
+You will notice that the computer automatically selects forehand, backhand,
+smash or lob for your player, depending on the height and position of the
+ball.
+
+The position of your joystick when the ball hits your bat determines where
+you aim the shot in your opponents half:
+
+                                   2
+                                1  |  3
+          _______                \ | /               _______
+         / 1 2 3 \             4---5---6            /       \
+        /_4  5  6 \              / | \             /         \
+       /_7___8___9_\            7  |  9           /___________\
+      |_____________|              8             |_____________|
+     /               \                          /  1    2    3  \
+    /                 \                        /  4     5     6  \
+   /                   \                      /  7      8      9  \
+  /_____________________\                    /_____________________\
+
+Try aiming the ball so your opponent really has to run to reach it, but be
+careful not to hit it out!
+
+
+A GUIDE TO SKILL LEVELS
+-----------------------
+On the pre-match menu screen you can alter the skill level (AM,SP,PRO,ACE)
+next to your name before pressing on PLAY MATCH.  If you are playing
+already press P then Q to quit back ti this point.
+
+The four skill levels are AMATEUR (AM), SEMI-PRO (SP), PRO and ACE and give
+you different levels of control over your player.  SEMI-PRO is the same as
+AMATEUR (which you have been playing so far) but has a controllable service
+called SUPERSERVE.  PRO is the same as SEMI-PRO but without the flashing
+feature; its up to you to get the timing correct!
+
+ACE is for real masters; its PRO with advanced SUPASPIN facility, giving
+you control over the ball spin.
+
+SUMMARY
+-------
+                        FLASHING       SUPASERVE       SUPASPIN
+Amateur                    *
+Semi-Professional          *               *
+Professional                               *
+Ace                                        *              *
+
+Your computer opponent has a skill level too, from being a soft touch at 1 to
+an almost unbeatable 15.  You can alter this on the same screen as you change
+your own skill level.
+
+
+LESSON THREE: CONTROLLING YOUR SERVICE
+--------------------------------------
+You will need to be on the SEMI-PRO skill level or higher to make use of
+the SUPASERVE facility.  With it you can control both the power and the aim
+of the service.
+
+The length of time you hold the fire button pressed determines the power of
+the shot.  Be careful not to smash it out of the court!  The position of
+the joystick when you press fire controls your aim within the opponent's
+service area.
+
+          _______                1  2  3               _*_____
+         /123    \                \ | /               //|\    \
+        /4 56     \             4---5---6            / / \     \
+       /7 8 9______\              / | \             /___________\
+      |_____________|            7  8  9           |_____________|
+     /               \                            /         1 2 3 \
+    /             _*_ \                          /           4 5 6 \
+   /               |   \                        /             7 8 9 \
+  /_______________/_\___\                      /_____________________\
+
+
+LESSON FOUR: BALL SPIN
+----------------------
+Only ACE players can make use of SUPASPIN; once this is mastered you will
+be able to enter any tournament in the world.
+
+After playing your shot, press the fire button a second time and move the
+joystick forward or backward to add topspin or backspin respectively.  You
+must do this quickly before the ball touches the ground or your opponents
+racket.
+
+                            These Are Supposed
+                <--         To Be Tennis Balls      -->
+                 ___                 |             ___
+                /   \               / \           /   \
+               |     |  <---      <-   ->        |     |  <---
+                \___/                             \___/
+
+                   -->                           <--
+
+      Topspin causes the ball to            Backspin causes the ball to
+      bounce fast and low on                bounce high and slow on
+      contact with the ground.              contact with the ground.
+
+
+SCORING
+-------
+For details of scoring see the section THE RULES OF TENNIS.
+
+While playing, the scores for the current game are displayed on the left of
+the screen.  The score of the player who is serving is printed first, and
+the player's colour indicated by an arrow.
+
+On the top right any other calls by the umpire are listed, such as OUT,
+FAULT and so on.  On the AMIGA these are read out by the voice of a real
+wimbledon umpire, John Relf.
+
+
+THE SCOREBOARD
+--------------
+
+            Time Of Day ___  Elapsed Time Since Game Started
+                           |                  |
+      _____________________|__________________|_________________
+     |                   --|----          ----|--               |
+     |                  | 01.18 | PALACE | 00.07 |  --------------- Look At
+     |                   -------          -------  |   |   |    |     KEY
+     |  ---- ---- ---- ----  -----------------  ---| --|- -|--  |
+     | |    |    |    |    ||                 || AA | BB | CC | |
+     | |    |    |    |    ||  |> H A R E.    ||    |    |    | |
+     |  ---- ---- ---- ---- |  |     V        | ---- ---- ----  |
+     | |    |    |    |    ||  | Y A T E S <| ||    |    |    | |
+     | |    |    |    |    ||  |            | ||    |    |    | |
+     |  -|-- -|-- -|-- -|--  --|------------|-  ---- ---- ----  |
+      ---|----|----|----|------|------------|-------------------
+   ______|    |    |    |      |            |
+  |           |    |    |      |  Player 2 Name
+ Number Of   2nd  3rd  4th     Player 1 Name
+ Games Won   Set  Set  Set   (Dot Indicates Next
+  1st Set                      Player To Serve)
+
+  KEY
+
+  AA - Number Of Sets Won In Match
+  BB - Number Of Games Won In Current Set
+  CC - Score Of Current Game
+
+Press fire to exit the scoreboard at any time.
+
+CAMERA ANGLES
+-------------
+Press F1 to F10 switches to one of the ten available camera angles.  On the
+AMIGA you can customise camera angle 10.  While in pause mode you can use
+the joystick to spin and zoom in on the court.  When you restart, this will
+become angle 10 and can be reselected later with key F10.
+
+
+MAIN MENU OPTIONS
+-----------------
+The main menu options are:
+
+                        1 PLAYER
+                        2 PLAYER
+                       TOURNAMENT
+                         SEASON
+                          DEMO
+
+1 PLAYER is the game explained so far.  You can alter your own skill level,
+the computer player's skill level and the type of playing surface
+(GRASS,CLAY,CEMENT or CARPET).  You can also enter your name by moving up
+to PLAYER 1 and using the delete key.  Press fire or press RETURN when you
+have finished typing.  You can also change the computer's name from the
+rather anonymous CPU.
+
+2 PLAYER is almost the same as 1 PLAYER but two humans can play each other.
+You will need a second joystick for this.  The computer will ask one of the
+players to press fire to serve first; it is important that the right player
+does this, so that the computer knows who is using which joystick!
+
+TOURNAMENT:  When you feel confident about your tennis skills you can try
+entering a real tournament.  All the statistics, court surfaces, stadium
+types, dates and prizes of the tournaments are based on their real life
+counterparts.  Never before has computer tennis been so realistic.
+
+SEASON:  Re-enact a year in the life of a top class tennis pro.  Try to
+earn as much money as possible over a year of tennis tournaments.
+
+DEMO:  Watch two random computer players have a game.  The camera angle
+changes automatically every few shots.  To get back to the main menu press
+fire (or type P) to pause the demo, then press Q to quit.
+
+
+TOURNAMENT
+----------
+Are you ready to enter a tournament?  International Tennis simulates
+seventy two real life tournaments of varying prestige, difficulty and
+prizes.  Select TOURNAMENT from the main menu.
+
+TENNIS TOURNAMENT PLAYER ENTRY:  On this screen you can enter your name,
+skill level and the length of matches you wish to play.  Tennis matches can
+be one, three, five sets in length.  Selecting the REAL OPTION give you the
+number of sets per match that the tournament has in real life.  When you
+are ready, press fire on SELECT TOURNAMENT.
+
+SELECT TOURNAMENT:  This gives you access to all the tournaments, eight at
+a time.  If you can't see the one you want select PREVIOUS or NEXT to move
+to another page.  The total prize money is displayed next to each
+tournament.  When you have decided on one, use the joystick to move to it
+and press fire.
+
+TOURNAMENT SCREEN:  This shows the tournament, its location on the world
+map, total prize money, the number of rounds you will have to enter, the
+length of matches and the playing surface.  MONEY BREAKDOWN gives a more
+detailed analysis of the prize money and RESELECT TOURNAMENT allows you to
+change your mind.
+
+When you feel ready, select ENTER TOURNAMENT and meet your first opponent.
+You will be entered into each round until you are knocked out or you win
+the whole tournament.
+
+
+SEASON
+------
+A whole season of International Tennis allows you to make a living in a
+series of tournaments.  Every few weeks you are offered a selection of
+tournaments to enter; remember that the higher the prize money, the stiffer
+the competition will be.  From the main menu select SEASON.
+
+TENNIS SEASON PLAYER ENTRY:  This screen allows you to enter your name,
+skill level and preferred lengths of matches in the same way as for a
+single tournament.  START NEW YEAR commences a brand new season; select
+CONTINUE SEASON if you have already started.
+
+The next screen shows you the tournaments currently available.  Select one
+to enter and you will play through it exactly as before.  When the
+tournament is over you will return to this screen.
+
+Some prestigous tournaments are unavailable to players with low skill
+levels and you will not be able to select these.  So of you fancy a go at
+wimbledon you will need to raise your skill level on the PROGRESS REPORT
+screen first.
+
+The PROGRESS REPORT screen allows you to check your performance since the
+beginning of the year, and to keep a track of your earnings.  It also
+allows you to LOAD or SAVE your progress to disk.  See the section SAVING
+AND LOADING SEASONS for details.
+
+
+THE RULES OF TENNIS
+-------------------
+1.  In each game, a player winning their first, second and third point will
+have a score of 15, 30 and 40 respectively.  Gaining a fourth point will
+normally win the game unless both players have a score of 40:  a situation
+called deuce.
+
+2.  When the score is deuce, the next player to win a point is said to have
+an advantage.  If he or she wins another, they have won the game.  If
+however the other player wins, the score is back to deuce.  In other words
+the first player to win two consecutive points after deuce takes the game.
+
+3.  The player who first wins six games ins the set, but he or she must do
+so by a margin of at least two games.  A score of six games to five will
+mean that the set is extended until one player has achieved a lead of two
+games.  In addition, if the score reaches six games all and the set is not
+the final one of the match, then the tie-break rule is invoked.
+
+4.  In a tie-break, the first player to score at least seven points and
+achieve a lead of a least two points is the winner.  Numerical scoring is
+used in a tie-break.  The player who would have been serving takes the
+first service, and then the service alternates every two points.  Players
+change ends every six points during the tie-break.
+
+5.  In a one set match, the player who wins the set also wins the match.
+In a three set match the first player to win two sets wins the match.  In a
+five set match the first player to win three sets is the winner.
+
+6.  If a player's service hits the net but is still in, this is known as
+LET; he or she is allowed another attempt.  If the ball goes out on a
+service or hits the net and doesn't go over, then the player is allowed
+only one further attempt.
+
+
+KEYBOARD CONTROLS
+-----------------
+S           View scoreboard (only available between points)
+P           Pause game (press fire or R to restart)
+Q           Quit game (while in pause mode)
+F1 - F10    Change camera angle
+
+
+JOYSTICK CONTROLS
+-----------------
+Fire to return shot, joystick to aim shot.  Joystick to move player before
+opponent hits ball.
+
+Fire to serve, unless SUPASERVE is in use.  For a SUPASERVE, fire to
+determine power, joystick to aim.
+
+When using SUPASPIN, press fire a second time after you have hit the ball
+and before it touches the ground.  Joystick forward or back gives topspin
+or backspin.
+
+
+SAVING AND LOADING SEASONS
+--------------------------
+Your progress in the season may be saved to disk, so that you can later
+carry on from where you left off.
+
+You will need a blank, formatted disk to save onto.  You should refer to
+your computer manual for details of how to format a disk.  This must be
+done before you load International Tennis.
+
+Do not try to save sessions onto your International Tennis Disk!
+
+SAVE:  From the PROGRESS REPORT screen, select SAVE.  You should then type
+a filename and press RETURN.  Keep a careful note of the filename.
+
+LOAD:  When you wish to continue the season in a later session, load
+International Tennis and go to the PROGRESS REPORT screen.  Insert your
+disk that you have saved your season onto.  Select LOAD, type in the
+filename you saved it under and press RETURN.
+
+If the season doesn't appear to load, then you are probably using the wrong
+filename.

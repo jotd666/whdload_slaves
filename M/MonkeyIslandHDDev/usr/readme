@@ -1,0 +1,110 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "The Secret Of Monkey Island" © 1990 Lucasfilm Games.
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ The installed program requires 0.5 MB ChipMem and 1.5 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ The game requires an installed A500 Kickstart 1.3 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick346.lha" on aminet.
+
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+Features:
+
+- Convenient Installer script
+- Runs from WB/CLI on any OS without GFX corruption or pointer shift
+- Uses WHDLoad to run
+- Heavily relies on KickEmu + Bert dos.library module
+- Codewheel protection removed (thanks to Kixx unprotected rerelease)
+- Quit key anytime (numerical '*', or QUITKEY)
+- All known versions supported
+- Access fault removed (crashed when you entered the church)
+- Save/load to HD without too many OS swaps
+- Docfile/walkthrough included
+- Many icons available (Original, Lucy, Exoticons, Trodas)
+- Source code included
+
+Notes:
+
+- Original quit button (F5 + give up) still work
+
+- Main keys:
+  * Space: pause
+  * F5: save/load/quit
+  * ESC: skip sequences
+  * F8: restart
+
+History:
+
+ Version 3.5 (21.10.2018):
+ - less os-flashing when saving games
+
+ Version 3.4 (18.06.2007):
+ - recompiled for new kickfs
+ - updated install & slave to support another (cracked) version
+ - source code included
+
+ Version 3.3
+ - adapted for italian version protection fix, reworked for WHDLoad v16
+
+ Version 3.2
+ - adapted for spanish version protection fix.
+
+ Version 3.1
+ - protection screen now fully removed. Restart works. Thanks to Kixx version!
+
+ Version 3.0
+ - reworked to use real kick1.3 dos.library. misc other changes.
+
+ Version 2.3
+ - adapted script to support versions where the main executable is crunched
+ - included source code and more icons
+
+ Version 2.2
+ - church access fault removed
+
+ Version 2.1
+ - mouse pointer speedup
+
+ Version 2.0
+ - adapted to KickEmu/KickDOS. Now all event and gfx bugs have been fixed and 
+   OS swaps have disappeared during game saves.
+
+ Version 1.x
+ - adapted to WHDLoad
+
+ Version 1.0
+ - runs using OSEmu/JST
+
+ Version 0.1 (a long time ago in 1997)
+ - first DOS release, dirty hack.

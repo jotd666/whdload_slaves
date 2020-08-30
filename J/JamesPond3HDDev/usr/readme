@@ -1,0 +1,86 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "James Pond 3" © 1993 Millenium Software
+
+ This install requires WHDLoad and DIC to be in the path. Both can be found in
+ the WHDLoad package.
+ To install from a different drive than DF0: select installation mode Expert.
+
+ The installed program requires 2.0 MB ChipMem and 1.0 MB OtherMem (but not AGA)
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page.
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+ 
+CD32 version:
+
+- This installer requires the James Pond 3 (Operation Starfish) original CD-ROM.
+- A joypad is better to be able to play this game, however, I translated the buttons in keys, so
+  the game is playable with a joystick and the keyboard.
+- Thanx to Walter Gierholz for providing the CD.
+
+
+History:
+ 
+version 2.0 (13.08.2020) done by JOTD:
+
+- CD32 version: restored CD32 joypad input
+- extended joypad support Play+Forward+Reverse quits to workbench
+- merged floppy (by Bored Seal) & CD32 versions install
+- removed AGA & 68020 restriction (still needs 2MB chipmem)
+- adapted to whdload 17
+- trainer: infinite lives & energy
+- manual included
+- source code included
+      
+version 1.x (1997-2001):
+
+- Convenient installer script
+- Joypad emulation with joystick and keys for non-joypad users
+- QUITKEY quits. Game saves are done when a save is performed
+- Games saves/loads without need of NV RAM (on *ANY* amiga).
+- Scores now also saved.
+- Low memory consumption (V1.1)
+- Decrunch routine relocated in fast memory
+- Cheat keys (arrows) to select level in the map section
+- Return skips level during the game and allows game save
+- Changed strings to match normal amiga controls.
+- NewIcon added (Thanks to Mario Qualmann)
+- French version by Ninjaw P.B (check the jp3_french.lha archive)
+
+Joypad controls (unified for floppy/CD32 versions):
+
+if CUSTOM2 is set
+
+- Blue/2nd button: jump
+- Yellow+joy direction: punch
+- Red+joy direction: run
+
+if CUSTOM2 is not set
+
+- up: jump
+- Blue/2nd button: run
+- fire+joy direction: punch
+
+meta-controls/cheat
+
+- Play: pause
+- Forward+Reverse+Yellow: Quit
+- Forward+Green / return: skip level
+- Reverse+Forward / esc: quit current game when paused

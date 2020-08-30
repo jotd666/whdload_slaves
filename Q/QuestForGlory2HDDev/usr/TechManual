@@ -1,0 +1,999 @@
+                                 SKID ROW
+
+                                 presents
+
+                     QUEST for GLORY II: TRIAL by FIRE
+ 
+                             Technical Manual
+
+Page 1 follows:
+---------------
+
+   Table of Contents
+ 
+What is Quest for Glory? .................. 2
+
+Creating a Character ...................... 2
+
+The Story thus Far ........................ 6
+
+Living in this Crazy World ................ 7
+
+Combat .................................... 9
+
+   How to Read this Manual
+
+All Systems ............................... 12
+
+Amiga ..................................... 16
+
+All Systems - How to Play ................. 16
+
+Trial by Fire Menus ....................... 18
+
+Communicating with Quest for Glory ........ 21
+
+Interacting with Quest for Glory .......... 23
+
+Page 2 follows:
+---------------
+
+WHAT IS QUEST FOR GLORY?
+
+   Quest for Glory combines the character development and combat of
+fantasy role-playing games with the basic adventure game concept
+of exploring and solving its puzzles.  Trial by Fire is the second
+Quest for Glory scenario.
+
+   The essence of role-playing is that you must try to think as your
+character would when faced with a dilemma.  In Quest for Glory II, you
+can choose from three basic character types - the strong fighter,
+the mysterious magician, or the wily thief.  Each has the same goal:
+to find Arus al-Din and restore him to the rank of Emir of Raseir.
+Each character will, however, set about accomplishing that goal in a
+different way.  The magician may use spells to overcome some obstacles,
+but might not survive a pitched battle with a monster.  The thief must
+find a crafty way around the same problem that the fighter or magic
+user would approach directly.
+
+   Experience can be a tremendous asset to you as a hero.  Your
+attributes will improve as you play the game.  Tasks that are beyond
+your ability early on may become less difficult as your skills
+improve.
+
+   Conversation is a very important element of Trial by Fire.  You
+will meet many strange people and creatures in Shapeir.  To learn about
+your surroundings and your quest, it will be necessary to speak with
+everyone you meet.  Like your character, the beings you meet will
+have distinct personalities, and their skill and knowledge may lie
+in different areas.  You'll want to ask specific questions, and find
+out all you can.
+
+   Every hero must deal with his share of foul and ferocious monsters.
+If you want to be a hero, you'll have to fight or avoid them, as they
+don't tend to favor discussion.  Each battle you fight with provide
+you with valuable experience, and many victories will yield treasure
+that you will need to buy food and equipment.
+
+   A hero's life isn't always serious, though.  Between desperate
+encounters with terrible monsters and life-and-death decisions lie
+many light-hearted, humorous and downright silly moments.  Shapeir
+is a strange place with a multi-faceted personality, as you will
+soon see.
+
+Creating a Character
+
+   Before beginning your adventure, you'll choose from three basic
+character types - The Fighter, The Magic User, or The Thief.  Your
+selection will determine much about the sorts of obstacles you will
+encounter, and the means by which you will over-
+
+Page 3 follows:
+---------------
+
+come them.  Choose CREATE CHARACTER from the starting screen.  You will
+see the character selection screen.  Choose the highlighted character
+from the character selection screen by pressing [ENTER] key or by
+pointing with your mouse and clicking (multi-button mouse users will
+use the left button).
+
+
+First of all, you can import your character from Quest for Glory I. If 
+you are like me and didn't finish it, you can create a new character. 
+The choices you have are Fighter, Magic-User and Thief. 
+ 
+Importing a Character From Spielburg
+
+   If you successfully completed Quest For Glory I: So You Want To Be
+A Hero, your hero can travel to Shapeir by magic carpet and once again
+help you defeat evil.
+
+   Locate the diskette on which you saved your hero after the QFGI
+victory celebration.
+
+   Load Trial By Fire, insert the saved hero diskette into a drive
+and choose IMPORT CHARACTER.  A file selector box will appear on the
+screen, listing the files on the disk in drive A:.  If your Hero is
+in another disk or directory, choose CHANGE DIRECTORY.
+
+   Use your mouse or [Arrow] keys to highlight the name of the file
+containing your saved Hero, then click on the Import box or press
+[ENTER].
+
+   To go back to the initial selection screen, choose CANCEL, or press
+[ENTER].
+
+   Each type of character comes with its own set of skills and abilities,
+some specific to the character type, some common to all three.  Every
+type has pre-assigned point values for appropriate abilities.  In
+addition, you will begin the game with a 50 point 'pool' to assign to
+the areas in which you wish your character to be strongest (see
+Assigning Skill Points, below).
+
+   After you have chosen a character, you must name it.  You may type
+in any name you like.
+
+The Fighter:
+
+   The Fighter depends upon his skill with weapons, his strength and
+his vitality to survive the rigors of life as a Hero.  His weapon is
+his sword, and his best defense is his shield.  We recommend that you
+play a Fighter if this is your first Quest for Glory adventure.
+
+The Magic-User: 
+
+   The Magic User must rely upon his intelligence and the successful
+casting of magic spells.  He can best protect himself by avoiding
+close combat.
+
+Page 4 follows:
+---------------
+
+The Thief: 
+
+   The Thief counts on his skills, stealth, and agility.  His weapon of
+choice is the dagger, and he prefers to throw it from a distance.  He
+can best defend himself in combat by dodging.
+ 
+Assigning Skill Points
+
+   To highlight a skill, use the mouse cursor or the up and down
+[Arrow] keys.  To assign points to a skill, press the right [Arrow]
+key.  Each time the right [Arrow] key is pressed, 5 points will be
+assigned to the highlighted skill.  Press the left [Arrow] key to
+subtract 5 points from a skill.  (You may not reduce skill points
+below the original value of that skill.)  For 'fine tuning' use the
+[+] and [-] keys to add or subtract one point at a time.
+
+   To attain a skill not normally available to your character type (such
+as lock-picking for a fighter), choose the desired skill from the skill
+menu and assign points using the procedure described above.  Acquiring
+a new skill costs 10 points, which means the minimum skill level
+of 5 will require 15 points from the 'Points Available' pool.  These
+will be assigned automatically.
+
+Page 5 follows:
+---------------
+
+   Points for Health, Stamina or Magic cannot be changed by you directly.
+The values for these attributes will change automatically as you gain
+experience, suffer damage and modify certain skills.
+
+   Strength is important in performing physical activities, especially
+combat.  The Fighter must be strong to be effective.
+
+   Intelligence will enable the Magic User to succesfully learn and
+cast spells, and will benefit all characters when engaged in mental
+activities, such as out-thinking opponents in combat, or trying to
+think effectively.
+
+   Agility is important during combat, and vital to lock-picking and
+stealth.  The Thief cannot prosper without high agility.
+
+   Vitality determines how much damage a character can sustain, and
+how quickly he will recover from damage and strenuous physical activity.
+High vitality is particularly useful to the Fighter.
+
+   Luck can aid you in many subtle and mysterious ways, and is especially
+important to the Thief.
+
+   Honor aids your interactions with those characters who live their
+lives by a code of honor.  Honor points must be earned - they can not
+be assigned directly.
+
+Skills:
+
+   Weapon Skill determines the character's ability to land a successful
+blow in combat.
+
+   Parry is the ability to block an opponent's blow using a wepon or
+shield.
+
+   Dodge is a skill used to avoid a blow by ducking or sidestepping it.
+
+   Stealth is the art of moving quietly and discreetly, taking advantage
+of shadows and other camouflage when sneaking around.
+
+   Pick Locks is the skill that allows a character to triumph over locked
+doors, chests, etc.  A lock pick of thief's tool kit is necessary
+to use this skill.
+
+   Throw determines your character's aptitude for throwing and
+accurately hitting a target with a small object such as a rock or a
+dagger.
+
+   Climb is the skill that allows a character to scale difficult
+surfaces.
+
+   Magic is the basic skill required to learn and cast magical spells.
+
+   Communication is the skill of putting your thoughts in order and
+expressing your self effectively to others.
+
+Page 6 follows:
+---------------
+
+   Each character also posseses attributes that are set automatically
+based on certain skills and abilities:
+
+   Health Points gauge the amount of damage a character can suffer
+before he will die.
+
+   Stamina Points determine how much energy a character has to perform
+physical activities.  When Stamina points are low, the character is
+tired.  He will fight less effectively, and may be injured more easily.
+
+   Magic Points measure the amount of mana or magical energy a
+character has, and therefore how much magic he can perform.  When magic
+points are gone, the character will be unable to cast spells.
+
+   Skills and abilities improve with practice.  The skills your
+character exercises frequently will improve more rapidly, while
+those left unused will remain fixed at their original levels.
+Your character can only advance in skills in which he has at least
+five points.
+
+   The Story Thus Far...
+
+
+   You begin Trial By Fire flush with the success of your last
+adventure (as depicted in Quest for Glory I: So You Wan To Be A Hero).
+As you recall, you arrived in Spielburg with little but your Famous
+Adventurers' Correspondence School diploma.  But now you are the
+Hero of Spielburg, having defeated the brigands and driven Baba Yaga
+from the valley.  You also made many important friends, including the
+Archmage Erasmus (and his faithful companion Fenrus), and the Baron
+Stefan von Spielburg.  Your friendship with the Kattas Shema and
+Shameen, and Abdulla Doo the Merchant, has led to your current quest.
+
+   You are now riding with Abdulla and the Kattas on the merchant's
+magical carpet, recovered from the briagand's stolen treasures.
+After a long and harrowing journey, you at last arrive in the magnificent
+city of Shapeir.  Unfortunately, just when you thought you could take
+a well-earned rest, you discover that Shapeir has problems of its own.
+A Hero is needed here, too!
+
+   Now you must become your character, and learn to think as he would,
+use his unique skills to experience the land of Shapeir, and be a Hero
+on your Quest for Glory.
+
+Page 7 follows:
+---------------
+
+Living in this Crazy World
+
+   Just as in real life, there are basic things a person must do to
+stay alive.  You will need to eat a couple of meals each day.  If you
+are carrying food, you'll eat automatically, but try not to run out
+of rations.  Be especially careful not to run out of water. In the
+desert, water is life itself.
+
+   You'll also need a certain amount of rest or sleep to regain Health,
+Stamina and Magic points.  Without rest or sleep you will use these
+points quickly.  Sleep is best accomplished in the safety of an inn.
+
+   Also, as in real life, basic necessities often cost money.  To earn
+money, you can fulfill a quest (thereby obtaining a reward), or defeat
+a wealthy monster.  The thief has other options.  The coin of the realm
+of Shapeir is unlike that of Spielburg.  Here, 100 brass centimes=
+1 golden dinar.  Supplies such as food, equipment, magical spells
+and healing points can be purchased from the local merchants.
+
+   You will carry most of your equipment in a backpack.  The amount you
+can carry is determined by your strength and the weight of the
+equipment.
+
+   If for some reason you are in a hurry (a monster on your tail, or
+some such thing), type run to move more quickly.  Don't run too far
+though, or you'll soon become tired.  Type walk to resume walking
+normally.  Characters with points assigned to STEALTH can also sneak
+when appropriate.
+
+Finding Your Way Around Shapeir
+
+   The city of Shapeir, in contrast to the quaint Alpine village of
+Spielburg, is an ancient and thriving metropolis.  Many first-time
+visitors find Shapeir's dense maze of streets and alleyways almost
+overwhelming.  Outside the gates is the seemingly endless Shapeir
+Desert.
+
+   The keys to keeping yourself oriented in this vast realm are proper
+use of a map and compass, taking advantage of such clues as street
+signs and the knowledge of local citizens.
+
+The Map
+
+   Purchasing a map in the game will help your character find his way
+around the streets of Shapeir without getting hopelessly lost.  Once
+your character has a map, you can type "use map" anywhere in the streets
+and plazas of Shapeir.  Then, simply place your cursor on a map location,
+click the mouse button or press [ENTER], and your character
+
+Page 8 follows:
+---------------
+
+will walk directly there (unless, of course, something gets in his way).
+Until you have visited a location (such as a particular shop), it will
+not show up on the map.  As you explore the city, you will discover
+more places and your map will become more useful.  It's better than
+getting lost.
+
+   To exit the map, press [ESC].
+
+The Compass
+
+   A compass is a very useful item for navigating the trackless
+desert, or even finding your way around town.
+
+Street Signs
+
+   Even natives of Shapeir sometimes need a reminder as to where they
+are going and which way they are heading.  (Wizards in particular
+are notorious for having dificulty in this area.)  For this reason,
+street signs are prominently posted at all major intersections and in
+the plazas.  Plaza signs also often include direction symbols.
+
+Asking Directions
+
+   One way to find locations you haven't visited yet is to talk to the
+locals.  A clear, concise set of directions may be your reward.  (Of
+course, that rather depends on whom you ask!)
+
+The Saurus and Desert Travel
+
+   Distances in the desert can be deceiving, and it is easy to lose your
+way.  A well-trained desert Saurus purchased from a reliable dealer can
+mean the difference between exploring the desert in comfort and death
+from sunstroke or dehydration.  Whether you are walking or riding, never
+travel in the desert without a full waterskin.  Night travel is also a
+good way to avoid the desert blazing sun.
+
+Winning the Game
+
+   When you complete Quest for Glory II successfully, you will be given
+the opportunity to save your character for use in Quest for Glory III:
+Shadows of Darkness.  You will be asked to insert a formatted, writeable
+disk.  Save this disk, as it will allow you to begin Shadows of Darkness
+with your character from Trial by Fire.
+
+Page 9 follows:
+---------------
+
+Talking to Other Characters
+
+   You will meet many strange beings in Shapeir - some human, some
+otherwise.  Most of them know things that you don't.  By speaking with
+them you can gain some of that knowledge.
+
+   Everyone you meet will understand sentences in which you ask about
+something in their areas of expertise.  You might ask about magic when
+speaking with the Astrologer or the Enchantress, or ask about heroes
+when you visit the Adventurer's Guild Hall.  You'll want to jot down
+anything that seems important, as your conversations will provide you
+with most of the clues you'll need to save the land and once more prove
+your worth as a Hero.
+
+   Many of the replies to your queries will suggest additional 
+questions to ask, or lead you to others who can provide you with
+useful information.  For example, when you ask Shameen about his inn,
+you will learn of the poet Omar.
+
+Combat
+
+   The world is full of monsters and villains, and if you want to stay
+alive long enough to become a Hero, you really ought to learn to how to
+fight them.   A clash will occur any time a monster comes near enough
+to strike your character, or when you type fight.
+
+   Combat can take place in the room where you encounter a monster 
+(allowing more movement and strategy), or the screen may change to a
+close-up view of the monster.
+
+   When you encounter a monster, you will need to react quickly.  You
+can throw daggers or cast an appropriate spell while the monster is 
+still at a distance, or you can type fight to engage in battle.  While
+in combat, you can cast some spells, but you won't have time to use
+healing or other potions.
+
+   In Quest for Glory II combat, you can Attack, Parry, Dodge, or Cast
+spells (assuming your character has the appropriate skills).  All
+combat moves are made with the numeric keypad (see chart).  In general,
+the top row of keys (7, 8, and 9) represent Attacks, the middle row
+(4, 5, and 6) represent Parries, and the bottom row (1, 2, and 3)
+cause your character to Dodge.
+
+   A Swing is a powerful blow that generally does more damage than a 
+Thrust.  However, it takes slightly longer, giving your opponent a 
+better chance to defend himself.  Choose a High Swing or Low Swing
+to take advantage of weaknesses in your opponent's defense.
+
+Page 10 follows:
+----------------
+
+   The direct Thrust is faster and harder to defend against, but leaves
+the attacker more open to a counterthrust.  Use a Thrust when accuracy
+is more important than damage, as against a fast-moving but lightly-
+armored opponent.
+
+   All attacks benefit from careful planning and timing.  Parry or Dodge
+your opponent's attacks while preparing your next blow.  Attacking too
+quickly will make you tire rapidly, and you will not hit as often as
+when you delay your thrusts.
+
+   The Parry, most often practiced by Fighters, is the art of blocking
+your opponent's attack with your weapon or shield.  Parrying is quicker
+than dodging, and less tiring, but must be timed properly to stop the
+enemy attack.
+
+   Dodging is the art of physically avoiding your opponent's attacks.
+It is the only defensive skill available to most Theives and Magic
+Users, and can also be crucial to Fighters when facing a clearly more
+dangerous opponent.  Watch your enemy carefully - anticipate his
+moves, and choose the proper Dodge accordingly.
+
+   Spells which may ordinarliy be used in close combat include:
+Flame Dart, Force Bolt, Zap, and Dazzle.  When in doubt, Run Away
+(but watch your backside!)
+
+Numberic Keyboard Keys:
+ 
+           7- Swing High   8- Thrust        9- Swing Low 
+           4- High Parry   5- Middle Parry  6- Low Parry 
+           1- Dodge Left   2- Dodge Back    3- Dodge Right 
+
+   In terms of combat strategies, timing and defense are both 
+important in Quest for Glory II.  Try to strike when your opponent 
+is 'open'.  and anticipate his attacks to better defend yourself.
+
+   If you feel that the situation has gotten out of hand, you can
+type escape, or press [CTRL-E] to retreat.
+
+   Many battles can be avoided, and it might be wise at time to do
+so.  Combat, how-
+
+Page 11 follows:
+----------------
+
+ever, is one of the best ways for an aspiring Hero to practice and
+improve skills.  Each time you defeat a monster, you'll gain valuable
+experience that will increase your chances in future battles. 
+Remember, always search the body of your opponent after winning a 
+battle, for some creatures carry money or other useful items.
+
+   In most cases, Status Bars are displayed during combat, keeping
+you informed of Health, Stamina and Mana (magic energy) points for
+your character.  As you become injured, Health points diminish.  You
+will use Stamina points as you work hard at fighting or using your
+skills.  When Stamina points are depleted, energy is drawn from 
+Health.  When Health points are gone, the character is dead.  A Health
+bar is also displayed for your opponent, to show how badly it is
+injured.  Your opponent's Stamina is not displayed, since it would
+not be obvious to you during combat.
+
+Thief Skills
+
+   Thief characters have two special skills: 'Pick Locks' and 
+'Stealth.'  To use these skills type pick lock to gain entrance to
+a locked door, or sneak to move quietly.  When you are finished
+'sneaking,' type walk to resume walking normally.
+
+Magic
+
+   A Magic User begins the game with several spells.  For a 
+thorough discussion of these spells and their effects, see the
+Famous Adventurer's Correspondence School Manual, pages 5-8.
+The spells he possesses will be listed in his inventory.  Also listed
+will be the number of Magic Points needed to cast a spell, and the level
+of skill the character has in each spell.  His spell casting will improve
+with practice.  To use a spell, type cast (or press [CTRL-C]), then
+type the name of the spell.
+
+   Targeting Spells
+
+   In Trial by Fire some spells must be targeted.  If you cast such a
+spell, a targeting cursor will apppear onscreen.  The targeting
+cursor is in the shape of crosshairs.  Use the mouse or [Arrow] keys
+to move the cursor to where you want to cast the spell, then click
+your left mouse button or press [ENTER].
+
+   The spell's success will depend on your skill in magic in general,
+and your skill with that spell in particular.  Practice pays.
+
+Page 12 follows:
+----------------
+
+How to Read this Manual
+
+   Throughout this manual we will use the following ways of representing
+information:
+
+   MENU COMMANDS will be capitalized.
+Example: SAVE, RESTORE, QUIT, PAUSE GAME
+
+   Typed commands will appear as bold type.
+Examples: 'type: ask about shapeir' 'type: cd \sierra'
+
+   Portions of the command line not meant to be typed will not appear
+in bold type.  For example, in the line 'type: cd \sierra', 'type:'
+should not be typed.
+
+   [Keystrokes] will appear in brackets setting them off from the 
+surrounding text.  The brackets are not keystrokes and should not
+be typed.
+Examples: [Spacebar], [Tab], [PageUp]
+
+    Two or more keys that should be pressed at the same time will be
+separated by a hyphen (-).  This hyphen is not a keystroke, and should
+not be typed.
+Examples: 'Press [CTRL-I] to view your inventory.'
+
+   The terms 'disk', 'floppy disk', and 'diskette' are used 
+interchangeably to refer to either 3.5" or 5.25" external data
+storage disks.  The term 'hard disk' is used to refer to a fixed,
+no-removable data storage disk.
+
+ALL SYSTEMS
+-----------
+
+PLEASE NOTE:  If there is a README file on your game diskette, it may
+contain important information and instructions that were not available
+at the time the documentation and other materials for this game were
+printed.  Failure to review the README file before installing the
+program may result in unexpected consequences during the installation
+and/or running of the program.
+
+GETTING STARTED: DISKETTE DRIVES
+
+   It is always advisable to make back-ups of your master program
+diskettes to increase the life of the masters and guard against
+accidents.  Follow your computer's instructions to make copies
+of all game diskettes.
+
+Page 13 follows:
+----------------
+
+   If you will be playing from diskettes rather than a hard disk,
+you will also want to format a blank diskette for saving games.
+In fact, saving games to diskettes is a good idea, even if you are
+playing the game from your hard disk.  Follow your computer's
+instructions to format a blank diskette and keep it handy for saving
+your game as you play.  For some helpful tips on saving games,
+see the 'Saving Your Game' (Page 22) and 'Interacting with Quest
+for Glory' (Page 23) sections of this manual.
+
+   When installing your program, you may be prompted to insert a
+'Drivers' disk.  If you receive this prompt, please examine your
+disks and insert the disk marked 'Drivers' and press [ENTER], so
+that the appropriate drivers will be loaded.  Some games do not include
+a separate 'Drivers' disk.
+
+Page 16 follows:
+----------------
+
+AMIGA
+-----
+
+INSTALLING THE GAME
+
+NOTE: RENAME your copies of all game disks to remove the words 'COPY
+OF' from the disk name.  If the words 'COPY OF' are not removed from 
+the disk names of ALL the copies, the system will continue to ask
+for the original disk, and will not run the game.
+
+   1. Boot your system with Workbench, and double-click on the INSTALL
+icon.
+
+   2. Follow the on-screen prompts, choosing your selection with the
+mouse by clicking once on the item.
+
+   3. You will be asked if you wish to install the game on your hard 
+disk.  If you do NOT wish the game to be installed on your hard disk,
+select NO.  If you want to install the game on your hard disk,
+select YES.
+
+   4. Using your mouse, select which hard disk you wish to install
+the game onto.
+
+   5. Follow the on-screen prompts to complete the installation.
+
+LOADING INSTRUCTIONS
+
+From Floppy Diskettes:
+
+   1. If you have less than 1 megabyte of memory for your Amiga, 
+disconnect any external drives while your system is off.
+
+   2. Insert Disk #1 into drive DF0:.
+ 
+   3. Turn on your system.
+
+From Hard Disk:
+
+   1. Load Workbench and double-click on your hard disk icon.
+
+   2. Double-click on the SIERRA drawer.
+
+   3. Double-click on the drawer for the desired Sierra game.
+
+   4. Double-click on the game icon.
+
+Page 17 follows:
+----------------
+
+ALL SYSTEMS
+-----------
+
+HOW TO PLAY
+
+MOVING YOUR HERO
+
+   You may move your character on the screen with the [Arrow] keys,
+the numeric keypad, or the mouse.  To halt your character's steps
+with the keypad, press the number 5, or press the last used direction
+key again.  Do not attempt to move the character to start and stop
+continuously, resulting in very slow progress. 
+
+   Using the mouse, position the arrow to where you want the character
+to move, then click the left mouse button.
+
+Cursor Keys:
+
+  Up Arrow - UP
+  Down Arrow - DOWN
+  Left Arrow - LEFT
+  Right Arrow - RIGHT
+
+Numeric Keypad:
+
+  7 - NW
+  8 - N
+  9 - NE
+  4 - W
+  5 - STOP
+  6 - E
+  1 - SW
+  2 - S
+  3 - SE
+
+SPECIAL CURSORS
+
+Quest for Glory II uses special mouse cursors during certain modes
+of play.  The shape of each cursor shows you what actions are 
+available to your character at that time.  If you are not using 
+a mouse to play, the special cursor will usually appear in the lower
+right corner of the screen to inform you of the current mode.
+
+Dagger - When you see this cursor, you can move your character and/or
+         type commands.
+
+Face - When you see this cursor, you can neither move your character
+       nor type commands.
+
+Page 18 follows:
+----------------
+
+Shield - This cursor is for aiming targeted spells or when throwing
+         something (see Targeting Spells, page 11).  You will see this
+         cursor then you cast a spell that must be targeted.  Move
+         the cursor to the place onscreen where you want to aim a
+         spell.
+
+TRIAL BY FIRE MENUS
+
+   When you press [ESC], a menu bar will appear at the top of your
+screen with several menus that can be opened to show the command
+choices available to you.
+
+   Use the left and right [Arrow] keys to open a menu, and the up and
+down [Arrow] keys to highlight items within a menu.
+
+   If the menu choice opens a screen with two or more choices, use the
+[Tab] key to move between the choices.
+
+   Press [ENTER] to select a highlighted command.
+
+   Press [ESC] to return to the game without choosing a command.
+
+      Menu........................Shortcut Command Keys
+
+      Sierra Menu
+ 
+         About Quest for Glory II..... [Ctrl-G]
+         Help......................... [F1]
+         Silly Clowns................. [Ctrl-Y]
+
+      File Menu
+
+         Save Game.................... [F5]
+         Restore Game................. [F7]
+         Restart Game................. [F9]
+         Quit......................... [Ctrl-Q]
+
+Page 19 follows:
+----------------
+
+      Game Menu
+
+         Faster Animation............. +
+         Normal Animation............. =
+         Slower Animation............. -
+         Sound Volume................. [Ctrl-V]
+         Turn Sound on/off............ [F2]
+         Arcade Difficulty............ [F4]
+         Game Detail.................. [F6]
+         Game Time Scale.............. [F8]
+
+      Action Menu
+
+         Cast Spell................... [Ctrl-C]
+         Fight........................ [Ctrl-F]
+         Escape....................... [Ctrl-E]
+         Pause Game................... [Ctrl-p]
+         Repeat Last Command.......... [F3]
+
+      Information Menu
+
+         Inventory.................... [Ctrl-I]/[Tab]
+         Character.................... [Ctrl-S]
+         Time/Day..................... [Ctrl-D]
+         Ask About.................... [Ctrl-A]
+         Tell About................... [Ctrl-T]
+         Look At...................... [Ctrl-L]
+         Read Map..................... [Ctrl-R]
+         Compass Heading.............. [Ctrl-H]/[Backspace]
+
+OTHER SHORTCUT KEYS
+
+      [Spacebar]...................... Repeat last command
+      [Shift-Click]................... Look At
+
+Page 20 follows:
+----------------
+
+   SHIFT-CLICK* is a feature that will allow you to 'look' at a person or
+object using your mouse.  Place the mouse arrow on the desired person
+or object, then hold down the [SHIFT] key and press the mouse button.
+You will now receive a descriptive message.
+
+* Please note: Multi-button mouse users should use the RIGHT mouse
+button, and need not press [SHIFT].
+
+GAME SPEED CONTROL
+
+   At times it may be useful to slow down the speed of the game
+animation in order to negotiate a trcky section, or observe 
+something more carefully.  At other times, you may wish to speed up
+game actions.  In Quest for Glory II, animation speed is controlled by
+the [+] and [-] keys, or by selecting a choice from the Speed menu,
+using the mouse or [Arrow] keys.
+
+GAME TIME SCALE
+
+   You can adjust the speed at which days and nights pass in the game
+by choosing GAME TIME SCALE from the Game menu.
+
+GAME DETAIL
+
+   If your computer system is running the game too slowly, you may 
+want to adjust the amount of nonessential animation in the game.  At
+the beginning of the game, Game Detail will be automatically set at
+the best level for your system's speed.  This level will be shown
+on the Game Details screen as OPTIMAL.  You can adjust the detail 
+level at any time during game play by choosing Game Detail and
+making another selection from the Game Detail Screen.  NOTE: WE DO NOT
+RECOMMEND SETTING THE DETAIL LEVEL HIGHER THAN THE OPTIMAL LEVEL FOR
+YOUR SYSTEM.
+
+ARCADE LEVEL
+
+   You can set the difficulty level of arcade sequences (combat and
+skill-based puzzles) using the ARCADE LEVEL option in the Action menu.
+
+USING THE MOUSE (optional)
+
+   Your mouse will be useful to you in moving your character, and in
+learning about your surroundings.  To move your character using the
+mouse, position the arrow to where you want the charcter to move,
+then click the left mouse button.  In many scenes, you can find out
+about a person or object by using the [SHIFT-CLICK] feature described
+above.
+
+Page 21 follows:
+----------------
+
+EXAMPLES OF COMMON COMMANDS
+
+Communicating with Quest for Glory II
+
+   Many characters in the game will have information of one kind or
+another for you.  To talk with a character, type: ask about [character,
+subject or object] (for example: ask about the brigands) or press
+[CTRL-A], then type [character, subject or object].  Using a mouse,
+choose the menu command ask about.  Try different approaches, and
+remember : talk to everyone you meet!
+
+   You may encounter objects you need along the way.  To take an
+object, type: take [object].  For example, take the note.  You will
+need to use the objects you acquire as you explore.  You can try
+different things such as typing: use the [object], or give the 
+[object] to [character].  Different approaches to a puzzle may bring
+about a different outcome.
+
+   Pay close attention to details.  To examine objects, type look at 
+the [object], (for example: look at the table), or press [CTRL-L],
+then type the name of the object.
+
+   Using a mouse you can also use the 'Shift-Click' feature described
+above.  To get a general description of the current room or scene,
+type look, or use your mouse to choose LOOK from the menu.
+
+RETYPING COMMANDS
+
+   If you wish to repeat a command select REPEAT LAST COMMAND from the 
+ACTION menu or press the [CPACEBAR] or [F3].
+
+INVENTORY/SPELL LIST
+
+   If you wish to see the items you are carrying and/or the magic spells
+you have, select INVENTORY from the Action menu, press [CTRL-I], or
+press the [TAB] key.
+
+   You will see a list of the items you are carrying and the spells
+(if any).  An asterisk (*) will appear next to any spell that is 
+currently active.
+
+   Press [ENTER] or [ESC] to resume play.
+
+PAUSING THE GAME
+
+   If you wish to pause the game, select PAUSE from the Action
+menu, press [Ctrl-P] or [ESC] or [ENTER] to resume play.
+
+Page 22 follows:
+----------------
+
+SAVING YOUR GAME
+
+   If you wish to save your game, select SAVE from the File menu, or
+type save, or press [F5].  To allow for errors in judgement and 
+creative exploration, we recommend that you frequently save your game
+in progress, and that you save several different games from different
+points as you play.  You will always want to save your game before
+encountering potentially dangerous situations.  You should also
+save your game after you have made significant progress.
+
+Please note: If you're playing from diskettes, you must have a 
+separate formatted diskette ready before you can save a game.
+
+   If you choose to save games to your hard disk, we suggest you
+create one or more saved game directories or folders on your hard disk.
+See your computer's instructions for creating directories or folders.
+
+   You may name your saved games using the standard English phrases.
+For example, if you are standing by a fountain, you might call
+your game 'standing by fountain', or simply 'fountain'.
+
+RESTORING YOUR GAME
+
+   Select RETORE from the File menu, or type retore, or press [F7].
+You will be prompted to select the game you wish to restore.  (On
+a single drive system, you will be prompted to insert your save
+game disk.)  Highlight the desired game and select RESTORE.  If the
+game you wish to restore is in a different directory, select CHANGE
+DIRECTORY.
+
+   Please note:  If you do not have a mouse, use the [TAB] key to 
+toggle between RESTORE and CHANGE DIRECTORY.
+
+QUITTING YOUR GAME
+
+   If you wish to stop playing, select QUIT from the File menu,
+or type quit, or press [CTRL-Q].
+
+RESTARTING THE GAME
+
+   If you wish to restart your game at any time during play, select
+RESTART from the file menu, or type restart, or press [F9] key.  The 
+game will begin at the opening scroll.
+
+Page 23 follows:
+----------------
+
+INTERACTING WITH QUEST FOR GLORY II
+
+   You can generally interact with the game by simple commands
+consisting of as little as a noun and a verb.  For instance,
+the command sit in the chair can be shortened to sit chair, or
+even sit.  Unless otherwise directed, follow all typed commands
+with [ENTER].
+
+   A message window will appear after you enter each command, and at
+other times during the game.  When you have read the message, press
+[ENTER] to remove the window and resume play.
+
+   Trial by Fire understands many common verbs.  Here are some you
+might try:
+
+   ASK        CLOSE      FIGHT    MOUNT    RIDE     STAND
+
+   BARGAIN    DISMOUNT   GET      MOVE     RUN      TELL
+
+   BET        DRINK      GIVE     OIL      SEARCH   THANK 
+ 
+   BUY        DROP       GO       OPEN     SHOW     THROW
+
+   CAST       EAT        JUMP     PICK     SIT      USE
+ 
+   CLIMB      ESCAPE     LOOK     READ     SNEAK    WALK
+
+   
+   LOOK everywhere.  Thoroughly explore your surroundings.  Open 
+doors and drawers, lookunder things and behind things for valuable
+objects and clues.  Look closely at all objects you encounter or you
+may miss important details.
+
+   EXPLORE each area of the game very carefully.  Search every area
+of Shapeir.  Be careful!  There are many hazards awaiting you!
+
+   DRAW A MAP as you progress through the game.  Make a note of each
+area you visit, and include information about objects found there and
+dangerous areas nearby.  If you miss an area, you may miss an
+important clue.
+
+   ASK ABOUT anything you think a character might know.  This is by 
+far the best way to learn what is really going on in Shapeir.  But use
+discretion!  Some characters will be friendly and helpful.  They may
+give you valuable information and advice.  Others may mislead you.
+
+Page 24 follows:
+----------------
+
+   Some Common Things to Ask About:
+
+Shapeir    Raseir   Rumor     Money     Elemental    Monster
+
+Weather    Name     Magic     Sultan    Emir         Guild
+
+
+   GET objects you think you will need.  You will come across a
+number of objects that may be of use to you later, but don't overload
+your character.  The amount that you can carry will vary depending 
+on your strength.  You can see an inventory of items on hand by 
+pressing the TAB key at any time.
+
+   USE the items you have picked up to solve problems in the game, or
+to help you to make progress and discover more clues.
+
+   BE CAREFUL, and remain alert at all times - disaster may strike
+in the most unlikely of places.
+
+   DON'T GET DISCOURAGED.  If you come to an obstacle that seems
+insurmountable, don't despair.  Spend some time exploring another
+area, and come back later.  Every problem in the game has at least
+one solution, and some have more than one.  Sometimes solving a 
+problem one way will make it harder to solve the next one, and 
+sometimes it will make it easier.  If you get stuck, you might try
+backtracking to an ealier point in the game, then choosing a 
+different path.  
+
+SKID ROW  SKID ROW  SKID ROW  SKID ROW  SKID ROW  SKID ROW  SKID ROW

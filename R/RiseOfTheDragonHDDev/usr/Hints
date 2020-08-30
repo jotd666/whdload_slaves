@@ -1,0 +1,1047 @@
+
+			W   A   T   C   H   E   R   S !
+
+
+
+                         Rise of the Dragon Hint Book
+
+
+
+                       The Making of Rise of the Dragon
+                       --------------------------------
+
+The roots of Rise of the Dragon can be traced back to a game called Project
+Firestart for the Commodore 64. Released in September 1988, this was Dynamix's
+first tentative step into the world of interactive entertainment.  Project
+Firestart incorporated many new aspects of design and production which have
+been built upon in more recent products. Innovative approaches in Firestart
+included the use of cinematic effects, video images, and complicated animation
+sequences.
+
+Shoehorning the complex Firestart design into 64k was an impressive
+technological accomplishment, but it also caused the project to run more than
+a year behind schedule and nearly gave the lead programmer on the project a
+nervous breakdown.
+
+Despite the difficulties we encountered making Firestart, we were convinced
+it was a step in the right direction for product development. So,with a bit of
+experience under our belts,we decided to move on to bigger and better things
+in interactive entertainment.
+
+The original story concept behind Rise of the Dragon was developed in late
+summer 1988 by David Selle and Jeff Tunnell.
+
+After some preliminary design work, it was clear that Dragon was going to be
+bigger than anthing Dynamix had yet attempted. What we were discussing was not
+just a new kind of game, but an entirely new way of making them.
+
+We realized we needed to create a completely new development enviornment
+which could handle projects of this magnitude.  But, with the experience of
+Project Firestart fresh in our minds,it was apparent that we were not going to
+be able to build the product we wanted on the hardware which was currently
+available.
+
+Reluctantly, Dragon was placed on the back burner to wait for technology to
+catch up with us.  In the meantime we took an intermediate step forward with
+David Wolf: Secret Agent.
+
+Many of the individual software tools which were incorporated into the
+system used on Rise of the Dragon were created during the development of David
+Wolf! Secret Agent.  Another positive event which took place during the
+development of Agent was that better and more powerful hardware was becoming
+available for home use.
+
+With the increase in the number of 386 machines on the market, VGA
+graphics, and improvements in our own in-house video and sound technology,
+we became more confident we could begin to build the product we wanted by
+the end of 1989.  This provided the impetus for the development of the
+Dynamix Game Development System (DGDS).
+
+The DGDS concept is the brainchild of Dynamix president Jeff Tunnell.
+He envisioned this system as the way to build the next generation of Dynamix
+computer adventure software.  DGDS provides a new way to build games and a
+new way to play them.  On the programming side, it allows artists,
+programmers. and writer to work on a project simultaneously in the same
+development enviornment.  For the player, its main purpose is to create
+games that are easy to play while providing a powerful way to interact with
+the game enviornment.  DGDS accomplishes this without forcing the player to
+struggle with a parser.
+
+Dragon's intuitive DGDS point-and-click interface has all the depth and
+complexity of traditional adventures games without the frustration often
+associated with them.
+
+As an adventure game Rise of the Dragon is unique in its implementation
+and its conception.  It is not aimed at the younger market.  We wanted
+Dragon to have a gritty, dark tone in the tradition of Blade Runner and the
+William Gibson novels.  Designer Jeff Tunnell's catch phrase was "Cyberpunk
+untouchables" during the early phases of development.  This design
+philosophy combined with DGDS enabled us to create a truly unique interactive
+computer adventure.
+
+A typical scene is put together for Rise of the Dragon in several
+stages.  First, storyboard sketches are craeted from the original story text
+as called for by the design.  Then, after deciding on the look and feel of a
+given scene, a background is hand-painted and scanned into the computer.
+Next, ambient animations are added to the backgrounds.  One unique feature
+of Dragon is that there are animations in every scene.  Some scenes in Rise
+have over two hundred animations in them, each randomly generated.  The
+individual animation sequences can be digitised from hand renderings, video
+or deveoped wholly on the computer.
+
+During the next phase of development, text is imported through a special
+interpreter.  Finally, programmers hard code special cases for individual
+scenes and implement the game logic to tie everything together.  The last
+hurdle is Quality Assurance (QA).  Our QA depatment spent 1,000 hours
+testing Dragon to make sure the final product was bug free.
+
+Rise of the Dragon required 11,000 man hours (about five years) of
+development time by programmers, artists, writers, sound technicians,
+testers and support personnel.  There are 105 scenes, 26,000 pieces of text
+and more than 12,500 individual animations in Rise of the Dragon.  Whew!
+
+
+
+                                 Introduction
+                                 ------------
+
+              Welcome to the world of Blade Hunter, Private Eye! 
+
+We hope you have as much fun playing this game as we did creating it.
+Rise of the Dragon: A Blade Hunter Mystery is a non-linear interactive
+adevnture game which allows you to follow multiple solution paths to resolve
+the game.  If you have a problem that isn't mentioned here, feel free to
+contact Dynamix/Sierra at (209) 683-8989 8 A.M.-5 P.M. Pacific Time.
+
+The whole point of playing Rise of the Dragon is to discover puzzels and
+find the solution to them in a limited amount of time.  However, some
+puzzles may be extremely well hidden, or so arcane that you haven't any idea
+where to begin.  Or, this may be your first experience with an adventure
+game.  Don't feel bad if you occasionally get stuck.
+
+                         How to use a solution manual
+
+When you get stuck, look through this manual for a question close to
+your problem.  Since the hints are organized from "slightly helpful" to
+"here's a big clue" to "Smack! Here's the answer!" you should read them
+individually and in sequence.  Place your "Adventure Window Card" over each
+answer to read it.
+
+                       How NOT to use a solution manual
+
+Use this book only for the hints you really need.  It defeats the purpose
+of playing an adventure game if you simply read this manual cover to cover
+and learn all the answers.
+
+                     If you've finished Rise of the Dragon
+
+Even if after you've "won" the game, we're sure we can interest you in
+playing again.  There are several different ways to resolve Rise of the
+Dragon depending on the choices you make.  You may want to go back and try
+some different approaches to the puzzles and possibly arrive at the happier
+ending.  You may also want to try some things "just to see what happens."
+
+If you enjoyed this game, you might like to try some of the 3-D graphic
+animated adventure games produced by Sierra.  Stay tuned for future Blade
+Hunter Mysteries from Dynamix as well.
+
+              Good luck in your adventuring and we hope you enjoy
+                              Rise of the Dragon!
+
+
+
+                               GENERAL QUESTIONS
+                               -----------------
+
+------------------------------------------------------------------------------
+I can't figure this out!  What kind of fun is this?
+------------------------------------------------------------------------------
+Read the documentation carefully, especially the "user walk through."
+
+Examine each new room carefully using the LOOK function.
+
+Search Blade's apartment throughly.
+
+Play the messages on Blade's VidPhone, and re-check your machine regularly.
+
+------------------------------------------------------------------------------
+What's the point of this game anyway?
+------------------------------------------------------------------------------
+You are William 'Blade' Hunter, a burned out former police detective turned
+private investigator.  You have been hired by your former boss, now the
+mayor, to investigate the death of his daughter without causing unnecessary
+publicity.
+
+There are more than one possible solution path for this game.  Here are some
+general hints to get you started.
+
+Look at everyone and everything in the game.  Clues to puzzles and hidden
+objects can sometimes be found this way.
+
+Talk to everyone you meet.  If you leave a scene for a time and then come
+back, try talking to them again.
+
+Take anything that's not nailed down.  Chances are it will help you later on
+(then again, it may not).
+
+------------------------------------------------------------------------------
+It's August second and I can't find anything to do!
+------------------------------------------------------------------------------
+Have you seen the mayor?
+
+Have you talked to the Jank?
+
+There is a period of time when you might have to wait for the Jake to call
+you at your apartment.
+
+------------------------------------------------------------------------------
+When I try to exit an area entire rooms are bypassed.
+------------------------------------------------------------------------------
+The detail setting is on MINIMUM.
+
+------------------------------------------------------------------------------
+Every time I go anywhere I get arrested!
+------------------------------------------------------------------------------
+Try getting dressed before you go out.  Remember, you are Blade.
+
+Your clothes are on the floor and his overcoat is hung up.
+
+Your clothes have to be worn, not just placed in inventory.
+
+------------------------------------------------------------------------------
+I can't find Blade's gun.
+------------------------------------------------------------------------------
+It's not far from the ammo pack.
+
+It's hidden under/behind/in something (the cursor icon won't change).
+
+Where does James Bond keep his gun at night?
+
+Search the bedding in Blade's apartment.
+
+Look under your pillow.
+
+Sometimes you're better off if you don't have a gun with you.
+
+------------------------------------------------------------------------------
+I can't find the keys to my cupboard.
+------------------------------------------------------------------------------
+Someone else has them.
+
+Read your VidPhone messages.
+
+Visit City Hall.
+
+Go to the Bureau of Records.
+
+Get them from Karyn.
+
+------------------------------------------------------------------------------
+I'm locked out of my apartment.
+------------------------------------------------------------------------------
+Oops! You must have left your ID card in the VidPhone.
+
+There is another tricky way to get back in.
+
+Try to short out the door mechanism.
+
+Look on the ceiling of the hallway.
+
+Open the steam valve.
+
+------------------------------------------------------------------------------
+What am I supposed to do at Karyn's?
+------------------------------------------------------------------------------
+Absolutely nothing.
+
+------------------------------------------------------------------------------
+I can't find "the Jake."
+------------------------------------------------------------------------------
+Read your VidPhone messages.
+
+Ask the patrons in the Pleasure Dome.
+
+Check out the people in the bar.
+
+Ask Mujalambo.
+
+Talk to the man in the green coat at the end of the bar.
+
+The man in the green coat is the Jake, but he won't admit it unless you
+approach him correctly.
+
+------------------------------------------------------------------------------
+I found "the Jake" but he won't give me any useful information.
+------------------------------------------------------------------------------
+Save the game right before you talk to him and experiment with different
+responses.
+
+The photograph of the mayor's daughter will help you out here.
+
+Try this sequence of responses on your first encounter with the Jake (if
+you've already visited him this will change).
+
+#1 I'm looking for the Jake.
+
+#2 A friend of his is in some trouble.
+
+#2 Chandra Compton.
+
+#2 Let's say you have a lot of freinds... minus one.
+
+Give photo of Chandra (from your VidPhone) to the Jake for proof.
+
+#2 Who is Chen?
+
+#3 You think Chandra would want you covering this guy's ass?
+
+#3 I don't know, but someone does.  Why don't you help me out?
+
+#3 What's this guy's name and address?
+
+------------------------------------------------------------------------------
+I was arrested at Chen Lu's, and when I returned I couldn't get back inside
+his apartment.
+------------------------------------------------------------------------------
+It is possible to avoid being arrested in the first placeif you move quickly
+enough.
+
+Chen's ID card will open the door lock.
+
+You can blow the door open with a bomb, but the neighbors will hear the
+explosion and call the police.
+
+The best strategy is to get Chen's ID card from his VidPhone, leave before
+the police get there and then return after they're gone.
+
+------------------------------------------------------------------------------
+I can't find anything at Chen Lu's.
+------------------------------------------------------------------------------
+Read Chen Lu's VidPhone messages.
+
+Search the bathroom carefully.
+
+LOOK at the statue in Chen's bedroom.
+
+Take Chen's ID card from the VidPhone terminal.
+
+Check the bathroom counter.
+
+Click on the Dragon's right eye.
+
+------------------------------------------------------------------------------
+I found a safe but I can't open it.
+------------------------------------------------------------------------------
+There are four digits in the safe combination.
+
+You could always blow it open with a bomb.
+
+Examine Chen Lu's VidPhone for a clue to the combination.
+
+Look at Chen's ID number and gun permit.
+
+The safe combination is the last four numbers of Chen's gun permit.
+
+------------------------------------------------------------------------------
+I found some items at Chen's but I don't know what I should do with them.
+------------------------------------------------------------------------------
+You will need another person's help to get more information about them.
+
+Preferably someone with a computer.
+
+Someone who works for the city and has access to the Bureau of Records
+databank.
+
+Somone with the initials K.S.
+
+Show Chen's ID card and the drug patch to Karyn.
+
+------------------------------------------------------------------------------
+Karyn is mad at me.  How can I patch things up?
+------------------------------------------------------------------------------
+Do something nice for her.
+
+Get her a present and apologize.
+
+Try the flower stand outside City Hall.
+
+Buy a dozen roses, give them to Karyn and reschedule your date.Note: this will
+only work once.
+
+------------------------------------------------------------------------------
+I want to buy some flowers but Bliss at the flower stand won't accept cash.
+------------------------------------------------------------------------------
+That's O.K. because you don't have any.
+
+You need a credit (ID) card.
+
+The ID card is in your VidPhone at your apartment.
+
+Use the following response with Bliss when she suggests you buy your lady
+friend some flowers and apologize.
+
+#2 Good idea.  I'll take a dozen long stem roses.
+
+Give her your ID card.
+
+Bliss will then give you the flowers.
+
+------------------------------------------------------------------------------
+Karyn is so mad all she does is scream at me.
+------------------------------------------------------------------------------
+Did you try to pick up Candi?  Bad move, Blade.
+
+Did you skin out on your second date?  Also very bad.
+
+If you cheated on her or stood her up a second time there is no way she will
+forgive you (unless you were in jail).
+
+Seriously.
+
+If she has already given you information concerning the lab report and Chen
+you may still be able to win the game without her help.
+
+Start over.
+
+------------------------------------------------------------------------------
+Slen and Arreis snagged my gun and they won't give it back!
+------------------------------------------------------------------------------
+oops!  You made a mistake!
+
+If you only lost your pistol you can live without it.
+
+You should be nice to the guards when you first meet them.
+
+You need to get a claim ticket from the ticket window immediately after you
+give up your gun.
+
+Try bribing the guards.
+
+Bribe the guards with a candy bar.
+
+Try the following procedure when you initally encounter Slen and Arreis.  (By
+the way, Arreis spelled backwords is the name of a well known software
+development company.)  After they scan you, choose response #2: "No problem.
+Take good care of them." Then, after Slen says "Nice piece. Be a pity to lose
+it." give him the candy bar.  Now pick up your claim check and put it in
+inventory.Give the lady at the ticket window thestub when you leave and she'll
+return your weapon(s).
+
+------------------------------------------------------------------------------
+Jenni won't let me in to see the Mayor.
+------------------------------------------------------------------------------
+You need to give Mayor Vincenzi a good reason to see you.
+
+Yelling may be effective if you have something to back it up.
+
+Something Karyn gives you may be just the ticket.
+
+Get the lab analysis tape for the drug patch from Karyn and ask Jenni to let
+you see the mayor.
+
+Try the following responses with Jenni, once you have the lab report tape.
+
+#1 I need to see the mayor about an urgent matter.
+
+#1 Damnit Jenni!  Tell him I want to see him - NOW!!
+
+------------------------------------------------------------------------------
+The Mayor threw me in jail!
+------------------------------------------------------------------------------
+Try to be a little more cooperative.
+
+Don't threaten him too much.
+
+Give him what he wants.
+Let Mayor Vincenzi have the MTZ tape.
+
+------------------------------------------------------------------------------
+Deputy Van Halen won't let me into the armory.
+------------------------------------------------------------------------------
+You need to get a special pass.
+
+A person high up in the city government might be able to pull a few strings
+for you.
+
+The mayor might give you a pass.
+
+Once you get in to see the mayor, try the following responses.
+
+#3 You should show a little more courtesy to someone who has
+
+   information that could cost you the nest election.
+
+#2 I found out who killed your daughter.
+
+#2 No effin' way.  I'm finished with this crap.  Show me the door.
+
+------------------------------------------------------------------------------
+O.K. I'm on the street at Jonny Qwong's, now what?
+------------------------------------------------------------------------------
+A frontal attack won't work, but there is another way.
+
+Look around the scene carefully.
+
+The answer may be right at your feet.
+
+Try the manhole.
+
+It might be a good idea to save your game here.
+
+------------------------------------------------------------------------------
+I found the VidPhone access panel, but I can't open it.
+------------------------------------------------------------------------------
+You need to use something on the lock.
+
+Subtlety isn't called for here and it doesn't matter if anyone hears you.
+
+Blow the sucker open with a bomb.
+
+------------------------------------------------------------------------------
+Where the heck are the bombs?
+------------------------------------------------------------------------------
+They are inside something else.
+
+That something else is locked.
+
+They're in your apartment.
+
+Check the cupboard.
+
+------------------------------------------------------------------------------
+I got the VidPhone maintenance panel open, but I don't know what I should do
+next.
+------------------------------------------------------------------------------
+Read the documentation and the detective handbook section on "VidPhone
+maintenance."
+
+You need a piece of equipment here.
+
+A wire tester would be nice.
+
+Look at the schematic on the outside of the panel.
+
+Hook up the red positive lead to the battery terminal, the blue lead to the
+ground.  Connect the yellow lead to the second brass wire terminal from the
+bottom.  The wire terminals are located toward the right-hand side of the open
+panel.
+
+------------------------------------------------------------------------------
+Where is the wire tester?
+------------------------------------------------------------------------------
+It is inside something else.
+
+That something else is locked.
+
+It's in your apartment.
+
+Check the cupboard.
+
+------------------------------------------------------------------------------
+I keep getting zapped when I'm working on the VidPhone panel!
+------------------------------------------------------------------------------
+Be more careful.  After all, you are messing around with a high-voltage
+electrical system while standing in two feet of water.
+
+If the wire tester indicator light turns red, disconnect at least one of the
+leads immediately.
+
+Look at the voltage regulators before you try to place a tester lead.
+
+If you try to place one of leads while the gauges are in the red you will get
+fried.
+
+------------------------------------------------------------------------------
+How do I avoid the sewer rats?
+------------------------------------------------------------------------------
+Hurry.
+
+------------------------------------------------------------------------------
+What should I do at the warehouse?
+------------------------------------------------------------------------------
+Pay attention to the "meanwhile" screens.
+
+Take a closer look at the reactor cooling system sub-panel.
+
+It would throw a real wrench into the works if the warehouse were to be, shall
+we say, "shut down."
+
+A bomb might come in handy here.
+
+Place a bomb on the second electrical trunk from the left and stand back.
+
+------------------------------------------------------------------------------
+The gate is closed.
+------------------------------------------------------------------------------
+Patience, it will open again later.
+
+Have you tapped Jonny Qwong's VidPhone?
+
+------------------------------------------------------------------------------
+What's the deal with the piece of paper that has unintelligible Chinese
+calligraphy on it?
+------------------------------------------------------------------------------
+Karyn will give you a small hint about it.
+
+It is not unintelligible to someone who reads Chinese.
+
+Check out the warehouse district.
+
+Look for an alley.
+
+Show it to an old man sitting on a crate.
+
+------------------------------------------------------------------------------
+I went to the reservoir but nobody was there.
+------------------------------------------------------------------------------
+Come back later.
+
+Be patient, it will take Deng awhile to get all his units in position.
+
+Pay close attention to the "meanwhile" screens.
+
+Deng Hwang will deploy his strike units to the reservoir between 7:00 pm and
+10:00 pm on August fourth.
+
+------------------------------------------------------------------------------
+I can't get off the ground in the hovercar.
+------------------------------------------------------------------------------
+Click on the map at the center of the console between the driver and passenger
+seats. This will bring up a holo-map similar to the one at the Em-Way.Select a
+location and click on it.  The computer will automatically take you to your
+destination.
+
+------------------------------------------------------------------------------
+Karyn has been kidnapped. Help!
+------------------------------------------------------------------------------
+You need to find out where she is.
+
+Tapping Jonny Qwong's VidPhone might be helpful.
+
+Check your VidPhone messages after you have tapped Jonny Qwong's line.
+
+She is at Deng Hwang's, but you must set and pick up the VidPhone taps from Jonny
+Qwong's to discover the address.
+
+------------------------------------------------------------------------------
+The snake keeps killing me in the warehouse district while holding the Jake
+hostage.
+------------------------------------------------------------------------------
+Try arming yourself with a gun.
+
+------------------------------------------------------------------------------
+The guard outside of DH Enterprises won't let me in.
+------------------------------------------------------------------------------
+There is more than one way to get past him.
+
+Bombs, bullets, and gas are all useless.
+
+You need the correct ID card.
+
+You need Snake's ID card.
+
+Snake will be in the warehouse district after the Jake calls you on the
+VidPhone.
+
+You can land the hovercraft on the roof of the compound, bypassing the first
+layer of security.
+
+------------------------------------------------------------------------------
+I'm in the lobby at DH Enterprises, what now?
+------------------------------------------------------------------------------
+You need to get further inside the complex to rescue Karyn.
+
+The laser gate and security alarm must be shut off.
+
+You must get past the receptionist and into the security room.
+
+Lie, lie, lie to the receptionist.
+
+Try posing as a repairman.
+
+If all else fails, use NaPent on the receptionist.
+
+------------------------------------------------------------------------------
+I made it into the security room but I was beaten to a bloody pulp by the
+guards.
+------------------------------------------------------------------------------
+DO NOT open the door to the break room.
+
+Sooner or later the receptionist out front will figure out what's really going
+on and press the alarm, so you need to think of a way to stall the guards.
+
+Look the security panel over carefully.
+
+Flip the switch marked "BREAK LOCK" up to activate it (the indicator bar above
+the switch should turn green).
+
+Turn all the other switches to the off position (red).
+
+------------------------------------------------------------------------------
+I can't figure out how to deactivate the laser gate and security alarm.
+------------------------------------------------------------------------------
+Try inserting your ID card into the console.
+
+Didn't work?  Well at least you can try manual override?
+
+Ever play the game Simon?
+
+There are clues for one of the correct sequences hidden in the documentation.
+
+If you gave the old man the parchment, he gave you one of the correct code
+sequences, although you may not realize it yet.
+
+If you are FORTUNATE, you may figure out the clue the old man gave you.
+
+The correct sequence for manual override button 3 (far right) is.
+
+Phase 1: yellow, red, purple, blue, white
+
+Phase 2: yellow, red, purple, blue, white, blue, red, yellow, purple, yellow
+
+Phase 3: yellow, red, purple, blue, white, blue, red, yellow, purple, yellow,
+red, purple, blue, white, red
+
+Make sure you turn off the laser gate!
+
+------------------------------------------------------------------------------
+Karyn died when I tried to unhook her from the collar.
+------------------------------------------------------------------------------
+Oops!
+
+You only have a limited amount of time to free her.
+
+You need to deactivate the collar mechanism before you try to unhook it.
+
+If you had some wires you could try to short it out.
+
+Look in a nearby room.
+
+Try the janitors closet.
+
+Place the wires over Karyn, then unhook the three collar control leads.
+
+------------------------------------------------------------------------------
+I can't find the wiring I need.
+------------------------------------------------------------------------------
+Look at everything in the janitor's closet.
+
+Look at the electrical panel on the back wall.
+
+You will need a tool to work on the panel.
+
+That screwdriver on the sink will help.
+
+Make sure you throw the breaker switch on the top panel.
+
+Use the screwdriver to remove the bottom panel.
+
+Grab the wires.
+
+                                  ARCADE HINTS
+                                  ------------
+
+------------------------------------------------------------------------------
+Those goons at the reservoir are wiping me out.
+------------------------------------------------------------------------------
+Read the documentation carefully.
+
+Make sure your gun is loaded.
+
+If at first you don't succeed, try, try again.
+
+Wearing a bulletproof vest will help.
+
+Getting the rifle from the police armory will make life easier, but you can
+still win without it.
+
+Show the piece of paper to the old man in the warehouse to get the vest.
+
+If you don't already have a rifle, make sure you pick one up after you kill
+all the bad guys.
+
+------------------------------------------------------------------------------
+I keep getting shot to pieces by the guards!
+------------------------------------------------------------------------------
+Read the documentation section on the arcade sequences carefully.
+
+You can duck under some of the guards bullets.
+
+You can jump over some of the guards bullets.
+
+Aim for the head.
+
+A bulletproof vest will allow you to take more hits.
+
+Shoot your gun in the direction of a guard when he is off the edge of the
+screen and chase the bullet till it hits him.
+
+------------------------------------------------------------------------------
+The hazards at the warehouse are too hard!
+------------------------------------------------------------------------------
+No they aren't!
+
+Jump over or go around pools of toxic waste.
+
+You can avoid leaping over some of the pits by jumping up to a loading dock
+and walking across it.
+
+Don't get sprayed by the posion gas.
+
+Avoid the Bum-Away beams.
+
+Make sure to duck as you pass the electric field generator.
+
+Jump up and shoot Snake a couple of times as he is coming across the pit.
+
+------------------------------------------------------------------------------
+I'm being toasted by the flame throwers!
+------------------------------------------------------------------------------
+Your bulletproof vest is no good against fire.
+
+The flame throwers go in a pattern. If you time it right you can sneak under
+them.
+
+You can get past some of the flame throwers if you use the lower level (make
+sure to duck).
+
+Some of the flame throwers have a red valve handle on them.  If you shoot the
+valve it will shut the flame thrower off.
+
+------------------------------------------------------------------------------
+I can't kill Bahumat in the final arcade.
+------------------------------------------------------------------------------
+A rifle would be VERY helpful here.
+
+You can jump over and duck under some of Bahumat's fireballs.
+
+A bomb might come in handy if you have one left.
+
+If you have a bomb, walk towards Bahumat while staying on the lower level and
+press the action button when you are directly beneath him.  Blade will
+automatically throw a bomb at Bahumat if you have any left.
+
+
+
+
+                                     OBJECTS
+                                     -------
+
+Item                Where found               Where used
+------------------------------------------------------------------------------
+Gun                 Under pillow in Blade's   Arcade sequences
+                    apartment
+
+Coat                Blade's apartment         Everywhere
+
+Clothes             Floor of Blade's          Everywhere
+                    apartment
+
+Blade's ID card     Blade's VidPhone          Blade's VidPhone,
+                                              Blade's door, flower
+                                              stand
+
+Cabinet Keys        Karyn, Bureau of Records  Blade's cabinet
+
+Chandra's Photo     Blade's VidPhone          Give to the Jake at the
+                                              Pleasure Dome bar
+
+Claim check for gun Pleasure Dome entrance    Pleasure Dome ticket
+                                              claim window
+
+MTZ sample          Counter at Chen Lu's      Give to Karyn at B.O.R.
+                    bathroom
+
+Candy bars          One in Blade's cupboard,  Give one to Slen at 
+                    another in Chen Lu's      Pleasure Dome for claim
+                    safe                      ticket, give other to
+                                              the Jake
+
+Bahumat list (paper Chen Lu's safe            Give to Chang Li at
+  with Calligraphy)                           warehouse
+
+Mayor's pass card   Mayor's office            Show to Deputy Van Halen
+
+Wire tester         Blade's cabinet           Use on Jonny Qwong's
+                                              VidPhone trunk
+
+Chen Lu's ID card   Chen Lu's VidPhone        Use in Chen's door and
+                                              VidPhone.  Give to Karyn
+                                              for computer check.
+
+First Aid Kit       Medicine cabinet in       Use when wounded
+                    Blade's apartment
+
+Roses               Flower stand near City    Give to Karyn at B.O.R.
+                    Hall
+
+Big gun (rifle)     City Hall armory or       Use in arcades.
+                    reservoir
+
+MTZ lab tape        Karyn in B.O.R.           Give to Mayor.
+
+Rock of Life        Chang Li in warehouse     Give to Karyn.
+
+Tome of Wisdom      Chang Li in warehouse     Read when in danger(it might not
+                                              help but at least you'll feel
+                                              better).
+
+Bulletproof vest    Chang Li in warehouse     Arcades.
+
+Snake's ID card     Warehouse arcade          DH Enterprises main gate.
+
+NaPent              Blade's medicine cabinet  Receptionist at DH Enterprises.
+
+Screwdriver         On sink in janitor        Use to remove electrical sub-
+                    closet at DH Enterprises  panel in janitor closet.
+
+Wires               Behind electrical sub-    Use to short out Karyn's collar
+                    panel in janitor closet   in DH Enterprises interrogation
+                                              room.
+
+Bombs (4)           In Blade's cabinet        Chen Lus front door and his safe
+  Note: Use them                              VidPhone panel in Jonny Qwong's
+  only when you                               sewer, electrical trunk at.
+  REALLY need them                            warehouse, final arcade sequence
+
+Wire Tester         In Blade's cabinet        Use to open VidPhone panel in
+                                              Jonny Qwong's sewer.
+
+Fortune Cookie      Chang Li in warehouse     Use in DH Enterprises security
+                                              room.
+
+
+                              FOR YOUR INFORMATION
+                              --------------------
+
+Rise of the Dragon: A Blade Hunter Mystery (VGA version) consists of:
+
+    4,402,206  bytes of source code which compiles down to
+      822,096  bytes of object code
+    7,483,416  bytes of animation
+    4,096,000  bytes of background pictures
+      788,028  bytes of sound effects and music
+    1,014,833  bytes of program, drivers, and interpreter.
+   ----------
+   18,606,579  bytes total.
+
+Data totalling 13,382,277 bytes were compressed by a proprietary program to
+7,376,947 bytes of resources on your disks.
+
+
+
+
+
+                              CHARACTER PROFILES
+                              ------------------
+
+                        Name: William S. "Blade" Hunter
+                  Occupation: Private Investigator
+                     Hobbies: Guns, knives, cyberball
+              Place of Birth: Eugene, Oregon
+               Date of Birth: Sept 27, 2013
+                Future Plans: Make enough money
+                              so I won't have to
+                              work anymore
+
+Background: Blade is a former police detective who was pressured to resign
+from the LAPD by then police chief Giuseppe Vincenzi because of his unorthodox
+methods of investigation.  Although Blade had one of the highest conviction
+rates of any officer, he also was named as a defendant in more civil lawsuits
+than any other officer in the history of the department.  After leaving the
+force, Blade opened his own detective agency, which provided a subsistence
+level of income.
+
+
+
+                        Name: Karyn Sommers
+                  Occupation: Data retrieval specialist
+                     Hobbies: Judo, gardening
+              Place of Birth: Yreka, California
+               Date of Birth: Oct. 16, 2028
+                Future Plans: Self fullfillment through
+                              a rewarding career with
+                              the city
+
+Background: Karyn Sommers is Blade's sometime girlfriend.  There is genuine
+affection between these two but Blade, well, he's not the most romantic man
+who ever lived. His idea of a romantic evening is to split a six-pack during a
+ball game and neck during the commercials.  Needless to say, this has caused a
+certain amount of friction in their relationship.
+
+
+
+                        Name: Deng Hwang
+                  Occupation: Mafia kingpin and megalomaniac 
+                     Hobbies: Biochemistry, genetics, cat-bowling
+              Place of Birth: Unknown
+               Date of Birth: Unnown
+                Future Plans: World domination
+
+Background:  Little is known about this shadowy mafia figure.  He claims to
+have been born in mainland China, but this can not be verified independently.
+Psych profiles indicate he possesses great intelligence and a highly developed
+criminal instinct.
+
+
+
+                        Name: Giuseppi Vincenzi
+                  Occupation: Mayor of Los Angeles
+                     Hobbies: Baby kissing, cutting welfare,
+                              lying to his constituency
+              Place of Birth: Los Angeles, CA
+               Date of Birth: Feb. 14, 2003
+                Future Plans: Governorship of California
+
+Background: Mayor Vincenzi has proven himself to be a ruthless politician who
+will stop at nothing to advance his career.  Formerly, he was the chief of
+police for the LAPD.  He is responsible for pressuring Blade into resigning
+from the police force - consequently there is little love lost between these
+two men.
+
+
+
+                        Name: Willard Jakeston AKA "The Jake"
+                  Occupation: Miscreant
+                     Hobbies: Prank phone calls, shoplifting
+              Place of Birth: Los Angeles, CA
+               Date of Birth: Aug. 12, 2028
+                Future Plans: None of your biz, slicker
+
+Background: Willard Jakeston is a small time player on the street scene in the
+"dome" district of LA.  Although he occasionaly engages in activities of
+questionale legality, he doesn't consider himself a criminal, merely an
+"entrepreneur."  Petty theft aside, The Jake is basically an O.K. guy.
+
+
+
+                        Name: Chang Li
+                  Occupation: Scholar
+                     Hobbies: Radio astronomy, writing self-
+                              help literature, ancient
+                              Chinese mythology
+              Place of Birth: Los Angeles, CA
+               Date of Birth: Feb. 29, 1992
+                Future Plans: To gain spiritual  
+                              enlightenment in this life cycle
+
+Background: A native of the City of Angels, Chang Li is a respected scholar in
+the field of Chinese mythology.  He has also written several books including
+The Step by Step Guide to Private Investigation and Other Fun Things.
+
+
+
+                Rise of the Dragon Hint Book provided by Watchers
+                  Rise of the Dragon crack provided by Skid Row
+                    Rise of the Dragon Hint Book Fixed by ...
+
+                       >>> RYGAR OF K.Y.H.A.A. & Y.F.L. <<<
+
+     If you play this game, buy the original so that there will be a sequal
+
+      yeah, the sex and violence originally planned for Rise of the Dragon
+                     would have been nice... maybe next time
+
+                                  - F I N I S -
+
+

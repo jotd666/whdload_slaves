@@ -1,0 +1,143 @@
+           ____               _______________   _______________
+          /    \             /               \ /               \
+         /     /\           /                //                 \
+        /     /  \         /       _________//        _____      \
+       /     /    \       /       /        //\       /    /\      \
+      /     /      \     /       /        //  \      \   /  \      \
+     /     /        \   /        \_______//    \      \ /    \      \
+    /     /         /   \                \      \      \      \      \
+   /     /         / mUb \                \      \      \      \      \
+  /      \________/__   __\_________       \   __/       \_____/       \
+  \                  \ /                    \ /                        /
+   \                 //                      \\                       /
+    \_______________/ \______________________/ \_____________________/
+     \              \  \                    /  /                    /
+      \              \  \                  /  /                    /
+       \              \  \                /  /                    /
+        \              \  \              /  /                    /
+         \______________\/ \____________/ \/____________________/
+
+                            P R E S E N T
+
+                 S U P E R   S P A C E   I N V A D E R S
+
+
+Typed by SIDEWINDER/LSD.
+Manual supplied by TORCH/LSD.
+
+
+THE POTTED HISTORY
+
+SPACE INVADERS - the game that launched a thousand space ships, was
+released to an unsuspecting world in 1978.  Previously, ATARI's PONG had
+introduced the public to coin ops, but TAITO were determined to strike
+back and regain the number one spot.  TOSHIHIRO NISHIKADO was working in
+Taito's R&D department at the time.  He looked at Atari's Pong and felt
+that recent microprocessor would allow him to develop a new kind of
+game.  I thought it would be fun to destroy targets on the screen and
+clear everything.  I also planned to have enemies which attack the
+player and use diplomacy with human beings, this type of game didn't
+exist before.'  He spent 10 months working on the project from September
+1977 to June 1978 - 'Everything was new, there were no existing tools or
+computers at the time, so we had to build everything ourselves.  First I
+used tanks as targets, but because of the slow processing speeds of the
+microprocessors then, it was difficult to make the targets turn around
+and move smoothly.'   Influenced by the STAR WARS induced space boom
+that was raging Japan at that time, Nishikado decided to use space
+aliens as the targets.  SPACE INVADERS was so new and so different that
+at first, Taito's game testers did not like it and Toshihiro was worried
+that it wouldn't be a hit.  He needn't have worried - once released
+(after a name change from SPACE MONSTER to SPACE INVADERS at the request
+of the sales department), it sold like wildfire.  Production could not
+cope with the demand and the market was flooded by pirate copies.  By
+Autum 1979 it had peaked - INVADER mania had gripped the world, children
+stole from their parents to play the game, executives stayed out at
+lunch all afternoon playing INVADERS - it became a social problem.
+
+Soon however many similar games were released which expanded the theme -
+GALAXIANS, GORF, PHOENIX and dozens of others as many video
+manufacturers were born.  Atari launched their 2600 VCS system which
+gave (for the first time), near arcade quality graphics on
+interchangeable cartidges.  Atari became an overnight sensation selling
+literally tens of millions of VCS's all over America and Europe.  Video
+games were here to stay.
+
+Few games, if any, have managed to recreate the heart stopping
+excitement INVADERS caused, the rhythmic thump - thumping as they
+advanced down the screen getting quicker and quicker all the time, the
+pulse of the laser as you dart from behind your ever crumbling shield to
+pick off another row of alien scum and blast that mother ship for
+maximum points.
+
+Sadly, INVADERS was Mr. Nishikado's first and last microprocessor
+videogame, the father of video games (now 47) moved departments within
+Taito to work on amusement machines and smart card systems.
+
+Today he thinks games have moved on - 'Graphically due to faster
+processors, games have become very good, but I feel games themselves
+have not changed very much, they all look the same more or less,
+although occansionally some special games come out - I think TETRIS is
+very good in this respect.  I heard DOMARK are bringing out SUPER SPACE
+INVADERS from Taito for personnal computers and the SEGA MASTER SYSTEM.
+I think this game is very good because it has a lot of features and
+original game concepts.  I hope SUPER SPACE INVADERS will be as
+successful in Europe.'
+
+
+THE GAME
+Invaders is a two player simultaneous shoot'em up with a host of new
+features that expand if from the original.  You must destroy the
+advancing aliens while dodging their shots.  Shoot the space ship that
+goes across the top of the screen to collect exciting additional
+weapons!
+
+GETTING STARTED
+For those who are unfamilar with Invader (where have you been?), the
+object is to prevent the Invaders from landing at the bottom of the
+screen.  They advance one row down each time they reach the edge of the
+screen.  You can only have one shot on the screen at a time, (unless you
+have a power-up) so be accurate with your firing.  Once you have cleared
+the screen ('Attack Wave') the Invaders regroup and will try a new
+tactic.  There are literally dozens of these so take time to learn them
+all.  The secret to success is the extra weapons.  These are collected
+by shooting the saucer that traverses the top of the screen.
+
+After each three waves you will encounter either the Cattle Mutilation
+bonus screen or the End of Level Guardian.
+
+The Cattle Mutilation is zany fun as you attempt to prevent your cows
+being kidnapped (cownapped?) by those pesky aliens.  As this is a bonus
+level, you cannot be killed, but you can earn extra bonus by destroying
+all the alien saucers and saving all the cows.
+
+The Guardians are very tough customers indeed.  Try and get some extra
+fire-power before entering this level or you will almost certainly be
+destroyed.  Each Guardian has a soft spot where he can be damaged by a
+direct hit but it is up to you to discover where this is.
+
+HINTS AND TIPS
+
+  -     Get double or triple shot for the End of Level Guardians
+  -     There is a pattern which determines which weapon is dropped by the
+        saucer.
+  -     On expanding Invaders shoot alternate columns to prevent them
+        expanding to triple widths.
+  -     On the Cattle Mutilation level, the cow that is about to be picked
+        up zips left and right as he feels the tractor beam.
+  -     Also on this level the higher you let the saucer take the cow
+        before shooting it, the higher the bonus.
+  -     Watch out for hidden levels!
+
+CONTROLS
+Player 1 - Joystick in port 1 or Keyboard.
+Player 2 - Joystick in port 2 or Keyboard.
+
+KEYBOARD
+        PLAYER 1                        PLAYER 2
+
+        Z  -  Move Left                 N  -  Move Left
+        X  -  Move Right                M  -  Move Right
+        Q  -  Fire                      O  -  Fire
+        A  -  Fire Special Weapon       K  -  Fire Special Weapon
+
+End.

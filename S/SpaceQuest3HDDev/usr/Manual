@@ -1,0 +1,527 @@
+                         SPACE QUEST III 
+ 
+At the end of Roger's adventure in Space Quest II, he had narrowly escaped
+death aboard Sludge Vohaul's asteroid fortress.  Entering an escape pod, he
+rocketed away seconds before it burned up in the Labionian atmosphere. 
+ 
+Shortly after blasting away, he discovered his oxygen supply near
+depletion.  Making a last ditch effort to survive, he climbed into the
+hibernatic sleep chamber with the hope that someone would find him soon. 
+ 
+Now, an indeterminate amount of time has passed, and the small pod drifts
+aimlessly through deep space.  Time stands still for our  hero in suspended
+animation. 
+ 
+                                3 
+
+"This year for our vacation, I think we'll all go to Pheebut!!" 
+ 
+"Huh?!" 
+ 
+"B-But Dad!!  We wanted to go to Robertaland!!" 
+ 
+"Shadup!!  You'll go to Phleebut and Like It!!" 
+ 
+"Waaaaaaa!!!" 
+ 
+                                4 
+ 
+"We interrupt this hologram to bring you this hologram to bring you this
+hypernews bulletin:  We have just been informed that  universally famous
+software authors, those 2 guys from Andromeda, were abducted today by
+software pirates!" 
+ 
+"The reason for the abduction is not known as there have been no death
+threats or ransom requests!  It is rumored, however, that the pirates were
+under contract to the disreputable software publisher Scumsoft, makers of
+such flops as Stuntfloggers, Aquatron and  Scumword...Company president
+Elmo Pug could not be reached for  comment, as the location of Scumsoft is
+shrouded in secrecy!!" 
+ 
+"We now return you to our regularly scheduled hologram." 
+ 
+                                5 
+ 
+ALL SYSTEMS 
+ 
+GETTING STARTED: FLOPPY DRIVES 
+ 
+It is always advisable to make back-up copies of your master  program
+disks, to increase the life of the masters and guard  against accidents. 
+Follow your computer's instructions to make  copies of all game disks.
+
+If you will be playing from floppy disks, rather than a hard disk, you will
+also want to format a blank disk for saving games.  Follow your computer's
+instructions to format a blank disk and keep it handy for saving your game
+as you play.
+
+MS-DOS
+
+INSTALL THE GAME
+
+Place your disk 1 (or it's back-up) into your floppy disk drive.  Type the
+letter of the disk drive you just placed the disk into followed by a colon
+and press ENTER (eg. A:).  Type INSTALL and press ENTER.  Answer the
+onscreen questions using the up and down arrow keys to highlight your
+selections.  You will be asked if you wish to install the game on your hard
+disk.  If you do not wish the game to be installed on your hard disk, then
+press ESC (to skip this step).  Otherwise enter the letter designation of
+your hard disk (usually C) and follow the prompts.
+
+Please Note:  The install procedure will write a file named RESOURCE.CFG to
+disk 1.  For the installation to be completed correctly, DISK 1 MUST NOT BE
+WRITE PROTECTED.  No other files on disk 1 are written or changed by the
+INSTALL command.
+
+LOADING INSTRUCTIONS
+
+1.   If you are starting the game from floppy disk: Place disk 1
+        into the drive, type SIERRA and press ENTER>
+
+2.   If you are starting the game from hard disk: Type CD\SIERRA
+        and press ENTER.  Next type SQ3 and press ENTER.
+
+ATARI ST
+
+LOADING INSTRUCTIONS
+
+Please Note:  If you are using an Atari 520 ST without memory expansion,
+you should not run your Sierra game with any desk accessories installed.
+
+1.   If you are playing the game from floppy disk: Place disk 1 in
+        drive A, open the disk by double-clicking on its icon, then
+        start the game by double-clicking on the SIERRA.PRG.
+
+2.   If you are playing the game from a hard disk: Open the disk
+        by double-clicking on its icon, then open the game folder by
+        double-clicking on the game folder icon.  Start the game by
+        double-clicking on SIERRA.PRG.
+
+                                6
+
+HARD DISK INSTALLATION
+
+1.      If you are playing from a hard disk, first make sure you have
+        enough space on the hard disk for the game -- single-click on
+        the disk icon, then select Show Info., from the File menu. 
+        Bytes Available should be at least 800,000 times the number
+        of floppy disks included with the game.
+
+2.   Open the hard disk by double-clicking on its icon.
+
+3.   Create a game folder by choosing New Folder... from the File
+        menu.  Open the new folder by double-clicking on its icon.
+
+4.   Place the first game disk in drive A.
+
+5.   Copy the game disk into the new folder by dragging the drive
+        A icon into the window you opened in Step 3.  (Click on the
+        drive A icon, while holding the mouse button down, move the
+        mouse arrow over the open window, then release the button).
+
+6.   Repeat steps 4 and 5 for each of the other game disks.
+
+7.   Put the master disks away in a safe place.
+
+CHOOSE A MUSIC DEVICE (Optional)
+
+Your Sierra game is initially set up to play music and sounds through the
+Atari ST's internal speaker.  If you have one of the supported MIDI
+synthesizers, you may run the MUSIC program to have the game play music
+through the synthesizer.
+
+1.   Open the game disk/folder by double-clicking on its icon.
+
+2.   Run the MUSIC program by double-clicking on the MUSIC.PRG
+        icon.
+
+3.   Select "Music Device" from the Options menu.
+
+4.   Select your synthesizer (or "Atari ST Internal Sound") by
+        clicking on the appropriate button.  Then click OK>
+
+5.   Select "Install Game" from the File menu.  This will replace
+        the RESOURCE.CFG file on your disk.
+
+   Please Note: It is important to turn your synthesizer on before
+        playing the game.
+
+AMIGA
+
+LOADING INSTRUCTIONS
+
+From Floppy Disks:
+
+1.   Boot your system with Workbench, then insert the game disk in
+   any drive.
+
+2.   Position the mouse pointer over the game disk icon and double-
+        click.
+
+Please Note: If your game has more than one disk, RENAME your copies of all
+game disks to remove the words "COPY OF" from the disk name.  If the words
+"COPY OF" are not removed from the disk names of all the copies, the system
+will continue to ask for the original disk and will not run the game.
+
+From Hard Disk:
+
+1.   Load Workbench and double-click on your hard drive icon.
+
+2.   Double click on the SIERRA drawer.
+
+3.   Click on the drawer for the desired Sierra game.
+
+4.   Click the game icon.
+
+                                7
+
+MOVING YOUR CHARACTER
+
+You may move your character on the screen with the arrow keys, the numeric
+keypad, or the mouse.  To halt your character's steps with the keypad,
+press the number 5, or press the last used direction key again.  Using the
+mouse, start movement by clicking the left mouse button where you want the
+character to move.
+
+                          NW           N          NE
+                              \        |         /
+                               ____  ___  ____
+            N                  ||_7_||_8_||_9_||
+            ^                  |/___\/___\/___\|
+            |             W -- ||_4_||_5_||_6_|| -- E
+    W  <--- | ---> E           |/___\/___\/___\|
+            |                  ||_1_||_2_||_3_||  5----Stop
+            S                  |/___\/___\/___\|
+                                        
+                              /        |         \
+                            SW         S          SE
+                                                                     
+
+At times it may be useful to slow down the speed of the game animation in
+order to negotiate a tricky section, or observe something more carefully. 
+In Space Quest III, speed is controlled by the + and - keys, or by
+selecting a choice from the Speed menu, using the mouse or arrow keys.
+
+                                8
+
+SHORT CUTS FOR COMMON COMMANDS
+
+You can use function and control keys to short cut many common commands.
+
+   F1      Help
+
+   F2      Toggle Sound on/off
+
+   F3      Repeat previous command
+
+   F5      Save Game
+
+   F7      Restore (saved) Game
+
+   F9      Restart Game (from beginning)
+
+   CTRL-C   Cancel typed command line
+
+   CTRL-I   Inventory
+
+   CTRL-J   Reset Joystick
+
+   CTRL-P   Pause Game
+
+   CTRL-Q   Quit Game
+
+   CTRL-R   Toggle RGB/Composite graphics mode
+
+   CTRL-S   Change Speed
+
+   CTRL-V   Change Volume
+
+   +      Increase Volume
+
+   -      Decrease Volume
+
+   =      Normal Volume
+
+                              MENUS
+
+When you press ESC, a menu bar will appear at the top of your screen with
+several menus which can be opened to show the command choices available to
+you.
+
+USING KEYS IN THE MENUS
+
+Use the left and right arrow keys to open a menu, and the up and down arrow
+keys to highlight items within a menu.
+
+Press ENTER to select a highlighted command.
+
+Press ESC to return to the game without choosing a command.
+
+INTERACTING WITH THE GAME
+
+You may interact with the game by typing in commands of one or two words,
+or in complete sentences. Unless otherwise instructed, follow all commands
+with ENTER.
+
+EXAMPLES OF COMMON COMMANDS
+
+You may meet characters who have messages for you.  Start the conversation
+with them.  Type: TALK TO (whoever you wish to talk to.)  For example, TALK
+TO THE PIRATE.
+
+You may encounter objects you need along the way.  To take an object type:
+TAKE (the object you want to take).  For example, TAKE THE SILVER CHALICE.
+
+                                9
+
+Pay close attention to details.  Take a close look at objects.  Type:  LOOK
+(the object you wish to examine).  For example, LOOK AT THE TREASURE CHEST.
+
+You will need to use the objects you acquire on your journey.  Type: GIVE
+THE (object) to (the person or thing you wish to have the object).  For
+example, GIVE THE BONE TO THE HUNGRY TIGER.
+
+RETYPING COMMANDS
+
+If you wish to repeat a command select RETYPE from the ACTION menu or press
+the SPACEBAR.
+
+INVENTORY
+
+If you wish to see the items you are carrying, select INVENTORY from the
+ACTION menu or press the TAB key.  A list of the items you are carrying
+will be displayed.  To view an object, click on its name with the mouse, or
+use the arrow keys to highlight the name and press ENTER.  Select OK or
+press ESC to resume play.
+
+PAUSING YOUR GAME
+
+If you wish to pause the game, select PAUSE from the ACTION menu. Press ESC
+or ENTER to continue play.
+
+SAVING YOUR GAMES
+
+If you wish to save your game, select SAVE from the FILE menu.  To allow
+for errors in judgement and creative exploration, it is recommended that
+you frequently save your game in progress.  You will always want to save
+your game before encountering dangerous situations.  You should also save
+your game after you have made significant progress in the game.
+
+Please Note: If you are playing from floppy disks, you must have a
+formatted save game disk before you can save a game.
+
+You may name your saved games using standard English phrases.  For example,
+if you are standing on a sandy beach, call your saved game "STANDING ON A
+SANDY BEACH", or whatever seems appropriate.
+
+RESTORING YOUR GAME
+
+Select RESTORE from the FILE menu.  You will be prompted to select the game
+you wish to restore.  (On a single drive system, you will be prompted to
+insert your save game disk.)  Highlight the desired game and select
+RESTORE.  * If the game you wish to restore is on a different directory,
+select CHANGE DIRECTORY.
+
+QUITTING YOUR GAME
+
+If you wish to stop playing, select QUIT from the FILE menu.
+
+* If you do not have a mouse, use the TAB key to highlight games.
+
+                               10
+
+                TIPS FOR THE BEGINNING ADVENTURER
+
+If you've never played one of Sierra's adventure games before, here are a
+few suggestions to get you started.
+
+                INTERACTING WITH SPACE QUEST III
+
+You can interact with the game by typing in simple commands consisting of
+as little as a verb and an object.  For instance, the command "get into the
+rail grabber" can be shortened to "get in grabber."  The command "give six
+buckazoids to the clerk" could be expressed as "give money to clerk."
+
+Space Quest III will understand many common verbs.  Here is a list of some
+you might want to try:
+
+LOOK      DROP      EXAMINE      USE
+CLIMB       GET      READ      TALK
+HIT      PICK UP      PLAY      KICK
+PUNCH      PUSH      PULL      MOVE
+OPEN      CLOSE      JUMP      SIT
+STAND      GIVE      PUT ON      TAKE
+TAKE OFF
+
+LOOK everywhere.  When you go somewhere you haven't been before, or where
+you think you may have missed something the first time, the first thing you
+should do is look around.  Whey you type "look" on entering an area, you
+will receive a description of the general area.  Read this description
+carefully -- often there is a clue to the game or an indication that
+something in the scene bears further investigation.
+
+If you are standing close enough to a particular object you can take a
+closer look at that specific thing.  EXAMPLE: "look at the spaceship."
+Press ENTER each time you type a command to enter that command.
+
+A comment window will appear each time you enter a command, and at other
+times during the game.  When you have read the comment, press ENTER to
+remove the window and resume play.
+
+EXPLORE each area of the game very carefully.  Search every area of the
+garbage freighter for a way to escape.  Search each area of each planet you
+voyage to, but carefully!  There are a lot of hazards out here in space.
+
+DRAW A MAP that includes each place you visit, objects found, dangerous
+areas, any and every landmark you see along the way.  If you miss an area,
+you may miss an important item or clue you will need to complete your
+quest.
+
+                               11
+
+TALK to almost everyone you meet, but use discretion!  Some characters will
+be friendly and helpful.  They will give you valuable information and
+advice.  Others may mislead, capture, or even kill you.  At times it may be
+necessary to fight, at others to run away, hide or try to outwit your
+opponent.
+
+PICK UP anything that isn't nailed down.  You'll come across a number of
+objects that will be of use later in the game.  Some of these can be picked
+up, others may have to be bought or traded for.  You can see an inventory
+of items on hand by pressing the TAB key at any time.
+
+USE the items you have picked up to solve problems in the game.  Some
+problems have obvious solutions; if you're thirsty, take a drink of water. 
+To purchase an item, you'll need some buckazoids.  Other problems require
+more imagination to solve.
+
+BE CAREFUL.  Remain alert at all times -- disaster may strike in the most
+unlikely places.
+
+SAVE YOUR GAME often, especially when you are about to try something new or
+potentially dangerous.  That way, if the worst should happen, you won't
+have to start all over again from the beginning.  (See your reference card
+for instructions on saving your game.)
+
+DON'T GET DISCOURAGED.  If you come to an obstacle that seems
+insurmountable, don't despair.  Explore the game some more, then come back
+later.  Every problem in the game has at least one solution, and some have
+more than one.  Sometimes solving a problem one way will make it harder to
+solve the next, and sometimes it will make it easier.  If you get stuck,
+you might try backtracking to an earlier point in the game, the choosing a
+different path. If all else fails, you can buy a Space Quest III Hint Book
+from the dealer who sold you the game.
+
+                               12
+
+                          (WALKTHROUGH)
+
+                             WARNING
+
+The following documentation is for beginning adventure game players only. 
+The contents include answers to some game puzzles and hints that
+experienced adventurers may not wish to see.  Continue reading only if you
+are having difficulty getting started with Space Quest III.
+
+When the character has stepped out of the escape pod and the door closes,
+you will have control of the character and the game will begin.
+
+Press ENTER to remove the comment screen that appears after the pod door
+closes.
+
+Use mouse, keyboard or joystick to walk south (down) to the next area,
+where several junk spaceships are stored.
+
+                               13
+
+While you are here, try looking around at your surroundings: 
+
+Type "look"
+Walk to the spaceships. 
+Type "look at ship" at each one. 
+Walk to a pile of junk. 
+Type "look at junk." 
+Walk to the crate in the left foreground. 
+Type "look at crate"
+
+From this area, walk east (right) to the next room.
+Walk to the large gear in the left foreground.
+Type "look at gear"
+Walk to the giant arm in the background
+Type "look at arm"
+
+When you have explored all you want, walk to the right side of the room
+until you come to a vertical conveyer that is lifting buckets up and out of
+the screen.  If you stand close enough, in front of the conveyer, it will
+catch you and carry you to a horizontal conveyer belt which leads to the
+shredding machine.  At this point it would be a good idea to save your
+game.
+
+To keep from being thrown in the shredder, type "stand". Immediately type
+"jump" to reach the rail above the conveyer.  Now you will be able to walk
+along the rail to begin your exploration of the ship, but BE CAREFUL!  It
+is still possible to slip and fall to your death.  NOTE: If you have been
+using a mouse or joystick to move the character, you might want to switch
+to the ARROW keys for tricky sequences like this one.
+
+When you are up on the rail, walk west (left) until you come to an opening
+in the ship's bulkhead.  On the other side, hanging from the rail, is a
+rail-grabber car.  Walk close to it and type "get in grabber".  You are now
+on your way to exploring your new environment.
+
+Good luck, and remember, those Two Guys are counting on you!
+
+                               14
+
+             INSTALL PROCEDURE FOR AMIGA
+
+INSTALLING THE GAME    
+
+NOTE: RENAME your copies of all game disks to remove the words "COPY OF"
+from the disk name.  If the words "COPY OF" are not removed from the disk
+names of ALL the copies, the system will continue to ask for the original
+disk, and will not run the game.
+
+1)   Boot your system with Workbench and insert Disk #1 of your Sierra
+   game.       
+
+2)   Double-click on the disk icon, then double-click on the INSTALL
+        icon.
+
+3)      Follow the onscreen prompts, choosing your selection with the
+        mouse by clicking once on the icon.
+
+4)      You will be asked if you wish to install the game on your hard
+        disk.  If you do NOT wish the game to be installed on your hard
+   disk, select NO.  If you want to install the game on your hard
+   disk, select YES>
+
+5)   Using your mouse, select which hard drive you wish to install the
+   game onto.
+
+6)   Follow the onscreen prompts to complete the installation.
+
+LOADING INSTRUCTIONS
+
+From Floppy Diskettes:
+
+1)     If you have less than 1 megabyte of memory for your Amiga,
+   disconnect any external drives while your system is off.
+
+2)   Insert Disk #1 into drive DF0:.
+
+3)   Turn on your system.
+       
+From Hard Disk:
+
+1)   Load Workbench and double-click on your hard drive icon.
+
+2)   Double click on the SIERRA GAMES drawer.
+
+3)   Click on the drawer for the desired Sierra game.
+
+4)   Click the game icon.
+
+============================================================================
+         DOCS PROVIDED BY  -+*+-ROBOCOP-+*+- for MYSTIC PLACES BBS.
+============================================================================

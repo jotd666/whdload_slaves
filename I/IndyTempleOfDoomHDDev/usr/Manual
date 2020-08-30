@@ -1,0 +1,287 @@
+		Indiana Jones And The Temple Of Doom
+
+GETTING STARTED
+
+What You Need
+
+	Commodore 64 or 128; Atari 520ST, 1040St, Mega; Amiga 500, 1000, 
+	or 2000; Apple IIe/IIc/IIGS, 128K minimum; or IBM PC/XT/AT, Tandy
+	1000/3000, or 100% IBM compatible computer.
+
+	Color Monitor or TV
+
+	Single disk drive
+
+	Joystick (Atari ST, Amiga, Apple and IBM - recommended, Commodore -
+	required)
+
+	Color or Enhanced Graphics Adaptor (IBM only)
+
+Loading Instructions:
+
+Commodore
+
+Note:  If you use a fast load cartridge and experience problems loading the
+program, turn off the computer and disk drive, remove the disk from the
+disk drive, remove the fast load cartridge, and then follow the
+instructions to load the program.  With no cartridge attached, the program
+should load normally.
+
+1. Make sure the joystick is plugged into Port 2 of your computer.
+
+2. Turn on your monitor or TV, the disk drive and the computer.
+
+3. Insert the Indiana Jones and the Temple of Doom disk, label side up,
+   into the disk drive and close the drive door.
+
+4. Type LOAD"*",8,1 and press RETURN.  The game will load into your
+   computer's memory.
+
+Atari ST
+
+1. If you are using a joystick, make sure that it is plugged into Port 1 of
+   your computer.
+
+2. Insert the Indiana Jones and the Temple of Doom disk into the disk
+   drive.
+
+3. Turn on your disk drive, monitor or TV, and computer.
+
+4. The program will load automatically.
+
+Amiga
+Using Kickstart 1.2
+
+1. If you are using a joystick, make sure that it is plugged into Port 2
+   of your computer.
+
+2. Insert the Kickstart 1.2 disk into the disk drive.
+
+3. Turn on your monitor or TV, and computer.
+
+4. At the Workbench prompt, insert the Indiana Jones and the Temple of Doom
+   disk into the disk drive.
+
+5. The program will load automatically.
+
+Apple
+
+1. If you are using a joystick, make sure that it is plugged into the game
+   port of your computer.
+
+2. Insert the Indiana Jones and the Temple of Doom disk, label side up,
+   into the disk drive.
+
+3. Turn on the monitor and computer.
+
+4. The program will load automatically.
+
+IBM
+Using DOS 2.1 or higher
+
+1. If you are using a joystick make sure it is plugged into the game port
+   of your computer.
+
+2. Insert a DOS disk into Drive A and close the drive door.
+
+3. Turn on the monitor and computer.
+
+4. Respond to the date and time prompts.
+
+5. At the A> prompt, remove the DOS disk and insert the Indiana Jones and
+   the Temple of Doom disk, label side up, into the drive.
+
+6. At the A> prompt, type INDY and press ENTER.  The program will load 
+   into your computer's memory.  Please note:  If you have an EGA computer,
+   the program will automatically load the EGA version; and if you have
+   CGA, the program will load the CGA version.  If you have EGA and would
+   like to play the game in CGA, type INDY C for the loading command.
+
+Installing Indiana Jones and the Temple of Doom on a Hard Disk
+
+After you complete the procedure outlined below, Indiana Jones and the
+Temple of Doom will run entirely from your hard disk; you will not need to
+use the floppy Indiana Jones and the Temple of Doom disk.  You cannot copy
+the files directly to your hard disk.  The installation will create a
+sub-directory on the hard disk and copy all relevant files to it.  Once
+Indiana Jones and the Temple of Doom has been copied to a hard disk, your
+floppy disk won't generate any more hard disk copies.  However, you can
+transfer the hard disk installation capability back to your floppy disks
+from the hard disk by following the procedures given in the section
+entitled "Uninstalling Indiana Jones and the Temple of Doom From A Hard
+Disk Drive."  Warning:  Do NOT attempt to install Indiana Jones and the
+Temple of Doom from a 1 megabyte 5.25" floppy disk drive.  During
+installation, the disk is being written to and files may be corrupted if
+the program is installed from a 1 megabyte 5.25" floppy disk drive. 
+
+Warning: Before you attempt either to make an archival backup of your hard
+disk, or to run a hard disk "optimization" or "defragmenting" program after
+having installed Indiana Jones and the Temple of Doom on the hard disk,
+first make sure that you follow the instructions to uninstall Indiana Jones
+and the Temple of Doom.  If you don't, the program will no longer be
+executable from the hard disk, and you won't be able to re-install the
+program.  After you make the backup or run the optimization program, follow
+the installation instructions given below to re-install the program on your
+hard disk.  The instructions for hard disk installation are as follows:
+
+1. Boot the system, if necessary, and go to the hard disk directory to 
+   which you would like to copy Indiana Jones and the Temple of Doom, this
+   may be C, D, E, or F.
+
+2. Insert Indiana Jones and the Temple of Doom, label side up, into the
+   disk drive and close the drive door; this may be either Drive A or B.
+
+3. At the hard disk prompt, type A:INSTALL, and press Enter.  Follow the
+   on-screen prompts to set up the hard disk installation.
+
+4. You will be prompted to enter the letter of the disk drive in which
+   Indiana Jones and the Temple of Doom is located.
+
+5. You will then enter the letter of the hard disk drive to which you will
+   be installing the program (either C, D, E, or F).
+
+6. The program will create a sub-directory on the hard disk named INDY.  If
+   you would like to use a different name for the sub-directory, you will
+   be able to enter the name you have selected.
+
+7. You will then be prompted to proceed with the hard disk installation by
+   pressing Y to continue.  If you type N, the installation will be
+   aborted, and you will return to the hard disk prompt.
+
+8. When the installation is complete, the system must be rebooted.  To
+   reboot, press the Ctrl, Alt, and Del keys at the same time.  To run
+   Indiana Jones and the Temple of Doom from the hard disk after rebooting,
+   type CD\NAME, where NAME is the new directory name, and press Enter. 
+   Then follow the loading instructions listed above.
+
+Uninstalling Indiana Jones and the Temple of Doom From A Hard Disk Drive
+
+1. Boot the system, if necessary, and insert Indiana Jones and the Temple
+   of Doom in Drive A or B.
+
+2. At the A> or B> prompt, type INSTALL U and press Enter.
+
+3. Follow the on-screen prompts for uninstalling Indiana Jones and the
+   Temple of Doom from your hard disk.
+
+4. When the process is complete, Indiana Jones and the Temple of Doom will
+   no longer be executable from the hard disk.  You may now delete the 
+   files from your hard disk.  To re-install Indiana Jones and the Temple
+   of Doom on a hard disk, follow the hard disk installation instructions
+   already given.
+
+Game Controls
+
+IBM users note:  Press F2 to toggle between joystick and keyboard control. 
+The option you select will be listed on the title screen.
+
+Joystick - Move the joystick to the right, left, up or down.  Press the
+fire button to crack the whip in the direction you are facing.
+
+Keyboard - ST & Amiga users: Q = up, A = Down, O = Left, and P = Right. 
+IBM users: Use the numeric keypad to control Indy's movements.  Press the
+Spacebar to crack the whip in the direction you are facing.
+
+Game Options
+
+Number of Players - Atari ST, Amiga, and IBM users can select either a one-
+or two-player game by pressing the F1 key.  The Commodore and Apple
+versions allow for only one player.
+
+Sound On/Off - Atari ST and Amiga users can toggle the music on and off by
+pressing F2.  IBM users press F3 to toggle music on and off.  Commodore and
+Apple users can adjust the volume on the monitor or TV.
+
+Game Difficulty - In the Atari ST, Amiga, and IBM versions, the game begins
+with Indiana Jones in front of three entrances:  to the left is the Easy
+Route, to the right is the Medium Route and straight ahead is the Hard
+Route.  Each Route goes in the same direction, but the hazards you face are
+different and points scored increase with the difficulty of the route.  In
+the Commodore and Apple versions you will not be able to select difficulty
+levels, however the game will become more difficult the longer you play.
+
+IBM Features - Press F2 to toggle between joystick and keyboard control. 
+Quit the game by pressing F4.
+
+PLAYING THE GAME
+
+While on an archeological expedition, Indiana Jones stumbles across the
+remote village of Mayapore in India.  Following the theft of the powerful
+Sankara Stone which once protected the village and its people, the town lay
+in ruin and its children are mysteriously missing.  Indy discovers the
+enslaved children are being held captive in the evil Pankot Palace - the
+home of the Maharajah.  Mola Ram, the ruthless High Priest, has forced the
+children to mine for precious gems and the other missing Sankara Stones.
+
+Indy's adventure begins once he enters the Mine Caverns below the palace
+where he must free the imprisoned children and escape the Thugee guards. 
+Upon reaching the mine tunnel entrance, indy hurls down a treacherous
+course in a rickety mine car, leading him to the Temple of Doom.  Once in
+the Temple, he must retrieve the Sankara Stones encircled by a firey lava
+pit.  After recovering all three Stones, Indy must then escape from the
+Temple by crossing a perilous rope bridge guarded by the fireball-throwing
+Mola Ram.
+
+The Game Levels
+
+There are three levels in the game: the Mine Caverns, the Mine Tunnels and
+the Temple of Doom.  Proceed through the first two levels to reach the
+Temple of Doom, where you must retrieve a Sankara Stone.  After you have
+the stone, a door will open that will take you back to the first level. 
+Proceed through all the levels again to recover another stone.  After
+recovering all three stones, make your escape over the bridge.  A "bonus
+round" is awarded if you escape successfully.
+
+Level 1 - The Mine Caverns
+
+Indy's mission is to work his way through the maze-like Caverns and find
+the entrance to the Mine Tunnels.  To get there he must climb up and down
+ladders and swing from one ledge to anoter by wrapping the whip around the
+swinging posts.  Indy also faces a variety of perils while on his journey;
+bats and snakes can make the going rough.  An army of Thuggee guards awaits
+Indy at every turn.  Use the whip to kill sankes and bats, and to stun the
+Thuggee guards.  On the Medium and Hard Routes, watch out for spikes that
+rise up from the ground.  Free the imprisioned children by whipping the
+locks off their cages.  Watch out for Mola Ram, the evil High Priest; he
+can appear suddenly and send a fireball hurling towards Indy.  After
+recovering a stone, you will be transported back to this level, where
+conveyor belts can move you along quickly.  Watch out though, sometimes
+they move too quickly, or in the wrong direction!  On your third pass
+through the Mine Caverns, you'll have to work your way across rickety
+bridges teetering over firey lava pits.  Commodore and Apply users please
+note:  you will face the conveyor belts the first time through the Mine
+Caverns.
+
+Level 2 - The Mine Tunnels
+
+As Indy races down the tracks, he must fight off Thuggee guards while
+watching out for oil drums, missing tracks and other hazards.  Tilt the
+mine car to the left or right to avoid the hazards on the rails or to
+change tracks when necessary.  Pull back on the joystick to slow down the
+mine car.  Don't make any wrong turns or Indy will never make it to the
+Temple of Doom.
+
+Level 3 - The Temple of Doom
+
+In the Temple of Doom, Indy has to recover the Sankara Stone located in
+front of the statue of Kali, the four-armed goddess of death.  The statue
+is on a small island completely surrounded by molten lava.  Maneuver Indy
+around the firey lava pit to reach the trap door that opens and closes.  To
+get the stone, Inday must stand over the trap door while it is closed. 
+Time his run so that he can grab the stone and escape to safety.  After he
+has recovered all three stones, he must make his escape over a rope bridge.
+ Watch out though!  Old Mola Ram will try to keep Indy from crossing the
+bridge by hurling fireballs.
+
+The Scoreboard
+
+The Scoreboard for both players is located on the right-hand side of the
+screen.  The Scoreboard lists points earned, number of children saved,
+number of stones recovered and number of lives remaining.  Extra lives can
+be earned for each 10,000 points scored.  Points are scored for killing
+snakes and bats, stunning Thuggee guards, rescuing children, and
+successfully completing a level.
+
+============================================================================
+         DOCS PROVIDED BY  -+*+-THE SOUTHERN STAR-+*+- for M.A.A.D.                                                               
+============================================================================

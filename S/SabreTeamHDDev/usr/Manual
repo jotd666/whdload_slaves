@@ -1,0 +1,678 @@
+      ∑
+      :    ¶    .     _________                 ________       _____________
+û_____è    |         ∑   __   / :   ___________/   _   \      \   __  _   /
+|     \    é____:    :     \_/ -A : \______    \    |    \_ _:  \_/     \_/
+|      \   ¶    |    ¶      \_  ∑∑D_  /   /   _/    |     /  é___/       \_
+|    :     :    |    é_______/  `N∑ _/    \    \_________/   |   \________/
+¶    é_____è    ¶    |           :  \__________/      \      ¶    \_
+:    :    \__________è                                 \___________/
+.    ∑                           CRaZY GaNG              
+    .                +--------------------------------+
+
+
+                 SABRE TEAM ENGLISH INSTRUCTIONS
+                 ===============================
+ 
+                   FOR THE IBM PC & AMIGA A1200
+                   ----------------------------      TYPED BY SHARD - N&B
+
+IMPORTANT
+---------
+
+1) NO MORE GAMES
+
+Much  work  has gone into making this product but software piracy is slowly
+destroying the games industry with many companies going out of business and
+projects  of  the  depth and detail of Sabre Team becoming less viable.  If
+you  enjoy  entertainment software of this quality then please have a sense
+of responsibility
+
+                     Any fool can copy software....
+             It takes a little more intelligence not to
+
+2) VIRUS
+
+All  Sabre Team disks are guaranteed to be in working order and virus free.
+Any  disks  found  to  be  faulty at the time of purchase will be replaced.
+Send  your  details  and  return the disk(s) only to Krisalis Software Ltd.
+Krisalis  always ensure to analyse any returned disks.  Note that it is the
+purchasers   responsibility   to   prevent   subsequent   virus  infection.
+Additionally  it  is  the  purchasers responsibility to avoid damage to the
+disks  by  irresponsible use of virus killers.  Any disks which have become
+damaged  in  these  ways  will  be replaced at a cost of £3.00.  Return the
+disk(s) only enclosing a SAE.
+
+
+               Copyright c 1994, Krisalis Software Ltd
+
+                     Krisalis Software Ltd
+              Teque House Masons Yard, Downs Row, Moorgate
+                      Rotherham, S60 2HD
+
+
+CONTENTS
+--------
+
+STARTING THE GAME      1 - 4
+
+THE GAMEPLAY AREA      4 - 9
+
+MISSION DESCRIPTIONS   9 - 10
+
+
+STARTING THE GAME
+-----------------
+
+Now that Sabre Team has loaded and you have gone past the Overview text and
+a few intro screens, the GAME SETUP MENU will now appear as shown by
+Figure 1 below.
+
+GAME SETUP MENU
+                      --------------------
+                      |                  |
+                      |         4        |
+                      |                  |
+                      |  3      1     2  |
+                      |                  |
+                      --------------------
+
+If this is the first time you have played SABRE TEAM there are two possible
+choices for starting the game from the GAME SETUP MENU:
+
+QUICKSTART  - Choose the DISK icon as shown by Figure 1 (4) Please refer to
+your SABRE TEAM REFERENCE GUIDE for further instructions
+
+NORMAL START - Please refer to the instructions outlined below
+
+The  following  SECTION  explains  how  to  SELECT, ARM and DEPLOY your own
+individual SABRE TEAM prior to beginning a mission
+
+
+SELECT TEAM MEMBERS
+
+Figure 1 (1)
+
+Allows selection of up to four Sabre team members from a choice of eight.
+
+Position  the  mouse  pointer on this icon and press left mouse button this
+will display a screen showing the faces of eight Sabre Team members
+
+Below each face is a box containing a CROSS
+
+Clicking on a box will toggle the selection between a CROSS or TICK.
+
+        CROSS - Team member has not been SELECTEO
+        TICK  - Team member has been SELECTED
+
+A  minimum  of  one or a maximum of four team members can be selected for a
+mission  but  if  a face is covered by a cross bearing RIP that team member
+has been killed in action and cannot be selected.
+
+Clicking  on  a  face will display another screen showing that team members
+particular statistics.
+
+Click  on each face prior to selection to view each individual team members
+statistics this will help in selecting the best overall team.
+
+TEAM MEMBERS STATISTICS
+
+After  clicking  on  a  players face a screen will appear showing a graphic
+representation  of a soldier on the left hand side and a text report on the
+right.   Height  is  shown  to the left of the soldier strength on the arm,
+perception  by the head marksmanship by the gun, health under the heart and
+action points between the feet.  The text report on the right gives a brief
+description and general history of the current team member being viewed.
+
+SELECT TEAM EQUIPMENT
+
+Figure 1 (2)
+
+Allows selection of up to eight items of equipment for each team member.
+
+Move  the  mouse  pointer  over the EQUIPMENT icon and press the left mouse
+button to select.  The EQUIPMENT screen will appear as shown in Figure 2
+
+EQUIPMENT SCREEN
+
+CHOOSE EQUIPMENT
+
+Figure 2 (1)
+
+The  EQUIPMENT  window, contains a list of all available equipment for your
+team  members  to  use.  To scroll through the equipment list, use the drag
+bars  to the right of and below the window, position the mouse pointer over
+the  arrows  at  the  edge  of  each bar and press the left mouse button to
+scroll  the  list  up  or down on the vertical bar and left or right on the
+horizontal  bar.  Alternatively you can position the mouse pointer onto the
+bar itself, then press and hold down the left mouse button and move the bar
+quickly in the appropriate direction.
+
+To  display  the  description  of any equipment, position the mouse pointer
+over that particular item and press the left mouse button.  Details of that
+item of equipment selected will appear in the SELECTION window (as shown by
+Figure 2 (2))
+
+EQUIPMENT SELECTION
+
+Figure 2 (2)
+
+The  SELECTION  window  displays  a  picture  and  gives  a  more  detailed
+description  of  the item chosen from the EQUIPMENT window.  To add this to
+the  team  members  INVENTORY  window  (Figure  2  (3)), position the mouse
+pointer  over  the  equipment picture in the SELECTION window and press the
+left mouse button.  That item of equipment will now appear in the INVENTORY
+window,  in  an available slot numbered 1 to 8.  Once you have selected the
+equipment  required  select  the next team member to be equipped by placing
+the  mouse  pointer  over  the  TEAM MEMBER icon at the bottom right of the
+EQUIPMENT  screen (Figure 2 (4)), then press the left mouse button.  Repeat
+equipment  selection  for  each  subsequent  team member when the last team
+member  has  been  equipped and the TEAM MEMBER icon is clicked on the GAME
+SETUP MENU will reappear.
+
+INVENTORY
+
+Figure 2 (3)
+
+The  INVENTORY  window,  displays  the  name, statistics, weapons and other
+equipment currently selected by that particuiar team member.  Every item of
+equipment  in  the inventory will weigh that team member down by decreasing
+the  number  of  action points (AP) in relation to the strength percentage.
+The  marksmanship  percentage helps when choosing weapons, low marksmanship
+skills  will  require  an accurate weapon, whereas high marksmanship skills
+only  require a less accurate weapon.  This window is also scrollable using
+the drag bar to the right.
+
+NOTE:   GUNS  must  be  used  with  the  correct  type  of  AMMUNITION When
+ammunition  is  chosen  that  may  fit more than one particular type of gun
+currently  held  in  your  inventory,  the mouse pointer will change into a
+question  mark  (?).   Select which gun the ammunition will be used with by
+positioning  the  mouse  pointer  over  the  appropriate gun picture in the
+SELECTION window and then press the left mouse button.
+
+TEAM MEMBER
+
+Figure 2 (4)
+
+Picture  of  a Sabre Team member, click on this to choose the next selected
+team  member.  Once all team members have been advanced through you will be
+returned to the GAME SETUP MENU again.
+
+If  at  this point you would like to reselect or remove any of your current
+equipment  simply  reselect  the  EQUIPMENT icon, when the EQUIPMENT screen
+appears  examine  the INVENTORY window to find out which items of equipment
+need  removing.   To  remove an item from the INVENTORY, position the mouse
+pointer  over  it  and press the right mouse button, that item will then be
+removed  from  the  INVENTORY  window and will be returned to the EQUIPMENT
+window.   To  reselect another item of equipment to replace the one removed
+please refer back to the CHOOSE EQUIPMENT section.  Advance through all the
+team  members  until  you  are satisfied with your equipment selection Once
+back to the GAME SETUP MENU you may now DEPLOY your Sabre Team
+
+DEPLOY TEAM MEMBERS
+
+Figure 1 (3)
+
+Allows  selected  team  members  who  have been armed to be positioned on a
+grid, within the game zone, prior to starting the game.
+
+Move the mouse pointer over the DEPLOY icon and press the left mouse button
+to  select.  After a few seconds a white square grid will appear within the
+game  zone  window.  Position the mouse pointer over the square you wish to
+place a team member onto and press the left mouse button.
+
+A  team  member will appear in that square, now simply repeat this for each
+team member until all are deployed on the grid.
+
+Note that not all of the grid will appear on screen at once.  To scroll the
+grid  place the mouse pointer at the edge of the screen and press the right
+mouse button.
+
+Once all team members are deployed the GAME TURN MENU wil appear.
+
+LOAD A GAME
+
+Figure 1 (4)
+
+Allows selection of a QUICKSTART game or previously SAVED game Please refer
+to the REFERENCE GUIDE for further explanation
+
+GAME TURN MENU
+
+This  screen will appear at the beginning of a mission and after every game
+turn taken
+
+STATUS REPORT
+
+Figure 3 (1)
+
+Shows  current  mission, list of all team members (on mission, not selected
+or  dead)  and  their  individual  scores and total game score to date, and
+number of hostages rescued or targets destroyed, depending on the mission.
+
+SAVE CURRENT GAME
+
+Figure 3 (2)
+
+Saves  the game in progress Please refer to the REFERENCE GUIDE for further
+explanation
+
+LOAD GAME
+
+Figure 3 (3)
+
+Loads  a  previously  SAVED  game  Please  refer to the REFERENCE GUIDE for
+further explanation
+
+TEAM MEMBERS
+
+Figure 3 (4) 
+
+Team members selected for the current mission.  Selecting a face will bring
+up that team members STATISTICS screen.
+
+START/CONTINUE GAME
+
+Figure 3 (5)
+
+Selecting  this  icon will either start the current mission or continue the
+next game turn during a mission.
+
+ENEMY TURN SCREENS
+
+These  screens  (variable  depending  on  the  mission) will be shown after
+ending  your  game turn, whilst the enemy decides and executes its movement
+and  attack  actions.   If  the  enemy is visible, then all actions will be
+shown, as viewed by the team member who can see them.
+
+THE GAME PLAY AREA
+
+The top window represents the main GAMEPLAY area
+The bottom window contains the MAIN GAME icons
+The COMPASS to the right of the MAIN GAME icons is the DIRECTIONAL
+CONTROL icon.
+
+MAIN GAME ICONS
+
+The means by which all in game functions are selected and used.
+
+These  are  positioned within the control bar below the GAMEPLAY window and
+may  be  SELECTED by positioning the mouse pointer over the one desired and
+then press the left mouse button.
+
+The ICONS starting top row (left to right) are as described below:
+
+(1) NEXT PLAYER:
+
+Advances  through  the  members  of  your Sabre Team this also includes any
+hostages currently being led to safety.
+
+(2) PLAYER STATISTICS:
+
+Shows  the  current  team members STATISTICS as described earlier under the
+heading TEAM MEMBER STATISTICS
+
+(3) BLUEPRINT SCREEN:
+
+Displays A BLUEPRINT MAP view of the game area and its contents
+
+The  middle  window  represents  the MAP view of the gameplay area, the MAP
+co-ordinates are shown directly above this window.
+
+To the left of the MAP window are the directional control arrows, use these
+to  scroll  the  MAP up, down, left or right.  Each single step of movement
+will use one action point.  The number of currently available action points
+are shown directly below the MAP window.
+
+To  the  right of the MAP window are the faces of all current team members,
+selecting  one  of  the  faces  with the mouse pointer will move the MAP to
+centre  on  the  appropriate  player.   The  name of the currently selected
+player  is  displayed  below  the  MAP  window, directly to the left of the
+action point figure
+
+All  SABRE  TEAM  members HOSTAGES and ENEMIES visible on the blueprint MAP
+are represented by a letter within a small circle.
+
+SABRE TEAM member (S), HOSTAGE (H), and ENEMY (E)
+
+On  some missions however the target may be a MACHINE, these are shown as a
+normal outline drawing.
+
+To  EXIT from the BLUEPRINT screen, place the mouse pointer over the switch
+containing  two  arrows  facing  left  situated  at  the  top of the screen
+directly left of the MAP co-ordinates and press left mouse button.
+
+(4) PICKUP SCREEN:
+
+Displays a screen similar to the EQUIPMENT screen seen earlier.
+
+Allows  an  item  of  Equipment  under the current team members feet, to be
+picked  up  and used.  Pick up Able items are represented by rucksacks Dead
+bodies  can  also be searched for items of equipment whether it be an enemy
+or  team member.  To pick up an item, place the mouse pointer over the item
+in  the  EQUIPMENT  window  (as shown by Figure 2 (1)) and press left mouse
+button.   Then  select  the picture of the item in the SELECTION window (as
+shown  by  Figure  2  (2)) with the mouse pointer, and press the left mouse
+button  again.   The item picked up will appear in the INVENTORY window (as
+shown by Figure 2 (3)).
+
+To EXIT the PICKUP screen place the mouse pointer over the ARROW picture in
+the bottom right hand corner and press left mouse button.
+
+(5) DROP SCREEN:
+
+Displays the same screen AS PICKUP
+
+Allows an item or items of equipment being held in the current team members
+inventory  to  be dropped at his feet.  To drop an item, select the item in
+the  INVENTORY  window  by  placing the mouse pointer over it and press the
+right  mouse  button.   The  item  selected for dropping will appear in the
+EQUIPMENT window.  EXIT the DROP screen the same way as PICKUP
+
+NOTE:   When  picking  up  equipment  only  the items which were originally
+available for pick up can be deselected.
+
+(6) WALK TO:
+
+Allows AUTOMATIC movement of a team member to a selected location
+
+When selected the mouse pointer will change into a large ICON
+
+Place  the  mouse  pointer  (ICON) anywhere in the GAMEPLAY AREA window and
+press   the   left  mouse  button.   The  current  team  member  will  then
+automatically  move  to  that  location,  providing however, that there are
+enough  action  points available and the destination is a valid (not a wall
+or any other solid object) location.  After the move is completed the mouse
+pointer will change back to normal (hand).
+
+(7) OPEN/CLOSE DOOR:
+
+Allows the opening and closing of a door.
+
+When  selected  the  door  must be one movement space away from the current
+team member and in the direction he is facing.
+
+The ICONS on the bottom row (left to right) are as described below:
+
+(8) CHANGE WEAPON:
+
+Allows a team member to select an alternative weapon to the one he is
+currently using, providing he has one available. This also includes any
+grenades.
+
+The  weapon  currently in use has a large arrow to the left of it to change
+to  another weapon (from those available), place the mouse pointer over the
+picture of the desired weapon and press the left mouse button.
+
+The large Arrow will now appear next to the newly selected weapon
+
+If  more  than two weapons are available for selection, use the drag bar at
+the right of the screen to scroll through them.
+
+To  EXIT  this  screen, press left mouse button anywhere, but not while the
+mouse pointer is on a picture or the drag bar.
+
+(9) PRIME GRENADE:
+
+Allows current team member to prime a grenade, ready for throwing.
+
+A  grenade must be thrown before changing control to another team member or
+ending  the  game  turn  otherwise  it  will  detonate in the hands of that
+particular team member.
+
+(10) LOAD WEAPON:
+
+Loads currenty held weapon providing there is available ammunition.
+
+The  MAIN  GAME  icon  bar will be replaced with the image of a sniper, the
+weapon  will  be  automatically loaded and the MAIN GAME icon bar will then
+reappear.  A gun must be loaded before it can be fired.
+
+(11) THROW GRENADE: 
+
+Allows a team member to throw a primed grenade. 
+
+Grenades  may be thrown through windows or bounced off walls.  However, the
+grenade  may  not  reach  its  target  as  the distance it can be thrown is
+limited by the strength of that team member.
+
+The effects of a grenade last for one gane turn.
+
+Once selected the mouse pointer will change into a gun sight, position this
+over the target spot and press the left mouse button to initiate the throw.
+
+NOTE:  A grenade must be primed before it can be thrown, and must be thrown
+before  changing  control  to  another team member or ending the game turn,
+otherwise it will explode.
+
+(12) AIM SHOT:
+
+Allows  a  team  member  to take an accurate shot at an enemy or target The
+outcome of this type of shot, is influenced by that team members particular
+marksmanship  percentage  of  accuracy  and  the  current weapons effective
+range.
+
+(13) SNAPSHOT:
+
+Allows  a  team  member  to take aim and fire quickly, thus using a minimal
+amount  of  action  points,  however  this results in a relatively poor hit
+ratio, depending on the marksmanship of the team member and the distance of
+the shot.
+
+(14) END GAME TURN:
+
+Ends  the current game turn for all Sabre Team members and goes straight to
+the enemy turn.  This icon also ends an opportuinty move.
+
+FIRING GUNS
+
+Once  SNAPSHOT  or AIM SHOT has been selected the mouse pointer will change
+to a single or triple sight accordingly and an image of a sniper appears at
+the  bottom  of  the  screen  replacing  the control bar.  Aim your shot by
+moving  the  sight  with  the mouse, until the sight is positioned over the
+centre  of  the  target.   Press  the left mouse button to confirm selected
+target.   Please  note that the target selected must be in the line of fire
+(in  the  direction  the  gun is currently pointing).  If the target is off
+screen it is possible to scroll round the game zone, by moving the sight to
+the  edge  of the screen and press the right mouse button.  The screen will
+now centre around the point the sight was placed.
+
+Once  a  target  has been selected, you must choose the number of rounds to
+fire.  This is done by pressing the left mouse button over the arrows (left
+arrow  "<"  decrease number of rounds or right arrow ">" increase number of
+rounds), surrounding the number box below the snipers gun and then pressing
+left  mouse  button  while  the  mouse  pointer is positioned over the box.
+Firing will now automatically commence.
+
+The  number  of rounds selectable is limited by the number of action points
+available for firing or by the number of rounds remaining in the gun.
+
+Single shot weapons can only fire one shot before reloading is required.
+
+Selecting zero rounds cancels the shot.
+
+Note that before a gun can be fired it must be loaded with ammunition.
+
+WEAPON INFORMATION
+
+The  noise  level  when  a  gun  is  fired radiates over a certain distance
+depending  on  the  weapon  type.   The  radiated  noise  distance  figure,
+represents  the  number of movement spaces that the shot can be heard, from
+the  position  where the team member fired his weapon.  The damage a bullet
+can do decreases with the distance it has to travel.
+
+A  100% damage distance figure, represents the number of move spaces that a
+bullet could possibly do 100% damage, given an accurate shot at the target.
+
+WEAPON USED                RADIATED NOISE       100% DAMAGE
+                           DISTANCE             DISTANCE
+
+MP5A3                      12                    3
+MP5SD                       8                    3
+MP5K                       12                    3
+ACCURACY INTERNATIONAL PM   6                    5
+SELF LOADING RIFLE (SLR)    6                    4
+M16A2                      12                    7
+L2A3 STERLING              10                    3
+SA-80                       6                    4
+L7A2                       14                    7
+G3                          6                    4
+STUN GRENADE               12                    0
+CS GAS                      2                    0
+
+
+DIRECTIONAL CONTROL
+
+Controls  the  direction  a player faces or moves to and indicates possible
+enemy  sightings  or  suspicious noises heard.  To move a team member place
+the  mouse  pointer over the arrow in the direction you want to go and move
+by  clicking  on  it once or hold down the left mouse button for continuous
+movement.
+
+AUDIO/VISUAL STATUS
+
+During  a  game  turn the compass (DIRECTIONAL CONTROL) arrows may light up
+either RED or BLUE.  This is a WARNING that there is someone within a close
+proximity  to  that  current  team  member.   A  red highlighted arrow, but
+indicates they are in visual range, in the direction indicated by the arrow
+but may not yet be visible on the qame screen area shown.
+
+A  blue  highlighted  arrow indicates a noise has been heard in the general
+direction of that arrow.
+
+OPPORTUNITY MOVE
+
+If  enough  action  points  are saved before ending a turn, then during the
+enemies  turn  an  opportunity  move  may  be  awarded  to a team member An
+opportunity  move  occurs if a team member has more than five action points
+and is in visual range of and can be seen by the enemy.
+
+The  number  of  action  points  available,  determines the chance of being
+awarded  an  opportunity  move.   For  example saving twenty or more action
+points  gives a 100% chance decreasing to a 0% chance as less action points
+are  available  During  an opportunity move, control is taken away from the
+enemy  and  the team member concerned is given the chance to use all of the
+action points remaining, either for weapons or moving.
+
+Ending  the  opportunity move turn gives full control back to the enemy for
+the remainder of the enemy turn.
+
+Note that only one opportunity move may be awarded per game turn.
+
+HEALING WOUNDED PLAYERS
+
+Medical Kit - Any team member carrying this piece of equipment during a
+mission will regain 5% of total health per game turn
+
+Resting  -  If  a  wounded team member sits out a mission, he will be fully
+healed when selected for the next mission.
+
+PASSING ITEMS
+
+To  pass  items  of  equipment  from  one  team  member to another drop the
+required  item(s)  on  the  ground using the DROP icon, select the required
+team member and then WALK over the dropped item(s), then select the PICK UP
+icon and choose the items you wish to collect.
+
+Note that any dead bodies be they a team member or an enemy can be searched
+by using the PICK UP icon and any equipment found can be used.
+
+ACTION POINTS
+
+Two  sets  of  numbers are shown on the GAMEPLAY screen these represent the
+number  of action points remaining, followed by the number of action points
+required  to  perform  the  currently  selected option as determined by the
+mouse pointer position.
+
+ACTION POINT TABLE
+
+Action Performed                Action Points Used
+
+Movement (Left,Right,Up,Down)   4
+Movement (Diagonally)           5
+Rotation                        1 (per step)
+View Player Statistics          0
+View Blueprint Map              0
+Scroll Blueprint Map            1 (per step)
+Open/Close Door                 3
+Walk To                         Variable
+Change Weapon                   5
+Load Weapon                     4
+Aim Shot                        6
+Snap Shot                       3
+Prime Grenade                   3
+Throw Grenade                   3
+Pick Up/Drop                    2
+
+
+MISSION DESCRIPTIONS
+
+MISSION 1: EMBASSY SIEGE
+
+Terrorists's  have  taken control of the American Embassy in London and are
+holding  four hostages.  Find the rooms where they are being held and guide
+them  to  safety.  To rescue a hostage, move a Sabre team member to a space
+directly  next  to  and  facing  that particular hostage, you will now gain
+control of the hostage as if he were a member of your team.
+
+To  successfully complete this mission either guide all the hostages out to
+safety  or  kill  all of the terrorists, leaving the Metropolitan police to
+collect them.
+
+MISSION 2: JUNGLE POW CAMP
+
+Imprisoned  within  the  prisoner  of war camp are four hostages.  Find the
+cells where they are being held and guide them to safety.
+
+Hostages are then air lifted to safety once outside the POW camp.
+
+To  successfully  complete  this mission, guide all four hostages to safety
+outside  the POW camp.  Once all hostages have been rescued, you must guide
+the remaining members of your team out of the camp to safety.
+
+MISSION 3: WAR GAMES
+
+Four  machines  containing  missile  launch  codes,  are  located within an
+underground  military base.  These machines must be completely destroyed by
+shooting them at least three times.
+
+To  successfully  complete  this mission, all four machines must be totally
+destroyed.   Surviving  Sabre  team members must then make their way out of
+the base, to be air lifted to safety.
+
+MISSION 4: LINER HIJACK
+
+Terrorists  have  hijacked an ocean liner and have altered its destination,
+they are holding innocent passengers and crew members hostage.
+
+To  successfully  complete this mission, all of the terrorists onboard must
+be killed, thus allowing the liner to resume its original course.
+
+The mission is automatically completed on killing the last terrorist.
+
+MISSION 5: MISSILE GUIDANCE
+
+Four machines used for programming missile guidance systems are held within
+a missile manufacturing plant.
+
+To  successfully  complete  this  mission all four machines must be totally
+destroyed  (as  in mission 3).  Surviving Sabre team members must then make
+their way out of the base, to be air lifted to safety.
+
+MISSION NOTE
+
+If  all Sabre team membes are killed within a mission, then that mission is
+deemed  failed  unless  however  all  mission  objectives have already been
+successfully  achieved  and  one team member is available to participate in
+the  next  mission.   Hostages cannot be collected or controlled, during an
+opportunity move.
+
+
+-----------------------------------END------------------------------------
+
+                   /\_  ____________ ______/\___________/\___
+                  /  \/  |\  __  / \____  /  \   |\  __  /
+                 /  |  \  |  \/ \/ & |  _  \ |  \  é_\/ \/
+                 \__Ä__å_____/\__/    é_____å____å____/\__/
+                +-------------------------------------------+
+                           SHaRD PRoDUCtiONS `94
+ 

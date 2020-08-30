@@ -1,0 +1,2820 @@
+CONTENTS
+
+When I die, I want on my tombstone:
+'The Sorest Loser That Ever Lived.'
+
+
+
+-
+
+Ead
+
+weaver
+
+This manual is for IBM and IBM compatible computers. If you're playing
+Earl Weaver Baseball on sornething otherthan an IBM or IBM compatible, please refer to rhe Command Summary card for any differences in
+game play for )our computer. The scrcens that you see in this manual
+may also be slj8hdy different from what you see on your screen.
+
+Q cerrrxc srAnrED
+whether you're a floppydisk or hard disk user, rhe firn thjng you must
+do is boot your system wifi DOs.
+
+floppy Dlrrl Userr
+
+a
+
+Do nol pl.y with the original dislca. You MUST make a copy of both
+
+disk AND install the Eame oryou will encounter problems with
+the game.
+To copy your diskls):
+
+1.
+
+Have a disk ready. Earl Weaver Baseballwill write over this disk so
+make sure it doesnt contain information you still want
+
+2.
+
+Put your DOS disk in drive A (if it isn't already). Type A: and press
+Enter.
+
+3.
+
+SinSle d,ive users" Type DISKCOPY and press Enter.
+
+You'll be
+
+prompted when to insen your source disk (the original) and when to
+insert your destination disk (the backup).
+
+Dual drive use6: Type DISKCOPY A: B: and press Enter. Put your
+original disk in drive A and backup disk in drive B. Press Enter when
+ready, You won't need to swap disk durin8 the copying process.
+
+4. If you're usinS
+
+5.25 inch diskt copy both disks onto two separate
+using a 3.5 inch disk, allthe infomation is packed
+onto a sinSle disk so you only have to copy one disk.
+
+disk. lf you?e
+
+Inst,lllng lhe
+
+Oo'f',c
+
+lnstalling Earl weaver 8aseball onto your hard drive or floppy disks is
+easy with the install program. You should install your game whether
+you're u5in8 a hard drive or floppy disks. After booting your system with
+Dot do the following:
+
+'1. Type A! and pres6 tnter.
+
+2.
+
+Putthe Program Disk in drive A, type INSTALL and press Enter
+(Floppy Oisk Users
+Be sure to use your copr'ei!). You'll see the
+followinE options (3.5 inch disk users do not Eet option
+
+-
+
+,;
+
+I
+
+I
+
+Inslill Ea Weaver Baseballon
+
+2
+3
+
+lnshll Earl Weaver 8a!eball on a 2 driw floppy sy.bm.
+lnstlll tarl Weaver Ba'eball on ),ollr Hard or RAM di.L
+Relurn lo DO6.
+
+4-
+
+Please choose one of the above
+
+a
+
+drive floppy syrtem.
+
+L
+
+3. Enter the appropriate number. Follow the onscreen prompts to install
+your disk. Hard disk users: The game will be installed in a directory
+of you. choice. The defauh directory is EwaB; you cim enter a new
+
+one
+
+ifyo! want
+
+Pt'lffug on d nof.dDx'tttc
+I . Type C: and press Enter (we1e asslming
+
+your hard drive is c; if it
+
+isn't, type the appropriate letter).
+
+2.
+
+and press Enter. (Don't aclually type the word
+"directory." Type the name ofthe directory that /ou chose when you
+innalled the game. For instance, if you chose EWBB fo. you. direc-
+
+Type CD
+
+\dircclorl
+
+tory you would type CD\EWBB.)
+
+3.
+
+Type wEAvER and press Enter. (ECA Users: Type wEAvER E and
+press Enter.) The game will load and you'll see the title screen. Press
+the space bar when you want to stan the Bame.
+
+Ptaytug on Flo991t llishs
+
+l.
+
+Put your
+Enter.
+
+2.
+
+Type WEAVER and press Enter. The game will load and you'll see
+the title screen. Press the space bar when you want to start the game.
+
+a
+
+copyofthe Program Disk in drive A, type A:, and press
+
+CGA Ljsers: lf you have a 384K sin8le-drive synem, you'll see a box
+with a red bar and yellow bar in it; at this point you need to replace
+your Program Disk with the Craphics disk and press Enter to continue.
+ECA Users: Type WEAVER E and press tnte..
+
+3. You'll be prompted
+
+a
+
+to switch disk durin8 dE Same when necessary.
+
+Note to owne6 of Earlweaver Baseball(versions 1.0 and 1.1) and
+to 1985 and 1987 Baseball Stat Disk owners: The first time you play
+with your data disks, Earl Weaver Baseball version 1.5 will ask you if
+you want to rename your PIAYERS.S file. Answer YES to update your
+
+data filesto the new format. Accumulad stats compiled with Earl
+Weaver Easeball versions 1.0 and 1.1 are not compatible with the
+new data format. Moe on the new format in Chaptet 12, Commissidler's and Baseball sl|at Disks.
+
+Paths
+You'rc goinS to see the word PATH followed by a drive letter (probably
+A, B, or C) on a lotofmenus. Path is, simply, fie.oute that your computer follows to get to the information it needs. Let's say the floppy disk
+that contalns all the information about your teams is in drive B; then the
+path to that information is "B:". l-et's say it's on your hard drive (and lets
+assume your hard drive is C) in a suMirectory called WEAVER; the path
+would be C:\WEAVER
+
+What is a suMirectory? lt's iust a directory within a directory. ln the
+C:\WIAVER example, C:\ is the .oot (or main) directory while WEAVER
+is a suMirectory. ln C:\WeAVER\5TATS, STATS is a subdirectory of
+WIAVER, while WEAVER is a subdirectory of C:\.
+SET PATH is an option available on many rnenus. Choose this anytime
+you want to change the path to your data. You'll see the following:
+
+Select any ofthe drive letters and the program will go to that drive. You
+will see either STATS FOUND or STATS NOT FOUND. The paths you
+can work with will display STATS FOUND. lf that path contains suMirectories, it will show all the subdirectories.
+
+SuMiredories are useful in keeping information organized. For instance, if you plan on having more than one league, you could keep
+different leagues in different suMirectories.
+
+If you select the wrong subdireclory, you can "back out'' by clicking on
+"{parend'. This will take you back to the root directory in your cuffent
+drive.
+
+CONTNOLLINC EARL
+WEAVEN BASEBALL
+Regibo,,'"d. cnd, Kegpad
+
+Con''.olt
+
+lf you choose to use the keyboard, you'll use this set of keys.
+
+If you choose to
+
+use the keypad,
+
+you'll
+
+use this ser of keys.
+
+Selecting from Option cridst Option grids are the "grids'you select
+banin& pitching and running options from. To select an option, just
+press the key that corresponds to the option on the grid.
+
+setecling frorn MsrrBr To seleq frcm menut use the arrow keys to
+highliShi the menu option you want and press Enter {if you're using rhe
+keyboard you can also press S; if you're usin8the keypad, you can also
+press 5).
+see the Manage/s card for a complete list of the keys you can use
+in Earl weaver Baseball,
+
+to'sllah
+
+4''tit rto','sa
+
+Contlolt
+
+push the ioystick toSelecling fmm Optlon Gti&: Joy$ick users
+press
+the button, roll rowaads
+Mouse
+uselg
+wards an option and click.
+an option, ard then release.
+
+-
+
+-
+
+Seleclhg ftDrll Mcrts. To select frcm a rnenu, mo\e youa ioystick or
+rnouse up, do,vn, left, or ri8ht to .rpve around the seleclion; click on
+the highlighted option to selecl it,
+Note to loystick Users: You'llsee eferences to "bufton 1" and "button
+2.'Since joystick vary tremendously, you'll have to test both buftons to
+determine which is button I and which is button 2.
+
+Q nnr-c^lnE
+
+MENU
+
+Once the game loads, you see the title screen. Press the space bar when
+you're ready to continue and you'll 8d the Pre-came menu. lf you don't
+press the space bar for two minutes, the demo will run, The Pre-came
+menu gives you these options:
+
+GAME-The Arcade Came is the simple "hands on" version
+of Earl weaver Baseball. You'll do a lot ofplaying and a little managing.
+ARCADE
+
+a
+
+Are you new to ea weaver Baseball? Then play the Arcade Came
+first. lt's a quick and easy way to get acquainted with the game.
+
+FULL PROGRAM
+ln the Full Program, you can choose from the full
+selection of baseball options and ganE utilities. You can also choose to
+just manage the team or to play and manage.
+
+-
+
+Q er.lrrxc rHE aRcArDE
+
+GAIttE
+
+I.
+
+Pi& the horne tedn.
+
+Scroll up and down the list and Pick the one you want. N[ nands for
+National League and AL stands for American League. The numbers be_
+hind NL or AL stand for the era. For instance, if )ou pick AL 00'30,
+you'll manage American Lea8ue players like Babe Ruth and Cy Young
+who played in the early'1900s.
+
+2.
+
+select your input device.
+'1,
+Chmse from KEYEOARD, KEYPAD,IOYSTICK or MOUSE. ln a two player game, the players must use different input devices; you can't
+share the same one. Noas On Tandy machines, the mouse is replaced
+with jOYSTICK 2. To use a mouse, you must install your mouse driver
+before running Earl weaver Saseball.
+
+3. Select who controls lhe home team.
+Choose from YOU PLAY or EARL PLAYs. lfthis is your first time in the
+8ame, try controlling the home team,
+
+4.
+
+Pick the leam's play level.
+MAJOR LEAGUE is the toughest while SANDIOT is the easiest. Choose
+an easier sening if you want faster runners, fa$d fielderg and a larger
+hittingzone. ln SEMI-PRO and SANDLOT, the computer comrols all
+baserunners.
+Choose f.om any of the teams on the lisl to be lhe visiting team.
+The setup choices for the visiting team are the sarne as for the home
+team except at the end you'll see NINE MAN IINEUP {the pitcher bats
+tor himself or DESIGNATED HITTER (the oH bats for fte pitcher).
+when you choose the Arcade Came from the Pre-Came menu, you play
+with the nine man llneup, regardless ofwhich option you choose. To
+play an Arcade Carne with a desiSnated hitter, you'll have to select
+
+5.
+
+FULL GAME. From the Full Came menu select DESIGNATED HITTER
+and ARCADE GAME (set the other settings any way you wand.
+
+5.
+
+Choose READY when you're ready lo play ball.
+lfyor.r decide you didn't Jike your set!p cho;ces, select CANCEL and
+you'll Bo back to to the Pre-Came menu where you can start over.
+
+7.
+
+Enter your season ticket pass number.
+Oa the codewheel, ljne !p the stadi!m name with the seatinS section
+inforrnation. Next to the stadium area you see a small window with a
+number jn it; type in that number and press Enter.
+
+8.
+
+Reading the scoreboard,
+Once you're in, you see two views ofthe field: an overhead view and
+the catcher's view. You also see hr'vo scoreboards across the top.
+
+The Main scoreboard shows game information.
+
+.
+I
+R
+H
+
+Team at bat
+
+Efiors
+
+E
+
+lnnings
+
+o
+
+Runs
+
+B
+
+Hits
+
+s
+
+Ous
+Balls
+Strikes
+
+The PitcherBafter scoreboard shows slats for the pitcher and batter.
+Eatter:
+
+BattingAverage
+Pitcher:
+
++F
+
+ERA
+
+(Eamed Run Average)
+
+'
+
+HR Home
+
+S
+
+Runs
+
+Fatigue
+Strikes
+
+R
+
+Runningrating
+
+*P
+
+Pitch count
+
+B
+
+Balls
+
+The Fatigue mting and Pitch @unt (nunle.t o{ pitches thrcwn) only show
+in nE Re8rJlation Eatt]ps.
+
+watch the Balls and strikes column oftheMain scoreboard durinS
+gameplayfor official scoring on hits, errors and pitching. You'll see a
+code and, ifapplicable, the position ofthe pla)er involved in the play.
+lf an error occuE, an E is posted after B: and the position ofthe player
+who made the eror is posted after s:. lfa wild pitch occurs, w is posted
+after B: and P is posted after S:. The following is a complete list ofscoreboard codes.
+scoreboard codes
+H
+
+Sing'e
+
+BK
+
+D
+
+Double
+
+rc
+
+T
+
+Tiple
+
+HB
+
+HR
+E
+
+10
+
+P8
+
+Balk
+Hit batter
+
+9.
+
+Pitching.
+
+lf you?e the home team, you take the field filst. To deliver a pitch,
+you need to Sive three pitch commands: 1) the type
+speed and curve,
+2) the localion
+where the pitcher will aftempt to th.ow h, and 3) the
+
+-
+
+delivery seleoion.
+
+The option Erids below show the options you can cfimse from. You
+never actually see the grids on the screen. You'll just choose from the
+qJids as if they werc lp on the screen,
+
+Selectingfrom Option Crids: Keypad or keyboard users-pressthe
+number or letter that corresponds to your pitch. Joystick use6
+pr.rsh
+press the
+the Joynick towards an option and click. Mouse users
+button, rolltowards an option, and then release.
+
+-
+
+-
+
+1. The t)pe of pitch is the first pitching option
+yo! select. Choose from any of these.
+
+a
+
+Press Escto shake off a siBn.
+
+2.
+
+Now you need to select the locatioD, This
+is where in lhe slrike zone the pitcherwill
+attempt to throw the ball.
+
+'t1
+
+3.
+
+a
+
+ln the final pitch selection, you can deliver the
+pitch or make some other pitching rnove like a
+pltchout or pickoff attempt. You can't attempt
+a pickof{ if nobod/s on base; the pitcher will
+Bo ahead and pitch the ball. lfthere are two or
+more runners on base, the pitcher will throw
+to the base with the lead runner.
+
+To intentionally walk a player, issue four successive pitchouts.
+
+Pitches thrown down the middle have a Ereater chance of being a strike.
+Computer batters hit balls that come down the middle harder, so you
+take chances when you send it straiSht down the middle. lf you're
+ahead in fte count, )aou mi8ht want to use an oppo6ite pitch that's an
+intentional ball; a computer player might chase after the bad pitch and
+
+strike out.
+An opposite pitch is one that breaks the pattern of where the pitches
+have been crossing the plate. For instance, if you throw three successive
+pitches to the outside of the plate away from the batter. a fourth throw
+to the inside of the plate would make that pitch an opposite pitch.
+
+10. Fielding.
+ln additlon to pitchin& you'll also field the ball when you're on defense.
+
+catchingj The fielders automatically run and
+catch rhe ball; then they wait for your instruction
+ro rhrow. This grid shows the placesthat your
+fielder can throw to. If you don't instrucl your
+fielder where to th.ow the ball, he won't throw it.
+
+12
+
+Cutting off lhrows frorn lhe outfield: KeyboardAeypad users
+keep
+the button or key pressed down. ,oystick users
+click buton 1 while
+the ball is in the air. Mouse users
+click the left button while the ball
+
+-
+
+is in the air.
+
+-
+
+-
+
+I. Using the defensive Slrategy menu.
+ln your role as a manager, you can call plays from the dugout with the
+Strategy rnenus. Press the space bar to open the cards; you'll see one for
+defensive plays and one for offensive plays.
+I
+
+You can only work with the ca.d that appliesto your team: if youte out
+on the field, you can only choose from the defensive Strategy menu and
+if you're at bat, you can only choose from the offensive Strategy menu.
+The home team's menu is always on the left and the visitor team's menu
+is always on the right.
+The dimmed words are unavailable commands. Some, like LINEUP are
+unavailable because you're playingthe Arcade game while others are
+unavailable because ofplay chcumstances (i.e., you can't HOLD if
+there are no rlnneas on base),
+
+Many of the commands toggle on or off. lf rherds a dot to the left of
+the command, it's off; ifthere's a dot to the rlght, ifs on,
+
+on: Keyboard or keypad users highlight the
+highlight the oprion and press
+Joystick users
+button 2 (since joysticks vary tremendously, you'll have to rest both
+buttons to determine which acts as bufton I and which as button 21.
+Mouse users- highlight the option and click rhe right butron.
+To lum a command
+
+option and press
+
+J.
+
+-
+
+-
+
+off, Keyboard or keypad users highlightthe
+highlight the option and press
+Joystick users
+button 1. Mouse users
+highlight the option and click the left button.
+
+To tum a command
+
+option and press
+
+e.
+
+-
+
+-
+
+-
+
+13
+
+Slrategy Menu
+
+-
+
+Defense
+
+READY
+
+LINEUP*
+
+Opens the Lineup scrcen.
+
+EAAL
+
+Ask Earlfor
+
+CONFER'
+
+Queries ).our pitcner and catder on the pikhe/s siatus. lf
+you decide to make a pitching change, yor/ll r'eed lo go
+to lhe bu IIFn. You m
+re're your pitcher after M1D
+'ri inf,ing.
+conferen@s in the tame
+
+CUARD
+
+Moves
+
+HOLD
+
+Moves infielders closer to the lead bare to reduce leadoffs
+
+If
+
+lnfield ,hifL Shifts your infielders leftor riShL
+lnfield deplh. lvoves yoor infieldeB shallo$/ or deep.
+outfield shift. Mo,,/es your outlieldeE left or right.
+
+SHIFT
+
+IF DEPTH
+
+OfSHIFT
+OF DEPTH
+P
+
+ARNDI
+
+his rdvlce on theplay.
+
+)ourfilstand thhd basmen
+
+closer to the foul lires.
+
+outtield depth. Mo!es youroudieldeB shallowor deep.
+Pilch around. Doern't8ive the baner any8ood pir.hp\ ro
+hir-
+
+OUf
+
+Pitch out.Tells the pitcher uc thmwoutride the suike zone
+and the catcher to step outfor a quick lhrow to a bare on
+
+cHc rsr
+
+Tells your fiEt baseman to charye iowar& home in antici-
+
+CHG 3RD
+
+Telb your thid bareman to chaee iowrdr home in anticipation of a bunL
+
+NO PTAY
+
+Can@h all plays exccpt HIDE. Also resets defenslve positlons to their neutlalor'unshifted" positions,
+
+HIDE
+
+Displays the name ofthe playr only, the ory'off status of
+lhe plays are hidden so you must keep tracl of tl'em men-
+
+P
+
+l,ally.
+
+'0 Not available
+
+Uetulfor two-phyer gam6.
+
+in Arcade came.
+
+Notavailable in Play & ManaSe mode.
+
+14
+
+To close the menu, p.ess F10. Or, hi8hlight READY and then press
+J, or click eilher joyslick or mouse blnon.
+
+e
+
+or
+
+12, Hitting and Runnin&
+Three outs and i(s yolr up5. At the end ofeach half-inning, you'll see a
+recap of the half-inning and which th.ee batters are due up. You control
+the hitring and base running.
+
+Hittin&
+
+Press the Swing or Bunt key to take a
+backwin8; release the keylo follow through on the
+
+you can swing by
+pressin8 and releasing bufton 1 and bunt by pressin8 and releasing button 2. Mouse users
+you can
+
+swing or bunt. Joystick users
+
+-
+
+-
+
+swing by pressinS and eleasing the left button and
+bunt by pressing and releasing $e right button.
+
+'
+
+Not available in semi-pro and Sandlot play levels.
+
+Running
+
+Press the Run Ahead key to make the lead runner run. ,oystick
+push up to .un forward, pull back to run back. Mouse users
+roll up to run forward, roll down to run back. You only control the run-
+
+users
+
+-
+
+-
+
+ners at Major and Minor league levels.
+'I 3. Using the offensive StraleSy menu.
+To open the offensive Strategy menu, press the space bar. As with the
+defensive strategy menu, dimmed commands are unavailable. Commands that a.e 'on" have a dot to the .ight of them.
+
+l5
+
+Strategy Menu
+
+RTADY
+LINeuP'
+f^Rt
+ACCI
+
+-
+
+Defenia
+
+Retums !o play.
+
+openr ttE Lineup sseen.
+Aek E:rlfd hir advice on thic play.
+Ag8eirive baserunning. lnrtructs your runneE !o take
+chances.
+
+SUNTr
+H&
+
+R'
+
+&
+
+H'
+
+R
+
+Tells your balter lo bunt.This play tums off if lhe batter
+has rwo strikes,
+it and .un. Runner atlempls to steal as the batter uie. lo
+make contaet wirh rhe ball,
+H
+
+Run and hit. Runnerattempt! !o steal; the bauer can rwinS
+if he likes d|e pilch.
+
+I Xtr
+
+Tells ba[er not !o swin8,
+
+LIAIX)FF
+
+Telk lhe runner
+
+STEAI2'
+STEAT 3+
+STEAI H'
+
+Telk the man on fird lo attempla rteal.
+Telk the man on second to atlempt a rGal.
+
+D
+
+STTAL'
+
+SQUttZd
+
+lD l.ke a lonSer le.d. (If you rum lhis on
+in PIay and Man.ge mode, you'E re+onrible Io' ratoming lhe runner to b.se in a pickoffauemp0.
+
+Tells the runner on lhhd to attempt to steal home.
+
+Double steal. lnslructs two barerunners !o steal simultaneously.
+Tells the runne. on third to break for home as dte ball is
+
+bunled.
+
+PIAY
+HIOE
+NO
+
+Caneli allplaysexcepl HIDE.
+Displays the name of lhe pla',r onlyr lhe orvott statu3 of
+the playr are hidden. Usefulfor two-player gamer.
+
+Notavailablc in Arclde Came.
+Not.vailable in Play & ManaSe mode.
+
+Not
+
+on barerunninS: When you?e playin8 in Play & Mana8e mode at
+
+maioror mim.leaSue levelr, you mustcontlolthe lead runner youlselt
+15
+
+To close the menu, press Fl0. Or, highlight READY and then press
+J, or click either joyslick or nrouse button.
+
+e
+
+or
+
+14. Finirhing an Arcade Game.
+lf the score isn't tied after nine inninSs, the game is over and the hi8h
+scorer wins, lf there is a tie, the teams will continue play until somebody
+breaks the tie and fte home team has had last ups. You can quit a Bame
+if you don't want to finish it by pressing Fl0. You can't sa!e Arcade
+Cames-
+
+At the end of each Same you complete, you'll see a screen with a recap
+of the final score. The dimmed items are unavailable in the Arcade
+Came. See page 30 for complete details on this screen.
+
+Now )ou know everything you need to know as a coach and player in
+the Arcade Came. When you're comfortable with the Arcade Came, you
+can move on to the Full Program where you'll have many new options
+
+17
+
+Q rr.arrxc rnE FULa PnocRAM
+About Stals Disks and Playet Stats...
+You?e going to see a lot of references to stats. A stals disk is where
+player, team, league, and park information is stored. You must
+have a stats disk to play a game- If you've installed your disks as
+outlined in Chapter 1, you've already made a stats disk (if you're
+using a hard drive, the stats will be in the path you created).
+Players have two types of stats: rcal stalr and accumulated stats.
+The real stats are the stats that came on the master Earl Weaver
+Baseball disks; they're the players'historical sta6. The accumulated
+stats are the onesthe players accrue after each game they play.
+Real stats never change; accumulated stats do. A player's performance durin8 a game is affected by his real stats, not his accumu-
+
+lated stats.
+
+1.
+
+Choose FULI- PROGRAM from lhe Pre-Game menu and you'll get
+the Full Progaam main menu.
+
+18
+
+2.
+
+Select the teams.
+The teams that automatically come up in the Full Program a.e AL 00-30
+and NL 00-30. lfthe home or visiting team isn't the one you want,
+choose SELECTTEAM under HOME or VISITORS (depending on the
+team you want to change) and you'll see a list ofteams you can choose
+
+from.
+
+3.
+
+Chooce from KCYEOARD, XEYPAD, IOYSTICK 1 or MOUSE as you.
+
+input device.
+Noae On Tandy machines/ the mouse is replaced by JOYSTICK 2. To
+use a mouse? you must inslall your mouse driver before runnin8 Earl
+weaver Baseball.
+
+4.
+
+Choose the managing option.
+YOU MANACE
+You call the plays for your team and the computer
+
+-
+
+controls the playerc.
+PIAY AND MANACE
+You conrol player movement 6itting, pitching, fielding, etc.) and manage, too.
+EARL MANACES- ea.l calls the shots and the computer moves the
+
+-
+
+players.
+
+5.
+
+Choose lhe skill level of play.
+MAJOR LEACUE
+The most advanced. Pitches are harder to hit.
+MINOR LEACUE
+A Iittle easier than Major Lea8ue.
+SEMI PRO
+The players run faster, field faster, and can hit more
+pitches. Compute. controls all runners.
+sAND LOT- The easiest sefting. Computer contols all runners.
+
+-
+
+-
+
+5. Ihe
+
+pilching style affects lhe length oI your game.
+(Available unless one team is in Play and Manage
+ONE PITCH
+mode.) The fast game. one key pitch represents an entire at-bat (unless
+a foul ball is hit o. a special play is put on).
+
+-
+
+t9
+
+FULL AT BAT
+
+-
+
+You see every pitch.
+
+7.
+
+Choode whether you want league or nonleaEue play.
+LEACUE
+lnjured players are lnavailable for a ceftain number of
+games (dependingon the nature ofthe injury), and staning pitchers
+cant pitch in back-to-back league games. Earl Weaver Baseball compiles a set of league stats that includes team and player pe ormance information. You can sa!e these stats after the game (as long as a copy of
+the teams are on your stats disk). league stas arent used in determining
+player aclion during a 8ame. You must have a stats disk ready if you
+plan to use lea8ue play.
+NON LEACUE
+Every player on your roster is available for every
+
+-
+
+8ame.
+
+-
+
+8. rte
+
+groond rules are for the home team's ball park
+lf you want to change the park, choose this and you'll
+SE|ECI PARK
+get a list of the 32 real and fantasy ball parks. The current park is the
+home team's park.
+
+-
+
+9.
+
+Use lhe regular nine-man lineup or have a designated hitter,
+NINE MAN LINEUP
+Choose this if you don't want a designated hitter. The pitcher will hit for himself.
+DTSICNATED HtfIER
+Choose this to have a designated hiner (who
+will bat fcr your pitcher),
+
+-
+
+-
+
+10. Choo6e the game mode.
+RECULATION GAME
+This lets )ou selectthe staning lineup. Players
+perform according to thek real statistics. You can also accumulate the
+final stats and/or save games in pro8ress.
+ARCADE GAME
+Earl selecs the lineup for both teams; you can't
+change either. Each player performs at a peak level of performance;
+players do not fatigue or get injured.
+
+-
+
+-
+
+2T
+
+.
+
+Decide whether o. not players can be iniured.
+Players can only get injured for the remainder of the
+will still fatigue and .equire a few days off.
+INJURIES OCCUR
+Players can Bet injured for mo.e than one Same
+(except in the ARCADE GAME mode). The number of games that an injured player will miss depends on the nature ofthe injury.
+1 1
+
+No
+
+lNrU RIES
+Earne. Pitchers
+
+-
+
+-
+
+12.
+
+Use other features.
+The options under THINCS TO DO let you change a number of features
+in Earl weaver Baseball. You don't have to make changes now; you can
+always come back to this menu after the game.
+PLAY BALI
+Choose this when you'rc ready to pick your sta(ing
+
+-
+
+pitcher and lineup in Regulatlon mode. ln Arcade mode, yor./ will immediately staft the game. If you haven't already done so, you'll need to ente. your season ticket pass number. On the codewheel, line up the nadium name with the seating section information. Nextto the stadium
+area you see a small window with a number in iq type in that number
+and press Enter.
+PMCTICE
+This lets you warm up before the game. You can work on
+pitching, batting, baserunnin8, and fielding. See Chaptet 6, Praclice
+Opttont for complete details.
+CENERAL MANACER
+This option lets you trade, draft, clone, and
+edit players so you can build your own team. See Chaplet T, Genenl
+Managet Options, lot aomplete details.
+LOOK AT PARK
+Lets you look at the currently selected ball park.
+DISPLAY 5TATS
+Lets you view stats in a number ofdifferent ways.
+See Chapter 8, Diiplay Statistics Opliont for complete details.
+Resume a prcviousiy saved game. You're
+CONTINUI A GAME
+list
+games;
+shown a
+of
+select the one you want to resume.
+COMMISSIONER
+tets you customize leagues, divis;ons, teams and
+ball park. Also lets you create new stats disks. see chapter 9, commissionet Options, lot comp lete detai ls.
+
+-
+
+-
+
+-
+
+-
+
+-
+
+21
+
+Select PLAY EALL to continue with the game.
+1
+
+3. Pick a
+
+starling pitcher.
+
+visiting Team Pitcher: The list on the riSht shows all the available
+pitchers: you'll see R fo. a right hander or L for a left hander, his name,
+eamed run avera8e, wonJoss record, and fatigue ratin8. lf you're playin8 Ea.l, you can override his choice by highlighting a pitcher from the
+list, pressinS Enter, highlighting the pitcher currently on the lineup card,
+and pressing Enter again. The pitchers willexchange places,
+ASK EARL
+Choose this to have Earl choose the starting pitcher (or
+lineup when you choose your lineup). You can override any of his
+choices,
+PRINT LINEUP-This leB you print the lineup for both teams. Left-handers are marked with an asterisk (') and swirch hitters are marked with a
+pound sign (#). If your printer is not attached and on line when you attempt to print, you will "hang" the computei you'll have to turn off the
+computer and start over again. Printing the lineup is a good ldea. You'll
+get the lineups for each team and the players available on the bench in
+the bullpen.
+EACK UP
+This returns you to the previous screen.
+FINISHED
+Choose this when youte satisfied with the selection.
+
+-
+
+-
+
+22
+
+Home Team Pilchei Select the horne team pitcher. To put a pitcher in
+the lineup, highlight his name and press Enter. Then move the cursor
+over to the numberyou want him at in the lineup and press Enter. lf
+you're using a designated hiner, put the pitcher in the blank slot below
+'9" so the pitcher won't be in the batting order. Choose ASK EARL if
+you want Earl's choice. Select FIN'SHED when you're done.
+14. Finish filling out the lineup cards.
+
+I
+
+,t!umr
+
+3:
+
+Visiting Team Lineup: The visitor fills out his card first. lf )ou'.e playing
+Earl, you can override any ofhis choices. Just highlight a player from the
+list on the left, press Enter, highlight a player currently on the lineup
+card, and press Enter again. The playerswill exchange places.
+
+Home Team Lineup: Fill out the home lineup. To put a player on the
+lineup, highlight him on the list, press Enter, move the cursor to a
+number on the lineup and press Enter again. You mun have a player
+foreach position, otherwise, when you try to continue, you'il see
+"Complete your defense.'
+
+23
+
+Pop Up a Stats Card
+
+You can look at any player's stats on your lineup or roster by highlighting that player and then pressing the space bar Press rhe
+space bar again to close the stats card. See "Reading Player Stats"
+in Chaptet 7 , Ceneral Managet Options, lot complete details on
+player stats.
+
+Players with dimmed names (in leaSue play only) aren't active and can't
+play in thisSame. lf a pla)er is dimmed due to injury or fatigue, the
+number to the left ofhis name indicates how many more games he'll
+mi55.
+
+Player Po6itioN: A player will play the position that appears to the left
+of his name. lf you want a player to play somewhere else, go to the
+small menu atthe lower left ofthe screen that contains allthe @sitions.
+Highlight the position you want him to play and press Enrer. Move rhe
+cursor on top of the player on the lineup card and pr6s Enter to assign
+him his new position, You can't change a playet"s position unless his
+name is on the lineup catd.
+Player Positions
+
+P
+1B
+28
+38
+Ss
+
+24
+
+Pitcher
+First base
+Second base
+
+Third base
+Short stop
+
+C
+l"F
+CF
+RF
+DH
+
+catcher
+teft field
+Center field
+Right field
+Oesignated hitter
+
+Select FINIsHED when youle done with your lineup.
+
+5. Take a final look al youi lineup and ft6{er.
+The home team is on the iop half ofthe screen while the visitinS team is
+1
+
+on the boftom half.
+
+---
+
+=L]&i
+
+rN@
+
+t-i-i;;i;Er TFid;"
+It's not too late to chan8e the startinS lineup. Just hiShliSht the player
+you want to put into the lineup and press Enter. Then highliSht the
+pla'er you want out of the lineup and press Enter. The two players will
+swap places.
+
+This lets you warm !p a pitcher when your pitcher on the
+BULL PEN
+mound is staning to show erratic performance. See step 18, below, for
+complete details on the bull pen.
+
+-
+
+DlsPl"AY sTATs
+shows you the c!rrcntly-highlighted playe/s
+-This
+main stats. ,ust hiShlight the player whose stats you want to view. To
+view a player's complete stats, highlight his name and press the space
+bar. (see Chapter 8, Display Staristics options,lor complete information
+on statistics.)
+
+25
+
+'15. Phy ball!
+Horne team takes the field and visitingteam is up at bat. lf you're in
+Play and Manage mode, you'lldnectli control pitchin& fieldin& baning
+and runninS. see Chaptet 4, Playing the Arcade Came, for instructions
+on how to control your players.
+
+17. Use your Slrategy mmus.
+The Strate8y menus let you call plays from the du8out. Press the space
+bar to open them. lf youte playing against tarl, he automatically calls
+the plays for his team so you can't change his Strategy menu. Plays unavailable to you because of Eame circumstances are dimmed. Plays that
+are "on'have a dot to the rightofthem. To close the menu, press Fl0.
+Or, highlight READY and then p.ess r- or -r, or click either joystick o.
+mouse button. If you're playing against a human opponent, both players
+must close their menus.
+
+18. Use your bull pen when lhe pildEr sla.ts to lirc.
+signs of fatigue include wild pitches, low-speed pitches (check the
+speed with the radar gun by pressing R), and successave batters getting
+hit!.
+When your pitcher begins to tire, you can visit the mound by calling a
+conference (choose CONFERENCE from the Strategy menu or press F8).
+On the mound, the pitcher and catcher answer the question "How's the
+arm?" The pitche/s answer is based on whether his arm is tirin& while
+the catcher's answer is based on the speed and accuracy ofthe pitches.
+The number of pitches thrown so far appears at the bottom of the conference box.
+A pitcher's endurance is based on his actual major league stats or on
+endurance ratings you've entered. Some pitchers can throw more
+26
+
+pitches than others before their arm tires. The more familiar you become
+with a pitcher, the better you can 8au8e how long he can throw.
+
+If you decide to switch pitchers, you can either bring the reliever in immediately or give him a chance to warm up in the bull pen. Relievers
+pitch better if you let them warm up first. Open the lineup card by
+pressing L or by pressing the space bar and selecting LINEUP from the
+Strateg!, menu. Hi8hli8ht a pitcher and press Enter. Move the cursor to
+either slot under BULI-PEN and press Enter.
+Next to his name you'll see the pitche/s warmup status: CID means
+he's cold; oK lets you know he's looseninS up (after one batterl wRM
+means he's almod ready to play (after two battersL RDY means he's
+ready for the mound (after three batters). To bring in the reliever, hi8hlight his name, press Enter, hi8hllghtthe pitcher currently in the lineup,
+and press Enter. Donl leave a pitcher in the bullpen too long o. his effecliveness and durability will d.op,
+
+If you want to bypass the bullpen, highliBht a pitcher from the roster and
+press Enter, Highlight the pitcher in the lineup and press Enter to have
+the reliever go straight to the mound. Wa.ning: when a pitche. skips the
+bullpen, he won't be adequately warmed up for at least two batters.
+19. Find out who's on base and who's on deck.
+Press B to find out who's on base and to see the speed ratings for the
+curent baserunners. Ease.unner ratings are on a scale of 1 (slowest) io
+'10 (fa$esd.
+
+You'll also find olt whothe on-deck batter
+
+is.
+
+20.
+
+Replace a balter or runner,
+Durin8 the 8ame. you can replace a batter or runner with a pinch hitter
+or tunner. Open the lineup card by pressing t or by pressing the space
+
+27
+
+bar and selecting LINEUP from the Strategy menu. Highlight the player
+you want to come in and press Enter. Then highlight the name ofthe
+batter or runner you want to eplace and press Enter. Once you replace
+a player at bat or on base, that player is out for the rest of the game.
+
+21. Check a playe/s statistics.
+You can look at a player's statistics at anytime by popping up his stats
+card. Open the lineup card by pressin8 L or by pressingthe space bar
+and selecting LINEUP from the StrateSy menu. Highlight a player and
+then press the space bar to open his stats card. Press the space bar again
+to close the stats card. See "Reading Player Stats' in Chafiet 7, Ceneral
+Managet Opidls, foa ca,inplete details on player stats.
+
+22. Try out the many featu.es in lhe tame.
+Wind conditions: Press F7 to see lhe current wind conditions. Prevailang
+winds affect the distance and direction the ball canies, so position your
+outfielders accordingly. Conditions can change every half inning. Wind
+conditions vary from ball park to ball park.
+lnstant Replay: Press I to see an instant replay. To see an instant replay
+in slow motion, press M. Press F to advance frame by frame; press any
+keyto resume normal slow motion (you must have 5'l2K of memory for
+this to work).
+Radar
+
+gun: Press
+
+R
+
+to get a radar reading of the last pitch.
+
+Umpke call: Press U to find out what the last pitch was. You get the
+ump's call on the aclual pitch. Lefs say you swung at a high curveball
+that was a ball and missed; the ump will rell you the lasr pitch was a
+ball e!en though it counted as a strike.
+
+2a
+
+Sound: Press F3 to togSle the sound on and off.
+These are just a few things you can do. Check out 'Key Commands" on
+the Manageds Card for a list of all the features you can use.
+
+23. Save the 8ame.
+Press 16 to save the game. You'll be pompted to enter a name and then
+you'll return to the 8ame. Press F10 if you want to return to the main
+menu (A,oler The
+
+fxit key F1O returns you to the main menu without
+saving your game. Be sure to press F6 before you press F'l 0 if )ou want
+to save
+same.) When you wantto resume your 8ame, select CONTINUE A
+GAME
+from the Full Program main fircnu and then select your
+'/our
+from
+saved Bame
+the listNole To Tandy Use6: lf you'.e playinSon a Tandywith 512Kor more
+of memory andloule using a joystick, you can't reload a saved game
+in tCA mode. To get back into a saved game, you must reload Earl
+Weaver Baseball in CCA mode by typing WEAVER C; then you can
+resume the Same in joystick rnode.
+
+24.
+
+Finish lhe game and update the slats.
+When you finish the Bame, you'll see the following screen:
+
+29
+
+H
+w
+Sv
+
+Hils
+
+DP
+GWREI
+
+winnin8 pitcher
+
+T
+
+baned in (if applicable)
+
+Savins
+
+pitchs
+
+(i, appliGble)
+
+The Box Score shows )ou the batting and pitching statistical breakdown
+
+for bodr teams, You can print all or some of the information to SCREEN,
+PRINTER, or DISK.
+REPLAY
+Lets you review the game-ending
+SLOW MOTION REPLAY
+Les you review
+slow motion.
+UPDATE PLAYER STATS
+updates the
+-This
+lated from the game to your stat5 disk.
+UPDATE WL RECORDS
+This updates the
+lated from the game to your stats disk.
+
+-
+
+-
+
+-
+
+a
+
+the Same-ending play in
+player statistics accumu-
+
+bam statistics accumu-
+
+Both teams must come from the same path or disk in order for
+UPDATE PTAYERS STATS and UPDATE WL RTCORDS to work
+
+correctly.
+
+30
+
+play.
+
+Q nnlcrrcE oPTroNs
+selcct PRACTICE from lhe Full Program main menu for all of the
+followint oplions.
+
+8'firng
+
+Pt4,aliae
+
+ln battin8 practice, you get the following pitches: 5 each of medium
+fastballs, fast fastballt cuNe ballt and screwballs;20 strikes (assoned;
+and an unlimited mix ofstrikes and balls. If you wantto go strai8ht to
+swinging at a random assortment ofpitches (great for training your eye),
+press M. To return to the "5 each" drill, press M a8ain.
+
+Fie'd;ing Ptaatiae
+For the first
+
+where
+
+Earl
+
+panotfielding practice, you do the infield/outfield drill
+tells yor.r where to throw the ball. then as the practice
+
+progresses, you go to lhe situational drill where Earl calls situations like
+"'l on, 2 ouf; you must decide where to throw the ball. Earl doesn't
+le{ you off the hook until you toss the ball to the right place. To toggle
+betlveen the two types of pracllce, press F.
+31
+
+Pttahing Ptacarcc
+You can throw any son of pitch )/1ou want for as long as you want. As
+is in the game, the pitch is composed of th.ee parh: the type of pitch,
+the location, and the delivery/destination.
+
+a
+
+it
+
+To end any of these practice sessions, press F] 0.
+
+Q crxrnlL
+
+MANAcER oPTroNs
+
+Select CENERAL MANACER from lhe FullProgram main menu
+all of the following options.
+
+for
+
+As ceneral Manager you can build your own franchise by tradin& draftin8, cloning, or even buildin8 new superstars from scratch.
+
+32
+
+n.eadh'8 Pt'.',e] Sl'Ils
+Understanding a player's stat card is important if you want to analyze
+your playe/s strengths and weaknesses. Highlight any player and press
+the space bar to view his stats. You'll see one of the iwo following
+screens depending on whether the player is a pitcher or fielder. Press
+the space bar again to close the stats card.
+Player Slab for Fieldet
+
+l-I lll" l. te r!"
+Player Stab for Pitche.
+
+br.r.: r - ---:::.:
+
+!-l
+
+l
+
+tf3. Fre t'"
+
+33
+
+Here's a list of the abbreviations you'll see on the siatistic screens. Not
+every playe/s sqeen will contain every abbrcviatitn listed below.
+
+sletislics Ahbrsialions
+
+tb
+
+H&t
+
+Sin8le
+
+Hit & Run 6ting
+
+HR
+IP
+
+2b
+
+3b
+
+L
+
+o8A
+
+IA
+
+Primary lieldanS posi(ion
+
+BAIJ(
+
+?2
+
+8B
+
+PD
+
+CG
+
+cs
+
+seonddy
+
+t
+
+fi eldi,E
+
+poririd
+
+'Righf it after 8Ars,
+
+caught steling
+
+E
+
+ET
+ERA
+
+RBI
+
+Ett
+
+s
+slug8ins
+
+avege
+
+s8
+FieldinS awa8e at Fimary
+
+so
+
+EA-2
+f{ituc'
+c
+GWRBI
+cs
+
+daty position
+Pitche''s htigue Eting
+cames played
+
+vs lefi-hdd pitdE s (if
+player k nota pit her) or
+
+Carewinnin8
+
+balta
+
+HB
+
+Hh
+
+Fieldan8
+
+avsSe at
+
+eq-
+
+SH
+
+(al plays i5 a pirchq)
+Vr ight-hand pnchds (if
+player b dot a pikhed o,
+banss (it plays ir a pitchet
+
+RBI
+
+cam6 naned
+bitchsr dly)
+
+B.itd
+
+e.
+' ne.&Bone
+peftaiu,
+
+t to todth1tF@, dik t l*,lAtlp l@4 a M.ge,.'xl to$2 A$.4
+Ahhougl rlet .6cd Plzy ln .ll ryps ol gzrc. rhel hzve tEn g.aa .tu.t la
+i,ininethe Pit he
+Onlf nbd<. t.IiE@ dtinAft* Ph.tnElhyu lpgututdyhaw
+irt 6eeic hit t li.sin ta ebrh. AldDudl th.* t t: Es baed M n.!i ial dal. Ihey have
+m elarent ol ebl..ivity. tl tu d.a t .8@ wxh 2 ttth8, Jbu d.h.age L
+
+thing to
+M.aJe]c
+
+.i
+
+34
+
+*i
+
+4
+
+ffif
+
+Dditit a P!,I{et Stors
+when you edit a player, you can change his stats and ratings. select
+EDIT PLAYER. Selecl a player, press Enter and the Edit Player window
+oPens up.
+lnputting Stats
+To chanSe an item, hi8hlightlhe item, press Enter, t)?e in the revision,
+and press Enter aSain (or you can press Tab in place of the last Enter to
+accept the revision and move to the next field. Use your riSht cursor or
+Tab to move from field to field. Press Escto recall an ori8inal value (you
+mu$ presg this before you move to the next field). Slome entries, like BA
+(bafting average) and FA (fielding average)can't be changed because
+theyre calculated from otherentries. Here are a couple ofthings you
+need to know when inputting stats:
+
+Yean This number represents the year in which the player accrued the
+staG. Since pofessional baseball began around 1845, that's the earliest
+year you can enter.
+Pocition: The first time you enter a playe/s position (Pl), enter the
+nlmber that represents the player's primary position. lf $e player is not
+a pitcher, he can have a secondary position. For programming purposes,
+we've added a couple of extra numbers to thF standard numbering
+system for normal baseball positions. You cai also use the standard
+abbreviations for a pla)er's position.
+
+35
+
+Player Position Numbe.s
+
+2
+
+orC
+
+catcher
+
+3or1B
+o.28
+5or38
+5orSS
+TotlE
+4
+
+aorlt
+
+teftfield
+
+1o or RF
+11 o. Of
+
+center fleld
+Rlghtfield
+Oudield
+
+9orCt
+
+Third base
+
+l2 orOF
+
+oudield
+
+shorrs!op
+
+13 of DH
+
+Designaled hitter
+
+lnfield
+
+Split statistics lets you break stats down into ri8ht- and
+left-hand categories. For instance, a batter's split stats show his effective-
+
+SPLIT 5TAT5
+
+ness against left-handed pitchers ardri8ht-handed pitchers, rather than
+against pitchers in general. lf the player is a pitcher, you can check out
+his effectiveness against ri8ht- and left-handed batte6. The more information you supply, the more true-tolife the game simulations will be.
+You must enter left and right stat5 separately.
+
+when you're entering Split Stats, you can't enie. information for some
+of the stats in Croup l. Much of the information in Group I is calculated from the stats that you enter in Croup 2 under the VsL and VsR
+categories,
+TOTAL STATS
+TOTAL STATS les you dkectly enter stats for Croup 1 .
+It does not show the VsL and VsR (croup 2) information. when you
+switch to Split Stats, the information you entered in Croup I will show
+only in the VsL row; the VsR row will contain zeroes. The computer
+tries to break down the $ats as logically as possible. For accurate Split
+Stats figures, you should enter the information in Split Staa mode,
+
+-
+
+RESET STATS
+
+If you've made changes to a player's stats and wish you
+- REsET
+STATS to recall the original stats.
+
+hadn't, choose
+35
+
+CLEAR STATS
+CLEAR STATS deletes every entry on the screen. After
+you clear stats, you can re-enter new information for this player or use
+the blank sc.een for another player. Select RESET STATS if you decide
+not to clearthis player's stats,
+
+-
+
+SAVe STATS
+After you've made chan8es to the playe/s stats, this lets
+you save his revised rtats onto his team's roster. lf you want these stats
+saved permanently on disk, you must save the entire team by selecling
+SAVE fiom $e CENERAL MANAGER screen. If you don't save the entire
+team, then all changes to this pla)er will be loswhen you return to the
+main menu screen.
+
+-
+
+ACCUMULATED STATS
+cial scorcr, you can chanSe
+player's card. Keep in mind
+performance, only real $ats
+
+-
+
+If you disagree with the decision of the offithe accumulated sta6 at the bottom ofa
+that accumulated stats don't aftect a playe/s
+do.
+
+Tt,,ding P,agerc
+To vade a player, select TRADE PLAYeR. Highlight a player from one
+roster and press Enter. Then highlight a playeron the other team's rcster
+and press Enter. The names on the two rosters automatically reverse to
+complete the trade.
+To trade with a team otherthan the one currently onscreen, choose
+SELECT TEAM for the team nolinvolved with the trade. You'll see your
+list of teams. Choose the one you want to trade with and that team will
+replace the current team on the scrcen. You must save for the fiade to
+be permanent.
+
+37
+
+IrtoJti'ng
+
+Pl''',tt
+
+You can draft a player from any team without givingthem anyone in
+retu.n. Select TRADE PLAYeR. Make sure you have an empty spot on
+your roster. lf you don1, you'll have to delete sornebody.
+
+Highlight the word DRAFT: and press Enter. Type the /a$ name ofthe
+player you wantto find. The program searches for names with the letters
+that you type. For example, if you type "C," the program searches for
+all players whose last narne begins with "C." If you type "Car," the
+computer will search for all names that stan with "Car," like Carey and
+Carter. Draft will search for the name on the path/disk that you lan
+loaded.
+
+when the computer finds a match, you have three choicest move the
+player to the Draft window with DRAFT; continue to search with NEXT;
+or stop the search with CANCEL. lf you draft a player, highlight his
+name from the draft window and press Enter. Then highlight an empty
+space on the roster and press Enter to complete fie draft.
+You must save each team for the trade to become permanent.
+
+Dcleling P|'J,eB
+To delete a player, select TRADE PLAYER. Select a player and then
+move him to the DEIETE window. The name won't be deleted immediately; this Eives you a chance to retrieve him if you change your mind.
+The player will be deleted when ),ou place another name in the DETETE
+window. If you accidently delete a player, dont worry. Nothing is permanent until you save your changes to disk; just don't save it to disk if
+you made a mistake.
+
+38
+
+Cron nA
+
+Pr'/ri''
+
+You can make as manyduplicates of a ptayer as you have room for in
+your roner. Select CLONE PLAYER. Highlight any player and press Enter. Move the cursor to a blank spot on the roster and press Enter to
+clone the player. You can't done a player if you don't have an empty
+space on your roster; delete somebody if you need to.
+
+Cleatlng Ne,ut Plage,ts
+lf you want to create new players without deleting existing ones, select
+EOIT. Move the cursor to a blank spot on the roster and press Enter.
+You'll see a blank stat cand; fill itout and then save the new playe..
+
+If you don't have a blank spot on your roster, you'll have to delete a
+pla)er. Or you can create a new team and build a roster from scratch.
+Another ahernative is to copy a team, change the players' names, and
+edit their stats to your satisfaclion.
+
+I'ISPLAI STATISTTCS
+OPTIONS
+
+Selecl DISPLAY STATISTICS Irorn ihe Full Program main menu
+
+for
+
+all of the following options,
+Earl Weaver Baseball lets you display statistics in a number ofways.
+
+39
+
+Choose where you want the data to go to. lf
+you send the inlormation to disk, it will be stored in a text file that you
+can work with through a word processor,
+SCREEN/PRINTER/DISK
+
+-
+
+FROM REAL STATS/FROM ACCUM 5TAT5
+REAL STATS aie the
+pla)e/5 real life stats. They're the ones that came on youroriginal Earl
+weaver Baseball disks. ACCUM STATS are the slats a player accumulates when you actually playthe game.
+
+HICHESTTO LOWESTAOWEST TO HICHEST-Choose if you want
+your srats to be displayed from the highest value to the lowest value, or
+vice verca.
+LEAGUE NAMES
+All-Time League isthe one that comes on your
+-The
+original Earl weaver Baseball disks.
+LIST LEADERS IN:
+
+BA
+HR
+RBI
+eRA
+40
+
+Eatting average
+Home runs
+Runs bafted in
+Earned run average
+
+wlNS
+
+Cames won for pitchers
+
+50
+
+Strike outs for pitchers
+
+8Y NUMBER: You can list a number of other stats by entering a number
+code that represents a specific cabgory. The lists below shows all the
+codes 1ou can enter for batters and for pitchers for real and accumulated stats. Real statt are rhe stats dra corre on fie anaser dislc Accumulated stats are fie stats that the players accrue after each Bame
+played,
+
+a
+
+For a conplete key to all the abbreviations used in the folloring
+tables, see $e Statistic5 Abbeviations table on page 34.
+
+Real Stats for Eatterr
+Ri8hrHanded
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+lo
+l1
+12
+
+t3
+14
+ts
+16
+
+8A
+G
+A8
+R
+H
+2b
+3b
+HR
+RBt
+5H
+
+17 BA
+
+l8 AB
+l9X
+m2b
+21 3b
+22 HR
+23 BB
+2450
+25 SA
+x o8A
+
+27 BA
+28 A8
+
+29H
+:Xt 2b
+3! 3b
+32 HR
+33 BB
+
+37
+38
+
+H&R
+
+39
+/l()
+
+4l
+12
+
+34 50
+35 S\
+36 0BA
+
+8B
+SO
+
+s8
+
+cs
+
+5{
+OBA
+
+4t
+
+Real Stds for Pitchers
+vs.
+
+46 1
+47 ERA
+480
+49 CS
+50 cG
+51 5V
+52 tP
+53H
+54 ER
+55 HR
+56 BB
+57 SO
+5A HB
+59 Balk
+
+Left.Han.k
+
+Vr. RiSht-Hdded
+
+SdLB
+60 8A
+61 H66H
+52 HR
+63 88
+64 SO
+
+Ads
+65 8A
+67 HR
+58 88
+59 SO
+
+71 Control
+Z2 Fatlgue
+73 Bunt
+
+Accumulated Statr for Balters and Pitchers
+Pildin8
+
+IBA
+2G
+3AB
+4R
+5H
+6 21,
+73b
+AHR
+9 RBI
+IO BB
+l1 so
+12 5A
+t.i oBA
+l5 sA
+42
+
+glrt
+
+17 I
+16 ERA
+19 G5
+21 lP
+22H
+23 ER
+2s BA
+25 SO
+
+76 AB
+77H
+Z8 HR
+79 SH
+
+LIST REQUIREMENTS:
+
+MIN AT BATS
+Enterthe minimum number ofar bats thatthe player
+mu$ have to quali9 for the list,
+MIN lN NINCS
+Enter the minimum number of innings that a player
+must have played to qualify for the list,
+LIST LENCTH
+Enter how many playem you want on this list
+
+-
+
+-
+
+sHow:
+STANDINGS
+
+Shows accumulated won/loss record.
+you print the roster for any team or the lea8ue roste.s.
+Select SKIP TEAM to call up the nen team. lf you select League Roster,
+it begins with the first ream in the selecled leaSue even if you've skipped
+ahead a few teams.
+TEAM TOTALS
+Sho\rs rhe bafting and pitching btals for all teams in
+the cunent (seleded league.
+ROSTERS
+
+-
+
+-
+
+Lets
+
+-
+
+0 COMMISSIONER OPTIONS
+o
+
+Select COMMISSIONER from the Full Program main menu for all
+of the following options.
+
+Cu5ao.t.. a..is
+C{5ao.ir. r.!rr
+eul.Bor.
+
+D.t.t. .lt rl.s.!s di
+Cr.t. ..r l..eu.
+
+re.F
+
+43
+
+Customize lzaguet
+CUSTOMIZE LeAGUES lets you name or rcname leagues and divisions.
+Highlight any ofthe slots, press Enter, type in a name, and press Enter
+a8ain. Select FINISHED and the new names are savd onto )/our stats
+disk,
+To create a new league, use the "Create New League on New DisV
+
+Path' option.
+
+Customtze tearns
+SeIecI CUSTOMIZE TEAMS and you'll see a list of the teams on your
+stats disk. Selectthe team you want to customize and press Enter.
+
+(RE)NAME
+
+name or rename a team, hiShlight the existing name or
+
+-To
+the blank space next to (RE)NAME, press Ente., type in a name, and
+press Enter again.
+
+STADIUM
+ball pa* must be on the same disk as the team you
+-The
+want to aftach itto. Select the ball park after STADIUM, seleclthe name
+ofthe stadium you want foa the home field, and press Enter.
+DTLETE ALL PLAYERS
+Seleclthis to empty out the locker room, This
+feature is useful when you want to 5tart a team from src.atch. You can
+cop, clone, or oeate new players using the General Manager options.
+
+-
+
+To recolor uniforms, choose from any of the eight
+colors. Noter onlyTandy and EcA will display these colo6.
+
+TEAM COLOR
+
+44
+
+COPY TEAM
+Moves teams from division to division, disk to disk, or
+even within the same division. To copy a team:
+
+-
+
+1.
+2.
+
+Highlight a blank space and prcss Enter.
+Choose COPY TeAM. When you're prompted to "lnsert Source Stats
+Disk," insen the disk containing the team you want to copy and seIect READY.
+
+3.
+
+You now see a path selection list. Make sure the right path is selected and then select FINISHED.
+
+4.
+
+Select the team you want to cop, insertthe disk you're copying to
+at the "lnsen Destination Disk" Fompt, and select READY. When
+the team is copied to the destination disk, the customize team rnenu
+appears so )iou can change the team if you want. lf you donl want
+to customize this team, select FINISHED to return to the list of teams.
+Use CANCEL if you decide not to copy the team.
+
+To crcale a newleam...
+
+The leaguethat comes on your Ead weaver Baseball disk hasthe maximum number ofteams that the Came disk can hold. To create more
+teams, you thould create a new league to put them in. See 'Create New
+Lea8ue on New Disk/Path," below, for details on creating a new league.
+Once you cteate a new league, you can create new teams. ln your new
+league, select a blank spot on the team list screen and press Ente.. You'll
+get all the options under "Customize Team,'above. If you don't want to
+construct a team entirely from scratch, you can copy ateam and then
+editthe team and player information to your liking.
+
+45
+
+C',,rtomlzc Pa'ks
+choose CUSTOMIZE BALL PARKS b create your own park. Select the
+existing ball park you want to work from and click the button.
+Notice dle LOOK AT PARK option in the lover left-hand corner of your
+screen. Seled this option to see how )/our remodeling or new constn ction prorect is pro8res6ing. You can also look at the park by pressinS the
+space bar.
+name or
+
+park, highlight the
+
+or
+a
+existing
+-To
+the blank space next to (RONAME, press Enter, type in a name, and
+name
+
+{RONAME
+
+renarne
+
+p(ess Enter again.
+NATU RAVARTIFICIAI
+
+oUTDOoMNDOOR
+
+-
+
+Chooce
+
+fie type of turf you want.
+
+Choose a domed or open-ah stadium.
+
+BLEACHERS
+Choose the settings fo. the four sections of bleachers.
+Enter a number from 1 to 4:
+
+-
+
+1
+
+2
+3
+4
+
+-
+
+The bleacher has one deck.
+lt has 2 deckslt has 3 decks.
+lt has 3 decks and a rmf.
+
+HEICHT
+These are the height settings for the oudield wall. The diagram below shows you where each part ofthe wall is, The height ofthe
+wall is measured in feeJWall Min
+
+-
+
+LI, RI
+L2, R2
+
+t3,
+
+R3
+
+3
+
+14, R4
+
+4
+
+c
+46
+
+3
+3
+
+6
+
+40
+40
+40
+20
+20
+
+DISTANCES-This isfie distance to each part ofthe outfield wall. The
+diagram below shows you where the lines are. The distance is measured
+in feet.
+
+Line Min tength
+Left line
+244
+Right line
+244
+L2,R2
+260
+13, R3
+300
+14, R4
+320
+cL, cR
+340
+
+I'tax Length
+355
+355
+400
+
+4s0
+46s
+480
+
+when you enter height or distance figures, you can enter 000 to
+autooatical ly 8et the lowest value or 999 for the highest.
+
+-l
+
+-r."
+
+Jwas
+
+47
+
+To creale a new park...
+Select a blank spot on the screen frat lists the parks and press Enter.
+Enter the above information and save the park when you?e done.
+
+Oront d lral, Ofi
+Records a day off in the accumulated lea8ue data on your stats disk,
+givin8the teams a day of rest and recuperation. You can grant as many
+days off as you want. This option is only effeclive if you're playinSwith
+the l-eague option ON. See Chapter 1 l, seri4g Up you Own LeagE,
+
+for more informatlon on running your own leagues.
+
+Co!,!' Oie Batt Path
+when you choose this option, you're asked to insert the source disk; this
+is the disk that the park you want to copy is on. If you're lsing a hard
+drive, you'll also have to select the correct path. After you select the
+correct path, select FINISHED. Choose the ball park you want to copy
+by highlighting it and pressing Enter. when you're asked to insen the
+deflination disk. insen the disk that )lou want fie park copied to. Yo{r'll
+see the set Path screen a8ain. After you select the correct path, select
+
+FlNlSHED. when you're shown the ball park list, highlight a blank spot
+and press Enter to copy the pa* to that blank spot. lfthere's no blank
+spot you can highlight an existin8 ball park and the new park will be
+copied over the existing one.
+
+E']ase Saoeit carncs
+Permanently removes ail the saved games from the stats disk in the
+currently selected disk drive or palh.
+
+48
+
+Delet Nl P't,lfs' a'f'dt
+
+o,fr.t
+
+This leaves an empty set of player and team files on the stats disk in the
+cur.ently selected disk drive or path. The files are 'blanked out."
+
+C'reat4 Neut
+
+l2aguc
+
+ort Ne',, DlshlP.a',h
+
+This command places blank league, park, and player data files on a new
+disk or in a new disk path. lf you'.e using floppy diskt you'll need a
+blank, formatted disk. lf you're using a hard drive, the program will create a new path on your drive; you'll be asked for a path name.
+
+Clc at Ac ct$r'',,l,'z,' Stott
+select this option to clearout all the acarmulated Jfatr on your current
+stats disk. The original /eal slats remain unahered on your disk.
+
+Cleat WonlLo.tl necotdt
+lf )rou complete a season and want to start a brand new one, or if your
+record isn't too impressive and you want to forget the season altogether,
+you can reset all of the teams' won/4oss records to 0-0 with this option.
+
+49
+
+trrs FRoM TaE
+@
+- MASTER TECNNTCTAN
+It all began in st. Louis, where Earl's father owned a dry cleaning firm.
+Arnong his clients were $e SL Louis Cardinals and the St. Louis Browns.
+(The St. Louis Browns would later move to Bakimore and become the
+Orioles.) Needlessto say,dle weaver family made many tripsto spoftsman's Park.
+
+"As a kid I would carry the unifoms in and out of the clubhouse,' says
+Weaver. "ln my mind, there was never any doubtthat l'd make the majors. Eetween the Cards and the Browns, I would go to a hundred games
+a year. I had a 'Me and Paul' T-shirt I loved the old Cas House GanB
+with Pepper Manin, Joe Medwick, Dizzy and Pall Dean." Earlwatched
+that team and the other 5t. Louis teams to follow, and by age thirteen he
+was already second-guessing Cardinals' manager Billy Southworth (who
+had an impressive .593 winning percentage).
+Earl enioyed an outstandlng career as a second baseman for Beaumont
+
+High, and after his senior year the Browns and the Cardinals both wanted to sign him. Earl chose the Cards when Walter Shannon, the minorleague director, pointed to second base at Sportsman's Park and told
+Earl, "One day you'll play there,"
+ln the minor-leaguet Earl rode the buses and grew tough on the $1.25a-day meal money. He played ball whether the temperature was 32 or
+'I
+02 degrees, and in his second year of pro ball, he drove in 1 0l runs
+while hitting only two homers, Earl was named Most Valuable Player in
+his leaSue in two of his firsl four years, and all four of his teams won
+titles.
+
+50
+
+After eightyears of beating the bushes, Earldecided he wasn't Soing to
+make the majors, and late in the 1956 season he became the playermanager for the Knoxville Smokies. The next year, the Orioles hired Earl
+to run their Class D club in Fitzgerald, Ceorgia. Earl was starting at the
+bottom as a manager just as he had done as a player, but this time he
+would make it to the top.
+
+weaver's digdain
+victories.
+His distinclive
+for defeat drove his teams to an incredible 1407
+flair for managing and uncanny abilityto consistently produce winning
+one of
+clubs enabled him to compile a winninB percentage of .592
+the besl in major league history. whercver Earl Weaver went, he won
+from Elmira to Rochester and finallyto Baltimore, where he led the
+Orioles to a first or second place finish in the American League East
+Division thirteen ofthe sixteen years he managed the club. DurinS his
+entire career, his clubs posted only wo losing seasons.
+During his 29 years
+
+as a major league manager, Earl
+
+-
+
+-
+
+"lt's simple," says Earl, "l love baseball, and I love to win." And to help
+you enjoy Earl weaver Baseball to the maximum, Ea.l has kindly agreed
+to impan some ofhis widom here. ln the following sections you'll find
+gems that will help make you the tops in your own league.
+
+norne ng,ns
+"The home run is my favorite subjecl. lt's the most exciting play in baseball
+the sport's knockout punch. lt's often the dlfference between
+winning and losing.
+
+-
+
+"The minute you hit a homer, you have a run, no questions asked. with
+anlthing else, you aren't guaranteed a run. On a home run, nothing can
+go wrong. You can't be robbed by a fielder makinga geat catch or by
+
+5l
+
+your baserunner fallingdown or by someone beinB thrown out. Why
+people can't see that, l'll never know."
+
+nout to
+
+telt I, a mchct ls Ttulng
+
+"There are no hard and fast rules on when to take out a pitcher, but
+there are some clues to look fo.. for example, if a pitcher is throwins
+well, hitters will usually hit foul balls straight back, and there'll be
+plenty of foul tips. when batters start making solid contact and hitting
+line drives down the foul lines, it usually means they're catching up
+with the guy on the mound.
+
+"Another sign to look for is lead-offwalks. lfthe piicher has a big lead
+and walks the first hitter on four straight pitches, ifs usually a sign that
+he's getting tired."
+
+the ldeat ltlr o, Ptate's
+"You should have 9 pitchers and I6 position players available. The
+ideal situation is to have a ri8ht handed hitting catcher, left-handed hittin8 catcher, and a catcher who can go behind rhe plate and play other
+@sitions. Then you'll need one staner each at first base. second base,
+shortstop and third b.se, and two utility infielders to back them up. That
+makes 9. Now you can eithe. have 7 outfielders or 6 outfielders and a
+
+thkd utility infielder. That's the way I would select if I was selecting off
+ofthe roster. ldeally, l'd have 4 right-hand hitting infielders, 3 left-hand
+hittin8 infieldeas and as many switch-hitters as lcan get in there."
+
+52
+
+Setting Ap t tc Aafting Otdq
+"Your leadoff guy should have speed and be a man who can get on
+base. The number 2 Buy should be a contact hitter, one who can get the
+bat on the ball and move the leadoff man to second. I prefer a left-hander who can pull the ball, because ifthe first guy gets on base, the first
+baseman has to hold him on and that opens up a hole in the defense.
+"The number 3 man should be a contact guy who can hit with power.
+Stan Musial and Ted williams were two ofthe best that ever lived. Pick
+a player like that.
+"The founh guy should be your power hitter. The object is to get him to
+bat in the first inning, because if he gets to bat, you've Eot the potential
+for two runs. The fifth hitter should be somebody who can ddve in a
+couple of people when they're on base. If you can get him to bat in the
+first inning and he's Bot power, you'll have a chance to getthree runs.
+"The 8uy hitting in the sixth position should be you. best hitter left, either averase-wise or power-wise. Then 7th, and here's where the AL
+will differ from the NL, 8th and 9th aren't going to have much power.
+You'd like a little speed in the 7th spo! if possible. Especially in the NL.
+One of the reasons for that is ifthere are
+
+wo
+
+out and the 7th hitter gets
+
+on base, you're goingto let him run automatically, because you don't
+want to 8et your pitcher leading off. So you either want him to 8et in
+scoring position for the 8th hifter or picked ofJto end the inning.
+"You've Eot the DH in the AL, so your 9th hitter is usually your weakest
+hitter, so you don't want him leading offeithe.. He might be your bunter. If you can get power in the 8th spot, that's pretty good. If you can hit
+a DH 8th, then you've got a pretty strong lineup."
+53
+
+Wlnninc ond t oslng PlaJ,ds
+"Sportswriters and announcers spend too much time talking about
+'clutch' players, 'winning playert and 'losinS' players. lls lrue that
+some players deliver more than other players in crucial situations. lt's
+also true that some players play on more winningteams than others. 8ut
+you must remembrthat baseball is a team 8ame. That may be a cliche,
+but it's also a fact.'
+
+The Sacrtrtue Eunt
+"They don't call it a sacrirtce bunt for nothinS. When you use the saclifice bunt, you're giving the opposilion an easy out. Since you only have
+three outs each inning, they should be veasured and not Biven away
+
+lightly.
+
+"Decidingwhen to bunt will depend on the averages ofyour hitters. The
+bunt can be a good play if you?e bringing the riSht people to the plate
+todrive in the baserunners, but there's no Suarantee that a bunt is Sonna
+move the runner over and get the run in. The odds are with you if you
+bunt at the end ofyour order, but they're a8ainst you if you bunt in the
+cente. ofthe order. For example, l'm not going to have my number
+three hitter buntthe runners over and give the other team an out jlst so
+they can walk my number four man to set up a force or doubleplay."
+
+Bosc Steotine
+"The steal has to be successful 75% ofthe time to,do some good, lf it's
+only successful 5O%. it ain'twonh a damn. Coleman, \Mlson and those
+guys are going to be ruccessful
+
+54
+
+80lo 90% of fie time.
+
+"The guy on the mound will determine who you wili give the green light
+to. Ifthe pitcher has a big delivery, you might be willing to take more of
+a chance. If you've 8ot one out and your pitcher or number nine hitter
+at the plate, you will almosl always try to steal second. The worsr thinS
+that could happen is the runnergets picked off and the pitcher makes
+the last out, so you start the nex inning with your lead-off hitter."
+
+C',,tofi P!a'/t
+"when the right fielder or center fielder is making a throw to the plate,
+the first baseman is uslallythe cutoff man. The third baseman normally
+handles throws from left field to home. Dependingon who has the better arm, the second baseman or shonstop will be the relay man for balls
+hit in the alleys
+left-center and right-center
+the other player
+
+-
+
+covering second base.'
+
+-with
+
+X|p lllt-anl,n;tn
+"l believe the hit-and-run isthe worsl play in baseball. What I prefer is
+somerhing I call the tun-and-hit. The difference is that with the hit-andrun, the runner is going to second base at halfspeed, waiting to see if
+the batter makes contact with the ball. tfthe batter doesnt connecl, the
+runne. gets thro\ r'n out about 90% of the time. The batter is also at a disadvantage because he hasto swing at any pitch, even a bad one, to protect the runner.
+"With the run-and-hit, the runner is trying to steal second and isn,t
+countinS on the hitter to protect him by making contad. The batter only
+swings at the pitch if he likes it
+he doesn't have to swing at a bad
+pitch out ofthe strike zone.' -
+
+Xh. Piahot
+'',oue
+
+"On the pickofi move to first base, you can sometimes cheat a little.
+Certain umpkeswill not call balks. The pitche. can twist his shoulder
+hal6^,/ay to the clubhouse and they won't call a thing. lt doesn't mean
+a balk won't be called, but you can get away with it rnost of the time.
+I know of an umpire who has called only one balk in his career. He
+told me this, and he said he only called the balk because the pitcher
+dropped the ball while on the mound, and that's an automatic balk.
+Furthermore, the umpire said he waited until the ball bounced twice
+
+before making the call."
+
+tln $tiaidc
+
+Squeezc
+
+Aay
+
+"The suicide squeeze is the most dangerous play jn baseball-there is
+no margin for error and no way to defend against it, ln the suicide
+squeeze play, the runneron third breaks for the plate as soon as the
+pitcher commits to making the pitch. h the meantime, the batter
+squares around to bunt lfexecuted properly, the batter la)6 down a
+bunt just before the baserunner gets tothe plate.
+"The reason it's called a suicide gqueeze is ifthe batter doesn't connect
+and putthe ball in play, or at least foul it off, the runner i5 a dead duck."
+
+thc Fottt-llan mchlng not'fion
+'l've
+
+gone with the four-man pitching rotation more often than any
+other manager overthe years. The reasoning is very simple
+it s easier
+to find four good staners than five. why should you give a stan to a fifth
+pitcher when you have four who are befter than him? tfyou have four
+pitchers who are winning for you and you can get them to the mound
+more often, it means more wins for the team."
+
+-
+
+55
+
+SrrDstitlltlors
+'A manager is alwals weighing a playe/s defense against hisofrense to
+determine if he should be in the lineup. tdon'tthink that the occasional
+extra base that could be given up is worth sacrificing much offense for,
+however. The players who are your regulars are more than likely pretty
+good defensive ballplayers, so on my bench I emphasized hitting. The
+bench guys are around for offense. They'll step intothe lineup if some of
+your nine guys on the field aren't ploducing offensively."
+
+Sspsrstitl,o'tt
+"l'm not superstitiout but I have picked up a few habits through the
+years. Forexample, if we were on a winning streak, l'd make out the
+lineup with the sarne pen every day. When the streak was stopped, l'd
+throw the pen in the garbage and break out a new one."
+
+SETTING UP IOUN
+OWN LEAGUE
+By RussellSipe, Commissioner of the Computer Caming World Ba.f"ball
+leaSue
+SettinS up your own league is the most excitingway to play Earl Weaver
+Baseball. How you set up your league is determined by your answersto
+the following questions: how many 'team owners' do you have? ls your
+league strictly a face-to-face league or can Earl manage some or all of
+the timel How often do you meet? How long will the league last? And
+so forth. Here are some suggestions.
+
+Which ltodc?
+lfthe members ofyour league are ofequal ability in hand-eye coordination, you may want to consider a "Play and Manage" league. But most
+leagues opt for atrue statistics-based league
+
+thatthe'You Manage"
+
+mode provides.
+The abil ity to have Earl rnanage takes some pressure off those owners
+who can't attend every play session. Or you could even have an "Earl
+Manages" league for people who prcfer to simply play general manager
+(this would work for a play-by-mail baseball league where the commissioner runsthe games and mails regular updates to the owners).
+Number of Teams: your league should contain an even number of
+teams. Consider usingtwo or more divisions if you have more than
+six teams.
+
+Numbet o, C,Ifiet
+The morc games you play, the morc realistic the final statistics will be.
+You should play at least40 games. Eighty games is a good number for a
+league with dedicated owners. If you play the equivalent of three games
+per week you can run an 80 game league that closely cofiesponds to
+the calendar of "real" bareball. Opening day can be early ;n April and
+the world Series will usually fall early in October. An advanta8e of the
+80 Eame schedule is that it is almost exacdy one half of a "real' baseball
+season (162 games). You can double your final stats to see how the
+players probably would have done in a 162 game season.
+
+58
+
+teafl
+
+Cons''.,,ctTon
+
+This is the mon critical issue fo. )r'our league. There are three basic ways
+to zconstruct' your teamsi a rotisserie league-type draft, a traditional
+draft, or a high-low combination.
+ln the rotisserie league draft, you set a spending limit for hiring players
+(typical ranges are $25 to $260, depending on the economic situation
+of the team owners). The collected money goes to pay expenses ofthe
+league (trophies for example) and to provide a prize fund forthe victors.
+On draftday, players are announced one at a time and owners bid on
+them. You cannot spend more for your team than the pre-set limit. For
+more details on this type ot dtaflgPJe Rotisseie League Baseball 1987
+Ed,?ion (edited by wag8oner & Skylar, Bantam Books).
+
+The members of the Cornputer caminq wo d Baseball League
+(CCWB0 prefer a more traditional draft, whereby a draftorder is determined (by lots in the first yearofa league) and owners simply draft players in turn for twenty five rounds.
+The third method (which does not requke a draft day where all owners
+physically get together) involves usinS a database of major league
+teams, paired accordingto their finishes in the year. The team with the
+best winning percentage is paired with the team having the worst winning percentage; second best with second worst, and so on. An order of
+selection is determined (by drawing lots, or numbers out of a hao and
+each owner picks a combination.
+
+59
+
+Ptoteclclt Pi.ks
+At the close of the firn season most stat leagues permit team o$r'ners to
+protect a number of players for the follo^/in8 season. We recommend
+that each owner be allored to protect seven of his tlventy five players.
+This number is high enough to give a flavor of continuity to your team
+but low enou8h that weaker teams will not be dominated by stronger
+teams year in and year out.
+
+Dtstt Ofile"
+ln the initial year, you can determine draft order by using loG. ln subsequentseasons, you should have a rule that determines the draft order
+based on the prior season's standings. ln the CCwaL we Bive the first
+draft pick to the team that had the best win/toss record among teams
+that did not make the playoffs. Second pick goes to the non-playoff team
+with the second best record, and so forth. After all the non-playoffEams
+have been assigned a draft order number, all the playofrteafis arc assigned numbers. The playoff team with the lowest WL record picks first,
+and the team with the best WL record pick last.
+
+Ptlzes ,'',d T"ol,hles
+Even if you league doesnl provide cash prizes to the victors, you
+should at least have a league tophyortophies. aeyond trophies for the
+leaSue champions, ),ou mi8ht provide small trophies to the teams that
+lead the league in a numbe. of categories (for example: best team batting avelage, most runs, most home runs, most stolen bases, best team
+ERA, most strikeouts by pitchers, least eflors, and most shutouts).
+
+Cocd luck, commissioner!
+60
+
+COMMISSIOXER'S AND
+BASEBALL STAT IIISKS
+The Commissionefs Disk and the annual Baseball Stat Disk from Electronic Arts are two products that compliment Earl Weaver Baseball,
+
+Tie Commissioner's Disk is a collection ofadvanced tools that will increase yo!. enjoyment of Earl Weaver Baseball, With it you can draft
+teams, schedule your league, make baseball cards, sort stats by position,
+and perform other duties as the Commissioner of your own league.
+
+The Baseball Stat Disk comes out at the end ofeach season, h contains
+real stats for Major League Baseball players: 25 players per team, selected from all the active Majo. Leaguers who played- Llse these stats to
+create your own dream team, to pit any two teams agalnst each other, to
+simulate a real season schedule
+you
+-do anything with r true-to-life
+teams and players.
+
+Cofimiitlottct t Dish t o ,;nt
+
+t
+
+rA6laT Aasebot, Stats Dls& Urcrs
+
+1. When you try to use those teams on Ea.l Weaver Easeball 1 .5, you'll
+be asked ifthe program can rename your PLAYERS.S file (to
+PLAYERS.DAI. This is due to a change in the way rhe Same now
+keeps accumulated stats. ln order to use these players with the Commissione/s Disk after ir has been changed to PIAYERS.DAT, you
+will need to use the DOS rename command to change it back to
+PLAYERS.S. At the DOS prompt, type REN PLAYERS.DAT PLAYERS.S
+and press Enter.
+The Commissioner's Disk Version 1.5 will work with these modified
+teams; the ori8inal Commissioner's Disk will not.
+51
+
+2.
+
+lf you want to use the "Combine accumulated statistics tool," you
+must update both the action andthe simulation statistics.
+
+Q ron rEM usEns
+Speclal Commanlrt
+You can load Earl Weaver Baseball with parameters that affect the Same
+in certain ways. These are the parameterc:
+
+A
+c
+D
+
+t
+F
+L
+
+M
+
+N
+
+62
+
+Co straight to Arcade Came.
+U!e cCAgraphics.
+Use designated hicer.
+Use ECAgraphica,
+
+Go straiShtto the main menu screen.
+Play the two defaultteams (the fiBt t^,o ieams on your default stats disk)
+over and over agaln in fast statJ mode (Earlpicks the lineups). The accum'rlated stats updac after each game and lhe home tields alEmaG.
+Play all the teamt in the fiEt league in one round of round robln fast stats
+games. Updates accumulated stils attheend ofeach 8ame.
+Play all tlE teamt in the iecond lea8ue (the team, on the rr8fitside of the
+team menu) in one mund of mund rcbin fast rtats 8ames. Updates accumulated stats at the end ofeach game.
+
+o
+
+Play all the teams in both leagues in one round of ound rcbin fast-slat!
+games. Updates accumulated stat, atthe end ofeach game.
+
+Q
+
+Tum oft sound effects.
+
+S
+T
+V
+
+Tum offannouncer.
+
+%
+
+Play in staE mode. You select the teams and lineups. Earlwill manage both
+Eams. No gnphics arc displayed durlag gameplay.6ames last from 4lo 7
+
+Use Tandy graphics (s12K
+
+Use VC/AJS
+
+of memory required).
+ECA emulation mode Game as option E).
+
+To use a parameter, simplytype the letter afterWEAVER. For instance,
+to go straight to the Full Program, you would type WEAVER F. You
+can also use more than one parameter at a time. To go to a Full Program
+with the sound turned offand in CcA mode, you would type
+WEAVER F Q C (do rol put commas between the letters).
+
+Fot Con,'nTttTo{',e?'s Dlsh Vse?t Onl!
+You can use this pa.ameter orly if you have the Commissioner's Disk.
+
+P
+
+Playa schedulebuilt in theCommisrione/s Diskin stats mode. The prograrn will pompt you for the name of schedu le, starting day, an d n umbe. of
+game days to play.
+
+
+
+
+
+
+ELECTRONIC ARTS@
+Customer Service
+P.O.Box7578
+San Mateo, CA 94403-7578
+
+3@805
+

@@ -1,0 +1,120 @@
+CEDRIC MANUAL
+
+System Requirements
+Amiga 500 - 4000 with at least 1 MB RAM. Up to 3 additional disk drives
+are supported.
+If your Amiga has at least 2 MB RAM, of which at least 1 MB is Chip-RAM,
+then CEDRIC can also be installed to a hard disk if available. If you
+happen to own a CD-ROM drive then you can play the CD version directly
+from CD.
+
+CD-ROM Version
+Boot up your Amiga using Workbench. Place the CEDRIC CD in your CD drive
+and using a double click, open the diskette icon which will now have
+appeared. You can start CEDRIC by performing a double click on the large
+CEDRIC icon in the disk drive window.
+
+Floppy Disk Version
+Start the game from disk
+Insert CEDRIC disk 1 into the built-in disk drive and turn on your
+computer. The game will now load automatically.
+
+Hard Disk Installation
+CEDRIC will occupy approximately 5 MB of disk space. If you don't happen
+to have this much free space on your drive, then you will have to delete
+some non-essential files to create more room. If you can't do this, then
+the installation won't be possible. CEDRIC will only load automatically
+if you already have Amiga Workbench loaded on your hard disk. Boot your
+Amiga from the hard disk (If you've configured your Amiga such that
+Workbench doesn't load, enter the command "LOADWB" in the CLI window),
+insert CEDRIC disk 1 into the drive of your choice and open the diskette
+icon with a double click. In the diskette window that will now have
+appeared, use a double mouse click to select the icon "HD-Installation
+English".
+Within the installation program you can confirm all actions by clicking
+on the "Continue" button. Once you have clicked on the "Continue" button
+in the installation program, select the directory in which the CEDRIC
+drawer is to be located. All files which belong to the game will then be
+copied to this drawer. Now follow all of the on-screen instructions that
+appear for changing the diskettes etc. After a successful installation
+the wonderful large CEDRIC icon will now be seen in the newly created
+drawer. All you have to do now is clicking on this icon to start the 
+game.
+(Where we refer to "joystick" in the following, then of course the same
+movements are valid for the joypad of the CD32 console. "Fire button" on
+the joystick translates to the red button on the joypad.)
+
+The Controls
+* Joystick left/right: This moves CEDRIC in the corresponding direction
+* Joystick up:         This leaves our character jumping in the air. The
+                       longer you hold the stick in this direction, the
+                       higher CEDRIC will jump. (Of course there is a
+                       limit to the height he can jump)
+* Joystick down:       This makes CEDRIC duck. (This is handy in helping
+                       CEDRIC to avoid certain flying creatures)
+* Fire button:         This is used for self-defence.
+If the fire button is depressed briefly then CEDRIC (also while jumping)
+will carry out a punch. If you hold the button down a little longer,
+CEDRIC goes into defensive mode, in which, as long as you hold the 
+button depressed while moving the joystick, he can strike out in
+virtually all directions. By moving the stick down or up CEDRIC will
+duck or stand up again.
+If you press the keyboard SPACE bar (or if you have a joystick with two
+separate fire buttons, press the second button) then you can no longer
+control CEDRIC directly, instead you find yourself in the status panel
+at the bottom of the screen. Here, by using the joystick movements and
+pressing the fire button, you can select objects and actions. The
+currently active icon is highlit in colour while the inactive icons
+remain grey. This mode is appropriate most of all when you wish to use
+one of the numerous objects scattered about the levels, or combine one
+object with another. Such objects will become obvious when CEDRIC
+passes by and then all of a sudden begins to "think". A thought bubble
+will appear above CEDRIC's head (complete with cogs going wound in his
+brain) and in addition there will be a line of text explanation in the
+status panel. If you want to do something with such an object, then you
+can switch into Object Mode using the SPACE bar which then gives you
+various possibilities to consider.
+Above left in the status panel there is a crystal ball in which the
+currently active object is represented by a small icon. All object
+actions relate JUST TO THIS OBJECT. If the crystal ball is empty, then
+you don't have any object selected, or there's no object within range.
+On the right hand side of the status panel there is a group of five
+icons which have the following functions:
+* Eye (top left):             Look at object/investigate object
+* Hand (top right):           Pick up object
+* Joystick (centre):          Switch back into running mode. This action
+                              can also be carried out by a further press
+                              on the space bar
+* Mouth (right):              Speak to people (also to objects!)
+* Hand with spanner (bottom): Use an object
+
+In the course of the game you will most probably find yourself in a
+situation where you would like to combine the use of two objects with
+one another. In this case you must follow this procedure (You can only
+combine an object from the inventory with one that is directly in front
+of CEDRIC. It's not possible to combine the use of two objects from the
+inventory): Position CEDRIC in front of the "stationary" object, so that
+he begins to think. Switch the status paneland nominate the desired
+inventory object as active and then select the "Use" (spanner) icon.
+Voilà!
+The status panel also carries some additional valuable information for
+playing the game.
+There is a bar bottom left which shows the current life energy of our
+hero. At the beginning this bar is still in the green zone, which
+signifies "full energy". Every collision with a nasty enemy being will
+contribute to a loss of energy. If the bar is showing red and has shrunk
+to a fraction of its original size, then this is the time to get 
+refreshed by collecting some of the many energy pills which are spread
+throughout the levels. If you don't do this then you're in danger of
+losing a life. The remaining lives are displayed to the right. Of course
+if you don't have any lives remaining then you'll receive the dreaded
+GAME OVER epitaph.
+Along with the previously mentioned energy pills, there are some extra
+lives and heaps of bonus symbols and coins hidden in the levels. Of 
+course these are extremely useful for our hero to collect.
+There is a display of the number of collected bonus symbols to the right
+of the remaining lives indicator. If you collect more than 99 of these
+symbols then you are rewarded with a free extra life!
+The number of coins collected is also displayed right alongside. It is
+highly advantageous to collect a decent stock of these, you'll be
+needing them in the course of the game!

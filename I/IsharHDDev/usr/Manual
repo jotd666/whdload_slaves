@@ -1,0 +1,607 @@
+   ____________/\        /\      ________________________/\__________________
+   \          /  \      /  \     \     \         \      /  \       \        /
+   /         /   /     /   /     /     /         /     /   /       /       /
+  /    /    /   /___  /   /___  /     /    /    /         /   ____/   ____/
+ /         /   /    \/   /    \/     /         /         /       /      /
+/     /   /         /         /     /     /   /   /     /       /   ___/
+\    /___/\________/\________/\    /\    /___/\  /_____/\______/      /
+ \  /                          \  /  \  /      \/           \________/Ci
+  \/                            \/    \/
+                              -+(*- PRESENT -*)+-
+
+                               ISHAR DOCUMENTS
+
+                            Call The ALLiANCE WHQ!
+
+                 Unknown Pleasures   -   (+44) (0)20429917
+                            Sysop: Razor Blade
+
+
+*****************************************************************************
+
+Ishar : Legend of the Fortress
+
+AZALHGORMS TALE
+         
+Azalhgorm took a deep breath and began his tale.
+
+"This land was once called Arborea. Morgoth, Lord of Evil and Chaos, 
+decided to make Arborea his own. His dark powers soon subdued the 
+land. But Jarel, Prince of the Elves fought against this evil 
+succesful in his quest for the magic crystals of Harmony, he and his 
+faithful companionsfinally destroyed Morgoth in an unforgettable 
+battle (*).
+
+Jarel's companions are still alive and their names are engraved in 
+everyones memory...Akeer, Olbar, Zach, Irvan, Thorm and Jon the 
+Alchemist. After his victory Jarel became ruler of the whole land, 
+which he renamed Kendoria. Under the leadership of Jarel and a wise 
+Elven government the many peoples of Kendoria lived health and 
+wealtlrl.
+
+Sadly Jarel was killed in a hunting accident, and as his succesors 
+struggled violently for power anarchy spread through the whole land. 
+Taking advantage of the troubled situation people of many different 
+races crossed into Kendoria from nearby, poorer lands. Many were 
+traders or farmers...but some were adventurers and mercenaries. Such 
+a one was Krogh...a shady and powerfull figure... "
+
+Azalhgorm paused. He was troubled by these memories of the past...he 
+coughed slightly and his deep, low voice echoed once again... 
+
+"Krogh has grown rich and powerful and built a temple on the 
+Kingdoms borders. The temple is called "Ishar" which means Unknown 
+in the Elven tongue. Krogh is evil and like Morgoth in the past, 
+threatens Kendoria. his powers are great...he seeks the return of 
+darkness. Leave now for Ishar and regain the throne of Jarel. 
+
+" It was already dark. I could barely see Azalhgorrns face as, 
+feeling puzzled, I bid him farewell and began my long joutney to the 
+mysterious land of Kendoria. 
+
+TECHNICAL DATA 
+
+STARTING THE GAME: 
+
+- ATARI/AMIGA: Insert disk A into drive, then turn on your computer. 
+
+- PC : * FLOPPY DISK: After booting with MS-DOS, insert disk A into 
+drive A (or B) then enter START. 
+
+* HARD DISK: To install the game on your hard disk, insert disk A 
+into drive A (or B), then enter INSTALL <source drive> <destination 
+drive> (INSTALL A: C: or INSTALL B: C: or INSTALL A: D: or INSTALL 
+B: D:). Follow the instructions displayed on your screen. To start 
+the game from your hard disk, just open the subdi- rectory 
+containing the game, and enter START. 
+
+- MACINTOSH: start the game by double-clicking on the START icon, 
+then select the PLAY option in the COMMANDS menu. 
+
+To install the game on your hard disk, copy all the files from the 
+disks to a directory of your choice (directly on to your hard disk). 
+
+You can then start the game by double-clicking on the START icon 
+within that directory. 
+
+PC SPECIFIC TECHNICAL PROBLEMS: 
+
+- The program stops while loading: check your MS-DOS commands to see 
+if resi- dent programs are loaded when booting your system. They can 
+take too much memory for the program to run correctly. 
+
+- The program stops when playing PCM (digitized) sounds: You can 
+cancel these sounds by starting the game with the START S command 
+instead of START. 
+
+- Joystick problems: you can disconnect the joystick port by 
+starting the game with the START J command instead of START. 
+
+- Mouse problems: Start the garne with the START M command instead 
+of START. 
+
+- You can also use all these parameters: START MSJ. 
+
+TO QUIT THE GAME: Press <CONTROL> X. 
+
+PAUSE KEY: Press on the <ESC> key. 
+
+USER INTERFACE: 
+
+- MOUSE: The game can be completely controlled with the mouse. Use 
+the left mouse button to select an item, and the right mouse button 
+to cancel the selected action or close the current menus. 
+
+- JOYSTICK: You can move the arrow on the screen with the joystick. 
+The fire button acts like the left mouse button. The <ALT> key works 
+like the right mouse button. 
+
+- KEYBOARD: The numeric pad keys (I to 9) are similar to the mouse 
+controls. The SHIFT key (used to write in upper case) works like the 
+left n mouse button, the ALT key like the right button. 
+
+The F1 to F10 keys activate the ACTION and ATTACK options for the 5 
+characters. 
+
+The CONTROL key used with the numeric pad keys allows you activate 
+the following options:   
+
+* Open the Tactical Panel with the 7 key.
+
+* Open the Save Menu with the 9 key.
+
+* Move on the 3D screen with the keys 1 to 6, just like the six 
+directions on the control panel. 
+
+GAME SCREEN ACTIONS:
+
+- To pick up a visible item, just click on it. The mouse pointer 
+will then take the form of the item. You can place it directly 
+within a character's inventory by clicking on the character's face, 
+or W by clicking on his name (displays the character sheet). 
+
+- To use an item on another object (a key on a door, for example), 
+select the item on the character sheet and move it to the place you 
+want to use it, then confirm by clicking on the left mouse button. 
+
+CONTROL PANEL 
+
+MOVES: A character is moved using the directional arrows (5 to 10). 
+You can move forward (6), move to the right (7) and to the left (5), 
+turn 45ø right (10) and left (8), or move backwards (9). 
+
+The compass (2) displays the current picture orientation.Some type 
+of terrain is im- passable, like water, high bushes and dense 
+forest. 
+
+The name of the area your party is currently exploring is displayed 
+on the scroll (1) 
+
+TACTICS: 
+
+You can alter the tactical disposition of your party. To do this, 
+click on the small box (3). You will then see a 5 X 5 board with 
+small symbols representing each character in the party (See 14 on 
+next page). Select the character's symbol and place it on the board.
+The characters standing on the top squares of the board will be to 
+the front of the team. They will also be first during battles. The 
+characters at the back will have better protection (if no one 
+attacks you from behind!), but they will not be able to fight in 
+close combat, unless they are equipped with t'nrowing weapons (see 
+"COMBATS"). 
+
+To move in single file, you must place the character's symbols on 
+the board along a vertical line. The character at the front of the 
+team will be attacked first in battles, and he is the only character 
+able to fight in close combat. 
+
+SAVING A GAME: 
+
+To load or save a game, click on the disk icon (4). Follow the 
+instructions displayed on the screen. You will have to insert a 
+formatted disk. You can save as many garnes as you want. 
+
+AMIGA users will have to wait a few seconds after inserting a disk, 
+while the drive reads the data. 
+
+HARD DISK users saved games will be directly saved in the same 
+directory or sub-directory as the game. 
+
+PANEL
+         
+A team may include a maximum of five characters. You begin the game 
+with only one.
+
+The name of each character is displayed at the bottom of the screen 
+(16). His face appears in the medallion (13). If there is no 
+character, the medallion displays a rock face (21).Note the small 
+symbol (14) displayed at the left bottom of the screen, representing 
+the character in the tactical panel (see "TACTICS").
+
+The bar (15) shows hit points level. Watch this carefully, because 
+the character dies when this bar reaches zero. In that case, a skull 
+appears in the box (22). You can pick up the items carried by the 
+dead character using his character sheet, as long as you stay in the 
+same place. As soon as you move, the dead character and his posse- 
+sions will be lost forever. If all characters are killed, the game 
+is over.
+
+When you click on the medallion, you can open two other windows.The 
+first one displays the following information:
+
+- Physiology: The boxes (17) show the player's condition after a 
+spell has been cast on him (see "SPELLS SYMBOLS").
+
+- Spells: When a spell has been prepared - or written in runes (See 
+"CAST A SPELL" in the "ACTIONS" section), the spell symbol is 
+displayed in the left box ( 18). To cast this spell, just click on 
+it.
+
+- Items held in the hand (box 19). You can trade or place items 
+directly with these icons (See "CHARACTER SHEET").
+
+The second window (20) displays vital information: physical and 
+mental condition, experience and money.
+
+Physical condition affects combat performances. This level goes down 
+as you move. When it reaches zero, the hit points start to go down. 
+To raise the level, you must sleep, eat, or drink special potions.
+
+Mental condition affects effectivity and length of spells. You can 
+regain points when you sleep, or by drinking special potions. 
+
+COMBAT
+
+All battles are played in real time. To hit your opponent(s) click 
+on the "ATTACK" box (12). The colour of the box changes during the 
+attack. When the colour returns to the original colour, your 
+character may hit the opponent again.
+
+The character strikes the opponent(s) with the weapon he is 
+currently holding. De- pending on the weapon, the character can hit 
+faster or slower. A two handed weapon is slower than a single hand 
+weapon, but it is also more effective, causing more darnage to the 
+enemy. If the character holds a different weapon in each hand, he 
+will hit twice as fast as if he only had one weapon in hand. If the 
+character holds no weapon, he will attack with his fists.
+
+To strike an opponent, the character must beat the front of the 
+party (See "TAC- TICS"). The characters behind the leader can use 
+throwing weapons. You can easily recognize these by the small lines 
+drawn on them. They symbolize speed. To throw a weapon, click on 
+"ATTACK". The mouse pointer changes. You must then select the 
+opponent you want to strike. The enemy chosen can be quite far away.
+
+Hits are shown on the screen by a small blood "puddle", in which the 
+damage points are displayed. Damage varies according to many factors 
+:the weapon's power, strength and agility level (especially for 
+thrown weapons), the character's weapons skills, opponent's 
+constitution... 
+
+ACTIONS
+
+To perform a specific action, click on the "ACTION" icon (11) for 
+the selected character. A window opens and displays the following 
+options:
+
+- GIVE ITEM: The character sheet is displayed. Choose the item and 
+click on the character receiving the item.
+
+- GIVE MONEY: This option is similar to the Give Item option, but 
+you must in- dicate the amount of money to give with the "+" and "-" 
+signs, then click on the "COIN" icon.
+
+- KILL: Select the character you want to kill. WARNING: The 
+character's psychology is important when you perform this action: if 
+one of your characters is a good friend of the victim (See 
+"ALIGNMENT"), he may himself kill the murderer, and so on! You could 
+end up with most of your characters being murdered by each other!
+
+- DISMISS: The other characters in the team vote if you want to 
+dismiss a character. This vote depends on the level of friendship 
+with the character you want to dis- miss (See: ALIGNMENT). A 
+dismissed character is taken out of the game, and you will not be 
+able to recruit him again.
+
+Dismissing a character is less risky than killing him. But sometimes 
+you will be in a situation where you can not dismiss a character, 
+and you cannot pick up the items he is carrying. Still, you may 
+often have to dismiss characters during the game. 
+
+- RECRUIT: It is impossible to recruit all the characters you meet 
+in this game. Just as when you want to dismiss a character, the 
+other members of your team will vote. Be careful, because even 
+traitors could join your team. Their usual behaviour is to disappear 
+suddenly whith some of your possesions.
+
+- CAST SPELL: This action may only be performed by specific 
+character classes (clerics, wizards...). Choose a spell: some of 
+them are automatic (radar), but most of them require you to spot the 
+opponent on the screen (combat spells) or the character within the 
+party (protection spells). The mouse pointer then changes to a torch.
+
+You can also prepare a spell using runes, with the option "RUNES". 
+It will then be available in the spell icon (18).
+
+To cast a spell, a character must have enough psychic energy. If his 
+psychic energy level is too low, the spell will have no effect. The 
+efficiency and length of the spell also depends on intelligence 
+level (wizards) and wisdom level (clerics).
+
+There are about thirty available spells, available for different 
+levels (See "SPELLS DECSRIPTION"). You can learn these spells during 
+magical training courses(See "TRAINING").
+
+- LOCKPICK: the mouse pointer turns into a lockpick. You must click 
+on the lock you wish to open.
+
+- ORIENTATION: the character will give you information about the 
+area you are exploring.
+
+- FIRST AID: Select the character to be healed. A character cannot 
+be healed twice with this option, unless he has been injured since 
+the last healing. The efficiency of the "LOCKPICK", ORIENTATION" and 
+"FIRST AID" options depend on the character's skill level in each 
+specific field. 
+
+ALIGNMENT: 
+
+The relationship between the characters is very important in the 
+game: they vote to disrniss or recruit other characters, they can 
+kill each other, and sometimes even re- fuse to fight against 
+members of their own races. This relationship is based on the 
+traditional RPG (Role Playing Games) alignment tables (good and 
+bad). The align- ment of a character depends on his race and his 
+class (for example, dwarfs are not very friendly with elves).
+
+You can gather information about your character's alignments by 
+visiting "psycho analysts". 
+
+INSIDE BUILDINGS 
+
+TRADERS:                             
+
+Click on the "Buy" icon. A list of the available products is 
+displayed, with their cost. Select the item you want to buy, and 
+click on the character box (the character who is buying), or click 
+on the character name to open his character sheet. If the character 
+does not have enough money, the operation is automatically canceled.
+
+TAVERNS: 
+
+In the taverns, you have a choice of 4 different actions:
+
+- LISTEN: This option allows you to gather useful information.
+
+- RECRUIT: The tavern is the one of the best places to recruit 
+characters. Select the character you want to recruit. The members of 
+your team then vote. The result depends on this vote. If your team 
+agrees, the character will join them.
+
+- EAT: You must buy a meal for the whole party. If there is not 
+enough money, then the team will not eat. If so, the food will be 
+shared between the characters. If a character has not enough money, 
+his share will be paid by the other members of the party, starting 
+with the first character on the team panel.
+
+- SLEEP: This option is similar to the Eat option. You must rent a 
+room for the whole party. 
+
+HOUSES: 
+
+You can meet various characters in the houses. Most of the time, 
+they will give you precious information (though often you will have 
+to pay for it!). Sometimes you will find useful items you can pick 
+up. Just click on the item you want to take, and give it to one of 
+your characters.
+
+The "Psycho analysts" will give you their advice for a regular fee. 
+The payment sys- tem is similar to the tavern options. 
+
+TRAINING: 
+
+Training is essential to reach higher skill levels. There are five 
+different training courses: strength, agility, intelligence, wisdom 
+and spells.
+
+Select the character you wish to train. If he doesn't have enough 
+money to pay for the training, or doesn't have the necessary skills, 
+the training is automatically can- celed.
+
+For spells training, you must choose the spell you want to learn 
+after selecting the character. This type of training is only 
+available to certain classes (see "CAST SPELL"). 
+
+CHARACTER SHEET
+
+Each character in your party has his own character sheet. To open 
+the character sheet, simply click on the character's name (16). 
+
+CHARACTER DESCRIPTION (box 23):
+
+The character description is displayed on three sheets. To browse 
+through the pages, click on the "BOOKS" icon (27). The complete 
+character description includes:
+
+- the character's identity: his name, race and class
+
+- the character's current level and experience level
+
+- the character's health: physical & mental energy and vitality.
+
+- the character's attributes and skills. The skill level determines 
+the effectivness of a character (Ex: a strong character will cause 
+more damage to the opponent during combat, a robust character will 
+be more resistant).
+
+These parameters change during the game, depending on combat, and 
+your successes and failures. There are eight skills available in the 
+game: lockpick, orientation, first aid, foreign languages 
+(readlspoken), shooting (bowslcrossbows) and weapons skills (one 
+handed/two handed/weapons). The three first skills are used through 
+the "ACTION" menu (11). 
+
+MONEY (17): 
+
+The "MONEY" icon (31) displays the amount of money owned by the 
+characters in the party. When you click on this icon, you open a 
+"money management" menu.
+
+With the 3-arrows icon, you can easily share your money between the 
+characters in your party. You can also give a specific amount of 
+money to one of the characters.
+
+Use the "+" and "-" signs to enter the correct amount, then click on 
+the "COIN" icon. The mouse pointer will turn into a coin. Click with 
+this coin on the character receiving the money. 
+
+ITEMS (box 24): 
+
+A character often has some items when he first joins the party. 
+When you find a new item, you can place it in one of the nine boxes. 
+Some items can be regrouped in a single box: food (5 maximum), 
+potions (10 maximum) and arrows (20 maximum).
+
+In this case, the number of items is displayed at the bottom right 
+of the box.
+
+To select an item, click on it, or, if you hold regrouped items, 
+select the number of items you want to use.You will then be able to:
+
+- drop (destruction) the item by putting it in the "TRASH" icon (30).
+
+- see a description of an item by holding the mouse button down, and 
+moving the item onto "VIEW" icon (29).
+
+- eat and drink by placing any food item or potion on the "ABSORB" 
+icon (28).
+
+Note: this icon can also be used for blowing. When a character eats, 
+he regains vitality points.
+
+- equip the character with some items. You must place the clothes, 
+armours and helmets on the character's body (25).
+
+- place the item in your hands. Place it on the "HANDS" icon (26) 
+and click. If the item is cumbersome (two handed swords), the second 
+hand is shaded and cannot be used.
+
+- give the item to another character (on his character sheet). Click 
+on the name of the character receiving the item, then place it in 
+the character's inventory.
+
+- put the item directly in another character's hands. Place the item 
+on the charac- ter's "HANDS" icon (19) and click on the mouse. If 
+you click on an item when you are already holding one, the exchange 
+is automatic. 
+
+MAKING POTIONS: 
+
+To create a potion, you must have the magic transparent flask (there 
+is only one in the game!), to use as a container. Mix the 
+ingredients by clicking the different potions you own on the magic 
+flask. This flask is reusable after drinking its contents. Read the 
+magical recipes book at the end of this manual carefully, because 
+some mixtures may have very strange resulls... 
+
+SPELLS DESCRIPTION
+         
+Spells will last a certain length of time, depending on the 
+character's magical powers (See "CAST SPELL"). There are ten 
+different levels for spell casters (l to 10). Some spells are only 
+available to certain classes. You can learn new spells by training. 
+
+CLERIC SPELLS (also available for rangers and paladins): 
+
+- Healing (Level l, 3 and 4): this spell will raise the number of 
+hit points of the selected character.
+
+- Protection (Level 1, 3 and 5): This spell gives protection during 
+combat. Another spell allows you to protect the whole party (Level 
+6).
+
+- Sleep (Level l): Your opponent will fall asleep.
+
+- Cure poison (Level 2): This spell cures if the character has been 
+infected by a po- tion or bitten by an enemy.
+
+- Repulse (Level 8): This spell will send all your opponents to hell.
+
+- Dissolve (Level 6): turns one of your team into a gas cloud. He 
+can pass through opponents without any injury.
+
+- Attack spells: Flame Wall (Level 8) and Psychic Hammer (Level 6).
+
+- Inversion (Level 4): the alignment of the character is reversed. A 
+friend becomes an opponent, the enemy turns into a companion.
+
+- Confusion (Level 3): The enemy loses all control. He does not 
+remember who's side he is on, and hits randomly at friends and 
+enemies.
+
+- Invisible ParLy (Level 5).
+
+- Radar (Level 3).
+
+- Resurrection (Level 10): With this spell, a dead character can be 
+brought back to life. 
+
+WIZARD SPELLS (also available to Monks and Priests): 
+
+- Attack Spells: Burning Hands (Level 1), Magic Missile (Level 1), 
+Fireball (Level 3), Flame Spirit (Level 10), Psychic Hand (Level 9), 
+Blindness (Level 9) and Binding (Level 5).
+
+- Lightning: This combat spell hits all the enemy.
+
+- Charm (Level 1): this spell is useful to gain some imformation 
+without having to pay for it.
+
+- Invisibility (Level 4): A character can still be wounded, even if 
+he is invisible.
+
+- Mental Shield (Level 6): This spell gives protection against magic 
+spells cast by your opponents.
+
+- Regeneration (Level 7): This spell raises the nurnber of hit 
+points for a certain amount of time.
+
+- Invisibility Detection (Level 4): This spell allows you to see any 
+invisible enemies.
+
+- Invulnerability (Level 6).
+         
+SPELLS SYMBOLS
+         
+Figure 1: Protection             Figure 2: Inversion
+Figure 3: Binding                Figure 4: Blindness
+Figure 5: Invisibility           Figure 6: Dissolve
+Figure 7: Invulnerability        Figure 8: Psychic Shield
+Figure 9: Regeneration           Figure 10: Poison
+        
+(See SYMBOLS.TIF that is supplied with this Humble-Dox release).
+
+MAGIC RECIPES BOOK FOR THE NOVICE WIZARDS
+         
+         Given:
+                A = toad eye             B = salamander oil
+                C = trapdoor spider web  D = dried mistletoe
+                E = rat brain            F = gargoyle claws
+                G = turtle slobber       H = powdered dragon bones
+         
+Main recipes (you can mix the ingredients in any order)
+         
+         - "Schloumz": 1 dose B + 1 dose D + 2 doses F
+         - "Olmaq": 2 doses D + 2 doses E
+         - "Clopatos": 1 dose B + 1 dose D + 1 dose E + 1 dose F 
+         - "Exqiz": 2 doses B + 1 dose D + 1 dose E   
+         - "Foklim": 1 dose A + 1 dose B + 1 dose D    
+         - "Drouli": 1 dose B + 1 dose C + 2 doses D + 1 dose E
+         - "Izdolia": 1 dose B + 1 dose C + 1 dose E + 1 dose H 
+         - "Trillix": 2 doses B + 1 dose D + 1 dose E + 1 dose F
+         - "Worgaz": 2 doses B + 1 dose D + 1 dose F + 1 dose H
+         - "Zarklug": 2 doses B + 1 dose D + 1 dose E + 1 dose G
+         - "Krakos": 2 doses E + 1 dose F + 1 dose H
+         - "Bymph": 2 doses B + 1 dose D
+         - "Ghoslam": 1 dose B + 1 dose D + 1 dose E
+         - "Lhwyxz": 1 dose B + 1 dose D + 1 dose G       
+         - "Arbool ": 1 dose A + 1 dose B + 1 dose D + 1 dose H
+         
+
+NOTE: Before anyone starts to say that we ripped these docs from 
+      THG we are in a co-op. IE - They release all our docs as their 
+      own the PC and we release all of their docs on the Amiga!.  If 
+      anyone doubts this then consider this ...they were scanned on 
+      my scanner!  hohoho................................
+
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+GREETS TO THE WORLDS BEST DOC TYPERS AND FIXERS (IN NO SPECIFIC ORDER) -
+2tuff/CRYSTAL, BASER-EVIL, LOONS, MUNCHIE, PAZZA/LSD,  SCOOTER/SKID ROW,  
+BRYNN ROGERS, AND RYGAR.
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+ +-------------------------------------------------------------------------+
+ |                     THIS FILE HAS BEEN UPLOADED TO                      |
+ |                      *-== UNKNOWN  PLEASURES ==-*                       |
+ |                 ALLIANCE WORLD HEADQUARTERS = 0204 29917                |
+ +-------------------------------------------------------------------------+
+end.

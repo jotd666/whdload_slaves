@@ -1,0 +1,2825 @@
+    The Docs For Genesia (Mindscape) Brought to You By The Fucking Best:
+
+                           - BASER EVIL/BACKLASH -
+
+      Marking My Return to Amiga Docs - It Won't Be The Last, This Time
+
+              Mega-Thanks to Coif for Supplying Me This Manual!
+
+    Greetz to the Rest: The Loons, Nut & Bolt, Universal Soldier, Scooter
+
+ All Docs Producers Are Invited to Call The Courts of Chaos - Just For Chat
+ About This Work. Also Call If Your Group Wants FAST & RELIABLE 0-DAY Docs,
+   Typed On Demand to Go With Your Release By The Fucking Best & Fastest,
+     All You Need Is A FAX and Some Docs. See End of Doc For the Number.
+
+
+
+
+                                   CREDITS
+                                  ~~~~~~~~~
+
+Original concept:                 Thomas Zighem
+Product Director:                 Elliot Grassiano
+Product Manager:                  Olivier Grassiano
+Designers:                        Thomas Zighem, Olivier Grassiano, Laurent
+                                  Plu, Franck Quero, Philippe Villain,
+                                  Valerie Perruzza
+Lead program:                     Thomas Zighem (Amiga), Jean-Paul Mari (PC)
+Graphics & animation:             Thomas Zighem, Antoine Rodelet
+Cover artwork:                    Philippe Mandilas
+Sounds and Music:                 Thomas Zighem (Amiga), Alexis Montighies
+                                  (Amiga), Claude Abromont (PC)
+Story-board & Manual:             Olivier Grassiano, Valerie Perruza
+Press relations:                  Olivier Grassiano
+
+=====[ Genesia Manual ]======================================[ Page 01 ]=====
+
+GENESIA USER'S MANUAL
+
+CONTENTS
+
+PASSWORD .................................................................. 4
+
+PART I GETTING STARTED IN GENESIA ......................................... 5
+Chapter 1 - A few words on Genesia ........................................ 5
+Chapter 2 - Installation and loading instructions .......................... 6
+Chapter 3 - Object of the game ............................................ 6
+Chapter 4 - Cmpeting forces ............................................... 7
+Chapter 5 - The different maps ............................................ 8
+Chapter 6 - Using the mouse ............................................... 8
+
+PART II THE ECONOMY ....................................................... 8
+Chapter 1 - The Inhabitants of Genesia .................................... 8
+Chapter 2 - Trades ....................................................... 11
+Chapter 3 - Managing the trades .......................................... 14
+Chapter 4 - Seasons and vegetation ....................................... 17
+Chapter 5 - Buildings .................................................... 18
+Chapter 6 - Construction ................................................. 26
+Chapter 7 - Production and storage ....................................... 29
+Chapter 8 - Money ........................................................ 31
+Chapter 9 - The balance sheet ............................................ 32
+
+PART II THE ARMIES ....................................................... 34
+Chapter 1 - Different types of armies .................................... 34
+Chapter 2 - How to recruit an army ....................................... 35
+Chapter 3 - Characteristics .............................................. 36
+Chapter 4 - Moving around ................................................ 37
+Chapter 5 - Movement bonuses ............................................. 38
+Chapter 6 - Formations ................................................... 38
+Chapter 7 - Captures ..................................................... 39
+Chapter 8 - Emblems ...................................................... 39
+Chapter 9 - Lands ........................................................ 40
+Chapter 10 - Colonisation ................................................ 41
+Chapter 11 - Battles ..................................................... 42
+Chapter 12 - Alliances ................................................... 44
+
+=====[ Genesia Manual ]======================================[ Page 02 ]=====
+
+PART IV INVENTIONS - GENERAL INFORMATION ................................. 45
+Chapter 1 - Introduction ................................................. 45
+Chapter 2 - Conditions ................................................... 46
+Chapter 3 - The table of inventions ...................................... 47
+
+PART V INVENTIONS - THE LIST ............................................. 49
+Chapter 1 - Some information ............................................. 49
+Chapter 2 - Interactive inventions ....................................... 50
+
+PART VI THE JEWELS ....................................................... 54
+Chapter 1 - How to discover the jewels ................................... 54
+Chapter 2 - Prospecting .................................................. 54
+Chapter 3 - The tavern ................................................... 54
+Chapter 4 - Guarding the jewels .......................................... 55
+Chapter 5 - Capturing the jewels of another captain ...................... 56
+
+PART VII THE SCREENS ..................................................... 56
+Chapter 1 - The main screen .............................................. 56
+Chapter 2 - World screen ................................................. 57
+Chapter 3 - Workshop ..................................................... 58
+Chapter 4 - Barracks ..................................................... 58
+Chapter 5 - Temple ....................................................... 59
+Chapter 6 - Tavern ....................................................... 60
+Chapter 7 - Warehouse .................................................... 60
+
+PART VIII SAVING - LOADING ............................................... 61
+Chapter 1 - Saving ....................................................... 61
+Chapter 2 - Loading ...................................................... 61
+
+PART IX OPTIONS .......................................................... 61
+
+PART X ADVICE FOR BEGINNERS .............................................. 62
+
+TECHNICAL SUPPORT ........................................................ 64
+
+=====[ Genesia Manual ]======================================[ Page 03 ]=====
+
+License contract
+
+This software and this users manual are legally potected. All rights are the
+property of Microids S.A. No part f this software or of this manual can be
+cpied or reproduced in any form or by any means without the prior
+authorisation of Microids S.A.
+
+PASSWORD
+
+Despite your many qualities and the confidience that the people of GENESIA
+have in you, some question whether youa re truly an heir to the ancient
+Prince. To ease their doubts, identify your version as the original. Use the
+manual to find the code requested at the beginning of the game. The program
+wil give you a page number and a line number. You must give the first word of
+the line. Open your manual to the corresponding page. Count the number of
+lines to the number given by the computer starting from the top of the page
+(titles count as a line). All you have to do is type the first word (which
+appears in the line in question on the keyboard followed by RETURN.
+
+Example:
+
+Question: Give the first word of line 4, page 6.
+Answer: TURN. Type the word on the keyboard, then RETURN.
+
+=====[ Genesia Manual ]======================================[ Page 04 ]=====
+
+PART I: GETTING STARTED IN GENESIA
+
+Chapter 1 - A FEW WORDS ON GENESIA
+
+Once upon a time, blinded by love, the Prince of the land of Genesia defied
+the all-mighty Gods. For the love of a treacherous woman, he had the tomb of
+the God Neort opened and the sacred jewels removed to adorn his beloved. But
+the wrath of the Gods fell on the country and its inhabitants.
+Today, three of his descendants are returning to the beatiful land of
+GENESIA. But only one can obtain forgiveness from the Gods by recovering the
+jewels of Neort.
+
+
+Chapter 2 - INSTALLATION AND LOADING INSTRUCTIONS
+
+ATARI AND AMIGA
+
+The AMIGA and ATARI versions of GENESIA require at least 1 MB of RAM. The
+ATARI ST must be a 1040 at least.
+
+- Amiga and Atari, without hard disk
+
+Turn off your computer, then turn it back on. Insert the GENESIA
+"Configuration" diskette and follow instructions. On Amiga, if your computer
+has two floppy disk drives, you must disconnect the second drive so that
+Genesia can run smoothly.
+If you want to continue a game where you left off using the same data (e.g.,
+number of players, map number, etc. stored on a diskette), turn your computer
+off, insert diskette 2, and turn the computer back on. If you want to load
+configuration ptions, load GENESIA from the Configuration diskette.
+
+- Amiga with hard disk
+
+Turn your computer off and insert the configuration diskette or diskette no.
+2 if you want to play with the same options. Follow the instructions.
+
+- Warning!
+
+If your Amiga is equipped with just 1 MB of RAM and a ROM 2.0, you cannot
+play with the additional soundtrack (See PART IX, Options).
+
+- Saving
+
+* If the game is installed on the hard disk, you must save on the hard disk
+  or on a diskette.
+* If you are using diskettes, you must save on a diskette formatted with the
+  name
+
+=====[ Genesia Manual ]======================================[ Page 05 ]=====
+
+GENESAVE. The program will ask you to insert the disk when needed (see PART
+IX, SAVING - LOADING).
+
+
+PC and compatible (hard disk is mandatory)
+
+* Turn on your computer according to the usual procedure.
+* Insert diskette 1 in the 3"1/2 drive and type the name of the drive (A or
+  B) followed by ":", then press RETURN.
+* Type INSTALL, then RETURN.
+* Follow the instructions on the screen.
+
+
+Starting up the game:
+
+Once GENESIA is installed on your hard disk:
+
+* Under DOS, type CD GENESIA and RETURN
+* Type GENESIA and RETURN.
+
+
+Chapter 3 - OBJECT OF THE GAME
+
+YOUR MISSION
+
+Before you start out on thsi adventure, remember that GENESIA needs only one
+master, the greatest strategist of all times: YOU.
+In the world of GENESIA you must demonstarte your superiority at all times:
+
+- You must have the strongest armies to expand your territory.
+- You must be able to guide your people and make sure they lack nothing.
+- You must be the best in managing technological progress.
+
+You must expand at the smoothest possible pace.
+To do this, you must take into account several paramaters, such as nature
+(e.g., the weather, water resources and wood) and the morale of your
+population which will have an impact on its productivity.
+
+You can use the skills of several trades to build thsi new world, including
+farmers, woodsmen, blacksmiths, soldiers, carpenters, and others. Of course,
+none of this will come easily. Even as you work, the other captains are
+striving on their own lands.
+
+
+* The ultimate goal
+
+Bear in mind at all times that you must find the 7 jewels. You can achieve
+this thanks to
+
+=====[ Genesia Manual ]======================================[ Page 06 ]=====
+
+the development of your economy, your military strength and technolgical
+skill.
+
+Before we move on to more detailed explanations, let us give you a word of
+advice: a jewel won can be lost again.
+
+
+HOW TO WIN
+
+GENESIA is not simply a race against the clock. There are sveral ways to win.
+In this paragraph we will examine the eaisest way to start out. As you grow
+more familiar with the game, you will develop your own strategy.
+
+
+Be the first to recover all 7 jewels.
+
+To do this, you must develop your economy and build up considerable resources
+to recruit several men to find the jewels as soon as possible. Moreover, you
+must protect the jewles and thus build up necessary defences. Lastly, you can
+decide to attack the zones on which your enemies store their own jewels.
+
+
+Be the only player left.
+
+This consists of eliminating all of your adversaries. This can be done in
+several ways:
+
+- By capturing all of a player's lands (see PART II, Chapter 8 - CAPTURING A
+  LAND)
+- By crushing him militarily
+- By ruining him financially (e.g., by destroying his stocks, see PART II,
+  Chapter 5 - The warehouse).
+
+
+DEFEAT
+
+You have lost the game if:
+
+- All of the jewels have been found by one of your adversaries
+- You have no land or armies left.
+
+
+
+Chapter 4 - COMPETING FORCES
+
+NUMBER OF PLAYERS
+
+When you start up the game, the program asks the number of players. 1 to 3
+people can play. At the beginning of each game there are always 3 players.
+
+
+INDICATE THE NUMBER OF HUMAN PLAYERS
+
+* Click on 1 if you are playing alone. In this case, you play the first
+  captan and the two
+
+=====[ Genesia Manual ]======================================[ Page 07 ]=====
+
+  other captains are played by the computer.
+
+* Click on 2 if two people are playing. Player number 2 plays the second
+  captain and the third captain is played by the computer.
+* Click on 3, if three people are playing. Each one plays a captain.
+
+Enter the names of the players on the keyboard and press RETURN to confirm.
+
+
+CHARACTERS PLAYED BY THE COMPUTER
+
+The captains played by the computer have the same goal as you. However,
+during the game some captains played by the computer can stress economic
+strategies, while others can be far more aggressive (see PART I, Chapter 3).
+
+
+Chapter 5 - THE DIFFERENT MAPS
+
+You can choose between five different worlds. Depending on the world you
+choose, the computer will apply a specific plicy and the game's configuration
+will be different. We recommend starting with world no. I (the computer's
+choice by default).
+
+Each map (i.e., world) has its own strategy.
+
+
+Chapter 6 - USING THE MOUSE
+
+SCROLLING ON THE GAME SCREEN
+
+To scroll down the map, point the mouse arrow in the direction you want on
+the edge of the screen.
+
+
+MOUSE BUTTONS
+
+Clicking on the mouse buttons has a different impact depending on the screen
+zone. We will look at the different effects and functions.
+
+
+
+PART II: THE ECONOMY
+
+
+Chapter 1 - THE INHABITANTS OF GENESIA
+
+YOUR POPULATION
+
+Like any society, your people will evolve.
+In the following chapter, we will see that the inhabitants of GENESIA have
+different
+
+=====[ Genesia Manual ]======================================[ Page 08 ]=====
+
+trades. For the first time in this type of game, the inhabitants have their
+own lives. They work, pay taxes, get married, have children, age, etc. And
+they are vulnerable to various illnesses.
+You start out with a small population made up of settlers who each live in
+their own hut. You must take care to provide them with work as soon as
+possible.
+
+
+Rule no. 1
+
+Each inhabitant of your land must have a house.
+If one of your inhabitants does not have a home, he will revolt, refuse to
+work and is liable to turn your people against you or desert your territory.
+
+
+Time
+
+As in real life, time in GENESIA is measured in years.
+Each year is divided into four seasons (spring, summer, autumn, winter).
+A season represents one turn.
+The game begins in spring.
+
+
+Morale
+
+This is the inhabitants' main feature. It is measured on a scale of 0 to 7.
+When an inhabitant has a morale of 0/7, this is disastrous: he either deserts
+the territory or dies.
+In contrast, a morale of 7/7 makes this inhabitant an excellent, particularly
+productive woker, and a great soldier. You can easily see that morale has a
+determining impact on several factors of GENESIA, including productivity,
+military strength, the desire to start a family, the number of births, etc.
+
+
+Births
+
+Increasing the population is also extremely important. One way to do this is
+to increase the number of births. To do this, you need:
+
+- A land with abundant water and food.
+- Homes capable of containing at least two people (see PART II, Chapter 5 -
+  Houses).
+- A man and woman living in the same house.
+
+If these three conditions are met, you will soon have the pleasure of
+celebrating the birth of a beatiful baby!
+He will soon be counted in your population when he grows old enough to work,
+i.e., when he reaches the age of 16.
+
+=====[ Genesia Manual ]======================================[ Page 09 ]=====
+
+Note: to make the game easier to play you do not have to wait 16 turns (i.e.,
+years) before you can employ this new recruit!
+
+Remark: One home can include at most 2 inhabitants.
+
+
+Age
+
+From year to year, your inhabitants age.
+
+- At 16, they are included in the available workers when they become old
+  enough to work.
+- Between 20 and 30 they tend to get married. This is the period during which
+  they are the most efficient. However, their morale can decline and increase
+  rapidly because they have not reached full stability.
+- Between 30 and 40, they become vulnerable to viruses and other diseases,
+  but their morale is also less volatile because they have achieved a certain
+  stability.
+- Over 49, they die of old age.
+
+
+Diseases
+
+Several diseases can strike your population (we will not list them here so
+that you can discover them as you play).
+
+These diseases have various features:
+
+- Some of them are only contagious in a given season.
+- Some go away by themselves.
+- Some are very contagious.
+- Others are deadly.
+
+They all have something in common:
+*   When one of your inhabitants is struck by a disease, he can no longer
+    work, and he doesn't pay taxes anymore. However, he tends to consume
+    more food and water to fight his infection.
+**  When an inhabitant is sick, by the end of his convalescence, he will have
+    aged one or several years.
+*** The only way to fight the various illnesses is to discover vaccines to
+    immunise your people (see inventions).
+
+
+THE POPULATIONS OF OTHER PLAYERS
+
+The inhabitants live in enemy territory and evolve in the same way. You can
+lure the population of other players onto your own land by capturing virgin
+territry in the vicinity of
+
+=====[ Genesia Manual ]======================================[ Page 10 ]=====
+
+enemy lands, then by developing an important production site.
+
+
+
+NOMADS
+
+Nomads are men and women who live on no land. They travel over the lands of
+GENESIA in search of a province or land on which to settle. Nomads are
+essential because their strong morale makes them excellent workers.
+
+To lure them onto your land you must have:
+
+- A vacant home.
+- Enough water and food in stock.
+- An average morale of over 5.
+- No edpidimics.
+- No battles underway in your land.
+
+
+Chapter 2 - TRADES
+
+OUTDOOR TRADES
+
+These are the trades that are performed outside the home. It is important to
+differentiate them from other trade categories (indoor trades) when shifting
+a worker from one trade to another (see PART II, Chapter 3 - Changes of
+trade).
+
+When a worker begins his work in the course of season, he will not be
+available again until the following seas. The season affect the yield of
+these trades (see PART II, Chapter 4 - The impact of seasons).
+
+
+Farmers
+
+Farmers are crucial for your economy.
+
+Thanks to them, and mostly to their crops, you will be able to increase the
+number of inhabitants on your land, guarantee the morale of your population,
+meet the needs of other territories, prevent famine, etc.
+
+To work, a farmer needs a field to till. When the game starts you have none.
+To create a field, go to the construction window (see PART II, Chapter 6 -
+Constructions) and click on Field.
+
+In the window representing the type of construction being built, you will see
+the drawing of a field appear. Click on the site on the game screen on which
+you wish to place the field. Choose a plain, and if possible, close to home.
+
+=====[ Genesia Manual ]======================================[ Page 11 ]=====
+
+On your following turn, you will see a farmer tilling the field. A farmer
+cannot farm more than one field.
+
+You need as many fields as you have farmers, if you do not have enough
+fields, the extra farmers will not work. If you have no warehouse, your
+farmers will store no food, everything that is produced will have to be
+consumed right away and any surplus will be wasted. To prevent this disaster,
+make sure you build a warehouse quickly to store your food and avoid a
+famine (See PART II, Chapters 5 and 6).
+
+
+Learn to use your farmers in the most productive seasonssuch as spring and,
+especially, autumn, when the harvest is optimal.
+
+
+In winter, your farmers (and your woodsmen and carpenters) do not go out
+because of the harsh weather. Remember to store enough food to keep your
+inhabitants alive during this period in which there are no cops.
+
+
+The balance sheet (see PART II, Chapter 9, the balance sheets) will give you
+an indication of how long your supplies will last.
+
+
+Example:
+
+Food = 3 seasons
+
+-> Explanations:
+
+Supposing you have no crops, you will have food for the three following
+seasons. However, if the number of inhabitants increases or declins, th
+forcast will change as well.
+
+
+Woodsmen
+
+Wood is an important raw matrial in GNSIA because it is needed in all
+constructions. But before you can use wood in your constructions, you will
+ned to employ woodsmn to cut down trs. The woodsmn will choose which forests
+to xploit. ach woodsmn will cut down his own tree. You will se thm cutting th
+tree, it will take on woodsman a full season to cut down a tree. Once the
+work is done, each tr is replaced by thre trunks. The amount of wood availabl
+to the carpenter will vary depending on th woodsman's moral. When he is done
+with one tree he will move on to the next.
+
+
+Warning!
+
+Be careful not to cut down an entire forest, which would b ecological
+diasater (See
+
+=====[ Genesia Manual ]======================================[ Page 12 ]=====
+
+PART II, Chapter 4) To prevent this disaster, remember to keep an eye on the
+condition of the vegetation in the balance sheet. If you are in the red,
+immediately stop the activities of the woodsmen (see PART II, Chapter 3). In
+winter, the woodsmen do not work.
+
+
+Carpenters
+
+Once a tree is chopped down, it is replaced by three trunks. The next job is
+for your carpenter. The carpenter helps the woodsman. The amount of wood
+prepared will depend on the carpenter's morale. For a carpenter to be active,
+all he needs is an available chopped down tree. Once the carpenter's task is
+finished, the wood is stored in one of the warehouses located on your land
+(assuming one exists). Carpenters do not work in winter.
+
+
+Architetcs
+
+Architects will build different constructions (see PART II, Chapter 6 -
+Constructions). They can build several types of constructions depending on
+what you order. Unless you give them specific instrcutions, they will build
+additional homes for your people. You will be able to see your architects
+construct buildings and monitor the various stages of construction. To see
+the building of an architect under construction, place the mouse cursor on
+the building and click with the right-hand button. A window will appear with
+information. Architects are the only people that work outdoors even in
+winter. Each architect works on his own building. For all outdoor trades,
+click with the right-hand button on a worker to find out about his trade
+(farmer, woodsman, carpenter or architect) and other characteristics (such as
+his sex, morale, function and age). The information will appear in a window,
+
+
+INDOOR TRADES
+
+The advantages of indoor trades is that, contrary to outdoor trades, they can
+be performed all year round (even in winter).
+
+Inventors
+
+Inventions will play a particularly crucial role in helping you fulfil your
+mission. Your inventors will create machines that can help you win. But to
+recruit inventors, you must supply them with a workshop. The workshop must be
+built by an architect. When the workshop is finsihed, you can hire one or
+more inventors. If you only have one workshop, but several inventors, all of
+your inventors are represented on screen by their chief. With several
+inventors, however, your inventions will progress far more rapidly.
+
+=====[ Genesia Manual ]======================================[ Page 13 ]=====
+
+Similarly, the morale of the inventor has an enormous influence on the speed
+with which he performs his task.
+
+
+Blacksmiths
+
+The blacksmiths help the inevntors. They build products designed by the
+inventors. But to create the tools you have ordered, they need raw
+materials - and money to increase their motivation.
+
+Like the inventors, several blacksmiths will be represented on the screen by
+their chief. A team of blacksmiths is more efficient than a single
+blacksmith. The blacksmith can only build certain types of inventions such as
+wagons, boats, cannons and balloons.
+
+
+Specialists
+
+The activities of specialists are performed indoors. At first sight, you may
+think that specialists are of little importance compared to other workers.
+But you will soon realise that they are very important. Each land of GENESIA
+has a specialty such as: culture pearls, fruit, pottery or fabrics.
+Specialists increase the market value of the land.
+
+You can sell your speciliaties to the shopkeeper (See PART II, Chapter 6, the
+shop) and collect a tidy profit. When you recruit specialists, they will
+produce and stock the local speciality. Moreover, the specialist is the only
+person capable of producing fabric which is necessary to manufacture wagons,
+boats and balloons.
+
+
+THE IMPACT OF MORALE ON YIELD
+
+The morale of your inhabitants has a determining impact on their
+productivity. Morale is measured on a scale of 0 to 7. The higher the morale,
+the more productive the labour.
+
+
+Chapter 3 - MANAGING THE TRADES
+
+CHANGES OF TRADE
+
+
+Why change the trade of an inhabitant?
+
+Throughout the game you will have to change the trades of your people. The
+inhabitants of a land are few and you must carefully adjust their numbers to
+have the right trades at the right moment.
+
+=====[ Genesia Manual ]======================================[ Page 14 ]=====
+
+You need to know the following:
+
+
+* To recruit soldiers you need settlers (these appear in the settler column
+  of the trades window).
+* You can place a settler in the trade square that interests you.
+* If you have just created farmers, woodsmen, or carpenters, they will not
+  become active until the next season.
+* When an inhabitant is inactive, a 'ZZ' symbol appears in the window (he's
+  asleep!).
+
+
+Working Conditions
+
+- In winter, farmers, woodsmen and carpenters do not work.
+- You must have as many fields as you have farmers.
+- You must have enough trees for your woodsmen to cut and thus work.
+- Trees must be cut into logs so that the carpenters can take over.
+- Sick inhabitants do not work.
+
+
+When can you change trades?
+
+- Take advantage of the quiet of winter to recruit your armies and explore
+  the territory in search of the jewels.
+- If you have few inhabitants, make one of them a woodsmen for one season and
+  the next season you will have logs instead of a tree. Before the end of the
+  season, change your woodsman to a carpenter. This way, he can start to chop
+  the logs as of the following seas, supplying the architects with wood.
+
+
+Warning!
+
+The chopped wood is stored in the warehouse located on your land. If you have
+no warehouse, all of the work will be lost.
+
+
+TRADE CHANGE WINDOW
+
+Appearance
+
+The trade window contains 8 columns.
+
+- Each column represents a trade.
+- Each column contains 2 squares.
+- Each square can be occupied by one inhabitant.
+
+
+The figure displayed next to the words 'fields' 'logs' and 'trees' represents
+the total amount of each respective item.
+
+=====[ Genesia Manual ]======================================[ Page 15 ]=====
+
+Instructions
+
+- To load the trade window, click on the flag in the centre of the field.
+- To exit the trade window, click with the right button of the mouse.
+- To change the trade of an inhabitant, position the cursor on the inhabitant
+  of your choice and select by pressing and holding down the left button of
+  the mouse. Keep the button pressed and slide the character into the trade
+  column of your choice.
+
+
+Example:
+
+You decide to make an inventor a blacksmith:
+
+-> Press and hold the left-hand button of the mouse on one of the inventors
+shown in the inventor column. Then, slide the inventor into the blacksmith
+column and release the mouse button.
+
+* When you make on eof your inhabitants a farmer, woodsman or carpenter, the
+  character is represented by the 'ZZ' symbol. In the following ses, if the
+  character is working, the 'ZZ' symbol will be replaced by an icon
+  representing the trade.
+* With the mouse, position the cursor on the block occupied by an inhabitant.
+  The character's morale level appears in the bottom center f the trade
+  window.
+* Soldiers are represented in the settlers window. In the screen on the
+  previous page, the soldiers are represented in the settlers' column by
+  two figures on the second line.
+* In the above example, assuming you have barracks on that land, you will not
+  be able to recruit more than two new soldiers since you only have two
+  available settlers. The settlers are shown in the 'SETTLER' column by the
+  two figures on the upper line.
+* Newcomers in a land automatically sppear in the settlers window.
+
+=====[ Genesia Manual ]======================================[ Page 16 ]=====
+
+Chapter 4 - SEASONS AND VEGETATION
+
+
+As in the real world, there are four different season in a year. Depending on
+the season, rain or snow falls on the land of GENESIA. This will affect the
+behaviour of the people. Seasons have a particularly strong impact on trades.
+
+
+SEASONS ARE VERY IMPORTANT IN GENESIA
+
+
+Summer
+
+GENESIA starts in summer. This is the seson of het and atmospheric pressurema
+and hence of storms and lightning. The problems caused by lightning are the
+following:
+
+- Fires: when lightning falls ons trees, it sets fire to the vegetation.
+- Scorched land: the fires spread and burn everything, especially crops. Once
+  a parcel of land is burnt, it will no longer grow plants. To repair the
+  damage select the DESTRUCTION icon (see PART VII, Chapter 1, Definition of
+  the icons).
+
+The following incidents happen in summer:
+
+- Summer is not a good season for crops and farners are not optimum in their
+  work.
+- To prevent damage from lightning, invent the lightning rod (See PART IV and
+  PART V of the manual).
+- Summer rain storms help replenish underground water supplies.
+
+
+Autumn
+
+This season is particularly productive for farmers since it is when the crops
+are harvested. In autumn, food resources improve considerably. This is when
+the earth is most productive, and when the underground water supplies are the
+most plentiful.
+
+
+Winter
+
+Winter in GENESIA is extremely harsh, and all outdoor activities (farming,
+lumber and carpentry) automatically come to a stop. Also, the inhabitants
+tend to catch colds and more serious diseases that can be very contagious.
+
+
+Note:
+
+- Quickly invent vaccines to protect the health of your people (see PART IV
+  and V).
+
+=====[ Genesia Manual ]======================================[ Page 17 ]=====
+
+- In winter, many people are inactive (farmers, woodsmen and carpenters). You
+  can take advantage of this period of inaction to enlist the sttlers in your
+  army. But be careful: their morale is likely to be a little low which means
+  that your soldiers will have few life points.
+
+
+Spring
+
+Spring raises the mood of your people and raises their morale points, which
+is fortunate because spring is also when the taxes are levied. The vegetation
+grows back and Nature awakens. Spring is also the season when babies are
+born.
+
+
+CAUSES AND EFFECTS OF DROUGHT
+
+Drought and the depletion of underground water resources is a catastrphe
+because this prevents any renewal of natural resources.
+
+* case no. 1
+
+- Too many wells -> depletion of underground water sypplies -> no crops.
+
+solution:
+
+You must destroy certain wells (See PART VII, Chapter 1, Main Screen,
+definition of icons, destruction icon), then wait for the rain season for the
+underground water reserves to be replenished.
+
+* case no. 2
+
+- too many woodsmen -> too many trees cut down -> no rain -> depletion of
+  water supplies.
+
+solution:
+
+Go to the trades window to stop the work of the woodsmen as of the following
+season. As long as you have at least one tree, nothing is lost. If the earth
+is rich enough, new trees will sprout and the vegetation will return.
+
+
+Chapter 5 - BUILDINGS
+
+ACTION BUILDINGS
+
+Action buildings are buildings in which you can act.
+To enter oone of these buildings, place the cursor of the mouse on the chosen
+building and
+
+=====[ Genesia Manual ]======================================[ Page 18 ]=====
+
+click on the right-hand button. For information on the building click with
+the left-hand button.
+
+
+The barracks
+
+In the barracks, you can:
+
+Change the taxes
+
+Tell the administrator who is always in the barracks to collect the taxes.
+You can increase or decrease the taxes. Choose 5%, 10%, 20% or - if you are
+in a particularly generous mood - 0%.
+
+Avoid raising taxes too much. At 20%, your people could revolt rapidly.
+
+Taxes are collected at the end of winter and the amount collected appears at
+the beginning of spring on the taxes sheet.
+
+
+To change the taxes:
+
+- Go to the main screen. Place the cursor on the barracks and click the
+  right-hand button to enter the barracks.
+- Click on the administrator, which is the character sitting behind the table
+  (see PART VII, Chapter 4 - The Barracks). (Place the cursor on the
+  adminstrator and click.) Three messages will appear:
+
+- Change the tax rate.
+- Recruit an army.
+- Offer an alliance.
+
+- Click on tax message.
+
+Several percentages appear.
+
+-Click on the tax rate you want.
+
+=====[ Genesia Manual ]======================================[ Page 19 ]=====
+
+Recruit armies:
+
+The barracks is the only place you can recruit an army.
+As you advance in the game, you will have the choice between different types
+of armed forces, but in the beginning of the game, you have only one type of
+army, made up of ordinary soldiers. (See part III, Chapter 1 of this manual
+for further information on armies).
+
+Warning!
+
+You can only enlist inhabitants who are not working outdoors and who are not
+sick. Once your men have been recruited, they will wait for you in front of
+the barracks.
+
+
+The warehouse
+
+Warehouses are a critical factor for the success of your land. You must own
+at least one on each of your lands.
+The warehouse stores food, drinking water, wood, metal, stone, fruit,
+pottery, fabrics and rare pearls. A warehouse has a storage capacity of 500
+units.
+
+Warning!
+
+Each of your lands are independent, i.e., land A and land B each have their
+own stocks.
+
+To enter a warehouse, position your cursor on the warehouse and click on the
+right-hand button.
+You can move the contents of your warehouses.
+To do this, the inventors and blacksmiths of your land must have invented and
+built at least one wagon.
+
+You can sell the contents of the wagon to the shop (see PART II, Chapter 5,
+The shop and PART II, Chapter 7 for more information).
+
+=====[ Genesia Manual ]======================================[ Page 20 ]=====
+
+The workshop
+
+This is where your inventors and blacksmiths invent and build tools.
+
+You must have a workshop for your inventors and blacksmiths. Inside the
+workshop, you can invent and build. To invent, you need one or more inventors
+and a workshop.
+
+
+To launch and invention:
+
+- On the main screen, place the cursor on the workshop and click on the
+  right-hand button.
+- A window appears providing information on the type of invention being
+  produced.
+- Clicking on ENTER, to enter the workshop.
+- Position the cursor on the inventor - i.e., the character standing before
+  the workbench - a message appears to inform you whether your inventor is
+  available. If he is not available, he can inform you of the state of his
+  research.
+- Click on the inventor with the left button to display the invention sheet.
+  (see PART IV, Chapter 3 - Inventions).
+
+
+Warning!
+
+The inventors of the same land work together on the same project.
+
+
+Example:
+
+If you have three inventors on land A, and you order them to invent
+something, all three will work together on that project. You cannot ask all
+three of them to work on separate projects.
+
+
+To build a product which has been invented, you need one or several
+blacksmiths and a workshop.
+
+- On the main screen, place the cusror on the workshop and click on the
+  right-hand button.
+- A window appears providing information on the type of invention being
+  produced.
+
+=====[ Genesia Manual ]======================================[ Page 21 ]=====
+
+- Clicking on ENTER to enter the workshop.
+- Place the cursor on the blacksmith (the character holding a hammer and
+  standing before the anvil).
+- If your blacksmith is available, he will suggest a list of products
+  (cannon, wagon, boat and balloon).
+- Click on the object you are interested in. The blacksmith will give you a
+  list of raw materials needed and will tell you how much it costs to make
+  the product.
+
+The blacksmiths of the same land work together on a single project.
+
+Example:
+
+If you have three blacksmiths on land A, and you order them to build
+something, all three will work together on that project. You cannot ask them
+to work on seperate projects.
+
+
+The tavern
+
+The tavern is where the adventureres hang out. This is where youc an obtain
+information on the jewels. At certain times, you may find sinister looking
+individuals seated at the tables. Adventurers are greedy men who like gold,
+but they can help you in your quest.
+
+If you buy their information, you may learn where the jewels are. When you
+ask as adventurer for information, he will ask you how much you are willing
+to pay. Depending on the amount you give, the infromation you receive will be
+more or less precise.
+
+- On the main screen, with the mouse, position the cursor on the tavern and
+  click on the right-hand button.
+- If you see any adventurers (characters sitting at the tables), position the
+  cursor on one of the adventurers and click on the left button. A message
+  will appear, asking you how much you are willing to pay. Click on the
+  desired amount.
+- A map of GENESIA will appear. The tavern is at the center of the map and
+  the jewels are represented by a lather bag.
+
+=====[ Genesia Manual ]======================================[ Page 22 ]=====
+
+Warning!
+
+GENESIA is represented at a 45 degree angle while the map the adventurer
+shows you is viewed from above. The information may be very vague. The higher
+the sum given, the more precise the information you receive will be.
+
+
+The temple
+
+The temple is a sacred place.
+In the temple, you can:
+- Make an offering.
+- Deposit the jewels.
+
+* It is very umportant to make an offering. Depending on the size of the
+  offering, it will lift the morale of your people more or less (those living
+  on the land on which the temple is located) and increase the lands 
+  fertility.
+- From the main screem, position the cursor on the temple with the mouse and
+  click with the right button.
+- Inside the temple, position the cursor on the Master who will ask you how
+  much you are prepared to offer. Position the cursor on the desired amount
+  and click on the left button.
+
+* The temple is the only place in which you can store and keep the jewels you
+  find. When you find a jewel, a window appears asking you in what temple you
+  want to store it. If the temple is destroyed by the enemy, all of the
+  jewels stored inside will be left outisde, and accessible to anyone!
+
+You can build several temples, but it is unnecessary to have more than one
+temple on a single land. In contrast, if you have temples on other lands,
+this will
+
+- Boost the morale of your people.
+- Enable you to spread the jewels you find around and thsu protect them more
+  efficently.
+
+=====[ Genesia Manual ]======================================[ Page 23 ]=====
+
+The shop
+
+The shop can help you increase your revenues. But to be able to benefit from
+the "generosity" of the shopkeeper, you need a wagon (See PART IV, Chapter 2
+- Interactive inventions).
+Bring your wagon to the front of the warehouse (See PART II, Chapter 5 - The
+warehouse), load it with goods, and bring your wagon to the shop. The
+shopkeeper will buy whatever is in the wagon.
+
+This will help you considerably:
+
+* Your income will increase.
+* If your warehouse is too full, you can remove some of your goods.
+
+If you wish, you can also sell raw materials to another player.
+
+Example:
+
+If player 2 has a lot of money but very few raw materials (such as stone,
+wood and metal), you can load your wagon and bring yoru goods to the other
+player's shop. The goods in the wagon will be available in the other player's
+warehouse and you will receive a sum of money. These exchanges can only take
+place if there is mutual confidence. If you do not feel completely safe, we
+suggest having your wagon escorted by armed soldiers to protect your goods.
+
+
+Drills
+
+Drills are crucial to the economy since they are the only way to obtain stone
+and metal. Without drills you cannot build anything. Contrary to the other
+buildings, you cannot go inside.
+
+=====[ Genesia Manual ]======================================[ Page 24 ]=====
+
+A single drill can extract both stone and metal (see PART II, Chapter 7 -
+Production). But if you want to produce more stone than metal, position the
+drill at the top of a mountain, and preferably on a rock. If you place a
+drill at sea level, it will produce more metal than stone.
+
+To position your drill:
+
+- Open the construction window.
+- Select the drill command.
+- You must have an architect available.
+- Position the cursor with the mouse to choose a production site on the game
+  screen.
+- Click with the left button to get your architect started on the
+  construction of the drill.
+
+
+Warning!
+
+Once installed, a drill cannot be placed elsewhere.
+
+
+HOUSES
+
+Houses are where your inhanbitants live. You are not in charge of managing
+their construction and your architects will decide what types of houses to
+build. Depending on the type of house, your architects will get the materials
+they need from your warehouse.
+
+Warning!
+
+Your population cannot increase ulness you have vacant homes. You must thus
+let your architects freely build the homes of their choice.
+
+However, you can interrupt the construction of a house. To do this, pen the
+constructions window and select the type of building you want. The house that
+is being built will be cancelled and will be replaced by your order.
+
+
+Different types of houses:
+
+* Huts and cabins
+
+Huts and cabins are the most primitive of hosuing. As long as your land is
+still as a primitive stage of development, your architects will build this
+type of house which requires no raw material input. The drawback is that they
+can only house one person.
+
+=====[ Genesia Manual ]======================================[ Page 25 ]=====
+
+* Small farms, Houses and Inns
+
+These are better quality lodgings that can house two people, making marriages
+possible and therefore a larger population.
+
+
+DEFENSIVE BUILDINGS
+
+These buildings protect you from an enemy attack.
+They must be built by your architects.
+
+
+Stone walls
+
+You can build stone walls around towns, sites, or buildings that you feel
+need special protection (for example, a temple).
+Building a wall will cost raw materials as well as some money.
+
+
+Portcullises
+
+Once you have built a rampart (i.e., 2 walls side by side) you can install a
+portcullis. This is a major advantage since by clicking on it with the mouse,
+you can open the portcullis to let your armies in or out. Click again on the
+portcullis to close it and prevent enemy armies from penetrating your land.
+
+
+
+Chapter 6 - CONSTRUCTIONS
+
+INSTANT BUILDINGS
+
+So-called "instant" buildings are those that involve no work by architects.
+These include roads, wells and fields which can be created simply by clicking
+on the mouse. There is no construction delay.
+However, these constructions will cost money which will be automatically
+taken from your coffers, as well as raw materials which are needed for wells
+and roads. Instant buildings are represented by an "I" in the construction
+window.
+
+General rules concerning instant constructions
+
+- To launch a construction, open the constructions window.
+- To do this, click on the anvil icon in the window at the bottom of the
+  screen; a window with the list of constructions will appear.
+- The figure on the right is the cost of the building.
+- Place the cursor on the construction you are interested in. The cost of the
+  construction in raw materials will be displayed.
+
+=====[ Genesia Manual ]======================================[ Page 26 ]=====
+
+Click with the left-hand button of the mouse to confirm your choice.
+
+- The chosen construction will appear in the "in progress" window (see main
+  screen).
+- Once you have chosen the cnstruction you want to build, select where you
+  want the construction to be placed. Position the cursor on the game map and
+  click with the left-hand button to confirm the position.
+- You must own the land on which you plan to build (see main screen).
+
+Example:
+
+To build a road, open the construction window; using the mouse, place the
+cursor on "Road". A new window will appear which will indicate the cost in
+raw materials. Click with the left-hand button to confirm.
+
+
+Roads
+
+When you travel in GENESIA you use up travel points (see PART III, Chapter 5,
+Travel points). Roads make it easier for your armies or wagons to get from
+one point to another, by cutting in half the number of travel points needed.
+
+Roads have one main advantage: they facilitate exchanges between your lands.
+Thus, if you own several lands, connecting them with roads and crossroads
+saves your travel points.
+
+It is impossible to build roads over mountains or over the sea.
+
+
+Wells
+
+Wells provide drinking water which is drawn from the underground reserves. If
+you dig too many wells, yu risk drying up the underground water supplies.
+
+
+
+Warning!
+
+Too many wells will tie up the underground water reserves (see PART II,
+Chapter 4 - Sesons and vegetation).
+
+
+Fields
+
+These enable farmers to grow crops. You must have at least as many fields as
+farmers.
+
+=====[ Genesia Manual ]======================================[ Page 27 ]=====
+
+COMPLEX CONSTRUCTIONS
+
+Contrary to instant constructions, complex cnstructions require the work of
+an architect.
+
+
+Ordered Buildings
+
+These are the buildings that you must specifically order (e.g., barracks,
+drills, etc.). The architect will follow your orders and will build the
+constructions you ask for. If no architect is available, a message will
+appear on the screen.
+
+
+General rules concerning building oredrs placed with an architect:
+
+- First open the construction window.
+- To do this, click on the icon representing an anvil in the window at the
+  bottom of the game screen; a window will appear with the list of buildings.
+- The buildings cost is indicated on the right.
+- To know the cost in raw materials, place the cursor on the building of your
+  choice, a window will appear indicating the consumption of raw materials
+  for each unit.
+- Click on the left button of the mouse to confirm your selection.
+- The icon representing the building you have chosen will appear in the
+  window (see main screen).
+
+
+Warning!
+
+You must have an architect available:
+
+- Once you have chosen the type of building, choose the location by moving
+  the cursor on the game map to the point on which you want the building
+  constructed and clock on the left-hand button to confirm.
+- You must own the land on which you plan to build.
+
+The following buildings require an architect (see PART II, Chapter 5 -
+Buildings for a detailed description of each type of building): barracks,
+workshops, taverns, shops, warehouses and stone walls.
+
+
+Autonomous buildings
+
+These are the buildings that the architects build on their own, i.e., houses.
+An architect will build houses if the following conditions are met:
+
+- Economic conditions are favourable.
+- The warehouse contains enough raw materials.
+- The architect is healthy.
+- No other construction order has been given at the beginning of the season.
+
+=====[ Genesia Manual ]======================================[ Page 28 ]=====
+
+THE NECESSARY EQUIPMENT
+
+
+      Type of    Price of      Wood       Metal       Stone
+     building    building    Consumed    Consumed    Consumed
+    ----------  ----------  ----------  ----------  ----------
+    Barracks         1,214           8           8          12
+    Drill            1,020           8           8           8
+    Temple             719          15           8          20
+    Workshop           639           8           8          12
+    Tavern             545          12           8          15
+    Shop               425           8           8          10
+    Warehouse          315           8           5           6
+    Stone Wall         206           0           0           5
+    Portcullis         103           1           5           3
+    Well                84           2           2           3
+    Road                33           0           0           1
+
+
+
+Chapter 7 - PRODUCTION AND STORAGE
+
+Production and storage are the keys to victory. Your inhabitants will produce
+the supplies and materials you need to develop your economy.
+
+
+PRODUCTION
+
+Note: See also chapter on trades.
+
+Food and water
+
+* Your families cultivate your fields and store the fruit of their labour
+  themselves in the warehouse.
+* When you dig wells, these draw water from underground water resources.
+  Drinking water is stored directly in the warehouse. The inhabitants of the
+  land draw the amount of food and water they need. If there is a famine, a
+  message from your inhabitants will appear on screen.
+
+=====[ Genesia Manual ]======================================[ Page 29 ]=====
+
+Raw materials
+
+* Wood
+  ~~~~
+To produce wood (a necessary component of all buildings) you need to call in
+your woodsmen and carpenters. Your woodsmen will choose which trees to cut
+down. Once their task is accomplished, the carpenters will work on the tree
+trunks. When they are finished, the wood is stored directly in the warehouse
+where it becomes available for your architects. If you run out of wood, a
+message will appear on the screen.
+
+* Stone and metal
+  ~~~~~~~~~~~~~~~
+Production of these materials is determined by the position of the drill.
+Both are produced with a drill. If you want more stone than metal, place your
+drill at the top of a mountain, preferably on a rock.
+
+If you place your drill at sea level, it will tend to produce more metal than
+stone.
+
+All materials extracted are stored in the warehouse. If you run out of stone
+or metal, a message will appear on screen.
+
+
+Specialties
+
+Specialists work at home. They produce pottery, pearls, fruit and fabrics.
+Stocks of these items in your warehouse will increase at the end of each
+season.
+
+Pearls, pottery and fruit can only be sold in the shop. Fabric has other
+uses. It can be:
+
+- Sold like another speciality to the shopkeeper.
+- Stored to produce certain inventions like the balloon (see PART V, Chapter
+  2 - The balloon).
+
+Each land has its own speciality. This can be pottery, pearls, fruit or
+fabric. The specialist will produce twice as much of the lands speciality
+than of the other three Specialities.
+
+Example:
+
+The speciality of your land is fabric. If at the end of the season, if your
+specialist produces 3 units of fruit, three units of pearls and 3 units of
+pottery, he will produce 6 units of fabric.
+
+=====[ Genesia Manual ]======================================[ Page 30 ]=====
+
+STORAGE
+
+
+Warehouses
+
+As you have already guessed, to store the output of a land you must have at
+least one warehouse. Each warehouse has a storage capacity of 500 units. When
+you enter the warehouse, the figure in the top right hand corner indicates
+the units used up. With each new warehouse you build, your overall storage
+capacity increases by 500 units.
+
+Example:
+
+If you have two warehouses on a land, your Total Storage Capacity (T.S.C.)
+will increase to 1,000 units.
+
+The warehouse is emptied as:
+
+* Raw materials are used up for construction.
+* Food and water are consumed by inhabitants.
+* Some goods are carried out by the wagon.
+
+Be careful not to overstock
+When a warehouse is full, any surplus production i slost. This means your
+farmers, woodsmen and carpenters work for nothing.
+
+Solutions:
+
+- de-stock goods using the wagon
+- build a new warehouse
+- stop producing
+
+
+
+Chapter 8 - MONEY
+
+As in any game, economic strategy plays a critical role. It is very important
+to manage your money. You have to keep track of what you spend and what you
+earn.
+
+YOUR EXPENSES
+
+Your capital diminishes with each of the following developments:
+
+* Cost of constructon: Each time you launch a construction, a certain amount
+  is deducted from your capital.
+* Purchasing goods from another player: If you have a shop and another
+  players sells his
+
+=====[ Genesia Manual ]======================================[ Page 31 ]=====
+
+  goods in one of your stores, your stock increases, but some money will be
+  deducted. 
+* Paying your blacksmiths: This happens every time something is invented.
+* Making an offering to the temple: This increases the morale of your people
+  and the fertility of your land.
+* Buying information on the jewels: These are the bribes you must pay the
+  adventurers in the tavern.
+
+
+YOUR REVENUES
+
+* Taxes: At the beginning of the spring, the inhabitants of your land pay
+  their taxes. The more inhabitants, the more taxes.
+* Selling goods to the shop: Selling goods to the shopkeeper increases your
+  revenues.
+* Selling goods to another player: First negotiate with another player to
+  sign a trade pact.
+* Bonuses: In the world of GENESIA, one can receive a bonus for a remarkable
+  deed.
+
+
+
+Chapter 9 - THE BALANCE SHEET
+
+The balance sheet is divided into two parts. The sheet called BALANCE 1
+provides visual indications represented by gauges. The sheet called BALANCE 2
+provides the same indications, but stated in figures. BALANCE 2 also provides
+the average performances of each land, including water and food reserves.
+
+=====[ Genesia Manual ]======================================[ Page 32 ]=====
+
+- for each land: this shows your position for each of the components of your
+  land (water, wood, metal, etc.)
+- the average of your lands: in Balance 2, click on 'Average'.
+- forecasts: you can easily manage your water and food needs based on the
+  indications provided by reserves (see Balance 2)
+
+Example:
+
+-  Food = 4 seasons
+-> This means you have enough food to feed your people during the next four
+   seasons.
+
+-  Drinking water = 2 seasons
+-> This means you have enough drinking water for the next two seasons.
+
+These indications are very important because they tell you if yur reserves of
+water and food are sufficient or if you must produce more.
+
+=====[ Genesia Manual ]======================================[ Page 33 ]=====
+
+PART III: THE ARMIES
+
+Chapter 1 - DIFFERENT TYPES OF ARMIES
+
+What You Need to Know:
+
+Armies vary according to:
+
+- Potential action points.
+- Potential attack points.
+- Potential defense points.
+- Ability to use projectiles.
+
+SOLDIERS
+
+Soldiers are the smallest unit of army. At the beginning of the game, before
+you have invented anything, your soldiers have no additional attack or
+defense points. As the game progresses (with the help of your inventors), you
+will strengthen your soldiers by supplying them with very sophisticated
+weapons and protection.
+
+
+ARCHERS
+
+Once you have invented projectiles, you will be able to hire archers. Several
+types of launch weapons can be invented (see PART V, Chapter 1, Inventions).
+Archers have the considerable advantage of being able to strike the enemy at
+a distance.
+
+To fire a projectile:
+
+- Place the cursor on the archer.
+- Click the right button of the mouse, a multiple-choice window opens.
+- Select the "FIRE" option.
+- Place the cursor on the target.
+- Click to confirm.
+
+
+Warning!
+When you shoot a projectile, sction points will be deducted (See PART III,
+CHAPTER 4, Action points).
+
+
+HORSEMEN
+
+Once you have invented the strap, you can move about on horseback which has
+the
+
+=====[ Genesia Manual ]======================================[ Page 34 ]=====
+
+advantage of using only one action point per field square (instead of two
+movement points for soldiers and archers). Horsemen move twice as fast as
+foot soldiers.
+
+
+KNIGHTS
+
+Knights are the most efficient troops, since they travel on horseback and are
+also better protected (because of their coat of mail - which you have to
+invent). They also have a greater attack potential than other troops.
+
+
+Chapter 2 - HOW TO RECRUIT AN ARMY
+
+WHERE TO RECRUIT AN ARMY
+
+To recruit an army:
+
+- You must have available settlers (See PART II, CHAPTER 3).
+- You must have barracks.
+- You must have a sufficient number of gold coins to pay for their
+  enlistment.
+
+If these conditions are filled:
+
+- Click with the right mouse button on the barracks.
+- Click on the administrator, the person seated behind the table.
+  (Position the cursor on the administrator, then click the right button of
+  the mouse)
+
+Three messages will appear on the screen:
+
+- Change the tax rate.
+- Recruit an army.
+- Offer an alliance.
+
+Click on "Recruit an army"
+The administrator will then ask what tupe of army you wish to enlist.
+
+- Select the desired type of army (soldiers are always available even at the
+  beginning of the game).
+- According to the number of settlers you have on the field, the
+  administrator will offer a certain number of men available for enlistment.
+- Click on the desired number.
+- A certain amount of money will be asked to pay the recruits.
+
+=====[ Genesia Manual ]======================================[ Page 35 ]=====
+
+- Click on the message "Here are your gold coins."
+- If you do not have enough money, click on the message "I do not have enough
+  gold coins."
+
+
+WHO CAN BE ENLISTED?
+
+You can enlist only the inhabitants of your own land, providing they are in
+good health.
+
+
+HOW TO DEMOBILISE A SOLDIER
+
+Place the soldier(s) on the square next to the barracks in which he (they)
+was (were) enlisted.
+
+- Click on the right button of the mouse, a multiple choice window will
+  appear.
+- Select "DEMOBOLISE".
+- You will find your ex-soldiers amoing the settlers.
+
+
+Chapter 3 - CHARACTERISTICS
+
+LIFE POINTS
+
+Your armies are made up of men and women. Their life points depend on their
+morale.
+
+Example:
+
+You have decided to recruit a farmer with a morale of 6 out of 7 (6/7).
+Open the trades window and place the figure of the farmer with the 6/7 morale
+in the sttlers column. The soldier you will latter recruit will have
+thereafter six life points, in proportion to his morale as a farmer, then as
+a colonist which was six.
+
+
+ATTACK POINTS
+
+Attack points determine the amount of damage done to an adversary when he is
+hit. If the attack potential is of three, these destruction points will vary
+from 1 to 3 when youstrike your adversary. In GENESIA you will find that your
+soldiers - according to their class - will have different attack potentials.
+At the beginning of the game, your armies will only have daggers and nothing
+to protect them.
+
+As you progress in the game and more specifically in the development of your
+inventions, you will be able to increase the attack potential of your troops.
+Thus with more effective weapons such as the sword, the rapier, and in
+particular the broadsword, the soldiers' attack potential will increase
+considerably.
+
+=====[ Genesia Manual ]======================================[ Page 36 ]=====
+
+DEFENSE POINTS
+
+Defense points follow the same principle as attack points. The only
+difference is tha they determine the extent to which your armies are
+protected from attacks. By inventing armours such as the breast plate, the
+coat of mail and the armour, you will greatly increase your armies' defense
+potential.
+
+
+Chapter 4 - MOVING AROUND
+
+To Move a Unit:
+
+- Click on the desired unit with the left button of the mouse.
+- Place the cursor of the mouse on the dsired destination.
+- Click with the left button on the mouse to confirm.
+
+Warning!
+
+The distance must represent no more than your total action points, otherwise
+it is not taken into account.
+
+
+MOVEMENT POINT
+
+For a unit to move, it must use movement points. These points will be
+deducted from the action points displayed on the sign (See PART VII,
+Screens). Action points allow the movement of both military and civilian
+units, such as carts, cannons, boats and balloons. At the beginning of a
+turn, a certain number of action points are given for each unit. When a
+unit's number of action points is used up by a movement, a message will let
+you know. Wait for the next turn (the following season) to move again.
+
+
+DISPLAY OF MOVEMENT POINTS
+
+The number of movement points absorbed depends of the type of terrain on
+which your units are travelling. The best way to move units is to use roads.
+Plains should be crossed because of the low demand on movement points.
+Mountains and sand (beaches) require the most movement points.
+
+=====[ Genesia Manual ]======================================[ Page 37 ]=====
+
+Forests
+
+Demand 3 movement points to enter but offer the strategic advantage of
+camouflaging your armies by making them invisible to the enemy. Warning: the
+opposite is quite possible. To find out if an army is hidden in the forest,
+simply move a unit to the edge of the forest.
+
+
+The Sea
+
+With the invention of the boat, you can move on the seas and save many
+movement points.
+
+
+The Air
+
+The skies will be accessible with the invention of the balloon: the ultimate
+weapon, as well as a means of espionage and movement in GENESIA.
+
+
+
+Chapter 5 - MOVEMENT BONUSES
+
+During the game you will have several opportunities to gain extra movement
+points.
+
+EXPERIENCE
+
+How you play GENESIA will be assessed as the game advances. Thus when you
+successfully carry out certain actions, if your expansion is well managed, if
+your people are happy with their king, if..., certain experience points are
+given. The experience points are represented on the screen by pieces of the
+Abora Globe displayed on the game screen. With every new piece of the globe,
+you will receive movement, money or raw materials bonuses.
+
+
+INVENTIONS (see PART IV, Inventions)
+
+Inventions are crucial to increase the number of your movement points as well
+as to make your armies more efficient, more aggressive and more resistant. We
+suggest you consult the chapter on inventions to study closely the
+correlationbetween certain inventions and their advatages for your armies.
+
+
+
+Chapter 6 - FORMATIONS
+
+A formation is made up of several units which have been brought together to
+be more agressive during a battle.
+
+=====[ Genesia Manual ]======================================[ Page 38 ]=====
+
+MERGING SEVERAL ARMIES
+
+To merge several units you must place them on adjacent squares. Click on one
+of the units with the left button of the mouse. A window will appear with the
+option "ENLIST". Select this option to merge the companies.
+
+
+Advantages of a formation:
+
+- The movement of several small units grouped into one bigger units becomes
+  more efficient.
+- The life points, the attack points and the defense points of all the units
+  are combined. The formation becomes an important attack entity.
+
+
+BREAKING UP A GROUP OF ARMIES
+
+To break up a formation of units click on the formation with the left button
+of the mouse. A window will appear with the option "DIVIDE". Select this
+option to break up a formation.
+
+Drawbacks of a formation:
+
+- You cannot spread your men.
+- The damage from enemy projectiles (arrows, cannonballs...) will be more
+  extensive on a formation than on individual units.
+
+
+
+Chapter 7 - CAPTURES
+
+UNITS YOU CAN CAPTURE
+
+You can capture enemy units and take them over. You can only capture wagons
+and cannons.
+
+
+HOW TO MAKE A CAPTURE
+
+To do this, you must surround the enemy unit with two of your own units.
+
+
+
+Chapter 8 - EMBLEMS
+
+MEANING OF EMBLEMS
+
+An emblem is the flag located in the centre of a land. To conquer a land, you
+must position one of your armies on an adjacent square.
+
+=====[ Genesia Manual ]======================================[ Page 39 ]=====
+
+COLOURS
+
+To identify the (potential) owner of the land you wish to conquer, place the
+cursor on the area and glance at the colour of the flag represented at the
+top of the game screen next to the mini-map (see PART VII, Chapter 2 - World
+screen). Depending on the colour of the flag, you know who controls the land.
+
+White corresponds to player number 1.
+Yellow, to player number 2.
+Blue, to player number 3.
+
+
+
+Chapter 9 - LANDS
+
+REPRESENTATION OF LANDS
+
+GENESIA'S various maps are displayed om the screen at a 45 degree angle.
+
+The large map
+
+The main map shown at the beginning of the game (or by clicking on the
+"planet" icon on the playing screen) shows the world in which you will find
+yourself, with its mountains, its plains and its seas. The players'
+territories are represented by the colour of their emblems. When you press
+one of these emblems, you will be placed on its land. All the maps of the
+world are divided into 64 squares, 8 squares high by 8 squares wide. Each
+square represents a land with plains, mountains, forests, lakes, seas, etc.
+
+The map of the game screen (see PART VII, Chapter 1)
+
+This map represents the main field in GENESIA: it is your area of activity.
+It represents a portion of a land. Each area is divided into 256 squares, 16
+squares high by 16 squares long. In each of these squares, you can find a
+square of plain, or a tree; you can place a field or erect a building.
+
+The mini-map of the game screen (see PART VII, Chapter 1)
+
+This mini-map is placed at the top of the screen. It gives a general view of
+the world. Clicking on the button at the edge of the mini-map opens or closes
+the information mode. When the information mode is open, the boundaries of
+each land are displayed and the name of each object is given. Example: If you
+place the cursor on a tree, a message will tell you if it is a palm, a poplar
+or a fir tree.
+
+=====[ Genesia Manual ]======================================[ Page 40 ]=====
+
+The mini-map is also very useful for moving from one land to another.
+
+Example:
+
+You are on a land placed on the upper left hand corner of the mini-map, you
+would like to see a land placed in the lower right hand corner. Position the
+mouse cursor on the mini-map and click on the desired land. The main game
+screen will display the land you are interested in.
+
+Note:
+
+The white area shown in the mini-map is the area displayed on the main
+screen. Your land is represented on the mini-map by the colour of your
+emblem.
+
+
+TO CONQUER A LAND
+
+
+Unclaimed Land
+
+By definition, unclaimed land belongs to none of the players. To take over
+unclaimed land, place one of your troops on a square adjacent to the emblem
+of the land you wish to conquer. Click on the army which is next to the
+emblem with the right button of the mouse. A window will appear with several
+options including "CONQUER TERRITORY" and "COLONISE". Choose "CONQUER
+TERRITORY." You have acquired a new land. (See PART III, CHAPTER 10,
+Colonisation).
+
+Land conquered by another player
+
+When the land belongs to one of the other two players, matters become more
+complicated because you will have to confront the adversary who owns the
+land. To take the land, place one of your troops on the square next to the
+emblem of the land. Place the mouse cursor on the soldier next to the emblem
+then click the right button of the mouse.
+
+
+
+Chapter 10 - COLONISATION
+
+DEFINITION
+
+Colonisation is the step following the conquest of an unclaimed land. By
+colonising a land, you can develop its economy. When one of your troops is
+placed on the square next to the land's emblem, click with the left button of
+the mouse on the soldier. A window is displayed offering the choice between
+"CONQUER TERRITORY" and "COLONISE".
+
+=====[ Genesia Manual ]======================================[ Page 41 ]=====
+
+Click on COLONISE
+
+The colonising army immediately turns into an architect. This architect
+builds a hut and moves in as soon as the hut is finished. Once he has a home,
+the architect moves out of his original land into the new land. He is no
+longer part of the population of his former land.
+
+
+ADVICE FOR COLONISATION
+
+- As soon as your architect has built his house, you should build a
+  warehouse.
+- Let at least one architect build houses to attract possible travellers who
+  can become settlers.
+- Colonise a land where the land is fertile, the vegetation lush and the
+  water table high.
+- Colonise land next to your land with a large population and stockpiles.
+  Your architects will go build houses themselves on the new colony.
+
+
+
+Chapter 11 - BATTLES
+
+During the battle, you have no control over the actions of the troops, but
+you can measure the strength of your adversary by placing the mouse cursor on
+the enemy army and clicking the right button of the mouse. If you decide to
+attack, evaluate your chances of winning.
+
+
+HAND-TO-HAND COMBAT
+
+Hand-to-hand combat is represented by a cloud of dust and battle sound
+effects. Place the cursor on the square on which the battle is taking place.
+This displays a battle table with infrmation on the forces present (type of
+unit, total troops, total number of life points, etc.).
+
+Engaging combat
+
+To engage hand-to-hand combat, place an army on a square adjacent to that of
+an enemy unit. Click on your army with the left button of the mouse and
+select 'ATTACK'.
+
+
+Difference between attacker and defender
+
+The advantage of attacking is important since you maintain the option of
+"RETREAT". Place the mouse cursor on the square on which the battle is taking
+place; click with the left button of the mouse. Click on "RETREAT" when it is
+displayed and you will leave the battlefield, saving the men who are still
+alive.
+
+=====[ Genesia Manual ]======================================[ Page 42 ]=====
+
+The battle
+
+- During the battle the adversaries strike one at a time until one of the two
+  parties dies or runs off.
+- When an army launches an attack, it inflicts a certain amount of damage to
+  its adversary.
+- The attack is represented by a fist which appears in the attacking party's
+  section of the table. A figure shows the amount of damage done.
+- After that, the army which has received the attack gets to strike back.
+
+A unit made up of several men has as many life points and attack points as
+the total of the men that compose it.
+
+Example:
+
+A soldier with 7 life points and 2 soldiers wih 5 life points each, will make
+three soldiers with seventeen life points.
+
+
+Description of the battle table
+
+The battle table displays the array of forces, distinguishing soldiers,
+archers, horsemen and knights. Each group has a specific area displaying the
+number of men (Example: 2 soldiers, 1 archer, 2 horsemen, 0 knights). On the
+lower right hand dside of the table is a gauge reprsenting the total number
+of life points.
+
+
+COMBAT AT A DISTANCE
+
+This includes attacks by archery units. Whenever an enemy unit enters the
+action area of one of your archery units, you can fire an arrow. This is an
+important advantage since you can damage the stock of life points and
+possibly destroy them without being hit. Thus, if the enemy is not destroyed
+and at the next turn he decides to go hand-to-hand, he will be considerably
+weakened.
+
+Warning!
+
+Firing an arrow will deduct action points in proportion to the distance of
+the shot.
+
+
+Steps to follow:
+
+- Click on your archery unit with the left button of the mouse.
+- Place the mouse cursor on the target.
+- Click with the left button of the mouse to confirm and fire.
+
+=====[ Genesia Manual ]======================================[ Page 43 ]=====
+
+Warning!
+
+The distance of the shot must not be greater than your number of action
+points.
+
+- Archers are capable of fighting hand-to-hand, but they are less effective
+  than other troops such as soldiers.
+- If a battle is not going well for your men, and if your archers are near
+  the battle square, they can fire arrows onto the square. Thus you can cause
+  damage to the enemy fighting hand-to-hand, although your men run the risk
+  of being hit in the crossfire.
+
+
+REINFORCEMENTS
+
+If a battle is not going well and you have other units nearby, you can bring
+them to the battle as reinforcements. They will appear in the numbers on the
+battle.
+
+Steps to follow:
+
+- Establish the battle square on which one of your enemies is fighting.
+- Move the unit you want to send into battle (for movement, follow the
+  standard procedure).
+- When your troops are on the adjacent square place the mouse cursor on the
+  unit, click on "ATTACK" with the left button of the mouse.
+
+
+
+Chapter 12 - ALLIANCES
+
+PRINCIPLE
+
+GENESIA is played by three people. Often, one of the three becomes stronger
+than the other two. When it seems that one of the other two captains is
+becoming dangerous, a player can propose an alliance with the third player.
+You can approach any player to suggest an alliance, regardless of whether the
+character is played by the computer or by a person. An alliance includes:
+
+A non-aggression pact:
+
+- The allies may neither engage in combat nor conquer each other's land.
+- A player will not capture cannons or carts belonging to the ally.
+
+A commercial pact:
+
+- Allies can eaisly do budiness together (you can send a wagon into allied
+  land without the risk of it being captured).
+
+=====[ Genesia Manual ]======================================[ Page 44 ]=====
+
+Duration of the pact:
+
+- An alliance is valid for a certain number of seasons (usually 8).
+- If one of the allies does not respect the agreements above, the alliance is
+  immediately broken.
+
+
+TO PROPOSE AN ALLIANCE
+
+
+* You must have barracks:
+
+- Click on the barracks with the right button.
+- Click on the administrator.
+- Click on the message that says "OFFER AN ALLIANCE".
+- Indicate the player with which you want to strike an alliance by clicking
+  on the cursor corresponding to his flag.
+
+-> At the end of your turn, the player you have approached will give you his
+   answer.
+
+
+
+PART IV: INVENTIONS - GENERAL INFORMATION
+
+Chapter 1 - INTRODUCTION
+
+ADVANTAGES OF INVENTIONS
+
+As you have probably guessed, inventions open the way to victory. With
+invention your basic soldier becomes a brave and powerful warrior, new units
+(archers, horsemen, knights) join your armies, you will find vaccines to
+fight epidimics, Wagons, boats and balloons will carry you across the world
+of GENESIA.
+
+PRINCIPLES OF INVENTIONS
+
+To create inventions, you must employ inventors who will study the Great Book
+of Knowledge to discover valuable secrets. Over 70 inventions can be
+developed.
+
+=====[ Genesia Manual ]======================================[ Page 45 ]=====
+
+Chapter 2 - CONDITIONS
+
+THE WORKSHOP
+
+There must be at least one workshop in a land (See PART II, CHAPTER 5, The
+Workshop). The more workshops there are in the same land, the more your
+inventions will progress rapidly.
+
+If you have several lands, and you have built workshops in them, you can
+diversify the development of your inventions.
+
+Example:
+
+The inventors of the workshops in land X are learning "WOODWORKS" while those
+in land Y are learning "METALWORK". When the inventors in X discover
+woodworks, it will be accessible to the workshops in land Y, even though they
+have not discovered it themselves.
+
+An invention created in one land is valid for all lands.
+
+
+THE INVENTOR
+
+The more inventors you have, the more rapidly inventions will progress. The
+morale of an inventor is taken into account. An inventor with a morale of 7/7
+will find his inventions faster than an inventor with a morale of 3/7.
+
+To launch an invention, see PART II, CHAPTER 5, The workshop.
+
+Reminder:
+
+- Click on the workshop of your land.
+- Click on ENTER on the displayed window.
+- Click on the inventor in the centre of the workshop.
+- Click on the invention in the list that you want.
+
+REMEMBER: the discoivery of an invention is valid for all territories.
+
+Example:
+
+You have just invented the sword in land X. You control lands A, B and C. All
+soldiers in lands X, A, B and C will be equipped with swords (provided each
+of these territories have barracks).
+
+=====[ Genesia Manual ]======================================[ Page 46 ]=====
+
+THE BLACKSMITH
+
+Blacksmiths can only build wagons, cannons, boats and balloons. Like
+inventors, the more blacksmiths there are, the faster their work is done.
+Blacsmiths require raw materials and gold coins.
+
+If you have invented the cannon, the blacksmiths will buidl one, if you ahve
+what they require. There will be a delay for the construction. The length of
+the delay depends on the number or workshops and blacksmiths, as well as one
+their morale.
+
+To place an order with the blacksmiths, see PART II, CHAPTER 5, The Workshop.
+
+Reminder:
+
+- Check in the population window to see if you have at least one blacksmith.
+- Click on the workshop in your land.
+- Click on ENTER in the displayed window.
+- Click on the blacksmith at the anvil to see if he is available or not (if
+  not, he will tell you what he is building).
+
+The blacksmith will describe what he can build (name of the construction ,
+price, necessary raw materials), a previous invention. If you are not
+satisfied with what he has to offer, click on the message at the bottom of
+the workshop: "OTHER". If another construction is available, the blacksmith
+will offer you something else. If there is something to your liking, click
+"YES" at the bottom of the workshop. If there is nothing you like, or if you
+do not have the means to make what you wish, click "NO".
+
+
+Chapter 3 - THE TABLE OF INVENTIONS
+
+DESCRIPTION
+
+The table lists more than 70 inventions. There is a general index at the end
+of this manual, but you should refer to it only when you have played GENESIA
+long enough. Thus, you will discover your inventions along with your
+inventors. There are two categories of inventions. When you load the
+inventiosn table, you will be on the "CRAFTS" page. When you click on the
+right button of the mouse, the "SCIENCES" page will appear.
+
+=====[ Genesia Manual ]======================================[ Page 47 ]=====
+
+Example:
+
+Before inventing the cannon (in metalwork), you will have to have invented
+gunpowder in "SCIENCES" (See CHEMISTRY branch, after explosives).
+
+
+READING THE TABLE
+
+You can only discover:
+
+- New inventions derived from previous ones and within a same branch.
+- Inventions which do not require another, intermediate invention.
+
+Once something has been invented, it is crossed out. While something is being
+developed, a yellow light bulb appears over it. Once an invention is
+available, its name becomes apparent. Inventions that are not yet available
+are in grey.
+
+
+ORGANISATION
+
+Organise your inventions in the most strategically effective manner possible.
+
+Example:
+
+You control lands A, B and C. You need an invention which requires three
+steps. Ask the workshops in land A to develop step 1, those in land B to
+develop step 2 and those in C to develop step 3. Thus the work can be divided
+to obtain your invention as quickly as possible.
+
+=====[ Genesia Manual ]======================================[ Page 48 ]=====
+
+PART V: INVENTIONS - THE LIST
+
+Chaper 1 - SOME INFORMATION
+
+* Disocvery of the microscope and the test tube
+
+  Epidimics can decimate your people. By inventing the microscope, you can
+  identify the several viruses and, with the test tube, you can develop
+  vaccines. These vaccines will immunise the populations of all your
+  territories.
+
+
+* Invention of the telescope and the compass
+
+  These are essential inventions for building boats and balloons. They will
+  enable your troops to see (telescope) and navigate (compass) better, which
+  saves movement points. The telescope can also help your spies.
+
+
+* Discovery of metals
+
+  With the science of metals and alloys, you will discover 4 different
+  metals, each will be essential for further inventions.
+
+
+* Invention of fertilisers and of the lightning rod
+
+  Fertilisers will greatly enhance crops, but will dry the soil and lower the
+  water table. The lightning rod will protect against lightning, which will
+  invariably strike your territories during the summer.
+
+
+* Invention of the bomb
+
+  The bomb will destroy any construction belonging to the players and can be
+  dropped from balloons.
+
+
+* Invention of the sling, the arc and the crossbow
+
+  The invention of one of these weapons enables the enlistment of archers.
+
+
+* Invention of the blade, the sword, the rapier and the broadsword
+
+  According to the weapon invented, your troops will be more or less
+  effective in combat.
+
+
+* Invention of the strap
+
+  The strap enables you to enlist horsemen.
+
+=====[ Genesia Manual ]======================================[ Page 49 ]=====
+
+* Invention of the breastplate, the coat of mail and plate armor
+
+  These inventions are of the utmost importance in your campaigns. If you
+already have the strap, the coat of mail enables you to enlist knights.
+
+
+
+Chapter 2 - INTERACTIVE INVENTIONS
+
+Interactive inventions are the only inventions your blacksmith can make, as
+well as the only inventions you can work on yourself.
+
+
+THE WAGON
+
+Once you have invented and built a wagon, you can use it to:
+
+- Supply one of your warehouses on any of your land to increase your stock of
+  food or raw materials.
+- If you own a shop, you can increase your supply of gold coins by selling
+  some of the supplies stored in your warehouses.
+- If you have a non-aggression pact with another player who owns a shop, you
+  may trade with this player by selling your supplies.
+
+
+Using the wagon:
+
+- Click on the wagon with the left button of the mouse.
+- Place the cursor on the destination.
+- Click with the left button to confirm.
+
+Warning!
+
+The distance travelled cannot exceed the number of action points you have.
+
+Using the wagon with the warehouse
+
+You can use a wagon to sell supplies stored in your warehouse to a shop or to
+re-supply another warehouse. Place the wagon in front of the warehouse, enter
+the warehouse by clicking with the right button of the mouse.
+
+- Load supplies stored in your warehouse onto the wagon.
+  Place the cursor on the goods you wish to load onto the wagon and click
+  with the left button of the mouse. The number of units in the wagon
+  increases as the units stored in the warehouse diminish.
+
+=====[ Genesia Manual ]======================================[ Page 50 ]=====
+
+- Unload the contents of the wagon in the warehouse.
+  Place the cursor on the goods you wish to unload from the wagon into the
+  warehouse and click on the right button of the mouse. The number of units
+  in the wagon diminishes as the number of units in the warehouse increases.
+
+When the wagon is full you can leave the warehouse. Click on the wagon with
+the right button, a window describing the freight carried by the wagon
+appears.
+
+
+Using the wagon in front of the shop
+
+Place the wagon in front of the shop and click on the shop. The shopkeeper
+will buy the contents of your wagon.
+
+A full wagon can be driven to another land or its contents unloaded onto a
+ship (if you own one).
+
+
+THE CANNON
+
+One shot of a cannon is usually enough to entirely dstroy the target. You can
+thus level walls, annihilate trops, etc.
+
+Advice:
+
+If you spot a cannon approaching one of your formations grouped onto one
+square, quickly split into several units so the cannon can only hit one unit
+at a time.
+
+Using the cannon
+
+* To move the cannon from one place to another:
+
+- Click on the cannon with the left button of the mouse.
+- In the menu: select "MOVE".
+- Position the cursor on the desired destination.
+- Click with the left button to confirm.
+
+Warning!
+
+The distance travelled cannot exceed the number of action points you have.
+
+=====[ Genesia Manual ]======================================[ Page 51 ]=====
+
+* To fire the cannon:
+
+- Click on the cannon with the left button of the mouse.
+- In the menu: select "FIRE".
+- Position the cursor on the desired destination.
+- Click with the left button to confirm.
+
+Warning!
+
+The distance of your shot cannot exceed the number of action points you have.
+
+
+THE BOAT
+
+A boat will enable you:
+
+- To travel quickly.
+- To attack your enemy from the coast, provided you have placed troops on
+  board.
+- To bomb the enemy with a cannon on board.
+- To explore islands which are inaccessible without a boat.
+
+Using the boat
+
+Click on your boat with the right button of the mouse, a window will appear,
+informing you of the state of the vessel as well as its cargo. Everything on
+board is represented by a symbol.
+
+If your boat is empty
+
+Place the cursor on the boat using the mouse. Click on the boat with the left
+button of the mouse. This puts you in movement mode.
+
+- Click on your boat with the left button of the mouse.
+- Place the cursor on your destination.
+- Click with the left button of the mouse to confirm.
+
+Warning!
+
+The distance of your voyage cannot exceed the number of action points you
+have.
+
+
+Putting a unit aboard a boat
+
+- Place your boat on a beach (the square of sea adjacent to a square of
+  land).
+- Move the unit to the square of beach next to the boat.
+- Click on the unit with the left button of the mouse.
+- On the menu, select 'EMBARK'.
+
+=====[ Genesia Manual ]======================================[ Page 52 ]=====
+
+- Click on the left button of the mouse to put the unit on board.
+
+If an army, wagon or cannon are brought on board:
+
+Click on the boat with the left button of the mouse; a menu will appear with
+the following options: MOVE, FIRE, DIEMBARK.
+
+- FIRE: fire the cannon as explained above.
+- DISEMBARK: after selecting this option, choose the unit which you wish to
+  disembark.
+
+
+THE BALLOON
+
+The balloon is the ultimate weapon in GENESIA. It requires the fewest number
+of points for the greatest distance of travel. Nothing can be brought on
+board a balloon, however, if you have invented the bomb, you can bomb the
+enemy.
+
+If you have not invented the bomb:
+
+To move a balloon from one place to another:
+
+- Click on the balloon's shadow with the left button of the mouse.
+- Place the cursor on the desired destination.
+- Click on the left button of the mouse to confirm.
+
+
+Warning!
+
+The distance of travel cannot exceed the number of action points you have.
+
+
+If you have invented the bomb
+
+- Click on the balloon's shadow with the left button of the mouse.
+
+-> A menu appears with the following options: "DROP BOMB" or "MOVE".
+
+- Select "DROP BOMB" with the left button of the mouse to bombard the enemy.
+
+-> The bomb falls directly bellow the balloon and hits what is in the
+   balloon's shadow.
+
+To move your balloon, select "MOVE".
+
+=====[ Genesia Manual ]======================================[ Page 53 ]=====
+
+PART VI: THE JEWELS
+
+Chapter 1 - HOW TO DISCOVER THE JEWELS
+
+You must recover the 7 jewels. The jewels will be found by your armies. To
+take possession of the jewels, you must first find them, then place soldiers
+on a square adjacent to the one with the jewels. Once the unit is next to the
+jewel, click on the army with the left button. A window appears containing
+the following option 'TAKE JEWEL'. Once your army is near a jewel, a message
+will appear on screen. All you have to do is place your group in the vicinity
+of the jewel.
+
+
+Chapter 2 - PROSPECTING
+
+Before you have the joy of discovering the jewels, you will have to send
+troops to the four corners of GENESIA to explore as many territories as
+possible. Recruit soldiers among your settlers, then send them as far as
+possible.
+
+
+Chapter 3 - THE TAVERN
+
+Description of the tavern
+
+The tavern will be of great help to you in your search. Many adventurers go
+there for food and drink. Most are nomads who belong to no land in
+particular. If a jewel is in the vicinity of the land on which the tavern is
+located, they can give you valuable information in exchange for money.
+
+Procedure:
+
+- Click with the right-hand button of the mouse on the tavern. (you must
+  previously have built one on your land - (See PART II, Chapter 5 -
+  CONSTRUCTIONS - The tavern).
+- Click with the left-hnd button of the mouse on an adventurer (i.e, the
+  characters seated at the table. Caution: they are not in the tavern at
+  all times).
+
+-> To the question: "That all depends on your purse", click on the message
+   corresponding to the amount you wish to pay at the bottom of the screen.
+
+=====[ Genesia Manual ]======================================[ Page 54 ]=====
+
+Two solutions are possible:
+
+1) There are no jewels in the area. The adventurer will tell you this but
+   only after he is paid.
+2) The adventurer knows where to find the jewels. In this case, a map
+   centred on the tavern will be displayed with the position of the jewels.
+
+Depending on the amount you pay, the information you receive will be more or
+less accurate - or completely false.
+
+Advice
+
+You own lands A, B and C. A tavern is located on land A. If you learn from an
+adventurer in your tavern on land A that there are no jewels in the vicinity
+(assuming the information is true), but remember to build taverns on lands B
+and C and to question the adventurers of these lands.
+
+
+
+Chapter 4 - GUARDING THE JEWELS
+
+The temple is the only place where you can store your jewels:
+
+YOU HAVE NO TEMPLE
+
+As you prepare to take a jewel, if you have no temple, a mesage will appear
+on screen to inform you that you cannot take the jewel. You can always leave
+an armed unit near the jewel to protect it from an enemy. Build a temple as
+soon as possible on one of your lands to put the stone in a safe place.
+
+YOU HAVE ONLY ONE TEMPLE
+
+You own land A and you have built a temple on it. When you take the stone, a
+window will appear indicating that the stone will be stored in the temple on
+land A.
+
+YOU HAVE SEVERAL TEMPLES
+
+You own lands A, B and C and have a temple on each. When you take the stone,
+a message will appear asking where you want to store the stone you have just
+discovered. You have the choice between temple A, B or C.
+
+=====[ Genesia Manual ]======================================[ Page 55 ]=====
+
+Chapter 5 - CAPTURING THE JEWELS OF ANOTHER CAPTAIN
+
+The other way to get jewels is to take those of another player.
+
+IF THE OTHER PLAYER DOES NOT HAVE A TEMPLE
+
+Spot the troops which are likely to be guarding the jewels. Send a
+sufficiently well-armed unit to capture the jewel.
+
+IF THE OTHER PLAYER HAS ONE OR MORE TEMPLES
+
+This is somewhat trickier: you must first find the temples likely to contain
+jewels. Then you must destroy the temples. This can only be done with a
+cannon or a balloon (using bombs).
+
+Once you have dstroyed the temple with jewels, you will find the jewels
+somewhere on the land. It will be easy to take them. The other way is to
+conquer the land on which the temple is located. The temple then belongs to
+you along with the jewels it contains.
+
+
+PART VIII: THE SCREENS
+
+Chapter 1 - MAIN SCREEN
+
+DEFINITION OF ICONS
+
+* Disk: Save and load games.
+* World: load overall view of game map.
+* Statistics: Load statistics from different lands.
+* Destruction: Click on this icon, then use the mouse to place the cursor on
+  the square you wish to destroy. Click with the left button to confirm
+  destruction.
+* Construction: load construction window.
+
+Search icons are followed by an asterik (*).
+
+
+Search icons:
+
+* Combat: Finds battles in which your armies are engaged. Click on this icon
+  to locate a battle. In some versions of GENESIA, the combat icon represents
+  a fist holding a sword.
+* Armies: Finds military units. Click on this icon to locate an army.
+* Wagon: Finds your wagons. Click on this icon to locate a wagon.
+* Boat: Finds your boats. Click on this icon to locate a boat.
+* Balloon: Finds your balloons. Click on this icon to locate a balloon.
+* Markers: (only on PC version): Click with the left button on any of the
+  ~~~~~~~~ three markers. Then click on the zone you wish to select (e.g.,
+           a workshop). By clicking on the marker with the right button of
+           the mouse, you will position yourself in the selected zone.
+
+The mini-map:
+
+* Information: activates or de-activates the information option (e.g.,
+  displays land borders and the squares through which the cursor passes).
+* Activate zone: the land displayed in the game area.
+* Game area: the main screen on which the game takes place.
+* Building selected: shows the type of building the architect is going to
+  make.
+* Action points: displays a unit's action (or travel points).
+* Hourglass: displays time spent for each turn (i.e. season).
+* Stop: click on stop button on top of the hourglass to interrupt your turn.
+
+
+
+Chapter 2 - WORLD SCREEN
+
+The screen of the world is used to visualise the map of the entire game. The
+flags displayed show which captains the lands belong to. Click on your colour
+to zoom in on your own land.
+
+=====[ Genesia Manual ]======================================[ Page 57 ]=====
+
+Example:
+
+- Player 1 clicks on white.
+- Player 2 clicks on yellow.
+- Player 3 clicks on blue.
+
+
+
+Chapter 3 - WORKSHOP
+
+* The inventor: Click on the inventor to access the table of inventions.
+
+* The blacksmith: Click on the blacksmith to launch the construction of the
+  wagon, the cannon, the boat and the balloon once these inventions have been
+  designed.
+
+* Exit: Click on the door to exit the workshop.
+
+
+
+Chapter 4 - BARRACKS
+
+* The administrator: This is the person in charge of changing the tax rate,
+  of enlisting armies and of proposing alliances.
+
+* Exit: Click on the door to exit the barracks.
+
+=====[ Genesia Manual ]======================================[ Page 58 ]=====
+
+Chapter 5 - TEMPLE
+
+* The magician: Click on the magician to make an offering and thus increase
+  the morale of your people and fertility of your land.
+
+* The jewels: the jewels stored in the temple will appear in the upper
+  right-hand corner.
+
+* Exit: Click on the door to exit the temple.
+
+=====[ Genesia Manual ]======================================[ Page 59 ]=====
+
+Chapter 6 - TAVERN
+
+* The adventurers: You can question the characters seated at the tables to
+  obtain information on the jewels.
+
+* Click on the door to exit the tavern.
+
+
+
+Chapter 7 - WAREHOUSE
+
+=====[ Genesia Manual ]======================================[ Page 60 ]=====
+
+Using the mouse, place the cursor on the products shown in the illustration
+above and the quantity of items stored appears.
+
+Click on EXIT to leave the warehouse.
+
+
+
+PART VIII: SAVING & LOADING
+
+Before you save a game, you must create a storage diskette especially for
+GENESIA. You must name the diskette GENESAVE when you format it. To do this,
+see the users' manual of your computer.
+
+If your computer is equipped with a hard disk, you can save your games
+directly onto it. To access the save screen, click on the icon representing a
+diskette on the main screen.
+
+
+Chapter 1 - SAVING
+
+Click on the icon representing a diskette on the main scren. If you save onto
+a diskette, insert the GENESAVE diskette in the drive when the program asks
+you to. Click on the 6 zones of the screen and type the name under which you
+wish to save that particular game. Click on Exit to return to the main screen
+(follow the instructions on the screen).
+
+
+Chapter 2 - LOADING
+
+Click on the icon representing a diskette on the main screen. If you want to
+load a game from diskette, insert the diskette containing the game in the
+disk drive when the program asks you to. Click the name of the particular
+game you wish to resume.
+
+
+PART IX: OPTIONS
+
+THE OPTION SCREEN
+
+The option screen appears at the beginning of the game. This is where you
+determine the number of players by clicking on the corresponding figure
+(1, 2 or 3). You also choose from one of the 5 world maps.
+
+=====[ Genesia Manual ]======================================[ Page 61 ]=====
+
+On Amiga only
+
+* Specify whether you are playing from a diskette or hard disk. When you want
+  to resume a game using the same options, load GENESIA from the diskette
+  even if it is installed on the hard disk. If you want to change
+  configurations, load GENESIA from the diskette called 'Configuration'.
+
+* On models with just 1 MB and a ROM 2.0, answer NO to the question: "Do you
+  want to play with additional sound effects?". Click on NO.
+
+
+On PC only
+
+Click on RETURN TO DOS to quit GENESIA and return to DOS.
+
+Option keys on PC
+
+Press CTRL plus the appropriate key for the following commands:
+
+CTRL + S        activates or de-activates the sound.
+ESC:            return to DOS
+CTRL + C        return to DOS
+
+
+
+PART X: ADVICE FOR BEGINNERS
+
+The following advice corresponds to one of the strategies experimented by us
+and which will enable you to achieve maximum growth in the world of GENESIA.
+This is not the only solution. There are many other ways of reaching the
+ultimate goal. However, you must follow certain rules when you face your
+adversaries.
+
+There are three essential goals in the very beginning of the game. These are:
+
+1) Building a warehouse to store the materials you will need throughoutthe
+   game.
+
+2) Pumping enough drinking water from underground reserves to satisfy the
+   needs of the population.
+
+3) Hiring at least one farmer with a moral of 6 or 7 and giving him a field.
+
+4) Since you still have very little stone and metal, you need to drill to
+   construct other
+
+=====[ Genesia Manual ]======================================[ Page 62 ]=====
+
+   buildings. Hire a woodsman and once he's finished cutting down a tree,
+   make him a carpenter so he can supply you with food.
+
+5) As soon as possible, construct barracks to ward off danger.
+
+Once you reach this stage, you must make certain decisions:
+
+If you want to expand rapidly, let your architects build homes (but be
+careful that they do not carelessly use up all of your raw materials). As a
+result, your population will increase rapidly. You can then send a large
+number of troops to fight the enemy. To enlist inhabitants as soldiers, you
+must have enough cash because enlisting is expensive. Without money, you will
+no longer be able to defend yourself efficiently, which spells imminent
+defeat. If you start the game near another player, you must build up a strong
+defense as quickly as possible because your enemy can lay hold of your land.
+This means you must build stone walls and place troops at strategic areas.
+
+If you are far from your rivals, you have enough time to increase your
+population by focusing immediately on the construction of homes.
+
+As for inventions, we recommend inventing the bow or the sling as quickly as
+possible to protect yourself from enemy attacks thanks to projectiles. If
+you are focusing on inventions you need to mobilise inventors and thus reduce
+the number of men ready to fight. If you decide to favour growth through
+inventions, take care not to fall prey to enemies with bigger armies. But by
+inventing more powerful swords, a cannon or an armour, your armies will be
+particularly efficient. Invent vaccinations as quickly as possible to prevent
+your men from being rendered incapable of working or of defending your land.
+
+Last but not least, remember to build a temple as soon as possible since
+this is the only place in which you can store the jewels you find.
+
+We still have plenty of advice to give you, but we will stop here to leave
+you the pleasure of discovering GENESIA and of applying your own strategy. We
+hope you will spend as many pleasurable hours in the company of GENESIA and
+we thank you for your confidence in choosing a MICROIDS product.
+
+=====[ Genesia Manual ]======================================[ Page 63 ]=====
+
+TECHNICAL SUPPORT
+
+Should you experience any technical problems with this game, such as it
+failing to operate, please contact our Technical Services Department.
+
+Technical Services
+Mindscape International Ltd
+Priority House
+Charles House
+Burgess Hill
+West Sussex RH15 9PQ
+England
+
+Telephone: +44(0)444 239600 (09:30 to 6:30 Monday to Friday)
+Fax: +44(0)444 248996
+
+We regret that we cannot offer game hints and tips, as the service is
+provided for technical difficulties only.
+
+=====[ Genesia Manual ]======================================[ Page 64 ]=====
+
+

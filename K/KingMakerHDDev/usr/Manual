@@ -1,0 +1,2205 @@
+            _____
+           /__  /\  ________      T.H.E  ____________
+          //   å_å_å\_____  \/\________  \_______    ç_________
+   ___ __/    /    /\\    \   .\_____  \/\  /.  /   /\     ___å_ ____ ___
+      Y  \______  / ó \    \   \\ _  \    \//  /    ñ \___   _ _\    Y
+      .   \_____ç/ / \ \________/\\   \    \__å__  / ñ/\        \\   .
+                 \/   \å_______/\ \________å__ç__ç/ / \ \  ______/[Sk!n]
+                                 \å_______/       \/   \ \å_____/
+                             [Simply Nutty]             \/      
+
+                                                          06/01/94
+                               PROUDLY PRESENT
+
+
+                              KINGMAKER  MANUAL
+   
+
+                 Typed By:-( TinTin     Supplied By:-) PyTh0N
+
+
+------------------------------------------------------------------------------
+
+
+KINGMAKER
+---------
+
+The game of intrigue and warfare in the War of the Roses
+Original Board Game by : Andrew McNeil
+Programming : Graham Lilley
+Development : Paul Cockburn
+Play-testing : Paul Bonner, Martin Smith
+Producer : Steve Fitton
+DoCs : TinTin
+
+
+INTRODUCTION
+------------
+
+Act 2, Scene 4 of William Shakespeare's HENRY VI Part One is a scene of great
+drama. Six powerful lords of England stand in the Temple gardens. Richard, Duke
+of York, has challenged his great rival, John Beaufort, Duke of Somerset, over
+great matters of State. Somerset, foremost of those who surround the King at
+Court, can barely restrain his anger. They have argued loudly in the Hall, each
+trying to persuade others of the righteousness of their case. But the others
+present cannot find a clear winner in the argument.
+
+Determined to resolve the issue, York plucks a white rose from a nearby bush,
+and signifies that those who support him should do likewise.
+
+Echoing this, Somerset picks a red rose. In vain, a noble named Vernon pleads
+with both parties to accept that "he upon whose side the fewest roses are
+cropp'd from the tree shall yield the other in the right opinion". The nobles
+are drawn into their factions - the Earl of Warick, Vernon and an unnamed
+lawyer take the white rose, while the Earl of Suffolk alone sides with
+Somerset. Realising how matters have turned out, Somerset almost draws his
+dagger there and then. The scene ends with Richard speaking these ominous words
+to his supporters
+
+  " Come, let us four to dinner. I dare say this quarrel will drink blood
+                               another day "
+
+In four tumultuous plays, Shakespeare portrays the War of the Roses as a
+conflict of treachery, murder, fearsome vengeance and bloody battle. For those
+who lived in Shakespeare's era - a century later - the Wars were a time of
+violence, devastation and anarchy. Only when Henry Tudor killed Richard III at
+Bosworth, did these evil times come to an end.
+
+The Tudors - whose faithful propagandist Shakespeare was - had an interest in
+portraying the Wars of the Roses in this way. It reminded anyone considering
+rebellion that loyalty to the crown might be the lesser evil. Henry Tudor had
+taken the crown from Richard III's head and the new dynasty was precariously
+seated upon the throne. Henry VII faced open revolts in the field; Henry VIII
+felt the crumblings of rebellion; even good Queen Bess - Elizabeth I - faced
+the opposition of northern lords.
+
+To legitimise their rule, the Tudors claimed they were the legitimate heirs of
+the Plantagenets; Henry Tudor was related Henry VI. Certainly, they were the
+last champions of the Lancastrian cause, all others having fallen. Also, Henry
+had married Elizabeth of York, symbolically uniting the two waring factions. In
+this way, the culmination of the Wars could be portrayed as the legitimate
+victory of Lancaster over Yorkist usurpers, along with the reconciliation of
+the losers through an act of dynastic union.
+
+It's typical of the Wars of the Roses that this simple explanation has passed
+into popular belief. Much of what we know has been obscured behind simple
+symbols, without much basis in fact.
+
+The emblems themselves, for example. The War of White and Red Roses was not an
+allegory understood at the time. In fact, the symbols were themselves rarely
+used - Edward IV is better known for his symbol of the Sun in Splendour, while
+Richard II fought under the White Boar.
+
+It is equally confusing to the modern reader - or games player - to discover
+the Lancastrians held large estates in Yorkshire, while the Yorkists were
+strongest in the Midlands! In fact, the story is a confusing jumble of names
+( there are altogether too many Prince Edwards!), titles, places and dates,
+against an ever-changing background of treachery and political chicanery. And
+barely half of what you read is factual...
+
+Ever since Shakespeare's day, the Wars of the Roses have been confused by the
+propaganda of partisan supporters of the White or the Red, or by those who see
+the whole affair as a minor dynastic squabble. The Wars were not the bloodbath
+Shakespeare described, but the royal house of plantagenet was wiped out, and
+other noble dynasties beside. Modern research, however, has shown that the era
+was no better or worse than those that came before and after for the ending of
+the dynastic lines.
+
+But it is too easy to trivialise the Wars. Like all civil conflicts, they were
+savagely contested. Though the battles were often small, and many victories
+owed more to treachery or accident than force of arms, blood was spilled
+freely, though one foreign commentator remarked that the English fought very
+curious wars:
+
+  "...once they have gained a battle, they do no more killing, especially of
+common people..."
+
+Several victories were marked by the beheading of captured leaders. This is
+because the Wars were primarily a struggle between opposing factions, with no
+great ideals at stake. Although the Yorkists claimed a constitutional cause for
+their revolt, both sides were cut from the same political cloth.
+
+The struggle was also characterised by the way many local struggles were fought
+under the banner of the Civil War. In the far north, the Nevilles and the
+Percies had been bitter rivals for centuries. In SW England, a feud between the
+Courtenay Earls of Devon and the upstart bonville family drew in the major
+players in the Wars, who sided with their supporters in a local dispute over
+land and title.
+
+For those bold enough, the Wars of the Roses provided opportunities for
+advancement and power as established noble families fell by the wayside and
+local rivals were slain. The story is epitomised by the story of Richard
+Neville, the Earl of Warwick, the man immortalised as the Kingmaker. Warwick
+used his power, the patronage at the command of his wealthy family, and the
+desperate times to promote Neville interests, even while he strove to put
+Edward IV on the throne. Then, having achieved all this - at the high point of
+his career - he and Edward parted company, and the Kingmaker went to war
+against his King, to die on the battlefield at Barnet.
+
+Powerful barons had acted against the crown before - when they conspired
+against King John they were called heroes. But the conspiacies of Warwick,
+Somerset, de la Pole and Stanley mark the beginning of the end for feudal
+baronies, who had treated Kings like puppets.
+
+In Kingmaker, the chaotic spirit of the age is captured perfectly in a game of
+intrigue, factional politics and bloody warfare. Can you place your candidate
+upon the throne ? Or will you end, as so many did, bent beneath the headman's
+axe...
+
+*******************************************************************************
+
+HOW TO PLAY
+-----------
+
+This manual provides all the information you need to play Kingmaker. It is
+written assuming you are playing with a mouse, in VGA, on an IBM-compatible PC,
+with the game stored on your hard drive. For different formats, consult the
+Reference Card.
+
+BEFORE YOU START
+----------------
+
+Check that your game box contains the following items:
+   
+   3 Disks
+   Manual
+   Reference Card
+
+You can install Kingmaker on your hard drive. [Please follow the instructions
+on the Reference Card].
+
+SOUND
+-----
+
+Select the sound options appropriate for your machine. The music will run on
+AdLib / SoundBlaster or Roland; the FX run on SoundBlaster or Roland; digitised
+speech is only available on SoundBlaster.
+
+GETTING STARTED
+---------------
+
+This manual contains all the instructions you need to play Kingmaker. [The
+basics are also summarised on the Reference Card.] All the game's major
+functions can be accesssed with the mouse, although you do need to use your
+keyboard as well.
+
+There is also an On-Line Help facility for use during play.
+
+From Start-Up, you are taken through a short introduction, conducted by William
+Shakespeare. You can hit any key to escape.
+
+NEW / SAVED GAME MENU
+---------------------
+
+You are now presented with this menu.
+    
+    New Game
+    Saved Game
+    Select Saved Game to restore a game previously saved to disk.
+    Select New Game to start afresh.
+
+NUMBER OF FACTIONS
+------------------
+
+Selecting New Game brings up a second menu, which asks you to select the number
+of Factions you will face in the game.
+    
+    1 faction  (easy)
+    2 factions
+    3 factions
+    4 factions
+    5 factions (hard)
+
+The more factions the computer controls the tougher the game becomes, although
+the computer-controlled factions will compete against each other just as
+fiercely as they compete against you. The Roll of Honour rewards victory
+against large number of Factions with greater glory.
+
+DIFFICULTY LEVEL
+----------------
+
+A third menu asks you to set one of two difficulty levels.
+    
+    Allocate Blind (hard-you move first)
+    After Computer (easy-you see where it has placed its forces before you
+    place yours)
+
+Allocate Blind forces you to place your Nobles on the map in ignorance of the
+actions of the computer-controlled Factions.
+
+If you select After Computer, you see the computer-controlled Faction(s) appear
+on the map before you make your own disposition. This allows you to see which
+Royal Heirs are most at risk of capture by your opponents, and where the enemy
+is strongest.
+
+ADVANCED OPTIONS
+----------------
+
+You are next asked to set or reject two Advanced Game options - Advanced
+Weather and Advanced Plague - and the level of Autohelp. The Advanced Game
+options affect the way the game is played, although neither adds to difficulty.
+Use the buttons to toggle these options on or off.
+
+Advanced Weather is checked at the beginning of the player's Turn. The computer
+determines wheather this is to be a Fair Weather or a Bad Weather Turn. In Fair
+Weather, the game proceeds as normal. In Bad Weather the following restrictions
+apply:
+    
+    1) Armies move only 3 areas per Turn.
+    2) No combat or sieges are possible.
+    3) Storms at sea occur more often, and can sink ships.
+
+With Adavanced Plague, infection can break out anywhere, not just in towns.
+Plague spreads along roads, through ports, and into Towns and Cities. Death is
+no longer automatic, but anyone caught in a plague area has a 25% chance of
+being killed.
+    Select On / Off for each option
+
+AUTOHELP 
+--------
+
+Kingmaker features an On-Line help facility. Before the game begins, you must
+select from the following:
+
+    Full Autohelp
+    First-use Autohelp
+    Disable Autohelp
+
+Full Autohelp provides repeated automatic advice and help on all facets of the
+game as you play it.
+
+First-use Autohelp provides the same level of help, but each unit of the
+tutorial is displayed only once.
+
+Disable Autohelp removes this facility. It still leaves the Chronicle system
+available, in case you need a little specific information later on.
+
+Clicking on the button cycles through these three options. The Autohelp menu
+can be accessed during play through the Game Utilities icon.
+
+Having completed your games setup, click on the Exit button. Kingmaker now
+completes loading.
+
+COPY SECURITY
+-------------
+
+At selected intervals during the game, you may be asked to pass a Copy Security
+Check. Your computer displays a picture of a City, Town or Castle featured in
+the game, along with a range of page numbers. All the Towns and Castles
+featured in this way are listed, with their pictures, in this manual. Find the
+correct Town / Castle, and enter its name at the prompt.
+
+OBJECT OF THE GAME
+------------------
+
+In Kingmaker, you control a Faction of power-hungry nobles and their
+supporters. Your objectiveis to control the last Royal Heir in the game, and
+to crown him King of England (or Queen, in the case of Margaret of Anjou). In
+other words, you're not trying to become King yourself, but to be the power
+behind the throne, the ultimate puppet-master.
+
+To achieve this, you must:
+ 
+   (i) capture and control a Royal Heir;
+   (ii) eliminate all his/her rivals; and 
+   (iii) have your Heir crowned King in a Cathederal Town or City by an
+         Archbishop or two Bishops.
+
+In addition to the Noble members of your Faction, you may control Assets, such
+as Offices of the Crown, Mercenaries and Ships. Other Nobles and Assets are
+gained during the game which you either bring into play at once, or keep
+hidden, ready to be produced at a vital moment.
+
+Of course, in the meantime the opposing (computer-controlled) Factions are
+trying to do the same thing...
+
+ROLL OF HONOUR
+--------------
+
+Kingmaker includes a Roll of Honour, which carries the names and ranks of those
+players who have best fulfilled their destiny. You may enter your name on the
+Roll of Honour if you successfully complete the game.
+
+THE ROYAL HEIRS
+---------------
+
+Because the Royal Heirs are the key to success or failure in the game, it's
+important you understand how they work before you deploy your Assets at the
+beginning of the game. The quick capture of a Royal Heir can pay rich dividends
+as play unfolds.
+
+THE ROYAL HOUSES
+----------------
+
+There are nine potential heirs to the throne of England. These are:
+
+    HOUSE OF LANCASTER                       HOUSE OF YORK
+
+    Henry VI                                 Richard, Duke of York
+    Margaret of Anjou                        Edward, Earl of March
+    Edward, Prince of Wales                  Edmund, Earl of Rutland
+    Beaufort, Duke of Somerset               George, Duke of Clarence
+                                             Richard, Duke of Gloucester
+
+CAPTURING ROYAL HEIRS
+---------------------
+
+Royal Heirs are captured when Nobles from a Faction occupy the same area on the
+map. If the Heir is accompanied by another Faction's Nobles, the enemy must be
+defeated in Battle before the Heir can be captured. See the chapter on Combat
+to find out how this works.
+
+If the Royal Heir occupies a City, Town or Castle, that place may have to be
+captured by siege. This is covered in more detail in the chapter on Sieges.
+However, since you may need to overcome a Castle early on in the game (in order
+to capture a Royal Heir), the basic idea is presented here.
+
+The total troop strenth of the noble(s) trying to capture the Royal Heir must
+be equal to or greater than the Town/Castle's garrison. The example on the
+following page should make this clear:
+
+   ( Edward, Earl of March, is in Harlech, which, like all Royal Castles has a
+garrison of 200 men. The Percy faction wishes to capture him. Percy himself,
+Earl of Northumberland and Constable of Dover Castle, is accompanied by
+Stanley. Percy has 100 Troops from his own household and 50 men by virtue of
+being Constable of Dover, while Stanley's contribution is another 50 Troops.
+That gives Percy a total Troop Strenth of 200. He can besiege Harlech and - when
+it falls - will capture Edward )
+
+Every Castle, City and Fortified Town has a garrison.
+
+THE ROYAL HEIRS AT THE BEGINNING OF THE GAME
+--------------------------------------------
+
+In every game, the Royal Heirs start in the same places. These locations are
+listed here, along with their garrison, any other Troops who might be there,
+and the name of any Office which grants ownership of that place to the Noble
+who possesses the Office.
+
+Henry VI - London - The capital is controlled by the Constable of the Tower,
+who can sieze Henry directly. Otherwise, London must be besieged by a force of
+at least 300 Troops - more if another faction has troops in the City ( and
+whoever controls the Constable of the Tower has at least 250).
+
+Margaret of Anjou - Coventry - this Fortified Town must be besieged by a force
+of at least 200 troops - more if another faction moves troops in.
+
+Edward, Prince of Wales - Kenilworth - this Royal Castle must be besieged by a
+force of at least 200 troops - more if anoter Faction has troops in the Castle.
+
+Beaufort, Duke of Somerset - as mentioned above, Beaufort is a special case,
+and enters the game as an ordinary Noble.
+
+Richard, Duke of York - York - This City is controlled by the Archbishop of
+York, who can seize Richard directly. Otherwise, York must be besieged by a
+force of  at least 300 troops - more if another faction has troops there ( and
+anyone who controls the Archbishop has at least 30).
+
+Edward, Earl of March - Harlech - This Royal Castle is controlled by the
+Marshall of England, who can seize Edward directly. Otherwise, Harlech must be
+besieged by a force of at least 200 troops - more if another faction has troops
+in the city ( and whoever controls the Marshall has at least 100).
+
+Edmund, Earl of Rutland - Ireland - the Emerald Isle is controlled by the
+Lieutenant of Ireland, who can seize Edmund directly. If no faction controls
+the Lieutenant, Edmund can be seized with a minimum force ( provided you have a
+ship ), since there is no garrison protecting the Earl. However, if another
+Faction controls the Lieutenant of Ireland, and sends him over to guard Edmund,
+that Noble has at least 250 troops at his disposal in Ireland, who must be
+defeated in Battle before Edmund can be captured.
+
+George, Duke of Clarence - Cardigan - This is an Open Town, with no garrison.
+Whoever reaches the town first can seize Clarence easily.
+
+Richard, Duke of Gloucester - Calais - This Town is controlled by the Captain
+of Calais, who can seize Edmund directly. Otherwise, Calais must be besieged by
+a force of at least 200 troops - more if another faction has troops in the City
+( and anyone who controls the Captain of Calais has at least 350 ). Furthermore
+the besieging force needs to be transported by Ship. Because of these factors,
+Richard is often not captured during the game, but is killedwhen the plague
+reaches Calais.
+
+INITIAL STRATEGY
+----------------
+
+Planning the risk-free capture of a Royal Heir is one of the most important
+parts of the game's opening Turns. Your Faction's opening dispositions and
+moves should be geared primarily towards the capture of at least one Royal
+Heir. Choosing the right one is a question of balancing a number of variables -
+how close are members of your faction to the Heir ? How close are the forces
+of opposing Factions ? How well guarded is the Heir ? Is there a Noble in play
+who can capture the Heir easily by virtue of an Office they hold ?
+
+For your first few games, the right strategy might seem bewilderingly obscure.
+Until you get used to the game, set yourself a simple goal, and go for it.
+You'll soon get used to the advantages of certain combinations. For example,
+Neville, Earl of Warwick, can start the game close to Kenilworth, Cardigan, or
+York. He has 50 Troops automatically. On his own, he can capture Clarence in
+Cardigan, unless Herbert can beat him there. With another 150 Troops assigned
+to him, he can capture Kenilworth and the Prince of Wales. With 250 extra
+Troops he can capture York in the first Turn, or he can enter the City freely
+if the Faction controls the Archbishop. This flexibility makes Warwick a
+powerful Noble.  
+
+CONTROLLING ROYAL HEIRS
+-----------------------
+
+Having captured a Royal Heir, a Faction can begin the process of eliminating
+their rivals and having their Heir Crowned King. Each faction may control more
+than one Royal Heir, but may not control Heirs from both royal houses 
+( Lancaster and York ) for more than two consecutive Turns. After that, one or
+the other Heir must be executed.
+
+A Faction may execute any Royal Heir it controls at any time. You are asked if
+you wish to execute an Heir at the point at which he or she is captured.
+Thereafter, click on the Heir's name in the Family Tree display and you are
+asked if you wish to execute him or her.
+
+When you capture Royal Heirs, they are assigned to one of the Nobles in the
+Army. The captive royal puppet now follows your army and is in your control
+until captured or killed. The presence of a Royal Heir alongside your army
+brings a small benefit to its combat abilities, but otherwise he is just a
+target for the other Factions to pursue. Make sure you protect your Royal
+Heir(s) with ample forces - allowing for even the most unlikley mishaps.
+
+CROWNING ROYAL HEIRS
+--------------------
+
+To win the game, you must control the last, Crowned Royal Heir. This implies
+two factions. First, the last surviving Heir must be Crowned King, and,
+second,you need to see the other Heirs killed.
+
+Some may die at the hands of your enemies. Others may fall into your hands
+through victory in Battle or Siege. As you capture Royal Heirs, you must judge
+when the moment is right to execute them. Since you become biased towards one
+of the Royal Houses, some decisions are easy. On the other hand, knowing when
+to "lose" a second member of the same Royal House is more tricky.
+
+The second task ahead of you is to arrange the Coronation of one of your Royal
+Hiers. Royal Heirs can be Crowned only in the order of succession for their
+Houses. Margaret of Anjou, for example, can only be Crowned once Henry VI is
+dead, and Edward, Prince of Wales can become King only after she joins her
+husband in the grave.
+
+   NOTE : THAT IT IS QUITE POSSIBLE FOR THEIR TO BE TWO KINGS, A YORKIST AND A
+          LANCASTRIAN
+
+In addition to this rule about seniority within each House, their are other
+conditions which must be met for a Corronation to take place.
+
+(i) The Heir must occupy a Cathederal. Several Towns and Cities have
+Cathederals, from mighty London and York, through lesser Towns like Lincoln and
+Exeter, down to small centres like Salisbury or St Davids.
+
+(ii) The Heir must be accompanied by at least one Noble of your Faction.
+
+(iii) The Heir must be accompanied by at least one Archbishop or two Bishops.     
+
+Once you control a Crowned King, you have the power to call Parliment. This may
+allow you to give additional Assets to your Faction's Nobles. This power only
+resides in a King's Faction when their is but one King - if their is a rival
+monarch, the chancellor has the power instead.
+
+On the minus side, a sole Crowned King can be pulled to different parts of the
+country to meet Embassies from foreign lands. This can be very awkward, since
+it can disrupt your plans, and divide a secure Army into two smaller,
+defeatable forces. The fact that Henry VI starts the game as the sole crowned
+King can lead to a situation where he is called away from London to an
+unfortified town, making him easy to capture.
+
+FACTIONS
+--------
+
+Before the bloody struggle for the Crown can commence, you need to know who
+your supporters are, and what resources you have. At the beginning of the game
+you are presented with a display containing:
+
+1 All-Britain map, showing places associated with your Faction.
+
+2 The Build Faction Box, showing the Nobles in your Faction.
+
+3 Faction Build controls.
+
+The All-Britain Map shows all of England and Wales, the Scottish Borders, plus
+the Irish and French coasts. This is where the action takes place. Several
+Cities, Towns and Castles may be picked out in different colours. Gold
+locations are Castles belongingto the Nobles of your Faction. Red dots mark
+various locations connected with Assets under your control. The white and pink
+dots show the locations of Royal Heirs.
+
+In the Build Faction Box at the top right of the screen there is a list of
+Nobles, some with Titles, and others not. These are the initial members of your
+Faction. The display shows their name, their Title (if any) and the number of
+troops under thier immediate command at that moment.
+
+There shold also be a cursor, which you can position with the mouse pointer. To
+scroll up or down, click the Left Mouse Button on one of the buttons in the
+first row under the Build Faction Box. In order, these are:
+
+Scroll up a Noble
+Scroll up a line
+Scroll down a line
+Scroll down a Noble
+
+You can also position the Cursor by clicking on one of the locations marked in
+red or gold on the map. If London, for example, is marked red, click on it and
+the cursor moves to show the Office of the Constable of the Tower, an Asset
+which grants possession of the City to whichever Noble is given the Office.
+
+During the game you can return to the Build Faction Box display by clicking on
+the Faction Icon.
+
+THE INITIAL FACTION BUILD
+-------------------------
+
+Your first task as a power-crazed Kingmaker is to allocate the Assets you have
+been given to these Nobles. Click on the Noble Up button a few times, and you
+scroll up the list of your Assets.
+
+Each Faction begins with a random assortment of forces. Depending on the number
+of computer-controlled Factions you choose during the start-up sequence, you
+have 6-18 Nobles and other Assets available. Some, such as the independant
+towns, are not featured on the list, but are in your possession on the main
+map.
+
+Number of Factions
+(inc. Players)                  Assets
+
+      2                            18
+      3                            12
+      4                             9
+      5                             7
+      6                             6
+
+There are 9 different elements from which your Faction will be built. These
+are:
+
+Titled Nobles
+Untitled Nobles
+Titles ( Which you can give to untitled Nobles; effectively making them Titled
+Nobles.)
+Offices ( Which you can give to a Titled Noble.)
+Archbishops and Bishops
+Mercenaries
+Ships
+Independant Cities and Towns
+
+Each Asset is listed by it`s name, and several have a numerical value 
+attached - these are the Troops which that Asset automatically and permanently
+bestows on the Faction. Other benefits may also come from possessing that
+Asset.
+
+Independent Towns are not shown in the Faction Box. Instead, your Factions flag
+is placed above that town on the Main Map.
+
+You can learn more about any Noble or Asset by positioning the mouse pointer
+over it`s icon (the pointer changes shape to a Question Mark as you do so).
+Click the Left Mouse Button. You can now read the Chronicle information about
+that item.
+
+Once you are happy that you understand the strength of the Assets in your
+Faction, you must allocate these to your Nobles. A Noble may only have one
+Title, and only Titled Nobles may have Offices. Apart from that, you can
+combine these forces as you wish.
+
+Select a Noble by clicking on his name with the mouse pointer; he becomes
+highlighted, and the Castles which he possesses flash.
+
+Now you can allocate your resources to capture Royal Heirs and to frustrate the
+enemy. No one strategy in Kingmaker works better than all the others, so you
+should group your resources in pursuit of a number of key goals - the rapid
+capture of Royal Heirs, regional supremacy and security.
+
+LOCATING ROYAL HEIRS
+--------------------
+
+The Main Map shows the starting locations of the Royal Heirs - white dots for
+the Yorkists, pink dots for tyhe Lancastrians. You`ll see the Yorkist Rutland
+in Ireland, and two Lancastrians in the Midlands - Prince Edward and Margaret
+of Anjou.
+
+As disscussed above, if one of your Nobles starts the game close to a Royal
+Heir, you may wish to ensure he has sufficient strength to capture the Heir at
+the beginning of the game. For Clarence, just 10 men can do it; for Prince
+Edward, you need 200 to overcome the garrison at Kenilworth. You can `tour`
+these locations using the Review button.
+
+ALLOCATING ASSETS
+-----------------
+
+Having selected a Noble, scroll through the list of your Faction`s Assets (or
+select red locations on the map which are close to your Noble`s castles). Click
+on an Asset; it is highlighted and any places on the map associated with that
+Asset start flashing. You can select further Assets in the same fashion. When
+you have selected the Assets you wish to allocate to that Noble, click on the
+Combine button.
+
+The list automatically reconfigures so that the Assets you have allocated to a
+Noble are listed directly under his name.
+
+Do the same for other Nobles in your Faction. If you make a mistake, or you`re
+unhappy with the way your forces are allocated, you can click a Noble and the
+Disperse button to break that grouping up.
+
+The aim is to allocate all of your Assets to the Nobles in your Faction.
+However, you may not be able to allocate all the forces at your disposal. For
+example, you may have an Office left over, and no Titled Nobles to give it to.
+This is unfortunate, and theres nothing you can do about it. Thye Asset is
+placed in Chancery when you finish building your Faction. In all other cases,
+you hear a warning if you try to leave the Build Faction Phase without having
+allocated all your forces.
+
+THE ENEMY FACTIONS
+------------------
+
+If you selected Allocate Blind as a pregame option, you must place your forces
+in ignorance of the whereabouts of the enemy. Your first chance to see what
+opposition you face will come during the first Turn. 
+
+If you selected After Computer, you will have seen the other Factions place
+their forces before you start. This should affect your choices. If it looks as
+though an enemy Faction has the means to capture a Royal Heir before you, then
+you should change your plans. You might also want to avoid starting a Noble in
+a part of the country swarming with enemy troops. 
+
+REVIEWING ENEMY FACTIONS
+------------------------
+
+You can review the dispositions of the computer controlled Factions by pressing
+the Review icon. This function is onlt available if you choose to deploy after
+the computer.
+
+Select to view one of the enemy Factions, or the Royal Heirs. You are given a
+`guided tour` of each Faction you select, working through the Nobles
+one-by-one.
+
+Use Review to take note of where enemy Nobles are, and where their strengths
+are. What Royal Heirs are they likely to move after ? Is there an option for
+your Faction to pounce on an isolated Noble ?
+
+Click the Right Mouse Button to return to the Build Faction view.
+
+STARTING LOCATIONS
+------------------
+
+When you have completed allocating your forces, click on the Proceed button.
+Select a starting location for each Noble in turn - their Home Castles are the
+flashing [gold] `spots' (other locations associated with them through Offices,
+etc are shown in [white]). Click the mouse pointer to select a Castle.
+
+RAISING THE STANDARDS
+---------------------
+
+After you click on the Proceed Icon, your Faction raises its standards,
+proclaiming its cadidacy for power. It is 1453 and Margaret of Anjou has just
+produced an heir for Henry VI. The Yorkists se their chance to seize the throne
+slipping away. The times are out of joint; let slip to the dogs of war...
+
+The other Factions, your oponents in the race for power, raise their standards
+likewise. Depending on which option was selected at the start, they show their
+hand either before or after you have deployed your forces.
+
+OBSERVING THE ENEMY
+-------------------
+
+You can keep an eye on the other Factions using the full map and the Review
+option.
+
+Click on the arrow in the botton left corner of the small map in the
+Information Box (click the RMB to make this visible). This brings up the main
+map showing the location of enemy forces and unclaimed Royal Heirs.
+
+You can also click on the Review icon on the main panel. This works exactly the
+same way as the Review in the Build Faction display.
+
+THE FAMILY TREE
+---------------
+
+You can also gain intelligence about the Royal Heirs through the Family Tree
+icon.
+
+This lists the Royal Heirs, by House, in their order of precedence. Where a
+Royal Heir has been killed, their names are "crossed out". Where a Royal Heir
+has been captureed by a Faction, this is indicated by a bar in the colour of
+that Faction under the Heir's name. If a Royal Heir has been crowned King, this
+is indicated by a crown beside his or her name.
+
+KNOW YOUR ENEMY
+---------------
+
+Depending on the option you selected at the beginning of the game, your Faction
+is opposed by 1 - 5 other Factions, equally determined to seize unchallenged
+power.
+
+IDENTIFYING FACTIONS
+--------------------
+
+ Throughout the game, each Faction's resources are marked by a single colour.
+The player's Faction is always green. Each Factions colour is used to signify:
+
+i) The Faction to which a Noble belongs; the background colour behind their
+sheilds is the same as their Faction's.
+ii) Cities, Towns and Castles controlled by that Faction, which are marked by a
+flag of the appropriate colour on the map.
+iii) Royal Heirs captured by that Faction (on the Family Tree).
+
+In addition, the most senior Noble of the Faction gives his name to the Faction
+as a whole - messages will speak of "Percy's Faction", or "Mowbray's Faction".
+
+COMPUTER CONTROLLED FACTIONS
+----------------------------
+
+Computer-controlled Factions have the same goal as you. They try to control one
+Royal Heir, and eliminate the others. To do this they need to defeat enemy
+Factions.
+
+Each Noble in a computer-controlled Faction is rated for his Aggressivness,
+Mercy and Ambition. As you play, you'll appreciate how Nobles display different
+degrees of each attribute. If you read through the historical information in
+the second half of this manual, you can work out for yourself who are the
+bloodthirsty, gramping ego-maniacs...
+
+Aggression measures the extent to which the Noble is prepared to take risks in
+seeking battle. Aggressive Nobles fight more battles when the odds are less
+heavily stacked in their favour. They also take greater personal risks in
+combat.
+
+Mercy measures the extent to which the Noble is prepared to temper his Ambition
+and Aggression with a measured and less bloodthirsty attitude towards his
+opponents. This particularly affects how the Noble deals with prisoners.
+
+Ambition dictates how readily the senior Noble in a Faction seeks and uses the
+instruments of State - Corinations and Parliment - in pursuit of his goal.
+
+The computer checks the attributes of Faction Leaders or local commanders
+whenever it is decising on how the factions controls will behave.
+
+WHAT ARE THEY UP TO ?
+---------------------
+
+As previously stated, you can Review the whereabouts of all or some of the
+Nobles in different enemy Factions by clicking on the Review icon of the Build
+Faction display.
+
+FACTION RIVALRY
+---------------
+
+The computer-controlled Factions have their programmed priorities (which aren't
+so very different to the player's). However, during the game, these become
+unballanced by specific rivalry between Factions.
+
+Each computer-controlled Faction records the injuries done to it by other
+Factions (including the player's). Each Battle fought increases the rivalry
+between it's participants. The execution of a Noble can increase it even more.
+
+These rivalries become sharper and more intense as the game goes on. The
+computer-controlled Factions seek out enemy Factions with whom they have the
+most intense rivalry, looking for revenge...
+
+THE SEQUENCE OF PLAY
+--------------------
+
+Play continues in turns, until one faction acheives the victory conditions -
+namely, control of the sole remaining royal heir, crowned King of England.
+
+In each turn, each faction proceeds through upto six phases, namely:
+
+Events Phase - the vagaries of chance.
+
+Movement Phase - your chance to move all or some of your forces.
+
+Combat Phase - all battles and seiges are resolved.
+
+Parliment Phase - the King (if there is only one) or the Chancellor may summon
+                  Parliment.
+
+Coronation Phase - the first royal heir in order of succession from either
+                   royal house may be crowned.
+
+Reinforcement Phase - each faction recieves additional forces, which may be
+                      allocated immediately or kept hidden.
+
+ORDER OF PLAY
+-------------
+
+The faction controlling the Office of Chancellor of England moves first,
+followed by the others in rotation. Should the Chancellor's Office not be in
+play, the most senior cleric from the following list determines which faction
+starts first.
+
+Archbishop of Canterbury
+Archbishop of York
+Bishop of Durham
+Bishop of Carlisle
+Bishop of Lincoln
+Bishop of Norwich
+
+If this does not decide the issue, the faction with the greatest number of
+permanent troops moves first.
+
+EVENTS
+------
+
+Plagues, emissaries from foreign lands, storms at sea, raids, revolts... a
+turbulent world is turning while you and your rivals squabble over the throne.
+
+During this phase of each faction's turn, you are kept informed of events in
+the Kingdom through the Information Window in the top right of the screen.
+
+Events can create opportunities, or rob a well-planned strategy of a vital
+component. Watch them carefully. It is possible for there to be no event during
+a factions turn. Some events affecting an enemy faction are kept secret from
+you.
+
+The different types of event are listed here, along with their effects.
+
+PLAGUES
+-------
+
+Plague strikes at one or more cities and towns. Any noble in that town is
+killed immediately. The plague does not affect the surrounding countryside,
+though it will affect any port attatched to the town.
+
+Before the game, you can toggle on the Optional Plague Rules. Under these
+rules, plague can break out in a port at anytime. Once it does, it spreads
+widely, area by area. It moves fastest along the coast, port to port, and into
+areas which contain armies.
+
+Any noble, royal heir, Archbishop or Bishop who spends any part of a turn in an
+area affected by plague under Optional Rules may contract the disease, and be
+slain. In addition, merecnaries may desert if there leaders insist on passing
+through plague-ifested regions.
+
+STORMS AT SEA
+-------------
+
+Storms drive all ships at sea into the nearest port at once ( obviously, if a
+ship is already in port, there is no effect), a friendly one if possible, a
+neutral one as second choice. A ship forced into a neutral or hostile port may
+have difficulty leaving again...
+
+RAIDS, REVOLTS AND PIRACY
+-------------------------
+
+Because of the unrest in different parts of the realm, nobles amy be forced to
+leave the armies they march with, in order to meet the threat. Nobles may be
+summoned because of their title, or because of an office or bishop they hold.
+All forces associated with the summoned noble move with him. Other nobles in
+the same army do not move. [ The only choice a faction has concerns royal
+heirs: if an heir is present in an army split up through summonsof this kind,
+the faction chooses who the royal heir remains with.]
+
+The noble moves into the place named on the summons. If the location is no
+longer friendly, the noble remains outside instead.
+
+If a noble is summoned to two seperate locations by virtue (for example) his
+title and his office, he goes to the first location named by the event.
+
+Nobles in beseiged castles, at sea, on an island or in Calais cannot respond
+even if they have a ship close-at-hand.
+
+EMBASSY
+-------
+
+News of the arrival of an embassy causes the King to move at once to the place
+where the meeting is to take place. Embassies do not arrive when there is no
+King, or when there are two. Any nobles accompanying the King when the embassy
+is announceed must move to the meeting place with him.
+
+If the King is beseiged in a town or castle, or if he is at sea, on an island
+or in Calais, he cannot respond even if he has a ship close-at-hand.
+
+FRESH HORSES
+------------
+
+Factions may recieve fresh horses. These are recorded in the icon on the main
+control panel.
+
+Fresh horses allow a single noble, royal heir or bishop to move twice in a
+single turn. To move more than one noble in a stack, one set of fresh horses is
+required for each noble. To use fresh horses, inspect an army. If your faction
+has sufficient fresh horses, you will be offered the option to use them, and to move
+4 extra areas.
+
+PARLIMENTARY SUMMONS
+--------------------
+
+A faction which includes the Chancellor may receive a Writ of Parlimentary
+Summons. The faction retains this summons, and can play it at an appropriate
+time to summon a session of parliment. See "Parliments"
+
+If a faction loses control of the Chancellor, all the summons they hold are
+discarded.
+
+Factions may also receive Writs of Attendance. Thaeir use is also described in
+the Chapter on "Parliments".
+
+MERCENARIES GO HOME
+-------------------
+
+Finally, a factions foreign mercenaries may be called home. This affects all
+mercenaries, except the Scots and Irish.
+
+CONTROLLING THE ACTION
+----------------------
+
+During the movement phase of the player turn, you have the option to inspect
+areas in detail, and to move some or all of your forces. During the computer
+factions turn, you will see their forces move.
+
+THE AREA MAP
+------------
+
+Play now switches to the area map display.
+
+GAME CONTROLS
+-------------
+
+On the right of the screen, there is an Information Box, and the following
+icons.
+
+1 Faction Build Key
+
+This returns you to the Faction Box, where you can make changes to your
+factions line-up. You can also use the Review function to observe where other
+factions have their armies, and where the royal heirs are.
+
+2 Family Tree
+
+You can gain intelligence about the royal heirs through the Family Tree icon.
+
+This lists the royal heirs, by house, in their order of precedence. Where a
+royal heir has been killed, that character's name will be "crossed-out". Where
+a royal heir has been captured by a faction, this is indicated by a bar in the 
+colour of that faction. If a royal heir has been crowned King, this is
+indicated by the crown beside his name.
+
+3 Secret Support
+
+During the Reinforcement Phase of the game, factions may be joined by
+additional nobles. These can be brought into play through the Secret Support
+button. See the Chapter on Reinforcement.
+
+4 Chronicle Key
+
+Use the menus to discover detailed information about various parts of the game.
+Click on the item you wish to read.
+
+5 Review
+
+This allows you to discover the whereabouts of royal heirs and enemy nobles.
+
+6 Where Is...?
+
+Use this to track down nobles, royal heirs, bishops, towns or any other item.
+
+7 Save Game Options
+
+You can store upto eight saved games on your hard disk. Click on a line to
+highlight it, type in a unique name, and hit return. Click on Save the game to
+return to play.
+
+You can also restore a saved game from here.
+
+8 Game Options
+
+From here you can restart the game (return to the New Game option). Quit,
+toggle the sound On/Off and alter the Auto-Help setting (click on the button to
+cycle through the options).
+
+9 Fresh Horses
+
+This records how many fresh horses your faction has. See Movement for the way
+to use fresh horses in the game.
+
+THE MOVEMENT PHASE
+------------------
+
+At the beginning of your turn, the area map centres one of your nobles. His
+sheild flashes, to show that he is waiting for orders.
+
+Nobles are represented on the area map by their heraldic sheilds. If two or
+more nobles are grouped together in an army, only the most senior is shown.
+
+INSPECT
+-------
+
+Basic intelligence about most items can be gathered by clicking on them with
+the RMB. Details appear in the Information Box.
+
+You can look at different parts of Britain using the large-scale map in the top
+right window. Click the pointer an any part of this map, and the main area map
+centres on the selected area. Click on the button in the bottom left corner to
+bring up the full map of Britain. If you click on that map, the display returns
+to the detailed view.
+
+NOBLES / ARMIES
+---------------
+
+Click the RMB on a noble's sheild, and the Information Box displays the names
+of the noble leading the army, any lesser nobles or royal heirs with him and
+this summary:
+
+Troop Strenth
+B = Archbishops / Bishops
+R = Royal Heirs
+S = Ships (controlled by a member of that army)
+
+If the Noble occupies a City, Fortified Town or Castle, His troop strength is
+strengthened by its garrison. This is shown by a "+" sign after the troop
+strength number. Garrisons are disscussed in the Seiges section.
+
+CASTLES CITIES AND TOWNS
+------------------------
+
+When you inspect a castle, town or city, you are shown an illustration, the
+place's name, and three pieces of information:
+
+C = Capacity - the maximum number of troops the location can hold (excluding
+its own garrison);
+
+G = Garrison - the number of troops the location adds to a defending army;
+
+S = the current total of troops present.
+
+SHIPS
+-----
+
+When you inspect a ship, you are shown it's name, any passengers on board, and
+whether its at sea or in port.
+
+MOVEMENT
+--------
+
+During your turn's movement phase you may move each of your nobles and ships
+along with all forces stacked with them.
+
+Each noble can command an army consisting of the assets he controls directly,
+plus any lesser nobles placed under his command (see Combining/Dividing
+Armies) along with any captured royal heirs.
+
+When you move an army or ship its marker moves across the map, area by area.
+The map automatically re-centres if a unit moves close to the edge of the
+visible map.
+
+Each of your armies and ships is presented in turn, requiring your orders. You
+have the following options:
+
+No Move: hit the SPACEBAR if you do not wish to move that army at all this
+turn, or to halt an army before it has used its full movement allowance.
+
+Delay Move: hit TAB if you wish to move this force later in your turn.
+
+Move: details of which follow.
+
+NOBLES / ARMIES
+---------------
+
+To move an individual noble or an army, move the pointer across the map in the
+direction you wish to go. As the pointer moves over areas adjacent to the army,
+it changes shape.
+
+Click on the area, and the army moves there. Each army can move five areas. The
+number of moves an army has left is shown on its sheild.
+
+FRESH HORSES
+------------
+
+During previous events phases, you may have received frash horses. These are
+recrded on your Command Panel.
+
+Fresh horses allows you to move one noble or royal heir an extra 4 areas (2 in
+bad weather). One set of fresh horses is required for each noble or royal heir
+in an army. Inspect an army, and - if you have enough fresh horses - you will
+be asked if you wish to use them to complete this move.
+
+TERRAIN EFFECTS
+---------------
+
+Caertain terrain affects movement.
+
+Forest - Any move into a forest area ends there. You can move out next turn.
+
+Estuaries - Land forces cannot cross estuaries.
+
+Sea - Only ships may enter sea areas. Nobles require ships to make sea
+crossings.
+
+Rivers have no effect on the game, except when they act as area boundaries.
+
+If you try to make an illegal move an audible warning sounds.
+
+ROAD MOVEMENT
+-------------
+
+In addition, an army may move by road, provided it starts the movement phase in
+an area bisected by a road.
+
+As you move the pointer over the map, beyond normal range of land movement, the
+pointer changes shape.
+
+Whenever it passes over an area to which there is a direct, unblocked road
+connection. Click on the area, and the army moves directly there.
+
+Not all road areas will be accessible. Road movement is blocked by neutral or
+unfriendly fortified towns cities or castles. It is not blocked by the presence
+of enemy forces.
+
+You cannot combine road with ordinary movement.
+
+CASTLES, TOWNS AND CITIES
+-------------------------
+
+Towns and castles are part of the area they occupy. When selecting an area to
+move into, click either on the open area, or directly onto the castle city or
+town you wish to enter. If a force enters an area containing a town or castle,
+it may pass by or remain outside freely.
+
+If, however, you wish the army to occupy the town or castle click directly on
+its symbol.
+
+STATUS OF TOWNS AND CITIES
+--------------------------
+
+Your ability to enter a town or castle depends on its status. Towns can be
+open, fortified or unfortified. All cities are fortified. Naturally, so are all
+castles.
+
+Open towns (Cardigan, Hereford and Kinston) are friendly to all factions. They
+can be occupied and besieged, but never controlled. As soon as an occupying
+army moves out, an open town reverts to its original status. Unless defended by
+a factional army, they pose no hinderance to mevement. Cardigan, where George,
+Duke of Clarence starts the game, is a particularly important open town.
+
+Unfortified towns have no major effect on the game, though they may also be
+ports and/or cathederals. They can be defended, but without advantage to the
+defender. They can never be controlled. Unless defended the pose no hiderance
+to movement.
+
+CONTROL OF CASTLES TOWNS AND CITES
+----------------------------------
+
+As the game progresses, the control of key locations becomes vital. From any
+factions perspective, all castles cities and fortified towns are eitheer
+friendly, neutral or hostile.
+
+Friendly places are those controlled by the moving faction. They may be freely
+entered, and place no restriction on road or other movement.
+
+Neutral places are controlled by no faction. No noble or army may enter them;
+they must first be captured by siege. They block road movement.
+
+Hostile places are those belonging to other factions. They block road movement
+and can only be captured by siege.
+
+Sieges are covered in the Combat Chapter. Obviously, once a place is captured
+by siege, it becomes friendly to the faction who capture it.
+
+CAPACITY
+--------
+
+The only other restriction on entering castles, towns or cities is that the
+capacity of the place must not be exceeded by the troop strength of the
+visitors. Different places have different capacities:
+
+Unfortified Town        =  n/a
+Towns(inc. Open Towns)  =  400
+Cities                  =  unlimited
+Noble Castles           =  300
+Royal castles           =  300
+
+If an army's troop strength is too great to enter the town or castle, the army
+must be split up to allow a portion to enter. The remainder are left outside.
+
+COMBINING / DIVIDING ARMIES
+---------------------------
+
+Nobles and armies of the same faction can be combined by moving one onto the
+other during the movement phase. The armies combine automatically.
+
+To divide an army, double click the LMB on its sheild. You are shown a list of
+the nobles and royal heirs in that army. Select those you wish to stay together
+by clicking on their name with the LMB, then click on the combine button. Then
+hit the proceed button, and play continues. This is, in effect a simpler
+version of the Build Faction routine allowing you to "allocate" nobles to
+different armies.
+
+ENEMY ARMIES
+------------
+
+Enemy forces pose no hinderance to movement. If an army ends its movement in
+the same area as an enemy army, [ a message explains that you are skirmishing
+with the opposing force.] You are given the option to attack in the combat
+phase.
+
+SEA MOVEMENT
+------------
+
+Armies may also be moved by ship. Any noble moved into a friendly or unfotified
+port in which the faction also has a ship may embark. Click on the ship as you
+would click on any other destination and the noble/army moves to the ship and
+boards it. All ships move later in a factions turn, after the armies, and are
+moved independently, without passengers.
+
+Any number of nobles may travel together on a ship, but they must be combined
+into one army before they board the ship. Only one army can travel on a ship.
+
+Ships can be inspected (by clicking on the ship's marker with the RMB).
+
+Sea movement is conducted in the same manner as land movement. When a ship is
+flashing, it is waiting for orders. Move the pointer over an adjacent sea area
+and it changes shape. Click on the area for the ship to move there.
+
+Ships may move upto 5 areas. Ports count as seperate areas. A ship can leave
+port and move into the adjacent sea area, or from a sea area to a port on its
+periphery, including along estuaries.
+
+FAIR WINDS
+----------
+
+Fair winds allow you to move one ship and all its passengers an extra 5 areas
+(3 during bad weather). You only discover if the weather is set fair once you
+start moving.
+
+ENTERING PORT
+-------------
+
+As soon as a ship enters a port movement ceases and all passengers
+automatically disembark. They cannot move until the next turn.
+
+Ships may not enter fortified, neutral or unfriendly port unless forced to do
+so by an event (sheltering from a storm, for example). A ship which occupies a
+neutral port is free to leave in the follwing turn. A ship which occupies a
+port controlled by another faction may not leave.
+
+If a faction loses control of a ship while it is at sea (through the loss, for
+example, of the office to which the ship is attatched or the seizure of its
+home port), the ship may complete its journey before it is lost.
+
+Ships cannot block the movement of other ships, nor do they engage in combat.
+
+REINFORCEMENTS
+--------------
+
+Reinforcements can be made active at any time during the movement phase. Nobles
+are brought into play through the secret support icon. Other assets can be
+assigned to a noble through the Build Faction screen.
+
+THE COMBAT PHASE
+----------------
+
+Any army which ends its movement in the same area as an opposing factions army
+can attack the enemy during the combat phase. If you move an army onto the
+heraldic sheild representing the other factions forces, a message appears to
+tell you that you are skirmishing with the enemy. If it was your intention to
+attack, and you do not get this message when you move, try moving the army
+within the area.
+
+An individual noble or army may only attack once per turn. If the defending
+force occupies a city, fortified town or castle, they can only be attacked by
+siege. This is covered in the next chapter.
+
+CHOOSING TO ATTACK
+------------------
+
+When an army of the player's faction ends its movement in the same area as an
+enemy force, a box appears, detailing the forces present in the area, and
+asking you if you wish to attack or evade it.
+
+Control is covered in Advanced Battle.
+
+If you evade, and their is more than one army present in the area, you will be
+offered the chance to attack the second. If not your army has completed its
+turn. Evading doesn't mean that there can't still be a battle here; the enemy
+faction may attack you during its turn.
+
+Computer-controlled nobles are rated for their aggression. Some, such as
+Warwick, seek battle almost at any odds. Others, such as Fitzalan, only attack
+when they know they can win. Experience will expose the more aggressive nobles.
+
+All nobles in an army contribute their troop strength to a grand total. As has
+been shown, you can inspect an enemy force by clicking the RMB on its heraldic
+sheild during the movement phase.
+
+BATTLE RESOLUTION
+-----------------
+
+If you elect to attack, if you are attacked by an enemy faction, or if there is
+a battle between two computer-controlled factions, heralds bring word of the
+outcome.
+
+Battles can be delayed by storms or bad weather. In the basic game, there is a
+small chance of a storm preventing a battle. Using the advanced weather option,
+combat is immpossible during a bad weather turn.
+
+A battles outcome is decided through a simple calculation. The troop strength
+of the attacker is compared to the troop strength of the defender, and
+expressed as a ratio. This can be a simple majority, 5:4, 3:2, 2:1, 3:1 or 4:1.
+The ratio is always rounded down in favour of the smaller force.
+
+For example, if a force of 410 troops attacked an army of just 280, the ratio
+would be 1.95:1, which falls somewhere between 3:2 and 2:1. The battle ratio is
+therefore 3:2 in the attacker's favour
+
+Each battle can either be a victory for the larger army, or indecisive. The
+odds on either outcome depend on the ratio between the forces.
+
+ATTACKING WITH A SMALLER ARMY
+-----------------------------
+
+Small forces can attack larger ones in the hope of killing one or more nobles
+in the opposing army. The odds are calculated in the same manner as for an
+attack by a larger army, but reversed.
+
+THE OUTCOME
+-----------
+
+The following are the approximate odds against a decisive victory for the
+larger army.
+
+BATTLE                                OUTCOME
+RATIO                       VICTORY               INDECISIVE
+
+1:1                           15%                    85%
+5:4                           25%                    75%
+3:2                           40%                    60%
+2:1                           55%                    45%
+3:1                           70%                    30%
+4:1+                          85%                    15%
+
+Having calculated the outcome, the computer displays the result on the screen.
+In a decisive battle the smaller army is destroyed. An indecisive outcome means
+it has escapes to fight another day.
+
+CASUALITIES
+-----------
+
+Even in an indecisive battle, there can be critical losses on either side. The
+battle result names nobles killed in the affray. Each noble has a variable
+chane of becoming a fatality, the more aggressive nobles having the highest
+chance. On average, the odds are about 1-in-12 (8%).
+
+In an indecisive battle, where no major victory is scored by either side, those
+nobles who cheated death leave the field of battle with their lives and other 
+assets intact.
+
+In a decisive battle, on the other hand, all the loser's surviving nobles are
+captureed, and many of the forces they controlled may be lost through ransom.
+
+The outcome of all battles - even those between computer-controlled factions -
+are shown. The herald brings news of the deaths of royal heirs or your deadly
+rivals, be it on the battlefield or through savage execution.
+
+AMBUSH
+------
+
+If a small army attacks a largerone at odds worse than 1:4, it will certainly
+be decisively defeated. The only point in such a suicidal attack is that it
+might lead to the death of a more important noble in the larger army. Only one
+noble in the larger army can be killed in this way.
+
+An ambush is a desperate tactic, but it might just mean that you kill off a
+noble controlling 300 men for the loss of a minor pawn like Audley...
+
+EXECUTING CAPTURED NOBLES
+-------------------------
+
+To the victor, the spoils. The victorious faction decides how to deal with
+captured nobles and their possessions. If you are the victorious party in a
+decisive battle, a box appears, listing the nobles you have captured one by
+one. The information box displays the assets available for ransom. For each
+noble, you are asked whether he is to be executed, ransomed or set free. 
+
+If executed, the noble is removed from his faction, along with any assets ne
+held. Titles and offices are placed in chancery; other assets are removed. All
+towns, cities or castles controlled by that noble, either directly or through
+his assets, become neutral and all occupants are expelled.
+
+If set free, the noble returns to play with all his assets intact. Why would
+you do it ? Remeber faction rivalry. Killing a noble may take him out of the
+game, but his faction may never forgive or forget your action.
+
+RANSOMING A CAPTURED NOBLE
+--------------------------
+
+Alternatively, a faction can attempt to ransom all or some of it's captives. If
+successful, the faction takes control of all or some of the assets of the
+captured noble's faction in exchange for his freedom.
+
+Nobles titles and offices cannot be taken. Nor can any asset gained as part of
+another asset (for example, the town of Lincoln, which is part of the holding
+of the Bishop of Lincoln).
+
+Royal heirs, Archbisops and Bishops, ships and certain towns which are not
+attatched to offices or other assets can be taken as ransom, along with all
+troops and other assets connected with them.
+
+Select one or more of the items displayed in the information box, and then
+click on the ransom button. You will be told either that the ransom is agreed,
+in which case your army gains control of the assets, and the noble is set free,
+or that the demand is refused. In the latter case, you are offered to either
+set the noble free, or to execute him.
+
+Naturally the more you demand, the less likely it is that the other faction
+will agree to your demands.
+
+If a royal heir is captured, the option is given to execute him at once, you
+cannot ransom royalty.
+
+All mercenaries in the defeated army are destroyed, and are removed from the
+factions strength immediately.
+
+MERCY OR VENGEANCE ?
+--------------------
+
+If the player's faction is the loser, the computer displays the extent of it's
+malice or mercy. It may allow you to ransom your nobles. You must decide
+whether the ransom is worth paying. Sometimes, a noble is set free even without
+a ransom being paid.
+
+If a ransom is demanded, you will be told of which noble is being considered,
+and which of your assets demands. You may either accept or reject the demands.
+
+The computer-factions have their own rationale for deciding when to set a noble
+free, when to execute, and when to demand ransom. As part of this, through
+faction rivalry, they keep a note of how you treat the prisoners you capture.
+The more generous you are, the more likely they are to be generous with you. On
+the other hand, if you execute proisoners regularly, you can be sure you will
+be at the centre of every other faction's vengeful plans.
+
+HEIRS
+-----
+
+Nobles killed in battle or executed afterwards are removed from play. Their
+heirs may appear later through the reinforcement phase.
+
+CHANCERY
+--------
+
+The titles (where these are not permanently attatched to a titled noble) and
+offices of nobles who die as a consequence of battle are in chancery (see the
+parliment chapter). They only re-enter play through the summoning of Parliment.
+
+EXECUTING ROYAL HEIRS
+---------------------
+
+As has been previously mentioned, when royal heirs are captured, you are given
+the choice of whether to execute them immediately or hold them prisoner. You
+must decide if the royal heir has any potential place in your plans; if not,
+then you must act with appropriate brutality...
+
+You are faced with the same decision if you capture heirs from both opposed
+royal houses. You can only sit on the fence in the dispute between York and
+Lancaster for a short while. After two turns, you are asked to choose which
+royal heir you will continue to support, and which will meet his inevitable
+fate.
+
+During play, if you decide that a royal heir you have been holding prisoner
+becomes superfluous, then click on the family tree button. From this display,
+select the name of the noble you have decided you no longer need. You are given
+the opportunity to execute the poor wretch. If you select YES, the headsman
+will be summoned at once.
+
+The computer-controlled factions are making the same kinds of decisions.
+Ambitious nobles find it easier to kill royal heirs than more reserved
+characters. Sooner or later, though, the royal heirs must decline and die,
+until but one remains...
+
+ADVANCED BATTLE RULES
+---------------------
+
+At any time in the game, you may fight a Battle usong the advanced battle
+rules. Simply select Control when the option to attack or defend is offered to
+you. Instead of the normal resolution of the conflict, you are taken to the
+battlefield to take command of your army.
+
+By superior generalship and good fortune, you may find that you achieve a
+greater level of success than the normal calculation
+inspires.
+
+THE PLAN OF BATTLE
+------------------
+
+Before the battle, you must allocate your forces, under the command of the
+nobles you have in that army, to their places on the battlefield.
+
+Your army will consist of two lines, a front rank and a reserve, and each line
+divided into a right wing, centre and left wing, according to the accepted
+military practice of the day.
+
+The nobles in your army (along with any royal heirs and mercenaries) are listed
+in the information box. Select them one-by-one and place them in one of the six
+"slots" available. You might, for example (and this would be normal practice)
+place your most senior noble in the centre of the front rank. Continue to do
+this until all your forces have been allocated a place on the battlefield.
+
+As you allocate your nobles, their sheild appears in that position, and the box
+underneath records their troop strength. Mercenaries, likewise, add their
+strength to that battalion. A Royal Heir merely adds himself, but he gives that
+battalion an edge in the coming fight.
+
+SCALING
+-------
+
+To make things easier to handle on screen, the computer automatically scales
+larger forces down (equally on both sides!), so that each man on the screen
+equals 2.5 or even 10 actual troops. As your nobles are placed in position, the
+troop strength given in the box shows their actual size.
+
+COMMAND
+-------
+
+The first noble placed in each position commands that "battalion" once fighting
+begins. It pays to have a noble in command of each battalion, since they will
+relay your orders more successfully. More than one noble can be placed in a
+battalion, adding his troop strength, but he has no command role.
+
+"SPILLING"
+----------
+
+Somtimes , even having taken scaling into account, one noble brings a
+disproportionate number of troops to the field, for example, if one noble
+controls 200 troops out of an army of 220.
+
+Each of the "battalions" can hold a maximum of 30 men (after scaling has been
+taken into account). If a noble is placed in command of a battalion, and he has
+more than 30 men, the excess will "spill" into a neighbouring battalion. Unless
+another noble is then placed in command of this neighbouring battalion, these
+troops remain under the direct command of their lord.
+
+Naturally, it makes sense to make certain that as many of your battalions as
+possible have a noble to command them. Your troops are an unwieldy bunch, and
+once the fighting starts it's very difficult to manouvre them around the
+battlefield.
+
+Of course, if you have less than six nobles, you can't place a noble in command
+of each battalion, so there may be battalions who take their orders from a
+distant noble. They will suffer from delays and errors accordingly. An army of
+200 men with 6 nobles involved will be easier to command than an army of 200
+all undre one noble.
+
+THE BATTLEFIELD
+---------------
+
+Having laid out your forces, the action now shifts to the battlefield itself.
+Your army, dressed in red, and with it's green banners prominent, will be
+arrayed opposite the host of your opponent.
+
+Your men are arrayed in their "battalions", as you deployed them. The front
+rank is nearest the enemy, with the centre separated from the left and the
+right.
+
+In each battalion, there is a mix of spearmen, archers and men-at-arms,
+normally in three ranks. The numbers of each type are decided by the source of
+the troop strength you placed in the battalion. For example, the noble's own
+household troops contribute 1/3 srearmen, 1/3 archers and 1/3 men-at-arms
+(which means that the 30 troop strength Talbot commands supply 10 of each).
+Most troops supplied by virtue of office or by bishops are 1/3 spearmen and 2/3
+archers. Some mercenary units are all archers.
+
+Your nobles appear mounted on dark horses under a banner. Any royal heirs you
+have are mounted on white horses.
+
+To move round the battlefield, move the mouse pointer and press the LMB. The
+view centres on the pointer.
+
+There is a menu bar across the top of the screen. Use this to cammand the
+action. The first thing you will want to do is to issue orders.
+
+ORDERS
+------
+
+Select the orders box in the menu bar.
+
+Each battalion is divided into two "companies" of 15 men. You can give orders
+to each company individually, or - by giving orders to the noble - to the whole
+battalion. You can also give orders to royal heirs, who have no command role.
+
+Select a company by clicking on one of its soldiers using the RMB. If you move
+the pointer around the map, you will now see a ylloe line appear. Select a
+target - this can either be a place or an enemy soldier. If you select an open
+area on the map, your selected company marches in that direction. If you select
+an enemy noble or soldier to be the target, when you release the button you are
+presented with a pair of icons.
+
+If you select the `man' icon, your chosen company will attempt to engage that
+target in combat, traking them acrossthe battlefield. If you selectthe `area'
+icon, your chosen men move to the target area.
+
+When you give orders to the whole battalion through their commanding noble, you
+are given an additonal pair of icons to select from. Select the arrow icon if
+you wish your troops to advance to the attack. Select the shield if you want
+them to halt in place immediately.
+
+As soon as they come into range, your archers open fire on the enemy. They have
+a limited supply of arrows - once these have gone they become spearmen. Your
+men will also melee automatically if they come into contact with enemy troops.
+Normally, once this occurs they will be virtually impossible to control again,
+and will ingnore any fresh orders you try to give them.
+
+REVIEW
+------
+
+You can review which orders each unit has by clicking on the review box in the
+menu bar. Select a unit. You will see where it has been ordered to march to.
+
+STATUS
+------
+
+Once the battle begins, you may wish to see how healthy your forces are. Select
+the status box in the menu bar.
+
+Select a unit with the RMB. You will See the name of its commander, its type
+(spearmen, archers, men-at-arms or noble) and its status.
+
+Status is a measure of the unit's cohesion, how well it is capable of
+performing its duties. Nobles and men-at-arms start as elite forces; all other
+start as firm. The presence of a royal heir in a battalion makes allunits in
+that battalion start as elite troops.
+
+As a unit takes missile fire, or is batteredin a melee, it reduces its status,
+falling to shaken then routed.
+
+A shaken unit tries to retreat out of mele and missile range.
+
+A routed unit tries to flee the battlefield.
+
+CONTINUE
+--------
+
+Having inspected your army and given your orders, select the continue box in
+the menu bar.
+
+The battle commences. Your men attempt to obey their orders, click the RMB to
+recover the menu bar.
+
+Once a battalion is deeply engaged in battle, they become incapable of obeying
+fresh orders. Commanding a mediaeval army was an impressive science at its
+best.
+
+You may also find that your battalion commanders may exercise a little
+"discretion", if they feel they should be taking a more active or passive role.
+Under fire, or faced with an opponent against whom the faction has a strong
+faction rivalry, an agressive noble might ignore your order to stand firm, and
+charge into the fray. On the other hand, a less agressive noble might be slow
+in obeying an order to attack.
+
+NOBLE CASUALTIES
+----------------
+
+During a battle, nobles and royal heirs can be killed. Each arrow strike or
+melee blow has a small chance of killing one of these prominent figures. The
+battle continues, but all units in a battalion commanded by a noble who is
+slain, or who were accompanied by a royal heir who fell, suffer an immediate
+fall in status.
+
+VICTORY!
+--------
+
+The battle continues until one of the following occurs:
+
+(i) One of the armies completely routs from the battlefield. This counts as a
+decisive victory for the other side.
+
+(ii) 50% or more of each army routs, in which case the battle is indesisve.
+
+With the battle over, the game returns to its normal display. If the victory
+was a decisive one, all the defeated army's nobles will be prisoners, and can
+be ransomed, executed or set free in the usual fashion.
+
+You can speed up the conclusion of a battle by using either of the other
+buttons on the menu bar. Fight places the battle into a quicker mode. You won't
+be able to access the menu bar any longer, and all combat damage is doubled.
+Click on surrender when your position is too hopeless to cantinue. This at
+least means your remaining nobles survive until the ransom routine...
+
+SIEGES
+------
+
+If an army belonging to one faction attacks another faction's forces occupying
+a city, town or castle, a siege must take place. In order to declare a siege,
+the attacking army must have a troop strength of at least an equal size to the
+opposing army, including the garrison.
+
+GARRISONS
+---------
+
+Garrisons resist sieges, even when no other troops of their faction are
+present. This is particularly important when considering neutral towns.
+
+The number of garrison troops depends on the location.
+
+TYPE                                    GARRISON
+
+UNFORTIFIED TOWN                        NONE
+
+TOWNS                                   200
+(inc. open towns)  
+
+CITIES                                  300
+
+NOBLE CASTLES                           200
+
+ROYAL CASTLES                           100
+
+Open towns only provide a garrison while occupied by a faction's forces. At
+other times they have a garrison strength of 0, and can be freely entered.
+
+When you inspect an army, the presence of additonal garrison troops is
+signified by a "+" sign. If you inspect a place, the size of its garrison is
+given after the "G", and the total troop strength (including any nobles'
+forces) after the "S".
+
+If the attacking army's troop strength falls below the size of the defender's
+army (including the garrison), the siege is lifted. This can happen if the
+attack is delayedand the attacker weakened by events. EDuring the movement
+phase, the besieger voluntarily raise the siege by moving away.
+
+SIEGE RESOLUTION
+----------------
+
+Each turn after a siege is declared, there is an 85% chance that the defenders
+will capitulate. In the meantime, as in battle, nobles can be killed in the
+fighting. A display shows all nobles who perish in this way.
+
+The siege may be successful immediately, or it may take a number of turns to be
+successful. This largely depends on good weather; a siege cannot proceed during
+storms (basic game) or a bad weather turn (advanced weather option(.
+
+During their turn, the defenders (excluding the garrison) may sally forth to
+give battle (particularly if the odds aren't too much against them). They can
+join forces with a relieveing army but they can't move away from the castle.
+
+Once the besieged defenders surrender, the outcome is shown on screen. All
+those within are captured, and may be dealt with in the same way as nobles
+captured after a decisive battle.
+
+A city, town or castle captured in this way becomes fiendly to the victor, even
+if it is associated with an office or asset. It only becomes neutral if the
+faction is destroyed.
+
+No-one may get in or out of a town or castle under siege.
+
+THE PARLIMENT PHASE
+-------------------
+
+During the course of play, titles and offices may become "vacant" as nobles are
+killed. These assets are placed in chancery and can only be brought returned to
+play by parliment.
+
+CHANCERY
+--------
+
+Titles and offices appear in chancery through one of two methods.
+
+(i) Some factions may not be able to allocate all the assets they begin the
+game with (because they did not have enough nobles). The excess is placed in
+chancery.
+
+(ii) Any offices or seperate titles held by a noble killed through plague,
+battle or execution are placed in chancery.
+
+Not all titles can be seperated from their nobles, even by death. Some nobles
+have a title permanently associated with them. If they are killed, and their
+heir appears later in the game, the heir automatically has the title.
+
+SUMMONING PARLIMENT
+-------------------
+
+Parliment may be summoned during the parliment phase of any faction's turn. It
+is summoned in one of two ways.
+
+(i) If there is one crowned King (or Queen), the faction controlling that royal
+heir may call parliment.
+
+(ii) If there is no crowned King / Queen, or if there are two, the chancellor
+must also issue a writ of parlimentary summons (these are gained through the
+events phase and stored among the factions secret assets).
+
+In either case, the King or chancellor must occupy a town or city (excluding
+Calais or anywhere under siege), and must also possess at least one writ of
+attendance (likewise gained through the events phase).
+
+If all these conditons are met, the faction controlling the King or chancellor
+is told how many assets are in chancery, and is offered the opportunity to call
+parliment.
+
+WRIT OF ATTENDANCE
+------------------
+
+Having decided to call a parliment, the faction must first serve a writ of
+attendance on a noble in one of the other factions. You are asked to select
+which noble receives a writ from a list in the information box of all the
+nobles in play. Use the scroll buttons to move through the list, and click on
+the selected noble. Naturally, the computer handles this choice automatically
+for its factions. You are told if one of your nobles is selected.
+
+Each faction which possesses writs of attendance is asked if they too wish to
+serve these on nobles in other factions. If your faction holda any additional
+writs, you will be asked if you wish to play them. Either select nobles from
+the list, or select cancel.
+
+All nobles summoned to parliment by a writ must attend.
+
+VOLUNTARY ATTENDANCE
+--------------------
+
+Finally, each faction is asked if any of their nobles attend parliment
+voluntarily. 
+Nobles cannot be summoned or volunteer to attend if they are in a besieged city
+or town. Nor can they attend if they are in Calais or some other location
+seperated from mainland Britain by the sea, unlessthe faction they are part of
+controls a ship with sufficient capacity to transport the noble and his
+followers.
+
+Those nobles who grace parliment with their presence then make their way there
+regardless of normal movement rules.
+
+ATTENDING PARLIMENT
+-------------------
+
+Once parliment has assembled, the faction which summoned it is entitled to
+reallocate titles or offices which have been placed in chancery.
+
+One title or office can be reallocated for each noble attending parliment
+(assuming there are sufficient in chancery).
+
+Titles and offices may be given to any noble and not just to those actually
+present, subject to the usual rules concerning combinations of nobles, titles
+and offices. If the player controls parliment, you are asked to combine a noble
+with each title or office in turn.
+
+Any titles or offices which cannot be allocated are returned to chancery.
+
+You can give a new title or office to one of your nobles who already
+controls such an asset. His old asset will have to be given to someone else.
+This is the only time offices may be transferred.
+
+Once parliment dissolves, the factions move away during the movement phase of
+their turn as normal. No battle may take place in the town or city either
+during parliment of for a full turn thereafter. The King's peace forbids any
+transition of this law.
+
+THE CORONATION PHASE
+--------------------
+
+Part of the vicyory conditions for Kingmaker is that a faction must not only
+control the last surviving royal heir, but must also have that heir crowned as
+King (or Queen) of England. Coronations, therefore, play a central part in the
+game. In addition, a crowned heir may be able to summon parliment.
+
+ARRANGING A CORONATION
+----------------------
+
+The following conditions must be met before a faction can crown a royal heir.
+
+(i) They must control the most senior Yorkist or Lancastrian royal heirs,
+according to the order of succession of that house.
+
+(ii) The potential King must occupy a town or city which is also a cathederal
+and must be accompanied by either an archbisop or two bishops.
+
+If these conditions apply, the faction automatically crowns its royal heir.
+
+THE REINFORCEMENT PHASE
+-----------------------
+
+In the final phase of each faction's turn, it receives one asset as a
+reinforcement, so long as there are assets available. All the nobles, titles
+offices, bishops, ships, etc which were not distributed at the beginning of the
+game are available, as are all nobles killed during the game, and any other
+assets removed during play. Titles and offices, as we have seen are placed in
+chancery when they are removed, and return to play through parliment.
+
+A message appears to tell which asset has become available. Nobles who join a
+faction are automatically added to the faction's secret support. Other assets
+are placed in the faction build box.
+
+SECRET SUPPORT
+--------------
+
+Secret support can be thought of as those supporters of your faction who have
+not yet come into the open, declaring their allegiance. Computer factions
+determine when to bring their supporters into play automatically. You must
+activate your secret reinforcments as you see fit.
+
+Select the secret support icon. The list of your secret supporters appears.
+Select a noble by clicking on his name, and select proceed to bring him into
+Home Castle. Nobles start in their nome castle unless it has been captured by
+another faction, in which case the noble starts instead from the nearest
+friendly castle, town or city.
+
+As usual, you can learn more about the noble by positioning the mouse pointer
+over his icon. Click on the LMB. You can now read the chronicle information
+about him.
+
+ACTIVATING OTHER ASSETS
+-----------------------
+
+All other assets are brought into play through the build faction box.
+Allocating an asset to a noble activates that asset. This is done in the same
+way as in the original faction build phases; select a noble and the asset you
+wish to give him, click on combine, and the asset is brought into play. Any
+assets you have not allocated by the time you click on proceed are returned
+remain in reserve.
+
+Until a noble declares his allegiance to your faction, or an asset is assigned
+to one of your nobles, they are completely secret - the other factions do not
+know of their existence. The computer-controlled factions likewise develop
+their "secret reserves".
+
+REBUILDING YOUR FACTION
+-----------------------
+
+During the game, nobles in your faction may be killed. Any titles or offices
+they control are returned to chancery (see parliment), towns, cities or castles
+which they controlled become neutral.
+
+As your faction suffers losses, or is enlarged through reinforcment, you may
+wish to redistribute your assets. Return to the build faction box display by
+clicking on the faction icon.
+
+You cannot reallocate titles or offices in this way - this must be done at
+parliment. Other assets such as merecenaries or bishops can only be exchanged
+between two or more nobles in the same army. The rules for this are covered in
+the movement chapter.
+
+PARLIMENTARY SUMMONSES AND WRITS OF ATTENDANCE
+----------------------------------------------
+
+During the events phase, you may recieve parlimentary summonses and writs of
+attendance. These are automatically stored, and can be played in the parliment
+phase, as outlined above.
+
+******************************************************************************
+
+GLOSSARY
+--------
+
+Archbishops. The senior members of the church in England. Control of an
+archbishop allows you to crown a  royal heir. There are two archbishops.
+Canterbury is the most senior. York provides the faction with extra troops.
+
+Armies. Two or more nobles in the same faction can be combined together, along
+with all their assets, to form an army, commanded by the mor senior of the
+nobles. They are represented on the map by the sheild of the most senior noble.
+
+Bishops. Lesser clerics of the church in England. There are four bishops in the
+game, and any noble can control any number of them. You need two bishops to
+stage a coronation. Most bishops bring other assets with them.
+
+Cathederals. Found in towns and cities, cathederals are sites where coronations
+take place.
+
+Cities. Larger versions of towns, the cities of London, York, Bristol and
+Norwich have garrisons of 300 troops.
+
+Faction. One of between two and six groups of nobles, each group vying against
+the others for the ultimate prize - the Government of England. The plaer
+controls one faction, the computer controls the others. Each is identified by
+the name of its leader and a colour. The player's faction is green.
+
+Mercenaries. There are eight mercenary bands in the game, and any number maybe
+controlled by any noble.
+
+Nobles. Nobles are the basic playing piece of the game controlling your
+facton's army. They can be titld or untitled. Each noble is shown on the map by
+his heraldic sheild. They can be combined together to form armies.
+
+Offices. These provide additional power. Each titled noble (or untitled nobles
+granted a title) can be given one office. They confer extra troop strengths
+(sometimes tied to one part of the country), towns or castles. A titled noble
+with an office is a potent combination.
+
+Royal Castles. Well-garrisoned fortifications in key parts of the country. Only
+one - Carisbrooke - can be controlled in this way. It can be given to any
+noble.
+
+Ships. These provide vital transport, particularly if your faction has a base
+in Calais, Ireland or the Isle of Man. There are twelve in the game, and any
+noble may control any number of them.
+
+Titled Nobles. These are the primary members of a faction. There are 9 in all,
+annd even the least powerful one has a respectable number of troop strength
+points.
+
+Titles. These are high honours which can be given to your untitled nobles.
+Obviously, only one can be allocated to each untitled noble. This effectively
+makes them the same as titled nobles, though not as permanent. There are eight 
+titles available.
+
+Towns. These are the key locations in England. Fortified towns provide a
+defensive garrison of 200 men for the faction which controls them. Unfortified
+towns do not, and they cannot be controlled. Open towns (namely Cardigan,
+Hereford and Kingston) cannot be controlled, but do provide garrisons if
+occupied. Control of certain independent towns is gained either at the start of
+the game or through reinforcement. Others can be gained by control of offices,
+bishops or titles. Towns can be also captured by siege. As far as any faction
+is concerned, a town is either friendly (occupied and/or controlled by the
+faction). Neutral (controlled by no faction) or unfriendly (controlled by an
+enemy faction). A fortified town can shelter up to 400 troops.
+
+Untitled Nobles. These are less powerful nobles, but they can be built up to be
+as powerful as their titled cousins.
+
+******************************************************************************
+
+THE FOLLOWING ARE REFERENCES TO ALL THE FORCES IN THE GAME:
+
+TITLED NOBLES
+-------------
+
+Percy, Earl of Northumberland. Troop Strength 100; Alnwick and Cockermouth
+castles.
+
+Mowbray, Duke of Norfolk. Troop Strength 50; Castle Rising, Denbigh,
+Framlingham, Usk and Wressle castles.
+
+Neville, Earl of Warwick. Troop Strength 50; Ogmore, Richmond, Warwick and Raby
+castles.
+
+Beaufort, Duke of Somerset. Troop Strength 30; Corfe castle.
+
+Stafford, Duke of Buckingham. Troop Strength 30; Leeds and Newcastle castles.
+
+Pole, Duke of Suffolk. Troop Strength 30; Ludlow castle.
+
+Courtenay, Earl of Devon. Troop Strength 30; Okehampton castle.
+
+UNTITLED NOBLES
+---------------
+
+Stanley. Troop Strength 50; Douglas castle.
+
+Roos. Troop Strength 20; Belvoir and Helmsley castles.
+
+Grey. Troop Strength 20; Chillingham and Rockingham castles.
+
+Holland. Troop Strength 20; Kimbolton and Compton castles.
+
+Cromwell. Troop Strength 10; Tattershall castle.
+
+Howard. Troop Strength 10; Farnham castle.
+
+Bourchier. Troop Strength 10; Pleshy castle.
+
+Greystroke. Troop Strength 10; Appleby castle.
+
+Scrope. Troop Strength 10; Masham castle.
+
+Clifford. Troop Strength 10; Conisborough castle.
+
+Audley. Troop Strength 10; Tickhill castle.
+
+Berkeley. Troop Strength 10; Berkeley castle.
+
+Hastings. Troop Strength 10; Tutbury castle.
+
+Herbert. Troop Strength 10; Llanstephan castle.
+
+TITLES
+------
+
+Earl of Richmond. Troop Strength 40.
+
+Earl of Westmoreland. Troop Strength 40.
+
+Earl of Kent. Troop Strength 30.
+
+Earl of Salisbury. Troop Strength 30.
+
+Earl of Worcester. Troop Strength 30.
+
+Earl of Wiltshire. Troop Strength 30.
+
+Duke of Exeter. Troop Strength 20; Exeter.
+
+Earl of Essex. Troop Strength 20.
+
+OFFICES
+-------
+
+Marshall of England. Troop Strength 100; Harlech castle.
+
+Chancellor of England. Troop Strength 50; Caernarvon castle.
+
+Captain of Calais. Troop Strength 50; 300 extra troops in Calais; Calais.
+
+Chamberlain of the County Palatine of Chester. Troop Strength 50; 200 extra
+troops in Wales; Rhuddlan, Chester.
+
+Lieutenant of Ireland. Troop Strength 50; 200 extra troops in Ireland.
+
+Chancellor of the Duchy of Cornwall. Troop Strength 50; 100 extra troops in
+Devon and Cornwall; Oxford, Plymouth.
+
+Chancellor of the Duchy of Lancaster. Troop Strength 50; !00 extra troops
+within three areas of Conway; Conway castle.
+
+Warden of the Northern Marches. Troop Strength 50; 100 extra troops noth of the
+River Tees; Bamburgh, Berwick.
+
+Constable of Dover Castle. Troop Strength 50; Dover.
+
+Steward of the Royal Household. Troop Strength 50; Newark
+
+Treasurer of England. Troop Strength 50; Wallingford and Beaumaris.
+
+Admiral of England. Troop Strength 50; Lynn, Southampton; Le Margaret of Rye,
+Le Christopher of Southampton.
+
+Warden of the Cinque Ports. Troop Strength 50; Pevensey; Le Trinity of Rye, Le
+George of Rye.
+
+BISHOPS
+-------
+
+Archbishop of Canterbury. 
+Canterbury.
+
+Archbishop of York.
+Troop Strength 30 north of the River Trent; York.
+
+Bishop of Norwich.
+Troop Strength 50; Norwich.
+
+Bishop of Carlisle.
+Troop Strength 30 north of the River Trent; Carlisle.
+
+Bishop of Durham.
+Troop Strength 30 north of the River Trent; Durham.
+
+Bishop of Lincoln.
+Lincoln.
+
+INDEPENDENT TOWNS
+-----------------
+
+Bristol, Coventry, Ipswich, Lancaster, Leicester, Newcastle, Northampton,
+Nottingham, Shrewsbury, Swansea.
+
+INDEPENDENT SHIPS
+-----------------
+
+Le Swan of Berwick, Le Rose of Plymouth, Le Lucas of Whitby, Le Michael of
+Bristol.
+
+MERCENARIES
+-----------
+
+100 French Foot Soldiers.
+2 x 30 Burgundian Crossbowmen.
+2 x 20 Flemish Crossbowmen.
+2 x 20 Scots Archers.
+2 x 10 Saxons.
+
+ROYAL CASTLE
+------------
+
+Carisbrooke.
+
+-------------------------------------------------------------------------------
+
+
+ Thats ya!! lot go play this immensly ?? interesting game and fight !!!!!
+

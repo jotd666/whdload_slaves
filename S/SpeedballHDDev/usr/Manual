@@ -1,0 +1,170 @@
+                                SPEEDBALL
+
+Typed in by MEDUSA. Edited by PARASITE.
+
+
+THE PITCH
+The game takes place on a steel walled floored pitch,160 feet long by
+90 feet wide. The walls are 30 feet high. There is a goal at each end
+of the pitch and a ball warp tunnel in each side of the wall. Throwing
+the ball into the tunnel causes it to reappear on the opposite side.
+The ball launcher, in the center of the pitch, rises at the start of
+each game, rotates, then shoots out the ball in a random direction.
+There are bounce domes, off of which the ball will be deflected, but
+over which players are free to move. These appear in different formats
+for each match.
+
+TEAM SELECTION
+You have a choice of one of three possible teams to represent.These
+differ in skill and stamina.In two player mode, each player must
+choose a team.
+
+THE OPTIONS
+Select one of these options:
+
+DEMO GAME
+Computer vs Computer. Press the fire button to exit the demo.
+
+ONE PLAYER KNOCKOUT
+Human vs Computer. Your team wears green and is playing up to pitch.
+You take part in a knockout game based on 10 rounds. The object being
+to reach the final and win.
+The opposing teams will become more difficult as the rounds progress.
+Each round is the best of 3 matches. You get 2 points for a win, 1 for
+a draw and 0 for losing. To qualify for the next round, you need to
+score 3 points. However, if you gain 3 points in the first and second
+legs you will be kept informed of your progress and requirements
+before the start of each match.
+
+TWO PLAYER GAME
+Human vs Human. Player one controls the green team playing up the
+pitch, Player two controls the red team playing down the pitch. You
+will be asked to select the duration of the league from 10-100 weeks.
+Before each game you will be kept informed of your current status. You
+score 100 points for a win, 20 for a draw and 5 for each goal.
+
+LEAGUE GAME
+Human vs Computer. This game is played in a league system with scores
+of 100 points for a win, 20 for a draw and 5 for each goal. There are
+11 teams in the league, including yours. After selecting the duration
+of the league, you play each week of the league as in the knockout
+game. Your opposing teams are drawn randomly, so you will meet teams
+of different skills throughout the league.
+At the end of each week, the computer will analyse the results of the
+matches played by the other teams that week and compile the current
+league. Your team name will be shown flashing in the table.
+Each week consists of 5 matches, 10 teams play each week, your team
+will not play in week 11.
+
+SAVING A GAME
+Make sure that you have a totally free disk-as any existing data on a
+disk will be lost. The type of game you have just been playing will
+automatically be saved, however the disk will save one each of a
+knockout, league and two player game. Any existing game of this type
+will be overwritten, so be careful! An un-formatted disk will
+automatically be formatted.
+If the save fails, check for write protect or try another disk.
+
+LOADING A SAVED GAME
+Simply insert your disk in to the drive and choose the correct loading
+option.
+
+CONTINUE GAME
+This option allows you to continue playing a previously saved game.
+
+CONTROLLING THE TEAM
+To throw the ball, press the fire button. A very short press will
+throw the ball at waist height, but if the fire button is held down it
+will be thrown high up into the air, passing over the heads of the
+players. Therefore it is possible to throw the ball too high to enter
+the tunnels and goal mouths.
+If your player doesn`t have possession of the ball, but it is in the
+air near him,pressing the fire button will make him jump into the air
+and attempt to catch it. If the fire button is pressed down when your
+player doesn`t have the ball, then he will attempt to tackle an
+opposing player. If he is moving and the fire button is pressed, he
+will slide. This last tactic can be used to tackle an opponent or to
+move faster to intercept the ball.
+
+THE GOALKEEPER
+The goalkeeper is controlled by the joystick when he is visible. With
+the joystick in a central position, pressing the fire button will
+cause him to jump up and punch the ball.
+As soon as he touches the ball, he will automatically thrown it out
+towards the centre of the pitch (either straight, or diagonally
+left/right, depending on his movement when he gains control of the
+ball).
+
+TACKLING
+Your tackle may or may not be successful, this depends on your skill
+level (shown in your team info before a game starts-see attributes).If
+you win the tackle, your opponent will lose some stamina, depending on
+your strength (see attributes). Also, the losing player will be sent
+into an uncontrolled roll and will be unable to do anything for a
+couple of seconds. If the losing player is the goalkeeper, he will not
+be able to save the ball for a couple of seconds-remember this!
+A successful tackle will result in you taking control of the ball. You can
+tackle any player at any time, there are no fouls and no rules in this game!
+However, you are vulnerable when in the air and will always lose a tackle,
+irrespective of your own or your opponent`s skill.
+
+ATTRIBUTES
+Strength: The stronger your team, the more stamina they take from your
+opponents when tackling.
+Stamina: As your stamina is depleted, your team gets slower and cannot throw
+the ball as far, or with as much power.
+Your stamina is replenished to a maximum level at the start of each game. The
+small meters at the bottom left and right of the screen, depict the current
+players stamina.
+Skill: The higher your skill level the more successful your team will be in
+tackling.
+
+TOKENS
+During the game, tokens will appear, move your player over them to pick them
+up. There are two types of tokens:
+The `SAVE and COLLECT` type, which are the rotating discs. These are saved and
+can be used at the end of each match to select various options from the
+following list:
+
+OPTIONS               TOKENS         RESULT
+Bribe official          2            Buy an extra minute game time for
+                                     previous game.(This can only be done once
+                                     per game).
+Extra stamina           3            Increase your maximum strength level
+Bribe Timer             3            Increase the length of time the immediate
+                                     effect tokens last.(10 stage countdown).
+Bribe Trainer           4            Reduce computers intelligence (not 2
+                                     player).
+Extra skill             4            Increase your tackling ability
+Reduce stamina          4            Reduce opponent`s stamina
+Extra Power             6            Increase your strength
+Reduce skill            6            Reduce opponent`s tackling ability
+Bribe Ref               6            Buy a one goal advantage for the next
+                                     game, or the previous game if you also
+                                     buy extra time
+Reduce power            7            Reduce your opponent`s strength
+
+The changes to the attributes will be shown before a match. Note the changes
+to the opponent`s attributes in a two player game are permanant, but in a one
+player game affect the oppositon for the current round.
+The `immediate Effect` type, which are rotating tiles that will have an
+immediate effect when picked up, depending on the letter on the tile:
+
+F- Freeze the opposing team (except for the goalie) for a 10 stage countdown.
+R- Reduce the opposing team`s speed for a 10 stage countdown.
+P- Protect your team,(ie. can`t be tackled) for a 10 stage countdown.
+S- Increase your team`s stamina.
+D- Decrease your opponent`s stamina.
+G- Get the ball if not already in possession of it.
+E- Electron: Bolt of energy that will tackle any opponent it hits for a 10
+stage countdown.
+W- Turn the ball into a weapon for a period. When thrown it will tackle an
+opposing player for a 10 stage countdown.
+M-8 way electron burst for a 10 stage countdown.
+J- Reverse opponent`s joystick control for a 10 stage countdown (two player
+game only). The computer cannot use these weapons.
+
+During a game:
+F1- Pause
+F10- Quit. This will end the league/knockout and will not give you an
+opportunity to save the game.

@@ -1,0 +1,107 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "B.C.Kid" © 1992 Hudson-Soft/Factor 5.
+
+ Requirements:
+ -------------
+ This install requires WHDLoad and RawDIC to be in the path.
+ These programs can be found in the WHDLoad package.
+
+ The installed program requires 0.5 MB ChipMem and 0.5 MB OtherMem.
+ It can be quit by pressing F10 (key can be changed with Tooltype "QuitKey=").
+
+ Note: This install cannot be used with the game (extended ADF) image provided
+ by the website of Factor5 at http://www.factor5.de/ because the image is
+ corrupted. You will get a checksum error on track #122. Also the last track is
+ incomplete. Use real disks or IPF images as these will work fine.
+
+ Features:
+ ---------
+ Tested on A4000/CSPPC/68060/50.
+ Tested on A1200/68060/50.
+
+ History:
+ --------
+ 
+ version 1.5 (16.08.2019) done by JOTD:
+ - added option to force 2nd button = jump (CUSTOM2=1 as always)
+ - added joypad controls for pause, give up current game, quit to wb & levelskip.
+ - shuffled the CUSTOMx flags to respect my personal logic (custom1=trainer,
+   custom2=2nd button jumps, customx: other)
+ - fixed lockup bug when saving hiscores/options with trainer on
+ 
+ version 1.4 (06.03.17) done by JOTD
+ - added trainer: infinite lives / select number of lives / select start level
+ - Press F1 to skip levels, F2 to skip stages
+ - hiscore won't be saved if trainer is enabled
+ 
+ version 1.3 (17.03.14) done by Wepl
+ - interrupt acknowledge and smc in the TFMX player code fixed
+ - decruncher optimized, should be a bit faster now
+ - HudsonSoft/Factor5 logos can be skipped using Custom1 now
+ - disk image shortend a bit, if you want to have this either reinstall or
+   manually set the filesize to 1022536, you can also leave the old image as
+   it still works
+ - WHDLoad v17 is now required due Custom1 control
+ - thanks to Retro-Nerd for report and testing (issue #2967) although this
+   update doesn't really fix the mentioned problems
+
+ version 1.2 (24.10.10) done by Wepl/CFOU!
+ - crashes after selecting 'end game' on the game screen should be fixed
+ - stack moved to fast ram
+ - interrupt acknowledge added
+
+ version 1.1 (22.02.08) done by Wepl
+ - new rawdic imager, changed image format, you have to reinstall!
+ - highscores are now saved to a seperate file, not into the image anymore
+ - decruncher relocated to fast memory and smc removed
+ - some snoop bugs removed
+ - slave infos added
+ - new install script
+ - manual added
+
+ version 1.0 (09.05.98) done by Mr.Larmer/Wanted Team:
+ - initial release
+ - Thanx to Chris Vella for original disk image.
+
+
+
+ Cheats/Hints
+ ------------
+ Jump up and turn on the autofire on your joystick. You'll glide through
+ the air while spinning madly. This should help you dodge all the dinosaurs
+ and volcanoes.
+
+ Select 'OPTIONS' from the title screen. On the option screen, use and
+ enter the following sequence: UP UP DOWN DOWN LEFT RIGHT LEFT RIGHT.
+ Now start the game and infinite lives are yours.
+
+ Note that if you enable levelskip or infinite lives trainer, highscores
+ won't be saved.
+ 
+ Contact:
+ --------
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, EXPCHIP, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ There's an access fault on "continue play" on WinUAE if "more compatible" isn't checked
+ I (JOTD) haven't fixed this as it was non-trivial and probably winuae only.
+  
+  

@@ -1,0 +1,509 @@
+                               SKID ROW
+
+                               presents
+
+                         LEISURE SUIT LARRY 5: 
+             PASSIONATE PATTI DOES A LITTLE UNDERCOVER WORK
+
+                              GAME MANUAL
+
+HOW TO READ THIS MANUAL
+
+Throughout this manual we will use the following ways of representing
+information:
+
+Menu Commands will be CAPITALIZED.  Example: SAVE, RESTORE, QUIT, PLAY
+
+Type commands will appear as bold type.
+   Example: 'type cd\sierra`
+
+Portions of the command line not meant to be typed will not appear
+in bold type.  For example, in the line 'type cd \sierra`, 'type`
+should not be typed.
+
+[Keystrokes] will appear in brackets setting them off from the
+surrounding text.
+   Example: [Spacebar], [Tab], [PageUp]
+The brackets are not keystrokes and should not be typed.
+
+Two or more keys that should be pressed together will be separated by
+a hyphen (-).  This hyphen is not a keystroke, and should not be
+typed.
+   Example: 'Press [Ctrl-I] to view your inventory.`
+
+If a space appears between parts of a command, it is meant to be typed.
+   Example: 'type cd \sierra` (the space between cd and \sierra should be
+   typed as part of the command)
+
+The term 'diskette` is used to refer to either 3.5" or 5.25" data
+storage disks.
+
+GETTING STARTED
+
+ALL SYSTEMS: 
+Readme Files
+
+PLEASE NOTE: If there is a README file on your game diskette, it may
+contain important information and instructions that were not
+available at the time the documentation and other materials for this
+game were printed.  
+
+AMIGA README Instructions
+
+Boot your system with Workbench.  With the STARTUP DISK in your diskette 
+drive, double-click on the SIERRA disk icon, then double-click on the 
+README.DOC icon.
+
+ALL SYSTEMS: 
+Getting Started
+
+Make Back-ups
+
+It is always advisable to make back-up copies of your master program
+diskettes to increase the life of the masters and guard against
+accidents.  Follow your computer's instructions to make copies of all
+game diskettes.
+
+Create a 'Save Game` Disk
+
+Even if you will be playing from a hard disk, you may want to format
+a blank diskette for saving games.  Follow your computer's instructions
+to format a blank diskette and keep it handy for saving your games as
+you play.  For some helpful tips on saving games, see 'Saving Your
+Game`.
+
+AMIGA
+
+HARD DISK Installation Options
+
+PLEASE NOTE: RENAME your copies of all game disks to remove the words
+'COPY OF` from the disk name.  If the words 'COPY OF` are not removed 
+from the disk names of ALL the copies, the system will continue to ask 
+for the original disk, and will not run the game.
+
+There are two Hard Disk Installation options to choose from:
+
+Complete Install
+   will copy the contents of all game disks to your hard disk.  Choose 
+   Complete Install if you want to install the entire game.
+
+Small Install 
+   will copy only the contents of the STARTUP DISK onto your hard disk.  
+   As you play the game, you will be prompted to insert other game disks 
+   as necessary.  The INSTALL procedure will recommend Small Install if 
+   you do not have the minimum amount of storage space available on your 
+   hard disk for the entire game.  
+
+Installing Your Sierra Game
+
+1. Boot your system with Workbench, and insert the STARTUP DISK into
+   Drive DF0.
+2. Double-click on the disk icon, then double-click on the INSTALL icon.
+3. Follow the on-screen prompts to complete the installation.
+
+Note: If your hard drive is not device DH0, be sure to change the default
+destination to the correct device.  For instance, on the Amiga 3000,
+the default destination directory should be changed to WORK.
+
+Loading Instructions
+
+From Diskettes:
+
+NOTE: YOU MUST HAVE TWO DISKETTE DRIVES TO PLAY FROM DISKETTES.
+
+1. Insert the DUAL PLAY DISK into drive DF0:.
+2. Turn on your system.
+3. Insert GAME DISK 1 into drive DF1.  You will be prompted to insert
+   additional disks as required.
+
+NOTE: THE DUAL FLOPPY PLAY DISK MUST REMAIN IN DRIVE DF0.
+
+From Hard Disk:
+
+1. Load Workbench and double-click on your hard disk icon.
+2. Double-click on the SIERRA drawer.
+3. Double-click on the Sierra Game drawer.
+4. Double-click on the Sierra Game icon.
+
+AMIGA 1000
+
+Loading Instructions Without Hard Disk
+
+1. Boot your system with Kickstart.
+2. When the Workbench disk appears on-screen, insert the DUAL FLOPPY
+   PLAY DISK in Drive DF0.
+3. Insert GAME DISK 1 in Drive DF1.
+   You will be prompted to insert additional diskettes as required.
+
+NOTE: THE DUAL FLOPPY PLAY DISK MUST REMAIN IN DRIVE DF0.
+
+Note for experienced Amiga users: This game will search all drives for
+game information.  If you have more than two floppy drives and/or a
+RAM disk, you may load additional game disks in these drives to save time.
+
+Playing Your Sierra Game
+
+ALL SYSTEMS:
+
+Using a Mouse 
+
+To activate the icon bar, move the cursor to the top of the screen.  To
+position the on-screen cursor, move the mouse to the desired position.
+To move your character, position the cursor and click the mouse button.
+To execute a command, click the mouse button (multi- button mouse users,
+click the left button).
+
+   NOTE: If the icon bar has been activated using the mouse you will not
+   be able to use the keyboard to toggle between choices.
+
+For more detailed mouse instructions, see below.
+
+1 - Button Mouse
+                   __________   [SHIFT-CLICK]
+    [ENTER] ---   |          |  Cycle through
+                  |__________|  available cursors.
+                  |          |  [Ctrl-Click]
+                  |          |  Toggle between
+                  |          |  WALK and last
+                  |__________|  cursor chosen.
+
+2 - Button Mouse 
+                   __________   
+    [ENTER] ---   |    ||    | --- Cycle through
+                  |____||____|     available cursors.
+                  |          |     [Ctrl-Click]
+                  |          |     Toggle between
+                  |          |     WALK and last
+                  |__________|     cursor chosen.
+
+
+3 - Button Mouse
+
+       Middle-click Toggle between WALK and
+           WALK and last active cursor.
+                        | 
+                   ___________   
+    [ENTER] ---   |   |   |   |  --- Right-click Cycle
+                  |___|___|___|      through available
+                  |           |      cursors.
+                  |           |  
+                  |           |  
+                  |___________| 
+
+Using a Keyboard to Play Your Sierra Game
+
+To position the on-screen cursor or move your game character using a
+keyboard, press a direction key on the numeric keypad.  To stop your
+character, press the same direction key again.  To execute a command,
+press [ENTER].  To move the on- screen cursor or game character in
+smaller increments for exact positioning, hold down the [SHIFT] key
+and use the arrow keys.  For more detailed keypad instructions, see 
+below.
+
+Numeric Keypad
+
+7      Up-Left
+8      Up
+9      Up-Right
+4      Left 
+5      Cycle through available cursors.
+6      Right
+1      Down-Left
+2      Down
+3      Down-Right
+0      Toggle between WALK and last cursor chosen.
+.      Open icon bar.
+Enter  [ENTER]
+
+
+Using a Joystick
+
+To position the on-screen cursor using a joystick, move the stick in the
+desired direction.  To execute a command, press the FIRE button.  For
+more detailed joystick instructions, see below.
+
+Joystick button 1  [ENTER]
+Joystick button 2  Open icon bar
+
+PLEASE NOTE: With the exception of mouse-only items, all playing 
+instructions beyond this point are for keyboard.  Mouse or joystick
+commands may also be used.  Please reference the section above for
+mouse and joystick equivalents to keyboard commands.
+
+Using Icons and Cursors
+
+   Note: Listed below are standard Sierra icons and cursors.  Additional
+   icons and cursors may be available in your game - for more information,
+   please use the HELP icon and cursor explained below.
+
+At the top of the screen is an icon bar containing several icons
+that can be selected to execute the command choices available to you.
+
+To open the icon bar, press [ESC] or move the mouse cursor all the way
+to the top of your screen.
+
+Some icons will have a menu of choices.  Use the [Tab] key, arrow keys
+or mouse cursor to move between choices within an icon menu.
+
+The Walk Icon
+
+Choose Walk when you want to move the character from place to place
+on-screen.  A walking character will move as far as the edge of the
+screen, avoiding obstacles in its path.
+
+The Walk Cursor (mouse mode only)
+
+When you choose Walk, the cursor will change to a walking figure.  Place
+the feet of the figure at the place where you want to move the character
+and click the mouse button or press [ENTER].  Your character will move 
+to that spot, avoiding any obstacles in its path.
+
+PLEASE NOTE: Your character's destination will be assumed to be the edge 
+of the screen in the direction of movement, and will walk off the screen 
+if not stopped.
+
+The Look Icon
+
+Choose Look when you want to have the character look at something
+on-screen.
+
+   *Note: There may be a slight variation in the appearance of this icon
+   from game to game.  If you are unsure of an icon's purpose, click
+   on the icon with the HELP icon (the question mark located at the
+   right end of the icon bar).
+
+The Look Cursor
+
+When you choose Look, the cursor will change to an eye.  Place the eye
+at the desired place on the screen and press [ENTER].  If there is
+something to be seen at this place, a message will be displayed.
+
+The Action Icon
+
+Choose Action when you want your character to manipulate an object.
+
+The Action Cursor
+
+When you choose Action, the cursor will change to a hand.  Place the hand
+at the desired place on-screen and click the mouse button or press [ENTER].
+The necessary action will be performed.
+
+The Talk Icon
+
+Choose Talk when you want to initiate a conversation between game 
+characters. 
+
+   *Note: There may be a slight variation in the appearance of this icon
+   from game to game.  If you are unsure of an icon's purpose, click
+   on the icon with the HELP icon (the question mark located at the
+   right end of the icon bar). 
+
+The Talk Cursor
+
+When you choose Talk, the cursor will change to a talking head.
+Position the TALK cursor on the person (or thing) you want to speak to,
+and click the mouse button or press [ENTER].  If conversation is possible,
+your character will talk, or a conversation will begin.
+
+The Item Icon
+
+The Item icon shows the last inventory item you selected.  Choose Item
+when you want to see or use this item.
+
+The Inventory Icon
+
+Choose Inventory when you want to see and select from the items you are
+currently carrying.  Within the Inventory screen are several options: ?,
+Look, Action, and OK.  Choose ? and click on any menu icon to learn the
+function of the icon.  Choose Look and click on any inventory item to
+get a description of that item.  Choose Action and use the Action cursor
+to use an inventory item to take action on another inventory item
+(Example: putting jewels into a pouch).  To select an item for use,
+click on the arrow icon, then click on the desired inventory item.
+(See Inventory Object Cursors, below.)  Choose OK to leave the Inventory
+screen and return to the game.
+
+   *Note: There may be a slight variation in the appearance of this icon
+   from game to game.  If you are unsure of an icon's purpose, click
+   on the icon with the HELP icon (the question mark located at the
+   right end of the icon bar).
+
+Inventory Object Cursors
+
+Each item in your inventory has a special object cursor associated 
+with it.  Each of these cursors looks like the object it represents.
+Object cursors can be used to perform game actions with your inventory
+items.
+
+To use an Object cursor in the game, follow the steps below:
+
+1. From the game, choose the Inventory icon from the icon bar, or
+   press the [Tab] key.
+2. Move the arrow cursor to the inventory item you want to use,
+   and press [ENTER].  The cursor will change to look like the item 
+   you have selected.
+3. Choose the OK icon.  You will exit the inventory screen to the game.
+4. Move the Object cursor to the place on-screen where you want to use
+   the inventory item and press [ENTER].
+
+The System Icon
+
+When you choose the System icon, several options will be displayed;
+SAVE, RESTORE, RESTART, QUIT, PLAY, TEXT (in some games), VOLUME,
+SPEED, and DETAIL.
+
+Choose SAVE when you want to save your game in progress.  Choose RESTORE
+to restore a previously saved game.
+
+For more instructions on saving and restoring games, see page 20 through 
+22.
+
+Choose RESTART to begin the game again.
+
+Choose QUIT to stop playing and return to DOS.  The SPEED lever adjusts
+the speed of your character's on-screen movement.
+
+Place the cursor on the lever and hold down the left mouse button as you
+move the lever up (faster) or down (slower).
+
+The VOLUME lever adjusts the sound volume of the game music.  Place the
+cursor on the lever and hold down the left mouse button as you move the
+lever up (louder) or down (softer).  NOTE: On systems using only an
+internal speaker, VOLUME will not adjust sound level, but will toggle
+sound on (up) and off (down).
+
+The DETAIL lever adjusts the amount of non-essential animation in the
+game; if your computer system is running the game too slowly,
+you may want to adjust the game detail to eliminate non-essential
+animation.  Place the cursor on the lever and hold down the left mouse
+button as you move the lever up (more detail) or down (less detail).
+
+The TEXT lever, available only in selected games, adjusts the amount of
+time text messages will remain on your screen.  Place the cursor on
+the lever and hold down the left mouse button as you move the lever up
+(less reading time) or down (more reading time).
+
+   *Note: There may be a slight variation in the appearance of this icon
+   from game to game.  If you are unsure of an icon's purpose, click
+   on the icon with the HELP icon (the question mark located at the
+   right end of the icon bar).
+
+The Help Icon
+
+Choose ? and click on any menu icon to learn the function of the icon.
+
+Pausing Your Game
+
+If you wish to pause the game, select the System icon from the icon bar.  
+The game will pause until you select PLAY to resume play.  Alternatively,
+just bringing up the icon bar will also cause the game to pause.
+
+Saving Your Game
+
+IMPORTANT!! If you do not wish to save to your hard drive, you must have
+a separate formatted diskette ready before you can save a game.  Since 
+each disk can only hold a limited number of games, we recommend that you 
+have more than one disk formatted, in order to assure adequate space for
+save game storage.  To allow for errors in judgement and creative 
+exploration, we recommend that you frequently save your game in progress, 
+and that you save several different games from different points as you play.
+You will always want to save your game before encountering potentially
+dangerous situations.  You should also save your game after you have
+made significant progress.  You may name your saved games using standard 
+English phrases.  For example, if you are standing on a beach, you might 
+call you game 'standing on beach`, or simply 'beach`.
+
+Saving to a Floppy Disk
+
+1. Choose the System icon (slide lever) from the icon bar, then select
+   SAVE.  The Save Game menu will appear.
+2. If you are playing from a hard drive and saving to a floppy drive,
+   you will be prompted to insert your Save Game diskette into your 
+   floppy drive (example: a:).
+   PLEASE NOTE: The first time you attempt to save a game to a floppy
+   disk while playing from the hard drive, you will need to change your
+   default save game directory as follows: using your [Tab] key,
+   select CHANGE DIRECTORY.
+3. Press [Ctrl-C] to clear the command line, and type the name of your
+   floppy drive.
+4. Insert a blank formatted diskette in your floppy drive.
+5. Select OK, and press [ENTER].
+6. Type the description of your save game, and press [ENTER] to save
+   the game.
+* The term 'directory` refers to directories, drawers and folders.
+
+Saving to Hard Disk
+
+NOTE: If you choose to save games to your hard disk, we suggest that you
+create one or more save game directories or folders on your hard disk.
+See your computer's instructions for creating directories.
+
+1. Choose the System icon (slide lever) from the icon bar, then select
+   SAVE.  The Save Game menu will appear.
+2. If you wish to save the game to a directory * other than the one you 
+   are currently playing on, select CHANGE DIRECTORY *.  Press [Ctrl-C]
+   to clear the command line, and type the drive and name of the new
+   directory * .
+3. Select OK, and press [ENTER].
+4. Type the description of your saved game, and press [ENTER] to save the
+   game. 
+
+Restoring Your Game
+
+1. Choose the System icon (slide lever) from the icon bar, then select
+   RESTORE.  You will be prompted to select the game you wish to
+   restore.
+2. Highlight the desired game and select RESTORE.
+3. If the game you wish to restore is in a different directory, select
+   CHANGE DIRECTORY, then type the name of the directory * you wish to
+   restore from.
+
+* The term 'directory` refers to directories, drawers and folders.
+
+Quitting Your Game
+
+To stop playing, choose the System icon from the icon bar (slide lever)
+and select QUIT.
+
+Restarting Your Game
+
+To restart your game at any time during play, choose the System icon
+(slide lever) from the icon bar and select RESTART.
+
+Message Windows
+
+Message windows will appear at various times during the game.  When
+you have read the message, press [ENTER] to remove the window and
+resume play.
+
+NOTE: Some message windows are program controlled, and cannot be cleared
+by pressing [ENTER].  These windows will clear automatically, 
+dependent on your text speed setting (see TEXT LEVER, page 20).
+
+TIPS FOR ADVENTURERS
+
+LOOK everywhere.  Thoroughly explore your surroundings.  Open doors
+and drawers.  Look closely at all objects you encounter or you may
+miss important details.  EXPLORE each area of the game very carefully, 
+and DRAW A MAP as you progress through the game.  Make a note of each 
+area you visit, and include information about objects found there and 
+dangerous areas nearby.  If you miss an area, you may miss an important 
+clue!
+
+GET objects you think you will need.  You can see an inventory of
+items on hand by choosing the Inventory icon at any time.
+
+USE the items you have picked up to solve problems in the game.  
+Different approaches to a puzzle may bring about a different outcome.
+
+BE CAREFUL, and remain alert at all times - disaster may strike in
+the most unlikely of places!
+
+SAVE YOUR GAME OFTEN, especially when you are about to try something new
+or potentially dangerous.  This way, if the worst should happen, you 
+won't have to start all over again from the beginning.  Save games at 
+different points, so you will always be able to return to a desired 
+point in the game.  In effect, this will enable you to travel backward 
+through time and do things differently if you wish.
+
+SKID ROW  SKID ROW  SKID ROW  SKID ROW  SKID ROW  SKID ROW  SKID ROW

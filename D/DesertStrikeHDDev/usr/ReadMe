@@ -1,0 +1,124 @@
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Desert Strike - Return to the Gulf" © 1993 Electronic Arts
+
+ This install requires WHDLoad and DIC to be in the path. Both can be found in
+ the WHDLoad package.
+ To install from a different drive than DF0: select installation mode Expert.
+
+ The installed program requires 1.0 MB ChipMem and 1.5 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ Features:
+ ---------
+ - System friendly disk imager.
+ - Custom1=1 - Trainers - Infinite Power, Fuel, Hellfire, Hydra, and Cannon
+ - Custom2=X - Level Select
+ - Custom3=1 - Disable Blitter patches
+ - Custom4=1 - Enable alternate CD32 joypad controls
+	Red			- Always fires the Cannon
+	Blue		- Always fires Hydra
+	Green		- Always Fires Hellfire
+ - Custom5=1 - Skip Intro
+ - ButtonWait - Force NTSC
+ - Supports two versions
+ 
+ If CD32 pad is detected, the controls below are enabled no matter what:
+ 
+	Yellow/Play 			- Bring Up Map Screen/Exit Map screen
+	Play+Forward+Reverse 	- Quit
+	Green+Forward+Reverse 	- Abort Game
+
+ If CUSTOM4 is not set, the controls stick to "classic" with extras:
+ 
+    Blue / Forward: changes weapon (original game only used blue/2nd button)
+ 
+ History:
+ --------
+ 
+ 12.may.2019 - V3.1 by Keith Krellwitz/Abaddon & JOTD:
+ - Removed division by 0 at the end of the intro (no need for novbrmove tooltype)
+ - added automatic joypad detection
+ - CUSTOM4 now allows alternate CD32 controls, but with classic controls (no CUSTOM4)
+   status screen/abort mission/quit to OS joypad controls are active
+ - joystick left/right select mission password in "enter password" menu:
+   that plus joypad controls means no need for keyboard anymore for the entire game
+ - music cpu active loops fixed
+ - Fixed issue with copperlist being corrupted when restarting level (because of previous copper fix)
+ 
+ 13.mar.2016 - V3.0 by Keith Krellwitz/Abaddon:
+ - Removed all JST specific code and converted to use patchlists
+ - Added Level Select 
+ - Added Trainer - Infinite Power, Fuel, Hellfire, Hydra, and Cannon
+ - Blitter Waits Added
+ - Removed 6x Disk Access
+ - Fixed issue with copperlist being set before the its loaded 
+   (after main menu, press fire to skip intro, mission briefing, etc.)
+ - Reworked the CD32 controls as requested
+	Red 	- Always fires the Cannon
+	Blue	- Always fires Hydra
+	Green	- Always Fires Hellfire
+	(The weapon select no longer functions)
+ - Added Button Wait to force NTSC
+ - Second version supported
+ - Custom5=1 - Skip Intro - Jumps to the Main Menu
+ - Not Publicly Released
+  
+ 21.jan.2013 - V2.3 by Keith Krellwitz/Abaddon:
+ - Custom4=1 - Enable CD32 joypad support
+ 	Red 			- Fire
+	Yellow 			- Bring Up Map Screen/Exit Map screen
+ 	Play 			- Pause 
+ 	Play+Forward+Reverse 	- Quit
+ 	Green+Forward+Reverse 	- Abort Game
+  
+ 07.july.2007 - V2.2 by JOTD:
+ - no need for NOVBRMOVE anymore
+ - reworked install & icons
+ - source code included
+
+ previous versions done by JOTD (1996-2007, no history available)
+ - Rewrote memory allocation so the loader now only needs 512K chip/512K 24bit RAM
+ - Removed routines that lit the floppy led (I hate that floppy led :) )
+ - Second button changes weapons (VERY useful during intensive fights)
+ - Fast decrunch using relocated routines in fastmem
+ - Manual included
+
+
+ Cheat:
+
+ Enter "HARDCASE" to get unlimited weapons, but low armour.
+ Enter "PSYCHOTI"? (This is only active in one of the versions)
+
+ LEVEL 2-"BQJRAEF"
+ LEVEL 3-"KLJLTOE"
+ LEVEL 4-"WEIVVJT"
+ END SEQUENCE-"ONKKQKF"
+ 
+ 10 GUYS AND INFINITE AMMO-"BQQQAEZ"
+
+ Todo:
+ 
+ - add support to automatic password entry in other version
+ - blitter glitches/flashes in some parts
+
+ 

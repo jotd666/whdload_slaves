@@ -1,0 +1,27 @@
+Short : HD-Installer & fix for Rampage
+Type : game/patch
+Author : Jean-François Fabre (JOTD)
+
+Install-Script & HD-loader © 1997-2015 Jean-François FABRE
+
+Rampage is © 1989 Activision
+
+
+FEATURES:
+
+- Runs fully from RAM/HD
+- 2 versions supported
+- Uses WHDLoad to run
+- Keyboard routine fixed
+- Convenient installer script
+- Copy protection removed (easy copylock)
+- Possible quit with QUITKEY (WHDLoad) at any time
+- Nice icon by Frank/Exoticons
+
+History:
+
+v1.3-a: installer script redone from scratch, source included (old but still works!)
+v1.3: hiscore saving support added (no more illegal instruction)
+v1.2: keyboard routine fixed again. The game no longer freezes.
+v1.1: fixed install script, reassembled, with diskfile renamed
+v1.0: first whdload release

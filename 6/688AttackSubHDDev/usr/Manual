@@ -1,0 +1,150 @@
+			688 ATTACK SUB
+
+Typed in by SYCON. Edited by Parasite. 
+
+
+CONFIGURATION PANEL
+  [] Begin Game - 
+  [] Mission Selection
+  [] Exit To Workbench
+
+SET PLAY LEVEL
+  [] Standard
+  [] Beginner
+
+CONTROLS
+  [F1] -> Not used
+  [F2] -> Radio 
+  [F3] -> System Status
+  [F4] -> Steering 
+  [F5] -> Control
+  [F6] -> Course Plotting
+  [F7] -> Weaponary Selection
+  [F8] -> Sonar
+  [F9] -> Bridge 
+
+[F2] - RADIO
+ [*] -> Send Code. When starting a new mission you will be connected via 
+        satellite with the HQ and a description of your mission will be 
+        given. Click on Send Code to link with the satellite (the Send Code
+        button together with 3 other buttons with letters were originaly 
+        used as a copy protection - I think)
+
+ [*] -> Msg Review
+        Prev - to see the previous message.
+        Next - next message.
+
+ [*] -> Transmit
+ 
+     -> To transmit your message. Using the keyboard.
+ 
+ [*] -> Esm Level - I think it tells you if the enemy found your sub.
+
+     -> Periscope Down/Up - raises or lowers the periscope (for those who 
+        don't know what is it used for don't bother playing)
+     -> Antenna - used for communication
+
+ [*] -> On the bottom there are coordinates with mission time.
+  
+[F3] - SYSTEM STATUS 
+ [*] -> Select - clicking on this will go through the whole sub and 
+                 give you system status (damage if any)
+
+[F4] - STEERING  
+ [*] -> The horizonatal lever is used for steering left or right. 
+        The one next to it is for motor speed. The lever on the top
+        is used to make the sub RISE or DIVE.  
+   
+ [*] -> Auto Function
+ 
+ [*] -> 150 FT - raises the sub to 150 ft below surface. 
+
+ [*] -> Periscope depth - raises the sub to depth where you can use 
+                         the periscope to see the what is on the surface
+ 
+ [*] -> Emergency Surface - raises the sub to the surface in case of 
+                           emergency (all the tanks are filled with air)
+   
+  P  F  S  \
+  I  H  O   >--Zoom in/out, 3D view, under-water view, etc...
+  C  B  T  /
+ 
+[F5] - CONTROL
+
+ [*] -> Target - select your  target with the pointer (cross-hair) if
+                 there is no object in the area you will be told so.
+ 
+ [*] -> Launch - launches torpedos or a missile on the target.
+   
+ [*] -> Periscope Up/Down - raises the periscope to view the surface, and 
+                           to aim at a target.   
+ 
+ [*] -> Antenna - up/down used for communication (and I think for sonar
+                  tracking too)
+      
+ [*] -> Periscope Rotation (in degrees) - to see what is around you.
+   
+ [*] -> Weapon Control - Launch a torpedo or a missile at a target.
+
+[F6] - COURSE PLOTTING 
+ [*] -> Target - select target.
+ 
+ [*] -> Waypoint Control - Set --------> specify course.
+                           Clear ------> clear previously set course.
+                           Time -------> compresses time (speeds up time)
+                           Auto Pilot -> self explanatory.
+
+ [*] -> Plotting
+ 
+ [*] -> Target Track - On/Off tracks the target you selected.
+
+[F7] - WEAPON SELECTION
+ [*] -> Torpedoes - 1,2,3,4 - if yellow it means it is being armed 
+                              and put into the launching tube. 
+                              When changes color it means ready
+                              to launch.
+ 
+                        1,2 - different type of torpedoes 
+                              (the noise maker)
+  
+                          2 - Missiles - used for surface targets only!
+  
+ [*] -> Detonate - detonates a missile or a torpedoe before it 
+                   reaches its target.
+
+ [*] -> Select - selects tube. 
+  
+[F8] - SONAR
+ [*] -> Filter - turns the filter on (High Pass/Band Pass)
+
+ [*] -> Trgt Pulse - sends sonar ping to the target. 
+
+ [*] -> Towed Array - underwater microphone, towed by a cable by the ship
+        far away enough to avoid towing ship noise perturbation.
+
+ [*] -> Target - to select the target you want to listen to.
+
+ [*] -> Analyze - gives you analysis of the sonar ping. I know how 
+        a sonar worx but this shit beats the hell out of me. I never
+        use it , and sink the ships anyway. 
+
+[F9] - BRIDGE
+ [*] ->  Back to the Bridge where you can perform all the functions
+         described here with your mouse (or like I do with 'F' keys) 
+
+At the mission selection screen next to almost every mission are two 
+buttons; one blue and one orange (dark). Next to the blue is says: 688
+which is an American sub, the orange is either 700 or ALFA which is a
+Soviet sub. You can pick either one. I will not get into describing every
+mission, I just want ot make few comments -> 1. Pick the First mission to
+get to know the game, and learn how to operate the sub. The first time
+I played this game I lost but the second time I won, it is really easy to
+master, there are few flows (bugs) and some things I don't know how to use.
+But I play the game and it doesn't bother me -- I still win! I have problems
+with the 9 buttons labeled with letters, when I click on one of them I get a 
+Zoom function, click on other nothing happens! Use the Waypoint control to
+set the course (where the targets are - marked with crosses or letters) and
+set it on auto-pilot. then when you get close to the target, go no Periscope
+Depth and look around, if you see a ship arm torpedos or missiles and 
+nuke'em. If there is a helicopter coming at you watch out. I dive when that
+happens.      

@@ -1,0 +1,383 @@
+                FAERY TALE ADVENTURE SOLUTION
+
+Typed by PAUL COLAIACO.  Edited by PARASITE.
+
+
+STARTING OUT
+ FAERY TALE ADVENTURE is a game of exploration and adventure, rather
+than a typical hack and slash CRPG. However, at the beginning of the
+game, as in most CRPGs, your character is weak and vulnerable to attack
+from a variety of enemies. Before you start journeying through Holm, you
+will need to develop a strong character with sufficient bravery and
+vitality points to survive. This won't take forever to accomplish, but
+it will consume the first few hours of play.
+ You start the game one morning in Tambry. Your character is Julian, who
+has the highest bravery score of three brothers. As long as you stay
+within the village walls, you will not be attacked. Your first task is
+to thoroughly explore the village to look for magical items that will
+help you on your quests. Go to each of the buildings, and look for
+hidden objects, particularly near fireplaces. You should find: 1) a
+glass vial, which contains a healing potion that will restore lost
+vitality points; 2) a Bird Totem, which is a navigational device that
+gives you a "bird's-eye" view of your surroundings (useful when you're
+lost in Holm -- a common occurrence); 3) a jade skull, which will
+destroy any and all enemies attacking you; 4) a quiver of arrows; 5) a
+gold key. Keep in mind that all magic items and keys can be used only
+once, so be careful and use them wisely.
+ Once you have collected these things and have saved your game, you are
+ready to begin. Soon after you step out of the village, you will be
+attacked. Monsters usually come in groups of four or less, and your
+bravery score will go up 1 point for every kill you make. Vitality will
+also increase as bravery goes up, although at a slower rate. Your
+maximum vitality is usually about one third of your bravery score. If
+you are lucky enough to defeat a group of monsters, save the game
+immediately. Then search each of the bodies (using the "take" command).
+You will often find weapons, magic items, and gold coins this way. Be
+prepared to die a lot in your initial encounters. There's no simple way
+to develop a strong character; you'll just need to keep saving and
+restoring until you've won enough battles to accumulate about 100
+bravery points. By that time your character should be able to survive
+many, if not most encounters, provided his vitality doesn't run out.
+When you have a few hundred more bravery points, your character will be
+invulnerable to all but the bowmen.
+
+ SURVIVAL TIPS:
+ 1) Once you have a sword, your chances of surviving a battle improve
+significantly. You can buy one at the inn in Tambry, but you start the
+game with very little gold; you'll need that to buy food. The best way
+to get a sword is to take it from a dead monster.
+ 2) There are treasure chests scattered throughout Holm, and you will
+find one just a little southeast of Tambry by the side of the road.
+These usually contain magic items, but their contents are completely
+random. Save the game just before opening a chest. If you don't like
+what you find inside, restore the game, open the chest again, and this
+time you will receive a different treasure. You can keep doing this
+until you get something you like. You might try to get a jade skull,
+which can save your life when you're losing a battle.
+ 3) If you're hungry and your money is critically low, go to the stone
+circle east of Tambry near the coast (if you look carefully you'll see
+it marked on your map). There you will find 50 gold coins and some other
+treasures.
+
+ MAGIC ITEMS
+ Some of the magic items were explained above. Here are others you will
+find:
+ 1) Green Jewels: These provide light for traveling at night.
+ 2) Crystal Orbs: These will reveal secret doors in some of the
+dungeons. They're particularly helpful in Hemsath's tomb.
+ 3) Gold Ring: This stops time for a while, and it's useful when you're
+under attack. You can't slay an opponent while time is stopped, but you
+can take his weapon and magic items.
+ 4) Blue Stones: There is a network of large stone circles scattered
+throughout Holm. When you use a blue stone while standing in a stone
+circle, you are transported to one of the other stone circles. Which one
+you go to depends on which direction you are facing when you use the
+blue stone. For example, if you go to the stone circle near Tambry and
+face west while using the blue stone, you will be transported to the
+Isle of Sorcery. If you face east, you will be transported to the
+southern edge of Holm. You can use trial and error to "map out" the
+connections between all the stone circles, or you can follow this
+"transportation matrix" (courtesy of Ted Haskell):
+ The circle you will be transported to is a result of the direction you
+last moved just before using a blue stone.
+ Remember that if you were staggering when you entered a circle, you
+might not have moved in the direction you thought.
+ I numbered the circles as follows:
+  1) West of dragon's cave.
+  2) Isle of Sorcery.
+  3) North of Lake of Dreams.
+  4) West of Grimwood.
+  5) East of Grimwood.
+  6) South of Pixel Grove.
+  7) East of Tambry.
+  8) South of Tambry.
+  9) South of Burning Waste.
+ 10) Near mountains with Temple.
+ 11) Extreme south near ocean.
+ When standing in the circle whose number is in the left column, you
+will be transported to the circle whose number is under the column
+heading in which you last moved before using the blue stone.
+         N       S       E       W      NE      NW      SE     SW
+
+   1     7      11       8       4       3       6      10      9
+
+   2     6      10       3       9       7       1       8      11
+
+   3    10       5       9       1      11       8       4      2
+
+   4     2       3       6      10       1       5       7      8
+
+   5     1       8       7      11       6       2       3      10
+
+   6     3       9      10       5       8       7      11      4
+
+ * 7 --- 8 ----  4 ---- 11 ----  2 ---- 10 ----  3 ----  9 -----5
+
+   8    11       2       4       6       9      10       5      1
+
+   9     5       7       1       8       2       4       6      3
+
+  10     9       1       5       7       4      11       2      6
+
+  11     4       6       2       3       5       9       1      7
+
+ Circle 7 is highlighted because it is the closest to Tambry and may be
+thought of as home base.
+ 5) Keys: These aren't magic, but they do disappear after one use; you
+will need many of them. Keys may be colored green, gray, blue, red,
+gold, and white. Use trial and error to find out which color key opens
+which door. One hint: White keys are rare and can only be found on the
+bodies of wraiths.
+
+ A FEW WORDS ABOUT MONSTERS
+ Skeletons are the easiest enemies to kill, and they will often have
+green jewels or glass vials. The hooded wraiths are deadly when you
+first start out, but after you've accumulated enough bravery points,
+they can do you little harm. Wraiths will often disappear when you kill
+them, but there is a way to get their treasure before they vanish. Watch
+carefully while you're battling a wraith. When you see its body start to
+crumble, stop fighting and immediately use the "take" command. If you
+time your actions correctly, you'll get the wraith's treasure just
+before it vanishes.
+ Ogres are usually armed with maces or swords and won't pose much of a
+threat to a strong character. However, bowmen are always deadly no
+matter how many experience points you have. Kill them quickly.
+
+THE GRAVEYARD AND MARHEIM
+ The following will describe of all the important places you will need
+to visit. You don't need to use my sequence exactly, but there is a
+rough order you must follow to complete your quests successfully. Before
+leaving on a long journey, make sure that you are well fed and your
+vitality points are high. Food is very scarce in Holm, and you will be
+starving for much of the time. Hunger won't diminish your ability to
+fight, but it will slowly drain your vitality.
+ Once you start exploring, visit the various inns and keeps around
+Tambry. (Keeps are marked as little towers on the map.) You'll find
+treasures and gold in these places. There is a graveyard southeast of
+Tambry on the road leading to Marheim. (You'll see it on your map marked
+by a little headstone.) The graveyard is a good place to gain bravery
+points because you will be attacked often there -- usually by wraiths
+and skeletons. There is a crypt in the corner of the graveyard, and you
+can enter it if you have a gray key. Hang around in the crypt until
+midnight, and you will meet the Spectre who will give you a quest: He
+wants you to find the bones of the ancient king and bring them to him.
+ Next you might want to go to Marheim, the capital city of Holm. The
+king's palace is here, and you can enter if you have a white key and a
+few gold ones. The king is upset because his daughter has been
+kidnapped. One of your quests will be to find her, but you won't be able
+to accomplish this until much later in the game. Search all the
+buildings in the city, and you'll find treasure. You will also meet the
+priest. If you ask him to, he will restore your vitality points to
+maximum (about one third of your bravery points). There's no tavern in
+Marheim, but there are apples in some of the buildings. You can carry
+these with you and eat them as you travel, but they will run out
+quickly. As far as I know, there is no other portable food in the game.
+
+ TURTLE POINT AND SORCERY ISLAND
+ By this time you should have considerable bravery points and be ready
+for a long journey. Head north towards Turtle point. There you will see
+three small, round objects which are the sea turtle's eggs. You will be
+attacked by some red serpents, which you should be able to easily kill.
+The sea turtle will then appear. If you have enough kindness points (25
+or 30 should do it), you can talk to her. She will thank you for saving
+her eggs from the serpents, and she will let you ride on her back. She
+will also give you a seashell that you can use to summon her anytime
+you're near coastal waters.
+ Once you're riding the turtle, sail west to Sorcery Island. Visit the
+crystal palace where the sorceress lives. You will need two blue keys to
+get in. Talk to her when you find her, and she will give you one of the
+five golden statues you must find to complete the game. Keep talking to
+her, and your luck score will go up five points at a time. If you use
+your save function conscientiously, you won't need much luck for most of
+the game, but it will come in handy when you reach the endgame. Now, if
+you want a short cut home, go to the stone circle in the northern part
+of the island. Face northeast, and use a blue stone. You will be
+transported to the Tambry stone circle.
+
+THE DRAGON'S CAVE
+ Your next quest will be a little more complicated. The dragon's cave is
+located in the northern part of the snow mountains, east of the stone
+circle. (If you look closely, you will see the cave entrance marked on
+the map.) The easiest way to get there is to go to the Tambry stone
+circle, and use a blue stone while facing west. This will take you back
+to Sorcery Island. Now, face northwest, use another blue stone, and you
+will arrive at the stone circle near the snow mountains. From here, go
+south until you hit water. Then go directly east, and you will come to a
+mountain range. You should arrive right at the cave entrance or very
+near to it.
+ When you enter the cave, you will go through a twisting tunnel until
+you reach a forked intersection. Take the branch on the right. (If you
+go left, you will find a maze of caves and tunnels that are interesting
+but contain no important treasure.) Soon, you will see the dragon.
+ The best way to get around her is to stop time using a gold ring, and
+sneak by. After you pass her, you will come to a dungeon. It's only one
+level, but it's large. Make a rough map and explore thoroughly. There
+are magic wands in two separate locations, but you'll only need one.
+Once you find the wand you can explore for fun, but there are no
+important items to be found. Return to the dragon, and use a gold ring
+to go past. When you reach the stone ring, use a blue stone while facing
+north to return to Tambry.
+
+THE TOMBS OF HEMSATH
+ Now you are ready for an even more complex task. Make sure you have a
+large number of gold keys and crystal orbs. You should also have a
+number of red keys. Set out early in the morning for the tombs. Make
+sure you're well fed before you leave.
+ Upon entering the tombs, take the first right. Go to the end of the
+corridor, and turn right again. You will now go south through an
+extremely long corridor. You will eventually come to a corridor leading
+east. This will take you to a stone maze with rooms connected by golden
+doors. There's no easy way to tell you how to negotiate the maze. Of
+course, the golden doors unlock with the gold keys. Occasionally, you
+will see two rooms that are close together but have no connecting door.
+Use a crystal orb, and a secret door may be revealed. Use a red key to
+unlock secret doors. Explore the maze thoroughly, and you will find a
+gold statue and a bone (which represents the bones of the ancient king
+that the Spectre wanted you to find).
+ There is a bug in the Amiga version that might help you if you're short
+on gold keys. Save the game before entering the stone maze. Unlock a few
+doors, then immediately restore to your original position. The doors
+will all be unlocked, and you will get back all the keys you used. I
+don't know if this will work for the Commodore version. Additional Amiga
+Note: There are still a couple of different versions of the Amiga game
+disks on dealers' shelves, and you'll need the current version to
+function properly with expansion memory.
+ After leaving the tombs, go see the Spectre in the graveyard crypt at
+midnight. Give him the bone, and he will give you the crystal shard.
+
+THE DREAM KNIGHT AND THE WITCH OF GRIMWOOD
+ You will now embark on a series of quests that will culminate in the
+rescue of the king's daughter. First you need to find the "Temple of the
+People who have Gone Before." This is located in the mountains south of
+Marheim but is not marked on your map. Fortunately, it's not too hard to
+find. Go to the stone circle near Tambry, and use a blue stone while
+facing northeast.
+ You will be transported to a place west of a mountain range. Before you
+go anywhere, use a bird totem, and you will see the temple to your
+northeast. It is almost completely surrounded by mountains, but you can
+reach the temple from the south. Once you arrive, you will face the
+Dream Knight, who will challenge you to a duel. By this time you should
+have enough bravery points to defeat him with your sword. Then you can
+enter the temple and find the sunstone. Go back to the stone circle, and
+use a blue stone while facing west to return to Tambry.
+ Now you are ready to enter Grimwood to find the witch's castle.
+Grimwood is a dense forest with a complex maze of paths. Finding your
+way through the forest maze is probably the most difficult part of the
+game, and the castle's location is not marked on the map. There's no way
+I can give you specific directions to find the castle, but here are a
+few guidelines. At the Tambry circle, use a blue stone while facing
+south, and you will be transported to the circle west of Grimwood. The
+entrance to the forest is to your east. Once in the forest, take the
+paths that head north. Use bird totems often to keep track of where you
+are, and make a map as you go along.
+ Shortly after you enter the forest, you will hit a large quicksand
+trap. You can walk around the edges, but if you enter the sand, you will
+sink and be taken to an underground cavern. The exit back to the forest
+is to the south. Once you get around the quicksand, keep heading north.
+Here and there you will find cave entrances; one of them will take you
+to a long, winding east/west path in the most northern part of the
+forest. Follow this path east, then south, and it will eventually lead
+you to the castle.
+ When you enter the castle and approach the witch, she will shine a
+death ray on you that drains your vitality and pushes you away from her.
+Use the sunstone and watch what happens. The witch loses control of the
+death ray and becomes vulnerable to attack. You can now kill her with
+your sword and take the magic lasso.
+ There is one other important object to find in the forest. From the
+forest entrance, take the paths that run to the southeast, and you will
+come to the forest keep. (Its general location is marked on your map.)
+When you arrive at the keep, use a bird totem. Just west of you at the
+end of a cul-de-sac, you will see a few red markings. This is the ogre's
+den, and there is a golden statue there. Unfortunately, to reach the den
+you will have to take a long path that winds north of the keep. My
+advice would be to forget about this statue until later in the game,
+when you've tamed the golden swan. Then you can fly right to the den,
+take the statue, and fly home -- saving a lot of time.
+
+SWAN ISLAND
+ After you've found the lasso, you should visit Swan Island. To get
+there, go to the Tambry stone circle, and use a blue stone while facing
+southeast. This will take you to the stone circle near the burning
+waste. Just go west towards the coast, use the seashell to summon the
+turtle, and then sail southwest to the island, where you will find the
+golden swan. If you have the lasso, she will let you ride on her back.
+To control your flight, use the same keys that you used for walking. If
+you find you're flying too fast in a certain direction, just push the
+key for the opposite direction, and you will slow down. To dismount,
+stop your flight, and use the same key that waves your sword. Mastering
+flight is a little tricky, but it is a lot of fun and will make the game
+go much faster.
+
+THE FORBIDDEN KEEP
+ Now that you've found the swan, you are ready to rescue the princess.
+She is imprisoned in the Forbidden Keep, which is located in the
+mountains south of Marheim. This keep is completely walled off by
+mountains and can be reached only by air. It's marked on your map and is
+a little southeast of the Dream Knight's temple. When you arrive, land
+your swan on the roof, and enter the keep. There you will find the
+princess.
+ As you approach her, the screen will fade to black (darn!), and then
+you will find yourself back in the king's castle with the princess
+standing a discreet distance away from you. Talk to the king, and he
+will give you a writ and 100 gold coins. Take the writ to the priest of
+Marheim (located in the building just south of the beggar). If you talk
+to the priest or give him the writ, he will give you a gold statue. You
+should have four of these statues now, and you are very close to
+finishing your quest. Take the swan back to Tambry.
+
+THE FIFTH STATUE AND THE HIDDEN CITY OF AZAL
+ The fifth statue is probably the hardest one to find. As far as I can
+tell, the game gives you no clues about its location. It's in the
+Seahold, which is a castle on the southeastern tip of Holm (it's marked
+on your map). Enter the castle, and you'll find the statue right there.
+ Once you have all the statues, take your swan and fly to the city of
+Azal, which is in the burning waste. This city is normally invisible and
+appears only when you have all five golden statues. Search the city
+thoroughly, and you will find a red rose.
+
+THE CITADEL OF DOOM AND THE ASTRAL WORLD
+ You now have all the objects you need, and you are ready to find the
+necromancer. His citadel is not marked on your map, but it is located in
+the Black Mountains just south of the lava pits. (On your map, these are
+the little circles in the Plain of Grief.) You can't land the swan near
+the citadel because the ground is too hot. You'll have to park a
+considerable distance away and walk. When you arrive at the citadel,
+you'll see a lake of fire blocking the entrance. You can walk right over
+it if you have the rose. Inside the citadel there is a force-field
+barrier, but the crystal shard neutralizes this. Once you've passed
+these two obstacles, you will find the portal to the astral world, which
+is the endgame.
+ The astral world is a series of colored walkways suspended in space.
+The green walkways are safe. When you're walking on the orange squares,
+your speed doubles. The blue sections are very slippery, and it is easy
+to fall over the edge. Just go slow and you'll have no problems. If you
+do fall off, your character dies and will be restored minus two luck
+points. This is why it can be important to have a high luck score before
+playing the endgame.
+ Explore the astral world for a while, and you'll eventually come to a
+large black area where no stars shine. Just step into the blackness, and
+you'll find that all your directional keys now work in reverse. For
+example, the key that normally moves your character south, now moves him
+north. In the center of the black area is an orange plane where the
+necromancer is waiting for you. Use your wand to slay him, and he will
+release the magic talisman. Take it, sit back, and enjoy the ending.
+
+RED HERRINGS AND LOOSE ENDS
+ There are several places in Holm that are interesting to visit but
+aren't vital parts of the game.
+ 1) The Lake of Dreams. There is a raft on the southern edge of the
+lake, but that's all there is to find.
+ 2) The Pixel Grove: This is a mysterious stone structure that seems to
+have no function.
+ 3) The Red Knight: The story introducing the game mentions that the Red
+Knight is missing. Don't look for him because you won't find him
+anywhere in this game. His home, Vermilion Manor, contains treasure but
+nothing vital to the game.
+ 4) The Bog: Well, this isn't really a red herring. It does contain a
+couple of hints which, if you weren't using this walkthru, would be
+important for completing the game.
+ 5) The Watchtower: If you don't want to travel to Turtle Point, you can
+take the long journey to the Watchtower where you will find a seashell
+for summoning the turtle.
+
+End.

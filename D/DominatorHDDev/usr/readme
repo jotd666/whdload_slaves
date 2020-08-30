@@ -1,0 +1,30 @@
+Short : HD-Installer for Dominator V1.1
+Type : game/patch
+Author :  Bored Seal & JOTD
+
+This patch applies to "Dominator" by System 3 (c) 1989 - 1 disk.
+Slave requires WHDLOAD V17+.
+Game requires 0.5 MB Chip Mem (+ 0.4 other memory for preload option)
+
+FEATURES:
+- Full load from HD
+- RNC disk protection removed
+- Access faults fixed
+- CPU dependant loops fixed
+- Highscores will be saved
+- Trainer option added (set CUSTOM1=1 tooltype for unlimited lives)
+- NI/ROM icon (created by JHZ)
+- Quit option (press LMB in game)
+
+HISTORY:
+V0.9 (08-Dec-2000) - first public release (beta)
+V1.0 (08-Feb-2001) - final release - access faults fixed, proper quit option
+                   - trainer option, highscore support added
+                   - snoop mode bug fixed
+V2.0 (15-Jul-2017) - adapted to WHDLoad 17
+                   - added quitkey for 68000 & fixed keyboard handler (issue #0003680)
+				   
+Thanks to Carlo Pirri for diskimage.
+
+         Bug report form, full WHDLoad package and other installs:
+                          http://www.whdload.de

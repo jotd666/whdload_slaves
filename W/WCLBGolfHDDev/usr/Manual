@@ -1,0 +1,55 @@
+
+
+
+
+
+                               LEADERBOARD GOLF
+
+     Taken from an ST SEWER SOFTWARE docs disk. Typed in by Maurie. Edited by
+     Parasite.
+
+
+     ABILITY.............DESCRIPTION
+     Novice..............Beginner level. When a shot is taken on this level
+                         it will not hook or slice or be affected by the wind.
+
+     Amateur.............Intermediate level. Shots at this level will not be
+                         affected by the wind.
+
+     Professional........Advanced level. No restrictions on wind or hook and
+                         slice.
+
+     SELECTING A CLUB
+     Club selection is made by mov.................171
+     7I  7 Iron...........45.................163
+     8I  8 Iron...........35.................146
+     9I  9 Iron...........25.................123
+     PW  Pitching Wedge...11..................83
+         Putter...........1 inch..............64 feet
+
+     The putter is the only club which may be used on the green and is
+     automatically selected.
+
+     Shots from the rough and good shots from the bunkers (with no hook
+     or slice) will function as if made by a club 2 sizes smaller.
+
+     The left mouse button controls the cursor to aim the shot.
+
+     The wind indicator is on the right side of the screen. Allowance for
+     the wind should be made at Professional Level. The height of the white
+     stake indicates the wind velocity and the blue line the direction,
+
+     The right mouse button is used to swing the club and hit the ball.
+     Press the button to commence the swing. Set the power by releasing the
+     button during the back swing. Releasing the button at the top of the
+     swing will set maximum power.
+
+     Hook and slice is avoided by re-pressing the button as the club hits the
+     ball. The snap indicator lets you know if you pressed early or late.
+
+     When putting you should make allowance for the slope as shown by the
+     slope indicators on the green when aiming the shot and the power should
+     be set according to the slope and distance.
+
+     To go to driving Range press "R" or press "D" for Demo, when select
+     player screen appears. Exit by pressing "/".

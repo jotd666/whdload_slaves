@@ -1,0 +1,77 @@
+
+                      Earl Weaver Baseball
+              
+Taken from an ST SEWER SOFTWARE doc disk. I don't know who originally 
+typed this doc, but thanks go to the person responsible. Here's what
+he's figured out so far. Edited by Parasite.
+
+
+R - display speeed of last pitch.
+I - instant replay.
+S - stop game.
+W - display wind speed/direction.
+T - time out.
+U - consult umpire about last pitch.
+H - `Ask Earl' [defense]
+V - `Ask Earl' [offense]
+B - examine lineup
+L - lineup change
+            _
+F1 - consult pitcher.              \
+F2 - argue with home umpire.        \
+F3 - argue with 1st base umpire.     - Red Team
+F4 - argue with 2nd base umpire.    /
+F5 - argue with 3rd base umpire.  _/
+                                  _
+F6 - consult pitcher.              \
+F7 - argue with home umpire.        \
+F8 - argue with 1st base umpire.     - Blue Team
+F9 - argue with 2nd base umpire.    /
+F10 - argue with 3rd base umpire. _/
+
+Also: hit TAB or SPACE while playing to set your play.  It's pretty
+self-explanitory from there.
+
+<esc>  - Go back to last roster setup screen.
+         (only during roster setup before
+          regulation game).
+          
+To hit, just press the joystick/mouse button.
+Ditto for pitching, but the more times you press it, the wilder the pitch.
+You can throw curves, screwballs, etc. but I don't know how yet.
+
+   In order to pitch, you hold the left button down, and move the mouse in the
+direction of the pitch that you want (from the '/' key), and then let go.  If
+you hit the left key after the pitch is thrown, the pitch goes wild.  To try
+to pick off the lead runner (I don't think you can pick him off) double click
+on the left button, or click once on the right.  Fielding is fairly straight-
+forward; to throw you move the pointer to behind the player you want to throw
+to and double click on the left.
+
+   To hit, you hold the left button down, and let up when you want to swing.
+Running is a little more difficult.  The computer will run for you, but in a
+very wimpy manner.  If you want to take second or steal, hold down the right
+button and push the mouse forward or reverse (depending on which direction you
+wish the player to run in - ie. if you wish the player to run forward, push
+forward).
+
+Pitching --->
+-------------
+Pitch wildly but fast - hit the button like crazy
+Pitch a slider - when pitching hold the joystick down while holding down
+the joystick button (or mouse)
+Pitch a high one - when pitching hold the joystick up while holding down
+the joystick/mouse button
+Pitch a curve right - when pitching do the normal junk, but just before
+you let go push right
+Pitch a curve left - same as above but push the joystick left just
+before you let go
+Pitch a knuckle ball (i am pretty sure) - when pitching do the normal
+shit, but just before you
+let go hit the joystick/mouse
+button fast.
+Hitting the ball
+----------------
+It is pretty self-explantory, but if you want to hit (ie: a inside curve)
+you must push the button and move the joystick in the direction of the
+ball.

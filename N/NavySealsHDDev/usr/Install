@@ -1,0 +1,187 @@
+;****************************
+
+(set #readme-file "readme")
+
+(procedure P_MakeImages
+  (set #CI_disknum 1)
+  (set #CI_diskname ("%s Disk %ld" @app-name #CI_disknum))
+  (set #CI_disklen 901120)
+  (set #CI_skiptrk 1)
+  (P_CreateImage)
+)
+
+(procedure P_ChkRun
+  (if
+    (= 0 (run ("cd SYS:\nWhich %s" #program)))
+    ("")
+    (abort 
+      (cat
+	"You must install \"" #program "\" first!\n"
+	"It must be accessible via the path.\n"
+	"You can find it in the WHDLoad package."
+      )
+    )
+  )
+)
+
+(procedure P_CreateImage
+  (message
+    (cat
+	"\nInsert \"" #CI_diskname "\" into drive " #CI_drive " !\n\n"
+	"(make sure it's the right disk because it will not be checked)"
+    )
+  )
+  (if
+    (>= #CI_skiptrk 0)
+    (set #option (cat " SKIPTRACK=" #CI_skiptrk))
+    (set #option "")
+  )
+  (if
+    (= 0
+      (run 
+        (cat
+          "cd \"" #dest "\"\n"
+          "DIC " #CI_drive " FD=" #CI_disknum " LD=" #CI_disknum " SIZE="
+          #CI_disklen #option " PEDANTIC >CON:///1000//CLOSE"
+        )
+      )
+    )
+    (run ("FileNote %s Quiet" #CI_diskname))
+    (abort "\"DIC\" has failed to create a diskimage")
+  )
+)
+
+(if
+  (exists #readme-file)
+  (if
+    (= 0 (run ("SYS:Utilities/Multiview %s" #readme-file)))
+    ("")
+    (run ("SYS:Utilities/More %s" #readme-file))
+  )
+)
+
+(set #program "WHDLoad")
+(P_ChkRun)
+
+(set #program "DIC")
+(P_ChkRun)
+
+; in expert mode ask for source drive
+(if
+  (= @user-level 2)
+  (
+    (set #CI_drive
+      (askchoice
+	(prompt "Select source drive for diskimages")
+	(default 0)
+	(choices "DF0:" "DF1:" "RAD:" "Enter Device")
+	(help @askchoice-help)
+      )
+    )
+    (select #CI_drive
+      (set #CI_drive "DF0:")
+      (set #CI_drive "DF1:")
+      (set #CI_drive "RAD:")
+      (set #CI_drive
+        (askstring
+          (prompt "Select source drive for diskimages")
+          (default "DF0:")
+          (help @askstring-help)
+        )
+      )
+    )
+  )
+  (set #CI_drive "DF0:")
+)
+
+(set @default-dest
+  (askdir
+    (prompt 
+      (cat
+	"Where should \"" @app-name "\" installed ?\n"
+	"A drawer \"" @app-name "\" will automatically created."
+      )
+    )
+    (help @askdir-help)
+    (default @default-dest)
+    (disk)
+  )
+)
+(set #dest (tackon @default-dest @app-name))
+(if
+  (exists #dest)
+  (
+    (set #choice
+      (askbool
+        (prompt
+          (cat
+            "\nDirectory \"" #dest "\" already exists.\n"
+            "Should it be deleted?"
+          )
+        )
+        (default 1)
+        (choices "Delete" "Skip")
+        (help @askbool-help)
+      )
+    )
+    (if
+      (= #choice 1)
+      (run ("Delete \"%s\" \"%s.info\" All" #dest #dest))
+    )
+  )
+)
+(makedir #dest
+  (help @makedir-help)
+  (infos)
+)
+
+;----------------------------
+
+(copyfiles
+  (help @copyfiles-help)
+  (source ("%s.Slave" @app-name))
+  (dest #dest)
+)
+(if
+  (exists ("%s.newicon" @app-name))
+  (set #icon
+    (askchoice
+      (prompt "\nWhich icon do you like to install ?\n")
+      (default 0)
+      (choices "Normal" "NewIcon")
+      (help @askchoice-help)
+    )
+  )
+  (set #icon 0)
+)
+(select #icon
+  (set #icon ("%s.inf" @app-name))
+  (set #icon ("%s.newicon" @app-name))
+)
+(copyfiles
+  (help @copyfiles-help)
+  (source #icon)
+  (newname ("%s.info" @app-name))
+  (dest #dest)
+)
+(if
+  (exists #readme-file)
+  (copyfiles
+    (help @copyfiles-help)
+    (source #readme-file)
+    (dest #dest)
+  )
+)
+(if
+  (exists ("%s.info" #readme-file))
+  (copyfiles
+    (help @copyfiles-help)
+    (source ("%s.info" #readme-file))
+    (dest #dest)
+  )
+)
+
+(P_MakeImages)
+
+(exit)
+

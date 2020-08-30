@@ -1,0 +1,4 @@
+s:assign devs: ram:
+s:copy :devs/#? ram: quiet
+sq3
+s:endcli

@@ -1,0 +1,23 @@
+Short : HD-Installer for Total Football
+Type : game/patch
+Author : JOTD
+
+Install-Script & HD-loader © 2000-2007 JOTD
+
+Total Football is © 1996 Domark/Akklaim
+
+The loader needs 1 meg chipmem amiga to run.
+
+Features:
+
+- Full loading from HD
+- Convenient installer script
+- Quit key
+- Nice Exoticon and even nicer Frank icons
+
+History:
+
+- v1.3: CUSTOM1=1 to fix port 2 for joystick (1 player mode)
+- v1.2: another version supported (without Akklaim logo)
+- v1.1: first WHDLoad release
+- v1.0: JST release. Needed 2MB of chipmem

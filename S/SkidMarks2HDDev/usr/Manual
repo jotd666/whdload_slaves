@@ -1,0 +1,339 @@
+                         __!_          __
+                _______ (__¡) __   _ /__)________  _______
+                ____  _\/   \/  |   //   \____  _\/  ___
+                /   \  \\    \  |  ·/     \   |.  \\  Ž____
+                \_______Œ____/\____/\_____Œ___!   ·\______
+                [==========PRESENTS==========]Ž______/EL?
+
+
+                         SUPER SKIDMARKS 2 MANUAL
+
+                           Supplyed by BULLDOGS
+
+                        Typed by Pixie di\/ine/Pgn
+
+ SUPER SKIDMARKS 2 MANUAL
+
+ CONTENTS
+
+ * Introduction
+ * New Features
+ * Memory and System requirements
+ * Building a 4 player joystick adaptor
+ * Super Skidmarks2 User Interface
+ * HD Installation
+ * Racing with Super Skidmarks 2
+ * Imagine 2 Converter
+ * Super Skidmarks Racer Magazine
+ * Credits and Greetings
+
+ INTRODUCTION
+
+ This package was suppose to be an upgrade that was due to be released
+ several months after the original SkidMarks was completed (Dec 93).
+ It was originally intended that we would release a new track editor that
+ would be friendly enough for users to create there own tracks.
+
+ Sadly it was not to beand several months later,we decided to simply
+ add another two track disks to the original package.These were
+ completed some 6 months ago.
+
+ We then found by using a different sprite system we could have 8 cars
+ with AGA machines and set about redesigning the sprite converter which
+ we are proud to announce has been included in this release for users
+ to add their own cars.
+ With new cars and new tracks we then thought a quick rewrite of the
+ front end was in order.That was 4 months ago.
+
+ It may be due to bad management,too many other projects to distract us,
+ general laziness,or just bloody mindedness but Super SkidMarks 2 is
+ finally finished,we hope it was worth the wait.......
+
+ NEW FEATURES
+
+ * New 8 car mode for AGA machines
+ * Shared screen mode for up to 4 player team racing
+ * triple split screen mode forthree players on one Amiga
+ * Caravan towing,Wo! what a holiday!
+ * 12 new tracks as well as compatibility with original 12
+ * New cars including Mini,VW,F1,Cow and Midget
+ * New Acid intelligence technology for computer drivers
+ * Super view mode for locally linked AGA machines
+ * Improved comms support for local and remote linking
+ * Competition play with a multitude of challenging series
+ * Imagine->SkidMarks car converter for the defined cars
+
+
+ MEMORY AND SYSTEM REQUIREMENTS
+
+ Super SkidMarks 2 should be run on any Amiga with 1 meg of memory
+
+ Those with more memory will be able to have more than one type of car
+ racing at once and may even have some music to listen to while selecting
+ options.
+
+ Those with AGA Amigas can enjoy the new hi-res modes as well as racing
+ 8 cars at once.
+
+ Modem owners can enjoy Super SkidMarks 2 improved comms support and race
+ against others over the phone lines.
+
+ Super SkidMarks 2 also supports 4 joystick adaptors. This devce connects
+ two extra joysticks to an Amiga via the paralle port.
+
+
+ BUILDING A 4 PLAYER JOYSTICK ADAPTER
+
+ The simplest and possibly cheapest method is to start with a standard
+ printer cable.remove the casing on the DB25 end (computer end) so you
+ can see what colour wires are connected to which pins then cut off
+ the connector at the other end of the cable (printer end) and strip of
+ an inch of shielding.
+
+ As both joystick connectors require GND(pin 17) and 5v(pin 14) unsolder
+ the wires connected to pin 18 and 15 on the DB25 connector and solder
+ them on top of pins 17 and 14 respectively.This will give you two wires
+ at the other end for the extra GND and 5V required by the second
+ joystick connector.The best thing to do then is write down the colours
+ of each of the wires you will be connecting to JOY3 and JOY4. Then
+ tint the wires (add solder to them before soldering to connectors) and
+ solder them to the joystick connectors.Good luck!
+
+
+ THE SUPER SKIDMARKS 2 USER INTERFACE.
+
+ Super SkidMarks 2 includes numerous new options which can all be
+ accessed via the user interface.Using the mouse,joystick or arrow
+ keys select an option by highlighting the gadget and pressing the
+ button or Return key.
+
+ Often the ESC key on the keyboard can be used to exit from one options
+ page back to a previous one.
+
+ Certain gadgets allow the user (you) to enter some text.After clicking
+ on such a gadget a cursor appears.From the the keyboard type in the text
+ and hit return.With a joystick use up and down to change the character
+ under the cursor,left and right to move the cursor and fire when finished.
+
+
+ HD INSTALLATION
+
+ Those with a hard disk system will want to install Super SkidMarks 2 onto
+ their hard disks.From workbench simply drag the Super SkidMarks 2 drawer
+ on the program disk onto your hard disk,this will copy all the files
+ required to run Super SkidMarks 2 from your hard disk.Then click on the
+ HDCar install utility.This will unpack the cars from the data disks onto
+ your hard disk.Unfortunately we are unable to offer the opportunity
+ to do the same with the tracks disks at this time,we are sadly not in
+ the position to risk sales because of the nature of piracy still rampant
+ in the Amiga community.However we promise to include a TrackDisk install
+ utility in the first issue of the "SkidMarks Racer" magazine (see later in
+ this manual for details).
+
+
+ RACING WITH SUPER SKIDMARKS 2
+
+ Instead of a large section on what buttons to pressand where,along with
+ a detailed description of when and where to slow down and speed up,the
+ following is a quick list of helpful hints and tips to get you in the
+ spirt of things........
+
+ * Stay cool,a frustrated driver is a bad driver.
+ * Taking your finger off the button is uncool (see above).
+ * Use the horn to vent frustration (pull down on the joystick).
+ * Drunk driving is for idiots,crash for the night or call a cab.
+ * Bounching off other cars is an essential skill,practice it.
+ * Telling people to buy Super SkidMarks2 will make you friends for life.
+ * Subscribing to SkidMarks Racer is a totlly wise thing.
+ * Writing SkidMarks poetry is good for the soul.
+ * Banging on big drums dancing naked is good for you too.
+ * Approaching corners at a wide angle is sensible.
+ * Pulling 360 degree turns in mid air is not.
+ * Racing the formula one series is for nutters.
+ * Winning the formula one series is insane.
+ * Building a 4 joystick adapter is a rewarding projact.
+ * Racing backwards with caravans attached can be tricky.
+ * Replacing audio samples in the sfx drawer with your own is possible.
+ * Sending email to acid@iconz.co.nz may get results.
+ * Adding memory to your Amiga allows greater variety of cars in races
+ * Driving two cars at once is an interesting possibility.
+ * High speed mid air collisions are to be encouraged.
+
+
+ CREATING YOUR OWN SKIDMARKS CAR IN IMAGINE
+
+ Included on the Super SkidMarks2 program disk is a drawer containing
+ the files you need to add your cars to Skidmakrs.You will of course
+ need access to Imagine 2.
+
+ RENDERING IN IMAGINE
+
+ Some familiarity with Imagine ie required for those wanting to add
+ their own cars to Skid2.A sample object has been included.
+
+ 1.Copy the Kart drawer from the program disk onto your herd disk.
+ 2.Run Imagine 2.
+ 3.Open the SkidMarks project which can be found in the Kart drawer.
+ 4.Open the Kart subproject.
+ 5.Select all frames and then select Render.
+
+ Note:
+
+ Select Preferences in Imagine and check that the EDLE variable is set
+ to 255 resulting in the best anti-aliasing Imagine has to offer.
+
+ The latest version of Imagine 3 we have is still unable to treat a
+ genlock background properly and hence produces poor results when
+ rendering SkidMarks cars (anti aliases the car to the background
+ colour.....yuck!).
+
+
+ RENDERING YOUR OWN CAR.
+
+ To render your own car you must still use the SkidMarks project file
+ included on the disk.This contains among other things:
+
+ * Correct angles for the 800 rotations
+ * Best iso-metric lens setting
+ * Bright green genlock background colour required by converter
+ * Correct file format (ILBM 24 bit)
+ * Correct light sources and angles
+
+ First up,from the detail editor load the Kart and your own car.
+ Scale your own car to that of the Kart.Then orient it's global axis
+ to that of the Karts:
+
+ * Select your car
+ * Press shift R (rotate global axis)
+ * Point x-axis forward
+ * Point z-axis straight up
+ * Point y-axis towards left side of car
+ * Press shift M (move global axis)
+ * Position axis in centre of car 3 units above ground level
+ * Save your car
+
+ You may also need to change your car's colour to suit SkidMarks.
+ Use only reds,blacks,greysand whites.
+
+ To render your own car,go to the Action Editor and select the red bar
+ in the "TYRES" field.Replace the Kart.iob filename with that of your
+ own car.Save changes and render the first 32 frames of your car.
+
+ Then run the converter program supplied on the program disk.
+ Click on select-file and find the first frame of the car you just
+ rendered.SkidMarks.imp/kart.pix/pic.001 or some such.
+
+ Then click on SHOW-AGA to view the first 32 frames in the SkidMarks
+ format.You may need to change the x and y offsets to centre your car
+ in the frame,more than likely you dhould alter the objects axis position
+ and size from within Imagine.
+ The four varibles on the right of the screen adjust the dithering limits
+ used by the converter.By changing these variables and then clicking on a
+ frame of the car below you can fine tune how different shades are
+ reproduced by the converter.
+
+ Problem Solving.........
+
+ * If the car is being clipped it is either too large or it's axis is
+   not correctly centred,the x offset variable in the converter may
+   also require adjustment.
+
+ * If your car points the wrong direction when driven the orientation
+   of the axis needs adjusting (see the rotate global axis description
+   above).
+
+ * If your car looks like crap the chances are you need to change the
+   colour attributes in the detail editor.We only use red(255,0,0)
+   black(0,0,0),grey(160,160,160) and white(255,255,255) colour
+   settings.
+
+ * Turn off phong shading for all attributes as it simply slows
+   down rendering,increase specularity for panels you want to
+   reflect light (body and windows but not tyres),don't bother
+   trying to use textures.
+
+ * Make sure for tyres that reflection and specularity are off,
+   nothing looks worse than shiny tyres.
+
+ * If your car looks too good (better than any in the Acid garage) then
+   please send us the file,we might offer you some money or even a job.
+
+ * If you are having problems adding textures to faces then don't bother
+   the best method of adding amall detail to cars is to attach objects
+   in the form of 3D text or structured drawings.
+
+
+ SUBSCRIBE TO THE SKIDMARKS RACER MAGAZINE
+
+ Publishing our own magazine will enable us to release new tracks and
+ beta versions of upgrades,run competitions and most of all keep in
+ touch with all of you SkidMarks racers.Send the enclosed registration
+ card today!
+
+ All being well the first issue of SkidMarks Racer will be mailed first
+ week of April and we plan to include the following:
+
+ COLOURING COMPETITION
+
+ Two new tracks will be incuded in issue one of SkidMarks Racer.Your
+ job will be to add the trackside detail using your favourite Amiga
+ paint program.
+
+ CAR MODELLING COMPETITION
+
+ After the success of the "Imagine Build my Hot rod Competition" in
+ Amiga Format last year we want to do it again.This time we will be
+ expecting the entries to be "race ready" using the Imagine-Skidmarks
+ converter included on Skids2's cover disk.
+
+ FULL HD INSTALLATION UTILITY
+
+ Subscribers to SkidMarks Racer will at some time also recieve a
+ utility to install the 4 SkidMarks track disks on their hard disks.
+
+ GRANDPRIX LICENSE
+
+ All those who fill in the grandprix registration section will be
+ listed in the magazine.We'll encourage everyone to contact others in
+ their area to organise race meetings at a local venue and/or run
+ tournaments using a BBS to schedule playoffs.
+ If you can get enough people interested why not set up a venue,
+ charge an entry fee and give away some prizes.Don't forget to take
+ some photos so we can feature the event in the SkidMarks Racer
+ magazine.
+
+ ARTICLES WANTED
+
+ If you have a story to tell be it about driving your own car or a
+ party you had where everyone ended up playing SkidMarks till the sun
+ came up we want to hear about it.Any hints and tips regarding driving,
+ setting up your modem etc.Would also be appreciated.
+
+ Credits:
+
+ Andrew Blackbourn           programmer
+ Simon Armstrong             mechanic
+ Rodney Smith                artist#1
+ Hans Butler                 artist#2
+ Anthony Milas               musician
+ Mark Sibly                  blitz guru
+ Kurt Butler                 buildings
+ Sonic                       novice
+ Ted Bailey                  moo man
+ Giles Hunter                long distance nag man
+ Greetings Blitz Users       what a bunch
+ Marcus Dyson                what a dude
+ Net Surfers                 what a waste
+
+END OF DOC..........
+
+        This manual was typed on the 31/3/95 by Pixie-Di\/ine/PGN,
+        because I had nothing better to do.
+
+ Greetings go to... REBEL,KRONE,DEMONS,PINK FLOYD,SCOUSER,BIGGLES,TMAN,
+                    REZ N8,GODFATHER,FATRAT,BUDDY,THE WELDER,LIBRARIAN,
+                    SARGE,DARK ANGEL,KGB,CYBORG.
+
+ Pixie-Di\/ine/Pgn
+
+

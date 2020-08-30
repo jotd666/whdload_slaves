@@ -1,0 +1,481 @@
+         FRONTIER/ELITE 2
+         ----------------
+         
+ POUR COMMENCER LE JEU
+ Lorsque le jeu commence il se met en mode démonstration. Pour 
+ afficher le Menu de départ appuyez sur une touche quelconque ou 
+ sur le bouton gauche de la souris. Le menu contient 5 options: (1) est la 
+ position de départ recommandée;(2) et (3) vous permettent de commancer 
+ à d'autre endroits dans le système;(4) charge automatiquement la
+ dernière position chargée ou sauvegardées ;(5) vous permet de choisir d'
+ autres positions sauvegardées déja sur la disquette. Ces fontions
+ sont activées en appuyant sur les touches '1' à '5' 
+ 
+ OPTION DE JEU, ET CHARGEMENT OU SAUVEGARDE D'UN JEU
+ 
+ Vous pouvez afficher l'ecran des options pendant le jeu en appuyant 
+ deux fois sur la touche ESC, ou en cliquant deux fois sur l'icone 'pause'
+ ( ou en faisant une combinaison des deux). Les options vous permettent
+ d'ajuster à volonté l'environnement du jeu, et de charger ou sauvegarder 
+ des jeux. 'Use Filenames Extension' ( Utilisez exentions de nom de 
+ fichier) rajoute automatiquement un chiffre au nom de votre commandant
+ afin de vous permettre de suivre facilement la dernière version.
+ Sur l'écran des options ( voir si-dessus) les icones 7,8 et 9 vous
+ permettent de charger, de sauvegarder, ou d'effacer respectivement
+ les fichiers de postion de jeu.
+ 
+ ICONE 7, CHARGER LE JEU. Cliquez sur cet icone pour choisir le fichier que 
+ vous désirez charger. Vous pouvez changer d'unité et de répertoire en 
+ cliquant sur un nom. Pour charger un fichier cliquez sur son nom.
+ 
+ ICONE 8,SAUVEGARDE DU JEU. Cliquez sur cet icone pour afficher
+ la structure et le contenu du répertoire de la disquette. Choisissez
+ la disquette et le répertoire en cliqaunt sur leurs noms, puis éditez
+ le nom du commandant si nécessaire en cliquant sur le nom affiché en haut 
+ de l'écran et en tapant le nouveau nom. Les noms peuvent psséder maximum 
+ de 8 caractères. Appuyez sur RETURN ou cliquez sur l'icone OK une fois
+ pour changer le nom. Appuyez de nouveau sur ENTRE ou cliquez de nouveau 
+ sur Ok pour sauvegarder la position.
+ 
+ ICONE 9,EFFACEMENT DE FICHIER. Comme pour les icones 7 et 8, cliquer sur 
+ cet icone affiche la structure et le contenu du répertopire de la disquette.
+ Choisiseez une disquette et un répertoire en cliqaunt sur leurs noms. 
+ Effacez un fichier en cliquant sur le nom de fichier en répondant 'O' (Oui)
+ à la demande de la confirmation O/N (Oui/Non). Faites très attention à ce 
+ point. Si vous appuyez sur une autre touche que 'O' le fichier ne sera pas 
+ effacé. 
+ 
+ ICONE 10,QUITTER LE JEU. Si vous choisissez cette option vous serez renvoyé 
+ a la d'introduction.
+ 
+ COMMANDES
+ Frontier peut etre joué à partir du clavier seul, ou, avec une souris ou 
+ un joystick compatible, en jonction avec le clavier 
+ COMMANDES DE VOL
+ Q ou (Souris en avant + bouton de droite)       Monter
+ W ou (Souris en arrière + bouton de droite)     Piquer
+ ; ou (Soursi à gauche + bouton de droite)       Virer à gauche
+ : ou (Soursi a droite + bouton de droite)       Virer à droite
+ ENTER   				 Augmente la puissance
+ SHIFT (à droite)			 Diminuer la puissance
+ F1 à F10				 Comme les icone 1 à 10
+ ESPACE		         		 Faire feu
+ 
+ MINE ET BOMBES
+
+ MINE DE PROXIMITE XB13 (representee comme une boule herissee de piquants)
+ Explose lorsque l'objet est dans son champ de 
+ portée. Elles sont ransportées sur des polynones à missiles au lieu 
+ d'un missile.
+ 
+ FAUSSE MINE DE PROXIMITE XB47 (idem) Apparence exactement semblable à la 
+ Mine de Proximité, Meme sur le radar, mais elles n'explosent pas,
+ en fait elles ne font rien, elles contribuent seulement à augmenter la
+ facture de blanchisserie de votre enemi. Vous pouvez la recuperer
+ comme cargaison si vous avez une Ecope à Carburant et une Conversion 
+ Cargaison, mais attention à ne pas en ramasser une vrai 
+ accidentellement!
+ 
+ BOMBE ENERGIE (representée par une explosion avec un chiffre a droite)
+ Surcharge et fait exploser les systèmes de transmission
+ des vaisseaux plus petits, mais pas le votre car il est très specifique.
+ On peut lui résiter si le vaisseau possède une protection assez robuste.
+ 
+ MISSILES
+ Remarquez que tous les missiles possèdent les memes caractéristiques 
+ de vol.
+ 
+ MISSILES DE PRECISION KL760 Pour détruire les petits vaisseaux et 
+ endomager en plus gros.
+ 
+ MISSILE INFORMATISEE LV111 Semblable au missile de précision mais 
+ bénéficie d'une protection ECM (Inefficace contre ECM de catégorie 
+ spatiale). A une plus grande puissance explosive que le missile de 
+ précision.
+ 
+ MISSILE DE CATEGORIE SPATIALE NN500 Encore plus de bruit pour votre argent
+ et immunisé à tout système ECM connu, malgrès certaines rumeurs disant que
+ la technologie s'est améliorée dans ce domaine.
+ 
+ LASER DE MINE 30 mw Laser à pulsions, prévu pour pulvériser les astéroides 
+ en portions récupérable si vous voyez votre avenir dans les mines. Peut
+ etre utiliseé en tant qu'arme mais son rythme de répétition n'est pas 
+ aussi rapide que les lasers prévus en tant qu'armes.
+ 
+ LASER A PULSION 1MW le meme laser bas de gamme, tel que le Phlaschgyt 
+ fourni avec votre vaisseau. Les combatants aguerris le considèrent seulement
+ pour tatouer des nombres sur les esclaves. Mieux que rien.
+ 
+ LASER A PULSION 5MW Connu ausi sous le nom de Phalschbugher. Plus puissant 
+ que le Phlaschgyt, mais moins dévastateuir qu'un laser à rayons.
+ 
+ LASER A RAYON Laser à rayon continu plus dévastateur qu'un laser è pulsion. 
+ Les lasers à rayons 1MW,4MW,20MW et 100MW sont les memes mais avec une
+ puissance plus destructive et un voltage plus important.
+ 
+ REFROIDISSEUR RENFORCE DU LASER Certain pilote affairés trouvent leur 
+ système de refroidissement du laser souvent inefficace. Comme les lasers
+ s'arretent de fonctionner lorsqu'ils suchauffent, ce dispositif est un 
+ bonus. 
+ 
+ PETIT ACCELERATEUR DE PLASMA Très gros et lourd et monté sur les gros 
+ vaisseaux et les navires seulement. Extremement puissant il détruit
+ complètement les vaisseau de petite et moyenne taille d'un seul tir.
+ 
+ GRAND ACCELERATEUR AU PLASMA L'ultime arme désirée par tous les pilotes.
+ 
+ SYSTEMS ECM (representé par un graphique jaune avec un E a droite)
+ Abbrévation pour Compteur electronique de Mesure. Un dispositif astucieux,
+ car il provoque une détonation de tous les missiles de précision activés 
+ dans sa portée ( y compris le votre).
+ 
+ SYSTEME ECM SPATIAL (idem sauf 2 courbes graphiques) Ce système a 
+ spécifications plus élevées peut aussi détruire Le Missile Informatisée. 
+ Seulement disponible dans les plus grands chantiers spatiaux.
+ 
+ SYSTEMES DE CONTROLE DE L'ENVIRONNEMENT
+
+SYSTEME A OXYGENE DE LA SOUTE Superbe controle de l'environnement, 
+comprenant dispositif de déodorisation avec un choix de quatre aromes,
+Fomalhaut Harvest, Ma's Cookies, Seashore et Solar Breeze. Nécessaire pour
+transporter les animaux vivants et les esclaves.
+
+CABINE PASSAGER SUPPLEMENTAIRE Pour une personne. Equipée d'un système à
+oxygène, d'alimentation et d'un inducteur de reves Holovid pour les longs
+voyages. Une autre fonction supplémentaire consiste à changer le décor
+automatiquement selon l'humeur des occupants. Elle est activée par des
+détecteurs de chaleur et de phéromones. Occupe cinq tonnes d'espace de 
+cargaison.
+
+EQUIPEMENT ELECTRONIQUE
+
+POUR CONTROLE ET SURVEILLANCE
+
+PILOTAGE AUTOMATIQUE Le système de navigation automatique Robocruise a la
+capacité de tracer et de controler les itinéraires pour toute destination
+au sein du système. 
+
+DISPOSITIF D'ALIMENTATION EN CARBURANT AUTOMATIQUE Transfère 
+automatiquement 1 tonne de carburant de la soute au réservoir interne d'un
+moteur du vaisseau si nécessaire, pour éliminer tout gaspillage. Il permet
+aussi d'éviter tout épisode embarrassant lorsque vos moteurs tombent en
+panne duranr un combat ou un arrimage.
+
+SCANNERS La section scanner au milieu de la console est fournie en
+standard sur la plupart des vaisseaux. Certains spationautes aguerris s'en
+débarrassent en pensant qu'ils prouvent une certaine masculinité, mais
+d'autres disent qu'il en est tout autrement.
+
+RADAR TOPOGRAPHIQUE (Représenté par une croix à l'interieur d'un cercle)
+Recherche des informations sur tout vaisseau visé.
+
+ANALYSEUR DE NUAGE HYPERESPACE (Representé par une boule blanche à 
+l'interieur d'une grande croix) Détermine la destination, le temps et
+la date d'arrivée exacts des vaisseaux en analysant le dérangement
+résiduel espace-temps produit après un saut hyperespace. On vous donnera
+aussi la masse du vaisseau qui est parti ou qui va arriver.
+
+DEFENSE
+
+GENERATEUR DE BOUCLIERS Ce dispositif offre une protection supplémentaire
+à la résistance normale de la coque à l'endommagement. On peut en monter
+plus d'un à la fois et l'effet est cumulatif. Ils se rechargent sur le
+système électrique du vaisseau, et chaque bouclier prend un certain
+temps à le faire. Par exemple, un grand vaisseau avec dix boucliers
+prendra le meme temps à se recharger qu'un vaisseau à un bouclier.
+Toutefois, le vaisseau avec dix effectuera la meme défense que le
+vaisseau avec un bouclier dans un dixième du temps à cause de l'effet
+additif des Générateurs de Boucliers. 
+
+UNITE DE RENFORT D'ENERGIE Renforce le taux de recharge de tous les
+Générateurs de Boucliers montés. Un achat astucieux pour les très
+grands vaisseaux.
+
+CAPSULE DE SECOURS (Representée par une capsule avec une croix rouge
+à gauche) Pour ces moments périlleux lorsqu'une sortie rapide est
+prudente. Sans arme ni boucliers.
+
+PROTECTION ATMOSPHERIQUE Revetement supplémentaire sur la coque qui
+permet au vaisseau d'entrer dans une atmosphère plus rapidement.
+
+SYSTEME DE REPARATION AUTOMATIQUE DE LA COQUE Un matériel très
+encombrant généralement monté seulement sur les plus grands vaisseaux.
+Son fonctionnement exact est un secret commercial, mais il consiste à
+placer de nombreux microrobots dans les sections de renforcement de 
+la coque.
+
+MOTEURS ET ACCESSOIRES DIVERS
+
+TRANSMISSION INTERPLANETAIRE Un moteur léger ordinaire qui utilise du
+carburant hydrogène contenu dans la transmission meme. Il est incapable
+d'effectuer des sauts hyperespace, mais peut faire de petits sauts
+interplanétaires. Elle équivaut à une Hypertransmission Catégorie 1,
+mais sans capacité hyperespace.
+
+HYPERTRANSMISSIONS STANDARD sont facilement disponibles et sont
+utilisées par la plupart des vaisseaux. Elles utilisent de
+l'hydrogène comme carburant, qui peut s'acheter ou etre écopé
+(voir Ecope à Carburant) et tous les déchets sont utilisés comme
+masse de réaction par les tuyères d'éjection. La portée d'un
+moteur à Hypertransmission Standard dépend de la dimension du
+vaisseau sur lequel il est monté. Par exemple, un moteur de 
+Catégorie 3 aura une plus grande portée s'il est monté sur un
+vaisseau de 200 tonnes plutot qu'un vaiseau de 300 tonnes. Bien
+que les catégories aillent jusqu'à sept, des catégories 
+supérieures existent mais sont seulement disponibles chez des
+spécialistes.
+
+HYPERTRANSMISSIONS MILITAIRES Une différente classe de moteurs par
+rapport aux Hypertransmissions standard : ils sont plus rapides et
+plus légers. Ce qui signifie qu'un petit vaisseau peut avoir un moteur
+de type militaire équivalant à une Hypertransmission standard qui
+serait trop importante pour la monter. Tous les vaisseaux militaires
+ont ces moteurs. Ils marchent au carburant militaire plus couteux et
+qui comporte des inconvénients.
+Une Hypertransmission Militaire donnera certains avantages à votre
+vaisseau, mais il vous en coutera. Dans le meme ordre que les
+Hypertransmissions Standard, la portée est en fonction de la taille
+du vaisseau et de la portée maximum du moteur. Les hypertransmissions
+Militaires ne sont pas facilement disponibles et il existe seulement
+trois catégories en vente. La cause est certainement l'instabilité
+produite dans les moteurs plus gros, mais il parait que des techni-
+ciens militaires sont penchés sur ce problème. Ils vont aussi
+peut-etre fabriquer des moteurs encore plus légers.
+                                                           
+ECOPES A CARBURANT ET EQUIPEMENT D'EXPLOITATION MINIERE
+
+ECOPES CARBURANT Ecopent le carburant des couches supérieures des
+géants gazeux ou de la photosphère des étoiles froides, lorsque vous
+naviguez de l'avant et rapidement, en dessous d'environ 30 Km d'altitude.
+Pour écoper d'un géant gazeux, une Protection Atmosphérique est néces-
+saire. Toutefois une étoile nécessite une plus grande protection pour
+votre vaisseau sous la forme d'un Bouclier Atmosphérique et d'un
+Générateur de Bouclier. Meme avec cette protection, cette opération
+est toujours dangereuse et seul un pilote désespéré la tenterait.
+
+CONVERSION ECOPE CARGAISON Permet à l'Ecope à Carburant d'etre utilisée
+pour récupérer une cargaison délestée et des fausses Mines. Elle est
+aussi utilisée pour ramasser du minerai durant l'exploitation des
+astéroides et les débris d'explosion de vaisseaux.
+
+MACHINE D'EXPLOITATION MINIERE MB4 Cette machine étonnante prospecte,
+exploite et raffine des minéraux pour vous, mais elle est difficile à
+obtenir.
+
+POUR COMMENCER...
+
+Vous etes à la station d'étoile Sirocco, sur Merlin, planète qui
+gravite autour d'une étoile géante de gaz qui elle meme gravite 
+autour de Ross 154, à 9,35 années lumière de la Terre. Ce que vous
+voyez sur l'écran est la vue avant de votre vaisseau. L'étoile géante
+de gaz encerclée, Aster, se dessine dans le ciel. L'heure et la date
+sont indiquées sur le coté gauche de la console.
+1. Regardez d'abord le système dans lequel vous etes.
+(a) Sélectionnez l'icone Carte Galactique F2 et vous verrez une carte
+contenant toutes les étoiles à votre proximité. Ross 154 est au milieu
+mis en valeur en vert.
+2. Renseignez-vous sur le système :
+(a) Sélectionnez l'icone Données F6 et un diagramme de votre système
+apparaitra.
+(b) Comptez deux éléments à partir de l'étoile Ross 154. Voici Aster.
+Maintenant, cliquez la planète qui se trouve en dessous et des
+renseignements sur Merlin apparaitront.
+(c) Cliquez l'icone Economie F7 pour obtenir des informations com-
+merciales sur le système entier. Remarquez que la majeure partie des
+exportations sont de la viande animale (du poisson sur Merlin) et de
+l'oxygène liquide, les deux produits devraient donc etre assez bon
+marché.
+(d) Sélectionnez l'icone Politique F8 pour obtenir des renseignements
+sur la structure sociale. Ce système est sous le controle de la
+Fédération et devrait etre pratiquement sans danger.
+3. Cherchez un marché pour vendre les marchandises que vous achetez
+à un prix raisonnable.
+(a) Retournez à la grille en utilisant l'icone Carte Galactique F2
+(b) Utilisez les touches FLECHES (CURSEUR) pour bouger la carte de
+manière à positionner l'étoile Barnard au milieu de l'écran (regardez
+vers le haut, puis vers la droite) et la mettre en valeur en vert.
+(c) Sélectionnez l'icone Données F6.
+(d) Cliquez les éléments jusqu'à obtention de la station spatiale qui
+gravite autour de Birminghamworld, elle s'appelle Boston Base.
+(e) De la meme manière qu'aux étapes 2(c) et 2(d), vérifiez l'économie
+et la structure sociale. Vous découvrirez que la viande animale et
+l'oxygène liquide sont des importations. Le système est un état de la
+corporation et devrait donc etre pratiquement sans danger. Vous pouvez
+donc y faire du commerce.
+(f) Vous pouvez voir les orbites des éléments du système en utilisant
+l'icone Carte Orbitale F10.
+(g) Si vous voulez regarder de plus près, vous pouvez utiliser les
+icones de Zoom F7 et F8 pour faire un zoom et en sortir. Cliquez sur
+l'élément pour le mettre au centre de l'écran, puis utilisez les icones.
+4. Achetez une tonne de poisson sur Merlin. Vous ne pouvez négocier
+qu'en étant à quai, vous pouvez donc le faire maintenant.
+(a) Choisissez l'icone Communication F4 et vous obtiendrez une liste
+d'options.
+(b) Choisissez Bourse.
+(c) Une liste d'articles apparaitra avec des touches Achat et Vente.
+Cherchez Viande Animale. Vous avez les moyens d'acheter une tonne de
+viande animale.
+(d) Cliquez une fois la touche Achat de viande animale  et une tonne
+de viande animale se chargera automatiquement dans votre cargo. (Si
+jamais vous achetez une trop grande quantité de marchandise par erreur,
+cliquez sur la touche Vente jusqu'à obtention de la quantité désirée).
+La console affichera la somme d'argent et l'espace de cargo qui vous
+restent.
+5. Regardez s'il y a des colis à transporter à l'étoile Barnard. C'est
+ce genre de chose qui rapporte de l'argent mais comporte des risques.
+L'avantage des colis est qu'ils ne prennent pratiquement pas d'espace
+de cargo et n'ont pas besoin de cabine ni d'équipement de vie.
+(a) Cliquez sur l'icone Communications F4, puis sur le Tableau
+d'affichage.
+(b) Faites défiler les annonces en utilisant les flèches Plus...vers 
+le haut et vers le bas.
+(c) Il n(y a peut etre pas d'annonce adéquate, mais s'il y en a une,
+cliquez la. S'il n'y en a pas, passez à l'étape 6.
+(d) Une liste de réponses vous sera offerte, vous devez en choisir une 
+en la cliquant. Toute personne courageuse cliquera sur "OK - d'accord."
+sans poser de question.
+(e) Le colis sera automatiquement chargé sur votre vaisseau.
+(f) Vous pouvez vérifier qu'il est bien à bord en cliquant sur l'icone
+Inventaire F3 jusqu'à affichage de la page donnant la liste des passa-
+gers et des petits colis.
+6. Décollez pour le système de l'Etoile Barnard.
+(a) Retournez à la vue avant en utilisant l'icone Vue F1 et cliquez la
+jusqu'à ce que VUE AVANT s'affiche sur le coté droit de la console.
+(b) Sélectionnez l'icone Communication F4 et vous obtiendrez une liste
+d'options. Cliquez sur DEMANDE DE LANCEMENT.(OBLIGATOIRE)
+(c) Quand l'autorisation est donnée par la console, choisissez l'icone
+Controle de Vol F7. Vos moteurs verticaux s'engageront, vous faisant
+décoller lentement.
+(d) Relevez l'avant de votre vaisseau en reculant la souris tout en
+appuyant sur le bouton droit de la souris.
+(e) Activez les moteurs en utilisant la touche ENTER pour quelques
+secondes et vous commencerez à voler dans l'atmosphère. Vous etes 
+maintenant en controle manuel.
+7. Faites un saut hyperspatial vers l'Etoile Barnard :
+(a) Utilisez l'icone Carte Galactique F2 et vérifiez que l'Etoile
+Barnard est bien au milieu de l'écran où elle sera mise en valeur
+en vert.
+(b) Retournez au mode Vue F1.
+(c) Activez le moteur hyperspatial en appuyant sur l'icone Hyperspatiale
+F8. Après un voyage dans l'hyperespace, vous remarquerez les effets de la
+perturbation. Utilisez l'icone Vue F1 pour obtenir la vue arrière où vous
+pourrez les voir. Ce nuage hyperspatial derrière vous est visible à une
+grande distance et risque d'attirer des pirates. Il est conseillé de le
+quitter au plus tot en appuyant sur la touche ENTER pour augmenter votre
+vitesse Fixée. Cliquez encore une fois sur l'icone Vue pour revenir à la
+vue avant.
+(d) Choisissez l'icone d'Identification de Texte F10 qui mettra un nom
+aux éléments des systèmes qui ne sont pas encore visibles à l'oeil nu.
+(e) Si vous désirez regarder autour de vous, vous pouvez le faire en
+appuyant sur le bouton droit de la souris pour faire tourner votre 
+vaisseau. Ceci n'est pas essentiel pour arriver à votre destination.
+8. Volez vers Birminghamworld en utilisant le Pilote Automatique et le
+Controle de Temps Stardreamer.
+(a) Regardez la structure du système en utilisant l'icone Carte
+Galactique F2 puis l'icone Carte Système en Cours F2 pour obtenir une 
+carte orbitale du système utilisé.
+(b) Faites un zoom en utilisant l'icone Zoom F7 jusqu'à ce que vous
+puissiez clairement voir Birminghamworld.
+(c) Mettez cette planète au centre de l'écran en le cliquant et en
+le mettant en zoom jusqu'à ce qu'il soit clairement défini et que les
+lignes orbitales couvrent presque toute la largeur de l'écran.
+(d) Quand vous pouvez voir le nom de la station spatiale (Boston Base),
+bougez la souris tout en appuyant sur son bouton droit pour voir
+clairement la station spatiale.
+(e) Réglez la destination pour le Pilote Automatique en utilisant
+l'icone Cible F10.
+(f) La console vous demandera de choisir une cible. Indiquez la 
+direction de la station spatiale et cliquez la et un carré de direction
+s'affichera. Si vous prenez trop de temps pour effectuer cette opération,
+il vous faudra peut-etre encore utiliser l'icone Cible. 
+(g) Retournez au mode Vue F1.
+(h) Engagez le Pilote Automatique avec l'icone Controle de Vol F7 en
+l'activant jusqu'à ce que Pilote Automatique s'affiche sur la console.
+Le vaisseau n'est plus en controle manuel.
+(i) Vous verrez des carrés cibles qui ressemblent à un tunnel vous 
+conduisant à Boston Base. Quand vous vous approcherez, ils viendront
+vers vous plus rapidement, ce qui indique que vous devriez ralentir
+en approchant. Idéalement, ils devraient passer à une vitesse constante.
+(j) Bien que vous soyez relativement près de Boston Base, il vous
+faudra encore un long moment pour y arriver, utilisez donc le Controle de 
+Temps Stardreamer pour que le temps semble passer plus vite. 
+(k) Cherchez les icones de Controle de Temps. La flèche unique règle
+l'heure normale et chaque icone de droite augmente le passage apparent
+du temps de dix fois. Vous pouvez choisir 1000 fois le temps normal
+(quatre fleches) ou 10 000 fois le temps normal (dernière icone à droite).
+Quand vous vous approchez de la station spatiale, l'ordinateur de bord
+vous remettra à l'heure normale avant d'arrimer.
+(l) Le procédé d'arrimage est controlé par le Pilote Automatique, y
+compris la demande d'autorisation aux Controleurs de Navigation. Si
+vous ne voulez pas regarder le procédé d'arrimage, vous pouvez réutiliser 
+le controle du temps.
+9. Vendez vos marchandises :
+(a) Quand vous etes a quai, choisissez l'icone Communication F4 et
+choisissez encore Bourse.
+(b) Vendez vos marchandises en utilisant les touches VENTE, c'est à
+dire en cliquant une fois sur la touche VENTE de viande animale.
+(c) La somme d'argent indiquée en dessous de ARGENT à gauche en bas
+de la console devrait etre supérieure à la somme avec laquelle vous
+avez commencé, sauf si vous n'avez pas eu de chance avec les cours
+de la bourse.
+(d) Rappelez-vous de faire le plein en achetant au moins une tonne
+de carburant hydrogène !
+
+RESUME DES ICONES Ceci resume les icones ou touches fonctions appuyées
+une ou plusieurs fois, dans l'ordre :
+
+F1         F2		F3		F4		F6
+
+AVANT      CARTE	EQUIP.		COMMUNIC.	
+	   GALACTIQUE	VAISSEAU	
+ARRIERE	   CARTE 	PROFILE		
+	        	COMMANDANT
+TOURELLE        	LISTE
+			EQUIPAGE
+EXTERNE			CARGO A
+			BORD
+			LISTE
+			PASSAGERS
+			LISTE DE
+			CONTRATS
+			NON REGLES
+			INSTAL.							
+			MINIERES
+	   CARTE 			
+ 	   SYSTEME >>F6=DONNEES
+	   EN COURS
+
+DONNÉES>>F6=RETOUR A CARTE GALACTIQUE
+         F7=ECONOMIE
+	 F8=STRUCTURE SOCIALE
+	 F10=CARTE ORBITALE
+
+CARTE SYSTEME ENCOURS>>>F6=DONNÉES
+			F7=FAIRE UN ZOOM
+			F8=SORTIR D'UN ZOOM
+			F9=OUTILS>>F9=SUPPRESSION DE LIGNES ORBITALES
+			F10=VUE GALACTIQUE>>>F10=CIBLE
+
+OUTILS>>>F7=SUPPRESSION DE TIGE
+	 F8=SUPPRESSION DE GRILLE
+	 F9=SUPRESSION DE ROUTES DE COMMERCE
+	 F10=SUPRESSION IDENTIFICATION DE TEXTE
+
+F7		F8		F9		F10
+
+DECOLLAGE	HYPERESPACE     RELEVEMENT	IDENTIF.
+VERTICAL			TRAIN ATTER.    TEXTE
+SANS 				RABAISSEMENT
+MOTEUR				TRAIN ATTER.
+PILOTE
+AUTOMATIQUE
+VOL MANUEL
+
+
+DOC TAPPÉE EN PARTIE PAR DOCTORFIRE A L'INTERMEDIA (THANX), PUIS PAR 
+LAURENZO POUR CE CD EUROSWAP...ENVOYEZ-NOUS VOS DOCS DE SOFTS ST OU
+AMIGA  MERCI....  
+PASSWORDS 12/93
+CONTACT: 3615 RTEL CLUB NOTARIUS PASS EURO OU BAL PASSWORDS
+
+ 	   

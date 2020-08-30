@@ -1,0 +1,108 @@
+
+	THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER
+	EXPRESS OR IMPLIED, STATUTORY OR OTHERWISE.
+	THE ENTIRE RISK AS TO USE, RESULTS AND PERFORMANCE OF THE PACKAGE IS
+	ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE TO BE DEFECTIVE, YOU
+	ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING, REPAIR OR OTHER
+	REMEDIATION.
+	UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY
+	DAMAGE CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE
+	OWNER OR A THIRD PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF
+	DAMAGE.
+
+	That install applies to "Xenon 2" © 1988,1991 The Bitmap Brothers.
+	It supports 6 floppy disk and the CDTV version of Xenon 2.
+
+	That install requires WHDLoad and RawDIC to be in the path. Both
+	can be found in the WHDLoad package.
+	To install from a different drive than DF0: select Expert as
+	installation mode.
+
+	CDTV: You need 1.0 MB ChipMem and 0.5 MB OtherMem.
+	Floppy: You need 0.5 MB ChipMem and 0.5 MB OtherMem.
+	
+	You can quit the game by pressing F10 (key can be changed with
+	Tooltype "QuitKey=").
+
+	Features:
+	 - some access faults removed
+	 - highscores will be saved
+	 - after game over a wait has been added, which waits until the fire
+	   button is not pressed for a while, this is to prevent filling the
+	   highscore table with 'AAA' if autofire is used
+	 - the game hs been patched so that cash can be taked over from one
+	   shop to the next (in original cash is cleared on shop exit)
+	 - trainer added, gives 100000 cash and 9 ships, trainer will be
+	   enabled via Tooltype Custom1, if trainer is enabled the highscores
+	   wont be saved
+	 - in the CDTV version Custom2 redirects the left mouse button to the
+	   fire button B (if you don't have a joypad)
+	 - CD music control from the game is currently impossible (CDTV), 
+	   maybe there will be a future version of WHDLoad which makes it
+	   possible
+
+	if you have problems with this installation please try first to get
+	a newer version of this install from 
+		http://www.whdload.de
+	if that does'nt help try some Tooltypes like NOCACHE, NOAUTOVEC,
+	NOVBRMOVE, NOMMU, PAL or NTSC. if that also does'nt help inform the
+	author via the Bug-Report-Form which can be accessed on
+		http://www.whdload.de
+
+	for full WHDLoad package and other installs refer to:
+		http://www.whdload.de
+	or	aminet:dev/misc/whdload#?
+	and	aminet:game/patch/
+
+	Wepl in December 1998 and May 1999.
+	Thanks to Frank Brandis for support.
+
+	version Floppy 1.12 (14.07.2019) done by JOTD:
+	- reduced chipmem usage to strict $80000 instead of $81000, so 512k chip amigas can use it.
+	- fixed another prefetch issue for 2 ancient versions
+	  (related to copylock protection, see notes on WinUAE on 1.8, same root cause,
+	  strange as it used to work with previous versions of WinUAE without "more compatible")
+
+	version Floppy 1.11 (25.02.18) by JOTD:
+	- CUSTOM2 allows to skip introduction for floppy versions which have one.
+    - quitkey available for 68000
+
+	version Floppy 1.10 CDTV 1.7 (23.12.17) by JOTD:
+	- adapted to WHDLoad v17
+	
+	version Floppy 1.9 CDTV 1.6 (11.05.05) by Wepl:
+	- supports another disk version (one disk version by Speedlock
+	  Associates)
+	- autofire highscore writer preventer added
+
+	version Floppy 1.8 (13.08.04) by Wepl:
+	- two more disk versions supported (budget: one disk without intro
+	  and one disk complete on PDos), thanks JOTD
+	- SMC on two disk versions removed which caused problems on UAE
+	  (Toni Wilen)
+	  
+	version Floppy 1.7 (11.05.03) by Wepl:
+	- snoop bugs removed
+	- keyboard fixed
+	
+	version 1.5/1.6 (16.08.00) by Wepl:
+	- crash fixed, occuring when not entering highscores (thanks to Jan
+	  Vieten for report)
+	  
+	version 1.4/1.5 (19.06.00) by Wepl:
+	- highscore saving fixed (sorry, old scores are lost)
+	- cash takeover added
+	- trainer fixed
+	
+	JOTD notes:
+	- I originally intended to create a "superpowered" cheatmode, but I gave up because this game
+	  is quite difficult to understand and there are a lot of versions so I lost patience. I just added more
+	  continues in the existing trainer.
+	- What would be also cool would be using the second button for "dive" feature (instead of space),
+	  which is available later in the game. Once again, 7 versions to support + testing/debugging at some advanced
+	  stage daunted me (for now).
+	- The patch removes the "zero credits after shop", which is not faithful to the original game (some advice states: 
+	  "you cannot take it with you"). Makes game slightly easier by allowing not spending all the money. Maybe a stupid design
+	  from the programmers, but the original design.
+	- Also we could use in-game keys: F1: resplenish energy, F2: levelskip, ...
+	

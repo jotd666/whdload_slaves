@@ -1,0 +1,56 @@
+Short : HD-Installer for Abandoned Places 2
+Type : game/patch
+Author : Jean-François Fabre (JOTD)
+
+HD-loader & Fix © 1998-2006 Jean-François Fabre
+
+Abandoned Places 2 © 1993 ICE Ltd.
+
+Features:
+
+- Runs fully from HD using WHDLoad/KickEmu/KickDOS
+- Convenient install script (done by Dr.Zarkov, many thanks to him)
+- Stackframe error fixed to allow game to run on 68020+
+- Keyboard handshake problem fixed
+- Grid protection removed
+- Quit key (numerical '*', or configurable with QUITKEY)
+- NewIcon (created by Dr.Zarkov)
+- Doc file included
+
+History:
+
+- v2.0: unprotected version supported (Thanks to Luca for testing)
+        rewritten install script
+
+- v1.1: protection enabled again (too many checksums), protection file included
+        (only protected version supported ATM)
+- v1.0: WHDLoad release, protection removed, doc file included
+- v0.x: DOS releases, protection still there
+
+Comments:
+
+* Thanks to Dr Zarkov for hacking bits of my Monkey2 install & my old
+  AP2 DOS fix to create a first working version (I missed the savegame
+  stuff, and thus I got unexplainable access faults), and for the cool
+  install script.
+
+* I don't like RPGs but this one was easy (and interesting) to fix,
+  and asked by a cool guy so...
+
+* Use the AP2 file included in install if you previously installed the old
+  fix or some features may be disabled (like password protection crack)
+
+Requirements:
+
+ The game requires a installed A500 Kickstart 1.3 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ a appropriate requester.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick343.lha" on aminet.
+
+Thanks to Bert Jahn for writing kickemu.s kickstart interface system.
+

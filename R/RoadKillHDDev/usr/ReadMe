@@ -1,0 +1,102 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "RoadKill" AGA/CD남 � 1993/1994 Vision
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ The installed program requires 2.0 MB ChipMem and 1.0 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ The game requires an installed A1200 or A4000 Kickstart 3.1 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick40068.A1200" (resp kick40068.A4000). 
+ The image can be extracted from a A1200 (resp A4000) with tools like 'GrabKick'
+ or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick40068.A1200.RTB" (resp "kick40068.A4000.RTB")
+ must be installed in the same directory as the kickstart image.
+ It can be found in the archive "util/boot/skick346.lha" on aminet.
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 2.2-B (12.07.2020) done by JOTD:
+ - fixed long-time sound bug in AGA version(issue #0003441).
+   Reinstall the game or apply "patch_snd" file only sound file like this:
+   patch_snd sounds.blkpak (thanks for EAB members for the solution)
+ 
+ version 2.2 (11.08.2019):
+ - changed joypad read routine. Blue button fires the missiles
+   (it was using green button despite the manual says), leading to
+   keyboard and joypad/2-button joystick unified controls
+   (P / Play for pause, up/down fwd/rev for gear switch)
+ - fixed controls to "CD32" (works for joysticks too),
+   fixes issues #000004092 and #0002074 which look like an original game bug
+ - megatrainer added (invincibility, infinite retries, infinite missiles)
+ - misc menu controls defaults directly modifiable from splash screen
+ 
+ version 2.1-B (22.05.05) done by JOTD:
+ - fixed a bug in v2.1 slave (AGA/CD남) so it works without the
+   big intro animation file (sorry about that, even AGA version couldn't work)
+
+ version 2.1 (11.05.05) done by JOTD:
+ - added manual (typed by Stellan, thanks dude)
+ - CD남 intro animation supported if file "RoadkillIntro.anim7" is manually
+   copied from the CD to the "data" directory (it is skipped by default). Install
+   script now allows to copy it too.
+
+ version 2.0 (07.05.05) done by JOTD:
+ - complete rewrite of install & slave using KickEmu (A1200/A4000 ROM image needed)
+ - CD남 support supported as well
+ - joystick/joypad routine & 2-button routine fixed
+ - hiscore saving/loading from HD
+ - source code included
+
+ version 1.0 (19.10.01) done by JOTD:
+ - initial release (floppy version only)
+
+ Notes: 
+ 
+ - Due to the large size of the intro animation in the CD남 version (23 megs),
+   I did not include it in the WHDLoad install (file "RoadKillIntro.anim7").
+   You can still view it from the CD-ROM using multiview or any other
+   IFF-ANIM capable browser.
+
+ Level codes:
+
+                  TRACKLEVEL 0 =  LQPONTQNJO / LQPONSSFRP
+
+                        TRACKLEVEL 1 =  LQPONRHCNM 
+
+                        TRACKLEVEL 2 =  LQPONUPQCK 
+
+                        TRACKLEVEL 3 =  LQPONTMBCH
+
+                        TRACKLEVEL 4 =  HQPOPONLRK
+
+                        TRACKLEVEL 5 =  PQPOQTETNT
+
+reported bugs (not reproduced):
+
+- crashes when using CD32 controls: should be fixed with new CD32 controls
+- engine noise corrupted with accelerator boards: issue #0003441 still to fix
+

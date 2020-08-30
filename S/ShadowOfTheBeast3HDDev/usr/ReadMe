@@ -1,0 +1,133 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Shadow of the Beast 3" © 1992 Psygnosis.
+
+ Thanks to Chris Vella for original (NTSC) disk images, and Jan Krolzig 
+ for original (PAL) disk images.
+
+REQUIREMENTS:
+- Slave requires WHDLoad V17+ and RawDIC
+- Game requires 512Kb chip mem & 512Kb fast mem (+2.9Mb other memory for preload option)
+
+Version 1.7 - done by JOTD (08.06.2020)
+- CUSTOM2: blue/second button jumps instead of up (and ladders are properly handled)
+- Trainer: infinite lives / in-game keys now enabled only with the trainer
+- Skip introduction now mapped to CUSTOM4
+
+Version 1.6 - done by JOTD (august-2017)
+- changed memory map from 1MB chip to 512K chip & 512K fast
+- added code to detect joystick (with 2 buttons)/joypad
+- removed CUSTOM1: button 2 or joypad now always active (depending on which is connected)
+- CUSTOM2 also skips Reflections & title screen
+
+Version 1.5 - done by StingRay (15-Jun-2016)
+- Intro patches completely redone, PAL version now fully supported
+- Disk accesses removed
+- Bplcon0 color bit fixes
+- Byte writes to volume register fixed
+- "Insert Game Disk 1" screen after intro disabled
+- Intro can be skipped with CUSTOM2
+- ByteKiller decruncher optimised and error check added
+
+
+Version 1.4 - done by JOTD (15-may-2016)
+- CUSTOM1=1 enables joypad controls
+- Quit key works on 68000
+- Source code included under the GPL license
+
+Version 1.3 - done by Bored Seal
+- PAL version works again (intro sequence patched for both versions)
+- Decrunch routine moved in Fast RAM
+- Small bugs removed
+
+Version 1.2 - done by Galahad of Fairlight
+- Intro sequence is now patched to work
+- Reworked RomIcon and NewIcon and new GlowIcon (created by Codetapper!)
+
+Version 1.0/1.1 - done by Mr.Larmer/Wanted Team
+- Full load from HD
+- Protection removed
+- Quit option (default key is F9)
+
+
+IN-GAME KEYS:
+
+- ESC  : lose a life and restart
+- HELP : restart
+- F10  : return to menu
+- SPACE: scroll through inventory
+- cursor right: invincibility
+- cursor left : normal
+
+joypad controls:
+
+- RED: normal fire
+- BLUE (second button on a 2 button joystick):
+   - weapon change (space) (if CUSTOM2=0)
+   - jump (if CUSTOM2=1)
+- GREEN: weapon change (if CUSTOM2=0)
+- START: pause (P)
+- GREEN+YELLOW: restart part (HELP)
+- FORWARD+BACKWARDS: quit current game (F10)
+
+and if in-game cheat keys are on:
+
+- FORWARD: invincibility (cursor right)
+- BACKWARDS: remove invincibility (cursor left)
+
+Notes for 1.7 (JOTD):
+
+Here is the new control option: the controls are soooo much better with a dedicated jump button.
+Note that using jump when you're facing a ladder just makes the character cling to the ladder
+In some other games adaptations (Gods, Ghost'n'Goblins), I could make the character jump instead,
+but here the game logic is made so if you're jumping and pass in front of a ladder you cling to
+it automatically so it's by design (exactly like in Cedric or Moktar/Titus). The only thing
+that needed some thinking is the fact that you can go up a ladder with "up", and also you
+can start climbing a ladder with "up", whereas "up" has no effect on jump.
+
+A funny thing was: if I didn't distinguish between demo and real play mode, the character doesn't jump
+in the demo (because it's receiving a "up" order) so it misses the trajectory, continues right and falls
+and ... locks up the machine :)
+
+The infinite lives trainer is different from the invincibility trainer because
+you have to actually be careful of not being hit too much. But I didn't fix the
+energy refill, so when you lose a life, you don't know the energy status. This status
+isn't supposed to refill during game so it would require some more reverse engineering...
+
+Notes for 1.5 (StingRay):
+I had a look at the Beast 3 patch because of a report that the music runs
+too slow, this was not a problem with the patch but just running the
+NTSC version of the game on a PAL machine. You need to use WHDLoad's
+"NTSC" option to make the music play at proper speed in that case.
+
+However, there were quite a few real problems with the old patch, the most
+serious one was the not fully supported intro for the PAL version, it would
+just freeze after a while. This was caused by a buggy loader patch which only
+worked by coincidence for the NTSC version! I have completely recoded the
+loader for the intro data and now, 15 years after support for the PAL
+version was added, the intro now finally works properly! I have also disabled
+the "Insert Game Disk 1" screen that was shown after the intro and added
+an option to skip the intro with CUSTOM2.
+
+There also were Bplcon0 fixes needed and bytes write to the volume register
+in the replayers which I have fixed as well. I have also optimised the
+ByteKiller decruncher and added an error so in case the loaded data is
+corrupt WHDLoad will quit with an appropriate error message.
+
+I may update the patch further in the future but for now this should do.
+StingRay, 15-Jun-2016
+
+
+Regards are going out to : Bert, Codetapper, Chris Vella and everyone from
+the pages of the Amiga's history that are still sticking around :)
+
+         Bug report form, full WHDLoad package and other installs:
+                          http://www.whdload.de/

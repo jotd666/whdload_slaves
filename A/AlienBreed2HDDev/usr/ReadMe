@@ -1,0 +1,91 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Alien Breed 2 - The Horror Continues" © 1993 Team 17.
+
+ This install requires WHDLoad and RawDIC to be in the path. Both can be found
+ in the WHDLoad package.
+ To install from a different drive than DF0: select installation mode Expert.
+
+ The installed program requires 1.0 MB ChipMem and 0.5 MB OtherMem for ECS.
+ The installed program requires 1.0 MB ChipMem and 1.5 MB OtherMem for AGA.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+ 
+ version 1.5 (24.04.2020) done by JOTD:
+ - ECS version added quitkey for 68000 machines (issue #0004202)
+ 
+ version 1.4 (22.06.2016) done by JOTD:
+ - AGA version access fault fixed (issue #0002183)
+ - Enabled 'N' to skip levels
+ - Slaves adapted to WHDLoad v17
+ - Added cheat mode to AGA version (100000 credits, 99 keys, 99 lives)
+
+ version 1.3 (11.05.05) done by JOTD
+ - another ECS version supported (only slight changes)
+
+ version 1.2 (01.03.05) done by JOTD:
+ - support for fastmem in ECS slave (loading is much faster)
+ - fixed access fault in ECS version with rebouncer weapon (Garry C.)
+ - enabled original Mr Larmer trainer with CUSTOM1=1 on ECS version
+ - fixed startup text in both ECS & AGA versions
+ - added icons by Chris & Exoticons
+ - check in slaves to avoid version mixups (ECS files with AGA slave...)
+ - reworked install script
+
+ version 1.1 (03.01.03) done by JOTD:
+ - support for fastmem in AGA slave (loading is much faster)
+ - impossible to shoot on first life fixed (ECS/AGA)
+ - manual included
+ - source code rework and various improvements on AGA version
+ - source code included
+
+ version 1.0 (23.03.01) done by Mr.Larmer:
+ - AGA & ECS versions supported
+
+ version 1.0 (16.03.01) done by Mr.Larmer:
+ - ECS version supported only
+
+Original Cheat mode (ECS and AGA versions, thx to www.lemonamiga.com):
+Enter one of the following passwords to activate the corresponding cheat function.
+
+Cheat codes: 	
+Fifty keys: 378829
+10 extra lives, 50 keys, 50,000 credits: 736353
+10 extra lives and 50 keys: 098654
+
+Level codes:
+2: 353828
+3: 108383
+4: 370101
+5: 982822
+6: 847464
+7: 737373
+8: 928112
+9: 267364
+10: 193831
+11: 090921
+12: 309383
+13: 101221
+14: 103992
+15: 998112
+16: 125332
+17: 091233

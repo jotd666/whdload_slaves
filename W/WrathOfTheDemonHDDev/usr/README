@@ -1,0 +1,60 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Wrath of the Demon" © 1990 ReadySoft
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+
+
+Floppy version (done by Harry):
+
+You will have to install it with that install to run it from hd.
+That install needs WHDLoad and The Patcher 1.05 in the path (eg in c:).
+
+Fixed:  Some access faults. (I guess the game ran not reliable at an A4000).
+
+Default quitkey is numerical *. Change it with the QUITKEY-tooltype.
+Default trainer key is numerical ] (quitkey-2 in the keytable).
+Pressing the trainer key gives full energy.
+Once you used the trainer the program will not save the gameposition this
+runtime anymore.
+
+The install is tested with 2 MB on an A1200, and on an 18 MB 68030.
+
+Since my installs are freeware, and although i try to make them as reliable
+as possible, you use them wholly on your own risk.
+
+JOTD: fixed missing assign command when running disk imaging. Now works
+
+CDTV version (done by JOTD)
+
+
+ The game requires an installed A500 Kickstart 1.3 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick345.lha" on aminet.
+
+ - added manual
+ - added icons
+ - re-done install script
+
+ TODO:
+ - how to get in save/load game in CDTV version ??
+
+
+Full whdload package:	aminet:dev/misc/whdload#?.lha
+Other installs:		http://www.whdload.de

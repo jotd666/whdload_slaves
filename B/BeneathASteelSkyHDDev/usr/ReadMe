@@ -1,0 +1,120 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Beneath A Steel Sky" © 1993-1994 Virtual Theatre/Virgin.
+
+ This install is designed for the floppy versions (15 disks) & CD³² version.
+  
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ Floppy version:
+
+ The installed program requires 1.0 MB ChipMem and 1.0 MB OtherMem (12 MB with PRELOAD)
+
+ The game requires an installed A500 Kickstart 1.3 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick346.lha" on aminet.
+
+ CD³² version:
+
+ The installed program requires 2.0 MB ChipMem and 1.0 MB OtherMem (15MB with PRELOAD,
+ 100 MB (!) with PRELOAD & speech on)
+
+ The game requires an installed A1200 or A4000 Kickstart 3.1 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick40068.A1200" (resp kick40068.A4000). 
+ The image can be extracted from a A1200 (resp A4000) with tools like 'GrabKick'
+ or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick40068.A1200.RTB" (resp "kick40068.A4000.RTB")
+ must be installed in the same directory as the kickstart image.
+ It can be found in the archive "util/boot/skick346.lha" on aminet.
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+  Version 2.1 (03.02.2019) still done by JOTD:
+  - fixed a bug in the sound replay (CD³²): program is now loaded in fast memory,
+    but some sound routine relied on the fact that it was in chipmem (music & sfx worked,
+	but the "beep" sound at start was funny, and there were also parasite sounds). It was some
+	hard work to find this. Thanks to Toni for the new "wrong memory write to DMA registers" in WinUAE
+  - floppy version bump, with just some source code rework & reassembled with newest kickemu, added
+    WHDLF_ClearMem flag because the game seems to read "in the woods" sometimes, better read 0 than trash.
+  
+  Version 2.0 (06.02.2005)
+  - reworked for WHDLoad v16 & kickemu, smaller slave, loads faster, less OS swaps
+  - CD³² version support (Thanks Bert for ISO), with program loading in fast memory (fast load)
+    (hard work because I had to relocate some chip-only data in chip, check the source!)
+ - reworked readme & install script
+
+  Version 1.1 (01.04.2003)
+  - After load access fault removed
+  - Source code included (needs kick13.s & kickdos stuff)
+
+  Version 1.0 (22.09.2001) done by JOTD
+  - Initial release 
+  - Runs fully from HD using WHDLoad/KickEmu/KickDOS
+  - LINC terminal problems fixed (the english version of the game crashed)
+  - Game file provided in order to avoid gfx corruption at Dr Burke's
+  - No more crash on "Restart" option
+  - OS Swaps avoided when loading/saving a game
+  - Convenient install script
+  - Full use of fast memory
+  - Menu access faults removed
+  - All versions are supported (tested with english, french, swedish, german versions)
+  - LINC Password protection removed (thanks to Mark Knibbs for AmigaPatchList)
+  - Quit key (numerical '*', or configurable with QUITKEY)
+  - Walkthrough included
+  - Wide choice of icons provided
+
+Notes
+
+  - As in the original DOS release, use F5/F6 to save/load games.
+  - Due to a bug in the original release, "Restart" option has been
+    changed so now program loads first game (game0).
+    If you did not save any game here, restart will just quit the game.
+    The best thing to do to make "restart" work is to save the game at
+    the very beginning (when you're in the press room with the cop)
+    under position 0.
+  - You need a lot of memory (about 12MB) to run that game using WHDLoad
+    because of the data files.
+  - Once, I experienced a game freeze (original game bug, I think). Don't forget
+    to save your games from time to time...
+  - I finally fixed the problem with LINC terminal: once you gained access to
+    a pirate ID card, the retina scan allows you to enter the 6-digit code
+    (which is now bypassed, fortunately :)). After that code, some LINC menu
+    crashed the machine. Actually, it only worked on a 24 bit CPU (68000, 68010
+    or 68020).
+  - I would like to thank all the people who sent me their versions of the
+    executable, and also pseudo-fix packages for it (good but not enough :))
+    and especially Olivier Schott for completing the game with this slave
+    (he used the french version).
+  - Due to the size of the game, the long introduction, the amount of bugs,
+    and the tests, this install was very time consuming.
+    I hope you'll appreciate it.

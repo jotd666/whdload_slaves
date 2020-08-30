@@ -1,0 +1,119 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Magic Pockets" © 1991 Renegade.
+
+ This install requires WHDLoad and DIC to be in the path. Both can be found in
+ the WHDLoad package.
+ To install from a different drive than DF0: select installation mode Expert.
+
+ The installed program requires 0.5 MB ChipMem and 0.5 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 3.3 (17.05.2020) done by JOTD:
+ - added trainer option: ability to start with gold chalice
+ - added trainer option: keep difficulty at the easiest no matter
+   if player took gold chalice or completed the game by warping to level 1
+
+ version 3.2 (14.05.2020) done by JOTD:
+ - fixed jump option with a helmet on one of the 2 PAL versions
+ - added option to start on a given world (4 different worlds)
+ - added option to use simplified level codes (only for US/NTSC version)
+   level codes are 00<world><level>,so:
+   0011,0012...,0016,0021,....,0041,...,0049 (last level)
+ - changed CUSTOMx options (grouped misc options to CUSTOM4)
+ - added "G" cheat key to increase score by 5000
+
+ version 3.1 (09.05.2020) done by JOTD:
+ - changed CUSTOM1 to add more cheats
+ - fixed sound play during game
+ - fixed quitkey on 68000 when cheatkeys aren't active
+ - added speed regulation (can be turned off)
+ - enabled joypad controls for pause & quit & quit to wb
+ - updated hint file
+ 
+ version 3.0 (01.06.2019) done by JOTD:
+ - CUSTOM2 enables jump with 2nd/blue button
+ - CUSTOM3 enables alternate custom level 1 on US/NTSC version only (other levels are identical ATM)
+   (you have to copy the contents of "custom_levels" directory at the same location where "disk.1" resides)
+ - CUSTOM1 enables cheat keys, see below
+
+ version 2.2 (09.05.2014) done by JOTD:
+ - reworked installed script (hoping to fix issue #2996)
+ - added 'S' trainer key to get gold coin / gold star and increase number
+   of silver stars (same as 'T' but you get other weapons than teleport)
+   (too many presses => buggy/trashed gfx bonus)
+ - source code included
+
+ version 2.1 (12.11.2001) done by JOTD:
+ - 3 versions are supported: 11/09/91,18/09/91, and US 1992 version (NTSC)
+ - Works with caches for amazing speed
+ - RNC Decrunch routine relocated to fastmem
+ - Password protection removed for US version (thanks Keith)
+ - Copylock protection removed for UK versions (thanks Galahad)
+ - Use 'T' key to get gold coin / gold star (and reach the secret warp everytime !)
+ - Docs/walkthrough/level codes for US version provided
+ - Nice icons by Frank/Exoticons
+
+NOTES:
+
+- This game needed NOVBRMOVE because I could not fix the copylock. I was almost
+  there, but it still crashed at some point. I asked help to Codetapper who
+  went very close, but could not do it either. Finally Galahad gave the final
+  blow to the protection, one of the toughest copylocks ever IHMO.
+
+- Install should work with cracked versions, but it is not guaranteed.
+
+- I asked to Bitmap Bros if they could give the game for free (i.e. allow
+  the game to be put on legal sites) but they refused. Too bad.
+
+- there are several issues (I may fix them in the future):
+  - when entering a wrong level code in an underwater level of world 3, the helmet
+    goes away and you die...
+  - On WinUAE, fast setting, the bike can only go right, not left !!
+  
+KEYS:
+
+P    : pause
+Q    : quit game & return to level 1
+F2   : enter level code (US/NTSC version)
+
+Controls with 2nd controls:
+
+2nd button jumps. Up is still active when using diving helmet or bubble gum machine
+
+Cheat keys:
+
+HELP : levelskip (kill at least 1 monster to get the levelcode)
+T    : next token is a coin, 1 silver star owned
+S    : next token is a coin, silver star owned++
+F    : fly mode (bubble doesn't appear but effect is the same)
+
+Don't forget to set the tooltype to NTSC if you run the game from a PAL machine or
+the music will be jerky.
+
+
+A walkthrough is provided. It explains the tricks to reach secret rooms and more.
+It has been greatly enhanced by dELTA tX and recently by me
+
+Custom world 1 was re-created by JOTD using a custom level editor.
+It is possible to enable it only with NTSC/US version

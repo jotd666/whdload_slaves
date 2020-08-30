@@ -1,0 +1,90 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Marble Madness" © 1985 Electronic Arts.
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ The installed program requires 0.5 MB ChipMem and 0.5 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ The game requires an installed A500 Kickstart 1.3 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick346.lha" on aminet.
+
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 2.3 (20.03.2020) done by JOTD:
+ - rebuilt slave with latest kickemu, fixed crash (issue #0004402)
+ 
+ version 2.2 (15.10.2018) done by JOTD
+ - added start level select (with properly calibrated seconds bonus at least I hope so)
+ - "F1" key adds 10 seconds to each player
+ - fixed trainer & ESC for 2-player game
+ - added "P" for pause, LMB/fire to resume
+ - added CUSTOM2 to disable the music
+ - added slave which works with cracked diskimage (used for the CD32load version)
+ 
+ version 2.1 (07.03.2016)
+ - support for WHDLoad v17 splash screen
+ - added BUTTONWAIT to see the game splash screen or skip it
+
+ version 2.0 (08.04.04)
+ - fully reworked for WHDLoad v16, no more KickDOS stuff
+ - use of fast memory & caches for better speed
+ - Front/Rear port texts changed (who's running MM on a A1000 now? ;) )
+ - Infinite time trainer now activated by CUSTOM1=1
+ - reworked install script
+ - reworked readme file
+
+ version 1.2 (2002?)
+ - support for the nice splash screen
+
+ version 1.1 (2001?)
+ - fixed kick 1.3 keyboard bug
+
+ version 1.0 (2001?) done by JOTD:
+ - initial release
+ - WHDload slave, using KickEmu, merged with some parts of OSEmu dos emulation
+ - Main executable decrypted and fixed (done by anonymous, excellent work)
+ - Quit key (default: F10)
+ - 2 Access faults fixed
+ - Uses fastmem for super-smooth scrolling
+ - Trainer: CUSTOM5=1 gives infinite time
+ - Added ESC key to give up current game
+ - Nice icons by Exoticons and Chris Vella
+ - source code included
+
+
+Notes:
+
+- The game could not run with OSEmu (because of AddTask() call)
+- The game used the EOA protection, and some files were read protected so
+  finally I decided to included the decrypted exe from a crack.
+- when turning off the music you realize that some samples (the acid pools, the
+  helping slope at start) were recorded with the level music in the background...

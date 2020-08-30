@@ -1,0 +1,67 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Street Racer" © 1994 Epic
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ The installed program requires 2.0 MB ChipMem and 3.0 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+
+History:
+
+Version 2.0 (24.04.2020) done by JOTD:
+
+- fixed a nasty bug that prevented 3 and 4 player mode to work (issue #0004325)
+- added joypad controls for player 1: space=blue/second button, play=F1, rev+fwd+play=quit to wb
+
+Version 1.5 (01.07.2004)
+
+- fixed another access fault (practice/soccer)
+- source code included
+
+Previous versions (1997-):
+
+- Runs fully from HD, starts from Workbench, using WHDLoad
+- Installer script provided
+- Access faults/programming error removed
+- SNOOP problems fixed
+- Decrunch routines/clearmem routines relocated in fastmem for better speed
+- Quit key (QUITKEY for WHDload)
+- Nice new/glow icons by Frank
+- Stack fix by Keith Krellwitz (on the old JST slave)
+- Keyboard fixed
+- CPU dependent loops fixed
+
+Notes:
+
+- Thanks to Bored Seal, Juergen Urbanek, Xavier Bodenand & Hexaae for bug reports
+- Run in NTSC for better speed (this is default, remove if you wish)
+- On the options screen, you have either to plug a joystick in port 0 or unplug
+  the mouse because there's a control bug (the same as in Chaos Engine 2) if
+  mouse is in port 0.
+- Original CD version was done in 1997 by JOTD with the help of Abaddon. It was released
+  as a commercial game. It must be the first (and only) game using JST in a commercial form.
+  Original files were ripped from the original floppy disc by JOTD for the CD version
+  

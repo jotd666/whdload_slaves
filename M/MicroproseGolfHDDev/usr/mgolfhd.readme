@@ -1,0 +1,23 @@
+Short: HD Installer & fix for Microprose Golf
+Type: game/patch
+Author: JOTD (Jean-François Fabre)
+Uploader: JOTD (Jean-François Fabre)
+
+Install-Script © 1997 Jean-François Fabre
+
+This installer requires the Microprose Golf original disks
+and (optionnal) the 2 course disks.
+
+FEATURES:
+
+- Can now install anywhere (does not need DH0: or SYS:)
+- Convenient installer script
+- Startup script including nofastmem to avoid that the player disappears or flickers.
+- Protection removed (done by Fairlight)
+
+I don't know why, but I could only choose English as language. Other choices make
+the game quit.
+You may need to boot without startup-sequence to be able to see the player.
+For 68000 users, I think you can remove the nofastmem commands in the script
+
+Well, a quick fix, but useful.

@@ -1,0 +1,430 @@
+
+
+
+
+
+
+
+
+
+
+                              Proudly Present LOOM
+
+
+Getting Started
+  NOTE: We recommend that you first make a backup copy of all disks and put 
+the originals in a safe place. The disks are not copy-protected, so to copy 
+them, just follow the instructions that came with your computer.
+  You can play Loom from either a hard disk drive or a floppy disk drive.
+
+Keyboard Controls
+ To spin drafts using the keyboard, you can use either of the following set 
+of keys or click the mouse on the appropriate notes on the distaff:
+
+Q    W    E    R    T    Y    U    I
+                 or
+C    D    E    F    G    A    B    [shift]C
+
+Note: these keys correspond to the tonal positions of the distaff on the 
+screen.
+
+Function and Command Keys
+
+F5        Save or Load a Game (only when the cursor is visible.)
+ESC       Bypass a Cut-Scene
+F8        Restart a Game
+SPACE     Pause the Game
+F6        Sound Control       (one press disables music but retains sound 
+                              effects. second press disables all sounds.
+                              third press restores all sounds.)
+>         Faster              [shift] period
+<         Slower              [shift] comma
+ALT i     Reposition Instantly
+ALT j     joystick on         n.o. note: I'm not sure if this works on the
+                              ST version as these docs are from IBM
+ALT x /   Exit Game
+CTL c
+CTL v     Version Number
+
+
+Save/Load Instructions
+
+  If you are playing from floppy disks (and not a hard drive), you will need 
+a blank, formatted disk BEFORE you start to play.  This disk will become you 
+Save/Load disk.  If you are playing Loom from a hard disk, your games will 
+be saved in the directory with the game files.
+  Press F5 when you want to save or load a game.  If you are playing from 
+floppy disks, you will be asked to insert your Save/Load game disk.  Once 
+the Save/Load screen is displayed, you can move the cursor and click on 
+either SAVE, LOAD or PLAY.The SAVE/LOAD option will not be available during
+the opening sequence.
+
+TO SAVE:
+  Click on the SAVE option.  The current list of saved games will be 
+displayed in slots along the left side of the screen.  Select a slot by 
+pointing the cursor to it and clicking.  Now you will be able to type a new 
+name for that slot or use the backspace key to change the existing name.  
+Pressing ENTER will reactivate the cursor.  Click the cursor on OK to save 
+the game, or CANCEL if you have changed you mind and do not wish to save it.
+
+TO LOAD:
+  Click on the LOAD option.  The current list of saved games will be 
+displayed in slots along the left side of the screen.  Select a slot by 
+pointing the cursor to it and clicking.  Click the cursor on OK to load the 
+game, or CANCEL if you have changed you mind and do not wish to load it.
+
+Note: Loading a previously saved game will cause you to lose the game you 
+are currently playing.
+  SAVE/LOAD is disabled during cut-scenes (whenever the cursor disappears 
+from the screen).
+
+
+About Loom
+
+  In Loom, you play the role of Boffin Threadbare, a young boy coming of age 
+in a fantasy world on the brink of apocalypse. Wielding a legacy of magical 
+knowledge, you will set out across a landscape filled with beauty, danger 
+and excitement, making new friends, solving mysteries, and growing in 
+experience and power as you weave your way toward a destiny of overwhelming 
+consequence.
+  Loom is unlike traditional "adventure games" in many ways. Its goal is to 
+let you participate in the unfolding of a rich, thought-provoking fantasy. 
+It is neither a role-playing game (although it incorporates elements of 
+role-playing), nor a collection of brainteasers. Its simple mysteries are 
+designed to engage your imagination and draw you deeper into the story, not 
+to frustrate you or increase the amount of time it takes to finish.
+  You can never be stranded while playing Loom. We've gone to great lengths 
+to insure that you will never find yourself in a situation from which you 
+cannot escape. If you're not sure how to proceed, remember: the knowledge 
+you need to continue the story is always available somewhere nearby. You 
+don't need to save and restore your game frequently to insure success 
+(although you can if you want to). Don't be afraid to experiment. Nothing in 
+the game can "kill" you. If you're really stumped, ask a friend for help. 
+Sooner or later, the answers will reveal themselves!
+  Most important of all, Loom is designed to be completed, not played 
+halfway through and then thrown on a shelf and forgotten. We spent a lot of 
+time and effort creating these disks. We want you to enjoy them all!
+  Listen to the audio drama! The Dolby Stereo cassette tape included in your 
+Loom package will tell you everything you need to know to play the role of 
+Bobbin and to enter his world. Listening to this tape before you start the 
+game will help you to enjoy the story to its fullest. You'll also gain a 
+clearer understanding of how Bobbin can weave magic to affect his 
+environment.
+  Read the Book of Patterns! It contains important information about the 
+magical powers you will soon command.
+  Read the rest of this manual! Loom looks and plays like no other adventure 
+game. Take the time to learn how to make the most of its unique design.
+  This is you role... You direct the actions of Bobbin Threadbare, an 
+inexperienced member of the Guild of Weavers. At the beginning of the story, 
+Bobbin doesn't know very much about the power of the Weavers or how to use 
+it. As he encounters and masters increasingly challenging situations, Bobbin 
+becomes a more proficient Weaver.
+  If this is your first computer adventure game, be prepared for an 
+entertaining challenge. Be patient, even if it takes a while to figure out 
+some of the puzzles. If you get stuck, you might need to solve another 
+puzzle first or discover a musical pattern. But hang in there and use you 
+imagination, and you will guide Bobbin to understand the mysteries of the 
+Loom!
+  We've included the Book of Patterns to help you learn the magical patterns 
+that have been created by Weavers over the millennia. As Bobbin explores the 
+world around him, certain actions on his part cause musical nots, or 
+threads, to be played. Pay attention to these threads- they will always 
+occur in a series of four, which the Weavers call a draft. As the Book of 
+Patterns points out, each draft has its own unique effect, and discovering 
+the purpose for each draft is the secret to success in the world of Loom. As 
+Bobbin finds new drafts, write down the individual threads (each draft has 
+four) for future reference. Be sure to use a pencil when writing drafts in 
+the Book of Patterns! Each time you start a new game, the threads of each 
+draft may be different.
+
+
+Playing the Game
+
+  After the opening title sequence and introduction, you will see Bobbin 
+standing high atop a rocky peak overlooking the island of Loom. You begin 
+directing his actions when he finishes talking and turns to face you. The 
+screen is divided into the following sections:
+
+  1) The Animation Window is the largest part of the screen. The animated 
+action takes place there. It shows the "camera's-eye view" of the room or 
+location where Bobbin is.
+
+  2) The Distaff, the magic staff of the Elders, is represented graphically 
+below the Animation Window. The distaff is essential to Bobbin's success, as 
+it allow him to spin the drafts which affect the world around him in 
+different ways. Remember, Bobbin must first find the distaff for it to 
+appear on the lower part of the screen!
+
+  3) The Icon Box is in the lower right corner of the screen. When the 
+cursor touches an object on the screen that can be used in some way, this 
+box will display an icon representing that object (except when Bobbin is 
+already standing next to an object).
+
+  To move Bobbin around, move your cursor into the Animation Window, point 
+it where you want him to go, and click. If you point to an open door and 
+click, Bobbin will walk through it.
+
+  To examine or "use" an object, point to the object and double-click, or 
+click on the object's icon in the Icon Box. Some objects will produce the 
+sound of a draft (or part of a draft) when activated in this way. Bobbin 
+must be standing next to an object in order to examine it or spin a draft on 
+it. You'll know when he's standing next to an object when its name appears 
+under the icon in the Icon Box. You can deselect the object in the Icon Box 
+by pressing the ESC key.
+  To spin a draft, point and click on each note on the distaff in the proper 
+sequence. For example, if you hear a series of four musical sounds in the 
+game, like C D E C, you should first write the sequence in the Book of 
+Patterns. next to the corresponding draft description. Then, you can try the 
+draft yourself by clicking on an object on the screen, waiting for Bobbin to 
+stand next to it, and repeating the same four notes on the distaff. Note: If 
+you wish to stop spinning a draft while in the process of spinning it, you 
+can press ESC.
+  "Cut-scenes are short, animated sequences - like scenes from a movie - 
+which provide clues and information about the characters (like when Bobbin 
+is greeted by the message nymph). While you are viewing a cut-scene, you do 
+not direct the action and the cursor will disappear from the screen.
+
+Things to Try of the Island of Loom
+
+  Touch the leaf on the tree next to which Bobbin is standing in the 
+beginning of the game. (You can "touch" the leaf by moving the cursor over 
+and double-clicking.)
+  Walk to the Sanctuary of the Elders, at the far left end of the village. 
+Inside you will find three tapestries which Bobbin can tell you about. You 
+will also find the Elders in a heated discussion, and the Loom.
+  Pickup the distaff which was dropped by the Elder Atropos. You must have 
+this object to complete the game.
+  Open the swan's egg into which Hetchel was transformed. Double-click on 
+the egg to hear the Draft of Opening. Then, using the distaff, spin the 
+draft on the egg yourself.
+  Walk to Hetchel's tent, at the far right end of the village. Here you will 
+find a flask with dye in it and a bye pot full of boiling dye. Using each of 
+these objects will produce interesting and educational effects. (Be sure to 
+have a pencil handy!)
+
+
+                            The Book of Patterns
+
+E C E D        Opening - This fundamental draft is traditionally the first 
+- - - -        one taught to novice spellweavers. Once mastered, it may be
+               spun into tarpaulins, theater curtains, or any covering that
+               must be whisked aside on command.
+
+               Dyeing - This draft was perfected by the dye chemists of the 
+- - - -        Woonsocket Chapter, who slaved for hours over steaming pots 
+               to satisfy the Clerics' appetite for colorful vestures. 
+               Originally woven into all types of fabric, the applicability 
+               of the Dyeing draft has diminished over the course of 
+               centuries. Now it works only on wool.
+
+               Summoning - Chiefly spun by the Elders in those rare 
+- - - -        instances when a member's physical presence is required in 
+               the Sanctuary. The draft may be perceived by its recipient in 
+               many different ways. It most often takes the form of a small, 
+               luminous spheroid, referred to in children's stories as a 
+               "messenger nymph".
+
+               Tongues - The Pattern of Tongues was first spun into the 
+- - - -        dinner placemats at the 423rd Conclave of the Guilds, held at 
+               Elstree in 7610. For the first time, the Guild delegates 
+               could understand each other's speeches. This innovation was 
+               widely praised until an Undertake was overheard insulting a 
+               Florist. Both Guilds were plunged into a bloody war lasting 
+               five hundred years.
+
+               Silence - Silence was hailed as a welcome relief for first-
+- - - -        time parents and dwellers in college dormitories. 
+               Unfortunately, our Guildmasters are too often hired to spin 
+               these threads in situations of doubtful appropriateness. The 
+               worst offender is the Guild of Conductors, whose members 
+               frequently impost a draft of Silence over their audience
+               before a concert.
+
+               Emptying - The contents of almost any filled container may be 
+- - - -        instantly unravelled with this handy draft. Before its 
+               development c. 4200, the streams of Woonsocket ran green with 
+               the discarded dyes of the chemists. Avoid the temptation to 
+               spin Emptying upon lakes or clouds; its range is deliberately 
+               limited to prevent catastrophes such as the Double Deluge of 
+               4204 (for which the Guild admits no responsibility).
+
+               Unmaking - Novices are often impatient to acquire the 
+- - - -        undeniably dramatic ability to Unmake physical objects. 
+               Luckily, these volatile threads lie well beyond the grasp of 
+               all but the most mature spellweavers. Entire armies can and 
+               have been disembodied by the transawesome power of Unmaking. 
+               Let us hope we are never again called upon to demonstrate our 
+               craft in this manner.
+
+               Extinguishing - Open flames are easily smothered with the 
+- - - -        draft of Extinguishing. It untangles the threads of oxygen 
+               and fuel within a conflagration almost instantly, with few if 
+               any side effects any very little smoke. The Guild of 
+               Firefighters awarded us with their 6222 Plaque of Distinction 
+               for the development of this safe, fast-acting treatment.
+
+               Sharpening - Scissors, pins and knitting needles are the 
+- - - -        usual benefactors of this simple draft. In ancient times, 
+               however, warriors often submitted their blades to our 
+               Guildmembers for treatment. A formal protest by the 
+               Blacksmiths resulted in the Wetstone Bridge Treaty of 7550, 
+               which specifically prohibits the use of the Sharpening draft 
+               on weapons of war.
+
+               Blessing - Also known as "Casino's Bane". Blessed items 
+- - - -        acquire a charmed state of probability which manifests itself 
+               as "good luck" to laymen. Use of this draft outside the Guild 
+               is restricted by the Emerick Agreement of 5858, which 
+               coincidentally supplies our treasury with an ample endowment 
+               from the Order of Statisticians.
+
+               Straw into Gold - When times are lean, the Elders may invoke 
+- - - -        this draft to generate extra revenue. Its use is strictly 
+               regulated by the Treasurer of the Guild to prevent inflation. 
+               Other Guilds, ignorant in the ways of spellweaving, have 
+               concocted a variety of outlandish fairy tales involving this 
+               rather elementary weave.
+
+               Temblor - Temblor was discovered by a reckless (and now very 
+- - - -        dead) spellweaver who directed the threads of Rending upon a 
+               thought-to-be-dormant volcano. Eagerly sought after by the 
+               Guild of Seismologists, this extremely dangerous draft is 
+               included here only for reference; its spinning has been 
+               forbidden by the Guild since 7331.
+
+               Rending - The inventors of this innocent draft could not have 
+- - - -        imagined how badly it would be abused. The Guild of Embalmers 
+               originally licensed the draft for tearing rags into long 
+               strips. When the Embalmers were disbanded in 6529, a legal 
+               battle awarded the rights to the Guild of Career 
+               Politicians, who employed it to shred documents. The secret 
+               wandered from one unscrupulous Guild to another until it 
+               ended up among the Assassins, whose uses for Rending are too 
+               horrible to describe.
+
+               Night Vision - The threads of this distinctive and beautiful 
+- - - -        draft are extrapolated from the song of nocturnal birds. At 
+               one time, Night Vision was prized by the Guild of Miners, 
+               whose legendary underground realm was chiefly illuminated by 
+               luminous tapestries bearing our Seal. Tragically, demand fell 
+               off after the Great Earthquake of 7331.
+
+               Healing - In Volume 19 of her Brief History of the Guild of 
+- - - -        Weavers (Guild Press, 5620), Third Elder Lazykate documents 
+               the way bandages were treated with Healing as early as 1716. 
+               The four threads have evolved far beyond their original form. 
+               They can now be spun into virtually anything which needs 
+               rejuvenation, with the notable exception of the spellweaver's 
+               own body.
+
+               Shrinkage - Many fabrics contract when exposed to moisture or 
+- - - -        heat. In studying this phenomenon, the ancient Weavers 
+               isolated the threads that cause this natural Shrinkage, and 
+               soon developed a draft to weave the effect into any material 
+               object. Be wary in its use! Open spun, the Shrinkage threads 
+               can never be unwoven.
+
+               Desire - The draft of Desire has its origins in the primitive 
+- - - -        days of our community, when it was used to lure unsuspecting 
+               passersby into Guild shops. When spun upon a creature or 
+               person, it warps the threads around the spellweaver so that 
+               he or she resembles whatever thing the victim desires most. 
+               The illusion is quite fragile and impossible to maintain for 
+               more than a few moments.
+
+               Waterproofing - The 5992 expedition of Fifth Elder 
+- - - -        Spindleshank to the rain forests of Lesser Uxbridge yielded 
+               this very practical draft, which shields any fabric from the 
+               effects of moisture. The Poison Galoshes Panic of 6003 
+               almost resulted in a permanent ban on Waterproofing, until it 
+               was revealed that magazine test reports had been rigged by 
+               the Guild of Umbrella Openers.
+
+               Reflection - This draft was commissioned by the Guild of 
+- - - -        Dancers to expedite costume changes for their 500th 
+               anniversary performance of the classic ballet Olema. When 
+               properly invoked, the spellweaver immediately assumes the 
+               appearance of the being the draft is spun upon, and vise 
+               versa. The four threads are based upon the mating grunt of 
+               the slit-throated chameleon.
+
+               Terror - This draft reweaves the spellweaver's appearance 
+- - - -        into a form drawn from the deepest anxieties of the being the 
+               threads are spun upon. In effect, it turns you into the thing 
+               the recipient fears most. Terror works only on sentient 
+               beings, but its potency more than makes up for this 
+               limitation. It is approved for limited therapeutic use by the 
+               Guild of Psychotherapists.
+
+               Folding - Archaeological evidence suggests that Folding was 
+- - - -        never supposed to be spun upon the fabric of space. Instead, 
+               its inventors seem to have been more concerned with the 
+               management of laundry! No faster or more convenient way has 
+               been found to move a spellweaver from one place to another. 
+               Caution must be exercised when Folding a section of space 
+               already Folded by another spellweaver. Careless spinning can 
+               create an uninhabitable "wrinkle" zone, such as the 
+               Gainsborough Blind Spot.
+
+               Invisibility - When spun upon a person or group, Invisibility 
+- - - -        frays the focus of their vision, rendering the spellweaver 
+               quite difficult to see. The provenance of this draft is 
+               uncertain. It seems to have been acquired (under questionable 
+               circumstances) from the Guild of Shepherds, whose genius in 
+               the art of stealth is probably unrivaled.
+
+               Confusion - The reason why this unusual draft developed is 
+- - - -        lost in time. Revisionists claim that it was spun into the 
+               cheaper fabrics sold at Guild shops in an attempt to 
+               undermine the confidence of bargain hunters. Whatever its 
+               origin, Confusion's potency has not diminished over time. One 
+               spin leaves a victim helplessly bewildered until the 
+               spellweaver is safely out of sight.
+
+               Shaping - Only a handful of Weavers possess the concentration 
+- - - -        necessary to Shape a material substance. The threads of the 
+               draft must be spun with unusual single-mindedness before the 
+               Pattern will yield. Even then, a successfully Shaped object 
+               may revert to its original form if the draft is not rewoven 
+               periodically.
+
+               Twisting - The origins of this ancient draft are lost in 
+- - - -        history. The earliest references to it are woven into the 
+               foremost hem of the Long Tapestry, beside threads depicting 
+               the manipulation of flax and yarn by hand. Tradition has it 
+               that the four notes were derived from the rhythmic squeak of 
+               First Elder Swellfax's own spindle.
+
+               Warmth - What Weaver has never been wrapped in the cozy 
+- - - -        threads of a Warmth draft? Second only to Aphrodesia in 
+               popularity (they are often sold together), Warmth has been a 
+               staple of our Guild for much of our recorded history. Even a 
+               thin gauze coverlet feels as substantial as a Penumbrian 
+               quilt after a single application.
+
+               Aphrodesia - The Guild's quick rise to prosperity and 
+- - - -        influence was due in very large part to the success of this 
+               best-seller. Fabrics woven with threads of Aphrodesia are 
+               guaranteed to soften the heart of even the most indifferent 
+               love interest. Only the Elders are privileged to know the 
+               true origin of the draft. Rumors of a secret affair between 
+               Second Elder Twillfast and a member of the Guild of Organists 
+               are malicious and completely unfounded.
+
+               Sleep - It would be difficult to find a pillow, baby bonnet 
+- - - -        or sleeping bag that has not been imbued with the soothing 
+               properties of this popular draft. The Guild of Nannies 
+               requires its use in all household fabrics, and the 
+               Anesthesiologists have approved an industrial-strength 
+               version as an alternative to chloroform.
+
+C'F G C        Transcendence - Few indeed are the Weavers who have 
+- - - -        successfully spun this, the most subtle and mysterious 
+               expression of our art. Transcendence dissolves the ties that 
+               bind our threads into the Pattern, elevating mind and body to 
+               an undefined state of existence. Transcended beings are said 
+               to assume the form of birds, constellations, or even 
+               sunspots. Because corporal punishment is forbidden in our 
+               Guild, Transcendence is occasionally used as a means of 
+               humane banishment, but only for the most unforgivable 
+               infractions of the the Rules.

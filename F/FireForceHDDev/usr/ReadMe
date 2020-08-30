@@ -1,0 +1,50 @@
+Short : HD-Installer for Fire Force V1.1
+Type : game/patch
+Author : Bored Seal, Rob (trainer values), JOTD
+
+This patch applies to "Fire Force" by ICE.
+Slave requires WHDLOAD V17+.
+
+SUPPORTED VERSIONS:
+- floppy version (c) 1992 ICE - 2 disks (requires 1MB ChipRAM + 1.3MB for PreLoad)
+- CD32 version (c) 1993 ICE - 1 CD (requires 2MB ChipRAM + 1.7MB for PreLoad)
+
+FEATURES:
+- Full load from HD
+- Roster savegame redirected to HD
+- Self-modifying code patched
+- ButtonWait tooltype added for title picture
+- Keyboard handler fixed
+- Blitter waits inserted
+- Beam delays inserted
+- NI/ROM icon (created by JHZ)
+- Quit option (your default key)
+- Access faults fixed (CD32 version)
+- Trainer option added (values found by Rob)
+  * set CUSTOM1=1 for unlimited energy
+  * set CUSTOM2=1 for unlimited ammo
+  * set CUSTOM3=1 for unlimited time
+  
+COMMENTS:
+- If you own FPU, game will probably not work correctly.
+- CD32 version has no animated intro and savegame posibility.
+- Savegame menu is accessed with LMB click on logo at rooster screen.
+
+HISTORY:
+V1.0 r1 (10-Aug-2001) - first release
+V1.0 r2 (01-Oct-2001) - CD32 version supported
+V1.1    (10-Aug-2008) - more trainer options (thanks to Rob), another delay added
+		      - saved rooster loads at startup now
+V1.2    (16-july-2016)
+   - adapted for whdload v17 with dynamic trainer options
+   - quit key for 68000 machines on floppy version
+   - 68000 address error fixed
+   - renamed rooster => roster (rename current file if any)
+
+V1.2-B    (15-july-2017)
+   - fixed keyboard input that was broken in 1.2 (issue #0003705)
+
+Thanks to Chris Vella for disk images.
+
+         Bug report form, full WHDLoad package and other installs:
+                          http://www.whdload.de

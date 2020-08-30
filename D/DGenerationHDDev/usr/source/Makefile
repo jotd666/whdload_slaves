@@ -1,0 +1,13 @@
+PROGNAME = DGeneration
+
+all :  $(PROGNAME)ECS.slave $(PROGNAME)AGA.slave $(PROGNAME)CD32.slave
+
+$(PROGNAME)ECS.slave : $(PROGNAME)ECSHD.asm
+	basm $(PROGNAME)ECSHD.asm
+
+$(PROGNAME)AGA.slave : $(PROGNAME)AGAHD.asm
+	basm $(PROGNAME)AGAHD.asm
+
+$(PROGNAME)CD32.slave : $(PROGNAME)CD32HD.asm
+	basm $(PROGNAME)CD32HD.asm
+

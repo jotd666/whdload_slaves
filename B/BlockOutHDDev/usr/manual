@@ -1,0 +1,294 @@
+                                BLOCK OUT
+
+Typed in by PARANOMIA. Edited by PARASITE.
+
+
+INTRODUCTION
+Welcome to BLOCKOUT, the unique game of three dimensional action and
+strategy. It is played with a set of 3-D blocks, each composed of 1 to 5
+cubes. These blocks appear at the top of a multilayered pit and
+automatically drop down into the pit. You must flip, rotate, and move
+them into the proper position in order to completely fill a layer with
+cubes. When a layer is full, it will disappear, giving you more room to
+maneuver. The more layers you completely fill, the higher your score
+will be. Be careful, though: cubes in uncompleted layers will remain at
+the bottom of the pit, giving you less time and room to maneuver. When
+the stack of blocks reaches the top of the pit, the game is over. Don't
+worry if you don't do well the first few games; the more you play, the
+easier the game becomes.
+
+BLOCKOUT has many options allowing you to modify the different features
+of the game. This includes changing the dimensions of the pit and the
+block set used. Once you master a setup, you can create another one with
+new challanges.
+
+BLOCKOUT, designed by Aleksander Ustaszewski, was inspired by the Soma
+Cube. The Danish writer and mathematician Piet Hein invented the Soma
+Cube, basing it on an unusual geometrical theorem. If you combine no
+more than four cubes into all possible irregular shapes (that is, there
+is a corner somewhere in the shape), you will end up with seven different
+shapes, each composed of three or four cubes. In turn, these seven
+shapes, which contain a total of 27 small cubes, can be combined into a
+larger 3 by 3 by 3 cube. For a complete description of the Soma Cube, see
+Martin Gardner's 2nd Scientific American Book of Mathematical Puzzles &
+Diversions, published by Simon and Schuster, 1961.
+
+GETTING STARTED
+Your BLOCKOUT diskette is not copy protected, so before you play the game
+we strongly recommend that you make a back-up copy of the original
+diskette or copy its contents onto your hard disk. Then use your back-up
+copy when loading the game. If you wish to save your high scores, make
+sure the disk is not write protected.
+
+Note: To skip the title screen, press any key or the mouse button.
+
+PLAYING THE GAME
+
+PLAYING FOR THE FIRST TIME
+While BLOCKOUT is a relatively simple game, you may need some time to
+get used to the interface. The easiest way to do this is to follow
+these steps:
+
+o After successfully loading BLOCKOUT, the program will present you with
+  the Main Menu. Select the Practice Mode option.
+o The playing screen will be displayed. Place your left hand on the Q,
+  W, and E keys, and your right hand on the numeric keypad.
+o Press the 8 key on the numeric keypad. The block will move up towards
+  the top of the screen.
+o Next press the 2 key. The block will move back down towards the bottom
+  of the screen.
+o Press the 6 key and the block will move to the right.
+o Press the 4 key and the block will move to the left.
+o Next try rotating the block. This is done with the left hand, using
+  the Q, W, and E keys.
+o Press the E key and watch the block rotate. Press the E key again and
+  it will rotate in the same direction. Do this a few times to get
+  familiar with the rotation of the block.
+o Next experiment with the Q and W keys in the same fashion. Watch how
+  the block reacts to each keypress.
+o Now try dropping the block into place by pressing the Space Bar.
+o Once you have become familiar with the game controls, press the Esc
+  key to exit the Practice Mode.
+o You can now try the actual game by selecting the Start Game option.
+o You will be presented with another menu that allows you to set the
+  starting level. Press Enter or the 0 key to select level 0 (the
+  easiest level).
+o The game will begin. Now that you have gamed some familiarity with
+  the game controls, you should be well on your way to mastering
+  BLOCKOUT.
+
+GAME CONTROLS
+Moving the Blocks
+
+Numeric keypad
+      1           move down and left
+      2           move down
+      3           move down and right
+      4           move left
+      6           move right
+      7           move up and left
+      8           move up
+      9           move up and right
+
+Note: The mouse and the cursor keys will also move the block around the
+pit.
+
+Rotating the Blocks
+Q - Flips the block counter-clockwise (around x axis)
+W - Turns the block counter-clockwise (around y axis)
+E - Spins the block counter-clockwise (around z axis)
+
+A - Flips the block clockwise (around x axis)
+S - Turns the block clockwise (around y axis)
+D - Spins the block clockwise (around z axis)
+
+Other Game Controls
+Select the highlighted option                  Return
+Drop the block                                 --Space or Mouse Button--
+Turn sound on/off                              --(see Choose Setup Menu)--
+Pause/resume the game                          P
+Abort the current game or exit from the menu   Esc
+
+PLAYING SCREEN
+The playing screen for BLOCKOUT is divided into three areas: the pit,
+the layer bar, and game information. In the center of the screen is the
+pit. This is the area where you will position the blocks. On the left
+side of the screen is the layer bar. This vertical bar will show the color
+or shade of each layer of blocks in the pit. On the right side of the
+screen the game information is displayed; the current score, number of
+cubes played, and high score, as well as the pit dimensions and block
+set.
+
+SCORING
+There are a total of 11 dificulty levels in BLOCKOUT. You will be able
+to start the game at any of the first ten levels. After a certain
+number of cubes has been played, the level will increase, making the
+game more difficult. In larger pits, you must drop more cubes before the
+difficulty level changes.
+
+Your score in BLOCKOUT increases.
+o With the complexity of both the individual block and the block set.
+o With the height from which the block is dropped (using the Space Bar).
+o As the level increases.
+o As the size of the pit decreases.
+
+Bonus points are awarded for:
+o Filling an entire layer.
+o Filling more than one layer at a time.
+o Clearing the entire pit.
+
+Note: The score in BLOCKOUT does not depend on the Rotation Speed
+parameter.
+
+HALL OF FAME
+Once the game is over, press Enter (or Return). The Hall of Fame will
+then appear, displaying the ten highest scores. If your score is higher
+than the lowest score on the list, you will be allowed to enter your
+name. After typing in your name using the keyboard, press Enter to save
+the new score to disk. pressing Enter without typing a name will also
+save the score.
+
+If you don't want to save your new score, press the Esc key or select
+the Cancel button.
+
+Every setup will have its own Hall of Fame. This will allow you to save
+the ten highest scores for each combination of pit and block set. The
+only exceptions are pits with reversed length and width dimensions. For
+example: a 4 x 5 x 10 pit would have the same Hall of Fame as a 5 x 4 x
+10 pit.
+
+MENUS
+BLOCKOUT has a system of menus that allows you to alter different
+features of the game.
+
+Select a menu option by using the mouse and mouse button, or by pressing
+the first letter of the option name. If you are in a submenu, pressing
+the Esc key will return you to the Main Menu.
+
+MAIN MENU
+Start Game - Starts the actual game with the specified setup ("Flat
+Fun" is the default). Upon selecting this option, you will be allowed
+to set the starting level (0 being the easiest). You can use Enter, the
+the up and down cursor keys, the 0 through 9 keys, or the mouse (if
+applicable) to select the level.
+
+Choose Setup - Selects the Choose Setup menu. This menu allows you to
+choose from several preselected setups, or change the setup completely.
+
+Write Setup - Saves the current setup to the disk, in a file called
+'blockout.set'. The setup will automatically load the next time you
+boot the game.
+
+Practice Mode - Starts the practice mode in the current setup. In this
+mode, the blocks do not automatically descend until the Space bar is
+pressed. The player has unlimited time to move and rotate the block.
+Press the Esc key to exit the practice mode.
+
+Demo - Starts a demonstration of the game in the current setup. The
+computer takes over the role of the human player and automatically
+adjusts the position of each block and then drops it into place.
+Pressing any key will exit the demo, (Note: The demo mode will start
+automatically, if you don't play for a while.)
+
+Help - Displays a screen listing the game controls and showing
+examples of three blocks, each rotating along a different axis.
+Selecting one of the two rows of keys in the menu will change the
+rotation direction.
+
+Quit Game - Exits the game and returns to the operating system.
+
+CHOOSE SETUP MENU
+The Choose Setup menu allows you to alter different features of the game.
+It contains several windows and buttons. To select an option in a
+window, click on the selector next to the option name.
+
+Predefined Setups. This window allows you to choose from several
+preselected setups. Watch how selecting predefined setups changes the
+parameters in other windows.
+
+    Flat Fun - Changes the current setup to Flat Fun. This setup was
+    designed with the novice player in mind. Its Flat block set and
+    large pit allow for easier play than the more advanced setups.
+
+    3-D Mania - Changes the current setup to 3-D Mania. Designed for
+    advanced players, this setup uses the Basic block set with a
+    narrow pit. This is the favorite setup of the developers of the
+    game.
+
+    Out of Control - Changes the current setup to Out of Control. This
+    setup is quite different than the other two. When using the
+    Extended block set, the game becomes a complex logic puzzle.
+
+Block Set. This window allows you to select one of the three block sets.
+
+    Flat Set - The Flat Set consists of the two dimensional blocks
+    (1, 2, 5, 6, 9, 10, 13, and 14) that are composed of 1 to 4 cubes.
+
+    Basic Set - The Basic set consists of blocks 1 through 7. They are
+    formed by combining three or four cubes into the irregular shapes.
+    These seven shapes, which contain a total of 27 cubes, can be fitted
+    together to form a larger 3 x 3 x 3 Soma Cube (see INTRODUCTION).
+
+    Extended Set - The Extended set consists of all block combinations
+    of 1 to 5 cubes (blocks 1 - 41). Note: If the current pit is too
+    small to fit a block from the extended set, this type of block is
+    not generated.
+
+Rotation. This window controls the speed of the rotation and transition
+of the blocks when moving down the pit. The game scoring does not depend
+on this parameter. Select one of the three speeds: Fast, Medium, or Slow.
+
+Pit Dimensions. This window allows you to change the depth (6 to 18),
+width (3 to 7), and length (3 to 7) of the pit. Please note that there
+is a separate top-ten list for each block set and pit combination.
+
+Sound. This window allows you to turn sound effects off and on.
+
+At the bottom of the Choose Setup window you will find the following
+buttons: Start Game, Main Menu, Write Setup, and Cancel.
+
+Start Game - Starts the actual game.
+
+Main Menu - Returns to the Main Menu with the new setup (if you change it).
+
+Write Setup - Saves the current setup to the disk, in a file called
+'blockout.set'. This option is also available in the Main Menu.
+
+Cancel - Returns to the Main Menu without any changes in the game setup.
+
+HALL OF FAME MENU
+Start Game - Starts the actual game. The setup will be the same as the
+game just played.
+
+Change/Choose Setup - Selects the Choose Setup menu.
+
+Main Menu - Returns to the Main Menu.
+
+Quit Game - Exits the game and returns to the operating system.
+
+HINTS AND STRATEGY
+o Unless you have three hands, use just one set of keys to rotate the
+  block: either Q, W, and E, or A, S, and D, but not both. Place three
+  fingers of your left hand on the Q, W, and E (or A, S, and D) keys. Place
+  your right hand on the numeric keypad. Try to keep your hands at these
+  locations at all times when playing.
+o Becoming familiar with rotating the blocks using the Q, W, and E
+  keys or (A, S, and D) is important to mastering the game. Don't get
+  discouraged if it seems confusing at first.
+o If you are having problems playing the game for the first time, watch
+  the computer play in the Demo mode. Then try the Practice Mode to
+  become familiar with the game controls.
+o Sometimes it becomes difficult to tell the exact position of a block
+  within the pit. When this happens, try moving the block against the
+  side of the pit. From there carefully move it into the desired
+  position.
+o Remember that the faster you move a block into position and drop it, the
+  more points you will get.
+o If you have problems recognizing the overall shape of a block, try
+  rotating it into different positions. By getting several views of the
+  block in different positions, you should get a better idea of its shape.
+o If you are trying to achieve the highest score possible, try beginning
+  from a higher starting level.
+o You can maneuver the block until it is filled with colors or shades.
+  After you drop a block, there is still a very short moment when you can
+  move the block if there is room for it.

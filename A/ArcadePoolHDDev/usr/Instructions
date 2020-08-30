@@ -1,0 +1,228 @@
+
+ARCADE POOL
+~~~~~~~~~~~
+This is an exciting arcade-style Pool game for 1 to 8 players. It combines
+realistic poolhall action, authentic sound effects, offical rules of many
+different games, the option to configure your own custom rules and a simple,
+yet highly accurate control system to make this the most definitive pool
+simulator available.
+
+COMPATIBILTY
+~~~~~~~~~~~~
+Arcade Pool was designed and written for the AMIGA series of home computers
+and as such will run fine on any system. Additionally, Arcade Pool will
+detect and make use of the AGA chipset should your machine be suitably 
+equipped. The enchancements include better sound and improved ball graphics.
+
+REQUIREMENTS
+~~~~~~~~~~~~
+You will need an Amiga computer equipped with 1Meg or More of RAM and a mouse
+attached in the appropriate port. This game does NOT use a joystick.
+
+LOADING
+~~~~~~~
+To load Arcade Pool, simply reset your machine and insert the disk. After a 
+while, the Team 17 logo will appear and following that, the game menu and
+a demonstration will commence.
+
+During loading, you will be informed of the configuration that the game has
+recognised whether you get enchanced graphics and sound and if the game will
+utilise a disk cache(memory permitting).
+
+MAIN MENU
+~~~~~~~~~
+From this you will be able to select the following
+
+
+    - Player Set Up
+    - Options
+    - View Hall Of Fame
+    - Demo Session
+    - Save/Load Options
+
+START NEW GAME
+~~~~~~~~~~~~~~
+This will take you into the main game selection menu and allows you to pick
+a game from any of the styles available(see later) and what type of game
+you would like. The game will then commence with the environment set up in
+the Options and the Player-Setup sub-menu.
+
+PLAYER SET UP
+~~~~~~~~~~~~~
+This allows you to specify player names and whether or not they are
+controlled by the computer (CPU). A monitor/Screen next to the name means
+that the player is controlled by the computer - clicking on ths will change
+it to a mouse icon and this specifies that it is a human player. Click on
+the player name to edit with keyboard.
+
+OPTIONS
+~~~~~~~
+In here are various options which effect how the game is played.
+
+       - Aiming Aid             :    Line/Outline/None
+       - Skill Level            :    Easy/Normal
+       - Table Friction         :    Low/Normal/High
+       - Sound                  :    Music/Sound-Effects
+
+ Additionally, there are a set of options which govern how the "CUSTOM POOL"
+ is regulated and enable you to set up exactly how you prefer to play, with
+ what table and ball etc. Options are also available will enable you to
+ configure to your own regional 8-Ball rules.
+
+ Note that both scoring games("9-Ball challenge" and "Speed Pool") ignore
+ the options settings so that all games played have the same environment.
+
+VIEW HALL OF FAME
+~~~~~~~~~~~~~~~~~
+This displays the top ten scores in "9-Ball Challenge" and the top ten times
+for "Speed Pool". Top ranking challenge game players are also shown. These
+lists can be loaded/saved via the Load/Save options.
+
+DEMO SESSION
+~~~~~~~~~~~~
+Watch the CPU players battle it out in a self-running demomstration of 
+Arcade Pool.
+
+LOAD/SAVE OPTIONS
+~~~~~~~~~~~~~~~~~
+From here you can load/save the Hall of Fame mentioned earlier, or save/load
+situations for the "Trickshot" mode. Follow on-screen prompts carefully when
+using these options.
+
+SELECT GAME STYLE
+~~~~~~~~~~~~~~~~~
+When starting a new game, you will be offered a number of different game 
+styles. Games are available in a variety of modes depending on the number of
+players;
+
+       SINGLES       (Best of 1/3/5 games)
+       TOURNAMENT    (Knock-out tournament)
+       CHALLENGE     (Against CPU opponents)
+
+Game styles available are as follows;
+
+UK 8-BALL
+~~~~~~~~~
+This game uses regular 8-Ball rules, with the UK Ballset on a green table.
+Uses current option set-ups and is available in Singles, Tournament or
+Challenge Modes.
+
+US 8-BALL
+~~~~~~~~~
+As above only with US set-up (Spots/Stripes and Blue Baize table). Standard
+8-Ball Pool Rules apply.
+
+TRICKSHOT
+~~~~~~~~~
+A single player game where anything goes, nothing is illegal and you can pick
+up and move balls as you please. Options on screen allow you to add and remove 
+balls in setting up trickshots, which can be loaded and saved with the 
+Save/Load Options. Uses the current options for play.
+
+CUSTOM POOL
+~~~~~~~~~~~
+Uses the current set options and the additional Custom-Pool options which
+allow you to configure how the game is played. This is available in Singles
+Tournament or Challenge modes.
+
+9-BALL
+~~~~~~
+Played with a US set-up and available in Singles, Tournament or Challenge
+modes.
+
+8/15 BALL POOL (STRAIGHT POOL)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This is a single player only game and is based on 9-Ball but with full 
+scoring. For details of this, consult the rules specified later in this
+manual.
+
+SPEED POOL
+~~~~~~~~~~
+This is a single game, the object is to clear all the balls from the table
+in any order. Best times are recorded. This is available in Singles and 
+Challenge mode, where to keep competing, you have to beat the time limit.
+
+SURVIVOR (KILLER)
+~~~~~~~~~~~~~~~~~
+This is an enjoyable tournament for up to 8 players all of whom must aim to
+be the last "Survivor"(or alternatively, the "Killer"). Its great fun if 
+there are a number of you around and this one will really test players
+ability to pot ball under pressure.
+
+ON-SCREEN DISPLAY AND ICONS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The main game display shows you the table from the direct overhead view. The
+shot power indicator is on the bottom right and is tweaked by clicking on the
+sliding scale, with a full red line indicating maximum power.
+
+Next to the power indicator is the spin icon. Clicking on this cue ball will
+affect how the ball react, so you can apply back, side and top spin onto the 
+cue ball to aid you in postioning for you next shots.
+
+If you are playing in EASY mode, the movements of the cue ball after hitting
+the target ball will be shown by the dotted line or ball outline.
+
+If you are playing a game where it is vital that that you know the ball
+numbers on the spots/stripes ballset, an indicator will be to the left of the
+spin icon. If you move the cursor over the ball on the table, its number will
+be displayed on the indicator - so make sure you know what you are supposed
+to be hitting next by using this very useful icon.
+
+On the left, there are five icons which have the following effects;
+
+         -Exit To Main Menu
+         -Reset Table
+         -Instant Replay
+         -Statistics
+         -Save Situation
+
+In the top left corner of the display, to the left of the player name, is the
+ball or ball type that the player should be currently aiming for. In the
+event of any ball being able to be played, a hybrid ball appears.
+
+MAKING A SHOT
+~~~~~~~~~~~~~
+The mouse pointer icon will change to indicate the control options avilable;
+
+     CROSSHAIR GRAPHICS
+     ~~~~~~~~~~~~~~~~~~
+ Postion the crosshair to aim the cue ball and click the left mouse button
+ to confirm.
+
+     BALL MOVEMENT GRAPHIC   
+     ~~~~~~~~~~~~~~~~~~~~~
+  This means that the balls are in play and no input is possible untill all
+  the balls have come to a rest.
+
+     ARROW GRAPHIC
+     ~~~~~~~~~~~~~
+  Use this to select the Power, Spin or Control functions in the lower area
+  of the screen.
+
+     HAND GRAPHIC
+     ~~~~~~~~~~~~
+  The Cue Ball may be picked up and positioned wherever the player wants
+  (following a foul).
+
+     CLOCK GRAPHIC    
+     ~~~~~~~~~~~~~
+  A CPU player is thinking about its shot.
+
+     MOUSE GRAPHIC
+     ~~~~~~~~~~~~~
+  Paused, Click left mouse button to continue.
+
+After postioning your ball with the crosshair and clicking on the left button
+a dotted line or ball outline will appear showing the ball`s path.
+
+If you are playing in EASY skill mode, the deflection of the cue-ball after
+hitting the target ball we also be shown - this makes it much easier to avoid
+accidently potting the cue ball by mistake (called a 'SCRATCH' in the US)
+
+Note: If playing with no aiming aid, you will just see the cross hair.
+
+At this point you can still modify you shot strength and spin by using the
+relevant icons at the bottom of the display.
+
+When you are ready to make your shot, press the right mouse button to shoot.
+

@@ -1,0 +1,1192 @@
+
+
+                               - C O A L A -
+
+                          A Battlefield Simulator
+
+
+          "Nothing except a battle lost can be half so melancholy
+                             as a battle won."
+
+                -Arthur Wellesly, Duke of Wellington, 1815
+
+
+
+
+Populierenlaan 59                    Copyright © 1995 BITFUSION Software
+NL-2925-CP Krimpen a/d IJssel        All Rights Reserved
+The Netherlands
+Phone +31(0)1807-20798
+Email bitfusion@hegate.xs4all.nl
+
+                CLICK HERE FOR THE CONTENTS OF THIS MANUAL
+
+
+
+
+----------------------------------------------------------------------------
+C O N T E N T S
+----------------------------------------------------------------------------
+           COALA FEATURES                 COALA GAMEPLAY             
+
+
+           SYSTEM REQUIREMENTS            HARDDISK INSTALLATION      
+           STARTING UP COALA              LOGIN WINDOW               
+
+           HELICOPTER CONTROLS            VIEW POSITION CONTROLS     
+           VIEW DIRECTION CONTROLS        WEAPON SYSTEM              
+           PREFERENCES                    OTHER FUNCTIONS            
+
+           COCKPIT                        HUD (HEAD UP DISPLAY)      
+           HDD (HEAD DOWN DISPLAY)        CHOOSE OPERATING AREA      
+           CHOOSE TIME OF DAY             CHOOSE SCENARIO            
+           MAKING A CUSTOM SCENARIO       LIST OF VEHICLES           
+           LIST OF WEAPONS                WEAPON EFFECTIVENESS CHART 
+
+
+           GLOSSARY                       CREDITS                    
+
+
+
+
+-----------------------------------------------------------------------------
+C O A L A   F E A T U R E S
+-----------------------------------------------------------------------------
+
+ Virtual Cockpit
+ ~~~~~~~~~~~~~~~
+ Unlike most simulators, the cockpit view is not a fixed view to the front
+ of you. It is a 'real' three dimensional object, which enables you to look
+ around in every direction. By pressing the right mouse button and moving
+ the mouse, you can turn your 'head' around.
+ It is possible to fly north and to turn your head from the West to the
+ East. Or you can look up to watch a plane flying over. You can even look
+ down and watch your own virtual hand moving the steering column. ( Set
+ object detail to 10 in preferences menu <Del> )
+
+ Artificial Intelligent Living World
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ In other games you are the only target of the enemy. In this game there
+ exists a world living on his own. Enemy pilots choose their own targets
+ and you are just one of them. You can watch planes killing tanks while
+ flying past. There a lot of different vehicles and all of them have their
+ own artificial intelligence.
+
+ IHADSS Integrated helmet and display sighting system
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ You don't have to line up your chopper to the target, it's enough to
+ turn your head. Thanks to the virtual cockpit this system is very well
+ simulated !
+
+ Extensive flight computer
+ ~~~~~~~~~~~~~~~~~~~~~~~~~
+ Including many functions like radar, sattelite view, extensive databank,
+ virtual camera and real-time battle reports.
+
+ Flexible Viewposition Control
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ By using your mouse you can rotate around and zoom in/out all vehicles.
+ You can even fly along enemy military hardware to study their tactics.
+ Supported views : Inside, Outside, Independent, Missile and Sattelite.
+
+ Nice light effects
+ ~~~~~~~~~~~~~~~~~~
+ Real shadows, shading, depth cueing and a gradient horizon
+
+ Cyclic world map
+ ~~~~~~~~~~~~~~~~
+ The world never ends, just like in real life, it's round!
+
+ The possibility to make your own scenario
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ This makes all kinds of what-if  scenario's possible. It's possible, for
+ example, to launch 10 A10 warthogs against a single T72 tank.
+
+ Four involved sides
+ ~~~~~~~~~~~~~~~~~~~
+ East, West, UN and Civil.
+ Which side is friendly and which is hostile depends fully on your own
+ behaviour.
+
+ Four surrounding types of area
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ Forest, jungle, desert and ice
+
+ Four times of days in which to start
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ Dawn, afternoon, nightfall and night
+
+ Smart weapon systems
+ ~~~~~~~~~~~~~~~~~~~~
+ Hellfires   : laser guided missile,lock on your reflected laser
+ Sidewinders : infra red guided missile,lock on heat radiated by vehicles
+
+
+
+
+
+
+----------------------------------------------------------------------------
+S Y S T E M   R E Q U I R E M E N T S
+----------------------------------------------------------------------------
+
+Coala works on a standard A1200 and the A4000
+
+Although it will work on these platforms we suggest the use of
+some FAST memory. This will make the animation frame rate twice as fast !
+Coala detects and uses faster processors like the 68030 and 68040.
+For optimum game satisfaction we also recommend the use of a harddisk with
+2 Megabyte of free space.
+
+To be short, the minimum requirement is a 68020 processor and an AGA
+chipset. Everything above this minimum will be used by the game to
+give you faster/better graphics.
+
+If you are not sure about the system specifications of the computer
+you use, please consult the manuals which came with your computer and
+additional expansions.
+
+
+
+
+
+
+
+-----------------------------------------------------------------------------
+I N S T A L L A T I O N
+-----------------------------------------------------------------------------
+
+Coala can be installed on a harddisk.
+
+Before you proceed, make a backup copy of the gamedisk and use this
+disk to install the game instead of the original floppy disk.
+This will prevent the original game disk from being damaged.
+The backup copy and the original is for private use only!
+If you're not sure of how to do this, please consult the manuals which
+came with your computer.
+Startup the workbench, insert the disk and doubleclick on the disk icon.
+The look for the icon called 'HDinstall' and doubleclick on this icon.
+After a while the program will ask you questions about the place
+where to store the game, answer these questions.
+After a short while  the game is installed on your harddisk and can
+now be played from your harddisk.
+
+If any of the above terms are unfamiliar, please consult the Workbench
+manual for further explanation.
+
+
+
+
+
+
+
+-----------------------------------------------------------------------------
+L O A D I N G
+-----------------------------------------------------------------------------
+
+To run Coala, simply Doubleclick on it's icon from the workbench or type
+'Coala' from the shell in the appropiate directory.
+
+
+
+
+
+
+----------------------------------------------------------------------------
+L O G I N
+----------------------------------------------------------------------------
+
+In order to login you have to type in the password corresponding to one
+of the following usernames :
+
+Username				Password
+----------------------------------------------------------------------------
+guest					I'll behave myself
+Gen. Sir Anthony Hogmanay Melchett	Georgina
+Lt. George Colthurst St.Barleigh	Jippededoo
+Lt.-Gen. Frederick M. Franks		wtfigo
+Lt.-Col. Terence Otway			Sword
+Dana Scully				beyond the sea
+Fox Mulder				UFO
+Colin Powell				White House
+John Lennon				Stu Sutcliffe
+John Doorzon				BUUV
+Yogi Bear				Picnic Basket
+Bruce Lee   				Yip Man
+David Letterman				Madonna
+Fred Flindstone				Wilmaaa
+Betty Boop				PassWord
+Chuck Rock				Ophelia
+Wolf Child				Saul
+K.Lovett				Hybris
+Zool					Zooz
+Lee Harvey Oswald			Jack Ruby
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------
+H E L I C O P T E R   C O N T R O L
+----------------------------------------------------------------------------
+
++,-					Height.	   SeaLevel -> 100 meters
+					Also check out the following keys :
+					<1>,<3>,<4>,<5>,<0>
+
+Mouse/Joystick Left/Right		Heading	   360 degrees of freedom
+
+Mouse/Joystick Forward/Backwards	Speed	   -75 -> +300 km/hour
+
+
+Mouse control is recommended because it gives you a much more sensitive
+control over your chopper !
+
+
+
+
+
+
+
+----------------------------------------------------------------------------
+V I E W P O S I T I O N   C O N T R O L
+----------------------------------------------------------------------------
+
+F1					Cockpit/Video Display
+
+F2					Outside
+
+F3					Indipendent
+
+F4					Missile
+
+F5					Cycle through other vehicles
+
+
+
+OUTSIDE VIEW:
+
+Mouse Forward/Backwards,both buttons	Distance at vehicle
+
+
+
+
+
+
+----------------------------------------------------------------------------
+V I E W D I R E C T I O N   C O N T R O L
+----------------------------------------------------------------------------
+
+INSIDE VIEW:
+Mouse Left/Right,right button		Turn head left/right
+Mouse Forward/Backwards,right button	Turn head up/down
+
+
+
+OUTSIDE VIEW:
+Mouse Left/Right,right button		Rotate horizontally around vehicle
+Mouse Forward/Backwards,right button	Rotate vertically around vehicle
+
+
+
+IN & OUTSIDE VIEW:
+F6					Front
+F7					Right
+F8					Back
+F9					Left
+F10					Top
+
+
+
+
+
+
+
+----------------------------------------------------------------------------
+W E A P O N   S Y S T E M
+----------------------------------------------------------------------------
+
+Space				Change weapon
+Left Mouse Button, Return	Fire weapon
+TAB				TADS display
+				(Target Acquisition and Designation
+				System )
+z,x				Zoom factor in TADS mode
+c				release CHAFF, to mislead radar guided
+   				missiles like Hellfires and Kedges
+f				release FLARE, to mislead heat seeking
+				missiles like Sidewinders and Aphids
+
+After you've released a decoy, the missile aimed at you will continue flying
+but won't be able to follow your path, so don't release a decoy and
+keep flying straight ahead. The missile will follow the path of the decoy
+and eventually wil hit you. The proper use of it is to release a decoy and
+turn away, leaving your original flight path, while the missile will continue
+flying after your decoy.
+
+You can choose from four different weapons. When landing on a friendly base
+you are automatically rearmed and refuelled.
+
+-30 MM GUN	Bullets
+		unguided, short range
+		Thanks to the IHADSS system ( integrated helmet and display
+		sighting system) the 30 mm gun slaves automatically whenever
+		you move your head. So you don't have to line up your chopper
+		to the target
+
+-FFAR 		Unguided Rockets
+		stabalized by rotating,long range.
+		Because rockets are unguided, you have to line up your
+		chopper to the target. Notice the movement of the crosshair
+		when you move your head.
+
+-HELLFIRE	Laser Guided Missiles
+		Flies automatically to the vehicle/building your laser is
+		pointing at. Since the missile flies to the reflecting point
+		of your laser, you have to keep the laser pointing at the
+		target UNTIL it hits the target. It's even possible to switch
+		to a different target while the missile is flying.
+		Long range
+
+-SIDEWINDER	IR Guided Missiles
+		Locks on the heat produced by the vehicle's engines.
+		This is the only weapon that can be effectively used against
+		fast moving objects like jet planes.
+		Fire and Forget
+		Long Range
+
+
+
+
+
+
+----------------------------------------------------------------------------
+P R E F E R E N C E S
+----------------------------------------------------------------------------
+
+Since computer power is limited, a simulator is always a compromise between
+graphics detail and animation speed. Using the preferences menu you can set
+this ratio to your own favour :
+
+Vision			0-1000
+World Detail		1-10
+Object Detail		1-10
+Shadows			no/yes
+Surface Detail		no/yes
+Time Compression	slow motion/realtime/fast motion
+Sound			no/yes
+Shaded Horizon		no/yes
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------
+O T H E R   F U N C T I O N S
+----------------------------------------------------------------------------
+
+Help		HUD ( Heads Up Display )
+Del		Preferences Menu
+        	Use the cursor keys to change the preferences
+~		night vision goggles  (PNVS pilot night vision system)
+p		pause
+		Note that a lot of functions are still working in pause
+		mode. You can still cycle through the other vehicles and
+		change your view direction.
+Esc		Get out of your helicopter. Don't forget to first land your
+		helicopter since it isn't exactly good for your health
+                to jump out of a flying helicopter.
+
+
+
+
+
+
+
+----------------------------------------------------------------------------
+G A M E   P L A Y
+----------------------------------------------------------------------------
+
+In this game you will find yourself in a fully armed helicopter in the middle
+of a battlefield. You have no missions, no commanding officers and no orders.
+
+The objective of this game is to find out what's happening in the battlefield
+,choose one side and to help them win the battle. There are a lot of
+scenarios to choose from. It's even possible to make your own scenario or to
+let the computer make a random scenario.
+
+Each scenario requires different tactics, for example it makes a big
+difference if you have to fight against 3 tanks+1 chopper or 1 tank+ 3
+choppers !
+
+When you first enter the battlefield you have neither enemies nor friends.
+The East and West side are at war and by attacking one of those sides you
+got yourself involved in this battle.
+
+Every vehicle in the field has his own artificial intelligence. You have to
+find out different tactics for each type of vehicle. For example :
+
+-Fighter planes won't be able to track you if you fly at a low attitude
+
+-The best tactic to kill a chopper is the ambush, for example behind a
+ big building.
+
+-Always keep yourself covered by buildings or trees when approaching an
+ AA-GUN.
+
+-You can escape missiles by using decoys, or to dart off perpendicular
+ to the missiles's flight path
+
+-Use the right decoy (CHAFF/FLARE) for the right missile
+
+Always remember that actions cause reactions. For example :
+
+-Killing a Western plane not only pleases the Eastern forces but also
+ gives you a new enemy !
+
+-Attacking an UN vehicle gives you a very tough enemy : the rest of the
+ world ! The UN will immediately send some F16 fighters after you !!!
+ (if available)
+
+-Killing a red-cross/ambulance vehicle will make the enemy furious
+
+-You will only be rearmed and refueled at friendly bases
+
+In the field you will encounter 4 sides :
+
+        1 East		 	uses RUSSIAN equipment
+        2 West		 	uses NATO equipment
+        3 UN (United Nations)   attacking this side is not a very clever move
+        4 Civil			don't find yourself brave by attacking this side
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------
+Cockpit
+----------------------------------------------------------------------------
+
+        1  -     Height
+        2  -     CRT     (Press F1 to zoom in)
+        3  -     Missile wWarning
+        4  -     Hosile vehicle warning
+        5  -     Speed
+        6  -     Current engine power
+        7  -     Power
+        8  -     Dummy
+        9  -     Fuel
+        10 -     Heading
+
+
+
+
+
+
+----------------------------------------------------------------------------
+Heads Up Display (HUD)
+----------------------------------------------------------------------------
+
+The Head Up Display can be turned on/off by pressing the <HELP> key.
+
+1 -     Speed in kilometer/hour
+
+2 -     Altitude in meters
+
+3 -     Heading
+Please note that the virtual cockpit allows you to look to another
+direction the chopper is flying
+
+4 -     Crosshair
+When selected a weapon, a crosshair will appear in the middle
+of the screen. All weapons have a different crosshair.
+
+5 -     This displays the current thrust
+
+6 -     Time
+
+7 -     Current time
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------
+Heads Down Display (HDD)
+----------------------------------------------------------------------------
+
+During cockpit view ( <F1> ) you can zoom in on your
+CRT display by pressing <F1> again
+
+1 -     Info Button
+        ~~~~~~~~~~~
+By pressing this button, additional information will be presented about the
+selected vehicle. You can select a vehicle by clicking on its icon on the
+radar screen. This will turn it's icon white.
+
+2 -     Camera Button
+        ~~~~~~~~~~~~~
+You can fly alongside the selected vehicle by pressing this button.
+By pressing the right mouse button you can rotate 360 degrees around
+the vehicle. When pressing both mouse buttons you can alter the
+distance of your view point and thus zoom in- and out.
+
+3 -     Sattelite Button
+        ~~~~~~~~~~~~~~~~
+By pressing the right button and moving your mouse you can look around
+and thus scan the area for other vehicles, buildings, etc.
+When pressing both the mouse buttons you can zoom in and out, while moving the
+mouse back and forth.
+
+4 -     Stores Button
+        ~~~~~~~~~~~~~
+
+This screen gives you important information about the fuel you
+have left, weapons you're carring, etc.
+
+5 -     Weapon button
+        ~~~~~~~~~~~~~
+You can change your current loaded weapon by pressing this button
+
+6 -     Radar
+        ~~~~~
+All vehicles are represented by small colored icons :
+
+                       Radar Colour Side
+                       -------------------------------
+                       blue		West
+                       red		East
+                       grey		UN/civil
+                       yellow	        hostile
+                       purple	        selected target
+                       white		current vehicle
+
+7 -     Radar Range Button
+        ~~~~~~~~~~~~~~~~~~
+
+Use this button to cycle through 4 radar ranges.
+
+8 -     Briefing
+        ~~~~~~~~
+This will give you a real-time briefing of the ongoing situation.
+Information about the destroyed vehicles, helicopters and planes can
+be found here.
+
+
+9 -     Messages
+        ~~~~~~~~
+This screens keeps you informed what's happening in the field
+
+10 -    Main Menu
+        ~~~~~~~~~
+Let you choose from the above options
+
+
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------
+C H O O S E   O P E R A T I N G   A R E A   M E N U
+----------------------------------------------------------------------------
+
+                Forest - Western Europe
+
+                Jungle - Yucatan, Mexico
+
+                Desert - North Africa
+
+                Ice - North Pole
+
+
+
+
+
+----------------------------------------------------------------------------
+C H O O S E   T I M E   O F   D A Y   M E N U
+----------------------------------------------------------------------------
+
+
+                        Dawn      - 0600 hours
+
+                        Afternoon - 1200 hours
+
+                        Sunset    - 1800 hours
+
+                        Night     - 0000 hours
+
+
+
+        Don't forget to turn on the PNVS (Pilot Night Vision System)
+                  by pressing <~> if you are flying at night.
+
+
+
+
+
+----------------------------------------------------------------------------
+C H O O S E   S C E N A R I O   M E N U
+----------------------------------------------------------------------------
+
+1 -     PEACE
+
+Voted the most boring mission by anonymous descision.
+This scenario is perfectly suitable for practicing at flying the chopper
+and trying out 'new' techniques and strategies.
+
+2 -     COLD WAR
+
+There is no war, but the tension is there. Be carefull at what you do,
+you might conflict a full scale war!
+
+3 -     UN CONTROLLED CEASE FIRE
+
+The eastern and western force agreed on a cease fire, which is controlled
+by the United Nations. You can terminate this cease fire by attacking one
+of the parties. Do not try out the patience of the UN by killing one
+of their machines, unless you're sure you can dodge some jet planes!
+
+4 -     TANK BATTLE
+
+Although the war rages on, eastern and western forces have restricted themself
+at 'only' using tanks. Find out why the coala helicopter is nicknamed
+'tank killer' in this scenario.
+
+5 -     GROUND WAR
+
+After the use of tanks, AA'S are entering the battlefield as well as
+other vehicles. Stay clear of those AA vehicles, you might end up with
+a missile trying to get you.
+
+6 -     HELICOPTER BATTLE
+
+Fight head to head with other helicopters. Show them who really
+controls the air!
+
+7 -     AIR BATTLE
+
+Both forces decided to let 'tank killers' and fighterplanes enter the
+battlefield, this will require a new strategy when dealing with
+the enemy.
+
+8 -     TOTAL WAR
+
+Every vehicle the Eastern and Western force could find is dragged into
+the war to finish off the enemy forever. You can expect a attack from
+everywhere, either ground or air!
+
+9 -     RANDOM
+
+Now for a real challenge, try this scenario!
+You'll be the one to find out in what situation your landed and how
+to deal with it.
+
+10 -    CUSTOM SCENARIO
+
+Create your own scenario, please read this manual of how to do this.
+
+
+
+
+
+----------------------------------------------------------------------------
+M A K E   C U S T O M   S C E N A R I O   M E N U
+----------------------------------------------------------------------------
+
+This feature makes it possible for you to create your own scenario.
+You can define up to 20 vehicles from all four sides involved.
+You'll most likely to find this the most interesting option of the game,
+because it allows you to experiment with all kinds of what-if scenario's.
+If you want a real challenge always make Western forces equal to Eastern forces,
+but it's more interesting to create unfair situations. For example :
+
+- 10 warthogs against 10 Eastern trucks         (road to hell)
+- 10 Migs against 1 Eagle                       (watch the crossfire)
+- 10 ZOO's mobile anti aircraft guns
+  against 1 Cobra helicopter                    (dangerous grounds)
+- 10 tanks against 10 APC'S                    (tank's on holiday)
+
+But don't make the mistake by making the force ratio too extreme : Some
+vehicles might get killed by crossfire !
+
+If you want to watch artificial intelligence in action press <F5> in the
+games to cycle through all the vehicles.
+
+
+Explanation of the bottom row of buttons:
+
+1 -     Next
+Shows the next vehicle in list.
+
+2 -     Previous
+Shows the previous vehicle in list.
+
+3 -     Add
+Adds the current shown vehicle to your CUSTOM SCENARIO.
+
+4 -      Ok
+Confirms that you are ready, and starts the game with the chosen options.
+
+
+
+
+
+
+
+-----------------------------------------------------------------------------
+V E H I C L E S
+-----------------------------------------------------------------------------
+
+FighterPlanes
+~~~~~~~~~~~~~
+Name		F15 EAGLE
+Type		FIGHTER PLANE
+Party		West
+Engine Power	2*10855 KG
+Speed		MACH 1.2
+Dimensions	13.0*5.6*19.4 M
+Weight		12420 KG
+Crew		2
+Cost		$40.000.000
+Armament	20 MM GUN
+		SIDEWINDERS
+		MAVERICKS
+
+Name		MIG27 FLOGGER
+Type		FIGHTER PLANE
+Party		East
+Engine Power	12500 KG
+Speed		MACH 1.1
+Dimensions	8.2*4.8*16.8 M
+Weight		10200 KG
+Crew		2
+Cost		$35.000.000
+Armament	23 MM GUN
+		APHIDS
+		KERRYS
+
+
+Attack Planes
+~~~~~~~~~~~~~
+Name		A10 THUNDERBOLT (OR WARTHOG)
+Type		ATTACK PLANE
+Party		West
+Engine Power	2*4112 KG
+Speed		681 KM/H
+Dimensions	17.5*4.4*16.3 M
+Weight		9761 KG
+Crew		1
+Cost		$8.000.000
+Armament	7*30 MM GUN
+		SIDEWINDERS
+		MAVERICKS
+
+Name		SU25 FROGFOOT
+Type		ATTACK PLANE
+Party		East
+Engine Power	2*4237 KG
+Speed		980 KM/H
+Dimensions	14.3*4.8*15.4 M
+Weight		9500 KG
+Crew		1
+Cost		$9.000.000
+Armament	2*30 MM GUN
+		APHIDS
+		KERRYS
+
+Attack Helicopters
+~~~~~~~~~~~~~~~~~~
+Name		AH1 COBRA
+Type		ATTACK HELICOPTER
+Party		West
+Engine Power	2*1342 KW
+Speed		282 KM/H
+Dimensions	7.3*4.6*17.6 M
+Weight		4627 KG
+Crew		2
+Cost		$4.000.000
+Armament	30 MM GUN
+		SIDEWINDERS
+		HELLFIRES
+		ROCKETS
+
+Name		KA41 HOKUM
+Type		ATTACK HELICOPTER
+Party		East
+Engine Power	2*1659 KW
+Speed		350 KM/H
+Dimensions	7.0*4.0*16.4 M
+Weight		5400 KG
+Crew		2
+Cost		$5.000.000
+Armament	30 MM GUN
+		APHIDS
+		KEDGES
+		ATOLLS
+
+Transport Helicopters
+~~~~~~~~~~~~~~~~~~~~~
+Name		CH47 CHINOOK
+Type		TRANSPORT HELICOPTER
+party		West
+Engine Power	2*2796 KW
+Speed		276 KM/H
+Dimensions	9.1*6.2*30.2 M
+Weight		12000 KG
+Crew		3+55
+Cost		$16.000.000
+Armament	NOT ARMED
+
+Name		MI14 HAZE
+Type		TRANSPORT HELICOPTER
+Party		East
+Engine Power	2*1417 KW
+Speed		230 KM/H
+Dimensions	10.6*5.6*25.3 M
+Weight		8000 KG
+Crew		3+32
+Cost		$12.000.000
+Armament	NOT ARMED
+
+Battle Tanks
+~~~~~~~~~~~~
+Name		L1V LEOPARD
+Type		BATTLE TANK
+Party		West
+Engine Power	614 KW
+Speed		70 KM/H
+Dimensions	3.4*2.6*6.9 M
+Weight		42.5 T
+Crew		4
+Cost		$800.000
+Armament	105 MM GUN
+
+Name		T72
+Type		BATTLE TANK
+Party		East
+Engine Power	575 KW
+Speed		75 KM/H
+Dimensions	3.5*2.1*6.9 M
+Weight		41 T
+Crew		3
+Cost		$600.000
+Armament	125 MM GUN
+
+Mobile Anti Aircraft Guns (SAM systems)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+Name		PRTL
+Type            MOBILE AA GUN
+Party		West
+Engine Power	610 KW
+Speed		65 KM/H
+Dimensions	3.3*3.4*7.3 M
+Weight		45.5 T
+Crew		3+2
+Cost		$700.000
+Armament	2*35 MM GUN
+
+Name		ZSU ZOO
+Type		MOBILE AA GUN
+Party		East
+Engine Power	191 KW
+Speed		50 KM/H
+Dimensions	3.1*2.6*6.5 M
+Weight		20.5 T
+Crew		4
+Cost		$700.000
+Armament	4*23 MM GUN
+
+Armored Personel Carriers (APC)
+~~~~~~~~~~~~~~~~~~~~~~~~~
+Name		M113
+Type		APC
+Party		West
+Engine          Power 154 KW
+Speed		70 KM/H
+Dimensions	2.3*2.8*4.6 M
+Weight		8900 KG
+Crew		3+9
+Cost		$300.000
+Armament	NOT ARMED
+
+Name		BTR
+Type		APC
+Party		East
+Engine Power	2*66 KW
+Speed		80 KM/H
+Dimensions	2.8*2.3*7.2 M
+Weight		10.3 T
+Crew		3+9
+Cost		$500.000
+Armament	NOT ARMED
+
+Trucks
+~~~~~~
+Name		FORD
+Type		TRUCK
+Party		UN
+Engine Power	180 KW
+Speed		110 KM/H
+Dimensions	3.1*3.0*10.0 M
+Weight		6000 KG
+Crew		3
+Cost		$90.000
+Armament	NOT ARMED
+
+Name		LADA
+Type		TRUCK
+Party		East
+Engine Power	176 KW
+Speed		70 KM/H
+Dimensions	3.2*3.2*9.3 M
+Weight		19 T
+Crew		3
+Cost		$70.000
+Armament	NOT ARMED
+
+
+
+
+-----------------------------------------------------------------------------
+W E A P O N S
+-----------------------------------------------------------------------------
+
+Chaingun
+~~~~~~~~
+Name		CHAINGUN
+Type		bullets
+Party		West
+Speed		Mach 1
+Range		3 KM
+Dimensions	30 MM
+Weight		0.3 KG
+Cost		$30
+Targets		NON ARMORED VEHICLES
+
+Name		CHAINGUN
+Type		bullets
+Party		East
+Speed		Mach 1
+Range		3 KM
+Dimensions	30 MM
+Weight		0.3 KG
+Cost		$30
+Targets		NON ARMORED VEHICLES
+
+
+Unguided rockets
+~~~~~~~~~~~~~~~~
+Name		FFAR
+Type		UNGUIDED ROCKET
+Party		West
+Speed		800 KM/H
+Range		3 KM
+Dimensions	70*70*170 MM
+Weight		9 KG
+Cost		$8000
+Targets		LIGHT ARMORED VEHICLES
+
+Name		Attol
+Type		UNGUIDED ROCKET
+Party		East
+Speed		800 KM/H
+Range		3 KM
+Dimensions	70*70*170 MM
+Weight		9 KG
+Cost		$8000
+Targets		LIGHT ARMORED VEHICLES
+
+IR Guided air to air missiles
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Name		SIDEWINDER
+Type		IR GUIDED MISSILE
+Party		West
+Speed		MACH 2
+Range		18 KM
+Dimensions	34*34*200 MM
+Weight		87 KG
+Cost		$40000
+Targets		ALL AIRBORN VEHICLES
+
+Name		Aphid
+Type		IR GUIDED MISSILE
+Party		East
+Speed		MACH 2
+Range		18 KM
+Dimensions	34*34*200 MM
+Weight		87 KG
+Cost		$40000
+Targets		ALL AIRBORN VEHICLES
+
+Radar guided air to surface missiles
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Name		HELLFIRE
+Type		LASER GUIDED MISSILE
+Party		West
+Speed		MACH 1
+Range		8 KM
+Dimensions	32*32*145 MM
+Weight		43 KG
+Cost		$30000
+Targets		ALL GROUND VEHICLES
+
+Name		Kedge
+Type		LASER GUIDED MISSILE
+Party		East
+Speed		MACH 1
+Range		8 KM
+Dimensions	32*32*145 MM
+Weight		43 KG
+Cost		$30000
+Targets		ALL GROUND VEHICLES
+
+IR Guided air to surface missiles
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Name		MAVERICK
+Type		IR GUIDED MISSILE
+Party		West
+Speed		MACH 1
+Range		25 KM
+Dimensions	32*32*145 MM
+Weight		220 KG
+Cost		$30000
+Targets		ALL GROUND VEHICLES
+
+Name		Kerry
+Type		IR GUIDED MISSILE
+Party		East
+Speed		MACH 1
+Range		25 KM
+Dimensions	32*32*145 MM
+Weight		220 KG
+Cost		$30000
+Targets		ALL GROUND VEHICLES
+
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------
+HOSTILITIES AND WEAPONS EFFECTIVENESS CHART
+----------------------------------------------------------------------------
+
+ |                       | West        |    East        | 1234 5678 0   |
+ |-----------------------+-------------+----------------+---------------|
+ |0 Buildings/Trees      |             |                |               |
+ |1 Fighter Plane	 | F15 Eagle   |  MiG27 Flogger | ****          |
+ |2 Attack Plane	 | A10 Warthog |  SU25 Frogfoot |  *** ****     |
+ |3 Attack Helicopter    | AH1 Cobra   |  KA41 Hokum    |   ** ****     |
+ |4 Transport Helicopter | CH47 Chinook|  MI14 Haze     |               |
+ |5 Battle Tank	         | Leopard     |  T72	        |      ****     |
+ |6 Mobile AA gun	 | PRTL	       |  ZSU	        | ****          |
+ |7 APC		         | M113	       |  BTR           |               |
+ |8 Truck		 | Ford	       |  Lada          |               |
+ |-----------------------+-------------+----------------+---------------|
+ |Bullet		 | 	       |   	        | ****      *   |
+ |Shell		         |	       |                |      **** *   |
+ |UnGuided Rocket	 |	       |   	        | ****    * *   |
+ |IR Guided AIM	         | Sidewinder  |  Aphid	        | **** ****     |
+ |Laser Guided AGM       | Hellfire    |  Kedge         |      **** *   |
+ |IR Guided AGM	         | Maverick    |  Kerry	        |      **** *   |
+ `-----------------------+-------------+----------------+---------------'
+
+
+
+
+
+AA	anti aircraft
+AAH	advanced attack helicopter
+AAM	air to air missile
+AGM	air to ground missile
+APC	armoured personnel carrier
+Chaff	little metal strips to decieve radar guided missiles
+CINC	Commander In Chief
+CM	counter measures
+Coala   A cute forest animal/deadly one-man attack helicopter
+CPG	co pilot gunner
+CRT	cathode ray tube
+Flare	little heat producing cartridge to decieve heat seeking missiles
+GPS	global positioning system
+HDD	head-down display
+HUD	head-up display
+IHADSS	integrated helmet and display sighting system
+IIR	imaging infra red
+IR	infra red (heat)
+IRCM	infra red counter measures
+LZ 	landing zone
+PNVS	pilot night vision system
+RF	radio frequency
+SAM	surface to air missile
+TADS	target acquisition and designation system
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------
+C R E D I T S
+----------------------------------------------------------------------------
+
+        Design and Coding	- Michiel den Outer
+
+        Music and Sound Effects	- Marco Tibben
+
+        3D graphics		- Richard van der Brugge
+
+        Manual			- Michiel den Outer
+                                  Additional work by
+                                  Marco Tibben and Richard van der Brugge
+
+        Play Testing		- Taco den Outer, Pim van Thiel
+
+
+                            SPECIAL THANKS TO
+
+
+
+
+
+
+    We would like to thank the following people for helping us create this
+                program, giving moral support and suggestions.
+
+
+                Ronald Langendijk               Frank Wilsens
+                Leon Voesten                    Sonja Veneman
+                Dimitri Lommers                 Danny Roelofs
+                Amiga Magazine                  Sandor Rabe
+                Jascha Hoogenraad               Tjerk van den Herik
+                Dirk-Jan Zwartveld              Matthijs in 't Anker
+
+
+
+       And to all of those we have forgotten to mention, but we are still
+                   gratefull for their help and support ...
+
+

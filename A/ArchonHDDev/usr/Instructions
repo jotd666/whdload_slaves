@@ -1,0 +1,706 @@
+
+
+
+
+
+                                     ARCHON
+
+     Typed in by ???. Edited by Parasite.
+
+
+     THE GAME.  ARCHON depicts the eternal struggle between Light and Darkness
+     as a contest of action and strategy between opposing forces wrought from
+     myth and legend.  The Light Side and the Dark Side are equal in number,
+     balanced in strength, but not identical.  Their aim, however, the same,
+     conquest of the five "power points" or the elimination of the opposite
+     side.
+
+     ICONS.  The various fantastic creatures at your command are represented by
+     specific images - "icons" - stylized pictures of knights, goblins,
+     manticores, and the like.
+
+     THE TWO SCREENS.  ARCHON is played on two screens.  On one - the strategy
+     screen - you and your opponent take turns maneuvering your icons into
+     favorable positions.  When you place an icon on a square already occupied
+     by one of your opponent's icons, the game shifts temporarily to the second
+     screen display, the combat arena.
+
+     HOSTILITIES.  In old-fashioned and - admit it - somewhat dull board games
+     (chess backgammon, and their ilk), the "defending" piece gets removed
+     quietly from the board and the "attacker" wins the "battle" - and the
+     square - without a blow being struck.
+          In ARCHON, we do not allow such docility, such rank defeatism on the
+     part of the defender.  No!  If you want that square, you have to fight for
+     it!  When you try to occupy a square held by the enemy, the disputed square
+     expands to fill the entire screen...and then, in the words of a certain
+     orange-skinned monster of comic book fame, "IT'S CLOBBERIN' TIME".
+
+     INITIAL STRATEGY SCREEN
+
+     THE LUMINOSITY CIRCLE.  ARCHON's strategy screen changes.  While some
+     squares are always white or always black, others - "luminance" squares
+     (marked with a sextagon) - vary in brightness throughout the game in a
+     simple patter:  black - dark - barely dark - barely light - light -
+     white....and reverse.  Back and forth, throughout the game, the cycle
+     continues, the luminance shifting after every other turn.
+
+     POWER POINTS.  The five "power points" are indicated on the screen by
+     flashing read symbols.  Icons on power points heal faster than usual and
+     are protected from the effects of magic spells.  If your icons occupy all
+     five power points you win the game.
+
+     MOVEMENT.  If the hallow square of "frame" is on your side, it's your
+     turn.  (Simple eh?) Use your joystick to move the frame atop the icon you
+     want.  Once you push the button to confirm your choice, you must move that
+     icon somewhere.  (If an icon has nowhere to go, the computer will not allow
+     you to "pick it up".).  Once you move the icon to its destination (again,
+     with the joystick), push the button again, and the obedient image will
+     freeze in place.
+          Movement comes in three flavors:  ground, fly, and teleport.  Ground
+     movers cannot move through occupied squares; fliers are restricted only in
+     where they land.  Fliers can also move diagonally, ground icons cannot.
+     Only the Wizard and the Sorceress and teleport, but for practical purposes
+     you can think of them as fliers in disguise.
+
+
+
+
+
+
+
+
+          On any turn, you can move an icon as far as its range allows in any
+     direction or combination of directions.  It can stop on any square not
+     already occupied by one of your own icons.
+          Note:  If you change your mind while maneuvering a ground mover, you
+     must backtrack.  Otherwise, the computer, being very literal minded, will
+     assume you are trying to extend your move unlawfully,
+
+     THE COMBAT ARENA
+
+     COMBAT.  Action in the combat arena is immediate and simultaneous; there is
+     no taking turns.  Joysticks direct movement of the icons.  Pressing the
+     button initiates an attack - swinging the sword, firing an arrow, casting a
+     fireball - in the direction the joystick is pointed.  You can attack or
+     move in any of eight directions:  up, down, left, right, and the four
+     diagonals.  Important:  your icon cannot move while the button is pressed.
+         Combat is of three general types.  Knights and Goblins are sword
+     swingers and club wielders; they must be very near an opponent to inflict
+     damage.
+         The Banshee and the Phoenix inflict damage in a circular area around
+     themselves; the longer the opposing icon is in that circle, the greater the
+     damage it sustains.  Such "area" attacks need not be aimed.
+         All the other icon "throw" missiles of some sort and can, consequently,
+     do damage from a considerable distance.  See the Quick Reference Card for a
+     detailed comparison of the speed ("Attack Speed") of a damage done ("Attack
+     Force") by the different missiles.
+
+     THE ATTACK INTERVAL.  While combat is fast and furious, you can't just fire
+     away as fast as your finger twitches.  It takes a moment to raise a sword
+     into position to strike; longer to conjure even a fast fireball; and the
+     better part of two whole seconds (!) to rip a boulder out of the ground and
+     lift it high enough to throw.
+          Pushing the button before your icon is ready to strike will accomplish
+     nothing - except to keep your icon from moving.  At the exact instant you
+     can launch another attack, the computer rings a bell - a high note for the
+     Light Side, a lower one for the Dark Side - to let you know.
+
+     BARRIERS.  The obstacles or barriers in the arena go through luminosity
+     cycles of their own.  Be careful; they can be as tricky as an opponent!
+
+          Normally, a barrier is impenetratable.  However, when its cycle
+     changes a barrier's luminance to exactly match the color of the background,
+     the barrier disappears...for a few seconds.  You can walk over it, shoot
+     past it, anything.  It's gone.
+          Furthermore, for a few seconds before a barrier vanishes and after it
+     reappears, you can walk or fire a missile through it, but you (or the
+     missile) will be slowed down.
+          If this seems at all confusing, just remember that the more solid a
+     barrier looks, the more solid it is.  If you have any doubts, avoid the
+     barrier entirely - and get out of the way of oncoming missiles.
+
+     LIFE, DEATH, AND WOUNDS.  The "lifelines" at either end of the arena
+     indicate the current lifespan (health/strength) of the two battling icons.
+     When an icon is wounded, its matching lifeline is reduced in proportion to
+     the severity of the wound.  When its lifeline is gone, the icon is "dead"
+     and combat is over.
+          A victorious icon returns to the strategy screen in control of the
+     disputed square.  However, a seriously wounded icon is easier to defeat the
+     next time it is forced to fight.  Even the strongest icon can be worn down
+
+
+
+
+
+
+
+
+     by waves of attackers.
+          On the strategy screen, wounded icons are healed slowly by the simple
+     passage of time, more quickly, by resting on a power point; or instantly
+     and completely, by a Heal spell.
+
+     MAGIC SPELLS
+
+     Magic is arguable the most significant strategic element in ARCHON.  Only
+     the two mages (magicians) - the Wizard and the Sorceress - can cast spells,
+     and each mage can cast each spell only once.  While the spells are
+     powerful, they have one drawback:  each spell weakens the mage casting it,
+     leaving the mage progressively less able to defend itself against direct
+     attack.
+         A spell may cast instead of a regular move on the strategy screen.
+     Simply move the frame atop your mage, as if you were going to move it.
+     Push the button, and the usual message appears.  Without moving the icon,
+     however, just push the button again, and you will get a new message:
+     "SELECT YOUR SPELL".
+          Push the joystick up or down to survey the spells still available, and
+     push the button when you find the one you want.  If further actions on your
+     part are required, additional messages will direct you appropriately.
+          Remember that you can't conjure the same spell more than once, and you
+     can't cast a spell against power points or icons on them.  Details are
+     given below.
+
+     TELEPORT
+
+     EFFECT:  This spell moves - teleports - any one of your icons any distance
+     from one square on the strategy screen to another.
+
+     ACTIONS REQUIRED:  After selecting the spell, move the frame to the icon
+     you want; push the button; and then move the icon to its destination - just
+     as if it were a normal move.
+
+     RESTRICTIONS:  You cannot move an enemy icon.  You cannot move onto a
+     square already occupied by one of your own icons (as usual).  You cannot
+     teleport onto or off a power point.  You cannot teleport an imprisoned
+     icon.  (See IMPRISON).
+
+     ADDITIONAL NOTE:  Do not confuse this spell with a mage's normal three
+     square movement.  That is minor magic, on the same order as casting
+     fireballs, and is not bound by the restrictions of the seven major spells.
+
+     HEAL
+
+     EFFECT:  This spell instantly heals any icon of all wounds it has sustained
+     in the combat arena.
+
+     ACTIONS REQUIRED:  After selecting the spell, move the frame to the
+     wounded icon, and push the button.
+
+     RESTRICTIONS:  You cannot heal an icon resting on a power point.  You can
+     "heal" an already healthy icon, but why bother.
+
+     SHIFT TIME
+
+     EFFECT:  Two effects are possible.  Most often, the spell reverses the flow
+     of time:  i.e., the direction of the luminosity cycle of the delta squares.
+
+
+
+
+
+
+
+
+     Squares that had been growing gradually darker now grow lighter - until the
+     cycle peaked.  However, if the spell is cast when the luminosity cycle is
+     at either peak, SHIFT TIME will cause the cycle to shift abruptly to the
+     opposite extreme (from black to white, or vice versa).
+
+     ACTION REQUIRED:  None after selecting the spell.
+
+     RESTRICTIONS:  None
+
+     EXCHANGE
+
+     EFFECT:  This spell causes any two icons on the strategy screen to trade
+     places.
+
+     ACTIONS REQUIRED:  Move the frame to one of the icons you wish to
+     transpose, and push the button.  Then do the same to the other icon.
+
+     RESTRICTIONS:  Neither icon can be imprisoned or on a power point.
+
+     SUMMON ELEMENTAL
+
+     EFFECT:  This spell allows you to attack any enemy icon with a new
+     temporary icon representing one of four elementals - animated spirit of the
+     ancient elements of earth, air, fire and water.  Combat is conducted in the
+     combat arena as usual, except that the elemental vanishes after the battle,
+     win or lose.
+
+     ACTIONS REQUIRED:  Once is the spell is selected and the elemental appears
+     on your side of the strategy screen, move it to the icon you wish to
+     attack.  In the combat arena, direct the elemental just as you would any
+     other icon.
+
+     RESTRICTIONS:  You cannot attack an icon on a power point.  You cannot
+     direct the elemental to a vacant square or one occupied by one of your own
+     icons.  You cannot choose which elemental will respond to your summons.
+
+     REVIVE
+
+     EFFECT:  This spell restores to the game an icon previously lost ("killed")
+     in combat.
+
+     ACTIONS REQUIRED:  The procedure is similar to a TELEPORT spell or a
+     normal move, except that the revived icon comes from a special display by
+     the side of the strategy screen, and its destination must be a vacant
+     square next to the mage.
+
+     RESTRICTIONS:  You cannot "revive" an icon not already dead.  One of the
+     (initially five) squares adjoining your mage must be vacant, and you must
+     put the revived icon on one of those vacant squares.
+
+     IMPRISON
+
+     EFFECT:  This spell keeps an icon on the strategy screen from leaving the
+     square.  The icon can fight its attackers in the combat arena, but it
+     cannot be moved off its square.  Important:  an imprisoned mage cannot cast
+     spells!  Imprisonment is temporary.  A Dark Side icon would remain
+     imprisoned until the delta squares turn black; a Light Side icon would be
+     freed when delta squares turn white.
+
+
+
+
+
+
+
+
+
+     ACTIONS REQUIRED:  Once the spell is cast, move the frame to the target
+     icon, and push the button.
+
+     RESTRICTIONS:  You cannot imprison an icon on a power point.  You cannot
+     imprison any icon at a time when the luminosity cycle would automatically
+     free it.
+
+     CEASE CONJURING This is not a spell; it is a way to avoid casting a spell
+     if you miscalculate.  If you change your mind while selecting a spell, or
+     if the spell you want is unavailable or canceled, you may push the button
+     when CEASE CONJURING is displayed.  This will allow you to start your turn
+     over.
+
+     THE OPPOSING FORCES
+     LIGHT SIDE
+
+     THE WIZARD:  An ancient man of vast supernatural power, the WIZARD is the
+     leader of the Light Side.  In battle, the WIZARD casts devastating balls of
+     fire.  He rarely ventures from the safety of his home power point, however,
+     and is more commonly used to cast one of the seven spells (See MAGIC
+     SPELLS).
+
+     THE UNICORN:  Resembling a great white horse with the tail of a lion and a
+     sharp, spiral horn set at its brow, the UNICORN is swift and agile.  The
+     beautiful creature can fire blinding blots of energy from its magical horn.
+
+     THE ARCHERS:  The ARCHERS are fearless Amazon warriors of legendary skill
+     with their fine, whitewood bows.  They are endowed with magical quivers
+     that can never be emptied.
+
+     THE GOLEM:  A GOLEM is an artificial being shaped from a stone and
+     gleaming metal, and animated by magic.  Roughly man-shaped, it is hugh,
+     twice the height of a man.  Its weapons are boulders ripped from the earth
+     and hurled with devastating force.
+
+     THE VALKYRIES:  VALKYRIES are beauteous blonde war maidens from the
+     legions of Valhalla.  Each of these ferocious females is endowed with two
+     great magical gifts:  first the ability to stride the air as if it were
+     solid ground; and, second an enchanted spear, which, when thrown, returns
+     to her hand of its own accord.
+
+     THE DJINNI:  The DJINNI is a magical being from another dimension, a plane
+     of tempest and storm.  In form he is a hugh, superbly muscled man whose
+     body is partly flesh and partly swirling currents of air.  A cousin to the
+     wind itself, the DJINNI can raise a small tornado with a gesture and
+     control it with a thought.
+
+     THE PHOENIX:  The PHOENIX is a flaming bird of immense size and power.  In
+     battle it can explode into a seething mass of fire, scorching anyone on the
+     perimeter of the blaze and burning severely any enemy unfortunate enough to
+     be caught near the incandescent core.  Not only is the PHOENIX unscathed by
+     its own flames, but, while undergoing its fiery metamorphosis, it cannot be
+     harmed by any attack known.
+
+     THE KNIGHTS:  The KNIGHTS are foot soldiers armed and armored against foes
+     far larger than themselves.  Although they cannot withstand more than one
+     blow from many of their enemies, they need not be mere cannon (or dragon)
+
+
+
+
+
+
+
+
+     fodder.  Provided they are swift and clever, their speed of attack gives
+     them a chance to survive and triumph.
+
+     DARK SIDE
+
+     THE SORCERESS:  The equal of the old WIZARD only in power, the eternally
+     young and ever beautiful SORCERESS is his counterpart in all ways.  Her
+     lightning bolts are swifter and surer than his fireballs, if a shade less
+     potent.  Fierce in battle but safest on the black power point, she is most
+     often used to cast the seven spells (See MAGIC SPELLS).
+
+     THE BASILISK:  The BASILISK is a small, crested reptile with a scaly body
+     of a lizard and the bulbous glowing eyes of a gorgon.  Although it is
+     relatively short-lived, the beast's quick movements and deadly glance make
+     it a terrifying opponent.
+
+     THE MANTICORE:  The MANTICORE resembles a large golden lion with a human
+     face and a scorpion's thorny tail.  This nasty appendage bristles with
+     great quills like spikes, which the fell beast can fling over its head with
+     surprising accuracy.
+
+     THE TROLL:  A dweller in caves and dark places, the misshapen TROLL is a
+     shambling giant, dull but strong, clumsy but hard to slay.  Like the GOLEM,
+     it carriers no ready-made weapons; instead, it seizes boulders, tree trunks
+     - whatever comes to hand - and catapults the massive objects at its
+     enemies.
+
+     THE SHAPESHIFTER:  The SHAPESHIFTER is a doppleganger, a demonic creature
+     without true shape or form, save what it steals from its enemies.  In
+     battle it becomes the mirror image of its opponent, strongest on squares
+     where its enemy is weakest, turning the enemy's powers against itself.  It
+     has no fixed lifespan; all wounds that do not prove fatal will heal as soon
+     as it assumes a new form.
+
+     THE DRAGON:  The DRAGON, a monstrous serpentine reptile, is without peer
+     in the combat arena.  One gout of its flaming breath will kill many
+     creatures, and a second blast is almost always fatal.  Highly mobile and
+     very difficult to slay, its awesome powers make it second in value only to
+     the Sorceress.
+
+     THE BANSHEE:  The BANSHEE is an undead spirit that feeds off the souls of
+     her opponents, a ghostly apparition that attacks with her keening wail,
+     draining the life from anyone in range of the sound (the shaded area around
+     her).  Prolonged exposure to the terrifying shriek can be fatal.  THE
+     GOBLINS:  GOBLINS are hideous dwarves, twisted of limb and misshapen of
+     feature, unfriendly and often violent.  Their mutual antagonism is kept in
+     check only by the powers of the Sorceress.  On dark ground their gnarled
+     clubs are more than a match for the swords of the Knights and if
+     well-directed they can bring down the most potent of enemies.
+
+     PLAYING HINTS
+
+     STRATEGY SCREEN: OPENINGS
+
+     CONSERVATIVE OPENINGS.  This involves moving your unfavorably located icons
+     onto more favorable squares (white squares for Light icons, black squares
+     for Dark icons).  The idea is to establish a strong, balanced position
+     early on.  Since the corner icons (the Valkyrie/Banshee) are mobile and
+
+
+
+
+
+
+
+
+     especially vulnerable to magical attack (via the Summon Elemental or
+     Teleport spells), these are often the first to be moved.  Being a
+     ground-mover, the Unicorn/Banshee will be stuck on the "wrong" square until
+     you clear an escape route, either directly by moving the Knight/Goblin in
+     front of it or indirectly, and more slowly, by moving other Knights/Goblins
+     and then adjacent icons in the back rank.  MAGICAL ASSAULT ("BIG JUJU" OR
+     "MAJOR MANA" OPENING).  The aim here is to wipe out the strongest enemy
+     icon right off the bat, before it can do any harm.  This is most easily
+     done with a combination of spells:  Imprison, Summon Elemental, Teleport,
+     and if needed, Reverse Time.  The first spell holds the victim immobile
+     while you attack with an elemental and then one of your strongest icons
+     teleported across the board.  Shift Time may be used to prevent the
+     imprisoned icon from getting away before you can finish it off.  MONSTER
+     ROMP.  This is risky but fun and sometimes surprisingly effective.  Just
+     fly or teleport one of your strongest icons (the DJINNI/DRAGON or
+     PHOENIX/SHAPESHIFTER) to the other side of the board, and take it on a
+     rompin' stompin' tour of all the occupied squares unfavorable to the icons
+     stuck on them.  This procedure tends to throw new players into a panic,
+     which is always helpful.  More experienced players will either imprison the
+     attacker or counter with a monster romp of their own.  Rapid attrition on
+     both sides follows such a counterattack.
+
+     STRATEGY SCREEN: GENERAL HINTS
+
+     STAY ON YOUR COLOR!  The effect of a square's luminance on the life of your
+     icon is large - often as much as 50%.  Attack on unfavorable squares only
+     if you have an overwhelming superiority over the defending icon.  PLAN
+     AHEAD.  Most successful attacks require more than one move to execute.
+     Before taking a square consider what you will do afterwards.  What icon
+     will continue the assault if the first attacker dies?  AVOID TRAFFIC JAMS.
+     Make openings in your front line for ground-movers to pass.  The greater
+     your force's mobility, the greater flexibility and strength.  PROTECT YOUR
+     MAGE!  The Wizard/Sorceress may be a tough hombre in the combat arena, but
+     doom is nigh should you lose your mage early in the game.  Since power
+     points are immune to magic spells, it is a wise idea to keep your
+     Wizard/Sorceress at home.
+
+     STRATEGY SCREEN: SPELLS
+
+     TELEPORT:  This spell is handy for tossing a slow or unfavorably placed
+     icon into your opponent's back rank to raise a ruckus.  Alternatively, you
+     can teleport a wounded icon out of danger.  HEAL:  Never heal the
+     Shapeshifter!  Since it regenerates completely between battles, the spell
+     would be wasted.  SHIFT TIME:  Use this spell to prolong an imprisonment by
+     reversing the flow of time before the luminance cycle peaks, free the enemy
+     icon.  Conversely, especially if you are playing second, you can free your
+     own imprisoned icon early by casting the spell at the opposing luminosity
+     peak:  in that case, the cycle will jump to your peak, and your icon will
+     be freed.  A more strategic use of the spell could allow you to make a
+     concerted attack on the power points - and possibly win the game - by
+     keeping the luminance favorable.  EXCHANGE:  An enemy advance can be
+     frustrated temporarily by exchanging a menacing intruder (e.g.  an opposing
+     Dragon/Djinni) in your territory with a weaker icon (a Goblin/Knight) from
+     your opponent's rear ranks.  SUMMON ELEMENTAL:  Since elementals are
+     neutral beings, unaffected by changes in luminance, they are well suited to
+     attacking an annoying enemy icon that remains on squares favorable to it.
+     The spell is also de rigueur against mages that venture from their home
+     power points.  REVIVE:  Revive only strong icons.  Also, avoid placing a
+
+
+
+
+
+
+
+
+     revived icon on an unfavorable square, or it may die again immediately.
+     IMPRISON:  The real trick with this spell is timing, coupled with Shift
+     Time, if necessary, prolong the effect.  Imprison a threatening intruder to
+     blunt an attack, or immobilize a strong icon on a delta square; then attack
+     when the luminance cycle is most favorable.
+
+     TIPS ON STRATEGY
+
+     COMBAT ARENA: GENERAL HINTS
+
+     DON'T MOVE IN STRAIGHT LINES.  Monsters are tricky; you should be too.
+     Dodge and weave.  Don't become predictable.  HIT AND RUN.  Don't just fire
+     a shot and then sir there waiting for a retaliatory strike.  Take your
+     finger off the button immediately after firing, and boogie on out of there!
+     If you hit something, it can probably hit you.  USE DIAGONAL SHOTS!
+     Although difficult to master 45 degree - angle shots will improve your
+     performance dramatically.  Few players manage consistent diagonals.  TRAP
+     YOUR OPPONENT IN A CORNER.  This is especially helpful for sloggers with
+     slow, easily dodged missiles and for the poor infighters (Knights/Goblins).
+     FEINT!  Trick your opponent into attacking by moving into the line of fire
+     momentarily.  Then, in the interval before the enemy icon can attack again,
+     close in and loose your own attack.  CONFUSE YOUR OPPONENT.  When at close
+     range, dodge back and forth to keep from being nailed.  This is especially
+     important when you cannot afford an exchange of blows and is vital for a
+     Knight/Goblin.  KNOW YOUR ICON'S STRENGTHS AND WEAKNESSES.  Different icons
+     require different tactics - sometime radically different - and the nature
+     of your immediate enemy should also affect your course of action.
+
+     COMBAT ARENA: THE ICONS
+
+      WIZARD.  Avoid using the Wizard in combat unless attacked.  In a fight,
+     approach mid-range but no closer.  Stay in the open; fireballs are easily
+     stopped by barriers.
+      SORCERESS.  Avoid combat if possible!  The speed of her lightening bolts
+     makes the Sorceress effective at long range.  Play defensively, and use the
+     barriers to trap an enemy long enough to zap it.
+      UNICORN/BASILISK.  Speed and distance are their prime weapons.  Never
+     close, especially if the opponent is in the open.  Try to use lines of
+     barriers as alleys for fire.
+      ARCHER.  The Archer's arrows are not fast, so she must get fairly close to
+     ensure a hit.  Slower targets, of course, allow greater range.
+      GOLEM/TROLL.  The advantages of these slow-moving creatures are their long
+     lives and deadly attacks.  (Those boulders hurt!) Since the rocks travel
+     slowly, the Golem/Troll must get close to the enemy.  Be aggressive!
+      DJINNI/DRAGON.  You have power to spare here, so be brazen in attack.
+     Avoid possible entanglements of cluttered terrain when fighting an icon
+     with a fast attack.
+      VALKYRIE.  The Valkyrie is basically a tougher archer with a more damaging
+     but slower moving attack.  Use similar tactics.
+      PHOENIX.  Get close - the closer the better.  Trap fast foes in corners.
+     Avoid firing alleys, and use the explosive attack defensively when
+     necessary to keep from being hit never sit still when vulnerable.
+      SHAPESHIFTER.  The success of this icon is solely dependent on the proper
+     battleground.  Avoid white squares like the plague!  Ignore the Knights.
+     (Why take a chance on getting killed for so small a prize?) Attack strong
+     icons on black or dark squares.
+      MANITCORE.  This beast has the advantage of a broader attack than its
+     counterparts, especially on diagonals.  Be bold against weak opponents, but
+
+
+
+
+
+
+
+
+     remain at mid-range when fighting more dangerous adversaries.
+      BANSHEE.  The Banshee requires - and rewards - great skill; she is worth
+     the extra effort needed.  Stay out of firing lines until the moment of
+     attack; then come in from the side, where the area of effect is greatest.
+     Release the joystick button immediately after pressing it, and follow the
+     opponent closely to prolong the exposure to the scream.  Avoid the Golem
+     (sometimes known as "the Banshee Curse").
+      KNIGHT/GOBLIN.  Where these infighters are concerned, he who
+     hesitates....is dog food.  Move quickly but erratically.  Get in close and
+     stay there!  Dodge back and forth or circle your enemy to avoid return fire
+     and fluster your opponent.  Never stand still, and attack constantly.  In a
+     Knight-Goblin conflict, use feints and stop thrusts.  Accept an exchange of
+     blows only if you have a significant luminosity advantage.
+      ELEMENTALS.  The four elementals are quite different from one another.
+     The Earth elemental should be played like a Golem/Troll which it greatly
+     resembles.  Of the other three, Fire has the fastest and most damaging
+     attacks, and Water the longest lifespan.  Tactically, you can think of Fire
+     as a Wizard, Air as an Archer, and Water as a Manticore.  REgardless of
+     which elemental you have, however, be aggressive!!!!  Remember that it
+     wounds don't matter, since it will not outlast the battle, anyway.
+
+     COMMAND SUMMARY
+     Notice:  This product requires Kickstart version 1.1.  To Start:  Kickstart
+     your Amiga and then insert your Archon disk in the internal drive.  It will
+     boot automatically.  If your Amiga is already up and running, insert your
+     Archon disk and "warm boot".  Pressing the SPACEBAR during the introductory
+     screen takes you to the introduction of the icon; pressing it again by
+     passes the rest of the introduction and takes you directly to the Main
+     Menu.  Main Menu:  Select Main Menu choices with the joystick plugged into
+     Port #2.  As you move the joystick, the selection arrow moves from box to
+     box.  Make your selection by pressing the joystick button when the arrow is
+     in the appropriate box.  Options:  Choose from the following options for
+     each side:
+
+          Human: Human makes all moves for that side.
+          Computer: Computer makes all moves for that side.
+          Cyborg:  Human player makes the moves on the strategy board, while the
+     computer controls combat on the battleground.  You can override the
+     computer by pressing the joystick button when prompted, before the battle
+     begins.  Handcapping:  The greater the difference in rank between the two
+     players, the greater the higher ranked player's handicap.  A handicapped
+     player's icons and missiles move more slowly, and the missiles take longer
+     to reload.  For the maximum possible handicap, the weaker player should
+     choose Beginner and the stronger player Advanced.
+
+     Start Play:  To start play with the Light side moving first, move the
+     selection arrow into the Left (Light) Start box and press and release the
+     joystick button.  Conversely, to start play with the Dark side moving
+     first, press the joystick button with the selection arrow the Right (Dark)
+     Start box.  If you make no choice, the computer will play a demonstration
+     game.  Joystick Control:  If you are playing against the computer, plug
+     your joystick in Port #2.  For a two-player game, you will need two
+     joysticks.  In that case, Port #1 controls the Light Side and Port #2
+     controls the Dark Side.
+
+     MOVING
+
+     1.  Strategy.  Use your joystick to move icons and frames, and press the
+
+
+
+
+
+
+
+
+     button to start and finish moves.  If you change your mind about moving a
+     particular icon on the strategy board, just move it back to the square you
+     picked it up from, and press the button.  You can then start your turn over
+     by picking up another icon.
+
+      2.  Combat.  Use the following instructions for each icon:
+          Knight or Goblin:  Move the joystick toward the enemy and press the
+     button to swing your weapon.
+          Banshee:  Press button to initiate attack.  Banshee can move while
+     screaming.
+          Phoenix:  Press button to initiate attack.  Phoenix cannot move until
+     the explosion is over.
+          All Others:  Move joystick in the direction your wish to fire, and
+     then press button to fire.  Note:  Because of the 3-D simulation on the
+     battlefield, a "hit" on the lower portion of an icon is likely to pass
+     harmlessly in front of it.  For best results, aim at the upper portion of
+     the icon.  Pausing or Quitting:  During play, pressing the SPACEBAR at any
+     time pauses the game.  Resume play by pressing it a second time.  Pressing
+     Q (for "Quit") ends the game and returns you to the Main Menu.
+
+     ARCHON -- QUICK REFERENCE CARD The Opposing Forces -- Light Side
+
+          WIZARD                             VALKYRIE
+     MOVEMENT: Teleport-3               MOVEMENT: Fly-3
+     SPEED: Normal                      SPEED: Normal
+     ATTACK MODE: Fireball              ATTACK MODE: Magic Spear
+     ATTACK FORCE: Great                ATTACK FORCE: Moderate
+     ATTACK SPEED: Medium               ATTACK SPEED: Slow
+     ATTACK INTERVAL: Average           ATTACK INTERVAL: Average
+     LIFESPAN: Average                  LIFESPAN: Average
+     NUMBER ON SIDE: 1                  NUMBER ON SIDE: 2
+          UNICORN                            DJINNI
+     MOVEMENT: Ground-3                 MOVEMENT: Fly-4
+     SPEED: Normal                      SPEED: Normal
+     ATTACK MODE: Energy Ball           ATTACK MODE: Whirlwind
+     ATTACK FORCE: Moderate             ATTACK FORCE: Moderate
+     ATTACK SPEED: Fast                 ATTACK SPEED: Medium
+     ATTACK INTERVAL: Short             ATTACK INTERVAL: Long
+     LIFESPAN: Short                    LIFESPAN: Very Long
+     NUMBER ON SIDE: 2                  NUMBER ON SIDE: 1
+          ARCHER                             PHOENIX
+     SPEED: Normal                      SPEED: Normal
+     ATTACK MODE: Arrow                 ATTACK MODE: Fiery Explosion
+     ATTACK FORCE: Minor                ATTACK FORCE: Great
+     ATTACK SPEED: Medium               ATTACK SPEED: Slow
+     ATTACK INTERVAL: Average           ATTACK INTERVAL: Long
+     LIFESPAN: Short                    LIFESPAN: Long
+     NUMBER ON SIDE: 2                  NUMBER ON SIDE: 1
+          GOLEM                              KNIGHT
+     MOVEMENT: Ground-3                 MOVEMENT: Ground-3
+     SPEED: Slow                        SPEED: Normal
+     ATTACK MODE: Boulder               ATTACK MODE: Club
+     ATTACK FORCE: Great                ATTACK FORCE: Minor
+     ATTACK SPEED: Slow                 ATTACK SPEED: Instant
+     ATTACK INTERVAL: Long              ATTACK INTERVAL: Very short
+     LIFESPAN: Long                     LIFESPAN: Short
+     NUMBER ON SIDE: 2                  NUMBER ON SIDE: 7
+
+
+
+
+
+
+
+
+
+     THE OPPOSING FORCES
+     DARK SIDE
+     SORCERESS                            SHAPESHIFTER
+     MOVEMENT: Teleport-3                 MOVEMENT: FLY-5
+     SPEED:    Normal                     SPEED: Varies
+     ATTACK MODE: Lightening Bolt         ATTACK MODE: Varies
+     ATTACK FORCE: Moderate               ATTACK FORCE: Varies
+     ATTACK SPEED: Fast                   ATTACK SPEED: Varies
+     ATTACK INTERVAL: Average             ATTACK INTERVAL Varies
+     LIFESPAN: Average                    LIFESPAN: Unknown
+     NUMBER ON SIDE: 1                    NUMBER ON SIDE: 1
+
+     BASILISK                             DRAGON
+     MOVEMENT: Ground-3                   MOVEMENT: Fly-4
+     SPEED: Normal                        SPEED: Normal
+     ATTACK MODE: Eye Beam                ATTACK MODE: Fiery Breath
+     ATTACK FORCE: Great                  ATTACK FORCE: Very Great
+     ATTACK SPEED: Fast                   ATTACK SPEED: Medium
+     ATTACK INTERVAL: Short               ATTACK INTERVAL: Long
+     LIFESPAN: Short                      LIFESPAN: Very Long
+     NUMBER ON SIDE: 2                    NUMBER ON SIDE: 1
+
+     MANTICORE                            BANSHEE
+     MOVEMENT: Ground-3                   MOVEMENT: Fly-3
+     SPEED: Normal                        SPEED: Normal
+     ATTACK MODE: Tail Spikes             ATTACK MODE: Scream
+     ATTACK FORCE: Minor                  ATTACK FORCE: Moderate
+     ATTACK SPEED: Slow                   ATTACK SPEED: Instant
+     ATTACK INTERVAL: Average             ATTACK INTERVAL: Long
+     LIFESPAN: Average                    LIFESPAN: Average
+     NUMBER ON SIDE: 2                    NUMBER ON SIDE: 2
+
+     TROLL                                GOBLIN
+     MOVEMENT: Ground-3                   MOVEMENT: Ground-3
+     SPEED: Slow                          SPEED: Normal
+     ATTACK MODE: Boulder                 ATTACK MODE: Club
+     ATTACK FORCE: Great                  ATTACK FORCE: Minor
+     ATTACK SPEED: Slow                   ATTACK SPEED: Instant
+     ATTACK INTERVAL: Long                ATTACK INTERVAL: Very Short
+     LIFESPAN: Long                       LIFESPAN: Short
+     NUMBER ON SIDE: 2                    NUMBER ON SIDE 7

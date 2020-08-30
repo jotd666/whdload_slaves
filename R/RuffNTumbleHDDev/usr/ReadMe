@@ -1,0 +1,121 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Ruff'N'Tumble" © 1994 Renegade
+
+ This install requires WHDLoad and DIC to be in the path. Both can be found in
+ the WHDLoad package.
+ To install from a different drive than DF0: select installation mode Expert.
+
+ The installed program requires 0.5 MB ChipMem and 1.0 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page.
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 2.7 (20.04.2020) done by JOTD:
+ - streamlined joypad read code to be more compatible with third party CD32 adapters
+ 
+ version 2.6 (12.04.2020) done by JOTD:
+ - added BUTTONWAIT to hear the loading tunes (issue #0004342)
+ - provided 512k chip / 512k slow slave for 512k chip 24 bit machines (issue #0004464)
+ 
+ version 2.5 (24.01.2020):
+ - fixed: 68000 incompatibility / joypad detection bug
+ - fixed: keys (O, P, Q, M ...) now work again alongside the joypad controls
+ - changed: use CUSTOM2=1 to enable 2-button controls (was CUSTOM1)
+ - runs with SNOOP/CHK
+ 
+ version 2.4 (24.01.2020):
+ - completely broken hasty release, ignore
+ 
+ version 2.3 (10.05.2018):
+ - removed "use CD32 joypad controls". Now CD32 joypad is detected at startup and
+   controls are enabled if plugged in. You'll still have to enable "2nd button jump"
+   
+ version 2.2 (08.2017):
+ - adapted to WHDLoad 17 (access options in whdload splash screen)
+ - added CD32 controls (adapted from Earok control code)
+ 
+ version 2.1 (01.03.2016):
+ - fixed wrong keyboard interrupt (thanks Toni)
+
+ version 2.0 (16.08.08) done by JOTD
+ - CUSTOM1=1 enables 2-button controls (2nd button jumps, up does not jump)
+ - decruncher relocated in fastmem
+ - slave fully rewritten
+
+ version 1.4 (25.04.06) done by JOTD
+ - reworked install script & readme
+ - added icons by Frank, CFou! & Chris Vella
+ - source code included
+
+ version 1.x (2002) done by JOTD:
+ - initial release
+ - fixed for 32 bit CPUs: Crashes removed and GFX are displayed properly (15 patches per world !)
+ - Access faults removed (1 per world)
+ - Keyboard fixed
+ - Level skipper (Help)
+ - Exoticon, NewIcon and GlowIcon provided.
+ - Documentation included
+
+
+ COMMENTS:
+
+ Well, a very good game, but totally unusable with a 32 bit CPU such as a 68030, 68040 
+ or 68060, even without 32 bit fastmem.
+ A shame in 1994, the year this game was released.
+
+ I tested the game intensively, so it should work OK.
+
+ This game is really great in terms of graphics, speed, sound and playability. It really
+ deserves this patch. I hope you'll enjoy it.
+
+ LEVEL CODES:
+
+ Enter any of the following for the password (thanks to K. Krellwitz for Sweetcheater)
+
+                      "6581"____________________Level 2.
+                      "3178"____________________Level 3.
+                      "8392"____________________Level 4.
+                      "7339"________For the game ending.
+                      "6717"_____________Infinite lives.
+
+
+ BUGS:
+
+- A gameover could happen when you finish a level by killing the boss.
+- Some small gfx corruption can occur on a game over (http://mantis.whdload.de/view.php?id=3870)
+  This has been investigated but it's 1) random 2) very difficult to fix since there are a ton of blitter operations
+  done at the same time.
+
+CD32 JOYPAD CONTROLS (courtesy of Earok):
+
+- INGAME:
+Pause = Play
+Replay = Reverse (on game over)
+Quit = Reverse + Forward 
+
+- MENU:
+Options = Reverse / set code to 0000
+Music Toggle at Options screen = Forward
+Enter infinite lives code (switches on permanently) = Play
+Enter practice code for World 2 = Blue
+Enter practice code for World 3 = Green
+Enter practice code for World 4 = Yellow
+

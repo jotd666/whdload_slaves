@@ -1,0 +1,68 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+
+ This install applies to "International 3D Tennis" (c) 1990 Sensible 
+ Software/Palace - 1 disk. Thanks to Didier Giron and Philippe Bovier 
+ for the original!
+
+REQUIREMENTS:
+- Slave requires WHDLoad V10+ and RawDIC.
+- Game requires 512k chip mem (+0.6Mb other memory for preload option)
+
+Version 1.1 (16.05.2020) done by JOTD:
+- adapted stupid RNC decrunch overflow that required more than 512k chipmem
+  now file is decrunched lower in memory, and moved at the proper location (issue #0004529)
+- fixed possible random lockup in title music replay (at least on WinUAE)
+
+Version 1.0 (21.08.2001) done by Codetapper:
+- Full load from HD
+- Protection removed (Dos/MFM combination and speed check on track 1)
+- Loads and saves games (an absolute nightmare to code!)
+- Joystick and mouse ports swapped around
+- Mouse port is disabled by default so you can play a one player game.
+  Toggle the mouse port on/off by pressing Help
+- Snoop bug fixed (access to kickstart Rom)
+- Colour bit fixes (x2)
+- Instructions included
+- International keyboard support (requires WHDLoad 12+)
+- All files can be crunched to save space (Propack, Fimp etc)
+- RomIcon, NewIcon and GlowIcon (created by me!)
+- Quit option (default key is 'PrtSc')
+
+This was one of the hardest patches I have ever done, mainly because the 
+code for loading and saving games is very complex and spaghetti like.
+
+I have fixed absolutely everything I could think of in this game.  In the
+original, the game stupidly requires you to plug a joystick into the mouse
+port and worse still, if you forget about this, you cannot actually select
+any of the options on the title screen!  Press Help to toggle the mouse
+port back on if you are playing a two player game.
+
+Greetings to those of you who prefer quality fixes than fast half finished
+ones.
+
+
+Codetapper/Action (21-Aug-2001)
+
+
+         Bug report form, full WHDLoad package and other installs:
+                          http://www.whdload.de/
+
+            ________  ________  ________  ____  ________  ________
+           _)       \_)       \_)       \_)   \_)       \_)       \
+   __ ___ /___/     /   /_____/\  /     /     /   /     /   /     /
+  /_//__// \___    /   /     /CT\/     /     /   /     /   /     /
+        /___/     /___      /   /     /_____/___      /___/     /___ __
+            \____/    \____/    \____/          \____/    \____//__//_/
+
+
+           Visit the Action website for more of our productions:
+                           http://codetapper.com

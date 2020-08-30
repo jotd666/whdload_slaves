@@ -1,0 +1,223 @@
+
+                            [41m[32mBUBBLE & SQUEAK[0m
+
+[1mBUBBLE & SQUEAK.[22m Bubble was just about to fall asleep when he heard a
+thump, and a strange squeaking noise coming from the wardrobe. Summoning all his
+courage, he got out of bed and opened the wardrobe door to reveal a strange blue
+creature sitting amongst his dirty socks.
+"Who are you?", he asked, trying to sound braver than he felt.
+"I'm Squeak", replied the blue creature nervously, "Where am I?"
+"You're in my wardrobe", said Bubble, "And I want to know how you got there!"
+"Well", said the creature, "The last thing I remember is jumping into a passing
+black hole hoping to find someone who could help us."
+"Us?", interrupted Bubble, "you mean there are more of you in there?".
+"No, they, are all working in the porridge mines on Grool. I'm the only onw who
+escaped... and you're the only one who can help." A large tear rolled slowly
+down his cheek.
+"Porridge... Grool... perhaps if you started from the beginning I'd know what
+was going on", said Bubble. "But of course, I'll help you if I can".
+So Squeak explained how the evil Kat of Nine Tails and his henchmen had captured
+the inhabitants of Grool imprisoning them in 'Bozo Domes' and forcing them to
+work in the porridge mines. Somehow Squeak had evaded capture, and had used his
+last few coins to buy some bubble gum. There must have been something special
+about the gum, because as he chewed it he suddenly felt full of energy, and
+jumped into a passing black hole.
+"OK", said Bubble, "I'll help you, but how do we get to Grool?".
+"I'm not sure... I think we'll have to jump into a black hole".
+"Will any black hole do?", asked Bubble, "How about that one in my sock?"
+"It looks pretty black to me", said Squeak, "Let's try it."
+And so now you know how Bubble & Squeak came to find themselves on the
+planet Grool. But that's only the beginning... how you've got to outwit
+the evil Kat of Nine Tails, free the creatures trapped in the Bozo Domes,
+and live happily ever after. What are you waiting for?
+
+[1mLOADING INSTRUCTIONS.[22m If you have a CD32, place the CD in the drive and
+press the reset button. Otherwise place Disk 1 in the internal drive and reset
+your computer. Change disks only when instructed to do so (if you have a second
+floppy drive you will not need to change disks at all).
+
+The floppy disk version can be installed to hard disk. First make a directory
+called (say) SQUEAK, then copy all of the files on both disks to this directory.
+Add the following lines at the bottom of your STARTUP-SEQUENCE file:
+
+		Assign BUBBLE1: DH0:SQUEAK
+		Assign BUBBLE2: DH0:SQUEAK
+
+To play the game, reset the computer, and when it has finished rebooting insert
+Disk1. Go to the SQUEAK directory and type CODE to run the game.
+
+[1mCONTROLS.[22m Whether you play on a CD32 or an Amiga you can use a CD32
+controller, a joystick with two indipendent fire buttons (or a Megadrive
+controller), or an ordinary one-button joystick.
+
+You control Bubble - you can walk, jump, throw stars, and pick up coins, gems,
+and other useful items. Squeak will follow you around - as best he can - unless
+you tell him to stop and wait. Unfortunately Squeak can't walk as fast as you,
+or jump so far or so high - unless you take him to one of the bubble gum
+machines and feed him a magic gumball. But more of that later. Another useful
+thing about Squeak is he doesn't mind being kicked around - literally. And you
+can jump on his head, too. He'll even throw you up in the air if you want him
+to!
+
+The diagrams on the opposite page show how to use the different controllers.
+Note that some of the functions require two keys (or one key and a joystick
+direction) to be pressed together.
+
+If you choose to quit a level you'll lose a life.
+
+[1mCD32 CONTROLLER.[22m
+
+ Left Ear:                       Right Ear:
+ Look-Up                         Look-Down    Action Button [33m(X)  (Y)[0m Fire/Kick
+              Middle-pad button:
+                    Pause                         Fire/Kick [33m(Z)  (Q)[0m Jump/Fly
+
+                                                    [33m(Z)[0m+[33m(Q)[0m simultaneously:
+                                                      Throw Bubble in Air
+When Game is Paused:
+Look-Up + Look-Down + Fire/Kick: Restart Level
+Look-Up + Left + Action Button : Quit Game
+
+Action Button - Call/Stop Squeak
+                Pick-Up Object
+                Climb Off Squeak
+                Insert Coins
+
+
+[1mONE FIRE BUTTON JOYSTICK (A).[22m
+
+         Jump/Fly            Throw Bubble in Air
+            |                         |
+     Left --o-- Right                 o    Hold Fire Button [33m(A)[0m Then Move
+                                      |             Joystick
+    [33m(A)[0m Fire Button:            Action Button
+       Fire/Kick                 (see above)
+
+P=pause, ESC=quit level
+PAUSE then ESC=quit game.
+
+[1mTWO BUTTON JOYSTICK (B) (C).[22m
+
+   Throw Bubble in Air
+ Fire/Kick      Jump/Fly
+    [33m(B)           (C)[0m                 o    Hold Fire Button [33m(B)[0m
+                                      |
+     Left --o-- Right           Action Button
+                                 (see above)
+P=pause, ESC=quit.
+
+[1mOVERVIEW.[22m There are thirty main levels in the game. Bubble and Squeak
+need to get to the end of each level, marked by flashing post. Of course, the
+creatures that the Kat of Nine Tails has left on guard aren't exactly going to
+help you - so watch out!
+
+On Each level there is a submarine icon to collect. Pick this up, and at the the
+end of the level Bubble and Squeak will get in a submarine to battle against the
+Kat of Nine Tails in a shoot'em-up. There are five different shoot'em-ups, and
+you must complete one before you go onto the next level.
+
+In addition, if you free 3 of Squeak's little monster friends from the Bozo
+Domes you get to play a bonus game - in all there are then different bonus
+games. There is a Bozo Dome on most, but not all of the main levels.
+
+As if it wasn't already tricky enough, you'll find that most of the main levels
+gradually flood with water. Whilst Bubble and Squeak can survive under water for
+a short time, you shouldn't push your luck!
+
+[1mWATCH YOUR HEALTH![22m When the game begins you have 3 lives. You lose a
+life when your health runs out. Watch the 'heart' indicator in the status
+display - when this shows zero the next hit you take will be curtains!
+
+[1mWHAT TO COLLECT.[22m On each level you'll find various magic items scattered
+around. Pick these up whenever you have the chance - and provided you have the
+time. Look out for
+
+GEMS - liberally scattered throughout the levels, they are worth points - but
+most important, you can use them to free Squeak's little monster friends from
+the Bozo Domes. It takes 50 gems to shatter a Bozo Dome. Any gems you are still
+carrying at the end of a level are worth 50 points each.
+
+COINS - these are dropped by aliens when you zap them. Pick them up and use them
+to buy gum for Squeak. Three coins are needed for each gumball, and any coins
+you have left at the end of the level are worth 50 points.
+
+FOOD - collect food to replenish your health. You can have a maximum of 8 health
+points at any one time.
+
+SUBMARINE TOKEN - collect this for a chance to battle against the Kat of Nine
+Tails in his underwater lair.
+
+[1mWATCH OUT FOR...[22m Other things to look out for are:
+
+GUMBALL MACHINES - there's at least one on almost every level. Different
+machines sell different-flavoured gum.
+
+FLOWER POTS - you can pick them up, pile them up, stand on them, even throw them
+around a little.
+
+SPRINGS - use them to jump to heights you've never dreamt of! You can even pick
+them up and pile them on top of each other!
+
+ELEVATORS - these are usually controlled by a button that you must hit.
+
+LAVA FLOW - hit the button alongside these funnels to send hot lava down into
+the water below, evaporating it and giving you more time.
+
+GOAL POST - this flashing post indicates the end of the level. Remember you've
+got to get Squeak there too!
+
+[1mBUBBLE(GUM) AND SQUEAK.[22m Feed Squeak some gum, purchased from one of the
+gumball machines that you'll find on most levels, and you'll find that not only
+can you jump on his back, he'll also have powers you didn't suspect. Take Squeak
+over to the machine, then insert three coins and give the machine a good kick.
+Jump on his back, and now, depending on the flavour of the gum, Squeak will be
+able to:
+
+-move as fast and jump as high as you can, and blow bubbles of gum to zap
+ aliens, or
+-fly, or
+-run super fast
+
+In addition, while you're on his back he can squash aliens just by jumping on
+them. However, these magic powers only last while you're on Squeak's back.
+
+[1mBONUS GAMES.[22m Each Bozo Dome contains a captive who can only be freed if
+you deposit 50 gems in the dome (just stand in front and the gems will
+automatically fly in). Free three of Squeak's little blue friends from the domes
+and you'll be allowed to play a special bonus game when you get to the end of
+the level.
+
+There are ten different bonus games, divided into three types:
+
+SPRING CHAMBER - bounce around collecting gems
+
+MAZE RACE - which way to go to get the most gems?
+
+LIFT OFF - trigger the lifts and moving platforms in the right order to collect
+the gems
+
+If you collect at least 50 gems, then get to the Goal Post before the timer runs
+out you'll be awarded an EXTRA LIFE. Any surplus gems score 50 points.
+
+[1mTHE SHOOT'EM-UPS.[22m If you collect the submarine token that can be found
+on each level, then at the end of that level you'll get a chance to battle
+against the Kat of Nine Tails and his fishy friends in an underwater battle.
+
+There are five lagoons, each more difficult than the one before. Though you
+start with only one submarine you can collect extra subs along the way. Watch
+out for the arrow tokens - collect one of these and if you have to restart the
+level you won't have to go back to the beginning.
+
+If you get to the end of the level you'll have to battle it out with the Kat of
+Nine Tails himself - can you send him crashing to the ocean floor?
+
+[3mGame, characters and manual copyright Audiogenic Software Limited, 1994
+BUBBLE & SQUEAK is a trademark of Sunsoft
+Original design by Pat Fox and Scott Williams
+Programmed by Alex Slater and Ray Price
+Graphics by Pat Fox with the help from Richard Smith
+Sound and music by Allister Brimble
+
+Doc typed in by Hexaae (15.10.06)[23m
+
+                                     <END>

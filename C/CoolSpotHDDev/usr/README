@@ -1,0 +1,27 @@
+
+
+	That patch applies to Cool Spot (c) 1993 Virgin (3 disk version).
+
+
+	Before you can use this you must install WHDLoad and DIC from the
+	whdload package. The tools must be available via the path.
+
+
+	You need 0.5 MB ChipMem and 1.0 MB OtherMem.
+
+
+	full whdload package:	aminet:dev/misc/whdload#?.lha
+	other installs:		http://www.whdload.de/
+
+        v2.1 (17.04.2016) done by JOTD
+        - added quitkey for 68000 machines
+
+	v2.0 (12.04.2016) done by JOTD
+	- chipmem usage lowered to 0.5MB
+	- fixed spurious level 6 interrupt that locks up the game (CD32 but can happen on non-CD32 configs)
+	- source code included
+	
+	v1.x done by Mr.Larmer
+	
+	Thanx to Vaughn Tovey for original disks image.
+

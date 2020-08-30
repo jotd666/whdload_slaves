@@ -1,0 +1,12 @@
+PROGNAME = Flashback
+JSTLOADER = $(PROGNAME)HD
+WHDLOADER = $(PROGNAME).slave
+SOURCE = $(PROGNAME)HD.asm
+
+all : $(WHDLOADER)
+
+$(JSTLOADER) : $(SOURCE)
+	phxass $(SOURCE) I=include:
+
+$(WHDLOADER) : $(SOURCE)
+	basm $(SOURCE)

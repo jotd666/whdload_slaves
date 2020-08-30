@@ -1,0 +1,740 @@
+                            F/A-18  INTERCEPTOR
+                  
+                                Contents
+
+
+Overview.......................................................1
+
+Getting Started................................................1
+   How to use the F/A-18 Flight Computer.......................2
+
+Aircraft Reference.............................................3
+    Joystick Control...........................................3
+    Aircraft Controls..........................................3
+    Simulation Controls........................................5
+    View Controls..............................................5
+    ECM (electronic countermeasures)...........................6
+    Available Weapons..........................................6
+
+Flight.........................................................6
+    Demonstration Flight.......................................7
+    Free Flight, no enemies...................................11
+    Training, demo of maneuvers...............................11
+    Training, practice maneuvers..............................12
+    Qualification.............................................13
+    Next Active Advanced Mission..............................13
+    Selectable Missions.......................................15
+    Your Current Flight Log...................................15
+
+Tips from a Combat Veteran....................................16
+
+Appendix A - Aircraft Specifications..........................18
+
+Overview
+
+F/A-18 Interceptor tests your air combat ability, as you fly a super-modern
+jet fighter against destruction-seeking intruders. The action unfolds in a 
+realistic flight environment; you skim over the bay, soar above the San 
+Francisco peninsula, and perform maneuvers above the Pacific Ocean. You 
+look out from the cockpit of a Navy F/A-18 Hornet or an Air Force F-16
+Flying Falcon.
+
+Read the Getting Started section to begin play, and study the Aircraft 
+Reference section to become familiar with the joystick and keyboard
+controls for F/A-18 Interceptor. The cockpit and controls are the same for
+both the  F-16 and F/A-18. After you've seen the demo flight, and have
+flown in free  flight, you practice the training maneuvers vital to
+successful combat. You'll qualify for active duty, practice selected combat
+missions, then fly in actual combat against the intruders.
+
+Getting Started
+
+You can play Interceptor on an Amiga 500, 1000 or 2000. Before you begin, 
+write protect your disk then make a playing copy of the diskette. You can 
+play Interceptor using the keyboard or joystick.
+
+Note to new Amiga owners: F/A-18 Interceptor requires at least 512K bytes
+of memory (if your computer has 512K, you should disconnect your external
+drive to  receive improved sound.). Its recommended that you have a color
+RGB monitor and one megabyte of memory to maximize sound capabilities, as
+well as to view the Demonstration Flight in full. To get started:
+
+1. Turn on your computer and monitor.
+
+2. Plug your mouse in port one, and your joystick in port two.
+
+3. Insert your playing copy. If you have an Amiga 1000, use Kickstart 1.2,
+   then insert your playing copy when the onscreen request for the
+   WorkBench appears.  Move the pointer to the Program Disk icon,
+   double-click the mouse button, then double-click on the Interceptor icon
+   in screen center.
+
+4. The title screen and credits appears; when prompted, enter a callsign to 
+   enlist in a full Tour of Duty. Then press Return (see Note below).
+
+5. When the Mission Selection screen appears, press the number of the
+   option you want to begin play.
+
+                                1
+
+Note: When you write-enable your disk, "R" for Rookie appears as the
+current callsign. The Rookie is a pilot who has successfully completed the
+first three F/A-18 Interceptor missions; using the "R" callsign thus lets
+you select from a wider variety of missions right away. If you wish to use
+your own callsign (thus permanently erasing the Rookie) you must select
+"8" ("your current flight log"), then reset the log by pressing SHIFT-2.
+Now press 1 to update the log to disk. Am message appears requesting you to
+enter your own callsign. You may opt not to enlist for a Tour of Duty.
+However you must still pass Qualification in order to fly combat missions.
+
+How to Use the F/A-18 Flight Computer
+
+To play F/A-18 Interceptor, you need to enter a security countercode after
+you select any of the Flight options (see "Flight").  At the onscreen
+prompt, you'll use your F/A-18 Flight Computer to line up the 4 letters
+and/or numbers, then type in the appropriate code visible in the window
+above the last letter or number.
+
+1.  The first letter or number is for the innermost (smallest) dial on the
+    wheel.  Find that character.
+
+2.  Find the second character on the middle wheel, and line it up directly
+    over the first.
+
+3.  Find the third number on the large, outer wheel.  Line it up with the
+    first two characters.
+
+4.  Now look on the innermost wheel to find the fourth character (a window
+    is placed directly above each).  Type in the numerical code visible in
+    the window above the 4th character, and press Return.
+
+5.  You should receive confirmation to proceed with the mission.  If you
+    enter the incorrect countercode, you are given 2 more chances to clear
+    security before the program asks you to reboot.
+
+                                2
+
+Note: Use care when selecting characters on the Flight Computer; and "8"
+can look like a "B" or an "0" can resemble a "D".  To practice using the
+F/A-18 Interceptor Flight Computer, find the number for the combination
+9E5F.  You're on the right tack if the answer you come up with is 057247. 
+See Flight Computer Illustration, page 2.
+
+Aircraft Reference  
+
+When you take to the air, you fly one of two intercept aircraft - either
+the General Dynamics F-16 Fighting Falcon orr the F/A-18 Hornet. In your 
+capable hands, the Falcon and the Hornet are both weapon and shield.
+Please refer to Appendix A - Aircraft Specifications, for more information
+on both aircraft.
+
+Joystick Control
+
+You control your plane in flight by using the keyboard, or a joystick. Take
+control of the joystick when your plane is taxiing off down the runway on
+takeoff. Once you have achieved takeoff of about 200 knots, pull back on 
+the joystick and take to the air. In flight, move your joystick in the 
+direction you want your aircraft to fly. The joystick's fire button fires 
+the selected weapon against the selected target, and triggers the 
+instructor's next maneuver in Training Missions.
+
+Aircraft Controls
+
+Familiarity of the cockpit controls of both the F-16 Falcon and the F/A-18
+Hornet is important to the F/A-18 Interceptor pilot. Prominent features of
+the cockpit are the HUD (heads up display) system, the radar and weapons
+systems, and the fuel, altitude and airspeed indicators. The HUD, which 
+appears on the canopy above the control panel, includes a target
+designator, missile-aiming reticle, gun-boresight line, weapon-select
+indicator, target-in-range, target lock-on, and a G-meter (load
+measurement). Refer to the  HUD illustrations on page 10 to familiarize
+yourself with these features. 
+
+Note: Refer to the illustrations of the cockpit control panel and the 
+keyboard when reviewing this list of controls:
+
+  F1 - F10            Thrust. Control throttle in 10% increments.
+                      Note: Pressing F1 twice shuts down the engine if you 
+                      are at settings above 10%. Pressing F10 twice turns
+                      on the afterburner if you are at 100% throttle.
+
+   = key              Thrust. Increases throttle by one step. 
+
+   - key              Thrust. Decreases throttle by one step.
+
+                                 3 
+
+ BACKSPACE            Brakes. Puts on speed brakes or ground brakes 
+                      (depending on your location). The "Brakes" indicator
+                      on left side of control panel lights up when you put
+                      the brakes on.
+
+      ,               Rudder control. Left Rudder, turns left ("yaws").
+
+      .               Rudder control. Right Rudder, turns right ("yaws").
+
+ Cursor Keys          Aircraft movement. The UP arrow pitches the nose down,
+                      the down arrow pitches the nose UP, the LEFT arrow 
+                      rolls it left, and the RIGHT arrow rolls it right.
+
+      G               Gear. Raises or lowers the landing gear.
+
+      A               Arrestor hook. Extends arrestor hook on F/A-18 for
+                      carrier landings.
+
+      H               HUD. Turns HUD display on/off. All displays except
+		      that for a selected weapon disappear when you
+		      deactivate the HUD, and return when you re-select
+                      it.
+
+      J               ECM jammer. Turns ECM (electronic countermeasures)
+                      on/off. "ECM" on the right side panel lights up when
+                      you select it.
+
+      C               Chaff. Dispenses rapid-bloom chaff to jam an enemy
+                      aircraft's surveillance system, as well as radar-
+                      homing missiles.
+
+      F               Flare. Dispenses an infra-red flare to draw IR-guided
+                      missile away from your aircraft.
+
+      M               Map. Displays map of airspace and your location on
+                      the HSI (horizontal situation indicator).
+
+      R               Range. Controls radar resolution (2, 10 or 40 miles).
+
+      T               Target Select. Selects radar contact as a target.
+                      Toggle through available targets by pressing T 
+                      repeatedly.
+
+   RETURN             Weapon Select. Press repeatedly to toggle through 
+                      available weapons. The weapon selected is highlighted
+                      by a red bar in the weapons window in control panel.
+
+ SPACE BAR            Fires weapon. Fires active weapon at selected target.
+
+  Shift-F             Dispenses rescue pods. Releases rescue pods in some
+                      missions.
+
+  Shift-E             Eject. Press to eject from a doomed aircraft.
+
+                                4
+
+Simulation Controls
+
+       P              Pause on/ off.
+
+    ESCAPE            Reset Mission. Returns you to the start of the
+                      current mission.
+
+  Shift-Escape        Exit Current Mission. Returns you to Mission Select
+                      screen.
+
+View Controls
+
+  Keypad Enter        Switches viewing mode from first-person perspective
+                      inside cockpit to third-person perspective outside
+                      cockpit; press ENTER again to re-enter cockpit. Press
+                      ENTER to skip through the "zoom down" that follows
+                      your selection of any of the scenarios; you'll go
+                      straight to the cockpit. 
+
+   Shift-Enter        Takes you to the control tower nearest your starting
+                      location.
+
+     [ ]              Zoom. Left bracket zooms out, right zooms in.
+
+The following keys on the numeric keypad function when your view is from 
+inside the plane:
+
+      4               Moves your head to the left.
+
+      6               Moves your head to the right. 
+
+      5               Locks your head in present position.
+
+      2               Turns your head around for backward view (checks 
+                      your "6").
+
+      1               Straight-down view.
+
+      7               Straight-up view.
+
+      8               Returns you to forward view (shortcut).
+
+Note: The program automatically returns you to the forward view after 4 
+seconds. To prevent this, press 5 (see above) to remain in the pilot 
+viewing mode that you have selected.
+
+When you press Enter, the view mode numeric keypad remains inoperative.
+However, the view each number gives is the position of the viewer outside
+the  aircraft. Scroll through the numbers on the keypad to view your plane
+in flight from the different possible angles, then press ENTER again to
+return  to the cockpit view.  Note: In addition to the 7 keys mentioned
+above, the 3 and 9 keys are operative when you're viewing the plane from the
+outside  views (the 5 key now shows you a view of the aircraft from
+directly above). In addition, the decimal point gives you a
+beneath-the-plane view.
+
+                                5
+
+ECM (Electronic CounterMeasures)
+
+You can use ECM to foul an enemy's radar, avoid detection, and deflect an 
+incoming attack. ECM has both an active form, like jamming the enemy's
+radar electronically, and a passive form, like dropping chaff, composed of
+small  lengths of wire or foil. Chaff acts as a signal decoy, confusing the
+tracker's  radar. --- even causing missile guidance on the wrong target.
+When a pilot  faces an impending attack, he will often employ ECM and
+perform an evasive maneuver simultaneously.
+
+Both the F-16 and F/A-18 Hornet are fitted with standard ECM pods. There is
+an ECM indicator on the right side of your cockpit panel. It is highlighted
+in yellow when your ECM pod is active. Using ECM reduces the range and
+effectiveness of enemy missiles, but also provides a beacon to your current
+position.
+
+Available Weapons
+
+Each aircraft boasts medium and short range missiles, plus a short range
+cannon. The AIM-120A AMRAAM is the medium range missile on each aircraft;
+it is a highly accurate "fire and forget" weapon. The AMRAAM has an
+effective range of over 30 miles; its guidance system keeps it on a
+strapdown, inertial course until it approaches the target. Then the AMRAAM
+activates a small active seeker in its nose as it homes in on the target.
+
+The short range missile available to the F/A-18 Interceptor pilot is the 
+AIM-9L Sidewinder anti-aircraft missile. The Sidewinder has a range of 11 
+miles, and reaches a speed of Mach 3. A pilot maneuvering at 6g can still 
+release a Sidewinder toward its target; the Sidewinder can be released when
+the attack craft is as close as 1000 feet. The AIM-9 performs best when it
+is launched from astern at a glowing afterburner, but its "all-angle"
+capability allows launch at head-on targets as well.
+
+The close-range cannon is the GE-M61, a 20mm cannon that fires 570 rounds
+at 6000 rounds per minute. In the modern era, a close range gun is most
+valuable in the midst of a close-quarters dogfight.
+
+Flight
+
+Now that you've completed your brief check-out of each aircraft, you're
+ready to solo. Your departure point is always the Mission Selection screen,
+where you choose the flight option that's right for you. Select
+Demonstration Flight and become familiar with the basic mechanics of
+flight from a passenger's point of view -- and some of the key landmarks
+of the San Francisco bay area.
+
+                                     6
+
+Select Free Flight a few times if you are a beginner to get the feel of the
+airplanes, then select Training: Demo of Maneuvers, to get acquainted with
+the basic combat maneuvers.. To practice the maneuvers behind an expert
+instructor flying an F-16, select Training: Practice Maneuvers, and go 
+through the maneuvers (descriptions of each are found below). Select
+Qualification to qualify for combat; now go on to the Next Active Advanced
+Mission, where you are dispatched on active status to face one of six 
+missions. As you complete them, you can relive past glories by selecting a
+previously completed mission in Selectable Missions.
+
+Demonstration Flight
+
+After you select the Demonstration Flight (enter 1 at Mission Selection 
+screen), you zoom in to the carrier Enterprise (CVN 65). You watch as the 
+Navy's workhorse takes off from the carrier deck, with its afterburners
+alight. When you select the demo, you cannot take control of the plane. The
+demo gives you a brief taste of flight, then lands at Alameda Naval Air
+Station. The demo repeats; to exit to Mission Selection, press
+Shift-Escape. When you're ready to take control of the aircraft, go on to
+Free Flight.
+
+                                7
+
+Free Flight, No Enemy Confrontation
+
+Free Flight, No Enemy Confrontation is the perfect opportunity to become
+familiar with the skills of flight that build a combat pilot's base of
+experience. Once you select Free Flight, select your starting location 
+choosing between San Francisco International (1), Alameda Naval Air Station
+(2), Moffett Field Naval Air Station (3), and an aircraft carrier  off the
+coast of San Francisco (4). You choose to fly either the F/A-18 Hornet or
+the F-16 Falcon (if you select the carrier as your starting location you are
+assigned an F/A-18 automatically). Watch as the view zooms in to your 
+aircraft in takeoff position, then check your control panel and verify that
+all systems are "go". To take off, just press F10 to increase your throttle
+to "military power". Once your airspeed reaches 200 knots, pull back on the
+joystick to lift off.
+
+In Free Flight, you face no enemies, and have no aerial targets to sight
+on; however, you can explore the possibilities of flight, practice
+take-offs, and familiarize yourself with the control systems and flight
+characteristics of your aircraft. Free Flight also lets you in on the
+sounds of flight -- the roar of take-off as you accelerate, the whine of
+your landing gear as it is raised, the kick of supersonic flight as you
+light the afterburners.
+
+Note: If you should crash in any of the F/A-18 Interceptor missions, you
+are  returned to your starting position, in position to take off again.
+However, if you are enrolled in a Tour of Duty, crashing means you won't
+gain mission completion credit in your flight log (see Your Current Flight
+Log, below).
+
+Training: Demo of Maneuvers
+
+In Training: Demo of Maneuvers, you ride as a passenger, as a flight 
+instructor performs a sequence of basic flight maneuvers. After you select
+the Training Demo from the Mission Selection screen,  you'll be airborne, 
+ready to watch the first of seven maneuvers. The pilot flies at 80% thrust
+throughout the demo; he may climb to altitudes above 14000 feet, and fly as
+fast as 650 knots.
+
+As a passenger, you have no control of the aircraft. However, to skip any 
+maneuver,, or to interrupt a maneuver in progress and select the next in
+sequence, press RETURN. Once the sequence of maneuvers is complete (see 
+Training: Practice Maneuvers for a complete list of the maneuvers), it will
+ repeat automatically until you exit the demo. Take advantage of the
+training demo; it gives you a leg up when you fly the maneuvers yourself in
+Training: Practice Maneuvers. To exit and return to the Mission Selection
+screen,  press Shift-Escape.
+
+                                11 
+
+Training: Practice Maneuvers
+
+In this scenario, the maneuvers are the same as in Training: Demo of 
+Maneuvers, and you perform them in the same order. Once you select this
+scenario, you begin lined up on the runway, behind the instructor's plane. 
+He'll wait for you to begin his take-off. Accelerate to 80% thrust; when 
+you reach 200 knots, take to the air. Try to stay in sight of the
+instructor as he climbs into position for the first maneuver. Follow the
+instructor,  and perform each maneuver in sequence as he does. If you lose
+the instructor once he starts to perform his maneuvers, you can reposition
+yourself behind his aircraft by pressing Return (once you're repositioned,
+make sure  you stay within range of the instructor without overtaking him).
+
+Use your experience in Training: Demo of Maneuvers, and follow the
+instructor as he loops or rolls, breaks or flies inverted. If a particular
+maneuver is too difficult, you can always trigger the next maneuver
+automatically. Make sure you're lined up in sight of the lead plane, then
+press the joystick  button when the instruction to trigger appears at the
+bottom of the cockpit panel. The instructor executes the maneuver, and you
+try to keep up. To skip a maneuver, press Return; to leave a smoke trail
+behind the instructor's  plane, press S. Just as in Training: Demo of
+Maneuvers, the maneuvers repeat automatically until you exit. Press
+Shift-Escape to return to Mission  Selection.
+
+What follows are detailed descriptions of the 7 maneuvers you practice in
+Training:
+
+The Aileron Roll: To perform an aileron roll, push the stick to one side.
+The plane rolls around, and its nose describes a circle on the horizon. In
+combat, use rolls to position yourself to "lift" through climbs, dives, and
+turns.
+
+The Break Turn: Use the Break Turn when the attacker is first seen
+approach- ing when you're in the enemy's "cone of vulnerability". To
+execute, break hard in the direction of the attack, fly with your wing
+pointed at the ground , then right yourself. You want to generate
+"angle-off" and ruin the  aggressor's angle, making him overshoot.
+
+The Inside Loop: In an inside loop, you pull up quickly and go all the way 
+over. Your head faces the center of the loop, while you pull positive G's.
+It's a bit like an aerial backward somersault. Perform an inside loop to 
+trade positions with an opponent who's near.
+
+Split-S: In the Split-S maneuver, the defender rolls inverted and then
+dives away vertically, pulling out in the opposite direction. from his
+opponent.  The idea is to force the attacker to overshoot, positioning
+yourself for a  reversal, while destroying the opponent's angle of attack.
+
+                                12
+
+Vertical Half-Loop: In this maneuver, you pull back on the stick, get to
+the top of the loop, then fly horizontally in inverted flight. Now roll
+your  plane upright. Also known as an Immelman, the half-loop allows you to
+gain  altitude and reverse directions.
+
+Barrel Roll: In the Barrel Roll, the defender first breaks, then rolls in
+the opposite direction to the break. The barrel roll involves loss of much 
+speed; it works best when the attacker is in a high angle-off, high
+overtake situation. If you execute this maneuver properly, the opponent
+should overfly you.
+
+Inverted Flight: Inverted Flight is a basic part of several aerial 
+maneuvers; to accomplish it, pull the stick back until you're upside-down,
+maintain your direction, then fly inverted. Try to maintain level flight.
+
+Qualification
+
+When you've completed your training and orientation, choose Qualification
+at the Mission Selection screen. You quickly hear the roar of the F/A-18's
+powerful engines, and look out from the Hornet's cockpit to the Enterprise'
+deck and the ocean beyond. Read the onscreen instructions for
+qualification.
+
+In Qualification, you must take off successfully from the carrier's deck, 
+fly around, then return to land safely on the carrier deck. You should be
+prepared for potential opponents in the Pacific skies; your enemies are 
+indifferent to your mission, and will harass you with impunity. Deal with 
+bogeys if they appear, then find your way back to the carrier. Get a
+bearing  on the ship, reduce your speed to 175 knots, drop your altitude,
+and bear  down on the flight deck. Head in toward the side where the hooks
+are closest to your aircraft. Put on your brakes, lower your landing gear,
+then hit the  wires to come to a full halt. 
+
+Once you pass Qualification, you are eligible for active duty (a message 
+appears onscreen confirming your advancement to active combat status).
+
+Escape repositions you on the carrier deck; Shift-Escape sends you back to 
+Mission Selection.
+
+Next Active Advanced Mission
+
+When you select Next Active Advanced Mission, you take on the challenge of 
+several combat missions against the intruders. Each mission has a specific 
+task for you to execute (see descriptions of the 4 missions below). To 
+succeed in Next Active Advanced Mission, you must be versed in all phases
+of  combat -- flying the aircraft, detecting the enemy while avoiding
+detection  through electronic and visual measures, closing in for the
+attack, selecting and readying your weapons systems, attempting kills, and
+then maneuvering to disengage from combat.
+
+                                13
+
+Note: The warning lights in the upper-right corner of the cockpit panel
+flash these different colors when the following situations arise:
+
+1.  A friendly plane in the area is green.
+
+2.  An enemy in the area is red.
+
+3.  A stall warning is red.
+
+4.  An RH missile fired at you is white.
+
+5.  An IR missile fired at you is white.
+
+In addition, an explanatory message appears at the bottom of the control 
+panel for each "event".
+
+Visual Confirmation
+
+In this first combat mission, you take off from San Francisco International
+in an F-16 Falcon or and F/A-18 Hornet. Your assignment is to find and 
+identify an aircraft (it's somewhere out there!), then return to SFO 
+unscathed. The aircraft which you must identify may be either a friend or a
+ foe. In Visual Confirmation, you face some danger of attack,. All your 
+weapons systems are operational, so arm your weapons if you spot a bogey. 
+Shoot only if fired at. If you can avoid a melee, you're better off. An 
+onscreen message lets you know when you've completed your assignment. Head
+for home, and put your aircraft down in one piece.
+
+Emergency Defense Operation
+
+When you complete Visual Confirmation, you're ready to fly Emergency
+Defense Operation. You fly an F/A-18 Hornet from the deck of the carrier
+anchored off the coast of San Francisco. Your mission is clear and
+compelling -- "We have hostile aircraft in your sector. Air Force One is
+currently on course  to SFO." That means the Commander-in-Chief is unaware
+of the attempt to  assassinate him and fatally compromise U.S. security. In
+this protective  situation, you must intercept and occupy the aggressor
+planes, allowing the Air Force One pilot time to land safely at SFO (an
+onscreen message informs you when the President's plane is down). Scramble
+to the scene of the attack,  deflect or destroy the enemy, and return to
+the carrier to land. Emergency Defense Operation is a combat pilot's
+challenge of the highest magnitude -- including the ability to gain attack
+position, outmaneuver your opponent, and outgun him if necessary.
+
+Intercept Stolen Aircraft
+
+Two F-16 Falcons from the U.S. Air Force have defected to the enemy side, 
+aided in their escape by a couple of unidentified escorts. Your assignment
+is to take off from the carrier, find the would-be defectors and their co-
+conspirators, and deal with the enemy planes in the most convincing manner
+possible. Fly in front of the would-be Benedict Arnolds to inform them that
+the game is up. If they agree to return home, escort them there; if they 
+disobey your signal to surrender, prevent their getaway at all costs.
+
+                                14
+
+Search and Rescue Operation
+
+In Search and rescue Operation you try to find and rescue a downed friendly
+pilot. Take off from the carrier Enterprise, and find the lost pilot, using
+radar and your pilot's keen eyes. Again, enemy aircraft seek to prevent the
+execution of your mission. After you locate the downed flier, you should
+deploy the rescue pod within his range. A message informs you if the drop
+was successful. Once the downed pilot is safe, your job is done -- return
+to the carrier and safety.
+
+Selectable Missions
+
+Choose Selectable Missions after flying Next Advanced Mission. You'll be
+able to select any of the missions that you completed in Next Active
+Advanced Mission, plus one more. Each time you complete a mission in
+Selectable  Missions, you are given a new scenario to select from the
+Selectable Missions  screen. As you take to the air in each mission, all of
+your instrumentation and weapons are operational; your aircraft is standing
+by, so strap on your G-suit and climb aboard. Fly Selectable Missions to
+practice the combat scenarios before returning to combat on active status.
+
+Note: There are other selectable missions, which we won't describe here.
+Once you have successfully completed an active mission, you may repeat it.
+The second time around, though, you may have to contend with a tougher 
+array of opposing pilots.
+
+Your Current Flight Log
+
+Your Current Flight Log lets you view your progress when you enroll in a 
+Tour of Duty (you must write-enable your disk before enrolling). Select
+Your Current Flight Log from the Mission Selection screen; you view a 
+summary that includes the following:
+
+1. Total mission started.
+
+2. Missions successfully completed.
+
+3. Amount of weapons fired and hits achieved.
+
+4. Accumulated flight time.
+
+5. Total number of crashes - doesn't include ejections.
+
+6. Hits suffered from enemy missiles.
+
+After each mission that you complete, your flight log is updated. To save
+the  update onto your disk, press "1". Any missions you've completed count
+toward  your credit; for example, if you've completed the first two
+Selectable Missions, you can begin the third whenever you like. As you fly
+more missions,  you will continue to update the flight log, keeping track
+of your progress throughout play.
+
+                                15
+
+If you wish to reset the Flight Log and keep statistics from scratch, press
+Shift-2. This erases the current log and sets statistics at 0. When you
+reset  the Flight Log, you erase credit for any missions completed.
+Remember to enter a new callsign.
+
+Note: You'll need to requalify to fly missions.
+
+To exit from the Flight Log back to Mission Selection, press Esc.
+
+Tips from a Combat Veteran
+
+Learning the workings of today's modern fighters is a key element of the
+pilot's art. He need to know where all the controls are by touch, but more
+than that, he needs to approach his aircraft as the wonder of aerospace
+technology that it is. Your F/A-18 Interceptor and F-16 Falcon aircraft are
+the best that the Navy and the Air Force can put in the air. They are the
+results of thousands of hours of design and engineering, and are kept in
+tip-top shape by careful ground crew maintenance. In your hands, the F-16
+and the F/A-18 turn into precise instruments, and the trained pilot emerges
+as a surgeon of the sky.
+
+The art of combat flying is a combination of skills. Experience is any
+pilots best teacher -- there's no substitute for long hours spent
+perfecting basic flight maneuvers., the principles of attack, and
+successful disengagement. The qualities that a top gun must have are
+courage, determination, acceptance of danger, and a measured faith in his
+ability to get the job done without fanfare. A flashy show-off is
+guaranteed one of two outcomes -- a quick trip to the beyond, or lots of
+practice separating himself from the lines of his flight chute after a
+dizzying fall to earth.
+
+A solid pilot builds flight skills in stages, taking on the right
+challenges  at the right time -- taking it smart, not easy. That means
+graduated training,  moving from Free Flight to Training, on to
+Qualification, then Selectable Missions, and finally, Next Active Advanced
+Mission. He applies basic principles like achieving surprise, detection,
+gaining a superior attack position, closing, and using weapons in an
+attack. A smart pilot builds a  good variety of maneuvers into his
+repertoire, practicing each until it is second nature. Careful preparation
+helps instill a calm, winning attitude in the most heated of aerial
+encounters.
+
+Welcome to the combat pilots' fraternity!
+
+                                16
+
+				17
+
+Appendix A - Aircraft Specifications
+
+The General Dynamics F-16 Fighting Falcon is a state-of-the-art,
+lightweight, multirole air-combat fighter with an advanced ground attack
+capability.  The F-16 is a single-seat aircraft with a single vertical
+tail, mid-mounted tailerons and wings, leading-edge flaps, and
+trailing-edge flaperons.
+
+Engine: The F-16 has a single Pratt and Whitney F100-PW-100 engine with
+23,830 lbs of thrust.
+
+Dimensions: The aircraft has a wing span of 31 feet and a length of 47
+feet.
+
+Weight: 16,794 lbs when empty, and 37,500 lbs at maximum take-off weight.
+
+Navigation: The Fighting Falcon's primary navigation system is a
+Singer-Kearfott SKN-2400 INS with a Standard ALQ-131 ECM Pod.
+
+Radar: Its radar capability includes a I/J-band pulse-doppler set, with
+range scales of 2, 10, or 40 miles.  The Falcon's downlook capability
+allows detection of fighter targets over 30 miles - including treetop
+targets.
+
+Ordnance: The F-16 can carry a weapon load of up to 20,450 lbs.  With 2
+short-range Sidewinder heat-seeking missiles boasting an 11 mile range, 4
+medium-range AMRAAM missiles with a 30 mile range, and an
+internally-mounted GE M61 A-1 gun capable of firing 500 rounds of
+armor-piercing projectiles at a maximum range of 500 meters, the F-16 is a
+sleek and deadly weapon of defense.
+
+Speed: The Falcon can attain a maximum velocity of about 1350 mph (Mach
+2.05) at 40,000 feet; at sea level, the F-16 reaches a speed of around 915
+mph (Mach 1.2).
+
+Combat Radius: The Falcon's tactical combat radius with maximum internal
+fuel is 340 miles.
+
+Ferry Range: The fighter's ferry range is 2415 miles.
+
+The combat pilot is assured a quiet ride and an exceptional all-around
+cockpit view when he takes the Falcon out for a ride.  Control inputs are
+force-sensing sidestick controller and pedal, both positioned for maximum
+effectiveness.  The speed and range of the F-16 Falcon guarantees top
+performance in several areas of combat.
+
+				18
+
+The carrier-based McDonnell Doublas/northrop F/A-18 Hornet is a U.S. Navy
+workhorse, performing both fighter and attack functions.  Designed as a
+replacement for the timeless FA Phantom II and the versatile A7 Corsair,
+the F/A-18 has filled a critical strategic need in the Navy's combat
+arsenal.
+
+Engine: The Hornet is driven by two GE F404-6E 400 engines, each of which
+generates 16,000 lbs of thrust.
+
+Dimensions: It spans 37 1/2 ft. without missiles, and over 40 feet with
+missiles.
+
+Weight: The F/A-18 weighs 23,060 lbs empty, and 36,710 lbs when loaded for
+a fighter mission.
+
+Radar: Search and define, lock-on and multiple-pass capabilities.
+
+Ordnance: There are 9 external weapon stations on the aircraft, plus 4
+medium-range AMRAAM missiles, 2 short-range Sidewinder missiles, and a GE
+M61 cannon (20mm) that fires up to 570 rounds.
+
+Speed: The F/A-18 can reach a maximum speed (clean) of 1190 mph, or Mach
+1.8, and will sustain a combat maneuver ceiling of over 40,000 feet.
+
+Combat Radius: The Hornet's air-to-air combat radius (with no external
+fuel) extends to 461 miles.
+
+				19
+ 
+============================================================================
+         DOCS PROVIDED BY  -+*+-THE SOUTHERN STAR-+*+- for M.A.A.D.                                                               
+============================================================================

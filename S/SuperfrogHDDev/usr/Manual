@@ -1,0 +1,327 @@
+
+            ________  ________  ________  ____  ________  ________
+           _)       \_)       \_)       \_)   \_)       \_)       \
+  __ ____ /___/     /   /_____/\  /     /     /   /     /   /     /
+ /_//___// \___    /   /     /CT\/     /     /   /     /   /     /
+      ::/___/     /___      /:::/     /_____/___      /___/     /___ __
+       :T:::\____/::::\____/::::\____/::::::::::\____/::::\____//__//_/
+       :|::::::::::  ::::::::  ::::::::        ::::::::  :::::::T::::
+       :|:                                                     :|:
+        |             Codetapper of Action presents             |
+        |                                                       |
+        |                                                       |
+        |                Superfrog Documentation!               |
+        |                                                       |
+        |     .                                           .     |
+        | ..::                                             ::.. |
+        | :.:        Another fine Action production!        :.: |
+        l______/\  ___________________________________  /\______|
+                 \/                                   \/
+
+
+SUPERFROGS STATISTICS
+---------------------
+* Superfast and smooth PAL overscan 360 degree scrolling
+* Superb 32 colour cartoon style "cute" graphics
+* Digitised sound and speech effects
+* Amazing in-game music (8 different scores)
+* Bonus sub-game featuring a realistic fruit machine
+* Skill level to cater for younger (or older!) players!
+* Massive worlds,  hugh levels
+* Well tailored difficulty curve
+* Packed with secret rooms,  hidden rewards and much more
+* Fantastic cartoon introduction by leading Amiga animator, Eric Schwartz
+
+
+CREDITS FOR SUPERFROG
+---------------------
+           Programming/Design: Andreas Tadic
+              Graphics/Design: Rico Holmes
+      Music and Sound Effects: Allister Brimble
+                      Mapping: Rico Holmes
+Additional Mapping and Design: Martyn Brown
+       Intro Animation/Design: Eric Schwartz
+              Intro Backdrops: Rico Holmes 
+                Vocal Effects: Chris Brimble/Lynette Brimble
+                               Martyn Brown
+             PDOS Disk Format: Rob Northen
+                  Playtesting: Lotta/Frazze/Paul/Andy/Chris
+                               Katrina/Craig/Mick 
+              Project Manager: Martyn Brown
+              HD-Installation: Codetapper/Action
+
+
+ABOUT THE PROJECT
+----------------- 
+Ever since I can remember, we always wanted to produce a super-playable
+platform game in the classic style.  Much like what we did with Project X
+in the shoot'em-up mould.  The idea of Super frog had been around for a
+considerable time and it was a matter of finishing up other projects before
+we got around to completing the project.
+ 
+Now it's finished we believe we have the game and character that is ageless
+in appeal and will hopefully become a milestone on the Amiga.  Technically
+we have squeezed the machine very hard, so much so that I doubt if more
+could be done.
+ 
+The true test of course is what you, as the player, think of the game.
+We had excellent feedback during development and I firmly believe that you
+will look upon Super Frog as an excellent purchase and one that will give
+you, your friends and your family, many hours of considerable
+entertainment.
+ 
+As for the team listed above, we're back on the Alien Breed 2 assignment.
+Working with a cute green frog who hasn't got a gun has been, shall we say,
+different!
+ 
+Martyn Brown, Project Manager, Super Frog.
+ 
+ 
+SUPER FROG: ALMOST A FAIRY TALE 
+-------------------------------
+Hi there and a warm welcome to magic land.  Former home of the magic prince
+and his lovely bride to be.  All was peace and harmony until the wicked
+witch lived up to those fabled Danish fairy tales and predictably turned
+the poor old prince into nothing more than a little green frog...  But...
+it was only a matter of a few hours beside the river bank (being Prince's
+far less statley new home) when a strange bottle floated past.  Intriguied,
+he grabbed it and drank from bottle and the rest is history.  Or at least
+it will be sooner or later.
+ 
+
+COMPATABILITY AND OTHER NOTES
+----------------------------- 
+SUPER FROG has been tested on an extensive variety of AMIGA machines and
+works on all varieties, from the A500 to the A4000 including the CDTV/1200.
+Should you experience any difficulties then it is probably the case of
+faulty or corrupt disks, in any case please refer to the TROUBLESHOOTING
+guide.  If you have external drives connected, you may use those during
+play.
+ 
+SUPER FROG is not hard drive installable.  The disks that SUPER FROG are
+supplied on are not the usual AmigaDOS format and writing to them will most
+likely result in damage, so ALWAYS keep them write protected.
+
+
+RECOMMENDATIONS
+--------------- 
+SUPER FROG is controlled from the joystick in port 2, the gameport next to
+the one where the mouse is usually located.  Turn any auto fire off before
+play as the game will not function correctly with auto fire enabled.
+ 
+Hooking your AMIGA'S sound output through an amplifier or your HIFI will
+result in even further enjoyment of the exellent music during the game.
+ 
+Your SUPER FROG disks carry on disk protection and cannot be backed up.
+So long as you treat them with care and keep them write protected they will
+give you trouble free operation.  Keep them away from strong magnetic
+sources such as the top of TV'S/MONITORS and speakers.  If your disks do
+become faulty by spilling coffee or whatever else on them, then please
+refer to the returns guide.
+ 
+
+LOADING INSTRUCTIONS
+--------------------
+Turn your Amiga OFF at the power supply and wait 10 seconds.  Turn it back
+on again and continue the instructions as laid out below - this ensures
+your system is clear of all other data.
+ 
+When the usual insert disk prompt appears you can insert either the story
+disk or game disk 1.
+ 
+Inserting game disk 1 will load the game straight away, missing out the
+introductory animation.
+ 
+If after a short while nothing has appeared on screen or the insert disk
+prompt still remains, then repeat the instructions once more and consult
+the TROUBLESHOOTING guide for futher help and information.
+ 
+
+MAIN MENU
+--------- 
+When the game has loaded and the SUPER FROG character is on screen,
+pressing your button will reveal two selections:  START GAME and OPTIONS.
+
+ 
+GAME OPTIONS
+------------ 
+You can move through the various selections with the joystick, using fire
+to toggle the various options.  When you are satisfied you can return to
+the main menu and start the game.
+ 
+LIVES:            Selectable between 1, 3 or 5.  (Default is 3)
+ 
+SKILL LEVEL:      Easy or Normal.  Easy gives you a slightly slower type
+                  of control, more game time etc.  (Default is Normal)
+ 
+SAVE HIGH SCORES: You can save your high scores to a data disk to keep a
+                  permanent record of your achievement.  You should NOT
+                  use your SUPER FROG disks for this purpose.
+ 
+LEVEL CODES:      During the game you will be given codes to restart at
+                  various levels, these can be typed in here.
+
+
+START GAME
+---------- 
+If you have one of the LEVEL CODES as described earlier you may jump into
+the game at a later level, so there's no need to cover old ground (unless
+you feel that you need the practice or a big score!) otherwise you start at
+the beginning, in the magic woods as SUPER FROG sets off in his quest to
+vanquish his froggy curse, get back his girl and teach that old witch a
+lesson or two!
+ 
+
+GAME PLAY
+--------- 
+The game is divided into worlds, of which there are six major ones, in each
+world there are a number of levels and you must complete all the levels in
+order to advance through that world and on to the next.
+ 
+
+MONEY MAKES THE WORLD GO AROUND
+------------------------------- 
+To complete a level you must collect a certain number of coins, which acts
+as a toll fee (even in magic worlds, bills must be paid, appearence fee's
+met and so on) - this is shown on the large coin in the bottom right hand
+corner of the screen.  When all the coins have been collected, the exit
+will open and you can progress further.
+ 
+
+THE TIME ELEMENT AND BONUS AWARDS
+---------------------------------
+You will also notice that when you start, a timer begins to count down.
+This represents the time you have left before your SUPER POWERS run out and
+you turn into a normal frog once more.  Which in effect means that the game
+is over.  To counter this effect, SUPER FROG must find and drink bottles of
+LUCOZADE to maintain this SUPER ENERGY.  In the first few worlds there is
+plenty of LUCOZADE scattered about, but as you progress it becomes
+increasingly rare and this means that you have to move quicker and be more
+thoughtful in your approach.
+ 
+Collecting fruit gives you points and also counts towards the SUPER BONUS
+award and the conclusion of each of the games levels.  You are awarded
+credits for the amount of time left (increased by collecting more
+LUCOZADE), the number of fruit collected and also the number of coins
+collected (including all the hidden ones).  You are then given the chance
+to change these credits into points, or gamble them on the bonus game.
+(See bonus game)
+ 
+
+SPECIAL ITEMS
+-------------
+You will also find a number of special powers scattered around for your
+use, these are detailed below:
+ 
+WINGS
+ 
+Enables you to fly by quickly pressing your button when in the air, this
+helps perform greater leaps.  You cannot stay airborne forever though and
+sooner or later you'll drop back down to earth.
+ 
+DESTRUCTO-SPUD
+ 
+This little green blob does your dirty work, you can throw him at airborne
+ememies and knock them to the ground.  To fire SPUD, hold down your
+joystick button when you are standing still (it will not work in the air).
+You can also fire SPUD upwards and to the side by pressing the relevent
+direction whilst holding fire down.
+ 
+INVISIBILITY PILL
+ 
+This little ped pill renders our hero invisible to his enemies for a short
+term, which obviously has its advantages.
+ 
+SPEED PILL
+ 
+These come in two forms, SPEEDUP (green) and SLOWDOWN (red) and are
+obvious as to what they do.  Speed pills are usually placed in a position
+where speed is either necessary or useful and not in places where going
+fast would be a hindrance, such as a particularly tricky jumping section.
+ 
+LUCOZADE
+ 
+This prolongs you SUPER ENERGY and also acts to boost your bonus award at
+the end of each level.  The more LUCOZADE you get, the more time you will
+have, the better score you will achive.  It pays to find those golden
+bottles!
+ 
+RESTART PILL
+ 
+This red pill with a large "R" on it enables you to restart at this point
+should you lose a life.  On the early worlds, these pills are pretty
+frequent, enabling you to get further into the game more quickly.
+
+ 
+OTHER ITEMS
+-----------
+Other special items, such as JEWELS, CROWNS and so on, can be found in
+particular worlds and levels.  These add greatly to your score and are well
+worth seeking.  You are awarded an extra frog every 200,000 points.
+
+
+CONTROLLING SUPER FROG
+----------------------
+The controls have been made as simple as possible, allowing precision and
+comfort on the joystick.
+ 
+Pushing left/right will move the frog left/right.  Pushing up will make
+SUPER FROG jump, pushing up and keeping the joystick up will make him jump
+a little higher.
+ 
+Pressing the fire button has no effect unless he has collected a special
+item such as WINGS or he is carrying his friend SPUD.  (See special items).
+ 
+When in flight you can move SUPER FROG right/left and manouvre him over
+dangerous obstacles and enemies.  If you tap the joystick in the opposite
+direction, he will drop straight down, allowing you to control where he
+lands/drops.
+ 
+You can attack various enemies from the air, such as the snails and blue
+blobs on world one.  This will SPLAT them and enables you to clear the
+world and collect a fruit bonus in the process.  Some enemies, the bird and
+hedgehog in world one for example, cannot be destroyed and it is for you to
+discover which in other worlds.  The best way to find out is to get an
+invisibility pill and try jumping on the enemies!  Airborne enemies such as
+the bats and wasps can be jumped on or blasted by SPUD.
+
+It's common sense to avoid things like fire, spikes and so on.  Frogs, even
+SUPER ones are generally soft, gooey creatures that do not enjoy such
+contact.
+
+
+LEVEL ONE HINTS
+---------------
+To get you started, you should note that LEVEL 1 has two hidden sections
+and that the blobs, snails and wasps can all be squashed by jumping on
+them.
+
+
+BONUS GAME: FRUIT MACHINE
+-------------------------
+After the SUPER AWARD at the end of each level, you are given credits which
+you can turn into points, or use on the FRUIT MACHINE.  In the FRUIT
+MACHINE you can try and win level codes, extra lives and massive advances
+(all numbers shown mean thousands of points).  Playing the machine is
+simple enough and can be done with either the joystick or mouse.
+ 
+In general whenever something is lit on the far right, you have won that
+amount (in thousands) and you can either COLLECT it, or opt to GAMBLE IT,
+where the outcome could be either of the other two flashing squares above
+and below it.  The HI-LO feature enables you to gamble on the spin of a
+number (1-10) and progress through the features on the right side.
+ 
+The JACKPOT (gained by gambling, through the HI-LO feature or by getting
+three LUCOZADE cans) rewards you with points for remaining credits, a hefty
+score bonus and the code to start at the next level whenever you play
+again!
+
+
+GAME OVER
+---------
+After each contact with an enemy, you lose one unit of energy.  When you
+lose five units of energy, a life is lost.
+ 
+The game ends when your supply of lives is spent or you run out of SUPER
+ENERGY time (which shouldn't happen as there is plenty of LUCOZADE on each
+level to enable it to be completed comfortably).

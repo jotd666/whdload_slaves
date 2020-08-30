@@ -1,0 +1,82 @@
+Short : HD-Installer for D/Generation ECS/AGA/CD남
+Type : game/patch
+Author : JOTD
+
+Install-Script & HD-loader � 2002-2018 JOTD
+
+D/Generation � 1991-1994 Mindscape
+
+Features (ECS/AGA version):
+
+- Runs fully from HD using WHDLoad/KickEmu31/13
+- Convenient install script
+- Copylock protection removed (present only in ECS version)
+- Saves to HD (as the original did)
+- Quit key (numerical '*', or configurable with QUITKEY)
+- Doc/Hints included
+
+Features (CD남 version):
+
+- Runs fully from HD using WHDLoad/KickEmu31
+- Convenient install script
+- Saves to HD (in "nvram" file, thanks to new Wepl nonvolatile.s code)
+- Joypad supported and emulated with function keys (F1-F6)
+- Quit key (numerical '*', or configurable with QUITKEY)
+- Doc/Hints/Walkthrough included
+
+History:
+
+- v2.4 (CD32 only): fixed savegames that didn't work
+  game needs reinstalling, else just copy "nvram" in "data"
+  seems that v2.0 install fix didn't fix after all, or that a whdload change about empty directory read
+  broke the savegames. Anyway, all good now (note: don't leave Alt-S pressed too long else it will save
+  a lot of times. Press any other key to stop that side effect)
+- v2.3 (AGA only): super cheat mode: selectable number of lives, infinite power weapons & more
+- v2.2: rewritten ECS/AGA versions for WHDLoad v17 (now ECS version has quit key on 68000, issue #003583)
+- v2.1: rewritten CD32 version for WHDLoad v16
+- v2.0: new ECS, AGA & CD남 slaves,
+  no more KickDOS stuff, shorter & faster slaves,
+  CD남 version supports real joypad.
+  CD남 users will have to reinstall the game in order to be able to save games
+  (or the game will tell 'Game Save Locked')
+- v1.3: fixed AGA slave. No more OS swaps now. Locked whdload versions below 15
+  for AGA/CD남 slaves
+- v1.2: fixed ECS slave. CTRL-Q now quits, and if you save and the SAVE.DAT file
+  is not in the directory, the game still saves. Added AGA floppy version.
+- v1.1: added CD남 version, which uses Kick 3.1
+- v1.0: initial release
+
+Notes:
+
+- Should run on original & cracks.
+- Read the documentation for load/save keys. Don't mix up Alt-R and CTRL-R
+  (someone will recognize himself :))
+- All versions now need WHDLoad v17.
+
+Requirements (ECS version, SPS 677):
+
+ The game requires a installed A500 Kickstart 3.1 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ a appropriate requester.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick346.lha" on aminet.
+
+
+Requirements (AGA version SPS 457/CD남 version):
+
+ The game requires a installed A1200 Kickstart 3.1 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick40068.A1200". The image can be extracted from a A1200 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ a appropriate requester.
+ Additionally the file "kick40068.A1200.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick346.lha" on aminet.
+
+Thanks to Bert Jahn for writing kickemu.s kickstart interface system.
+

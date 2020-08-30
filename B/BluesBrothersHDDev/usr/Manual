@@ -1,0 +1,43 @@
+      	    	    [41m[32mBlues Brothers[0m
+             	       [41m[32mBy Titus[0m
+
+Docs typed by: Squank, adapted by JOTD & Hexaae
+
+During the Game:
+
+F2   Toggles Music
+F3   Toggles Sound FX
+F5   Quits current Game
+F9   Audio filter on/off
+F10  Pauses Game
+
+Joystick Controls:
+
+Button       Picks up and throws items (Fire button)
+Up           Jumps/Climb up
+Fire+Jump    Enter doors
+Left-Right   Runs
+Down         Crawls
+
+Keyboard Controls:
+
+Up           Jumps/Climb up
+Space+Up     Enter doors
+Left-Right   Runs left or right
+Down         Crawls
+Space        Picks up and throws items (Fire button)
+
+To crawl or jump left or right, you have to press
+Down or Up while you are running.
+
+HINT: you can climb up a ladder with a crate pressing up twice quickly!
+
+For 2 players simultaneously cycle through both Jake and Elwood selected
+under the limelights on main menu.
+
+You start the game with 3 lives.  Each life consists of 3 (pieces of) hearts. When
+you get hit or shot, you lose 1 (piece of) heart.  Losing 3 (pieces of) hearts
+causes you to lose 1 life. If you can collect 100 record albums, you will gain
+1 extra heart.
+
+(The function keys are the same on the Amiga)

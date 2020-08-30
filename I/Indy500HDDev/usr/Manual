@@ -1,0 +1,344 @@
+      _____    _____      ___  ____       _______    ______
+     / ___/\  /\  \ \    / _/ / __ \     /_  ___ \  /\____/\  /\      /\
+    / / _/ / / /__/\/   / /  / /  \ \     / /__/ / / /   / / / /     / /
+    \ \ \_/ /    __/   / /  / /   /\/    / //___/ / /   / / / /     / /
+  /\ \ \   / /\ \     / /  / /   / /    / / \ \  / /   / / / / __  / /
+ / /__\ \ / /__\ \__ / /_ / /___/ /    / /__ \ \_\/___/ /  \ \/ /\/ /
+ \/____\/ \/__/ \__/ \/_/ \/_____/     \/__/  \________/    \/_/\_\/
+
+                             PRESENTS
+                             
+                       COMMAND SUMMARY CARD
+
+                         Indianapolis 500
+                          The Simulation
+                    Typed by Sentry of Thunderdome
+
+Before playing Indianapolis 500, copy the disk.  Put the original
+disk away and play with your copy.  For information about copying
+disk, see your AmigaDOS manual.
+Note:  Indy 500 does not support hard drive installation.
+
+Starting The Game
+
+1.  Turn on your computer (duh).  Amiga 1000 must use Kickstart 1.2
+    or 1.3 at the prompt.
+2.  At the Workbench prompt, insert your COPY of Indy 500 into df0:
+3.  First you'll see the Indy title screen and then the demo (computers
+    with less than 1 megabyte of memory don't have a demo).  Press Esc,
+    a joystick button, or a mouse button to continue.
+4.  You're shown the winning car from a past Indy 500, and you're asked
+    a trivia question about it. (Nevermind this part, it CRACKED!)
+    
+Note:  You must reboot your machine to exit Indianapolis 500.
+
+DRIVING CONTROLS
+
+To learn how to drive choose Practice from the Main menu.  Highlight
+Practice by pressing the Spacebar, the Up or Down arrows, or by moving 
+the mouse forward and backward.  Press Return or the mouse button to 
+select Practice.  You're in the pit.  Above your dashboard is the Pit
+Board.  See "The Pit Board" for a description of this board.  For now,
+just accelerate out of the pit and the pit board will disappear.
+
+You can drive your car with the mouse, keypad, or joystick.
+
+Steering with the Mouse
+Your mouse should be plugged into mouse/joystick port #1.  The mouse 
+acts like a steering wheel; the more you move it to the right or left,
+the more you turn the wheels.  To avoid sharp turns or overreaction, 
+move the mouse lightly and carefully.  In most situations you don't 
+need to move it much to control the car.
+
+Steering with the Keyboard
+Each steering key turns the wheels; the longer you press the key, the 
+more the wheels turn.  When you release the key, your wheels straighten
+out gradually.  As you round corner, listen for the squeal of your tires 
+which indicates loss of grip.  Release the key momentarily to allow the
+tires to regain traction.  Use this technique throughout the turns.
+
+Steering with the Joystick
+Your joystick should be plugged into mouse/joystick port #2.  Move the 
+joystick right or left to turn the wheels; the longer you hold the joy-
+stick to one side, the more the wheels turn.  If you release the joystick,
+your wheels straighten out gradually.  As you round corner, listen for
+the squeal of your tires which indicates loss of grip.  Release the 
+joystick momentarily to allow the tires to regain traction.  Use this 
+technique throughout the turns.
+
+Driving in Reverse
+To drive in reverse, first come to a full stop.  Press the down arrow,
+or press 2 on the keypad, or pull back on the mouse.
+
+Adjusting Anti-Roll Bar
+=                        Stiffen front anti-roll bar
+- (dash)                 Soften  front anti-roll bar
+]                        Stiffen rear anti-roll bar
+[                        Soften  rear anti-roll bar
+
+Setting Turbo Boost
+1(min) to 9(max) on the keyboard
+
+Adjusting Cruise Control
+C
+
+Cruise control maintains your speed so you don't have to hold down the
+throttle.  Disengage cruise by hitting the brakes or the throttle. 
+(Cruise also disengage when you collide with the wall.)  If you hold down
+the C key, you'll accelerate until you release it (unless you reach max
+speed) - your cruise will be set to the speed you were going when you 
+release the key.  When learning to drive, cruise control allows you to
+get used to the track without worrying about speeding up or slowing down.
+When driving during a yellow flag, cruise control lets you drive at a
+steady speed without having to think about keeping up or falling back.
+
+Other Controls
+Ctrl-R                   This restarts your current event, as though you
+                         returned to the Main menu and select Practice,
+                         Qualify, or Race again.
+                         
+P                        Pause the game
+
+Esc                      Return to menu
+
+THE PIT BOARD
+
+You pit has a big red "X" along the pit wall.  Whenever you stop the car
+in your pit, the Pit Board appears.  If you press a function key (F1, F2,
+etc.), the Pit Board disappears.  Tap the brake to display the Pit Board
+again.
+
+The fuel indicator shows approximately how much fuel you have; the more
+fuel you have, the more color there is in the indicator.  Your tank can 
+hold up to 40 gallons.  Highlight the word Fuel on the pit board by 
+pressing the Spacebar, and then press Return to fill the tank to your
+current Fuel setting.
+
+To change your Fuel setting, first select Fuel by pressing the Spacebar.
+Now decrease the fuel amount by pressing <(or ",") and increase the
+amount by pressing >(or ".").
+Each tire shows its tire wear; the more a tire is greyed out, the more
+worn out it is.  If the tire is all grey, it'll soon fail.  To replace 
+the tire, highlight it by pressing the Spacebar, and then press Return.
+
+CAR SETTINGS
+
+To display a car setting menu, press a function key.
+
+    F3    Fuel              F7    Pressures
+    F4    Wings             F8    Shocks
+    F5    Rubber            F9    Cambers
+    F6    Stagger           F10   Gears
+    
+You can change the settings F3-F7 at anytime during Practice, but only
+in the pit during Racing and Qualifying.  You can change the settings
+F8-F10 only during Practice or in the pit during Qualify.
+
+To change the setting of the component that's highlighted, press < and >
+(or "," and ".").
+
+To highlight a different component (for instance, a shock or a tire), 
+press the Spacebar or Tab to cycle through all the components clockwise
+or press Backspace or Shift-Tab to cycle through all the components
+counter-clockwise.
+
+LAP INFO AND STANDINGS
+
+To display Lap Info or Standings, press the function key listed.
+F1   Lap Info
+F2   Standings
+
+To scroll your view up and down the pole to see all the standings, press
+< and >(or "," and ".").
+
+MAIN MENU
+
+Press Esc any time to display the Main Menu.  This is where you make
+your major selections.  Unavailable items are dimmed.
+
+Press Esc to exit a sub menu and return to the Main menu.  Also press
+Esc if you crash, blow a tire, or blow your engine to return to the 
+Main menu.
+
+SELECTING OPTIONS FROM THE MENU
+
+Use the commands below to make selections from this menu, all sub menus,
+and the Pit Board.
+
+Mouse Users
+To move the highlight down, pull the mouse toward you; to move the high-
+light up, push the mouse away from you.  To select the highlighted option,
+press a mouse button.
+
+Keyboard Users
+To move the highlight down, press the Spacebar or the Down Cursor key.
+To move the highlight up, press Backspace or the Up Cursor key.  To
+select the highlighted option, press Return.
+
+Joystick Users
+To move the highlight down, pull the joystick toward you, to move the 
+highlight up, push the joystick forward.  To select the highlighted option,
+press the joystick button.
+
+Resume Driving
+This option exits the Main menu and returns you to the track where you 
+left off practicing, qualifying, or racing.  This option is not available
+if you have not gone to the track yet.  It also isn't available if you
+load a new car or car settings during qualifying or racing.
+
+Instant Replay
+This shows you the last twenty seconds of the action on the track.
+(Note: There is no Instant Replay feature on computers with less than
+1 megabytes of available memory.)
+When you reach the end of the replay tape, a horizontal line rolls down
+the screen and the replay starts over.  Highlight the view you want by 
+pressing Spacebar, or by moving the mouse or joystick forward, backward,
+right, or left.
+
+   InCar       TV
+   Behind      Sky
+   Track       Leader/Crash(Only available during a race)
+   
+Control the replay with the following commands:
+
+> or "." or right mouse button          Fast forward
+< or "," or left mouse button           Rewind
+P                                       Pause on/off
+
+To step forward and backward frame by frame, press P to pause the replay, 
+and then press the fast forward or rewind keys.  Press P again to remove
+pause.  Press Esc to leave Instant Replay.
+
+Practice
+Enter the Practice mode.  You start in the pit viewing the Pit Board.
+(See Pit Board section).  Just accelerate to hide the Pit Board and leave 
+the pit.  Be careful not to hit the wall at the end of the pit row.
+
+You can change any of your car settings during Practice any time.  This 
+lets you quickly see how settings affect your car's handling.  Your tires
+and engine are subject to normal ware, and they may fail if abused, but
+collisions won't damage your car during Practice.  Press Esc or Ctrl-R
+to continue if you blow an engine or a tire.
+
+Qualify
+Begin qualifying.  Set up your car before qualifying because anti-roll bars
+and turboboost are the only settings you can change without pulling into
+the pit.  The faster you drive four consecutive laps the farther ahead in
+the pack you'll start the race. 
+    
+For an added advantage during qualifying, reduce your fuel load to 10 gallons
+(must be done in Practice mode or in the pit).  Also increase your turboboost
+setting to 9, the maximum.  Be sure to increase your fuel supply and reduce
+your turboboost before you start a race.
+
+You start your first lap already in motion - a "rolling start" - just before
+the start/finish line.  Drive the fastest four laps you can.  The Standings
+display appears when you're done to show your new field position.  If you
+stop in the pit during qualifying, your attempt is aborted.  Restart qualify-
+ing by pressing Esc.
+
+Remember that your car can be damaged during qualifying.  If you suspect an
+equipment failure, check the top left corner of your screen.  For example,
+if you blow a tire, you'll see a flashing message like TIRE BLEW or ENGINE
+BLOWN.  Press Esc to see the Main menu, or press Ctrl-R to restart the event.
+
+Race
+Choose the race length you want:
+
+ 10 laps  =   25 miles     (no car damage from collisions;
+                           no yellow flags)
+ 30 laps  =   75 miles     (no car damage from collisions)
+ 60 laps  =  150 miles
+200 laps  =  500 miles
+
+Notes:  For races where collisions don't cause damage, your car is 
+still subject to wear.  The race begins with a rolling start, with 
+all the drivers in their qualifying positions, as show below.
+
+                    Pole    1       2       3
+                    
+                            4       5       6
+                            :       :       :
+                            :       :       :
+                            31      32      33
+                            
+As in qualifying, anti-roll bars and boost are the only settings you 
+can change without pulling into the pit.
+
+When the winner crosses the finish line, he takes the checkered flag 
+and the race is over.  If you win, press Esc to enjoy the victory 
+celebration.  Press the Spacebar or the mouse button to see each screen
+until you end up at the Main menu.  Everyone else in the race gets 
+ranked according to their placement at that time.
+
+Teams
+Choose one of these three team/engine combinations:
+
+   March/Cosworth
+   Lola/Buick
+   Penske/Chevrolet
+   
+The Chevrolet and Cosworth engines both reach their peak horsepower at 
+approximately 12,000 rpms.  The Buick engine redlines (reaches peak
+horsepower) at 9,000 rpms, and it therefore needs lower gear ratios than
+the Chevrolet and Cosworth engines.
+
+The cars have different initial settings.  The March/Cosworth is the 
+easiest to drive, but it's the slowest.  The Penske/Chevrolet is the
+most difficult to drive, and has the fastest setup.  The cars have 
+different handling characteristics, but none of them is inherently
+faster than the others.  It's all a matter of settings.  The cars are
+set up this way so you can progress from a slow easy-to-drive car to
+a fast hard-to-drive car as your skill increases without changing many
+settings.
+
+There are three car settings you can load from the File selection of the
+Main menu (See "File" below).  Car Settings 1 and 2 are intended for the 
+Lola/Buick.  Car Setting 1 is equivalent to the March/Cosworth default 
+settings, and Car Setting 2 is equivalent to the Penske/Chevrolet default
+settings.  Loading one of these two settings lets you set up the Lola/Buick
+like either of the two cars, but with gear ratios appropriate for the
+Lola/Buick engine.  Car Setting 3 is intended for the Penske/Chevrolet and
+is equivalent to the March/Cosworth default settings.  This lets you drive
+the Penske/Chevrolet with easier settings than its default configuration.
+
+If you change teams during racing or qualifying, you forfeit the race or
+qualifying attempt and can't Resume Driving.  You must select Practice,
+Qualify, or Race to get back on track.
+
+File
+You can load and save up to three different car settings.  You must 
+remember which one is which.  If you load new settings, you can't resume
+qualifying or a race.  If you save a car settings, you will overwrite
+the existing one.  Save you files on your copy of Indy 500 or else you
+will permanently lose the original settings for that car.
+
+Remember which car settings is for.  If you load a setting into a different
+car, the performance will be different.  If you load a Chevrolet configur-
+ation into a Buick engine, you could even blow the engine because the gear
+ratio might be too high.
+
+You can also load and save one instant replay.  If you load an instant
+replay, you must watch it before choosing Resume Driving or it will be
+replaced with new track footage.  Save replays on you copy of Indy 500.
+
+Options
+
+MOUSE SENSITIVITY
+To get to this option, press Esc, choose Options from the Main menu, and 
+press the mouse button.  With this option you can adjust how sensitive the
+car is to your steering when you steer with the mouse.  The settings are:
+
+   Low
+   Medium (Default)
+   High
+   
+LEVELS OF DETAIL
+Change graphic quality by selecting one of three levels of detail.  Note 
+that your simulation speed will decrease as details are added.  Likewise 
+you can increase the speed by selecting less detail.
+
+   Low detail               You see the track, the track walls, pit row,
+                            and the pole.
+   Medium detail (Default)  Partial grandstands and trees are added.
+   High detail              Full grandstands and clouds are added.

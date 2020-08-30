@@ -1,0 +1,729 @@
+                        RED STORM RISING
+
+Typed by Sierra Hotel.  Edited by PARASITE.
+
+
+PREFACE BY TOM CLANCY
+   The submarine tactics with which most of us are familiar never really
+happened. We've all seen the dramatic movie representations of sweating men
+in the tight confines of a fleet boat's conning tower. But in fact the most
+effective work done by submarine commanders in WWII was conducted on the
+"roof", where they could use their higher surface speed to conduct "end
+runs",get ahead of their targets, then close in and fire at close range
+before escaping in the confusion.
+   Technology has changed all that, even while it was happening in the
+Second World War. Improved radar sets and continuous aerial surveillance
+chased German U-Boats below the surface even at night. This denied them the
+mobility upon which they depended to close with thier targets, and in doing
+so cost Germany her best chance of winning the Second World War.
+   Nuclear power and improved sonar technology changed things yet again in
+the 1950's. A nuclear-powered submarine can now outrun most surface ships,
+and modern passive sonar can actually out-range the radar used by American
+WWII submarines. It is not unusual today for a submarine to detect a surface
+ship, on sonar, at ranges over thirty nautical miles. Torpedoes, once
+relatively simple machines that ran a straight course until they hit a
+target or ran out of fuel, are now robotic kamikazes, programmed to search
+for thier targets with active and passive sonars, then close on and
+destroy it with a half-ton (or nuclear) warhead. Or the submarine skipper
+can fire surface-to-surface cruise missles that easily fly those thirty
+nautical miles.
+   But one thing has remained constant: the business of a submarine is
+stealth. Once detected, the enemy surface commander has more ships and
+weapons to use than the submarine. Helicopters with sonobuoys and dipping
+sonars-the submarine's deadliest enemy-can hunt and localize their quarry,
+then engage it with homing torpedoes of thier own. You are safe only so long
+as you are undetected. Your only real advantage is invisibility. Submarine
+warfare is ambush, followed by evasion; a game of life and death played in
+three dimensions of cold, wet, unforgiving darkness.
+   The submarine's other enemy is another submarine. He lives in your
+enviroment, knows everything that you know, is trained, armed, and equipped
+as you are. And enemy submarines are getting better. The Walker spy ring and
+foriegn companies like Toshiba have given the Soviets priceless information
+and hardware with which they have been improving their ships and their
+training. Their mission is to sink you, to sink the other ships in your
+fleet, and to sink the merchant ships without which your country and the
+NATO alliance cannot survive. Simply put, the job of the United States Navy
+is  to control the sea. The job of the Soviet Navy is to deny us the use of
+the sea. You can guess which is the easier mission.
+
+   You are the commanding officer of an American SSN, a nuclear-powered
+fast-attack submarine. The word has only just arrived from National Command
+Authority: Your country is at war. All during the spring of this year, while
+you prepared your boat for her next deployment, the media was full of
+stories about the Spring of Promise, perhaps the long-hoped-for end of the
+cold war, as East-West arms-control agreements reached fruition after
+generatoins of frustrating effort. Then only days after you sailed on
+your deployment, something went wrong. Some disaster changed hopes of
+lasting peace to fear of a real, shooting war. You do not know what
+happened-SSN's don't get much in the way of news analysis-but none of that
+matters. Your country is at war, and war-fighting is what they pay you for.
+   You are thirty-nine years old. A graduate of the United States Naval
+Academy, you've worked your way up the ladder of your chosen profession:
+Nuclear Power School; Prototype School; Submarine Officers Basic
+School;Prospective Nuclear Engineer Officer School; Submarine Officers
+Advanced Course; Prospective Executive Officer Course; then, Prospective
+Commanding Officer School; and along the way you picked up a Masters Degree
+in Operations Analysis at the Navy's own post-Graduate School at Monterey,
+Califorina. You've served both on SSN's and SSBN's- the "boomers", the
+ballistic-missile submarines-but fast-attack was what you wanted, because
+fast-attack is where the action is. You've been an Engineer, a Navigator,
+then an XO. All this has a price. Endless cruises far from home, seperations
+from your loved ones, mini-wars at AUTEC in the Bahamas, fleet excercises in
+mid-ocean, too many exams and tests to count, month-long strings of
+eighteen-hour days. But what that price has bought you is association with
+and respect from the finest men your country can make. You have spent
+seventeen years learning your craft, and six months ago you achieved a dream
+you've held since high school-command of your own SSN.
+   You are now the commanding officer of a ship of war, the most demanding
+and most god-like job in the world. You are responsible for the saftey of
+your ship, for the lives of over one hundred men, and most of all, you are
+responsible for carrying out the missions assigned you by COMSUBLANT and
+COMEASTLANT. You know why you are here. You know what the job is.
+   You are about to find out how good you really are.
+
+A QUICK START
+   The Manual: This manual is divided into 3 parts. Part 1 gives specific
+instructions for all simulation displays and controls. Part 2 provides
+greater insight into the tactics, tricks, and subtleties of the game. Part 3
+provides background data on weapons, ships,and boats involved. (Bullshit.
+It's only there for the purpose of code words, the game shows a picture of a
+ship or sub and you suppoed to choose the correct class of ship. It has been
+disabled in this version and therefore I ain't puttin' in section 3)
+Beginners should learn how the game is played before tackling the Campaign.
+So, if this is your first try at Red Storm,select training scenarios,
+experiment with the displays, make some kills, then move on to the next
+higher challenge.
+
+BATTLES AND CAMPAIGNS
+   Battles: Once you've cut your teeth in the traing scenarios, it's time to
+try a "real" battle. Not much here. Try all the battles, with differing
+degrees of challenge, and don't be supprised if your ambushed. It happens in
+real life too. After experimenting with a variety of battles, select "a
+chance engagement", where you never know what you're up against. You may
+find that adjusting your boat or time period makes life more interesting.
+   The Campaign: You should move on to a campaign shortly after trying the
+chance engagements, it won't take long to get the hang of things. The game
+gets old after playing thru several campaigns, so try switching time periods
+and boats to keep the games interesting. It won't take long to get to the
+Ultamite challenge level, and after a couple of campaigns, you will be
+ready for a new game. Red Storm isn't hard to master, but will be fun each
+time you play it.
+
+EFFICIENCY RATING, ETC.
+   Efficiency Rating (ER): After each engagement, your ER is updated as a
+USNavy captain. It's the average of your performance to date. Obviously, the
+higher the better you are.
+   Decoratoins and Medals: Occur only in the campaign game.
+CM-Navy Commendation  BSV-Bronze Star of Valor  SS-Silver Star
+DSM-Distinguished Service Medal  NC-Navy Cross
+CMOH- Congressional Medal Of Honor, the highest.
+   Promotions: None here. Only after war is over, it will give a final rank.
+The USNavy needs the experianced CO's to fight the war.
+
+PART 1: THE OPERATIONS MANUAL
+   The Year: 1984-Russian naval forces lack "stolen" western technology.
+However, your sub is limited to weapons availible at the time: the original
+Mark 48 torpedo and the Harpoon missle
+             1988-The new Russian SIERRA and KILO class subs appear, as well
+as the first fruits of the stolen technology from the West. However, you
+have the new Tomahawk missle and the improved Mark 48 ADCAP torpedo. This
+scenario represents the situation at the time of the action in the novel RED
+STORM RISING.
+             1992-A nuclear aircraft carrier joins the Red Banner Fleet,
+while technological upgrades spread to more of their vessels. Meanwhile, the
+Sea Lance ASW missle and the Stinger SAM masts are availible to NATO.
+             1996-The Russian northern fleet continues to expand in size and
+virtually all frontline ships have received technological upgrades.
+Fortunately for the West, the first boats in the new Seawolf class are
+launched, carrying the new silent-launching ("Swim Out") Mark 48 torpedo.
+
+Warship ID Test: Just pick anything, it won't matter, that part has been
+deleted, or shall I say "corrected".
+
+Boat Selection: List from older to newer, and depends on which time period
+you picked. You can let the Navy pick your command for you for better
+realism.
+
+LEVEL OF CHALLENGE:
+   Introductory-recommended for the first few games. Compared to reality,
+enemy ships are easier to find and track, while your sub is very resistent
+to damage and your crew quit expert.
+   Normal-for casual gaming the books says. Skip it and move on.
+   Serious-fully realistic the book says. Try a few and then go to the next
+level of play
+   Ultimate-just as realistic as Serious, but takes a less optimistic view
+of sub survivability (one hit, you go down). In this level, you must
+personally ID every contact, your crew being too indecisive. The book says
+not to try this level unless Serious seems like childs play. It better, if
+your not up to Ultimate in just a few battles, you're a hurtin' puppy!
+
+Scenarios:  3 types, training, battles, and campaign
+Training:   you take NO DAMAGE
+            level of challenge decides location of fight
+            intro-open sea
+            normal-drift/floe ice
+            serious-beneath ice pack(except for vs. destoyer)
+            ultimate-in the shallows
+Battle simulations:
+            A duel: go one-on-one with a nuclear attack sub
+            The cruise missle sub: higher challenges often add one or more
+            escorting "guardians"
+            The wolfpack: group of subs using wolfpack tactics
+            The boomer bastion: find the boomer among it's fast attack
+            escorts and sink it, can be very difficult.
+            a strike group: task force of Russion surface ships
+            an ASW group: an anti-sub force which may or may not have subs
+            in it. Can you successfully hunt the hunters?
+            a carrier task group: you've stumbled into a submarinr's dream:
+            a Russian carrier task force. A chance at a Russian carrier is an
+            oppurtunity you won't want to miss. No big deal to me. Once
+            you've sunk a carrier, they're all the same.
+            a chance engagement: a random choice of one of the above
+Red Storm Rising: WWIII, from first invasions to victory or defeat. Lasts
+many missions and many hours.
+
+Mission Orders: self-expanitory, tells ya what to do
+
+BATTLE:ENGAGING THE ENEMY
+Attack Center Console:Shows the primary, secondary, and navigation displays.
+
+   --------------------------------------------------------------------
+   - --------        ------------------------------------             -
+   - -      -        -           Top Display            -             -
+   - -      -        ------------------------------------             -
+   - -      -   /                                                     -
+   - -      -   -----------  Navigation Display                       -
+   - -      -   \                                                     -
+   - -      -                                                         -
+   - -      -                   Primary Display                       -
+   - -      -                                                         -
+   - --------                                                         -
+   - -      -                                                         -
+   - -      -   /                                                     -
+   - -      -   ---------- Secondary Display                          -
+   - -      -   \                                                     -
+   - -      -                                                         -
+   - -      -   --------------------------------------------------    -
+   - -      -   -        Verbal Reports                          -    -
+   - --------   --------------------------------------------------    -
+   --------------------------------------------------------------------
+
+   Navigation Display: This info is always present
+   Primary Display: Select from one of eight primary displays
+   Secondary Displays: Select one of five secondaries; some primary displays
+                       automatically bring up a secondary
+   Verbal Reports: Reports and confirmation of orders appear here
+   Top Display: shows sensor functioning
+                A=Active sonar T=Towed array  R=Radar
+            passive sonar is constantly on and ESM is auto on above 55 feet
+            also shows Acoustic Volume (AV) of your sub, measure of how loud
+            you are as you move thru the water. Also shows zoom factor.
+
+NAVIGATION: SHOWS HOW YOUR BOAT IS TRAVELING
+   Heading: north is 000degrees, south is 180, etc......
+   Speed: in knots. A "C" symbol indicates your  propellers(screw is what
+they should be called) are cavitating(making large amounts of noise). As you
+go deeper, you can go faster and faster without cavitation.
+   Depth: in feet. A special symbol indicates wheter you're above or below
+the thermal "layer". The "layer" interferes with sound-keeping the thermal
+layer between you and the enemy is a good way of hiding.
+   Rudder: current course command. "Steady" indicates running straight
+ahead.
+   Planes:current setting of diving planes, which control the depth of the
+boat. "Level" indicates running level(not changing depth)
+
+   Course: to set a course, hit F10 key, type in one to three digits for
+course, from 000 to 360.
+   Depth: to set depth, hit F9 key, type in from one to three digits, from
+010 to 999. NOTE:Modern nuclear subs never surface during battle. There is
+no advantages and lots of disadvantages. In fact, surfacing means "I
+surrender". Therefore, minimum depth is 10 feet. That's what the book says,
+actually, surfacing and going to max spped is good for taking out surface
+ships, doesn't work to good on subs though.
+   Speed: to increase speed, hit + key, or - key to decrease speed. When
+turning or after substaining damage, speed will decrease.
+   Emergency Turns:use . key and , key for right and left rudder, useful
+when dodging torpedoes. Sharp turns or fast speeds will break a control wire
+to all of your torpedoes, so use the two sparingly.
+   Straight and Level: the / key will cancel all navigation commands and you
+will be at the course and depth you were at when selected.
+
+TACTICAL DISPLAY   F1 KEY
+   F1 key puts your location and all contacts on the primary display. Zoom
+in and out with the z and x keys. From zoom fgactor of 2 to 7.
+   This is the main display used most frequently. Enemy vessels first appear
+on this display as dim symbols. The direction is accurate, but usually the
+range is unknown. As your sensors collect more info over time, the accuracy
+of the info increases and the symbol changes color. When detection data is
+good enough, the display plots a course track, recording his movements. If
+contact is lost, the symbol gives a "best guess" of enemy's position. Course
+tracks also appear for all weapons in the water, yours and theirs. You can't
+see the airborne enemies(missles and helos) unless you're at periscope depth
+with radar on. NOTE: Dim, uncertain contacts will bounce around the
+display,don't put too much trust in the "dim" contacts.
+
+Map Overlay: haven't figured out how to get up on the Amiga. Shows an
+overlay of water conditions. Shows acoustic absorption, depth of the
+shallows, or icepack pressure ridges, depending on situation.
+Acoustic Absorption-in deep water with or without drift ice, shows the local
+conditions for sound absorption. Darker areas with few dots absorb little
+sound resulting in good sound transmission and recception. Lighter areas
+with more dots absorb more, causing poorer transmission and reception.
+In shallow water, this map overlay shows the depth of the water. Each digit
+represents one hundred feet. 2=200ft, 4=400ft,etc....the deeper the water,
+the better the sound transmission, worse in shallow water.Of course, running
+into the bottom of the ocean floor is hazardous to your life! When operating
+under the ice pack, the overlay shows the depth of the ice into the water.
+The sames applies for ice ridges as with the bottom, i.e. don't run into the
+ice.
+
+SENSORS
+Sensors are devices that find and track the enemy. "Passive" sensors
+constantly "listen" for enemy signals without emitting any betraying
+signals. "Active" sensors broadcast a signal and "listen" for the return.
+Active sensors function  only if turned on, give detailed data quickly, but
+often reveal your location to the enemy.
+
+   View Contacts: hit the C button to rotate thru contacts on the secondary
+display. When viewing contacts, the incoming sound from that contact is
+channeled to the screen.
+   Contact: The type of enemy contacted. This progresses from totally
+unknown to general type (ship or sub) to a specific class of ship. The word
+CONTACT may change color to indicate whether the contact is continuing, or
+is lost (and the data deteriorating).
+   Bearing: The direction, in compass degrees, from you to the contact. Your
+course does not affect the bearing.
+   Sensor: The left value is the signal strength recieved on your sensor,
+and which sensor has the best reception(A=active P=passive T=towed R=radar).
+You can't see a contact until a signal strength of at least 8  is recieved,
+but once you've found a contact, a signal strength of 0 or more is enough to
+maintain the contact. If signal strength is negative, you've lost the
+contact. The right value is the signal strength the enemy's best sensor
+would get from your boat. This is known only if you know the enemy's
+specific class, and thus can predict what sensor equipment he has. When his
+predicted sensor value reaches 8 or higher, he will "see" you. Don't get
+complacent because no contacts show an 8 or higher. Your contact data may
+still be incomplete, and worse, there could be "unseen" enemies who alredy
+"have you number".
+   SOL: The acurracy of your data. The highest is 99%, which can still be
+inaccurate. Low percentage solutions are very unreliable.
+   CRS/SPD: The contact's course and speed (in compass heading and knots).
+   Range: range to contact (in thousands of yards). The vertical arrow
+symbol represents his position above or below the thermal layer.
+   Passive Sonar(P): unless damaged by a hit, this sensor is always working
+(i.e. no key controls it's operation). Passive sonar gives the bearing to
+the enemy with great accuracy. In addition it lets you slowly determine the
+type of enemy ship. Once that is known, estimates of speed, course, and
+range develop quickly.
+   Towed Array(T): This long, computerized array of hydrophones is towed
+("streamed") behind your boat. It functions only when trailing in a straight
+line or a smooth curve. Any tight or fast turns causes "kinks" and
+"whiplash" that ruin reception. Similarly, if you come to a full stop, it
+goes slack and fails. You must maintain "headway", a minimum speed of 4 or 5
+knots, to keep the array fucntioning. Because the towed array trails dee in
+the water, it always listens under the layer, even if your sub is above it.
+The towed array functions like passive sonar, but is much more sensitive.
+   Active Sonar(A): hit the 8 button to toggle active sonar on and off. One
+active sonar "ping" gives the exact bearing and range to a contact. Multiple
+pings establish the contact's course and speed. Unfortunaately, these pings
+also reveal your location to the enemy.
+   The Baffles: Your boat's motion leaves an area of confused and disturbed
+water directly behind it. Sound travels poorly in this area, called "the
+baffles". It is about 60 degrees wide (30 degrees on each side). More on
+this later. Your hull-mounted passive and active sonars are "blind" in the
+baffles. Your towed array is unaffected, since it trails far to the rear,
+safely below the disturbed water.
+
+TYPE OF      SENSING        ADVANTAGES               DISADVANTAGES
+SENSOR       MEDIUM
+
+Active    water:sound     -1 ping gives range     -reveals position to enemy
+Sonar                     -multiple pings give     at longer ranges than it
+                           detailed data           can detect them
+                                                  -works best at 0 knots
+                                                  -limited to 300 degree arc
+
+Passive   water:sound     -recieves only, does    -gives data slowly
+Sonar                      not reveal position    -provides range last
+                          -gives bearing fast     -works best at 0 knots
+                          -longer range than      -limited to 300 degree arc
+                           active sonar in most
+                           conditions
+
+Towed     water:sound     -longer range than      -stops working during and
+Array                      active or passive       after hard and/or fast
+                           sonar in most           turns, high speeds
+                           conditions             -stops working at 0 knots
+                          -works best at 5 knots
+                          -total 360 degree arc
+
+Active    air:radar       -best, often only way   -signal reveals position
+Radar                      to track aircraft or    to all ships and planes
+                           incoming missles        in area, and subs at
+                          -range equal to ESM      mast depth
+                          -unaffected by speed
+
+ESM       air:radar       -receives only, sends   -mast may reveal position
+(Radar                     no revealing signal    -does not detect sub
+Receiver)                 -range superior to       unless it is using
+                           periscope/laser, can    active radar
+                           be superior to sound
+                          -unaffected by speed
+
+Periscope air:light       -sends no revealing     -mast may reveal position
+(with laser)               signal to enemy        -mast needs to be higher
+                          -can track aircraft      than ESM or Active Radar
+                           with some difficulty    to achieve equal range
+                          -unaffected by speed
+
+FACTORS IN SONAR SENSORING
+
+FACTOR                   EFFECT
+
+Acoustic Absorption     -the greater the absorption around sensor and/or
+                         target, the lower the contact value
+Surface Noise           -the greater the ocean surface noise, the lower the
+                         contact value, provided either or both vessels are
+                         near the surface. Icepack has the lowest suface
+                         noise, open sea or shallows is average, drift/floe
+                         ice produces very high noise
+Surface Duct            -if sensor and target are both in surface duct,
+                         contact value is increased; the stronger the duct,
+                         the greater the contact value
+Thermal Layer           -if sensor and target are on opposite sides of the
+                         layer, contact value is reduced; the stronger the
+                         layer, the lower the contact value
+Water Depth             -the shallower the water, the lower the contact
+                         value. This only applies in shallow water.
+Icepack                 -the deeper the ridge of ice, the lower the contact
+                         value.
+Diastance to target     -the greater the range, the lower the contact value
+Direction target faces  -if target's broadside faces sensor, contact value
+                         is slightly increased(very small change)
+Speed of target         -higher speed=higher contact value
+Quietness of target     -quieter vessel design=lower contact value
+Speed of sensor         -the higher your speed=lower contact value
+
+SEA CONDITIONS
+   This primary display provides a handy visual reference about current
+conditions at various depths. Hit the F8 key.
+
+COMPARE SONAR
+   Hit the F6 key to compare your sonar aagainst that of the contact.
+
+ACOUSTIC SIGNATURE
+   Hit the F5 key to compare incoming sound data with data files about enemy
+ships to ID the class of ship. Normally, the crew does this. But in Ultimate
+challenge level, you must do this for all contacts. Use the shift key to
+select different clases to compare to the incoming data. Once you've found a
+match, use Ctrl key to positively ID the contact. If you've choosen wisely,
+the class of the ship is displayed with the contact data and the firing
+solution increases. If you didn't choose the correct class, the firing
+solution decreases alot.
+
+SURFACE SENSORS
+   The sensors mounted on the masts that come out of the sail (used to be
+called conning tower) have different degrees of effectiveness, depending on
+how high they stick out of the water. Each mast is 60 ft. long, so if you're
+at 15 ft., the mast will stick out of the water 45ft. The greater the mast
+sticks out of the water, the greater the range (due to the curvature of the
+earth). At 10ft. (minimum depth) radar can see 100 Kyds and periscope 50.
+Whenever you're at 55ft or less, your ESM mast is out of the water and you
+risk detection. Hit the F4 key to look thru the periscope and hit c button
+(view contact button) to rotate thru contacts. This is not reccomended.
+NOTE: You CAN find NATO ships and subs, so make sure you ID something before
+you shoot it.
+
+SHIP DATA BASE
+   Hit the F7 key to get this primary display. Then choose letter of class
+you want info on. Not much real use.
+
+WEAPONS
+   All weapons are "intelligent": they have a homing system that "turns on"
+at a pre-planned point (the PAP:pre-planned activation point). From this
+point forward, the weapon "sees" in a 90 degree arc ahead of it, seeking the
+nearest target (this can also mean YOU).
+   Ice and Missles: All weapons except torpedoes launch themselves from the
+sea into the air. In drift/floe ice conditions, there is a 25% to 50% chance
+that the missle may hit a piece of ice as it emerges from the sea, which
+wrecks the missle. A Sea Lance's torpedo head must drop back into the water
+at the PAP, and again there is a chance of hitting ice. Stinger mast has
+problems too. Though hitting the ice with the mast will only destroy one
+stinger, not the whole mast. Beneath the ice pack, don't try wasteing your
+missles on the ice, unless you can find "open water" areas.
+
+WEAPON          AVAIL.                 SPEED  RANGE   CONTROLS AVAILABLE
+NAME            FROM  TARGETS WARHEAD (KNTS) (KYDS)
+
+Mk 48           1984 sub,ship large   40,55  0-40    wire,PAP homing,search
+Mk 48 ADCAP     1988 sub,ship large   40,60  0-40    wire,PAP homing,search
+Mk 48 Swimout   1996 sub,ship large   40,60  0-40    wire,PAP homing,search
+Harpoon UGM     1984 ship      mdm     560   6-120   PAP homing
+Tomahawk TASM   1988 ship     large    475   6(or 8)-500   PAP homing
+Tomahawk TLAM   1988 land     large    475   6-1000  pre-programmed
+Sea Lance/Mk 50 1992 sub      small    625+  6-60    PAP homing,search
+FIM-92A Stinger 1992 aircraft  tiny    1260  0-6     PAP homing
+
+torpedoes have active and passive speeds, Sea Lance does work on ships too
+wire-means the launcher can control the weapon while it's running, provided
+the wire is intact. PAP homing-means the weapons goes to the PAP and the
+activates, searching a 90 degree arc in front of it. If weapon is jammed, it
+continues flying straight ahead unless other controls take over(wire or
+search). Search-if the weapon misses, it circles, searching for a target.
+Pre-progammed at port-means the weapon has a guidance program loaded into it
+that can't be changed on the boat, must return to port to select another
+target.
+
+WEAPONS LOADOUT
+   This secondary display shows the weapons availible and the reserves in
+your magizine. Hit the V button once to see what's loaded in which tube. Hit
+it again to see reserves in magizine.
+To load an empty tube: hit the shift key and the weapon key at the same
+time. This will load selected weapon in first availible empty tube.
+To load a loaded tube: hit the shift key and weapon key and if all tubes are
+full, you're promted with "which tube do you which to unload". Just select
+the desirde tube and it will switch weapons in that tube.
+3=stinger (doesn't need to be loaded, it has it's own mast)
+4=Mk 48     5=Sea Lance    6=Harpoon UGM     7=Tomahawk
+It takes time to load the weapons, so a light weapon name in the loadout
+displays indicates that the crew is still loading and the weapon isn't
+ready for use.
+
+MK 48 WIRE GUIDED TORPEDO
+   Once lauched, you can guide it by means of a wire until it hits the
+target, runs out of fuel, or has the wire cut by high speed, tight turns, or
+if it's coming after you, you can drop the wire (cut it yourself). If it is
+cut, the 48 will go on a pre-programmed search pattern (circle left or
+circle right). A 48 can be launched at any depth,min. range is a few hundred
+yards.
+Firing the 48:
+1. Hit the 4 key. This brings up the torpedo fire control computer, where
+you select the PAP.
+2. Use the mouse or joystick to select the PAP. This is where the 48 will
+switch on it's active sonar, increase speeed, and seek the enemy. At the
+bottom, it shows the range to the PAP.
+3. Press the joystick fire button or the mouse button to actually fire the
+48. $8's are launched with compressed air. This "launch transient"
+temporarily increases your loudness by 8 AV. This could be enough to reveal
+your position. However, the 48 Swimout has no launch transient, as it just
+"swims out" of the torpedo tube.
+   A 48 trails a fine wire behind it with which to control th 48. As long as
+the wire is intact, you can change it's course or PAP. W=wire good, X=wire
+broken, and control lost. To control a running torpedo, hit the N key and
+cycle thru all active torpedoes untill you get the desired 48. This shows
+the Torpedo Control Secondary Display which gives the following info:
+Torpedo Name A,B,C, or D. Only can have 4 48's running at a time.
+Torpedo Status: either ---- for inactive (while it heads to it's PAP),
+active, homing, or jammed. If a 48 gets jammed, it's good to take manual
+control and steer around the decoy or noismaker or knuckle.
+Time to Run: # of seconds the 48 will run before it runs out of fuel
+Time to PAP: # of seconds to PAP
+Speed: duh? in knts, w=wire good, X=wire broken
+Heading: current course
+/Search: whether the 48 will search left or right if the wire is broke or it
+loses homing, and wheter the 48 is programmed to run above or below the
+layer.
+   Hitting the F2 key will bring up the primary display of Weapon Control,
+which will bring up the secondary for the first 48(A first, or B if no A,
+etc.....), then hit V button to cycle to desired 48. This gives you a
+"torpedo's eye view". If the torpedo is not yet active, it's PAP will also
+appear so you can redirect the PAP. If the 48 is active with good wire, use
+the joystick to make the 48 go left or right. You should be able to hit
+every target with some experiance under your belt. You can zoom in and out
+in this display with the Z and X keys. If it hasn't reached PAP yet, you can
+change depth (above or below the layer) and search pattern of the 48. I
+haven't figured which keys do this, but the book says it's possible. Anyway,
+you shouldn't need this, assuming your wire is good. If the wire isn't good,
+you must have other things to worry about! Important: You can also manually
+activate a 48 before it's PAP. Once again, I didn't find out how to do this
+as of this writing, but this is deffinetly handy to use, so figure it out,
+you will need it sooner or later. Also......I keep thinking of more stuff...
+there is a way to "drop" the wire, useful to get rid of hopeless lost 48's,
+making room for another 48 nto shoot. Remember, only 4 at a time. You can
+use the PAP to "sneak" up on a target, not letting it go active until it's
+right on the target.
+
+TOMAHAWK AND HARPOON
+   They both fly toward their PAP, and once there go active (which makes
+them easier to shoot down). So you should use the same tactic of not letting
+it go active until it close to the target, not giving the enemy any reaction
+time. You must be at a depth of 300ft. or shallower to fire these. Harpoons
+are launched from torpedo tubes only, while Tomahawks can be launched from
+vertical launch tubes in the Los Angles class or torpedo tubes in all subs.
+To fire a Harpoon or Tomahawk, it's like a 48. First, hit the 6 or 7 key,
+select PAP point, then hit fire button on joystick(a mouse is not
+recommended, since you can't control a 48 with the mouse). Once a missle is
+fired, it's "on it's own", meaning you have no control whatsoever. Select a
+PAP about 2/3 of the way to the ship, giving a wide arc for the missle to
+find the ship (remember, the position on the display may not be exact, which
+means you can overshoot or shoot to the side of a target, out of the 90
+degree search arc.
+
+SEA LANCE   MK 50
+   This missle is designed to attack subs, but will work on ships, but has a
+smaller warhead than a 48. Must not be deeper than 300ft. to launch. It
+flies to PAP, drops it's Mk 50 torpedo in the water, which then goes in
+circles looking for a sub (or ship). Very useful for keeping an enemy sub
+busy while you sneak up on it or taking out a sub trying trying to escape.
+Also useful for finding subs. Just drop a couple of Sea Lances where you
+think there is an enemy sub and flush him out as the Mk 50 homes on him and
+he goes to full power (very noisy) to avoid it. Fire it like everything
+else. Use 5 key to select. Once fired, you can't control the Sea Lance/Mk50.
+
+STINGER MISSLES
+   Effectivee only against helos, it is fired from a mast above the water,
+so you must be 55ft. or shallower to fire. Select 3 key to fire. Minimum
+range is a few hundred yards and max range is ONLY 6000 yards (6 Kyds), so
+don't shoot until the helo is within range, at which time it will probably
+fire one of it's own torpedo's at you!
+
+DEFENSE DISPLAY
+   Hit the F3 key to get this display, useful for avoiding those anoying
+torpedos of the enemy. This brings a display similiar to the tactical
+display, but centered around your boat, showing a close up view of all
+threats in the area. A warning is sounded whenever a new threat is
+identified, which means CHECK THIS DISPLAY! If an enemy torpedo is homing on
+you, you should go to this display IMMEDIATLY to check out the situation, or
+you could ignore it and DIE. If an enemy torpedo is homing, you'll here it's
+"pings" bounce off your hull.
+
+Threat weapons is a secondary display that goes with the defense display,
+showing range and bearing to the enemy's torpedos. This can be brought up by
+hitting the M key, without bringing the defense display.
+
+DEFENSE EQUIPMENT
+   There are 3 techniques for "fooling" enemy torpedos: noisemakers, decoys,
+and knuckles. Each relies on the limited sonar abilities of a torpedo: it's
+sonar only faces forward in a 90 degree arc, 45 on either side of forward.
+
+Noisemakers: hit the 1 key to release a noisemaker directly behind your
+boat. A noisemaker jams a torpedoes sonar if (a) the noisemaker is fairly
+close to the torpedo and (b) if the torpedo is facing toward the noisemaker.
+Jammed torpedoes may head straight ahead or steer around it. But, once past
+it, they usually circle and seek you once more. Noisemakers are small
+devices. Subs carry nlarge numbers of them and can drop them fairly quickly.
+However, if you  drop too many too quickly, you will temporarily be out
+while the crew loads another one.
+
+Knuckles: If you make a tight 15 degree turn at high speeds, your sub forms
+a "knuckle" of turbulance in the water. The knuckle acts like a niosemaker,
+but lasts for a far less time. Furthermore, a knuckle is only effective if
+it is closer to the torpedo than your boat. If your boat is closer, the
+torpedo will ignore the knuckle and go after you!
+
+Decoys: Hit the 2 key to launch a decoy. A decoy travels straight at 20
+knots. It sends out and reflects sound signals that immitate your sub.
+Actually, it's good enough to fool a torpedo, but not a human sonar operator
+on a sub or ship. A torpedo homes on the decoy if (a) the torpedo is closer
+to the decoy than it is ti your sub and (b) the torpedo faces the decoy.
+Decoys are launched from a special tube. Reloading and programming a new
+decoy takes considerable time. If you attempt to launch another decoy too
+fast, your crew tells you that a decoy is not ready (yet).
+
+   The max acquisition range of a torpedo is about 2000 to 3000 yards,
+depending on sonar conditions. The classic evasive actions are to increase
+speed, drop a decoy or noisemaker and turn away, getting as far from the
+torpedo as possible. But remember, the torpedo will go thru or around it and
+try to relocate you.
+
+RBU ROCKETS
+   These extremely short range multiple rocket launchers are carried by most
+Russian ships. Range varies from a few hundred to a few thousand yards,
+depending on the class of ship. Generally, the bigger the ship, the longer
+the range. If a ship knows your location, it can launch the RBU's at you,
+which drop quickly thru the water and explode around you.
+
+DAMAGE REPORTS
+   Hit the B key for a list of systems that has been damaged or knocked out.
+
+STRATEGIC TRANSIT
+   In this mode, you manuver your sub across hundreds of miles of ocean,
+seeking your objective. This mode is reached on in a campaign. Your home
+port of Holy Loch is on the upper left portion of the isle of England. You
+will need to return here to replenish ammo and repair damage. Use the
+joystick button to transit at max power (and thereby cavitate, giving away
+your position to anyone waiting to ambush you. But this is useful to use to
+get somewhere quick). The map shows only the latest info on enemy forces,
+which may be several hours old, and the enemy very far away.
+
+   When you pause or contact the enemy, this brings a screen with different
+choices:
+   Review Mission Orders: exactly what it says
+   Computer Log: lets you save the game
+   Continue on Course: not availible if an enemy is encountered
+   Battle Stations: starts the battle. Make sure you see the next one first.
+   XO's Ship Staus Report: Subs don't cruise around with loaded weapons, you
+should load tubes once a contact is found, or you can waste precious time
+loading tubes while the enemy is shooting at you. To load a tube, just
+select the weapon you wish in tube #1,then the weapon in the next tube,
+etc......, or you can change weapons in a tube by clicking on that tube, and
+then selecting a weapon for it.
+
+Finishing your mission: an after combat report is automattically sent, and a
+score given (ER). If you finished your mission, you will get new orders. If
+you just tangled with a patrol, you will still continue with your mission.
+Be warned though, don't use all your ammo on the patrol ships and subs. Save
+some for the mission. It takes a long time to return to Holy Loch and
+reload/repair damage, at which time, it may be too late to achieve your
+objective.
+
+A red and blue bar gauge is displayed between missions, as news reports
+arrive before and after missions. If the gauge moves toward the WP, then the
+Warsaw Pact is winning, if it moves toward NATO then NATO is doing better.
+You play a campaign until the gauge is fully toward one side (the war won by
+one side or the other).
+
+PART 2   THE CAPTAIN'S MANUAL
+   I have deleted a LONG explanation about NATO strategy given in the
+manual. If you would like to see it, go buy, it has no effect on how you
+play the game.
+   I do not feel like typing the rest of the manual (dealing with tactics),
+as this would take DAYS or WEEKS. It is a huge manual, 108 pages in all.
+   I will give some general advice. When dealing with surface ships only, a
+nice tactic to use is to make contact, develop a solution on one or two
+ships, then rapidly fire a missle at each ship, surface, go active radar
+long enough to target every ship that doesn't already have a misle going to
+it, fire, turn off active radar, and GTFO. Of course, you should go to max
+speed after firing the first missles, this gives you speed to out manuever
+the incoming torpedoes. Be careful, there is usually a sub with the ships,
+and this won't work on him.
+   All in all, just remain quiet, sneak up on them, fire, and sneak away.
+There are many diferent stratagies availible to you, just experiment with
+different ways of attacking until you get the right way of attacking in
+different situations. Don't discount the value of a 48, it's the best weapon
+you have, if used correctly.
+
+CONTROLS
+   1=drop noisemaker
+   2=launch decoy
+   3=fire stinger
+   4=fire Mk 48                    )
+   5=fire Sea Lance                ) use Shift with these to load tubes
+   6=fire Harpoon UGM              )
+   7=fire Tomahawk                 )
+   8=active sonar toggle
+   9=active radar toggle
+   0=rig for silent running
+
+   F1=tactical display                  F6=compare sonar
+   F2=weapon control display            F7=ship database
+   F3=torpedo defense display           F8=sea conditions
+   F4=periscope vidieo                  F9=depth control
+   F5=acoustic signature               F10=course control
+
+   + =increase power level
+   - =decrease power level
+   help=suggestions from computer
+   . =right 5 rudder
+   , =left  5 rudder
+   / =straight and level
+
+   z=zoom in
+   x=zoom out                                  esc=unselect
+   c=view contacts
+   v=weapons loadout
+   b=damage report
+   n=torpedo control
+   m=threat weapons
+
+End.

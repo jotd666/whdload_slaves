@@ -1,0 +1,114 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER
+ EXPRESS OR IMPLIED, STATUTORY OR OTHERWISE.
+ THE ENTIRE RISK AS TO USE, RESULTS AND PERFORMANCE OF THE PACKAGE IS
+ ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE TO BE DEFECTIVE, YOU
+ ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING, REPAIR OR OTHER
+ REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY
+ DAMAGE CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE
+ OWNER OR A THIRD PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF
+ DAMAGE.
+
+ That install applies to "Exile" © 1991-1995 Audiogenic
+ Game requires 2.0MB ChipRAM (+ 2.0MB any memory for PreLoad)
+
+ ECS version has 1 disk
+ AGA version has 2 disks
+ CD32 version has 1 CD
+
+* AGA & CD32 version (done by JOTD):
+ 
+ The game requires an installed A1200 or A4000 Kickstart 3.1 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick40068.A1200", or kick40068.A4000. 
+ The image can be extracted from a A1200 (resp A4000) with tools like 'GrabKick'
+ or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick40068.A1200.RTB" or
+ "kick40068.A4000.RTB" must be installed in the same directory as the
+ kickstart image.
+ It can be found in the archive "util/boot/skick346.lha" on aminet.
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 1.1 (12.07.2020) done by JOTD:
+ - AGA/CD32 version: added BUTTONWAIT to see the credits
+ - AGA version: removed flashing "insert disk 2"
+ - CD32 version: added quitkey when novbrmove is set
+ 
+ version 1.0 (03.05.2020) done by JOTD:
+ - initial release for AGA & CD32
+ - copylock protection removed for AGA version (borrowed from an old crack)
+ - saves to hard disk
+ - added multiple slot system for CD32 version (originally only one slot)
+ - source code included
+
+* ECS version (Bored Seal, Codetapper, Galahad, JOTD):
+
+
+This patch applies to "Exile" by Audiogenic (c) 1991 - 1 disk.
+Slave requires WHDLOAD V13+.
+Game requires 0.5MB ChipRAM (+ 0.9MB any memory for PreLoad)
+
+FEATURES: (Bored Seal)
+- Full loading from HD
+- Savegames redirected to HD
+- RNC disk protection removed
+- Blitter waits added
+- No waiting for intro module pattern anymore
+- Faster boot option added (set tooltype CUSTOM1=1)
+- NI/ROM icon (created by JHZ)
+- Quit option (your default key)
+
+History:
+
+V1.4 (04-May-2020) done by JOTD:
+- reduced chipmem usage to 512k (issue #0004604)
+- fixed soundtracker dbf loops in intro (buggy music on fast machines)
+- added cache flushes where they were missing
+
+V1.3 (29-Jun-2007) Bored Seal:
+- whd16+ compatibility fixed, source included
+- savegames didn't worked from v1.2 if savedisk image was not pre-created, now fixed
+
+v1.2 (Galahad)
+- Now both Copylock Protection routines have been removed properly
+- Code protection later in the game removed
+- Replaced JHZ's small single frame icons with a 120x96 RomIcon, NewIcon,
+  and OS3.5 Colour Icon (Codetapper) and 2 Exoticons (taken from 
+  http://exotica.fix.no)
+- Instructions included
+
+
+Protection Notes: 
+It appears that many people with Emulators and Real Amiga's have had
+problems from this game for a long time, this is SOLELY because The Company
+in a rare form of slackness, didn't crack it properly, hence why all ADF
+files are basically junk!
+
+Now, ALL copy protection is removed and Exile plays as it should....
+
+HOW TO TRANSFER MY OLD SAVEDISK?
+Put your old savegame floppy in the disk drive.  Get disk2file (it's a
+program from the JST package).  Now write this line in CLI:  
+
+        disk2file 0 Disk.2 108 159
+
+It will create the file 'Disk.2' with size 292864 bytes.  Copy it into the
+Exile directory.
+
+Thanks to - Adrian Simpson for the disk image
+          - Codetapper for fixing OS switch problem with saves!
+

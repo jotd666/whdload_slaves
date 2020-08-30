@@ -1,0 +1,89 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ That install applies to "Oscar" � 1993 Flair Software. Supported are two
+ different floppy AGA versions, the floppy ECS version, the CD남 version and the CD남 Oscar/Diggers-Bundle.
+
+ That install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ You need 2 MB ChipMem and the AGA chipset for AGA & CD32 versions, and
+ 0.5 MB Chipmem for the ECS version.
+ 
+ You can quit the game by pressing F10 (key can be changed with	Tooltype 
+ "QuitKey=").
+ 
+ If you have problems with this installation please try first to get a newer
+ version of this package from the WHDLoad's WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also doesn't succeeds inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad's WWW-Page.
+
+ For full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 2.4 (15.04.2020):
+ - ECS: oops quitkey crashes on 68000 (issue #0004494)
+ 
+ Version 2.3 (14.04.2020) done by JOTD:
+ - ECS version: Exit key fixed to work on 68000 (issue #0004465)
+ - ECS version: CD32 joypad support to pause game.
+ - ECS version: "up" wasn't disabled when second button was used to jump
+ 
+ Version 2.2 (08.04.2020) done by JOTD:
+ - support for ECS version with same features (trainer, 2nd button jump...) (issue #0003886)
+ - reduced audio dma delay (audio still okay) which fixes main sprite glitch
+   on some fast machines (issue #0001181)
+ 
+ Version 2.1 (04.04.2020) done by JOTD:
+ - option to jump with blue/second button (issue #0004276)
+ - added trainer: "easy mode": instant kill of enemies instead of hitting them 3 times
+   which makes the game tedious (specially because of constant respawn). This was asked
+   by someone recently, and I found that interesting (and easy to implement too)
+ - added trainer: as soon as an Oscar is picked up, the exit is open (find the clapperboard)
+ - CD남 version pause reenabled (with play or 'P' key)
+ 
+ Version 2.0 (10.11.2019) done by JOTD:
+ - war level underwater wall could not be broken due to access fault
+   fixes that were failing to do the correct thing in some
+   special cases (see source code for details)
+ - added trainer: infinite lives & energy
+ - adapted to whdload v17  
+ - source code included
+ 
+ Version 1.9 (26.03.2002) Wepl, unreleased:
+ - decruncher moved to fastmem
+
+ Version 1.8 (24.02.2001) Wepl
+ - supports CD남 Diggers-Bundle version:
+ - gfx underwater bugs fixed
+ 
+ Version 1.7 (16.01.2000), Wepl:
+ - supports CD남 version
+ - thanks to Dr.Zarkov for support
+
+ Version 1.6 (08.12.1999) Wepl:
+ - supports another version
+
+Notes:
+
+When second button is selected as jump, up remains active to go up underwater and control
+the toy. For simplicity's sake, when the character is touching the water or in the water, both
+button AND jump go up (this is for the mixed case when character is knee-deep in the water.
+He goes up, then jumps when meets the surface. It would have been unpractical to forbid usage of second button to jump in
+that case)
+
+CD남 version never blocked "up" for jump but allowed reverse & forward joypad buttons to
+perform the exact same operation. You can choose to leave controls as-is, or use blue button
+for jump/swim.
+
+

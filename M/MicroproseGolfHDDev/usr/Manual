@@ -1,0 +1,1641 @@
+MICROPROSE GOLF MANUAL page 5-50
+
+In medieval times, shepherds passed the time while watching their sheep by hitting
+pebbles around the hills and meadows with their crooks, so inventing Golf
+
+It is almost possible to picture a similar scene in the same fields today; the
+descendants of those shepherds sitting on a wall, lap-top computer at the ready,
+playing MicroProse Golf One of the oldest sports seems to have become a natural
+companion for new technology.
+
+There are several computer golf games available, some of which have filled a few
+lunch hours at MicroProse. But none of them have kept us playing them time and
+again. We've always found them to be missing two fundamental requirements.
+
+Firstly, they are all two-dimensional. Secondly, and partly as a result of their being 2-d,
+The true effects on the ball of changing parameters such as club, swing, stance and
+ball-spin cannot be accurately seen. The means by which you measure your success
+are via shot distances calculated by the computer and then printed on screen, not by
+making the journey with the ball.
+
+We wanted an accurate simulation which not only provided hours of entertainment, but
+actually improved our own golfing ability, both in terms of understanding ball dynamics
+at first hand and by teaching us about the tactics of golf To master your environment
+you have to have free range of movement around iL
+
+So the idea for MicroProse Golf was born. Its completion has been an immense
+challenge. Those who love and play golf know about the challenges faced in playing
+the most difficult shot on the most testing course. The thrill is greatest when it is
+achieved through skill, appilcation, and as the result of many hours practice.
+
+We hope that MicroProse Golf provides you with the challenges and thrills that it has
+given us.
+
+
+MicroProse
+
+July 1991
+
+                                  Page 5
+
+THIS MANUAL
+provides a Quickstart for beginners, detailed operating instructions, and a wide
+variety of technical background. It is applicable to all computer systems.
+
+THE TECHNICAL SUPPLEMENT
+gives specific instructions for loading and/or installing the simulation for your
+computer. It also provides a complete reference of all the graphics and keys
+used in the game.
+
+THE COURSE MAPS AND CLUB SELECTION CARDS
+provide you with additional information about the courses included in the game
+and about each club's attributes.
+
+THE QUICKSTART TUTORIAL
+is the best way to play the game for the first time. Once you have played a few
+holes of Master Golf you will quickly become familiar with the controls and how
+to use them.
+
+UNDERSTANDING THE OPTIONS
+You will probably want to play competitively so as to judge one round against
+another, or to judge your ability against a friend's or a computerised
+opponent's. There are many different types of competition to choose from, all
+clearly explained in "The Main Menu" (page 23) and "Handicaps and
+Competitions" (page 27).
+
+Everything ydu need to know about setting up player profiles prior to a playing
+round can be found in the "Player Set-Up" section, starting on page 35.
+
+Once you've chosen your options, it's off to the first tee!
+
+                                  Page 7
+
+DEVELOPING YOUR GAME
+Once you have used the Quickstart to learn the basics of the game interface
+you will be ready to start giving more consideration to the effect that changing
+variables have on your game. The section "Developing your game" gives
+further explanation of the various elements which make up your game, and
+relates what you see on screen to what you might experience on an actual golf
+course. You'll be surprised at how close the two are!
+
+PLAYING THE COURSE
+Each of the clubs is analysed in detail, giving you hints and tips about how to
+get the best out of them across a variety of situations, and explaining the
+mechanics and effects of changing foot, ball and tee positions.
+
+ADVANCED PLAY
+Understanding strategic play can be done right from the start. You'll save a lot
+of wasted time in the rough by learning how to read the course and, for the low
+handicap player who wants to win tournaments, there's top tips for tough
+situations.
+
+VITAL STATISTICS
+A section to help you get the best from the range of statistical services offered
+by MicroProse Golf.
+
+                                  Page 8
+
+Install and/or load the game as explained in the Technical Supplement.
+
+Once the game has loaded, the Main Options Menu will appear. Move the on-
+screen pointer over the "New Round" option and click the left mouse button
+once. This is the method you should use whenever selecting an option from a
+menu. The Competition Menu will then appear, from which you should select
+"Medal".
+
+Then select the number of players who wish to learn the game. For example, if
+you are learning alone, select "One Player".
+
+You will then be invited to configure the players via the screen shown.
+
+Each player may be given a name, be controlled by
+human or computer and be left or right handed. Each
+player starts at novice level. For the purposes of the
+Quickstart, simply click on the "Begin Round" icon which
+looks like this;
+
+Each player will be
+given a default name
+of "Player 1, 2 etc.",
+and will be a right-handed human designated as a
+"Novice" player. A full explanation of how to change a
+player's configuration is given on page 35.
+
+You will then be asked to "Insert a Course Disk". There are two course disks
+supplied with the simulation, Course Disks A & B. Course Disk A holds the
+"Buckland Heath", "Mountsummer Point" and "Fairdale Park" courses, and Disk
+B holds the "Fenham Valley", "Ballybrook" and "St. Augustine" courses.
+
+                                  Page 9
+
+Insert Course Disk A and select "Buckland Heath" from the Courses menu. A
+message will appear showing the first hole number, par, distance, stroke index
+and green speed. Click the left mouse button and the first hole will appear in
+isometric view.
+
+The isometric map shows
+the hole which you are
+about to play and its nearest
+neighbouring hole. The
+green to which you are
+playing can be identified by
+the red flag, and the
+position of the tee by the
+white ball on it. You will see
+that there is a white line
+extending from the ball. At
+the top of the screen you
+can see information relating to the player's name, the hole number followed by
+the figures 0(4), the club currently selected, the distance to the hole and the
+"Aim" distance. The club currently selected will be that recommended for your
+tee shot on this hole.
+
+Locate the on-screen pointer, and note that you may move it by moving the
+mouse. Move the pointer over the "arrow" in the top right hand corner and click
+once. The isometric map will rotate through 90. Further clicks on the "arrow"
+icon will rotate the map further. A total of four clicks will return the map to its
+original position.
+
+SETTING DIRECTION
+Now move the pointer onto the isometric map itself and click the mouse button
+whilst watching the white line which extends from the ball. You will see the line
+move. The "Aim" distance will also change. The white line represents the path
+which the ball will take if struck perfectly with the club currently selected,
+provided that no external factors such as wind direction influence it.
+
+As you click the mouse on a different pointer location, the white line will attempt
+
+                                  Page 10
+
+to join the ball to the pointer. As the selected club has a maximum distance, the
+arc of the white line may rejoin the ground before reaching the pointer. By
+moving the white line you may select the direction of your next shot. You
+should be aware that shortening the arc below the maximum distance
+achievable will not result in the ball being hit only as far as the point selected.
+The power of the shot is set later, and you are only setting the direction of the
+shot at this stage.
+
+The "Aim" distance shown corresponds to the distance between the ball and
+the location of the mouse pointer when clicked, to the nearest five yards. This
+allows you to see, at a glance, the distance between the ball and any course
+features such as trees, bunkers or the front of the green.
+
+For the purposes of the Quickstart, you should finally click on the base of the
+flag itself. Alternatively, clicking the right mouse button when looking at the
+Isometric Map will always ensure that you are aiming directly at the hole.
+
+THE ISOMETRIC MAP ICONS
+At the bottom of the screen are a number of selectable icons, the functions of
+which are described briefly below.
+
+Allows you to alter both height and position of the tee. You should
+leave these variables set as they are for the time being.
+
+Allows you to alter your stance and the position of your feet
+relative to the ball. You should also leave these variables set as
+they are for the time being.
+
+Allows you to view information relating to the club currently
+selected or to change club selection. You may view this screen,
+but do not change your club at this stage.
+
+                                  Page 11
+
+Allows you to return to the main menu, after confirming that this is
+your true intention. Do not select this icon at this stage.
+
+Indicates the direction and strength of the wind. The white line
+shows the direction and the red bar below indicates the
+approximate strength. Clicking on this icon will have no effect, as it
+is for information only. When playing at novice level, wind will not
+affect your shot.
+
+Allows you to proceed with the shot by transferring you to the
+three-dimensional view.
+
+Once you have set the direction of the shot accurately you should select
+the "Proceed" icon. You will then be looking down the fairway in the
+exact direction set on the isometric map.
+
+The main viewing window shows your view down the Fairway from the Tee.
+You will be able to see the dark green rough on either side of the fairway and
+some trees in the distance. At the top of the main window a flag indicator is
+positioned directly above the flag on the green. This flag indicator allows you to
+see the position of the flag on the green even if your view of the actual flag is
+obscured by distance or by obstacles.
+
+Below the main window you can see the player's name, club selected, shots
+taken (currently zero) and, in brackets, the par for the hole (for this hole 4), and
+current distance to the hole.
+
+                                  Page 12
+
+THE SHOT VIEW ICONS
+To the left and right of the main window you will see a variety of icons, some of
+which may be familiar from the Isometric Map (namely wind direction and
+strength, stance, tee position, and club selection). There is also a "Return to
+Isometric Map" icon, a "Camera Position" icon and a "View Pitch Area" icon.
+
+Selecting   to
+return  to  the
+Isometric Map will allow you
+to do just that, in case you wish to reset direction from that view.
+
+Selecting the Camera Position icon will display a window allowing
+you to select one of five camera positions. The currently selected
+position is indicated by the word "On". You may wish to
+experiment with different camera positions as you take successive
+shots, but for the time being, leave the Camera Position as it is
+currently set.
+
+The "See Pitch Area" icon, when selected, shows a quick time
+journey to the pitch area defined by the club and direction
+currently selected. It allows you to examine close-up any potential
+danger in the area. Once you can see the pitch area, reselecting
+the "pitch area" icon will take you to the green. Alternatively to return to the tee
+from the pitch area click the right mouse button.
+
+Clicking the right mouse button whilst on the tee will show you the green in
+close-up.
+
+                                  Page 13
+
+ADJUSTING DIRECTION
+The lowermost icons on each side are arrows pointing to the left and right
+which allow you to make last-minute adjustments to the intended direction of
+your shot. By clicking on one of these icons you will see the view down the
+fairway adjust to the left or right. The intended direction of your shot remains
+towards the centre of the main window, but the window itself realigns, to
+actually give you a new overall intended direction. There is another way to
+adjust direction in the Shot View. By moving the on-screen pointer into the
+main window and clicking the left mouse button you may realign the view so
+that you are looking towards the point on which you clicked. Once you have
+made any final adjustments in direction which you feel are necessary, you are
+nearly ready to take your first shot.
+
+TAKING YOUR SHOT
+Around the golfer you will see two circular lines. These comprise the
+swingometer; the outer line governs the strength of the shot (or backswing)
+and the inner governs the timing of the contact with the ball (the downswing).
+The timing of contact governs the amount of hook or slice you impart on the
+ball. By hooking the ball you can make it deviate to the left from your intended
+direction, and by slicing it, to the right, assuming you are a right-handed golfer.
+(All descriptions in the manual refer to right-handed golfers).
+
+Hook and slice can be used to great advantage once you learn to control them.
+Whilst learning, you should try to avoid hooking or slicing the ball. The best
+golfers first learn to remove hook or slice, and then learn how to re-impart them
+in a controlled fashion.
+
+You should read through the next eight paragraphs before attempting your first
+shot, as things will happen very quickly once you initiate the stroke!
+
+To start your backswing, move the on-screen pointer over the "Proceed" icon
+and click the left mouse button. A blue line will move along the outer arc of the
+swingometer as you "pick up" the club during your backswing. The higher the
+line rises, the higher you are "picking up" the club, and the more power you will
+impart to the ball.
+
+A white check marker shows the limit of your "controlled" backswing. For a shot
+at optimum power, required to strike the ball the recommended distance for the
+
+                                  Page 14
+
+club you are using, you must stop your backswing at this check point. The
+effect of stopping the backswing after this point will be to impart "overswing".
+The ball may well go further than the recommended distance, but the shot will
+become harder to control.
+
+A fractional delay will occur as you stop the club at the top of your backswing,
+but be warned that the delay is barely perceptible; it is as short as it is when
+actually swinging a club on a real course! The downswing will then start.
+
+The key to a clean strike, avoiding hook or slice, is to stop the downswing, by
+clicking the mouse again (for a third time), at exactly the right moment. Look at
+the inner arc of the swingometer. You will see, before you take your shot, a
+solid white area of the arc, the "sweet-spot", immediately below the ball. When
+the downswing reaches this area it must be stopped.
+
+At this point, before the shot is taken, the solid white area is quite large. When
+playing at novice level, the sweet-spot will remain at a constant size. However,
+when playing as a handicap or scratch player, the sweet-spot will decrease
+during the backswing. The higher the backswing, the more power you will put
+into the shot, but the smaller the white area becomes, and the harder it will be
+to execute a clean strike. If you stray into "overswing", the white area is likely to
+become very small.
+
+As with 'real' golf, the longer the distance to be covered by the downswing, the
+less accurate you will be. When club meets ball, the club is travelling at very
+high speed. As with 'real' golf, don't expect your first shot to be your best.
+
+MicroProse Golf is a near accurate simulation of what happens when golf club
+meets golf ball, and it also simulates accurately the effect of stance, foot
+position, ball position and tee position on the shot. Power of backswing is not
+the only factor in the equation, but you should concentrate on mastering its
+effect before considering the effects of the other parameters.
+
+Now play your first shot by clicking on the "Proceed" icon. The backswing will
+start. Click on the mouse when power reaches a maximum, and then click
+once again when the downswing reaches the white area.
+
+Fore!
+
+                                  Page 15
+
+At this point it becomes difficult to explain precisely what happens, not because
+our flight model is anything less than entirely accurate, but because what
+happens depends entirely on your shot. If you strike the ball with near
+maximum power, and hit it clean, straight and true, it will fly off along the centre
+of the Fairway, with the camera tracking the ball while the ground skims along
+below you. However, if you mishit the ball it could go anywhere. Provided it
+moves a reasonable distance, the camera will move with it, but if you only
+strike the ball a few yards the camera will remain at its starting position. Once
+the ball comes to rest, a message will appear in the main window giving details
+of the distance the ball travelled and the ground on which the ball has come to
+rest. You have played your first shot.
+
+At the completion of your first shot, you will notice the icons surrounding the
+main window change. Options to return to the Main Menu and change Camera
+Position remain, but new "Save Shot" and "Replay" icons will have appeared.
+
+By selecting the Replay icon you can review your last shot. You will find the
+Replay facility particularly useful when learning to control your swing, as it will
+show exactly when you stopped your backswing and when you made contact
+with the ball. Try to get a feel for the timing of the shot.
+
+You can replay the same shot as many times as you like before moving on to
+the next shot. The Save Shot icon, when selected, allows you to save the shot
+you have just played to the Data Disk. If you do not have a Data Disk already
+prepared, insert a blank disk at this stage and it will be formatted for you. This
+allows you to keep a permanent record of any shot for later viewing.
+
+Once you feel you have seen enough of your brilliant, mediocre or simply awful
+first shot, select the "Proceed" icon. The Isometric map will return with your ball
+in its new position. The information at the top of the screen will have been
+updated to show that you have taken one shot; your new recommended club,
+the distance now remaining to the hole, and the ball's lie will be shown.
+
+                                  Page 16
+
+As you are no longer on the tee, the icon allowing you to adjust tee height and
+position will no longer be displayed. In its place you will see a Lie Information
+icon, which will be one of the following;
+
+You may rotate the Isometric Map as explained earlier, if it helps you to get a
+better view of your route to the hole. If your first shot carried the ball far
+enough, the green may well be in reach with your second shot. The club which
+best suits the distance will automatically be selected for you. The white arc
+showing the ball's unaffected optimal flight may stop short of the green, but do
+not worry unduly, as the ball will roll a certain distance after landing to finish on
+the green, especially if you are using a wood or long iron.
+
+If your first shot leaves you so far from the green that it cannot be reached with
+the longest club (a Driver) on your second shot, you should still use the club
+automatically selected. However, if you are forced to play through or over trees
+to reach safety, or have landed in heavy rough or a bunker, another club may
+be more suitable. To change from your given club, select the "Change Club"
+icon, and choose a more suitable club. The expected distances on the club
+selection screen indicate the average distance the ball will travel before landing
+(pitch), and before coming to a halt (finish), respectively.
+
+By clicking on a club name you can display the distances for that club. Once
+you have made your choice of club, click on the "Proceed" icon to return to the
+Isometric Map.
+
+The optimal flight arc expected with your new club will be shown extending
+from the ball. Adjust direction by clicking on the point of the isometric map at
+
+                                  Page 17
+
+which you wish to aim. Once again, clicking the right mouse button will ensure
+that you are aiming at the hole.
+
+The distance the ball rolls after pitching depends partly on the amount of
+backspin which you impart to it which, in turn, is governed, to a certain degree,
+by the position of the ball in relation to your feet when you hit it, but more so by
+the club you choose. For the purposes of the Quickstart, it is unnecessary to
+give more than cursory consideration to the merits of imparting backspin, but
+you should be aware that when shots are played without adjustment to the
+default setting of ball position in relation to feet, with woods, long or medium
+irons, the ball will roll on a good way after pitching.
+
+It is therefore important that the optimal flight arc of the ball allows it to land
+before reaching the flag. If it does not, the ball will come to a halt beyond the
+flag, and could possibly run off the back of the green.
+
+Once you have selected your club and set your aim, select the "Proceed" icon
+to transfer to the Shot View.
+
+Once again you can view the likely pitch area by selecting the relevant icon.
+Try selecting a different camera angle for your second shot; the 'track and pan'
+position, for instance.
+
+Make any last-minute adjustments to direction, and then take your swing!
+
+Take time to review your shots by using the replay facility, as it will help you to
+analyse any faults with your swing.
+
+Eventually you will arrive on or near the green. When you are so close to the
+green that you need only hit the ball less than half the maximum distance with
+the shortest club (i.e 40 yards with the Pitching Wedge) that club will
+automatically be selected for you and you will go straight to the Shot View
+without reference to the Isometric Map. You may still go from the Shot View to
+the Isometric Map by selecting the "Go to Isometric" icon, but the value of the
+Isometric Map diminishes as you near the hole, and more detail can be seen
+by going directly to the Shot View.
+
+When playing a shot which requires less than maximum power with your
+selected club (whether it is a Pitching Wedge or not), you must adjust your
+backswing accordingly.
+
+                                  Page 18
+
+The relationship between power (length of backswing)
+and distance (length of shot) is not linear. When you
+allow the blue line to travel half distance to the check
+marker, the ball will not travel half maximum distance for
+the selected club. The relationship is an exponential one,
+best illustrated by the following graph.
+
+Many external factors such as wind, foot position, ball lie,
+and ground slope influence the relationship. You must
+develop a "feel" for the relationship between swing,
+power and distance, as you do on a real course. The
+Driving Range is the best place to practise!
+
+Once you reach the green the icons and method of control change slightly, and
+you will automatically be given a putter. New icons will appear with the
+following functions:
+
+View shot from 180 (directly behind hole)
+
+Display 'Grid Lines'
+
+Check speed of green
+
+The art of putting is one which has proved difficult for players of all standards
+to master. A certain par can suddenly turn into a double-bogey, and the long,
+straight drives of the fairway can be made to seem insignificant, as a short,
+sloping two-foot putt curls around the cup. Reading the green is the key to
+success.
+
+                                  Page 19
+
+The slower the ball moves, the more it is influenced by the terrain. The putting
+green is where the three-dimensional view of Master Golf is at its most useful.
+You can actually read the green for yourself; you can move around the green.
+
+There are three points from which a putt must be viewed for you to judge slope
+correctly. The view along the line from ball to hole, seen from behind the ball;
+the same view seen in the opposite direction, from behind the hole; and a view
+at right-angles to the line between ball and hole, as shown below.
+
+Each of these views can be
+seen. The view from behind the
+ball is seen as the 'default' view
+as soon as you arrive on the
+green. To see the opposite view
+from behind the hole, select the
+"180" icon. To see the
+perpendicular view, click the
+right mouse button anywhere
+on the screen.
+
+Judging a slope is made
+easiest when  it can  be
+referenced with a straight line.
+You are able to do this by
+viewing the putt from any of the
+three viewpoints with gridlines
+drawn over the green. These
+lines, which are drawn when you select the "Gridlines" icon, show every
+contour of the green to full effect. It should be possible to tell immediately
+whether the green slopes up- or down- hill to the cup, and whether it slopes
+right or left between ball and cup. You must, of course, set your aim and judge
+the pace of your putt accordingly. For example, if the green slopes down from
+right to left, you must aim to the right of the hole. The pace of the putt is set via
+a power bar which will appear when you start your putt by selecting the
+"Proceed" icon.
+
+                                  Page 20
+
+The check mark which appears halfway
+across the bar indicates the optimum
+strength for the distance you must cover to
+the cup, if the putt you face were on a
+perfectly flat green. If the green is not flat, the
+amount of adjustment needed depends on
+the degree of slope and "speed" of the green.
+
+The "speed" of the green is important, and is governed, amongst other things,
+by the type and length of grass used and the prevailing weather conditions.
+Each green is classified as one of five types; very slow, slow, medium, fast or
+very fast. The speed of the green on which you are currently playing can be
+reviewed by selecting the "Green Speed" icon.
+
+When judging the power required you must take into account both slope and
+green speed.
+
+The power bar fills from left to right when you click on the "Proceed" icon. To
+stop the power increasing when it reaches the point which represents the
+required speed, click the left mouse button again.
+
+If you stop the power bar before it reaches the check marker you will strike the
+ball with less power than that required for the same putt on a perfectly flat
+green. You would do this for a downhill putt.
+
+If you stop the power bar after it reaches the check marker you will strike the
+ball with more power than that required for the same putt on a perfectly flat
+green. You would do this for an uphill putt.
+
+If you are making adjustments on a fast green, the adjustment must be greater
+than for the same slope on a slow green.
+
+If you were putting downhill on a very fast green you would need less power
+than for the same distance putt down the same slope on a slow green. Both
+slope and speed of green must be taken into account.
+
+If the ball passes within six feet of the hole during a putt, a window will appear
+in the top left of the screen showing a birds-eye view of the cup. You will see
+the ball travel across the window and, hopefully, come to rest very close to, or
+actually in the cup.
+
+                                  Page 21
+
+After each putt a message will appear telling you how far the ball travelled and
+where it came to rest. Below the main window you will see the distance
+remaining to the cup. Icons will appear which allow you to replay the shot or to
+save it to disk, as normal.
+
+To play your next putt, click on the "Proceed" icon. The view will realign directly
+behind your ball. You may view the putt from any of the three angles once
+again, and check the Gridlines before clicking on the "Proceed" icon to take
+your shot.
+
+Eventually the ball will go down the hole! Remember that, whatever distance
+putt you are faced with, the check marker represents the optimum power. Even
+when the ball is inches from the cup, strike with close to optimum power.
+
+On completion of the hole, click on the "Proceed" icon. The scorecard will
+appear, detailing your score so far. Icons which allow you to return to the main
+menu or save the game to disk are selectable, along with an icon which will
+take you to the next hole.
+
+This Quickstart is now coming to an end. You can, of course, continue to finish
+your round, or just play a few holes. Either way, you now have enough
+information to do so. Hopefully you have been bitten already. Golf is like that.
+Real soon you'll be looking at your scores and wondering how to get them
+down. You'll find some help in, "Developing your Game", starting on page 39.
+
+To quit your round at any time, select one of the "Return to main menu" icons.
+Alternatively, after completion of the round the final scorecard will be displayed.
+Once you click on the "Proceed" icon a message will appear informing you that
+the player has a new profile, and inviting you to save it.
+
+You can save the new profile as explained in the section on "Vital Statistics",
+page 79. If you decline the offer, or once you have saved the new profile, you
+will be returned to the Main Menu.
+
+                                  Page 22
+
+The main menu offers seven options;
+
+Select this option to begin a new game as you did for the Quickstart. There are
+eleven types of game available, each of which is clearly explained in the
+section "Handicaps and Competitions" on Page 27.
+
+The Driving Range is the ideal place to practise. You are not restricted to
+practising shots with your Driver; you can use any of your woods or irons.
+When selecting this option you will be asked to insert a course disk, which you
+should do. The Isometric Map of the Driving Range will appear, with the icons
+which normally appear on the Isometric Map available for selection. If you have
+not worked through the Quickstart you will not have seen an Isometric Map
+before. By turning back to page 10 you can work through the section of the
+Quickstart which deals specifically with the Isometric Map.
+
+At the top of the screen you will see the club currently selected and the aim
+distance; you will also notice that there is not a conventional hole shown on the
+Map. There are two putting greens, one out of range ahead of you and one
+behind you. You can also see ground markings along the avenues of trees
+which show distance from the tee. For conventional driving and long iron
+practice, during which you are more concerned with hitting the ball sweetly
+than landing the ball on the green, you should hit towards and along the
+
+                                  Page 23
+
+avenues of trees. For short iron or accuracy practice, you might like to aim
+towards the green behind you.
+
+You may change your selected club, foot position, stance, tee position and
+height as normal via the Isometric Map icons. On going to the Shot View you
+will see an additional icon, allowing you to switch between tee/fairway practice
+and bunker practice.
+
+If you select bunker practice you will automatically be taken to a
+bunker near a green.
+
+When you have finished practising, select the "Return to Main
+Menu" icon.
+
+Putting is not Golf; it is a game within Golf. How well you can hit the ball
+through the air bears little relation to how well you can roll it along the ground.
+As nearly half your shots during a round are likely to be putts, you'd better
+practise them!
+
+On selecting putting practice, insert the course disk if it is requested. You will
+be taken directly to the Shot View of the putting green. An introduction to
+putting can be found from page 19 of the Quickstart. There are some extra
+options associated with putting practice which are not available during an
+actual round, represented by the following icons:
+
+Switches between a flat and sloping green, allowing you to
+practise a wider variety of putts.
+
+Moves the putt to a new position on the green.
+
+After each missed putt this icon will appear, allowing you to play
+the ball from the position in which it came to rest.
+
+                                  Page 24
+
+After each successful putt the ball will automatically be reset in a new position
+for your next putt. To leave the putting green, select the "Return to Main Menu"
+icon.
+
+After the completion of each hole during a round, you may save the game. This
+option has not been designed to allow you to bend the rules by replaying a
+hole which you have double-bogeyed immediately with a view to keeping your
+scorecard 'clean'!
+
+You will find the saving and loading options useful if you do not have time to
+complete a full eighteen holes in one playing session, or during Tournaments
+over more than one round.
+
+By selecting to 'Load Round' you may continue a previously saved game. More
+information on loading and saving can be found in the section "Vital Statistics"
+on page 79.
+
+Tall tales of great shots are often the subject of conversation at the nineteenth
+hole. Microprose Golf allows you to record for posterity those magic moments
+on the course by saving any individual shot to the Data Disk, for replay at a
+later date. On the completion of each shot an "Immediate Replay" and a "Save
+Shot to Disk" icon will appear. You should select the latter.
+
+By selecting the 'Replay' option from the Main Menu you can impress your
+friends or boost your own confidence by reviewing your great shots before
+stepping onto the course.
+
+You will be asked to insert the Data Disk holding the shot. More information on
+loading and saving can be found in the section "Vital Statistics" on page 79.
+
+MicroProse Golf offers a full statistical analysis for each player for whom a
+profile exists. A player can create a profile after the completion of one round.
+Player profiles are stored on the Data Disk, which you must insert after
+selecting to view the stats. Each player profile shows stats for each course
+played, with a hole-by-hole analysis showing the average score for each hole
+and your performance against par. It also keeps track of your Handicap, best
+
+                                  Page 25
+
+performances, average performances, and your last performance at each hole
+and for each round. An explanation of how to use and read the stats displays
+can be found in the section "Vital Statistics" on page 79.
+
+MicroProse Golf incorporates a demonstration mode, during which you can
+watch a computer-driven golfer playing a round on the course of your choice.
+You can learn by watching the demo and noting the club and direction which
+the computer golfer selects.
+On selecting this option you will be asked to insert a course disk and to select
+a course. The demo will continue automatically until you click either mouse
+button to return to the Main Menu.
+
+                                  Page 26
+
+MicroProse Golf has been designed to be as near accurate a simulation of golf
+as is possible. Like real golf, you should improve your play over time, but your
+initial standard might not be as high as you would like. It can be shattering to
+your confidence to play against golfers whose ability and technique are
+superior to yours, and consequently beat you easily.
+
+You will improve at your own pace, but while you are learning you will want to
+experience the edge that playing competitive golf can give your game; the
+taste of competition is much sweeter when you win.
+
+The handicap system was introduced to give players of unequal ability an
+equal chance in competitive golf, whilst ensuring that it is always in each
+golfer's interest to get his handicap as low as possible. The ultimate aim is to
+become a 'Scratch' golfer playing off par.
+
+Before playing competitively, it is important to gain an understanding of the
+relevant terminology associated with handicap and par.
+
+Each hole is designated as a par three, four or five. Par is the measure of how
+many shots a scratch golfer (one with with no handicap) should take for that
+hole. On a hole of up to 250 yards in length, it is assumed that the scratch
+player will reach the green with his first shot, and then take two putts, making it
+a par three. On a hole between 250 and 475 yards long, two shots should be
+needed to reach the green. Add two puffs, and you have a par four. A hole over
+475 yards long will require three shots in reaching the green, which, when
+added to the two putts required, gives a par five.
+
+By adding the pars for each of the eighteen holes the total par for the course
+can be found. On most courses, the majority of holes will be par fours. If there
+are an equal number of par threes and par fives, the total par for the course will
+be 72. The total par is sometimes referred to as the standard scratch score
+(SSS), the score expected by a scratch player. It is this total from which
+handicaps are assessed.
+
+                                  Page 27
+
+If a player expects to go round in four shots more than the SSS, his handicap
+is 4 shots. If he expected to complete a par 72 course in 86 shots his handicap
+would be 14.
+
+The maximum handicap for men is 28 and, in theory, anyone on that handicap
+should go round in 28 shots more than the course par. However, anyone taking
+more shots is still given a maximum handicap of 28 shots.
+
+The point at which a handicap is taken into account varies, depending on the
+type of competition. When playing a round of strokeplay the strokes received
+are subtracted on completion of the round. Each player subtracts his handicap
+from his gross score, and the player with the lowest resulting nett score wins.
+
+During matchplay they are assessed on a hole-by-hole basis; calculating the
+strokes received is not as simple as merely subtracting one player's handicap
+from his opponent's.
+
+During singles matchplay, three-quarters of the difference between the two
+players is used in the calculation. For example, in a match between Player A
+with a nine handicap and Player B with a 21 handicap, there is a handicap
+difference of 12. For a singles match, three-quarters of the difference is taken
+to give a handicap allowance of nine. Player B therefore receives nine shots
+from his opponent player A.
+
+Matchplay golf uses the handicap system differently. Here the golfers are
+playing to win holes. As soon as one golfer has holed out, his opponent may
+only take as many shots as the first player took to hole out. For example, if the
+first player holed out in four shots and his opponent was about to take his fifth
+shot, the first player would have won the hole.
+
+As a result, the total number of shots for the round cannot be calculated, as
+each hole is not necessarily played out to a finish. Therefore the handicap
+cannot be deducted at the end of the round; it must be deducted on a hole-by-
+hole basis.
+
+The Course Card has a column marked "S.l.", with each hole being given a
+number from one to 18. The "Stroke Index" indicates the difficulty level of each
+hole, relative to the par for that hole. If player B is due to receive nine strokes
+
+                                  Page 28
+
+from player A in a singles matchplay competition, he would receive one shot at
+each hole with a Stroke Index of nine or less.
+
+Handicap calculations become more complicated when more than two players
+are competing. For each description of a competition type ( starting on page
+31) an explanation of handicap calculation is given.
+
+LOWERING YOUR HANDICAP
+Your first round of handicap golf is played off a handicap of 28. In order to
+lower your handicap you must complete the round in less than 28 over par,
+giving you a neff score less than par.
+
+Handicaps are not adjusted immediately to reflect your 'best' score. They are
+an indication of your average expected score. Playing your first round with a
+gross score under par (before deduction of your handicap allowance) will not
+automatically make you a scratch player.
+
+Handicaps are divided into the following categories;
+
+EXACT AND PLAYING HANDICAPS
+Exact Handicap states an exact number (e.g. 13.6).
+
+Playing Handicap is the Exact Handicap rounded to the nearest whole number
+(0.5 is rounded upwards).
+
+ALTERATIONS
+If a player returns a score that is no more than two strokes above his Playing
+Handicap, his Exact Handicap is not altered.
+
+                                  Page 29
+
+If a player returns a score that is three or more strokes above his Playing
+Handicap, his Exact Handicap is increased by 0.1
+
+If a player returns a score that is below his Playing Handicap, his Exact
+Handicap is reduced by an amount per stroke that he was below his Playing
+Handicap, the amount per stroke being determined by his Handicap category.
+
+STROKEPLAY
+Strokeplay is usually thought to be the most demanding type of competition.
+The lowest total score for eighteen holes brings victory. In professional
+tournaments and championships the gross score (without any account to
+handicap) is used. During amateur competitions (other than certain specific
+championships), the nett score is calculated by deducting the player's
+handicap from his gross score. Strokeplay is the only format which can be
+used to assess handicap.
+
+While playing a round of strokeplay there can be a temptation to think too far in
+advance. Think only of one hole at a time, and think firmly in the present. Do
+not assume that your final score will be a multiple of the number of holes you
+have already played; do not even think of front-nines and back-nines; certainly
+don't dwell on bad shots; think of the next shot, but don't take unnecessary
+risks or gambles, especially with recovery shots.
+
+The time to add up your score is when you have left the eighteenth green.
+During tournaments, your partner is not the only golfer you are playing against.
+Even so, resist the temptation to look at the leaderboard. Everyone else has
+played a different number of holes to you until you leave the course, and the
+competition is not over until your last opponent has left the course too.
+
+                                  Page 30
+
+MATCHPLAY
+In Matchplay you compete hole-by-hole against one opponent or partnership.
+The player or partnership with the lowest score on each hole wins that hole. If
+both players take the same number of shots, the hole is said to be 'halved'.
+Handicaps are taken into account according to the Stroke Index of the hole. A
+player can never receive more than one stroke per hole.
+
+If player A and player B are both scratch players, and, at the first hole A takes
+four shots and B five, A wins the hole and goes "1 up". B is said to be "1 down".
+If the second hole is halved, A stays "1 up" and B "1 down". If B wins the third
+hole, taking three shots to A's five, he wins the hole and the match becomes
+"All square". The fact that B has taken two shots less at the hole does not
+mean that he pulls back two 'points'.
+
+Eventually, at the sixteenth tee, A is three up with three holes to play. If the
+sixteenth is halved, B can no longer win enough holes to square the match,
+and A is declared the winner by "3 and 2", indicating that he is three up with
+two to play. The remaining holes are not played.
+
+In matchplay you do not hole out, and the hole-by-hole score is irrelevant.
+However, your mental approach to matchplay should be similar to that of
+strokeplay. Ignore your opponent's score until the hole is over. Try not to
+assume that he will automatically hole his three-foot putt and that, as a result,
+you must be bold with your twelve-footer. Play it as you would normally. If he
+hits a long drive and gets a lucky bounce over a bunker, don't try to do the
+same with your drive. Play your own game.
+
+MEDAL (OR STROKEPLAY)
+Select this option to play a round of Medal golf with one to four players. Medal
+is a contest over eighteen holes decided by the lowest number of shots, with
+handicap allowances considered after completion of the round.
+
+SKINS
+One round of Matchplay golf played for money. Each hole is worth a certain
+amount of money, the player taking the least number of shots at the hole being
+declared the hole winner, collecting the money for that hole. Handicaps are
+
+                                  Page 31
+
+taken into account at each hole, as with standard Matchplay. The first six holes
+are each worth the same amount, the next six twice as much each, and the
+final six three times as much. If a hole is 'squared' the money for that hole is
+carried forward to the next. You are invited to set the 'pot' for the first hole. The
+computer will then calculate how much each hole is worth, and display the total
+pot. As you play the round the computer will automatically keep a note of each
+player's winnings.
+
+HEAD-TO-HEAD
+Once you have attained 'scratch' status you can challenge the first of eight
+computer-controlled ranked players in a head-to-head challenge over 18 holes.
+The round can be played as stroke or match-play.
+
+Load in your scratch player as normal. Your next head-to-head opponent's
+name will be shown. Select the proceed icon to display a picture of your
+opponent and his style of play. His style cannot be altered! The round is then
+played as normal. If you beat him you will face another challenge from a new
+opponent. If you lose you'll have to play the winner again another day.
+
+TOURNAMENT
+There are three classes of tournament playable; an 18-hole all-comers
+tournament, open to every handicap player; a 36-hole tournament open to
+every player with a handicap of 14 or under; and a 72-hole tournament
+restricted to scratch players. All tournaments are played in strokeplay format.
+After each hole the scorecard displays an extra icon allowing you to view the
+leaderboard. The tournament is played in a minimum of pairs. If you are the
+only human controlled golfer, you will play with a computer controlled partner. If
+there are more than one human controlled golfers (up to the maximum of four)
+they will all play together.
+
+SINGLES
+One round of matchplay golf between two players, the winner being the one
+winning most holes, with handicap allowances allocated according to stroke
+index.
+
+                                  Page 32
+
+THREEBALL
+One round of matchplay golf in which three players each play their own ball;
+there are actually three matches going on at once; Player A vs. Player B, B vs
+C, and A vs. C, with the scoring for each match calculated after each hole,
+handicaps being allowed according to stroke index.
+
+FOURBALL
+Four players each play a ball, but scoring is in partnerships, matching the
+lowest score of one partnership with the lowest of the other for matchplay, or by
+recording the lowest score of each side for strokeplay. In a match,
+handicapping is on three-quarter basis, the players taking handicap allowances
+from the lowest handicap player of the four.
+
+BESTBALL THREE
+One player plays against a partnership, each playing his own ball, the score of
+the single player being compared against the best score of the partnership in
+matchplay format. The handicap allowance is calculated as three-quarters of
+the difference between the handicap of the single player and the average of
+the two partners' handicaps.
+
+BESTBALL FOUR
+Similar to bestball three, one player plays against a team of three, the score of
+the single player being compa,red against the best score of the team in
+matchplay format. The handicap allowance is calculated as three-quarters of
+the difference between the handicap of the single player and the average of
+the team members' handicaps.
+
+THREESOME
+Played as strokeplay or matchplay, in which a single player plays against a
+partnership who use one ball and take alternate shots. Handicap calculations
+are as bestball three, with full handicap allowances being used for strokeplay
+calculations.
+
+                                  Page 33
+
+FOURSOMES
+Strokeplay or matchplay, in which a partnership play alternate shots with one
+ball against another partnership doing similarly. Alternate shot partnerships
+always take turns to start a hole, without reference to which player putted out
+the previous hole. Handicap calculations take three-quarters of the difference
+between the average handicap for each side.
+
+                                  Page 34
+
+Each time you select to play a "New Round" via the Main Menu you will be
+invited to select a competition type. Depending on the type of competition you
+select, you must then select the number of players and whether you wish to
+play the competition as a strokeplay or match play format.
+
+The player set-up screen will then appear. This allows
+you to configure each of the players as you wish.
+
+The icons at the bottom of the screen allow you to
+proceed to the first tee, return to the main menu, load an
+existing player profile, configure a computerised
+opponent or select different clubs.
+
+The first player will be highlighted. By moving the pointer over another player
+and clicking the left mouse button you will highlight the new player.
+
+When a player is highlighted you may give him a name, by simply typing one in
+via the keyboard. You may wish to replace him by loading in an existing player
+profile from your Data Disk. To do so, simply select the "Load existing player"
+icon when the player you wish to replace is highlighted.
+
+You will be asked to insert the Data Disk holding the profile. This profile will
+replace that of the player currently highlighted.
+
+                                  Page 35
+
+On the right of the screen, next to each player's name, are options to set up
+the players as human or computer controlled, right or left handed, and as a
+novice or handicap player. These buttons, which act as toggles between either
+option in a pair, should be selected in the usual way if you wish to toggle them.
+
+Whenever you set up a player as computer controlled, you can also set his
+'style' of play, by selecting the 'computer style' icon.
+
+A window will appear allowing you to set the levels of 'Power', 'Putting' ability,
+standard of his 'Long Game', 'Short Game', 'Strategy', and level of
+'Aggression'.
+
+Each quality can be below average, standard, or high, depending on which of
+the three boxes is highlighted next to that quality. You can change them by
+clicking on one of the boxes which is not highlighted. The box furthest to the
+right represents the highest level. When you have configured your opponent,
+select the arrow to return to the Set Up screen.
+
+If you change any of the computer opponent's styles, his handicap will also
+change. Each computer player is initially set up with a style configuration which
+will give him a handicap of 10. If you improve more of his styles than you
+decrease, his handicap will tend to decrease. If you decrease his ability overall,
+his handicap will increase.
+
+Each human player can be designated as "Novice" or "Handicap". Human
+handicap players start out with a handicap of 28. After each round, the
+handicap of a player is re-adjusted and his stats updated to take account of
+any improvement or deterioration.
+
+Please note that some types of play (head-to-head, 36- and 72-hole
+tournaments) are only available to players of a certain standard. If one or more
+of the players you set-up or load does not reach that standard (his handicap is
+too high) a message will appear when you try to go to the first tee, and you
+must return to the Main Menu to select a different type of play.
+
+                                  Page 36
+
+If you designate a player as a Novice, he will play without the wind influencing
+his shots. Only human players can be designated as novices. Novices do not
+have a stated handicap, but will be given one of 28, just for this round. A
+Novice cannot improve his handicap.
+
+Novice players will find it much easier to hit the ball straight as the "sweet-spot"
+of the swingometer (see Quickstart P.14, or On the First Tee P.40) remains at
+a constant size during backswing.
+
+At the bottom of the screen you will see a "Select Clubs" icon. This allows you
+to change the clubs automatically given to you for a different combination.
+Each player can carry a maximum of 14 clubs. Full information on club
+selection can be found on page 43.
+
+To begin the round select the "Go to first Tee" icon. If you leave without altering
+a player's set up he will automatically be given a default name of "Player 1, 2, 3
+or 4".
+
+                                  Page 37
+
+DEVELOPING YOUR GAME
+Having worked through the QuickStart you will have learnt much about
+MicroProse Golf. You should be familiar with the workings of the basic controls,
+although you may not have mastered them yet. Perfecting a controlled swing is
+the key to success, and time spent practising on the Driving Range will always
+pay off. Learn to walk before you learn to run!
+
+You can now develop your game in two ways; by trial and error or by studying
+the desired techniques before putting them into practice. Both are valid; if you
+lack confidence in your swing, the time you might spend studying could be
+beffer spent practising via the trial and error route. You will pick up information
+about the factors other than swing which influence a shot, but should
+concentrate on accuracy of swing.
+
+If you feel that your swing will allow you to repeat shots consistently, and it is a
+lack of understanding about the other factors involved in club/ball dynamics
+that is holding your game back, you are ready to learn about the principles
+behind altering such things as stance, swing, ball position and foot position,
+and the way in which they can be used to drastically lower your scores.
+
+Developing your golf strategy is important if you want to master the courses,
+and a special section is devoted to consideration of a few of the tricky
+decisions you'll have to make.
+
+The following sections deal with every aspect of golf in increasing detail. From
+the basics of club selection and judging distance through to the reasons for
+sometimes using a five-iron for a short ten yard pitch-and-run shot. Understand
+the basic principles and you will become a good player; learn a few tricks as
+well and you'll be unbeatable!
+
+MicroProse Golf has been developed to be both a computer game and a
+learning aid. To learn how to play the computer game you should concentrate
+on the sections of italicised text which appear. To master the computer game
+and actually improve your on-course golf you should read the explanations
+preceding the italicised text before putting principle into practice.
+
+                                  Page 39
+
+Any game with a history as long as Golf is bound to have seen changes. The
+tools of a golfer's trade have not been exempt. From early 'wooden' shafts to
+iron shafts and now laminates, graphite or titanium compounds, the materials
+used have developed enormously through the years.
+Media advertising now leads to the likes of Ping,
+Slazenger and Wilson all promoting their clubs by
+laying claim to the latest technological
+breakthrough. If money were no option, the
+fanatical golfer could carry a club for any shot
+imaginable. However, it was this very practice
+which led to the rule change in the 1930s,
+stipulating a maximum number of fourteen
+clubs - a rule which is still adhered to today.
+It was the caddies, rather than the players,
+who were suffering under the strain of
+carrying twenty-five clubs in a huge golf
+bag!
+
+CLUB SELECTION
+The limit of fourteen includes a putter,
+and for most players this leaves as
+an ideal full set a driver (1 wood)
+and 3 and 5 woods; 2, 3, 4, 5, 6, 7, 8
+and 9 irons; and a pitching wedge
+and a sand wedge.
+
+The angle of loft increases through
+the set of woods and irons enabling
+progressively higher shots. Adjacent clubs also differ in length by about 1/2
+inch (narrowing to 1/4 inch for short irons).
+
+                                  Page 41
+
+The changes in length
+and angle in loft are
+combined with a change in
+angle between shaft and
+ground. The most upright
+club is the pitching wedge
+(excepting the putter), with the
+flattest being the long irons and
+the woods.
+
+The combination of all factors in club
+grading means that, for equivalent
+power shots, woods will usually travel
+further than irons. The lower the
+number of the club, the further and
+flatter the shot will travel.
+
+                                  Page 42
+
+The clubs given to you automatically at the start of a round of Microprose Golf
+are a driver (1 wood) and 3 and 5 woods; 2, 3, 4, 5, 6, 7, 8 and 9 irons; a
+pitching wedge and a sand wedge; and a putter You may vary the combination
+of clubs before each round, via the 'Player Setup' screen, by clicking on the
+'Select Club' icon.
+
+The full llst of seventeen clubs will appear; with the fourteen default clubs
+highlighted. To be able to select a club which is not highlighted, you must first
+deselect a highlighted one,
+by cllcking on it, as you can
+never have more than
+fourteen clubs in your bag.
+
+Then click on the clubs
+which you do wish to take
+with you. The putter cannot
+be de-selected. Cllck on the
+"Proceed" icon once you are
+happy with your selection of
+clubs. You need not take a
+full set of fourteen clubs; you
+can have some fun playing a "one club challenge'; in which each player takes
+only one club (usually a five fron) and a putter
+
+The club selection chart is also used to set the unfts of measurement in the
+game, between yards and metres. To toggle between them cllck on the "Y/M"
+box in the lower right corner of the display.
+
+Just above this icon is another showing a golfer's jersey By cllcking on This
+icon you can set the colour you wish to wear! Each cllck wm step through The
+available colours.
+
+Once you have selected your clubs and jersey and stated your preference for
+yards or mefres, select the arrow to return to the 'Player Set Up' screen.
+
+                                  Page 43
+
+THE BASIC PARTS OF A CLUB
+Learning the name for each of
+the  basic  club  parts  is
+important. It will aid in teaching
+as fault-finding often involves
+referring to these parts of a club
+and their movements during its
+swing.
+
+The correct shaft is vital,
+especially with woods. A stiff
+shaft will tend to lead to poor
+height and shots finishing to the
+right. Weak and overly flexible
+shafts will lead to erratic
+direction.
+
+Drivers have a loft angle of
+anything between 70 and 12.
+The better the player, the less
+the angle of loft required for
+comfort.
+
+The height obtainable from an
+iron is not only dictated by the
+angle of loft. The weight
+distribution up and down the
+clubhead is also influential,
+although to a lesser extent.
+With the weight at the base of
+the clubhead the ball will tend
+to fly higher, but length may be
+lost. With the weight nearer the
+centre, length is gained at a
+flatter trajectory. Tournament
+pros will often opt for the latter,
+but a good strike is essential!
+
+                                  Page 44
+
+Iron weighting across the clubhead can have an influence on the precision
+required for a clean shot. Some clubs, such as the Ping type, carry more
+weight at heel and toe than in the centre. The effect is to spread the 'sweet-
+spot', lowering the accuracy of strike required to produce a straight shot.
+
+The club with the widest variety of designs is probably the putter. Varying in
+angles of loft from 3 (for smooth greens) to 7 (for bad ones), they must, by
+regulation, have an angle of at least 10 between puffer and shaft (to prevent
+players adopting a croquet-type action). The four basic designs - mallet, blade,
+centre-shaft and Ping type - have varying sizes of 'sweet-spot' according to
+weight distribution across the face. A light putter can present problems for a
+smooth swing; the heavier it is the straighter the swing will tend to be.
+
+                                  Page 45
+
+One of the joys of golf is that every new hole brings a new challenge. Walking
+onto the first tee you'll be full of anticipation, a little nervous, wondering if this is
+going to be the round when you finally master the course or, if it's your first time
+at a new venue, eager to test your mettle against the unseen.
+
+It becomes easy to rush things. A cursory glance at your course map, a look up
+at the fairway and you feel ready to tee-up and let fly. To fall victim to such a
+thought process is to become easy meat for the great unseen enemies, course
+architects. They are the guys who chuckle at the thought of you thinking such
+things as "Big fairway, big drive" or "I can see the flag, therefore I can carry the
+green".
+
+Stop and think again. Before each hole you are told two things of vital
+importance; the par and the distance. Even more importantly, in Microprose
+Golf you are given an Isometric Map of the hole which allows you to plan each
+hole meticulously. Although your best laid plans don't always come to fruition,
+those which are carefully thought out succeed more often than those which are
+not.
+
+A number of holes are analysed in the "Advanced Play"
+sections later in the Handbook. You are advised to make
+time to read them sooner or later!
+
+THE ISOMETRIC MAP
+The isometric map shows The hole which you are about
+to play and its nearest neighboring hole. The green to
+which you are playing can be identified by the red flag,
+and the position of the tee by the white ball on it. You will
+see that There is a white ilne extending from The ball. At
+the top of the screen you can see information giving the
+player's name, The hole number followed by par for the hole in brackets, The
+club currently selected, The distance to The hole, and the 'Aim" distance. The
+club currently selected wm be That recommended for your tee shot on This hole.
+
+                                  Page 47
+
+Locate the on-screen pointer, and note that you may move it by moving the
+mouse. Move the pointer over the arrow" in the top right hand corner and click
+once. The isometric map will rotate through 90. Further clicks on the "arrow"
+icon will rotate the map further. A total of four clicks will return the map to its
+original position.
+
+SETTING DIRECTION, CHOOSING CLUB AND MEASURING DISTANCE
+Now move The pointer onto The isometric map itself and click the mouse button
+whilst watching the white ilne which extends from the ball. You will see the ilne
+move. The 'Aim" distance will also change. The white line represents The path
+which the ball will take if struck perfectly with the club currently selected,
+provided that no external factors such as wind direction influence it.
+
+As you click the mouse on a different pointer location, the white line will
+attempt to join The ball to The pointer. As The selected club has a maximum
+distance, the arc of the white line may rejoin the ground before reaching the
+pointer By moving the white ilne you may select the direction of your next shot.
+You should be aware That shortening The arc below the maximum distance
+achievable will not result in the ball being hit only as far as the point selected.
+The power of the shot is set later, and you are only setting the direction of the
+shot at this stage.
+
+Selecting the 'Change Club' icon will display the club
+selection window
+
+The clubs you chose to bring with you are highlighted in
+yellow and the club currently selected in white. Below
+the clubs you will see the words "Expected'; "Record"
+and "Holeout".
+
+"Expected" will be followed by two numbers, The number
+on the left being smaller than the one on the right The
+smaller number represents the expected pitch distance
+(the distance the ball wm travel before bouncing for the
+first time), and The greater number The expected finish distance (The distance
+the ball will travel before coming to a halt), for the currently selected club.
+These numbers correspond to Those you will find on your Club Selection Card,
+and are intended as a guide only.
+
+                                  Page 48
+
+There will not be any numbers next to "Record" or "Holeout" when you first
+start to play. As soon as you have used a club, the record pitch and finish
+distances for That club wm be recorded. However, do not assume That These
+'records' give an accurate indication of what to expect every shot. Your longest
+shot is ilkely to be one played with The wind's help!
+
+The "Holeout" reading will take even longer to accumulate. It shows the
+longest shot played with that club which actually finished up in the hole!
+Naturally you will soon have a reading for your putter It is unilkely That you'll
+ever get one for your driver If you do, save the shot to disk for posterity!
+
+To change The selected club, simply move The pointer over your new choice
+and cllck the left mouse button. To return to the Isometric View select the
+"Proceed" arrow
+
+If you changed club, you will on returning to the Isometric Map, notice That The
+length and curve of the white arc has changed. The arc not only shows
+expected distance, but also expected paTh of The shot. You can see That the
+short irons have a very high arc and The long ones a shallow arc. Use The arc
+to judge clearance over obstacles such as trees and water hazards.
+
+The 'Aim" distance shown corresponds to The distance between The ball and
+the location of The mouse pointer when dicked, to The nearest five yards. This
+allows you to see, at a glance, The distance between The ball and any course
+features such as trees, bunkers or the front of the green. This facility is
+especially useful when considering a change of club. It is not necessary to
+physically change clubs to see if the new choice wm reach a certain landmark;
+you can use The "aim" distance to check, and refer to your Club Selection Card
+
+if you experiment wfth The Isometric Map, changing clubs and direction, and
+subsequently want to return your aim so That ft is direcily at the flag, just cllck
+the right mouse button. The arc will reallgn automatically
+
+                                  Page 49
+
+THE ISOMETRIC MAP ICONS
+At the bottom of the screen are a number of selectable icons, the functions of
+which are described briefly below
+
+Allows you to alter boTh height and position of The tee. Please refer to page 61
+for more information about The tee.
+
+Allows you to alter your stance and The position of your feet relative to The ball.
+Please refer to page 63 for more information about stance on The tee.
+
+Allows you to view information relating to the club currently selected or to
+change club selection, as explained above.
+
+Allows you to return to the main menu, after confirming that this is your true
+intention.
+
+Indicates the direction and strength of the wind. The upper circular section
+shows the wind's direction. It represents a top-down view with you standing in
+the centre of the circles looking straight ahead at the point marked X. The
+white ilne shows the dfrection of the wind (in this example blowing towards you
+and from left to right), and the red bar below the circles indicates The wind's
+approximate strength. Clicking on this icon will have no effect, as it is for
+information only Hints on playing in windy conditions can be found on page 92.
+
+Allows you to proceed with the shot by transferring you to the three-
+dimensional view
+
+Once you have set the direction ot the shot accurately you should select
+the "Proceed" icon. You will then be looking down the tairway in the
+exact direction set on the isometric map.
+
+                                  Page 50
+
+
+                   * MICROPROSE GOLF *
+                   -------------------
+
+                   TECHNICAL SUPPLEMENT
+
+
+CONTENTS       Your Microprose Golf package (?) should contain
+               a manual, this Technical Supplement, 3 disks, a
+               club selectiton guide, course maps and a 
+               registration card.
+
+
+REQUIRED       COMPUTER & DISPLAY: This simulation requires 
+EQUIPMENT      either a Commodore Amiga with a minimum of 1
+               megabyte of RAM or an Atari ST of 512k of RAM,
+               and a colour monitor. Please prepare a blank 
+               formatted disk in advance for a use as a Data
+               Disk.
+               CONTROLS: The simulation can be run enirely from
+               the keyboard or with a joystick, but a mouse is
+               strongly recommended for playing the game.
+
+
+INSTALLING     Boot up your hard disk as normal, insert the 
+ON HARDRIVE    Program Disk in Drive df0: and type the 
+               the following:
+               cd df0:
+               golfinstall
+               The Program Disk will then be copied into a folder
+               on your Hard-disk root directory called "GOLF".
+               You will then be asked to insert the two course
+               disks so that the course data can be copied into
+               the "GOLF" folder.
+               NOTE: Golf runs from a folder that is situated in
+                     your root directory. If you copy the files
+                     into a sub-directory the program won't run
+                     correctly.
+
+
+INSTALLING     To install future courses that may be released,
+FUT. COURSE    open the folder "GOLF", and type 'courseinstall'.
+DISKS ON A HD  All the course data form the new disk will be 
+               copied into your "GOLF" folder.
+
+
+LOADING FROM   If your computer has KickStart in ROM, insert the 
+FLOPPY DISKS   Program Disk into the internal drive. Power up the
+               computer. The program will then auto-load.
+               (oh really?)
+
+
+LOADING FROM   Boot up your hard-disk as normal. Open the "GOLF"
+A HARDDISK     folder and type 'GOLF'.
+
+
+SAVED GAMES,   Whenever you wish to save a game, replay or player
+REPLAYS AND    profile, the file will be saved to the device that
+PLAYER         your first booted the game from. (eg: if you booted
+PROFILES       the game from Hard-Disk, files will be saved to
+               Hard-Disk). You can, however, save to Drive A, Drive
+               B or Hard-Disk, depending upon what you have 
+               connected at the time by clicking on the appropriate
+               icon at the time of saving.
+
+
+               OPERATING DIFFICULTIES AND LOADING PROBLEMS!
+               --------------------------------------------
+
+
+               In the vast majority of cases a loading problem
+               is not of faulty software, but either an incorrect
+               procedure or a hadware fault. Please ensure that the
+               loading instructions have been correctly executed.
+               The most common hardware failures are due to a
+               misalignment of the heads in the disk drive. 
+               Such faults may be detected by loading the game on 
+               another computer.
+
+
+               Alternatively, a virus may have transferred into your
+               hardware from another piece of software.
+               Pirated copies of games are an incredibly common 
+               source of viruses. It always pays to own orginal 
+               software. (a virus killer is a cheaper solution -RBL)
+
+
+               In the unlikely event of a software fault, please 
+               return the complete package, with receipt to the 
+               place of purchase. Microprose regret that goods can't
+               be replaced unless bought from the company directly.
+
+
+               If you have any difficulty whilst loading MICROPROSE
+               GOLF, or need help in geting the simulation to run.
+               Microprose will be happy to help you on the helpline.
+               Please ring UK (0666) 504399, Monday to Friday 0900
+               to 1700 hrs. Have a pen and paper handy when you call.
+
+
+PROTECTION     We regret that organised (FairLight) and casual pircay
+               forces us to use manual protection. When the game has 
+               loaded, you will be asked to indicate which language
+               your manual is in, by clicking on a nationalflag icon
+               (English, French or German). You will then be asked to
+               type in the word corresponding to the given manual
+               ref. in the form Page number, Line number and then
+               word number. Simply open the manual at the appropriate
+               page, count down to the required line and then across
+               to find the correct word. Type this word in and press
+               Return. the game will then load.
+
+
+               CONTROLLING MICROPROSE GOLF WITH KEYBOARD OR JOYSTICK
+               -----------------------------------------------------
+
+
+               We strongly recommend that the mouse is used as a
+               control method for playing this game. However, if you
+               prefer to use Joystick or Keyboard as a control method
+               you may do so. The game is configured on both Atari ST
+               and Commodore Amiga to read from Mouse, Keyboard or
+               Joystick all the time, so it is not necessary for you
+               to select which you require. The alternative Keyboard
+               and Joystick controls are listed below:
+
+
+      MOUSE          KEYBOARD EQUIVALENT          JOYSTICK EQUIVALENT
+      -----          -------------------          -------------------
+
+      Up             Cursor Up                    Up
+      Down           Cursor Down                  Down
+      Left           Cursor Left                  Left
+      Right          Cursor Right                 Right
+      L. Button      Left Alt & A Keys            Fire Button
+      R. Button      Right Alt & A Keys           Right Alt & A Keys
+
+
+                           INFO ABOUT THE CLUBS
+                           --------------------
+
+
+               Distances are given for average pitch and finish 
+               distances for each club, in yards, for both novice
+               (28 handicap) and scratch players. The distances
+               assume a perfect lie and no wind.
+
+
+                 _______________________________________________
+                |            |                |                |
+                |            |     NOVICE     |    SCRATCH     |
+                |____________|________________|________________|
+                |            |       |        |       |        |
+                |   CLUB     | PITCH | FINISH | PITCH | FINISH |
+                ------------------------------------------------
+                 1. Wood        199     243      227     270
+                 2. Wood        194     228      221     253
+                 3. Wood        187     215      213     239
+                 4. Wood        184     206      206     229
+                 5. Wood        177     196      200     218
+                 1. Iron        176     206      199     229
+                 2. Iron        168     195      190     216
+                 3. Iron        166     186      186     206
+                 4. Iron        158     175      179     194
+                 5. Iron        150     164      167     182
+                 6. Iron        146     155      164     172
+                 7. Iron        135     141      153     157
+                 8. Iron        123     128      137     142
+                 9. Iron        110     113      124     125
+                 Pitching Wedge  96     100      108     111
+                 Sand Wedge      76      76       84      84
+
+
+                     INFO ABOUT THE DIFFERENT COURSES
+                     --------------------------------
+
+
+        BUCKLAND HEATH:                 MOUNTSUMMER:
+
+
+        | HOLE | YDS | PAR | S.I. |     | HOLE | YDS | PAR | S.I. |
+        ---------------------------     ---------------------------
+            1    428    4     15            1    451    5     14
+            2    411    4     12            2    403    4      4
+            3    462    5     18            3    421    4      1
+            4    407    4     10            4    432    4     10
+            5    130    3     13            5    158    3     13
+            6    317    4      6            6    372    4     16
+            7    386    4     14            7    544    5      3
+            8    351    4     11            8    514    5      7
+            9    463    5     17            9    390    4     17
+           10    198    3      2           10    142    3     11
+           11    355    4      4           11    284    4     18
+           12    162    3      7           12    415    4      8
+           13    332    4      1           13    386    4      5
+           14    487    5      8           14    533    5     15
+           15    396    4      5           15    498    5      6
+           16    326    4      3           16    130    3      2
+           17    130    3      9           17    374    4      9
+           18    466    5     16           18    521    5     12
+
+
+        FENHAM VALLEY:                  BALLYBROOK:
+
+
+        | HOLE | YDS | PAR | S.I. |     | HOLE | YDS | PAR | S.I. |
+        ---------------------------     ---------------------------
+            1    455    5      6            1    413    4     15
+            2    364    4      9            2    154    3      8
+            3    152    3     10            3    418    4     13
+            4    439    4     14            4    476    4     10
+            5    356    4     15            5    492    5     16
+            6    140    3     18            6    401    4     12
+            7    468    5      4            7    369    4      1
+            8    496    5      7            8    186    3      3
+            9    130    3      5            9    411    4      2
+           10    301    4     17           10    401    4      5
+           11    492    5     12           11    464    5      4
+           12    184    3      2           12    352    4     14
+           13    379    4      8           13    357    4     17
+           14    474    5     11           14    168    3      6
+           15    152    3     16           15    414    4      7
+           16    354    4      3           16    475    5     11
+           17    136    3     13           17     93    3     18
+           18    484    5      1           18    506    5      9
+
+
+        ST. AUGUSTINE:                  FAIRDALE:
+
+
+        | HOLE | YDS | PAR | S.I. |     | HOLE | YDS | PAR | S.I. |
+        ---------------------------     ---------------------------
+            1    452    4      8            1    500    5      3
+            2    434    4      4            2    420    4      8
+            3    472    5      6            3    337    4      9
+            4    136    3     18            4    410    4     14
+            5    329    4     17            5    184    3      2
+            6    458    5     12            6    323    4     17
+            7    462    5     13            7    509    5      1
+            8    320    4     16            8    507    5      6
+            9    159    3      3            9    505    4     12
+           10    457    4      1           10    170    3     13
+           11    466    5     14           11    172    3      7
+           12    344    4     15           12    378    4     10
+           13    338    4     10           13    385    4     15
+           14    136    3     11           14    353    4      4
+           15    490    5      7           15    420    4      5
+           16    448    4      9           16    134    3     18
+           17    165    3      5           17    312    4     11
+           18    563    5      2           18    293    4     16
+
+
+ Reference manual typed in by Rebel / FairLight on the 20th of nov.
+
+ Greetings to: Gaston, Galactus, Sauron, Ice-Brigade, Rastan, Sensei,
+               The Baron, Zelnik, Animal, Coke, Bruse Li, Rygar,
+               Splatt, In Decent, Marshal, Action Man, Slayer & Ted!
+
+ Ps. MIF and AIK Sucks!!

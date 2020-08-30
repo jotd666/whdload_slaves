@@ -1,0 +1,65 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Gulp" (c) 1994 ICE - 3 disks / 1 CD-ROM.
+ This install supports:
+
+- Original ECS version
+- Original CD32 version
+
+REQUIREMENTS:
+- Slave requires WHDLoad V17+
+- game requires 0.5Mb chip mem and 1.7Mb other mem (+2.0Mb other memory for preload option)
+
+
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+ 
+History:
+
+Version 1.1-C (30.05.2020):
+
+- fixed install script issue introduced when fixing the previous install script issue :)
+
+Version 1.1-B (27.05.2020):
+
+- fixed minor readme error (issue #0004703)
+- fixed install script (issue #0004700)
+
+Version 1.1 (25.05.2020) done by JOTD:
+
+- password protection removed
+- increased memory requirement (else end sequence crashes)
+- fixed keyboard interrupt during end sequence that crashed the game when a keyboard
+  was pressed. That bug was present in the original non-whdload version (issue #0004692)
+
+Version 1.0 (18.05.2020) done by JOTD:
+
+- supports ECS & CD32 versions (which look exactly the same)
+- OS calls patched so no need for kickstart emulation
+- cache flushes inserted
+- can run with fast memory
+- keyboard interrupts preserved (quitkey on 68000)
+- manual included
+- source code included
+
+Note: use the joystick to enter codes in the CD32 version
+
+

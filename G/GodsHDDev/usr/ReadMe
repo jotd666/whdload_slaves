@@ -1,0 +1,88 @@
+
+	THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER
+	EXPRESS OR IMPLIED, STATUTORY OR OTHERWISE.
+	THE ENTIRE RISK AS TO USE, RESULTS AND PERFORMANCE OF THE PACKAGE IS
+	ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE TO BE DEFECTIVE, YOU
+	ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING, REPAIR OR OTHER
+	REMEDIATION.
+	UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY
+	DAMAGE CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE
+	OWNER OR A THIRD PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF
+	DAMAGE.
+
+
+	That install applies to "Gods" © 1990 Bitmap Brothers.
+
+
+	That install requires WHDLoad and DIC to be in the path. Both
+	can be found in the WHDLoad package.
+
+	You need 0.5 MB ChipMem and 1 MB OtherMem.
+	You can quit the game by pressing F10 (key can be changed with
+	Tooltype "QuitKey=").
+	
+	
+	Soundtracker playback fixed. Drive accesses / copy protection removed.
+    Cache problem fixed. Bug not running with Kick3.1 fixed. Byte write to 
+	custom.aud1vol fixed. Highscores saving redirected to harddisk.
+	Little trainer added, press HELP in the shop (but highscores wont be
+	saved once used).
+
+
+	if you have problems with this installation please report them via
+	the WHDLoad Bug-Report-Form.
+
+	for full WHDLoad package and other installs refer to:
+		http://www.whdload.de/
+	or	aminet:dev/misc/whdload#?
+	and	aminet:game/patch/
+
+
+	Wepl 1997/98
+
+    version 3.2 (08.05.2020):
+    - fixed crash in some configs due to constant in the middle of 
+      slave code (issue #0004598)
+    - removed possible slowdown when loading due to joypad detection
+      in some configs
+    - removed 1MB chip slave which is useless
+    
+    version 3.1 (03.05.2020):
+    - fixed crash when using cheat key (issue #0004599)
+    - providing 1MB fullchip slave (trying to fix issue #0004598)
+    
+	version 3.0 (01.05.2020) by JOTD:
+    - option to jump using second/blue button
+    - joypad controls: play for pause, rev+fwd for quit,
+      rev+fwd+yellow to quit to workbench
+    - changed chipmem usage to 512k (issue #0004535)
+    - trainer: infinite lives
+    - trainer (adds 10000 to money) limited to 300000 to avoid crashes (issue #0004123)
+    - trainer: F1 enables giant jump (high scores won't be saved after this)
+    - trainer: F2 freezes aliens (high scores won't be saved after this)
+    - adapted to whdload v17
+    - latest source code included
+    
+	version 2.3.1 (25.03.2006) by Wepl:
+	- install script fixed (thanks Apex for report)
+	- icons and more docs added
+
+	version 2.3 (14.01.2004) by Wepl:
+	- support for NTSC version added, thanks to Edwin McLouth for image
+
+	version 2.2 (08.11.2003) by JOTD/Wepl:
+	- self-modifying code fixed
+
+	version 2.1 (27.10.2003) by Wepl:
+	- some debug code removed
+
+	version 2.0 (24.10.2003) by Wepl:
+	- slave rewritten, uses fast memory, ssp moved to fast memory,
+	  various optimizations
+	- snoop bugs removed
+	- ButtonWait/S to view initial loading picture
+	- docs added
+
+    version 1.0 (1997/1998) by Wepl:
+    - first release
+

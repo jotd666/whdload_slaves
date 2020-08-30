@@ -1,0 +1,409 @@
+;****************************
+
+(set #sub-dir "data")			;sub directory containing data files
+(set #readme-file "ReadMe")		;name of readme file
+(set #man-file "Manual")		;name of manual file
+(set #hint-file "Hints")		;name of hint file
+(set #sol-file "Solution")		;name of solution file
+(set #highs-file "Highs")		;name of high scores file
+(set #last-file "Disk.2")		;last file the imager should create
+(set #prefix @app-name)			;name of slave, directory
+(set #icon-base #prefix)		;name for all icons
+
+(set #ico_suffix_00 "inf")		;Icon suffixes (not all of these must exist)
+(set #ico_suffix_01 "magicwb")
+(set #ico_suffix_02 "romicon")
+(set #ico_suffix_03 "newicon")
+(set #ico_suffix_04 "newexot")
+(set #ico_suffix_05 "coloricon")
+(set #ico_suffix_06 "colexot")
+(set #ico_suffix_07 "colfrank")
+(set #ico_suffix_08 "colchris")
+(set #ico_suffix_09 "colcode")
+(set #ico_suffix_10 "colcfou")
+(set #ico_suffix_11 "colakira")
+
+;                 "123456789012345678901234567"
+(set #ico_desc_00 "Normal")		;Icon descriptions (max 21 chars if you have > 9 entries, or 27 chars otherwise. These are renamed to "gamename.info" so no illegal characters like :/* etc)
+(set #ico_desc_01 "MagicWB Icon")
+(set #ico_desc_02 "RomIcon")
+(set #ico_desc_03 "NewIcon")
+(set #ico_desc_04 "NewIcon by Exotica")
+(set #ico_desc_05 "OS3.5 Icon")
+(set #ico_desc_06 "OS3.5 Icon by Exotica")
+(set #ico_desc_07 "OS3.5 Icon by Frank")
+(set #ico_desc_08 "OS3.5 Icon by Chris Vella")
+(set #ico_desc_09 "OS3.5 Icon by Codetapper")
+(set #ico_desc_10 "OS3.5 Icon by CFou")
+(set #ico_desc_11 "OS3.5 Icon by Akira")
+
+;****************************
+;----------------------------
+; checks if given program is installed, if not abort install
+; #program - to check
+
+(procedure P_ChkRun
+  (if (= 0 (run ("cd SYS:\nWhich %s >NIL:" #program)))
+    ("")
+    (abort
+      (cat
+	"You must install \"" #program "\" first!\n"
+	"It must be accessible via the path.\n"
+	"You can find it in the WHDLoad package."
+      )
+    )
+  )
+)
+
+;----------------------------
+; Create Image using DIC
+; #dest        - path to save image in
+; #CI_disknum  - number of the disk image to create
+; #CI_diskname - label of the disk
+; #CI_disklen  - length of disk image to create
+; #CI_skiptrk  - track to skip, -1 means no skip
+; #CI_drive    - drive to create image from
+
+(procedure P_CreateImage
+  (message
+    (cat
+	"\nInsert \"" #CI_diskname "\" into drive " #CI_drive "!\n\n"
+	"(make sure it's the right disk because it will not be checked)"
+    )
+  )
+  (if (= #CI_skiptrk "")
+    (set #option "")
+    (set #option (cat " SKIPTRACK=" #CI_skiptrk))
+  )
+  (if
+    (= 0
+      (run
+        (cat
+          "cd \"" #dest "\"\n"
+          "DIC " #CI_drive " FD=" #CI_disknum " LD=" #CI_disknum " SIZE="
+          #CI_disklen #option " PEDANTIC >CON:///1000//CLOSE"
+        )
+      )
+    )
+    (run ("FileNote \"%s.%ld\" \"%s\" Quiet" (tackon #dest "disk") #CI_disknum @app-name))
+    (abort "\"DIC\" has failed to create a diskimage")
+  )
+)
+
+;----------------------------
+; Wait for inserting disk
+; IN:  #AD_disk - name of disk
+; OUT: -
+
+(procedure P_disk
+  (askdisk
+    (dest #AD_disk)
+    (prompt ("\nInsert Disk \"%s\" in any drive!" #AD_disk))
+    (help @askdisk-help)
+  )
+)
+
+;----------------------------
+; copy file including icon if exist
+; #copy-file - name of file to copy
+
+(procedure P_CopyFile
+  (if (exists #copy-file) (
+    (copyfiles
+      (help @copyfiles-help)
+      (source #copy-file)
+      (dest #dest)
+    )
+    (if (exists ("%s.info" #copy-file)) (
+      (copyfiles
+        (help @copyfiles-help)
+        (source ("%s.info" #copy-file))
+        (dest #dest)
+      )
+      (tooltype
+        (dest (tackon #dest #copy-file))
+        (noposition)
+      )
+    ))
+  ))
+)
+
+;****************************
+
+(if (< @installer-version (+ (* 44 65536) 10))
+  (
+    (message
+      (cat
+        "Warning: your installer is outdated.\n"
+        "Some features of this installation won't be available, "
+        "such as icon show and drawer opening. "
+        "You have version " (/ @installer-version 65536) "." 
+        (BITAND @installer-version 65535) ", recommended is version 44.10. "
+        "The 'installer' 44.10 comes with OS 3.5 but is also contained in the NDK 3.9. "
+        "You may also use the InstallerNG by Jens Tröger."
+        "\n\n"
+        "The installers can be obtained from the net:\n"
+        "http://www.amiga.com/3.9/download/NDK3.9.lha\n"
+        "aminet:util/sys/InstallerNG.lha"
+      )
+    )
+    (set #newstuff 0)
+  )
+  (set #newstuff 1)
+)
+
+(if (exists #readme-file)
+  (if (= 0 (run ("SYS:Utilities/Multiview %s" #readme-file)))
+    ("")
+    (run ("SYS:Utilities/More %s" #readme-file))
+  )
+)
+
+(set #program "WHDLoad")
+(P_ChkRun)
+
+(set #version
+  (askchoice
+    (prompt "\nWhich version would you like to install?\n")
+    (default 0)
+    (choices "ECS original" "CD32 original")
+    (help @askchoice-help)
+  )
+)
+(set #suffix "")
+
+(select #version
+  (
+   ""
+  )
+  (
+    (set #suffix "CD32")	;name of slave, directory
+  )
+
+)
+
+
+
+(if (getenv "WHDLInstPath")
+  (set @default-dest (getenv "WHDLInstPath"))
+)
+(set #dest
+  (askdir
+    (prompt
+      (cat
+	"Where should \"" @app-name "\" be installed?\n"
+	"A drawer \"" #prefix "\" will be automatically created."
+      )
+    )
+    (help @askdir-help)
+    (default @default-dest)
+  )
+)
+(run ("setenv WHDLInstPath \"%s\"\ncopy ENV:WHDLInstPath ENVARC:" #dest))
+(set #dest (tackon #dest #prefix))
+(if (exists #dest) (
+  (set #choice
+    (askbool
+      (prompt
+        (cat
+          "\nDirectory \"" #dest "\" already exists.\n"
+          "Should it be deleted?"
+        )
+      )
+      (default 1)
+      (choices "Delete" "Skip")
+      (help @askbool-help)
+    )
+  )
+  (if (= #choice 1)
+    (delete #dest
+      (help @delete-help)
+      (all)
+    )
+  )
+))
+(makedir #dest
+  (help @makedir-help)
+  (infos)
+)
+
+;----------------------------
+
+(copyfiles
+  (help @copyfiles-help)
+  (source ("%s%s.Slave" #prefix #suffix))
+  (dest #dest)
+)
+(set #icon 0)
+(if (exists ("%s.%s" #icon-base #ico_suffix_11)) ((set #icon 11)(set #icnt (+ 1 #icnt))(set #icon_11 #ico_desc_11)) (set #icon_11 ""))
+(if (exists ("%s.%s" #icon-base #ico_suffix_10)) ((set #icon 10)(set #icnt (+ 1 #icnt))(set #icon_10 #ico_desc_10)) (set #icon_10 ""))
+(if (exists ("%s.%s" #icon-base #ico_suffix_09)) ((set #icon 9) (set #icnt (+ 1 #icnt))(set #icon_09 #ico_desc_09)) (set #icon_09 ""))
+(if (exists ("%s.%s" #icon-base #ico_suffix_08)) ((set #icon 8) (set #icnt (+ 1 #icnt))(set #icon_08 #ico_desc_08)) (set #icon_08 ""))
+(if (exists ("%s.%s" #icon-base #ico_suffix_07)) ((set #icon 7) (set #icnt (+ 1 #icnt))(set #icon_07 #ico_desc_07)) (set #icon_07 ""))
+(if (exists ("%s.%s" #icon-base #ico_suffix_06)) ((set #icon 6) (set #icnt (+ 1 #icnt))(set #icon_06 #ico_desc_06)) (set #icon_06 ""))
+(if (exists ("%s.%s" #icon-base #ico_suffix_05)) ((set #icon 5) (set #icnt (+ 1 #icnt))(set #icon_05 #ico_desc_05)) (set #icon_05 ""))
+(if (exists ("%s.%s" #icon-base #ico_suffix_04)) ((set #icon 4) (set #icnt (+ 1 #icnt))(set #icon_04 #ico_desc_04)) (set #icon_04 ""))
+(if (exists ("%s.%s" #icon-base #ico_suffix_03)) ((set #icon 3) (set #icnt (+ 1 #icnt))(set #icon_03 #ico_desc_03)) (set #icon_03 ""))
+(if (exists ("%s.%s" #icon-base #ico_suffix_02)) ((set #icon 2) (set #icnt (+ 1 #icnt))(set #icon_02 #ico_desc_02)) (set #icon_02 ""))
+(if (exists ("%s.%s" #icon-base #ico_suffix_01)) ((set #icon 1) (set #icnt (+ 1 #icnt))(set #icon_01 #ico_desc_01)) (set #icon_01 ""))
+(if (exists ("%s.%s" #icon-base #ico_suffix_00)) ((set #icon 0) (set #icnt (+ 1 #icnt))(set #icon_00 #ico_desc_00)) (set #icon_00 ""))
+(procedure P_Icon
+  (copyfiles
+    (help @copyfiles-help)
+    (source ("%s.%s" #icon-base #icon-suf))
+    (newname ("%s.info" #icon-name))
+    (dest #icon-dir)
+  )
+  (tooltype
+    (dest (tackon #icon-dir #icon-name))
+    (noposition)
+  )
+)
+(if (> #icnt 1) (
+  (if (= #newstuff 1) (
+    (set #icon-dir ("T:%s Icons" #icon-base))
+    (makedir #icon-dir
+      (help @makedir-help)
+    )
+    (if #icon_00 ((set #icon-suf #ico_suffix_00) (set #icon-name #ico_desc_00) (P_Icon)))
+    (if #icon_01 ((set #icon-suf #ico_suffix_01) (set #icon-name #ico_desc_01) (P_Icon)))
+    (if #icon_02 ((set #icon-suf #ico_suffix_02) (set #icon-name #ico_desc_02) (P_Icon)))
+    (if #icon_03 ((set #icon-suf #ico_suffix_03) (set #icon-name #ico_desc_03) (P_Icon)))
+    (if #icon_04 ((set #icon-suf #ico_suffix_04) (set #icon-name #ico_desc_04) (P_Icon)))
+    (if #icon_05 ((set #icon-suf #ico_suffix_05) (set #icon-name #ico_desc_05) (P_Icon)))
+    (if #icon_06 ((set #icon-suf #ico_suffix_06) (set #icon-name #ico_desc_06) (P_Icon)))
+    (if #icon_07 ((set #icon-suf #ico_suffix_07) (set #icon-name #ico_desc_07) (P_Icon)))
+    (if #icon_08 ((set #icon-suf #ico_suffix_08) (set #icon-name #ico_desc_08) (P_Icon)))
+    (if #icon_09 ((set #icon-suf #ico_suffix_09) (set #icon-name #ico_desc_09) (P_Icon)))
+    (if #icon_10 ((set #icon-suf #ico_suffix_10) (set #icon-name #ico_desc_10) (P_Icon)))
+    (if #icon_11 ((set #icon-suf #ico_suffix_11) (set #icon-name #ico_desc_11) (P_Icon)))
+    (openwbobject #icon-dir)
+  ))
+  (set #icon
+    (askchoice
+      (prompt "\nWhich icon would you like to install?\n")
+      (choices #icon_00 #icon_01 #icon_02 #icon_03 #icon_04 #icon_05 #icon_06 #icon_07 #icon_08 #icon_09 #icon_10 #icon_11)
+      (default #icon)
+      (help @askchoice-help)
+    )
+  )
+  (if (= #newstuff 1) (
+    (closewbobject #icon-dir)
+    (delete #icon-dir
+      (help @delete-help)
+      (all)
+    )
+  ))
+))
+(select #icon
+  (set #icon #ico_suffix_00)
+  (set #icon #ico_suffix_01)
+  (set #icon #ico_suffix_02)
+  (set #icon #ico_suffix_03)
+  (set #icon #ico_suffix_04)
+  (set #icon #ico_suffix_05)
+  (set #icon #ico_suffix_06)
+  (set #icon #ico_suffix_07)
+  (set #icon #ico_suffix_08)
+  (set #icon #ico_suffix_09)
+  (set #icon #ico_suffix_10)
+  (set #icon #ico_suffix_11)
+)
+(copyfiles
+  (help @copyfiles-help)
+  (source ("%s.%s" #icon-base #icon))
+  (newname ("%s.info" #prefix))
+  (dest #dest)
+)
+(if (= #icon "newiconzzzzz")
+  ("")
+  (
+    (tooltype
+      (dest (tackon #dest #prefix))
+      (settooltype "Slave" ("%s.Slave" #prefix))
+    )
+  )
+)
+(tooltype
+  (dest (tackon #dest #prefix))
+  (setdefaulttool "WHDLoad")
+  (setstack 10240)
+  (noposition)
+)
+(set #copy-file #readme-file)
+(P_CopyFile)
+(set #copy-file #man-file)
+(P_CopyFile)
+(set #copy-file #hint-file)
+(P_CopyFile)
+(set #copy-file #sol-file)
+(P_CopyFile)
+(set @default-dest #dest)
+(if (= #sub-dir "")
+  ("")
+  (
+    (set #dest (tackon #dest #sub-dir))
+    (makedir #dest
+      (help @makedir-help)
+    )
+  )
+)
+(set #copy-file #highs-file)
+(P_CopyFile)
+
+;----------------------------
+
+; uncomment to test installation without copying data
+;(set #version 2)
+
+(if					;Original ECS version (files)
+  (= #version 0)
+  (
+    (set #AD_disk "Gulp1")
+    (P_disk)
+    (copyfiles
+      (help @copyfiles-help)
+      (source ("%s:" #AD_disk))
+      (dest #dest)
+      (pattern "~(s)")
+    )
+    (set #AD_disk "Gulp2")
+    (P_disk)
+    (copyfiles
+      (help @copyfiles-help)
+      (source ("%s:" #AD_disk))
+      (dest #dest)
+      (pattern "~(s)")
+    )
+    (set #AD_disk "Gulp3")
+    (P_disk)
+    (copyfiles
+      (help @copyfiles-help)
+      (source ("%s:" #AD_disk))
+      (dest #dest)
+      (pattern "~(s)")
+    )
+  )
+)
+(if					;Original CD32 version 
+  (= #version 1)
+  (
+    (set #AD_disk "GULP_CD")
+    (P_disk)
+    (copyfiles
+      (help @copyfiles-help)
+      (source ("%s:" #AD_disk))
+      (dest #dest)
+      (pattern "~(s)")
+    )
+
+
+  )
+)
+
+;----------------------------
+
+(if (= #newstuff 1)
+  (openwbobject @default-dest)
+)
+(exit)

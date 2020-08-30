@@ -1,0 +1,34 @@
+This install applies to "The Amazing Spiderman" (c) 1990 Empire
+
+Requirements:
+
+ You'll need 0.5 mb chip and 1 mb fast to run this game
+ 
+ The game requires a installed A500 Kickstart 1.3 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ a appropriate requester.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick346.lha" on aminet.
+
+History:
+
+ version 2.0 (25.04.2018) done by JOTD:
+ - another version supported (multi-language & now english-only) (issue #0002617)
+ - source code included
+ 
+ version 1.1 done by JOTD:
+ - Code protection now completely removed (doesn't even appear anymore)
+
+ version 1.0 done by JOTD:
+ - initial release
+ - Runs fully from HD using WHDLoad/KickEmu
+ - Convenient install script
+ - Quit key (numerical '*', or configurable with QUITKEY)
+ - Docfile included
+ - Cheat included
+ - Original & Exoticon included
+ 

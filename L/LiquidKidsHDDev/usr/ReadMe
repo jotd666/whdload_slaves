@@ -1,0 +1,84 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Liquid Kids" © 1991 Ocean (unreleased).
+
+ This install requires WHDLoad, DIC and RawDIC to be in the path.
+ The programs can be found in the WHDLoad package.
+ To install from a different drive than DF0: select installation mode Expert.
+
+ The installed program requires 0.5 MB ChipMem and 0.5 MB OtherMem.
+ It can be quit by pressing F10 (key can be changed with Tooltype "QuitKey=").
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, EXPCHIP, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+        http://www.whdload.de/
+ or     aminet:dev/misc/whdload#?
+ and    aminet:game/patch/
+
+ version 1.2 (11.11.2019) done by JOTD
+ - CUSTOM2=1 enables jumping using second button instead of up
+ - Added joypad controls: play: pause/unpause, fwd+rev+play: quit whdload
+ - you can force a language using CUSTOM4 tooltype (instead of CUSTOM2)
+   CUSTOM4=1 : for english
+   CUSTOM4=2 : for french
+   CUSTOM4=3 : for german
+   CUSTOM4=4 : for polish
+
+ version 1.1 (29.04.2006) done by CFou!
+ - Fixed to run with full cpu caches on 68060
+ - Another missing blitter delays inserted in game and outro
+
+ version 1.0 (12.11.2005) done by CFou!
+ - initial release
+ - Possiblility to install disk image or to extract files
+ - Rawdic imager used only for file extraction
+ - CUSTOM1=1 tooltype used to activate unlimited lives 
+   CUSTOM1=2 to activate level skip key 'F8' during the game
+   CUSTOM1=4 to see outro pressing 'F8' in game
+   (you can cumulate different options by example: CUSTOM1=3 for 1+2 options)
+ - Some engligh messages fixed (Thanx to Codetapper)
+ - French, german & polish transations added (Thanks to CannivalPinHead & Janusz)
+   if lowlevel.library is found in your OS, language is automatically set.
+   (only for french, german and english)
+   but you can force a language using CUSTOM2 tooltype
+   CUSTOM2=1 : for english
+   CUSTOM2=2 : for french
+   CUSTOM2=3 : for german
+   CUSTOM2=4 : for polish
+ - Keyboard interrupt added to the intro and main title
+ - Keyboard interrupt fixed during the game
+ - 'F7' key used to kill yourself
+ - Load/Save game redirected on HD (file 'highs')
+   (save option only if trainer is not activated)
+    press in game:
+     1 - to Switch off/on Music
+     2 - to Switch off/on SFX
+     P - to switch off/on game pause
+ - Many copper list problems fixed
+ - Decrunch routines relocated in fast memory (ICE!)
+ - Many blitter delays inserted
+ - Source code included
+ - Many colored icons added
+
+PS: Game was been tested with full 'caches' Tooltype on Blizzard 030&060 + 32 Mo
+
+Thanks:	to Clement MARY (Lettenaire) to lend to me his 68060 board for test
+	to Wolf for supplying this unreleased game
+        to Codetapper for this slave's beta source and help
+        to CannibalPinHead for german translation
+        to Janusz (Shoonay) for polish translation
+        to Galahad who leaves me finish it!

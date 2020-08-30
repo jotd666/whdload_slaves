@@ -1,0 +1,2329 @@
+
+			Adventure Construction Set
+
+
+Getting Started:  
+
+     Start your Amiga with your Kickstart disk as you normally would.  You
+need at least one blank, initialized disk to use as an adventure disk with
+ACS.  If you don't have an initialized disk available, insert a Workbench
+disk and create one.  (See your Amiga User Guide for information on
+initializing disks.)
+
+     Once you have one or more initialized disks available, reset your
+Amiga with Control-Left-Amiga-Right-Amiga, and when the "Insert Workbench
+Disk" screen appears, insert your Adventure Construction Set „program disk.
+After a few moments the ACS title screen appears and the demo begins. 
+Click either of the mouse buttons, a joystick button, or press any key to
+leave the demo and start ACS.
+
+Main Menu commands:
+
+     Main menu commands are issued by using the function keys at the top of
+the Amiga Keyboard.  The six main menu function keys and their resulting
+actions are:
+
+     F1:  Creates an adventure on a blank, initialized disk.
+     F2:  Makes a backup copy of an existing adventure disk.
+     F3:  Enters adventure construction mode.
+     F4:  Lets you play an existing adventure on an adventure disk.
+     F5:  Toggles between a mouse in port 1 (the mouse will only work
+          in port 1) and a joystick in port 2, or joysticks in both 
+          ports.  The default is the mouse and joystick setting.
+     F6:  Toggles between one or two disk drives.  The default
+          setting is for two drives; press F6 to change to one drive.
+
+Additional Playing Tips:
+
+     1.  The manual tells how to drop objects your character is carrying. 
+Please note that you can drop items directly on top of your character.  If
+the item is not magic and is not set to disappear when dropped, it will
+appear when you move off the square you dropped it in.  If it's a magical
+item which is activated when dropped, you will be the beneficiary (or
+victim) of the magic.
+
+     2.  To pause a game during your turn, click the Wait option with
+either mouse button.  Click again to restart the game.
+
+     3.  Never eject a disk while a disk drive's red, "in-use" light is on.
+doing so can result in damaged disks.  Change the disks in the drives only
+when prompted or when the "in-use" light has gone out.
+
+    4.  The Amiga version of ACS contains an additional adventure entitle
+"Galactic Agent" that isn't mentioned in the ACS manual.  "Galactic Agent"
+cannot be created with the Make an Adventure option from the main menu. 
+Use Copy an Adventure to copy "Galactic Agent" onto your own adventure
+disk.  The Copy an Adventure feature requires an already initialized disk
+as does the Make an Adventure option.
+     
+    5.  At the beginning of Play an Adventure mode, you are asked to choose
+the device that will control your characters by pressing a button on the
+device you want to use.  This means that you can use a mouse for editing
+and a joystick for play without having to unplug either. To move your
+character with the mouse during play mode, place the X-cursor on your
+character's destination.  Click either mouse button to make the character
+move.  Each click of the mouse button moves the character once.  (See the
+ACS manual for information on the movement bar.)
+
+Additional Construction Tips:
+
+     1.  When entering text messages, use the cursor keys to move the
+cursor.  Press Return to start the next line.  Use the Delete or Backspace
+keys to erase characters to the left of the cursor.  Also, function key F1
+erases all the text so you can work with a blank screen.
+
+     2.  The "Edit Graphics" menu described in the manual has been modified
+to take advantage of the Amiga's advanced graphics.  There are a total of
+32 colors available for use at one time.  To draw, select a color then hold
+down the left button as you draw with the mouse in the editing window.  You
+can change the hue of any color by clicking on a color and selecting the
+Change Colors option.  This brings up a palette control that allows you to
+increase or decrease the mixture of hue, color, and brightness, thus
+changing the overall appearance of the selected color.  Click the
+greater-than (>) or less-than (<) sign to increase or decrease the color
+values.
+
+     Click an image in the upper portion of the screen to magnify and edit
+the image.  You can page through all of the images by selecting the Edit
+More Pictures option.  When this option is used, another set of images
+replaces the first.  Pictures are edited on a pixel-by-pixel basis in the
+magnified view window.  Click on a pixel to change it to the currently
+selected color.  To erase a pixel, select the background color and click on
+the pixel.  Additional new options in Edit Graphics mode include:
+
+    Erase   - Erases all of the currently selected picture with the
+	currently selected color.
+    Save    - Saves the current picture in a clipboard area that's shown at
+	the bottom of the editing screen.
+    Restore - Replaces the currently selected picture with the contents of
+	the clipboard.
+    Swap - Switches the contents of the clipboard with the currently
+	selected picture.
+
+     It's often a good idea to Save a picture before editing so that you
+can use Restore to undo any adverse changes.
+
+     3.  Here are some restrictions you should keep in mind when changing
+the ACS 32-color palette:
+
+     * The bottom row of colors are used by ACS as the system colors;
+       i.e., the colors used in messages and cursors.  You can change
+       these colors if you want, but the resulting changes may make 
+       some of the displays difficult to read or view.
+
+     * The upper-left color in the palette is the background color
+       used in all the ACS displays.  Changing the background color
+       could also result in hard to read messages, or hard to see
+       cursors.  Also, some characters contain areas where the background
+       color shows through.  When you draw characters and objects with
+       these "hollow" areas, be sure to use the actual background color. 
+       For instance, if you draw hollow areas in a character with a
+       standard color that matches the background, rather than the actual
+       background color, the hollow in your characters won't look hollow
+       when you change the hue of the background color.
+
+     4.  You cannot use Deluxe Paint pictures in ACS.
+
+     5.  If you've never made an adventure before, you'll find it easiest
+to use "Let ACS Finish Your Adventure" on the Fantasy construction set for
+your first attempt.  (Follow the instructions in the manual).  ACS will
+build an adventure where all rooms have at least one door, all regions have
+a way in and out, and all rooms within a regions have room names that
+belong together.
+
+     Use the "Non-Altering Play" option from the Adventure editor menu to
+test the new adventure.  As you play the adventure, not the names you'd
+like to change, places you'd like to add text, objects you'd like to add or
+delete, creatures you'd like to modify, etc.  Use the other ACS
+construction options to make those changes.  (Refer to the manual for
+help.)  To leave "Non-Altering Play" mode and return to the adventure
+editor, select the "Save" option during play then follow the prompts.
+
+     6.  If you're an adventure user and want to start constructing an
+adventure from scratch, use the "Make an Adventure Disk" option to make an
+adventure disk containing one of the three basic construction sets.  Then
+select "Construct an Adventure."  Next, select "Do More Detailed Work"
+twice.  Finally, select "Erase Everything But Graphics."
+
+            		  THE MANUAL
+
+Introduction: Your Own Theater..................................3
+
+I. Playing
+
+How to Play the Adventures on the ACS Disk......................3
+	Making an Adventure Disk................................3
+	Creating a Character....................................4
+	Reading the On-Screen Status Reports....................4
+	Moving Your Character...................................4
+	Exploring the World of an Adventure.....................5
+	Things You Can Do During Your Turn......................5
+
+Summary of Player Options.......................................6
+
+Summary of Traits and Skills....................................7
+	The Traits..............................................7
+	The Skills..............................................8
+
+Exploring Aventuria: A Tutorial.................................9
+	Using the "How to Play" Adventure.......................9
+	What You Have Learned..................................11
+	Playing the Other Adventures in Aventuria..............13
+
+Rivers of Light................................................14
+
+II. Constructing
+
+The ACS Construction Options...................................15
+
+Asking ACS to Build Adventures For You.........................16
+
+				1
+
+Editing and Constructing Adventures............................18
+
+Step-by-Step Adventure Editing Guides..........................19
+	How to Add a Door to the World Map.....................19
+	How to Add and Edit World Map Creatures................19
+	How to Add Rooms and Regions...........................20
+	How to Add to and Change Room Contents.................20
+	How to Add to the Master Lists.........................21
+	How to Edit Pictures and Create New Ones...............22
+
+Magic Spells...................................................22
+
+Some Special Things and Their Uses.............................24
+
+General Construction Tips and Techniques.......................25
+
+III. Reference
+
+Map Reference Guide............................................26
+
+Room and Region Reference Guide................................28
+
+Creature Reference Guide.......................................29
+
+Thing Reference Guide..........................................34
+
+Graphics Reference Guide.......................................41
+
+Appendix.......................................................42
+
+Index..........................................................43
+
+				2
+
+How to Use Adventure Construction Set
+
+Your Own Theater...
+
+Owning Adventure Construction Set is like having a theater and a troupe of
+actors completely at your disposal.  Hundreds of extremely versatile actors
+wait for their assignments.  They can play just about nay kind of person,
+animal, monster, magical being, robot or vehicle you can imagine.
+
+     Your set-building crew can construct settings containing up to 240
+different "rooms" (or as they might say in the movies business,
+"locations").  And you can connect these locations to each other in quite 
+unusual ways, creating time portals, "beam me down" transporters, and
+circles of connecting rooms you can only go through in one direction, and
+much, much more.
+
+     Last but not least, you have a very resourceful props department who
+can equip any setting and story with hundreds of objects and special
+effects.  Magic items, treasures, furniture, weapons, sound effects and
+music, ways to make objects appear and disappear, ways to produce messages,
+ways to summon and banish creatures - they're all there.  And if you still
+can't find what you want, your props department has the tools you need to
+design and construct the items yourself.
+
+How to Play the Adventure on the ACS Disk...
+
+This section tells how to make an adventure disk, how to create a character
+and how to move your character on the map.
+
+1.  Making an Adventure Disk - You will need your ACS disk and a blank disk
+(or one which contains information you no longer need).  Boot your ACS disk
+and select "Make an Adventure Disk."  Then use your joystick to move the
+cursor down and into the name of the adventure your want (either "Land of
+Aventuria" or "Rivers of Light") and press the button.
+
+     "The Land of Aventuria" contains a "How to Play" tutorial adventure
+play the 6 other mini-adventures described on page 13.  "Rivers of Light,"
+described on page 14, is a large complex adventure designed to delight even
+the most experienced adventurer.  (It was built entirely with the same ACs
+system you now own, by the way.)
+
+     Creating an adventure disk may require several disk swaps.  Follow the
+instructions as they appear.  When the process is complete, use the
+joystick to move the cursor up to Exit, and press the button as prompted.
+
+				3
+
+2.  Creating a Character - Select "Play an Adventure" then press the button
+as prompted.  Select "Create an New Player" when it appears (by pressing
+the button while that option is highlighted), and continue to follow the
+prompts.  When a character picture appears, move the stick right and left
+to look at different picture choices, and press the button to select the
+one you want.  Then type in a name (up to 15 characters long) and press the
+button once more.
+
+     Up to 4 characters can play at once.  And since players take turns
+moving, all four can be controlled from the same joystick.  For information
+about adding more than one character to an adventure see Add Someone
+further on.
+
+3.  Reading the On-Screen Status Reports - Once you've selected a
+character, the display will change.  You'll find your character standing
+somewhere in the adventure you choose.  If you chose "Land of Aventuria"
+your character will be standing just above a castle in a valley between two
+mountain ranges.  The castle marks the entrance into a simple adventure
+called "How to Play."
+
+     The text in the wide bar of color across the bottom of the screen will
+change continually as you play.  The top line in the bar contains the name
+of the human-controlled creature whose turn it is and the name of the area
+it is standing in.  Below that is a message which tells how to proceed. 
+And on either side are rising bars of color which give information about
+the individual's status.
+
+4.  Moving Your Character - To move your character, move the joystick which
+controls it in the direction you want the character to go.  The bar on the
+left side of the screen will shorten with each move.  When the bar is gone,
+that character's turn is over.  (The bar will also shorten gradually even
+if you don't move.  Time passes as you play, and you aren't given forever
+to decide what to do.)
+
+     If you try to move onto a square which contains impassable terrain
+(mountains, for instance) or an obstacle, your character won't move and
+your movement bar will not change.  If you try to move onto an object which
+you can pick up, you'll be told the name of the object you are adding to
+your list of possessions, and you'll be prompted to press the button to
+continue.  If you try to move into a creature and you have a melee weapon
+(like a knife, a sword or a club), a battle will be initiated.  The
+computer will give you blow-by-blow account of the battle, prompting you to
+press the button when necessary.
+
+     If there's only one character in the game and there are no
+computer-controlled creatures on the screen, that character may move again
+when the movement bar reappears.  If others are playing or if there are
+creatures in the room, each will get a turn before the first character
+moves again.  
+
+				4
+
+(Note:  If different players are simultaneously exploring different
+regions, each will be given several turns each time his or her turn comes
+around.)
+
+5.  Exploring the World of an Adventure - As you move, you'll see more map
+scroll into view.  The main map of an adventure can cover an area 40
+squares by 40 squares, but only a 10 square by 15 square area can be seen
+at once.
+
+     Scattered about on the main map are "doors" into regions within the
+map, like the castle that leads to "How to Play" in the "Land of
+Aventuria."  The "Land of Aventuria" contains 7 such regions, one for each
+of the 7 mini-adventures. For a simplified picture of its map see page 12.
+
+    A region can itself contain up to 16 different rooms.  When you move
+into rooms, new area does not scroll into view.  Instead, when you move
+onto a door that leads to another room (or another regions or even back to
+the main map), the picture of the new location completely replaces the 
+picture of the old one.
+
+6.  Things You Can Do During Your Turn - If you press your button when it's
+your turn, a menu containing additional options will appear in the message
+bar.  To select one of the options, use your joystick to move the highlight
+to it, then press the button.
+
+     The next paragraphs describe how to use your options and how to
+interpret the information available to you as you play.  If you're new to
+adventuring, don't feel like you have to master all this information at
+once.  The mini-adventures in the "Land of Aventuria" were designed to let
+you play your way into an understanding of how adventures work.  Start
+playing them whenever you like, then use this manual as a reference when
+you'd like more information.  (For a tutorial walk-through of the "How to
+Play" mini-adventure, see page 9.)
+
+				5
+
+Summary of Player Options
+
+This section describes actions a player/character can take during a turn. 
+To produce the menu containing these options, press the button. To select
+an option, move the highlight to it with the joystick, then press the
+button again and follow the prompts, if any, as they appear.
+
+Move - Select this to remove the menu so you can move your character.
+
+Rest - Select this to attempt to restore some Life Force to a wounded
+character.
+
+Fire - Select this to use a missile weapon (if you're carrying one) like a
+bow, rifle, grenade, etc.
+
+Use Object - Select this to use a magic object you are carrying.  Magic
+objects always work, by the way, but some magic items must be dropped
+instead of used to be activated.
+
+Drop Object - Select this when you want to drop a possession to see if it's
+magic or to put it on a particular square you're adjacent to, or when you
+simply want to stop carrying something.  If you use this option on the main
+map, whatever you drop will be lost forever from that adventure.   (Note: 
+sometimes an effort to pick up an object will produce a "sorry, but you
+can't carry more of those" message.  If you need to pick the item up in
+order to move, drop the one you're carrying first.)
+
+Use Power - Select this when you want to cast a spell you possess.  The
+greater your character's Power, the greater the chance that spells will
+work.  Note:  Be careful with spells which banish creatures.  A banished
+creature takes all its possessions with it, so don't banish the creature
+who just stole the key you need to get into the next room.
+
+New Weapon - Select this so you can ready a weapon you're carrying for use.
+(Note:  Picking up a weapon automatically readies it.)
+
+New Armor - Select this to put on or ready a piece of armor you are
+carrying.
+
+Profile - Select this to look at your character's rating in the catagories
+described in the next section and to see your character's list of
+possessions.
+
+Add Someone - Select this to add another character to the adventure.  (Up
+to 4 can play at once).  The character will come onto the map at the same
+place the first character did, regardless of when the new character begins
+playing.  If you choose to add a character from another ACS adventure,
+you'll be prompted through the necessary steps. The character will come
+with its traits and skills intact, but it will keep none of its
+possessions.
+
+Retire - Select this to save your character for later use in an adventure
+or to remove a character from an adventure altogether.
+
+Save Game - Select this to save an adventure in progress but continue
+playing.
+
+IMPORTANT! If your character should happen to fall victim to a powerful
+monster or a deadly trap, all is not lost.  You will be give the
+opportunity to resume the game at the point where you last "Save Game." 
+"Save Game" is automatically invoked when you enter or leave a region.
+
+				6
+
+Summary of Traits and Skills
+
+Each individual begins each adventure with values assigned to certain basic
+traits and skills.  Those numbers determine how the characters and
+creatures move and fight, how durable they are in battle, and how powerful
+they are with magic.
+
+	In the course of an adventure the numbers will change to reflect
+the outcome of battles, the casting of spells, successful experience, etc. 
+To find out what the ratings are for your character, press the button and
+select "Profile" when it's your turn.  The descriptions below tell what
+each of the entries in your profile signifies.  (Note:  A mark like this
+"_|_" next to an item signifies a higher than average rating for that item.
+ A similar mark which points down instead of up signifies a lower than
+average one.)
+
+The Traits 
+
+The maximum possible number for each trait is shown in parenthesis
+following the trait description.  Normal starting range is 10 to 11 for all
+traits except Speed.  Normal starting range for speed is 6 to 7.
+
+Speed - How far an individual can move each turn.  Speed may be permanently
+increased and decreased by magic spells.  An individual's movement range
+can be decreased by trying to carry too much weight and by being adjacent
+to an individual who is aggressive and not friendly.  Movement range is
+indicated by the rising bar on the left side of the screen.  (Maximum of
+15.)
+
+Life Force and Constitution - Life Force (shown by the rising bar on the
+right side of the screen) is an individual's physical durability.  Blows
+received from an enemy in battle subtract from an individual's Life Force
+as does being the victim of certain spells.  Being the "victim" of other
+spells can add to Life force.  When Life force goes to 0, an individual
+dies.  (Maximum of 63 for Life Force and 31 for Constitution.)
+
+	Constitution is an individual's natural capacity for Life Force. 
+For new characters, initial Life force is always the same as Constitution. 
+Wounded individuals may restore lost Life Force up to the limit of their
+Constitution by using the "Rest" option.  If they do not rest, their lost
+Life Force will return, but it will take it 6 times as long to do so. 
+Characters whose Life Force is greater than their Constitution will fight
+better.
+
+Power and Wisdom - Blows received from an enemy in battle also reduces an
+individual's Power.  So does using magic spells and objects, and being the
+victim of certain spells you may encounter.  Other spells may increase
+Power.  The higher an individual's Power rating, the greater the chance
+that spells he casts will succeed.  Individuals with higher Power ratings
+also fight better than those with lower ones, and they are more resistant
+to battle damage.
+
+	Power is not stable.  On each turn, an individual's Power will
+increase or decrease by a small amount in the direction of that
+individual's Wisdom rating.  Thus Wisdom is an individual's natural spell
+casting ability, toward which his Power will always tend.  Wisdom also
+helps an individual make better deals when selling items to a store. 
+(Maximum of 127 for Power and 31 for Wisdom.)
+
+				7
+
+Strength - Swords, treasures, armor, gold, etc. all have weight.  An
+individual's strength determines how much weight he can carry without being
+slowed down.  If you notice a decline in your movement bar, yet have not
+been the victim of a "reduce speed" spell and are not standing next to any
+aggressive "unfriendlies," chances are that you're trying to carry too much
+stuff.  You need to drop some things and find a magic bag or horse or some
+other means of carrying more weight.
+
+     If you are wounded, your ability to carry things declines.  It returns
+as you heal.  (Maximum of 31.)
+
+Size - Larger individual's make more powerful fighters.  Smaller
+individuals dodge and parry better.  Size cannot be changed, so take note
+of what it tells you about your character's limits and plan your strategy
+accordingly.  (Maximum of 31.)
+
+Dexterity - When the battles start, dexterity comes in very hand.  Like
+size, high dexterity increases the force of blows that land.  Further, it
+increases the likelihood of landing an unusually powerful blow.  It also
+helps to determine how many blows an individual can get in and how many
+shots he, she or it can get off.  (Maximum of 31.)
+
+The Skills
+
+In calculating the effects of a battle, the program considers the weapons
+and the armor being used and the Skills, Power and Life Force of the
+combatants.  (Some weapons and armor a„r„e„ better than others.  If you'd
+swear you were doing better before you started using that shield or sword,
+maybe you should leave it behind for some other poor soul to find.)
+
+     To determine the likelihood that you'll hit the mark with a long-range
+weapon like a bow.  ACS looks at your missile skill.  To determine the
+probability that you were able to get out of the way of a shot from such a
+weapon, it looks at dodge skill.
+
+     For gauging the accuracy of your blows in close-range fights, ACS
+looks at your melee skill.  To determine the likelihood that you were able
+to meet an opposing blow with your own close-range weapon, it looks at
+parry skill (provided you had your weapon readied of course.)
+
+Armor Skill - lets you overcome the disadvantages of armor (because it
+tends to make you clumsy, armor reduces the accuracy of your blows) without
+giving up the advantages (it absorbs some percentage of blows from the
+enemy).
+
+    Each of these skills can improve each time you use it successfully -
+that is, dodge a blow successfully and your dodge skill may increase, hit
+the target and your missile skill may go up, etc.  The higher a skill
+rating is, the harder it is to improve that rating still further.  The
+maximum for any skill rating is 127.  Normal starting range is 25 to 35 for
+all except Missile Skill and Armor Skill, 10 to 20 for Missile Skill, and 0
+for Armor skill.
+
+Magical Defense - Is a special kind of skill.  At its most powerful, it
+stops completely all blows or missiles from non-magical weapons and reduces
+by half the force of all blows or missiles from magical ones.  It is, as
+you might imagine, a very valuable ability to possess.
+
+				8
+
+Exploring Aventuria:  A Tutorial
+
+This section offers a tutorial walk-through of the "How to Play"
+mini-adventure, plus brief guide-posts to the other mini-adventures in "The
+Land of Aventuria."  (Remember, before you can play these adventures, you
+must use the "Make an Adventure Disk" option to make a disk containing the
+"Land of Aventuria."
+
+Using the "How to Play" Adventure - In which you can learn how to use the
+"help" squares, how to pickup objects, how to fight and how to cast magic
+spells.
+
+1.  Help Squares - If you create a character and then move into the first
+castle you see on the main map of Aventuria, you'll find your character
+standing in a room which has one square marked with a large H, and three
+doors.  To find out where the three doors lead, move onto the square marked
+with the H.
+
+	Help squares like this appear throughout the Land of Aventuria. 
+Use them for helpful tips and information as you play.  To continue with
+the "How to Play" tutorial, go through the door at the top.
+
+2.  Picking Things Up - In the next room, you'll see a sword lying on the
+floor.  To pick up the weapon, try to move on top of it as the help square
+advises.
+
+3.  Using Your Other Options - If you press the joystick button when it's
+your turn to move, a menu containing additional options will appear in the
+message bar.  To select one of the options, use your joystick to move the
+highlight to it, then press the button.
+
+				9
+
+     Try the Drop Object option in the middle of the first column of
+options.  Use the cursor as the screen instructs to drop the Sword on a
+square next to your character.  Then move toward it to pick it back up. 
+You'll do a lot of dropping and picking things up as you play.  It's how
+you'll get rid of things that prove too heavy, how you move things blocking
+your way and how you'll acquire the wealth, goods and tools you'll need to
+reach your goal.
+
+4.  Dealing with Life-Threatening Enemies: an Example - If you move your
+character through the door, you'll soon find yourself in a new room,
+outside of which stands a vicious dragon poised to spring.
+
+    To attack with the sword, move outside the room and into the dragon,
+then press the button when prompted to do so.  Keep at this when it's your
+turn and you should win, thanks to the fact that your game designers made
+your opponent look stronger than he is.  And still, he's strong enough to
+do some damage if he gets you with his fangs.
+
+     When the dragon dies, its picture will disappear and a picture of a
+lamp will appear in its place.  That's because the dragon was carrying the
+lamp.  If you had died instead, your picture would have been replaced by
+the picture of the sword you are carrying.  Whenever a character or a
+creature dies, it leaves behind whatever it was carrying (except when it
+dies on the main map, or when the adventure constructor designed the
+objects to disappear upon the death of the owner).
+
+     Be sure to pick up the lamp before you leave the room.  Who knows? 
+Maybe it's magic.
+
+5.  Your Life Force Bar - Once you've been through a battle, it's time to
+begin using some more of the information always available to you on your
+turn.  The Life Force Bar (on the far right) indicates how durable you are
+in battle.  When you fight, enemy blows which land on you subtract from
+your Power and Life Force totals, and blows you land on your enemy subtract
+from his.  When either side's Life Force reaches 0, the battle's over and
+the loser is dead.
+
+     You can restore lost Life Force in two different ways;  by using the
+"Rest" option, or by finding some place or item which invokes an "increase
+your force" spell.  In the Land of Aventuria, the first aid square marked
+by a cross invokes such a spell when you bump into it.  As you use these
+different methods, watch your Life Force Bar to see the effect of your
+action.  (Note:  Before your next battle, charge your Life Force way up
+before you fight.  It'll make you a better fighter.)
+
+				10
+
+6.  Your Power Bar - The Power Bar (just to the left of your Life Force
+Bar) shows how much magical energy your character has.  You might thing of
+Power as endurance or fortitude, as "the Force," as spiritual
+enlightenment, as the energy in your personal science fiction power pack,
+etc., depending on what best fits the adventure you are playing.
+
+     You need Power to protect yourself in battle and to cast spells you
+might find as you play.  The lamp the dragon was carrying contains just
+such a spell - in this case a "summon creature" spell which will bring a
+mighty genie to the room.
+
+    The likelihood that a spell will succeed when you cast it is determined
+by how much Power the spell uses up and how much Power you have.  The more
+Power you have, the greater your chances of success.
+
+     In "How To Play," moving into the next room temporarily boosts your
+Power so you can cast the "Summon Genie" spell.  Try it, then stay in the
+room until the genie appears and gives you a valuable gift.
+
+7.  The Profile Option - If you press the button and then select "Profile,"
+a new screen will appear  filled with a listing of the various traits and
+objects possessed by your character.
+
+    Don't let the display overwhelm you, and don't try to master it all at
+once.  You already know about some of what is listed there.  (Speed
+determines the height of the Movement Bar on the left of the screen; Life
+Force determines the height of the Life Force Bar and Power the height of
+the Power Bar.)  And the rest will become more meaningful as you gain
+adventuring experience.
+
+     For a description of all the profile entries, study the section called
+Summary of Traits and Skills (page 7) as you play.  To continue with the
+mini-adventures in the "Land of Aventuria," go through the door after
+receiving the gift from the genie.  You'll find yourself standing in the
+first room of "Agent 00111," about to get some practice in firing
+long-range weapons.
+
+What You Have Learned - Before going on, you might want to stop to reflect
+on all you've learned so far from this simple adventure.
+
+     * You know how to move around now and how to pick up and drop
+       things, and you know the significance of the three bars that
+       appear on the screen whenever it's your turn.
+
+     * You know how to fight and how to cast spells - though you will
+       learn from more challenging adventures, the weapons don't
+       always work and neither do the spells.
+
+     * You know that some creatures are friendly and some are not - a
+       complexity to consider when you're trying to decide whether to
+       attack when a new creature appears.
+
+     * You know that passing through doors can produce surprising
+       results - increases power, destruction of objects you are
+       carrying, etc.
+
+These are principles you'll encounter over and over while you play and
+create with your Adventure Construction Set program.  As you play the
+adventures described further on, you'll learn new variations on these, plus
+a whole host of new things to consider besides.
+
+				11
+
+Legend for map of Aventuria
+
+A  How to Play/Agent 00111
+B  Sam Club, Private I
+C  Alice in Wonderland
+D  Across the Delaware!
+E  Deep, Dank Dungeon
+F  In the Nazi Castle
+G  Save the Galaxy!
+
+bridge  =========
+
+               ^
+forest        |_|
+
+                 /\
+mountains      /\  /\
+
+water         |||||||||
+
+				12
+
+Playing the Other Adventures in the "Land of Aventuria" - This section
+briefly describes all the adventures in the "Land of Aventuria."
+
+          NOTICE TO ALL ADVENTURERS WHO GO DOWN THESE PATHS!
+
+There are Wandering Monsters on the main map of Aventuria.  Some are
+Friendly.  Some are not.  If you are pulled into the lair of any of these
+during your journey, study their names for clues to their disposition.  But
+don't believe everything you read.
+
+Features Common to All the Mini-Adventures - Throughout the adventures in
+the "Land of Aventuria," a square marked by a large H will produce a
+screen-full of helpful text if you move on top of it.  Trying to move onto
+a square marked by a cross will increase your character's life force.  Do
+so often to keep your Life force high and you'll be harder to kill and a
+better fighter as well.
+
+Secret Agent 00111 - A simple adventure that demonstrates a common
+adventuring problem - the need to find an object (in this case, a key)
+before you can pass through a door to reach your goal (in this case,
+microfilm and the kidnapped girl being held prisoner).  There are two
+entrances to this mini-adventure - the door that leads to the right from
+the first room in "How to Play" and the door that leads out of the last
+room in "How to Play."
+
+Sam Club, Private I - If you've ever seen Humphrey Bogart in "The Maltese
+Falcon," you'll get a chuckle from this one.  And if you haven't you'll
+still have the pleasure of discovering who's lying and what really
+happened.  You'll also get the chance to see that doors can lead all the
+way across town, especially when they're disguised as subway trains and
+cars.
+
+Alice in Wonderland - An adaption from Lewis Carroll's classic.  Follow the
+White Rabbit down the Rabbit Hole, wander past the Caterpillar and the
+Cheshire Cat, look in on the Mad Tea Party and more.  Confront the puzzle
+of how to grow big enough to reach the key atop the glass table.  A good
+example of an adventure where conversation, not combat, tells the tale.
+
+Washington Crosses the Delaware - Even historical dramas can be done with
+Adventure Construction Set.  Figure out how to get Washington across that
+river in this fanciful telling of the tale, and you'll win the day. 
+Teachers take note; Enter the schoolhouse on the other side of the river
+for a demonstration of how adventure puzzles can become entertaining
+reinforcement drills.
+
+Deep Dank Dungeon - A 15-room adventure in the classic "explore a dungeon"
+tradition.  There are bad guys and treasures, there's a room where
+everything looks like a door and another where nothing does, there's even a
+labyrinth of 4 rooms which all look exactly alike.  Try this one when
+you're ready for some puzzles with the sort of diabolical twist that makes
+you suspect the creator is somewhere watching you, and laughing.
+
+In the Nazi Castle - A 15-room adventure set in the castle of the enemy. 
+You'll run into lots of armed guards and trick treasure chests in this one,
+so build up your life force every chance you get.  Your goal is to get the
+secret plans and escape with them.  If you like to fight, this is the
+adventure for you!
+
+				13
+
+Save the Galaxy! - A 15-room adventure set on a space ship, a planet
+surface and the subterranean caverns of a frozen asteroid.  Wistrik the
+Evil is stealing all the crystite from the planet of Irata.  You'll be able
+to find and stop him... but you better disable the bomb that has
+mysteriously appeared in the port engine pod of your ship, as well.
+
+Rivers of Light
+     
+This new Stuart Smith epic is set in ancient Egypt and the Near East at the
+dawn of human civilization.  The goal is the essence of Osiris, god of the
+dead and giver of eternal life.
+
+   Your quest begins in the valley of the Tigris and Euphrates rivers, the
+cradle of civilization.  Your first problem is that the world map is full
+of uncrossable rivers - uncrossable, that is, for those who don't know how
+to swim.  The old woman and the hunter can help.
+
+     If you locate the Tigris and Euphrates rivers on a map in a good
+atlas, you'll know where to look for Egypt on the world map of "Rivers of
+Light."  The adventure is historically accurate in many other details as
+well.  If you'd like to know more about the mythology that lies behind this
+tale, look into some of the books listed in the bibliography in the
+appendix (page 42).
+
+     A few words of friendly encouragement and advice.  "Rivers of Light"
+is a classic adventure filled with challenging puzzles.  There's a powerful
+weapon, for instance, in Assur, available to all who can find it.  And
+there's a substance with great healing power in the Ancient Valley where
+the old woman and hunter live.
+
+     Poke around as you adventure.  Look for messages, for hidden doors and
+treasures, for things which reveal themselves only after you've crossed a
+particular space while carrying a particular item.  True, you may die from
+too bold a move and have to go back to the last position where you entered
+or left a region or saved the game, but at least you'll know not to try
+that move again.
+
+     When you get stuck, allow yourself to stay that way for a while.  Not
+all possible solutions will come to you immediately, but the ones that come
+slowly will feel even better when they finally do come.  Give yourself
+every chance to play "Rivers of Light" to its conclusion before you use the
+editor to study how it was put together.
+
+				14
+
+The ACS Construction Options
+
+Think of the Adventure Construction Set construction menus as belonging to
+3 main screens.  And think of the joystick as a kind of gearshift which you
+use to move the cursor around in the menus so you can select the options
+you want.
+
+1.  Making Easy Changes - The top screen (see below) i.e., the one you see
+first when you select "Construct an Adventure," contains the options you
+need to work on the surface of your adventure - to change the name, the
+theme music that will play at the beginning, etc.
+
+     This screen also contains the three options which cause the program to
+write to the adventure disk you are working on:  1) "Save Work and
+Continue" (to save the work you've done so far so you won't lose it if
+there's a sudden power failure); 2) "Save Your Work and Exit" (so you can
+quit constructing and start playing); 3) "Let ACS Finish Your Adventure"
+(so you can let the program do the constructing work for you).
+
+        SAVE YOUR                               LET ACS
+        WORK AND-------------|-----------------FINISH YOUR
+         EXIT                |                 ADVENTURE
+                             |
+    SAVE WORK                |
+  AND CONTINUE               |           
+        |                    |           |--CHANGE NAME
+        |--------------------|-----------|--CHANGE BYLINE
+        |                    |           |--EDIT ADVENTURE
+  SCIENCE FICTION            |              INTRODUCTION
+   THEME MUSIC               |
+                         DO MORE
+                      DETAILED WORK
+
+2.  Building the Map and Regions - If you select "Do More Detailed Work"
+from the top screen, you produce the menu that lets you work on the world
+map and on regions and rooms.
+
+     Selecting options from the screen produces menus which let you create,
+populate and fill up the map, the regions and the rooms in your adventure. 
+Here also, you put in the doors which lead from place to place in your
+adventure.
+
+   EDIT                      EXIT                     EDIT
+  WORLD-----------------------|-----------------------MAP
+   MAP                        |                    CREATURES
+                              |
+  EDIT                        |                       ADD
+ REGION-----------------------|---------------------REGION
+                              |
+                           DO MORE
+                        DETAILED WORK
+
+3.  Creating and Editing Things, Creatures and Graphics - If you select "Do
+More Detailed Work" again, you produce the screen that lets you add to and
+edit the Master Creature List, the Master Thing List and the Master
+Graphics Set for an adventure.
+
+     Selecting option son this screen produces the menus you need to create
+and modify the things, creatures and pictures you need for your map and
+your rooms.  This menu also contains the options that let you erase
+particular parts of existing adventure disks.
+
+  EDIT THINGS               EXIT
+      |                      |                       EDIT
+      |----------------------|--------------------MASTER LIST
+      |                      |                    OF CREATURES
+  EDIT GRAPHICS        COPY OR ERASE
+                        ADVENTURE
+
+				15
+
+Asking ACS to Build Adventures For You
+
+Your ACS program comes with three basic construction sets located on the
+back side of the disk.  One is ideal for fantasy adventures (the sword and
+sorcery sort of thing), another is great for contemporary spy and mystery
+dramas, and the third comes equipped for science fiction escapades.
+
+     To make an adventure disk containing one of the basic sets, select
+"Make an Adventure Disk" from the main option screen and follow the
+instructions as they appear.  You may then select "Construct an Adventure"
+and "Let ACS Finish Your Adventure" (described below) to ask the computer
+to build you a new adventure.  Note:  For best results, start with the
+Fantasy set or the Science Fiction Set, especially if this is your first
+time to use this option.
+
+	|--ADVENTURE:
+        |-----AUTHOR:
+        |-------MOOD:
+        |--CHALLENGE:
+        |-------GOAL:
+        |---MAP NAME:
+        |
+        |--ACS COMPLETELY REDRAWS THE MAP
+        |--ACS TRIES TO USE ONLY DEFINED THINGS
+        |-------EDIT REGION ATTRIBUTES
+        |------------LET ACS WRITE THE ADVENTURE
+        |------------EXIT TO TITLE SCREEN
+
+1.  You can enter the adventure Name, Author by line and Map Name, or you
+can let ACS do it for you.  If you want to do it yourself, move the cursor
+to each of those options and press the button so you can type in the names
+you want.
+
+2.  Mood offers 3 possibilities:  Fantasy, Spy/Mystery, and Science
+Fiction.  To select among the possibilities, repeatedly move the cursor
+into the "Mood" option until you have the one you want.  Unless you make a
+change here, ACS will use the mood which matches the construction set
+you're using.  The "Mood" setting determines the names ACS will choose for
+the map and the rooms, the pictures it will use to make up the walls, etc.
+
+3.  Move the cursor to Challenge and move the joystick right and left until
+you have the setting you want.  The range goes from "1 Easy" to "10 Hard." 
+In easy adventures, the creatures you'll encounter won't be too mean and
+powerful, and the hints and clues will be more plentiful and easier to
+figure out.
+
+4.  The Goal of an adventure is to find some particular object.  If you
+want to pick the object from the Master Things List, select "Goal" and then
+select an object from the list which will appear.  (Moving the joystick
+left brings up a new list.  Moving it up and down moves the highlight from
+item to item within a list.  Moving it right and pressing the button
+selects the highlighted item.)
+
+5.  Don't change the next two options - ACS Completely Redraws the Map and
+ACS Tries to Use Only Defined Things.  These are useful for scrambling an
+existing adventure, as described below.  (You should change "ACS Tries to
+Use Only Defined Things" to "ACS Creates Several New Things" if you are
+starting with a sparse master list and you want ACS to add to it so it can
+make a more interesting adventure.  The basic sets which come on the ACS
+disk are not sparse.)
+
+				16
+
+6.  Use Edit Region Attributes to tell ACS how many and what kinds of
+regions you want in your adventure.  You can have up to 15 different
+regions and can name each one or let ACS do it for you.  If you make no
+changes here, ACS will automatically build an 8-region adventure and will
+use your overall "Challenge" setting to determine the difficulty of each
+region.
+
+     If you do select this option, a new menu (below) will appear so you
+can give ACS specific instructions about how many regions you want and how
+you want them built.
+	
+	|--NAME:
+        |--WRITE A COMPLETELY NEW REGION
+	|--TYPE
+  	|--CHALLENGE
+	|--EDIT ANOTHER REGION
+	|
+	|--------EXIT
+
+     Use "Type" to tell ACS what you want the rooms in the region to look
+like.  (There are 8 possibilities, including letting ACS pick the type for
+you.)  Use "Challenge" if you want the region to have a different
+difficulty level from the one you chose from the overall adventure. 
+
+     Use the second option from the top to set the number of regions ACS
+will build.  Set it to "Write a Completely New Region" for each region that
+you want, then set the next region to "Leave This and Later Regions Empty."
+ Use "Edit Another Region" to move from region to region to make these
+settings.
+
+7.  Select Let ACS Write the Adventure, then go do something else while ACS
+does it work.  A message will appear when your new disk is ready for
+playing.  In the meantime, the screen will periodically give you a new
+estimate of how much longer the process will take.
+
+Important:  Remember, playing an adventure changes it.  Things get picked
+up and moved around or destroyed, creatures dies and give up their
+possessions, etc.  Before you play your new adventure for the first time,
+you may want to use "copy an Adventure" to make a copy of it.  That way
+you'll have an original version to work with if you decide you want to edit
+the adventure and/or make copies of it for your friends who also own ACS.
+
+Starting With an Existing Adventure
+
+You can also use the "Let ACS Finish Your Adventure" option to scramble old
+adventures into freshly playable new ones.  If you want to use the same
+map, select "ACS Adds a Few Doors to the Map."  Otherwise, pick "ACS
+completely Redraws the Map."
+
+    You can also decide how much you want to change each region, selection
+among "Write a Completely New Region," "Leave Region Almost Unchanged,"
+"Shuffle Contents Only" and "Shuffle Room Layout and Contents" for each
+one.  The only thing you can't select for a region which already exists is
+"Leave This and Later Regions Empty."
+
+     As before, when you've entered the directions you want ACS to follow,
+select "Let ACS Write the Adventure" and go do something while ACS does its
+work for you.
+
+				17
+
+Note:  Any adventure created with the "Let ACS Finish Your Adventure"
+option can be edited and changed with the other ACS construction options
+described in the next sections of this manual.  You can add sound effects
+and music, edit out or tone down a creature who's causing players a lot of
+trouble, put in text messages to make the adventure more richly detailed
+and suggestive (especially important for spy/mystery stories), and more.
+
+    You can also use the "Copy or Erase Part of an Adventure" option to use
+work you've done for one adventure as the starting place for another.  See
+page 26 for further on for more information.
+
+Editing and Constructing Adventures
+
+Overview
+
+The ACs construction options let you work on the 5 fundamental program
+parts which underlie every adventure:
+
+     * The World Map, which contains terrain of various types and
+       doors to and from the map regions.
+
+     * Maps of each region, which are composed first of a diagram
+       showing an overview of all the rooms in the region, and then
+       of pictures of each room in detail.
+
+     * The Master Thing List, which contains a record of every basic
+       prop and special effect.
+
+     * The Master Creature List, which contains a record of every
+       basic creature and from which the creature lists for the world
+       map and for each region may be made up.
+
+     * A Master Graphics Set, from which pictures can be selected for
+       terrain, things and creatures.
+
+Learning Your Way Around The System
+
+The fastest and easiest route to understanding how the ACS construction
+options work is by using them to modify an adventure you've spent some time
+playing.  The next few paragraphs contain step-by-step instructions for the
+editing actions you are likely to take most often.
+     
+    To follow along, use a disk containing an adventure you know, and try
+to perform the operations described.  If it's an adventure you still want
+to play, use a backup copy so you can make changes without worrying about
+messing things us.  (You needn't worry too much anyway.  Since deleting and
+adding are equally easy, you can always take out whatever you wish you
+hadn't just added, and you can always put back what you wish you hadn't
+taken out.)
+
+     One bit of friendly advice.   Don't use the editor to look at "Rivers
+of Light" until you've given yourself plenty of time to solve its puzzles. 
+Sometimes it takes a while for the solution to a puzzle to come, but when
+it does, figuring it out yourself is just that much more satisfying.  Wait
+until you're through playing "River of Light" before you use the editor to
+see how Stuart Smith put it together.
+
+				18
+
+Step-by-Step Adventure Editing Guides
+
+Doors may lead form one place on the world map to another or to any room in
+any region.
+
+1.  Select "Edit World Map" from the map and region menu to produce a set
+of map editing options.  Then select "Draw World Map."
+
+     The large rectangle on the right represents the whole map, and the
+lighter rectangle within it represents the section of the map you are
+looking at.  If you move the cursor up from the menu onto the screen and
+then move it against the edges of the map section, new terrain will scroll
+into view and the position of the lighter rectangle will change within the
+darker one.  Experiment with this until you understand how to use the
+little "two-rectangle" map to tell where the section on the screen lies on
+the big map.
+
+2.  Use "Select New Terrain" to flip through the 16 terrain possibilities
+until you come to the doors.
+
+     Move the cursor back down into the menu and push it toward the "Select
+New Terrain" option.  Each time you do this, a new terrain picture will
+appear in the small square and a new terrain description will appear below
+the menu.  There are 16 different terrain types to choose from in all. 
+Numbers 13 through 16 - Castle, Regal Gateway, Boat, and Cavern door in the
+Land of Aventuria set are doors.  When you add them, ACS prompts you
+through the process of telling where you want the doors to come out.
+
+3.  Move the cursor into the map, then move it to the spot you want the
+door on and press the button.
+
+     On world maps, putting down new terrain replaces what was already
+there.  And terrain can be set so that it is open only those who do or
+don't carry some object (which you pick) or so that it evokes a spell
+(which you pick) when someone moves on it.   For more information see the
+World Map Reference Guide on page 26.
+
+How to Add and Edit World Map Creature
+
+Up to 8 creatures can be instructed to appear.  You pick the creatures,
+the terrain they will appear in, and what percent of the time they will
+show up.
+
+1.  Select "Edit Map Creatures" and then select "Add Another Map Creature."
+
+     A list of all the creatures available in the Master Creature List on
+your adventure disk will appear.  Move the joystick up and down to move the
+highlight from creature to creature.  Move it to the left to select a
+different group within the list.  Move it to the right and press the button
+to select the highlighted creature.
+
+     If there is no "Add Another Map Creature" slot available, select a
+creature you no longer need and edit it as described in the next step.
+
+				19
+
+2.  Select the creature you want to edit, then select each of the items you
+wish to change.
+
+     A new menu will appear.  Repeatedly selecting the top lines lets you
+flip through 12 terrain types to pick the one you want the creature to
+appear in (12 and not 16 because you can't pick any of the doors). 
+Repeatedly selecting the third line in the menu lets you tell ACS what
+percentage of the time you want the creature to appear.  The higher you set
+this percentage, the more likely you are to run into the creature while
+exploring in the terrain type it inhabits.
+
+     If you select the "Edit Trait" option, a screen will appear which is
+very much like the one you see when you select "Profile" option while
+playing.  By moving the cursor to any item in the list and then moving the
+stick simultaneously  holding down the button, you may change any of these
+settings.
+
+     For more information about creature traits (especially including using
+the three "Strategy" settings to determine how the creature will move and
+behave), see Creature Reference Guide on page 29.
+
+How to Add Rooms and Regions
+
+Adventures may have up to 15 regions and up to 16 rooms per region.  You
+decide the number of regions you want and the number, size and location of
+the rooms in each region.
+
+1.  To add a room to an existing region, select "Edit Region" and  then
+select the particular region you  want.
+
+     If the name of the region you want isn't on the bottom of the new
+menu, select "Next Region" until it is, then select it.  A top-view diagram
+of all the rooms in the region will appear.  Select "Add Room" and follow
+the instructions as they appear on the screen.
+
+     Rooms may be up to 15 squares wide and 10 squares high.  If you want
+to connect the new room to its neighbor with a normal two-way door,
+position it so that it  shares a common wall with that neighbor.  If you
+make a drawing mistake, use the "Delete Room" option and then start over.
+
+2.  To add a region, select "Add Region," type in a region name and  press
+the button, then continue using "Add Room" until you have all the rooms you
+want.
+
+     You may build up to 16 rooms.  It's better at first, though to build
+fewer than that so you can add on later if you decide the adventure needs
+another room.  If you want to put things and creatures in the rooms as you
+go along, select the "Edit Room" option described in the next section.
+
+How to Add to and Change the Contents of Rooms
+
+You may have up to 16 creatures from your Master Creature List and more
+than 500 things from your Master Thing List in each region.  You could if
+you wanted, stack them all on a single square in a single room.
+
+1.  Select "Edit Region," then select the region which contains the  room 
+you're interested in, and then select  "Edit Room."
+
+     The cursor will appear (as a very small solid square) so you can tell
+ACS which room you want to edit.  When you do so, a menu containing 4
+options will appear.  To change the characteristics of creatures already in
+("resident") or assigned to ("random") the room, select the 2 options on
+the left.  To add or delete either things or creatures select the "Edit
+Contents of Room" option.
+
+				20
+
+2.  After selecting the "Edit Contents" option, select each option as 
+often as you want and follow the directions as they appear.  To return to
+the  main region editing menu, select "Exit."
+
+     To get information about what's already in a room, select "Examine
+Room."  Use "Add 1 Thing" to bring up the Master Thing List so you may
+select an item from it.  Use "Add Many Things" if you want to put down
+multiple copies of the same thing.  Use "Add Creature" to bring up the
+Master Creature List so you may select from it.  Use "Delete Thing" to get
+rid of something - thing or creature - previously added.
+
+     Unlike world map terrain, new items do not replace old ones.  Instead
+they form a stack.  For more information about regions and rooms, including
+information about adding random creatures to rooms, see the Region and Room
+Reference Guide on page 28.  For information about creating stacks, see
+page 39 in the Thing Reference Guide.
+
+Note:  When the Master Thing and Creature Lists appear, they do so in
+segments.  Select "View Another Group" to bring up a different segment. 
+Select "Next Thing" and "Previous Thing" to move the highlight within a
+segment.  For information about the logic behind the groupings, see the
+Creature Reference Guide on page 29 and the Thing Reference Guide on page
+34.
+
+How to Add to the Master Thing and Creature Lists
+
+Each list can contain up to 128 items.
+
+1.  To add a new thing, select "Edit Things" and then "Add Thing."
+
+     You will be warned that once a thing is added, it cannot be deleted. 
+(It can however, be edited into an entirely different things within its
+category.)  Then you will be prompted by the screen to tell whether you
+want to proceed, what type of thing you want to add, and how many of them
+an individual may possess at one time.  You may then move the cursor to
+each option in the thing profile to set it as you want.
+
+     To return to the main menu, select "Exit."  For more information , see
+the Thing Reference Guide on page 34.
+
+2.  To add a new Creature, select "Edit Master List of Creatures" and then
+select "Create a Creature."
+
+     A creature profile - similar to the profile for characters - will
+appear.  You may change any of the items in the profile and then return to
+the main menu by following the on-screen instructions.  Note:  When you
+change a creature's characteristics in the Master Creature List, the
+changes are not reflected in the adventure.
+
+     For more information, see the Creature Reference Guide on page 29.
+
+				21
+
+How to Edit Pictures and Create New Ones
+
+The picture possibilities you scroll through for terrain, characters,
+creatures and things are grouped onto 3 screens.  To get to those screens,
+select "Edit Graphics."
+
+1.  Select the picture you want to  edit or the blank area into which you
+want to add a picture.
+
+     The first screen has room for the 16 pictures which must be used for
+map terrain but which may also be used for things or creatures.  The second
+screen (select "Edit Another Group of Pictures" to see it) can contain up
+to 48 pictures which may be used for things, terrain or creatures.  The
+third screen can contain up to 46 pictures, all reserved for creatures
+only.
+
+     When you have the screen you want, use the "Edit Another Picture" line
+to move the selector from picture to picture, bringing an enlarged version
+of the selected picture into the drawing area.
+
+2.  Use the joystick to paint what you want into the drawing area.
+
+     To draw, move the cursor from the menu into the drawing area and press
+the button to put down a block of the selected color.  Choose "Draw Another
+Color" to select another of the four available color choices.  Choose
+"Change Paint Color" to change the color of the paint swatch currently
+selected.
+
+     For more information see Graphics Reference Guide on page 41.
+
+Magic Spells
+
+Magic spells are both a category of things in their own right and something
+which can be hooked to Magic Items, Portals (doors), and Obstacles and
+Spaces.  Altogether there are 15 different base spells available.
+
+     Each magic spell can be made to display a short three-line text
+message when it is invoked (providing the opportunity to explain to the
+player/character what is happening) and may be made to disappear after its
+first use. Here are the 15 base spells and what each does.
+
+				22
+
+1.  Kill all But an Owner of (you pick the things from your Master Thing
+List).  Don't be casual about how you employ such a spell in your
+adventures.  It does just what it says, and no one wants to adventure in a
+world where death is too frequent and too often arbitrary and unexpected.
+
+2.  Summon/Banish Creature (you specify the creature, picking it from your
+Master Creature List).  This can be used to banish all creatures present in
+a room where the spell is cast, or it can be used to summon to the room any
+creature on the Master Creature List.  Banishment happens immediately. 
+Summons will not be answered until the following turn.  This spell may not
+be used on the world map.  (Note:  When you banish creatures, they take all
+their possession into oblivion with them.  Don't banish the creature who
+stole the key you need to get into the next room.)
+
+3.  Increase Magic Defense But Not to Better Than...(you pick from four
+possibilities).  At its most powerful, a magic defense completely absorbs
+blows from normal weapons and reduces damage from magic weapons by half.
+
+4.  Decrease Magic Defense But Not to Better Than...(you pick from four
+possibilities).  The opposite of the previous spell.
+
+5.  Increase the Victim's...(you pick Constitution, Strength, Dexterity,
+Speed, Wisdom, Dodge Skill, Parry Skill, Armor Skill, Melee Skill or
+Missile Skill.)  Traits are increased by 1 point, skills by 5.  The effect
+of the spell is permanent - until the next spell is encountered, that is.
+
+6.  Decrease the Victim's...(you pick Constitution, Strength, Dexterity,
+Speed, wisdom, Dodge Skill, Parry Skill, Armor Skill, Melee Skill, or
+Missile Skill).  See previous spell.
+
+7.  Change Power of Victim by...(you specify a number between -63 to +63). 
+Because an individual's Power automatically changes in the direction of his
+Wisdom each turn, it does not matter whether you choose for the effect to
+be temporary or permanent.  All changes to Power are temporary, no matter
+what the setting.
+
+8.  Change Life Force by ...(you specify a number between -63 to +63). 
+Like the previous spell, except Life Force does not decay when it is
+greater than Constitution.  A permanent increase is Life Force can only be
+lost in battle or to another spell.
+
+9.  Give to Victim (you pick the thing from you Master Thing List).  One
+use for this spell is to give a Magic Spell to a hero/player or a creature.
+
+10.  Display Long Message (up to 8 lines long, up to 32 characters per
+line).  This spell is usually used with the spaces and obstacles in a means
+of telling the player/character about a special occurrence or object or to
+give a clue.
+
+11.  Play Music (you select from 30 different possibilities).  Choices 1
+through 12 are sound effects.  Choices 13-30 are musical themes.  The
+choices with "endless" in their titles (14 through 17) will continue to
+play until another music choice is activated.  (See "Stacking Things on One
+Square" on page 40 for an example of an effective use of endless themes.)
+
+				23
+
+12.  Rid Room of Every Uncarried... (you pick the thing from your Master
+Thing List).  A particularly fiendish use of this spell would be to attach
+it to an invisible object (one with no picture) which you place directly in
+front of a visible treasure, naming the treasure as the thing to rid the
+room of.  Alternately you could use it to rid the room of a covering placed
+over a valuable object hiding underneath.  (See the section called "Let
+There Be Light" on page 40.)
+
+13.  Add to Room One (you pick the thing from your Master Thing List). 
+Does just what it says.  The effect is immediate.
+
+14.  Activate All Things at This Place.  Especially useful for setting off
+a series of spells associated with items, spaces and/or obstacles stacked
+on a single square.  See "Stacking Things on One Square" on page 39.
+
+15.  Do nothing.  Use this when you simply want to display a short message
+at the bottom of the screen but don't want to do anything else.  Since
+spells can't be dropped, it might also be used to give creatures or
+player/characters a characteristic they could not rid themselves of-a curse
+perhaps, which prevents passage through certain doors.
+
+Some Special Things and Their Uses
+
+The basic Fantasy, Spy/Mystery and Science Fiction construction sets all
+contain a few very useful special purpose things.  Here's a listing of some
+of them, along with brief descriptions.  For more information, see  Things
+Reference Guide on page 34.
+
+1.  The Do-all Spaces and Obstacle - The Do-All-Walk Space is activated
+whenever someone walks on it and the Do-All-Bump Obstacle when someone
+bumps into it, and each will then activate, in order from top to bottom,
+whatever spells lie below it.  The Do-All-Carry Space (a Custom space,
+actually) works the same way, but is activated only by someone carry;ing a
+particular item (which you get to pick when you place one of these in a
+room.)
+
+2.  The Music and Message Custom Spaces - When you place these in a room,
+you get to choose the particular text or music which will be produced when
+the space is activated - either by being walked on or by a Do-All spell
+above. it.
+ 
+3.  The Rid the Room Custom Space - Place this one in a room and you get to
+tell ACS what to remove from the room when the space is activated.  Its 
+storytelling power lies in its association with the thing you name when you
+place it in the room.  For a nice example of what can be done with a "Rid
+the room" spell, see the discussion of "Let There Be Light" on page 40. 
+(Note: If you check the basic sets, you'll find other custom spell spaces
+there as well - "Add to Room 1," "Increase Life Force," etc.  Like the Rid
+the Room Custom space, these let you pick the spell modifier when you place
+them in a room.)
+
+				24
+
+4.  The Flight Spell - If you use "Edit Thing" to take a look at this
+spell, you may find it hard to imagine what it's good for.  By itself, it
+does nothing.  But if you set some terrain to be "Open Only to Owners of
+Flight Spell," it becomes powerful indeed.  (The same principle can be
+used, of course, for rivers open only to owners of a swim spell, a trick
+employed to get "Rivers of Light" off to an interesting start.)
+
+5.  The Decoder Custom Space -  Available in the Spy/Mystery set, this
+variation on the message space described above will display text whenever a
+Coded Message is dropped on it.  It's a good example of how a basic idea
+like a custom message space can be tailored with a picture and a different
+activation method to perform a very useful function in an adventure.  The
+same trick was used to produce the Help spaces in "How to Play" in
+Aventuria.
+
+General Construction Tips and Techniques
+
+1.  Do some browsing and planning before you start constructing.
+
+     ACS will let you begin the construction process with as much or as
+little as you like (down to "nothing but graphics") on your adventure disk.
+The advantage to starting with a basic construction set is the time it
+saves you in the creation of Master Things and Creature Lists.
+
+     Pick one of the sets and spend some time browsing through the Master
+Lists to see what's available.  Think about where you might use this
+powerful, aggressive enemy creature or that magical crossbow.  Draw
+diagrams of your regions on paper so you an think about where you want to
+place things.
+
+     If you decide you need something not in the set or want to modify
+something that is there, you can use the "Edit Things," or "Edit Creatures"
+and "Edit Graphics" options to create new items or change existing ones. 
+In time you will wind up with new versions of the basic sets which have
+been modified to fit your own style, taste and adventure construction
+ideas.
+
+2.  Pay attention to the pace of your adventure. 
+
+     Some actions take the computer longer to perform than others.  Be
+thoughtful about how you place these in your adventure.  When a door leads
+to another region for instance, the program must go to disk for new
+information.  Use such doors sparingly so that adventurers do not tire of
+waiting for the new information to appear.
+
+				25
+
+     Also pay attention to the order in which things occur.  When a short
+text message is associated with a spell for instance, the message will be
+displayed before the spell itself if activated.  Make sure your message
+makes sense if read before the spell takes effect.
+
+3.  Pay attention to the pacing of difficulty and frustration in your 
+adventure.
+
+     If you make things too hard at the outset, no one will keep playing
+long enough to discover all the neat stuff you planted.  Make sure you've
+given the adventurers enough success and mystery to hook them before you
+ask them to deal with your more fiendishly clever tricks and traps.
+
+     You might accomplish this by leaving a very powerful but breakable
+weapon in the first room adventurers will enter.  Or you might orchestrate
+matters so that passing through an early door delivers a big temporary
+boost in Life Force or Power.  Either of these actions will help
+adventurers make it through early perils without giving them too much of a
+permanent advantage.
+
+4.  Use the work you put into one adventure as a starting place for others.
+
+     To use an existing adventure as a starting place, begin with a disk
+containing that adventure and use the "Erase Part of the Adventure" option
+to get rid of the parts you don't want.  (To find the "Erase Part of the
+Adventure" option, select "Construct an Adventure" and then select "Do More
+Detailed Work" twice.)  You can erase the maps of the world and the
+regions, or the Master Creature List, or everything but the graphics.
+
+     You can also copy graphics from one adventure into another.  Select
+"Copy Graphics From Another Adventure," then select the option you want and
+follow the instructions as they appear.  You could use this option to copy
+a strange graphics set into an existing adventure.  More to the point,
+though, you could use it to copy your own custom graphics set into each of
+a series of adventures.
+
+5.  Back up and date your work.
+
+     Good adventures are not constructed in a day.  As you work, make a
+backup copy at the end of each session and put the date you did the work in
+the name of the adventure (e.g., "Superdungeon Oct. 15").  Doing this keeps
+you from trusting all your hard work to a single disk and makes it easy for
+you to figure out which version is the latest should you get confused about
+the disks.
+
+Map Reference Guide
+
+1) Draw World Map - The full map area is 40 squares by 40 squares.  Only a
+10-square by 15-square section can be on the screen at one time.  The
+larger rectangle to the right of the map represents the whole map; the
+smaller grey rectangle inside of it represents the section visible on the
+screen.
+
+     The square on the lower right contains a picture of the terrain type
+that can be added if you move the cursor up into the map area and press the
+button.  Moving the cursor into the menu and to the left brings a new
+terrain picture into the square.  The name of the terrain type appears at
+the end of the second line.  Whether the terrain is passable or whether it
+evokes a spell when crossed appears on the third line.
+
+				26
+
+     When you put a piece of terra on top of existing terrain, the new
+replaces the old.  There are 16 different terrain types available.  To
+select a new name, picture, or travel condition or spell for any of the 16,
+see "Change Definition of Map Terrain" below.  To learn how to put doors on
+the World Map, see "Adding Doors" below.
+
+2) Change Map Name - Selecting this option lets you type in a new name (up
+to 15 characters long) for a map.
+
+3) Change Definition of Map Terrain -  Repeatedly select "Terrain #" to
+move the selecting highlight among the 16 possibilities.  To select "Change
+Picture" to change the picture for the highlighted terrain type.  (Both
+these options can be activated by moving the joystick either right or left
+to go forward or backward through the available choices.)
+
+    Select "Name" to type in a new name, and select the fourth option to
+determine whether and under what conditions the terrain may be passed over
+by players and creatures.  If necessary, ACS will bring up the Master Thing
+List so you can pick an object or spell from it to complete your editing of
+the terrain type.
+
+     Terrain pictures are shown in groups of 4 so you can see what
+multiple-square patches of the terrain will look like when you're
+considering new pictures.  If you want to modify one of the pictures or
+draw a new one, see Graphics Reference Guide on page 41.
+
+Important! Terrain types 13-16 are portals (doors).  See "Adding Doors"
+below for information about using them.
+
+4) Movement Off Edge of Map Is/Is Not  Permitted - Select this option to
+determine whether or not the map "wraps."  If you permit movement off the
+edge of the map, the top edge and bottom one are treated as though there
+were joined to each other, and so are the right and left edges. 
+Topologically, the three-dimensional shape a wrapping map corresponds to is
+a torus.  (A doughnut is also a torus. Think about it.)
+
+5) Move Entrance to the Adventure - Use this option to select the spot
+where all new adventures will start regardless of when they are added to
+the game.
+
+     Adding Portals (Doors) - ACS considers terrain types 13-16 to be
+one-way doors regardless of their pictures or names.  When you add a door
+to the world map, follow the instructions as they appear to say where you
+want the door to come out.
+
+     You may have up to 32 one-way doors on the World Map.  Those same
+doors may also be used to mark the exit points of one-way doors which lead
+from inside rooms back to the World Map.
+
+     Using the same place to mark an entrance and an exit destination helps
+players make conceptual sense of the map.  A door might represent the
+entrance to a city whose streets and shops are defined by the rooms in the
+region the door leads to.  Making a one-way door lead form inside the
+region back to the same spot helps underline the notion that the region
+represents an extension of the world map.
+
+     You may also use 31 additional locations on the map as places where
+one-way doors come out.  You can even have doors on the world map lead to
+other places on the world map (see the Boat in Aventuria, for instance).
+
+				27
+
+     Generally, you will not want to add doors to the world map until you
+have build the regions you want them to lead to.  Moreover, because ACS
+will let you put down whatever you want, including impassable terrain, on
+top of places where one-way doors come out, you will not want to do a lot
+of map revision after you have designated a number of map locations as
+one-way door exits.  You won't usually want to have players emerge from a
+region only to find themselves surrounded by mountains unable to move.
+
+For information about "Editing Map Creatures," see "Putting Random
+Creatures in an Adventure" on page 33 in the Creature Reference Guide.
+
+Room and Region Reference Guide
+
+Each Adventure can contain up to 15 regions and each region can contain up
+to 16 rooms.  Select "Add Region" to build a new region, and select "Edit
+Region" to modify or add to an existing region.
+
+     Either choice leads to a menu which contains the options "Add Room,"
+"Delete Room" and "Edit Room," (If you select "Edit Region," you will be
+asked to select the one you want to edit before these choices appear.)
+
+1.  Add Room - When you select "Add a Room," the room first appears as a
+small flashing square which you may move about on the screen with your
+joystick.  Once you press the button, the joystick will make the square
+grow in size instead of moving it.  You may use it to make a room up to 15
+spaces wide by 10 spaces high.
+
+     New rooms may be placed anywhere you like so long as they don't
+overlap with existing rooms (but rooms may share a common wall).
+
+2.  Delete Room - This option lets you place the cursor in a room you want
+to get rid of and press the button to get rid of it.  Note:  If you
+accidentally delete the destination for a one-way door, ACS will banish
+creatures who pass through the door and will place all player/characters
+who pass through it on the world map at the adventure's starting  point.
+
+3.  Edit Room - Select this option and use the cursor to identify the room
+you want to edit, then select a choice from the new menu which will appear.
+ The choices allow you to change the room's name and to add, subtract and
+edit creatures and things in the room.
+
+4.  Change Room Name - Selecting this option lets you type in a new name
+for the room.
+
+5.  Edit Room's Contents -  Selecting this option brings a picture of the
+room to the screen along with a new menu of options.  The options on the
+right let you pick things and creatures from your Master Things and Master
+Creature Lists, and they let you add those things to the room at the places
+you designate with the cursor.  Use "Add Many Things" when you want to put
+down several copies of the same thing before selecting something else.
+
+     The top option on the left - "Delete Thing" - may be used to remove
+either things or resident creatures from the room.  The selecting cursor
+will appear so you can pick the thing or creature you want to delete.
+
+     Selecting "Examine Room" lets you move the selecting cursor around,
+pressing the button when you want a description of the thing or creature at
+a particular spot.  (Note:  The Examine option will tell you if a spell at
+a location produces music or a sound effect, but it will not play the sound
+for you.)
+
+				28
+
+     "Select Wall Picture" lets you choose a new picture for the wall of
+the room.  This is especially useful when you want the room to "play the
+role" of something else - a field, for instance, or a forest, or a mountain
+valley.
+
+6.  Adding Doors - When you use the "Add Thing" option to add a two-way
+door to a room, the program will let you place the door on a wall shared by
+an adjacent room.  When you use it to add a one-way door, follow the
+instructions as they appear to determine where the door comes out.  Doors
+may lead to other places within the same region (or even in the same room),
+or to other regions, or to the world map.
+
+7.  Stacking Things on Top of Each Other - Unlike editing on the world map
+where new terrain replaces whatever old terrain it is placed on top of, you
+may stack many things in the same space in rooms.  For more information,
+see "Stacks of Things."
+
+To learn more about the "Edit Resident Creature" and "Edit Random Creature"
+ options study the Creature Notes section below.
+
+Creature Reference Guide
+
+You can have up to 128 creatures in a Master Creature List.  Each can have
+its own unique combination of name, picture, traits, skills, battle
+equipment, behavior patterns and possessions.
+
+     Further, you can customize each of these characteristics for
+individual creatures after you have placed them in a room or instructed
+them to appear in a room or on the World Map.  Thus, you might design a
+single leprechaun for your Master Creature List, yet have many leprechauns
+in the game, each with a different list of weapons and possessions.
+
+1.  Creating and Editing Creatures - To add creatures to your Master
+Creature List and modify ones already there, select "Construct an
+Adventure, and then select "Do More Detailed Work" twice, and finally
+select "Edit Master List of Creatures."
+
+2.  Grouping Creatures in Catagories - ACS lets you divide your Master
+Creature List into 8 smaller lists to make it easier to think about the
+kinds of creatures you have.  The Fantasy builder set, for instance, has
+four lists containing persons (one for friends, one for enemies, one for
+thieves, and one for neutrals), two lists containing beasts (one for
+hostile beasts, the other for neutral ones), one for evil beings (banshees,
+demons and the like), and one left open for a category of your own
+choosing.
+
+     To change the name of a creature category, select "Change Creature
+Class Name," then select the name you want to change and type in a new one.
+ You pick the class a creature belongs to when you use the "Add Creature"
+and "Edit Creature" options.  To learn  how to make a creature behave like
+a friend, enemy, etc., see Setting Creature Strategy below.
+
+				29
+
+3.  Changing a Creature's Profile - Begin by selecting "Edit a Creature"
+and then the name of the creature you want or by selecting "Add a
+Creature."  To change any item in a list of creature characteristics, move
+the highlight to that item with the joystick, then simultaneously hold down
+the button while moving the stick.
+
+    If the item needs typed input from you, ACS will ask for it.  If the
+item is one where you can choose among 2 or more preset possibilities,
+repeatedly select the item to browse through the possibilities until you
+reach the one you want.  If the item needs something from the Master Things
+List, it will bring up the list so you may select from it.
+
+     Use the last item in the profile list to determine how many copies of
+the creature ACS may put into an adventure when you use the "Let ACS Finish
+the Adventure" option.  When picking resident creatures, ACS looks first
+for creatures which are limited in number.  When assigning randomly
+appearing creatures, ACS looks for creatures which may appear many times.
+
+4.  Creature Traits, Skills and Possessions - You can set any of the trait
+and skill numbers anywhere between 0 and their maximum (see Traits section
+earlier).  To calculate how much a creature or character's strength will
+let it carry, subtract Life Force from Constitution and divide by 2, then
+subtract your answer from Strength and multiply and result by 100. 
+Individuals carrying more than half their maximum capacity will be slowed
+down.
+
+     Before you can ready a weapon or a piece of armor, you must add it to
+the creature's inventory with the "Change or Examine Possessions" option. 
+Choosing the "Mimics" option causes the creature to exactly mirror the
+opponents it encounters.  (Note:  If you set Speed to 0, the creature's
+name will not be displayed when it is its turn to move.)
+
+     Selecting "Change or Examine Possessions" lets you page through all
+the treasures, magic items, weapons and armor on your Master Thing List. 
+Pressing the button highlights the item indicated by the pointer on the
+left side of the screen, and adds that item to the creature's inventory. 
+If the item is already  highlighted (i.e., already belongs to the
+creature), another will be added if an individual is allowed to own more
+than it already has.  Otherwise, the item will be removed from the
+creature's inventory.  Moving the pointer to the top or bottom of the list
+brings a new segment of the list to the screen.  There are 4 segments in
+all.
+
+     Deciding what to give to creatures and how powerful, durable and
+skillful to make them is an art, not a science.  Finally there is no
+shortcut for experience when it comes to shaping creatures to fit your
+adventure. In general, the higher the number in any category and the more
+potent the weapons and magic in the creature's possession, the more
+powerful and resourceful the creature.
+
+     But player/characters can themselves become more powerful and better
+equipped as they play.  Thus, the effect on the game of a creature's power
+possessions and goals depends upon where in the adventure it is
+encountered.  A mean duel with maximum power and the magic sword to end all
+magic swords is not someone you want to run into just outside the main
+entrance, nor is a complete wimp worthy to face a powerful experienced
+hero.
+
+				30
+
+     The three construction sets each contain a range of creature strengths
+and weaknesses in each category.  Learn you way to good adventure
+constructing by experimenting with them.  Place them in rooms or on the
+map, then play to see whether they have the effect you wanted for your
+adventure.  If they don't, return to construction and edit them, then try
+them out again in play.
+
+5.  Setting Creature Strategy - Thing of creatures as having personalities
+which shape their decisions.  When it comes time for them to move, they
+look at the alternative possibilities, then choose a path or action that
+matches their personality.
+
+     Use the three items on the strategy line to set a creature's basic
+personality.  Each item has two possible settings.  Think of the last item
+- Friend/Enemy/Thief/Neutral - as determining four basic types, and think
+of the first two as a pair shaping that type's behavior.
+
+     A creature which is Aggressive and  either Brave or unwounded (Life
+Force equal to or exceeds Constitution) will behave as a fighter.  A
+creature which is Peaceful or which is both Cautious and wounded (Life
+Force less than Constitution) will behave as a slinker.  No slinker will
+attack or cast a spell.
+
+     When a creature's turn comes, each possible type will look for an
+pursue its targets in the order they are listed below.
+
+A) A fighter enemy loves to attach player/characters and friends, and may
+attack neutrals and thieves it encounters on the way to its goal.  It won't
+attack a fellow enemy. It will seek a player/character, an aggressive
+friend, a peaceful friend, an exit, an aggressive neutral or thief, a
+peaceful neutral or thief, or gold.
+
+B) A slinker enemy will seek a peaceful enemy, an aggressive enemy, an exit
+or gold.
+
+C) A fighter friend will seek an aggressive enemy, an aggressive neutral, a
+peaceful enemy, an aggressive thief, a player/character, or an exit.  It
+loves to attack the first four categories, is willing to attack a peaceful
+neutral or thief, but won't attack a player/character or another friend.
+
+D) A slinker friend will seek a player/character, or an exit.
+
+E) A fighter neutral will seek an aggressive friend or enemy, an aggressive
+thief, a peaceful friend or enemy, a peaceful thief or aggressive neutral,
+a peaceful neutral, gold or an exit.  It is not averse to attacking anybody
+but prefers to attack player/characters, aggressive friends, peaceful
+thieves, and aggressive enemies.
+
+F) A slinker neutral will seek an exit.
+
+G) A fighter thief will seek treasure or gold, or an exit.  It is willing
+to attack anybody in the way but will go around a peaceful enemy, friend or
+neutral, if possible.  (No allegiance is shown to other thieves, however.)
+
+H) A slinker thief will seek treasures of gold or an exit.
+
+Note:  A creature who is damaged in combat with a player/character will: 
+1) turn into a neutral if currently a friend; 2) turn aggressive if
+currently peaceful; or 3) turn into an enemy if currently a smart (see next
+paragraph), aggressive neutral.  For more information about creature
+movement, see the next two sections.
+
+				31
+
+6.  Creatures and Spells - Creatures are smart if their Wisdom is greater
+than 14 and dumb if it is less than 6.  Creatures between those limits will
+act smart some of the time, and the higher their Wisdom rating, the greater
+the chance that they will do so.
+
+     Only smart creatures will cast spells or use magic items when they
+possess them, and even smart creatures will only cast spells when their
+Power is greater than or equal to their Wisdom.
+
+     Creatures will cast damaging spells only on their foes and beneficial
+spells only on their friends.  If a creature casts a "Banish" spell, it
+will banish all creatures from the room except for itself.  Creatures
+cannot cast the following:  Do nothing, Rid room of all, Add to room one,
+Activate all things, Display message and Play music.
+
+7.  Additional Movement and Behavior Rules 
+
+A) Creatures who reside in a room do not get a turn until a
+player/character enters the room.  The player/character gets his or her
+turn first, but the creature then gets its turn even if the
+player/character leaves the room.  In that case the creature may move
+toward an exit permitted to it (see next rule).  Creatures may, therefore,
+"follow" player/characters into a new room.
+
+B)  No creature will move onto any space or obstacle, including custom
+ones. Creatures will move onto doors only if the doors have no do-all, rid
+room or add to room spells associated with them, and lead to someplace in
+the same region.
+
+C)  Creatures will not pick up magic items, weapons or armor.  All
+creatures, except friends and slinker neutrals, will pick up gold.  Only
+thieves will pick up treasure.
+
+D)  Most creatures will go toward a less favorite goal if it is closer than
+a more desirable one.
+
+E)  A slinking, wounded creature will see an exit.
+
+F)  Smart, powerful (Power greater than or equal to Wisdom) creatures will
+cast a spell on their selected goal if it is an individual and they have an
+appropriate spell.  If they have more than one appropriate spell, they will
+use the one with the lowest item number.  Smart, half-powerful creatures
+will use magic items in a similar fashion provided the objects are
+activated when used.
+
+G)  An overburdened creature will drop a magic item, a treasure or gold.
+
+H)  A creature will ready an appropriate weapon.  If it is "safe" (not next
+to a foe) it will ready a missile weapon if it has one.  Otherwise it will
+ready a melee weapon if it has one.  If it has more than one appropriate
+weapon, it will ready the one with the lowest item number.
+
+I)  A fighter who is "safe" and has a readied missile weapon will fire if
+its selected goal is a foe.  Note:  fired missiles may hit anyone in the
+line of fire.
+
+J) A friend who selected a player/character as a goal and who is next to
+the player/character will drop a magic item if it has one.
+
+				32
+
+8.  Putting Random Creatures in an Adventure - By selecting "Edit Map
+Creature" or "Edit Room's Random Creature" you may instruct a creature to
+show up some items but not others in a particular type of terrain or in a
+particular room.  This is particularly useful for creating events like the
+occasional appearance of a river god or of a ghost who sometimes haunts a
+corridor. It's also a way of keeping the adventure fresh by giving players
+a chance to experience different challenges on different visits to the same
+room.
+
+     When a random creature appears on the map, the hero/player is drawn
+into a special area for the encounter.  The borders of the are will match
+the map territory in which the player/character was traveling.
+
+     You can have one random creature list for the world map and one for
+each region in an adventure.  Each random creature list can contain up to 8
+creatures chosen from the Master Creature List (and customized i.e., give
+different trait settings, possessions, etc.).
+
+     Each creature on the random creature list for the world map can be
+assigned to appear in a particular terrain type by repeatedly selecting the
+"Appearing in" option.  The percentage of the time that the creature will
+appear can be set for all random creatures.
+
+     The appearance percentage range for random map creatures is 0 to 60%. 
+For room random creatures it is 0 to 75%.  (The range can be set higher for
+rooms because adventurers typically spend less time in particular rooms
+than they do in particular terrain types on the world map.  Also, the
+opportunity to add a creature exists before every move on the map, but it
+exists only upon entering a room in a region.
+
+     Once you've added a random creature to a random creature list, you
+cannot remove it.  But you can set its appearance percentage to 0 or edit
+it into a completely different creature.  Random creatures will only be
+added to a spot in the room which doesn't have a thing on it.
+
+     No more than 16 creatures can occupy a region at once.  Once 16 are
+present, no new random creatures will appear and no creatures will answer a
+"summon creature" spell until someone leaves.  Random creatures which have
+been added to rooms no longer occupied by a player/character are
+periodically removed.
+
+				33
+
+Thing Reference Guide
+
+A thing in ACS can be just about anything - a weapon or magic item a
+hero/player might pick up and use, a door leading from one place to
+another, a space fixed so that walking on it causes music to play, etc. 
+And things can be made to masquerade as other things (even as terrain and
+individuals) to keep adventurers on their toes.  You can have up to 128
+things on an adventure's Master Thing List.
+
+1.  Creating and Editing Things - To add things to your Master Things List
+and modify ones already there, select "Construct an Adventure," then select
+"Do More Detailed Work" twice, and finally select "Edit Things."  The
+profile of one thing in your Master Thing List will appear.
+
+    The options in thing profiles work just as they do elsewhere in ACS. 
+Some must be repeatedly selected to bring up their various possibilities,
+while others will ask you to type in text or numbers.  To add a new thing,
+select "Add Thing" and follow the instructions as they appear.
+
+     To work with a different thing already on the list, select "Edit
+Another Thing."  A new menu will appear along with a list of the things in
+one of the 13 different thing catagories.  Moving the joystick up and down
+moves the highlight from item to item in the list.  Moving the joystick
+right selects the highlighted item.  Moving it left brings a new category
+to the screen.
+
+     Once you add a thing to your list, you cannot remove it, nor can you
+change the decision (which you made when adding it) about how many of it an
+individual may own.  You can, however, edit it into a completely different
+thing within the same category.
+     
+     The categories are Treasures, Magic Item, Missile Weapon, Melee
+Weapon, Armor, Magic Spell, Portal, Space, Custom Space, Obstacle, Custom
+Obstacle, Store, Room Floor.  The options which you may set for each thing
+depend upon the category the thing is in.
+
+2.  Treasures - Treasures are perhaps the simplest of the things you can
+include in an adventure.  You may select their weight (which determines how
+easy they will be to carry), their value (important for determining how
+much a store will sell them for and how much it will offer to buy them
+back), and whether they will disappear if dropped.
+
+     But even within this simplicity, ingenious tricks are possible. If you
+look, for instance, at the Magic Bag in the Fantasy builder set, you'll
+notice that its weight is set to a negative amount.  ACs adds the weight of
+all items in an individual's possession when determining whether the
+individual is strong enough to carry everything without slowing down. 
+Having something with negative weight means being able t carry much more
+than before without slowing down.  Whoever finds that magic bag will be
+grateful indeed.  (The same negative weight trick is also used for horse in
+the Fantasy set.)
+
+				34
+
+     There's one Treasure you'll always find on a brand new list.  It's
+called Gold, and it has some special properties.  Individuals are allowed
+to own as many of these as they can carry (25,000 pieces is the maximum,
+more than anyone could possibly carry unless you set the weight to 0).  And
+you may not change the value from the preset value of 1.
+
+     Change the picture and name when you want to replace the gold standard
+with something different for a particular adventure.  (Dollars, for
+instance, are used in the Spy/Mystery builder set, and crystite is used in
+the Science Fiction one.)  Whatever the standard, by carefully setting the
+weight in tune with the strength you give to characters and creatures and
+the value you give to desirable objects, you build a basic economy for your
+world.
+
+    For example, consider a world in which gold weighs 1 unit per piece,
+individuals begin with strength of 12, and the magic sword to end all
+swords costs 1500.  In such a world, a hero would need to be the
+beneficiary of some strength-increasing spells or the lucky finder of a
+magic bag of some light, valuable objects (like jewels) before he or she
+could afford that sword.
+
+3.  Magic Items - Magic items are treasures with magic spells attached to
+them.  The spell can be set to be invoked when the item is picked up and
+/or used and/or dropped.  For a discussion of all the possible spells, see
+"Magic Spells" on page 22.
+
+4.  Missile Weapons, Melee Weapons and Armor - Missile weapons are those
+which can operate at a distance (bows, rifles, grenades, etc.), Melee
+weapons are effective up close (daggers, claws, clubs, etc.).  Armor
+absorbs some of the force of blows against its wearer (chain mail, thick
+hide, shield, etc.)
+
+Power (set between 0 and 31) is a measure of the damage a weapon will do
+or, in the case of armor, of the damage it will prevent.
+
+Attack adjustment (set between -35% and +40% for weapons and -65% and +10%
+for armor) combines with a player/character's weapon or armor skill to
+determine how likely it is that blows or missiles will hit their mark.  The
+higher the positive attack adjustment, the more likely success will be.
+
+     Note:  The attack adjustment for armor does not affect anything about
+blows struck against the armor.  Instead it affects the success of its
+wearer with the weapons he is using.  Think of it as a representing how
+awkward and cumbersome the armor is.  And think of armor skill as the
+ability to overcome the cumbersomeness of the protection so you can fight
+well while wearing it.
+
+     You might also use armor as a "cloak of skill" by setting it's power
+to 0, so it doesn't ward off blows, while setting the attack adjustment to
++10%, so it will improve its owners skill with weapons.  Such a piece of
+armor might be called a "priest's protection spell" and could be set to
+disappear after the first use or to break easily (see next item).
+
+				35
+
+Chance of Breaking (set between o and 15%) determines how likely it is that
+the weapon or armor will break when it is used.  (Individuals automatically
+try to parry melee blows if they have a melee weapon of their own readied.)
+If you are using a weapon to represent some natural quality that it doesn't
+make sense that the owner would lose, be sure to set the Chance of Breaking
+to 0.
+
+Magic/Not Magic determines how successful the weapon will be against magic
+defenses.
+
+Select Usable Only by Owner for items like claws, teeth, fists, etc.  If
+this option is set to Can be Used By  Anyone After Owner Dies, the weapon
+will appear when the body of the departed owner disappears.  A
+player/character will not be permitted to drop an item that is usable only
+by its owner.
+
+Range determines the number of spaces (horizontally, vertically or
+diagonally) that missiles will travel before their force is spent. (Note: 
+missiles will not pass through Obstacles, but they can pass between two
+items which are diagonally adjacent to each other, if the shot is
+accurate.)
+
+Thinking About Weapon and Armor Design - Like creature constructing, the
+design and placement of weapons in an adventure is an art, not a science. 
+As a starting place, study the weapons and armor in the basic construction
+sets.  Notice that the more powerful ones tend to have n„e„g„a t„i„v„e„
+attack adjustments - that is, they decrease the likelihood of a successful
+blow and therefore require higher skill ratings if they are to be used
+effectively.
+
+     One good rule, then, is that the more powerful the weapon or armor,
+the greater the degree of skill which ought to be needed to wield or wear
+it.  Another good rule is to avoid making super weapons (+40% Attack
+Adjustment, Power in the 10's or 20's) unless you want to guarantee a huge
+edge to anyone who finds them.  Try placing and modifying different weapons
+in different ways, then notice their effect on the game when you play.  In
+time, you will develop a feel for the kinds of weapon characteristics that
+best suit the kinds of adventures y„o„u„ want to design and play.
+
+5.  Magic Spells - Magic Spells are both a category of things in their own
+right and something which can be hooked to things (Magic Items), portals,
+and obstacles and spaces (including custom obstacles and spaces). 
+Altogether there are 15 different base spells available.  They are
+described in some detail beginning on page 22.
+
+     When a spell belongs to the Magic Spell category, it can only belong
+to a creature or a player/character, and it is invoked only when the owner
+casts it - and only then if he, she or it has enough power and/or luck to
+do so.  (You may set the amount of power required to any number between 0
+and 127).
+
+     Each Magic Spell can be made to display a short three-line text
+message when it is invoked (providing the opportunity to explain to the
+player/character what is happening) and may be made to disappear after its
+first use.
+
+				36
+
+     When spells are invoked by a space or obstacle or by dropping an
+object on a space, they take effect at that space or obstacle.  When they
+are cast or invoked by the use of a Magic Item, the her/player chooses the
+target of the spell.  (An exception: if a spell invoked by a dropped object
+applies only to an individual and it's dropped on a square next to the
+dropper unless it's dropped on a creature.)
+
+     Magic Items which invoke spells upon being picked up take effect where
+they were, unless they apply to individuals.  If they do apply to
+individuals, they act on the one who picked them up.
+
+6.  Portals - Portals (i.e., doors, passageways, tunnels, time windows,
+etc.) may invoke a spell (which you pick) whenever they are passed through.
+ Alternately, they may simply allow passage from one room to another (or
+even to another region or to the world map).  And if they are not set to
+invoke a spell, they may be set to allow passage only to those who own or
+don't own a thing you pick from the Master Thing List.
+
+     Portals may be designated as normal two-way doors or as one-way, no
+return passages.
+
+     Two-way doors can only be used to provide passage between rooms which
+share a common wall.  One-way, no-return passages can be made to lead
+anywhere within the region they start in, or anywhere on the map, or
+anywhere in another region.  When you install them, the program will prompt
+you through the process of setting where they come out.
+
+     Whenever you make passages lead from one region to another, or to and
+from regions and the map, ACS must go to the disk for new information.  Use
+such jumps by all means, but to keep the  pace of your adventure brisk (and
+because jumps from one region to another can be very disorienting), use
+such passages sparingly.
+
+     If a Portal is set to bar passage to all carrying or not carrying
+something, it may also be set to display a 3-line message explaining why
+passage is blocked.  You may type in any message you want.  You may also
+set the blocked passage   so it will destroy the object named when you pass
+through it - a nice little way to set a chasm so it can only be crossed by
+a rope which breaks after delivering you to the other side.
+
+     Don't forget that you can have any picture for a door that you like. 
+For a delightfully puzzling use of that fact, see the room where the whole
+wall seems made of doors and the adjacent one where there seems to be no
+door at all in the Land of Aventuria mini-adventure called "Deep Dank
+Dungeon."
+
+7.  Spaces and Custom Spaces - These things offer a way to put spells and
+barriers within a room without using a door.  Like doors, Spaces and Custom
+Spaces can be made to invoke any spell, or they can be set to bar passage -
+and say why - to any player/character carrying or not carrying anything you
+pick from the Master Thing List.  In addition, a Custom Space can be made
+to invoke a spell if a thing you specify is dropped on it.
+
+				37
+
+     A Custom Space is like a wild card.  It lets you choose which
+characteristics you want in common for every copy you put down, and which
+ones you want to vary each time you put a copy down.  The Help spaces
+(marked with a big H) used in the "Land of Aventuria" adventures on your
+ACS disk offer a good illustration of the usefulness of Custom Spaces.  By
+creating the Help space as a Custom Space, the tutorial designers were able
+to give you a symbol you could depend on for helpful information and still
+give you different information each time they used the symbol.
+
+     A Custom Space can also be used as a "vending machine," a place where
+an individual can drop one thing and get back another.  To create this
+effect, set line 5 to "Invoke Spell When Thing Dropped Here" and pick the
+thing you want to use as quarters ("Gold" perhaps).  Then set line 7 to
+"Add To Room One" and pick the thing you want the machine to dispense
+(anything from candy bar to a magic sword).  Since this is a Custom Space,
+you must pick either the thing to be dropped or the thing produced when you
+put this trick into the room.
+
+     There is one limit on Custom Spaces.  While they can be associated
+with both a spell and a thing (if they contain a spell evoked by dropping a
+particular item, for instance), you cannot wait until placing them in a
+room to pick b„o„t„h„ the spell and the thing.  One or the other must be
+specified during construction of the Custom Space.  (Note:  ACS will not
+use any Custom Spaces when you use the "Let ACS Finish the Adventure"
+option.)
+
+     Spaces and Custom Spaces are wonderfully versatile props.  Turned into
+beds and chairs with the appropriate spell attached (Increase Life force),
+they can be made to heal all who "rest" upon them (i.e., move onto them). 
+As "costumes" they can masquerade as anything or terrain type, creating
+puzzles for the adventurer where things are not what they seem.
+
+    You might, for instance, make a space called "invisible cover" which is
+the same color as the floor.  By placing this item on top of other things
+in a room, you could then  hide those things from view.  You might then
+make a Magic Item which invokes the spell "Rids the Room of All Uncarried
+Invisible covers" when it is picked up.  Picking up the item would then
+have the effect of making visible any item covered by an invisible cover.
+
+     For more uses of Spaces and Custom Spaces, see "Stacking Things on One
+Space" below.
+
+8.  Obstacles and Custom Obstacles - To make a place in a room or on a map
+impassable to everyone under all circumstances, put an Obstacle there (like
+a table or mountain).  If you want the obstacle to be temporary, set it to
+disappear after the first time it's bumped into.
+
+     You may also associate a spell with an obstacle so it will be invoked
+whenever a player/character bumps into the obstacle.  If you want to be
+able to chose a different spell modifier each time you put a copy in a room
+- a different text message, perhaps, or a larger or smaller increase in
+Life Force - use a Custom Obstacle.
+
+     The treasure chest used in the "In a Nazi Castle" mini-adventure is an
+example of the usefulness of Custom Obstacles.  The designers were able to
+leave immediately recognizable treasure chests throughout the adventure,
+yet put a different treasure (with the "Add to Room One" spell) in each
+one.
+
+				38
+
+     Like Spaces, Obstacles are remarkably flexible props.  Obstacles with
+not associated spell are useful for decorative detail, for making mazes
+with walls within rooms (see the "Land of Aventuria" mini-adventure called
+"Deep Dark Dungeon") and for making red herrings - items which look like
+they might be worth investigating but which adventurers discover to be
+simply obstacles if they spend the moves necessary to check them out.
+
+9.  Stores and Room Floors - Stores and Room Floors are not very editable,
+but they are especially useful.  You may pick the picture for each, and you
+may have only one of each per Master Thing List.  The picture you assign to
+Room Floor will be used for the floor of every new room you create.  ACS
+will not add any Stores to the adventure it creates when you use the "Let
+ACS Finish Adventure" option.
+
+     When you place a store in a room (you may add up to 1 per region while
+editing a room's contents), your things list will appear so that you can
+select the store's inventory.  You may pick from among the treasures, magic
+items, weapons and armor in your list.  How many you can have in inventory
+for each item depends on what you chose for the "No one may own more than X
+of these" option.  Just keep pressing the joystick button over an item to
+discover whether you can have only 1 or up to 3 of it in stock.
+
+     Stores know the value you have assigned to things in the adventure,
+and they compute all transactions accordingly.  Stores will also buy back
+items at a reduced rate.  The smarter a player/hero is (i.e., the higher
+his or her Wisdom rating ) the better the deal.
+
+10.  Stacking Things on One Space - You may have more than 500 different
+things in each region in an adventure, and if you wished, you could stack
+them all on a single square in one room.  And though you are not likely to
+go to that extreme, you will find stacking things on top of each other very
+useful for creating various special effects.
+
+    When you create a stack of things, it's important to remember that the
+thing on top (the last one you put down) will be executed first.  Also, if
+a "Rid the Room of All Uncarried" spell names an item in a stack, that item
+will also be removed when the spell is cast.  And finally, an "activate all
+things" spell activates only spells in the stack.  Here are some special
+effects you can create with stacks of things.  Each stack is listed from
+top to bottom.
+
+A) Disease - This stack is both simple and deadly: 1) "Activate All Things"
+Space, 2) "Increase Life Force by 10 Temporarily" Space, 3) "Decrease Life
+Force by 10 Permanently" Space.
+
+     The adventurers leave the square the stack was on with the same amount
+of Life Force that they entered with, but now 10 units of that Life Force
+will tick away at the rate of 1 unit every few turns - about twice as fast
+as Life Force regenerates when less than Constitution.
+
+     Four such disease would be enough to kill an adventurer.  The rate of
+decay would be too great for rest to overcome.
+
+				39
+
+B) Using Endless Music Themes - Whenever you use the "Let ACS Finish the
+Adventure" option, it always places the goal of the adventure on top of a
+stack designed to give you musical accompaniment while you read the
+congratulatory message for successful completing the adventure.  This
+"success stack" contains 1) the treasure/goal; 2) an "Activate All Things"
+space; 3) a "Play Music" space set to play the endless theme which matches
+the music mood for the adventure; 4) a "Display Message" space set to
+display a congratulatory page of text; 5) a "Play Music" space set to play
+the short fanfare.
+
+    After the player/character picks up the object, and then moves onto the
+space, the Do-All spell puts everything in motion.  The music starts to
+play.  The message appears as the music continues.  When you press the
+button again, the short fanfare plays, ending the "endless theme" in the
+process.
+
+C) Let There Be Light - Here's how to create the effect of shining a light
+into a dark room.  Place objects in the room and cover them with "Invisible
+Covers."  Then put the following stack at the room's entrance:  1) an
+"Activate All Things" Space; ) an "Open only to owners of a lantern/Rids
+the room of all uncarried covers" Custom Space set to display the message,
+"Your light shines into every nook and cranny"; 3) an "Open only to those
+who don't own a lantern" space set with a do nothing spell which displays
+the message " You can walk forward, but it's quite dark here."
+
+     The Do-All Space lets both passage conditions shine through but
+continues only with the spell that was actually invoked.  Player/characters
+not carrying a lantern receive the message that it's dark.  Those carrying
+a lantern are told that light is shining into the room and they see items
+appear.
+
+    The messages play a crucial role in this trick, by the way.  By
+persuading adventurers that they need a light, it sets their expectations
+so they'll accept what they later see as the result of light being shined
+into darkness.  In good adventures, messages often work in this fashion. 
+Your ability to create depends greatly on how clever you are in using
+messages to plant ideas you can play on later.
+
+				40
+
+Graphics Reference Guide
+
+You can have 3 "pages" (screens) of pictures with up to 16 pictures on the
+first page, up to 48 on the second an up to 46 on the third - a total of
+110 pictures in all.
+
+     The third  page in the set is reserved for pictures of creatures -
+that is, you may choose pictures from it only when selecting pictures for
+creatures.  The pictures from the first two pages can be used for anything
+- terrain, things or creatures.  Unless you make a change with the "Change
+Definition of Map Terrain" option (in the "Edit World Map" group), the 16
+pictures on page 1 are used by ACS as the world map terrain pictures.
+
+Selecting a Picture to Edit - Moving the cursor back and forth along the
+"Edit Another Picture" line at the bottom moves the selecting bars among
+the pictures on the page.  The picture being selected by the bars is
+displayed just above the menus.  If you want to draw a brand new picture,
+select a blank space on the page.  To choose a different page, select "Edit
+Another Group of Pictures"
+
+Drawing - Move the cursor up into the magnified version of the selected
+picture.  Hold the button to put down a block of the color currently
+outlined by the selecting box.  If you draw on top of colors different from
+the one you're using, the new color will replace the old.  If you draw on
+top of the same color, the color will be replaced by the currently selected
+background color (the top left one of the four currently available color
+choices).
+
+Selecting a Different Color - Selecting "Draw another Color" moves a
+selecting rectangle among the four currently available color choices. 
+Selecting "Change Paint Color" changes the color in the selecting
+rectangle.  Changing the paint color in the top left choice changes the
+background color.  Any change in paint color will affect all pictures using
+that color.
+
+Erasing a Picture - To erase a picture, select the background color (top
+left of the four possibilities), then draw over everything with that color.
+
+Note:  To draw pictures which won't blur into adjacent pictures when you
+use them use only the background color for the the bottom and right edges
+of the picture.
+
+				41
+============================================================================
+         DOCS PROVIDED BY  -+*+-THE SOUTHERN STAR-+*+- for M.A.A.D.                                                               
+============================================================================

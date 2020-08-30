@@ -1,0 +1,125 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Alien Breed" © 1991 Team 17.
+
+ This install requires WHDLoad and DIC to be in the path. Both can be found in
+ the WHDLoad package.
+ To install from a different drive than DF0: select installation mode Expert.
+
+ The installed program requires 1.0 MB ChipMem and 0.5 MB OtherMem.
+ It can be quit by pressing '*' (key can be changed with Tooltype "QuitKey=").
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 2.2 (18.05.2018) done by JOTD:
+ - added 2nd player joypad controls
+ - enabled the use of fast memory again
+ - added BUTTONWAIT to be able to read mission text (end with joystick/lmb)
+ - repaired the pause button on joypad (sorry!)
+ 
+ version 2.1 (13.05.2018) done by JOTD:
+ - bugfix for pause key
+ - updated 2.0 feature list & added fun release notes from the authors
+ - added switch (CUSTOM2) to enable original cheat keys
+   
+ version 2.0 (09.05.2018) done by JOTD:
+ - adapted to WHDLoad v17 dynamic options splash screen
+ - trainer now includes infinite credits so you can buy all equipment at once
+ - added quitkey for 68000 machines
+ - added CD32 controls for pause & weapon switch  (issue #0002940)
+ 
+ version 1.3 (01.03.2006) done by JOTD:
+ - fixed second button handling (intex terminal access)
+ - install script rewritten
+ - icons added
+ - manual, solution, and cheats added
+
+ version 1.2 (22.01.2004) done by JOTD:
+ - removed intex terminal access by fire button (was annoying)
+ - either RMB or second fire button (blue CD³² button) activates intex
+ - source code included
+
+ version 1.1 (01.06.2003) done by JOTD:
+ - reworked to work with 512k chip and fastmem
+ - keyboard fixed
+ - joystick second button activates intex terminal
+ - Mr Larmer trainer activated by setting CUSTOM1=1: infinite energy, keys, etc...
+ - source reworked
+
+ version 1.0 (21.03.2001) done by Mr.Larmer:
+ - disk protection removed
+ - two access faults removed
+
+ comment from Mr Larmer on the protection:
+ - when I first time seen game code, i thought this is unpatchable. about
+   950 decode loops which have 20kb, but for what I have brain ;)
+
+Keys/joypad buttons:
+   - Space/second/blue button: enter Intex Computer System
+   - M/yellow button: holo-map
+   - Alt keys/green button: weapon selection
+   - P/play button: pause
+   - ESC/fwd+reverse buttons: quit
+
+Original cheat/gametesting keys:
+   - F6: level destruct
+   - F7: level skip
+   - F9: cross walls, all weapons available, no self-destruct timer
+   (note that pressing F9 cannot be undone)
+   - F1: game over
+   - F4: lose life
+   - F?: other function keys effects are unknown
+
+notes:
+
+- on WinUAE turn off JIT/use NOCACHE for the game to start
+- quitkey works on 68000, but only from inside the game
+  (won't work from the menu or the end sequence)
+
+"release notes" (found somewhere I don't remember where):
+
+ZALIEN BREED V1.3, =SB= 14-Oct-91    
+Main program code by Andreas Tadic and Peter Tuleby, Graphics and game design 
+by Rico Holmes, music and sound effects by Allister Brimble,
+ additional programming, bug fixing, copyprotection, data compression routines 
+and algorithms, and fastmem sample players by Stefan Boberg
+
+                      == "Funny facts" about this game... 
+
+1) Source code is unreadable and extremely sensitive to changes 
+(banana-code at the highest level). 
+2) My first protection had to be removed due to the fact that those f***ing 
+duplicators couldn't copy it reliably , so this is really not the protection 
+I wanted to put in (this one was threwn together in great haste in two days, 
+completely from scratch) . For a REAL protection, look forward to PROJECT X 
+from Team 17 software, released Jan-92.. It will be tough!  
+3) A dozen or so MAJOR bugs were fixed within three days.. we worked 72 hours 
+without sleep! I worked even longer after that... I hate the sight of this
+ bloody game, sure hope it'll sell well, so I can get some serious cash and
+ buy some goodies for me... like a Fusion Forty for my little A3000    
+4) The game's gotten rave reviews in all major mags, YAHOO! (six-page review in
+ ACE, three pages in CU AMIGA etc..) Good job we payed them all that money! 
+(not really...:)    5) After this sentence is finished, this game is 100% finished
+, and you cannot possibly imagine how bloody RELIEVED I am.... phew... Over and out...
+ bibi                                       
+>w                    
+FILENAME> abfinal.s   
+>!                    Exit, are you sure? Y bzzzt.... EOT         

@@ -1,0 +1,68 @@
+
+This installer requires the Operation Stealth original disks (3)
+from Delphine Software, 1990.
+It should work for any version including clean cracks. Go to hell rather
+than submitting me a bug report if you've got a crack, though.
+
+
+History:
+
+ v2.0 (15.07.2003)
+ - Rewritten for kick13, osemu no longer used. You've got to reinstall or copy
+   the file "startup-sequence" of the install package in the directory "data"
+   of the installed game, under a directory "s" (you'll have to create it too)
+   otherwise the game will not boot and you'll have to type "delphine" to play!
+ - Support for "James Bond 007 - The Stealth Affair", the US version of the game
+   (Thanks Toaks for original images and support)
+ - Source code included
+
+ v1.3 (around 2002)
+ - I thought it was 100%, but there were an error in expmem declaration. The
+   game needed 8 megs of expansion mem! fixed (now needs 512K only!)
+
+ v1.2
+ - Convenient install script
+ - Uses WHDLoad & OSEmu for full memory control & quit key
+ - Runs with fastmem & caches for better loading and game speed
+ - Supports theorically all versions. Tested with v4.0 (Kixx, UK), v3.6 (UK) and v3.7 (French)
+ - V3.7 has lots of problems. Fixed
+ - CPU dependent loops removed (music works OK with fast memory/caches on)
+ - Color code protection removed (tough, did it 8 years ago!)
+ - Saves to HD, without OS swaps with the help of zero-filled savegame files
+ - Insert save disk requests removed
+ - Quit key (numerical '*')
+ - Icon by Frank
+ - Docfile included
+ - Walkthrough included
+
+ v1.1
+ - First WHDload release, supports only v4.0 and lots of problems still to solve
+
+ v1.0
+ - JST/OSEmu release, with hacked executable included
+
+
+Notes:
+
+- If you've got a save disk, you can copy its contents in the game directory
+  (files named SD.DIR, and SD.<number>).
+- Thanks to Olivier Schott and Juergen Bornmeyer for bug reports/their versions
+  of the game (there are a lot of versions of this game out there)
+- The install script asks you how is labelled your disk 1. It is because
+  in the french version there's an accent on the e of "Operation"
+- If you've got an old installed version and you've got trouble, please re-install
+  game from floppies or run the install script in your game directory to update
+  files (slave/OSEmu/Savegame files)
+
+
+Requirements:
+
+ The game requires a installed A500 Kickstart 1.3 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ a appropriate requester.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick345.lha" on aminet.

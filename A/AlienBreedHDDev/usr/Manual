@@ -1,0 +1,197 @@
+                 __     o __ __      __  __  __  __ ___
+                |__||   ||_ |  |    |__)|__)|_  |__ |  )
+                |  ||__ ||__|  |    |__)| \ |__ |___|_/ 
+  
+                         -*- From Team 17!. -*-
+              -*- FULL DOCUMENTATION BY HYDR0/ANTHR0X -*-
+          -*- CRACKED BY SKID ROW. FIXED TO 100% BY LEGEND -*-
+ 
+   Why So Late?... Well Why Not They Havn`t Been Done Before! (I Think!)
+
+ HYDR0- Please Go Out And Buy The Original As This Game Is V.Cool!.
+’
+
+ ALIEN BREED LOADING INSTRUCTIONS:
+ ---------------------------------
+ 
+ To play ALIEN BREED simply insert disk one and reset you Amiga with the
+ conventional CTRL & 2 Amiga Key operation. The Game will load and run 
+ after a short period of time. Alternatively you may wish to know the
+ background story thats surrounds the game - because we believe a picture
+ paints a thousand words we have created a story-disk that we hope will
+ get ypou in the right mood for the mission that awaits. To view the
+ background story simply insert the story-disk and reset as indicated
+ earlier. We believe that having a nice background story/intro is important
+ but also realise that you`re unlikely to want to see it every time you play!
+
+ ALIEN BREED SYSTEM REQUIREMENTS:
+ --------------------------------
+ 
+ ALIEN BREED requires at least one-meg of memory to operate, it doesn`t 
+ matter exactly what typr you have (ie.Chip or Fast) as long as you have 
+ one-meg. Altough ALIEN BREED is a one-meg product and most of tha data is 
+ loaded initally, there is still a need to load other data when necessary 
+ - but this is done between levels and doesn`t detract from gameplay.
+ If you have more than one meg of ram then more data is loaded, resulting
+ in even faster game-operation.
+ 
+ INTRODUCING THE I.P.C.
+ ----------------------
+ 
+ The Inter-Planetary-Corps (IPC) are and elite band of tough mercenaries
+ that were assembled by the Planetary Federation to maintain peace and
+ order throughout the universe. Their schedule usually consisted of 
+ purusing pirates, investigating narcotics-rings and catching sabotuers.
+ Teamed in two`s, the IPC were a match for most, if not all of the
+ colonists and even most of the outlaws gave them a somewhat grudging 
+ respect. IPC members Johnson and Stone were on a rountine journey, 
+ Patrolling a relatively quiet part of the intex network cluster in
+ the outer spiral arm - after six months on patrol they were heading back
+ to IPF-HQ for a well earned break. Their craft, IPCC Miraculous - was a
+ compact little machine, highly manouverable but lightly armed - but they 
+ weren`t expecting any trouble in the sector of the universe and certainly 
+ not on their way home...
+ 
+ INTEX SYSTEMS
+ -------------
+ 
+ Intex systems was the name behind many of the technological breakthroughs
+ of the period, they were responsible for the huge increase in colonisation
+ and most of the complex computer and driod operated stations. Most bases
+ have Intex Systems computers available and these offer many services to the
+ user including the latest entertainment craze - Space Tennis - amongst
+ other things such as new armoury, first-aid-packs, ammo clips etc - which
+ are all instantly available through the matter-displacement unit. Intex
+ Space Research Centre Number 4 (ISRC-4) Was a such a centre, home to many
+ science officers who were working on new security systems, the exact 
+ nature of which still remains a closely guarded secret. It seemed odd that
+ even the IPC were not told what went on at such stations, all they were 
+ given was a vague map of the deck-layout.
+
+ CONTROLLING THE IPC MEMBERS..
+ -----------------------------
+
+ Both players are contolled using the joystick, simply move the joystick
+ in the direction you wish to go. The joystick button fires off a round of
+ ammo using the current weapon, weapons can be bought with collected
+ credits at the computer-consoles located around the decks. To activate 
+ a console, move towards it and hold the button down. All consoles operation
+ is then dont with the joystick and cursor on-screen. The players have a
+ finite amount of energy (represented in a energy bar) and this decreases
+ as the game commences.
+ Energy is lost through battle contact and through drainage using 
+ some of the security systems, not to mention things like the acid pools on
+ the engineering deck. Energy can be topped up by locating first-aid packs
+ scattered around the station or a kit can be ordered from the console.
+ You can expect security-device such as the fire-doors(once shut stay shut!),
+ one-way energy-doors and suchlike once on board, but because of sercurity
+ regulations and restrictions, we are unfortunatly unable to explain any
+ further. We do understand that ISRC-4`s host system computer (LNET) is fully
+ intact however and this may be able to give some assistance. A small
+ portable map of the deck layout can be brought if you have the appropriate
+ credits available, this can be operated by pressing "M" on your keyboard
+ Pressing "M" again will turn it off!.  The map works better the closer it
+ is to an intex console due to magnetic storm activity. When you purchase
+ additional weaponry you can select between the currently available ones
+ by press the left "ALT" key (Player One) and the righ "ALT" key (player 2)
+ Different weapons have different effects and its up to the player to use
+ the best weapon in a given situation. You can exit from the computer 
+ sub-game by pressing the other joystick button(or left button in one player
+ mode).
+
+ GAME MENUS AND OPTIONS
+ ----------------------
+ 
+ The game offers several options which are selectable once it is up and
+ running. All of these can be toggled using the joystick and fire button.
+ These options are as follows: One Player/Two Players (Two joysticks 
+ required in 2 player mode)* View High Score Table (Reveals the days top
+ ten players)*Share Credits On/Off (in a 2 player game you have the option
+ to share any credits you find between the team - otherwise it`s a race
+ for cash!)* Start game (play commences with currently selected options).
+ The game features a full attract/demo sequence if left alone, Returning
+ to the menu afterwards, You can also exit to the main menu by pressing
+ ESC.
+
+ TIPS FOR BETTER ENJOYMENT OF THE GAME..
+ ---------------------------------------
+  
+ ALIEN BREED is a great one player game but(like most of the good things
+ in life) - is best done with a friend. The two player option is heartily
+ recommended and it`s advisable that you both play as a team and cover each 
+ other or your survival cannot be guaranteed! ALIEN BREED boats a spectacular
+ array of atmosoheric game-sounds and is best played with the volume up!. 
+ We recommend that you hook your Amiga up to your Hi-Fi to fully savour
+ this aspect of the game.. Now turn down the lights, turn up the sounds
+ and encounter ALIEN BREED!.
+
+ TEAM 17`S HOPES AND ASPIRATIONS...
+ ----------------------------------
+
+ Our belief when producing ALIEN BREED was to produce a game that wouldn`t
+ look (or sound) out of place in a arcade and be the type of game that 
+ everyone would want to play and get involved in. We`d like to think that
+ we`ve achieved our aims and that you - the player, enjoys the result.
+
+ BACKGROUND IMFORMATION...
+ -------------------------
+
+ ALIEN BREED was developed on 2 Amiga 3000`s using ASM-ONE assembler, All
+ game graphics are 32 colours and the game runs at 50 frames/second using
+ a full Pal display. It uses well over 1.5mb of graphics data (not including
+ the story disk), 140k of deck-map data and 210k od digitised sound 
+ (74 effects). The source-code is 635k (35.000 lines) and written in 100%
+ assembler language - everything has been designed, written and produced
+ using the Amiga.
+
+ THE TEAM.
+ --------
+  
+ ALIEN BREED was programmed by the Swedish talents of Andrea Tadic And 
+ Peter Tuleby. The art and animation werte courtesy of Rico Holms, Sound
+ and music by Allister Brimble with speech effects by Lynetter Reade. Ham 
+ story animation created by the one and only Tobias Richter us Reflections.
+ Original game design by Rico with jeers and rather infuriating help from
+ Martyn Brown, who also was responsible for getting the thing into one
+ piece - ie. doing all the shouting,screaming,moaning and sweating.
+ 
+ Thanks are also due to Stefan Boberg for additional programming help and
+ copy-protection rountines. We`d also like to thank everyone invloved in
+ the project, including all the rather willing games-testers, Mike and
+ everyone at EIS, the press for their persistant encouragement, the guys
+ n guls in the office and YOU (HYDR0- I HOPE!) for buying, Playing and
+ hopefully enjoying the game.
+
+ Thanks also to Stevey babes,Paul,Marcus,Ansy,Kath&Joyce who spent ages
+ packing all those full contact boxes, June 91!. Thanks to Dean,Mick Parker
+ , Debbie,elaine and Heather for all their encouragement,finally a big 
+ thanks to Mick to seeing the whole thing through
+
+ Team 17 have many more exciting Amiga projects in the pipeline, look out
+ for them in the press and your local software ratailer. Full Contact
+ is also avaiable rrp 9.99 from your local dealer. We`d like to hear from
+ players as to what we could have done to make this (and other) titles
+ and better. We are making software titles for you first and foremost,
+ so its only right that you should have your say!.
+ 
+ THE END!
+ --------
+
+                                        .      . 
+   CALL THE ANTHROX BBS!..               \____/
+ GET NUMBERS FROM THE ELITE!          /\_/||||\_/\           
+                                      \__\ oo /__/          ___ 
+  C.A.L       +44-XX-XXX-XXXX    	 / __ \  __________/   \_ 
+  CITY LIMITS +44-XXX-XXX-XXX	     Moo \____/\/                \
+  HYPERSPACE  +49-XX-XXX-XX 		     \                   _\
+ 		                              \                _/ \\ 
+  FOR THE LATEST WAREZ.  		      | ||\_______/| ||   //
+  AND THE COOLEST MSG-BASES!. 		      | ||    \__/  \ \\  \\ 
+      					      < <|    /|\\  / //  /\\ 
+      					      | |-         | //
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^     
+
+         ----------------------------------------------------------
+         THIS FILE WAS DOWNLOADED FROM `THE CENTRUM' (312) 776-0417
+             SYSOP: REEET-MON   CO's: LOVERBOY - TOM/FAiRLiGHT
+         ----------------------------------------------------------

@@ -1,0 +1,102 @@
+
+
+   ____  __  ____  __  ____  _ ___________ ____ ____  ______ ____    _______
+   \__ \|  \ \__ \|  \ \__ \| |\  ___/ __/ \__ \\__ \|  __/ \\__ \/\ \  ___/
+   | |\ \   \| |\ \   \| |\ \ |/\ \ /  _/  | |\ \ |\ \  _/   \| \   \/\ \
+   | |/_/ |\ \ |/ / |\ \ |/ / |\ \ \  |_   | |/ / |/ / |_| |\ \ |\/\ \ \ \
+   |_|  |_|/__\|\_/_|/__\/ /|_| \__/\___/  |_/ /|_|\_/___/_|/__\|  /  \__/
+                         \/                  \/         Highlander \__/
+............................................................................
+
+		   Uploaded at: 18:16:12 on: 15-Jun-93
+
+         
+     GUNSHIP 2000 KEYBOARD AND JOYSTICK CONTROLS
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     Written by the world famous RGY-RA... Ripped of the PC version so it
+     might not be 100% accurate..~~^~~~
+
+     SIMULATION CONTROLS
+     ~~~~~~~~~~~~~~~~~~~
+     Quit to Dos                     Alt q
+     End Mission                     Alt e
+     Pause                           Alt p
+     Joystick Adjust                 Alt j
+     Detail Adjust                   Alt d
+     Cockpit Style                   Alt s
+     Volume Adjust                   Alt v
+     Co-Pilot Sound                  Alt c
+     Last Message                    Alt m
+     Change Selection                Tab/Shift/Arrow Keys or Move joystick
+     Choose Selection                Return/Backspace
+     Leave Screen                    Esc
+     Cancel Command                  Esc
+     Accelerate Time                 ]
+     Normal Time                     [
+
+     SIMULATION VIEWS
+     ~~~~~~~~~~~~~~~~
+     Cockpit                         F1
+     Mast                            F2
+     Left                            F3
+     Right                           F4
+     Chase                           F5
+     Flight Chase                    Shift + F5 keys
+     Tactical                        F6
+     Remote                          F7
+     Reverse Tactical                F8
+     Missile                         F9
+     Map View                        F10
+     Change Map Scale                Spacebar
+
+     FLIGHT CONTROLS
+     ~~~~~~~~~~~~~~~
+     Cyclic Forward                  Up Arrow
+     Cyclic Back                     Down Arrow
+     Cyclic Left                     Left Arrow
+     Cyclic Right                    Right Arrow
+     Collective Up                   =
+     Collective Up Fast              Shift + =
+     Collective Down                 -
+     Collective Down Fast            Shift + -
+     Gear Up/Down                    3
+     Autopilot On/Off                5
+     Next Waypoint                   6
+     Previous Waypoint               7
+     Bay Open/Close                  8
+     Rotor Engage/Disengage          9
+     Auto-Hover                      0
+     Change One or Left MFD          z
+     Change Right MFD                x
+     Low Limit -                     c
+     Low Limit +                     v
+
+     WEAPON CONTROLS
+     ~~~~~~~~~~~~~~~
+     Rocket Salvo x1                 1
+     Rocket Salvo x2                 2
+     Rocket Salvo x4                 4
+     Acquire/Next Target             Backspace  or  Fire Button #2
+     Radar Jammer On/Off             n
+     Drop Chaff                      m
+     IR Jammer On/Off                .
+     Drop Flare                      /
+     Select Weapon                   Spacebar
+     Fire Weapon                     Return  or  Fire Button #1
+     Jettison Weapon                 Shift + Spacebar
+
+     FLIGHT COMMANDS
+     ~~~~~~~~~~~~~~~
+     Next Unit                       n
+     Fly To                          f
+     Hold Position                   h
+     Speed Adjust                    s
+     Altitude Adjust                 a
+     Land                            l
+     Return to Base                  b
+     Disengage                       d
+     Regroup                         g
+     Weapons Free                    w
+     Cargo Drop                      c
+     Mission Assets                  m
+

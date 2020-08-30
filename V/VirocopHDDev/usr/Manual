@@ -1,0 +1,372 @@
+Virocop
+© 1995 Renegade
+
+Manual
+Hardware Requirements
+
+To play Virocop you will need an Amiga with at least one Megabyte of RAM.
+The game will enhance itself by providing a RAM disk if you have more than
+one Megabyte of memory to reduce loading times. If you have an Amiga with
+the AGA chipset, e.g. an A1200 or an A4000, then the game will enhance itself
+further by displaying extra features. A second floppy disk drive is useful
+but not essential, as minimal disk swapping takes place.
+
+Virocop AGA, reasonably enough, requires an Amiga with the AGA chipset, and
+will therefore currently only run on an A1200 or A4000. It also requires at
+least a 68020 CPU, as it takes advantage of some of the extra features
+provided. The AGA disks are amigaDOS disks, and the game is hard disk
+installable.
+
+KIT SUPPLIED.
+
+This manual. 3 floppy disks: 1 program disk, and 2 data disks
+
+Loading.
+
+Switch off your Amiga and remove any cartridges. Insert the Virocop program
+disk into drive DF0: and switch on. (A1000 owners should insert their
+kickstart disk as normal first).
+
+When prompted, please supply whichever of the two data disks is required.
+Please note that your own personal preferences, high score table, and name
+registration information may be saved onto your program disk, so the write
+protect tab must close the hole on the disk to allow this. Leave the write
+protect hole open if you do not wish to save these files to disk.
+
+Alternatively, Virocop AGA only may be installed on your hard disk, if you
+have one. Simply drag the install icon from your Virocop: disk to where you
+wish the game to be installed, and then double-click this copy. The install
+program will automativally create a Virocop drawer and copy all the required
+files to this directory. Once installed, all you then have to do is double-
+click on the Virocop icon in your new Virocop drawer to start the game. All
+disk accesses will then be redirected to yoor hard disk.
+
+In the unlikely event that your Virocop disks do not load then just
+download them again :)
+
+Name Registration.
+
+After loading, you will be presented with the "owner registration" screen.
+You have 17 letters to specify your name as you would like it to appear on
+the title screen. Type your name and then press ENTER. The game will attempt
+to save your name to the program disk so that you do not need to enter it
+again on subsequent loading. It also personalises your passsword for
+restarting on any level yo have played on the game. If y do not allow the
+game to save your name onto disk then you will have to input your name next
+time, and any passwords that you note down from this game session will be
+invalid on subsequent loads.
+
+If you accidently enter your name incorrectly and wish to change it, you can
+do so next time you load the game by holding the "help" key down just before
+the titles appear, and this will force the name registration to be done again
+from scratch.
+
+Controls.
+
+Moving D.A.V.E about:
+
+Keyboard.
+
+Many keys may be used, offering a wide choice of setups for left and right-
+handed players.
+
+up  up                          up  up
+Q   W   E   R   T   Y   U   I   O   P
+
+
+down down                        DOWN DOWN
+A    S    D   F   G   H   J   K   L   ;
+
+
+left left right right          left left right right
+Z    X    C     V    B    N    M    ,    .     /
+
+The cursor arrow keys are also available.
+The ctrl, alt and both shift keys are used as fire buttons, and the space bar
+cycles through the available weapons.
+
+Joystick
+
+The joystick moves D.A.V.E. around the game environment, accelerating in the
+direction pushed. Pressing the button will fire the current weapon,
+indicated by the icon in the bottom right-hand corner of the screen.
+
+Joysticks with an independant second button can cycle through the available
+weapons using this button. Joypads usually have at least two buttons. If no
+second button is available, press the space-bar. A CD32 game controller may
+be used. In this case the red button is the main fire button, the blue button
+cycles through the the available weapon slots.
+
+Mouse. AGA version only.
+
+Push the mouse button in the required direction to move D.A.V.E. Press the
+left button to fire, and the right button to change weapons.
+
+Player Options.
+
+Press any function key during the title sequence or demo game to bring up the
+options screen.
+
+The following options are available:
+F1:    -  Cycle through game modes:
+1.  1P -  one player, 3 lives.
+2.  2P -  two player alternating, 3 lives each.
+3. TEAM - Two player team mode. Player one controls the body, and player two
+controls the head. Thus one person is responsible for movement, ans the other
+for firing. Brave solitary players may like to try controlling D.A.V.E. with
+two joysticks at once.
+
+F2: - Select player one control method, either joystick port 2, port 1 or
+keyboard.
+F3: - Select player two control method, either joystick port 2, port 1 or
+keyboard.
+F4: - In-game music ON or OFF.
+F5: - Fast start password entry.
+
+A cursor will appear under the 7-letter password at the botom of the screen,
+initially set to `???????`. You may enter a password using your chosen input
+device to change each letter up or down, unless you are in keyboard mode. For
+convenience, the password may also be entered directly on the keyboard. Thus
+keyboard mode would be ambiguous. Once a password has ben input, press fire
+or ENTER to start the game. If the password is valid, the game will start on
+the corresponding level, with the same weapons and battery. This password
+will remain in effect for subsequent game starts until another is entered. If
+the password is invalid you will return to the titles and the game will start
+from the beginning.
+
+Note that your high score entries may be saved to the program disk if the
+write-protect hole is closed, along with your selections on F2, F3 and F4. So
+if you intend to always play with keyboard you need only to selct this mode
+once, then get a high score, and save this to disk. Next time you load the
+game it will remember your selections.
+
+Convenience Keys.
+
+Press the `Help` key during the game to pause. Press `Help` again or press
+fire to restart the game. During pause you may press the `Esc` key to quit
+the game and return to the titles sequence.
+
+The Story So Far...
+
+The controller shook her head in dismay. Another game zone had malfunctioned.
+This was the second one today. Worse, it was the fifth this week. She studied
+the map display. Several areas were flashing red, indicating that all was not
+well. Most of the zones affected were clustered together on the outskirts of
+the GameDisk. How was she going to explain to the clients that many of the
+game zones were not going to be operational...again? How was she going to
+explain it to the board? She had already had a grilling from Shacklehouse
+once this week and was more than anxious to avoid a repetition.
+
+The game zones had been set up on the GameDisk some twelve years ago. The
+idea had been scoffed at by the press at the time. How would you ever
+convince people to but virtual time-share experiences in another place
+without actually having to go there? Of course, it had been tried before, but
+the equipment had been so large that people still had to leave their homes
+and reside in places called `video arcades` to experience the game zones. Now
+with some miniturisation, the equipment could be used in the home, and people
+could experience the game zones without even getting out of bed in the mornin
+
+The game zones had become so popular that holiday brochures were sold in
+newsagents on a monthly basis. Of course, other companies had set up similar
+ventures. Well, you know what they say about imitation, but the GameDisk
+still had the biggest amd best game zones on offer. The media finally
+admitted that maybe this was a winner after all, and jumped joyfully on the
+bandwagon, organising competitions, special features and creating media
+celebrities out of holiday reviewers.
+
+Special holiday shops and begun to appear, offering `The thrill of a lifetime
+a holiday in a box`. Shelves were stacked high and wide offering time-share
+holidays in the GameDisk`s zones. New ones were being added every week. The
+sports zones and the shoot-em-up zones had recently been joined by the
+platform zones and military zones. The adventure zones were under
+construction. Chain stores and supermarkets also began to sell holidays,
+although it wasn`t always possible to take a day trip before the two-week
+vacation.
+
+Right now though it had all gone horribly wrong. Contact had been lost with
+many of the game zones. It was clear from the map display that something had
+broken into the GameDisk from...out there! And it was spreading fast. It was
+time to shut down the film-processing lab and commandeer the clients`
+holiday snaps to look for clues.
+
+The controller took a deep breath and knocked on the boardroom door. She had
+been summoned to this emergency meeting and had an overwhelming desire to be
+just about everywhere else but here at this moment. At least she had some
+evidence of the cause of game zone failures. She carried the envelope of
+glossy 8 by 10 colour photos to the table and sat down. Many of the clients
+had unwittingly taken photosgraphs of the cause of the disruption, thinking
+that it ws just a new attraction in the zone. They had been the lucky ones.
+How many clients had apparently gone home early yesterday, over two dozen?
+Perhaps they hadn`t gone home at all. Almost certainly they had strayed too
+close to these invading creatures, giant viruses, spreading out across the
+game zones. The viruses were tapping into the power and control systems
+causing mass disruption everywhere. They seemed to be feeding off the power
+and spreading rapidly throughout the GameDisk. The corporation couldn`t risk
+letting more clients into the affected zones. No, it was time to send in the
+authorities. An elite policing authority had been set up for just such
+emergencies, the Virocops. At times like these though it is no good sending
+in just any Virocop. Wgat you need in a situation like this is a Virocop
+with attitude, a virocop who can take care of itself, a Virocop who doesn`t
+take "Maybe" for an answer. What you need is D.A.V.E. - the Digital Armoured
+Virus Exterminator. (KOOOOOL!! :))
+
+The Mission.
+
+D.A.V.E. needs to collect power balls in the combat zones to pay for new
+weapons. Power balls are produced by many enemies as they are despatched.
+They deteriorate rapidly so they should be picked up immediately. They come
+in three distinct colours, low power are blue, mid power are red, and high
+power are green. Collected power can be used to power up circuit lines to
+make new weapons available.
+
+Beware that when D.A.V.E. is destroyed, all the power carried is lost. Power
+is automatically deposited at restart points for safekeeping.
+
+Weaponry.
+
+D.A.V.E. can take three weapons to each combat zone. At least one of them
+must be an infinate shot weapon, which will be the primary weapon. The
+secondary and tertiary weapons may have limited shots. Additionally a fourth
+weapon slot exists for any weapon discovered in the combat zone as an orange
+box. After picking up such a box, the weapon may be viewed by selecting the
+last weapon slot using the second button or space bar. There are a number of
+special weapons dotted around, and each will have very limited number of
+shots, but they are powerful weapons. Use them wisely. Picking up a special
+weapon replaces any previous special weapon completely.
+
+Before D.A.V.E. is sent to each combat zone, you have an opportunity to
+select the three weapons to take, and you may pay some of the collected power
+towards new, more powerful weapons. The weapon selection system consists of
+D.A.V.E.`s central processor connected to weapon boxes by circuit tracks.
+D.A.V.E.`s collected power is shown as a 3 digit LED display in the centre.
+You may spend this on any of the 12 weapons connected to the side or top of
+the chip. Rotate the purple pointer round the chip to the required pin using
+left and right. Left rotates the pointer clockwise, right rotates it anti-cl
+ockwise. Press fire and the display will move to show the box at the end of
+the track. If you wish to put power into the line then push up while pressing
+fire. You can change your mind and remove power just entered by pushing down
+and pressing fire. The cross-hair cursor at this point shows the maximum
+distance that can be covered on the current line. If you power the whole line
+the box is highlighted and the weapon may then be selected in one of the
+slots at the bottom. The weapon will now be available until the end of the
+game.
+
+To put your desired weapons into D.A.V.E.`s three slots, rotate the purple
+pointer to one of the three pins at the bottom of the chip next to the EXIT
+pin. Press fire and push up or down to flip through all the available weapons
+Note that each weapon can only appear in one box at a time, and only the
+infinate-shot weapons can be selected for the primary slot on the left.
+
+When you are satisfied with the weapon selections, rotate the purple pointer
+to the EXIT line and press fire.
+
+Weapons available are:
+
+1) Single shell. Fast repeat but low damage. Default for slot 1
+2) Mortar. Slow repeat lobbed weapon for mid damage. Default for slot 2.
+3) Mine. Slow repeat dropped weapon. High damage area. Default for slot 3.
+4) 3-way shell. Fast-repeat shells 22.5 degrees apart.
+5) Plasma surround. All round close-range protective shot.
+6) Missile spread. 8 high-damage short-range missiles.
+7) Twin missile. High-damage slow-repeat missiles. Limited shots.
+8) Homer. High-damage target-seeking single homing missile. Limited shots.
+9) Twin Homer. High-damage target-seeking homing missile pair. Limited shots.
+10) Small flame-thrower. Mid-range directable weapon.
+11) Plasma. 3-way fast-repeat low-range plasma. 2 high, 1 low.
+12) Large flame-thrower. Long-range directable weapon.
+13) Twin bolt laser. 2 parallel bolts
+
+Shots Remaining Bar
+
+Certain weapons have unlimited shots. These are indicated by a solid blue bar
+beneath the weapon icon in the bottom right panel on the screen. Limited shot
+weapons have a graduated bar. The number of graduations indicates the number
+of shots remaining. These also change colour from green through to red as the
+number diminishes. 14 shots maximum are shown individually. If more shots
+remain from that, the rightmost graduation is wider.
+
+Once a limited shot weapon is used, it will no longer be selectable in this
+zone. It will be replenished when you complete the zone. Firing will revert
+to your slot 1 weapon, which will always be an unlimited shot weapon.
+
+Lives.
+
+D.A.V.E. starts each game with 3 lives. Bonus lives may be discovered within
+the game as small floating D.A.V.E.`s. Additionally, extra lives are awarded
+at 10,000, 40,000, 90,000, 160,000, and 250,000 points.
+
+Your current battery and energy status are shown in the bottom left panel.
+There are 4 different battery sizes. As D.A.V.E. is damaged, the colour
+drains away until the battery is empty. The number of lives remaining is
+shown in the bar beneath the battery.
+
+Viruses.
+
+There are a number of viruses within each game zone. This is shown next to
+your score at the top of the screen. The exit from the zone will not let you
+pass until all viruses in the zone are destroyed.
+
+As each virus is despatched, a bonus letter is released. These letters form
+the password which will allow you fast access to the next zone on later plays
+as detailed in the next section. The complete password is shown to you after
+you successfully leave the zone.
+
+Password System.
+
+Your passwords are personal to you. No-one else will have the same ones as
+you. As you complete each zone of the game, the full password is displayed on
+the screen. Write it doen somewhere. You can restart the game at the
+beginning of the next zone with the battery and available weapons that you
+had. by typing in the password on the options screen, see "Player Options".
+
+Note therefore that if you reach the same zone with different available
+weapons and/or a different battery then you will be given a different
+password.
+
+Play Recommendations.
+
+Keep your eyes peeled for battery upgrades and extra lives and don`t pick up
+energy that you can`t use. If your battery is full, leave the energy for
+later - you might need it.
+
+It is a good idea to commit all your power to weapon lines at the earliest
+opportunity as it will be lost if D.A.V.E. is destroyed on the next level.
+
+Try to pick up a good balance of weapons for the 3 slots. At least one long
+range weapon is recommended, especially for the Urban Jungle end of level.
+
+Search out all of the viruses on each level. Use the counter display to find
+out whether there are more remaining.
+
+Play defensively if you are running out of energy, as losing a life will cost
+you all of the power balls that you are carrying.
+
+Limited weapon shots are replenished only at the beginning of each new zone.
+Use them wisely.
+
+Different weapons will have different effects on the various enemies
+encountered. Some weapons may appear slow and clumsy, but are very effective
+against big, slow or stationary targets that would take a lot of pounding
+from fast but weak weapons.
+
+Keep well away from edges that drop into water or lava, or other less-than-
+solid substances. D.A.V.E. doesn`t work very well in liquids.
+
+Software Features
+
+Stereo sound effects when the music is switched off. Effects are routed to
+the left or right channels depending on the position of the sound event on
+the screen.
+
+A RAM disk is set up if sufficient memory permits to cache loaded data,
+speeding up subsequent loading times.
+
+Extra chip memory will provide a smoother game flow as a better screen
+display is switched in.
+
+Non-AGA version automatically detects AGA or enhanced CPU Amigas and upgrades
+some effects to AGA standard.
+
+---
+Typed by IGGY/HF 30/6/95
+For more Amiga documents, visit www.lemonamiga.com

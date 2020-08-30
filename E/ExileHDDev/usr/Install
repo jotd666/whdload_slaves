@@ -1,0 +1,449 @@
+;****************************
+
+(set #readme-file "ReadMe")		;name of readme file
+(set #docs-file "Manual")		;name of docs file
+(set #highs-file "HiScores")		;name of high scores/prefs file
+(set #cleanup "")			;files to delete after install
+(set #last-file "Disk.1")		;last file the imager should create
+(set #prefix @app-name)
+
+;****************************
+;----------------------------
+; checks if given program is installed, if not abort install
+; #program - to check
+
+(procedure P_ChkRun
+  (if
+    (= 0 (run ("cd SYS:\nWhich %s" #program)))
+    ("")
+    (abort
+      (cat
+	"You must install \"" #program "\" first!\n"
+	"It must be accessible via the path.\n"
+	"You can find it in the WHDLoad package."
+      )
+    )
+  )
+)
+
+
+;----------------------------
+; Wait for inserting disk & copy files
+; IN:  #AD_disk - name of disk
+; OUT: -
+
+(procedure P_disk
+  (askdisk
+    (dest #AD_disk)
+    (prompt ("\nInsert \"%s\" disk in any drive !" #AD_disk))
+    (help @askdisk-help)
+  )
+(copyfiles
+  (help @copyfiles-help)
+  (source ("%s:" #AD_disk))
+  (dest  #dest)
+  (pattern "~(s)")
+)
+
+)
+(procedure P_cddisk
+  (askdisk
+    (dest #AD_disk)
+    (prompt ("\nInsert \"%s\" CD-ROM in any drive !" #AD_disk))
+    (help @askdisk-help)
+  )
+)
+
+;****************************
+
+(if
+  (exists #readme-file)
+  (if
+    (= 0 (run ("SYS:Utilities/Multiview %s" #readme-file)))
+    ("")
+    (run ("SYS:Utilities/More %s" #readme-file))
+  )
+)
+
+(set #program "WHDLoad")
+(P_ChkRun)
+
+
+(if
+  (getenv "WHDLInstPath")
+  (set @default-dest (getenv "WHDLInstPath"))
+)
+
+(set default-dest
+  (askdir
+    (prompt ("Where should \"%s\" be installed?\nA drawer \"%s\" will be automatically created." @app-name #prefix))
+    (help @askdir-help)
+    (default @default-dest)
+    (disk)
+  )
+)
+
+(set @default-dest default-dest)
+(run ("setenv WHDLInstPath \"%s\"\ncopy ENV:WHDLInstPath ENVARC:" default-dest))
+
+(set #dest (tackon @default-dest #prefix))
+(if
+  (exists #dest)
+  (
+    (set #choice
+      (askbool
+        (prompt ("\nDirectory \"%s\" already exists.\n Should it be deleted?" #dest))
+        (default 1)
+        (choices "Delete" "Skip")
+        (help @askbool-help)
+      )
+    )
+    (if
+      (= #choice 1)
+      (run ("Delete \"%s\" \"%s.info\" All" #dest #dest))
+    )
+  )
+)
+(makedir #dest
+  (help @makedir-help)
+  (infos)
+)
+
+;----------------------------
+
+(set #version
+    (askchoice
+      (prompt "\nWhich slave version would you like to install?\n")
+      (default 0)
+      (choices "ECS" "AGA" "CD³²")
+      (help @askchoice-help)
+    )
+)
+
+(procedure P_MakeImages
+
+  ;the following lines must be copied and adjusted for multiple disk images
+
+  (set #CI_disknum 1)
+  (set #CI_diskname ("%s Disk %ld" @app-name #CI_disknum))
+  (set #CI_disklen 705024)
+  (set #CI_skiptrk 1)
+  (P_CreateImage)
+)
+;----------------------------
+; Create Image using DIC
+; #dest        - path to save image in
+; #CI_disknum  - number of the disk image to create
+; #CI_diskname - label of the disk
+; #CI_disklen  - length of disk image to create
+; #CI_skiptrk  - track to skip, -1 means no skip
+; #CI_drive    - drive to create image from
+
+(procedure P_CreateImage
+  (message
+    (cat
+	"\nInsert \"" #CI_diskname "\" into drive " #CI_drive "!\n\n"
+	"(make sure it's the right disk because it will not be checked)"
+    )
+  )
+  (if (= #CI_skiptrk "")
+    (set #option "")
+    (set #option (cat " SKIPTRACK=" #CI_skiptrk))
+  )
+  (if
+    (= 0
+      (run
+        (cat
+          "cd \"" #dest "\"\n"
+          "DIC " #CI_drive " FD=" #CI_disknum " LD=" #CI_disknum " SIZE="
+          #CI_disklen #option " PEDANTIC >CON:///1000//CLOSE"
+        )
+      )
+    )
+    (run ("FileNote \"%s.%ld\" \"%s\" Quiet" (tackon #dest "disk") #CI_disknum @app-name))
+    (abort "\"DIC\" has failed to create a diskimage")
+  )
+)
+;****************************
+
+
+(if
+  (< @installer-version (+ (* 44 65536) 10))
+  (
+  (message
+    (cat
+      "Warning: your installer is outdated.\n"
+      "All features of this installation won't be available, such as icon show and drawer opening.\n"
+      "You have version " (/ @installer-version 65536) "." 
+      (BITAND @installer-version 65535) ", needed is at least version 44.10. "
+      "The 'installer' 44.10 comes with OS 3.5 but is also contained in the NDK 3.9. "
+      "You may also use the InstallerNG by Jens Tröger."
+      "\n\n"
+      "The installers can be obtained from the net:\n"
+      "http://www.amiga.com/3.9/download/NDK3.9.lha\n"
+      "aminet:util/sys/InstallerNG.lha"
+    )
+  )
+  (set #newstuff 0)
+  )
+  (set #newstuff 1)
+)
+
+;----------------------------
+
+(if (exists ("%s.glowexot"  #prefix)) ((set #icon 7)(set #icnt (+ 1 #icnt))(set #icon-gex "Exotic GlowIcon")) (set #icon-gex ""))
+(if (exists ("%s.newexot"   #prefix)) ((set #icon 6)(set #icnt (+ 1 #icnt))(set #icon-nex "Exotic NewIcon"))  (set #icon-nex ""))
+(if (exists ("%s.exoticon"  #prefix)) ((set #icon 5)(set #icnt (+ 1 #icnt))(set #icon-exo "Exoticon"))        (set #icon-exo ""))
+(if (exists ("%s.glowicon"  #prefix)) ((set #icon 4)(set #icnt (+ 1 #icnt))(set #icon-glo "Glow Icon"))       (set #icon-glo ""))
+(if (exists ("%s.coloricon" #prefix)) ((set #icon 3)(set #icnt (+ 1 #icnt))(set #icon-col "OS3.5 Icon"))      (set #icon-col ""))
+(if (exists ("%s.newicon"   #prefix)) ((set #icon 2)(set #icnt (+ 1 #icnt))(set #icon-new "NewIcon"))         (set #icon-new ""))
+(if (exists ("%s.romicon"   #prefix)) ((set #icon 1)(set #icnt (+ 1 #icnt))(set #icon-rom "RomIcon"))         (set #icon-rom ""))
+(if (exists ("%s.inf"       #prefix)) ((set #icon 0)(set #icnt (+ 1 #icnt))(set #icon-nor "Normal"))          (set #icon-nor ""))
+(procedure P_Icon
+  (copyfiles
+    (help @copyfiles-help)
+    (source ("%s.%s" #prefix #icon-suf))
+    (newname ("%s.info" #icon-name))
+    (dest #icon-dir)
+  )
+  (tooltype
+    (dest (tackon #icon-dir #icon-name))
+    (noposition)
+  )
+)
+(if
+  (> #icnt 1)
+  (
+    (set #icon-dir ("T:%s Icons" #prefix))
+    (makedir #icon-dir
+      (help @makedir-help)
+    )
+    (if #icon-nor ((set #icon-suf "inf")      (set #icon-name "Normal")          (P_Icon)))
+    (if #icon-rom ((set #icon-suf "romicon")  (set #icon-name "RomIcon")         (P_Icon)))
+    (if #icon-new ((set #icon-suf "newicon")  (set #icon-name "NewIcon")         (P_Icon)))
+    (if #icon-col ((set #icon-suf "coloricon")(set #icon-name "OS3.5 Icon")      (P_Icon)))
+    (if #icon-glo ((set #icon-suf "glowicon") (set #icon-name "Glow Icon")       (P_Icon)))
+    (if #icon-exo ((set #icon-suf "exoticon") (set #icon-name "Exoticon")        (P_Icon)))
+    (if #icon-nex ((set #icon-suf "newexot")  (set #icon-name "Exotic NewIcon")  (P_Icon)))
+    (if #icon-gex ((set #icon-suf "glowexot") (set #icon-name "Exotic GlowIcon") (P_Icon)))
+(if (= #newstuff 1)
+    (openwbobject #icon-dir)
+)
+    (set #icon
+      (askchoice
+        (prompt "\nWhich icon would you like to install?\n")
+        (choices #icon-nor #icon-rom #icon-new #icon-col #icon-glo #icon-exo #icon-nex #icon-gex)
+        (default #icon)
+        (help @askchoice-help)
+      )
+    )
+   (if (= #newstuff 1)
+     (closewbobject #icon-dir)
+   )
+    (delete #icon-dir
+      (help @delete-help)
+      (all)
+    )
+  )
+)
+(select #icon
+  (set #icon "inf")
+  (set #icon "romicon")
+  (set #icon "newicon")
+  (set #icon "coloricon")
+  (set #icon "glowicon")
+  (set #icon "exoticon")
+  (set #icon "newexot")
+  (set #icon "glowexot")
+)
+(copyfiles
+  (help @copyfiles-help)
+  (source ("%s.%s" #prefix #icon))
+  (newname ("%s.info" #prefix))
+  (dest #dest)
+)
+(if
+  (= #icon "newicon")
+  ("")
+  (
+    (tooltype
+      (dest (tackon #dest #prefix))
+      (settooltype "Slave")
+      (settooltype "PreLoad")
+    )
+    (tooltype
+      (dest (tackon #dest #prefix))
+      (settooltype "PreLoad" "")
+      (settooltype "Slave" ("%s.Slave" #prefix))
+    )
+  )
+)
+(tooltype
+  (dest (tackon #dest #prefix))
+  (setdefaulttool "WHDLoad")
+  (setstack 10240)
+  (noposition)
+)
+
+(select #version
+  (set #slave ("%sECS.slave" #prefix))
+  (set #slave ("%sAGA.slave" #prefix))
+  (set #slave ("%sAGA.slave" #prefix))
+)
+
+(copyfiles
+  (help @copyfiles-help)
+  (source #slave)
+  (dest #dest)
+  (newname ("%s.slave" #prefix))
+)
+(if
+  (exists #readme-file)
+  (copyfiles
+    (help @copyfiles-help)
+    (source #readme-file)
+    (dest #dest)
+  )
+)
+(if
+  (exists ("%s.info" #readme-file))
+  (
+    (copyfiles
+      (help @copyfiles-help)
+      (source ("%s.info" #readme-file))
+      (dest #dest)
+    )
+    (tooltype
+      (dest (tackon #dest #readme-file))
+      (noposition)
+    )
+  )
+)
+(if
+  (exists #docs-file)
+  (copyfiles
+    (help @copyfiles-help)
+    (source #docs-file)
+    (dest #dest)
+  )
+)
+(if
+  (exists ("%s.info" #docs-file))
+  (
+    (copyfiles
+      (help @copyfiles-help)
+      (source ("%s.info" #docs-file))
+      (dest #dest)
+    )
+    (tooltype
+      (dest (tackon #dest #docs-file))
+      (noposition)
+    )
+  )
+)
+
+(set #dest-org #dest)
+
+(select #version
+(
+; ECS
+(set #program "DIC")
+(P_ChkRun)
+
+
+(if
+  (= @user-level 2)
+  (
+    (set #CI_drive
+      (askchoice
+	(prompt "Select source drive for diskimages")
+	(default 0)
+	(choices "DF0:" "DF1:" "DF2:" "DF3:")
+	(help @askchoice-help)
+      )
+    )
+    (select #CI_drive
+      (set #CI_drive "DF0:")
+      (set #CI_drive "DF1:")
+      (set #CI_drive "DF2:")
+      (set #CI_drive "DF3:")
+    )
+    (set #ignore " IGNOREERRORS")
+  )
+  (set #CI_drive "DF0:")
+  (set #ignore "")
+)
+
+
+(P_MakeImages)
+
+
+(if
+  (exists (tackon #dest #last-file))
+  ("")
+  (abort "Diskimaging was not successful!\nDIC was unable to create all needed files!")
+)
+
+)
+(
+; ============= AGA ================
+(set #dest (tackon #dest "data"))
+(set #AD_disk "Bubble1")
+(message "Please insert disk #1.\nCareful as both disks have the same label")
+(P_disk)
+(message "Please insert disk #2.\nCareful as both disks have the same label")
+(P_disk)
+(if
+  (exists (tackon #dest "disk1boot"))
+  ("")
+  (abort "disk 1 has probably not been inserted!")
+)
+(if
+  (exists (tackon #dest "disk2id"))
+  ("")
+  (abort "disk 2 has probably not been inserted!")
+)
+
+ ; create savedir and initialize empty save catalog
+ ; (so save works right away)
+ (set #savedir (tackon #dest "save"))
+
+    (makedir #savedir
+      (help @makedir-help)
+    )
+ (copyfiles
+  (help @copyfiles-help)
+  (source "GameSaveCat")
+  (dest  #savedir)
+)   
+)
+(
+(set #dest (tackon #dest "data"))
+
+(set #AD_disk "Exile")
+(P_cddisk)
+
+
+(copyfiles
+  (help @copyfiles-help)
+  (source ("%s:" #AD_disk))
+  (dest  #dest)
+  (pattern "(#?)")
+)
+
+
+)
+(
+
+
+
+;----------------------------
+
+(run ("Delete %s ALL QUIET FORCE" #cleanup))    ;delete temporary files
+)
+)
+
+(if (= #newstuff 1)
+  (openwbobject #dest-org)
+)
+(exit)

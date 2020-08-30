@@ -1,0 +1,86 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Fantastic Dizzy" © 1993/1994 Codemasters/Purple Haze, 2 disks.
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ The installed program requires 1.0 MB ChipMem and 2.0 MB OtherMem for AGA
+ The installed program requires 0.5 MB ChipMem and 1.0 MB OtherMem for ECS.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ The AGA version requires an installed A500 Kickstart 1.3 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick346.lha" on aminet.
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+ 
+ version 2.2 (23.04.2020) done by JOTD:
+ - AGA: fixed missing second button jumps in subgames (issue #0004126)
+ - AGA: really fixed trashed screen after save/load fix (issue #0004060)
+ - fixed music replay on fast machines for AGA/ECS (issue #0004536)
+ 
+ version 2.1 (30.03.2020) done by ross/JOTD
+ - trashed screen after save/load fix (issue #0004060) by ross
+ - updated ECS version (issue #0004051): added quitkey for 68000, 512k chip only is needed
+ - Added complete manual
+ 
+ version 2.0 (13.01.2019) done by JOTD:
+ - AGA version supported (all features of this release relate to AGA)
+ - jump with 2nd/blue button (optional, with CUSTOM3=1)
+ - save to disk (not to ram)
+ - joypad controls for menu & inventory
+ - trainer added (infinite lives, start with 2,3,4 or 5 lives)
+ - walkthrough included (the one from the megadrive)
+ - source code included
+
+ version 1.1 (ECS only, 25.06.2010) done by Bored Seal
+ - three additional copylocks removed, thanks to Solaris104 for report and testing!
+  (bubble and archery subgames, congratulations screen)
+ - quitkey changed to F9 (with tooltype) to not collide with cheat key
+ - slave uses ChipRAM only now, game part decruncher moved to Fast RAM
+
+ version 1.0 (ECS only, 13.02.2001) done by Bored Seal, Keith Krellwitz (initial copylock crack)
+ - first release
+ - RNC disk protection removed (5x)
+ - ButtonWait added for title picture
+ - Trainer option added (set CUSTOM1=1 for unlimited lives)
+ - ROM/NI icon (created by JHZ)
+ - Quit option (your default key)
+
+CD32 joypad controls (AGA version):
+
+- play: pause (p)
+- blue/second button: jump (if CUSTOM3=1)
+- reverse: main menu (esc)
+- forward: inventory (shift)
+
+CHEAT MODE (ECS & AGA):
+On the title screen, hold down 'L SHIFT', 'S', 'U', and 'B'.  You will
+then be presented with a new menu called "Subgame Cheat Thing" where
+you can pick from 6 subgames. Once you exit the this menu the game will start.
+Press 'F10' to automatically gain 6 lives.

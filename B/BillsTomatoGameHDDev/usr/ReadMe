@@ -1,0 +1,181 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Bill's Tomato Game" © 1992 Psygnosis
+
+ This install requires WHDLoad and RawDIC to be in the path. Both can be found
+ in the WHDLoad package.
+ To install from a different drive than DF0: select installation mode Expert.
+
+ The installed program requires 0.5 MB ChipMem and 1.0 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 2.0 (17.04.2020) done by JOTD:
+ - removed last sneaky time-bomb code checksum (issue #0000973)
+ - empty dbf loops fixed in intro (music should be better)
+ - SMC code removed (caused crashes on WinUAE)
+ - Name bug fixed (Bill Tomato's -> Bill's Tomato)
+
+ version 1.1 (09.04.2005)
+ - HELP key now skips levels
+ - "this is an illegal copy of bill tomatos game" message removed
+ - empty dbf loops fixed (music should be better)
+
+ version 1.0 (01.01.2005) done by JOTD:
+ - now imager uses a RawDIC slave
+ - save/load games/hiscores from HD
+ - password protection removed (and many code checksums!!)
+ - copperlist color bits added
+ - documentation included
+ - a lot of icons added
+ - source code included
+
+ version 0.9 (2001)
+ - initial WHDLoad release
+
+ version 0.x (1998)
+ - initial JST release
+
+This game has 3 "this is an illegal copy of..." message. One in the intro, one hidden in plain sight
+in the main game, and one hidden in some encrypted code that reveals itself after having completed a
+level and trying another one. At some point, when a checksum doesn't match, the program changes
+some code, and the code activates itself later. Of course the program that changes the code is loaded
+dynamically at some point, it's not in the main code... Well, thanks to WinUAE and mantis reporters I
+could reproduce and fix this last issue.
+
+another rather complete set of passwords (thanks to http://www.ollivision.de/ch/b/billstom.htm):
+
+The first column seems to match version SPS 1748, the only one officially supported by the slave ATM
+I fixed some typos in the passwords. If one password doesn't work, just enter the previous one and press HELP
+to get it :)
+
+Level 1- 1: TOIBBAL
+         2: MOIVEL     BEGIN      GLYCKEN
+         3: BIOGIN     CLOACKON   SEEPPUN
+         4: MIECON     TROITTAR   MEPEL
+         5: PLEETTAR   MOINON     PLOOTTIT
+         6: ZAINON     BIOKAL     WANNAL
+         7: ZIOKAL     MIENNAN    CLOOPEN
+         8: NOINNAN    PLEEGGUN   CIAPOG
+         9: VIAGGUN    ZAIKET     ZULLAR
+        10: PLOUPAN    ZIOKEN     BAGGEN
+
+      2- 1: PLAPOG     SALLAR     ZAIVIT
+         2: GEELLAR    TAIGGEN    ZIOMAL
+         3: TOAGGEN    PLOUMUG    NOIBAD
+         4: VOOMUG     PLADDAD    VIANEN
+         5: BEADDAT    GEELLET    CLIENNUG
+         6: CLYYLET    TOACKIN    WAIVAR
+         7: SICKIN     VOODDUM    GLEALOG
+         8: GEADDOM    BEAPET     MEEFAN
+         9: TAPET      CLYVIT     SAKUG
+        10: SAILLOG    SIMAL      TAIGAT
+
+      3- 1: CLEEFAN    BOOKUG     CLYFIT
+         2: DROUKUG    BIGGAT     SIPUG
+         3: SLOGGAT    SAISSIT    GEABBAR
+         4: BIESSET    CLEEGOM    TAPPER
+         5: PLIEGOM    DROUTTER   VOASSOG
+         6: CLOITTER   SLOGGET    GIVIN
+         7: FLEGGET    BIELLIN    SIEDDER
+         8: TIOLLIN    PLIEMON    TOUKER
+         9: TOMON      CLOIFIT    BOOMAN
+        10: PIODDER    FLEPUG     BINNON
+
+      4- 1: GOOKER     BYMAN      CLOINAL
+         2: GLOUMAN    SLOONNON   FLESSAR
+         3: PONNON     PIOMER     TIOFIN
+         4: WOOMER     GOOTTOG    TEPPER
+         5: SOTTOG     GLOUTTAN   TIAVER
+         6: WYTTAN     POLLAN     PLOIDDOG
+         7: SLYLLAN    WOOSSOM    NEABBAN
+         8: FLOSSAN    SONNER     PAIBBAN
+         9: VENNER     WYNAL      BYMEL
+        10: DREEBBAN   SLYSSAR    SLOOVOM
+
+      5- 1: NAIBBIN    DROAMEL    WYVAN
+         2: WIMEL      BOUVOM     SLYPIT
+         3: GAVOM      DREEDDUN   FLOGGAL
+         4: GLOIDDUM   NAIGGON    VENIN
+         5: MOGGON     GAPIT      DRUTTEL
+         6: SAINNUN    GAPIT      GLIETTUG
+         7: PLEAPIT    GLOIVUG    FLYNNEL
+         8: GYVUG      MOLLAT     MIOSSAT
+         9: TEELLAT    SLAIVAN    DROADDAR
+        10: GOUNNEL    PLEAPPIT   BOUTTOL
+
+      6- 1: VOUSSAT    WOIDDAR    SLAINUN
+         2: CLOADDAR   TETTOL     PLEAMIN
+         3: PATTOL     GOUCKAT    GYVET
+         4: MOOCKAT    VOUPPET    TEETTAL
+         5: FLIOPPET   CLOAVUN    BOACKER
+         6: CLAVUM     PASSUN     BOICKEL
+         7: PLUSSUN    MOOVAL     PLOAGOG
+         8: NOAVAL     FLIONNOG   FLOUMUN
+         9: FLOINNOG   CLANUN     WOISSAN
+        10: PLIOGOG    PLUMIN
+
+      7- 1: DREMUN     FLEASSAN
+         2: PLISSAN    NYMIT
+         3: GEMIT      PLIOFOL
+         4: FLAIFOL    DREDDIN
+         5: FLADDIN    PLIPAR
+         6: DRIPAR     GEGIT
+         7: POIGIT     FLAIVAT
+         8: NOOVAT     FLAGGOG
+         9: VIGGOG     DRINNOL
+        10: FLOOCKUG   POIGOL
+
+
+      8- 1: NOUGEN     GLUTTAT
+         2: VEATTAT    FLUVON
+         3: SLEVON     FLOOGGAR
+         4: SLOIGGAR    NOUPPEL
+         5: TOOPPEL    VEAKAR
+         6: MYKAR      SLEDDON
+         7: BUDDON     SLOIPOL
+         8: VAIPOL     TOOLLEL
+         9: GOLLEL     MYPER
+        10: GLIAGGIN   BUMET
+
+      9- 1: SIADDEN    GLEEGGAN
+         2: NEGGAN     DRAIBBEN
+         3: CLIBBEE
+         4: VUKIN
+         5: PIMOL
+         6: SLEAKOL
+         7: NUGAT
+         8: SLOASSEN
+         9: DROOBBEL
+        10: CLOUFON
+
+     10- 1: FLIFEL
+         2: PLOGGEL
+         3: MULLIT
+         4: ZOAGEL
+         5: GOACKOG
+         6: SOATTIN
+         7: GLIOSSET
+         8: ZOLLON
+         9: GIEMOM
+        10: GIONOG
+        

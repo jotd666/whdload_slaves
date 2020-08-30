@@ -1,0 +1,379 @@
+                        ADVANCED DESTROYER SIMULATOR
+
+PORTED FROM THE ST, AND EDITED FOR THE AMIGA BY -SCOOTER- AND FIXED BY RYGAR.
+TYPED BY LAWZ.  Edited by PARASITE.
+
+
+A.D.S. is the first naval simulator using new techniques of animation in
+filled 3D. The game portrays the main naval engagements of World War II
+during which the Destroyers of the Royal Navy played a major part.
+
+The different missions you will have to carry out will take place in:
+1 - The Mediterranean; from the English base at Malta, located in a zone
+    occupied by the enemy (Italians to the north, Germans to the south).
+
+2 - The English Channel; from the English bases, you will help evacuate
+    Allied forces gathered in Dunkirk.
+
+3 - The North Sea; your mission is to sink the enemy vessels which are hiding
+    in the Norwegian Fjords.
+
+You will be in overall control - you will have to manoeuvre to perfection to
+avoid being sunk, take control of attacking the enemy and defending against
+them when the situation calls for it.
+
+There are 18 available missions preset with a date/time and a precise target;
+and there are DELTA missions, in which you are the one to choose your target
+in an environment and date which differs each time.
+
+The admiralty and Admiral Walkirie are always on your side to report any ship
+spotted by the R.A.F.
+
+You can alter the level of realism of the simulation, so younger players can
+have as much fun. But we advise older players not to change the preset
+parameters so they can get more from the simulation.
+
+    DESTROYER
+                        Category       :  H.M.S. Onslaught
+       +                Launched       :  1939
+  |'   | -{]-           Type           :  DD 231
+\---------------/       Displacement   :  2200 Tons, 3200 Tons loaded
+ \ o o o o o o /        Length         :  110m
+  ------------          Breadth        :  12m
+                        Draught        :  4.80m
+                        Propulsion     :  2 Propellers, Gear Turbines
+                                          60,000 HP
+                        Speed          :  35 Knots
+                        Armament       :  3 Turrets each with 2
+                                          120mm cannons
+                                          2 Torbedo Tubes, with 4
+                                          tubes each.
+
+The DD-231 was one of the first Torpedo-Tube Destroyers of World War II, and
+176 ships were built to the same pattern. Easy to recognise by the shape of
+it's funnel, it participated in battles in the North Sea, in the English
+Channel and in the Mediterranean.
+
+THE COMMAND POST
+From this view you should be able to see the wide open spaces of the ocean.
+From left to right on the control panel the features are as follows...
+
+------------------------------------------------------------------------
+I                                   I                                   I
+I                                   I                                   I
+I         ^ The blue seas ^         I       ^ The blue seas ^           I
+I                                   I                                   I
+I                                   I                                   I
+I                                   I                                   I
+-------------------------------------------------------------------------
+    Radar          fuel    &     speed        compass      depth gauge
+
+(Green circle)       (white circles)         [-S---E-]        ===
+                                                              =-=
+                                Transmitter                   =-=
+                               (Big Speaker)                  =-=
+  RADAR     &    SONAR                                        =-=
+    O  indicators  O                                          =-=
+
+THE RADIO
+The radio allows you to receive information from:
+The admiralty (H.Q.) located in Malta for the Mediterranean and by the Thames
+for the English Channel and the North Sea.
+
+The engine room, about possible damage.
+
+The look-out man, to get information about ships spotted
+
+THE BINOCULARS
+Doubles your range of vision.
+
+DAMAGE
+Your destroyer can suffer damage during a battle. This damage can affect:-
+
+ RADAR -         you will no longer be able to spot ships on the radar screen.
+ SONAR -         you will no longer be able to spot submarines on the sonar
+                 screen.
+ PUMPS -         you lose the ability to pump water out of the ship; could
+                 lead to the destruction of the ship if a leak occurs at the
+                 same time.
+ CANNONS -       one or more turrets are no longer operational. Be careful, if
+                 the cannons overheat, the turret will explode.
+ RADIO -         radio messages become broken and garbled.
+ TORPEDO TUBES - one or more tubes are no longer operational. You'll have to
+                 wait until you dock at base to have them repaired.
+ RUDDER -        you lose all steering. Most of the time the crew members can
+                 repair this type of damage.
+ ENGINE -        the ship is without power; a sitting duck until repairs are
+                 carried out.
+
+NB: All repairs are carried out automatically by the crew members, you do not
+    have to intervene.
+
+CANNON FIRE
+Your destroyer is equipped with 3 turrets, two forward, one aft. Each turret
+has two 120mm cannons. These turrets can rotate 270 degrees and fire 2 shells
+simultaneously. 300 shells are in stock. In every turret there is a
+temperature indicator - do not overheat the cannons or they will explode.
+
+TORPEDO FIRE
+Your destroyer is also equipped with 2 torpedo stations (4 tubes each), one on
+the port side and one on the starboard side. The tubes can rotate 90 degrees,
+and each time they fire, 4 torpedoes are launched. 80 torpedoes are in stock.
+Torpedoes have an impact far more powerful than the cannon shells. One or two
+torpedoes in the right spot can destroy a ship when otherwise 10 or 20 shells
+would be required for the same result.
+
+ATTACK STRATEGY
+The tactics you should use to attack an enemy vessel depend on the category
+of the ship. For example, a FREIGHTER is somewhat easier to sink than a
+CRUISER, for the simple reason that it cannot shoot back, and therefore you
+can attack it with much more directness, getting closer and sailing slower.
+
+To sink an enemy vessel you must bear in mind differences like speed:
+
+15-20 Knots for a freighter or a tanker
+30-35 Knots for a destroyer
+32-37 Knots for a cruiser
+
+You can carry out a frontal attack on an unarmed Freighter or Tanker and sink
+it with some successful cannon fire. With a Destroyer or a Cruiser it's better
+to start by launching a torpedo either to port or starboard and by keeping a
+course parallel with the enemy ship at a similar speed. Keep your distance -
+the enemy have guns too and are not afraid to use them, and the closer you
+get, the more accurate they are.
+
+Two or three torpedos may be enough to sink a Destroyer whereas you may need
+four or five to sink a Cruiser. A torpedo launched at the right spot can break
+the rudder of a ship, or even stop it. Then you can sink it with cannon fire.
+To rapidly sink an enemy ship you should maintain non-stop firing to keep the
+enemy crew from repairing any damage you may have caused. But in any case,
+observe one rule if you want to hit the enemy during your attacks - try to
+avoid being spotted.
+
+To locate a submarine, use the sonar. It is easiest to hit it with a torpedo
+when it surfaces to renew its oxygen levels.
+
+CONTROL GUIDE
+At all times:   joystick in port #1 or Cursor keys and Space.
+                Left/right for steering.
+                Up/Down for speed.
+                Fire (space) to fire weapons.
+
+F1              Command Post
+
+F2              Binoculars
+
+F3 or C         Cannons
+                Keys 1, 2 and 3 (main keyboard) to change the turret.
+                Numeric pad 4 and 6 to train the turrets.
+                Numeric pad 2 and 8 to elevate/depress the cannons.
+                Space bar or joystick Fire to fire cannons.
+
+F4 or T         Torpedo tubes (port side)
+                2 (main keyboard) for starboard side
+                Numeric pad 4 and 6 to train the tubes.
+
+F5 or D         Damage and ammunition/fuel indicators
+                (lit bright red means that station is damaged)
+
+F6              Map
+                Z or F7 to zoom in the map.
+                Cursor keys or joystick to move the map.
+                Space bar in zoom mode centres the map on your ship.
+                Esc to exit the map display.
+
+F8              Accelerated time
+                Only available in map mode and when more than 1 mile from the
+                coast and any other ships.
+
+F10 or P        Pause
+
+R               Selects Radar
+
+S               Selects Sonar
+
+ENEMY SHIPPING CHARACTERISTICS.
+
+  TYPE             DESCRIPTION                    SPECIFICATIONS
+  Tanker           Looks like a tanker            Max speed     :N/A
+                   Long flat forward decks.       Cruise speed  :18 Knots
+                                                  Armament      :N/A
+
+  Freighter        Very similar to Tanker but     Max speed     :N/A
+                   Bridge is set nearer to        Cruise speed  :18 Knots
+                   the mid-ships then flat deck   Armament      :N/A
+  Cruiser          Has 2 funnels and 4 gun        Max speed     :N/A
+                   turrets.                       Cruise speed  :32 Knots
+                                                  Armament      :8 cannons of
+                                                                 200mm each.
+                                                  Protection    :armoured deck
+                                                                 & hull,resis-
+                                                                 tant to shell
+                                                                 impact.
+
+  German Torpedo   Single funnel,has guns set to  Max speed     :38 Knots
+  Boat             rear of vessel.                Cruise speed  :28 Knots
+                                                  Armament      :4 cannons 150
+                                                                 mm each, & 80
+                                                                 torp. tubes
+                                                                 on deck.
+  British
+  Destroyer        Single funnel, set mid-ships   Max speed     :34 Knots
+
+                   3 gun turrets, 2 to front and  Cruise speed  :27 Knots
+                   1 to the rear of vessel.       Armament      :6 Cannons of
+                                                                 120mm each.
+
+  Italian
+  Destroyer        single funnel, with bridge in  Max speed     :35 Knots
+                   front, 3 gun turrets, 2 to     Cruise speed  :28 Knots
+                   rear, 1 to front.              Armament      :6 cannons
+                                                                 120mm each.
+
+   German
+   Destroyer       Twin funnels set midships,     Max speed     :35 Knots
+                   2 gun turrets both on the      Cruise speed  :28 Knots
+                   rear of ship, bridge at front. Armament      :6 cannons of
+                                                                 150mm each.
+
+   Submarine       Well look for a conning        Max speed(subm) :8  Knots
+                   tower in the water that just   Max speed(surf) :17 Knots
+                   could be it.                   Armament        :4 Torpedos.
+
+THE MISSIONS
+
+MEDITERRANEAN MISSIONS
+1: Training mission. This mission is an easy introduction into the battle.
+   At 6:30 am, you leave the base of LA VALETTE on Malta (E3). Your mission
+   is to destroy a freighter cruising off LINOSA ISLAND (D3). You must then
+   return to your base before 8:00 am.
+
+2: You sail from the base of LA VALETTE on Malta (E3). Your mission is to
+   intercept and destroy a convoy of enemy ships spotted at 9:15 am by the
+   R.A.F. to the south of PANTELLERIA ISLANDS (C3) on its way to the enemy
+   base of TRIPOLI. This convoy consists of of 2 freighters and 1 tanker. It
+   has an approximate speed of 10 Knots. Once your mission is over, you must
+   return to your base.
+
+3: You sail from the base of LA VALETTE on Malta. Your mission is to sink an
+   Italian cruiser already heavily damaged by the R.A.F., off SYRACUSE (F3).
+   The last report from the Admiralty states that the vessel was at cruising
+   speed on its way to the italian base of TARANTO. You must intercept it
+   before enemy destroyers arrive to escort it.
+
+4: You are cruising off TUNIS. A reconnaissance aircraft reports 2 Italian
+   cruisers spotted close by PANTELLERIA ISLAND (C3). Alerted to the threat,
+   the cruisers are now sailing in the direction of CAP BON to escape the
+   R.A.F. Your mission is to launch a surprise attack upon them and then to
+   immediately head for MALTA.
+
+5: You sail from the base of LA VALETTE in MALTA (E3). Your mission is to
+   protect a supply convoy coming from GIBRALTAR and now cruising off TUNIS
+   (B3). You must rendezvous with it and destroy any enemy ships heading in
+   its direction. Watch out, the R.A.F. have spotted an enemy destroyer in
+   the sector (C3).
+
+DELTA MISSION
+   A surveillance mission. You sail from your base, fully laden with fuel
+   and munitions. You must patrol in the area demarcated by the map. You
+   may stop in Allied ports to repair and resupply. The Admiralty counts on
+   you to inflict heavy losses on the enemy, but make sure that you have
+   identified your target before firing.
+
+ENGLISH CHANNEL MISSIONS
+1: You are patrolling south of DOVER. Your mission is to identify 2 vessels
+   which our coastal Radar stations have spotted to the North of DUNKIRK (G2).
+   Then head back to your base in the THAMES estuary. Be careful, they are
+   probably enemy vessels, in which case, your mission is to sink them.
+
+2: MONDAY, MAY 27th 1940: You sail from your base in the THAMES estuary. Your
+   mission is to protect the evacuation of the Allied forces gathered in
+   DUNKIRK (G2). You must protect the transport ships sailing between DUNKIRK
+   and the THAMES from the attacks of German destroyers. As soon as you are
+   short of fuel or munitions you must dock at DUNKIRK.
+
+3: You are cruising off PORTSMOUTH (E3) Your mission is to attack an enemy
+   convoy of freighters and tankers which the R.A.F. has spotted close by
+   CHERBOURG (D4) sailing EAST. You must inflict heavy losses on the enemy
+   before heading back to PORTSMOUTH.
+
+4: You sail from the base of PORTSMOUTH (E3). An enemy submarine has been
+   seen off CHERBOURG (D4). Your mission is to find it with the sonar and to
+   shadow it until it surfaces, and then you're to sink it.
+
+5: JUNE 4th, 1940. DUNKIRK (G2) is surrounded by the enemy. Fortunately the
+   evacuation of allied troops is almost complete. Your mission is to protect
+   the last two ships transporting Allied troops about to leave DUNKIRK.
+
+DELTA MISSION:
+   A surveillance mission. You sail from your base, fully laden with fuel
+   and munitions. You must patrol in the area demarcated by the map. You
+   may stop in Allied ports to repair and resupply. The Admiralty counts on
+   you to inflict heavy losses on the enemy, but make sure that you have
+   identified your target before firing.
+
+NORTH SEA MISSIONS
+1: You are cruising west of STAVANGER (E4); the radio informs you that a light
+   enemy cruiser damaged by our artillery has taken refuge in the fjords close
+   to SAUDA (E3) to repair. You must spot it and, if possible, attack. Be
+   careful, enemy destroyers are probably coming in as reinforcements.
+
+2: You are sailing off NORWAY. You must patrol along the shores, up to BERGEN
+   (D1) to spot and destroy enemy ships which are hiding in the FJORDS zone
+   (E2).
+
+3: You sail from EGERSUND (E5) in NORWAY. You are the only allied ship in the
+   sector with an offensive capability. Your mission is to run the blockade
+   set up by the German destroyers at the fjords' exit. You must sink every
+   enemy ship, to allow our supply convoy to sail in safety. If you are badly
+   damaged, you can head to EGERSUND to be repaired.
+
+4: The enemy is in possession of heavy water, used in the construction of
+   atomic bombs. A freighter transporting the containers and 5 warships
+   escorting it  have been spotted south of BERGEN (D1). Your mission is to
+   attack the convoy and to sink the freighter, at all costs.
+
+5: The Luftwaffe have badly damaged your ship. You took refuge in the FJORDS
+   (E2) to repair. The radio informs you that enemy ships are heading for you
+   at full speed. You have no alternative, you must confront them and then
+   sail back to the base at BERGEN (D1).
+
+DELTA MISSION:
+   A surveillance mission. You sail from your base, fully laden with fuel
+   and munitions. You must patrol in the area demarcated by the map. You
+   may stop in Allied ports to repair and resupply. The Admiralty counts on
+   you to inflict heavy losses on the enemy, but make sure that you have
+   identified your target before firing.
+
+SOME ADVICE FROM ADMIRAL WALKIRIE
+
+SAILING WITHIN SIGHT OF LAND:
+Reduce your speed to half and carefully watch your depth gauge. In these
+areas of the map, the bottom depth varies a lot and you might run aground.
+Reducing speed when sailing into port:
+
+To promptly reduce speed you must reverse the engines. Go from 1/2 or full
+forward speed to FLANK in reverse speed, then when the ship speed is at it's
+lowest go to the stop position.
+
+FLANK SPEED:
+This is attained with full engine power. You can stay at flank speed for only
+a few minutes. When the engine room crew detect the engines overheating,
+power is reduced to FULL position. For security reasons, it is better to use
+the FLANK position during an emergency withdrawal.
+
+RUDDER DAMAGE:
+If your rudder is damaged, reduce speed to minimum, to allow the crew to
+repair it.
+
+SUDDEN CHANGE OF COURSE:
+Reduce your speed (1/2 position) and change your course. Any type of
+manouevering is more easily carried out at low speed.
+
+ATTACK FROM ENEMY AIRCRAFT:
+When you are sent on a mission close to an enemy base, the Axis forces may
+launch STUKAS to sink you. These divebombers are extremely accurate, and
+very dangerous to Allied forces without air cover. Cannons are the only
+weapons you have to defend yourself with.
+
+End.

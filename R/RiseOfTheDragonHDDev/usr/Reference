@@ -1,0 +1,254 @@
+RISE OF THE DRAGON
+from Dynamix
+
+Released by S K I D  R O W in 1991 !
+
+
+Amiga Quick Reference Card
+
+INSTALLATION
+
+Amiga Installation Procedure
+
+The following are instructions for installing Rise of the Dragon onto a 
+hard disk and booting the system.  Both can be done from either the 
+Workbench or the CLI.  In the instructions we assume that you are using 
+floppy drive DF0: and hard drive DH0:.  If your drives go by different 
+names, replace the drive label in the example with the correct one.  For 
+example, if you have an Amiga 3000, you will probably need to replace DH0: 
+with WORK:.
+
+Copying Rise of the Dragon to a Hard Disk
+
+1. Boot your system
+
+2. Insert Dragon Disk #1 into the first internal floppy disk
+   drive.
+
+3. From Workbench, double click on the Rise of the Dragon #1
+   icon and then on the Install icon.
+
+4. From the CLI, type CD DF0: and press the return key.
+   Then type INSTALL and press the return key.  The Dynamix
+   Install Utility window will appear.
+
+5. Choose which drive and directory you wish to install the
+   program to.  The default directory is: DH0:Dynamix/Dragon.
+   To change the path, click in the Destination Directory box
+   and type in the new path.
+
+6. Click on the INSTALL button.
+
+7. At the prompt, click on the OKAY button to install the 
+   program files.  To cancel the installation process, click on
+   the CANCEL button.
+
+LOADING
+
+Amiga Loading Instructions
+
+From Floppy Disks
+NOTE: You may run the Dragon program from multiple floppy
+      drives.
+
+
+Self-Booting
+
+1. Insert Rise of the Dragon Disk #1 into drive DF0:
+2. Turn on the system.
+
+From Workbench
+
+1. Boot your system with Workbench.
+2. Insert Rise of the Dragon Disk #1 into a disk drive.
+3. Double click on the Dragon #1 disk icon.
+4. Double click on the Dragon icon.
+
+From the CLI
+
+1. Boot your system with the CLI.
+2. Insert Rise of the Dragon Disk #1 into DF0:
+3. Type CD DF0: and press the return key.
+4. Type DRAGON and press the return key.
+
+From a Hard Disk
+
+From Workbench
+
+1. Load Workbench.
+2. Double click on the hard disk icon.
+3. Double click on the Dynamix drawer.
+4. Double click on the Dragon drawer.
+5. Double click on the Dragon icon.
+
+From the CLI
+
+1. Load a CLI window.
+2. Type CD DH0:DYNAMIX/DRAGON and press the return key.
+3. Type DRAGON and press the return key.
+
+NOTES
+
+Amiga Specific Notes
+
+1. Rise of the Dragon does not multitask with other programs.
+   For best performance, make sure no other programs are running
+   when you start Dragon.
+
+2. Although your system may have one megabyte of memory, you 
+   still may not have enough available memory to run Rise of the
+   Dragon.  Self-booting the program from disk should provide
+   you with enough free memory to run the program.  NOTE: Memory
+   allocated for hard disk partitions or resident programs will
+   reduce the amount available for running programs.
+
+3.  If your system has only the minimum RAM required to play
+    (1MB), the Detail Level Slider is set to low and cannot be
+    changed.
+
+4. If you are playing off floppies, you can speed-up game play
+   or disk loading by turning off the music or by inserting the
+   music disk (#10) in a second drive.
+
+5. If you are using more than one floppy drive, leaving the
+   Music Disk (#10) in an external drive will reduce disk swaps.
+
+TROUBLESHOOTING
+
+Problem: Even though my computer has 1MB of memory, I receive a message 
+saying there is not enough memory to run Dragon.
+
+Possible Solution: Avoid running other programs before you start Dragon.  
+Such programs might be using memory that Dragon needs.  It helps if you 
+run Dragon from the CLI without loading the Workbench.  You can also save 
+memory by running Dragon from the Workbench when there are no CLI or 
+application windows currently open.
+
+Problem: My computer doesn't have a hard disk, so I'm often forced to swap 
+disks during game play.
+
+Possible Solution: You can reduce the number of disk swaps by turning off 
+the game's music or leaving the Music Disk (#10) in a second drive.  Press 
+Alt-M to turn of the music.
+
+Problem: Constantly playing music bugs me, but I still want to hear sound 
+effects.
+
+Possible Solution: Press Alt-M to turn off the music or select "music off" 
+from the Options Menu.
+
+Problem: Everytime I set the game's Detail Level to high, the computer 
+lowers it.
+
+Possible Solution: Unless your computer has more than 512K of chip RAM, 
+you will be unable to set the game's Detail Level to high.  Owners of 
+Amiga 1000s, or some older 500s and 2000s, will need to upgrade their 
+computers to the 1MB Fat Agnus chip to increase the amount of chip RAM.
+
+CONTROLS
+
+MOUSE
+
+Look =            Click the Right mouse button.
+Operate =         Click the Left mouse button.
+Move =            Click and Hold the Left mouse button and move.
+Main Inventory  = Click Right Mouse button while on inventory.
+Quick Inventory = Click Left mouse button while on inventory.
+Using Weapons   = Click Right mouse while on that object.
+                  The above + Clicking & Holding Left mouse 
+                  and selecting where you want to use the item.
+
+KEYBOARD
+
+Look                             = Press the Return key
+Pick Up/Drop & Operate Commands  = Pick Up = pressing the Space
+                                             Bar or keypad 5.
+                                   Drop or Operate = Space Bar 
+                                                     keypad 5.
+
+Main Inventory                   = Press Return while on 
+                                   Inventory.
+Quick Inventory                  = Press Space Bar or keypad 5
+                                   while on Inventory.
+Using Weapons                    = Object + Backspace = Aim
+                                   Locked.
+                                 = Aim Locked + Spacebar or 
+                                   keypad 5 = Fire.
+
+Keyboard Cursor Control
+
+The numeric keypad has Arrow Keys which control up, down and diagonal 
+movement of the cursor.  The values are:
+
+1 = Diagonal Down & Left
+2 = Down
+3 = Diagonal Down & Right
+4 = Left
+5 = Pick Up & Drop
+6 = Right
+7 = Diagonal Up & Left
+8 = Up
+9 = Diagonal Up & Right
+Enter = Look 
+
+KEYBOARD HOT KEYS
+
+ESC or F10 ..... VCR Menu
+Alt-R or F9 .... Restart
+Alt-Q .......... Quit
+Alt-S or F2 .... Sound ON/OFF
+Alt-M .......... Music ON/OFF
+Alt-P .......... Pause Game
+F5 ............. Save Game
+F7 ............. Restore Game
+C .............. Screen Clock ON/OFF
+
+NOTE: During character interaction and non-interactive story sequences, 
+pressing SPACEBAR or RETURN will advance to the next dialogue box or 
+story screen.
+
+
+
+
+
+
+ARCADE CONTROLS
+
+Walking
+
+Diagonal Up & Left    = Walk Left
+Diagonal Up & Right   = Walk Right
+Left                  = Walk Left
+Right                 = Walk Right
+Diagonal Down & Left  = Walk Left Squatting
+Diagonal Down & Right = Walk Right Squatting
+Down                  = Duck
+
+Jumping & Leaping
+
+Diagonal Up & Left    = Leap Up and to the Left
+Diagonal Up & Right   = Leap Up and to the Right
+Left                  = Jump Left
+Right                 = Jump Right
+Up                    = Leap Up
+Down                  = Jump Down
+
+Mouse Controls
+
+Move the mouse pointer over the arrow that represents the direction you 
+want to move and click the left mouse button.
+
+Move = press left button
+
+Shoot/Combat = press right button
+
+Jump = hold down right button, then click on direction arrow
+
+Power Bar
+
+Gray = can't jump
+White = short jump
+Red = long jump
+
+Hold down the right mouse button until the Power Bar turns white or red.  
+Then click the mouse on a direction arrow to make the jump.

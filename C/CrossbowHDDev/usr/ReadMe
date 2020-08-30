@@ -1,0 +1,36 @@
+Short : HD-Installer for Crossbow: The Legend of William Tell
+Type : game/patch
+Author : Bored Seal, fixes by JOTD
+
+This patch applies to "Crossbow" by Screen 7/Intelligent Games (c) 1989 - 1 disk.
+Slave requires WHDLOAD V10+.
+Game requires 0.5MB ChipRAM (+ 0.9MB RAM for PreLoad)
+
+FEATURES:
+- Game loads entirely from HD
+- RNC disk protection removed
+- Savegames redirected to HD
+- ButtonWait tooltype added for title picture
+- NI/ROM icon (created by JHZ)
+- Quit option (your default key)
+
+HISTORY:
+
+V1.2 (04-Aug-2017) done by JOTD:
+- fixed for 68000/68010 CPUs (issue #0003507)
+- adapted to WHDLoad v17
+- added manual in installation
+- source code included
+
+V1.1 (29-Aug-2006) - taglist fixed to work with WHDLoad v16.6
+V1.0 (14-Mar-2001) - first release
+
+HOW TO TRANSFER MY OLD SAVEDISK ?
+ Put your old savegame disk in floppy. Write this line in CLI:
+"dic fd=2 ld=2 size=146432". It will create file 'Disk.2' with size 146432 bytes.
+Copy it in Crossbow directory.
+
+Thanks to Carlo Pirri for disk image and Mr.Larmer for copylock decoder.
+
+         Bug report form, full WHDLoad package and other installs:
+                          http://www.whdload.de

@@ -1,0 +1,895 @@
+        BUCK ROGERS IN THE 25TH CENTURY: COUNTDOWN TO DOOMSDAY
+
+TYPED BY OLLIE NORTH of SKID ROW.  Edited by PARASITE.
+
+
+TABLE OF CONTENTS
+
+INTRODUCTION.........................................................1
+  What Comes With the Game?..........................................1
+  Before You Play....................................................1
+  Getting Started Quickly............................................1
+  Using Menus........................................................1
+  Beginning to Play..................................................2
+
+MODIFYING CHARACTERS AND TEAMS.......................................3
+  Team Creation/Training Menu........................................3
+  Non-Player Characters (NPCs).......................................3
+  Viewing Characters.................................................4
+  Character Status...................................................4
+
+ADVENTURING..........................................................5
+  Display Screens and Points of View.................................5
+  3-D and Area Views.................................................5
+  Combat View........................................................6
+  Overland Map.......................................................6
+  Solar Map..........................................................6
+  Adventuring Options................................................6
+
+OUTPOSTS.............................................................7
+
+ENCOUNTERS...........................................................9
+  Combat.............................................................9
+  After the Battle..................................................10
+  Space Combat......................................................11
+  After Space Combat................................................12
+
+
+Page [1]
+
+INTRODUCTION
+
+WHAT COMES WITH THE GAME?
+You should find the following items in the game box:
+
+Disks, Rule Book, Log Book, Data Card
+
+This Rule Book is designed to explain all your options and guide you
+through playing the game.  If you are not familiar with the BUCK ROGERS XXV
+game system, you will find helpful information about how things work in the
+Log Book.
+
+The Log Book contains a variety of information including details about
+character careers, technology, combat and an introduction to the adventure
+story.  The Log Book also includes the maps, information, rumors and stories
+that you will need to play the game.  You will discover for yourself which of
+the tales you hear are fact and which are fiction.
+
+The Data Card explains how to start the game and select items and menu
+options with your specific computer.  It also shows how to get right into the
+game without having to read through the rules.
+[Due to the fact that the Amiga version of this game is not yet released
+there is no typed up Data Card]
+
+BEFORE YOU PLAY
+There is no copy protection on your COUNTDOWN TO DOOMSDAY disks, so please
+make backup copies and put the originals away for safekeeping.  When you
+start the game, you will be asked to answer a verification question from this
+Rule Book or the Log Book before you can play.  [REMOVED BY SKID ROW 1990!!!]
+Turn to the page as indicated for either this Rule Book or the Log Book, find
+the indicated word, type it in and press the Return or Enter key.
+
+GETTING STARTED QUICKLY
+COUNTDOWN TO DOOMSDAY comes with a ready-made team that allows you to begin
+adventuring immediately.  Use the instructions on the Data Card to load the
+saved game that has been provided and begin playing.  [I installed this on my
+HD and there was NO pre-made party]  These rules and the Log Book will answer
+any questions during play.
+
+USING MENUS
+All commands are menu based, and the concept of the active character is
+central to the game.  Outside of combat the active character's name is
+highlighted on the display.  During combat the active character is surrounded
+with a cursor at the start of his combat segment.
+
+During combat the active character is chosen automatically according to the
+character's initiative and random factors.  Other times you may select which
+character is active before choosing other commands.
+
+If a command affects the whole team, just select the command.  If the command
+affects one character, make that character active and then choose the command.
+
+****************************************************************************
+Example: To look at a character's equipment, select that character, choose
+the VIEW command, and then choose the GEAR command. The computer displays a
+list of that character's gear.
+****************************************************************************
+
+Menus are displayed either vertically or horizontally.
+
+Vertical menus select the character or item to be acted upon.  If there are
+more choices than will fit on the screen at one time, use the NEXT and PREV
+commands to view the additional selections.
+
+***************************************************************************
+Example: When purchasing gear, selections are made from a vertical menu list
+of equipment.
+***************************************************************************
+
+Horizontal menus list what that character can do or what can be done to the
+character.  In the rules, menus are shown with all of their options.
+In some cases options will not be available every time a menu appears.
+
+***************************************************************************
+Example:
+
+BOOTY MENU:
+
+VIEW TAKE POOL DIVVY EXIT
+
+The options TAKE AND DIVVY will only appear if there it booty to take.
+***************************************************************************
+
+The Rule Book only lists the general menus.  Special menus will appear with
+many encounters that indicate available options.
+
+
+BEGINNING TO PLAY
+To begin playing the game you must load a saved game or make characters and
+band them together into a team.
+
+CREATE NEW CHARACTER
+
+ADD CHARACTER TO TEAM
+
+LOAD SAVED GAME
+
+INITIALIZE MOUSE/JOYSTICK [Ha!  Don't need this one!]
+
+EXIT TO DOS/WORKBENCH
+
+CREATE NEW CHARACTER is used to build a character.  Detailed information
+about characters, races, careers and so on is available in the Log Book.
+This command starts the process of making a new character.
+
+PICK RACE lists six races a player-character can be in the twenty-fifth
+century.
+
+PICK GENDER lists the sex the character can be.
+
+PICK CAREER lists the careers a character is qualified for based on race.
+
+The computer randomly generates the character's ability scores.  If you are
+not happy with the scores, you may roll them again.  Remember that you can
+use the MODIFY CHARACTER command on the Team Creation/Training Menu to change
+the character's ability scores and hitpoints after the character has been
+generated.
+
+CHARACTER NAME provides a 15 letter space to type in the character's name.
+On some computer systems the character is named after the abilities scores
+are generated.
+
+ALLOCATE SKILL POINTS allows you to allocate points to the character's Career
+and the General skills.  This phase really determines a character's strengths
+and weaknesses.  See the section on skills in the Log Book for more
+information.
+
+SELECT CHARACTER ICON allows you to select the shape that will represent the
+character in combat.  You can select new combat icons from the Training
+Center menu.  On some systems the character will be saved after the combat
+icon is selected.
+
+EXIT from any of the character creation menus will display the Team Creation
+Menu.
+
+ADD CHARACTER TO TEAM allows you to add characters to the team from the save
+game disk.  A team is a group of characters composed of up to six player
+characters (called PCs) and up to two non-player characters (called NPCs).  A
+team should have a balanced mix of characters with different careers.  For
+more information about building teams see the Log Book.
+
+LOAD SAVED GAME permits you to resume a game that had been previously saved.
+The saved game provided with COUNTDOWN TO DOOMSDAY can also be loaded.
+
+INITIALIZE MOUSE/JOYSTICK sets up the joystick or mouse.
+[Still don't need this one!]
+
+EXIT TO DOS/WORKBENCH ends play.
+
+
+Page [3]
+
+
+MODIFYING CHARACTERS AND TEAMS
+The Team Creation/Training Menu shows the characters currently in your team
+and lists the commands for creating and modifying the team.  Not all of the
+options will be available at all teams.
+
+Team Creation/Training Menu
+
+CREATE NEW CHARACTER
+
+PURGE CHARACTER
+
+MODIFY CHARACTER
+
+ICON SELECT
+
+TRAIN CHARACTER
+
+VIEW CHARACTER
+
+ADD CHARACTER TO TEAM
+
+REMOVE CHARACTER FROM TEAM
+
+LOAD SAVED GAME
+
+SAVE CURRENT GAME
+
+BEGIN ADVENTURING
+
+EXIT TO DOS/WORKBENCH
+
+
+PURGE CHARACTER eliminates a character from the team and erases him from the
+saved game disk.  A purged character may not be recovered.
+
+MODIFY CHARACTER can change the character's ability scores and HP.  Use
+MODIFY CHARACTER to change a character generated in COUNTDOWN TO DOOMSDAY to
+match a favorite BUCK ROGERS XXc game character.  A character cannot be
+modified once he has begun adventuring.
+
+ICON SELECT allows you to select a new icon to represent a character in
+combat.
+
+TRAIN CHARACTER increases a character's level when he has gained enough
+experience points (EXP).  Characters can only advance one level at a time.
+If a character has gained enough experience to advance more than one level,
+he will advance one level and then lose all experience in excess of one point
+below that required for advancement to the next level.  See the section on
+Experience Points in the Log Book for an example.
+
+Characters get additional points to allocate to skills as they advance, and
+Warriors gain weapon skills.  See the Advancement Tables starting on Page 40
+of the Log Book for EXP requirements.  There is no charge for training
+characters.
+
+VIEW CHARACTER displays about a character.  For more information see the
+Viewing Characters section on page 4.
+
+REMOVE CHARACTER FROM TEAM transfers a character from the team to the saved
+game disk.
+
+SAVE CURRENT GAME stores the current game to the save game disk or directory.
+
+BEGIN ADVENTURING starts the game.
+
+EXIT TO DOS/WORKBENCH quits the game.
+
+
+NON-PLAYER CHARACTERS (NPCs)
+During the game the team will encounter Non-player Characters (NPCs).  They
+may talk to the team, attack or offer to join the team.  NPCs that join the
+team are treated like player characters with a few differences.  The computer
+generally commands NPCs in battle.  Characters with Leadership skill may be
+able to put NPCs who have joined the party under direct control (this is
+difficult).  NPC's have morale--if things are going badly for the team, NPCs
+may run.  Gear can be traded to some NPCs, but they cannot be traded from
+conscious NPCs to other characters.  If an NPC dies, however, you can use the
+TRADE command on the Gear Menu to take his gear.  Only two NPCs at a time may
+join the team and they may insist on taking a share of all booty found.
+
+
+Page [4]
+
+
+VIEWING CHARACTERS
+The VIEW command displays the character summary screen.
+
+Encumbrance is the total weight the character is carrying.  As a character
+becomes more encumbered, his combat movement speed drops.  Encumbrance is
+based on the weight a character carries above the weight allowable by
+strength.  Combat Movement is how many squares a character can move during
+a combat round.  This is based on his readied armor, strength and total
+encumbrance.
+
+CHARACTER STATUS
+OKAY means that the character has positive HP and can move and fight
+normally.
+
+POISONED means that the character is suffering from the effects of some
+poison, and must have a Medic perform a Treat Poison immediately after combat
+or become Comatose.
+
+UNCONSCIOUS means that the character has exactly 0 HP.  He cannot move or
+fight, but is in no danger of dying.
+
+COMATOSE means that the character is severely injured and has lapsed into a
+coma.  Comatose characters require hospitalization or shipboard Medical
+Center care to recover.
+
+DEAD means that the character has died.
+
+FLED means that the character fled from the battle.  After the battle he will
+rejoin the team.
+
+GONE means that the character was abandoned during a combat and the body has
+been lost forever.
+
+
+Page [5]
+
+
+From the View Menu several options are available to inspect the active
+character.  Not all of these commands are available at all times.
+
+VIEW MENU:
+
+GEAR SKILLS WPN SPEC TRADE EXIT
+
+GEAR will show all the equipment the character is carrying.  Items preceded
+by a YES are ready for use.  Not all commands in the Gear Menu are always
+available.
+
+Gear Menu:
+
+READY TRADE DROP HALVE JOIN SELL EXIT
+
+READY is used to change the ready status of a weapon, armor, or other item.
+Only readied gear can be used in combat.  Characters can only ready one
+weapon at a time, except that a grenade can be readied while a character has
+a readied grenade launcher.  On some systems there are items that can only be
+readied or unreadied while in either camp or combat.
+
+TRADE on the Gear Menu is used to transfer an item from one character to
+another.  Choose the item and then the character to receive it.  Remember
+that a conscious NPC will not give up an item once he has it.
+
+DROP permanently removes items from a character.  Dropped items may not be
+recovered.
+
+HALVE will divide a bundle of grenades or poison antidotes into two bundles.
+For example, halve would turn on bundle of 24 grenades into two groups of 12
+each.
+
+JOIN combines grenades and poison antidotes into one line of the gear list.
+No more than 100 items can be joined onto one line.  This is handy because
+there are a limited number of slots available on a gear list.
+
+SELL (only available at shops) causes the shopkeeper to make an offer on the
+highlighted item.  Sold gear may not be recovered.
+
+WPN SPEC allows Warriors to examine their weapon specialization bonuses.
+
+TRADE on the View Menu is used to transfer credits from one character to
+another.  Indicate which character is to receive, and then indicate what and
+how much is traded to the other character.  On some systems this option is
+only available if you select the View Menu from outposts shops or from the
+Booty Menu after combat.
+
+
+ADVENTURING
+After setting up your team and reading the background information in the Log
+Book, it is time to head for adventure, fame, and glory.  Your team will
+engage in fierce battles, find booty, and sometimes have to stop, and
+recuperate from battle.
+
+DISPLAY SCREENS AND POINTS OF VIEW
+During the adventure, teams must travel from planet surfaces to the reaches
+of space.  There are several points of view or areas that are displayed for
+different regions.
+
+3-D AND AREA VIEWS
+3-D view appears in towns, aboard enemy rocketships and so on.  This view
+appears at the top left of your screen and shows the surrounding area from
+the team's perspective.  Rotate the team's facing and move using the
+directional.  The direction controls for your computer are described on the
+Data Card.
+
+Area view provides an overhead view of the team's surroundings, replacing the
+3-D view.  choose the AREA command from the Adventure Menu.  This view is not
+available in many regions.
+
+In the area display a cursor shows the team's position.  On some computer
+systems, the cursor is an arrow that indicates current team facing.  On some
+computer systems you may move around while in the area view, on others this
+view is only to help you get your bearings.
+
+
+Page [6]
+
+
+To the right of the point of view window, in either 3-D or Area, are the map
+coordinates, current time, facing direction (N, S, W, E) and what the team is
+doing.
+
+Every time the team moves a square, one minute of game time passes.
+
+
+COMBAT VIEW
+Combat view occurs automatically whenever the team engages in battle.  The
+combat screen is a detailed view of the area the team was in when the
+encounter began.
+
+OVERLAND MAP
+This view displays a large region and is used to move across planetary
+surfaces.  Move the team with normal direction controls.
+
+SOLAR MAP
+Solar Map view is used when the team is traveling in its rocketship to
+another planet or outpost.  Simply move the ship towards the destination as
+you would move in any other view.  The difference between this view and
+others is that destinations are orbiting the sun, and they move as the ship
+does.  The relative speed of the ship is very fast, so reaching destination
+is not difficult--that is if there are no encounters with pirates or RAM
+warships.
+
+Each move on the solar map takes three days of game time.
+
+
+ADVENTURING OPTIONS
+The Adventure Menu controls normal game options while exploring or traveling
+between planets or outposts.  While traveling on the solar map, some commands
+are not available.
+
+Adventure Menu:
+
+MOVE AREA VIEW LOOK CHANGE ROCKET SAVE
+
+MOVE is used to actually get to where you can move the team around the map.
+The team can turn right or left, turn around, or move forward.  Refer to the
+Data Card for computer-specific movement information.  Select EXIT to return
+to the Adventure Menu.
+
+AREA toggles between the area and 3-D view.  In many regions this command may
+not be available.
+
+VIEW displays the character screen and the View Menu.
+
+LOOK is used to search an individual square.  Looking in a square takes ten
+minutes of game time.
+
+CHANGE is used to change the characters in the team and the parameters of the
+game.
+
+
+Change Menu:
+
+ORDER PURGE MESSAGES ANIM LEVEL EXIT
+
+ORDER changes how the characters are listed on the screen and how they are
+deployed in combat.  Characters at the top of the list tend to be on the
+front line in combat.
+
+PURGE eliminates a character from the team and erases him from the saved game
+disk.  A purged character is gone forever and may not be recovered.
+
+MESSAGES controls the rate at which messages are printed on the screen.  If
+the game is running too slowly, use the FASTER command to speed up the
+displays.  If you have trouble reading messages, try the SLOWER command.
+
+ANIM allows you to toggle the animation of the close-up pictures on and off.
+Turning the animation off speeds up the game.  This command is not available
+on all computers.
+
+LEVEL permits you to adjust combat difficulty.
+
+
+Page [7]
+
+
+Level Menu:
+
+NOVICE CADET TROOPER VETERAN ACE
+The game is preset at the Trooper level.  This is the level at which we
+consider the game to be balanced. To make the combats easier, choose either
+the Novice (easiest) or Cadet level.  To make the combats more difficult,
+choose either the Veteran or Ace (hardest) level.
+
+When you choose to make the game more difficult, you are rewarded by
+receiving more experience points from your combats.  When you choose to make
+the game easier, you are penalized by receiving fewer experience points from
+your combats.
+
+Receiving fewer experience points will slow the rate at which your characters
+advance levels.  Advancing at a slower rate will give you less powerful
+characters which, in the long run, may more than offset the benefits of
+playing at an "easy" level.
+
+ROCKET is used to examine the team's rocketship.  This is only available
+during space travel, and may not be on all computer systems.
+
+SAVE restores the characters and current game to the save game disk or
+directory.  Saved games may be loaded either from the first menu or from the
+Team Creation/Training Menu.  Save often -- especially after surviving really
+tough encounters.  See your Data Card for computer-specific savings
+instructions.
+
+OUTPOSTS
+Outposts are pockets of humanity, if not civilization, sprinkled around the
+solar system.  They range in size from city-sized installations on planets to
+glorified rocketship service stations among the furthest asteroids.  Outposts
+are where teams can buy new gear and ammunition, get ship repairs and
+purchase fuel.
+
+The Outpost Menu allows the team to get to the various facilities that may be
+found in outposts.  Larger stations, of course, have a greater variety of
+services to offer than the smaller frontier outposts.
+
+Outpost Menu:
+
+BANK DOWNTOWN HOSPITAL PORT TRAINING
+
+BANK will allow you to deposit credits for safekeeping.  An extensive
+computer network keeps track of accounts so that you may withdraw your funds
+from any branch in the solar system.
+
+Bank Menu:
+
+DEPOSIT WITHDRAW EXIT
+
+DEPOSIT prompts you for the number of credits you wish to deposit.
+
+WITHDRAW allows funds to be retrieved from the team account.
+
+EXIT returns to Downtown Menu.
+
+DOWNTOWN is where Shops, Restaurants, and so on are located.
+
+Downtown Menu:
+
+SHOP LIBRARY BAR RESTAURANT EXIT
+
+SHOP allows characters to buy and sell equipment.
+
+Shop Menu:
+
+BUY SELL AMMO VIEW POOL TAKE DIVVY EXIT
+
+BUY displays the available gear and costs.  Select items for the active
+character to buy.
+
+SELL puts you in the Gear Menu with SELL option highlighted.  If this option
+is not available on your system, then select the VIEW option then the GEAR
+option then choose SELL.
+
+AMMO is used to purchase ammunition for a character's weapons.  This
+includes recharges for battery packs on energy weapons such as lasers.
+
+
+Page [7]
+
+
+VIEW displays the character screen with the SELL command available in the
+Gear Menu.
+
+POOL places all the team's credits into a pool which can be used by any
+member to make purchases.  Use the TAKE or DIVVY commands to pick up the
+credits pool after all purchases have been made.
+
+TAKE is used to pick up credits from the team credits pool.
+
+DIVVY picks up everything from the pool and distributes even shares among the
+team.
+
+EXIT returns to Downtown Menu.
+
+LIBRARY is where the team goes to get information.  To effectively use a
+library, at least one character needs to have Library Search skill.
+
+BAR and RESTAURANT are places where characters go to hear the latest gossip
+and news.  The quality and class of clientele in these establishments varies
+a great deal.  Going to a high society place may get you a different type of
+information than a dive.
+
+Bar Menu:
+
+BUY DRINK TALK WAIT EXIT
+
+BUY DRINK purchases a round of drinks for the team so that they can relax and
+listen to the latest gossip unobtrusively.
+
+TALK has members of the team chatting with patrons and trying to coax
+information.
+
+WAIT has the team sit tight and see what happens.
+
+EXIT returns to Downtown Menu.
+
+Restaurant Menu:
+
+ORDER FOOD TALK WAIT EXIT
+
+ORDER FOOD has the team sit down to a meal and listen to gossip.
+
+TALK has members of the team chatting with patrons and trying to coax
+information.
+
+WAIT has the team sit tight and see what happens.
+
+EXIT returns to Downtown Menu.
+
+HOSPITAL offers first rate medical services, for a fee.
+
+Hospital Menu:
+
+HEAL EXIT
+
+HEAL will have the hospital give medical treatment to the active character.
+
+EXIT returns to the Outpost Menu.
+
+PORT is where ships are repaired, resupplied, fueled, and launched.
+Everything in port is paid for from the team's NEO salvage account.  This is
+the account that is credited with the salvage value for enemy ships the team
+has defeated.  At Salvation Station port facilities and materials are free.
+All other stations charge the going rates.
+
+Port Menu:
+
+LAUNCH REPAIR FUEL AMMO MED SUP EXIT
+
+LAUNCH exits the outpost and puts the team in space.
+
+REPAIR has your shop repaired at the port shipyards.  The cost of repairs
+will vary with the amount of work required.
+
+FUEL allows you to purchase fuel for your ship.
+
+AMMO allows you to purchase ammunition for your ship's weapons.
+
+MED SUP allows the team to restock the shipboard Medical Center.
+
+EXIT returns to the Outpost Menu.
+
+TRAINING allows characters to get to a Training Center and advance in level.
+You can also modify the team using the Team Creation/Training Menu.
+
+
+Page [9]
+
+
+ENCOUNTERS
+When a team comes across opponents or NPCs, an encounter occurs.  If the team
+attacks immediately it may receive a bonus to its initiative in combat.  If
+the opponents surprise the team, the opponents can attack immediately and get
+a bonus to their initiative in combat.  If the opponents do not attack
+immediately, the team can react by choosing from an Encounter Menu.
+Encounter menus vary and they list options for new situations.
+
+****************************************************************************
+SAMPLE ENCOUNTER MENU:
+
+COMBAT WAIT FLEE TALK
+
+In this menu you have opportunities to attack immediately, wait and see, run
+away or try and talk.
+****************************************************************************
+
+COMBAT
+During combat the computer chooses the active character.  Characters with
+higher dexterity will tend to go before characters with lower dexterity.  A
+character may hold his action until later with the WAIT command.  There is a
+more detailed description of how combat works in the Log Book.
+
+The active character will be centered on the screen at the start of his
+combat segment.  The active character's name, HP, AC, and current weapon are
+displayed.  The Combat Menu lists the character's options.
+
+COMBAT MENU:
+
+MOVE TARGET VIEW INTIMIDATE QUICK AID SPRINT DODGE JETPACK WAIT GUARD END
+
+MOVE allows a character to move into an opponent's square.
+NOTE: if a character selects SPRINT or DODGE all further movement by that
+character during that round will be sprinting or dodging.
+
+TARGET allows weapons to be aimed.  If the character has shot an opponent in
+a previous segment, the cursor will come up on that target.
+
+When targeting, the range to the target will be displayed above the menu bar
+on some systems.  If a character moves adjacent to an enemy, and has no more
+movement remaining, the TARGET command can be used to attack with a melee
+weapon (mono knife, sword, etc.)  The TARGET command can also be used to
+survey the condition of your team and enemies.  As you move the target cursor
+over a character or opponent, HP and weapon information will be displayed on
+the right of your screen.
+
+Target Menu:
+
+NEXT PREV MANUAL ATTACK CENTER EXIT
+
+NEXT is used to look at all possible targets, starting with the closest
+target and then going to the next farthest and so on.  NEXT and PREV only
+indicate targets in the character's line of sight.
+
+PREV (Previous) is the opposite of the NEXT command.  Use this command to
+look at the possible targets starting with the farthest, and working back
+toward the character.  This command is most often used to select a target for
+a missile attack.
+
+MANUAL permits the player to aim anywhere on the map.  Only targets in the
+character's line of sight can actually be attacked.
+
+ATTACK is used to fire a weapon, throw a grenade, or attack an adjacent enemy
+with a melee weapon (mono knife, sword, etc).  If this option is not
+displayed the target is out of range or not in line of sight.
+
+CENTER will center the screen around the cursor.  This is helpful when
+manually targeting.  This option is not available on all computer systems.
+
+
+Page [10]
+
+
+VIEW displays the character screen and View Menu.
+
+INTIMIDATE is the skill to project an aura of menace and to frighten adjacent
+opponents.  Intimidated opponents will be too frightened to move or fight for
+one round.
+
+QUICK turns control of the character over to the computer  Press the space
+bar to regain manual control of characters.  Under computer control, a
+fighting character with a readied missile weapon will tend to hang back and
+attack from a distance.  If the character has no readied ranged weapon, he
+will ready a melee weapon and charge.
+
+Characters will remain under computer control for all subsequent combats
+until manual control is again selected.
+
+AID only appears if a team member is bleeding to death.  Only character with
+First Aid or Treat Light Wounds skills can use the command.  The command will
+perform either First Aid or Treat Light Wounds, depending on the characters
+abilities.  Also, medics with the Treat Stun/Paralysis skill can also use the
+AID command to treat stunned characters. The team member using the AID
+command must be adjacent to the victim.
+
+SPRINT allows a player to run at double normal combat move distance.  The
+character cannot shoot or guard after sprinting.
+
+DODGE has the character move and try to evade enemy fire at the same time.
+The character will receive a temporary AC bonus that increases as he advances
+in level.  The character cannot do anything else in the same
+segment--including attack or fire weapons.
+
+JETPACK allows a character with a jet pack to fly over the battle to any
+square in range.  Any opponents guarding in squares adjacent to the
+destination square can attack when the character lands.  JETPACK can only be
+used in outdoor fights, and the character must have a jet pack and Use Jet
+Pack skill.
+
+WAIT causes the character to hold his turn until after the other characters
+and opponents have acted.
+
+GUARD sets a character armed with a ranged, non-area effect weapon (laser
+rifle, bolt gun, etc.) to fire automatically at the first opponent to move.
+Characters armed with melee weapons will attack the first opponent to move
+adjacent.
+
+END finishes a character's turn.
+
+AFTER THE BATTLE
+When combat is over team Medics will treat wounded characters and you will
+see how much experience each character receives.  After this the Booty menu
+is displayed.  Most of the Booty Menu commands work like the commands in the
+Shop Menus.
+
+BOOTY MENU:
+
+VIEW TAKE POOL DIVVY EXIT
+
+VIEW displays the character screen and View Menu.
+
+TAKE permits the active character to pick up any gear or credits left by
+defeated opponents.  This will only appear if the opponents had booty or the
+team has pooled its funds.
+
+Take Menu:
+
+GEAR CREDITS EXIT
+
+GEAR lists the equipment in the booty.  Frequently, the weapons and armor
+used by opponents are not listed because they are poor quality and not worth
+taking.
+
+CREDITS displays the amount of credits found after a battle.
+
+EXIT returns to the Booty Menu.
+
+
+Page [11]
+
+SPACE COMBAT
+The solar system is a dangerous place in the twenty-fifth century.  Space
+travel is filled with the constant threat of pirates and RAM warships.  In
+space combat there are two basic menus; one of the pilot, and another for the
+crew.  Not all options in space combat menus are always available.
+
+Pilot Menu:
+
+FIRE TARGET QUIT VIEW CLOSE WITHDRAW RAM BOARD
+
+FIRE allows the pilot to attack with the ship's K-cannons and missiles.  This
+attack has the greatest chance to hit, and will affect random systems on the
+enemy ship.
+
+TARGET allows the pilot to fire the ship's K-cannons and missiles at specific
+systems on the enemy ship.  Targeting is more difficult than the general FIRE
+command.
+
+QUIT ends the pilot's turn.
+
+VIEW allows you to examine either the ship or the pilot.
+
+CLOSE shortens the distance between your ship and the enemy ship.  If the
+enemy ship is faster than yours, and attempts to WITHDRAW, you will not be
+able to close.
+
+WITHDRAW attempts to escape the enemy ship.  If your ship is not faster than
+the enemy ship, you will not be able to disengage.
+
+RAM is an attempt to crash your ship into the enemy ship, RAM uses the
+pilot's Pilot Rocket skill to determine success.  When ships ram, the damage
+inflicted on each ship is the tonnage of the other ship.  For example, if a
+150 ton ship rams a 50 ton ship, the larger ship suffers 50 points of hull
+damage while the smaller ship suffers 150 points of hull damage.
+
+BOARD is only available if the enemy ship can no longer maneuver and the
+range is zero or one.  When you board your team docks with the enemy ship's
+airlock, and they must fight their way in.  The only way to salvage a ship is
+to board it and capture both the control bridge and engineering sections.
+Sections that have been destroyed do not have to be secured.  Only characters
+with spacesuits or armor can board ships with zero life support.
+
+Crew Menu:
+
+FIRE TARGET LOAD JURYRIG QUIT VIEW COMMAND AID BOOST ENGINES SENSORS
+
+FIRE is similar to the Pilot Menu command, except that crew members may only
+fire lasers.
+
+TARGET is similar to the Pilot Menu command, except that crew members may
+only fire lasers.
+
+LOAD reloads ships weapons.  This command only appears when a weapon is empty
+or not fully loaded.  The weapons that are ready to be loaded are displayed
+when LOAD is selected.
+
+JURYRIG appears when some weapons or system has been damaged, and if the
+character has the Jury Rig skill.  Ship's systems can only be successfully
+jury rigged once per battle.  Weapons can be jury rigged whenever they are
+nonfunctional.  The chance for success and degree of accomplishment is based
+on the character's skill level.  When this command is selected a menu of
+damaged systems will come up.
+
+
+Page [12]
+
+
+QUIT ends the character's turn.
+
+VIEW allows you to examine either the ship or the character.
+
+COMMAND only appears when the pilot is dead or incapacitated.  COMMAND orders
+the current character to take control and pilot the ship.  Remember: Put a
+character with good Pilot Rocketship skill into the pilot's position if the
+first pilot is incapacitated--this skill is crucial in space combat.
+
+AID only appears when a character is bleeding to death, and the current
+character has either a Treat Light Wounds, or First Aid skill.
+
+BOOST ENGINES attempts to squeeze extra speed from the rocket engines.  This
+command only appears if the current character has Nuclear Engine Repair
+skill.  The engines may be damaged if the skill check fails.  Engines can
+only be boosted successfully twice during a battle.
+
+SENSOR only appears if the current character has Sensor Operation skill.
+This is an attempt to probe the enemy ship.
+
+
+AFTER SPACE COMBAT
+After your team has defeated the enemy ship, boarded it, and secured both the
+bridge and engineering sections, a salvage beacon is attached to the hulk and
+a NEO tug will pick it up.  The team is automatically credited the salvage
+value of the ship in their NEO salvage account.  This account can be used to
+pay for ship repairs, fuel, ammo and medical supplies at any space port.
+
+At the same time as the beacon is being placed, all salvageable fuel from the
+defeated ship will be transferred to your ship.
+
+Medics on the team will perform whatever services they can for the wounded,
+and additionally, all possible field repairs will be made on the ship.  If
+there are any valuables on the captured ship a Booty Menu will also come up.
+
+End.

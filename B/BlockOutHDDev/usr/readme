@@ -1,0 +1,81 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Blockout" © 1989 California Dreams.
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ The installed program requires 0.5 MB ChipMem and 1.0 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ The game requires an installed A500 Kickstart 1.3 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick346.lha" on aminet.
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+
+History:
+
+v1.4 (23.04.2020) done by JOTD:
+- fixed trashed fonts in hiscore section (issue #0004543)
+- reworked readme file
+
+v1.3 (20.04.2020) done by JOTD:
+- reassembled with new kickemu, using kickfs, removes 68020+ restriction (issue #0004526)
+- source code included
+
+v1.2  done by JOTD:
+- fixed setup write bug and OS swap avoided (thanks Juergen for bug report)
+
+v1.1  done by JOTD:
+- recompiled with newer KickEmu. Now correct date is displayed in scores
+
+v1.0 (2001) done by JOTD:
+- first release
+- Runs now properly from HD using WHDLoad/KickEmu/KickDOS
+- Manual protection removed
+- Full use of fast memory
+- Font fix (KickEmu bug?) to avoid corruption in hiscore section
+- Quit key (F10, or configurable with QUITKEY) anytime
+- Convenient install script
+- Nice icons by Frank & Chris
+- Docfile included
+- Hiscore/prefs save (as in DOS release)
+
+
+Notes:
+
+- Yes, the game originally runs from HD/DOS, but the screen may be shifted depending
+  on the config, and can disappear too. It also crashes on exit. And there's a manual
+  protection. So a fix was needed.
+- Thanks to Carlo for providing the original disk image.
+- Original quit option is still available
+- Runs OK with JST (even if more OS swaps)
+
+Thanks to Bert Jahn for writing kickemu.s kickstart interface system.
+

@@ -1,0 +1,127 @@
+                         MindWalker Solve Part 1
+
+   Ok, when you start the game (at ANY of the "presets" in the startup
+screen) you are one of four characters:
+          a Wizard,
+          a Spriggan,
+          a Nymph,
+          a Human.
+
+   Each of these characters is associated with a color. These colors can be
+determined by looking at their names on the map screen (you get the map by
+clicking left-mouse on the  "scroll" in the top right of the "play-screen").
+This color/characters relationship plays an important role !
+
+   When you start up the game take a look at the map.  You'll see that there
+is a flashing rectangle and a flashing square. The rectangle represents the
+current "play-screen" and the square is where you are headed.  Now, notice
+that there are  various colors on the map and these colors correspond to the
+colors of the characters.
+
+   You steer your character to a "crystal" (when you start the game you are
+already "at" a crystal).  Now you must head  towards the flashing square that
+you saw on the map.  As you go you will leave a trail of black squares AS
+LONG AS YOU  ARE WALKING ON SQUARES THAT ARE THE SAME COLOR AS YOUR
+CHARACTER'S COLOR. (these colors are NOT necessarily seen on the squares
+(tiles ?) of the play-screen but they ARE seen  properly on the map.)  If you
+reach a point where you cannot go any farther because the color changes, you
+must find a "PYRAMID".  Pyramids allow you to change your character into
+another.  Once you're "changed" to the RIGHT character you can go back to
+where you left the path and carry on towards the flashing square.  Obviously
+some advance planning with the map can save you a lot a aggravation here.
+
+OTHER HINTS & TIPS
+------------------
+   Be very careful not to touch any other CRYSTALS as you go. If you do, then
+you've essentially started over and your previous path is erased. You can
+find where ANY of the important things are by going to the map and holding
+down Left-Mouse while pointing at the desired item.  If you do this on a
+character you will "light up" all the squares that character affects.  If you
+look at "path" you can see just where you've been (MOST useful). You can also
+find CRYSTALS, TUBES (more on this in a minute) and PYRAMIDS.
+
+   TUBES will become numerous around your goal (the flashing square.  This
+flashing square will be a flashing WHITE square in its play-screen).  YOU
+CANNOT lay a path on squares with TUBES.  Plan your path carefully in
+advance[ using the map.  It's hard enough fighting off all your attackers
+without spending time rushing around trying to find your path again.  The
+"devils-heads" cannot be killed.  You can only run from them.
+
+   When you make it to your goal the play-field will go black (and look at
+your map now as well.)  NOW, you can walk up to (into ?) a TUBE and you will
+be in the Second Phase of LEVEL ONE.
+
+   The entrance to phase two is via a screen with two hands. These hands must
+capture a green block that's thrown at you from down a long tunnel.  This is
+really pretty easy.  Only thing to get used to is that the joystick
+directions work backwards. Just get a green block's center to hit the general
+area of "between" the hands and you've got it.
+
+   That's enough for now.  I'll do another on the second phase. (A hint
+though... phase two is handled mostly through sound.)  Remember, the object
+at this point is to lay down a CONTINUOUS path from the crystal to the
+flashing square.
+                           MindWalker Solve Part 2
+
+
+   When you first enter Phase 2 you find that you are now in the form (?) of
+some "invader" in the "body" of something.  The impression is gained first
+from the beeping/chirping "anti-bodies" that are forever charging you and,
+secondly, from the "heartbeat" that is heard.  THIS HEARTBEAT IS THE REAL
+GUIDE THROUGH THIS SECTION OF THE GAME.
+
+   Think of yourself as being in a maze. You can only see part of the maze
+(your screen) at any one time.  Somewhere in this maze is your goal: a
+diamond shaped, multi-colored object surrounded by a large number of
+"anti-bodies". You should have little difficulty recognizing it.  YOU FIND
+THIS THING BY THE HEARTBEAT which will beat FASTER/SLOWER as you get
+CLOSER/FARTHER from the goal.  Once you find this 'diamond' and have
+"touched" it, the sound is now used to find your way BACK to the top of the
+tube that brought you here.  Make sure you keep your bearings as time counts
+here.  You should try and perform this "mission" as fast as possible, but
+DON'T TOUCH THE CELLS ! (by "cells" I mean the "walls" of the maze.)
+
+   You will notice that there are two vertical "graph bars" at the right of
+the screen.  Just what these truly represent is a mystery.  However, I can
+make the following observations about them.  Killing anti-bodies lowers the
+left bar and appears to further your ability to survive in this "hostile"
+environment.  The right bar seems (!) to be connected to the time factor but
+just how I'm not sure at all.  What the middle flashing horizontal part is
+about is a big zip to me.
+
+   When trying to get back down the tube you will find it's entrance is
+surrounded by "cells".  The only (apparent) way through these things is to
+have sufficient energy/strength (right bar ?) to dash through these cells
+IMMEDIATELY after the screen does one of those little "flashes" of white.
+(Trust me. I've done it so I know it can be done.)  Even then you may have
+trouble getting back down the tube.  Be sure NOT to touch any of the cells AT
+ALL.  Doing so takes away a LOT of your time/energy. (It often kills you
+outright.)
+
+   If you can get back down the tube you advance to the next level.  (Try
+wriggling around over the top of the tube).
+
+Hints:
+
+   Hurry!  Time works against you here.  Consider yourself as a foreign
+invader to a body.  That body is working all the time to wear you down.  Kill
+anti-bodies as best you can.  Each one killed seems to help you out in
+time/strength.  Try not to get hit by or stay under the vertical "sprite"
+that occasionally moves across the screen.  Lots of "sparks" fly on this one.
+You lose time/strength from this.
+   Do your best to keep your bearings in mind.  It makes it a LOT easier to
+get back to the tube/exit quickly.  Remember, you need as much strength as
+possible to withstand the rigors of getting through the cells to the tube.
+
+Level Two:
+
+   So far, playing at level two seems to be just a faster, more complex
+version of level one.  You'll notice that there are little "bites" taken out
+of the spheres.  Also, beware of the "play-fields" that have one or more
+"towers".  These towers MUST be "touched" before they will lower the "fence"
+around the border of the play-field and allow you to move on.  This can be
+MOST disconcerting when there are two death-heads setting you in their
+sights!  AND, even if you manage to touch the tower(s) and escape, the next
+time you venture into that screen the towers are "reset" and you have to do
+it again.  Takes away that first round ability to jump back and forth between
+screens to escape things.

@@ -1,0 +1,688 @@
+Introduction 		5
+1. Getting Started 		6
+What You Will Need 		6
+To Start 		6
+2. A Training Session		7
+Choosing a Campaign 		7
+Choosing an Opponent 		9
+Viewing the War Map 		9
+Your Objective 		9
+Command Options 		10
+In the Eye of the Storm 		12
+End of Training Session 		12
+3. Campaign Descriptions 		13
+4. Game Generator 		16
+Making a Map		17
+Making an Army 		19
+Selecting the Enemy 		20
+Setting the Rules 		20
+Writing the Story 		20
+Writing the Title 		21
+Playing Your New Campaign 		21
+ 
+INTRODUCTION
+Introduction
+Book I is an Instruction Manual which will take you step-by-step through every aspect of playing The Ancient Art of War. It will also give you useful strategy tips. Book I is divided into four sections.
+"Getting Started" tells you how to start up the program. This information is also included on the Quick Reference Card.
+"A Training Session — Prepare for War!" quickly guides you through the program's main features and leads you into your first campaign. Use this section as a tutorial for getting acquainted with the game play, commands and controls.
+Next, "Campaign Descriptions" outlines the eleven campaigns provided with the game. As you'll discover, there are over two thousand variations of these eleven campaigns alone.
+The "Game Generator" section shows you how to make up your own campaigns, quickly and easily. You'll learn how to select every element of a campaign: troop strength, positioning, enemy strategy — you'll even create your own colorful game boards.
+After you are familiar with the game, refer to Books II and III for more information and strategy tips to help you in playing The Ancient Art of War. Book II is a Strategy Guide that outlines the military philosophy of Sun Tzu and other famous leaders. The Reference Glossary in Book III provides thorough information on every variable involved in The Ancient Art of War.
+ 
+ 			
+	GETTING STARTED		
+	The first time you play, you may want to read this chapter. It will help you set up the game and get started.
+WHAT YOU WILL NEED: IBM PC, PCjr or XT with at least 128K memory Color/graphics adapter card for PC or XT Color or monochrome monitor
+PC DOS 2.0 or 2.1
+Joystick (optional)
+TO START
+First, start up your computer using PC DOS 2.0 or 2.1. When you see the A> prompt, remove the DOS disk and replace it with the game disk. Type WAR. Then press the return key.
+After a moment, you will see the title page. There is a banner on the screen that says "GO TO WAR". You can use the + (plus) and — (minus) keys to view the other options at this point, which are "MAKE CHANGES" and "QUIT". If you don't do anything for 30 seconds, the game will automatically begin a self-playing demo, which you can watch to get an idea of the game play. Press any key to exit the demo and go back to the title page.
+Before you start playing your first game, you may want to view the options settings and change them if they are not set the way that you want them. You may, of course, leave them as they are. To review or alter these settings, press + or — until "MAKE CHANGES" appears on the banner, then press the return key. You will see the Changes Page. Using the + or — key, move the cursor (the blinking box) to the picture in the lower right corner of the screen ("Ye Olde Options Shoppe" will appear at the top of the screen). Press the return key.
+At the Options Shoppe page, use + or — to move the sword to any one of the options, then use the space bar to change the setting. Directions also appear at the bottom of the screen. Note: On the Fight Delay option, the medium setting allows you about 30 seconds to get to the squad once an encounter is reported.
+As soon as you have these set up the way you like them, you're ready to play your first campaign! Press the return key to go back to the title page. Good Luck!
+6		
+			
+			
+ 
+A TRAINING SESSION:
+PREPARE FOR WAR!
+This section leads you through your first campaign. In the process, you'll learn about the controls and commands used in The Ancient Art of War. It's a good idea to start up the program and try out things as you read.
+CHOOSING A CAMPAIGN
+CAMPAIGN: A series of military operations that form a war.
+Start at the title page. "GO TO WAR" should be displayed on the banner (if not, press + or — until it is). Press the return key. An ancient scroll will open, revealing the titles of a variety of campaigns. Note: Each of the scrolls you will see is about two screens long, so use the + or — keys to see all the information. From this point until you press the return key after choosing your opponent, you can go back — all the way to the title screen, if you wish — by pressing Esc.
+ 
+Following the directions at the bottom of the screen, make sure the sword is pointing to "Race for the Flags" and press the return key. The ancient scroll will close, and when it reopens, it will reveal the story behind the war you are about to wage. After you read through the story, press the return key. The scroll will close and reopen again, this time showing you the rules of this particular campaign. The rules have been individually preset for each campaign, but you can adjust them. However, for the first time you play, it's a good idea not to make any changes — this will give you a better idea of the overall game play.
+After you have read the rules, press the return key. Now you will meet your opponent.
+ 
+CHOOSING AN OPPONENT
+You can fight any of the eight enemy leaders portrayed on the screen. Each has a different fighting style, as well as different strengths and weaknesses. At the top of the screen, you'll see the enemy's name and a brief description. Use the + key to move the cursor box through the opponents. (HINT: for an easy opponent, use Crazy Ivan.)
+When the cursor box is on the enemy you want, press the return key. Look for a strategy hint before the game begins.
+VIEWING THE WAR MAP
+As the war begins, you are viewing the war map, which includes a variety of features. On the bottom of the "Race for the Flags" map, in the corners, are hills (the round, light-colored areas). Near the center of the screen, you can see a village (the four white circles), which is inhabited by the enemy. The rest of the terrain is composed of forests and trails. The white, cross-shaped object near the center is the marker, which enables you to scout out the enemy troops, and give commands to your own squads.
+ 
+The soldiers you see on the map represent squads; each squad is made up of between 1 
+and 14 men. You control the white squads, and the enemy controls the black squads.
+To scroll the map, use the — key to scroll up (when you're ready, the + key will scroll you back down). You can jump quickly to the top or bottom of the map by pressing the shift key and the + or — key at the same time. You can use Ctrl in place of + and Tab in place of — (this is especially helpful if you are using the PCjr, or if you are left-handed). If you are using the joystick, hold down button #1 and move the joystick to scroll the map.
+YOUR OBJECTIVE
+At the top of the "Race for the Flags" map is a river with a bridge at each end, above the river are more hills with a mountain range on each side, and beyond the mountain ranges — the fort with two flags. One flag is black, the other white. This is the goal; whichever side can get a squad to the fort first, and capture the opposing flag, wins the game. In other campaigns, there may be more than one flag, but this has only two. In
+ 
+The Ancient Art of War, the most skillful player wins by taking all the enemy flags with a minimum of fighting. The next preferable method is capturing the enemy, followed by keeping the enemy divided. The last resort is to fight the enemy in a series of encounters.
+COMMAND OPTIONS
+At the bottom of the current screen are three command options: View, Time, and Surrender. Throughout The Ancient Art of War, command options appear at the bottom of the screen. To select an option, press the letter key that corresponds to the first letter of the command. In this example, the commands are as follows:
+View — Press V, and a miniature of the entire war map will appear in the bottom left corner of your screen. From the smaller map, you can see at a glance where both sides are strong and weak (again, your forces are represented by white and the enemy by black). Solid areas show the strongest influence, green/blue areas show open land. Strength is determined by a number of factors: the number and type of soldiers, their condition, and their location. The total number of soldiers on each side is also shown.
+Time — you can alter the speed of the game at any point when Time appears on the command line by pressing T. Four different times are available. (You may want to use a slow time when you're making your plans, then speed up the time when you've got everything set.)
+Surrender — You can surrender at any time during the game when Surrender appears on the command line by pressing S.
+Saving the game — If you want to save the game and start it up again later where you left it, press Alt S, and the computer will prompt you to insert a data (or blank) disk —just follow the prompts on the screen; the program takes care of the rest.
+ 
+Move Info Size Formation Detach
+There are more command options available when you have the marker positioned 
+over one of your own squads. To move the marker, use the arrow keys on the right side 
+of the keyboard. If you want to move the marker at an angle, you can press two arrow
+ 
+keys at the same time. With a full keypad, you can use the 1, 3, 7 and 9 keys to move a	the marker at an angle. If you are using the joystick, just move it in the direction you 
+want the marker to go.
+Size: Press S to see the type and number of soldiers in a squad.
+Info: Press I to find out about a squad's food supply, condition, and marching speed. While you're in Info, you can change a squad's marching speed by pressing S. The maximum speed a squad can march depends on its condition.
+Move: To move a squad, press M (notice that the marker changes its shape to an open box). Move the marker, using the keyboard or joystick, to trace the path you want the squad to follow, and press M again to mark the destination (a small white mark will appear here). The squad will take exactly the same route that the marker takes, so be careful not to let them drown in a river! The exact position of the squad is at its feet (this corresponds to the bottom of the marker box).
+Occasionally, while you are tracing a squad's path the computer will mark a destina¬tion before you press M. This means that the computer's memory for keeping track of squad paths is temporarily full. Once the squad reaches the marked destination, you will usually be able to move it ahead to the final destination. The computer can keep track of 700 steps, so this won't happen very often.
+Detach: To detach part of a squad, press D. Select from the types of soldiers listed on the screen by pressing the first letter of their names (A for archer, etc.), and continue to do so until you have created the new squad you want. Now press E for end.
+Join: If two of your squads are close enough, and the total number of soldiers in both squads adds up to 14 or less, you can join them into one squad. Press J, then join them in the same way you detached a squad. You can also move soldiers between two squads with this command, as long as the marker is over a squad with less then 14 soldiers.
+Formation: Press F to see a squad's formation. Using the + and – keys, you can see 
+the other available formations and assign a new one if you want. Once a battle begins, 
+it's too late to change a squad's formation, so use strategy and planning ahead of time!
+You can gather some information on an enemy squad by placing the marker over it, and pressing S for Size, or I for Info.
+On The March
+Now you can set up destinations for your squads, assign formations, gather informa¬tion, and devise your strategy. Remember — the enemy squads are on the move while you're getting ready to meet them, so move quickly!
+News from the Front
+You will receive messages during the campaign indicating enemy sightings, imminent encounters, flags captured, and more (for now we'll leave it up to you to find out what other things can happen). When an encounter is reported, you have about 30 seconds to get there (if you've set the time lag to "medium" at the Options Shoppe). Once you get to the scene of an encounter, use Zoom to get an exciting, animated close-up view of what's happening, and give your soldiers battle commands.
+ 
+IN THE EYE OF THE STORM
+Zoom: This option will appear on the command line when you place the marker over a squad going into an encounter with the enemy. Now you'll see both squads, facing off and ready for battle. Press A to initiate the attack (sometimes the enemy will take the initiative before you get a chancel). Then, give tactical instructions to your soldiers in two steps.
+ 
+1.	Indicate whom the order is for by pressing A for archers, B for barbarians, K for knights, or S for the entire squad. Use the backspace key to cancel if you make a mistake.
+2.	Give specific orders by pressing A to attack, B to back off, F to move forward, or S to stop.
+3.	After you have given the orders, you can order the entire squad to retreat by pressing R. (Retreat will cancel any Move command you may have given the squad.)
+Now, you can play out the rest of the campaign, or press S to surrender.
+END OF TRAINING SESSION
+Congratulations! You've made it through the training session in one piece. For help and quick advice, keep the Quick Reference Card handy.
+There isn't anything you can do in this part of the program that will have a permanent effect, so feel free to "cut loose!" You can change any or all of the rules and choose a different opponent. Each campaign can be very different, depending on the rules and the enemy. The next time you play the game, everything will return to how it was before you started.
+When you are ready to become an advanced player, read The Ancient Art of War: Strategy Guide. It is a strategy lesson based on the philosophy of Sun Tzu and other famous leaders. Reading this will give you a distinct playing advantage.
+ 
+CAMPAIGN DESCRIPTIONS
+The Ancient Art of War consists of eleven campaigns. Each offers its unique chal¬lenges. (You can also create your own campaigns. See the section titled "Game Generator".)
+A brief description of each campaign follows. Difficulty is rated on a scale of 1 to 10, 10 being the most difficult. Time is also on a scale of 1 to 10, 10 being the lengthiest (of course, if your opponent is much craftier than you, it might make a long game very short!). Time and difficulty will vary if you change the rules or the enemy leader.
+
+THE RACE FOR THE FLAGS
+In the abandoned fort in the north are two flags: one white and one black. The first squad to the fort wins the war. Sound easy? Well, you're greatly outnumbered, and a horde of Mongolian warriors are between you and the fort.
+Difficulty:4
+Time: 3
+
+THE BATTLE OF PHARSALUS
+The enemy outnumbers you, and you can't hold him off from your flag forever; plus, he has two flags that you must cap¬ture. This one can be won if you apply some clever strategy.
+Difficulty:	3
+Time:	2
+
+THE CONTEST OF THE GODS
+This is a race through the forest, two of 
+your soldiers against two enemy soldiers.
+Do you try to cut the enemy off or outrun them?
+Difficulty:	2
+Time:	1
+
+SHERWOOD FOREST
+Find and protect your flag; and move swiftly through the forest. There is a very important fort in the center. Take advan¬tage of the natural superiority of your men against the enemy's men.
+Difficulty:	6
+Time:	4
+
+THE ELUSIVE SPY
+You're outnumbered 100 to 1, so use what strength you have against the enemy's weakness.
+Difficulty:	3
+Time:	2
+
+CUSTER'S LAST STAND
+Custer is in a fix, and now he expects you to get him out of it. This campaign can be won, but it won't be easy.
+Difficulty:	9
+Time:	3
+
+THE RIVALRY
+Remember to consider the condition of your squads.
+Difficulty:	7
+Time:	5
+
+A TALE OF THREE ISLANDS
+You have a long way to march your sol-diers to the enemy flags. Meanwhile, you and the enemy are going to have to use the same bridges to move troops around.
+Difficulty:	6
+Time:	6
+
+WU VS. CH'U
+Using the less obvious strategy is the key to winning this campaign.
+Difficulty:	8
+Time:	9
+ 
+WAR IN THE MOUNTAINS
+There are many forts and flags, and your
+men are scattered all over. The terrain is
+full of mountains — remember, the enemy is agile here and you aren't!
+Difficulty:	9
+Time:	8
+
+ISLANDS OF DOOM
+You are on your own on this one. Good Luck!
+Difficulty:	9
+Time:	9
+
+GAME GENERATOR
+With this part of The Ancient Art of War, you can create your own campaigns; you can re-create historical battles or just let your imagination run wild. You will save the campaigns you create on data diskettes (up to 11 campaigns per disk), so you can make all the campaigns you want, and replay them all.
+To use the Game Generator, start at the title page. Press + or — until "MAKE CHANGES" appears on the banner, then press the return key.
+The changes page will appear and give you a choice of six selections. As usual, + or —moves you through your choices. The name of each selection will appear on the screen when the marker is over it. "Make a New Campaign" is the first choice. "Change a Campaign", the second choice, allows you to revise (edit) a game you have already created. "Remove a Campaign", the third choice, allows you to remove one of the campaigns you created from your data diskette. "Return to the Title Page", the fourth choice, takes you to the beginning of the program. The fifth choice is "Teach Squads
+ 
+New Formations"; for more information on this option, see "FORMATION" in the glossary. The last choice, "Ye Olde Options Shoppe," allows you to change options settings.
+ 
+Choose "Make a New Campaign." The computer will now ask you to insert your data disk into the disk drive. You can use the same data disk for new campaigns and saved campaigns. (The drive you use for your data disk can be changed in "Ye Olde Options Shoppe". See the section titled "Getting Started" if you have not changed any options settings yet). The first time you use the blank disk to create a new campaign, the program will check to see if it is formatted, and if it is not, the program will do this for you. Just follow the prompts to swap disks when necessary, and the computer will do the rest.
+Creating a new campaign involves six steps: making a map, placing squads and flags on it, selecting the enemy leader, setting the rules, and writing the story and title.
+MAKING A MAP
+Making the war map is a lot like putting together a puzzle. Press the return key to begin.
+There are four tools you use while making your map: the map board, the marker, the map grid, and the map pieces.
+Map Board: At the top of the screen is a view of a section of the map board. This is where you will place pieces of terrain as you build your war map (right now, it's all flatland). Slightly less than one-sixth of the total map board is seen at one time.
+Marker: The marker is the bright square on the map board. To move the marker, use the arrow keys; you can scroll through the entire map board with the marker.
+Map Grid: The map grid is at the lower left of the screen; it's a miniature version of the entire map. The bright square represents your marker, so that you can see where you are placing things in relation to the rest of the map.
+ 
+Map Pieces: To the right of the map grid are the map pieces. To move a map piece onto the map board, type the letter under it, and the piece will appear under your marker. You can use any map piece as many times as you wish, and change a map piece to another after you have placed it, if you change your mind.
+There are four pages of map pieces; to flip through the pages, press P. You can go through them as many times as you wish when making a campaign. Here is a listing of the map pieces and their command keys:
+ 
+Page 1
+A and B — flatland pieces
+C — a fort
+D — a village
+E and F — hills
+G, H, M, and N — shoreline, or curves in a river
+I and I — bridges
+0 — water
+K, L, R, and S — forest edges
+Q — a north/south forest trail
+Page 2
+This page contains shoreline and rivers. A, B, and C — east/west river pieces
+D,	1, and Q — north/south river pieces
+E,	K, and R — western shores
+F L and S — eastern shores
+G, H, and 1 — northern shores
+M, N, and 0 — southern shores
+Page 3
+This page contains most of the mountain pieces.
+A, B. G. and H — curves in a mountain range, or end pieces
+C and I — stubby north and south end pieces
+D and J — longer north and south end pieces
+E and K — end pieces surrounded by forest M and N — long east and west end pieces O and Q — stubby east and west end
+pieces
+R and S — end pieces surrounded by forest L — solid mountain
+F — a decorative compass
+ 
+Page 4
+This page contains forest pieces.
+A, B, C, G, I, M, N, and 0 — forest edges H — solid forest
+D, E, F, and J — alternate forest edge pieces
+K, L, R and S — mountain curves surrounded by forest
+Q — an east/west forest trail (the north/south trail is on page 1)
+The map you just made will appear on the full screen; now, you will place squads and flags on it.
+MAKING AN ARMY
+To place a Flag, move the marker to where you want it located. Press F, and a flag will appear under the marker. To change it from Friend to Foe, press F again. If you change your mind, you can Remove the flag by pressing R. You'll need at least one white flag and one black flag in the game; if you forget to put them in, the computer will place one of each flag in a random location for you. You can have up to 10 flags of any combination in the game.
+To place a Squad, move the marker to the location where you want the squad to be, and press S. A window will open at the bottom of the screen, and you can build your squad out of the four different types of soldiers. Press A for archers, B for barbarians, etc., until the squad is as you want it (up to a maximum of 14 men.) If you change your mind, you can take men out of a squad by pressing D for Decrease, or add more men by pressing I for Increase. When you're finished, press E to End, and the squad will appear under the marker.
+You can make more adjustments to the squad you've created. A new command line will appear at the bottom of the screen. The first thing you need to do is press I for Info. Then press T for Type (this will change the squad from friend to foe or back again). By pressing S you can adjust the marching speed. To adjust a squad's Condition or Food, first press I or D (to indicate Increase or Decrease), then press C or F. When everything is set as you want it, press E to End.
+The other options on the command line are Size, to look at or change the size of the squad; Formation, to look at or assign a new formation for a squad; and Get, to move a squad to a new location (press G to Get the squad, move the marker to the new location, and press P to Put the squad there).
+To remove a squad entirely, put the marker over it and press R for Remove.
+ 
+choose. Of course, you must have at least one of each type.
+To find out the total number of soldiers on each side, move the marker so that it is not over a squad, and Total will appear on the command line; then, press T.
+When you have completed placing all the squads and flags, press the return key (when the marker is not over a squad or flag), and you will automatically go to the next section.
+SELECTING THE ENEMY
+The third step is selecting the enemy leader. Press any key to begin.
+You probably know all these enemies by now To find out a little more about each one, refer to the chapter titled "Know the Enemy's Mind" in The Ancient Art of War Strategy Guide.
+Using the + or — keys, scan through the choices. When the marker highlights your choice, press the return key to continue.
+The ancient scroll will appear.
+SETTING THE RULES
+The fourth step is to set the rules. Press any key to begin.
+Press + or — to move the sword to the rule you want to change, then use the spacebar to change it. When all the rules are set as you want them, press the return key. The ancient scroll will close, then open again.
+WRITING THE STORY
+The fifth step is writing the story. Press any key to begin.
+ 
+YOUR CAMPAIGN
+ON THIS SCREEN, YOU WILL WRITE THE STORY BEHIND THE CAMPAIGN YOU JUST CREATED .
+111.NL,
+The pen appears, and now you can write the story behind the battle you have created. Just type in the words as you normally would (you will need to press the return key at the end of each line). You can move the pen with the arrow keys. The backspace key will erase as it moves back.
+ 
+-.1A1	When you are done, press ESC, and the scroll will close and open again.
+WRITING THE TITLE
+The sword will appear at a blank line on the scroll. Put the title of your campaign here (it needs to be at least one letter, and can be up to about 25 characters long, including spaces). After you type in the title, press the return key. The scroll will close, the computer will tell you that the campaign is complete, and you will return to the title page.
+PLAYING YOUR NEW CAMPAIGN
+Right after you complete a campaign, at the title page, select "GO TO WAR". The first scroll the computer will show you will be from your war disk. To play the campaign you just created, choose the last selection — Data Disk. The computer will tell you when to swap disks. You can also play one of the campaigns that come with the program at this point.
+ 
+ 
+BOOK 11
+STRATEGY
+GUIDE
+ 
+ 
+COMMIS
+
+Introduction 		25
+1. The Ancient Art of War 		26
+About Sun Tzu 		26
+Planning 		27
+Know the Enemy's Mind 		27
+Athena 		27
+Alexander the Great 		28
+Geronimo 		28
+Crazy Ivan 		28
+Julius Caesar 		29
+Genghis Khan and Subotai 		29
+Napoleon Bonaparte 		30
+Sun Tzu 		30
+Know Your Men, Know the Enemy 		30
+Waging War 		31
+The Art of Fighting Without Fighting 		31
+Condition 		32
+Tactics 		32
+On the March 		33
+The Nine Types of Terrain 		33
+The Nine Types of Ground 		34
+Energy 		35
+Strength and Weakness 		35
+2.	A Brief History of War Through the Ages 		37
+3.	War Terms 		41
+ 
+
+ 	INTRODUCTION
+
+Introduction
+Book II is a Strategy Guide that will provide you with information about the art of
+war, and how military leaders have applied this art throughout history.
+"The Ancient Art of War" summarizes Sun Tzu's philosophy on war strategy. This section also provides valuable hints for wisely using Sun Tzu's strategies in the game.
+"A Brief History of War through the Ages" outlines the development of war strategies from 4000 B.C. through the 19th century. You will notice that many of the major developments in military strategy evolved as a result of Sun Tzu's work.
+"War Terms" is a glossary listing some of the specific terms used in Book II.
+Careful study of this Strategy Guide will help you become a better player in The Ancient Art of War.
+ 
+
+ 
+THE ANCIENT ART OF WAR
+In about 400 B.C., a Chinese philosopher named Sun Tzu (pronounced Son Sue) wrote The Art of War. Although it is an ancient work, The Art of War outlines planning and strategy that is still applicable in today's world. Reading this section will teach you much about strategy, and improve your chances of defeating your oppo¬nents in The Ancient Art of War.
+About Sun Tzu
+Long ago, Sun Tzu lived in the Kingdom of Wu. His book, The Art of War, so impressed the King of Wu that Sun Tzu was invited to give a demonstration of his leadership skills at the king's castle.
+The King of Wu wanted to see if the demonstration could be carried out with women acting as soldiers, so dozens of his lovely concubines were brought into the courtyard. The king would later regret his desire to be amused in this way.
+The concubines were divided into two groups, and the king's two favorite concubines were made the leader of each. Sun Tzu, acting as the general, carefully explained the orders he would give. However, the first time he gave the orders, the women broke into gales of laughter. He explained the orders again, to ensure that he was not at fault, then again gave the order. Again the women dissolved into laughter. Sun Tzu announced that as he had explained the order carefully and could not be at fault, the concubine leader of each group was at fault and should be executed. At this point, of course, the king became rather alarmed and announced that Sun Tzu had certainly proved his leadership qualities and did not need to prove it further by carrying out the behead¬ings. Sun Tzu then told the king that as the appointed leader of troops, there were times when he had to carry out certain orders the king might not think necessary. The concubines were beheaded, and two others moved up to take their places.
+As you can imagine, the concubines very seriously followed Sun Tzu's next orders. And Sun Tzu became general of the Kingdom of Wu.
+For nearly twenty years, the armies of Wu defeated their ancient enemies. Then, both Sun Tzu and the King of Wu died and soon after that the ancient kingdom fell.
+ 
+The Art of War has been studied by many of the most brilliant military minds throughout history. The great Mongol leader Genghis Khan used The Art of War as the basis for his own philosophy and created the most awesome army the world has ever seen. In 1782, The Art of War was translated into French by a Jesuit priest and some believe that this translation inspired young Napoleon. Mao Tse Tung was greatly influenced by The Art of War when he wrote his Little Red Book. The Art of War is as valid today as it was 25 centuries ago when it was written.
+I.	PLANNING
+The art of war is a mental art, an art of planning and organizing well. Because war is a situation of extremes, of life and death, a leader must be able to plan his strategy so he can win while losing as few lives as possible — on either side.
+Here are the keys to planning:
+The more thoroughly you can plan before your soldiers engage in battle, the more chance you have of winning. The art of war is dependent on strategy more than tactics; to rely entirely on tactics with no thought to strategy can lead to disaster. You may find that you have sent a squad into battle against a highly superior squad, or that you have not ensured a food supply for your squads. Tactics are worth very little without strategy. However, tactics are important, too — many times, a squad may be in a situation that could not be anticipated, and these will try your tactical wit.
+In your planning, try to foresee any opportunities when you might fool the enemy, such as retreating when you are truly able to continue the fight. Hide your weaknesses from the enemy, and search for his. Do not try to attack his strong points, but use your strengths against his weak points. Using decoys to keep his army busy can wear him down and give other squads time to get away. Constantly surprising an enemy so he is always forced to try to outguess you will make him more susceptible to whatever action you actually take.
+Remember to plan well; otherwise, victory will belong to your opponent.
+II.	KNOW THE ENEMY'S MIND
+To anticipate the enemy leader's strategy, his methods must be studied. The following is a description of the enemy leaders in The Ancient Art of War.
+Athena
+Athena was one of the most important of Greek Goddesses, worshipped for her wisdom and for her skills as a warrior. Her first battle was a critical one; she had to help her father, Zeus, overthrow the Titans. Using her wits, she counseled her father to send for Heracles, knowing he could defeat the Titans. Then, she fought relentlessly on the battlefield, killing two of the giants herself.
+HINT: As an opponent in The Ancient Art of War, Athena will move her squads toward your flags, attacking and fighting anyone in reach, regardless of their strength. She will tend to leave her own flag unprotected and will let her food supplies become dangerously low before looking for more food. She will die before surrender.
+ 
+Alexander The Great
+Alexander the Great's story begins with his father, Philip of Macedonia, who lived between 300 and 400 B.C. While spending three years of his life as a captive of the Thebans, Philip studied the fighting methods of their great leader, Epaminondas. When Philip returned to Macedonia, he united Greece and created a powerful army. With the help of his teenage son, Alexander, he defeated the Persian empire.
+Soon Alexander surpassed his father as a great leader, never losing a battle. He armored his troops lightly but only used the bow and arrow as a minor weapon. Alexander treated his men with compassion, was good at maintaining a supply line, and was most effective when fighting in the open. When forced to retreat, he would suffer heavy losses.
+His most famous battle was in 331 B.C. when he met the Persians at Gaugamela. When the Persians overextended their line, he ordered his phalanx to advance at an angle, penetrating their wing. The Persians fell apart and victory was assured.
+HINT: As an opponent in The Ancient Art of War, Alexander will tend to protect his flag well and to keep a supply line open. He is a compassionate leader and will surrender when the situation becomes hopeless rather than send his remaining men to their death. He is slow when traveling through the mountains or forests but will move aggressively to engage enemy found in the open.
+Geronimo
+Geronimo was a famous Apache leader in the American Southwest of the 1800's. He was at home in the mountains and forests, and would sweep down on an enemy and destroy him before the enemy could join its forces. However, Geronimo was weak in the open.
+Geronimo's men were elusive targets, using guerilla tactics and never taking perma¬nent possession of any piece of ground. Offensive fighters, they would not defend ground but move on to a more favorable location.
+With speed, endurance and maneuverability, Geronimo and his men could disappear into the terrain and become impossible to follow. Refusing or offering battle at will, Geronimo would keep the initiative.
+Superstition handicapped the Indians in war, but their biggest problem was lack of manpower and the inability to use coordinated unit action.
+HINT: As an opponent in The Ancient Art of War, Geronimo will keep on the move, providing an elusive target. Traveling as fast through forests and mountains as most armies can travel in the open, Geronimo will sweep down on villages periodically to keep his men well fed.
+Crazy Ivan
+Born into a family of Norwegian farmers, Crazy Ivan earned his nickname at an early age when he shot the neighbor's milk cow (Ivan thought it was a Reindeer). Later, he fled the frozen north to the small South American village of Mescalito. His leadership ability was soon put to the test when he led a renegade band of tequila soaked followers into the hills in search of the Fountain of Perpetual Euphoria. He was never seen again.
+ 
+HINT: As an opponent in The Ancient Art of War, Ivan will be unpredictable and rarely use logic when making a decision. He is the easiest opponent to defeat.
+Julius Caesar
+Julius Caesar was the emperor of Rome for 10 years and achieved better discipline and higher morale than other Roman emperors had. His own morale was improved by a love affair with the Egyptian queen Cleopatra. This, combined with his boldness, led him to both some brilliant victories and dismal defeats.
+In Caesar's time, the style of fighting was to exhaust and then penetrate the enemy's front. Success depended largely on superiority of numbers. Caesar modified this by basing his campaign on boldness and surprise. Before the battle even began, the enemy would be half beaten morally.
+Caesar's Legions were strongest on open land, and he would move aggressively to meet any enemy, any challenge. However, he was weak against archers and his own archers were poor shots. Like Alexander, he would suffer heavy losses when forced to retreat. Caesar, being a poor organizer, would rush into a situation and then rely on tactical genius in battle to solve his problems. He was not always careful to consolidate his position before going off after something else, and would find himself cut off from food supplies. He considered problems resulting from his lack of planning as acts of God.
+[ :	Caesar suffered only two defeats, and in each case his troops panicked.
+HINT: As an opponent in The Ancient Art of War, Caesar will concentrate his power, :Gll	fighting to the end and rarely conceding defeat. He will move slowly and steadily 
+toward his goal to conserve his strength.
+Genghis Khan and Subotai
+In 1298 A.D., Genghis Khan of the Mongols arrived. His combination of weapons, tactics and physical stamina stunned the world, and he became the greatest conqueror in history.
+Khan's Mongol army had no trouble subsisting in enemy country. If no food was available, they would drink horse milk. The enemy would not be engaged until it was favorable to the Mongols. Then they would strike the enemy at his weakest point and cut off his supplies.
+Subotai was Genghis Khan's right hand man. He conquered 30 nations and won 75 battles, never tasting defeat. He was possibly the greatest general of all time.
+1. 
+Using ingenuity and surprise, the Mongols could strike from several directions at
+once. The archers would disorganize the enemy and then the swordsmen would attack. If the battle went against them, they could turn and retreat with minimum losses.
+HINT: As opponents in The Ancient Art of War, Genghis Khan and Subotai will 
+protect their flag and keep their supply lines open. They can travel quickly through the 
+ mountains and forests and are among the three toughest opponents in The Ancient 
+Art of War. 
+
+ 
+Napoleon Bonaparte
+Napoleon Bonaparte lived from 1769 to 1821 and became one of the best military minds in history. Concentrating his widely spread forces at the enemy's weak point, Napoleon could use the economy of force like few men before him.
+In 1805, at the Battle of Austerlitz, he lured the Russians down from their hill using a feigned withdrawal. When they split and tried to hit him from two sides, he shot through the gap and seized the height himself. Austerlitz showed his tactical genius and was his finest victory.
+When marching, Napoleon would make precise plans ensuring that provisions and camp sites were prepared ahead. Then, he would travel quickly to hit the enemy before they could assemble in force. At other times, he would keep his destination secret by marching rapidly one way and then abruptly changing directions.
+He would also march men through enemy territory in a wide front (100 miles long), which allowed them to live off the land, deceive the enemy as to the real goal, and concentrate forces quickly. Some said he could move his troops twice as fast as any other commander. By selecting his targets carefully, he placed superior strength in an unprepared spot, gaining numerical superiority.
+HINT: As an opponent in The Ancient Art of War, Napoleon will try to strike where you are weak, protecting his flags and keeping his supply lines open. He is slow when traveling through forests and mountains — but he is among the three toughest opponents in The Ancient Art of War.
+Sun Tzu
+Sun Tzu lived in ancient China around 400 B.C. in the kingdom of Wu. An expert leader, he understood all aspects of the art of war. He wrote the book that set the standard for great leadership in war throughout history.
+HINT: As an opponent in The Ancient Art of War, Sun Tzu will protect his flags, keep his supply lines open and strike with strength where you are weak. Sun Tzu moves quickly through forests and mountains. A brilliant strategist, he is the toughest opponent in The Ancient Art of War.
+III. KNOW YOUR MEN, KNOW THE ENEMY
+To be an effective leader, you must be aware of the strengths and weaknesses of your troops, then protect the weakness and maximize the strength. You must also be aware of the strength and weakness of your enemy's troops, so that you can exploit their weakness and avoid their strength.
+The Ancient Art of War uses four types of soldiers: Knights, Barbarians, Archers, and Spies. Each of the soldiers are most effective when fighting against a certain type of opponent.
+The Knight is heavily armored and strong; he fights best against the unarmed Barbarian.
+The Barbarian has no armor or weapon but is swift and agile, making an elusive target. He is best against Archers.
+The Archer is deadly at a distance but helpless at close quarters. The slow Knight
+ 
+makes an easy target for the Archer. Archers in close quarters and unsupported cannot defend a position. The bow and arrow can only be used when the enemy is at a proper distance. Archers are most effective behind fort walls.
+The Spy is defenseless but a good lookout, so he is used to discover the location of enemy squads and avoid surprise attacks. A squad with a Spy in it will spot enemy movement twice as far away as a squad with no Spy. This is very valuable since you must know the position of the enemy before you can make your own offensive plans.
+When moving squads on the map, try to meet a squad of enemy Barbarians with a squad of Knights, a squad of enemy Archers with a squad of Barbarians, and a squad of enemy Knights with a squad of Archers.
+After zooming and taking command of a squad on the battlefield, wise use of your command options can adjust the tactical balance, and mean the difference between victory and defeat. If the enemy has Knights and Barbarians in his squad, and you have Knights and Archers, use your Archers against his Knights and then as they get too close, order your Archers to back off and send your Knights forward to finish the job.
+You can defeat the enemy almost all the time if you thoroughly study the strengths and weaknesses of his men as well as your own. You will only win half the time if you have only figured out your own strengths and weaknesses, and if you do not know much about either yourself or the enemy, you will be constantly defeated.
+Consider these ideas carefully.
+IV.	WAGING WAR
+During war, you are not only fighting against the enemy, you are fighting against time. As time passes when you are at war, food supply decreases, the condition of your men declines, and their effectiveness in battle diminishes.
+Patience is not a virtue in the art of war. Long, drawn-out wars are very costly in terms of lives. In your strategy, remember that a swift victory is your goal.
+Because of the element of time, a quick-witted commander can defeat an opponent with a larger army by staying a step ahead at all times.
+When in the field, squads should go through villages to obtain food, then leave some men behind to control the village. This will cut off the enemy's food supply from that village, but open the supply lines to your own squads nearby in the field.
+In order that your men have every advantage when battling the enemy, you must 
+ensure that they are in good condition, and pitted against weaker opponents at every
+"•11	opportunity.
+Dwell on these thoughts.
+V.	THE ART OF FIGHTING WITHOUT FIGHTING
+The best victory is not to defeat the enemy by battling his squads and eliminating all his men, but to defeat him with as few battles as possible. You must take this into account in your planning. Rather than destroy an enemy, capture his squads, subdue him into surrendering.
+
+ 
+ 	To weaken an enemy squad, make guerilla attacks with small squads, keeping your main force in reserve. Each time a squad fights, even a small force, it tires physically and emotionally. If your squad is beaten unexpectedly, send a nearby squad quickly to the front, striking tired men with fresh. After a battle, let your squads rest so they can regain their strength before fighting again.
+In The Ancient Art of War, the most skillful player wins by taking enemy flags without fighting. The next preferable method is to capture the enemy, the next to keep the enemy divided, and finally, to fight the enemy in an encounter.
+Be aware that the enemy will try to deceive you as you are trying to deceive him. An easy enemy target may be bait to lure you into a dangerous situation. But, if there is a perfect opportunity for the enemy to fight you and he avoids it, his soldiers may be exhausted. Sometimes this is an opportunity for you to capture a squad.
+Take these thoughts with you into battle.
+VI.	CONDITION
+You should always consider your squad's condition and the opponent's condition (use the Information command to check conditions) when planning your strategy. Ex-hausted, hungry soldiers do not fight as well as well-fed, rested soldiers.
+Condition is affected by marching (speed, distance, and type of terrain), fighting, rest and food supply. When food is below 20%, food will be rationed and this will start depleting the squad's condition. A squad with no food will weaken rapidly. A squad will receive food from a nearby village if the village is controlled by the same side. To increase a squad's food supply to maximum, move it to a village and the squad's food supply will soon go up to 100%.
+The condition of soldiers on a rapid march will deteriorate much faster than the condition of soldiers on a slow march.
+You can weaken the enemy before fighting by controlling nearby villages, thus cutting 
+off his food supply. You can also lay siege to a fort in the same manner. Even if the 
+enemy attacks you, his condition will be low and your squad will be rested and fed.
+So much for condition.
+VII.	TACTICS
+The skillful warriors of old made themselves invincible and then awaited the enemy's moment of weakness. It is up to you to make your army invincible and then watch the enemy closely for your opportunity. If you can conceal yourself from the enemy, then attack swiftly when the time is right, you can be successful.
+Remember to always match your strengths against your opponent's weaknesses. If you have a squad in prime condition, send it to capture an enemy squad in poor condition. Send a large squad after a small enemy squad. Use specific soldiers against their weaker counterpart (such as barbarians against archers). This is the type of tactical thinking to use.
+Remember to keep your archers at a good arrow range to their opponents; close 
+enough so their aim is accurate, far enough so they can escape without harm. Be 
+careful when sending knights and barbarians to attack when your own archers are
+			
+ 
+shooting; they might hit your own men in the back in the confusion.
+If you can avoid it, do not go into battle until you are sure of a victorious outcome. Once you are there, use the wisest tactics you know to defeat the enemy.
+So much for tactics.
+VIII.	ON THE MARCH
+Knights are the slowest soldiers in a march because they are carrying heavy armor and a heavy sword. Barbarians and archers are light and fast. A squad will only move as fast as its slowest unit. So, a squad with ten archers and one knight will travel as slowly as a squad of knights.
+A slow march will not decrease a squad's condition, marching will slowly decrease their condition and a fast march will decrease their condition fastest. To preserve their strength, only make a squad march fast during an urgent situation. When stopped, they are resting and their condition will improve as long as the food supply is greater than 20% . A squad whose condition is less than 30% will not be able to march fast. If a squad's condition is 10% or less, they will only be able to march slowly.
+When at rivers, do not advance to meet an enemy midstream. By waiting on the shore and letting them come to you, you will be rested; they will be tired.
+If you hug the shore, you cannot be surrounded. One flank of your army will always be free from attack, but you are also cutting off one direction for retreat. Try to avoid mountains and water if the enemy is present. He will usually have a natural advantage in these areas.
+So much for marching.
+IX.	THE NINE TYPES OF TERRAIN
+1. FORTS: Forts supply new troops to any squad in the fort that is not full (14 soldiers). It takes time to train new soldiers, so the squad will increase one soldier at a time as new men are trained. If a fort squad is full, detach some soldiers so there will be room for new recruits.
+The fort walls offer the inhabitants protection. They are safe as long as you have archers guarding the walls. When there are no archers left to guard the walls, the walls will be overrun and you will meet the enemy inside the fort.
+There are three ways to put pressure on an enemy fort:
+a.	Direct Attack: Order squads with archers to attack the fort walls.
+b.	Lay Siege: This means to cut off the fort's food supply. You can do this by capturing all nearby villages and then wait until the enemy squad's
+---		condition deteriorates. At this point, you can make a direct attack with 
+a greater chance of victory. The enemy squad may also decide to
+-.-11	abandon the fort.
+c.	Storm the Fort: This means to use a mass of men to overpower the enemy's defense. This takes perfect timing but can be very effective, especially if you have few archers in the area and the enemy has only
+4.-III		one squad in the fort. You have to have at least two squads to storm a 
+fort, but the more squads you have, the better are your chances for
+33
+ 
+success. Send the first squad forward to attack the fort and while they keep the enemy occupied, use the other squads to move into the fort (for this to work, don't zoom in on any battles). This is dangerous because the other squads must get inside between the time the encounter mes¬sage is received and the time the battle ends. If the enemy defeats your squad at the wall, any squads you have gotten inside will meet the enemy on the courtyard inside the fort.
+2.	VILLAGES: Villages that you control supply food to any of your squads that are in
+
+range. To see if you are controlling a village, use "View7 If solid white or shaded white
+is over the area where the village is located, that village will supply food to your nearby troops. To see if a squad is in range of the village, use "Info." If there is a +sign to the right of its food bar chart, it is in range. An enemy squad can be in a village and you can still be supplied from that village if your influence is much greater. To cut off the food supply to a nearby fort, you must place a large force in the village because it
+
+will try to remain loyal to its fort and will be smuggling food out unless you have
+enough men to control it. By cutting off a fort's food supply you can lay siege and force them out.
+3.	HILLS: Hills improve the fighting ability of the higher squad. On hills, soldiers have the advantage of downward momentum. If you order your soldiers to fight uphill, you are increasing the odds of defeat.	
+4.	BRIDGES: Bridges can be valuable strategically to restrict enemy movement. The
+
+value of the bridge is proportional to the type of river it is over. When faced with a
+treacherous river, the enemy will be forced to meet you on the bridge, rather than risk
+
+losing most of his squad by ordering them to cross the river in the water. If the river is
+shallow, they will be less likely to need the bridge to get across.
+
+5.	RIVERS: Rivers can restrict squad movement by forcing them to use a bridge or risk crossing the river. While in a river, movement is slow and you are helpless against	 
+enemy attack. Your squad's condition may decrease (by what amount depends on the type of river), and you may lose soldiers to drowning. A description of the severity of	 
+the rivers can be found in the "Rules" scroll.
+6.	SHORELINES: To cross shorelines into open water is extremely dangerous. Besides	 
+running a high risk of drowning, a squad will be helpless against any enemy attack from land and will be unable to move rapidly.
+7.	FORESTS: In forests, squads move slower and tire faster than when in the open.	Ilk 
+Dense forests are more difficult than sparse forests.
+8.	FLATLANDS: On flatlands, squads move fast and tire slowly.
+9.	MOUNTAINS: Traveling through the mountains is even slower and more tiring	 
+than traveling through the forests. It will also decrease your squad's condition very quickly, and you may lose soldiers due to the hazards of mountain travel. The type of mountains to be found on your campaign can be found in the "Rules" scroll.
+X. THE NINE TYPES OF GROUND
+The Ancient Art of War recognizes nine types of ground:
+
+ 
+Try to divert the enemy from your villages.
+1.	HOME GROUND: Villages and forts that your troops control are home ground. that is just outside your home ground. This could be a
+2.	NEAR FRONTIER: Territory short penetration into enemy territory. Try to avoid fights in this ground, but do fight if you are attacked. Keep on the move.
+3.	CONTENTIOUS: Ground that is not favorable for battle but important strategi¬cally and of advantage to either side. If the enemy has the advantage, avoid an encounter. Hills are an example of contentious ground. Try to occupy the hill and wait
+	-%•	for your enemy to come up. If your enemy controls it, do not attack, but retreat to lure
+T	him down.
+J	P.	4. EQUALIZING GROUND: This is ground where neither side has the advantage, and 
+neither side will benefit by making the first move. The situation is deadlocked. Do not "1'	Mb	advance, but retreat to lure the enemy. When they advance, you can be waiting, rested,
+r.
+to strike swiftly.
+5.	OPEN: Open ground is seen on the miniaturized map in the "View" command. It will appear as solid green/blue. Either side is free to move upon this land, so try to beat your enemy to the open high spots, and defend your supply lines.
+6.	SERIOUS: Serious ground is in the midst of hostile country. Here, give high priority to food supply and condition.
+7.	DIFFICULT: Mountains, forests, any ground that is hard to travel is difficult ground. -r_41	Keep moving, and try to stay on roads and paths as much as possible.
+8.	CONSTRICTED: Constricted ground includes narrow passes, entrances to gorges, paths through the forest. If your squad is there first, it may be to your advantage to rest and wait for the enemy. If the enemy is there first, attack only if you are sure he is weak.
+9.	DESPERATE: Ground where your only choice is to fight. Be sure that your men understand they are fighting to the death.
+Xl. ENERGY
+Remember the strong points of each type of soldier: barbarian (best against archers), 
+knight (best against barbarians), archer (best against knights), and spy (can see twice
+111	as far as other soldiers). When planning your strategy, be sure they are pitted against
+'1 
+the type of soldier that it is easiest for them to defeat.
+Keep your men moving, but remember their condition. If you wear a squad down with 
+fast marching before they reach an inevitable encounter, they will suffer heavy losses.
+As much as possible, use your strategic wits to defeat the enemy, rather than brute force which will exhaust your men. Remember that lost battles and desperate retreats demoralize your men, which lowers their condition.
+XII. STRENGTH AND WEAKNESS
+If your planning takes into account the strengths and weaknesses of your own men as well as the enemy's, this knowledge will act as a lever to increase your strength.
+If an encounter is inevitable, try to be first to the battlefield and use whatever natural
+
+ 
+advantages are available while you rest and await the opponent. You must always keep the upper hand, mentally and physically, to be a victorious leader.
+If you know an enemy squad is weak, corner and capture them if you can; or, pursue them and wear them down.
+If you can confuse your enemy so that he is unsure of your next place of attack, he will divide his men and send them to defend many points. Each of these spots will be weak, since there are fewer men at each. At the last moment, consolidate your forces against one of his weak spots. You can capture many men and flags using this strategy.
+Always remember to avoid the enemy's strong points. Discover his weaknesses, and attack them with your strengths. Remember that he may be planning in the same manner, so protect your weak points from him.
+The four essentials of victory are:
+1.	Keep your troops in good condition.
+2.	Strike the enemy where he is weak, or when he is in poor condition.
+3.	Keep your food supply lines open.
+4.	Match your soldiers against their weaker counterpart.
+Incorporate these ideas into your planning.
+ 
+
+ 
+A BRIEF HISTORY OF
+WAR THROUGH THE AGES
+Between 4000 and 2000 B.C., in Mesopotamia, the main principles of warfare first evolved. The methods of fighting wars remained basically the same until the arrival of gunpowder in the 14th century.
+In 2340 B.C., the Sumerians and Semites struggled for the possession of Mesopota¬mia. Sargon, the leader of the Semites, armed his troops with javelins and spears. Meanwhile, in ancient Egypt, military commanders began to think in terms of lines of battle, wings, centers, flanking movements, and frontal attacks. The Egyptian com¬manders thus established strategy and tactics as a part of military thinking. The Assyrians (911-612 B.C.) were the most warlike nation of ancient times, emphasizing the importance of good leaders and well-trained soldiers.
+In about 400 B.C., the Chinese philosopher Sun Tzu wrote his famous book, The Art of War. His work outlined the foundation of war strategy and tactics, and from that time on, influenced warfare throughout history.
+At about that time, the Greeks and Romans were developing a war method based on the "phalanx," a tightly packed square of armed soldiers. The phalanx would meet the enemy on an open field, and both sides would move forward until they clashed. The phalanx was not very mobile and had little firepower, but it was effective, especially when fighting on an open field against a disorganized enemy. Unfortunately, these battles were slow and deadly. The side with the most soldiers usually won, and when equally matched sides battled, the results were costly and inconclusive. The idea behind the phalanx was to maintain maximum strength at the front line, filling vacancies as men fell or became tired.
+The phalanx had a major weakness: a large mass of men in close formation is difficult to maneuver and becomes completely disorganized once penetrated.
+In 371 B.C., Epaminondas of Thebes improved the phalanx at the Battle of Leuctra. He became aware that during a battle, a phalanx would drift to the right because each soldier would use the shield of the soldier on his right for protection. To counteract this, he regrouped the phalanx into an oblique line, with the left wing advanced and a
+ 
+heavy concentration of troops there to crush the enemy's right. Epaminondas was one of the first men in history to apply economy of force using a reinforced wing. This innovation crushed Sparta and established the Theban phalanx as the best military formation of the period.
+Philip of Macedonia (who ruled between 359-336 B.C.) was influenced by Epaminon¬das and was the next to improve the phalanx. His phalanx could be used like a pivot, forming a wedge offensively, or a hollow square with a center of archers defensively. Philip united Greece and with his son, Alexander, swept away the Persian empire.
+When Alexander the Great succeeded his father, he further improved the phalanx. Instead of using the normal straight battle front, he had his phalanx advance in the shape of a V facing the enemy. This created a dent in the enemy line and pinned down the infantry.
+Hannibal, a brilliant Carthiginian leader, lived around 200 B.C. He fought 14 major battles in 17 years, losing only 3. He believed that the mission of an army was to destroy the field forces of its enemy. Hannibal's most famous battle was the Battle of Cannae in 216 B.C., where he vanquished the enemy by having his center troops back off, then had the left and right flanks wrap around the approaching enemy.
+The Romans developed the legion, which became a major part of military organiza¬tion. To make the legion more flexible than the phalanx, and to conserve the men's endurance, they divided it into three parts: a fighting line, a support line, and a reserve. They could quickly adapt to changing terrain and rapidly change their own formation.
+The legion had another important advantage over the phalanx; it took into account the men's endurance, which is important for hand-to-hand combat. In the phalanx, only the first 4 or 5 ranks were actually fighting, but all the men were in the "fighting line." Many men in the rear lines were in close contact with danger, and became exhausted physically and emotionally. The legion eliminated this problem by keeping two-thirds of its men outside the danger zone, thus it always had fresh troops to use.
+To guard against a surprise attack on the legion, the Romans made entrenched camps at the end of each day's march. This increased security, and the soldiers were always rested, well fed, and ready to fight. But it also reduced marching time by about three hours a day, and reduced mobility.
+The Romans often fought against barbarians. These barbarians had a less sophisti¬cated strategy, believing that strength increased in proportion to soldiers. They threw all their men into the initial assault, and had no reserves when they grew tired.
+There were many famous Roman leaders. Scipio led the Roman legions at the height of their early development. Marius, who organized men well, used a 10 cohort legion (cohort = a band of men). Marius had a famous nephew — Julius Caesar — who achieved better discipline and higher morale in his armies than previous Roman emperors. Despite this achievement he was murdered by his power-hungry Roman rivals on the Ides of March.
+In 433 A.D., Attila became king of the Huns. An overrated leader, he made the 
+mistake of trying to organize his armies to fight as the Romans were fighting, but the
+ 
+soldiers were too small for this to be effective. The Huns were the first of the barbarian tribes to come out of Northeastern Europe.
+During this period, other barbarians came out of Northeastern Europe — the Goths and Vandals. The Goths were the first to have their cavalry use stirrups on their horses, which gave the riders much more stability during a battle.
+In the sixth century A.D., Belisarius led the Byzantine Empire, winning forty impor¬tant victories over Vandals and Persians in 30 years. As his armies were usually inferior in numbers, his victories came from ingenuity.
+At about the same time, the prophet Mohammed started the Islam faith; his followers were called Moslems. The Moslems faced persecution and resistance, but by the time Mohammed died in 632, the Islam faith was well established. His successors launched a series of lightning wars that were successful even though they used no new weapons or tactics. They were tough desert fighters, lightly armed and very mobile. Their main strength was their religious fervor and high morale. By 711, all of the modern Arab world had fallen to Islam.
+The Moslems took most of Spain, but when they invaded France, they were soundly defeated by Charles Martel, the leader of the Franks. The Franks were awesome offensively, but unsteady defensively. Martel's grandson was an illiterate genius named Emperor Charlemagne. Charlemagne improved the Frank warriors so that they could travel a great distance with little food.
+In the 11th Century, William the Conqueror ruled Normandy. At the famous Battle of Hastings in 1066, he found himself forced to make a direct attack against a powerful enemy. When unable to make any headway in the first attack, he feigned withdrawal and then counterattacked successfully.
+The First Crusade began in 1095 when Emperor Alexius of Byzantium appealed to the Franks for help against the Moslems. The Crusaders were awesome at close quarters. No one could stand against them when they plunged into battle, except in the open where the quick Moslem archers on horseback could cut them down. The Crusaders would absorb the Moslems' hit and run tactics until they could pin the Moslems down and crush them.
+During the 13th Century, Genghis Khan followed the writings of Sun Tzu and became the greatest conqueror in history. Subotai, Genghis Khan's right hand man, was himself the conqueror of 30 nations, winner of 65 battles, loser of none. Genghis Khan and Subotai used their archers to disorganize the enemy, and then sent in the swords¬men to attack. They would maneuver to hide their true objective from the enemy, and would not engage in battle until it was to their favor.
+In the 17th century, King Gustavus Augustus of Sweden became the father of modern 
+warfare and made his army the best in Europe. He introduced light muskets that could 
+be quickly reloaded, and raised the morale of his soldiers by paying them regularly.
+During the late 18th century, the French used a dense column, but only the first two ranks could fire at the enemy. The Duke of Wellington, from Britain, had his greatest victory when he beat Napoleon at Waterloo. Wellington's strategy was to position his troops in long double lines, which enabled more men to shoot at once, thus shattering
+ 
+Napoleon's infantry columns.
+In America in the summer of 1876, Custer made his famous Last Stand. Colonel Custer did several things that Sun Tzu warned against. He had his already tired men march throughout the night, allowing their condition to decline drastically. He lost the element of surprise and was enticed by the enemy's bait (a false retreat). He did not know the size of the enemy, and he himself had too quick a temper. These mistakes led to his downfall.
+Other famous American military leaders, who were better strategists, were Robert E. Lee and Ulysses Grant. Lee was a bold leader who would confuse his enemy by appearing to march one way and then turning up somewhere else. Grant knew how to use flexibility; rather than retreat from a losing fight, he would find more favorable ground and continue to fight.
+The American Indians lived off the land and were very mobile. They could move entire villages in an hour. Their biggest problems were superstition, an inability to organize, and a lack of manpower. However, they were experts at concealment and used the terrain to great advantage.
+The Chinese leader Mao Tse Tung studied Sun Tzu's writing. His army was usually inferior to its enemy materially, but did well because of the flexibility of its com¬manders and the high morale of its soldiers.
+The four basic styles of war are guerilla, mass and maneuver, attrition, and siege. Guerillas use attack and withdraw, wearing down a stronger opponent (Geronimo used this strategy). Alexander the Great effectively used the mass and maneuver style with his phalanx, as did Caesar with his Legion. Attrition can lead to victory when an army greatly outnumbers its opponent. A siege is used to starve an enemy out of a stronghold, and has been used throughout history by most armies.
+In war, the objective may remain constant, but the path to victory constantly changes as you adapt to your situation. Terrain can be a critical consideration in the choice of tactics.
+The key to victory is to assemble strength in the right place at the right time. The weakening of a point in your line to obtain superiority at another point, the pitting of strength against weakness — this is the most important principle in the art of war.
+ 
+
+ 
+WAR TERMS
+Army: There are two armies in The Ancient Art of War — yours and the enemy's. All the white squads form your army, all the black squads form the enemy's army.
+Close Quarters: fighting at close range. Cohort: a band of men.
+Feint: a threat intended to make your opponent defend at the wrong point and thus weaken his defense where you intend to actually strike.
+Flank: the left or right side of a formation.
+Front: the line of battle that occurs when two forces clash; also, the forward center of a formation.
+Legion: a unit of the Roman Army; Caesar's Roman Legion swept through the ancient world like no force before it.
+Numerical Superiority: achieved by the side that has the most men.
+Overextended: a front that has stretched too far during battle, thus creating weak spots at which the opponent can successfully strike.
+Phalanx: a tightly packed group of armed men in a square; the basic structure of an army in the field in the ancient days.
+Quarter: mercy; i.e., to give quarter is to show mercy; to give no quarter is to show no mercy.
+Soldiers: individual fighting men (knights, barbarians, and archers). Squad: a group of soldiers (between 1 and 14).
+Strategy: bringing armies into action in a way that gives them an advantage.
+Supply Lines: an army's source of food while in the field; if an enemy captures a village that was supplying you with food, he "cuts your supply line:'
+ 
+Tactics: the maneuvering of men inside the framework of a battle; used in The Ancient Art of War after you use Zoom. Everything else in the art of war is strategy.
+Zones: in a battle, the three areas in the front line: the left flank, the right flank, and the center.
+ 
+
+WOK	 
+
+REFERENCE
+GLOSSARY
+ 
+REFERENCE GLOSSARY
+This glossary describes the commands you can use while playing The Ancient Art of War. You can also find out about the strengths and weaknesses of various types of soldiers, what types of terrain are dangerous, and other items you may wonder about as you are playing. Read through it when you have time, or refer to it while you are playing. It will help you become a better player!
+ARCHER: One of the four types of soldiers, archers are good long range fighters, but are defenseless at close quarters. Archers have a 2 to 1 advantage over an equal number of opposing knights, and a 1 to 2 disadvantage against an equal number of opposing barbarians.
+Archers are very valuable when attacking or defending a fort. When on a fort wall, archers will begin shooting immediately, even without receiving orders from you. Archers have an unlimited supply of arrows, and will use them against the enemy during a battle. The closer an archer is to his enemy, the more accurate his aim is. Be careful, though; your archers might accidentally shoot your own men if they get in the way.
+ART OF WAR: The Art of War was written 2500 years ago by the Chinese philospher Sun Tzu. His work outlines the basic concepts of war strategy that have been used in wars ever since.
+BARBARIAN: One of the four types of soldiers, barbarians carry no weapons, fight with their hands, and are fast and agile. They have a 2 to 1 advantage over an equal number of opposing archers, and a 1 to 2 disadvantage against an equal number of opposing knights.
+BATTLE: See "ENCOUNTER".
+BRIDGE: Bridges are the fastest and safest way to cross water; however, they are narrow, so use extra caution when giving a squad commands during a fight on a bridge.
+ 
+CAMPAIGN: A campaign is a series of military maneuvers that form a war. The Ancient Art of War comes with eleven separate campaigns, each at a different location and set in another time period. You can make your own campaigns using the Game Generator.
+CHANGING A FORMATION: See "FORMATION"
+COMMAND OPTION: "Command Options" are used to set up strategy, check on information, and give orders to your soldiers. Command Options will change at different points in the game, but they always appear on the bottom line of the screen. To use a Command Option, press the key that is indicated, or, if no key is indicated press the first letter of the command word.
+CONDITION: Condition reflects the overall physical status of a squad; energy, injuries, and morale are all taken into account. As its condition decreases, a squad's ability to fight and march also decreases. Resting will improve a squad's condition if it has enough food. If a squad is resting in a village or fort, its morale will increase, thus improving its condition.
+Also See "INFO".
+DETACH: If a squad has more than one soldier in it and there are less then 20 squads on the map (including enemy squads not shown), you can detach part of the squad. Put the marker over the squad, and when "Detach" appears on the command line, press D. You can now move men to the new squad by typing either K, A, B, or S (for knights, archers, barbarians, or spies). When you are done, the new squad will appear just to the right of the original squad. By typing J (Join), you can move soldiers back to the orginal squad, using the same method.
+ENCOUNTERS: If your squad gets close to an enemy squad, they will report an encounter, meaning that both squads have met and are preparing for battle. You can either take command of the squad and lead them in battle (using the "Zoom" command), or let them fight without your help. If the two squads start blinking, it means they have started fighting without you. You can check the size of both squads
+
+ 
+while they are blinking to see who is winning, but you cannot take command (Zoom) after the fighting has started.
+To adjust the amount of time between the report of an encounter and the start of a battle, go to "Ye Olde Options Shoppe." When the Fight Delay is set to medium, you have about 30 seconds to get there and Zoom in.
+ENEMY: The enemy is represented by the black squads and soldiers. Their leader is one of eight historical military minds, each of whom has his (or her) own style of waging war.
+The aggressive attrition strategy of Athena
+The mass and maneuver tactics of Alexander the Great
+The elusiveness of Geronimo
+The unpredictability of Crazy Ivan
+The legion press of Julius Caeser
+The cunning and speed of Genghis Khan
+The power of Napoleon Bonaparte
+The wisdom and genius of Sun Tzu
+FLAG: There are two ways to win a campaign. One way is to defeat all of the enemy squads, forcing a surrender. The better (but often more difficult) way is to capture all of the enemy flags. A flag is captured when a squad passes over it; the flag then changes to that squad's color. At least one flag of each color will be in each campaign, and there may be up to ten flags of any combination.
+FOOD: See "INFO".
+FOREST: A forest can be dense or sparse depending on how the rules are set before the game starts. Squads will travel faster on forest trails than through sparse forest, and faster through sparse forest than dense forest.
+FORMATION: A squad's formation (the position each soldier takes) can greatly 
+affect the outcome of the battle. To select a formation, move the marker over one of
+ 
+your squads until "Formation" appears on the command line; then press F. The formation window will show a top down view of the position each man will take when the squad goes into a battle. (A is archer, B is barbarian, K is knight.) Scan through the various formations until you find one that will work well for that squad (remember to consider the type and number of soldiers in the opposing squad when selecting a formation). While you are looking at formations, time freezes.
+To create new formations, go to the Make Changes page before starting a campaign. Select "Teach Squads New Formations" and press the return key. You will have nine formations; formations 1 through 5 are permanent and cannot be changed. Forma¬tions 6, 7, 8, and 9 are for you to use as they are, or change to your own design.
+Formation 1 is good for archers, keeping them out of danger. Formation 2 is a "Legion" formation, also allowing protection for the archers. Formation 3 is a "Phalanx" formation. Formation 4 is good for a barbarian squad opposing an archer squad, placing the barbarians far forward. Formation 5 is the rumble formation, which is seemingly disorganized, but again places archers in a safe spot. You can change formations 6, 7, 8 and 9. While viewing one of these formations, you can move the soldiers into new positions by following the directions on the bottom of the screen. To indicate which soldier is to move, press M and the marker will appear. Place the marker over the soldier's heart, then use the arrow keys to indicate his new position. When you are done changing a formation, press S to Save (this will save all the formation changes you have made, not just the one currently on the screen). When you are finished working with the formations, press the return key to go back to the title page.
+FORT: Forts are used for protection, for training new soldiers and, when the rules indicate, for supplying food.
+When in a fort, any squad that is not full (14 soldiers) will get new soldiers as they are trained. How frequently this happens depends on how the rules are set before you start the campaign. A fort will not supply new soldiers if there is not a squad in the fort, or if that squad already has 14 men. This is a good place to use the "Detach" command so that you will continue to receive new soldiers.
+ 
+If you "Zoom" in on a fort battle, be sure to move your knights and barbarians back from the wall to be safe from enemy arrows. If you lose all your archers, your remaining men will retreat, and may meet the enemy inside the fort.
+If you have a squad of archers in a fort, and an enemy squad with no archers attacks, it is to your advantage to Zoom in and direct the battle. If you don't Zoom, the enemy squad may succeed in scaling the wall and capturing the fort.
+Don't send a squad without archers to attack a fort unless the enemy squad in the fort has no archers. You can enter a fort by defeating the enemy archers on the fort wall with your own archers, or, you can sneak a squad over a fort wall while another of your squads keeps the enemy busy on another wall (to do this, don't zoom). You can also lay siege to a fort by capturing nearby villages and cutting off the fort's food supply (this won't work if the fort supplies food).
+HELP LINE: The Help Line is just above the command line at the bottom of the screen. It appears with some of the commands to tell you what to do next.
+HILL: A squad has a fighting advantage when it is on the higher side of a hill; try to take advantage of this by being the first to a hill if an encounter is imminent.
+INFO: You can find out information about a squad by moving the marker over the top of it and pressing I (Info).
+Speed — shows the currently assigned speed, and the general direction in which the squad is marching. If the squad is one of yours, you can alter the marching speed by pressing S. The maximum speed a squad can march depends on its condition. If condition is less than 10%, only a slow march is possible. You can also stop the squad, and start them marching again later, without altering their previously assigned desti-nation.
+Condition — indicates the squad's physical status, including energy,
+
+ 
+injuries, and morale. A fully rested and well-fed squad's condition is 100%. A " + " at the end of the condition bar means condition is improving, a " — " means condition is declining, and no sign means condition is stable.
+Food — indicates the squad's food supply. If food drops below 20%, the squad will have to ration what it has left and condition will suffer. A " + " on the end of the food bar indicates that the squad is in range of a supply line; a " —" when a food source looks nearby means the enemy is controlling that source.
+Also see "Supply Line".
+JOIN: When two of your squads are close together, you can move soldiers between the two squads or combine the squads into one (up to 14 men in either squad). To do this, move the marker over one of the two squads (the squad must have less than 14 soldiers) until "Join" appears on the command line, and press J. You can then move soldiers between the two squads by pressing A (archers), B (barbarians), K (knights), or S (spies).
+KNIGHT: One of the four types of soldiers, knights are slow but well armored. Knights have a 2 to 1 advantage over an equal number of opposing barbarians, but have a 1 to 2 disadvantage against an equal number of opposing archers.
+MAKE CHANGES: You can make changes to the game before you start playing a campaign. At the title page, press + or — until "MAKE CHANGES" appears on the banner, then press the return key. The Changes page will appear, giving you six options. They are 1) Make a New Campaign, 2) Change a Campaign (you can only change the campaigns that you created, not the ones that come with the game), 3) Remove a Campaign (only the ones you have created — and be careful, this is permanent!), 4) Return to the Title Page, 5) Make a Formation, and 6) Ye Olde Options Shoppe — to change options settings. Choices 1 through 3 are covered in the chapter "Game Generator". Number 4 simply takes you back to the title page. For more in¬formation on 5, see "FORMATION". Number 6 is explained in the "Getting Started" section.
+MARKER: The marker is the white cross shaped object that is on your screen at various times during the game. It is usually used to "mark" an object on the screeen so that you can move or get information on the object. You can use either the arrow keys or joystick to move the marker.
+MESSAGE: During a campaign, your squads and spies will report information to you. Messages will appear at the bottom of the screen just above the Help Line. Up to two messages can appear on the screen at the same time. When a new message comes in, the previous message will move down and the new message will take its place on top. To remove the messages on the screen, press C to clear them.
+The locations given in these messages are in reference to the map, not to the squad making the report.
+Some of the messages are:
+Enemy Sighted — One of your squads has reported that he has sighted
+ 
+an enemy squad.
+Encounter — One of your squads is preparing to fight another squad. 
+You have a short time after receiving this message to move the marker to 
+the location and Zoom in to give your squad orders during the battle.
+Fighting — The two fighting squads will blink to show that a battle is in progress. Once fighting begins, you cannot Zoom in on that battle.
+Battle Won/Lost — When you do not Zoom, you will receive the results of the battle in a message.
+Captured — When one squad is vastly superior to an opposing squad, it captures the weaker squad without a fight. To capture an enemy squad without fighting shows great skill in The Ancient Art of War.
+Flags — The capture of a flag is a major event and will be reported immediately.
+Lost in the Mountains — Your squads may lose men during mountain crossings. If you lose an entire squad, you will receive this message.
+Drowned — You lost an entire squad that tried to cross treacherous or deep water.
+MOUNTAIN: Crossing a mountain is slow and may be dangerous; the enemy may be more at ease in the mountains than you are.
+MOVE: To use Move, place the marker over a friendly squad until "Move" is shown on the command line, then press M. Now use the marker to trace the route that you want the squad to take. When you've reached the end of the route, press M again, and a small white dot will appear, marking the destination.
+OPTIONS: See "MAKE CHANGES".
+RETREAT: When you've "Zoomed" in on a fight, you have the option to command your squad to retreat. The squad will then run from the enemy and regroup a short distance away. Retreating will cancel any Move command you have given the squad. It also lowers the squad's morale.
+RIVER WATER: Crossing water will slow a squad's marching, and some of your men may drown if the water is deep. A squad in the water that encounters an enemy squad on the shore will fight at a great disadvantage.
+RULES: Some rules will change with each campaign. You will see the rules on the scroll before the campaign begins. For variety, to make a game more or less challenging, you can always change the rules right before you play.
+Rules and Options
+Villages Do/Don't Supply Food — Determines the strategic value of a village.
+Forts Do/Don't Supply Food — Affects whether you take a fort by siege or storm.
+Supply Line is Short/Medium/Long — Determines how far a squad can be from a food source that it controls and still receive food supplies.
+Forts Train Men Rarely/Often/Very Often — Determines how often partially filled squads will receive new men when in a fort.
+
+
+VILLAGES SUPPLY FOOD
+FORTS DON'T SUPPLY FOOD
+SUPPLY LINE RANGE IS MEDIUM
+FORTS TRAIN MEN OFTEN 
+
+Your Men Are Out Of. In Good/In Prime Shape — Decides how fast a squad's condition will decline while marching. Enemy Is Seen when Close/Far/Always — The first few times you play The Ancient Art of War, set this rule to Always to give yourself a bit of an advantage. When the rule is set to Close or Far, you only see enemy squads which are sighted by your men, and enemy locations are not reported with the View map. Water is Shallow and Cahn/Deep but Calm/Deep and Dangerous —Determines how quickly a squad can move through water. If the water is deep, some soldiers may drown. Mountain is Low and Safe/High but Safe/High and Risky — Determines how quickly squads can move through the mountains. If the mountain is risky, some soldiers may not survive the crossing. Forest is Sparse/Dense — Affects squad's marching patterns; you have to determine whether it is quicker for your squad to march through the forest or go around. 
+
+
+SAVE: If you need to stop playing in the middle of a campaign to use your computer for something else, press Mt S.
+The computer will ask you for a data disk (if you haven't used one yet, insert a blank disk. The computer will check to see
+if it is formatted for data. If the disk is not formatted, the program will do this for you; just follow the prompts that will
+tell you when to swap disks). Then, follow the instructions on the screen. The game will be saved to the data disk, and the
+program will automatically exit to the operating system. To restore the game, start the game and Go To War.
+Choose the last selection on the scroll (Data Disk) and press the return key. The computer will prompt you to insert a data disk.
+Just follow the prompts on the screen to start the game right where you left it. If you have to stop for just a few minutes,
+and aren't going to use your computer for something else, just make sure the marker isn't over a squad,
+and press V for View. This will freeze the time until you press E for End. 
+
+converted from PDF manual to https://www.onlineocr.net

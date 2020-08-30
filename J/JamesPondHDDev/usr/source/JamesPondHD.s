@@ -91,7 +91,7 @@ _config
 
 
 DECL_VERSION:MACRO
-	dc.b	"2.4"
+	dc.b	"2.5"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -307,7 +307,7 @@ start	;	A0 = resident loader
 	move.w	#$7FFF,$dff09a
 	move.w	#$7FFF,$dff09c
 
-	jmp	$1276c
+	jmp	$1277e
      
 .needs_other_slave
     dc.b    "This game version requires the other slave: JamesPond1MB.slave",0
@@ -726,6 +726,13 @@ pl_blitter_mfmalt
 	; blitter stuff
     PL_IFC5
     PL_ELSE
+    
+    ; 3 blits in the intro
+	PL_PS	$123a0,move_d7_bltsize
+	PL_PS	$123ca,move_d7_bltsize
+	PL_PS	$12482,move_d7_bltsize
+    PL_PSS  $12618,move_2832_bltsize,2
+         
 	PL_P	$AA,blitwait_a1_a6
 	PL_P	$B0,blitwait_a4_a5
 	PL_P	$B6,blitwait_a5_a6
@@ -902,6 +909,8 @@ pl_main_mfmalt
 pl_main_mfm512k
 	PL_START
 
+    PL_PS   $EF90,avoid_wrong_write   
+    
     PL_IFC1X    0
     PL_NOP  $09ae8,6
     PL_ENDIF
@@ -931,11 +940,13 @@ pl_main_mfm512k
 	; protection (ripped by comparing original -> rerelease)
 
 	PL_NOP	$0000b0a0,$2
-	PL_NOP	$00012908,$4
-	PL_L	$0001290c,$4e712a3c
-	PL_L	$00012910,$00000002
-    
     ;;;; different from 3015 from now
+    ; not fixing the 3 offsets below makes the game go
+    ; "pond you're fired" even when mission is completed :)
+	PL_NOP	$12a60,$4
+	PL_L	$12a64,$4e712a3c
+	PL_L	$12a68,$00000002
+    
     PL_PS   $0fe3c,load_music_code_title
     
 
@@ -1144,6 +1155,35 @@ pl_main_3016
 
 	PL_NEXT pl_blitter_3016
     
+    ; only needed for the early 512k version
+    ; what happens in the game (68000) is:
+    ; there's a odd read/write which triggers the bus error handler
+    ; which "reboots" the game. Since this happens right after the intro
+    ; and the game reboots at the MGM roaring lion parody screen, it goes
+    ; unnoticed
+    ;
+    ; on 68020+ the fault doesn't occur and the program reads/writes out of
+    ; bounds. I don't know if it crashes or not afterwards. Anyway, skipping
+    ; and jumping to the reset vector when the address is odd does the same,
+    ; and it's cleaner
+    ;
+    ; with NOVBRMOVE and MMU, bus error is triggered by reading out of bounds
+    ; with the same results...
+    
+avoid_wrong_write
+    move.w  a0,d7
+    btst    #0,d7
+    bne.b   .odd
+    
+	LSL.W	D0,D1			;0ef90: e169
+	MOVE.W	D1,D7			;0ef92: 3e01
+	LSR.W	#1,D7			;0ef94: e24f
+    rts
+.odd
+    ; simulate bus error
+    move.l  8.W,(a7)
+    rts
+    
 set_start_level:
 	MOVE.W	#$0003,$1b0  ; nb lives
     move.b  _start_level+3(pc),$2BB
@@ -1256,8 +1296,14 @@ move_d5_64_clr_66
 	move.w	d5,($64,a6)                    ;$00dff064
 	move.w	#0,($66,a6)                       ;$00dff066
 	rts
-
-
+move_2832_bltsize:
+    MOVE.W $2832,$00dff058
+	bra	waitblit
+    
+move_d7_bltsize:
+    MOVE.W  D7,$dff058
+	bra	waitblit
+    
 move_d5_a6_swap
 	bsr	waitblit
 	move.w	d5,($46,a6)                    ;$00dff046

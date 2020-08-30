@@ -1,0 +1,765 @@
+                           WORLD TOUR GOLF
+
+                         Table of Contents
+
+Getting Started on the IBM..................................1
+Getting Started on the Commodore 64/128.....................2
+Getting Started on the Apple IIGS...........................3
+Getting Started on the Amiga................................3
+Playing Golf................................................4
+Club Selection..............................................5
+Aiming Your Shot............................................6
+Hitting the Ball............................................7
+Hazards.....................................................8
+Chipping....................................................9
+Putting.....................................................9
+Scoring....................................................10
+Game Play Keyboard Commands................................10
+Customizing Your Game......................................10
+The Activity Menu..........................................11
+The Play Options Menu......................................11
+The Show Players Menu......................................11
+The Edit Players Menu......................................11
+The Player Attributes Menu.................................11
+Load a Course and Play.....................................12
+Practice, Practice, Practice...............................13
+Golf Course Construction...................................13
+The Course Edit Menu.......................................13
+The Draw Terrain Menu......................................14
+The Finish Hole Menu.......................................14
+Placing Objects............................................14
+Setting Features...........................................15
+Saving a Hole or Course....................................15
+Quick Save.................................................16
+Construction Keyboard Commands.............................16
+Meet the Artists...........................................17
+
+                      GETTING STARTED ON THE IBM
+
+For your convenience, World Tour Golf on the IBM is not copy-protected. So,
+you can make one backup copy for your own use or install the program on
+your hard disk. Please show us that copy protection is unnecessary by
+refusing to give away copies of this product. To make a backup of your
+World Tour Golf disk, see the DISKCOPY command in your DOS manual for
+details.
+
+To install World Tour Golf on the hard disk, create a directory (e.g.,
+MKDIR\WTG). Change to that directory (CD\WTG). Insert your game disk in
+Drive A. Type A:Install and press Enter to run the hard disk installation
+program. Then follow the onscreen instructions to load the game.
+
+To start play on the IBM, boot your computer with DOS, then remove the DOS
+disk and insert your World Tour Golf disk into drive A. Type GOLF and press
+Enter. When requested, type the name of the hole that appears onscreen
+(you'll find it in the pages of your manual), and press Enter. If you fail
+to type in the correct course name (and press Enter) when prompted, you
+will be put into Demonstration mode. Demonstration mode allows you to play
+just 2 holes of any course you select; and you cannot save holes or courses
+you've built in Construction. When you enter the correct course name, the
+title screen appears. Press any key to go to the Activity menu.
+
+To play World Tour Golf on the IBM, you may use either the keyboard or a
+joystick. If you're playing on a keyboard, use the up/down arrow keys to
+highlight an item, followed by Enter to select, or to specify a club during
+play. Use the left/right arrow keys to change colums, as well as to adjust
+your aim before each stroke. Joystick users, move the joystick forward to
+move up a menu, and push it back to go down a menu. Hit button 1 to select;
+use button 2 as a spacebar equivalent at the Play Golf screen. If you wish
+to return to a previous menu screen, select the appropriate item or press
+the ESC key. Note: World Tour Golf does not support the IBM AT joystick.
+
+Three special keyboard commands exist for the IBM version of World Tour
+Golf.
+
+KEY                     FUNCTION
+------------------------------------------------------------------------
+CTRL-K                 Turns off joystick
+CTRL-J                 Resets joystick for use (center it before use).
+CTRL-V                 Toggles sound on/off.
+
+Graphics Display and Memory on the IBM
+Some graphics boards may require that you type one of these alternate
+commands instead of "GOLF" when starting the game:
+
+COMMAND      GRAPHICS            DEFAULT HARDWARE          OTHER HARDWARE
+---------------------------------------------------------------------------
+GOLF /C      4 color             CGA                       EGA, Tandy
+GOLF /T4     4 color selectable  EGA (color),Tandy(256K)   Tandy SX
+GOLF /T      16 color            Tandy (384K)
+GOLF /H      Hercules Monochrome Mono monitor (no EGA)
+GOLF /EM     EGA Monochrome      EGA with mono monitor
+
+Note: 4 color selectable is a four color mode in which you can adjust three
+of the default colors (black, green, lt. blue, brown). Adjust the colors
+simultaneously by pressing the ALT key and 1,2, or 3.
+
+Note: Make sure the NUMLOCK key id oss, or the keypad arrows may not
+function correctly.
+
+                GETTING STARTED ON THE COMMODORE 64/128
+
+Remove all cartridges and unplug your printer, second disk drive, or modem,
+if you have one (World Tour Golf uses a new fastloader that may not load
+the program properly with any of these connected to your system). Plug your
+joystick into port 2, then turn on the disk drive, monitor and computer.
+Insert Side 1 of the World Tour Golf disk in your drive and type LOAD
+"EA",8,1. Press RETURN. The Electronic Arts logo appears, followed by the
+game's title screen. When the music starts and the disk drive light goes
+off, hit the joystick button to go to the Activity menu.
+
+You may use either a joystick or a keyboard to play World Tour golf. If
+you're using a joystick, push the stick forware to travel up a menu, and
+pull back to go down a menu. Once you've highlighted an item, press the
+joystick button to select. To change columns using the joystick, push it to
+the left or right. If you're using the keyboard to play, use the up/down
+cursor key to highlight an item, and press Return to select. use the
+left/right cursor key to change columns. The up/down cursor key also
+changes club selection during play, while the left/right key adjusts your
+aim before each shot.
+
+To return to a previous menu screen, select the appropriate item or press
+the UP arrow next to RESTORE.
+
+Note: When moving between Play and Construction, the program pauses to load
+additional information. Side 1 of the disk is required to load this
+information.
+
+	                GETTING STARTED ON THE APPLE IIGS
+
+Apple IIGS owners should make a backup copy of World Tour Golf program for
+their convenience; see "Making a Backup Copy" in your IIGS Owner's Guide
+for instructions on copying your disk.
+
+To get started on the Apple IIGS, make sure your system speed on the
+control panel is set to "fast". Insert your game disk into the start-up
+drive; then turn on the monitor and computer. At the desktop menu,
+double-click on GOLF; when the single hole appears onscreen, look for the
+matching illustration in the manual and type in the name of the course (if
+you press Return without typing the name in, or if you type in an incorrect
+response, you will get Demonstration mode. In Demonstration mode, you may
+play only 2 holes for each course you choose - and you may not save holes
+or courses built in construction mode). Press RETURN and the title screen
+appears; click the mouse anywhere on the screen to exit to the Activity
+Menu.
+
+Note: The Apple IIGS version of World Tour Golf is played with a mouse. Use
+it to make menu selections, as well as to play golf and construct holes and
+courses. Just move the pointer to the appropriate spot and click.
+
+To return to a previous menu screen, you can either select the appropriate
+item or press the ESC key.
+
+                   GETTING STARTED ON THE AMIGA
+
+Amiga owners should make a backup copy of their World Tour Golf program for
+their convenience. See "Using the Workbench" in your Introduction to Amiga
+for instructions on how to copy your disk. To get started on the Amiga,
+turn on your monitor and computer (Amiga 1000 owners only, insert Kickstart
+1.2 into the internal drive). When prompted by the Workbench request,
+insert your World Tour Golf disk (do not boot with workbench, or the game
+won't run properly when you start it). In a few moments, you'll see the
+Workbench screen. Double-click on the World Tour Golf disk icon to open it.
+Next, double-click on the Golf icon (golf club and ball) and the title
+screen appears. Press the left mouse button to continue. When the sample
+golf hole appears onscreen, look for the matching illustration in the
+manual, then type in the name of the course. Press Return to go to the
+Activity menu. If you press Return without entering the correct course
+name, you'll go to the Activity menu. If you press RETURN without entering
+the correct course name, you'll go to Demonstration mode. In Demonstration
+mode, you can play only 2 holes on each course; in addition, you cannot
+save holes or courses you've built during construction.
+
+Note: You play World Tour golf Amiga with the mouse; use the mouse to make
+menu selections, as well as to play golf and construct holes and courses.
+Just move th epointer to the appropriate spot and click. Press the LEFT
+mouse button to select and swing, and the RIGHT mouse button as a spacebar
+equivalent at the Play Golf screen.
+
+If you wish to return to a previous menu, select the appropriate item.
+Press the ESC key when at a non-menu screen.
+
+PLAYING GOLF
+
+The Activity menu is the nerve center of World Tour Golf. From the Activity
+menu, you can access other menu screens. Once at a menu screen, you can
+always return to the central Activity menu. First, let's take a quick tour
+of the course at Pebble Beach. Note: You have a wide range of championship
+courses from which to choose when playing World Tour Golf. when you load a
+course, the names of the available sites appear onscreen. The file names
+for these courses are shorter than the actual names, in some cases.
+
+To get to the first tee at Pebble, select Play from the Activity menu, then
+select Accept Options (a single golfer plays stroke play). At the Show
+Players Menu, select Accept Players; you've just designated Jack Snicklaus
+as your golfer. Next, at the Load a Course and Play menu, select "Load...",
+then select and load Pebble Beach. A message describing course conditions
+appears; press the Button to see the scoreboard. Course and player
+information is listed. you're ready to play golf! If you want to change the
+course, number of players or type of play, you'll be able to do so later.
+For now, take a round at Pebble.
+
+Note: Throughout the manual, we refer to pressing button 1 on a joystick
+(the only button on some joysticks), pressing the Return key (the Enter key
+on the IBM), clicking the mouse on an Apple IIGS, and clicking the left
+mouse button on an Amiga as pressing the "Button".
+
+Play Golf!
+
+Now, press the Button to go to the first tee (see Figure 1). The left half
+of the screen shows a bird's eye view of the hole, while the right half
+displays a golfer's view of the hole, plus important game information. The
+golfer is on the tee, lined up over the ball. A driver is preselected for
+you. Rough surrounds the fairway; you'll also see water, sand hazards, and
+trees on most holes.
+
+Club Selection
+
+Before you hit the ball, be sure you are using the right club. You have
+fourteen to choose from:
+	
+	Three Woofs (A Drive, a 3-Wood and a 4-Wood)
+	Ten Irons (2 through 9-Iron, Wedge and Sand Wedge)
+	One Putter
+
+Golf clubs are numbered according to their length and the maximum distance
+they can hit the ball when the golfer swings perfectly. The lower the
+number, the farther the club should hit the ball. Though woods and irons
+may have the same number, woods are more powerful clubs. Here are the
+maximum ranges for each club:
+
+	CLUB		MAX RANGE	CLUB		MAX RANGE
+---------------------------------------------------------------------------
+Driver			240 yards	6 Iron		155 yards
+3 Wood			220 yards	7 Iron		145 yards
+4 Wood			210 yards       8 Iron          135 yards
+2 Iron                  195 yards       9 Iron          125 yards
+3 Iron                  185 yards       Wedge           100 yards
+4 Iron                  175 yards       S. Wedge         75 yards
+5 Iron                  165 yards       Putter           45 yards
+
+At the beginning of each hole, you are automatically assigned your Driver.
+On Par 3 holes, or on holes with obstacles near the tee, you may want to
+use a club with a shorter range. On your second shot, select a club by
+pressing the up and down arrow keys on the keyboard, or by moving your
+joystick. On the Apple IIGS and Amiga versions, just click on the up or
+down club selection arrows. The name of the chosen club appears below the
+yardage showing distance to the green. To view a range of a particular
+club, press the spacebar and an arc appears showing the distance a well-hit
+ball would travel on a windless day. When selecting a club, remember that
+higher-numbered clubs will lift the ball higher in the air and a shorter
+distance than a lower-numbered club. If you need to hit the ball over a
+hill or tree, use a club with a high loft (a 9-Iron or Wedge, for example).
+
+Aiming Your Shot
+
+On the left hand side of the screen, a cross-hair indicates the direction
+your shot is currently aimed. World Tour Golf automatically positions the
+crosshair on a straight line between the ball and the hole. At times,
+though, you won't want to hit your ball straight towards the hole. To
+adjust your aim, press the left and right arrow keys, or move the joystick
+to the left or right. On the Apple IIGS and Amiga versions, use the mouse
+to click on the spot on the overhead view window where you want to target
+your shot. The point of view window will change to show your new target
+direction. Always factor the wind direction and speed into your adjustment.
+If the wind is blowing more than 2 or 3 miles per hour, you may need to aim
+into the wind to compensate. Note: Some holes may be displayed in the
+overhead view with the tee at the top. The wind direction is relative to
+the overhead view - not to the point-of-view window.
+
+Hitting the Ball
+
+When you're ready to hit a shot, position the pointer on the golfer's point
+of view window (Apple IIGS and Amiga versions only). Next, press the
+Button, and the swing meter appears in the lower right-hand corner of your
+screen (see Figure 2). Press the Button a second time to start your
+BACKSWING. Press a third time to decide the strength of the shot and begin
+your DOWNSWING. To hit the ball full strength, press the Button when the
+meter reaches the 100% position. To hit the ball a shorter distance, press
+the button before the 100% point. You can also overswing, which may hit the
+ball farther than the club's maximum range, or cause an erratic shot. Press
+a fourth time to hit the ball. To hit the ball straight, press the Button
+when the swing meter is pointing straight down. If you press the Button
+BEFORE the meter reaches this position, your shot HOOKS to the left (a
+slight hook is called a DRAW; use this shot in a dogleg or to compensate
+for wind). Pressing it after the meter passes the straight-down position
+causes a SLICE to the right. A slight slice is called a FADE, which, like a
+draw, is useful in negotiating doglegs or in tricky wind conditions.
+
+Note: To bypass the steps described above, use the number keys 1-5 on the
+top of the keyboard to hit perfectly straight shots of varying strength.
+See the GAME PLAY KEYBOARD COMMANDS for further information on how to use
+these keys.
+
+Hazards
+
+The following hazards are encountered in any game of golf:
+
+Trees: These are found on most every hole. When your ball hits a tree, it
+may bounce off the trunk or branches in any direction. To get out from the
+trees, loft over them with a high-loft club, or slap under them with a club
+having little loft. You can also hook or slice the ball around a tree.
+
+Hills: If your ball hits a hill, it will bounce off. If there is a hill
+directly in front of you, try to hit over or around it just as you would a
+tree.
+
+Water: A ball hit into a lake or a stream is lost. A new ball is
+automatically placed immediately behind the offending hazard, and you
+receive one penalty stroke.
+
+Bad Lies: The LIE of a ball is the quality of the ground where it rests.
+The type of lie you have is shown in the upper right-hand area of the
+screen. A good lie means that the ball is resting lightly on the grass,
+with no obstacles around it. If the ball is in the rough, on hard earth, or
+in the mud, you face an undesirable lie. Your lie affects your club
+selection; your shots won't go as far when you hit from poorer lies. The
+following table shows the longest club you can use for each type of ball
+without a HIGH PROBABLILTY of flubbing your shot:
+
+	Lie		Maximum Safe Club
+-------------------------------------------------------
+	Perfect		3 Wood
+	Fair		2 Iron
+	Poor		5 Iron
+	Rotton		8 Iron
+	Sand		9 Iron
+	Plugged		Sand Wedge
+
+Bunkers: BUNKERS (also called sand traps) typically border putting greens
+or line fairways. You'll usually get a SAND lie when you hit the ball into
+a bunker. Sometimes, you'll be faced with a PLUGGED lie. Then, your balli s
+buried deep in the sand, and a Sand Wedge is your best tool for escape.
+
+Out of Bounds: A ball is out of bounds if it leaves the edge of the playing
+area. You're penalized a stroke and must hit again from your previous
+position.
+
+Chipping
+
+A chip is a shot hit from a position close to the green with less than full
+strength. When chipping, you'll generally use your Wedge. If you are very
+close to the green, you may want to use your putter.
+
+Putting
+
+When you are on the green, the left half of the screen becomes a
+bird's-eye-view of the green, showing your ball's position relative to the
+hole. Don't worry about club selection; the game automatically puts the
+putter in your hands.
+
+When putting, calculate the effect of the green's slope (if there is one)
+on your put. A symbol on the green reveals the severity of the slope. A
+brace (}) indicates a slight slope; arrows of increasing sharpness indicate
+moderate and severe slopes. The pointing arrow shows you the direction that
+the green slopes -- the direction the ball will curve when putted. Place
+the crosshair to compensate for green slope. A flat green has no symbols on
+it, and requires no compensation in your aim. The SPEED OF THE GREEN also
+affects your putting. A wet green is slow, while a dry green is fast. On a
+slow green, expect your putts to go only 2/3 as far as they normally would.
+On a fast green, they will go 30% farther. In a single session on one
+course, all greens have the same speed. Wind has no effect on putting.
+
+Putting is slightly different from other shots because you only press the
+Button three times. The first press brings up the swing meter, the second
+starts your backswing, and the third determines the strength of the shot.
+The distance between the ball and the crosshair on the green is seven feet.
+
+Use the 0 to 5 keys (see GAME PLAY KEYBOARD COMMANDS below) to putt
+automaytically. You can also press T for "Tap" if you are within 4 feet of
+the hole. This controls the strength of the shot, but still requires you to
+aim. If you have a very short putt (under 3 feet), and your partners agree
+that it's a GIMME (a shot so easy no one could miss), press G and the putt
+drops automatically into the hole.
+
+Scoring
+
+Once your ball is sunk, the result appears in the uper right-hand area of
+the screen.
+
+	Albatross is three under par.
+	Eagle is two under par.
+	Birdie is one under par.
+	Par means you have completed the hole in the allotted number of
+	shots.
+	Bogie is one over par.
+	Double Bogie is two over par.
+	Other indicates that you failed to achieve a double bogie.
+
+After you have completed a hole, you return to the scorecard screen. Press
+the Button to go to the next hole.
+
+		    GAME PLAY KEYBOARD COMMANDS
+
+Here are some crucial keyboard commands which apply to GAME PLAY on all
+versions of World Tour Golf:
+
+  KEY			FUNCTION
+
+0 or T..................Putts the ball 4 feet.
+1.......................Hits the ball at 20% strength or putts 15 feet.
+2.......................Hits the ball at 40% strength or putts 30 feet.
+3.......................Hits the ball at 60% strength or putts 45 feet.
+4.......................Hits the ball at 80% strength or putts 60 feet.
+5.......................Hits the ball at 100% strength or putts 75 feet.
+G......................."Gimme." Automatically sinks a putt under 3 feet.
+S.......................Displays current scorecard.
+SPACEBAR................Shows maximum range for club selected.
+
+		       CUSTOMIZING YOUR GAME
+
+Now that you have a feel for golf, it's time to get acquainted with some of
+the ways you can customize the game.
+
+Using the Menus
+
+To select from a menu on the IBM or C64/128 versions, use the arrow keys or
+the joystick to move the hightlight up and down or right and left, then
+press the Button. To select on the Apple IIGS and Amiga versions, move the
+pointer to the appropriate location, the click the mouse button. The box at
+lower-screen right describes each item as it is highlighted (except on the
+Amiga version). To return to a previous menu, select the appropriate menu
+item or press the ESC key. * On the C64 version, use the Up Arrow key (near
+Restore) as a replacement for the ESC key.
+
+* On the Amiga version, the ESC key works only on NON-MENU screens.
+
+In some cases, you must type in a command from the keyboard. There is a
+default selection in the box at lower-screen right. Accept the default by
+pressing RETURN, or type in an alternative. The Backspace key removes the
+typing, if you make an error. Press the RETURN key when you are finished.
+To back out, hit ESC.
+
+The Activity Menu
+
+From the Activity menu, you can choose to Play, Practice or Construct a
+Golf course. To quit the game on the IBM and Apple IIGS versions, choose
+"Title Screen" and then press the Q key. On the Amiga version, select "Quit
+Game" from the Activity menu, and on the C64/128 simply turn off your
+machine.
+
+The Play Options Menu
+
+# OF PLAYERS allows you to play with up to four people. TYPE OF PLAY,
+indicates Stroke Play (1-4 Players) or Match Play (two or four players). In
+Stroke Ply, the player with the lowest score after 18 holes is the winner.
+In Match Play, you compete for each hole. ROBOT PLAYERS allows you to
+assign a computer opponent to one or more of the player positions (IBM
+version only). Selecting ACCEPT OPTIONS confirms the present play option
+choices and sends you on to the Show Players Menu.
+
+The Show Players Menu
+
+On the left side of the screen, you see Player Information. You either
+accept the player listed by selecting ACCEPT PLAYERS, or change player
+information by selecting CHANGE PLAYERS. You can reset his handicap and
+attributes, then go on to play.
+
+THE EDIT PLAYERS MENU
+
+From this menu you can change the players' names, handicap or attributes (a
+player's name can be a maximum of 12 letters long). A player's handicap is
+subtracted from his total strokes to arrive at his net score. Use this
+feature to balance players of different abilities. Player's attributes
+distringuish one golfer from another. If you want to change the default
+values, select SET ATTRIBUTES. This takes you to the Player Attributes
+menu.
+
+The Player Attributes Menu
+
+you can change a Robot Player's attributes as well as those of a human one.
+Adjust player attributes as follows:
+
+DRIVE DISTANCE guages a player's strength. The average distance a player
+hits a Driver can be adjusted from 100 to 300 yards. This in turn affects
+the maximum distance all the other clubs are capable of hitting. The game's
+default distance is 240 yards.
+
+DRIVE ACCURACY is a percentage (1% to 99%, with a default value of 90%).
+Accuracy affects your shot consistency as wlel as the likelihood of
+flubbing a shot.
+
+DRIVE TENDENCY reflects each player's tendency to hook or slice. Drive
+tendency is set at Straight until you change it (not available on the
+C64/128 version).
+
+RECOVERY SKILL is a player's ability to get out of bad lies. The better
+your recovery skill, the better your chance of getting out of a rotton lie
+without flubbing the shot. The player's recovery skill is set at Fair until
+you change it (not available on the C64/128 version).
+
+When you have finished, select ACCEPT PLAYER. You can not select a course
+on which to play.
+
+Load a Course and Play
+
+World Tour Golf features twenty or more golf courses from around the world.
+In this section, we explain how to access the golf courses on the various
+versions of the game.
+
+On The IBM
+
+The available courses are listed on the left side of the screen; select
+"Load". The default course is Pebble Beach. To choose a different course,
+backspace over "Pebble Beach" and type the name as it appears onscreen.
+Press ENTER to load it. To load a course from another disk, use "Change
+Disk" or "Change Drives" and follow the onscreen prompts. Selecting DELETE
+premanently erases a course from disk.
+
+On The Commodore 64/128
+
+All of the courses are found on side 2 of your World Tour Golf disk. To
+load one of these courses, select "Change Disk", then flip your disk over
+and press the Button. The courses are displayed on the left side of the
+screen. Note: For your convenience, a select group of courses is included
+on side 1.
+
+On The Apple IIGS
+
+The courses are contained in the folder names "courses". To open it, select
+"courses" and click on the "open" button. To load a course from a different
+disk, use "disk". DELETE permanently removes a course from the disk.
+
+On The Amiga
+
+The golf courses are found in the drawer named "courses". To load a course
+from a different disk, use the "DF0:", "DF1:, or "DH0:" buttons. DELETE
+brings up another dialogue box which allows you to remove files from the
+disk.
+
+			PRACTICE, PRACTICE, PRACTICE
+
+To hone your skill, you can practice without actually playing. Select
+PRACTICe from the Activity menu, then choose from three options. PRACTICE A
+HOLE lets you play any hole from any course. Select it, choose a player,
+then load a hole from one of the World Tour Golf regulation courses.
+PUTTING GREEN lets you practice putting on greens of varying slopes.
+DRIVING RANGE lets you hit shots from the tee with any club, and measures
+the distance of each shot. Note: If you wish to practice a hole you've
+constructed, you must save the hole as a COURSE, not as a single hole.
+
+			    GOLF COURSE CONSTRUCTION
+
+To build the course of your dreams, select CONSTRUCT from the Activity menu
+to access the Course Edit menu.
+
+The Course Edit Menu
+
+The left half of the screen shows miniature diagrams of the first nine
+holes on the course. For now, all of these holes are blank, that is,
+totally rough with no fairway. The right half of the screen contains the
+Course Edit functions.
+
+LOAD lets you load an existing course or hole from disk. You can then alter
+it. This menu also lets you erase the current course. Note: First-time
+users may want to load and edit a pre-existing course before tackling a
+blank course. When you load a pre-existing course, its first 9 holes come
+up onscreen.
+
+SAVE lets you save either an entire course or a single hole to disk, as
+well as erase a course. Note: Saving and loading individual holes is the
+only way to transfer holes between courses.
+
+HOLE MANAGER takes you to a new menu where you can copy, exhange, or move
+holes around within an existing course.
+
+HOLE EDIT is where you actually create new holes or customize existing
+holes.
+
+When you select HOLE EDIT, a thick frame appears around the first hole on
+the left side of the screen (on the IBM version), or around the hole number
+(on the C64/138 version). Use the cursor keys or joystick to move the frame
+to the hole you want to create or modify. If you move the frame downward
+long enough, the back nine holes appear. When you have chosen a hole, press
+the Button. On a blank hole, this takes you to the Draw Terrain menu. On a
+pre-existing hole, this takes you to the Finish Hole menu, whose menu
+options are described below. Note: Press the SPACEBAR to toggle between the
+right and left halves of the screen. This is also the case on most other
+construction screens.
+
+When you select Hole Edit on the Apple IIGS version, an "Other 9" button
+appears at lower-screen left. Click on it to toggle between the front and
+back nines of a course. When the hole you want to edit appears onscreen,
+click on it to begin editing. The Amiga version has not Hole Edit menu
+item; to edit a hole, simply click on it at the Course Edit menu. To move
+between the front and back nines, select See Other Nine at the Course Edit
+menu.
+
+The Draw Terrain Menu
+
+There are two steps to constructing a hole. First, use the Draw Terrain
+menu to lay out the terrain (fairways, rough and water). When you draw a
+hole's terrain, you work on the left-hand side of the screen with a block
+representation of the hole. When you've completed the basic hole layout,
+place the tee, green, bunkers, trees and other hazards. Note: Don't worry
+about the angular look fo the drawing; it emerges smooth and detailed.
+
+Selecting DRAW TERRAIN places a thick cursor on the left half of the
+screen. Grass is preselected next to Change Terrain. Use the arrow keys 9or
+the mouse on the Apple IIGS) to move the cursor, then press the button to
+drop a square "tile" of fairway on the hole. When you have placed as many
+tiles as you wish, press ESC or the Spacebar to return to the menu. On the
+Amiga, position the pointer on the desired spot and click to drop a square
+tile. If you hold the mouse button down, you place a sequence of tiles
+onscreen. Press the Button repeatedly on CHANGE TERRAIN to change the
+drawing terrain from grass (fairway) to rough to water, and back to grass
+again. CLEAR HOLE fills the entire hole with the terrain you are using.
+PREVIEW HOLE allows you to see the hole after it has been smoothed and
+detailed. You can enter the Draw Terrain mode while previewing, but the
+blocky image returns the first time you drop a tile.
+
+Several keyboard shortcuts are available to make drawing the hole easier.
+See the CONSTRUCTION KEYBOARD COMMANDS for construction shortcuts.
+
+The Finish Hole Menu
+
+After you have outlined the basic shape of the hole, complete it by placing
+objects and defining features such as green slope.
+
+Selecting FINISH HOLE from the Draw Terrain menu takes you to the Finish
+Hole menu. The left half of the screen shows the hole you have just
+designed. The right half contains the functions you use to transform this
+hole into one which will rank among golfdom's finest.
+
+PLACE OBJECTS allows you to place objects (Green, Tee, Bunkers, Trees,
+etc.) on the hole. CLEAR OBJECTS removes all objects. SET FEATURES takes
+you to the menu you will use to finish the hole. DRAW TERRAIN returns you
+to the Draw Terrain menu, in case you need to make adjustments. COURSE EDIT
+takes you back to the Course Edit menu.
+
+Placing Objects
+
+Selecting PLACE OBJECTS from the Finish Hole menu takes you to the Object
+Type menu (on the Amiga version, you go directly to the Selecting Object
+menu, see the NOTE TO AMIGA USERS below). Toggle or point to the type of
+object you wish to place on the hole and press the Button. Press the left
+and right arrow keys to reveal the variations for that object type. Press
+"F" to flip the object horizontally. Press the up arrow key to return to
+the Object Type menu.
+
+When you have chosen an object to place on the hole, press the Button and
+that object appears on the left side of the screen. Move the object with
+the cursor keys or joystick. Press the Button to "drop" the object. Once
+dropped, an arrow appears that you use to "pick up" and move anyobject on
+the hole. To pick the object up, position the arrow over the object and hit
+the Button. To remove an object, pick it up and press the Spacebar.
+
+Note To Amiga Users: Click on the object name, then wait for the object to
+appear on the green square beneath the object choices. Point to the object
+with the arrow, click, and drag the selected object to the left side of the
+screen. Select the desired location on the hole, and click again to deposit
+the object. To remove an object you've placed, click on it again, and drag
+it back to the right side of the screen and click the mouse.
+
+You can place up to 50 objects on a single hole, but you cannot overlap
+them or place more than one tee or green on a hole. Once you have
+positioned the tee and the green, the program calculates the distance of
+the hole and its par. If you have created a dogleg hole, place a Par Marked
+(in the Other category) at the bend of the dogleg to obtain a more accurate
+distance calculation. A hole is not playable unless both a tee and a green
+have been placed. (Note: You may notice that the length of the hole varies
+from time to time as you play -- the program periodically adjusts the
+placement of the pin on the green to make the game a little more
+challenging.)
+
+You can use several keyboard shortcuts when placing objects on a hole. See
+CONSTRUCTION KEYBOARD COMMANDS for more information.
+
+Setting Features
+
+Choose SET FEATURES from the Finish Hole menu to set the hole difficulty
+and green slope, and put in skyline features.
+
+When you select HOLE DIFFICULTY, you must rate difficulty on a scale of 1
+to 99 (with 99 being the most difficult). The program automatically assigns
+handicaps to each hole based on the relative difficulty ratings you have
+designed. A hole's handicap is a measure of its difficulty relative to
+other holes on the course. The most difficult hle on the course receives a
+handicap rating of 1.
+
+
+Green Slope lets you set direction and severity of the green's slope.
+SKYLINE lets you drop hills, etc. into the background. EXIT takes you back
+to the Finish Hole menu.
+
+Saving a Hole or Course
+
+World Tour Golf lets you save a completed hole or course from the Save
+menu. Make sure you have a formatted disk available before you begin.
+Return to the Course Edit menu and select SAVE. COURSE/EDIT returns you to
+the Course Edit menu.
+
+Note to Commodore 64/128 users: Before you save a course, you must use your
+World Tour Golf disk to format a blank disk. Select "Format Disk" from the
+SAVE menu and follow the onscreen prompts. After the disk is formatted,
+place side 1 of your program disk in the drive and press the Button. Course
+names may be as long as 12 characters; you can save up to 25 courses on a
+disk.
+
+Quick Save
+
+Save a course under its current name from any of the main construction
+menus (DRAW TERRAIN, FINISH HOLE, COURSE EDIT), by pressing S (IBM and
+C64/128 versions only). Use the SAVE MENU to save a course under a differnt
+name.
+
+			CONSTRUCTION KEYBOARD COMMANDS
+
+While in "Draw Terrain," you can use the following keys:
+
+KEY			FUNCTION
+-----------------------------------------------
+G.......................Changes selected terrain to grass.
+W.......................Changes selected terrain to water.
+R.......................Changes selected terrain to rough.
+P.......................Lets you preview hole; toggles on/off
+F.......................Fills enclosed area with selected terrain. Works only
+			 with draw lock off.
+U.......................Undoes last command. Press twice to restore last 
+			command.
+D.......................Toggles draw lock on/off. Lets you drop series of 
+			tiles to outline terrain features. (IBM, C64/128 
+			only).
+CTRL-PgUp...............Moves entire hole up. (IBM)
+Shift-U.................Moves entire hole up. (C64/128)
+CTRL-PgDown.............Moves entire hole down. (IBM)
+Shift-D.................Moves entire hole down. (C64/128)
+CTRL-Left Arrow.........Moves entire hole to the left. (IBM)
+Shift-L.................Moves entire hole to the left. (C64/128)
+CTRL-Right Arrow........Moves entire hole to the right. (IBM)
+Shift-R.................Moves entire hole to the right. (C64/128)
+
+Place Objects/Selecting Objects Menus - Special Keyboard Commands
+
+KEY			FUNCTION
+------------------------------------------------------------------
+T.......................Displays distance from arrow to tee.
+G.......................Displays distance from arrow to green.
+Y.......................Draws arc 150 yards from green to assist in
+			placement of yard markers.
+D.......................Draws arc representing driver's maximum range from
+			tee.
+F.......................Flips an object.
+L.......................Places duplicate of last selected object on the
+			hole.
+7 or 8..................Rotates through different objects - trees, bunkers
+			and other.
+9 or 0..................Rotates through objects of current type.
+DEL.....................Deletes an object (except on Apple IIGS).
+
+Meet the Artists
+
+Evan and Nicky Robinson's interest in golf parallels the evolution of World
+Tour Golf. Once they took a few lessons, the Robinsons became hooked on the
+game, and now play whenever they can. Before discovering the joys of the
+sporting life, they worked on games like Mail Order Monsters, created with
+fellow WTG artist Paul Reiche III. Paul, a native Nebraskan, has worked on
+a number of games (Archon, ArchonII:Adept, and Murder on the Zinderneuf are
+three); he's also ventured into computer graphics consulting for ad
+agencies -- and piano moving.
+
+The artists would like to express their thanks to their family and friends,
+to the good people at Electronic Arts, and to Ron Hoyt of the Indian Valley
+Golf Course for showing them that hitting out of the rough can be fun.
+
+=============================================================================
+Complete World Tour Golf docs brought to you by The Southern Star.

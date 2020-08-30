@@ -1,0 +1,77 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "The Immortal" © 1990 Electronic Arts.
+
+ This install requires WHDLoad and DIC to be in the path. Both can be found in
+ the WHDLoad package.
+ To install from a different drive than DF0: select installation mode Expert.
+
+ The installed program requires 1.0 MB ChipMem and 1.5 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 3.0 (16.06.2018) done by JOTD:
+ - fixed a huge loading bug that prevents level 7 and 8 to work properly (crashes/ trashed gfx)
+ - added functions keys F2-F8 to enter valid preset passwords for levels 2 => 8
+ - protection doesn't even appear anymore
+ - added F9 key to restart the game (reboot). Sure was useful when testing, now I'm not sure...
+ - added trainer: infinite energy (you can still be killed, but not in fights, or by arrows/fireballs,
+   everything that depletes your energy doesn't anymore, which makes the game MUCH easier)
+ - ability to set your password through CUSTOM tooltype, and recall it with TAB in the "enter certificate"
+   screen
+ - added joypad/2nd button controls:
+   * 2nd button / blue: pause/select item (alongside with spacebar)
+   * rev/fwd: set preset passwords in "enter certificate" screen
+   * yellow: enter CUSTOM certificate if present (like TAB)
+   * green: toggle music on/off (like CTRL+S)
+   * rev+fwd+play (hold several seconds): give up current game
+   * rev+fwd+play+red: quit to workbench
+
+ 
+ version 2.1 (25.02.2017) done by JOTD:
+ - fixed DMA wait for better music replay (issue #0003295)
+   (the delay was made BEFORE write to DMACON, even in the original game)
+ 
+ version 2.0 (03.11.2008) done by JOTD:
+ - global slave update, including disk file renaming
+ - empty CPU loop fixed (music works OK in WinUAE now)
+ - source code included
+ - documentation included
+
+ previous versions (2001)
+ - Convenient installer script
+ - Manual protection removed (adapted a patch from LockPick v2.0)
+ - Nice icon by Frank
+
+ SPS version 340 is supported, version 3343 (NDOS) isn't.
+ 
+ convenient passwords (source: http://www.lemonamiga.com/games/cheats.php?id=555):
+ 
+	Normal 	        Full power wizard
+2	BEFE810006F70 	CDDFF10006F70
+3	CC5EE21000E10 	F47EF21000E10
+4	465FA31001EB0 	B5FFF31001EB0
+5	B57F943000EB0 	94BFB43000EB0
+6	1BBEB53010A41 	563FF53010A41
+7	8DDFB62010AC1 	C250F63010AC1
+8	E011F730178C1 	A890B730178C1
+

@@ -1,0 +1,68 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Great Courts / Pro Tennis Tour" © 1989 Blue Byte/Ubi Soft
+
+ Thanks to Chris Vella for Pro Tennis Tour image
+
+ This install requires WHDLoad and RawDIC to be in the path. Both can be found
+ in the WHDLoad package.
+ To install from a different drive than DF0: select installation mode Expert.
+
+ The installed program requires 0.5 MB ChipMem and 0.5 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 2.3 (25.02.18):
+ - fixed random keyboard interrupt crash at startup (issue #003802)
+ 
+ version 2.2 (16.08.06) done by JOTD
+ - another version of Great Courts supported (SPSID: 2605), 5 versions total!
+ - sfx and music fixed (glitches on WinUAE and possibly on fast machines)
+ - save/load game fixed (worked only for 1 version of Great Courts),
+   in a separate "gamesave" file, created by default on first save.
+
+ version 2.1 (05.01.05)
+ - keyboard fix fixed (did not work at all due to previous fix!)
+
+ version 2.0-B (29.12.04)
+ - install reworked, supports another version of Pro Tennis Tour
+ - CAPS ID file added to identify CAPS dumped images which work
+   (both dumped files are exactly the same I'm afraid, and 3 other
+    supported versions are missing)
+
+ version 2.0 (08.12.04) done by JOTD
+ - slave/readme/install script fully rewritten
+ - now uses RawDIC imager
+ - Pro Tennis Tour supported
+ - documentation included
+ - source code included
+
+ version 1.1 (2001) done by CFou!
+ - Load/Save to HD
+ - 2nd version support
+
+ version 1.0 (2000) done by JOTD
+ - initial release
+ - fixed for 020+ CPUs
+ - password protection removed
+ - keyboard fixed
+ - nice icons by Exoticons

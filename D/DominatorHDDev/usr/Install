@@ -1,0 +1,151 @@
+;****************************
+
+(set #sub-dir "data")		;sub directory containing data files
+(set #readme-file "Readme")	;name of readme file
+(set #cleanup "")		;files to delete after install
+
+;****************************
+
+;----------------------------
+; Checks if given program is reachable via the path
+; if not abort install
+; IN:  #program - to check
+; OUT: -
+
+(procedure P_chkrun
+  (if
+    (= 0 (run ("cd SYS:\nWhich %s" #program)))
+    ("")
+    (abort ("You must install \"%s\" first !\nIt must be accessible via the path.\nYou can find it in the whdload package." #program))
+  )
+)
+
+;----------------------------
+; Wait for inserting disk
+; IN:  #AD_disk - name of disk
+; OUT: -
+
+(procedure P_disk
+  (askdisk
+    (dest #AD_disk)
+    (prompt ("\nInsert Disk \"%s\" in any drive !" #AD_disk))
+    (help @askdisk-help)
+  )
+)
+
+
+;****************************
+
+(if
+  (exists #readme-file)
+  (if 
+    (= 0 (run ("SYS:Utilities/Multiview %s" #readme-file)))
+    ("")
+    (run ("SYS:Utilities/More %s" #readme-file))
+  )
+)
+
+(set #program "WHDLoad")
+(P_chkrun)
+
+(set @default-dest
+  (askdir
+    (prompt ("Where should \"%s\" installed ?\nA drawer \"%s\" will automatically created." @app-name @app-name))
+    (help @askdir-help)
+    (default @default-dest)
+    (disk)
+  )
+)
+(set #dest (tackon @default-dest @app-name))
+(if
+  (exists #dest)
+  (
+    (set #choice
+      (askbool
+        (prompt ("\nDirectory \"%s\" already exists.\n Should it be deleted ?" #dest))
+        (default 1)
+        (choices "Delete" "Skip")
+        (help @askbool-help)
+      )
+    )
+    (if
+      (= #choice 1)
+      (run ("Delete \"%s\" \"%s.info\" All" #dest #dest))
+    )
+  )
+)
+(makedir #dest
+  (help @makedir-help)
+  (infos)
+)
+
+;----------------------------
+
+(copyfiles
+  (help @copyfiles-help)
+  (source ("%s.slave" @app-name))
+  (dest #dest)
+)
+(if
+  (exists ("%s.newicon" @app-name))
+  (set #icon
+    (askchoice
+      (prompt "\nWhich icon do you like to install ?\n")
+      (default 0)
+      (choices "Normal" "NewIcon")
+      (help @askchoice-help)
+    )
+  )
+  (set #icon 0)
+)
+(select #icon
+  (set #icon ("%s.inf" @app-name))
+  (set #icon ("%s.newicon" @app-name))
+)
+(copyfiles
+  (help @copyfiles-help)
+  (source #icon)
+  (newname ("%s.info" @app-name))
+  (dest #dest)
+)
+(if
+  (exists #readme-file)
+  (copyfiles
+    (help @copyfiles-help)
+    (source #readme-file)
+    (dest #dest)
+  )
+)
+(if
+  (exists ("%s.info" #readme-file))
+  (copyfiles
+    (help @copyfiles-help)
+    (source ("%s.info" #readme-file))
+    (dest #dest)
+  )
+)
+
+(if
+  (= #sub-dir "")
+  ("")
+  (
+    (set #dest (tackon #dest #sub-dir))
+    (makedir #dest
+      (help @makedir-help)
+    )
+  )
+)
+
+;----------------------------
+
+(set #AD_disk "Copylock Amiga Key Disk")
+(P_disk)
+
+(copyfiles
+  (help @copyfiles-help)
+  (source ("%s:" #AD_disk))
+  (dest #dest)
+  (all)
+)
+
+(exit)

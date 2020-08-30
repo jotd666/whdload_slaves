@@ -1,0 +1,294 @@
+The Chaos Engine - Bitmap Brothers manual typed by FAIRLIGHT!
+-------------------------------------------------------------
+
+                          Welcome!
+                          --------
+
+Welcome to The Chaos Engine. This manual has been produced to ensure
+that you get the very best out of this premium product. If you should
+find either the program or the documentaion unsatisfactory in any way,
+tell us about it. Opinions and complaints should be sent to The Project
+Manager, The Chaos Engine, Renegade Software Ltd, Unit C1L, Metropolitan
+Wharf, Wapping Wall, London E1 9SS.
+
+                   Equipment requirements
+                   ----------------------
+
+Runs in 1MB RAM
+Compatible With : Expanded a500, a500+, a600, a1000, a1200, a2000, b2000,
+a2500, a3000, a4000
+
+Please *NOTE*: The Chaos Engine cannot be installed on a compatible hard
+disk drive.
+
+                      Loading problems
+                      ----------------
+
+In the unlikely event that The Chaos Engine fails to load, turn off your
+computer and remove any extraneous external peripherals such as printers
+(leave the monitor or television connected) before repeating the loading
+procedure. If The Chaos Engine still refuses to load then 'check your
+discs for error' by using for example X-copy.
+
+                      The Options Screens 
+                      -------------------
+
+A short introduce sequence will set the scene. Once it's been shown, the
+Options Screen is presented. Push the joystich shaft up or down to highlight
+the 'SELECT NEW GAME' or 'ENTER PASSWORD' option. Press fire button to select
+the highlighted option.
+
+                       Select New Game
+                       ---------------
+
+You can have a Party made up of one or two humans players. A single human-
+controlled Character won't fight alone - the computer controlled companion
+sees to that. The action's not as competitive without a second human player,
+but it's no less frenetic.
+
+Player 1, insert your joystick in the AMIGA port marked '1 JOYSTICK'.
+
+Player 2, insert your joystick in the AMIGA port marked '2 JOYSTICK'.
+
+Push the joystick shaft up or down to highlight the '1 PLAYER & CPU' or 
+'2 PLAYER' option. Press the firebutton to select the highlighted option.
+
+                       Enter Password
+                       --------------
+
+Passwords are given at key points during play. They contain details of your
+characters' performance and position and will save you the bother of playing
+through the early stages again (and you may have missed the hidden delights,
+so it's up to you). When you register a valid Password, play will begin from
+where the Password was given.
+
+                       Hiring characters
+                       -----------------
+
+There are six characters available for hire, but only two can join the Party.
+Check out the Reports before you hire a Character. Player 1 has first choice
+of the Characters to play. If a second human player is not involved, Player 1
+must also choose which character is to be controlled by the computer. 
+Otherwise, Player 2 may choose a Character to play.
+
+                        Character Attributes
+                        --------------------
+
+The Characters have their own Special Abillities and Weapons. Their 
+characteristics are determined by four variable Attributes: Skill, Stamina, 
+Speed and Wisdom. Attributes are boosted by spending Cash in the Character
+Equip Screen. Stamina (in the form of Food) can also be acquired during play.
+
+The character's attribute ratings are shown in bar form. The currect potential
+is determined by Skill rating. A Character's current potential can never 
+exceed its absolute potential shown.
+
+SKILL is perhaps the most important Attribute. It's a form of overall rating
+which affects all Attributes and determines when PowerUps and Special Abitil-
+ities will become available.
+
+STAMINA is the Character's life force. When this run's out, he's dead.
+
+SPEED is how fast the Character can move. Suprised?
+
+WISDOM only applies to computer-controlled Characters as it determines their
+ability to play.
+
+                      Controlling a character
+                      -----------------------
+
+It's simple. The Joystick shaft is used to move him in any of the eight 
+directions. A single press of the firebuttom shoots a Character's Weapon
+in the direction he's facing. Pressing and holding the firebutton for approx.
+two seconds will activate a Special Ability held, providing you have special
+power. You will hear 'SPECIAL ACTIVATED!' when this happends
+
+                            Weapons
+                            -------
+
+Each character has a different weapon with different attributes. These 
+attributes can be changed by collecting or purchasing Power-Ups. Depending
+on the character, these may increase the number of shots fired, the damage
+they do, wheter they travel through monsters and spread of fire. As this 
+happends the characters shots will change colour to give you an indication
+that they have increased in power. Your objective is to turn all of your
+characters shots red.
+
+                        Special Abilities
+                        -----------------
+
+Equipment with unique qualities. There are many different Special Abilities
+to be bought in The Chaos Engine, but none of the Characters gets to use 
+them all (five Speial Abilities are detailed below).
+
+When a character has more then one special ability in his inventory, you 
+may change between them by using the relevant shift key on your keyboard.
+The Left Hand Shift changes Player 1's current special and the Right Hand
+Shift key changes Player 2's.
+
+When Player 2 is controlled by the computer his special abillities can be 
+used by Player 1. Press the space bar to swap between the two Special 
+abilities shown on the Status Panel below the playfield.
+
+Special Abilities also appear as you play - simply walk into on to active
+it. And don't worry about shooting Special Abilities by mistake - they are
+indestructible.
+
+                       Special Power
+                       ------------- 
+
+These are allow you to use your characters special ability. You can carry
+up to six at any time. They can either be purchased in the Charcter equip
+screen or collected during game by walking over them.
+
+In a one player game you may use Player 2's special power store as a reserve
+which provides you with an extra 6 storage.
+
+
+
+MOLOTOV  - A ring of fireballs shoot out in the dirction the Molotov was 
+thron or walked into.
+
+BOMB - Watch the screen shake as the Bomb blows!
+
+SHOT BURST - Powerful Shots shoot out in all direction around the Character,
+
+DYNAMITE - When it blows, all the Monsters you can see will disappear in the
+blinding flash of light. Beware! They don't destroy generators
+
+MAP - Shows a plan view not the whole Level but a three screen square area
+around the Character who activated it.
+
+                        Playfield
+                        ---------
+
+It scrolls, that's to say, as the Characters move around the scenery,
+the screen follows to keep up with them. When a computer-contolled Char-
+acter is left behind, off screen, he will be teleported to the vicinity
+of Player 1's Character approx. three seconds after he was lost. When two
+humans are involved, the scrolling is averaged between them so an element
+of cooperation is required to move on, OK?
+
+                 Nodes (And how to activate one)
+                 -------------------------------
+
+Shoot the Node until its casing explodes and it's activated. You will
+hear 'NODE ACTIVATED!' when you - no! - activate a Node. When enough nodes
+have been activated (there are three on the very first Level), the Exit to
+the next level will open (You will hear 'EXIT OPEN!'. Go for it, unless
+you feel hard enough to hang around and explore Level further. 'LEVEL COM-
+PLETE!' you will hear when you pass through the Exit.
+
+Now, some levels have more than one Exit. The Node counter on the status
+Panel at the bottom of the screen shows the number of Nodes to activate
+before an Exit will be open. If an Exit is open and yet there are still 
+Nodes to activate, that means an alternative Exit exists. Activate the 
+rermaining Nodes and find it - it will take you to a more advantageous
+postion on the next Level.
+
+
+
+TREASURE - or Cash. Dead Monsters drop two different values of coinage, 
+and there are often half a dozen or so different types of Treasure left
+lying around on each level. Pick 'em up quick before they disappear.
+Treasure is added to the Party Kitty, ready to be distributed between
+the Characters when the Level's completed.
+
+SILVER KEYS - Affect the scenery in some way so as to allow progress, for 
+example, by destroying trees or creating steps. They can also reveal objects
+and tresure. Silver Keys are essential to completing levels.
+
+GOLD KEYS - Affect the scenary in some way so as to reveal secret hidden
+areas full of Treasure, or reveal objects. Gold keys are not essential to
+completing levels, but greedy people can't do without them. I know!
+
+FOOD - It comes in tins and provides extra Stamina for anyone who eats it.
+
+DEATH ZONE TOKEN - When a character touches this, it disappears (you will 
+hear 'PLAYERS SAVED!'). The status of both Character at that point has been
+noted. Now, if one player's Character dies, he will be returned to the 
+action with his recorded status - but only after the live Character finds
+another Death Zone Token, or he dies or reaches the end of the Level.
+And, of course, provided the Characters have lives remaining.
+
+MONSTERS - ' All of them hold treasures which they leave behind when they
+are killed. Pick 'em up to increase the Party Kitty.'  There are about 
+seven or eight different types of Monster in a world and it takes more
+than a single Shot to kill the blighters.
+
+Some monsters spit or shoot deadly projectiles with varying degrees of
+accuracy. Some Monsters run after characters. Some monsters protect items
+of interest. Some Monsters appear from generators (a few well-placed Shots
+or keys will stop a Generator from generating monsters).
+
+                     The Bonus Screen
+                     ---------------- 
+
+The Bonus screen is displayed when a Level is completed. You can see whether
+you did all you could do within the Level. And the party Kitty - all that 
+tresure you collected during the Level ...  That gets split between the 
+Party according to how well the Characters performed.
+
+In a one player game, all the cash that has been collected is split equally
+between the two characters automatically.
+
+The column down the center of the screen shows small Pictures (Icons) 
+representing the six most important elements of a Level, with the Level
+Total to the far left. You can see how the two Characters performed individ-
+ually and as a Party. The EXIT button is already highlighted, so press fire-
+button to leave this screen.
+
+If either of the character has run out of lives remaining members of the
+Party is given the chance to buy a life from him after every Bonus Screen.
+The dead character will pay, providing he has enough money, if not the 
+remaining character must make up the difference. In a two player game you
+are given the option to answer NO, push joystick shaft left or right to 
+highlight the required option and then press the firebutton to select the
+highlighted option. In a one player game you *MUST* buy the other player
+a life.
+
+                    Equipping Characters
+                    -------------------- 
+
+The character Equip screen is presented after every second and fourth level
+in a World. Here you can use the Cash acquied during play to purchase
+equipment and boost a character's attributes. The right-hand side of the 
+screen shows the Items for sale. The left-hand side of the screen shows the
+current status of character. Player 1's character gets to spend his personal
+allowance first. If a second human player is not involved, Player 1 must 
+also equip the computer-controlled Character. Otherwise, Player 2's 
+character is equipped by the second player.
+
+Push the joystick shaft in any direction to move the highlight from item
+to item. Press firebutton to buy the highlighed Item (your cash balance 
+will be moved into your inventory on the left hand side of the screen,
+highlight it and press fire to select it for use during the next level.
+When you have finished equipping your Character, move highlight to the 
+EXIT button and press the firebutton.
+
+If you choose the ALL function, the computer will take one look at your
+Character's cash situation and then select the most desirable Attributes 
+for him. It will not purchase Power-Ups, Special Abilities or Special Power
+
+Skill controls what can be purchased for your character at anytime. As skill
+is purchased you will notice that various things become available. The 
+current maximum (yellow bar) of your other attributes will increase allowing
+you to increase their current level (green bar). Power-Ups and different
+special abilities will also become available at certain skill levels. Note
+that as skill is an overall rating for your character it means that this 
+level can only be increased once you have also increased all the other
+attributes and purchased Power-ups and abilities.
+
+When the party has finished buying equipment, a password will be given.
+Write it down, it holds details of the Party's performance. When you next
+load The Chaos Engine you can register this Password and begin play from
+where the Password was given. Please note that a password given during a
+one player game will only restore a one player game and vice versa.
+
+
+
+(C) 1992-93 Mindscape Ltd, Renegade Software - The BitMap Brothers - 
+
+
+
+Typed in by FairLight 8/3-93

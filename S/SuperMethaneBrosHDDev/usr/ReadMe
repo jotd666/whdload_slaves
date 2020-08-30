@@ -1,0 +1,93 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+
+ This patch applies to "Super Methane Bros" (c) 1993 Apache - 2 disks/CD32.
+ Thanks to Carlo Pirri for the original 2 disk version, and Chris Vella and 
+ Mike West for the CD32 version! You can download the enhanced version of the
+ game (without protection) from Ami Sector One at http://amiga.emucamp.com
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ The CD32 version of the game requires an installed A1200 or A4000 Kickstart 3.1 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick40068.A1200" (resp kick40068.A4000). 
+ The image can be extracted from a A1200 (resp A4000) with tools like 'GrabKick'
+ or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick40068.A1200.RTB" (resp "kick40068.A4000.RTB")
+ must be installed in the same directory as the kickstart image.
+ It can be found in the archive "util/boot/skick346.lha" on aminet.
+
+REQUIREMENTS:
+- Slave requires WHDLoad V17
+- Disk game requires 1Mb chip mem (+1.8Mb other memory for preload option)
+- CD32 game requires 1.9Mb chip mem (+0.5Mb, +2.1Mb other memory for preload option) & kickstart 3.1 (see above)
+
+FEATURES:
+- Full load from HD
+- Access fault removed
+- Blitter waits inserted
+- RomIcon, NewIcon and GlowIcon (created by me!)
+- Quit option (default key is '*' on keypad)
+- Help to toggle trainer (infinite lives!)
+
+Version 2.0 (08.08.2019) done by JOTD:
+
+- CD32 version adapted to kickemu 3.1 & better lowlevel emulation: joypad buttons work (pause,jump),
+  and a 2-button joystick also allows to jump with second button in joypad mode (issue #0004128)
+- CD32 version can also be paused with P if no joypad is available
+- CD32 version can quit to wb during game with rev+fwd+play
+- resourced & reassembled floppy & CD32 versions after source had been lost
+- source code included
+
+Version 1.3 (15.07.2001) done by Codetapper/Action:
+- Fixed bug in the original disk version which caused the game to return
+  to the titles after one or two levels (thanks to Juergen Urbanek for
+  the report!)
+
+Version 1.2:
+- Disk requester no longer appears (in disk version!)
+- Fixed snoop bugs in both versions
+
+Version 1.1:
+- Supports CD32 version
+- Access faults fixed
+- Detects PAL/NTSC screen modes based on PAL/NTSC tooltype
+- CD32 non-volatile storage code removed
+- CD32 version defaults to joystick control rather than CD32 joypad
+- Icons now have 10240 bytes for the stack
+- Decruncher relocated to fast memory (both versions)
+- Loads and saves high scores (both versions - unless you cheat!)
+- Help to toggle trainer (infinite lives - screen will now flash)
+
+
+As usual, if you cheat then none of your scores will be saved to disk!
+Greetings to all Action members, my testing crew and the WHDLoad team!
+
+
+Codetapper/Action (15-Jul-2001)
+
+
+         Bug report form, full WHDLoad package and other installs:
+                          http://www.whdload.org/
+
+            ________  ________  ________  ____  ________  ________
+           _)       \_)       \_)       \_)   \_)       \_)       \
+   __ ___ /___/     /   /_____/\  /     /     /   /     /   /     /
+  /_//__// \___    /   /     /CT\/     /     /   /     /   /     /
+        /___/     /___      /   /     /_____/___      /___/     /___ __
+            \____/    \____/    \____/          \____/    \____//__//_/
+
+
+           Visit the Action website for more of our productions:
+                           http://zap.to/action/

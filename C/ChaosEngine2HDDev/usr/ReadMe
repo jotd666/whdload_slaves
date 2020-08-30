@@ -1,0 +1,134 @@
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER
+ EXPRESS OR IMPLIED, STATUTORY OR OTHERWISE.
+ THE ENTIRE RISK AS TO USE, RESULTS AND PERFORMANCE OF THE PACKAGE IS
+ ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE TO BE DEFECTIVE, YOU
+ ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING, REPAIR OR OTHER
+ REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY
+ DAMAGE CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE
+ OWNER OR A THIRD PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF
+ DAMAGE.
+   
+ That install applies to :
+ 
+ "The Chaos Engine 2 AGA/ECS" © 1996 The Bitmap Brothers - 3 disks
+
+ Slave requires WHDLoad V17+.
+ ECS version needs 0.5Mb Of Chipmem & 3.5Mb of Fastmem (for preload option)
+ AGA version needs 2Mb Of Chipmem & 3Mb of Fastmem (for preload option)
+
+ --------------------------------------------------------------------------
+
+ version 2.6 (09.05.2020):
+ - Moved joypad detection at startup to avoid freezes
+   on some configurations (issue #0004538)
+   
+ version 2.5 (20.04.2020):
+ - Added 1MB chip ECS version (issue #0004525)
+ 
+ version 2.4 (18.04.2020) done by JOTD:
+ - fixed non-working AGA version in 2.3 (issue #0004509, #0004507)
+ - added CD32 controls for ECS version too (issue #0004498)
+ - swapped retry/quit joypad buttons (green is left, so is retry)
+ - add blue/second button to switch secondary weapons (untested)
+ 
+ version 2.3 (15.04.2020) done by JOTD:
+ - ECS version 512k chip (issue #0004467)
+ - CUSTOM option (enter password) adapted for ECS version too
+ - AGA version pause/unpause better fix
+ 
+ Version 2.2 (01.05.2019) done by JOTD:
+ - CD32 controls added (AGA version)
+ - removed constant INTENA write in VBL interrupt (AGA version)
+ 
+ Version 2.1 (16.04.2017) done by JOTD:
+ - Another access fault fixed in the AGA version (issue #0002266)
+ - Set CUSTOM1 to disable 2nd joystick which goes berzerk when a mouse is plugged (added to ECS version)
+ - Quitkey added for 68000 owners (ECS version)
+ 
+ Version 2.0 (06.04.2017) done by JOTD:
+ - Another access fault fixed in the AGA version
+ - CUSTOM=<14-char code> option added to avoid entering the code again (AGA version)
+ - Set CUSTOM1 to disable 2nd joystick which goes berzerk when a mouse is plugged (AGA version)
+ - source code included (including resourced slave from MiCK who didn't provide the code, so it may be messy)
+ 
+ Pre V2.0 features (done by MiCK)
+
+ - Full Loading from HD
+ - Quit Option (F10 is default key)
+ - Cool Icons (created by Frank)
+ - AGA/ECS versions supported
+ - RNC disk protection removed
+ - One access fault fixed
+ - Decrunch routine relocated in fastmem
+ - Trainer included (Thanks to Ferox/Hellfire)
+ 
+ --------------------------------------------------------------------------
+ CD32 CONTROLS (AGA version)
+ ---------------------------
+ 
+ Player 1 joypad only:
+ 
+ - Reverse+Forward: ESC (R/Q menu)
+ - Green: Retry
+ - Yellow: Quit
+ - Play: Pause
+ 
+ --------------------------------------------------------------------------
+ INGAME KEYS
+ -----------
+
+ F1..........Toggle unlimited lives             F6..........Refill lives
+ F2..........Toggle unlimited energy            F7..........Refill energy
+ F3..........Toggle unlimited bullets           F8..........Refill bullets
+ F4..........Toggle unlimited magazins          F9..........Refill magazins
+ HELP........Skip level                         DEL.........Skip to end boss
+
+
+    If you press a key without <SHIFT> player one's state is modified,
+          If <SHIFT> is pressed player two's state is modified.
+
+   If you press <HELP> + <SHIFT> the level is skipped and player two wins.
+
+ --------------------------------------------------------------------------
+
+ LEVEL CODES
+ -----------
+ 
+Team: Brigand & Navvie
+Medieval: 40M3H#WBFJJQJL
+Aztec: 48TDLPN841N60V
+Chaos: YLFNMJB#7BR104  
+
+(thanks to Popocop@eab for the codes)
+
+ NOTE
+ ----
+
+ About the trainer :
+
+ When you skip levels using <HELP> key, until the world's boss, kill him !
+ or music will be wrong for next levels.
+
+ About the game :
+
+ In the one-player-match, the second player is your enemy.
+ Remove your mouse from joy-port1 or the program gets confused (unless CUSTOM1 is set)
+
+ --------------------------------------------------------------------------
+
+ Thanks to : - Bored Seal for AGA original disk images.
+             - Helmut Motzkau for ECS original disk images.
+
+
+		for full WHDLoad package and other installs refer to:
+			http://www.whdload.de/
+		or	aminet:dev/misc/whdload#?
+		and	aminet:game/patch/
+
+
+ MiCK & JOTD
+
+Note:
+
+- if the installed ECS slave doesn't work, use the 1MB chip version or the EXPCHIP tooltype.

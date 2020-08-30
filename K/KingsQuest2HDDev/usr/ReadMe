@@ -1,0 +1,75 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "King's Quest 2" © 1987 Sierra.
+
+ This install requires WHDLoad and DIC to be in the path. Both can be found in
+ the WHDLoad package.
+ To install from a different drive than DF0: select installation mode Expert.
+
+ The installed program requires 0.5 MB ChipMem and 1.0 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ The game requires an installed A500 Kickstart 1.3 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick346.lha" on aminet.
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 1.3 (24.07.2016):
+ - adapted to whdload v16
+ - fixed issue #0003487 on 68000 machines
+ 
+ version 1.2-B (12.03.04)
+ - reassembled with Bert's keyboard fix (cleaner)
+
+ version 1.2 (03.08.03)
+ - added support for BTTR version
+ - improved/simplified install script
+
+ version 1.1 (30.05.03)
+ - noticed that it won't work if the disk is not fixed (s/startup-sequence added)
+   install script does the necessary fixes to the source disk
+ - added Byte Bandit antivirus protection (found it on a copy of King's Quest I)
+
+ version 1.0 (25.05.03) done by JOTD:
+ - initial release
+ - use fastmemory
+ - boot fixed (updates file "disk.1" first time)
+ - quit option quits to system
+ - saves to HD (updates file "disk.1")
+ - Herdnon disk protection removed
+ - solution included
+ - source code included
+
+ notes:
+ 
+ - since original version has no startup sequence, and the game fails inexplicably
+   but if there is one, installer script asks you if you want to modify your 
+   original disk. If you don't want to, use a backup to install, and answer
+   yes, or the install will quit.
+   Best way to do it is to mount a FMS disk, copy the original disk there, then
+   install from the FMS virtual floppy.

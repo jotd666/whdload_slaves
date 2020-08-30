@@ -1,0 +1,71 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Fantastic Voyage", 2 disks, © 1991 Centaur Software
+ This install applies to "Fantastic Voyage", CDTV, © 1992 Centaur Software
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ -------- Floppy version requirements ---------
+
+ The installed program requires 1.0 MB ChipMem and 1.0 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ The game needs no kickstart image
+
+ -------- CDTV version requirements ---------
+
+ The installed program requires 1.0 MB ChipMem and 1.0 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ The game requires an installed A500 Kickstart 1.3 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick345.lha" on aminet.
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 1.0 (01.01.05) done by JOTD:
+ - initial release, supporting both CDTV and floppy versions
+ - highscores are saved (unless cheatmode is on, floppy version only)
+ - CUSTOM1=1 allows to start with 99 lives (floppy version only)
+ - use of fastmemory (CDTV version only)
+ - RawDIC imager
+ - decruncher relocated in fast memory
+ - blitterwaits inserted on CDTV & floppy versions
+ - all SNOOP bugs removed (including PAL/NTSC switch so set NTSC tooltype if required)
+ - manual included
+ - nice icons by Exoticons/Chris Vella/CFou!
+ - source code included
+
+ Thanks go to:
+
+ - Abaddon for JST install I took parts of to create WHDLoad slave (especially the
+   loading routines)
+ - Codetapper for CAPS disk images and his work on RawDIC
+ - Psygore for his work on MFM2WWarp
+ - CAPS team for the excellent IPF format
+ - Wepl for KickEmu

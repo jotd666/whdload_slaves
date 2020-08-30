@@ -1,0 +1,77 @@
+Short : HD install for Rise Of The Robots ECS/AGA/CD32
+Type : game/patch
+Author : JOTD
+
+Install-Script & fix © 2000-2018 JOTD
+
+Floppy AGA version:
+
+The patch can be applied to a already installed version of the game,
+using the installer provided in the original game package.
+
+The AGA version runs using kickstart 3.1 and needs 2 MB of chipmem and
+1MB of fastmem.
+
+The ECS version also runs using kickstart 3.1 and needs 1 MB of chipmem and
+2MB of fastmem.
+
+CD³² version:
+
+The game can be installed using the provided install script
+
+
+Bug (AGA):
+
+- when selecting "training" at game boot, the game locks up (you can still quit to WB)
+  if cinematics are on. if you play "mission briefing" once, training then works with
+  cinematics.
+- there are slight gfx bugs, due to fixed access faults
+
+
+ History:
+
+ Version 1.4-C (26.04.2020)
+ - possible crash on 68000 if A1200 or A4000 kickstart is found
+ 
+ Version 1.4-B (25.12.2018)
+ - Forgot to allow 68000 processor in the ECS version. You'll need A600 3.1 kickstart
+   to run the game (issue #0004008)
+   
+ Version 1.4 (03.09.2018)
+ - Fixed missing sound in ECS version intro (by adding more fast memory to the slave)
+ 
+ Version 1.3 (23.08.2018) done by JOTD
+ - Added support for ECS version (thanks to Retroplay for the images)
+ - source code included
+ 
+ Version 1.2 (08.01.2006) done by JOTD
+ - CD³² control method fixed (in lowlevel.s)
+ - slaves converted for WHDLoad v16
+
+ Version 1.1
+ - WHDLoad slave, CD³² support as well
+ - runs using KickEmu31
+ - for floppy version allows to run the game from anywhere,
+   which means that you don't have
+   to install the game in a Rise directory directly on the root volume you
+   selected during the install (you can move the dir anywhere)
+ - Access faults removed in both versions
+ - CACR/VBR stuff removed
+ - Use of fast memory for awesome loading speed
+
+ Version 1.0
+ - floppy fix, no WHDLoad slave
+
+
+Requirements:
+
+ The game requires an installed A1200 or A4000 (or A600 for ECS) Kickstart 3.1 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick40068.A1200" (resp kick40068.A4000, kick40068.A600). 
+ The image can be extracted from a A1200 (resp A4000, A600) with tools like 'GrabKick'
+ or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick40068.A1200.RTB" (resp "kick40068.A4000.RTB","kick40068.A600.RTB")
+ must be installed in the same directory as the kickstart image.
+ It can be found in the archive "util/boot/skick346.lha" on aminet.

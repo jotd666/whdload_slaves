@@ -1,0 +1,85 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Beast" © 1989 Psygnosis.
+
+ This install requires WHDLoad and The Patcher to be in the path. Both can be
+ found in the WHDLoad package.
+
+ The installed program requires 1.0 MB ChipMem and 0.5 MB OtherMem.
+ It can be quit by pressing F10 (key can be changed with Tooltype "QuitKey=").
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page.
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+version 2.5 (03.01.2020) done by CFou!
+ - RAWDic imager fixed (debug flag removed)
+ - Second button & CD32 Pad support
+    CUSTOM4=1 to enable second button & CD32 Pad support
+
+version 2.4 (30.10.2019) done by CFou!
+ - RAWDic imager used instead of Patcher (SPS 1357/1414)
+ - new install script
+ - Fix borders screen with AGA (using DIWHIGH DMA register)
+   (Thanks to Ross & Toni Wilen for fix and helps)
+ - random sprite bug on loading screen fixed
+ - CUSTOM3=1 used to remove all 2.3 & 2.4 AGA fixes 
+
+version 2.3 (26.10.2019) done by CFou!
+ - Fix tree sprites in main multi scrollings screen (issue #3498)
+   (Method: fix sprites structure | Toni Wilen)
+ - CUSTOM2=1 to try another tree sprites fix solution
+   (Method: CopperList2 used to disable temporary DMA sprites | CFou!) 
+ - CUSTOM3=1 to ignore tree sprites fix (for ECS Denise chipset)
+ Thanks Toni Wilen, Ross & Hexaae for help 
+ Special thanks to Codetapper for his very interesting and detailed article
+ (see: http://codetapper.com/amiga/sprite-tricks/shadow-of-the-beast/)
+
+ version 2.2 (28.12.2018) done by JOTD
+ - fixed install script (issue #0003991)
+ - fire button now allows to end death sequence (issue #0003975)
+ 
+ version 2.1-C (30.07.2016) done by JOTD
+ - added CUSTOM1=1 to skip introduction (issue #003449)
+
+ version 2.1-B (10.05.2003) done by JOTD
+ - fixed install script
+
+ version 2.1 (28.04.2003) done by JOTD
+ - decrunch routine relocated in fastmem for better loading speed
+ - some blitterwaits were incorrect and caused gfx bugs. This is now fixed
+ - source code included, Trodas check the src, and when you understand something
+   about it I'll talk to you again (not a chance)...
+
+ version 2.0 (16.04.2003) done by JOTD
+ - many blitterwaits fixed: no more gfx bugs and crashes
+ - updated install package
+ - added icons by Frank, Exoticons, ...
+ - added manual and solution
+ - use CACHE for better loading speed, but soundfx may be a bit trashed
+
+ version 1.0 (1997?) done by Harry:
+ - initial release
+ - 2 versions supported
+ - Fixed: protection check caused a stackframe error.
+ - Toggle energytrainer with F1 on/off. No complete trainer, its senseless:
+   if you hang in an abyss you couldnt get out.
+
+Comment: That was a funny one with 2 ingameprotectionchecks and 
+	 5 memorychecksums, also in the interrupt. Enjoy this graphical
+	 wonder of Psygnosis!

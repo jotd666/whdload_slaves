@@ -1,0 +1,47 @@
+Short : HD-Installer & fix for Gee Bee Air Rally
+Type : game/patch
+Author : Jean-François Fabre (jffabre@free.fr)
+
+Install-Script & HD-loader © 2002 JOTD
+
+Gee Bee Air Rally © 1987 Activision
+
+Features:
+
+- Runs fully from HD using WHDLoad + KickEmu + dos.library emulation
+- 32-bit relocated kickstart issue fixed (a vicious one!)
+- Access fault fixed (bad use of audio.device)
+- Uses fast memory for better general speed
+- Convenient install script
+- Quit key (default: F10, or configurable with QUITKEY)
+- Nice New/Glow icons by Frank
+- Source included
+
+Thanks go to:
+
+- Bert Jahn for WHDLoad and KickEmu + doslib emulation
+- Barney Erasum for the bug report
+
+Notes:
+
+- Tested on A1200/68060/64MB, A1200/68020/NoFast, WinUAE
+  If you've got trouble, try setting NOCACHE or/and NOMMU
+
+
+History:
+
+- v1.0: initial release
+- v1.1: fixed hiscore save
+
+Requirements:
+
+ The game requires a installed A500 Kickstart 1.3 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ a appropriate requester.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick344.lha" on aminet.
+

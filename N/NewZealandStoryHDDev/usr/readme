@@ -1,0 +1,108 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "The New Zealand Story" © 1988 Taito/Ocean.
+
+ This install requires WHDLoad and DIC to be in the path. Both can be found in
+ the WHDLoad package.
+ To install from a different drive than DF0: select installation mode Expert.
+
+ The installed program requires 0.5 MB ChipMem and 1.0 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 2.0 (16.11.08) done by Hungry Horace
+ - Load / Save scores to HD (file 'highs')
+ - Highscore saving is disabled if either CUSTOM1 tooltype or the
+   original game cheat are used.
+ - Game now returns to the highscore table after game completion,
+   instead of the menu screen.
+ - After completing the game the round number for game completion
+   is entered as "END".
+ - Highscore table delete function now fixed to three characters
+   to prevent overwriting of score.
+ - Blitter waits adjusted to make speed closer to the original.
+ - Loop which locks the game where no sound is enabled (emulation)
+   is now removed.
+ - JST source level emulation removed (JOTD) so HH can improve the
+   patch in a full WHDLoad source fashion.
+ - Install script & readme rewritten to fit WHDLoad standards (JOTD)
+ - Trainers on CUSTOM1 can be combined for multiple trainers:
+   - CUSTOM1=1 - Infinite Lives
+   - CUSTOM1=2 - Infinite Oxygen
+   - CUSTOM1=4 - Enables Levelskip (Help key)
+
+ - CUSTOM2=1 enables the "fast cheater" - press any key to enable
+    the original game cheat.
+ - "Fast cheater" now supports both game versions
+
+ - CUSTOM3=1 enables two button support
+ - This operates exactly like the arcade version;
+   - Jump is now activated by the second button and not "up".
+   - Upwards movement of a balloon or rider is activated by the
+   second button.
+   - After collecting the Joystick item, or riding the spaceship,
+   the joystick up control is used.
+
+ - CUSTOM4=1 enables the music player
+   - Press any key on the number line (starting at 1 and ending with 
+     the plus key) to activate any of the game music.
+   - This tooltype overwrites and disables the easy-cheater on CUSTOM2
+
+
+ version 1.3 (09.04.01) done by JOTD & Abaddon
+ - Full loading of the game from RAM/HD (faaaaast)
+ - Convenient installer script
+ - Two versions supported
+ - JST and WHDLoad slaves provided
+ - Possible quit with QUITKEY at any time
+ - Press any key during main menu to activate cheatmode
+ - Removes copy-protection check (actually skips this part)
+ - Fixed by Abaddon to fully remove the protection
+ - Blitter waits inserted to avoid GFX problems
+ - Nice icon by Frank (MWB version by D. Cresswell)
+ - Hints docfile included
+
+ version 1.x (1998-2001) done by JOTD
+ - JST release
+ - whdload rewrites
+
+Notes:
+
+Avoid to quit by a reset: the game is reset-resistant.
+Using the quitkey solves the problem.
+
+
+Type MOTHERFUCKENKIWIBASTARD on the title screen to enable the
+   original cheat the early release.
+
+Type FLUFFYKIWIS on the title screen to enable the original
+   cheat on the later (common) release.
+
+
+Hungry Horace thanks JOTD for letting him be involved in this
+   labour of love.
+
+Wepl, Girv and BippyM are also thanked for their general
+   help and encouragement.
+
+Further thanks got to Denis for providing the original version
+   as a disk image.

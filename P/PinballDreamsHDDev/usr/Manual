@@ -1,0 +1,196 @@
+             ______  ___  _________  ______  _____________  ___  ___
+            /  __  \/  /\/  /\ __  \/  __  \/__   __/\ __/\/  /\/  /\
+           /  /\/  /\ / / ./ //\/  /\ /\/ ./\_/  /\_\//\_\/  / / ./ /
+          /  / /  / // / // // /  / // / // //  / /  /_/  \  \/ // /
+         /. / /  / // /  / //_/  / //_/  / //. / /  ___/\/ \  \_/ /
+        // /_/  /_//_/  / /__  ./ /   __/ /// / /. /\__\/  /\  \\/
+       /         /\    / //\/ // //\  \_\//  / //      /\ / /  /\
+       \________/ /___/ // /__/ // /__/\ /__/ /_______/ // /__/ /
+        \_______\/____\/_\/\__\/_\/\__\/ \__\/\_______\/_\/\__\/
+ 
+                 PINBALL DREAMS from 21ST CENTURY (Docs)!
+                       Typed in by ... MaZ!/QUARTEX
+ 
+ 
+                                 MAIN MENU
+---------------------------------------------------------------------------
+To load a table use F-keys 1 to 4:
+ 
+F1                     - IGNITION TABLE (easiest)
+F2                     - STEEL WHEEL TABLE
+F3                     - BEAT-BOX TABLE
+F4                     - NIGHTMARE TABLE (hardest)
+ 
+The space-bar toggles the hi-score table.
+ 
+ 
+                               GAME CONTROLS
+---------------------------------------------------------------------------
+F1 - F8                - No. of players (maximum 8 players)
+                                 (F1 = 1 player, F8 = 8 players)
+ 
+ 
+                                   MOUSE
+---------------------------------------------------------------------------
+Drag downards          - Pull back spring (for shooting ball)
+Left mousebutton       - let go of spring (shoot ball)
+Arrow-Down             - Pull back spring (release to shoot ball)
+P                      - Pause (any keypress restarts)
+ESC                    - Quit table (after pausing)
+ESC                    - Quit current game (when ball is in chute)
+Right SHIFT/ALT/AMIGA  - flip right flipper cycle lit/unit lights clockwise
+Left SHIFT/ALT/AMIGA   - flip left flipper cycle lit/unit lights anti-cloc.
+SPACE BAR              - Tilt the table
+M                      - Toggle Music on/off
+ 
+If  at  the  end  of a game you have made a high-score, simply type in your
+name  (3  letters  allowed)  when  prompted.  The delete key can be used to
+correct  mistakes.   If you want to save high-scores to disk make sure that
+disk  2  is  always  write-enabled.   If you don't want to save high-scores
+press the left mousebutton when asked to write enable the disk.
+ 
+ 
+                            GENERAL INFORMATION
+---------------------------------------------------------------------------
+The  JACKPOT  is  a  score  counter  which is built up by all participating
+players  together  during  the  game.   It  is reset each time a JACKPOT is
+awarded to a player.
+Many  of the lights on the tables have letters written on them which enable
+special features as follows:
+ 
+XB                     - Extra Ball
+DB                     - Double Bonus
+SB                     - Score Bonus
+HB                     - Hold Bonus
+xxxK                   - Score xxx thousands
+ 
+A  flashing  light is often a hint as to where you can raise your score and
+collect the bonuses.
+ 
+ 
+                                THE TABLES
+---------------------------------------------------------------------------
+ 
+
+                            TABLE 1 "INGNITION"
+ 
+"WARP" ROLL OVERS      - Light all letters to  collect 2, 3, 4, 6 + 8 times
+                         bonus multiplier, then 1 MILLION points  each time
+                         afterwards.
+"LIGHT" TARGETS        - Light  all letters to enable  EXTRA BALL, 5 and 10
+                         MILLION points  in turn. The bonus  will then swap
+                         between  5 and 10 MILLION  points everytime after-
+                         wards. If PLANET WARP is enabled at  the same time
+                         you are awarded a bonus PLANET WARP.
+TOP-LEFT PASSAGE       - Collect and raise the current RAMP VALUE. The RAMP
+                         VALUE will step  down one  step every 20  seconds.
+                         Also awards  PLANET WARP, 5 and 10 MILLION  points
+                         when enabled.
+RIGHT PASSAGE          - Scores  one BOOST  (10,000 points) and  lights the 
+                         next SUN letter. Also scores DOUBLE BONUS and HOLD
+                         BONUS when enabled.
+BALL TRAP              - Collect  and cycle  the current  points value  and 
+                         collect EXTRA BALL, JACKPOT  and SCORE  BONUS when
+                         enabled.
+"RED" TARGETS          - Add an IGNITION letter when all 3 are lit.
+"IGNITION" LETTERS     - Collect when all letters lit.
+PLANET WARP            - Awards a DOUBLE SCORE BONUS when you reach Pluto.
+"SUN" LETTERS          - Enable  HOLD BONUS,  SCORE BONUS and  DOUBLE BONUS 
+                         in  turn when all lit. SCORE  and DOUBLE BONUS are
+                         repeated every time after this.
+ 
+ 
+ 
+                           TABLE 2 "STEEL WHEEL"
+ 
+"ARROW" ROLL-OVERS     - Collecting are  flashing arrows scores 1, 2, 3, 5,
+                         10  and 20  MILLION points  in turn.  Lighting all 
+                         arrow  scores  2, 3,  4, 5, 6  and  7 times  bonus
+                         multiplier in turn  and 1 MILLION points each time
+                         afterwards.
+"STEAM" DROP TARGETS   - When all lit the ticket price for the left ramp is
+                         increased.
+RIGHT DROP TARGETS     - When  all lit  these enable  text "green" score in 
+                         the RIGHT BALL-TRAP.Also enables HOLD BONUS, SCORE
+                         BONUS, DOUBLE BONUS and JACKPOT in turn.
+RIGHT BALL-TRAP        - Collect  the lowest  flashing  "green"  score  and 
+                         score EXTRA CARRIER when lit.
+TOP BALL-TRAP          - Spin the WHEEL if enabled.Awards 1 MILLION points,
+                         EXTRA BALL, 2  MILLION points, JACKPOT,  3 MILLION
+                         points  or raises the TICKET PRICE  randomly. Also
+                         scores  HOLD BONUS, SCORE  BONUS and  DOUBLE BONUS 
+                         when lit.
+LEFT RAMP              - Collect TICKET VALUE.
+CENTER RAMP            - Collect TRAIN VALUE.
+LEFT RAMP+CENTER RAMP  - Score 1 MILLION points when  completed alternately
+                         within 5 seconds.
+TOP PASSAGE            - Enables EXTRA CARRIER and the WHEEL, and collects
+                         JACKPOT or EXTRA BALL when enabled.
+EXTRA CARRIER          - Raises TRAIN VALUE in four steps.
+ 
+ 
+                            TABLE 3 "BEAT-BOX"
+ 
+"DOLLAR" TARGETS       - Light all to enable EUROPE TOUR,USA TOUR and WORLD
+                         TOUR in turn.
+"STAR" ROLL-OVERS      - Score 2, 3, 4, 6, 8 and 10  times bonus multiplier
+                         when al lit and scre DOUBLE BONUS each time after-
+                         wards.
+BALL TRAP              - Collect SCORE BONUS ,  DOUBLE  BONUS, HOLD  BONUS,
+                         EXTRA BALL, JACKPOT and MEGAHIT when enabled.
+LEFT TUNNEL            - Light  all arrows  to enable  LP/CD/MC and  enable 
+                         HOLD BONUS, DOUBLE BONUS and SCORE BONUS in turn.
+CENTER TUNNEL          - Enable SINGLE. Lighting all arrows cycles MAXI and
+                         VIDEO each time afterwards.
+RIGHT TUNNEL           - Light all arrows to enable MOVIE.
+RIGHT RAMP             - Collect  SINGLE, VIDEO, MAXI, LP/CD/MC and  MOVIE.
+                         Also  raises USA  and EUROPE  CHARTS when enabled.
+                         Collecting all items during one play enables EXTRA
+                         BALL bonus.
+LEFT RAMP              - Collect EUROPE/USA/WORLD TOUR bonuses when enabled
+                         Collecting WORLD TOUR enables JACKPOT.
+MID TARGET             - Enable EUROPE CHARTS.
+RIGHT TARGET           - Enable USA CHARTS.
+NUBER ONE              - Reaching number 1 in USA or EUROPE CHARTS awards 5
+                         MILLION points.
+ 
+ 
+ 
+                            TABLE 4 "NIGHTMARE"
+
+"DIE" ROLL-OVERS       - Light the letters to score 2, 4, 6, 8 and  10 time
+                         bonus multiplier in turn. Scoring 6,8 and 10 times
+                         bonus multiplier enables DOUBLE BONUS. Scoring 10
+                         times bonus multiplier enables EXTRA BALL.
+"RIP" TARGETS          - Light al letters to add GRAVEYARD leter and enable
+                         MYSTERY SPIN.
+LEFT BALL-TRAP         - Collect  MYSTERY SPIN: either 100,000 points, HOLD
+                         BONUS, 3 MILLION points, 10 MILLION points, RETURN
+                         LANES  LIT (Return-lanes  activates  HURRY-UP  and 
+                         EXTRA BALL), EXTRA BALL, CATCH UP (Double ur score
+                         or add  the highest score  reached to your own) or
+                         JACKPOT.
+TOP-RIGHT BALL-TRAP    - Collect  lowest flashing  "red" score  and  DOUBLE 
+                         BONUS when enabled.
+TOP BALL-TRAP          - Shoot the bal here 3 times to enable BALL LOCK and
+                         MULTI-JACKPOT.  Also collects  SCORE BONUS,  EXTRA
+                         BALL, JACKPOT and SUPER-JACKPOT when enabled.
+BALL-LOCK              - Lock your current ball in  either BALL-TRAP to add
+                         JACKPOT  MULTIPLIER then shoot your  new ball into
+                         TOP BALL TRAP to collect MULTI-JACKPOT.
+JACKPOT & MULTIJACKPOT - Enables SUPER JACKPOT for 7 seconds.
+LEFT/RIGHT RAMPS       - Shoot the ball onto a flashing ramp to advance the
+                         timer and reach MIDNIGHT. Shooting the ball into 
+                         each ramp in turn within 8 seconds awars 1 MILLION
+                         points.
+MIDNIGHT               - Reaching  MIDNIGHT enables  HURRY-UP and  awards 5
+                         MILLION points each time you put a bal onto a ramp
+                         (in a 30 second period).
+HURRY-UP               - Enabling  HURRY-UP awards the displayed decreasing
+                         score.
+RIGHT PASSAGE          - Collect the current BONUS value and trigger HURRY-
+                         UP  when enabled.  Shooting the ball  all the  way 
+                         around the passages within 5 seconds awards 1 MIL.
+                         points and raises current bonus value.
+
+end.

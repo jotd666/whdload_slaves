@@ -1,0 +1,330 @@
+                            THE FOOL'S ERRAND
+
+Typed by SKID ROW.  Edited by PARASITE.
+
+
+PLAYING THE FOOL'S ERRAND
+  This game comes with an animated introduction called the Prologue.  This
+  is used to introduce the main characters in The Fool's Errand and begin
+  the story.  It is designed to be viewed prior to playing the game itself.
+  A second animated sequence, called the Finale, can be viewed upon
+  completion of the game (but not before).  It serves both as a reward for
+  finishing the game and depicts the resolution of the story in the game.
+
+STARTING THE GAME:  When prompted for the Workbench disk, insert the
+  Game Disk into the internal drive.  The game will begin to load and
+  then display the line
+       Do you want to see the Prologue? (Y/N).
+  Type Y <enter> if you want to see the Prologue, of N <enter> if you
+  want to go directly to the game.  If you choose to view the Prologue,
+  you will be prompted to insert the Show Disk, and when the prologue
+  is complete you will be prompted to insert the Game Disk and the game
+  will begin.
+
+     You can also choose to view the Prologue separately by inserting the
+  Show Disk when prompted for the Workbench disk, and then from the
+  CLI prompt, type
+       Prologue <enter>
+  and the Prologue will be shown.
+
+VIEWING THE FINALE:  After you have completed the game, you will go
+  directly to the Finale.  You will be prompted to insert the Show Disk
+  into any disk drive, and the Finale will be shown.  If you have
+  previously completed the game and wish to view the Finale again,
+  insert the Show Disk when prompted for the Workbench disk.  From the
+  CLI prompt, type
+       Finale <enter>
+  and the animated Finale will be shown.
+
+FLOPPY DISK USERS:  You should make backup copies of the master disks
+  before playing the game.  The Game Disk must always be write-enabled
+  (that is, the tab in the corner of the disk should be closed).  This
+  allows you to save games on the disk as well as allowing the proper
+  file modification when you finish the game that indicates that the
+  Finale can be viewed.  If you are running the game on a machine with
+  512K of memory, please disconnect the external drives before playing.
+  This frees up enough memory for the game to run.  Since the game is
+  played using only one disk at a time, this should not create a
+  problem.
+
+INSTALLING THE FOOL'S ERRAND ON A HARD DISK:  Start up the Workbench
+  on your hard disk as you would normally.  Then start the Amiga's
+  Command Line Interface and insert the Game Disk into any drive.  At
+  the CLI prompt, type
+       [df0:] <enter>
+       Execute FEinstall    [dh0:] Fools <enter>
+  where [df0:] is the floppy drive the Game Disk is in and [dh0:] is the
+  hard drive on which you will install the game.  The install program
+  will create a drawer named 'Fools' on the hard disk dh0: and copy all
+  of the necessary game files into it.  You will then be given the
+  information you need to add to the 'Startup-Sequence' file to allow the
+  game to be played from the hard disk.  Please refer to your Amiga
+  manual for instructions on how to modify the 'Startup-Sequence' file.
+
+     To play the game from the hard disk, open up the 'Fools' drawer and
+  double-click on the 'Errand' file icon.
+
+THE CODE WHEEL
+  The game starts up with a Code Wheel screen, displaying 3 cards and a
+  question preceeded by a symbol.  Click on any 3 or 5 symbols,
+  depending on the question with the mouse.  Your selection will always
+  be correct, you will then begin the game.  Cracked by SKID ROW
+  (more recently by JOTD :))
+
+GAME PLAY
+     Move the arrow cursor to the menu bar then press and hold the left
+  button to drop the menu down.  By sliding up or down the menu and
+  releasing the button when your choice is highlighted, you will be
+  taken to that part of the story.  When the story scroll is showing,
+  clicking once on the ? button at the bottom of the scroll will take
+  you to the puzzle.  Or, hold down the Ctrl key while selecting a menu
+  item and you will be sent directly to the associated puzzle.
+
+     To move you through the story one page at a time, place your
+  cursor near the bottom of the scroll and click when its shape has
+  changed to an up or down arrow to move backwards or forwards,
+  respectively.
+
+INSTRUCTIONS MENUS
+  When in a puzzle, a menu with the name of the puzzle appears to the
+  right of the -V- menu, and gives you directions for playing the
+  current puzzle (see page 9 in the manual).  Once you have read the
+  instructions, let go of the button to play the puzzle.
+
+FILE OPERATIONS
+  The File menu is discussed in the manual (pp. 4-5) and we will just
+  go over some of the Amiga specific information for clarity here.  The
+  A refers to the Open-Amiga key to the right of the space bar on your
+  keyboard.
+
+     New (A-N).  Starts a new game with no puzzles solved.  It is an
+  untitled game until you decide to save it.
+
+     Load (A-L).  Selecting this item will bring up a directory list from
+  which you can choose a previously saved game to open.  Use the arrows
+  to scroll down the list until the game you wish to open is highlighted,
+  then press Enter to load the game.  In order to move up to higher
+  subdirectories, highlight the listing <PARENT>.. and press Enter.  To
+  go to lower subdirectories, highlight the directory listing and
+  press Enter.
+
+     Save (A-S).  This will save you current game onto your disk or
+  hard drive.  You can save all of your games on a separate, formatted
+  disk.  Just place the formatted disk in the active or chosen drive,
+  click on the DRIVE button to log onto the drive, and then save your
+  game.
+
+     Save As (A-A).  This option allows you to save your current game
+  either with a changed name or onto a new disk.
+
+Death             - A shadow falls over the ancient land of Tarot.
+The Moon              It's people grow eccentric and forgetful.
+High Priestess
+
+The Hierophant    - Hidden enchantments prevent safe passage
+Wheel of Fortune           along the familiar paths.
+Temperance
+The Chariot
+The Tower
+The Devil
+
+The Empress           - The four kingdoms are on the verge of war.
+Judgement
+The Emperor
+
+The Hermit            - Only the magic of the Sun's Map
+The Sun
+The Hermit            - The magic of the Sun's Mundo matches his treachery.
+The Hanged Man
+The Lovers
+The Magician
+Justice
+
+The Fool - And this map is held by a wandering fool who hopes to find the
+           fourteen lost treasures of the land.
+
+THE FILE MENU
+The File Menu provides game playing functions as described below.  When
+you start "The Fool's Errand," a new untitled game is automatically
+created.
+
+TO START A NEW GAME
+   select 'New' from the File Menu and a directory will appear.  Type
+   a name into the 'Name of New Game?' box.  Specify which drive you
+   wish to save to, then select the 'Save' option.
+
+TO OPEN A PREVIOUSLY SAVED GAME
+   select 'Open' from the File Menu and a directory will appear.  Specify
+   which drive you wish to use, choose a saved game, then select the
+   'Open' option.
+
+TO SAVE THE CURRENT GAME
+   select 'Save' from the File Menu.  Be sure to save your game often.
+
+TO SAVE THE CURRENT GAME WITH ANOTHER NAME
+   select 'Save As' in the File Menu and a directory will appear.  Type
+   the new name in the 'New Name?' box.  Specify which drive you wish
+   to save to, then select the 'Save' option.
+
+TO TURN THE SOUND ON AND OFF
+   select 'Sound' in the File Menu.  A checkmark next to the 'Sound'
+   option means the sound is on, no checkmark means it is off.
+
+TO RECEIVE A PROGRESS REPORT OF YOUR GAME
+   select 'About Fools's Errand' from the File Menu.
+
+TO QUIT THE GAME
+   select 'Quit' from the File Menu.
+
+By the way, you cannot "die" in The Fool's Errand, so wherever you go,
+there you are.
+
+PRINTING THE STORY
+For most of the game, the 'Print Story' option is in gray and cannot
+be used.
+
+Once you have restored the Sun's Map, the 'Print Story' option can be
+used.
+
+Before you print the story, however, make sure that your printer is set
+up and ready.
+
+Then select 'Print Story' and take a break.  The story is very long.
+
+THE STORY IS VITAL TO SOLVING THE GAME.
+It chronicles the adventures of the fool as he wanders throughout the
+land.
+It provides a description of the land, necessary to restore the Sun's
+Map.
+It gives important clues to the names of the fourteen lost treasures.
+
+The story has 80 parts.  the - I - II - III - IV - V - menus show the
+names of all 80 parts in the order that they will appear in the story.
+
+At the beginning of the game, however, only 21 parts are available to
+be read.
+
+If a name is in black, then that part of the story is visible on the
+scroll.
+
+If a name is in gray, then that part of the story is hidden by an
+enchantment and does not yet appear on the scroll.
+
+To scroll through the story, use the commands shown on your System
+Information Sheet.
+
+Another way to move through the story is to use the - I - II - III - IV -
+V - menus.
+
+Just select a name and the scroll will jump to that part of the story.
+
+The name of the story is displayed at the bottom of the scroll.  Some
+story parts are more than one scroll long.
+
+THE ENCHANTMENTS
+An enchantment is a magical barrier that prevents you from traveling to
+the hidden parts of the land.
+
+Once an enchantment is overcome, a new part of the story is revealed and
+a new piece is added to the Sun's Map.
+
+If there is a symbol next to a story name in the - I - II - III - IV - V -
+menus, then there is a hidden enchantment at this location in the scroll.
+
+You can move to an enchantment in one of two ways.
+Scroll to that part of the story and select the button which appears
+at the bottom of the scroll, or hold down the Ctrl key as you select that
+name from the menu.
+
+When you enter an enchantment, a new menu appears to the right of the
+- I - II - III - IV - V - menus.
+
+This menu usually includes a set of instructions, telling you how to
+solve that particular enchantment.
+
+Yet some instructions are vague.
+
+And a few have no instructions at all.
+
+The Fool's Errand is a game of discovery.  All you need to solve the many
+enchantments is contained within the game.  And sometimes, just figuring
+out what to do is part of the puzzle.
+Whenever you solve an enchantment, the ? button on the scroll changes to
+a * button.
+
+Selecting it allows you to view the solved enchantment.  In a few cases,
+the enchantment can be played over again, but it is optional.  No
+additional clues will appear.
+
+To leave an enchantment select 'Return to Scroll' from its menu and
+you will return to that enchantment's part of the story.
+
+Or, from the - I - II - III - IV - V - menus, select any story name in
+black and the scroll will jump to that part of the story.  Or hold down
+the Ctrl key (or Option key, please see your System Information Sheet
+for details) and select a story name with a symbol next to it.  You will
+be transported to the new enchantment.
+
+STRATEGY
+The Fool's Errand offers a challenge like no other.
+
+Interwined in a tale of fantasy and enchantment lurks a hidden puzzle -
+to help the fool name the fourteen lost treasures of the land.  To
+accomplish this, you must reveal the complete story of the fool's
+adventures and restore the Sun's Map.  And to do this, you must
+overcome all of the many enchantments blocking your way.
+
+When the game begins, there are 21 parts of the story already visible
+on the scroll.  Before you do anything else, read this story from
+beginning to end.  It provides all the background for the game.
+
+The very first part of the story, the Sun, contains the Sun's Map.  The
+Sun's Map is vital to the game, but it too is enchanted and most of its
+pieces are missing.
+
+Solving the enchantments in any order you wish.  If one seems too
+difficult, move on to another.  There may be clues waiting elsewhere.
+
+Whenever you solve an enchantment, you will be rewarded with another
+part of the story and another piece of the Sun's Map.
+
+Each piece of the map represents an episode from the fool's adventures.
+To restore the map, all the pieces must be arranged so that the completed
+map represents a correct view of the land.
+
+The map has a single path.  It is a continuous line, having only one
+starting point and one ending point.
+
+Each piece can be identified by its symbols, letters, or numbers.  The
+trick is to determine which piece goes with which part of the story.
+Some pieces are easier to identify than others.
+
+The path on the completed map should pass through the pieces in the
+same order as their corresponding story names in the menus.
+
+It may be a good idea to work on the map as you go rather than wait
+to the very end.
+
+It may be a good idea to work on the map as you go rather than wait
+to the very end.
+
+Once you restored the Sun's Map, be sure to read its menu, for there
+will be new instructions.
+
+To discover the names of the fourteen treasures, study both the story
+and the map very carefully.  Between the two is all the information
+you need to solve the game.  All colored or highlighted text in the
+story is important.
+
+Everything on the Sun's Map is important.
+
+Look for relationships between the characters and events in the story
+and their counterparts on the Sun's Map.
+
+Seek the hints hidden within The Book of Thoth.
+
+Use your imagination.  Try anything and everything.
+
+All clues are used only once.
+
+End.

@@ -1,0 +1,1788 @@
+   ___ __    __      ___     ___      __  ___ __    __  ___
+|   [__ (__   [__]\  /[__ |\ |  |  |  |[__)[__ (__   |  \[__
+|___[___.__)  |  | \/ [___| \|  |  |__||  \[___.__)  |__/[___
+
+888b     d888          888      888
+8888b   d8888          888      888
+88888b.d88888          888      888
+888Y88888P888  .d88b.  888  888 888888  8888b.  888d888
+888 Y888P 888 d88""88b 888 .88P 888        "88b 888P"
+888  Y8P  888 888  888 888888K  888    .d888888 888
+888   "   888 Y88..88P 888 "88b Y88b.  888  888 888
+888       888  "Y88P"  888  888  "Y888 "Y888888 888
+
+
+a.k.a.
+
+_____ _ _               _   _              ___
+/__   (_) |_ _   _ ___  | |_| |__   ___    / __\_____  __
+  / /\/ | __| | | / __| | __| '_ \ / _ \  / _\ / _ \ \/ /
+ / /  | | |_| |_| \__ \ | |_| | | |  __/ / /  | (_) >  <
+ \/   |_|\__|\__,_|___/  \__|_| |_|\___| \/    \___/_/\_\
+
+
+
+- COMPLETE WALKTHROUGH FOR THE PC AND AMIGA VERSIONS -
+Version 1.5
+
+
+- Written by ManiacMansionFan -
+- Contact: maniacmansionfan@hotmail.com -
+
+
+
+*********** IMPORTANT INFO ***********
+
+Please do not distribute or reproduce the guide anywhere without my explicit
+permission. The ONLY websites allowed to host it are:
+
+* http://www.gamefaqs.com
+* http://www.neoseeker.com
+* http://www.supercheats.com
+* http://ttf.mine.nu
+
+Please contact me if you see it reproduced anywhere else.
+
+
+
+*********** GAME HISTORY ***********
+
+“Les Aventures de Moktar” is a French platform game created by Titus and
+released in 1991. The game’s scenario derives from a (very bad) popular French
+song of the time.
+
+The international version, renamed “Titus the Fox”, was released in 1992. In
+order to appeal to a broader audience, this new version replaced the original
+protagonist, who was unknown internationally, with a cartoon fox (the company’s
+mascot).
+
+Apart from that, both games are virtually the same. Minor cosmetic changes have
+been made, sometimes for the sake of political correctness: at some point in
+Moktar, you are chased by hungry black guys carrying a knife and a fork; in
+Titus the Fox, these enemies are instead white skinned. A few sound effects
+have been added for the Titus version. There is also the very occasional minor
+change in the levels (the Titus version sometimes gives the player an item that
+isn’t present at that point in the Moktar version, and vice versa), but these
+differences are all rare and minor. And finally, the last level of Moktar
+(level 15) has been removed for the conversion to Titus the Fox, reportedly
+because it wasn’t deemed good enough. I don’t know if that is the real reason,
+but I agree: this level is considerably inferior to all the previous ones, it
+feels like the programmers were tired of working and just wanted to finish the
+game.
+
+
+
+*********** DIFFICULTY AND SCROLLING ***********
+
+This game has a justified reputation of being very difficult. In itself, it is
+already pretty hard. But on top of that, everything is made harder by the
+horrible scrolling of the PC version (the Amiga version fixed that problem, but
+if you’re like me and only own it on the PC, you don’t have much choice).
+Instead of being fluid and closely following the protagonist’s movements,
+scrolling in this game is done abruptly. This often means that enemies will
+suddenly appear at the edge of the screen, too late for you to react because
+the scrolling did not let you see that you had an enemy inches away from you.
+
+It is usually better to stand at the end of the screen and wait for the
+scrolling to go on, rather than to move forward without seeing where you’re
+heading. So when you’re in doubt, wait, and hope that there isn’t an enemy just
+around the corner. A good player advances slowly and waits for the screen to
+scroll properly.
+
+Another source of difficulty is the fact your character does not briefly become
+invincible upon getting hit, as is often the case with other platform games.
+Instead, if you get hit, you will be thrown a great distance, and if you’re
+unlucky you’ll be thrown into a pit or against another enemy, which may in turn
+throw you back to the first enemy, etc. Getting hit even once can be disastrous
+for you if it happens when you’re in a bad position.
+
+Despite this exaggerated difficulty, the game is still very good, which is why
+I keep coming back to it. But be aware it is so difficult that only the best
+and most dedicated players will ever catch a glimpse of the later levels.
+
+
+
+*********** PASSWORDS ***********
+
+The existence of passwords makes the difficulty more bearable, but don’t think
+you will automatically gain a password for each level. In this game, you have
+to earn it by finding an oil lamp icon which rests somewhere in the level, and
+is sometimes well hidden.
+
+I consider that it is usually worth the extra effort to locate the passwords in
+each level. The game is hard enough as it is, and it will only get more
+frustrating if you skip the passwords and repeatedly have to beat levels you
+have already beaten.
+
+Different passwords are generated with each installation of the game, which is
+why I’m not giving you a password list here: unless you are playing on somebody
+else’s installation, you cannot swap passwords for this game.
+
+There are no oil lamps in levels 9 and 13. I don’t know why. Note that
+passwords to access these levels do exist, but you can only find them by
+guessing, you will not receive them at any point during the game. There is even
+a password to go straight to the ending, which, likewise, is never given during
+the game.
+
+
+
+*********** GAME SPEED IN DOS EMULATION ***********
+
+Unless you are playing this on an ancient computer, you will most likely need
+to use a Dos emulator, such as DosBox, to make the game work. This tends to
+make the game go too fast. If this is the case, decrease the number of cycles
+(in DosBox this is done by using Ctrl+F11) until the speed is acceptable.
+
+
+
+*********** CONTROLS ***********
+
+Move: directional arrows
+Jump: up arrow
+Crouch: down arrow
+Note that crouching for a while on top of an object will make you drop to the
+object’s level.
+Crawl: down arrow + other directional arrow
+Enter a passage: keep the down arrow pressed
+
+Pick up an object*: down arrow next to the object + space bar
+Throw an object: space bar, when you are carrying something
+Throw an object upwards: same, but while keeping the up arrow pressed
+Note that throwing an object upwards usually means that the object will remain
+in the game, whereas throwing one normally usually removes it from the game;
+see the items section for more details
+Drop an object: down arrow + space bar, when you are carrying something
+
+Check your lives and bonus: F4 (this can also be used to pause the game)
+Lose a life: F1 (use this if you get irremediably stuck)
+Display your energy bar: E (the bar is displayed when your energy changes, but
+disappears after a while)
+
+* It is also possible to pick up certain enemies if you come up behind them.
+However, this is usually risky and not worth the trouble.
+
+
+
+*********** ITEMS ***********
+
+The oil lamp gives you a password for the current level.
+
+The padlocks are level checkpoints (if you die, you will resume the game at the
+location of the last padlock you picked up).
+
+The energy tokens give you your energy back, at the rate of one energy point
+per token (colliding with an enemy costs you two energy points). Unless they
+are dangerous to reach, you should always pick them up even if your energy is
+full: every time you pick up an energy token while your energy bar is full,
+this token is added as an extra bonus. At the end of the level, you will gain
+one extra life for every ten extra bonus.
+
+There are many different objects to pick up and throw on enemies (bottles,
+crates, pots, sacks…). Most of them work in the same way: their only use is to
+throw them, and once you have thrown them they will disappear from the game*,
+whether they have hit an enemy or not.
+* Most of them will however not disappear if you throw them upwards, but
+killing enemies this way is difficult because it requires perfect timing, so
+you should only do this when you are short of ammo.
+
+There are some special objects which react differently:
+
+The trampoline allows you to jump higher if you jump on top of it. It will take
+a few jumps before it gives you its full potential.
+
+The blue bouncing ball works like a regular object that you can throw at
+enemies, except it doesn’t disappear afterwards and can be used again. You can
+also bounce on the ball as if it was a trampoline.
+
+The magic carpet allows you to kill enemies by throwing it at them, but also
+more importantly allows you to fly if you throw it from a certain height and
+then jump on top of it. This can sometimes allow you to skip big portions of a
+level. Just like the blue bouncing ball, the magic carpet also doesn’t
+disappear after use.
+
+Rolling items such as skateboards, scooters, carts or rolling dustbins can be
+thrown at enemies and do not disappear after use. The skateboard and the
+scooter can also be ridden by simply standing on them.
+
+There are a few other rare items that behave differently, but I will cover
+these as needed in the walkthrough.
+
+
+
+*********** WALKTHROUGH ***********
+
+I originally wanted to make a walkthrough detailing every secret passage and
+every energy token you could find. After trying this for a bit, I have come to
+the conclusion that, without the aid of pictures and special text formatting to
+clearly separate the different sections (both of which are impossible in a
+basic .txt file), I just can’t write a complete and easy to read walkthrough
+for this game. There are too many optional routes the player can take, and the
+resulting text file is too cumbersome.
+
+Therefore, the walkthrough that I am offering here instead details what I feel
+is the easiest path to beat each level. I also make a point to lead you to all
+the oil lamps.
+
+Don’t hesitate to email me at maniacmansionfan@hotmail.com if you are curious
+about optional routes and techniques.
+
+
+
+****** LEVEL 1 ******
+
+This is an easy, straightforward level that helps you get acquainted with the
+game.
+
+Move to the right and pick up one of the two bottles. Further to the right, you
+will see two enemies walking around. Throw the bottle at one of them, head back
+to where the other bottle was, pick it up and this time throw it at the second
+enemy. Pick up your first padlock and your first oil lamp (giving you the
+useless password for level 1). Pick up the energy tokens by jumping on the fire
+hydrant and then on top of the garage.
+
+Further to the right is a house. If you crouch down in front of the door, you
+will use a secret passage that makes you ignore the rest of the level.
+
+You will now be on top of a chimney. Jump to the platforms to the right and
+keep jumping on the next platforms. There are twenty of them, but they all have
+the same distance between them, so you merely have to keep performing the same
+jump. You will occasionally have to wait for the scrolling to keep up here, if
+you don’t want to jump blindly. When you reach the end, let yourself fall down,
+and direct your fall slightly to the left as there is an enemy to the right.
+Grab the pot you see on your left, throw it at the enemy to be rid of him, and
+touch the “Metro” signpost to end the level.
+
+
+
+****** LEVEL 2 ******
+
+This is already a fair step up in difficulty, but still it is not too hard.
+
+Pick up the sack and walk to the right. Dogs will run after you, but save your
+sack, because there aren’t a lot of objects to throw in this level. Jump over
+them instead, using the fire hydrant as a safe location if needed, and keep
+going right. Kill the human enemy here with the sack. This will allow you to
+walk through this small zone without having to jump and get hit by the bees.
+Pick up the crate on top of the trashcan and similarly dispose of the other
+human enemy. Next, you will see two bottles, and two more human enemies: you
+know what to do.
+
+If you want, you can grab the two energy tokens on top of the lamppost by first
+jumping on the trashcan to the right, but be aware of the bees! It’s only two
+tokens so don’t go getting hit over them.
+
+Use the nearby trashcan to jump on top of the next lamppost and grab the
+padlock, again being aware of the bees. Jump over the two dogs that come next.
+
+After passing the house, take the lower level. You will have to jump above two
+enemy trashcans. These enemies hit you with a giant hammer when you get too
+close to them, so you will have to time your jumps perfectly.
+
+Grab the rolling dustbin here: you can throw it around, and it doesn’t
+disappear after you throw it. If you want to obtain the password for this level
+and grab a few energy tokens then read the next section, otherwise skip to the
+next.
+
+~Optional: password route~
+You now have to backtrack, but this time you are armed with the rolling
+dustbin, so use it to dispose of the two enemy trashcans. Jump on the house’s
+balcony and jump to the higher level this time. There are several other enemy
+trashcans here, which you should kill with your dustbin.
+
+When you reach the end of that ledge, you will see two bottle-throwing hobos
+sitting on the balconies ahead. You will have to quickly jump and throw your
+dustbin to get rid of the first one. Position yourself carefully before
+jumping: if you do it too close to the hobo he will hit you with a bottle, and
+if you are too far away the dustbin won’t reach him. Once that is done, forget
+about the dustbin. Jump on the now empty balcony, quickly grab the bottle and
+throw it at the second hobo as soon as you can see him. Grab the other bottle
+here and throw it at a third hobo on the right (you may need to wait for the
+screen to scroll before you see him).
+
+You can now safely jump to the oil lamp and also get yourself a skateboard.
+Optionally, you can jump to the balcony on the right (where the third hobo was)
+and crouch there to enter a secret passage containing ten energy tokens, as
+well as two bees that you can kill with blue balls or avoid by crouching. You
+can easily kill them by standing on the small upper platforms and throw your
+ball in a straight line when they come next to you. Whether you take the secret
+passage or not, you can now jump down to ground level.
+
+~After the password route~
+There will be many dogs and human enemies here, so you will probably get hit if
+you simply try to jump over them all. If you didn’t get the password and are
+still carrying the rolling dustbin, throw it around to clear the way. If you
+got the password, you can use the skateboard to obtain the same results. The
+level will end when you reach the last house.
+
+
+
+****** LEVEL 3 ******
+
+In this level, things (already) get serious. It is much more difficult than the
+two previous levels, and from this point on the difficulty will never decrease.
+
+Go right and jump to the ledge above using the fire hydrant and the lamppost.
+Don’t go too far right or you will face a hobo. Walk left across the ledge,
+jumping above an enemy, and jump up to the ledge on the edge of the screen.
+Pick up the pot there. Jump to the ledge above and go right. Save your pot for
+later and just jump over the enemy. When you reach the end of the ledge, jump
+right to the scaffolding.
+
+Walk to the right and climb the first ladder. Now, get ready to climb the
+second ladder but be careful, because there is a hobo at the top on the right.
+If you make the screen scroll left so that he remains out of view, he won’t
+attack you. Climb up and jump left. If you can make it to the next platform in
+a single jump, great. Otherwise you will land on the lower platform, it’s no
+big deal but be careful of the dog there.
+
+Get rid of the hobo on the left by throwing your pot at him. Jump on the
+chimney where he was sitting, and crouch on the right side of the chimney to
+enter a secret passage that acts as a shortcut.
+
+You will emerge further ahead in the level, on top of another chimney. Drop
+down to the left and collect the four easily accessible energy tokens here.
+
+Keep going left until you see a trampoline. Take it with you and be careful
+never to throw it (that would make it disappear). Optionally, you can continue
+left and drop the trampoline near a pile of garbage cans (to drop it, keep the
+down arrow pressed as you press space bar), allowing you to reach six energy
+tokens. If you do this, watch out for the hobo on the other side and remember
+you need to pick your trampoline back up afterwards.
+
+Now, go back to the right and take the higher level, jumping up on the house’s
+balconies. Once you are on the longer ledge (with a dog running around), drop
+your trampoline there and use it to jump to the higher ledge. Climb up two
+ladders (being careful of the dogs) and you will find a magic carpet. We will
+use it to bypass the sewer exploration sequence of this level.
+
+You can’t throw your magic carpet on the top level because the chimney is in
+your way. So, take the ladder and go down one level. You can get rid of the dog
+here by throwing your magic carpet at it, the carpet will not disappear
+afterwards. Go to the right edge of the ledge, throw your carpet to the right,
+and jump on top of it. You will ride the carpet and fly past a pile of garbage
+cans with a hobo sitting on it, which is normally impassable.
+
+Once the carpet ride is over, you should have landed on one of the higher
+stories of a house. If you want to obtain the password for this level then read
+the next paragraphs, otherwise skip to the next section.
+
+~Optional: password route~
+Walk right, jumping over an enemy or killing him with the carpet, and drop down
+to the ground level at the first opportunity.
+
+You should see some scaffolding to your right. Stay on ground level and keep
+going right under the scaffolding. The oil lamp is there on top of a pile of
+rubble.
+
+Once you have your password, head back all the way left until you see a padlock
+and a ladder. Take the padlock and climb up.
+
+~After the password route~
+Use the ledges and balconies to climb up to the roof of this house, but be
+careful because some of the tiles are fragile and will make you fall down if
+you step on them. To avoid this as much as possible, try to jump around rather
+than to walk around, as this makes you touch less tiles. If you still have your
+magic carpet with you, you can use it to kill enemies.
+
+Once you are on the roof, go right and you will see a ladder next to a chimney.
+Climb it up, but not too high or the bee will attack. Either kill the bee with
+the magic carpet or wait for it to be sufficiently far away to the left to jump
+up and go right. Jump right to the top level of the scaffolding.
+
+(For your information, it looks as though you can also jump to the scaffolding
+from the ledge below the chimney, but the tiles on the edge are “fragile” tiles
+so it’s not actually possible.)
+
+Avoid the cannibal and climb down the ladder. Crawl to the right (you will now
+be forced to leave the carpet if you still had it with you), climb up the short
+ladder and go right. Unless you are carrying something you can climb on, the
+energy tokens are inaccessible from here, so don’t worry about them. Jump to
+the ledge on the right and be prepared to avoid another cannibal there. Climb
+down the ladder and mind the two cannibals who are running around on the ledge
+below. When the coast is clear, pick up the radio and go left, being careful
+not to touch the lethal spikes.
+
+Use the hole to drop down to the first level of the scaffolding. To your right
+is a hobo (you may have to wait for the screen to scroll). Throw your radio to
+get rid of him, then jump right across the platforms.
+
+Drop down to the right and take the padlock, then get ready to fight a boss.
+
+~Boss fight~
+Take the blue ball here and throw it again and again at the boss, while
+avoiding the rocks he throws at you. This boss doesn’t move and he throws his
+rocks in a predictable fashion, so you shouldn’t have too much trouble with
+him. You can either jump over his rocks or crouch to avoid them, unless you are
+holding the ball, in which case crouching will not work. I recommend
+positioning yourself at the foot of the rubble pile on the left: if you throw
+your ball from this location, it will be just the right distance for it to hit
+the boss and conveniently bounce right back to you.
+
+Once he is gone, walk to the metro entrance to end the level.
+
+
+
+****** LEVEL 4 ******
+
+The difficulty rises once again, and from now on oil lamps will usually be
+harder to find.
+
+Pick up one of the objects near the entrance and go right. You will face a
+hobo, throw your object at him. Go past the turnstiles (you can either jump
+over them or crawl under them) and go down the stairway. In the Titus the Fox
+version, you will find a blue ball here that you can use to get rid of the two
+enemies. In the Moktar version, you will have to jump over them, or go back all
+the way to the beginning to pick up more objects to throw. Go right and crouch
+in front of the opening to enter a passage.
+
+If you want, you can quickly crawl and pick up the two energy tokens you see
+under the stairs here, but don’t go further down that passage as it is a dead
+end, and you will end up getting trapped with enemy worms you won’t be able to
+avoid.
+
+Worms are indefinitely dropping down the stairway. In order to avoid them, you
+will simply need to jump over them and they will eventually turn around and
+enter that dead end under the stairs I was telling you about (don’t throw
+things at them, as they are too low on the ground). Wait until the first four
+or so worms have dropped to ground level, as they come in quicker succession
+than the others. When they have dropped down, take one of the objects near the
+entrance and go up the stairway. You will need to jump over a few more worms
+while climbing up. This can be tricky because of the poor scrolling, so be
+careful.
+
+When you reach the top, you will notice an opening in the ceiling. You can’t go
+there yet, but remember the location. Go left and throw the object you are
+carrying to the first enemy you see. Keep going left and past some more
+turnstiles. This time, make sure you crawl under them. There is a hobo sitting
+on the last turnstile here, and he will shoot if he sees you jumping. If you
+don’t jump he will be completely harmless to you.
+
+Keep going left. If you want to obtain the password for this level then read
+the next paragraphs, otherwise skip to the next section.
+
+~Optional: password route~
+Pick up the old box resting by the left wall. Go right, climb the stairs back
+up, and kill the hobo on the turnstile by throwing the box at him. It is
+absolutely necessary to kill that hobo, you will understand why in a short
+moment.
+
+Go back down the stairs to your left and, this time, go under the stairs to
+your right. There are bees here, but if you simply crawl under them they will
+leave you alone. Go right until you reach a dead end and a trampoline. Take the
+trampoline and head back left, but this time, to be able to crouch or crawl,
+you will first need to drop your trampoline (be careful not to accidentally
+throw it!).
+
+Go back up the stairs and, now that the hobo is gone, jump over the turnstiles.
+This is why you needed to kill him earlier: if you crawl under the turnstiles,
+you won’t be able to take the trampoline with you.
+
+Go back to that opening in the ceiling you saw earlier. Drop your trampoline
+there, and use it to reach the higher level. Go right and you will see yet
+another hobo. You probably aren’t carrying anything by now, so you will have to
+be quick. Let the hobo shoot, then quickly go near him, pick up the nearby
+bottle, and kill him.
+
+Go down the ladder and crawl through the passage to the right. You will arrive
+in a large room, and will see the oil lamp in the top left corner. However, it
+is too high for you to reach. In order to reach it, you will need to jump on
+some invisible blocks (which, thankfully, appear upon first touching them). The
+first one is located against the right wall. Jump there until you find it.
+There are three other blocks, located about twice higher than the first one and
+to the left. Jump around until you find them all, then jump from the last one
+to the oil lamp.
+
+Climb down the ladder. Here, two energy tokens are hidden behind the objects on
+the right. Drop down a long hole that will take you back to the beginning of
+this section. Climb up the stairs as before, go past the turnstiles once again,
+and drop down the stairs to your left.
+
+~After the password route~
+Go under the stairs to your right. If you took the password route, you’ve done
+this before. There are bees there, but if you simply crawl under them they will
+leave you alone. Crouch in front of the opening to enter a passage.
+
+Here, immediately walk into the left wall. It is a fake wall, and this hidden
+passage takes you to twelve energy tokens. But that’s not all: crouch in the
+location where you found the tokens, and you will be taken to a room with no
+less than forty-six of them! Go back through the opening.
+
+You will somehow reappear in a different location: this passage has also acted
+as a shortcut, making you skip an annoying portion of the level. Once you
+reappear, your goal is to enter the leftmost opening (right beside the one you
+just came from). However, there are two enemies armed with slingshots here, and
+if you try to rush you will just get hit over and over again.
+
+It is possible to distract the two enemies, and make them move sufficiently far
+away from the opening to be able to enter it. However, it is risky, and I
+recommend that you instead do what I am about to describe, notably because it
+makes you pick up a padlock that you may need very soon.
+
+Ignore the slingshot enemies for now. Go right and jump over one of them, then
+climb down the stairway. At the bottom of the stairs, go all the way left to
+find a padlock. There will be a few worms to avoid on the way. On the pile of
+rubble where you found the padlock, you can pick up two stones. I know they are
+hard to notice, but they are there. The first one is on ground level, while you
+will need to jump on the beginning of the pile to pick up the second one. Take
+one stone, climb the stairway back up, throw it at one of the sling shot
+enemies. Repeat this to get rid of the second one (or, if you’re feeling
+confident, you can try to avoid him). Once they are gone, you can safely enter
+the leftmost opening.
+
+You will reappear in an underground cavern. Take the blue ball and go right.
+Drop the ball at the bottom of the wall, then bounce on it to grab the energy
+token above. This will release two more blue balls which were resting on the
+token. Pick up one of the balls and go on top of the two others. Face the wall
+and drop the ball you are carrying. If you did it correctly, it should somehow
+get “stuck” to the wall.
+
+Bounce on the top ball repeatedly, and it should progressively make you go up,
+while also going up itself, still being stuck to the wall. When you reach the
+top, pick up the ball again and drop down to the right.
+
+You will see a worm on top of some energy tokens, which you cannot safely take
+unless the worm is dead. You have your blue ball with you, so jump and throw it
+at the worm, then pick up the tokens. It is not necessary to keep the blue ball
+beyond this point. Keep going right. You will see a moving platform here, jump
+on it and then jump above the wall.
+
+Here you will have to perform a few jumps above spiked carts. But before you
+jump, you should deal with the anvils resting on top of energy tokens: even if
+you are not aiming for them, you are likely to touch them while you jump over
+the carts, which will make the anvil fall down on you and ruin your jump.
+Therefore, quickly pick up the energy token then move out of the anvil’s way.
+Once the anvil is gone, make a careful jump over the cart. Rinse and repeat for
+the two next ones.
+
+After this you will reach a pile of crates. If you no longer have your blue
+ball with you, take one and keep going right, but it is not mandatory for you
+to have one, so if you get hit and drop it, forget about it and avoid doing
+anything dangerous to recover it.
+
+There will be three spiked carts in a row that you cannot jump over. You need
+to jump on the moving platform here, and when it reaches the end of its
+movement to the right, jump right as far as you can. Go right and dispose of
+the enemy by throwing your crate at him. If you somehow lost your crate,
+jumping over him works just as well.
+
+Now, WATCH OUT as there is a rather fast moving spiked cart coming your way,
+and you will be killed if it hits you! Keep going right slowly, being careful
+of the scrolling, and be ready to make a quick jump when the cart appears. In
+my opinion this was a pretty harsh trap to add at the end of the level.
+
+When you reach the pile of rock with some bones on top, jump over it to be
+taken to the next level.
+
+
+
+****** LEVEL 5 ******
+
+This is a level where a lot of people give up. The path to take is more
+straightforward than in the previous level, but unless you can find a certain
+secret passage, it is considerably more difficult than anything you have faced
+so far. Thankfully, I will tell you where the passage is and you will get to
+skip a particularly frustrating sequence.
+
+Let’s start by taking a secret passage for some energy tokens. See the small
+blue ledges on your right? You will need to jump to the top one. Don’t drop
+down to ground level now, because you will then no longer be able to access the
+ledges (if that happens anyway, just skip to the next paragraph, all you will
+miss is energy tokens). Drop to the solid grey ledge located just below you.
+From there, you must jump to the right and land on a blue ledge that you can’t
+see from your viewpoint. However you can guess its location if I tell you that
+it is on the exact same vertical line as the leftmost ledge that you can see.
+If you succeeded with your jump, jump up to the top ledge. Crouch here to enter
+a secret passage and reach a room with 24 energy tokens. Leave the room and you
+will reappear at the same place where you entered.
+
+Drop down and go right. Skeletons will rise from the piles of bones you see
+here, so be ready to jump over them. Keep going right. When you reach a pile of
+rocks, one more skeleton will rise. Take one of the piles of bones in front of
+the rocks, and continue right.
+
+Climb up the small stairs and throw the bones at the bee to kill it. Next, you
+will reach a trampoline and a few items: two sacks if you are playing Titus,
+two crates and a bowl if you are playing Moktar. Three skeletons wait nearby.
+Dispose of as many skeletons as possible by throwing the crates/sacks/bowl at
+them (you can kill them all if you play Moktar, if you play Titus you’ll be
+short one object and will have to jump over the third skeleton). Take the
+trampoline and go right.
+
+After you get past a pile of bones, be careful, because in the next screen a
+skeleton will appear from mid-air and drop down to your level. Avoid it, then
+uses the ledges you see here to climb up through an opening in the ceiling.
+
+When you reach the last ledge, drop your trampoline on it, then use it to jump
+to the higher level. There are several crates there. Take two of them and drop
+them in a pile on the ledge where you left the trampoline. Drop back down to
+that ledge and take the trampoline again. This time, the two crates you have
+piled up allow you to jump directly to the higher level, without needing to use
+the trampoline.
+
+Take the three remaining crates and drop them to the left side this time (you
+really only need two, but it’s best to have a spare one). With your trampoline
+still in hand, drop down to the left. If you want, you can use the trampoline
+to collect the few energy tokens here. Now, take two crates and put them in a
+pile against the left wall. Drop your trampoline on top of that pile. Jump on
+it and bounce until you can jump high enough to reach the higher ledge on the
+left. If you waste a crate by accident, use the spare one.
+
+Get ready for a slightly tricky passage. Take one of the barrels and continue
+left. You will see five bees flying together in a triangular shape. Throw your
+barrel at the bees to kill one in the middle level. Go take the other barrel,
+and throw it at the bees again to kill the other bee in the middle level. You
+will now need to use the spaces you have created to jump between the bees to
+the other side. This is best done when the bees are coming towards you. After
+this, you will find the oil lamp.
+
+Next, drop to the left, colleting the energy tokens as you fall down. Crouch
+there and you will enter a passage. This makes you skip a very long and very
+difficult portion of this level.
+
+As you can see, there are a lot of objects to take here, and on your right you
+will find a lot of enemy insects. Take the objects here and throw them at the
+insects to kill most of them. After this there should only be a couple still
+flying around. Go right and you will see a blue ball resting against the wall.
+Don’t throw it, because there is a pit of lava on the left and you don’t want
+to lose your ball there. Instead, jump on top of the ball and bounce on it
+until you can jump to the higher level. From there, jump to the ledges on the
+left to pick up a padlock. When you are ready, jump back to the top ledge and
+crouch to enter a passage leading to the level boss.
+
+~Boss fight~
+This boss is a lot more difficult than the previous one. As soon as you enter
+the room, jump on the midlevel ledge and jump up to avoid getting hit by the
+boss. Next, quickly take one of the two crates. Do NOT ever throw them or they
+will disappear and you will not be able to kill the boss (you can afford to
+throw one, but you absolutely need to keep the other one). Your goal is to jump
+to a platform higher than the boss, and drop the crate on top of him when he is
+walking below you. This way, the crate won’t disappear, so you can pick it back
+up and repeat the process. There is a difference between the Moktar version and
+the Titus version here: while Moktar has solid blocks, Titus instead has tiny
+moving platforms. With the moving platforms, the boss won’t always arrive in a
+convenient location for you, so you will also have to perform jumps to avoid
+touching him. However, with the solid blocks, all you have to do is stand on
+the rightmost one and drop your crate to the right every time the boss comes
+by. Keep a good rhythm and be careful, because getting hit by the boss at a bad
+moment can make it hard for you to go back up.
+
+When the boss is gone, drop one of the crates on the midlevel ledge and use
+this extra height to reach the ledge in the top left corner. This will end the
+level.
+
+
+
+****** LEVEL 6 ******
+
+This level is a bit less aggressive than the previous one, but it is harder to
+figure out which way to go.
+
+Go right and you will see a crate next to what looks like one of those enemy
+trashcans that hit you with a hammer. However, this trashcan is really just an
+ordinary trashcan that you can pick up. Pick up either of these objects, go
+right, and throw it at a slingshot enemy. Now pick up the other object, go
+right again, and throw it at the slingshot enemy on the other side of the pile
+of garbage cans (your object will fly through the cans).
+
+Climb up on the balconies to reach the two pots on top of the porch. Don’t go
+further above because there are two bottle throwing babies there (they work
+like the bottle throwing hobos) and there is no need to face them. Take one of
+the pots and go down to ground level. Drop your pot next to the pile of garbage
+cans and use this extra height to jump over the pile to your right.
+
+You will walk past a large climbable building with a lot of bottle throwing
+babies on it. You do not need to climb it up (there are only some energy tokens
+at the top) and can walk straight past it.
+
+You will come across a blue ball. Take it and keep going right. Place it at the
+bottom of the pile of garbage cans here, and bounce on it to reach the balcony.
+You will need to climb on top of this building, jumping from ledge to ledge and
+avoiding the bottles all the babies are throwing at you. Rhythm is very
+important here. What you want to do is stand on the small middle ledges, jump
+up in a straight line to get the baby above you to fire, then quickly jump up
+to the empty balcony and to the next middle ledge. Mind in particular the last
+baby, who shoots in quicker succession than the others. Be careful, because if
+you get hit you’ll most likely fall down and have to start all over again.
+
+When you’re on the roof, you will see a baby carriage to your left. These are
+unmoving, shooting enemies like the hobos and the babies, except that you can
+walk past them. Ignore this one and avoid his bullet if needed, then go right
+and pick up the padlock.
+
+There is a very small detour to take here to find the password for this level,
+as well as a useful skateboard. I think it’s worth it just so you can have the
+skateboard. If you’re not interested, skip to the next section.
+
+~Optional: password route~
+Walk to the right of this building and drop all the way down. The oil lamp is
+there in plain sight. While you are there, you can pick up the skateboard,
+which you can use to kill enemies more easily later on. Note that there are
+also crates here which you can come back to pick up if you find yourself short
+of ammo later on. Then, just climb the building back up, there are no enemies.
+
+~After the password route~
+From the roof, jump right to the scaffolding. Be careful because a lone worm
+will appear here, if it hasn’t already. Climb up the ladder when the enemy
+above is sufficiently far away. Take the crate but don’t waste it to kill this
+pretty harmless enemy, instead climb up the ladder. To your right is a baby
+carriage: throw your crate at it to get rid of it. Now, take the other crate on
+this level and go right until you see another baby carriage on a higher ledge.
+Jump and throw your crate at it.
+
+You can climb up the platforms on the left here to find seven easily accessible
+energy tokens. When you’re done, jump right to the platform where the second
+baby carriage was. Climb up the ladder and avoid the enemy here. Go right and
+jump to the next platform.
+
+If you want, you can try and grab seven energy tokens if you can climb up the
+first ladder here while getting past a pesky bee.
+
+Climb ladders down until you are above brown scaffoldings with two sets of
+three energy tokens and two enemy cats. The cats are sleeping at first, but
+will wake up and chase you when you get too near. To get past them, you can
+either jump from the platform above, all the way to the left (this will make
+you drop down two levels below); or you can climb down the ladder and then very
+quickly move left and climb down the second ladder.
+
+Go right and you will see two crates. Unless you brought a skateboard here,
+pick up one of the crates. Keep going right and go down the ladder.
+
+Now, Go left and climb down the first ladder you see.
+
+On this story, you will have to face three cats. If you are carrying the
+skateboard, you can easily send it back and forth to kill them all. This is the
+best option. If you aren’t carrying the skateboard, then you can dispose of two
+of the cats using the crates you saw earlier, and you will have to either jump
+over the third one or backtrack to find another crate to kill it. Note that you
+can only throw crates on the cats when they are moving: if they are sleeping,
+the crate will fly over their heads.
+
+Ready? Go left, taking care of the three cats as you go along, and don’t touch
+the energy tokens on the floor here: there are lethal spikes underneath. Jump
+over them instead.
+
+When you reach the end of this story, you will see spikes on your left as well
+as a ladder going down. Don’t take the ladder, because while you are here you
+can take a secret passage that will save you a lot of trouble. Go to the
+leftmost window, the one that is partially covered by the spikes, and crouch
+right next to the spikes to enter a secret passage. If you haven’t killed all
+the cats, watch out that you don’t accidentally get hit by one while trying to
+enter the secret passage.
+
+You will reappear on ground level on top of a lamppost. Go right, mind the cat
+sleeping on the balcony above (it will drop down when you go near it), then
+keep going right to end the level.
+
+
+
+****** LEVEL 7 ******
+
+This level is made very difficult by all the pesky enemies and the scarcity of
+objects to throw. If you have taken all the shortcuts in the previous levels
+like I have instructed you to, then this is going to be your hardest challenge
+so far.
+
+In this level you will have to climb to the top of a huge building while a fat
+woman on the roof throws melons at you, in a fashion reminiscent of Donkey
+Kong. The melons drop down the building’s stories one by one, so you won’t see
+any at the beginning of the level. However, at some point you will catch up
+with them and from then on you will have to continuously jump over them as they
+appear all over the place.
+
+When you start playing, the oil lamp will be right in front of you; that’s a
+nice change. Go right and be wary of the cats that are sleeping on the higher
+levels, as they will wake up and drop down when you approach them. They are
+quite fast and will keep running around the area, so don’t forget about them.
+
+Keep going right and you will see an empty garbage can, followed by two baby
+carriages. I suggest you take the can and use it to dispose of the first baby
+carriage. Walk past the second one, crawling to avoid his bullets.
+
+Go right and climb up the ladder, but pause before you reach the upper level.
+The old man with a gun here is the same type of enemy as the hobos, but they
+aim lower and you can’t avoid their bullets by crouching. Move up just a little
+bit to get him to fire, then quickly climb up, jump to the porch on your left,
+grab the pot and kill the old man with it.
+
+Once that is done, jump back to the balcony on the right, but be careful of the
+cats there. Many of the cats in this level respawn, so if you go through the
+same areas more than once, remember the cats will probably be there again.
+Climb up the ladder.
+
+Here, if you want, you can go right and drop to the lower level to grab three
+energy tokens. Just let yourself fall down and direct your fall to the left.
+After picking them up, fall back to ground level and go back to where you
+previously were.
+
+See the window to the left of the ladder you have just climbed? There is a
+secret passage here in the darker left side of the window. Crouch on this
+location to enter it. This passage is optional, but it is recommended. In this
+new room, take one of the blue balls and climb up to the top level, avoiding
+the hobo’s bottles with the same technique as usual. Walk all the way left and
+climb down the ladder there. Drop your blue ball at the bottom of the right
+wall, then bounce on it to reach the intermediate level. Normally, your first
+bounce should make the hobo react, and your second one should allow you to
+reach the ledge. Quickly reach the ladder and climb down. Take the fourteen
+energy tokens here and go through the newly revealed passage. You are taken
+back to where you previously were.
+
+Go left and avoid two more cats here. Start climbing the ladder but DON’T go to
+the upper level just yet, because you are not prepared. The balcony wall just
+to the top left of the ladder is not solid, you can go through it. Do so, and
+you will land on the other side of the pipes. Go left, jumping across the
+balconies, and you will find a pot. Pick it up and go back right until you are
+against the pipes. There, throw your pot upwards (by keeping the up arrow
+pressed and pressing space bar) and it will land on the story above, where you
+will need to use it.
+
+You can’t come back from the same way you came, so drop down to ground level
+and take the same path over again, until you are back on the right side of the
+ladder. Remember the cats will have respawned, and by this time the melons are
+probably starting to roll around you.
+
+Now that you are back, climb the ladder completely this time, but be careful as
+this is a dangerous section. You are going to need to quickly dispatch two
+enemies, and there is only one pot here, which is why I made you bring a second
+one. The two enemies are an old man located on your left, and an enemy with a
+helipad that is going to chase you as soon as you reach this story. These
+helipad enemies are slow, but once they see you they will never stop following
+you, and, due to the combination of their size and the cramped space you are
+in, it is impossible to go past them when they are in your way. Because of the
+scarcity of objects to throw around here, this makes them extremely dangerous,
+and don’t ever think you can just ignore them: you MUST kill them to be able to
+continue.
+
+So, with the two pots you have here, dispatch these two enemies as quickly as
+possible. I recommend that you use the game’s scrolling to your advantage here:
+if you can climb the ladder without making the screen scroll left, the old man
+will not appear, and you can just wait for the helipad to show up to kill him.
+Then, you can go left and dispose of the old man. I recommend you don’t try to
+fight them both at the same time as this is difficult to do.
+
+After killing them both, go left and ignore the ladder you see for now. Keep
+going left until you reach a pot. Take it, and ignore the TV throwing old man,
+avoiding his projectiles if needed. Go back right and climb up the ladder this
+time.
+
+When you reach this story, a helipad enemy will appear, although he appears
+more slowly than the first one. Just wait for him to show up, then throw your
+pot to get rid of him.
+
+Go left and take the radio. Now, go all the way right. As usual, be careful of
+the cats and melons. When you reach the end, a TV throwing old man will block
+your way. Throw your radio at him.
+
+Climb up the ladder and go left. Keep going left until you see another ladder
+going up. Climb it as well. Again, go left until you see a ladder, and climb it.
+
+You will now be at the leftmost side of the building, and there will be a pot
+there. Take it, and wait for a third helipad enemy to show up. Kill him with
+the pot.
+
+Now that the helipad is gone, go back down one level by using the ladder. Go
+all the way right this time. When you reach the end, you will see a TV throwing
+old man above you. Don’t climb up yet, and instead go to the left side of the
+rightmost window. Crouch there to enter a secret passage. In this new room, you
+can either crawl all the way down, or take a shortcut by crouching on the space
+just left of the door you used to enter. This will transport you to the lower
+level. Take the six easily grabbed energy tokens, then exit through the door in
+the bottom right corner. You will be taken back to where you previously were.
+
+Now, you must climb this ladder. You can influence the scrolling to make the
+old man on the right disappear, so that he won’t be a threat at all. Go left.
+Climb up the first ladder you see and keep going left. Again, climb up the
+first ladder you see.
+
+You are now on the story just below the roof. Go right. If the cat on the
+balcony is still there, you won’t wake him up as long as you don’t touch him.
+Go right and climb the ladder.
+
+Take the blue ball to your left, then go right to fight the boss.
+
+~Boss fight~
+This boss is a bit like the first one, except the melons she throws are faster
+and thus a bit harder to avoid. I suggest you move right just enough to make
+her appear on screen, then stay on the left side of the screen and throw your
+blue ball at her from there. Try to catch the blue ball back as it rolls near
+you, or you will have to run after it while still having to jump over the
+melons. If you position yourself at the correct distance, this shouldn’t be too
+hard.
+
+Once she is gone, walk right to end the level.
+
+
+
+****** LEVEL 8 ******
+
+This is normally one of the longest and hardest levels in the game, but you can
+skip most of it by taking a well hidden secret passage. If you take this
+passage, the level will mostly be a breeze. If you don’t, good luck!
+
+Walk to the right. On the lower floor here, avoid the enemy and take the crate.
+Climb up to the level where you will have a hobo on your left. Jump and throw
+your crate at him, making sure not to jump too close to him or he will probably
+hit you. Now climb up the ladder, avoiding the bee. There is a lone energy
+token you can grab on the left.
+
+Go right until you reach the edge of the platform. Drop down below, either by
+hugging the left wall or by jumping on top of the brick. Don’t fall into the
+water or you will die! Jump right across all the platforms, timing your jumps
+so that you don’t hit the jumping fish.
+
+Once you jumped past the last gap, the oil lamp will be there above you, but at
+the moment it is too high for you to reach. Keep going right and drop onto a
+platform below. There is a hobo on your right here, and a walking enemy at the
+bottom of this small pit. Your objective is to reach the bottom right corner of
+the pit, where you will find a blue ball. Watch the enemies and, when you get
+the opportunity, rush to the ball. Use the ball to kill them both.
+
+~Optional: password route~
+Go back left now, carrying the blue ball. Drop it on the left edge of the
+platform and bounce on top of it to reach the oil lamp. Now go back right,
+still carrying the blue ball.
+
+~After the password route~
+Climb out of the pit and go right. Below you is a narrow area with two enemies.
+When they aren’t right below you, drop down and quickly throw your blue ball to
+kill them both. Next, put the blue ball at the bottom of the right wall, and
+bounce on it to reach the higher area.
+
+Keep going right. At some point there will be a lone energy token here that you
+can take, then you will face a small lake. Wait for a tiny platform to appear,
+and jump on it. Let it take you to the upper level.
+
+On the right of this new area, you will find a padlock. On the left, you will
+find five energy tokens and a crate. Take the crate and go back down onto the
+moving platform.
+
+Once the platform is low enough, jump to the right and start climbing down the
+ladder, but don’t drop down. This is where you are going to take the huge
+shortcut I was telling you about, but it’s quite hard to do, so be careful (I
+can however assure you that completing the rest of the level normally is much
+harder). If you fail and fall down, you have no way to go back up, so you will
+need to kill yourself and try again.
+
+On your immediate left is a little niche with two crates. On the right is
+another niche with a hobo. You need to drop down the ladder and immediately
+direct your fall to the left so that you land in the left niche, your crate
+still in hand. You will thus be on the left niche with three crates at your
+disposal; don’t waste any of them or you won’t be able to enter the passage.
+
+First, throw a crate at the hobo to get rid of him. Next, you need to position
+the two other crates in the right niche in a very particular way. Take a crate,
+jump to the right niche, and position it near the wall (but not completely
+against it). Jump left, take the last crate, jump right, and position this one
+carefully. It must be to the left of the other crate (not on top of it), and
+must be slightly past the left edge of the niche so that you can land on top of
+it (just a few pixels will do). This must be done slowly and carefully, don’t
+drop it too far or it will fall down! When you’re satisfied with the way you’ve
+positioned your crate, jump up. If you’ve placed your crate properly, you will
+land on top of it and be in a crawling position. Keep crawling to the right and
+you can now go through the wall!
+
+You will reach a large area with the letters “super” written in bricks. Go
+right until you reach a big wall. There are invisible blocks you can climb on
+here, and they appear as soon as you touch them. Jump around this area and you
+will quickly find them. Use them to reach the higher ledge, and there you will
+find a secret oil lamp giving you the code to level 14! If all you want is to
+see the ending you could restart right now and use the password to jump
+straight to level 14, but you will skip about a third of the whole game and I
+find it much more rewarding to go through the other levels.
+
+Drop down to the right. After the fall, you will find a padlock. Drop down to
+the left for another big fall.
+
+Go left while avoiding the moving spiked carts. Drop down into the first hole
+you see, then jump to the room on the right.
+
+Be careful not to fall into the water here. On your right, on the upper floor,
+are three enemy flies. You need to get rid of at least some of them to be able
+to safely go there. Go down to the platforms below, being careful of the water
+(if you can’t see the bottom of the screen, hug the left side of the higher
+platform and you will land safely on the platform below).
+
+Jump right and you will find a trampoline as well as two objects to throw. The
+ladder here leads you right in the middle of the flies, so don’t use it, it is
+too risky. Instead, take the trampoline, go back left, and place it on the edge
+of the platform there so you can access the higher level by using the
+trampoline. Go take one of the two objects, then use the trampoline to go up.
+Throw your object at a fly here, it should be easy. Go back down and repeat the
+procedure with the other object. This time it might be more difficult to make a
+hit, so be patient and wait for the right moment.
+
+Now, there hopefully is only one fly left in that area: that much you should be
+able to handle. Go back down, take the trampoline, and this time use the ladder
+to go up. Drop the trampoline here, and use it to access the highest level,
+being careful to avoid the fly at the same time.
+
+When you are on top, walk right to end the level. When you know how long and
+difficult the level normally is, you almost feel cheap for taking the big
+shortcut, but hey – this isn’t a glitch, this is something the programmers
+allowed to happen. You’ll probably also like to know that there is no oil lamp
+in level 9, so be thankful you can go through level 8 this way in case you need
+to restart.
+
+
+
+****** LEVEL 9 ******
+
+This is also one of the hardest and longest levels in the game (in fact it is
+probably THE hardest). And this time, you will actually have to go through it
+properly. There are different possible routes and I will walk you through the
+slightly less intimidating one, but it’s still extremely hard. Also be aware
+there is no oil lamp in this level. If you have followed my walkthrough in one
+continuous playthrough and didn’t die too often, you should have several extra
+lives by now, and you will probably need them. Attempting this level with only
+the three lives you start with will probably make you want to pull the hair out
+of your head.
+
+You will be falling down as the level begins. Jump on the ledges and make your
+way to the right. Jump on the rocks there and crawl right.
+
+Here you can choose between two routes through the level, by going up or down.
+The upper route is a bit easier so we will go there, but first there is an
+object you need to grab. There is a ghost following you around here, jump to
+avoid him and keep walking right until you can fall down a gap in the floor.
+Move left and, on one of the ledges above the spikes, rests a small grey
+coloured ball. It works like a blue ball, except it doesn’t bounce back when it
+hits enemies. Jump there while avoiding the ghost and the spikes (for a good
+jump, jump from the bottom stair) and take the ball. You will use it to kill
+the ghost, but don’t do it just yet or you will probably lose it. Go back right
+and up to the floor from which you came. Here, you can safely throw your ball
+at the ghost and the ball’s course will be stopped by the walls.
+
+Pick up the ball again, climb the ladder and go right. There are many enemy
+crabs here, but you can kill them all by throwing your ball at them. Wait for
+the scrolling to display them all, then throw the ball.
+
+Once the crabs are gone, don’t bother picking the ball back up because you
+can’t take it any further. To cross the spikes, wait until the moving platform
+is on your side and jump on it. You will automatically crouch when you go
+through the narrow passage, making you drop your ball if you were still
+carrying it.
+
+Jump to the ledge on the other side and keep going right, choosing the lower
+level. When you reach the bottom, crawl, don’t walk, because there is a knife
+throwing fakir to the right. Keep crawling right and you will see some sacks,
+and possibly the fakir. Don’t waste either of the sacks on this fakir, because
+they will be more useful elsewhere. Instead, stealthily take a sack and go back
+left. Crouch as needed to avoid the fakir’s knives. Now jump on the ledges on
+the right, and get rid of one of the crabs by throwing your sack at it. If you
+can manage it, you can use the upwards throw technique to get rid of the first
+crab without losing your sack. Go back down to get the other sack, then go back
+to the ledges.
+
+Observe the remaining crab’s movements here and jump on its platform when it
+gives you enough space (if you used the upwards throw technique to kill the
+first crab, you have an extra sack, so in this case just throw it at the second
+crab). When you reach the top level, throw the last sack you are carrying to
+get rid of the flying fakir there, and continue right.
+
+You will find a padlock and another sack here. Take the padlock, grab the sack,
+and get ready for a tricky sequence. You will need to drop down the pit on your
+right, but be careful because there are deadly spikes underneath. Drop to the
+first ledge on the left, then jump to the right one. Now, you probably can’t
+see it from where you are standing, but there is a big row of spikes under you,
+and the only safe position is on a ledge on the left, located just below the
+other left ledge. Let yourself drop there.
+
+Jump and throw your sack at the enemy on the right to get rid of him. Once that
+is done, carefully jump on the moving platform (which will be large in Titus,
+but tiny in Moktar) and let it take you to the other side. Be careful because
+you can die easily here. Jump on the tiny vertical moving platform when it’s
+near you. This is not an easy jump, especially in Moktar, so take your time and
+wait for the platforms’ movements to coincide perfectly before attempting it.
+When you’re at the top, jump right to the platform with three crates.
+
+Here is another tricky sequence, although if you know what to do it is not as
+hard as it first seems. If you drop to the right, you will land on a row of
+spikes similar to the one you have just passed, but this time there is no safe
+location at all: just spikes everywhere. What you need to do is to use the
+three crates here to create a bridge of sorts over the spikes.
+
+Take a crate, jump on the right ledge, then drop the crate down the pit. Repeat
+the exact same operation for the two other crates. You can ignore the tiny
+vertical moving platform here, you don’t need it, it will probably even annoy
+you.
+
+Drop down to the location where you dropped the crates, and you will land on
+the pile you have just created. Now take the first crate (remember you can drop
+down a level here by crouching) and drop it to the right. Repeat the process
+with the second crate, and drop it to the right of the one you have just
+dropped. If all went well, you now have a bridge of sorts over the spikes, and
+you will be close enough to the right wall that you can jump there and land on
+the tiny moving platform that will take you up.
+
+Go right and immediately go to the top ledge. Take one of the pots there, and
+then I recommend dropping it down to the lower level, and doing the same with
+the second pot. You will need both pots and, while it is possible to climb back
+up here, doing so requires you to perform a tricky jump, so it’s easier to do
+it the way I said. Drop down to the intermediate level of this room, and to
+your right you will see a narrow passage with a crab and a fly. Jump and throw
+your two pots to get rid of both enemies.
+
+Go right to enter the passage and go all the way to the right until you reach a
+ladder leading to six blue balls (ignore the moving platform you will pass on
+the way). Climb up the ladder. There is a secret passage here that will save
+you some headaches: jump to the wall on the right and you will see that you can
+go through the wall here, leading you to the other ladder. Throw at least one
+of the blue balls through this secret opening. If you want to collect energy
+tokens in a few, then throw at least four balls. When you are done, go through
+the opening yourself and drop all the way down.
+
+Your blue balls will have landed here. Take one and go left. On your right you
+will see some energy tokens, but there are spikes underneath, so the only way
+to take them is to drop three blue balls down the pit first, so that you can
+safely drop there AND be able to bounce and jump back up afterwards.
+
+Now, whether you picked up the tokens or not, you must have one blue ball left.
+Drop down to the left and use your ball to kill the mummies here. It is
+possible to kill them with the ball even if they have not risen yet.
+
+There is a padlock at the top of this structure. From the ground, use the
+ledges to jump up two levels, killing crabs with your ball in the process. You
+will see that the third level is too high for you to reach. Just drop your blue
+ball there and use it to reach the top level and the padlock.
+
+When you are ready, go to the dark opening in this structure (on ground level,
+below the pharaoh) and crouch to go through a passage.
+
+In this next sequence you will have to be careful. Climb up the ladder and the
+fakir will start rapidly throwing knives. Wait for an opening and quickly climb
+up. On the upper level, jump once to get the other fakir to throw a knife, then
+jump right above the dried mummy. As long as you don’t touch it, it will not
+wake up. Repeat the same process to jump over the second dried mummy, and start
+climbing down the ladder. Wait until the other fakir here starts throwing
+knives, and when you’re ready let yourself fall down by hugging the left wall.
+If you do it well, you won’t get hit.
+
+Go right, take the crate and jump to the ledge on the right. Continue right and
+throw your crate at one of the crabs there. You will need to avoid the
+remaining crab and take the trampoline, but this is easier said than done
+because you have no room to jump properly here. Either wait until the crab is
+to the right of the trampoline then hurry to pick it up, or jump above both
+and, when you are on the right side, throw the trampoline upwards to make it
+fall on the crab and kill it (but be careful not to throw it and waste it). Go
+back left and place the trampoline on the edge of the platform. There are
+fifteen energy tokens above, which you can easily grab now by using the
+trampoline.
+
+Once you are done, go back to the structure on the right and crouch in the
+middle of it to enter a passage and access the final room.
+
+Start by taking the padlock on the left. This is one of the most difficult
+sequences in the level, and sadly there is no real way to explain how to beat
+it, you will have to time several jumps very precisely through trial and error.
+And every time you will fail, you will lose a life. That’s harsh.
+
+You need to jump from platform to platform and calculate your jumps so that
+they are neither too big (you will touch the spikes on the ceiling) or too
+small (you will fall down in the pit of snakes). The jump from the second to
+the third platform is the most difficult, you need to only very barely jump or
+you will hit the spikes above; but you really do need to make a jump as falling
+down will not work.
+
+Once you reach the part with the moving platforms, the hardest part is over.
+There are some energy tokens against the ceiling here, but they are not worth
+the risk, so leave them alone. Just keep jumping right and, when you reach the
+end of the pit, wait for the crab to be sufficiently far away and make a good
+jump to the right.
+
+Avoid the crab, go right, and drop down against the wall to pick up the last
+padlock. The level is thankfully almost over, but first there is a difficult
+boss fight.
+
+~Boss fight~
+First of all, mind the spikes on the floor! It’s easy to get distracted by the
+fight, forget about them, and accidentally step on them. This boss will just
+walk left and right over and over again, but it is too tall for you to jump
+over it. You will need to use the barrels you see here to gain the extra height
+you need to make the jump. The boss is in sleep mode at first, but it will wake
+up and start moving when you get close, so keep that in mind. You can either
+pick up the barrels and place them at a sufficient distance from one another:
+this way you will have two different jumping points; or you can pile them up,
+which means you only have one jumping point, but jumping over the boss will be
+much easier since you will have extra height. I personally prefer the second
+option. You can also bounce on the blue ball to jump over the boss but that is
+difficult to do and not recommended unless you have no other choice. Keep
+throwing the blue ball at the boss, and as soon as he comes near take refuge on
+your barrels and jump over him to the other side. Repeat the process until the
+boss dies. Be patient here, you will need to be careful if you want to succeed.
+
+Once the boss is gone, go to the sarcophagus to end the level.
+
+
+
+****** LEVEL 10 ******
+
+Here comes another difficult level (what did you expect?) but it is thankfully
+not as difficult as the previous one, and it is also shorter.
+
+Start by collecting the oil lamp, because surely you don’t want to have to beat
+level 9 again. You will have to be very fast to complete the first part of this
+level. Take the skull, which will be your only ammo until you find the first
+padlock; if you want, you can use the upwards throw technique to get rid of
+some enemies along the way without losing your skull, but in general I would
+recommend to just rush to the padlock.
+
+Go right, jumping past the crabs. Continue right and you will see a snake
+charmer (a fakir sitting next to a pot). The trick here is that you can touch
+the fakir, but you can’t go near the pot or the snake will jump out and hit
+you. Jump over the pot, not caring whether you touch the fakir or not, and
+continue right.
+
+Several flies start chasing you here, and they can do big damage because they
+tend to stick to you and hit you several times in a row. Just keep walking
+without stopping to avoid them. You will arrive at a scaffolding, with a knife
+throwing fakir on the left and another on the right. You can try to ignore one
+of them by influencing the scrolling so that he doesn’t appear on the screen.
+Get rid of the other one (I suggest you kill the more annoying left one) by
+throwing the skull at him.
+
+Quickly go up a couple of ladders. There is another fly up there, but if you
+climb up without stopping you will be able to avoid it. However if you pause
+for the slightest moment it will probably hit you and make you fall to the
+ground, with potentially disastrous consequences because of the enemies there.
+When you reach the platform with a crab, jump over it and hurry to the next
+ladder to pick up a welcome padlock and nine energy tokens.
+
+Jump to the right, avoid the crab, and pick up one of the sacks. Start climbing
+up the ladder and use your sack to dispose of the fire-breathing enemy. Be very
+careful doing this because he shoots quickly.
+
+Now, jump on the small platform to your left, just above the platform with the
+crab. Crouch there to find a secret passage. You will reappear very slightly
+further in the level, but most importantly there will be nine energy tokens
+there.
+
+Get off the scaffolding by going right and down whenever possible. Soon you
+will reach ground level, and you will see a padlock there. Take it.
+
+From the platform where the padlock was, jump right so that you land to the
+right of the sword wielding enemy. He will chase you, but just keep going right
+and he won’t catch you. When you arrive at the well, jump on top of it and
+crouch to enter it.
+
+There is another padlock in there. Go left and let yourself drop down a hole.
+From there, go left and watch the movements of the enemy fly. You need to go to
+the other side but the fly is blocking your way. However, there are gaps on the
+floor which you can use to crouch and take cover when it comes near.
+
+Once you got past the fly, go left and let yourself drop down again. There is
+yet another padlock here. This is where the level becomes pretty difficult,
+don’t be surprised if you die a lot here.
+
+You will have to go right and make several tricky jumps. Wait for the first
+stalactite to fall, then jump on the small ledge, and go down to the one below
+that, being careful not to slip. The second stalactite only falls when you get
+near, so what you have to do is quickly jump to the ledge under it, then just
+as quickly jump to the next platform. If you are not fast enough, you will get
+hit and possibly fall to your death.
+
+Continue right and make several jumps across the small ledges. Wait for the
+moving platform and use it to jump to the next ledge with a padlock. Be aware
+this padlock is horribly placed: if you die in the following sequence (i.e. the
+rest of the level, because this was the last padlock) you will reappear by
+falling down here to a slippery spot, and you will sometimes die as soon as you
+reappear if you slip and don’t correct your fall. Because of this, I would tell
+you to avoid taking this padlock, but with the way it’s placed in your way this
+might be difficult.
+
+You now have to ride the large moving platform to the right while avoiding all
+the stalactites. You will die if they touch you (I think because when they hit
+you they also push you down to the dirty water below), so be careful! Watch the
+rhythm at which they fall, and position yourself accordingly to the left or to
+the right of the moving platform. Jump to the other side whenever possible.
+This sequence is difficult and most of all is unforgiving.
+
+The rest of the level is thankfully easy. For your information there is a
+secret passage for some energy tokens around here, but it involves making
+several more jumps, and since you really don’t want to risk dying now I
+consider it’s not worth the risk.
+
+Continue right and take the pile of bones. You will soon come across a mummy,
+move close to it to wake it up then dispose of it with your bones. Take the
+other bones you see here, and continue right.
+
+Jump up the ledges and kill the fakir with your bones when you see him. Keep
+going up, there is nothing difficult here. You also, for some odd reason, find
+another oil lamp which gives the same password as the first one.
+
+When you reach the top, there will be twelve easily accessible energy tokens
+for you. Go left and you will see a fakir moving around, blocking your way like
+the fly did previously. Use the same technique and take advantage of the gap in
+the floor to crouch when he comes near.
+
+At the leftmost side of the passage you will find a trampoline. Take it and
+jump up four ledges. Place the trampoline on the top ledge, preferably not too
+close to the wall. Bounce on it and direct your jump slightly to the left so
+that you can come out of the well. If you accidentally drop your trampoline
+here and must go back down, watch out for the fakir before dropping down.
+
+When you are back to the surface, walk all the way right to end the level.
+
+
+
+****** LEVEL 11 ******
+
+This level is of moderate-high difficulty and is really long. I will however
+show you a shortcut to skip about two thirds of it. This also makes you miss
+several energy tokens, but you can’t have everything.
+
+Start by collecting the oil lamp. The shortcut I was telling you about is right
+here at the beginning of the level, but first you need to collect six crates.
+Go right, jump above the enemy, and you will find the first crate here. I
+recommend getting rid of the enemy because he will annoy you, but don’t throw
+your crate at him, you need it! Instead, use the upwards throw technique (keep
+the up arrow pressed as you press space bar) and time it so that it lands on
+the enemy: that will kill him and you will still have your crate.
+
+Place that crate just to the left of the blue tent. Continue right and you will
+find four readily accessible other crates as well as a trampoline. Bring all of
+this to your starting location. Make a pile of crates on top of where you
+placed the first one, then place the trampoline at the top.
+
+You still need a crate, or you will get stuck later on. Go right again and,
+avoiding some crabs, you find your sixth crate. Pick it up and go back to the
+starting location.
+
+With your crate in hand, jump on the trampoline on top of your crate pile and
+bounce on it repeatedly until it takes you to a hidden set of platforms in the
+sky.
+
+These icy platforms are slippery, and you may fall down a few times (thankfully
+there is nothing lethal underneath, you’ll just have to start over). I can’t
+really explain to you how to avoid slipping, it is something you have to learn
+by trial and error. Jump all the way up.
+
+When you reach the upper platform, make sure not to touch the frozen spikes or
+you will die. Drop your crate on the small platform where you emerged, climb on
+top of it, and jump up to the higher level. This is why you needed to bring
+that crate: if you don’t have the extra height, you will not be able to jump
+high enough and will be unable to go further.
+
+The next sequence is a short tower climbing session that may bring back bad
+memories of level 7. However I will explain an easy way to do it.
+
+Take the new crate here and go right. Climb up the ladder, ignoring the
+platforms on the right (this is where you would have arrived if you had not
+taken the shortcut). When you reach the upper floor, don’t go left because a
+fakir will block your way and you need to save your crate for later. Instead,
+jump on the balcony and position yourself right under the ladder you see on the
+upper floor. Jump up a few times and you should be able to grab the ladder.
+
+Use the ladder to immediately climb up to the next floor. There is a
+fire-breathing enemy here, but you can bypass it the exact same way as before.
+While on the balcony, position yourself right under the ladder you see on the
+upper floor, and jump up until you manage to grab it.
+
+From then on climbing up the tower will be a very simple affair, just climb the
+ladders one after another. Around this time, a third fakir will appear and will
+start chasing you in a fashion reminiscent of these helipads in level 7. This
+is why I made you save that crate: throw it on that fakir as soon as you see
+him and you will be rid of him.
+
+When you reach the top, you will find a padlock, twelve energy tokens, as well
+as a cage with your fiancée. (What is she doing there? Hadn’t we found her
+already? This part is shrouded in mystery for me.)
+
+Take the padlock and the tokens and grab the cage with your fiancée. You need
+to hold on to it at all times because you must have it with you in order to end
+the level (if you reach the end without carrying the cage, nothing will
+happen). You can throw it around and it will not disappear, however it cannot
+be used to attack enemies, so there is no point to throw it around.
+
+If you are playing Moktar, don’t ever touch a padlock again, because you will
+restart without the cage, which will have respawned to its original location
+and will be inaccessible by then (thus ruining all your chances of beating the
+level and resulting in a forced game over). If you are playing Titus, this
+issue has been fixed, but you MUST be carrying the cage as you touch the
+padlock or you will similarly reappear empty-handed.
+
+Jump to the right on the icy platforms, and don’t fall. After the three small
+platforms there will be three big ones, then again two small ones. When you are
+on the last platform you can drop down to your right.
+
+You will be in front of a tower, ignore it and go right. When you reach a
+larger building, you may want to use the upwards throw technique to throw your
+fiancée on the balcony up here. This is not mandatory, but will make things
+easier.
+
+Continue right and, when you reach the quicksand, start crawling instead of
+walking because a knife throwing enemy will be on your right. Wait for the
+moving platform here to be at your level, and jump on it while avoiding the
+knives. When you’re on top, continue left and ignore the right side as an
+annoying fakir blocks your way there.
+
+Jump left across the balconies until you find your fiancée again (if you had
+dropped her there). Pick up the cage and ride the moving platform to go up.
+
+Jump to the upper balcony on your right, go right and watch out for the camel’s
+projectiles, then jump up to the two small ledges. From here, jump up to reach
+the roof and start jumping across the roof ledges as quickly as possible. You
+must be quick because a fakir that follows you around will soon appear, and
+your only chance to get past him is if you do not waste any time. Otherwise he
+will be in your way and you will have to backtrack.
+
+When you’re on the rightmost ledge on the roof, make the largest possible jump
+to the right. If you did it correctly, you will have avoided a fakir who will
+now be on your left and leave you alone.
+
+If you are playing Moktar, do NOT touch the padlock here! As I explained above,
+if you die and restart here, your fiancée will have respawned to her original
+location, which is inaccessible now, thus completely ruining your chances of
+beating the level. If you are playing Titus, you can touch the padlock but ONLY
+when you are carrying the cage, or if you die the game will similarly make it
+respawn to its original location.
+
+Continue right and, when you reach a tower with a fakir, drop the cage here
+because you are going to be doing some acrobatics. Be prepared for a difficult
+sequence.
+
+Your goal is to reach the top of this short tower while avoiding the fakir who
+actively pursues you. In order to do this, bait him and make him go to the
+lower left of the tower, then quickly go right. Ideally, by now, the fakir
+should be around the horizontal middle of the tower and completely on ground
+level. Practice this movement several times if needed so that you can position
+the fakir more or less according to your wishes. Once he is in that spot,
+quickly climb up the rightmost ledges to reach the upper level. Hurry and grab
+the blue ball here. This is easier said than done, but you need that blue ball
+for later, so be patient and try until you succeed. Once you have the blue
+ball, you can easily kill the fakir. Don’t lose sight of the ball because
+you’ll need it again shortly.
+
+Now, grab the cage and climb once again to the top of the tower. Jump on the
+rightmost edge and wait for the moving platform to come near you. Jump on it.
+When the platform reaches the end of its path to the right, throw your cage to
+the right. Don’t worry, you won’t lose it.
+
+Go back to the place where you left the blue ball, take it, and board the
+moving platform again. This time, jump to the right and you will land in the
+area of the level boss.
+
+~Boss fight~
+The boss just keeps jumping around in a predictable fashion, and you simply
+have to throw your ball at him repeatedly. What slightly complicates matters is
+that the floor is entirely made of quicksand and you will have a harder time
+controlling your character, but still it’s not really difficult. Avoid the boss
+and throw the ball at him whenever possible, walking under him when he does his
+jumps.
+
+Once he is gone, take the cage back and walk to the right edge of the area to
+end the level.
+
+
+
+****** LEVEL 12 ******
+
+This level is short and may seem deceptively simple at first, but it contains
+some tricky passages and, in Moktar only, something that is either a bug or a
+very cheap game over trap.
+
+Start by grabbing the oil lamp. Isn’t it a nice change that lately they all
+appear right at the beginning?
+
+The first thing you need to do is to grab the blue ball you see on top of a
+ledge here. You can either take all the pots lying around and place them in a
+pile that you can climb up to access the ledge, or you can do it the easy way:
+place yourself under the ledge with the blue ball and crouch there. You will
+enter a secret passage that teleports you on top of the ledge, saving you a lot
+of time.
+
+You will now need to climb the mountain on your right, and you will have to be
+careful because rocks are rolling down from the top. You will continuously have
+to jump over them during your ascension.
+
+When you are ready to climb, you will very quickly find yourself facing a wall
+too high for you. In order to climb it, you need to place items against the
+wall so that they get “stuck” on it.
+
+You can either stick the blue ball there and bounce on it repeatedly, making it
+go up along with you. In that case, don’t forget to make it go all the way up
+and pick it back up afterwards. This is not difficult to do in itself, but you
+have to be careful of the rocks while you do it. The second option is to stick
+two pots against the wall at different levels, creating steps for you. Now you
+can jump on top, blue ball in hand. The first three rocks always appear close
+to each other, so if they have not appeared yet by the time you are up on this
+wall, I suggest you wait for them to pass by before you continue.
+
+Keep jumping and climbing and make your way to the top, jumping over the
+rolling rocks as needed. The scrolling can be annoying here, make sure to wait
+for the screen to scroll properly before you continue. Whenever possible, try
+to jump over the rocks when you are standing on a flat ledge, it is much easier
+than when you are standing on a slope. This sequence can be quite difficult if
+you start getting hit and having to fetch your blue ball back, so advance
+carefully.
+
+Once you made it to the top, the rocks will stop falling. Keep going right
+until you reach the edge of the mountain. Make the biggest possible jump to the
+right, directing your fall to the right as much as possible. If you did it
+correctly you will land at the bottom of a lighthouse.
+
+In Moktar there is padlock here, but do NOT touch it! It is either a very cheap
+trap or an oversight on the programmers’ part: if you ever need to restart,
+this padlock will systematically make you reappear against an enemy, and you
+will get thrown in the water and die. This will mercilessly continue until you
+run out of lives. Therefore, leave the padlock alone! In order to avoid
+touching it, place your blue ball here and use it to bounce over the padlock (a
+normal jump will not be high enough). If you are playing Titus, the padlock
+won’t be here, and you can use your blue ball to dispose of the two pirates
+here instead, or if you prefer you can keep it as extra ammo for the ascension
+of the lighthouse. In the rest of the walkthrough, I will write as if you no
+longer have the ball with you.
+
+Go right, jumping over the two pirates, and you will find a crate on the other
+side of the lighthouse. Take it.
+
+Start climbing up the lighthouse by jumping on the ledges to your right. You
+will soon see a pirate on one of the ledges, throw your crate at him to kill
+him. As you have probably seen, there are two more crates below you (which you
+can reach by jumping on the left ledges instead of the right ones), and a third
+crate past the pirate you have just killed. You will need all of these.
+
+On the rightmost ledge here, you will see that above you there is another ledge
+that you can’t quite reach. Take one of the crates and drop it here, giving you
+the extra height you need to reach the upper ledge.
+
+Take yet another crate and jump up. There will be another pirate on your left,
+kill him with your crate. Go back down and take the last remaining crate, then
+climb back up until you see yet another pirate. The way there is very
+straightforward. If you are playing Titus, the padlock will be here, and this
+one is safe to take.
+
+Kill the pirate with your crate, then go back down and pick up the last lone
+crate that you have passed while climbing up.
+
+Climb back up to the top and position yourself on the second ledge from the
+left. You need to access the upper level, and the middle of the platform above
+(the area in the lighter shade of grey) can be jumped through. Wait for the
+pirate above to be sufficiently far away to the left and jump up. Do not use
+your crate to kill this pirate: you need it as extra height to reach the upper
+level.
+
+Position the crate on the right edge of the platform so that you can jump up to
+the slightly smaller platform above. Mind the pirate there, as usual.
+
+On this new floor, avoid the pirate and take the magic carpet on the right.
+Quickly jump up to the right side of the roof, against the cone shaped top. You
+are now at the very top of the lighthouse.
+
+Throw your magic carpet to the right and ride it. The ride will last quite a
+while, then your carpet will suddenly fold and you will start falling down. As
+soon as it happens, direct your fall to the right as much as possible. If you
+did it correctly, you will land on a large piece of ground with some big fish
+in the water underneath.
+
+Go right but be aware of the fish: when you get near them, they quickly jump
+out of the water to hit you. The best strategy is to jump over them in advance,
+so you will never get too close to them and they will not get a chance to
+attack you.
+
+Keep going right past some pots (there is a padlock hidden behind the pots
+here, but the level is over; it is probably meant for people who want to stick
+around and collect some hard to grab energy tokens on the left, but for the
+purpose of this walkthrough I’ll go the safe way and say it’s not worth the
+risk). Walk to the right edge of the screen to end the level.
+
+
+
+****** LEVEL 13 ******
+
+This level is a huge and confusing maze where you explore a gigantic
+underground pipe. However, it will be a breeze for you thanks to a well hidden
+secret passage that allows you to skip ALL of the level, and collect forty
+seven energy tokens on the way too. Note that there is no oil lamp in this
+level.
+
+As soon as the level introduction screen appears (thus before you actually
+enter the level), keep the up and right arrows pressed at the same time. When
+the level loads, if you have done it properly, this will make you jump through
+an invisible passage and you will be on top of the screen, walking on an
+invisible floor. It is necessary that you start pressing the keys before you
+even start the level, because if you are not ultra quick you will fall down and
+the level will start normally.
+
+Walk right and collect all the energy tokens on the way. After that the
+invisible floor will turn into a stairway going down, keep going and walk to
+the right edge of the screen to end the level.
+
+
+
+****** LEVEL 14 ******
+
+If you are playing Titus this is the last level, but Moktar still has one after
+that. It is, no surprise, pretty difficult. However a lot of the difficulty
+stems from figuring out what to do. If you know how to solve the level it will
+be easier.
+
+Jump on the platform to your right and grab the oil lamp. Be careful here
+because the ledges are harder to see than usual and your jumps must be precise.
+
+We are going to take a secret route that will make you avoid two frustrating
+areas, namely a sequence with some surprise invisible pits (I really hate
+those), and a particularly dangerous sequence where you have to jump across
+several narrow ledges which all have enemies on them.
+
+Use the ledges to jump up to the roof of the building you are on, taking the
+crate you will see along the way.
+
+Go to the top leftmost ledge and place your crate there. Go on top of it and
+jump: you will reveal an invisible platform. Keep jumping up until you see a
+magic carpet. Walk up to it (but not further because the platform stops there)
+and pick it up.
+
+Now you need to reach the roof of a second building, located to your right and
+completely identical to the first one. You can either climb down and go there
+the regular way by jumping across ledges to your right, or you can throw your
+carpet and ride it from the place where you found it. If you use the carpet,
+note that you will have to control it and make it land by yourself, because if
+you just sit back and let it go all the way right you will go past the
+building. This is not too hard to do but it is easier if you know exactly where
+the building is located, so if it is your first time playing the level you
+might be better off jumping there the regular way. It’s your call.
+
+Now that you are on the roof of the second building, stand on the rightmost
+ledge, throw your carpet and ride it. You will get past a chimney with three
+pipes, ignore it. Quickly afterwards you will see another chimney, with only
+one pipe this time. You need to land on top of that chimney. Don’t bother
+trying to keep the carpet from this point on because you can’t take it with you.
+
+Once you are on top of the correct chimney, crouch to enter a secret passage
+that acts as a convenient shortcut through the level.
+
+You will reappear in an enclosed area with two trampolines and a very tall
+chimney to your right. You need to go right past that chimney, while taking
+BOTH trampolines with you.
+
+How can you do that? Take one of the trampolines and position it near the
+chimney on the right, but not completely against it. See these intermediate
+white ledges on the chimney? The trampoline needs to be positioned in such a
+way that when you jump on it, the trampoline goes up with you thanks to the
+momentum, and lands on the upper ledges. If the trampoline is properly
+positioned, all you will have to do is jump up and it will do all the work by
+itself. Don’t forget to take the second trampoline with you before you do any
+jumping attempts, because as I said you need to have both of them.
+
+When you are on top of the chimney, take one of the trampolines and drop it to
+the right on the ground below. Take the remaining trampoline in hand and drop
+down to the right yourself.
+
+Continue right. Climb on top of the two crates here to be able to jump on the
+chimney. Jump on the platform to the right, and keep going right.
+
+Here is another tall chimney you need to pass. Make a pile of the five crates
+that you see here, then put the trampoline you are carrying on top of it.
+Before you jump up, go back to where you left the other trampoline and take it
+with you. Once you have it, use the trampoline on top of the crates to reach
+the top of the chimney.
+
+Drop down to the right while hugging the wall. As you can see there is a large
+pit to your right that seems impassable, as well as two energy tokens that you
+must NOT attempt to take as it would ruin your chances of completing the level
+(anyway, you cannot take them here without killing yourself at the same time,
+so it would be a bad move in any case).
+
+This sequence is pretty hard to figure out if you don’t know what to do in
+advance. Start by dropping your trampoline on the ledge you are standing on;
+you will need it later. Now, crouch on that ledge to enter a secret passage.
+You will reappear in a new room located just above that impassable pit. Take
+both energy tokens here so that the crates fall down their respective holes.
+The crates will land on the energy tokens below, creating jumping platforms for
+you. Go to the bottom right corner of this new room and crouch to exit.
+
+You will reappear at the same location, on that small ledge in front of the
+pit. Take the trampoline that you left here and jump right, jumping across the
+two crates. Once you are on the second crate, you need to reach the chimney you
+see on your right, but a normal jump will not work. Drop your trampoline on the
+crate here, being careful not to drop it into the pit, and use it to jump on
+top of that chimney.
+
+From here, take some momentum and jump right as far as possible to reach
+another platform. Keep walking to the right to end the level. If you are
+playing Titus, you will now see the game’s ending. If you are playing Moktar
+you have one more level to beat.
+
+
+
+****** LEVEL 15 ******
+
+This level is only featured in the Moktar version. As I explained in the
+introduction to this document, it is a surprisingly uninteresting level
+compared to the rest of the game. It is thankfully short and not too hard by
+this game’s standards.
+
+Start by grabbing the oil lamp.
+
+This level is a straight line where you will have to avoid several enemies
+before facing a boss. The idea is to reach the boss as quickly as possible to
+be safe from the other enemies, who will not follow you past that point. As
+long as you don’t get yourself killed, it doesn’t matter if you get hit a few
+times as there will be many energy tokens for you near the boss.
+
+Take the anvil here, and be aware that, until you reach the boss, it will be
+the only ammo you will have. Furthermore, the anvil disappears after use even
+if you use the upwards throw technique, so you really can only use it once.
+
+Go right and jump over the first car. Keep going and you will have to jump over
+two more cars. You can use the signposts here to gain some extra height and
+make your jumps easier.
+
+At some point there will be an unmoving car, and to the right of it are a very
+slow moving car and a helipad enemy. The unmoving car cannot hurt you, so you
+can walk right through it. I recommend you use your anvil here to dispatch
+either the helipad or the slow moving car, as avoiding them both at once is
+tricky. Thankfully, the helipad will not pursue you all throughout the level,
+it will stop chasing you once you get out of his area.
+
+Shortly afterwards you will have to jump over a very fast car, be careful
+because this one can easily take you by surprise.
+
+Keep moving right to face another very fast car and another helipad enemy. Like
+the other one, this helipad will not pursue you out of his area.
+
+Continue right and you will find a scooter. You can ride it by standing on it,
+but your ride will be continuously interrupted by the signposts, so I wouldn’t
+bother. Just take it with you: you will use it to fight the boss that you are
+about to encounter.
+
+~Boss fight~
+The boss just walks around the area, waiting for you to repeatedly throw your
+scooter at him. He is too tall for you to jump over him, but you can do so if
+you either stand on top of your scooter or on top of a signpost. The main trick
+is that you will want to stay on the right part of the level now, because the
+boss by himself is easy, but things will get much more complicated if you have
+to fight him among the other enemies. Therefore, I suggest you start by jumping
+over the boss (using your scooter or a signpost as extra height) and going
+sufficiently to the right to be far away from the other enemies. If you keep
+going right you will find a huge load of energy tokens forming the word
+“Zoubida” and a heart. Take them to restore any energy lost so far, but don’t
+take them all at once: save them in case you get hurt again during the fight. A
+good thing to know is that if the boss gets too far away from you, he will
+eventually reappear near you even if it doesn’t make sense (for example, he can
+be seen going left and eventually reappear on your right). Use this to your
+advantage and don’t ever chase the boss to the left of the level where the
+other enemies will be waiting for you. Instead, let him go left and keep going
+right until you see him again.
+
+Once the boss is gone, walk to the right edge of the screen to end the level
+and see the game’s ending. If you have successfully played all levels from 1 to
+15, some major congratulations are in order!
+
+
+
+
+
+
+Written by ManiacMansionFan
+Contact: maniacmansionfan@hotmail.com
+
+
+Please do not distribute or reproduce this walkthrough anywhere without my
+explicit permission. The ONLY websites allowed to host this walkthrough are:
+
+* http://www.gamefaqs.com
+* http://www.neoseeker.com
+* http://www.supercheats.com
+* http://ttf.mine.nu
+
+Please contact me if you see it reproduced anywhere else.

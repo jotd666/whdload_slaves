@@ -1,0 +1,1692 @@
+                      ================================
+                               D/Generation
+                               Walkthrough
+                      ================================
+
+Copyright 2003 Nathan Kuslis
+Version 1.10
+2-24-04
+Author: Naytie, aka Nate Kuslis
+E-Mail: Naytie@yahoo.com
+
+If you want to email me, please use the subject "D/Generation" so that I do not
+think it is junk mail.
+
+Note: This is my first FAQ that I have ever written, and I am trying to make it
+as professional as possible. Please bear with me and please point out any
+mistakes that I make.
+
+
+===============
+Version History
+===============
+
+-Version 1.10-
+Fixed password for level 84. Updated a strategy or two.
+
+-Version 1.00-
+Wrote walkthrough for level 89 and updated previous levels. This is it! 
+
+-Version .90-
+Wrote walkthrough for level 88.
+
+-Version .70-
+Wrote walkthrough for level 87.
+
+-Version .60-
+Updates obstacles section. Created items section. Wrote walkthrough for level
+86.
+
+-Version .50-
+Wrote walkthrough for level 84 and 85. Double whammy. Also updated obstacle
+section.
+
+-Version .40-
+Wrote walkthrough for level 83 after long break. School and college
+applications do that to you.
+
+-Version .30-
+Wrote the walkthrough for level 82. Updated controls. Updated obstacles.
+
+-Version .20-
+Wrote walkthrough for level 81 and added individual level stats. Revised some
+of the writing.
+
+-Version .10-
+Wrote introduction, game background, controls, obstacles, gameplay info,
+general gameplay strategies, and began the walkthrough. Wrote walkthrough for
+floor 80. Whew!
+
+
+============
+Introduction
+============
+
+Way back, many years ago when I was younger than twelve years old, my dad
+bought me a cd-rom challenge pack. One of the games was D/Generation. At the
+time, this game was awesome. Its graphics were amazing and the gameplay was
+captivating. I found this game on an abandonware site (I won't mention which
+one), and decided to download it. After playing the first level, I decided to
+check www.gamefaqs.com to see if there was an FAQ written for it, and to my
+surprise, there wasn't, so I took it upon myself to write a walkthrough for
+this game. I will try to guide you through each scene and level, and hopefully
+help you save each of the civilians inside the Genoq facility. Good luck and
+have fun!
+
+
+===============
+Game Background
+===============
+
+(Taken from the manual found at www.the-underdogs.org)
+Alone with your jetpack, you have flown from Finland across the Urals and the
+entire length of Asia to deliver a package to Genoq Biolabs in Singapore.  You
+land on the building`s 80th floor setback, finding  nobody there to greet you.
+When you enter the building, the main door snaps shut behind you, and you
+narrowly escape being killed by the building`s security system.
+
+You find the receptionist hiding behind her desk.  She tells you that Genoq`s
+head scientist, Derrida, has been demanding the package you`re carrying.  His
+last panicked message came over an hour ago.  This package is more important
+than you could have thought.
+
+You realize that there is only one course of action, that you `must` bring the
+package to Derrida, and, if at all possible, rescue any survivors you find
+along the way.
+
+----------
+
+As the last paragraph states, your ultimate goal is to bring the mysterious
+package to Derrida on the 89th floor. Along the way, you will meet people that
+will help you on your mission. Others say nothing and only wish to leave. It
+is not absolutely imperative that you save these people, but for each person
+that you save, you get an extra life.
+
+As you will notice, there are also many hidden rooms that you can enter that
+are not essential to your mission, but I will try to include them to make the
+game complete.
+
+
+========
+Controls
+========
+
+Movement - You can use the arrow keys to move, but the game becomes quite
+difficult when you can only move in four directions. I suggest you use the
+numeric keypad in order to move since you have eight directions to move. It
+may take a while to get used to, I suggest you familiarize yourself with the
+movement controls in the first or second scene of the game, before you run off
+and get yourself killed. 8 moves up, 2 moves down, etc.
+
+Enter - Talk to people you meet in Genoq. I believe you MUST talk to certain
+characters, so I suggest that when you meet a character, press Enter when
+standing next to him or her just in case they have something to say.
+
+Spacebar - Fire your laser. You have infinite ammo once you find your laser,
+just be careful with it. You can kill some bad guys with it, but just be
+careful since you can also kill civilians. Your armor protects you from your
+laser, which is all it protects you from. You can use your laser to shoot wall
+buttons to open doors.
+
+T - Throws grenade, if you have any. Creates a projectile that will travel in
+a straight line until it hits something. Can destroy a security turret whereas
+a laser cannot. Also kills the C/Gens.
+
+Escape - Pauses and unpauses the game.
+
+S - Shows your status, including your lives, grenades, the floor number you
+are on, the number of people you have rescued, your security level, and the
+scene you are in. Almost all of them are self-explanatory. Your security level
+is the highest level key that you currently have for the level. The scene you
+are on will be used as reference, although I do not think they are in numerical
+order. For instance, I believe that there is a scene 24 on level 80 and a scene
+12 on level 81. Strange how the programmers set this up, don't you think?
+
+U - Selects items or weapons, if you have any. Simply hit U and then use the
+arrow keys to select.
+
+Ctrl-A - If you are stuck, you can use this to restart the scene you are in,
+but it takes away one life, so either don't use it or use it sparingly!
+
+Ctrl-Q - Quits the game.
+
+Ctrl-R - Restarts the current level.
+
+Alt-R - Restores the previously saved game (only 1 slot!)
+
+Alt-P - Pauses the game.
+
+Ctrl-S - Switches sound on and off.
+
+Alt-S - Saves game. Note: Only saves the level you are on, not the scene. So if
+you save on a level, get far, and reload, you will start at the beginning of
+the level. You also only get one save "slot" (i.e. you can't choose which game
+to load. You either load or don't). Be careful about when and where you save.
+
+
+=========
+Obstacles
+=========
+
+In your perilous mission, you will encounter many obstacles, including
+electrified floors, monsters, and security turrets. This section describes
+each obstacle in depth.
+
+Doors - About 40% of the puzzles you will solve have to do with opening doors.
+Some are open when you enter a room, most are not. They can be triggered by
+pushing a wall button, securing a room, passing a security laser, security
+keys, and secret wall buttons. You can stand on an open door, fire your laser,
+and let it hit the wall button that triggers the door. It will turn a different
+color, but will close when you step off of it. Lasers do not go through doors
+and will bounce off of them if they hit one.
+
+Security turrets - These guys are found on every floor. They are little green
+pipes that are bent at a 90 degree angle and have a red "eye". Usually, they
+will spin around, searching for targets to destroy. If you or a person you are
+helping gets in the vision of the "eye", the turret will shoot what resembles
+one of your grenades at you. If it hits you, boom, you're dead. You can dodge
+the grenades and walk around the turret out of its view safely. Just keep
+moving. You can use grenades to destroy these.
+
+Electrified floors - Not very hard to recognize, a square in the floor will
+light up in red, green, and blue colors. It looks cool, but don't step on it!
+These are pretty easy to bypass unless there is a line of them. In that case,
+wait until the first or second square goes on and off, then attempt to cross
+the line.
+
+Mines - Black tiles with a red light going around the perimeter of the tile.
+They don't go on and off, so just completely avoid these at all costs.
+
+Lasers - Some rooms will contain lasers that bounce off the wall in a
+continuous path. Just try to find out when you can go by safely, time it right,
+and execute. It gets very hard when there are multiple lasers in the room.
+
+A/Generation - These are the red bouncy balls that you see. Not very harmful as
+long as you get them from long range. They will "turn invisible" when the see
+you (go from red to just a clear object with a green outline), and are not much
+harder to kill. One shot from the laser, they are dead. If they do catch you,
+they will bounce with you inside for about 2 seconds and then explode, and you
+die. You can shoot a laser, bounce it off the wall, get caught in the
+A/generation, and have the laser kill it and you will live.
+
+B/Generation - A blue pencil eraser. These guys will also bounce around, but
+when they see you, they can jump very far and hide in the floors. You can still
+see them by the green dotted-line in the floor, so to kill them, walk close
+enough for them to jump out and then immediately fire your laser. If they catch
+you, they will stomp you into a pulp.
+
+C/Generation - A bad guy that can disguise himself to look like a civilian or
+an object in the room. They turn black and red when you get close, and if they
+get close enough to you, they decapitate you. Be careful, because your laser
+cannot kill these guys, but grenades can, so make sure you save your grenades!
+
+=====
+Items
+=====
+
+Freezer - This looks like a stopwatch when you select it. Basically, anything
+that moves will stop, including any laser you shoot. Only useful in select
+situations.
+
+Package - You can't use it, but if you accidentally hit "u", just select this
+so you don't waste your precious items.
+
+Bomb - Looks like a little pink pyramid when you use it. It will puff up a few
+times then explode. It can kill you if you're close enough, so be careful.
+These babies can blast through doors, so you should conserve them for ones you
+can't open without them.
+
+Personal Shield - This thing rocks. It makes you appear blurry, but you can't
+be killed! Only lasts a short while, so conserve these too.
+
+
+=============
+Gameplay Info
+=============
+
+If a room has monsters in it, it is considered not secure. There is usually a
+blinking red panel somewhere on the wall to signify the status of the room. If
+it is blinking, the room is not secure. If it stays black, the room is secure.
+
+In order to secure the room, you must kill all non-human species present and
+seal the vents. Monsters such as A/Generations and B/Generations will spawn
+out of vents so that there is always one on the screen for each vent. After
+you kill the one, there is about a one to two second delay before another
+monster appears. In order to seal the vent, walk over it. When it is sealed,
+it will cover with either a red or green top. Red means that the room is not
+secure, green means the room is secure.
+
+Civilians will not get up, greet you, or move around if a room is insecure. So
+if someone is just sitting there, secure the room!
+
+A civilian is considered "rescued" when the run down the hall with the arrow
+and out of the room you are in.
+
+If a civilian is killed at any time in the room, they are dead. Gone. So the
+only way you can save them is if you restore your game or sacrifice a life and
+redo the room, which is pointless since you only get one life if you save him
+or her. Don't do it unless the person as essential info. Or if you want to save
+everyone. You kind hearted person you.
+
+Note: If a civilian begins to run down the hall with the arrow and you exit the
+room and return, they disappear. You do not get an extra life until it says "X
+People Rescued!," where X is the amount of people you have saved. So don't
+leave the room until it says this!
+
+
+===========================
+General Gameplay Strategies
+===========================
+
+Your laser is your best friend. Don't forget to get it on level 80 or you will
+be screwed. It can do anything from kill monsters to blow up stuff to hit wall
+buttons.
+
+If you fire your laser, the beam will bounce off reflect off of walls. Use this
+to your advantage! Kill monsters at long range to be safe! Hit inaccessible
+wall buttons! The laser will bounce off the wall 4 times before disappearing.
+
+Obviously, to activate wall buttons, either touch them or shoot them with your
+laser. Be careful about the number of times your laser can bounce off the wall.
+You can lock yourself in a room if you hit a monster. If you must, pit yourself
+in the laser bolt's path to stop it after it has hit a wall button. Nobody gets
+hurt and the button gets activated!
+
+I find that the best way to kill monsters is from long range. Line up on the
+diagonal axis (using 1, 3, 7, or 9 to move) and then fire. Works like a charm.
+
+In order to seal off most vents, I usually kill the monster, and if I'm close
+to the vent, I walk over it. If not, I line up on the diagonal axis and shoot
+as soon as I see anything pop out of it. Then I run over it and seal it.
+
+Watch out for electric eyes. They are very small pink dots on the wall that
+are easy to miss if you don't look closely. You can see an example in the
+second scene of a game. They usually activate a door, though some make
+security turrets pop up. Watch out and pay attention to what they do! They
+can be destroyed if you shoot them with the laser you can destroy them.
+
+Before you help a civilian, try to make sure the room is as safe as possible.
+You will notice that rooms are considered secure even though there are security
+turrets still active or lasers bouncing off the wall. They are not alive, so
+you must be careful when leading the civilian to safety. If you can, try to
+lure a monster into a path of a laser. Now that's killing two birds with one
+stone.
+
+Some wall buttons are hidden or invisible, so if there is a door that you just
+can't open in a room, try walking along and against the walls. There's bound to
+be an invisible wall button somewhere.
+
+Conserve your grenades. You will only find a limited amount, so only use them
+if you absolutely have to. This includes killing security turrets that just
+keep killing you or civilians.
+
+Computers! If you see a computer in a room, make sure you walk up to it.
+Sometimes they will display useful information, other times they will add to
+the plot, some are absolutely useless, and others require user names and
+passwords. So make sure you check them all out!
+
+When you talk to civilians, try to talk to them as much as possible and pay
+attention to what they say. Select all of the available dialogues, and if they
+say "Can we leave now?" or something to that extent, you know you've exhausted
+the dialogue. You may then lead them to safety.
+
+Security turrets are probably the most-encountered obstacle throughout the
+game. They are usually easy to bypass, although it's a little harder when you
+are leading a slowly moving civilian. Try to turn them off if possible when
+helping a person. They only have a small angle of view in the direction they
+are facing, so sometimes you can sneak around them. Otherwise, if you have to
+walk in front of them and don't want to use a grenade, just keep moving and
+hope that their shots don't hit you.
+
+I just found out something interesting. If you stand on top of a turret while
+it is being activated, it will stay deactivated, so you change the sequence
+when you hit the button that activates it. This is helpful when an A/Gen or
+B/Gen keeps hitting a button that activates/deactivates a turret.
+
+
+===========
+Walkthrough
+===========
+
+Note: When I give directions, I mean the actual direction they are. So if I say
+up, I mean the up arrow or 8 on the keypad. If I say up left or upper left, I
+mean 7 on the keypad.
+
+Note: This obviously contains spoilers to the plot, so I will divide the scenes
+and write a strategy for each room. You do not have to save everybody, although
+it is recommended for the bonus lives that you receive when you save them.
+
+Note: Remember, you can always check the level and scene you are in by pushing
+the S button to see your status.
+
+Note: I will try to do the rooms in the order that I think you should do them.
+
+Note: I suggest you read the walkthrough for the room before you attempt
+anything so that you don't have to stop and read.
+
+--------
+Level 80
+--------
+
+"You had been in your apartment in Paris when the call came in. Hours later,
+after flying the length of Asia, over the Himalayas and the radioactive deserts
+of Kazakhstan, you arrive in Singapore carrying an urgent package for the
+scientist Derrida..."
+
+"Genoq brought in Derrida to head the special operations lab, the supersecret
+research wing charged with designing the next generation biomedicines. The
+message you received from Derrida was panicked and desperate. Perhaps there had
+been some accident, and the labs are now contaminated with a lethal virus or
+even worse..."
+
+*Note*: Sometimes I may say that you can pick up a freezer, but it could be a
+bomb or a shield, and vice versa.
+
+Total People: 6
+
+Total Grenades: 2
+
+Special Weapons/Items/Computers: None
+
++++++++
+Scene 1
++++++++
+
+Try out the movement keys if you have to. When you're done messing around, hit
+the wall button (yellow triangle on the wall) which opens the door. Proceed to
+the upper right to the next scene.
+
++++++++
+Scene 6
++++++++
+
+See the little flashing pink dot on the wall? It's on the bottom right. Once
+you pass this laser trip, the pink door will lock you in. Proceed into the
+Genoq facility to the upper right.
+
++++++++
+Scene 8
++++++++
+
+This is your first test of courage. Wait in the hall with the arrow until the
+security turret looks away, then dash for the wall button and hit it. The
+turret will retreat into the floor. Now, go talk to the woman. She is
+hysterical, but you can get a little information out of her. Lead her to the
+escape hall (as they will be called henceforth) and she will show herself out.
+Check out the messages on the computer. When you're ready, wait until the
+electrified floor goes away, and then cross over and head to the upper left.
+
++++++++
+Scene 3
++++++++
+
+You'll see a trapped person and a security turret. You're safe on against the
+upper wall in the escape hall, so when the turret faces away, run to the
+room to the upper left and stand next to the wall. When the turret faces down
+or down left, run around it clock-wise from the base and hit the button. It
+will open a door. Quickly run back towards the door and go into the newly
+accessible room. Get the key, which will give you security level 1. If you walk
+against the wall to the lower right, you'll hit the secret button that will
+open the blue door and give you access to the hall along the top of the screen.
+Hit the wall button and the turret will deactivate. Talk to the old man and
+find out some more information about Genoq and Derrida. Get the laser (the blue
+glowing thing behind the desk). Now you're armed. Cross over the electrified
+field and head down the hall to the lower left.
+
+++++++++
+Scene 43
+++++++++
+
+You'll be safe from the turret as long as you stay against the upper wall of
+the escape hall. When it looks away, shoot the tall gray things and get your
+first grenade. Watch the turret! When you're done, go back two scenes to scene
+8. Hit the gray wall button to open the security door. Head to the upper right.
+
+++++++++
+Scene 36
+++++++++
+
+Check out the computer. Strange. Hit the wall button closest to you to open the
+door. Kill the A/Generation (From know on, I'll refer to them as A/Gen's) to
+your upper right and go hit the wall button in that room. Go kill the A/Gen in
+the bottom of the room and seal the vent. The room will become secured and the
+red door to the upper right will open. Proceed to the upper right.
+
++++++++
+Scene 9
++++++++
+
+Hit the button at the end of the hall and cross the electrified floor. Kill the
+A/Gen. Hit the button near the desk to open the blue door. Stand on the blue
+door you just opened as far to the upper left as possible. Face right and fire
+your laser. You should hit the button which opens two doors. If you miss,
+reposition yourself and fire. *Alternate*: When the right most door is open,
+stand on it and fire at the button to the lower right. Hit the button to the
+upper right and all the doors should open. Head to the lower right.
+
+++++++++
+Scene 10
+++++++++
+
+Shoot your laser right away to kill the A/Gen. Hit the only button you can to
+open the door. Go in and kill another A/Gen and seal the vent to secure the
+room. Stand on the open door and fire at the button you just hit. Head right
+into the room. Move clockwise around the turret and hit the button on the upper
+right wall. Pick up the grenade. The turret should deactivate. Talk to the
+civilian and walk against the wall to the lower right where you find him. You
+should hit an invisible button to open the pink door. Lead him into the room
+with the vent. Stand on the open door and fire your laser at the button on the
+wall to the upper left. Lead him to the escape hall and then go down the hall to
+the lower left.
+
+++++++++
+Scene 26
+++++++++
+
+You'll see a turret and an A/Gen turning it on and off. Notice the little
+laser trip on the upper right wall near you. If you trip it, the turret will
+activate, so keep note of it. Wait until the turret is turned off and run to
+the wall the opposite of which the turret faces. Make sure you stay towards the
+top of the screen.  Hit the button to open the door. Kill the A/Gen and
+deactivate the turret. Blast the chair with your laser and greet the man. (I
+don't know what hitting the button along the lower left wall does besides
+change the color of the door). Stand next to the lower right edge of the table
+at the top of the screen. When you're ready, run to the escape hall. The turret
+will reactivate, but hopefully you'll make it to the escape hall in time to be
+safe. Head back two scenes to scene 9. Go past the electrified floor to the
+upper right.
+
+++++++++
+Scene 11
+++++++++
+
+Ignore the button to your left and walk around the turret and hit the button
+on the upper right wall. Go through the door that just opened and head to the
+lower right and hit the button. Go back up and stand to the right of where the
+first electrified turns on and off. As soon as it turns off, head to the upper
+left and get the key. Hit the button in front of you and go past the turret
+again and hit the button again. Head to the right.
+
++++++++
+Scene 7
++++++++
+
+This room isn't that hard, just time it right and cross past the lasers.
+
+++++++++
+Scene 12
+++++++++
+
+Hit the button that you can to open the door. Kill the A/Gen. Hit the button
+in the room you just entered. Kill the other A/Gen to secure the room. Hit the
+security button on the lower right wall and open the door to the civilian.
+Leader her to the escape hall and proceed to the upper right.
+
+++++++++
+Scene 13
+++++++++
+
+Last room of floor 80. Kill the A/Gen and hit the lower button. Try to lure the
+A/Gen in the top of the room into the laser. If not, go up to the vent so
+another comes out, and repeat the process until the laser hits one. Hit the
+other button to open the door to the person and the teleporter. Lead him to the
+escape hall and enter the teleporter. You beat floor 80!
+
+--------
+Level 81
+--------
+
+Total People: 5
+
+Total Grenades: 1
+
+Special Weapons/Items/Computers: 2
+The bomb that a civilian gives you - Scene 23
+The passworded computer - Scene 23
+
+++++++++
+Scene 14
+++++++++
+
+Just a few A/Gens. Hit the button to the upper right to open the door. Kill the
+A/Gen (2 if you trapped them both in there). Stand on the open door and shoot
+your laser at the button you just hit. Kill the other A/Gen(s)  to secure the
+room and exit to the lower left.
+
+++++++++
+Scene 15
+++++++++
+
+This room looks pretty crazy, but it's not. Just watch the electrified floor
+panels in the hall you are in and when the closest one shuts off, head towards
+the center of the room. There are electrified floor panels that go off around
+the four corners of the center part of the room. Seal the vent to secure the
+room and hit the lower wall button and head to the lower right.
+
+++++++++
+Scene 17
+++++++++
+
+Head to the upper right and hit the button. Kill the A/Gen and seal the vent
+to secure the room. Be careful - hit the lower button to open the door to the
+civilian, but beware of the now activated security turrets. When the turrets
+face up, lead the person to safety. Now, go to the top of the room where
+neither turret can hit you. Walk above both turrets and come down to the right
+of the right turret. Go down the hallway to the lower right.
+
+++++++++
+Scene 18
+++++++++
+
+Your first encounter with B/Gens. Hit the lower button to open the door and
+kill your first B/Gen. Seal the vent and hit the lowest button. Kill the other
+B/Gen and check out the computer. Quite a resume this Derrida has! Head to the
+lower left.
+
+++++++++
+Scene 46
+++++++++
+
+This puzzle looks tough, but isn't. The red and green lines running across the
+floor mark the path of the lasers, so just time it right and walk between the
+floor between the lowest and middle red and green lines. Now walk all the way
+to the lower right. Repeat until you  reach the nook with the key. Watch out
+for the electrified floor. Head back across the lasers and exit the room
+through the upper hall. You'll end up in scene 15, so just hit the button to
+open the door and head to the upper left.
+
+++++++++
+Scene 16
+++++++++
+
+Kill all of the A/Gens and seal the vents. Open the security door and watch
+the electrified floor. Lead the civilian over the floor when it is safe and
+watch him run to safety. Head down the lower left hall.
+
+++++++++
+Scene 20
+++++++++
+
+Kill the close A/Gen and seal off the close vent. Lure the other A/Gen in the
+room after the laser. Both the laser and the A/Gen disappear, so head in and
+seal the vent to secure the room. Hit the button to gain access to the
+civilian and save him. Head to the left.
+
+++++++++
+Scene 21
+++++++++
+
+This room is simple. When the security turret faces away, hit the lower button
+to open the door, then run in and hit the other button. Head back to the right
+to scene 20 and head to the lower hall.
+
+++++++++
+Scene 22
+++++++++
+
+Pick up the key when the floor isn't electrified. When the A/Gen opens the
+door, head through it. When the turret is deactivated, head up and hit the
+wall button. When safe, head back to the room with the A/Gen and kill it. Seal
+the vent to secure the room and make sure the turret is offline. If it isn't,
+hit the upper button and then head to the left.
+
+++++++++
+Scene 23
+++++++++
+
+Watch out for the electrified floor. Walk to the middle of the room and kill
+the A/Gen and seal the vent. Hit the left button to open the door to the other
+A/Gen. Kill it and seal the vent. If the door to the civilian isn't open, hit
+the right button to open it. Check out the computer and talk to the civilian.
+Uh oh. He doesn't know the password. On the bright side he gives you a bomb.
+Save him. In the room where he was sitting, there's a yellow thing to the left.
+Shoot it and walk over where it was. The door to the left should open. Go down
+the hall to the left.
+
++++++++
+Scene 4
++++++++
+
+Open the door to the civilian and talk to him. His name is Seth. He tells you
+the password is ostrich. Save him and head back to scene 23. Enter Seth for
+the username and ostrich for the password. The upper left door should open. Go
+through it and head up the hall.
+
+++++++++
+Scene 21
+++++++++
+
+Kill the A/Gen and seal both vents. Open the security door when the floor is
+safe and head through it to the lower left.
+
+++++++++
+Scene 40
+++++++++
+
+Your first encounter with teleporters. When the left turret faces down, go in
+the teleporter and head towards the left turret. Pick up the key and run
+around the turret. When it faces down, run to the middle of the room and
+up to the other turret. Repeat the process to get the grenade and head back to
+the teleporter. Exit the room through the left.
+
+++++++++
+Scene 25
+++++++++
+
+Kill the close A/Gen and the far one when it heads to your side of the room.
+Seal the close vent and when safe, cross over the electrified floors. Seal the
+other vent and open the security door. Go up the tube. You beat floor 81!
+
+
+--------
+Level 82
+--------
+
+Total People: 5
+
+Total Grenades: 0
+
+Special Weapons/Items/Computers: 1
+A shield that a civilian gives you - Scene 35
+
+++++++++
+Scene 30
+++++++++
+
+Immediately run to the upper-left to avoid the security turret and go up the
+hall. As you may notice, you will need a lot of security keys to get by in
+this room.
+
+++++++++
+Scene 27
+++++++++
+
+Hit the wall button to open the door. Pass over the electrified floor and kill
+the A/Gen. Seal the vent. Notice the mine in the left corner of the room. Hit
+the wall button on the left wall to open up the door to the lasers. Stand on
+top of the door you just opened. Shoot the button on the other side of the
+hall. When the lasers are heading to the lower right, as soon as they pass
+you, run to the hall at the top of the room. Head up.
+
+++++++++
+Scene 19
+++++++++
+
+Stand next to the closest wall button. When the B/Gen hits the button to
+deactivate the right security turret, hit the button and run behind the now
+inactive security turret. Hit the button to the right. After the turret gets
+reactivated and deactivated, run to the left against the wall where the green
+floor meets the black floor. When the B/Gen deactivates the left turret, run
+into the top room with the desk and chairs. Hit the button on the wall. Make
+sure the left turret is deactivated, and when the B/Gen comes in view, kill
+it. Run across to the lower left and pick up the security key. *Note* If the
+left security turret is active when you want to run across, just run straight
+across and don't stop. It won't hit you. To open the red door on the right,
+walk up to the corner above the left security turret and walk against the
+wall to hit a secret button. Head behind the right security turret and down
+the hall to the right.
+
+New Stategy: If you stand on top of the right turret while the B/Gen activates
+it, you will switch the sequence. Now both turrets activate/deactivate together,
+so you don't have to waste a grenade on it!
+
+++++++++
+Scene 45
+++++++++
+
+This room is very tricky. Immediately run to the upper room and pick up the
+grenade. When the laser heads up the hall to the left, run to the upper
+right room and pick up the grenade. You're safe in the upper two rooms
+because the laser will never go in there. When the laser is in the lower left
+room, run to the lower right room, pick up the grenade, and go back to the
+upper right room. When safe to do so, run back out the hall to the left. Head
+back three scenes to the first scene of the level with all of the security
+doors, scene 30. Hit the security wall button on the bottom of the screen and
+head down the lower hallway.
+
+++++++++
+Scene 34
+++++++++
+
+Run past the laser and lure out an A/Gen into the laser. Seal the leftmost
+vent. Hit the button to the left. Go to the lower right and seal the vent.
+Stand on the open door and shoot the left button with your laser to open the
+right door. Go through the door you just opened and seal the vent. Stand on
+the open door, face right, and shoot the right button. Lead the civilian to
+safety and head down the hall to the right.
+
+++++++++
+Scene 35
+++++++++
+
+Run past both lasers and hit the button to your right. Run into the top room
+and seal the vent. Stand on the open door and shoot the right button. Go
+into the lower room. The civilian won't talk to you until he is safe. Pick
+up the security key on top of the electrified floor. Go back to the top room
+and make sure the civilian goes in as well. Stand on the open door and shoot
+the left button. Lead the civilian past the lasers and into the hall with the
+black floor but not quite to the escape hall. Hit enter to talk to him. He
+says he doesn't know what's going on but he does give you a shield. Lead him
+to the escape hall and go back to scene 34. Now head down the hall to the
+left.
+
+++++++++
+Scene 33
+++++++++
+
+Head around the security turret and push the button. Head into the small
+room to the left and push the other button. When the security turret faces
+to the lower left or left, lead the civilian to safety. Head back to the
+room with all of the security doors and hit the security button to the left.
+Head down the hall to the left.
+
+++++++++
+Scene 29
+++++++++
+
+This room looks fun. Hit the button at the top of the screen. In order to
+seal the vents, I suggest going in Rambo style and just rapid firing your
+laser. You should probably seal the lower left vent first because B/Gens will
+spawn out of it. Remember: keep moving. Once you seal all of the vents, check
+out the computer. A low-down on A/Gens it seems. It makes them seem so useful
+and efficient. Too bad their target is you! Anyway, head down the hall to
+the lower right.
+
+++++++++
+Scene 33
+++++++++
+
+Simply grab the key as soon as the laser goes by. Head back one scene and go
+down the hall to the left.
+
+++++++++
+Scene 28
+++++++++
+
+Head to the bottom of the room when the security turret looks away and kill
+the A/Gen and B/Gen. Run across to the left room with the blonde man and
+lead him to safety when the turret looks away. Now, when safe, head down the
+lower hall and shoot the button. Lead the civilian to safety. Head back to
+the starting room with the security buttons and hit the rightmost button.
+Head up the hall to the upper right.
+
+++++++++
+Scene 31
+++++++++
+
+This is just a run and gun room. Seal each vent as soon as possible so that
+the civilians aren't hurt. Seal the left one, then the top one, then quickly
+seal the right one so that the right civilian isn't killed. Finally, seal the
+bottom one and lead both civilians to safety. Go to the hall to the right.
+
+++++++++
+Scene 42
+++++++++
+
+Mines and a turret. Immediately run to the left nook. When the turret faces
+up, run above the first mine, below the second, and above the turret. Just
+stay against the top wall and go down the hall to the right and you should
+be fine.
+
+++++++++
+Scene 32
+++++++++
+
+Notice the laser trip at the very top of the screen. Go along the bottom of
+the screen and shoot the electric eye. Quickly run across the floor and seal
+the vent. Lead the civilian to safety. Get the key to the right. Head back
+to the first screen and open the door to the tube. Congratulations, you beat
+level 82!
+
+
+--------
+Level 83
+--------
+
+Total People: 3
+
+Total Grenades: 0
+
+Special Weapons/Items/Computers: 1
+A freezer - Scene 39
+
+++++++++
+Scene 24
+++++++++
+
+Go down and hit the close button while avoiding the electrified floor. Dodge
+the security turret and hit the second button. Head down the hall.
+
+++++++++
+Scene 39
+++++++++
+
+Shoot the far button and kill the two A/Gens. B/Gens come out of the vent,
+so be careful and seal it. Stand at the lower button. As soon as you see the
+electrified floor near the civilian turn on, hit the button. He should
+safely cross the floor. Hit the button again and carefully lead the civilian
+over the other electrified floor. Get the freezer. Head to the upper right.
+
+++++++++
+Scene 41
+++++++++
+
+You can't go by the mines, so just hit the button and head back down to
+scene 39. Go to the lower right.
+
++++++++
+Scene 2
++++++++
+
+3 vents to seal. The outside ones spawn B/Gens and the middle one spawns
+A/Gens. When your done killing all of them, hit the upper button. Enter the
+room, seal the B/Gen vent and stand on the top part of the door. Shoot the
+button and head over to the room with the civilians in it. Lead both of them
+to safety. Return to the first scene of the level, and head right.
+
+++++++++
+Scene 37
+++++++++
+
+Hit the left button, go into the upper room and hit the top button. While
+dodging the wrath of the security turrets, hit the button on the upper wall
+in the lower room. Head to the lower right.
+
+++++++++
+Scene 41
+++++++++
+
+Stand near the upper mines and shoot the wall. Your laser should bounce and
+hit the button to deactivate the security turret. Get the key and go back to
+scene 37. This time, head to the upper right.
+
+++++++++
+Scene 44
+++++++++
+
+Open the door with the key. Use the computer to get the lowdown on the B/Gen.
+Pretty deadly. Don't bother hitting the button, just cross the lasers when
+safe and head to the upper right.
+
++++++++
+Scene 5
++++++++
+
+Hit the button. Dodge the laser and pick up the key when safe to do so. Open
+the door with the key. Be careful: you'll have your first encounter with a
+C/Gen. Either let him walk into the laser or hit him with a grenade. Enter
+the tube. Congratulations, you beat level 83!
+
+--------
+Level 84
+--------
+
+Total People: 5
+
+Total Grenades: 0
+
+Special Weapons/Items/Computers: 2
+The freezer - Scene 63
+The passworded computer - Scene 82
+
+++++++++
+Scene 51
+++++++++
+
+Hit the button and dodge the laser when walking out of the door. Stand
+directly below the button but outside the room and shoot at it to open the
+door to the right. Go through the newly opened door.
+
+++++++++
+Scene 77
+++++++++
+
+Kill the close B/Gen. Hit the button, go in the room, kill all the B/Gens
+and seal the vent. Access the computer just for fun. These guys are really
+concerned about their employees, huh? Anyway, hit the lower button again
+and lead the guy to safety. Hit the lower button one more time and go in
+the hall to the right.
+
+++++++++
+Scene 78
+++++++++
+
+Dodge the lower security turret and the laser to hit the left most button.
+This will deactivate the lower security turret. When the laser is in the
+lower room, shoot the right button to close the door. Destroy the laser
+eye in the upper room with your laser. Lead the civilian to the escape
+hall. Hit the top button to open the bottom door. Destroy the object in
+the left corner of the top room near the deactivated security turret and
+hit the invisible button near the corner to open the top door. Go to the
+right.
+
+++++++++
+Scene 81
+++++++++
+
+Memorize the pattern of the electrified floors, and when safe, cross the
+hall up to the A/Gen and kill it. Hit the button. Head back down to the
+entrance to the hallway with the laser. Cross it and stand on the right
+side of the bottom door. Face left and shoot your laser. It should hit
+the button; if it doesn't, try again. Head up the newly accessible hall
+and dodge the rotating turret. Carefully maneuver past the electrified
+floors and pick up the key. Head back one scene and this time, go down.
+
+++++++++
+Scene 79
+++++++++
+
+Wait until the security turret faces up or right. When the laser opens
+the door, go through and for now, go to the hall to the right.
+
+++++++++
+Scene 87
+++++++++
+
+Kill the close A/Gen. Watch out, the security turret rotates extra fast.
+When the top A/Gen opens the lower door, kill it. Since you have the
+secret security key, you can open the door. Get the other key just for
+fun and head up the hall to the right.
+
+++++++++
+Scene 60
+++++++++
+
+BE CAREFUL! There will be a C/Gen that rushes towards you. Just use a
+grenade on it to kill it and proceed up the hall.
+
+++++++++
+Scene 63
+++++++++
+
+Get close enough to the turret but on a path with it and the lower left
+teleporter. When it shoots a few times, move to the lower right. One of
+its shots should kill it. Seal both vents and keep using the teleporters
+until you transport to the upper room. Get the object next to the guy,
+either a freezer or a grenade, and bring him back. Lead him to safety. 
+Go back two scenes and head down.
+
+++++++++
+Scene 86
+++++++++
+
+Kill the B/Gens and seal the vent. Pick up the grenade. Stand on the door
+to the room with the civilian and shoot the button. Get the key and stand
+right next to the door with the civilian. Shoot the button (make sure you
+don't kill the man) and immediately exit the room. You should safely dodge
+the security turret. Lead the man to safety and head to the left.
+
+++++++++
+Scene 85
+++++++++
+
+Go to the bottom room, kill the A/Gen, and seal the vent. Hit the button.
+Go to the upper room and seal the vent. Stand on the left side of the door
+and shoot the button to the right. This should open the top two doors. Kill
+the B/Gen. Go through the upper door.
+
+++++++++
+Scene 79
+++++++++
+
+Dodge the laser and seal the vent. Hit the button. Carefully lead the man
+to safety (make sure the turret is facing left or up when you attempt to
+cross the room). Get the grenade near the bottom of the room. Go back to
+the lower left.
+
+++++++++
+Scene 84
+++++++++
+
+Kill both B/Gens and walk up to the man. Get the key. Talk to him. He says
+he is "John of Maryland. I am the bringer of famine." Then ask him the
+passcode. He says, "Hah! Yes. Quickly! I could see the black wings coming
+across the desert. They'll be here in a few minutes, and when I see you
+and you see me there will be a crater and thousands of dead." Interesting.
+Lead him to safety and go down the bottom hall.
+
+++++++++
+Scene 82
+++++++++
+
+Wait for the B/Gen to open the door. Seal the bottom vent and open the room
+with the B/Gen. Kill it and seal the vent. Talk to the guy to get some plot
+and lead him to safety. Use the computer. Today's passcode? "Death". The
+door to the left will open, go through it. (For some reason, sometimes the
+password is "death." I guess it changes sometimes.)
+
+++++++++
+Scene 73
+++++++++
+
+Go past the lasers one at a time (you can stop in between each one and
+advance when you are ready). Stand in the narrow spot past the last laser.
+Shoot at the button and run in the room with the security turret (make sure
+it is facing away. Use a grenade on it if you want). The laser should bounce
+enough times and grant you access to the tube. Congratulations, you beat
+level 84!
+
+--------
+Level 85
+--------
+
+Total People: 4
+
+Total Grenades: 1
+
+Special Weapons/Items/Computers: 3
+A freezer - Scene 83
+A personal shield that Rivers gives you - Scene 75
+A personal shield - Scene 57
+
+++++++++
+Scene 74
+++++++++
+
+Quickly seal the vents and kill the A/Gens. Go through the top door and
+pick up the key near the top of the room. Go back and go through the
+bottom door near the security turret. Squeeze around the bottom of it
+and hit the key button. The door opens and the security turret deactivates.
+Go to the left.
+
+++++++++
+Scene 62
+++++++++
+
+The lasers bounce in a simple pattern. Dodge them by crossing at the top or
+the bottom of the room and go to the left.
+
+++++++++
+Scene 83
+++++++++
+
+A C/Gen rushes towards you, so shoot a grenade immediately. When the B/Gen
+opens the door, go through it and go through the next door when it's opened.
+Shoot the left button and kill the B/Gen. Look at the doors that were
+being opened and closed by the B/Gen. Open the left one and stand inside
+the room. Stand directly between the two doors that were being opened and
+closed by the B/Gen, face left, and fire. You should hit the button to open
+the right door. If not, keep trying. Pick up the freezer at the top of the
+room. Head up the hall to the left.
+
+++++++++
+Scene 88
+++++++++
+
+Walk to and touch the lower right side of the table in the middle of the
+room. Face upper right and shoot your laser to hit the button, and let your
+laser hit you. Make sure the civilian doesn't see you. Go near the entrance
+to the room with the rotating security turret. When it looks left or up,
+run to the teleporter. There is a secret button directly to the left of
+where you appear. Talk to the woman, and when the left turret faces left
+or up, get in the teleporter and quickly get out of the room with the woman
+following you. Once again, stand on the lower right side of the table and
+shoot the button to open the door. Lead the woman to safety and go down the
+lower left hall.
+
+++++++++
+Scene 56
+++++++++
+
+This room has a tube that will bring you to the next level, but I strongly
+recommend that you ignore it and finish the level that you are on. Besides,
+you also get much less on the next level. Just dodge the lasers and pick up
+the grenade. Go back one seen and go to the upper left.
+
+++++++++
+Scene 75
+++++++++
+
+When the A/Gen opens the right room, go past the laser and go into it. Let
+the A/Gen close it. Right after the A/Gen opens it again, hit the button and
+go stand in front of the laser bouncing rapidly in front of the narrow door.
+The A/Gen should come and die in the laser. Seal the vent. Talk to the
+civilian. She asks you if you thinks she is fat. Say no. Say it again and
+she makes you admit her ugliness. She gives you a personal shield. She just
+says useless things over and over again after that, so hit escape and lead
+her to safety. Go up the hall to the right.
+
+++++++++
+Scene 57
+++++++++
+
+Good thing you have that personal shield. Hit "u" and select it to use it.
+Walk past the electrified floor and pick up the shield between the tale and
+the wall. Go right.
+
+++++++++
+Scene 92
+++++++++
+
+When the turret faces right, kill the A/Gen and go to the bottom room. Kill
+the A/Gens and seal the vent. When safe, stand on the door and shoot the
+button to the right to open the right door. Hit the left button to open the
+left door. Go up the hall to the right.
+
+++++++++
+Scene 90
+++++++++
+
+Ignore the top button for now. Without getting in the turrets field of view,
+shoot the B/Gen. When the left turret faces lower left, run to the vent and
+seal it. Dodge the top turret and hit the button. The door will open and the
+laser will kill the A/Gen. You may want to use a grenade on the left turret
+to make saving the man easier. Run back near the entrance and hit the top
+button. Run up to the man and  lead him to the very top of the room before
+you talk to him. Talk to Kosygin to get some more plot line. Apparently
+Genoq is conducting illegal activities. Big surprise. Lead him to safety and
+go back one room. Go to the top hall.
+
+++++++++
+Scene 89
+++++++++
+
+Face right and shoot the wall so your laser bounces and hits the button. The
+B/Gen will come and get killed in the laser. Kill the A/Gen. Seal both vents
+and talk to Andre to discover more about Genoq and its illegal activities.
+Open the security door and enter the tube. Congratulations, you beat level
+85!
+
+--------
+Level 86
+--------
+
+Total People: 3
+
+Total Grenades: 1
+
+Special Weapons/Items/Computers: 2
+The strange computer where you run away from a C/Gen - Scene 69
+A bomb - Scene 59
+
+++++++++
+Scene 71
+++++++++
+
+Immediately move up or down to dodge the laser. Go to the upper part of the
+room and you can safely cross to the right part. Dodge the laser again, and
+when the turret faces up or right, run past it into the hall and go to the
+right.
+
+++++++++
+Scene 70
+++++++++
+
+Quickly run up to the woman and kill the A/Gen, OR hit the bottom button,
+right button, left button, then top button. Seal the vent and talk to her.
+She gives you some plot about Derrida, so when you're finished  speaking
+with her, lead her past the turret to the escape hall. Go to the upper
+right.
+
+++++++++
+Scene 54
+++++++++
+
+This room is tricky because I can't find any other way to beat it other
+than to use a bomb. So place a bomb directly next to the pink door and run
+to the hall near the entrance. Hit the button to open the other door, and
+run in and seal the vent. Be careful, a C/Gen appears and charges you. Kill
+it and lead the man to safety. Go back one scene and head to the left.
+
+
+++++++++
+Scene 69
+++++++++
+
+Walk around the wall, kill the A/Gen, seal the vent, hit the button, and
+use the computer. Another strange part of the game, I don't know what to
+do other than let the guy hit you. I tried running away, but it didn't
+work. So let him hit you and you go back to the room. Hit the button and
+go stand in front of the laser. An A/Gen should come up and get killed.
+Seal the vent and carefully but quickly pick up the key. Head to the
+lower left.
+
+++++++++
+Scene 68
+++++++++
+
+When the A/Gen activates the right turret, run up behind it. When the
+A/Gen deactivates it, run towards the button at the bottom of the room.
+Shoot at it and let the laser hit you. Hide in the recess of the door and
+when it opens, go in the room and kill the A/Gen. Seal the vent and open
+the security door. Go up to the left.
+
+++++++++
+Scene 55
+++++++++
+
+This room is a little tricky. For now, you want to go to the left, but
+getting past those rotating turrets is difficult. If you can, have one
+shoot the other by standing near it when the other turret sees you (stand
+near the lower one, let the top one see you and shoot at you, then run out
+of the way). If you can't do it, either use a freezer or a grenade. Go to
+the left.
+
+++++++++
+Scene 59
+++++++++
+
+Hit the button. Careful, there is a C/Gen disguised as an object, so be
+ready. Kill the B/Gen, and pick up the bomb and the grenade. Go back one
+seen and go to the top hall.
+
+++++++++
+Scene 76
+++++++++
+
+This room isn't too hard. Just seal all the vents. This is where you
+would have come up if you took the shortcut tube on level 85. Proceed to
+the right.
+
+++++++++
+Scene 65
+++++++++
+
+Hit the button at the bottom of the room. When the turret is deactivated,
+run to the top of the room and hit the button up there. When it is
+deactivated again, run in the door that you just opened. The top person
+is a C/Gen, but it will only attack you when you secure the room. Close
+the door by hitting the button in the room you are in. Stand next to the
+closed door leading to the room with the civilians and face the button
+you just hit. When the turret is deactivated, shoot at the button and
+run outside. The door to the room with the B/Gen should be open, so run
+in and kill it. Make sure you deactivate the turret, then hit the button
+at the top of the room. Kill the C/Gen and lead the civilian to safety.
+Go to the hall to the right.
+
+++++++++
+Scene 66
+++++++++
+
+Mines block your path, but don't worry. Stand near them so that A/Gens
+come out of the vent. Shoot them when they are over the mines and the
+mines should explode. When you clear a path, make sure the turret is
+facing away, and seal the vent. Evade the turret and go to the hall to
+the right.
+
+++++++++
+Scene 67
+++++++++
+
+This room is pretty easy. Just dodge the lasers and get the key. Go
+back one scene and open the security door. Go in the tube.
+Congratulations, you beat level 86!
+
+--------
+Level 87
+--------
+
+Total People: 5
+
+Total Grenades: 3
+
+Special Weapons/Items/Computers: 1
+A bomb - Scene 128
+A freezer - Scene 127
+
++++++++++
+Scene 101
++++++++++
+
+Immediately run to the lower right. When the lower right turret faces
+away, hit the button, run around it, and hit the bottom button. Go back
+outside and hit the first button to safely close the door. If you want,
+you can open the door and have the turrets fire at you, dodge, and have
+them kill each other, but you don't have to. Go to the lower left room,
+evade the turret and get the key. Get the grenade to the upper left, open
+the security door, and go up to the upper right.
+
++++++++++
+Scene 128
++++++++++
+
+When you're ready, go in the teleporter and rapid fire your laser.
+Hopefully, you'll seal them unscathed, but it may take a few tries. Hit
+the button and go down the hall to the lower right.
+
++++++++++
+Scene 118
++++++++++
+
+There is a secret button on the wall directly to the right, so walk along
+the wall to you hit it. Open the security door and kill the B/Gen. Talk to
+Irislav to find out more about Genoq's cover up. Oh geeze, there's a bomber
+coming to destroy the building in 20 minutes. Don't worry, the timer doesn't
+start yet, so you don't have to rush until I say so. Get the key and head to
+the secret room to the lower left.
+
++++++++++
+Scene 132
++++++++++
+
+Pick up the two grenades. Go back one scene and go to the lower right.
+
++++++++++
+Scene 120
++++++++++
+
+A few vents to seal. Seal them and kill the B/Gens. Save the guys and go to
+the right.
+
++++++++++
+Scene 128
++++++++++
+
+Pick up the item in the top of the room (I think it could be either a bomb
+or a freezer, but I think it's always a bomb). Open the security door, but
+don't go in it. See the electric eye at the top of the room? You have to kill
+it. Walk down by the bottom deactivated turret and fire at it. That should
+rid of it. Pick up the key and talk to the hysterical man. He doesn't want
+to go with you. Oh well. There's a secret button on the table right next to
+him, so hit it and go to the right.
+
++++++++++
+Scene 135
++++++++++
+
+Quickly enter the right teleporter and be careful of the laser. Open the
+security door, get in the right teleporter, and go to the bottom right.
+
++++++++++
+Scene 124
++++++++++
+
+I can't figure out how to beat this room without using a bomb, so close the
+right door and plant a bomb next to it. Run up near the entrance, so after
+it explodes, go down and talk to the guy. His name is Gonzo. He kind of
+serves as a prophet. I like the line "The technology you have seen in this
+building is serving to blur the distinction between the living and the
+merely animate." Wow. Scary. Apocalyptic. Anyway, he tells you that you're
+came to do more than deliver a package. OBVIOUSLY! Lead Gonzo to safety
+and go all the way back to Scene 128 and open the right security door and
+go in it.
+
++++++++++
+Scene 116
++++++++++
+
+Another room that requires an item. Use a personal shield to get rid of
+the laser. Use a grenade on the turret if you have a few. Save the two
+guys and go to the right.
+
++++++++++
+Scene 117
++++++++++
+
+Kill the two A/Gens. This looks interesting. The top right button, which
+I will call button 1, activates/deactivates the bottom turret. The button
+to the left of it, number 2, activates/deactivates the top and left
+turrets. The button below it, number 3, activates/deactivates the top and
+right turrets. Finally, the bottom button, number 4, activates/deactivates
+the top and bottom turret. It's not a hard puzzle to solve. If all four are
+activated, hit buttons 2, 3, and four. Get the key and go back 2 scenes.
+Open the left security door and go in.
+
++++++++++
+Scene 111
++++++++++
+
+Right away you get a message that the bomber will attack in 20 minutes,
+so you have to hurry up. Stand right next to the button and hit it. The
+laser should go by you. Hit the top button and get the key. When the
+laser opens the door back up, run to the hall of the entrance. When it
+goes back in the room it started in, quickly hit the button to close the
+door behind it. Open the security door and go up the hall.
+
++++++++++
+Scene 109
++++++++++
+
+Run around the rapidly rotating turret and get the grenade. Hit the
+button to open the door and go in the tube. Congratulations, you beat
+level 87!
+
+--------
+Level 88
+--------
+
+Total People: 4
+
+Total Grenades: 5
+
+Special Weapons/Items/Computers: 1
+A freezer - Scene 127
+
++++++++++
+Scene 125
++++++++++
+
+Stand still until the top turret shoots at you. Dodge the shots and
+make sure they hit the bottom turret. Repeat until the bottom turret
+is hit twice. Run down and into the room to the left. Pick up the
+grenade. Go in the left portal and hit the top button. Go back in the
+portal and stand on the top left side of the bottom teleporter. Face
+to the upper left and shoot your laser. It should go through the left
+teleporter and hit the button. Go in the bottom teleporter and go up
+the hall.
+
++++++++++
+Scene 126
++++++++++
+
+This room is difficult but fun. I sealed the vents by rapidly firing
+my laser while running up the bottom row and then the top row. Kill
+any B/Gen left alive and pick up the key. Go to the right hall.
+
++++++++++
+Scene 119
++++++++++
+
+Stand behind the middle turret when it looks away and let the right
+turret shoot at you to destroy the turret you're standing next to.
+Run up the hall to the upper right.
+
++++++++++
+Scene 112
++++++++++
+
+Kill the B/Gen. Proceed to the hall to the right.
+
++++++++++
+Scene 115
++++++++++
+
+You need to run by the turret. If you have any extra grenades, use
+it. Keep going up.
+
++++++++++
+Scene 125
++++++++++
+
+There are four buttons on the left wall. Hit the second from the left,
+the left, then the right button. This should open the doors for the
+laser to hit the buttons. Go in and kill the B/Gen. When the right door
+opens, wait for the laser to go up to the top of the room, then hit the
+button in the room you're in. Go get the key. Stand on the right door,
+which is open, face right, and shoot the button. This will open the
+left door. Go back two scenes to scene 112.
+
++++++++++
+Scene 112
++++++++++
+
+Hit the button on the top wall to open the door. Dodge the laser, and
+go in the bottom door when it's open. Wait for the laser to hit the
+door to the right, and when it does, dodge the turret and open the
+security door. Run into the room with the guy, Edward, and ask him
+everything you can. He's kind of dumb, but when the turret looks to
+the right, hit the button and open the door. Lead Edward into the
+bottom room, and when the laser opens the door, carefully lead him
+past the laser and into the escape hall. Go back one scene to scene
+119. This time, go down.
+
++++++++++
+Scene 123
++++++++++
+
+You need to dodge the outside laser and the electrified floors. If you
+wish, get the grenade, and then open the security door. Proceed to the
+right.
+
++++++++++
+Scene 110
++++++++++
+
+When the turret looks away, lure the C/Gen towards you and kill him
+with a grenade. Hit the button and go in the room and talk to Robert.
+Ask him everything and then lead him around the turret and to the
+escape hall. Go in the hall at the bottom of the room.
+
++++++++++
+Scene 129
++++++++++
+
+Hit the button on the left wall to deactivate the turret. Stand to the
+right of  the teleporter and shoot a laser into it. This should hit the
+button in the bottom room and deactivate the turret. Go in the
+teleporter and hit the bottom button to open the top door. Stand on the
+open door and shoot the button to open the bottom door. Go in the hall
+to the bottom left.
+
++++++++++
+Scene 130
++++++++++
+
+Kill the two A/Gens and go seal the B/Gen vent. Next to the civilian
+is an orange object. This is actually a C/Gen in disguise, so approach
+with caution and kill it. Rescue the man and go in the hall to the
+left.
+
++++++++++
+Scene 127
++++++++++
+
+In the room with the turret, hit the top button to open the door. Kill
+the B/Gen and seal the vent. Pick up the freezer next to the table at
+the top of the room. Hit the button on the left wall to open the bottom
+door. Seal the vent, pick up the key, and when the guy is following you,
+go back towards the top room with the turret. Shoot or hit the bottom
+button to deactivate it and lead the guy to safety. Go to the right.
+
++++++++++
+Scene 102
++++++++++
+
+Kill the bottom turret with a grenade. There is a secret button to the
+right of it, so walk along the wall until you hit it. Either kill the
+top turret or walk around it and pick up the 4 grenades. Go back two
+scenes and head to the bottom right.
+
++++++++++
+Scene 113
++++++++++
+
+When you're ready, hit the button to open the door. Kill or dodge the
+turrets, kill the B/Gens, and seal the vent. Go down the bottom hall.
+
++++++++++
+Scene 131
++++++++++
+
+Hit the button to open the door. Use a freezer if you want, otherwise,
+run behind the right row of turrets and get the key. Walk directly
+towards the door and you should dodge any shots coming your way. Go
+back one scene and go to the right.
+
++++++++++
+Scene 137
++++++++++
+
+Stand close to the bottom right wall. The turrets should not shoot at
+you. Kill all of them with grenades, open the security door, and go in
+the tube. Congratulations, you beat level 88!
+
+--------
+Level 89
+--------
+
+Total People: 0
+
+Total Grenades: 0
+
+Special Weapons/Items/Computers: 0
+
++++++++++
+Scene 133
++++++++++
+
+Well, here he is: Derrida. He claims to have a broken leg and needs help.
+If you touch him, exit the room, shoot your laser, shoot a grenade, or 
+use an item, you automatically get teleported to a special room. Walk to
+the right and ignore the grenade looking items. In the room with the 
+background of eyes, walk to the lower right then the upper right. You 
+will enter a cross-shaped room with a discombobulated Derrida. Listen to
+his story. The D/Generation is a new age weapon that took over, but was
+paralyzed as a security measure, so it sent for you to bring the package
+so that it may move. All that work to help a monster. It is the perfect
+assassin. You have to kill it by luring it into the microwave antenna.
+Derrida tells you the password, "regeneration." Immediately run to the
+upper right. You only have a certain amount of time before the D/Gen 
+escapes. Go to the upper right.
+
++++++++++
+Scene 104
++++++++++
+
+Many turrets. Walk behind the top row so that the bottom row can shoot 
+them and destroy them. Start at the bottom of the room and run and get
+the key and exit the room to the upper right.
+
++++++++++
+Scene 106
++++++++++
+
+Go past the mines and shoot the button at the bottom of the room. Stand
+on the middle of the newly opened door, face left, and fire your laser.
+It should hit the button. Go to the lower room with the security turret
+and hit the left button. Stand on the door and shoot the bottom button.
+Go to the upper right.
+
++++++++++
+Scene 105
++++++++++
+
+Dodge the laser and go to the right.
+
++++++++++
+Scene 121
++++++++++
+
+Wow! The D/Gen. Don't let it catch you! Go back one scene and go to the
+bottom hall!
+
++++++++++
+Scene 122
++++++++++
+
+Run down to the bottom of the room. When the D/Gen walks in front of the
+dish, hit the security button and watch the fireworks. Lots of blood. Go
+back to where you first saw the D/Gen in its real form, scene 121.
+
++++++++++
+Scene 137
++++++++++
+
+The D/Gen already opened the door with the password regeneration. Walk
+up to the jetpack to get a happy ending. Congratulations, you beat level
+89! You beat the game!
+
+
+
+------------------
+This FAQ should only be found on the following sites:
+
+
+www.gamefaqs.com
+www.neoseeker.com
+dlh.net
+www.cheats.de
+faqs.ign.com
+
+If you found this somewhere other than the aforementioned places, please
+email me. Thank you.

@@ -1,0 +1,111 @@
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER
+ EXPRESS OR IMPLIED, STATUTORY OR OTHERWISE.
+ THE ENTIRE RISK AS TO USE, RESULTS AND PERFORMANCE OF THE PACKAGE IS
+ ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE TO BE DEFECTIVE, YOU
+ ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING, REPAIR OR OTHER
+ REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY
+ DAMAGE CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE
+ OWNER OR A THIRD PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF
+ DAMAGE.
+ 
+ 
+ That install applies to "First Samurai" © 1991 Vivid Image.
+ 
+ That install requires WHDLoad and DIC to be in the path. Both
+ can be found in the WHDLoad package.
+ To install from a different drive than DF0: select Expert as
+ installation mode.
+ 
+ You need 1.0 MB ChipMem and 0.5 MB OtherMem.
+ You can quit the game by pressing Help (key can be changed with
+ Tooltype "QuitKey=").
+
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+	Thanx to:
+	- Harry for original disk images,
+	- Grzegorz Malczewski for AGA disk images.
+
+History:
+		  
+ Version 2.0 (31.08.2019) done by JOTD (features added only for ECS original)
+ - CUSTOM3=1 forces introduction skip (which could be achieved by holding fire...)
+ - CUSTOM2=1 enables jump with second button (easier to play & perform rear sword/kicks)
+ - CUSTOM1=1 trainer infinite energy
+ - CUSTOM1=2 trainer infinite lives
+ - CUSTOM1=4 trainer get sword immediately
+ - CUSTOM1=8 trainer get all needed magic items from start
+ - CUSTOM1=16 trainer bell is always active
+   Adding CUSTOM1 option enables more than one. 255 enables all options.
+ - Regulated speed for fast processors/WinUAE. CUSTOM4=1 disables this
+ - All levels are reachable from level select menu, even if not played/saved before
+   Just press F1-F10 to reach corresponding level
+ - added quitkey for 68000
+ - password screen completely removed
+ - added joypad controls (see full details at the end of the document)
+ - added ESC key to quit current game (could not quit from pause, even if the manual says so)
+ - reworked source code, source included, see how much control tweaks were added for joypad :)
+ 
+ Version 1.6 (22.12.2010) Harry/Wepl
+ - max volume for channel 4 fixed (issue #2260)
+ - highscores will now be saved to a separate file instead into the
+   second disk image
+ - keyboard acknowledge delay fixed
+ - v10 slave infos added
+ - new install script
+ - manual, solution and icons added
+ 
+ Version 1.5 (30.03.1999) and all previous versions by Mr.Larmer/Wanted Team
+ 
+ 
+ To our (Harry/Wepl) knowledge there exists no AGA release of this game.
+ We think the game version Mr.Larmer refers to was probably a crack or
+ aga-fix. The changes made with this update apply only to the original
+ version.
+ 
+ Update: http://eab.abime.net/showthread.php?t=73962
+ A A1200-compatible version was released. But it's the same as standard ECS version, with
+ built-in AGA fixes
+	
+ Joypad controls: the game recieved special treatment to be able to played/saved
+ all parts completely without the keyboard
+ 
+ Joypad controls - Game:
+ - FWD+REV+PLAY: quit to workbench
+ - PLAY: pause (fire to unpause)
+ - FWD+REV: quit current game
+ - GREEN: enables bell
+ - BLUE: jump (if jump option selected)
+ 
+ Joypad controls - Menu:
+ - FWD+REV+PLAY: quit to workbench
+ - YELLOW: shows level selection menu
+
+ Joypad controls - Level menu:
+ - FWD+REV+PLAY: quit to workbench
+ - YELLOW: save positions (level menu) ("S" key)
+ - BLUE: select current level
+ - FWD: forward one level (screen flashes green)
+ - REV: back one level (screen flashes red)
+ 
+ So pressing 2 times "FWD" then "BLUE" selects level 3. Wraps to 1 when reaches 10
+ 
+ Joypad controls - Hiscore menu:
+ - FWD+REV+PLAY: quit to workbench
+ - BLUE: simulate ENTER (so no keyboard is required at all)
+
+ Note: if you have a 2-button joystick (and not a joypad), blue button will still work
+ 
+ 

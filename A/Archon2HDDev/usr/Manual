@@ -1,0 +1,454 @@
+                       A R C H O N  I I - A D E P T
+
+                            T H E   M A N U A L
+
+
+Typed by SIDEWINDER/LSD
+Another golden oldie doc.
+
+
+INTRODUCTION
+
+Long, long had the Master of Order struggled with the Mistress of
+Chaos.  Ancient as time, changeless as death was their conflict -
+waged in mundane realms by magically portent Adepts.  No more.  The
+old, secure wellsprings of magical energy are failing.  To control the
+new sources, the Adepts are bringing forth new armies of reluctant
+Demons and Elementals long unsummoned.  Change is at hand and the
+battle would find an end.
+
+This is that battle.  The ending is yours.
+
+
+GETTING STARTED:
+
+Plug a joystick into port 2 for a one player game, or plug joysticks
+into port 1 and 2 for two player games.  Joystick 1 controls Order and
+joystick 2 controls Chaos.
+
+Kickstart your Amiga, then insert the ARCHON: ADEPT disk in the
+internal disk drive.  The game will boot automatically.  Press the
+SPACEBAR to page through the title screens and bring up the options
+menu.
+
+
+USING THE MAIN MENU:
+
+Use the joystick to move the onscreen pointer and make selections from
+the main menu.  Press the joystick button when the pointer is on the
+currect choice.  You can choose from the following player options for
+each side.
+
+HUMAN:  You make all the moves for your side.
+CYBORG: You control your icons on the strategy board and the computer
+controls combat on the battleground.  You can override the computer by
+pressing the joystick button when prompted, before the battle begins.
+COMPUTER: The computer makes all the moves for its side.
+
+
+HANDICAPPING:
+
+Before starting your game, select your play level; Beginner, Standard,
+or Advanced.  Beginners start with more magical energy, Advanced
+players start with less.  The lower a player's level, as compared to
+an opponent's, the slower the opponent's icons, missiles, and attacks
+will move.  In the case of Adepts, missiles not only move slower,
+they're also harder to control.  Choose Advanced for the most
+skillful, and Beginner for the least skillful player to obtain the
+maximum possible handicap.
+
+
+STARTING THE GAME:
+
+Select the START option for the side you want to move first.  If you
+wait for a little while without making any menu selections, the
+computer will begin playing a game against itself.  Press Q to
+interrupt a computer-against-computer game.
+
+        NOTE: Because the player who moves first has an advantage, the
+     player who moves second receives additional magical energy to
+     maintain evenly balanced play.
+
+
+MOVING ICONS ON THE STRATEGY BOARD:
+
+The selection frame appears on your side of the board when it's your
+move.  Use the joystick to place the frame over the icon you want to
+move and press the button.  Next, move the icon (or the frame again in
+the case of Adepts) to the desired location and press the button
+again.
+
+If you change your mind, press the button again before moving the
+icon.  If you change your mind after already moving your icon, return
+the icon to its original position beneath the frame and press the
+joystick button.  For additional information about about board
+movements see chapter on MOVEMENT.
+
+
+MOVING AND FIGHTING ON THE BATTLEGROUND:
+
+You must fight for disputed territory when you enter a space occupied
+by an opposing icon.  Use the joystick to move your icon.  To fire,
+move the joystick in the direction you want to aim and press the
+button at the same time.  See COMBAT TIPS for more information.
+
+    NOTE: Your Wraiths are visible when you play against the computer.
+    Because the computer knows where they are, it's only fair that you
+    know as well.
+
+
+CASTING SPELLS:
+
+Place a frame over an Adept and press the button twice.  Move the
+joystick forward and backward to scroll through the list of spells.
+Press the button to choose the spell you want.  Choose 'Cease
+Conjuring' if you change your mind.  Move the frame over your citadel
+and press the button if you change your mind in mid-spell.  To change
+your mind during a Summon spell, select the blank square at the bottom
+of the listed icons.
+
+Casting spells cost magic energy.  Occupying power points increase
+your energy.  Your total energy is displayed on the bar that appears
+next to the board during your move.
+
+    NOTE: The Apocalypse spell is automatically invoked when you lose
+    all your Adepts.
+
+
+STARTING OVER IN THE MIDDLE OF A GAME:
+
+Press Q to return to the player/move menu choices.
+
+
+PAUSING A GAME IN PROGRESS:
+
+Press the SPACEBAR.  Press it again to resume playing.
+
+
+AN OVERVIEW
+
+THE TWO SCREENS
+
+The game is played on two screens.  On one - the main board - you and
+your opponent (human or computer) takes turms manoeuvreing your pieces
+(called icons) into favourable positions.
+
+When you move to a space already occupied by one of your opponent's
+icons, the game shifts to the second display, the battleground.  There
+you must fight a fast-action battle to determine which icon will
+return to the board in possession of the disputed poosition.
+
+
+THE MOVES
+
+You begin the game with 4 Adepts on a side.  On each turn you may use
+whatever magical energy you have left to: 1) move an Adept or 2) use
+an Adept to cast a spell (including Summon which lets you bring new
+icons into the game) or 3) move an icon conjured up (with a Summon
+spell) on a previous turn.
+
+
+WINNING
+
+You win if you occupy all six power points at once or if you triumph
+in the Apocalypse (evocable with a special spell).  You also win if
+your opponent runs out of magical energy or icons.
+
+
+THE BOARD
+
+The main board is composed of four bands representing the classical
+elements of Earth, Water, Air and Fire.  Additionally there are four
+squares which are not part of any band.  Two are black, neutral
+squares representing the Void.  The others are citidels, the home
+squares of Order and Chaos.  While the Void squares can be occupied by
+icons just like any position in the four bands, the citidels remain
+empty throughout the game.
+
+
+   +---------------------------------------------------------------+
+   |                              Fire                             |
+   |   +-------------------------+---+-------------------------+   |
+   |   |                         |   | - The Void              |   |
+   |   |                         +---+                         |   |
+   |   |   +-----------------+           +-----------------+   |   |
+   |   |   |                 |    Air    |                 |   |   |
+   |   |   |                 +-----------+                 |   |   |
+   |   |   |   +---------+                   +---------+   |   |   |
+   |   |   |   |  Temple |       Water       | Fortress|   |   |   |
+   +---+---+---+---+---+ +-------------------+ +---+---+---+---+---+
+   | A | A | A | A | T |         Earth         | F | A | A | A | A |
+   +---+---+---+---+---+ +-------------------+ +---+---+---+---+---+
+   |   |   |   | of Chaos|                   | of Order|   |   |   |
+   |   |   |   +---------+                   +---------+   |   |   |
+   |   |   |                +------------+                 |   |   |
+   |   |   |                |            |                 |   |   |
+   |   |   +----------------+            +-----------------+   |   |
+   |   |                         +---+                         |   |
+   |   |                         |   | - The Void              |   |
+   |   +-------------------------+---+-------------------------+   |
+   |                                                               |
+   +---------------------------------------------------------------+
+
+     A = Adept   T = Temple   F = Fortress
+
+There are 6 flashing power points.  Two are the Void squares.  The
+other 4 'move' from turn to turn through the outermost corners of each
+of the four elements.  Occupation of the 6 power points is the major
+goal of the game.
+
+
+MOVEMENT
+
+If the hollow square (or 'frame') is on your side, it's your turn.
+Use your joystick to move the frame atop the icon you want, and push
+the button.  Next, use the joystick to move the icon (or the frame, in
+the case of the Adepts) to your intended destination and press the
+button again.  (If you accidentally press the button over an icon you
+don't want to move, press the button again without moving your stick
+to cancel the selection and start over.  Once you've moved an icon at
+all, you cannot cancel your selection.  NOTE: The rule for cancelling
+an Adept move is different.  See Magic Spells below.)
+
+ELEMENTS AND DEMONS (conjured up with the Summon spell) slide freely
+along the element they are on.  You may slide them as far as you like
+with two restrictions: they cannot pass another icon and they cannot
+end their move atop a 'friendly' icon.  Alternatively, you may jump
+them from one element to an adjacent one on a turn.  No icon may slide
+and jump on the same turn.
+
+ADEPTS can teleport anywhere on the board, but it costs them a bit of
+magical energy to teleport from one element to another.
+
+
+MAGIC SPELLS
+
+Instead of a move, on any turn an Adept can cast any spells it has
+enough energy for.  Simply select the Adept with the frame, press the
+button, and press the button again.  Instead of cancelling your
+Adept's move, this action produces the message 'SELECT YOUR SPELL'.
+
+Move the joystick forward and backwards to produce the different
+choices described on the next page.  Press the button to select the
+one you want.  If you change your mind and decide you would rather
+move the Adept (or another icon) instead, select 'CANCEL SPELL'.  To
+cancel a spell after you've already selected it with a button push,
+move the frame over your citadel and press the button again.
+
+Magic lies at the heart of the action - and so does the fact that it
+costs.  The amount of magical energy you have (shown by a vertical bar
+next to the board when it's your turn) varies throughout the game.
+You gain energy from each power point you occupy and - for the first
+few turns only - from your home citadel.
+
+Moving icons is mostly free, but it takes magical energy to maintain
+each Demon and Elemental on your side and substantial amounts to cast
+spells.  The cost of different actions is shown by the mark which
+appears next to the energy bar as you explore your options.  You will
+not be allowed to take actions you do not have enough energy for.
+
+The effect of spells are limited to the element of conjuring Adept is
+on.  Adepts cannot cast spells from a Void square and Adepts are
+immune to all spells except Heal.
+
+
+THE SPELL LIST
+
+SUMMON - This is far and away the spell you will use most often.  When
+you select it you may choose among 4 Elementals and 4 Demons by moving
+the frame from monster to monster.  The cost in energy goes up as you
+move up the column of choices.
+
+Remember, Adept magic works only within the element of the conjuring
+Adept.  An Adept in Fire cannot, for instance, summon an icon to the
+band of Earth.
+
+You may summon an icon and directly attack an opposing icon, but it
+takes extra magical energy to do so.  And Adepts are immune from such
+attacks.  For them, you must use icons already on the board.
+
+HEAL - This spell cures half of an icon's wounds and paralysis.
+
+WEAKEN - Use this to cut an enemy's icon's current lefespan in half.
+
+IMPRISON - Cast this spell and the imprisoned icon cannot be moved.
+The cost of maintaining imprisoned icons fall on the imprisoner and
+not the original conjuror.
+
+RELEASE - Use this when you can no longer afford to keep an icon
+imprisoned - or no longer need to.
+
+BANISH - Very expensive to cast.  On the other hand, an icon you can't
+defeat can be very expensive to live with.  And occupied power points
+on elements without Adepts make very tempting targets.
+
+APOCALYPSE - This spell begins a battle that ends the game.  In that
+apocalyptic battle, your icon's lifespan, missile power, and missile
+speed depends on your magical energy, icons remaining, and Adepts
+left, respectively.  Use to put a hopelessly overwhelmed enemy out of
+his or her misery or as an act of suicidal desperation.
+
+
+COMBAT TIPS
+
+ATTACK METHODS - On the battleground, icons hurl, hammer, flame, sing,
+fling, stare and otherwise harass the enemy in whatever direction you
+move the jpoystick while simultaneously pressing the button.  (See the
+hints under Attack Styles below for some exceptions and variations.)
+The lifelines at either end of the arena indicate the current lifespan
+(health/strength) of the two battling icons.  When an icon is wounded,
+its matching lifeline is reduced.  When its lifeline is gone, the icon
+is dead, the battle over.  IMPORTANT: Except for the Juggernaut and
+the Wraith, you cannot move icons while pressing the joystick button.
+
+THE ATTACK INTERVAL - Combat is fast but you just can't fire away as
+rapidly as your finger twitches.  It takes a moment after all to
+conjure a whirlwind or generate a tidal wave.  At the exact moment
+your joystick button can launch another attack, the computer rings a
+bell - a high note for Order, a lower one for Chaos.
+
+ATTACK STYLES - Each icon is most effective when it is used in
+friendly - or at least neutral - elements and when its special
+strengths and weaknesses are understood and exploited.  The hints
+below are intended only to help you begin thinking about how to use
+the 6 icons which have the most unusual attack styles.
+
+1. ADEPT missiles can be steered as long as you hold the button down.
+Of course, Adepts cannot move as long as the button is down.  Nothing
+comes free.
+
+2. THE GORGON does not wound; it paralyzes.  After every hit from the
+Gorgon's eye beam, an icon moves more slowly.  When it can no longer
+move, it dies.
+
+3. WRAITHS are not nice.  They are invisible except when they're
+trying to hurt you (and to 'reload').  They can move even while they
+attack.  Their circular attack aura steal the life force from all
+caught in it.  Wraiths can leave battles stronger than when they
+entered them.  They can be devastating in the hands of the skillful.
+
+4. When the FIREBIRD explodes it cannot be hurt nor can it move.  But
+unlike Archon's PHOENIX, you can early end the explosion by releasing
+the button.
+
+5. SIRENS don't have to aim.  Press the button and they start singing
+and their opponents start dying.  If you're attacked by one, don't
+waste time wondering what to do or the problem will be solved for you.
+
+6. JUGGERNAUTS are in effect they're own missiles.  In 'missile' mode,
+they only travel in straight lines and they are invulnerable - except
+to the song of the Siren.
+
+
+             MAGICAL ENERGY CHART ADDED BY PAZZA AND SHAGRATT!
+
+   X
+   X
+   X
+   X
+   X
+   X
+   X
+   X
+   X
+   X
+   X
+   X
+   X
+   X
+   X
+   X
+   X
+   X
+   X
+   X
+   X
+   X
+   X
+   X
+   X
+   X                                    O
+   X                                    O
+   X                                    O
+   X                           O        X
+   X                           O        X
+   X                           O        X
+   X                           X        X
+   X                           X        X
+   X         X                 X        X
+   X         X                 X        X
+   X         X        X        X        X                   X
+   X         X        X        X        X        X          X
+   X         X        X        X        X        X          X
+
+Normal   | Income | Income | Elem   | Demon  | Maintain | Maintain |
+Starting | Corner | Void   | Summon | Summon | per icon | per icon |
+Energy   |        |        |        |        | per full | per full |
+                                             | turn -   | turn -   |
+                                             | Elem     | Demon    |
+--------------------------------------------------------------------
+                                                      O
+                                                      O
+                                                      O
+                                                      O
+                                                      O
+                                                      O
+                                                      O
+                                                      O
+   X                                                  O
+   X                                                  O
+   X                                                  O
+   X                                                  O
+   X                                                  O
+   X                                        O         O
+   X                                        O         O
+   X                                        O         O
+   X                                        O         O
+   X                                        O         O
+   X                                        O         O
+   X                                        O         O
+   X   -----------------                    O         X
+   X   | KEY           |           O        X         X
+   X   |               |           O        X         X
+   X   | X = MINIMUM   |           O        X         X
+   X   |               |           O        X         X
+   X   | O = MAXIMUM   |           O        X         X
+   X   -----------------           X        X         X
+   X                               X        X         X
+   X                               X        X         X
+   X                               X        X         X
+   X                               X        X         X
+   X                               X        X         X
+   X                               X        X         X
+   X                               X        X         X
+   X                               X        X         X
+   X                               X        X         X
+   X                               X        X         X
+   X                               X        X         X
+   X                    O          X        X         X
+   X                    O          X        X         X
+   X         O          X          X        X         X
+   X         X          X          X        X         X
+   X         X          X          X        X         X
+   X         X          X          X        X         X
+   X         X          X          X        X         X
+   X         X          X          X        X         X
+
+Normal   | Heal     | Heal     | Banish | Banish | Apocalypse |
+Starting | Weaken   | Weaken   | Elem   | Demon  |            |
+Energy   | Imprison | Imprison |                              |
+         | - Elem   | - Demon  |                              |
+---------------------------------------------------------------
+
+
+             BATTLEGROUND EFFECT OF CONTACT WITH BARRIER
+
+        ELEMENT         MISSILES        ICONS
+
+        Earth           Destroyed       Stopped
+        Water           Slowed          Slowed
+        Air             Deflected       Slowed
+        Fire            No Effect       Wounded
+        Void            ---------       -------
+
+end.

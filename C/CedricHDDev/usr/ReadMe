@@ -1,0 +1,87 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Cedric" © 1996 NEO/ALCATRAZ.
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ The installed program requires 1.0 MB ChipMem and 2 MB OtherMem.
+ It can be quit by pressing F10 (key can be changed with Tooltype "QuitKey=").
+
+ The game requires an installed A500 Kickstart 1.3 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate message.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive
+ "util/boot/skick346.lha" on aminet.
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, EXPCHIP, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page.
+
+ For the full WHDLoad package, other installs and updates refer to:
+        http://www.whdload.de/
+ or     aminet:dev/misc/whdload#?
+ and    aminet:game/patch/
+
+ version 2.1 (08.06.2020) done by JOTD:
+ - forgot a VBR read, access fault on some machines, but not in WinUAE, damn (issue #0004720)
+ - defaults to english language except if system locale is german (issue #0004721)
+   (now the game can be fully played in english, no more bug at level 5)
+   
+ version 2.0 (01.06.2020) done by JOTD:
+ - optional joypad controls: jump with blue button, status now uses green (or space)
+ - fixed bug in level 5 when using english language (read about it: http://eab.abime.net/showthread.php?t=52958)
+ - keyboard timings fixed
+ - added quitkey in the end sequence
+ - trainer: infinite lives
+ - trainer: level skip (adapted from original levelskip)
+
+ version 1.2 (18.04.2020) done by CFou!:
+ - ExitKey added for 68000
+ - Kick13 used instead of Kick31 (for 68000 support)
+ - Access faults fixed for Kick13 support
+ - random code using absolute ROM access fixed
+ - less chip memory needed
+ - CUSTOM1=x (1-11) to select start level
+ - CUSTOM2=1 to force English language
+ - Keys support added to select language in game 
+	E: English
+	D: Deutch
+ - CUSTOM3=1 used to skip intro
+ - Manual & Codes files included
+
+ version 1.1 (13.01.2005) done by CFou!:
+ - Blue screen freeze fixed (sorry for that)
+ - Start level can be selected using 'CUSTOM1=x' tooltype (x=1 to 11)
+ - source code included
+ - new install script
+
+ version 1.0 (29.08.2003) done by CFou!:
+ - initial release
+ - ECS and CD versions supported
+ - some access faults fixed (fire animation)
+ - VBR move removed
+ - 2 slaves used (Slow/Fast fire animation)
+ - some icon added
+
+ Thanks to Irek Kloska for original disk images
+
+ Remark about special PASSWORDS:
+ - GLUNZNSTRUDL : To see intro
+ - PAPASHNUXLA  : To Enable trainer
+	->unlimited lives
+	->'HELP' key to skip level

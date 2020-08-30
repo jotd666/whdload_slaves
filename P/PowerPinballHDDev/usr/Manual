@@ -1,0 +1,92 @@
+     
+             
+                :::::: :::::: ::    :: :::::: ::::::
+                ::  :: ::  ::  :    :  ::     ::  ::
+                :::::: ::  ::  :    :  ::::   ::::::
+                ::     ::  ::  : :: :  ::     ::  ::
+                ::     ::::::  ::::::  :::::: ::   ::
+      
+           :::::: :::::: :::  :: ::::::  :::::  ::     ::
+           ::  ::   ::   :: : :  ::  ::  :: ::  ::     ::
+           ::::::   ::   ::  ::  ::::::  :::::  ::     ::
+           ::       ::   ::   :  ::  ::  :: ::  ::     ::
+           ::     :::::: ::   :: :::::: ::   :: :::::: ::::::
+
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  POWER PINBALL'S KEYBOARD COMMANDS: Keyboard commands are available
+  for EVERY pull down menu in POWER PINBALL.  Each menu keyboard equiv-
+  alent is noted in preceding pages of this manual in the "Menu Tour."
+
+  During PLAY mode the following keys are active:
+
+  RETURN: 
+  -Drops another coin into the coin slot.
+
+  SPACE:
+  -Starts another game.  Press [space] up to four times to play multi-
+  player games.
+
+  B or b: 
+  -Toggles the background noise on and off.
+
+  AMIGA KEYS:
+  -(or Commodore key on the left and Amiga key on the right, on some 
+  Amiga keyboards) function as pinball machine flippers.
+
+  ALT KEYS:
+  -Shake the machine.  Be careful not to tilt it!
+ 
+  ARROW KEYS:
+  -The up and down arrow keys control the spring tension against the
+  pinball when it is in its chute and ready to launch.  The Arrow Keys
+  are also referred to as "Cursor Keys" and their arrangement and place-
+  ment varies slightly on different model Amigas' keyboards.
+
+  RIGHT AMIGA KEY
+  -Shoots the ball out of its tube when the spring is pulled back.
+
+
+  DIRECTORIES ON THE POWER PINBALL DISK:
+  
+  There are 5 directories which must reside on the same disk where Pinball
+  is placed.  These are:
+
+  MACHINES
+  -Where the machines are kept.  These files contain the bumper, walls,
+   point values, programmed events, and etc.  Each saved pinball machine
+   contains internal information to point it to the other files in the 
+   other directories which it needs to play correctly.  No special suffix
+   is required in pinball machines' names.
+
+  PICS
+  -The IFF background/playfield picture files are stored here.  All file
+  names in this directory must end with ".pic".
+
+  SOUNDS
+  -Sound files are stored here.  No special suffix is required in pinball
+  machines' sound file names.  Sound files should not exceed a maximum of
+  128K bytes of data.  You may create your own sound files with sound digi-
+  tizing hardware and software available from other manufacturers.  POWER
+  PINBALL has no facilities for editing sound files.
+
+  HISCORES
+  -High score files for each machine are kept here.  POWER PINBALL auto-
+  matically writes these files when required (providing the disk is not
+  write-protected) and each is named with the suffix of ".HiScore" You
+  should not attempt to modify these files in any way.  They are completely
+  under game control.
+
+  MISC
+  -This directory contains Flippers.pic and icon information.  The files
+  which are stored in the MISC directory are ABSOLUTELY NECESSARY to the 
+  proper functioning of POWER PINBALL.  Please do not delete ANY files from
+  the MISC directory nor attempt to alter or modify any of them in any way,
+  ever.  No icons exist in this drawer but it is not empty.
+
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  The preceding has been typed by Capricorn/Fusion on 09-19-90.  The complete
+  DOX on how to make MACHINES etc. should hopefully be typed up soon to 
+  follow.  Greets to all I know and especially to Paradox for cracking the
+  game!!!
+  
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

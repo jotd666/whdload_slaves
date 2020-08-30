@@ -1,0 +1,450 @@
+                                SKID ROW
+
+                                presents
+
+                     THE ADVENTURES OF WILLY BEAMISH 
+
+                              from Dynamix
+
+What if you were nine again...
+knowing what you know now?
+
+                             
+INSTALLATION & HELP INSTRUCTIONS
+
+ON-LINE HELP SYSTEM
+
+   Control Documentation is available in the form of an electronic help
+system built into Willy Beamish.  To access the help system, press the
+ESC key during game play.
+                                                                 _____
+   Use the arrow keys to move the cursor over the button marked |  _  |
+and press the spacebar.                                         |?|_|?|
+                                                                |_____| 
+
+AMIGA
+
+   The following are instructions for installing Willy Beamish onto a
+hard disk and booting the system.  Both can be done from either the
+Workbench or the CLI, in the instructions we assume that you are using
+floppy drive DF0: and hard drive DH0:.  If your drives go by different
+names, replace the drive label in the example with the correct one.
+For example, if you have an Amiga 3000, you will probably need to replace
+DH0: with WORK:.
+
+Copying Willy Beamish to a Hard Disk
+
+   1. Boot your system.
+   2. Insert Willy Disk #1 into the first internal floppy disk drive.
+   3. From Workbench, double click on the Willy Beamish #1 icon and
+      then on the install icon.
+   4. From the CLI, type CD DF0: and press the Return key.
+      Then type INSTALL and press the Return key.
+      The Dynamix install Utility window will appear.
+   5. Choose which drive and directory you wish to install the program
+      to.  The default directory is: DYNAMIX/WILLY.  To change the path,
+      click in the Destination Directory box and type in the new path.
+   6. Click on the INSTALL button.
+   7. At the prompt, click on the Okay button to install the program
+      files.  To cancel the installation process, click on the Cancel
+      button.
+  
+Amiga Loading Instructions
+
+   From Floppy Disks
+   Note: You may run the Willy program from multiple floppy drives.
+
+   Self Booting
+   1. Insert Willy Beamish Disk #1 into drive DF0:.
+   2. Turn on your system.
+
+   From Workbench
+   1. Boot your system with Workbench.
+   2. Insert Willy Beamish Disk #1 into a disk drive.
+   3. Double click on the Willy #1 disk icon.
+   4. Double click on the Willy icon.
+
+   From a Hard Disk
+   From Workbench
+   1. Load Workbench.
+   2. Double click on the hard disk icon.
+   3. Double click on the Dynamix drawer.
+   4. Double click on the Willy drawer.
+   5. Double click on the Willy icon.
+   
+   From the CLI
+   1. Load a CLI window.
+   2. Type CD DH0:DYNAMIX/WILLY and press the Return key.
+   3. Type WILLY and press the Return key.
+
+Amiga Specific Notes
+
+   1. Willy Beamish does not multitask with other programs.  For best
+      performance, make sure no other programs are running when you
+      start Willy.
+   2. Although your system may have one megabyte of memory, you still
+      may not have enough available memory to run Willy Beamish.  Self-
+      booting the program from disk should provide you with enough 
+      free memory to run the program.  
+      NOTE: Memory allocated for hard disk partitions or resident
+      programs will reduce the amount available for running programs.
+   3. If your system has only the minimum RAM required to play (1MB),
+      the Detail Level Slider is set to low and cannot be changed.
+   4. If you are playing off floppies, you can speed-up game play or
+      disk loading by turning off the music or by inserting the music
+      disk in a second drive.
+
+Trouble shooting
+
+   Problem: Even though my computer has 1MB of memory, I receive a
+   message saying there is not enough memory to run Willy.
+
+   Possible Solution: Avoid running other programs before you start
+   Willy.  Such programs might be using memory that Willy needs.  It
+   also helps if you run Willy from the CLI without loading the
+   Workbench.  You can also save memory by running Willy from the 
+   Workbench when there are no CLI or application windows currently
+   open.
+
+   Problem: My computer doesn't have a hard disk, so I am often forced
+   to swap disks during game play.
+ 
+   Possible Solution: You can reduce the number of disk swaps by turning
+   off the game's music or leaving the Music Disk (#10) in a second
+   drive.  Press Alt-M to turn off the music.
+
+   Problem: Constantly playing music bugs me, but I still want to hear
+   sound effects.
+
+   Possible Solution: Press Alt-M to turn off the music or select "music
+   off" from the Options Menu.
+
+   Problem: Everytime I set the game's Detail Level to high, the computer
+   lowers it.
+
+   Possible Solution: Unless your computer has more than 512K of chip
+   RAM, you will be unable to set the game's Detail Level to high.
+   Owners of Amiga 1000's or some older 500's and 2000's, will need to
+   upgrade their computers to the 1MB Fatter Agnus chip to increase
+   the amount of chip RAM.
+
+
+                              SLICE OF LIFE 
+                               PIZZARAMA!!
+                        1335 SOUTH FRUMPTON STREET
+
+PIZZA MENU
+
+Plumber's Friend                                   med. 12.50  lg. 17.95
+   Olives, refried beans, oysters, Limburger 
+   cheese, jalepenos, your plumbing.  If this one
+   won't clog up your plumbing, we don't know 
+   what will.
+
+Frumptonian Flip-out                               med. 14.50  lg. 18.95
+   Pepperoni, linguica, smoked salmon.  Our   
+   specialty.
+
+Dumpling Delight                                   med. 12.50  lg. 17.95
+   Anchovies, jalepenos, crayfish, pesto sauce.
+   A taste of the old country.
+
+Tootsweet Tempter                                  med. 10.95  lg. 13.95
+   Artichoke hearts smothered in low-cal maple
+   syrup made with real Tootsweet.  Delicious
+   and nutritious.
+
+Anchovy Olive Surprise                             med. 11.50  lg. 14.50
+   Anchovies, olives, and a surprise ingredient -
+   if we told you it wouldn't be a surprise.
+
+Humpford Howler                                    med.  9.50  lg. 13.50
+   Horseradish and jalepenos.  A real scream.
+
+Super Sludge Supreme                               med. 20.50  lg. 27.95
+   Refried beans, olives, tomatoes, pesto sauce,
+   oysters, smoked salmon, artichoke hearts,
+   broccoli, fresh garlic, smoked BBQ chicken,
+   linguica, sausage, feta cheese, shrimp,
+   mushrooms, anchovies, pineapple, onions,
+   Canadian bacon.  Everything but the kitchen
+   sink.
+
+Granola Gobbler                                    med. 13.95  lg. 17.50
+   Turkey and crumbled granola bars.  Yum!
+
+Beverages                                 On the Side
+ 
+Draft Beers        Glass  Pint  Pitcher   Frumpton fries            1.75
+                                          Buffalo chips             2.25
+Hanks'             1.00   1.50  3.75      Pea soup   cup 1.25  bowl 2.75     
+Frumptons's Own     .25    .50  1.00      Mixed greens              1.50
+Spud               1.00   1.50  3.75       with dressing            2.80
+Spud Light         1.00   1.50  3.75
+Schludweiler       1.25   1.75  4.25      
+Half-Mast Ale      2.00   3.00  8.00      
+Milwaukee's Best    .05    .15   .75      DON'T FORGET!
+OE8                 .85   1.10  2.85      WE DELIVER!!
+Chucky's           1.00   1.50  3.75      CALL 555-LIFE
+Rain-dog           1.00   1.50  3.75
+L.A. Beer          1.00   1.50  3.75
+
+Other Beverages
+
+Ola Cola, Diet Ola Cola, Caffeine Free Ola Cola,
+ Caffeine Free Diet Ola Cola.    sm. .85  lg. 1.00
+Mineral waters: Conestoga Cooler, Clearly
+ Grenadian, Impala.              bottle 1.50             NOW THATS'  
+                                                         GOOD PIZZA!
+Desserts
+
+Frumpton Fountain Float    1.95       Tootsweet Frappe      2.30
+Hot Sludge Sundae          2.65       Sphincter Surprise    3.25    
+
+
+Willy's "Top Secret" Notebook!!
+Keep Out - or Die! - Stop B4 it's 2 late!
+
+Hintline 1-900-370-KLUE or in California 1-900-370-5113
+
+Reed this and weep!  
+
+You are now cursed to live in the booger - snot world of girls with
+kooties!!  Ha - Ha - Ha!
+
+NINTARI CHAMPIONSHIP '91 
+August 13-14
+Nintari Square Garden
+BE THERE OR DON'T!!        <-- I will rain Supreme as Nintari King!!
+
+Coach Beltz has plummers butt!
+
+SLICE OF LIFE COUPON
+
+HELP US CELEBRATE OUR
+15TH YEAR IN FRUMPTON!
+
+$1.75 off any size
+Anchovy, Olive Surprise pizza!
+
+Carbuncle Cows Rule all space-time and dimension!
+Udder Power!
+
+Mr. Frick is a Dork!
+
+LEONA HUMPFORD: A CITIZEN WE CAN BE PROUD OF 
+--------------------------------------------
+by Henrietta Sskisser.
+
+   FRUMPTON-Frumptonians are privileged to enjoy the high quality of life
+in our fair city made possible by pillars of the community like Leona
+Humpford.
+
+   Outstanding community service programs such as the upcoming Tootsweet
+Annual Frumpton Frog Jump have long been a hallmark of the Humpford
+family, enriching Frumptonians both young and old for nearly two
+generations.  Following in the footsteps of the patriarch of the
+Humpford clan, Col. Rev. Dr. Hipolytus Mumford Humpford, (may he rest
+in peace) and her husband Harold Henry Humpford (may he also rest in
+peace), Leona Humpford has continued the family's tradition of
+generosity to the citizens of Frumpton.
+
+   Indeed, even in the midst of deep personal grief, she affirmed the
+Humpford civic commitment, remarking to the group of reporters
+shortly after her husband's untimely demise in a tragic golfing
+accident, "Harold guaranteed in his will that the sludgeworks will
+continue to benefit all the citizens of Frumpton as long as sludge can
+be turned into Tootsweet.  I will do everything in my power to make
+sure the terms of his will are fulfilled."
+
+Continued on page D2
+
+Monster Squad are 2 rad!!
+
+Tip: Knock over ice cream cone = 4 ultra - powers!!
+
+Nerds play Police Quest!
+
+buds 4 ever!!
+Dana-
+bane-a
+banana-
+fana-fo-
+fayna
+
+    W.B. + D.M.
+
+Child Care - Responsible 15 to 18 year old babysitter with first aid
+             training to care for 2 children at least once a week.
+             Call 555-2154 and ask for Sheila.
+
+Carmine eats his own boogers!!
+
+Skull Crusher Trux
+Skateboard trucks, wheels & more
+4 a free catalog call
+(415) 555-TRUX
+
+   FROG-GRO
+Ultra Strength
+   VITAMINS
+
+This revolutionary pill will instantly transform your common, lazy frog
+into the frog you've only dreamed of!!!....
+
+YOUR FROG WILL:
+  O JUMP FARTHER!
+  O JUMP HIGHER!
+  O PUT ON MUSCLES, MUSCLES & EVEN MORE MUSCLES!!!
+  O STOP YOUR FROG'S SULKING AND POUTING
+
+"Best damn thing I could have bought for my ol' friend Wartey"
+                                       Hugh Wetshoe
+                                       Hickville, AR.
+
+Send $7.95 plus $2.00
+shipping & handling to:
+
+SCAMCO
+P.O. BOX 1233
+GYPTOWN, MA. 98876
+
+CARE OF THE COMMON BULLFROG
+---------------------------
+By Prof. J. Arthur Toedkissrer
+
+The North American spotted bullfrog (jumpinus greenwartia) has long
+been maligned as a source for the unpleasant skin condition commonly
+known as warts.  This assumption is not only medically invalid but 
+also a grave dis-service to a benevolent and helpful species.  As any
+young boy can tell you, frogs are great fun and make excellent pets as
+long as you take a few basic steps to care for them.  To keep your
+hopper in good health you need to make sure he stays moist and cool.
+Check his skin: if it's cold and slimy then your frog is probably in
+good condition.  As far as food goes, frogs can eat almost any kind of
+insect but they are especially partial to ants and bees.  You should
+try to feed your amphibian friend at least once a day, but he can go
+without food for several if he has to.  It's also a good idea to let 
+your web-footed pal take a swim on a regular basis: it's good for his 
+skin and will keep him in good spirits.  A bathtub-sized pool is ideal
+for your little green buddy to bathe in.  Following these guidelines 
+will keep both you and your frog happy and healthy.
+
+                                        May 20, 1991   32
+
+Nintari System - Must sell all Nintari games and system.  "Monster 
+                 Squad", "Killer Klownz from Outer Space", and many
+                 more!!  All going for $80!  Joysticks included.
+                 Ask for John at 555-9872.
+Call this guy /
+
+Gotta check this out!  RAD!
+
+ DR. JECKLE'S
+   At Home
+Hypnosis Course
+
+It's as easy as saying....
+"Hoopa, Coiler, Agamemnon."
+We'll tell you why these are
+three of the most powerful
+words you can ever know.
+
+o Amaze your friends!
+o Confuse your enemies!
+o Seduce unsuspecting members of the opposite sex!
+o Get past security guards!
+
+You are feeling a powerful urge to
+pick up the phone.  That's right
+Juuust reeelax.  Don't fight it.  Call
+meee.  Call meee.  Call meee nowww.
+Dial 1-800-555-TIZE.  Call now.
+Dial the phone.  1-800-555-TIZE
+
+Wonder if this would work on Brianna??
+
+                                      Willy Beamish
+                                      November 25
+                                      Ms. Glass
+
+                   "My best friend."
+
+I have a lot of cool friends like Dana and Perry, but my bestest friend
+is the ghost of my grandfather Beamish.  He is totally awesome, even if
+he is dead and can't buy me ice cream anymore.  He's kind of like a
+"fairy grandfather."  He is the best, coolest, most excellent, friend
+I have ever had.
+
+                                                The End.
+
+C - This was supposed to be about someone real!
+
+rumor has it that it'll be out around December 1st!!
+
+NINTARI - MONSTER SQUAD 2  - COMING SOON -
+All new graphics!  Gut wrenching action!  Can the monsters stop the
+evil Dr. Dreadd?  on sale anywhere fine NINTARI products are sold.
+
+definite on X-mas list!
+
+Nintari Scores!
+
+4/2 - 1,000,009,154
+  broke a billion!!
+4/10 - 1,007,995,142
+4/21 - 1,301,114,022
+5/11 - 1,582,601,003
+(only 3 weeks until the regionals!)
+5/21 - 1,893,611,502 
+(almost there!!)
+6/1 - 2,010,102,050
+(2 Billion)
+6/3 - Kicked some major butt today at the Nintari Championships
+
+2,349,997,186
+
+Local Boy Wins Regional Title
+-----------------------------
+
+   Frumpton's own William J. Beamish has won the western regional title
+for the Nintari "Monster Squad" championships, qualifying him for the
+national championships to be held later this summer.  Beamish's score of
+2,349,997,186 was enough to beat his closest competitor by eighty
+thousand points.  The Nintari Corporation plans to award the winner of
+the national championships a scholarship and will feature him in
+several upcoming nationally-aired commercials.  He will also receive a
+lifetime supply of video games, a stereo, a minibike and a trip to space
+camp.  When asked the secret to his success, the nine year-old Beamish
+replied "I practice a lot and drink Slam-Dunk cola while I play: it 
+improves my reflexes."
+
+Supreme Interview after I dominate at Nintari Championship!
+
+Lather: So Mr. Beamish, How does it feel to be the Supreme exalted
+world Nintari Championship?
+
+Me: Pretty good, Stan.  But I gotta tell ya: it took a lot of hard work
+for me to get where I am today.
+
+Lather: I guess so.  What kind of things did you do to get ready for this
+championship?
+
+Me: I had a very strict training regiment:  Every day I'd get up and skate
+3 miles down to the video arcade and play Space Busters for a while.
+Then I'd head back home after my parents went to work and practice 
+Nintari.
+
+Lather: I see.  What other things did you do to get ready for the
+championship?
+
+Me: Well, I had a strict diet: Dofritos chips, Slamdunk Cola, and
+products made with Tootsweet were almost all that I would let myself
+eat.
+
+Lather: That's impressive self discipline!
+
+Me: Well if you want to Hone your skills to razor sharpness, you have
+to make a few sacrifices.
+
+SKID ROW  SKID ROW  SKID ROW  SKID ROW  SKID ROW  SKID ROW  SKID ROW

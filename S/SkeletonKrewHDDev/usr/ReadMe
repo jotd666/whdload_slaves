@@ -1,0 +1,89 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Skeleton Krew AGA/CD³²" © 1995 Core Design.
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ The installed program requires 2.0 MB ChipMem and 3.0 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 3.0 (22.08.2019) done by JOTD:
+ - End sequence accessible (weren't working for both versions!)
+ - Level selection
+ - Control method selection
+ - Trainer infinite lives
+ - AGA version now works with a standard 2 button joystick (needed a CD32 joypad or second button "stuck")
+ - AGA version from MicK resourced from binary (source wasn't available)
+ - Decrunch in fast memory added for CD32 version
+ - fixed access fault (issue #0000845, well I fixed some random / rare crash)
+ - source code included for both versions
+ 
+ CD³² version 2.0 (30.05.06) done by JOTD:
+ - original joypad controls enabled again
+ - fully rewritten
+ - source code included
+ - merged both floppy & CD³² install packages
+
+ CD³² version 1.0 (2001) done by JOTD:
+ - Runs fully from HD with WHDLoad on any AGA amiga.
+ - Patched for joystick/keyboard
+ - Convenient installer script
+ - Pause key added (P)
+ - Nice exoticon (http://exotica.fix.no)
+
+KEYS/BUTTONS:
+
+ESC: Quit current game
+Fire: fire, without rotation
+Fire2: Change weapon
+P: Pause
+
+Player 1:
+
+Key left: fire + left rotation
+Key right: fire + right rotation
+Key up: jump/rematerialize
+Right Shift: Change weapon
+
+Player 2:
+
+Z: fire + left rotation
+X: fire + right rotation
+S: jump/rematerialize
+Left Shift: Change weapon
+
+ floppy version 1.0 (16.04.00) done by MiCK
+
+ - Full Loading from HD
+ - Quit Option (F10 is default key)
+ - Cool ROMIcon/NewIcon (created by JHZ)
+ - RNC disk protection removed
+ - Decrunch routine relocated in fastmem
+ - Interrupts fixed when caches are enabled on 040/060
+ 
+
+ Thanks to Helmut Motzkau for original disk images
+
+ Now fully tested from start to end sequence in 2019 by JOTD for both versions.

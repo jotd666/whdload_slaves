@@ -1,0 +1,83 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Genesia" © 1994 Microids.
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ *** PLEASE READ INSTALLATION NOTES *** (end of this text)
+
+ The installed program requires 0.5 MB ChipMem and 1.5 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ The game requires an installed A500 Kickstart 1.3 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick345.lha" on aminet.
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 1.5 (22.04.09)
+ - fixed wrong game date in slave
+ - small slave rework
+
+ version 1.4 (14.03.05)
+ - fixed a problem after configuration screen (privilege violation)
+
+ version 1.3 (23.09.04)
+ - changed IOCACHE and reassembled
+ - updated/uppercased 'notes' part of the readme for those who don't read it 
+   and then get on my nerves
+ - sourcecode included
+
+ version 1.2 (14.06.03)
+ - adapted to WHDLoad v16
+
+ version 1.1 (22.06.03)
+ - barracks password protection now removed
+ - fixed disk requester on config disk
+ - BUTTONWAIT tooltype enable LMB wait on setup information screen
+
+ version 1.0 (07.06.03) done by JOTD:
+ - initial release, french & UK versions supported
+ - password protection removed on config disk
+ - config disk reboot -> starts game
+ - saves to HD with a reduced number of OS swaps
+ - nice icons by Frank & Exoticons
+ - manual included
+ - set CUSTOM1=1 to enable boot on configuration disk
+
+
+ *** INSTALLATION DETAILS & TROUBLESHOOTING *** PLEASE READ ***
+
+ 1) Install USING THIS INSTALL SCRIPT
+
+ 2) Run "Config" just after the install (CUSTOM1=1 settings or Config icon) AT LEAST ONCE
+
+ 3) While in config disk boot, always answer: "game already installed" ('NO' answer)
+    or else you won't be able to save your games
+
+ 4) When you save your games, always choose to save games to/from harddisk, NOT FLOPPY

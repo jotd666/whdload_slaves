@@ -1,0 +1,67 @@
+
+               ˆ------------------------------------------‰
+               |       Ford Prefect strikes again!        |
+               |                                          |
+               |              Here it is:                 |
+               |                                          |
+               |           The Ultimate Cheat             | 
+               |              for BloodNet                |
+               |                                          |
+               Š------------------------------------------‹
+
+      So...here is the complete cheat for BloodNet. Just load in your
+  favourite hex-editor (like Zap or AZap) and change the positions below
+    to FF. This will give you 255 in every stat, and 16,777,215 virtual
+                       dollars to fool around with.
+
+   NOTE: You have to change the value in the positions under both Pos#1
+      and Pos#2, or else the game will accuse you of cheating... :-)
+
+                                  POS#1:             POS#2: 
+
+                  Hit Points:     $34B/$34D          $6E8E/$6EAE
+
+                                 PHYSICAL:
+                    Strength:     $358               $6EB5
+                   Endurance:     $359               $6ECD
+                     Agility:     $35A               $6E9D
+                     Stealth:     $35B               $6EAB 
+                 Pick Pocket:     $35C               $6E9F
+
+                               CYBERSKILLS:
+                     Hacking:     $370               $6EB0 
+              Deck Integrity:     $371               $6EA7 
+               Cybercloaking:     $373               $6E9A
+
+                                  COMBAT:
+                       Melee:     $36A               $6E99   
+                    Firearms:     $36B               $6EB3 
+                    HighTech:     $36C               $6ECC
+                     BioTech:     $36D               $6EA4 
+                      Blades:     $36E               $6ECA 
+                  Explosives:     $36F               $6ECB
+
+                               PERSONALITY:
+                  Leadership:     $35D               $6EA0
+                   Innonence:     $35E               $6E8F
+                       Faith:     $35F               $6EA5
+                     Courage:     $360               $6EA9
+                        Will:     $361               $6E9E
+                     Bribery:     $362               $6EAA
+
+                                  MENTAL:
+                Intelligence:     $363               $6EA6
+                   Fast-talk:     $364               $6EA3
+                 Observation:     $365               $6EAC
+                  Bargaining:     $366               $6EAF
+                    Jury Rig:     $367               $6EB1
+                   Medicinal:     $368               $6EB4
+                   Lock Pick:     $369               $6EB2
+
+                       Money:     $34F/$350/$351     $6E96/$6E97/$6E98
+
+     Another great save-file cheat from Ford Prefect. Hope you haven't
+    missed my earlier for UFO, Reunion, DuneII and so on, and so on...
+
+
+

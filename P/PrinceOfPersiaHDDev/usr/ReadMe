@@ -1,0 +1,100 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Prince Of Persia" 1990 Jordan Mechner/Broderbund.
+
+ This install requires WHDLoad and RawDIC to be in the path. Both can be found
+ in the WHDLoad package.
+ To install from a different drive than DF0: select installation mode Expert.
+
+ The installed program requires 0.5 MB ChipMem and 1.0 MB OtherMem.
+ It can be quit by pressing Num '*' (key can be changed with Tooltype "QuitKey=").
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 3.4 (01.05.2020):
+ - fixed corruption and crash when saving/loading (issue #0004589)
+
+ version 3.3 (09.03.2020) done by JOTD:
+ - no more error if highscore file exists :) (introduced in 3.2)
+ 
+ version 3.2 (07.03.2020) done by JOTD:
+ - reduced chipmem usage so 512k chipmem amigas can run it
+ - no more error if highscore file doesn't exist
+ 
+ version 3.1 (06.03.2016)
+ - added whdload 17 config buttons
+ - CUSTOM2: subset of trainer: just unlimited levelskip & keeps minutes.
+
+ version 3.0 (01.01.2005) done by JOTD
+ - slave fully rewritten, now supports 5 versions
+ - rewritten readme & install script
+ - changed savegame system, now uses the excellent multi-save system by Bert
+ - trainer now activated by CUSTOM1 (not CUSTOM5 as before)
+ - another version supported (IPF ID 1823, english)
+ - restored support for another version (IPF ID 1407, english)
+ - sourcecode included
+
+ version 2.2 (2002) done by JOTD
+ - 4 versions of the game supported (US,Europe,German (IPF ID 82) & 
+   French version "Le temps des heros" compil, IPF ID 2290)
+ - RawDIC imager
+
+ version 2.1 (2001) done by JOTD
+ - better error handling, documentation added
+
+ version 2.0 (2001) done by JOTD & Harry
+ - WHDLoad version using JST2WHD emulation macros
+ - Convenient installer script
+ - 3 versions of the game supported (US,Europe,German)
+ - load/save games to HD
+ - remembers best times (thanks Harry!)
+ - No more 'unexpected exception' during the game
+ - Removed ALL disk accesses
+ - Cool icon by Frank/Exoticons/???
+ - Annoying password potion level removed (does not appear at all)
+ - Set CUSTOM5=1 tooltype gives infinite time/infinite energy,
+   and enables level skip (Shift+L) for levels above 4.
+
+ versions 1.x (1997-1999) done by JOTD:
+ - JST releases
+
+In-game keys:
+
+ - Ctrl-R: quit current game & go to main game menu
+ - Ctrl-S: sound on/off
+ - Ctrl-L: load game (from main game menu)
+ - Ctrl-G: save game (level 3 and higher)
+ - Ctrl-V: show game version
+ - Ctrl-Q: quit to workbench (used to reboot) (QWERTY keyboard)
+ - Ctrl-A: restart level (QWERTY keyboard)
+ - Shift-L: skip levels but not above to level 4 unless CUSTOM1 is set, sets timer to 15 minutes
+ - Space: show remaining time
+ - Esc: pause
+ - Joystick/Numerical keypad:  directions
+ - Fire/Right Amiga: fire
+ - 0 on keypad: give up fight
+
+Notes:
+
+ - After reloading a game, CTRL key must be pressed before Shift-L can be used
+ - If trainer (infinite time/energy) is set, Ctrl-G has no effect, and high scores are not saved
+ - when using trainer infinite energy and falling in pits
+   the level doesn't auto-restart. Use Ctrl-A to restart level manually

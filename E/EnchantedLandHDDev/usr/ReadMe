@@ -1,0 +1,68 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Enchanted Land" © 1990 Thalion
+
+ This install requires WHDLoad and RawDIC to be in the path. Both can be found
+ in the WHDLoad package.
+ To install from a different drive than DF0: select installation mode Expert.
+
+ The installed program requires 0.5 MB ChipMem and 0.5 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 1.3 (20.01.2019) done by JOTD:
+ - fixed self-modifying code which made objects & characters flash like
+   crazy on 68040/68060/WinUAE JIT (issue #0001494)
+ - adapted to whdload 17
+ - fixed all SNOOP issues (illegal beamcon0 write, missing color bit,
+   missing copperlist end, wrong bitplane address, wrong blitter source)   
+ - added joypad support: play: pause, fwd+bwd: die
+ - blue/2nd button display spells/potions screen
+ - Removed mandatory keyboard keys. Blue/2nd button starts, fire ends gameover/hiscore screens
+ - added trainer
+ - enabled in-game cheat keys (function keys)
+ 
+ version 1.2 (06.10.06) done by JOTD:
+ - stack frame format fix removed for 68000 CPUs (crashed badly)
+ - save highs for all users
+ - reworked icons & install script & source
+ - quitkey for 68000 users
+ - fixed some SNOOP issues (not all of them)
+ - manual included
+ - source code included
+
+ version 1.1 (2000) done by Mr Larmer:
+ - disk protection removed,
+ - two access fault removed (stupid Atari ST code remaining),
+ - stack frame format fixed,
+ - save highs for registered users only,
+ - nice NI/MWB icons included,
+
+ Thanx to:
+ - Ronald van Dijk and Richard Wagenfuhrer for original disk image.
+
+ Joypad controls:
+ - blue/2nd button: start game from menu / spell screen
+ - play: pause
+ - fwd+reverse: quit
+ 
+ 

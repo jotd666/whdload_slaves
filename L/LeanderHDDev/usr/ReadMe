@@ -1,0 +1,91 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Leander" © 1991 Psygnosis (3 disks).
+
+ This install requires WHDLoad and RawDIC to be in the path. Both can be found
+ in the WHDLoad package.
+ To install from a different drive than DF0: select installation mode Expert.
+
+ The installed program requires 0.5 MB ChipMem and 1.0 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 2.5 (27.05.2018)
+ - audio glitch removed after the intro (dragon picture): game stopped DMA but not the music routine! (issue #0003807)
+ - full removal of the intro / "press fire" start screen
+ - BUTTONWAIT now waits 2 seconds at the end of a level and when loading world
+   (keep fire pressed to make it last longer)
+ 
+ version 2.4 (04.02.2018)
+ - new CUSTOM3 option to skip introduction (issue #002202)
+ - trainer now prevents losing a life when performing the suicide weapon
+ 
+ version 2.3 (31.07.2016)
+ - Now intro music is enabled, no more "press fire to skip intro music" message, unless CUSTOM2 is set
+ - adapted to WHDLoad v17
+
+ version 2.2 (07.04.05)
+ - level 6 interrupt fixed just after "Traveller Tales Presents"
+   (could crash on machines with quick chipmem)
+
+ version 2.1 (03.04.05)
+ - CACR access removed
+ - BUTTONWAIT bug removed
+ - a zillion blitter waits inserted (gfx were corrupt)
+ - music fixed (byte write to register)
+
+ version 2.0 (23.03.05) done by JOTD
+ - complete rework (Installer, RawDIC imager, & slave)
+ - PAL/NTSC versions properly supported.
+ - BUTTONWAIT tooltype added to be able to see the mission (recommended)
+ - CUSTOM1=1 enables trainer (infinite lives)
+ - hiscores are loaded/saved to HD (unless CUSTOM1 is set)
+ - Country check removed (PAL/NTSC)
+ - disk protection removed
+ - Nice icons from Frank & Exoticons
+ - manual included
+ - source code included
+
+ version 1.x (2001) done by JOTD:
+ - initial WHDLoad release
+
+
+ Thanks to Harry for bug-reports on this installer, for initiating the
+ jst2whd source level converter, and for pre-converting this game to WHDLoad.
+
+ Thanks to Mr Larmer for the RawDIC MFM decoding routine I used to create the
+ file ripper (converted from my rippsyfiles program)
+
+ Passwords
+
+ Enter any of the following for the password:
+
+   "ZXSP"______________LEVEL 2.        "LVFT"______________LEVEL 3.
+   "LTUS"_______INFINITE LIVES.        "ESPR"______________cancel "LTUS" cheat
+   "LUCY"_______________HEARTS.        "SOTB"______________RAIN.
+                       "SNOW"______________SNOW.
+
+ If you typed "LTUS" use 'F8' to pause the game and press 'F6' and
+ then the fire button to skip levels.  'F2'-'F7' selects the various
+ super weapons.
+
+ ESPR just cancels LTUS effect (thanks to Michael Ofner for the info)

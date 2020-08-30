@@ -1,0 +1,74 @@
+Short : HD-Installer & fix for Archon
+Type : game/patch
+Author : Jean-François Fabre (jffabre@free.fr)
+
+Install-Script & HD-loader © 2002 Jean-François Fabre
+
+Archon © 1985 Electronic Arts
+
+Features:
+
+- Runs fully from HD using WHDLoad + KickEmu
+- Game now works on any amiga. No need for a Kickstart 1.2 A500 anymore.
+- Annoying blank screen delays removed
+- Disk protection removed, in a clean way
+- Fixed problem with graphics.library FreeSprite() call
+- Convenient install script
+- Quit key (default: F10, or configurable with QUITKEY)
+- Instructions included
+- Nice icon by Chris Vella
+- Should support original version and cracked versions
+
+
+Thanks go to:
+
+- Ungi for testing and memory dumps
+- PHR for their terrible Action Replay freeze "crack" I included, because
+  the program would not decrypt properly on any config I tried
+- CAPS team for technical advice on the game execution
+- Bert Jahn for WHDLoad and KickEmu
+- Hidehiko Ogata for original disk image
+- Chris Vella for nice icon
+- LSD for documentation
+
+Notes:
+
+- This one was tough, and time consuming. I hope you'll appreciate it. I would grant
+  the "most incompatible game award" to that one okay: does not run on anything else
+  than A500 Kickstart 1.2 (and I did not even see it running on it). WinFellow/WinUAE
+  or any real amiga, including A500 KS1.3 cannot run the standalone, original version
+  or even the crack. Actually, the protection was hard to emulate without the
+  original disk, and did not even appear if the track supposed to contain it
+  was free of read errors (dos copy attempt) !
+- I tested the program with kick 1.3 emulation, but it failed because of the
+  FreeSprite problem (the
+  game called FreeSprite with an illegal sprite number -> access fault), so I thought
+  that maybe the program would need kickstart 1.2 emulation, so I did it, adapting
+  it from Bert kickstart 1.3. I found the problem was still there on kickstart 1.2
+  so it was something else, and then I found the FreeSprite fault. It runs on
+  kickstart 1.3 now. Grrrr.
+  As you see, it was not a very straightforward fix.
+- Don't ask me for other early EOA titles such as Skyfox I & II, 7COG,
+  ... as I'm planning to fix them anyway.
+- Tested on A1200/68060, plain A1200/68020.
+  If you've got trouble, try setting NOCACHE or/and NOMMU
+
+
+History:
+
+- v1.0: initial release
+- v1.1: no need for the big .RNC file anymore. Now clean fix.
+- v1.2 (29.02.2016): adapted to WHDLoad v16, runs with CD32Load
+
+Requirements:
+
+ The game requires a installed A500 Kickstart 1.3 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ a appropriate requester.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick346.lha" on aminet.
+

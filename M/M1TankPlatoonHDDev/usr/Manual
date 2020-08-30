@@ -1,0 +1,502 @@
+     M1         Technical                
+   TANK         Supplement                { Typed By [RYGAR] }        
+PLATOON         for Amiga Computers                             
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                                
+                                                                   
+Contents                                 
+
+Your M1 Tank Platoon should contain a manual, this technical supplement, a
+3.5" disk, keyboard overlays and a registration card.
+
+Equipment
+
+This simulation requires a Commodore Amiga with at least 512K of memory. It
+runs faster on machines with 1 Megabyte (1M) of memory. You can play this
+simulation entirely with the mouse, but many "tankers" find the keyboard
+useful at points. A joystick is also supported for certain tasks.
+512K Memory Machines: If your machine has only 512K of RAM (memory), M1
+Tank Platoon requires that you use only one 800K 3.5" floppy drive. You must
+unplug all other drives. If you leave additional drives connected, the 
+operating system leaves M1 Tank Platoon with insufficient memory.
+
+Saving Games
+
+The game program disk has sufficient room to save all your platoon records.
+You do not need a separate save-game disk.
+
+Installation
+
+M1 Tank Platoon is not copy-protected. It can be copied to other disks. If 
+you copy it into a hard disk, make sure everything is in the same drawer.
+Always play from a copy, never from your original.
+You can only make copies of the disk for your own, personal use. Selling or
+giving away any copies of M1 Tank Platoon is a Copyright Violation and against
+the law. See the copyright notice at the end of the game manual.
+
+Loading
+
+M1 Tank Platoon can be loaded from the Workbench by double-clicking on the M1
+Tank Platoon icon, like any other program.
+In addition, you can auto-load the simulation by turning off your computer,
+inserting the M1 Tank Platoon disk, then turning on your computer. (Exception:
+if you have an Amiga 1000 that requires a Kickstart disk, you must use that
+disk first, then insert M1 Tank Platoon when the computer asks for the
+Workbench disk.)
+If playing from floppy disks, leave the disk in your drive throughout the
+game. Do not remove the disk until you quit the game.
+
+                                    Copyright @ 1990 MicroProse Software, Inc.
+                      Amiga is a registered trademark of Commodore-Amiga, Inc.
+
+
+Operating Problems
+
+The latest notes regarding this program can be found on the disk in a file
+named "READ.ME"
+If the program does not load or run correctly, turn off your computer and 
+restart it. On a 512K machine, make sure only ONE floppy disk drive is
+attached. Also remove any other peripheral hardware. If you still have
+trouble, make a new copy of the game on another Amiga and try it on that. If
+the copy works on that machine, but not your own, your machine has hardware
+problems. Take it to a dealer or service facility for examination. A common
+problem is disk drives falling out of alignment.
+If you have trouble loading on other Amigas as well as your own, you may be
+one of the tiny percentage with a defective disk. In such cases contact
+MicroProse Customer Service at (301) 771-1151, Monday through Friday, 
+9AM-5PM, Eastern time. Please have a pencil and paper handy when you call.
+
+MOUSE CONTROLS
+
+The Amiga version of M1 Tank Platoon fully supports mouse operations in the
+Amiga style. This means significant changes from the IBM system described in
+the manual. For example, mouse actions are activated by the left-side mouse
+button (a "left-click"), while holding down the right-side mouse button brings
+up menus (a "right-holddown").
+All options outside battle are mouse operated. The keyboard is used only to
+erase and reenter names. The joystick is not used outside of battle.
+During battle keyboard, mouse and joystick are supported. You can use the
+keyboard controls and overlay as described in the manual, or the mouse
+controls as described below, or any combination that suits you. In battle the
+joystick emulates the keyboard's cursor keys (the controller).
+
+Prepare for Battle
+
+You must use a mouse for all these controls. Ignore the manual references to
+Controllers and Selectors. Instead use the mouse to find and move the
+highlight, and then left-click to make a choice. In addition, some screens
+have yellow buttons. Click on these to perform various actions.
+Staff Briefings (page 31-35): As you move the mouse, a selected option
+highlights. Left-click to make your selection.
+On the very first briefing page, where the platoons are listed, you can start
+a new platoon by pressing the Esc key, typing a new name, and pressing Return.
+This erases the old platoon and creates an entirely new one.
+Vehicle Identification Quiz (page 33): As in the briefing, use the mouse to
+highlight and left-click to make your choice.
+Bivouac-Outfitting (page 35-36): You can highlighy the text areas in the top
+half of the screen. Left-click on your platoon name, a vehicle name, a
+crewman's name, or ammo supply. In each case you'll see detailed information
+on the bottom half of the screen.
+To transfer a crewman to another position (either in that tank or another 
+tank), click on the man's name, click on the "XFER" button, then click on the
+position he'll occupy. Illegal positions (see the lower box on page 36) will
+not highlight.
+To promote or decorate a crewman after a battle, simply click on his name and
+press the appropriate button. A man's current rank and task may prevent
+promotion (see the lower box on page 36).
+You can change a crewman's name by clicking on it, pressing ESC, typing a new
+name, and pressing Return. This permanently changes that name with the new one
+(you'll never see that old name again!).
+Bivouac-Briefing (page 36): Although the briefing is automatic, you can "speed
+read" through it using the yellow buttons. "PREV" sends your back to the 
+previous page, "NEXT" to the next page, and "EXIT" to the bivouac options.
+
+Battle Controls Overview
+
+Controllers: The "controller" swings your view left or right, elevates it up 
+or moves it down. You can use the joystick, cursor keys, and/or mouse as the
+"controller". Each operates somewhat differently; select the method(s) you
+prefer.
+Mouse Controller: In crew positions (TC, Gunner or Driver), use the mouse to
+manipulate the device illustrated on page 40. The mouse moves the small
+"Controller Position" boxes like "slider" switches along their respective
+tracks (the left-right horizontal track, and the up-down vertical track).
+To move the box, left-holddown on the box, wait until it changes color, then
+drag it along the slider. The further you drag it, the faster the movement.
+When you release the mouse button, the slider jumps back to center position
+(the slider is "spring loaded").
+For small movements, you can "left-click" along the slider beside the box.
+This produces very slow movement as long as you hold down the mouse button.
+When you release it the movement stops.
+Joystick Controller: Holding the joystick left, right, up or down causes
+accelerating movement in that direction. To move slowly, flick or tap the
+joystick repeatedly. Movement stops when you release (center) the stick.
+Cursor Controller: One tap of a cursor key starts movement very slowly in a
+direction. Repeated taps, or holding the key down, accelerates the movement.
+To stop movement, tap once in the opposite direction. You can use both the
+special cursor keys and the direction keys on the numeric keypad.
+Up and Down: Unlike the IBM version, the "up" button or control position 
+device moves your aim upward, while "down" moves it downward.
+The Pop-Up Menu: During battle a right-holddown with the mouse pops up a
+general-purpose menu. This menu lets you change viewpoints, your OP (personal
+location) and leaders. These options are described in more detail on page 37
+and pages 66-67. The menu options duplicate certain function keys.
+Selector #1: Frequently referenced in the manual, this is always the Return 
+key or the Joystick fire button.
+Selector #2: Also referenced in the manual, this is always the Space bar. 
+There is no joystick equivalent.
+
+TC Unbuttoned View
+
+This view is illustrated on page 39 of the manual. As shown there, a mouse
+left-click in the appropriate area fires a Smoke Grenade Launcher.
+The Controller: Moving the controller left or right (with the mouse, joystick,
+or cursor keys) swings the TC's cupola that direction, including his machine-
+gun. Moving the controller up or down elevates or depresses your view and the
+gun.
+Firing: To fire the caliber .50 M2HB machine-gun, left-click on either handle,
+or the area between them. A single click fires a short burst. Hold it down for
+sustained fire.
+Zoom/Unzoon: To use your 7x35 binoculars, left-click anywhere in the outside
+view. To remove them, left-click again in the same area.
+New Controls: There is a new switch, not illustrated in the manual, to the 
+right of the Round-Loaded and Laser Warning lights. This switch toggles on/off
+the image intensifiers (a night vision aid) in your binoculars. Obviously, if
+you aren't using the binoculars this switch has no effect!
+
+TC Buttoned View
+
+This view is illustrated on page 41. A mouse left-click in the appropriate 
+area fires a Smoke Grenade Launcher. In addition, left-clicking on the 
+Ammunition Switch or the Main-Coax Switch instructs the gunner to change ammo
+or weapon types. The other switches and lights are informational only. To 
+operate them you must move to the gunner's position.
+The Controller: Performs the same function here as the TC Unbuttoned View
+(above).
+Firing: AS in the real M1A1, you an fire the TC's caliber .50 M2HB machine-gun
+with the hatch closed. Left-click on the small handgrip to the far right, just
+below the vision slot. As before, a single click fires a burst, holding down
+the button produces sustained fire.
+Zoom/Unzoom: The TC can toggle between 1x (normal) and 3x (zoom) vision. To
+do this, left-click anywhere in the vision slot view.
+Night Vision: When buttoned up the TC has no night vision aids. The thermal
+viewer is only available to the gunner, not the TC. (The US Army is aware of
+this limitation and has proposed additional night-vision aids for future
+versions of the M1.)
+
+Gunner View
+
+This view is illustrated on page 43 of the manual. A left-click in the 
+appropriate area operates each of these controls: Smoke Grenade Launchers,
+Thermal (night) Viewer Switch, Computer (Norm)/Battlesight Switch, Main-Coax
+Switch, Ammunition Switch, and the Magnification Lever.
+The Controller: Moving the controller left or right (with the mouse, joystick,
+or cursor keys) rotates the turret and your viewpoint. Moving the controller
+up or down elevates or depresses the main gun, the coaxial machine-gun and 
+your view.
+Firing Laser or Gun: The Gunner Controls Handgrip buttons are "clickable" with
+the mouse. The LEFT button fires the laser rangefinder once. The RIGHT button
+fires the gun. If the gun is set to "main", the 120mm cannon fires one round
+and the loader immediately begins reloading. If the gun is set to "coax", the
+coaxial machine-gun either fires a burst (with a click), or gives sustained
+fire (if you hold down the mouse button).
+Zoom/Unzoom: To toggle between the 3x and 10x views available to the gunner,
+either left-click in the view area, or on the Magnification Lever.
+Gun Stabilization: Whenever your laser strikes a target (i.e., any vehicle or
+ground troops), the turret stabilization system is automatically engaged. From
+that moment onward, the turret automatically rotates, elevates, or depresses
+to keep the weapon aimed at the target, regardless of either your movement or
+the target's movement. An "*" appears in your gunsight after the range when
+your stabilization is running.
+Stabilization is very handy. You just "zap" the target with the laser, then 
+sit back and watch the weapon track the target. If you don't fire soon, it's 
+wise you occasionally update the range with another laser flash.
+If you move the controller, the stabilization turns off. If you leave the 
+gunner's position, the actual crewman takes over and makes his own target
+selection (which may not match yours!).
+
+Driver View
+
+This view is illustrated on page 47. As shown there, a mouse left-click
+operates the Engine Exhaust Smoke Generator, the Night Periscope, and the
+Brake Pedal. The Parking Brake (the smaller pedal) is not used during battle,
+and is therefore inactive. 
+The Controller: Moving the controller left or right (with the mouse, joystick,
+or cursor keys) turns the hull in that direction. Moving the controller up
+causes the tank to accelerate forward. Moving the controller back causes the
+tank to slow down; if the tank is already halted and you move the controller
+back, the tank moves in revers.
+Firing: The driver has no weapons, and therefore cannot fire. The joystick 
+fire button or the Return key apply the brakes. Remember that because of your
+viewing angle, the brakes are off when the pedal is down, and applied when the
+pedal is up.
+Zoom/Unzoom: The driver has no zoom viewer. His vision slot is always 1x
+(normal) power.
+New Controls: The driver's handgrips in the M1 operate like motorcycle 
+controls. Rotating them controls vehicle acceleration. For convenience, a 
+mouse left-click on either handgrip immediately "puts the pedal to the metal",
+accelerating the vehicle to maximum speed as fast as possible. The tank 
+continues at maximum speed until you use the brakes.
+Driving Notes: The mouse and joystick controls recenter when you release them,
+causing the tank to coast to a stop. The cursor keys do not. Therefore, you
+may find it convenient to accelerate to speed with the cursor keys, then steer
+with the joystick or mouse.
+
+The Mapboard
+
+The mapboard is illustrated on page 56. All keyboard controls for the mapboard
+work as described in the manual. Function keys F5, F6, F7 and F8 navigate 
+through all mapboard options, and the regular alphabetic keys to issue orders.
+In addition, you can use the mouse for a different and more intuitive control
+of the map.
+Mapboard Area: In the map area to the left, left-click to move the crosshairs
+to any part of the map. To zoom or unzoom either use the keyboard "z" and "x"
+keys, or move to the right and click on the "Z-zoom" or "X-unzoom" text in the
+lower right corner. 
+If you left-click on top of a unit on the map, in addition to putting the
+crosshairs there, you also see the data window for that unit.
+Manual references to "move to" and "turn to" orders (pg 13, 57, 59, 62) are
+inaccurate because of the new mouse controls. The "m" and "t" keys are now 
+used for these orders.
+Data Window: The data-window (to the right of the map) operates on three 
+levels of detail. The highest shows you a map key. To go to a friendly 
+platoon, left-click anywhere in the list of US forces. You'll drop down to the
+data for your first platoon (your MBT platoon of M1/M1A1 tanks).
+The next highest level is platoon data, with a gray background. Left-click in
+the upper left corner (on the vehicle symbol) to return to the map key. Left-
+click on the platoon name across the top to go to the next platoon. Left-click
+on an individual platoon vehicle to see a specific vehicle.
+The lowest level shows information about a specific vehicle in a platoon (with
+a white background). Again, left-click in the upper left corner (on the 
+symbol) to move up to platoon data. Left-click on the vehicle's name (across
+the top) to see the next vehicle in that platoon. For tanks in your platoon,
+left-click on a crewman to go to that position (which exits the map). Note
+that whenever you left-click to go to a crew position, your OP (observation
+point) is automatically transferred to that tank (see page 66 for details on
+your OP).
+On both the platoon (middle) and vehicle (lowest) levels you can issue orders
+to the platoon (page 58-63) or the vehicle (page 56-58). Move the mouse over
+the order (it will highlight) and left-click. Keyboard equivalents are noted
+beside each order. To change leaders from one tank to another you must use the
+keyboard or the right-holddown menu. See page 66 for details.
+
+The Outside View
+
+This view is described on page 68. In the Amiga version a series of mouse
+buttons are arranged across the top, with their keyboard equivalents noted in
+blue. You can accelerate the left or right view by repeatedly clicking on the
+same button. To stop turning, click once in the opposite direction. As 
+described in the manual, "Turn to this Facing" rotates the vehicle to match
+your current view direction.
+
+
+         ~~~~~~~~~~~~~~~~~~~~ KEYBOARD CONTROLS ~~~~~~~~~~~~~~~~~~~~
+
+[RYGAR] - They are already done by another person, but i'm gonna type them in
+          aswell, better to have it together with this stuff!!!    
+
+
+
+Viewpoint Controls
+
+Control                       Key       Manual   Active in these views...
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+TC Unbuttoned                 F1        pp.39-41 works from any viewpoint
+TC Buttoned                   F1        pp.41-43 works from any viewpoint
+Gunner                        F3        pp.43-47 works from any viewpoint
+Driver                        F4        pp.47-50 works from any viewpoint
+Outside Tank                  F9        p.68     view from OP tank
+Outside Any                   Shift F9  p.68     must be on mapboard
+
+
+OP & Platoon Leader Controls
+
+Control                       Key       Manual   Active in these views...
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+OP to Next Tank               F10       p.66     works from any viewpoint
+LDR to OP Tank                Shift F10 p.66     works from any viewpoint
+
+
+Standard Vehicle Controls
+
+Control                       Key       Manual   Active in these views...
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Sabot (AP) Ammo               1         p.46     Gunner (tiny on TC Buttoned)
+HEAT Ammo                     2         p.46     Gunner (tiny on TC Buttoned)
+Main/Coax                     3         p.46     Gunner (tiny on TC Buttoned)
+Computer(Normal)/Battlesight  4         p.45     Gunner (tiny on TC Buttoned)
+Input Battlesight Range       5         p.45     Gunner (tiny on TC Buttoned)
+Manual Range Input            Shift 0-9 p.45     Gunner (tiny on TC Buttoned)
+Magnify Vision                7       39,41,44   none (but view changes)
+Night Vision                  8     39,41,44,47  Gunner, Driver
+Turn to This Facing           9       40,42,47   TC (both), Gunner
+Smoke Generator On            =         p.39     Driver
+Smoke Generator Off           -         p.39     Driver
+(Fire) Smoke Grenades         Backspace p.9      TC (both), Gunner
+
+
+TC Controls  These controls are unique to the two TC(Tank Commander) positions
+
+Control                   Key           Manual    Other effects...
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+View/Aim Up               Up cursor     pp.39-42  aiming TC's caliber .50 gun
+View/Aim Down             Down Cursor   pp.39-42  aiming TC's caliber .50 gun
+View/Aim Left             Left Cursor   pp.39-42  aiming TC's caliber .50 gun
+View/Aim Right            Right Cursor  pp.39-42  aiming TC's caliber .50 gun
+Fire Machine-gun          Return        pp.40,42
+
+
+Gunner Controls  These controls are unique to the Gunner position
+
+Control                   Key           Manual    Other effects...
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Elevate Main Gun/Coax     Up Cursor     p.43      aims main gun and coax MG
+Depress Main Gun/Coax     Down Cursor   p.43      aims main gun and coax MG
+Rotate Turret Left        Left Cursor   p.43      aims main gun and coax MG
+Rotate Turret Right       Right Cursor  p.43      aims main gun and coax MG
+Fire Laser Rangefinder    Space bar     pp.44-45  engages stabilization
+Fire Gun or Coax          Return        p.46      
+
+
+Driver Controls  These controls are unique to the Driver position
+
+Control                   Key           Manual   Notes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Accelerate/Move Forward   Up Cursor     p.48     takes time to reach max speed
+Decelerate/Move Back      Down Cursor   p.48     takes time to stop
+Turn Left                 Left Cursor   p.48     
+Turn Right                Right Cursor  p.48     
+Brake (stop quickly)      Return        p.48      
+
+
+          ~~~~~~~~~~~~~~~~~~~~~~ COMMANDS ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Vehicle Orders
+
+Control                   Key           Manual   Notes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Advance Fast              a             p.57     
+Advance Slow              s             p.57     
+Halt                      h             p.57      
+Backup                    b             p.57      
+Left Turn                 l             p.56      
+Right Turn                r             p.57     
+Move to...                m             p.57      
+Turn to...                t             p.57      
+Fire at Will              f             p.57    
+Cease Fire                c             p.57    
+Engage to Front           e             p.58    
+Engage to Rear            d             p.58     
+Engage to Left            <,            p.58     need not hold down shift key
+Engage to Right           >.            p.58     need not hold down shift key
+Smoke Generator On        +=            p.58     need not hold down shift key 
+Smoke Generator Off       -_            p.58     need not hold down shift key
+
+
+Platoon Orders
+
+Control                   Key           Manual   Notes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Advance Fast              a             p.62     
+Advance Slow              s             p.62
+Halt                      h             p.62 
+Backup                    b             p.62
+Left Turn                 l             p.59
+Right Turn                r             p.59
+Move to...                m             p.62
+Turn to...                t             p.59
+Fire at Will              f             p.62
+Cease Fire                c             p.62
+Form Wedge                Shift W       p.59     illustrated on pg 60
+From Vee                  Shift V       p.59     illustrated on pg 60
+From In-Line              Shift I       p.59     illustrated on pg 60
+From Column               Shift C       p.59     illustrated on pg 61
+Form Echelon Left         Shift L       p.59     illustrated on pg 61
+Form Echelon Right        Shift R       p.59     illustrated on pg 61
+Smoke Generator On        +=            p.62     need not hold down shift key
+Smoke Generator Off       -_            p.62     need not hold down shift key
+
+
+HQ Radio Net  only if the appropriate support is available
+
+Control                       Key      Manual    Notes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+A-10A Attack Jet              j        pp.64,65  has Mavericks and 30mm GAU
+AH-64A Attack Helicopter      a        pp.64,65  has Hellfires and 30mm Chain
+OH-58D Observation Helicopter o        pp.64,65  has Machine-Gun
+107mm Mortar Bombs            b        pp.63,64  high explosive barrage
+107mm Smoke Bombs             s        pp.63,64  smoke screen barrage
+155mm HE Shells               h        pp.63,64  high explosive barrage
+155mm WP Shells               w        pp.63,64  smoke screen barrage
+MRLS 227mm Rockets            r        pp.63,64  large high explosive barrage
+
+
+        ~~~~~~~~~~~~~~~~~~~ SIMULATION CONTROLS ~~~~~~~~~~~~~~~~~~~~~
+
+Control                       Key      Manual    Notes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Outside Tank                  F9       p.68      view from OP tank
+Outside Any                   Shift F9 p.68      must be on mapboard
+Hide Map Objectives           Alt m    p.55      toggles graphic on and off
+Pause                         Alt p    p.68      hardware pause may also work
+Accelerated Time              Alt a    p.69      lower number is faster
+Boss (Hide Game)              Alt b    p.69      must press Alt b to resume
+Quit                          Alt q    p.69      exit to DOS
+Adjust Detail                 Alt d    p.69      adjust graphic complexity
+
+
+          ~~~~~~~~~~~~~~~~~~~~~~~ MAPBOARD ~~~~~~~~~~~~~~~~~~~~~~~
+Controls
+
+Control                   Key      Manual    Notes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Mapboard                  F5       p.54      
+Your Tank                 F6       pp.54,56  displays OP tank position, data
+Next Platoon              F7       55,58-63  cycles platoon data windows 
+Next Vehicle              F8       55,56-58  cycles vehicle data windows
+
+
+Terrain Color Key
+
+Feature           Color
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Open Ground       Dark green
+Road              Black line
+Building          Gray/black box
+Stream            Blue line
+Tree              Black-green dot
+Bog or Field      Olive green areas
+
+
+Vehicle Symbols Key
+
+[RYGAR] - Check out the picture !!! 
+
+
+
+
+                         Credits
+
+                Programming  Joe Hellesen
+
+                   Graphics  Max Remington III
+
+             Project Leader  Arnold Hendrick
+
+          Quality Assurance  Chris Taormino, Diane Baile
+
+                Playtesting  Christopher Hromantic, Arnold Hendrick
+
+Technical Supplement Layout  Susan Ullrich, [RYGAR]
+
+
+
+Typed By [RYGAR] !    Greetings to Conqueror for the Christmas Card !!! !
+
+End of docs !
+
+
+
+[I Might do the complete manual later!]
+
+
+

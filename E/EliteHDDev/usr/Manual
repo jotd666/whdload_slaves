@@ -1,0 +1,2377 @@
+
+
+
+                           ELITE     by Rainbird
+
+
+
+                   SPACE TRADERS FLIGHT TRAINING MANUAL
+
+
+CONTENTS
+
+1.  Introductory Data ...........................................  2
+
+2.  Navigation and Flying .......................................  4
+
+     Flying and Navigation Controls 
+     Leaving the Space Station                                      
+     Making for Your Target World 
+     Travelling to Other Galaxies 
+     Docking Procedure                                              
+
+3.  Interplanetary Travel ....................................... 10
+
+     In-Flight Combat:
+          Controls and Tactics 
+          Likely Enemies                                         
+
+     Equipping the Cobra Mk III:
+          Weaponry and Non-Combative Equipment 
+          How to Buy Equipment for Your Ship                     
+
+4.  Intergalactic Trading ....................................... 18
+
+     How to Trade 
+     Piracy                                                      
+     Bounty Hunting 
+
+5.  Political Profile of the Universe ........................... 22
+
+     Consequences for Trade 
+     Alien Races 
+
+6.  Observer's Guide to Ships in Service ........................ 25
+
+7.  Pilot's Log ................................................. 35
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                   - 1 -
+
+
+
+
+
+
+                             INTRODUCTORY DATA
+
+Welcome aboard this Cobra Mk III trading and combat craft.   The  ship  has 
+been supplied to you by Faulcon deLacy Spaceways,  by arrangement with  the 
+Galactic Co-operative of Worlds whose Space and Interstellar Pilot's  Exams 
+you  have just successfully completed.   The small flight  manual  supplied 
+with  the  craft is designed to familiarize you with all aspects  of  space 
+flight, combat and trading, and we hope that it will be of use to you.
+
+You  begin  your career,  your ship equipped with a  single  forward-firing 
+pulse laser,  3 homing missiles,  7 light years of fuel, and the sum of 100 
+Credits  (CR),  ready  to embark from a space station in orbit  around  the 
+planet Lave.
+
+The Cobra Mk III is the best of the medium-range,  medium capacity fighter-
+traders,  and  is  an ideal ship for new traders intent on  building  their 
+fortunes, or new combateers who will constantly need to finance the cost of 
+both armaments and non-combative equipment.
+
+The  ship  is  highly maneuverable,  has a  good  C-holding  factor  during 
+hyperspace transit,  can hold sufficient Quirium H-fuel for a  7-light-year 
+single  jump  and  has  full Auto Trading Systems Link  for  use  at  space 
+stations.   Further,  it  is  protected by Dual  Zieman  Energy  Deflection 
+Shields,  powered by 4 energy banks,  and has a powerful,  rapid-fire pulse 
+laser mounted on the forward hull segment.  Flight controls and elegant and 
+simple, and ThruSpace GravDistort communications systems.  Its life support 
+functions are varied and flexible to ensure maximum comfort during  trading 
+or hunting operations.
+
+Pilot  licences  are  issued only at the planet Lave,  and  it  is  likely, 
+therefore,  that  you are now docked at a Coriolis station in orbit  around 
+that particular world.  Lave is a rich, agricultural dictatorship, but is a 
+reasonably  safe world at which to begin your endeavors.   GalCop  and  the 
+Lave  Authorities  allow practice docking and departure runs to  all  their 
+space  stations here,  and you would be advised to take advantage  of  this 
+facility.
+
+INTERIOR OF A COBRA MK III
+
+The Cobra is essentially a single-pilot trade-ship,  but has been  designed 
+to  support a second person,  provided that person is of ordinary human  or 
+humanoid dimensions and physiology.   The ship itself consists of five main 
+areas:
+
+THE  CARGO  HOLD fills the bulk of the mid-space area,  and the  cargo  bay 
+doors  open downwards.   The capacity in an unmodified Cobra is 20  1-tonne 
+canisters.   Extra cargo space may be acquired by extending the cargo  bay, 
+which  does  not  affect  maneuverability.   Tonne  canisters  (TC)  attach 
+magnetically  to the cargo arms within the bay,  and 2 AutoShuttles  occupy 
+the central space.
+
+THE BRIDGE has seats for pilot and co-pilot,  a MedStim Center, entrance to 
+the escape pod,  descent well to living quarters,  communications  console, 
+special  suit  locker,  RemLock  supply  case,  attachment  facilities  for 
+AutoDock  System and a hand-weapons locker.   The main wall is occupied  by 
+the scanner screen, astrogation console and main systems monitors.
+
+
+
+                                   - 2 -
+
+
+
+
+
+
+THE  DRIVE SECTOR houses the directional thrusts,  the System Space  Kruger 
+"lightfast" motors,  and the Irrikon Thru-Space drives.   Also here are the 
+rear laser housings,  the ECM capsule,  the Zieman shield  generators,  and 
+energy  banks,  and the Witch-Space fuel condensors (Quirium).   There  are 
+both internal and external access panels.  Radiation level is high.
+
+THE  LIVING  AND  HYGIENE SECTION is below the  main  bridge,  and  reached 
+through a descending gravity well.   Two bunks, food dispensing facilities, 
+waste disposal (including high-tox copper exudate for Aonians), SynPleasure 
+relaxapads, and videos.
+
+THE EQUIPMENT LEVEL runs throughout the ship,  and houses all energy  banks 
+for lasers, plus the missile rests, with dispatch shafts to the lower hull.  
+The  communications  center is here,  and the escape pod (with  a  separate 
+entrance from the bridge) life support systems,  cryogen tanks (two) and 40 
+cubic meters of FacsEnvironment for emergency use.
+
+THE STATUS PAGE
+
+The  "Present  System" refers to the planetary system which  your  ship  is 
+currently in; while the "Hyperspace system" refers to the system onto which 
+the hyperspace is locked.
+
+There are 4 possible "Conditions":   DOCKED means that you are docked in  a 
+space station at the Present System; GREEN means that there is no immediate 
+danger; YELLOW indicates enemy ships in the vicinity; Condition RED signals 
+a high-risk on-going death-type combat situation.
+
+"Legal Status" refers to your Galactic Police record.  If this is CLEAN you 
+have nothing to worry about, but as an OFFENDER or, still worse, a FUGITIVE 
+you are likely to be attacked by police ships.
+
+The "Rating" is a dispassionate assessment of your performance in combat so 
+far.
+
+Current  cash  and  fuel are also displayed,  along with  a  list  of  ship 
+fittings.
+
+The status page is always retrievable by pressing F9.
+
+YOUR RATING AS A COMBATEER
+
+To  become  an  elite combateer requires great skill  and  great  patience, 
+because  expert  trading is essential before the  necessary  more  powerful 
+armaments  and equipment available to the Cobra ship can  be  bought:  beam 
+lasers,   more  missiles,   energy  bombs,  a  docking  computer,  galactic 
+hyperdrive, etc.
+
+As  you sail through space between the stars,  and as you trade,  you  will 
+live with your combat rating.   You will begin as HARMLESS.  If you survive 
+your first skirmish you may be reclassified as MOSTLY HARMLESS.  But on the 
+slow climb to a status level that reflects a growing talent for combat  you 
+will have to engage many different ships,  in many different skirmishes, in 
+the System Space of many different worlds.  You will be classified as POOR, 
+then AVERAGE,  then ABOVE AVERAGE,  then COMPETENT.   Then you will  become 
+DANGEROUS, then DEADLY.  An at last, a few will become ELITE.
+
+
+
+                                   - 3 -
+
+
+
+
+
+
+Your kills are photographed and transmitted by TS ComDirect to the  nearest 
+GalCop  Federal Law Center.   Your rating as a combateer will  increase  in 
+direct proportion.
+
+Fly your Cobra craft wisely and carefully.   Remember:  other pilots may be 
+attempting to increase their own combat rating by attacking either innocent 
+traders,  or police Vipers (the ships of the GalCop Police Force).   If you 
+resort to such tactics (or if your adopt the fast-credit routine and  trade 
+in illegal goods) then your combat rating may rise,  but your legal status: 
+CLEAN -> OFFENDER -> FUGITIVE,  will make you Public Enemy Number One  with 
+the Federation Crime Monitoring Authority and you will not be left alone.
+
+---------------------
+KEY FUNCTION - STATUS
+
+  F9 - Status page accessed by pressing F9.
+
+
+                           NAVIGATION AND FLYING
+
+NAVIGATION
+
+The  Galactic Co-operative is only one - although the largest - of  several 
+planetary federations,  and maintains trade and diplomatic links with  over 
+2000  planets  spread throughout 8 galaxies.   The political profile  of  a 
+planet is an important navigational consideration as many are in a state of 
+anarchy and are unsafe to visit in poorly equipped ships.  Important too is 
+its economic profile, as will be discussed in the section about trading.
+
+Navigational  strategy depends of course upon your aims in  life.   If  you 
+think you have what it take sot become elite,  you will need to chart  your 
+path through the galaxies with care and great precision.   You will wish to 
+equip your ship as fully and as early as possible.   You  will,  therefore, 
+need to study the trading section of this manual so that you can work out a 
+profitable  trading  route in order to be able to afford the  weaponry  you 
+will require.   You will wish to lead;  in general, the more risks you take 
+(travelling  to  dangerous planets or trading  in  contraband  goods),  the 
+faster  you may equip your ship but the quicker you will  be  killed.   You 
+will  discover that life in the 8 galaxies is a question of  fine  balance.  
+Although  it  may seem,  at first,  that indiscriminate carnage is  a  soft 
+option  (kills  improve  your  rating,  after  all),  as  your  skills  and 
+experience of living in space mature, you will quickly discover that piracy 
+is a short-lived career.
+
+Success in this context is a mosaic of talents:  combative,  certainly, buy 
+thinking and decision-making talents too.
+
+Here you are introduced to all the controls which will eventually be useful 
+to you in developing a route through the 8 galaxies.
+
+NAVIGATIONAL CONTROLS
+
+It is important that you do not press the F1 key for the moment.
+
+GALACTIC  CHART (F5).   This chart shows all registered worlds  within  the 
+galaxy, and indicates your own coordinate position.  The star cursor may be 
+used to scan the shown worlds for potentially favorable trade sites.
+
+
+                                   - 4 -
+
+
+
+
+
+
+Use the joystick,  mouse or cursor keys to move the small cross over to one 
+of the dots, and hit F7.
+
+WORLDATA LINK.   The Orbit Space Authority takes no responsibility for  the 
+accuracy of the information registered here,  but the trader may gain  some 
+idea  of  the  relative  wisdom of trading with the  world  whose  data  is 
+displayed.   The  information shown is distance,  type of main  life  form, 
+degree  of  agricultural or industrial  development,  with  industrial  and 
+technological  level displayed on a scale of 1-12.   The  government  type, 
+ranging from Corporate State to Anarchy, will be a strong indication of the 
+danger of trading with the system.
+
+Use F5 again to return to the chart and acquire information about some more 
+planets.
+
+The  larger  of the crosses on the chart shows where your ship is  and  the 
+circle shows how far it can jump with its current hyperspace fuel.
+
+Hit B key to return the small cross to the larger one.
+
+LOCAL NAVIGATION CHART (F6).   This is a high power chart of all planets in 
+the immediate vicinity of your docking world.   Since the Cobra ship has  a 
+maximum  single  H-jump range of 7 light years,  the target world  must  be 
+chosen carefully.  The target cursor, used in conjunction with the Worldata 
+link, will indicate dangerous or likely worlds for trade.
+
+If the cross moves off the screen,  use the B key to bring it back.  Notice 
+also that the D key will tell you how far away the system nearest the small 
+cross is.
+
+--------------------------
+KEY FUNCTIONS - NAVIGATION
+
+   F5 - Galactic chart
+   F6 - Local chart
+   D  - Distance to system
+   B  - Retrieve cursor cross
+   F7 - Data on system
+   Cursor keys - Cross-sight cursor for local and galactic systems
+
+
+A CORIOLIS SPACE STATION
+
+Every world registered with the Galactic Co-operative has several  Coriolis 
+space  stations  in  orbit at various  altitudes.   Coriolis  stations  are 
+"neutral"  territory,  controlled  equally  by  GalCop  and  the  Planetary 
+Government.
+
+A new dodecahedral design (the so-called "Dodo" stations) is replacing  the 
+Coriolis  design  in  the more advanced  systems.   Coriolis  stations  are 
+hexagonal  in  approximate shape.   They spin along a single  axis  running 
+vertically from the planet below.  One side of the station always faces the 
+planet, and it is on this facet that the access tunnel is located.
+
+
+
+
+
+
+                                   - 5 -
+
+
+
+
+
+
+Coriolis  stations  were designed at the GASEC  (Galactic  Astronautic  and 
+Space Exploration Center) Laboratories on the planet Vetitice.   The  first 
+station was in orbit around the world Lave in 2752.
+
+Coriolis  stations have powerful defensive shields (against  pirate  attack 
+and inept docking) and a large fleet of Viper fighters,  and several larger 
+types of ship.   The inside of the station is free-space, and on each inner 
+facet of the station there are berthing and refueling  facilities,  as well 
+as cities, hospitals, farmlands and leisure-scapes.
+
+Each  Coriolis station has a diameter of 1 standard  kilometer.   They  can 
+berth  2000 ships,  and support a fair-sized colonial life  development  of 
+humanoids.
+
+LEAVING THE SPACE STATION  (F1)
+
+On  coding  for Station Depart the pilot is advised to accept  a  10-second 
+MemnSomn to dispense with subjective experience of the passage from docking 
+bay to Coriolis station egress.  The screen will then show a break-pattern, 
+which  is  the  passage  through the protective  field  over  the  Coriolis 
+entrance tunnel.
+
+BASIC MANEUVERS
+
+The  Cobra  trade  ship needs practice to fly well,  though  it  is  highly 
+maneuverable,  very  fast,  and a good combat vessel.   It accelerates  and 
+decelerates rapidly using fingertip control:
+
+     Anticlockwise roll         <, joystick or mouse left
+     Clockwise roll             >, joystick or mouse right
+     Dive                       S, joystick or mouse forward
+     Climb                      X, joystick or mouse back
+     Increase speed             SPACE or hold right mouse button 
+                                   then forward
+     Decrease speed             / (slash) or hold right mouse button down
+                                   then back one
+     Cancel roll                press on right mouse button
+
+Pitch and yaw maneuver requires bi-digital play on keyboard model (<,>,S,X)
+
+Notice  the small dot moving around inside the large circle on  the  dials.  
+This  is  your compass;  the dot corresponds to the position of  the  space 
+station.  If the dot is small then the station is behind you.  When the dot 
+is  large and in the center of the circle,  you should be able to  see  the 
+space station directly in front of you.
+
+Practice rotating the space station off the screen and using the compass to 
+find it again.
+
+You  might  see  some Cobra Class ships.   These  are  other  traders  like 
+yourself,  and will not harm you unless you shoot at them.   If you do this 
+they will either attack or,  alternatively,  run away.  Should you use them 
+for combat practice, do not expect the space station to turn a blind eye to 
+such unruly behavior.   Nothing will attack you while you are within  sight 
+of the space station - unless you make a nuisance of yourself.
+
+
+
+
+                                   - 6 -
+
+
+
+
+
+
+It is not possible to land on the planet,  and flying into planets or space 
+stations  is  fatal.   The altimeter shows your height above  the  planet's 
+surface, and you should not let it fall too low.
+
+(If  you  are  a new pilot,  now is your best chance  to  practice  docking 
+maneuvers with the space station at Lave.   The Lave Orbit Space  Authority 
+permits an unlimited number of practice runs by newly appointed pilots, and 
+does  not charge.   This facility is suspended during attack,  or when  the 
+Coriolis station has no free docking space.
+
+CONSOLE READINGS
+
+(bars to the left of the flight grid scanner)
+
+1.  (FU)  Fuel level.
+
+2.   (CT)   Cabin temperature will increase and the console  register  this 
+when your ship flies too close to a sun.
+
+3.   (AL)   Altimeter.   You altitude above your destination planet can  be 
+crucial.  Flying too near its surface will be fatal.
+
+(flight grid scanner)
+
+4.  (x1 - upper left corner of scanner)  Radar Magnification.
+
+5.  (S)  S refers to the space station and indicates that you are on target 
+for it and within its protective range.
+
+6.   Compass (upper right corner of scanner).   This instrument first picks 
+up  a target planet while it remains out of range of the  main  flight-path 
+scanner.  When the planet's space station nearest to you comes within range 
+of  it,  the compass picks up that instead.   When the dot  is  small,  the 
+object is behind you;  when large and in the center of the compass  circle, 
+it should be visible through your front viewfinder.
+
+7.   Flight grid scanner.   This sophisticated instrument displays a three-
+dimensional view of space in the immediate vicinity of your ship, seen from 
+a point behind and above it.   The precise position of any ship within  its 
+range can be pinpointed.
+
+(bars to the right of the flight grid scanner)
+
+8.   (SP)   Forward velocity should be maintained at maximum  on  planetary 
+approach.  Keep it low during space station approach, and minimal for final 
+docking.
+
+9.   (RL and DC)  Gyro orient bar indicators show right/left roll and dive/ 
+climb status.
+
+
+
+
+
+
+
+
+
+
+                                   - 7 -
+
+
+
+
+
+
+MAKING FOR YOUR TARGET WORLD
+
+     Hyperspace and Related Controls
+
+Having  left  the space station you will be in low orbit above  the  planet 
+Lave,  moving at low velocity.   Decrease your velocity to absolute minimum 
+before coding the astrogation console for Hyperspace Jump.
+
+During space flight only,  F1,  F2,  F3, and F4 provide access to views all 
+around your ship.
+
+Use F5 or F6 to display a chart (galactic or local, respectively), and move 
+the smaller cross to choose a larger planet, press F1, then hit H.  After a 
+short delay, the hyperjump motors will engage.
+
+On arrival in a new planetary system,  after transit from  hyperspace,  you 
+will find yourself at some distance from your target world.   This conforms 
+with GC Flight Law.
+
+Even  in the safest systems there can be unseen dangers,  and you  will  be 
+well advised to approach orbit space,  and the safety of the space station, 
+as  quickly as possible.   Increase forward velocity to maximum.   At  this 
+point you can take full advantage of the space-skip facility  (J).   Inter-
+space jumping does not function (because of interference patterns) if there 
+is another ship, a planet or a sun in the immediate vicinity.
+
+Soon  your ship's computer will pick up the beacon signals of  the  nearest 
+orbital space station and will re-engage the compass to track that  instead 
+of  the target planet.   Once the Cobra is within scanning  and  protective 
+range of the Coriolis station,  the flight-grid scanner will begin to track 
+it.   Its  own defenses are now available for your  protection.   The  scan 
+console will register the letter "S" as long as the space station is within 
+range.
+
+     Hyperdrive Across Galaxies
+
+The  intergalactic  hyperdrive is expensive and can be obtained  only  from 
+planets  at Tech level 10 or higher.   It can only be used once,  and  will 
+take you to a system in a whole new galaxy (i.e.  a new F5 map).  There are 
+8 such galaxies and making 8 jumps will return you to your starting galaxy.  
+The Inter-Galactic Hyperdrive is engaged by pressing G then H.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                   - 8 -
+
+
+
+
+
+
+DOCKING PROCEDURE
+
+Docking  with a Coriolis space station is never easy,  unless the  ship  is 
+equipped with an automatic  docking computer (in which case C will activate 
+it).   The Navy Training Manual recommends the following approach and  dock 
+sequence.
+
+Locate the Coriolis station and approach it.   The entrance tunnels to  all 
+these stations face the mother planet.  Fly near to the station and then on 
+towards  the  planet (monitoring altitude carefully).   By turning  a  half 
+circle you will now find your ship orientated towards the entrance.
+
+Approach the final moments of docking at DEAD SLOW SPEED.   Failure to dock 
+cleanly  can be fatal but may simply result in your scraping the  sides  of 
+the  aperture,  with  consequent  loss of  defensive  shield(s)  and  quite 
+possible your cargo.  Manually control the Cobra's roll motion to match the 
+rotation  of  the  Coriolis station.   The entry port  must  be  as  nearly 
+horizontal as possible.
+
+If docking is successful;  the protective field across the station entrance 
+is  penetrated,  and a break pattern appears on the  screen.   Berthing  is 
+handled automatically.
+
+Docking  protocol,  and  Orbit Space Regulations,  are  numerous,  and  are 
+available  in the GC Orbit and System Space Code,  published by  Federation 
+Planet Bureau.
+
+
+----------------------
+KEY FUNCTIONS - FLYING
+
+   F1        - Launch
+   SPACE     - Increase velocity
+   J         - Space skip
+   / (SLASH) - Decrease velocity
+   <         - Counterclockwise roll
+   >         - Clockwise roll
+   S         - Dive
+   X         - Climb
+   G then H  - Inter-galactic hyperdrive
+   C         - Docking computer toggle on/off
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                   - 9 -
+
+
+
+
+
+
+                           INTERPLANETARY TRAVEL
+
+
+     IN-FLIGHT COMBAT:
+
+COMBAT PROTOCOL
+
+Not all ships in deep space,  even small fighters, are pirates.  Most ships 
+will respond to hostile action with hostile action.  If you attack a police 
+ship or trade in contraband goods (see Trading),  your legal status will be 
+changed  to OFFENDER,  or even higher.   If you destroy  pirate  ships,  or 
+Thargoid invaders,  (or asteroids) you will receive a bounty  payment.   If 
+you  shoot at the Coriolis space station,  its own defensive  ships  (Viper 
+class fighters) will attack you.
+
+MANEUVERING
+
+The  Cobra tradeship is fast,  and has a very tight turning circle  (though 
+less tight at full speed);  it is an ideal combat ship against small  packs 
+of enemy vessels.   It will outrun many attack craft by speed alone, but it 
+will  not  outrun  a  missile.   Spinning,  fast-slow,  and  duck-and-weave 
+maneuvers  are very effective against the larger,  less maneuverable  ships 
+when  then  attack.   A sudden decrease in speed followed by  a  tight  180 
+degree turn and an increase in velocity will often give you a big advantage 
+over pursuing enemy craft.
+
+SIGNS OF DANGER
+
+If you cannot make an interspace quick jump J towards the planet,  there is 
+a ship in the vicinity.  It could be dangerous.
+
+If the status screen, during flight, shows YELLOW or RED, prepare to engage 
+in combat.
+
+Laser  fire striking the defensive shields makes a light screeching  sound.  
+Listen for laser fire striking the hull direct.  Through damaged screens it 
+makes a low, screeching sound.  DANGER.
+
+An  incoming  missile will be detected,  tracked,  and  a  warning  message 
+flashed on main screen.
+
+Some star pilots are braver than others and pirate ships may break off  and 
+run  in  the face of stiff resistance.   Some appear to know no fear  -  in 
+particular  Thargoid  vessels,  whose captains have had their  fear  glands 
+surgically removed.
+
+LIKELY ENEMIES
+
+Lone-wolf  traders  - such as Cobra pilots - are constantly  at  risk  from 
+other Spacefaring types.   An understanding of other  loners,  packhunters, 
+and bounty killers is essential.
+
+
+
+
+
+
+
+
+                                  - 10 -
+
+
+
+
+
+
+     Bounty Hunters
+
+Unless you have achieved FUGITIVE status,  and especially if you are highly 
+ranked as a combateer as well as being a criminal,  bounty hunters will not 
+bother  a  ship as insignificant as a Cobra Mk 3.   In  fact,  many  bounty 
+hunters  favor Cobra trade-ships as they make an excellent  disguise.   But 
+the real killers star-ride in the sleek, and highly efficient, Fer-de-Lance 
+Lightspeeder,  in which they live for months at a time.  Bounty hunters can 
+always be found outside Orbit Space, especially around worlds classified as 
+"dangerous".   They  are  invariably of combat  rating:  DEADLY  or  ELITE.  
+Bounty hunters rarely identify themselves to passing ships, and if pestered 
+too closely will usually kill.
+
+     Pirate Vessels
+
+There  are  several  ways  of identifying a  space-going  ship  as  "pirate 
+occupied",  and this is essential since pirates and renegades will take any 
+ship  for their purpose,  from a Worm to a massive Python.   Pirates  exist 
+everywhere in the galaxy, but cluster mainly around unstable GalCop worlds, 
+especially worlds run on a feudal or anarchic system.
+
+Small ships hovering very distant from a planet are pirates.   Large  ships 
+accompanied  by a mixture of small fighter types are pirates.   Ships  that 
+refuse  to acknowledge identification signals are pirates.   Around  worlds 
+run  by autocracies,  or clans,  pirates will very often have been paid  to 
+leave trade ships alone.   Piracy is a huge, and complex, business, and any 
+life-respecting trader will learn the tell-tale signs of pirate presence.
+
+     Police
+
+In  a Co-operative of Worlds as complex as the 2040 planets f  the  GalCop, 
+the police can be as menacing as they can be helpful.   The typical  police 
+vessel  is  a  Viper GH Class PulseShip,  which  is  very  fast,  and  very 
+maneuverable.   They  are on constant standby on every Coriolis  and  Dodec 
+space station,  and will attack - a pirate,  or a fugitive trader -  within 
+seconds.   They  do not make arrests,  they destroy.   There are  different 
+police   departments  serving  different  purposes  -   narcotics,   space-
+drunkenness, psychotic shooting, piracy, slave trading, etc. - but all have 
+small fleets of these very fast Viper patrol craft.
+
+     Thargoid Invasion Ships and Thargons
+
+The Thargoids are humankind's deadly enemy,  and throughout the 8  galaxies 
+there are at least 50 war zones between humanity and Thargoid.  This highly 
+technologically advanced insectoid race is also at war with 17 other space-
+going life-forms.
+
+All Thargoid combateers are ruthless in combat,  and some may be comparable 
+with elite-status human combat pilots.
+
+Though  most  of  the  Thargoid Space Fleet is  currently  engaged  by  the 
+Galactic  Navy in InterGalactic Space,  a few of the smaller  battle  ships 
+make  occasional  destructor-raids  into  human  space.   These  ships  are 
+extremely  fast  for  their size and  invariably  have  anti-missile  (ECM) 
+Systems.
+
+
+
+
+                                  - 11 -
+
+
+
+
+
+
+Additionally,  most  Thargoid  battle ships carry  several  small,  remote-
+controlled "thargons", killer-craft each equipped with a single, but highly 
+advanced,  pulse-laser.   The Galactic Navy are developing their own  deep-
+space  RemCraft,  and  pay a large bounty for any thargon  craft  that  are 
+brought to them.
+
+(N.B.  Bounty on Thargoid invasion craft destroyed is very high.   Thargoid 
+battle-cruisers believed to be able to "hover" in Witch-Space  (hyperspace) 
+and destroy through-coming craft).
+
+OTHER SPACE TYPES
+
+     Rock Hermits
+
+Pirates,  aging bounty hunters,  or planetary outcasts,  who create  living 
+space out of asteroids.   They usually choose large asteroids,  and set  up 
+signal beacons to warn off miners.   GalCop Law protects Rock Hermits,  but 
+since most of the asteroid is hollowed-out, there is little advantage to be 
+gained by "mining" them anyway.
+
+     Generation Ships
+
+Before  the  development of the WS Thru-Space drive,  in  all  its  various 
+forms,  interstellar travel occurred in large,  self-sustaining environment 
+ships  -  Generation Ships - most of which have now been logged  and  their 
+progress monitored.   There are more than seventy thousand of these immense 
+vessels  ploughing their way through the galaxy,  some of them  into  their 
+30th  generation.   The  penalty  for interference with such  a  vessel  is 
+marooning.
+
+     Space Dredgers
+
+These immense factory ships are to be found wherever there has been a  war, 
+or a Thargoid invasion,  or a natural catastrophe.   More than forty  miles 
+long,  the dredgers are a life-form to themselves.   The Dredgers are  huge 
+cities in space, feeding off debris and ruination.  Heavily armed, and with 
+fleets of reconditioned fighter ships, they are to be avoided at all cost.
+
+COMBAT CONSOLE
+
+(bars to the left of the scanner)
+
+1.   (FS & AS)  Defensive shields take power from two energy bank  sources, 
+fore and aft.
+
+2.   (missile)  Missile status depicts the number of missiles on board  and 
+whether  they are "targetted" (purple) or "untargetted" (green) or  "locked 
+and ready to fire" (red).
+
+3.   (LT)   Laser  temperature will rise during continuous  firing  of  the 
+ship's  laser(s).    As  the  central  housing  overheats,   a  laser  will 
+temporarily cut out rather than destroy the system.
+
+(flight grid scanner)
+
+4.  The 3-dimensional scanner operates in such as way that you can pinpoint 
+a  ship above and below yours,  as well as to the front,  behind or to  the 
+sides.  The vertical bars show this clearly.
+
+                                  - 12 -
+
+
+
+
+
+
+(bars to the right of the scanner)
+
+5.   (1,2,3,4)   Energy banks will rapidly drain if defensive  shields  are 
+taking excessive fire.  Using lasers or an ECM System will also drain their 
+resources.   When  the fourth bank is tapped,  an ENERGY LOW  message  will 
+flash onto the screen.  Eventually, in normal circumstances, the banks will 
+be automatically replenished by surface radiation absorption.
+
+AGRESSIVE WEAPONRY
+
+     ITEM                     TECH LEVEL          PRICE/CR
+     Fuel                       always             varies
+     Missile                    always                30
+     Large Cargo Bay            always               400
+     ECM System                    2                 600
+     Pulse Laser                   3                 400
+     Beam Laser                    4                1000
+     Fuel Scoops                   5                 525
+     Escape Capsule                6                1000
+     Energy Bomb                   7                 900
+     Extra Energy Unit             8                1500
+     Docking Computers             9                1500
+     Galactic Hyperdrive          10                5000
+     Mining Lasers                10                 800
+     Military Lasers              10                6000
+
+LASERS
+
+Pulse lasers are initially housed only in the front of the ship,  and so no 
+sights  appear  across  rear  or side views until such  time  as  you  have 
+sufficient  credits  (from combat and trading) to afford lasers  for  these 
+mountings.   As we shall see, with sufficient cash you will also be able to 
+upgrade pulse to more powerful beam lasers.
+
+The  Cobra  astrogation console accommodates a single laser-fire  key  (A).  
+Pilots with joysticks use the fire button of course.   Even fully  equipped 
+only one laser may be fired at a time.   If a laster overheats it will  not 
+fire (observe the laser temperature bar).
+
+Lasers are the principal armament of all space fighters.
+
+Pulse  lasers will be offered for sale at planets of Tech level 3 or  above 
+(see Trading).  Beam Lasers will be offered at Tech level 4 or above.  If a 
+beam laser replaces a pulse laser the price of the pulse laser is  refunded 
+after the beam one has been fitted.
+
+     Pulse Laser Specification:
+
+Ingram  Model  1919A4 Pulse Laser is recommended for all  positional  laser 
+mountings,   but   is  especially  effective  for   rear-shooting.    Fires 
+intermittent laser "rods" 610mm in length,  with a cycle rate of 1500 RoPM.  
+The  barrel is of high grade Allutium fiber,  lined with tempered  QuQorian 
+Silica.   Power  provided directly from inverse energy banks  contained  in 
+main  ship's drive.   Each rod is capable of piercing 267mm of  Flux-Locked 
+metal.
+
+
+
+
+                                  - 13 -
+
+
+
+
+
+
+     Beam Laser Specification:
+
+Ingram Model M1928A2 is highly recommended for front shooting.  beam lasers 
+fire continuous laser strands, up to 150 in parallel.  Barrel is Allutium + 
+lined with tensioned plastiglass, and as with the 1919A4 Pulse laser, power 
+is provided by main drive link.  Beam lasers are capable of slicing through 
+410mm FL metal.
+
+Military  lasers are the very height of  sophistication.   Costing  fifteen 
+times  the  price of a pulse laser and available only on  planets  at  Tech 
+level 10, it is an extremely effective piece of hardware.
+
+(See also Mining lasers under Non-Combative Equipment)
+
+     Military Laser Specification:
+
+Range  and penetration twice as effective as the Ingram Model M1928A2  beam 
+laser.   This  is Lance & Ferman's entre into the laser  market.   Hitherto 
+known for their highly effective and relatively cheap missile  systems,  in 
+the  military laser they have in effect created a whole new  laser  market.  
+The LF90 is the current computer-aided model and comes with x4SUSAT sights.
+
+MISSILES
+
+Missiles  are  always available,  whatever the nature of  your  destination 
+world,  though no more than four may be carried at any one time.   They are 
+extremely effective weapons and are carried by the larger star ships.  Your 
+ship's  computer will warn you when one is fired at you with a message  on-
+screen.   Unless your ship is fitted with ECM (see below) you will have  to 
+outmaneuver  the missile,  which will home in on you  relentlessly.   If  a 
+missile hits you,  it can almost completely exhaust a fully charged  shield 
+and, if your shields and energy are low, may well be fatal.
+
+Before a missile can be fired it must be locked onto a target.  When fired, 
+it  will  home  in  on  that target  and  destroy  it,  unless  your  enemy 
+successfully  takes  on of the precautions described  above.   The  missile 
+launch  mechanism is very reliable and hardly ever jams.   Missiles can  be 
+locked onto targets in any view (F1, F2, F3 or F4).
+
+The targeting sequence is engaged by hitting the T key.  The square missile 
+status  indicator on the astrogation console will then turn  purple.   When 
+any possible target enters the cross-hair region the missile will lock onto 
+it,  the missile status block turning red.  A beep will sound to inform you 
+of this.
+
+Pressing  the I key switches on the ship ID computer.   This computer  will 
+tell  you the class of the next enemy ship to pass in front of your  cross-
+hairs, and then it will automatically Lock a missile onto that ship.
+
+The  M key will then fire the missile.   The U key (Unarm) will  abort  the 
+sequence at any time before firing.
+
+
+
+
+
+
+
+
+                                  - 14 -
+
+
+
+
+
+
+     Missile Specification:
+
+Lance  &  Ferman Homing Missiles (4x4) are now recommended  for  all  small 
+class  trade-combat  ships,  but can be fitted as part of  a  mixed  design 
+weapon  rack.   LF  missiles have 2IL-135 guidance  systems,  and  optional 
+manual  directional  control overrides.   Warhead packed  with  Terminal  9 
+explosive,  and the 4x4 is invulnerable to all known counteraction,  except 
+ECM systems.  Capable of Megazon Destruct Force 7.  Prototype first used in 
+2987, during Ineran Wars.
+
+ENERGY BOMBS
+
+An  energy  bomb will be offered for sale at a planet of Tech  level  7  or 
+higher, and can be used only once.  It is activated by the TAB key and will 
+destroy all other ships, asteroids, and missiles in the vicinity.
+
+     Energy Bomb Specification:
+
+Medusa Pandora Self Homing Energy Bomb (available at Tech Level 7 worlds or 
+higher)  is a tactical weapon capable of Megazon Destruct  Force  13.   Has 
+heat  radius of 900 km.   Developed by Klaus-Kline laboratories for  multi-
+role combat using "launch-and-leave" techniques.
+
+DEFENSIVE MEASURES
+
+SAFETY ZONE
+
+The  Orbit Space around any Coriolis Space Station is safe.   The  Stations 
+own defences will come to your immediate assistance.   Entry to safety zone 
+is signalled with a large "S" on the astrogation console.
+
+SHIELDS AND ENERGY BANKS
+
+You ship comes equipped with fore and aft shields and  energy  banks.   The 
+shields protect your ship from agressive fire,  and will be recharged  from 
+the energy banks.   Constant fire will harm the shields.   Once a shield is 
+depleted,  enemy lasers and missiles striking that shield will take  energy 
+directly from the energy banks and may even destroy items of cargo or  ship 
+fittings.   When  all  your  energy  banks are  empty  your  ship  will  be 
+destroyed.   Using  lasers or an ECM system will also deplete  your  energy 
+banks.
+
+The  ship's computer will keep you informed of any damage to your ship  and 
+will also warn you when energy levels are dangerously low.
+
+An  Extra Energy Unit may be fitted at planets of Tech level 8  or  higher, 
+and  doubles the energy bank replenishment rate.   This is the energy  unit 
+with the copper colored top.   No other unit looks like it,  or lasts  like 
+it.
+
+     Defensive Shield Specification:
+
+The shields consist of hi-tense flux webs of Zieman-charged  sub-particles.  
+They are weakest where the laser and missile tubes pass through the  ship's 
+hull,  and along the central ship bank where the two shields  overlap,  and 
+cause a stress zone.
+
+
+
+                                  - 15 -
+
+
+
+
+
+
+ECM
+
+An ECM System (literally Electronic Counter Measures System) is offered for 
+sale at Tech level 2,  and may be used any number of times given sufficient 
+energy replacement.  When activated by the E key, ECM destroys all missiles 
+in  your vicinity - including any that you have fired.   Some enemy  ships, 
+especially  traders,  will have this and may use it against your  missiles.  
+Your  ship's  computer  displays an E on the console when  it  detects  ECM 
+broadcasts.
+
+     Anti-missile (ECM) System Specification:
+
+Radiant-Magnetic  "wipe-out" using ion-saturation theory developed by  Bell 
+and Braben on riedquat 359.  Electronic Counter Measures Systems use minute 
+charged particles of InterSpac heavy Element dust,  releasing their radiant 
+energy and setting up expanding nuclear flux chains.
+
+ESCAPE CAPSULE
+
+An escape capsule can be fitted in place of your cabin at any world of Tech 
+level  6  or higher.   If Q is then hit during combat the capsule  will  be 
+jettisoned from the ship, be automatically tracked by the nearest world and 
+will  travel  safely  to  a Coriolis space  station.   Your  cash  will  be 
+preserved but all your cargo will be lost.
+
+However,  this  item comes with a widely recognized insurance  cover  which 
+will guarantee you a new Cobra Class ship,  equipped in like  manner.   The 
+contents of the cargo hold is exempt from this protection.
+
+Since  the  unique  IR signature of a ship's hull is used  to  file  police 
+records,   abandoning   your  ship  in  this  way  will  have  the   effect 
+(unfortunately exploited as much by galactic brigands as trader victims) of 
+clearing your police record.
+
+You  may see an escape capsule leaving an enemy ship.   This will not  harm 
+you unless you crash into it.
+
+     Escape Capsule Specification:
+
+Recommended model is the Xeesian FastJet LSC 7, which can support two human 
+life-forms for seven weeks, in moderate Suspended An.state.
+
+NON-COMBATIVE EQUIPMENT
+
+FUEL
+
+Fuel is always available.  You can refill your tanks to full (7 light-year) 
+capacity - no less is permitted.
+
+FUEL SCOOPS
+
+Fuel  Scoops  may  be fitted to the hull at a planet of  Tech  level  5  or 
+higher.   These  enable a ship to obtain free hyperspace fuel by  "skimming 
+the sun" - flying close to it at high velocity.
+
+
+
+
+
+                                  - 16 -
+
+
+
+
+
+
+Since  fuel  scoops utilize powerful electro-magnetic fields to  guide  the 
+solar  winds  into  their converters,  they may also be  used  to  pick  up 
+miscellaneous  space  debris.   Almost all pirate vessels are  fitted  with 
+these so that they can blast their prey apart and sift among the  wreckage, 
+rather than attempt to dock with a hostile craft.
+
+Once fuel scoops are installed, you can scoop up an object (such as a cargo 
+canister)  by keeping it in the lower half of the screen view  areas  while 
+flying right up to it.
+
+     Fuel Scoop Specification:
+
+Fuel scoops are considered an essential for Deep Space,  and dangerous zone 
+trading.   They have a standard design,  and a standard fitment.   They use 
+powerful  electromagnetic fields to guide solar wind or small space  debris 
+into their ReQax convertors.
+
+CARGO BAY EXTENSION
+
+One cargo bay extension can be bought, increasing the hold space from 20 to 
+35 tonnes.
+
+     Cargo Bay Extension Specification:
+
+Standard model is the Mariner Freight Chamber.
+
+DOCKING COMPUTER
+
+This  is available from all Tech level 9 planets;  they are fitted  to  the 
+ship's flight control system and enable it to dock the ship  automatically.  
+The  auto-docking  sequence is triggered by the C key and switched  off  by 
+pressing C again.
+
+     Docking Computer Specification:
+
+The  SinCorn RemLock D&A System is a sophisticated and expensive  piece  of 
+gadgetry.  It comes with MemnSomn pilot interaction to induce hi-cram sleep 
+during the maneuvers.
+
+INTERGALACTIC HYPERDRIVE
+
+The intergalactic hyperdrive is obtainable only from planets at Tech  level 
+10 or higher,  and can only be used once.  The Inter-Galactic Hyperdrive is 
+engaged by pressing G then H.
+
+     IGH Specification:
+
+although  a  number of manufacturers have supported a whole  range  of  IGH 
+motors,  it is recommended you remain loyal to Xexor/Hikan who provide  the 
+standard hyperspace transit drives.
+
+
+
+
+
+
+
+
+
+                                  - 17 -
+
+
+
+
+
+
+ASTEROID MINING LASERS
+
+Asteroid  mining  involves the fitting of fuel scoops  and  special  mining 
+lasers to your ship.  Ships which always carry them are known as "Belters".  
+They search for asteroids and, on finding one, use the laser to fragment it 
+into pieces sufficiently small to be taken into the cargo bay.
+
+     Mining Lasers Specification:
+
+Kruger Model ARM64 Sp.  Mining laser is highly recommended as both a  trade 
+and combat addition.   Uses variable frequency laser rods of 200mm  length, 
+fired  in  wide beam,  100 channels/beam.   Automatic  debris-pattern  lock 
+ensures  no  fragments  of large size of target asteroid  impinge  on  ship 
+space.  can be fitted with a fuel and matter scoop.
+
+
+----------------------
+KEY FUNCTIONS - COMBAT
+
+   A   - Fire laser
+   T   - Target missile
+   I   - Ship ID computer
+   M   - Fire missile
+   U   - Unarm missile
+   E   - Operate ECM
+   TAB - Launch energy bomb
+   Q   - Launch escape capsule
+   F4  - Equipment acquisition
+
+
+
+
+                           INTERGALACTIC TRADING
+
+The  Cobra Mk III,  designed primarily as a trading ship,  combines  combat 
+efficiency  and  maneuverability  with substantial cargo  space  (20  Tonne 
+Canisters)  and with scoop attachments for space debris,  jettisoned  cargo 
+and space rock.
+
+Most space stations have made the process of trading very simple,  in order 
+to  facilitate  a  fast turnover in goods and  ships.   Import  and  export 
+tariffs  -  which  are high on some worlds -  are  automatically  added  or 
+deducted  and  this  is reflected in the  prices  shown.   The  auto-trader 
+system,  employed  by the Cobra,  does not allow for more specific  trading 
+deals to be performed.
+
+A selection of the more valuable alien items that are tradeable is given in 
+this manual, but the trader must deal with them in person.
+
+Once docked you are linked directly with the CorCom Trade System.   At your 
+request you can obtain a list of basic trade items available for purchase.
+
+Slaves  are  measured by the tonne in galactic trading.   This may  seem  a 
+little strange,  but it includes the cryogenic suspension system  necessary 
+to  keep  them alive during space travel.   The slave  trade,  once  almost 
+eliminated by the Galactic government is now returning, despite the efforts 
+of the Galactic Police Force to suppress it.
+
+
+                                  - 18 -
+
+
+
+
+
+     
+                                                               AVERAGE
+     ITEM                                                      PRICE/CR
+     
+     Food          (Simple organic products, see below)          4.4 tonne
+     Textiles      (Unprocessed fabrics)                         6.4   "
+     Radioactives  (Ores and by-products)                       21.2   "
+   * Slaves        (Usually humanoid)                            8.0   "
+     Liquor/Wines  (Exotic spirits from unearthy flora)         25.2   "
+     Luxuries      (Perfumes, Spices, Coffee)                   91.2   "
+   * Narcotics     (Tobacco, Arcturan Megaweed)                114.8   "
+     Computers     (Intelligent machinery)                      84.0   "
+     Machinery     (Factory and farm equipment)                 56.4   "
+     Alloys        (Industrial Metals)                          32.8   "
+   * Firearms      (Small-scale artillery, sidearms, etc)       70.4   "
+     Furs          (Includes leathers, Millennium Wompom Pelts) 56.0   "
+     Minerals      (Unrefined rock containing trace elements)    8.0 kg
+     Gold                                                       37.2 kg
+     Platinum                                                   65.2 kg
+     Gem-stones    (Includes jewelry)                           16.4 g
+     Alien Items   (Artifacts, Weapons, etc)                    27.0 tonne
+     
+* These items are defined as illegal by the Galactic Government, so trading 
+  in them is risky.
+
+F8 activates a list of basic trade items at current market prices.
+
+Shown on this list are the quantities of each item available (vertical  bar 
+to  the right of the item),  and the current market price per  unit.   Most 
+CorCom Trade Systems deal exclusively under blanket  categories,  including 
+Food, Machinery, Minerals and Gemstones.
+
+The prices shown at the time of trading represent an offer to you and  will 
+be guaranteed while you are in Trading Mode.
+
+F10 offers an inventory of cargo, fuel and cash.
+F3 puts you in purchase mode.
+
+If you wish to buy,  numerically indicate the amount you wish to  purchase; 
+autoSCAM  modules will immediately load your purchase into the  cargo  bay.  
+your screen will indicate your remaining credit facility.
+
+The Cobra trade ship must dock with a Coriolis space station before  buying 
+or selling cargo.   It has no Free Space trade facility, apart from routine 
+jettisoning of cannisters.
+
+Once  docked,  the  selling  process is automated,  although  there  is  no 
+requirement to sell.  F2 puts you in selling mode.
+
+
+
+
+
+
+
+
+
+
+
+
+                                  - 19 -
+
+
+
+
+
+
+HOW TO TRADE
+
+BUYING MODE FOR GOODS
+
+   F8  - List of goods available on target planet
+   F10 - Inventory of your cargo
+   F8  - To see again what is available
+   F3  - To buy some goods use the mouse, joystick or cursors to select
+         item and then press fire or double click either button.  You will
+         then be asked to enter the quantity of goods you require on a
+         calculator pad.
+
+SELLING MODE
+
+   F2  - To sell some goods use the mouse, joystick or cursors to select
+         item and then press fire or double click either button.  You will
+         then be asked to enter the quantity of goods you wish to sell on
+         a calculator pad.
+
+ADVICE TO TRADERS
+
+The Cobra trade ship can be fitted with four lasers,  four missiles and one 
+energy bomb.   This should be sufficient to make trade possible within  the 
+System  Space  of  even  heavily piratised  worlds.   But  it  is  strongly 
+recommended  that pilots achieve a combat of at least "Deadly"  before  any 
+worlds designated "Anarchy" or "Feudal" are approached,  especially if  the 
+cargo is high tech machinery or luxury goods.
+
+To make money as a trader is no easy task.  Unless you have backing capital 
+you would be well advised to start with foodstuffs,  textiles, minerals and 
+luxuries.
+
+Demand  for goods varies widely and prices within  planets  fluctuate,  but 
+galCop regulations prohibit planets from advertising their requirements  or 
+announcing their market prices beyond their own System Space.   Any trader, 
+therefore, approaches all transactions with a certain financial risk.
+
+Trade  depends  upon demand,  and selling prices depend upon  the  level  f 
+demand on the planet,  and its available money.   None of these factors can 
+be assessed before docking.
+
+Agricultural planets invariably have excess produce at reasonable  purchase 
+prices,  and  such  food sells well at  industrialised,  middle-  to  high-
+technology worlds.   Raw materials, and ores, will sell well to middle-tech 
+worlds,  which are usually able to refine them, and the refined product can 
+fetch excellent prices at worlds of very high tech status.
+
+The rules are complex, and anarchy and piracy has its effect on causing the 
+rules to change.
+
+In trading with a planet, consider its economic profile:
+
+AGRICULTURAL  WORLDS  need specialist food and raw  materials,  but  mostly 
+basic machinery and spare parts.   If they are rich, they need luxuries and 
+high  tech  industrial  machines.   They  produce  food  in  quantity,  raw 
+materials and specialized "organic" items, like some textiles.
+
+
+
+                                  - 20 -
+
+
+
+
+
+
+INDUSTRIAL WORLDS need agricultural produce;  raw materials (for refining); 
+resource exploitation machinery;  (if rich) high tech goods.   They produce 
+basic items of need for civilized worlds:  beds,  seals and gaskets,  power 
+storage  units,  basic weapons,  mass produced  fertilizer,  mass  produced 
+medicines, etc.
+
+Think about a planet's needs.
+Think what might make the society function.
+Don't trade expensive trivia to a hungry world.
+
+If the profit isn't worth it, trade it somewhere else.
+
+ALTERNATIVES TO TRADING
+
+Since  the Cobra craft is equipped as a fighter as well as a  trader,  with 
+in-built  capacity for strengthening its armaments,  there are  alternative 
+life-styles  to  trading  which  may  prove  profitable,   but  which   are 
+excessively dangerous.
+
+BOUNTY HUNTING
+
+Galactic banks,  which insure the larger trading convoys,  will pay a large 
+bounty  for each pirate ship destroyed.   A ship's computer  will  transmit 
+photographic evidence of any kill to the GalCop Bank Federation  Monitoring 
+Authority.  The IR signature of the destroyed ship is then tallied with all 
+known pirate vessels, and the bounty hunter pilot credited accordingly.
+
+Bounty  hunters commonly have Cobra Class ships in order to  masquerade  as 
+traders.   They simply hyperspace into a system (anarchic and feudal worlds 
+especially)  and wait to be attacked,  ensuring that they  have  sufficient 
+hyperspace fuel (Quirium) for a quick escape.
+
+PIRACY
+
+Piracy is widespread throughout the 8 galaxies,  and many pirates  are  not 
+hardened criminals at all,  but failed traders who have turned to this  way 
+of life in desperation.   To survive as a pirate, looting freighter convoys 
+and  small ships,  requires a high degree of combat experience,  since  not 
+just  Police  Vipers will pursue them,  but other pirate ships  and  Bounty 
+Hunters, too, prey upon them.
+
+But the rewards are high.  Provided the pirate ship is equipped with a fuel 
+scoop,  the  jettisoned  tonne-cannisters of attacked cargo  ships  can  be 
+scooped up and traded.
+
+ASTEROID MINING
+
+There  is money in rock,  but to make the most of it a Cobra ship  must  be 
+fitted with a fuel scoop and a MinReduc 15 Mining Laser (or some equivalent 
+type).   The  mining laser will blast very large asteroids into very  small 
+fragments and the scoop can rapidly swallow this tradeable ore.
+
+
+
+
+
+
+
+
+                                  - 21 -
+
+
+
+
+
+
+FREE SPACE CARGO
+
+Trade  ships are often destroyed (by natural catastrophe or  enemy  action) 
+and their cargo left ungathered.  Using a fuel scoop such "free bounty" can 
+be collected.   The contents of the cannisters will be known until they are 
+taken  aboard and examined,  and may be worthless or worth a  fortune.   It 
+their  contents  are illegal goods,  they cannot be traded r  sold  without 
+legal risk.
+
+(NB:  Pressurized cargo canisters are the Universal means of storing  cargo 
+for Interplanetary Space voyaging.  Made of HiFlux Chromon-alloy, they hold 
+one Gal Tonne of goods, under variable pressure and temperature conditions.  
+Tales have been told of such barrels being discovered after over 500  years 
+on  barren  moons,  and  such  "Moon salvage" is  a  remarkable  source  of 
+historical artifact material.)
+
+ILLEGAL TRADING
+
+It  is surprising how many planetary systems will allow the  purchasing  of 
+illegal  trade  items,  notably firearms,  narcotics  (especially  Arcturan 
+Megaweed) and slaves.  Slaves are supplied in cryosuspension in transporter 
+coffins,  and  often  turn  out to be old and  sick  specimens  of  vaguely 
+humanoid life forms.   Nonetheless,  few systems will allow the selling  of 
+these items without taking recriminatory action.
+
+
+---------------------
+KEY FUNCTIONS - TRADE
+
+   F8  - Market prices
+   F10 - Inventory
+   F3  - Buying mode/trade goods
+   F2  - Selling mode/trade goods
+
+
+
+
+
+
+                     POLITICAL PROFILE OF THE UNIVERSE
+
+CONSEQUENCES FOR TRADE
+
+To trade successfully, and profitably, will almost certainly require you to 
+fly  the  Cobra  trade ship into politically  unstable  planetary  systems.  
+Pirate and free-booter activity is high in many solar systems, and adequate 
+ship defences are essential if the rewards of higher selling prices are  to 
+be reaped.
+
+For the benefit of new traders,  a brief political summary is given  below, 
+but reference should be made to Kroweki & Carr's PsychoHistory and Economic 
+Theory in the GalFederation, 2845.
+
+
+
+
+
+
+
+                                  - 22 -
+
+
+
+
+
+
+Planetary  governments,  or federations, determine the relative  safety  of 
+their  Solar  Space.   Ranked  in decreasing  order  of  safety,  the  2040 
+officially registered worlds of the Galactic Federation can be classified as
+
+     Corporate States
+     Democracies
+     Confederacies
+     Communist States
+     Dictatorships
+     Multi-Governments
+     Feudal Worlds
+     Anarchies
+
+CORPORATE STATES
+
+Like ENGEMA and ZAATXE,  these are well-ordered worlds,  which have usually 
+developed  from  settlers who practiced a free trade  form of  competition.  
+Taxation  is high on such worlds,  but the living standards are high  also.  
+Corporate planets with to protect their trade,  so goods are expensive, but 
+luxuries are welcomed.  Import licences are often necessary.
+
+Engema  is  an agricultural world,  run as a single  farming  co-operative.  
+Farmers receive a fixed payment for their crops, whether or not the harvest 
+is  good,  and  selling prices do not vary greatly.   It  is  a  dependable 
+market,  and  customer relations are good.   Luxuries,  machinery  and  raw 
+materials sell well here.
+
+Zaatxe  is  an example of a rich,  industrial state (Tech  level  12).   It 
+produces  luxury  goods,  elaborate and  innovative  machine  systems,  and 
+specializes in Prototype design.  Prices fluctuate depending upon the level 
+of  inter-state competition,  but it is always a safe bet to buy  recently-
+developed  machine  items  which have not yet spread very  far  across  the 
+galaxy.
+
+DICTATORSHIPS
+
+Dictatorships such as the worlds Lave and Enzaer,  are only moderately safe 
+to  trade with,  but are well worth the risk (provided the trader  is  well 
+defended  and  combat trained).   Very often pirate attack will  not  occur 
+because  of  an agreement between pirate fleets and the  world  itself.   A 
+proportion of all incoming trade is "allowed" to be stolen by pirates,  who 
+will then leave the world alone, and protect its shops from aliens or rogue 
+traders.  It is an uneasy liaison, which often breaks down.
+
+Lave  is  an agricultural world,  and Enzaer an industrial  planet,  but  a 
+similar  principle  operates  on both  surfaces.   There  are  two  trading 
+standards,  that of the People and that of the Aristocracy.   Standards  of 
+living are artificially generated,  a veneer of progress, and luxury goods, 
+machinery and textiles sell well - usually.   The great demand, however, is 
+for basic commodities,  especially foodstuffs,  clothing and raw materials.  
+These  will  sell  well when the voice of the People  has  been  raised  in 
+protest.
+
+
+
+
+
+
+
+                                  - 23 -
+
+
+
+
+
+
+ANARCHY PLANETS
+
+A  trader  can  make  his biggest profits here  and  reach  his  grave  the 
+quickest.   Worlds  like Onisou and Xeesenri have vast wreck-yards  in  far 
+orbit,  the dead places of ships that came to trade honestly, and fell prey 
+to trickery.
+
+These are lawless places,  and have usually become so because the  original 
+settlers  completed too hard when there was too little  resource  material.  
+Those  worlds which survived holocaust did so because of uneasy and  bloody 
+alliances  between clan families.   Pirates and mercenaries were hired  for 
+protection and assassination purposes.   Anarchic worlds will trade readily 
+in narcotics,  slaves,  firearms and exotica, and the price will be good... 
+if  you  get  a price at all.   These worlds are  almost  always  supplying 
+invisible Masters, usually elite trader/combateers who have turned to crime 
+as the most profitable way of life.  Such form loose federations, and trade 
+on the black market extensively throughout the galaxies.
+
+These worlds pay highly for goods they cannot produce  themselves,  because 
+they  know that traders avoid them.   Their own products need  specialized, 
+illegal outlets:  weaponry,  narcotics,  eavesdropping devices...  if  it's 
+covert,  then anarchic worlds are producing it.   Trade in these items  and 
+you will get rich quick, or dead quick, or at least become a "Fugitive".
+
+ALIEN RACES
+
+Of the 2040 officially registered planets in the GalCop, all but 45 support 
+human colonies only, that is to say, human presence elsewhere is restricted 
+to settlements in under-populated parts of the land surface.
+
+Trading at such worlds depends,  for its success, very much upon the extant 
+state of co-operation between human and alien.   Human control the Coriolis 
+stations  in  orbit,  but the availability of items for  trade,  and  their 
+relative expense, can be affected by the controlling life forms.
+
+Most  alien life forms are either too primitive,  or too glad of  off-World 
+trade,  to interfere.   Some,  such as the Reptiloid life form of Esanbe or 
+the  Amphibioids of Anbeen,  can make a trader's life  very  difficult,  by 
+haggling at the point of a laser.
+
+The available planetary information on all worlds will indicate the  nature 
+of the inhabiting life form.
+
+BIRD-FORMS.   Dealing  in  alien artifacts on such  worlds  often  involves 
+forming  a close liaison with Flight Elders,  or Nest Elders,  and this  is 
+very  much  a job for the specialist.   Bird-forms are,  on  the  whole,  a 
+delight to trade with,  and the highest form of honor (fairly  universally) 
+that  an off-worlder can receive is an (invitation to "keep the  eggs  warm 
+for a moment".
+
+AMPHIBIOIDS are usually a lot sharper than their wet,  sluggish  appearance 
+would  suggest.   They are usually keen to trade in  narcotics,  or  exotic 
+foodstuffs.   Skin creams are always well received.   Technologically  they 
+tend to be backward,  but will pay high prices for such middle-range  items 
+as automated ponds, croak metres, spawn freezers and swamp purifiers.
+
+
+
+
+                                  - 24 -
+
+
+
+
+
+
+FELINES  are dangerous in the extreme.   No matter what sort  of  political 
+structures  the  world may have,  feline aliens are  pack  orientated,  and 
+feudal,  and  very  unpredictable.   All traders are advised to  wear  body 
+suits,  to  prevent secretions of sweat from triggering a feeding  response 
+among these hostile and enigmatic life forms.
+
+To win the confidence of a feline alien is almost invariably to be  invited 
+to mate, so a certain aloofness is recommended.
+
+INSECTOIDS.   The  most  dangerous insectoidal life form is  the  Thargoid, 
+which is mentioned in the Combat section.   Insectoidals are usually highly 
+intelligent,  often  existing  as  a  group  mind.   There  is  rarely  any 
+individuality among insectoids,  and the trader must beware making deals in 
+such a way.   One life form builds earth cities up to four miles high,  and 
+over four million drones live in the middle levels.   According to  legend, 
+any  trader  who voluntarily ascends the earth passageway  from  ground  to 
+upper  surface  of  these immense mounds is honored  with  the  rare  title 
+Ascender  of the Scent City.   And then consumed alive.   But trading  with 
+insectoids  can be immensely profitable,  as there are so many of them  (to 
+trade  in  wrist  watches,  for example,  means two  to  four  watches  per 
+individual in a clone-group of perhaps ten thousand).
+
+In dealing with any alien life-form,  for the purposes of trade,  there are 
+three cardinal rules:
+
+     Learn the body language of the alien race.
+
+     Cover up your body scent.
+
+     Beware of Carapace concealed weapons.
+
+
+
+
+
+
+
+
+
+                   OBSERVER'S GUIDE TO SHIPS IN SERVICE
+
+
+In  most  trading  and combat  operations,  certain  ships  are  repeatedly 
+encountered.    All   ships,   whether  unarmed  cargo  shuttles  or   Navy 
+transporters,  are  potentially  dangerous  as pirate  and  bounty  hunting 
+activity spreads.  Some ships are potentially more dangerous than others.
+
+The brief guide given here is just an indication of the range of ship-types 
+plying  the trade and space lanes.   The illustrations show top,  side  and 
+front views of each craft.  Dimension data provide the scale.  For a fuller 
+account  see Jane's Galactic Ships and Remote  Colonial  Construction,  5th 
+Edition, 3205 pub. Trantor House.
+
+
+
+
+
+
+
+                                  - 25 -
+
+
+
+
+
+
+ADDER
+
+Manufactured by Outworld Workshops,  a rogue breakaway company from Spalder 
+and Prime Inc. which operates without license from an unknown location, the 
+Adder-class craft has dual atmospheric-spatial capability and is often used 
+by  smugglers.   Pregg's "wingfolding" system permits landing on  planetary 
+surfaces.  Carries one missile.
+
+     Dimensions - 45/8/30 ft
+     Cargo Capacity - 2 TC (Tonne Canisters)
+     Armaments - Ingram 1928 AZ Beam laser; Geret Starseeker missile
+     Maximum Velocity - 0.24 LM (Light Mach)
+     Inservice Date - 2914 AD (Outworld Workshop)
+     Maneuverability - CF (Curve Factor) 4
+     Crew Number - 2
+     Drive Motors - AM 18 bi Thrust
+     Hull Stress Factor - T Ko 28
+     Hyperspace Capability - Yes
+
+
+
+
+ANACONDA
+
+The  largest  known  freighter with a cargo bay designed  by  Beerbaum  and 
+ThruSpace  Inc.,  the  Anaconda is the only freighter fitted  with  Dizaner 
+SpaceWares  swing-float  platforms.   These load-balance  metering  devices 
+enable  the  loadmaster to rearrange the cargo within seconds  to  increase 
+maneuverability of the great ship.  Equipped only with laser weaponry (the 
+500 Gigazap front-firing pulse),  and sometimes with missiles, the Anaconda 
+range  of  craft usually have fighter escorts.   In  trader  parlance,  the 
+Anaconda is built as strong as a rogue asteroid, and steers like one.
+
+     Dimensions - 170/60/75 ft
+     Cargo Capacity - 750 TC
+     Armaments - Front-fire Hassoni HiRad Pulse laser; ColtMaster
+        Starlasers; Missiles (Geret Starseekers)
+     Maximum Velocity - 0.14 LM
+     Inservice Date - 2856 AD (RimLiner Galactic)
+     Maneuverability - CF (Curve Factor) 3
+     Crew Number - 40-72
+     Drive Motors - V&K 32.24 Ergmasters, with under-and-over firing tubes
+     Hull Stress Factor - T(ensmann) Ji57 C-Holding Z 22-28
+     Hyperspace Capability - Yes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                  - 26 -
+
+
+
+
+
+
+ASP MK II
+
+Galactic  Navy  vessel designed and manufactured in  government  workshops, 
+incorporating  secret  self-destruct devices which are primed  to  activate 
+when the astrogation controls are used by unfamiliar hands.  Integument has 
+chameleon  properties enabling the ship to assume effective  camouflage  in 
+any type of environment.   Intended for reconnaissance and the transport of 
+high-ranking   military  personnel  from  combat  it  is  very   fast   and 
+maneuverable.   Despite  its  hazardous  nature it makes  an  ideal  pirate 
+vessel,  primarily   because of the speed,  camouflage and  high  intensity 
+Hassoni-Kruger  Burst-lasers.   The  Asp II has room  for  powerful  shield 
+generators, but only one missile port.
+
+     Dimensions - 70/20/65 FT
+     Cargo Capacity - None
+     Armaments - Hassoni-Kruger Burst Laser; Geret Starseeker missile
+     Maximum Velocity - 0.40 LM
+     Inservice Date - 2878 AD (GalCop Workshops)
+     Maneuverability - CF 4
+     Crew Number - 2
+     Drive Motors - Voltaire Whiplash HZ Pulsedrive
+     Hull Stress Factor - TT 16
+     Hyperspace Capability - Yes
+
+
+
+
+
+BOA CLASS CRUISER
+
+Although marginally smaller than the Python,  which it superseded,  the Boa 
+has  a greater cargo capacity due to refinements in equipment design  (e.g. 
+the  Renold  Astrogation  bloc  is  one fifth  the  size  of  the  previous 
+Machanalian  Interspatial Wayfinder) and reduced number of necessary  crew.  
+Largely  developed out of the recommendations left by  Commodore  Monty,  a 
+Python Captain of 40 years experience.
+
+     Dimensions - 115/60/65 ft
+     Cargo Capacity - 125 TC
+     Armaments - Ergon Laser system; Standard JK Pulse laser; IFS Seek &
+        Hunt missiles
+     Maximum Velocity - 0.24 LM
+     Inservice Date - 3017 AD (Gerege Federation Space Works)
+     Maneuverability - CF 4
+     Crew Number - 15-28
+     Drive Motors - 4 C40KV Ames Drive motors.  Seeklight Thrust Systems
+     Hull Stress Factor - T(ensmann) Yo20 C-Holding K21-31
+     Hyperspace Capability - Yes
+
+
+
+
+
+
+
+
+
+
+
+                                  - 27 -
+
+
+
+
+
+
+COBRA MK I
+
+Combat-trader craft favored latterly by pirates,  the Mark I Cobra was  the 
+first  trade ship designed and built for the one-man trader.   Its  special 
+feature at the time of manufacture (by Paynou,  Prossett and Salem) was its 
+Prossett  Drive,  which  incorporated afterburners  with  proton-tightened, 
+interior shaft walls.   These are now a standard fitting for both  internal 
+and external integuments of all PPS made craft.
+
+     Dimensions - 55/15/70 ft
+     Cargo Capacity -10 TC
+     Armaments - Hassoni Variscan laser system and early Lance & Ferman
+         missile system
+     Maximum Velocity - 0.26
+     Inservice Date - 2855 (Paynou, Prossett and Salem)
+     Maneuverability - CF 3
+     Crew Number - 1
+     Drive Motors - Prossett Drive
+     Hull Stress Factor - T Ji 18
+     Hyperspace Capability - Yes
+
+
+
+
+
+COBRA MK III
+
+Larger,  more  popular  version of the Cobra Mk I (the Mk  2  only  reached 
+prototype stage and was abandoned due to a design fault in the hull).  This 
+ship  is equipped with several special features,  including  Zieman  Energy 
+Deflection  Shields,  fore  and aft,  and mountings for four  Ingram  Pulse 
+lasers.  The Cobra is much favored by lone-wolf traders who wish to combine 
+potential superior combat qualities with adequate cargo space.
+
+     Dimensions - 65/30/130 ft
+     Cargo Capacity - 20 TC
+     Armaments - Ingram laser system; Lance & Ferman Seek & Kill missile 
+         system
+     Maximum Velocity - 0.30
+     Inservice Date - 3100 AD (Cowell & MgRath Shipyard, Lave)
+     Maneuverability - CF 8
+     Crew Number - 1 or 2
+     Drive Motors - Kruger "lightfast" motors Irrikan ThruSpace
+     Hull Stress Factor - T Ji 18 C-Holding M18
+     Hyperspace Capability - Yes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                  - 28 -
+
+
+
+
+
+
+FER-DE-LANCE
+
+A  Zorgon  Petterson Group (Zee Pee Gee) designed vessel favored  by  well-
+heeled   bounty   hunter  and  freewheeling   business   corporations.    A 
+sophisticated craft,  capable of both limited trading,  combat, and leisure 
+function.   The  spacious  hull  is  mainly  given  over  to  sophisticated 
+weaponry,  defences  and  navigation  equipment at  the  expense  of  cargo 
+capacity.   Cabin  accommodation  is  large and  luxurious  with  extensive 
+Owndirt  Inc.  recycling facilities,  encouraging extended live-in  periods 
+(useful  whilst  pursuing a quarry).   Fuel scoop is  a  standard  fitting, 
+ensuring complete self-sufficiency.
+
+     Dimensions - 85/20/45 ft
+     Cargo Capacity - 2 TC
+     Armaments - Ergan Laser System; IFS Seek & Hunt missiles
+     Maximum Velocity - 0.30
+     Inservice Date - 3100 AD (Zorgon Petterson)
+     Maneuverability - CF 5
+     Crew Number - 12
+     Drive Motors - Titronix Intersun Ionic for LT
+     Hull Stress Factor - T Ji 10
+     Hyperspace Capability - Yes
+
+
+
+
+
+GECKO
+
+Patented by Robert Bream, but not manufactured until Ace and Faber improved 
+upon  the original design specifications after the death of  the  inventor.  
+Later the design was stolen and widely circulated to a number of "backyard" 
+workshops  who  produced  the ship in vast  numbers  with  many  individual 
+variances to protect companies against lawsuits.   Mainly used as a single-
+pilot combat craft, typically pirates.
+
+     Dimensions - 12/40/65 ft
+     Cargo Capacity - 3 TC
+     Armaments - Ingram 1919 A4 laser; LM Homing missile
+     Maximum Velocity - 0.30
+     Inservice Date - 2852 AD (Ace & Faver HullWorks, Lerelace)
+     Maneuverability - CF 7
+     Crew Number - 1 or 2
+     Drive Motors - BreamPulse Light XL
+     Hull Stress Factor - T to 84-94 C-Holding JZ20
+     Hyperspace Capability - Not available
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                  - 29 -
+
+
+
+
+
+
+KRAIT
+
+Small,  reliable one-man fighter,  common until the standardized version of 
+the  Mamba  became available on the open market.   Several of  these  early 
+Faulcon  deLacy  designed  craft may still be found in  service  in  remote 
+areas,  but spare parts are no longer available and the need to cannibalize 
+has reduced numbers still further in recent years.
+
+     Dimensions - 80/20/90 ft
+     Cargo Capacity - 10 TC
+     Armaments - Ergon laser system
+     Maximum Velocity - 0.30 Light Mach
+     Inservice Date - 3027 AD (deLacy ShipWorks, ININES)
+     Maneuverability - CF 8
+     Crew Number - 1
+     Drive Motors - deLacy Spinlonic ZX 14
+     Hull Stress Factor - C-Holding A20-B4
+     Hyperspace Capability - No
+
+
+
+
+
+MAMBA
+
+Fighter  which  grew  out of custom-built  primarily  designed  for  racing 
+purposes  but  adopted  and  armed by pirates due to  its  high  speed  and 
+maneuverability.   Cargo  space was added later when Raddlett  and  Rayburn 
+Shipyards   (based  at  Reorte)  standardized  the  variences   and   began 
+manufacturing the craft in large numbers.
+
+     Dimensions - 55/12/65 ft
+     Cargo Capacity - 10 TC
+     Armaments - Ergon laser
+     Maximum Velocity - 0.32
+     Inservice Date - 3110 AD (Reorte Ship Federation)
+     Maneuverability - CF 9
+     Crew Number - 
+     Drive Motors - Seeklight HV Thrust 
+     Hull Stress Factor - TKi 10 C-Holding B100+
+     Hyperspace Capability - No
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                  - 30 -
+
+
+
+
+
+
+MORAY STAR BOAT
+
+Developed initially as a submarine flyingboat,  Marine Trench Co.  soon say 
+the  possibilities for extending their operations into space and the  Moray 
+SFB became the "Star Boat" after its ingenious adaptations were  completed.  
+Aquatic space-faring races are the main users of this multi-purpose vessel, 
+whose  hull  is  able to withstand the pressures of depths of  up  to  5500 
+fathoms.   Standard fittings include: highpower seal locks, 2 torpedo tube/ 
+single missile pods and flood-lock cabins for subaquatic life-forms.
+
+     Dimensions - 65/25/60 ft
+     Cargo Capacity - 7 TC
+     Armaments - Geret Starseeker missile system
+     Maximum Velocity - 0.25
+     Inservice Date - 3028 AD
+     Maneuverability - CF 4
+     Crew Number - 6
+     Drive Motors - Turbulen Quark Re-charger Mode 1287
+     Hull Stress Factor - T Ko T24
+     Hyperspace Capability - Yes
+
+
+
+
+
+PYTHON
+
+One  of  the larger trading vessels manufactured in Inera  Orbit  Space  by 
+Whatt  and  Pritney  ShipConstruct.   Cabin accommodation  is  cramped  and 
+spartan  in  contrast  to  facilities for  cargo  and  "alien  environment" 
+transport.   Though slow and ponderous,  the craft has powerful CC-Voltaire 
+shields and  Volt-Variscan Pulse lasers,  earning it the  nickname  of  the 
+"space porcupine".   Not commonly attacked by pirate ships,  but a  popular 
+craft for freebooters, usually used as a way-station and storage hulk.
+
+     Dimensions - 130/40/80 ft
+     Cargo Capacity - 100 TC
+     Armaments - Volt-Variscan Pulse lasers
+     Maximum Velocity - 0.20
+     Inservice Date - 2700 AD (Whatt and Pritney ShipConstruct)
+     Maneuverability - CF 3
+     Crew Number - 20-30
+     Drive Motors - 4 C40K V Ames Drive Exlon 76NN Model
+     Hull Stress Factor - T(ensman) YO 20 C-Holding K21-31
+     Hyperspace Capability - Yes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                  - 31 -
+
+
+
+
+
+
+ORBIT SHUTTLES
+
+These  unarmed  and often unmanned craft are built under license  in  every 
+planetary   system.    Based  on  a  prototype  developed  by   Saud-Kruger 
+AstroDesign,  they  are  used for cargo ferrying between planet  and  space 
+station,  but  can  be modified to hospital  ships,  or  orbiting  prisons.  
+Favorite targets for small-time criminals,  because of their  instantaneous 
+release  of  cargo canisters,  they are often followed  by  single  fighter 
+patrol ships.
+
+     Dimensions - 35/20/20 ft
+     Cargo Capacity - 60 TC
+     Armaments - None
+     Maximum Velocity - 0.08
+     Inservice Date - 2856 AD (Saud-Kruger AstroDesign)
+     Maneuverability - CF 4
+     Crew Number - 6
+     Drive Motors - V & K 20.20 StarMat drive
+     Hull Stress Factor - T Ko 28
+     Hyperspace Capability - No
+
+
+
+
+
+SIDEWINDER SCOUT SHIP
+
+Designed  by  Faulcon deLacy and built in the Onrira Orbital  Shipyards  by 
+Spalder  and Starblaze Inc.  to Galactic Navy specifications for  a  multi-
+purpose  support craft.   Mainly used for atmosphere and planetary  surface 
+scouting,   but  extensively  too  for  city-strafing,  reconnaissance  and 
+infantry air support (and by pirates who favor speed and  elusiveness,  its 
+primary  advantage).   Has  some interspatial  capability    not  including 
+hyperspace, and must be carried through hyperspace by jump-capable vessels.  
+Hull  is too small for the installation of fuel scoops,  or more  than  one 
+missile pod.
+
+     Dimensions - 35/15/65 ft
+     Cargo Capacity - None
+     Armaments - Dual 22-18 lasers; Seeker missiles
+     Maximum Velocity - 0.37
+     Inservice Date - 2982 AD (Onrira Orbital/Spalder & Starblaze)
+     Maneuverability - CF 9
+     Crew Number - 1
+     Drive Motors - deLacy Spin Ionic MV
+     Hull Stress Factor - Not available; C-Holding C50
+     Hyperspace Capability - No
+
+
+
+
+
+
+
+
+
+
+
+
+                                  - 32 -
+
+
+
+
+
+
+THARGOID INVASION SHIPS
+
+Though  most  of  the  Thargoid Space Fleet is  currently  engaged  by  the 
+Galactic  Navy in Intergalactic Space,  a few of the smaller  battle  ships 
+make occasional sorties into Human Space.   These ships are extremely  fast 
+for  their  size  and invariably have ECM Systems (this  was  originally  a 
+Thargoid  invention to counter Navy missiles,  subsequently copied  by  the 
+Navy from captured Thargoid ships).
+     Additionally,  most  Thargoid battle ships carry a few  small  remote-
+controlled ships,  each equipped with a single pulse laser.   It is rumored 
+that  the Galactic Navy are designing their own remote-controlled  fighter, 
+and will pay well for Thargoid ones to study.
+
+     Dimensions - 180/40/180 ft
+     Cargo Capacity -
+     Armaments - Widely varying.  Mountings available for most systems.
+     Maximum Velocity - 0.20 LM
+     Inservice Date - Uncertain
+     Maneuverability - CF 6
+     Crew Number - 150
+     Drive Motors - Thargoid invention
+     Hull Stress Factor - Uncertain
+     Hyperspace Capability - Yes
+
+
+
+
+TRANSPORTER
+
+The  Lakon  Spaceways  MC15  QuikTransport Shuttle  is  the  most  commonly 
+encountered  intermediate range shuttle,  with a range of 0.1LY and a  full 
+HiGrav  Loading facility.   It can carry up to 100 passengers,  and  has  a 
+cargo capacity of 10 tonnes undefined bulk.   Can land on asteroids,  space 
+stations,  and can skim atmosphere, and touch down on land surfaces and all 
+liquid surfaces except acid.
+
+     Dimensions - 35/10/30
+     Inservice Date - Unknown, but probably pre-2500 AD.  Known prototype
+         built on spaceLink Shipyards, Mars orbit (Old Earth).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                  - 33 -
+
+
+
+
+
+
+VIPER (POLICE SHIP)
+
+Small,  highly  maneuverable  short range "hunter-killer",  the  Viper  was 
+specifically  designed  for  GalCop  Space  Policing  purposes  by  Faulcon 
+Manspace and are built under licence on all Medium Tech worlds.   The Viper 
+is a single pilot craft,  but can carry up to ten humanoid  passengers.  It 
+has no cargo space, but has a "tug" capability, and can tow a ship of up to 
+140,000  MTS mass (including the Cobra Mk 3).   This popular ship  is  also 
+carried by large freighter convoys, for defensive purposes.
+
+     Dimensions - 55/80/50 ft
+     Cargo Capacity - Zero
+     Armaments - Ingram MegaBlast Pulse Laser; Seeker missiles
+     Maximum Velocity - 0.32 LM
+     Inservice Date - 2762 AD (Faulcon Manspace, Reorte)
+     Maneuverability - High (CF 7.4)
+     Crew Number - 1 (up to 10)
+     Drive Motors - deLacy Super Thrust VC10
+     Hull Stress Factor - Varies
+     Hyperspace Capability - No
+
+
+
+
+
+WORM CLASS LANDING CRAFT
+
+A  small  landing  craft  carried on larger ships,  for  use  as  either  a 
+lifeboat, or for landing parties.  Lightly armed, the Worm is occassionally 
+employed  as  an  attack  and/or  decoy  craft  during  combat  conditions.  
+Manufactured to specific requirements dependent upon the Mother  Ship,  the 
+Worm is highly adaptable.
+
+     Dimensions - 35/12/35 ft
+     Cargo Capacity - None
+     Armaments - Ingram Pulse laser
+     Maximum Velocity - 0.23
+     Inservice Date - 3101 AD
+     Maneuverability - CF 6
+     Crew Number - 2
+     Drive Motors - Seeklight HV Thrust
+     Hull Stress Factor - T Ki 10
+     Hyperspace Capability - No
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                      rmh
+
+                                  - 34 -
+
+
+
+
+
+
+                                PILOT'S LOG
+
+
+Date:                                          Filename:
+
+Name:                                          Status Combat/Legal:
+
+Planets Traversed:
+
+
+
+
+
+
+
+Current Equipment:  
+
+
+
+
+Purchases and Prices Paid:
+
+Item/Planet         Av.price        Price paid         Quantity ordered
+
+
+
+
+
+
+
+
+
+
+
+
+Trading Profits:
+
+Kills:
+
+Credits:
+
+SPECIAL NOTES:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                  - 35 -
+
+
+
+
+
+
+                                PILOT'S LOG
+
+
+Date:                                          Filename:
+
+Name:                                          Status Combat/Legal:
+
+Planets Traversed:
+
+
+
+
+
+
+
+Current Equipment:  
+
+
+
+
+Purchases and Prices Paid:
+
+Item/Planet         Av.price        Price paid         Quantity ordered
+
+
+
+
+
+
+
+
+
+
+
+
+Trading Profits:
+
+Kills:
+
+Credits:
+
+SPECIAL NOTES:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                  - 36 -
+
+
+
+

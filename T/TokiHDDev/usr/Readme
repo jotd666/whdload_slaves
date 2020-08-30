@@ -1,0 +1,89 @@
+
+
+	THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER
+	EXPRESS OR IMPLIED, STATUTORY OR OTHERWISE.
+	THE ENTIRE RISK AS TO USE, RESULTS AND PERFORMANCE OF THE PACKAGE IS
+	ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE TO BE DEFECTIVE, YOU
+	ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING, REPAIR OR OTHER
+	REMEDIATION.
+	UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY
+	DAMAGE CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE
+	OWNER OR A THIRD PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF
+	DAMAGE.
+
+
+	That install applies to "Toki" © 1991 Ocean.
+
+
+	That install requires WHDLoad and The Patcher to be in the path.
+	Both can be found in the WHDLoad package.
+	To install from a different drive than DF0: select Expert as
+	installation mode.
+
+
+	You need 0.5 MB ChipMem and 0.5 MB OtherMem.
+	You can quit the game by pressing Help (key can be changed with
+	Tooltype "QuitKey=").
+
+
+	if you have problems with this installation please try first to get
+	a newer version of this install from 
+		http://www.fh-zwickau.de/~jah/whdload/
+	if that does'nt help try some Tooltypes like NOCACHE, NOAUTOVEC,
+	NOVBRMOVE, NOMMU, PAL or NTSC. if that also does'nt help inform the
+	author via the Bug-Report-Form which can be accessed on
+		http://www.fh-zwickau.de/~jah/whdload/
+
+	for full WHDLoad package and other installs refer to:
+		http://www.whdload.de
+	or	aminet:dev/misc/whdload#?
+	and	aminet:game/patch/
+
+  version 2.3 (29.10.2017):
+  - adapted to WHDLoad v17: dynamic CUSTOM settings
+  
+  version 2.2
+  - really added .imager file now :)
+  - more compatible 2nd button detection routine
+
+  version 2.1 (09.08.04)
+  - added support for another re-release version (small bootblock changes)
+
+  version 2.0-B (01.07.04)
+  - missing .imager file added
+
+  version 2.0 (16.05.04)
+  - added support for The Hit Squad Release (merged JST loader from Keith & me)
+    (no 2 button control nor trainer in this version, contact me if you need it)
+  - reworked install script for this new version
+  - lots of icons by Chris Vella, CFou!, Exotica, added
+
+  version 1.1-B (19.02.04)
+  - ooops, CUSTOM2 tooltype was deactivated, so no 2-button control, now fixed
+
+  version 1.1 (15.02.04) done by JOTD
+  - CUSTOM1=1 enables trainer (invincible, was done by Mr Larmer)
+  - CUSTOM2=1 enables 2-button joystick control
+  - source code reworked
+  - source code included
+
+  version 1.0 (28.01.99) done by Mr Larmer
+  - protections removed,
+  - lots of blitter waits inserted,
+  - keyboard handling fixed,
+  - nice MWB/NI icons included,
+
+
+  Thanx to:
+  - Jan Krolzig for original disk image,
+  - Don Adan/Wanted Team for sending me freezed memory (AR3) from
+    that game. Without his help I can't do that installer :)
+
+Mr.Larmer/Wanted Team in 1999.
+
+I added 2-button joystick control because the original controls are terrible,
+e.g. when you want to shoot up and you jump instead (and die), it's very annoying.
+Obviously you need a CD³² joypad or a differentiated button joystick (Sega) to play
+in this mode (CUSTOM2=1)
+
+JOTD in 2004

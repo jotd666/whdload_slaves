@@ -1,0 +1,50 @@
+
+
+	THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER
+	EXPRESS OR IMPLIED, STATUTORY OR OTHERWISE.
+	THE ENTIRE RISK AS TO USE, RESULTS AND PERFORMANCE OF THE PACKAGE IS
+	ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE TO BE DEFECTIVE, YOU
+	ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING, REPAIR OR OTHER
+	REMEDIATION.
+	UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY
+	DAMAGE CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE
+	OWNER OR A THIRD PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF
+	DAMAGE.
+
+
+	That install applies to "Badlands" © 1990 Tengen.
+
+
+	That install requires WHDLoad and DIC to be in the path. Both
+	can be found in the WHDLoad package.
+	To install from a different drive than DF0: select Expert as
+	installation mode.
+
+
+	You need 0.5 MB ChipMem and 0.5 MB OtherMem.
+	You can quit the game by pressing F10 (key can be changed with
+	Tooltype "QuitKey=")
+
+
+	if you have problems with this installation please report them via
+	the Bug-Report-Form which can be accessed on 
+	http://www.whdload.de
+
+	for full WHDLoad package and other installs refer to:
+		http://www.fh-zwickau.de/~jah/whdload/
+	or	aminet:dev/misc/whdload#?
+	and	aminet:game/patch/
+
+
+        History:
+
+        Version 1.1 (29.04.2016) done by JOTD:
+
+        - added second button to fire bullets/missiles
+        - added quitkey on 68000 machines
+        - re-enabled VBL interrupt (so CD32load mapping for pause & quit work)
+        - source code included (resourced with whdload_slave_resourcer)
+
+        Version 1.1 (04.07.1998) done by John Sleck:
+
+        - initial release

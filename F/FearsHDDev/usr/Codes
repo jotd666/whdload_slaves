@@ -1,0 +1,200 @@
+                                                                                
+
+----  FEARS       doom-clone Passwords explanation by Giovanni Meroni --------
+
+When I solved the first level and I got the level code for the second level I 
+saw that this code was a 8 digit hexadecimal number but I thougth that this was
+meaningless and the code was only a casual sequence of digits...
+No! That's wrong!!! In the level code is coded (well is a code after all...:-))
+all the important stats of the player: His number of lives, ammo, level and the
+type of weapons.
+Infact try to end the first level many times, with different number of ammo or  
+lifes, you'll get a different code for the second level...
+Note that these codes don't remember things like energy, treasures founds, time
+used, secrets founds, so when you enter a level using a code all this stats will
+be at a default level.
+After collecting some Level 2 access code I started to try to understand how all
+these informations are coded.
+First of all I discovered that the 8 digit sequence has to be seen as the union
+of two 4 digit numbers: In the first one are coded the level, the number of 
+lives and the type of weapons available, and in the second one the number of the
+two type of ammo.
+Exemplation:
+          lv code  F8F856A5
+                   \__/\__/
+                    \   \__ means 99 weapon of type 1 and 28 of type 2
+                     \_____ means access to level 2 with gun and 0 lives left
+               
+          lv code  C9F545B9
+                   \__/\__/
+                    \   \__ means 53 weapon of type 1 and 14 of type 2
+                     \_____ means access to level 3 with gun and machinegun
+                            and 3 lives left
+ 
+N.B: the two groups of digits are completley scorrelated!!! so you can always
+     get the first 4 digit from a level code and the last 4 of another one and
+     you'll have another valid level code!!! 
+     example: using the two code above you can buld up two other codes:
+     F8F845B9 and C9F556A5 , and those are valid codes too!!
+
+So...
+
+------------------------------------------------------------------------
+| Explanation of the SECOND group of a level code ( the last 4 digits) |
+------------------------------------------------------------------------
+(My GrandFather always told me to start at the beginning ;-) )
+Well... I had no luck and so there is NO explanation :(
+but I collected a few codes so here they are:
+      ___________________________
+      | Lv code | type1 | type2 |    Type1 means the number of ammunitions of
+      +---------+-------+-------+         type 1 ( gun and machinegun ammo)
+      |   54AD  |   99  |   14  |
+      |   94AC  |   98  |   14  |    Type2 means the number of ammunitions of
+      |   40A8  |   00  |   14  |         (guess ?) type 2 ...( Rockets )
+      |   91ED  |   91  |   14  |
+      |   519D  |   87  |   10  |
+      |   5000  |   64  |   00  |
+      |   45B9  |   53  |   14  |
+      |   56A5  |   99  |   28  |
+      |   5C8D  |   99  |   42  |
+      |   5E85  |   99  |   56  |
+      |   742D  |   99  |   70  |
+      |   7625  |   99  |   84  |
+      |   7C0D  |   99  |   98  |
+      |   BC0F  |   99  |   99  |
+      +---------+-------+-------+
+
+When I foud out BC0F I stop searching new codes because it'd  be pointless:
+BC0F is the best code to use to start every level with the max ammo and so...
+I often use it...
+
+If you manage to find out how ammo numbers are coded into this 4 digit well...
+DONT let me know!!!! ;-) I really don't care much adout it....
+
+
+Well now ....
+------------------------------------------------------------------------
+| Explanation of the FIRST group of a level code ( the first 4 digits) |
+------------------------------------------------------------------------
+
+Here the thing is a bit tricky : It envolves the use of Binary to Hexadecimal
+conversions and so if you dont know much about it... Jump to the conclusions ;-)
+
+In the first 4 digits are coded the level number, the type of weapons and the 
+number of lives.
+
+The code number is a Hexadecimal number, so it can be written in binary:
+
+ D8F5  -> 1101 1000 1111 0101
+
+and the meanings of each group of bit is:
+
+xxxx 100x x11x xxxx
+\__/ \____/  \__/|\_ =1 if you have the machinegun (0 else)
+ \    \       \  \__ =1 if you have the rocket launcher (0 else)
+  \    \       \____ in this triplet is coded the level :
+   \    \            111 = level 1   110 = level 2   101 = level 3
+    \    \           100 = level 4   011 = level 5
+     \    \_________ this is a sort of checksum to see if the code is valid:
+      \                I had not foud out how this works but you can try
+       \               some combinations and use the only one that works
+        \___________ in these bits is coded the number of lives you have:
+                           1111 = 0 lives
+                           1110 = 1 life
+                           1101 = 2 lives
+                           1100 = 3 lives
+                           ..... .......
+                           0111 = 8 lives
+                           0110 = 9 lives
+
+Here are some codes I found out: I calculated them first and then I tried to 
+insert them as password in the game and they all worked well 
+
+| Level |  only Gun | Gun+Machinegun | gun+Machinegun+ |
+|       |           |                | rocket launcher |
++-------+-----------+----------------+-----------------+
+|   1   |           |                |      6D7F       | 9 LIVES
++-------+-----------+----------------+-----------------+
+|   2   |   F8F8    |     F879       |                 | 0 LIVES
+|       |   E878    |     E8F9       |                 | 1 LIFE
+|       |   D9F8    |     D979       |       (*)       | 2 LIVES
+|       |   C978    |     C9F9       |                 | 3 LIVES
+|       |   BAF8    |     BA79       |                 | 4 LIVES
+                           (*)                             ....
+|       |   (*)     |     7C79       |                 | 8 LIVES
+|       |           |     6CF9       |      6DFB       | 9 LIVES
++-------+-----------+----------------+-----------------+
+|   3   |   F974    |     F875       |                 | 0 LIVES
+|       |   E9F4    |     E8F5       |                 | 1 LIFE 
+|       |   D874    |     D975       |       (*)       | 2 LIVES
+|       |   C8F4    |     C9F5       |                 | 3 LIVES
+                                                           ....
+|       |   (*)     |      (*)       |      6C77       | 9 LIVES
++-------+-----------+----------------+-----------------+
+|   4   |           |     F971       |      F873       | 0 LIVES
+|       |           |     E9F1       |      E8F3       | 1 LIFE 
+|       |           |     D871       |      D973       | 2 LIVES
+|       |           |     C8F1       |      C9F3       | 3 LIVES
+|       |           |                |      BA73       | 4 LIVES
+|       |    (*)    |      (*)       |      AAF3       | 5 LIVES
+|       |           |                |      9B73       | 6 LIVES
+|       |           |                |      8BF3       | 7 LIVES
+|       |           |                |      7C73       | 8 LIVES
+|       |           |                |      6CF3       | 9 LIVES
++-------+-----------+----------------+-----------------+
+|   5   |           |                |      FBEF       | 0 LIVES
+|       |           |                |      EB6F       | 1 LIFE
+|       |           |                |      DAEF       | 2 LIVES
+|       |           |                |      CA6F       | 3 LIVES
+|       |           |                |      B9EF       | 4 LIVES
+|       |    (*)    |      (*)       |      A96F       | 5 LIVES
+|       |           |                |      98EF       | 6 LIVES
+|       |           |                |      886F       | 7 LIVES
+|       |           |                |      7FEF       | 8 LIVES
+|       |           |                |      6F6F       | 9 LIVES
++-------+-----------+----------------+-----------------+
+
+(*)I Have no code for this combinations of level,lifes,weapon_type because
+   I have no time to spare on this silly things :) (And, most important fact,
+   finding out new codes is really boring, when you know how to do it)
+   If You really need them (I cant immagine why), Well found them out yourself!!
+
+-----------------
+|  CONCLUSIONS  |  (The most waited part......)
+-----------------
+
+The complete codes to start a level with all ammo, all weapons, 9 lives are:    
+
+	level1:   6D7FBC0F
+	level2:   6DFBBC0F
+	level3:   6C77BC0F
+	level4:   6CF3BC0F
+	level5:   6F6FBC0F
+
+
+*++++++++Ending note....
+- Forgive my Spagetti-English... but I'm a Spaghetti-eater (i.e an Italian boy)
+- All these codes works well on my version of FEARS, but in the building of the
+  codes there is room to have a different set of codes for different copy of the
+  game.. If it'd happen, these codes won't work (obviously) but I think that the
+  logic behind won't change.Try to change the '100' part in the checksum nibble,
+  or the '11' bits between checksum and level nibble.
+- Let me know your opinions on this.
+- You can use this doc and the informations inside it as you want, but dont
+  steal the credits !!!
+
+- You can reach me preferably on snail-mail but you can also e-mail.
+
+Snail-Mail:
+Giovanni Meroni
+Via G.Ferraris 39
+20025 Legnano (MI)
+     ITALY
+
+e-mail (only for few month, until January 1996, I think)
+piu1950@cdc8g5.cdc.polimi.it
+   please include as subject the words 'Per Gionna' (Yeah I have to share this 
+   address with a friend of mine... These stupid Politecnico's rules...)
+                      _
+      // /\  |/|/| | / _  /\   o                               !     BUST     !
+    \X/ /--\ | | | | \_/ /--\  o  ALWAYS THE BEST, FOREVER     !   MICROSOFT  ! 

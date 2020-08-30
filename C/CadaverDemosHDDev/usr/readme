@@ -1,0 +1,108 @@
+
+
+   THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER
+   EXPRESS OR IMPLIED, STATUTORY OR OTHERWISE.
+   THE ENTIRE RISK AS TO USE, RESULTS AND PERFORMANCE OF THE PACKAGE IS
+   ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE TO BE DEFECTIVE, YOU
+   ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING, REPAIR OR OTHER
+   REMEDIATION.
+   UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY
+   DAMAGE CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE
+   OWNER OR A THIRD PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF
+   DAMAGE.
+
+
+   This install applies to Cadaver demo - 3 unique bonus levels, ©1990 Bitmap Brothers
+
+
+   That install requires WHDLoad to be in the path.
+   Both can be found in the WHDLoad package.
+
+   You need 0.5 MB ChipMem and 0.5 MB OtherMem.
+   You can quit the game by pressing F10 (key can be changed with
+   Tooltype "QuitKey=").
+
+
+   if you have problems with this installation please try first to get
+   a newer version of this install from 
+      http://www.whdload.de
+   if that doesn't help try some Tooltypes like NOCACHE, NOAUTOVEC,
+   NOVBRMOVE, NOMMU, PAL or NTSC. if that also doesn't help inform the
+   author via the Bug-Report-Form
+   
+   for full WHDLoad package and other installs refer to:
+      http://www.whdload.de
+   or aminet:dev/misc/whdload#?
+   and   aminet:game/patch/
+
+History:
+
+ version 1.1 (13.07.2019)
+ - adapted to whdload v17 (issue #0004146)
+ - changed CUSTOM tooltypes
+ 
+ version 1.0 (2002) done by JOTD
+ - first release
+ 
+The first demo was originally uploaded by Bill Bennett (bspwrb(at)bath.ac.uk),
+a Cadaver maniac (like me).
+The second demo level has been provided by Keith Krellwitz.
+
+Second demo level is actually the one pointed by CUSTOM2=0. It was released for 
+a demo in a magazine. Walkthrough for that one is included too.
+I'm looking for a walkthrough for the other one (I nearly completed it, but did
+not reach the end).
+
+I hacked the files a bit so they decrunch faster, without stripes and allow to quit
+by pressing the QUITKEY key. I also added a trainer option (CUSTOM1=1 tooltype) which allows
+infinite energy (easier to end the game)
+
+It completes my quest for patching the Cadaver series to HD.
+
+
+The third demo level was sent by Tomaz Kac, and was featured in Amiga Format #13
+(set CUSTOM1=2 to enable it)
+
+I was not aware of this demo until Tomaz sends it to me. The controls are a bit
+different, and the interrupt system of this one was very buggy (keyboard/VBL).
+I had to fix it a little bit and it seems to have no sound. Original instructions
+(with wierd control description) are included. This must be the very first
+demo level since there is no sound at all and other demo level controls
+are the same as the final version. It's also the easiest one.
+
+
+To do: Try to do some kind of save game (it won't be a piece of cake :))
+Better run it on UAE with save state function :)
+
+I enclose Bill instructions below
+
+--
+
+Long: This is an old coverdisk demo containing 1 full bonus level of 
+Cadaver, which is not to be found as part of either Cadaver or The Payoff.  
+
+For those not familiar with Cadaver, it's a 3D isometric adventure/arcade
+game, in which you move Karadoc the dwarf through a series of rooms,
+acquire items, spells, etc. and solve (fiendish) puzzles. 
+
+Controls:  Use the joystick to move Karadoc around, jump and interact with
+objects.  When holding a weapon or spell, the fire button activates it,
+other items will be thrown.  "H" key will toggle a held item on or off. F3
+toggles between icons being displayed as soon as you touch an item, or
+after pressing fire.  F2 toggles between using fire and enter to bring up
+icons.  Space brings up the last item you used, and Return will bring up
+the entire rucksack.  The diary in the first room lists your health, gold
+(irrelevant in this demo) and XP, as well as the percentage of rooms
+visited.  F1 brings up the map, the joystick scrolls it, Del centres it on
+you, and cursor up/down will zoom.  P pauses, C clears all messages from
+the screen, and F4 toggles between movement in 4 and 8 directions. 
+
+Now for a plea - I can't solve the damn thing - if anyone manages to 
+complete the level, could they please email me?  
+
+Ta,
+
+Bill Bennett
+bspwrb@bath.ac.uk
+
+22/3/97

@@ -35,6 +35,10 @@
 
  History:
  
+ version 2.5 (29.08.2020) done by JOTD:
+ - fixed bug on a non-SPS 512k version (issue #0004791)
+ - added blitter waits in 1MB version with shark fin introduction
+ 
  version 2.4 (25.08.2020) done by JOTD:
  - another 512k MFM version supported (now 5 versions supported!)
  - fixed more active cpu loops
@@ -118,4 +122,7 @@
  If you install the 1MB version by mistake, you get an explicit error when running whdload, just replace
  the slave by the file "JamesPond1MB.slave".
  
+ The install supports 5 different versions. One is a very early non SPS 512k version with a huge
+ bug at startup that went unnoticed. Also, in this very version the highscores screen flickers
+ a bit with slightly trashed graphics, but I'm leaving it as is for now.
  

@@ -1,0 +1,469 @@
+	LEISURE SUIT LARRY IN THE LAND OF THE LOUNGE LIZARDS
+
+			3-D ANIMATED ADVENTURE GAME 
+			REFERENCE CARD FOR AMIGA
+
+Sierra's 3-D animated adventures represent a totally new approach to computer
+gaming -- a third generation in computer adventure. They feature detailed three
+dimensional background screens with life-like animated characters. The improved
+parser lets you talk to the computer in whole sentence.
+
+Sierra's new series of adventures are interactive, changing as you explore and
+solve the puzzle. New facets are revealed as you delve into the game. In fact,
+because of ramdom events, you can play the game many times over and never play
+the same game twice.
+
+BEFORE GETTING STARTED
+Before starting to play you should make back-up copies of your original disks.
+
+LOADING INSTRUCTIONS
+1.  Power up the system and load the Amiga Kickstart disk and the Amiga
+Workbench disk.
+2.  Use the preference tool from the Workbench disk to set date and time
+information. This procedure is recommended but not required.
+3.  Insert the original program disk or a back-up copy you have made, into the
+drive and double click the left mouse button on the disk's icon to open the
+disk.
+4.  Double click the left mouse button on the "Sierra" icon. If you are loading
+from a back-up copy you will be prompted to briefly insert the original disk
+when loading.
+5.  To bypass the opening sequence, press any key.
+
+BACKING UP YOUR PROGRAM MASTERS
+From the Workbench, follow the procedure below to copy the original master disk
+to a back-up.
+
+One Drive Systems:
+1. Insert the original disk in the drive.
+2. Place the mouse cursor (arrow) on the master program icon.
+3. Highlight the icon by clicking the left mouse button.
+4. Place the mouse cursor on the menu bar. Hold down the right mouse button and
+pull down the Workbench menu.
+5. Place the mouse cursor on Duplicate and release the left mouse button.
+6. Follow the disk swap prompts to copy the program disk.
+7. Do not rename your back-up copy.
+
+Two Drive Systems:
+1. Insert the original and back-up disk in the drives.
+2. Place the mouse cursor on the original program disk icon and hold down the
+left mouse button.
+3. Drag the mouse cursor to the icon of the drive you're copying to and release
+the button.
+4. Follow the prompts to complete the copy procedure.
+5. Do not rename your back-up copy.
+
+FORMATTING A DISK (to be used as a saved game disk)
+1. From the Workbench, insert a blank disk into any drive.
+2. Place the mouse dursor on the blank disk icon and click the left mouse
+button, highlighting the icon.
+3. Place the mouse dursor on the menu bar at the top of the screen. Hold down
+the right mouse button and pull down the Disk menu.
+4. Place the mouse cursor on "initialize" and release the right mouse button.
+The blank disk is now being formatted. When formatting is complete, you will be
+returned to the Workbench.
+5. Place the mouse cursor on the "Empty" icon and click the left mouse button.
+Place the mouse cursor on the Workbench menu, hold down the right mouse button,
+and select "Rename". Follow the prompts to rename the "saved game" disk. If you
+don't rename the "saved game" didk, its default name will be "Empty".
+6. When a formatted disk is used for saving games, the 3-D Animated Adventure
+automatically creates a saved game directory for saving 12 games. Creating
+additional directories on the disk (for saved games), will allow you to save
+more games on the formatted disk (12 per directory). Consult your system's DOS
+manual for creating directories on a formatted disk.
+
+COMMANDS FOR THE HERO
+A joystick, mouse or keyboard moves the main character north, south, east, west
+or diagonally. To halt your character's steps with the keyboard, press the last
+direction key again, or the 5 on the number pad. If you are using a mouse,
+start movement by single clicking the left mouse button. The character will
+move to the point where the left mouse button was last clicked and stop there,
+unless there is an obstruction in his path.
+
+During the game you can use any form of control at any time. Just click the
+mouse, press a direction key, or move the joystick. If the joystick was not
+plugged in before loading the game, press CTRL-J and insert the joystick into
+joystick port # 2. The joystick will now be active.
+
+|---------------|      \ North /          \   ^  /
+|               |     |---------|          7  8  9
+| !----! !----! | West|         |East    --4  5  6--
+| !    ! !    ! |     |         |          1  2  3
+| !----! !----! |     |---------|          /  |  \ 
+|               |      / South \
+|               |
+|---------------|      Joystick         Direction Keys
+    Mouse
+
+
+Talk to your computer in commands of one or two words, or even simple
+sentences. Unless otherwise instructed, follow all commands with the RETURN
+key.
+
+You may meet others who have messages for you. Command them to speak. Type:
+TALK TO THE GNOME
+You may later need objects you see along the way. Type: GET THE KEY
+Pay attention to details. To see an object closely, type: LOOK AT THE PANEL
+Use the objects you find along the way. Type: GIVE THE BASKET TO THE GIRL
+
+To fully savor a scene you enjoy watching or negotiate a narrow paty, you can
+slow down the animation. Speed up the animation to make the main character walk
+faster. To change the speed type "slow" or "fast" and press RETURN. To return
+to the original speed, type "normal" and press RETURN.
+
+Function and control keys shortcut these common commands:
+F1 or HELP	Shows list of control keys (including some specific to your
+		game which may not be mentioned here).
+F2		Toggle sound on/off
+F3		Echo (repeat) previous command
+F5		Save game
+F7		Restore game
+F9		Restart game
+CTRL-C or
+CTRL-X		Cancel line
+CTRL-J		Select joystick mode
+ALT-Z		Quit game
+TAB		Inventory
+ESC		Pause/resume game
+
+SAVING AND RESTORING GAME
+To allow for errors in judgement, and also for some pretty creative
+exploration, we make it possible for you to save and restore the game. Before
+you try something that looks dangerous, or just because you've been playing
+awhile and don't want to lose what progress you've made through some chance
+encounter, SAVE YOUR GAME.
+
+At any time during the game, tuype "save game" and press return or press F-5 to
+save your game. Follow the directions below to complete saving your game.
+
+SINGLE DISK DRIVE USERS
+You have a choice of saving your game on your game disk (original or back-up),
+or to a formatted "saved game" disk. When you receive the prompt asking on
+which directory to save your game, press RETURN and follow the prompts if you
+are saving on your game disk. If you use a "saved game" disk, remove the game
+disk from the drive, insert the "saved game" didk, and type the name of the
+"Saved game" disk followed by ":" and the name of the directory and press
+RETURN. Follow the prompts, using the up/down arrow keys to select a saved game
+space. Re-insert the game disk to resume playing.
+
+TWO DISK DRIVE USERS
+When you receive the prompt asking on which directory to save your game,
+backspace through the suggested default name and type the name of your "saved
+game" disk with it in one of the drives, and press return. This will allow your
+game to be saved onto your second disk drive. If you are using more than one
+directory for for saved games, when prompted, type the name of the directory
+where you want the game to be saved. Follow the prompts using the up/down arrow
+keys to select a saved game space, to complete saving the game.
+
+IN GENERAL
+Although your game position is stored on disk as a normal Amiga DOS file, you
+are not required to follow Amiga DOS naming conventions in identifying your
+saved games. If the character is standing before a tree when you save a game,
+call your saved game "STANDING BEFORE A TREE" or whatever has meaning to you.
+You may save up to 12 different games per saved game directory.
+
+If you "run out" of saved game spaces in your saved game directory, (and you
+don't want to create more saved game directories), you may reuse one of the 12
+spaces. To change the name of a saved game, just enter CTRL-C or CTRL-X to
+clear the line, and type a new one.
+
+RESTORING A GAME
+Type "restore game" and press RETURN or press F-7 to restore a previously saved
+game. You will be asked where you saved the game. To accept the default
+directory, press RETURN. Otherwise, clear the line, type the name of the "saved
+game" disk followed by ":" and the directory on which you saved the game, and
+press RETURN. Now choose the game you wish to restore by moving the pointer and
+selecting it by pressing RETURN. 
+
+
+			REFERENCE CARD
+
+HOW TO PLAY SLOTS	1. Walk to the machine. Type "PLAY SLOTS".
+			2. When you are finished, type "EXIT SLOTS".
+
+HOW TO PLAY BLACKJACK	The object is to get as close to 21 points as
+			possible without going over. Face cards
+			count 10 points each, and aces count as 1
+			or 11 points, whichever is to your 
+			advantage. You are dealt 2 cards to begin with.
+
+HOW TO BET		Sit down at the table. Type "BET". You will be
+			asked to specify an amount. (This house only
+			accepts bets in $2 increments).
+
+INSURANCE		When the house dealer shows an "Ace Up." You will
+			be asked if you want insurance. Insurance equals half
+			of your wager. Use insurance cautiously. If the dealer
+			has blackjack (21) you will be paid off at 2 to 1 odds.
+
+SURRENDER		If you do not like the odds after reviewing your
+			initial two cards, you may "SURRENDER." Half of your
+			wager will be refunded to you.
+
+TAKING CARDS		After receiving your first two cards, you must decide
+			if you want to take more or to "STAND" on what you've
+			got. Type the appropriate option.
+
+DOUBLING DOWN		You are allowed to "double down" if your cards show a
+			value of 10 or 11. Your bet is doubled and you are
+			dealt one more card.
+
+SPLITS			If the house deals you a pair (any two like cards, i.e.
+			two tens) you may "SPLIT" them. This move allows you 
+			to play two hands and double your bet.
+
+TO QUIT PLAYING		Type "STAND UP" at the end of a hand.
+
+TALKING TO WOMEN	Learning this will be your number one priority while in
+			Lost Wages. When you want to talk to a woman, type
+			"TALK TO THE WOMAN". If you happen to get her name,
+			type "TALK TO (NAME)".
+			Women can be loads of fun. They are great to "LOOK"
+			at. They are fun to "DANCE" with. You could even try
+			to "KISS" them. Nothing is off-limits if you "PLAY
+			YOUR CARDS RIGHT".
+			Women are also fickle. Do not take "no" for an answer.
+			Be persistent. With a little sweat and a lot of luck
+			you could wind up being a happy guy.
+
+TRANSPORTING YOURSELF	Getting from place to place is very crucial. To walk
+			somewhere, simply use the direction keys, your joystick
+			or a mouse. You can move Larry practically anywhere.
+
+TAXI SERVICE		Catching cabs in a convenient way to get around Lost
+			Wages. Look for taxi stand signs near the curb at most
+			major establishments. Please note that you should not
+			keep a taxi waiting. When the cab pulls up, walk
+			directly to the rear door and type "ENTER CAB".
+
+ELEVATORS		You can use elevators anywhere they are accessible. The
+			Lost Wages Casino is a full nine stories tall - a trip
+			up the stairs could waste your whole night. Just walk 
+			into the elevator car and type "PRESS ONE" (or
+			whichever floor you choose). Note that some elevators
+			are restricted in use.
+
+-------------------------------------------------------------------------------
+
+		LEISURE SUIT LARRY IN THE LAND OF THE LOUNGE LIZARDS
+
+This is what Larry Laffer used to look like (pathetic, isn't it?). Notice the
+receding hairline and expanding waist. The cardigan sweater and pocket
+protector give you a pretty good idea of what is - a totally mild and lazy guy.
+
+The "old" Larry Laffer was a confirmed bachelor. At 38 years old, he still
+lived with his mother, and the idea of asking a woman out was, basically,
+terrifying. He felt more comfortable at night curling up with a good book (his
+vavorite, "Know Your RS-232 Serial Port") and listening to his record
+collection, which absolutely reeked of Air Supply and Barry Manilow records.
+
+Then one day it hit him. Larry realized that his opportunity to live was
+passing faster than an ugly woman on the way to her wedding. So he decided to
+change. "No more Mr. Nice Guy!" he shouted. "It's time to party!"
+
+This is the new Larry Laffer. Underneath all the polyester and gold, he is
+still the same weenie he always was, but after a credit card blitz at the Night
+Fever Polyester Plaza Larry is equipped for a night on the town. Notice the
+solid white leisure suit, genuine gold-laquered chains, the "steppin' out"
+elevator shoes and the "Saturday Night Fever" style bouffant haircut
+(guaranteed to get the chicks - by the truckload!) A few nights at the Disco On
+Fire Health Club and Dance Spa has given Larry new confidence, new grace, and a
+360-degree move that has to be seen to be believed.
+
+Now Larry Laffer has landed in Lost Wages for one fabulous evening.
+
+Watch out world, here he comes.
+
+AN OVERVIES
+A Sierra 3-D Animated Adventure Game, simply stated, is an interactive movie
+where you become the main character. In this game, the main character is
+"Leisure Suit" Larry Laffer, a would be man-about-town and exceptionally mild
+and lazy guy. The "movie" takes place in the fictional town of Lost Wages.
+
+Each 3-D Animated Adventure Game has a main goal, and yours in Leisure Suit
+Larry in the Land of the Lounge Lizards is to find a seduce the girl of your
+dreams. This goal won't come easy, because you only have one night, and
+unfortunately, you are stuck with Larry's looks. Other problems, such as lack
+of money, lack of opportunity, and bad breath can complicate things
+significantly. Your interaction with the game controls the outsome of each
+situation.
+
+For example, having your character sign on with a major league baseball team or
+start a successful men's magzine could be beneficial to your ultimate goal. On
+the other hand, catching a fatal disease or losing all your cash can only
+impede your progress.
+
+A combination of common sense, logical thinking, and downright sheer luck is
+needed to achieve your goal. Good luck.
+
+			TIPS FOR NEW ADVENTURE PLAYERS
+NOTE: IF YOU HAVE PLAYED AN ANIMATED ADVENTURE BEFORE, THIS SECTION CAN BE
+SKIPPED.
+
+1.  HOW TO MOVE AROUND
+Basic instructions on how to interact with this game are included on the
+command card enclosed. If you are not sure of what to do, follow the WALK THRU
+at the end of this manual.
+
+2. IT PAYS TO USE PROTECTION
+Due to the dangerous nature of this (and every) adventure game, you will want
+to type SAVE GAME many times during a playing session. Type SAVE GAME  any time
+you have done something important. Type SAVE GAME when you feel you're in
+danger.
+
+RESTORE GAME is used when you were right, and there was danger. If you get
+killed, type RESTORE GAME rather than starting over. Careful and diligent use
+of this function has saved many an adventurer from frustration and impotence.
+
+(For more on save and restore game, see Reference Card enclosed).
+
+3. LOOK AT EVERYTHING
+When you enter a room type LOOK AT THE ROOM. When you enter a street, type LOOK
+AT THE STREET. When you want to talk to a woman, type TALK TO THE WOMAN. The
+descriptions and close-ups offered may provide valuable clues.
+
+4. PLAY WITH A FRIEND
+When it comes to playing Leisure Suit Larry, more heads are better than one.
+You may find it very helpful, and more fun, to go through this game with a
+friend.
+
+5. A FEW CHOICE WORDS
+This 3-D Animated Adventure Game understands a number of verbs such as:
+BLOW UP		EAT		ORDER
+BUY		GET		READ
+CHANGE		GIVE		TAKE
+COUNT		JUMP		UNDRESS
+CUT		KISS		USE
+DRINK		LOOK		WEAR
+DROP		OPEN
+
+Naturally, not all of these words are understood in every situation. (This is a
+grphic adventure after all), nor will these words all fit into one sentence,
+but you can string these words into commands such as "COUNT THE MONEY" and "USE
+THE KINKY DEVICE".
+
+6.  YOU'VE GOT TO BE OPEN MINDED
+If it's silly, rude, dirty or funny, Al Lowe and Mark Crowe probably thought of
+it when they were writing this program. Some of the puzzles in this game may
+require deranged thinking to solve.
+
+You should try anything you can think of. After all, no one ever got a social
+disease from a keyboard, and you have your RESTORE GAME function if things
+really backfire on you.
+
+7. IF YOU STILL CAN'T FINISH
+Feeling frustrated? Can't finish what you started. Is your wife making fun of
+you?
+
+Even the best adventurers sometimes can't complete their tasks. (For text
+adventure players, this is almost a chronic disorder.)
+
+For this reason, hint books for all of the 3-D Animated Adventures are
+available. You can order the hint book for this game using the order form in
+this package. Don't be embarrassed, it happens to us all sometimes. If you just
+want to talk about your problem, call the Sierra Customer Support Line at
+(209)683-6858 or the Sierra Bulletin Board Service at (209)683-4463. (We
+promise to be discreet).
+
+WARNING!  THE FOLLOWING DOCUMENTATION IS FOR BEGINNING ADVENTURE GAME PLAYERS
+ONLY. THE CONTENTS INCLUDE ANSWERS TO SOME OF THE GAME'S PUZZLES AND HINTS THAT
+EXPERIENCED ADVENTURERS MAY NOT WISH TO SEE. CONTINUE READING ONLY IF YOU ARE
+HAVING DIFFICULTY GETTING STARTED WITH LEISURE SUIT LARRY IN THE LAND OF THE
+LOUNGE LIZARDS.
+
+YOUR FIRST VISIT....BEGINNING "LEISURE SUIT LARRY."
+
+You start in front of Lefty's Lounge.
+Type:
+>INVENTORY (This command gives you a listing of all your possessions.)
+>LOOK AT THE SIGN (To abbreviate commands simply type:
+>LOOK SIGN)
+>LOOK AT THE STREET
+>LOOK AT THE SIDEWALK
+>LOOK AT THE WINDOW
+>LOOT AT THE MAT
+>LOOK AT THE DOG (This is good for a few laughs).
+
+Walk up to the door. Type:
+>LOOK AT THE DOOR
+>OPEN THE DOOR
+The sceen will change.
+
+Walk inside the bar. Type:
+>LOOK AT THE PEOPLE
+>LOOK AT THE PICTURE
+>LOOK AT THE MOOSE
+>LOOK AT THE FAN
+>LOOK AT THE BAR
+>LOOK AT THE WALL
+
+Walk to the vacant stool. Type:
+>SIT DOWN
+>TALK TO THE BARTENDER
+>ORDER A BEER
+>ORDER A WINE
+>ORDER A WHISKEY
+>STAND UP
+
+Try walking around. Walk over to the girl. Type:
+>LOOK AT THE GIRL
+>TALK TO THE GIRL
+
+Walk over to the jukebox. Type:
+>LOOK AT THE JUKEBOX
+>PLAY THE JUKEBOX
+
+Walk to the closed door on the right side of the room. Type:
+>OPEN THE DOOR
+>KNOCK ON THE DOOR
+>OPEN SESAME (OR ANY OTHER WORD WHICH COMES TO MIND)
+
+Walk through the doorway on the northwest side of the room.
+
+The screen will change. Type:
+>LOOK AT THE ROOM
+>LOOK AT THE WALL
+
+Walk over to the table. Type:
+>LOOK AT THE TABLE
+>TAKE THE ROSE
+>LOOK AT THE ROSE
+>LOOK AT THE DRUNK
+
+Walk over to the drunk. Approach him as close as possible (walk between his
+legs). Type:
+>TALK TO THE DRUNK
+HINT: PERHAPS IF YOU DO SOMETHING FOR THE DRUNK, HE'LL DO SOMETHING FOR YOU.
+
+Whenever your breath turns bad, use your breath spray. Type:
+>USE THE BREATH SPRAY
+
+Walk to the door on the right. Type:
+>LOOK AT THE WALL (Repeat this command until the message repeats.)
+
+TAKE NOTE OF THE PASSWORD FOR FUTURE USE.
+
+Walk over to the toilet. Type:
+>LOOK AT THE TOILET
+>LOOK AT THE TOILET PAPER
+>GO TO THE BATHROOM (Wait for the computer to respond. It will make a couple of
+tasteless remarks.)
+>STAND UP
+
+Walk over to the sink. Type:
+>LOOK IN THE MIRROR
+>LOOK AT THE SINK
+>TAKE THE RING
+>LOOK AT THE RING
+>WASH HANDS
+
+You are now ready to leave this room and continue on your adventure. By the
+way, type:
+>FLUSH THE TOILET
+before you leave. It's nice to show some respect for your fellow adventurers.
+
+Happy adventuring!
+
+-------------------------------------------------------------------------------
+
+These docs brought to you by the courtesy of Southern Star.
+ 

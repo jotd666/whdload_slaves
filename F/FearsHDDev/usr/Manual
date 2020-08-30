@@ -1,0 +1,370 @@
+
+                   ______________________________________
+                  / | \_ ___ç   /   / ___ç__å____  \_ __/
+                 /  _  / __)/  /\  /\  _//  \|  /  // __)
+                /   | /  é /  / / /  \ |/    |  õ  ô  é  \
+                \___è \____ç____ç____/ |\____è  |\__ç____/
+                ----|     \-sHy!---|   |-----|  |PreSENtS
+                    ä------'       ä---ã     ä--ã
+                        FULL DOCUMENTATiON TO FEARS
+                     TYPED UP BY iGGY/HELLFiRE 29/9/95
+
+
+
+                         FULL DOCS TO FEARS -AGA-
+
+TYPED BY IGGY/HF
+
+We at Manyk are committed to providing you, the games player with the very
+best entertainment possible. We are always interested in hearing from you
+with comments about our games, new games ideas or suggestions.
+
+We are always lookgn for new programming or artistic talent and are
+extremely interested in hearing from anybody out there who believes that
+they "can do it better". Feel free to contact us at the address on the
+inside back page of this manual for the best service and advice in the
+industry,
+
+Fears is a 360 degree, 3D arcade game specifically written for the Amiga
+1200, 4000 and CD32 machines and featuring:
+
+Over 1.5 meg of graphics.
+1 meg of music and sound effects.
+30 fearsome levels.
+12 different monster types including an invisible one.
+2 end of level bosses
+
+The aim of the game.
+
+Similarly to Frankenstein of older times, Professor Bloodheart believes
+that by the use of genetic engineering he can manipulate creatures to
+become is allies in his quest for world domination. He has installed
+himself within a dark and complex tower of secret rooms and passages
+guarded by the unfortunate mutations of his experiments. Captured by
+Professor Bloodheart yuo have escaped from his clutches.
+
+Your mission, if you decide to accept it, is to fight your way through
+hordes of his mutants ever onwards towards your final confrontation with
+the mad Professor himself. The tower is filled with tricks, traps, stairs,
+passageways and secret rooms. Scattered around are various weapons and
+potions to aid you in your quests well as heaps of treasure which will
+increase your score.
+
+Loading the game
+
+You will require an Amiga 1200/4000/CD32 to play the "floppy" version of
+"Fears" or a CD32 or compatible CD Rom drive for your A1200/4000 to play
+the CD version.
+
+Insert disk 1 in drive A (?) (LAMERS THIS AINT A PC ITS AN AMIGA!)
+The game will load and you will be presented with the main menu screen.
+
+The menu screen
+
+Start game       Loads "FEARS".
+Load Game        Loads any game save or level created in the editor.
+Options          Allows you to adjust the graphics level. This can also be
+done during the game using the "F" keys.
+Edit maze        Loads editor.
+Difficulty       Allows you to set the difficulty level of the game.
+Null modem       Should be set to on if you are linking two machines
+together.
+
+Controls
+
+The game may be played with either keyboard, mouse, joystick or CD32
+compatible gamepad.
+
+Keyboard:
+
+Up arrow          Move forward
+Up arrow+return   Run
+Down arrow        Move backwards
+Right arrow       Rotate right
+Left arrow        Rotate left
+Right Alt key     Step to the right
+Right Amiga key   Step to the left.
+
+Select weapons with the number keys:
+
+1. Knife         available at the start of the game and only supplied as a
+last resort should you run out of ammo. If you do not find ammo very soon
+you are likely to perish quickly.
+
+2. Rifle         available at the start of the game. Single shot shotgun.
+Requires ammotype #1.
+
+3. Machine gun   (when available) rapid fire automatic weapon. Requires
+ammotype #1
+
+4. Bazooka       (when available) Single shot, but inflicts heavy wounds.
+Requires ammo #2
+
+5. Plasma gun    (when available) Most powerful weapon in the game.
+Difficult to find but it is simply lethal to your enemies. Requires ammo
+#3
+
+6. Circular saw  (when available) creates mayhem at close quarters but of
+no use whatsoever in a long range shoot out.
+
+Other Keys 
+
+Escape button    quit game or exit any screen in editor.
+
+Tab              displays a map of the current level. You are represented
+as a red dot. The curent direction you are facing is shown by the compass
+needle.
+
+Space bar        Opens doors, secret paths and uses lifts.
+
+Shift key        Fires/uses current weapon.
+
+F1  Dithering on/off
+F2  Ground and ceiling textures off/on
+F3  Walls textures off/on
+F4  Window size 1 (max)
+F5  Window size 2
+F6  Window size 3    
+F7  Window size 4 (min)
+
+Using mouse ( in addition to keyboard )
+
+Right mouse button               Move forward
+Right mouse button + return key  Run
+Left mouse button                Fire/use curent weapon
+Move mouse back + right button   Move backwards
+Move mouse right                 Rotate right
+Move mouse left                  Rotate left
+
+Using a joystick ( in addition to keyboard )  
+
+Up     Move forward
+Down   Move backwards
+Right  Rotate right 
+Left   Rotate left
+Fire   Fire/use current weapon
+
+Other items in the game
+
+Ammo           there are three types of ammo in the game. There is a counter
+for each ammo type displayed on the screen. We would advise that you do not
+waste rare ammo on low level enemies.
+
+First aid kit  Restores your health, essential.
+
+Red flask      Protection from the effects of acid etc. for a limited time.
+"Protected" is highlighted on screen during this time.
+
+Treasure       Jewels, gold bars etc increases your score.
+
+Enjoying link play
+
+"Fears" may be played by two people on different Amigas providing the
+machines are joined by an appropriate cable. Select the option from the
+main menu and load the game on the first machine. Once the game has been
+loaded on the first machine then it may then be loaded on the second. If
+different speed machines are joined then Fears will run at the speed of the
+slower of the two machines.
+
+Using the editor 
+
+Included with the game is a level editor which with practice will allow you
+to create your own levels to play in Fears. this is a simplified versiom of
+the actual editor used to create "FEARS" which we hope will provide you
+with hours of enjoyment. You will not be able to construct some of the more
+difficult effects used in the game. (eg doors activated by distant switches
+are not allowed ) as this requires some specialist knowledge. However you
+will be able to create quite complex mazes which should be great fun
+particularly in "link play". We should be pleased to receive your efforts
+and if we have enough we will make them available via an add on disk.
+
+WE STRONGLY ADVISE THAT YOU CAREFULLY READ THIS SECTION OF THE MANUAL IN
+CONJUNCTION WITH THE DEMO LEVEL SUPPLIED BEFORE EMBARKING ON YOUR OWN
+MASTERPIECE. PAY PARTICULAR ATTENTION TO THE USE OF BOTH SHAPE EDITORS.
+
+The editor at first sight will appear daunting to use but with patience and
+practice you should soon be producing complex mazes. To begin with we
+recommend that you learn to create simple rooms joining them by doors and
+staircases before advancing to more complex shapes.
+
+The editoe is loaded by selecting EDIT MAZE from the main menu and is
+controlled by the use of seven screens accessed by the keys F1  to F7 or by
+use of a push button pad in the top right hand corner of each edit screen.
+Detailed below is a description and use of each of these seven screens.
+
+There is a demo level in the editor when it is loaded. Remember that these
+screens will need to be removed from the editor before you can start work
+on your own masterpiece. Select "NEW"
+
+F1  SHAPE EDITOR
+
+On this screen you design the shape and heights of your maze. There are
+also icon words for:
+
+Load / save          save up to 3 levels on a standard formatted disk.
+Please ensure that you have a formatted disk to save on before designing a
+level.
+
+New                  clears everything in the current level.
+
+Clear                Clears current screen
+
+Player               Allows placement of starting position of each player.
+
+Direction arrows     Used to select the direction a player is facing at the
+start of a level.
+
+Placing players on the map
+
+This is acheived by 3 left button presses on the mouse. Click left mouse
+button on the word / icon "PLAYER" once. Click right mouse button a second
+time on the word / icon "PLAYER" and then move the mouse pointer to the
+position on the layout grid in which you wish to place the player. Select
+right mouse button and the player will be placed in the appropriate
+position facing in the direction indicated by the direction arrows. If you
+wish to change the direction a player is facing then us the direction
+arrows.
+
+Designing a maze shape
+
+The maze is viewed from above in the large layout grid window. On the right
+hand side of the screen are a range of colours from turquoise (lowest) to
+pink (highest). Each colour represents a different height within the
+maze. Thus a floor coloured in a shade of blue is lower then one in a shade
+of red. Within each colour band there are eight diffeeent shades. Each
+shade represents a level a step higher or lower than one immediately above
+or below it.
+
+This sounds complicated but if you wish to build a flight of stairs for
+example that ran from an area at height dark blue then you would place on
+the map a series of squares using that colour range. Just try it and you`ll
+soon pick it up.
+
+Using the left mouse button, select a colour from the right hand bar and
+create your floor areas. Each area needs to be surrounded by a wall and
+naturally to create this effect you should choose a colour for the wall
+that is higher than the level you are surrounding. As a rough guide a wall
+should be eight colour bars higher than the floor that it surrounds. This
+same technique is used to create a complete overhead view of the your maze.
+You may make the maze as small or as large as you like. You are only
+limited by the size of the grid. 
+   
+F2 ADVANCED SHAPE EDITOR
+
+This is similar to the editor om F1 but now you can also see your design in
+profile. The main screen is divided into two main areas. The top view is an
+overhead view as in F1. you may scroll the map of your maze up and down
+using the arrow keys. As each section moves under the highlight bar that
+runs across the upper part of the screen a side on view of that section of
+the maze is displayed in the lower window. In this lower window you will
+notice that there is are height bars depicting the floor height of each
+level of your maze. It will normally appear as two walls with a gap in
+between. You need to add a ceiling.
+
+Adding a ceiling
+
+This is achieved by selecting one of the small bars immediately at the top
+of the lower section with the right mouse button and bringing it down to
+meet the top of the surrounding walls. This will set a height which you
+must continue across the whole of the room if you wish to create a room
+with a ceiling of uniform height. Continue to scroll the map in the upper
+section under the highlight bar setting each ceiling height as you go. With
+practice you will be able to create variable height ceilings and walls even
+within the same room setting.
+
+F3 ITEMS EDITOR
+
+On this screen you can place items and monsters in the game. You are
+presented with an overhead view of your maze ( remember to "CLEAR" any of
+the demo maze.) On the rigth hand side there is a list of items/monsters
+that can be placed on the level. Select an item/monster with the left mouse
+button and place it where you want in the maze, pressing the left mouse
+button. To erase something press the right mouse button.
+
+You are allowed to have a maximum of 999 items and 63 aliens on a level. By
+pressing the "tab" key you can view where all the items of the same kind
+are situated.
+
+F4 TEXTURES EDITOR
+
+This screeen is used in conjunction with the textures selection screen (F5)
+to place a texture on walls, ceilings and floors.
+
+There are a range of buttons immediately above a right hand panel which
+control the main area of the screen display:
+
+TEXT. WALL UP         This refers to walls that come down from the ceiling.
+
+TEXT. WALL DOWN       This refers to walls that come up from the floor.
+
+TEXT. CEILING         Refers to the ceiling.
+
+TEXT. FLOOR           Refers to the floor.
+
+In the right hand panel is a list of numbers and colours that refer to the
+various textures available. Some are specified particularly for ceilings
+and floors whilst others are doors and end of level. You can if you wish
+use wall textures for floors and floor textures for walls. The layout is
+just our opinion.
+Select, using the buttons the area on which you wish to add a texture. Then
+select the texture you wish to add with the left mouse button from the
+current list in the right hand panel. Select an area on the main grid which
+depicts your maze and add the texture to this area with the left mouse
+button.
+When selecting a texture for a floor or ceiling the whole of the floor or
+the whole of the ceiling will default to the selected texture unless areas
+are done individually.
+
+F5 TEXTURES SELECTION
+
+This screen is used in conjunction with the TEXTURES EDITOR (F4). The
+textures available are divided into three separate sections. You can
+highlight each section by using the small counter arrows on the right hand
+side of the screen. Each bank of texture corresponds to the panel on the
+right hand side of the screen F4 i.e the top left hand texture is for the
+floor, whilst the bottom right hand texture can be applied to an exit. Once
+you have selected your textures return to the TEXTURES EDITOR (F4) to use
+them in your maze.
+
+F6 THE MONSTERS LIST
+
+This screen is used to select the monsters that can appear in your maze.
+You are allowed to have three monster types in each maze. Select a
+compartment in the lower part of the screen by selecting the appropriate
+button with the mouse and then select which monster you wish to place in
+this compartment. These compartments correspond to monsters 1,2 and 3 on
+the ITEMS EDITOR (F3)
+
+F7 THE DOORS EDITOR
+
+Of course you will wish to have doors in your maze. You may have up to 63
+doors in a level. The 64th door is always used as the exit of the level.
+Using the counter in the right hand panel select a door number. To place a
+door on the layout screen select a position with the mouse and press the
+left mouse button. You will notice that the right hand panel gives a
+profile view of the door in a closed and open position. Adjust the heights
+of the open position (ensuring that the surrounding walls are the same
+height as the doorway.). There are eight different settings possible for
+each door which correspond to the positions of the switch which operates
+it. These can be altered with the left mouse button. Work your way through
+the level placing and setting all the doors that you require. Remember that
+the END OF LEVEL EXIT MUST ALWAYS BE NUMBERED AS DOOR 64.
+
+If you wish to delete a door this can be done by clicking on the
+icon/letter "D" in the right hand panel.
+
+Rememeber creating a level involves quite a lot of careful and thoughtful
+planning and attention to detail. At each stage of design you can test out
+the level by saving and then reloading it into the game environment. If
+walls are too high or ceilings too low you can then return to the editor
+and make the adjustments necessary. We look forward to seeing your efforts
+!!!!!
+
+PUBLISHED BY :
+MANYK LTD
+70 SPRINGFIELD AVENUE
+MERTON PARK
+LONDON
+SW20 9JU
+
+

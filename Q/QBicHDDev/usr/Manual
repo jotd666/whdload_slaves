@@ -1,0 +1,181 @@
+
+COPYRIGHT BLURB:
+
+    The Qbic program, its code, graphic images, sound effects, music
+    score and documentation are copyright (C) 1992 Ronald Pieket
+    Weeserik.
+    It may be distributed freely, provided that both the program and
+    the documentation are present and unaltered. The following files
+    must be included in any distribution:
+
+    QBIC     - The main program file.
+    QBIC.DOC - The documentation file. (The one you are reading!)
+
+SHAREWARE BLURB:
+
+    THIS GAME IS CHARITYWARE...
+
+    If you enjoy playing Qbic, and intend to keep it, you are asked
+    to make a donation to a deserving charity of your own choice.
+
+    Consider for instance:
+
+        The Terrence Higgins Trust
+        FREEPOST
+        52-54 Gray's Inn Road
+        London WC1X 8BR
+
+    The Terrence Higgins Trust has played leading part in the fight
+    against AIDS, and must continue doing so.
+
+FEEDBACK:
+
+    Any feedback, postcards or plain chocolates you may send to:
+
+        Ronald Pieket Weeserik
+        26 Saltoun Road
+        London SW2 1EP
+        England
+
+    Or Email:
+
+        ronald@cix.compulink.co.uk
+
+GAME HISTORY:
+
+    Qbic is loosely based on my second commercial game, called
+    Fuzzball, published in 1986, released only on the MSX format.
+    (I was paid five hundred Dutch guilders for that - about one
+    hundred pounds in those days.)
+    In the years that followed I made programming games my job, and
+    produced seven MSX and four Amiga/ST titles, among which Amiga
+    Silkworm, The Ninja Warriors, SWIV and Rodland.
+    Fuzzball has always been my personal favourite. Both because of
+    its playability and its history. However since I don't own an MSX
+    computer anymore, an Amiga version was called for.
+    I could not call it Fuzzball, because another game has recently
+    been released with that name - a game that has nothing to do with
+    my original MSX Fuzzball.
+
+PLAYING THE GAME:
+
+    You control Qbic with the joystick. Qbic can only jump
+    diagonally. Therefore, you must turn the joystick by 45 degrees
+    in clockwise direction. So 'up' will become 'back/right', 'down'
+    becomes 'forward/left', 'left' becomes 'back/left', and 'right'
+    moves Qbic 'forward/right'. (There is an alternate control method
+    available, see the 'BUTTONS AND KEYS' section.)
+
+    Be careful not to jump off the pyramid - you can't fly! Jumping
+    onto a spinning disk will take you back to the top of the
+    pyramid.
+
+    The object of the game is simple: on each pyramid, change the
+    colour of all the cubes into the target colour. The target colour
+    is shown in the top left hand corner of the screen. You will
+    encounter various characters while doing that.
+    In order of appearance:
+
+    Spheric - You will see a lot of these. It is the simplest of your
+    enemies. All you can do is dodge them.
+
+    Snakey - Bounces down the pyramid as a large purple ball. Once
+    hatched, he will pursue Qbic relentlessly. If you can, jump onto
+    one of the spinning discs, just as Snakey is about to get you.
+    This animal must be far-sighted. Mind you, his eyesight improves
+    with age!
+
+    Cling - This is what is called a 'sidewalker'. Disregarding
+    newtonian physics. Hint: if you time it right, you can jump over
+    them!
+
+    Cool - Blue, that means he is safe to touch. Cool as he is, he
+    doesn't look where he's going and will jumble up your work. Jump
+    on him to send him away.
+
+    Magic - These blue crystals come like a gift from heaven! When
+    touched, their magic spell will freeze everything on the pyramid,
+    apart from Qbic himself. During this magic time you may jump
+    around freely, but be quick - it won't last forever...
+
+BUTTONS AND KEYS:
+
+    Press the fire button to begin a new game. During the game, the
+    fire button is used to speed up the bonus countdown and the 'Get
+    Ready!' screen.
+    Pause the game by pressing the 'P' key, or the space bar. Press
+    again to resume play.
+
+    The escape key aborts the game, and takes you back to the title
+    screen. During the attract sequence, the escape key is used to
+    turn the page.
+
+    At any time, but not during the game, pressing F1 or F2 will take
+    you to the control selection screen. If you find the diagonal
+    joystick hard to get used to, try the 'straight' control method.
+    See what you like best. Use F1 or F2 to select.
+
+    At any time, but not during the game, pressing the HELP key will
+    show you the info screens. Press the space bar or 'P' to pause
+    the page, so you can read it at your own tempo.
+
+    At any time, pressing 'Ctrl-C' will end the program, and return
+    you to the shell/workbench. If you have entered a new high score,
+    the new table will be saved onto disk.
+
+WARNING:
+
+    Qbic will take over the machine. It will do this in a relatively
+    nice manner, but if you want to make trouble, you can.
+    Don't try to multitask.
+    Don't try to access the disk once Qbic has loaded.
+    I have made Qbic as safe as I could, but I cannot make any
+    guarantees.
+
+NOTE:
+
+    The program will try to save the high score information to the
+    current directory. If you do not want the program to write to
+    your floppy, flip the write protect tab, and cancel the
+    requester. If you are running Qbic from a hard drive, make sure
+    that the current directory is ram:, or something like that.
+
+NOTE TO 512k RAM AMIGA OWNERS:
+
+    Qbic needs about 420k to run. On a 512k machine, with the
+    operating system taking up more than 80k that is a close shave!
+    You will probably not be able to run Qbic from the workbench.
+    Try this:
+
+    1)  Make up a floppy disk with Qbic, Qbic.doc, Run and EndCli
+        on it.
+
+    2)  Create a startup-sequence that reads:
+            RUN >NIL: <NIL: QBIC
+            ENDCLI
+
+    3)  Remember to make the disk bootable by using Install.
+
+    4)  Disconnect external drives, and other periphials that may use
+        up memory. (Remember to switch the power off first!)
+
+    5)  Boot the machine, and keep your fingers crossed.
+
+    This procedure has been tested and found to work on a 512k A500
+    with the 1.3 operating system.
+
+    However I would strongly recommend that you consider upgrading
+    your machine to 1 Meg.
+    Memory expansions are quite cheap nowadays, and many games and
+    applications use/need it. 1 Meg machines are now considered to
+    be standard, and if you don't upgrade, you will be left behind.
+
+NOTE TO MAGAZINES:
+
+    The competition for spelling my name correctly is still open...
+
+THANKS:
+
+    To Ned for help with the graphics. To John for saying 'Boit!' for
+    no apparent reason. To all the Puntettays for eating cheese.
+

@@ -1,0 +1,65 @@
+Short : HD-Installer for Wolfchild - (c) 1991 Core Design Ltd
+Type  : game/patch
+Author: Galahad / Fairlight (gldflt@blueyonder.co.uk)
+
+ 
+ This install applies to "Wolfchild" © 1991 Core Design Ltd.
+ Slave requires WHDLoad V14+.
+ Game needs 0.5 MB Of Chipmem & 1.5MB of Fastmem (for preload option and reloc)
+
+ SUPPORTED VERSIONS
+ ------------------
+ 
+ - Original version
+ - BTTR version
+
+
+ FEATURES
+ --------
+
+ - Full Loading from HD 
+ - Lame-o-Protect removed (RNC Copylock)
+ - Installer and nice Icons by Frank!
+ - Quit Option (DEL key)
+ 
+ Thanks to John Regent for the images!
+
+ VERSION 1.2 (01.03.2020) done by JOTD:
+ - CD32 joypad controls
+ - blue/second button jumps (CUSTOM2=1) (issue #003750)
+ 
+ VERSION 1.1 (07.11.2017) done by StingRay:
+ - Bplcon0 color bit fixes
+ - Interrupts fixed
+ - Blitter wait added
+ - 68000 quitkey support
+ - Default quitkey changed to F10
+ - Source code included
+
+ CD32 controls
+ -------------
+ 
+ - BLUE: jump (if CUSTOM2=1)
+ - PLAY: pause
+ - REV+FWD: quits current game
+ - REV+FWD+PLAY (when game is paused): quits to workbench
+ 
+ EXTRA NOTES
+ -----------
+ 
+Hmmm..... not sure about this one!  It's ok, but its very formulaic, and I have
+to question why its in 25Mhz?  There isn't a great deal going on in the game!
+
+Usual Knobbylock protection, though this one had 12 modifications made by the 
+protection, but as per usual, the protection was as formulaic as the game!
+
+There is one bug in the Intro sequence that I couldn't track down, and thats 
+right at the start where its supposed to write the word 'Wolfchild', but it
+doesn't!  I'm certainly not going to stress about it..... you'll all watch it
+once and realise its still a lame intro anyway!
+
+See you all again! :)
+ 
+Kindest Regards, Galahad & Frank
+
+END.

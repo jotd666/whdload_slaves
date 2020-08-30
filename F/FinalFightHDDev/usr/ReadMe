@@ -1,0 +1,73 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Final Fight" © 1991 Capcom
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ The installed program requires 1.0 MB ChipMem and 0.5 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+ (There is a "low memory" 512k slave provided which only needs 0.5 MB chipmem and 0.5 MB othermem)
+ 
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+This installer requires the two original Final Fight disks. It supports two
+versions. The original one and the KIXX re-release.
+
+ version 1.7 (02.04.2020) done by JOTD:
+ - added quitkey for 68000 machines (issue #0004203)
+
+ version 1.6 (21.07.2016) done by JOTD:
+ - removed remaining floppy drive access on KIXX version too
+
+ version 1.5 (02.07.2016) done by JOTD:
+ - removed remaining floppy drive access (SNOOP)
+
+ version 1.4 (06.06.2016) done by JOTD:
+ - 1MB slave provided: music during menu & fast character mirror supports
+  (needs reinstall or decrunching of the "final" executable in "data" directory)
+ - Install script rewritten from scratch
+ 
+ version 1.3 (29.02.2016) done by JOTD:
+ - now works on 68000 (access fault fix code introduced an odd address register value)
+ - files can be crunched using ProPack, Crunchmania, TPWM, Imploder
+ - installation subdir renamed to "data"
+ - source code included
+		
+ version 1.2 (??) done by Gore Design:
+ - Support for KIXX re-release added. Thanks to Andrew Barker for sending me his original
+ - Icons changed
+
+ version 1.0 and 1.1 (??) done by Gore Design:
+ - Supports SPS version 1329
+ - Slave now fully pc-relative
+ - Exit key changed to Numl
+ - Access faults removed
+ - Disk protection removed
+ 
+To activate cheat mode type SHERIFF FATMAN while pausing.
+
+If you only have 512k chipmem and 24-bit expmem, you can use "FinalFight_512.slave" instead of the main one.
+The game has a lot of issues with 32 bit memory, which explains it's better to remain on chipmem for high end machines.
+
+
+
+

@@ -1,0 +1,128 @@
+ Short:	 	HD Installer for Virocop
+ Author (AGA):	JOTD
+ Author (ECS):	Keith Krellwitz/Abaddon
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+
+ Virocop AGA
+ ==============================================================================
+
+ This install applies to "ViroCop" (AGA) © 1995 Graftgold.
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ The installed program requires 2.0 MB ChipMem and 0.5 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ The game requires an installed A1200 Kickstart 3.1 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick40068.A1200". The image can be extracted from a A1200 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick40068.A1200.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick346.lha" on aminet.
+
+ version 1.5 (01.04.2020):
+ - controller issue fixed once and for all with all control options for both gameports.
+   As mouse/joystick autodetect isn't great, it is now possible to force mouse or joystick
+   (If CD32 gamepads are connected, those have no effect) (issue #0004322)
+   
+ version 1.4 (02.08.2019) done by JOTD:
+ - re-fixed controller issue: reverted back to emulated lowlevel library now that it's been
+   fixed (issue #0004093)
+
+ version 1.3 (05.05.2013) done by JOTD:
+ - fixed controller issue: reverted back to real lowlevel library (issue #002297)
+
+ version 1.2 (04.05.2013) done by JOTD:
+ - fixed access fault on game over (issue #002783)
+ - source code included
+
+ version 1.1 (07.05.2009) done by JOTD:
+ - reassembled with latest kickemu (should solve kickstart not found problem)
+ - uses lowlevel library emulation instead of original one (freezes with WinUAE)
+
+ version 1.0 (01.01.2003) done by JOTD:
+ - initial release
+ - VBR access removed
+ - nice icons included
+ - manual included
+ - codes included
+
+
+ Virocop ECS
+ ==============================================================================
+ 
+ This install applies to "Virocop" © 1995 Renegade
+
+ Requirements:
+ -------------
+ The install requires WHDLoad and RAWDIC to be in the path. Both can be found
+ in the WHDLoad package.
+ To install from a different drive than DF0: select installation mode Expert.
+ 
+ The installed program requires 1.0 MB ChipMem (+2.2Mb other memory for preload 
+ option).
+ 
+ It can be quit by pressing F10 (key can be changed with Tooltype "QuitKey=").
+ 
+ The installed program requires WHDLoad 17+
+
+ 
+ Features:
+ ---------
+ - System friendly disk imager.
+ - Manual protection removed
+ - Trainer (Custom1=1)
+ 	Infinite Energy
+ 	Infinite Cash
+ 	Infinite Lives
+ - Custom2=1 - Disable blitter patches
+ - Load/Save registration to HD (saves to Disk.1 image)
+ - Patched quit for 68000
+ - Load/Save high scores
+ 
+ History:
+ --------
+ version 1.0-B (03-08-2019):
+ - reassembled with vasm. source adapted to fully relocatable code. No need to update for that
+ 
+ version 1.0 (03-23-2012) done by Keith Krellwitz (Abaddon):
+ - System friendly disk imager.
+ - Manual Protection Removed
+ - Trainer (Custom1=1) - Infinite Energy, Cash & Lives
+ - Load/Save registration to HD (saves to Disk.1 image)
+ - Load/Save high scores
+ - Patched quit for 68000
+ - Fixed 1x access faults 
+ - Fixed issue with press fire screen.  Issue was with the
+   diskswap routine.
+ - Fixed 2x copper snoop bugs
+ - Custom2=1 - Disable blitter patches
+ - Fixed access fault which occurs right before the game over screen.
+ 
+ Contact:
+ --------
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, EXPCHIP, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+

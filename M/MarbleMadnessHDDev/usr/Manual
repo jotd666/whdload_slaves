@@ -1,0 +1,48 @@
+			     Marble Madness
+
+Getting Started
+
+Start your Amiga with Kickstart and insert the Marble Madness disk at the
+"Insert Workbench" screen.  If your Amiga is already on, reboot with
+Control-Amiga-Amiga and insert the Marble Madness disk.  When the Workbench
+appears, double-click the Marble Madness disk icon to open the disk window,
+then double-click the Marble Madness program icon to start the program.
+
+After a few moments the title screen appears, followed by the Marble
+Madness options menu.  Only the mouse can be used to make choices in the
+options menu.  The default game play options are for one player using a
+joystick plugged into the rear port.  Click GO! at the bottom of the screen
+to play the game with the default settings.
+
+Changing Options
+
+You can change any of the other options by clicking the appropriate option.
+ Click Number of Players to toggle between one or two players.  The default
+control device for the Blue Player (Player 2) is the mouse plugged into the
+front port.  You can change either player's control device and port by
+clicking the Input Device, and the Red Player or Blue Player options.
+
+In addition to mice and joysticks, Marble Madness also supports two types
+of trackballs.  Trackball 1 is a device that behaves just like a joystick
+internally, while Trackball 2 is a device that behaves like a mouse
+internally.  Refer to the documentation provided with your trackball to
+determine which setting you should use.
+
+The final player-adjustable option is the Difficulty level.  There are
+eight levels of difficulty numbered from 0 to 7.  0 is the easiest level
+and should be used by first-time players.  Each time you click Difficulty,
+the option advances to the next highest level of difficulty.  Clicking at
+level 7 returns the option to 0.
+
+When you are finished playing Marble Madness, eject the program disk and
+reboot your Amiga.
+
+Controlling Your Marble
+
+The Amiga version of Marble Madness contains an option that lets you
+turbocharge your marble.  Simply press the joystick, trackball, or left
+mouse button as you steer to give your marble an extra burst of speed.
+
+============================================================================
+         DOCS PROVIDED BY  -+*+-THE SOUTHERN STAR-+*+- for M.A.A.D.                                                               
+============================================================================

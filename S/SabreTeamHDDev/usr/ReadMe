@@ -1,0 +1,114 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Sabre Team" © 1992/1994 Krisalis Software Ltd.
+
+ Slave requires WHDLoad V16+.
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+
+ SUPPORTED VERSIONS
+ ------------------
+ 
+ - 2 Disk Original Release (ECS VERSION)
+ - 2 Disk Original Release (ECS VERSION) Another version
+ - 5 Disk Original Release (AGA VERSION)
+ - CD³² version
+
+ floppy version (Galahad):
+
+ Game needs 1.0 MB Of Chipmem & 2.1MB of Fastmem (for preload option)
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+
+ FEATURES
+ --------
+
+ - Full Loading from HD
+ - Lame-o-Protect removed (Manual Protection)
+ - Game decrypter relocated to fast ram
+ - ECS only protection removed (to force you to buy the AGA version)
+ - Load/Save game to hard drive
+ - Savefile optimised to take up less room
+ - All files needed by game are generated on first runtime
+ - Quit Option (F10 key)
+ 
+ Thanks to Retro-Nerd, Vertigo and Seppo Typpo for the disk images.
+
+ EXTRA NOTES
+ -----------
+ 
+ Don't try and load a save game, unless you have actually saved a game... 
+ Logical I think!
+ 
+ Playtested as much as I can (not my kind of game!), everything appears
+ to operate as it should on 68o20-68o6o!
+   
+ Be patient whilst the game boots up.  I transferred the decrypter 
+ routine to fastmem, but it still takes a while.
+ 
+ Enjoy this install.
+ 
+Kindest Regards, Galahad of Fairlight
+
+ AGA version (JOTD):
+
+ - access faults fixed
+ - source code included
+
+ AGA & CD³² versions (JOTD):
+
+ version 1.2 (27.05.09) done by JOTD:
+ - fixed CD³² version
+ - fixed script for AGA version
+
+ version 1.1 (26.04.09) done by JOTD:
+ - added AGA version
+ - empty savegame load crash workaround (AGA)
+ - sorry no install script for AGA: I don't have disk names, please send diskimages
+
+ version 1.0 (28.01.06) done by JOTD:
+ - CD³² joypad buttons emulated by function keys
+ - access faults fixed
+ - source code included
+ - install/readme rework to merge ECS & CD³² versions
+
+ About AGA version: this one has been sitting on my hard drive for about 3 years
+ because it crashed at the first game load. Then today I stumbled on the game
+ readme which stated that you have to save the game first, or it will crash!!
+ I should have read this file a bit earlier :)
+
+ The installed program requires 2.0 MB ChipMem and 1.0 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ The game requires an installed A1200 or A4000 Kickstart 3.1 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick40068.A1200" (resp kick40068.A4000). 
+ The image can be extracted from a A1200 (resp A4000) with tools like 'GrabKick'
+ or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick40068.A1200.RTB" (resp "kick40068.A4000.RTB")
+ must be installed in the same directory as the kickstart image.
+ It can be found in the archive "util/boot/skick346.lha" on aminet.
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/

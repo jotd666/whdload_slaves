@@ -1,0 +1,2044 @@
+
+
+
+                         /////////////////   /////////////
+                        /////////////////   /////////////
+                            /////  /////   /////
+                           /////  /////////////   /////
+                          /////  /////////////   /////
+                         /////  /////   /////////////
+                        /////  /////   /////////////
+                       The Humble Guy's Humble Dox
+
+                             Proudly Presents
+
+                               Interplay's
+
+                                 Castles
+
+                       Complete Game Documentation
+
+                            Humble Dox 7/03/91
+
+
+
+
+
+  -= STARTING THE GAME =-
+
+  When the Main Menu appears, choose the desired Options. Press and release
+ the right mouse button (or press the Z key if using the keyboard) to trigger
+ the menu. Move the cursor to and select Labour from the menu list and then
+ press hire until it no longer increases the number of workers. This will give
+ you enough labour to start.
+  Go to the Design menu and plot your castle pieces.
+
+ THE
+ Readme.Doc FILE
+
+  As important changes are often made to a computer game after the manual
+ goes to the printer, please refer to the Readme.Doc file before running the
+ game. To view the file type:
+
+  TYPE A:README.DOC
+
+
+  KEYBOARD COMMANDS
+
+ F - Flip view of castle (Front/Back)
+ J - Toggle Joystick Off/On
+ M - Toggle Music Off/On
+ Q - Quit
+ R - Repeat Message (messenger screen only)
+ T - Show Trasury and Infantry (this works only
+     when the messenger screen is active)
+ [ - Slow Message
+ ] - Speed Message
+ 1 - 9 - Move Cursor (Numeric Pad Only)
+ X - Left Mouse Button
+ Z - Right Mouse Button
+ SPACE BAR - Left Mouse Button
+ ESC - Pause Game
+
+
+  -= A Brief History of Medieval Castles =-
+
+ Of all of the works created from human hands, few are as evocative as the great
+ castles of Europe. Built during a time when the great civilizations of the
+ Westem World were strugling to recover from the Dark Ages, the earliest modern
+ castles (the motte and bailey castles) were built to defend against Viking
+ attacks. The Vikings were very good at raiding sparsely defended coastal
+ villages, but had great difficulty attacking these early fortresses; the decline
+ in Viking successes after the year 1100 can be attributed in large part to the
+ castles that were being built throughout Europe. After the Vikings ceased to
+ be a major threat, castles entered the age of Chivalry. Europe began to be
+ consolidated into countries and empires, each owing allegiance to a duke, or a
+ king or an emperor. In order to consolidate their power, the great lords of
+ Europe built castles over the tenritories they conquered. To defend themselves
+ against the great lords of Europe, local lords also built castles. As one might
+ expect from such a situation, the art of castle building progressed at a rapid
+ rate, and the cost of building these huge fortresses bankrupted many noble
+ families and nations.
+
+  The era of castles came to a close by the late 15th Century, when castle walls
+ proved to be no defense against gunpowder weapons such as cannons. For
+ centuries these relics of medieval Europe lay in ruins, ignored by the
+ inhabitants whose land they once defended. In the 18th Century, however,
+ romantic poets and musicians drew upon the Middle Ages for inspiration, and
+ castles once again became important, a symbol of romance, chivalry, and
+ strength. Today, few symbols of the medieval period are as enduring or as
+ powerful as castles.
+
+  The purpose of this program, CASTLES, is to allow you to experience both the
+ romance and the reality of medieval castle-building. At the zenith of
+ castle-building, between 1280 and 1305 A.D., King Edward I consolidated his
+ Welsh conquests by building some of the greatest fortresses ever constructed,
+ in the hopes that the security of these castles would attract English settlers
+ into Wales and assimilate the population. We have fictionalized the characters
+ and changed the names of the nations involved, and added a fantasy world for
+ those who enjoy medieval fantasy, but the castles you can build are based on
+ the actual Welsh castles of Edward I. In this game you are placed on the
+ throne of the kingdom of Albion, and must build your castle amidst political
+ unrest, unfriendly neighbors, and war on two of your borders. You will make
+ the hard decisions and face treachery, ambitious nobles, military disasters,
+ and other things that we don't always associate with the romance of the period.
+ You may wonder why people remember this period with any fondness whatsoever,
+ but hopefully you will have a greater appreciation for the challenges involved
+ in both castle-building and being a king during the medieval period. Perhaps
+ it might even make you appreciate the complexities of engineering and politics
+ in today's world.
+
+  -= OF BASIC MATTERS =-
+
+ FOR THE BEGINNER
+ Once you have learned our interface, CASTLES is an easy game to play. However,
+ if you are a newcomer, especially if you have never played computer games, here
+ is some advice.
+
+  A) The first screen will ask you about difficulty level. The Peasant
+  difficulty level is designed to make the ganie Is easy as possible to play.
+  There is virtually unlimited money, labour, food and military is already
+  purchased, and the castle lay-out is partially done.
+
+  B) There is a tutorial in this manual entitied "Sir Richard's guide to
+  Castle-Building". Read through this tutorial carefully, and practise laying
+  out pieces on the computer screen.
+
+ KEYBOARD and MOUSE
+ It is possible to play this game from either the keyboard or the mouse. This
+ game is considerably easier to play on a mouse, but the keyboard is not
+ difficult to use, with a little practise. The same letter keys "F" for flip,
+ "M" to toggle off music, etc. will work if you are playing from the keyboard,
+ or if you are using a mouse or a joystick.
+
+  To bring up the menu when playing from the keyboard, use the "Z' key Pressing
+ the "Z" key again will restore the screen to a full view.
+
+  To manipulate the pointer from the keyboard, use the arrow keys on the
+ computer's number pad. When you wish to click on an object, use the space bar.
+
+  To play the game with a mouse, simply point to the desired object and click
+ on it with the left mouse button. To bring up the menu, use the right mouse
+ button.
+
+  For a full list of commands, refer to the Reference card.
+
+ OPTIONS
+
+ After you have successfully loaded CASTLES, the first screen that you will
+ see is the Options screen.
+ The Options include:
+
+ MESSENGERS (Yea or Nay): This determines whether you will be visited by
+ messengers. If the answer is "Yea" you will receive a new messenger every
+ month. If the answer is "Nay", no messengers will appear.
+
+ WORLD (Fantasy or Real World: If you are interested in playing in a world
+ where the myths and folk beliefs of the people of the British Isles in the
+ middle ages were true: the Sidhe, dragons, ogres, the Wild Hunt, and wizards,
+ then use the Fantasy option. If you do not wish to play in a world with these
+ fantastic creatures, employ the Real World option. The Fantasy world becomes
+ most evident in the message sequences; playing in a Fantasy world without
+ messengers is something of a waste of time.
+
+ LEVEL (Peasant, Duke, Prince, or King): There are four difficulty levels in
+ the game of CASTLES. The Peasant difficulty level is a practise level, with a
+ partially laid out castle, workers, labourers, and food, and enough money to
+ build any castle you want. Duke, Prince, and King levels are the real game
+ levels. Duke and Prince levels give you a higher starting money value, higher
+ tax values, better relations with the noble factions, the Church, and the
+ people, and easier battles. The highest difficulty level (King) gives you
+ less access to money, less popularity, and harder battles. No one said that
+ being a King was easy.
+
+ CAMPAIGN: In CASTLES, one of the objects is to subjugate the "savage lands of
+ the Celts" by building castles in strategically important areas. If you don't
+ want to engage in a major castle building campaign, then choose the Single
+ Castle option. If you wish to play a short campaign, play a Three Castle
+ campaign. The Eight Castle campaign is the longest and most intense of all of
+ the campaigns. See the section ("Of the Conquest of the Celtic Lands" for
+ further details.
+
+ Note: you can build more than one castle on a level; the Single Castle
+ campaign refers to the game ending after you have conquered a single playing
+ area.
+
+ NAME: The options screen allows you to insert your name, and whether you are a
+ King or a Queen. To determine this, click on the King or Queen to change your
+ character's gender.
+
+ CASTIE NAME: Where the Options screen says: "Building the Castle", you may
+ insert whatever name you desire.
+
+ MAIN MENU
+
+ When you begin the game, click on the right mouse button. This will bring up
+ the main menu, which includes the following options:
+
+ DESIGN: This allows access to the Design submenu. When you click on this
+ option with the left mouse button, the design window will appear, with a
+ number of castle pieces and a slashed red circle. Refer to "Of Castle Design"
+ for more details.
+
+ LABOUR: This allows access to the Labour submenu. When you click on this
+ option with the left mouse button, the Labour menu will appear, allowing you
+ to click on arrows to manipulate the number of labourers at work on your
+ castle. Refer to "Of Labourers and their ilk" for more details.
+
+ TAXES: This allows access to the Taxes sub-menu. When you click on this
+ option with the left mouse button, the Taxes menu will appear, allowing you to
+ set your tax rate and levy taxes. Refer to "Of Taxation and Personal Safety"
+ for more details.
+
+ MILITARY: This allows access to the Military submenu. When you click on this
+ option with the left mouse button, the Military menu will appear, allowing
+ you to hire or fire archers infantry and dig moats where it is allowed by the
+ terrain. Refer to "Military Matters" for more details.
+
+ FOOD: This allows access to the Food sub-menu. This option will allow you to
+ purchase a reserve of food in case of siege. Refer to "Of Food and Its
+ Advantages" for more details.
+
+ OPTIONS: This allows access to a number of functions, including Save Game
+ Load Game, and Quit Game, Speed, and Counsel.
+
+ Speed: CASTLES has three speed levels, which governs the quickness of play,
+ Laboured allows for slow building rate, and gives the player more time to
+ consider his actions. Steady provides for a quicker paced game, while
+ Swift is even quicker than Steady.
+
+ Counsel: Pushing the Counsel button will cause one of your counsellors to
+ appear and give you the state of your relations with important factions
+ in the kingdom, and some helpful (well, sometimes helpful) hints
+ to improve your relations.
+
+  -= OF CASTLE DESIGN =-
+
+ In all sub-menus, the command "Main" allows you to return to the Main menu.
+ The heart of CASTLES is its ability to design a castle, which is done
+ from the design window. When the design window has been trigered,
+ you will see a top-down perspective of the castle grounds. This is
+ referred to as the blueprint. Entering the design window will bring
+ up the top-down view of the castle, and allow you to place pieces on the
+ blueprint. The main pieces are:
+
+ Towers
+
+  There are two tower types: round, and square. Square towers are the earlier
+ form of tower; they are easier and cheaper to build, but its exposed edges
+ render it susceptible to attack. Round towers are more expensive and take
+ longer to build, but are less vulnerable to attack.
+
+ Walls
+
+  There is a single wall type in the game, with three varying thicknesses.
+ Thicker walls provide greater protection, but all take longer to build.
+
+  Walls have two accessories, arrow slits and cauldrons. Arrow slits provide
+ protection for the archers that are stationed on the castle walls.
+ Cauldrons are filled with boiling oil, which is poured on enemy troops
+ that attack the wall in battle.
+
+ Gates
+
+ The center of the castle defense is often the gatehouse. The door is the
+ most vulnerable point of the castle structure, and one which the enemy
+ will likely attack first. Gates take a long time to build, which is one
+ of the reasons why castle builders typically waited until a castle neared
+ completion before the gates were added.
+ Other topics of concern in Castle design include:
+
+ The Keep
+
+ The most important part of the castle is the Keep. This is the
+ central area of the castle, protected by thick walls, strong towers,
+ and sturdy gates. The Keep must be built by the player, constructed
+ from walls and towers. It might be considered a castle within a
+ castle. If the enemy begins to destroy the keep, one's defeat cannot
+ be far away.
+
+ The Eraser
+
+ If a player makes a mistake in the blueprint of the castle, the eraser
+ will correct it. This eraser is a red circle with a line through it;
+ place the eraser on a piece and click on the left mouse button to
+ remove it.
+
+  -= OF LABOURERS AND THEIR ILK =-
+
+ When constructing a castle, there must be a suitable mix of workers
+ for maximum efficiency. If a master builder does not have a sufficient
+ amount of specialized labor, work on the castle will likely slow to a
+ crawl.
+
+  In CASTLES, we have divided the work force into seven categories: six
+ specialists and one general labourer category. In reality, medieval castle
+ building required other types of specialized labour. Records from the
+ building of Flint Castle in Wales has recorded payments to Plumbers, Coalers,
+ janitors, Watchmen, and Messengers. The records also indicate that the
+ total payments of these workers were substantially less than other categories,
+ which indicates that only a few of individuals filled these positions in
+ comparison with other worker types, so it is safe to ignore them.
+  In playing CASTLES, it is easy to overlook one of the most difficult
+ problems facing Edward I in his castle-building, logistics. The resources that
+ were needed to build these castles were immense. Thirty-five hundred
+ workers were hired to build Edward I's masterwork, the unfinished Beaumaris
+ castle. In less than six months, L6500 was spent. This amounted to one
+ and a half million pennies, the principle unit of currency in England.
+ Transporting the wages of the workers for Beaumaris must have been a
+ nightmare. That these magnificent fortresses were built is a tribute to
+ the abilities of Edward I, his master builder Sir James of Savoy, and to
+ the thousands of craftsmen who laboured over a twenty year
+ period to build them.
+  The types of workers employed in the game are:
+
+ DIGGERS: Anyone who has tried to dig a large hole with precision
+ knows that a digger's task is not as easy as it may seem. In
+ castle-building, diggers had to know how to dig the foundations
+ of the castle with precision and quickness. Diggers are more
+ important to the early stages of castle-building than they are in the
+ latter portions, but anyone who wants to build a moat will need
+ to have some skilled diggers directing the operation.
+
+ CARPENTERS: These men know how to knock on wood, and nails, and
+ hammers, and put together scaffolds, and braces, and many other
+ important castle pieces. Castle-building requires an immense amount of
+ materials; during a five month period in 1286, work on Harlech and
+ Conway castles required the purchase of 125,000 nails for each
+ castle. Carpenters are an important component of a castle's work force.
+
+ MASONS: Masons were the backbone of the castle-building labour force. The
+ person who designed and oversaw the building of a castle was known
+ as the Master Mason (or Master Builder); masons received higher wages
+ than the other workers on the castle. Despite this elite status, a mason's
+ life was not an easy one, as they laid stones, mixed and carried mortar,
+ and made certain that the castle walls would be able to withstand the
+ test of battle.
+
+ QUARRYMEN: Stones for castle-building did not come easily. ]n the Welsh
+ castle-building campaign, the quarries were dug as close to the castle
+ as possible, but there are records of stones being brought by oxcart from
+ quarries as far away as twenty miles. At Flint Castle, quarrymen
+ provided over 36,000 stones during the winter and spring of 1280 and
+ 1281. Quarrymen not only provided stones, but also valuable supplies
+ of lime and sand.
+
+ CARTERS: As mentioned above, supplies for castle-building did not magically
+ appear on the castle site. Carters were needed to ferry supplies over
+ both land and water; Harlech Castle did not have a nearby supply of
+ lime or lime-sione, and these had to be ferried from Caernarvon, a
+ voyage over water of nearly seventy miles around the Lleyn peninsula.
+ Carters were in charge of safely delivering immense amounts of materials,
+ travelling an estimated ten miles per day by oxcart during their journey.
+
+ SMITHS: Castles were not made solely of stone and wood; a substantial
+ amount of metal was also used in the construction. Smiths were
+ important to working the metal used in castle-building; smithing was one
+ of the better paid occupations in castle building.
+
+ LABOURERS: Common labourers made up the rest of the castle's work force.
+ Many labourers were peasants making up feudal obligations, and as such
+ were unpaid, others were pressed into service by
+ force. Others were untrained workers looking for a pence a day.
+ Labourers were cheaper than skilled workers, but not as efficient;
+ an over-reliance on unskilled labourers tended to slow down construction.
+ To hire labour, use the buttons to request the number of each labourer
+ type. A good castle relies on a mix of labour types. The Master
+ Builder's evaluation of the efficiency of the mix is printed at the
+ bottom of the screen; he rates a mix as Poor, Inefficient,
+ Satisfactory, Good, I and Excellent. A Poor mix will build a castle
+ very slowly, while an Excellent mix will build a castle very quickly.
+ The labour menu also allows you to alter the wages of your workers.
+ The base wages for your workforce are:
+
+ Diggers L1/month/20 digger
+ Carpenters 15/month/20 carpent
+ Masons 16/month per 20 masons
+ Quarrymen L1/month per 20 quuarrymen
+ Carters L1/month per 20 carters
+ Smiths L5/month per 20 smiths
+ Labourers L0/month per 20 labourers
+ Archers L2/month per 20 archers
+ Infantry L3/month per 20 infantry
+
+ Higher wages will attract more workers, and encourage them to
+ join your workforce more quickly. Lower wages will save
+ money, but will cause you to recruit more slowly and limit the number
+ of workers who will want to work on your castle.
+
+  -= OF TAXATION AND PERSONAL SAFETY =-
+
+ A monarch Who embarks on a program to build castles must have money
+ to pay for the supplies and the labourers The money for castle-builing comes
+ from taxation. The rate of taxation depends on two factors:
+ the difficulty level of the game, and the level of taxation as set by
+ the player. The player will receive less tax money when the game is
+ set to King level than he would at Prince level, and he would receive
+ less tax money at Prince level than he would when the game is at Duke level.
+
+ The player can decrease or increase the amount of money he will get by
+ setting the Level of Taxation. The levels are (in ascending order):
+ Generous,
+ Normal, Oppressive, and Tyrannical. A king who has set his funding at a
+ Tyrannical level will receive more funds than one who is Generous.
+
+  Taxes are collected at the beginning of every fiscal year (i.e.. March 15,
+ when building on the Castle resumes.) If a king needs money in a hurry, then
+ they must levy taxes.
+
+ Levies are taxes which are collected every month. To collect a levy, simply
+ go to the Collect Levy area on the Taxes screen, and adjust the amount to
+ whatever you desire, then click on the box below. At the beginning of the next
+ month, that amount will be added to the Treasury.
+
+ The maximum amount that can be levied depends on the difficulty
+ level of the game. At Duke level, it is L400. At Prince level, it is
+ L300, and at King level it is L200.
+
+ Excessive taxation not only makes peasants angry, it also
+ upsets the Church and the noble families, as everyone is taxed
+ by the King. Excessive taxation can have two drawbacks.
+ First, no one likes a tyrant. If you tax people long enough and
+ hard enough, you will have rebellions. Second, the well eventually
+ runs dry. Eventually, you will find that high taxes will
+ bring a point of diminishing returns. Imposing levies on your
+ subjects will also make them angry; imposing frequent levies
+ on your subjects can cause the people who loved you to
+ despise you in only a few months.
+
+ On the other hand, if a monarch realizes that he is running into
+ a problem with his peasants, and tries to be Generous, he will
+ rarely get the results he wants. Peasants will appreciate low
+ taxes, but never as enthusiasfically as they despise high taxes.
+
+ For an overview of your taxes, call the Treasurer. He will give a report on
+ your finances, including revenues from other castles, and will also offer
+ warnings when you are spending money too quickly. Running out of money
+ will bring your operations to a halt.
+
+ Let the taxer beware.
+
+
+  -= OF MILITARY MATTERS =-
+
+ If you can't defend a castle, there is no sense in building it.
+ When you build a castle in hostile territory, expect to defend it against
+ attack.
+
+ MILITARY MENU
+
+ To hire troops, you must enter the Military menu. In this menu, you
+ will be able to hire the two types of troops most commonly
+ used in sieges in the Middle Ages: Archers, and Infantry.
+
+ Archers shoot arrows at opponents. They are very poorly armored,
+ and no match in melee range for someone with armor or a melee
+ weapon; they will disappear when their supply of arrows have been
+ depleted, or when they are slain. Infantry also serve as castle
+ guards; these are the men who will be used if someone asks you for
+ troops. Infantry are tougher than archers, but can only attack at
+ close range.
+
+ The number of troops that you can have depends on the number of pieces
+ you have built in the castle. Small castles cannot support as many troops as
+ a large castle.
+
+ BATTLES
+
+ SET-UP
+ When a battle occurs, you will be given a chance to set up your castle before
+ the enemy comes. Simply pick up archer and infantry pieces and place
+ them on the blueprint, in the same way that you placed castle pieces. These
+ pieces will attack the enemy when they appear or come within weapon
+ range.
+  If you are operating at less than maximum strength (500 infantry and
+ 500 archers), you will have an option to divide your forces into 1-10 units.
+ Stronger units will not be damaged as easily as weaker ones, buk more
+ numerous units will allow you to spread your forces across a larger area.
+ Beware of spreading yourself too thin.
+
+ CONTROLLING YOUR ARMY
+ Each character in the army is subject to individual control. For
+ archers, simply click on the piece, then click on the target; the archer will
+ concentrate its fire on that piece until it is dead, then he will choose a new
+ target. For infantry pieces, you may click either on an enemy target, or a
+ position. Sometimes your infantry may lose line of sight of an enemy or get
+ caught at the edge of a moat, simply move the infantry piece to another
+ location, and he will try to locate the enemy.
+
+ THE ENEMY
+ Trying to destroy your castle is the Enemy. The Enemy will usually be
+ Celts, though ogres will attack you frequently in the Fantasy World setting.
+
+ The enemy will march toward your keep, trying to destroy anything or
+ anyone in their path. Ogres are particularly infamous for their blood-thirsty
+ tendencies.
+
+ The enemy has two special weapons: sapper's tents and catapults.
+ sapper's tents contain miners who will dig a tunel underneath your
+ castle, fill it with dead pigs, and light them afire, causng an
+ explosion that will destroy the castle.
+
+ Catapults will coninuously fire large stones at your castle walls,
+ knocking them down after multiple hits.
+ When most of the enemy pieces have been killed, the attack will end
+ and you will have triumphed. If you have completed your castle, you
+ will proceed to the next level, or to the final screen (if all castles in
+ the campaign have been built. However, when the enemy has killed off
+ your defenders or destroyed a large section of your castle,
+ they will have triumphed and your game will be over.
+
+  -= OF FOOD ITS ADVANTAGES =-
+
+ One of the most comon tactics of an enemy, particularly
+ if they believe that they can block your supplies, is the siege.
+ In order to withstand a siege, a wise monarch will purchase a
+ emergency supply of food thus when one's army is under siege, they
+ will not starve.
+  Food can be purchased entering the Food menu, clicking on the
+ arrows beside "Buy" and clicking on the box underneath the Food menu.
+ This will purchase the proper amount food.
+ Food costs vary wildly, depending on demand availability. Food is
+ much less expensive after the fall harvest than it is in early
+ spring, when the needs of winter have used up most
+ surpluses. The same needs of winter will also affect
+ the supply of food at your castle; you will have less
+ food after winter than you had before the winter.
+
+ During a siege, depending on the number of defenders at your
+ castle, the food supply will decrease. When it hits zero,
+ defenders will start to die. Some sieges can be quite
+ long, making multiple purchases of food very necesary.
+
+  -= OF MESSENGERS AND DIPLOMACY =-
+
+ At the beginning of the game, the player
+ has the option of receiving messengers. These messengers will
+ come from a variety of sources; noble families, the
+ Holy Church, the princes of Gwynedd, the peasants,
+ or the King of Bretagne are the most common sources
+ of messengers.
+
+ During the course of this sequence, you will have to
+ make a decision on a problem brought to you by the
+ messenger This problem may be as trivial as a name
+ for a knight's newborn son, or as important as
+ determining whether or not the kingdom goes to
+ war.
+
+ The decisions that you make will have consequences.
+ Do not expect to insult an ambassador from
+ another kingdom without some sort of retaliation.
+ During the course of the decision-making process,
+ you may find loyal vassals betraying you, you may
+ have to arbitrate important disputes, or you may make
+ peace with your enemies. Consider your answers
+ carefully. Some of the things that the messengers
+ want may not be in the best interest of the
+ kingdom. Be careful of nobles who are trying to
+ advance their own fortune at the kingdom's expense.
+ On the other hand, making the nobles unhappy is
+ usually not a good idea. Prudent judgement is essential.
+
+ The best way to consider the messenger sequences is
+ as stories that are interwoven into the game. The
+ exploits of the Prince might be one story, the attempt
+ by the Duke of Norshire to conquer the Picts is
+ another story. There will always be the possibility of
+ several stories running through the game at a time.
+
+ Your responses to the messenger sequence will
+ determine your style of rule. Brutal actions may go
+ unnoticed for a long time, but eventually people will
+ begin to hear stories about you. Indecisiveness in moments
+ of crisis will give you the reputation of
+ being a weak king. You may have to find a balance
+ while walking a diplomatic tightrope. Still, no one said
+ that being a king or queen was easy.
+
+ To get an indication on how whether the various
+ factions in the kingdom like you, go to the Options
+ screen and click on the Counsel button. Sir Richard
+ of Westhampton will appear and tell you how
+ you're doing.
+
+  -= OF THE CONQUEST OF THE CELTIC LANDS =-
+
+ The ultimate goal of the original
+ CASTLES player, Edward I, was to build a network of invincible
+ fortresses. That is the goal of the player of this game
+ as well.
+
+ The Celtic lands are divided into eight strategic
+ territories, or cantrefs. To conquer a cantref, the
+ player must build a castle within the territory, and
+ must face a battle. When the completed castle has
+ proven its worth in battle, it will attract settlers who
+ will build a town nearby. Eventually, the town will
+ trade with the Celts, who will become dependent on
+ Albion for goods and services. Thus the Celtic lands
+ will be assimilated.
+
+ There are eight cantrefs in which the conquest of
+ the Celtic princedoms takes place. They are (in
+ order):
+
+ Rhos
+ Arfon
+ Penllyn
+ Arwystli
+ Aberffraw
+ Gwerthyrnio
+ Dunoding
+ Powys
+
+ RHOS
+ This is is a broad plain with coastal area in the west
+ and north. It is close to qarties, and has great historical value to the
+ Celts. they will not permit you build a castle here with out a fight.
+
+ ARFON
+ This is another broad plain, with lakes, near the coast of Gwynedd.
+ It is close to quarries.
+
+ PENLLYN
+ This is an area of interior Marsh, a quagmire that is
+ not loved by those who work on castles. It is close
+ quarries.
+
+ ARWYSTLI
+ The construction site in Arwystli is in a heavily
+ wooded section. It is also an isolated area, far from
+ the quarries.
+
+ ABERFFRAW
+ This area in Northwest Gwynedd contains substantial
+ coastline. Its quaries are nearby, but noted
+ for their hard stone which makes them difficult to
+ work.
+
+ GWERTHYRNION
+ This area in South Gwynedd is known for its
+ broad, shallow lakes, and fierce natives. It is far from
+ any quarries, too far, as the carters will tell you.
+
+ DUNODING
+ The castle site in this wide region is in
+ marshland, every workers least favorite terrain. Its
+ quarries are old, and quarymen have to work harder
+ than the once did to get valuable supplies of
+ lime and limestone.
+
+ POWYS
+ In the center of the Celt lands is the huge region
+ known as Powys. Once it was a rival to Gwynedd.
+ Now it is a land of bitter resistance to the Albion
+ conquerors. It uses the same quarries as Donoding,
+ but they are considerably further away.
+
+ As each cantref is subdued, more tax money will
+ come to the Treasury of Albion. However, there may
+ be occasions where the King must rush his troops,
+ to the defense of one of his other castles, or lose that
+ tax money.
+
+ In each cantref, the rebellions will become more
+ fierce. The land may be some distance from the
+ quarries, increasing the cost of the castle. The subjugation
+ of these lands is not an easy thing. The terrain of these lands
+ are different; Arwystli and Powys are heavily forested, while
+ Penilyn contains a great marsh. The enemy will use
+ different approaches on these territories.
+
+ When a castle has been built in all eight cantrefs,
+ victory will have been achieved, and you will
+ receive a summary of your relations with the various
+ factions in your kingdom, and how historians viewed
+ your rule (the overall score).
+ If your reign was the Golden Age of Albion, you
+ truly were a great king!
+
+  -= A GEOGRAPHY OF ALBION AND ITS NEIGHBOURS =-
+
+ Albion is based on England in the late
+ 13th Century. Albion is an amalgamation of
+ several Germanic kingdoms that were conquered
+ by a French duke in the late 11th Century;
+ this new King then eliminated the ruling
+ families and replaced them with his own.
+
+ Albion has four geographical regions. The
+ North, which falls under the influence of the Duchy
+ of Norshire, has sometimes belonged to Pictland, the
+ kingdom of the Picts which lies north of Albion.
+ The North has a rather strong independent streak,
+ being farther from the influence of the king than
+ the other people of Albion. The west of Albion falls
+ under the influence of the Duke of Westhampton, a
+ close relative of the ruler of Albion. This includes the
+ border marches, land which once belonged to
+ the Princes of Gwynedd and now belongs to Albion
+ barons. The ownership of the marches has been a
+ major source of disagreement for Albion and
+ Gwynedd.
+
+ The east of Albion falls under the influence of the
+ duke of Warfield. Warfield is the section of the
+ country where Parliament resides, a council of barons
+ who has been fighting for power since they forced
+ King John to sign the Great Charter in 1215,
+ which limited the King's rights. This charter has
+ usually been ignored by the King, but it has been
+ used by barons as a weapon to limit the power
+ of a weak king.
+
+ Between north, east, and west are the Midlands. The
+ Warfields are the most influential family here, followed by the
+ Westhamptons. The rivalry between the noble families
+ is caused because of disputes in the Midlands; the
+ rivalry between the Westhamptons and the Norshires is particularly
+ bitter.
+
+  North of Albion is the Pictlands. They are a group
+ of clans who owe allegiance to a king, a distant
+ relative of the king of Albion. The Picts and Albion
+ have enjoyed a long truce until recently, when the alliance between
+ the Picts and the Bretagnese triggered a series of border
+ skirmishes that have erupted into a full scale
+ war. The commander of Albion's Northern forces
+ the Duke of Norshire; he not noted for his military
+ skill.
+
+ West of Albion is the pricedoms of the Celts, of
+ which Gwynedd is by far the most powerful. These
+ princedoms have been at war for centuries with Albion.
+
+ South of Albion is the main continent of Europe
+ The closest kingdom to Albion is Britagne, a union
+ duchies under a single monarch. Britagne is the
+ historical enemy of Albion since the King of Albion
+ once held large portions of land in Britagne and many
+ wars were fought over that land. The lands are now
+ controlled by the King of Bretagne, but no King of
+ Albion has ever abandoned the dream of regaining their continental
+ empire. The throne of Britagne is currently in dispute.
+ The two claimants are Henry, Duke of Beel, and Charles, Duke of Clossau.
+
+  The greatest state in Europe is the Teutonic Provinces, ruled by a
+ single Emperor. The Teutonic Provinces occasionally invades
+ Britagne, other than that, its affairs have little bearing on the current
+ state of Albion.
+
+  -= A GUIDE TO THE PERSONAGES OF THE REFIONS =-
+
+ THE RULING FAMILY OF ALBION
+ The current ruling family of Albion has been in
+ power since the mid-12th Century. They have seen a
+ vast empire in continental Europe dwindle to virtually
+ nothing, civil wars, and conquest of neighboring
+ states.
+
+ Albion is considered a minor power in the politics
+ of Europe, and the ruler of Albion is considered less
+ important than one of the Princes of the Teutonic
+ States.
+
+ The King/Queen of Albion (aka you). Now entering
+ middle age, the ruler of Albion is enjoying
+ a relatively peaceful time following a tumultuous succession to
+ the throne, when your younger brother Prince Arthur tried to take your
+ throne. Your spouse died many years ago, leaving you with but a single heir.
+ You have won a string of recent victories against the Celtic Princes, and hold
+ enough territory to allow you to build castles in their lands, in hopes of
+ holding it. Some of the Celtic Princes do not appreciate this,
+ and rebellions are commonplace.
+
+ Prince Henry: Your only child is Prince Henry, who
+ has a well-earned reputation for irresponsibility. He is
+ in his late teens, and causes nothing but
+ trouble. Somehow, you hope that he will turn into a
+ creditable king when his rime comes, but you have strong doubts.
+
+ Prince Xrthur: Your rebellious brother fled the country during a small
+ civil war that took place during your succession. He
+ is currently in exile in the court of your enemy Charles,
+ Duc de Clossau, who is one of the leading contenders
+ in the Britagnese civil war.
+
+ Princess Edith: Your sister was married to an important Britagnese
+ duke to strengthen your alliance with the Britagnese ruling
+ family. That ruling family is now dead and there is a
+ civil war in Britagne. Princess Edith stays out of
+ politics, is well-known for her graciousness, piety,
+ and,charity, and is well beloved in both Albion
+ and Britagne.
+
+
+ NOBLE FAMILIES OF ALBION
+ Even a government as centralized as Albion's cannot
+ run by a king's decree alone; the feudal system
+ gives a great deal of power to the noble families. There
+ are three dukes in Albion, all of whom have immense
+ political and financial importance, many earls, and
+ many more knights who serve the earls and hold
+ fiefs of their own. The three principle noble families are:
+
+ THE WESTHAMPTONS
+ This family is the most prominent noble family in the kingdom, a fact which
+ does not go unnoticed with the other noble families of Albion. The Westhamptons
+ have a reputation for chivalry, integrity, and unmatched prowess in arms. This
+ reputation is deserved, but some Westhamptons deserve it more than others. The
+ Westhamptons are also extremely proud, and that is not always a virtue. The
+ Westharnptons hold large tracts of lands in West Albion, and shares their
+ influence with the Warfields in the Midlands.
+
+ The Duke
+ of Westhampton
+
+ This aging Duke was once a great knight in the days of his youth, having
+ fought in the Crusades. He is an old friend of the ruler of Albion, though
+ they have grown apart during the years. The Duke expects the Westh@mpton
+ family to receive the kingdom's highest honors and privileges. The Duke
+ despises the other noble families, and holds the
+ Church in complete contempt, though he takes
+ pride in defending Christian values and beliefs.
+
+ Sir Richard
+ of Westhampton
+
+ The eldest of the Duke's many children, Sir Richard
+ is one of the chief administrators in the realm,
+ as well as one of the most trusted counsellors. Sir
+ Richard is capable, competent, and loyal, though
+ on occasion he holds the glory of the Westhampton
+ family in higher regard than the welfare of the
+ kingdom. Sir Richard is a formidable combatant, but
+ prefers administrative duties to battle. Sir
+ Richard's loyalty is unqueslioned.
+
+ Sir Roger
+ of Westhampton
+
+ The second oldest of the Duke's sons, Sir Roger is
+ not the most honorable member of his family, nor
+ the most beloved. Roger takes extreme pride in
+ being a Westhampton and will protect his family
+ interests at all costs. Sir Roger is loyal to the throne, but his actions
+ are not always in accord with the wishes of the
+ ruler of Albion.
+
+ Sir Phillip of
+ Westhampton
+
+ The third oldest son of the Westhamptons, Sir Phillip delights in
+ being a warrior and displaying his martial prowness. He
+ earned a formidable reputation during the Crusades as one of the
+ greatest knights in Europe. Sir Phillip is a skilled commander, but would
+ rather fight on the fields of Europe than in Gwynedd or the Pictish lands.
+ He is extremely loyal to the throne, but his pursuit of honor in battle and
+ tournaments sometimes goes beyond the best interests of the kingdom.
+
+
+ THE NORSHIRES
+
+ This family is the most Prominent of the Northern
+ nobility. They are not as wealthy or as comf onable
+ as the other great lords of the kingdom, and there is
+ considerable enmity between them and the other
+
+
+  ___________________________________________________
+ |                                                   |
+ |          O---O---O---O---O  O - ROUND TOWER       |
+ |          |               |  # - SQUARE TOWER      |
+ |          |               |  - - WALL              |
+ |          |               |  | - WALL              |
+ |          O   #---#---#   O III - GATE             |
+ |          |   |       |   |                        |
+ |          |   |       |   |                        |
+ |          |   |       |   |                        |
+ |          O   #--III--#   O                        |
+ |          |               |                        |
+ |          |               |                        |
+ |          |               |                        |
+ |          O---O--III--O---O                        |
+ |                                                   |
+ |                     Figure A                      |
+ |___________________________________________________|
+
+ noble families. The Norshires take great pride in
+ their military ability, pride which is not always
+ deserved.
+
+ The Duke
+ of Norshire
+
+ This aging man is considered by members of
+ many of the other noble families to by the joke of the
+ kingdom. He is an incompetent general (rumored
+ to be a coward), petty, vain, and proud. The
+ Duke of Norshire believes that everything he does is
+ in the best interest of the kingdom, but his own personal pride
+ really comes before all else.
+
+ Thomas
+ of Norshire
+
+ The Duke's teenage son Thomas is considered
+ a reckless youth; he is the closest friend of Prince
+ Henry of all of the Albionese nobility. Thomas
+ has attracted notice for his martial skill, his ability to
+ command troops, and their loyalty to him (as well for
+ as playing pranks on the Picts). Despite their many
+ differences, Thomas cares a great deal for his father,
+ and holds his family's honor in high regard.
+
+ THE WARFIELDS
+
+ The third great family of Warfield is the Warfields,
+ who hold a great deal of power in the Midlands and
+ in the Southeast. The Warfields have a reputation for
+ bullying, tyranny, overtaxing, and ill-treatment of
+ peasants.
+
+ The Duke of Warfield
+
+ The Duke rules his fiefs with an iron fist. He is a
+ cruel and intolerant lord, and his knights are little
+ more than thugs. Nonetheless the Duke has many
+ lords who are loyal to him, and he holds a position of
+ great political importance. The Duke is loyal to the
+ throne, but is also quite greedy.
+
+ Sir Edwin of Warfield
+
+ The eldest son of the Duke despises his father's
+ cruelty and greed. An atypical Warfield, he is on
+ reasonably good terms with the Westhamptons
+ and the Norshires. He and his father are estranged.
+
+ THE CHURCH
+
+ The Church's influence has been in decline
+ throughout the 13th Century; recent archbishops
+ and bishops have been trying to increase their influence in Albion.
+ As with the dukes, the Church provides some revenues
+ for the Crown, and is a faction that cannot be easily
+ ignored.
+
+ The Pope
+
+ The Bishop of Rome, Pontiff of the Holy Roman
+ Church, the Pope is a man with considerable
+ political influence. His greatest power is the
+ power of excornmunication, which bans a person
+ from membership in the Church and from the ritual
+ of holy communion. In general, the Pope overuses
+ excommunications, and they are not as great a
+ deterrent to anti-clerical behavior as they once were.
+
+ The Bishop
+
+ The local bishop is an extremely proud man,
+ far more devoted to the Church than you had hoped when you appointed him
+ (there is a quarrel between Albion and Rome on the appointment of
+ bishops, with Rome on losing end). The bishop is arrogant, smug,
+ greedy, and vindictive, but he is also (unlike the popular stereotype of
+ medieval clergy) genuinely concerned about the poor and the spiritual
+ well-being of his followers.
+
+ The Abbess of St. Martha's
+ Also known as the Mad Abbess, she believes that supernatural
+ forces are everywhere, conspiring to corrupt the soul of the
+ people of Albion. The abbess has been known to make rather
+ absurd allegations from time to time.
+
+ THE CELTS
+
+ West of Albion, beyond Hay's dike, is one of the historical lands of the
+ Celts, which in our world is known as Wales. The Celts were never united,
+ and the lands of the Celtic West is divided into a number of Princedoms:
+ Gwynedd, Powys, and Deheubarth are the most prominent Throughout
+ history, the Celts and the peoples of Albion have raided each other at
+ virtually every opportunity; after the Norman Conquest, the Celts generally
+ on the losing side of this battle. Of the Princedoms of the West, Gwyned
+ is generally the most unified and powerful.
+
+ BRETAGNE
+ Across the Channel is the great land of Britagne, one
+ of the great powers of Europe. A century ago, the
+ king of Albion controlled much of Bretagne, though
+ technically he was still the vassal of the King of
+ Bretagne. The King of Bretagne eventually broke
+ most of Albion's continental empire, which has
+ resulted in decades of hostility, much of it caused by
+ Albion's refusal to let go of its empire.
+ The King of Bretagne recently died, naming Henry, Duke of Bee] as his
+ lawful successor. however, many of the most powerful
+ barons of France support Henry's cousin, Charles,
+ Duke of Clossau.
+
+ Henry, Duke of Beel
+ Henry of Beel is the most sympathetic of the two contenders
+ to the throne of
+ Britagne. He was appointed by the former king as his successor, but the
+ majority of the barons either refuse to support him, or support his
+ rival, Charles of Clossau.
+
+
+ Charles, Duke
+ of Clossau
+ Charles of Clossau is an old enemy; you knew him from a visit to
+ the Britagnese court when you were ten, when you found him
+ to be spoiled, ill-mannered, and contemptuous. He had
+ similar opinions of you. Neither of you have forgotten that meeting.
+ Charles harbored your traitorous brother, Arthur, following
+ his rebellion, and has been his host ever since.
+ Charles' messengers pride themselves on their wit, usually an insult
+ at the expense of Albion.
+
+ Andre, Duke
+ of Mallardville
+ The Duke of Mallardville
+ is recognized as one of Bretagne's greatest knights
+ and a paragon of chivalry He holds Albion in extreme
+ contempt, and is a bitter enemy of Sir Phillip of Westhampton,
+ who fought with him (and against him)
+ in the Crusades.
+
+ FAERIE
+ (These entities will only appear in the Fantasy version of this game).
+ Faerie is the land beyond the twilight, A magical place full of mystical
+ beings. According to legend, Faerip is ruled by Lord Oberon and Lady
+ Titania, and is home to many sprites, hobgoblins,
+ ogres, and elves; fay creatures both good and evil.
+ Most of the folk of Faerie do not involve themselves
+ in the affairs of the world, but some of the more mischievous or evil do.
+ The Seelie Court The Seelie Court is the court of the good elves, the
+ beneficent elves (this is opposed by the Unseelie Court of the dark elves).
+ The Seelic Court is worried about the interference by
+ others in Faerie on the world of Albion, and will
+ occasionally offer warnings regarding supernatural evils at work in
+ Albion.
+
+ The Bean Sidhe
+ The Bean Sidhe, or Banshee, is a female spirit
+ whose song foretells death and disaster. She is one of
+ the most dangerous spirits of Faerie to walk in the
+ world of the living.
+
+ The Wild Hunt
+ The legendary Wild Hunt appears in time of great un
+ rest. The hunt is one of the guises of Death, who rides
+ a pate horse and leads ghastly hounds in a procession, whose purpose
+ is the gathering of souls.
+
+  -= SIR RICHARD OF WESTHAMPTON'S GUIDE TO CASTLE BUILDING =-
+
+ Herein, Sir Richard of Westhampton and his squire, Alain, seek to explain
+ some of the mysteries of castle-building.
+
+ SIR RICHARD: Greetings. I am Sir Richard of
+ Westhampton, one of the foremost knights in the
+ kingdom, as you'll probab]y notice -- over and over
+ again. Castle building is not my field of expertise, I
+ am an administrator for my father, the Duke of Wes-
+ thampton, and a counsell for my sovereign, the rul
+ of Albion. However, as mliege is busy with other
+ matters, I have been aske to explain some of the bas
+ secrets of castle construc- tion. I have talked with
+ some fine master builders in my day, so it is a subjec
+ with which I feel comfor able.
+ But as my language is that of the court, perhaps
+ my squire, Alain, should explain some of the essenfials
+ of castle-building in simple terms...
+
+ ALAIN: Certainly my lord. First, to start your
+ castle-building, use your mouse. Click on the right
+ button and bring up the main menu.
+
+ SIR RICHARD: A mouse? Using a mouse as a
+ messenger? What non-sense is this?
+
+ ALAIN:'Tis the way it is done these days, my lord.
+
+ SIR RICHARD: Talking mice? I have never heard
+ of such a thing. Perhaps I am behind the times.
+
+ ALAIN: The main menu is your key to commanding
+ yofir workforce. If you wish to design your castle,
+ click with your left mouse button on the Design
+ window. If you wish to hire labourers, click with your
+ left mouse button on the Labour window. If you
+ wish to hire guards, click on the Military menu. To
+ escape from these menus, click on the right mouse
+ button. I would recommend spending a minute
+ or two practising using this interface.
+
+ SIR RICHARD: Interface? Common speech is
+ indeed strange!
+
+ ALAIN: They will soon find that the interface is
+ easy to use, my lord. Now, let us continue our castle
+ building. We will need to plot our pieces, so we must
+ click on the Design window. In the upper right
+ hand corner are two types of towers, a wall, a gate,
+ and a circle with a line through it.
+
+ SIR RICHARD: I had not heard of a Master Builder
+ using this tool. It was probably developed by the
+ Saracens. They are masters of their craft.
+
+ ALAIN: Perhaps, my lord. Use these pieces to
+ plan the layout of your castle. Remember that
+ there are several things that can go wrong in castle
+ building. If you are planning your castle, and your
+ castle piece does not appear on the terrain when
+ you place it.
+
+ SIR RICHARD: As it did in that castle in Powys, the
+ one with the large towers, if I recall...
+
+ ALAIN: Yes my lord. That's because the master
+ builder tried to build the castle on very solid stones,
+ ones which could not be removed.
+
+ SIR RICHARD: Yes. I recall the king was not
+ very happy about paying the diggers for digging on
+ a piece of land that was unsuitable for castle building.
+
+ ALAIN: I would imagine not, my lord. Remember,
+ do not try to build in TREES, ROCKS, HEAVY
+ MARSH, POOLS, or too close to the SHORE. You
+ will be unable to lay a foundation for your castle.
+
+ SIR RICHARD: Of course, there is the matter
+ of towers and walls...
+
+ ALAIN: Thank-you for reminding me, your
+ lordship. Novice castle-builders will sometimes
+ try to plan castles whose walls are placed at different
+ angles, such as a north facing wall trying to
+ connect with a southeast facing wall.
+
+ SIR RICHARD: They are unbuildable?
+
+ ALAIN: Unsupportable. Always place a tower if
+ you wish to change the facing of a wall.
+
+ SIR RICHARD: Unsupportable? I would think
+ that builders with our skill will be able to master such
+ a difficult craft.
+
+ A-LAIN: Surely you jest, my lord. Our builders are
+ skilled tis true, but they cannot defy the laws of
+ nature. If you wish a wall to build, it MUST have
+ SUPPORT from a structure ALMOSt AS TALL, AS TALL,
+ or TALLER THAN ITSELF Thus a WALL cannot
+ build that is more than FOUR feet taller than
+ either of its ADJACENT walls. It would collapse my
+ lord. The same applies for a GATE.
+
+ SIR RICHARD: I would not tell my father that this
+ cannot be done. He believes that a Westhamptoin can do anything.
+
+ ALAIN (laughing): Yes, my lord.
+
+ SIR RICHARD: You have mentioned walls and
+ gates. What of towers? Are they unsupportable?
+
+
+
+ ALAIN: No, my lord. Towers are built with solid
+ support at all stages of their building. They can
+ rise on their own. 'Tis why they take so long to build.
+
+ SIR RICHARD: Suppose I have been building a
+ large castle, and I cannot place any more towers,
+ walls, or gates?
+
+ ALAIN: I would check on one's Resources count, my
+ lord. If the count is at zero, then you can no longer
+ place any more pieces. I have heard of kings who
+ built castles beyond their means.
+
+ SIR RICHARD: Yes, I know one quite well. Now,
+ I will provide you with what the scribes calla
+ tutorial. This will teach you the basics of castle
+ buildiing. Here is the plan for the castle we are about
+ to build. (See Fig. A, pg. 30)
+
+ SIR RICHARD: This should be reasonably easy
+ to follow. Just place the pieces, do not concern
+ yourself with such things as height, number of
+ labourers, and other considerations just yet.
+
+ ALAIN: Perhaps you should tell them to find a
+ suitable piece of land.
+
+ SIR RICHARD: I thought that I had done so.
+ ALAIN: You did not, my lord.
+
+ SIR RICHARD: Oh. I apologize. Anyways, be certain that the land on which
+ you place your castle is a broad swarth, of suitable
+ measure for your task. Now place the castle. On
+ the northern section, going from left to right, you
+ should place a round tower, three segments of
+ wall, a second round tower, three more segments of tower, a third
+ round tower, three more segments of wall, a fourth
+ round tower, three more segments of wall, and a
+ final round tower, as shown below.
+
+ O---O---O---O---O
+
+ ALAIN: 'Tis a lot of wall segments, my lord.
+
+ SIR RICHARD: Without them, the castle would
+ soon fall to one's enemies. Now, I have mentioned
+ the laws of building walls, that you should have adjacent structures to
+ support it. Allow me...
+
+ ALAIN: My lord, I was the one who mentioned the law of support!
+
+
+
+ SIR RICHARD: Do not contradict thy liege, Alain.
+ 'Tis against all codes of chivalry.
+
+ ALAIN: My apologies, my liege.
+
+ SIR RICHARD: We will make a knight out of thee
+ yet, Alain. Now, let us look at this law in action. First
+ hire some workers. Five hundred will be more than
+ adequate for our purpose. Be certain to hire skilled
+ masons.
+
+ ALAIN: That is very important.
+
+ SIR RICHARD: Indeed. The other workers are important,
+ but the mason is the most skilled at the art
+ of castle-building. Without a skilled workforce, castle-building
+ is a labourous and unnecessarily lengthy task.
+ Now once you have your workforce, you are ready
+ to build the castle. Let us go to the northwest corner
+ of the castle, and take the first section, which consists
+ of a round tower, three wall segments, and a
+ second round tower. We shall start on the north-west tower..
+
+ ALAIN:...Takeyour mouse and have it increase
+ the count of labourers on a piece to its maximum.
+
+ SIR RICHARD: That mouse again!
+
+ ALAIN: If you had followed the previous instrutions, your
+ tower should be building nicely on the tight-hand side of the
+ tower should be three wall segments and another
+ tower, as follows:
+
+  T123T
+  O---O
+
+ Now, take your mouse, and increase the number of
+ workers on wall piece number one, and wall
+ piece number three.
+
+ SIR RICHARD: I see that the report on this piece
+ says "Waiting".
+
+ ALAIN: That is because there are only a limited
+ number of scaffolds and work crews available at a
+ time. "Waiting" means that it is waiting for a scaffold.
+
+ SIR RICHARD: Ah, the building has begun. I suppose that
+ is why it says Building.
+
+ ALAIN: Aye, my lord. And now it says Unstable
+ It has stopped building.
+
+ SIR RICHARD: Yet the work crews are still there!
+ What lazy churls are these?
+
+
+
+ ALAIN: That is because they follow your instructions only, my lord. You
+ know the penalty for disobeying one's liege in
+ these times, my lord. The workers will only do work
+ where they are ordered to do so. And if a structure is
+ Unstable, it cannot be built any further without risk of
+ collapse. Thus the workers are not building any more.
+
+ SIR RICHARD: Excuses, excuses. They are lazy, 'tis clear. Now how do we
+ solve the dilemma, and cause these unstable walls
+ to build?
+
+ ALAIN:'Tis easy, my lord. Think not of the castle pieces as individual
+ segments, but sections of connected walls, towers, and gates. Each piece in
+ this section must be building for the entire structure
+ to build. Currently, only the left tower, and wall segments Number One and
+ Number Three have builders assigned to them, as indicated by the stars
+ above the pieces...
+
+ ** *
+ T123T
+ O---O
+
+ SIR RICHARD: So if we were to assign workers to
+ the pieces without stars, the second wall and the
+ right tower, the entire piece would build without
+ any problems?
+
+ ALAIN: Let us try it. Take your mouse and click on
+ the pieces. Their height should be four feet, and
+ they should have no labourers assigned.
+
+ SIR RICHARD: That mouse again!
+
+ ALAIN: Now increase the labourers to maximum.
+
+ SIR RICHARD: The entire structure is building!
+
+ ALAIN: Indeed. And soon, we will have a completed section of wall,
+ surrounded by two towers. Now that you have successfully built one
+ section of wall, let us continue building the entire structure.
+
+ SIR RICHARD: Suppose one makes an error in the
+ planning stages. My brother Roger has done so frequently. Can such an
+ error be rectified?
+
+ ALAIN: Aye. Bring up the Design menu. This
+ provides our blueprint. See the circle with that slash
+ through it?
+
+ SIR RICHARD: Reminds me of a Coat of Arms.
+
+ ALAIN: Well, click on that symbol. Now, take the cursor to the piece you
+ wish to delete on the blueprint. Click the left mouse button on that piece I
+ to remove it. If you wish to replace the piece, simply click on the
+ appropriate piece and place it on the desired spot.
+
+ SIR RICHARD: That was simple.
+
+ ALAIN: Indeed. Let us resume our castle building.
+ Let us continue building the North wall We shall build slowly, a section at a
+ time. Currently, this is what has been built:
+
+   *****
+   O---O---O---O---O
+   |               |
+   |               |
+   |               |
+   O               O
+
+
+ ALAIN: Wait for the number of available labourers
+ to reach its maximum total. If five hundred labourers
+ were hired, then five hundred labourers should be free, as labourers who
+ finish their assigned job head directly into the Freed Labour Force to
+ await reassignment. The "Free" count should be at 500. Once it is,
+ click on the next three wall segments, and the tower on the right
+ hand side of those walls. The following walls or towers should be built,
+ or in the process of building:
+
+    *********
+    O---O---O---O---O
+    |               |
+    |               |
+    |               |
+    O               O
+
+ ALAIN: Once those wall have been completed, confinue with the next
+ three wall segments and tower
+
+    *************
+    O---O---O---O---O
+    |               |
+    |               |
+    |               |
+    O               O
+
+ ALAIN: And then once more. The North section of
+ the castle's outer wall should now be complete.
+
+    *****************
+    O---O---O---O---O
+    |               |
+    |               |
+    |               |
+    O               O
+
+ ALAIN: Now repeat the process for the western wall.
+
+   ******************
+   *O---O---O---O---O
+   *|               |
+   *|               |
+   *|               |
+   *O   #---#---#   O
+   *|   |       |   |
+   *|   |       |   |
+   *|   |       |   |
+   *O   #--III--#   O
+   *|               |
+   *|               |
+   *|               |
+   *O---O--III--O---O
+
+ SIR RICHARD: I notice that you have been moving
+ to another view to place your workers. Let us suppose we complete
+ the front of the castle, in the same way that you did the back.
+ Now let us try to assign workers to the inner walls...
+
+ ALAIN: Hmm. It is rather hard to allocate to pieces
+ that are concealed by portions of the castle that are
+ already constructed.
+
+ SIR RICHARD: We could tear them down and build them up again.
+
+ ALAIN: That's a rather awkward solution, my lord. There are two better
+ solutions for this problem. First, it is possible to change the perspective
+ on the castle. Flip the castle from front to back by using the "F" key.
+
+ SIR RICHARD: "F" key? I believe I once heard a minstrel talking about that.
+
+ ALAIN: If you still cannot adjust the piece using a flip command, then go
+ back to the design menu. You can adjust the number of workers from the main
+ view and from the blueprint.
+
+ SIR RICHARD: All of this allocafing of workers seems so...
+
+ ALAIN-. Tedious? It can be, my lord. Fortunately, there is a shortcut.
+ Before one builds a castle, hire your laborers immediately. Then go to the
+ design menu, and before you put together your blueprint, allocate workers to
+ that piece. The piece will begin to build as soon as you place it, and the
+ number of workers assigned will remain the same for all future pieces.
+
+ SIR RICHARD: That is an improvement. However, I've always found
+ shortcuts to be rather dangerous in practise.
+
+ ALAIN: Well, there are risks. If you do not have
+ enough workers and allocate too many pieces, then
+ the pieces will not build immediately. They will be in
+ a state of 'Waiting". Worse, when vou have allocated
+ pieces with more workers then you have in the available
+ workforce...
+
+ SIR RICHARD: That can be a mess. Workers will be
+ reduced on the pieces that are being built to stretch
+ between all of the allocated pieces. Sometimes, the
+ number of workers on a piece will drop to zero,
+ which may cause an entire wall section to become
+ Unstable. The work force will lack alt coordination.
+ ALAIN: Why do I expect that you knew everything
+ I was talking about, my lord?
+
+ SIR RICHARD (smiles): I have seen many castles rise
+ and fall, and dealt with many master builders in
+ my day. The study of castle building has been something
+ of a hobby of mine. After all, if my liege has
+ been spending many thousands of pounds on
+ castle-building, his counsellors ought to know whether his money
+ has been well spent. Of course, there is only one true test
+ of a castle, and that is how well it does in battle. I
+ think I will let my brother Phillip talk about it when
+ he has the time...
+
+ ALAIN: Yes, he would be the choice. Or Thomas of
+ Norshire.
+
+ SIR RICHARD: That pup? Surely you jest. Now,
+ by this rime you should have a clear indication of
+ how to place castle pieces, how to assign workers to
+ castle pieces, and what to look for if the castle pieces
+ are not being built.
+
+ ALAIN: Perhaps you should repeat the main points, my lord.
+
+ SIR RICHARD: An excel lent suggestion. First, if
+ you cannot place castle pieces on your blueprint, it
+ is either because you are trying to place it on land
+ where a castle cannot be constructed, or because
+ you have used up the maximum resources that can be
+ assigned to the project.
+
+ ALAIN: Be certain that your Resources counter is
+ not at Zero. Also, if the number is slightly above
+ zero, you may not be able to place certain pieces such
+ as gates.
+
+ SIR RICHARD: Second, if a castle piece has stopped
+ building, check to see if the piece is listed as Unstable or Waiting.
+ Unstable pieces need to be supported by the adjacent pieces. Wailing
+ pieces need a scaffold to become available.
+
+ ALAIN:'Tis true. But what of No Workers?
+
+ SIR RICHARD: Ah yes. If a piece is not building, and you receive a report
+ that says "No Workers", then you need to hire more
+ labourers.
+
+ ALAIN: Are there any other possible problems?
+
+ SIR RICHARD: Not unless the monarch is so foothardy with his purse that
+ he runs out of money. In such a case, both laborers
+ and guards will quickly abandon the king for better paying work. Why does
+ it always seem that the people in power are the greatest debtors?
+
+ ALAIN: Perhaps because they are not spending their own money, my lord.
+
+ SIR RICHARD: Hmm, that reminds me, I have business to do for my
+ father. If you do not understand these principles, repeat this
+ tutorial until you do. Now if you will excuse me, my father wishes
+ me to look at his household accounts, and see how much debt he has
+ incurred.
+
+ ALAIN: And now that we have come to the end, remember, gentle folk, that
+ if we have offended you with problems that were not explained within this
+ discourse, use your telephones to contact us at the number listed in the
+ Warranty section, and gladly will the wise and patient folk do their best to
+ solve your problems.
+
+
+  -= THE REAL WORLD CASTLES OF EDWARD I =-
+
+ The reign of King John and his son Henry Ill were a disaster for
+ England's continental empire; the vast empire that Henry II had built
+ between Scotland and the Pyranees had crumbled. One side effect of this
+ defeat was that it allowed England to concentrate on the subjugation
+ of its neighbors, Scotland, Ireland, and Wales.
+
+  The history between England and its neighbors was never a peaceful one.
+ While England and Scotland both coalesced into centralized monarchies
+ before the 11th Century, Wales remained a collection of princedoms,
+ squabbling for land, raiding each other and England. Ownership of
+ Northern England changed hands frequently The Welsh raided the
+ English lands on their boader, and vice versa. Everyone worried about
+ Vikings. In 1066, however the Norman Conquest changed everything.
+
+  The subjugation of England by the Normans was conducted in a manner that was
+ ruthless even by medieval standards; whole villages were destroyed, and the
+ entire ruling class of England disappeared in twenty years, replaced by
+ Normans.
+
+ A culture as ambitious and as powerhungry as the Normans were not content
+ to hold a single kingdom; they were constantly trying to expand, and
+ engaged in continuous suppression of rebellious provinces, attacks against
+ the King of France, and disgruntled family members (refer to the Tales of the
+ Middle Ages for suitable examples). However, this did not mean that the
+ kings of England forgot about the other nations in the British Isles.
+ The Normans were quick to expand into Wales. However, the geography of
+ Wales confined their advances to the valleys and lowlands of
+ Southern Wales. Even the might of Henry II was not sufficient
+ to defeat Welsh troops. Henry responded by recognizing
+ the rule of Welsh lords, particularly Rhys ap Gruffyd, in return for
+ their recognition of his overlordship. This would not
+ be the first time that an English king would meddle in Welsh
+ politics, nor would it be the last.
+
+  In the 13th Century, Wales was finally united
+ under the leadership of Prince Llywelyn the Great
+ and his grandson, Llywelyn ap Cruffyd. Indeed, in the treaty of
+ Montgomery, Llywelyn ap Gruffyd forced Henry III
+ of England to recognize his territorial gains and his
+ title "Prince of Wales". However, despite the triumph of the
+ princes of Gwynedd, their glory was soon to end. Henry III
+ relinquished most of the disputed lands in France
+ with the Treaty of Paris in 1259. This allowed his son,
+ Edward I, to concentrate on the conquest of Wales
+ as no king had done since the early days following
+ the Norman Conquest. His original plan was to overrun many
+ of Llywelyn's lands and hand them to his more compliant brothers,
+ Dafydd and Gruffyd. However, his campaign of 1277 was such a
+ success that Edward realized that he didn't have to reward
+ Dafydd. In 1282, the Welsh rebelled. Edward went to
+ war against the Welsh, and won. Llywelyn died in an
+ ambush, and Dafydd was captured, tried, and executed.
+
+  Edward realized that he needed to consolidate his
+ gains. He decided on a policy of building castles
+ in strategic places. He would encourage English
+ settlers to build towns near the castles, eventually they
+ would trade with and assimilate the Welsh.
+
+ This was the most expensive enterprise ever taken
+ up by a King of England at that time, and eventually it
+ would almost entirely drain the English treasury.
+ To coordinate the building, Edward chose as his master
+ mason a renowned architect, Sir James of Savoy,
+ who had studied the castles built by the Moslems in the Crusades.
+ Sir james built castles according to the needs of his master, Yang
+ Edward, and supervised the building.
+ There were ten castles built by Edward I, in what clearly can be
+ considered three separate castle building campaigns. Of these ten,
+ six castles have special importance.
+
+  THE MAJOR WELSH
+  CASTLES OF EDWARD I
+  Castles Dates Built
+  Flint 1277-1281
+  Rhuddian 1277-1281
+  Caernarvon 1283-1323
+  Conway 1283-1287
+  Harlech 1283-1289
+  Beaumaris 1295-1323
+
+ The first two castles on this list (as well as two lesser, castles,
+ Builth and Ruthin, which were started at the same time) were
+ built by Edward following the initial campaign. While
+ Flint and Rhuddlan are impressive, they do not compare with the latter
+ four castles, which are truly masterpieces of English
+ building and military engineering. What is also impressive about the
+ castles is their sheer variety; each castle, though constructed
+ at the same time, stands out as an individual structure with little in
+ common with the others.
+
+ Caernarvon, Conway, and Harlech were all started following the
+ conquest of Wales. Harlech was designed as a military
+ fortress, standing tall on the face of a large cliff. Its
+ central defense was designed around an extremely strong gatchouse,
+ which was later incorporated into the second
+ stage of building at Caernarvon.
+ In many ways, Conway is the most visually impressive of Edward's
+ castles, with eight huge drum towers and an inner ward
+ surrounded with turrets. Its approaches were
+ protected by barbicans and fortified steps.
+ Of all of Edward's castles, Caernarvon had a highly
+ symbolic importance that was reflected in its design.
+ Before its construction, a rumor surfaced that the
+ bones of Magnus Maximus, the father of the first
+ Christian Roman Emperor Constantine had been
+ found on the site. Master James had visited the
+ castles of the Holy Lands and may have been to Constantinople,
+ where he would have seen the walls of Constantinople with its
+ polygonal towers; the towers of Caernarvon were
+ based on those of Constantinople. The great tower of
+ Caernarvon, the Eagle Tower, was meant to have
+ imperial connotations. In 1284, Edward's heir, the future
+ Edward II, was born at Caernarvon. He became the first in
+ a long line of Princes of Wales; tragically, Edward II was
+ destined to be deposed by his wife, his barons, and his
+ fifteen year old son in 1327.
+
+  In the 1294 and 1295, a new series of revolts broke
+ out in Wales. In 1294, Caernarvon Castle and its town
+ fell to the rebels, and though it was soon
+ liberated, Edward and Master James were determined
+ that this would never again occur. The resulting rebuilding and
+ expansion of Caernarvon included Lhe King's Gate,
+ which included no fewer than five doors and six
+ portcullises, with each of these secfions bolstered by
+ arrow loops in the walls and murder holes in the ceiling.
+
+  It was after the revolt of 1295 that Edward decided
+ to begin work on the grandest and most ambitious castle of all,
+ the beautiful Beaumaris ("beautiful marsh"). While lacking in the
+ Christian (and Arthurian) mythological tones of Caernarvon,
+ Beaumaris was an immensely impresive fortress based
+ on the concentric castles of the Middle East. It had
+ two sections, an outer curtain wall defended by over a dozen
+ towers and strong gatehouses, and an inner wall with immense
+ towers and extremely powerful gatehouses. The layout of
+ Beaumaris demanded that any attacker who managed
+ to break through the outer curtain would have to
+ make a sharp turn under heavy fire to approach the
+ inner curtain to attack it. For several years,
+ thousands of men, at a cost of L13000, worked on
+ Beaumaris, until Edward ran into financial
+ problems. Edward's belligerent policy towards
+ Scotland and a dispute with the French crown
+ over Gascony caused an immense drain on the treasury of England, and
+ Edward was a king who heavily taxed his subjects.
+ England was building an empire of castles it could
+ not afford.
+
+  Although the construction of Beaumaris continued well into the reign
+ of Edward II, the great castle was never finished. The towers of the inner
+ curtain wall were never raised to their full height, the southern gatehouse
+ remaimed unfinished, and the great hall within the inner wall was never
+ begun. Beaumaris remained, like all too many works of art, an unfinished
+ masterpiece. No enemy ever attacked Beaumaris;
+ the rebellion of Owen Glendower in 1400 was the last armed attempt to
+ restore the. Welsh nation, and it failed.
+
+ The grandest human achievements, like grand works of nature, cannot be
+ described or shown in pictures. It impossible to understand
+ the awe inspiring scope of the Grand Canyons without seeing it
+ in person. It is impossible to truly appreciate the Cathedral
+ of Notre Dame without visiting it. So it is with the castles of
+ Edward I; one cannot truly appreciate the scale of Edward's endeavor
+ without viewing these castles in person. This is perhaps the greatest
+ tribute that one can pay to Edward I, that and the fact
+ that his castles have endured to inspire people long after his death.
+
+  -= TALES OF THE MIDDLE AGES =-
+
+ I: The Plantagenet Saga
+
+  Let's imagine a soap opera about medieval
+ royalty. We'll include:
+
+ King Henry
+
+  A tall, handsome man with a temper so bad that he was seen chewing on
+ straw when he was angry. A man who ordered the murder of one of his
+ closest friends in a fit of rage. A man whose sons and whose wife
+ continuously plots aginst him.
+
+ Queen Eleanor.
+
+  Leader of a rebellion against her husband, and imprisoned for the rest of
+ his reign.
+
+ Prince Henry
+
+  The eldest son. At his father's coronation, he
+ boasted that he was the son of a king, while his
+ father was only the son of a Duke. He led rebellion
+ after rebellion against his father, reconciling with
+ him after every failure.
+
+ Prince Richard
+
+  The second son.
+ Betrothed to Alice, sister of his best friend, the King of
+ France. Unfortunately, she currently in the custody
+ of King Henry, who is enamored by her, and
+ refuses to allow the mariage.
+
+ Prince Geoffrey
+
+  The third son. When his brothers rebel, he does too.
+
+ Prince John
+
+ The youngest son. He was born after his father's
+ empire was carved up, and ended up with nothing,
+ hence the derogatory title "Lackland". His father's
+ favorite, much to the chagrin of his brothers.
+ Later, he would become one of the worst rulers in
+ English history.
+
+  The writers of modern day soap operas would be
+ hard pressed to find a more contentious family
+ for their drama than the Plantagenet family of
+ Henry II. Their history was one of treachery, combat,
+ and enough sex to ensure that it would receive big
+ ratings, if it was ever aire.
+
+  When Henry II was crowned King of England
+ in 1154, he held the largest empire in Western Europe
+ He was King of England, and Duke of Normandy
+ and Anjou, possessing as much as two-thirds of
+ France. By 1158 he had become overlord of Wales
+ and Scotland as well, and soon added Ireland to his
+ empire. However, powerful men make powerful
+ enemies.
+
+ Henry Il's enemy was King Louis VII of France.
+ Although Henry was technically Louis's vassal,
+ Henry had more land and a much larger army than
+ Louis. However, Louis was far from the greatest threat
+ that Henry had; the greatest threatcame from
+ his sons: Henry, Richard, Geoffrey, and John.
+
+ In 1173, Henry the Younger demanded that
+ his father resign either the throne of England, or the
+ thrones of Normandy or Anjou. When his father
+ refused, Henry the Younger fled to the court
+ of Louis of France, followed by his brothers
+ Richard and Geoffrey. The revolt lasted two years,
+ after which Louis, Young Henry, and Geoffrey sued
+ for peace. Richard tried to continue the rebellion on
+ his own, but failed, and was forced to return to his
+ father and ask for his forgiveness. Surprisingly,
+ Henry forgave his sons. His wife, Eleanor of
+ Aquitaine, however, was locked up in a tower for sixteen
+ years for her part in the rebellion.
+
+ Henry gave his sons pieces of his empire, which kept them happy for nearly
+ eight years. In 1182, Henry the Younger demanded
+ that his brother Richard (who was named Duke of Aquitaine) pledge his
+ loyalty to him. Richard refused, and Henry the Younger
+ and Geoffrey marched their armies against him.
+ King Henry, alarmed by the war between his sons, demanded that they settle
+ it peacefully. They cheerfully ignored him, so King Henry allied himself with
+ Richard. The rebellion ended when Henry the
+ Younger died of dysentery in 1183. Surprisingly,
+ Henry the Younger was so popular with the people of
+ Rouen and Le Mans that they nearly went to war
+ for the custody of the body
+
+  Geoffrey took refuge at the court of the recently
+ crowned King Phillip Augustus of France, until
+ his unfortunate death in a tournament in 1186. This
+ left Phillip without a pawn to use against the King of
+ England, so he invited Richard to his court.
+ Richard and Phillip soon became close friends, to the
+ great chagrin of Henry II.
+
+  In 1188, Richard and Phillip joined forces against
+ Henry II, and captured several of Henry's towns.
+ The pretext for this attack was Henry's unwillingness
+ to allow Richard to marry Alice, sister of Phillip
+ Augustus.
+
+  In 1189, Henry learned that his one previously unrebellious
+ son, John, had joined with Richard in the
+ revolt. Henry, who loved John far more than any of
+ his other children, fell into despair and soon died,
+ cursing his sons with his last breath. And no one
+ could really blame him, could they?
+
+  Happy at last, Richard took the throne of
+ England. He rewarded those who had supported
+ him against his father by dismissing them, then
+ joined with his friend Phillip Augustus in the Third Crusade.
+ By the end of 1191, they were no longer friends. The greedy Prince
+ John, who was not made regent in Richard's absence, deposes
+ Richard's hand-picked governor, the greedy William Longchamp. Richard,
+ through a combination of military brilliance and extreme ruthlessness (who's
+ going to miss a few thousand hostages anyways?) secures a Christian presence
+ in the Holy Land and visiting privileges for Christian pilgrims in Jerusalem.
+ Richard returns home in 1192, but is captured by ne of his enemies, the
+ Archduke of Austria.
+
+  Meanwhile, brother John joined with Richard's former friend Phillip
+ Augustus to usurp Richard's empire while Richard is imprisoned.
+ John declared that Richard died in prison, but no one
+ believes him, and the barons of England joined
+ forces to oust him. The loyal barons then collect a
+ huge sum of money to pay his ransom. John is then
+ betrothed to the same Alice that Richard was betrothed
+ to (who was beloved of his father Henry II), but eventually
+ spurns her to marry the heiress of the duke of
+ Gloucester. (Later, John decided to divorce his wife
+ and marry the daughter of a French noble, in what
+ proved to be the second messiest royal divorce in
+ English history.)
+
+  Richard is released from prison in 1194, and returns
+ to England. He immediately goes to war against
+ Phillip and John, annulling the sale of estates made in
+ 1189 to raise money for the effort. John, wanting to get
+ back in his brother's good graces, invites the officers
+ of one of Phillips garrisons to an entertainment,
+ then massacres them and returns to England. At
+ their mother's behest, the two brothers are reconcile
+ with each other, though Richard is noticeably cool
+ to the arrangement. Surprisingly, John does not
+ betray Richard for the rest of his reign. Richard
+ spends most of the rest of his life fighfing Phillip
+ Augustus (who nearly drowns in the river Epte
+ after fleeing a major defeat), and quelling rebellions in Brittany and
+ Aquitaine. Finally, Richard died from an arrow wound
+ while trying to take a treasure from a rebellious
+ vassal. Richard appointed the eleven year old Arthur
+ of Brittany (son of his dead brother Geoffrey) as his
+ successor, but the disgruntled John eventually
+ fights his way back to the throne, losing the empire
+ of his brother and his father in the process. In
+ 1216, he dies, succeeded by his young son, the boy-king Henry III, who
+ is the father of Edward 1. (Eventually, Edward III, Edward
+ I's grandson, would invaded France to take back some of
+ the lands lost by John, starting the Hundred Years War in the process.
+ But that's another story.)
+
+ II. Roast Rochester
+
+  During the course of John's troubled reign, one
+ of his many problems were rebellious barons. His
+ father, Henry II, had torn down many castles in his
+ day (in an attempt to keep his barons from developing
+ their own centers of power), but one which had
+ escaped his notice was Rochester Castle in
+ England. This castle, built of small-sized stones and
+ consisted of a huge central keep surrounded by curtain
+ walls, was attacked by King John's troops in 1215.
+ During the siege, the attackers dug a tunnel
+ beneath the base of one of the corner towers, propping it up
+ with heavy wooden beams. Into this tunnel, they placed forty
+ fat pig carcasses. Then they set the pigs on fire.
+
+ To the defenders' astonishment, the heat from the burning pigs
+ began to crack the masonry. The corner of the tower
+ crumbled. The besiegers then entered the keep and
+ forced the defenders to surrender. One scribe wrote of
+ the event: "Men no longer put their trust in castles.
+ The scribe's assessment was soon proved to be inaccurate; not only
+ did lords continue to build castles,
+ but the fallen tower was later replaced.
+
+ III. Devils May Care
+  Religion was important in the Middle Ages, and the
+ gathering of souls by the Church was considered to
+ be one of the most important activities.
+
+  Many of the clergy were highly literate, and some
+ were exceptional scholars, providing scholarship
+ whose influence has been felt even in the modern
+ era. Unfortunately, not all of them were. Bishops
+ sometimes found that both candidates and ordained
+ priests were unable to read Latin, and therefore unable
+ to understand both the scriptures and the ritual.
+ Gerald of Wales spoke at length about ignorant
+ parish priests who confused Barrabas and Barnabas,
+ or St. Jude with Judas Iscariot, or the meaning of parables.
+ Perhaps this might explain why priests frequently talked
+ about devils.
+
+  The Bible does not talk very much about Hell or
+ devils, which was not reflected in the sermons of
+ these priests. Devils, the torments of Hell that awaited the wicked,
+ and other nasty tales were often told in church, usually with very little
+ Biblical basis. The popular image of devils (pointed ears, forked
+ tails, red or black skin) owes a lot more to these
+ medieval tales than the Bible..
+
+ Priests told highly entertaining tales of sinners
+ who were caught or tricked by the devil and who
+ were forced to suffer for an eternity as a result. These
+ stories endured in the form of folktales, even to the
+ present day.
+
+ Priests were not the only ones who told stories
+ about devils. There was a popular rumor that there
+ was demonic blood in the House of Plantagenet, as
+ Geoffrey Greygown, Count of Anjou in the late
+ 10th Century, was said to have married a demon.
+ One wonders, given the gentle nature of the family
+ how such a rumor might have started.
+
+ Although England and Wales in the Middle Ages
+ were thoroughly Christian cultures, pagan superstitions
+ still endured in the minds and hearts of both
+ peasants and nobles. In many ways, diabolical tales
+ were a Christian counterpoint to these enduring
+ pagan myths. Travelling performers often performed morality tales from
+ the bible or the lives of saints that featured the
+ devil; eventually the Church began to raise concerns about the accuracy
+ of these plays.
+
+ IV. Five Good Reasons Not to Be a Peasant in the Middle Ages
+
+ 5. Wonderful traveling opportunities!
+
+  Most peasants in the Middle Ages never travelled
+ more than twenty miles away from their homes at
+ any time in their (usually short) lifetime.
+
+ 4. Friendly neighbours!
+
+  People living on the borders between neighbouring nations had to be
+ worried about an invasion at virtually any time. During one Scottish
+ invasion of Northern, England, it is said that so many prisoners were taken
+ that not one Scottish bousehold was without an English slave.
+
+ 3. Great bosses!
+
+  One of the more charming feudal customs was called "Jus Primae Noctis",
+ which gave the lord of a fief a right to sleep on the first night with
+ the newly married bride of one of his serfs.
+
+ Fortunately, a serf could avoid this practise -- if he paid a fine. This
+ practise was never common in England, and seems to have fallen out of favor
+ on the continent by 1200 AD.
+
+ 2. Great cuisine!
+
+ A peasant did not have a lot of variety in their meal.
+ Meat was rare, there was not a great variety in
+ vegetables, water was stale (or worse), and peasants were generally
+ undernourished.
+
+ 1. Do we need any other reasons?
+
+        CASTLES
+  -= A Bibliography =-
+
+ BOOKS
+
+ Castle
+ David MacCauley, Houghton Mifflin, 1977
+ (An entertaining and informative look at castle building).
+
+ The Castle Guide
+ Grant Boucher, Troy Christensen, Arthur Collins, and Nigel Findley,
+ TSR Inc, 1990
+
+ English Medieval Castles
+ R. Allen Brown, B. T Batsford, 1954, 1961
+
+ Kingdom of Champions,
+ Phil Masters, Iron Crown Enterprises, 1990
+
+ Life in a Medieval Village
+ Frances and Joseph Gies, Harper Perennial, 1991
+ (An extremely informative, yet easy to read book on life in an English
+ viltage, providing invaluable background on the Middle Ages).
+
+ Lionheart
+ Edwin Mng, Columbia Publications, 1987
+
+ Norman Castles
+ Derek Frank Renn, John Baker Publishers, Ltd., 1968,
+
+ Oxford History of Britain
+ Kenneth O. Morgan ed., Oxford University Press, 1988
+
+ Studies in Castles and Castle-Building
+ Arnold Taylor, Hambledon Press, 1985
+ (A highly technical piece, this provides hard data on castle construction
+ for people who are really interested in the topic)
+
+ TELEVISION
+
+ Castle, Unicorn Projects,
+ 1983 (Highly entertaining animated adaptation of David MacCauley's
+ Castles, occasionally airs (in the United States) on PBS.)
+
+ Robin of Sherwood, ITV
+ Productions, 1985-88
+ (While this series had its flaws (historically inaccurate for a show that
+ tried to be "realistic") this series provides an interesting interpretation
+ of the popular Robin Hood cycle and British Fantasyltnyths.)
+
+ Wizards and Warriors,
+ Don Rio Productions, 1982
+ (Long forgotten by all but a handful of fantasy fans, this series provided
+ good production values, anachronisfic heroes, and interesting villains.)
+
+ MOTION PICTURES
+
+ The Adventures of Robin Hood
+ 1938 (Historically inaccurate adaptation of a 19th Century version of
+ Robin Hood, with a delightful performance by Errol Flynn and Basil Rathbone.
+ Hollywood pageantry at its finest, wonderfully produced.)
+
+ Robin and Marion, 1974
+ (Sean Connery is superb as an aging Robin Hood in this unorthodox telling
+ of the popular tale.)
+
+This file once passed through -------->
+                                        LSD UNITED STATES HEADQUARTERS
+                                         PRAYER GATE - (501) 336-9661
+                                           your sysop is baser evil
+

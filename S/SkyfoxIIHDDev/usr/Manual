@@ -1,0 +1,509 @@
+                             Skyfox II
+
+                         Table of Contents
+
+1 CONFLICT SUMMARY................................................... 1
+	1.1  About This Manual....................................... 1
+2 SKYFOX II QUICK REFERENCE.......................................... 2
+	2.1  Starting Skyfox II...................................... 2
+	2.2  Joystick Control........................................ 2
+	2.3  Cockpit Controls........................................ 2
+	2.4  Scan Monitor Controls................................... 3
+3 THE FEDERATION COMPUTER............................................ 4
+	3.1  Play.................................................... 4
+	3.2  Describe................................................ 4
+	3.3  Level................................................... 4
+	3.4  Specs................................................... 4
+4 SKYFOX II OPERATION................................................ 5
+	4.1  Skyfox II Cockpit....................................... 5
+	4.2  Flight.................................................. 6
+	4.3  Combat.................................................. 7
+	4.4  Docking and Repair...................................... 9
+5 OVERVIEW OF POSSIBLE CONFLICTS.................................... 11
+	5.1  Xenomorph Uprising..................................... 11
+	5.2  Incoming............................................... 11
+	5.3  Intruder Alert......................................... 11
+	5.4  Guardian............................................... 11
+	5.5  Grizzly Encounter...................................... 11
+	5.6  Diplomatic Immunity.................................... 11
+	5.7  War!................................................... 12
+	5.8  Spy Versus Xenomorphs.................................. 12
+	5.9  Xenomorph Juggernaut................................... 12
+	5.10 The Boondock Expedition................................ 12
+
+                                          FROM: Federation HQ, Terra, Sol
+			                 TO: Federation HQ, Deneb, Cygnus
+                        RE: The Cygnus Conflicts - WARPWARRIOR EYES ONLY!
+
+                        1  CONFLICT SUMMARY
+
+Effective immediately, all Federation Warpwarriors are on Condition Alert. 
+Intelligence reports that a Xenomorph uprising is in progress.  We can only
+assume that their ultimate goal is the conquest of the Terran Federation
+since all attempts to negotiate with them have thus far failed.
+
+If you'll recall your Academy lessons, the Xenomorphs attempted to
+subjugate the Federation on another occasion with unprovoked attacks on our
+colonies.
+
+Their defeat was due in large part to the amazing Skyfox warplane.  Once we
+had driven them from our colonies, we contained them in Cygnus, their home
+star system.
+
+now it seems they want once again to spread terror and tyranny across the
+galaxy.  To meet this new threat, Federation engineers and scientists have
+developed the Skyfox II warp fighter.  Every Federation Warpwarrior has
+been issued a Skyfox II in order to meet and deal with each Cygnus conflict
+as it arises.
+
+Your mission in the Cygnus System:
+
+	1.  Acquaint yourself with your Skyfox II warp fighter.
+	2.  Use the Skyfox II and your experience as one of our finest
+	    Warpwarriors to keep the Xenomorph threat contained in the
+	    Cygnus constellation, and protect all Federation interests
+	    there.
+
+God's Speed Warpwarrior!
+
+1.1  ABOUT THIS MANUAL
+
+This manual is organized to help you become familiar with the Skyfox II
+warp fighter in the most expedient manner.  The first section is a
+reference section on the computer installed in your fighter and its control
+sequences.  You can refer to this reference section while on patrol or in
+battle.  The next section of the manual covers every aspect of the Skyfox
+II in detail, and the final section details the various conflicts in
+Cygnus.
+
+				1
+
+                  2  SKYFOX II QUICK REFERENCE
+
+This section details how to start your Skyfox II, and briefly describes the
+function of all its controls.  Read this section before continuing with the
+rest of the manual, and keep it nearby for reference during your mission.
+
+2.1  STARTING SKYFOX II
+
+Make a backup copy of Skyfox II using Workbench. See "Using the Workbench"
+in your copy of 'Introduction to the Amiga' if you need instructions.
+
+STARTING SKYFOX II ON THE AMIGA 500, 1000 OR 2000
+
+            1. Insert your joystick into Port 2.
+            2. Turn on your monitor and computer.
+            3. If you own an Amiga 500 or 2000, insert the program disk. If
+               you own an Amiga 1000, insert KickStart 1.2, then wait for
+               the hand holding a disk to appear onscreen. Insert your
+               Skyfox II program disk. The game will automatically load.
+            4. When the title screen first appears or after the credits,
+               press any key to move to Mission Selection.
+
+2.2  JOYSTICK CONTROL
+
+See section 3 for complete Federation computer instructions.  See section 4
+for complete combat and flight instructions.
+
+Flight:		Move joystick forward to dive, back to climb, and left or
+		right to change direction of flight.  Press the Button to
+		fire the neutron disruptors.
+
+Non-Flight:	When docked, or when using the Federation computer, use
+		the joystick to position the cursor directly over the
+		option you want, then press the Button to select.
+
+2.3  COCKPIT CONTROLS
+
+See section 3 for complete Federation computer instructions.  See section 4
+for complete combat and flight instructions.
+
+0-9		Speed. 0 = stop; 9 = 9,000 KPS (Kilometers Per Second)
+A		Autopilot.  Toggles autopilot on/off.
+L		Location.  Toggles X, Y location on/off.
+Control-M	Muffler.  Toggles engine noise on/off.
+Control-R	Rescue. Quit current conflict to Mission Evaluation screen
+		of the Federation computer.
+Control-S	Silencer.  Toggles all sound on/off.
+
+				2
+
+D		Dock.  Dock when you're in the vicinity of a friendly 
+		starbase (See section 4.4 for details).
+Del		Deceive.  Toggles deceptor device on and off.
+I		Information.  Intercepts Xenomorph transactions (only in
+		certain conflicts - check Overview of Possible Conflicts).
+M		Mines.  Drops anti-matter mines.
+O		Overview.  Displays overview map.  Joystick Button puts
+		it away.
+P		Pause.  Catch your breath, then press P again to
+		continue.
+R		Repair.  Functions only when docked at a starbase.
+S		Shield.  Toggles defense screens on/off.
+Spacebar	Photons.  Fires photon pulse bombs.
+
+2.4  SCAN MONITOR CONTROLS
+
+See section 4.3.4 for information on using the scan monitor in conjunction
+with the HUD.
+
+F1		Toggles between fore and aft screen views.
+F3		Puts scan monitor in Long Range mode.
+F5		Puts scan monitor in Medium Range mode.
+F7		Puts scan monitor in Short Range mode.
+
+				3
+
+                    3  THE FEDERATION COMPUTER
+
+The first thing you'll see when you start your Skyfox II are options
+provided by the Federation computer on Terra.  You can use the Federation
+computer to describe, select, and set the difficulty of your missions.  The
+Federation computer will also evaluate your performance at the end of, or
+when you abort, a mission.  The following sections describe the options you
+can select from the Federation computer.
+
+3.1  PLAY
+
+After highlighting a conflict, choose PLAY to embark on that mission. 
+After completing or aborting the mission with the Rescue command (see
+section 2.3), the Federation computer will display the following screens:
+
+Mission Summary Screen - Appears when you complete a mission; either by
+winning or failing.  This screen tells you how you performed in helping to
+resolve the conflict; i.e., whether you completed all of your objectives
+and lived, or completed only some of your objectives and died.  In some
+cases, your mission may end, but you are still alive.  This means that the
+Xenomorphs have accomplished their objectives ahead of you, or you have
+simply run out of time.  Choose Play Again to retry the mission.  Choose
+Missions to return to the Mission Selection screen.  Choose Evaluation to
+see the Evaluation screen for the mission.
+
+Mission Evaluation Screen - Appears when you use the Rescue command. 
+Evaluates the statistics of your mission; i.e., the number of enemies
+destroyed, the level, and so on.  Choose Play Again to retry the mission. 
+Choose Missions to return to the Missions Selection screen.  Choose Level
+to select an earlier or a harder conflict level.
+
+3.2  DESCRIBE
+
+Gives a brief description of the mission you have highlighted.
+
+3.3  LEVEL
+
+Changes risk level.  Choose between Cadet, Wingman, Flight Leader, Squadron
+Commander, or Ace of the Base.
+
+3.4  SPECS
+
+Shows the technical specifications of your Skyfox II warp fighter.
+
+				4
+
+                    4  SKYFOX II OPERATION
+
+The following sections describe the capabilities of your new Skyfox II warp
+fighter.  Please read the operation manual carefully to insure that you
+know how to use your ship effectively in the heat of battle.
+
+4.1  SKYFOX II COCKPIT
+
+       |-----------------------------------------------------------|
+       |                                                           |
+       |                                                           |
+       |                                                           |
+       | AutoPilot                0 -- HUD Target Ring             |
+       |  Off/On                                                   |
+       |       |        /--------------------\                     |
+       |-------|-------/                      \--------------------|
+       | |-----|-----|  |--------------------|  |----------------| |
+ |-----|-|- 99 A  20-|-||        ==>         |  | ER___________ -|-|-----|
+ |     | |  -- -- -- | ||         |          ||-|-XX SH_______ --|-|---| |
+ | |---|-|-| | || | || ||   Scan Monitor     || | XX DM________--|-|-| | |
+ | |   | | --- -- ---| ||--------------------|| |----------------| | | | |
+ | |   |--|------------|----------------------|--------------|-----| | | |
+ | |   |  |   Incoming!|        SHORT         |              |     | | | |
+ | |   |  |---|--------|----------|-----------|--------------|     | | | |
+ | |   |------|--------|----------|-----------|--------------------| | | |
+ | |          |      Mines        |           |          Damage Indicator|
+Photons    FTLC Warning Indicator |     Shield on Indicator            | |
+   |                              |                             Shield Level
+Target Identifier           Range Indicator                              |
+                                                              Energy Level
+
+				5
+
+4.2  FLIGHT
+
+The following sections describe how to pilot your warp fighter into combat.
+
+4.2.1  Launch
+
+Press the fire button to launch from a starbase docking bay.  Your Skyfox
+II is always launch-ready while docked, except during repairs - you must
+cancel any repairs currently underway before you can launch.
+
+4.2.2.  Flight Control
+
+Federation engineers have designed the Skyfox II flight control systems to
+operate as much like the original Skyfox fighter as possible.  Push the
+stick forward to lower, and pull it back to raise the nose of your ship. 
+Move the stick left or right to change direction.
+
+4.2.3  Navigation
+
+This section describes how to navigate your Skyfox II.  You can navigate
+manually, or you can select a destination on the overview map and let your
+autopilot guide you there.  However, the autopilot will not avoid
+asteroids.  You can either attack and destroy asteroids in your direct path
+or override autopilot with manual steering to avoid them.  Use the
+following steps to program your autopilot:
+
+	1. Display the overview map (see section 2).
+	2. Use the joystick to move the cursor to your desired
+	   destination on the map.
+	3. Press the Button to choose location.
+	4. Set your flight speed (see section 2).
+	5. Engage the autopilot (see section 2).
+
+The autopilot will automatically disengage when you reach your destination.
+Note: Turning on your autopilot will return your Skyfox II to the level of
+the orbital plane in Cygnus.  So, if you're flying above the orbital plane,
+you'll descend to it.  If you're beneath it, Autopilot will lift your
+fighter to the level of the orbital plane.  All starbases and wormholes are
+located on the orbital plane.
+
+Using Wormholes:  Littered throughout the Cygnus star system are
+astrophysical anomalies known as "wormholes".  Wormholes are byproducts of
+black holes, and you can use them to quickly travel between different
+points within Cygnus.  When you enter a wormhole, you leave our universe
+and enter a region that Federation
+
+				6
+
+physicists have termed "nullspace."  Because time and distance have no
+correlation in nullspace, you will emerge from the "twin" wormhole,
+possibly many millions of kilometers from your original location, but only
+a few seconds later.  The map included with your Skyfox II package shows
+the locations of all the known wormholes in the Cygnus star system. 
+Wormholes appear as red dots on your scan monitor.  To enter, target it
+using your HUD; as you approach, you'll see the wormhole flashing on your
+screen.  Reduce your speed to keep the wormhole in sight.  As you're
+travelling through, the screen will blur.  Note: Be prepared for possible
+ambush when emerging from wormholes in Xenomorph space.
+
+4.2.4  Speed
+
+Speed is measured in klicks (kilometers) per second (KPS).  Press number
+keys 0 through 9 to set flight speed (0 = stop; 9 = 9,000 KPS).  Your
+current speed appears under the anti-matter mines register in the cockpit.
+
+4.3  COMBAT
+
+The following sections describe the combat capabilities of the Skyfox II. 
+See section 2 for cockpit controls.
+
+4.3.1  Neutron Disruptors
+
+Disruptors shoot directly towards the target ring in the HUD.  Use them to
+destroy enemy ships, and asteroids.  The nuclear cells power the disruptors
+- if the nuke cells run out of energy, the disruptors are useless.
+
+4.3.2  Photon Pulse Bombs
+
+Photons shoot directly toward the targeting ring when no enemies are
+present.  When an enemy vessel is visible through the front view screen,
+the photon locks on and tracks the enemy vessel.  Pulse bombs are the only
+way to reliably destroy an enemy starbase.  They will also destroy
+asteroids, no matter their size.  The pulse bombs are useless if the Skyfox
+II photon tubes are damaged during battle or by an asteroid collision.
+
+Photons are self-contained and do not use energy from the nuke cells.  Th
+photons indicator in the cockpit displays the number of photons in your
+arsenal.  The number of available photons will change depending upon your
+current mission.
+
+				7
+
+4.3.3  Anti-Matter Mines
+
+Drop Anti-matter Mines from the rear of your Skyfox II.  Mines are timed
+and explode when they strike an enemy, or when their time is up.  Mines
+cause extensive damage to enemy ships.
+
+Mines are self-contained and do not use energy from the nuke cells.  The
+mines indicator in the cockpit displays the number of mines in your
+arsenal.  The number of available mines will change depending upon your
+current mission.
+
+4.3.4  HUD (Heads Up Display)
+
+HUD is the Skyfox targeting system, vital for locating and destroying enemy
+ships and starbases.  The HUD automatically locks onto the nearest ship or
+starbase within medium range.  The locked object will flash on the scan
+monitor.  When the HUD locks on, its target ring displays an arrow
+indicating the direction you should move the joystick in order to intercept
+the target.  The targeting ring then changes color to indicate the distance
+to the target and the likelihood of a hit.  The ring is green when
+nothing's in range, gray when a potential target is distant, white at
+mid-range, and red when your target is closest.
+
+The target identifier readout in the cockpit displays the identity of
+objects flashing on the scan monitor and targeted by the HUD.  You can
+select the various active targets by pressing Return.  The HUD, scan
+monitor, and target identifier will all change to show the currently
+targeted object as you press Return.  The target identifier and the scan
+monitor both display different targets in different colors:
+
+	Green		Federation
+
+	Blue		Xenomorph
+
+	Purple		Third World
+
+Note: If your HUD is damaged during the combat, or by asteroid collisions,
+toggling the fore and aft view (see section 3.4) can approximate a target
+finder until you can dock and repair your HUD system.
+
+				8
+
+4.3.5  Deceptor Device
+
+An invisibility device that conceals your Skyfox from enemy radar and
+sight.  Firing neutron disruptors, photon pulse bombs, or dropping an
+anti-matter mine will temporarily disengage this device, thus revealing
+your location.  When the deceptor is activated, the view through the main
+screen is tinted red, and the deceptor device indicator in the cockpit
+glows.  The deceptor device uses a huge amount of energy from the nuke
+cells, so use it only when necessary.
+
+4.3.6  Shields
+
+Shields absorb damage normally inflicted upon your ship by asteroids and
+Xenomorphs.  Shields are automatically engaged upon takeoff.  Shield energy
+is supplied by the nuclear batteries.  When the shields are too damaged to
+take the full impact of a hit, or the nuke cells are too low to adequately
+replenish the shields, the damage is sustained by your ship.  Skyfox
+systems that may be damaged or destroyed by enemy fire or asteroid
+collisions are: neutron disruptors; deceptor device; photon tubes; scan
+monitor; KPS indicator; HUD; and FTLC.  The shield bar graph in the cockpit
+shows your current shield charge.  The shield-on indicator in the cockpit
+glows red when the shields are active.
+
+4.4  DOCKING AND REPAIR
+
+This section describes the procedure you use to dock with a Federation
+starbase to replenish your weapons, recharge your nuke cells, and repair
+damaged ship systems.  Use the following steps to dock with a starbase:
+
+	1.  Reduce speed to about 1,000 KPS and approach the starbase.
+	2.  Your ship will stop when the starbase locks you into its
+	    docking beam.
+	3.  Use the "Dock" command (see section 2).
+	4.  The overview map appears with a starbase selected.  Find the
+	    selected starbase on your map of Cygnus and type in the first
+	    four letters of the starbase name.  The correct code identifies
+	    you as a Federation ship, and the starbase pulls your ship
+	    into the docking bay.
+
+Once you are in the docking bay, starbase crews will begin recharging your
+nuke cells and reloading your photons.
+
+				9
+
+Use the Repaid command (see section 2) to repair damaged systems.  A
+schematic diagram of your Skyfox II appears on the cockpit main screen. 
+Damaged systems appear yellow when partially damaged and red when they're
+not functioning and require replacement.  Undamaged systems are green. 
+Move the screwdriver onto a damaged system and press the Button to tell the
+starbase repair crew to begin.  Repairs take time, and Xenomorphs don't
+wait for you to finish, so keep an eye on your scan monitor.  Be prepared
+for the possibility of launching and defending the starbase before repairs
+are complete.
+
+				10
+
+                 5  OVERVIEW OF POSSIBLE CONFLICTS
+
+What follows are summaries developed by Federation tacticians of possible
+conflicts that may arise in the Cygnus system.  Study them carefully -
+because you may have to eventually experience one or more of them first
+hand.
+
+5.1  XENOMORPH UPRISING
+
+Xenomorph battlegroups are converging on Federation territory from Xeno
+starbase Zebra.  Your mission is to destroy both the attackers and starbase
+Zebra.
+
+5.2  INCOMING
+
+Long-range scanners have spotted incoming Xenomorph missiles approaching
+your starbase through Asteroid Alley.  Destroy the missiles, their launch
+point, and return to your starbase.
+
+5.3  INTRUDER ALERT
+
+A Xenomorph battlegroup has invaded Federation territory.  The intruders
+pose a hostile threat.  Seek out and destroy all the enemy fighters.
+
+5.4  GUARDIAN
+
+A Federation frigate has been badly damaged.  Your assignment is to escort
+the crippled ship from starbase Madrid to Havana, where the frigate will be
+repaired.  Watch out for Xeno attacks from Asteroid Alley.
+
+5.5  GRIZZLY ENCOUNTER
+
+A Xenomorph convoy is enroute to starbase Grizzly with a secret weapon. 
+Destroy the convoy before it can reach Grizzly.  You must also prevent
+diversionary attacks on Federation starbases.
+
+5.6  DIPLOMATIC IMMUNITY
+
+The Xenomorphs have requested a peace conference.  Accompany Ambassador
+Grace on his way to the Xeno-Federation Peace Summit. Protect the
+Ambassador's ship at all costs in the event of a Xenomorph trap.
+
+				11
+
+5.7  WAR!
+
+The Xenomorphs have officially declared war on the Federation.  Their
+leaders have ordered a huge invasion force to mobilize at starbase Charlie
+in preparation for attack.  Use all your skill to protect endangered
+Federation territory.
+
+5.8  SPY VERSUS XENOMORPHS
+
+The Xenomorphs are readying a secret war plan against the Federation. 
+Proceed to Xeno HQ, using your Deceptor device as necessary to avoid
+detection, and intercept the secret transmission using the Information
+cockpit command (see section 2).  Then return to Federation HQ with the
+information.
+
+5.9  XENOMORPH JUGGERNAUT
+
+The secret Xenomorph war plan is about to come to fruition.  They have
+built a massive death base near their homestar.  Their commanders are
+readying yet another, and possibly the final, assault on the Federation. 
+Pulverize this base before the Xenos attack!
+
+5.10  THE BOONDOCK EXPEDITION
+
+Find the lost starbase Boondockia.  Federation experts estimate this to be
+a four-day mission.  Once you arrive there, attempt to dock with the
+ancient starbase (it is not known whether the starbase is under friendly or
+hostile domination).  Your ship is specially equipped with solar power
+collectors which continuously replenish the nuclear batteries.  Bring along
+lots of supplies to help you explore the furthest reaches of space.  Note: 
+Once out in deep space, use the Deceptor device with extreme caution.  The
+Deceptor device drains your nukes more quickly than the solar power
+collectors can restore them, and docking to replenish your energy supplies
+may be impossible in the midst of this expedition.
+
+				12
+
+============================================================================
+         DOCS PROVIDED BY  -+*+-THE SOUTHERN STAR-+*+- for M.A.A.D.                                                               
+============================================================================

@@ -1,0 +1,89 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Flashback" © 1992 Delphine Software
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ The installed program requires 0.5 MB ChipMem and 1.0 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ The game requires an installed A500 Kickstart 1.3 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick345.lha" on aminet.
+
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+  version 3.2 (08.06.07) done by JOTD:
+  - fixed CPU delay loop to avoid flickering
+    (by using a calibrated CPU active loop instead of the classic VHPOS delay)
+
+  version 3.1 (22.06.06) done by JOTD:
+  - nasty protection presence check removed (near the end of the game)
+    (without it the game locks up just after dropping the bomb in the planet)
+  - fixed even more CPU dependent loops
+  - readme/install script fully rewritten 
+  - source code included
+  - CUSTOM1=1 enables trainer
+  - virtually all versions supported
+
+  version 3.0 (12.12.02) done by JOTD:
+  - rewritten for KickEmu
+  - sound REALLY fixed now
+
+  version 2.1 (2002) done by JOTD:
+  - game slowed down if played from keyboard, fixed.
+  - zoom function keys now work (needs a little more memory)
+
+  version 2.0 (2001) done by JOTD:
+  - initial WHDLoad release
+
+  v1.x (JST & DOS versions, 1999-2001)
+  - Convenient installer script
+  - Uses OSEmu by Harry/Wepl/MrLarmer/Me (included)
+  - 2 french versions, english and german versions supported, other may work too.
+  - Password protection removed
+  - Second button fixed (even on a A500 it did not work!!)
+  - Quit key (numerical '*')
+  - Uses fastmem for better loading/game speed
+  - Keyboard fixed
+  - Music fixed (many CPU dependent loop fixed)
+  - Cool icon (thanks Frank!)
+  - Walkthrough included
+
+ For the ones who don't have the documentation, a quick key guide
+ (thanks Luca for providing it)
+
+ Arrow keys = move, jump, crouch...
+ Shift = shoot, pick-up objects, append, talk...
+ Space bar = extract pistol
+ Return = force field (with belt)
+ F1 = inventory
+ F8, F9, F10 = various zoom levels
+ CTRL+C = 3D in-game sequences on/off
+ CTRL+G = Auto zoom on/off

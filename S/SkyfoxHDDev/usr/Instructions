@@ -1,0 +1,220 @@
+                     OPERATING YOUR SKYFOX FIGHTER
+
+Getting Started
+
+After Kickstarting your Amiga, insert Skyfox disk in the drive.  It will
+boot automatically. NOTE: requires Kickstart v. 1.1 Press the mouse (or
+joystick) button to begin> Whether you use the mouse or joystick, make sure
+it is plugged into Port One.
+
+Choosing Ranks (Skill Levels) and Scenarios
+
+Click the right or left arrows to go to the next higher or lower rank or
+scenario. The 5 ranks range from Cadet (the easiest) to Ace of the Base
+(the hardest).
+
+Of the 15 scenarios, the first seven are Training Missions, some with enemy
+tanks only, some with enemy planes only, some with both. Training missions
+contain no enemy Motherships and the enemy cannot destroy your home base.
+
+The remaining eight scenarios are invasions. You must protect your home
+base or lose your computer and whatever fighters you still have there.  The
+different scenarios will be discussed later.
+
+When you wipe out all the enemy forces or when the enemy wipes out all of
+your planes, you will be returned to base. When you reach the end of the
+game, press any key then press the mouse or joystick button to start a new
+game at the same level and scenario. To start over before the end of a
+game, press Control R.
+
+Launching a Skyfox Fighter
+
+After you choose rank and scenario, the base computer will appear on the
+screen.  To launch automatically against the nearest target, press the
+mouse or joystick button to enter the launch tube. If necessary, then use
+the mouse or joystick to select low (for launching against tanks) or high
+(for launching against planes). Press the button again to launch.  Your
+launch speed depends on your rank.
+
+Flying a Skyfox Fighter
+
+Move the mouse (or joystick) right and left to turn the plane. Move it
+forward and back to change altitude.  Press and hold down the spacebar to
+engage the afterburners for quick thrust. Release it to return to your
+pre-thrust speed.
+
+				1
+
+Using the Skyfox Weapons Systems
+
+Press the mouse or joystick button to fire the laser cannons.  Press H on
+the keyboard to arm a heat seeking missile and G to arm a guided one.
+(Press again if you want to disarm an armed missile which you haven't yet
+fired.) Press the button to send an armed missile against an enemy target.
+You must have a target visible on your on-board radar scanner to fire a
+missile.
+
+Using Automatic Pilot to Find More Enemy Targets
+
+When no enemy targets are in view, press A on the keyboard to engage the
+automatic pilot. Your onboard computer will locate the nearest enemy target
+and send you to their location.
+
+Using the Base Computer
+
+The base computer displays a tactical map which shows the location of all
+your installations and of all enemy vehicles. While flying the Skyfox,
+press C to bring up a visual display of that map, transmitted from your
+base computer. Use the cursor keys to move the cursor to the sector you
+want to fly to, then press A to engage the automatic pilot. You may also
+follow this procedure to choose your own target to launch against from the
+base.
+
+Switching between the High and Low Combat Arenas
+
+Skyfox provides you with two different combat arenas - High (30,000 to
+40,000 feet) and Low (below 1000 feet). You can switch between the two by
+flying up or down accordingly.  You can speed up this process by pressing U
+to go to high altitude combat and D to go to the low altitude one.  Either
+way, flying up to 30,000 feet results in heavy fuel consumption.  Look for
+enemy planes between 30,000 and 40,000 feet.  They will only fly in that
+range.
+
+Landing a Skyfox Fighter
+
+You may land at home base to recharge your shields and take on fuel.  You
+may not land at any installation other than your home base. (You can locate
+your home base by looking at the tactical map). To land: 1) enter the
+sector containing your base; 2) reduce your speed to 0 by pressing 0 on the
+keyboard; 3) reduce altitude to 0 by pushing forward on the mouse or
+joystick. Once you've successfully landed, the base computer will appear on
+the screen.
+
+				2
+
+The Scenarios
+
+Tank Training 1 -- You are launched flying due east toward three
+consecutive waves of tanks. When you destroy the last one, you will
+automatically be returned to base. Launch again to face even more tanks.
+Use your overhead radar scanner to spot your targets.
+
+Tank Training 2 -- Sectors all over the map will be occupied by tanks, all
+advancing on your base. When you clear out the tanks in your immediate
+area, press A on your keyboard to engage the automatic pilot. This will
+take you to the nearest target and top speed.
+
+Plane Training 1 -- You will be launched onto the tail of an enemy plane.
+Shoot fast or it will circle and attack you. The forward scanner will help
+to locate planes which are in range and will help you determine whether
+they are above or below you. (Press ALT to toggle between forward and
+overhead scanners).  Try your guided and heat seeking missiles. (Press G or
+H to arm the mouse or joystick button to launch). Succeed and you can
+relaunch against successively more planes.
+
+Plane Training 2 -- Launches you nose to nose with the enemy. The slow
+don't live.
+
+Plane Training 3 -- Like Tank Training 2, but with planes.
+
+High/Low Training -- Alternate waves first of tanks, then planes. You'll
+automatically be returned to base after each successful mission.
+
+Combo Training -- Like High/Low but a wave consists of both tanks and
+planes. You may fly between the high and low arenas.
+
+Small Invasion -- One Mothership to defeat, before it launches enough
+planes and tanks to destroy your base. Protect your base and the outlying
+installations containing your friends and relatives. Be sure to save some
+missiles to use against Motherships (When a mothership launches a plane
+against one of your installations, the message "Launch Detected" will
+appear on the radar scanner display in your cockpit.
+
+Full Invasion -- A three Mothership invasion.
+
+Massive Onslaught -- Six Motherships.
+
+				3
+
+Halo, Alamo, Advancing Wall, Chess and Cornered -- Each a multiple
+Mothership invasion, each with its own shape and pressure. (Note: To study
+enemy movement patterns in the scenarios, choose a scenario and press the
+button to enter the base, then don't launch. Just watch the enemy movement
+on the tactical map.)
+
+Link With Computer's Tactical Map
+
+C brings up the computer map. Pressing C again removes it. With the map on
+the screen:
+
+      The cursor keys move the cursor (blinking square).
+
+      Z zooms in on square under cursor. Z again returns to the normal map.
+
+      A engages automatic pilot, targeting square under the cursor. (If
+      tactical map is not up when automatic pilot is engaged, computer will
+      automatically select nearest enemy occupied square).
+
+      S brings up score summary.
+
+      R brings up an installation status report.
+
+      T brings back the tactical map.
+
+Guided Missile Count - press G to arm (and G again to disarm) and the
+joystick button to fire. You must have a target on your radar scanner to
+fire.
+
+Clock - Shows elapsed time since invasion onset.
+
+Fuel Indicator - Fuel consumption increases with speed. Thrust boosts and
+climbing to high combat arena are especially expensive. Land at home base
+to refuel. Running out of fuel in flight is fatal.
+
+Speed Indicator - In miles per hour. Press a number on the keyboard to set
+a new speed. 0 stops, 1 sets 10% of maximum, 2 at 20%, etc. Press + to
+increase speed by 100 mph and - to decrease speed by 100 mph. Maximum speed
+is 3000 mph.
+
+Each square on the base computer's tactical map is one mile on a side.
+
+X Coordinate -- Your current position in miles from the left of the
+tactical map.
+
+				4
+
+Y Coordinate -- Your current position in miles from the bottom of the
+tactical map.
+
+Compass Heading -- 0 is north, 90 is east, 180 is south and 270 is west.
+
+Control S -- Toggles sound on and off.
+
+Control R -- Restarts the game.
+
+ESC -- Pauses the game. Hit any key to resume.
+
+Help -- Gets help when you are at the base or flying with the computer up.
+
+Radar Scanner Display -- ALT toggles between overhead and forward radar
+screens.  Overhead radar shows installations as well as enemy targets.
+Enemy targets blink.  Watch for messages to appear here during battle.
+
+Heat Seeking Missile Count -- Press H to arm (and H again to disarm) and
+the mouse or joystick button to fire.  You must have a target on your radar
+scanner to fire.
+
+Auto Pilot Indicator -- Will show either AUTO or nothing depending on your
+flying mode.  Press A to engage.
+
+Shield Indicator -- When your shield is gone, so are you.  Land at home
+base to recharge.
+
+Altitude Indicator -- Be careful.  Above the rank of Cadet, hitting  the
+ground hard costs some shield strength.
+
+				5
+
+============================================================================
+         DOCS PROVIDED BY  -+*+-THE SOUTHERN STAR-+*+- for M.A.A.D.                                                               
+============================================================================

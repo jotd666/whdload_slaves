@@ -1,0 +1,29 @@
+Short : HD-Installer for Global Gladiators
+Type : game/patch
+Author : Bored Seal & JOTD
+
+This patch applies to "Global Gladiators" by Virgin (c) 1993 - 2 disks.
+Slave requires WHDLOAD V10+
+Game requires 0.5MB ChipRAM + 0.5MB any RAM (+ 1.8MB for Preload)
+
+FEATURES:
+- Game loads entirely from HD
+- Disk protection removed
+- BPLCON0 access fixed (4x)
+- 24bit access fault fixed
+- tested with CD32 (CD32 CIAs tend to emit level 6 interrupts that lockup the game)
+- NI/MWB icon (created by JHZ)
+- Quit option (your default key) inc. on 68000 machines
+- source code included
+
+HISTORY:
+V1.0 (16-Dec-1998) - first release
+V1.1 (29-Aug-2006) - fast mem usage, bplcon0 access fixed, protection removed properly, slave updated for WHD10+.
+V1.2 (13-Apr-2016) - (JOTD) fixed level 6 interrupt lockup on checkered screen (CD32 & others).  [issue #003402]
+V1.3 (17-Apr-2016) - (JOTD) added quitkey for 68000 machines
+V1.4 (03-Jan-2018) - (JOTD) (really) fixed level 6 interrupt lockup on checkered screen (CD32 & others).  [issue #003402]
+
+Thanks to Chris Vella for disk image and Mr Larmer for his Cool Spot install ;)
+
+         Bug report form, full WHDLoad package and other installs:
+                          http://www.whdload.de

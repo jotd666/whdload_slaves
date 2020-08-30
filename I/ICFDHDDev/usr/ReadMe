@@ -1,0 +1,72 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "It Came From The Desert" & "Antheads" © 1989 Cinemaware
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ The installed program requires 0.5 MB ChipMem and 1.0 MB OtherMem.
+ It can be quit by pressing F10 (key can be changed with Tooltype "QuitKey=").
+
+ The game requires an installed A500 Kickstart 1.3 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick346.lha" on aminet.
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 2.0 (08.11.10) done by JOTD:
+ - more CPU-dependent loops removed: game is now slower on fast machines
+ - sound samples now play OK (donkey)
+
+ version 1.2 (09.03.08) done by JOTD:
+ - SPS version 14 supported
+
+ version 1.1 (09.06.07) done by JOTD:
+ - fixed blitter wait
+ - adapted to data disk (Antheads / ICFD II)
+
+ version 1.0 (05.09.05) done by JOTD:
+ - install script supports free version from cinemaware site
+   (with faulty disk 3). Instead of including the 200K file, I made
+   a program to copy as much of the file as possible from the disk, and
+   then append the non-working part with a provided file (thanks Chris
+   for the original and working version !!)
+ - re-assembled slave
+ - source code included
+
+ version 0.1 (20.11.02) done by JOTD:
+ - initial pre-release
+ - many icons provided
+ - manual included
+ - solution included
+
+ Notes:
+ 
+ - The "Anthead" version works but if you leave the intro running, you'll face a black screen
+   where you have to press "fire" in order to continue. I think that this is the "do you want to restart
+   from a saved game" screen, only this is black for some strange reason. I'm not fixing this.
+   Solution: skip the intro or press fire when it happens.

@@ -1,0 +1,68 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Pinball Mania" © 1995 21st Century Entertainment.
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ The installed program requires 2.0 MB ChipMem and 1.3 MB OtherMem.
+ It can be quit by pressing F10 (key can be changed with Tooltype "QuitKey=").
+
+ The game requires an installed A1200 Kickstart 3.1 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick40068.A1200". The image can be extracted from a A1200 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick40068.A1200.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick345.lha" on aminet.
+
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 1.4 (30.05.10)
+ - Tarantula access fault workaround (being sitting on my harddrive for a long while, untested)
+ - no longer requires separate A1200/A4000 slaves
+
+ version 1.3-B (08.10.03)
+ - fixed keyboard problem appeared in v1.3 (which is unusable BTW)
+
+ version 1.3 (18.10.03)
+ - support for A4000 ROM
+ - adapted for WHDLoad v16
+
+ version 1.2 (21.04.03)
+ - fixed another access fault in "Kick Off" table
+ - reassembled with new kick31/kickfs
+ - reduced fastmem usage
+
+ version 1.1 (10.01.03)
+ - fixed all VBR accesses (sorry, I thought I had removed them)
+ - fixed many access faults in "Kick Off" table
+
+ version 1.0 (05.01.03) done by JOTD:
+ - initial release
+ - removed VBR accesses
+ - highscore sorted (I was told it did not work properly)
+ - save scores to HD, in game directory
+ - sourcecode included
+ - icons by Exoticons

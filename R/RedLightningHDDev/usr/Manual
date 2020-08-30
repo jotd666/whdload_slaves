@@ -1,0 +1,1134 @@
+                          RED LIGHTNING
+
+Typed in by SHAIHULUD. Edited by PARASITE.
+
+
+INTRODUCTION
+Red Lightning is a game for one or two players. Players will assume
+the roles of commanders of NATO and Warsaw Pact military forces during
+a hypothetical general war in central Europe in the early 1990's. Each
+game turn represents twelve hours of action. The military units
+represented in the game are regiments, brigades, divisions, corps, and
+corps or army headquarters. Units and air forces may be examined to
+the level of individual vehicles, squads, and heavy weapons. Almost
+every tank, gun, and tactical aircraft deployed in central Europe is
+available for inspection.
+
+1.0  STARTUP
+Before beginning play, you should make a back-up copy of your Red
+Lightning disks and place your masters in a safe place. You should
+always play off copies of your masters, thus providing for a backup in
+case of damage to your play disks.
+
+1.1 - 1.2 ST/IBM loading info.
+
+1.3  The Map
+The map shows central Europe for northern Denmark to central Austria
+and from central Belgium to central Poland / Czechoslovakia. Military
+units (when detected) will be displayed on the map as standard NATO
+military symbols (see appendix A), Hex scale is twenty five
+kilometers. The primary display shows an area fourteen hexes wide and
+seven high (about 40% of the total map area). Scrolling is accomplished
+by selecting any of the top six buttons at the right of the screen.
+Holding down the mouse button or number key will repeat the scroll in
+the selected direction. The other three buttons shown on the map
+screen perform the following functions:
+
+* <U> Enable/Disable display of unit icons. This allows you to remove
+the units from the map to allow unobstructed viewing of the map.
+Pressing the key again will return the units to the map.
+
+* <P> Enable/Disable display of hex possession and para / amphibious
+target hex information. This function shows which side controls a
+given hex by putting a colored dot in the lower left corner of all
+hexes on the map. When enabled, Warsaw Pact hexes will be shown with a
+red dot, neutral hexes (Austria) with a white dot, and NATO owned
+hexes with a blue dot. If displayed area, it will be indicated by an
+outlined "check" mark.
+
+* <O> Invoke the strategic overview display. The unit and possession
+selections described above remain in effect. the entire game map will
+be displayed at a greatly reduced scale. To exit, you must select a
+location on the overview display. The standard map display will
+reappear centered on the selected area.
+
+You may also select any hex on the standard map display for additional
+information (displayed below the map) on terrain and units in the hex.
+This is accomplished by pressing the left mouse button while the map
+cursor is in the desired hex. If a hex containing a unit is selected,
+that unit and any other units belonging to its corps (NATO) or army
+(Pact) will be marked with a small rectangle in the lower left corner
+of the unit icon. Full unit information will only be available for
+friendly and neutral hexes.
+
+1.4 Saving a Game
+At the beginning of each turn, you will be given the chance to save
+the game in progress. A formatted disk, hard disk, or ramdisk (on
+machines with RAM in excess of the game requirements) is required. You
+need only to follow the prompts in order to save the game. Saved games
+may be restored at the saved point whenever the game is booted.
+
+1.5 The README File
+Your game disk may include a README file. If so, then there have been
+important changes or additions to these rules. Please exaine any
+README file on your game disk before beginning play.
+
+2.0 PLAYING THE GAME
+Each game of Red Lightning consists of 20 or 60 turns representing the
+first 10 or 30 days of WWIII in Central Europe. Each turn represents
+12 hours (either AM or PM) of time.
+
+Before each turn is resolved, both players may move all of their units
+(or give attack orders), plot all their air missions, assign special
+forces teams to targets, and even allocate a paratroop or marine unit
+to land somewhere. Then, after all these functions have been completed
+by both players, the turn is resolved with a combat phase. The players
+watch as the combat unfolds, and the casualties are counted. Score is
+then calculated and displayed indicating that another turn is about to
+begin.
+
+Before beginning a game of Red Lightning, it is strongly recommended
+that you carefully read section 3.24(movement) and 4.0(combat). These
+two sections will let you know the basics of how to play.
+
+There are two players in a game of Red Lightning and either (but not
+both) can be controlled by the computer. Thus, the options are:
+
+*NATO Solitaire: A human player controls the forces of NATO against a
+Warsaw Pact computer player.
+*Pact Solitaire: A human player controls the forces of the Warsaw Pact
+against a NATO computer player.
+*Two Player: Human players control both sides.
+
+2.1 Pre-Game Selections
+Before starting a game of Red Lightning, you will be asked if you wish
+to load a previously saved game. If you do wish to load a saved game,
+the program will display a standard selector box. Simply select the
+saved game file as indicated to begin play.
+
+If you have not loaded a saved game, you will be presented with the
+following menu:
+
+Scenerio Selection
+Scenerio:
+         Red Lightning
+         "Lions & Tigers & Bears..."
+         A Gathering of Hosts
+Scenerio Length: Long or Short
+
+General Selection
+Chemical Weapons : Yes or No
+Season: Summer, Autumn, Winter, or Spring
+Pact Competence Level: Pushover, Moderate, challenging, Hairy,
+Hideous, or Random
+Play Mode: NATO Solitaire, Pact Solitaire, or Two Players
+
+Control Levels
+North Atlantic/Special ops: On or Off
+Air Campaign: On or Off
+Sub Divisional Deployments: On or Off
+Limited Intelligence: On or Off
+
+2.11 Effects of Menu Selections
+Under the Scenerio Selection section of the menu, you may choose which
+of the three scenerios you will play and what scenerio length you
+want. If you choose the long scenerio, you will play for 60 turns or
+until one side is declared victorious (by knocking the other side out
+of the war). The short scenerio lasts only 20 turns.
+
+General Selections control the following items:
+Chemical weapons: If "yes", then chemical warfare is assumed to be in
+effect. Warsaw Pact, US, and French artillery factors will be modified
+(generally increased in effectiveness) depending upon current weather
+conditions (see section 4.2). Units will also fatique more rapidly in
+combat under these conditions. Warsaw Pact SSM attacks on NATO
+airfields and depots will tend to be more effective. Setting this
+selection to "no" will strongly tilt play balance to favor NATO.
+
+Season: The time of year may be selected. This will have a significant
+effect on the game. Airpower and chemical weapons are very much
+affected by weather conditions.
+
+Pact Competence Level: This sets the following:
+1. Rate of recovery from combat fatique for Pact ground and air units
+forces (see section 5.3)
+2. Combat modifier for Pact ground units. (See section 4.2)
+3. Intelligence of the computer player in solitaire games. At higher
+levels, the Warsaw Pact computer player plays a "smarter" and more
+aggressive game and at lower levels a NATO computer player plays a
+"smarter" and more careful defensive game.
+
+*Play Mode: This selects for two player or solitaire (human vs.
+computer) modes of play.
+
+Control Levels are ON/OFF that either enable or disable certain
+features of the game. A "historical" game will be with all four
+selections set to "on". However, it is suggested that you learn the
+game with the Air Campaign and North Atlantic/Special Ops levels set
+to "off".
+
+*North Atlantic/Special Ops: This selects whether you will have any
+input into the conduct of the North Atlantic campaign or use of
+special forces and SSM's (see sections 3.22 and 5.1). If "on", you
+will have full access to theater reserve units, special forces, and
+SSM forces. If governing these functions, and these functions will be
+ignored by the program. The North Atlantic campaign will still be
+resolved assuming only the deployment of default units (USMC,
+Canadian, Norwegian, and other NATO forces, Soviet 6th Army and
+Northern Fleet marine forces) to Norway. There will be no Iceland
+invasion (see section 5.1). Since the warsaw Pact has significant
+advantaged in these areas, setting this selection to "off" will
+strongly upset play balance to favor NATO.
+
+*Air Campaign: This selects whether you will have access to the menus
+controlling air operations. If "on", you will have full control of
+your air forces. If "off", the program will control both players' air
+forces. This function doesn't favor either player, and turning it off
+will simplify the game.
+
+*Sub Divisional deployments: This selects whether you will have
+control over the deployments of individual regiments and brigades
+within larger units(see section 3.13). It should be noted that turning
+this function "off" can actually make the game more difficult as you
+can not force units in critical spots into a desired deployment mode.
+If set to "off", the computer will control the deployments of both
+players' subordinate (part of a larger unit) regiments and brigades.
+The computer will set sub unit deplyments immediately before the
+combat phase. Units adjacent to enemy units will have a large
+proportion of their units scheduled to attack will be almost entirely
+set to forward deployments. Units in "safe" areas will tend to be set
+to rest and reserve deployments. The sub unit screen (see section
+3.13) will be those selected by the computer before the last turn's
+combat phase. If set to "on", you have full control over these
+deployments.
+
+*Limited intelligence: This selects how much information is available
+to you on the location of enemy forces. If "on", you will only know of
+any units spotted by electronic, airborne, and satellite recce, and
+any information gained from special and regular forces during their
+normal duties. If "off", both players will be completely informed fof
+the location of all enemy forces at all times. The computer players
+always function in a limited intelligence mode, so setting this
+selection "off" will upset play balance to favor human players.
+
+Exit Selections allows you to terminate the selection prcess and begin
+playing the game.
+
+2.2 Turn Sequence
+Each game turn will proceed in the following order:
+    A. Game Save Opportunity (section 1.4)
+    B. Warsaw Pact Orders Phase (section 3.0)
+    C. NATO Orders Phase (section 3.0)
+    D. Joint Air Combat Phase (section 4.1)
+    E. Joint Ground Combat & Movement Phase (section 4.2)
+    F. General Resolutions Phase (section 5.0)
+
+3.0 THE ORDERS PHASE
+Orders will be issued to the military and air forces of both alliances
+by use of the Orders menu (see section 3.2). At the beginning of each
+turn, Warsaw Pact player will be given the option to invading Austria.
+Warsaw Pact units may not enter Austria unless an invasion is
+declared. NATO units may not enter Austria unless Austria request NATO
+aid.
+
+3.1 The Info Menu
+The Info Menu gives you access to the following game functions:
+
+3.11 Strategic Report              3.14 Weather Report
+3.12 Political Report              3.15 Supply Net Map
+3.13 Full Hex Report
+
+3.11 Strategic Report
+Selection of Strategic report will present you with a display of the
+overall strategic situation. Territory held by both players is listed,
+and the progress of the North Atlantic campaign is detailed. The
+Central Europe box list s territory held by each alliance as well as
+the current supply stockpile levels of both alliances. The North
+Atlantic box gives the status of Norway, Iceland, and the naval
+situation at sea. The three possibilities for the status of each are
+are "Control Contested", "NATO Control", or "Campaign Conluded:Pact
+(or) NATO Victory". "Control Contested" means that fighting is still
+going on while "Campaign Concluded" means that the battle is over and
+the listed side has been victorious. "Nato Control" indicates that the
+area has not been attacked yet.
+
+Control of Norway or Iceland will effect the outcome of the naval
+campaign. The status of the naval campaign ("at sea") has a
+significant impact on the attrition of convoys carrying supplies and
+reinforcements, in turn, can have a definite effect on the outcome of
+the conflict in Central Europe.
+
+The Recent News Reports box displays a list of significant events
+affecting the outcome of the war.
+
+3.12 Political Report
+Selection of Political Report will present you with a list of public
+morale and political allignment (NATO, Warsaw Pact, or neutral) for
+all of the countries in the area. When a country reaches zero morale,
+it may (50% chance per turn) engotiate a separate peace and withdraw
+from the war. Calculation of morale levels is explained in section
+5.5.
+
+3.13 Full Hex Report
+When this function is selected, you will be asked to select a friendly
+hex for examination. This is accomplished by clicking the mouse on any
+displayed friendly map hex. Only friendly hexes may be chosen for this
+function.
+
+The hex information and orders screen gives a geographic description
+and list of combat modifiers for the selected hex as well as a list of
+military units present in the hex. You may either examine any units in
+the hex (see below) or exit back to the main map screen.
+
+If a unit is selected for examination, you will be presented with a
+detailed list of equipment for each of the sub units of the selected
+unit (i.e. regiments for a selected Motorized Rifle Division). Also
+displayed will be the deployment and readiness information for all sub
+units of the unit. The effects of deployment and readiness of sub
+units on combat capabilities of a unit are detailed in section 4.0. If
+sub unit deployments are under player control (see section 2.1), they
+may be changed by clicking on the deployment buttons associated with
+the sub units. Any changes in the combat strength of the unit will be
+shown immediately.
+
+The ability to change the deployment of each brigade within a division
+gives you maximum control of your forces. If you really have to hold
+deployment and hope for the best. Units that are on "forward"
+deployment are not going to recover lost efficiency very quickly and
+will quickly dwindle in combat power if moved around much. If you
+don't expect to fight with a unit, the brigades on "rest" status to
+enable fast recovery of efficiency.
+
+The strengths of the units are displayed at the bottom of the screen
+with lethality (the ability to damage enemy units) on the left of a
+slash, and survivability (the ability to resist damage) on the right.
+Artillery strength is a measure of the unit's ability to conduct
+artillery bombardments on enemy units. The displayed strengths are
+fully modified current strengths; they include the effects of terrain,
+sub unit deployments, and readiness. Mobile strengths will be used
+during combat if the unit has moved at any time during the turn or has
+an average sub unit readiness of less that 75. Static strengths will be
+used for combats if the unit has not moved in a given turn. This
+reflects the effects of prepared defensive positions.
+
+A previous/subsequent unit selection allows you to examine other
+units. This allows you to select each units in play for your side one
+at a time to insure that none were missed.
+
+3.14 Weather Report
+Current conditions and a condesed summary of their effects on air
+operations, unit readiness in combat operations, and effectiveness of
+chemical weapons will be displayed.
+
+Weather forecasts are also available. A 12 hour (next turn) forecast
+is 90% accurate. The 24 hour forecast (turn after next) is 80%
+acurate, and the 36 hour forecast is 70% accurate.
+
+See section 5.6 for an explanation of weather determination and
+effects.
+
+3.15 Supply Net Map
+This calls for a calculation and display of current NATO and Warsaw
+Pact supply nets. A theater level map (same scale as the Strategic
+Overview map) showing the current supplied areas will be displayed.
+This is a complicated calculation and will take a few seconds to
+process. Area shown as dots are unsupplied while solid areas are
+supplied.
+
+3.2 THE ORDERS MENU
+The Orders Menu gives you access to the following gamefunctions:
+
+3.21 Air Operations         3.24 Unit Movement
+3.22 Special Operations     3.25 End Player Turn
+3.23 Para/Amphibious Hex
+
+3.21 Air Operations
+Selection of Air Operations agives you access to the Air Oeprations planning
+screen. At the screen left is a list of aircraft types. One of these types is
+highlighted. Details on the highlighted type are currently displayed in the
+Mission Allotment Orders and Aircraft Description boxes. The displayed
+aircraft may be changed by selecting any other type on the list. Recce aircraft
+may not be selected if the limited intelligence control selection is "off".
+
+The Aircraft Description shows a drawing of the most numerous or distinctive
+aircraft in the selected type. Below the drawing is a list of characteristics
+for the type (these are an average if multiple or distinctive aircraft models
+are bumped together). Characteristics include air superiority, strike
+capability, close air support capability, avionics capability, and
+survivability. Additionally, the readiness of the force and the number of
+aircraft of that type available are shown.
+
+Air superiority strike capability, and close air support capability display he
+aircraft's ability to accomplish these missions. Avionics capability indicates
+the ability of the aircraft type to operate in less than ideal conditions.
+Survivability is a measure of the ability to resist attrition while on a
+mission. Force readiness, like the readiness level of a ground sub unit, is a
+modifier to the ability of the force to carry out its mission. The total
+aircraft listing gives the total number of aircraft in the selected
+(highlighted) category.
+
+Allocations of aircraft to various missions is accomplished by selecting
+buttons in the Mission Allotment Orders box. Selecting "All rest" will assign
+all aircraft of the selected type to rest for the turn. This should be done
+when the readiness falls below an acceptable level or when environmental
+conditions would prevent effective accomplishment of assigned missions (i.e.
+Mig-21's flying on a PM/Storm turn).
+
+At the bottom of the Mission Allotment Orders box is a flight conditions
+indicator. Aircraft effectiveness for each condition is:
+         Very Good ----- 100%
+         Good ---------- 20% * avionics
+         Poor ---------- 15% * avionics
+         Very Poor ----- 10% * avionics
+
+This is essentially a force multiplier. Example: 100 Su-24 aircraft (avionics
+= 4) operating under "poor" flight conditions will function with the
+effectiveness of 60 (15% * 4 * 100) Su-24 operating under "very good" flight
+conditions. Survivability is not affected by flight conditions.
+
+Flight conditions are based on weather and time of day as follows:
+
+    Fair weather/AM ------------ very good
+    Fair weather/PM or
+    Cloudy weather/AM ---------- good
+    CLoudy weather/PM or
+    Storms/AM ------------------ poor
+    Storms/PM ------------------ very poor
+
+Whenever any part of a force is flown (assigned a mission), that force will
+have its readiness decreased by 10% * fraction of force flown. Example: if 65
+aircraft of a 120 aircraft force are assigned missions on a given turn, then
+the loss of readiness experienced by that force would be : 10% * 65/120 = 5%.
+Air forces recover abou 5% readiness on any given turn, and there are no
+attacks on airbases (which also affects force readiness), force readiness will
+remain constant.
+
+3.22 Special Operations
+Special Operations include all uses of airborne and marine forces, special
+forces teams, and Surface-to-Surface Battlefield Missiles (SSMs)- (Pact player
+nly). These functions are handled through the Special Operations Menu Option.
+If selected, this option will present you with the main special operations
+screen, From this screen you may exit back to the map, examine theater level
+airborne & marine forces, examine special forces & SSM's, or examine Norway
+and Iceland deployments of theater reserve units.
+
+3.221 Theater Level Airborne and Marine Forces
+If you examine theater level airborne and marine forces, you will get a new
+screen with a list of all currently available theater level airborne and
+marine units and their unit strengths. Any unit may be selected for deployment
+by selecting the button to the left of a unit name. Pressing the button again
+"deselects" the unit. Only one unit may be selected for deployment on any
+given turn. The selected unit will be deployed to the area indicated at the
+bottom of the screen. Selecting the "Unit deployment area" button will toggle
+deployments sites for selected units from a map hex on the central front (see
+below) to/from Norway or Iceland. (iceland may only be selected as a deployment
+area once either the "at sea" or Norway campaigns have been concluded with a
+Warsaw Pact victory.)
+
+3.222 Special Forces Teams and SSMs
+Examining the Special Forces and SSMs will lead you to another screen where
+you may assign special forces teams and SSMs to specific missions. The missions
+will be accomplished at the end of the turn. These missions represent actions
+by company size teams or small salvos of tactical battefield missiles (SSMs).
+
+Allowed missions are:
+* Airfield suppresion... each airfield suppresion mission will have the
+following effect: One enemy aircraft type is selected. From 1 to 10 of the
+selected type are destroyed, and the force readiness is decreased by 5%. (This
+is the same effect as an airstrike on an airfield)
+
+* Port/POMCUS/railway suppression... Each such mission will attack one enemy
+reinforcement unit as it enters the map. The entering unit will suffer a 20
+point reduction in readiness of all sub units. If no enemy units enter the map
+this turn, the mission is cancelled without loss to the special forces team.
+
+* Rear area harassment... Each such mission will have a stockpile / 1000
+chance of reducing the enemy supply stockpile by one.
+
+* Intelligence gathering... Each such mission will add a 10% chance to spot
+enemy forces during recce resolution at the end of the turn. (See section 5.4)
+This option may not be chosen if the limited intelligence control selection is
+"off".
+
+For each mission accomplished, one special forces team is expended and removed
+from the game. Selected actions may be cancelled by selecting the "Cancel all
+actions" button.
+
+the SSM menu is sued to assign fire missions to Warsaw Pact SSM's. NATO has no
+similiar capability. Each fire mission represents the launch of 12 missiles.
+Missions are the same as for special forces with teh exception that SSM's also
+have the further limitation that if chemical warfare is not in effect, each
+fire mission has only a 50% chance of being efective.
+
+3.223 Norway and Iceland Deployments
+A list of all units deployed frome ach player's theater reserve to Norway and
+Iceland is displayed. Note that the Warsaw Pact player need not deploy units
+to Norway in order to have a chance of victory as there are units assumed to be
+deployed there automatically. However, there will be no Iceland campaign
+unless the Warsaw Pact player deploys at least one theater reserve unit to
+Iceland.(There are assumed to be no Pact default forces sent to Iceland. The
+decision to initiate an Iceland invasion is up to the Warsaw Pact player once
+he controls Norway or wins the campaign "at sea".)
+
+3.23 Para/Amphibious Hex
+Any unit selected for deployment to the central front(the are covered by the
+game map) will be deployed to the hex shown in the special operations screens
+(see section 3.221). The target hex for an airborne or amphibious deployment
+of a theater reserve unit may be changed using the Para/Amphibious Hex menu
+option. After selecting a hex on the main map display. This hex will become
+the new target hex. Only hexes adjacent to ocean hexes may be selected for
+amphibious operations. Marine units targeted to inland hexes will abort their
+assigned missions. Only airborne units may be dropped into inland hexes.
+
+3.24 Unit Movement
+When you select the Unit Movement item, you will be asked to select a hex
+containing a friendly unit. Once a hex is chosen, you will choose which unit
+to move (if more than one is in the hex), and which type of movement you wish
+to order for the unit. There are two movement modes for units:
+
+3.241 Travel Movement
+Travel Movement allows you to move a unit freely across the map the the limit
+of the unit's movement capability. This is accomplished by selecting any hex
+adjacent to the moving unit. If the unit has enough remaining movement
+allowance to enter the hx, it will do so. A list of movement costs follows.
+Units may not be moved into an enemy occupied hex. Movement need not be
+completed for a unit in a single operation. You may exit and then return to
+units and continue moving them until they are out of movement points. Since
+knowledge of enemy positions may be gained immediately during travel movement,
+you may not retract a travel move order once it has been executed. This is
+very important to remember as you can cause difficult traffic jams if you are
+not paying attention.
+
+A special case of travel movement applies to the Danish ferry and Dutch
+highway routes. In order to transit these routes, your alliance must own (have
+possession of both ends of the route and there may be no units in the
+destination hex of the route. The moving unit must have at least 10 movement
+points remaining. All remaining movement allowance for the unit is expended in
+the move. Since the entire movement allowance of a unit is expended in
+transiting the route, this effectively imposes a one unit per turn rate of
+movement across each route. The moving unit must be in one of the end hexes of
+the route. When you select the enarest hex of the route, the unit will be
+moved from the start hex to the destination hex of the route.
+
+Example: The Sjaelland ferry route connects hexes 24,17 and 26,15. In order to
+move a unit from 24,17 to 26,15, you would select hex 25,17 (the nearest hex
+of the route). Moving a unit from 26,15 to 24,17 would require that you select
+movement for the unit into hex 26,16.
+
+TRAVEL MODE MOVEMENT COSTS
+(Cost to enter hex unless otherwiese specified)
+                                                    cost
+Terrain                                       (in movement points)
+-------------------------------------------------------------------
+Open -------------------------------------------------  3
+Road(all terrain except rough) -----------------------  1
+Road(rough terrain) ----------------------------------  2
+Urban ------------------------------------------------  2
+Marsh ------------------------------------------------  4
+Forest -----------------------------------------------  3
+Rough ------------------------------------------------  4
+Mountain --------------------------------------------- N/A
+Sea/Lake --------------------------------------------- N/A
+Ferry ------------------------------------------------ 10-12
+Dutch Highway ---------------------------------------- 10-12
+Exit River hex to a non friendly, non road hex ------- +3
+Entering friendly hex which already contains
+       another unit ---------------------------------- +1
+Entering non friendly hex ---------------------------- +1
+PM turn (per hex) ------------------------------------ +1
+Exiting from a hex adjacent to an enemy unit --------- +4
+Road(non rough) hex on cold/storm turn --------------- +1
+Road(non rough) hex (NATO only): --------------------- +1
+    Red Lightning scenerio (turn 1-6)
+    "Lion & Tigers & Bears..." scenerio (turn 1-5)
+
+Sub unit readiness will decline by one for each movement point expended by the
+parent unit. All units in supplied areas begin each turn with 10 or 12
+movement points (see section 5.3). Note that road hexes will give their
+movement benefits even if entered from non road hex. This means that the road
+net on the map is more extensive than it first appears.
+
+3.242 Maneuver Movement
+Maneuver Movement allows you to plan movement for units to execute during the
+joint movement and combat resolution phase. This is accomplished by selecting
+any adjacent hex(an arrow will be drawn into the selected hex). A second
+maneuver move may be selected for any hex adjacent to the first plotted
+hex(again, an arrow will be drawn into the plotted hex). Each hex pf plotted
+maneuver movement costs 6 movement points and will fatique the plotted units
+by 6 points(when the move is executed later in the turn). Since no knowledge of
+enemy positions may be gained by the simple act of plotting maneuver movement,
+you may freely re-plot such movement or cancel maneuver movement without
+penalty(regaining the expended movement points).
+
+The main purpose of Maneuver Movement is to attack enemy units. If you are
+simply trying to move your unit, you will usually use Travel Movement. Don't
+forget that units will not advance after combat unless one of the sub units is
+deployed in "reserve" mode (see section 3.13)
+
+3.243 General Movement and Stacking Rules
+Travel and Maneuver movement may be combined to the limit of available
+movement points although plots for maneuver movement must be made after travel
+movement. Any travel move made with a unit will cancell any previously plotted
+Maneuver movement for the unit. It is also very important to remember that
+units may take back Maneuver moves but not Travel moves.
+
+Because of the general superiority of NATO command, control, and
+communications, NATO executes all travel movement and plots all maneuver
+movement after the Pact player has finished his movement. This allows the NATO
+player to effectively "watch" the Pact player move and then respond to his
+movement. If the Pact player masses for an attack, the NATO player may simply
+withdraw rather than let the Pact player smash him. Of course, this means that
+the NATO player can simply avoid combat by retreating in travel movement
+before the combat phase. The side effect of this is the loss of the hexes.
+Winning the game as the NATO player requires the holding of terrain, so flight
+is the answer only when the alternative is loss of the units in question as
+well as the hex.
+
+Unit stacking restriction: The presence of two units in the same hex is
+traditionally referred to as stacking. At no time may more than two units
+occupy(be stacked in) the same hex.
+
+3.25 End Player Turn
+You use this selection to end your player turn and turn control over to the
+other player or to following phases. When playing against the computer, this
+option ends the turn and leads to te Combat Phase.
+
+3.3 The General Menu
+The Geenral menu allows access to a number of functions:
+
+* Quit Game allows you to stop playing the game and return to the desktop in a
+controlled manner. You will be asked again if this is the option you wish to
+choose, preventing accidental exiting of the program.
+
+* Erase Screen is a way to immediately clear the screen in case your opponent
+walks into the room.
+
+* Draw Screen is a function for the ST that will immediately restore the
+screen to the primary mapd isplay. This is useful for recovery from Erase Map.
+The program should recover automatically from accessory induced graphics
+difficulties.
+
+* End Game gives you an opportunity to end the game with a count of current
+victory levels. The general Resolutions Phase and certain menu selections are
+disabled, and the game is placed in a limited two player mode for ease of
+inspection of the computer player's situation after a solitaire game.
+
+4.0 COMBAT PHASE
+Each turn, after both sides have moved(or plotted moved for) all desired
+units, the game proceeds into teh combat phase to resolve all air and ground
+combats. Air combat consists of Air Superiority Ground Support, and Air Strike
+mission. Ground combat occurs whenever units belonging to one side attempt to
+enter a hex occupied by the other side's units.
+
+4.1 Joint Air Combat Phase
+Once into the combat phase, all Air Combat is resolved first(as air combat may
+heavily affect ground combat and then all ground combat is resolved. The air
+combat resolution starts with Air Superiority missions and then proceeds to
+Ground Support and Strike missions. The results of the Joint Air Combat Phase
+are listed in the information window at the bottom of the screen.
+
+NATO and Warsaw pact aircraft with Air Superiority missions will add their
+combat capability to a base value capability(due to anti aircraft fire) of
+their respective alliance. This capability number translates to a loss ratio
+that causes casualties among enemy aircraft flying that turn. The number of
+claimed kills will be displayed at the bottom of the screen. (Displayed kills
+will approximate actuall kills by a factor of 1.2 to 2.0). The actual
+algorithm used in calculating the umber of aircraft destoryed is listed in
+appendix E.
+
+Ground Support missions create additional artillery points at rate based on
+the capability of the assigned aircraft. The number of points created are
+listed during the Joint Air Combat Phase on the "Close Air Support" line. The
+artillery points created by a given force is listed in appendix E. The
+artillery points created are added to all units on the friendly side.
+
+Airstrikes are assigned by the appropriate player to attack airbases, supply
+blines, or troop concentrations. Each strike on an airbase will
+select(randomly) one enemy aircraft type, destroy 1-10 of the type, and
+decrease the readiness of the type by 5%. Every supply line strike, on the
+other hand, has a stockpile/1000 chance of reducing the enemy supply level by
+one. Each strike against troop concentraitons will have a 1% chance of
+striking each enemy sub unit(unit subordinate to a larger unit). Each piece of
+equipment in the inventory of the sub unit has a chance of surviving the
+attack. In addition tot eh loss of equipment, the sub unit will have its
+readiness decreased by 1 to 20 points. Any units so affected will be listed
+below the map.
+
+4.2 Joint Ground Combat & Movement Phase
+All amneuver movements plotted during the orders phase are executed in a
+random order with one corps/army moving all of its units before units of the
+next corps/army move its units. Movement alternates between NATO and Warsaw
+Pact with one Pact army moving, then one NATO corps. ALl units of each player's
+theater reserve are considered to belong to one corps for this purpose.
+
+If a unit attempts to enter a hex already occupied by an enemy unit, combat
+will occur. If the defending unit began the turn with an average sub unit
+readiness of at least 75 and did not expend any movement points during the
+turn, the attack is treated as an assault, and the defending unit expended any
+movement points this turn, a meeting engagement is assumed, and the defending
+units defend with mobile strengths.
+
+4.21 Ground Combat Strength Modifiers
+The numbers that are displayed during a full hex report(see section 3.13) are
+the strengths of the units. They will be modified by terrain and chemical
+warfare(see charts below). In addition, the pact competence level selection
+will modify the combat ability of Pact units:
+
+Pact Competence Strength Multiplier:
+Pushover ------------- 0.8
+Moderate ------------- 0.9
+Challenging ---------- 1.0
+Hairy ---------------- 1.1
+Hideous -------------- 1.2
+
+Terrain Effects On Unit Combat Strengths:
+
+Terrain Type       Lethality   Light Units   Survivability
+-----------------------------------------------------------
+Open                   1.0        1.0            1.0
+Forest                 1.0        2.0            1.5
+Rough                  1.0        2.0            1.5
+Marsh                  1.0        2.0            1.0
+Urban                  1.0        3.0            2.0
+River                  0.75       1.0            1.0
+
+The light units modifier applies only to units listed as having a survivability
+of one or two in Appendix B. Survivability modifiers are cumulative, thus
+increasing the survivability of light units in urban terrain six-fold.
+
+Weather Effects on Chemical Weapons:
+                                               Additional
+Weather           Artillery Mod             Readiness Loss
+-----------------------------------------------------------
+fair/warm              1.1                       4
+fair/mild              1.2                       2
+fair/cold              1.2                       2
+cloudy/warm            1.3                       4
+cloudy/mild            1.3                       2
+cloudy/cold            1.0                       2
+storms                 1.0                  (no effect)
+
+Thus all artillery factors are multiplied by 1.1 on a fair/warm day and all
+combats result in an additional 4 points of readiness being lost.
+
+4.22 Ground Combat Resolution
+Ground combat is resolved in a three-step process that ends up displaying the
+battle results in a Battle Result Display. This display shows the % of the
+attacking and defending forces that must check for elimination. Note that this
+percentage does not necessarily match the percentage of equipment that had to
+check for loss. The steps are the Artillery Combat Step, the Ground COmbat
+Step, and the Elimination/Retreat/Advance Step.
+
+Artillery Combat
+All units attempting to enter or hold the hex will sum their artillery values.
+If the corps/army headquarters or any corps/army artillery units belonging to
+the involoved corps/army are within two hexes of the combat hex, they will
+contribute 1/2 of their combined artillery and non-artillery factors as
+artillery strength in support of the combat. Only units not scheduled to
+perform their own maneuver combats will be available for ranged artillery
+support. Artillery units scheduled for manuever combats will be treated as
+normal combat units and will contribute their entire artillery values to their
+plotted combat. When chemical weapons are in use, the total artillery value
+may
+be multiplied by a factor of 1.1 to 1.3 depending upon the weather. Only Warsaw
+Pact, US, and French units receive a chemical warfare advantage. Finally, close
+air support is added to the attacking player's artillery value. This gives a
+final "Artillery Value", which is then converted into a "Loss Ratio". This
+"Loss Ratio" is applied to enemy forces and causes losses that are calculated
+from the survivability of forces are in static or mobile modes(mobile forces
+suffer greater losses from artillery combat).
+
+Ground Combat
+After artillery combat, ground combat is resolved. Ground combat is ver
+similiar to artillery combat except that the non-artillery lethality of the
+forces involved is used instead of the artillery factors, and there is no
+contribution to the combat from air support or artillery units. Remember that
+the lethality of static units is higher than that of mobile units, and that the
+lethality of units attacking from river terrain is multiplied by .75.
+
+Eliminations, Retreats, and Advances After Combat
+After losses are applied to both sides, a check is made to determine whether
+any units have been eliminated. If so, those units are removed from the map.
+Surviving defending units are then checked to see of they will retreat. The
+chance that a unit will retreat is equal to the loss ratio from non-artillery
+combat. This number is shown in the Battle Result Display during the combat
+resolution phase and will range from 2% to 100%. NATO units will only retreat
+north, northwest, southwest, or south. Warsaw Pact units will only retreat
+north, northeast, southeast or south. Units will retreat into a random
+friendly hex if one is available. If a unit attempts to retreat and no retreat
+route is available, teh unit will stay in place and suffer an additional 5%
+equipment loss and readiness decrease.
+
+If all defending units retreat from the hex, attacking units may advance into
+the hex. The chance for a unit to advance is equal to the average readiness of
+the unit's sub units divided by 100%. A unit with a low average readiness level
+is unlikely to advance after combat. Also, a unit can only advance after combat
+if at least one of its sub units has a "reserve" deployment.
+
+4.23 Combat Summary
+The combat strength of a unit is based upon the type of equipment assigned to
+the unit, the readiness of its sub units, and the deployments of those sub
+units. Large quantities of lethal, survivable weapon systems will lead to
+lethal, survivable units. High readiness rates lead to high combat strengths.
+Poor equipment and readiness rates lead to weak units. Forward deployments will
+maximize your unit strength (at the expense of limiting the rate at which the
+unit can recover from combat). A unit will only advance after a successful
+combat if at least one sub unit assigned to it has a reserve deployment.
+
+Units will cause fewer casualties to your opponent if they are forced to fight
+from open terrain. You can maximize the combat power of your units by defending
+in rough, urban, or forested terrain. Non artillery units will launch weaker
+attacks than normal formal river hexes.
+
+Units will defend better after they have been in a hex for at least a turn.
+
+Atillery and HQ units will contribute strength to any combats within two hexes
+of their location. Close air support contributes to the strength of your units
+in both attacks and defences.
+
+4.3 Airborne & Amphibious Operations
+Airborne and amphibious landings of theater reserve units will proceed without
+difficulty if the target hex is not occupied by enemy units, and if the hex is
+not already occupied by two friendly units. The unit being deployed will
+however suffer some losses in the process. (If the hex is already occupied by
+two friendly units, the drop will be aborted without losses.) Units will lose
+more equipment during AM drops due to increased chance for interception, but
+night drops impose a greater loss of readiness. The losses are also affected by
+the size of the enemy air force and the X coordinate of the airdrop target
+hex.
+
+If the target hex is occupied by enemy units, a standard combat (as described
+in section 4.1) will occur. On the turn of a drop, the airborne or marine
+unit's lethalities and any friendly close air support which applies to the
+combat drop will be multiplied by 1.66. If the defending unit is not forced to
+retreat from the hex, the dropped theater reserve will be destroyed. If the
+defending unit does retreat, the dropped theater reserve unit will be placed in
+the target hex as planned.
+
+Airborne and marine units may not be deployed to the central front during the
+last 10 turns of any game. They may still be deployed "out of theater".
+
+5.0 GENERAL RESOLUTION PHASE
+After all movement and combat is resolved, the computer will resolve the
+current turn's actions in the following areas:
+5.1 The North Atlantic Campaign
+5.2 Reinforcements
+5.3 Resupply Operations
+5.4 Intelligence Gathering
+5.5 National Morale Determination
+5.6 Weather Determination
+5.7 End of Game Test
+
+5.1 The North Atlantic Campaign
+The North Atlantic Campaign is divided into three parts: Norway, Iceland and
+the naval campaign "At Sea". Players may deploy units from their theater
+reserve forces in attempts to influence the outcome of the campaign. The
+results of the campaign will in turn influence the outcome of the "big show" on
+the central front. When checking for victory in the three areas, the conputer
+always checks for a Warsaw Pact victory first. If the Warsaw Pact fails to win
+in an area, then NATO player is checked to see if he wins.
+
+* Norway: Most of the forces involved in this area are invisible to players.
+Warsaw Pact (default) forces include the Soviet 6th Army, with support from
+Northern Fleet naval infantry, and air units based near Norway. NATO (default)
+forces include Norwegian army and air force, as well as contingents of USMC,
+(British) Royal Marines, and Canadian army troops. The Warsaw Pact has an
+advantage here that can only be countered by NATO reserve units. If the NATO
+player commits nothing, the Warsaw Pact has a base 3.33% chance of victory each
+turn compared with a 0-2% chance for NATO.
+
+*Iceland: An Iceland invasion can only occur if Warsaw Pact player deploys an
+airborne or the marine unit to Iceland. This can only happen if the Warsaw Pact
+player wins either "At Sea" or in Norway. The Warsaw Pact have no default
+forces for this campaign while the NATO defenses on Iceland are the NATO
+defaults. The Chance of victory for the Warsaw Pact is based on the lethality
+of the forces both players commit to the campaign while the NATO chance of
+victory is 0-10% (depending on the current status of the "At Sea" campaign).
+
+Any enemy forces adjacent to friendly units at any time will be spotted.
+Orbital, airborne and special forces recce are cummulative:
+
+Chance of Spotting units in an enemy controlled hex:
+Orbital recce(fair weather) ------------- 20%
+Orbital recce(cloudy weather) ----------- 10%
+Orbital recce(storms) ------------------- 0%
+Special forces recce -------------------- +10% * number of missions
+Airborne recce -------------------------- see below
+
+Airborne recce for each side is divided into three geograhic regions:
+
+Region                NATO                         WARSAW PACT
+----------------------------------------------------------------
+Tactical recce:       hexrows 0-28                 hexrows 23-54
+Deep recce:           hexrows 28-42                hexrows 12-22
+Strategic recce:      hexrows 43-54                hexrows 0-11
+
+Airborne recce will occur in each region for which aircraft were assigned
+missions earlier in the turn. Airborne recce is the primary method of gaining
+information on enemy deployments. The percentage effectiveness of such recce is
+based on the effectiveness of the aircraft, the capability of the aircraft, the
+readiness of the aircraft, and the number of recce aircraft committed.
+
+"Maskirovka": The Soviet military devotes considerable resources to deceptive
+counter-intelligence. Each turn, several(generally from oen to 10) false Soviet
+units may appear on NATO's map display. As these units aren't erally there at
+all, any NATO unit moving next to such a ghost unit will remove it from the
+map. False units have no direct effect on play.
+
+5.5 National Morale Determination & Effects
+All countries except the Soviet Union will be affected to some extent by troop
+losses. Each sub unit lost in combat will decrease national morale for the
+owning nation by (1/starting number of sub units). Each unit lost by a small
+army will have a large effect on the owner's national morale.
+
+For every 30 non urban or 6 urban hexes lost or gained by an alliance, all
+member of the alliance will lose or gain 1% national morale. In addition, loss
+of the following cities to enemy occupation will subtract 20% from the national
+morale of losing nation. This morale is regained if the city is re-taken.
+
+Major City Morale Losses:
+
+City(Hex)                      Owner
+-------------------------------------
+Vienna(43,46) ----------------- Austria
+Brussels(0,30) ---------------- Belgium
+Prague(36,37) ----------------- Czechoslovakia
+Copenhagen(29,10) ------------- Denmark
+Strasbourg(12,44) ------------- France
+Berlin(33,26) ----------------- GDR (East Germany)
+Bonn(10,33) ------------------- FRG(West Germany)
+Lodz(53,29)-------------------- Poland
+
+For each country which concludes a separate peace(surrender), all countries in
+the original alliance will lose 5% of national morale.
+
+Finally, national morale is affected by the outcome of the North Atlantic
+Campaign(see section 5.1).
+
+If the national morale of a country reaches 0, there is a 50% chance each turn
+that the country will conclude a separate peace with the enemy alliance. When
+this happens, all of that country's military units will be removed from the
+map. Some countries will also withdraw air forces. If the US, West Germany or
+Soviet Union conclude a separate peace, the war(and the game) ends
+immediately.
+
+Air Force Withdrawals by Country:
+*Czechoslovakia:
+ 20% of Pact MiG-21 force
+*German Democratic Republic:
+ 20% of Pact MiG-21 force
+*Poland:
+ 30% of Pact MiG-21 force
+*Belgium:
+ 10% of NATO F-16/F-18/Mirage F1 force
+*France:
+ 10% of NATO Jaguar/A-7/Harrier force
+ 40% of NATO F-15/Mirage 2000 force
+*Netherland:
+ 10% of NATO F-16/F-18/Mirage F1 force
+*Great Britain:
+ 20% of NATO Jaguar/A-7/Harrier force
+ 30% of NATO F-4/Tornado Force
+
+5.6 Weather Determination & Effects
+Weather conditions are updated each turn. Forecasts are also updated to prohect
+weather three turns in advance. Weather is dependent upon the season:
+
+Weather Probability by Season:
+Season           Cold/Mild/Warm              Fair/Cloudy/Storms
+---------------------------------------------------------------
+Winter:          60%/40%/0%                  30%/60%/10%
+Spring:          30%/60%/10%                 40%/50%/10%
+Summer:          0%/60%/20%                  50%/40%/10%
+Autumn:          20%/60%/20%                 30%/60%/10%
+
+Weather has significant effects on air operations(see section 3.21) chemical
+weapons(see section 4.2) and intelligence gathering (see section 5.4)
+
+5.7 End of Game Test
+The computer tests to see if either alliance has collapsed, or if the final
+turn of a scenerio has been reached. If so, the game ends and victory is
+awarded; otherwise, the game continues.
+
+Most short scenerio are concluded at the end of the day 10(pm) turn. Most long
+scenerios will continue until the end of the day 30(pm) turn. The Lions &
+Tigers & Bears scenerio will end day 11(am) or day 31(am) turn.
+
+6.0 SOLITAIRE AND TWO PLAYER PLAY
+In two player mode, the game will pause and display an alert box before
+beginning the next player/s phase. This allows the players to exchange places
+at the computer without either player seeing any information he shouldn't see.
+All unit location information etc, is erased before the alert box is displayed,
+and the next player's information is not displayed until the alert box(begin)
+button is selected.
+
+When a saved game is resumed, it will continue with all play selections as they
+were made when the game was begun. Solitaire games will be restarted in a
+solitaire mode while two player games will restart in a two player mode.
+
+7.0 SCENERIOS AND VICTORY CONDITIONS
+Scenerios may be either short or long. Long scenerios last for 60 turns(30
+days), and short scenerios last for 20 turns(10 days). Victory is determined
+solely by relative alliance morale level. Victory level = Pact average morale -
+NATO average morale.
+
+7.1 Red Lightning
+Mobilization during hostilities. This situation assumes no prior mobilization
+by either side and complete strategic surprise by the Warsaw Pact. NATO wakes
+up just in time to put up air defenses and order troops out of barracks as the
+Warsaw Pact units cross the borders into Norway and West Germany.
+
+Convoys will arrive on the following turns: day 8(am), day 15(am), day 22(am),
+day 29(am).
+
+Short Scenerio Victory Levels:
+Victory level < 20 NATO victory
+Victory level > 30 Pact victory
+Any other result is a stalemate(draw)
+
+7.2 "LIONS & TIGERS & BEARS..."
+Some mobilization has occurred. Most of NATO's European forces are mobilized,
+although US army reinforcements from North America are just beginning to
+arrive. While western leadership realizes that there is a high probability of a
+Pact invasion, most NATO units remain garrison positions in an "unprovocative"
+deployment. Pact units from the western USSR are beginning to arrive. Most Pact
+"first echolon" units have moved to invasion staging areas.
+
+Convoys will arrive on the following turns: day 4(am), day 11(am), day 18(am),
+day 25(am).
+
+Short Secenerio Victory Levels:
+Victory level < 12 NATO victory
+Victory level > 22 Pact victory
+Any other result is a stalemate(draw)
+
+Long Scenerio Victory Levels:
+Victory level < 15 NATO victory
+Victory level > 45 Pact victory
+Any other result is a stalemate(draw)
+
+7.3 A GATHERING OF HOSTS
+All of the forces of both alliance are fully mobilized and in wartime
+deployments. A few Pact units have not yet arrived, but almost everything each
+side has that can be committed to central Europe is "in the shop window".
+
+Convoys will arrive on the following turns: day 3(am), day 10(am), day 17(am),
+day 24(am).
+
+Short Scenerio Victory Levels:
+Victory level < 4 NATO victory
+Victory level > 14 Pact victory
+Any other result is a stalemate(draw)
+
+Long Scenerio Victory Levels:
+Victory level < 10 NATO victory
+Victory level > 40 Pact victory
+Any other result is a stalemate(draw).
+
+8.0 TACTICS TIPS
+You should probably play your first few games with the Air Campaign control
+selection set to "off". You will lose a bit of flexibility this way, but the
+game will be much easier to play. The Limited intelligence option is a matter
+of personal taset. Playing with limited intel is only a little more difficult
+than with unlimited intel, and it gives a more accurate and interesting game.
+The ability to painlessly stimulate "fog of war" is one of the great strengths
+of computer wargames. The North Atlantic/Special Ops control selection should
+probably be set to "off" for your first game, and "on" thereafter. This option
+adds relatively little complexity to game, but it does add a great deal of
+realism.
+
+Each scenerio presents different prblems for both players. The first order of
+business is creating a coherent defense or attack out of chaotic garrison
+deployments. This will generally be more of a problem for NATO than for the
+Pact. Don't try to confront an organized enemy force with mixed and incomplete
+corps or armies. Give up ground if necessary in order to gain time to organize
+your forces. Corps HQ and artillery support, movement coordination, and
+stacking restrictions will combine to give a strong advantage to the player who
+keeps his corps or armies intact.
+
+In a general sense, most Warsaw Pact formations are similiar in capability.
+This is not true of NATO's units. You should not expect a French or Belgian
+division to do the work of a British, German or American division. Examine your
+units in detail before committing them.
+
+If one of the countries in your alliance is heading for zero morale, pull that
+country's units out of the line as much as possible. Remember that when a
+country leaves the war, it takes its army and air force with it. The units are
+going to go away anyway if the country goes neutral. At least if they're still
+on the map, you can use them as a last ditch reserve.
+
+The most effective way to kill large numbers of enemy aircraft(assuming that
+they come out to play) is t o commit large forces to air superiority missions.
+This is not the best way to reduce the overall effectiveness of the enemy air
+force. Aircraft lost in air superiority combat tend to be older, less
+survivable types. Airfield strikes will affect all types equally, regardless of
+survivability. Also, strikes on airfields will keep enemy aircraft grounded due
+to decreased readiness. It doesn't matter how many aircraft the other guy has
+if he can't fly them. Flying low readiness forces is a losing proposition. You
+won't accomplish much, but you will generally lose a minimum of 2.5% of your
+committed force even if the other player doesn't fly a single air superiority
+mission. The air over central Europe will be filled with surface to air
+missiles.
+
+The Warsaw Pact:
+The Pact player should concentrate his forces and follow Pact doctrine. Keep up
+the tempo of the attack. Remember that unless you are facing fresh units,
+NATO's outfits are as badly fatiqued as your own. Ignore losses if you have a
+second echelon army ready to take up the advance. Reinforce success, not
+failure. Unless a tremendous hole opens up in your front, NATO does not have
+the units to exploit breakthroughs into your rear ares. On the other hand, if
+you manage to break through NATO lines, head west at top speed. Don't lose any
+sleep over a lack of defense for you flanks. This is particulary true if NATO
+has already committed his entire force. Head for the concentration of urban
+hexes near the Dutch/West German border. Occupation of this area will almost
+certainly force West Germany and the Nertherlands out of the war, resluting in
+a political collapse of NATO.
+
+Be sure to take out the Berlin garrison as soon as possible. If you dedicate a
+large enough force, this can be done with a minimum of casualities. The Berlin
+garrison is not a threat, but it does lie directly in the center of your main
+road net.
+
+Don't use all of your reserve forces in Norway. Thet are very useful in
+Denmark, and along NATO's lines of communications in Germany. If you have an
+opportunity, drop at least an airborne division on Iceland. Nothing will ruin
+NATO's day as quickly as the loss of all three phases of the North Atlantic
+campaign. Try to keep at least a couple of reserve units uncommitted until the
+very end of the game. The NATO player will be forced to keep reserves behind
+the lines to counter surprise airborne or amphibious operations.
+
+Use your tremendous special operations capability to keep the NATO air force
+from getting out of hand. NATO air is a real threat to your advance on the
+ground.
+
+NATO:
+The NATO player should be very careful to defend only in favorable terrain
+wherever possible. Trade tanks one for one in open terrain is not a good idea.
+Set up your defenses as far east as possible, but be sure to give your units at
+least a turn to "dig in" before the bad guys get there.
+
+Use your theater reserve units only in urban and rough terrain. Keep Copenhagen
+stacked with two units. Most of your reserve force should be used in the North
+Atlantic. If you like being supplied, and if you want to get all of your US III
+corps reinforcements, you don't want to lose the North Atlantic.
+
+Be sure to keep as large an uncommitted reserve as possible. In the initial
+stages of all scenerios, keep the French units lined up on the roads in West
+Germany. The French won't be much good on the line against full strength Pact
+units, but a rested, intact French corps makes a dandy offensive stopper
+against an understrength or heavily fatique Pact army. On the local level, keep
+a few units near but not in the front line. Whenever possible, rotate tired
+units out and replace them with fresh ones.
+
+Use the bulk of your air force for air superiority and airbase strike missions
+early on, then switch to hitting troop concentrations. Proper use of the NATO
+air force will severely damage the Pact.
+
+9.0 DESIGNER'S NOTES
+  (This part is omitted as it does not contain any information relevant to the
+game)
+ NOTE: Finally, all other data including the APPENDIXES have been omitted due
+to the fact that it will take a lot of times just to type down all the
+information data concerning the aircraft info, forces info, etc. Some of the
+informations have been included in the README file in your disk that comes from
+SSI.

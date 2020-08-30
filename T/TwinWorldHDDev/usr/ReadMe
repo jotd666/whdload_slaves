@@ -1,0 +1,117 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Twinworld" © 1989 Ubi Soft.
+
+ Requirements:
+ -------------
+ This install requires WHDLoad and RawDIC to be in the path.
+ These programs can be found in the WHDLoad package.
+ To install from a different drive than DF0: select installation mode Expert.
+
+ The installed game requires 0.5 MB ChipMem (+1.0 MB OtherMem for preload).
+
+ It can be quit by pressing F10 (key can be changed with Tooltype "QuitKey=").
+
+
+ Features:
+ ---------
+ - Full load from HD
+ - Protection removed (MFM)
+ - DMA waits in replayer and sample player fixed (x4)
+ - Bplcon0 color bit fixes (x7) 
+ - Keyboard routine rewritten
+ - Trainer options added
+ - High-score load/save
+ - NewIcon (created by me)
+ - Source code included
+ - Quit option that works on 68000 machines (default key is 'F10')
+
+ Here is another update of a very old patch. I have coded a RawDIC
+ imager, added Bplcon0 color bit fixes and recoded the keyboard
+ routine completely.
+
+ I have also added a few trainer options which can be selected in
+ WHDLoad's splash window. If you select in-game keys the following
+ extra keys can be used:
+
+ W: toggle unlimited weapons
+ L: toggle unlimited lives
+ 1: 99 red bubbles
+ 2: 99 green bubbles
+ 3: 99 blue bubbles
+
+ Please note that high-score saving is disabled if any
+ trainer options are used.
+
+ Enjoy the game from HD.
+ Harry in 1998.
+ Sting, 30-Oct-2017
+ JOTD, 2020
+
+
+ Greetings to all in Scarab and Scoopex, the WHDLoad team, PMC,
+ Musashi5150, Skan, Slummy, Loaderror, Frequent, Wayne Kerr, Mr.Spiv,
+ Alpha One, CFou!, Paradroid, Audiomonster, Vention, Slammer
+ Axis, Tim, Triace, Britelite, Buzzer and all the other usual suspects. :)
+
+ Special greetings to all Golf MK1 fans worldwide and all classic
+ car owners/drivers. :)
+
+ Extra greetings to the usual suspects on #amigascne, see you all at
+ Revision 2018! :)
+
+
+
+ History:
+ --------
+
+ version 1.2 (07.05.2020) done by JOTD:
+ - added joypad support for pause, weapon switch, etc...
+ - blue/second button jumps if CUSTOM2 is set
+ - fixed more sountracker replay loops (menu music)
+ - grouped all trainer option in CUSTOM1 bits
+ 
+ version 1.1 (02.11.2017) done by StingRay:
+ - RawDIC imager
+ - Bplcon0 color bit fixes
+ - keyboard routine rewritten
+ - trainer options added
+ - source code included
+ - readme reworked
+ - new install script
+
+ version 1.0 (1998) done by Harry:
+ - initial version
+
+ Joypad controls:
+ 
+ - blue/second button: jumps (if option is selected)
+ - play: pause/unpause (like P key)
+ - green: call merchant (like H key)
+ - yellow: switch weapon (like space key)
+ - fwd+bwd: lose life (like ESC key)
+ - yellow+fwd+bwd: give up play (like DEL key)
+ - green+yellow+fwd+bwd: quit to workbench
+ 
+ Contact:
+ --------
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, EXPCHIP, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+

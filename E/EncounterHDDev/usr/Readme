@@ -1,0 +1,30 @@
+That patch applies to Encounter (c) 1991 Novagen.
+
+You will have to install it with that install to run it from hd.
+That install needs WHDLoad and The Patcher 1.05 in the path (eg in c:).
+
+Default quitkey is numerical *. Change it with the QUITKEY-tooltype.
+
+Note:   The program has still a bug, but i cant find the source since
+          it occurs so rarely. If the colors are all white, pressing
+          numerical ] (quitkey-2) fixes this.
+
+ History
+ 
+ Version 1.2 (10.01.08) done by JOTD
+ - No more need for NOVBRMOVE (division by zero avoided)
+ - BUTTONWAIT allows to see intro screen (was not disableable)
+ - source code included
+
+ Version 1.1 (13.02.03) done by Harry
+ - Protection prevented the program from running on 68020+. Removed.
+ - Program saves the highscores.
+
+The install is tested with 2 MB on an A1200, and on an 18 MB 68030, in on WinUAE
+
+Disclaimer: Although i try to make my installs as reliable as possible, you 
+          use them wholly on your own risk.
+
+Full whdload package:	aminet:dev/misc/whdload#?.lha
+Other installs:		http://www.whdload.de
+Report bugs with the bug report form on that page.

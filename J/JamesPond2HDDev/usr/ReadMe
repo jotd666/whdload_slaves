@@ -1,0 +1,124 @@
+Short : HD-Installer for James Pond 2 - Robocod ECS/AGA/CD32
+Type : game/patch
+Author : MiCK, JOTD, C-Fou!, StingRay
+
+ OCS HD INSTALLER V1.3 by StingRay (13-Mar-2015)
+ AGA HD INSTALLER V2.0 by C-Fou! & JOTD
+CD32 HD INSTALLER V1.0 by JOTD
+
+
+ That install applies to "James Pond 2 ECS/AGA" © 1991-93 Millennium - 1 disk
+ Slave requires WHDLoad V10+ (v15 for CD32 version, v17+ for OCS version)
+ Game needs 512Kb Of Chipmem & 1Mb of Fastmem (for OCS version)
+            2 MB Of Chipmem & 1Mb of Fastmem (for AGA version)
+            2 MB Of Chipmem & 0.5MB of Fastmem (for CD32² version)
+
+ --------------------------------------------------------------------------
+History:
+
+*** OCS version ***
+
+v1.3 (13-Mar-2015) done by StingRay
+ - completely redone
+ - RawDic imager
+ - uses real files
+ - uses WHDLoad v17+ features
+ - blitter waits only installed on 68010+ machines (CUSTOM2 to force on 68000)
+ - copperlist bug fixed
+ - 68000 quitkey support
+ - sources included
+ - more trainer options added (CUSTOM1)
+ - all "ECS" references removed as the game is OCS!
+ 
+v1.2 (29-Jun-2007) done by Bored Seal
+ - taglist termination fixed to work with WHDLoad v16.6
+
+v1.x (date unknown) done by Bored Seal
+ - initial release
+ - Full Loading from HD (real files!)
+ - Two versions supported (original & Kixx re-release)
+ - Quit Option (your default key)
+ - Cool ROMIcon/NewIcon (created by JHZ)
+ - GlowIcon added (by Frank)
+ - Disk Protection removed
+ - Lots of blitter waits inserted
+ - Decrunch routine relocated in fastmem
+ - CUSTOM1=1 tooltype activates Trainer : infinite lives & energy
+
+ I (StingRay) have redone the patch for the OCS version of this game.
+ Old patch didn't have a proper imager so I created a RawDIC imager
+ which supports the original and the Kixx budget version. The Kixx budget
+ version is actually a stolen Skid Row crack! You will have to re-install
+ the game as the patch is now using real files!
+
+ The new patch also has some more trainer options which can be enabled
+ with CUSTOM1. If you enable the built-in cheat you can use the
+ following keys during game:
+
+ F - toggle flying ability
+ C - get car
+ P - get plane
+ B - get bath tub
+ X - move to exit spot - !ATTENTION! This option doesn't seem to be reliable
+                         so use at your own risk! Don't ever use it in the
+                         boss levels as it doesn't work and causes glitches
+                         then. You have been warned!
+ M - map selector
+ S - save position
+ G - go to position
+ K - Kill James Pond
+F6 - PAL
+F7 - NTSC
+
+ Blitter wait patches are only installed on 68010+ machines, you can force
+ them on 68000 machines with CUSTOM2.
+
+ Have fun with the game.
+ Sting, 13-Mar-2015
+
+*** AGA version ***
+
+v2.0 (11-april-2018) done by JOTD:
+ - completely rewritten
+ - needs Kick40068.A1200/Kick40068.A4000 file in devs:kickstarts
+ - No need to press any key, screen fades automatically at manual protection screen
+ - Fixed issue #0002364: fire button not working when using a CD32 joypad
+   (was because of wrong OSEmu handling of joypad, my fault, since I wrote that code a looong time ago)
+ - updated/redone installer script
+ 
+If you have the previous version, a reinstallation is required
+If you can't, unpack the "Robocod" file, and move it to a "data" subfolder
+   (requires XFDDecrunch package, get it on aminet)
+
+v1.x (29-june-2007) done by CFou!
+ - running with OSEmu
+ - Manual protection removed
+   
+*** CD32 version ***
+
+v1.0 (29-june-2007) done by JOTD:
+ - needs Kick40068.A1200/Kick40068.A4000 file in devs:kickstarts
+ - No need for CD32 joypad to play the CD32 version (use function keys for extra buttons)
+
+
+Requirements (AGA & CD³² versions):
+
+ The game requires a installed A1200 or A4000 Kickstart 3.1 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick40068.A1200" or "kick40068.A4000". The image can be extracted from
+ a A1200 or A4000 with tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ a appropriate requester.
+ Additionally the file "kick40068.A1200.RTB" or "kick40068.A4000.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick346.lha" on aminet.
+ 
+ --------------------------------------------------------------------------
+
+ Thanks to : - Chris Vella for original diskimage (OCS),
+             - Tom Meades for Kixx re-release diskimage (OCS).
+
+         Bug report form, full WHDLoad package and other installs:
+                          http://www.whdload.de
+
+ MiCK, C-Fou!, JOTD & StingRay

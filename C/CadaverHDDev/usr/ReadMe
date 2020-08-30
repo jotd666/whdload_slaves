@@ -1,0 +1,100 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Cadaver & The Payoff" © 1990-1992 Imageworks/Renegade.
+
+ This install requires WHDLoad and DIC to be in the path. Both can be found in
+ the WHDLoad package.
+ To install from a different drive than DF0: select installation mode Expert.
+
+ The installed program requires 0.5 MB ChipMem and 0.5 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 2.4 (10.06.2019):
+ - fixed some parasite file dump that I had added for reverse-engineering purposes
+   and which made the game crash after a while (issue #0004132)
+   
+ version 2.3 (20.01.2019):
+ - adapted to WHDLoad 17. Game levels & trainer can be selected from splash screen
+ 
+ version 2.2 (20.12.2003) done by JOTD:
+ - Three versions supported: V0.01 and V1.03 with and without disk protection.
+ - Copy protection removed on the protected versions
+ - Stackframe error (due to copyprotection) removed on both protected versions
+ - Access faults fixed
+ - Load/Saves from/to HD or floppy (saves are compatible with all the versions)
+ - Tool to rip the saves from floppies (V1.03/unprotected saves only).
+ - Complete walkthrough provided for both level disks, with some small additions
+   from me (the walkthoughs are better than the ones provided on the official site
+   or on the excellent www.gods-country.de site)
+ - Documentation provided
+ - Set CUSTOM2=1 to activate The Payoff level disk (or rename disk.3 as disk.2 !)
+ - Set CUSTOM4=1 to enable free save games (you don't have to pay anymore to save!)
+ - Set CUSTOM5=1 to activate in-game cheat keys (F3: infinite energy, F4: normal)
+ - Source code included (Codetapper will love it :))
+ - Savegames for payoff levels 2,3 & 4 included
+ - Added glowicon by CFou!
+ - Fully tested on Cadaver & Payoff levels
+ - Savegames for each start of level included for original & payoff levels
+ 
+ version 2.1 (2003)
+ - added built-in trainer, infinite energy, that you can toggle on and off
+   using F3 & F4. Set CUSTOM5=1 to activate it
+
+ version 2.0 (2002)
+ - uses WHDLoad and supports 3 versions.
+ - It also fixes access faults which do not occur in english language,
+   but in the french language (I don't recommend french language, 
+   because there is a typo at level 2 on an orb name, and you don't know
+   which is which... Also because I fixed the access fault, but I could not fix
+   it completely: instead of crashing, some potion names will be garbage in the object
+   display menu (but it still works in the individual object description)
+ 
+ Version 1.x (1996-2001)
+ - JST & pre-JST releases
+
+Game versions:
+
+There are 3 versions I know of:
+
+ - v0.01: Imageworks release. Buggy, copy-protected, uses MFM savegame disk.
+ - v1.03: Renegade/Bitmap bros release. Buggy, copy-protected, uses MFM savegame disk.
+ - v1.03: Renegade/Bitmap bros release. Not copy-protected, not buggy, uses DOS tracks
+   for savegames (much better). The tool provided to rip the saves from floppy disk
+   only works for this version.
+
+
+THANKS GO TO:
+
+- Steve Kelly for allowing me to release any patch for the Bitmap Bros games.
+- Keiron Wilkinson for providing me unprotected V1.03 (I only had V0.01).
+- Bernard & Dominique Kubler for the chocolates. Finalement, j'ai terminé ce patch
+  un peu grâce à vous :-)
+- Jari Pakarinen for his extensive beta testing on V0.01 saves and for his report
+  about the crash on exit.
+- Carlo Pirri for sending v0.01 original
+- 2 other people for sending the unsupported v1.03 version in previous patches.
+- Mr Larmer and Harry for their tools to decrypt copylock code: Mr Larmer for
+  his copylock decoder tool, and Harry for his source I adapted to remove the
+  protection.
+- Kametyken for his excellent website about the Bros. games:
+  http://www.gods-country.de

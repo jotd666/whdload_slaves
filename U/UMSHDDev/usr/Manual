@@ -1,0 +1,667 @@
+
+
+
+
+
+
+                  Software Presents Part 1 of the UMS Docs
+                     Thanks once again to DR.J (U.S.A.)
+
+                      THE UNIVERSAL MILITARY SIMULATOR
+
+                            By Rainbird Software
+
+FORWARD
+
+Originally,  the  "Universal Military Simulator" was just the working  title 
+for  a  very  unusual piece of software.   That was about  15,000  lines  of 
+computer code ago.
+
+Simply put,  the program you just purchased will simulate a conflict between 
+any  two  opposing forces,  from history or fantasy,  displayed on  a  three 
+dimensional battlefield that can be viewed from any perspective,  while  you 
+zoom in on the action, command the smallest unit and change any variable.
+
+Of course there's more.   The Design Map section will help you create  three 
+dimensional maps of anything you wish:  battlefields,  D & D worlds, castles 
+or maps for reports.  If you're out of ideas UMS will even randomly generate 
+maps for you.
+
+The Create Army section will allow you to design armies of any  description.  
+The Universal Military Simulator comes with 18 pre-defined unit types,  from 
+charioteers  to  armored  cavalry.   If that isn't  enough  you  can  create 
+"wildcard units" with the characteristics you wish.
+
+The  Create Scenario function will help you put any two armies  together  on 
+any battlefield.   Literally,  any two armies.  It is possible, for example. 
+to simulate a conflict between Alexander and Napoleon with their  respective 
+troops  on the fields of Gettysburg.   Again,  your imagination is the  only 
+limitation.
+
+UMS  also  possesses  a  unique  Artificial  Intelligence  that  "perceives" 
+opposing armies as geometric shapes and interconnecting lines of force while 
+individual fighting units are maneuvered as a cohesive army striving towards 
+a  common  goal.   Furthermore the 14 actual variables evaluated by  UMS  to 
+resolve combat may be viewed by the user after all hostile contacts  thereby 
+eliminating "the fog of war" that other wargames hide behind.
+
+Over  seven  years in the making,  the Universal Military  Simulator  is  as 
+revolutionary  as it is evolutionary.   UMS will certainly be  the  standard 
+that all wargames are measured by for many years to come.
+
+
+                        CHAPTER I - GETTING STARTED
+
+THE MAIN MENU
+
+The  Universal  Military Simulator consists of four sections that  help  the 
+user  create new maps,  design armies,  create new battle scenarios and  run 
+battle  simulations.   These sections are accessed from the main  menu  that 
+first appears after running the program.   To select a section, position the 
+arrow cursor over the desired box and click the left mouse button once.
+
+To  terminate  the program select QUIT.   You will be returned  to  the  GEM 
+desktop.   To create new armies, or to edit an army that has been previously 
+saved  to  disk,  select  DESIGN ARMY.   The  Universal  Military  Simulator 
+contains  a  powerful three-dimensional typographical design  tool  that  is 
+accessed by selecting DESIGN MAP.   This function is not limited to creating 
+battlefields,  but may be used to design maps of all kinds including fantasy 
+worlds  from  role-playing  games  and  computer  text  adventures.   CREATE 
+SCENARIO  allows the user to place two armies from any time period  together 
+on  a  field  of  battle.   There are  virtually  no  restrictions  and  the 
+combinations are nearly infinite.   Selecting RUN SIMULATION allows the user 
+to participate as the Universal Military Simulator's Artificial Intelligence 
+routines  supervise the conflict.   The user may play against  the  program, 
+against another human opponent,  or even influence the computer's  decisions 
+while viewing the battlefield in complete 3-D.
+
+
+                     CHAPTER II - RUNNING A SIMULATION
+
+THE SELECTION SIMULATION MENU
+
+The  Universal  Military Simulator disk contains  five  battle  simulations.  
+They are: ARBELA, the battle that decided the conquest of Asia Minor, fought 
+in 331 B.C.  between Alexander the Great and Darius of Persia; HASTINGS, the 
+great clash of the Medieval Ages between two claimants to the English throne 
+in  1066;  MARSTON MOOR where Oliver Cromwell saved the  young  Parliament's 
+Army;  WATERLOO,  the last card played from the Emperor Napoleon's hand  and 
+GETTYSBURG,  where  General  Robert E.  Lee's Confederate Army  of  Northern 
+Virginia  reached their highwater mark under the summer Pennsylvanian  skies 
+of  1863.   To select a scenario click the left mouse button once  over  the 
+desired simulation.
+
+Other  scenarios from Universal Military Simulator Scenario Disks,  or  user 
+created scenarios, may be read from disk by selecting the READ SCENARIO FROM 
+DISK option.   After clicking the left mouse button once over this option  a 
+dialog  box  will appear requesting that the user specify a  disk  drive  by 
+clicking  the left mouse button once over the appropriate  drive  box.   Two 
+floppy disks and two hard drives are supported.  Double click the left mouse 
+button over the desired file.  Selecting CANCEL returns to the last menu.
+
+THE BATTLEFIELD WINDOW
+
+The Universal Military Simulator take full advantage of the GEM capabilities 
+of the Atari ST.  The battlefield window contains drop-down menus (discussed 
+in detail in the following pages), a close box located in the upper lefthand 
+corner of the window, and dialog boxes that appear throughout the simulation 
+to  receive user input.   At the bottom of the window two status  lines  are 
+displayed  that  indicate the  current  three-dimensional  perspective,  the 
+current simulation time (in military time) and the present 'active army'  or 
+side that is currently capable of receiving commands and firing weapons.
+
+Clicking  the  left  mouse button once inside the close  box  will  end  the 
+simulation after the program has confirmed the user's intentions.
+
+THE SCENARIO PHASES
+
+The  RUN SIMULATION section is divided into two phases:  the  ISSUE  COMMAND 
+PHASE  in  which orders are given by the user to all desired units  of  both 
+armies and which is terminated by selecting END COMMAND PHASE from the drop-
+down  menu or by pressing the letter Q on the keyboard;  and  the  MOVEMENT/ 
+BATTLE  PHASE.   At  the  end of the COMMAND PHASE the  user  is  requested, 
+through  a  series of dialog boxes,  to select the desired  computer  battle 
+logic.  (For more information see the Battle Logic section in this chapter.)  
+The MOVEMENT/BATTLE phase is divided into eight equal  segments.   Selecting 
+NEXT  SEGMENT  from the drop-down menus,  or pressing the letter  N  on  the 
+keyboard will advance the scenario time and update the  battlefield.   After 
+the MOVEMENT/BATTLE phase is completed the COMMAND PHASE is repeated.
+
+THE DROP-DOWN BATTLEFIELD MENU
+
+Located  at the top of the battlefield GEM window are six  drop-down  menus.  
+All  functions of the Universal Military Simulator may be  accessed  through 
+these  menus.   Many  functions  may also be activated  by  a  corresponding 
+keystroke.   The  left most menu,  FILENAMES,  when selected,  displays  the 
+actual  filenames  used for storing the maps,  scenario and armies  for  the 
+current  simulation.   This  information  is quite helpful  when  editing  a 
+scenario.   Three-dimensional viewing perspective is controlled by the drop-
+down menus underneath NORMAL and ZOOM IN.   Moving the mouse over any of the 
+titles above the window will cause the drop down menu to  appear.   Clicking 
+the  left  mouse  button over a highlighted item will cause the  map  to  be 
+redrawn  within  the  battlefield  window  from  the  perspective  selected.  
+Selecting NORTH, for example, will create a map drawn from the point of view 
+of someone south of the battlefield looking North.   Selecting a perspective 
+from the ZOOM IN menu will draw a map with a  corresponding close in  aerial 
+perspective.
+
+The  EXTREME  ZOOM IN menu controls highly magnified viewing of  a  selected 
+areas.   Selecting  the  item EXTREME ZOOM IN under the  menu  heading  will 
+create a flashing 10 grid point by 10 grid point box.   (Color monitors will 
+also  show  woods  and unit directions arrows in  reverse.)   This  flashing 
+square  is under the control of the mouse.   Any directional change  of  the 
+mouse  will be immediately copied by the flashing grid.   Clicking the  left 
+mouse  button  will  cause  the map area beneath  the  grid  to  be  greatly 
+magnified.   Clicking  the right mouse button will cancel this function  and 
+restore the map.  After EXTREME ZOOM IN has been activated the enlarged area 
+may be scrolled by either selecting the desired direction from the drop-down 
+menu or by pressing the four cursor arrow keys on th right hand side of  the 
+keyboard.  Pressing and holding an arrow key will cause the screen to scroll 
+continuously  in  indicated  direction  until  the  border  of  the  map  is 
+encountered.  (IMPORTANT: to avoid confusion only movement arrows that begin 
+and end within the zoomed in area are displayed.)  AUTOMATIC ZOOM works like 
+a toggle switch and may be turned on or off.  When AUTOMATIC ZOOM is enabled 
+the  computer  will automatically zoom in on any important activity  on  the 
+battlefield during the simulation.   A check mark (tick) indicates that  the 
+function is on.
+
+The BATTLE menu contains many of the functions required to fully utilize the 
+Universal Military Simulator.  Selecting ISSUE COMMANDS TO UNITS either from 
+the  drop-down menu or by pressing the space bar on the keyboard  will allow 
+the  user to give specific commands to each unit on the  battlefield.   This 
+function  is discussed in complete detail in the  following  pages.   SWITCH 
+SIDES  is  used in conjunction with ISSUE COMMANDS to select which  army  is 
+currently  active or capable of receiving commands.   This 'active' side  is 
+shown in the display at the bottom of the battlefield window.   SWITCH SIDES 
+is  also  used  in conjunction with FIRE RANGED  WEAPONS  to  select  firing 
+targets.  Again, the 'active', or firing, army is displayed at the bottom of 
+the  window.   Selecting  END  COMMAND PHASE,  either from the  menu  or  by 
+pressing  Q on the keyboard signals the program that the user has moved  all 
+desired  units.   See the Battle Logic section in this chapter for  complete 
+information.   The  FIRE RANGED WEAPONS function (which becomes  operational 
+after  selecting the END COMMAND PHASE) allows the user to fire  units  with 
+long  range  capabilities.   This is discussed later in this  chapter  under 
+Combat.  The SAVE SIMULATION function is activated from either the drop-down 
+menu  or  by pressing the letter S from the keyboard.   After  entering  the 
+desired  filename,  select the drive for storage by clicking the left  mouse 
+button over the appropriate letter box.   To restore a saved simulation  use 
+the  READ FROM DISK option on the previous menu.   All simulation files  end 
+with the .SIM extension.
+
+A hard copy print out of the battlefield window may be obtained by selecting 
+PRINT  MAP from the drop-down menu or by pressing P on  the  keyboard.   The 
+Universal  Military  Simulator supports both the Atari 1280 line  format  or 
+Epson 960 dots per inch format.   Select the desired format by clicking  the 
+left mouse button over the appropriate box.   The user may also add one line 
+of text at the top of the printout.
+
+After  hard  copy  printout  has  been  'formatted'  using  this   function, 
+additional  screen prints may be made at any time throughout the program  by 
+pressing the ALT and HELP keys simultaneously.   The ORDER OF BATTLE command 
+will display all units currently within an army.   If the display  continues 
+for more that one screen,  pressing the left mouse button will show the next 
+page of units;  pressing the right mouse button will cancel the display  and 
+return the user to the simulation.
+
+The  DISPLAY OPTIONS MENU allows the user to control the features  that  are 
+displayed on the battlefield map.  The options are 'toggle switches' and may 
+be  turned  either on or off.   A check mark indicates that  the  option  is 
+active.   The  options  are:  BATTLE MARKERS,  which indicate  points  where 
+hostile contact between units has occured,  MOVEMENT ARROWS,  which indicate 
+the  future  movement of all units,  TOWNS & LANDMARKS that mark  points  of 
+interest  on the battlefield,  WHITE FLAGS and BLACK FLAGS which  will  hide 
+from view one or both armies, and FAST DISPLAY MODE.  When FAST DISPLAY MODE 
+has  been  toggled on,  the Universal Military Simulator will  only  briefly 
+display  contact  between hostile units and computer-controlled  long  range 
+fire.   This considerably speeds up the viewing time of a  simulation.   For 
+more information see the section on Combat later in this chapter.
+
+DEMONSTRATION MODE
+
+Selecting  DEMONSTRATION MODE instructs the Universal Military Simulator  to 
+take over all army command functions and viewing perspectives.   To activate 
+DEMONSTRATION  MODE press the CONTROL key and the letter D on  the  keyboard 
+simultaneously.  A warning box will appear to confirm this choice.
+
+DEMONSTRATION  MODE  can  be activated at any time  during  any  simulation, 
+including  user-designed simulations.   The five simulations that come  with 
+the  Universal  Military  Simulator,  however,  will  automatically  receive 
+special  instructions to recreate the actual battles.   These  battles  will 
+follow the guidelines as described in Appendix A.
+
+ISSUE COMMANDS
+
+All  units participating in a scenario may be given specific  commands  that 
+control  the  unit's movement and status.   The ISSUE COMMANDS  function  is 
+activated  either from the drop-down menu or by pressing the keyboard  space 
+bar.   After  selecting this option the COMMAND BOX appears and  the  active 
+unit's  vital  information  is displayed along the left  hand  side  of  the 
+battlefield window.   A copy of the unit's flag is also displayed surrounded 
+by  the  eight compass directions.   If AUTOMATIC ZOOM has  previously  been 
+selected the area immediately around the active unit will be  enlarged.   To 
+move  a  unit either click the left mouse button over  the  desired  compass 
+direction box or position the mouse cross-hairs over the intersection  point 
+on the map.   Units move from adjacent point to another.   To scroll the map 
+(when  in  EXTREME ZOOM) click the left mouse button  over  the  appropriate 
+arrow  key in the lower right hand corner of the battlefield  window.   NEXT 
+UNIT  and LAST UNIT will de-activate the current unit and  activate  another 
+unit for commands.  Pressing the right mouse button will also advance to the 
+next unit.   QUIT erases the COMMAND BOX.   If AUTOMATIC ZOOM has previously 
+been  selected  the  map  will be redrawn  to  that  last  full  perspective 
+selected.
+
+A unit may also be ordered to assume one of the following statuses: MANEUVER 
+(which allows for maximum movement but leaves the unit vulnerable to  attack 
+and defense),  ATTACK (which reduces a unit's mobility but greatly increases 
+its value in battle),  DEFEND (which halts all further movement by the  unit 
+but increases the unit's ability to withstand attack), and RESERVE (the unit 
+may not move,  and is vulnerable to attack; however the unit's morale factor 
+will be increased after one full eight segment movement phase).
+
+BATTLE LOGIC
+
+To access the Universal Simulator's Battle Logic,  select END COMMAND  PHASE 
+after all desired units and commands have been made.  The Universal Military 
+Simulator  may be instructed to assume command of either one or both  armies 
+or run in a 'supervisory' mode and simply referee the simulation and  decide 
+the  outcome of contact between hostile units.   The first dialog  box  that 
+appears  after  selecting END COMMAND PHASE requests that  the  user  assign 
+commanders for both the black and white armies.   If both armies are  placed 
+under  HUMAN COMMAND the Universal Military Simulator will not  request  any 
+further information and will activate the MOVEMENT PHASE.   Selecting either 
+NEXT  SEGMENT  from  the  drop-down menu or pressing the  letter  N  on  the 
+keyboard will 'step' the units on the battlefield to their ordered positions 
+and increase the time appropriately.
+
+If,  however,  either  army is placed under COMPUTER CONTROL  the  Universal 
+Military Simulator will display a series of dialog boxes requesting specific 
+instructions,  or limitations,  for the command of those forces.  The BATTLE 
+LOGIC dialog box is now displayed.   Any one of the following options may be 
+selected:  ALLOW  COMPUTER  TO DECIDE STRATEGY (the computer will  make  the 
+decision  to  attack or defend after analyzing over 10 factors per  unit  in 
+both armies), FORCE COMPUTER TO ATTACK (the computer will decide and execute 
+the  attack  with the greatest probability of success),  FORCE  COMPUTER  TO 
+DEFEND (the computer will not attack but will assume the defensive,  and, if 
+possible,  move units to a more secure position),  LEFT FLANK,  RIGHT FLANK, 
+ATTACK  IN  CENTER  and DOUBLE ENVELOPMENT  require the  Universal  Military 
+Simulator  to execute the desired attack plan.   LEFT FLANK and RIGHT  FLANK 
+attacks  may  also be supported by the opposite half if  the  army.   Dialog 
+boxes are displayed to receive user input.
+
+Click the left mouse button over CONTINUE,  or press RETURN on the keyboard, 
+to  continue.   CANCEL de-activates the BATTLE LOGIC and allows the user  to 
+give orders to units.   IMPORTANT: The Universal Military Simulator's Battle 
+Logic will not move units that have already received commands from the user.  
+This  allows  for the movement of some specific units while  the  rest  will 
+receive computer orders.
+
+COMBAT
+
+Combat  occurs  during the  MOVEMENT PHASE when units from  opposing  armies 
+move onto adjacent points.   Some units have long range weapons  (artillery, 
+armor  and  archers,  for  example) and can enter  into  combat  at  greater 
+distances.  See the Fire Ranged Weapons section in this chapter for details.  
+When  combat  occurs the two opposing units flash.   If AUTOMATIC  ZOOM  has 
+previously been selected the area immediately surrounding the combat will be 
+greatly  enlarged.   If FAST DISPLAY MODE had previously been  selected  the 
+units will flash 20 times and the results of combat calculated.   No  combat 
+results  will be displayed,  however,  and the Universal Military  Simulator 
+will continue moving units and updating the battlefield map as previous.
+
+If FAST DISPLAY MODE had not been previously selected the two hostile  units 
+will continue to flash until the right mouse button is pressed.   The  vital 
+statistics  of  each unit and the combat results are now  displayed  on  the 
+screen.  Clicking the left mouse button in SEE EQUATION box will display the 
+values  and equation used by the Universal Military Simulator  to  determine 
+this  particular combat result.   Starting with the original unit  strength, 
+eight different modifiers are evaluated.  NOTE: A retreat path is calculated 
+for the losing unit, and displayed.
+
+FIRE RANGED WEAPONS
+
+The FIRE RANGED WEAPONS routine is activated from either the drop-down  menu 
+or  by  pressing  F  on  the  keyboard.    It  is  only  active  during  the 
+MOVEMENT/BATTLE  PHASE.   If  both  armies are under  COMPUTER  CONTROL  the 
+Universal  Military Simulator will make all Ranged Weapon firing  decisions.  
+The  army  capable  of receiving firing instructions  is  indicated  in  the 
+display  at the bottom of the battlefield window.   The active army  may  be 
+changed  by selecting SWITCH SIDES from the drop-down  menu.   If  AUTOMATIC 
+ZOOM has previously been selected,  the area directly surrounding the active 
+unit will be greatly magnified.   IMPORTANT:  do not use the AUTOMATIC  ZOOM 
+function when issuing firing orders to units with a firing range of  greater 
+than five; it may be impossible to select the desired targets.
+
+The  FIRE  RANGED WEAPONS box is now displayed.   Clicking  the  left  mouse 
+button over the NEXT UNIT or LAST UNIT will de-activate the current unit and 
+activate  the  next appropriate unit in the army.   Only  units  capable  or 
+ranged weapon fire will be activated.   To select a target, locate the mouse 
+cross-hairs  over the grid-point where the enemy unit is located  and  press 
+the left mouse button.   An arrow is drawn and the results are displayed  at 
+the  bottom of the screen.   This function may be repeated until  all  units 
+under  HUMAN  CONTROL have fired.   A unit may fire only once  per  movement 
+segment, or a total of eight times per MOVEMENT/BATTLE PHASE.
+
+ANALYSIS OF BATTLE TO DATE & FINAL BATTLE ANALYSIS
+
+At  the  end  of the MOVEMENT/BATTLE PHASE the ANALYSIS OF  BATTLE  TO  DATE 
+screen  is displayed showing an updated casualty and battle  report.   After 
+clicking  the left mouse button in the CONTINUE box a message  is  displayed 
+indicating that the COMMAND PHASE is again active.   When the simulation has 
+reached  the previously designated end time,  or when all units from  either 
+army have been eliminated, the FINAL BATTLE ANALYSIS screen is displayed.  A 
+hard copy of all units,  from both armies and the last unit strengths may be 
+printed if desired.  The user may return to the Battlefield Window or to the 
+MAIN MENU by clicking the left mouse button over the desired box.
+
+
+                     CHAPTER III - CREATING NEW ARMIES
+
+THE UNIT SELECTION MENU
+
+The UNIT SELECTION MENU is displayed after selecting the DESIGN ARMY  option 
+from  the MAIN MENU and either selecting an old army to edit or  entering  a 
+new  army  name and pressing RETURN.   Clicking the left mouse  button  over 
+CANCEL will return the user to the MAIN MENU.  This section of the Universal 
+Military  Simulator  allows  the  user  to create  new  armies  for  use  in 
+simulations,  or  to modify existing armies.   Selecting QUIT from the  UNIT 
+SELECTION MENU will return the user to the MAIN MENU.   A previously created 
+army  may  be loaded and edited by clicking the left mouse button  over  the 
+LOAD box.   The user is requested to select a drive.  The Universal Military 
+Simulator supports two floppy disk drives and two hard drives.  Double click 
+the  left  mouse button over the desired filename.   Selecting  CANCEL  will 
+return the user to the UNIT SELECTION MENU.   To save an army to disk  click 
+the left mouse button over the SAVE box.   Enter the filename and click  the 
+left mouse button over the desired drive.   All Universal Military Simulator 
+filenames  end with the .ARM file extension.   Selecting CANCEL will  return 
+the  user to the UNIT SELECTION MENU without saving the army file  to  disk.  
+To  enter a new unit to an army click the left mouse button over the  desire 
+flag.
+
+ENTERING A UNIT'S VITAL STATISTICS
+
+The  Universal Military simulator stores a great deal of data on  each  unit 
+used  in a simulation.   Some  items  (morale,  status,  location,  marching 
+orders)  are acquired during a simulation,  or at the time the  scenario  is 
+created (see the chapter on Creating a Scenario for details).   The rest  is 
+entered at the time that the unit is created.
+
+Enter all items requested at this time.  To change a unit's efficiency click 
+the left mouse button over the box containing the desired rating.  Click the 
+left  mouse button over CANCEL to return to the UNIT SELECTION MENU  without 
+saving the unit.   To advance to the next line press either TAB or  position 
+the mouse cursor over the desired line and click the left mouse button once.  
+After all data has been entered,  click the left mouse button over CONTINUE.  
+If the user has neglected to enter all necessary data the Universal Military 
+Simulator  will  display a gentle error message and return to  this  screen.  
+The entire army's ORDER OF BATTLE is now displayed.  If there are more units 
+within the army than can be displayed on one screen, pressing the left mouse 
+button  will continue to the next screen.   Pressing the right mouse  button 
+will cancel the display and return to the UNIT SELECTION MENU.
+
+ORDER OF BATTLE
+
+An  army's ORDER OF BATTLE is a graphic depiction of each unit  within  that 
+army  and the accompanying vital statistics.   The ORDER OF BATTLE  function 
+may be activated from the drop-down menu in the BATTLEFIELD WINDOW, from the 
+UNIT  SELECTION  MENU  or  automatically after  a  unit  has  been  created.  
+Pressing the left mouse button will continue the display; pressing the right 
+mouse  button will cancel the display and return to the  previous  activity.  
+The ORDER OF BATTLE is continuously updated during a simulation and reflects 
+the current unit strengths.
+
+EDITING A UNIT
+
+Selecting  EDIT UNIT from the UNIT SELECTION MENU allows the user to  change 
+the vital statistics of a previously created unit.   Clicking the left mouse 
+button  over the NEXT UNIT or LAST UNIT boxes will de-activate  the  current 
+unit and replace it with the requested unit.   Selecting CANCEL will  return 
+to  the  SELECT UNIT MENU.   A unit may be removed from the army's ORDER  OF 
+BATTLE  by  clicking  the left mouse button in the  DELETE  UNIT  box.   The 
+Universal  Military simulator will request confirmation before removing  the 
+unit.   Unless  the deleted unit had been previously stored to disk it  will 
+now  be irretrievably lost.   Click the left mouse button over EDIT UNIT  to 
+change any of the vital statistics.  The window will now display all current 
+statistics of the unit and they may be edited using the method described  on 
+the  previous page.   Selecting CANCEL will return the user to the  previous 
+menu  without storing any edited statistics.   Select CONTINUE to  keep  the 
+data for the edited unit.
+
+CREATING A WILDCARD UNIT
+
+An  army may contain up to six 'wildcard' or user-defined units in  addition 
+to the 18 pre-defined units.   A wildcard unit may be any type that the user 
+needs  or can invent.   A wildcard unit may be defined,  for example,  as  a 
+squadron of B-52 bombers,  a wizard,  or an air cavalry company.   The  only 
+limitations to a wildcard unit is the user's imagination.
+
+A wildcard is selected from the UNIT SELECTION MENU in the normal manner  by 
+clicking the left mouse button over the desired unit.   Enter the UNIT  TYPE 
+data  from the keyboard.   To enter the UNIT VALUE data either press TAB  or 
+click the left mouse button over the field.   The UNIT VALUE is a rating  of 
+the firepower of this unit type.  Some of the default unit values are:
+
+          Unit Type                   Unit Value
+          --------------------------------------
+          Light Infantry                   .75
+          Heavy Infantry                  1.0
+          Archers                         2.75
+          Knights                         4.5
+          Armor                          15.5
+
+Once  a wildcard's values have been defined,  all subsequent units  of  this 
+type  will  automatically acquire them.   It is only necessary to  define  a 
+wildcard's values once.
+
+Each  army  may have six different wildcards;  consequently a  scenario  may 
+contain 12 wildcards (six wildcards each from two armies).   An army may  be 
+created entirely from wildcards.
+
+
+                       CHAPTER IV - CREATING NEW MAPS
+
+THE DESIGN MAP WINDOW
+
+The  Universal  Military  Simulator contains  a  powerful  three-dimensional 
+mapping  utility  that is accessed from the MAIN MENU by clicking  the  left 
+mouse button over the DESIGN MAP box.  The user may create virtually any map 
+from history,  fiction,  adventure or fantasy.   These maps may be used as a 
+battlefield  within  the  universal  Military  Simulator  and   role-playing 
+adventures.
+
+The  filename of the map currently being designed is displayed near the  top 
+of the window.  Clicking the left mouse button in the upper left hand corner 
+CLOSE  BOX  will  end  the  map  designing  function.   The  current  three-
+dimensional perspective is displayed at the bottom of the window.   A series 
+of drop-down menus are at the top of the window and are activated by  moving 
+the mouse cursor over the titles and clicking the left mouse button over the 
+desired item.  Many of the drop-down menu functions may also be activated by 
+an appropriate keypress.
+
+THE DESIGN MAP DROP-DOWN MENUS
+
+Clicking the left mouse button over the NEW MAP item will erase the  current 
+map.   The  filename displayed at the top of the window will be the  default 
+NEW MAP.   All Universal Military Simulator map files end with the extension 
+.MAP.   Sixteen  different  perspectives amy be selected  with  the  options 
+underneath the NORMAL and ZOOM IN titles.  Selecting Northeast, for example, 
+will  cause  the map to be redrawn from the viewer  perspective  of  someone 
+southwest of the map looking northeast.  Selecting EXTREME ZOOM will cause a 
+flashing  10  grid  point by 10 grid point box that  is  controlled  by  the 
+movement  of  the  mouse.   Pressing the left mouse button  will  cause  the 
+highlighted area to be greatly magnified.   Pressing the right mouse  button 
+will  cancel  the EXTREME ZOOM function.   Selecting PRINT or  pressing  the 
+letter  P on the keyboard allows the user to obtain a hard copy printout  of 
+the current map and perspective.   The Universal Military Simulator supports 
+both  the  Atari  1280 D.P.I printer and the Epson standard  of  960  D.P.I.  
+Select  the  desired  format  by clicking the left  mouse  button  over  the 
+appropriate box.   The user may also add one line of text at the top of  the 
+printout.   After  hard  copy  printout  has  been  'formatted'  using  this 
+function,  additional screen prints may be made at any time  throughout  the 
+program  by  pressing the ALT and HELP keys  simultaneously.   A  previously 
+created map that has been stored to disk may be edited by using the LOAD MAP 
+function selected from either the drop-down menu or by pressing the letter L 
+on the keyboard.  A map may be stored on disk by selecting SAVE MAP from the 
+menu or pressing S on the keyboard.   both functions support two floppy disk 
+drives  and two hard drives.   Selecting CANCEL during either function  will 
+return the user to the MAP DESIGN WINDOW.
+
+THE TOPOGRAPHICAL MENU
+
+The  topographical  menu  is  displayed after a  map  grid  point  has  been 
+selected.   The active map grid point is highlighted by a  three-dimensional 
+cube.   A large section of the map can be activated by clicking and dragging 
+the mouse from one grid point to another.
+
+All topographical features can be PLACED or CLEARED.   Click the left  mouse 
+button  over the desired window.   All highlighted grid points will  receive 
+the selected landscape feature.
+
+When entering a landmark,  click the left mouse button over the text line of 
+the desired landmark type, enter text and press RETURN when done.
+
+THE RANDOM MAP FUNCTION
+
+Random  maps can be generated by selecting this function from the  drop-down 
+menu.  Hills, Ridges, Depressions and Forests can all be computer generated.  
+For each item either enter a minimum and maximum number of select RANDOM for 
+a completely random number of features.   CLUMPING controls the way that the 
+features  appear  on the map.   A very low number will  create  a  scattered 
+pattern,  higher numbers create a more ordered landscape.  The default value 
+is three.  Calculating time is proportional to the complexity of the map.
+If  OVERLAY  is  off (default) the old map is erased before  a  new  one  is 
+generated.   When OVERPLAY is on (highlighted) the old map is not destroyed, 
+but overlayed with a new random map.
+
+SELECTING TOWNS & LANDMARKS
+
+The Landmarks, Cities and Towns menu is reached from the Topographical Menu.  
+To select the desired landmark type, click the left mouse button to the left 
+of the desired landmark inside the editable text field.  Use the keyboard to 
+enter any seven letter name and press RETURN when done.   Landmarks have  no 
+importance  other than a historical one during a battle simulation.   A  map 
+may contain 30 different landmarks.
+
+
+                  CHAPTER V - CREATING & EDITING SCENARIOS
+
+THE EDIT SCENARIO WINDOW
+
+Scenarios  are created,  or edited,  by assigning the unit displayed in  the 
+upper left hand box to a map grid point location.  This location is selected 
+by  clicking the left mouse button over a map grid point.   A message  above 
+the  box  indicates whether this unit currently has a location on  the  map.  
+The  unit  in  the box may be changed by either  pressing  the  right  mouse 
+button,  selecting  NEXT  UNIT or LAST UNIT from the drop-down  menu  or  by 
+pressing the keyboard letters N or L.
+
+Perspective may be changed selecting the desired view from either the NORMAL 
+or ZOOM IN menus.   Selecting EXTREME ZOOM IN will cause a flashing 10 x  10 
+grid  on the map that is controlled by the mouse.   Pressing the left  mouse 
+button will greatly enlarge the area underneath the flashing  box;  pressing 
+the right mouse button will cancel this function.
+
+Select  SAVE  SIMULATION  or press the letter S on the keyboard  to  save  a 
+simulation  to disk.   Enter the filename (the .SIM extension will be  added 
+for  you)  and  click the left mouse button over  the  desired  disk  drive.  
+Selecting  CANCEL  will  end this function  without  saving  to  disk.   The 
+Simulation  Time and the Long Ranged Weapon data may be edited by  selecting 
+EDIT TIME/RANGES from the drop-down menu.
+
+Click  the left mouse button in the CLOSE BOX in the upper left hand  corner 
+to end this function.
+
+EDITING SCENARIO INFORMATION
+
+The starting time of the simulation,  end time,  the length of segments, and 
+the message that appears at the top of the Battlefield Window are entered by 
+clicking the left mouse button over the appropriate text field and  entering 
+the data from the keyboard.   Pressing ESC clears the line;  TAB advances to 
+the  next  line.   If  an  old  simulation  is  being  edited,  the  current 
+information  is displayed in the text field.   Click the left  mouse  button 
+over CONTINUE when done.
+
+A gentle reminder will be displayed if the fields are incorrectly entered or 
+left blank and the user will be returned to this menu to correct the data.
+
+EDITING RANGED WEAPON DATA
+
+Some units may possess long range weapons capability (they are able to  fire 
+at  units that are not on adjacent grid points).   These units are  Archers, 
+Catapults,  Field Artillery,  Horse Artillery, Armor, or Wildcard Units.  To 
+enter a range click the left mouse button over the desired text field, press 
+BACKSPACE  if necessary,  and enter the data.   If a wildcard unit had  been 
+previously defined,  its type will also be displayed.  The maximum effective 
+range is 50 grid points.
+
+
+                                 APPENDIX A
+
+          RECREATING HISTORY WITH THE UNIVERSAL MILITARY SIMULATOR
+
+
+ARBELA
+
+To accurately recreate the battle of Arbela,  place the White Army  (Darius) 
+under Computer Control and select FORCE COMPUTER TO DEFEND.  Place the Black 
+Army  (Alexander) under Computer Control and select RIGHT FLANK ATTACK  with 
+the SUPPORT WITH LEFT FLANK option.   This is necessary because  Alexander's 
+forces  are  outnumbered  by almost a two to one margin  and  The  Universal 
+Military Simulator's Battle Logic will not attack at such odds.  After about 
+two  hours  of simulation time have elapsed switch the White Army  to  ALLOW 
+COMPUTER  TO DECIDE STRATEGY.   A general melee will ensue now  (both  sides 
+completely  controlled  by  the Universal  Military  Simulator)  that  quite 
+accurately reflects that fateful day in 331 B.C.  Best viewing perspectives: 
+For  the  first hour or two of simulation time select NORTHWEST ZOOM  IN  or 
+NORTHEAST  ZOOM  IN and turn off the AUTOMATIC ZOOM function.   It  is  also 
+advisable to put the Universal Military simulator in FAST MODE.   Within the 
+first  three  hours  of combat over 125 individual  battle  will  erupt  and 
+watching them all in detail can become a bit tiring.
+
+HASTINGS
+
+Place  both  armies  under  complete computer  control  by  selecting  ALLOW 
+COMPUTER  TO  DECIDE  STRATEGY and step back  to  1066.   The  best  viewing 
+perspective  for the first two or three simulation hours is  NORTHEAST  ZOOM 
+IN.   Remember it is quite possible for the Normans (Black Army) to  utterly 
+destroy the defending Saxons on the hill and only achieve a marginal victory 
+(the  type  of  victory  is decided on a comparison  of  the  percentage  of 
+casualties  for  both armies - if the Normans suffer  many  casualties  they 
+could  win  the  battle  and still lose the  war).   The  armies  have  been 
+accurately  recreated.   To  even  up the play-balance (at  the  expense  of 
+historical  accuracy) use the EDIT ARMY function to give the Saxons  another 
+2000  peasants.   Then  place  them  in position  using  the  EDIT  SCENARIO 
+function.
+
+MARSTON MOOR
+
+Put  the  White  Army (Royalist) under Computer  Control  and  select  FORCE 
+COMPUTER TO DEFEND while the Black Army (Parliament) is ordered to execute a 
+DOUBLE  ENVELOPMENT.   All  of the Zoom In perspectives offer  an  excellent 
+aerial view of the battlefield.   To see the Universal Military  Simulator's 
+Battle  Logic  in  action,  place both armies in ALLOW  COMPUTER  TO  DECIDE 
+STRATEGY  mode  and  watch how the Black Army threads its  way  through  the 
+intervening ditch to attack the Royalist forces.
+
+WATERLOO
+
+The  Universal  Military Simulator is not aware of  the  Emperor  Napoleon's 
+precarious political position and consequently must be instructed to  attack 
+the seemingly impregnable positions of the Anglo-Allies by placing the Black 
+Army (French) under Computer Control and selecting FORCE COMPUTER TO ATTACK.  
+Leave  the  AUTOMATIC  ZOOM  on and let  the  Universal  Military  Simulator 
+highlight the action as it develops.   To create a more equal play balance - 
+and  to  increase Napoleon's chances of winning at Waterloo - use  the  EDIT 
+ARMY function to add the French Corps described in Appendix B.
+
+
+GETTYSBURG
+
+As at Waterloo,  the political consequences of victory for the smaller  army 
+greatly  outweighed  sound  strategic  thinking.   Robert  E.  Lee  and  the 
+Confederate Army must win at Gettysburg even though they are outnumbered  by 
+the Union Army.   To recreate Gettysburg, place the Union (White Army) under 
+Computer  Control  and select FORCE COMPUTER TO  DEFEND.   The  confederates 
+should  be  assigned to FORCE COMPUTER TO ATTACK.   There are  a  number  of 
+exciting perspectives of the Gettysburg battlefield including ZOOM IN NORTH, 
+ZOOM IN SOUTH,  and ZOOM IN NORTHEAST.   To increase the Confederate odds of 
+victory add J.E.B. Stuart's cavalry corps as shown in Appendix B.

@@ -1,0 +1,10 @@
+PROGNAME = XP8
+SOURCE = $(PROGNAME)HD.asm
+
+all :  $(PROGNAME)ECS.slave $(PROGNAME)AGA.slave
+
+$(PROGNAME)AGA.slave : $(SOURCE) $(PROGNAME)AGAHD.asm
+	basm $(PROGNAME)AGAHD.asm
+
+$(PROGNAME)ECS.slave : $(SOURCE) $(PROGNAME)ECSHD.asm
+	basm $(PROGNAME)ECSHD.asm

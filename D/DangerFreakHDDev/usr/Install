@@ -1,0 +1,271 @@
+;****************************
+
+(set #readme-file "ReadMe")		;name of readme file
+(set #docs-file "Manual")		;name of docs file
+(set #highs-file "HiScores")		;name of high scores/prefs file
+(set #cleanup "")			;files to delete after install
+(set #last-file "Disk.1")		;last file the imager should create
+(set #prefix "DangerFreak")
+
+;****************************
+;----------------------------
+; checks if given program is installed, if not abort install
+; #program - to check
+
+(procedure P_ChkRun
+  (if
+    (= 0 (run ("cd SYS:\nWhich %s" #program)))
+    ("")
+    (abort
+      (cat
+	"You must install \"" #program "\" first!\n"
+	"It must be accessible via the path.\n"
+	"You can find it in the WHDLoad package."
+      )
+    )
+  )
+)
+
+
+
+;****************************
+
+(if
+  (exists #readme-file)
+  (if
+    (= 0 (run ("SYS:Utilities/Multiview %s" #readme-file)))
+    ("")
+    (run ("SYS:Utilities/More %s" #readme-file))
+  )
+)
+
+(set #program "WHDLoad")
+(P_ChkRun)
+
+
+(if
+  (getenv "WHDLInstPath")
+  (set @default-dest (getenv "WHDLInstPath"))
+)
+
+(set default-dest
+  (askdir
+    (prompt ("Where should \"%s\" be installed?\nA drawer \"%s\" will be automatically created." @app-name #prefix))
+    (help @askdir-help)
+    (default @default-dest)
+    (disk)
+  )
+)
+
+(set @default-dest default-dest)
+(run ("setenv WHDLInstPath \"%s\"\ncopy ENV:WHDLInstPath ENVARC:" default-dest))
+
+(set #dest (tackon @default-dest #prefix))
+(if
+  (exists #dest)
+  (
+    (set #choice
+      (askbool
+        (prompt ("\nDirectory \"%s\" already exists.\n Should it be deleted?" #dest))
+        (default 1)
+        (choices "Delete" "Skip")
+        (help @askbool-help)
+      )
+    )
+    (if
+      (= #choice 1)
+      (run ("Delete \"%s\" \"%s.info\" All" #dest #dest))
+    )
+  )
+)
+(makedir #dest
+  (help @makedir-help)
+  (infos)
+)
+
+;----------------------------
+
+(set #version 0)
+
+
+
+;****************************
+
+
+(if
+  (< @installer-version (+ (* 44 65536) 10))
+  (
+  (message
+    (cat
+      "Warning: your installer is outdated.\n"
+      "All features of this installation won't be available, such as icon show and drawer opening.\n"
+      "You have version " (/ @installer-version 65536) "." 
+      (BITAND @installer-version 65535) ", needed is at least version 44.10. "
+      "The 'installer' 44.10 comes with OS 3.5 but is also contained in the NDK 3.9. "
+      "You may also use the InstallerNG by Jens Tröger."
+      "\n\n"
+      "The installers can be obtained from the net:\n"
+      "http://www.amiga.com/3.9/download/NDK3.9.lha\n"
+      "aminet:util/sys/InstallerNG.lha"
+    )
+  )
+  (set #newstuff 0)
+  )
+  (set #newstuff 1)
+)
+
+
+(set #icon 6)
+
+
+(select #icon
+  (set #icon "inf")
+  (set #icon "romicon")
+  (set #icon "newicon")
+  (set #icon "coloricon")
+  (set #icon "glowicon")
+  (set #icon "exoticon")
+  (set #icon "newexot")
+  (set #icon "glowexot")
+)
+(copyfiles
+  (help @copyfiles-help)
+  (source ("%s.%s" #prefix #icon))
+  (newname ("%s.info" #prefix))
+  (dest #dest)
+)
+(if
+  (= #icon "newexot")
+  ("")
+  (
+    (tooltype
+      (dest (tackon #dest #prefix))
+      (settooltype "Slave")
+      (settooltype "PreLoad")
+    )
+    (tooltype
+      (dest (tackon #dest #prefix))
+      (settooltype "PreLoad" "")
+      (settooltype "Slave" ("%s.Slave" #prefix))
+    )
+  )
+)
+(tooltype
+  (dest (tackon #dest #prefix))
+  (setdefaulttool "WHDLoad")
+  (setstack 10240)
+  (noposition)
+)
+
+(select #version
+  (set #slave ("%s.slave" #prefix))
+  (set #slave ("%sCD32.slave" #prefix))
+)
+
+(copyfiles
+  (help @copyfiles-help)
+  (source #slave)
+  (dest #dest)
+  (newname ("%s.slave" #prefix))
+)
+(if
+  (exists #readme-file)
+  (copyfiles
+    (help @copyfiles-help)
+    (source #readme-file)
+    (dest #dest)
+  )
+)
+(if
+  (exists ("%s.info" #readme-file))
+  (
+    (copyfiles
+      (help @copyfiles-help)
+      (source ("%s.info" #readme-file))
+      (dest #dest)
+    )
+    (tooltype
+      (dest (tackon #dest #readme-file))
+      (noposition)
+    )
+  )
+)
+(if
+  (exists #docs-file)
+  (copyfiles
+    (help @copyfiles-help)
+    (source #docs-file)
+    (dest #dest)
+  )
+)
+(if
+  (exists ("%s.info" #docs-file))
+  (
+    (copyfiles
+      (help @copyfiles-help)
+      (source ("%s.info" #docs-file))
+      (dest #dest)
+    )
+    (tooltype
+      (dest (tackon #dest #docs-file))
+      (noposition)
+    )
+  )
+)
+
+(set #dest-org #dest)
+
+
+
+(set #program "RawDIC")
+(P_ChkRun)
+
+
+(if
+  (= @user-level 2)
+  (
+    (set #CI_drive
+      (askchoice
+	(prompt "Select source drive for diskimages")
+	(default 0)
+	(choices "DF0:" "DF1:" "DF2:" "DF3:")
+	(help @askchoice-help)
+      )
+    )
+    (select #CI_drive
+      (set #CI_drive "DF0:")
+      (set #CI_drive "DF1:")
+      (set #CI_drive "DF2:")
+      (set #CI_drive "DF3:")
+    )
+    (set #ignore " IGNOREERRORS")
+  )
+  (set #CI_drive "DF0:")
+  (set #ignore "")
+)
+
+(copyfiles
+  (help @copyfiles-help)
+  (source ("%s.islave" #prefix))
+  (dest #dest)
+)
+
+(working)
+(run ("CD \"%s\"\nRawDIC SLAVE=%s.islave RETRIES 10 SOURCE=%s%s\nDelete %s.islave" #dest #prefix #CI_drive #ignore #prefix))
+
+(if
+  (exists (tackon #dest #last-file))
+  ("")
+  (abort "Diskimaging was not successful!\nRawDIC was unable to create all needed files!")
+)
+
+;----------------------------
+
+(run ("Delete %s ALL QUIET FORCE" #cleanup))    ;delete temporary files
+
+
+
+(if (= #newstuff 1)
+  (openwbobject #dest-org)
+)
+(exit)

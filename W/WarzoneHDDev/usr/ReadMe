@@ -1,0 +1,44 @@
+Short:    HD-Installer for Warzone V1.0
+Author:   Codetapper/Action (codetapper@hotmail.com), ICQ: 26051687 & JOTD
+Version:  2.0
+Type:     game/patch
+
+This patch applies to "Warzone" (c) 1991 Core - 1 disk.
+Thanks to Chris Vella for sending the original!
+
+REQUIREMENTS:
+- Slave requires WHDLoad V10+.
+- Game requires 512kb chip mem (+0.7Mb other memory for preload option)
+
+FEATURES:
+- Full load from HD
+- RNC copylock removed (x2) - thanks Fairlight!
+- Blitter waits inserted (too many to count :)
+- Buttonwait tooltype added for Core Design picture
+- Trainer added (select level by pressing keys 1-8 before you hit fire to
+  start, and press Help to toggle infinite lives, bombs and energy).
+- RomIcon, NewIcon and GlowIcon (all created by Frank!)
+- Quit option (default key is 'F10')
+- Fixed access fault at level 3 boss
+- Adapted to whdload v17
+
+Greetings to all Action members, my testing crew and the WHDLoad team!
+Special greetings to Mad-Matt and Chris Vella for testing this game!
+
+
+Codetapper/Action (22-Feb-2001), JOTD (11-Apr-2017)
+
+
+         Bug report form, full WHDLoad package and other installs:
+                          http://www.whdload.org/
+
+            ________  ________  ________  ____  ________  ________
+           _)       \_)       \_)       \_)   \_)       \_)       \
+   __ ___ /___/     /   /_____/\  /     /     /   /     /   /     /
+  /_//__// \___    /   /     /CT\/     /     /   /     /   /     /
+        /___/     /___      /   /     /_____/___      /___/     /___ __
+            \____/    \____/    \____/          \____/    \____//__//_/
+
+
+           Visit the Action website for more of our productions:
+                           http://zap.to/action/

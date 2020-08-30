@@ -1,0 +1,308 @@
+RISE OF THE DRAGON
+from Dynamix
+
+Released by S K I D  R O W in 1991 !
+
+Control Documentation
+
+GETTING STARTED
+
+The essence of Dragon is the simple action of point-and-click.  The small 
+cursor on the screen represents you in the world of Blade Hunter.  By 
+moving the cursor around Blade's world and "clicking," you interact with 
+his environment.  There are 3 basic point-and-click actions:
+
+	1. LOOK: Single click the right mouse button while the
+                 cursor is placed over the object you want to look
+                 at.  This will bring up a text box containing
+                 information on the object you're looking at.
+
+	2. OPERATE: Single click the left mouse button while the
+                    cursor is placed over the object you want to
+                    activate or select.
+
+	3. MOVE: Click and HOLD the left mouse button while the
+                 cursor is placed over the object you want to pick
+                 up and move.
+
+	NOTE: Not all objects can be picked up so don't cramp your
+              fingers trying to pick up Blade's bed or toilet.
+
+There are 3 more clicks before we are ready to begin:
+
+	4. MAIN INVENTORY: Right click while the cursor is placed
+                           on the Inventory Icon.  Windows showing
+                           Blade's status and the current inventory
+                           objects he is holding will be displayed.
+
+	5. QUICK INVENTORY: Left click while the cursor is placed
+                            on the Inventory Icon.  Only your
+                            inventory window will be displayed.
+
+	6. USING OBJECTS: To use objects that Blade is carrying,
+                          simply click an hold the right mouse
+                          button.  The on-screen cursor will change
+                          to indicate that the specific object that
+                          Blade is holding has been selected for
+                          use.  With the object selected for use,
+                          it can be operated in the same way as
+                          other objects in the game.
+
+	NOTE: Since everyone "clicks" slightly differently from the
+              next person, the preset "click" controls may not seem
+              perfect for everyone.  You can adjust the preset
+              controls to suit your own personal speed and feel by
+              using the CALIBRATE MENU.
+
+THE SMART CURSOR
+
+In addition to pointing in different directions, the cursor will, at times, 
+completely change shape to inform you about items, places or people you 
+should pay attention to.
+
+When the cursor changes to an exit sign, it's telling you that by left 
+clicking on this spot you can enter another room.
+
+When the cursor changes to a pointed exit it's differentiating between two 
+closely placed, but different, exits.  You are likely to see this on 
+elevators, where there are both "up" and "down" buttons.
+
+If the cursor changes to a conversation bubble, you can left click to 
+engage in a conversation with the person the cursor is pointing at.
+
+If the cursor changes to a magnifying glass, it's your cue that you can 
+left click to "zoom in" and get a closer look at what the cursor is 
+pointing at.
+
+In addition to the normal gameplay cursor icons, you will soon become 
+familar with DGDS's signal that it's thinking - the WAIT icon.  The 
+cursor will change to the Wait Icon whenever the game needs to access 
+information from disk or is preparing a surprise.  The length the Wait 
+Icon remains on-screen is heavily dependent upon whether you are playing 
+the game from floppy disk or hard disk.  it is highly recommended that 
+you play from a hard disk drive.
+
+INVENTORY SCREENS
+
+The inventory allows you to interact with Blade Hunter.  Inventory is 
+where you direct his use of these objects.  The Inventory consists of 3 
+parts: the Main Inventory Window, the Quick Inventory Window and the 
+Inventory Icon, which gives you access to the Inventory.
+
+Inventory Icon
+
+Located on the bottom right corner of all game play windows, the Inventory 
+Icon represents the character of Blade Hunter.  It's use is straight 
+forward and very simple.
+
+- To give Blade Hunter objects, simply move objects on top of the 
+  Inventory Icon and drop them.  They will automatically be placed into 
+  Blade's inventory.
+
+- To access the Main Inventory Window, right click on the Inventory Icon.
+
+- To access the Quick Inventory Window, left click on the Inventory Icon.
+
+Looking at Inventory Objects
+
+Using the LOOK command (right click) on objects held in inventory will 
+give a close-up picture and description of the object you are looking at.
+
+MAIN INVENTORY WINDOW
+
+Accessed by right clicking on the Inventory Icon, the Main Inventory 
+Window gives you control over all items that have placed into Blade's 
+inventory.  You can drop the items from inventory or give them to Blade 
+to use.
+
+QUICK INVENTORY WINDOW
+
+Accessed by left clicking on the Inventory Icon, the Quick Inventory 
+Window shows you only the object inventory items on Blade from this menu, 
+you can quickly move objects from inventory.
+
+A Note on Inventory Menus:
+
+The Quick Inventory is just what the name implies: it pulls up the Quick 
+Inventory much faster than the Main Inventory.  When you don't need to 
+interact with Blade's character and only need to access the items in 
+inventory, left click on the Inventory Icon to use the Quick Inventory.  
+You'll spend a lot less time waiting....  Also, objects can be moved 
+directly out of the Quick Inventory.  Just left click and hold the object 
+and move it out of the inventory window.  this can only be done from the 
+Quick Inventory!  It's a big time saver during conversations when you 
+need to exchange items with another character.
+
+OBJECT USE
+
+Using objects in Blade Hunter's world is easy.  Simply move objects to 
+where you want them to be used or perform an action on objects that need 
+something to be done to them.
+
+- If you want to pick something up off the ground and put it into your 
+  inventory, you simply move the object onto the Inventory Icon and drop it.
+
+- If you want to turn on a VidPhone, you simply locate the power switch 
+  using the LOOK command (right click) and then operate it (left click) to 
+  turn it off and on.
+
+- If you want to open a lock using keys in your inventory, move the keys 
+  from inventory directly to the lock and drop them.  The lock will open 
+  (assuming you've got the right keys!).
+
+TIME
+
+In Blade Hunter's world, time is an ever-present companion.  People go to 
+work and go home, buildings open and close and Blade needs to sleep when 
+he's been up too long.
+
+When Blade has been up past his bedtime, a thought box will pop up.  It 
+means that Blade is getting sleepy and it's time to head home for some 
+shut-eye.  If you ignore this warning, Blade could end up falling asleep 
+in a place much less cozy (and less safe) than his cramped bedroom.
+
+DATE AND TIME INDICATORS/CONTROLS
+
+Located inside each of the inventory windows are the Date and Time 
+Indicators.  Along with the current date and time are controls for 
+advancing game time.  these controls are provided because you may come to 
+a point in your adventure when you need to wait until a specific time.  
+In this case, you will have two options:
+
+	1. Just hang...wait around twiddling your cursor.
+	2. Advance time using the Time Controls.
+
+Each click on the >> key will advance time by 1 hour.
+
+Each click on the > key will advance time by 1 minute.
+
+ARCADE SEQUENCES
+
+There are 2 side-scrolling arcade sequences in Rise of the Dragon.  In 
+the arcades, you control Blade Hunter from a side view as he makes his 
+way past physical hazards and various bad guys.  The arcades are 
+interwoven with the evolving story.  If they are completed successfully, 
+normal game play will resume.
+
+NOTE: All functions under the VCR Menu are operational during arcades
+except SAVE and RESTORE.
+
+ARCADE SCREEN
+
+Health Status Bar
+
+Indicates Blade's current status.  Each hit from enemy fire or from
+hazards drains energy from the bar.  If the Health Status Bar is depleted, 
+Blade dies.
+
+Mouse Controls
+
+The Mouse Control arrows direct Blade's actions when using a mouse.
+
+Weapon Screen
+
+Displays the active weapon.  Control of this function is automatic - the 
+computer selects the best weapon from Blade's Inventory.
+
+Weapon Control
+
+Blade enters the arcade sequences with whatever weapons he is carrying in 
+the inventory.  if he is carrying more than one weapon, the best weapon 
+for a particular part of the arcade is automatically selected.
+
+Weapons can be used in more than one way.  When Blade encounters "the Boss" 
+at the end of the arcade sequence he will be able to engage in hand-to-hand 
+combat when close enough.  blade will automatically use his weapon as a 
+club in hand-to-hand combat, beating "the Boss" with a variety of moves.  
+The moves selected for use in hand-to-hand combat are automatically 
+selected by the computer each time the action button or key is pressed.
+
+Hazards
+
+Each arcade sequence includes more than just bad guys out to end Blade's 
+existence.  There are numerous physical hazards that must also be 
+avoidable or overcome.  Some are bothersome, some will inflict minor 
+injury and some are downright deadly.
+
+Difficulty Levels
+
+The difficulty level of the arcade sequences can be changed at any time.  
+If you're not a fan of arcade shoot'em ups, call up the VCR Menu (press 
+ESC) and then select the CONTROLS sub-menu.  Find the slider marked 
+Difficulty and move it all the way to the left, toward EASY.
+
+MEANWHILE & STORY SEQUENCES
+
+Rise of the Dragon operates in a living environment where events are
+happening all the time, whether you're present or not.  When an event of 
+interest occurs somewhere else in Blade's world, a Meanwhile Screen will 
+pop up, introducing a sequence that shows what's occurring.
+
+Meanwhile sequences are intended to convey information that heightens the 
+cinematic experience of the story.  It's important to note that these 
+sequences are not interactive, you can't affect them, and that the 
+information given in the sequences isn't known to yourgame alter-ego, 
+Blade Hunter.  The fact that Blade isn't knowledgeable of the events 
+shown in meanwhile sequences is important to remember.  It means that 
+Blade's questions and responses to other characters will only deal with 
+elements that Blade is aware of.
+
+GAME PLAY MENUS
+
+VCR Menu
+
+Pressing the ESC key of left clicking on the top of any game play screen 
+will bring up the VCR Menu.  This is the main menu from which all others 
+are accessed.  the following is a breakdown of the 5 menus, and their sub-
+menus, available from the VCR Menu.
+
+- Play: Located in each of the sub-menus.  Pressing PLAY will exit the 
+        current menu and immediately return you to game play.
+
+- Controls:
+		- Difficulty - allows you to adjust difficulty levels
+                  in arcade sequences.
+		- Text Speed - adjusts the duration of Dialogue Box
+                  display.
+		- Detail Level - Adjusts the amount of animation.
+		- VCR - returns you to the VCR Menu.
+
+- Options:
+		- Joystick On/Off
+		- Mouse On/Off
+		- Sounds On/Off
+		- Music On/Off
+
+- Calibrate:
+		- Button Threshold - allows fine tuning of what the
+                  game considers a button "click."
+		- Joystick - brings up joystick calibration screen, 
+                  with instructions on "centering" your joystick for 
+                  the game.
+		- Mouse - See Sub Menu below.
+		
+Mouse Sub Menu:
+		- Mouse Speed - controls how fast the cursor moves
+                  mouse movement.
+		- Calibrate - returns to the calibrate menu.
+		
+Files:
+		- Save - See sub menu below
+		- Restore - See below
+		- Restart - quits the current adventure and restarts
+                  the game from the beginning.
+		
+Save Sub Menu:
+		- Brings up the Save menu.  Up to 20 games can be
+                  saved in one directory.  The Save feature is NOT
+                  operational during Meanwhile Story sequences and
+                  Arcades.
+
+Restore Sub Menu:
+		- Brings up the Restore menu.  Restoring a previously
+                  saved game will erase the current game.  The Restore
+                  feature is NOT operational during Meanwhile Story
+                  sequences and Arcades.
+
+Quit:
+		- Self-explanatory.

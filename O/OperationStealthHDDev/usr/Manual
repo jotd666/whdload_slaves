@@ -1,0 +1,562 @@
+                           SKID ROW presents
+
+                           OPERATION STEALTH
+
+              REFERENCE MANUAL FOR THE CINEMATIQUE SYSTEM
+
+We recommend that you make safety copies of your original disks and use
+these when you are playing.
+
+Note: Before you start playing, it is advisable to make sure that you
+have a blank formatted disk at hand so that you can save games part way
+through.
+
+HOW THE GAME WORKS
+
+You can move the figure that represents you around the screen at will.
+All you have to do is make him move is to move the cursor and press the
+LEFT mouse button.  The hero will then walk towards the spot you have
+chosen.
+
+The figure will stop if an obstacle en route blocks his way.  Choose
+another point that will allow him to get round the obstacle.
+
+The Actions Menu
+
+You can carry out numerous and varied actions, by using the hero, even
+though the actions menu is very simple.
+
+The actions menu is displayed if you press the RIGHT mouse button.  Move
+the menu bar until it highlights the action you desire and press the
+mouse button.
+
+The actions activated by the LEFT button are as follows:
+
+EXAMINE: Lets you get more information about an object in your vicinity.
+When the cursor changes to a '+', point to the object you want to
+examine and press the LEFT mouse button.
+
+TAKE: Use this command when you want to pick up an object which you
+think may be useful.  When the cursor changes to a '+', point to the
+object you want to pick up and press the LEFT mouse button.
+
+INVENTORY: Shows you the objects you hold.  Press on either mouse button
+to quit the inventory.
+
+USE: Lets you use an object you possess, to carry out an action on any
+object or person in the vicinity.  When the cursor changes to a '+',
+choose the object in the list then click on the object or person you
+want to use it on.
+
+ACT: Lets you carry out an action on any object or person.  When the
+cursor changes to a '+', point to the object or person to be affected
+and press the LEFT mouse button.
+
+SPEAK: You use this to speak to the people you will meet.  When the
+cursor changes to a '+', point to the person you wish to speak to and
+press the LEFT mouse button.
+
+The actions activated by the RIGHT button are as follows:
+
+EXAMINE: Lets you find out more about an object you possess.  Move the
+menu bar until it highlights the chosen object then press the LEFT
+mouse button.
+
+USE: Lets you use one object you have, to carry out an action on
+another object you have.  Move the menu bar until it highlights the
+chosen object then press the LEFT button.
+
+ACT: Lets you carry out an action on an object you have.  Move the
+menu bar until it highlights the chosen object then press the LEFT
+button.
+
+The User Menu
+
+This menu provides additional functions.  The menu is displayed when
+you press on both buttons at the same time.
+
+PAUSE: Stops the game until you press one of the mouse buttons.
+
+RESTART: Allows you to restart the game from the beginning.
+
+DISK DRIVE: Use this to tell the program which disk drive you want
+to use for savings games.
+
+LOAD A GAME: If you wish to rename a saved game, when the program
+asks you, insert the disk containing your saved games.  The list of
+games saved on a disk will be displayed.  Move the cursor to the name
+of the game to be loaded and confirm.
+
+SAVE A GAME: To save a game, when the program asks you, insert your
+saved game disk.  A list of all the games already on the disk will be
+displayed.  Choose an empty space and confirm.  Type in the text box
+the name you wish the game to be saved under, and confirm.  If there
+is no free space, either use a new disk or save it over an existing
+game.
+
+NOTE: As long as your hero is alive, you can save the game.  We
+recommend that you use this option frequently, especially if facing
+a dangerous situation.  In the course of certain animation sequences,
+you cannot guide your figure or save the game.  But don't worry,
+nothing really dangerous can happen to you during these sequences,
+or if it does, it is already too late to take any action.
+
+Hints
+
+o Examine all the objects in your vicinity.
+o Get close to objects to examine them.  No one is infallible and our
+  hero cannot see certain details unless he examines them closely.
+o Read the comments that are displayed carefully.  They may contain
+  clues which may be important later.
+o Pick up the greatest number of objects possible.
+o Think about all the possible different uses of the objects you possess.
+o Act on everything you see.
+o Speak to as many people as possible, they may give you a lead.
+o Make a copy immediately you sense danger.
+
+If, after all this, you get stuck at a certain point in the game, try
+and remember if you have forgotten an object, or if you did not do
+something earlier on...
+
+LOADING INSTRUCTIONS
+
+AMIGA 500, 1000, 2000, 2000-HD and 2500
+
+(If you are using an AMIGA 500 without extended memory you may have to
+unplug the external disk drive.)
+
+o Switch off the computer for at least ten seconds.
+o Switch on computer.
+o Insert the Kickstart disk in disk drive DF0: if required.
+o When the computer prompts you for Workbench, insert game disk No. 1
+  in drive DF0:.
+o The game will load and run automatically.
+
+Hard Disk Installation
+
+o Check that the number of bytes available on the hard disk is larger
+  than that used by the game.
+o Create a new directory and copy the contents of each disk into it.
+
+Loading from the Hard Disk
+
+o Double click on the hard disk icon.
+o Double click on the icon of the directory that contains the game.
+o Double click on the icon DELPHINE.PRG.
+o The game will load and run automatically.
+
+KEYBOARD COMMANDS
+
+o The eight arrow keys move the cursor one pixel each time they are
+  pressed.
+o Pressing SHIFT and an arrow key, moves the cursor rapidly.
+o Pressing CTRL and an arrow key, Positions the cursor in the center
+  of one of eight squares into which the screen is divided.
+o The ESC key functions like the right mouse button.
+o Pressing CTRL and the "S" key turns the sound on and off.
+o The RETURN, ENTER and "5" key (the central key on the numeric keypad)
+  function as the left mouse button.
+o You can also use the function keys to directly access the commands
+  as follows:
+
+  "F1" EXAMINE                  "F5" ACTIVATE
+  "F2" TAKE                     "F6" SPEAK
+  "F3" INVENTORY                "F9" The actions menu
+  "F4" USE                      "F10" The user menu
+
+o Pressing "P" halts the game until you press the key again.
+o Pressing "+" speeds up the animation.
+o Pressing "-" slows down the animation.
+
+Moving the Figure:
+
+Keyboard Key  Direction
+------------  ---------
+ Q            NW
+ W            N
+ E            NE
+ A            W
+ S            STOP
+ D            E
+ Z            SW
+ X            S
+ C            SE
+
+Moving the Mouse
+Numlock key on:
+
+Keypad Key  Direction
+----------  ---------
+ 7          NW
+ 8          N
+ 9          NE
+ 4          W
+ 5          STOP
+ 6          E
+ 1          SW
+ 2          S
+ 3          SE
+
+Moving the Mouse
+Numlock key off:
+
+Keypad Key  Direction
+----------  ---------
+ 7          NW
+ 8          N
+ 9          NE
+ 4          W
+ 5          STOP
+ 6          E
+ 1          SW
+ 2          S
+ 3          SE
+ .          User Menu
+ 0          Actions Menu
+ ENTER      CONFIRM
+
+                             INSTRUCTION MANUAL
+
+THE HERO: JOHN GLAMES
+---------------------
+John Glames has been a member of the CIA, the American secret service,
+for the last 7 years.  His pedigree is outstanding, which is why he
+has been chosen for numerous dangerous and delicate international
+missions.  The mission he is being entrusted with today is of capital
+importance, for the diplomatic stability of the world hangs in the
+balance.
+
+CONFIDENTIAL REPORT
+-------------------
+SUBJECT: AGENT DSC 3 - JOHN GLAMES
+         CHOSEN FOR THE MISSION
+         "OPERATION STEALTH"
+BRIEFED: MARCH 1990
+Height:  1.85 m
+Weight:  75 kgs.
+Age:     33
+
+Born in 1957 to an upper middle class family in Vermont, from his
+earliest childhood his acute intelligence was remarkable.  He went to
+school in his home town where he became a member of the local skiing
+and swimming teams.
+
+After having studied at the famous university in Boston, where, as a
+member of the swimming team, he established university records for the
+1.500 m freestyle and the 200 m butterfly, he was admitted to Westpoint
+military academy at the age of 22.
+
+In 1981 DSC 3 spent a year at an American base in Asia.  He put his time
+to good use, learning all the techniques of the martial arts, and is
+currently a Master of Ninjitsu.  In 1983 he was recruited by our agency
+while he was finishing a brilliant Masters degree in chemistry at MIT
+(Massachussets Institute of Technology.
+
+He is, therefore, an excellent skier and a very good swimmer (he is
+particularly fond of skin diving, which he learned during his stay
+in Asia).  His mastery of the techniques of the martial arts makes him
+very strong in hand-to-hand combat and very resistant both to effort
+and to injury.  His brilliant studies, (he was among the top students
+both at MIT and at Westpoint) have made him an expert on armaments,
+shooting and chemistry.  He is also infatuated with electronics and is
+passionately interested in anything touching upon that area.  DSC 3 is
+also a great enthusiast for racing cars and car chases, an area in
+which he excels.
+
+His weakness?  Women.....
+
+REPORTS ON HIS PREVIOUS MISSIONS
+--------------------------------
+Restricted access - Top secret documents.
+
+STEALTH FIGHTER
+---------------
+MODEL A:
+
+TECHNICAL SPECIFICATIONS
+OF THE STEALTH FIGHTER
+------------------------
+ARMAMENT:
+o Selected targets are located by Laser technology, which guides the
+  bombs onto the chosen one.
+o Target error factor : 0.001%.
+o 2 missiles with nuclear washeads : "Smart bombs".
+o Each bomb can destroy a town the size of New York in 10 seconds.
+
+FUEL:
+
+o A mixture of refined aviation fuel, CAT 08 and 34% liquid hydrogen.
+o Quantity of fuel : minimum of 300 litres.
+o STEALTH Model A is not refuellable in flight.  This option will
+  be incorporated in Model B.
+
+OPTION "OZX":
+
+o Jams all radars.  When it is in operation, the Stealth Fighter is
+  undetectable.
+
+SPEED
+
+o 3,000 km/h.
+o from 0 to 800 km/h in 10 seconds.
+o from 800 to 2,500 km/h in 5 seconds : option "ULTRA".
+o from 2,500 to 3,000 km/h in 3 seconds : option "HYPER BOOST".
+
+DANGER!  Only use HYPER BOOST option in cases of last resort because
+the fuel consumption is enormous.  There is a risk of fuel shortage.
+
+YOUR WEAPONS
+------------
+1) THE FALSE ATTACHE CASE
+
+The false attache case has a double bottom.
+
+CALCULATOR : DANGER!!!
+
+Never take the calculator far away from the attache case.  The
+calculator is linked with the attache case by an infra-red beam.
+If you separate the calculator from the attache case, the infra-red
+beam is broken, setting off an explosion equivalent to 10 kg of
+plastic explosive.  (Serious damage to everything within a radius of
+10 meters).
+
+NTY FORGER:
+
+This ultra modern machine is designed to forge passports.  The forger
+is in the secret compartment of the attache case and has three programs:
+
+            o false French passport.
+            o false British passport.
+            o false German passport.
+
+Type in the required code on the calculator to get the NTY FORGER.
+
+a) Use the nationality best suited for the current political situation.
+
+b) Use the arrows on the NTY FORGER to select the nationality you have
+   chosen.
+
+c) Press the button to confirm your choice.
+
+NOTE!  This attache case is a new invention of our weapons service.
+The director of the service, Professor CARLING is very attached to it.
+
+2) THE WATCH CABLE
+
+This can be an invaluable aid under any circumstances.  An object like
+a watch is so ordinary that it would never raise the suspicions of your
+enemies, for example:  the Watch Cable was very useful to agent DSC 2
+during a chase over the roofs in HONG-KONG in the course of his last
+mission.
+
+THE CHASE IN HONG KONG
+----------------------
+After stealing documents from the Chinese secret services building in
+HONG-KONG, agent DSC 2 was spotted by the security services of the
+building.  After a wild chase, DSC 2 found himself on the roof of the
+building.  The enemy was at his heels.  There was another building
+facing DSC 2.  He used the cable option on his watch and was thus able
+to escape from his pursuers.
+
+o Maximum length of cable : 30 m.
+o Maximum weight the cable will support : 100 kgs.
+o The cable plays out in 10 seconds.
+
+3) THE CUTTING PEN
+
+Just like the watch, an ordinary pen will never awaken the suspicions
+of your enemies.  The cutting pen looks like an ordinary fountain pen.
+It is special because it contains a pressurized capsule of benzoic
+acid.  When the swivel ring on the pen body is turned through 180
+degrees, the benzoic acid capsule depressurizes and lets drops of benzoic
+acid fall from the nib of the pen.
+
+PROPERTIES OF BENZOIC ACID:
+
+DISSOLVES ALL     AMOUNT OF ACID
+   METALS             NEEDED
+
+   STEEL              3 drops
+   IRON               2 drops
+   GOLD              10 drops
+ MANGANESE            5 drops
+ TUNGSTEN             1 drop
+ PLATINUM             8 drops
+   LEAD              12 drops
+  COPPER              2 drops
+
+SWIVEL RING
+
+Use the prescribed number of drops.  If you exceed the dose the vapours
+given off by the chemical reaction could suffocate you.
+
+NOTE:  The cutting pen was used successfully by agent DSC 1 to escape
+from the ALMADENA prison.
+
+4) THE RECORDING RAZOR
+
+Recorder Option:
+
+a) Make sure the razor contains a blank micro cassette.  To do this,
+   first press the Eject button.  You will find the micro cassette
+   located towards the upper rear portion of the razor.  Make sure the
+   cassette has been rewound.
+
+b) Replace the cassette.
+
+c) To record a conversation : switch the On/Off switch to the On position.
+
+d) The shaving heads will now function as very powerful microphones,
+   capable of recording any conversation within a radius of 20 meters
+   of the razor.
+
+e) When the razor is recording : the indicator light is green.  When
+   the razor is not recording : the indicator light is red.
+
+f) When the cassette is full, the razor rewinds it automatically.  When
+   the cassette has been rewound, the indicator light changes to red.
+
+o Recording time of the micro cassette : 30 minutes.
+
+5) THE SAFE - CRACKING BOX
+
+Allows you to find the combination of any safe.  This box was dreamed
+up by world famous burglar known as "The Cracker".  When he was caught
+by agent DSC 3, this mastermind of burglary told us all of his secrets.
+
+With his help, Professor CARLING perfected the Code-Breaking Box.  Let it
+be said that Professor CARLING added his own personal touches so as to
+improve on the ideas of "The Cracker".
+
+HOW TO USE THE CODE - BREAKING BOX
+
+a) Place the box on the safe.
+
+b) Press the On/Off button.
+
+c) Slowly turn the tumbler of the safe.
+
+d) The numbers in the code will be shown on the number display in the
+   same order as they occur in the combination lock.
+
+e) Recompose the code in the same order as that shown on the number
+   display of the box and the safe will open.
+
+WARNING!
+
+The Code-Breaking Box is powered by two batteries containing enriched
+mercury.  This substance allows it to sense all of the infinitesmal
+variations in sound.  That is why it is used in the box.  The
+disadvantage of enriched mercury is that it does not last very long when
+in use.  You must act quickly.
+
+6) THE CIGARETTE CASE
+
+This cigarette case contains two types of cigarettes.
+
+A) Rocket launching cigarettes.
+
+B) Finger print revealing cigarettes.
+
+A) ROCKET LAUNCHING CIGARETTES
+
+This cigarette contains a rocket near the filter.  The rocket is linked
+to a heat sensor at the end of the cigarette by a minute thread.  When
+the cigarette is lit, the thread burns and launches the rocket.
+
+Characteristics of the Rocket:
+
+o Length : 3 cm.
+o Range : 25 m.
+o Hit Rate : at 5 m - 100%.
+             at 10 m - 95%.
+             at 15 m - 92.5%.
+             at 20 m - 90%.
+             at 25 m - 87.5%.
+o It can destroy an object the size of a car.
+
+B) FINGER PRINT REVEALING CIGARETTES
+
+The cigarette contains an ultra-sensitive micro-film made of CrO2.
+With this micro-film, you can photograph any finger print.  All you
+have to do is to place the micro-film on the spot where you have
+found the finger print.  The computerized database research unit can
+then identify the owner of the finger print you have photographed.
+
+THE SUSPECTS
+------------
+SUSPECT No. 1 - GENERAL MANIGUA
+
+He was democratically elected by the Paraguayan people three years ago.
+
+At that time, he was adored by his fellow countrymen.  He had thwarted
+a military junta that threatened to sieze power.  General MANIGUA was
+not known then as General but as President MANIGUA.
+
+He had never been a military man, but had studied sociology at Harvard.
+Unfortunately, he has changed a lot since he came to power, but we do
+not know the reasons why.
+
+A year ago he assumed the title of General and dissolved the People's
+Assembly, making himself dictator.
+
+The country is now in a state of siege.  Even his own family no longer
+recognize the good President MANIGUA.  Freedom of speech has disappeared
+in SANTA PARAGUA.  No one dare voice any opposition.  General MANIGUA
+has surrounded himself with a terrifying secret police force which is
+ruthlessly efficient in its repression of political opponents.
+
+It is under these circumstances that a resistance group called LIBERTAD
+has been formed.
+
+This group struggles in secret against the dictatorship.  According to
+them, MANIGUA is only the puppet of an international crime syndicate.
+However, opinions are divided in the group.  Other members believe
+that MANIGUA rules the country with a rod of iron by himself.
+
+Since General MANIGUA plunged the country into a dictatorship, we have
+ceased to support him.
+
+We are now supplying LIBERTAD with arms to fight MANIGUA's secret police,
+making us MANIGUA's enemy No. 1, for without our arms supplies, the
+local resistance would be incapable of fighting.
+
+We are sending you to SANTA PARAGUA immediately because agent DSC 2,
+who has been on a mission there for the last six months, has sent this
+worrying telex:
+
+"IMPORTANT INFORMATION ABOUT THE STEALTH AFFAIR.  STOP.  I NEED URGENT
+HELP.  STOP."
+
+It is therefore probable that MANIGUA is implicated, either directly
+or indirectly, in the theft of our STEALTH.  We do not know, however,
+if he planned the whole affair, or whether he was callaborating with
+a foreign power.
+
+SUSPECT No. 2 THE U.S.S.R. (The KGB)
+
+Over the last few years our relations with the Soviet Union have
+improved considerably.
+
+We have jointly signed several treaties in such areas as disarmament
+and trade.  The present leaders of the Soviet Union seem to be looking
+for dialogue.
+
+However, in the heart of the Supreme Soviet there are extremist
+elements who advocate the destruction of capitalism and war with the
+United States.  We also know that Soviet scientists have been working
+for the last two years on an aviation project similar to STEALTH.  The
+man in charge of the project, Professor LUKASIEWICZ, fled the U.S.S.R.
+and sought asylum in West Germany.  Since he left, the project has
+been frozen.  It could be that the Soviets, unsettled by our progress
+on the Stealth project, have stolen our technological jewel to copy it.
+
+Did they act in collaboration with General MANIGUA?
+
+We have no clues.
+
+Your air ticket.  Destination : SANTA PARAGUA.
+
+SKID ROW  SKID ROW  SKID ROW  SKID ROW  SKID ROW  SKID ROW  SKID ROW
+
+

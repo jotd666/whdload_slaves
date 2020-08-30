@@ -1,0 +1,275 @@
+                            MEGA-TYPHOON
+
+============================================================================
+         The fastest arcade action game ever made for the AMIGA !            
+============================================================================
+
+
+   (C) Copyright 1992-96. All rights reserved.
+   
+      Bernhard Braun
+      Jahnweg 6
+      69231 Rauenberg      
+      Tel.: 06222/64878
+
+ Exclusively distributed by Nordlicht EDV Service.
+
+               
+ COPYRIGHT
+   
+ This program is copyrighted by the authors. No part of this program may
+ be  reproduced or utilized in any form or by any means, without written
+ permission from the copyright owner.
+
+ DISCLAIMER
+
+ The authors make no  warranty  of any kind with respect to this product
+ and explicitly  disclaims  any implied warranties of merchantability or
+ fitness for  any  particular  purpose.
+
+ HOW TO PLAY
+
+ Boot from disk (in drive DF0: !), or type "MEGA-TYPHOON"  at  the  CLI-
+ prompt.
+ Hit the SPACE Key for smart bombs.
+ Hit the ESCAPE Key mouse button to exit.
+ Hit the P Key to pause the game.
+
+
+ ===========================================================================
+
+              A B O U T    M E G A - T Y P H O O N
+
+ ===========================================================================
+
+
+    Enjoy the first REAL arcade-like shoot-em-up ever made for
+                       the amiga computer
+
+
+
+ MISSION:   insert coin.
+
+            destroy them all ...
+
+            (good luck ! ;-)
+
+
+
+ KEYS:     <SPACE> or second button  Smart Bomb
+
+           <P>                       Pause
+
+           <ESCAPE>                  Abort Mission
+
+
+
+ WEAPONS & EXTRAS:
+           
+           <S>          Spread Shot
+
+           <L>          Sinus Laser
+
+           <H>          Homing Missiles
+
+           <M>          Power Missiles
+
+           <B>          Smart Bomb
+           
+           <P>          Get Full Weapon
+
+           <1UP>        Extra Life
+
+
+           To increase weapon power, collect bonus items
+           of THE SAME TYPE successively.
+
+           Modify power of the sinus laser by varying
+           the fire-button frequency
+
+
+ TECHNICAL FEATURES:
+
+
+            *   more than 100 objects moving on screen 
+                at the same time
+
+            *   50 (!) frames per second (fps)
+                (all conventional games with comparable number,
+                size and complexity of moving objects run at 17 
+                or at most 25 fps only )
+
+            *   Full performance on ALL AMIGAS (including A1000,A500)
+
+            *   pioneering new graphics engine featuring
+                64 BOB's, 48 Sprites, 16 Colors
+
+            *   copper driven blitter
+ 
+            *   virtual sprite engine 
+ 
+            *   virtual playfield scrolling
+
+            *   asynchronuous multi-process animation algorithm 
+
+            *   animation/control process separation 
+ 
+  In other words:
+
+     The fastest arcade action game ever made for the AMIGA ! 
+
+ ---------------------------------------------------------------------------
+
+
+ " MEGA - TYPHOON "
+ *******************
+ 
+ Autoren           : Bernhard Braun + Guido Kehrle
+
+ Musik             : Tobias Hirsch
+
+ Titel/Cover       : Udo Drüke
+ 
+ Exclusiv-Vertrieb : Nordlicht® -EDV-Service
+ 
+ ___________________________________________________________________________
+
+ 
+ Technische Daten:
+ 
+ ---- Lauffähig ab OS 1.3  1 MB Ram Speicher
+ 
+ ---- durchgehend 50 Hz Bildwiederholfrequenz
+ 
+ ---- über 64 BOBs gleichzeitig
+ 
+ ---- über 48 Sprites gleichzeitig
+ 
+ ---- 16 Farben
+ 
+ ---- intelligente Gegner-Algorithmen
+ 
+ ---- über 100 bewegte Objekte
+ 
+ ---- 20 Extrawaffen
+ 
+ ---- 1 oder 2 Spieler
+ 
+ ---- HD-Installation möglich
+ 
+ 
+ Vitual Playfield Scrolling: ( IFF ) - Graphic-Brushes beliebiger Größe,
+ können an jeder beliebigen Pixel - Position  auf dem virtuellen Hinter-
+ grund plaziert werden, welcher mit beliebiger Geschwindigkeit gescrollt
+ werden kann.  ( Größe des Virtual Playfields: bis zu 448 x 1684 Pixel )
+ 
+ Copper Controled Blitter:  Alle  Blitter-Operationen  verlaufen Copper-
+ gesteuert, unabhängig von der  CPU im Hintergrund ( Mit zunehmender An-
+ Zahl der BOBs  erreicht dieses  Verfahren  gegenüber  dem herkömmlichen
+ " Blitter-finished-Interrupt-Chaining ",  wegen  der  relativ langsamen
+ Interrupt-Verarbeitung, eine Performance-Steigerung um bis zu 30%.
+ 
+ Interleaved Bitplane Format und Blitter Optimized Coodinate Fomat (BOC)
+ zur weiteren Reduzierund des " Blitter-Overheads ".
+ 
+ Animation/Control Process Separation:  Dank  dieser  völlig  neuartigen
+ Technik, bei der der gesamte Programmablauf in 3 unabhängige, asynchron
+ kommunizierende Prozesse aufgeteilt wird,  ist die sichtbare Frame-Rate
+ ( 50 Hz ) in keinster Weise durch die CPU-Berechnungen beschränkt, son-
+ dern ausschließlich durch den Blitter.  Das  heißt:  selbst  aufwendige
+ Berechnungen, wie z.B. 50  gleichzeitig  laufende  Zielsuch-Algorithmen
+ verlangsamen die Bildwiederholrate nicht!
+ 
+ Systemkonforme Programmierung, Kompatibilität: Trotz der auf die Spitze
+ getriebenen  Ausreizung  der Hardware, wurde das Programm so systemkon-
+ form wie möglich konzipiert. Der hardwarespezifische Teil des Programm-
+ codes ist über wohldefinierte Schnittstellen vom übrigen Programm abge-
+ kapselt, welches ausschließlich Standard-Systemfuntionen verwendet.  So
+ läßt sich " Mega-Typhoon " z.B. problemlos auf  Festplatte installieren
+ und wurde auf allen AMIGA-Modellen  (A1000, A500, A2000, A12000, A4000)
+ erfolgreich getestet.
+ 
+ 
+ Waffen:
+ 
+ Die Feuerfrequenz ist beeinflußbar
+  
+ Die Feuerkraft wird durch die Sinuswelle verstärkt
+ 
+ Die Schußwaffen werden verändert, indem man 4x das gleiche Symbol ein-
+ sammelt.
+ 
+ Waffensysteme: Die 4 Grundwaffensysteme Laser (L), Power-Missiles (M),
+ Homing-Missiles (H)  und  Sread-Shot (S),  können in  jeweils 5 Stufen
+ ausgebaut  und in über 100 Möglichkeiten  kombiniert  werden.  In  der
+ höchsten Ausbaustufe stehen z.B. bis zu 15 einzelne Schhüsse und 8 un-
+ abhängige zielsuchende Raketen gleichzeitig zur Verfügung.  Zusätzlich
+ stehen für " Notfälle " eine begrenzte Zahl von Smart-Bombs(B) bereit,
+ welche mit der Space-Taste ausgelöst werden.
+ 
+ Die Durchschlagkraft des Lasers (L) kann durch erhöhen der Feuerknopf-
+ Frequenz  gesteigert  werden,  was  durch  eine  erhöhte  Frequenz der
+ " Sinuswelle " sichtbar wird.
+ 
+ Beim  Aufsammeln  der  Extrawaffen-Symbole  ist  zu beachten,  daß ein
+ Wechsel der Bewaffnung  zwischen S und L,  bzw. H und M ein bloßes Um-
+ schalten ohne Aufbaueffekt zur Folge hat.  Darüberhinaus  wechseln die
+ Symbole nach einer bestimmten Zeitspanne eingenständig ihren Typ.
+ 
+ 
+ 
+ Symbole:
+ 
+ " B "   ---> Smartbomben 
+ 
+ " H "   ---> Zielsuchraketen
+ 
+ " S "   ---> Schußwaffenaufbau
+ 
+ " L "   ---> Lazer
+ 
+ " M "   ---> Missiles
+ 
+ " P "   ---> volle Bewaffnung
+ 
+ " 1up " ---> ein Leben mehr
+
+ Steuerung:
+
+ Joystick oder Joypad in Port II
+ 
+ Space-Taste  oder  2. Fire Button (Joystick, Joypad) -->  "Smartbomben"
+ 
+ ESC    --- > Ende / zum Menü
+ 
+ ---------------------------------------------------------------------------
+ 
+ 
+ Geschichte:
+ 
+ Im Jahre " 2199 ".  Längst haben sich die Menschen auf anderen Planeten
+ koloniesiert. Ihre Existenz ist allerdings abhängig von der Kooperation
+ mit anderen  intelliegenten  Lebensformen. In diesem Zusammenhang wurde
+ auch daß Projekt  " Mega-Typhoon "  gestartet.  Hier  werden die besten
+ Piloten der Galaxis zum  Schutz der  Bevölkerung ausgebildet. Denn auch
+ in ferner Zukunft gibt es immer wieder Größenwahnsinnige, die versuchen
+ die Oberhand des Universums zu erlangen.  Hat  man den ersten Endgegner
+ erfolgreich besiegt, wartet auch  schon der nächste.  Die  Gegner  sind
+ hervorragend bewaffnet und nur durch Geschick  und  gezieltes Einsetzen
+ der Waffen wird es möglich sein, die Mission erfolgreich zu beenden.
+ 
+ 
+ 
+ Fazit: 
+ 
+ Ein  vertikales  Hochleistungs - Action - Vergnügen,  in Hochleistungs-
+ Qualität,  butterweicher, genauer Steuerung, fantastischen Animationen,
+ erstklassigen  Effekten  und  mit  einer farbenreichen genialen Grafik.
+ Das wohl erste Ballerspiel in absoluter Spielhallen-Qualität.
+ 
+  
+ Nordlicht®Team
+ 
+ 
+ ---------------------------------------------------------------------------
+                                                      

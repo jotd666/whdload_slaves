@@ -1,0 +1,91 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "The Ancient Art Of War" © 1990 Broderbund, 1 disk
+
+ This install requires WHDLoad to be in the path. It can be found in
+ the WHDLoad package.
+ To install from a different drive than DF0: select installation mode Expert.
+
+ The installed program requires 0.5 MB ChipMem and 0.5 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+ 
+Requirements:
+
+ The game requires a installed A500 Kickstart 1.3 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ a appropriate requester.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick346.lha" on aminet.
+
+History:
+
+version 1.1 (04/03/2020):
+
+- added icons from Irek
+- added translated loading pic (only visible with BUTTONWAIT) by DamienD
+
+version 1.0 (24/02/2020) done by JOTD:
+
+- option to use full english translation (took a while to achieve)
+  from french version
+- french & spanish versions supported
+- password protection removed
+- keyboard routine fixed
+- added manual OCR'ed from original english manual
+- stupid hardware disk checks removed for data disk
+- cpu dependent loops fixed
+- fixed to run with fast memory
+- support for both french & spanish versions
+- buttonwait allows to see intro picture (in french/spanish)
+- added wait for left mouse button when giving up the game
+- source code included, including python scripts used to rip/build the images & texts
+
+The game has been translated to english by JOTD using:
+
+- MS-DOS version for texts & title screen (after heavy rework of colors & shades)
+- GIMP to rework text as images (most small font text are actually images)
+- custom-made python tools to convert bitplanes to and from png images
+- custom-made python tools to extract the text from binary/text mixed files to json
+  and back (after translation)
+
+The internal image format is really strange and I thought it would be easier to
+"subtitle" the graphics when detecting given patterns on the screen rather than decode
+the internal file format, rework & rebuild the original files with reworked graphics.
+The result looks very neat now.
+
+After 15 years sitting on my hard drive this patch is finally complete and translated
+to english. Enjoy.
+
+Remaining possible issues:
+
+- translation: "O" of "ouest" on the map was not translated as "W", because there were color issues,
+  and it's not a big problem anyway.
+- translation: Some word wrap on proverbs is incorrect sometimes
+- translation: maybe some end of game stuff isn't translated (when you won)
+- The spanish version I have doesn't seem to have password protection
+  Maybe it's a crack, so if you have the original with a password, send it!
+- missing game icon. If you have one, please provide

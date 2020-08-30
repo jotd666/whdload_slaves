@@ -1,0 +1,74 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "4D Sports Boxing" © 1991 Mindscape
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ The installed program requires 0.5 MB ChipMem and 0.5 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ The game requires an installed A500 Kickstart 1.3 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive
+ "util/boot/skick346.lha" on aminet.
+
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 1.3-B (02.04.2020) done by JOTD:
+ - fixed: reenabled fast memory
+
+ version 1.3 (22.03.2020) done by JOTD:
+ - really fixed music by waiting after dma sound stop (not after dma sound start)
+
+ version 1.2 (09.05.2014) done by JOTD:
+ - checks for disk 2 installation at startup (in answer to issue #2761)
+
+ version 1.1 (27.06.2006) done by JOTD:
+ - rewritten for WHDLoad v16, music sounds a bit better (not perfect...)
+ - source code included
+
+ version 1.0-B (2002)
+ - enabled 68060 specific caches by default,
+ - added Chris icon, reworked install.
+
+ version 1.0 (2001) done by JOTD:
+ - initial release
+ - Convenient install script
+ - Quit key (numerical '*', or configurable with QUITKEY)
+ - Full use of fastmem for smooth 3D animation
+ - access faults due to the use of 32 bit fastmem removed (lots of them!)
+ - password protection removed
+ - Docfile included
+ - Export boxers to HD
+ - Automatic import of boxers (import option becomes obsolete)
+ - Original quit option still active
+ - Nice icons by Exoticons, Chris Vella
+
+notes: if slave crashes with "cannot find setup.dat", you have probably forgot to install disk 2!!
+
+

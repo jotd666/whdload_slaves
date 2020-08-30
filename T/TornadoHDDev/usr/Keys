@@ -1,0 +1,207 @@
+
+===============================================================================
+
+             Keyboard Overview for TORNADO by Digital Integration
+
+                                (Amiga Version)
+
+===============================================================================
+
+
+1. Main Controls
+
+   Up                                      NUM 2 or CURSOR DOWN
+   Down                                    NUM 8 or CURSOR UP
+   Roll Left                               NUM 4 or CURSOR LEFT
+   Roll Right                              NUM 6 or CURSOR RIGHT
+   Rudder Left                             NUM 0 or LCOMMAND
+   Rudder Right                            NUM . or RCOMMAND
+   Fine Adjust                             ALT + Keys
+
+
+2. Thrust Controls
+
+   Increase Thrust/Afterburner             NUM +
+   Decrease Thrust/Afterburner             NUM -
+   Maximum Thrust/Afterburner On           SHIFT NUM +
+   Minimum Thrust/Afterburner Off          SHIFT NUM -
+
+
+3. Flight Controls
+
+   Sweep Wing Backward 1 Step              S
+   Sweep Wing Forward  1 Step              W
+   Flaps Down 1 Step                       A
+   Flaps Up   1 Step                       Q
+   Airbrake                                BACKSPACE
+   Reverse Thrust (when landed)            BACKSPACE
+   Gear Brakes On/Off                      B
+   Gear Up/Down                            G or U
+   Jettison
+                    external Tanks         ALT   J
+                    external Loads         CTRL  J
+                    all Loads and Tanks    SHIFT J
+   SPILS On/Off                            CTRL  I
+   Eject                                   CTRL  E
+
+
+4. Weapon Controls
+
+   Unlock Air-Ground Weapons               RETURN
+   Unlock Air-Air Weapons                  ALT RETURN
+   Lock Weapons                            CTRL RETURN
+   Select Air-Ground Weapon                K
+   Select Air-Ground Targeting Mode        L
+   Select Air-Air Weapon                   ; (Ö)
+   Fire Weapon                             SPACE
+   Release Chaff                           C
+   Release Flare                           F
+   ECM On/Off                              E
+
+
+5. Autopilot Controls
+
+   Course to Left                          NUM 4 or CURSOR LEFT
+   Course to Right                         NUM 6 or CURSOR RIGHT
+   Increase Altitude                       NUM 2 or CURSOR DOWN
+   Decrease Altitude                       NUM 8 or CURSOR UP
+   Increase ATS Thrust                     NUM +
+   Decrease ATS Thrust                     NUM -
+   Fine Adjust                             ALT + Keys
+   Automatic Trim                          NUM 5
+   Approach Mode                           F6
+   Track Mode                              F7
+   Standard Mode                           F8
+   TRN Mode                                F9
+   IAS Mode                                F10
+   Disable Autopilot                       ESC
+   Next Waypoint                           N
+   Define Target Waypoint                  T
+   Delete Target Waypoint                  CTRL T
+
+
+6. Cockpit Controls
+
+   HUD Contrast                            H
+   HUD On/Off                              CTRL H
+   Speed KTS/MACH                          ALT  H
+   Radar
+         Ground Radar On                   R
+         Air Radar On                      ALT  R
+         Radar Off                         CTRL R
+   Alarm Off                               NUM *
+   Toggle Active Window (Mouse)            TAB
+   MFD Mode Toggle                         D
+   MFD Off                                 CTRL D
+   Tactical Map MFD
+                    Zoom In/Out            , or .
+                    Toggle Centering       O
+   Ground Radar MFD
+                    Target Select Movement (MOUSE)
+                    Select                 LEFT BUTTON
+                    Deselect               RIGHT BUTTON
+                    Increase Range         CTRL LEFT BUTTON
+                    Decrease Range         CTRL RIGHT BUTTON
+   Air Radar MFD
+                    Target Select Movement (MOUSE)
+                    Select Target          LEFT BUTTON
+                    Next Target            ALT CAPSLOCK
+                    Front Target           CAPSLOCK
+                    Forget Target          CTRL CAPSLOCK
+                    Increase Range         CTRL LEFT BUTTON
+                    Decrease Range         CTRL RIGHT BUTTON
+   Toggle Left  TAB Display                [ (Ü)
+   Toggle Right TAB Display                ] (+)
+   Left  TAB Display On/Off                CTRL [ (CTRL Ü)
+   Right TAB Dosplay On/Off                CTRL ] (CTRL +)
+   Tactical Map TAB
+                    Zoom In/Out            , or .
+                    Toggle Centering       O
+   TIALD TAB
+                    Move TIALD Camera      (MOUSE)
+                    Select Target          LEFT BUTTON
+                    Deselect Target        RIGHT BUTTON
+                    Zoom In                CTRL MOUSE FORWARD
+                    Zoom Out               CTRL MOUSE BACKWARD
+   Main Map TAB
+                    Move Map               (MOUSE)
+                    Select Target          LEFT BUTTON
+                    Deselect Target        RIGHT BUTTON
+                    Zoom In                CTRL LEFT BUTTON
+                    Zoom Out               CTRL RIGHT BUTTON
+                    Show Plane             ALT LEFT BUTTON
+                    Show Target            ALT RIGHT BUTTON
+   Overview Map
+                    Switch to Map          M
+                    Zoom In/Out            , or .
+
+
+7. Cockpit View Controls
+
+   Select/Toggle Front Seat                CTRL CURSOR UP     or NUM 7
+   Select Back Seat                        CTRL CURSOR DOWN   or NUM 9
+   Temporary View Left                     CTRL CURSOR LEFT   or NUM 1
+   Temporary View Right                    CTRL CURSOR RIGHT  or NUM 3
+   View Left                               SHIFT CURSOR LEFT  or SHIFT NUM 1
+   View Right                              SHIFT CURSOR RIGHT or SHIFT NUM 3
+   View Down (Preferences)                 ~ or NUM [
+
+
+8. Outside Views
+
+   Track Mode
+                    Select                 F1
+                    Toggle High/Low        F1
+                    Reset                  CTRL F1
+   Satelite View
+                    Select                 F2
+                    Toggle High/Low        F2
+                    Reset                  CTRL F2
+   Follow View      Select                 F3
+   Spectator View
+                    Select                 F4
+                    Reset                  CTRL F4
+   Drone View
+                    Select                 F5
+                    Next Drone             F5
+                    Previous Drone         SHIFT F5
+                    Toggle Air/Ground      CTRL F5
+                    Toggle Friend/Enemy    ALT F5
+   Weapon View
+                    Select                 V
+                    Reset                  CTRL V
+
+   All Modes
+                    Turn Left/Right        Z or X (Y or X)
+                    Turn Far Left/Right    SHIFT Z or SHIFT X (SHIFT Y/SHIFT X)
+                    Zoom In/Out            , or .
+                    Fast Zoom In/Out       SHIFT , or SHIFT .
+
+
+9. Konfiguration Controls
+
+   Visibility                              1
+   Ground Textures                         2
+   Hill Textures                           3
+   Sky Textures                            4
+   Ironwork                                5
+   Control Device                          6
+   Sound Effects                           7
+   Minimize/Restore                        0
+
+
+10.Other Controls
+
+   End Mission                             CTRL Q
+   Pause On/Off                            P
+
+
+===============================================================================
+
+                    If you like this Simulation: BUY IT !!!
+
+===============================================================================
+
+
+
+

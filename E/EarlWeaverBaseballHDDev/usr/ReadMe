@@ -1,0 +1,67 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Earl Weaver Baseball" © 1986-1987 Electronic Arts
+
+ The installed program requires 0.5 MB ChipMem and 0.5 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ The game requires an installed A500 Kickstart 1.3 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick346.lha" on aminet.
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page.
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 1.0 (27.06.2020) done by JOTD:
+ - initial release
+ - disk protection removed (thanks to Lockpick for the second part)
+ - "fast intro" option to get access to the game very quickly
+ - speed adjusted on fast machines (a different fix applied for game
+   and all 3 practice modes!)
+ - buttonwait option to see title pics
+ - CUSTOM2=1 starts commissioner disk (game data editor) instead,
+   with blitter fixes :)
+ - nice icon from Chris Vella
+ - quick manual included
+ - manual OCR'ed (with a ton of errors) included
+   (PDF version can be found here: https://www.gamesdatabase.org/Media/SYSTEM/Microsoft_DOS/manual/Formated/Earl_Weaver_Baseball.pdf)
+ - source code included
+
+notes:
+
+This install was started in 2005, but was running too fast.
+It also used disk images. My recent successes in fixing speed of a
+lot of games made me retry that one, and it seems to run at proper speed now.
+
+The commissioner disk editor is also supported. It seems to be a system friendly game but
+programmers just forgot to wait for blitter operation end when filling rectangles, which resulted
+in slightly trashed graphics (never leave trashed graphics!).
+Commissioner program can't use fast memory as there seem to be some 32 bit incompatibilities.
+We'll leave that fix for later. Not super-crucial.
+
+I didn't test all features, like load/save. There may be some limitations. Please report them
+using Mantis with the full reproduction scenario
+
+If someone knows how to quit current game/practice mode, I'd like to know...

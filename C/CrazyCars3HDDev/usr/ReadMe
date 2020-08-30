@@ -38,6 +38,10 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 2.2 (29.08.2020) done by JOTD:
+ - fixed introduced bugs when fixing wrong blitterwait routines (issue #0004790)
+ - added quitkey on 68000
+ 
  version 2.1 (21.08.2020) done by JOTD:
  - fixed wrong blitterwait routines that could create graphical corruption on some machines
    during the game (issue #0000892)

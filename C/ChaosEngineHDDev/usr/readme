@@ -1,0 +1,195 @@
+   THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER
+   EXPRESS OR IMPLIED, STATUTORY OR OTHERWISE.
+   THE ENTIRE RISK AS TO USE, RESULTS AND PERFORMANCE OF THE PACKAGE IS
+   ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE TO BE DEFECTIVE, YOU
+   ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING, REPAIR OR OTHER
+   REMEDIATION.
+   UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY
+   DAMAGE CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE
+   OWNER OR A THIRD PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF
+   DAMAGE.
+
+        -----------------------------------------------------------------------
+        The Chaos Engine AGA/ECS/CD³² HD INSTALLER V1.0 by MiCK/Wepl/JOTD/Harry
+        -----------------------------------------------------------------------
+
+                       Release date : 02.02.2001
+
+                       -------------------------
+
+
+
+ That install applies to :
+ "The Chaos Engine AGA/ECS/CD³²"  © 1992/93 The Bitmap Brothers - 2 disks/1 CD
+
+ Slave requires WHDLoad V17+.
+ ECS version needs 1Mb Of Chipmem & 2Mb of Fastmem (for preload option)
+ AGA version needs 2Mb Of Chipmem & 2Mb of Fastmem (for preload option)
+ CD³² version needs 2Mb Of Chipmem & 2Mb of Fastmem (for preload option)
+
+ --------------------------------------------------------------------------
+ 
+ History (a little late to start that, but...)
+
+ version 2.2 (01.05.2020):
+ - added a trainer: infinite special weapon (both players)
+ - added more level passwords
+ 
+ version 2.1 (16.04.2020):
+ - BUTTONWAIT added to wait and hear loading music/see loading screen (issue #0004481)
+ - joypad spurious firepresses fixed (issue #0004478)
+ - fixed lockup in CD32 version when watching the intro until the end
+ 
+ version 2.0 (11.04.2020) done by JOTD:
+ 
+ - CD32 version: fixed CD32 controllers (issue #0004129: CD32 controllers don't work)
+ - all versions: CUSTOM=password allows to set the password at startup
+ - ECS & AGA versions: full joypad controls (see at bottom of document) (issues #0003412 and #0004427)
+ - ECS version now uses 512k chipmem & 512k fastmem (issue #0004466)
+ - trainer added infinite energy / 90+ lives (don't use it, the game is fair)
+ - source code included for all versions
+ 
+ FEATURES
+ --------
+
+ - Full Loading from HD
+ - Quit Option (F10 is default key)
+ - Cool NewIcon (created by Frank)
+ - AGA/ECS versions supported (ECS by Wepl, AGA by MiCK)
+ - Convenient installer script (done by MiCK & JOTD)
+ - RNC disk protection removed
+ - Decrunch routine relocated into fastmem
+ - Loads of icons added
+ - Manual included
+ - CUSTOM1=1 tooltype actives Trainer : infinite lives/energy
+   (only for AGA version, not really needed with special codes)
+ - CD³² version supported (by JOTD, 22.03.2006) with
+   * fastmem relocation for awesome speed
+   * joypad emulation with keys
+   * joypad & 2-button joystick support
+   * no more need to plug a joystick in port 0. Works with mouse.
+   * blitter problem fixed in the intro part
+   * source code included
+   * v1.2 (01.10.2006): added check to detect RNC-packed executable (install problem)
+ - AGA version supported properly (by JOTD, 30.09.2006) with
+   * cache flush
+   * rawdic imager
+ - install script rewritten by JOTD
+ - source code included for AGA & CD³² version
+
+ --------------------------------------------------------------------------
+ NOTES
+ ----
+
+ If you have JST or old WHDLoad version of Chaos Engine AGA already installed, you can use
+ same diskimages for this version, just join chaos.boot with chaos.disk1 to "disk.1"
+ and rename chaos.disk2 to "disk.2"
+
+ Enjoy this great game on your HD.
+
+ I (JOTD) think that now CD³² version is the best one, except that it lacks
+ Richard Joseph intro music :)
+
+ I (JOTD) also think that MiCK wrote the WHDLoad version using big parts of my
+ JST source without crediting me. Pretty unfair.
+
+ CD³² version requires an installed A1200 or A4000 kickstart image
+
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick40068.A1200" (resp kick40068.A4000). 
+ The image can be extracted from a A1200 (resp A4000) with tools like 'GrabKick'
+ or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick40068.A1200.RTB" (resp "kick40068.A4000.RTB")
+ must be installed in the same directory as the kickstart image.
+ It can be found in the archive "util/boot/skick346.lha" on aminet.
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ --------------------------------------------------------------------------
+
+ Thanks to : - Chris Vella for original disk images,
+             - JOTD for his diskrippers.
+             - Wepl for having already done ECS version :) 
+             - Harry for the OSEmu version of CD³² version
+
+		for full WHDLoad package and other installs refer to:
+			http://www.whdload.de/
+		or	aminet:dev/misc/whdload#?
+		and	aminet:game/patch/
+
+
+ MiCK & JOTD
+
+ --------------------------------------------------------------------------
+
+Controls:
+
+ CD³² joypad buttons & emulation keys:
+
+ Player 1
+ - P or play: pause
+ - red: fire
+ - space or blue: special weapon
+ - L-shift or green: select special (current player/player 1)
+ - R-shift or yellow: select special (cpu)
+ - both shifts or green+yellow: swap special weapon
+ - [When paused] SPC+both ALTs (blue+yellow+green): quit
+
+ Player 2: keys 567890
+
+ (original version switched to keyboard when joypad wasn't available,
+  but my lowlevel implementation forces joypads, so it uses my internal
+  emulation. Amounts to the same thing)
+  
+ ECS/AGA Floppy joypad buttons:
+ 
+ - P or play: pause
+ - red: fire
+ - long red press: special weapon
+ - space or blue: swap weapon
+ - L-shift or green: select special (current player/player 1)
+ - R-shift or yellow: select special (cpu)
+ - player 1 both shoulders + yellow: quit current game
+ - player 1 both shoulders + green: quit to workbench (only during game)
+
+Note that the infinite specials option doesn't work first time it's used. I'm
+not going to fix that. Just do it again...
+
+Some (cheat) passwords:
+
+"51TD4M9JGMGT" - Level 4 (30 extra lives)
+“HHGGFFDDCCBB” - Thug and Preacher, 50.000 credits
+"JJHHGGFFDDCC" - Navvie and Brigand, 10.000 credits
+"XXXXXXXXXXXX" - Gentleman and Navvie, 30.000 credits
+"YYYYYYYYYYYY" - Thug and Gentleman, 20.000 credits
+"VVVVVVVVVVVV” - Brigand and Mercenary, 30.000 credits
+"TTTTTTTTTTTT" - Mercenary and Gentleman, 45.000 credits (World 2)
+"0WHS5PX3835F" - Mercenary and Thug, 40.000 credits
+"2F#8Q55KKQNH" - Navvie and Gentleman, 50.000 credits
+"LQPBK8JWDNBY" - Thug and Preacher, 40.000 credits (World 3)
+"C4HNWRH86B18" - Navvie and Gentleman, 40.000 credits
+"8H8BK0SWQY7H" - Thug and Preacher, 30.000 credits (World 4)
+"HMWMUY0WB019" - Navvie and Gentleman, 33.000 credits
+"P28BKM6XMWWK" - Thug and Preacher, 30.000 credits
+"PKJKDLI#DFD4” - Brigand and Mercenary, 20.000 credits
+"XSFB8DDNR4R8" - Gentleman and Preacher, 20.000 credits
+"WRIVVFXQIMLC" - Mercenary and Brigand, 20.000 credits
+"PKWD2FJJPWFY" - Brigand and Preacher, 20.000 credits
+"F#BFZF60T5MW” - Brigand and Navvie, 20.000 credits 
+
+(LEVEL CODES TWO PLAYERS)
+
+"RVDBK0Q7JWM6" - Brigand and Preacher, level 3, 30 lives
+
+JOTD plays:
+
+"5SR1LNLKR3#1" - Brigand and Navvie, level 2
+"805S73DXBF6T" - Brigand and Navvie, level 3
+"7VKVWNQLVCCW" - Brigand and Navvie, level 4

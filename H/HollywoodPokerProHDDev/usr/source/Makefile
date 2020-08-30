@@ -1,0 +1,12 @@
+PROGNAME = HollywoodPokerPro
+WHDLOADER = $(PROGNAME).slave
+SOURCE = $(PROGNAME)HD.asm
+RAWDICSLAVE = $(PROGNAME).islave
+
+all :  $(WHDLOADER) $(RAWDICSLAVE)
+
+$(WHDLOADER) : $(SOURCE)
+	basm $(SOURCE)
+
+$(RAWDICSLAVE) : $(RAWDICSLAVE).s
+	basm $<

@@ -1,0 +1,92 @@
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Dune" © 1992 Cryo.
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ The installed program requires 0.5 MB ChipMem and 0.5 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ The game requires an installed A500 Kickstart 1.3 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick346.lha" on aminet.
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 3.1 (14.03.2020):
+ - another english version supported
+ 
+ version 3.0 (06.01.2017)
+ - new install script using RawDIC to extract files (excellent work by StingRay)
+ - french version bug was actually because of corrupt disks by my end.
+   Using another disk set makes it run perfectly.
+ - new slave using files, probably no more issues when saving
+ - kept legacy floppy install & slave (you can install to the file-based version using those disk images)
+ 
+ version 2.5 (29.01.14)
+ - unpacked version of the savedisk (for users who did not have XPK GUNZIP plugin)
+ - fixed crash after save in the french version when clicking on the planet
+   (warning: french version still has the intro bug, see notes below)
+
+ version 2.4 (25.03.06)
+ - more SMC code removed
+ - fixed some problems on french version
+ - use of fastmem & cache for better speed 
+ - reworked source
+
+ version 2.3 (30.12.04)
+ - support for German version (worked before, but now it is official)
+ - now supports french, english, italian and german version
+ - reworked source
+
+ version 2.2 (14.12.04)
+ - slight changes in source
+ - reworked install script
+ - added CAPS identification file
+
+ version 2.1 (04.01.03)
+ - reworked for WHDLoad v16
+ - keyboard bug on french version fixed
+ - bug on CPU dependent loop fix fixed :)
+
+ version 2.0 (29.05.02) done by JOTD:
+ - diskfile release, shitty original installer not necessary anymore
+ - now uses kick 1.3 emulation for better compatibility
+ - supports french, english, and italian version (possibly more)
+ - a great choice of icons available
+ - reworked install script
+ - source code included
+
+ version 1.x done by JOTD
+ - OSEmu release, using installed game
+ - Document protection removed
+ - Access fault removed during the intro
+ - Many empty DBF loops fixed
+ - Some Self modifying code removed
+ - Uses fast memory
+ - Manual included
+

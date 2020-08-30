@@ -1,0 +1,67 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Quest For Glory 2 - Trial By Fire" © 1990 Sierra.
+
+ Thanks to BTTR for original disk images
+ 
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ The installed program requires 1.0 MB ChipMem and 2.0 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ The game requires an installed A500 Kickstart 1.3 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick346.lha" on aminet.
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 1.3 (23.01.2019) done by JOTD:
+- added support for Roland MT32 (issue #0004047): unpack the "mt32_support.zip"
+  archive into "data" directory, overwriting the "resource.cfg" file and adding
+   missing "serial.device"(thanks el_pasi for reporting
+   all MT32 enhancement requests and how to do it)   
+ - reassembled with latest kickemu sources
+
+ 
+ version 1.2 (31.12.05) done by JOTD:
+ - adapted to Kixx version
+ - reworked install script
+
+ version 1.1 (20.11.05) done by JOTD:
+ - increased chipmem size requirement to 1 meg -> better music 
+   (thanks Hubert Maier)
+ - reworked for WHDLoad v16
+
+ version 1.0 (17.08.03) done by JOTD:
+ - initial release
+ - game quit option quits WHDLoad
+ - source code included
+ - default save directory fixed
+ - full documentation included
+
+Note: As always, don't hesitate to send me pre-protection check savegames.

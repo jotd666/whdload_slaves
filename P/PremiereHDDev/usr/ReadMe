@@ -1,0 +1,100 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Premiere" (floppy/CD³²) © 1992/1994 Core Design
+
+ This install requires WHDLoad and RawDIC to be in the path. Both can be found
+ in the WHDLoad package.
+ To install from a different drive than DF0: select installation mode Expert.
+
+ The installed program requires 1.0 MB ChipMem and 1.0 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+ 
+
+ version 3.2 (20.08.2019):
+ - fixed issue #0004100 (no need for EXPCHIP to avoid trashed gfx, and game still uses only 512k chip)
+ - removed decruncher hack, increased fastmem by $1000 bytes, which allows to avoid it
+ - quit with play+reverse+forward if a joypad is connected
+ - added levelskip using CD32 pad yellow+forward buttons
+ - added levelskip notes
+
+ version 3.1 (23.03.2019) done by JOTD:
+ - uses 512k chipmem only (and slightly more than 512k other mem)
+ - fixes intro sound issue/crash (issue #0004087)
+ 
+ version 3.0 (06.03.2019) done by JOTD:
+ - option to jump with second/blue button
+ - added ESC key to quit current game
+ - game needed more than 1MB chip because of game decompression bug; fixed
+   (game could work with 512k chip, but there's too much work for that ATM)
+ - CD32 joypad support: play=pause, fwd+bwd=game over
+ - adapted to whdload v17, slave completely rewritten
+ - level select (including "boss" levels)
+ - start with soundfx or music
+ - in the menu ability to select music/sfx by pressing the 2nd button
+ - removed the added "prem_abs" file which is useless after all (loader.bin file is enough)
+ 
+ version 2.0 (28.11.2005) done by JOTD
+ - RawDIC imager (use new RawDIC 4.0), direct wwp/ipf support
+ - reworked install & readme
+ - added icons
+ - source code included
+
+ version 1.2 (09.10.2001) done by JOTD
+ - 2 versions supported, CD32 and floppy
+ - Convienient installer script
+ - Uses WHDLoad to run
+ - Blitter waits inserted
+ - CUSTOM5=1 enables Trainer mode: infinite lives, energy, and ammunition.
+ - Quit key (even with NOVBRMOVE on)
+ - Press the "/" on the numeric keypad to skip levels.
+ - Doc file included
+ - Nice icon by Frank
+ - Tested with SNOOP
+
+ version 1.0 (1997) done by JOTD:
+ - initial JST release
+
+COMMENTS:
+
+Core Design released this ECS game, and they added patches for faster CPUs (there were
+GFX bugs in the scrolling), but I had to modify the patches, else the game crashed
+on 68020 with cache. Else, it's the same version as the floppy one (once again).
+
+The "SPARKPLUGS" cheatmode is useless now, and you can skip levels without having
+infinite lives.
+
+THANX TO Chris Vella for sending me the original floppies and bug reports in the
+install script.
+
+description of the CUSTOM options:
+
+CUSTOM1=1: trainer
+CUSTOM2=1: 2nd button jumps (up still used to enter the doors)
+CUSTOM3=1: start with sfx by default
+CUSTOM4=0-11: start level
+
+Note about levelskipper:
+
+If you use levelskip when on "backstage" (not the main theme, after entering a door where there are cameras,
+paint pots, Chuck Rock statues, etc...), it kind of works, but in the next level, when entering the backstage
+again, tiles are trashed. So avoid that.

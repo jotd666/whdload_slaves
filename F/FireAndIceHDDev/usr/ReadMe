@@ -1,0 +1,162 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Fire And Ice" © 1990-1994 Graftgold
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ Floppy version:
+
+ The installed program requires 1.0 MB ChipMem and 0.5 MB OtherMem.
+ There's a version which only requires 512kb ChipMem and 24-bit othermem (game
+ doesn't like 32-bit memory at all)
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ CD³² version:
+
+ The installed program requires 2.0 MB ChipMem and 1.0 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ The game requires an installed A1200 or A4000 Kickstart 3.1 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick40068.A1200" (resp kick40068.A4000). 
+ The image can be extracted from a A1200 (resp A4000) with tools like 'GrabKick'
+ or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick40068.A1200.RTB" (resp "kick40068.A4000.RTB")
+ must be installed in the same directory as the kickstart image.
+ It can be found in the archive "util/boot/skick346.lha" on aminet.
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 3.3 (17.05.2020):
+ - ECS: fixed spurious fire when pressing second button for jumping
+ 
+ version 3.2 (16.05.2020) done by JOTD:
+ - ECS: fixed crash when saving high-score (issue #0004611)
+ - CD32: fixed non-working 2-button joystick (issue #0004539)
+ - ECS: added delay on "Cool Coyote" screen (skip with fire button)
+ - ECS: fixed disrepancy between install script and ECS slave (expecting diskimages to be in "data" directory)
+   install script has been fixed to create diskimages in "data" now (issue #0004649)
+ - packaged source code cleanup (removed old JST emulation sources)
+ 
+ version 3.1 (22.04.2020):
+ - CD32 version: maps enabled by default again (issue #0004540)
+ - CD32 version: fastmem enabled again (sorry!)
+ - CD32 version: TODO: 2button joy doesn't work!
+ - floppy version: TODO: BUTTONWAIT for intro screens
+ - floppy version: TODO: custom2 select more options
+ 
+ version 3.0 (19.04.2020) done by JOTD:
+ - floppy slave completely rewritten, adapted to whdload v17
+ - floppy version: fixed possibly wrong intro music (missing audio dma delays)
+ - trainer: infinite lives (fixed issue #003981)
+ - trainer/easy setup: quit world with incomplete key when door is found
+ - allows to start all 7 levels (not only the 4 first ones) in trainer mode
+ - CD32 joypad support for floppy version (play: pause, reverse when paused: quit)
+ - CD32 version: fixed CD32 controller issues (#0004088 and #0004127).
+   (Extra buttons beside red button didn't work beside other bad stuff with 1B A1200 motherboards)
+ - CD32 version starts with "on chip" music like floppy version as CD music is obviously unavailable
+ - CD32 version can quit to workbench with reverse+forward+play
+ - CD32 version second button jump & higher level trainers directly activable from splash screen
+ - CD32 version fixed random/rare access fault write at $CCCCCCCC by clearing memory at startup
+   (code will write at 0, I don't think it will be an issue for the game)
+ - CD32 version hiscore saves done to "nvram" file (using new nonvolatile emulation by Wepl)
+ 
+ version 2.2 (05.03.2009)
+ - music fixed
+ - caches re-enabled
+ - source code cleanup & working with latest kickcd32
+
+ version 2.1 (2007)
+ - CD³² version install fixed, no longer requires lowlevel.library,
+   keyboard now works 100%, so does joypad & joystick emulation.
+ - You can select J-8 controller (joypad) if you use a 2-button joystick
+   so 2nd button works as the blue button (jump)
+ - Joypad emulation keys:
+   * P: pause the game
+   * ESC: quit the game while in pause
+   * SPACE: special weapon
+ - reworked readme file (I think this is the final release of the slave!)
+
+ version 2.0
+ - CD³² version uses lowlevel.library & kick31 emulation, removed OSEmu stuff
+   (there are 2 versions of the slave, one needing lowlevel and the other not, but
+   with buggy keyboard & joystick controls)
+ - source code included (including the CD³² emulation stuff)
+ - icons added (by Frank)
+ - document file added
+
+ version 1.2+ (xx.06.2001) done by JOTD
+ - better/faster RawDIC slave (disk format was actually DOS with modified track header)
+
+ version 1.2 (xx.05.2001) done by JOTD/Harry
+ - first WHDLoad version
+ - CD³² version support by Harry. Hiscore & settings are saved to "FireNIce.nvd" dir
+ - 2 floppy versions supported
+ - RawDIC slave adapted from Ralf diskrip program
+
+ version 1.1 (xx.11.2000) done by JOTD
+ - access fault removed
+
+ version 1.0 (xx.09.1998) done by Ralf (Kaervek) & JOTD
+ - JST release, 1 version supported (Ralf)
+ - RNC disk protection removed (JOTD)
+ - codewheel protection removed (Ralf)
+ - set CUSTOM5=1 tooltype for infinite lives
+
+CREDITS:
+
+- Floppy version:
+  JOTD: copylock decryption
+  Ralf: rest of the JST install for v1.00
+  JOTD: WHDLoad install, access fault fix and snoop bugs fixes
+  JOTD: adaptation to v1.05
+  JOTD: written a RawDIC slave
+
+- CD³² version:
+  Harry: work on OSEmu
+  JOTD: work on OSEmu, CD³² specific parts (lowlevel.library, etc...)
+  Harry: work on OSEmu, nonvolatile library, first install version, using OSEmu.
+  JOTD: rewritten from scratch for kickemu 3.1,
+  uses on-disk lowlevel.library now. NTSC tooltype runs the NTSC version.
+  JOTD: reworked install script and merged with floppy version install
+  JOTD: completely reworked lowlevel emulation: fixed keyboard & joypad issues
+        now the game works perfect.
+
+Notes from original Ralf JST installer:
+
+One of the best jump and run games ever - on any platform. Patched to run
+from your harddisk in one day. One of Andrew Braybrook's greatest
+games - runs now on the A1200 HD. Have fun!
+
+Seeing the code, it's a miracle that we could patch it. Andrew Braybrook
+code is very compact and obfuscated, with register-relative accesses, bit fields,
+weird optimizations...
+It's the main reason why I didn't add levelskip but only a "exit-when-you-want" option.
+
+Many thanks to Carlo Pirri for sending me the original from
+Australia!
+
+The game has been sucessfully tested with an Amiga1200 030/50Mhz/18MB
+with a Blizzard 1230/IV and an Amiga 1200 030/28Mhz/12MB, and with
+a A1200 060/50MHz/64MB with a Blizzard 1260/IV.

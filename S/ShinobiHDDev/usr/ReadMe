@@ -1,0 +1,100 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Shinobi" © 1989 Sega.
+
+ This installer requires the original Shinobi disk. It supports the versions from
+ SEGA's 'Arcade Smash Hits' and 'Super SEGA' compilation.
+
+ This install requires WHDLoad and DIC to be in the path. Both can be found in
+ the WHDLoad package.
+ To install from a different drive than DF0: select installation mode Expert.
+
+ The installed program requires 0.5 MB ChipMem and 0.5 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 1.4 (21.10.2015) done by JOTD:
+
+ - added quitkey for 68000 machines (the only ones where this game is useful anyway!)
+ - changed default quitkey to num "*"
+
+ version 1.3 (24.08.06) done by JOTD:
+ - joystick button 2 triggers "banzai" only if CUSTOM3=1. Exclusive usage
+   with space bar
+ - CUSTOM1=1 triggers level skipper with F1 key (feature existed, but was not 
+   properly documented, and reserved to registered users)
+ - CUSTOM2=1 triggers unlimited magic
+
+ version 1.2 (20.08.06) done by JOTD:
+ - joystick button 2 triggers "banzai" (user request)
+ - more active loops fixed
+ - removed restriction for unregistered users
+ - patcher install replaced by DIC
+ - manual added
+ - Chris & Exoticon icons added
+ - source code included
+
+ version 1.1 done by Dark Angel
+ - Support for 'Super SEGA' version added. Thanks to Marc Le Douarain for
+   sending me his game.
+ - New icon
+
+ version 1.0 done by Dark Angel
+ - initial release
+ - Self-modifying code removed
+ - Access faults removed
+ - Sample timing fixed
+ - Trainer [registered users only]
+ - Saves Highscores to HD [registered users only]
+ - Return to OS (Numl)
+
+ notes:
+
+ - graphics of this game suck. I bet C64 version was better.
+ - music of this game suck (not even in tune)
+ - this game does not work properly with WinUAE (too much SMC and CPU dependent
+   loops). Maybe I'll fix it, but when you've got WinUAE, you've got MAME and
+   shinobi is a hundred times better on MAME
+
+
+ Just for fun, some text found in the game:
+
+
+Fuck me! I never thought you would do it!! Bet it took a long time though!
+
+
+
+By the way, the only way to crack this game is if you have at least 4mb of
+fast ram... There's a hint!  Are you enjoying this, by the way?
+
+Me (Richard Aplin) and Tim (the programmer) thought we might give you a
+little challange... I reckon I'll hold you off for about a week.  Oh, by
+the way Quartex, you told me at the SAE party this would be EASY..
+Well is it?
+
+
+
+Well, obviously you weren't fooled earlier!! I'm impressed! Not a bad bit
+of hacking.. but the best is yet to come!!! Hehehehe... Just wait, cos now
+it gets REALLY good..
+

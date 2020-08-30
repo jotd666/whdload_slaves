@@ -1,0 +1,175 @@
+                                CODE-NAME: ICEMAN
+
+Typed by THE RINGWRAITH.  Edited by PARASITE.
+
+
+BOARDING PROTOCOL:
+Salute Flag - When standing on the gangway, prior to steping on board, face
+ aft and 'salute the flag'.
+
+Salute Officer of the Deck - After the above, turn and face the Officer of
+ the deck, salute and 'request permission to come aboard'.
+
+Presenting orders - After the above, the Officer of the Deck will inspect
+ your orders and grant you permission to board.
+
+THE EXECUTIVE OFFICER:
+Duties and Responsibilities - The XO is the number one man under the Captain.
+ His responsibilities are to provide leadership to all men under him while
+ maintaining a feeling of good spirit.  The XO will take command of the ship
+ during any absence of the Captain.  It shall be the responsibility of the XO
+ to insure the operational status of his vessel by inspecting and cycling
+ equipment in the following areas:
+
+        1. Control room
+        2. Machinery compartment
+        3. Torpedo room
+        4. Engine room
+
+CONTROL ROOM:
+Periscopes (Attack & Observation) - Use your periscopes to determine the exact
+ location of an object on the surface.  The left and right arrow keys will
+ adjust the heading of the scope.  When you have located an object, take note
+ of its location.  Scopes should only be used at periscope depth (approx. 70').
+ Severe damage may occur if the 'attack scope' is used at speeds in excess of
+ 5  knots.  Severe damage may also occur if the 'observation scope' is used at
+ speeds in excess of 12 knots.
+
+SONARMAN:
+ The sonarman is situated in the control room next to the radioman and to
+ the left of the control panel.  Contact with the sonarman and the
+ radioman can be made by walking over to them and talking to them.
+
+COMMUNICATIONS:
+Coded messages:
+ All messages recieved aboard the U.S.S. Blackhawk will be in coded
+ format and shall be received through the radioman.
+
+Decoding messages:
+ Aboard the U.S.S. Blackhawk can be found a book entitled "US NAVAL
+ INTELLIGENCE DECODING".  This book must be used in conjunction with
+ your technical manual.  The word keys used for decoding can be found
+ within the 'boxed shaded' areas.  The coded numbers represent page, line,
+ and word.  All coded numbers are in the range 0-9.
+
+CHARTS: (Located in the control room)
+Course Plotting:
+ Enlcosed within the packaging of this game is a foldout map.  Use
+ this map for determining and plotting your course heading.
+
+Coordinates:
+ Using a straight edge, plot your course on the foldout map.  When it
+ is necessary for the submarine to change from a direct course, make
+ note of the latitude and longitude of the 'waypoint' (the point at
+ which you'll change direction).  These are your coordinates.
+
+ The initial overall course to be followed will be given to you using
+ landmarks.  Using the foldout map and the landmarks as a guide,
+ chart your 'way points' on the map and then enter them into the
+ computerized charts table located in the control room.  You may also
+ recieve information via radio, of other specific way points for
+ rendezvous purposes.  Type: LOOK MAP to get a close up view.  The
+ flashing point on the map represents your vessel at it's current
+ location.
+
+To begin entering way points Type: PLOT COURSE.
+
+ When entering the way points, use the directional keys until the
+ longitude and latitude that you have calculated on the foldout map
+ are displayed.  Depress the [ENTER] key on your keyboard to enter
+ the way point.  To change a waypoint already entered type: CHANGE
+ POINT.  Repeat the above procedure until you have entered all your
+ way points.  When entering the last way point depress the [ENTER]
+ key twice.
+
+THE CONTROL PANEL:
+Map Display - Use to determine present location at all times.
+
+Fire Control Panel - The fire control panel consists of four controls.
+ From left to right their functions are as follows:
+
+   A - Select Weapon (Use shift-F5 or mouse)  Target selection is
+       fully automatic.
+
+   B - Lock on Target (Use shift-F6 or mouse)
+
+   C - 3-D Imaging Display (Use shift-F7 or mouse)
+
+   D - FIRE (Use shift-F8 or mouse)
+
+Sonar - There are two types of sonar used on the U.S.S. Blackhawk:
+
+   Passive sonar - Listening for sound produced by other vessels,
+    responsibilty of the sonarman.
+
+   Active sonar - Sending out sound waves to detect underwater
+    objects.  Size and distance can be measuered when an object has
+    been detected.  Active sonar consists of Vertical and Ranging
+    sonar, explained below.
+
+Vertical Sonar - Vertical sonar determines the distance above and below
+ your submarine to a solid object such as an iceberg or the ocean floor.
+ The center point on the screen represents your vessel.  Each line on the
+ screen represents 10 feet above or below the sub, When an object is
+ present within 100 feet above or below your sub, the lines on your screen
+ become highligted to indicate the distance of the object to your location.
+
+Ranging Sonar - Ranging sonar indicates obstacles within a 100 yard radius
+ around the sub.
+
+Depth Gauge - Displays current depth.
+
+Water Temperature Gauge - Displays the current water temp. in degrees celsius.
+
+Time Clock - Displays the time.
+
+Speed Indicator - Displays the speed in Knots.
+
+RPM Indicator - Displays engine RPMs.
+
+Stern Plane Indicator - Indicates the angle of inclination of the Stern Plane.
+
+Dive Lever - Use this to change the ballast so that you can surface or dive.
+ Use the up/down arrow keys or drag it with the mouse.
+
+Engine Lever - Use this to change the running speed of your sub.  Change it
+ with the +/- keys, or drag it with the mouse.
+
+Silent Running On/Off - Use the shift-F4 key to turn this on or off.  When it
+ is on it will help mask the noise of you sub.
+
+Sonar On/Off - Use shift-F4 to turn the sonar on and off.
+
+Wheel - This controls the direction of the sub.  Use the right and left arrow
+ keys or drag on it with the mouse.
+
+Closed Circuit Monitor on/off - This lets the navigator see junk in his path.
+ Use the shift-F1 key to turn it on or off.
+
+Fire Control Panel Activate Button - Use shift-F2 to lower the control panel
+ for easy access.
+
+Throttle Speed Indicator:
+
+   A. Lights out     - Throttle stopped
+   B. 1 light        - Throttle Slow
+   C. 2 lights       - Throttle 1/3
+   D. 3 Lights       - Throttle 2/3
+   E. 4 Lights       - Throttle full
+   F. All lights Red - Throttle reverse
+
+Torpedo Room Missiles - Harpoon, Sting Ray, and Emerson Electric MK2
+ Torpedo Decoy
+
+CPR PROCEDURE:
+
+1. Shake and shout to establish responsiveness.
+2. Call for help.
+3. Establish the airway.
+4. Look, listen, and feel for breathing.
+5. Give 2 breaths.
+6. Repeat Step 5.
+7. Check pulse.
+8. Begin compressions.
+
+End.

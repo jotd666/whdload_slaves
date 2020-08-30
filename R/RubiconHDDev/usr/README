@@ -1,0 +1,66 @@
+
+
+	THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER
+	EXPRESS OR IMPLIED, STATUTORY OR OTHERWISE.
+	THE ENTIRE RISK AS TO USE, RESULTS AND PERFORMANCE OF THE PACKAGE IS
+	ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE TO BE DEFECTIVE, YOU
+	ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING, REPAIR OR OTHER
+	REMEDIATION.
+	UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY
+	DAMAGE CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE
+	OWNER OR A THIRD PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF
+	DAMAGE.
+
+	That install applies to "Rubicon" © 1992 21st Century
+
+	That install requires WHDLoad and DIC in path (available in the WHDLoad package)
+	To install from a different drive than DF0: select Expert as
+	installation mode.
+
+	You need 1.0 MB ChipMem (and 0.9 MB of any mem for PreLoad option).
+	You can quit the game by pressing your default quit key
+
+	if you have problems with this installation please try first to get
+	a newer version of this install from 
+		http://www.whdload.de/
+	if that doesn't help try some Tooltypes like NOCACHE, NOAUTOVEC,
+	NOVBRMOVE, NOMMU, PAL or NTSC. if that also doesn't help inform the
+	author via the Bug-Report-Form which can be accessed on
+		http://www.whdload.de/
+
+	for full WHDLoad package and other installs refer to:
+		http://www.whdload.de/
+	or	aminet:dev/misc/whdload#?
+	and	aminet:game/patch/
+
+
+	Thanks to:
+	-  Harry for original disk images.
+
+    version 2.1 (10-Jul-2019):
+	- forgot to perform joypad/joystick auto-detection, damn this happens too often (issue #0004152)
+	
+	version 2.0 (11-Jun-2019) done by JOTD
+	- adapted to whdload v17
+	- resourced from Bored Seal slave & Mr Larmer previous sources
+	- added CD32 controls
+	- added manual
+	- added 2nd/button/blue for jump option
+	- source code included
+	
+	version 1.1 (30-Jun-2002) done by Bored Seal:
+	- blitter waits (5x) added
+	- trainer option added (set CUSTOM1=1 for unlimited energy/lives)
+	- Back to the Roots version supported (version check removed)
+	- colorbit access fixed (9x)
+	- original decruncher copied to expansion memory instead of being in slave
+	
+    version 1.0 (14-Jul-1998) by Mr.Larmer/Wanted Team
+	- first public release
+	- protection removed
+	- bug fixed: moveq #0,D1 was lost when game set colors
+	  with first title pic
+	- blitter waits added (14x)
+	- decruncher relocated to fast
+	- nice NI/MWB icons included
+	

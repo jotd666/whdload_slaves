@@ -1,0 +1,110 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Goblins 3" © 1993 Coktel Vision.
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ The installed program requires 0.5 MB ChipMem and 1 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ The game requires an installed A500 Kickstart 1.3 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick346.lha" on aminet.
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page.
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 3.1 (06.06.2020) done by JOTD:
+ - really fixed issues #0003339 and #0003638 for good. A bugfix attempt to correct RectFill wrong values
+   interacted badly with game when expansion memory was only 24-bit. Method of fixing the original issue
+   has been improved. Also raised issue #0004709. Damn that was tough to fix properly and preserve ability
+   to use fast memory for this game. Now got to fix Gobliins 2 too I guess...
+ - added another blitter fix
+   
+ version 3.0 (28.05.2020) done by JOTD:
+ - fixed small graphical issues (blitter waits) on fast machines (can be turned off on slow machines)
+ - fixed issues #0003339 and #0003638 for good: blitter wait errors that just slighty
+   corrupt the graphics (but not always) and the game memory,
+   typical from Cocktel Vision Games. Setting EXPCHIP sometimes fixed the bug because it slowed
+   the game down and allowed blitter to finish... SNOOP+CHK didn't help because it also slowed
+   down the game and fixed the bug (and didn't detect it)
+ - no need to click on mouse when "insert disk 2" requester appears (issue #0003016)
+   (was tricky to do elegantly)
+ - added more language selection options
+ - reduced chipmem usage to 512k
+ - cleaned up protection part, worked by miracle without crashing on one version
+ 
+ version 2.3 (27.02.2017)
+ - adapted for WHDLoad v17
+ - found workaround for issues #0003339 and #0003638: use EXPCHIP when you get system err -6
+   (you need 2MB chipmem to be able to do that). Spent a lot of time on that bug, seems that
+   the game has a nasty uninitialized variable error, and depending on the fastmem config it
+   happens or not. Locating the program in chipmem doesn't work if contiguous (0-$100000) but
+   EXPCHIP works because it probably allocates the expmem very high in chipmem.
+
+ version 2.2 (05.03.14)
+ - increased chip memory to avoid random error message "not enough memory" (SPS #370)
+  (looks like issue #002985, though a bit different). With 64k more chipmem, the message
+  no longer appears.
+
+ version 2.1 (29.12.2013 but from an unreleased fix from 01.07.2006)
+ - fix for fastmem improved (could lead to problems: should fix issue #0002216)
+ - quick installation check on slave startup (avoids wrong installation problems)
+ - reassembled for kickemu/whdload 17.2
+
+ version 2.0 (26.05.2005)
+ - fixed for fastmem: super fast load & play
+   (wrong gfx.RectFill call crashed, and access fault on quit)
+ - fixed left mouse button press on "insert disk". No need to keep pressed
+ - 3 versions supported
+
+ version 1.2 (11.09.2004) done by JOTD:
+ - adapted to WHDLoad v16
+ - reworked readme
+ - source code included
+
+ version 1.1 (19.05.2002) done by JOTD:
+ - supports another version
+ - misc kickemu changes
+ - adapts to current system locale by default
+ - CUSTOM 1 & 2 tooltypes help to select language selection:
+   * Set CUSTOM2=1 to force language selection
+   * Set CUSTOM2=2 to force english language
+
+ version 1.0 (12.05.2002) done by JOTD:
+ - initial release
+
+
+I apologize for all users that reported me the infamous "system error -6" and I couldn't reproduce it, or
+not always, ... it was a damn blitter bug. I investigated another Cocktel Vision game (Asterix Operation Getafix)
+and found that small parts of memory were changed without the CPU doing anything: missing blitterwaits, probably
+very short so whdload debug options couldn't detect them...
+
+I just noticed that spanish and italian languages lock up the game just after
+the protection bit in the 3 versions I have. German language works in one of the versions (SPS370)
+and not it the others... Not sure why... French and english languages seem to work ok.
+It's NOT a protection issue, since it locks up even when not cracked and correct code entered
+Although noone ever reported that issue to me, even if this NEVER worked.

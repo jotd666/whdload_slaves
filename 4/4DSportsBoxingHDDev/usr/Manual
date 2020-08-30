@@ -1,0 +1,744 @@
+                     A   N   T   H   R   O   X
+
+                              Presents:-                The Docs Factory?
+           _     ___ __  __  __ ___ ___     __  __      _      __
+       |_|| \   (__ |__)|  ||__) | (__     |__)|  | \_/ | |\ || _
+         ||_/   ___)|   |__|| \  | ___)    |__)|__| / \ | | \||__)
+
+                        -*- From MindScape -*-
+
+      -*- Full Documents & Addendum Card Typed By HYDR0/ANTHR0X -*-
+
+	IF YOU ENJOY THIS GAME PLEASE GO OUT AND BUY THE ORIGINAL
+
+ - Why did I Do This So Late !?!?.... :- Because No-One Else Did It!..
+
+ 4D BOXING AMIGA ADDENDUM CARD
+ -----------------------------
+
+ This Amiga version of 4D Sports Boxing Has Been Supplied with the PC
+ manual. The operation of the Amiga version of 4D Sports Boxing is
+ identical to the PC version but some aspects of the installation
+ procedures are different are are outlined below.
+
+ 4D Sports Boxing will work on the following machines.
+
+ An AMIGA 500,500 Plus,1000, 2000 and 3000 with a least 1Mb Of Ram.
+
+ A Faster processor and a hard disk drive are recommended, although
+ they are not essential.
+ 
+ The game is controlled via Keyboard, Mouse or Joystick. In a two player
+ game, any combination of keyboard and joystick can be used toi control
+ the fight.
+
+ SETUP AND INSTALLATION
+ ----------------------
+ Hard Disk Installation
+
+ Reset your Amiga and load the WORKBENCH disk supplied with your machine.
+ Insert BOXING DISK 1 into any drive. The screen will display a disk icon
+ labelled 4D SPORTS BOXING. Double click on the icon in the normal
+ fashion and a window will open containing an icon called HDINSTALL. Click
+ on HDINSTALL and follow the on screen instructions swapping disks when
+ prompted.
+
+ PLAYING FROM HARD DISK
+ ----------------------
+ USERS WITH 512K CHIP RAM:-
+
+ From WORKBENCH double click the mouse pointer on the SHELL or CLI icon.
+ Change to the directory type `4DBOXING' and then press the `ENTER' key.
+
+ Should the program terminate through a lack of memory you will need to
+ free up as much CHIP RAM as possible. The best way to do this is to edit 
+ the startup-sequence and remove the loadwb command. Check your Amiga manual
+ to see how to do this.
+
+ USERS WITH 1MB OF CHIP RAM:-
+
+ Whilst in WORKBENCH, Select the 4D SPORTS BOSING drawer by double clicking
+ its icon. This will open the drawer and show an icon called 4D SPORTS
+ BOXING which you then double click to start the game.
+
+ PLAYING FROM FLOPPY DISK:-
+ 
+ Reset your Amiga and insert the disk when the WORKBENCH Disk request
+ screen is displayed. Insert Disk 1 in DF0: and the game will load 
+ automatically. Insert disks as and when requested throughout the rest
+ of the game.
+
+ IMPORTING/EXPORTING BOXERS:-
+ 
+ To Save off your own creations of mean fighter machines you will have to
+ create data disks to store them on. Format diskettes using the
+ WORKBENCH format.initialise command and label them DATA DISK. When you
+ have created a boxer the game will request this DATA DISK. Insert the disk
+ when you are prompted. Please note that each formatted disk will only store
+ one boxer.
+
+ PLAYING CONTROLS:-
+ 
+ The manual refers to `FIRE BUTTON 2', Which is specific to the PC version.
+ On the Amiga, FIRE BUTTON 2 is emulated by the appropriate `SHIFT KEY'
+ on the keyboard.
+
+ HYDR0 NOTE:- Thats The End Of The Addendum Card.
+
+
+                          4D SPORTS BOXING!! 
+                            
+                               CREDITS
+  
+          CREATED BY DISRINCTIVE SOFTWARE INC. VANCOUVER, CANADA
+
+               ORIGINAL CONCEPT BY DON MATRICK STAN CHOW
+
+                       WITH THANKS TO CHRIS GRAY
+
+          DESIGN AND PROGRAMMING BY JAY MACDONALD & CHRIS TAYLOR
+
+                            & RICK FRIESEN
+
+                GRAPHICS AND ANIMATION BY GERARD DESOUZA      
+
+     SOUND AND MUSIC BY MICHAEL J SOKYRKA, KRIS HATLEID & BRIAN PLANK    
+
+        PRODUCED BY PHIL HARRSION FOR MINDSCAPE & BRAD GOUR FOR DSI
+
+           QUALITY ASSURANCE DIRECTED BY THE SOFTWARE TOOLWORKS
+
+            DIRECTED BY JACOB SMITH FOR THE SOFTWARE TOOLWORKS
+
+                  & IVAN ALLAN, STEVE FRIESEN FOR D.S.I
+
+                   BOXING CONSULTANCY FROM PAUL SAVAGE
+
+             MANUAL AND DOCUMENTAION WRITTEN BY PHIL HARRISON    
+
+
+              SPECIAL THANKS TO GEOFF HEATH, GARY CARLSTON
+
+
+
+ QUICK PLAY
+ ----------
+
+ Once the game has loaded, you will see the title screen and credits
+ Press any key to progress to the Main Menu. For a brief insight into
+ some of the game`s features. Select DEMO with the cursors keys or mouse
+ or even joystick and press fire,left mouse button Or Enter to run
+ a demonstraction show-case of 4D Sports Boxing.
+
+ THE MAIN MENU
+ -------------
+
+ To move around this menu and others within the game use the arrow keys on
+ the Numeric keypad with the ENTER or RETURN key to confirm the selection.
+ The RETURN and ENTER key will aslo be refered to As FIRE is the manual.
+ If you are using a joystick. move the box around with the stick and Press
+ FIRE on button 1 to confirm the selection. When the program detects a
+ mouse connected to your computer system, it displays a pointer to the
+ required icon and press the left hand button to confirm your choice.
+ The mouse cannot be used during the fight to control the boxer. Pressing
+ ESCape during a menu screen has the same affect as selecting the DONE
+ button.
+
+ Move the flashing box over the EXHIBITION option. Press ENTER To Select It.
+ Select the Human boxer that you wish to fight with. Cycle through the
+ available boxers with NEXT and PREVIOUS buttons and move to DONE when you
+ have made your selection. Now select the COMPUTER boxer with the same
+ method. Look at the statistic at the bottom of the screen.
+ Choose a boxer with a similar or lower ranking to your boxer so you dont
+ make ife too difficult.
+
+ You will not go to the ring for the fight. You will be introduced to the
+ fight by the host and two icons will appear on the status panel. Press
+ FIRE over the two gloves to start the fight.
+
+ Study the key controls i the Reference guide section of this manual for
+ the various boxing moves that you can perform. for now. do all you can
+ to get your opponent on the canvas with stars in his eyes - forget the
+ strategy and have fun getting used to the control method and the way
+ boxers move.
+
+ Press FIRE to ring the bell and start the fight. At the end of each round
+ you will see the statistic for the fight so far. Don`t worry if your
+ performance si not exactly Championship stuff quite yet!. You will quickly
+ learn a fighting strategy and style that is most effective in decking
+ your opponenet, But for now just have a bit of fun.
+
+ To quit the fight at any stage during the fight press ESCape and select
+ the "Throw in the Towel" icon. Confirm that you really do want to quit
+ by selecting the Thumbs up icon. This will register a TKO against you
+ and end the contest.
+
+ In EXHIBITION mode the boxer`s results are not recorded and do not effect
+ his career. Use this mode to "test" your own boxer or maybe try out a
+ friend`s champ to see if he matches up to your standards.
+
+ During the EXHIBITION fight press the function keys (F1 - F8) to see the
+ action from different camera angles or experiment with 1st person views
+ with F9 and F10. You will learn later in this manual how to move the
+ cameras around and how to become a 4D Sports Vision movie director.
+
+
+ 4D Sports Boxing Reference Guide
+ --------------------------------
+
+ USERS INTERFACE AND PLAY CONTROLS
+ ---------------------------------
+
+ The game is designed to operate primarily with keyboard or joystick
+ with the optional use of a mouse in the selection screens to "Click"
+ on icons.
+
+ KEYBOARD:-
+
+ To Select icons and optikons with the keyboard, move the flashing cursors
+ box with the arrows keys on the numeric keypad. Press ENTER and RETURN
+ to confrim the selection.
+
+ JOYSTICK:-
+
+ To Select options with the joystick, first select joystick as a control
+ device from the Game Options Menu using the Keyboard as described above.
+ Use the joystick to move the flashing cursor box and press Fire Button
+ 1 to confirm the selection.
+
+ MOUSE:-
+
+ To select options with the mouse, move the arrow with the mouse over the
+ icon you wish to select and "Click" with the left button to confirm.
+ Note that the program automatically detects whether a mouse is present
+ and displays the arrow.
+
+ Go to the OPTIONS panel from the MAIN MENU to select input devices for
+ each player..
+
+ GAME OPTIONS PANEL
+ ------------------
+
+ You will see a selection panel allowing you to choose the input device
+ for the Red and Blue boxer. Move the cursor box to the icon you wish to
+ select and press ENTER to confirm the decision. In a one player game,
+ leave one boxer assigned to the Computer icon to indicate that it is
+ being controlled automactically. Select the input device you wish to use
+ from the two joystick and two keyboard options:
+
+    Left Hand Keys                      Right Hand Keys
+
+     \    |    /                         \    |    /
+      Q   W   E                           7   8   9
+
+     -A   S   D-                        <-4   5   6->
+
+      Z   X   C                           1   2   3
+     /    |    \                         /    |    \
+
+  FIRE BUTTON #1:LEFT SHIFT            FIRE BUTTON # 1: RIGHT SHIFT
+  FIRE BUTTON #2:TAB KEY               FIRE BUTTON # 2: RETURN/ENTER
+
+
+ Along the bottom of the screen are the icons for Kilograms or Pounds
+ (metic or imperial weight system - also used to change between
+ centemetres and feet/inches for the height measurement) and the icons for
+ changing the number and duration of rounds in a fight. Press ENTER over
+ these icons until the desired time and number are displayed in the
+ icon.
+
+ Changing the length of the rounds only effects the EXHIBITION, career
+ fights are always 3 minuits in duration. Select DONE when you have
+ completed your selections.
+
+ GENERAL KEYS
+ ------------
+
+ During the fight there are a number of keys that act as "Short cuts"
+ to options available through menus:
+
+ F1 through to F8 will access the first 8 camera directly
+ F9 and F10 select the 1st person "through the eye" camera view for
+ each boxer.
+
+ ESCape brings up the control menu during the fight. From here the player
+ can access the camera control menu, 4D Sports Vision video replay system
+ and other options. See later in the manual for imformation on these
+ options and controls.
+
+ Whilst inb a control panel the ESCape key has the same affect as selecting
+ the DONE button.
+
+ Ctrl + P  - Pause The Game .
+ Ctrl + S  - Sound On/Off Toggle.
+ Ctrl + M  - Music On/Off Toggle.
+ Ctrl + x  - Exit And Quit To Dos.     HYDR0 NOTE: Dont Know If It - CTRL
+
+ - Note that this has the same effect as "Throwing In The Towel" and will
+ mark against you in your career.
+
+ The "+" and "-" keys on the top right row of the main keyboard increases
+ and decreases the Rendering level on the boxers. See the later sections
+ headed "Rendering" and "Frame Rate" for more information.
+
+ FIGHTING KEYS
+ -------------
+
+ The following shows the bosing and "showboat" moves avaible during the
+ fight. The moves are the same regardless of wether they are controlled
+ by keyboard Or Joystick. See the OPTIONS menu for information on how to
+ select the correct controlling input device.
+
+ The boxer is capable of a wide variety of moves depending on the
+ situation. For example, the "showboating" moves change depending
+ on wether the opponent is on this feet or not. There is also a secret
+ move to help bring back energy yo the dangerously exhasted fighter.
+ We think you should find that one out for yourself.
+
+ Each of the eight directionals has three actions associated with it -
+ depending on wether No button is pressed (NB), Fire button 1 (B1) Or
+ Fire Button Two (B2).
+
+ +---------------------------------------------+
+ |             NOT BUTTON PRESSED!             |
+ |                                             |
+ |  Move Left     MOVE FORWARD     Move Right  |
+ | Block High\        |         / Block High   |
+ |            \       |        /               |
+ |             \      |       /                |
+ |              \     |      /                 |
+ |                                             |
+ | Move Left ----            ---- Move Right   |     
+ |                                             |
+ |              /     |      \                 |
+ |             /      |       \                |
+ |            /       |        \               |
+ |           /        |         \              |
+ |   Move Left     MOVE BACK     Move Right    |
+ |   Block Low                   Block Low     |
+ +---------------------------------------------+
+
+ To move your boxer around the ring use the correct keyboarf or joystick
+ direction for the selected control device (see OPTIONS PANEL). Use the
+ Primary directions (Up,Down,Left And Right) for general movement.
+ Use the diagonals to bring up your guard and move in that direction.
+
+ +------------------------------------------------+
+ |              BUTTON 1 PRESSED                  |
+ |                                                |
+ |  Left Hook    Right Straight    Right Hook     | 
+ |  To Head \       To Head!      / To Head       |
+ |           \         |         /                |
+ |            \        |        /                 |
+ |             \       |       /                  |
+ |                                                |
+ | Left Hook ----             ---- Right Uppercut |
+ | To Body                            To Head     |
+ |             /       |       \                  |
+ |            /        |        \                 |
+ |           /         |         \                |
+ |          /          |          \               |
+ | Left Straight  Right Uppercut    Right Hook    |
+ |  To Body          To Body         To Body      |
+ +------------------------------------------------+
+
+ +------------------------------------------------+
+ |               BUTTON 2 PRESSED!.               |
+ |                                                |
+ | No Effect      Stick Chin Out      Bolo Punch  | 
+ |          \            |           /            |
+ |           \           |          /             |
+ |            \          |         /              |
+ |             \         |        /               |
+ |                                                |
+ | Shake Arm ----                ---- Flurry No.1 |
+ |                                                |
+ |             /         |        \               |
+ |            /          |         \              |
+ |           /           |          \             |
+ |Shake Head/         Shuffle        Flurry No.2  |
+ +------------------------------------------------+
+
+ To throw a punch, hold down Fire Button One and then the correct direction
+ from the chart above for the type of punch you want to use. Jab on fire
+ button oine on its own to jab with the left hand at the opponent.
+
+ THE MASTER PANEL
+ ----------------
+
+ During a fight you can press ESCape to bring up the MASTER PANEL. This
+ allows access to 4D Sports Vision camera and video replay control systems
+ and other functions of the game. This menu can be accessed by clicking on
+ the CONTROLS icon before the fight and between each round. There are eight
+ icons on the Master Panel. From Left To Right.
+
+ 1.> A Boxer Throwing A Towel Into The Ring.
+ 2.> A Camera.
+ 3.> A Video Tape.
+ 4.> Sum Eyes.
+ 5.> A Thin N Fat Boxer
+ 6.> A Document.
+ 7.> A Disk.
+ 8.> A Done Icon.
+
+ Let`s look at these menu options in more detail:
+
+ 1.>THROW IN THE TOWEL - terminates the fight as a TKO. Against you except
+ if the fight hasn`t started yet!. This allows you to cancell a fight
+ without penalty - except for maybe incurring your manager`s wrath.
+ 2.>VIEW OPTIONS MENU - Allows the player to set, position and adjust the
+ 8 user definable cameras.
+ 3.>INSTANT REPLAY MENU - The icon accesses the 4D Sports Vision replay
+ system, allowing the player to review the fight so far and play back 
+ portions of the action.
+ 4.>POINT OF VIEW MENU - Allows quick selection of the viewpoint between
+ action through thr cameras or through either of the boxer`s eyes.
+ 5.>RENDERING LEVEL - here the player selects the rendering level and 
+ playwindow size. See also FRAME RATE.
+ 6.>STATISTIC - This icon brings up a list of the fight stats recorded
+ for the fight so far and the last round in detail.
+ 7.>SYSTEM PANEL - From here the player can save and load cmaera settings
+ and control music and sound effects.
+ 8.>DONE. Returns you to the previous menu, or directly back to the fight
+ if the menu was access during a round.
+
+ 1.> Throw in the towel - This permits the player to terminate a fight
+     before it has reached its natural conclusion. If you do this, the
+     computer will automatically register a TKO against you. If this is 
+     done during a MAIN EVENT fight, then this will effect your career 
+     standings. This was included to prevent the unscrupulous boxers
+     amongst you from winning fights withour going the full distance -
+     no chance to take a dive here!.
+
+     If the fight has not yet statted, you can quit withour any penalty
+     whatsoever.
+ 
+ 2.> View Options - allows the player to enter the VIEW OPTIONS PANEL and
+     manipulate the various camera viewing systems. Once selected, there
+     are seven icons displayed. From left to right these are:
+
+     A Plus Sign : Step Up to the next camera in the sequence
+     A Minus Sign: Step back to the previous camera in the sequence
+     Adjust      : Adjust the cameras. See also section "Adjusting Cameras"
+     A Standing Camera : Flying/Fixed camera. This toggles between a camera
+                         that can fly around the track the action or is
+                         "Locked Off" in a set position.
+     A Man Holding A Camera : Cameraman On/Off. This toggles between that is
+                              "operated" by an intelligent computer
+  		              controlled cameraman who tracks the action
+                              smoothly as you would see on TV or fixed
+                              camera.
+     A Crowd     : Crowd On/Off. THis toggles between a computer generated
+                   rendered crowd or a blank background. Note: when this
+                   icon is selected. the camera is automatically fixed and
+                   locked off with no cameraman that will not track the
+                   action..
+     Control     : Control room. This icon displays all 9 cameras together
+                   and allows you to set up combined camera views that gives
+                   the best coverage of the ring and the action. Toggles
+                   it to return to the main panel.
+    Done         : DONE. Returns you to the MASTER PANEL.
+
+ 3.> Instant replay
+
+ The key to the 4D Sports series is the ability to really recreate the
+ atmosphere and excitement of a full scale sports event. One of the
+ abilities we have with the 4D Sports graphic system is to record the
+ action onto a "Digital" video tape. You can then rewind and re-play
+ sections of the fight to impress your friends with your incredible skill
+ and more importantly, carefully analyse your opponents strengths and
+ weaknesses before going in for the kill. The 4D Sports Vision instant
+ replay system lets you re-live and last round fought and to rewind
+ and fast forward through the action so you can find the moment of glory
+ (or disaster) that you want to see again.
+
+ Once selected, there are eight icons displayed. From left to right, they
+ are:-
+
+ |<<    i)Rewind to the beginning of the round.
+
+  <<    ii) Rewind manually. "HOLD" this button down until the desired
+          portion of the fight is displayed on screen.
+
+  >     iii) Play
+
+  >|    iv) Frame advance -allows the action to be examined step by step
+          to really see the details.
+
+  ||    v) Pause. Toggle this on and off to freeze and continue the replay.
+
+  >>    vi) Fast forward manually. "HOLD" this button down until the desired
+         portion of the fight is displayed on screen.
+
+ >>|    vii) Fast forward to end of round.
+
+ Done Viii) DONE!. returns you to the MASTER PANEL.
+   ___________________________
+  |_________|__|______________|
+
+ Frame Rate Slider - adjust the slider left to right to increase and
+ decrease the frame rate. 100% is normal speed. A lower figure means
+ slow motion, a higher figure increases the speed. This can be adjusted
+ during the replay.
+
+ 4) Point Of View - From this menu, the player can quickly select the
+    viewpoint form either a camera, the Red boxer or Blue Boxer.
+    Once selected, there are four icons displayed. Form left to right,
+    they are:
+
+    Camera    : Camera View - Shows views from the movable cameras. See
+                also section on "Adjusting Cameras".
+    Dark Eye  : View through Red Boxer`s eyes [or use F9 during the fight]
+    Light Eye : View through Blue Boxer`s eyes [or use F10 during fight]
+    DONE      : DONE. Returns you to the MASTER PANEL.
+
+ 5) Rendering - This menu allows the player to adjust the detail of
+                graphics used to create the boxer`s shape and features.
+                This has a fundamental effect on the speed and
+                smoothness of the RATE for more information about processor
+                speed and adjusting frame rates to get optimum performance
+                out of the game.
+    Once selected, there are six icons displayed. From Left To Right,
+    They Are:
+
+  Fat Man To Thin : Increase detail level, Adds polygons to the boxers to
+                    increase detail level and therefore realism at the
+                    expense of frame rate on slower machines.
+
+  Thin Man To Fat : The Total Reverse Of The Upper Text!.
+
+  Auto            : Auto. This puts an automatic system into operation that
+                    selects the optimum graphics level to provide the ideal
+                    playing speed and frame rate. Note: this system will
+                    operate constantly and will therefore make "unexpected"
+                    changes to the graphics level during the fight.
+                    This is to compensate for a heavy demand momentarily
+                    on your computer`s processor by the game for some
+                    "hidden" task.
+ Box With Arrows
+         Going In : Decrease playwindow size. The smaller the playwindow
+                    the faster the frame rate becomes. On slower machines
+                    it may be necessary to decrease the size slightly in
+                    order to get a better game speed.
+
+ Box With Arrows
+        Going Out : The Total Reverse Of The Upper Text!.
+
+ Done             : DONE. Returns you to the MASTER PANEL.
+
+ 6) Statistics   - The icon brings up a list of the boxing stats recoreded
+                   for the fight so far and for the last round in detail.
+ 7) System Panel - From here the player can save and load camera settings
+                   and  adjust music and sound effects. Once selected,
+                   there are six icons displayed. From Left to Right
+                   They Are:-
+
+ SAVE            : SAVE Camera Settings. Stores All of the adjustments.
+ LOAD            : Load Camera Settings. Previously stored.
+ RESET           : Reset all camera settings.
+ FX              : Toggle Sound Fx On/Off
+ Music           : Toggle Music On/Off
+ Done            : DONE. Return to Main Panel.
+
+ 8) DONE - Returns you to the top level "Fight or Control" menu, or
+           directly back to fight if the menu was accessed during a round.
+
+ TWO PLAYER MODE
+ ---------------
+
+ One of the best features of 4D Sports Boxing is the ability for two player
+ to fight each other on the same computer.
+
+ They can even use the same keyboard.
+
+ Select a control input device from the OPTIONS panel via the MAIN MENU
+ for the two players. Assign the correct joystick or keyboard patch for
+ the player and then preceed to either the EXHIBITION or MAIN EVENT
+ sections for the fight.
+
+ A third person can usefully be employed as 4D Sports Vision director
+ changing camera angles during the round and showing replays and
+ adjusting camera angles between rounds.
+
+ ADJUSTING CAMERAS
+ -----------------
+
+ During the fight, it is possible to access any of the camera angles by
+ simply pressing the associated function key (F1-F10) for each camera
+ setting. However, it is easy to set up your own camera positions and
+ angles - and of course much more fun than using the presets. Follow
+ the instructions below and you will soon become the best TV director
+ in your street.
+
+ To enter the Camera Adjust menu, go into the MASTER PANEL. To do this
+ either prsss ESCape during a fight, or select controls from the top
+ level "Fight or Controls" menu.
+
+ Once in the Master Panel select the VIEW OPTIONS icon to enter into
+ the VIEW OPTIONS panel. Next select ADJUST and you will go into the
+ panel that allows the cameras to be positioned and adjusted by the
+ player. Once selected, there are eight icons displayed. Form left
+ to Right, They Are:
+
+ A + Sign           i) Step Up to the next camera in the sequence.
+ A - Sign          ii) Step Down to the previous camera in the sequence.
+ 2 Cameras        iii) Adjust the current camera view
+ 1 Camera & 2 Guys iv) Select camera focus on either or both boxers.
+ Arrow Up           v) Zoom In.
+ Arrow Down        vi) Zoom Out.
+ Save             vii) Save.
+ Done            viii) Done. Return you to the View Options Panel.
+
+ To select any camera from the nine available foe user definition, move up
+ and won through the cameras with the STEP UP and STEP DOWN icons until
+ the desired cameras view is displayed.
+
+ Go to the ADJUST icon and press and hold FIRE BUTTON 1 Or ENTER. With the
+ button or key syill depressed, move around in the 8 directions to adjust
+ the position of the camera with the joystick or keyboard. Follow the
+ chart below fot the camera move availble:
+
+
+               FORWARD
+      MOVE UP    /\    MOVE UP
+             \\  ||  //
+              \\ || //
+ ROTATE LEFT ========== ROTATE RIGHT
+              // || \\
+    MOVE DOWN//  ||  \\MOVE DOWN
+                 \/
+              MOVE BACK
+
+ Using the above moves, it is possible to position the camera anywhere within
+ the 4D Sports arena. NOTE: It is not possible to adjust the camera on the
+ F1 Key. It is always fixed in the same position.
+
+ Next select which boxer, or both, you wish to centre and focus the camera
+ on. Toggle through the SELECT camera focus icon until the desired choice
+ is shown.
+
+ Use ZOOM In to get closer to the action and ZOOM OUT to come back out for
+ a wider camera shot.
+
+ Repeat this for all the available cameras until you are happy with the
+ angles and focuses the you have set up. Remember that you change the
+ settings in the middle of a fight with no penalty to your success if you
+ want to tweak a camera position slightly.
+
+ Once the settings are complete, select SAVE to store them for future use.
+
+ Select DONE to return to the VIEW OPTIONS PANEL. From here it is possible
+ to set the type of camera and how it follows the action. See the
+ descriptions of the icons in the previous section and also read the section
+ headed FRAME RATE before making your choices.
+
+ If you select a camera to be "Flying" then it will track the action
+ smoothly. If a "locked" or static camera is used. then during the fight
+ press the SPACEBAR to re-centre the camera on the action.
+
+ CROWDS
+ ------
+
+ It is possible to add a textured and rendered crowd into the background
+ behind the ring. NOTE: it is  only possible to have a fixed camera and
+ a crowd included together, which is why when you select the Crowd icon,
+ it automatically chooses a fixed camera that has no operator.
+
+ With the 4D Sports Vision System it is possible to place a camera right
+ inside the ring that flies around with the action. No TV sports show in
+ the world ever gives you the freedom to see the action so close. Mind
+ you don`t get hit, though!
+
+ FRAME RATE
+ ----------
+ 4D Sports Boxing uses mathematically generated polygons to creat the
+ onscreen graphics. Because of the complexity of the programming
+ algorythms required to do the mathematical calculations, polygon
+ graphics take a large proportion of your computers available processing
+ power. On faster machines with a 286 or 386 processor chip this is not
+ a problem, since there is ample power "in reserve" to handle the most
+ intensive task. However, if you are running the game on a less powerful
+ computer (e.g. one with a clock speed of less than 10mhz) then you may
+ encounter situations in the game where the frame rate of amnimations
+ and graphics slows down.
+
+ There are a number of features built into the game that allows you to
+ speed up the frame rate on your computer. The following is a list of
+ suggestions that we recommend you try in order to get the optimum
+ preformance out of this product. However , since different PC`s behave
+ in different ways, we suggest you experiment to achieve the optimium
+ frame rate by trying these simple options:
+
+ 1) Decrease the RENDERING LEVEL of the boxers.  This removes polygons
+ form the human figure and therefore the computer has less graphics to
+ calculate for each frame of animation. You can select the AUTO options
+ from the RENDERING menu so that the game decides for you the best
+ rendering level to use.
+
+ 2) Decrease the playwindow size. This takes the visible screen area
+ down tp a more manageable level for slower machines.
+
+ 3) Cameras. If frame rate is a problem on your machine, then select
+ cameras to have no cameraman and for them to be fixed. This decrease
+ the calculations required for the game to follow the action.
+ - Thus increasing visible fram rate.
+
+ 4) LOW and HIGH SIM. From the OPTIONS panel it is possible to select LOW
+ or HIGH simulation level for the game. If LOW sim is selected, it
+ removes a proportion of the artificial intelligence for the opponents
+ boxers. This means there are less calculations to do for the fight and
+ you get a marginally better frame rate.
+
+ 5) Sound. POn slower machines with no sound card, selecting digital
+ sounds through the PC SPEAKER can have an adverse effect on the
+ overall frame rate - especially during sound intensive portions of the
+ fight. If This is a problem, simply select PC SPEAKER from the Set-Up
+ menu.
+
+ 4D SPORTS BOXING "THE CHAMPIONSHIP"
+ -----------------------------------
+
+ Once you have tried out a few boxers in the EXHIBITION match and set up
+ the camera angles  it is time for the BIG FIGHT. This where your Boxing
+ career takes  off. Make a big and you are going to be a rich man, If
+ you fail... well it will be back to normal life again - no fast cars,
+ big houses. Yes, you can wave goodbye to the good life and everything that
+ goes with it.
+
+
+ THE GYM
+ -------
+
+ Before you can enter the Championship you must first create your own boxer
+ and for this you must visit the Gym. From here you "design" your boxer by
+ specifying height, weight and the characteristics of his fighting style
+ and even down to the colour of his baggy stain shorts. A "Champ" of upto
+ ten boxers can be held at any one time. If you Gym gets full then you will
+ have to "fire" your least favourite boxer via th DELETE function.
+
+ Enter the GYM via the Main Menu. Once inside you will visit th locker
+ room where you can flick through your database of current fighting
+ boxers. Use the NEXT and PREVIOUS buttons to go through them all.
+
+ BOXER CREATION
+ --------------
+
+ To add a new boxer to the camp, select CREATE.
+
+ This takes you to the 4D Sports Boxing Champion Generation Machine.
+
+ You will see your brand new boxer strutting his funky stuff to the side of
+ the screen. On the right are a list of options that  make up the Boxer`s
+ pyhsiqure and fightinhg characteristics.
+
+ Then Follow Onscreen prompts.
+
+ Once you have created your Boxer its time for the hard bit... The Fight!
+
+
+                         G O O D   L U C K
+                         -----------------
+
+                             THE END!
+
+ I`m Pissed Bored With Typing Docs!... So L8rs.

@@ -1,0 +1,1279 @@
+                                   ______
+                         /           |  /   |
+                        /__   /  \   | /   /|    /  /
+                          / |/   |\  |/\  | | | /| /
+                         /  |\ | |/  |  \ |/  |/ |/
+                        /   |  | /   |   \|   |  |
+                      \      __|__        \
+                      |\       |                  /
+                      |/        /            |   /__  
+                      |  |/ /_ /__ /_ |\ | -----   /
+                      |  |  \    / \  | \|   |    /
+                                /        \   |   /Mct!
+
+                              RED BARON DOCS
+                              ^^^^^^^^^^^^^^
+
+         Docs typed by Mictlantecuhtli and supplied by Nightspawn
+
+
+Please Note: these are the IBM docs but they should be very close the the
+Amiga docs. Also, I have only done the Game Play chapter since this is the
+only section that you must have in order to play the game. I have left out
+the Historical Overview, Historical Flight Reference, and Appendices. If
+there is enough whining, begging and pleading, I will do the Historical
+Flight Reference and Appendices. If someone has the maps, digitize them or
+send them to me so that I can do it; the game isn't complete without them.
+
+One last note: IF YOU LIKE THE GAME BUY IT! YOU GET THE COMPLETE DOCS AND
+MAPS WHEN YOU DO! Oh joy! Not to forget that these docs are for archival
+purposes only since whoever has them also had the actual docs but his dog
+(or little brother) ate them! And he really did buy the original but it
+was consumed in the fire that....well, er, you get the idea.
+
+
+                                GAME PLAY
+
+                               INTRODUCTION
+
+Red Baron is an historically accurate and detailed recreation of flight
+during the era that launched aerial combat, World War I. The controls
+available to the great Aces were few and primitive. However, as a
+computerized simulation, Red Baron is capable of offering you controls
+unlike anything the Aces would have ever dreamed. This portion of the Red
+Baron manual outlines and describes these controls. It does not describe
+the elements of flight such as take-off and landing, maneuvers, and
+tactics. These elements are discussed in detail in previous chapters.
+Please refer to the table of contents for specific page references.
+
+Following are the sections described in this chapter:
+
+  -Flight Controls
+  -View Commands
+  -Machine Gun Controls
+  -Time Compression
+  -Game Play Preferences
+  -Realism Panel
+  -Weather
+  -Your flight Group
+  -Simulation Overview
+  -Fly Single Mission
+  -Fly Single Mission Condidtions
+  -The Mission Assignment Screen
+  -The Flightr Assignments Screen
+  -Navigation
+  -Ending the Mission
+  -Career Play
+  -Career Menu
+  -Aerodrome Menu
+  -Career Sequences
+  -The Mission Recorder
+
+                                GAME PLAY
+
+                             FLIGHT CONTROLS:
+
+Movement
+
+You use the control surfaces and throttle to maneuver your aircraft (for
+more detail, see the Flight Section). These include the ailerons, the
+elevators, the rudder, and the throttle.
+From the Preferences Panel (activated from the simulation by pressing
+F10), you may select which peripheral you have attached. You may select:
+keyboard, joystick, or mouse.
+
+Keyboard and joystick:
+
+                               Pitch Down
+   Roll Left and Pitch Down 7      8      9 Roll Right and Pitch Down
+   Roll to the Left         4             6 Roll to the Right
+   Roll Left and Pitch Up   1      2      3 Roll Right and Pitch Up
+
+Mouse:
+ 
+The mouse controls are identical to those for the joystick. For movement
+controls, the mouse is self centering. This means that it will
+automatically recenter itself  after each movement command.
+
+Rudder
+
+The rudders can be controlled from the keyboard at any time. They can also
+be controlled from the joystick or mouse while in the cockpit view.
+
+  Keyboard Rudder Controls
+  <                  left rudder
+  >                  right rudder
+
+Joystick Rudder Controls
+While in the cockpit view, you may control the rudder with the joystick
+or mouse by pressing and hold both buttons on the joystick or mouse. When
+both buttons are held down simultaneously, moving the joystick or mouse
+left and right will apply rudder in the corresponding direction. External
+views do not allow rudder control form the joystick or mouse. The keyboard
+must be used for external view rudder control.
+
+Throttle
+
+The throttle can be controlled by mouse, joystick, or keyboard.
+
+  Keyboard Throttle Controls
+  1...9               controlls throttle
+                      1=idle
+                      9=full throttle
+  +                   increase throttle
+  -                   decrease throttle
+
+Joystick Throttle Controls
+Within the cockpit you may control the throttle with the joystick by
+holding and pressing both buttons on the joystick. When both buttons are
+held down simultaneously, moving the joystick forward will increase
+throttle, and moving it backward will decrease it. This will not work for
+you if your view is outside the aircraft. The keyboard must be used for
+throttle control in external views.
+
+Instruments
+
+From the Realism Panel, if you turn on Realistic Instrumentsthe only
+instruments you will see will be the ones that existed on the original WWI
+aircraft.
+
+Altimeter
+Indicates the altitude in feet. The large needle indicates 100's of
+feet, and the small needle indicates 1,000's of feet. It is set to 0 at
+ground level.
+
+Compass
+Indicates your current heading. The readings are N for North, S for
+South, W for West, E for East.
+
+Fuel Gauge
+Indicates how much you have left.
+
+Air Speed Indicator
+Indicates your current air speed in miles per hour.
+
+Tachometer
+Indicates how many revolutions per minute the engine is making. The
+needle indicates rpm's x 100. generally, this corresponds to your current
+throttle setting.
+
+Oil Pressure Gauge
+Indicates your current oil pressure. If your airplane is damaged and has
+an oil leak, the needle will drop (NO SHIT!).
+
+Inclinometer
+Indicates the current bank of your aircraft. The instrument is simply a
+ball bearing inside a curved grove. If the ball is to the left of center,
+it means that you have banked left. It's a crude ancestor of the atificial
+horizon equipped in aircraft today.
+
+                              VIEW COMMANDS:
+
+While patrolling the front, you'll find it necessary to look around often
+to avoid being surprised. The best pilots of WWI were always looking for
+enemy fighters.
+
+  Controlling View Commands With the Keyboard
+
+  Switching between cockpit and external view
+  Press the return key
+
+  From within you aircraft (cockpit views)
+  F1    Look forward  (you instruments will be visible)
+  F2    Look back
+  F3    Look left
+  F4    Look right
+  F5    Look up
+  F6    Look down (lean out and look straight down)
+
+  From outside your aircraft (external views)
+  F1    View the front of your aircraft
+  F2    View the rear of your aircraft
+  F3    View the left side of your aircraft
+  F4    View the right side of your aircraft
+  F5    View the bottom of your aircraft  (look up at your plane from a
+        lower altitude)
+  F6    View the top of your aircraft (looks directly down at your plane
+        from a higher altitude)
+
+  F7    View from a chase plane (the view follows your aircraft in a chase
+        plane). F7 works from within the cockpit and outside your
+        aircraft.
+
+Controlling View Commands with the Joystick
+
+You may control the current view without touching the keyboard.
+
+From Within the Cockpit
+
+Holding down button #2 and moving the joystick forward will switch to Look
+Forward (F1), to the left will switch to look left (F3), etc. Pressing and
+releasing button #2 with the joystick centered will switch from the
+cockpit view to the outside rear view.
+
+From Outside the Aircraft
+
+Holding down button #2 while moving the joystick will pan the view
+smoothly around the aircraft: moving the joystick to the left will pan the
+view clockwise around your aircraft, moving the joystick forward will pan
+the view up around the aircraft, etc. Holding down both buttons wile
+moving the joystick foward/backwards will move the camera closer to/away
+from the aircraft. Pressing and releasing button #2 with no joystick
+movement will switch to the front cockpit view.
+
+These commands may be duplicated without a joystick. The keypad will
+function like the joystick, the space bar will function like button #1,
+and the enter key will function llike button #2.
+
+From any outside view, press ctrl-F1...F10 to save off the current view.
+To switch to any of these saved views, use alt-F1...F10.
+
+Mouse controls for view commands are identical to those of the joystick.
+Button #1 = left button and button #2 = right button.
+
+                          MACHINE GUN COMMANDS:
+
+You are armed with one or two forward-firing machine guns (depending upon
+the plane). That's all the WWI pilots needed. Before going up on the
+mission, you may select what type of ammo to use:  incendiary or regular.
+Incendiary ammo is used to attack Zepplins and balloons. It is extremely
+difficult to ignite a dirigible with regular ammunition. However, regular
+ammunition is more accurate and less likely to jam the machine guns.
+Regular ammunition is also better against enemy airplanes than incendiary.
+
+Occaisonally, your machine guns will jam. Firing a long burst from your
+machine gun has a greater chance of jamming your guns than does a short
+burst. This is why the good pilots would fire short bursts in their
+attacks. If your guns are jammed, you may try to unjam them by repeatedly
+pressing the "u" key. This won't always work, but keep trying. Note: it is
+possible for your machine guns to permanently jam. You will receive an
+on-screen message indicating this if your attempts at unjamming are
+unsuccessful.
+
+Press the space bar or button #1 to fire; press the "u" key to unjam the
+guns.
+
+                            TIME COMPRESSION:
+
+There may be periods of the simulation play where there's not a lot of
+action going on. Often this is after taking off as you make your way to
+the front or after the mission is over and you are making your way back to
+your aerodrome.
+
+As a convenience, Red Baron contains a time compression modewhich will
+speed up the simulation to amy times its normal speed. Time compression is
+activated by pressing the "c" key.
+
+Time compression will be automatically deactivated when you press the "c"
+kay again, when you fire your machine guns, when you come near enemy
+aircraft, balloons, Zepplins, or AA guns, and when you fly near the
+ground.
+
+IMPORTANT!
+It's very difficult to stay in formation when time compression is active.
+because of this, Red Baron will automatically enter Auto-formation when
+time compression is activated. This will control your aircraft and keep it
+locked into formation until time compression is de-activated.
+Auto-formation will NOT activate when you are the flight leader unless you
+are escorting another flight.
+
+                            Starting Location
+
+On some missions a menu will appear, giving you a choice of where to start
+you flight. You may start near the action or near the aerodrome. For most
+missions, it is recommended that you start near the action. The missions
+will be shorter and more exciting. However, if you want to try your hand
+at navigating as the WWI pilots did, begin the mission near your
+aerodrome.
+
+                               PREFERENCES:
+
+There are two main panels that allow you to control game play, the
+PREFERENCES panel and the REALISM panel. The displayed PREFERENCES panel
+is available only from within the simulation. OPTIONS from the main menu
+will bring up an abbreviated version which does not contain detail level
+controls.
+
+Preferences Panel
+Press F10 from the simulation to activate. Press ACCEPT or the ESC key to
+ exit.
+
+With the Preferences panel you may tailor some of the tecnical aspects of
+Red Baron to your tastes and computer configuration. You may customize the
+following game controls:
+
+  Joystick on/off
+  Sound on/off
+  Mouse on/off
+  Time Scale Adjustment low-high
+  Ground Detail Level Adjustment low-high
+  Aircraft Detail Level Adjustment low-high
+  Combat Button Regular/off
+
+Note:  settings and adjustments made to the preferences and realism panels
+are automatically saved to disk. The new settings remain even if you quit
+and restart Red Baron later.
+
+Detail Levels
+The smoothness of simulation play is dependent upon two things: the speed
+of your computer and the amount of graphic detail displayed. The first of
+the two, the speed of your computer, cannot be changed. However, with
+the graphic detail controls, you can reduce the amount of graphic detail
+displayed. The detail sliders give you control over the amount of graphic
+detail that your computer is required to display. You may trade off detail
+for smoother animation according to your tastes. When you first install
+Red Baron, it will set the detail slider's positions based upon the speed
+of your computer.
+
+There are three controls that allow you to select the amount of graphic
+detail in the simulation. Depending on the speed of your computer, you may
+want to increase or decrease the amount of graphic detail to control the
+smoothness of play.
+
+Aircraft detail controls how detailed the aircraft displayed will be.
+
+Ground detail controls how many terrain features are displayed at once.
+
+Combat button controls the amount of ground detail displayed during combat
+sequences. When set to normal ground detail, the ground detail will remain
+the same when you enter aerial combat. When set to no ground detail, the
+ground detail will be cut back during combat. This will increase the
+smoothness of animation during combat.
+
+Time Scale
+Time scale control is provided to help in cusomizing the pace of
+simulation play to fit best fir your tastes. If battles are moving too
+fast for you, move the Time Scale slider towards LOW. This will slow the
+action down. If you're playing on a machine that runs slow even with the
+detail levels turned down, try moving the Time Scale slider towards HIGH.
+This will speed up the action.
+
+Low = Slower and easier to control. High = faster and more difficult to
+control but it is best for slower computers.
+
+                              REALISM PANEL:
+
+Press alt-r to access
+Press accept or esc to ext
+Press restore to cancel
+
+You may change any of the realism settings from either the mission
+assignment screen or from within the simulation itself. The settings allow
+you to customize certain features of the game to your own tastes. IN most
+cases, each setting gives you a choice between ease of use and realism.
+
+There are 11 settings you may switch from realistic to nonrealistic. When
+a setting is set to realistic, a red check mark appears beside it.
+Pressing the button for the setting will switch it between available
+states. For convenience, we've included three buttons at the top of the
+realism panel to allow you to change all the settings at once. Each has
+default settings for different skill levels including Novice,
+Intermediate, and Expert. Following are descriptions of realism settings
+available.
+
+Realistic Instruments. When turned on, the only instruments seen from the
+cockpit will be the ones that existed on the original WWI aircraft. When
+turned off, all possible instruments are displayed.
+
+Sun Blind Spot. When turned on, the Sun Blind Spot will cause a glare
+whenever you view is placed directly at the sun. Enemy aircraft which are
+in the sun will not be visible until they are very close.
+
+Realistic Weather. If turned on, the weather conditions will vary from
+mission to mission. If turned off, the weather will always be perfect: the
+sky will be clear with no clouds, and there will be a light wind.
+
+Gun Jams Allowed. The machine guns in WWI were very unreliable and would
+jam frequently. The longer the gun was fired, the greater the chance that
+it would jam. Pilots would often carry a hammer or mallet with which to
+hit their machine guns in case of jamming. When Gun Jams Allowed is turned
+off, your machine guns will operate perfectly, never jamming.
+
+Blackouts Allowed. The pilots of WWI didn't have oxygen masks, and
+consequently a pilot who flew above 20,000 feet for too long would get
+dizzy and occaisonally even black out from lack of oxygen. Hopefully, when
+the pilot's aircraft went into a dive, the pilot would wake up before
+hitting the ground. When Blackouts Allowed is turned on, blackouts are
+possible. When turned off, blackouts will never occur.
+
+Carburetor Freezes. At high altitudes, it gets very cold. The carburetor
+would often freeze, especially during the winter months. This would cause
+a complete loss of power until the carburetor would thaw out, which could
+only come about if the aircraft was brought to a much lower altitude. When
+Carburetor Freezing is turned on, your plane's carburetor will freeze at
+higher altitudes. When turned off, the carburetor will never freeze.
+
+Limited Ammunition. The great pilots would fire their guns sparingly,
+closing to within 30 yards and firing a short, decisive burst. This takes
+skill, but it can be mastered. If Limited Ammo is turned on, your ammo
+supply will be limited. If turned off, you can spray the sky with bullets
+for as long as you like, assuming that you guns don't jam.
+
+Limited Fuel. Most of the aircraft had enough fuel to fly for two and a
+half hours. When limited fuel is turned on, your air time will be limited
+to your plane's fuel capacity. when limited fuel is turned off, your fuel
+supply will be indefinate.
+
+                              REALISM PANEL:
+
+Real Navigation. When Real Navigation is turned on, you will fly as WWI
+pilots did...without sector coordinates displayed.You will have to
+navigate with the map, and by viewing natural landmarks on the ground
+below. When turned off, your sector coordinates will be displayed on the
+screen. This is useful whn you are acquainting yourself with navigation.
+
+Aircraft May Be Damaged. When Aircraft May Be Damaged is turned on, your
+aircraft will be susceptible ti damage. When turned off, your aircraft
+will become invulnerable. We recommend the off setting for beginning red
+Baron players only. Your score will be very low if this is turned off.
+
+Flight Model. Flight Model allows you to select the level of realism your
+airplane can handle. The settings are: Novice, Intermediate, and Expert.
+Novice is the easiest to use, and expert is for experienced pilots.
+      Novice setting: flying is easy, turns are straight forward. If you
+      bank the aircraft, it will turn. Your aircraft will not nose down
+      in a turn.
+
+      Intermediate setting: turning is modelled more realistically. In
+      order to turn properly, you will have to apply back pressure
+      (pulling back on the stick) to keep the aircraft turning and keep
+      the nose above the horizon. Some rudder may be needed as well.
+      Unlike Novice, if you bank the aircraft without using back pressure,
+      your turn will degenerate into a slow spiral dive. Landing is also
+      more difficult.
+
+      Expert setting: this will test all of your flying abilities. Not
+      only are turns modelled realistically, but the danger of going into
+      a spin is present. The various quirks of certain aircraft are also
+      included. For instance, the gyroscopic effect of the Sopwith Camel's
+      rotary engine will make a simple turn a difficult, tricky maneuver.
+      And, if too much stress is put on your aircraft's wings during a
+      high speed dive, your wings may break!
+
+Score Factor:
+Mission success, promotions and your placement on the high score listing
+are all based upon your scoring, or point total, at the end of a mission.
+There are two main factors in determining your score after a mission; your
+performance and the score factor. Scoring for mission performance is based
+upon how well you achieved the goals of the mission, how valiant your
+moves were and whether you survived the mission intact. Your overall score
+for the mission is derived by multiplying your mission score by the score
+factor. The score factor is displayed at the bottom, center of the realism
+panel under the overall difficulty heading. It reflects the difficulty of
+the current realism settings. Increasing the number of realistic setting
+on the realism panel will increase your score factor.
+
+Important! Once you enter the simulation, a 30 second "grace" period
+begins. Any changes to the realism settings must be made before this
+period is up in order for the chagnes to be reflected in the score factor.
+Settings turned on after the first 30 seconds of simulation play will be
+displayed in lightened text to reflect that they were changed after the
+"grace" period and have no bearing on the score factor.
+
+                                 WEATHER:
+
+From the realism panel you may turn on and off realistic weather. With it
+turned off, there will be no clouds in the sky and there will be a light
+wind blowing eastward.
+
+The wind will play an important part in your missions. Generally the wind
+gives German pilots an advantage as it usually blows toward the German
+side. This makes it difficult for Allied pilots to fly home when they are
+over German territory. The stronger the wind, the more advantage German
+pilots will have.
+
+Clouds will add to the complexity of the combat tactics. Diving into a
+cloud is a good way to lose a pursuer. On the other hand, clouds may be
+hiding enemy aircraft waiting to strike. Clouds may also obstruct the sun,
+thus taking away the ability to dive out of the sun on an enemy.
+
+                            YOUR FLIGHT GROUP:
+
+The group of 1 to 4 aircraft that you fly with is called a flight. Your
+flight will travel together and protect one another.
+
+Formations
+When a flight goes on a mission, it will fly in formation. If you are the
+flight leader, the rest of your flight will fall into formation. The types
+of formations that you may fly include: solo, line, abreast, line astearn,
+vee, box, echelon, and diamond.
+
+If you are not the flight leader, fly with the rest the formation. Do not
+stray from the rest of your flight.
+
+Flight Leader Commands
+Once airborne, WWI pilots would communicate with arm gestures. As a member
+of a formation, you will be given orders by your flight leader during the
+mission. These will be indicated as a text message that appears on your
+screen.
+
+If you are the flight leader, you will have the opportunity to give orders
+to the members of your flight. However, keep in  mind that once you enter
+combat your commands will go unnoticed--the rest of the flight will be
+busy keeping their eyes on the enemy. If there are three or more aircraft
+in your flight, some aircraft will make up the "minor wing". The flight
+leader may give orders to the minor wing separately from the rest of the
+flight. With three aircraft, the third aircraft in the formation makes up
+the minor wing. With four aircraft, the third and fourth make up the minor
+wing.
+
+Flight leader Commands
+
+Drop Below
+Key Command: D
+Order the minor wing to drop about 500 feet below the rest of the fligh.
+This tactic can be used to flush out enemy aircraft. enemy aircraft will
+often attack the seemingly helpless aircraft of the minor wing, unaware of
+the aircraft above them. When they do so, the aircraft above may swoop
+down on the enemy. Be warned that this tactic leaves the minor wing
+exposed. This order will be ignored if the flight is at low altitude.
+
+Join
+Key Command: J
+Order the minor wing to rejon the rest of the flight. If the flight
+descends to a low altitude, then the minor wing will automatically rejoin
+the rest of the flight.
+
+Attack!
+Key Command: A
+Order the entire flight to attack the enemy.
+
+Minor Wing Attack!
+Key Command:  M
+Order the minor wing to attack the enemy.
+
+Warning!
+key Command: W
+Alert the rest of the flight that enemy aircraft have been spotted. If
+you issue this warning when there are no enemy aircraft around, the rest
+of the flight will ignore your warnings for the rest of the mission. You
+may issue a warning even when you are not the flight leader.
+
+                           SIMULATION OVERVIEW:
+
+Red Baron has two play options, Fly Single Mission and Career. Single
+Mission offers you the choice of ten randomly generated mission types and
+allows you to custom tailor your squadron and the conditions of play.
+Career allows you to enlist as an officer of either the German Air Service
+or the Royal Flying Corps. You will fly multiple mission, progressing
+through the war until you are either killed, grounded, or the war ends. In
+career play, you are given much less control over the mission conditions.
+You must earn the right to a command, transfer and change plane types.
+
+Missions in both Fly Single Mission and Career can be recorded and saved
+to disk. These saved missions, or tapes, can then be replayed with the
+Mission Recorder. You can record, save, playback and manipulate any of
+your missions. You can even re-enter a saved mission, completely altering
+the mission's outcome. Altered missions can then be saved to disk for
+later viewing or manipulation.
+
+On the following pages, you will find in depth descriptions of Single
+Mission, Career, and Mission Record.
+
+FLY SINGLE MISSION
+
+The first of the two options of simulation play is Fly Single Mission.
+Single Mission play allows you to tailor many elements of your mission:
+the type of mission you'll go on, on whose side you'll fly, the conditions
+you'll encounter, who you fly with (and against), and the type of plane
+used. Fly Single Mission is the quickest way to get into the simulation.
+You simply select the type of mission you want to fly, set the conditions,
+and play! After your custom mission is completed, you'll receive an
+evaluation of your performance and a score based upon the realism
+settings, goals achieved and number of kills.
+
+Mission Types
+When Fly Single Mission is chosen from the main menu, a new menu will
+appear displaying the types of missions available.
+
+Fly a Historic Mission
+Relive the great aerial battles of the war
+
+Dogfight a Famous Ace
+Have you got what it takes to go head-to-head with the might Red Baron
+himself? Find out as you go up against the war's greatest pilots.
+
+Dogfight a Squadron
+Engage and enemny flight of fighters and try to clear them out of the sky.
+Just remember that they're trying to do the same to your flight.
+
+Patrol the Front
+Patrol the front and engage any enemy recon or fighter planes that you
+come across.
+
+Escort a Bombing Raid
+Your bombers are about to penetrate deep into enemy territory to bomb
+strategic targets like RR yards, factories, and supply dumps. It's your
+mission to see that they succeed.
+
+Stop a Bombing Raid
+Intercept enemy bombers who are trying to bomb your side.
+
+Hunt a Zepplin
+Locate one of these high flying dirigibles and send it down in flames.
+It's best to use incendiary ammo.
+
+Escort Recon
+Protect a recon plane on its mission to take aerial photos. Enemy fighters
+will be gunning for both the recon plane and you.
+
+Balloon Defense
+Protect your observation balloons from the enemy!
+
+Balloon Busting
+Take out the eye's of the enemy. These large gasbags of hydrogen burn
+easily. It's best to use incendiary ammo.
+
+Fly Single Mission Conditions
+Once a Mission type has been chosen, you will be able to tailor the
+conditions of the mission. The number and type of conditions available for
+change vary from mission to mission. Following is a breakdown of mission
+types and their available options.
+
+Dogfight a Famous Ace
+After selecting Dogfight a Famous Ace, you will be asked to select the ace
+which you wish to dogfight. Pressing the up and down arrows will scrolling
+through the selection window. As each ace is highlighted, a description
+will be displayed showing the ace's name, alliance, total credited
+victories in the war, and a description of their known tactics. pressing
+the select button will accept the currently highlighted ace.
+
+Once an ace has been selected, the mission setup screen will be displayed.
+The misison setup screen will display the name of the mission type and a
+text area in which you may setup your mission. In the text area,
+changeable options are displayed as a button in the text. Clicking on one
+will bring up a menu with your possible options. All buttons except those
+on the pop up menu will be inactive when a pop up menu is diplayed.
+
+The following options are available under Dogfight a Famous Ace. Press the
+accept button when you've set the conditions to the desired settings.
+
+Your Aircraft Type: you may select any anircraft from either side of the
+war.
+
+The Ace's Aircraft Type: the selected ace will default to his preferred
+aircraft, including any historical markings and insignias. You may choose
+any type for the selected ace.
+
+Where You Will Battle: you can choose from over the front, over German
+territory, and over Allied territory. It is an advantage to meet over your
+own territory as it's easier to land.
+
+Altitude: it's an advantage to start higher than your opponent. This
+allows you to decide when combat begins. If you want more of a challenge,
+start at a lower altitude than your opponent.
+
+Sun: you may choose the positioning of the sun at the start of combat.
+Your choices are at no one's back, at your back, and at his back. The
+pilot who starts with the sun at his back has an advantage, being able to
+hide in the sun's glare.
+
+Wind and Sky: you may set the weather conditions.
+      Wind: still, light, strong
+      Sky: clear, partly cloudy, cloudy, overcast.
+
+Dogfight a Squadron
+The Dogfight a Squadron mission is similar to Dogfight a Famous Ace,
+except that you may also select:
+
+The side that you will fight for: you may select German Air Service or
+Royal Flying Corps.
+
+The number of aircraft in your flight group.
+
+The type of ammo used: you may select between regular and incendiary. In a
+dogfight, it is assumed that regular ammo will be used. This can be
+changed in the Flight Assignments screen.
+
+The type of aircraft your flight group will use: you will only be able to
+select aircraft available to your selected alliance.
+
+The formation your flight group will fly in: depending upon the number of
+aircraft in your flight group, you may choose between line abreast, line
+astern, echelon, vee wing, diamond, and box formation.
+
+The number of aircraft in your opponent's flight group.
+
+The type of aircraft your enemy's flight group will use: you will only be
+able to select aircraft available to the enemy's alliance.
+
+The quality of your pilots: Novice, Regular, or Veteran (see below).
+
+The quality of the enemy pilots: Novice, Regular, or Vetern (see below).
+
+The leader of the enemy pilots: this may be any of the famous aces or an
+anonymous pilot of any quality.
+
+Pilot Quality:
+Novice-just out of flight training. They are the poorest pilots, prone to
+be paralyzed in combat. They often take impossible shots. A novice will
+never use a maneuver in combat. They are the guys with a one in ten
+chance of surviving their first dogfight.
+Regular-Pilot with combat experience. He doesn't make stupid mistakes in
+combat, but does nothing brilliant either. Will occaisonally do some of
+the simple maneuvers: Zoom climbs, wing-overs, and barrel rolls.
+Veteran-a good pilot that flies and fights intelligently. He is skilled at
+many maneuvers and will pose a serious challenge to even the best of
+opponents.
+
+FLY AN HISTORIC MISSION
+From Fly an Historic Mission, you can choose to fly a famous historical
+air battle. All conditions of this single mission are preset to match the
+actual historic event.
+
+Once selecting Fly Historic Mission, you will be asked to select the
+historic mission you wish to participate in. Pressing the up and down
+arrows will scroll through the selection window. As each Historical
+Mission is highlighted, text will be displayed describing the mission. In
+the upper right corner of the screen a picture of the famous ace featured
+in the mission will be shown.
+
+Below the selection window are buttons marked British and German. These
+allow you to decide which side you wish to fly for in the mission. If you
+choose the side that the featured ace flew on, you will take his place in
+the mission. Choosing the other side will pit you against the featured
+ace. The text description of the mission will change to reflect your
+mission, depending upon which side you choose to fly on.
+
+Pressing Begin will start the mission.
+
+ALL OTHER MISSION TYPES
+This selection describes the conditions available for all missions other
+than Dogfight a Famous Ace and Dogfight a Squadron.
+
+The side that you will fight for: you may select German Air Service or
+Royal Flying Corps.
+
+The number of aircraft in your flight group: you may select up to four
+aircraft.
+
+The type of aircraft in your flight group: you will only be able to select
+aircraft available to your selected alliance.
+
+The type of ammo used: you may select between regular and incendiary.
+
+The formation of your flight group: depending upon the number of aircraft
+in your flight group, you may choose any of the same fucking formations
+that I have already typed three times! (or was it two?)
+
+Time: you may select between daytime, dawn, dusk, and night.
+
+Wind and Sky: as above.
+
+pressing accept will take you to the Mission Assignment screen.
+
+                      THE MISSION ASSIGNMENT SCREEN:
+
+For all missions except Dogfight a Famous Ace, you will recieve all data
+regarding your upcoming mission from the Mission Assignment screen. From
+the Mission Assignment screen, you will receive the following information:
+
+The date: the date of the current mission.
+
+Map reference: there are 5 off line maps (I DON'T HAVE THEM!!!) used for
+navigation in Red Baron. Each mission will require you to use a specific
+map. The name of the map needed is listed below the date.
+
+Situation: supplies you with any information available on your current
+mission. This will include your orders and any specific goal that you are
+to achieve.
+
+Mission Plan: the mission plan lists the recommended sequence to carry out
+your mission. This includes necessary map co-ordinates of your starting
+point, your flight path, and where to engage enemies.
+
+If you are following a flight leader, he will follow the mission plan
+exactly as specified. However, if you are the flight leader, you may come
+up with your own mission plan.
+
+Weather: gives you a description of the weather conditions in the area
+where you mission will be carried out.
+
+Time: describes the time of day when the mission begins.
+
+Buttons: Flight Assignments goes to the Flight Assignments screen. Begin
+Mission will start your mission. Cancel returns you to the main menu.
+
+                      THE FLIGHT ASSIGNMENT SCREEN:
+
+Available from within the Mission Assignment screen, the Flight Assignemnt
+screen gives you a complete breakdown of the settings in your flight
+group. You can change settings for formation, total aircraft in flight,
+your aircraft and ammo. Along with the graphical representation of your
+currently selected formation, you will receive a listing of the position
+for all pilots in your flight. This will indicate the flight leader (this
+will always be you in Fly Single Mission) as well as the skill levels of
+the other pilots. The pilots, and their skill levels, that are assigned to
+fly with you are based upon the historical context and random generation
+of the mission you are flying. This will change with each mission you fly.
+You may also find that you are sometimes assigned an ace to fly as part of
+your flight group. This is dependent upon the mission type, the time that
+it occurs and the known locations of the individual aces at the time.
+
+Pressing Begin Mission will enter the simulation.
+
+Pressing Realism Panel will bring up the realism panel.
+
+Pressing Mission Assignment will take you back to the Mission Assignment
+screen.
+
+                               NAVIGATION:
+
+Once you have your orders, you'll be required to navigate your way through
+the world. You will be required to find an enemy on many missions, and to
+find your way back to your own aerodrome. To navigate, you will use one of
+the 5 maps supplied with Red Baron. Use the compass to fly on your desired
+heading. To locate yourself on the map, watch the natural landmarks below.
+
+On the realism panel, you may turn realistic naviagtion off. When off, the
+current sector you are in is displayed on the screen. This will make
+navigation much simpler because you will always know where you are.
+
+How to Fly to a Desired Location
+On some missions you will start in the air near the enemy. On these
+missions, you will not be required to navigate to find the enemy aircraft.
+They will be within visual range. On escort missions, you will not need to
+navigate (unless the aircraft you are escorting are shot down, and you
+must find your way back to your home aerodrome). You will only need to
+follow the aircraft that you are escorting.
+
+However, on some missions you will start out on the ground at your
+aerodrome and will be required to fly to a specified sector to find the
+enemy. On these missions, the Mission Assignment screen will tell you on
+what heading you must fly in order to reach the sector. It will also tell
+you how far away your destination is.
+
+The abbreviations NNE, ENE, ESE, SSE, SSW, WSW, WNW, and NNW do not appear
+on your compass. You may still fly in these directions. For example, if
+your mission plan instructs you to fly NNE, then line up you aircraft so
+that the compass heading is halfway between N and NE. As you make your way
+through the sector, you should keep an eye on the map and watch natural
+landmarks below. These serve as checkpoints to let you know you're going
+in the right direction and are not off course.
+
+You need not always fly just by compass. Sometimes it's easier to fly by
+following a river, a road, or a rail-line.
+
+If you get lost, the first thing you should try to do  is to try to
+determine your present location by looking at the ground below and
+matching up the landmarks against the map. Large, obvious bends in rivers,
+bends in the front, as well as landmarks like cities and aerodromes can be
+used to place your location on the map.
+
+If you still can't determine your location, find the front (which is
+generally easy), and fly to your side of the lines. Land at the first
+friendly aerodrome that you find. As a last resort, you may land in a
+field on your side of the lines.
+
+                           ENDING THE MISSION:
+
+QUITTING
+You may quit at any time during your mission as long as your aircraft is
+not fatally damaged and you are not near an enemy. However, you will
+receive more points for landing at your aerodrome. When your mission is
+complete, a message will be displayed asking you if you want to quit. You
+may quit without penalty, however, IF YOU QUIT BEFORE THE MISSION IS
+COMPLETE, YOU'LL LEAVE ANY FRIENDLY AIRCRAFT AND BALLOONS AT RISK!
+
+ENDINGS
+If you crash, you may either walk away with no injuries, end up in a
+hospital, or be killed, depending upon the severity of the crash. If you
+are hospitalized, you will remain there until you recover from your
+injuries. If you land or crash (and survive) in enemy territory, you may
+end up in an enemy prisoner of war camp.
+
+MISSION REVIEW
+Following every mission will be the Mission Review screen. On it you will
+see:
+-A text description with the results of your mission.
+-Your mission score.
+-How many aircraft from your flight were lost.
+-How many victories (aircraft, balloons, and Zepplins) that you shot down
+ personally, and how many your squadron shot down.
+
+SCORING
+Scoring in Red Baron is based upon a number of different factors:
+-Successful completion of your mission.
+-Points for shooting down enemy aircraft and balloons. Zepplins are worth
+ a lot of points.
+-Lose points for aircraft in your flight that are shot down.
+-Bonus points for landing at your own aerodrome upon completion of your
+ mission.
+-Your score is multiplied by the score factor, specified in the realism
+ panel.
+
+In any of the missions available under Fly Single Mission, your score will
+determine your standing in the Best Missions listing. In Career mode, your
+score has a great impact upon your ability to advance in rank.
+
+BOARD OF INQUIRY
+If you screw up and shoot down a friendly aircraft during your mission,
+you'll come before the board of inquiry.
+
+Going before the Board of Inquiry during Fly Single Mission will be
+reflected in your score. In Career mode, the penalties are much more
+severe. While playing a career, the third visit to the Board will result
+in stripping of your wings and permanent grounding.
+
+                               CAREER PLAY:
+
+The most challenging game play option is to fly an entire career as either
+a German pilot or a British pilot. You will enlist in either the Royal
+Flying Corps or the German Air Service as a fighter pilot. Your career
+will start in Dec 1915, carry you through the Fokker Scourge when
+Eindeckers ruled the skies, and through the end of the war on Nov 10,
+1918.
+
+As your career progresses, you'll see the advantage swing back and forth
+between the German and Allied pilots as new aircraft are introduced. You
+will have a chance to fly during Bloody April of 1917 when the Albatross
+D.III swept the allies from the air, and in the summer of 1917 to see the
+allies regain the advantage with the S.E. 5 and the Sopwith Camel.
+
+As a fighter pilot, you will fly many different missions, including
+attacks against balloons, Zepplins, and recon aircraft. You'll also escort
+missions of bombers and recon planes and dogfight against enemy fighters.
+Your total victories will increase when you shoot down enemy balloons,
+Zepelins, and airplanes.
+
+Of course you greatest challenges will come when you face off against the
+famous aces like Mick Mannock, Rene Fock, and Rittmeister Richtofen. These
+aces are extremely good and they are trying to add you to their total
+victories.
+
+As your victories mount, you will receive promotions in rank. As a British
+pilot you will start out as a 2nd Lietenant, and may be promoted to 1st
+Lieutenant and finally Captain. As a German flyer, you will start with the
+rank of Leutnant, and may be promoted to Oberleutnant, and finally
+Rittmeister. With greater rank comes more privileges.
+
+As a 1st Lietenant (or Oberleutnant), you will become a flight leader.
+When you start your career, you will not be the flight leader and will
+have to obey your flight leader's orders and follow him in formation. As a
+flight leader, your flight will follow you and your orders. However, your
+flight will size will be small: only you and one other fighter.
+
+When you are promoted to Captain, you will be given command of flights of
+up to four aircraft. You will also be given a personal aircraft of your
+own choice, which you may paint.
+
+As your reputation grows, you will have a chance to fly with better
+squadrons. If you are extremely successful, you'll receive invitations
+from the most elite squadrons of the war, including the Storks or the
+Jagdgeschwader.
+
+You will be awarded medals in recognition of your bravery and gallantry.
+As an allied pilot, the most prestigious award to try for is the Victoria
+Cross. As a German, you will try to attain the order for Merit, or "Blue
+Max". even more difficult to attain is the Red Eagle Order, only awarded
+to Richtofen.
+
+When you finish your career by surviving to the end of the war, your final
+standing will be displayed. You could end up as a respected ace or as a
+crop duster. The ultimate challenge is to end the war with more victories
+than the historic totals of the famous aces. If you do this, you'll be the
+war's "Ace of Ace's". The highest scoring allied ace was the Frenchman
+Rene Fonck with 75 kills and the highest German was the Red Baron with 80
+kills.
+
+                               CAREER MENU:
+
+START A CAREER
+You will be asked to select your alliance and to enter the name of your
+pilot. The career roster will track 15 pilot careers at once. If it is
+full, you will be asked to delete another pilot from the roster or to
+cancel.
+
+Once you've chosen you alliance and your name, you'll be presented with a
+synopsis. You may change at what time during the war you will start.
+options: early, middle, and late. You may also change your alliance or
+your name. Press accept to being your career. Good fucking luck!
+
+CONTINUE A CAREER
+Select which pilot you wish to continue with. Pressing view while a pilot
+is selected will display the pilot's record.
+
+VIEW TOP ACES
+Displays the top ten career perfomances to date, ordered by number of
+victories. Pressing view while a top ace is selected will display their
+pilot record.
+
+RETURN TO MAIN
+Cancels the career menu, returning to the main menu.
+
+                             AERODROME MENU:
+
+All career play is based from the aerodrome menu. Between missions, you
+will return to the aerodrome menu. From this point you will make the
+decisions that will direct your career.
+
+FLY NEXT MISSION
+Pressing the Fly Next Mission, you will be given your next assignment and
+will fly the mission. These activities are described in the Fly Single
+Mission section. If you end up in the hospital or prison, time that could
+be used to score victories will be lost. You can lose up to six months if
+you are hospitalized or jailed.
+
+Career mode has a few options that are not available in Fly Single
+Mission. The first is that you may receive medals for your performane.
+Along with honors, you will also be held responsible for your errors. You
+may come before the Board after a mission if you've committed some error.
+The first time you come before the Board, you'll be given a mild
+reprimand. If you commit the same offense a second time, you'll be
+reprimanded strongly. And if you commit the same offense three times, the
+board will strip you wings and you'll be grounded forever!
+
+SQUADRON INFO
+Pressing Squadron Info will show you your current station, the date and
+the famous aces flying with the squadron.
+
+MAP OF THE FRONT
+Shows the Western Front and the location of the primary Aerodromes. You
+may highlight each earodrome by pressing the left or right arrows located
+on the center, right hand side of the screen. Highlighting an aerodrome
+will display its name and list any squadrons or aces stationed there at
+the current time.
+
+REQUEST TRANSFER
+You may transfer to squadrons stationed at other aerodromes. This will
+give you an opportunity to fly with other aces in different regoins of the
+front. You'll also be able to face off against different enemy aces on
+your missions depending on which region your in. As you progress in rank
+you'll have the opportunity to transfer to better squadrons.
+
+When you transfer, the map of the western front will be displayed, and it
+will show you where your new squadron is stationed. Once transferred,
+you'll have to remain at your new aerodrome for at least four months
+before transferring again.
+
+PERSONAL AIRCRAFT
+After reaching the rank of Captain or Rittmeister, you will be given the
+use of a personal aircraft. On the Personal Aircraft screen you may view
+your plane, request a new aircraft and paint your plane. The arrow keys on
+the bottom left of the screen allow you to change the view of your
+aircraft. You can zoom the camera in/out and rotate it left/right.
+
+Press Paint Aircraft will bring up the painting menu. You may paint two
+sections of your aircraft: wings and fuselage. Select which part of your
+plane you wish to paint and then the color you wish to paint it.
+
+Pressing Request new Aircraft will bring up the Select Aircraft screen.
+Your choices of aircraft will be dependent upon the side you are flying on
+and the progression of the war. As time progresses and the design
+improves, you will be allowed chose more sophisticated craft.
+Note: you must use your current aircraft for at least three months before
+requesting another!
+
+Press Continue to go back to the Aerodrome menu.
+
+VIEW PILOT RECORD
+Pressing  View Pilot Record will display the current record for your
+pilot. It will display the name and rank of the pilot, what squadron he is
+assigned to, which aerodrome he's stationed at and which aircraft he's
+flying. In addition, it will display his total kills. Also displayed is
+the career score, which is the accumulation of all mission scores, and all
+medals that have been received.
+
+BACKUP CAREER
+If you have a pilot who is doing very well, you may want to backup his
+status in case he's shot down. After pressing Backup Career, enter the
+name under which you wish to backup the career. If the career roster is
+full, you will be prompted to delete another pilot or to cancel. This
+backup career may be restored from the Continue a Career option in the
+Career Menu.
+Note: a pilot's most current career progress is automatically saved upon
+exiting the aerodrome menu. Backup Career is used to save a serarate
+version of the current career for later restoring. This is useful for
+undoing a mistake you've made in a mission. If you die or perform that
+damages your career, you will have the option restoring the backup career
+and replaying the mission until you are satisfied with the outcome.
+
+RETURN TO MAIN
+Pressing Return to Main will save your current pilot status and return to
+the main menu. You may later restore this career by pressing Continue a
+Career from the career menu and selecting the pilot on the career roster.
+
+                            CAREER SEQUENCES:
+
+There are numerous sequences that can occur between missions while playing
+in career mode. You may be promoted, alerted to a new aircraft, moved to
+new aerodromes, transferred to another squadron or challenged by a famous
+ace.
+
+RANK PROMOTIONS
+As your score increases, you will be promoted in rank. This was all
+explained before so go read it!
+
+NEW AIRCRAFT INTRODUCTIONS
+As new aircraft are introduced, you will be notified. If you have the rank
+of Captain, you will be given a chance to exchange your current plane for
+the new one.
+
+MOVING TO NEW AERODROMES
+From time to time, your squadron may be ordered to move to a different
+part of the front. You will be informed of your new station and aerodrome.
+
+SQUADRON TRANSFERS
+In addition to being able to transfer from the Aerodrome menu, you may
+receive special invitations to transfer. Some of the invitations will be
+for a temporary transfer and some will be for an indefinate period. If you
+are transferred for a temporary tour of duty, you'll be transferred to
+your official sqaudron when the tour is up.
+
+CHALLENGES BY FAMOUS ACES
+Occaisonally, famous aces would issue challenges to enemy aces. If you're
+doing exceptionally well, you may receive a challenge by a famous ace to
+meet at a certain place, at a specified time and altitude to dogfight. You
+may choose to ignore these challenges.
+
+END OF CAREER
+Your career will end with either your pilot being killed in action or
+surviving to the end of the war (Nov. 10, 1918). If your pilot survives to
+the end of the war, his final standing in history will be displayed.
+
+                             MISSION RECORD:
+
+Perhaps one of the most exciting elements of Red Baron is th Mission
+Record feature (joy!). With the mission recorder, you can record an entire
+mission, save it to disk and then replay the saved mission. However, the
+ability to save and replay a mission isn't what makes this feature so
+unique. Mission Record will also allow you to change the saved mission.
+You can alter the views, watch the action from nearly any angle and enter
+the simulation again from any point in playback. The changes you make can
+then be saved, played back and modified even further. You essentially
+become actor, producer, and director of your own WWI aerial dogfights. To
+help spread the news of your talent, you can copy the recorded missions to
+floppy disk or transfer them by modem to your friends who have Red Baron.
+They can load the files and admire your handiwork first hand.
+
+LIGHTS, CAMERA, ACTION!
+The first step in using the Mission Record feature is to tell the game to
+record your missions as you play them. Each time you enter the simulation,
+Red Baron will ask you if you wish to record the mission. Saying yes will
+automatically start the mission record feature. It operates silently and
+patiently in the background while you storm the skies. When your mission
+is over, you will be asked to name and save the recorded mission.
+
+-Naming the file and pressing Save will automatically save the mission in
+ a sub-directory called TAPES.
+-Pressing Cancel will abort the mission save, erasing the recorded mission
+ and exiting the simulation.
+
+IMPORTANT! THE MISSION NAME THAT YOU CHOOSE CAN BE NO LONGER THAN 8
+CHARACTERS. If you type a name longer than 8 characters, the computer will
+cut off the additional characters, saving only the first 8.
+
+INTO THE EDITING ROOM
+Once you have recorded and saved a mission, select Mission Recorder from
+the main menu. This will activate the playback mode of Red Baron. You will
+be shown a menu of all saved missions. Select the mission tape you wish to
+playback and press Load. The tape will load and the Mission Record control
+panel will be displayed.
+
+  (was a gfx of the panel here, but I can't do it in ansi so you get to
+   figure it out for yourself!)
+
+MISSION PLAYBACK WINDOW
+The Mission Playback Window is where playback of your loaded missions is
+displayed. It will playback the loaded mission exactly as you originally
+played it. The playback window has two modes of display, Edit and Full
+Screen.
+
+EDIT displays the Mission Playback Window with the Mission Record
+controls covering the bottom half of the screen. Use this mode to edit and
+view.
+
+FULL SCREEN displays the Mission Playback Window without the Mission
+Record controls. You will see a full screen image of your mission as it
+plays. Use this mode for viewing only.
+
+TO SWITCH BETWEEN EDIT AND FULL SCREEN MODES, PRESS THE ESC KEY.
+
+PLAYBACK CONTROLS
+(|<<  box  >  >>|)
+The playback controls operate like any VCR. You can fast-forward, rewind,
+stop, and play. It should be noted that while you can fast-forward
+incrementally, rewind will only rewind the tape to the beginning. You
+cannot partially rewind a tape (THAT'S LAME!).
+
+LOCATION COUNTER
+(box with numbers in it)
+Operating just like a VCR counter, the Location Counter keeps a running
+mark of your playback position.
+
+LOCATION SLIDER
+(line with a button somewhere on it)
+The location slider works in two ways.
+
+  It will act as a visual marker to display movement through the playing
+  tape.
+  It will act as a visual fast-forward slider, allowing you to pick the
+  location to fast-forward to.
+
+To use the location slider to fast-forward, move the slider bar to the
+desired distance into the tape. When you release the slider bar, the
+Mission Recorder will display an on-screen countdown as it fast-forwards
+to the specified point. NOTE: the slider cannot be moved backwards. You
+must use the rewind command.
+
+ACTIVE CAMERA CONTROLS
+The Active Camera Controls allow you to change the location of the
+playback camera.
+
+  Under the YOURS section, you can move the camera between your cockpit
+  and your plane's external view.
+  Under the OTHERS section, you can move the camera between other plane's
+  external views and an independent world camera.
+
+The options of SWITCH and INDEPENDENT become active when you have switched
+you camera viewpoint to EXTERNAL. Continually pressing SWITCH will cycle
+you through all the external views of all enemy aircraft in the recorded
+mission. Pressing INDEPENDENT will place the camera free from all aircraft
+movement to be completely controlled by the Movement Controls.
+
+CAMERA MOVEMENT CONTROLS
+Once the Active Camera has been chosen, the viewpoint can be fine tuned by
+using the Camera Movement Controls. The two arrow pads operate slightly
+differently depending upon where your Active Camera is positioned.
+
+ACTIVE CAMERA INSIDE YOUR COCKPIT
+COCKPIT allows you to look out the forward, left, right, and back cockpit
+views. EXTERNAL allows you to switch to forward, left, right, and back
+outside views of your plane.
+
+ACTIVE CAMERA OUTSIDE YOUR COCKPIT
+MOVE allows you to zoom the camera in/out. IN INDEPENDENT mode, it also
+shifts the camera left and right. ROTATE allows you to rotate the camera
+over, under, and around.
+
+TAPES
+Pressing the Tapes button will bring up the tapes control panel.
+MODE: switches between Director and View Only modes.
+LOAD NEW TAPE: brings up the tape menu for loading tapes.
+SAVE CURRENT TAPE: brings up the tape menu for saving tapes.
+DELETE TAPES: bring up the tape menu, allowing you to delete recorded
+missions. Selecting a mission and pressing Delete will delete the mission
+from the VCR subdirectory.
+DONE: closes the tapes control panel.
+
+MODE
+The Mission Recorder has two modes of operation, Director and View Only.
+Director mode enables the "save changes" option of playback. While in
+director mode, all changes made during playback will be stored in memory.
+Upon rewinding, loading a new tape, or quitting, the Mission Recorder will
+display a prompt asking if you wish to save the changes made to the
+original tape. View Only mode disables the "save changes" option.
+
+ENTER SIMULATION
+Pressing the Enter Simulation button at any point in during playback will
+place you back into the simulation. You can replay the mission, making
+whatever changes you desire. When the mission is over, you will be
+presented with the options of seeing a Mission Review based upon the
+changes made or returning to the Mission Recorder. IMPORTANT: changes made
+after entering the simulation will not be saved if you are operating in
+View Only mode.
+
+EXIT
+  Quits the Mission Recorder, returning you to the Main Menu. If you are
+  operating in Director mode and have made changes that haven't been saved,
+  you will be asked to save or discard your modifications.

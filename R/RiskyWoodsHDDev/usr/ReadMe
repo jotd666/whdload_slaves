@@ -1,0 +1,121 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Risky Woods" © 1992 Dinamic.
+
+ Requirements:
+ -------------
+ This install requires WHDLoad and RawDIC to be in the path.
+ These programs can be found in the WHDLoad package.
+ To install from a different drive than DF0: select installation mode Expert.
+
+ The installed game requires 0.5 MB ChipMem (+1.2 MB OtherMem for preload).
+
+ It can be quit by pressing F10 (key can be changed with Tooltype "QuitKey=").
+
+
+ Features:
+ ---------
+ - Full load from HD (real files!)
+ - Protection removed (manual check)
+ - Interrupts fixed
+ - DMA wait in replayer and sample player fixed (x4)
+ - Memory check disabled
+ - Blitter waits added (x8, 68010+ only)
+ - High score load/save (saving disabled if any trainers used)
+ - Keyboard routine rewritten
+ - ButtonWait support for intro screen
+ - Trainer options added
+ - NewIcon/ROMIcon (created by JHZ)
+ - Source code included
+ - Quit option that works on 68000 machines (default key is 'F10')
+ - CD32 joypad controls
+
+ Another old patch which has now been redone. There were a few
+ bug reports for the old patch, I checked the game, noticed that
+ there are files tables on both disks, coded a RawDIC imager and
+ made a new patch from scratch. Game code is fine except for
+ a lot of buggy CIA waits which for example could cause sound problems,
+ these should now all be fixed.
+
+ I have added quite a few trainer options which can be selected in
+ WHDLoad's splash window. If in-game keys are enabled the following
+ extra keys can be used:
+
+ E: refresh energy
+ A: add money
+ H: refresh time
+ T: toggle unlimited time
+ F: get fire ball for 10 seconds
+ I: invincibility for 10 seconds
+ N: skip level
+ 
+ Please note that high-score saving is disabled if any
+ trainer options are used.
+
+
+ Enjoy the game from HD.
+ Sting, 07-Dec-2017
+
+
+
+ Greetings to all in Scarab and Scoopex, the WHDLoad team, PMC,
+ Musashi5150, Skan, Slummy, Loaderror, Frequent, Wayne Kerr, Mr.Spiv,
+ Alpha One, CFou!, Paradroid, Audiomonster, Vention, Slammer
+ Axis, Tim, Triace, Britelite, Buzzer and all the other usual suspects. :)
+
+ Special greetings to all Golf MK1 fans worldwide and all classic
+ car owners/drivers. :)
+
+ Extra greetings to the usual suspects on #amigascne, see you all at
+ Revision 2018! :)
+
+ CD32 joypad controls:
+ 
+ - blue/second button: jump (if CUSTOM2=1)
+ - play: pause (P)
+ - reverse+forward: quit current game (ESC)
+ - forward+yellow: skip level (if relevant trainer option is set)
+ - forward+green: refresh energy (if relevant trainer option is set)
+ - reverse+forward+play: quit to workbench (during game & menu)
+ - during menu: reverse: toggle music on/off (F1)
+ - during menu: forward: toggle sfx on/off (F2)
+ 
+ History:
+ --------
+ version 1.2 (09.08.2019) done by JOTD:
+ - added CD32 controls for pause/quit
+ - added jump with second/blue button (CUSTOM2=1)
+ 
+ version 1.1 (07.12.2017) done by StingRay:
+ - patch redone
+ - blitter waits added
+ - sound problems fixed
+ - 68000 quitkey support
+ - trainer options added
+ - source code included
+
+ version 1.0 (06.10.2000) done by Bored Seal:
+ - initial release
+
+ Contact:
+ --------
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, EXPCHIP, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+

@@ -1,0 +1,106 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This patch applies to "Bubble Bobble" © 1988 Firebird - 1 disk.
+ 
+ Thanks to Mad-Matt, Frank and the SPS suppliers for the originals!
+ Supported versions: SPS 1342, 1343, 1344 and 2518.
+
+REQUIREMENTS:
+- Slave requires WHDLoad V17+.
+- Game requires 512k chip mem (+0.4Mb other memory for preload option)
+
+Version 1.3 (29-Mar-2020) done by JOTD:
+- fixed blank display after taking bomb bonus (issue #0003908)
+- fixed game speed, was too fast on some CPUs (issue #0002255)
+  (this was exactly the same issue as in LedStorm, programmed by the same guy!)
+- fixed fade-in/fade-out speed 
+
+Version 1.2 (28-Feb-2019): done by JOTD
+- CUSTOM2=1 changes up to 2nd/blue button for jump (both players)
+- CD32 buttons support: play: pause (F1), reverse+forward: quit (F10)
+- adapted to whdload v17
+- source code included
+
+Version 1.1 (15-Jul-2007)
+- Now supports 4 versions
+- Completely rewrote slave, no longer requires OSEmu
+- Now works on WHDLoad 16+
+- All files can be packed to save space (FImp, Propack etc)
+- Trainer added: 
+   Del - Toggle infinite lives on/off (set Custom1=1 to turn on)
+    F9 - Jump to the final level
+  Help - Skip the current level
+- Stack relocated to fast memory
+- Fire button will skip the "Now it is the beginning of a fantastic story"
+  intro
+  
+Version 1.0 (29-Apr-2001)
+- Full load from HD
+- 2 versions supported
+- Copy protection removed
+- Loads and saves high scores
+- Buttonwait tooltype added for title picture
+- RomIcon, NewIcon and OS3.5 Colour Icon (created by Frank!)
+- Quit option (default key is 'F10')
+
+
+For those of you that are curious, here are the differences I have found
+between the 4 known versions:
+
+SPS 1342: No credits on title screen, insufficient memory allocated for 
+          "asprites.spr" file, buggy end of game guardian (16x16 blocks 
+          sometimes vanish when you hit him and the final bubble he is
+          trapped in is sometimes corrupt), slow firing bubble speed,
+          music plays faster, credits screen replaced, Rob Northen copylock 
+          contained in "snd" file
+
+The other 3 versions are basically the same and have these features:
+          Credits appear on the title screen, bubbles fire faster, end of 
+          game guardian works correctly, slower music, Protec copy 
+          protection contained in the executable
+
+SPS 1343: Fully encrypted file (Rob Northen copylock, Protec disabled)
+SPS 1344: No copy-protection (Protec disabled)
+SPS 2518: Protec copy protection is checked
+
+I would guess that SPS 1342 was the first version released, then a few bugs
+were fixed and the copylock replaced with Protec copy-protection for SPS 
+2518. SPS 1343 looks like a re-release with the best protection of all, and
+then another final release containing no copy-protection for SPS 1344. Phew!
+
+If you are upgrading from the old install, it is recommended you re-install
+the game completely since the old script copied the executable from one
+version.
+
+It is highly recommended to play this game in NTSC mode as it is a lot
+faster and smoother!
+
+Greetings to Frank for the nice icons, Mad-Matt for constant nagging to
+finish this release :) all Action members, Wepl and the entire WHDLoad
+team!
+
+
+Codetapper/Action (15-Jul-2007)
+
+
+         Bug report form, full WHDLoad package and other installs:
+                          http://www.whdload.de/
+
+            ________  ________  ________  ____  ________  ________
+           _)       \_)       \_)       \_)   \_)       \_)       \
+   __ ___ /___/     /   /_____/\  /     /     /   /     /   /     /
+  /_//__// \___    /   /     /CT\/     /     /   /     /   /     /
+        /___/     /___      /   /     /_____/___      /___/     /___ __
+            \____/    \____/    \____/          \____/    \____//__//_/
+
+
+           Visit the Action website for more of our productions:
+                           http://zap.to/action/

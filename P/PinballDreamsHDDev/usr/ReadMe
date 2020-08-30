@@ -1,0 +1,159 @@
+
+
+   THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER
+   EXPRESS OR IMPLIED, STATUTORY OR OTHERWISE.
+   THE ENTIRE RISK AS TO USE, RESULTS AND PERFORMANCE OF THE PACKAGE IS
+   ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE TO BE DEFECTIVE, YOU
+   ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING, REPAIR OR OTHER
+   REMEDIATION.
+   UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY
+   DAMAGE CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE
+   OWNER OR A THIRD PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF
+   DAMAGE.
+
+   This install applies to Pinball Dreams, ©1992 Digital Illusions
+
+   That install requires WHDLoad and RawDIC to be in the path.
+   Both can be found in the WHDLoad package.
+   To install from a different drive than DF0: select Expert as
+   installation mode.
+
+   You need 0.5 MB ChipMem and 1.1 MB OtherMem.
+   You can quit the game by pressing F10 (key can be changed with
+   Tooltype "QuitKey=").
+
+   if you have problems with this installation please try first to get
+   a newer version of this install from 
+      http://www.whdload.de
+   if that doesn't help try some Tooltypes like NOCACHE, NOAUTOVEC,
+   NOVBRMOVE, NOMMU, PAL or NTSC. if that also doesn't help inform the
+   author via the Bug-Report-Form
+   
+   for full WHDLoad package and other installs refer to:
+      http://www.whdload.de
+   or aminet:dev/misc/whdload#?
+   and   aminet:game/patch/
+
+
+Supported versions:
+
+2 Disk version, Initial original release PAL
+2 Disk version, Amiga A12oo Zool Pack release
+2 Disk version, Dreams & Fantasies pack release
+2 Disk version, Initial original release NTSC
+Thanks to John Regent, Bert Jahn and Quietust for the various versions
+
+Slave requires WHDLOAD V17+.
+Game requires 1.3 MB Chip Mem (+ 2.3 other memory for preload option)
+
+History:
+
+Version 1.7 (12.07.2020): done by JOTD
+
+- joystick controls only worked with joypads, not plain joysticks (issue #0004704)
+
+Version 1.6 (24.06.2020): done by JOTD
+
+- allow to play with only 2 classical joysticks (if no CD32 joypad is available)
+- fixed erratic joypad readings. This was done by re-enabling vertical blank just
+  to read joypad at this very moment (and not when the game originally read the controls)
+- fixed intro music replay (damn empty dbf soundtracker replay loops x6)
+
+Version 1.5 (02.08.2019): done by JOTD
+
+- fixed lockup with black screen when quitting table (issue #0002814)
+- fixed install script (issue #0004160)
+
+Version 1.4-B (17.07.2019): done by JOTD
+
+- fixed issue #0004156 (installation directory error)
+
+Version 1.4 (13.07.2019): done by JOTD
+- CD32 joypad support / full keyboardless controls
+- CUSTOM1=1 skips introduction
+- adapted to whdload 17
+- 68000 quitkey
+- lmb or joyfire can now be used to skip intro credits
+- resourced/merged from v1.1 source & v1.3 binary (Galahad can't find 1.3 duh...)
+- removed "must be registered" restriction (well, not really useful...)
+- source file incuded
+
+Version 1.3 (2003): done by Galahad
+- NTSC version now supported
+- Installer and nice icons by Frank
+- Slave optimised further
+- Registered users only
+- Quit option is 'F10'
+
+Version 1.1: done by Galahad
+- System Friendly disk Imager used
+- 2 more versions supported (NTSC version to follow)
+- All REAL files located in data directory
+
+Version 1.0: done by Galahad
+- Full load from Hard drive (REAL files!)
+- Lame-o-Protect removed (Custom TSL MFM format)
+- Load/Save Hiscores to Hard drive
+- Decrunch routine relocated to fast ram
+- Quit option is 'Del'
+
+
+EXTRA NOTES:
+
+Special thank you to Quietust who sprang out of nowhere to offer his NTSC
+version.... I've only been waiting two years!!! :)
+
+I am not aware of any other versions of Pinball Dreams that need supporting,
+if you know otherwise, let me know.
+ 
+Enjoy this modern classic.
+
+Regards, Galahad, JOTD, Bert, Frank, John and Quietust
+
+
+CD³² joypad controls: 
+
+Red           - start game / add a player (numerical enter)
+Down		  - launch ball               (return)
+Rev/Forward   - left/right flippers       (left/right amiga/shift/alt keys)
+Up            - nudge table upwards       (space bar)
+Play		  - pause game                (p)
+Green         - quit                      (ESC)
+Yellow        - confirm quit              (Y)
+Blue          - right flipper
+Left          - left flipper
+
+menu options:
+- red: ignition
+- blue: steel wheel
+- yellow: beat box
+- green: nightmare
+
+If CUSTOM2 is set the controls try to use only standard joystick (port 1) inputs so:
+
+Red           - start game / add a player (numerical enter)
+Down		  - launch ball               (return)
+Up            - nudge table upwards       (space bar)
+Right         - right flipper
+Left          - left flipper
+
+control keys are achieved through joystick (port 0)
+
+Joy2 button 1  - escape
+Joy2 left      - Y
+Joy2 right     - N
+
+menu options:
+- left: ignition
+- right: steel wheel
+- down: beat box
+- up: nightmare
+
+Of course, that setting isn't practical with a joystick because you cannot use left+right at the same time, but
+the person who asked for this feature wants to create an arcade cabinet so it's not a problem activating left+right
+
+to enter hiscore, you need keyboard. If you don't have a keyboard, you can
+still skip this part by entering "Y" (yellow), "P" (play) or "space" (up). It won't
+be your initials, okay, just change your name to Yander Price and it will be fine.
+
+(with CUSTOM2 set, use the joystick in port 0 left/right to enter Y or N)

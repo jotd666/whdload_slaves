@@ -1,0 +1,9 @@
+PROGNAME = 4dsportsboxing
+JSTLOADER = $(PROGNAME)HD
+WHDLOADER = $(PROGNAME).slave
+SOURCE = $(PROGNAME)HD.asm
+
+all : $(WHDLOADER)
+
+$(WHDLOADER) : $(SOURCE)
+	basm $(SOURCE)

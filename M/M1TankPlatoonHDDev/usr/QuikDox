@@ -1,0 +1,125 @@
+                        M-1 TANK PLATOON KEYBOARD COMMANDS
+
+Typed in by THE MIGHTY DRUIDS. Edited by PARASITE.
+
+
+KEY COMMANDS:
+
+VIEWPOINT CONTROLS
+F-1   TC unbuttoned
+F-1   TC buttoned
+F-3   Gunner
+F-4   Driver
+F-9   Outside Tank
+
+Shift F-9  outside any - must be on mapboard
+
+OP AND PLATOON LEADER CONTROLS
+F-10        OP to next Tank - works from all viewpoints
+Shift F-10  LDR to OP tank          "          "           "
+
+STANDARD VEHICLE CONTROLS
+
+KEY
+1           Sabot (AP) Ammo          gunnery (tiny on TC buttoned)
+2           Heat Ammo                "                          "
+3           Main/Coax                "                          "
+4           Computer (normal)/ Battlesight
+5           Input Battlesight range
+Shift 0-9   Manual range input
+7           Magnify vision
+8           Night vision
+9           Turn to this facing
+=           Smoke generator on
+-           Smoke generator off
+Backspace   Fire Smoke grenades
+
+TC CONTROLS
+Up cursor        View/Aim up
+Down cursor      View/Aim down
+Left cursor      View/Aim Left
+Right cursor     View/Aim Right
+Return           Fire machine gun
+
+GUNNER CONTROLS
+Up cursor        Elevate main gun/Coax
+Down Cursor      Depress Main gun/Coax
+Left Cursor      Move turrent left
+Right cursor     Move turrent right
+Space bar        Fire Laser rangefinder
+return           Fire gun or coax
+
+DRIVER CONTROLS
+Up cursor        Move forward
+Down cursor      Move back
+Left cursor      Turn left
+Right cursor     Turn Right
+Return           Brake
+
+COMMANDS:
+
+VEHICLE ORDERS
+A                Advance fast
+S                Advance Slow
+H                Halt
+B                Backup
+L                Left turn
+R                Right turn
+M                Move To
+T                Turn to
+F                Fire at will
+C                Cease fire
+E                engage to front
+D                Engage to rear
+<,               Engage to left
+>.               Engage to right
++=               Smoke generator on
+-_               Smoke generator off
+
+PLATOON ORDERS
+A                Advance Fast
+S                Advance slow
+H                halt
+B                Backup
+L                left turn
+R                Right turn
+M                Move to
+T                Turn to
+F                Fire at will
+C                Cease fire
+Shift W          Form wedge
+Shift V          Form Vee
+Shift I          Form in line
+Shift C          form column
+Shift L          Form Echelon Left
+Shift R          Form Echelon Right
++=               Smoke generator on
+-_               Smoke generator off
+
+HQ RADIO NET
+
+KEY
+J                 A-10A Attack jet
+A                 AH-64A Attack helicoptor
+O                 OH-58D Observation helicoptor
+B                 107mm Mortor bombs
+S                 107mm smoke bombs
+H                 155mm HE shells
+W                 155mm WP Shells
+R                 MRLS 227mm rockets
+
+SIMULATION CONTROLS
+F-9               Outside Tank
+Shift F-9         Outside any
+Alt-M             Hade map objectives
+Alt-P             Pause
+Alt-A             Accelerated time
+Alt-B             Boss (hide game)
+Alt-Q             Quit
+Alt-D             Adjust detail
+
+MAPBOARD
+F-5               Mapboard
+F-6               Your Tank
+F-7               next Platoon
+F-8               Next Vehicle

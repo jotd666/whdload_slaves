@@ -1,0 +1,92 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Tin Toy Adventure" © 1996 Mutation Software - 2 disks. 
+ Thanks to Adrian Simpson for the original. You can also download 
+ the game from Back to the Roots: 
+ http://www.back2roots.org/Games/Files/Tin%20Toy%20Adventure
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ The installed program requires 2.0 MB ChipMem and 1.0 MB OtherMem.
+ Slave requires WHDLoad V17+.
+
+version 1.3-B (22.05.2020):
+- fixed installer script (issue #0004641)
+
+version 1.3 (09.05.2020):
+- support for Micro Series rerelease version (issue #0004618)
+
+version 1.2 (24.04.2020):
+- fixed 2 small mistakes that could crash the machine (issue #0004541), don't
+  use v1.1 (no problem seen in WinUAE, but 2 confirmed crashes on real machines)
+
+version 1.1 (21.04.2020) done by JOTD:
+- added joypad controls (pause, quit, levelskip). Fully playable with joypad only
+- added up for jump option
+- added trainer (infinite lives, invincibility, levelskip)
+- enabled level/section select without invincibility/infinite lives
+  (invincibility isn't very good to train oneself)
+- fixed level 2 interrupt (quitkey didn't work)
+- source code reworked and included
+
+version 1.0 (05.11.2000) done by Codetapper:
+- Full load from HD
+- Snoop bugs removed
+- Decruncher relocated to fast memory (you can decrunch the file TT if
+  you find loading is too slow for you!)
+- RomIcon, NewIcon and GlowIcon (created by me!)
+- Quit option (default key is '*' on keypad)
+
+JOYPAD CONTROLS:
+
+- blue/second button: jump (if CUSTOM2=1 is set)
+- play: pause/unpause
+- reverse+forward: quit current game
+- forward+yellow: skip to next level
+
+CHEAT MODE:
+- Press 'P' to pause the game and press the left mouse button and 'HELP' 
+  at the same time for infinite everything.  Now use the following keys:
+
+          'F1'-'F5'______________Skip to the corresponding level.
+          '1'-'4'____Skip to different sections of current level.
+
+Beware: at level 5, pressing '4' to get to the boss locks up the game.
+
+Some of you might say "Why a hard drive installer for this game when
+it already has one?". The original doesn't work with all hard drives,
+it forces you to install in one of 3 paths that it chooses, and it does 
+not quit. So I think it improves the original version enough to warrant 
+an install.
+
+Besides, since 2020 update, it has now joypad controls and possible jump
+mapped to second button/blue joypad button.
+
+Greetings to all Action members, my testing crew and the WHDLoad team!
+
+
+Codetapper/Action (05-Nov-2000)
+
+
+         Bug report form, full WHDLoad package and other installs:
+                          http://www.whdload.org/
+
+            ________  ________  ________  ____  ________  ________
+           _)       \_)       \_)       \_)   \_)       \_)       \
+   __ ___ /___/     /   /_____/\  /     /     /   /     /   /     /
+  /_//__// \___    /   /     /CT\/     /     /   /     /   /     /
+        /___/     /___      /   /     /_____/___      /___/     /___ __
+            \____/    \____/    \____/          \____/    \____//__//_/
+
+
+           Visit the Action website for more of our productions:
+                           http://zap.to/action/

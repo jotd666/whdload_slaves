@@ -151,7 +151,7 @@ _detect_controller_types:
 	rts
 		
 _joystick:
-	movem.l	d0-d1/a0,-(a7)	; put input 0 output in joy0
+	movem.l	d0/a0,-(a7)	; put input 0 output in joy0
 ;	moveq	#0,d0
 ;	bsr	_read_joystick_buttons
 
@@ -164,7 +164,7 @@ _joystick:
     lea	joy1(pc),a0
 	move.l	d0,(a0)		
 
-	movem.l	(a7)+,d0-d1/a0
+	movem.l	(a7)+,d0/a0
 
 	rts	
 

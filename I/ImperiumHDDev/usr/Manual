@@ -1,0 +1,2366 @@
+                             ====-====
+                                 !
+                                 !
+                             ====-==== M P E R I U M 
+
+                             from Electronic Arts
+
+
+   		           DOCUMENTATION MANUAL
+
+
+     ==================================================================
+
+
+				   TUTORIALS
+
+
+      =================================================================
+
+Page:4
+
+	You have just been elected as the leader of Earth's empire.  Your
+job is to lead the empire to pre-eminence in the galaxy by a careful
+combination of economic controls, diplomatic skill, and military action. 
+To help you there, are a group of subordinate characters, who become your
+ambassadors, fleet captains, and planetary leaders.  But watch out, they
+are your political enemies too!  All elements of the game are inter-
+connected, so success or failure in, say, economics, will heavily affect
+your empire's overall performance.  You have help in the shape of optional
+computer controlled intelligent advisers who can control parts of the
+game.  If you wish, you can put the computer in charge of the military,
+diplomatic or economic sides of the game, leaving you free to concentrate
+on one or two main areas.
+
+	o  Remain popular so that you win elections, and are not overthrown.
+	o  Learn the correct military strategies and tactics to defeat
+	   aggressive enemy empires that threaten your survival.
+	o  Keep your population happy by keeping down inflation, and
+	   ensuring a regular supply or commodities for them.
+	o  Encourage trade, so that your empire may become rich.
+	o  Make friends with other empires quickly, and enemies slowly,
+	   but remember Palmerston's maxim "we have no permanent friends
+	   and no permanent enemies."
+	o  Colonize enough planets to sustain the expansion of your empire.
+ 	o  Maintain supplies of the life-extending drug - Nostrum - to keep
+	   you and your favored henchmen alive while you achieve all the
+	   above.
+
+	Ultimately, you can win by surviving for a thousand years, or by
+conquering all the other empires.  The former is probably more difficult
+than the latter, so we would advise you to initially choose an aggressive
+strategy.
+	Imperium has been designed so that you can access all the data
+in the game and make all your decisions in the simplest way possible.
+Using a custom designed windowing system, Imperium is at your fingertips.
+Once you have learned the basic skills needed for controlling the game you
+
+Page:5
+
+will be free to explore it and make your own decisions.
+
+To help, this manual is divided up into three main sections:
+
+1.   A tutorial section for those people who want to play the game without
+	reading much of the manual.  This consists of The User Interface
+	and Quick Start Guide.
+2.   A copy of an Intelligence Report which each Cadet is given during
+	training at the Imperial Academy.
+3.   The Imperial Reference Manual, which takes you through all of the menu
+	items and explains in detail how to use them.  Use this when you
+	get stuck.
+
+
+First Steps
+-----------
+	First of all start the game referring to the Imperium Reference
+Card for loading instructions.  You will see the Imperium Configuration
+window appear on the screen.  For now just select the OK button.  The
+Imperium Configuration window allows you to set various difficulty levels
+and rename your characters.  The functions of this window are covered in
+greater detail in the Imperial Reference section page 27.
+	At the top of the screen there is a row of sixteen icons.  The
+one on the far right moves you to the map screen, whilst the others produce
+menus or reports for you to control your empire.  These are as follows:
+
+
+(left to right)    'GAME'   'GAME CONTROL PANEL'   'ALLIANCE CONSTRUCTION'
+
+'EMBARGO'   'SET TAXATION LEVELS'   'TREASURY MENU'   'POLITICS MENU'
+
+'SUBORDINATE DISPLAY'   'MILITARY MENU'   'CREATE ARK SHIP'   'REPORTS'
+
+'CLIPBOARD'   'NEWS'   'GAME TURN'   'MAP'    (far right)
+
+It is recommended that you first read the sections overview to learn how
+the user interface works, and then run through the quick-start section to
+get a feel for the game.
+
+
+Page:6
+
+
+			    THE USER INTERFACE
+		
+
+
+	This section will teach you how the Imperium user interface works.
+Once you learn how the interface works, you can apply the same techniques
+to different parts of the game.  For example, a button in the Alliance
+Construction window will work in the same way as a button in the Embargo
+window.
+
+Anatomy of a window
+-------------------
+	A window is a self-contained entity that appears on the screen.  It
+has a title bar, contains a variety of items, and can be moved, collapsed,
+and closed.  A menu is a special kind of window that only contains a list
+of items to select.  You can open several window on screen at once and
+arrange them around the work area to suit your needs.
+	Occasionally if you try to open too many windows, the program will
+stop you and ask you to close some.  If this happens, close the warning
+window, then close any windows that you are not using and carry on.
+
+	o  Opening a Window:  Open the Alliance Construction window by
+	   clicking on the ALLIANCE CONSTRUCTION icon.
+	o  Moving the window:  Move the pointer over the blank title bar,
+	   press and hold down the left mouse button.  The window will turn
+	   into a frame.  Move the mouse to re-position the window and
+	   release the left mouse button when the window is in the desired
+	   position.
+
+Page: 7
+
+	o  Collapsing the window:  Collapse the window down to just its
+	   title bar by clicking on the collapse box.  Expand the window
+	   to its original size by pressing the collapse box again.
+	o  Closing the window:  Close a window by clicking in its close box
+	   or, if available, by pressing the button labelled CLOSE.  All
+	   windows associated with a particular icon can be closed by
+	   pressing that icon again to "pop" it out.
+	o  Moving a window to the front:  Click on any part of a window to
+	   bring it to the front of all overlapping windows.
+
+Inside windows you will find the following things:
+--------------------------------------------------
+
+	Buttons:  These act just like the icons at the top of the screen.
+		When you press them they either: bring up a list for you
+		to make a choice from; perform an immediate direct action
+		or act as on/off switches.  Switches fall into two types;
+		radio buttons which become blank when selected and tick
+		boxes which show a tick when selected.  Various icons are
+		repeated throughout the game to signify a particular
+		function.  For instance,  the EMPIRES icon always bring up
+		a list of empires.  Here are the most common buttons:
+
+EMPIRE   PLANET   FLEET   SUBORDINATE   COMMODITIES   AWARDS   APPOINTMENTS
+
+	Data Fields:  These are dark grey boxes, which are automatically
+		updated by the computer.
+	Text Fields:  These are white boxes which can be typed into.  Click
+		on the white box to type into it and if necessary use the
+		DEL key to change the entry.  Press RETURN, ENTER or the
+		right mouse button to return to the arrow cursor.
+
++------------------------------------------+
+! DURATION    ! 150 !    <- text field     !
+!   STATUS    !  Offered by you   !   <----!-- Computer filled data field
++------------------------------------------+
+
+Page: 7
+
+	Scrolling lists:  The planet list produced by the PLANETS icon is
+		an example of a scrolling list.  If there are more items
+		in the list than there is space to display them all, then
+		the list will display up and down arrows that will let
+		you page through the list to find the item you are looking
+		for.  Press on the up arrow to page up and the down arrow to
+		page down through the list.  If you type in the first
+		three letters of the name you are searching for, the name
+		will move to the top of the list automatically.  For
+		example, to bring the planet SMOYAS to the top of the list,
+		type SMO.  To reset the search, press ESC.
+	Sliders:  Press the SET TAXATION LEVELS icon to look at a slider.
+		When the window appears, click on the EMPIRES icon to
+	        select an empire on which to set a taxation level.  Select
+                an empire on which to set a taxation level.  Select an
+		empire from the list that appears.  You can now alter the
+		sliders in one of two ways:  either by clicking on the
+		thumb (the small square with a dimple in the middle) and
+		dragging it to the left or right, or by clicking directly
+		on to the scale.  The number in the data field to the right
+		of the scale will change correspondingly.
+
+    +--------------------------------------------------+ +---------+
+    !                         *                        ! !    80   !
+    !                            *                     ! !    23   !
+    !                          *                       ! !    22   !
+    !                       *                          ! !    27   !
+    +-----------------------^--------------------------+ +----^----+
+                            !                                 !
+                 Thumb: Click in this               Number showing value
+ 	         area and hold to move slider       selected
+
+
+Page: 9
+
+
+				QUICK START
+
+This section will show you how to make a few decisions and play one game
+turn.
+
+Use the Map
+-----------
+	Press the MAP icon to call up the Map screen.  This shows all the
+solar systems in your galaxy.  You can use it to get information about
+your empire, and spy on your enemies.
+
+	The screen is divided into four sections.  On the top left there are
+eight icons that allow you to manipulate the map, and get information from
+it.  In the middle is a scrollable list, which starts off blank, but can be
+used to select different items on the map, like different empires or space
+fleets.  On the top right are three text fields: Solar System, Planet and
+Item.  The dark areas to the right of each of these titles display the
+currently selected Solar System, Planet and Item (if one is selected).  An
+item is a planet of fleet, which you can send to the clipboard using the
+SEND ITEM TO CLIPBOARD button below the text fields.  The clipboard is a 
+feature of Imperium that lets you transfer information from the Map screen
+to the Main screen.
+
+	When you start the game, the map is still.  The flashing star is the
+solar system Phresys, and is the currently selected solar system (it is
+shown in the top right text field).  It is also the solar system that
+contains Earth, the home planet of your empire.
+
+	o  You can use the icons to control the galactic map.  Use the
+           ROTATION ARROW icons to rotate the map.  Clicking on one rotates
+           the map in that direction until you click it again, or click the
+           other direction icon.  Click on the SOLAR SYSTEM icon.  This will
+           zoom in on the currently selected solar system to show you to the
+           planets there.
+
+Page: 10
+
+	o  You can rotate planets around their star using the two ROTATION
+           ARROW icons, just as you can with the whole galaxy.
+	o  Click directly on the planets to see their names in the text
+           field.  Note that the yellow planet is the star and will not
+           show up in the ITEM data field.  Before you leave the solar
+           system, click on the planet Earth in the three-dimensional
+           display (the blue/white planet), and when you see EARTH appear
+           in the ITEM data field, press the SEND ITEM TO CLIPBOARD button,
+           so that you can look at it later.  You can move back to the
+           galactic map by pressing the Solar System icon again.
+	o  To leave the Map screen and go to the Main screen either press
+           the RETURN TO MAIN SCREEN icon or press the right mouse button.
+
+
+			        A SAMPLE TURN
+
+You will now be on the Main screen.  For this sample turn, you will get a
+report from an ambassador, another about planet Earth, give your home fleet
+some orders and activate the computer controlled economics and diplomatic
+adviser.
+
+Get Report from Ambassador
+--------------------------
+
+To get the ambassadors report:
+	o  Press the NEWS icon.
+
+This will bring up the news control menu.  This menu has two items on it
+NEWS CONTROL and NEWS REPORT.
+
+        o  Press the NEWS REPORT button.  This brings the News Report itself.
+
+You will use this to find out what happens in the game, and to get reports
+from your subordinates.  When there are too many reports to fit on the
+screen, scroll through the items by using the up/down arrows above and below
+the list.
+	o  Select the item that says 2020 AMBASSADOR.  It will turn black
+           when selected.
+	o  Select the GET REPORT button to see the news item you just
+           selected.  A News Details report will appear at the bottom of the
+           screen, and a tune will be played.  Click a mouse button to stop
+           the music.  When you have read the report, selected the CLOSE
+
+Page: 11
+
+           button.
+	o  The window will disappear, revealing the News Report window
+           underneath it.  Once you have read a report you can delete it by
+           clicking the DELETE button.  Do this now, while the report you
+           just read is still selected.  DELETE ALL deletes every item on
+           the list, regardless of whether you have read the items or now.
+           Use with care as this is irreversible!  Close the News Report
+           window by clicking on the CLOSE button and close the News Control
+           menu by clicking on its close box.
+
+Get Report on Earth
+-------------------
+Press the CLIPBOARD icon at the top of the screen.  This will open the 
+Clipboard window which looks similar to the News window, and the buttons
+REPORT, CLOSE, DELETE, and DELETE ALL work in the same way, as does the
+window's close box.  The ORDERS button will be used later to give orders
+to a space fleet.
+	o  Select EARTH from the list, and press the REPORT button on the
+           right.  This will bring up a comprehensive report on Earth
+           showing various statistics.
+
+Wealth, Population, and Stability are the most immediately important factors.
+Technology Level and Material Infrastructure are almost as important in the
+long term, and the other information is used to complete the picture and to
+help make specific decisions, such as whether to colonize or decolonize the
+planet.  Note: the leader on Earth is Amarillus.  He is the leader of the
+empire, in other words YOU.
+	o  Click on the CLIPBOARD icon to "pop" it out and close all of the
+           clipboard windows in one go.
+
+Give Fleet Orders
+-----------------
+
+You will now be able to use the clipboard to give orders to a fleet, but
+first you need to bring up a Fleet Report.
+	o  Press the MILITARY icon.  This will present the military menu.
+           Select the button marked FLEET REPORT.  When you see the Fleet
+
+Page: 11
+
+           Report, it is blank, because no fleet has been selected.  To
+           select a fleet click on the FLEET icon.  This will bring up a
+           menu of all the existing fleets - at this time only the HOME
+           FLEET exists, so select that.  This will then fill in the report
+           with information on the home fleet, including its leader, and the
+           number of ships in it - none at the moment.
+
+You add ships to a fleet using the ship transfer icons.  The pool is your
+stock of ships awaiting assignments at the currently selected location,
+which in this case is Earth.  You start the game with two scouts in Earth
+orbit (in the pool).
+	o  Select the POOL TO FLEET icon.  This icon brings up a menu of the
+           ships in the pool.  Click on both SCOUT 0 and SCOUT 1 - they will
+           both turn black, indicating that they are selected.  Then click
+           on the OK button on the Fleet Report, this is to say that you
+           want to make these changes. (If you don't want to confirm
+           something in the game, just close a window without pressing OK).
+           The Fleet Report shows that the two ships have been transferred
+           by updating the STRENGTH, DEFENCE, and NUMBER OF SHIPS text
+           fields.  Click on the POOL TO FLEET icon again to remove the
+           Select Ship menu.  For the time being ignore the troop transfer
+           section of the report, and CLOSE the Fleet Report window.
+	o  Press the GIVE FLEET ORDERS item on the military menu.  (You may
+           need to move the windows around so that they are all in view.) 
+           When the Fleet Orders window appears, click on the FLEET icon
+           and select HOME FLEET from the menu that appears. 
+
+The orders list on the left contains the five blank steps of an orders
+sequence.  For example, it allows you to program your fleets to first fly
+somewhere, then wait five years, then fly elsewhere and invade a planet.  In
+this instance you will just order the fleet to fly to Mars.
+	o  To input the first order, select the top space on the order
+           list.  Press the MOVE TO order button so that MOVE TO appears
+           in the order list.  Select the PLANETS icon to bring up a list
+           of destination planets.  Select MARS.  Now that everything is
+           set, click on OK to confirm your selections and CLOSE the
+           window.
+
+Finally put away the Military menu either by closing it, or by clicking on
+the Military icon at the top of the screen.
+
+Page: 13
+
+
+		    SET TAXATION AND DIPLOMACY TO AUTOMATIC
+
+Before you finish this turn, you must give economic orders, and diplomatic
+instructions to your ambassadors, because each of these helps to improve
+your empire's wealth and stability.  In order to make things easy, the game
+provides intelligent computer controlled advisers to run parts of the empire
+for you and for this you can invoke them to help you.
+	o  Press the GAME CONTROL PANEL icon.  When the window appears,
+           select the DIPLOMACY and ECONOMICS tick boxes.  When you do this
+           a little tick mark will appear to tell you that this particular
+           area of the game is now subordinated.  Later you can take back
+           control by unchecking these tick boxes.  Press OK to confirm
+           the changes, and CLOSE the window.
+
+Next Turn
+---------
+Now that everything is set for your first turn:
+	o  Press the NEXT TURN icon.  The Game Turn window will appear
+           containing a text field for you to enter the length of turn and
+           another showing the date.  Press the button marked NEXT TURN to
+           move on one year.
+           All the orders you made for the selected period will be put
+           into action.
+
+	On your first game turn you will have to enter some confidential
+data to validate your access at this stage and before your next turn can
+commence.
+	The computer will spend a few moments updating all the data and
+recording all the changes that have taken place (no small task with over
+100 planets, and several other empires to manage).
+	When the game turn is over, the news report will automatically appear,
+and show some of the events that happened in that turn.  To view these events,
+click on the relevant report and then select the GET REPORT button.  Once
+you have read the report, CLOSE the News Details window and repeat the
+process for the remaining reports in the list.  For the first turn this will
+usually consist of all your ambassadors reporting information about other
+empires.
+	At this point you may like to investigate the windows to see what
+effect the above actions have had on your money supplies, fleet location and
+commodity levels.
+
+Page: 14
+
+
+  			          WHERE NOW?
+
+You have completed your first turn of Imperium.  What next?  You should read
+through the next section, Intelligence Report (by Emperor Colinus + 2019),
+which will go through the various vital concepts in the game, such as what a
+full Game Turn actually consists of.
+
+Basic strategies for continuing the game are as follows:
+	o  You will need to build up your monetary supplies, since this will
+           affect all other areas of the game.  To do this you will need to
+           assess your economic strategy.  Experiment with alliances and
+           set your taxation levels.  The Historical Wealth chart under the
+           Treasury Menu is a good indication of how well you are doing.
+	o  Subsidise planets (using the Imperial treasury) under your
+           control in order to maximize their productivity.  Productivity
+           is measured by the various planets' Technology Levels, Material
+           Infrastructures and Planetary Defences, which will all need to
+           be increased in the long term.  Look at the Planetary Report to
+           view these levels.
+	o  Set up Embargoes to protect commodities vital to your empire. 
+           Running out of these will affect your popularity and production
+           capacity.  Check your Imperial commodity levels in the Treasury
+           menu to monitor your progress.
+	o  Building troops will enhance your military powers, and protect
+           planets under your control.  Troops are vital when invading
+           enemy empires.  The size of garrisons can be checked on the
+           Planetary Report.
+	o  Build ships and create fleets in order to claim planets.  Take
+           over control of planets to increase your commodity levels.
+           Controlling planets to increase your commodity levels.
+           Controlling planets with Nostrum, the life preserving drug, is
+           vital to your survival.  In order to colonize a planet and make
+           it productive you will need to send an Ark Ship to increase the
+           population. 
+
+You can find all relevant information on any of the above in the Reference
+section.  We wish you happy colonizing!
+
+
+Page: 15
+
+
+      =================================================================
+
+
+		                INTELLIGENCE REPORT
+
+			     Filed by Emperor Colinus
+	             Just before his demise in the year 2019
+
+
+       ================================================================
+
+
+Page: 16
+
+
+PLANETS, SOLAR SYSTEMS AND THE GALAXY
+
+	The galaxy contains a number of stars, each forming the centre of a
+solar system.  Each solar system contains from one to five planets each
+capable of supporting life.  The level of habitability of each planet is
+affected by its star's type, its distance from the start, the planetary type
+and its atmosphere.
+
+
+EMPIRES
+
+An empire is the overriding political, military and economic force that
+holds any number of planets together.  The planetary leader of the home
+world is responsible for both that planet and the empire as a whole.
+
+Within the game there are two types of eco-political unit; the planet and
+the empire.  The empire is a body that is treated separately to its planets.
+For example, there are planetary and Imperial treasuries.
+
+
+TREASURIES
+
+The concept of the Imperial treasury and planetary treasury is the key to
+understanding the way the economics of the game work.  A planet's treasury
+is the total amount of money the planet has in its 'Bank' and the planet
+cannot go overdrawn.  Unlike a planetary treasury, the Imperial treasury can
+go overdrawn, attracting interest, which is shown as an increasingly large
+negative value.  Some areas will affect the amount of money in the Imperial
+treasury to a greater extent than others.  For example, ship building and
+Imperial subsidies require a lot of capital expenditure.
+
+THE GAME TURN
+
+A game turn consists of manipulating six areas which should be played in the
+following order:
+
+1	Imperial Finance		For example, paying interest on
+					overdrafts.
+Page: 17
+
+2	Main Economics			For example, resolving trade
+					between planets and empires.
+3 	Main Diplomacy			For example, offering and
+					responding to alliances.
+4	Main Military			For example, conflict resolution.
+
+5	Population			For example, lowering the stability
+					factor and adjusting the population
+					growth.
+6	Effects				For example, subsidising planets,
+					shipbuilding, sending Ark Ships
+					and constructing antenna.
+
+The order in which issues are resolved can be important in certain
+situations in the game.  For example, Economics problems should be resolved
+before Military problems, so planet defences are increased through trade
+before a fleet invades in a given year.
+
+DEFINITION OF UNITS
+
+	Money		1 unit = 100,000 Imperial Zongs (credits)
+	Population	1 unit = 100,000 people
+	Tonnage		1 unit = 100 tonnes
+
+
+TRADE AND ECONOMICS
+
+
+Page: 18
+
+A planet produces, trades and has a demand for twenty different commodities.
+Planets trade with one another within their empires, then with planets from
+other empires.  Excess stock will be sold to the merchant fleet.  The
+merchant fleet are a mysterious impromptu band of interstellar traders, who
+will purchase commodities from planets that have a surplus.  A surplus in a
+commodity is defined as any quantity between 200 to 250 depending on the type
+of planet.
+
+A planet that needs to buy commodities from outside its empire will look at
+a number of factors before selecting a planet to purchase from.  It will
+look at the distance between itself and other planets and consider the price
+of the commodity, the level of taxation between the planets and the
+diplomatic situation between the empires governing them.  A planet will not
+be able to trade if it is blockaded or in a state of war.
+
+A planet will trade to a minimum commodity level of 10, thus allowing itself
+a degree of margin on its own supply and demand.  It will not let itself
+get into an out of stock situation, thus a planet will never trade to a
+negative commodity level.
+
+
+PRODUCTION, THE PRINCIPLES
+
+
+Every planet is assumed to produce the correct level of commodities to
+satisfy the needs of its current population.
+
+A planet produces commodities to support up to a maximum population level of
+25,000 units.  Above this level, the demand for commodities is greater than
+the planet can produce under normal circumstances.
+
+There are various factors that will affect the productivity of a planet. 
+These are the type of atmosphere it has, the type of planet, the star that
+it is orbiting, and the planet's distance from the star.
+
+
+Page: 19
+
+
+Two other factors affect productivity:
+--------------------------------------
+
+Material Infrastructure
+
+ 	A high level of material infrastructure will assist a planet's
+productivity as it covers services such as road and rail networks
+education, hospitals and health care - the physical backbone of the planet.
+
+Stability
+
+	A low stability factor will assist a planet's productivity as it
+represents the attitude and political state of the population.
+An example of a producive planet would be an agricultural one with a
+nitrogen/oxygen atmosphere in the 5th orbit around a G7 star having a high
+material infrastructure and low stability factor.
+
+Distortion
+
+	A report on another empire or planet, that is not part of your
+empire will contain a degree of distortion.  The level of distortion
+reflects the amount of error existing in the figures displayed.  For
+instance a report that has 100% distortion is effectively useless, whilst a
+report showing 10% distortion is close enough to the truth to be valuable.
+	Distortion is determined by whether or not the target falls within
+the catchment area of an antenna.  If the planet is within the antenna
+catchment, then the distortion is 0%, outside of the maximum range the
+distortion increases with distance.  If two empires have an information
+alliance, they both have a 0% distortion level for planets within the two
+empires and also share antenna catchment areas.  If a fleet is within a
+solar system, then all of its planets will have 0% distortion as long as
+that fleet remains in the system.
+
+Combat
+
+	There are four types of combat occurring in the game:
+
+	o  Deep Space
+	o  Solar System
+	o  Planetary Bombardment
+	o  Ground Assault
+
+All these combat situations can arise with more than one opponent at a
+time.  For example, three empires could be fighting for possession of one
+planet.  Combat is resolved by comparing the strengths of each side and
+applying casualties to the forces involved until one side withdraws or is
+defeated.
+
+Deep Space or Opportunity Fire
+
+	This occurs when different empires' fleets travel near enough to
+one another to allow them to engage in combat.  The damage done by the
+fleets is inversely proportional to the distance between them.  Fleets of
+different empires will always take the opportunity to fire at each other
+even if they are in an alliance. (This type of combat will not affect the
+alliance state between them).
+
+Deep space combat is not very common, because space is so immense and
+fleets tend not to pass close to each other.
+
+Solar System Combat
+
+	This occurs when unfriendly fleets are in the same solar system.
+The damage inflicted is not affected by distance, as the fleets are close
+together.
+
+Solar system combat is resolved as follows:
+	
+	o  The strengths of the opposing forces are calculated, this is
+           equal to the total of each fleets' strength.
+	o  Tactics are chosen by each side.  Each Fleet Commander selects a
+           tactic for his side.  This tactic applies to solar system combat
+           and to any invasion that may follow:  The Fleet Commander's
+           competence and charisma influences the outcome of the conflict
+           by the tactics he chooses.
+	o  The tactics are compared and the fleet strength modified
+           according to each tactic's suitability.
+	o  The modified strengths are then compared and damage is
+           inflicted.
+
+
+Page: 21
+
+
+Planetary Bombardment
+---------------------
+	Before an invasion fleet can deploy troops onto the planet surface,
+all of the planet's defences must be completely defeated.  The invasion
+fleet must fight the defence force until it is destroyed.  If there are
+other planets belonging to the empire within the same solar system, these
+other planets add 20% of their defence strength to the planet under attack.
+The other planets are not damaged in this combat.
+
+Planetary bombardment is resolved as follows:
+	o  The strengths of the combatants, the strength of the fleet and
+           the planet's defences are calculated.
+	o  The invasion tactics are chosen, if they have not previously
+           been selected in solar system combat they are selected now.  The
+           Fleet Commander's competence and charisma influences the outcome
+           of the conflict.
+	o  If the invasion planet falls within the antenna range of your
+           empire then there is a 10% bonus added to your strength.  This
+           bonus is because you have the advantage of knowing the lay of
+           the land and the defence positions.
+	o  If there is an alliance between your empire and the empire you
+           are attacking then you get a 10% strength bonus for surprise
+           and suddenness of the attack.
+	o  The total strengths are then compared and damage is inflicted.
+
+
+Ground Assault
+
+This can only occur after the invasion fleet has destroyed all the planet's
+defences through bombardment.  At this point, the fleet automatically
+deploys its troops onto the planet to do battle.  The main attacking force
+of the fleet is its drop troops as they can attack at full efficiency
+during the turn in which they invade.  Infantry and armoured troops have
+
+Page: 22
+
+their efficiency halved in the turn the invasion starts, because they are
+less suited to this operation than drop troops.
+
+After the first year of the battle, the infantry and armoured units are at
+full efficiency and drop troops fight at the same level as the infantry.
+
+Ground assault combat is supported through the use of indirect fire from
+the fleet in orbit around the planet, 50% of the fleet's weapon strength can
+be brought to bear as indirect fire.  Ships in the fleet cannot take damage
+while providing indirect fire.
+
+The planet's defending forces receive aid from the planet militia - a weak
+force that is called upon to defend a planet against invasion.  A militia
+force of 1% of the population can be mobilized at the start of a conflict,
+at a starting efficiency of 25% + 0.1% per unit of militia arms on that
+planet.
+
+
+EFFICIENCY
+
+
+Efficiency is the percentage of the troops that are ready for combat and
+able to fight.  The efficiency of troops is used to calculate the strength
+they contribute to the battle.  As a battle progresses, the efficiency
+level will fall, as troops become disorganized, tired and run out of
+supplies.  To represent this, the efficiency of each troop type is reduced
+by 5% per year that the conflict lasts.  A troop's efficiency cannot fall
+to below 20%.  In peace-time, the efficiency of a troop type is slowly
+increased until it reaches its maximum.
+
+COMBAT STRATEGIES AND EFFECTS
+
+During Ground Assault Combat:
+	o  The strength of each opposing force is calculated.
+	o  The effect of the selected tactics is applied - the same tactics
+           that were chosen for the invasion apply to ground combat.
+	o  The total strength of each force is compared and the damage
+           applied.
+
+Effects of Ground Assault Combat:
+        o  Production on the planet is halved. 
+        o  The planet is blockaded and there can be no trade with that
+           planet.
+        o  The Moral Infrastructure is reduced by 5 for each year the
+           conflict lasts.
+        o  The stability factor is increased by 10 for each year the
+           conflict last which causes instability.
+        o  The planet's defences cannot be rebuilt while there is combat on
+           that planet.
+        o  The population is reduced according to the number of troops
+           involved in the conflict.
+
+Ground Assault Combat Results
+-----------------------------
+        When two forces engage in battle the strength totals are added
+together and then compared to give a ratio.  The ratio determines the
+amount of damage that each side takes in the battle.
+
+        The strengths of each side are calculated by multiplying the number
+of troops by their current efficiency rating.  The attacking force adds the
+indirect fire to the total strength.
+
+        If the forces have a 10-1 difference then the larger side will
+totally destroy the smaller suffering only slight damage themselves.  If
+the forces have a ratio of 5-1 then the large side will win taking only
+light casualties.  At ratios below 5-1, the larger side will take more
+substantial damage in defeating their opponents.
+
+Damage to Fleets
+----------------
+        The total damage inflicted on a fleet is not all targeted at one
+ship, but is spread throughout the fleet.  A part of the total damage is
+allocated to each of the ships in the fleet.  If the damage inflicted to an
+individual ship is greater than its current armour level the ship is
+destroyed.  If it less than the current armour total then the damage done
+is subtracted from the armour level.
+
+Page: 24
+
+If a ship is destroyed, the total carrying capacity of the fleet is
+reduced, if the current troop level is greater than the new carrying
+capacity of the fleet then the excess troops are lost.
+
+Tactics
+-------
+When a fleet engages in either solar system combat or planetary invasion,
+the commanders of the fleets and/or the planet leader select a general
+tactic that the fleet will take.  The leader will select a tactic based
+upon a combination of their competence and their charisma: the better their
+qualities are, the stronger their decision-making skills will be.  By
+selecting good tactics, a leader can turn a battle in your favor.  The
+tactics selected for planet invasion also apply to ground assault.
+
+There are five basic forms of tactic that a leader can select; Sweep,
+Patrol, Assault, Blocking and Envelopment. 
+
+The tactics are compared and the modifiers are applied to each side's
+strength to get a result.
+
+Read the left column against the top row to get the resultant modification
+for each combination of maneuvers. 
+
+
+Page: 25
+
+
+Blockades
+---------
+A planet with an enemy in its orbit is termed as "under blockade".  A
+blockaded planet cannot trade with any other planets and can not receive
+ark ships; it is isolated for the period of the blockade.
+
+Planets can free themselves by removing the fleets in their orbit, which can
+be achieved in a number of ways.  For instance, the enemy fleet is
+automatically exposed to fire from the blockaded planet's defences,
+although only a portion of the defences can be brought to bear on the
+fleet.  If the enemy fleet is only small, the planetary defences may be
+able to destroy it or force the enemy fleet to withdraw by damaging it.  A
+blockade can also be removed if a friendly fleet can be in to destroy the
+enemy fleet or force it to withdraw.
+
+
+                                  REPORT END
+
+
+
+Page: 26
+
+
+        =============================================================
+
+
+                                REFERENCE SECTION
+
+        =============================================================
+
+
+
+Introduction
+
+This section itemizes all of the procedures which you will need to
+implement during your reign.  It assumes that you have worked your way
+through the Tutorial section.  (If you have not done this, you are advised
+to go back and refer to it now before continuing).  You should use this
+section as a reference, not as compulsory reading.
+
+You will find a chapter for each of the menu bar titles.  Each chapter has
+separate headings for all items listed.  These give the function and
+purpose of each of the items, together with any procedures that you should
+be aware of.  You will also find hints and examples (in italics), which
+will help deepen your knowledge of the points covered.
+
+
+Page: 27
+
+                             IMPERIUM CONFIGURATION
+
+This window appears each time you start a new game and governs the settings
+for the entire game session.  You can use this menu to enter your
+character's name in this game and also to give a name to your empire.
+Note: changing names is purely optional.  The difficulty level of the game
+is also determined using this menu.
+
+   To change the name of your character and empire
+        o  Select the name field
+        o  Delete the current name by backspacing through it.
+        o  Type your new name
+        o  Press RETURN of the right mouse button to enter the new name
+        o  Select the empire name field
+        o  Delete the current name by backspacing through it
+        o  Type your new empire name
+        o  Press RETURN or the right mouse button to enter the new name.
+
+Difficulty Levels
+-----------------
+A low settings will mean that the game is easier to play than at a high
+setting.
+
+The various categories are as follows:
+--------------------------------------
+Wealth         Starting size of the Alien empires' treasuries.
+Technology     Starting level of the Alien empires' technology level.
+Army Size      Starting size of the Alien planetary garrisons and the
+               number of ships in the alien fleets.  The size of the these
+               ships is defined by the starting technology level for the
+               empire.
+Empire Size    The number of planets in the Alien empires.
+
+        To change the difficulty level of the game
+        ------------------------------------------
+                o  Move the slides to the desired levels to set the
+                   starting configuration for this game
+                o  Press OK to confirm these settings
+
+
+Press: 27
+
+
+                                    GAME
+
+Click on the GAME icon to reveal the following items.
+
+About Game
+----------
+This gives information on the people involved in the creation of Imperium.
+
+Rename
+------
+You can give new names to planets, empires, solar systems or subordinates.
+
+        To rename a subject:
+
+                o  Select the type of subject to rename (i.e.: planet)
+                o  Select the subject icon that appears in the Rename
+                   window (i.e.: the SUBORDINATE icon.)
+                o  Select the item to rename from the list
+                o  Select the text field
+                o  Delete the name and enter a new one
+                o  Click on OK to complete the selection and CLOSE the
+                   window.
+
+Load/Save
+---------
+Refer to the Reference Card for details on loading and saving games.
+
+
+Quit Game
+---------
+This exits from the game and starts a new game.  You will be asked to
+confirm this action by clicking either YES or NO.
+
+
+Page: 29
+
+                                GAME CONTROL PANEL
+
+Click on the GAME CONTROL icon to reveal the following categories.
+
+Game Sound
+----------
+Select the tick box to switch the news report tunes on or off
+
+Subordinate
+-----------
+Selecting the box (tick will appear) next to a subordinate (a
+computer-controlled adviser) gives that subordinate complete authority to
+make decisions on your behalf.
+
+        To select a subordinate controlled area:
+                o  Select the tick box for the area that you wish to
+                   subordinate.
+                o  Click OK and then CLOSE the window
+
+        Computer control can be delegated to the following area:
+
+Military
+--------
+The military subordinate controls all the elements of shipbuilding, troop
+movement and fleet control.
+
+Diplomacy
+---------
+The diplomacy subordinate negotiates with other empires.  He will also deal
+with alliance offers from the other empires.
+
+
+Economics
+---------
+The economics subordinate deals with setting taxes, overproduction,
+Imperial subsidies and transferring wealth.  He also manages the
+construction of antenna and building and sending ark ships.
+
+If you have all of the subordinates switches on, they will deal with most
+of the elements of the game.  You will need to deal with subordinate
+control and politics.  As a position becomes available a subordinate is
+
+Page: 30
+
+automatically brought from the pool of subordinates and allocated to the
+position without reference to their abilities.  You should always go back
+and manually select and appropriate subordinate for these positions.  (see
+the section on subordinates for more details.)
+
+
+
+                           ALLIANCE CONSTRUCTION
+
+
+The Alliance Construction window has two functions: firstly the receipt of
+alliance offers and secondly creating and offering new alliances.  You will
+need to exercise your diplomatic skills in building alliances.
+
+Click on the ALLIANCE CONSTRUCTION icon to open the window.
+
+        To create a new alliance:
+                o  Select the WITH EMPIRE icon
+                o  Select the empire you want the alliance with, from the
+                   list that appears.
+                o  Enter either the amount of money to be paid by you, or
+                   to be received by you in the appropriate text entry box.
+                   This is a yearly payment that will continue until the 
+                   alliance ends.
+                o  Select the type of alliance that you wish to offer (ie:
+                   information, defensive of offensive, by clicking in the
+                   radio buttons adjacent and if it is offensive; enter in
+                   enter in the percentage terms of the trade barrier if
+                   you wish to apply this sanction.
+                o  Selecting an offensive alliance means that you have to
+                   select an empire that you and the allied empire are to
+                   be united against.  To do this select the AGAINST EMPIRE
+                   icon, and choose the empire from the list that appears.
+
+
+Page: 31
+
+                o  Enter the duration of the alliance in the text entry
+                   box (in years)
+                o  When you have an alliance proposal you are happy with,
+                   select the OFFER button to send the message through to
+                   the relevant Ambassadors.  The following year the empire
+                   will respond to your offer.
+
+        To respond to an alliance offer from an empire:
+
+                o  Select the WITH EMPIRE icon
+                o  Select the empire the offer has come from, from the
+                   list that appears
+                o  Look at the offer and decide whether to accept or
+                   reject it.  Then select the ACCEPT or REJECT button 
+                   accordingly.
+                o  If you wish to modify the offer then follow the
+                   instructions to create a new alliance (overleaf).
+
+        To offer a new alliance to an empire with whom you already
+accepted an alliance:
+
+                o  Select the WITH EMPIRE icon
+                o  Select the empire to view the current alliance
+                o  Change the alliance to the new conditions you wish
+                   to offer and OFFER it.
+
+If the new alliance offer is not accepted then the old one will not be
+affected.  When you are offered an alliance it can only be accepted the
+year in which it is offered.  After that time the offer is withdrawn, but
+any previous alliances still stand.
+
+Types of Alliance Available Trade Barrier
+-----------------------------------------
+A trade barrier sets the allied empires' export tax rate against
+another empire.  (See Set Taxations Levels) Setting a high export tax rate
+allows you to restrict the trade flow between empires.  For instance the
+Throygon and Droygon Empires ally against the Kroygon empire setting an 80%
+Trade barrier.
+
+Page: 32
+
+This will make it very expensive for the Kroygon empire to trade with
+Throygon or Droygon.
+
+Economic Treaty
+---------------
+This sets the tax rates between allied empires.  It has the same effect as
+altering the tax rates under Set Taxation Levels.
+
+Defensive
+---------
+A defensive alliance affects the expansion policies of the allied empire.
+When that empire selects planets to invade, a defensive alliance will sway
+their choice away from your planets.
+
+Offensive
+---------
+An offensive alliance is agreed between two empires, against another.  When
+the allied empire is selecting planets to invade, an offensive alliance
+will sway their choice towards the empire you are allied against.  The
+percentage terms you enter into the trade barrier will be applied to the
+empire which the offensive alliance is made against. (Although this
+percentage can be zero (i.e.: no trade barrier))
+
+Page: 33
+
+Information
+-----------
+An information alliance is formed to allow the free trade of information
+between the two empires.  The distortion factors are reduced to 0% on all
+allied empire reports.  Your empire has access to the allied empire's
+antenna and the extra information that these provide.
+
+An alliance is broken if either party takes military action other than
+'opportunity fire' against the other party.  All benefits will be lost, and
+the relationship between the two empires will also be affected.
+
+Page: 34
+
+
+                                   EMBARGO
+
+
+An embargo is a trade and commerce barrier, that can be set against other
+empires to restrict the movement of certain commodities.
+
+Click on the EMBARGO icon to open the window.
+
+        To create an embargo:
+                o  Select the NEW to create a new Unnamed embargo
+                o  Select the EMPIRE icon and select the empire of ALL
+                   EMPIRES for the embargo to affect
+                o  Select the COMMODITIES icon and select the
+                   commodities that you wish to select ALL COMMODITIES or
+                   or just some of them.
+                o  Click on OK when you are happy with the details of
+                   the embargo
+                o  Select the COMMAND icon and select SHOW DETAILS, this
+                   displays the specific details of the embargo.  CLOSE the
+                   Embargo Details window.
+                o  Select RENAME EMBARGO from the commands list, select the
+                   text field and backspace through Unnamed (or the current
+                   name) and type in the new name for the embargo.
+                o  Click on OK and CLOSE the Embargo window when you are
+                   satisfied with the embargo
+                o  Click on the EMBARGO icon at the top of the screen to
+                   close all the Embargo sub-windows
+
+An embargo will stop the trade of specific commodities with specified
+empires.  An embargoed commodity will not be sold to the selected empire,
+although it will be purchased from them if required.
+
+Page: 35
+
+
+                            SET TAXATION LEVELS
+
+
+You can set an import and export tax level with each empire in the galaxy.
+The tax rates apply to all of your empire's planets.
+
+Click on the SET TAXATION LEVEL icon to open the window
+
+        To set new taxation levels:
+                o  Select the EMPIRE icon
+                o  Select an empire from the list that appears
+                o  Set each slider to represent the level of tax
+                   required for imports and exports
+                o  Click OK before continuing
+
+Import Tax: Is the level of tax that your planets have to pay to your
+Imperial treasury when they buy commodities from an alien empire.  You can
+set a negative tax (a subsidy), in which case your Imperial treasury will
+pay your planets a subsidy when they buy commodities from an alien empire.
+
+For example:- If Earth bough commodities at a cost of 100 from an alien
+empire and you had set an import tax of -15%, then the Earth would pay 100
+to the selling alien planet from Earth's own planetary treasury.
+Additionally, Earth's planetary treasury would be paid 15 from your
+Imperial Treasury.
+
+Page: 36
+
+Export Tax: Is the level of tax that an alien Imperial treasury pays to
+your Imperial treasury when one of your planets exports good to one of that
+Alien empire's planets.  Again, you can set a negative tax rate in which
+case your Imperial treasury will pay the alien Imperial treasury when one
+of your planets exports good to one of that Alien empire's planets.
+
+For example:- If Earth sells commodities at a cost of 100 to an alien
+empire and you had set an Export tax of -15%, then Earth's planetary
+treasury would receive 100 from the selling alien planet.  Additionally,
+your Imperial treasury would pay 15 to the alien Imperial Treasury.
+
+Both Import and Export taxes can be used to either stimulate or to restrict
+trade between empires, but the Import tax only has the effect of moving
+money between your Empire's planets and the Imperial treasury.  Export tax
+transfers money between the different Empire's Imperial treasuries.
+
+
+
+                               TREASURY MENU
+
+
+This covers general finance, including commodities and commodity control.
+
+Click on the TREASURY MENU icon to open the window.
+
+Transfer Wealth
+---------------
+Transfer wealth allows you to make an immediate cash transfer between your
+empire's planets and the Imperial treasury, or vice versa.
+
+Page: 37
+
+        To transfer cash:
+                o  Select the PLANET icon and select the planet you wish to
+                   transfer cash to or from.
+                o  Enter the amount to transfer in the text field.
+                o  Select either TO PLANET or FROM PLANET button, to
+                   transfer the cash between the planet and the Imperial
+                   treasury.
+                o  Select the BALANCE button to even out the planet
+                   treasury levels of all of your planets.
+
+Historical Wealth
+-----------------
+This displays your total wealth, which consists of the combined wealth of
+all your planets' treasuries and Imperial treasury.  The total for the
+previous four years is also displayed.
+
+Historical Price Index
+----------------------
+This shows the historic price index for your empire.  The actual values are
+not given, but general trends can be seen from the bar charts.  The price
+index is an average of the percentage change in commodity prices between
+this year and last.
+
+Imperial Commodity Levels
+-------------------------
+This displays the cumulative total of your empire's commodities.  Only this
+year's commodity levels are shown - no historical information is stored.
+
+Page: 38
+
+Each planet can only hold a maximum commodity level of between 150 to 250
+depending on commodity and planet.  At levels above this, the surplus is
+traded to the Merchant fleet at current market prices.  The Imperial
+commodity level of a specific commodity represents the total of all your
+planets' current levels.  So with six well stocked planets (each planet has
+an average of 200 units), the Imperial commodity level will be around 1,200
+units, and yet for ten poorly stocked planets (each planet has an average
+of 100 units) the commodity level will be around 1,000 units.
+
+If the Imperial commodity level is negative, this means there is a shortage
+of this commodity.  It also means that the shortfall has not been met
+through trade.
+
+If the commodity level is zero it means that the shortfall has been met
+through trade and the demand satisfied.
+
+A surplus will not be created through trade, only demand will be satisfied.
+
+Imperial Production
+-------------------
+You can use an Imperial directive to alter the balance of commodity
+production levels.
+
+        To set the Imperial production levels:
+                o  Set the four sliders to the balance of production
+                   required. (Up to plus or minus 10%)
+                o  Use ZERO to reset all the sliders to zero if needed
+                o  Click on OK and CLOSE the window
+
+Page: 39
+
+Areas of Production are as follows:
+-----------------------------------
+
+Consumer Items          Consumer Goods
+                        Food
+                        Water
+                        Atmosphere
+Military                Planetary Defences
+                        Militia Arms
+                        Space Ship equipment
+                        Personnel
+                        Heavy Arms
+Technology              Rare Earth Elements
+                        Information
+                        Communications Equipment
+                        Computers
+                        Robots
+Industrial              Building Equipment
+                        Heavy Plant
+                        Power Supplies
+                        Raw Materials
+                        Material Infrastructure
+
+
+Page:40
+
+Imperial Subsidy:
+-----------------
+
+This is an Imperial budgeting system allowing you to allocate cash to
+support specific planets.  Making payments to a planet over a period of
+ time allows you to slowly increase the levels of technology, material
+infrastructure and planetary defences.  There is a limit of 100 units
+of cash to be spent on technology and 10,000 credits on material
+infrastructure and planetary defences.
+
+       To set an Imperial subsidy:
+
+               o    Select the planet icon
+               o    Select the planet you wish to subsidise.
+               o    Enter into each text field the yearly payment for
+                    Technology Level, Material Infrastructure and
+                    Planetary Defences.
+               o    Enter the DURATION for which this subsidy will
+                    last.  The number of years the subsidy has left
+                    will be reduced annually until it reaches zero, at
+                    which point the subsidy has finished.
+               o    Click on OK and CLOSE the window.
+
+Spending on the technology level will affect it slowly.  Material
+Infrastructure and planetary defences are commodities that can and
+will be traded with other planets through normal trading.  Material
+infrastructure is not bought on a linear pricing scale; as the level
+of infrastructure grows, the cost of maintaining and increasing it will
+rise at a greater rate.
+
+It is possible to alter a subsidy before its duration is finished.  To
+do this click on the appropriate text field, alter the amount and then
+click on OK.
+
+  Setting up subsidies for each of your planets allows you to research
+and build on the technology levels of the planets.  It is not possible
+to increase the technology level, this can only be done through slow
+and constant spending.  The material infrastructure and planet defences
+can be increased relatively quickly,  but can be reduced just as
+rapidly through trade and war.
+
+Page:41
+
+Imperial Volume of Trade:
+-------------------------
+
+This displays the relative levels of trade between your empire and all
+other empires in the game.
+
+The difference in the level of imports and exports shows the balance of
+trade for your empire.  If you are importing goods you know that your
+empire is not producing the correct quantity of commodities to satisfy
+its demand.  If your empire is exporting goods then you know that there
+is a surplus of commodities and that the economy of your empire is
+healthy.
+
+                                 P O L I T I C S
+
+
+Click on the Politics icon to open this window.
+
+The Politics menu offers the election options and population control.
+Politics, by its nature is a more tangible force in the galaxy, and is
+therefore a less controllable area of the game.  Elections can be a
+major stumbling block to a planet leaders career, if his or her
+policies and leadership are not popular.
+
+ELECTION:
+---------
+
+An election is a crucial event in the career of an Emperor.  Every 50
+years, the home planet leader's position comes up for re-election.  It
+us possible to have an election before the 50 year period is up.  This
+happens either through a vote of no confidence, or by the home planet
+leader calling an election when he/she feels that the time is right.
+
+  Note: If you fail to win a full majority in the election, your game
+will end!  The election window displays the years remaining to the next
+election and the current popularity of the planet leader.
+
+     To call and election:
+
+          o    Select ELECTION from the menu.
+          o    Enter the amount of cash that you wish to spend on the
+               roadshow and campaign, in the Election Campaign Fund Field.
+          o    Select CALL ELECTION to proceed to the Election day.
+          o    The votes are received planet by planet throughout the
+               empire.  Each canidate's percentage of the vote is
+               displayed on the graph.
+          o    When the final votes are counted, the result is
+               displayed in the Election Winner field.  The game can
+               only continue if your home planet leader is elected
+               again.
+
+There are three possible results to an election.  If the voting is in
+your favor and you receive more than 50% of the vote then the game
+continues.  If one of the other subordinates wins votes of greater than
+50% then they are voted the new planetary leader of your home planet
+and your game is over.  If the vote splits without a clear majority
+then there is a hung vote, you no longer have control and your game is
+over.
+
+An election requires three candidates: planet leader of the home planet
+(YOU), a member of your cabinet who aspires to the position of planet
+leader of the home world and a member of the pool of subordinates.  The
+opposition are chosen for their qualities and their lack of loyalty to
+you.
+
+The current planet leader has some advantages as he is judged on
+historical popularity, on his cabinet's abilities and on his own
+personal qualities.
+
+Election results and politics in general are strongly influenced by the
+media and promotional cash injections.  Spending on the campaign fund
+allows the planet leader to gain the advantage of an extensive and
+expensive political road show to sway the voting public with ritz and
+glamour.
+
+     The selection of your subordinates can be a vital factor at
+election time, if you have neglected your cabinet and your subordinates
+then at election time you could easily find yourself with some very
+promising opposing candidates.
+
+PAGE:43
+
+Population Control:
+-------------------
+
+You can modify the population growth rate by offering incentive programs
+to all planets within your empire.
+
+     To set population growth:
+
+          o    Set the slider to the population control value required.
+               (Up to plus or minus 10%).  The figure you set is
+               displayed next to the slider.
+          o    Click OK and CLOSE the window.
+
+Every planet has a basic population growth rate.  This modified by the
+general posperity of that planet and by the population control value.
+If a planet has a strong growth rate, a negative population control
+value will lower the growth rate rather than decrease the population.
+Planets that have a very low level of population will ignore any
+negative directives and expand at the normal rate.
+
+  Planets as a rule prefer to increase their native populations and the
+leaders's integrity will be affected if there is not a steady
+population growth.  On the other hand the planet will soon over
+populate if left to expand over a period of years.  This can cause a
+massive economic and political burden for the empire if it has to
+bolster a planet's flagging resources to support its swollen
+population.  Sending an Ark Ship can be a solution to this problem.
+(See Create Ark Ship section on page 56.)
+
+Page 45:
+
+                         SUBORDINATE DISPLAY
+
+Click on the Subordinate icon to open the window.
+
+Subordinates are your eyes and ears in an extensive empire.  You need
+to trust your subordinates to report any information available to them
+and to make decisions in your absence.  Each subordinate has a level of
+competence, trustworthiness and charisma.  These levels effect the
+subordinate's dealings with the tasks under their command.  For
+instance, and Ambassador will need to have a good strong personality
+and high charisma to work effectively with other empires' diplomats and
+ambassadors.  To keep each individual in your service and reliably
+under your influence it is necessary to pay them in cash, give them
+promotional awards and Nostrum - the life preserving drug.
+
+     To Promote a Subordinate:
+
+          o    Select the Subordinate Names icon.
+          o    Select a subordinate from the list.
+          o    Select the Appointments icon.  This lists the three
+               appointment categories, select the one required.
+          o    A list will be displayed, select the planet, empire or fleet
+               required.
+          o    If you wish to promote this subordinate then select the
+               Awards icon.
+          o    Select either MILITARY or CIVILIAN awards and then select a
+               specific award from the list.  You can make awards to one
+               person from both lists.
+          o    Select the MONEY text field and enter the yearly payment you
+               wish to give them.
+          o    Select the NOSTRUM text field and enter their yearly
+               allocation.
+                See Nostrum in the Reports section for more details.
+          o    Click OK and CLOSE the window.
+     For instance, Subordinate Octavius is selected to be the Ambassador
+     with the Droygon empire.  He is promoted to Legion Commander and
+     awarded the position of Tribune.  He is allocated 12 units of Nostrum
+     per year and is paid 12 imperial zongs per a year.
+
+Subordinate's characteristics do change with time and careful promotion.
+So someone disloyal can be shown that loyalty is well rewarded.  Awards and
+promotions are a way to lead a subordinate in the right direction, as well
+as reward those who perform well.
+
+You must have a subordinate as planet leader on each of your planets.  You
+must also have a fleet commander for each fleet that you have and an
+ambassador for each other empire in the game.
+
+When you conquer a new planet, you will always need a planet leader to rule
+over that planet.  There will be an automatic selection of planet leader to
+rule over that planet.  There will be an automatic selection of planet
+leader as you conquer a planet, although the leader will not be chosen for
+his qualities.  (See subordinate control page 29)   There is also automatic
+selection of an Ambassador when a new empire is formed.
+
+Fleet commanders have a great influence on the fleets and troops that they
+command.  A competent and charismatic leader will inspire his forces to do
+well, with both personal appeal and leadership, but also with wise and
+skillful decision making.  The planet leader can affect the defence of his
+planet when it comes under attack, again a charismatic and competent leader
+will be an advantage.
+
+  Slow progress over a period of time will have a better effect on the
+subordinate than a short and rapid rise to fame.  A percentage increase
+over time is more important than an instant rush of riches, however in
+desperate situations a subordinate may respond well to a heavy handed
+promotion.
+
+  You would be well advised to choose the subordinates that you want as
+planet leaders and Ambassadors after the automatic selection is done.
+
+Page 46:
+
+
+                                 MILITARY MENU
+
+
+Click on the Military Menu icon to open the window.
+
+The Military Menu covers all aspects of ship, troop and fleet construction
+as well as their deployment and usage.  Ships are built on a deployment
+planet, and once constructed, they join the pool of ships on that planet
+awaiting inclusion into a fleet.  Troops are created on the planet in a
+similar way to ships, except that they join the garrison on that planet
+until they are transferred to a fleet.  If a planet is under attack the
+garrison will count towards the defence of that planet, however the ships
+in the pool will not.
+
+There are a number of restrictions that apply to the military aspects of
+the empire.
+
+     o    There can only be one shipbuilding order processed by your empire
+          at any one time.
+     o    There can only be a certain number of troops recruited at a
+          planet in a given year, but there is no limit to the number of
+          troops recruited throughout the empire.
+     o    Up to TEN fleets can be controlled by each empire.
+     o    Up to EIGHTY ships can be built and controlled by each empire.
+
+Select Deployment Planet:
+-------------------------
+
+All construction must be completed on the deployment planet.  The default
+deployment planet is your home Planet.
+
+     To Select a Deployment Planet:
+
+          o    Select the Planet Icon.
+          o    Select a new deployment planet from the list.
+          o    Click on OK and CLOSE the window.
+
+Create Spaceship Class:
+-----------------------
+
+Ships can be built to any specification, however certain constraints are
+placed by the average technology level of your planets.  This affects the
+maximum tonnage your ship can have (See Below).
+
+You can create a maximum of twenty different classes of ship.  Use your
+allocation wisely.  Once created, you can then build that class of ship
+without having to specify the size and weight of its components.
+
+At the start of the game, only the SCOUT class is defined.  When building
+ships, you will need to create and name all other classes.  If you have a
+Military Adviser, he will automatically create and name the other classes.
+
+______________________________________________________________
+|Gross Weight | Description | Base Defence | Min. Tech. Level|
+|-------------|-------------|--------------|-----------------|
+| 1-100       | Scout       |      1       |        5        |
+| 101-200     | Patrol Boat |      2       |       15        |
+| 201-300     | Corvette    |      3       |       20        |
+| 301-400     | Frigate     |      8       |       40        |
+| 401-500     | Heavy Frigat|     10       |       50        |
+| 501-600     | Destroyer   |     20       |       60        |
+| 601-700     | Cruiser     |     30       |       70        |
+| 701-800     | Heavy Cruise|     50       |      100        |
+| 801-900     | Battle Cruis|     80       |      120        |
+| 901+        | Dreadnought |    100       |      200        |
+|_____________|_____________|______________|_________________|
+
+     Table of Ship Class used by the Military Advisor.
+
+Each ship will have a base defence rating which is rated by its tonnage.
+This is used with the weight of armor to calculate the defence of the ship.
+Defence is equal to the base defence of the ships plus one unit of defence
+for each ten units of armor.
+
+The strength of a ship is calculated at one point per ten units of weapons.
+The speed of a ship is calculated by the percentage of the engine weight
+compared to the gross weight divided by ten.
+
+
+Page 48:
+
+For instance a 300 unit weight ship that has 100 units of weapons, 50 units
+of armor and 100 units of engine requires a minimum average technology
+level of 20 and will have :
+
+     100/10 = 10 units of strength
+     (50/10)+3 = 8 Units of defence
+     ([100/300] x 100) / 10 = 3 units of speed (3.3 rounded down)
+
+     To create a spaceship design:
+
+          o    Select the CREATE SPACESHIP CLASS button.
+          o    Select the name field, delete the current class name by
+               backspacing though it and enter the name of this class of
+               ship.
+          o    Set the slider to the Gross Weight that you require.
+          o    Set the slider to show the level of Weaponry that you
+               require.
+          o    Set the slider to show the level of Armor that you
+               require.
+          o    Set the slider to show the level of Engines that you
+               require.
+          o    Click on OK and CLOSE the window.
+
+After setting the gross weight, the ranges of the three other areas of the
+ship design are set within the limits of the gross weight.  The sliders
+show the balance of components.  The data fields on the right side display
+the actual value of the components.
+
+The cost and any unused weight is displayed at the bottom of the window.
+
+Create Fleet:
+-------------
+
+A fleet is a military or tactical unit consisting of a single ship or group
+of ships.  It has a starting deployment planet from which you can transfer
+troops to and from the garrison, and ships to and from the planet's pool.
+A fleet can also be used to transfer troops and ships to and from their
+current location.
+
+     To Create a fleet:
+
+          o    Select the CREATE FLEET button.
+          o    Select the name field, delete Unnamed by backspacing through
+               it and enter a new fleet name.
+          o    Select GET LEADER: this will bring up the subordinate window.
+          o    Select the subordinate that you want to command the fleet.
+               (See Subordinate display for more information).
+          o    Select FLEET COMMANDER as his appointment.
+          o    Select UNNAMED fleet.  The fleet that is currently being
+               created will always be called unnamed so that you can find
+               it on the list.  Until you have OK'd the Create Fleet window
+               the fleet is unnamed.
+          o    OK the subordinate window and CLOSE it.
+          o    Select the GET DEPLOYMENT PLANET button if you wish to
+               change the fleet's deployment planet.  (See Select
+               Deployment Planet on Page 46)
+          o    Click on OK.
+
+          The fleet will be added to the pool and a new Unnamed fleet will
+          appear in the text box enabling you to create another new fleet.
+          o    CLOSE the Create Fleet window.
+
+
+Page 50:
+
+Create Troops:
+--------------
+
+There are three classes of troops which you can create; infantry, armored
+and drop troops.  You can recruit a draft of upto 1% of the deployment
+planet population in any given year (the units of population are
+significantly greater than that of the military).  By changing the
+deployment planet, you can create troops on each of the planets within your
+empire.
+
+     To Create Troops:
+
+          o    Select the GET DEPLOYMENT PLANET button if you wish to
+               change the troop's planet.  (See Select Deployment Planet).
+          o    Select the troop type that you wish to recruit (Infantry,
+               Armored, or drop troops).
+          o    Set the slider to the strength level required.
+          o    Click on OK and CLOSE the Create Troops window.
+
+          If you have not recruited the maximum of troops then you can
+          continue selecting all other troop types until the total number
+          of troops left is zero.
+________________________________________________________________________
+| Troop Type |Cost per Strength |Initial Efficiency |Weight to Transport|
+|------------|------------------|-------------------|-------------------|
+| Infantry   |      1           |       40%         |         3         |
+| Armored    |      3           |       50%         |         1         |
+| Drop Troops|      5           |       75%         |         0*        |
+|____________|__________________|___________________|___________________|
+
+                              Troop Table
+*    The drop troops have their own transport and travel as part of a fleet
+rather than taking up any space within that fleet.  Drop troops can only be
+part of a fleet and can never form without a fleet of at least one ship.
+
+A unit's strength is calculated by multiplying the efficiency of troop type
+by the number of troops.
+
+Page 51:
+The efficiency of a unit will fall each year the unit is in combat.  In a
+turn when troops are dropped onto a planet to invade it, both infantry and
+armoured troops have their efficiencies halved for that first year.  Drop
+troops are used in the first year of invasion.  They are tough assault
+troops who suffer no loss of efficiency in the first year, but later their
+efficiency is reduced to that of an infantry unit.
+
+
+BUILD SHIPS:
+------------
+
+You can only process one order for ships within your empire at any given
+time.
+
+     To build a number of ships:
+
+          o    Select the GET DEPLOYMENT PLANET button to change the planet
+               where the ship order will be processed. (See Select
+               Deployment Planet Page 46)
+          o    Select the class of the ship you wish to build.
+          o    Select the number field.
+          o    Enter the number of ships to be built. (Max of 10 at time).
+          o    Select BUILD to place the ship building order and CLOSE the
+               window.
+
+A class of ship is defined on the Create Spaceship Class menu (see page 47).
+Once it is defined, you can build this type of spaceship, without giving
+the exact specifications of that ship again.
+
+There is a fixed construction cost associated with every ship built of a
+certain class.  Ship building orders also require varying quantities of
+certain commodities depending upon the size of the ships being built.
+Commodities must be purchased at the current market cost by the Imperial
+treasury.  If the demand for the commodity cannot be fulfilled from you
+planets, your empire will attempt to buy the commodities from another
+empire.
+
+Ship building requires the following commodities per 100 units of gross
+weight being built:
+__________________________________________________
+|  Commodity     | Amount |  Commodity  | Amount |
+|----------------|--------|-------------|--------|
+| Building Equip |   5    | Heavy Plant |    5   |
+| Power Supply   |  10    |Rare Earth El|   10   |
+|Space Ship Equip|  25    | Information |   10   |
+|Communicat Equip|  15    |Raw Materials|   25   |
+| Personnel      |  20    | Heavy Arms  |    5   |
+| Computers      |  10    | Robots      |    2   |
+|________________|________|_____________|________|
+
+   Once you have placed an order to build ships you cannot place another
+   until the first one is complete.  you cannot cancel the order that is
+   being built, so committing to building a number os ships is an
+   irreversible decision.
+
+Shipbuild Status:
+-----------------
+
+This displays the current status of ships under construction.  It also
+allows you to pay outstanding costs and to see how long the ships will take
+to complete.
+
+     Allocate money to ship building
+
+          o    Enter any cash you wish to allocate towards the total cost
+               of construction in the Money to Allocate field.
+          o    Click on OK and CLOSE the window.
+
+The Remaining Build Time figure is the estimated construction time for the
+ships assuming a full stock of commodities.  If at any time the there is a
+shortfall of commodities, the construction time is increased.  The
+following table shows the estimated build time for ships by gross weight,
+the construction time is reduced by the (Tech level / 5)%.
+
+Page 53:
+
+_____________________________________________________________________
+| Gross Weight   Construction time| Gross Weight   Construction time|
+|                   in years      |                    in years     |
+|---------------------------------|---------------------------------|
+|  1 - 100               1        |  501 - 600              8       |
+|  101 - 200             2        |  601 - 700             10       |
+|  201 - 300             3        |  701 - 800             12       |
+|  301 - 400             4        |  801 - 900             14       |
+|  401 - 500             6        |  901 +                 16       |
+|                                 |                                 |
+| +1 per add'l 100 units          |                                 |
+|_________________________________|_________________________________|
+
+Fleet Report:
+-------------
+
+The fleet report gives details of the various fleets within your empire.
+
+     To view or alter a fleet:
+
+          o    Select the Fleet icon and then select the fleet from the
+               list displayed
+          o    Select the Pool to Fleet icon to show a list of ships in the
+               pool that can be transferred.
+          o    Highlight the ships that you want to transfer and press OK
+               on the fleet report to transfer the ship(s).
+          o    Set the troop slider levels to transfer as many or few of
+               each troop type from the garrison to the fleet as required.
+
+          Reducing the number of ships reduces the number of troops able to
+          be carried.
+
+          o    Click on OK and CLOSE the window.
+
+     Ships can be transferred from the fleet to the pool in the same way:
+
+          o    Select the Fleet icon and then select a fleet from the list
+               displayed
+          o    Select the Fleet to Pool icon to list the ships in the fleet
+               that can be transferred from the fleet to the pool.
+          o    Highlight the ships you want to transfer and press OK.
+
+Page 54:
+
+          o    Set the troop sliders to new levels to transfer troops to or
+               from the garrison
+          o    Click on OK and CLOSE the window.
+
+A fleet must be at a planet within your empire to transfer its troops or
+ships to or from that planet.  For example, you will need to move your
+fleet to Mars before transferring troops from Mars of from the fleet.  The
+maximum number of troops that can travel on a fleet is determined by the
+tonnage of the ships in the fleet.
+
+If you want to take a fleet out of commission that fleet must be empty of
+both troops and ships.
+
+     To de-commission a fleet:
+
+          o    Select the Fleet icon and then select a fleet from the list
+               displayed
+          o    Select the DE-COMMISSION button.
+
+If a fleet is de-commissioned, it will be removed from active service and
+the fleet commander retired.
+
+A fleet that has no ships cannot move or have troops transferred to it.
+
+  You may wish to de-commission a fleet, if it is created on a planet with
+no ships, or if all its troops and ships have been transfered to another
+fleet.
+
+Give Fleet Orders:
+------------------
+
+Fleets can be given up to five sets of instructions they will then carry
+out.
+
+     To give a fleet its orders:
+
+          o    Select the GIVE FLEET ORDERS button.
+          o    Select the Fleet icon.
+          o    Select a fleet from the list that appears.
+          o    Highlight first empty space on the orders list.
+
+Page 55:
+
+          o    Select an order from the list of Invade, Move To, Hold 1yr
+               or Hold 5yr.  (HOLD means hold position for the allocated
+                amount of time).
+          o    Select the Planets icon (or use the clipboard as explained
+               below).
+          o    Select the destination planet from the list that appears.
+
+               If you wish to send additional orders, repeat this process,
+               by highlighting the next available space on the orders list
+               and follow the same steps.  They will be carried out
+               sequentially on a yearly basis where applicable.
+
+  If you select MOVE TO or INVADE you must select a destination planet.
+
+          o    Click on OK and CLOSE the window.
+
+     If you wish to use the clipboard to order your fleet, follow these
+     instructions:
+
+          o    Open the Clipboard
+          o    Instead of selecting the Planets icon, highlight the planet
+               name on the clipboard list.
+          o    Select the ORDERS button on the clipboard.
+          o    To send additional orders repeat this process, by
+               highlighting the next available space on the fleet orders
+               list and follow the same instructions
+          o    Click on OK and CLOSE the Fleet Orders window.
+
+You can alter or change instructions at any time by highlighting and
+editing the order concerned.
+
+Page 56:
+
+                            CREATE ARK SHIP
+
+An ark ship is a large and cheap vessel, designed to transport large
+numbers of people and commodities between planets.
+
+Click on the Create Ark Ship icon to open the window.
+
+     To create an Ark Ship:
+
+          o    Select the Destination Planet icon.
+          o    Select a destination planet from the list that appears.
+          o    Select the Source Planet icon.
+          o    Select a source planet from the list that appears.
+          o    Set the commodities slider to the desired level.
+
+          The cost will rise as the percentage of the planet's commodities
+          you want to send increases
+
+          o    Set the population slider to the desired level.
+
+          The cost will rise as the percentage of the planet's population
+          you want to send increases.  You can only allocate 20% of the
+          source planet's population to be sent on an Ark ship.
+
+          o    Select the Ark Ship To Move Home Planet tick box, if you
+               wish to move your home planet to the destination planet.  A
+               tick will appear in the box to confirm this order.
+          o    Click on OK and CLOSE the Create Ark Ship window.
+
+          The cost falls after the window has been OK'd, because the total
+          population and commodity stock has fallen.
+
+There can only be five ark ships in space at any one time.  An ark ship is
+a slow vessel which will take longer than your fleets to travel between
+source and destination planets.  The number of remaining ark ships is shown
+in the window.
+
+  It should be noted that shipping people off to an exciting and new world
+is a good method of lowering total population of the planet they leave.
+
+Page 57:
+
+
+                                CREATE ANTENNA
+
+An antenna is a large communications device similar to a spy satellite.  An
+antenna can vary in size according to the technology level of the planet
+where it is under construction.  The size of the antenna directly affects
+the range of that antenna, and the catchment area around the planet.  A
+solar system falling within an antenna's catchment area has a zero
+distortion rate applied to all information received from planets within
+that system.  Outside the range of the antenna, the distortion level
+degrades with distance from the edge of the antenna's maximum range.
+
+Click on the Create Antenna icon to open its window.
+
+     To create an Antenna:
+
+          o    Select the Planet icon.
+          o    Select a planet where the antenna will be constructed, from
+               the list that appears.
+          o    Set the slider to the range you want.
+          o    The Solar System Encatchment are shows how many solar
+               systems fall within the range of this antenna.
+          o    The Cost of the antenna is displayed and varies as the range
+               changes.
+          o    Click on OK and CLOSE the window.
+
+The technology level of the planet will affect the cost and range of the
+antenna.  It will take five years for an antenna to be built.
+
+  It is only necessary to build one antenna within a solar system since the
+antenna works on a solar system scale, not a planetary one.  It is best to
+build at the highest technology level planet within a solar system, to get
+the largest range antenna.
+
+
+Page 58:
+
+                              REPORTS
+
+Click on the REPORTS icon to open its window.
+
+You can call up reports from any empire or planet, which means you can
+monitor all activity in the known galaxy.
+
+Empire Report:
+--------------
+
+The empire report allows you to examine the status of your and other
+empires.
+
+     To view an empire report:
+
+          o    Select the Empire icon.
+          o    Select an empire from the list that appears.
+
+The Imperial treasury balance and total population is then displayed, these
+figures are distorted by the percentage shown.  (See the Create Antenna
+section for more details on distortion.)
+
+     To view an inter-empire relationship
+
+          o    Select the bottom Empire icon.
+          o    Select an empire from the list that appears.
+
+The relationship of the first empire with the second is shown.  This is not
+always an equal relationship, with empires regarding each other very
+differently.
+
+  To view the relationship between your empire and another, it is necessary
+to look at that empire's relationship to you.  This is because your opinion
+as a player is your choice and it is not stored within the computer.
+
+
+Planet Report:
+--------------
+
+The planet report is the largest report within the game.  This shows the
+status of individual planets, their financial status and the population's
+stability.
+
+          o    Select the Planet icon.
+          o    Select a planet from the list that appears, scrolling up or
+               down if necessary with the up/down arrows.
+
+Page 59:
+
+   
+         Each planet has a range of information consisting of:
+
+Planet              The current planet name.
+
+Empire              Which empire the planet belongs to.
+
+Leader              The current leader name.
+
+Solar System        The name of the solar system is in.
+
+Star Type           The type of star affects the ability of the planet to
+                    produce commodities.
+
+Planet Type         The type of planet affects the ability of the planet to
+                    produce commodities.
+
+Atmosphere          The atmosphere affects the ability of the planet to
+                    produce commodities.
+
+Conflict            The level of conflict on this planet.
+
+Wealth              This is the current level of the planet's treasury.
+
+Population          The current population levels.
+
+Antenna             The current range of an antenna on this planet.  If
+                    this planet does not have an antenna the range is zero.
+
+Defences            The current level of planet defences.  This is a
+                    commodity and can be traded with other planets in the
+                    same way as any other commodity.  The planet defences
+                    can be increased by Imperial Subsidy, and decreased
+                    through planetary bombardment as part of an invasion.
+
+Garrison            The current number of troops in the garrison.  There is
+                    no distinction made between the types of troops when
+                    they are in the garrison.
+
+Ship Pool Size      The number of ships currently in planet's pool of ships.
+
+Technology Level    The current technology level of the planet.  The
+                    technology level can be slowly increased through an
+                    Imperial Subsidy.  The higher the
+
+Page 60:
+
+                    value the better the level of technology the planet
+                    has, therefore affecting the cost and potential of
+                    anything you wish to construct within the game.  For
+                    instance, Antennas are larger and cheaper and ships can
+                    be larger and proportionally less expensive with higher
+                    technology levels.
+
+Material Infrastructure
+                    The current level of the material infrastructure of the
+                    planet.  This is a commodity and can be traded to and
+                    from the planet.  Material infrastructure can be
+                    increased through the Imperial Subsidy and covers
+                    services such as road and rail networks, education,
+                    hospitals, and health care.  It is the physical
+                    backbone of a planet's capacity to sustain life.
+
+Moral Infrastructure
+                    Is the people's moral strength and attitude.
+
+Yearly Nostrum Growth
+                    Shows the yearly growth of the life-sustaining drug
+                    Nostrum.
+
+Distortion          Shows the level of distortion to these reports.
+
+Stability           The stability represents the attitude and political
+                    state of the population on this planet.  The higher the
+                    value the more volatile and unstable the population.
+
+Integrity           The integrity is a value representing the level of
+                    support the leader of the home planet has.  The higher
+                    the value, the better the level of belief and support. 
+                    The integrity is affected by the actions of the empire.
+                    For instance, if empire decolonises a planet then the
+                    leader of the home planet is send to be responsible
+                    for that action and receives a decrease in integrity.
+
+Loyalty             Current level of Loyalty to the empire ruling the
+                    planet.
+
+Page 61:
+
+     To decolonise a planet
+
+          o    Select the planet to be decolonised.
+          o    Select the DECOLONISE button.
+          o    You will then be prompted to confirm or cancel by selection
+               YES or NO.
+
+You can decolonise any planet within your empire, with the exception of your
+home planet.  The decolonisation of a planet will move all of the
+planetary treasury to the Imperial treasury and will take half of the
+population and ships splitting them equally to all planets within the
+empire.  All commodities, garrisons, antennas and ships in the pool will be
+lost.
+
+NOSTRUM REPORT
+--------------
+
+The Nostrum report simply shows you the stock of Nostrum your empire has.
+It also shows you the level of Nostrum your empire currently consumes, its
+allocation and estimated yearly growth.
+
+Nostrum is a life-preserving drug that is found on certain planets within
+the galaxy.  Nostrum is a special chemical compound which can only be
+harvested from certain planets and cannot be produced by man-made
+chemicals.
+
+Nostrum reduces the effects of ageing when allocated to a subordinate.  The
+quantity of Nostrum allocated slows the ageing process as follows:
+
+
+        Quantity of Nostrum per year Effect
+        -----------------------------------
+1-10    The subordinate ages a year for every two years that pass.
+11-49   The subordinate ages a year for every ten years that pass
+50+     The passing of time has no effect on the subordinates age.
+
+
+Popularity Report
+-----------------
+The popularity report shows the popularity level of the home planet leader
+over the last ten years.  This is shown in graphical form, and is a
+percentage representation indicating the popularity of your politics and
+actions to date.
+
+Page: 62
+
+                                CLIPBOARD
+
+The clipboard is used to pass information between the map screen and the
+main screen.
+
+Click on the CLIPBOARD icon to open its window.
+
+        To use the clipboard:
+                o  Use the Map screen to select and send Items to the
+                   clipboard.
+                o  Select the item from the list in the clipboard
+                o  Select REPORT to get a report on that item
+                o  Select DELETE to get rid of the highlighted item
+                   or DELETE ALL to delete all the items from the
+                   clipboard.
+
+        To use the clipboard to order fleets:
+                o  Follow the GIVE FLEET ORDERS section (see page 54)
+                   until you need to give the fleet a destination planet.
+                o  Highlight the planet's name on the list of items in the
+                   clipboard.
+                o  Select ORDERS.
+                o  The planets name will now be transferred to the Give
+                   Fleet Orders window.
+                o  Click on OK and CLOSE the Fleet Orders window.
+
+Page: 63
+
+                                  NEWS
+
+Click on the NEWS icon to open the window.
+
+The news reports keep you updated on the progress of the galaxy around you.
+For instance, confirming that your ships have arrived at their destination,
+that your ambassador has received a diplomatic message or that a major
+famine has struck on one of your agricultural planets.
+
+News Control
+------------
+You have two levels of control over the news that you receive.  You can
+either stop the present game turn at the end of the next year to receive
+news, or you can flag the news to be announced at the end of that chosen
+game turn.
+
+        To set news control level
+                o  Select either flag or stop.  A tick will appear 
+                   in the box to confirm the action.
+                o  Click on OK and CLOSE the window
+
+You can select the following news items:
+
+        Hostilities             Reports any aggressive actions, for
+                                instance, an invasion or colonisation
+                                of a planet.
+        Unrest                  Reports any situations of revolt or public
+                                unrest, for instance, anarchy and
+                                revolution.
+        Treaties                Reports any diplomatic alliance news, for
+                                instance, an empire responding to an
+                                alliance offer.
+        Deaths                  Reports of any of your subordinates who
+                                have died and their position in the empire.
+        Ark Ships               Reports when an ark ship arrives at its
+                                destination.
+
+Page: 64
+
+        Disasters               Reports any natural disasters that occur,
+                                for instance, a major plague on a planet.
+        Ambassador              Reports any ambassadorial activity, for
+                                instance, an empire has taken an
+                                aggressive stance and is building
+                                spaceships.
+        Miscellaneous           Reports any other news, for instance, a
+                                completed shipbuilding order or an
+                                election due in 5 years.
+        Relics:                 Reports any relics that are found while
+                                colonising a planet, for instance, Gold
+                                found on the planet prompting a
+                                destabilizing rush.
+
+The game will force certain events onto your news report, it is not
+possible to isolate yourself completely from the galaxy around you.  The
+news report will also appear when the list is full, to prompt you to read
+and delete a report.
+
+
+News Report
+-----------
+The news report shows the various items of news that you have received
+
+        To look at news report
+                o  Select the item of news by clicking on it
+                o  Select GET REPORT to see the item of news in detail
+                o  Select DELETE to get rid of the highlighted item of
+                   news.
+                o  Select DELETE ALL to delete all of the item s of news.
+
+
+Page: 65
+
+                                  GAME TURN
+
+Click on the GAME TURN icon to open its window.
+
+A game turn effectively carries out all of your commands set in that year
+and those that are outstanding.  As such it is a very powerful command and
+should only be used once you have checked all of your commands and are
+satisfied with them.
+
+You can select the number of years that any given game turn lasts.
+
+        To set game turn length
+                o  Click on the text entry box if you want to alter the
+                   current length of turn backspace through the existing
+                   turn length and enter your own choice  (Up to a
+                   maximum of ten years.)
+                o  Select NEXT TURN to proceed with the turn
+
+The game turn is stopped if there is any news which requires your
+attention.  Selecting NEXT TURN will close all of the other windows.
+
+The current year is displayed counting from the starting year of 2020.  The
+game lasts up to one thousand years from this date ending when the date is
+3020.
+
+
+                                       MAP
+
+
+Click on the MAP icon to move to the Map screen.
+
+This shows you the whole galaxy and from here you can directly select
+solar systems, planets and fleets.  The flashing solar system is the one
+you have currently selected.
+
+
+Page: 66
+
+Directional Arrows
+------------------
+        o  Select either arrow icon to rotate the map to the left or
+           right.  Select the same arrow icon again to stop the map
+           rotating.
+
+Return to Main Screen
+---------------------
+        o  This returns you to the main screen.
+
+Zoom
+----
+        o  Select the solar system by clicking on it directly with the
+           cursor on the Map screen.
+        o  Select the ZOOM icon to view the selected solar system in
+           greater detail.  You can use the arrow icons to rotate the
+           zoomed map.  At this level you can select specific planets
+           within the solar system.
+        o  Select the ZOOM icon again to return to the Map screen.
+
+Empire
+------
+        o  Select the EMPIRE icon.
+        o  This displays a list of all of the empires currently in play.
+           Select the empire name in the list to highlight all solar systems
+           that that empire has a presence in.  The systems under the
+           empire's control will be shown in blue.
+
+Fleet
+-----
+        o  Select the EMPIRE icon and select an empire from the list
+           that appears.
+        o  Select the FLEET icon, this lists all of the selected
+           empires fleets and highlights them on the map.  You can select
+           a fleet as an item from the map directly, then fleet name will
+           appear in the item field.
+
+Page: 67
+
+Known Stars
+-----------
+        o  Select the KNOWN STARS icon.
+        o  This highlights in blue all solar systems that an empire
+           has a presence in, from owning just one planet to owning the
+           whole system.  These will be highlighted in blue to indicate
+           ownership.
+
+Antenna
+-------
+        o  Select the EMPIRE icon and select an empire.
+        o  Select the ANTENNA icon, this will display in blue any
+           antenna that the selected empire has.  If there is more than one
+           antenna in any one solar system, only the largest is shown.  Any
+           solar systems within the catchment range of the antennas are
+           highlighted.
+
+Send Item to clipboard
+----------------------
+        o  Select either a planet, fleet or empire.  The item selected
+           will appear in the Item field.
+        o  Select SEND ITEM TO CLIPBOARD to send this item to the
+           clipboard by clicking on the button.
+
+Once an item has been send to the clipboard you can get reports on it and
+give orders from within the clipboard menu on the main screen.
+
+
+-----------------------------------------------------------------------------
+
+The End.  (Game Over Dude -WM)
+
+                  Typed by Eclipse & Winter Mute in July 1990

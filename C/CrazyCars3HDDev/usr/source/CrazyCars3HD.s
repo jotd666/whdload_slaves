@@ -58,7 +58,6 @@ IOCACHE		= 10000
 ;STACKSIZE = 10000
 BOOTDOS
 CACHE
-NO68020
 
 slv_Version	= 17
 slv_Flags	= WHDLF_NoError|WHDLF_Examine|WHDLF_ClearMem
@@ -74,7 +73,7 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"2.1"
+	dc.b	"2.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -272,27 +271,29 @@ pl_main
 ;
     ; replace possibly buggy blitterwait routine
     ; see https://eab.abime.net/showthread.php?p=1422388#post1422388
-    PL_PSS  $02b34,skip_wait_blitter,4
-    PL_PSS  $0e952,skip_wait_blitter,4
-    PL_PSS  $0eba6,skip_wait_blitter,4
-    PL_PSS  $0ec28,skip_wait_blitter,4
-    PL_PSS  $0ecb2,skip_wait_blitter,4
-    PL_PSS  $0eda2,skip_wait_blitter,4
-    PL_PSS  $0ee86,skip_wait_blitter,4
-    PL_PSS  $0ef72,skip_wait_blitter,4
-    PL_PSS  $0f002,skip_wait_blitter,4
-    PL_PSS  $0f08e,skip_wait_blitter,4
-    PL_PSS  $0f122,skip_wait_blitter,4
-    PL_PSS  $0f21c,skip_wait_blitter,4
-    PL_PSS  $0f30a,skip_wait_blitter,4
-    PL_PSS  $0f400,skip_wait_blitter,4
-    PL_PSS  $0f486,skip_wait_blitter,4
-    PL_PSS  $0f51a,skip_wait_blitter,4
-    PL_PSS  $0f5fc,skip_wait_blitter,4
-    PL_PSS  $0f688,skip_wait_blitter,4
+    PL_PS  $02b34,wait_blitter_skip_4
+    PL_PS  $0e952,wait_blitter_skip_4
+    PL_PS  $0eba6,wait_blitter_skip_4
+    PL_PS  $0ec28,wait_blitter_skip_4
+    PL_PS  $0ecb2,wait_blitter_skip_4
+    PL_PS  $0eda2,wait_blitter_skip_4
+    PL_PS  $0ee86,wait_blitter_skip_4
+    PL_PS  $0ef72,wait_blitter_skip_4
+    PL_PS  $0f002,wait_blitter_skip_4
+    PL_PS  $0f08e,wait_blitter_skip_4
+    PL_PS  $0f122,wait_blitter_skip_4
+    PL_PS  $0f21c,wait_blitter_skip_4
+    PL_PS  $0f30a,wait_blitter_skip_4
+    PL_PS  $0f400,wait_blitter_skip_4
+    PL_PS  $0f486,wait_blitter_skip_4
+    PL_PS  $0f51a,wait_blitter_skip_4
+    PL_PS  $0f5fc,wait_blitter_skip_4
+    PL_PS  $0f688,wait_blitter_skip_4
     PL_ENDIF
     PL_PSS  $02bc2,vbl_hook,2
 
+    ;;PL_PSS  $2BA2,small_vpos_wait,2
+    
     PL_PS   $046fa,fix_copperlist
     
     PL_PS   $05188,start_boost_test
@@ -324,8 +325,32 @@ pl_main
     PL_NOP  $05196,2
     PL_ENDIF
        
-    PL_END
+    ; quit key on 68000
+    PL_PS   $11e46,quit_key_hook
     
+    PL_END
+
+small_vpos_wait:
+.bd_loop1
+	move.b	$dff006,d0
+    cmp.b   #5,d0
+    bcs.b   .bd_loop1
+    
+	MOVE.L	-7952(A4),D0		;02ba2: 202ce0f0
+	MOVEA.L	-4432(A4),A0		;02ba6: 206ceeb0
+    rts
+    
+quit_key_hook
+    MOVE.B	$bfec01,D0
+    movem.w d0,-(a7)
+    ror.b   #1,d0
+    not.b   d0
+    cmp.b   _keyexit(pc),d0
+    beq _quit
+    movem.w (a7)+,d0
+    rts
+    
+
 fix_copperlist
     movem.l a0,-(a7)
     move.l  d0,a0
@@ -406,14 +431,21 @@ wait_blitter_d1
     bra.b wait_blitter
 wait_blitter_d5
 	MOVE.W	D5,_custom+bltsize
+    bra.b wait_blitter
+wait_blitter_skip_4
+    ; skip 4 instructions after jsr
+    ; avoids execution of 2 useless NOP instructions AFTER
+    ; blitter is ready to blit, better do the skip before!
+    addq.l  #4,(a7)
 wait_blitter
+    ; proper blitterwait uses an extra btst (workaround for
+    ; some buggy machines)
 	BTST	#6,_custom+dmaconr
 .wait
 	BTST	#6,_custom+dmaconr
 	BNE.S	.wait
     rts    
-skip_wait_blitter
-    rts
+
 fire_button_test:
     movem.l d0,-(a7)
     move.l  joy1(pc),d0

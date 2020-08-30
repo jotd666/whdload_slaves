@@ -1,0 +1,9 @@
+PROGNAME = SabreTeam
+
+all : $(PROGNAME)AGA.slave $(PROGNAME)CD32.slave
+
+$(PROGNAME)CD32.slave : $(PROGNAME)CD32HD.asm $(PROGNAME)XXXHD.asm
+	basm $(PROGNAME)CD32HD.asm
+
+$(PROGNAME)AGA.slave : $(PROGNAME)AGAHD.asm $(PROGNAME)XXXHD.asm
+	basm $(PROGNAME)AGAHD.asm 

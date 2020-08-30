@@ -1,0 +1,81 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Syndicate" © 1993/1994 Bullfrog
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ The CD³² installed program requires 2.0 MB ChipMem and 1.5 MB OtherMem.
+ The floppy installed program requires 0.5 MB ChipMem and 1.0 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ The CD³² game requires an installed A1200 Kickstart 3.1 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick40068.A1200". The image can be extracted from a A1200 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick40068.A1200.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick345.lha" on aminet.
+
+ The floppy game requires an installed A500 Kickstart 1.3 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick345.lha" on aminet.
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 2.4 (01.04.2020) done by JOTD:
+ - CD³² version: (really) no more error because of joypad or mouse not found (improved lowlevel lib emulation) (issue #0001054)
+ - CD³² version: fixed access fault
+ 
+ version 2.3 (15.03.2006)
+ - manual & tips added
+ - "mouse or joypad required" message obliterated in the CD³² version (got rid
+   of disk lowlevel.library and in the custom implementation the joystick is
+   never an option)
+
+ version 2.2 (13.09.05) done by JOTD
+ - better version check
+ - improved install script error checks
+ - adapted for another floppy version (CAPS 1887)
+ - slight CD32 version source rework
+
+ version 2.1 (06.04.04)
+ - adapted for other floppy version (german source)
+ - adapted for WHDLoad v16
+
+ version 2.0 (15.10.03)
+ - now uses kickstart images
+ - CD³² version supported, access fault fixed on this version
+ - source code included
+
+ version 1.1 (11.11.01) done by JOTD:
+ - initial WHDLoad release
+
+ version 1.0 (2000)
+ - JST release

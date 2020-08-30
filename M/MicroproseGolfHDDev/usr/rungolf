@@ -1,0 +1,27 @@
+; Startup-script by Jean-François Fabre
+
+; assigns
+
+assign "Course Disk 1:" ""
+assign "Course Disk 2:" ""
+assign JFF: ""
+
+; disable fastmem
+
+run sys:system/nofastmem
+
+; run the game
+
+wait 1
+JFF:golf/golf JFF:
+wait 1
+
+; fastmem again
+
+run sys:system/nofastmem
+
+; remove the assigns
+
+assign JFF: remove
+assign "Course Disk 1:" remove
+assign "Course Disk 2:" remove

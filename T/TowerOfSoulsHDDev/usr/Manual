@@ -1,0 +1,581 @@
+
+             +     ______  ____   ____    ____        __+
+             THE   \+    \ \__Œ  ___Œ______Œ__.___ | +|
+             DATA   \_/\__\__ \/  Œ_ .___Œ_/   \   \  |
+                     /  \/ \  \   /  \__. \  \-- ) ž    |
+                    /      Œ__—  Œ___Œ____Œ__Œ__/  |\___
+                   Œ______/    \/               Ž__  tr
+               +----->           PRESENTS            <----+
+                       THE TOWER OF SOULS AGA DOC'S
+
+
+TOWER OF SOULS
+==============
+
+In the Realm of Chaybore
+
+To enter the main  game  click  on  the  tower  to the right of
+Treeac.  A disk change request may appear at this point.
+
+Manoeuvring
+
+The main character, Treeac, will appear in a room.
+
+Move the character with the  mouse.  Guiding light changes from
+green to red to warn you of approaching enemies.
+
+To enter other rooms
+
+To enter another  room  move  main  character  up  to doorways,
+staircases, and onto small peninsulas.   If door is unlocked it
+will open allowing entry to the next room.
+
+Using the Virtual Joystick
+
+SPACE BAR switches 'virtual joystick' ON/OFF.
+Virtual joystick is on if pointer is a guiding light.
+Virtual joystick is off if pointer is a hand.
+
+Mouse button controls are:
+
+While virtual joystick is ON:
+
+LEFT - Use current weapon
+
+RIGHT - Cast current spell
+
+While virtual joystick is OFF:
+
+LEFT - Activates required  icon,  EXCEPT  when  holding food or
+drink. (Refer to section on Status screen and Use of Menu bar).
+
+RIGHT  -  Activates  alternative  functions  on  the  menu  bar.
+Switches the  'virtual  joystick'  back  ON  if  no alternative
+function found.
+
+USE OF MENU BAR
+===============
+
+Icons on the menu bar from left to right:
+
+1.  Automap:  This icon takes you to the Automap screen showing
+you your progress through the game.  Click on the icon with the
+LEFT mouse button to enter this screen.
+
+2.  Bag:  Clicking on  this  icon  with  the  LEFT mouse button
+takes you to the status  9refer  to  section on Status screen).
+While  holding  an  object   clicking   with  the  left  button
+automatically packs  the  object  into  the  correct container.
+Clicking with the RIGHT  mouse  button  while holding an object
+takes you to the Status  screen  without packing the object you
+are holding.  While not  holding  an  object, clicking with the
+RIGHT mouse button on the bag takes  a first aid object from it
+dependant on which face (Health or Energy) is shown.
+
+
+3.  Amulet Icon:  When amulet  is  red  it is fully charged and
+can be used to kill most enemies  that  are in the room you are
+currently in by clicking  on  amulet  icon  with the LEFT mouse
+button.  It takes time for the amulet to recharge.
+
+4.  Hands:  Objects picked up may be placed into either hand by
+clicking with the LEFT mouse button  onto  hand.  If object is a
+bag the contents may be cycled  through by clicking on bag using
+RIGHT mouse button.
+
+5.  Head:  This icon  gives  a  representation  of your current
+health and energy status;  which  can  be flipped between using
+LEFT mouse button.   Health  status  is  represented by graphic
+stages showing damage which is  restored by using healing items
+(click items on head).  A representation of your current energy
+level which can be restored by  consuming food and drink (click
+items on head).
+
+6.  Spell book:  Left mouse  button  opens and closes the spell
+book.  Once opened  left  button  held  down  and  moved around
+flicks pages for spells to  be selected.  (Alternatively, pages
+may be  clicked  through  slowly  using  RIGHT  mouse  button).
+Moving mouse up and down wit LEFT mouse button held down allows
+spell level to be selected.   Previous,  current and next spell
+available are displayed in the  current  spell icon until mouse
+button is released when  the  spell  now  selected is displayed
+here.   Spell book pages become colour of spell levels.  (Refer
+to section on Alchemy Screen).
+
+7.  Current Spell  Icon:   Current  spell  displayed in window.
+Clicking with left button closes spell book.
+
+8.  A-Attack:  Selects the current  Attack spell.  Holding down
+left mouse button and moving around  flicks pages in spell book
+through Attack spells available.
+
+9.  D-Defence:  Selects  the  current  Defence  spell.  Holding
+down left button and moving  around  flicks pages in spell book
+through Defence spells available.
+
+10.  M-Morphing Spells:   Selects  the  current  Morphing spell
+(these spells change your body state).  Holding down left mouse
+button and moving around  flicks  pages  in  spell book through
+Morphing spells available.
+
+11.   E-Equipment:   Selects   the   current  Equipment  spell.
+Holding down left  button  and  moving  around  flicks pages in
+spell book through Equipment spells available.
+
+STATUS SCREEN
+=============
+
+To enter Status screen click with the RIGHT mouse button on the
+Bag Icon.
+
+To exit Status screen click  on  LEFT  mouse  button at far top
+right corner of screen.
+
+The backpack displayed on  this  screen  is  made up of several
+smaller containers which may be opened using left mouse button.
+When opened items held in that  container are displayed in grid
+to left of screen.
+
+The hands at the bottom of  the  screen are those that are also
+on the menu bar and display  the  items that you are currently
+holding.  Items displayed on the  grid  may be placed into your
+hands using LEFT  mouse  button,  with  the  exception of the
+keyring and money purse.
+
+Opening containers within the Backpack.
+---------------------------------------
+
+Click RIGHT mouse button on container  in  grid to open it.  In
+order to close container click  with  RIGHT mouse button within
+grid, or LEFT mouse button on left eye.
+
+Food and drink may be  consumed  on  this screen by placing it
+over the character's mouth  and  clicking  with  the LEFT mouse
+button.
+
+CONSUMING FOOD AND DRINK RESTORES YOUR ENERGY.
+
+Character stats are displayed on  this  screen also by clicking
+on the circle to the  right  of  the  grid  with the LEFT mouse
+button.  To exit character stats click again on eye.
+
+LOAD AND SAVE GAME
+==================
+
+In order to load and save  the  game  you must build up credits
+using gold coins, these need to  be  fed to the gargoyle on the
+left of the Status screen.  Place  a  coin into its mouth until
+the number on the  plinth  reaches  zero  and  the disk icon is
+displayed. If you do not have enough gold coins try feeding the
+gargoyle with any  of  your  other  items.   Once  disk icon is
+obtained, clicking on the icon will  allow  you to load or save
+game.
+
+DEATH OF CHARACTER
+==================
+
+Provided you have a minimum requirement of 100 in coin value; a
+screen will come up on which there is a tombstone.  Clicking on
+the stone and putting  the  required  amount into the proffered
+cup allows you to resurrect Treeac in a ghost-like form.
+
+ALCHEMY SCREEN
+==============
+
+To get the Alchemy Screen click  with  LEFT mouse button on the
+Alchemy chest on your backpack in the Status screen.
+
+To  exit  Alchemy  Screen  click  with  LEFT  mouse  button  on
+rectangle above blood container.
+
+The Alchemy screen allows you  to  create  magic potions from the
+spell recipes.
+
+The display area in  this  screen,  (top  right sector), can be
+scrolled using the buttons at top  and  bottom if the number of
+items available cannot be contained within it.
+
+To bring bag contents into  display  area  clicking on button C
+will cycle through the herbs etc, that you have collected.
+
+If you have test tubes, one  will automatically appear when you
+select the spell you wish to make.  If you use a test tube that
+already contains a potion, that potion  will be replaced by the
+one that you are currently making.   If  you do not wish to lose
+the potion you have, click on button C to check if you have any
+empty test tubes on you.
+
+To select a spell recipe, click on  the class of spell that you
+want, buttons A,D,M & E,  using  LEFT mouse button.  The spells
+available are then represented  in  the  display area C.  Those
+spells greyed out are not available.
+
+A - Attack spells
+
+D - Defence spells
+
+M - Morphing spells
+
+E - Equipment spells
+
+Click LEFT mouse button on type  of  spell you want, spell type
+and test tubes will be displayed.   Next, select level of spell
+you want.  There  are  five  spell  levels  represented  by the
+colour of test tubes:
+
+EMERALD - Spell strength LOWEST
+
+SAPPHIRE - Spell strength LOW
+
+RUBY - Spell strength MEDIUM
+
+SILVER - Spell strength HIGH
+
+GOLD - Spell strength HIGHEST
+
+Select level of spell by clicking LEFT mouse button on coloured
+test tube and a depiction of the spell will be displayed beside
+the coloured test tube in (C)  along with the recipe for making
+the potion.
+
+The spell recipes list the ingredients (3 herbs and a catalyst)
+necessary for  the  particular  spell  selected  along  with the
+directions for the number of  blood  and water drops needed and
+cooking temperature required to produce that potion.
+
+The herbs are stored  in  the  herb  boxes  on the bottom right
+corner of the Alchemy  screen  with  the  catalysts below them.
+Click once with the LEFT  mouse  button  over  the herb you need
+(either on that in display area (C)  or on the herb box itself)
+and a window will appear either  showing  that you have some of
+this herb or displaying an empty window if you have none of that
+particular herb.  As all herbs  are  capable of making a potion
+of sorts, a substitute herb could  be  tried if you have none of
+the required herbs.   To  pick  up  necessary ingredients click
+again on  LEFT  mouse  button.   Placing  ingredients  into  the
+processor box by using LEFT mouse button once to open processor
+door and pressing again to put them into the processor.
+
+Next the current number of blood  drops  have to be added.  The
+blood is you own blood,  meaning  that  it  uses up your health
+points as you lose it.  Click  on  the  blood tap or on icon in
+'C' until you have released the correct number of drops.  Water
+drops are added in the same way.
+
+Cooking temperature is  selected  by  using  LEFT  mouse button
+depressed to move the  slider  (G)  up  and  down to adjust the
+thermostat, to click on icon in 'C' for automatic setting.
+
+You are now ready  to  turn  on  the  Alchemy engine which will
+automatically cook, bottle and  cork  your  spell.   To turn on
+engine click LEFT mouse button on machine switch (D) (in bottom
+left corner of alchemy engine  -  pull  down handle type knob).
+You can tell  how  far  through  a  reaction  is  by  the small
+display, (E).
+
+When potion is corked in test tube put it either in your bag or
+in your hand on the menu bar,  wherever it is, it is available
+for immediate use.
+
+RIGHT MOUSE BUTTON USED ON THE  DISPLAY AREA 'C' RETURNS YOU TO
+THE PREVIOUS DISPLAY.
+
+TO CAST A SPELL
+===============
+
+Spells can be cast from your spell  book or from any magic item
+you may find.   There  are  four  classes  of  spells.  Attack,
+Defence, Morphosis and Equipment.   Attack  spells  are  used to
+inflict damage on your  enemies.   Defence  spells are used to
+protect yourself from attack, either  reducing the damage taken
+or to help you avoid  being attacked.  Morphosis spells affect
+you body by  healing or  bestowing  special  effects like haste.
+Equipment spells can effect your items and surroundings, such as
+enchant weapon which  increases  you  swords  damage  or unseen
+servant which enables you to pick  up  objects which are out of
+reach.
+
+Choose spell from spell book.   Go back into 'virtual joystick'
+mode and use spell by clicking on RIGHT mouse button when spell
+is required.  Keep  button  depressed  to  auto-cast spell.  To
+cancel spells. C,lose spell book  or  deselect spell by clicking
+on A, D, M or E.
+
+SPELL SELECTION
+===============
+
+With pointer over the spell  book  on  the menu bar spell types
+can be selected by  keeping  LEFT  mouse button depressed while
+moving mouse  left  or  right.   Spell  levels  can  s\also  be
+selected using this method by moving mouse up and down.
+
+KEYBOARD SHORT CUTS
+====================
+
+The following keys can be  used  to  operate the menu bar while
+the virtual joystick is still on.   This  speeds up the flow of
+the game allowing you  to  access  functions  without having to
+switch off the virtual joystick and  go  and click on the icons
+by hand.
+
+VIRTUAL JOYSTICK KEYS:
+=====================
+
+SPACE - Virtual joystick ON/OFF
+
+MENU BAR KEYS:
+=============
+
+Z - Select Spell flip forwards
+
+X - Select Spell flip backwards
+
+F1 of C - Select Attack Class and Next Spell
+
+F2 or V - Select Defence Class and Next Spell
+
+F3 or B - Select Morphosis Class and Next Spell
+
+F4 or N - Select Equipment Class and Next Spell
+
+F5 or AMIGA key - Open/Close Spell book
+
+1-5 - Select Spell Page Level
+
+DEL - Cast Crystal Amulet
+
+S - Go To Status Screen
+
+M - Go To AutoMap Screen
+
+A - Go To Alchemy Screen
+
+SPELLS WHICH ARE CURRENTLY AVAILABLE
+====================================
+
+Destroy magic - Stops baddies casting spells
+
+Invisibility  - Makes you  undetectable  unless  you are within
+sniffing range.
+
+Freeze -  Freeze an enemy when hit
+
+Unseen servant - Allows you to  get objects that would normally
+be out of reach.
+
+Shield - Lessens the blows from your opponent
+
+Firebolt - Smite enemies from a distance.
+
+Enchant Weapon -  Increases  strength  of  sword  to cause more
+damage.
+
+Enchant armour -  Increases  strength  of  armour giving better
+protection.
+
+Haste - Allows you to move faster.
+
+Blind - Blinds some  enemies  susceptible  to  it.  Will damage
+others.
+
+Lightening - Smite enemies with lightening bolt.
+
+Master - Controls the mind of  an  enemy  so that he fights for
+you.
+
+Dissolve - Burn enemies with acid spell
+
+Illusion - Project image of column or other object to hide in.
+
+Fear - Create fear in enemies who flee in terror.
+
+Slow - Slows pace of enemies
+
+Deflect - Partial shield to deflect missiles.
+
+Transform - Turns main character into a rat
+
+Intangibility - Become invisible and ghost-like
+
+Heal -  Heals  wounds  according  to  strength,  the  lower  the
+strength the more time wounds will take to heal
+
+Food - Increases energy
+
+Levitate - Ability to walk on the surface of liquids.
+
+Stone Flesh - Turns  flesh  into  stone  so  that you cannot be
+hurt.
+
+Banish - Banishes Demons back to their own dimensions.
+
+Dispell - Cancels spells cast against you.
+
+Luck - Tips the balance of fate in your favour.
+
+Featherfall - Shields you  as  you  fall  allowing  you to fall
+greater distances with less damage.
+
+Psionic Blast - Links mind  and  body  together allowing you to
+use mental  and  physical  abilities  to  their  full potential
+simultaneously.
+
+Hero - Puts body into overdrive boosting all stats for duration
+of the spell.  Skills are  increased, you become more difficult
+for enemies to  hurt  and  are  a  higher  rank  character than
+before.
+
+Repair Armour - Repairs you armour
+
+Repair sword -  Repairs  your  sword,  the  level of spell used
+will dictate which sword can be repaired.
+
+Time warp - Slows down time for all but you.
+
+FIGHTING
+========
+
+Fighting is 8-directional.   With  'virtual  joystick'  ON press
+left mouse button to  attack  enemy  with currently held weapon
+when the guiding light pointer is RED.  (The guiding light will
+already  have  changed  from  green  to  red  to  warn  you  of
+approaching enemy).  The red  guiding  light  must  be, more or
+less, directly on the centre of  your target in order to ensure
+that you inflict damage on your enemy.
+
+TO PICK UP AN ITEM
+==================
+
+You must be close enough  to  an  object  to pick it up (unless
+using Unseen  Servant  Spell).   Press  SPACE  to  turn virtual
+joystick OFF.
+
+Move hand pointer over the object you want to pick up and click
+with LEFT mouse  button.   If  the  item  cannot  be  picked up
+nothing will happen.  If the item can  be picked up you may now
+move the item to EITHER a spare  hand on the menu bar and place
+it there by pressing the LEFT  mouse button to release the item
+into the hand; OR place  item  over  the  bag icon (far left of
+menu bar) and by pressing the LEFT mouse button the object will
+be automatically packed into the  correct container if there is
+space available.  If the object does  not disappear when this is
+done click RIGHT and go into the Status screen and exchange for
+another object if necessary.
+
+If you are already holding  an  object  and you pick up another
+one the object that you were holding will be shuffled into your
+right hand.  Continuously picking up objects will shuffle them
+through your hands into the bag.
+
+Magic items cam  be  immediately  selected  by placing straight
+into  Spell  Book.   Items  which  are  not  magic  items  will
+automatically be placed into the bag  if dropped onto the spell
+book.
+
+Herbs may be placed directly into the Alchemy chest by dropping
+them on the Alchemy icon (pestle and mortar).
+
+Objects can also be picked up  by walking over them or clicking
+on them when the guiding light pointer is green.
+
+(See also 'hands' in section on Menu Bar page).
+
+TO OPEN CHESTS
+==============
+
+Providing you are  close  enough  to  the  chest,  and have the
+correct key clicking on  the  chest  will  open  it.  With hand
+pointer keep clicking on the chest and objects contained in the
+chest will be shuffled through your  hands into your bag.  With
+the green guiding light  pointer  one  click  on the chest will
+shuffle through this process even more  quickly.  If a chest is
+locked the lock will appear on  the  menu bar when you click on
+the chest.  Use the key  (if  that  is  available to you) or the
+lock picks (see section below on  Opening Locks) if you want to
+open the chest.
+
+PUZZLES
+=======
+
+Some doors may have a  combination  lock.  To open these doors,
+first click with the LEFT  mouse  button  on the lock which you
+will find on or near the  door.   This then displays the puzzle
+lock on the menu bar.  Clicking  with  the left mouse button on
+the parts of the lock will move  the bolts.  Move all the bolts
+to the right  open  position  and  the  door  will be unlocked.
+Click the right mouse button at  any  time to return you to the
+game.  Some levers open hidden rooms  so anything that looks as
+though it may act as a lever should be looked out for.
+
+Power locks rely on you  having  the  crystals to operate them.
+When a crystal is in  the  correct  position all four lights in
+the corners of that box will be  lit.  To alter the position of
+crystals click in the two  crystals  you  wish to swap and they
+will change places.   When  all  crystals  are  in  the correct
+positions the lock will open.
+
+FOUNTAINS, PUMPS AND ENGINES
+============================
+
+the more you can  shut  down  of  these  component parts of the
+Spirit Reaping Machinery  the  less  power  Baalhathrok wields.
+The fountains cause the lower levels  to flood, it is therefore
+advisable to try  to  solve  the  puzzles  required for turning
+these off.
+  The pistons have to  be  destroyed  by  blowing them up using
+attack spells.
+
+OPENING LOCKS
+=============
+
+Click on the chest or lock in  the door that you wish to unlock.
+The lock will appear on the menu  bar.  If you have the correct
+key, it will appear in the  lock  and  by moving the mouse left
+and right the key can be turned.  If you turn the key the wrong
+way there is a possibility that it will snap.
+
+If a key has not appeared  in  the  lock you have the option of
+picking the lock.  The lock picks  are positioned either side of
+the lock and by left clicking  on  the pick you wish to select,
+it will be placed in the lock.   By moving the mouse around the
+pick can be used  in  the  lock.   Taking  the pick towards the
+point it is being pushed  away  from  will force it into place.
+The pick that moves the  slowest  during  this operation is the
+correct pick for that lock.   Once  the  pick is in the correct
+position in the lock move  the  mouse  left or right to unlock.
+Turning the pick the wrong way may cause the pick to snap.
+
+AUTOMAP
+=======
+
+With the hand pointer click  on  the  map icon displayed on the
+menu bar to view the Automap.   This shows your position in the
+tower and rooms that you  have  been  through.  Clicking on the
+depiction of the tower on the  right  of  the map allows you to
+select tower levels; the red light indicating the level you are
+currently viewing.  RIGHT mouse button exits from Automap.
+
+GAME KEYS
+=========
+
+Mouse sensitivity.  F9 lower  sensitivity,  F10 increases mouse
+sensitivity.
+
+Music and sound effects.  Up  and  Down Arrow keys increase and
+decrease volume of music and Right and Left Arrow keys increase
+and decrease volume of sound effects.
+
+ESC - Quits current game
+
+GAME HINTS
+==========
+
+You must collect all seven of  the  Nydus Crystal to gain entry
+to the lair of Baalhathrok in the depths of the tower.
+
+You need to slay Baalhathrok to end his reign of terror.
+
+Shut down the pumps, engines and  fountains that are sucking the
+life-force from Chaybore,  these  are  also  causing  the lower
+levels of the tower to flood.
+

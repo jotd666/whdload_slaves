@@ -1,0 +1,1064 @@
+        /--------------------------*----------------------------------\
+      . |          DESERT STRIKE: THE RETURN TO THE GULF              | .
+        \--------------------------*----------------------------------/       
+        ;                                                             :
+
+ -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+ ----------------------------------2----------------------------------------
+
+ CONTENTS
+ --------
+
+                  WHAT`S NEW............................3
+                  IMPROVED GRAPHICS.....................3
+                  IMPROVED SOUND........................3
+                  THE STORY SO FAR......................3
+                  LOADING THE GAME......................4
+                  COPYING DESERT STRIKE.................4
+                  TO LOAD DESERT STRIKE.................4
+                  THE MAIN MENU.........................5
+                  GATEWAY TO THE GAME...................5
+                  SELECT YOUR COPILOT...................5
+                  SELECT CONTROL TYPE...................6
+                  SELECT SOUND MODE.....................6
+                  SELECT IN-GAME MOVIE SEQUENCES........6
+                  ENTER PASSWORD........................7
+                  START CAMPAIGN........................7
+                  CONTROLLING YOUR CHOPPER..............7
+                  JOYSTICK CONTROL......................8
+                  MOUSE CONTROL.........................8
+                  KEYBOARD CONTROL......................8
+                  THE MAP...............................9
+                  MAP FUNCTION..........................9
+                  STATUS FUNCTION.......................9
+                  MISSION FUNCTION......................10
+                  APACHE INFORMATION....................10
+                  ABOUT THE APACHE......................11
+                  FUEL..................................11
+                  AMMUNITION............................11
+                  POWER.................................11
+                  THE SUPER WINCH.......................12
+                  EXTRA LIFE............................12
+                  THE END OF A CAMPAIGN.................12
+                  THE PASSWORD..........................12
+                  SNAFUS................................12
+                  CAMPAIGN OVERVIEWS....................12
+                  CAMPAIGN 1: AIR SUPERIORITY...........13
+                  QUICK START...........................13
+                  CAMPAIGN 2: SCUD BUSTER...............16
+                  CAMPAIGN 3: EMBASSY CITY..............18
+                  CAMPAIGN 4: NUCLEAR STORM.............21
+                  WEAPONS APPENDIX......................22
+            
+   WHY ARE YOU SITTING THERE READING THIS, YOU SHOULD BE PLAYING THE GAME? 
+
+ ----------------------------------3----------------------------------------
+ 
+ WHAT'S NEW
+ ----------
+
+ We know you want quality.  So when it came to designing the Amiga version 
+ of Desert Strike there was 1 question on everybody's lips - what can be 
+ done to improve the game?
+
+ IMPROVED GRAPHICS
+ -----------------
+
+ The Amiga's 64 colour extra half-brite mode offered us the chance to bring 
+ you realistic graphics including shadows, smoke and shading, 64 on-screen
+ colours mean you feel the heat of every explosion.  To give the game greater
+ depth the movie sequences that explain the areas of the plot were re-drawn
+ using a 32 colour palette - they now look better and faster!  Digitised 
+ screens and technical info supplied by military hardware manufacturers give 
+ a more authentic feel to other parts of the game.
+
+ IMPROVED SOUND
+ --------------
+
+ Digitised sound effects taken from actual Apache manoeuvres give you a seat
+ of the pants ride and a perfect excuse to blow up the smallest targets!
+ A stereo sound system supplies the depth and realism that you've always 
+ wanted.  And all this form a reservoir of music and effects over 2Megabytes
+ in size.
+
+ THE STORY SO FAR
+ ----------------      
+
+ The Middle East.  A melting pot of religions, races and confliction 
+ arguments.  Without warning a madman has emerged from this background and 
+ threatened to start Armageddon.
+
+ The Governments of the world known very little about this menace, the self-
+ styled "General" Kilbaba, but we have enough evidence of his military 
+ capabilities to take his threats very seriously.  The President has chosen 
+ you to fly a series of dangerous pre-emptive desert campaigns to vanquish
+ this maniac.
+
+
+ ----------------------------------4----------------------------------------
+
+ LOADING THE GAME
+ ----------------
+
+ As the world is not a perfect place we are unable to guarantee that your 
+ Desert Strike disks will last until the end of time.  What we can do is 
+ advise you to make a copy of your disks and play with the back-ups.  If you
+ ever experience problems with the backups just make another copy - simple as
+ that!
+
+ TO MAKE A COPY OF YOUR DESERT STRIKE DISKS:
+ -------------------------------------------
+ 
+ 1. Turn the Amiga on(Amiga 1000 owners insert kickstart 1.2/1.3).
+
+ 2. Insert your workbench disk into drive df0:.
+
+ 3. If you have a single drive system, take the workbench disk out and insert
+    the original Desert Strike disk 1 into df0:.  If you have two drives,
+    simply insert disk 1 into another drive.
+
+ 4. A disk 1 icon appears on the Workbench screen.  Place the mouse pointer
+    on disk 1 and left click to highlight it.
+
+ 5. Pull down the workbench menu from the menu bar.  Drag the bar down to 
+    duplicate and release the mouse button.  Users with Workbenck 2.0 or 
+    higher.  Select the copy command from the icon menu.
+
+ 6. Follow the on screen instructions, depending on your system you may have 
+    to swap disks from time to time.
+
+ 7. Once the computer has copied Disk 1 repeat steps 3 to 6 for disk 2 and 3.
+
+ 8. After the disks are copied, put your original Desert Strike disks away 
+    for safekeeping.  Play from your copies of the original disks.  Be sure to 
+    leave them write protected -push the black tab up so you can see through
+    the hole.
+
+ TO LOAD DESERT STRIKE:
+ ----------------------
+
+ 1. Put the Desert Strike disk 1 into drive df0:.
+    If the computer has a second disk drive then insert disk 2 into it.
+    When running from a single drive system, the program will prompt you to
+    enter disks 2 and 3.
+
+ 2. Turn the computer ON.
+
+ 3. The opening animations to the game will appear, and set the scene.  If 
+    you want to skip these sequences and go to the Main Menu, click the left
+    mouse button or fir button on the joystick.
+
+      IF YOU CANNOT WAIT TO GET FLYING, GO TO THE QUICKSTART SECTION.          
+
+ ----------------------------------5----------------------------------------
+
+ THE MAIN MENU
+ -------------
+
+ GATEWAY TO THE GAME
+ -------------------
+
+ The Main Menu is used to control the sound types, select your Co-Pilot and
+ enter a password.  You will only see the Main Menu screen at the very start 
+ of a game or after a password restart.
+
+       _____________________________________________________________
+      /                                                             \
+      |                 |0|  DESERT STRIKE  |0|                     |
+      |                                                             |
+      |-------------------------------+-----------------------------|
+      | |¯¯| CHOOSE YOUR CO-PILOT     | CURRENT CO-PILOT BIG DAVE   |
+      |  ¯¯                           |                             |
+      |-------------------------------+-----------------------------|
+      | |¯¯| CHOOSE CONTROL TYPE      |             JOYSTICK        |
+      |  ¯¯                           |                             |
+      |-------------------------------+-----------------------------|
+      | |¯¯|| SOUND                   |                    ON       |
+      |  ¯¯                           |                             |
+      |-------------------------------+-----------------------------|
+      | |¯¯|| IN GAME MOVIE SEQUENCES |                    ON       |
+      |  ¯¯                           |                             |
+      |-------------------------------+-----------------------------|
+      | |¯¯| ENTER PASSWORD                                         |
+      |  ¯¯                                                         |
+      |-------------------------------------------------------------|
+      | |¯¯| START CAMPAIGN           |            AIR SUPERIORITY  |
+      |  ¯¯                           |                             |
+      \_____________________________________________________________/
+
+ SELECT YOUR CO-PILOT
+ --------------------
+
+ Left click on the button to go to the Co-Pilot screen.
+
+                    ___________________________________
+                   /                                   \
+                   |      |0|DESERT STRIKE|0|          |
+                   |  ____________             __      |
+                   | |            |      NEXT |  |     |
+                   | | CO-PILOTS  |            ¯¯      |
+                   | |   FACE     |      EXIT |¯¯|     |
+                   | |____________|            ¯¯      |
+                   +-----------------------------------+
+                   |                                   |
+                   |    CO-PILOTS BRIEF PROFILE        |
+                   |___________________________________|                  
+                   |                                   |
+                   |      |Ø|  CO-PILOT  |Ø|           |
+                   \___________________________________/
+
+ The Co-Pilot is responsible for aiming the gun and operating the winch.  All
+ the Co-Pilots have combat experience and are capable of 'mixing it up' with 
+ the best of them - although some are better than others. Choosing a capable
+ Co-Pilot makes your job easier.
+
+ The Co-Pilot screen gives you the low down on every person available.  The 
+ mug shot is accompanied by the individual's name and call-sign.  Read the 
+ information below the photo for a brief profile of your Co-Pilot.
+
+
+ ----------------------------------6----------------------------------------
+
+ To view another Co-Pilot left click on the NEXT button.
+
+ Once the Co-Pilot you want to fly with appears on the screen, left click on
+ the exit button to return to the Main Menu screen.  The Co-Pilots name is 
+ displayed next to the button.
+
+ SELECT CONTROL TYPE
+ -------------------
+
+ Left click on the button to go to the Control type screen.
+
+                  ______________________________________
+                 /                                      \
+                 |        |0| DESERT STRIKE |0|         |
+                 |   ___      ___      ___     ___      |
+                 |  |___|    |___|    |___|   |___| EXIT|
+                 | MOUSE    JOYSTICK  KEYS		|
+                 \______________________________________/
+ 
+ Choose to control the Apache using the Mouse, Joystick or Keyboard.  To 
+ select a control type LEFT-CLICK on the button next to the icon - the icon
+ becomes highlighted.  LEFT-CLICK on the EXIT button and return to the Main
+ Menu.
+
+ For information on controlling the Apache see controlling your chopper.
+
+ SELECT SOUND MODE  
+ -----------------
+
+                         _________________________
+                        /   __                    \
+                        |  |__| SOUND      ON     |
+                        \_________________________/  
+
+ This selection controls the in-game sound effects.  LEFT-CLICK on the button
+ to switch between ON and OFF.
+
+ SELECT IN-GAME MOVIE SEQUENCES
+ ------------------------------
+
+                    ___________________________________
+                   / __                                \
+                   ||__| IN-GAME MOVIE SEQUENCES    ON |
+                   \___________________________________/
+     
+ The Movie Sequences are short animations that relate to key moments in the 
+ game.  The loading of these sequences interrupt the action so you may want
+ to turn them off.  
+
+ To switch between ON and OFF LEFT-CLICK the button.
+
+
+ ----------------------------------7----------------------------------------
+
+ ENTER PASSWORD
+ --------------
+
+ Passwords are given  when you complete one of the four campaigns.  They
+ enable you to restart the game at the stage you left it, kind of like a save 
+ feature.  LEFT-CLICK on the button to go to the Password screen.
+
+ -*-
+ Whould ya like the passwords for this game, of course ya do! (note the pass-
+ words are not included in the game manual.)
+ *-*
+ 
+                  MISSION  : NAME OF MISSION : LEVEL CODE
+                  ---------+-----------------+-----------
+                  MISSION 1: AIR SUPERIORITY : NOT NEEDED
+                  MISSION 2: SCUD BUSTER     : WQAEOBV
+                  MISSION 3: EMBASSY CITY    : OLABAHT 
+                  MISSION 4: NUCLEAR STORM   : OTEEEZI
+                  THE END  : WIN SCREEN      : OVCFKQK
+
+
+                      _______________________________
+                     /  __________     MAIN  __      \
+                     | |__________|    MENU |__|     |
+                     \_______________________________/
+
+ A red cursor appears.  Use the keyboard to type out the password.  Left-
+ click on the Main Menu button to return to the Main Menu screen.  If your
+ password was correct the name of the campaign you were playing appears in the
+ box next to Start Campaign button.
+
+ START CAMPAIGN
+ --------------
+
+ The text box next to the button contains the name of the current campaign.
+ LEFT-CLICK the button to strap on the Apache and go find some baddies. 
+ Before entering the mission you are given a briefing by the commander-in
+ -chief, who tells you the targets.
+
+ CONTROLLING YOUR CHOPPER
+ ------------------------
+
+ Controlling a multi-million dollar helicopter is'nt as difficult as you 
+ would think.
+
+ The Apache flies at a constant altitude so you don't have to worry about the
+ ground -that's good news.
+
+ The bad news is the occupying army do not agree with your campaign orders 
+ and want to stop you from saving the world.  It is this attitude which 
+ presents you with a problem.  They will stop at nothing to try and shoot you
+ and your Apache out of the sky.
+
+ Fortunately for you and the Apache is capable of travelling very fast and 
+ turning around quicker than the average anti-aircraft gun -if you tell it 
+ to.
+
+
+
+ ----------------------------------8----------------------------------------
+
+ JOYSTICK CONTROL
+ ----------------
+
+ Be a real chopper pilot and use your stick!
+ 
+                               Fly Forward   
+                      Roll Left__   /\    __Roll Right 
+                              /\    ||     /\
+                                \   ||    / 
+  
+                                /   ||    \
+                              \/_   ||    _\/
+                                    \/
+                              Fly Backwards  
+
+ Hold down FIRE and move the joystick LEFT or RIGHT to slide slip in the 
+ chosen direction -the Apache continues to fire as you do so.
+
+ Select active weapon - Space Bar
+ View Map screen - F10 or 0 (zero)
+ Quit the game and restart mission or return to Main Menu - SHIFT and ESC.
+
+ NOTE: If your joystick has two/or more fire buttons(eg. Python 3, SG Propad,
+ Sega joypad.) the second button(button C) will be used to select the other
+ weapons available.  This function is not guaranteed to function on all two
+ or more button joysticks.
+
+ MOUSE CONTROL
+ -------------
+          
+ 
+                    Roll Left  Fly Forward  Roll Right 
+                        /        /\   /\        \
+                       <---      ||   ||      --->
+                        \        ||   ||        / 
+                                _________
+                               / ___  __ \
+                              | |   ||  | |
+                         +--> | |___||__| | <---+
+                         |    |           |     |
+                         |    |           |     |
+                         |    |           |     |
+                         |     \_________/      |
+                         |                      |
+                         |       ||   ||        |
+                         |       ||   ||        |
+                         |       \/   \/        |
+                         |     Fly Backwards    |
+                         |                      |
+                         |                      |
+                 Fire active weapon   Select Active weapon
+
+ 
+ Hold down the Left button  and move the mouse LEFT or RIGHT to slide slip
+ in the chosen direction -the Apache continues to fire as you do so.
+
+ Pressing C centres the mouse control from any movement.
+ View Map screen - F10 or 0 (zero)
+ Quit the game and restart mission or return to Main Menu - SHIFT and ESC.
+
+ KEYBOARD CONTROL
+ ----------------
+
+                 #        - Pitch Forward
+                 ?        - Pitch Backwards
+                 Z        - Roll Left
+                 X        - Roll Right
+                 RETURN   - Fire active weapon
+                 SPACE    - Select active weapon
+                 0 or F10 - View Map screen
+                 SHIFT    - Quit the game and restart mission
+                 ESCAPE   - Quit and return to the Main Menu  
+
+
+ ----------------------------------9----------------------------------------
+
+ THE MAP
+ -------
+
+                  CYCLE ARROWS
+                        \
+                        _\/
+             _________________________________________________
+            /            <- 1.RADAR SITES ->                  \
+     +--->  | GUNS 1178  ________________________________     |
+     +--->  | HYDRAS 38 |                                |    |
+     +--->  | HELL-   8 |                                |    |
+     |      | FIRES     |                                |    |
+     |      |  ____     |     PICTURE OF THE MAP         |    | 
+     |      | |EXIT|    |                                |    |
+     |      |           |   				 |    |
+     |      |           |                                |    |
+     +--->  | LIVES  3  |                                |    |
+     +--->  | LOAD   0  |                                |    |
+     +--->  | FUEL  100 |                                |    |
+     +--->  | POWER 600 |________________________________|    |
+     |      |                |SCORE 320886|                   |
+     |      |   ___          ___            ___               |
+     |      |  |___| MAP    |___| STATUS   |___| MISSION      |
+     |      \_________________________________________________/
+     |
+ Apache information
+
+ Press F10 or 0 (zero) on the keyboard to go to the map screen.  
+ 
+ The map fulfills a very important role in the game.  It is a contact with
+ the world outside your Apache cockpit.
+ 
+ While at the map screen the game is PAUSED.  The Apache is not using fuel
+ and enemies are unable to cause any damage to the helicopter.
+
+ Use the map to call up a wealth of information on any campaign target, 
+ check out the locations of important items and find out your campaign 
+ status.
+
+ To see the different functions of the map screen, use the mouse or joystick
+ to move the highlighter over the function you want to use and LEFT-CLICK or
+ press the fire button.
+
+ To leave the map screen, move the highlighter to EXIT and press the fire 
+ button.
+
+ MAP FUNCTION
+ ------------
+
+ The map itself shows the region in which you are flying.  The Apache shows 
+ up as a spinning white cross.  Cycle through the targets and items by left-
+ clicking on the cycle arrows.  As they appear in the text box so they appear
+ on the map as a flashing icons or coloured dots.
+
+ STATUS FUNCTION
+ ---------------
+
+             _________________________________________________
+            /            <- 1.RADAR SITES ->                  \
+            | GUNS 1178  ________________________________     |
+            | HYDRAS 38 |     CAMPAIGN MISSIONS          |    |
+            | HELL-   8 |                                |    |
+            | FIRES     | RADAR SITES          ACTIVE    |    |
+            |  ____     | POWER STATION        ACTIVE    |    | 
+            | |EXIT|    | AIR FIELDS           ACTIVE    |    |
+            |           | COMMAND BLDGS        ACTIVE    |    |
+            |           | SECRET AGENT         LOST      |    |
+            | LIVES  3  |                                |    |
+            | LOAD   0  |    RETURN TO FRIGATE WHEN      |    |
+            | FUEL  100 |    MISSIONS ARE COMPLETED      |    |
+            | POWER 600 |________________________________|    |
+            |                |SCORE 320886|                   |
+            |   ___          ___            ___               |
+            |  |___| MAP    |___| STATUS   |___| MISSION      |
+            \_________________________________________________/
+
+ The status display gives you a report on your progress in the campaign. The
+ mission targets are listed, their status appears next to them.  A red status
+ message means that the relevant mission has not yet been completed.
+
+
+ ----------------------------------10---------------------------------------
+
+ MISSION FUNCTION
+ ----------------
+
+                          CYCLE ARROWS
+                        \               \
+                        _\/             _\/
+             _________________________________________________
+            /            <- 1.RADAR SITES ->                  \
+            | GUNS 1178  ________________________________     |
+            | HYDRAS 38 |           | RADAR              |    |
+            | HELL-   8 | PICTURE OF| RS - 152A          |    |
+            | FIRES     | A TARGET  | ARMOUR 100         |    |
+            |  ____     | OR AN ITEM|                    |    | 
+            | |EXIT|    |___________|                    |    |
+            |           |--------------------------------|    |
+            |           | 1.DESTROY THE EARLY WARNING    |    |
+            | LIVES  3  | RADAR SITES.  WHEN RADAR IS    |    |
+            | LOAD   0  | ACTIVE THE ENEMY WEAPONS HAVE  |    |
+            | FUEL  100 | AN INCREASED RANGE.            |    |
+            | POWER 600 |________________________________|    |
+            |                |SCORE 320886|                   |
+            |   ___          ___            ___               |
+            |  |___| MAP    |___| STATUS   |___| MISSION      |
+            \_________________________________________________/
+
+ Every target and object on the map has a file in the mission log.  The file
+ displayed at the mission log screen always corresponds to the target or 
+ object in the text box.  To view information on another subject, LEFT-CLICK 
+ or press the Fire button on the cycle arrows.
+
+ A number of missions have definite parameters that must be followed.  Use the
+ missions log to discover exactly what has to be done.
+
+ ARMOUR POINTS
+ -------------
+
+ Some of the targets have armour points.  The number represents the amount of
+ damage that target can take before it is destroyed.
+
+ POWER POINTS
+ ------------
+
+ The enemy's weapons have Power Points.  For instance if you get hit by a 
+ Rapier SAM which delivers a awesome 100 point punch, your armour will lose
+ 100 points
+
+ APACHE INFORMATION
+ ------------------
+
+ Use the two info boxes to find out how much ammo you have left, the Apache's 
+ fuel and armour state, the number of MIA's aboard and your remaining lives.
+
+                           _____________________
+                          | GUNS       1178     |
+                          |_____________________|  
+                          | HYDRAS        38    |
+                          |_____________________|
+                          | HELL-         8     |
+                          | FIRES         ______|
+                          |______________|
+
+ The ammo carried by the Apache is listed.  The remaining Hydras, Hellfires 
+ and gun rounds are shown by a number next to the relevant weapon.
+
+                             ________________
+                            | LIVES     3    |
+                            |________________|
+                            | LOAD      0    |
+                            |________________|
+                            | FUEL    100    |
+                            |________________|
+                            | POWER   600    |
+                            |________________|
+
+ The Apache's fuel and armour states are shown here.  These are pewrhaps the
+ two most important numbers in your campaign.  Creck them often.  The box
+ also tells you how many MIAs you have picked up.  Your load can be a maximum
+ of six.  For information, see about the Apache.
+
+
+ ----------------------------------11---------------------------------------
+
+ ABOUT THE APACHE
+ ----------------
+
+ The Apache helicopter is a machine dedicated to destruction.  Packing state-
+ of-the-art weapponary, the Apache is capable of saving the world from 
+ "General" Kilbaba - but only if flown correctly.
+
+ Apart from your flying capabilities there are three other factors that 
+ effect your performance - fuel, ammunition and armour.
+
+ FUEL
+ ----
+ 
+ The Apache can carry a maximum of 100 units of fuel.  If the helicopter runs
+ out of fuel it is unable to drive the rotor - and falls to the ground.  When
+ your fuel load is down to about 35 seconds worth, you recieve an audible 
+ warning accompained by an on-screen message.  More fuel can be obtained by
+ picking up fuel barrels.
+
+ AMMUNITION
+ ----------
+
+ You have three weapons available to you: the chaoin gun, Hydra rockets and
+ Hellfire missiles.
+
+ The chain gun is aimed and fired by your Co-Pilot who should target the
+ nearest enemy.  Having a good hit rate depends on the aptitude of the co-
+ pilot.  The Apache can carry a maximum of 1178 cannon rounds.   Cannon rounds
+ can be obtained by picking up ammo crates.
+
+ Hydras are unguided rockets that explode on impact with hard surfaces.  They
+ follow a straight line from the Apache until they meet the ground or a 
+ target.  The Apache can carry a maximum of 32 Hydras.  Replacement Hydras can
+ be obtained by picking up ammo crates.
+
+ Hellfires are guided missiles that, once released, follow a route to the 
+ nearest target.  Because of there destructive capability they are used
+ against heavy armoured enemies.  The Apache can carry a maximum of 8 Hell-
+ fires.  Replacement Hellfires can be obtained by picking up the ammo crates.
+
+ POWER 
+ -----
+
+ The Apache is protected from bullets, shells and missiles by a layer of 
+ armour which is measured in power units.  The maximum amount of power is 
+ 600 units.  As the helicopter is hit, the number of units goes down.  When
+ the armour surronding the Apache becomes so thin as to be life-threating,
+ you receive an audible warning followed by an on-screen message.  
+
+ You obtain replacement power points when you drop MIAs at landing zones.
+ Alternatively, you can pick up cases of armour.
+
+
+ ----------------------------------12---------------------------------------
+
+ THE SUPER WINCH
+ ---------------
+
+ Used to lift people and supplies into the helicopter, the winch can be 
+ upgraded by picking up a "Super Winch".  Combining great power with a faster
+ lifting rate the super-winch is essential for tight situations when getting 
+ out in the quickest time is essential.
+
+ EXTRA LIFE
+ ----------
+ If you're lucky enough to find this item, pick it up and guess what?  Yep,
+ you'll get an extra life!
+
+ THE END OF A CAMPAIGN
+ ---------------------
+
+ After you've battled through a campaign - leaving a trail of destruction 
+ from one side of the map to another - you recieve a debriefing.  The
+ debriefing gives you details of the enemy that were destroyed and other 
+ such important information, as well as youre score.
+
+ If the game ends due to you losing all three lives - maybe you had a bad day
+ or just were'nt concerntrating - a screen appears that allows you to return 
+ to the Main Menu or start the campaign again.  LEFT-CLICK or press the FIRE
+ button on the corresponding button to select.
+
+ THE PASSWORD
+ ------------
+
+ At the end of each succesful campaign you receive a password.  Make sure to 
+ write it down if you want to return to the game at the beginning of the 
+ next campaign with your score in-tact.  The password does not save your 
+ Co-Pilot selection.
+
+ SNAFUS
+ ------
+
+ This unlikely looking word is no laughing matter.  If you experience a 
+ 'situation normal - all fouled up' then you've done only one thing,
+ jeopardized the mission by probably being too triger happy.  A SNAFU occurs
+ when you destroy an object or person vital to the campaign.  A message 
+ appears, requesting your company back on the frigate.  On landing a red-
+ faced General will make you feel very small and then tell you to get back up
+ there and try it again.
+
+
+ ----------------------------------13---------------------------------------
+
+ CAMPAIGN OVERVIEWS
+ ------------------
+
+ The Campaign overviews give information about the game that makes it easier 
+ to play.  In no way is the reading of these overviews crucial to the compl-
+ etion of the game.  If you want to be a real hero, do not read any further!
+
+ We recommend you use these overviews if you are unable to understand the
+ information given to you at the map screen.
+
+ CAMPAIGN 1 - AIR SUPERIORITY
+ ----------------------------
+
+ The explanation of the first campaign can be used as a quickstart to Desert
+ Strike.  After following this quickstart you should read the earlier parts 
+ of this Loony Production for a fuller understanding of the game.
+
+ Once you begin a campaign you should not land on the frigate until all the 
+ campaign's missions have been completed.
+
+ QUICKSTART
+ ----------
+
+ For the purposes of this quickstart, the top of the screen is north. 
+
+ Using your control device, lift the Apache off the frigate's deck.  
+
+ For more information on controlling the Apache, see controlling your chop-
+ per.  As soon as you lift of, press F10 or 0 (zero) to check out the map.
+ Youre first objective is to destry the flashing radar sites.
+
+ Using the mouse, move the pointer upto the cycle arrows and LEFT-CLICK the
+ right arrow until the symbols representing AAA (Anti Aircraft Artilery) 
+ appear on the screen.  As you see, the radar sites are defended by a number
+ of these guns.  Now move the pointer to the mission button and LEFT-CLICK.
+ The information tells you that the AAAs are not heavily armoured and only 
+ pack a 20 point strength.  You should be able to handle them easily.
+
+ Return to the Apache by pressing F10, 0 or LEFT-CLICKing on the Exit button.
+
+ Fly to the southernmost radar site.
+
+ On your way there you may fly over soldiers fighting on the ground below.  
+ Soldiers dressed in brown are MIAs in need of rescue.  A rescued MIA will 
+ restore 150 points of the Apache's armour when dropped at a landing site.
+
+ If you fly over skirmishing troops, destroy the enemy soldiers and hand over
+ the MIA, who shouts "Over Here, HELP!".
+
+ 
+ ----------------------------------14---------------------------------------
+
+ When you're over the MIA, a rope ladder is winched down.  The MIA grabs the
+ ladder and is winched up.
+
+ At the beginning of campaign 1 there are at least 20 MIAs located around the
+ desert.  As the campaigns go by the MIAs are gradually killed.  With that in
+ mind, it's to your advantage to take out all the enemy ground troops you 
+ come across.
+
+ When you reach the radar site you find one AAA inside the fence and one just 
+ outside.  The AAAs begin to shoot at you as soon as you are in range.  
+ Destroy the AAAs with either your chain gun or a couple of Hydras.
+
+ As soon as you are safe from AAA fire, attack the radar dish.  Since the dish
+ cannot fire back there is no need to use heavy weapons on it - give it a 
+ taste of the chain gun.
+
+ After you destroy the radar dish press F10 to go to the Map Screen you were
+ looking at the information on AAAs so move the pointer to the map button 
+ and LEFT-CLICK.  
+
+ As you see, the radar site you just destroyed no longer appears on the map.
+
+ Fly north towards the remaining radar site, picking up any MIAs you come 
+ across.  Destroy the radar site.
+
+ At this point you should still have more than half a tank of fuel.  This 
+ should be enough to complete the second mission.
+
+ NOTE: IT IS UNWISE TO ATTEMPT TO COMPLETE THE OBJECTIVES OUT OF ORDER.
+
+ For example, if you try to complete mission 2 without first destroying the
+ radar sites, the enemy's defence will be better prepared and you're more 
+ than likely to lose a life.
+
+ You're next target is the power station.  To get the location of this doomed 
+ building, go to the map and use the cycle arrows to call up the power station
+ in the main text box.  The icon will flash on the map.
+
+ Cycle through the enemy weapons to find a safe route to the power station.
+
+ Try flying north and east, avoiding the heavily defended airfield.
+
+
+ ----------------------------------15---------------------------------------
+
+ ENEMY BUILDINGS AND TENTS SOMETIMES CONTAIN USEFUL SUPPLIES.
+
+ Take out the Rapiers and AAAs guarding the power station.  If you have still
+ plenty of fuel, you might take time to destroy the power station with your
+ chain gun and save your Hydras and Hellfires for targets that shoot back.
+
+ Notice a tool box appears in the crater left by the destruction of the power
+ station.  Go to the map and check how much armour you have.  The tool box
+ restores the Apache's armour to full strength.
+
+ At this point the helicopter could probably use some fuel and ammo.  There
+ is a crate in one of the barracks to the south and some fuel drums nearby.
+
+ The next target is the two airfields.  Both targets are very well defended.
+ Try to sneak up on the AAAs and Rapiers and destroy them before they turn 
+ around and fire.
+
+ Never hesitate to retreat.  If you take several hits and find your armour is
+ dangerously low, fly to the nearest landing sitre and drop off any MIAs.
+ This action restores your armour points and you can return to your present
+ objective with a new lease of life. IF POSSIBLE, ALWAYS HAVE AN MIA ON BOARD.
+
+ Finish destroying the airfield.  You have to take out all the planes and all
+ the buildings before the airfield is considered destroyed.  If in doubt, 
+ check the map.  If the icon is still flashing, then atleast one object 
+ critical to the airfield remains intact.
+
+ Destroy the other air field.  Before moving onto the Command Centres, make 
+ sure the Apache is well armoured, fuelled and armed.
+
+ When you destroy a command centre, the enemy commander attempts to escape.
+ Chase the commander and take him prisoner.  Only then you learn where the spy
+ is being held captive.
+
+ 
+ ----------------------------------16---------------------------------------
+
+ At the same site where the spy is located you find three buildings.  One of
+ the three buildings conceals a trap door leading to an underground complex.
+ Destroy each building until you find the trap door.
+
+ Fly above the trap door and the Apache automatically lands.  The Co-Pilot 
+ runs in to rescue the spy.
+
+ In the meantime, a few VDA guns appear onthe scene.  Destroy the guns and the
+ Co-Pilot and spy emerge from the trap door.  Pickup the Co-Pilot and spy, and
+ return to the frigate.
+
+ After you land, you and your Co-Pilot celebrate on the deck of the frigate 
+ and your commander gives you a summary of your score.
+
+ Notice the password given to you at this screen.  Write the password down.
+
+ For more information on the role of passwords, please see the password.
+
+ CAMPAIGN 2 - SCUD BUSTER
+ ------------------------
+
+ This campaign takes place at midday.  In campaign 1 you established Air
+ Superiority.  Now it's time to take out the madman's scud launchers.  As in
+ campaign 1, first you need to destroy the radar sites.  Complete the follow-
+ ing 6 missions in order.
+
+ 1. DESTROY THE RADAR SITES 
+ --------------------------
+ This time there will be three sites to destroy, and two are well defended.
+
+ 2. START A JAILBREAK
+ --------------------
+ Make sure you clear the area before you blast a hole in the jail.  If the 
+ area is not secure, the escaping prisoners may be destroyed before you can
+ pick them up.  You only need to pick up 10 prisoners for the mission to be a
+ success.
+
+
+ ----------------------------------17---------------------------------------
+
+ 3. DESTROY THE POWER STATION
+ ----------------------------
+ This target is well gaurded, but you should be able to demolish it without
+ taking too much damage if you know how to dodge the enemy's waepons.
+
+ 4. DESTROY THE CHEMICAL WEAPONS COMPLEX
+ ---------------------------------------
+ Make sure you have plenty of armour and ammo before attempting this mission.
+
+ 5. DESTROY THE SCUD LAUNCHERS 
+ -----------------------------
+ After you destroy the chemical weapons complex, the Scud commands start 
+ getting nervous and decide to make a run for it rather than risk facing the
+ shame of being caught like rats in their own holes.  Now is your chance to 
+ capture them and find out the locations of  the scud launchers.
+
+ Firstly, check the map and find out where the scud commanders headquarters 
+ are located.  Fly from headquarters to headquaters, blating each one into
+ oblivion and capturing the commander.
+
+ As you capture each Scud commander, a Scud launcher site appears on the map.
+ Fly to the launchers and see if you can destroy them before a missile is 
+ launched.  There are 6 launchers in all, destroy at least 5 of them to 
+ complete the mission.
+
+
+ ----------------------------------18---------------------------------------
+
+ 6. RESCUE PRISONERS OF WAR (POWs)
+ ---------------------------------
+ With enough ammo, fuel, and the intuition it takes to stay alive, you'll be
+ able to complete this rescue and return to the frigate for new orders.
+
+ There are 16 POWs in all.  You need to rescue 14 of them.  Don't let more 
+ than 2 men be destroyed or all your work up until now will have been for
+ nothing.
+
+
+ CAMPAIGN 3 - EMBASSY CITY
+ -------------------------
+
+ This campaign takes place in the early evening.
+
+ 1. RESCUE U.N. INSPECTORS
+ -------------------------
+ The United Nations inspectors are under attack near the hotel.  Fly in and
+ destroy the enemy tank and ground troops.  If you hit the U.N. Inspectors
+ you'll have to restart the campaign again - so be careful.
+
+ 2. DESTROY BIOLOGICAL WEAPONS COMPLEX
+ -------------------------------------
+ There is a large biological weapons complex in the northwest area of the 
+ desert.  The head scientist is hiding in a biological weapons factory 
+ surronded by seven other similar looking structures.  Destroy the buildings 
+ to find and capture the scientists.  When you find the head scientist he 
+ gives you the locations of the underground missile silos.
+
+ 3. DESTROY UNDERGROUND MISSILE SILOS
+ ------------------------------------
+ In this mission the silos are covered by sand dunes, so you have to do some 
+ searching.  Use the chain gun to locate the silos armoured covering, (listen
+ for the sound of riochet when you hit the correct soand dune), then you see
+ if you can blow up the silo before the missile is launched.  Sometimes the
+ explosion from the sand dune can blow up a fuel drum, ammo crate, or other
+ objects in the area, so you might want to pick up the supplies before 
+ destroying the silo.
+
+ 4. RESCUE THE PILOTS LOST AT SEA
+ --------------------------------
+ This mission is fairly easy.  Detsroy the attack boats without hitting the 
+ life rafts and then pick up the pilots.  One of the pilots has a valuable 
+ peice of information.
+
+ 5. DESTROY THE POWER STATION
+ ----------------------------
+ You learn from one of the rescued pilots that the power station contains a
+ radar system which alerts the madman's yacht of potential threats.  You have
+ to destroy the power station before attempting the difficult rescue at the 
+ yacht.
+
+
+ ----------------------------------20---------------------------------------
+
+ 6. RESCUE PRISONERS ON MADMAN'S YACHT
+ -------------------------------------
+ After you destroy any enemies in the area, blow a hole in the yacht.  The
+ prisoners will leap into the water one by one.  Captivity has made the 
+ prisoners weak and they cannot stay afloat, so you'd better have a good 
+ Co-Pilot.  Be care not to bump into the yacht, as the time it takes you to
+ recover control might cost a prisoner his life.  If you let more than four
+ prisoners drown then you have to start the campaign again.
+
+ 7. CAPTURE THE EMBASSY AMBASSADOR
+ ---------------------------------
+ Here you face the heaviest fire power you have encountered so far.  Make 
+ sure you have a full load of ammo and know where you can get more.  Before 
+ approaching the area take out the radar station which is providing early
+ warning information.  If you're not careful it's possible to lose a number
+ of lives here in a very short period of time.
+
+ 8. EMBASSY RESCUE
+ -----------------
+ Your last mission in this campaign is to rescue 12 officials held captive in
+ the Embassy building.  In order to drop off the Co-Pilot you must first dest-
+ roy the enemy helicopters.  Once they have been destroyed a landing zone 
+ appears.  Your Co-Pilot jumps out to drive the bus, so from here you're in
+ control of the gun.
+
+
+ ----------------------------------21---------------------------------------
+
+ Land on the "x" and the rescue sequence begins (provided you turned the in-
+ game movie sequences to ON).
+
+ After you destroy all the enemies defences, blast open the gate in front of
+ the bus.  Your Co-Pilot knows where the Navy Seals camp is located and 
+ drives the bus there.  The bus is very vulnerable and cannot take much of a 
+ beating.  You must escort the bus.
+
+ If the bus is destroyed your Co-Pilot is listed as MIA and you have to start
+ the campaign again.
+
+ CAMPAIGN 4 - NUCLEAR STORM
+ --------------------------
+
+ 1. PROTECT THE OIL FIELDS
+ -------------------------
+ There are two objectives in this mission: to airlift the commandos to the 
+ landing sight in the middle of the airfield and to destroy all the enemy 
+ tanks around the oil fields.  If you allow the enemy to destroy too many of
+ the oil tanks you will be called back to the frigate and have to begin 
+ again.
+
+ It's important to pick up all the commandos at once.  Because the commandos 
+ hope to use the element of surprise, their landing site can only be used 
+ once.  If you dont drop off enough commandos on your first landing you won't
+ be able to complete the mission.
+
+ 2. STOP THE OIL SPILLS
+ ----------------------
+ A good Co-Pilot comes in useful here.  Before you attempt to close off the 
+ pipe it's best to take out the enemy forces stationed near the oil dock.  
+ Once the area is safe, go ahead and fire at the end of the pipe.  In order
+ for the oil to stop gushing out you have to hit just the right spot on the 
+ pipe.  Now you're on your own.  Make sure you read all the information 
+ presented to you on the screen.
+
+          COMPLETING THE GAME IS HARD - BUT FAR FROM IMPOSSIBLE.
+
+
+ ----------------------------------22---------------------------------------
+
+ WEAPONS APPENDIX
+ ----------------
+
+ CHAIN GUN - inflicts 3 points of damage.
+ HYDRA - inflicts 25 points of damage.
+ HELLFIRE - inflicts 100 points of damage.
+
+                  THE APACHE CARRIES 600 POINTS OF ARMOUR
+  
+ ENEMY WEAPON | ARMOUR    | POWER DAMAGE | RATE OF FIRE | PROJECTILE SPEED |
+ -------------+-----------+--------------+--------------+------------------|
+ AK-47        | 10 POINTS | 5 POINTS     | 0.5 SECONDS  | FAST             |
+ -------------+-----------+--------------+--------------+------------------|
+ APHID        | 25 POINTS | 75 POINTS    | 3.0 SECONDS  | FAST             |
+ -------------+-----------+--------------+--------------+------------------|
+ AAA          | 50 POINTS | 20 POINTS    | O.5 SECONDS  | FAST             |
+ -------------+-----------+--------------+--------------+------------------|
+ RAPIER       | 75 POINTS | 100 POINTS   | 2.5 SECONDS  | FAST             |
+ -------------+-----------+--------------+--------------+------------------|
+ VDA          | 100 POINTS| 25 POINTS    | 0.33 SECONDS | VERY FAST        |
+ -------------+-----------+--------------+--------------+------------------|
+ ZSU          | 150 POINTS| 40 POINTS    | 0.33 SECONDS | VERY FAST        |
+ -------------+-----------+--------------+--------------+------------------|
+ GUNBOAT      | 150 POINTS| 50 POINTS    | 1.25 SECONDS | VERY FAST        |
+ -------------+-----------+--------------+--------------+------------------|
+ CHOPPER      | 150 POINTS| 50 POINTS    | 1.5 SECONDS  | VERY FAST        |
+ -------------+-----------+--------------+--------------+------------------|
+ M48          | 200 POINTS| 100 POINTS   | 2.5 SECONDS  | VERY FAST        |
+ -------------+-----------+--------------+--------------+------------------|
+ CROTALE      | 250 POINTS| 150 POINTS   | 2.0 SECONDS  | SLOW             |
+ _____________|___________|______________|______________|__________________| 
+  
+    
+ =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+        ;::::::;;:;:::::::::::::::::::::::::::::::::::::::::::::::::::
+       ::::::;::::::;::::::::::::::::::DoC TYPED BY PoB OF THE LOONS:
+      :::::::::::::::::::::;::::::::::::::::::::::::::::::::::::::::
+        :SOME HELP BY JOSiE::::::::;:::::::::::;:;::;::;:;:;:;:::;::::
+         ::::::::::::::::::::::::::::::::::::::::::::::::::::::::;:::::
+       :::::::;:;::::::::;:::::::DoC SUPpLIED BY DaBbLe/|.(.<::::::::
+      :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: 
+               
+
+ /\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
+
+        /--------------------------*----------------------------------\
+       ;|GREETZ FLY OUT TO:PYTHON/LOONS : SKUZ : DaBbLe : WOLVERINE : |,
+        |PAZZA/LSD : TROUT : RATTIE : KANE : SCOOTER : CRYSTAL : SK!N |
+       / : AMBL!N : |\|ISSA|\| : RYGAR : BASER EVIL : SPOOK : XTC :    \
+      :\ QUARTEX! : DECADE : RAZOR 1911 : GLOBAL OVERDOSE : PARADOX :  /:
+      . |TnT : FAIRLIGHT : MINISTRY : DYNAMIX : ANTHROX : BLACKHAWK : | .
+        |VALHALLA : PLUS ALL THE KEWL ELITE MEMBERS, WHO I FORGOT ??  | 
+        \--------------------------*----------------------------------/       
+        .                                                             :
+               (-*-)ANOTHER FINE PROD BY PoB/THE LOONS(-*-)
+

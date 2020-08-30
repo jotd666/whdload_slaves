@@ -1,0 +1,117 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Zool" © 1991-1993 Gremlin Software
+
+ This install requires WHDLoad and RawDIC to be in the path. Both can be found
+ in the WHDLoad package.
+ To install from a different drive than DF0: select installation mode Expert.
+
+ ECS: The installed program requires 0.5 MB ChipMem and 1.0 MB OtherMem.
+ AGA: The installed program requires 1.0 MB ChipMem and 1.0 MB OtherMem.
+ CD32: The installed program requires 1.0 MB ChipMem and 1.5 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ The CD32 version of the game requires an installed A1200/A4000
+ Kickstart 3.1 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick40068.A1200" (resp "kick40068.A4000").
+ The image can be extracted from a A1200 with tools like 'GrabKick'
+ or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick40068.A1200.RTB" (resp. "kick40068.A4000.RTB") 
+ must be installed in the same directory as the kickstart image.
+ It can be found in the archive "util/boot/skick346.lha" on aminet.
+
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+This installer requires the Zool ORIGINAL disks (there are 2)
+or Zool original CD. It will not work for cracked versions.
+
+History:
+
+version 2.0 (06.01.2019) done by JOTD:
+
+- AGA/CD³²: Fixed self-modifying code so gfx aren't trashed anymore with fast machines or UAE JIT (issue #0004011)
+- AGA/CD³²: access fault removed (when returning from secret level)
+- AGA: access fault fixed
+- CD³²: reworked controls, choice of more "classical" controls and 2-button
+- CD³²: trainer: infinite energy/time
+- CD³²: original keys re-enabled: 1,2,3,4, see below
+- AGA: trainer: infinite lives, original cheat keys activated (1,2,3,4)
+- ECS: fully rewritten slave, merged amiga format & MFM track versions
+- fixed SNOOP bugs for ECS & AGA versions
+
+versions 1.x (1996-?) done by JOTD:
+
+- ECS/AGA: Codewheel protection is removed.
+- ECS: Three versions are now supported: the original release, golden awards release,
+  and another release thanks to both users who reported there existed other versions
+  and sent me their disk 1.
+- Hiscores saved to hard disk
+- Music fixed to work with caches
+- Convenient installer script letting you choose between the versions
+- Nice RawDIC imager by Codetapper (he made a slave for one version of the
+  game but I convinced him to let me release my megapack for this game :))
+- CD³² version: Buggy country check removed (can be run in PAL or NTSC and on UAE now :))
+- CD³² version: Reworked controls so 2 button joysticks can be used
+- CD³², 3 ECS, 1 AGA and 1 dostrack Amigafun coverdisk versions supported.
+- Less memory demanding. Runs on 512K chipmem amigas (with at least 2MB of fastmem)
+- Docfile included
+
+Controls:
+
+- Set CUSTOM1=1 to enable CD³² joypad controls or original 1-button:
+  * Play/Pause/P-key: pause/resume/options
+  * Blue button acts like green button (so 2 button joysticks can be used too)
+  * ESC: game over
+  
+In the title screen, the program asks for 3¹/² button (green)
+Just press fire or blue/2nd button depending on your control settings
+
+Thanks to Psygore for improving OSEmu/kickemu for real joypad support.
+
+
+CHEAT MODE
+
+The (original) cheat mode can be activated by typing 'GOLDFISH' in the main menu
+(only for ECS version, cheat mode enabled by default for AGA & CD32)
+
+During the game, press:
+
+1 for invincibility (temporary, doesn't work in turbo mode)
+2 for levelskip
+3 for worldskip
+4 to lose one life
+
+Notes:
+
+- SPS version 893 does not work with this install
+- AGA version contains more images & start animation
+  (but lacks the 7th world & loading/level complete music). The character is still trashed
+  on fast machines (A1260). Releasing as-is as I already forgot to release it months ago...
+- CD32 version lacks this start animation but is the best one
+  featuring 2-button controls, easy wall climbing, 4 levels
+  per world aaaand ... a 7th world (plus CD music in
+  when running on a real CD32, I could not preserve that feature unfortunately)  
+  So far this is the best CD32 enhancement ever made
+  over an already existing AGA version. Kudos to Gremlin

@@ -1,0 +1,660 @@
+============================= First Samurai =============================
+
+FIRST SAMURAI
+
+
+INSTRUCTION MANUAL
+
+A
+VIVID IMAGE
+PRODUCTION
+IN CONJUNCTION WITH
+IMAGEWORKS
+
+
+(C) 1991 VIVID IMAGE. (P) 1991 MIRRORSOFT LTD. The  computer program and its
+associated documentation and materials are protected by National and Interna-
+tional Copyright Law. Storage in a retrieval system, reproduction, translation,
+copying, hiring, lending, broadcasting and public performances are prohibited
+without the express written permission of Mirrorsoft Ltd. All rights of the author
+and owner are reserved worldwide.
+
+Imageworks, Irwin House, 118 Southwark Street,  London  SE1  OSW.
+Tel: (O71) 928 1454.
+==================================[ 1 ]==================================
+
+============================= First Samurai =============================
+
+CREDITS
+
+Storyline, Concept & Design             Vivid Image Developments
+
+Additional Design                       Raffaele Cecco, Teoman Irmak.
+
+Amiga & Atari ST Programming            Raffaele Cecco.
+
+Commodore 64 Programming                Jon Wiliams.
+
+Amiga & Atari ST Visuals                Teoman Irmak.
+
+Commodore 64 Visuals                    Mat Sneap.
+
+Additional Visuals                      Paul Docherty.
+
+Music & Sound FX                        Nick Jones.
+
+Systems Utilities                       John Twiddy, Mev Dinc.
+
+Manual Copy                             G. John Penn.
+
+Manual Design & Artwork                 Definition
+
+With Special Thanks to Glen Lambert for the Personalized Access Code Concept.
+
+
+
+HINTS & TIPS
+For hints and tips call: O898 445926. All calls charged at 36p per minute (Cheap Rate)
+and 48p per minute at all other times.  Compiled by Guiding Light.
+
+
+
+VIRUS WARNING
+This product is guaranteed by Image Works to be virus free. We cannot accept any
+responsibility for damage caused to this product through virus infection. To be safe,
+always switch off your machine for at least 30 seconds before loading the game,
+particularly if you 've just finished using another piece of software. We cannot accept
+any responsibility for disks that become infected after purchase, but we will replace
+them for you. Return the disk directly to us enclosing =L 4.00 per disk to cover the cost
+of replacement. We will endeavour to replace the disk(s) for you within 28 days.
+
+
+
+NOTE
+Due to improvements and enhancements in the versions of this game, there may be
+some slight discrepancies in the manual. Any such changes have been made with the
+intention of giving you greater enjoyment of this game.
+
+
+==================================[ 2 ]==================================
+
+============================= First Samurai =============================
+
+CONTENTS
+BACKGROUND                    4
+PACK CONTENTS                 4
+EQUIPMENT REQUIREMENTS        4
+LOADING THE FIRST SAMURAI     5
+PLAYING THE FIRST SAMURAI     7
+CONTROLS                     10
+BAD CREATURES                14
+ADDITIONAL WEAPONRY          15
+MAGIC                        16
+PERSONALIZED ACCESS CODE     18
+BONUSES                      19
+ADVICE                       20
+
+
+
+LOADING PROBLEMS
+In the unlikely event The First Samurai fails to load, turn off your machine and
+remove any extraneous external peripherals such as printers (leave the monitor or
+television connected) before repeating the loading procedure. If the First Samurai
+still refuses to load then pop the faulty disk (not the packaging) into a suitably-sized
+jiffy bag or padded envelope, along with your name and address. To aid the trouble-
+shooting department, please provide in as much detail as possible of your equipment
+configuration (not forgetting any RAM expansion devices). Send the package to:
+Customer Services Department, T. F. S., Image Works, Irwin House, 118 Southwark
+Street, London SE1 OSW. Imageworks will endeavour to replace the faulty disk
+within 28 days of its receipt.
+
+
+
+CAUTION!
+Diskettes are magnetic media. Do not expose diskettes to x-rays or intense magnetic
+fields as the data they hold will be erased. Do not attempt to 'back-up' this data as it
+may be destroyed in the process. It's also an infringement of copyright, and Mirrorsoft
+Ltd. accepts no responsibility for disks damaged as a direct result of infringement of
+copyright.
+
+==================================[ 3 ]==================================
+
+============================= First Samurai =============================
+
+BACKGROUND
+In a tiny village of ancient Japan, Lord Akira and his young samurai were collecting
+taxes from the local peasants when the Demon King descended from the mountain.
+The village was destroyed, all the inhabitants murdered, but the Demon King paid
+special attention to the Warrior Lord. Fifteen minutes later, the young samurai was
+alone with the Demon's final words; "Tell them about me, tell them I'm ready to take
+back everything that is mine by right. Tell them their true Master has returned...!!"
+On that cold morning, the young samurai swore revenge for his fallen Master.
+
+For years the good people of the hills fought the Demon as best they could, until the
+Wizard-Mage arrived from the sea and challenged the Demon. They fought long and
+hard atop the Demon King's mountain, lightning and fire keeping the night aglow,
+until the Demon, fearing defeat, escaped into time, hurling himself far into the future
+where people had forgotten the magic and where he need fear no opposition...
+
+The good people were safe, but for the young samurai there was no rest, for his soul
+could not be at peace until he avenged his murdered Lord. So he begged the Mage that
+he might follow the Demon into the future to bring The Demon King back so that he
+could be destroyed at the foot of his own mountain throne....
+
+This was how it began.
+
+
+
+PACK CONTENTS
+Accompanying this manual you should find TWO The First SAMURAI program
+diskettes (Commodore 64 owners only need a single cassette or diskette, so that's all
+they get) and a poster.
+
+
+
+EQUIPMENT REQUIREMENTS
+
+AMIGA
+Compatible with: A500, A500 PLUS, A1500, A2000, B2000.
+Runs in 512k RAM (Enhanced Features with 1Mb RAM)
+
+ATARI ST
+Compatible with: 520ST, 520STe, 1040ST, 1040STe
+Runs in 512k RAM (Enhanced Features with 1Mb RAM)
+
+COMMODORE 64
+Compatible with C64, C64C, C128, SX64. Runs in 64K RAM
+
+==================================[ 4 ]==================================
+
+============================= First Samurai =============================
+
+LOADING THE FIRST SAMURAI
+Note: before we begin, please ensure that a joystick is plugged into the port marked
+'JOYSTICK 2' on the Amiga, '1' on the ATARI ST and 'PORT 2' on the Commodore
+64.
+
+
+
+AMIGA & ATARI ST
+
+If your computer is turned on, turn it off. After at least 30 seconds, turn on your
+computer.
+
+This will remove any virus which may be present and so minimise the risk of
+infecting and possibly destroying your First Samurai disk.
+
+Insert The First Samurai Disk One into internal disk drive (DF0: Amiga , or drive A
+for Atari ST) Disk One contains a scene-setting sequence which can be 'fast
+forwarded' by pressing the joystick firebutton.
+
+When prompted to insert The First Samurai Disk Two, do so, and The First Samurai
+will load and run.
+
+Note: the sheer size of The First Samurai's map means that it is broken down into a
+few carefully compressed bite-size chunks which are stored on Disk Two. For this
+reason, The First Samurai Disk Two should remain in the computer's internal drive
+for the duration of play. There will be no need to replace it with The First Samurai
+Disk One, unless, of course, you wish to review the scene setting sequence.
+
+If you wish to take advantage of the Personalized Access Code System (See YOUR
+PERSONALIZED ACCESS CODE), you must ensure that The First Samurai Disk Two
+is not write protected, ie, the hole in the top-left hand corner of the disk is closed.
+
+==================================[ 5 ]==================================
+
+============================= First Samurai =============================
+
+COMMODORE 64
+
+
+CASSETTE
+Hold Down the 'Shift' key then press the "Run/Stop" key. Release and press PLAY
+on the cassette deck when prompted.
+
+The First Samurai will now load and run automatically.
+
+
+DISKETTE
+
+Ensure that the disk drive is attached to the Commodore 64 and turned on. Now turn
+on your Commodore 64.
+
+Insert the disk into the drive and shut the door, so to speak. Type LOAD "*",8,1 then
+press the 'RETURN' key. The program will automatically load and run.
+
+The credit screen is presented when The First Samurai has loaded correctly. From
+here, play can begin or the Personalized Access Code menu can be accessed (see
+YOUR  PERSONALIZED ACCESS CODE).
+
+Press the joystick firebutton to return to the title screen at any time. From the title
+screen, press fire again to start the game.
+
+
+==================================[ 6 ]==================================
+
+============================= First Samurai =============================
+
+PLAYING THE FIRST SAMURAI
+The Japan of the 24th Century is far removed from the country we know today. The
+Demon King has ravaged the countryside and cities and now his minions inhabit the
+ruins.
+
+Our hero's mission unfolds through four sections of the tortuous countryside of
+futuristic Japan (Fig 1) and continues with a thrilling high speed journey on (and in)
+a subway train (Fig 2). The train's destination is the derelict suburbs of the Demon
+King's city (Fig 3) beneath which his subterranean hordes roam in the complex sewer
+network (Fig 4). Beyond the grime lies a near all-consuming battle through the
+classier side of town (Fig 5) before the base of the Demon King's city skyscraper is
+reached.
+
+[Figure 1 omitted.]
+Fig 1: The countryside of futuristic Ja-
+pan looks serene but hides many dan-
+gers such as bats and rats, fiery pits and
+falling rock (some of them less obvious
+than others).
+
+[Figure 2 omitted.]
+Fig 2: Slugging it out on (and in) a
+speeding subway train in a scene vaguely
+reminiscent of westerns of old.
+
+==================================[ 7 ]==================================
+
+============================= First Samurai =============================
+
+[Figure 3 omitted.]
+Fig 3: The rough side of town is home to
+many a ruck - and plenty of running and
+jumping across rooftops too.
+
+[Figure 4 omitted.]
+Fig 4: Beneath the streets, strange crea-
+tures roam the sewers and deadly water
+fountains gush.
+
+[Figure 5 omitted.]
+Fig 5: The inhabitants of the brighter
+side of town are no better than their
+neighbours.
+
+==================================[ 8 ]==================================
+
+============================= First Samurai =============================
+
+WHAT CAN YOU EXPECT TO SEE
+DURING PLAY
+
+[Screenshot omitted. The numbers 3-9 describe your status bar in the
+following order: 3, 4, 5, 6, 7, 9, 8.]
+
+THE PLAYFIELD
+
+1. THE FIRST SAMURAI                5. MYSTICAL ITEM OR
+                                       ADDITIONAL WEAPONRY HELD
+                                       [E.G. axes, stars etc.]
+
+2. REGENERATION POT                 6. PLAYERS SCORE
+   [Pot with ying-yang symbol.]      
+
+3. THE STATUS PANEL                 7. PLAYERS LIFES REMAINING
+
+4. PHYSICAL ENERGY                  8. MYSTICAL ENERGY
+   [Indicated by the arms length.]     [Indicated by sword length.]
+
+                                    9. Bell
+
+
+==================================[ 9 ]==================================
+
+============================= First Samurai =============================
+
+THE CONTROLS
+
+All the action takes place on the playfield. A 'camera' follows the first Samurai's
+movements throughout the environment.
+
+
+NOTE: BACKWARDS
+Move in opposite direction to the one you are facing. ie, if you are
+facing right - backwards is left.
+
+
+UNARMED COMBAT
+[All pictures on this page omitted.]
+
+WALK LEFT/RIGHT
+(Push left/right)
+
+PUNCH FORWARD
+(Push forward and press firebutton)
+
+LOW PUNCH FORWARD
+(Pull down joystick and press fire button)
+
+LEG SWEEP
+(Pull joystick down diagonally left or right)
+
+FLYING KICK FORWARD
+(Push up and press fire button)
+
+=================================[ 10 ]==================================
+
+============================= First Samurai =============================
+
+[All pictures on this page omitted.]
+TURN AND PUNCH
+(Backwards with fire button)
+
+HIGH KICK BACKWARDS/FORWARDS
+(Up diagonally left or right with
+fire button)
+
+
+ARMED COMBAT
+(With sword)
+
+FLYING SLASH
+(Up and firebutton)
+
+SLASH
+(Hold down fire button and
+push left/right)
+
+CROUCH SLASH & DIG
+(Pull down diagonally left or
+right with fire button)
+
+OVERHEAD SLASH
+(Up diagonally left/right
+with fire button)
+
+=================================[ 11 ]==================================
+
+============================= First Samurai =============================
+
+[All pictures on this page omitted.]
+TURN AND SLASH FORWARD
+(Fire button and backwards)
+
+
+
+THE FOLLOWING MOVES CAN BE MADE WHILST
+UNARMED OR ARMED
+
+JUMP
+(Push up)
+
+CROUCH
+(Pull down)
+
+CLING TO WALLS
+(Jump onto them)
+
+CLIMB WALLS
+(Push up once you have stuck to a wall)
+
+=================================[ 12 ]==================================
+
+============================= First Samurai =============================
+
+[All pictures on this page omitted.]
+PULL AWAY FROM WALLS
+(Pull backwards)
+
+JUMP AWAY FROM WALLS
+(Push up backwards)
+
+THROW MISSILES
+(Press Fire button)
+
+USE SPECIAL ICONS
+(Hold fire button whilst stationary)
+
+USE BELL
+(Hold fire button and pull
+down or press space bar)
+
+
+AMIGA & ATARI ST - FREEZING THE ACTION
+Press the 'P' key to freeze the action. Press the joystick firebutton or any other key to
+resume play.
+
+COMMODORE 64 - FREEZING THE ACTION
+Press the 'Run Stop' key to freeze the action. Press the joystick firebutton or any other
+key to resume play.
+
+QUITTING THE GAME
+Press Q while game is paused.
+
+=================================[ 13 ]==================================
+
+============================= First Samurai =============================
+
+BAD CREATURES
+
+THE DEMON KING'S MALEVOLENT MINIONS
+They are many and varied and each has its own characteristics and strengths. Note
+that an adversary which has been hit will flash but that does not mean it will die as
+not all minions can be killed. Points are given for each kill.
+
+
+
+THE STATUS PANEL
+The PHYSICAL ENERGY is that of the hero and is represented by an arm. The shorter
+the arm the weaker the hero. When the hero's physical strength runs out, he dies
+(unless he possesses the Magic Sword - see MAGIC SWORD).
+
+Physical Energy is lost whenever the hero is hit by one of the Demon King's minions.
+The hero begins his quest with his Physical Energy at a maximum.
+
+
+
+MYSTICAL ITEMS
+
+THE BELL
+This is the most powerful mystical item. Use it only when no other course of action
+can solve the problem you face.
+
+=================================[ 14 ]==================================
+
+============================= First Samurai =============================
+
+ADDITIONAL WEAPONRY
+There's no doubting the hero's unarmed combat skills - he's a lean, mean fighting
+machine. But occasionally he may need a little helping hand in the form of an
+additional weapon. These may be found during the Samurai's journey, but some
+types may only be collected if the Samurai has sufficient magical energy. Only one
+weapon can be held at a time: it is shown on the panel below the playfield. If the hero
+is holding a weapon when he picks up another, the old weapon is lost. Additional
+Weaponry is activated by pressing the joystick firebutton while the hero stands still.
+When the player has insufficient magical energy a magical item will appear as a
+sparkling star. Walking over the item will reveal its true form but the player will not
+be able to collect it.
+
+
+[Pictures of the weapons omitted.]
+DAGGER
+Throw out a deadly dagger. Better still, collect a maximum of three
+daggers and you can have three on the go at once.
+
+SEEKER
+A deadly star orbits the hero until one of the Demon King's minions
+nears. It then instinctively attacks the enemy. The hero can have a
+maximum of 3 Seekers on the go at once. Bear in mind that a Seeker
+will disappear when it runs out of hit power.
+
+AXE
+Throw a single axe. There can be no more.
+
+=================================[ 15 ]==================================
+
+============================= First Samurai =============================
+
+MAGIC
+
+THE WIZARD MAGE
+The Samurai is not adept in the ways of magic. Fortunately for him, the Wizard Mage
+is highly skilled in the mystical arts and may be summoned through time to aid the
+Samurai.
+
+Note: The Wizard Mage occasionally makes a fleeting appearance in times of trouble.
+When he appears, you know it's time to summon him.
+
+
+
+SPECIAL ITEMS
+
+The Wizard Mage is powerful but sometimes the problems presented are not soluble
+without a helping hand. On each level the hero needs to collect Special Items. When
+a Special Item is collected, the Wizard Mage appears to take it from the hero. When
+the moment comes, the Wizard Mage will use the Special Items to solve a particular
+problem. Note that you do not have to collect EVERY Special Item on a level - just
+most of them!
+
+The MYSTICAL ENERGY is  that of the hero's Magic Sword (see THE MAGIC
+SWORD). The energy of every creature killed is absorbed by the Magic Sword and
+shown as this bar. The longer the bar, the greater the quantity of Mystical Energy
+stored. This Mystical Energy is used to charge pots. The hero begins his quest with
+a small amount of Mystical Energy, which is increased by defeating the Demon King's
+Minions in battle.
+
+
+
+REGENERATION POTS
+Regeneration Pots are dotted about the landscape in opportune places (Fig 6). A
+charged Regeneration Pot marks the position on the landscape to where the hero will
+be returned when he is reincarnated following the loss of a life or when he uses a
+transport option.
+
+A pot is charged by positioning the Samurai over it and crouching down. The
+Mystical Energy accumulated during play will then flow into the Regeneration Pot.
+Only one pot can be active at any one time, but the hero can reactivate a previously
+charged Pot and so determine a restart position for the hero.
+
+=================================[ 16 ]==================================
+
+============================= First Samurai =============================
+
+[All pictures on this page omitted.]
+FIG 6 : an uncharged Regeneration Pot
+
+
+
+POTIONS
+Pick up a Potion (Fig 7) and the hero is TRANSPORTED to the last
+charged Regeneration Pot.
+
+Fig 7: the potions transport the player to the determined restart point.
+
+
+
+THE MAGIC SWORD
+The hero begins his quest without his Magic Sword. The Magic Sword is only given
+to the hero when he collects  sufficient Mystical Energy.  Not only does the Magic
+Sword effectively extend the First Samurai's reach, it also spares him instant death.
+When the hero's Physical Energy reaches zero, the Magical Sword is lost but the hero
+lives on, his Mystical Energy converted to a small portion of Physical Energy.
+
+
+
+TRANSPORTERS
+Watch out for transporters. When the hero touches one, press and hold down the
+joystick firebutton to transport him to a new area of the scenery.  It could even be
+another transporter.
+
+
+
+PLAYERS LIVES REMAINING
+The player's mission begins with five reincarnations of the hero. See if you can
+discover how to acquire extra lives.
+
+=================================[ 17 ]==================================
+
+============================= First Samurai =============================
+
+YOUR PERSONALIZED ACCESS CODE
+
+So what is your Personalized Access Code? Well, when a level is completed, the
+program remembers the stage reached along with the number of lives and score at
+that time and the time spent playing thus far. The player can store this information
+on Disk Two and then access it to avoid playing what's come before. This effectively
+determines the starting position of play.
+
+The player can save the Personalized Access Code at the end of a game or after
+quitting. At this time the game will go to the highscore table and then the title screen.
+From the title screen credits, press 'F1' to call up the personalized access code menu.
+There are 10 slots to which the state of play can be saved, one for each level. Any
+previously saved situations will be shown. To save your current status, press the 'S'
+key. Note that any existing code for the level in question is replaced.
+
+To load a saved situation, press the corresponding function key for the level required.
+For example, press F1 to restart at level 1.
+
+=================================[ 18 ]==================================
+
+============================= First Samurai =============================
+ 
+BONUSES
+
+The First Samurai rewards the player for good play in the form of many bonuses. The
+Statistics for the bonuses acquired during a level can be viewed by pressing the 'B'
+key. However, the actual bonuses are not given until the level in question is
+completed. Press the firebutton to return to the action.
+
+
+
+BONUS REPORT
+
+COURAGE BONUS
+Awarded for the number of Demon King minions killed.
+
+CHEST BONUS
+The number of chests opened.
+
+TREASURE BONUS
+The quantity of treasure collected.
+
+FOOD BONUS
+The quantity of food collected.
+
+SPECIAL OBJECTS HELD
+The quantity of Special Objects collected by the player for the Wizard Mage.
+
+SPECIAL OBJECTS NEEDED
+The number of special objects required by the Wizard Mage.
+
+TIME TAKEN
+How long the player has been in action.
+
+=================================[ 19 ]==================================
+
+============================= First Samurai =============================
+
+ADVICE
+
+Try striking the scenery -- hidden bonuses may be uncovered, such as food or extra
+weaponry. There is an object worth collecting which should throw a little light on the
+position of hidden bonuses.
+
+Some areas of the scenery are destructible -- don't be afraid to hit out at anything that
+looks remotely fragile.
+
+The chests hold treasure. Strike them a couple of times to scatter their contents.
+Simply walk over the treasure to collect.
+
+The baskets hold food which replenishes Physical Energy. Strike them a couple of
+times to scatter their contents. Simply walk over the food to collect it.
+
+Beware of landmines -- you will recognise one having trodden on one!
+
+Watch out for opponents who drop weapons -- you can pick them up.
+
+Finding it impossible to cross the flaming pit or in need of some means to reach
+seemingly unreachable heights? The Wizard Mage will prove useful.
+
+For further hints and tipps call: 0898 445926. All calls charged at 36p per minute
+(Cheap Rate) and 48p per minute at all other times. Compiled by Guiding Light.
+
+=================================[ 20 ]==================================

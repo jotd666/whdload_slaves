@@ -1,0 +1,4583 @@
+                             K240 FULL MANUAL
+                            ==================
+                                            TYPED BY SHARD - N&B
+Part 1
+
+CONTENTS
+--------
+
+Playing the Game
+Finding Your Way Around This Manual
+Zone 001 - Tutorial
+Zone 002 - Colony Management
+Zone 003 - Spacecraft Construction
+Zone 004 - Spying
+Zone 005 - Fleets
+Zone 006 - Button Selection Panels
+Zone 007 - Terracorp and Sci-Tek
+Zone 008 - Hints
+Zone 009 - Background
+Zone 010 - Building Reference Section
+Zone 011 - Sci-Tek
+Zone 012 - Spacecraft
+Zone 013 - Hardpoint Weapons
+Zone 014 - Missile Warfare
+Zone 015 - The Enemy
+
+
+EPILEPSY WARNING
+----------------
+
+Please  read  before using this video game or allowing your children to use
+it.
+
+Some  people are susceptible to epileptic seizures or loss of consciousness
+when exposed to certain flashing lights or light patterns in everyday life.
+Such  people may have a seizure while watching certain television images or
+playing  certain  video  games.   This may happen even if the person has no
+medical history of epilepsy or has never had any epileptic seizures.
+
+If  you  or anyone in your family has ever had symptoms related to epilepsy
+(seizures  or  loss  of  consciousness)  when  exposed  to flashing lights,
+consult your doctor prior to playing.
+
+We  advise  that  parents  should  monitor  the use of video games by their
+children.   If  you or your child experience any of the following symptoms:
+dizziness,  blurred  vision, eye or muscle twitches, loss of consciousness,
+disorientation,  any  involuntary  movement  or convulsion, while playing a
+video game, IMMEDIATELY discontinue use and consult your doctor.
+
+PRECAUTIONS TO TAKE DURING USE
+------------------------------
+
+Do  not  Stand  too close to the screen.  Sit a good distance away from the
+television screen, as far away as the length of the cable allows.
+
+Preferably play the game on a small television screen.
+
+Avoid playing if you are tired or have not had much sleep.
+
+Make sure that the room in which you are playing is well lit.
+
+Rest for at least 10 to 15 minutes per hour while playing a video game.
+
+CREDITS
+-------
+
+Programming:           Graeme Ing
+Graphics:              Pete Daniels
+Game Design:           Graeme Ing and Pete Daniels
+Music:                 Patrick Phelan
+SFX:                   Patrick Phelan and Neil Biggin
+Intro Programming:     Michael Hart
+Intro graphics:        Paul Green and Syd Franklin
+Produced by:           Mark Glossop
+Manual Copy:           Kai MacMahon and Graeme Ing
+Manual Design:         Kai MacMahon,
+Edited by:             Steve Mckevitt
+Manual Artwork:        Dave Lewis and Alan Batson
+Voice of the Computer: Tracey Park
+Additional Help:       Graham Stone, Kevin Dudley and Damian Hibbard
+Quality assurance:     Simon Short, Robert Millington, Tony Howe
+
+PLAYING THE GAME
+----------------
+
+From Floppy disk:
+
+1) Turn on your Amiga,
+2) Insert disk 1 in your internal disk drive, (DF0:)
+3) The game will automatically boot and run
+
+From Hard Disk:
+
+1) Turn on your Amiga,
+2) Wait for the Amiga to boot into Workbench
+3) Locate the directory you have previously installed K240 into, (see 
+"Installing onto Hard Disk" below) and double click on the K240 game icon,
+4) The game will run.
+
+It  is  recommended that you install K240 onto a hard disk if you have one.
+The  game  will  be  easier to play due to do data and screens being loaded
+almost instantaneously.
+
+On  Machines with more than half a Meg of chip ram K240 uses sampled speech
+to  announce important events.  This can cause excessive disk swopping on a
+single  drive  system.   If  you do not have a second drive, we suggest you
+disable  the  speech  option from the Tetracorp screen.  On the Floppy disk
+version,  all saved games are made to the internal disk drive (DF0:), IT IS
+IMPORTANT  THAT YOU HAVE A PRE-FORMATTED DISK FOR USE AS A SAVE-DISK BEFORE
+YOU  BEGIN  TO  PLAY THE GAME!  The save disk must be formatted in standard
+Amiga  format.   If  you  are  unsure  how  to  format  a  disk, follow the
+instructions  given  in  the  manuals that came with the Amiga.  Each saved
+game requires approximately 180K of space.
+
+Apart  from the save-disk, which will always be in DF0, K240 will recognise
+any of the game disks in any Floppy disk drive, internal or external.
+
+On the Hard Disk version, all saved games are made to the Hard Disk, in the
+same directory as the game has been installed.
+
+Installing Onto Hard Disk
+
+1) Turn on your Amiga.
+2) Wait for the Amiga to boot into Workbench.
+3) Insert K240 disk 3 into any Floppy disk drive. Wait for the disk icon 
+   to appear on the screen.
+4) Double click on the K240 disk icon.
+5) Double click on the "Install K240" disk icon.
+6) Follow on screen directions.
+
+FINDING YOUR WAY AROUND THE MANUALS
+-----------------------------------
+
+This manual comes in three distinct sections.
+
+a) Tutorial: 
+K240  is  a  complicated game.  Once you are familiar with the basics it is
+actually  quite  straightforward  to  play.   The tutorial forms a painless
+introduction to the basic elements of the game, and gives you an idea where
+to start.  We strongly advise that you follow it.
+
+b) Main Reference section: 
+This  explains  in  detail all of the game.  It is divided into sections so
+that  you  can  easily  find out about any subject.  It is not necessary to
+read this part of the manual before you commence play; you can refer to the
+sections  when  you  need them; but it is worthwhile skimming through it so
+that you are familiar with what you can do in the game.
+
+A  hints  section  is  included  to assist you if you are unsure of how you
+should go about developing your mining colony.
+
+c) Technical section: 
+This  contains  technical details on the various weapons, spacecraft, alien
+races  etc,  as  well  as some notes on Imperial history.  The bulk of this
+material is for background only, and is not necessary to play the game, but
+an  understanding of these technical details may help you to develop better
+strategies.
+
+
+ZONE 001 : TUTORIAL
+-------------------
+
+This  section  of  the  manual  is  designed  as a full tutorial.  Over the
+following pages you will be taken step by step through the initial parts of
+the  game.   The  more  complex  aspects  of  the  game  will  be easier to
+understand when you have this basic knowledge.
+
+For  a  painless introduction to the game, we strongly advise you to follow
+this tutorial.
+
+Because  you will be playing a proper game during the tutorial (Alien level
+1  in  fact)  events are bound to happen that are not documented here.  The
+most  noticeable  of  these  will  be windows that pop up to report certain
+events.  For now if any message window appears that is not explained by the
+tutorial, simply ignore it and click with the left mouse button on the Exit
+button  that  will  appear  in a little box beside the message window.  The
+message will go away and you can continue with the tutorial.
+
+THE MAIN ASTEROID VIEW SCREEN
+-----------------------------
+
+When  you  start  the  game select your language by picking the appropriate
+flag.   When  you  reach the Tetracorp screen click on "END" to begin Alien
+Level one.  You will now find yourself looking at your initial asteroid, on
+the  Asteroid  View  Screen.   Before  we  go any further let`s take a look
+around this screen.
+
+In  the  centre  is  a  3-D  representation  of your asteroid showing rocky
+terrain and the sole building in your colony (A Colony Preservation Unit in
+green.)
+
+In  space above the asteroid is the transporter ship that you used to reach
+Sector K240.
+
+At  bottom  right  is  a  building  icon.  This indicates which of the many
+buildings  is  currently active for construction.  You`ll see how it`s used
+when we look at Colony Construction in a moment.
+
+Below  it is a blue button.  This is explained in the section of the manual
+about "Time Saving Techniques".
+
+Below that is the status line.  Messages will appear here from time to time
+but usually it flashes between two important pieces or information:
+
+a) your money in Imperial Credits
+b) The date in the format: E2.yyy.dd
+
+Where  E2  marks  the 2nd Millennium AD, yyy the year and dd the day.  Each
+year  has  100 standard Imperial days.  The game begins in E2.380.01, which
+is the year 2380 AD.
+
+USING THE MOUSE
+---------------
+
+Before we go any further, lets look at the 3 different mouse modes as it is
+important that you are in the correct mode for an operation.
+
+a) Hand:
+This is the default mode used for most operations.  Whilst in this mode you
+can  click on the asteroid to construct buildings and click on buildings to
+obtain information.
+
+b) Arrow:
+This is the Ship Selection mode.  In this mode you can ONLY click on any of
+your  spacecraft  (or  Orbital Space dock) to obtain information about them
+and control them.  You can perform no other function.
+
+You  enter  this  mode  by clicking on the Ship Mode button (see later), or
+pressing the "S" key.  Do so again to return to the normal "hand" mode.
+
+c) Bomb:
+This  is  the  demolish  Mode.   In  this  mode  you can ONLY demolish your
+buildings  should  you  desire  to do so.  Simply click with the left mouse
+button over any building to destroy it.
+
+You  enter this mode by clicking on the demolish Mode button (see later) or
+pressing the "D" key.  Do so again to return to the normal hand mode.
+
+You  carry  out  most operations by clicking with the Left mouse button, eg
+selecting ships, selecting buildings, clicking on the asteroid, clicking on
+buttons, etc.
+
+Clicking the right mouse button anywhere on the screen brings up one of the
+several Button Panels.  A different button Panel appears for each different
+screen.  Some buttons also lead to other Button Panels.
+
+Most  buttons  are  explained  in the appropriate section in the manual but
+there  is  a  separate  card provided which identifies the purpose of every
+button.
+
+Try it now:  Click with the right mouse button.  The Asteroid Screen Button
+Panel appears with 3 rows of three buttons.
+
+Notice  the  button  in  the  bottom  right.   This  is the Exit button and
+clicking  on  it  takes  you  back  to  the  game.   Every  button Panel or
+information window has an Exit button and in each instance it will resemble
+the return key on your computer.
+
+Note also, that whilst any information window or button Panel is visible on
+the screen, the game is paused so take as long as you like.
+
+THE ASTEROID FIELD SCREEN
+-------------------------
+
+Let`s  have  a  quick  look  at this before we continue.  This and the Main
+Asteroid View Screen will be the screens you will use most.
+
+From  the  Asteroid  View  Screen  bring up the button Panel as shown above
+(Click the right mouse button.)
+
+The  centre button will take you to the Asteroid Field Screen.  Click on it
+now.
+
+Your  starting  asteroid is the one rotating with a little green dot an it.
+The  green  dot  indicates that the asteroid is owned by you.  Those with a
+red  dot  belong  to the enemy, and those without a dot are uninhabited and
+free for the taking.
+
+Around  your  asteroid  is a small black circle.  The rest of the screen is
+grey.   Grey  indicates  uncharted space, and you only know about ships and
+asteroids  within  the black circle which marks the extent of your sensors.
+At the start of the game it is likely that the only asteroid you know about
+is your own, though there are one or two others visible.
+
+There are two ways you can discover more asteroids:
+
+a) Sensor Range:
+If  any  asteroids move into your sensor range (the black circle) then they
+will  become visible.  You can extend the range of your sensors by building
+a Sensor Array and by colonising other asteroids.
+
+b) Scout Ships:
+You  can  instruct  Scouts  to  head  into uncharted space and Discover new
+asteroids outside your sensor range.
+
+Other  information  will  be laid over this screen at various points in the
+game but these will be explained later.
+
+Below  your asteroid is the acronym PAFW.  This is a status summary of your
+asteroid and will appear below all asteroids owned by you.  It is used as a
+quick means of seeing which of your colonies needs attention.
+
+P   Power supplies
+A   Air supplies
+F   Food supplies
+W   Water supplies
+
+A green letter indicates that all is well.
+
+An  orange  letter indicates that you are using more than you are producing
+on that asteroid and will be using up your surplus.
+
+A  red letter indicates that you are producing none at all and are existing
+(or maybe not!) off surpluses alone.  Time to do something!.
+
+These  factors are explained more fully a little later in the tutorial.  In
+the section about the Colony Summary Window.
+
+Finally, at the bottom right is the date/money indicator.
+
+Notice that the mouse pointer is now an orange cross hair.
+
+Let`s return to your asteroid now and look at building it up a bit.
+
+Click with the right button to bring up the Button Panel.  Notice that this
+is  a  different  button Panel to that on the Asteroid View Screen since it
+has  functions  applicable  to  this  screen.  Notice again that the bottom
+right button is the Exit button.
+
+The  bottom  left  button  will  take you back to the Asteroid View Screen.
+Click on it now.
+
+CONSTRUCTING A COLONY
+---------------------
+
+We`re  now  going  to  construct a small colony an our starting asteroid to
+give you a feel for colony construction.
+
+As already mentioned, you begin with a single CPU.
+
+There  are a range of buildings available to you and more are available for
+purchase  from  the  Sci-Tek Corporation.  You select the building you want
+from the Engineering Window.
+
+As  we showed you earlier click the right mouse button to bring up the main
+Button  Panel.  You access the Engineering Window by clicking on the button
+at bottom left.  Click there now.
+
+The Engineering Window
+----------------------
+
+You  can browse through the buildings available by clicking on the Left and
+Right  arrow  buttons.   Have  a  look  now at whats available.  The later
+section on buildings gives more detailed information about each building.
+
+Since  we are operating a Mining Colony let`s get things started.  Cycle to
+the "Mine" building.  Click on the Exit button to select this building.  As
+you  return to the main Asteroid View Screen, notice that the Mine building
+graphic appears at bottom right reminding you of your selection.  Until you
+select another building every time you click on the asteroid you will build
+a Mine.
+
+Find  a  piece  of  flat land on the asteroid and click there with the left
+mouse button, to build.
+
+Notice  the  error  message?  Good.  We have not yet allocated any funds to
+the  Engineering  Section.  To do this, bring up the Button Panel and click
+on  the  Information  button  (middle top).  This in turn brings up another
+Button Panel.  Click on the Financial Funds button top-right)
+
+You are now in the Financial Funds Window.  Before we proceed we`ll explain
+how this works.
+
+Financial Funds Window
+----------------------
+
+You have 5 different budgets to manage:
+
+Money          -  spare cash not assigned to any budget
+Construction   -  used for constructing buildings
+Vehicles       -  used for constructing spacecraft
+Intelligence   -  used tor financing spying
+Missiles       -  used for constructing missiles
+
+The  number  at  the  far  right gives the amount allocated to each budget.
+There are also 3 bar charts for each budget.
+
+Green          -  Each block = 5,000 credits     (heading is "5k")
+Orange         -  Each block = 100,000 credits   (heading is "100k")
+Red            -  Each block = 1,000,000 credits (heading is "1M")
+
+To  add  some  money  to a budget simply click somewhere on the appropriate
+line, under any of the three columns.  So if you click on the VEHICLES line
+between  the  5K and 100K headings you will add one or more blocks of 5,000
+credits.   Clicking  between  100K  and  1M  will add one or more blocks of
+100,000  credits.   The  further to the right you click the more blocks you
+will add.  To fine tune the amount, click and hold down the left button and
+drag it either left or right - this will add or remove a block.
+
+Go ahead and experiment, its easier to use than to describe!
+
+To  remove  some  money  from a budget click and drag left to remove one or
+more blocks.
+
+Notice that all money is given to or taken from the Spare Cash line (called
+MONEY)  at  the  top,  so you cannot directly move money from one budget to
+another,  you  have to delete it from one budget (making it spare cash) and
+then  add it to another budget.  If you are trying to add money to a budget
+and  nothing  is happening, its probably because you have no spare cash and
+you`ll have to reduce another budget first.
+
+Continuing our tutorial return all your money to the Spare Cash line at the
+top.   We  need  to  put  some  money  into  CONSTRUCTION so add some in by
+clicking  on the CONSTRUCTION line.  Anything over 100,000 Cr should do for
+now.  Add the lot if you like.  If during the rest of the tutorial you find
+that  one of your budgets has run out, simply return to the Financial Funds
+Window and allocate some more money.
+
+Now exit from this window (using the "exit" button) and return to the game.
+
+Construction
+------------
+
+You  can  now  build  some Mines by clicking on the asteroid.  Build 2 or 3
+Mines.  Notice that scaffolding appears as your men begin work.
+
+If  you  click  on  the scaffolding with the left mouse button and hold the
+button  down  you  will be told what is being built and how many days until
+completion.
+
+Go  back  to  the  Engineering Window and move on a few buildings until you
+come  to  a  Storage  Facility.   Exit  the store and build a Store on your
+asteroid.
+
+You  may want to build a couple of Solar Generators too, to ensure you have
+enough power.
+
+Interrogating Buildings
+-----------------------
+
+If  you click on an existing building with the left mouse button it will be
+identified.  Certain buildings also pop up information or control windows.
+
+As an example click on one of your finished Mines.  There is no information
+window for a mine just it`s name at the bottom of the screen.
+
+Click  on  the  Store  and  you are presented with a listing of all the ore
+being  held in your Stores at this time.  For further details see the entry
+on Stores in the buildings section.
+
+We suggest that you now construct a few more buildings on your asteroid and
+when  they are built, click on them to see what information you can obtain.
+For  now  simply  exit  any  information windows and refer to the Buildings
+section  for  more  details.   Build  what  you  like  but  we  suggest the
+following:
+
+                       4 or 5 Solar Generators
+                       Command Centre
+                       Weapons Factory
+                       Decontamination Filter
+                       Medical centre
+                       2 or 3 Mines
+                       2 or 3 Deep Bore Mines
+                       Storage Facility
+                       Sensor array
+
+Tactical Mode
+-------------
+
+If  you  were  having  difficulty locating a flat piece of land to build on
+there are two ways around this:
+
+The  first  is to rotate the asteroid around so you can see behind existing
+buildings.  To do this bring up the main Button Panel.  Click on the middle
+left  button  which  will  take  you  to the Asteroid Control Button Panel.
+There  are  two  yellow  arrow  buttons.   Clicking on them will rotate the
+entire asteroid left or right by 90 degrees.
+
+A  quicker way of doing this is to use the left and right arrow keys on the
+keyboard.
+
+Notice  how  the Transporter in orbit rotates as well since you are viewing
+the entire asteroid from another viewpoint.
+
+The  other  method  to  assist you is the Tactical Mode.  Bring up the main
+Button  Panel  and  then the Asteroid Control Button Panel just like above.
+The bottom left button (a blue cube) toggles the tactical mode on and off.
+
+Solid  box  with  "N"  indicates normal mode 
+Outline box with "T" indicates tactical mode.
+
+The  button  will  not  take effect until you exit out of the button panels
+(Later we`ll show you a quicker way to access buttons!)
+
+Notice  that  when you exit the button panels all the buildings and terrain
+have  disappeared  to be replaced by colour coded squares.  You can now see
+every part of the asteroid and selecting a site to build upon is easy.
+
+You  can  also  click on buildings to obtain information just as you can in
+normal mode.
+
+The various colours represent the following features:
+
+Light Grey     -   Flat land
+Dark Grey      -   Terrain unsuitable for building
+Light Blue     -   Buildings
+Red            -   Landing Pads
+White          -   Buildings protected by a Screen Generator
+Green          -   Asteroid Virus deposits
+Dark Blue      -   Anti Virus deposits
+
+We`ll explain some of these later.
+
+A  quicker way of changing between normal and tactical mode is to press the
+SPACE key on the keyboard.
+
+Tutorial Conclusion
+-------------------
+
+You  should  now  have  an understanding of the basics of the game:  How to
+access button Panels, view your asteroid, access the asteroid Field Screen,
+select and build a building, manage your budgets, and so on.
+
+The  rest  of  the  manual  is  a  reference  section  and will explain the
+important  features of the game in depth.  We would recommend that you read
+the  reference  sections.   In  the  order  they  appear, as they have been
+structured in such a way as to be chronologically correct ie they appear in
+the order that you are going to need them in.
+
+
+ZONE 002 : COLONY MANAGEMENT
+----------------------------
+
+Your  prime directive is to extract and sell as much ore as you can but the
+most  successful  and productive mining colonies all rely upon a strong and
+stable  colony  infrastructure.   It  is  vital  to  regularly  monitor the
+colonies on all your asteroids and to keep them running smoothly.
+
+There are four main aspects to successful colony management:
+
+a) Population
+b) Security
+c) Life Support
+d) Power
+
+a) Population
+Though  many  parts of your mining equipment are robotic,the robots usually
+only  undertake  the  tasks  that  are most dangerous to human life.  Human
+employees are required for many important duties and to oversee and control
+the  robots.   To  support  the mining and technician employees there is an
+entire  Service Industry offering training, relaxation and participation in
+other  leisure  activities.   Shifts  are  long  and  hard  and as a result
+Tetracorp encourage their employees to play hard too.
+
+Procreation  is  outlawed  on  mining  colonies for safety reasons but your
+colonies  will  slowly  grow  in  population  as  your personnel department
+entices  more  men and women out from the Home Worlds.  The more successful
+and  smoother  running  your  colonies  the easier recruitment becomes.  In
+general  your population will grow slowly to fill all avaiable living space
+so  you  can  directly  control  your  population by building fewer or more
+Living  Quarters.   The  Colony  Summary  Window  (see below) indicates the
+number  of  surplus  employees you have.  These are employees available for
+backup roles and to operate alternate shifts with technical employees.  For
+stability  attempt  to  keep the surplus positive but not too high.  If the
+surplus  is  negative  then your employees are stretched and may be working
+double  shifts to complete necessary work morale will deteriorate.  If your
+surplus  is  too  high,  boredom can effect those not currently working and
+trouble can break out.
+
+b) Security
+Morale  can  fluctuate  quickly on a mining colony.  Spaces are cramped and
+employees  work  and  play with the same faces day in and day out.  Tempers
+can  flare,  fights  are  commonplace  and  employees are quick to anger at
+management  failures.  There would be mutiny every day were it not for your
+dedicated and highly paid security team.
+
+Security  will keep your employees under control but only if their presence
+is  large enough.  Each Security Centre can easily manage 150 employees and
+often  many  more  but  don`t  stretch  your  security  too thin or you are
+inviting big trouble.
+
+You  will  be  issued  with reports when (if?) trouble breaks out but don`t
+wait  for  these  reports monitor the Security status in the Colony Summary
+Window (see below)
+
+c) Life Support
+Each  asteroid  colony must be self sufficient and that means producing its
+own Air, Food and Water.  Each employee uses 1 unit of each every day so it
+is  necessary  to  produce  at  least  as  many  units  per day as you have
+employees but it is also wise to produce and store a surplus.
+
+Initially  each  asteroid  colony  begins with a single Colony Preservation
+Unit (CPU) which provides living space, power, air, food and water but only
+for  a  limited  population  and  time.  (see description of the CPU in the
+Buildings section) To back up the CPU you need other support buildings.
+
+                 BUILDING                 PRODUCES
+
+                 Life Support              AIR
+                 Hydroponics               FOOD
+                 Hydration Plant           WATER
+
+In addition Environment Control continues where the CPU left off by storing
+all three of the above in vast quantities.
+
+The Colony Summary Window (see below) details how much of each resource you
+are  producing,  using and storing, so monitor it often and keep production
+ahead of population growth.
+
+More  information is given for each of the above buildings in the Buildings
+section.
+
+Remember also that the PAFW display on the Asteroid Field Screen provides a
+quick  summary  of the status of your asteroids.  PAFW was explained in the
+tutorial pages.
+
+d) Power
+Clearly  nothing  can  operate without power.  The Buildings section of the
+manual  details the power requirement of every building.  There are several
+power  production  buildings  and  more  efficient  ones are available from
+Sci-Tek.  Like Life Support it`s vital to use the Colony Summary Window and
+PAFW  to  monitor  the  status  of power to each colony and keep production
+ahead of usage.
+
+Should  you  suffer power shortages some buildings will fail before others.
+In  general the most vital buildings like Life Support and Hydroponics will
+fail  last.   To  see which buildings have failed simply click on any power
+generating building and those buildings without power will be listed.
+
+RADIATION
+---------
+
+Each  asteroid has background radiation some higher than others.  Radiation
+is expressed as a percentage.  0% means the radiation is immeasurable above
+the  radiation given off from the local star.  Any value of 50% or lower is
+acceptable  but higher radiation is harmful and will result in sickness and
+even deaths amoungst your employees.  Use Radiation Filters to provide them
+with  the  necessary  protection.   (see  the  description in the Buildings
+section).
+
+Factors  that  lead to high radiation values are the use of Nuclear missles
+extensive  combat  and the presence of rare ores such as Traxium and Nexos.
+When  mining  these ores you must be very careful to protect your employees
+using Radiation Filters.
+
+COLONY SUMMARY WINDOW
+---------------------
+
+You can access this by clicking on any of the colony support buildings such
+as  Living  Quarters  Life Support, Hydroponics and CPU etc.  Remember that
+you  must  be in Normal (hand) mode.  You can also access it via the button
+in the Asteroid View Screen Button Panel.
+
+This  information  gives  you  an important breakdown on the status of your
+colony on that asteroid.
+
+You  are  told  your current population, your maximum population, the total
+space  in  all  your  Living Quarter) and Surplus Population.  As explained
+above  in  Colony  management  try to keep the surplus a positive number to
+allow  for  growth  but  if you overpopulate your asteroid you risk running
+short of food, water and air.
+
+Keep an eye on the Radiation reading (see Radiation above).
+
+The  most  important  part of the Colony Summary Window is the breakdown of
+Power,  Air,  Food and Water.  You are told how much you are producing, how
+much is being used daily and how much is stored for later use.
+
+The  colour  codes give you an instant indication of which of these factors
+may need attention:
+
+Green      -    No problems
+Orange     -    The asteroid is using a commodity faster than it is being 
+                produced. Your reserves are being used up.
+Red        -    The asteroid is no longer producing a commodity and you are 
+                running entirely from reserves (or maybe none at all!) you 
+                must rectify the situation quickly!
+
+The  Security  line  provides a summary of employee morale on the asteroid.
+If  the  message suggests that the asteroid is not secure you would be wise
+to construct another Security Centre.
+
+The final line reminds you which fleets are present at this asteroid.
+
+There are also some options available by using the supplied buttons:
+
+            RENAME       INVENTORY      EXIT
+
+Clicking  on RENAME allows you to rename the asteroid.  You can personalise
+all  your asteroids and give them a name that reflects their function, like
+MAIN MINE or ORE DEPOT or SPACE DOCK etc.
+
+Simply  delete the existing name using the backspace key and enter your own
+name up to 15 characters.
+
+Clicking  on  INVENTORY will provide a detailed listing of how many of each
+type  of building you have.  The listing is broken down into pages - simply
+use the Arrow Buttons to cycle through the pages.
+
+ASTEROID MINING
+---------------
+
+The purpose of your colony in sector K240 is to locate and extract ores for
+sale  to  Tetracorp  and  the  Empire.   The more you sell, the larger your
+profits  and  your fame in the mining fraternity.  This section details how
+to mine ore, what to do with it, how to transport it and how to sell it.
+
+DISCOVERING ORE
+---------------
+
+The  first  step  is  to  locate  asteroids  rich  in  ore  deposits.  This
+Exploration  Phase  requires  the use of one or more Scout Ships.  To go in
+search  of  new  asteroids  dispatch the Scout with orders to Explore.  For
+details of how to do this see the section on Controlling Spacecraft and pay
+particular attention to the subsection on Scouts.
+
+Each  asteroid  has  different  amounts  of each type of ore.  To determine
+which  asteroids are the most abundant in ore you must use a Scout with the
+orders  to  Prospect  for  ore.   Again  see  the  section  on  Controlling
+Spacecraft.
+
+When  the  scout  has examined the asteroid it will return to its departure
+asteroid and present you with an ore report.  You can obtain this report at
+any  time  for any at the asteroids you have prospected, by clicking on the
+Geology button.
+
+The  Ore  Report simply details how much of each type of ore remains on the
+asteroid  to be mined.  The most common are shown at the top and the rarest
+at the bottom.
+
+ORE EXTRACTION
+--------------
+
+To  extract  ore you must have one or more mines.  There are three types of
+mine  each  mining  a  particular range of ores.  The table below indicates
+which mines you require to mine particular ores by colour coding them:
+
+
+Selenium       Red           Red requires a mine
+Asteros        Red
+Barium         Red
+Crystalite     Red
+Quazinc        Orange        Orange requires a deep bore mine
+Bytanium       Orange
+Korellium      Orange
+Dragonium      Orange
+Traxium        Green         Green requires a Seismic Penetrator
+Nexos          Green         obtainable from Sci-Tek
+
+
+As  well  as  providing  adequate power for the mines you must build one or
+more  Stores  to  hold  the ore.  Clicking on a Store building provides you
+with a listing of what ores you have in ALL the stores on that asteroid.
+
+Each  mine  extracts one unit of ore about every 8 to 16 days.  You have no
+control over which units are extracted.
+
+The  main thing to remember about mining is to keep it running smoothly and
+consistently.  Here are a few other points to bear in mind:
+
+Make sure there is enough power for all mines.
+
+Keep  a  constant  track  on  the  population  of your asteroid and try and
+maintain a positive surplus.
+
+Make sure you have enough storage space for the ore.
+
+ORE USAGE
+---------
+
+What do you do with ore?
+
+1) Use it for ship construction
+2) Use it for missile construction
+3) Sell it to the Empire (see later)
+
+This is a summary of most of the cases in the game when you wil need ore:
+
+ ORE            NEEDED FOR
+
+Selenium        Explosive Missile, Scatter Missile, Assault Fighter,
+                Combat Eagle, Scout Ship, Destructor, Terminator
+                Transporter, Fleet Battleship
+
+Asteros         Nuclear Missile, Powerplant
+
+Barium          Area Explosive Missile, Anti Virus Missile, Spy Satellite
+
+Crystalite      Vortex Missile, Assault Fighter, Combat Eagle
+                Scout Ship, Destructor.
+      
+Quazinc         Napalm Missile, Hellfire Missile
+  
+Bytanium        Space Dock
+ 
+Korellium       Stasis Missile
+
+Dragonium       Space Dock, Terminator, Transporter, Fleet Battleship
+
+Traxium         Virus Missile
+  
+Nexos           Mega missile  
+
+
+SELLING ORE
+-----------
+
+It  is  necessary to retain some ore for your own use but the remainder can
+be sold to Tetracorp and the Empire.  The Empire offers prices for ore that
+vary  each Imperial year.  You may attempt to play the markets and wait for
+a  high  price  before you sell ore but don`t speculate for too long or the
+price may drop again.
+
+To  obtain  the  Imperial  Ore Prices click on the Command Centre building.
+These  are  the  prices  that  the  Empire  will  pay for each unit of ore.
+Sometimes  the  Empire  will  guarantee  prices for a number of years for a
+particular  ore type that it needs badly.  In this case the letter "H" will
+appear  after  the ore price to indicate that the price has been held.  The
+number  after  the "H" indicates the number of years that the price is held
+for.
+
+The  Prices  window  also  indicates  the  number  of  days before the next
+Imperial Ore Carrier arrives at your colony.  This is important because you
+can only sell ore when the Imperial Ore Carrier arrives.
+
+The  Imperial Ore Carrier will always arrive at whichever of your asteroids
+has  the  most ore in its Stores.  You can use this fact to ensure that you
+transport  ore in from your other asteroids.  Tetracorp recommends that you
+have  a  central  asteroid  that acts as a major storage depot and that all
+other asteroids regularly ship their ore to this depot.
+
+The  Imperial  Ore Carrier remains in orbit about your asteroid for a short
+time before returning to the Imperial Home Worlds.  5 days before it leaves
+the crew will radio down with the appropriate message.
+
+Click  on  the Imperial Ore Carrier (whilst in Ship Selection Mode) and you
+will  gain  access  to the Ore Transfer Window.  This lists all the ore you
+have  in  the  asteroids  stores and the contents of the Ore Carriers cargo
+bays.  The current Imperial Prices are listed for convenience.
+
+To  transfer  ore to the Ore Carrier click over the name of the type of ore
+with  the right mouse button.  A quantity of ore will be transferred.  This
+quantity  depends upon which ore type you have selected.  Since you usually
+have large numbees of the cheaper ores the transfer quantity is large.  For
+rarer ores it is small.
+
+Ores marked as red     50 units at a time.
+Ores marked as orange   5 units at a time.
+Ores marked as green    1 unit  at a time.
+
+If  you  change your mind you can unload ore from the Ore Carrier into your
+Asteroid  Stores by clicking with the left mouse button.  Note that you can
+only Unload ore that you have previously loaded:  there is no way of buying
+ore from the Empire.
+
+You can access the Ore Transfer Window as many times as you like whilst the
+Ore  Carrier  orbits  your asteroid.  You will be paid for the ore when the
+Ore Carrier returns to the Imperial Home Worlds.
+
+TRANSPORTING ORE
+----------------
+
+There are two methods of transporting ore between your asteroids:
+
+a) Using a Transporter Ship
+b) Using an Ore Teleporter Building
+
+The  Ore  Teleporter  must  be  bought  from  Sci-Tek  but is a very useful
+facility.   It  enables you to instantly teleport ore between any asteroids
+that  have  an  Ore  Teleporter  installed.   This  facility is perfect for
+transferring  ore  to  your  ore  depot  at  the  last  minute when using a
+Transporter may take too long.
+
+For  details about how to use the Ore Teleporter see the description of the
+Ore Teleporter in the Buildings section.
+
+TRANSPORTER SHIP
+----------------
+
+This  is  the main means of moving ore between your asteroids.  The general
+procedure is:
+
+a) Load ore onto Transporter from asteroid Stores
+b) Move Transporter to another asteroid
+c) Unload ore from Transporter into new asteroid Stores
+
+Load Ore
+--------
+
+Click  on  the  Transporter  (whilst  in Ship Selection Mode) to access the
+Spacecraft  Control Window.  (See appropriate section for details) Click on
+the  LOAD/UNLOAD  ORE  order  button  and  you will access the Ore Transfer
+Window.   This  lists  all the ore you have in the asteroids stores and the
+contents of the Transporters cargo bays.
+
+To  Load ore onto the Transporter simply use the same process as is used to
+load ore onto the Imperial carrier.
+
+Ores marked as red        50 units at a time
+Ores marked as orange      5 units at a time.
+Ores marked as green       1 unit  at a time.
+
+Move Transporter
+----------------
+
+See  the  section  on Controlling Spacecraft for details of how to send the
+Transporter to another asteroid
+
+Unload Ore
+----------
+
+The  procedure  for Unloading ore is identical for that of Loading ore (see
+above)  except that ore is transferred from the Transporter to the asteroid
+Stores using the left mouse button.
+
+
+ZONE 003 : SPACECRAFT CONSTRUCTION
+----------------------------------
+
+You  will  not get very far in the game without constructing a ship for one
+reason or another.  This section describes how to do so.
+
+There  are  8  types of ship and each has its uses as suÿÿarised here.  For
+greater  details  about  each  ship, see the Spacecraft descriptions in the
+technical supplement.
+
+These ships can only be built using a Spacecraft Construction Yard:
+
+
+NAME               USE                              HARDPOINTS
+
+Assault Fighter    Combat                               1
+ 
+Combat Eagle       Combat                               2
+
+Scout Ship         Exploration/Prospecting/Spying       1
+
+
+These ships can only be built using a Space Dock: (see Space Docks)
+
+NAME               USE                              HARDPOINTS
+
+Destructor         Combat                               3
+
+Terminator         Combat                               4
+
+Transporter        Colonisation/Ore Transporting        2
+
+Fleet Battleship   Combat                               6
+
+Space Dock         Constructing Larger Spacecraft       4
+
+
+Spacecraft Construction Yard
+
+Once  you have built one or more Construction Yards, you can begin building
+the 3 smaller ship types.  Before you do so, you must have the following:
+
+A Weapons Factory on the current asteroid
+
+Money allocated into the Vehicles Fund (See Financial Funds)
+
+Appropriate ore in Stores on the current asteroid.
+
+Ship  construction will pause if all these things are not present.  You can
+check  the  status of the Yard that is currently building ships by clicking
+on  the  Yard.   Instead of the options to build ships, you will be given a
+progress  report.   This  report will state if any of the above factors are
+not catered for.
+
+Each  Yard  can  only  construct one type of ship at a time (but up to 6 of
+that type) but if you have another Yard then it can be building a different
+type  of ship at the same time.  Each Yard can construct up to 3 ships at a
+time or 6 if you have purchased the Construction Droids from Sci-Tek.
+
+Spacecraft Construction Window
+
+This  appears when you click on a vacant Spacecraft Construction Yard or on
+the Space Dock.
+
+Click  on  LEFT  or RIGHT or use the left and right arrows to cycle through
+the ships available to you.
+
+Most  of the ship details are repeated in the Spacecraft descriptions given
+in the technical section but a few require explanation.
+
+The  number  in  brackets  after  the ships name equals the number of ships
+currently  selected  for  construction.   Click  on  BUILD to Increase this
+number.
+
+There  are  two Armour Figures.  The first is the basic armour of the ships
+hull.   The  second figure (in brackets) is the total armour if any defence
+hardpoints have been installed in the ship (see below).
+
+The  Build  Times,  both  for  individual ships and for the whole group are
+indicated here.
+
+The Ore Needed is also displayed.
+
+The Cost is the basic Hull cost + the total hardpoint cost (in brackets) to
+give the total cost for each ship and for the whole production.
+
+Hardpoints
+
+Each  ship has a number of hardpoints into which you can install any of the
+available  weapons/  defenses.   This flexible system allows you to produce
+custom  ships  for  specific  purposes.   Hardpoint  weapons  fall  into  3
+categories:
+
+a) Weapon for use against an enemy asteroid
+b) Weapon for use against an enemy ship
+c) Defence.
+
+Here are a few suggestions:
+
+1) An Eagle with 2 attack weapons for use as an attack ship
+2) An Eagle with 1 shield weapon and 1 attack weapon for defensive purposes
+3) A Terminator with all hardpoints installed with anti asteroid weapons to 
+   maximise an attack against an enemy asteroid
+4) A Terminator with all hardpoints installed with anti ship weapons to use 
+   as part of a fleet intercepting enemy fleets (see later)
+
+Since  a  ship with all anti asteroid weapons could not defend itself if if
+were  attacked  by enemy ships it may be wise to have a couple of each type
+so the ship can attack an asteroid OR a ship.
+
+You  must  decide  the  contents  of each hardpoint depending upon your own
+strategies.
+
+Details on each hardpoint weapon are given in the technical section.
+
+Weapon Installation
+
+To  Install a weapon into a hardpoint you must first select the weapon.  In
+the  bottom  left  window  are  up  to  8 available weapon icons.  More are
+available  by  clicking  on  the NEXT button.  There are two sets of 8, but
+many are blank until they are purchased from Sci-Tek.
+
+Click  on one of the weapon icons with the left mouse button and it will be
+selected.  Its name and cost will be shown.  You can install this in one of
+the  ship's  hardpoints  by clicking with the left mouse button over one of
+the red boxes on the ship blueprint.  The weapon is now installed.
+
+To  remove  the weapon simply click on it again.  To install another weapon
+instead,  select  another  weapon  from the bottom icons and click over the
+already  occupied  hardpoint.   The  old  weapon will disappear leaving the
+hardpoint empty.  Click again to install the new weapon.
+
+Do  this  for  every hardpoint on the ship, though you may leave hardpoints
+blank if you are really short of money!
+
+When  you  are  satisfied  with your ship remember to select the number you
+want to build, using the BUILD button.  Then click on EXIT and construction
+will  begin  provided  you  have  enough money and ore, and that you have a
+Weapons Factory.
+
+You may clear everything at any time by clicking on ABORT.
+
+After Construction
+
+As  each  ship is completed it will be stored.  Smaller ships are stored in
+the  asteroid Hangers (see the section on Controlling Ships).  Larger ships
+as constructed by the Space Dock remain in orbit awaiting your commands.
+
+SPACE DOCKS
+-----------
+
+A  Space  Dock is necessary if you want to construct the larger spacecraft.
+Since  the  Space  Dock has 4 hardpoints and a large amount of armour it is
+also an effective defence against attack by enemy ships.
+
+Constructing a Space Dock
+
+Each  asteroid  can only support one Space Dock.  To construct one you must
+have  a  Command  Centre  on the asteroid.  Click on the Command Centre and
+then  on  the  Space  Dock Button that appears.  You are presented with the
+Ship  Construction  screen  and  the details of the Space Dock.  Notice how
+much ore and money is required!
+
+Use  the  method described above to construct the Space Dock.  If you go to
+the Asteroid Orbit Screen you will see scaffolding appear in space as it is
+built.   Eventually this scaffolding will clear and your Space Dock will be
+ready for use.  To obtain a status report click on the scaffolding.
+
+Using a Space Dock
+------------------
+
+To construct one of the larger ships simply go to the Asteroid Orbit Screen
+and  click on the Space Dock.  The Ship Construction Window will appear and
+you can proceed as described above.
+
+CONTROLLING SPACECRAFT
+----------------------
+
+Ships  can  be  controlled  individually  or  as  a group known as a fleet.
+Controlling Fleets is dealt with later.
+
+To  issue  orders to a ship you must click on the ship whilst in Spacecraft
+Selection  Mode.  This is where the mouse pointer is a white arrow, NOT the
+normal hand.  There are 2 ways to get into Spacecraft Selection Mode:
+ 
+a) Click on the Ship button
+b) Press the "S" key. 
+
+Both toggle between Normal Hand Mode and Spacecraft Selection Mode.
+
+When you click on a ship the Spacecraft Control Window appears:
+
+The ship details remind you what the capabilities of this ship are, such as
+the  contents of its hardpoints and remaining armour points.  It also tells
+you  which fleet (1 to 8) this ship may belong to, or zero if it doesnt yet
+belong to a fleet.
+
+Orders are given by clicking on the buttons.  You can give each ship one or
+two  orders  to carry out at a time.  Most ships revert to Patrol Mode when
+they complete their orders, waiting for you to issue new ones.
+
+Each  ship  has different orders available to it so we`ll examine each ship
+individually.
+
+Assault Fighter & Combat Eagle
+
+These ships have the same orders.
+
+ Land   Land Hanger  Patrol    Join Fleet   Go To Asteroid   Exit   Abort
+
+LAND:
+The  simplest order.  This simply causes the ship to locate a random vacant
+square on the asteroid and land on it.
+
+LAND HANGER:
+Similar  to  LAND except that the ship will locate one of your Landing Pads
+and  land there.  Once on the Pad the elelator will automaticaily lower the
+ship  into the underground hangers safly storing the ship.  See the section
+Controlling  Hangered  Ships for how to gain access to the ship again.  The
+main  advantage at hangering ships is to get them to safety during an enemyÿÿttack Damaged ships are repaired whilst they are in the hangers.
+
+PATROL:
+The  ship  will  enter  the  standard  patrol mode.  It will repeatedly fly
+between  the  Asteroid View Screen and the Orbit Screen ready for any enemy
+attack.
+
+JOIN FLEET:
+This  order is used to assign the ship to one of the 8 fleets.  For details
+see  the later section on Controlling Fleets.  When you click on the button
+the  order "JOIN FLEET 1" appears in the order window To assign the ship to
+another fleet simply click successively on the JOIN FLEET buttoÿÿ
+
+The  ship  will  do one of 3 things depending upon its position relative to
+the fleet:
+
+a)  If  the  fleet  and ship are in orbit around the same asteroid the ship
+will immediately join the fleet and go into Patrol Mode.
+
+b)  If  the  flett is in orbit around the current asteroid and the ships in
+the  underground  hanger  it will launch from the hangers via a Landing Pad
+and then join the fleet.
+
+c)  If  the  fleet is at a different asteroid to the ship, or travelling in
+space  between asteroids the ship will automatically leave the asteroid and
+travel to join the fleet wherever it is.
+
+Note:   Once  a  ship is in a fleet it can only be controlled via the Fleet
+Control  Window  (see  appropriate section).  To remove a ship from a fleet
+either  use the LEAVE option from the Fleet Control Window or simply access
+the   Spacecraft   Control   Window  and  give  it  new  orders.   It  will
+automatically leave the fleet and carry out the new orders.
+
+GO TO ASTEROID:
+This  order  allows  you  to  send  on  individual ship to another asteroid
+friendly  or  otherwise.   It  is often easier to send ships in Fleets (see
+later) but there are times when you need or want to send a single ship.
+
+When you click on the button you will be taken to the Asteroid Field Screen
+with  all  the  known  asteroids  shown.   Simply click with the left mouse
+button  on the destination asteroid.  Back at the Spacecraft Control Window
+notice that your order has been entered into the orders window.
+
+EXIT:
+Use  this  to  exit  the  Control  Window  and initiate the orders you have
+programmed if any.
+
+ABORT:
+Use  this to erase any current orders ready for you to enter new ones, (You
+must  ABORT current orders first).  You can also use ABORT followed by EXIT
+to cancel all orders and cause the ship to stop in space.
+
+Scout Ship
+
+This ship has all the orders available to the Assault Ship and Combat Eagle
+and three new ones:
+
+          PROSPECT         EXPLORE          SPY
+
+The  primary  purpose of the Scout Ship is to explore space looking for new
+asteroids  and then to prospect these asteroids to report what ore deposits
+are there.
+
+SPY:
+Once  you  know the location of one or more enemy colonies, you can use the
+Scout  to  gather  very basic information about them.  For full details see
+the section on Spying.
+
+EXPLORE:
+Initially your knowledge of the asteroid field is very limited and you will
+need  to send out one or more scouts to discover new asteroids to colonise.
+Use this option.
+
+When you click on the button vou will be taken to the Asteroid Field Screen
+with  all  the  known  asteroids  shown.  Space is divided into 40 sectors.
+Simply click with the left mouse button on the sector you wish to head for.
+Back  at  the  Spacecraft  Control  Window, notice that your order has been
+entered into the orders window.
+
+The  scout  will  head  for the chosen sector looking for asteroids all the
+while.   As  soon  as  it  discovers  one  it  will return to the departure
+asteroid  to  report its findings.  The asteroid will become visible on the
+Asteroid Field Screen and you will receive a bonus payment.
+
+PROSPECT:
+It  is  vital that you prospect new asteroids to discover what ore deposits
+are available for mining.  Use this option frequently.
+
+When you click on the button you will be taken to the Asteroid Field Screen
+where  all  known  asteroids will be displayed.  Simply click with the left
+mouse  button  on the destination asteroid.  Back at the Spacecraft Control
+Window notice that your order has been entered into the orders window.
+
+The  scout  will travel to the chosen asteroid land take mining samples and
+then return.  Upon its return it will issue a report of the ore deposits it
+has found.  You can then decide whether the asteroid is worth colonising or
+not.
+
+Destructor & Terminator
+
+These  ships  have  the same orders as the Assault Fighter except that they
+can neither LAND nor LAND HANGER.
+
+Transporter
+
+  COLONISE    LOAD ORE     GO TO AST    JOIN FLEET    ABORT    EXIT
+
+The two new options available are COLONISE and LOAD/UNLOAD ORE
+
+The Transporter is primarily used for two functions:
+
+a) Starting a colony on a new asteroid
+b) Transporting ore between colony asteroids
+
+COLONISE:
+When  you  have  located  an  asteroid  that  you wish to colonise you must
+dispatch  a  Transporter  to begin the new colony.  Starting a colony costs
+30000 Cr which must be available in the Free Money Grant.  (See the section
+On  Financial  Funds).   Upon  arrival at the chosen asteroid the Transport
+will  begin  construction  of  a  Colony  Preservation  Unit.  Once this is
+complete  you  may begin to build up your colony to your requirements.  See
+the section on Colonisation for further details.
+
+To give the required orders to the transporter first click on GO TO AST and
+select  an asteroid.  (See instructions above).  Then click on COLONISE and
+EXIT.
+
+If you want to start a colony on the asteroid the Transporter is already in
+orbit around, simply click on COLONISE.
+
+LOAD/UNLOAD ORE:
+Clicking  on  this  button  brings  up  the  Ore Transportation Window, and
+enables  you  to move ore between the cargo bays on the Transporter and the
+Stores on the current asteroid
+
+See  the  section  on  Ore Transportation in the Mining section for further
+details.
+
+Fleet Battleship
+
+This  has  only  the  following  orders  available  to  it all of which are
+detailed above:
+
+    GO TO AST       JOIN FLEET       ABORT       EXIT
+
+Space Dock
+
+No  orders are available to the Space Dock.  Clicking upon it will initiate
+the  Spacecraft  Construction  Window.   See the section on Space Docks for
+further details.
+
+CONTROLLING HANGERED SHIPS
+--------------------------
+
+When  ships  are in the underground hanger you obviously can`t control them
+by clicking on the ship graphic.  Instead you must click on the Landing Pad
+whilst in Normal Hand Mode.  This brings up the Ship Inventory Window.
+
+This  details all the ships in orbit around the current asteroid and in the
+underground hangers, but ONLY ships not currently members of another fleet.
+All these ships are available for control.
+
+To  select  one  or  more ships click the mouse button over the name of the
+ship.   Click  right  to  select  one  ship  or  left to deselect one ship.
+Selected  ships  are  shown  by green blocks, and non selected ships by red
+blocks.  You can quickly select more than one of a ship by holding down the
+mouse  button.   The  numbers at the right remind you of how many ships you
+have selected.
+
+The ABORT button will deselect all selected ships.
+
+The Exit button will exit the window performing no action on the ships.
+
+Clicking on the SHIP button enables to you to access the Spacecraft Control
+Window  and issue orders to the ships as described earlier in this sectioÿÿ
+You  can now issue any order to the ships and they will automatically leave
+the hangers via a Landing Pad before carrying out those orders.
+
+A  distinct  advantage  of  using the Ship inventory Screen is that you can
+issue  the  same orders to several ships at once.  You could select several
+ships  and  tell them all to land in the hangers or go to an asteroid.  You
+cannot  however  give  them  different  parameters to the order:  so if you
+ordered  7  scouts  to explore, they would all head for the same sector you
+couldn't direct them to different sectors.
+
+Note  also  that  some  orders  are  unavailable to certain ships eg if you
+selected  a  Scout  and a Transporter, you could order the Scout to explore
+but  the  Transporter would simply ignore that order.  They`re Transporters
+you see.  For transporting things.
+
+
+ZONE 004 : SPYING
+-----------------
+
+Though  the  Empire  and  Tetracorp  have  extensive  databases  containing
+information  about  the known alien races, much of this data is interpreted
+and  assumed  from  long distance sensors and spy satellites.  We know very
+little  about  the  physical  make up of alien colonies and even less about
+their expansion and military tactics.
+
+During  your  exploration  of  sector K240 you will need to supplement this
+information  with  more  specific  details  discovered  by  your own spying
+efforts.  Obtaining data about the aliens on a regular basis will allow you
+to predict their moves and could well give you an edge over them in combat.
+
+There  is  nothing  you  can learn until you discover at least one of their
+asteroid  colonies (It will be marked on the Asteroid Field Screen by a red
+dot).
+
+There are two approaches to gathering information:
+
+a) A Scout Spying Mission
+b) A Spy Satellite
+
+USING SCOUTS TO SPY
+-------------------
+
+This is the easiest approach to spying but the information gained is limited.
+
+Once  you have an available Scout click on the SPY button in the Spacecraft
+Control  Window.   You  will be taken to the Asteroid Field Screen with all
+the known asteroids shown.  Click on the asteroid of interest with the left
+mouse button.  Back at the Spacecraft Control Window notice that your order
+has been entered into the orders window.
+
+The  scout will head for the chosen asteroid.  Once there it will gather as
+much  information  as  it  can  without  being  detected and return to your
+asteroid to issue a report.
+
+The  report  simply indicates the number of buildings on the enemy asteroid
+(not what types), the number of ships observed in orbit around the asteroid
+and in particular the number of Transporter ships and Battleships (or ships
+of  a  similar size since exact ship details vary from alien to alien).  Be
+aware that due to the brevity of the Scouts mission, this information is an
+estimation only.
+
+THE USE OF SPY SATELLITES
+-------------------------
+
+There  are  three  major reasons for using Spy Satellites rather than Scout
+Ships for spying:
+
+a) They offer more detailed information
+b) They provide warnings of enemy fleet and missile movements
+c) They allow you to examine the enemy asteroid
+
+Once  you  have  a Spy Satellite orbiting an enemy asteroid, it continually
+transmits  back  video information about the surface of the asteroid.  This
+allows  you  to  use  the Asteroid View Screen and actually watch the enemy
+colony  yourself,  to  see  what  buildings they have, how quickly they are
+building,  what  ships  are  in  orbit  etc.   This information is free and
+extremely useful.  If you click on an enemy building you can get an idea of
+its function.
+
+The  only other time you can watch an enemy asteroid from the Asteroid View
+Screen  is  when you have ships or fleets currently attacking it.  Then you
+can watch the battle take place!
+
+CONSTRUCTING A SPY SATELLITE
+----------------------------
+
+You  may have as many satellites as you wish.  To construct one you need to
+build a Satellite Silo on one or more of your asteroids.
+
+When  you  click on the Satellite Silo with the left mouse button you enter
+the  Satellite  Construction  Window.  You are told the number of satelites
+currently in the asteroid hangers and the number under construction.
+
+     BUILD     ABORT     LAUNCH     TARGET      EXIT
+
+To  construct  a new satellite click on BUILD.  Each click will order a new
+satellite  to be constructed.  You may cancel these requests for satellites
+by clicking on ABORT.
+
+At  the present time each satellite costs 10,000 Cr and requires 2 units of
+Barium  Ore.   You  also  require a Weapons Factory on the same asteroid to
+construct the complicated shielding equipment needed by the satellite.  The
+money  is  taken  from  the Intelligence Grant so ensure you have allocated
+sufficient  funds  to  that grant via the Financial Funds Window.  A status
+line will inform you of any problems with construction.
+
+Completed satellites are sent to the main asteroid hangers and are ready to
+launch.  It is recommended that you construct several satellites before you
+actually need them.
+
+LAUNCHING A SPY SATELLITE
+-------------------------
+
+To launch a satellite click on the Satellite Silo and check that it reports
+that you have a satellite available for launch.
+
+First  you  must  select its destination.  Click on the TARGET button.  You
+will  be  taken  to the Asteroid Field Screen where you can select an enemy
+asteroid by clicking on it with the left mouse button.  This target will be
+remembered  by  the  Satellite  Silo  until  either  you  change  it or the
+destination  asteroid is destroyed.  Thus you can launch further satellites
+to the same asteroid without having to select the target again.
+
+To  launch the satellite simply click on the LAUNCH button you will observe
+the  satellite  leave the silo and head for the enemy asteroid.  You cannot
+launch  another  satellite  from  the  same silo for several days since the
+launch mechanism must be reset.
+
+SENSOR REPORTS FROM SPY SATELLITES
+----------------------------------
+
+Once  a  spy  satellite  arrives  at  its destination it shields itself and
+immediately  begins  to monitor the asteroid.  On the Asteroid Field Screen
+you  will  see  a  small  blue  animation  indicating that the satellite is
+operating normally.
+
+A  satellite  provides  you with warnings of an enemy attack.  Normallv you
+are only aware of the presence of enemy missiles and fleets when they enter
+the range of your sensors.  If the satellite detects missiles leaving silos
+on  the  asteroid it will immediately issue a missile Launch Detection.  It
+will do a similar thing the moment it detects a Fleet leaving orbit.
+
+This warning takes two forms.  On the Asteroid View Screen you will see the
+missile  or  fleet  warning icons appear in the bottom left corner but with
+the addition of the word Launch.  You will receive this warning even if the
+enemy  asteroid  is  not  inside  your sensor range.  In this case you will
+receive a Launch warning and then a short while later you will also receive
+the usual warning when the fleet or missiles enter your sensor range.  Thus
+a  satellite  can  warn  you of approaching danger long before your sensors
+detect the threat.
+
+The other visual indication is on the Asteroid Field Screen.
+
+Once  you recieve a Launch Detect Warning you may need to know which of the
+enemy  asteroids  has  launched the attack.  A flashing launch indicator (a
+red  box)  surrounds the asteroid from which the launch was detected.  This
+warning will disappear after a short while
+
+Warning:   The  spy satellite is not infallible.  On rare occasions it will
+fail  to detect a missile launch or fleet departure.  Do not over rely upon
+your spy satellites!
+
+SPY REPORTS FROM SPY SATELLITES
+-------------------------------
+
+At  any  time  you  can  interrogate  any of your spy satellites and obtain
+immediate information about the asteroid it is orbiting.  To do so click on
+the  SPY  button  from  the  Asteroid  View  Screen.   You are taken to the
+Asteroid  Field Screen and asked to select the asteroid that interests you.
+You  must  select  an  asteroid which has an orbiting spy satellite.  After
+selecting the asteroid you gain access to the main Spying Screen.
+
+There  are 8 categories of information listed on the screen and the cost of
+obtaining that information.  At the top of the screen is the money you have
+available  (The  Intelligence  Fund).   Always  ensure  you  have allocated
+sufficient  money  to  the  Intelligence  Fund  before  entering the Spying
+Screen.
+
+To   obtain   information,  simply  click  on  the  chosen  category.   The
+appropriate  cost will be deducted and a report will be issued.  Whilst you
+remain in the Spying Screen, you can call up these reports as many times as
+you  like  at  no  furthur  cost.   The categories are described below, but
+remember  that  the information is not always accurate, since the enemy are
+careful  to  encode  their transmissions and conceal their true plans.  For
+peace  of  mind  interrogate your spy satelites on a regular basis, perhaps
+annually.
+
+Population
+----------
+
+This estimates the population on the asteroid
+
+Missile Inventory
+-----------------
+
+This  estimates  the number of warheads stacked in their underground silos.
+Since  their  technology  differs from ours the exact types of warheads are
+not  given.   There  are three categories estimating the yield (destructive
+power)  of  the  warheads.   A  fourth  category  marked  "Other" indicates
+warheads of whose purpose we have no idea at this stage.
+
+Number of Enemy Asteroids
+-------------------------
+
+This  estimates  the  number  of  asteroids  occupied  by the enemy and may
+indicate that they occupy asteroids that we have not yet discovered.
+
+Our Asteroids Known to Enemy
+----------------------------
+
+This  gives  a  list  of our asteroids that are known to the enemy.  It can
+give  a  valuable  insight  into  where  they  are likely to attack or what
+asteroids we need not defend since the enemy are unaware of their presence.
+
+Building Inventory
+------------------
+
+This  provides  an  indication of the buildings observable on the asteroid.
+There  are  categories  for  general  buildings, defensive buildings (maybe
+Shield  Generators  or  Anti  Missile  Pods)  offensive  buildings (Turrets
+Missile Silos etc) and power generating buildings.
+
+Make Up of Deployed Fleet
+-------------------------
+
+If  you  have  been warned that this asteroid has recently deployed a fleet
+you  can obtain an estimation of its size.  The report indicates the number
+of ships and number of Battleships in the fleet.
+
+Destination of Deployed Fleet
+-----------------------------
+
+If  you  have  been warned that this asteroid has recently deployed a fleet
+you  can  determine  where  that  fleet  is  headed.   Clearly this is very
+valuable information allowing you to prepare a welcoming surprise!
+
+Destination of Missile Strike
+-----------------------------
+
+If  you have been warned that this asteroid has recently launched a missile
+strike you can determine where those missiles are headed.
+
+Remember  that  spying information can occasionally be in error.  Tetracorp
+accepts  no  responsibility for the loss and damage caused by an inaccurate
+or incomplete spy report.
+
+LOSING SPY SATELLITES
+---------------------
+
+It  is  inevitable  that  the  enemy will detect our satellites and destrov
+them.   The  longer  a  satellite orbits an enemy asteroid the greater this
+chance  is.   The  satellite  can  also  betray  its presence each time you
+request  specific  information  from  the  Spy  Screen so don`t ask for spy
+information  too  regularly.  Better still dispatch more than one satellite
+to the same enemy asteroid to provide a backup.
+
+
+ZONE 005 : FLEETS
+-----------------
+
+A  convenient  method  of  controlling  ships is to place them into fleets.
+Once joined together as a fleet ships can be easily ordered to move between
+asteroids.   There  are  advantages  and  disadvantages  to using fleets as
+opposed to controlling each ship individually.
+
+The advantages are that you can dispatch an entire battle fleet by clicking
+on  just  a  couple  of buttons.  It is also easier to group ships by their
+type  so  that  you  know  where ships are and what they are supposed to be
+doing.   There  are also some functions such as intercepting an approaching
+enemy fleet, that can only be done using fleets.
+
+The  disadvantages  are  that  you have less control over individual ships.
+There  are  only  4  orders  you can give a fleet though they are powerful.
+However  you  can always remove a ship from a fleet at any time if you want
+it  to  perform  more  specialised duties.  Certain orders can only be done
+using   individual   ship   control  such  as  colonisation,  exploring  or
+prospecting.
+
+JOINING A FLEET
+---------------
+
+There are two ways to group ships into a fleet:
+
+a)  Use  the JOIN FLEET option from the Spacecraft Control Window.  See the
+    appropriate section
+
+b) Use the JOIN SHIPS button from the Fleet Control Window described below
+
+In  general  it you are making a fleet for the first time it is best to use
+method  b).  If you later want to add one or two ships to an existing fleet
+you will usually use method a).
+
+FLEET CONTROL WINDOW
+--------------------
+
+You can obtain the Fleet Control Window by one of 2 means:
+
+a) Clicking on the Fleet button
+
+b) Clicking on one of your fleet markers on the Asteroid Field Screen
+
+You  can  control up to 8 fleets.  To obtain the details about any fleet or
+to  create  a  new one, select the fleet number 1-8 by clicking on the PREV
+and NEXT buttons.  The fleet number in the top right will alter.
+
+If  the  Fleet  Listing Window is empty then this fleet does not yet exist.
+If  it  does exist, there will be a listing of all the ships in the current
+fleet and their current armour points.
+
+To  create  a  fleet  or add ships to an existing fleet click on JOIN.  The
+display  will  switch  to  the Ship Inventory Window.  This details all the
+ships  in  orbit  around  the current asteroid but ONLY ships not currently
+members  of  another  fleet.   All these ships are available to be added to
+this fleet.  You cannot use this method to add hangered ships to the fleet:
+to  do  that  you must use the Spacecraft Control Window and the JOIN FLEET
+button.
+
+To  select  one  or  more ships click the mouse button over the name of the
+ship.   Click  right  to  select  one  ship  or left to de-select one ship.
+Selected  ships  are  shown  by  green  blobs and non-selected ships by red
+blobs.   You can quickly select more than one of a ship by holding down the
+mouse  button.   The  numbers at the right remind you of how many ships you
+have selected.
+
+The ABORT button will de-select all selected ships.
+
+The EXIT button will return you to the Fleet Control Window remembering the
+ships you have selected These will be added to the fleet and will appear in
+the  Fleet Listing Window.  These ships will switch to Patrol Mode orbiting
+the asteroid until you issue an order to the fleet.
+
+If  the  Fleet Listing fills its window then you can use the PAGE button to
+flick between the various pages of the listing.  The current and total page
+numbers appear in the top right of the window.
+
+You  can  obtain  more  detailed  information  on  any ship in the fleet by
+clicking  on  the  ship  in  the  Fleet Listing Window with the right mouse
+button.   This  is useful if you forget the hardpoint assignments of any of
+the ships in the fleet.
+
+LEAVING A FLEET
+---------------
+
+There  are  two  ways  to force ships to leave a fleet, but remember that a
+ship can only leave a fleet when the fleet is orbiting an asteroid not when
+it is in space between asteroids.
+
+a)  Simply issue new orders to the ship from the Spacecraft Control Window.
+The ship will automatically leave the fleet to obey those orders.
+
+b) Use the LEAVE button in the fleet Control Window:
+
+First  you  must select which ship(s) you want to leave the fleet.  Do this
+by  clicking  on those ships in the Fleet Listing Window.  Their names will
+be  highlighted  in  a  different  colour  to show they have been selected.
+Clicking  on  a highlighted ship will de-select it.  You can also de-select
+all the highlighted ships by clicking on ABORT.
+
+Then  click  on LEAVE and the highlighted ships will leave the fleet.  They
+will  disappear  from  the Fleet Listing Window and enter Patrol Mode about
+the current asteroid waiting for further orders.
+
+FLEET TACTICS
+-------------
+
+There  are four orders or tactics that you can give a fleet.  These are the
+large buttons on the fleet Control Screen
+
+Move Fleet (Non-Hostile Move)
+
+This is used to move an entire fleet to another asteroid.  You can only use
+this  order  to  move a fleet to one of your asteroids or to an uninhabited
+asteroid NOT an enemy asteroid.
+
+Click  on  the MOVE FLEET tactic button.  You will be taken to the Asteroid
+Field  Screen  where  you can select the destination asteroid with the left
+mouse  button.  In the Fleet Control Window notice that the Destination has
+been  entered  at  the  top of the window as well as a summary of the order
+selected.
+
+Click  on  Exit  and  the  fleet  will carry out the order.  The ships will
+depart from the asteroid and then you can monitor the progress of the fleet
+from  the  Asteroid  Field  Screen  where  the  fleet appears as a numbered
+marker.
+
+A  fleet using a non-hostile movement can move at a faster rate than one in
+attack mode since it does not have to consider the possibility of an attack
+whilst it is in transit.
+
+Attack Asteroid (Hostile Move)
+
+This  is  used to move an entire fleet to an enemy asteroid with the intent
+of attacking it upon arrival.
+
+Click  on  the  ATTACK  ASTEROID  tactic  button.  You will be taken to the
+Asteroid  Field  Screen  where you can select the destination asteroid with
+the  left  mouse  button  in  the  Fleet  Control  Window  notice  that the
+Destination  has been entered at the top of the window as well as a summary
+of the order selected.
+
+Click  on  Exit  and  the  fleet  will carry out the order.  The ships will
+depart from the asteroid and then you can monitor the progress of the fleet
+from  the  Asteroid  Field  Screen  where  the  fleet appears as a numbered
+marker.
+
+A  fleet  using  hostile  movement  moves  slower than normal since it must
+always be prepared for an enemy attack as it nears its destination.
+
+When  the  fleet  arrives at the destination asteroid it will automatically
+enter  an  attack  pattern.   Ships will either attack enemy ships or enemy
+buildings  depending upon the hardpoint weapons at their disposal Since the
+attack  Is automated you can dispatch several attack fleets and not have to
+worry  about  them,  though  it  is  fun to watch your fleets devastate the
+enemy.
+
+Intercept Enemy Fleet
+
+This  is used to send your fleet to attack an approaching enemy fleet.  The
+purpose  of  this is to attempt to destroy or weaken the enemy fleet before
+it can do damage to your asteroid.
+
+Click  on  the  INTERCEPT  FLEET  tactic  button.  You will be taken to the
+Asteroid  Field  Screen where you can select the destination fleet with the
+left mouse button.  In the Fleet Control Window notice that the Destination
+has been entered at the top of the window as well as a summary of the order
+selected
+
+Click  on  Exit  and  the  fleet  will carry out the order.  The ships will
+depart from the asteroid and then you can monitor the progress of the fleet
+from  the  Asteroid  Field  Screen  where  the  fleet appears as a numbered
+marker.
+
+Your  fleet  will  use hostile movement so it will move slower than normal.
+When  your  fleet  arrives  at the enemy fleet it will engage it in combat.
+The  two  fleets  will  automatically  fight  until one is destroyed or one
+retreats.   On  the  Asteroid  Field  Screen you will see the fleet markers
+(yours  and the enemies) flashing to indicate that they are in battle.  You
+can  elect  to  watch the battle by clicking on the flashing fleet markers.
+See the Space Combat Screen section for further details
+
+Sentry Mode
+
+This  is  used  to guard one of your asteroids.  Simply click on the SENTRY
+MODE  button  and  then  EXIT.   Your  ships  will continue patrolling your
+asteroid  as  if nothing has happened but they are in constant contact with
+your  asterold  sensors.  As soon as an enemy fleet is detected heading for
+the  current  asteroid  the fleet will enter Intercept Fleet Mode and go to
+Intercept the enemy fleet (as above).  If it is successful in defeating the
+enemy  it  will return to the asteroid and go back to Sentry Mode.  It will
+continue  to  intercept  all approaching enemy fleets until you instruct it
+otherwise or it is destroyed.
+
+RETREAT THRESHOLDS
+------------------
+
+Each  fleet  has a retreat threshold which is normally 100%.  This reflects
+the  amount  of  the original fleet which can be destroyed before the fleet
+will abandon its attack and return to a friendly asteroid.
+
+To  alter  the  retreat  threshold  simply click over the figure at the top
+right of the Fleet Control Window.  Click the left mouse button to decrease
+the figure by 10% or the right mouse button to increase it by 10%.
+
+With  100%  the  fleet  will  never  retreat.   It  will  fight until it is
+successful or all the ships in the fleet are destroyed.
+
+With  0%,  the  fleet will retreat as soon as a single ship in the fleet is
+destroyed.
+
+SPACE COMBAT SCREEN
+-------------------
+
+When  two  fleets meet in space they will pause in their initial orders and
+engage  in combat.  The battle will continue until either side is destroyed
+or retreats.  The fleet icons on the Asteroid Field Screen will flash.  You
+can watch the combat by clicking on the flashing icons.
+
+On  the  Space  Combat  Screen  you  can view yours and the enemys fleet in
+battle.   You  cannot examine your fleet listing but there are some buttons
+available by clicking with the right mouse button anywhere on the screen.
+
+           RETREAT       ASTEROID
+           PAUSE         EXIT
+
+RETREAT:  Enables you to force your fleet to retreat immediately
+
+ASTEROID: Returns you to the Asteroid Field Screen
+
+PAUSE:    Have we really got to explain this?
+
+EXIT:     Returns you to the space battle
+
+
+ZONE 006 : BUTTON SELECTION PANELS
+----------------------------------
+
+When the game is playing you can bring up a Button Panel by clicking on the
+right  mouse  button.   A  Button Pane appropriate to the screen you are on
+will appear.
+
+Whilst  the Button Panel is in view the game is paused.  You can select any
+of  the  buttons  by clicking on them using the left mouse button.  You can
+only  select  buttons  from the Button Panel - any buttons elsewhere on the
+screen are inactive until you exit the Button Panel.
+
+This section summarises the major button panels.  Use it to locate a button
+when  you  don`t  know  what  Button  Panel it is on.  Better still use the
+Button Extraction technique explained later.
+
+Asteroid View Screen Button Panel
+---------------------------------
+
+TETRACORP   INFO     MILITARY
+
+ASTEROID    FIELD    DEMOLISH
+
+BUILDING    PAUSE    EXIT
+
+TETRACORP
+Access the Tetracorp Control Screen providing options for changing scenario
+loading and saving games etc
+
+INFO
+Takes you to the Information Button Panel (see below)
+
+MILITARY
+Takes you to the Military Button Panel (see below)
+
+ASTEROID
+Access the Asteroid Control Button Panel (see below)
+
+FIELD
+Access the Asteroid Field Screen
+
+DEMOLISH 
+Toggle Demolish Mode on or off
+
+BUILDING
+Access the Engineering Window that allows you to select a building
+
+PAUSE
+Pause  the  game.   To  unpause the game click either mouse button.  If you
+leave  the  game  paused  for more than a couple of minutes then the screen
+will dim to protect your monitor from bright colours.
+
+EXIT
+Exit the Button Panel
+
+Information Button Panel
+------------------------
+
+SPYING       FUNDS
+
+GEOLOGY      SCI-TEK
+
+BLUEPRINTS   EXIT
+
+SPYING
+Access the Spying Control Window
+
+FUNDS
+Access the Financial Funds Window
+
+GEOLOGY
+Obtain an ore deposit report for the current asteroid
+
+SCI-TEK
+Access  the Communications Screen which allows you to purchase devices from
+the Sci-Tek catalogue
+
+BLUEPRINTS
+Obtain a listing of all the blueprints you have bought from Sci-Tek
+
+EXIT
+Exit the Button Panel
+
+Military Button Panel
+---------------------
+
+FLEET     SHIP
+
+MISSILE   EXIT
+
+FLEET
+Access the Fleet Control Window
+
+SHIP
+Toggle between Normal (hand) and Ship Selection Mode white arrow)
+
+MISSILE
+Access the Missile Launch Window
+
+EXIT
+Exit the Button Panel
+
+Asteroid Control Button Panel
+-----------------------------
+
+LEFT        RIGHT
+
+ORBIT       FIELD
+
+TACTICAL    EXIT
+
+LEFT
+Rotates asteroid left 90 degrees
+
+RIGHT
+Rotates asteroid right 90 degrees
+
+ORBIT
+Switch to the Orbit Screen
+
+The  Orbit Screen represents an area of space above your asteroid.  Many of
+the larger ships cannot approach the asteroid too closely so they remain in
+orbit.   The  Space  Dock  is  always  on the Orbit Screen and never on the
+Asteroid View Screen.
+
+This  button  switches  to  the Orbit Screen so you can view and select any
+ships that are there.  Clicking on this button again will return you to the
+Asteroid View Screen.
+
+FIELD
+Access the Asteroid Field Screen
+
+TACTICAL
+Toggles between normal and tactical mode on the asteroid.  Tactical mode is
+described in the Tutorial.
+
+EXIT
+Exit the Button Panel
+
+
+Asteroid Field Button Panel
+---------------------------
+
+DISPLAY     QUICKVIEW     SUMMARY
+
+MISSILE     PAUSE         FLEET
+
+ASTEROID    ENGINES       EXIT
+
+DISPLAY
+Access  the Display Options Button Panel.  This enables you to select which
+information you want to appear on the Asteroid Field Screen (see below)
+
+QUICKVIEW
+Enables  you  to  program and use the QuickView method at viewing asteroids
+QuickView is described in the section about Time Saving Techniques.
+
+SUMMARY
+Access the Colony Summary Window.  This provides a summary on the important
+elements  at the colony on the current Asteroid and is very useful when you
+are  managing several asteroids simultaneously.  Using this option can save
+you   accessing  the  Asteroid  View  Screen  to  look  at  how  a  colonys
+progressing.  See the appropriate section.
+
+MISSILE
+Access the Missile Launch Window
+
+PAUSE
+Pause  the  game.   To  unpause the game click either mouse button.  If you
+leave  the  game  paused  for more than a couple of minutes then the screen
+will dim to protect your monitor from bright colours.
+
+FLEET
+Access the Fleet Control Window
+
+ASTEROID
+Access the Asteroid View Screen for the current asteroid.
+
+ENGINES 
+Enables control of the current asteroids Asteroid Engines. If it has any.
+
+EXIT
+Exit the Button Panel
+
+Display Options Button Panel
+----------------------------
+
+PAFW    EXIT
+
+PAFW
+Toggles  the  PAFW display on and off on the Asteroid Field Screen.  If you
+are  confident  of  your ability to manage your asteroids you can turn this
+option off to avoid cluttering the Asteroid Field Screen
+
+EXIT
+Exit the Button Panel
+
+Other  options  are  available.  In this Button Panel when you purchase the
+Asteroid Tracker Device from Sci-Tek
+
+BUTTON EXTRACTION
+-----------------
+
+Most  likely you are finding it annoying accessing nested Button Panels all
+the  time.   You  can  avoid  this  by customising the Asteroid View Screen
+making  available  all  the  buttons  you  commonly use.  Note you can only
+customise  the Asteroid View Screen and Orbit Screen NOT the Asteroid Field
+Screen or any other screens.
+
+When  any  Button  Panel  is  active you can pull out or extract any button
+(except  the  Exit  button).   Click  the left mouse button over the chosen
+button  and  keep the button held down until the button appears in the main
+screen at the right or bottom edge.  Notice that the button function is NOT
+carried out.
+
+There  is  space  for 6 buttons up the right side of the screen and 8 along
+the bottom.  No button may be duplicated.
+
+It is well worth the time to extract your often used buttons since they are
+now available at any time without you having to remember which Button Panel
+to access.
+
+You  can delete an extracted button from the screen by clicking and holding
+in the same way as you extracted the button.
+
+Your customised screen will be remembered if you save the game.
+
+TIME SAVlNG TECHNIQUES
+----------------------
+
+Once you are familiar with the game you may wish to use these techniques to
+speed up play.
+
+Keyboard Short-cuts
+-------------------
+
+D   -   Toggles Demolish Mode on and off
+
+S   -   Toggles between Normal (hand) mode and Ship Selection (arrow) Mode
+
+SPACE Toggles between normal and Tactical mode on the Asteroid View Screen
+
+Left and Right Arrows - Rotate the asteroid left or right 90 degrees
+
+QuickView
+---------
+
+If  you  are  managing  several  asteroids and maybe know about a couple of
+enemy  asteroids as well it can be very time consuming if you are switching
+between them frequently.
+
+When  you  click  on  the  QuickView  button you are given a listing of the
+definitions  of the 10 function keys F1 to F1O.  You can define an asteroid
+to  any  of the function keys.  Then simply pressing that function key will
+take  you  to  the  Asteroid  View Screen.  For that asteroid from whatever
+screen you were previously on.
+
+To  define  a function key click on the line in the listing from F1 to F10.
+Then click on any asteroid with the left mouse button.  The function key is
+now defined.  You can redefine it at any stage by the same method.
+
+The listing is colour coded;
+
+Green       - asteroid owned by you
+Red         - asteroid owned by enemy
+Orange      - uninhabited asteroid
+
+With  several  function  keys defined you can browse through asteroids very
+quickly.
+
+Select Building
+---------------
+
+You  may  discover  that there is a subset of buildings that you are always
+building  when  you  colonise a new asteroid, and that it takes a long time
+choosing  them all from the Engineering Window.  You can program the keys 1
+to  9  to specific buildings then to select one of those buildings you just
+press 1-9 instead of accessing the Engineering Window.
+
+In  the  Engineering Window you may have noticed numbers in brackets at the
+top  left  of some buildings eg the Living Quarters.  These are the default
+definitions of the keys 1-9.
+
+To  program  any  building  to  a key 1-9 simply locate the building in the
+Engineering  Window  and  press the key 1-9.  The number will appear at top
+left  and  that  building is now programmed.  You can redefine a number key
+1-9 by the same method.
+
+It is well worth taking time to define the keys 1-9.  Your definitions will
+be remembered if you save the game.
+
+As  well  as selecting a programmed building using the kevs 1-9 you can use
+the  Blue  Button  situated  under  the  building icon on the Asteroid View
+Screen.   Each  click  on the Blue Button will select one of the programmed
+buildings 1-9.
+
+You  can  in  fact have a tenth programmed building because key 0 is alwavs
+defined  as  the  last  building  selected  by  from the Engineering Window
+itself,  it will of course change every time you select a new building from
+the Engineering Window.
+
+
+TERRAIN APPROVED 2450 THE FOLLOWING SECTION IS FOR EMPLOYEES OF SCI-TEK AND
+                          TETRACORP ONLY.
+
+ZONE 007 : TETRACORP AND SCI-TEK
+--------------------------------
+
+TETRACORP
+
+This  screen  is  accessed  by clicking on the Tetracorp button in the main
+Asteroid  View  Screen  Button Panel (The icon depicting a floppy disk) The
+Tetracorp  screen  provides the facilities for loading and saving games and
+selecting which scenario to play.
+
+Along  the  bottom  of the screen is the command line.  To select an option
+click on one of the commands:
+
+LOAD GAME
+---------
+
+Clicking  on  LOAD allows you to load and continue a previously saved game.
+If  the game is running off of floppy disk, the game is loaded from a saved
+game  disk  inserted  into the internal drive (DF0:) If the game is running
+from Hard Disk the game is loaded from the Hard Disk.
+
+Follow the on screen prompts to Load a game.
+
+SAVE GAME
+---------
+
+Clicking  on SAVE allows you to save a game to continue later.  If the game
+is  running  off  of  floppy  disk,  you  can  only  save  your  game  to a
+pre-formatted disk inserted into the internal drive (DF0:).  If the game is
+running  from  Hard Disk the game is saved onto the Hard Disk.  In the same
+directory as K240.
+
+Follow the on-screen prompts to Save a game.
+
+LOADING AN ALIEN
+----------------
+
+Clicking  on  ALIEN  will allow you to load and play any one of the 6 Alien
+scenarios.   You  access  the  Tetracorp Alien Database which presents each
+allen  along  with some information about them.  You can obtain more detail
+about the Aliens by reading the section of the manual entitled "The Enemy"
+
+Each Alien is given a difficulty rating and it is strongly recommended that
+you play the scenarios in the order of Easy, Medium and Hard.
+
+At  the  bottom  of  the Database screen is the command line.  To select an
+option click on one of the commands:
+
+NEXT
+This accesses the next Alien in the database.
+
+PLAY
+This  enables you to commence play on this scenario.  Note that if you were
+in  the middle of a game that game will be deleted and you cannot return to
+that game unless you had saved it to disk.
+
+END
+Exits the Alien Database selecting no scenario.  You may return to the game
+you were playing.
+
+SOUND FX ON/OFF
+This option simply turns on and off sound effect
+
+SPEECH
+This option simply turns sampled speech on and off
+
+DOS
+This option allows you to exit K240 altogether and return to the Workbench.
+Any  game  you were playing will be lost unless you had previously saved it
+to disk
+
+END
+This returns you to the game
+
+SCI-TEK - THE TECHNOLOGY YOU PREFER
+
+Sci-Tek  is available 24 hours a day for you to purchase blueprints.  Under
+their   comprehensive  licensing  agreement  you  purchase  the  rights  to
+manufacture  as  many devices as you like from each blueprint you buy.  You
+must  however pay a royalty to Sci- Tek for every item you make but this is
+included in the cost presented to you in the game.
+
+You can access the Sci-Tek database from the Sci-Tek button.  In some cases
+the   database  may  take  a  few  seconds  to  access  even  via  hi-speed
+communication devices.
+
+From  the database you can peruse Sci-Teks catalogue and opt to buy as many
+blueprints  as  you  desire.  All purchased blueprints will be delivered to
+you  on  the  next scheduled Imperial Ore Carrier and are NOT available for
+construction until then.
+
+On  the  database screen you are shown one device at a time.  At the bottom
+of the screen is the command line:
+
+          PREV        NEXT     PURCHASE     CLEAR      END
+
+Use PREV and NEXT to cycle through the catalogue.  Click on PURCHASE to buy
+the  displayed  blueprint,  or  CLEAR to change your mind.  Clicking on END
+will break the communication link with Sci-Tek and order any blueprints you
+have purchased.
+
+Note:   The money available to you is the funds you have in the Basic Money
+section  of  your  Financial  Funds (See appropriate secton) You cannot use
+money  allocated to Construction, Vehicles, Intelligence or Missiles unless
+you remove money from those funds prior to accessing Sci-Tek.
+
+
+ZONE 008 : HINTS
+----------------
+
+GAMEPLAY TIPS
+
+K240  is  an  open ended game - there is no one way to win.  These notes do
+not  necessarily  represent  the  best  way to play K240 they only serve to
+offer some assistance if you have no idea what you should be doing next.
+
+When  you  begin  the  game  spend about 50% of your money building up your
+first asteroid.  Build Mines, Stores, Power generation buildings, a Command
+Centre,  Sensor  Array,  Ship Construction Yard, Landing Pad, buildings for
+producing air, food and water and any other buildings that take your fancy.
+Dont worry about military defences just yet.
+
+Once your asteroid is a mass of scaffolding take the time to have a look at
+the  Asteroid  Field Screen to see where you are and whether you know about
+any other asteroids yet.
+
+It  is  often  a  good  idea  to enter into communications with Sci-Tek and
+purchase  one  or two cheap devices.  A Gravity Nullifier is well worth the
+investment  at this stage (assuming of course one has not been supplied for
+you  by  Tetracorp).   Once  you  begin  to discover asteroids you may find
+several of them on a collision course with your main asteroid and it may be
+too  late  then to purchase a Gravity Nullifier and wait for its arrival on
+the Imperial Ore Carrier.
+
+Your colony should now be producing ore nicely.  Your immediate concern now
+is  to  expand onto other asteroids.  You need to build some Scout Ships so
+get your Ship Construction Yard building a couple of Scouts.  They shouldnt
+take long.
+
+If  you  have  already  discovered  some  other  asteroids  you may wish to
+dispatch  your new Scouts on a Prospecting mission to see how rich they are
+in  ores.  If your sensors are looking bare send the Scouts out with orders
+to Explore.
+
+Once  you  have  discovered  a few other asteroids and obtained Ore Reports
+about  them,  you  are  in  a position to decide which asteroid to colonise
+first.   Pick  the  one with most ore deposits, particulary the rarer ores.
+If  you have discovered any send your Transporter ship off to colonise that
+asteroid.   When  the  new  colony  has  been established (the CPU has been
+built) you are in the position to expand that colony too building Mines and
+Stores etc.
+
+There  is  usually  a phase where you run severely short of money so try to
+spend  it  wisely.  Dont spread yourself across too many asteroids at once,
+dont  invest  in unnecessary luxuries from Sci-Tek yet and ensure you build
+the most important buildings first, whilst you have the money.  There is no
+point  in  having  20  Mines  on  an  asteroid if they have no power or the
+employees  are  dying from radiation because you can`t afford any Radiation
+Filters.
+
+Once you have sold several shipments of ore to the Imperial Ore Carrier the
+situation  should  improve  It is now worth your while beginning to build a
+small fleet and lay down a few defences on your asteroids preparing for the
+time when you discover the enemy or they discover you.
+
+Maintain a balance.  Keep all of your colonies growing slowly.  Keep mining
+at  all  costs.   As  you  deplete an asteroids reserves colonise and begin
+mining  a  new  asteroid.   Build a few ships and put them into a defensive
+fleet.   Maybe  build a few missiles.  Purchase a few devices from Sci-Tek.
+Everything in moderation.
+
+When  you finally discover the enemy start spying at once to gather all the
+information you can about him.  You may well need different tactics against
+each Alien.
+
+
+MILITARY STRATEGY
+-----------------
+
+Not  too  many clues here!  Until you discover the weaknesses and strengths
+of  each  Alien,  maintain  a varied defence.  If it appears that the enemy
+concentrate  on  missile strikes build plenty of Anti-Missile Pods.  If you
+are  constantly  plagued  by  enemy attack fleets maintain a strong defence
+fleet  which  can  intercept  the  enemy  fleet  as soon as it is detected.
+Protect your colonies with gun turrets and Screen Generators.
+
+Your attack tactics will also depend upon what you discover about the enemy
+and how they react when they are attacked.  Sometimes it is better to build
+large  and  strong  attack  fleets  and  back  them up with regular missile
+strikes.   Other  times  regular  attacks  by  small skirmish fleets may be
+enough to keep the enemy at bay whilst you plan something special for them!
+Examine the enemy defences carefully before you attack.
+
+Dont  leave it too long in the game before constructing a Space Dock.  This
+will allow you to buy the blueprints for the Terminator and Battleship from
+Sci-Tek and to add them to your fleet.
+
+One  last  tip:   Watch  where the enemy attacks carefully.  It is possible
+that  he  does  not know about all your asteroids and attacks the same ones
+over  and over.  If you think this is the case use the undetected asteroids
+for the bulk of your mining and ship production whilst they are safe.
+
+
+INTERVAL:
+---------
+
+THERE WILL NOW BE A SHORT BREAK IN THE MANUAL.  THERE WILL BE SOMEONE ALONG
+IN  A MINUTE TO SELL YOU ICE-CREAMS AND COFFEE.  PLEASE DO NOT OBSTRUCT THE
+WAY TO THE TOILETS.  THANKS
+
+
+ZONE 009 : BACKGROUND
+---------------------
+
+THE EMPIRE
+----------
+
+The  Terran Empire governs a vast area of space, a sphere approximately 300
+light years in radius with Earth at its centre.  Over 1000 worlds have been
+inhabited  and  are  home  to  countless  billions  of  humans  and a minor
+population of alien races discovered during the great expansion in the 23rd
+century.
+
+The  Empire came into unofficial existence in the year 2215 when command of
+the  homeworlds  (the  most  densely populated worlds nearest to Earth) was
+seized  by  the  Commander  of  the Fleet Parillo, during the 5 year war at
+Deneb  Markab.   Several  years  of  uncertainty  followed  but most worlds
+quickly  offered  their  support  for  Parillo  when he began his Expansion
+Policy; promising to push out in search of new worlds to ease overcrowding.
+By  2250  he  had discovered and opened up many new worlds for colonisation
+and  established  the Industrial Worlds so called because they concentrated
+industry  away  from  population  areas  and maximised productivity.  These
+advances led to Parillo being formally declared Emperor in the year 2253.
+
+Upon  his  death  in  2274  title  of  Emperor  passed to his son Marcissus
+Parillos policies were continued but his xenophobic nature led to many wars
+with newly discovered alien races, many of them highly advanced and capable
+of inflicting serious damage upon the Imperial Fleet.  The Decade of Terror
+came  about  in 2294 when the Tharmaxlons declared war on the Empire.  In a
+few  short years they opened a great gash in the side of the Empire nearest
+their  homeworlds  in the Capella Sector.  In 2301 they penetrated right to
+the  heart  of  the Empire and attacked and destroyed the Industrial Worlds
+orbiting  Beta  Hydrae.  Marcissus was blamed for his refusal to enter into
+peace  negotiations  with  the  aliens.   That  and  the hatred of even the
+friendly  alien  minorities  in  the  Empire for his open racism led to his
+being deposed as Emporer in 2303.
+
+Lynn  Salaria,  Marcissus  daughter and greatest critic was crowned Empress
+that  very  year.   Her first act was to push back the Tharmaxions with all
+the  Imperial  might  and  then  negotiated  treaty  with  them  which  was
+incidentally  very  preferential to the Terran Empire, Peace and prosperity
+returned  and  she  is  Empress  to this day (the year 2380), though she is
+expected to abdicate in favour of her eldest son at any moment.
+
+SCI-TEK
+-------
+
+Under  the  prosperity  established  by  Parillo  and  later Marcissus many
+companies  grew to immense size and profitability especialiy those directly
+linked to the Expansion Policy.  One such company was Sci-Tek.
+
+Sci-Tek  was  founded  in 2309 after decades of research into gravitational
+theory.   It's  first products were the much acclaimed Asteroid Engines and
+Gravity Nuilifier:  allowing complete control of an asteroid independent of
+the   gravitational  influence  of  other  space  objects  Countless  other
+corporations  bought  the  devices providing Sci-Tek with enough capital to
+channel more money towards R&D.
+
+Within  ten  years  it led the way in the design and manufacture of obscure
+but useful devices and facilities.  However its legal departments proved as
+cunning  and  resourceful as their technicians.  They devised an incredibly
+complicated  licensing  agreement whereby its clients could buy the license
+rights  to  the  design  blueprints  for  a  particular Sci-Tek product and
+manufacture  it  themselves.   The results were phenomenal as were Sci-Teks
+profits.   Other  corporations  preferred  to  use  their own manufacturing
+facilities  and  this  allowed  Sci-Tek  to  phase out their own industrial
+plants  and  concentrate  purely  on development.  They could put all their
+resources  into developing a larger product line.  Surpisingly, no loophole
+has  been found in Sci-Teks license agreement and as a result none of their
+designs  have  been stolen.  In the few cases where a client has broken the
+license  agreement the Imperial Administrator himself has stepped in favour
+of Sci-Tek
+
+TETRACORP
+---------
+
+Another,  larger,  Imperial  company  is  Tetracorp.   It  began  in  2221,
+manufacturing  scout  ships  and  sensory equipment for the Imperial Fleet.
+Its assets grew and it soon realised the potential of space exploration and
+asteroid  mining.   It  began  developing new techniques for extracting and
+transporting  rare  ores  mined  in  the  depths  of  space  which  were so
+successful  that  by  the year 2280 it had grown to own and fill the entire
+Industrial World of Barnard Five.
+
+By  the  middle  of  the  24th century it had cornered the market in mining
+franchises.   Having  manufactured  superior  mining  equipment and support
+ships.  It offered packages to anyone with the ambition to take over one of
+the  asteroid  fields  being  discovered  every year on the frontier of the
+Empire  (known  as  the  Fragmented  Sectors).   It  would  provide all the
+equipment  and support required to establish one or more mining colonies on
+these  ore  rich  asteroids.   In  return  for a degree of control over the
+colonies  and  full  rights  to purchase all ore mined at standard Imperial
+prices.
+
+THE FRAGMENTED SECTORS
+----------------------
+
+As  expansion  continued  in  search  of habitable worlds and resources the
+exploration  fleets  began to discover an increasing amount of star systems
+whose  planets had been torn apart to produce huge asteroid fields orbiting
+the star.  The cause of this widespread destruction in so many star systems
+is unknown but it proved incredible good fortune for Tetracorp.  The fields
+of  asteroids  made  it far easier to extract the valuable ores and several
+new  and  phenomenally  valuable  ores  were discovered such as Traxium and
+Nexos.
+
+K240
+----
+
+In  the  year  2380,  Sector  K240  was  made available for colonisation by
+Tetracorp.   K240  is  one  of the Fragmented Sector and occupies a cube of
+space  50  light  years  across.   As a Tetracorp franchise holder you have
+claimed  a section of K240 and are ready to begin your mining operations in
+the asteroid fields Good luck!
+
+TERRAN  APPROVED:   2450  THE  FOLLOWING SECTION IS FOR THOSE WITH SECURITY
+CLEARANCE BLUE AND ABOVE ONLY.
+
+
+ZONE 010 : BUILDING REFERENCE SECTION
+-------------------------------------
+
+This section describes each building available and its features and purpose
+in  the  game.   Some  are  unavailable at the start of the game but can be
+purchased from Sci-Tek.  These are marked as (Blueprint).
+
+Note:   This  data is accurate at the present time but is subject to change
+without warning, as manufacturing techniques improve.
+
+Anti-Missile Pod (blueprint)
+----------------------------
+
+Cost:   7000 Cr
+Power:  3 MW/day
+Time:   36 days
+
+These  are  your  major  defence  against  incoming  enemy  missiles.  They
+automatically  detect  enemy missiles and target them though their accuracy
+is low.  To improve accuracy build several
+
+Asteroid Engines (blueprint)
+----------------------------
+
+Cost:    45000 Cr
+Power:   0-5 MW /day depending upon speed
+Time:    64 days
+
+This is a phenomenally advanced facility that provides the means to control
+the gravitational field of the asteroid enabling it to change direction and
+speed any time you want
+
+When you click on the building a control window appears:
+
+The  current  direction and speed of the asteroid is shown.  To alter speed
+click  on  the  right  arrow  button  (increase)  or  the left arrow button
+(decrease).   A  speed  of  zero  indicates  that  the asteroid will remain
+stationary.
+
+To  alter  the  direction  click  on  any  of the yellow dots in the circle
+surrounding the asteroid.
+
+If  the  Engines  run  out  of  power  the  speed will drop to zero and the
+asteroid  will  no longer move.  Power is essential to maintain the gravity
+field that moves the asteroid.
+
+Colony Preservation Unit
+------------------------
+
+Cost:    30000 Cr to start a new colony
+Power:   none
+Time:    40 days
+
+This  building  can  only  be  built  when  beginning  a  new  colony on an
+uninhabited  asteroid.  (See the section on Colonising New Asteroids).  The
+Transporter  ship  will  automatically construct one when it arrives at the
+new asteroid provided enough funds are available.
+
+The  purpose  of the CPU is to establish a minimum survival colony allowing
+you  time  to  construct.  Further more specific buildings.  To this end it
+provides:
+
+          Living space for 100 employees
+          8 MW/day of power
+          300 units of air per day
+          250 units of food per day
+          250 units of water per day
+
+In addition it has storage capacity for:
+
+          1000 air units 
+          1000 food units
+          1000 water units 
+          50MW of power.
+
+The facilities at the CPU will degenerate over time since it is meant to be
+phased  out  when you have your colony up and running.  Because of this all
+production  of  air, water and food (NOT power) will decrease by 1 unit/day
+until  they  reach  zero.  Thus the CPU cannot sustain a colony after about
+250 days.
+
+Command Centre
+--------------
+
+Cost:     8000 Cr
+Power:    3 MW/day
+Time:     32 days
+
+This is a very important building and you are advised to have more than one
+amongst  your  asteroids.   A  Command  Centre  can  control  any number of
+colonies  therefore  its  exact location is unimportant.  It makes all your
+asteroids run more smoothly and also offers specific functions when clicked
+upon.  These are:
+
+a)  A  window  appears listing the prices at which the Imperial Home Worlds
+will  buy your mined ore.  Sometimes the Empire will guarantee prices for a
+number of years for a paticular ore type that it needs badly.  In this case
+the  letter  "H" will appear after the ore price to indicate that the price
+has been held.  The number after the "H" indicates the number of years that
+the  price  is  held  for.   This  window also indicates the number of days
+before the next Imperial Ore Carrier arrives at your colony.
+
+b) By clicking on the Space Dock button you have the option to construct an
+orbiting  Space  Dock  around  the current asteroid.  See the section about
+Space Docks.
+
+c)  By clicking on the Ship Button you can obtain a list of the location of
+all your Transporter ships whether they are around an asteroid or in space.
+Use this to manage your transporters more effectively.
+
+Note:   You  will  be  unable  to  command  any fleets without at least one
+Command Centre.
+
+Construction Yard
+-----------------
+
+Cost:   7500 Cr
+Power:  2 MW/day
+Time:   32 Days
+
+This  large  building extends underground into huge caverns (accessible via
+the  Landing  Pads).  you can construct the smaller spacecraft in the yard,
+namely Assault Fighters, Combat Eagle, and Scout Ships.
+
+When  ships  are  constructed they are left in the underground hangers.  To
+issue orders to the hangered ships, click on the Landing Pads.
+
+Clicking  on this building allows you to construct ships or obtain a status
+report  of  ships  currently  under  construction.   Full  details  on ship
+construction are given elsewhere.
+
+Decontamination Filter
+---------------------
+
+Cost:   8000 Cr
+Power:  3 MW/Day
+Time:   36 Days
+
+The  background  radiation  on  some  asteroids  is  high  causing employee
+sickness  which  leads  to  loss  of  production.   The Company advises the
+construction  of  one or more of these Filters which offer a screen against
+the  heavier  radioactive  particles protecting the employees inside colony
+buildings.
+
+Deep Bore Mine
+--------------
+
+Cost:   5500 Cr
+Power:  2 MW/Day
+Time:   36 Days
+
+This  is  a sophisticated mining drill for locating and extracting the more
+valuable Ores.  It can extract:
+
+    Quazinc
+    Bytanium
+    Korellium
+    Dragonium
+
+All mined ores are sent directly to Stores.
+
+Environmental Control
+---------------------
+
+Cost:     3200 Cr
+Power:    none
+Time:     20 Days
+
+This  facility  primarily  stores surplus environment commodities for later
+use.   Each building can store up to 5000 air units, 600 food units and 600
+water   units.   It  also  monitors  the  usage  and  production  of  these
+environment commodities to provide an uninterrupted supply in every section
+of your colony.
+
+Clicking on this building will access the Colony Summary window.
+
+Protected Environmental Control
+-------------------------------
+
+Cost:   8500 Cr
+Power:  3 MW/Day
+Time:   32 Days
+
+This  is an extension to the normal building, with an integral Laser Turret
+for  colony  defence.   Bearing  in  mind  the  importance of environmental
+control, it would seem prudent to protect it.
+
+Clicking on this building will access the Colony Summary window.
+
+Gravity Nullifier (blueprint)
+-----------------------------
+
+Cost:   35000 Cr
+Power:  4 MW/day if on
+Time:   52 days
+
+It  can  take  considerable time to monitor the movements of your asteroids
+and  those  nearby  and  collisions  are  a constant danger.  The Nullifier
+generates  a  gravitational field that stops all asteroids within a certain
+range  from moving including the one the Nullifier is built on.  As long as
+the  field  is active you don`t have to worry about collisions, however any
+asteroid using Asteroid Engines will be unaffected by the field.  Note that
+the  field  will  collapse  if  you  have  insufficient  power to drive the
+Nullifier so regular checks on it`s operational status should be maintained
+
+Clicking on the Nullifier gives the option of turning the field on or off.
+
+Hydration Plant
+---------------
+
+Cost:    5000 Cr
+Power:   1 MW/day
+Time:    20 days
+
+These buildings provide essential water for your employees.  Each hydration
+plant  provides  water  for  up to 500 employees.  A very efficiet chemical
+process is used to extract water and oxygen from ice crystrals trapped deep
+within  the asteroid.  Surplus water will be stored in Environmental Stores
+if you have any.
+
+Clicking on this building will access the Colony Summary window
+
+Hydroponics
+-----------
+
+Cost:     7000 Cr
+Power:    2 MW/day
+Time:     16 days
+
+These  buildings  provide  essential  food  for  your  employees.  Each one
+provides  food  for  up to 400 workers which is grown from a slurry tank of
+algae  fed  with  concentrated nutrients.  It sounds inedible but the basic
+slurry  can be moulded into any foodstuff (In tests it was found that 8 out
+of  10 employees could not tell the difference and the drastic reduction in
+cost  when compared to fresh food has made these units a Company Favourite)
+Surplus food will be stored in Environmental Stores should you have any.
+
+Clicking on this building will access the Colony Summary window.
+
+Landing Pad
+-----------
+
+Cost:    300 Cr
+Power:   none
+Time:    16 days
+
+These  are  the  access  points  for  ships  to  enter  and  leave the vast
+underground  hangers.  It is advisable to leave unused ships in the hangers
+as  this  keeps them safe from enemy attack and enables damaged ships to be
+repaired.
+
+Landing  Pads  cannot  be built too close to the edge of the asteroid where
+the rock is at its thinnest.
+
+Clicking  on  a  Landing  Pad displays a list of all ships currently in the
+hangers  or  orbiting the current asteroid.  You may issue orders to one or
+more  of  these  ships  from here.  For more information see the section on
+Controlling Ships elsewhere in this manual.
+
+Laser Turret
+------------
+
+Cost:    3400 Cr
+Power:   2 MW/day
+Time:    24 days
+
+This low powered weapon offers defence against attack by enemy ship(s).  It
+will automatically track and fire upon any enemy ship(s) around the current
+asteroid assuming it has sufficient power.
+
+Life Support
+------------
+
+Cost:    13000 Cr
+Power:   2 MW/day
+Time:    48 Days
+
+This  building  provides  vital  air and atmospheric control throughout the
+colony  buildings.   Each  life  support  module  can generate a breathable
+environment  for  up  to  500  employees.  A revolutionary (and top secret)
+chemical  process  is used to extract Hydrogen Oxygen and the various Noble
+gasses trapped within the asteroid and render them breathable.  Surplus air
+will be stored in the Environmental Stores if you have any.
+
+Clicking on this building will access the Colony Summary window
+
+Living Quarters
+---------------
+
+Cost:    1000 Cr
+Power:   none
+Time:    32 Days
+
+The  basic  support  building  for  employees  in  the colony.  Much of the
+building is underground and has adequate facilities for about 50.  They are
+quick to construct but very susceptible to damage from attack.
+
+Clicking on this building will access the Colony Summary window
+
+Medical Centre
+--------------
+
+Cost:   5000 Cr
+Power:  1 MW/Day
+Time:   30 Days
+
+This is a state of the art facility incorporating all the medical equipment
+and  staff  you`d  expect  to  find  in  a major planetary Hospital.  It is
+capable  of  supporting  a  colony  of  up  to 100 employees, handling both
+routine  and  emergency  medical care.  It is unwise to have a large colony
+without  at  least one Medical Centre.  Having one improves employee morale
+and  health  and in addition lowers the number of fatalities through mining
+accidents.   It  is  also invaluable in the rare cases when a virus spreads
+rapidly through the close confinement of a mining colony and can also offer
+treatment for low doses of radiation
+
+Mine
+----
+
+Cost:   4000 Cr
+Power:  1 MW/Day
+Time:   32 Days
+
+The  basic  mining  drill for extracting the commoner types of ore.  It can
+extract:
+
+      Selenium              Asteros
+
+      Barium                Crystalite
+
+All mined ores are sent  directly to Stores
+
+Missile Silo
+------------
+
+Cost:   4300 Cr
+Power:  none
+Time:   32 Days
+
+All  your missiles are constructed and launched from these silos.  For full
+details  about  Missiles  see  the  appropriate  section  elsewhere in this
+manual.
+
+Each asteroid has underground caverns capable of storing 10 of each type of
+missile,  a  total  of 110 missiles.  Obviously no matter how many missiles
+you  have  in storage you cannot launch them without a silo.  The advantage
+of multiple silos is that your launch rate is far greater.
+
+Clicking  on  a  silo  brings  up the Missile Construction Window where you
+select  which missiles to build.  Launching missiles is done by clicking on
+the  Missile  Button (See the section on Missiles for details of both these
+operations)
+
+Ore Teleporter (blueprint)
+--------------------------
+
+Cost:   45000 Cr
+Power:  1 MW/Day
+Time:   48 Day
+
+This  is  a  very  effective  and  swift means of transporting ores between
+asteroids  you  must  have  an ore transporter on both of the asteroids you
+want  to  move  ore  between.   For  best  results  install one on all your
+asteroids.
+
+To teleport some ore, click on the Ore Teleport on the asteroid you want to
+move ore FROM.
+
+A  window  appears  listing  all  the  ore  available in the Stores on this
+asteroid both in bar chart form and numerical form
+
+You  cannot  do  anything until you select the destination asteroid.  To do
+so,  click on the asteroid button.  You will be taken to the Asteroid Field
+screen  where you can move the cross hair over the destination asteroid and
+click with the left mouse button you must of course select an asteroid that
+is owned by you and that contains an Ore Teleporter.
+
+After  selecting  the  destination you will be returned to the Ore teleport
+window where you will now see the contents of the stores on the destination
+asteroid (The second column of figures).
+
+To teleport ore simply drag the bar charts either left or right (similar to
+the  means  explained  earlier  in  the  manual) and Ore will be teleported
+instantaneously between the asteroids.
+
+To  teleport  from  the  current  asteroid  to the destination drag the bar
+charts to the right.
+
+To  teleport  from  the  destination  to  the current asteroid drag the bar
+charts to the left.
+
+Plasma Turret (blueprint)
+-------------------------
+
+Cost:     5500 Cr
+Power:    3 MW /day
+Time:     30 days
+
+This  weapon  offers greater fire power than the standard Laser Turret.  It
+automatically  tracks  and  fires  upon  any enemy ships around the current
+asteroid providing it has sufficient power.
+
+Photon Turret (blueprint)
+-------------------------
+
+Cost:     7500 Cr
+Power:    5 MW /day
+Time:     52 days
+
+This  weapon offers the greatest fire power of the three turret types.  The
+Photon  Turrets  power and accurracy is beyond compare and is only rivalled
+by  some  of the larger intergalactic warships.  Having sold this however a
+warship  moves  pretty  damn fast whereas a turret is rooted to the spot as
+you  would  expect.   It  too automatically tracks and fires upon any enemy
+ships around the current asteroid providing it has sufficient power.
+
+Powerplant (blueprint)
+----------------------
+
+Cost:    10000 Cr
+Power:   variable
+Time:    40 days
+
+This  is  the major means of power generation upon your asteroids.  It is a
+large  and  complicated  building to construct but it offers superior power
+generation.   It  extracts  Asteros ore direct from the asteroid and uses a
+fusion process to turn it into a daily output of 32 MW.  Ensure you have an
+adequate supply of Asteros before construction since it uses 1 Asteros unit
+every 4 days.
+
+If there is an ample supply of Asteros it will generate 32 MW/day otherwise
+it will use less ores to give a much reduced output of 8MW/day.
+
+Clicking  on  this  building  brings  up  a list of all buildings currently
+without power if any.
+
+Power Store
+-----------
+
+Cost:    1500 Cr
+Power:   none
+Time:    32 days
+
+Unused  surplus power is channelled into these for later use.  They offer a
+good  backup in the rarer cases where you may temporarily lose some of your
+power  generation  buildings, perhaps during an enemy attack.  They will at
+least prevent you from being totally out of power for a short while.
+
+Each one has a capacity of 200 MW of power.
+
+Clicking  on  this  building  brings  up  a list of all buildings currently
+without power if any.
+
+Repair Facility (blueprint)
+---------------------------
+
+Cost:    20000 Cr
+Power:   none
+Time:    36 days
+
+Colony  buildings get damaged in the harsh environment of the mining colony
+especially  during enemy attacks, Normally there are insufficient resources
+to  affect  repajrs.   This building controls a fleet of repair robots that
+routinely move about the colony and undertake building repairs.
+
+Resiblock
+---------
+
+Cost:   3000 Cr
+Power:  2 MW/Day
+Time:   48 Days
+
+This  is  a  more  advanced  support building, offering more facilities for
+employees  especially  in  the way of entertiainment and leisure.  It takes
+longer  to  construct  than  the  basic  Living  quarters  but supports 150
+employees and is more space efficient.
+
+Clicking on this building will access the Colony Summary window
+
+Protected Resiblock
+-------------------
+
+Cost:   8500 Cr
+Power:  5 MW/Day
+Time:   56 Days
+
+The  standard resiblock is now protected by an integral Laser Turret giving
+better  protection  from  enemy  attack  and subsequently safeguarding your
+workforce.
+
+Clicking on this building will access the Colony Summary window
+
+Satellite Silo
+--------------
+
+Cost:   5000 Cr
+Power:  none
+Time:   24 Days
+
+Gathering  intelligence about the enemy requires the frequent launch of spy
+satellites.  Satellites are both constructed and launched from these silos.
+For details see the section on spying.
+
+Screen Generator (blueprint)
+----------------------------
+
+Cost:   20000 Cr
+Power:  7 MW/Day if on
+Time:   52 Days
+
+Most  buildings  have very little defence against damage from enemy attacks
+and  are  easily  damaged  or  destroyed.  A screen generator uses power to
+erect  a  force  screen  over  one  or  more  buildings  to  offer  greater
+protection.
+
+To  identify  the  area of effect of a screen (an asteroid can have several
+Screen  Generators)  select Tactical Mode on the main asteroid view screen.
+All buildings shown with a white square are protected.
+
+Security Centre
+---------------
+
+Cost:   4500 Cr
+Power:  2 Mw/Day
+Time:   24 Days
+
+The  Company believes in high pay for hard work but sometimes the employees
+forget  this  and  become  slack  or  troubled  by the long shifts and hard
+dangerous work.  It is inevitable that there will be regular rebellions and
+standoffs  between  the  management  and  the workers and this is where the
+highly  trained  security  team  steps  in.   They  possess  the  power  to
+discipline  employees  fine  them,  and  imprison  them if necessary.  More
+importantly  they also have guns.  It is wise to have a Security Centre for
+about every 50 employees to prevent criminal activities taking a foothold.
+
+Clicking on this building will access the Colony Summary window
+
+Seismic Penetrator (blueprint)
+------------------------------
+
+Cost:    26500 Cr
+Power:   3 MW/Day
+Time:    42 Days
+
+This  is  the  very latest mining equipment recently introduced by Sci-Tek.
+It  takes  more  asteroid  space  and  power than conventional Mines but is
+capable of extracting very valuable ores.  It can extract:
+
+                    Traxium and Nexos
+
+All mined ores are sent directly to Stores.
+
+Sensor Array
+------------
+
+Cost:    3500 Cr
+Power:   2 MW/day
+Time:    36 days
+
+Without  a  sensor  array  an asteroid has a very small sensor range.  (The
+small  black circle on the Asteroid Field screen).  The array improves this
+range  (increases  the  circle)  and  gives  better  warning of enemy fleet
+movements.
+
+Whenever  enemy  missiles  or  an  enemy fleet enters sensor range you will
+receive  an  on  screen  (and  audible) warning.  In the bottom left of the
+screen  one  or more icons will flash.  A missile inside a circle indicates
+the presence of missiles and a ship inside a circle indicates the detection
+of  a fleet.  The Asteroid Field Screen will indicate their position as red
+dots (for Missiles) or a red logo (for fleets).  For as long as these icons
+flash you are in danger!
+
+Solar Generator
+---------------
+
+Cost:     1500 Cr
+Power:    gen. 4 MW/day
+Time:     10 days
+
+A  more effective means of harnessing solar power, this building can output
+up to 4MW/Day.  It costs more but is more space efficient.
+
+Clicking  on  this  building  brings  up  a list of all buildings currently
+without power if any.
+
+Solar Matrix (blueprint)
+------------------------
+
+Cost:    5000 Cr
+Power:   gen 8 MW/day
+Time:    32 days
+
+This  is  an expensive building but maximises space on smaller asteroids by
+containing  a  large tower of solar panels using a very small surface area.
+The output is 8MW/day.
+
+Clicking  on  this  building  brings  up  a list of all buildings currently
+without power if any.
+
+Protected Solar Matrix (blueprint)
+----------------------------------
+
+Cost:     7200 Cr
+Power:    gen 8MW/day
+Time:     48 days
+
+This  improved  design  contains  an  Integral  Laser  Turret  for  defence
+purposes.
+
+Clicking  on  this  building  brings  up  a list of all buildings currently
+without power, if any.
+
+Solar Panel
+-----------
+
+Cost:     500 Cr
+Power:    generates 2 MW/day
+Time:     8 days
+
+This is a very cheap and easily constructed array to harness power from the
+sun.  It outputs a constant 2MW/day.
+
+Clicking  on  this  building  brings  up  a list of all buildings currently
+without power, if any.
+
+Storage Facility
+----------------
+
+Cost:     1500 Cr
+Power:    1  MW/day
+Time:     20 days
+
+This  building stockpiles all types of ore for later use.  It automatically
+handles  ore arriving at the stores from the Mines via underground conveyor
+belts  and feeds it to Construction yards or Missile Silos as needed.  This
+small building can store a total of 300 ore units.
+
+Clicking on this building lists the ore stored by category.
+
+Storage Tower
+-------------
+
+Cost:   3000 cr
+Power:  2 MW/day
+Time:   40 days
+
+This  is  a  more space efficient Store capable of holding 600 ore units of
+any type.
+
+Clicking on this building lists the ore stored by category. 
+
+Protected Storage Tower
+-----------------------
+
+Cost:    7500 Cr
+Power:   4 MW/Day
+Time:    48 Days
+
+This  is  an  improved  design  of  the Storage Tower with an inbuilt Laser
+Turret  to  fend  off  unwelcome visitors.  It should be noted that all ore
+storage devices will be prime targets for enemy attacks, as they are one of
+the  prime  requisites  of  any  colony.   It  would therefore seem wise to
+protect  them.   This is done by putting a huge fake plastic gun on the top
+and  a  fairly  pathetic real lasser turret inside it.  This is in the vain
+hope  that any attacking fleet will see the fake weapon and decide they are
+outgunned.   The  reality of course is that they see the tiny laser that it
+fires and think oh its another one of those realistic plastic guns I`m off.
+Honest.  Don`t delay buy one today.
+
+Clicking on this building lists the ore stored by category.
+
+Weapons Factory
+---------------
+
+Cost:    4400 Cr
+Power:   2 MW/Day
+Time:    32 Days
+
+This  enables  the  manufacture of weapons, missile warheads and spacecraft
+engines.   One  of  these  buildings provides such facilities for an entire
+asteroid.
+
+
+ZONE 011 : SCI-TEK
+------------------
+
+Welcome to Sci-Tek!
+
+As  you will be aware, at Sci-Tek we only deal in the galaxys most advanced
+blueprints.   And  since  we  dont waste any of our precious time with mass
+production  plants,  you,  the  customer, dont suffer in the long run.  The
+more  time we get to spend on our development, the better your equipment in
+the end.  Here at Sci-Tek we put YOU, the customer first and foremost.  And
+remember, this sign is your assurance of quality
+
+Sci-Tek
+
+Brochure 2425
+
+To  order  call  075846653687 and one of our androids will be happy to take
+your order.
+
+Quote this ref. (Grem.226) for an extra 10% off.
+
+
+2nd Generation Mines
+--------------------
+
+Cost:  55000 Cr
+
+This  is  a  computer  controlled  multi-headed  drill  assembly.   It will
+automatically  be  added  to all your existing Mines and all Mines built in
+the future.  It doubles the speed at which a Mine can extract ore.
+ 
+2nd Generation Deep Bore Mines
+------------------------------
+
+Cost:   75000 Cr
+
+This  is  a computer controlled multi-headed drill assembly for use on Deep
+Bore Mines.  It will automatically be added to your existing shafts and all
+those  built in the future.  It doubles the speed at which a Deep Bore Mine
+can extract ore.
+
+Anti-Missile Pod
+----------------
+
+Cost:   250000 Cr
+
+This  is  a  powerful  addition  to  your asteroid defences.  The pods will
+detect  and  track  any incoming enemy missiles and attempt to destroy them
+harmlessly  in  flight.   The  pod  accuracy  is low but can be improved by
+building several pods on each asteroid.
+
+Anti-Virus Missile
+------------------
+
+Cost:   100000 Cr
+
+This  warhead  is  the  only  known means of halting the effects of a Virus
+missile launched against one of your asteroids, For further details see the
+description of this warhead in the Missiles section.
+
+Asteroid Engines
+----------------
+
+Cost:   190000 Cr
+
+Engines  allow you full control over the direction and speed of an asteroid
+enabling  you  to  steer  it  clear  of collisions or even just position it
+exactly  where  you want it in space.  For full details see the description
+in the Buildings section.
+
+Asteroid Tracker
+----------------
+
+Cost:    40000 Cr
+
+This  powerful  computer  works in conjunction with your sensors to analyse
+the movement of all known asteroids.  It provides data on the direction and
+speed of each asteroid, enabling you to anticipate collisions.
+
+Once  you  have  the  blueprint  you  must  activate  the computer from the
+Asteroid  Field  Screen  Bring up the button panel and click on the Display
+Modes  button.   Two  new  buttons  have  now appeared in the Display Modes
+button panel:
+
+      PATHS          SPEEDS           PAFW           EXIT
+
+The  PATHS button toggles on or off the display of asteroid paths.  Once on
+the Asteroid Field Screen will display the path of an asteroid with a green
+dotted  line.   It  will  always  show  the  path  of  the current asteroid
+(providing it is actually moving) and will temporarily show the path of any
+asteroid  you  move  the cross hair over.  You can therefore quickly get an
+idea of the direction of all the asteroids.
+
+The  SPEEDS  button toggles on or off the display of asteroid speeds.  Once
+on,  the  Asteroid  Field Screen will display the speed of an asteroid as a
+number  next  to it.  It will always show the speed of the current asteroid
+and will temporarily show the speed of any asteroid you move the cross hair
+over.   You can quickly get an idea of the speeds of all the asteroids.  If
+the  speed  is  shown  in  red then that asteroid is caught in some kind of
+gravity nullifying field and is not currently moving.  The number indicates
+its speed should it escape the nullifying field.
+
+Building Armour
+---------------
+
+Cost:    110000 Cr
+
+You have purchased the rights to a strengthened construction material.  You
+can  use this in all new buildings you construct making them more resilient
+to enemy attacks.
+
+Construction Droids
+-------------------
+
+Cost:   20000 Cr
+
+Usually  your  Vehicle  Construction  Yards  only  have  the  resources  to
+manufacture up to 3 craft at a time.  Once you have this blueprint all your
+yards  and  all future yards will be modified to include a state of the art
+robotic  assembly  line.   The sophistication of these droids allows you to
+construct  up  to  6 craft at a time.  You can now build larger fleets with
+less of your time spent supervising the Yards.
+
+Deflector
+--------
+
+Cost:   115000 Cr
+
+This is a hardpoint that can be added to newly constructed ships to improve
+their  defence.   It consists of a generator that pulses energy through the
+ships  hull  all  the  time  that it is in flight using power from the main
+engines.   The  energised  hull is more resilient to attacks and can absorb
+and  deflect most attacks.  The Deflector can be used with existing shields
+and greatly improves the lifetime of a ship.
+
+Fleet Battleship
+----------------
+
+Cost:   150000 Cr
+
+One  of  the  most  powerful  ships  produced  in  the  Empire.  Using this
+blueprint  you  can  construct  these battleships at any asteroid where you
+have  a  Space  Dock.   For  further  details  see  the  description in the
+Spacecraft section
+
+Gravity Nullifier
+-----------------
+
+Cost:    70000 Cr
+
+The  Nullifier  generates a powerful gravity field about the asteroid it is
+built  upon.   This  prevents the asteroid and close neighbouring asteroids
+from  moving.   This is particularly useful to avoid asteroid collisions or
+simply  to  hold  several  of  your  asteroids  together for quick movement
+between  them.   For  further  details see the description in the Buildings
+section.
+
+Hi-Energy Power Stores
+----------------------
+
+Cost:   15000 Cr
+
+This specialised capacitance circuit is automatically installed in all your
+existing  Power  Stores  and  any built from now on.  It simply doubles the
+storage capacity of all Power Stores.
+
+Improved Sensors
+----------------
+
+Cost:   34000 Cr
+
+Sci-Tek have recognised the reliance most asteroid mining colonies put upon
+their  Sensor  Arrays  Without  them  an  asteroid is very vulnerable to an
+unexpected  collision  or  surprise enemy attack.  They have developed this
+device  that  is installed in all your existing asteroids and also added to
+the  CPU building so that all future colonies will have this device also it
+renders  Sensor  Arrays  unnecessary  by hiding the sensors underground and
+using new techniques to allow them to probe surrounding space
+
+MEGA Missile
+------------
+
+Cost:   500000 Cr
+
+Incredibly  expensive  but  then you are buying the most powerful weapon in
+the  Empire  capable  of  destroying  an  entire asteroid upon impact.  For
+further details see the summary of this warhead in the Missiles section.
+
+Missile Bay Extension
+---------------------
+
+Cost:   30000 Cr
+
+Conventional  missile  Silos can only store a maximum of 10 of each type of
+warhead  on  an asteroid.  If they are to be loaded and launched as quickly
+as  possible.   This  new  loading  rack  system  is  installed in all your
+existing and future Missile Silos and allows them to store up to 20 of each
+type of missile.  The rack system is compact but can arm any warhead on any
+silo in a matter of seconds.
+
+Missile Guidance System
+-----------------------
+
+Cost:   35000 Cr
+
+This  device  uses  your  sensors  to  accurately  measure the distance and
+relative  vectors  of  the  launching  and  target asteroids.  It uses this
+information  to  provide  you  with an indication of the likelihood of each
+missile hitting the target asteroid.  By using this device you can maximise
+your  attacks  and  avoid  wasting  missiles  by firing them at targets too
+distant.
+
+See the Missile section for details about how to use the Guidance System.
+ 
+Nuclear Missile
+---------------
+
+Cost:   300000 Cr
+
+This  missile  inflicts  large amounts of damage upon the asteroid it hits.
+For further details see the summary of this warhead in the Missiles section
+
+Ore Teleporter
+--------------
+ 
+Cost:   150000 Cr
+
+Transporting  ore  between  your asteroids via Transporter ships can take a
+lot  of  time and effort You can avoid this by constructing Ore Teleporters
+on  all  your  asteroids.   Any  type  of  ore  can  be  teleported between
+Teleporters   instantaneously.    For  instructions  on  its  use  see  the
+description of the Ore Teleporter in the Buildings section.
+
+Photon Turret
+-------------
+
+Cost:  100000 Cr
+
+The most powerful turret on the market today.  Very effective against enemy
+ships attacking your asteroids.  For further details see the description in
+the Buildings section.
+
+Plasma Turret
+-------------
+
+Cost:   60000 Cr
+
+A more powerful turret than the standard Laser Turret.  For further details
+see the description in the Buildings section.
+
+Power Amplifier
+---------------
+
+Cost:   100000 Cr
+
+This optimises your solar panels allowing them to double their power output
+to  your  colony.   The Amplifier is automatically added to all present and
+future Solar Panels, Generators and Solar Matrices.
+
+Powerplant
+----------
+
+Cost:   40000 Cr
+
+The  Powerplant  is a very cost effective means of power generation using a
+fusion  process to convert Asteros ore into power.  For further details see
+the description in the Buildings section.
+
+Repair Facility
+---------------
+
+Cost:  150000 Cr
+
+This  building  supports  a  fleet  of repair droids that move through your
+colony  buildings  and  carrying out repairs of battle damage.  For further
+details see the description in the Buildings section
+
+Screen Generator
+----------------
+
+Cost:  175000 Cr
+
+The   Screen   Generator  produces  a  defence  screen  around  itself  and
+neighbouring  buildings  absorbing  some  of the damage of an enemy attack.
+For furthur details see the description in the Buildings section.
+ 
+Seismic Genetrator
+------------------
+
+Cost:  120000 Cr
+
+This  is  the  only  type  of  drilling  assembly capable of extracting the
+incredibly  rare  (and  expensive) Traxium and Nexos ores from underground.
+It is a large and very complicated building but vital if you have ambitions
+of  becoming a major ore supplier.  For further details see the description
+in the Buildings section.
+
+Shield X40
+----------
+
+Cost:  30000 Cr
+
+This is a Hardpoint that can be added to newly constructed ships to improve
+their defence.  It simply adds an extra layer of armour to the ships hull.
+
+Shield X50
+----------
+
+Cost:  40000 Cr
+
+This  is  another  hardpoint that can be added to a newly constructed ship.
+It  provides  a state of the art defence system almost guaranteed to render
+the ship invulnerable (but not quite) And all for a mere 40000 Cr.
+
+Solar Matrix
+------------
+
+Cost:  30000 Cr
+
+This  is a more space and cost effective means of power generation than the
+basic  Solar Panel For furthur details see the description in the Buildings
+section.
+
+Static Inducer
+--------------
+
+Cost:  80000 Cr
+
+This  is  a  Hardpoint that can be added to newly constructed ships it uses
+the  ships  main engines to concentrate and emit a powerful electromagnetic
+pulse  that  temporarily  confuses  the  electronics  of  enemy ships.  The
+blueprint also shows how our own ships are protected against the e m pulse.
+During  the  pulse  all  enemy  ships  are unable to move or attack and are
+completely vulnerable to our own attacks.
+
+Stasis Missile
+-------------
+
+Cost:  250000 Cr
+
+This  state  of  the  art  missile  encompasses  the target asteroid with a
+temporary  field  that  stops  time, freezing the asteroid and all ships in
+orbit  about  it for a period of time.  For further details see the summary
+of this warhead in the Missiles section.
+
+Terminator
+----------
+
+Cost:  90000 Cr
+
+This  is  a powerful Cruiser warship with 4 hardpoints making it a superior
+attack  ship  to  everything but the fleet battleship.  For further details
+see the description of this ship in the Spacecraft section.
+
+Turret Optimiser
+----------------
+
+Cost:  240000 Cr
+
+This  devise  has  been  long awaited.  It modifies all existing and future
+turrets  of  any  type giving them the power to double the damage that they
+can  inflict in each shot.  Quite how the device works is a closely guarded
+secret, however the most popular theory is that a huge capacitor is used to
+charge the turret up when not in use and the surplus of power increases the
+damage it is capable of inflicting.
+
+Virus Missile
+-------------
+
+Cost:  350000 Cr
+
+This warhead releases a volatile substance upon impact that causes the very
+rock  of an asteroid to become unstable.  It is impossible for buildings to
+stand  upon  this  new,  unstable  substance.  The virus will slowly spread
+across  the  asteroid  destroying  everything in its path.  A very powerful
+weapon  (hence  its price).  Upon its initial release the Virus missile was
+declared  illegal  on  almost  200  separate worlds however modern thinking
+suggests  it  is  a  more  humane  method of warfare:  Maximum results with
+minimum  casualties.   Such  is  the turnaround in the concensus of opinion
+that  Sci-Teks  PR  department  has won several awards for its work on this
+particular project.  For further details see the summary of this warhead in
+the Missiles section.
+
+Warp Generator
+--------------
+
+Cost:  75000 Cr
+
+This  is a hardpoint that can be added to newly constructed ships.  It is a
+limited defence device.  A capacitor is charged from the ships main engines
+and  then  the charge is released as a powerful warp field phasing the ship
+out  of  the  Spacial  Matrix  (tm).   In  its phased out state the ship is
+impervious  to  all  damage  but  may still fire its own weapons.  When the
+capacitor  has  discharged the ship phases back into normal space until the
+capacators  charged  again  and  is  thus vulnerable to attack again.  This
+pulsing warp field happens automatically.
+
+
+ZONE 012 : SPACECRAFT
+---------------------
+
+Assault Fighter
+---------------
+
+Imperial Code:    15KC/TC/4158137
+Internal Code:    KC651910067
+Length:           13m
+Beam:              8m
+Speed:            15,700 km/h atmos.
+Speed:            3 FN = 1000 LS/day
+Mass:             40 tonnes
+Hull:             20 armour
+Build             20 days            From: Construction Yard
+Hardpoints:       1
+Ore:              2 Selenium, 2 Crystalite
+Cost:             6000 Cr
+Engine:           Kerell Thruster MKII, x2 KA344325G
+Cargo:            10 tonnes
+Boost:            +3000 LS/day
+Crew:             3
+Sensor:           Nembry Avionics NA6518PD
+Life Support:     1 year
+Computer:         Kerell TR37, 200 MIPS
+Landing Gear:     triple
+EW/ECM:           1 LD fwd & rear only
+Comms:            Sensory Matrix transceiver 1 LY effective
+Inert Damping:    none
+
+In  use  since  its  initial  design in 2232.  A proven ship that is cheap,
+quick  to  build  and  ideal in Combat situations.  Developed by the Kerell
+Corporation,  based  on the Industrial World of Tau Ceti III.  Its designer
+was L.G.R.  Riley, Engineer Grade VII at the Kerell Corp.  Incredible as it
+may  sound, Ms Riley is the only female engineer to have ever held a senior
+position  in  Kerell.   Ironically,  this ship is one of their best selling
+ever, and has provided the funding for many of their more recent ventures.
+
+
+
+Combat Eagle
+------------
+
+Imperial Code:    12TC/B5/8778103
+Internal Code:    TC86608133X
+Length:           10m
+Beam:             9m
+Speed:            15,700 km/h atmospheric
+Speed:            3 FN = 1000 LS/day
+Mass:             120 tonnes
+Hull:             30 armour
+Build:            30 days               From: Construction Yard
+Hardpoints:       2
+Ore:              4 Selenium, 4 Crystalite
+Cost:             8000 Cr
+Engine:           Fortuna Drive V3.4 (x2) MX3321H
+Cargo:            32 tonnes
+Boost:            + 2500 LS/day
+Crew:             7
+Sensor:           XLR array, XLR793 V1.31
+Life Support:     1.5 years
+Computer:         Kerell TX5, 560 MIPS
+Landing Gear:     triple
+EW/ECM:           2.5 LD, spherical
+Comms:            Sensory Matrix transceiver 2.3 LY effective
+Inertia Damping:  < 2 FN
+
+Designed  by  Engineer  and  Pilot  R  F  Drake Stoker at the Morgan Design
+Institute  on  Barnard  Five, under license to Tetracorp, in the year 2308.
+It  has now become Tetracorps standard lowcost assault ship and widely used
+throughout the Empire.  A general purpose Combat vessel.
+
+
+Scout Ship
+----------
+
+Imperial Code:    12TC/B5/8751113
+Internal Code:    TC-888132-712-F
+Length:           12m
+Beam:             6m
+Speed:            10,200 km/h atmospheric
+Speed:            2 FN = 740 LS/day
+Mass:             34 tonnes
+Hull:             5 armour
+Build:            20 days              From: Construction Yard
+Hardpoints:       1
+Ore:              4 Selenium, 2 Crystalite
+Cost:             3000 Cr
+Engine:           Fortuna Impulse Dome, Mk3 RBW 690421-C
+Cargo:            5 tonnes
+Boost:            + 200 LS/Day
+Crew:             3
+Sensor:           XLR sub array core, XLR-64 V5.2
+                  TN sampling units, code:TN 87991
+Life Support:     4.5 years
+Computer:         SG Imagine os 5.1 910 MIPS
+Landing Gear:     Triple
+EW/ECM:           1.2 LD, fwd only
+Comms:            Sensory Matrix transceiver 12,8 LY
+Inertia Damping:  none
+
+Designed by Engineer R Marax at the Tetracorp Central Construction Yards on
+Barnard  Five,  in  the  year 2345, This is the fourth issue of Tetracorprs
+Popular  scout  ship.   Though the Imperial Navy uses the superior Class 7,
+this vessel is widespread amongst Tetracorp's franchised mining operations.
+Whilst  it  is  near  useless in combat situations, it carries superior XLR
+sensor arrays tuned to the discovery of ore rich asteroids.
+
+
+Destructor
+----------
+
+Imperial Code:    171GX/B7/3771826
+Internal Code:    GX48911-8834
+Length:           34m
+Beam:             48m
+Speed:            9,700 km/h atmospheric
+Speed:            2 FN = 690 LS/day
+Mass:             1033 tonnes
+Hull:             40 armour
+Build:            48 days             From: Orbital Space Dock
+Hardpoints:       3
+Ore:              8 Selenium, 6 Crystalite
+Cost:             15000 Cr
+Engine:           Gax V2 Hyper drive (7.1c) (x1)
+                  Gax RN35 Thrusters (x2)
+                  GRN35-7133
+Cargo:            120 tonnes
+Boost:            + 340 LS/day
+Crew:             16
+Sensor:           XLR array, XLR 793 V2.17
+Life Support:     2.7 years
+Computer:         Kerell NT-690, 1700 MIPS
+Landing Gear:     none
+EW/ECM:           5.6 LD, spherical
+Comms:            Sensory Matrix transceiver 4.4 LY
+Inertia Damping:  < 2 FN
+
+Gax Industries are well known for their superior ship design, and this ship
+is  no  exception.  It is widely used as a leading attack and support ship,
+and  is  extremely  versatile,  being  capable of interstellar Jump travel,
+interplanetary and atmospheric use.  Its designer was Y.  Inars, working at
+the Gax R&D Facility on Brekon 7 , Initially designed in 2278, it was never
+built,  instead  it  underwent a redesign and finally became operational in
+2316.
+
+
+Terminator
+----------
+
+Imperial Code:    112ST/613922
+Internal Code:    ST-1D-7791337
+Length:           52m
+Beam:             32m
+Speed:            2,100 km/h atmospheric
+Speed:            1 FN = 430 LS/day
+Mass:             7814 tonnes
+Hull:             50 armour
+Build:            80 days               From:Orbital Space Dock
+Hardpoints:       4
+Ore:              8 Selenium, 2 Dragonium
+Cost:             34000 Cr
+Engine:           Sci-Tek InterSpacial Drive
+                  STC-87 revision 4.3 (x2)
+                  Sci-Tek Thrusting Unit
+                  STC-7133 revision 2 (x2)
+Cargo:            470 tonnes
+Boost:            + 60 LS/day
+Crew:             38
+Sensor:           STC-7Y, sweep pattern
+Life Support:     4.5 years
+Computer:         Sci-Tek Tek-16 2500 MIPS
+Landing Gear:     none
+EW/ECM:           9.8 LD, spherical 
+Comms:            Sensory Matrix transceiver 16.4 LY effective
+Inertia Damping:  full
+
+One  of  Sci-Tek's most popular warships, it is used widely by the Imperial
+Navy.   Originally  designed  and  built  in  2321,  this is the latest and
+updated  version 5, newly built in 2371.  Its original designer is unknown,
+but  version  5 is credited to I.  Atkin.  He (Atkin) is considered by many
+to be one of the greatest naval architects the galaxy has ever seen.  It is
+also  widely  believed  that he has the worst colour sense of anyone in the
+known worlds, hence the Terminator's lurid (original?) colour schemes
+
+
+Transporter
+-----------
+
+Imperial Code:    171GX/B7/3771663
+Internal Code:    GX42880-7515
+Length:           105 m
+Beam:             74 m
+Speed:            no atmospheric
+Speed:            1 FN = 400 LS/day
+Mass:             14320 tonnes
+Hull:             40 armour
+Build:            114 days              From:Orbital Space Dock
+Hardpoints:       2
+Ore:              6 Selenium, 1 Dragonium
+Cost:             24000 Cr
+Engine:           Gax V2 Hyper drive (7.1c) (x1)
+                  Gax Drive DC-721603-K (x1)
+Cargo:            48000 tonnes
+Boost:            +10 LS/day
+Crew:             8
+Sensor:           XLR array, XLR-793 V2.17
+Life Support:     8 years
+Computer:         Kerell NT-690, 1700 MIPS
+Landing Gear:     none
+EW/ECM:           2.4 LD, spherical
+Comms:            Sensory Matrix transceiver 14.2 LY effective
+Inert Damping:    full
+
+Another  ship designed by Y.  Inara on Brekon 7, Inara obviously had a poor
+year when he designed the Gax Transporter as in many areas it is inadequate
+and  in  others  it is woefully underspecced.  As an example it has far too
+powerful  a  computer  which  is  prone  to system crashes when the Impulse
+Drives are used to manoeuvre the Transporter into orbit.  Many clients have
+asked  for  better armour and longer range communicators and as a result it
+is  likely  that  Inara will update the ship for re-release in the next few
+years.  The reason the Gax Transporter sells is its enormous cargo bays and
+the ease of loading.  Despite it's slow speed, the XLR Sensor Array is more
+than  adequate  for  the  ship  to  be used in an asteroid field.  Shame it
+handles like a brick though.
+
+
+Fleet Battleship
+----------------
+
+Imperial Code:    112ST/617600
+Internal Code:    ST-1D-7785581
+Length:           92m
+Beam:             63m
+Speed:            no atmospheric
+Speed:            1 FN = 580 LS/day
+Mass:             45910 tonnes
+Hull:             70 armour
+Build:            114 days             From:Orbital Space Dock
+Hardpoints:       6
+Ore:              8 Selenium, 6 Dragonium
+Cost:             60000 Cr
+Engine:           Sci-Tek InterSpacial Drive
+                  STC-87 revision 4.3 (x2)
+                  Sci-Tek Thrusting Unit
+                  STC-135 revision 3.1 (x4)
+Cargo:            1310 tonnes
+Boost:            + 180 LS/day
+Crew:             74
+Sensor:           STC-7Y5, sweep pattern, globe
+Life Support:     12 years
+Computer:         Sci-Tek Tek-18 5000 MIPS
+Landing Gear:     none
+EW/ECM:           45.1 LD, spherical
+Comms:            Sensory Matrix transceiver 38.6 LY effective
+Inert Damping:    full
+
+One  of  Sci-Tek's  most  modern  and powerful ships, it was designed by R.
+Giggs  in  2364.  Despite its grand name, it is a mere fraction of the size
+of  the  real  Imperial  Battleship, but is easily large enough to form the
+centrepiece  of  any independent fleet.  Both Sci-Tek and Tetracorp use and
+recommend  them  as  their  primary warship, and its 6 hardpoints make it a
+very flexible vessel.
+
+
+Orbital Space Dock
+------------------
+
+Imperial Code:    12TC/B5?8799145
+Internal Code:    TC-734403-451T
+Diameter:         215m
+Speed:            1 FN = 50 LS/day
+Mass:             145512 tonnes
+Hull:             120 armour
+Build:            86 days
+Hardpoints:       4
+Ore:              10 Bytanium, 20 Dragonium
+Cost:             200000 Cr
+Engine:           Fortuna Thrusting Arrays MX-67-14 (x8)
+Cargo:            14400 tonnes
+Boost:            + 5 LS/day
+Crew:             230
+Sensor:           XLR GlobCon MkIV XLR-GC-71334
+Life Support:     indefinite
+Computer:         Kerell NT-690, 1700 MIPS
+Landing Gear:     none
+EW/ECM:           1 LY, spherical
+Comms:            Sensory Matrix transceiver, 70 LY effective
+Inert Damping:    <1 FN
+
+Designed  by  M.D.Glossop at the Morgan Design Institute on Barnard Five in
+the year 2338.  Tetracorp intended the O.S.D.  to be used as a control post
+in  the Frontier Sectors, keeping each mining colony in touch with the Home
+Worlds  and  Tetracorp.   Glossop originally designed larger cargo bays but
+altered them at the last moment into a ship construction facility.  This is
+probably the sole factor that has made the O.S.D.  as successful as it is -
+the ability to contruct large warships in the depth of space
+
+
+ZONE 013 : HARDPOINT WEAPONS
+----------------------------
+
+This is a summary of the devices available for installation in a hardpoint.
+Ones  marked  with  (blueprint)  are  only  available once the construction
+rights have been purchased from Sci-Tek
+
+Note:   Costs  given  are  correct  at  the present time but are subject to
+change without warning
+
+Ion Cannon
+----------
+
+Cost:   1000 Cr
+
+This  is the basic (and very cheap) weapon for use against enemy asteroids.
+It has a minimum impact area and does little damage
+
+Disruptor
+---------
+
+Cost:   6000 Cr
+
+This  weapon  is  another  Air-to-  Surface  weapon  for  use against enemy
+asteroids.  It has a greater area of effect than the Ion Cannon but darmage
+is still limited.
+
+Napalm Orb
+----------
+
+Cost:  4000 Cr
+
+This  fires a stream of high temperature plasma gas at an asteroid with its
+own  Oxygen supply which will burst into flame upon impact.  Damage will be
+inflicted  upon  any  buildings caught in the flame.  The area of effect is
+very limited however.
+
+Chaos Bomb
+----------
+
+Cost:   12000 Cr
+
+This  is  an improved version of the Napalm Orb but with a much larger area
+of  effect.   Like  the  Hellfire  Missile  the flames from this weapon can
+easily  spread  to  neighbouring  buildings  and devastate huge areas of an
+asteroid.  Very effective against densely populated asteroids.
+
+Vortex Mine
+-----------
+
+Cost:  5000 Cr
+
+An  electrical  vortex  is  released  upon the asteroid.  It will wander at
+random  upon  the  surface  inflicting damage upon any building it touches.
+The  longevity  of the vortex is indeterminate.  It can vanish at any time.
+It  is  possible  for the vortex to split into two parts each continuing to
+wreak havoc and each with the possibility of splitting again
+
+Laser
+-----
+
+Cost:   1000 Cr
+
+This  is the standard Ship to Ship weapon based on a focused beam of light.
+It does very little damage.
+
+Photon Cannon
+-------------
+
+Cost:   4500 Cr
+
+A more effective ship to ship weapon.  The twin guns fire packets of energy
+held together by a force field.
+
+Plasma Cannon
+-------------
+
+Cost:  9000 Cr
+
+The  most  powerful ship to ship weapon.  It fires a focused disruptor beam
+housing  superheated  plasma gas and is capable of ripping through even the
+most  powerful  armour.   Caution  should  be  exercised in the use of this
+weapon,  and  the Company is not liable for any damage incurred to the user
+should anything untoward happen.
+
+Static Inducer (blueprint)
+--------------------------
+
+Cost:  4500 Cr
+
+This  devise uses the ships main engines to concentrate and emit a powerful
+electromagnetic  pulse  that  temporarilly  confuses  the electronics of an
+enemy  ship.   During  the pulse the enemy ship is unable to move or attack
+and completely vulnerable to our own attacks.
+
+Warp Generator (blueprint)
+--------------------------
+
+Cost:  9000 Cr
+
+This  is  a  limited defence device.  A capacitor is charged from the ships
+main  engines  and  then  the  charge  is released as a powelful warp field
+phasing  the  ship  out  of the Spacial Matrix (tm) In its phased state the
+ship  is  impervious  to all damage but may still fire its own weapons When
+the  capacitor  has discharged the ship phases back into normal space until
+the  capacitor  is  charged  again  and is thus vulnerable to attack again.
+This pulsing warp field happens automatically
+
+Deflector (blueprint)
+---------------------
+
+Cost:  12000 Cr
+
+This  devise  consists  of a generator that pulses energy through the ships
+hull  all  the time that it is in flight using power from the main engines.
+The  energised hull is more resilient to attacks and can absorb and deflect
+most  attacks.  The Deflector can be used with existing shields and greatly
+improves the lifetime of a ship
+
+Shield X10
+----------
+
+Cost:  1500 Cr
+
+This extends the armour of the ships hull to give better protection against
+damage.   This  shield  adds 10 armour points and may be stacked with other
+Shields or defences
+
+Shield X20
+----------
+
+Cost:  3000 Cr
+
+This extends the armour of the ships hull to give better protection against
+damage.   This  shield  adds 20 armour points and may be stacked with other
+shields or defences
+
+Shield X30
+----------
+
+Cost:  5000 Cr
+
+This extends the armour of the ships hull to give better protection against
+damage.   This  shield  adds 30 armour points and may be stacked with other
+shields or defences
+
+Shield X40 (blueprint)
+----------------------
+
+Cost:  6500 Cr
+
+This extends the armour of the ships hull to give better protection against
+damage.   This  shield  adds 40 armour points and may be stacked with other
+shields or defences
+
+Shield X50 (blueprint)
+----------------------
+
+Cost:  8000 Cr
+
+This extends the armour of the ships hull to give better protection against
+damage.   This  shield  adds 50 armour points and may be stacked with other
+shields or defences.
+
+
+TERRAN  APPROVED:   2450  THE  FOLLOWING SECTION IS FOR THOSE WITH SECURITY
+CLEARANCE ORANGE AND ABOVE ONLY
+
+
+ZONE 014 : MISSILE WARFARE
+--------------------------
+
+Missiles  are  an  integral part of the military might of your colony.  You
+should  rely  on  neither  ships  alone  nor  missiles  alone,  but  use  a
+combination  of both of them.  The advantage of missiles is that they are a
+long range weapon, allowing you to strike at the enemy deep in space.  This
+is a disadvantage too since missiles cannot be used to combat enemy attacks
+on your asteroids.
+
+BUILDING MISSILES
+-----------------
+
+To  be  able to build and launch missiles you must have one or more Missile
+Silos  on  an  asteroid Select these from the Bullding Selection Window and
+construct  them on suitable asteroids preferably ones with a variety of ore
+and  not  too distant from an enemy asteroid.  You need only one silo on an
+asteroid  but  the  more  you  do  have  the  more  missiles you can launch
+simultaneously for a quicker attack.
+
+To  build  a  missile click on the Missile Silo building.  A window appears
+detailing  each of the missiles available to you at this time.  See the end
+of  this  section for a summary of each missile warhead type.  Some missile
+types  are  only  available  once  you  have  purchased the blueprints from
+Sci-Tek.  At the start of the game you have 6 types available but there are
+11 in total
+
+                      LEFT             RIGHT
+
+                      BUILD            ABORT
+
+                                       EXIT
+
+Use  the  Left  and  Right Arrow buttons to cycle through the missile types
+until you reach the one you wish to build.
+
+Click  on  the Build Missile button to build a missile and click successive
+times to build more than one.
+
+Click  on  the  Abort  button  to abort the building of any of this type of
+missile.  Other types will be unaffected.
+
+Missiles  will  be  built  over a period of time.  Each type takes the same
+amount  of  time to build but clearly the more you want to build the longer
+it  will  take.  The cost of each missile will be deducted when the missile
+is  finally  built  and  delivered automatically to the underground missile
+hangers.   These  hangers can hold up to 10 of each type of warhead on each
+asteroid.   NOTE:   Money  must be pre allocated to the Missile Fund in the
+Financial Fund Window.  See the appropriate section for how to do this.
+
+The  type  of  Ore  needed to build the missile is given in the information
+window  but  you  will  be warned if there is insufficient ore to build any
+particular missile.  The ore must be held in Stores on the current asteroid
+so  you may need Mines to extract ore (See the section on Mining) Similarly
+you will be warned if the current asteroid does not have a Weapons Factory.
+Missiles cannot be built without one.
+
+Even  if  you receive one of these warnings about insufficient ore, lack of
+money  or  lack of Weapons Factory the Missile Silos will continually check
+whether  they  can  build  another  missile.  So as soon as you rectify the
+fault  (ie  mine  or  transport more ore allocate more money to the Missile
+Fund   or   build   a  Weapons  Factory)  the  construction  will  continue
+automatically.
+
+LAUNCHING MISSILES
+------------------
+
+To  launch  a  missile  click  on the Launch Missile button either from the
+Asteroid View Screen or the Asteroid Field Screen.
+
+A  window  will  list  the  number  of each type of missile you have on the
+current  asteroid.   Each blob on the barcharts represents one missile.  At
+the bottom of the window the current target is listed, if you have selected
+one,  and  the  expected  accuracy  of  any  missiles launched against this
+target.   This  accuracy is unavailable unless you have purchased a Missile
+Tracker  from Sci-Tek.  So until you buy a Missile Tracker you will have to
+estimate your chances of success for a missile attack (see below)
+
+               LAUNCH   TARGET    ABORT     EXIT
+
+SETTING THE TARGET ASTEROID
+---------------------------
+
+Missiles  can  only  target  asteroids  not individual ships or fleets.  To
+select a target from the Missile Control Window click on the Target button.
+You  will  be  taken  to  the  Asteroid View screen (unless you are already
+there) and shown all the asteroids known to you.
+
+A  circle  is  entered  on the current asteroid and this marks the range of
+your  missiles.   The  circle  is  of  little use unless you have a Missile
+Tracker.   In  which  case it will be accompanied by a percentage chance to
+hit  figure.  If you don`t use a Missile Tracker you`ll have to experiment.
+As  you  move the cross hair with the mouse the circle will grow and shrink
+and  the  percentage chance to hit will alter.  The percentage chance is an
+approximate  indication  of the chance of EACH of your missiles hitting but
+remember  that  even if a missile reaches its target successfully the enemy
+may have the means to shoot it down.
+
+To  select a target asteroid move the cross hair over an asteroid and click
+the  left  mouse  button.   You  will return to the Missile Control window.
+That  target  is  now  set  and  will  remain so unless you alter it ot the
+targetted asteroid is destroyed
+
+SELECTING THE MISSILES TO FIRE
+------------------------------
+
+You  can  fire as many missiles at a time as you want but remember that the
+missiles  will  take  longer  to launch if you only have one or two Missile
+Silos.
+
+To  select  missiles  move  the  mouse  pointer over the name of a missile.
+Click  right to add one missile of that type to the launch bay.  Click left
+to  remove  one missile from the launch bay.  Hold down the mouse button to
+add/remove  several  missiles.   The  red blobs show available missiles and
+green blobs show missiles selected for launch.
+
+The  numbers  at  the right of the window echo this information showing how
+many missiles you have selected of each type.
+
+The abort button will clear all selected missiles of all types.
+
+LAUNCHING THE MISSILES
+----------------------
+
+To actually launch the selected missiles click on the Launch button.
+
+To quit without launching any missiles click on the Exit button.
+
+You  can  watch  the progress of missiles in flight from the Asteroid Field
+Screen.  Your missiles appear as yellow dots.
+
+MISSILE WARHEAD DATA
+--------------------
+
+The  data  on  each missile type follows.  Missiles marked with (blueprint)
+are only available from Sci-Tek.
+
+Note:   This  data  is  accurate  at  this moment in time but is subject to
+change by Sci-Tek and the other missile manufacturers without warning.
+
+Explosive
+---------
+
+Cost:  1000 Cr
+Ore:   1 Selenium
+
+This  is  the basic (and very cheap) warhead.  It has a minimum impact area
+on  the  target  and several such missiles may be required to destroy enemy
+buildings.  For best results launch many at one time.
+
+Area Explosive
+--------------
+
+Cost:  8000 Cr
+Ore:   2 Barium
+
+As  an  extension to the basic Explosive warhead, this warhead does similar
+damage  but  over  a  wider  area.   For  best  results use against densely
+populated asteroids.
+
+Napalm
+------
+
+Cost:  6000 Cr
+Ore:   1 Quazinc
+
+This  warhead  has  a  core of plasma gas which is released at a phenomenal
+temperature  upon  impact.   It  carries  its own Oxygen supply causing the
+impacted buildings to erupt into flame.  This flame will burn for some time
+inflicting further damage.  The area of effect is very limited however.
+
+Hellfire
+--------
+
+Cost:  20000 Cr 
+Ore:   3 Quazinc
+
+The  chemical  substance  encased  in  this  warhead is a by product of the
+development  of  the  Napalm  warheads.   Upon impact the core shatters and
+spreads high temperature plasma gas over a wide area.  Any structure caught
+in  this  blast  will  begin  to  burn ferociously and suffer damage over a
+period  of  time.   The  hellfire substance has the capability to spread to
+neighbouring  buildings  and it is possible for one missile to devastate an
+entire  asteroid  if  the  hellfire  burns long enough.  Clearly it is most
+eftective against densely populated asteroids.
+
+Scatter
+-------
+
+Cost:  10000 Cr
+Ore:   3 Selenium
+
+This  is  a  larger  version  of  the  basic Explosive warhead.  In fact it
+contains  25  such warheads.  It will explode just above the surface of the
+asteroid  and  the multiple warheads will fall at random upon the asteroid.
+The  damage  is  slight  but  the  random pattern is good at weakening many
+buildings at once.
+
+Vortex
+------
+
+Cost:   9000 Cr
+Ore:    3 Crystalite
+
+Upon  impact  an  electrical vertex is released upon the asteroid.  It will
+wander  at  random  upon the surface inflicting damage upon any building it
+touches.   The  longevity  of  the  vortex is indeterminate and Sci-Tek are
+still  attempting to develop a Vortex MkII that has a guaranteed longevity.
+It  is  possible  for the vortex to split into two parts each continuing to
+wreak havoc, and each with the possibility of splitting again.
+
+Nuclear(blueprint)
+------------------
+
+Cost:  50000 Cr
+Ore:   5 Asteros
+
+This is a multi-megaton warhead capable of inflicting enormous damage to an
+asteroid  possibly destroyirng every building upon it.  Spacecraft in orbit
+will  also  suffer  damage  from  the blast.  WARNING:  USE WITH CARE!  The
+radiation   effects   from   a   nuclear  attack  can  render  an  asteroid
+uninhabitable for many many years.
+
+Virus (blueprint)
+-----------------
+
+Cost:  30000 Cr
+Ore:   1 Traxium
+
+This  is  a very powerful weapon which unfortunately reguires the very rare
+Traxium  ore for its payload.  Upon impact it releases a volatile substance
+which  begins at once to eat at the fabric of the asteroid itself.  It will
+alter  the  molecular  consistency  of  the asteroid material, turning it a
+different  colour  as  it  does  so.  No building can stand upon a weakened
+section  of  asteroid,  but will simply collapse.  The mutated rock becomes
+radioactive too.  Over time the virus will spread across the asteroid never
+stopping  until it has affected the entire asteroid which is then incapable
+of  supporting  any  colony at all.  A virus infected asteroid is living on
+borrowed time!  There is one way to combat the virus an Anti-Virus missile.
+
+Anti-Virus (blueprint)
+----------------------
+
+Cost:  10000 Cr
+Ore:   4 Barium
+
+The  only  known  means  to enadicate the effects of a Virus missile.  Upon
+impact  it  disperses  a  bacterial  agent  over  the entire surface of the
+asteroid.   Within  moments  this  will  seek  out  and  destroy  the virus
+substance and halt its spread.  It will then begin to act upon the parts of
+the  asteroid that have been altered by the virus.  It takes a long time to
+act  but will eventually restore the asteroid to a more stable form capable
+of  supporting buildings again.  The only known side effect is an increased
+radiation.
+
+Since you will only be firing this missile aganst one of your own asteroids
+it  is  possible to target the same asteroid as the launching silo by using
+the same technique explained above.
+
+Mega (blueprint)
+----------------
+
+Cost:   65500 Cr
+Ore:    1 Nexos
+
+This  is  the  most  devastating weapon available!  It took Sci-Tek some 40
+years  of  research  to  perfect  it.   Quite  simply it destroys an entire
+asteroid  or  even  a small sized planet - nothing but rubble remains.  The
+actual  process  is  extremely complicated, relying upon a gravity pulse to
+rip  apart  the  target  asteroid  rather than simply using huge amounts of
+explosives.
+
+Stasis (blueprint)
+------------------
+
+Cost:  40000 Cr
+Ore:   2 Korellium
+
+This  is  the  latest  warhead  from  Sci-Tek utilising their research into
+temporal  physics.   Upon  impact it will establish a temporal field around
+the  asteroid  latching  it  to  the Spacial Matrix (TM) of the surrounding
+space.   The  effect  is  to  freeze time itself or at least the local time
+inside  the stasis field.  Nothing will happen on the affected asteroid and
+no  spacecraft  or  missiles may arrive or leave.  The field will decay and
+die over a period of time.
+
+
+ZONE 015 : THE ENEMY
+--------------------
+
+KLL-KP-QUA
+
+Home world: Tau Ceti III
+
+Physical  Description:   At  first  glance  they  resemble a Terran Praying
+Mantis,  standing  just  under  1m  tall.   Their  face  however bears more
+resemblance  to  a bird than an insect.  They have two eyes, two ears and a
+single  mouth  positioned  where  we  would expect a nose to be.  It is not
+known whether they possess a sense of smell.  Atop their heads they wear an
+ornate   headpiece,  whose  complexity  and  colours  denote  theie  social
+standing.   At  all  times  they  dress  in  exquisite and colourful robes,
+usually adorned with large ruffs and gemstones.
+
+Habitat:  Their native habitat varies from hot and arid grassland to steamy
+jungles.   They  can  adapt  to  other  habitats  except  they  have little
+resistance to cold or ice.
+
+Technology:   They have adapted to space very well, building well-insulated
+structures  and large underground caverns, filled with native jungle fauna,
+their spaceships are basic and their technology generally barely adequate.
+
+Social  Structure:   They  exhibit  remarkable  similarities to Terran hive
+insects.   Each  asteroid  possesses a single Queen, responsible for laying
+and  hatching  all  eggs,  the  rest  of  the  population is split into two
+distinct and genetically different groups.  One remains on the asteroid and
+fulfils  a  support role building, maintenance, serving the Queen, etc, the
+others  operate  the  spacecraft  and  are  never  allowed to return to the
+asteroids.   They spend their entire life inside the spacecraft.  In normal
+circumstances  a  Queen  is born every 2 to 3 Terran Years.  Once the Queen
+reaches  maturity,  in a few short months, she commandeers a transport ship
+and goes in search of her own asteroid.  It is not known whether their is a
+hierarchy   amongst   the   Queens.    Each  asteroid  appears  to  operate
+independently,  but  there  is  regular  communication  between  Queens  on
+different asteroids.
+
+Power  Generation:  The primary means of power generation is the burning of
+their  own  corpses.   All  dead  are  carefully recovered and taken to the
+burners.  Secondary power generation is by means of solar panels
+
+Special  Weapons:  It is known that they possess a special type of warhead,
+but its effects are unknown.
+
+Military  Strategy:   Their  actions  appear  very predicable so expect few
+surprises.
+
+
+LAK`MAJ`TRAAL (ORE EATERS)
+
+Home  world:   Their  exact  home  world  is  not  known.   We beleive they
+originated  in  the  M53  galaxy  in Sagittarius, which they appear to have
+explored extensively.
+
+Physical  Description:   An adult male stands 1m high at the head and up to
+12m  long.   They are very large wormlike creatures covered in hard scales.
+Their  fangs  and horns have the strength to break up rocks.  Their diet is
+one  of rock.  They regurgitate a special chemical that can break down even
+the  hardest  ores,  which  they  then  eat  hungrily,  digesting them with
+extraordinarily strong stomach acids.  Their heat signature in Infra Red is
+enormous.   They  are  slow  moving which is why they rely on technology to
+assist them.
+
+Habitat:   They  seem  able to exist in any habitat but particularly in the
+vacuum  of  space.   Examining the M53 galaxy, we have discovered that huge
+areas  of  it  have  been destroyed.  planet literally eaten apart by great
+migrations  of these creatures.  Their appetite is enormous - an adult male
+will eat up to twelve times his own body weight in ores every day!
+
+They are a real threat to the Empire
+
+Technology:  Most of their structures are simple domes, protecting areas of
+an  asteroid  from solar radiation and meteorite bombardment while they eat
+into  the  heart  of the asteroid in search of food.  They possess powerful
+spacecraft  which have carried them to our galaxy from M53.  We know little
+of  their  technology since whenever they evacuate an asteroid they destroy
+all remnants of their structures and devices.
+
+Social  Structure:  We have been unable to determine their heirarchy, other
+than  the  obvious  dominance  that the adult males have due to their size.
+Procreation  is  via egg laying, but the population grows slowly due to the
+longevity  of  each  male.   It appears that duties are simply performed by
+whoever is in the right place at the right moment.  Their must be some form
+of overall control, even if it is only the signal which makes them suddenly
+board  the  transporters  and  head  for another asteroid which they do the
+minute they have drained it of ore.
+
+Power  Generation:  They use chemical reactions to break down useless rock,
+harnessing the power created.
+
+Special Weapons: No information
+
+Military Strategy:  They are vicious when disturbed.  We have observed that
+they  only  ever attack our mining colonies and never inhabited planets, as
+if  they  identify  that  our mining colonies are robbing them of food.  Be
+prepared for regular missile strikes.
+
+
+AX-ZILANTH`S
+
+Home  world:   Beta Hydrae IV, though they are extensive in the Capella and
+Arcturus  Sectors,  where  we  have  fought  skirmishes  with  them on many
+occasions.
+
+Physical Description:  The bulk of their 2m tall bodies are a hard carapace
+that  protects  their vital and sensory organs The lower part of their body
+consists  of  six extremely sensitive and flexible tentacles which they use
+both for movement (fast!) and manipulation of objects.  Their eyes see in a
+greater  spectrum  than  our  own,  allowing them access to Ultraviolet and
+Infrared light.
+
+Habitat:   Varies from sparse desert and rocky badlands to temperate forest
+and grassy plains.
+
+Technology:   Their technology has developed upon similar lines to our own.
+They  use smelting processes to produce steel and use silicon and germanium
+components in their electronic circuits.  Their spacecraft are certainly on
+a par with our own, if not superior and many possess cloaking devices.
+
+Social  Structure:   They operate on a strict hierarchy as does our Empire.
+Each  asteroid is divided into sections responsible for a particular aspect
+such as engineering, food supply spacecraft manufacture, etc.  Each section
+head  reports  to  an  asteroid council which determines overall policy for
+that  asteroid.  The chair being of each council participates in a regional
+council  that  comprises twenty or more asteroids and planets.  We conclude
+that a representative of these regional councils sits upon a higher council
+that governs their entire Empire.
+
+Power  Generation:   Standard  techniques  of Fission and Fusion as well as
+harnessing solar energy.
+
+Special Weapons:  No information.  We suspect that they have
+
+Military  Strategy:   Our skirmishes with them in other sectors have led us
+to  determine that they are never first to initiate an attack.  They parade
+a  threatening  arsenal  of  weapons and warships but always wait for us to
+take  the  initiative  before  retailaiting.   Try  to  use  this  to  your
+advantage.
+
+
+TYLARAN EMPIRE
+
+Home world: Deneb Mira III
+
+Physical  Description:   They  resemble  hideous  lizards, standing over 3m
+tall.  Though they have no balancing tail, the bulk of their body and their
+strong legs enables them to walk easily as a biped.  Their clawed hands are
+surprisingly  dextrous and capable of manipulating very fine objects.  They
+possess  large mouths with fangs, identifying them as carnivores, and their
+craniums support a brain larger than our own.
+
+Habitat:   Their  homeworlds are ice worlds, far from their primary sun and
+covered  with continual ice and blizzards.  They are at home in the cold of
+space!   We  believe  that their hide contains special insulating layers to
+protect them against temperatures up to -100 degrees below freezing.
+
+Technology:   Their  technology  varies greatly.  On the one hand they have
+only  recently developed spacecraft capable of crossing interstellar space,
+(though we have monitored their home world for over a century and know that
+their  weapons technology is spohisticated).  On the other hand we have yet
+to understand other aspects of their technology, such as power generation.
+
+Social  Structure:   They  seem  to  operate  on  the principle of Imperial
+supremacy,  where  each  region of space has a sub Emperor who has complete
+control over his region, but reports to the real Emperor on Deneb Mira III.
+They  are  very social creatures and work well with each other.  Discipline
+is strong and absolute and apparently welcomed.
+
+Power  Generation:   We  can  only suspect that they harness power directly
+from  the  Spacial  Matrix,  which  would  give  the  access to practically
+unlimited  power.   We  have  detected  new  kinds  of  radiation  from the
+buildings  that  we have called Flux Convertors and Power Collectors and we
+suspect that these play an important part in the process.
+ 
+Special  Weapons:   One of their structures emits a huge surge of energy at
+regular  intervals.   This  could  well  be  a weapon proceed with caution.
+Their asteroids also have a screen generator whose purpose is unclear.
+
+Military Strategy: Unknown.
+
+
+THE RIGELLIAN CONFEDERATION
+
+Home world: Rigel system
+
+Physical  Description:   We  were  very  surprised when we first identified
+their  species  over  a century ago.  They corresponded almost exactly with
+historical  depictions  of  vampires,  which makes it conceivable that they
+visited  Earth in the long distant past to provide a source for the classic
+legends.   They appear similar to a human but with bald domed heads, and of
+course  those legendary fangs.  Their eyes glow an eerie red, which we know
+to be the reflection of light off their retinas.  All their senses are well
+developed.
+
+Habitat: Unknown
+
+Technology:   Their  technology is sophisticated, though not in the area of
+power  generation.   Their devices appear to require vast amounts of power,
+and  several of our scout ships have been mysteriously drained of all power
+after  entering  Rigellian  Space.  They are also extremely advanced in the
+areas of Warp technology.
+
+Social  Structure:   From the few communications we have made with them, we
+know  them  to  be  an extremely ancient race.  It is likely that they were
+developing   technology   when  dinosaurs  walked  the  Earth.   They  name
+themselves a Confederation, which suggests that they operate as a series of
+individual  states  or  worlds  that  are  independently  governed but have
+allegiance and common laws with each other under the authority of a federal
+government.   They are highly developed socially, but steadfastly refuse to
+open negotiations with us for the trade of materials or information.
+
+Power  Generation:   Primitive  methods of burning fossil fuels.  They only
+recently  aquired  the  secrets  of  atomic  power,  stolen from one of our
+research vessels.
+
+Special  Weapons:   They  have  the  abilility  to  drain  power  from  our
+batteries.  Otherwise, we expect few surprises.
+
+Military  Strategy:   We  would  best describe their strategies as muddled.
+They  are  very trigger-happy with missiles.  We also know that their ships
+carry advanced warp engines.
+
+
+SWIXARANS
+
+Home  world:   They  originate from the densely grouped star systems at the
+heart  of  our galaxy.  We have detected their presence in over thirty star
+systems.
+
+Physical Description:  The Swixarans are one of those rare cases when plant
+life  has  developed intelligence and the ability to develop technology.  A
+typical  Swixaran  is between 1m and 4m high and composed of a mass of soft
+and  pliable  shoots  and  creepers.   Constantly moving.  Their exact form
+varies with their surroundings - if they enter corridors they flatten their
+body  and use many of their creepers to probe the way ahead.  We are unsure
+of  their sensory organs but it is likely they possess very sensitive touch
+sensors  in their extremities and maybe motion detectors as well.  There is
+a  small  part of their body which we suspect houses their vital organs and
+brain, but it is always well protected by the creepers.
+
+Habitat:   Unknown,  but  we  suspect  either  dense  jungle worlds or huge
+forests.
+
+Technology:  Almost incomparable to our own, since much of their technology
+is  based  on biological proteins and DNA encoded, self replicating tissue.
+They are very advanced in areas of shield generation and cloaking devices.
+
+Social  Structure:  Difficult to determine.  We suspect that they possess a
+group intelligence and there is evidence to support the theory that a great
+deal  of  this  intelligence  is  located  in a particular location on each
+asteroid.  Their aims seem only to be expansion and colonisation.
+
+Power  Generation:   We do not understand their method of power generation.
+It  is  certainly biologically based and undoubtedly bears more resemblance
+to  blood  sugar  levels  in  their  organic  structures,  rather  than the
+harnessing of nuclear power.
+
+Special  Weapons:   Our  spies  report several closely guarded weapons, the
+details of which are unavailable at this time.  Be prepared for anything!
+
+Military  Strategy:   They  seem to react to our own strategies and attacks
+rather  than  initiating  their  own  they  are  especially  susceptible to
+fire-based  weaponry,  but  otherwise  their structures are well protected.
+There  does  seem  to  be  a  pattern  to their attacks, but we have yet to
+understand it.
+
+
+ANY PROBLEMS ?
+
+If  you  have prohlems loading K240, then return it to your retailer, or to
+Gremlin  Graphics  at  the  address  on  the  packaging.   If  you have any
+questions relating to the game, then Gremlin Graphics Helpline is available
+between  the  hours of 09:30 and 17:30 U.K.  time Monday to Friday, on 0742
+753423
+
+COPYRIGHT
+
+Copyright  1994  Gremlin  Graphics  Software Limited.  All Rights Reserved.
+This  manual  and the information contained on the disks are copyrighted by
+Gremlin  Graphics  Limited.   The  owner of this product is entitled to use
+this  product  for  his  or her own personal use only.  No one may transfer
+give or sell any part of the manual or the information on the disks without
+the  prior  permission of Gremlin Graphics Software Limited.  Any person or
+persons  reproducing any part of the program, in any media, for any reason,
+shall  be  guilty  of copyright violation and subject to civil liability at
+the discretion of the copyright holder.
+
+
+------------------------------------END------------------------------------
+
+
+                  * ********************** 
+                  *                       *
+                  *  TYPED F/\STER        *
+                  *      BY               *
+                  *      SHARD NUT & BOLT *
+                  *                       *
+                   ***********************
+
+
+
+                   /\_  ____________ ______/\___________/\___
+                  /  \/  |\  __  / \____  /  \   |\  __  /
+                 /  |  \  |  \/ \/ & |  _  \ |  \  Ž_\/ \/
+                 \__€__Œ_____/\__/    Ž_____Œ____Œ____/\__/
+                +-------------------------------------------+
+                         sHARD pROdUCTiONS 1994
+                       ·------------------------·
+ 

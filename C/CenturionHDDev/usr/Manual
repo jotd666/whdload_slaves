@@ -1,0 +1,731 @@
+                        CENTURION DEFENDER OF ROME
+
+Typed by SWAYZAR of CRYSTAL.  Edited by PARASITE.
+NOTE: This is the 100% Amiga manual, not the PC version!
+
+
+The year is 275 B.C. Through conquest and careful diplomacy, the Roman
+republic has brought the petty kingdoms and city-states of Italia under its
+control.  This is the moment at which the heirs of Romulus and Remus step
+onto the world stage.  This is the humble beginning of an empire that will
+one day cover most of Europe, Asia Minor, and North Africa.
+
+As an ambitious young officer, you duty is to defend Rome. Your hope is to
+become Caesar.  Your fate - to rule the world.
+
+USING THIS MANUAL
+Because key commands and controlling devices vary with computer models, this
+manual was written as a general guide to Centurion.  In it you'll find a
+game overview, descriptions of the features, and historical notes.  For
+loading instructions, keyboard commands, and other information specific to
+your computer, see the COmmand Summary Card included in the package.
+
+In this manual, 'select' means moving the arrow cursor to an item and
+activating it by pressing an action button.  See selecting items on the
+Command Summary Card for the action button on your computer.
+
+WHAT'S IN CENTURION
+
+Italia - The Beginning of an Empire:
+When the game begins you only control the province of Italia.  The
+legionnaire standing in Italia marks the single legion you command.  To go
+to Rome, you must enter the province of Italia.  See Entering Provinces on
+the Command Summary Card.
+
+Rome Sweet Rome:  You start at the rank of Officer.  At this rank, you can't
+raise more legions or build fleets.  And there's little you can do with the
+Twenty talents in the treasury.  The good news is that you can raise your
+rank and increase your wealth by adding - and holding onto - provinces. See
+Ruling Roman Provinces for details.
+
+Form Alliances: Winning Allies with the tongue is less constly than
+subduing them with the sword.  When you first move your legion into a
+province, you can try to negotiate alliances with your neighbors.  See
+Negotiating Alliances for details on diplomacy and alliances.
+
+Civilize through Conquest:  If the barbarians ignore your diplomats, they
+may listen to the legion you brought with you.  When you go to war, you
+choose a formation and a tactic, and then start the fight.  During the
+battle, you can stop the action and direct individual units or cohorts.  See
+legeion specifications and land battle for details on legions, formations,
+and tactics.
+
+Fight Marauding Scum:  Rome has no lack of enemies.  Barbarian tribes from
+the north invade Italia looking for easy plunder. From the south, cities
+like Carthago send out organized armies in hope of stemming Rome's rise to
+power.  As a soldier, you're obligated to protect ROme and her allies from
+foreign attack.  See Marauding Armies.
+
+Smash Enemy Fleets:  Once you're high enough rank and you have enough moneym
+you can build fleets to move legions overseas and fight foreign navies. See
+Sea Battles.
+
+Race the famous Circus Maximus:  With enough talents you can participate in
+chariot races in Rome.  Winning can earn you more talents and improve your
+reputation.  Watch out for agressive opponents and hairpin turns.  See
+Chariot Races.
+
+Spill Blood in teh Colosseum:  As a juvenal put it, the masses earn for 2
+things - 'bread and circuses.'  Without a doubt, the masses are happier when
+they're entertained, and the blood that flows during gladitorial events is
+guranteed to increase your popularity.  See Gladitorial Shows.
+
+QUICKSTART TO CENTURION
+Your goal in Centurion is to rule the world and keep the people happy.
+While there is no single way to conquer the world, you may want to start by
+occupying the Alpes.
+1. Select Italia I.
+2. Select Ultimatum. If they won't negotiate further, select Go To War.
+3. Select Balanced Army.
+4. Select Frontal Assault. The battle begins immediately, so you should
+   pause the battle in order to get your bearings - See Directing Individual
+   Units on the Command Summary Card.
+5. Direct Individual Units. With the game paused, you can give orders to
+   your units. Go ahead and experiment.  Try to use some of the tactics
+   described under Scipio's Battle Notes.
+6. Once the battle ends, select next turn from the Map.  A year will pass
+   and you can strengthen your legion, move it into another province, or
+   hold a chariot race. Every year check to see if you have gone up in rank
+   - the higher your rank, the more legions you can have.  And watch out for
+   marauding armies!
+
+MAP
+The Game Turn: The game progresses in single year increments or turns.  The
+turn limits the actions you can take in a year.  For example, you can move
+or strenghten an individual legion only once per turn.  Fleets can be moved
+only once per turn, too.  To go to the next turn, select End Turn from the
+Map.
+
+Game Control Menu: From the game control menu you can load or save games,
+start new games, adjust the difficulty level, or quit to DOS.  Select an
+option from the menu:
+
+Save Game - Save you current progress in the game.  You can save up to nine
+games.  Select the number you want to designate as your current game.  Note:
+You can't delete saved games, but you can save a game over an old one.
+
+Load Game - Load a previously saved game. Select the game you want to
+continue (1-9).
+
+New Game - Begin a New Game
+
+About Centurion - Game Credits
+
+Difficulty Levels - Adjust the difficulty level of your current game.
+Difficulty levels range from Galley Slave (EASY) to Emperor (HARD).  You can
+select fine tuning to raise or lower the difficulty level of a particular
+feature - Land Battle, Racing Chariots, Gladitorial COmbat, and Naval
+battle.
+
+Quit to Dos - Quit your current game.  Be sure to save your current game
+before quitting, if you want to continue it later.
+
+Continue Playing - Return to the game.
+
+RANK
+You begin at the rank of officer.  As you climb in rank, you can command
+more legions and the senate grants you new powers.
+
+RANK            LEGIONS        FLEETS           NEW POWERS
+Officer         1              0                  -
+Centurion       2              0                  -
+Tribune         3              1        Command Cavalry, Legions, FLeets
+Legatus         4              1                  -
+General         6              2                  -
+Praetor         8              2                  -
+Consul          10             3        Command Consular Armies
+Proconsul       12             3                  -
+Caesar          12             3                  -
+
+Increasing Rank:  In Rome, your reputation determines your success.  Your
+rank in the military depends on deeds and acts that distinguish you from the
+rest of the Roman nobility.  As your social status increases, you'll recieve
+promotions.  Doing any of the following increases your social Status:
+
+Adding Provinces - Adding provinces (through conquest or negotiation)
+increases your status.  Adding provinces that are rich in rescources -
+Aegyptus, Carthago, Macedonia, Parthia, or Gaul - brings more honors than
+adding poorer provinces.
+
+Strengthening Treaties - Your reputation as a trustworthy administrator also
+affects your status.  Every time an alliance is strengthened your reputation
+improves.
+
+Winning Chariot Races - Backing the Right Horse makes you look good.  When
+your team wins a race, you win the people's admiration.
+
+Building an Amphitheater - All levels of Roman society benefit from an
+amphitheater.  This is a good way to win popular support.
+
+Holding Gladiator Events - Lavish spectacles can increase your popularity,
+but only when you fairly judge who should live and who should die.
+
+Maintaining Rome's Honor - It's your duty to uphold Rome's reputation as a
+strong power, reliable ally, and fair administrator.  Rome's honor is
+tarnished whenever the people revolt.  Plundering a province also tarnishes
+the honor of the empire.
+
+Losing Social Status: Your reputation suffers whenever you lose a battle,
+fail at a game, weaken an alliance, or fail to protect an ally from foreign
+attack.  But though your social status can weaken, you can never be demoted
+to a lower rank.
+
+Becoming Caesar:  Conquering all the provinces in the world is not enough to
+acheive the ultimate rank as Casear - after all, Roman emperors were
+worshipped as gods.  To become Caesar you must also win the respect and love
+of the people by sponsering games and races, strengthening alliances, and
+maintaning Rome's Honor.
+
+RULING ROMAN PROVINCES
+Once your in a Roman Province, you can direct legions in the area, set the
+tribute the province pays, build fleets, and hold games.  If you're
+desperate for money and you dont care about your reputation you can plunder
+your provinces too.
+
+Morale:  In Roman Provinces, the morale of the inhabitants depends on how
+much you demand from them - both in tributes and in manpower.  The more
+tributes and soldiers you take from the province, the less content people
+will be to roman rule.  Of course, provinces that enjoy a good alliance with
+Rome are more willing to give up talents and manpower - for example, your
+demands will have a smaller effect on the morale of allies.  The honor of
+Rome also affects the morale of every province.  If Rome's honor is
+tarnished because you let your army plunder every province it occupies, the
+morale of all of your subjects could plummet.  The morale of the people can
+be Rebellious, Angry, Restless, or Content.  A rebellious morale may be the
+sign that a province will soon revolt.
+
+Alliances:  The Romans used a sort of graded system of punishment and reward
+to rule the provinces of their empire.  Roman citizenship, which measured a
+people's rights under Roman law, was the greatest reward.  It was a highly
+coveted status and was granted only to deserving allies.  In Centurion, an
+alliance is formed whenever you add a province to the empire.  There are
+four kinds of alliances: Occupied, Colony, Ally, and Citizens.  An alliance
+automatically improves over time providing the people's morale remains good.
+
+Manpower:  Each province generates men that are obligated under Roman law to
+serve in the army.  The manpower of a province is the current number of
+recruitable men in the area.  The rate at wich manpower increases depends on
+the population of the province.
+
+Courage:  The courage shown on a province screen is the general courage of
+the soldiers in the area.  Soldiers in a province can have Fierce, Good,
+Weak, or Panicky courage.  See Legion Specifications for details on the
+effects of people's courage.
+
+THE MENUS
+Legions:  Select legions to get the following options.
+
+Raise Legion - Form a new Legion.  Select raise legion, then select the type
+of legion you want to form.  You cannot raise a legion without the necessary
+number of talents.  The number of soldiers you recruit depends on the
+manpower available to you in the province.  In addition, there are minimum
+ranks at wich you can raise cavalry legions and consular armies (see Rank
+for details).
+
+Strengthen Legion - Recruit soldiers to strengthen a legion.  If there is
+moe than one legion in a province, you must select wich legion you want to
+strengthen.  Strengthening a legion requires talents.  The cost is
+proportionate to raising a legion.  For example lets say 20% of your
+infantry legion (840 soldiers) was lost in battle.  To strengthen the legion
+back to its maximum, you'd pay 20% of the cost of raising an entirely new
+legion (.2 x 20 talents = 4 talents).  However, the number of soldiers you
+actually recruit may be limited by the manpower of the province.
+
+Move Legion - Move a legion.  If there is more than one legion in a
+province, you must select wich legion you want to move.  When the map
+appears, select the province or fleet you want the legion to move into.
+
+Upgrade Legion - Upgrade an infantry legion to a cavaltry legion, or a
+cavalry legion to a consular army.  See Legion Specifications for details on
+different kinds of legions.
+
+Legion List - List all the legions in the empire and their current status
+and locations.
+
+Continue - Return to the main menu.
+
+Plunder:  To plunder a province of all its wealth, select Plunder.  When the
+box appears select Yes to confirm your order or select No if you changed
+your mind.  A Roman legion must be in the province you want to plunder.
+While plundering is a good way to fill up your coffers, the people you just
+robbed dont appreciate it.  And once other countries witness Roman
+Exploitation, they may be less willing to roll the welcome MATT when your
+diplomats come knocking.  You can only plunder a province once.  Note: You
+can not plunder Italia.
+
+Tribute:  Each province must pay a tribute for the order and protection Rome
+graciously provides.  Select Tribute, then select the level of taxation.
+See tributes and tribute policy for details on exacting tributes.  If you
+don't want to change the tribute level, select continue to return to the
+main menu.
+
+Hold Games:  Select Hold Games, then select with games you want to hold.  in
+the provinces you can pay for games to keep the locals happy; in Rome you
+can actually participate in chariot racing and gladiator shows.  If you
+don't want to hold a game select continue to return to the main menu. (See
+chariot racing and gladiator shows)
+
+Build Fleet:  You can build a fleet in any province with access to a sea.
+If a province is not on the sea this option will appear red and cannot be
+selected.  Select build fleet and select the kind of ship you want to build
+(see Ships for details about different ships).  When the box appears select
+the amount of ships you would like to build.  You must be at least a Tribune
+to build a fleet.
+
+Tribute Policy: Select Tribute Policy to set a standard tribute level for
+all the provinces in the empire.  This option is only available in Italia.
+See tributes and trubute policy for details on exacting tributes.
+
+See Province List: Select See Province List to see the current status of
+each province - the last tax paid, the morale of the people, the type of
+alliance you have, and the manpower available for recruitment.
+
+Continue:  Return to Map
+
+NEGOTIATING ALLIANCES
+In real Roman fashion, you begin serious negotiations with a foreign country
+by marching a legion over their border.  After receiving a scout's report on
+the wealth and defenses on the land, you meet with the province's leader.
+To respond to the leader, select a statement.  There are six kinds of
+statements you can select: Friendly, Diplomatic, Offer Alliance,
+Aggressive, Ultimatum,  Go To War.  Only 3 responses are available at any
+time - which three depends on the direction the talks are going.
+
+The statements you choose affect your success at negotiating, but other
+factors come into play as well.  Your rank determines how serious a leader
+you takes you, and some leaders may refuse to deal with you if your rank is
+to low.  The size of your legion can also affect a leader's judgement (big
+legions make big impressions).  Finally, the honor of Rome can also affect a
+leader's willingness to negotiate - talks may break down early if Rome is
+known as a poor ally or bad master.
+
+TRIBUTES AND TRIBUTE POLICY
+You set the level of tribute paid by each province. You can set a different
+tribute level for each province, or you can insititute a tribute policy that
+sets a standard tribute policy for the whole empire.  A tribute policy can
+be instituted only from Rome.  The exact number of talents you receive from
+a province depends on three things:
+
+Tribute Level - The more you demand, the more the province will have to
+cough up; however, the more you squeeze out of them, the less content they
+will be with Roman rule.  If your tribute level places to much of a strain
+on the local economy, the province may revolt.  Always monitor the morale of
+your provinces to see how close they are to rebellion.
+
+Wealth - Some provinces are wealthier than others and you can pay more.
+(This information is provided by your scouts when you first enter a
+province)
+
+Alliance - Rome's relationship with a province affects the number of talents
+paid each year.  The better the alliance, the more cooperative the
+inhabitants will be in paying their tributes.
+
+REVOLTS
+A rebellion can occur when Rome fails to protect a province, or when the
+general morale sinks so low that the people percieve Rome more as a burden
+than a boon.  If a marauding army invades an unprotected province, the
+anti-Roman faction in the province automatically takes control.  Even if you
+try to protect the province and fail, the province will revolt.  The only
+way to win back a rebellious province is to re-conqueror it.
+
+MARAUDING ARMIES
+Occasionally marauding armies set out to raid foreign lands.  Some wander,
+searching for weak provinces to invade; others set out with the sole purpose
+of sacking Rome.  If you have a fleet you can intercept marauding armies
+travelling by boat.
+
+RANDOM EVENTS
+Sometimes things just happen that are beyond your control.  Your luck can be
+good or bad, and there's nothing you can do when fortune smiles or frowns on
+you but accept the consequences. Oh well!
+
+LEGION SPECIFICATIONS
+You can command three types of armies: infantry legions, cavalry legions,
+and consular armies. Your rank determines wich kind of legions you can have,
+Legions cannot be combined
+
+TYPE               MAXIMUM INFANTRY          MAXIMUM CAVALRY
+Infantry Legion    4200                      -
+Cavalry Legion     4200                      300
+Consular Army      6000                      600
+
+Difficulty Levels:  The difficulty level set under the Game Options menu
+affects how the soldiers are divided into Cohorts.  At the lowest difficulty
+level there are more soldiers per cohort.  While this gives you fewer
+cohorts on the field, it actually works to your advantage - the more
+soldiers you have per unit, the less likely they are to panic under attack.
+Higher difficulty levels give you cohorts that are less resistant to direct
+assaults, which places a greater emphasis on wise tactical use of your
+units.  The following table shows you the maximum number of soldiers per
+unit at each difficulty level:
+
+DIFFICULTY LEVEL             INFANTRY COHORTS           CAVALRY COHORTS
+Galley Slave                 500/cohort                 150/cohort
+Legionnaire                  400/cohort                 150/cohort
+Senator                      350/cohort                 150/cohort
+Emperor                      350/cohort                 150/cohort
+
+* At all difficulty levels, consular armies have 500 soldiers/cohort
+
+The difficulty level also affects your enemies' courage - the harder the
+difficulty level, the more courageous your enemies will be.
+
+Courage:  A legion's courage is the general morale and bravery of the
+soldiers.  Courage is measured as Fierce, Good, Weak, or Panicky, but it
+should be thought as a continum, for example one fierce legion may be more
+fierce than another.  A legion's courage depends on which province the
+soldiers were drawn from. Strengthening a legion could raise or lower its
+courage.  If you add weak soldiers to the legion with good courage, you'll
+lower the legion's courage.  If you add enough weak soldiers its overall
+courage may drop to weak.
+
+Satus: A legion's status can be one of the following:
+
+Forming - the legion is still forming - you just raised or strengthened it.
+A forming legion can act on the next turn.
+
+Ready - The legion can still be strengthened or moved this turn.  Note:
+Upgrading a legion doesn't affect its ready status.
+
+Moved - The legion has been moved to a neighboring province.  It can't act
+until the next turn.
+
+COHORTS
+
+Infantry Cohorts        Elephant Cohorts       Cavalry Cohorts
+Speed: Slow             Speed: Good            Speed: Fast
+Size: 1-500 soldiers    Size: 20 elephants     Size: 1-150
+
+GENERALS
+The general directs and motivates his army.  Each general has leadership
+qualities that effect his ability to command: voice, charisma, and sphere of
+influence.  To see a general's leadership qualities, select his unit.
+
+Voice - The range of the general's control over his cohorts.  Voice is the
+numerical equivalent of the general's sphere of influence.  It can range
+from 8 (low) to 18 (high).
+
+Charisma - As a leader, the general inspires his troops and increases their
+courage.  Unit's within the general's sphere of influence won't panic as
+easily as units outside his direct control.  If a general falls in a battle,
+many troops may flee the field - a disaster for any army.
+
+Sphere of Influenc - The general can only direct units within his sphere of
+influence.  Troops outside his sphere of influence act only on the tactics
+chosen before the battle, or on any Melee or Retreat command.
+
+LAND BATTLE
+When you fight soldiers on a province you are actually reducing the manpower
+of that province.  You may want to kill as few enemy soldiers as possible so
+that once you add the province to your empire there will be more soldiers to
+recruit.  On the other hand if you're worried about a rebellion in the
+province, you may want to kill as many soldiers as possible to decrease the
+number of soldiers the rebels can field.
+
+Choose a formation and Tactic:  Once you've chosen to go to war you must
+meet the enemy on the field.  At the prompts, select a formation and tactic
+for your legion.  These are the preliminary orders for your cohorts.  once
+you've chosen a tactic, the battle begins.
+
+Pausing the battle:  You can pause the battle in order to direct individual
+units or review the courage status of any unit on the field.
+
+Checking unit status:  Once the battle is paused you can check the unit
+status.  To check a unit's status select a unit.  The unit status box
+appears, giving you critical information about the unit's current strength
+and courage.  You can check the status of an enemy unit by moving the cursor
+to the unit and holding down the action button.
+
+Reviewing Orders:  If you want to review the current orders for the whole
+army, pause the battle and select Select Roman Unit.
+
+Melee:  To order a unit to move and attack the nearest enemy, select a unit
+then select Melee.  If you want ALL units to Melee select Melee without
+specifying any particular unit. This 'releases the Roman Legion' every unit
+will move to the nearest enemy and cut their balls off.
+Note: When you 'release a legion' the army will proceed to slaughter with
+reckless abandon.  Melee doesn't produce a very systematic defeat of the
+enemy and can very well lead to your defeat if intiated to early.  On the
+other hand, Melee is a handy way to get units outside your general's sphere
+of influence to move and attack.  You can give ne orders to a unit in Melee,
+but once it receives these orders it is no longer in Melee Mode.
+
+Retreat:  To order a unit to retreat, select the unit and then select
+retreat.  A unit will continure retreating untill it is off the field or
+untill you give it new orders.  If you want ALL units to retreat, select
+retreat without specifying any particular unit.
+Note: If you are protecting a Roman Province from a marauding army and you
+order your entire army to retreat, the people of the region will rise up and
+annihilate your army.
+
+Battle Outcome:  When one of the armies is routed or destroyed, the battle
+ends and the battle outcome screen appears.  Generals are not counted among
+the survivors or casualties.
+
+SCIPIO'S BATTLE NOTES
+Flanking:  A cohort marches with shields and swords forward, making its
+falnks and rear vulnerable to attack.  Flanking is attacking a unit at one
+of these vulnerable points.  Whenever possible, you want to move your
+units into positions to flank enemy units.
+
+Doubling Up: When 2 cohorts are attacking, their combined strength is thrown
+at the enemy.  "Double Up" on enemy units whenever possible.
+
+Routing:  From a purely tactical standpoint, routing an enemy unit (making
+it flee the battle field) is just as good as destroying it; after all a
+panicked enemy unit poses no threat to you.  Once you rout an enemy unit you
+may want to turn your attacking cohorts on another enemy unit.
+
+Defence Vs. Offense:  Defense is easier than offense.  Units that are set
+have an advantage over units that are moving - the defending unit can
+inflict damage just before an approaching unit closes in.  If there isnt a
+tactical advantage in moving your unit to meet the enemy, let it stand where
+it is.
+
+Cavalry:  Because of their speed and power, cavalry cohorts are the most
+effective on the field.  A flank attack from a cavalry unit is deadly.
+
+Elephants:  The Romans discovered that the sheer size and strangeness of
+elephants were enough to set ranks of men and horses in disorder.  Troops
+are more likely to panic the first time they face elephants.  Once a legion
+has soldiers who are veterans of battles with elephants, their courage when
+facing these beasts goes up.  Elephants are will armoured towards the front
+but can be effectively attacked from the flanks or rear.  A panicked
+Elephant will behave erratically, often turning on its own troops in its
+attmept to flee.
+
+Generals:  A cohort's courage may drop when its general falls in battle.  if
+the cohort's courage drops to panicked, the cohort will flee the field.  To
+keep your army's courage up, don't let your general move into a position
+where the enemy can attack him.  At the same time take advantage of any
+oppurtunity to destroy the enemy's general.
+
+SHIPS
+The Romans armed their ships with catapults and ballistae or large arrow
+launchers.  In addition, each ship had a large ram fixed to the prow of the
+ship wich could be used to punch a hole in the enemy's hull.  The Romans
+also devised special spiked bridges wich they used to board enemy ships.  In
+Centurion there are 3 types of ships that vary in speed, size, and
+durability.
+
+Triremes               Quinquereme           Galleon
+Speed: Fast            Speed: Good           Speed: Slow
+Durability: Weak       Durability: Good      Durability: Strong
+Size: 50 soldiers      Size: 100 Soldiers    Size: 200 Soldiers
+
+Roman ships were operates by experienced saliors, but most of the fighting
+was done by legionnaires.  When you build a fleet, your ships are manned by
+a skeleton crew of sailors.  You need to place soldiers on your ships in
+order to make your fleet an effective weapon.  To man your ships, move a
+legion or amry onto the fleet (See Moving legions from the map on the
+command summary card).  Your ships can carry cavalry units as well.  Cavalry
+units take up more room onboard - one Cavalry unit requires the room of 4
+foot soldiers.  Though the size of your fleet is important, the kinds of
+ships you have is critical.  For example a fleet made up of sturdy galleons
+will naturally have an advantage over an equal number of triremes.
+
+THE FLAGSHIP
+If you have more than one typ eof ship in your fleet you must select a
+flagship before a battle begins.  Each type of ship has its advantages and
+disadvantages when acting as your flagship.  For example the triremes is
+fast but not very sturdy - a few rammings and your sunk.  A galleon on the
+other hand can take alot of punishment but may hav esome trouble moving into
+a position to attack the enemy.  The size of the ship is also a
+consideration, the more soldiers you have when you board a ship, the easier
+it is to slaughter the enemies crew.  If no legion is aboard your fleet,
+your flagship will be manned by a skeleton crew of one-half the maximum ship
+capacity; with a legion, your flagship will have the maximum # of soldiers
+it can carry.
+
+SEA BATTLE
+When you fight a sea battle, you actually only control your flag ship.  As
+you fight the enemies flagship your fleet's morale rises or falls with your
+progress.  There are 2 things to watch in a sea battle - your progress
+against the enemy flagship and how well your fleet is fighting.
+See Naval Battle on the Command Summary Card for details on controlling your
+flagship.
+
+Catapults and Arrows:  The catapult only fires in a straight line from the
+bow of the ship.  See Naval battle on the Command summary card for info on
+firing your catapult.  The soldiers on board your ship automatically launch
+arrows whenever your ship comes in range of an enemy.  If all men on your
+ship die, arrows will no longer be launched - the catapult crew however will
+continue to fire when ordered to.
+
+Ramming:  To ram, simply steer the ram on the prow of the ship into the
+enemy's ship.  The heavier your ship and the faster you're going the more
+damage you will inflict.
+
+Boarding:  See Naval Battle on the Command Summary Card for details on
+lowering your boarding ramp.  You can lower the boarding ramp any time
+during combat.  If the ramp makes contact with the enemy flagship your
+troops automatically board and hand to hand combat ensues.  If the ramp
+doesn't make contact, it will automatically be rasied.
+
+Fleeing:  See Naval Battle on the Command Summary Card for more details on
+fleeing the battle.
+
+CHARIOT RACES
+The Romans were great horse-racing enthusiasts, and virtually any festivity
+was a reason to hold races.  Races were run between professional companies
+or faciones, each with their own stables, horses, and full time charioteers.
+ Every company had a color - red, white, blue, or green - and its own group
+of devoted fans.  Charioteers were accorded as much fame as modern
+atheletes, and their pay was comparable, too - a skilled charioteer could
+retire at an early age with a huge fortune.  But while racing was an
+excellent oppurtunity for a man of lowly birth to gain social status, it was
+a hazardous profession - most charioteers suffered early deaths on the
+track.
+
+Select a Chariot:  You control the white team's chariot.  The first thing
+you have to do is decide whether you want to race a light, mdeium, or heavy
+chariot.  When selecting a chariot there are several things to consider.
+
+Speed - Light chariots are faster than heavier chariots.
+
+Durability - Running into opponents is a real danger.  Heavy chariots can
+take alot of damage.
+
+Cost - The lighter the chariot, the cheaper.
+
+Betting Odds - The odds against you winning are higher if you're racing a
+medium or heavy chariot. See Bet Below.
+
+Racing Styles:  Be sure to note the racing style of your opponents.
+Aggressive opponents will race fast but are more likely to make mistakes
+than steady or cautious opponents.
+
+Prepare for the Race:  You can prepare for the race by getting money.  If
+you don't think your chances of winning are goo dyou cna cheat.
+
+Skulduggery - Select an option to bribe an opponent, hire a physician, or
+invoke the help of the gods. Select Done.
+
+Bet - Select an option to increase or decrease the amount of your bet.  The
+maximum bet is 100 talents.  Select done to place your bet.  The betting
+odds are always a minumum of 1-1.  Medium and heavy chariots are more
+difficult to master, so the odds are increased - 2-1 if you're racing with a
+medium chariot, 3-1 if your racing with a heavy chariot.
+Note:  Every time you win, the odds go down - for example, if you're racing
+a heavy chariot and you win, you'll only get 2-1 odds next time you compete
+with a heavy chariot.  The odds can never be less than 1-1.  Every time you
+lose badly the odds go up one. The Odds cannot exceed 5-1.
+
+On the Track:  See Racing Chariots on the Command summary card for detail on
+controlling your chariot.  You must circle the track 3 times to complete the
+race.  Whenever you finish a lap, one of the fish on the lap counter flips
+up.  The finish line appears when one chariot finishes 2 circles around the
+track.  To win the race you must cross the finish line before the other
+chariots.
+
+Watch out for turns:  It's difficult to make a sharp turn while going at a
+high speed.  The Red Speed Limit Line marks the maximum speed you can be
+going when you enter the turn.  If you're going to fast your chariot will
+break apart.  The closer you are to the outside track the higher the speed
+limit and the faster you can take the turn.  Note, however, the inside of
+the turn is shorter - even though you cant go fast on the inside, you may
+get around the bend quicker than chariots on the outside.  Just as you want
+to stay under the speed limit while turning, avoid whipping your horses in
+the turns - the accerlation causes your chariot to break apart.
+
+GLADIATOR SHOWS
+Games were held to celebrate everything from an emperor's birthday to a
+foreign conquest.  Ambitious politicians often stage lavish spectacles to
+curry the public's favor and keep the peasants from worrying about more
+radical issues like land reform.  Though gladitorial games started on a
+snmall scale, they grew over time.  Competitions that could be once staged
+in a single day became month long marathons in which thousands perished.
+One such spectale - celebrating Trajan's campaigns in Dacia - laster 117
+days and involved 10,000 gladiators and 11,000 wild animals.
+
+Select Gladiators:  Select the gladitor you want to control and then select
+how much you want to pay for training.  Now select the galdiator you want to
+compete against and his level of training. Once you've chosen you combatants
+the fight begins. See Gladiator Show on the COmmand Summary Card for details
+on controlling your gladiator.
+
+In the Arena:  As you fight, the crowd's pleasure will rise and fall with
+the blood, gore, and action in the arena.  The more wild swinging and good
+blocks, the more the crowd likes it.  The Spectators don't like to feel
+cheated, so drag out the carngae as long as you can but avoid mooments where
+there is no action.  When a gladiator falls, you get to judge whether he
+lives or dies.  Select Thumbs Up if the gladiator gave the people a decent
+fight; select thumbs down if the worthless dog dropped to quickly.  If the
+crowd agreed with your ruling your pleasure bar will rise, if they did not
+your pleasure bar will fall.
+
+THE COMMAND SUMMARY CARD FOR AMIGA COMPUTERS
+
+TO SAVE A GAME:
+1. Press ESC or select the year icon in the upper right hand corner to bring
+   up the Game Options menu.
+
+2. Select Save Game
+
+3. Select the disk you want save the game on
+   One Drive users: Remove disk 1 and replace with disk 2 and click on the
+   Df0: box
+
+4. Select a # 1-9 for the game you're currently saving.  Type a name and
+   press return
+
+You control the game by selecting items such as menu options, provincesm or
+units on the battlefield.  Use the mouse to point at an item and press the
+mouse button to select the item. On the map screen the right mouse button
+selects legions and the left mouse button selects fleets.
+
+Special Key commands:   E = End Turn              F = Complete Fleet List
+                        L = Complete Legion List  P = Complete Provine List
+                        Q = Quit                ESC = Game Control Menu
+                        M = Music On/Off          R = Retreat (in the Water)
+
+You can enter provinces only from the map, Provinces belonging to your
+empire are outlined in Blue.  Move the cursor to a legion and press the
+right mouse button.  The ghost legion icons indicate the provinces you can
+move into and the fleets you can board.  Point to where you want to go and
+press a mouse button. Note: Disembarking a Legion from a fleet is no
+different than moving it on land.  Point the cursor at the legion icon on
+the fleet and press the right mouse button.  Point to the province you want
+to move and press a mouse button.
+
+Moving Fleets: Move the cursor to a fleet and press the left mouse button.
+The ghost fleet icons indicate the bodies of water you can move into.  Point
+to where you want to fo and press a mouse button.
+
+Directing Individual units: To give orders to units on the battle field you
+must first pause the battle.  Click a mouse button or press a key to pause
+the battle.  Now you can direct any troops within your general's sphere of
+influence.  To select a unit click on it and hold the button while dragging
+the mouse in the direction you want the unit to move.  Once you've
+determined the direction and distance, release the mouse button.
+
+Naval Battle:  Once you've selected a flagship the splash screen appears.
+Click a mouse button to begin the battle.  You can fight naval battles using
+the keybad or joystick.
+
+Keypad:                         7   8   9
+                                4   5   6
+                                1   2   3
+
+8 = speed up, 4 = turn left, 6 = turn right, 2 = slow down
+space bar = fire catapult, ENTER = Lower boarding ramp.
+
+The joystick button both fires your catapult at long range and lowers the
+boarding ramp at close range.
+
+To flee from the battle, move your flagship towards any edge of the screen.
+You will be asked whether you want to retreat or re-engage in battle.
+Or simply press R if you are sure you want to retreat.
+
+CHARIOT RACING:
+Keypad: 8 = whip horses, 7 = whip opponent on left, 9 = whip opponent on
+right, 4 = move left, 6 = move right, 2 = slow down
+
+The joystick button whips your horses when pressed forward at the same time,
+when pressed to the left or right it will whip opponents.
+
+GLADIATOR SHOW:
+Keypad: 8 = high block, 7 = high strike, 4 = move forward, 6 = move back
+2 = low block, 1 = low strike.
+
+End.

@@ -1,0 +1,238 @@
+                ___                 ___
+               /  /                /  /
+          ____/  /___ ___ _____   /  /  ______ _____ _____   ___ ___ ___
+         /  _   //  //  /_\__  \ /  /  /  ___//  __//  _  \ /  //  //  /
+        /  //  //  //  //  _   //  /  /  /   /  /  /  //  //  //  //  /
+       /  //  //  //  //  //  //  /  /  /__ /  /  /  ____//  //  //  /
+       \_____/ \_____/ \_____//__/   \____//__/   \_____/ \_________/ RD
+
++---------------Present's Full English docs for D/GENERATION------------------+
+       -  - +---Original supplied by The Dark Knight/Acidity---+ -  -
+
+GETTING STARTED
+---------------
+
+1. Insert disk 1 into your Amiga
+
+2. Follow the instructions that appear on the screen.
+
+
+JOYSTICK CONTROLS
+-----------------
+Your joystick is automatically calibrated when the game starts.  If your 
+joystick behaves strangely, you can recalibrate it by releasing the joystick
+and pressing CTRL-J.  If you are still having problems, adjust the joystick`s 
+time controls and press CTRL-J again.
+
+Push the joystick in the direction on screen that you wish to go.  For example,
+push the joystick UP to move the character up screen, or push the joystick
+DIAGONALLY to move diagonally on screen.  You can move the character in any of 
+8 directions using the joystick.  You can open and close doors by bumping into
+the long side of the `triangular yellow wall switches`.  You can also shoot 
+doors, but you need to find a gun first.  To fire your laser gun, press either
+joystick button.  From then on, this will be your laser button.  To throw
+grenades, press the other joystick button.
+
+
+KEYBOARD CONTROLS
+-----------------
+If you don`t have a joystick, you can do the following:
+
+Use numeric keypad to move.
+(Example, press 7 to move diagonally.)
+
+Press SPACEBAR to fire the laser.
+
+Press T to throw grenades.
+
+
+If you fid the keyboard controls difficult, press ALT-K for the alternative
+control mode.  This will rotate the movement key effects by 45 degrees.
+Pressing 9 on the numeric keypad causes the player to walk directly towards the
+top of the screen.
+
+
+You can also use the following special keys:
+
+ESC           -  Freezes the game, and continues it.
+
+ENTER         -  Talk to a survivor.
+
+S             -  Displays your status.
+
+U             -  View and select weapons you can use, if any.
+
+CTRL-A        -  Aborts the scene when you are trapped and takes away a life.
+                 Restarts play from where you last entered the room.
+
+CTRL-J        -  Recalibrates your joystick.  Be sure that your joystick is in
+                 its centre, released position.
+
+CTRL-K        -  Toggle keyboard only mode on and off.
+
+CTRL-Q        -  Exit D/Generation.
+
+CTRL-R        -  Restores previously saved game.
+
+CTRL-S        -  Toggles sound on or off.
+
+CTRL-X        -  Swap joystick axes.
+
+ALT-K         -  Toggle alternative control key mode on and off.
+
+ALT-R         -  Restarts play from the beginning of the level.
+
+ALT-S         -  Saves game.
+
+
+YOUR OBJECTIVE
+--------------
+Alone with your jetpack, you have flown from Finland across the Urals and the
+entire length of Asia to deliver a package to Genoq Biolabs in Singapore.  You
+land on the building`s 80th floor setback, finding nobody there to greet you.
+When you enter the building, the main door snaps shut behind you, and you
+narrowly escape being killed by the building`s security system.
+
+You find the receptionist hiding behind her desk.  She tells you that Genoq`s
+head scientist, Derrida, has been demanding the package you`re carrying.  His
+last panicked message came over an hour ago.  This package is more important
+than you could have thought.
+
+You realize that there is only one course of action, that you `must` bring the
+package to Derrida, and, if at all possible, rescue any survivors you find
+along the way.
+
+
+GAME STRATEGIES
+---------------
+You enter on the 80th floor, and work your way to Derrida`s lab on the 90th
+floor.
+
+
+WEAPONS
+-------
+Your first problem is to find a weapon.  Or you`ll die fast!  Look for a laser
+pulse-gun, a weapon that firs short, intense bursts of energy.  It is intended
+as an offensive weapon, but you`ll find other uses for it.  You fire the laser
+by pressing SPACEBAR or a joystick button (which thereafter becomes the laser
+button).  Grenades, which you`ll find later on, are far more destructive than
+the laser.  They are designed to destroy very robust targets.  You throw 
+grenades by pressing T or the other joystick button.
+
+
+WEAPONS MENU
+------------
+Press U to see how many, if any, of the following weapons you have:
+
+
+Bomb             -  Blows up stuff
+
+Clock            -  Slows down time for everything and everyone but you.
+
+Shield           -  Protects you from everything.  If a tracker hits you, the 
+                    shield is destroyed but you don`t die.
+
+Plasma Barrier   -  Form a plasma barrier that bounces off the walls.  But stay
+                    out of its way!
+
+Security Package -  For Derrida`s eyes only.
+
+
+To select an available weapon, press <- and -> to highlight, then press ENTER.
+
+
+NEOGENS
+-------
+The Neogens are extremely dangerous, genetically engineered organisms.  They
+have spread through the building using the ventilation system, and they are
+attacking anything human in sight.  The four generations were designed over a
+period of years and have become increasingly sophisticated with each successive
+generation.
+
+
+A/Generation -  Bouncing red ball that smothers its target.  Cloaks itself by
+                going transparent.
+
+B/Generation -  Bouncing blue cylinder that crushes target.  Extremely fast.
+                Can hide in floor.
+
+C/Generation -  Humanoid that can disguise itself as anything, animate or
+                inanimate.  Decaptates target.
+
+D/Generation -  Single prototype.  Project classified.
+
+
+SECURING ROOMS
+--------------
+Rooms with Neogens or vents must be secured before you can rescue any trapped
+workers.  To secure a room, you must kill every non-human organism and seal 
+every vent.  You seal a vent simply by running across it.  When a room is
+secured, all vents will turn green, and the red security door will open.
+
+
+SECURITY SYSTEM
+---------------
+The building security system includes:
+
+Security Switch/Key -  A white triangle with a smaller grey triangle in the 
+                       center.  Each of these opems special doors, and cannot
+                       be triggered until you are holding a security key of
+                       sufficient level.  The keys can be found in adjacent
+                       rooms, and can only be used on the floor where you find
+                       them.
+
+Electrified Plate   -  Blinks on and off at intervals.  These will instantly 
+                       fry you if you step on them while they are active.
+
+Tracker             -  Scans the room looking for a target, firing on anything
+                       human.
+
+Plasma Barrier      -  Rebounds between walls.  Will destroy anything on 
+                       contact.
+
+Teleporter          -  Moves anything instantly from one place to another.
+
+
+SURVIVORS
+---------
+The workers who are trapped in the building might be able to help you out, and
+provide you with information that will help you discover who Derrida is and 
+where you might find him.
+
+
+RESCUING SURVIVORS
+------------------
+You can only rescue a survivor when the room is secure (You must kill every
+non-human organism and seal every vent by running across it).  Once a survivor
+feels safe and sees you, he or she stands up, runs to you, and waits for your
+guidance.  You must lead each survivor past any active security devices to a
+safe exit, marked by a red arrow.
+
+Be careful when firing the laser - a stray bolt could easily kill an
+unprotected person.
+
+
+QUESTIONING SURVIVORS
+---------------------
+Press ENTER while standing near survivors to see a dialog menu.  To select a
+question or statement from the menu, Press DOWN arrow or UP arrow then ENTER.
+You can modify some menu selections ending with "...." by pressing -> or <- to
+scroll through sentences.
+
+HINT: Use computer terminals to get additional information.
+
+
+LIFE AND DEATH
+--------------
+You begin the game with 5 lives, and you lose one life anytime you are killed.
+Each time you save a survivor you gain one life.  When you lose your last life,
+you start over from the beginning of the level with the same number of lives
+you had when you began that level.
+
+At any point, you can press ALT-S to save your game position.  Press ALT-R and
+you will appear at the beginning of the level where you last saved. 
+
+-------------------------------------------------------------------------------
+        DOX typed by Leebold  of Dual Crew. Finished 1.38 PM GMT 1/7/92.
+-------------------------------------------------------------------------------
+

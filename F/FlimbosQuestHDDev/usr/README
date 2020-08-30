@@ -1,0 +1,85 @@
+	THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER
+	EXPRESS OR IMPLIED, STATUTORY OR OTHERWISE.
+	THE ENTIRE RISK AS TO USE, RESULTS AND PERFORMANCE OF THE PACKAGE IS
+	ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE TO BE DEFECTIVE, YOU
+	ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING, REPAIR OR OTHER
+	REMEDIATION.
+	UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY
+	DAMAGE CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE
+	OWNER OR A THIRD PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF
+	DAMAGE.
+
+	That install applies to "Flimbo's Quest" © 1990 System 3.
+
+
+	That install requires WHDLoad and RawDIC to be in the path.
+	Both can be found in the WHDLoad package.
+	To install from a different drive than DF0: select Expert as
+	installation mode.
+
+	You need 0.5 MB ChipMem and 0.5 MB OtherMem.
+	You can quit the game by pressing F10 (key can be changed with
+	Tooltype "QuitKey=").
+
+	If you have problems with this installation please try and get a newer
+	version of this package from the WHDLoad WWW-Page. If that doesn't help try
+	some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+	that also fails, please inform the author via the Bug-Report-Form which
+	can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+	For the full WHDLoad package, other installs and updates refer to:
+	   http://www.whdload.de/
+	or	aminet:dev/misc/whdload#?
+	and	aminet:game/patch/
+
+    Version 2.3 (18.05.2020) done by JOTD:
+    - CUSTOM3 blitter fix was active when it should not (issue #0004680)
+    
+    Version 2.2 (15.05.2020) done by JOTD:
+    - CUSTOM2 enables jump with blue button (issue #0004637)
+    - F1/F2 intro sequence can be done by red/blue (first/second) button (only on SPS release 121)
+    - added full joypad controls: play pauses, fwd+rev quits, yellow+fwd+rev quits to
+      workbench
+    - moved level selection to CUSTOM4
+    - added manual
+    (some additions are only working for SPS release 121,
+     I don't have the other version)
+      
+	Version 2.1a (13.12.2017) done by StingRay:
+	- blitter wait patches can be disabled with CUSTOM3
+	- lots of nice icons (all created by Irek'72) added
+
+	Version 2.1 (12.12.2017) done by StingRay:
+	- support for another version added
+	- high score load/save added (saving disabled when trainer is used)
+	- interrupts fixed
+	- illegal copperlist entries added
+	- Bplcon0 color bit fixes
+	- some more blitter waits added
+	- out of bounds blit fixed
+	- timing fixed
+	- more trainer options added
+	- end sequence fixed
+	- missing icons added
+	- new install script
+
+	Version 2.0 (16.07.2016) done by JOTD:
+	- adapted to WHDload v17
+	- added quitkey for 68000 CPUs
+
+	Version 1.x (1999) done by Mr Larmer/Wanted Team:
+	- if story not working you must install game from disk again,
+	  because new disk imager include lost data in original disk,
+	- keyboard handling fixed,
+	- access fault removed,
+	- TOD protection removed,
+	- nice MWB/NI icons included,
+
+	Thanx to:
+	- Chris Vella for original disk image,
+	- Keith Krellwitz for original disk,
+	- Harry for help with disk imager,
+	- Dark Angel and Helmut Motzkau for another disk version.
+	- Irek Kloska for another version
+

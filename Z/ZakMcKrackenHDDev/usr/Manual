@@ -1,0 +1,351 @@
+                  Zak McKracken and the Alien Mindbenders
+
+About Zak McKracken and the Alien Mindbenders.
+
+It's 1997, and the world is a dumber place then ever... Space aliens have
+built a stupidity machine that's slowly reducing everyone's IQ to single
+digits. Worse yet, the only person who can stop them is Zak McKracken,
+reported for the disreputable National Inquisitor, who dreams up stories
+about carnivorous cantaloupes and vegetarian vampires.
+
+They've taken over the phone company... Sure sounds like another one of
+Zak's tabloid fantasies. But while most people wouldn't believe him, he
+finds three who don't need convincing -- Annie, head of the Society for
+Ancient Wisdom, and her friends, Leslie and Melissa, two Yale coeds who
+traveled to Mars in their modified van. The four of them must piece
+together fragments of an ancient puzzle, unmask the aliens and destroy the
+stupidity machine.
+
+Here's where you come in... You direct the actions of Zak, Annie, Melissa
+and Leslie, taking them to many exotic places where they discover some
+pretty strange objects -- and some even stranger characters!
+
+To help you solve the game's dozens of puzzles, movie-like "cut-scenes"
+will appear from time to time. They will reveal new dimensions of the story
+by showing you what's happening elsewhere in Zak's world. You'll also find
+plenty of valuable clues in the enclosed copy of the National Inquisitor.
+
+If this is your first computer adventure game, be prepared for an
+entertaining challenge. It may take  a while to figure out some of the
+puzzles. If you get stuck, you might need to solve another puzzle first or
+use an object you haven't yet found. But if you hang in there and use your
+imagination, you will guide Zak and company to victory!
+
+			GETTING STARTED
+
+NOTE:  It is recommended that you first make a backup copy of all disks
+	and put the originals in a safe place.
+
+Bring up Workbench on your Amiga.  Insert Zak McKracken Disk 1 in your disk
+drive.  Open the disk icon and double-click on the Zak icon (the big nose
+glasses).
+
+When prompted, put in Disk 2.
+
+To use a two-drive Amiga system, place Disk 2 in your second drive.
+
+To install Zak Mckracken on a hard disk, first use your Workbench menu to
+create an empty file drawer called "Zak".  Without opening the "Zak"
+drawer, insert Disk 1 into the drive, double-click on its icon, and
+
+				2
+
+drag both the Zak and Rooms icons into the new hard disk drawer.  Then
+insert Disk 2 into the drive, double-click on its icon, and drag its Rooms
+icon into the the hard disk drawer.  (Note: If you open the hard disk
+drawer before moving the icons, take care not to drag the second Rooms icon
+on top of the first one.  If you do so accidentally, simply delete the hard
+disk Rooms drawer and re-copy the Rooms icons from both disks.)
+
+			PLAYING THE GAME
+
+After the opening title sequence, you will see Zak standing in his bedroom.
+When he turns to face you and the text appears at the bottom of the screen,
+you will be ready to start directing his actions.
+
+1) The Message Lines are the two lines at the very top of the screen. 
+Words spoken by any of the characters, as well as game-related messages,
+appear here.
+
+2) The Animation Window is the largest part of the screen and is where the
+animated action takes place.  It shows the "camera's eye view" of the room
+or location that the currently active character is in.
+
+3) The Sentence Line is directly below the Animation Window.  You use this
+line to construct sentences that tell the characters what to do.  A
+sentence consists of a verb (action word) and one or two nouns (objects). 
+An example of a sentence you might construct on the Sentence Line is
+
+				3
+
+"Use crayon on torn wallpaper."  Connecting the words like "on" or "with"
+will be automatically inserted by the program.
+
+4) Verbs must be selected from the words in the columns below the Sentence
+Line.  All the verbs shown can be used.  Check the list from time to time -
+new verbs will appear as the game progresses.  To select a verb, position
+the cursor over the word and click.
+
+5) The Inventory is the area below the Verbs. Each character you control
+has his or her own inventory.  At the beginning of the game Zak starts with
+only one object.  When a character picks up or is given an object during
+game play, the object's name is added to the character's inventory.  There
+is no limit to the number of objects a character can carry.  When there are
+more than four objects in an inventory, arrows appear in the middle of the
+list.  Use them to scroll the list up or down.
+
+Nouns (objects) can be selected in two ways.  You may select a noun by
+placing the cursor over an object in the Animation Window and clicking. 
+Most objects in the environment, and all usable objects in the game, have
+names.  If an object has a name, it will appear on the Sentence Line when
+you click on it.  You may also select nouns by clicking on them in the
+inventory.
+
+To move a character around, select "Walk to" from the Verbs by positioning
+your cursor over it and clicking.  Then move your cursor into the Animation
+Window, point it where you want the character to go, and click.  If you
+point to an open door and click, the character will walk through it. 
+Notice that "Walk to" appears automatically on the Sentence Line after a
+sentence has been executed - this is because moving around is what your
+characters will be doing most often.
+
+To tell a character to carry out the directions you've put on the Sentence
+Line, either click once more on the final noun or verb selected, or click
+once on the Sentence Line itself.  If nothing happens, double check the way
+you constructed the sentence.
+
+To replace a noun or verb on the Sentence without reconstructing the entire
+sentence, simply click on the replacement word.  It will appear in the
+right place in the sentence.
+
+"Cut-scenes" are short, animated sequences - like scenes from a movie -
+which can provide clues and information about the characters.  When you are
+viewing a cut-scene, you do not direct the action so the text below the
+Animation Window disappears.
+
+Keyboard Commands
+
+All of the verbs used in the game can be selected by using keyboard
+commands.  Each key corresponds to one verb.  Pressing the appropriate key
+once is equivalent to moving the cursor over the verb and pushing the
+
+				4
+
+button; pressing the key twice is the same as double-clicking on it.  The
+keys are mapped according to the layout of verbs on the screen:
+  ________   ________   _________   ________   _________
+ (   Q    ) (    W   ) (    E    ) (    R   ) (    T    )
+ |  Push  | |  Open  | | Walk to | | Put on | | Turn on |
+ (________) (________) (_________) (________) (_________)
+    _________   ________   _________   ________   ________
+   (    A    ) (    S   ) (     D   ) (    F   ) (    G   )
+   |   Pull  | |  Close | | Pick up | |Take off| |Turn off|
+   (_________) (________) (_________) (________) (________)
+       ________   _______   _______   _______   ________
+      (    Z   ) (   X   ) (   C   ) (   V   ) (    B   )
+      |  Give  | | Read  | |What is| |  Use  | | Switch |
+      (________) (_______) (_______) (_______) (________)
+
+You can also select inventory items from the keyboard.  On the screen, you
+can see four items at a time in the inventory list.  Use the following
+keys:
+   ___                   ___                    ___
+  (   )                 (   )                  (   )
+  | U | Scroll list up  | I | Upper left item  | O | Upper right item
+  (___)                 (___)                  (___)
+   ___                    ___                    ___
+  (   )                  (   )                  (   )
+  | J | Scroll list down | K | Lower left item  | L | Lower right item
+  (___)                  (___)                  (___)
+
+			THINGS TO TRY
+
+Open Zak's dresser drawer.  Select "Open" from the Verbs and then click on
+the dresser in Zak's bedroom, creating the sentence, "Open dresser."  Click
+again on the drawer to execute the sentence.  Zak will walk over to the
+dresser and open it.
+
+To pick up the plastic card under Zak's desk, try the sentence, "Use phone
+bill with plastic card."
+
+	First, place your cursor over the "Use" verb and click once. "Use
+		now appears on the sentence line.
+
+	Second, move the cursor over the phone bill on the drawer and click
+  		once, creating the sentence "Use phone bill with."
+
+	Third, select the plastic card by moving your cursor over the
+		object in the Animation Window.  By double-clicking on the
+		plastic card you can complete the sentence and execute it
+		at the same time.  Notice that Zak was smart enough to
+		pick up the phone bill first.
+
+Read Zak's phone bill by moving the cursor over "phone bill" in the
+inventory list below the Verbs and click once, creating the sentence, "Walk
+to phone bill."  This time, instead of clicking on the noun a second time,
+click on the "Read" verb, changing the sentence to "Read phone
+
+				5
+
+bill."  Click once more on the "Read" verb and Zak will read the bill. 
+Notice that the final click can be on either the noun or the verb.
+
+Walk Zak to his living room by first opening his bedroom door ("Open door")
+and then walking through it ("Walk to door").  The screen will iris to
+black while the next room is loaded from disk.
+
+                     SPECIAL VERBS AND FUNCTION KEYS
+
+To switch control from one character to another, select the verb "Switch." 
+The names of the four characters you can control will appear as Verbs. 
+Place the cursor over the name of the character you want to control and
+click once.  As a short-cut, you can use function keys F1-F4 to change
+characters (see below).  NOTE: The Switch verb will not appear until Zak
+has solved several puzzles and meets Annie.
+
+To find out what is in a room, select the "What is" verb and move the
+cursor around the room. When the name of something appears on the Sentence
+Line, you'll know that it is an "active" object and you might want to use
+it in the game.  If you click on that object, the "Walk to" verb will
+appear instead.  You can then click on the object a second time to make
+your character walk to it, or you may click on any other Verb that you want
+to use with that object.
+
+To save your progress in a game, so that you can turn the computer off and
+start again in the same place, use the "save" feature.  "Save" will not
+work during cut-scenes.  You can "save" up to ten games on your Zak
+McKracken Disk 1 or on your hard disk, depending on how much free disk
+space there is.  Previously saved games will have an asterisk next to them,
+for example: Game B*.  Simply press the Save/Load Game function key (F5)
+and follow the on-screen instructions.
+
+To load a game you have saved, use the Save/Load Game function key (F5)
+anytime after Zak McKracken has been loaded.  You can do this during the
+opening sequence, but not during other cut-scenes.  Follow the directions
+on the save-load menu.
+
+To bypass a cut-scene, use the right mouse button or the Esc key.  After
+you've played Zak McKracken several times, you may want to use this
+function to skip over scenes you have seen before, including the title
+sequence.  (While traveling on jet airliners during the game, this same key
+can be used to reach your destination immediately.)
+
+To restart the game from the beginning, press the F8 key.
+
+To pause the game, press the space bar.  Press it again to resume play. 
+The game will automatically pause if you make no input for five minutes,
+and you will need to press the space bar to continue playing.
+		
+				6
+
+When the disk is being accessed or the game is paused, the cursor will
+change; a picture of a snail replaces the cursor during these times.
+
+To adjust the speed of the Message Line to suit your reading speed, press
+the < key to make the messages stay up longer or the > key to make them
+stay up for a shorter period of time.
+
+To end the game, press Ctrl-C.
+
+		    FUNCTION AND COMMAND KEYS
+   
+Switching Characters:
+
+	  Zak 		  F1
+  	  Annie 	  F2
+	  Melissa  	  F3
+  	  Leslie  	  F4
+
+Save or Load a game  	  F5
+
+Bypass a Cut Scene        ESC or Right Mouse button
+
+Restart a game  	  F8
+
+Pause Game  		  Space Bar
+
+Message Line Speed :
+
+        Faster     	  >
+
+        Slower            <
+
+End a Game  	          Ctrl - C
+
+	           OUR GAME DESIGN PHILOSOPHY
+
+We believe that you buy games to be entertained, not to be whacked over the
+head every time you make a mistake.  So we don't bring the game to a
+screeching halt when you poke your nose into a place you haven't visited
+before.  In fact, we make it downright difficult to get a character
+"killed."
+
+We think you'd prefer to solve the game's mysteries by exploring and
+discovering.  Not by dying a thousand deaths.  We also think you like to
+spend your time involved in the story.  Not typing in synonyms until you
+stumble upon the computer's word for a certain object.
+
+Unlike conventional computer adventures, Zak McKracken and the Alien
+Mindbenders doesn't force you to save your progress every few minutes.
+Instead, you're free to concentrate on the puzzles, characters and
+outrageous good humor.
+
+				7
+
+                       A FEW HELPFUL HINTS
+
+* Pick up everything you can. Odds are, at some point all those strange
+  things will serve some purpose.
+
+* Read the National Inquisitor thoroughly.  It's full of clues.  For
+  example, the article about the jet lag suggests that Zak might create a
+  diversion in the airplane, get the stewardess temporarily out of the way,
+  and find a valuable hidden object.
+
+* Almost everyone you can interact with has something to offer - the French
+  baker, the bum in the airport, even the two-headed squirrel.
+
+* If you get stuck, and can't figure how to go farther , try looking
+  through all the items you've found and thinking how each one might be
+  used. Think about the places you've gone and the people you've met.
+  Chances are there will be a connection that'll put you back on track.
+
+* You have to go out of your way to get characters in Zak McKracken killed,
+  so you don't have to constantly save games before proceeding.
+
+* Several of the puzzles require coordination between two or more of the
+  characters.
+
+* There is more than one way to solve many of the puzzles.
+
+* If you feel like it, take a whirlwind tour around Zak's world first,
+  then settle down to serious puzzle-solving.
+
+* If your CashCard runs low, figure how to win the lottery!
+
+* If you want to speed up game play, order a hint book.
+
+			  IMPORTANT!
+             DON'T LOSE YOUR EXIT VISA CODE BOOK
+
+Without it, you won't be able to take international flights - an you won't
+be able to complete the game.
+
+To use the code book, watch for the Exit Visa Code reference on the screen
+when you're buying a ticked to leave the United States.  You'll see, for
+example:
+
+		Travel key is: Section 4 (C 22)
+
+Now, you should turn to the indicated section, column, and row and find the
+four symbols.  They refer to the symbols on the screen, which you should
+then click in order.  Once you've entered the code correctly, you can go on
+with the game.  If you enter incorrect codes too many times in a row,
+something embarrassing will happen to you.
+
+If you lose the code book, you may purchase another from Lucasfilm Games. 
+Call (415) 662-1902 for details.
+
+============================================================================
+         DOCS PROVIDED BY  -+*+-THE SOUTHERN STAR-+*+- for M.A.A.D.                                                               
+============================================================================

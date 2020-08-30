@@ -1,0 +1,314 @@
+	   
+           OVERDRIVE FROM TEAM 17! THE FULL ENGLISH DOCUMENTATION!
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	Overdrive is a slick, arcade style fast-scrolling race game the likes
+of which has never really been seen before on the Amiga. It combines super 
+smooth action with an excellent feel to provide a game that we think is
+unmatched in the playability stakes. Drive four different style vehicles
+over 5 terrains and twenty tracks, against 8 different characters - each with
+their own unique style.. ultimately finishing with the `race-off' of a 
+lifetime against the menacing demon driver! 
+With a difficulty curve that adapts to your own skills meaning that the game 
+gets as hard as you wnat, when you want, Overdrive caters for drivers of all
+ages and pedigree!
+
+System Requirement: Overdrive will run on any 1meg Amiga. An extra disk 
+drive is highly recommended to avoid disk-swaps during gameplay.
+
+
+1. LOADING INSTRUTIONS 
+
+	Turn your Amiga off at the power-supply and wait ten seconds before
+turning it back on. This makes sure that your computers memory is clean.
+Insert OVERDRIVE DISK ONE into your internal drive (df0:) and after a short
+period, a presentation sequence will begin. After a while the program will 
+have loaded and you will soon be ready for your first race.
+
+	If you have any problems during loading, repeat the process above 
+and in case of continued problems, consult the trouble-shooting guide.
+
+
+
+2. OVERDRIVE MAIN MENU
+
+	The main menu consists of 3 options;
+
+	START	- Begin with the current game configuration.
+
+	OPTIONS - Select the style of game and other aspects.
+
+	DISK 	- Disk operations to save and load scores/lap-times.
+
+
+3. OVERDRIVE OPTIONS MENU
+
+	The options menu consists of the following 3 options;
+
+	GAME MODE - Select from Arcade, Practice, Trails and 2 Player. These 
+		    game modes will be detailed in the next section. Note that
+		    for a 2 player gameyuo will require TWO machines linked 
+		    with a null-modem cable, consult the section named 
+		    `Overdrive 2 Player Game' for further information. 
+	   	    The default selection is ARCADE.
+
+	SOUND	  - Select from Music, Music and Sound Effects or Sound 
+		    Effects Only.
+
+	EXIT 	  - Quit back to the Main Menu.
+
+
+
+			OVERDRIVE GAME MODES EXPLAINED
+			~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	ARCADE
+		This is the main single player arcade style challenge that the 
+game is based around. It offers you a selection of race scenario`s to choose
+from as you progress through the games ranks. In order to have the final 
+`race-off' against the demon driver, you must achieve the games top-rank  -
+and that means some pretty serious driving!  You are given an amount of cash
+to start the game and it costs money to enter each race, but the harder the 
+race, the better the prize! 
+	Prior to the race you will have the chance to qualify and aim for a 
+better grid positionin 3 timed laps - which also acts as an aid to learning 
+the circuit, or you can jump straight into the race starting at the back of
+the grid.
+	You can improve your vehicles by picking up various parts during the
+game... including wheels, spanners and fuel; these increase your car`s 
+handling and performance in subsequent races. The game will keep a track of any
+modified vehicles during play, as you can drive any of the four vehicles in any
+given race. Other pick-ups are in the form of extra cash, turbo pads etc are 
+also littered on the tracks.
+	Yoy continue racing until your cash runs out or you are last in 3 
+different races. Notice that in some races, you must WIN (ie be first) to 
+continue and others, notably the easier tracks, you have to avoid finishing last
+to continue.
+	Races consist of a vehicle type, any one of five terrains and is against
+2 of the 8 drivers, consult the character info section for details about them.
+	From all of the above, a difficulty rating is obtained and this, 
+in turn, affects both the entry cost and the prize money. The game will allow
+a skilled driver to quickly skip through to more difficult races and rapidly
+climb the ratings scale, whilst a novice can take more time on the lower levels
+gradually building up confidence on easier races.
+	When you finally enter the `Overdrive Race-Off' against the demon 
+driver, it can be on any one of a number of specially configured `demon tracks'
+So there are a number of different endings to the game. 
+	You should find that the game offers you a slightly different menu of
+race options each time you play, making for a longer-lasting game.
+	Note that the best lap times are recorded for each race scenario and
+are saved with the DISK option on the Main Menu.
+
+	PRACTICE
+			In this mode, you are able to custom design your car,
+track and what opponents to race against. It is a non-scoring game but it 
+does allow vital practice.
+
+	TRIALS
+		This is a form of practice that sees you up against the clock
+only. You can select one of twenty configurated trials with the aim of beating
+the best lap/race time. This option is for those wishing to practice their
+driving skills and compete at the same time. The lap/race times in this mode
+are kept and saved for future records, thye can also be reset if desired.
+To save the updated lap/race times, use the DISK option on the main menu and 
+select save.
+
+	2 PLAYER
+		This configures the game into 2 player link mode where you race
+against human opposition on another Amiga! Follow the on-screen instructions
+when linking machines and consult the main `Overdrive 2 Player Game' section
+later in this text.
+	In 2 player mode, you can select the race set-up from the options and
+set the number of laps. The game will keep track of the scoring between
+players. On screen, the other players car is shown in blue and no computer
+cars will be on the track.
+
+
+5. OVERDRIVE DISK MENU
+
+	This menu is used for saving and reloading high-scores and the best
+laps/race times in the TRIALS game-mode. All saving is automatic, simply 
+follow the on-screen instructions.
+
+
+6. OVERDRIVE SCREEN DISPLAY
+	
+	On screen you will notice the following;
+	
+	The main track display in the top 90% of the screen, with you car, the
+	RED one in the middle.
+	The track scanner in the bottom middle of the screen, which warns of up
+	and coming road-patterns.
+	The cross-haor is your current location. You may or may not wish to use
+	the scanner depending on your control skill, but we recommend glancing
+	down when you are on straights and not when driving around a bend!
+		
+	The bottom right will show you the following information;
+	
+	Current LAP time in mins, secs, 100th`s.sec.
+	Record LAP time.
+
+	The bottom left has indicators for Revs, Speed, Turbo, Fuel and also
+the number of laps remaining. Fuel gradually runs out although you will have 
+sufficient for most races - extra fuel can be picked up on some circuits. No
+fuel means no speed, which in turn means GAME OVER!
+
+
+7. OVERDRIVE CONTROL METHODS
+
+	A lot of effort has gone intothe control method behind Overdrive, we
+have tried to optimise the digital joystick input and real-car mechanics to 
+produce a handling-feel that suits the game perfectly. It means that it`s 
+not simply a case of flying around the track like a maniac, the game 
+requires a lot of skill and crisp handling if you are to succeed.
+	As a result, the control instructions on joystick are as follows;
+
+	Fire Button   - Accelerate (Let go to decelerate)
+	Joystick Back - Brake
+	Joystick Left - Steer Left
+	Joystick Right- Steer Right
+
+	The important thing to notice during play is that when turning a
+corner and accelerating (holding the fire button down), your car will slide
+and skid in a wide arc, making it difficult to control. If you let go of the
+button for a short period, this enables more overall car control and you will
+find that you are able to turn more easily if a little slower. You will find
+that it will take some practice to complete circuits at full speed - but in
+order to achieve impressive lap-times you will have to put the work in!
+	The handling may feel a little strange at first but you will find
+that in a few minutes it becomes second nature and then it`s just a matter
+of making sure you follow the best racing line for the current track.
+	There ia also support for the LOGIC FREEWHEEL analogue steering
+wheel, plug this into gameport 1, where the mouse usually is. The left 
+buttin is the accelerator, the right is the brake.
+	A Sega Megadrive Joypad (or compatible) is also supported, button B
+is accelerate, C is brake. All Sega trademarks are acknowledged.
+
+
+8. OVERDRIVE TRACK FEATURES
+
+	On the tracks you will find oil, water spills, bumps, hills and all
+manner of obstacles that cause havoc in your quest for a perfect lap.
+	You`ll also be able to pick up bonus cash and other items which will
+improve your chances in subsequent races. Look out for wheels, spanners and
+fuel cans especially.
+
+
+9. CAR INFORMATION
+
+	There are four distinct types of vehicle in Overdrive;
+
+	GP CAR
+		This ground-hugging race machine loves the track and hates
+the rest of the ground! You`ll find the speed amazing and the acceleration
+incredible. GP cars are terrible on dirt and sand, skidding and spinning
+uncontrollably, slowing to a stop. The GP cars are available on GP 
+circuits, City circuits and the Icy circuits. The GP car is more at home on
+a GP circuit.
+
+	SUPERCAR
+		This hybrid super sports car is not unlike the GP car in
+performance but it does tend to slide on fast corners. It doesn`t mind the dirt
+quite as much, but try and stick to the road! This car is quite versatile on
+the GP, City and Icy circuits.
+
+	4 X 4
+		This powerful vehicle is able to bump `n bounce it`s way over
+most terrains, having a slower top speed but more agile over rough ground.
+It`s most at home on it`s own 4x4 arena although it handles well on the GP,
+city and icy tracks.
+
+	BUGGY
+		This nippy little buggy will surprise everyone with it`s
+turn of speed and versatility. At home on the desert tracks, you`ll also
+find it in the 4x4 arena as well as the city circuits.
+
+
+10. SCENARIO INFO
+
+	In Overdrive, you`ll find yourself racing over five different
+terrain types which are as follows; each one has an effect which depends
+upon the car driven on it.
+
+	GP CIRCUIT
+		These are fast, smooth tracks where speed is optimum.
+	GP circuits are best raced via the optimum `racing-line'. You`ll
+	find few bumps and obstacles in your way, but expect a fast
+	paced race from start to finish.
+
+	CITY CIRCUIT
+		Another fast, twisty track with good surfaces and few
+	obstacles. The racing-line isn`t quite as important as with the
+	GP circuits and therefore a little easier.
+
+	ICY CIRCUIT
+		The road is fast but very icy, making turning very
+	hazardous. Speed freaks beware on these circuits. Watch out for
+	rocks in the road!
+
+	DESERT TRACK
+		This bumpy, dusty road is ideal stomping ground for the
+	buggies and 4x4`s. Expect all manner of obstacles in the way.
+
+	4X4 ARENA
+		A soft dust 4x4 indoor arena full of bumps and twist,
+	ideal for the pacey buggies and 4x4 monsters. Don`t expect to
+	find a GP or sportscar on here though!
+
+
+11. CHARACTER INFO
+
+	Eight different drivers to face in the arcade game, seven of which will
+pit their wits against you and the last will only be revealed if you manage to
+attain top rank and qualify for the Overdrive `Race-Off'.
+
+	NAME		CHARACTERISTICS
+	~~~~ 		~~~~~~~~~~~~~~~
+
+	Burt	-	Very slow driver easy to beat
+	Lana	-	Slow but accurate, relatively easy
+	Dan	-	Composed, always has good lap-times
+	Mad H	-	Completely unpredictable!
+	Slick	-	The gentleman with high skills
+	The Prof-	Very good though he relaxes if in front
+	Sheik	-	Excellent driver putting in superb lap-times
+	??????	-	Only the best will win this duel....
+
+
+12. 2 PLAYER GAME
+
+	The Overdrive 2 player game is played with two Amigas linked up via a
+NULL MODEM CABLE. The cable is available from all good suppliers but if you
+are unable to locate one, call our helpline number (Uk 0924 201846 during
+normal office hours) and they will be happy to inform you of a source.
+	The game will guide you through the link up stages and then go into
+the game proper. Both players will appear as the RED car on their machine,
+the other player appearing as blue, we recommend that the monitors are facing
+opposite directions if at all possible.
+	The game keeps a score of races won and offers the option to re-race
+the previous track or select a new scenario. Exiting to the Main Menu will
+disconnect the link-up and return the Amiga to normal mode.
+
+
+13. TROUBLESHOOTING
+
+	If you have trouble loading and the subsequent running of Overdrive,
+carefully re-check the outlined procedure and your set-up. If you are sure
+that everything is as it should be and you think something is wrong then
+maybe d/l another version from your local bbs! You could alternatively buy
+the original!@?
+
+14. CREDITS
+
+	Programming 	- David J. Broadhurst
+	Graphics	- Haydn Dalton
+	Sound/Music	- Allister Brimble
+	Graphics	- Mike and Andy Oakley
+	Speech		- Christopher Brimble
+	Illustration	- Kevin Jenkins
+	Playtesting	- Andy, Paul, Craig, Mick, Vad, Katrina, Martyn, Chris
+	Produced by	- Martyn Brown
+	DOCS TYPED BY	- HoGSTER/FLT
+	GAME CRACKED BY	- FAIRLIGHT!
+
+
+

@@ -1,0 +1,145 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Moktar/Titus The Fox" © 1991-1992 Titus.
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ The installed program requires 0.5 MB ChipMem and 1 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ The game requires an installed A500 Kickstart 1.3 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick346.lha" on aminet.
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 2.2 (18.05.2020) done by JOTD:
+ - fixed lockup when detecting controllers at startup on ACA500
+
+ version 2.1 (16.05.2020) done by JOTD:
+ - adapted to WHDLoad v17
+ - trainer changed to: CUSTOM1: bit 0: infinite lives, bit 1: infinite energy
+ - CUSTOM2=1: blue/second button jumps instead of up
+ - Simple level codes that work for all versions (0001, 0002, ... 0015 or 0016 depending on the version).
+   Set CUSTOM4=1 to preserve original level codes if you really want...
+ - CD32 controls (see below)
+ 
+ version 2.0 (02.05.2014) done by JOTD:
+ - adapted to WHDLoad v16/Kickemu (fixes issue #002971)
+ - trainer added: CUSTOM1=1: infinite lives, CUSTOM2=1: infinite energy & lives,
+   CUSTOM3=x: select start level
+ - source code included
+ - walkthrough included
+ - manual included
+
+ version 1.0 (2001) done by JOTD:
+ - initial release
+ - uses OSEmu
+ - Music fixed (dbf loops)
+ - Disk protection removed
+ - 2 versions of Moktar supported, 1 version of Titus The Fox supported
+ - Thanks to Frank and Exoticon for the nice icons
+
+CD32 controls:
+
+- Play: pause
+- Fwd+Rev+Play: quit to workbench
+- Blue/second button: jump. Note that to grab a ladder, you have to jump on it first, then use
+  up to climb the ladder. The game is designed like that. Making "up" work on ladders from the start
+  would require to piggyback on the level logical grid to check if a ladder is behind the character like
+  the game does when the character is in mid-air. Doable but not worth the time...
+
+Other keys:
+
+- SPACE: close level codes screen, game over screen ...
+- F1: lose a life
+- F2: quit to menu
+- F4: restart level
+- F5: toggle music
+- F7: toggle the filter.
+
+There are too many moments where keyboard is needed, so I'm not doing a full 100% joypad game on that one.
+
+Titus The Fox Cheat mode: (source: Keith Krellwitz, Sweetcheater)
+
+        During play hold down both 'AMIGA' keys, 'C' and press 'F4'.  You
+        will be presented with a message and you will get 99 lives.
+
+                           (TITUS THE FOX LEVEL CODES)
+
+             LEVEL  1-"2625"     LEVEL  2-"8455"     LEVEL  3-"2974"
+             LEVEL  4-"4916"     LEVEL  5-"1933"     LEVEL  6-"0738"
+             LEVEL  7-"2237"     LEVEL  8-"5648"     LEVEL  9-"6390"
+             LEVEL 10-"8612"     LEVEL 11-"4187"     LEVEL 12-"1350"
+             LEVEL 13-"9813"     LEVEL 14-"5052"     LEVEL 15-"3360"
+                                 LEVEL 16-"2045"
+
+Note: level 15 code doesn't work, because level was scrapped. Level 16 code is the end sequence
+
+                           (MOKTAR LEVEL CODES)
+
+Source: www.cheatwarehouse.com
+
+1. 6752
+2. 2845
+3. 3559
+4. 1015
+5. 9822
+6. 7541
+7. 2665
+8. 2466
+9. 1331
+10.1802
+11.0791
+12.1204
+13.2290
+14.8311
+15.2332
+16.2578
+
+Level 16 code is the end sequence
+
+Notes:
+
+- Basically Moktar and Titus The Fox are almost exactly the same game.
+  The game was originally released as Moktar, which is a character invented
+  by a french "humorist", Lagaf. Then is was released abroad, and the Moktar
+  character along with some musics and sounds were changed to a more neutral
+  theme, and it became Titus The Fox (and last level was scrapped too, too "french"
+  and not really interesting anyway with 2 "BARBES" (Paris district) signs and Lagaf
+  posters. Wouldn't have fitted in the Titus game anyway.
+- The game appears bland at first, but reveals a surprising depth IMHO with
+  secret passages, a lot of funny items. Reminds me (loosely) of Magic Pockets,
+  although the latter is a much better game.
+- Coded by Carlo Perconti, a cross-platform prolific programmer from the 8-bit era.
+  His games were average to rather good but he wrote so many, so respect man!
+- the game engine looks very much like "The Blues Brothers" game engine too :)
+
+enjoy
+
+JOTD

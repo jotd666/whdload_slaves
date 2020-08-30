@@ -1,0 +1,31 @@
+Short : HD-Installer for Cabaret Asteroids V1.1
+Type : game/patch
+Author : Bored Seal, JOTD
+
+This patch applies to "Cabaret Asteroids - Vertical (c) 1991 - 1 disk.
+Slave requires WHDLOAD V10+, install requires RawDIC.
+Game requires 0.5 MB Chip Mem (+ 0.1 other memory for preload option)
+
+FEATURES:
+- Full loading from HD
+- Keyboard prefetch bug fixed (by JFF)
+- Blitter wait inserted
+- Highscores are saved
+- NI/ROM icon (created by JHZ)
+- Quit option (default key is '*' on keypad)
+
+RNC version only:
+- start game with fire button (lmb for 2 players)
+- source code included
+
+NOTE:
+ If you're experienced user, you can unpack file 'game' with XFD package
+and repack it with RNC or FIMP!, then replace installed slave with 'CA_RNC.slave'
+(available in archive) and loading will be much faster.
+
+Thanks to JFF for his JST patch and bugfix I used in my slave.
+
+Bored Seal
+
+      Bug report form, full WHDLoad package and other installs:
+                          http://www.whdload.de

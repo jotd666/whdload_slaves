@@ -1,0 +1,127 @@
+; $VER: Microprose Golf Install-Script V1.0 by Jean-Francois Fabre
+
+
+;try to figure out a place where the user usually installs his games
+(if (exists "Games:" (noreq) )
+    (set @default-dest "Games:")
+    (if (exists "SYS:Games" (noreq) )
+        (set @default-dest "SYS:Games")
+        (if (exists "Work:Games" (noreq) )
+            (set @default-dest "Work:Games")
+            (if (exists "JEUX:" (noreq) )
+               (set @default-dest "JEUX:")
+               (set @default-dest "SYS:")
+            )
+        )
+    )
+)
+
+(set GameDir "MicroproseGolf")
+
+; Ask the user what to install
+(set #install-datadisks
+	(askoptions
+		(prompt	"What do you want to install ?")
+		(help	@askoptions-help)
+		(choices
+			"Program Disk"
+			"Course Disk 1"
+			"Course Disk 2"
+		)
+	)
+)
+
+
+
+;ask the user to select a directory to install the game into
+(set default-dest
+     (tackon (askdir (prompt "Where would you like " @app-name " installed?\n"
+                             "A drawer called " GameDir " will be created.")
+                     (help @askdir-help)
+                     (default @default-dest)
+             )
+     GameDir
+     )
+)
+(set @default-dest default-dest)
+
+;	create the selected directory
+(makedir @default-dest
+         (infos)
+)
+
+(set #dest (tackon @default-dest "golf"))
+(makedir #dest
+         (infos)
+)
+
+
+(if (BITAND #install-datadisks 1)
+    (
+
+        (message "\n\n\n\n\n\nPlease insert Microprose Program Disk in any drive")
+
+        (copyfiles (source "Microprose Golf:golf")
+                   (dest #dest)
+		   (all)
+        )
+
+	;copy all extra files to this directory
+
+        (copyfiles (source "mgolfhd.readme")
+                   (dest @default-dest)
+		   (infos)
+        )
+
+	;replace the executables so it runs from any directory
+	;and the protection is removed
+
+        (copyfiles (source "golf")
+                   (dest #dest)
+        )
+
+        (copyfiles (source "code")
+                   (dest #dest)
+        )
+
+	;copy all extra files
+
+        (copyfiles (source "rungolf")
+                   (dest @default-dest)
+        )
+
+        (copyfiles (source "rungolf.icon")
+                   (dest @default-dest)
+		   (newname "rungolf.info")
+        )
+
+     )
+
+)
+
+(if (BITAND #install-datadisks 2)
+    (
+
+        (message "\n\n\n\n\n\nPlease insert Course 1 Disk in any drive")
+
+        (copyfiles (source "Course Disk 1:golf")
+                   (dest #dest)
+		   (all)
+        )
+     )
+
+)
+
+(if (BITAND #install-datadisks 4)
+    (
+
+        (message "\n\n\n\n\n\nPlease insert Course 2 Disk in any drive")
+
+        (copyfiles (source "Course Disk 2:golf")
+                   (dest #dest)
+		   (all)
+        )
+     )
+
+)
+

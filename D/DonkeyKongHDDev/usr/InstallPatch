@@ -1,0 +1,55 @@
+;ask the user to select a directory where the game is
+
+(set #gamedir "DonkeyKong")
+
+(set default-dest
+     (askdir (prompt "Where is " @app-name " located?\n")
+                     (help @askdir-help)
+                     (default @default-dest)
+                     (newpath)
+             )
+)
+
+(set @default-dest default-dest)
+
+(if (exists (tackon default-dest "DK-1200"))
+("")
+(
+  (abort  "The file 'DK-1200' was not found at the selected location")
+)
+)
+
+(copyfiles
+	(help @copyfiles-help)
+	(source "readme")
+	(dest @default-dest)
+	(infos)
+)
+
+
+
+(copyfiles
+	(help @copyfiles-help)
+	(source ("%s.slave" #gamedir))
+	(dest @default-dest)
+)
+
+  (set #icon
+    (askchoice
+      (prompt "\nWhich icon do you like to install ?\n")
+      (default 0)
+      (choices "Newicon" "Glowicon")
+      (help @askchoice-help)
+    )
+   )
+
+(select #icon
+  (set #icon ("%s.newicon" #gamedir))
+  (set #icon ("%s.glowicon" #gamedir))
+)
+(copyfiles
+  (help @copyfiles-help)
+  (source #icon)
+  (newname ("%s.info" #gamedir))
+  (dest @default-dest)
+)
