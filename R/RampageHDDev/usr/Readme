@@ -20,7 +20,7 @@ FEATURES:
 
 History:
 
-v1.3-a: installer script redone from scratch, source included (old but still works!)
+v1.3-a (Stingray): installer script redone from scratch (issue #0004440), source included (old but still works!)
 v1.3: hiscore saving support added (no more illegal instruction)
 v1.2: keyboard routine fixed again. The game no longer freezes.
 v1.1: fixed install script, reassembled, with diskfile renamed

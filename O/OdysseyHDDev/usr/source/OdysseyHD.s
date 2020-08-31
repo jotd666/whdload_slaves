@@ -379,7 +379,7 @@ _load_exe:
 	rts
 
 _saveregs
-		blk.l	16,0
+		ds.l	16,0
 _stacksize
 		dc.l	0
 

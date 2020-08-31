@@ -44,7 +44,7 @@ IOCACHE = 50000
 ; fix glitches in sound replay
 PATCH_SOUND
 
-	include	"sierra_hdinit.asm"
+	include	"sierra_hdinit.s"
 
 DECL_VERSION:MACRO
 	dc.b	"1.2"

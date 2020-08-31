@@ -406,7 +406,7 @@ _FileTable0
                 dc.l    -1
 
 _FileTable1     ;dc.l   0                       ;Skip first file
-                blk.l 45*2 ; 45 files
+                ds.l 45*2 ; 45 files
                 dc.l    -1
 
  ENDC

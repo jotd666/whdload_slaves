@@ -43,7 +43,7 @@ IOCACHE = 50000
 
 PATCH_SOUND
 
-	include	"sierra_hdinit.asm"
+	include	"sierra_hdinit.s"
 	IFD BARFLY
 	IFND	.passchk
 	DOSCMD	"WDate  >T:date"

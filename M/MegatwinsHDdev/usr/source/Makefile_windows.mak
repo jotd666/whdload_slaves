@@ -1,6 +1,6 @@
 #added by python script
 
-PROGNAME = Xenon2Demo
+PROGNAME = Megatwins
 HDBASE = K:\jff\AmigaHD
 WHDBASE = $(HDBASE)\PROJETS\HDInstall\DONE\WHDLoad
 WHDLOADER = $(PROGNAME).slave

@@ -1616,7 +1616,7 @@ _Lock:
 	BRA.W	.END
 
 .smallbuf:
-	blk.l	10,0
+	ds.l	10,0
 
 .LOCKFAILED
 	MOVEQ.L	#0,D0
