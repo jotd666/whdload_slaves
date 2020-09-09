@@ -1,0 +1,800 @@
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[RYGAR]   The Dox to **> 4D SPORTS DRIVING <** By Rygar/Science 451.   [RYGAR]
+
+Greets: Gee Dee, Jake/TSL, Deathlok, IBM, Scout, Swayzar, TCM & Joker, Manx,
+        Scooter, LSD, Andy, JAVAHEAD, Wormeater Y, Hoson, PiEmAn, WinterMute
+        AndEverOn, Fashion Light, The Cool Dudes(!) At Key West, Florida!...
+
+Notes:    1. CUBANS, DON'T STEAL MY INNER TUBES!!! YOU FUCKING "CUBAN" !!!
+
+          2. Still looking for more couriers (just kidding! heh)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+INTRODUCTION
+
+Welcome to the proving ground. This is the place where you can really feel the
+difference between good cars and the world's finest cars; where 55 isn't the
+limit, it's just getting started; where every driver wants a "cherry," and
+"lemons" don't even get to play. And it's no place for a driver who's too
+timid to get it up to 100 MPH on the loop, afraid to take the pipe upside
+down, or scared of a little "friendly" competition.
+
+The "Stunts" proving ground has two features that make it like no other in the
+world. It can be built almost any way you want it. And each track can be
+filled with fun, exciting and destructive stunts that can smash your car to
+pieces in a matter of seconds. So if you want to take a car around the track,
+you have to have the guts to get up to speed and the restraint to keep from
+going over the edge. Don't forget to buckle up.
+
+
+BEGINNING PLAY
+
+See the included reference card to find out about how to load the game onto
+your hard disk, or how to play from floppy disks. (Reference Card at the end
+of this textfile - [RYGAR].)
+
+Your Reference Card will also include information on how to control your car,
+as well as the conventions of using the keyboard, mouse or joystick throughout
+the game.
+
+Once you are on the main screen, you can begin driving immediately on the
+standard track by clicking on the car in the center of the screen. To select a
+new track, or create your own, select the sign labeled "Track," then see page
+13 for instructions on how to use the Track Editor. If you'd like to change
+the car you're driving, select the sign labeled "Auto," then see page 7 for
+descriptions of your possible car selections. If you'd like to race against an
+opponent, rather than race against the clock, select the sign labeled
+"Opponents," then see page 12 for descriptions of your competition. Choose
+"Option" to return to DOS or to see a list of options available throughout the
+game. See the Reference Card for more information about these options, which
+include setting the graphic level/animation rate, changing background scenery
+and loading replays, along with sound and input settings.
+
+
+DRIVING THE COURSE
+
+
+DRIVING TIME
+~~~~~~~~~~~~
+Each track has its own "Best Times" listing, found on the track selection
+screen. Your goal is to be on it. Your real goal is to be on the top of it. Of
+course, you'll have to finish the course to even have a time.
+
+The "Best Times" list will show your name, the car you drove to achieve your
+time, the opponent you raced (if any), and the time it took you to complete
+the course (including penalty time, if any).
+
+Some tracks will have forks in the road, giving you choices of how to complete
+the track. Be forewarned that not all fork paths lead to the end of the race;
+you might do well to preview a track before racing it (see page 13 under
+"Track Editor"). In addition, previewing might give you a better idea of what
+kind of car is best suited to the track.
+
+You'll find that some paths of the trackmight be shorter than others, but the
+difficulty of stunts along those paths may make them more time consuming than
+they look, as well as more dangerous.
+
+Ways to improve your best time include trying different cars on each path, as
+well as different paths through each track.
+
+
+PENALTY TIME
+~~~~~~~~~~~~
+Those drivers inclined to improve their times by skipping stunts should take
+note- the track knows who cheats. After each race, you'll be assesses "Penalty
+Time" for those portions of track (including stunts) which you missed. You're
+allowed to swerve off the track now and then, but missing wholesale lengths of
+tracks or entire stunts will cost you dearly.
+
+
+TIPS FOR A FASTER TIME
+~~~~~~~~~~~~~~~~~~~~~~
+The amount of penalty time you accrue will depend on several factors. Missing
+a jump or corkskrew will cost you more penalty time than missing three pieces
+of regular track.
+
+If you stray off the track, you'll see arrows directing you back onto the
+track in the proper direction. If you get on the track going in the wrong
+direction, you'll be told that you're driving the wrong way.
+
+You'll only be assigned penalty time when you begin driving on the track
+again. You may stray off the track and inadvertently cross other pieces
+without penalty.
+
+Become familiar with the handling of your car. Each vehicle has a different
+ability to grip the road, and a different point in turning at which it will
+spin out. Know that line.
+
+Don't be seduced by the faster cars. Speed counts, but some courses make you
+pay for your speed in off-road time and crashes.
+
+Don't be afraid to try different cars. While all the vehicles behave
+differently, they can all be mastered. Some track designs will call for
+different kinds of cars, so go ahead and try them out.
+
+
+QUALIFYING FOR A "BEST TIME"
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In order to qualify for a best time, the track you drive on must meet some
+qualifications. The track must be one of the tracks saved on your disk or hard
+drive (in other words, you must be able to select it in the Track Editor under
+"More Tracks), and the course you drive must exactly match the course saved
+under the same name. This means you cannot jump into a race from the replay,
+or drive a course only available in the replay and appear on the "Best Times"
+list unless that course is also available in your Track Editor.
+
+
+DISABLING THE SECURITY SYSTEM
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+SLAM Return, HARD!!!! Cracked by Crystal!
+
+
+                                  THE STUNTS
+                                  """"""""""
+
+THE PIPE
+~~~~~~~~
+Avoid the cement blocks by running up the sides of the pipe. Just make sure
+you're back on the ground by the time you come out. Your initial inclination
+will probably be to steer hard to one side or the other, but that path is
+likely to put you into a spin. Slow, steady progress up the side is the best
+plan. In the off-road vehicles, don't climb too high on the wall. Just see if
+you can stay out of the way of the cement.
+
+
+THE JUMP
+~~~~~~~~
+You'll need to gather speed for this, but don't overrun the down ramp, or your
+bumpy landing may cost you time. Best speed is between 90 and 130 MPH. Yes,
+you can hit the cables and crash.
+
+
+THE CORKSCREW
+~~~~~~~~~~~~~
+You can go as fast as your traction holds, but you must be going at least 60
+MPH in order to get through this stunt. If you keep flying out the end, try
+slowing down.
+
+
+THE SLALOM
+~~~~~~~~~~
+Although the LM-002 may (or may not) be able to run through these cement
+blocks (we wouldn't recommend it), you will likely have better luck with a
+tight cornering car. Each vehicle will have a different optimum speed for
+this, and your stunt driving ability will have a lot to do with it as well.
+
+
+THE BOULEVARD
+~~~~~~~~~~~~~
+One side or the other should work; avoid driving straight.
+
+
+THE BANKS
+~~~~~~~~~
+The straightaways are relatively simple; just stay on them. The curves are a
+little more dangerous. Depending on your vehicle, you'll want to keep at a
+maximum of 90 MPH or so. Again, be careful not to oversteer; it's easy to miss
+large chunks of road on banked curves and incur high time penalties.
+
+
+THE LOOP
+~~~~~~~~
+No, speeding up to 140 MPH for this won't help you get through it. The key is
+control while you are driving through the loop. Less than 60 MPH may cause you
+to fall out at the peak, while more than 110 MPH will probably shoot you out
+the side at escape velocity. You'll probably want to steer right very gently
+as you go through this.
+
+
+THE OTHER SURFACES
+~~~~~~~~~~~~~~~~~~
+Indy and Formula One tracks are not made of dirt. Take one of these cars out
+on a dirt track to find out why. Dirt and ice tracks are the home of the off-
+road vehicles, but some of the road cars will work fairly well on this type of
+track too. We leave it to you to find out which.
+
+
+THE ELEVATED ROADS
+~~~~~~~~~~~~~~~~~~
+Standard suspension bridges come in two flavors: translucent for those who
+wish to see what they're driving over, and opaque for those who are afraid of
+heights.
+
+While a straight bridge is no trouble at all, watch out for suspended curves;
+they come up quickly and have a maximum speed of about 50 MPH
+
+
+THE SPIRAL
+~~~~~~~~~~
+Reminiscent of the spiral parking garage ramp. 50 MPH should be acceptable if
+you've practiced. They really are only one 360 degree turn, although they seem
+like forever when you go through them.
+
+
+THE TUNNEL
+~~~~~~~~~~
+When this stunt is isolated, any car can negotiate it. However, it can be
+particularly dangerous after an icy curve. The best car for this stunt depends
+on what cruelty was in the mind of the track creator
+
+
+                              CHOOSE YOUR CAR
+                              ~~~~~~~~~~~~~~~
+When you choose to select a car, you'll see a screen displaying the current
+car, an acceleration curve (showing how quickly the displayed vehicle
+accelerates), some statistics on the car (including top speed and suggested
+retail price), and a set of buttons.
+
+Select DONE if you wish to drive the displayed car exactly as shown. Select
+NEXT or LAST to cycle through the eleven available cars. You will be shown one
+car at a time; continue using these buttons until the desired car is
+displayed. Select COLOR if you wish to change the color of the car. Select the
+AUTO/MANUAL button to toggle between automatic transmission and manual
+transmission; whichever mode is displayed when you select DONE is what you'll
+be driving.
+
+Once you select DONE, we'll truck your selected vehicle out to the track, then
+leave the driving to you. You'll be returned to the Main Menu. You then can
+get to the track by selecting "Let's Drive".
+
+
+RACING CARS
+
+You'll find these cars in Indianapolis and Datona, at Le Mans and Detroit
+driving in the Prototype and Indy-type races. Burn it up on the straightaways
+and get great ground effects in the tunnels, but watch for slippery road and
+be ready to decelerate quickly.
+
+
+PORSCHE MARCH INDY
+~~~~~~~~~~~~~~~~~~
+Rear-mounted engine; Rear-wheel drive; Dual overhead cam V-8, 2649 cc, 720 HP
+turbo engine; 0-60 2.9 seconds; Top speed: 230 MPH; Price $420,000.
+
+
+JAGUAR XJR9 IMSA
+~~~~~~~~~~~~~~~~
+Rear-mounted engine; Rear-wheel drive; Dual overhead cam Flat 6, 3500 cc, 520
+HP turbo engine; 0-60 2.9 seconds; Top speed: 215 MPH; Price $325,000.
+
+
+PORSCHE 962 IMSA
+~~~~~~~~~~~~~~~~
+Rear-mounted engine; Rear-wheel drive; dual overhead cam Flat 6, 3500 cc 525
+HP turbo engine; 0-60 2.8 seconds; Top speed: 215 MPH; Price $275,000.
+
+
+ROAD CARS
+
+Just your everyday type of vehicle. You might see one of these on the road.
+Perhaps you even drive one yourself.
+
+
+LAMBORGHINI COUNTACH
+~~~~~~~~~~~~~~~~~~~~
+Mid-mounted engine; Rear-wheel drive; Dual overhead cam V-12, 5162 cc, 420 HP
+engine; 0-60 4.7 seconds; Top speed: 183 MPH; Price $150,000.
+
+
+ACURA NSX
+~~~~~~~~~
+Mid-mounted engine; Rear-wheel drive; Dual overhead cam V-6, 3000 cc, 270 HP
+engine; 0-60 5.2 seconds; Top speed: 165 MPH; Price $60,000.
+
+
+FERRARI GTO
+~~~~~~~~~~~
+Mid- mounted engine; Rear-wheel drive; Dual overhead cam V-8,2855cc, 394 HP
+turbo engine; 0-60 4.7 seconds; Top speed: 190 MPH; Price $74,000.
+
+
+PORSCHE CARRERA 4
+~~~~~~~~~~~~~~~~~
+Rear-mounted engine; 4-wheel drive; Single overhead cam Flat 6, 3600 cc, 250
+HP engine; 0-60 5.8 seconds; Top speed: 161 MPH; Price $69,500.
+
+
+CORVETTE ZR-1
+~~~~~~~~~~~~~
+Front-mounted engine; Rear-wheel drive; Dual overhead cam V-8, 5727 cc, 375 HP
+engine; 0-60 4.9 seconds; Top speed: 172 MPH; Price $50,000.
+
+
+OFF-ROAD VEHICLES
+
+The Lancia and Audi are well-known in Europe for their many successful
+appearances in off-road rallies. The Lamborghini was designed for military
+use. While this model doesn't launch rockets, it may drive like one.
+
+
+LANCIA DELTA INTEGRALE
+~~~~~~~~~~~~~~~~~~~~~~
+Front-mounted engine; 4-wheel drive; Dual overhead cam 16v, 1995 cc, 200 HP
+engine; 0-60 6.1 seconds; Top speed: 137 MPH; Price $40,700.
+
+
+AUDI QUATTRO
+~~~~~~~~~~~~
+Front-mounted engine; 4-wheel drive; Dual overhead cam INLINE-5, 2133 cc, 220
+HP engine; 0-60 6.1 seconds; Top speed: 145 MPH; Price $60,000.
+
+
+LAMBOURHINI LM-002
+~~~~~~~~~~~~~~~~~~
+Front-mounted engine; 4-wheel drive; Dual overhead cam V-12, 5167 cc, 444 HP
+engine; 0-60 7.7 seconds; Top speed: 126 MPH; Price $120,000.
+
+
+USE THE REPLAY CAMERA
+
+You can record up to 10 minutes of driving in the video replay. If you take
+longer than 10 minutes to complete a course, you'll be interrupted while
+driving with a query whether you want to review your race so far or continue
+driving. If you review, you'll be allowed to return to your race with no
+penalty (if you continue from the point at which you stopped). If you choose
+not to review your race, every 20 seconds that you continue driving beyond the
+prompt will erase 20 seconds of saved replay from the beginning of your race.
+
+
+THE REPLAY PANEL
+
+
+REWIND/FAST FOREWARD
+~~~~~~~~~~~~~~~~~~~~
+Use the "Rewind" button to set the Replay Camera to any point in the race. As
+you rewind, you'll notice the counter moving backwards in time. Once you
+release the "Rewind" button, there will be a slight delay while the computer
+locates that exact point in the race. Once you have brought up the desired
+point in the race, you can either watch your performance ("Play") or assume
+control of the car from that point, driving to the end of the race (See
+"Continue Driving" on page 11).
+
+Once you have rewound, you can use the "Fast Foreward" button to move to a
+point later in the replay in much the same way.
+
+
+PLAY
+~~~~
+"Play" lets you view the race you just finished. While in play mode (or while
+paused), you can change the camera view, as well as the manual camera angle.
+Press "R" to show or hide the replay panel; press "D" to show or hide the
+dashboard.
+
+
+FAST PLAY
+~~~~~~~~~
+"Fast Play" allows you to move through the replay at a faster speed, while
+still seeing your driving performance. This button is useful for cueing up a
+particular spot in your race. You can also change the camera mode while in
+this viewing mode.
+
+
+CAMERA SELECTION
+~~~~~~~~~~~~~~~~
+Press "C" to move between the different camera views. You can do this either
+while in "Play" or "Stop" mode.
+
+Inside the Car: This option gives you the same perspective you had while
+driving the race. Press "R" to remove the Replay panel, and relive the moment
+completely.
+
+Overhead Camera: This option allows you to view your race from a position
+directly above your vehicle. This view is particularly useful if you crashed
+and burned and have no clue why it happened.
+
+Track Cams: Get the feeling of the raceway from the Track Cams, automatically
+placed by the computer at strategic points throughout every track. Watch
+yourself race as if you were one of the crowd.
+
+Manual Settings: Using this option, you can set the camera at any angle. Click
+on the buttons to pan or zoom if you are using a mouse or joystick. See the
+reference card for keyboard controls.    
+
+Change Graphic Level: This option changes the trade-off of how quickly your
+screen refreshes versus how far away you can see. If this is confusing, just
+choose this option (or press "CTRL-G" while driving) until you're comfortable
+with how the game is displayed.
+
+
+TOGGLE CAR VIEW
+~~~~~~~~~~~~~~~
+This item will only be available when you are racing against an opponent
+(rather than just against the clock). It will allow you to toggle between
+watching yourself run the race and watching your opponent. You can watch one
+car run the entire race, or you can toggle at a specific point in time within
+the race to view comparative positions on the course.
+
+
+MAIN MENU
+~~~~~~~~~
+This option brings you back to the main menu, where you can select any area of
+the game-tracks, opponents or cars.
+
+
+LOAD REPLAY
+~~~~~~~~~~~
+View any saved replay using this option. When you choose this selection,
+you'll be given a list of replays in the current directory. Highlight the
+desired replay using the cursor keys and press "Enter" to load. You can then
+use the regular Replay Panel to view the replay as you normally would.
+
+
+SAVE REPLAY
+~~~~~~~~~~~
+When your crash and burn is awe-inspiring, you can save it to show your
+friends (or yourself) later. When you choose this option, you'll be prompted
+to insert a name for the file. It will be saved in the same directory as
+"Stunts" as a ".rpl" file. WARNING: Selecting any option but this (or "Return
+to Replay") will erase your replay unless it has been saved.
+
+
+DISPLAY OPTIONS
+~~~~~~~~~~~~~~~
+Hide/Show Dashboard: At any point in the replay, you can remove the dashboard
+from the screen or make it reappear by selecting this item. This feature is
+also available by pressing "D" on the keyboard during the replay (or while you
+drive).
+
+Hide/Show Replay Panel: Like the command above, this menu item toggles the
+display of the replay panel on and off. Press "R" to access this feature from
+the keyboard.
+
+Change Camera Angle: This option operates from the menu to change the camera
+angle as described on page 10 under camera selection.
+
+
+THE MENU
+
+
+RETURN TO PLAY
+~~~~~~~~~~~~~~
+Use this choice to erase the menu and move the cursor back to the main Replay
+panel.
+
+
+RETURN TO EVALUATION
+~~~~~~~~~~~~~~~~~~~~
+Choose this to review your evaluation (time, penalty, speed, opponent's
+judgement of your performance, etc.). Once you leave the replay, this
+information disappears, so if you have any questions, better check now.
+
+
+RE-START DRIVING
+~~~~~~~~~~~~~~~~
+This selection allows you to immediately begin the race again, using the same
+track, same car and same opponent (if any). Your replay and evaluation will be
+erased.
+
+
+CONTINUE DRIVING
+~~~~~~~~~~~~~~~~
+This option will only be highlighted if you have previously set the replay to
+a point in the race (using the "Rewind" button). You may then assume control
+of the car and complete the race; the replay of your initial race from this
+point foreward will be erased and replaced with this completion of the race.
+Once you have completed the race a second time, you can view your driving
+performance from start to finish as if it were one continuous race. You will
+not, however, be able to enter an "edited" race on the "Best Times" list.
+
+
+THE OPPONENTS
+~~~~~~~~~~~~~
+If you'd like to see if you're up to the caliber of other drivers around, you
+can choose to race any one at a time. Each has different abilities and areas
+of expertise; a driver's best time will vary with the type of course and car
+chosen.
+
+When you're racing against an opponent, you'll need to know where they are on
+the track. Whenever an opponent is within 50 feet of you, you'll see an
+indicator appear on your screen. This will show his or her position relative
+to you. Of course, if they blow by you, you'll be able to see their tail
+lights and smell their exhaust.
+
+
+"SQUEALIN" BERNIE RUBBER
+
+The worst driver at the proving ground (except maybe you). Once you've beaten
+him...well...you're just getting started.
+
+
+HERR OTTO PARTZ
+
+This European driver has trouble with aerial stunts or elevated road, but
+could blow your doors off on a flat track.
+
+
+"SMOKIN'" JOE STALLIN
+
+Be sure to make up ground on the straightaways, because the way Joe handles
+curves is a thing of beauty.
+
+
+CHERRI CHASIS
+
+She's just in it for the speed. She lives for straightaways, but thinks
+corners are annoying.
+
+
+HELEN WHEELS
+
+She makes a trip around the course seem like a demolition derby. The big
+challenge is in staying out of her way.
+
+
+SKID VICIOUS
+
+The best driver on the course (except maybe rygar). When you've outperformed
+this driver, your name truly deserves to be on the "Best Times" list.
+
+
+
+
+BUILDING YOUR TRACK
+
+
+SELECTING/PREVIEWING A TRACK
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+When you select "Track" from the main menu, you'll have the option to select a
+new track from those already built, edit or create a track, or exit to the
+main menu. While on this screen, You'll see a bird's-eye view of the currently
+selected track.
+
+If you'd like to drive a different track, select the button labeled "More
+Tracks". Choose one of the tracks shown (or type in the subdirectory name
+after "Path:" if you have tracks stored in a subdirectory). You'll see that
+the track shown in the background has now changed to the one just chosen. Now
+is an excellent time to look for difficult spots, before they come upon you at
+120 MPH.
+
+
+USING THE TRACK EDITOR
+~~~~~~~~~~~~~~~~~~~~~~
+When you select the Track Editor, you'll see two major components on the
+screen: the track window on the left, and the palette on the right. Use the
+joystick or the mouse keypad to move the cursor between these two areas of the
+screen.
+
+You'll also see the piece currently under the cursor described directly below
+the track window.
+
+Select a piece of track in the palette by clicking on it with the mouse or
+joystick, or using the cursor keys to move the highlight to it and pressing
+the ENTER or RETURN key.
+
+Use the Joystick or Mouse to move the cursor over to the track window, then
+move the cursor to the square where you'd like the selected piece placed.
+Notice that the cursor is now flashing the selected piece over the current
+track window square. Press ENTER or RETURN, or click the mouse or joystick
+button to place the selected piece on that track window square.
+
+You will notice that some pieces are more than one square in size. Look
+closely when placing these pieces to see how the cursor flashes the selected
+piece. The area over which the cursor flashes the selected piece is the area
+upon which it will be placed.
+
+If the piece you wish to select is currently placed somewhere in the track
+window, you can move the cursor over it and doubleclick the mouse, joystick or
+ENTER key to select it, rather than jumping to the palette.
+
+
+THE TRACK WINDOW
+~~~~~~~~~~~~~~~~
+Each track is on a 30x30 grid of squares which covers a virtual area of
+approximately 1 square mile. You can see an 11x12 window of that area in the
+Track window at any time. To scroll that window around the track, use the
+mouse or joystick to move the scroll bars located below and to the right of
+the window, or use the cursor keys to move the cursor beyond the edge of the
+window. You can use any square in the grid to place track or scenery except
+corners of plateau (edges of plateau also have some restrictions) and water.
+
+
+PALETTES
+~~~~~~~~
+You can cycle through the palettes by pressing the "+" and "-" keys on the
+keypad, using the scroll bar directly under the palette window (see "Buttons"
+below), or pressing the F1 through F10 keys.
+
+Your palettes provide you with the tools to load, edit, and save a track, as
+well as the option to quit back to the main menu or create a brand new track.
+
+
+BUTTONS
+~~~~~~~
+The buttons to Load, Save, (create) New, Exit and Change Palette are always
+available, regardless of which palette you are using (Change Palette is the
+scroll bar positioned just below the construction tiles and above the other
+buttons).
+
+SAVE allows you to save the current track on which you are working. If, when
+saving a track, you choose a name currently used for another track, you will
+be asked if you wish to choose another name.
+
+LOAD allows you to work or race on a currently existing track. When you choose
+this option, you will be shown a list of existing tracks in the current
+directory. Highlight the desired track using the up and down cursor keys, then
+press ENTER or RETURN to select.
+
+NEW is the first step in building a new track. When selecting this button, you
+will first be given a set of backgrounds upon which to build your track. Each
+track requires and is allowed one (and only one) start/finish line, though the
+paths to get from and to that line may be many. You may not build track on
+water other than bridges, and you may not build track on the side of hills
+other than pieces going directly up the hill. Other than that, you're pretty
+free. Road can abruptly end, fork or rejoin. There are some restrictions
+placed on the building of stunts; for more information on these, see each
+individual stunt listed below.
+
+EXIT brings you back to the main screen, BUT DOES NOT AUTOMATICALLY SAVE ANY
+CHANGES YOU MAY HAVE MADE TO A NEW TRACK. If you have not saved changes to the
+track, it will prompt you to do so.
+
+To use the Change Palette button, position the cursor over the scroll bar in
+the middle of the palette window. You may then use the left and right cursor
+keys to change the palette (as well as the function keys or the "+" and "-"
+keys).
+
+
+BASIC BUILDING BLOCKS
+~~~~~~~~~~~~~~~~~~~~~
+Palette 1 contains the basic building blocks of tracks, including straight
+East/West track, straight North/South track, crossroads, and four orientations
+each of 90' turns, broad sweeping turns, 90' fork right and 90' fork left.
+These pieces have no restrictions. It also contains the all-important
+start/finish lines. You may only use one of these, but you must use one (from
+either this palette or palette 2 or 3).
+
+
+DIRT TRACK
+~~~~~~~~~~
+Palette 2 contains the same pieces as Palette 1, except that the road surface
+is dirt rather than asphalt. These pieces also have no restrictions.
+
+
+ICY TRACK
+~~~~~~~~~
+Palette 3, like Palette 2, contains the same pieces as Palette 1, except that
+these pieces have ice-surfaced roads. These pieces also have no restrictions.
+
+
+SLALOM, LOOP, PIPE, JUMP, TUNNEL & CORKSCREW
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Palette 4 contains six stunts: the slalom, the loop, the pipe, the jump, the
+tunnel and the corkscrew. Each stunt comes in two orientations: East/West and
+North/South.
+
+The slalom, loop, tunnel, jump, and corkscrew may be placed at any point on
+the track; there are no restrictions associated with them. The slalom and
+tunnel make for more interesting driving when several pieces are placed
+together in sequence. While it is possible to do this with the loop and
+horizontal corkscrew, it is highly unlikely that a course so designed could be
+successfully completed. So go ahead and try it.
+
+Unlike the other stunts on this palette, the pipe is made up of four distinct
+pieces: In, Through, Barrier and Out. You can place as many throughs together
+as you like, but each string of Throughs need to be capped at each end by an
+In and an Out. It's not just good sense, it's the law. The barrier piece is
+what makes it fun; like a Through piece, it goes between the end pieces, but
+it has a cement barrier on the ground side of the pipe. These are the pieces
+that force the driver to go up the side of the pipe.
+
+
+BANKED TRACK
+~~~~~~~~~~~~
+Palette 6 contains the banked pieces, both curves and straightaways. There are
+two orientations each of banked right straightaways and banked left
+straightaways, and four orientations of banked curves. Like pipes, banks have
+an In and an Out, and any stretch of banked road must be capped at either end.
+
+
+BROAD FORKS
+~~~~~~~~~~~
+Palette 6 contains four orientations of broad right forks and broad left
+forks. These are pieces that fork more gradually than 90 and provide more
+variety in steering the open road. There are no restrictions on these pieces.
+
+
+BOULEVARDS AND "S" CURVES
+~~~~~~~~~~~~~~~~~~~~~~~~~
+Palette 7 contains boulevards (two orientations) and "S" curves (two
+orientations left and two orientations right). "S" curves have no
+restrictions. Boulevards require end pieces capping any length of middle
+pieces.
+
+
+RAMPS & ELEVATED ROAD
+~~~~~~~~~~~~~~~~~~~~~
+Palette 8 contains ramps and most pieces of elevated roadway. There are two
+types of elevated ramps- regular and solid. Both perform essentially the same
+function; selection is simply a matter of visual preference. Each of these
+comes in four orientations (N S E W), and should be used to cap any stretch of
+elevated road.
+
+Elevated road comes in four varieties: regular, span, solid, and over road.
+Again, the function of the first three types is essentially the same;
+differences are in visual preferences. Elevated span over road allows you to
+build tracks that cross without meeting.
+
+Elevated corners come in four orientations and allow you to build prolonged
+stretches of elevated track.
+
+
+SPIRALS
+~~~~~~~
+Palette 9 contains Spirals, which act as another form of up and down-ramp.
+These come in four orientations each of "spiral right" and "spiral left."
+
+
+SCENERY
+~~~~~~~
+Palette 10 contains a variety of scenery pieces, including windmills, barns,
+gas stations, restaurants, several types of trees, office buildings, factories
+and tennis courts. Several of these scenery pieces come in four orientations,
+one in each direction, so that they can face the road properly.
+
+
+
+
+
+REFERENCE CARD
+""""""""" """"
+
+TO DRIVE
+
+
+KEYBOARD
+
+LEFT ARROW       TURN LEFT
+RIGHT ARROW      TURN RIGHT
+UP ARROW         ACCELERATE
+DOWN ARROW       BRAKE
+A                SHIFT UP
+Z                SHIFT DOWN
+
+MOUSE
+
+LEFT BUTTON      BRAKE
+RIGHT BUTTON     ACCELERATE
+A                SHIFT UP
+Z                SHIFT DOWN
+
+KEYBOARD OPTIONS
+
+CTRL-J           JOYSTICK MODE
+CTRL-K           KEYBOARD MODE
+CTRL-Q           QUIT TO DOS
+CTRL-M           MUSIC ON/OFF
+CTRL-S           SOUND EFFECTS ON/OFF
+ESC              RETURNS TO PREVIOUS MENU OR
+                 STOPS CALCULATING OPPONENT TIME
+P                PAUSE
+C                (IN TRACK EDIT)CHECK FOR ERRORS
+
+WHILE DRIVING
+
+D                SHOW/HIDE DASHBOARD
+R                SHOW/HIDE REPLAY PANEL
+CTRL-G           SET GRAPHICS LEVEL
+T                SHOW PLAYER/OPPONENT CAR
+C                CHANGE CAMERA VIEW
+M                DRIVE USING MOUSE
+
+
+END OF TEXT! RYGAR!!!
+
+
+                            This file passed through
+                                     __        __     __ __
+                     |/\ |/\  /||_ ||  ||/\   |  | /||  || \
+                     |\/ |\/ |-| |_||-| |\/   | __|-|   ||-
+                     |   | \ | | __||__|| \   |__|| |  / |_/
+
+                         long before you ever got it...
+
+           L S D   U N I T E D   S T A T E S   H E A D Q U A R T E R S
+
+                                 (501) 336-9661
+
+
+

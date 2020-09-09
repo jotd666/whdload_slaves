@@ -1,8 +1,8 @@
 ;*---------------------------------------------------------------------------
 ; Program:	HighwayHawks.s
-; Contents:	Slave for "HighwayHawks" (c) 1985 Activision
-; Author:	Codetapper & JOTD
-; History:	26.01.05 - v1.0
+; Contents:	Slave for "HighwayHawks" (c) 1988 Anco
+; Author:	JOTD
+; History:	
 ; Requires:	WHDLoad 16+
 ; Copyright:	Public Domain
 ; Language:	68000 Assembler
@@ -10,10 +10,11 @@
 ;---------------------------------------------------------------------------*
 
 		INCDIR	Include:
-		INCDIR	osemu:
 		INCLUDE	whdload.i
 		INCLUDE	whdmacros.i
 		INCLUDE	lvo/dos.i
+
+;;CHIP_ONLY
 
 		IFD BARFLY
 		OUTPUT	"HighwayHawks.slave"
@@ -28,8 +29,13 @@
 
 ;======================================================================
 
+    IFD CHIP_ONLY
+CHIPMEMSIZE	= $C0000
+FASTMEMSIZE	= $0000  
+    ELSE
 CHIPMEMSIZE	= $80000
 FASTMEMSIZE	= $40000
+    ENDC
 NUMDRIVES	= 1
 WPDRIVES	= %1111
 
@@ -53,6 +59,8 @@ DISKSONBOOT
 ;SETPATCH
 ;STACKSIZE	= 6000
 TRDCHANGEDISK
+;CACHECHIPDATA
+CACHE
 
 ;======================================================================
 
@@ -75,10 +83,22 @@ slv_keyexit	= $5D
 
 DECL_VERSION:MACRO
 	dc.b	"1.1"
+	IFD BARFLY
+		dc.b	" "
+		INCBIN	"T:date"
+	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
+	ENDC
 	ENDM
-
+    
 slv_CurrentDir	dc.b	0
-slv_name	dc.b	"Highway Hawks",0
+slv_name	dc.b	"Highway Hawks"
+    IFD CHIP_ONLY
+    dc.b    " (DEBUG/CHIP ONLY)"
+    ENDC
+    dc.b    0
 slv_copy	dc.b	"1988 Anco",0
 slv_info	dc.b	"Adapted & fixed by JOTD",10
 		dc.b	"Version "
@@ -98,8 +118,9 @@ slv_info	dc.b	"Adapted & fixed by JOTD",10
 		dc.b	" "
 		INCBIN	"T:date"
 	ENDC
-		dc.b	$A,$D,0
-
+		dc.b	0
+    even
+    
 ;======================================================================
 
 _bootblock
@@ -139,8 +160,18 @@ patch_exe
 	MOVEA.L	(A7)+,A1		;040: 225F
 	MOVEA.L	(A5),A0			;042: 2055
 	movem.l	d0-d1/a0-a2,-(a7)
-	move.l	_resload(pc),a2
-	move.l	a0,a1
+    
+    ;set segment tags
+    move.l  _resload(pc),a2
+    move.l  a0,d0
+    subq.l  #4,d0
+    lsl.l   #2,d0   ; BCPL
+    lea (segments,pc),a0
+    move.l  d0,(a0)
+    lea	(segtag,pc),a0
+	jsr	(resload_Control,a2)
+    
+	move.l	(a5),a1
 	lea	pl_exe(pc),a0
 	jsr	resload_Patch(a2)
 	movem.l	(a7)+,d0-d1/a0-a2
@@ -159,6 +190,7 @@ ABSEXECBASE = 4
 
 avoid_trap_15
 	; spurious interrupt occured: clear all
+	move.w	#$7FFF,$DFF09C
 	move.w	#$7FFF,$DFF09C
 
 	; patch return from trap
@@ -180,11 +212,11 @@ load_another_exe
 	move.w	d0,d1
 	rts
 
-
-	JSR	(A1)			;06B6: 4E91
-	CLR	D1			;06B8: 4241
-	MOVE.B	D0,D1			;06BA: 1200
-	rts
+    
+	;JSR	(A1)			;06B6: 4E91
+	;CLR	D1			;06B8: 4241
+	;MOVE.B	D0,D1			;06BA: 1200
+	;rts
 
 swap_disks
 	move.b	#0,d0
@@ -288,8 +320,50 @@ pl_exe
 	PL_PS	$2DC2,fix_access_fault_1
 	PL_PS	$6166,fix_access_fault_2
 	PL_PS	$1944,fix_access_fault_3
+    
+    ; nop THEN waitblit (to save cycles)
+    PL_NOP   $03B0,4
+    PL_NOP   $3840,4
+    PL_NOP   $387C,4
+    PL_NOP   $38D8,4
+    PL_NOP   $390E,4
+    PL_NOP   $3966,4
+    PL_NOP   $3A06,4
+    PL_NOP   $4ADA,4
+    PL_NOP   $4B24,4
+    PL_NOP   $4BF4,4
+    PL_NOP   $4C60,4
+    PL_NOP   $6384,4
+    PL_NOP   $63C4,4
+    PL_NOP   $63EE,4
+    PL_NOP   $652C,4
+    
+    PL_PS   $03B0+4,wait_blit
+    PL_PS   $3840+4,wait_blit
+    PL_PS   $387C+4,wait_blit
+    PL_PS   $38D8+4,wait_blit
+    PL_PS   $390E+4,wait_blit
+    PL_PS   $3966+4,wait_blit
+    PL_PS   $3A06+4,wait_blit
+    PL_PS   $4ADA+4,wait_blit
+    PL_PS   $4B24+4,wait_blit
+    PL_PS   $4BF4+4,wait_blit
+    PL_PS   $4C60+4,wait_blit
+    PL_PS   $6384+4,wait_blit
+    PL_PS   $63C4+4,wait_blit
+    PL_PS   $63EE+4,wait_blit
+    PL_PS   $652C+4,wait_blit
+        
+    
 	PL_END
-
+    
+wait_blit
+    BTST    #6,2(A0)
+.wait
+	BTST	#6,2(A0)		;03B0: 082800060002
+	BNE.B	.wait		;03B6: 6600FFF8
+    rts
+    
 fix_access_fault_1
 	add.l	#2,(a7)
 
@@ -336,8 +410,13 @@ tag		dc.l	WHDLTAG_CUSTOM1_GET
 custom1		dc.l	0
 		dc.l	0
 
+segtag		
+        dc.l    WHDLTAG_DBGSEG_SET
+segments:
+		dc.l	0
+		dc.l	0
 _wrongver	pea	TDREASON_WRONGVER
-_end		move.l	(_resload),-(a7)
+_end		move.l	(_resload,pc),-(a7)
 		add.l	#resload_Abort,(a7)
 		rts
 

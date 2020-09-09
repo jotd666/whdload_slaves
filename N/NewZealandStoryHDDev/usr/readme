@@ -29,7 +29,16 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 2.0 (16.11.08) done by Hungry Horace
+ version 2.1 (xx.09.2020) done by JOTD
+ - restored original title picture (can be paused with BUTTONWAIT)
+ - slave was using a wrong name for highscore files.
+ - swapped CUSTOM2 and CUSTOM3 (CUSTOM2 now enables arcade style controls)
+ - reworked/cleaned up source code
+ - TODO: fix controls (issue #0004766)
+ - TODO: too fast
+  TODO add pause
+ 
+ version 2.0 (16.11.2008) done by Hungry Horace
  - Load / Save scores to HD (file 'highs')
  - Highscore saving is disabled if either CUSTOM1 tooltype or the
    original game cheat are used.
@@ -45,7 +54,7 @@
  - JST source level emulation removed (JOTD) so HH can improve the
    patch in a full WHDLoad source fashion.
  - Install script & readme rewritten to fit WHDLoad standards (JOTD)
- - Trainers on CUSTOM1 can be combined for multiple trainers:
+ - Trainers on CUSTOM1 can be combined (added) for multiple trainers:
    - CUSTOM1=1 - Infinite Lives
    - CUSTOM1=2 - Infinite Oxygen
    - CUSTOM1=4 - Enables Levelskip (Help key)

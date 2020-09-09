@@ -88,7 +88,7 @@ DUMMY_CD_DEVICE = 1
 
 
 DECL_VERSION:MACRO
-	dc.b	"3.2"
+	dc.b	"3.4"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -106,8 +106,8 @@ slv_name		dc.b	"Fire And Ice CD³²"
 	dc.b	" (DEBUG/CHIP MODE)"
 	ENDC
 	dc.b	0
-slv_copy		dc.b	"1992 Graftgold",0
-slv_info		dc.b	"Install/fix by Harry/JOTD",10,10
+slv_copy	dc.b	"1992 Graftgold",0
+slv_info	dc.b	"Install/fix by Harry/JOTD",10,10
 			dc.b	"Joypad emulation keys",10,10
 			dc.b	"F5: options screen",10
 			dc.b	"Space: weapon",10

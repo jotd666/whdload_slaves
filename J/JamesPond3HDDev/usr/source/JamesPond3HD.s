@@ -32,12 +32,13 @@ _config
 		dc.b	"BW;"
         dc.b    "C1:X:Trainer Infinite Lives:0;"
         dc.b    "C1:X:Trainer Infinite Energy:1;"
+        dc.b    "C1:X:Trainer save at each level:2;"
         dc.b    "C2:X:CD32 original joypad controls:0;"
         dc.b    "C3:X:Show penguin advert:0;"
 		dc.b	0
 		
 DECL_VERSION:MACRO
-	dc.b	"2.0"
+	dc.b	"2.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -169,6 +170,11 @@ pl_main
     PL_IFC1X    1
     PL_NOP  $135a36,4
     PL_B    $135a3a,$60
+    PL_ENDIF
+    PL_IFC1X    2
+    PL_W    $129d00,$50f9
+    PL_NOP  $129d06,2
+    PL_B    $139d4e,$60
     PL_ENDIF
     
 	PL_P	$112000,read_file
@@ -457,7 +463,7 @@ skip_level_cd32
 	st.b	$7FA6		; completes level
 	st.b	$7C8A		; completes level
 	clr.b	$7B1F		; no revisit
-	st.b	$7BC5		; allow save
+	;;st.b	$7BC5		; allow save
 	rts
 	
 SaveOk:
@@ -504,10 +510,12 @@ GetScore:
 	JMP	$143972		; original game
 
 LoadGame:
+    bsr ReadSaves
+
 	movem.l	A0-A1,-(sp)
 	lea	savebuffer(pc),A0
 	lea	$9E954,A1
-	move.b	#SAVELEN-1,D0
+	move.w	#SAVELEN-1,D0
 .copy
 	move.b	(A0)+,(A1)+
 	dbf	D0,.copy
@@ -521,7 +529,7 @@ SaveGame:
 	movem.l	A0-A1,-(sp)	
 	lea	savebuffer(pc),A1
 	lea	$9E954,A0
-	move.b	#SAVELEN-1,D0
+	move.w	#SAVELEN-1,D0
 .copy
 	move.b	(A0)+,(A1)+
 	dbf	D0,.copy
@@ -563,10 +571,10 @@ WriteSaves:
 
 
 _exit
-		pea	TDREASON_OK
-        move.l	(_resload,pc),-(a7)
-		add.l	#resload_Abort,(a7)
-		rts
+    pea	TDREASON_OK
+    move.l	(_resload,pc),-(a7)
+    add.l	#resload_Abort,(a7)
+    rts
 beamdelay
 .bd_loop1
 	move.w  d0,-(a7)
@@ -608,6 +616,11 @@ pl_floppy
     PL_IFC1X    1
     PL_NOP  $1358b4,4
     PL_B    $1358b8,$60
+    PL_ENDIF
+    PL_IFC1X    2
+    PL_W    $129b30,$50f9
+    PL_NOP  $129b36,2
+    PL_B    $139a22,$60
     PL_ENDIF
 
     PL_PS   $11c9c8,_quit_test
@@ -763,7 +776,7 @@ skip_level_floppy
 	st.b	$7f9a		; completes level
 	st.b	$7c7e		; completes level
 	clr.b	$7b13		; no revisit
-	st.b	$7bb9		; allow save
+	;;st.b	$7bb9		; allow save
 	rts
 
 ; quit key with 68000

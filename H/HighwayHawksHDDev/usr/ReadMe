@@ -39,7 +39,8 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
  
- version 1.1 (2020) done by JOTD:
+ version 1.1 (31.08.2020) done by JOTD:
+ - fixed buggy blitterwait code that failed on some machines (issue #0004440)
  - fixed interrupt problem that crashed on some machines with caches on
  - wrong slave name in icon (issue #0004417)
 

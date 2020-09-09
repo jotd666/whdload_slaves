@@ -81,7 +81,7 @@ _config
 
 
 DECL_VERSION:MACRO
-	dc.b	"3.3"
+	dc.b	"3.4"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -369,7 +369,7 @@ Jump39CX:
 	
 pl_game_v1
 	PL_START
-	PL_W	$443E,$601A	; remove access to $BFD100
+	PL_B	$04430,$60	; remove access to $BFD100
 	PL_IFC2
 	PL_PS	$4972,read_joystick_blue_jumps
     ; use read from joypad instead of re-read from CIAPRA
@@ -404,7 +404,7 @@ pl_game_v1
     
 pl_game_v2
 	PL_START
-	PL_W	$443E,$549E	; remove access to $BFD100
+	PL_B	$05490,$60	; remove access to $BFD100
 	PL_IFC2
 	;;PL_L	$41DC,$70FF4E71		; blue button has no fire effect now (note: doesn't work!!)
 	PL_PS	$4230,read_joystick_blue_jumps

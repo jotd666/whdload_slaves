@@ -1,0 +1,835 @@
+             Leisure Suit Larry I - Sierra Game Manual 
+ 
+AMIGA Hard Disk Installation Procedure
+
+Please Note: Rename your copies of all game disks to remove the words
+"copy of" from the disk name.  If the words `copy of' are not removed
+from the disk names of ALL the copies, the system will continue to ask
+for the original disk, and will not run the game.
+
+There are two Hard Disk Installation options to choose from:
+
+Complete Install - will copy the contents of all game disks to your hard disk.
+                   Choose Complete Install if you want to install the entire
+                   game.
+
+Small Install - will copy only the contents of the STARTUP DISK onto your
+                hard disk.  As you play the game, you will be prompted to 
+                insert other games disks as necessary.  The INSTALL procedure
+                will recommend Small Install if you do not have the minimum
+                amount of storage space available on your hard disk for the 
+		entire game.
+
+Installing Your Sierra Game
+
+	1. Boot your system with Workbench, and insert the STARTUP DISK
+           into DF0:.
+
+	2. Double-click on the disk icon, then double-click on the INSTALL
+	   icon.
+
+	3. Follow the on-screen prompts to complete the installation.
+
+	NOTE: If your hard drive is not device DH0:, be sure to change the
+	default destination directory to the correct device. For instance, on
+	the Amiga 3000, the default destination directory should be changed
+	to WORK.
+
+Loading Instructions
+
+From Diskettes:
+
+Note: You must have two disk drives to play from diskettes!
+
+	1. Insert the Dual Floppy Play Disk (Disk 0) into Df0:
+
+	2. Turn on your system
+
+	3. Insert Game Disk 1 into Df1:. You will be prompted to insert 
+	   additional disks.
+
+From Hard Disk:
+
+	1. Load Workbench and double-click on your hard disk icon.
+
+	2. Double-click on the SIERRA drawer.
+
+	3. Double-click on the Sierra Game drawer.
+
+	4. Double-click on the Sierra Game icon.
+
+Amiga 1000
+
+Loading Instructions Without Hard Disk
+
+	1. Boot your system with Kickstart.
+
+	2. When the Workbench disk appears on-screen, insert the DUAL
+	   FLOPPY PLAY DISK (Disk 0) in Df0:
+
+	3. Insert Game Disk 1 in Df1:. You will be prompted to insert
+	   additional disks.
+
+	NOTE: The Dual Floppy Play Disk (Disk 0) must remain in Df0:.
+
+	Note for experienced Amiga users: This game will search all drives
+	for game information.  If you have more than two floppy drives
+	and/or a RAM disk, you may load additional game disks in these drives
+	to save time.
+
+
+Playing Your Sierra Game 
+ 
+Using a Mouse 
+To activate the icon bar, move the cursor to the top of the 
+screen.  To position the on-screen cursor, move the mouse to 
+the desired position.  To move your character, position the 
+cursor and click the mouse button.  To execute a command, 
+click the mouse button (multi-button mouse users, click the 
+LEFT button).  For more detailed mouse instructions see, 
+below: 
+ 
+1-Button Mouse 
+Click = ENTER 
+[SHIFT-CLICK] to cycle through available cursors. 
+[CTRL-CLICK] to toggle between WALK and the last active 
+cursor. 
+ 
+2-Button Mouse 
+Left-Click = ENTER 
+Right-Click = Cycle through available cursors. 
+[CTRL-CLICK] to toggle between WALK and last active cursor. 
+ 
+3-Button Mouse 
+Left-Click = ENTER 
+Middle-Click = Toggle between WALK and last active cursor. 
+Right-Click = Cycle through available cursors. 
+ 
+Using a Keyboard to Play Your Sierra Game 
+To position the onscreen cursor or move your game character 
+using a keyboard, press a direction key on the NUMERIC 
+KEYPAD, or CURSOR KEYS.  To stop your character, press the 
+same direction key again.  To execute a command, press 
+[ENTER]. 
+[8] = UP    [2] = DOWN     [6] = LEFT     [4] = RIGHT 
+[DEL] = Open icon bar 
+[INS] = Toggle between WALK and last cursor chosen 
+[5] = Cycle through available cursors. 
+[ENTER] = enter 
+ 
+Using a Joystick 
+To position the onscreen cursor using a joystick, move the 
+stick in the desired direction.  To execute a command, press 
+the FIRE button.  For more detailed joystick instructions, 
+see below: 
+ 
+NOTE: With the exception of mouse-only items, all playing 
+instructions beyond this point are for keyboard.  Mouse or 
+joystick commands may also be used.  Please reference the 
+section above for mouse and joystick equivalents to keyboard 
+commands. 
+ 
+Using Icons and Cursors 
+ 
+At the top of the screen is an icon bar containing several 
+icons that can be selected to execute the command, choices 
+available to you. 
+To open the icon bar, press [ESC] or move the mouse cursor 
+all the way to the top of you screen. 
+Some icons will have a menu of choices.  Use the [TAB] key to 
+move between choices within an icon menu. 
+ 
+The WALK Icon 
+Choose WALK when you want to move your character from place 
+to place onscreen.  A walking character will move as far as 
+the edge of the screen, avoiding obstacles in its path. 
+ 
+          NOTE: In Keyboard and Joystick mode, your 
+          your character's destination will be assumed 
+          to be the edge of the screen in the direction 
+          of movement, and will walk off the screen 
+          if not stopped. 
+ 
+The LOOK Icon 
+Choose LOOK when you want to have your character look at 
+something onscreen. 
+ 
+The SMELL Icon 
+Choose SMELL when you want to have your character smell 
+something onscreen. 
+ 
+The TASTE Icon 
+Choose Taste when you want to have your character taste 
+something onscreen. 
+ 
+The ACTION Icon 
+Choose ACTION when you want your character to manipulate an 
+object. 
+ 
+The TALK Icon 
+Choose TALK when you want to initiate a conversation between 
+game characters. 
+ 
+The ITEM Icon 
+The ITEM icon shows the last inventory item you selected. 
+Choose ITEM when you want to see or use this item. 
+ 
+The SYSTEM Icon 
+When you choose the SYSTEM icon, several options will be 
+displayed; SAVE, RESTORE, QUIT, PLAY, VOLUME, SPEED and 
+DETAIL.  Choose SAVE when you want to save you game in 
+progress.  Choose RESTORE to restore a previously saved game. 
+Choose RESTART to begin the game again. 
+Choose QUIT to stop playing and return to DOS. 
+ 
+Here are this CURSOR Descriptions.  (MOUSE ONLY!) 
+ 
+The WALK Cursor 
+Cursor will look like a "walking figure" when chosen. 
+ 
+The LOOK Cursor 
+Cursor will look like an "eye" when chosen. 
+ 
+The SMELL Cursor 
+Cursor will look like a "nose" when chosen. 
+ 
+The TASTE Cursor 
+Cursor will look like a "tongue" when chosen. 
+ 
+The TALK Cursor 
+Cursor will look like a "talking head" when chosen. 
+ 
+The ACTION Cursor 
+Cursor will look like a "hand" when chosen. 
+ 
+The following is a more detail explanation of the SYSTEM 
+icon. 
+ 
+The SPEED lever adjusts the speed of your character's on- 
+screen movement.  Move lever up for faster, and lever down 
+for slower. 
+ 
+The VOLUME lever adjusts the sound volume of the game music. 
+Move lever up for louder, and down for softer.  Using 
+internal speaker move lever up to toggle the sound on, or 
+down to toggle the sound off. 
+ 
+The DETAIL lever adjusts the amount of non-essential 
+animation in the game; if your computer system is running the 
+game too slowly, you may want to adjust the game detail to 
+eliminate non-essential animation.  Move lever up for more 
+detail, and down for less detail. 
+ 
+The HELP icon is for help on learning the function of other 
+icons in the icon bar.  When in mouse mode the cursor will 
+turn into a question mark(?). 
+ 
+The INVENTORY Icon 
+Choose INVENTORY when you want to see and select from the 
+items you are currently carrying.  Within the Inventory 
+screen are several options:  ?, LOOK, ACTION, and OK.  Choose 
+? and click on any menu icon to learn the function of the 
+icon.  Choose LOOK and click on any inventory item to get a 
+description of that item.  Choose ACTION and use the ACTION 
+cursor to use an inventory item to take action on another 
+inventory item (Example:  putting jewels into a pouch).  To 
+select an item for use, click on the ARROW icon, then click 
+on the desired inventory item.  (See INVENTORY OBJECT 
+Cursors, below.)  Choose OK to leave the Inventory screen and 
+return to the game. 
+ 
+INVENTORY OBJECT Cursors 
+Each item in your inventory has a special OBJECT cursor 
+associated with it.  Each of these cursors looks like the 
+object it represents.  OBJECT cursors can be used to perform 
+game actions with your inventory items. 
+ 
+To use an OBJECT cursor in the game, follow the steps below: 
+     1.  From the game, choose the INVENTORY icon from the 
+         icon bar, or press the [TAB] key. 
+     2.  Move the arrow cursor to the inventory item you want 
+         to use, and press [ENTER].  The cursor will change 
+         to look like the item you have selected. 
+     3.  Choose the OK icon.  You will exit the inventory 
+         inventory screen to the game. 
+     4.  Move the OBJECT cursor to the place onscreen where 
+         you want to use the inventory item and press 
+         [ENTER]. 
+ 
+PAUSING YOUR GAME 
+If you wish to pause your game, select the SYSTEM icon from 
+the icon bar.  The game will pause until you select PLAY to 
+resume play. 
+ 
+SAVING YOUR GAME 
+ 
+       IMPORTANT!!  If you're playing from diskettes, 
+       you must have a separate formatted diskette 
+       ready before you can save a game.  Since each 
+       disk can only hold a limited number of games, 
+       we recommend that you have more than one disk 
+       formatted, in order to assure adequate space 
+       for save game storage. 
+ 
+To allow for errors in judgement and creative exploration, we 
+recommend that you frequently save your game in progress, and 
+that you save several different games from different points 
+as you play.  You will always want to save your game before 
+encountering potentially dangerous situations.  You should 
+also save your game after you have made significant progress. 
+ 
+You may name your saved games using standard English phrases. 
+For example, if you are standing on a beach, you might call 
+your game 'standing on beach', or simply 'beach'. 
+ 
+SINGLE DISKETTE DRIVE SYSTEMS 
+     1.  Choose the SYSTEM icon (slide lever) from the icon 
+         bar, then select SAVE.  The Save Game menu will 
+         appear. 
+     2.  Select CHANGE DIRECTORY.  Press [CTRL-C] to clear 
+         the command line, and type a: 
+     3.  Select OK, and press [ENTER]. 
+     4.  Type the description of your saved game, and press 
+         [ENTER] to save the game.  When the process is 
+         complete, you will be prompted to re-insert the game 
+         diskette. 
+ 
+DOUBLE DISKETTE DRIVE SYSTEMS 
+     1.  Choose the SYSTEM icon (slide lever) from the icon 
+         bar, then select SAVE.  The Save Game menu will 
+         appear. 
+     2.  You will be prompted to insert your Save Game 
+         diskette into your primary drive (example: a:). 
+         Using your [TAB] key, select CHANGE DIRECTORY*. 
+     3.  Press [CTRL-C] to clear the command line, and type 
+         the name of your secondary drive (example: b:), and 
+         the name of the directory* you wish to save to. 
+     4.  Insert a blank formatted diskette in your secondary 
+         drive. 
+     5.  Select OK, and press [ENTER]. 
+     6.  Type the description of your saved game, and press 
+         [ENTER] to save the game. 
+ 
+HARD DISK USERS 
+ 
+       NOTE:  If you choose to save games to your hard 
+       disk, we suggest that you create one or more 
+       save game directories or folders on your hard 
+       disk.  See your computer's instructions for 
+       creating directories. 
+ 
+     1.  Choose the SYSTEM icon (slide lever) from the icon 
+         bar, then select SAVE.  The Save Game menu will 
+         appear. 
+     2.  If you wish to save the game to a directory* other 
+         than the one you are currently playing on, select 
+         CHANGE DIRECTORY*.  Press [CTRL-C] to clear the 
+         command line, and type the drive and name of the new 
+         directory*. 
+     3.  Select OK and press [ENTER]. 
+     4.  Type the description of your saved game, and press 
+         [ENTER] to save the game. 
+ 
+RESTORING YOUR GAME 
+     1.  Choose the SYSTEM icon (slide lever) from the icon 
+         bar, then select RESTORE.  You will be prompted to 
+         select the game you wish to restore.  (On a single 
+         drive system, select CHANGE DIRECTORY.  Press [CTRL- 
+         C] to clear the command line, and type a:.  Select 
+         OK and press [ENTER]. 
+     2.  Highlight the desired game and select RESTORE. 
+     3.  If the game you wish to restore is in a different 
+         directory, select CHANGE DIRECTORY, the type the 
+         name of the directory* you wish to restore from. 
+ 
+*The term 'directory' refers to directories, drawers, and 
+folders. 
+ 
+QUITTING YOUR GAME 
+To stop playing, choose the SYSTEM icon from the icon bar 
+(slide lever) and select QUIT. 
+ 
+RESTARTING YOUR GAME 
+To restart you game at any time during play, choose the 
+SYSTEM icon (slide lever) from the icon bar and select 
+RESTART. 
+ 
+MESSAGE WINDOWS 
+Message windows will appear at various times during the game. 
+When you have read the message, press [ENTER] to remove the 
+window and resume play. 
+ 
+     NOTE:  Some message windows are program controlled, 
+     and cannot be cleared by pressing [ENTER].  These 
+     windows will clear automatically. 
+ 
+LOOK everywhere.  Thoroughly explore your surroundings.  Open 
+doors and drawers.  Look closely at all objects you 
+encounter or you may miss important details. 
+ 
+EXPLORE each area of the game very carefully, and DRAW A MAP 
+as you progress through the game.  Make a note of each are 
+you visit, and include information about objects found there 
+and dangerous areas nearby.  If you miss an area, you may 
+miss an important clue! 
+ 
+GET objects you think you will need.  You can see inventory 
+of items on hand by choosing INVENTORY icon at any time, or 
+by pressing the [TAB] key. 
+ 
+USE the items you have picked up to solve problems in the 
+game.  Different approaches to a puzzle may bring about a 
+different outcome. 
+ 
+BE CAREFUL, and remain alert at all times -- disaster may 
+strike in the most unlikely places! 
+ 
+SAVE YOUR GAME OFTEN, especially when you are about to try 
+something new or potentially dangerous.  This way, if the 
+worst should happen, you won't have to start all over again 
+from the beginning.  Save games at different points, so you 
+will always be able to return to a desired point in the game. 
+In effect, this will enable you to travel backward through 
+time and do things differently if you wish. 
+ 
+DON'T GET DISCOURAGED.  If you come to an obstacle that seems 
+insurmountable, don't despair.  Spend some time exploring 
+another area, and come back later.  Every problem in the game 
+has at least one solution, and some have more than one. 
+Sometimes solving a problem one way will make it harder to 
+solve the next, and sometimes it will make it easier.  If you 
+get stuck, you might try backtracking to an earlier point in 
+the game, then choosing a different path.  If all else fails, 
+you can write to us for hints.  You can also buy the SIERRA 
+GAME HINT BOOK from the dealer who sold you the game, or 
+order it directly from Sierra On-Line by calling (800) 326- 
+6654. 
+ 
+BRING ALONG SOME HELP.  You may find it helpful (and fun) to 
+play the game with a friend.  Two (or more) heads are better 
+than one at interpreting clues and solving problems. 
+ 
+NEED A HINT? 
+ 
+If you need a hint while playing a Sierra game, try the 
+following ideas: 
+ 
+     1.  If you have a modem, you can talk to the Sierra 
+         Bulletin Board through the following number: 
+                       (209) 683-4463 
+         Our settings are 3000, 1200, or 2400 Baud; 8 Data; 
+         N Parity; 1 Stop Bit.  Our sysop will be happy to 
+         help you. 
+ 
+     2.  Many other bulletin boards also provide hints to 
+         many of our games. 
+          A.  Compuserve:  Go into the Gamers Forum (GO 
+              GAMERS) or write E-Mail to 76004, 2143. 
+          B.  Prodigy:  Write E-Mail to 'HTWS90E', or go to 
+              the PC Club and enter the adventure games forum 
+              (Jump: PC CLUB). 
+          C.  PCLink:  Select PCLink Plus, enter Publisher's 
+              Connection, select Publishers Forums, then 
+              Sierra On-Line.  E-Mail may be written to the 
+              User ID 'SierraOnLi'. 
+          D.  AppleLink:  Select the KEYWORD option from the 
+              'Goto' menu, and type:  Sierra.  E-Mail may 
+              also be written to the User ID 'Sierras'. 
+          E.  GEnie:  From the main menu select 10 (Games), 
+              then select 1 (Games Round Table).  Select 1 
+              (Games Bulletin Board), and type set 22 at the 
+              '?' prompt.  This will take you into the Sierra 
+              On-Line area. 
+ 
+For more information on these BBS lines, you can all these 
+toll-free numbers: 
+                 Compuserve   (800) 848-8199 
+                 Prodigy      (800) 822-6922 
+                 PCLink       (800) 458-8532 
+                 AppleLink    (800) 227-6364 
+                 GEnie        (800) 638-9636 
+ 
+     3.  The magazine Questbuster's Journal is a helpful 
+         source of many game hints.  For a subscription, 
+         write to: 
+         Shay Adams, P.O.Box 5845, Tucson, AZ 85703 
+ 
+     4.  Your local software dealer may carry our hint books, 
+         or may be willing to order them for you. 
+ 
+     5.  If you are unable to obtain a hint book through a 
+         dealer, you can order one directly from us.  Call 
+         (800) 326-6654 to place your order with a Visa, 
+         MasterCard or American Express card, or write: 
+                     Sierra On-Line Inc. 
+                     Order Department 
+                     P.O.Box 485 
+                     Coarsegold, CA 93614 
+ 
+     6.  Call our automated hint line at (900) 370-KLUE to 
+         receive a hint.  NOTE:  California residents, please 
+         dial (900) 370-5113. 
+ 
+THIS SERVICE IS AVAILABLE 24 HOURS A DAY.  THE CHARGES ARE: 
+75 CENTS FOR THE FIRST MINUTE AND 50 CENTS FOR EACH 
+ADDITIONAL MINUTE.  IF YOU ARE UNDER 18 YEARS OF AGE, YOU 
+MUST HAVE A PARENT'S PERMISSION TO CALL.  THE CONTENTS OF ALL 
+MESSAGE ARE SOLELY THE RESPONSIBILITY OF SIERRA ON-LINE. 
+HINTS WILL NOT BE GIVEN ON OTHER SIERRA TELEPHONE LINES. 
+ 
+     7.  Write a letter to the Sierra Hint Department, 
+         P.O.Box 485, Coarsegold, CA 93614 
+ 
+PROBLEM DISK? 
+ 
+TECHNICAL HELP (MS DOS ONLY) 
+If the game colors seem dull or washed out, please try 
+adjusting you monitor's brightness, and contrast before 
+assuming the program disks are faulty. 
+ 
+If you receive any of the following messages while playing 
+Sierra game: 
+ 
+CRC ERROR: This message means you have a bad disk.  It stands 
+for Cyclic Redundancy Check, a way to check for errors. 
+ 
+DATA ERROR READING DRIVE A: This message means you have a bad 
+disk. 
+ 
+INSERT DISK #_: (When you have inserted that disk) means you 
+may need to create a boot disk.  See BOOT DISK INSTRUCTIONS, 
+below. 
+ 
+OUT OF HUNK: This message means you may be running RAM- 
+resident programs such as Windows, Sidekick, and DOS shell, 
+or other programs that remain resident in your computer's 
+memory even when you are not using them.  Booting you 
+computer with a BOOT DISK will solve this problem.  See BOOT 
+DISK INSTRUCTION, below. 
+ 
+SECTOR NOT FOUND READING DRIVE A: While reading any MS-DOS 
+game disk means you have a bad disk.  See REPLACING DISKS, 
+below, for more information. 
+ 
+If, after loading the game, you see only a blank screen: 
+You may have made incorrect graphic or sound support choices 
+during the Install procedure.  Rerun the installation, and 
+choose again. 
+ 
+If, after loading the game, you see only a blank screen with 
+a mouse pointer: 
+You may have one of the newer SoundBlaster cards without CMS 
+chips installed, and you may have selected GameBlaster 
+support during the Install procedure.  Reinstall, selecting 
+AdLib support. 
+ 
+        IF YOU ATTEMPT ANY OF THESE SOLUTIONS AND THE 
+        PROBLEM PERSISTS, CALL SIERRA TECHNICAL 
+        SUPPORT (209) 683-8989 FOR ASSISTANCE. 
+ 
+BOOT DISK INSTRUCTIONS 
+Booting your computer system with a Boot Disk before you play 
+Sierra game will keep any TSR (Terminate-and-Stay-Resident) 
+programs from being loaded into memory. 
+      NOTE:  THE FORMAT COMMAND MUST BE USED WITH CARE 
+      TO AVOID ERASING ALL STORED INFORMATION ON YOUR 
+      HARD DISK.  PLEASE FOLLOW INSTRUCTIONS BELOW 
+      EXACTLY. 
+ 
+FORMATTING FROM A HARD DISK 
+ 
+     1.  Insert a blank disk into Drive A: 
+     2.  At the C: prompt, type: format a:/s [ENTER] 
+ 
+           Note:  If your A: drive is a 5.25" high 
+           density drive, using a low density disk, 
+           type: format a:/s/t:40/n:9 
+           If your A: drive is a 3.5" high density 
+           drive, using a low density disk, type: 
+           format a:/s/t:80/n:9 
+ 
+     3.  Follow the DOS prompts. 
+ 
+FORMATTING FROM A DISKETTE DRIVE 
+ 
+     1.  Insert you original DOS system disk in Drive A: 
+     2.  At the A: prompt, type format a:/s [ENTER] 
+     3.  When prompted, insert a blank disk into Drive A: and 
+         Follow the DOS prompts. 
+ 
+NOW YOU WILL NEED TO CREATE A CONFIG.SYS FILE FOR YOUR BOOT 
+DISK: 
+ 
+     4.  Insert your formatted blank disk into Drive A:. 
+     5.  Type: a: [ENTER] 
+     6.  Type: copy con config.sys [ENTER] 
+     7.  Type: files=20 [ENTER] 
+     8.  Press the [F6] key, then press [ENTER]. 
+         You should see the message: 1 File(s) copied. 
+ 
+IF YOU ARE USING DOS VERSION 4.00 OR VERSION 4.01, FOLLOW THE 
+STEPS BELOW TO CREATE AN AUTOEXEC.BAT FILE.  IF YOU ARE USING 
+A DIFFERENT VERSION OF DOS, GO TO MOUSE DRIVERS, BELOW: 
+ 
+CREATING AN AUTOEXEC.BAT FILE FOR MS-DOS 4.0 AND 4.01 
+     1.  Type: a: [ENTER]. 
+     2.  Type: copy con autoexec.bat [ENTER]. 
+     3.  Type: set comspec=c:\command.com [ENTER]. 
+     4.  Press the [F6] key, then press [ENTER]. 
+ 
+      NOTE:  IF YOUR HARD DISK DOS PARTITION IS GREATER 
+      THAN 32 MEGABYTES, YOU MUST LOAD THE FILE SHARE.EXE 
+      ONTO YOUR BOOT DISK. 
+ 
+LOADING SHARE.EXE 
+ 
+     1.  Insert your Boot Disk into Drive A:. 
+     2.  Type: c: [ENTER]. 
+     3.  Type: cd\ [ENTER]. 
+     4.  Type: copy c:\share.exe a:. 
+If you get the message FILE NOT FOUND, type: copy 
+c:\dos\share.exe a: [ENTER].  If this file is still not 
+found, call Sierra Technical Support at (209) 683-8989 for 
+assistance. 
+ 
+MOUSE DRIVERS 
+If you will be using a mouse to play your Sierra game, you 
+must copy your mouse driver onto your Boot Disk.  Refer to 
+your mouse manual for information on how to install your 
+mouse driver, or call Sierra Technical Support (209) 683-8989 
+for assistance. 
+ 
+AFTER YOU HAVE CREATED A BOOT DISK, YOU MUST REBOOT YOU 
+COMPUTER WITH THE DISK.  LEAVING THE BOOT DISK IN DRIVE A:, 
+PRESS [CTRL]-[ALT]-[DEL] AT THE SAME TIME.  YOUR COMPUTER 
+WILL NOW REBOOT, WITH A: AS THE DEFAULT DRIVE.  TYPE C: 
+[ENTER] TO CHANGE BACK TO YOUR HARD DISK.  FOLLOW THE 
+INSTRUCTIONS IN THE MANUAL TO START THE GAME, AND HAVE A 
+GREAT TIME! 
+ 
+If you have created a Boot Disk and booted your system with 
+is before playing you Sierra game, and your problem is still 
+evident, something else is wrong.  Call Sierra Technical 
+Support at (209) 683-8989 for assistance. 
+
+
+           Docs for Leisure Suit Larry I (32 Color Enhancement)
+
+
+
+
+                   LOST WAGES After Dark Visitors Guide
+
+
+Welcome to Beautiful Lost Wages
+
+	where you can ante up and party down.
+	You'll find just the right kind of action,
+	whether you're here to gamble or gambol!
+	You may be a little dazzled when you first arrive,
+	so we've got a suggestion or two for starting your
+	adventure here in Glitzy Gulch.
+
+WARNING
+
+Experienced adventure-type studs may not need this little walking tour,
+so don't read any further if you prefer to score on your own.
+
+Let's start your tour in front of Lefty's, one of our classier drinking
+establishments.  CLICK the Eye icon on the sidewalk to Look at it and it
+will call your attention to the sign on the pole... you'll want to Look
+at that, too.  That taxi sign is your key to transportation in the big
+city!  Look at the front of the bar, the window, and the street to get
+the big picture.
+
+CLICK the Hand icon on the doormat.  Now let's head on into Lefty's by
+clicking the Hand on the front door.  The joint is hopping, as usual!
+CLICK the Eye icon on everything: the customers, the bartender, the 
+jukebox, the painting, and the fan.  CLICK the Hand on the empty barstool
+to sit down.  CLICK the Talk icon on any of the customers to see what
+they've got to say.  Next, Talk to the bartender.  Here's where you choose
+your poison, but for now, go for some of Lefty's famous well-whiskey.
+Now, carefully carrying your drink, let's take a look in that mysterious-
+looking back room.  CLICK the Walk icon on the doorway at the upper left
+corner of the room to get there.
+
+Not much to look at... a table, some barrels piled up in back, and a heap
+against the wall.  Look on the table to see what's lying there, then CLICK
+the Hand on the rose to pick it up.  You never know when you'll meet some-
+body you'll want to impress!  Talk to the drunk lying on the floor.  Wants
+to have a drink, does he?  Demonstrate your generosity by giving him your
+whiskey.  To do that, open up the Inventory window and CLICK the Pointer
+and on the small glass of whiskey to highlight it.  The pointer will
+change to a Whiskey Glass.  CLICK the whiskey glass on the drunk to give 
+it to him.  In return, he'll give you his most prized possession!  Save 
+the game by clicking on the Controls icon and pressing the Save button.
+Name it something like, "In Lefty's Back Room."
+
+Now you're ready to start exploring Lost Wages on your own.  There are 
+other things to find and do in Lefty's and all over the city.  When
+you're ready to head out to other nightspots, just walk outside, and CLICK
+the Talk icon on your head.  Be sure to talk to the cabby, he knows where
+the action is!  You may need to try things More Than Once to achieve success.
+And, hey... enjoy the city!
+
+
+                        The Palamino Ranch Brochure
+
+Calling all dudes! Come one, come all!
+
+"Where even a tenderfoot can lick every mare on the spread"
+
+
+Activities
+
+
+Located in the scenic Lost Wages just 5 miles from the Humongous Tetons,
+two miles from the pouting Bodacious Tetons, and just down the road from the 
+Small-Yet-Pert-Tetons.
+
+Get a long little doggie! At the Palamino Ranch, you kin practice all your
+dude ranchin' skills, like:
+
+	Ropin' fillies
+	Bareback ridin'
+	Cow pokin'
+	And every Tuesday, enter our Canyon Yodelin' contest!
+
+
+Eatin' Out
+
+You'll enjoy real down-home campfire cookin'.  For lunch, cornbread and
+chili (and hey, blame it on the cows... that's what we do!)  For dinner,
+tuna tacos and hot buns.  And if you like jugs o' Moonshine, our cowgirls
+have some of the smoothest you've ever set yer lips on.
+
+For you wimmenfolk, we'll akshully show ya how to make some real frontier
+treats!  Just imagine pulling your own taffy under the stars, shuckin'
+corn in the barn, churning butter and packin' fudge in yor very own crock.
+You'll be pleasin' yer greenhorn in no time flat.
+
+
+Accommodations
+
+Remember, whether it's a day of horseplay or a Bronco-bustin' weekend,
+grease up your saddlebag and give us a call at 1-800-ZIP-DOWN.  We'll
+set you up with your own filly, bed roll and chaps.  Before you can say
+"Yippie-ay-yay," we'll have you back in the saddle!
+
+Available for Bar-Mitzvahs, Bachelor Parties, Conventions and CEO B-Days.
+
+Hourly rates.
+
+Reins extra; no spurs allowed.
+
+
+Also visit:
+
+	Carla's Bad Caverns (see the drippin' turgid stalagmites and
+	oozing paint pots.  Openings available year 'round!)
+
+	Moaning Glory Acres (where the pussywillow blooms!)
+
+	Old Faceful (Imagine... an eruption every 35 minutes!  Could you
+	do better?)
+
+
+Gettin' to the Palamino Ranch is easier'n pickin off a saddlesore.  Jes'
+head on down the Tooney Valley Highway and turn off at Venus's Mound O'
+Used Tires and RV Waste Sump.  Take Exit 69 and be sure to pull out when 
+you come to the sign of the Giant Palamino.  We'll keep a light on for ya!
+
+
+                   The Lost Wages Mystery Hole Brochure
+
+On your trip to Lost Wages,
+
+Experience the Thrill of a lifetime!  Plumb the depths of the Fabulous
+
+			Lost Wages Mystery Hole
+
+                       "over 5,000,000 serviced"
+
+Nestled in the bush just shooting distance from warm, inviting Beaver Creek,
+the bizarre yet strangely satisfying MYSTERY HOLE beckons.
+
+Plunge headfirst into the soothing Backdoor Basin!
+
+Squeeze into the wonderful Mossy Furrow at the end of Skidmark Trail!
+
+Spend 5 minutes in the disorienting Tumbling Tunnel... when you get home,
+you'll swear to your friends it took you an hour-and-a-half!
+
+See objects swell to 5 TIMES THEIR ORIGINAL size... Then, just as 
+mysteriously, wither back again!
+
+You've never seen anything like it!
+
+How did the Mystery Hole come to be?
+
+Nobody's quite sure.
+
+Psychic Investigators have studied the Mystery Hole and left scratching
+themselves.  Scientists have probed the Mystery Hole with their instruments
+and emerged shaking their heads.
+
+All we know is that everybody who explores the Mystery Hole's secret crevices
+wants to come again and again and again!
+
+
+                           WHOSE WHOM IN AMERICA
+
+                              4 N. Kate Place
+                        Salt Lick City, Utah  82110
+
+                       From the desk of Mr. Muhweeny
+
+
+DEAR MR. LAFFER,
+
+Frankly, I'm puzzled.
+
+I don't understand why you haven't responded to the Fabulous offer we
+recently made you!
+
+Let's face it, LAWRENCE.  Men have it rough in today's world.  What with the
+so-called "Women's Liberation" movement, it's getting harder and harder.
+To find a suitable mate.  Even for fabulouso, studly, sensitive guys like
+yourself, LAWRENCE.
+
+But we want you to know that WE appreciate your finer qualities.  After all,
+you're in the full flower of your manhood...a young, active 40 years old
+(barely out of your teens!).  We know that you've got a solid, established
+career as a TRAVELING SOFTWARE SALESMAN and make more than $ N/A a year.
+You've resided in one of America's finer neighborhoods, ANYTOWN, for 40
+years...long enough to have established a reputation as a ADEQUATE credit
+risk.
+
+So why Wouldn't any woman leap at the chance to throw herself on your
+strapping, muscular 65" frame?
+
+We'll tell you why.  They Would!  But it's so hard to Meet the kind of woman
+you deserve!
+
+That's why we know you'll Jump at the chance to be included in this 
+once-in-a-lifetime opportunity...an opportunity to have your face and your
+vital statistics included in what's sure to be this year's most sought-after
+book: WHOSE WHOM IN SINGLE MEN IN THE SOUTHWESTERN UNITED STATES.
+
+Imagine, women all over the country will be receiving this volume of THE
+SOUTHWESTERN UNITED STATE"S most eligible bachelors.  And not just any women,
+LAWRENCE.  The kind of women we know you like, women with the
+MEDIUM HANDFULS you've told us you so love to look at...to touch...to nuzzle!
+Single attractive, available women with ANY LENGTH legs, beautiful CLEAN
+hair and YES derrieres.
+
+Don't waste another minute, LAWRENCE!  Fill out the form at the bottom of this
+page and include your check or money order (or just use your NONE credit
+card).  And you'll be on your way to a lifetime of babes!
+
+					Enthusiastically,
+
+					Adolph Muhweeny
+					Vice President, Direct Male Dept.
+
+-Skid Row
