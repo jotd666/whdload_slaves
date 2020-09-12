@@ -29,14 +29,19 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 2.1 (xx.09.2020) done by JOTD
+ version 2.1 (12.09.2020) done by JOTD
  - restored original title picture (can be paused with BUTTONWAIT)
+ - self-modifying code removed: end screen was completely trashed
+ - high-scores aren't saved anymore if any cheat is set
+  (oxygen, level skip, start at level)
+ - added pause (P or joypad play)
+ - added speed regulation (game was too fast on some machines)
+ - added reverse+forward+yellow: quit to workbench
+ - added selectable start level
  - slave was using a wrong name for highscore files.
  - swapped CUSTOM2 and CUSTOM3 (CUSTOM2 now enables arcade style controls)
  - reworked/cleaned up source code
- - TODO: fix controls (issue #0004766)
- - TODO: too fast
-  TODO add pause
+ - hopefully fixed controls (issue #0004766)
  
  version 2.0 (16.11.2008) done by Hungry Horace
  - Load / Save scores to HD (file 'highs')
@@ -57,7 +62,8 @@
  - Trainers on CUSTOM1 can be combined (added) for multiple trainers:
    - CUSTOM1=1 - Infinite Lives
    - CUSTOM1=2 - Infinite Oxygen
-   - CUSTOM1=4 - Enables Levelskip (Help key)
+   - CUSTOM1=4 - Enables Levelskip (Help key, original cheat)
+   - CUSTOM1=8 - Enables cheat with only one key
 
  - CUSTOM2=1 enables the "fast cheater" - press any key to enable
     the original game cheat.

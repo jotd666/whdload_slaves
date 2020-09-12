@@ -20,8 +20,8 @@
 ;         - fixed 68000 "blackscreen"bug
 ;         - added v17 options
 ;  :Notes.
-;     Ver.1 is the common "FLUFFYKIWIS" version
-;     Ver.2 is the original "MOTHERFUCKENKIWIBASTARD" version
+;     Ver.1 is the common "FLUFFYKIWIS" version (SPS 1180)
+;     Ver.2 is the original "MOTHERFUCKENKIWIBASTARD" version (SPS 2875)
 ;  :Requires.  -
 ;  :Copyright. Public Domain
 ;  :Language.  68000 Assembler
@@ -55,7 +55,7 @@ EXPMEMSIZE = $0
 _base
 		SLAVE_HEADER			;ws_Security + ws_ID
    		dc.w  17 			;ws_Version
-		dc.w  WHDLF_Disk|WHDLF_NoError	;ws_flags
+		dc.w  WHDLF_NoError|WHDLF_ClearMem	;ws_flags
       IFD   USE_FASTMEM
 		dc.l  CHIPMEMSIZE		;ws_BaseMemSize
       ELSE
@@ -83,36 +83,41 @@ _expmem
 _config:	dc.b    "C1:X:Infinite Lives:0;"			; ws_config
 		dc.b    "C1:X:Infinite Oxygen:1;"
 		dc.b    "C1:X:Enable Levelskip (Help Key):2;"
-		dc.b    "C2:B:Enable Single Button Cheat Activation;"
-		dc.b    "C3:B:Enable 2 Button Support;"
+		dc.b    "C1:X:Enable Single Key Cheat Activation:3;"
+		dc.b    "C2:B:Enable 2 Button Support;"
+        dc.b    "C4:L:Start level:1_1,1_2,1_3,1_4,2_1,2_2,2_3,2_4,3_1,3_2,3_3,3_4,"
+                dc.b    "4_1,4_2,4_3,4_4,5_1,5_2,5_3,5_4;"
+        dc.b    "BW;"
 		dc.b    0
 	
-		EVEN
+
 ;============================================================================
 
-	EVEN
-   IFD BARFLY
-   DOSCMD   "WDate  >T:date"
-   ENDC
-
+ 	IFD BARFLY
+	DOSCMD	"WDate  >T:date"
+	ENDC
 
 DECL_VERSION:MACRO
-   dc.b  "2.2"
-   IFD BARFLY
-      dc.b  " "
-      INCBIN   "T:date"
-   ENDC
-   ENDM
+	dc.b	"2.1"
+	IFD BARFLY
+		dc.b	" "
+		INCBIN	"T:date"
+	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
+	ENDC
+	ENDM
 
 _name    dc.b  "The New Zealand Story"
       dc.b  0
 _copy    dc.b  "1988 Ocean",0
 _info    dc.b  "Adapted & fixed by JOTD & Abaddon",10
-      dc.b  "Additions by Hungry Horace",10,10
+      dc.b  "Additions by Hungry Horace, fixes by Stingray",10,10
       dc.b  "Version "
       DECL_VERSION
       dc.b  0
-_savename   dc.b  "NewZealandStory.highs",0
+_savename   dc.b  "highs",0
       dc.b  0
 
 
@@ -120,8 +125,12 @@ _savename   dc.b  "NewZealandStory.highs",0
 
    dc.b  "$","VER: slave "
    DECL_VERSION
-   dc.b  $A,$D,0
+   dc.b  0
 
+    even
+    
+    include     ReadJoyPad.s
+    
 BASE_ADDRESS = $400
 
 
@@ -130,8 +139,6 @@ BASE_ADDRESS = $400
 start ;  A0 = resident loader
 ;======================================================================
 
-      even
-
       lea	_resload(pc),a1
       move.l   a0,(a1)        ;save for later use
       move.l   a0,a2
@@ -139,10 +146,44 @@ start ;  A0 = resident loader
       lea   (_tags,pc),a0
       jsr   (resload_Control,a2)
 
+      bsr   _detect_controller_types
+      
       lea   CHIPMEMSIZE-$100,a7
       move.w   #$2700,SR
 
-
+      ; I slightly cheated to skip the first copylock at boot
+      ; after this it loads at $400 then transfers to $76000
+      lea   $76000-$4,A0
+      move.l   #$5A,D0
+      move.l   #$1,D1
+      bsr   read_tracks
+      
+      lea   $76000,a1
+      lea   pl_boot_76000(pc),a0
+      move.l    _resload(pc),a2
+      jsr   resload_Patch(a2)
+      
+      jmp   $7600C
+next_part:
+      ; we could have used the code at 76668 (after the copylock)
+      ; with proper copylock key in D0 = F974DB7D but in the previous slave
+      ; version I had already skipped that part. Putting the 76000 part back in
+      ; was only to be able to display title picture
+      ; so after having displayed the pic, we just jump back here (after waiting
+      ; for fire button)
+      move.l    #20,d0  ; 2 seconds
+      move.l    _resload(pc),a2
+      jsr   resload_Delay(a2)
+      
+      move.l    buttonwait(pc),d0
+      beq.b .nobw
+.wf
+    move.b  $BFE001,d0
+    and.b   #$C0,d0
+    cmp.b   #$C0,d0
+    beq.b   .wf
+.nobw
+      
    ; load & version check
 
       lea   BASE_ADDRESS,A0
@@ -160,6 +201,8 @@ start ;  A0 = resident loader
 	bsr   decrunch
 
    ; *** shift data by 4 bytes ($404 -> $400 and so on)
+   ; this was probably to make up for the RN copy protection boot
+   ; sequence that I (jotd) cowardly skipped
 
 	lea   $404,A1
 ;;;     move.w   #$B83,D0
@@ -168,133 +211,38 @@ start ;  A0 = resident loader
 	move.l   (A1),-4(A1)
 	addq.l   #4,A1
 	dbf   D0,.tr
-
+    
 	sub.l a1,a1
 	lea   pl_boot_v1(pc),a0
-
 
    ; main patches (JOTD)
 
 	lea   version(pc),a3
-	move  #1,(a3)			; assume version 1
+	move  #1,(a3)			; assume version 1 (SPS 1180)
    
 	cmp.l #$35400058,$C1C4		; check version
 	beq   .v1
 
 	lea   pl_boot_v2(pc),a0
-	move  #2,(a3)			; it is version 2
+	move  #2,(a3)			; it is version 2 (SPS 2875)
 
 .v1	move.l   _resload(pc),a2
 	jsr   resload_Patch(a2)
 
 	bsr   _loadscore		; load scoreboard
-	bsr   _tooltypes		; set tooltype extras
-   
-	move.l	(_resload,pc),a2		; 
- 	jsr 	(resload_FlushCache,a2)		; flush cache 
 	waitvb
 
 	jmp   BASE_ADDRESS		; begin game
 
-
-; *** custom tooltypes routine
-
-_tooltypes	
-	movem.l  D0-D1/A0-A2,-(A7)
-
-	move	version(pc),d0		; get version
-	move.l	custom3(pc),d1		; CUSTOM3 tooltype (2 button)
-   
-	cmpi.l	#0,d1      		; check if =0
-      	beq	.skip1         		; skip
-      
-	move.l   #0,a1			; patch from start            
-      
-	lea	pl_arcade_control_v2(pc),a0   ; patch 2 button control
-
-	cmp	#2,d0			; if version 2
-	beq	.patchctrl		; goto patch
-
-	lea	pl_arcade_control_v1(pc),a0   ; patch 2 button control   
-
-.patchctrl	
-	jsr	resload_Patch(a2)    ; do patch
-
-
-
-.skip1	;  move.l	custom4(pc),d1	; CUSTOM4 tooltype (sound test)
-	;  cmpi.l	#0,d1		; if active
-	;  bne		.skip2		; no easycheat
-
-	move.l	custom2(pc),d1	; CUSTOM2 tooltype (easy cheater)
-	cmpi.l	#0,d1		; check if =0
-	beq	.skip2		;  skip
-      
-      
-	cmp   	#2,d0      	; if version 2
-	beq   	.easycheatver2	; goto other exit    
-
-	move.w   #$601E,$B794	; *** easier original cheat (JOTD)  
-	bra   	.skip2            
-
-.easycheatver2		
-	move.w   #$6028,$BA0A   	; *** easier original cheat (HH) 
-
-.skip2
-      
-	move.l	custom1(pc),d1			; CUSTOM1 tooltype (trainers)
-   
-	btst.l	#0,d1       			; check if bit1 true
-	beq	.nolives    			; otherwise skip
-
-	move.l   #0,a1       			; patch from start
-
-	lea	pl_trainer_lives_v2(pc),a0	; assume ver 2
-
-	cmp	#2,d0				; if version 2
-	beq	.livespatch			; skip to patch
-
-	lea	pl_trainer_lives_v1(pc),a0	; make ver 1
-
-.livespatch	
-	jsr	resload_Patch(a2)		; do patch  
-
-
-.nolives
-	move.l   custom1(pc),d1   		; CUSTOM1 tooltype (trainers)
-
-	btst.l	#1,d1				; check if bit1 true
-	beq	.nooxygen			; otherwise skip
-
-	move.l	#0,a1				; patch from start
-
-	lea	pl_trainer_oxygen_v2(pc),a0	; assume ver 2
-	cmp	#2,d0				; if version 2
-	beq	.oxygenpatch			; skip to patch
-
-	lea	pl_trainer_oxygen_v1(pc),a0	; make ver 1
-
-.oxygenpatch   
-		jsr	resload_Patch(a2)	; do patch  
-
-.nooxygen   
-		move.l	custom1(pc),d1		; CUSTOM1 tooltype (trainers)
-		btst.l	#2,d1			; check if bit1 true
-		beq	.exit			; otherwise skip
-
-		cmp	#2,d0			; if version 2
-		beq	.levelskipver2    	; goto other exit    
-
-		move.w	#$3E8,$4FBA		; *** levelskip on v1   
-		bra	.exit          
-
-.levelskipver2 
-		move.w   #$3E8,$4F48		; *** levelskip on v2
-
-.exit		movem.l (a7)+,D0-D1/A0-A2
-		rts
-
-
+pl_boot_76000:
+    PL_START
+    PL_R    $798        ; floppy shit
+    PL_R    $764        ; floppy shit
+    PL_R    $9d2        ; floppy shit
+    PL_P    $698,read_tracks
+    PL_P    $064,next_part
+    PL_END
+    
 ; *** end game bugfix (HH)
 
 _endgame	movem.l	D0/A0,-(A7)		; preseve regs
@@ -351,9 +299,9 @@ _jump		movem.l	D1/A1,-(A7)		; preserve reg
 
 .go		lea   button_held(pc),a1	; read "held"
 
-		move.w   $DFF016,d1		; read joypad
-		btst  #14,d1			; test for blue
-		bne   .clear			; not true, skip routine
+        move.l  joy1(pc),d1
+		btst  #JPB_BTN_BLU,d1			; test for blue
+		beq   .clear			; not true, skip routine
 
 		cmp   #1,(a1)			; held
 		beq   .exit 
@@ -372,9 +320,9 @@ _jump		movem.l	D1/A1,-(A7)		; preserve reg
 _hold		movem.l	D1/A1,-(A7)	; preserve reg
 		bclr	#2,d0		; clear original
 
-		move.w	$DFF016,d1	; read joypad
-		btst	#14,d1		; test for blue
-		bne.b	.exit		; not true, skip routine
+		move.l  joy1(pc),d1
+		btst  #JPB_BTN_BLU,d1			; test for blue
+		beq   .exit			; not true, skip routine
       
 		bset	#2,d0		; set held! 
 
@@ -394,9 +342,9 @@ _ride		movem.l  D1/A1,-(A7)    ; preserve reg
       
 		bclr	#2,d7		; clear original button
       
-		move.w	$DFF016,d1	; read joypad
-		btst	#14,d1	; test for blue
-		bne.b	.exit	; not true, skip outine
+		move.l  joy1(pc),d1
+		btst  #JPB_BTN_BLU,d1			; test for blue
+		beq.b	.exit	; not true, skip outine
 
 		bset	#2,d7	; set jump!
 
@@ -473,9 +421,25 @@ read_tracks:
 	moveq	#0,D0    ; always return 0 (no error)
 	rts
 
+; < D0: ciaa sdr contents
 kb_int:
-	move.b   $BFEC01,D0  ; original game
+	
 	move.l   D0,-(sp)
+    BSET	#6,$bfee01
+    ; keyboard handshake
+	move.w  d0,-(a7)
+	move.w	#4,d0
+.bd_loop1
+	move.w  d0,-(a7)
+    move.b	$dff006,d0	; VPOS
+.bd_loop2
+	cmp.b	$dff006,d0
+	beq.s	.bd_loop2
+	move.w	(a7)+,d0
+	dbf	d0,.bd_loop1
+	move.w	(a7)+,d0
+    BCLR	#6,$bfee01
+ 	    
 	ror.b #1,D0
 	not.b D0
 
@@ -517,7 +481,7 @@ kb_int:
 _exit		pea	TDREASON_OK
 		bra	_end
 _debug		pea	TDREASON_DEBUG
-_end		move.l	(_resload),-(a7)
+_end		move.l	(_resload,pc),-(a7)
 		add.l	#resload_Abort,(a7)
 		rts
 
@@ -598,7 +562,7 @@ _Menu		movem.l	D0-d7/a0-A6,-(A7)		; preserve reg
 		bne	.exit2
 
 .exit1		movem.l	(A7)+,D0-d7/a0-A6	; restore regs
-		lea	$3174(pc),a0		; original code
+		lea	$3174.W,a0		; original code
 		moveq	#$F,d1
 		rts
 
@@ -613,6 +577,10 @@ _Menu		movem.l	D0-d7/a0-A6,-(A7)		; preserve reg
 
 _savescore	
 		movem.l	D0-d7/a0-A6,-(A7)		; preserve reg
+        move.l  trainer(pc),d0
+        bne.b   .skip               ; no save if trainer
+        move.l  startlevel(pc),d0
+        bne.b   .skip               ; no save if trainer
 		move.l	_resload(PC),A2
 		move.l	#$60,D0			; data length
 		moveq.l	#0,D1			; offset of zero
@@ -633,14 +601,15 @@ _savescore
 
 .save		jsr	(resload_SaveFileOffset,a2)   
 
-.skip		cmp   #2,(a4)		; check version
-		beq   .ver2exit
+.skip		
+        cmp   #2,(a4)		; check version
+        movem.l	(A7)+,D0-d7/a0-A6	; restore regs
+		beq.b   .ver2exit
 	
-.ver1exit	movem.l	(A7)+,D0-d7/a0-A6	; restore regs
+.ver1exit	
 		jmp	$C8BE			; goto normal score-entry end
 
 .ver2exit
-		movem.l	(A7)+,D0-d7/a0-A6	; restore regs
 		jmp	$C6A8			; goto normal score-entry end
 
 
@@ -673,17 +642,21 @@ _loadscore
 	rts
 
 
-; *** set game start lives - to allow levelskip (HH)
+; set game start lives - to allow levelskip without setting 1000 lives (HH)
+; infinite lives is a separate trainer option now
+; JOTD added start level there
 
-_startlives_v1
-		clr.w		8(a6)			; orig code
+_startlives
 		move.w		defaultlives(pc),d0	; set lives
-		jmp		$4fbc      		; return to code
+        MOVE.W	D0,26(A6)		;04fbc: 3d40001a
 
-_startlives_v2   
-		clr.w		8(a6)			; orig code
-		move.w		defaultlives(pc),d0  	; set lives
-		jmp		$4f4A			; return to code
+		move.l		startlevel(pc),d0
+        beq.b   .normalstart
+        lsl.w #4,d0     ; level is like $00, $10, $20, $30, ...
+        move.w  d0,44(a6)			; start level
+.normalstart
+        MOVE.W	44(A6),8(A6)		; copy start level to current level
+		rts
 
 
 ; *** in game cheat activated - to allow levelskip (HH)
@@ -707,10 +680,13 @@ _cheat_share	movem.l		A0,-(A7)		; preserve regs
 pl_boot
 
    PL_START
+   PL_PSS      $2A92,fire_test,2
 
    ; *** install quit key
-   PL_PS $1308,kb_int
-
+   PL_PSS   $130E,kb_int,2
+   PL_W    $01338,$4E73     ; remove handshake
+   PL_NOP   $01342,8     ; remove handshake
+   
    ; *** fix for 68000
 	PL_PS	$2AB0,_Menu
 
@@ -744,6 +720,25 @@ pl_boot
 
 pl_boot_v1
    PL_START
+   ; regulation
+   
+   PL_PS    $42A2,mainloop_hook
+   
+   ; install vbl hook
+   
+   PL_PSS     $0bb6a,vbl_hook,2
+   
+   ; fix end screen (self-modifying code)
+   PL_PS    $B260,store_a1
+   PL_PS    $B26A,get_d3
+   
+   ; audio fix, don't seem to fix the high pitches
+   ; probably only audible in winuae with chipsethack...
+   
+   ;;PL_PS    $EFC8,dma_wait
+   
+   ; ** levelskip with joypad too
+   PL_PS    $043f6,check_skip_key
 
    ; *** patch blitter waits (JOTD)
    
@@ -765,15 +760,53 @@ pl_boot_v1
 
    ; ***   levelskip bypasses
 
-	PL_P  $4Fb4,_startlives_v1 ; for setting no, of lives
+	PL_PSS  $4FbC,_startlives,4 ; for setting no, of lives / start level
 	PL_P  $B7B4,_cheat_v1      ; for activating cheat 
 
+
+    PL_IFC2
+	PL_L  $935A,$4EB800D2	; first jump routine
+	PL_L  $9530,$4EB800D8	; hold jump routine
+	PL_L  $9024,$4EB800DE	; up on rider routine
+    PL_ENDIF
+
+    PL_IFC1X    0
+	PL_W $79C8,$4A6E
+	PL_W $8A72,$4A6E
+	PL_W $8B2E,$4A6E
+	PL_W $8BEE,$4A6E
+	PL_W $990A,$4A6E
+    PL_ENDIF
+
+    PL_IFC1X    1
+	PL_W $9922,$4A6E
+    PL_ENDIF
+
+    PL_IFC1X    2
+    PL_W    $4FBA,$3E8,	; *** levelskip on v1   
+    PL_ENDIF
+   
+    PL_IFC1X    3
+	PL_W   $B794,$601E,	; *** easier original cheat (JOTD)  
+    PL_ENDIF
+    
 	PL_NEXT  pl_boot
 
+       
 
 pl_boot_v2
    PL_START
-      
+   PL_PSS     $0bde2,vbl_hook,2
+
+   PL_PS    $04298,mainloop_hook
+
+   ; fix end screen (self-modifying code)
+   PL_PS    $0b09e,store_a1
+   PL_PS    $0b0a8,get_d3
+   
+   ; ** levelskip with joypad too
+   PL_PS    $043e6,check_skip_key
+
   ; *** patch blitter waits (JOTD)
 
 	PL_L	$B8F4,$4EB800C6
@@ -792,75 +825,196 @@ pl_boot_v2
 	PL_P	$4912,_savescore	; score-saving routine
 
   ; ***   levelskip bypasses
-	PL_P	$4F42,_startlives_v2 ; for setting no, of lives
+	PL_P	$4f4a,_startlives ; for setting no, of lives
 	PL_P	$BA34,_cheat_v2      ; for activating cheat 
-	PL_NEXT	pl_boot
 
-
-; *** CUSTOM tooltypes
-
-pl_arcade_control_v1
-	PL_START 			; *** 2 button support (HH)
-	PL_L  $935A,$4EB800D2	; first jump routine
-	PL_L  $9530,$4EB800D8	; hold jump routine
-	PL_L  $9024,$4EB800DE	; up on rider routine
-	PL_END
-
-pl_arcade_control_v2
-	PL_START			; *** 2 button support (HH)
+    PL_IFC2
 	PL_L  $9210,$4EB800D2	; first jump routine
 	PL_L  $93DA,$4EB800D8	; hold jump routine   e
 	PL_L  $8EDA,$4EB800DE	; up on rider routine
-	PL_END
-  
-pl_trainer_lives_v1
-	PL_START		; *** remove life decrements  
-	PL_W $79C8,$4A6E
-	PL_W $8A72,$4A6E
-	PL_W $8B2E,$4A6E
-	PL_W $8BEE,$4A6E
-	PL_W $990A,$4A6E
-	PL_END
+    PL_ENDIF
 
-pl_trainer_lives_v2
-	PL_START		; *** remove life decrements  
+    PL_IFC1X    0
 	PL_W $787E,$4A6E
 	PL_W $8928,$4A6E
 	PL_W $89E4,$4A6E
 	PL_W $8AA4,$4A6E
 	PL_W $97B4,$4A6E
-	PL_END
+    PL_ENDIF
 
-pl_trainer_oxygen_v1
-	PL_START		; *** remove oxygen decrement
-	PL_W $9922,$4A6E
-	PL_END
-
-pl_trainer_oxygen_v2
-	PL_START		; *** remove oxygen decrement
+    PL_IFC1X    1   ; *** remove oxygen decrement
 	PL_W $97CC,$4A6E
-	PL_END
+    PL_ENDIF
 
+    PL_IFC1X    2
+    PL_W    $4F48,$3E8,	; *** 1000 lives means levelskip on v2   
+    PL_ENDIF
+    
+    PL_IFC3
+	PL_W   $BA0A,$6028   	; *** easier original cheat (HH) 
+    PL_ENDIF
+    
+	PL_NEXT	pl_boot
 
+; returns Z flag if not level skip
 
+check_skip_key
+    movem.l d0,-(a7)
+    jsr $404.W
+    bne.b   .levelskip
+    move.l  joy1(pc),d0
+    btst    #JPB_BTN_FORWARD,d0
+    beq.b   .levelskip
+    btst    #JPB_BTN_GRN,d0
+.levelskip
+    movem.l (a7)+,d0
+    rts
+    
+    
+store_a1:
+    move.l  a0,-(a7)
+    lea a1_value(pc),a0
+    move.l  a1,(a0)
+    move.l  (a7)+,a0
+    rts
+    
+get_d3:
+    move.l  a0,-(a7)
+    move.l a1_value(pc),a0
+    move.w  (a0),d3
+    move.l  (a7)+,a0
+    rts
+    
+dma_wait
+    MOVE.W D0,(A6,$0096)
+    MOVE.W D0,D1
+	move.w  d0,-(a7)
+	move.w	#7,d0
+.bd_loop1
+	move.w  d0,-(a7)
+    move.b	$dff006,d0	; VPOS
+.bd_loop2
+	cmp.b	$dff006,d0
+	beq.s	.bd_loop2
+	move.w	(a7)+,d0
+	dbf	d0,.bd_loop1
+	;;;addq.l	#2,(a7)  harmful if not used with PSS!!
+	move.w	(a7)+,d0
+    rts
+    
+fire_test
+    movem.l d1,-(a7)
+    move.l  joy1(pc),d1
+    not.l   d1
+    btst    #JPB_BTN_RED,d1
+    movem.l (a7)+,d1
+    rts
+    
+PAUSE_RAWKEY = $3177
+
+mainloop_hook:
+    bsr vbl_reg
+    ; pause test from keyboard
+    btst    #1,PAUSE_RAWKEY
+    beq.b   .nopause
+.norel
+    btst    #1,PAUSE_RAWKEY
+    bne.b   .norel
+.norel2
+    btst    #1,PAUSE_RAWKEY
+    beq.b   .norel2
+.norel3
+    btst    #1,PAUSE_RAWKEY
+    bne.b   .norel3
+    
+.nopause
+    movem.l d0,-(a7)
+    ; pause test from joypad
+    move.l  joy1(pc),d0
+    btst    #JPB_BTN_PLAY,d0
+    beq.b   .nopause_joy
+.norel_joy
+    move.l  joy1(pc),d0
+    btst    #JPB_BTN_PLAY,d0
+    bne.b   .norel_joy
+.norel_joy2
+    move.l  joy1(pc),d0
+    btst    #JPB_BTN_PLAY,d0
+    beq.b   .norel_joy2
+.norel_joy3
+    move.l  joy1(pc),d0
+    btst    #JPB_BTN_PLAY,d0
+    bne.b   .norel_joy3
+.nopause_joy
+    movem.l (a7)+,d0
+    ; original code
+	TST.W	84(A6)			;042a2: 4a6e0054
+	BNE.S	.noskip
+    add.l   #$1E,(a7)    
+.noskip
+   rts
+   
+vbl_reg:    
+    movem.l d0-d1/a0-a1,-(a7)
+    moveq.l #1,d1       ; the bigger the longer the wait
+    lea vbl_counter(pc),a0
+    move.l  (a0),d0
+    cmp.l   #10,d0
+    bcc.b   .nowait     ; first time called/lost sync/pause/whatever
+    ; wait till at least x vblanks passed after last zeroing
+.wait
+    cmp.l   (a0),d1
+    bcc.b   .wait
+.nowait
+    clr.l   (a0)
+    movem.l (a7)+,d0-d1/a0-a1
+    rts
+    
+
+vbl_hook
+    bsr _joystick
+    movem.l d0,-(a7)
+    move.l  joy1(pc),d0
+    btst    #JPB_BTN_FORWARD,d0
+    beq.b   .noquit
+    btst    #JPB_BTN_REVERSE,d0
+    beq.b   .noquit
+    btst    #JPB_BTN_YEL,d0
+    bne   _exit
+    
+.noquit
+    move.l  a0,d0   ; reuse d0 to save a0
+    lea vbl_counter(pc),a0
+    addq.l  #1,(a0)
+    move.l  d0,a0
+    
+    movem.l (a7)+,d0
+	BCLR	#7,$bfdf00
+    rts
+    
 
 ; ================
 _resload	dc.l  0
 _tags		dc.l  WHDLTAG_CUSTOM1_GET
-custom1		dc.l  0
-		dc.l  WHDLTAG_CUSTOM2_GET
-custom2		dc.l  0
-		dc.l  WHDLTAG_CUSTOM3_GET
-custom3		dc.l  0
-		dc.l  WHDLTAG_CUSTOM4_GET
-custom4		dc.l  0
-	dc.l	0
+trainer		dc.l  0
+    dc.l    WHDLTAG_BUTTONWAIT_GET
+buttonwait
+    dc.l    0
+	dc.l	WHDLTAG_CUSTOM4_GET
+startlevel
+    dc.l    3
+    dc.l    0
+    
+    
+vbl_counter dc.l    0
 defaultlives	dc.w  3
+
 version		dc.w  0
 complete	dc.w  0
 reload		dc.w  0
 button_held	dc.w  0
-CPU		dc.l  0 
+a1_value
+    dc.l    0
 		EVEN
 		dc.l  0
 
