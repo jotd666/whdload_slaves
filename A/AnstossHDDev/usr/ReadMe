@@ -8,12 +8,15 @@
  CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
  PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
- This install applies to "Anstoss - die fußball manager simulation" © 1992 Ascon.
- This install applies to "Carton Rouge - the football manager simulation" © 1992 Ascon.
+ This install applies to "Anstoss - die fußball manager simulation" © 1993 Ascon.
+ This install applies to "Carton Rouge - League edition" © 1993 Ascon.
+ This install applies to "On the ball - League edition" © 1993 Ascon.
  
  This install requires WHDLoad to be in the path. It can be found in the
  WHDLoad package.
 
+ ECS version:
+ 
  The installed program requires 1.0 MB ChipMem and 1.5 MB OtherMem.
  It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
 
@@ -26,6 +29,22 @@
  Additionally the file "kick34005.A500.RTB" must be installed in the same
  directory as the kickstart image. It can be found in the archive 
  "util/boot/skick346.lha" on aminet.
+
+ AGA version:
+ 
+ The installed program requires 1.0 MB ChipMem and 1.5 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ The game requires an installed A1200 or A4000 Kickstart 3.1 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick40068.A1200" (resp kick40068.A4000). 
+ The image can be extracted from a A1200 (resp A4000) with tools like 'GrabKick'
+ or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick40068.A1200.RTB" (resp "kick40068.A4000.RTB")
+ must be installed in the same directory as the kickstart image.
+ It can be found in the archive "util/boot/skick346.lha" on aminet.
 
 
  If you have problems with this installation please try and get a newer
@@ -40,13 +59,20 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 1.2 (03.05.14)
+ version 2.0 (15.09.2020) done by JOTD:
+ - support for AGA version with a clean install which
+   replaces custom install (installer requires XAD package from aminet)
+ - official support for all 3 AGA versions and all 3 ECS versions
+   for french, english, and german languages (6 versions total)
+ - try to adapt to original language keyboard (can be disabled)
+ 
+ version 1.2 (03.05.2014)
  - fixed the "infinite os swap" bug when saving (issue #2436)
 
- version 1.1 (09.09.05)
+ version 1.1 (09.09.2005)
  - increased memory (out of memory -> crashed game)
 
- version 1.0 (30.01.05) done by JOTD:
+ version 1.0 (30.01.2005) done by JOTD:
  - initial release
  - document protection removed
  - german & french version automatically detected & supported

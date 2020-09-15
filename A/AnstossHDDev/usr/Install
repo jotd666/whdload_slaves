@@ -59,6 +59,34 @@
   )
 )
 
+(procedure P_ChkRun_Package
+  (if (= 0 (run ("cd SYS:\nWhich %s >NIL:" #program)))
+    ("")
+    (abort
+      (cat
+	"You must install \"" #program "\" first!\n"
+	"It must be accessible via the path.\n"
+	"You can find it in the package " #package "."
+      )
+    )
+  )
+)
+;----------------------------
+; unpack archive using XAD package
+; IN:  #archive - archive to extract (full path)
+
+; OUT: -
+
+(procedure P_XADUnfile
+  (set #program "xadunfile")
+  (set #package "XAD (aminet:util/pack/xadmaster.lha)")
+  (P_ChkRun_Package)
+  (if
+    (<> 0 (run ("%s \"%s\" DEST \"%s\" DARC >CON:///1000//CLOSE" #program #archive #dest)))
+    (abort ("\"%s\" has failed to decompress the archive \"%s\"" #program #archive))
+  )
+)
+
 ;----------------------------
 ; Wait for inserting disk
 ; IN:  #AD_disk - name of disk
@@ -74,7 +102,15 @@
 
 (procedure P_Install
 
-
+      (copyfiles
+        (help @copyfiles-help)
+        (source "vonplatte")    ; game sees the file and knows it runs from hard drive
+        (dest #dest)
+      )
+      
+(select #version
+(
+; ECS: direct copy from disks
 (set #AD_disk (cat #disk_prefix "1"))
 (P_disk)
       (copyfiles
@@ -90,11 +126,7 @@
         (dest (tackon #dest "c"))
       )
 
-      (copyfiles
-        (help @copyfiles-help)
-        (source "vonplatte")
-        (dest #dest)
-      )
+
 
 (set #AD_disk (cat #disk_prefix "2"))
 (P_disk)
@@ -129,6 +161,126 @@
         (pattern "~(c|l|s|t|.#?|#?.info)")
       )
 )
+; AGA: unpack from disks using lha sfx & dimp xad module
+(
+; disk 1
+(set #AD_disk (cat #disk_prefix "1"))
+(P_disk)
+
+      (copyfiles
+        (help @copyfiles-help)
+        (source ("%s:c/atari.library" #AD_disk))
+        (dest #dest)
+      )
+      
+(run ("cd %s\n%s:bigfiles1 >CON:///1000//CLOSE" #dest #AD_disk))
+
+(set #archive ("%s:aga1" #AD_disk))
+(P_XADUnfile)
+(set #archive ("%s:aga2" #AD_disk))
+(P_XADUnfile)
+(set #archive ("%s:aga3" #AD_disk))
+(P_XADUnfile)
+(set #archive ("%s:aga4" #AD_disk))
+(P_XADUnfile)
+
+; disk 2
+(set #AD_disk (cat #disk_prefix "2"))
+(P_disk)
+
+(run ("cd %s\n%s:bigfiles2 >CON:///1000//CLOSE" #dest #AD_disk))
+(run ("cd %s\n%s:bigfiles2b >CON:///1000//CLOSE" #dest #AD_disk))
+(run ("cd %s\n%s:bigfiles3 >CON:///1000//CLOSE" #dest #AD_disk))
+
+; disk 3
+(set #AD_disk (cat #disk_prefix "3"))
+(P_disk)
+
+
+(run ("cd %s\n%s:Bigfiles4 >CON:///1000//CLOSE" #dest #AD_disk))
+(run ("cd %s\n%s:sound1 >CON:///1000//CLOSE" #dest #AD_disk))
+
+(set #archive ("%s:aga5" #AD_disk))
+(P_XADUnfile)
+(set #archive ("%s:aga6" #AD_disk))
+(P_XADUnfile)
+
+; disk 4
+(set #AD_disk (cat #disk_prefix "4"))
+(P_disk)
+
+(run ("cd %s\n%s:bigfiles5 >CON:///1000//CLOSE" #dest #AD_disk))
+(run ("cd %s\n%s:bigfiles6 >CON:///1000//CLOSE" #dest #AD_disk))
+
+
+)
+(
+; AGA installed: direct copy from disks
+(set #AD_disk (cat #disk_prefix "1"))
+(P_disk)
+      (copyfiles
+        (help @copyfiles-help)
+        (source ("%s:" #AD_disk))
+        (dest #dest)
+        (pattern "~(c|l|s|t|.#?|#?.info)")
+      )
+
+      (copyfiles
+        (help @copyfiles-help)
+        (source "run")
+        (dest (tackon #dest "c"))
+      )
+
+
+
+(set #AD_disk (cat #disk_prefix "2"))
+(P_disk)
+      (copyfiles
+        (help @copyfiles-help)
+        (source ("%s:" #AD_disk))
+        (dest #dest)
+        (pattern "~(c|l|s|t|.#?|#?.info)")
+      )
+(set #AD_disk (cat #disk_prefix "3"))
+(P_disk)
+      (copyfiles
+        (help @copyfiles-help)
+        (source ("%s:" #AD_disk))
+        (dest #dest)
+        (pattern "~(c|l|s|t|.#?|#?.info)")
+      )
+(set #AD_disk (cat #disk_prefix "4"))
+(P_disk)
+      (copyfiles
+        (help @copyfiles-help)
+        (source ("%s:" #AD_disk))
+        (dest #dest)
+        (pattern "~(c|l|s|t|.#?|#?.info)")
+      )
+(set #AD_disk (cat #disk_prefix "5"))
+(P_disk)
+      (copyfiles
+        (help @copyfiles-help)
+        (source ("%s:" #AD_disk))
+        (dest #dest)
+        (pattern "~(c|l|s|t|.#?|#?.info)")
+      )
+
+(set #AD_disk (cat #disk_prefix "6"))
+(P_disk)
+      (copyfiles
+        (help @copyfiles-help)
+        (source ("%s:" #AD_disk))
+        (dest #dest)
+        (pattern "~(c|l|s|t|.#?|#?.info)")
+      )
+)
+
+)
+
+)
+
+
 ;****************************
 
 (if
@@ -164,21 +316,53 @@
 
 (P_ChkRun "WHDLoad")
 
+    (set #lang
+      (askchoice
+        (prompt "\nWhich version (language) would you like to install?\n")
+        (choices "French (Carton Rouge)" "German (Anstoss)" "English (On The Ball)")
+        (default 0)
+        (help @askchoice-help)
+      )
+    )
+
     (set #version
       (askchoice
-        (prompt "\nWhich version would you like to install?\n")
-        (choices "French (Carton Rouge)" "German (Anstoss)")
+        (prompt "\nWhich version (chipset) would you like to install?\n")
+        (choices "ECS (5 disks - bootable)" "AGA (4 disks - not bootable)" "AGA (6 disks - bootable)")
         (default 0)
         (help @askchoice-help)
       )
     )
 
 (select #version
-(set #disk_prefix "c-r")
-(set #disk_prefix "ANSTOSS")
+
+(
+(set #suffix "ECS")   ; replace by suffix if dic slave is peculiar
+(select #lang
+    (set #disk_prefix "c-r")
+    (set #disk_prefix "ANSTOSS")
+    (set #disk_prefix "OTB")
+)
+)
+(
+(set #suffix "AGA")   ; replace by suffix if dic slave is peculiar
+(select #lang
+    (set #disk_prefix "c-r_aga_disk")
+    (set #disk_prefix "ANSTOSS_aga_disk")
+    (set #disk_prefix "otb_aga_disk")
+)
+)
+(
+(set #suffix "AGA")   ; replace by suffix if dic slave is peculiar
+(select #lang
+    (set #disk_prefix "c-r")
+    (set #disk_prefix "ANSTOSS")
+    (set #disk_prefix "otb")
+)
+)
 )
 
-(set #suffix "")   ; replace by suffix if dic slave is peculiar
+
 (if
   (getenv "WHDLInstPath")
   (set @default-dest (getenv "WHDLInstPath"))
@@ -358,7 +542,6 @@
      (help @makedir-help)
 )
 
-(P_CopyFile #highs-file)
 (P_Install)
 (if (= #newstuff 1)
   (openwbobject #dest-org)

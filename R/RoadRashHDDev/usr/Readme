@@ -76,14 +76,17 @@ F10 - reverse+forward: quit current game
 
 Custom password:
 
-The format matters: 5 chars - 2 spaces - 8 chars - 2 spaces - 5 chars
+The format matters: 5 chars - 2 spaces - 10 chars - 2 spaces - 5 chars
 Ex: whdload roadrash.slave preload custom="00000  01420019G5  457VO"
 
+There are 2 spaces above, regardless of your html viewer displays, like:
+
+whdload roadrash.slave preload custom="00000<space><space>01420019G5<space><space>457VO"
 
 Thanks to Marc Kelkermans for the original disks (and to the many people who sent me
 original disks of other games)
 
-Some level codes (thanx to Abaddon and SweetCheater)
+Some level codes (thanx to Abaddon and SweetCheater). Those are already built into the slave
 
         "00000 00J00 102VS 21JUD"   PANDA 600
         "00000 00J01 113BT 22KDP"   BANZAI 750
