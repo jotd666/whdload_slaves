@@ -1,0 +1,61 @@
+Short:    HD-Installer for All Terrain Racing V1.2
+Author:   Codetapper/Action (codetapper@hotmail.com)
+Uploader: Codetapper/Action (codetapper@hotmail.com)
+Version:  1.2
+Type:     game/patch
+
+This patch applies to "All Terrain Racing" (c) 1995 Team 17 - 2 disks.
+Thanks to Denis Lechevalier for sending the original!
+
+REQUIREMENTS:
+- Slave requires WHDLoad V10+.
+- Game requires 0.5Mb chip mem and 0.5Mb other mem (+1.3Mb other memory 
+  for preload option)
+
+FEATURES: (02-Dec-2000)
+- Full load from HD
+- Loads and saves high scores and league races (unless you cheat)
+- Fastest times for each of the courses set to 99.99 seconds so that you
+  can have a realistic chance of beating the built in times
+- RomIcon, NewIcon and OS3.5 Colour Icon (created by me!)
+- Trainer (press Del for loads of cash and Help to win a one player race).
+  If you cheat, nothing will be saved until you reload the game.
+- Quit option (default key is F10)
+
+VERSION 1.1: (17-Dec-2000)
+- First disk image is now less than half the size, so to preload requires
+  500k less memory :)
+- Color bit fix for scandoubler (requested by Pavel Narozny)
+
+VERSION 1.2: (14-Nov-2013)
+- Fixed uninitialised copperlist which caused weird faults on WinUAE due to
+  FMODE being set to -1
+- Source code included
+
+CHEAT MODE:
+- This cheat was taken from Sweet Cheater by Keith Krellwitz!
+  In order to play the later tracks in two-player mode you first have to
+  reach them in single-player game.  Then lose a race and enter your name 
+  as "ATR".  Now go back to a two-player battle and you can select any of 
+  the hidden tracks.
+
+Greetings to Toni for tracing the bug in WinUAE, Denis, Carlo, Chris, Wepl,
+all Action members, my testing crew and the WHDLoad team!
+
+
+Codetapper/Action (14-Nov-2013)
+
+
+         Bug report form, full WHDLoad package and other installs:
+                          http://www.whdload.de/
+
+            ________  ________  ________  ____  ________  ________
+           _)       \_)       \_)       \_)   \_)       \_)       \
+   __ ___ /___/     /   /_____/\  /     /     /   /     /   /     /
+  /_//__// \___    /   /     /CT\/     /     /   /     /   /     /
+        /___/     /___      /   /     /_____/___      /___/     /___ __
+            \____/    \____/    \____/          \____/    \____//__//_/
+
+
+           Visit the Action website for more of our productions:
+                        http://www.codetapper.com/

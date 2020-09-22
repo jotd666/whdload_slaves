@@ -1,0 +1,64 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Anstoss - World Cup Edition" © 1994 Ascon.
+ This install applies to "On the ball - World Cup Edition" © 1994 Ascon.
+ 
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+ 
+ The installed program requires 1.0 MB ChipMem and 1.5 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ The game requires an installed A500 Kickstart 1.3 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick346.lha" on aminet.
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 1.0 (22.09.2020) done by JOTD:
+ - ability to skip introduction
+ - VBR/cache accesses removed
+ - avoids os-flashes when saving a game
+ - document protection removed
+ - clean install which replaces custom (buggy) install
+ - official support for 2 AGA versions and 2 ECS versions
+   for english, and german languages (4 versions total)
+ - nice icon by Exoticons
+ - source code included
+
+Note: the game saves 8 different files to disk in "data/save" directory!
+So even if the slave pre-writes data, it's not possible to avoid 8 OS swaps
+since whdload performs 1 swap per written file...
+So there's a static option (selectable when installing the game) to avoid
+os-flashes when saving a game. This option works by pre-copying empty (XPKSQSH-packed)
+savegames during installation. The empty packed files are small but when unpacked they use 20kb each.
+There are 20*8 = 160 of them totalling 3.5 megabytes (which is also roughly the amount of data used
+when all save slots are taken by real savegames)
+So if you have enough ram, this option is recommended. Else, don't install the files.
+
+A good compromise is to delete savegames from x to 20: this frees RAM, and still allows to avoid
+os-flashes for the x first savegames.
