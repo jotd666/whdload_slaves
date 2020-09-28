@@ -1,0 +1,75 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Raffles" © 1989,1991 The Edge/Softek
+
+ SUPPORTED VERSIONS:
+ - floppy release (1 disk) - provided by Mark Knibbs
+ - CDTV release (1 CD)     - provided by Carlo Pirri
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ The installed program requires 0.5 MB ChipMem and 1.0 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ The game requires an installed A500 Kickstart 1.3 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick346.lha" on aminet.
+
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 1.1 (26.09.2020) done by JOTD:
+ - adapted to whdload 17 and kickemu
+ - 68020 restriction removed (issue #0004806)
+ - added joypad controls (issue #0004371)
+ - added trainer: infinite energy
+ - manual added
+ - install package revamped
+ - source code included (thanks to Bored Seal for providing his)
+ 
+ version 1.0 (22.11.1999) done by Bored Seal:
+ - initial release
+ - copylock protection removed
+ - Gfx generator fixed (in floppy version)
+ - Savegame routine fixed (in floppy version)
+ - KickDOS interface used
+ - Savegames will be saved (in floppy version)
+ - Trainer option added (set CUSTOM1=1 tooltype for unlimited lives)
+ - NI/ROM icon (created by JHZ)
+ - Quit option (your default key)
+
+Joypad controls:
+
+- play: pause (P)
+- blue: pull/back (return)
+- yellow: pick (space)
+- green: drop (shift)
+- fwd+rev: quit current game (Q)
+- yellow+fwd+rev: quit to workbench
+
+note: floppy version has save/load feature, cdtv version hasn't.
