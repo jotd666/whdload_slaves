@@ -8,13 +8,14 @@
  CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
  PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
- This install applies to "Tiny Bobble" © 2020 Pink^aBYSs
+ This install applies to "Missiles Over Xerion" © 1994 Kingsoft/Cycletech - 2 disks
 
  This install requires WHDLoad to be in the path. It can be found in the
  WHDLoad package.
 
- The installed program requires 0.5 MB ChipMem and 1.0 MB OtherMem.
- 
+ The installed program requires 1.0 MB ChipMem and 0.5 MB OtherMem (+ 1.1MB for preload option)
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
  The game requires an installed A500 Kickstart 1.3 image.
  The kickstart image must be located in the directory "Devs:Kickstarts" and
  must be named "kick34005.A500". The image can be extracted from a A500 with
@@ -24,6 +25,7 @@
  Additionally the file "kick34005.A500.RTB" must be installed in the same
  directory as the kickstart image. It can be found in the archive 
  "util/boot/skick346.lha" on aminet.
+
 
  If you have problems with this installation please try and get a newer
  version of this package from the WHDLoad WWW-Page. If that doesn't help try
@@ -36,19 +38,34 @@
 	http://www.whdload.de/
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
+
+ version 1.1 (03.10.2020) done by JOTD:
+ - adapted to whdload 17
+ - useless AGA restriction removed
+ - quit option for 68000 machines
+ - added joypad controls
+ - data files (disk.1/2 & "Xerion" file) now need to be
+   located in a "data" sub-directory. Move them or reinstall.
+ - source code included (thanks to Bored Seal for providing his)
  
- version 1.1
- - selectable button configuration per player
- - nice icons my mrupp
- 
- version 1.0 (28.09.2020) done by JOTD:
+ version 1.0 (22.11.1999) done by Bored Seal:
  - initial release
- - access faults removed (code to call WinUAE or whatever...)
- - option: second/blue button for jump
- - CD32 joypad controls:
-   * play: pause game (player 1)
-   * forward+reverse+yellow (player 1): quit to workbench
-   * blue: jump (CUSTOM2=1, both players)
- - high score save (on a game over, make sure you wait till
-   title screen before quitting)
- - source code included
+ - Full load from HD
+ - KickEmu interface used
+ - ButtonWait tooltype for title picture added
+ - Highscores will be saved
+ - NI/ROM icon (created by JHZ)
+ - Quit option (your default key)
+
+joypad controls:
+
+- all CD32 joypad buttons are used to replace the function keys, including
+  the "play" button usually used for pause
+- to pause without the keyboard, use left mouse button
+
+CHEAT:
+ Type 'TRAINON' on menu screen. Now you can use the trainer menu items but
+highscores will not work. If you want to turn trainer off, type 'TRAINOFF'.
+
+
+Thanks to Guenther Allgoewer for disk images.
