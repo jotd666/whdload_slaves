@@ -1,6 +1,6 @@
 ; $Id: Install 1.20 2012/10/06 18:31:34 wepl Exp wepl $
 
-(set #multiple-versions "")		;set to <> "" if there are multiple versions
+(set #multiple-versions "xx")		;set to <> "" if there are multiple versions
 (set #version 2)			;set if no multiple versions 0=RawDIC 1=Patcher 2=DIC 3=Files 4=CD 5=SingleFile 6=Arcadia
 (set #sub-dir "")			;sub directory containing data files
 (set #highs-file "AllTerrainRacing.save")	;name of high scores file
@@ -82,12 +82,12 @@
 	  ; because the number of the #version remains unchanged
 	  ;
 	  (choices
-		"Original release (RawDIC)"
-		"Alternate version (Patcher)"
-		"Budget re-release (DIC)"
-		"Hit-Squad version (Files)"
+		""
+		""
+		"Floppy"
+		""
 		"CD/CDTV/CD³² version (Files)"
-		"Defjam compact (Single File)"
+		""
 	  )
           (help @askchoice-help)
         )
@@ -108,7 +108,7 @@
 	; 2 = DIC
         ("")
 	; 3 = Files
-	(set #prefix ("%s%s" #prefix "AGA"))
+	(set #prefix ("%s%s" #prefix "CD32"))
 	; 4 = CD Files
 	(
 	  (set #prefix-slave (cat #prefix "CDTV"))
@@ -239,16 +239,11 @@
       (message ("\nInsert your %s CD in any drive." @app-name))
       (copyfiles
         (help @copyfiles-help)
-        (source "HolidayMakerCDTV:")
-        (pattern "(fonts|[1-9hnp]#?|de|map|se)")
+        (source "ATR:")
+        (pattern "(atrfinal)")
         (dest #dest)
       )
-      (copyfiles
-        (help @copyfiles-help)
-        (source "HolidayMakerCDTV:libs")
-        (pattern "diskfont.library")
-        (dest #dest)
-      )
+
     )
 
     (				;----- 5 = DOS (Select a single file on an unknown disk) -----

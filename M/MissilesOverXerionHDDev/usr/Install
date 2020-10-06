@@ -2,7 +2,7 @@
 (set #sub-dir "data")
 (set #readme-file "readme")	;name of readme file
 (set #last-file "Disk.2")
-
+(set #prefix "MissilesOverXerion")
 ;****************************
 ;----------------------------
 ; Checks if given program is reachable via the path
@@ -64,13 +64,13 @@
 
 (set @default-dest
   (askdir
-    (prompt ("Where should \"%s\" installed ?\nA drawer \"%s\" will automatically created." @app-name @app-name))
+    (prompt ("Where should \"%s\" installed ?\nA drawer \"%s\" will automatically created." @app-name #prefix))
     (help @askdir-help)
     (default @default-dest)
     (disk)
   )
 )
-(set #dest (tackon @default-dest @app-name))
+(set #dest (tackon @default-dest #prefix))
 (if
   (exists #dest)
   (
@@ -95,7 +95,7 @@
 )
 
 (if
-  (exists ("%s.newicon" @app-name))
+  (exists ("%s.newicon" #prefix))
   (set #icon
     (askchoice
       (prompt "\nWhich icon do you like to install ?\n")
@@ -107,18 +107,18 @@
   (set #icon 0)
 )
 (select #icon
-  (set #icon ("%s.inf" @app-name))
-  (set #icon ("%s.newicon" @app-name))
+  (set #icon ("%s.inf" #prefix))
+  (set #icon ("%s.newicon" #prefix))
 )
 (copyfiles
   (help @copyfiles-help)
   (source #icon)
-  (newname ("%s.info" @app-name))
+  (newname ("%s.info" #prefix))
   (dest #dest)
 )
 (copyfiles
   (help @copyfiles-help)
-  (source ("%s.slave" @app-name ))
+  (source ("%s.slave" #prefix ))
   (dest #dest)
 )
 (if
@@ -151,12 +151,12 @@
 
 (copyfiles
   (help @copyfiles-help)
-  (source ("%s.islave" @app-name))
+  (source ("%s.islave" #prefix))
   (dest #dest)
 )
 
 (working)
-(run ("CD \"%s\"\nRawDIC SLAVE=%s.islave SOURCE=%s IGNOREERRORS\nDelete %s.islave" #dest @app-name #CI_drive @app-name))
+(run ("CD \"%s\"\nRawDIC SLAVE=%s.islave SOURCE=%s IGNOREERRORS\nDelete %s.islave" #dest #prefix #CI_drive #prefix))
 
 (if
   (exists (tackon #dest #last-file))

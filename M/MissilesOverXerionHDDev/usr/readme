@@ -39,9 +39,14 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 1.2 (06.10.2020) done by JOTD:
+ - fixed issue #0004810 by changing pause to right mouse button
+   and by making it optional
+ - fixed install script after renaming some files
+ 
  version 1.1 (03.10.2020) done by JOTD:
  - adapted to whdload 17
- - useless AGA restriction removed
+ - useless AGA restriction removed (issue #0004810)
  - quit option for 68000 machines
  - added joypad controls
  - data files (disk.1/2 & "Xerion" file) now need to be
@@ -61,7 +66,7 @@ joypad controls:
 
 - all CD32 joypad buttons are used to replace the function keys, including
   the "play" button usually used for pause
-- to pause without the keyboard, use left mouse button
+- to pause without the keyboard, use right mouse button
 
 CHEAT:
  Type 'TRAINON' on menu screen. Now you can use the trainer menu items but

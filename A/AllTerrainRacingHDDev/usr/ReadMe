@@ -24,8 +24,16 @@
    You can quit the game by pressing F10 (key can be changed with
    Tooltype "QuitKey=").
 
- Version 1.3 (xx-10-2020) done by JOTD:
- - Second button brakes (issue #) if custom2 is set
+ Version 1.4 (06-Oct-2020) done by JOTD:
+ - added more joypad control options:
+   * leave 'up' for missile (else 2-button joysticks can't be used in 2-player mode)
+   * option to brake even if accelerator is pressed (nice suggestion by Hexae)
+   
+ Version 1.3 (04-Oct-2020) done by JOTD:
+ - joypad controls for player one or/and two (issue #0004802)
+ - CD32 version supported, with restored keyboard (pause, esc), and
+   disabled red+blue to quit. Note: the manual lied about the buttons, now
+   this is fixed :) Controls are 100% the same as floppy version now.
  
  Version 1.2 (14-Nov-2013):
  - Fixed uninitialised copperlist which caused weird faults on WinUAE due to
@@ -47,7 +55,12 @@
    If you cheat, nothing will be saved until you reload the game.
  - Quit option (default key is F10)
 
-
+CD32 JOYPAD CONTROLS:
+- blue/second buttons brakes
+- green button fires (2-player)
+- play pauses the game (player 1), fire resumes (like P)
+- reverse+forward quits the game (player 1) (like ESC)
+- reverse+forward+yellow quits to workbench (player 1)
 
 CHEAT MODE:
 - This cheat was taken from Sweet Cheater by Keith Krellwitz!

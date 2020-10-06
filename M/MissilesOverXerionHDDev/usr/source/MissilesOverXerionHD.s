@@ -54,7 +54,7 @@ IGNORE_JOY_DIRECTIONS
     include ReadJoyPad.s
     
 DECL_VERSION:MACRO
-	dc.b	"1.1"
+	dc.b	"1.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -64,7 +64,7 @@ DECL_VERSION:MACRO
 		incbin	datetime
 	ENDC
 	ENDM
-	dc.b	"$","VER: slave "
+	dc.b	"$VER: slave "
 	DECL_VERSION
 	dc.b	0
     
@@ -79,6 +79,7 @@ slv_CurrentDir:
     
 slv_config:
     dc.b    "BW;"
+	dc.b    "C2:X:right mouse button pauses game:0;"
     dc.b    0
     EVEN
 
@@ -139,6 +140,7 @@ pl_main
     PL_PS   $31DC,test_quit
     PL_PS   $333c,read_joypad
     PL_S    $3342,$4C-$42
+    PL_PSS  $2c94,test_lmb,2
     PL_PSS  $2cde,test_fire,2
     PL_END
 
@@ -150,6 +152,14 @@ test_fire:
     movem.l (a7)+,d0
     rts
     
+test_lmb
+    movem.l  d0,-(a7)
+    move.l  joy0_buttons(pc),d0
+    not.l   d0
+    btst    #JPB_BTN_RED,d0
+    movem.l (a7)+,d0
+    rts
+
 ack_keyboard
     move.l  d0,d1
 	move.l	#2,d0
@@ -167,7 +177,7 @@ FIRE_WEAPON:MACRO
     
 read_joypad
     bsr _read_joysticks_buttons
-    movem.l d0-d1/a0,-(a7)
+    movem.l d0-d2/a0,-(a7)
     move.l  joy1_buttons(pc),d0
     FIRE_WEAPON   BLU,0     ; F1
     FIRE_WEAPON   YEL,4     ; F2
@@ -175,17 +185,21 @@ read_joypad
     FIRE_WEAPON   REVERSE,$C     ; F4
     FIRE_WEAPON   FORWARD,$10     ; F5
     FIRE_WEAPON   PLAY,$14     ; F6
+    move.l  _control_bits(pc),d2
+    btst    #0,d2
+    beq.b   .out
     move.l  joy0_buttons(pc),d0
     lea previous_joy0_buttons(pc),a0
     move.l  (a0),d1
-    btst    #JPB_BTN_RED,d1
+    btst    #JPB_BTN_BLU,d1
     bne.b   .lmb_prev_press
-    btst    #JPB_BTN_RED,d0
+    btst    #JPB_BTN_BLU,d0
     beq.b   .lmb_prev_press
     eor.b   #1,$e1638       ; pause
 .lmb_prev_press
     move.l  d0,(a0)
-    movem.l (a7)+,d0-d1/a0
+.out
+    movem.l (a7)+,d0-d2/a0
     rts
     
 ; < D0: numbers of vertical positions to wait
@@ -228,4 +242,7 @@ InsertDisk2	movem.l	a0-a2/d0,-(sp)
 		rts
 previous_joy0_buttons
     dc.l    0
+_tag		dc.l	WHDLTAG_CUSTOM2_GET
+_control_bits	dc.l	0
+		dc.l	0
 gamedata	dc.b	"Xerion",0
