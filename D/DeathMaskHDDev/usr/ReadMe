@@ -1,0 +1,73 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Death Mask" © 1995 Apache
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ ECS: The installed program requires 1.0 MB ChipMem and 1.0 MB OtherMem.
+ AGA: The installed program requires 2.0 MB ChipMem and 1.0 MB OtherMem.
+ CD32: The installed program requires 2.0 MB ChipMem and 1.5 MB OtherMem.
+ 
+ The game requires an installed A600, A1200 or A4000 Kickstart 3.1 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick40068.A1200" (resp. "kick40068.A4000", or "kick40063.A600"). The image can be extracted from a A1200 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick40068.A1200/A4000.RTB" or "kick40063.A600.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick346.lha" on aminet.
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+ 
+ version 1.1 (11.10.2020) done by JOTD:
+ - Added CD32 version support
+ - Added quitkey for 68000 machines
+ - reworked ECS/AGA source
+ - source code included
+ 
+ version 1.0 (2001) done by Abaddon:
+ - Fixed Issue with High Detail Mode
+ - Seperate loaders for ECS and AGA
+ - Full load from HD
+ - Decrunch relocated to fastram
+ - Quit option (Default 'F10')
+
+CHEAT MODE:
+During play, type "BELINDA" and press 'RETURN' to skip to the next
+level.  This works on every level.
+
+                          (LEVEL CODES)
+
+          02-"52385"        13-"28283"        24-"82855"
+          03-"22428"        14-"85325"        25-"58474"
+          04-"84843"        15-"10769"        26-"38392"
+          05-"22087"        16-"25324"        27-"55276"
+          06-"38641"        17-"43542"        28-"68163"
+          07-"06395"        18-"62156"        29-"75156"
+          08-"33224"        19-"84678"        30-"70948"
+          09-"35527"        20-"57093"        31-"54334"
+          10-"48962"        21-"29264"        32-"39814"
+          11-"65074"        22-"47446"        33-"52262"
+          12-"62438"        23-"75330"        34-"73164"
+
+Greetings to JOTD, Codetapper, Ralph, Chris, and the entire WHDLoad team!
