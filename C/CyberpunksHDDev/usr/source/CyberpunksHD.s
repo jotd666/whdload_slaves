@@ -38,8 +38,8 @@ pullall:MACRO
 ;============================================================================
 
 _base		SLAVE_HEADER			;ws_Security + ws_ID
-		dc.w	10			;ws_Version
-		dc.w	WHDLF_Disk|WHDLF_NoError|WHDLF_NoKbd	;ws_flags
+		dc.w	17			;ws_Version
+		dc.w	WHDLF_NoError|WHDLF_NoKbd	;ws_flags
 		dc.l	$80000			;ws_BaseMemSize
 		dc.l	0			;ws_ExecInstall
 		dc.w	_start-_base		;ws_GameLoader
@@ -51,24 +51,36 @@ _expmem		dc.l	$80000			;ws_ExpMem
 		dc.w	_name-_base		;ws_name
 		dc.w	_copy-_base		;ws_copy
 		dc.w	_info-_base		;ws_info
-
+		dc.w	0                       ;ws_kickname
+		dc.l	0                       ;ws_kicksize
+		dc.w	0                       ;ws_kickcrc
+		dc.w	_config-_base		;ws_config
 ;============================================================================
-
+_config
+        dc.b    "C1:X:Trainer Infinite Lives:0;"
+        dc.b    "C1:X:Trainer Infinite Time:1;"
+        
+		dc.b	0
+        
 	IFD BARFLY
 	DOSCMD	"WDate  >T:date"
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.2"
+	dc.b	"1.3"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
+	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
 	ENDC
 	ENDM
 
 	dc.b	"$","VER: slave "
 	DECL_VERSION
-	dc.b	$A,$D,0
+	dc.b	0
 
 _name		dc.b	"Cyberpunks",0
 _copy		dc.b	"1993 Mutation Software & Core Design Ltd.",0
@@ -78,6 +90,8 @@ _info		dc.b	"Installed & fixed by",10,"Keith Krellwitz/Abaddon & Wepl & JOTD",10
 		dc.b	0
 	EVEN
 
+    include ReadJoyPad.s
+    
 ;============================================================================
 _start	;	A0 = resident loader
 ;============================================================================
@@ -122,20 +136,7 @@ _flushcache:
 
 
 jumper3:
-	patch	$22d32,loadtracks
-	patch	$7e1a,prot1
-	patch	$7194,memory
-	move.l	#$600008f6,$74f8
-	move.l	#$4ef90001,$17d18
-	move.w	#$870e,$17d1c
-	bsr	blitpatches
-	ret	$6f12			;cacr
-	skip	8,$6e46			;dsksel
-	skip	8,$6eee			;beamcon0
-	or.w	#$200,$21792		;bplcon0
-	or.w	#$200,$21a16		;bplcon0
-	or.w	#$200,$21ee6		;bplcon0
-
+    bsr _detect_controller_types
 	lea	$229D6,a0
 	lea	decrunch(pc),a1
 	move.w	#$351,d0
@@ -143,58 +144,76 @@ jumper3:
 	move.b	(a0)+,(a1)+
 	dbf	d0,.copy
 
-	patch	$229D6,decrunch
 
-	; keyboard
+    sub.l   a1,a1
+    lea pl_main(pc),a0
+    move.l  _resload(pc),a2
+    jsr resload_Patch(a2)
+    
 
-	IFEQ	1
-	skip	$44-$3C,$703C
-	ENDC
-	patchs	$705C,quitkey_test
 
-	bsr	_flushcache
+	jmp     $400.W
 
-	jmp     $400
+pl_main
+    PL_START
+	PL_P	$22d32,loadtracks
+	PL_P	$7e1a,prot1
+	PL_P	$7194,memory
+	PL_L	$74f8,$600008f6,
+	PL_L	$17d18,$4ef90001,
+	PL_W	$17d1c,$870e,
+	PL_R	$6f12			;cacr
+	PL_S	$6e46,8			;dsksel
+	PL_S	$6eee,8			;beamcon0
+	PL_ORW	$21792,$200		;bplcon0
+	PL_ORW	$21a16,$200		;bplcon0
+	PL_ORW	$21ee6,$200		;bplcon0
+	PL_P	$229D6,decrunch
+    PL_PS	$705C,quitkey_test
+    
+    ; joypad controls
+    PL_ORW  $06e60+2,$20        ; enable vertical blank
+    PL_PA   $6E58+2,level3_interrupt
+    PL_PS   $21732,read_joy1dat
 
-quitkey_test
-	bset	#0,$bfee01	; original
-	move.l	D0,-(a7)
-	not.b	d0
-	ror.b	#1,d0
-	cmp.b	_keyexit(pc),d0
-	bne.b	.noq
-
-	pea	TDREASON_OK
-	move.l	_resload(pc),-(a7)
-	addq.l	#resload_Abort,(a7)
-	rts
-
-.noq
-	move.l	(a7)+,d0
-	rts
-
-prot1:
-	move.l	#$c71b94ea,d7	; copylock
-	jmp	$22824
-
-memory:
-	clr.l	$0
-;	move.l	#$80000,d0
-	move.l	_expmem(pc),d0
-	move.l	d0,$731a
-	rts
-
-blitpatches:
-	pushall
-	sub.l	a1,a1
-	lea	pl_blit(pc),a0
-	move.l	_resload(pc),a2
-	jsr	resload_Patch(a2)
-	pullall
-	rts
-
-pl_blit
-	PL_START
+    PL_PSS  $074c2,read_fire,2
+    PL_PSS  $07eec,read_fire,2
+    PL_PSS  $07fde,read_fire,2
+    PL_PSS  $080cc,read_fire,2
+    PL_PSS  $081ba,read_fire,2
+    PL_PSS  $08298,read_fire,2
+    PL_PSS  $08328,read_fire,2
+    PL_PSS  $085a0,read_fire,2
+    PL_PSS  $08b40,read_fire,2
+    PL_PSS  $08bbe,read_fire,2
+    PL_PSS  $09c42,read_fire,2
+    PL_PSS  $09d66,read_fire,2
+    PL_PSS  $09e60,read_fire,2
+    PL_PSS  $09f78,read_fire,2
+    PL_PSS  $0a072,read_fire,2
+    PL_PSS  $0a18a,read_fire,2
+    PL_PSS  $0a284,read_fire,2
+    PL_PSS  $0a39c,read_fire,2
+    PL_PSS  $0a496,read_fire,2
+    PL_PSS  $0a5a2,read_fire,2
+    PL_PSS  $0a69c,read_fire,2
+    PL_PSS  $0a7b6,read_fire,2
+    PL_PSS  $0a8b0,read_fire,2
+    PL_PSS  $1263e,read_fire,2
+    PL_PSS  $15cf2,read_fire,2
+    PL_PSS  $15e02,read_fire,2
+    PL_PSS  $17a28,read_fire,2
+    PL_PSS  $17a68,read_fire,2
+    PL_PSS  $17ce2,read_fire,2
+    PL_PSS  $186d4,read_fire,2
+    PL_PSS  $187f2,read_fire,2
+    PL_PSS  $1881e,read_fire,2
+    PL_PSS  $1884e,read_fire,2
+    PL_PSS  $20e2a,read_fire,2
+    PL_PSS  $21680,read_fire,2
+    PL_PSS  $2176a,read_fire,2
+        
+    ; blitter
 	PL_PS	$1ecc6,blitshit1
 	PL_PS	$1ecb2,blitshit1
 	PL_PS	$1ec9e,blitshit1
@@ -220,7 +239,137 @@ pl_blit
 	PL_PS	$1170a,wt
 	PL_PS	$1171a,wt
 	PL_PS	$1172a,blitshit2
-	PL_END
+    
+    ; trainer
+    
+    ; infinite time
+    PL_IFC1X    1
+    PL_R    $1716e
+    PL_ENDIF
+    ; infinite lives for all 3 characters
+    
+    PL_IFC1X    0
+    PL_S    $1652c,8
+    PL_S    $16548,8
+    PL_S    $16560,8
+    PL_S    $165ca,8
+    PL_S    $165e6,8
+    PL_S    $165fe,8
+    PL_S    $16668,8
+    PL_S    $16684,8
+    PL_S    $1669c,8
+    PL_ENDIF
+    PL_END
+
+BTNTEST:MACRO
+    btst    #JPB_BTN_\1,d1
+    bne.b   .\1_was_pressed
+    btst    #JPB_BTN_\1,d0
+    beq.b   .out\1
+    st.b   (\2,a1)  ; space pressed
+    bra.b   .out\1
+.\1_was_pressed    
+    btst    #JPB_BTN_\1,d0
+    bne.b   .out\1
+    clr.b   (\2,a1)  ; space released
+.out\1
+    ENDM
+   
+read_fire
+    movem.l d0,-(a7)
+    move.l  joy1(pc),d0
+    not.l   d0
+    btst    #JPB_BTN_RED,d0
+    movem.l (a7)+,d0
+    rts
+    
+level3_interrupt
+    MOVEM.L	D0-D7/A0-A6,-(A7)
+    move.w  _custom+intreqr,d0
+    btst    #5,d0
+    bne.b   .vbl
+    jmp $06f22  ; copper
+.vbl
+    bsr _joystick
+    btst    #JPB_BTN_FORWARD,d0
+    beq.b   .noquit
+    btst    #JPB_BTN_REVERSE,d0
+    beq.b   .noquit
+    btst    #JPB_BTN_YEL,d0
+    bne quit
+.noquit    
+    
+    LEA	$7093,A1		;144ca: 43f90000
+    lea _prev_joy1_buttons(pc),a0
+    move.l  (a0),d1
+    move.l  joy1(pc),d0
+    BTNTEST BLU,$40
+    BTNTEST PLAY,$19
+    BTNTEST YEL,$44
+
+    btst    #JPB_BTN_GRN,d0
+    beq.b   .nogreen
+    BTNTEST UP,$4C
+    BTNTEST DOWN,$4D
+    BTNTEST LEFT,$4F
+    BTNTEST RIGHT,$4E
+    
+.nogreen
+    BTNTEST REVERSE,$43
+    tst.b   ($43,a1)
+    beq.b   .noesc
+    BTNTEST FORWARD,$45
+
+.out
+    move.l  d0,(a0)
+    move.w  #$20,_custom+intreq
+	MOVEM.L	(A7)+,D0-D7/A0-A6	;06f30: 4cdf7fff
+	RTE				;06f34: 4e73
+.noesc
+    clr.b   ($45,a1)
+    bra.b   .out
+    
+read_joy1dat
+    move.l  joy1(pc),d0
+    btst    #JPB_BTN_GRN,d0
+    beq.b   .no_green
+    ; when green is pressed, we use joystick to simulate
+    ; keypresses, so the characters can't move in the meantime
+    moveq.l #0,d0
+    rts
+.no_green
+    MOVE.W	_custom+joy1dat,D0		;21732: 303900dff00c
+    rts
+    
+quitkey_test
+	bset	#0,$bfee01	; original
+	move.l	D0,-(a7)
+	not.b	d0
+	ror.b	#1,d0
+	cmp.b	_keyexit(pc),d0
+	bne.b	noq
+quit
+	pea	TDREASON_OK
+	move.l	_resload(pc),-(a7)
+	addq.l	#resload_Abort,(a7)
+	rts
+
+noq
+	move.l	(a7)+,d0
+	rts
+
+prot1:
+	move.l	#$c71b94ea,d7	; copylock
+    move.l  d7,$100.W   ; just in case... (issue #002441)
+	jmp	$22824
+
+memory:
+	clr.l	$0
+;	move.l	#$80000,d0
+	move.l	_expmem(pc),d0
+	move.l	d0,$731a.w
+	rts
+
 
 blitshit1:
 	move.w	d5,$dff058	
@@ -229,7 +378,9 @@ blitshit2:
 	adda.l	#$2,a0
 wt:
 	btst	#$6,$dff002
-	bne		wt
+.w
+	btst	#$6,$dff002
+	bne		.w
 	rts
 
 loadtracks:
@@ -241,9 +392,9 @@ loadtracks:
 	move.w	d2,d1
 	mulu.w	#512,d1			;size
 	move.l	#$1,d2
-	move.l	(_resload),a2
+	move.l	(_resload,pc),a2
 	jsr	(resload_DiskLoad,a2)
-	movem.l	(a7)+,_MOVEMREGS
+	movem.l	(a7)+,d1-d2/a0-a2
 	moveq	#0,d0			;zero means success
 	rts
 
@@ -435,16 +586,16 @@ decrunch_400:
 
 
 	bsr	_flushcache
-
+    
 	jmp	$3a0.w
 
 decrunch
-	blk.b	$360,0
+	ds.b	$360,0
 
 ;--------------------------------
 
 _resload	dc.l	0		;address of resident loader
-
+_prev_joy1_buttons  dc.l    0
 ;======================================================================
 
 	END

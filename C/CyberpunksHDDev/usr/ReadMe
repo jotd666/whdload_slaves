@@ -31,7 +31,11 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 1.2 (24.07.06) done by JOTD:
+ version 1.3 (26.10.2020) done by JOTD:
+ - added joypad controls: game doesn't require keyboard at all now
+ - added trainer
+ 
+ version 1.2 (24.07.2006) done by JOTD:
  - keyboard fixed
  - decrunch routines relocated in fast memory
  - quit key working for 68000/NOVBRMOVE
@@ -40,7 +44,7 @@
  - icon added
  - source code included
 
- version 1.1 (27.12.00) done by Wepl:
+ version 1.1 (27.12.2000) done by Wepl:
  - access to CACR removed
  - some minor fixes
  - new icon included
@@ -49,3 +53,14 @@
  version 1.1 (1998?) done by Abaddon:
  - initial release
  - copy protection removed
+
+ joypad controls:
+
+ - red: fire (as usual)
+ - blue: change character in bottom menu
+ - yellow: use item
+ - green: keep pressed while using joystick to
+   select items in bottom menu (same as direction keys)
+ - backwards+forward: give up current game
+ - play: pause
+ - backwards+forward+yellow: quit to workbench

@@ -16,6 +16,9 @@ Requirements:
 
 History:
 
+ version 2.1 (21.10.2020) done by JOTD:
+ - removed 1MB chip restriction left by mistake (issue #0004825)
+ 
  version 2.0 (25.04.2018) done by JOTD:
  - another version supported (multi-language & now english-only) (issue #0002617)
  - source code included

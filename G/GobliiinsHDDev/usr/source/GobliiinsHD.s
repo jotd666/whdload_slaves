@@ -33,9 +33,9 @@
 ;============================================================================
 
 
-DEBUG
+;CHIP_ONLY
 
-	IFD	DEBUG
+	IFD	CHIP_ONLY
 CHIPMEMSIZE	= $FF000
 FASTMEMSIZE	= $0000
 HRTMON
@@ -74,7 +74,7 @@ slv_keyexit	= $5D	; num '*'
 
 
 DECL_VERSION:MACRO
-	dc.b	"1.3"
+	dc.b	"1.4"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -82,8 +82,8 @@ DECL_VERSION:MACRO
 	ENDM
 
 slv_name	dc.b	"Gobliiins"
-	IFD	DEBUG
-	dc.b	" (DEBUG MODE)"
+	IFD	CHIP_ONLY
+	dc.b	" (DEBUG/CHIP MODE)"
 	ENDC
 	dc.b	0
 
@@ -106,7 +106,7 @@ _program:
 
 	dc.b	"$","VER: slave "
 	DECL_VERSION
-	dc.b	$A,0
+	dc.b	0
 
 	EVEN
 

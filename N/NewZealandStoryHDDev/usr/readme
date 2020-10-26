@@ -29,7 +29,11 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 2.1 (12.09.2020) done by JOTD
+ version 2.4 (.10.2020) done by JOTD:
+ - merged version 2.2 bugfixes that I overlooked (but most fixes from broken 2.1 were
+   already been fixed). Means just optimize the slave code, nothing more
+   
+ version 2.3 (12.09.2020) done by JOTD
  - restored original title picture (can be paused with BUTTONWAIT)
  - self-modifying code removed: end screen was completely trashed
  - high-scores aren't saved anymore if any cheat is set
@@ -42,6 +46,15 @@
  - swapped CUSTOM2 and CUSTOM3 (CUSTOM2 now enables arcade style controls)
  - reworked/cleaned up source code
  - hopefully fixed controls (issue #0004766)
+
+Version 2.2 (StingRay)
+- Patch was broken since v2.1 and crashed with access fault shortly
+  after the title screen, buggy menu patch fixed
+- Copperlist problems fixed
+
+Version 2.1 (Hungry Horace)
+- Configuration features for WHDLoad v17 added
+- Fixed 68000 specific bug causing a black screen on game loadin
  
  version 2.0 (16.11.2008) done by Hungry Horace
  - Load / Save scores to HD (file 'highs')

@@ -17,9 +17,9 @@
 
 ;============================================================================
 
-DEBUG
+;CHIP_ONLY
 
-	IFD	DEBUG
+	IFD	CHIP_ONLY
 HRTMON
 CHIPMEMSIZE	= $100000
 FASTMEMSIZE	= $000000
@@ -58,7 +58,7 @@ slv_keyexit	= $5D	; num '*'
 
 
 DECL_VERSION:MACRO
-	dc.b	"2.0"
+	dc.b	"2.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -73,8 +73,8 @@ _assign
 	dc.b	"LCP",0
 
 slv_name		dc.b	"The Amazing Spiderman"
-	IFD	DEBUG
-	dc.b	" (DEBUG MODE)"
+	IFD	CHIP_ONLY
+	dc.b	" (DEBUG/CHIP MODE MODE)"
 	ENDC
 			dc.b	0
 slv_copy		dc.b	"1990 Paragon-Oxford Digital-Empire",0

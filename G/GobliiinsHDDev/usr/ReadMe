@@ -39,10 +39,13 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 1.3 (16.02.17) done by JOTD:
+ version 1.4 (22.10.2020) done by JOTD:
+ - rebuilt for 512k chipmem (issue #0004828)
+ 
+ version 1.3 (16.02.2017) done by JOTD:
  - fixed missing sounds (issue #003282)
  
- version 1.2 (27.05.05) done by JOTD:
+ version 1.2 (27.05.2005) done by JOTD:
  - fixed to use fast memory (much faster)
  - fixed display (normal PAL, no more truncated display in NTSC)
  - reworked source/install/readme
