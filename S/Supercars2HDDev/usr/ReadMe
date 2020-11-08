@@ -32,9 +32,16 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
-Version 1.1
+Version 1.1 (08.11.2020) done by JOTD:
 
-Version 1.0 (2005) done by Codetapper:
+- added joypad controls (pause/quit and optional buttons
+  for weapons with CUSTOM2 bits 0 and 1 for each player (1,2,3))
+- added BUTTONWAIT to pause in next race description
+- changed to CUSTOM3 for NTSC layout
+- changed to CUSTOM4 for track selection
+
+Version 1.0 (24.08.2005) done by Codetapper:
+
 - Full load from HD
 - Loads and save best scores and fastest times (unless you cheat!)
 - Both decrunchers relocated to fast memory (huge loading speedup!)
@@ -57,6 +64,13 @@ KEYS:
 - F8 to activate the built-in cheat mode on the options screen (see below 
   for full cheat details)
 - +/- to move the position of the status panel (useful for NTSC users)
+
+JOYPAD CONTROLS:
+- blue: front weapon
+- green: rear weapon
+- play: pause
+- fwd+rev: quit current game
+- fwd+rev+yellow: quit current game
 
 CHEAT MODE:
 - Taken from Sweet Cheater by Keith Krellwitz!
@@ -85,6 +99,12 @@ testing crew and the entire WHDLoad and HOL teams!
 
 Codetapper/Action (24-Aug-2005)
 
+
+Just the favourite racing games of all times, given justice by Codetapper
+high quality work as always, and now revamped with joypad controls
+
+
+JOTD (08-Nov-2020)
 
          Bug report form, full WHDLoad package and other installs:
                           http://www.whdload.de/

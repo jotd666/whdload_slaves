@@ -89,6 +89,7 @@ _expmem		dc.l	0			;ws_ExpMem
     
 ;---
 _config
+    dc.b    "BW;"
 	dc.b    "C1:B:enable permanent cheat mode;"
 	dc.b    "C2:X:joypad controls player 1:0;"
 	dc.b    "C2:X:joypad controls player 2:1;"    
@@ -270,6 +271,12 @@ _PL_Game	PL_START
         PL_IFC2X   1
         PL_PS   $78ff2,_read_joydat_player_2
         PL_ENDIF
+        
+        PL_IFBW
+        PL_PS   $7a54c,_wait_button
+        PL_ENDIF
+        
+        
 		PL_END
 
 ;======================================================================
@@ -340,6 +347,18 @@ read_joydat_xx:
 	bset	#8,d0	; xor 0 and 1 yields 1 cos bit1=0
 .no_blue:
     rts
+
+_wait_button
+.wait
+    move.l	joy0_buttons(pc),d0
+    btst	#JPB_BTN_RED,d0
+    bne.b   .out
+    move.l	joy1_buttons(pc),d0
+    btst	#JPB_BTN_RED,d0
+    beq.b   .wait
+.out
+    MOVE.W	#$ffff,$7e712
+    rts
     
 _test_fire_1
     movem.l D0,-(a7)
@@ -358,6 +377,7 @@ _test_fire_2
     
 _level1_hook
     bsr _read_joysticks_buttons
+    bsr _test_buttons
 	MOVE.W	#$0004,156(A6)		;74dfa: 3d7c0004009c
 	RTE				;74e00: 4e73
     
@@ -369,10 +389,44 @@ _level3_hook:
 .vblank:
     addq.l  #4,a7   ; POP
     bsr _read_joysticks_buttons
+    move.l  joy1_buttons(pc),d0
+    btst    #JPB_BTN_REVERSE,d0
+    beq.b   .noesc
+    btst    #JPB_BTN_FORWARD,d0
+    beq.b   .noesc
+    btst    #JPB_BTN_YEL,d0
+    bne   _exit
+.noesc
     move.w  #$20,intreq(a6)
 	MOVEM.L	(A7)+,D0-D7/A0-A6	;7b2d8: 4cdf7fff
 	RTE				;7b2dc: 4e73
+ 
+_test_buttons
+    movem.l  d0-d1/a0,-(a7)
+    lea previous_joy1_buttons(pc),a0
+    move.l  (a0),d1
+    move.l  joy1_buttons(pc),d0
+    move.l  d0,(a0)
+    btst    #JPB_BTN_PLAY,d1
+    bne.b   .nopause        ; was already pressed
+    btst    #JPB_BTN_PLAY,d0
+    beq.b   .nopause
+    eor.w   #1,$74bec
+.nopause
+    btst    #JPB_BTN_REVERSE,d0
+    beq.b   .noesc
+    btst    #JPB_BTN_FORWARD,d0
+    beq.b   .noesc
+    btst    #JPB_BTN_YEL,d0
+    bne   _exit
+    move.w  #$45,$74f90
+.noesc
+    movem.l  (a7)+,d0-d1/a0
+    rts
     
+previous_joy1_buttons
+    dc.l    0
+        
 ;======================================================================
 
 _Loader		subi.l	#$3000,d0
