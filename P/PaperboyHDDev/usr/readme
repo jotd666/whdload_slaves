@@ -1,0 +1,55 @@
+	THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER
+	EXPRESS OR IMPLIED, STATUTORY OR OTHERWISE.
+	THE ENTIRE RISK AS TO USE, RESULTS AND PERFORMANCE OF THE PACKAGE IS
+	ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE TO BE DEFECTIVE, YOU
+	ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING, REPAIR OR OTHER
+	REMEDIATION.
+	UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY
+	DAMAGE CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE
+	OWNER OR A THIRD PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF
+	DAMAGE.
+
+	That install applies to "Paperboy" © 1989 Elite.
+
+	That install requires WHDLoad and RawDIC to be in the path.
+	Both can be found in the whdload package.
+	To install from a different drive than DF0: select Expert as
+	installation mode.
+
+	You can quit the game by pressing F10 (key can be changed with
+	Tooltype "QuitKey=")
+
+ Version 1.3 () done by JOTD:
+ - slave rewritten for whdload 17, JST macros dropped
+ - source code included
+ 
+ Version 1.2 (07.10.2001) done by JOTD:
+ - Coded RawDIC imager (The old ripper did not work)
+   Disk imaging must be re-done for that version. The file "bootblock" is
+   no longer necessary.
+
+ Version 1.1 (??) done by JOTD:
+ - Quickly converted to WHDLoad (using Harry macros)
+ - Game runs from HD using WHDLoad (gave up JST)
+ - Lots of SNOOP bugs fixed
+ - QUITKEY
+ - Nice icon by Frank
+ - BUTTONWAIT added to let you see the title picture
+
+ 
+ Version 1.0 (??.08.1998) done by Ralf:
+ - First official release (JST)
+
+
+Big thanks to Chris Vella for sending us the disk and for install testing.
+
+
+--- Author
+
+__________________________________________________________________ / / /_
+                                                                  / / /
+Ralf Huvendiek                                                   / / /
+e-mail: kaervek(at)gmx.de                                    ____  / / /
+http://kaervek.freeservers.com/amiga/main_patches.html    \   \/ / /
+________________________________________ powered by AMIGA  \ \ \/ /______
+                                                            \_\_\/

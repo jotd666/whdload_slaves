@@ -29,7 +29,7 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 2.4 (.10.2020) done by JOTD:
+ version 2.4 (xx.11.2020) done by JOTD:
  - merged version 2.2 bugfixes that I overlooked (but most fixes from broken 2.1 were
    already been fixed). Means just optimize the slave code, nothing more
    

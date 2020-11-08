@@ -40,7 +40,8 @@ FASTMEMSIZE	= $80000
     ENDC
     
 IOCACHE = 50000
-
+; SEGTRACKER doesn't work well with Sierra games...
+;;SEGTRACKER
 ;
 ;SETPATCH
 
@@ -65,7 +66,7 @@ CRACKIT = 1
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"2.1"
+	dc.b	"2.3"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"

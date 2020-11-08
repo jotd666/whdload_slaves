@@ -13,7 +13,6 @@
 ;---------------------------------------------------------------------------*
 
 	INCDIR	Include:
-	INCDIR	osemu:
 	INCLUDE	whdload.i
 	INCLUDE	whdmacros.i
 	INCLUDE	lvo/dos.i
@@ -31,9 +30,9 @@
 
 ;============================================================================
 
-;DEBUG
+;CHIP_ONLY
 
-	IFD	DEBUG
+	IFD	CHIP_ONLY
 CHIPMEMSIZE	= $130000
 FASTMEMSIZE	= $0000	
 	ELSE
@@ -57,12 +56,13 @@ CACHE
 ;============================================================================
 
 
-slv_Version	= 16
+slv_Version	= 17
 slv_Flags	= WHDLF_NoError|WHDLF_Examine
 slv_keyexit	= $5D	; num '*'
 
 	INCLUDE	kick13.s
-
+IGNORE_JOY_DIRECTIONS
+        include     ReadJoyPad.s
 ;============================================================================
 
 	IFD BARFLY
@@ -70,19 +70,30 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.1"
+	dc.b	"1.3"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
 	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
+	ENDC
 	ENDM
 
+slv_config:
+	dc.b    "C1:X:Trainer infinite lives:0;"
+	dc.b    "C1:X:Trainer infinite smart bombs:1;"
+	dc.b	0
 
-slv_name		dc.b	"Mega-Typhoon",0
+slv_name		dc.b	"Mega-Typhoon"
+    IFD CHIP_ONLY
+    dc.b    " (debug/chip mode)"
+    ENDC
+    dc.b    0
 slv_copy		dc.b	"1996 Bernhard Braun / Nordlicht Edv",0
 slv_info		dc.b	"adapted & fixed by JOTD",10
 		dc.b	"from Wepl excellent KickStarter 34.005",10,10
-		dc.b	"Set CUSTOM1=1 for infinite lives",10,10
 		dc.b	"Version "
 		DECL_VERSION
 		dc.b	0
@@ -100,7 +111,7 @@ _args_end
 
 	dc.b	"$","VER: slave "
 	DECL_VERSION
-	dc.b	$A,$D,0
+	dc.b	0
 
 	EVEN
 
@@ -109,17 +120,33 @@ _args_end
 	;initialize kickstart and environment
 
 _bootdos
-	move.l	(_resload),a2		;A2 = resload
+	move.l	(_resload,pc),a2		;A2 = resload
 
-		lea	(_tag,pc),a0
-		jsr	(resload_Control,a2)
-
+		;lea	(_tag,pc),a0
+		;jsr	(resload_Control,a2)
+        bsr _detect_controller_types
+        
+        ; install our handler for the menu
+        lea system_vbl(pc),a0
+        move.l  $6C.W,(a0)
+        lea vbl_hook_sys(pc),a0
+        move.l  a0,$6C.W
+        
 	;open doslib
 		lea	(_dosname,pc),a1
 		move.l	(4),a6
 		jsr	(_LVOOldOpenLibrary,a6)
 		move.l	d0,a6			;A6 = dosbase
 
+        IFD CHIP_ONLY
+        move.l  a6,-(A7)
+        move.l  4,A6
+        move.l  #$48B0,d0
+        move.l  #MEMF_CHIP,d1
+        jsr (_LVOAllocMem,a6)
+        move.l  (a7)+,a6
+        ENDC
+    
 	;load exe
 		lea	_program(pc),a0
 		move.l	a0,d1
@@ -134,11 +161,12 @@ _bootdos
 		add.l	a1,a1
 		add.l	#4,a1
 
+    ; copy current key address from the code
+        move.l  ($00674,a1),d0
+        lea rawkey_address(pc),a0
+        move.l  d0,(a0)
+        
 		lea	pl_main(pc),a0
-		move.l	_custom1(pc),d0
-		beq.b	.sk
-		lea	pl_train(pc),a0
-.sk
 		jsr	resload_Patch(a2)
 	;call
 		move.l	d7,a1
@@ -167,14 +195,16 @@ _end
 		add.l	#resload_Abort,(a7)
 		rts
 
-pl_train
-	PL_START
-	PL_W	$5D1A,$4E71	; infinite lives	
-	PL_NEXT	pl_main
 
 pl_main
 	PL_START
-
+    PL_IFC1X    0
+  	PL_NOP	$5D1A,2	; infinite lives	
+    PL_ENDIF
+    PL_IFC1X    1
+    PL_NOP  $07278,6    ; infinite bombs
+    PL_ENDIF
+    
 	; access fault at the final level 1 monster
 
 	PL_PS	$65D6,fix_af_1
@@ -187,8 +217,77 @@ pl_main
 
 	PL_P	$8F1A,emulate_dbf
 
+    ; vbl hook to read joypad
+    PL_PS   $045a6,vbl_hook
+    PL_PS   $04878,vbl_hook
+    ; button 2
+    PL_PS   $0454a,read_buttons
+    PL_S    $04550,$14
+    ;;PL_PSS    $04580,read_fire,$10,4
 	PL_END
 
+read_buttons
+    move.l  joy1_buttons(pc),d1
+    btst    #JPB_BTN_RED,d1
+    bne.b   .red
+    bset    #7,d0   ; original
+.red
+    not.l   d1
+    btst    #JPB_BTN_BLU,d1  
+    rts
+
+vbl_hook_sys:
+    move.l  system_vbl(pc),-(a7)
+    bra.b   vbl_hook_2
+vbl_hook    
+    LEA	_custom,A5
+vbl_hook_2
+    movem.l d0/d1/a0,-(a7)
+    lea previous_buttons(pc),a0
+    move.l  (a0),d1
+    move.l  joy1_buttons(pc),(a0)
+    bsr _read_joysticks_buttons
+    move.l  joy1_buttons(pc),d0
+    btst    #JPB_BTN_REVERSE,d0
+    beq.b   .noesc
+    btst    #JPB_BTN_FORWARD,d0
+    beq.b   .noesc
+    btst    #JPB_BTN_YEL,d0
+    bne   _quit
+    ; quit current game
+    move.l  rawkey_address(pc),a0
+    move.b  #$75,(a0) 
+.noesc
+    btst    #JPB_BTN_PLAY,d0
+    beq.b   .nopause
+    move.l  rawkey_address(pc),a0
+    move.b  #$cd,(a0)
+    bra.b   .out
+.nopause
+    btst    #JPB_BTN_PLAY,d1
+    beq.b   .out
+    ; just released
+    move.l  rawkey_address(pc),a0
+    move.b  #$0,(a0)
+    
+.out
+    movem.l (a7)+,d0/d1/a0    
+    rts
+ 
+system_vbl
+    dc.l    0
+rawkey_address
+    dc.l    0
+previous_buttons
+    dc.l    0
+    
+_quit
+	pea	TDREASON_OK
+	move.l	_resload(pc),-(a7)
+	addq.l	#resload_Abort,(a7)
+	rts
+
+    
 fix_af_1
 	move.l	a4,d5
 	bmi.b	.avoid
@@ -228,9 +327,7 @@ beamdelay
 	dbf	d0,.bd_loop1
 	rts
 
-_tag		dc.l	WHDLTAG_CUSTOM1_GET
-_custom1	dc.l	0
-		dc.l	0
+
 
 ;============================================================================
 

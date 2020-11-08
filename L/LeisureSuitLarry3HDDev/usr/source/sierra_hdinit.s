@@ -207,6 +207,11 @@ _cb_dosLoadSeg
 	even
     
 
+; if those files aren't here, MT32 sound doesn't work but
+; there is no error message, so it can be frustrating to try
+; to figure out what is wrong (specially when the installation
+; has been done manually or using old installers)
+
     IFD PATCH_MT32
 patch_mt32_open
     PATCH_DOSLIB_OFFSET Open
@@ -218,18 +223,46 @@ patch_mt32_open
     tst.l   d0
     bne.b   .okay
     pea	.missingmt32_message(pc)
+    bra .failfile
+.okay
+    lea	.serial_device(pc),a0
+    move.l	_resload(pc),a2
+    jsr	resload_GetFileSize(a2)
+    tst.l   d0
+    bne.b   .okayser
+    pea	.missingserialdev_message(pc)
+    bra .failfile
+.okayser
+    lea	.resmt32(pc),a0
+    move.l	_resload(pc),a2
+    jsr	resload_GetFileSize(a2)
+    tst.l   d0
+    bne.b   .okayres
+    pea	.missingres_message(pc)
+    bra .failfile
+.okayres
+    rts
+.failfile
     pea	TDREASON_FAILMSG
     move.l	(_resload,pc),-(a7)
     add.l	#resload_Abort,(a7)
-    rts
-.okay
     rts
 
 .mt32_driver:
     dc.b    "mt32.drv",0
 .missingmt32_message
-    dc.b    "file mt32.drv is missing.",10
-    dc.b    "Make sure that game was properly installed",0
+    dc.b    "file 'mt32.drv' is missing.",10
+    dc.b    "Make sure that game was properly (re)installed",0
+.serial_device
+    dc.b    "devs/serial.device",0
+.missingserialdev_message
+    dc.b    "file 'devs/serial.device' is missing.",10
+    dc.b    "Make sure that game was properly (re)installed",0
+.resmt32
+    dc.b    "res_mt32.cfg",0
+.missingres_message
+    dc.b    "file 'res_mt32.cfg' is missing.",10
+    dc.b    "Make sure that game was properly (re)installed",0
     even
     
 new_Lock

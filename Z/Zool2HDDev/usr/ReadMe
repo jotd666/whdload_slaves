@@ -1,0 +1,166 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Zool 2" (c) 1993 Gremlin - 2 disks. Thanks to
+ Mad-Matt and Chris Vella for sending the originals! This install supports:
+
+- Original ECS version (Mad-Matt)
+- Original AGA version (Chris Vella)
+- Mok/Classic cracked ECS version (download from http://www.back2roots.org)
+- Original CD32 version
+
+REQUIREMENTS:
+- Slave requires WHDLoad V17+ (and RawDIC for ECS version)
+- ECS game requires 1.0Mb chip mem (+1.9Mb other memory for preload option)
+- AGA/CD32 game requires 1.6Mb chip mem and 0.5Mb other mem (+1.9Mb other memory for preload option)
+
+ The AGA and CD32 versions of the game requires an installed A1200/A4000
+ Kickstart 3.1 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick40068.A1200" (resp "kick40068.A4000").
+ The image can be extracted from a A1200 with tools like 'GrabKick'
+ or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick40068.A1200.RTB" (resp. "kick40068.A4000.RTB") 
+ must be installed in the same directory as the kickstart image.
+ It can be found in the archive "util/boot/skick346.lha" on aminet.
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+ 
+History:
+
+Version 2.0 (0x.11.2020) done by JOTD:
+
+- support for CD32 version added (one extra level)
+- adapted to whdload 17
+- AGA alternate controls: blue/second button jumps (a lot of time was saved doing
+  this thanks to the CD32 version that include code symbols!!) on CUSTOM2=1
+- AGA joypad controls: play = pause, rev+fwd = quit
+- CD32 alternate controls: blue/second button jumps, quit mapped on forward+reverse
+  (allows to use a 2-button joystick, green button no longer used)
+- now start level is controlled by CUSTOM3 (0-5 or 0-6 for CD32 version)
+- CD32 version starts with FX by default instead of music (since there's no music!)
+- Possible to enable original cheatkeys without the other cheats on
+  * Y: double zool
+  * B: smart bomb?
+  * RETURN: level skip
+- Added keys for CD32 version if no joypad is available
+  * space: bomb (TOTEST)
+  * P: pause
+  * ESC (when paused): quit
+- TODO: green AGA: alt controls: bomb???
+- TODO: unlimited smarts KO AGA...
+- TODO: start level CD32 wrong!!!
+- ACESS FAult BOMB trash green (CD32)
+
+
+Version 1.x (2002) done by Codetapper/Action:
+
+ - Full load from HD
+ - 3 versions supported 
+ - Manual protection removed (screen no longer appears)
+ - NTSC protection removed
+ - Loads and saves high scores (unless you cheat)
+ - Disk requesters removed
+ - Snoop bugs fixed
+ - Access faults removed
+ - Blitter waits added (x12)
+ - Decruncher relocated to fast memory
+ - Trainer added (set CUSTOM1=1 to enable cheat, CUSTOM2=1-6 for start level)
+ - MagicWB, RomIcon, NewIcon and GlowIcon (all created by Frank!) and 2 
+   Exoticons included (taken from http://exotica.fix.no)
+ - Quit option (default key is 'F10')
+
+CHEAT MODE:
+- When the screen says {Press Fire for Options}, type in any of the
+  following:
+
+            "BUMBLEBEE"___Skip stages (press 'RETURN' to skip)
+            "CREAMOLA"________________________________10 lives
+            "VISION"__________________________________20 lives
+            "TOUGHGUY"___________________________Invincibility
+            "OLDENEMY"__________________________Unlimited time
+            "ALCENTO"_______________________99 items collected
+            "KICKASS"____________________Unlimited smart bombs
+            "NAPOLEON"_________________Bonus level every stage
+            "MARROBONE"______Stops the ball on the bonus level
+            "SESAME"__________________________Start on level 1
+            "RONSON"__________________________Start on level 2
+            "FUNKYTUT"________________________Start on level 3
+            "HISSTERIA"_______________________Start on level 4
+            "7SLURP"__________________________Start on level 5
+            "PLUNGER"_________________________Start on level 6
+            "WARPMODE"_________________________________Unknown
+
+  The screen will flash red if you typed the code properly. These
+  codes assume a USA/UK keymap.
+
+I have allowed the high scores to be saved if you use one of the above
+level codes, but if you use any of the other cheats, high scores will not
+be saved.
+
+Ronny Illgen kindly supplied his Amiga Fun coverdisk version but either the
+disk images have been damaged or whoever compiled it has butchered the
+game.  I suspect the later as there are a lot of corrupted files and levels
+2, 3 and 4 will not decompress correctly.  It is also unusual that one of
+the best crackers Mok could not compress the game down to 2 disks yet it
+was done for the Amiga Fun release - another sure sign that it was never
+completely working.  It looks to me like somebody has taken the Mok/Classic
+crack as a base, repacked all files with the MASM cruncher and rejigged the
+contents of the disks.  Needless to say, the coverdisk doesn't work on my
+A1200 or A500 when booted from floppy and therefore I will not waste time
+trying to fix the game when the coverdisk itself appears to have been
+broken.  If you have the Amiga Fun version, use the cheat listed above to
+start on level 2, 3 or 4 and if it works, please contact me and I will
+re-enable support for that version.
+
+This install was quite hard work as the game has some really stupid access
+faults!
+
+You can download the full game from the great site Back to the Roots at
+http://www.back2roots.org
+
+A big thank you to Frank for the superb icons!  If you have a close look
+you will see that each of them has a different image!  I have also included
+the original 4 colour icon which is installed by the script on disk 2 of
+the AGA version.  Frank would not make icons this bad so that one is not
+his, OK! :)
+
+Greetings to Mad-Matt, Chris, Ronny, Carlo, Frank, Wepl, Jean-François Fabre, all
+Action members, my testing crew and the entire WHDLoad team!
+
+
+Codetapper/Action (28-May-2002)
+
+
+         Bug report form, full WHDLoad package and other installs:
+                          http://www.whdload.de/
+
+            ________  ________  ________  ____  ________  ________
+           _)       \_)       \_)       \_)   \_)       \_)       \
+   __ ___ /___/     /   /_____/\  /     /     /   /     /   /     /
+  /_//__// \___    /   /     /CT\/     /     /   /     /   /     /
+        /___/     /___      /   /     /_____/___      /___/     /___ __
+            \____/    \____/    \____/          \____/    \____//__//_/
+
+
+           Visit the Action website for more of our productions:
+                           http://zap.to/action/

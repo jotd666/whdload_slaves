@@ -17,10 +17,10 @@
 	INCLUDE	whdmacros.i
 	INCLUDE	lvo/dos.i
 
-;DEBUG
+;CHIP_ONLY
 	IFD BARFLY
 	OUTPUT	"KingMaker.slave"
-	IFND	DEBUG
+	IFND	CHIP_ONLY
 	BOPT	O+				;enable optimizing
 	BOPT	OG+				;enable optimizing
 	ENDC
@@ -33,9 +33,9 @@
 
 ;============================================================================
 
-DEBUG
 
-	IFD	DEBUG
+
+	IFD	CHIP_ONLY
 HRTMON
 CHIPMEMSIZE	= $FF000
 FASTMEMSIZE	= $0000
@@ -75,7 +75,7 @@ slv_keyexit	= $5D	; num '*'
 
 
 DECL_VERSION:MACRO
-	dc.b	"1.1"
+	dc.b	"1.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -85,6 +85,11 @@ DECL_VERSION:MACRO
 		incbin	datetime
 	ENDC
 	ENDM
+; version xx.slave works
+
+	dc.b	"$","VER: slave "
+	DECL_VERSION
+	dc.b	0
 	
 
 assign1
@@ -93,8 +98,8 @@ assign2
 	dc.b	"king2",0
 
 slv_name		dc.b	"Kingmaker - The Quest For The Crown"
-	IFD	DEBUG
-	dc.b	" (DEBUG MODE)"
+	IFD	CHIP_ONLY
+	dc.b	" (DEBUG/CHIP MODE)"
 	ENDC
 			dc.b	0
 slv_copy		dc.b	"1993 US Gold",0
@@ -111,11 +116,6 @@ args		dc.b	10
 args_end
 	dc.b	0
 
-; version xx.slave works
-
-	dc.b	"$","VER: slave "
-	DECL_VERSION
-	dc.b	0
 	EVEN
 
 _bootdos

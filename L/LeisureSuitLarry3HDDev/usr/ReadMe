@@ -40,6 +40,12 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 2.3 (30.10.2020) done by JOTD:
+ - removed "SEGTRACKER" switch that Sierra games don't seem to like (issue #0004840)
+ 
+ version 2.2 (27.10.2020):
+ - Added extra check for missing files when enabling MT32 sound (issue #0004746)
+ 
  version 2.1 (14.07.2020):
  - Password protection removed on german/english version recently supported in 2.0 (issue #0004751)
  

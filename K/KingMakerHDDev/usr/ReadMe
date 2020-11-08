@@ -39,10 +39,13 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 1.1 (16.07.17)
+ version 1.2 (26.10.2020)
+ - chipmem requirement back to 512k only (issue #0004834)
+
+ version 1.1 (16.07.2017)
  - 68000 compatibility issue fixed (issue #0003364)
  
- version 1.0 (01.07.07) done by JOTD:
+ version 1.0 (01.07.2007) done by JOTD:
  - initial release
  - UK & FR manual included
  - source code included

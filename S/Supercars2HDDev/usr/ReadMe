@@ -1,0 +1,101 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Super Cars 2" © 1991 Magnetic Fields/Gremlin.
+ Thanks to Frank for sending the original!
+
+ Game requires 512kb chip mem (+1.9Mb other memory for preload option)
+
+ This install requires WHDLoad v17 and RawDIC to be in the path. Both can be found in
+ the WHDLoad package.
+ To install from a different drive than DF0: select installation mode Expert.
+
+ The installed program requires 0.5 MB ChipMem and 1.0 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+Version 1.1
+
+Version 1.0 (2005) done by Codetapper:
+- Full load from HD
+- Loads and save best scores and fastest times (unless you cheat!)
+- Both decrunchers relocated to fast memory (huge loading speedup!)
+- Manual protection removed (screen will never appear!)
+- Disk protection removed
+- Blitter wait inserted
+- Snoop bug fixed in copperlist setup
+- Trainer added: Set CUSTOM1=1 to activate the built in cheat mode
+                 Set CUSTOM2=1-7 to start on whichever track you wish
+- NTSC screen layout changed: Set CUSTOM3=1 to move the panel up a bit or 
+  use the keys +/- to switch the status panel during the game
+- Default player names can be preset by using the CUSTOM tooltype and 
+  separating the names with a comma. eg. CUSTOM=Codetapper,Wepl
+- All intro screens can be bypassed with fire or either mouse button
+- RomIcon, NewIcon and 2 OS3.5 Colour Icons (all created by Frank!)
+- Quit option (default key is F10)
+
+KEYS:
+- F1-F7 to select the track you wish to start on
+- F8 to activate the built-in cheat mode on the options screen (see below 
+  for full cheat details)
+- +/- to move the position of the status panel (useful for NTSC users)
+
+CHEAT MODE:
+- Taken from Sweet Cheater by Keith Krellwitz!
+- Enter player one's name as "Wonderland" and player two's name as 
+  "The Seer" (only capitalize the first letter of each word).  You
+  will now qualify regardless of your position and you'll have all
+  the extras too.
+
+Frank requested that the game status panel be moved up if you are playing
+in NTSC mode due to most of it being cut off.  If you use the NTSC tooltype
+you will probably want to set CUSTOM4=1 which will remove the 8 pixel high
+black gap and cause part of the panel to disappear so only the vital
+information is displayed.  During the game you can also toggle the panel up
+and down by pressing the +/- keys.
+
+A big apology to everyone that has been waiting so long for this install.
+I've got no excuses other than being very busy.  I hope you'll at least
+agree that this is the ultimate version of the game!  Enjoy!
+
+This install is compatible with CAPS ID 224.
+
+Greetings to Jean-François Fabre for the original JST install, Frank for
+the great icons, Wepl for the mighty WHDLoad, all Action members, my
+testing crew and the entire WHDLoad and HOL teams!
+
+
+Codetapper/Action (24-Aug-2005)
+
+
+         Bug report form, full WHDLoad package and other installs:
+                          http://www.whdload.de/
+
+            ________  ________  ________  ____  ________  ________
+           _)       \_)       \_)       \_)   \_)       \_)       \
+   __ ___ /___/     /   /_____/\  /     /     /   /     /   /     /
+  /_//__// \___    /   /     /CT\/     /     /   /     /   /     /
+        /___/     /___      /   /     /_____/___      /___/     /___ __
+            \____/    \____/    \____/          \____/    \____//__//_/
+
+
+           Visit the Action website for more of our productions:
+                           https://codetapper.com/
