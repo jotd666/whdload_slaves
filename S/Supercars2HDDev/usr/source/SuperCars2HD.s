@@ -94,7 +94,6 @@ _config
 	dc.b    "C2:X:joypad controls player 1:0;"
 	dc.b    "C2:X:joypad controls player 2:1;"    
 	dc.b    "C3:L:Start race:1,2,3,4,5,6,7;"
-	dc.b    "C4:B:NTSC compatible screen layout;"
 	dc.b	0
     
 ;============================================================================
@@ -104,7 +103,7 @@ _config
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.1"
+	dc.b	"1.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -222,7 +221,8 @@ _MainGamePatch	movem.l	d0-d1/a0-a2,-(sp)
 		move.l	#6,d0
 .NotTooHigh	move.w	d0,$7af8a		;Starting race
 
-		move.l	_ntsc_screen(pc),d0		;Custom3 <> 0 if NTSC screen
+		move.l	_ntsc_screen(pc),d0
+        cmp.l   #PAL_MONITOR_ID,d0
 		beq	.NoNTSCScreen
 		bsr	_NTSCScreen
 
@@ -811,7 +811,7 @@ _Tags		dc.l	WHDLTAG_CUSTOM1_GET
 _cheat_mode	dc.l	0
 		dc.l	WHDLTAG_CUSTOM3_GET
 _race_number	dc.l	0
-		dc.l	WHDLTAG_CUSTOM4_GET
+		dc.l	WHDLTAG_MONITOR_GET
 _ntsc_screen	dc.l	0
 		dc.l	TAG_DONE
 ;======================================================================

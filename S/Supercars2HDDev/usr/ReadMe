@@ -32,6 +32,10 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+Version 1.2 (10.11.2020) done by JOTD:
+
+- NTSC option removed, monitor detection is now automatic
+
 Version 1.1 (08.11.2020) done by JOTD:
 
 - added joypad controls (pause/quit and optional buttons

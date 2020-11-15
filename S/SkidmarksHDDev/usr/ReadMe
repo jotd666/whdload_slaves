@@ -25,7 +25,7 @@
  an appropriate requester.
  Additionally the file "kick34005.A500.RTB" must be installed in the same
  directory as the kickstart image. It can be found in the archive 
- "util/boot/skick345.lha" on aminet.
+ "util/boot/skick346.lha" on aminet.
 
  If you have problems with this installation please try and get a newer
  version of this package from the WHDLoad WWW-Page. If that doesn't help try
@@ -39,7 +39,7 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 1.0 (21.01.05) done by JOTD:
+ version 1.0 (21.01.2005) done by JOTD:
  - initial WHDLoad release
  - RawDIC imager (adapted from my 1996 disk ripper !!)
  - 2 slaves, one for ECS (less fast memory needed), one for AGA

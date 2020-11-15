@@ -80,7 +80,7 @@
 )
 
 (procedure P_rework_files
-  (set #numtracks 4)
+
   (set #trackindex 1)
 
       (copyfiles
@@ -89,12 +89,10 @@
         (dest "T:")
       )
 
-  (while (<= #trackindex #numtracks)
+  (while (<= #trackindex #nb_track_disks)
   (
     (set #command ("cd T:\nrebuild_track TRACK_%ld %s" #trackindex (tackon #dest ("track/TRACK%ld" #trackindex))))
-    (message #command)
     (run #command)
-    ("")
     (set #trackindex (+ 1 #trackindex))
   )
   )
@@ -112,19 +110,46 @@
   ; floppy?
 
     (
-      (set #AD_disk "SKID2")
-      (P_Disk)
+
+
+
+(until
+  (or (exists "SKID2:skidmarks2" (noreq)) (exists "Skidmarks2.21:skidmarks2" (noreq)))
+  (message
+    ("\nInsert %s program disk in any drive!\n" @app-name)
+    (all)
+  )
+)
+(if (exists "SKID2:skidmarks2" (noreq))
+(
+(set #AD_disk "SKID2")
+(set #nb_track_disks 4)
+(set #isprefix "Skidmarks2_22")
+)
+(
+(set #AD_disk "Skidmarks2.21")
+(set #nb_track_disks 6)
+(set #isprefix "Skidmarks2_221")
+)
+)
+
+
+
       (copyfiles
         (help @copyfiles-help)
         (source ("%s:" #AD_disk))
         (dest #dest)
         (pattern "~(s|#?.info)")
       )
+      ; decrunching v2.2 exe works, but v2.21 is packed with an unknown unpacker
+      ; so we'll have to support packed executables directly with slave
+      ;(set #file (tackon #dest "skidmarks2"))
+      ;(P_XFDDecrunch)
 
-      (set #last-file "T:track_4")		;last file the imager should create
+      (set #last-file ("T:track_%ld" #nb_track_disks))		;last file the imager should create
       (copyfiles
         (help @copyfiles-help)
-        (source ("%s.ISlave" #prefix))
+        (source ("%s.ISlave" #isprefix))
         (dest #dest)
       )
 
@@ -133,9 +158,9 @@
       )
 
       (P_AskSrcDrvRaw)
-      (message "RawDIC will ask for 6 disks (2 car disks and 4 track disks)\n\nBe sure to insert car disks FIRST (starting by the AGA car disk) THEN insert the track disks")
+      (message ("RawDIC will ask for %ld disks (2 car disks and %ld track disks)\n\nBe sure to insert car disks FIRST (starting by the AGA car disk) THEN insert the track disks" (+ 2 #nb_track_disks) #nb_track_disks))
       (working "calling RawDIC...")
-      (run ("CD \"%s\"\nRawDIC SLAVE=%s.islave SOURCE=%s\nDelete %s.ISlave Quiet" #dest #prefix #CI_drive #prefix))
+      (run ("CD \"%s\"\nRawDIC SLAVE=%s.islave SOURCE=%s\nDelete %s.ISlave Quiet" #dest #isprefix #CI_drive #prefix))
       (if (exists (tackon #dest #last-file))
         ("")
         (abort "Disk imaging was not successful!\nRawDIC was unable to create all needed files!")
@@ -156,9 +181,6 @@
         (pattern "~(s|#?.info|#?.anim7)")
       )
 
-      (makedir (tackon #dest "Skidmarks2.nvd")
-        (help @makedir-help)
-      )
 
     )
 

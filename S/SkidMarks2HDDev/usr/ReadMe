@@ -41,12 +41,18 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 2.0 (xx.11.2020) done by JOTD:
+ - low memory slave re-provided (issue #0004220, default: 8MB RAM allowinf different cars)
+ - AGA/disk version supported (at least, issue #0004781), 2 versions: 2.2 and 2.21, 2.2 is the same
+   as CD32 but 2.21 contains 2 more tracks
+ - note: police.aga and police.set are missing from floppy but can be copied from a CD32 version
+ 
  version 1.1 (27.02.2018) done by JOTD:
  - fixed crash on exit (issue #0001540)
  - increased memory to 8MB to allow more cars for multi-player (issue #0001539)
    (left old low memory slave in the archive, install manually)
  
- version 1.0 (10.10.06) done by JOTD:
+ version 1.0 (10.10.2006) done by JOTD:
  - initial release, CD³² only
  - VBR access removed
  - source code included

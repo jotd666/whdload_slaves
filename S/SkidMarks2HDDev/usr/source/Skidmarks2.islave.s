@@ -9,23 +9,29 @@
 		incdir	Include:
 		include	RawDIC.i
 
+        IFD     BARFLY
 		OUTPUT	"Skidmarks2.islave"
 
 		IFND	.passchk
 		DOSCMD	"WDate  >T:date"
 .passchk
 		ENDC
+		ENDC
 
 		SLAVE_HEADER
-		dc.b	1	; Slave version
+		dc.b	2	; Slave version
 		dc.b	0	; Slave flags
 		dc.l	DSK_1	; Pointer to the first disk structure
 		dc.l	Text	; Pointer to the text displayed in the imager window
 
 		dc.b	"$V","ER:"
-Text		dc.b	"SkidMarks 2 / Super Skidmarks imager 1.0",10
+Text		dc.b	"SkidMarks 2 / Super Skidmarks imager 1.1",10
 		dc.b	"by JOTD on "
+        IFD BARFLY
 		INCBIN	"T:date"
+        ELSE
+        incbin	datetime
+        ENDC
 		dc.b	0
 		cnop	0,4
 
@@ -84,7 +90,12 @@ DSK_5		dc.l	DSK_6		; Pointer to next disk structure
 		dc.l	0		; Called before a disk is read
 		dc.l	0		; Called after a disk has been read
 
-DSK_6		dc.l	0		; Pointer to next disk structure
+DSK_6	
+        IFD SIX_TRACKDISKS
+        dc.l	DSK_7		; Pointer to next disk structure
+        ELSE
+        dc.l	0		; Pointer to next disk structure
+        ENDC
 		dc.w	1		; Disk structure version
 		dc.w	DFLG_NORESTRICTIONS		; Disk flags
 		dc.l	TL_0_159		; List of tracks which contain data
@@ -94,7 +105,29 @@ DSK_6		dc.l	0		; Pointer to next disk structure
 		dc.l	0		; Alternative disk structure, if CRC failed
 		dc.l	0		; Called before a disk is read
 		dc.l	0		; Called after a disk has been read
-
+        IFD SIX_TRACKDISKS
+DSK_7		dc.l	DSK_8		; Pointer to next disk structure
+		dc.w	1		; Disk structure version
+		dc.w	DFLG_NORESTRICTIONS		; Disk flags
+		dc.l	TL_0_159		; List of tracks which contain data
+		dc.l	0		; UNUSED, ALWAYS SET TO 0!
+		dc.l	tracks_5	; List of files to be saved
+		dc.l	0		; Table of certain tracks with CRC values
+		dc.l	0		; Alternative disk structure, if CRC failed
+		dc.l	0		; Called before a disk is read
+		dc.l	0		; Called after a disk has been read
+DSK_8		dc.l	0		; Pointer to next disk structure
+		dc.w	1		; Disk structure version
+		dc.w	DFLG_NORESTRICTIONS		; Disk flags
+		dc.l	TL_0_159		; List of tracks which contain data
+		dc.l	0		; UNUSED, ALWAYS SET TO 0!
+		dc.l	tracks_6	; List of files to be saved
+		dc.l	0		; Table of certain tracks with CRC values
+		dc.l	0		; Alternative disk structure, if CRC failed
+		dc.l	0		; Called before a disk is read
+		dc.l	0		; Called after a disk has been read
+        ENDC
+        
 TRACK_LENGTH = $1800
 
 DEFTRACK:MACRO
@@ -153,7 +186,11 @@ track\1:
 	DEFTRK	2
 	DEFTRK	3
 	DEFTRK	4
-
+    IFD SIX_TRACKDISKS
+	DEFTRK	5
+	DEFTRK	6
+    ENDC
+    
 	EVEN
 
 TRACKENTRY:MACRO
@@ -162,15 +199,16 @@ tracks_\1
 	FLEND
 	ENDM
 
-; filelist of track disks 1-4, filesize is approx. but we don't care
-; because we'll perform a WRip in the end and join files to remove
-; unnecessary data (would not match CD32 track files)
 
 	TRACKENTRY	1
 	TRACKENTRY	2
 	TRACKENTRY	3
 	TRACKENTRY	4
-
+    IFD SIX_TRACKDISKS
+	TRACKENTRY	5
+	TRACKENTRY	6
+    ENDC
+    
 TL_0_159
 	DEFTRACK	159
 	DEFTRACK	158

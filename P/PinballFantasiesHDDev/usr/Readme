@@ -1,0 +1,130 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ Note on AGA & CD남 game:
+
+ The game requires an installed A1200 or A4000 Kickstart 3.1 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick40068.A1200" (resp kick40068.A4000). 
+ The image can be extracted from a A1200 (resp A4000) with tools like 'GrabKick'
+ or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick40068.A1200.RTB" (resp "kick40068.A4000.RTB")
+ must be installed in the same directory as the kickstart image.
+ It can be found in the archive "util/boot/skick346.lha" on aminet.
+
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page.
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+
+	That patch applies to:
+    - Pinball Fantasies ECS (c) 1992 21st Century Entertainment (4 disk version)
+	- Pinball Fantasies AGA (c) 1994 21st Century Entertainment (4 disk version)
+	- Pinball Fantasies CD남 (c) 1994 21st Century Entertainment (CD-ROM version)
+
+
+	Before you can use this you must install WHDLoad (and Patcher for ECS version)
+        from the whdload package. The tools must be available via the path.
+
+
+	You need 1.0 MB ChipMem and 0.5 MB OtherMem
+	You can quit the game by pressing F10.
+
+
+	Thanx for original disks images to: Chris Vella (NTSC), Olaf Weicker
+	(PAL) and Keith Krellwitz (PAL), JOTD (CD남), Christian Schneider (AGA NTSC)
+
+History
+
+ version 3.0-B (14.11.2020) done by JOTD:
+ - fixed rawdic imager (had trouble reading one of the disks...)
+ 
+ version 3.0 (11.11.2020) done by JOTD
+ - AGA/CD32 version: changed the way the game saves/loads highscores,
+   which has caused numerous problems all over the years. Hopefully will fixed
+   issue #0002193)
+ - replaced patcher imager by RawDIC imager for the ECS version (easy work)
+   
+ version 2.7 (10.03.2018)
+ - Added quitkey for 68000 in ECS version (issue #3713). Quitkey doesn't work during the introduction
+ - Added skipintro switch for ECS version (intro could be originally skipped by holding LMB)
+ 
+ version 2.6-C (22.04.2009)
+ - Finally fixed install script (Pinball subdir was not copied)
+
+ Version 2.6-B (02.01.2008)
+ - Fixed install script (nv_location was not copied)
+ - reassembled with latest kickemu
+
+ Version 2.6 (26.12.2007)
+ - Adapted for another CD남 version (bundled with Sleepwalker)
+
+ Version 2.5 (14.08.2006)
+ - AGA/CD남: another slave provided for weird fast memory configurations
+   (replace the slave by the "PinballFantasiesCHIPONLY.slave" as told in the
+   error message. It will be slower, but it will work)
+ - AGA/CD남: pre-check for nv location directory to avoid trouble during game
+
+ Version 2.4 (11.11.2005)
+ - Better fonts in the AGA menu (Thanks Bert)
+ - Fixed install script
+ - reworked readme
+
+ Version 2.3 (08.08.2004)
+ - Added check for hiscore directory (AGA/CD남 version), in order to avoid
+   in-game errors (volume WHDLoad: is write protected). Create if absent.
+ - Included ECS & imager sources from Mr Larmer
+
+ Version 2.2 (17.01.2004)
+ - Added support for NTSC AGA version
+ - Adapted to WHDLoad v16
+
+ Version 2.1 (22.12.2002)
+ - Added support for AGA version
+   * same characteristics as CD남 version
+   * password protection completely removed
+ - Fixed hiscore save problem
+
+ Version 2.0 (15.12.2002) done by JOTD
+ - Added support for CD남 version:
+   * needs Kickstart 3.1
+   * Saves hiscores to HD
+   * Fixed to work with fast memory (used bits 30 & 31 for some stuff!)
+   * VBR stuff removed
+   * Quit anytime using QUITKEY, or with the original quit option.
+
+ - Rewritten installer script
+ - Added icons
+ - Added manual
+
+ Version 1.0 (31.12.1997) done by Mr.Larmer/Wanted Team
+ - Initial release
+
+Notes on AGA/CD32 version: with some memory configurations,
+because of the game using MSB to store stuff
+(which highly buggy and 24-bit compatible only), I had to use
+tricks to decode those addresses on the fly. The result is that
+it's not possible to use expansion memory in 0x7Fxxxxxx.
+
+Someone on EAB (http://eab.abime.net/showthread.php?t=36535) got rid
+of this problem by allocating the memory blocks $7f000000-7fffffff
+with a small tool from aminet (probably http://aminet.net/package/dev/misc/allocate)
+before starting the game. Ugly, but works better than the chip-only slave which seem
+to have issues.

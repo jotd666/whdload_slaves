@@ -9,7 +9,10 @@
 ;  :Copyright.	Public Domain
 ;  :Language.	68000 Assembler
 ;  :Translator.	Devpac 3.14, Barfly 2.9
-;  :To Do.
+;  :To Do
+;
+; check police
+
 ;---------------------------------------------------------------------------*
 
 	INCDIR	Include:
@@ -17,11 +20,11 @@
 	INCLUDE	whdmacros.i
 	INCLUDE	lvo/dos.i
 
-;DEBUG
+;CHIP_ONLY
 
 	IFD BARFLY
 	OUTPUT	"SkidMarks2.slave"
-	IFND	DEBUG
+	IFND	CHIP_ONLY
 	BOPT	O+				;enable optimizing
 	BOPT	OG+				;enable optimizing
 	ENDC
@@ -34,13 +37,16 @@
 
 ;============================================================================
 
-	IFD	DEBUG
-CHIPMEMSIZE	= $1FF000
-FASTMEMSIZE	= $0000
-HRTMON
+	IFD	CHIP_ONLY
+CHIPMEMSIZE	= $200000
+FASTMEMSIZE	= $000000
 	ELSE
-CHIPMEMSIZE	= $1FF000
+CHIPMEMSIZE	= $80000
+    IFD EIGHTMEGS
 FASTMEMSIZE	= $800000	; 8 megs
+	ELSE
+FASTMEMSIZE	= $80000	; 8 megs
+	ENDC
 	ENDC
 NUMDRIVES	= 1
 WPDRIVES	= %0000
@@ -48,13 +54,13 @@ WPDRIVES	= %0000
 ;DISKSONBOOT
 DOSASSIGN
 HDINIT
-INITAGA
-IOCACHE		= 10000
+;INITAGA
+;IOCACHE		= 10000
 ;MEMFREE	= $200
 ;NEEDFPU
 ;SETPATCH
 BOOTDOS
-CACHE
+;CACHE
 
 ;============================================================================
 
@@ -64,15 +70,10 @@ slv_Flags	= WHDLF_NoError|WHDLF_Examine|WHDLF_ClearMem
 slv_keyexit	= $5D	; num '*'
 
 
-DUMMY_CD_DEVICE = 1
-	; lowlevel not used by the game
-USE_DISK_LOWLEVEL_LIB
-;USE_DISK_NONVOLATILE_LIB
-
 ;============================================================================
 
 	INCLUDE	kick31cd32.s
-
+    
 ;============================================================================
 
 	IFD BARFLY
@@ -80,7 +81,7 @@ USE_DISK_LOWLEVEL_LIB
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.2"
+	dc.b	"1.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -96,14 +97,11 @@ DECL_VERSION:MACRO
 	DECL_VERSION
 	dc.b	0
 
-_assign1
-	dc.b	"CD0",0
-_assign2
-	dc.b	"SkidMarks2",0
 
-slv_name		dc.b	"SkidMarks 2 floppy / CD³²"
-			IFD	DEBUG
-			dc.b	"(DEBUG MODE)"
+
+slv_name		dc.b	"SkidMarks 2"
+			IFD	CHIP_ONLY
+			dc.b	"(DEBUG/CHIP MODE)"
 			ENDC
 			dc.b	0
 slv_copy		dc.b	"1995 Acid Software",0
@@ -137,10 +135,6 @@ _bootdos
 		jsr	(_LVOOldOpenLibrary,a6)
 		move.l	d0,a6			;A6 = dosbase
 
-	;assigns
-		lea	_assign1(pc),a0
-		sub.l	a1,a1
-		bsr	_dos_assign
 
 	;load exe
 		lea	patch_main_cd32(pc),a5
@@ -150,9 +144,8 @@ _bootdos
 		jsr	resload_GetFileSize(a2)
 		movem.l	(a7)+,a0
 		cmp.l	#236816,d0
-		beq.b	.cd32
+		beq	.cd32
 		
-		IFEQ	1
 		lea	_program_floppy(pc),a0
 		move.l	_resload(pc),a2
 		movem.l	a0,-(a7)
@@ -160,18 +153,49 @@ _bootdos
 		movem.l	(a7)+,a0
 		
 		cmp.l	#243108,d0
-		beq.b	.floppy
-		ENDC
+		beq.b	.floppy_22_unpacked
 		
+        cmp.l   #89584,d0
+		beq.b	.floppy_22
+        
+        cmp.l   #91848,d0
+		beq.b	.floppy_221
+        
 		pea	TDREASON_WRONGVER
 		move.l	(_resload,pc),-(a7)
 		add.l	#resload_Abort,(a7)
 		rts
 
-.floppy
-		lea	patch_main_floppy(pc),a5
+.floppy_22_unpacked:
+        IFD CHIP_ONLY
+        movem.l  d0-a6,-(a7)
+        move.l  4.W,a6
+        move.l  #MEMF_CHIP,d1
+        move.l  #$29A8+$2760,d0
+        jsr (_LVOAllocMem,a6)
+        movem.l  (a7)+,d0-a6
+        ENDC
+        
+		lea	patch_main_floppy_22_unpacked(pc),a5
 		bra	.load
+.floppy_22
+		lea	patch_main_floppy_22(pc),a5
+		bra	.load
+.floppy_221
+        IFD CHIP_ONLY
+        movem.l  d0-a6,-(a7)
+        move.l  4.W,a6
+        move.l  #MEMF_CHIP,d1
+        move.l  #$0005210,d0
+        jsr (_LVOAllocMem,a6)
+        movem.l  (a7)+,d0-a6
+        ENDC
+ 		lea	patch_main_floppy_221(pc),a5
+		bra	.load
+        
 .cd32
+
+        
 		bsr	_patch_cd32_libs
 .load
 		lea	_args(pc),a1
@@ -187,32 +211,68 @@ _quit
 
 patch_main_cd32
 	move.l	d7,a1
-	addq.l	#4,a1
 	lea	pl_main_cd32(pc),a0
-	jsr	resload_Patch(a2)
+	jsr	resload_PatchSeg(a2)
 	rts
 
 pl_main_cd32
 	PL_START
-	PL_P	$28d70,quit
-	PL_P	$29d6c,quit
-	PL_P	$2e5e4,quit
 	PL_L	$29C0C,$74004E71	; remove VBR access
 	PL_END
 
-
+patch_main_floppy_22
+	move.l	d7,a1
+	lea	pl_main_floppy_22_unpacker(pc),a0
+	jsr	resload_PatchSeg(a2)
+	rts
+patch_main_floppy_221
+	move.l	d7,a1
+	lea	pl_main_floppy_221_unpacker(pc),a0
+	jsr	resload_PatchSeg(a2)
+	rts
 ; < d7: seglist
 
-patch_main_floppy
-	move.l	d7,a1
-	addq.l	#4,a1
-	lea	pl_main_floppy(pc),a0
+after_unpack_22:
+    ; A1 is the start of the unpacked program
+	lea	pl_main_floppy_22(pc),a0
+    move.l  _resload(pc),a2
+	jsr	resload_Patch(a2)    
+    MOVEM.L	(A7)+,D0-D7/A0-A6
+    RTS
+    
+; < d7: seglist
+
+after_unpack_221:
+    ; A1 is the start of the unpacked program
+	lea	pl_main_floppy_221(pc),a0
+    move.l  a1,-(a7)
+    move.l  _resload(pc),a2
 	jsr	resload_Patch(a2)
+    RTS
+    
+patch_main_floppy_22_unpacked
+	move.l	d7,a1
+	lea	pl_main_floppy_22(pc),a0
+	jsr	resload_PatchSeg(a2)
 	rts
 
-pl_main_floppy
+pl_main_floppy_22_unpacker
 	PL_START
-	PL_L	$2B58C,$74004E71	; remove VBR access
+	PL_P    $0002e,after_unpack_22
+	PL_END
+pl_main_floppy_221_unpacker
+	PL_START
+	PL_P    $00024,after_unpack_221
+	PL_END
+
+
+pl_main_floppy_22
+	PL_START
+	PL_L	$2b85c,$74004E71	; remove VBR access
+	PL_END
+pl_main_floppy_221
+	PL_START
+	PL_L	$2db12,$74004E71	; remove VBR access
 	PL_END
 
 quit:
@@ -236,9 +296,6 @@ _load_exe:
 	move.l	d0,d7			;D7 = segment
 	beq	.end			;file not found
 
-	add.l	d7,d7
-	add.l	d7,d7
-
 	;patch here
 	cmp.l	#0,A5
 	beq.b	.skip
@@ -248,7 +305,8 @@ _load_exe:
 .skip
 	;call
 	move.l	d7,a1
-
+    add.l   a1,a1
+    add.l   a1,a1
 	move.l	a4,a0
 	move.l	($44,a7),d0		;stacksize
 	sub.l	#5*4,d0			;required for MANX stack check
