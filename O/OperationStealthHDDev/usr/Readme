@@ -1,13 +1,53 @@
 
-This installer requires the Operation Stealth original disks (3)
-from Delphine Software, 1990.
-It should work for any version including clean cracks. Go to hell rather
-than submitting me a bug report if you've got a crack, though.
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Operation Stealth" © 1990 Delphine Software, 3 disks
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ The installed program requires 0.5 MB ChipMem and 1.0 MB OtherMem.
+ 
+
+ The game requires a installed A500 Kickstart 1.3 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ a appropriate requester.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick346.lha" on aminet.
 
 
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+ 
 History:
 
- v2.0 (15.07.2003)
+ Version 2.1 (20.11.2020) done by JOTD:
+ - reassembled to new kickemu (quitkey works on 68000 too)
+ - adapted to whdload 16
+ - reworked slave, reduced to 512k chipmem (again)
+ - reworked readme file
+ 
+ Version 2.0 (15.07.2003) done by JOTD:
  - Rewritten for kick13, osemu no longer used. You've got to reinstall or copy
    the file "startup-sequence" of the install package in the directory "data"
    of the installed game, under a directory "s" (you'll have to create it too)
@@ -16,11 +56,11 @@ History:
    (Thanks Toaks for original images and support)
  - Source code included
 
- v1.3 (around 2002)
- - I thought it was 100%, but there were an error in expmem declaration. The
+ Version 1.3 (around 2002) done by JOTD:
+ - I thought it was 100%, but there were an error/typo in expmem declaration. The
    game needed 8 megs of expansion mem! fixed (now needs 512K only!)
 
- v1.2
+ Version 1.2 (around 2001) done by JOTD:
  - Convenient install script
  - Uses WHDLoad & OSEmu for full memory control & quit key
  - Runs with fastmem & caches for better loading and game speed
@@ -35,10 +75,10 @@ History:
  - Docfile included
  - Walkthrough included
 
- v1.1
+ Version 1.1 done by JOTD:
  - First WHDload release, supports only v4.0 and lots of problems still to solve
 
- v1.0
+ Version 1.0 done by JOTD:
  - JST/OSEmu release, with hacked executable included
 
 
@@ -53,16 +93,14 @@ Notes:
 - If you've got an old installed version and you've got trouble, please re-install
   game from floppies or run the install script in your game directory to update
   files (slave/OSEmu/Savegame files)
+- The color code protection crack was done in a long week-end of may 1993
+  using Action Replay and my A500. It took me (JOTD) more than 10 hours to figure out
+  the difference between a wrong code and a correct code by blindly tracing the
+  assembly code and backtracking it. If you ask me now (2020) how I did it, I must
+  admit that I don't remember like AT ALL. But I remember that a value of $60 was
+  present for a wrong code (at some point) and a value of $93 was present if the code
+  was correct. And to my knowledge, no other proper crack exists. "cracked" versions
+  made you press a key to display the color codes. Personally the game was provided to me
+  with the color sheet copied in B/W and the code numbers written in the areas... Fun times!
+  
 
-
-Requirements:
-
- The game requires a installed A500 Kickstart 1.3 image.
- The kickstart image must be located in the directory "Devs:Kickstarts" and
- must be named "kick34005.A500". The image can be extracted from a A500 with
- tools like 'GrabKick' or similar which can be found on aminet.
- If the image is of wrong version or altered in any way WHDLoad will quit with
- a appropriate requester.
- Additionally the file "kick34005.A500.RTB" must be installed in the same
- directory as the kickstart image. It can be found in the archive 
- "util/boot/skick345.lha" on aminet.

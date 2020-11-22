@@ -31,7 +31,7 @@
 
 _base
 		SLAVE_HEADER		;ws_Security + ws_ID
-		dc.w	10		;ws_Version
+		dc.w	17		;ws_Version
 		dc.w	WHDLF_Disk|WHDLF_NoError|WHDLF_EmulTrap	;ws_flags
 		IFND	CHIP_ONLY
 		dc.l	$80000		;ws_BaseMemSize
@@ -53,7 +53,17 @@ _expmem
 		dc.w	_name-_base		;ws_name
 		dc.w	_copy-_base		;ws_copy
 		dc.w	_info-_base		;ws_info
-
+    dc.w    0     ; kickstart name
+    dc.l    $0         ; kicksize
+    dc.w    $0         ; kickcrc
+;---
+	dc.w	slv_config-_base
+	
+slv_config:
+        dc.b    "C1:X:infinite tries:0;"
+        dc.b    "C1:X:infinite time:1;"
+        dc.b    "C1:X:HELP skips level:2;"
+		dc.b	0
 ;============================================================================
 
 
@@ -64,7 +74,7 @@ _expmem
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"2.0"
+	dc.b	"2.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -82,13 +92,9 @@ _name		dc.b	"Bill's Tomato Game"
 		dc.b	0
 _copy		dc.b	"1992 Psygnosis",0
 _info		dc.b	"adapted & fixed by JOTD",10,10
-		dc.b	"Press HELP to skip levels",10,10
 		dc.b	"Version "
 		DECL_VERSION
-	IFD BARFLY
-		dc.b	" "
-		INCBIN	"T:date"
-	ENDC
+
 	dc.b	0
 		even
 
@@ -96,10 +102,7 @@ _info		dc.b	"adapted & fixed by JOTD",10,10
 
 	dc.b	"$","VER: slave "
 	DECL_VERSION
-	IFD BARFLY
-		dc.b	" "
-		INCBIN	"T:date"
-	ENDC
+
 		dc.b	0
 
 DO_PATCH:MACRO
@@ -129,8 +132,9 @@ start	;	A0 = resident loader
 	move.l	a0,(a1)			;save for later use
 
 	move.l	a0,a2
-	lea	(_tag,pc),a0
-	jsr	(resload_Control,a2)
+	;get tags
+    lea	(_tag,pc),a0
+    jsr	(resload_Control,a2)
 
 	lea	$7FF00,a7
 	move	#$2700,SR
@@ -152,13 +156,13 @@ start	;	A0 = resident loader
 	lea	version(pc),a0
 	cmp.w	#$419A,d0
 	bne	.not_v1
-	move.l	#1,(a0)
+	move.l	#1,(a0)     ; PAL, SPS
 	bra.b	.cont
 
 .not_v1
 	cmp.w	#$D5BC,d0
-;	bne	.not_v2
-;	move.l	#2,(a0)
+	bne	.not_v2
+	move.l	#2,(a0)     ; NTSC
 	bra.b	.cont
 
 .not_v2
@@ -175,8 +179,15 @@ start	;	A0 = resident loader
 	pea	trap_jsr(pc)
 	move.l	(a7)+,$BC	; TRAP #15: SMC fix
 
-	DO_PATCH	pl_boot
+    move.l  version(pc),d0
+    cmp.l   #2,d0
+    beq.b   .ntsc
+	DO_PATCH	pl_boot_pal
+    bra.b   .start
+.ntsc
+    ;;move.w  #0,_custom+beamcon0
 
+	DO_PATCH	pl_boot_ntsc
         ; enable SMC-detection for the area $10000..$3e000:
 	;IFD	DEBUG
 	;move.l  #$10000,d0              ;length
@@ -184,24 +195,28 @@ start	;	A0 = resident loader
 	;move.l  (_resload,pc),a2
 	;jsr	(resload_ProtectSMC,a2)
 	;ENDC
-
-	move	#$2000,SR
+.start
+	move	#$2000,SR    
 	jmp	$EFA.W
 
-pl_boot
+pl_boot_pal
 	PL_START
-	PL_P	$1E0A,patch_main
+	PL_PSS	$65CE,soundtracker_loop,2
+	PL_PSS	$65E4,soundtracker_loop,2
+	PL_PS	$1AF8,remove_checksum_pal
+	PL_P	$1E0A,patch_main_pal
+    PL_NEXT pl_boot_common
+
+pl_boot_common
+	PL_START
 	PL_P	$4F0C,read_sectors
 	PL_L	$50B0,MOVEQZD0RTS		; check for disk in drive
-	PL_PS	$1AF8,remove_checksum
 	PL_P	$13F4,set_dmacon_boot
 	PL_R	$50FC
 ;;	PL_PS	$1B12,fix_smc_boot
 
 	PL_PSS	$5E54,soundtracker_loop,2
 	PL_PSS	$5E6A,soundtracker_loop,2
-	PL_PSS	$65CE,soundtracker_loop,2
-	PL_PSS	$65E4,soundtracker_loop,2
 
 	PL_W	$F4A,$4E4F
 	PL_W	$F50,$4E4F
@@ -210,7 +225,16 @@ pl_boot
 	PL_W	$2576,$4E4F
 	PL_END
 		
+pl_boot_ntsc
+	PL_START
+    
+	PL_PSS	$65D0,soundtracker_loop,2
+	PL_PSS	$65E6,soundtracker_loop,2
+	PL_PS	$1AF8,remove_checksum_ntsc
+	PL_P	$1E0A,patch_main_ntsc
 
+    PL_NEXT pl_boot_common
+		
 fix_smc_boot
 	bsr	_flushcache
 	jmp	$1D70.W
@@ -229,6 +253,14 @@ diskload
 	movem.l	(a7)+,d0-d1/d3/a0-a2
 	rts
 
+
+write_sectors_trainer:
+	cmp.w	#$774,D1
+	beq	write_hisc
+
+	moveq	#0,D7		; other parts, disabled
+	rts
+    
 write_sectors:
 	cmp.w	#$768,D1
 	beq	write_saves
@@ -242,14 +274,20 @@ write_sectors:
 ; executes the real disk routine, but I removed all
 ; CIA drive stuff, so noone will notice it
 
-bypass:
+bypass_pal:
 	movem.l	D0-D6/A0-A6,-(A7)
 	jmp	$13434
+bypass_ntsc:
+	movem.l	D0-D6/A0-A6,-(A7)
+	jmp	$134e8
 
 ; gamesaves
 
-read_768:
-	bsr	bypass		; to activate the load code
+read_768_pal:
+	bsr	bypass_pal		; to activate the load code
+	bra	read_saves
+read_768_ntsc:
+	bsr	bypass_ntsc		; to activate the load code
 	bra	read_saves
 
 ; hiscores
@@ -281,9 +319,11 @@ read_saves:
 	lea	save_name(pc),A0
 	move.l	_resload(pc),a2
 	jsr	resload_LoadFile(a2)
+.ok
 	movem.l	(a7)+,d0-a6
 	moveq	#0,D7
 	rts
+
 
 write_hisc:
 	movem.l	d0-a6,-(a7)
@@ -316,15 +356,20 @@ set_extmem
 	move.l	A0,$8.W
 	rts
 
-jump_1876:
-	DO_PATCH	pl_1876
+jump_1876_pal:
+	DO_PATCH	pl_1876_pal
+	jmp	$1876.W
+jump_1876_ntsc:
+	DO_PATCH	pl_1876_ntsc
 	jmp	$1876.W
 
 MOVEQZD7RTS = $7E004E75
 MOVEQZD0RTS = $7004E75
 
-pl_1876
+pl_1876_pal
 	PL_START
+    ; stupid crash on NTSC display
+    PL_R    $0d4c6
 	; this bitch does not like that the disk code
 	; is not called in the read scores section
 	; the following code removes all disk accesses and leds
@@ -342,7 +387,7 @@ pl_1876
 
 	; *** load game & hiscores
 
-	PL_PS	$D8AA,read_768	; saves
+	PL_PS	$D8AA,read_768_pal	; saves
 	PL_PS	$E616,read_774	; hiscores
 
 	; *** copperlist
@@ -361,8 +406,12 @@ pl_1876
 
 	; *** disk write
 
+    PL_IFC1    
+	PL_P	$134B4,write_sectors_trainer
+    PL_ELSE
 	PL_P	$134B4,write_sectors
-
+    PL_ENDIF
+    
 	; *** remove code checksum 1
 
 	PL_R	$98F8
@@ -415,13 +464,15 @@ pl_1876
 	PL_NOP	$12CBE,4
 
     ; this is the sneaky check. Happens when completing a level, completing a full level
-    ; and trying to go the the next one. Example: enter VIGOGG, skip level, climb tree
+    ; and trying to go the the next one. Example: enter VIGOGG or NOOVAT, skip level, climb tree
     ; play/skip all sea levels. At the interlude, this crap code is called and destroys
     ; some code/replaces by a jump to another "this is an illegal copy..."
     ;
     ; there are shorter ways to reproduce the error too. But never mind, we got this :)
+    ;
+    ; don't forget: to climb the tree, use big jumps: left+right mouse
     
-    PL_PS   $12b16,unpack_data_hook
+    PL_PS   $12b16,unpack_data_hook_pal
     
     
 	; SMC (JSR to modified locations)
@@ -430,9 +481,146 @@ pl_1876
 	PL_W	$101AE,$4E4F
 	PL_W	$102CA,$4E4F
 	PL_W	$102D0,$4E4F
+    
+    PL_IFC1X    0
+    PL_NOP  $C07C,4  ; infinite attempts
+    PL_ENDIF
+    PL_IFC1X    1
+    PL_NOP  $01bd4,6
+    PL_ENDIF
 	PL_END
 
-unpack_data_hook:
+pl_1876_ntsc
+	PL_START
+    ; stupid crash on PAL display
+    PL_R    $0d57c
+    
+	; this bitch does not like that the disk code
+	; is not called in the read scores section
+	; the following code removes all disk accesses and leds
+
+
+	PL_L	$137d0,MOVEQZD7RTS
+	PL_L	$13ad0,MOVEQZD7RTS
+	PL_L	$1395e,MOVEQZD7RTS
+	PL_L	$137aa,MOVEQZD7RTS
+	PL_L	$138c8,MOVEQZD7RTS
+	PL_L	$136d6,MOVEQZD0RTS
+	PL_R	$1383e
+	PL_R	$13806
+	PL_R	$13872
+	PL_R	$1376c
+
+	; *** load game & hiscores
+
+	PL_PS	$0d968,read_768_ntsc	; saves
+	PL_PS	$0e6ca,read_774	; hiscores
+
+	; *** copperlist
+
+	PL_PS	$1E96,set_dmacon_main
+
+	; *** disk read
+
+    PL_P    $C0,read_sectors
+	PL_L	$134e4,$4EF800C0
+	PL_L	$13688,MOVEQZD0RTS
+
+	; *** track format
+
+	PL_P	$135fa,format_sectors
+
+	; *** disk write
+
+    PL_IFC1    
+	PL_P	$13568,write_sectors_trainer
+    PL_ELSE
+	PL_P	$13568,write_sectors
+    PL_ENDIF
+    
+	; *** remove code checksum 1
+
+	PL_R	$09948
+
+	; *** remove code checksum 2
+
+	PL_W	$0c6f2,$6008
+	PL_W	$C6f6,$0	; unnecessary but removes $4AFC reference
+
+	; *** no more password
+
+	PL_B	$dde4,$FF
+
+	; *** some other illegal calls (not reached, but...)
+
+	;PL_NOP	$xx 181E,2
+	;PL_NOP	$xx D9F0,2
+	;PL_NOP	$xx 12DBE,$2
+
+	; *** keyboard
+
+	PL_PS	$1A1A,kb_int
+
+	; keyboard timing
+
+	PL_PS	$1A50,kb_delay
+
+	; active loops
+	
+	PL_PSS	$142ca,soundtracker_loop,2
+	PL_PSS	$142e0,soundtracker_loop,2
+	PL_PSS	$14a5a,soundtracker_loop,2
+	PL_PSS	$14a70,soundtracker_loop,2
+
+    PL_PSS  $21a40,soundtracker_loop,2
+
+	PL_PS	$0b784,d7_loop
+	PL_PS	$0bf24,d7_loop
+	PL_PS	$0c1c4,d7_loop
+
+    PL_PS   $0cb4c,small_delay
+    
+	; infinite loop replaced by ILLEGAL just in case
+
+	;PL_I	$xx 12A02
+
+	; avoid "this is an illegal copy" message
+	; this is the obvious check
+
+	PL_NOP	$12d72,4
+
+    ; this is the sneaky check. Happens when completing a level, completing a full level
+    ; and trying to go the the next one: this is an illegal copy...
+    ; Example: enter VIGOGG or NOOVAT, skip level, climb tree
+    ; play/skip all sea levels. At the interlude, this crap code is called and destroys
+    ; some code/replaces by a jump to another "this is an illegal copy..." when entering
+    ; the yin-yang level
+    ; this is really stealthy: you have to complete one entire level set without passwords
+    ; to trigger it.
+    ;
+    ; there are shorter ways to reproduce the error too. But never mind, we got this :)
+    
+    PL_PS   $12bca,unpack_data_hook_ntsc
+    
+    
+	; SMC (JSR to modified locations)
+
+    PL_W    $020fc,$4E4F
+	PL_W	$10262,$4E4F
+	PL_W	$1037e,$4E4F
+	PL_W	$10384,$4E4F
+
+    PL_IFC1X    0
+    PL_NOP  $c13a,4  ; infinite attempts
+    PL_ENDIF
+    PL_IFC1X    1
+    PL_NOP  $01bd4,6    ; same address as PAL
+    PL_ENDIF
+
+	PL_END
+
+
+unpack_data_hook_pal:
     JSR	$12b1e
     ; now a hidden checksum code may have been loaded at some point
     cmp.l   #$4A586716,$00057F14
@@ -442,6 +630,19 @@ unpack_data_hook:
 .bingo:
     ; remove the stealthy checksum and its side-effects
     move.w  #$4E75,$00057F14
+    bra _flushcache
+    
+unpack_data_hook_ntsc:
+    JSR	$12bd2
+
+    ; now a hidden checksum code may have been loaded at some point
+    cmp.l   #$4A586716,$00057FDE
+    beq.b   .bingo
+    rts
+    
+.bingo:
+    ; remove the stealthy checksum and its side-effects
+    move.w  #$4E75,$00057FDE
     bra _flushcache
     
 
@@ -564,35 +765,61 @@ kb_int
 	add.l	#resload_Abort,(a7)
 	rts
 .noquit
+    
+
 	cmp.b	#$5F,d0
 	bne.b	.nolskip
+    move.l  _trainer(pc),d0
+    btst    #2,d0
+    beq.b   .nolskip
 	st.b	$14F6.W		; level completed flag
 .nolskip
 	move.l	(sp)+,D0
 	rts
 
-patch_main:
+patch_main_pal:
 	bsr	decrunch
 		
-	DO_PATCH	pl_main
+	DO_PATCH	pl_main_pal
 	jmp	$128B2
+    
+patch_main_ntsc:
+	bsr	decrunch
+	DO_PATCH	pl_main_ntsc
+	jmp	$128B4
 
-pl_main
+pl_main_pal
 	PL_START
-	PL_P	$128DC,jump_7e800
+	PL_P	$128DC,jump_7e800_pal
+	PL_END
+pl_main_ntsc
+	PL_START
+	PL_P	$128DE,jump_7e800_ntsc
 	PL_END
 
-jump_7e800:
-	DO_PATCH	pl_7e800
+jump_7e800_pal:
+	DO_PATCH	pl_7e800_pal
+	jmp	$7E800
+jump_7e800_ntsc:
+	DO_PATCH	pl_7e800_ntsc
 	jmp	$7E800
 
-pl_7e800
+pl_7e800_pal
 	PL_START
 	PL_W	$128DC,$4EF9
 	PL_L	$128DE,$7E800
 ;;	PL_P	$7E80C,jump_1876    ; useful?
 ;;	PL_P	$7E828,jump_1876    ; useful?
-	PL_P	$7E836,jump_1876    ; this JMP is used others may not be
+	PL_P	$7E836,jump_1876_pal    ; this JMP is used others may not be
+	PL_END
+    
+pl_7e800_ntsc
+	PL_START
+	PL_W	$128DE,$4EF9
+	PL_L	$128E0,$7E800
+;;	PL_P	$7E80C,jump_1876    ; useful?
+;;	PL_P	$7E828,jump_1876    ; useful?
+	PL_P	$7E836,jump_1876_ntsc    ; this JMP is used others may not be
 	PL_END
 
 _flushcache:
@@ -604,11 +831,20 @@ _flushcache:
 
 ; remove a checksum in the intro!
 
-remove_checksum:
+remove_checksum_pal:
 	cmp.l	#$0CB801FC,$43806
 	bne	.nopatch
 	move.w	#$21FC,$43806
 	move.b	#$60,$4380E
+	bsr	_flushcache
+.nopatch
+	JMP	$1BF8.W	; original
+    
+remove_checksum_ntsc:
+	cmp.l	#$0CB801FC,$00043808
+	bne	.nopatch
+	move.w	#$21FC,$43808
+	move.b	#$60,$43810
 	bsr	_flushcache
 .nopatch
 	JMP	$1BF8.W	; original
@@ -813,30 +1049,12 @@ decrunch:
 	RTS				;0390: 4E75
 
 
-_tag		dc.l	WHDLTAG_CUSTOM1_GET
-_custom1	dc.l	0
-		dc.l	WHDLTAG_CUSTOM2_GET
-_custom2	dc.l	0
-		dc.l	0
+
 
 ;--------------------------------
 
 _resload	dc.l	0		;address of resident loader
 
-
-	IFEQ	1
-; < D0: numbers of vertical positions to wait
-_beamdelay
-.bd_loop1
-	move.l  d0,-(a7)
-        move.b	$dff006,d0	; VPOS
-.bd_loop2
-	cmp.b	$dff006,d0
-	beq.s	.bd_loop2
-	move.l	(a7)+,d0
-	dbf	d0,.bd_loop1
-	rts
-	ENDC
 
 version
 	dc.l	0
@@ -845,3 +1063,7 @@ save_name:
 	dc.b	"saves",0
 hisc_name:
 	dc.b	"highs",0
+_tag		dc.l	WHDLTAG_CUSTOM1_GET
+_trainer:
+        dc.l    0
+		dc.l	0

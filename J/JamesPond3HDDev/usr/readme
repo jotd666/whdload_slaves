@@ -38,9 +38,10 @@ CD32 version:
 
 History:
  
-version 2.2 (.2020) done by JOTD:
+version 2.2 (xx.11.2020) done by JOTD:
 
-- CD32 version: fixed crash that happened if savegame didn't exist (issue #0004808)
+- CD32 version: fixed empty save filename (issue #0004808)
+- CD32 version: fixed crash that happened if savegame didn't exist
 - TODO: yellow doesn't abort!!
 
 version 2.1 (31.08.2020) done by JOTD:

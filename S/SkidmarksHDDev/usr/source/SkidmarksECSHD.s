@@ -1,8 +1,0 @@
-
-CHIPMEMSIZE	= $FF000
-FASTMEMSIZE	= $100000
-	IFD BARFLY
-	OUTPUT	"SkidmarksECS.slave"
-	ENDC
-
-	include	"SkidmarksXXXHD.asm"

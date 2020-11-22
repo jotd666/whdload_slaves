@@ -55,7 +55,7 @@
         (askchoice
           (prompt ("Which version of %s would you like to install?" @app-name))
           (default 0)
-          (choices "Floppy disk release" "CD³² release")
+          (choices "Floppy disk release" "CD³² release" "Ultimate Super Skidmarks CD")
           (help @askchoice-help)
         )
       )
@@ -64,14 +64,27 @@
       ; required. It will change the install directory and the slaves used.
       ; 
       (select #version
-      ;  ("")
         (
-;        (set #version_suffix "CD32")		;Tack on AGA to the slave name(s)
         (set #program "RawDIC")
         (P_ChkRun)
         )
         ("")
-;        (set #version_suffix "CD32")		;Tack on CD32 to the slave name(s)
+        (
+      (set #sub-version
+        (askchoice
+          (prompt ("Which sub-version of %s would you like to install?" @app-name))
+          (default 0)
+          (choices "Farmyard_Edition" "SuperSillySkidmarks" "SuperSkidmarks" "SuperSkidmarks+")
+          (help @askchoice-help)
+        )
+        )
+       (select #sub-version
+          (set #sub-version "Farmyard_Edition")
+          (set #sub-version "SuperSillySkidmarks")
+          (set #sub-version "SuperSkidmarks")
+          (set #sub-version "SuperSkidmarks+")       
+       )
+       )
       )
 
     )
@@ -112,9 +125,11 @@
     (
 
 
+; ATM only 7 disk version is supported. I have seen a 9 disk version but no proper rips
 
 (until
-  (or (exists "SKID2:skidmarks2" (noreq)) (exists "Skidmarks2.21:skidmarks2" (noreq)))
+  ;(or (exists "SKID2:skidmarks2" (noreq)) (exists "Skidmarks2.21:skidmarks2" (noreq)))
+   (exists "SKID2:skidmarks2" (noreq))
   (message
     ("\nInsert %s program disk in any drive!\n" @app-name)
     (all)
@@ -124,12 +139,15 @@
 (
 (set #AD_disk "SKID2")
 (set #nb_track_disks 4)
-(set #isprefix "Skidmarks2_22")
+(set #isprefix "Skidmarks2")
 )
 (
 (set #AD_disk "Skidmarks2.21")
-(set #nb_track_disks 6)
-(set #isprefix "Skidmarks2_221")
+;(set #nb_track_disks 6)
+;(set #isprefix "Skidmarks2_221")
+(set #nb_track_disks 4)
+(set #isprefix "Skidmarks2_22")
+
 )
 )
 
@@ -183,6 +201,27 @@
 
 
     )
+    ; ultimate superskimarks CD32
+    (
+      (set #AD_disk "SuperSkidmarks+")
+      (P_Disk)
+      (copyfiles
+        (help @copyfiles-help)
+        (source ("%s:" #AD_disk))
+        (dest #dest)
+        (pattern "(devs|libs)")
+      )
+
+      (copyfiles
+        (help @copyfiles-help)
+        (source ("%s:%s" #AD_disk #sub-version))
+        (dest #dest)
+        (all)
+      )
+
+
+    )
+
 
  )
 )

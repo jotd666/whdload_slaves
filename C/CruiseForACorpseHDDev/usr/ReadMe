@@ -39,6 +39,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 2.2 (21.11.2020) done by JOTD:
+ - added support for the NTSC/US Gold version (issue #0004861)
+ 
  version 2.1-B (12.06.2016) done by JOTD:
  - install script fixed for french version (issue #0002989)
    (installing the game by hand won't work as startup-sequence must be modified)

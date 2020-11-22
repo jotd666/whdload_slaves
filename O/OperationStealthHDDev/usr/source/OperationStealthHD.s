@@ -11,9 +11,8 @@
 ;  :Translator.	Devpac 3.14, Barfly 2.9
 ;  :To Do.
 ;---------------------------------------------------------------------------*
-
+;CHIP_ONLY
 	INCDIR	Include:
-	INCDIR	osemu:
 	INCLUDE	whdload.i
 	INCLUDE	whdmacros.i
 	INCLUDE	lvo/dos.i
@@ -31,77 +30,82 @@
 
 ;============================================================================
 
+    IFD CHIP_ONLY
+CHIPMEMSIZE	= $100000
+FASTMEMSIZE	= $000
+HRTMON
+    ELSE
 CHIPMEMSIZE	= $80000
 FASTMEMSIZE	= $80000
+    ENDC
 NUMDRIVES	= 1
 WPDRIVES	= %1111
 
-;BLACKSCREEN
-;DISKSONBOOT
+BLACKSCREEN
 DOSASSIGN
-;DEBUG
-;INITAGA
 HDINIT
-HRTMON
+
 IOCACHE		= 20000
 ;MEMFREE	= $200
 ;NEEDFPU
 ;SETPATCH
 ;STACKSIZE = 10000
+CBDOSLOADSEG
+    IFD    CHIP_ONLY
+SEGTRACKER
+    ENDC
+;============================================================================
+
+slv_Version	= 16
+slv_Flags	= WHDLF_NoError|WHDLF_Examine|WHDLF_EmulTrap
+slv_keyexit	= $5D	; num '*'
+
 
 ;============================================================================
 
-KICKSIZE	= $40000			;34.005
-BASEMEM		= CHIPMEMSIZE
-EXPMEM		= KICKSIZE+FASTMEMSIZE
-
-;============================================================================
-
-_base		SLAVE_HEADER			;ws_Security + ws_ID
-		dc.w	15			;ws_Version
-		dc.w	WHDLF_NoError|WHDLF_EmulPriv|WHDLF_Examine	;ws_flags
-		dc.l	BASEMEM			;ws_BaseMemSize
-		dc.l	0			;ws_ExecInstall
-		dc.w	_start-_base		;ws_GameLoader
-		dc.w	_data-_base		;ws_CurrentDir
-		dc.w	0			;ws_DontCache
-_keydebug	dc.b	0			;ws_keydebug
-_keyexit	dc.b	$5D			;ws_keyexit = F10
-_expmem		dc.l	EXPMEM			;ws_ExpMem
-		dc.w	_name-_base		;ws_name
-		dc.w	_copy-_base		;ws_copy
-		dc.w	_info-_base		;ws_info
+	INCLUDE	kick13.s
 
 ;============================================================================
 
 	IFD BARFLY
 	DOSCMD	"WDate  >T:date"
 	ENDC
-
-_name		dc.b	"Operation Stealth / The Stealth Affair",0
-_copy		dc.b	"1990 Delphine",0
-_info		dc.b	"adapted by JOTD",10
-		dc.b	"from Wepl excellent KickStarter 34.005",10,10
-		dc.b	"Thanks to Tony Aksnes for U.S. version",10,10
-		dc.b	"Version 2.0 "
+    
+DECL_VERSION:MACRO
+	dc.b	"2.1"
 	IFD BARFLY
+		dc.b	" "
 		INCBIN	"T:date"
 	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
+	ENDC
+	ENDM
+		
+
+	dc.b	"$","VER: slave "
+	DECL_VERSION
+	dc.b	0
+    
+slv_name		dc.b	"Operation Stealth / The Stealth Affair"
+    IFD    CHIP_ONLY
+    dc.b    "(CHIP/DEBUG MODE)"
+    ENDC
+    dc.b    0
+slv_copy		dc.b	"1990 Delphine",0
+slv_info		dc.b	"adapted by JOTD",10
+		dc.b	"from Wepl excellent KickStarter 34.005",10,10
+		dc.b	"Thanks to Tony Aksnes for U.S. version",10,10
+		dc.b	"Version "
+        DECL_VERSION
 		dc.b	0
-_data:
+slv_CurrentDir:
 	dc.b	"data",0
-	CNOP 0,4
 _assign0
-	dc.b	3,"DF0",0
+	dc.b	"DF0",0
+
 	even
-
-;============================================================================
-_start	;	A0 = resident loader
-;============================================================================
-
-	;initialize kickstart and environment
-		bra	_boot
-
 
 ; < D0: BSTR filename
 ; < D1: seglist
@@ -127,13 +131,9 @@ _cb_dosLoadSeg
 .prog
 	clr.l	$0.W
 
-	bsr	_patchkb
 
-	move.l	(_resload),a2		;A2 = resload
+	move.l	(_resload,pc),a2		;A2 = resload
 
-	;get tags
-		lea	(_tag,pc),a0
-		jsr	(resload_Control,a2)
 	
 	;enable cache
 		move.l	#WCPUF_Base_NC|WCPUF_Exp_CB|WCPUF_Slave_CB|WCPUF_IC|WCPUF_DC|WCPUF_BC|WCPUF_SS|WCPUF_SB,d0
@@ -145,27 +145,6 @@ _cb_dosLoadSeg
 	rts
 
 
-_patchkb
-	IFEQ	KICKSIZE-$40000
-
-	lea	.ackkb(pc),A0
-	lea	.oldkb(pc),A1
-	move.l	$68.W,(A1)
-	move.l	A0,$68.W
-	rts
-
-.ackkb:
-	bset	#6,$BFEE01
-	movem.l	D0,-(A7)
-	moveq.l	#2,D0
-	bsr	_beamdelay
-	bclr	#6,$BFEE01
-	movem.l	(A7)+,D0
-	move.l	.oldkb(pc),-(A7)
-	rts
-
-.oldkb:
-	dc.l	0
 
 ; < D0: numbers of vertical positions to wait
 _beamdelay
@@ -178,14 +157,7 @@ _beamdelay
 	move.w	(a7)+,d0
 	dbf	d0,.bd_loop1
 	rts
-	ELSE
-	rts
-	ENDC
 
-
-_tag		dc.l	WHDLTAG_CUSTOM1_GET
-_custom1	dc.l	0
-		dc.l	0
 
 
 ;< A0: start
@@ -244,18 +216,14 @@ _game_start:
 	moveq.l	#0,d0
 	jsr	_LVOOpenLibrary(a6)
 	move.l	d0,a6
-
 	lea	_assign0(pc),a0
 	sub.l	a1,a1
 	bsr	_dos_assign
 	movem.l	(a7)+,D0-A6
-	
 	move.l	_saved_jmp(pc),-(a7)
 	rts
-
 _saved_jmp
 	dc.l	0
-
 ; < D7: seglist
 
 _patch_main
@@ -264,7 +232,6 @@ _patch_main
 	add.l	a3,a3
 
 	; execute some stuff just before start
-
 	lea	4(a3),a0
 	lea	_saved_jmp(pc),a1
 	move.l	2(a0),(a1)
@@ -469,8 +436,3 @@ _dbf_loop_d0:
 	rts
 
 
-;============================================================================
-
-	INCLUDE	kick13.s
-
-;============================================================================

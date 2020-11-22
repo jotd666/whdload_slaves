@@ -82,17 +82,22 @@ jff_assign
 ram_string:
 	dc.b	"RAM:",0
 
+
 DECL_VERSION:MACRO
-	dc.b	"2.1"
+	dc.b	"2.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
 	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
+	ENDC
 	ENDM
-
+    
 	dc.b	"$","VER: slave "
 	DECL_VERSION
-	dc.b	$A,$D,0
+	dc.b	0
 
 slv_name		dc.b	"Cruise for a corpse / Croisiere pour un cadavre"
 	IFD	DEBUG
@@ -135,7 +140,7 @@ _cb_dosLoadSeg
 	bsr	patch_exe
 
 	;get tags
-	move.l	(_resload),a2		;A2 = resload
+	move.l	(_resload,pc),a2		;A2 = resload
 	lea	(_tag,pc),a0
 	jsr	(resload_Control,a2)
 	
@@ -154,7 +159,7 @@ VERSION_PL:MACRO
 	lea	current_drive_offset(pc),a0
 	move.l	#-\2,(a0)
 	lea	pl_\1(pc),a0	
-	bra.b	.out
+	bra	.out
 	ENDM
 
 ; < A0: executable name
@@ -177,6 +182,9 @@ get_version:
 	cmp.l	#105168,d0
 	beq.b	.german
 
+    cmp.l   #104856,d0
+    beq.b   .american
+    
 	pea	TDREASON_WRONGVER
 	move.l	_resload(pc),-(a7)
 	addq.l	#resload_Abort,(a7)
@@ -186,11 +194,29 @@ get_version:
 	VERSION_PL	english,31896
 	VERSION_PL	spanish,31892
 	VERSION_PL	german,31892
+	VERSION_PL	american,31892
 
 
 .out
 	movem.l	(a7)+,d0-d1/a1
 	rts
+
+
+pl_american:
+	PL_START
+	PL_P	$00240,quit_to_dos
+	PL_P	$00610,fake_open_trd	; do not detect DFx: for save games
+	PL_NOP	$00c0e,4		; access fault
+	PL_PS	$02e08,intena_flush
+	PL_PS	$02e2a,intena_flush
+	PL_PS	$030a0,intena_flush
+	PL_PS	$030c2,intena_flush
+	PL_L	$05a64,$4EB80100		; crack
+	PL_PS	$0c1ea,dma_sound_wait
+	PL_PS	$0c218,dma_sound_wait
+	PL_PS	$0c27e,dma_sound_wait
+	PL_PS	$0342e,active_ffff_loop
+	PL_END
 
 ; english also works for italian (same length, almost identical binary)
 
@@ -456,14 +482,13 @@ do_crack
 	LEA	-12(A0),A1		;3FF7A: 43E8FFF4
 
 	; UK/german versions
-
 	cmp.b	#'O',0(a3)
 	bne.b	.try_french
 	cmp.b	#'.',1(a3)
 	bne.b	.try_french
 	CMPI.B	#'0',13(A3)		;3FF7E: 0C2B0030000D
 	BEQ.S	.code_entered		;3FF84: 670E
-	BRA.S	.not_ok		;3FF92: 6060
+	BRA	.not_ok		;3FF92: 6060
 
 	; french version
 .try_french

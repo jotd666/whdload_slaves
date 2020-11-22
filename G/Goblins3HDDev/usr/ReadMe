@@ -30,15 +30,20 @@
  version of this package from the WHDLoad WWW-Page. If that doesn't help try
  some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
  that also fails, please inform the author via the Bug-Report-Form which
- can be accessed on the WHDLoad WWW-Page.
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
 
  For the full WHDLoad package, other installs and updates refer to:
 	http://www.whdload.de/
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 3.2 (.11.2020) done by JOTD:
+ - fixed sound issue (issue #0004862)
+ - added speed regulation (game is too fast on fast machines)
+ 
  version 3.1 (06.06.2020) done by JOTD:
- - really fixed issues #0003339 and #0003638 for good. A bugfix attempt to correct RectFill wrong values
+ - really fixed issue #0003339 and issue #0003638 for good. A bugfix attempt to correct RectFill wrong values
    interacted badly with game when expansion memory was only 24-bit. Method of fixing the original issue
    has been improved. Also raised issue #0004709. Damn that was tough to fix properly and preserve ability
    to use fast memory for this game. Now got to fix Gobliins 2 too I guess...
@@ -97,14 +102,12 @@
  version 1.0 (12.05.2002) done by JOTD:
  - initial release
 
-
-I apologize for all users that reported me the infamous "system error -6" and I couldn't reproduce it, or
-not always, ... it was a damn blitter bug. I investigated another Cocktel Vision game (Asterix Operation Getafix)
-and found that small parts of memory were changed without the CPU doing anything: missing blitterwaits, probably
-very short so whdload debug options couldn't detect them...
+notes:
 
 I just noticed that spanish and italian languages lock up the game just after
 the protection bit in the 3 versions I have. German language works in one of the versions (SPS370)
 and not it the others... Not sure why... French and english languages seem to work ok.
 It's NOT a protection issue, since it locks up even when not cracked and correct code entered
-Although noone ever reported that issue to me, even if this NEVER worked.
+Although noone ever reported that issue to me, even if this NEVER worked. I suspect that the same
+game code is present without the relevant data files. Or some generic multi-language selection is used,
+but no spanish or italian versions exist for this opus.

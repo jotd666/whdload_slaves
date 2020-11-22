@@ -29,6 +29,14 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 2.1 (21.11.2020)
+ - NTSC version supported (finally). issue #0004856
+   I think I had this version at some point but just lost it or dropped the
+   support a long time ago. Now thanks to modern tools I'm able to adapt
+   it more easily (having notepad++ and 2 monitors help a lot)
+ - added trainer: infinite time, infinite retries, help skips (existed but now must be enabled)
+   (scores won't be saved if either is set)
+ 
  version 2.0 (17.04.2020) done by JOTD:
  - removed last sneaky time-bomb code checksum (issue #0000973)
  - empty dbf loops fixed in intro (music should be better)
@@ -64,7 +72,8 @@ could reproduce and fix this last issue.
 
 another rather complete set of passwords (thanks to http://www.ollivision.de/ch/b/billstom.htm):
 
-The first column seems to match version SPS 1748, the only one officially supported by the slave ATM
+The first column seems to match version SPS 1748 which is the PAL version, and also seems to
+work with the NTSC version (except for some that doesn't work like at all...)
 I fixed some typos in the passwords. If one password doesn't work, just enter the previous one and press HELP
 to get it :)
 

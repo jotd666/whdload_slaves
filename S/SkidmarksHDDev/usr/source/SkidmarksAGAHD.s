@@ -1,9 +1,0 @@
-
-AGA_MODE
-CHIPMEMSIZE	= $100000
-FASTMEMSIZE	= $200000
-	IFD BARFLY
-	OUTPUT	"SkidmarksAGA.slave"
-	ENDC
-
-	include	"SkidmarksXXXHD.asm"

@@ -18,16 +18,15 @@
  It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
 
 
- The game requires an installed A1200 or A4000 Kickstart 3.1 image.
+ The game requires an installed A600, A1200 or A4000 Kickstart 3.1 image.
  The kickstart image must be located in the directory "Devs:Kickstarts" and
- must be named "kick40068.A1200" (resp kick40068.A4000). 
- The image can be extracted from a A1200 (resp A4000) with tools like 'GrabKick'
- or similar which can be found on aminet.
+ must be named "kick40068.A1200" (resp. "kick40068.A4000", or "kick40063.A600"). The image can be extracted from a A1200 with
+ tools like 'GrabKick' or similar which can be found on aminet.
  If the image is of wrong version or altered in any way WHDLoad will quit with
  an appropriate requester.
- Additionally the file "kick40068.A1200.RTB" (resp "kick40068.A4000.RTB")
- must be installed in the same directory as the kickstart image.
- It can be found in the archive "util/boot/skick346.lha" on aminet.
+ Additionally the file "kick40068.A1200/A4000.RTB" or "kick40063.A600.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick346.lha" on aminet.
 
  If you have problems with this installation please try and get a newer
  version of this package from the WHDLoad WWW-Page. If that doesn't help try
@@ -41,11 +40,15 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 2.0 (xx.11.2020) done by JOTD:
- - low memory slave re-provided (issue #0004220, default: 8MB RAM allowinf different cars)
- - AGA/disk version supported (at least, issue #0004781), 2 versions: 2.2 and 2.21, 2.2 is the same
-   as CD32 but 2.21 contains 2 more tracks
+ version 2.1 (22.11.2020) done by JOTD:
+ - low memory slave fixed (more memory) to avoid crash (issue #0004865)
+ - support for other CD version: Ultimate Super Skidmarks (issue #0004868)
+ 
+ version 2.0 (20.11.2020) done by JOTD:
+ - low memory slave re-provided (issue #0004220, default: 8MB RAM allowing all different cars)
+ - 7 disk version supported (at least, issue #0004781)
  - note: police.aga and police.set are missing from floppy but can be copied from a CD32 version
+ - game doesn't seem to require a 68020, so should run with a A600 3.1 image on a 68000
  
  version 1.1 (27.02.2018) done by JOTD:
  - fixed crash on exit (issue #0001540)
@@ -58,3 +61,15 @@
  - source code included
 
 Note: if you get crashes at startup (issue #0002504) just try NOCACHE
+
+The "Ultimate Superskidmarks" CD edition is just the CD32 version copied
+over and over with other "skins" and cars. This CD is rather a waste of space...
+My installer doesn't install all the games, it just lets you choose between the various
+flavours and just installs one of them. The game is 100% identical to the CD32 version
+
+Supported versions:
+
+CD32:OK
+SPS1797:OK (v2.2)
+2.21 (9 disks): bad dumps
+Ultimate CD:OK

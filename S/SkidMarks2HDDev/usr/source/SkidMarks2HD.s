@@ -45,7 +45,7 @@ CHIPMEMSIZE	= $80000
     IFD EIGHTMEGS
 FASTMEMSIZE	= $800000	; 8 megs
 	ELSE
-FASTMEMSIZE	= $80000	; 8 megs
+FASTMEMSIZE	= $100000	; 1 meg
 	ENDC
 	ENDC
 NUMDRIVES	= 1
@@ -61,6 +61,7 @@ HDINIT
 ;SETPATCH
 BOOTDOS
 ;CACHE
+NO68020
 
 ;============================================================================
 
@@ -81,7 +82,7 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.1"
+	dc.b	"2.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -157,9 +158,10 @@ _bootdos
 		
         cmp.l   #89584,d0
 		beq.b	.floppy_22
-        
-        cmp.l   #91848,d0
-		beq.b	.floppy_221
+ 
+; not yet supported 
+;        cmp.l   #91848,d0
+;		beq.b	.floppy_221
         
 		pea	TDREASON_WRONGVER
 		move.l	(_resload,pc),-(a7)
