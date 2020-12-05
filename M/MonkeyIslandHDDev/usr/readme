@@ -66,6 +66,10 @@ Notes:
 
 History:
 
+ Version 3.6 (29.11.2020):
+ - fixed sound glitches (issue #0004882)
+ - improved source code
+
  Version 3.5 (21.10.2018):
  - less os-flashing when saving games
 

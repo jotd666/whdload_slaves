@@ -17,7 +17,7 @@
 	INCLUDE	whdmacros.i
 	INCLUDE	lvo/dos.i
 
-CHIP_ONLY
+;;CHIP_ONLY
 	IFD BARFLY
 	OUTPUT	"FinalAssault.slave"
 	IFND	CHIP_ONLY
@@ -36,12 +36,12 @@ CHIP_ONLY
 
 	IFD	CHIP_ONLY
 HRTMON
-CHIPMEMSIZE	= $100000
+CHIPMEMSIZE	= $C0000
 FASTMEMSIZE	= $0000
 	ELSE
 BLACKSCREEN
-CHIPMEMSIZE	= $100000
-FASTMEMSIZE	= $100000
+CHIPMEMSIZE	= $80000
+FASTMEMSIZE	= $40000
 	ENDC
 
 NUMDRIVES	= 1
@@ -74,7 +74,7 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.0"
+	dc.b	"1.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -91,7 +91,7 @@ DECL_VERSION:MACRO
 assign1:
 	dc.b	"Final Assault",0
 
-slv_name		dc.b	"FinalAssault"
+slv_name		dc.b	"Final Assault / Bivouac"
 	IFD	CHIP_ONLY
 	dc.b	" (DEBUG/CHIP MODE)"
 	ENDC
@@ -110,7 +110,8 @@ args		dc.b	10
 args_end
 	dc.b	0
 slv_config
-;	dc.b    "C1:X:Trainer Infinite lives:0;"
+	dc.b    "BW;"
+	dc.b    "C5:B:disable fast cpu fixes;"
 	dc.b	0
 
 ; version xx.slave works
@@ -122,6 +123,14 @@ slv_config
 
 _bootdos
 		clr.l	$0.W
+
+    ; install vbl hook which counts vblank
+    ; and also reads controllers
+        lea old_level3_interrupt(pc),a0
+        move.l  $6C.W,(a0)
+        lea new_level3_interrupt(pc),a0
+        move.l  a0,$6C.W
+        
 
 	; saves registers (needed for BCPL stuff, global vector, ...)
 
@@ -163,13 +172,52 @@ _quit		pea	TDREASON_OK
 		move.l	(_resload,pc),a2
 		jmp	(resload_Abort,a2)
 
-; < d7: seglist (BPTR)
 
+    
+
+; < D1: number of ticks
+vbl_reg:    
+    movem.l d0/a0-a1,-(a7)
+    lea vbl_counter(pc),a0
+    move.l  (a0),d0
+    cmp.l   #10,d0
+    bcc.b   .nowait     ; first time called/lost sync/pause/whatever
+    ; wait till at least x vblanks passed after last zeroing
+.wait
+    cmp.l   (a0),d1
+    bcc.b   .wait
+.nowait
+    clr.l   (a0)
+    movem.l (a7)+,d0/a0-a1
+    rts
+    
+    
+new_level3_interrupt
+    movem.l d0/a0,-(a7)
+    move.w  _custom+intreqr,d0
+    btst    #5,d0
+    beq.b   .novbl
+    ; vblank interrupt, read joystick/mouse
+    ;;bsr _joystick
+    ; add to counter
+    lea vbl_counter(pc),a0
+    addq.l  #1,(a0)
+.novbl
+    movem.l (a7)+,d0/a0
+    move.l  old_level3_interrupt(pc),-(a7)
+    rts
+    
+
+; < d7: seglist (BPTR)
+; 3 versions are supported
+; - french cracked
+; - english cracked
+; - english protected (same version as cracked once decrypted)
 patch_main
 	bsr	get_version
 	lea	patch_table(pc),a1
     cmp.l   #2,d0
-    beq.b   .us_encrypted
+    beq.b   .english_encrypted
 	add.w   d0,d0
     lea patch_table(pc),a0
     add.w  (a1,d0.w),a0
@@ -177,19 +225,18 @@ patch_main
     move.l  d7,a1
     move.l  _resload(pc),a2
     jsr resload_PatchSeg(a2)
-    rts
-.us_encrypted
-    ; save segment (encrypted version will need it)
-    lea first_segment(pc),a2
-    add.l   d7,d7
-    add.l   d7,d7
-    addq.l  #4,d7
-    move.l  d7,(a2)
-    IFD CHIP_ONLY
-    move.l  d7,$100.W
-    ENDC
-    
 
+    bsr save_first_segment
+
+
+    rts
+    
+.english_encrypted
+    move.l  d7,-(a7)
+    ; save segment (encrypted version will need it)
+    bsr save_first_segment
+
+    
 DECRYPT_PASS:MACRO
 us_encrypted_start_\1:
 	MOVEA.L	first_segment(pc),A0		;2fa86: 206d0024    ; start ($20000)
@@ -230,38 +277,126 @@ us_encrypted_start_\1:
 
     DECRYPT_PASS    1,$F130,$66CB
     DECRYPT_PASS    2,$E99C,$5D7C
-    move.l  d7,a1
-    lea pl_us_encrypted(pc),a0
+    move.l  (a7)+,a1
+    lea pl_english(pc),a0
     move.l  _resload(pc),a2
     jsr resload_PatchSeg(a2)
     rts
     
-	;MOVEA.L	first_segment(pc),-(a7)		;2fa86: 206d0024    ; start ($20000)
-    ;rts
     
 patch_table:
-    dc.w    pl_english_noprotection-patch_table
-    dc.w    pl_french_noprotection-patch_table
+    dc.w    pl_english-patch_table
+    dc.w    pl_french-patch_table
 
-pl_english_noprotection
+pl_english
     PL_START
     PL_PSS  $0e51e,dma_sound_wait_1,2
     PL_PSS  $0e530,dma_sound_wait_2,2
+    PL_IFC5
+    PL_ELSE
+    PL_PSS  $016D6,speed_regulation_game_english,2
+    PL_PS   $0c386,speed_regulation_preparation_english
+    PL_PS   $0c462,speed_regulation_preparation_english
+    PL_ENDIF
+    PL_IFBW
+    PL_PSS   $0c01c,after_title_english,4
+    PL_ENDIF
     PL_END
     
-pl_french_noprotection
+pl_french
     PL_START
     PL_PSS  $0e2f2,dma_sound_wait_1,2
     PL_PSS  $0e304,dma_sound_wait_2,2
+    PL_IFC5
+    PL_ELSE
+    PL_PSS  $01730,speed_regulation_game_french,2
+    PL_PS   $0c0fa,speed_regulation_preparation_french
+    PL_PS   $0c1d6,speed_regulation_preparation_french
+    PL_ENDIF
+    PL_IFBW
+    PL_PSS   $0bd90,after_title_french,4
+    PL_ENDIF
     PL_END
-    
-pl_us_encrypted
-    PL_START
-    ;PL_PS    $0,us_encrypted_start
-    PL_END
-    
 
+save_first_segment    
+    lea first_segment(pc),a2
+    add.l   d7,d7
+    add.l   d7,d7
+    addq.l  #4,d7
+    move.l  d7,(a2)
+    IFD CHIP_ONLY
+    move.l  d7,$100.W
+    ENDC
+    rts
 
+after_title_english
+	PEA	voies_string(PC)		;0bd90: 487a05e4
+	JSR	-32110(A4)		;0bd94: 4eac8282
+	ADDQ.W	#4,A7			;0bd98: 584f
+    bra.b   wait_both_fire
+   
+after_title_french
+	PEA	voies_string(PC)		;0bd90: 487a05e4
+	JSR	-32126(A4)		;0bd94: 4eac8282
+	ADDQ.W	#4,A7			;0bd98: 584f
+wait_both_fire:
+.loop1
+	btst	#7,$BFE001
+	beq.b	.loop1
+	btst	#6,$BFE001
+	beq.b	.loop1
+.loop2
+	btst	#6,$BFE001
+	beq.b	.out
+	btst	#7,$BFE001
+	bne.b	.loop2
+.out
+	rts
+    
+speed_regulation_preparation_french
+    movem.l d1,-(a7)    
+    moveq.l #2,d1
+    bsr vbl_reg
+    movem.l (a7)+,d1
+	MOVE.B	-11124(A4),D3		;0c386: 162cd4c0
+	EXT.W	D3			;0c38a: 4883
+    rts
+    
+speed_regulation_game_french
+    movem.l d1,-(a7)    
+    moveq.l #1,d1
+    bsr vbl_reg
+    movem.l (a7)+,d1
+    
+    ; original game code
+	TST.W	-11374(A4)		;016d6: 4a6cd3c6
+    BEQ.W	.out		;016da: 660001aa
+    add.l   #$886-$6DC,(a7) ; emulate BNE
+.out
+    rts
+   
+speed_regulation_preparation_english
+    movem.l d1,-(a7)    
+    moveq.l #2,d1
+    bsr vbl_reg
+    movem.l (a7)+,d1
+	MOVE.B	-11072(A4),D3		;0c386: 162cd4c0
+	EXT.W	D3			;0c38a: 4883
+    rts
+    
+speed_regulation_game_english
+    movem.l d1,-(a7)    
+    moveq.l #1,d1
+    bsr vbl_reg
+    movem.l (a7)+,d1
+    
+    ; original game code
+	TST.W	-11322(A4)		;016d6: 4a6cd3c6
+    BEQ.W	.out		;016da: 660001aa
+    add.l   #$886-$6DC,(a7) ; emulate BNE
+.out
+    rts
+    
 dma_sound_wait_1:
 	move.w  d0,-(a7)
 	move.w	#4,d0
@@ -393,6 +528,11 @@ _stacksize
 first_segment
     dc.l    0
     
+old_level3_interrupt
+    dc.l    0
+vbl_counter
+    dc.l    0
+        
 decrypt_offset_len_table_1:
      dc.w   $0003,$0536,$0539,$0536,$0A6F,$0536,$0FA5,$0536
      dc.w   $14DB,$0536,$1A11,$0536,$1F47,$0536,$247D,$0536
@@ -450,4 +590,6 @@ decrypt_keys_1:
     incbin  "decrypt_keys_1.bin"
 decrypt_keys_2:
     incbin  "decrypt_keys_2.bin"
+voies_string
+    dc.b    "voies",0
     

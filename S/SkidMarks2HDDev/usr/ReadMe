@@ -13,8 +13,8 @@
  This install requires WHDLoad to be in the path. It can be found in the
  WHDLoad package.
 
- The installed program requires 2.0 MB ChipMem and 8.0 MB OtherMem
- (low fast memory slave available as well).
+ The installed program requires 1.0 MB ChipMem and 9.0 MB OtherMem
+ (low fast memory slave available as well: 0.5 MB Chipmem and 2.0 OtherMem).
  It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
 
 
@@ -40,6 +40,10 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 2.2 (29.11.2020) done by JOTD:
+ - increased chip memory (1MB chip required) for the standard slave, allows
+   music to play at start (issue #0004884)
+ 
  version 2.1 (22.11.2020) done by JOTD:
  - low memory slave fixed (more memory) to avoid crash (issue #0004865)
  - support for other CD version: Ultimate Super Skidmarks (issue #0004868)

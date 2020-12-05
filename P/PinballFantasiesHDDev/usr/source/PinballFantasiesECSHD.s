@@ -46,7 +46,7 @@ _expmem		dc.l	0			;ws_ExpMem
 		dc.w	slv_config-_base
 
 slv_config:
-		dc.b    "C1:B:Skip intro;"
+		dc.b    "C1:B:Skip introduction;"
 		dc.b	0
 
 ;============================================================================
@@ -58,7 +58,7 @@ slv_config:
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"3.0"
+	dc.b	"3.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"

@@ -13,12 +13,16 @@
 ;---------------------------------------------------------------------------*
 
 	INCDIR	Include:
-	INCDIR	osemu:
 	INCLUDE	whdload.i
 	INCLUDE	whdmacros.i
 	INCLUDE	lvo/dos.i
 
 	IFD BARFLY
+    IFD AGA_MODE
+    OUTPUT  SkidmarksAGA.slave
+    ELSE
+    OUTPUT  SkidmarksECS.slave    
+    ENDC
 	BOPT	O+				;enable optimizing
 	BOPT	OG+				;enable optimizing
 	BOPT	ODd-				;disable mul optimizing
@@ -27,10 +31,28 @@
 	BOPT	wo-			;disable optimizer warnings
 	SUPER
 	ENDC
-
+    
+;CHIP_ONLY
 ;============================================================================
 
-
+    IFD AGA_MODE
+    IFD CHIP_ONLY
+CHIPMEMSIZE	= $200000
+FASTMEMSIZE	= $00000
+    ELSE
+CHIPMEMSIZE	= $100000
+FASTMEMSIZE	= $200000
+    ENDC
+    ELSE
+    IFD CHIP_ONLY
+CHIPMEMSIZE	= $180000
+FASTMEMSIZE	= $0
+    ELSE
+CHIPMEMSIZE	= $80000
+FASTMEMSIZE	= $C0000 
+    ENDC
+    ENDC
+    
 CIAA_PRA	EQU	$BFE001
 DMACONR		EQU	$DFF002
 VHPOSR		EQU	$DFF006
@@ -42,7 +64,6 @@ COLOR00		EQU	$DFF180
 NUMDRIVES	= 1
 WPDRIVES	= %0000
 
-DEBUG
 HDINIT
 ;HRTMON
 IOCACHE		= 10000
@@ -51,6 +72,7 @@ IOCACHE		= 10000
 SETPATCH
 ;STACKSIZE = 10000
 BOOTDOS
+
 
 ;============================================================================
 
@@ -68,8 +90,20 @@ slv_keyexit	= $5D	; num '*'
 
 
 DECL_VERSION:MACRO
-	dc.b	"1.0"
+	dc.b	"1.2"
+	IFD BARFLY
+		dc.b	" "
+		INCBIN	"T:date"
+	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
+	ENDC
 	ENDM
+    
+	dc.b	"$","VER: slave "
+	DECL_VERSION
+	dc.b	0
 
 _assign
 	dc.b	"Skidmarks",0
@@ -78,6 +112,9 @@ slv_name		dc.b	"Skidmarks "
 		IFD	AGA_MODE
 		dc.b	"(AGA enhanced)"
 		ENDC
+        IFD CHIP_ONLY
+        dc.b    " (CHIP/DEBUG MODE)"
+        ENDC
 		dc.b	0
 slv_copy	dc.b	"1992 Acid Software",0
 slv_info	dc.b	"adapted by JOTD",10,10
@@ -100,13 +137,7 @@ _args_end
 
 ; version xx.slave works
 
-	dc.b	"$","VER: slave "
-	DECL_VERSION
-	IFD BARFLY
-		dc.b	" "
-		INCBIN	"T:date"
-		dc.b	$A,$D,0
-	ENDC
+
 
 	EVEN
 
@@ -115,7 +146,7 @@ _bootdos
 
 		clr.l	$0.W
 
-		move.l	(_resload),a2		;A2 = resload
+		move.l	(_resload,pc),a2		;A2 = resload
 
 	;enable cache only for slave
 
@@ -362,12 +393,37 @@ pl_main
 
 	PL_R	$2A206+$20
 
+    PL_P    $23338+$20,dma_delay_1
+    PL_PS   $23394+$20,dma_delay
+    PL_S    $2339A+$20,$AE-$9A
 	PL_END
 
 _tag		dc.l	WHDLTAG_CUSTOM1_GET
 _custom1	dc.l	0
 		dc.l	0
 
+
+dma_delay_1:
+    bsr dma_delay
+	MOVE	D1,D2			;23338: 3401
+	LSL	#7,D2			;2333A: EF4A
+	RTS				;2333C: 4E75
+
+dma_delay:
+	move.w  d0,-(a7)
+	move.w	#3,d0
+.bd_loop1
+	move.w  d0,-(a7)
+    move.b	$dff006,d0	; VPOS
+.bd_loop2
+	cmp.b	$dff006,d0
+	beq.s	.bd_loop2
+	move.w	(a7)+,d0
+	dbf	d0,.bd_loop1
+	;;;addq.l	#2,(a7)  harmful if not used with PSS!!
+	move.w	(a7)+,d0
+    rts
+    
 detect_chipset
 	IFD	AGA_MODE
 	move.w	#$F8,d0

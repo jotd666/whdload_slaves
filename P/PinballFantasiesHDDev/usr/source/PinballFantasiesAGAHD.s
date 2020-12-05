@@ -17,6 +17,7 @@
 	INCLUDE	whdmacros.i
 	INCLUDE	lvo/dos.i
 
+
 	IFD BARFLY
 	OUTPUT	"PinballFantasies.slave"
 	BOPT	O+				;enable optimizing
@@ -30,8 +31,14 @@
 
 ;============================================================================
 
+    IFD FAST_SLAVE
 CHIPMEMSIZE	= $100000
 FASTMEMSIZE	= $100000
+    ELSE
+CHIPMEMSIZE	= $1FF000
+FASTMEMSIZE	= $0000	; just for OS memory
+    ENDC
+    
 NUMDRIVES	= 1
 WPDRIVES	= %0000
 
@@ -47,20 +54,19 @@ IOCACHE		= 10000
 ;SETPATCH
 BOOTDOS
 CACHE
-CBDOSLOADSEG
+;CBDOSLOADSEG
 FONTHEIGHT = 8
 
 ;============================================================================
 
 
-slv_Version	= 16
-slv_Flags	= WHDLF_NoError|WHDLF_ReqAGA|WHDLF_Req68020|WHDLF_Examine
+slv_Version	= 17
+slv_Flags	= WHDLF_NoError|WHDLF_ReqAGA|WHDLF_Req68020|WHDLF_Examine|WHDLF_ClearMem
 slv_keyexit	= $5D	; num '*'
 
 ;============================================================================
 
-	INCLUDE	kick31.s
-	INCLUDE	nonvolatile.s
+	INCLUDE	kick31cd32.s
 
 ;============================================================================
 
@@ -76,7 +82,7 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"3.0"
+	dc.b	"3.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -90,7 +96,11 @@ DECL_VERSION:MACRO
 	DECL_VERSION
 	dc.b	0
 
-slv_name		dc.b	"Pinball Fantasies CD³²/AGA",0
+slv_name		dc.b	"Pinball Fantasies CD³²/AGA"
+    IFND    FAST_SLAVE
+    dc.b    " (no fast)"
+    ENDC
+    dc.b    0
 slv_copy		dc.b	"1994 21st Century Entertainment",0
 slv_info		dc.b	"adapted by JOTD",10
 		dc.b	"Version "
@@ -103,7 +113,10 @@ slv_CurrentDir:
 	dc.b	"$","VER: slave "
 	DECL_VERSION
 	dc.b	0
-	EVEN
+slv_config		
+	dc.b	"C1:B:skip introduction (CD32);"
+	dc.b	0	
+	even
 
 _program:
 	dc.b	"Pinball",0
@@ -111,16 +124,13 @@ _args		dc.b	10
 _args_end
 	dc.b	0
 
+	IFD	FAST_SLAVE
 mem_message:
 	dc.b	"Sorry you have expansion mem at $7Fxxxxxx,",10
-	dc.b	"Please replace by the CHIPONLY slave.",10
+	dc.b	"Please replace by the AGACHIP slave.",10
 	dc.b	"Or use allocate tool for aminet to allocate block",10
 	dc.b	0
-mem_message_2:
-	dc.b	"Sorry you have expansion mem > $7Fxxxxxx,",10
-	dc.b	"Please replace by the CHIPONLY slave.",10
-	dc.b	0
-	
+	ENDC
 	EVEN
 
 ;============================================================================
@@ -129,18 +139,19 @@ mem_message_2:
 
 _bootdos
 	clr.l	$0.W
+	bsr	_patch_cd32_libs
 
+	IFD	FAST_SLAVE
 	move.b	_expmem(pc),d0
 	btst	#7,d0
 	beq.b	.skip
 	; expmem has 31-bit set: no way, can't do
-	pea	mem_message_2(pc)
+	pea	mem_message(pc)
 	pea	TDREASON_FAILMSG
 	move.l	(_resload,pc),-(a7)
 	add.l	#resload_Abort,(a7)
 	rts
 .skip
-	bsr	_nonvolatile_init
 
 	; lookup for a zeroed bit on expmem MSB to replace
 	; the $1E (30) value that the game uses and which is
@@ -161,14 +172,27 @@ _bootdos
 	lea	_mask(pc),a0
 	move.b	d0,(a0)		; store MSB of fastmem in mask
 
-	
+	; patch ROM!! this is ugly but can't be avoided
+    ; or we would have to re-implement LoadSeg relocation ourselves
+    ; (done in OSEmu code but I'd rather not dig that one out)
+    ; we have to detect A1200 / A4000 ROM
 	move.l	_expmem(pc),a1
 	add.l	#$26F9C,a1
+    cmp.l   #$d7b21800,(a1) ; long expected for A1200 3.1 rom
+    beq.b   .patchrom
+    ; it has to be A4000 3.1 rom
+	move.l	_expmem(pc),a1
+	add.l	#$1d3c4,a1
+    cmp.l   #$d7b21800,(a1) ; long expected for A1200 3.1 rom
+    beq.b   .patchrom
+    illegal     ; can't happen since only 2 ROMS are supported by kickemu
+.patchrom
 	move.l	#$4EB80124,(A1)
 	patch	$124,_preloc
 
 	bsr	_flushcache
-
+	ENDC
+	
 	move.l	(_resload,pc),a2		;A2 = resload
 
 	;open doslib
@@ -176,38 +200,67 @@ _bootdos
 	move.l	(4),a6
 	jsr	(_LVOOldOpenLibrary,a6)
 	move.l	d0,a6			;A6 = dosbase
-
+    lea _the_dosbase(pc),a0
+    move.l  d0,(a0)
 
 	;load exe
-		lea	_program(pc),a0
-		move.l	a0,d1
-		jsr	(_LVOLoadSeg,a6)
-		move.l	d0,d7			;D7 = segment
-		beq	_end			;file not found
-
+    lea	_program(pc),a0
+    movem.l a0,-(a7)
+    jsr (resload_GetFileSize,a2)
+    lea _version(pc),a0
+    cmp.l   #6732,d0
+    bne.b   .noaga
+    move.l  #0,(a0)
+    bra.b   .cont
+.noaga
+    cmp.l   #4348,d0
+    bne.b   .nocd32
+    move.l  #1,(a0)
+    bra.b   .cont
+.nocd32    
+	pea	TDREASON_WRONGVER
+	move.l	_resload(pc),-(a7)
+	addq.l	#resload_Abort,(a7)
+	rts
+.cont
+    movem.l (a7)+,a0
+    move.l	a0,d1
+    jsr	(_LVOLoadSeg,a6)
+    move.l	d0,d7			;D7 = segment
+    beq	_end			;file not found
 
 	;patch here
-
+    
+    
+    move.l  _version(pc),d0
+	lea	patch_table(pc),a1
+	add.w   d0,d0
+    lea patch_table(pc),a0
+    add.w  (a1,d0.w),a0
+    move.l	d7,a1
+    jsr (resload_PatchSeg,a2)
+    
 	;call
-		move.l	d7,a1
-		add.l	a1,a1
-		add.l	a1,a1
-		lea	(_args,pc),a0
-		move.l	(4,a7),d0		;stacksize
-		sub.l	#5*4,d0			;required for MANX stack check
-		movem.l	d0/d7/a2/a6,-(a7)
-		moveq	#_args_end-_args,d0
-		jsr	(4,a1)
-		movem.l	(a7)+,d1/d7/a2/a6
+    move.l	d7,a1
+    add.l	a1,a1
+    add.l	a1,a1
+    lea	(_args,pc),a0
+    move.l	(4,a7),d0		;stacksize
+    sub.l	#5*4,d0			;required for MANX stack check
+    movem.l	d0/d7/a2/a6,-(a7)
+    moveq	#_args_end-_args,d0
+    jsr	(4,a1)
+    movem.l	(a7)+,d1/d7/a2/a6
 
 	;remove exe
-		move.l	d7,d1
-		jsr	(_LVOUnLoadSeg,a6)
+    move.l	d7,d1
+    jsr	(_LVOUnLoadSeg,a6)
 
 	;quit
-_quit		pea	TDREASON_OK
-		move.l	(_resload,pc),a2
-		jmp	(resload_Abort,a2)
+_quit	
+    pea	TDREASON_OK
+	move.l	(_resload,pc),a2
+	jmp	(resload_Abort,a2)
 
 _end
 	jsr	(_LVOIoErr,a6)
@@ -218,43 +271,96 @@ _end
 	add.l	#resload_Abort,(a7)
 	rts
 
+	IFD	FAST_SLAVE
+
 msb_7f
 	pea	mem_message(pc)
 	pea	TDREASON_FAILMSG
 	move.l	(_resload,pc),-(a7)
 	add.l	#resload_Abort,(a7)
 	rts
+	ENDC
 	
+patch_table:
+    dc.w    _pl_aga-patch_table
+    dc.w    _pl_cd32-patch_table
+		
 
-; < D0: BSTR filename
-; < D1: seglist
 
-_cb_dosLoadSeg:
-	move.l	d1,a3
-	add.l	a3,a3
-	add.l	a3,a3
-	move.l	d0,a0
-	add.l	a0,a0
-	add.l	a0,a0
+_pl_aga
+	PL_START
+	PL_R    $220	; skip protection on AGA version
 
-	cmp.b	#'p',1(a0)
-	beq.b	.1
-	cmp.b	#'P',1(a0)
-	bne	.out		; not a patchable file
-.1
-	cmp.b	#7,(a0)
-	bne.b	.nopinball
-	cmp.w	#$4EB9,$224(a3)
-	bne.b	.nopinball
-	cmp.w	#$4E75,$22A(a3)
-	bne.b	.nopinball
-	move.w	#$4E75,$224(a3)	; skip protection on AGA version
-.nopinball
-	bsr	.remove_vbr
+    PL_NOP  $06cc,4  ; remove cache turn off
+    PL_NOP  $06dc,4  ; remove delay of 1 second or such
+    PL_NOP  $06fe,4  ; remove delay of 1 second or such
 
-	cmp.l	#'FILE',4(a0)
-	bne	.notable
+    PL_PSS  $684,_which_table_is_it,2
+    ;;PL_PSS  $6a8,_which_table_is_it,2
 
+    PL_PS   $06e8,_patch_table
+
+	PL_END
+
+_pl_cd32:
+	PL_START
+    PL_L    $3ae,$4E717000      ; VBR => 0
+    PL_IFC3
+    PL_NOP  $5B8,4
+    PL_ELSE
+    PL_PS   $5a8,_patch_intro
+    PL_ENDIF
+    
+    PL_PSS  $6FA,_which_table_is_it,2
+    
+    PL_PS   $470,_patch_music
+    PL_PS   $5E4,_patch_menu
+    
+    PL_NOP  $71c,4  ; remove cache turn off
+    PL_NOP  $72c,4  ; remove delay of 1 second or such
+    PL_NOP  $75a,4  ; remove delay of 1 second or such
+    PL_PS   $738,_patch_table
+	PL_END
+
+_which_table_is_it
+    ; d1 holds table name
+    ; depending on the table name, a different value must be put
+    ; in the sprite color register ... I don't remember how I found that out either...
+    ; and why it doesn't work right out of the box
+    move.l  d1,a0
+    cmp.b   #'B',(7,a0)
+    bne.b   .not_speed_devils
+	move.w	#$00BB,$DFF10C		; fixes gfx bugs on sprite (ball, level 2)    
+    bra.b   .loadseg
+.not_speed_devils
+	move.w	#$0044,$DFF10C		; fixes gfx bugs on sprite (ball, all other tables)
+.loadseg
+	MOVEA.L	_the_dosbase(pc),A6		;6fa: 2c6d000c
+	jmp	(_LVOLoadSeg,A6)	; we'll patch it later
+    
+_patch_table
+	move.w	#$0000,$DFF1FC		; fixes gfx bugs on tables (fmode = ECS)
+	move.w	#$0000,$DFF106		; fixes gfx bugs on tables
+
+
+	ADDA.L	A0,A0			;5e4: d1c8
+
+    
+    movem.l d0-d1/a0-a2,-(a7)
+    ; now try to find which table it is
+    addq.l  #4,a0
+    bsr _get_table_id
+    move.l  a0,a1
+    move.l  _resload(pc),a2
+    movem.l a1,-(a7)
+    lea _pl_table_common(pc),a0
+    jsr (resload_Patch,a2)
+    movem.l (a7)+,a1
+    
+    ; a1: first segment + offset (ntsc)
+    add.l   _patch_offset(pc),a1
+    
+    IFD FAST_SLAVE
 
 	patch	$100,_p100
 	patch	$106,_p106
@@ -262,95 +368,165 @@ _cb_dosLoadSeg:
 	patch	$112,_p112
 	patch	$118,_p118
 	patch	$11E,_p11E
-
-
-	move.w	#$0000,$DFF1FC		; fixes gfx bugs on tables
-	move.w	#$0044,$DFF10C		; fixes gfx bugs on sprite (ball)
-	move.w	#$0000,$DFF106		; fixes gfx bugs on tables
-	cmp.b	#'D',8(a0)
-	beq.b	.table4			; skulls
-	cmp.b	#'B',8(a0)
-	bne.b	.table1
-	move.w	#$00BB,$DFF10C		; fixes gfx bugs on sprite (ball, level 2)
-	bra.b	.table1
-
-
-.notable:
-.out
-	rts
-
-; tables 1 2 and 3 are similarly patched
-
-ID_LONG = $0881001E
-.table1:
-	addq.l	#4,a3
-	cmp.l	#ID_LONG,$42EA(a3)
-	beq.b	.pal
-
-	; ntsc: shifted by 6 bytes
-
-	addq.l	#6,a3
-	cmp.l	#ID_LONG,$42EA(a3)
-	bne.b	.wrong_version
-.pal
+    
+    ENDC
+    
+    lea _pl_table_123(pc),a0
+    move.l  _is_table_4(pc),d0
+    beq.b   .p1
+    lea _pl_table_4(pc),a0
+	IFD	FAST_SLAVE
+	move.b	_freebit(pc),$42F3(a1)
+	move.b	_freebit(pc),$43BF(a1)
+    ENDC
+    bra.b   .p    
+.p1
+	IFD	FAST_SLAVE
 	; change position of the #30 bit
+	move.b	_freebit(pc),$42ED(a1)
+	move.b	_freebit(pc),$43B9(a1)
+    ELSE
+    nop
+    ENDC
 
-	move.b	_freebit(pc),$42ED(a3)
-	move.b	_freebit(pc),$43B9(a3)
+.p
+    jsr (resload_Patch,a2)
+    movem.l (a7)+,d0-d1/a0-a2
+    jsr (4,a0)
+    rts
 
-	move.l	a3,a1
-	lea	_pl_table1(pc),a0
-	move.l	_resload(pc),a2
-	jsr	resload_Patch(a2)
-
-	rts
-
-.wrong_version
+_get_table_id
+    lea _patch_offset(pc),a1
+    clr.l   (a1)
+    lea _is_table_4(pc),a1
+    clr.l   (a1)
+    move.l  #$0881001e,d0
+	cmp.l	$42EA(a0),d0
+	beq.b	.table_pal
+	cmp.l	$42EA+6(a0),d0
+	beq.b	.table_ntsc
+    move.l  #1,(a1) ; probably table 4
+	cmp.l	$42F0(a0),d0
+	beq.b	.table_pal
+	cmp.l	$42F0+6(a0),d0
+	beq.b	.table_ntsc
+    
 	pea	TDREASON_WRONGVER
 	move.l	_resload(pc),-(a7)
 	addq.l	#resload_Abort,(a7)
 	rts
+    
+.table_pal
+    rts
+.table_ntsc
+    lea _patch_offset(pc),a1
+    move.l  #6,(a1)
+    rts
+    
+    
+_patch_menu
+	ADDA.L	A0,A0			;5e4: d1c8
+    movem.l d0-d1/a0-a2,-(a7)
+    move.l  _resload(pc),a2
+    move.l  a0,a1
+    addq.l  #4,a1
+    ; a1: first segment
+    lea _pl_cd32_menu(pc),a0
+    jsr (resload_Patch,a2)
+    movem.l (a7)+,d0-d1/a0-a2
+    jmp (4,a0)
+    
 
-.table4:
-	addq.l	#4,a3
+    
+_patch_music:
+    movem.l d0-d1/a0-a2,-(a7)
+    move.l  _resload(pc),a2
+    move.l  a0,a1
+    ; a1: first segment
+    lea _pl_cd32_music(pc),a0
+    jsr (resload_Patch,a2)
+    movem.l (a7)+,d0-d1/a0-a2
+	MOVE.L	A0,(A5)			;470: 2a88
+	MOVEQ	#40,D0			;472: 7028
+	JMP	(A0)			;474: 4e90    
+    
+_patch_intro  
+	CMPA.L	#$0,A0		;: b0fc0000
+	BNE.S	.ok		;5ac: 6728
+    add.l   #$D6-$AE,(a7)
+    rts
+.ok
+    movem.l d0-d1/a0-a2,-(a7)
+    move.l  _resload(pc),a2
+    move.l  a0,a1
+    add.l   a1,a1
+    add.l   a1,a1
+    addq.l  #4,a1
+    ; a1: first segment
+    lea _pl_cd32_intro(pc),a0
+    jsr (resload_Patch,a2)
+    movem.l (a7)+,d0-d1/a0-a2
+    rts
 
-	cmp.l	#ID_LONG,$42F0(a3)
-	beq.b	.pal4
+; nothing to do, just empty patch for intro
+_pl_cd32_intro:
+	PL_START
+    PL_END
+    
+_pl_cd32_music:
+	PL_START
+    PL_PSS  $3E6,_fix_dma_sound,2
+    PL_PSS  $b2e,_fix_dma_sound,2
+    ;PL_PS   $00442,_fix_dma_sound_2
+    ;PL_PS   $00196,_fix_dma_sound_2
+    ;PL_P   $00098,_fix_dma_sound_3
+    PL_END
+    
+_pl_cd32_menu:
+	PL_START
+    ; leave VBR to 0
+    PL_B    $012,$60
+    ; remove LMB => call exec.Debug (and locks up)!!
+    PL_S    $0e18a,$20
+    PL_END
+    
+_fix_dma_sound_2
+    MOVE.W	d0,_custom+dmacon
+    bra.b   _dma_sound_wait
+_fix_dma_sound_3
+    MOVE.W	#$F,_custom+dmacon
+    bra.b   _dma_sound_wait
+    
+_fix_dma_sound:
+    MOVE.W	(30,A6),_custom+dmacon
+_dma_sound_wait:
+	move.w  d0,-(a7)
+	move.w	#4,d0
+.bd_loop1
+	move.w  d0,-(a7)
+    move.b	$dff006,d0	; VPOS
+.bd_loop2
+	cmp.b	$dff006,d0
+	beq.s	.bd_loop2
+	move.w	(a7)+,d0
+	dbf	d0,.bd_loop1
+	move.w	(a7)+,d0
+    rts
 
-	; ntsc: shifted by 6 bytes
-
-	addq.l	#6,a3
-	cmp.l	#ID_LONG,$42F0(a3)
-	bne.b	.wrong_version
-.pal4
-
-	; change position of the #30 bit
-
-	move.b	_freebit(pc),$42F3(a3)
-	move.b	_freebit(pc),$43BF(a3)
-
-	move.l	a3,a1
-	lea	_pl_table4(pc),a0
-	move.l	_resload(pc),a2
-	jsr	resload_Patch(a2)
-
-	rts
-
-; remove VBR read on first segment of files pinball, PINFILE?.DAT
-
-.remove_vbr:
-	movem.l	d0-d1/a0-a1,-(a7)
-	move.l	a3,a0
-	lea	$1000(a0),a1
-	move.l	#$4E7A0801,D0
-	move.l	#$4E717000,D1
-	bsr	_hexreplacelong
-	movem.l	(a7)+,d0-d1/a0-a1
-	rts
-
-
-
-_pl_table1:
+_pl_table_common
+    PL_START
+    PL_B    $00c6,$60       ; skip VBR read, leave to 0    
+    PL_END
+    
+    
+	IFND	FAST_SLAVE
+_pl_table_123:
+_pl_table_4:
+	PL_START
+	PL_END
+   
+    ELSE
+_pl_table_123:
 	PL_START
 	PL_L	$4348,$4EB80100
 	PL_L	$4404,$4EB80100
@@ -365,7 +541,7 @@ _pl_table1:
 	PL_L	$43E0,$4EB8011E
 	PL_END
 
-_pl_table4:
+_pl_table_4:
 	PL_START
 	PL_L	$434E,$4EB80100
 	PL_L	$440A,$4EB80100
@@ -389,11 +565,19 @@ MASKIT:MACRO
 	move.l	(a7)+,d0
 	ENDM
 
-; patch dos.library relocation
 
+    
+; patch dos.library relocation
+; I don't remember what it does, but it probably
+; only changes a special kind of reloc, else it would
+; trash all other addresses and also menu, intro...
+; since LoadSeg code is changed globally...
+; anyway it works great... damn I wish i had commented that
+; back in the day...
 _preloc
 	movem.l	D0/D2,-(A7)
 	move.l	(0,A2,D1.L),d2
+    ; replace bit 30 when set by the free bit
 	bclr	#30,d2
 	beq.b	.skip
 	moveq	#0,d0
@@ -435,53 +619,7 @@ _p11E:
         OR.B    D7,48(A3)               ;0431C: 8F2B0030        ; FIX1
 	RTS
 
-
-_hexreplacelong:
-	movem.l	A0-A1/D0-D1,-(A7)
-.srch
-	cmp.l	(A0),D0
-	beq.b	.found
-.next
-	addq.l	#2,A0
-	cmp.l	A1,A0
-	bcc.b	.exit
-	bra.b	.srch
-.found
-	move.l	D1,(A0)+
-	bra	.next
-.exit
-	movem.l	(A7)+,A0-A1/D0-D1
-	rts
-
-;< A0: start
-;< A1: end
-;< A2: bytes
-;< D0: length
-;> A0: address or 0 if not found
-
-_hexsearch:
-	movem.l	D1/D3/A1-A2,-(A7)
-.addrloop:
-	moveq.l	#0,D3
-.strloop:
-	move.b	(A0,D3.L),D1	; gets byte
-	cmp.b	(A2,D3.L),D1	; compares it to the user string
-	bne.b	.notok		; nope
-	addq.l	#1,D3
-	cmp.l	D0,D3
-	bcs.b	.strloop
-
-	; pattern was entirely found!
-
-	bra.b	.exit
-.notok:
-	addq.l	#1,A0	; next byte please
-	cmp.l	A0,A1
-	bcc.b	.addrloop	; end?
-	sub.l	A0,A0
-.exit:
-	movem.l	(A7)+,D1/D3/A1-A2
-	rts
+	
 
 
 ; MSB mask
@@ -493,7 +631,13 @@ _mask:
 
 _freebit:
 	dc.w	0
-
-;============================================================================
-
-	END
+    ENDC
+_patch_offset
+    dc.l    0
+_is_table_4
+    dc.l    0
+_version
+    dc.l    0
+_the_dosbase
+    dc.l    0
+    

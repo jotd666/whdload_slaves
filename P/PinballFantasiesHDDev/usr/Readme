@@ -53,6 +53,21 @@
 
 History
 
+ version 3.1 (05.12.2020) done by JOTD:
+ - Highscores are properly saved in the "nvram" file, using Bert new
+   nonvolatile emulation
+ - Fixed crash (issue #0004869) introduced in 3.0
+ - Fixed: clicking with left mouse button during the pinball selection
+   just froze the game. This bug is triggered by an original cd32 menu
+   "feature" that calls exec.Debug on left click, probably
+   to debug the game, but that was left in in the final release...
+ - CD32: using lowlevel library emulation instead of real lowlevel library code
+   (fixes issues with some A1200 motherboards rev 1B or whatever)
+ - Can skip intro in CD32 version
+ - fixed the way fastmem slave patches memory allocation,
+   A4000 kick3.1 image now supported (worked only on A1200 kick3.1 image)
+
+ 
  version 3.0-B (14.11.2020) done by JOTD:
  - fixed rawdic imager (had trouble reading one of the disks...)
  
@@ -115,7 +130,7 @@ History
  - Added manual
 
  Version 1.0 (31.12.1997) done by Mr.Larmer/Wanted Team
- - Initial release
+ - Initial release (ECS only)
 
 Notes on AGA/CD32 version: with some memory configurations,
 because of the game using MSB to store stuff
@@ -124,7 +139,16 @@ tricks to decode those addresses on the fly. The result is that
 it's not possible to use expansion memory in 0x7Fxxxxxx.
 
 Someone on EAB (http://eab.abime.net/showthread.php?t=36535) got rid
-of this problem by allocating the memory blocks $7f000000-7fffffff
+of this problem by allocating the memory blocks $7f000000-7ff7ffff
 with a small tool from aminet (probably http://aminet.net/package/dev/misc/allocate)
 before starting the game. Ugly, but works better than the chip-only slave which seem
 to have issues.
+
+Using fast memory on AGA/CD32 version makes this game really faster,
+specially on high-end accelerator boards where running code in chipmem
+is slow as hell (Blizzard 060...)
+
+On WinUAE using chipset hack setting to force audio issues, I get trashed
+music at startup, but I can't seem to fix it the way I usually fix it, so
+I just hope that it doesn't happen on real amigas but is just a WinUAE-only
+"feature" (chipset_hacks=0x8)

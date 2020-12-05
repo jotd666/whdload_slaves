@@ -29,7 +29,11 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 2.0 (24/11/02) done by JOTD:
+ version 2.1 (26/11/2020) done by JOTD:
+ - quit key with 68000 (issue #0004864)
+ - source code rework
+ 
+ version 2.0 (24/11/2002) done by JOTD:
  - Uses 68060 caches & fast memory for better framerate
  - Rewritten installer script
  - Adapted to Barfly/WHDLoad 13+
@@ -38,7 +42,7 @@
  - Manual included
  - Source included
 
- version 1.1 (05/08/98) done by Dark Angel:
+ version 1.1 (05/08/1998) done by Dark Angel:
  - Instant replay now enabled but 1 MB chip required
  - Caches now by default on
 

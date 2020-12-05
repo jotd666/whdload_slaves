@@ -9,7 +9,7 @@
 (set #highs-file "highs")		;name of high scores file
 (set #exename "")		        ;name of executable program
 (set #last-file "disk.0")          ;last file the imager should create
-(set #prefix "Indy500")                       ;name of slave, directory
+(set #prefix "Indianapolis500")                       ;name of slave, directory
 
 ;----------------------------
 ; copy file including icon if exist

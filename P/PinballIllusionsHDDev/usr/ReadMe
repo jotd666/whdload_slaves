@@ -25,7 +25,7 @@
  an appropriate requester.
  Additionally the file "kick40068.A1200.RTB" (resp "kick40068.A4000.RTB")
  must be installed in the same directory as the kickstart image.
- It can be found in the archive "util/boot/skick345.lha" on aminet.
+ It can be found in the archive "util/boot/skick346.lha" on aminet.
 
 
  If you have problems with this installation please try and get a newer
@@ -40,25 +40,25 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 2.3 (10.08.04)
+ version 2.3 (10.08.2004)
  - reworked so there's only a single slave (A1200/A4000)
 
- version 2.2 (18.10.03)
+ version 2.2 (18.10.2003)
  - Support for A4000 ROM (special slave provided)
  - adapted for WHDLoad v16
 
- version 2.1 (17.02.03)
+ version 2.1 (17.02.2003)
  - Added support for another floppy version
- - CD³² version now really supported support
+ - CD³² version now really supported
 
- version 2.0 (07.02.03)
+ version 2.0 (07.02.2003)
  - Improved installer script
  - CD³² version support (did not work)
  - Uses KickEmu instead of OSEmu to avoid problems
  - Added an icon by Frank
  - Mini documentation added
 
- version 1.0 (07.04.01) done by JOTD:
+ version 1.0 (07.04.2001) done by JOTD:
  - initial WHDLoad release
  - Uses OSEmu for better compatibility (included)
  - VBR stuff removed

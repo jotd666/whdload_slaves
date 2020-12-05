@@ -30,8 +30,8 @@
 
 ;============================================================================
 
-;DEBUG
-	IFD	DEBUG
+;CHIP_ONLY
+	IFD	CHIP_ONLY
 CHIPMEMSIZE	= $100000
 FASTMEMSIZE	= $0
 	ELSE
@@ -76,7 +76,7 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"3.5"
+	dc.b	"3.6"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -92,8 +92,8 @@ DECL_VERSION:MACRO
 	dc.b	0
 
 slv_name		dc.b	"The Secret Of Monkey Island"
-	IFD	DEBUG
-	dc.b	" (DEBUG MODE)"
+	IFD	CHIP_ONLY
+	dc.b	" (DEBUG/CHIP MODE)"
 	ENDC
 	dc.b	0
 slv_copy		dc.b	"1990 LucasFilm Games",0
@@ -245,54 +245,16 @@ _cb_dosRead
 	movem.l	(a7)+,d0/a0-a3
 	rts
 
-crack_stub
-	move.w	0(a7),D1
-	rts
 
 _patchit:
-	patch	$200,crack_stub
-	move.l	d7,A3
-	add.l	A3,A3
-	add.l	A3,A3
-
-	move.l	A3,A0
-	move.l	A0,A1
-	add.l	#100000,A1
-	lea	.access_fault(pc),A2
-	moveq.l	#8,D0
-	bsr	_hexsearch
-	cmp.l	#0,A0
-	beq.b	.skipaf
-
-	pea	_avoid_af_1(pc)
-	move.w	#$4EB9,(A0)+
-	move.l	(A7)+,(A0)
-.skipaf
-	rts
+	move.l	d7,A1
+    move.l  _resload(pc),a2
+    lea pl_main(pc),a0
+    jsr (resload_PatchSeg,a2)
+    rts
+    
 	
-	; WTF is this code? I don't remember
-	; probably to fix another access fault on a specific version
-	; fine and dandy, but it "fixes" other versions as well and triggers access faults
-	; I guess the search pattern should have been longer...
 
-	move.l	A3,A0
-	move.l	A0,A1
-	add.l	#$3000,A1
-	lea	.access_fault_tfmx(pc),A2
-	moveq.l	#4,D0
-	bsr	_hexsearch
-	cmp.l	#0,A0
-	beq.b	.skipaf_tfmx
-
-	move.l	#28414294,(A0)	; clr.l (A0) -> clr.l (A4)
-.skipaf_tfmx
-
-	rts
-
-.access_fault:
-	dc.l	$10182948,$5C2A0440
-.access_fault_tfmx:
-	dc.l	$28414290
 
 _avoid_af_1:
 	move.l	D1,-(A7)
@@ -314,7 +276,50 @@ _deletefile:
 	moveq.l	#-1,D0
 	rts
 
+fix_dma_1
+    MOVE.W	82(A5),_custom+dmacon
 
+dmadelay
+	movem.l	D0,-(A7)
+	; dma enable should be followed by a wait
+	; now that the code runs from fastmem/on fast amigas
+	; some sfx could be wrongly played
+	moveq.l	#4,d0
+	bsr	beamdelay
+	movem.l	(a7)+,D0
+	rts
+
+; < D0: numbers of vertical positions to wait
+beamdelay
+.bd_loop1
+	move.w  d0,-(a7)
+        move.b	$dff006,d0	; VPOS
+.bd_loop2
+	cmp.b	$dff006,d0
+	beq.s	.bd_loop2
+	move.w	(a7)+,d0
+	dbf	d0,.bd_loop1
+	rts
+    
+; all versions share the same executable (same as loom) thanks!!!
+pl_main
+    PL_START
+    PL_PS   $04ba8,_avoid_af_1
+    ; put back original code so crack (JSR $200.W) is supported
+    ; the crack is done here by changing the VM code not the real code
+    PL_L    $0a6f6,$322f0000
+
+;	MOVEA.L	D1,A4			;01506: 2841
+    ; should probably be clr A4 since A4 is overwritten the line after!
+;	CLR.L	(A0)			;01508: 4290
+;	MOVEA.L	D0,A4			;0150a: 2840
+
+    PL_W    $01508,$4294	; clr.l (A0) -> clr.l (A4)
+    
+    PL_PSS   $00aae,fix_dma_1,2
+    PL_END
+    
+    
 new_Open:
 	move.l	D0,-(A7)
 	cmp.l	#MODE_NEWFILE,d2
@@ -360,35 +365,7 @@ get_long
 	move.b	(a0)+,d0
 	move.l	(a7)+,a0
 	rts	
-;< A0: start
-;< A1: end
-;< A2: bytes
-;< D0: length
-;> A0: address or 0 if not found
 
-_hexsearch:
-	movem.l	D1/D3/A1-A2,-(A7)
-.addrloop:
-	moveq.l	#0,D3
-.strloop:
-	move.b	(A0,D3.L),D1	; gets byte
-	cmp.b	(A2,D3.L),D1	; compares it to the user string
-	bne.b	.notok		; nope
-	addq.l	#1,D3
-	cmp.l	D0,D3
-	bcs.b	.strloop
-
-	; pattern was entirely found!
-
-	bra.b	.exit
-.notok:
-	addq.l	#1,A0	; next byte please
-	cmp.l	A0,A1
-	bcc.b	.addrloop	; end?
-	sub.l	A0,A0
-.exit:
-	movem.l	(A7)+,D1/D3/A1-A2
-	rts
 
 ;============================================================================
 

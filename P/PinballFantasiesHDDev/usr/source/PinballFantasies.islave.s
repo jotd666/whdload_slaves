@@ -28,7 +28,7 @@
 		dc.l	Text	; Pointer to the text displayed in the imager window
 
 		dc.b	"$VER:"
-Text		dc.b	"Pinball Fantasies imager V1.0",10
+Text		dc.b	"Pinball Fantasies imager V1.1",10
 		dc.b	"by Mr.Larmer/Wanted Team/JOTD on "
         IFD BARFLY
 		INCBIN	"T:date"

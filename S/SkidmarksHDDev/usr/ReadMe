@@ -39,7 +39,11 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 1.1 (xx.11.2020) done by JOTD:
+ version 1.2 (29.11.2020) done by JOTD:
+ - not enough memory configured for ECS slave made it crash
+   (issue #0004885)
+ 
+ version 1.1 (29.11.2020) done by JOTD:
  - fixed sound effects replay on fast machines
 
  version 1.0 (21.01.2005) done by JOTD:
