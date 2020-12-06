@@ -10,8 +10,6 @@
 
  This install applies to "Elite" © 1989 Mr Micro
 
- Check SPSID file to see which version is supported
-
  This install requires WHDLoad and RawDIC to be in the path. Both can be found
  in the WHDLoad package.
  To install from a different drive than DF0: select installation mode Expert.
@@ -32,7 +30,13 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 2.0 (31.12.07) done by JOTD
+ version 2.1 (06.12.2020) done by JOTD
+ - disk imager fixed, which directly allows support for SPS811
+ - SPS115 version supported (issue #0004239)
+ - more compatible blitter wait routine (fix can be turned off for slow cpus)
+ - fixed music replay (fix can be turned off for slow cpus)
+ 
+ version 2.0 (31.12.2007) done by JOTD
  - quit key works on 68000 & NOVBRMOVE
  - keyboard routine fixed
  - self-modifying code fixed and does not use flushcache anymore
@@ -43,7 +47,7 @@
  - added documentation & cheat information
  - added icon by Exotica
 
- version 1.0 (13.02.03) done by Dark Angel
+ version 1.0 (13.02.2003) done by Dark Angel
  - initial release
  - Selfmodifying code fixed
  - Protection removed
@@ -54,9 +58,13 @@
 
 NOTES:
 
-The imager asks you for 2 disks, in fact, leave the only disk in the drive (or for IPF file users
+* The imager asks you for 2 disks, in fact, leave the only disk in the drive (or for IPF file users
 just press "Start" again). The reason for this is that v1.0 install used 2 disk images for 1 disk,
 and the simplest way to make this happen with RawDIC was to ask for 2 disks.
+
+* up to version 2.0 only version SPS1572 was supported, and imager created disk images which can be
+truncated (no data on those tracks, other SPS versions don't have those tracks). If you want to shorten
+the diskfiles, just reinstall. Else leave it be.
 
 CHEAT:
 

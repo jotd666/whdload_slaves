@@ -30,10 +30,13 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 1.1-B (24.06.06) done by JOTD:
+ version 1.2 (06.12.2020) done by JOTD:
+ - added quitkey for 68000 machines (issue #0004855)
+ 
+ version 1.1-B (24.06.2006) done by JOTD:
  - install script fixed
 
- version 1.1 (22.03.06) done by JOTD
+ version 1.1 (22.03.2006) done by JOTD
  - now uses fast memory
  - NTSC version supported
  - country check removed (now able to run NTSC version in PAL mode)
@@ -45,7 +48,7 @@
  - initial release
  - protection removed,
  - fast decrunching files
- - nice MWB/NI icons included,
+ - nice MWB/NI icons included
 
  Thanx to:
  - Jan Krolzig for original disk images.

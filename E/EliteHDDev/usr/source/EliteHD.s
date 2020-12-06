@@ -32,8 +32,8 @@ basemem	=$80000
 
 _base
 	SLAVE_HEADER		;ws_Security + ws_ID
-	dc.w	10		;ws_Version
-	dc.w	WHDLF_EmulTrap|WHDLF_Disk|WHDLF_NoError	; ws_flags
+	dc.w	17		;ws_Version
+	dc.w	WHDLF_EmulTrap|WHDLF_NoError	; ws_flags
 	dc.l	basemem					; ws_basememsize
 	dc.l	0					; ws_execinstall
 	dc.w	_start-_base				; ws_gameloader
@@ -46,27 +46,42 @@ _keyexit
 	dc.w	_name-_base		;ws_name
 	dc.w	_copy-_base		;ws_copy
 	dc.w	_info-_base		;ws_info
-
-
+		dc.w	0                       ;ws_kickname
+		dc.l	0                       ;ws_kicksize
+		dc.w	0                       ;ws_kickcrc
+		dc.w	_config-_base		;ws_config
 	IFD BARFLY
+	IFND	.passchk
 	DOSCMD	"WDate  >T:date"
+.passchk
 	ENDC
-
-
+	ENDC
 DECL_VERSION:MACRO
-	dc.b	"2.0"
+	dc.b	"2.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
 	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
+	ENDC
+
 	ENDM
+	dc.b	"$VER: slave "
+	DECL_VERSION
+    
+_config	dc.b  "BW;"
+	dc.b	"C1:B:enables passwords and cheat (type SUZANNE);"
+	dc.b	"C3:B:turn off fast cpu fixes;"
+	dc.b	0
+
 
 _name		dc.b	"Elite v2.0"
 		dc.b	0
 _copy		dc.b	"1989 Mr Micro",0
 _info		dc.b	"adapted & fixed by Dark Angel & JOTD",10,10
-		dc.b	"CUSTOM1=1 enables passwords & cheat (SARA)",10
-		dc.b	"BUTTONWAIT allows to wait",10,10
+
 		dc.b	"Version "
 		DECL_VERSION
 		dc.b	0
@@ -74,9 +89,8 @@ _info		dc.b	"adapted & fixed by Dark Angel & JOTD",10,10
 
 ; version xx.slave works
 
-	dc.b	"$","VER: slave "
-	DECL_VERSION
-	dc.b	$A,$D,0
+
+
 
 ;--- version id
 
@@ -119,12 +133,23 @@ _start
 	pea	toggle_ro_2(pc)
 	move.l	(a7)+,$bc
 
-
-	lea	pl_main(pc),a0
-	move.l	custom1(pc),d0
-	bne.b	.cheat
-	lea	pl_no_cheat(pc),a0
-.cheat
+    move.w  $404,d0
+    cmp.w   #$26f2,d0
+    bne.b   .other
+	lea	pl_main_1572(pc),a0
+    bra.b   .p
+.other
+    cmp.w   #$26e6,d0
+    bne.b   .unsup
+	lea	pl_main_115(pc),a0
+    bra.b   .p
+.unsup
+	pea	TDREASON_WRONGVER
+	move.l	_resload(pc),-(a7)
+	addq.l	#resload_Abort,(a7)
+	rts
+    
+.p
 	sub.l	a1,a1
 	jsr	resload_Patch(a6)
 
@@ -163,26 +188,33 @@ ro_1
 ro_2
 	dc.w	ROR_CODE
 
-pl_no_cheat
+
+pl_main_1572
 	PL_START
+
+    PL_IFC1
+    PL_ELSE
 	PL_R	$bc42			; skip manual protection
-	PL_NEXT	pl_main
-
-pl_main
-	PL_START
-
+    PL_ENDIF
+    
 	PL_B	$bd08,$60			; manual protection (cheat remains)
 	
 	PL_S	$26FC,$270C-$26FC	; skip vector overwrite
 
-	PL_PS	$7718,.kb_routine
-	PL_W	$7718+6,$4E71
+	PL_PSS	$7718,kb_routine,2
 
-	PL_PS	$2764,.button
-	PL_P	$7672,.bbusy
-
+    PL_IFBW
+	PL_PS	$2764,buttondelay_1572
+    PL_ENDIF
+    PL_IFC3
+    PL_ELSE
+	PL_PSS	$766A,bbusy,2
+    ; sound fix
+    PL_PS   $06276,write_dmacon_d5
+    PL_ENDIF
+    
 	PL_B	$162be,$60			; self check
-	PL_W	$bcd0,$4E71			; allow return only
+	PL_NOP	$bcd0,2			; allow return only
 
 
 	PL_R	$af10			; head -> #0
@@ -190,18 +222,18 @@ pl_main
 	PL_R	$aec4			; head move
 	PL_R	$af4a			; drive off
 
-	PL_PS	$29fa,.lower
-	PL_PS	$a8a6,.lower
-	PL_PS	$abb8,.lower
-	PL_PS	$ac6e,.lower
+	PL_PS	$29fa,lower
+	PL_PS	$a8a6,lower
+	PL_PS	$abb8,lower
+	PL_PS	$ac6e,lower
 
-	PL_PS	$2a04,.upper
-	PL_PS	$10d2a,.upper
-	PL_PS	$10f84,.upper
+	PL_PS	$2a04,upper
+	PL_PS	$10d2a,upper
+	PL_PS	$10f84,upper
 
-	PL_P	$aea2,.rd_trk
-	PL_P	$ad1e,.sv_trk
-	PL_P	$ac8c,.format
+	PL_P	$aea2,rd_trk
+	PL_P	$ad1e,sv_trk
+	PL_S	$ac8c,$D8-$8C
 
 	; fix SMC without flushing cache (tricky)
 
@@ -227,14 +259,101 @@ pl_main
 	PL_W	$CA68,$4E4F
 	PL_W	$CA72,$4E4F
 	PL_W	$CA7C,$4E4F
-
+    
 	PL_END
 
+pl_main_115
+	PL_START
+
+    PL_IFC1
+    PL_ELSE
+	PL_R	$0bc04			; skip manual protection
+    PL_ENDIF
+    
+	PL_B	$bcca,$60			; manual protection (cheat remains)
+	
+	PL_S	$026f0,$10	; skip vector overwrite
+
+	PL_PSS	$076f8,kb_routine,2
+
+    PL_IFBW
+	PL_PS	$02758,buttondelay_115
+    PL_ENDIF
+    PL_IFC3
+    PL_ELSE
+	PL_PSS	$0764a,bbusy,2
+    PL_PS   $06246,write_dmacon_d5
+    PL_ENDIF
+    
+	PL_B	$1621e,$60			; self check
+	PL_NOP	$0bc92,2			; allow return only
+
+
+	PL_R	$0aed2			; head -> #0
+	PL_R	$0af56			; headpos
+	PL_R	$0ae86			; head move
+	PL_R	$0af0c			; drive off
+
+	PL_PS	$029da,lower
+	PL_PS	$0a868,lower
+	PL_PS	$0ab7a,lower
+	PL_PS	$0ac30,lower
+
+	PL_PS	$029e4,upper
+	PL_PS	$10ce2,upper
+	PL_PS	$10f36,upper
+
+	PL_P	$0ae64,rd_trk
+	PL_P	$0ace0,sv_trk
+	PL_S	$0ac4e,$D8-$8C
+
+	; fix SMC without flushing cache (tricky)
+
+	PL_PS	$0c76e,store_ro_1
+	PL_S	$0c774,$C7D4-$C7B4	; skip SMC
+
+	PL_PS	$0c99e,store_ro_2
+	PL_S	$0c9a4,$CA22-$C9E4	; skip SMC
+
+	PL_W	$0c7da,$4E4E
+	PL_W	$0c7fa,$4E4E
+	PL_W	$0c80e,$4E4E
+	PL_W	$0c824,$4E4E
+	PL_W	$0c83a,$4E4E
+
+	PL_W	$ca72,$4E4F
+	PL_W	$caae,$4E4F
+	PL_W	$cac4,$4E4F
+	PL_W	$cadc,$4E4F
+	PL_W	$caf4,$4E4F
+	PL_W	$ca14,$4E4F
+	PL_W	$CA1e,$4E4F
+	PL_W	$CA28,$4E4F
+	PL_W	$CA32,$4E4F
+	PL_W	$CA3C,$4E4F
+    
+	PL_END
 
 ;	PL_PS	$c7ce,.smod1
 ;	PL_PS	$ca1c,.smod1	; there was a bug in SMC fix !
 
-.kb_routine
+write_dmacon_d5
+	MOVE.W	D5,_custom+dmacon		;: 33c500dff096
+	move.w  d0,-(a7)
+	move.w	#7,d0
+.bd_loop1
+	move.w  d0,-(a7)
+    move.b	$dff006,d0	; VPOS
+.bd_loop2
+	cmp.b	$dff006,d0
+	beq.s	.bd_loop2
+	move.w	(a7)+,d0
+	dbf	d0,.bd_loop1
+	;;;addq.l	#2,(a7)  harmful if not used with PSS!!
+	move.w	(a7)+,d0
+	rts
+    
+kb_routine
 	bset	#6,$BFEE01
 	movem.l	D0,-(A7)
 	moveq.l	#2,D0
@@ -255,14 +374,13 @@ pl_main
 
 ;--- buttonwait delay
 
-.button
+buttondelay_115
+	jsr	$8782
+    bra.b   buttondelay_all
+buttondelay_1572
 	jsr	$8786
-
+buttondelay_all
 	pushall
-
-	lea	button(pc),a0
-	tst.l	(a0)
-	beq.b	.bwbye
 
 	move.l	#$10000,d7
 
@@ -304,16 +422,20 @@ pl_main
 
 ;--- blitter wait
 
-.bbusy	btst	#14,$dff002
-	bne.b	.bbusy
+bbusy
+	MOVE.W	#$1c10,88(A0)		;0766e: 31400058
+	
+    btst	#6,$dff002
+.w
+    btst	#6,$dff002
+	bne.b	.w
 
-	subq	#1,$3708(a6)
-	jmp	$767c.w
+	rts
 
 
 ;--- switch to image 1
 
-.lower	move.l	a0,-(sp)
+lower	move.l	a0,-(sp)
 
 	lea	reqside(pc),a0
 	move.l	#1,(a0)
@@ -324,7 +446,7 @@ pl_main
 
 ;--- switch to image 2
 
-.upper	move.l	a0,-(sp)
+upper	move.l	a0,-(sp)
 
 	lea	reqside(pc),a0
 	move.l	#2,(a0)
@@ -335,7 +457,7 @@ pl_main
 
 ;--- single track reader
 
-.rd_trk
+rd_trk
 	pushall
 
 	move	d0,d1
@@ -353,7 +475,7 @@ pl_main
 
 ;--- single track saver
 
-.sv_trk	
+sv_trk	
 	pushall
 	move	d0,d1
 	lsr	#1,d1
@@ -371,7 +493,7 @@ pl_main
 
 ;--- skip drive access
 
-.format	
+format	
 	jmp	$acd8
 
 ; < D0: numbers of vertical positions to wait
@@ -396,8 +518,6 @@ reqside	dc.l	0	;	=
 
 tags	dc.l	WHDLTAG_BUTTONWAIT_GET
 button	dc.l	0
-	dc.l	WHDLTAG_CUSTOM1_GET
-custom1	dc.l	0
 	dc.l	0
 
 

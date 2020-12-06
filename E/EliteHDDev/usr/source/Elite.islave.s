@@ -11,13 +11,17 @@
 		incdir	Include:
 		include	RawDIC.i
 
+        IFD     BARFLY
 		OUTPUT	"Elite.islave"
 
 		IFND	.passchk
 		DOSCMD	"WDate  >T:date"
 .passchk
 		ENDC
+        ENDC
 
+
+        
 		SLAVE_HEADER
 		dc.b	1	; Slave version
 		dc.b	0	; Slave flags
@@ -25,9 +29,14 @@
 		dc.l	Text	; Pointer to the text displayed in the imager window
 
 		dc.b	"$VER:"
-Text		dc.b	"Elite imager V1.0 (insert/select twice the same disk)",10
+Text		dc.b	"Elite imager V1.1 (insert/select twice the same disk)",10
 		dc.b	"by JOTD on "
+	IFD BARFLY
 		INCBIN	"T:date"
+	ENDC
+	IFD	DATETIME
+		incbin	datetime
+	ENDC
 		dc.b	0
 		cnop	0,4
 
@@ -42,7 +51,7 @@ DSK_1		dc.l	DSK_2		; Pointer to next disk structure
 		dc.l	0		; Called before a disk is read
 		dc.l	0		; Called after a disk has been read
 
-TL_1		TLENTRY	000,078,$1600,SYNC_STD,DMFM_STD
+TL_1		TLENTRY	000,077,$1600,SYNC_STD,DMFM_STD
 		TLEND
 
 DSK_2		dc.l	0		; Pointer to next disk structure
@@ -57,6 +66,6 @@ DSK_2		dc.l	0		; Pointer to next disk structure
 		dc.l	0		; Called after a disk has been read
 
 
-TL_2		TLENTRY	000,078,$1600,SYNC_STD,DMFM_STD
+TL_2		TLENTRY	000,023,$1600,SYNC_STD,DMFM_STD
 		TLEND
 

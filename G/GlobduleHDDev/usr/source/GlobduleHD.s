@@ -12,6 +12,7 @@
 
 	INCDIR	Include:
 	INCLUDE	whdload.i
+	INCLUDE	whdmacros.i
 
 	IFD BARFLY
 	OUTPUT	Globdule.slave
@@ -29,7 +30,8 @@
 
 
 
-USE_FASTMEM
+;CHIP_ONLY
+
 CHIPMEMSIZE = $80000
 EXPMEMSIZE = $80000
 
@@ -39,10 +41,10 @@ _base
 		SLAVE_HEADER		;ws_Security + ws_ID
 		dc.w	10		;ws_Version
 		dc.w	WHDLF_Disk|WHDLF_NoError|WHDLF_EmulTrap	;ws_flags
-		IFD	USE_FASTMEM
-		dc.l	CHIPMEMSIZE		;ws_BaseMemSize
-		ELSE
+		IFD	CHIP_ONLY
 		dc.l	CHIPMEMSIZE+EXPMEMSIZE
+		ELSE
+		dc.l	CHIPMEMSIZE		;ws_BaseMemSize
 		ENDC
 		dc.l	0		;ws_ExecInstall
 		dc.w	start-_base	;ws_GameLoader
@@ -51,10 +53,10 @@ _base
 _keydebug	dc.b	$0		;ws_keydebug
 _keyexit	dc.b	$5D		;ws_keyexit = '*'
 _expmem	
-	IFD	USE_FASTMEM	
-	dc.l	EXPMEMSIZE			;ws_ExpMem
-	ELSE
+	IFD	CHIP_ONLY	
 	dc.l	0
+	ELSE
+	dc.l	EXPMEMSIZE			;ws_ExpMem
 	ENDC
 		dc.w	_name-_base		;ws_name
 		dc.w	_copy-_base		;ws_copy
@@ -68,14 +70,24 @@ _expmem
 
 
 DECL_VERSION:MACRO
-	dc.b	"1.1-B"
+	dc.b	"1.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
 	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
+	ENDC
 	ENDM
+	dc.b	"$","VER: slave "
+	DECL_VERSION
+	dc.b	0
 
 _name		dc.b	"Globdule"
+    IFD CHIP_ONLY
+    dc.b    " (DEBUG/CHIP mode)"
+    ENDC
 		dc.b	0
 _copy		dc.b	"1993 Psygnosis",0
 _info		dc.b	"adapted & fixed by Mr Larmer & JOTD",10,10
@@ -84,12 +96,7 @@ _info		dc.b	"adapted & fixed by Mr Larmer & JOTD",10,10
 		dc.b	0
 		even
 
-; version xx.slave works
 
-	dc.b	"$","VER: slave "
-	DECL_VERSION
-	dc.b	$A,$D,0
-	CNOP	0,4
 
 ;	dc.b	'$VER: Globdule HD by Mr.Larmer/Wanted Team - V1.0 (07.01.99)',0
 ;	CNOP 0,2
@@ -98,6 +105,7 @@ _info		dc.b	"adapted & fixed by Mr Larmer & JOTD",10,10
 start	;	A0 = resident loader
 ;======================================================================
 
+        ;;move.w  #0,$DFF1DC   ; force NTSC
 		lea	_resload(pc),a1
 		move.l	a0,(a1)			;save for later use
 
@@ -150,20 +158,20 @@ start	;	A0 = resident loader
 		rts
 
 get_expmem
-	IFD	USE_FASTMEM	
-	move.l	_expmem(pc),d0
-	ELSE
+	IFD	CHIP_ONLY	
 	move.l	#CHIPMEMSIZE,d0
+	ELSE
+	move.l	_expmem(pc),d0
 	ENDC
 	rts
 
 pl_boot_pal
 		PL_START
 		PL_W	$10E,$6012		; skip set cache
-		PL_W	$12C,$4E71		; skip clear zero page
+		PL_NOP	$12C,2		; skip clear zero page
 		PL_W	$140,$6006		; skip wrong access to CIA
 
-		PL_W	$226,$4E71
+		PL_NOP	$226,2
 		PL_PS	$228,patch_pal
 
 		PL_P	$252,Load
@@ -208,7 +216,6 @@ patch1_ok
 
 patch1
 	movem.l	d0-d1/a0-a2,-(a7)
-
 	bsr	get_expmem
 	move.l	_resload(pc),a2
 	move.l	d0,a0
@@ -232,7 +239,7 @@ patch1
 pl_pal
 	PL_START
 	PL_W	$299C,$6034		; skip manual protection
-;	PL_R	$1130			; skip country check
+	PL_PS   $2030,kb_hook
 	PL_END
 
 
@@ -240,8 +247,24 @@ pl_ntsc
 	PL_START
 	PL_W	$29EA,$6034		; skip manual protection
 	PL_R	$1130			; skip country check
+	PL_PS   $207e,kb_hook
 	PL_END
 
+kb_hook:
+    movem.l d1,-(a7)
+    ror.b   #1,d1
+    not.b   d1
+    cmp.b   _keyexit(pc),d1
+    bne.b   .noquit
+	pea	TDREASON_OK
+	move.l	_resload(pc),-(a7)
+	addq.l	#resload_Abort,(a7)
+	rts    
+.noquit
+    movem.l (a7)+,d1
+    MOVE.B	#$40,3584(A0)
+    rts
+    
 ;--------------------------------
 
 Load
