@@ -1,0 +1,63 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER
+ EXPRESS OR IMPLIED, STATUTORY OR OTHERWISE.
+ THE ENTIRE RISK AS TO USE, RESULTS AND PERFORMANCE OF THE PACKAGE IS
+ ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE TO BE DEFECTIVE, YOU
+ ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING, REPAIR OR OTHER
+ REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY
+ DAMAGE CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE
+ OWNER OR A THIRD PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF
+ DAMAGE.
+ 
+ That install applies to "Video Kid" © 1992 Gremlin
+ 
+ That install requires WHDLoad and RawDIC to be in the path.
+ Both can be found in the whdload package.
+ To install from a different drive than DF0: select Expert as
+ installation mode.
+ 
+ You need 0.5 MB ChipMem and 1.0 MB OtherMem.
+ You can quit the game by pressing F10 (key can be changed with
+ Tooltype "QuitKey=")
+ 
+ 
+ if you have problems with this installation please report them via
+ the Bug-Report-Form which can be accessed on 
+ http://www.whdload.de or create a mantis issue directly
+ at http://mantis.whdload.de
+ 
+ for full WHDLoad package and other installs refer to:
+     http://www.whdload.de
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+ 
+ Version 2.0 (13.12.2020) done by JOTD:
+ - joypad controls (issue #0004900)
+ - adapted to whdload v17
+ - gfx glitches fixed on fast machines (racing the beam issues)
+ - quitkey on 68000 machines
+ - fixed keyboard read routine
+ - protection completely skipped
+ - trainer x3 (adapted from MrLarmer hardcoded trainer)
+ - using 512k chip memory instead of 1MB
+ - now using rawdic islave instead of patcher imager
+ - levelskip with help (or fwd+green)
+ - manual added
+ 
+ Version 1.0 (01.10.1998) done by Mr.Larmer/Wanted Team:
+ - protection removed
+ - fast decrunching files (Byte Killer highly optimized)
+ 
+ Thanx to:
+ -  Chris Vella for original disk images.
+
+joypad controls:
+
+* blue button: bomb (SPACE)
+* play: pause (P)
+* rev+fwd: quits current game (ESC)
+* rev+fwd+yellow: quits to workbench (QUITKEY)
+* fwd+green: skips current level (HELP)
+
+Supported version: SPS2555
