@@ -8,7 +8,7 @@
  CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
  PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
- This install applies to "Banshee" Â© 1992 Core Design.
+ This install applies to "Banshee" © 1992 Core Design.
 
  This install requires WHDLoad to be in the path. It can be found in the
  WHDLoad package.
@@ -60,14 +60,14 @@
  - second button bug fixed, now works everytime for loops
  - 5 access faults removed
  - copylock protection removed (floppy)
- - CDÂ³Â² version supported
+ - CD³² version supported
  - original quit key (ESC during menu) still works
  - hiscore save
  - docfile included
  - cheat file included
  - rewritten readme file
  - source code included
- - fixed keyboard in the CDÂ³Â² version 
+ - fixed keyboard in the CD³² version 
    (now pause does not quit the current game anymore)
 
  version 2.x
@@ -76,6 +76,6 @@
  version 1.x
  - JST releases
 
- Notes: if you had previously installed the CDÂ³Â² version, either reinstall it or
+ Notes: if you had previously installed the CD³² version, either reinstall it or
  run XFDDecrunch on the file "data/picture.exe", in order to allow the game to run
  with caches.

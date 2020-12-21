@@ -8,7 +8,7 @@
  CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
  PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
- This install applies to "Fire And Ice" Â© 1990-1994 Graftgold
+ This install applies to "Fire And Ice" © 1990-1994 Graftgold
 
  This install requires WHDLoad to be in the path. It can be found in the
  WHDLoad package.
@@ -20,7 +20,7 @@
  doesn't like 32-bit memory at all)
  It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
 
- CDÂ³Â² version:
+ CD³² version:
 
  The installed program requires 2.0 MB ChipMem and 1.0 MB OtherMem.
  It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
@@ -92,7 +92,7 @@
  - source code cleanup & working with latest kickcd32
 
  version 2.1 (2007)
- - CDÂ³Â² version install fixed, no longer requires lowlevel.library,
+ - CD³² version install fixed, no longer requires lowlevel.library,
    keyboard now works 100%, so does joypad & joystick emulation.
  - You can select J-8 controller (joypad) if you use a 2-button joystick
    so 2nd button works as the blue button (jump)
@@ -103,10 +103,10 @@
  - reworked readme file (I think this is the final release of the slave!)
 
  version 2.0
- - CDÂ³Â² version uses lowlevel.library & kick31 emulation, removed OSEmu stuff
+ - CD³² version uses lowlevel.library & kick31 emulation, removed OSEmu stuff
    (there are 2 versions of the slave, one needing lowlevel and the other not, but
    with buggy keyboard & joystick controls)
- - source code included (including the CDÂ³Â² emulation stuff)
+ - source code included (including the CD³² emulation stuff)
  - icons added (by Frank)
  - document file added
 
@@ -115,7 +115,7 @@
 
  version 1.2 (xx.05.2001) done by JOTD/Harry
  - first WHDLoad version
- - CDÂ³Â² version support by Harry. Hiscore & settings are saved to "FireNIce.nvd" dir
+ - CD³² version support by Harry. Hiscore & settings are saved to "FireNIce.nvd" dir
  - 2 floppy versions supported
  - RawDIC slave adapted from Ralf diskrip program
 
@@ -137,9 +137,9 @@ CREDITS:
   JOTD: adaptation to v1.05
   JOTD: written a RawDIC slave
 
-- CDÂ³Â² version:
+- CD³² version:
   Harry: work on OSEmu
-  JOTD: work on OSEmu, CDÂ³Â² specific parts (lowlevel.library, etc...)
+  JOTD: work on OSEmu, CD³² specific parts (lowlevel.library, etc...)
   Harry: work on OSEmu, nonvolatile library, first install version, using OSEmu.
   JOTD: rewritten from scratch for kickemu 3.1,
   uses on-disk lowlevel.library now. NTSC tooltype runs the NTSC version.

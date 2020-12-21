@@ -64,12 +64,21 @@ slv_Version	= 16
 slv_Flags	= WHDLF_NoError|WHDLF_Examine
 slv_keyexit	= $5D	; num '*'
 
-; whd/kickemu magic I don't remember why this is needed BEFORE include
-; without it, game does not start. specific to Lucasgames (MI2 has the same issue)
+; whd/kickemu magic
+; without it, game does not start because it requires the
+; executable name to match (and not whdboot.exe)
+; it's specific to Lucasgames (MI2 has the same issue)
+
 BOOTFILENAME:MACRO
 	dc.b	"atlantis.exe"
 	ENDM
-
+	; Vasm makes a difference between macro and equate
+	; barfly doesn't, so IFD BOOTFILENAME works on BARFLY
+	; but not on vasm. The following trick makes the source build
+	; on both assemblers
+	IFND BARFLY
+BOOTFILENAME = 1
+	ENDC
 	include	kick13.s
 
 ;============================================================================
@@ -80,12 +89,19 @@ BOOTFILENAME:MACRO
 
 
 DECL_VERSION:MACRO
-	dc.b	"2.2"
+	dc.b	"2.3"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
 	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
+	ENDC
 	ENDM
+	dc.b	"$","VER: slave "
+	DECL_VERSION
+	dc.b	0
 
 df0name:
 	dc.b	"df0",0
@@ -112,10 +128,6 @@ args		dc.b	10
 args_end
 	dc.b	0
 
-; version xx.slave works
-
-	dc.b	"$","VER: slave "
-	DECL_VERSION
 	EVEN
 
 _bootdos
@@ -133,7 +145,21 @@ _bootdos
 	;get tags
 		lea	(tag,pc),a0
 		jsr	(resload_Control,a2)
-	
+
+    ; create iq points file if non existing or empty
+    ; non-existing: makes game swap like crazy at some points
+    ; empty: makes game display "cannot allocate ... shit at startup
+    
+        lea iq_1(pc),a0        
+        bsr create_iq_file
+        lea iq_2(pc),a0        
+        bsr create_iq_file
+        lea iq_3(pc),a0        
+        bsr create_iq_file
+        lea iq_4(pc),a0        
+        bsr create_iq_file
+
+    
 	;open doslib
 		lea	(_dosname,pc),a1
 		move.l	(4),a6
@@ -163,7 +189,20 @@ _quit		pea	TDREASON_OK
 		move.l	(_resload,pc),a2
 		jmp	(resload_Abort,a2)
 
-
+create_iq_file
+        move.l  (_resload,pc),a2
+        move.l a0,a3
+        jsr (resload_GetFileSize,a2)
+        tst.l   d0
+        bne.b   .notempty
+        ; 0 or empty file: create it now or get problems later
+        lea iq_points(pc),a1
+        move.l  a3,a0
+        move.l  #iq_points_end-iq_points,d0
+        jsr (resload_SaveFile,a2)
+.notempty
+        rts
+    
 ; < d1 - file pos
 ; < a0 - name
 ; < a1 - buffer
@@ -463,6 +502,29 @@ _deletefile:
 tag		dc.l	WHDLTAG_CUSTOM1_GET
 custom1		dc.l	0
 		dc.l	0
+
+iq_1
+    dc.b    "iq-points",0
+iq_2
+    dc.b    "iq-punkte",0
+iq_3
+    dc.b    "points-IQ",0
+iq_4
+    dc.b    "punti-iq",0
+    
+iq_points:
+	dc.b	$aa,$00,$00,$00,$66,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64
+	dc.b	$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64
+	dc.b	$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64
+	dc.b	$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64
+	dc.b	$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64
+	dc.b	$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64
+	dc.b	$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64
+	dc.b	$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64
+	dc.b	$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64
+	dc.b	$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64
+	dc.b	$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$64,$00
+iq_points_end:
 
 ;============================================================================
 

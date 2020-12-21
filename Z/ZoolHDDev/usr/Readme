@@ -8,7 +8,7 @@
  CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
  PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
- This install applies to "Zool" Â© 1991-1993 Gremlin Software
+ This install applies to "Zool" © 1991-1993 Gremlin Software
 
  This install requires WHDLoad and RawDIC to be in the path. Both can be found
  in the WHDLoad package.
@@ -51,12 +51,12 @@ History:
 
 version 2.0 (06.01.2019) done by JOTD:
 
-- AGA/CDÂ³Â²: Fixed self-modifying code so gfx aren't trashed anymore with fast machines or UAE JIT (issue #0004011)
-- AGA/CDÂ³Â²: access fault removed (when returning from secret level)
+- AGA/CD³²: Fixed self-modifying code so gfx aren't trashed anymore with fast machines or UAE JIT (issue #0004011)
+- AGA/CD³²: access fault removed (when returning from secret level)
 - AGA: access fault fixed
-- CDÂ³Â²: reworked controls, choice of more "classical" controls and 2-button
-- CDÂ³Â²: trainer: infinite energy/time
-- CDÂ³Â²: original keys re-enabled: 1,2,3,4, see below
+- CD³²: reworked controls, choice of more "classical" controls and 2-button
+- CD³²: trainer: infinite energy/time
+- CD³²: original keys re-enabled: 1,2,3,4, see below
 - AGA: trainer: infinite lives, original cheat keys activated (1,2,3,4)
 - ECS: fully rewritten slave, merged amiga format & MFM track versions
 - fixed SNOOP bugs for ECS & AGA versions
@@ -72,15 +72,15 @@ versions 1.x (1996-?) done by JOTD:
 - Convenient installer script letting you choose between the versions
 - Nice RawDIC imager by Codetapper (he made a slave for one version of the
   game but I convinced him to let me release my megapack for this game :))
-- CDÂ³Â² version: Buggy country check removed (can be run in PAL or NTSC and on UAE now :))
-- CDÂ³Â² version: Reworked controls so 2 button joysticks can be used
-- CDÂ³Â², 3 ECS, 1 AGA and 1 dostrack Amigafun coverdisk versions supported.
+- CD³² version: Buggy country check removed (can be run in PAL or NTSC and on UAE now :))
+- CD³² version: Reworked controls so 2 button joysticks can be used
+- CD³², 3 ECS, 1 AGA and 1 dostrack Amigafun coverdisk versions supported.
 - Less memory demanding. Runs on 512K chipmem amigas (with at least 2MB of fastmem)
 - Docfile included
 
 Controls:
 
-- Set CUSTOM1=1 to enable CDÂ³Â² joypad controls or original 1-button:
+- Set CUSTOM1=1 to enable CD³² joypad controls or original 1-button:
   * Play/Pause/P-key: pause/resume/options
   * Blue button acts like green button (so 2 button joysticks can be used too)
   * ESC: game over

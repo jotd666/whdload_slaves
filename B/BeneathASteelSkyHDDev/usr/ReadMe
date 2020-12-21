@@ -8,9 +8,9 @@
  CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
  PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
- This install applies to "Beneath A Steel Sky" Â© 1993-1994 Virtual Theatre/Virgin.
+ This install applies to "Beneath A Steel Sky" © 1993-1994 Virtual Theatre/Virgin.
 
- This install is designed for the floppy versions (15 disks) & CDÂ³Â² version.
+ This install is designed for the floppy versions (15 disks) & CD³² version.
   
  This install requires WHDLoad to be in the path. It can be found in the
  WHDLoad package.
@@ -31,7 +31,7 @@
  directory as the kickstart image. It can be found in the archive 
  "util/boot/skick346.lha" on aminet.
 
- CDÂ³Â² version:
+ CD³² version:
 
  The installed program requires 2.0 MB ChipMem and 1.0 MB OtherMem (15MB with PRELOAD,
  100 MB (!) with PRELOAD & speech on)
@@ -60,7 +60,7 @@
  and	aminet:game/patch/
 
   Version 2.1 (03.02.2019) still done by JOTD:
-  - fixed a bug in the sound replay (CDÂ³Â²): program is now loaded in fast memory,
+  - fixed a bug in the sound replay (CD³²): program is now loaded in fast memory,
     but some sound routine relied on the fact that it was in chipmem (music & sfx worked,
 	but the "beep" sound at start was funny, and there were also parasite sounds). It was some
 	hard work to find this. Thanks to Toni for the new "wrong memory write to DMA registers" in WinUAE
@@ -69,7 +69,7 @@
   
   Version 2.0 (06.02.2005)
   - reworked for WHDLoad v16 & kickemu, smaller slave, loads faster, less OS swaps
-  - CDÂ³Â² version support (Thanks Bert for ISO), with program loading in fast memory (fast load)
+  - CD³² version support (Thanks Bert for ISO), with program loading in fast memory (fast load)
     (hard work because I had to relocate some chip-only data in chip, check the source!)
  - reworked readme & install script
 

@@ -8,7 +8,7 @@
  CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
  PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
- This install applies to "The Speris Legacy" floppy & CDÂ³Â² Â© 1996 Team 17
+ This install applies to "The Speris Legacy" floppy & CD³² © 1996 Team 17
 
  Thanks to Tony Aksnes & Galahad for providing the original diskimages of the
  floppy version.
@@ -46,12 +46,12 @@
 
  version 1.0-B (08.01.03)
  - fixed install script (installed only 3 disks out of 4 for the floppy version
-   and asked for the wrong CD label on the CDÂ³Â² version). Thanks to Tony for
+   and asked for the wrong CD label on the CD³² version). Thanks to Tony for
    reporting it.
 
  version 1.0 (05.01.03) done by JOTD:
  - initial release
- * floppy & CDÂ³Â² versions supported (same slave)
+ * floppy & CD³² versions supported (same slave)
  * password protection removed
  * floppy disk accesses removed (load/save to HD  & format disabled)
  * VBR stuff removed

@@ -8,16 +8,16 @@
  CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
  PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
- This install applies to "Syndicate" Â© 1993/1994 Bullfrog
+ This install applies to "Syndicate" © 1993/1994 Bullfrog
 
  This install requires WHDLoad to be in the path. It can be found in the
  WHDLoad package.
 
- The CDÂ³Â² installed program requires 2.0 MB ChipMem and 1.5 MB OtherMem.
+ The CD³² installed program requires 2.0 MB ChipMem and 1.5 MB OtherMem.
  The floppy installed program requires 0.5 MB ChipMem and 1.0 MB OtherMem.
  It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
 
- The CDÂ³Â² game requires an installed A1200 Kickstart 3.1 image.
+ The CD³² game requires an installed A1200 Kickstart 3.1 image.
  The kickstart image must be located in the directory "Devs:Kickstarts" and
  must be named "kick40068.A1200". The image can be extracted from a A1200 with
  tools like 'GrabKick' or similar which can be found on aminet.
@@ -50,12 +50,12 @@
  and	aminet:game/patch/
 
  version 2.4 (01.04.2020) done by JOTD:
- - CDÂ³Â² version: (really) no more error because of joypad or mouse not found (improved lowlevel lib emulation) (issue #0001054)
- - CDÂ³Â² version: fixed access fault
+ - CD³² version: (really) no more error because of joypad or mouse not found (improved lowlevel lib emulation) (issue #0001054)
+ - CD³² version: fixed access fault
  
  version 2.3 (15.03.2006)
  - manual & tips added
- - "mouse or joypad required" message obliterated in the CDÂ³Â² version (got rid
+ - "mouse or joypad required" message obliterated in the CD³² version (got rid
    of disk lowlevel.library and in the custom implementation the joystick is
    never an option)
 
@@ -71,7 +71,7 @@
 
  version 2.0 (15.10.03)
  - now uses kickstart images
- - CDÂ³Â² version supported, access fault fixed on this version
+ - CD³² version supported, access fault fixed on this version
  - source code included
 
  version 1.1 (11.11.01) done by JOTD:

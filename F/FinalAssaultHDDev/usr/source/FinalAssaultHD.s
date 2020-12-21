@@ -74,7 +74,7 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.1"
+	dc.b	"1.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -91,7 +91,7 @@ DECL_VERSION:MACRO
 assign1:
 	dc.b	"Final Assault",0
 
-slv_name		dc.b	"Final Assault / Bivouac"
+slv_name		dc.b	"Final Assault / Bivouac / Chamonix Challenge"
 	IFD	CHIP_ONLY
 	dc.b	" (DEBUG/CHIP MODE)"
 	ENDC
@@ -216,7 +216,7 @@ new_level3_interrupt
 patch_main
 	bsr	get_version
 	lea	patch_table(pc),a1
-    cmp.l   #2,d0
+    cmp.l   #3,d0
     beq.b   .english_encrypted
 	add.w   d0,d0
     lea patch_table(pc),a0
@@ -287,6 +287,7 @@ us_encrypted_start_\1:
 patch_table:
     dc.w    pl_english-patch_table
     dc.w    pl_french-patch_table
+    dc.w    pl_chamonix_2281-patch_table
 
 pl_english
     PL_START
@@ -317,6 +318,21 @@ pl_french
     PL_PSS   $0bd90,after_title_french,4
     PL_ENDIF
     PL_END
+    
+pl_chamonix_2281
+    PL_START
+    PL_PSS  $0e3ba,dma_sound_wait_1,2
+    PL_PSS  $0e3cc,dma_sound_wait_2,2
+    PL_IFC5
+    PL_ELSE
+    PL_PSS  $016b8,speed_regulation_game_chamonix,2
+    PL_PS   $0c1c2,speed_regulation_preparation_chamonix
+    PL_PS   $0c29e,speed_regulation_preparation_chamonix
+    PL_ENDIF
+    PL_IFBW
+    PL_PSS   $0be58,after_title_chamonix,4
+    PL_ENDIF
+    PL_END
 
 save_first_segment    
     lea first_segment(pc),a2
@@ -332,6 +348,12 @@ save_first_segment
 after_title_english
 	PEA	voies_string(PC)		;0bd90: 487a05e4
 	JSR	-32110(A4)		;0bd94: 4eac8282
+	ADDQ.W	#4,A7			;0bd98: 584f
+    bra.b   wait_both_fire
+    
+after_title_chamonix
+	PEA	voies_string(PC)		;0bd90: 487a05e4
+	JSR	-32118(A4)		;0bd94: 4eac8282
 	ADDQ.W	#4,A7			;0bd98: 584f
     bra.b   wait_both_fire
    
@@ -370,6 +392,28 @@ speed_regulation_game_french
     
     ; original game code
 	TST.W	-11374(A4)		;016d6: 4a6cd3c6
+    BEQ.W	.out		;016da: 660001aa
+    add.l   #$886-$6DC,(a7) ; emulate BNE
+.out
+    rts
+ 
+speed_regulation_preparation_chamonix
+    movem.l d1,-(a7)    
+    moveq.l #2,d1
+    bsr vbl_reg
+    movem.l (a7)+,d1
+	MOVE.B	-11080(A4),D3		;0c386: 162cd4c0
+	EXT.W	D3			;0c38a: 4883
+    rts
+   
+speed_regulation_game_chamonix
+    movem.l d1,-(a7)    
+    moveq.l #1,d1
+    bsr vbl_reg
+    movem.l (a7)+,d1
+    
+    ; original game code
+	TST.W	-11330(A4)		;016d6: 4a6cd3c6
     BEQ.W	.out		;016da: 660001aa
     add.l   #$886-$6DC,(a7) ; emulate BNE
 .out
@@ -438,6 +482,8 @@ get_version:
 	cmp.l	#88524,d0
 	beq.b	.us_encrypted
 
+	cmp.l	#85428,d0
+	beq.b	.chamonix_noprotection
 
 	pea	TDREASON_WRONGVER
 	move.l	_resload(pc),-(a7)
@@ -450,8 +496,11 @@ get_version:
 .french_noprotection
 	moveq	#1,d0
 	bra.b	.out
-.us_encrypted
+.chamonix_noprotection
 	moveq	#2,d0
+	bra.b	.out
+.us_encrypted
+	moveq	#3,d0
 	bra	.out
 .out
 	movem.l	(a7)+,d1/a1

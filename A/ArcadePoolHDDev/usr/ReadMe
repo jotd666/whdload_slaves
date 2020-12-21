@@ -8,7 +8,7 @@
  CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
  PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
- This install applies to "Arcade Pool" Â© 1994 Team 17.
+ This install applies to "Arcade Pool" © 1994 Team 17.
 
  This install requires WHDLoad to be in the path. It can be found in the
  WHDLoad package.
@@ -28,7 +28,7 @@
  directory as the kickstart image. It can be found in the archive 
  "util/boot/skick345.lha" on aminet.
 
- CDÂ³Â² slave:
+ CD³² slave:
 
  The game requires an installed A1200 or A4000 Kickstart 3.1 image.
  The kickstart image must be located in the directory "Devs:Kickstarts" and
@@ -54,16 +54,16 @@
  and	aminet:game/patch/
 
  version 3.0 (01.07.06) done by JOTD:
- - 2 floppy versions and CDÂ³Â² version supported
+ - 2 floppy versions and CD³² version supported
  - rewritten for KickEmu (no longer uses OSEmu)
  - nice icon from exoticons
  - patched to support caches/fastmem on 68060
- - saves/loads data to disk (even on CDÂ³Â² version)
+ - saves/loads data to disk (even on CD³² version)
  - instructions included
  - source code included
 
  version 2.2
- - CDÂ³Â² version added, works on 68060 with all caches, saves prefs to HD
+ - CD³² version added, works on 68060 with all caches, saves prefs to HD
 
  version 2.1
  - fixed ECS slave, reworked install script

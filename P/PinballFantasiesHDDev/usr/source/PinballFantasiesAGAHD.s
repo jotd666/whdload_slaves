@@ -82,7 +82,7 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"3.1"
+	dc.b	"3.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -208,14 +208,21 @@ _bootdos
     movem.l a0,-(a7)
     jsr (resload_GetFileSize,a2)
     lea _version(pc),a0
-    cmp.l   #6732,d0
-    bne.b   .noaga
+    cmp.l   #6724,d0
+    bne.b   .noaga_47
+; aga SPS0047
     move.l  #0,(a0)
     bra.b   .cont
-.noaga
+.noaga_47    
+    cmp.l   #6732,d0
+    bne.b   .noaga_2025
+; aga SPS2025
+    move.l  #1,(a0)
+    bra.b   .cont
+.noaga_2025
     cmp.l   #4348,d0
     bne.b   .nocd32
-    move.l  #1,(a0)
+    move.l  #2,(a0)
     bra.b   .cont
 .nocd32    
 	pea	TDREASON_WRONGVER
@@ -283,6 +290,7 @@ msb_7f
 	
 patch_table:
     dc.w    _pl_aga-patch_table
+    dc.w    _pl_aga-patch_table
     dc.w    _pl_cd32-patch_table
 		
 
@@ -305,7 +313,7 @@ _pl_aga
 _pl_cd32:
 	PL_START
     PL_L    $3ae,$4E717000      ; VBR => 0
-    PL_IFC3
+    PL_IFC1
     PL_NOP  $5B8,4
     PL_ELSE
     PL_PS   $5a8,_patch_intro

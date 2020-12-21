@@ -8,7 +8,7 @@
  CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
  PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
- This install applies to "Pirates/Pirates Gold CDÂ³Â²" Â© 1987-1993 Microprose.
+ This install applies to "Pirates/Pirates Gold CD³²" © 1987-1993 Microprose.
 
  This install requires WHDLoad to be in the path. It can be found in the
  WHDLoad package.
@@ -29,7 +29,7 @@
  directory as the kickstart image. It can be found in the archive 
  "util/boot/skick345.lha" on aminet.
 
- * CDÂ³Â²/unofficial AGA version *
+ * CD³²/unofficial AGA version *
 
  The installed program requires 1.0 MB ChipMem and 2.0 MB OtherMem.
 
@@ -62,7 +62,7 @@
 
  version 1.4 (30.11.2004)
  - rewritten installs for WHDLoad v16
- - unofficial AGA version (actually floppified CDÂ³Â² version) support
+ - unofficial AGA version (actually floppified CD³² version) support
  - reworked install script & readme
  - fixed access fault while quitting game in ECS version
 
@@ -77,12 +77,12 @@
  - instructions included
 
  version 1.1 (2003)
- - really supports original CDÂ³Â² version, and german support
+ - really supports original CD³² version, and german support
  - install script only installs required files, and not the huge anims
  - runs german executable if language is set to german in the workbench
 
  version 1.0 (xx.xx.2002) done by JOTD:
- - initial release, CDÂ³Â² only
+ - initial release, CD³² only
  - access fault fixed
  - source code included
  - joypad emulated with function keys

@@ -8,7 +8,7 @@
  CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
  PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
- This install applies to "The Humans" & "Human Race - Jurassic Levels" Â© 1992 Imagitec Design.
+ This install applies to "The Humans" & "Human Race - Jurassic Levels" © 1992 Imagitec Design.
 
  Floppy version:
 
@@ -19,7 +19,7 @@
  The installed program requires 1.0 MB ChipMem and 0.5 MB OtherMem.
  It can be quit by pressing '*' (key can be changed with Tooltype "QuitKey=").
 
- CDÂ³Â² version:
+ CD³² version:
 
  - requires 2.0 MB ChipMem and 0.5 MB OtherMem.
  - It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
@@ -61,7 +61,7 @@
  - 2 other versions supported (including Jurassic Levels)
 
  version 1.3 (05.03.05) done by JOTD:
- - CDÂ³Â² version supported (Humans 1 & 2):
+ - CD³² version supported (Humans 1 & 2):
      * gfx errors fixed (blitter waits)
      * intro fixed (by rebooting just after it because of memory problem)
      * CUSTOM1=1 skips introduction

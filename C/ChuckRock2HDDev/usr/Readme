@@ -8,7 +8,7 @@
  CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
  PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
- This install applies to "Chuck Rock 2 - Son Of Chuck" floppy/cdÂ³Â² Â© 1993 Core Design
+ This install applies to "Chuck Rock 2 - Son Of Chuck" floppy/cd³² © 1993 Core Design
 
  This install requires WHDLoad and DIC (floppy install only) to be in the path.
  Both can be found in the WHDLoad package.
@@ -17,7 +17,7 @@
  The installed program requires 0.5 MB ChipMem and 1.0 MB OtherMem.
  It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
 
- This installer requires the Chuck Rock 2 original CDÂ³Â² or Chuck Rock 2 floppies (2).
+ This installer requires the Chuck Rock 2 original CD³² or Chuck Rock 2 floppies (2).
 
  If you have problems with this installation please try and get a newer
  version of this package from the WHDLoad WWW-Page. If that doesn't help try
@@ -60,7 +60,7 @@
  - slave revision bumped to 2.1
 
  version 2.0-B (02.09.2003)
- - fixed install scripts for both floppy & CDÂ³Â² versions
+ - fixed install scripts for both floppy & CD³² versions
 
  version 2.0 (10.08.2003) done by JOTD
  - Icons by Exoticons/Frank/Chris

@@ -8,12 +8,12 @@
  CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
  PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
- This install applies to "Fields Of Glory" Â© 1992 Microprose.
+ This install applies to "Fields Of Glory" © 1992 Microprose.
 
  This install requires WHDLoad to be in the path. It can be found in the
  WHDLoad package.
 
- CDÂ³Â²  : The installed program requires 1.0 MB ChipMem and 1.0 MB OtherMem.
+ CD³²  : The installed program requires 1.0 MB ChipMem and 1.0 MB OtherMem.
  Floppy: The installed program requires 0.5 MB ChipMem and 1.0 MB OtherMem.
 
  It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
@@ -44,5 +44,5 @@
  - initial release
  - floppy version: access fault removed when using fast memory
  - floppy version: manual protection removed (taken from a crack)
- - CDÂ³Â² version: savegames are stored in "data/FOG.nvd"
+ - CD³² version: savegames are stored in "data/FOG.nvd"
  - icons by Exoticons

@@ -37,12 +37,11 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 1.1 (xx.08.2020) done by JOTD:
+ version 1.1 (xx.yy.202?) done by JOTD:
  - 2 versions supported (SPS160 and another one)
  - protection REALLY removed, no need for LockPick, it was trivial
  - CUSTOM1 bit 0 set: skips first part (car race)
  - TODO (v2)/TOTEST ALL LEVELS: CUSTOM1 bit 1 set: infinite lives
- - TODO (v2) fail: kickreboot (forcer à 5)
  - adapted to new kickemu
  - changed from diskimages to real files (needs reinstalling)
  

@@ -53,6 +53,10 @@
 
 History
 
+ version 3.2 (08.12.2020) done by JOTD:
+ - re-added support for AGA version SPS0047 (issue #0004895)
+ - fixed wrong skip intro custom option (CD32)
+ 
  version 3.1 (05.12.2020) done by JOTD:
  - Highscores are properly saved in the "nvram" file, using Bert new
    nonvolatile emulation

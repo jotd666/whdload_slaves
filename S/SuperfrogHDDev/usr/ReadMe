@@ -8,7 +8,7 @@
  CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
  PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
- This install applies to "Superfrog" Â© 1993/1994 Team 17 - 3 disks/CD32.
+ This install applies to "Superfrog" © 1993/1994 Team 17 - 3 disks/CD32.
  
  This install requires WHDLoad to be in the path. It can be found in the
  WHDLoad package.
@@ -65,7 +65,7 @@ version 1.0: (03-May-2001)
 - Load/Save high score menu options have been disabled (disk version)
 - Compatible with JST disk images (rename them to Disk.x)
 - Intro installed separately
-- All O/S code removed in CDÂ³Â² version (no need for OSEmu!)
+- All O/S code removed in CD³² version (no need for OSEmu!)
 - ATN! decruncher relocated to fast memory (x3)
 - Snoop bugs fixed (move.l #$ffffffff,$dff084)
 - Access faults in Project F fixed (x8)

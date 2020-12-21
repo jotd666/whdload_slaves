@@ -67,16 +67,17 @@ SETPATCH
 ;STACKSIZE = 10000
 BOOTDOS
 ;;CBDOSLOADSEG = 1
+NO68020
 
 ;============================================================================
 
-slv_Version	= 16
+slv_Version	= 17
 slv_Flags =	WHDLF_NoError|WHDLF_Examine
 slv_keyexit =	$5D			;ws_keyexit = F10
 
 ;============================================================================
 
-	INCLUDE	kick31.s	; 13 also works but sound is strange
+	INCLUDE	kick13.s	; 13 also works but sound is strange
 
 ;============================================================================
 
@@ -84,16 +85,20 @@ slv_keyexit =	$5D			;ws_keyexit = F10
 	DOSCMD	"WDate  >T:date"
 	ENDC
 DECL_VERSION:MACRO
-	dc.b	"2.0"
+	dc.b	"1.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
 	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
+	ENDC
 	ENDM
-
 	dc.b	"$","VER: slave "
 	DECL_VERSION
-	dc.b	$A,$D,0
+	dc.b	0
+
 
 _assign1
 	dc.b	"Defender_2",0
@@ -106,15 +111,16 @@ slv_name		dc.b	"Defender Of The Crown 2 CD³²/CDTV"
 	ENDC
 			dc.b	0
 slv_copy		dc.b	"1993 Commodore Electronics",0
-slv_info		dc.b	"adapted & fixed by JOTD",10,10
-			dc.b	"Set CUSTOM1=1 to force english language",10
-			dc.b	"Set CUSTOM2 to force another language",10
-			dc.b	"(see README for details)",10
+slv_info		dc.b	"adapted & fixed by JOTD",10
 			dc.b	10,"Version "
 		DECL_VERSION
 		dc.b	0
 slv_CurrentDir:
 	dc.b	"data",0
+slv_config		
+	dc.b	"C1:B:force english language;"
+	dc.b	"C2:L:language:auto,english,english,german,french,spanish,italian;"
+	dc.b	0	
 
 ;_joymouse
 ;	dc.b	"joymouse",0
@@ -167,7 +173,7 @@ _cb_dosLoadSeg
 _bootdos
 	clr.l	$0.W
 
-	move.l	(_resload),a2		;A2 = resload
+	move.l	(_resload,pc),a2		;A2 = resload
 
 
 	;get tags
@@ -341,12 +347,12 @@ _load_exe:
 
 .end
 	move.l	a3,-(a7)
-	pea	205			; file not found
+	jsr	(_LVOIoErr,a6)
+	move.l	d0,-(a7)
 	pea	TDREASON_DOSREAD
 	move.l	(_resload,pc),-(a7)
 	add.l	#resload_Abort,(a7)
 	rts
-
 
 ; < a0: progs+args to execute
 ; < a6: dosbase
@@ -409,7 +415,7 @@ _check_language_dir:
 	bra.b	.out
 .german
 	move.w	#'GE',(A1)
-	bra.b	.out
+	bra	.out
 .out
 	move.l	a1,d1
 	move.l	#ACCESS_READ,d2
@@ -437,13 +443,15 @@ _check_language_dir:
 ; exit with error if playerprefs libs is not there
 
 _pperror
-	lea	_fullppname(pc),a3
-	move.l	a3,-(a7)
-	pea	205			; file not found
+	jsr	(_LVOIoErr,a6)
+	pea	_fullppname(pc)
+	move.l	d0,-(a7)
 	pea	TDREASON_DOSREAD
 	move.l	(_resload,pc),-(a7)
 	add.l	#resload_Abort,(a7)
-	rts	
+	rts
+
+
 _fullppname:
 	dc.b	"libs/"
 _playerprefsname

@@ -8,7 +8,7 @@
  CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
  PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
- This install applies to "Pierre Le Chef is ... Out To Lunch" Â© 1994 Mindscape
+ This install applies to "Pierre Le Chef is ... Out To Lunch" © 1994 Mindscape
 
  This install requires WHDLoad to be in the path. It can be found in the
  WHDLoad package.
@@ -31,7 +31,7 @@
 
 
  version 2.3 (01.02.06) done by JOTD:
- - added support for CDÂ³Â² version with joypad emulation with keys
+ - added support for CD³² version with joypad emulation with keys
  - reworked install script & readme
 
  version 2.2 (01.03.05) done by JOTD:
@@ -51,7 +51,7 @@
   - CACR code removed
   - Relocated decrunch routine in fastmem
 
- CDÂ³Â² notes:
+ CD³² notes:
 
  joypad emulation keys:
 

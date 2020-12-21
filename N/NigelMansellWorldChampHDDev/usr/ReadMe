@@ -8,7 +8,7 @@
  CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
  PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
- This install applies to "Nigel Mansell World Champion" Â© 1992 Gremlin.
+ This install applies to "Nigel Mansell World Champion" © 1992 Gremlin.
 
  This install requires WHDLoad to be in the path. It can be found in the
  WHDLoad package.
@@ -40,7 +40,7 @@
  and	aminet:game/patch/
 
  version 1.3 (25.01.06) done by JOTD
- - support for CDÂ³Â² version (not very good, but allows to play) with joystick
+ - support for CD³² version (not very good, but allows to play) with joystick
  - fixed bug that made results music played wrong when using fastmem on AGA version
 
  version 1.2 (19.11.05) done by JOTD
@@ -62,7 +62,7 @@
 
 
 
- Notes for CDÂ³Â² version:
+ Notes for CD³² version:
 
  - joystick is enabled by default, use CUSTOM1=1 to reset to joypad
  - optional: use CUSTOM2=1 to 7 to select control method:

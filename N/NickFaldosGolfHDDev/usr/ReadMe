@@ -8,7 +8,7 @@
  CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
  PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
- This install applies to "Nick Faldo's Championship Golf" Â© 1992-1994 Grandslam
+ This install applies to "Nick Faldo's Championship Golf" © 1992-1994 Grandslam
 
  This install requires WHDLoad to be in the path. It can be found in the
  WHDLoad package.
@@ -22,7 +22,7 @@
  The installed program requires 1.0 MB ChipMem and 0.5 MB OtherMem.
  It can be quit by pressing '*' (key can be changed with Tooltype "QuitKey=").
 
- CDÂ³Â² version:
+ CD³² version:
 
  The game requires an installed A1200 or A4000 Kickstart 3.1 image.
  The kickstart image must be located in the directory "Devs:Kickstarts" and
@@ -48,21 +48,21 @@
  and	aminet:game/patch/
 
  version 2.1-B (08.06.06) done by JOTD
- - CDÂ³Â² version ILLEGAL debug code fixed
+ - CD³² version ILLEGAL debug code fixed
 
  version 2.1 (02.02.06) done by JOTD:
- - CDÂ³Â² version coaching mode relocation bug fixed
+ - CD³² version coaching mode relocation bug fixed
 
  version 2.0-B (30.01.06) done by JOTD:
- - CDÂ³Â²: forgot to remove a temporary check that worked only on my memory setup
- - CDÂ³Â²: install script did not copy the icon
+ - CD³²: forgot to remove a temporary check that worked only on my memory setup
+ - CD³²: install script did not copy the icon
 
  version 2.0 (28.01.06) done by JOTD:
- - CDÂ³Â² version supported
- - program relocated to fast memory for super-speed (both floppy & CDÂ³Â² versions)
+ - CD³² version supported
+ - program relocated to fast memory for super-speed (both floppy & CD³² versions)
  - empty dbf loops fixed (both versions)
- - fixed snoop bug (wrong copperlist in CDÂ³Â² version)
- - VBR accesses removed (CDÂ³Â² version)
+ - fixed snoop bug (wrong copperlist in CD³² version)
+ - VBR accesses removed (CD³² version)
  - SMC removed (both versions), now tree gfx is no longer corrupt
  - install script rewritten
  - manual included
@@ -73,7 +73,7 @@
  - RNC protection removed
  - load/save game not supported yet
 
- CDÂ³Â² version: Press F10 to giveup game
+ CD³² version: Press F10 to giveup game
 
  Cheat (from Sweetcheater):
 

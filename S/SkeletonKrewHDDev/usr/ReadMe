@@ -8,7 +8,7 @@
  CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
  PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
- This install applies to "Skeleton Krew AGA/CDÂ³Â²" Â© 1995 Core Design.
+ This install applies to "Skeleton Krew AGA/CD³²" © 1995 Core Design.
 
  This install requires WHDLoad to be in the path. It can be found in the
  WHDLoad package.
@@ -40,13 +40,13 @@
  - fixed access fault (issue #0000845, well I fixed some random / rare crash)
  - source code included for both versions
  
- CDÂ³Â² version 2.0 (30.05.06) done by JOTD:
+ CD³² version 2.0 (30.05.06) done by JOTD:
  - original joypad controls enabled again
  - fully rewritten
  - source code included
- - merged both floppy & CDÂ³Â² install packages
+ - merged both floppy & CD³² install packages
 
- CDÂ³Â² version 1.0 (2001) done by JOTD:
+ CD³² version 1.0 (2001) done by JOTD:
  - Runs fully from HD with WHDLoad on any AGA amiga.
  - Patched for joystick/keyboard
  - Convenient installer script

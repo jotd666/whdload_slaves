@@ -58,7 +58,7 @@ slv_config:
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"3.1"
+	dc.b	"3.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"

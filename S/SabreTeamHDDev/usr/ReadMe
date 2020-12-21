@@ -8,7 +8,7 @@
  CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
  PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
- This install applies to "Sabre Team" Â© 1992/1994 Krisalis Software Ltd.
+ This install applies to "Sabre Team" © 1992/1994 Krisalis Software Ltd.
 
  Slave requires WHDLoad V16+.
 
@@ -22,7 +22,7 @@
  - 2 Disk Original Release (ECS VERSION)
  - 2 Disk Original Release (ECS VERSION) Another version
  - 5 Disk Original Release (AGA VERSION)
- - CDÂ³Â² version
+ - CD³² version
 
  floppy version (Galahad):
 
@@ -65,10 +65,10 @@ Kindest Regards, Galahad of Fairlight
  - access faults fixed
  - source code included
 
- AGA & CDÂ³Â² versions (JOTD):
+ AGA & CD³² versions (JOTD):
 
  version 1.2 (27.05.09) done by JOTD:
- - fixed CDÂ³Â² version
+ - fixed CD³² version
  - fixed script for AGA version
 
  version 1.1 (26.04.09) done by JOTD:
@@ -77,10 +77,10 @@ Kindest Regards, Galahad of Fairlight
  - sorry no install script for AGA: I don't have disk names, please send diskimages
 
  version 1.0 (28.01.06) done by JOTD:
- - CDÂ³Â² joypad buttons emulated by function keys
+ - CD³² joypad buttons emulated by function keys
  - access faults fixed
  - source code included
- - install/readme rework to merge ECS & CDÂ³Â² versions
+ - install/readme rework to merge ECS & CD³² versions
 
  About AGA version: this one has been sitting on my hard drive for about 3 years
  because it crashed at the first game load. Then today I stumbled on the game

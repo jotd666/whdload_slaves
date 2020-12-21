@@ -136,23 +136,6 @@
   )
 )
 
-(copyfiles (source "iq-points")
-           (dest #dest)
-)
-
-(copyfiles (source "iq-points")
-           (dest #dest)
-           (newname "points-IQ")	; for french version
-)
-
-(copyfiles (source "iq-points")
-           (dest #dest)
-           (newname "iq-punkte")	; for german version
-)
-(copyfiles (source "iq-points")
-           (dest #dest)
-           (newname "punti-iq")	; for german version
-)
 
 (set #indysize (getsize (tackon #dest "atlantis")))
 

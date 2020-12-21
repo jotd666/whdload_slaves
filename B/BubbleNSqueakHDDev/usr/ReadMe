@@ -8,7 +8,7 @@
  CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
  PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
- This install applies to "Bubble And Squeak" Â© 1994 Audiogenic
+ This install applies to "Bubble And Squeak" © 1994 Audiogenic
 
  Thanks to Codetapper & Ninjaw for disk images
 
@@ -91,7 +91,7 @@
 
  version 1.0 (17.07.03) done by JOTD:
  - initial release
- - CDÂ³Â² version supported
+ - CD³² version supported
  - disk protection removed on floppy version (Thanks Mark Knibbs)
  - access fault removed on floppy version
  - VBR accesses removed
@@ -101,7 +101,7 @@
  bugs:
  
  - I was not able to make 2-button joystick work properly in all versions at
-   least for my Wico joystick. Works for a CDÂ³Â² controller. There seems to
+   least for my Wico joystick. Works for a CD³² controller. There seems to
    exist a limitation with some 2-button joysticks.
 
 Hint: Enter the password as HEFSBEER for an easier time...

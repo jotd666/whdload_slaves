@@ -8,7 +8,7 @@
  CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
  PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
- This install applies to "Gunship 2000" Â© 1993 Microprose
+ This install applies to "Gunship 2000" © 1993 Microprose
 
  This install requires WHDLoad to be in the path. It can be found in the
  WHDLoad package.
@@ -28,10 +28,10 @@
  directory as the kickstart image. It can be found in the archive 
  "util/boot/skick345.lha" on aminet.
 
- Floppy AGA/CDÂ³Â² version:
+ Floppy AGA/CD³² version:
 
  The installed program requires AGA: 1.0 MB ChipMem and 2.0 MB OtherMem,
- CDÂ³Â²: 2.0 MB ChipMem and 1.0 MB OtherMem,
+ CD³²: 2.0 MB ChipMem and 1.0 MB OtherMem,
  It can be quit by pressing F10 (key can be changed with Tooltype "QuitKey=").
 
 
@@ -46,7 +46,7 @@
  must be installed in the same directory as the kickstart image.
  It can be found in the archive "util/boot/skick345.lha" on aminet.
 
- Additionaly, for the CDÂ³Â² version it is required that you have the files 
+ Additionaly, for the CD³² version it is required that you have the files 
  "lowlevel.library" and "nonvolatile.library" installed in your LIBS: directory
 
 
@@ -74,14 +74,14 @@ features:
 
  version 2.2 (05.09.04)
  - ECS version supports introduction
- - AGA & CDÂ³Â² versions reassembled
+ - AGA & CD³² versions reassembled
 
  version 2.1 (14.02.04)
  - AGA version GPS check removed
 
  version 2.0 (18.08.03)
  - AGA version supported
- - CDÂ³Â² version supported, saving of roster data on HD
+ - CD³² version supported, saving of roster data on HD
  - requires WHDLoad v16+
 
  version 1.0 (16.05.02) done by JOTD
