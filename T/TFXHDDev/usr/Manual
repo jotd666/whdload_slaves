@@ -1,0 +1,151 @@
+keys:
+
+F Keys Views 
+F1 Cockpit 
+F2 Virtual cockpit left 
+F3 Virtual cockpit right 
+F4 Rear view 
+F5 Track camera 1 
+F6 Flyby track camera 
+F7 Track camera 2
+Escape Eject/Quit 
+Shift Q Quit
+W Wheelbrakes
+Return Weapon select
+F8 Missile view
+F9 Enemy view
+F10 Virtual cockpit centre
+R Radar scale
+A Autopilot
+P Pause
+T Time warp
+I Information
+S Stealth
+[ Engine 1 on/off
+] Engine 2 on/off
+G Landing gear
+~ Settings
+H Hook
+1 VDU 1 
+' Landing system
+L Repeat last message
+2 VDU 2 
+3 VDU 3 
+4 Save game
+5 Auto Stick pressure
+num 9 Cockpit up
+num 3 Cockpit down
+- Decrease thrust
++ Increase thrust
+M Map
+* Max power
+Help PAL/NTSC
+B/Spacebar Ground target
+Tab Auto recovery
+DEL Toggle mid-air refuel mode
+alt W Wind/weather report
+7 set autopilot to waypoint mode
+8 set autopilot to bearing mode
+9 set autopilot to tracking mode 
+\ switch to targettting camera for the Laser-Guided-Bombs
+Numeric * increase after burner stage
+Numeric / switch off afterburner
+-/+ throttle control
+left-ALT J Jettison all air-to-ground weaponry
+left-ALT + cursors left/right - rudder control
+Z lock onto a target
+
+
+From: andrew.korn(at)ecm.emap.com (Andrew Korn)
+Newsgroups: comp.sys.amiga.games
+
+Some quick answers to common questions..
+change targets with the c key
+hit z to use the laser bomb sites
+'040 version is a little buggy, seems to only work on stock A4000s. Use
+the FPU version. Processor settings in MCP or use of Oxypatcher make
+the FPU code go a lot faster on '040 and '060s.
+
+From: &quot;Tony Horgan&quot; <tony.horgan@ecm.emap.com>
+Newsgroups: comp.sys.amiga.games
+
+In article <34297995.MD-0.196.dave@stanza.demon.co.uk>, &quot;Dave Nuttall.&quot; <dave@stanza.demon.co.uk> wrote:
+
+> As I am completely hopeless at flight simms I thought that I might
+> have a real good go at TFX , So I started off at the training missions
+> and managed to complete a couple untill I had to land on the carrier,
+> I have tried everything but I can't seem to line up properly and end
+> up aproaching the carrier at totaly the wrong angle,
+
+Press ALT L to put the plane into auto landing mode. Now go and practice doing
+it yourself!
+
+
+
+From: &quot;Eike M. Lang&quot; <elang@neuss.netsurf.de>
+Newsgroups: comp.sys.amiga.games
+
+Hello everybody,
+
+as getting the TFX-issue of CU Amiga was quite a *big* problem for me,
+and I do not want to buy the November issue of TFX as well, I suggest
+we exchange some information on the keys supported by TFX.
+
+L - does NOT activate instrument landing, it only repeats the last
+message
+
+' - Instrument Landing System
+
+DEL - Toggle mid-air refuel mode
+(mid-air refueling is quite easy in TFX, just make sure you approach
+the refueller straight from behind and within a reasonable range of
+its speed)
+
+alt W - Wind/weather report
+(pointless, really, as the wind never stayed on, no matter how often I
+toggled it)
+
+the reference in CU Amiga that says '9' and '3' can be used to look
+up/down within the cockpit should read 'Numeric Keypad 9' and 'Numeric
+Keypad 3'
+
+A - Autopilot
+in all autopilot modes, speed can be adjusted in steps of 10 in the
+same way engine RPM is controlled
+
+7 - set autopilot to waypoint mode
+
+8 - set autopilot to bearing mode - the plane will keep the preset
+bearing and speed, bearing can be adjusted using the cursor left/right
+keys
+
+9 - set autopilot to tracking mode - your plane will follow the
+currently active air target
+
+\ - switch to targettting camera for the Laser-Guided-Bombs
+(you still need to press 'Z' to lock onto a target)
+
+Numeric * - increase after burner stage (RPM will be turned to
+maximum, too)
+
+Numeric / - switch off afterburner
+
+-/+: throttle control
+
+left-ALT J - Jettison all air-to-ground weaponry
+
+left-ALT + cursors left/right - rudder control
+(changes plane heading without banking, this is only effective at
+speeds below 300 knots, great for correcting your runway approach) 
+
+
+
+-- joypad?
+
++ and -for throttle
+M for Map
+P for Pause
+Return for change weapon system
+Fire for erm..... firing
+B is for Ground targets
+Not sure how to cycle Air Targets 

@@ -1,0 +1,90 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "TFX" © 1995 Digital Image Design.
+ 
+ It was released on CU amiga coverdisk in 1997.
+  
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ It can be quit by pressing num 'k' (key can be changed with Tooltype "QuitKey=").
+
+
+ The installed program requires 2.0 MB ChipMem and 7.0 MB OtherMem (16 MB with PRELOAD)
+ It also requires the AGA chipset and at least a 68020, but a 68030 and/or
+ a FPU or even a 68040 or 68060 will help a lot with framerate.
+
+ The game requires an installed A1200 or A4000 Kickstart 3.1 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick40068.A1200" (resp kick40068.A4000). 
+ The image can be extracted from a A1200 (resp A4000) with tools like 'GrabKick'
+ or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick40068.A1200.RTB" (resp "kick40068.A4000.RTB")
+ must be installed in the same directory as the kickstart image.
+ It can be found in the archive "util/boot/skick346.lha" on aminet.
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+  Version 1.0 (25.12.2020) done by JOTD
+  - automatic executable selection depending on cpu/fpu (or manual)
+  - self-modifying code removed (fonts were trashed)
+  - CD32 joypad support for some frequently used keys (see below)
+  - small manual included (thanks Angus)
+  - source code included
+ 
+ Installation:
+ 
+ the game wasn't distributed in floppies but only in an archive of a beta
+ version. To install, just create a "data" directory and unpack the files there
+ 
+ Versions:
+ 
+ there are a lot of executables around for this game. 3 of them are supported, the
+ others (3 newer beta versions) are complete bogus/not working
+ 
+ - TFX (554340 bytes): base 68020/nofpu version
+ - TFX.FPU (503340 bytes): 68020/68881 fpu version
+ - TFX.040 (599152 bytes): 68040/fpu version
+   
+ The slave tries to select the best executable for your configuration but if
+ for some reason it doesn't work, it can be selected manually.
+
+ Joypad controls:
+ 
+ Obviously I couldn't map the million keys required but at least a few
+ that are probably frequently used.
+ 
+ FORWARD: thrust (+)
+ REVERSE: thrust (-)
+ BLU:     switch weapons (return)
+ YEL:     lock to target (Z)
+ RED:     fire (original controls)
+ GRN:     max power (*)
+ PLAY:    pause (P)
+
+ FORWARD+REVERSE+YELLOW: quit to workbench
+ 
+ Todo:
+ 
+ - maybe try to make the bogus exes work
+ - see if game can be made faster
