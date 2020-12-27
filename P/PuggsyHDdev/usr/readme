@@ -1,0 +1,74 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER
+ EXPRESS OR IMPLIED, STATUTORY OR OTHERWISE.
+ THE ENTIRE RISK AS TO USE, RESULTS AND PERFORMANCE OF THE PACKAGE IS
+ ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE TO BE DEFECTIVE, YOU
+ ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING, REPAIR OR OTHER
+ REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY
+ DAMAGE CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE
+ OWNER OR A THIRD PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF
+ DAMAGE.
+ 
+ That install applies to "Puggsy" © 1993 Travelers Tales/Psygnosis
+ 
+ That install requires WHDLoad to be in the path.
+ WHDLoad can be found in the whdload package.
+
+ The installed program requires 0.5 MB ChipMem and 1.5 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+
+History:
+
+version 2.0 (27.12.2020) done by JOTD:
+
+- full joypad controls and 2-button support (issue #0004914)
+- fixed crash when pressing a key during the introduction
+- option to skip introduction completely
+- option to set second button jump by default
+- when up=jump, second button is used to activate objects (ex: gun)
+- trainer: infinite lives
+- slave, install script & readme fully rewritten
+- removed JST slave
+- source code included
+
+
+version 1.0 (03.04.2001) done by JOTD:
+
+- Runs from HD/RAM
+- Convenient installer script
+- Runs either with JST or WHDLoad (both slave types included)
+- Memory patch: now runs on 512 chipmem amigas if you've got fastmem anywhere
+- 2nd joystick button patch (it did not work properly)
+- Quit key (F10 for JST slave/QUITKEY for WHDLoad slave) at any time
+- Proper cache handling
+- Relocated decrunch routines in fast memory when possible
+
+Note: if you had a previous JST installed version, you'll have to create a "data"
+directory and move all the files into it, or simply re-install.
+
+Joypad controls:
+
+- red: action
+- blue: jump (controls 2) / use object (controls 1)
+- green: use/activate object (controls 2 only) (space)
+- play: pause (p)
+- yellow: show bosses (return)
+- reverse: show passwords (b)
+- reverse+forward: return to map/quit game (esc)
+- reverse+forward+yellow: return to workbench
+
+

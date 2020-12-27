@@ -1,183 +1,377 @@
-CHIPMEMSIZE=$80000
-FASTMEMSIZE=$80000
-FAKEFMEMSIZE=0
-MAJOR_VERSION = 1
-MINOR_VERSION = 1
-	IFD	BARFLY
-WHDLOADSLAVE = 1
+;*---------------------------------------------------------------------------
+;  :Program.	PuggsyHD.asm
+;  :Contents.	Slave for "Puggsy" from Psygnosis
+;  :Author.	JOTD
+;  :History.	
+;  :Requires.	-
+;  :Copyright.	Public Domain
+;  :Language.	68000 Assembler
+;  :Translator.	Barfly 2.9
+;  :To Do.
+;---------------------------------------------------------------------------*
+
+	INCDIR	Include:
+	INCLUDE	whdload.i
+	INCLUDE	whdmacros.i
+
+	IFD BARFLY
 	OUTPUT	Puggsy.slave
+	BOPT	O+				;enable optimizing
+	BOPT	OG+				;enable optimizing
+	BOPT	ODd-				;disable mul optimizing
+	BOPT	ODe-				;disable mul optimizing
+	BOPT	w4-				;disable 64k warnings
+	BOPT	wo-			;disable optimizer warnings
+	SUPER
 	ENDC
-	incdir	include:
-	include	"jst.i"
 
+;CHIP_ONLY
 
-WHDLOADSLAVESUBDIR = 1
-	HD_PARAMS	"",0,0,<Puggsy>,<1993 Psygnosis>,<Installed by JOTD>
+_base
+		SLAVE_HEADER		;ws_Security + ws_ID
+		dc.w	17		;ws_Version
+		dc.w	WHDLF_NoError|WHDLF_EmulTrap	;ws_flags
+        IFD CHIP_ONLY
+		dc.l	$100000		;ws_BaseMemSize
+        ELSE
+		dc.l	$80000		;ws_BaseMemSize
+        ENDC
+		dc.l	0		;ws_ExecInstall
+		dc.w	_start-_base	;ws_GameLoader
+		dc.w	_data-_base		;ws_CurrentDir
+		dc.w	0		;ws_DontCache
+_keydebug	dc.b	$58		;ws_keydebug = F9
+_keyexit	dc.b	$59		;ws_keyexit = F10
+_expmem		
+    IFD CHIP_ONLY
+    dc.l    0
+    ELSE
+	dc.l	$80000			;ws_ExpMem
+    ENDC
+		dc.w	_name-_base		;ws_name
+		dc.w	_copy-_base		;ws_copy
+		dc.w	_info-_base		;ws_info
+		dc.w	0                       ;ws_kickname
+		dc.l	0                       ;ws_kicksize
+		dc.w	0                       ;ws_kickcrc
+		dc.w	_config-_base		;ws_config
 
-; *** Puggsy Hard Disk Loader V$VER
-; *** Written by Jean-François Fabre
+	IFD BARFLY
+	IFND	.passchk
+	DOSCMD	"WDate  >T:date"
+.passchk
+	ENDC
+	ENDC
 
-_loader:
-	bra.b	_run
-_whddata:
-	dc.b	"data",0
-	even
-_run
-	move.l	#$80000,D0
-	JSRABS	AllocExtMem
-	RELOC_MOVEL	D0,ExtBase
-	beq	MemErr
-
-	Mac_printf	"Puggsy HD Loader V1.0"
-	Mac_printf	"Coded by Jean-François Fabre © 1997"
+DECL_VERSION:MACRO
+	dc.b	"2.0"
+	IFD BARFLY
+		dc.b	" "
+		INCBIN	"T:date"
+	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
+	ENDC
+	ENDM
+	dc.b	'$VER: slave '
+	DECL_VERSION
+	dc.b	0
+		
+_data   dc.b    "data",0
+_name	dc.b	'Puggsy'
+    IFD CHIP_ONLY
+    dc.b    " (CHIP/DEBUG mode)"
+    ENDC
+    dc.b    0
+_copy	dc.b	'1993 Psygnosis',0
+_info
+    dc.b   'adapted by JOTD',10,10
+	dc.b	"Version "
+	DECL_VERSION
+	dc.b	0
 	
-	IFND	WHDLOADSLAVE
-	lea	_whddata(pc),A0
-	JSRABS	SetFilesPath
-	ENDC
+_config
+        dc.b    "C1:X:Trainer Infinite Lives:0;"
+        dc.b    "C2:B:blue/second button jumps;"
+        dc.b    "C5:B:skip introduction;"
+		dc.b	0
 
-	TESTFILE	introname
-	tst.l	D0
-	bne	FileErr
+	CNOP 0,2
+IGNORE_JOY_DIRECTIONS
+    include ReadJoyPad.s
 
-	move.l	#1000,D0
-	JSRABS	LoadSmallFiles
+_start
+    lea	_resload(pc),a1
+    move.l	a0,(a1)			;save for later use
 
-	moveq.l	#0,D0
-	move.l	#CACRF_CopyBack,D1
-	JSRABS	Degrade
-
-
-	GO_SUPERVISOR
-	SAVE_OSDATA	$80000
-	move.w	#$2700,SR
-
-	bsr	InstallBoot
-
-	; **** boot stuff and patch
-
-	JSRGEN	FlushCachesHard
-	move.w	#$7FFF,dmacon+$DFF000
-	JSRGEN	BlackScreen
-	JMP	$918.W
-
-InstallBoot:
+    IFD CHIP_ONLY
+    lea _expmem(pc),a0
+    move.l  #$80000,(a0)
+    ENDC
 	lea	introname(pc),A0
 	lea	$800.W,A1
-	moveq	#-1,D1
-	moveq	#0,D0
-	JSRGEN	ReadFile
+    move.l  _resload(pc),a2
+    ; load+RNC unpack
+    jsr     (resload_LoadFileDecrunch,a2)
 
-	lea	$800.W,A0
-	move.l	A0,A1
-	JSRGEN	RNCDecrunch
+	; **** boot stuff and patch
+    movem.l a0-a2/d0-d1,-(a7)
+    lea pl_boot(pc),a0
+    sub.l   a1,a1
+    move.l  _resload(pc),a2
+    jsr (resload_Patch,a2)
+    movem.l (a7)+,a0-a2/d0-d1
 
-	PATCHUSRJMP	$1248.W,RNCDecrunch
-	PATCHUSRJMP	$2502.W,LoadFile
-	PATCHUSRJMP	$1074.W,KbInt
-	PATCHUSRJMP	$148C.W,GetExtMem_1
-	PATCHUSRJMP	$208E.W,PatchMain
-	PATCHUSRJMP	$20FE.W,PatchIntro2
-	move.w	#$4E75,$21C4.W
+	move.w	#$7FFF,_custom+dmacon
+	JMP	$918.W
 
-;	move.w	#$4E75,$22CE.W
-;	move.w	#$4E75,$23B0.W
+pl_boot
+    PL_START
+    PL_IFC5
+    PL_L    $918,$4EF82024
+    PL_ENDIF
+	PL_P	$1248,RNCDecrunch
+	PL_P	$2502,LoadFile
+	PL_PS	$1074,KbInt
+	PL_P	$148C,GetExtMem_1
+	PL_P	$02088,PatchMain
+	PL_P	$20FE,PatchIntro2
+	PL_R	$21C4
+    
+    PL_P    $3be0,RNCDecrunch
+    
+;	PL_R	$22CE
+;	PL_R	$23B0
 
-	RTS
+	PL_END
 
 
-PatchIntro2:
-	PATCHUSRJMP	$D40C,LoadFile
-	PATCHUSRJMP	$DF0A,RNCDecrunch
-	PATCHUSRJMP	$D028,PatchMain
-	move.w	#$4E75,$D0E2
-	PATCHUSRJMP	$1CE9A,GetExtMem_3
-	JSRGEN	FlushCachesHard
+pl_intro:
+    PL_START
+	PL_P	$D40C,LoadFile
+	PL_P	$DF0A,RNCDecrunch
+	PL_P	$D022,PatchMain
+	PL_R	$D0E2
+	PL_P	$1CE9A,GetExtMem_3
+	PL_END
+    
+PatchIntro2
+    movem.l a0-a2/d0-d1,-(a7)
+    lea pl_intro(pc),a0
+    sub.l   a1,a1
+    move.l  _resload(pc),a2
+    jsr (resload_Patch,a2)
+    movem.l (a7)+,a0-a2/d0-d1
+
 	jmp	$CC26
 
 GetExtMem_1:
-	move.l	ExtBase(pc),$8F4.W
+	move.l	_expmem(pc),$8F4.W
 	RTS
 
 GetExtMem_2:
-	move.l	ExtBase(pc),$2FB74
+	move.l	_expmem(pc),$2FB74
 	RTS
 
 GetExtMem_3:
-	move.l	ExtBase(pc),$7F2E4
+	move.l	_expmem(pc),$7F2E4
 	RTS
 
 RNCDecrunch:
-	JSRGEN	RNCDecrunch
+    movem.l a2/d1,-(a7)
+    move.l  _resload(pc),a2
+    jsr (resload_Decrunch,a2)
+    movem.l (a7)+,a2/d1
+	
 	rts
 
 KbInt:
 	move.b	D0,$808.W
-	IFND	WHDLOADSLAVE
-	cmp.b	#$59,D0
-	ELSE
-	cmp.b	_whdinit_base+ws_keyexit(pc),D0
-	ENDC
-	bne	.noquit
-	JSRGEN	InGameExit
+	cmp.b	_keyexit(pc),D0
+	beq     _quit
 .noquit
 	RTS
+
+control_method = $1AC3C
+current_keycode = $20058
 
 KbInt_2:
-	move.b	D0,$20058
-	IFND	WHDLOADSLAVE
-	cmp.b	#$59,D0
-	ELSE
-	cmp.b	_whdinit_base+ws_keyexit(pc),D0
-	ENDC
-	bne	.noquit
-	JSRGEN	InGameExit
+	move.b	D0,current_keycode
+	cmp.b	_keyexit(pc),D0
+	beq     _quit
 .noquit
 	RTS
 
+_quit
+	pea	TDREASON_OK
+	move.l	_resload(pc),-(a7)
+	addq.l	#resload_Abort,(a7)
+	rts
+
+
+set_alt_controls
+    CLR.B	current_keycode		; original
+    move.w  #1,control_method
+    rts
+    
+start_address = $1B2C0
+
 PatchMain:
-	PATCHUSRJMP	$2FB2A,GetExtMem_2
-	PATCHUSRJMP	$1EADC,LoadFile
-	PATCHUSRJSR	$23F3A,Patch2ndButton
-	PATCHUSRJSR	$1FFDC,KbInt_2
-	PATCHUSRJMP	$28B1E,RNCDecrunch
-	move.w	#$4E71,$23F40
+    ; game unpacks some data in chipmem, but goes over the $80000
+    ; boundary in the process. The idea is to decrunch it in-place
+    ; then copy it partially
+    ; 
+    ; strange as the previous version of the slave didn't go over
+    ; the boundary...
+    movem.l a0-a2/d0-d1,-(a7)
+    move.l  a0,a1
+    move.l  _resload(pc),a2
+    jsr (resload_Decrunch,a2)
+    movem.l (a7),a0-a2/d0-d1
+    
+    ; copy truncate to $80000
+.copy:
+    move.l  (a0)+,(a1)+
+    cmp.l   #$80000,a1
+    bcs.b   .copy
 
-	move.w	#$4E75,$1E792			; goto root block
+    bsr  _detect_controller_types
 
-	JSRGEN	FlushCachesHard
-	JMP	$1B2C0
+    movem.l (a7),a0-a2/d0-d1
+    lea pl_main(pc),a0
+    sub.l   a1,a1
+    move.l  _resload(pc),a2
+    jsr (resload_Patch,a2)
+    movem.l (a7)+,a0-a2/d0-d1
+	JMP	start_address
 
+pl_main
+    PL_START
+	PL_P	$2FB2A,GetExtMem_2
+	PL_P	$1EADC,LoadFile
+	PL_PS	$23F3A,Patch2ndButton
+	PL_PS	$1FFDC,KbInt_2
+	PL_P	$28B1E,RNCDecrunch
+	PL_NOP	$23F40,2
+
+	PL_R	$1E792		; goto root block
+    
+    PL_ORW  $1c80c+2,$20    ; enable vblank
+    PL_PS   $1FB90,vblank_hook
+    PL_W    $1FB9E+2,$50    ; ack copper & blitter only
+    PL_PS   $3c9f4,install_menu_copperlist  ; game map
+    PL_PS   $4041E,install_menu_copperlist  ; game menu
+    
+    PL_IFC1
+    PL_NOP  $1f60c,6
+    PL_ENDIF
+    PL_IFC2
+    PL_PS   $1b310,set_alt_controls
+    PL_ENDIF
+    
+    PL_END
+    
+TEST_BUTTON:MACRO
+    btst    #JPB_BTN_\1,d2
+    beq.b   .nochange_\1
+    move.b  #\2,d3
+    btst    #JPB_BTN_\1,d0
+    bne.b   .pressed_\1
+    clr.b   d3   ; released: zero in that game
+.pressed_\1
+    move.b  d3,(a1) ; store keycode
+.nochange_\1
+    ENDM  
+
+
+install_menu_copperlist
+    cmp.w   #$9C,($500,a0)
+    bne.b   .nopatch
+    ; also write vblank to intreq else vbl interrupt
+    ; is not active in menu
+    move.w   #$8030,($502,a0)
+.nopatch
+	MOVE.L	A0,$dff080
+    
+    rts
+    
+vblank_hook
+    btst    #5,_custom+intreqr+1
+    bne.b   .vbl
+	ADDQ.L	#1,$1c02a
+    rts
+.vbl
+    addq.l  #4,A7
+    
+    ; vblank hook
+    movem.l d0-d3/a0-a1,-(a7)
+    lea .toggle(pc),a0
+    eor.b   #1,(a0) ; read every 2 vblank, will be enough
+    tst.b   (a0)
+    beq   .skip_joy
+    ; vblank interrupt, read joystick/mouse
+    lea buttons_state(pc),a0
+    lea $20058,a1
+    move.l  (a0),d1     ; get previous state
+	moveq	#1,d0
+	bsr	_read_joystick
+    move.l  d0,(a0)     ; save previous state for next time
+    ; now D0 is current joypad state
+    ;     D1 is previous joypad state
+    ; xor to d2 to get what has changed quickly
+    move.l  d0,d2
+    eor.l   d1,d2
+    beq   .skip_joy
+    ; d2 bears changed bits (buttons pressed/released)
+    TEST_BUTTON REVERSE,$35 :; B show passwords
+    
+    ; quit and esc
+    btst    #JPB_BTN_REVERSE,d0
+    beq.b   .nofwd
+    btst    #JPB_BTN_FORWARD,d0
+    beq.b   .nofwd
+    btst    #JPB_BTN_YEL,d0
+    bne _quit
+    
+    TEST_BUTTON FORWARD,$45
+.nofwd
+    TEST_BUTTON YEL,$44     ; return
+    tst.b   control_method+1
+    bne.b   .green
+    TEST_BUTTON BLU,$40     ; use object
+    bra.b   .pausetest
+.green:
+    TEST_BUTTON GRN,$40     ; use object
+.pausetest    
+    TEST_BUTTON PLAY,$19     ; pause
+.skip_joy
+    movem.l (a7)+,d0-d3/a0-a1
+    move.w  #$0020,_custom+intreq
+    rte
+.toggle
+    dc.l    0
+    
 Patch2ndButton:
-	movem.l	D0/A0,-(sp)
-	move.w	$DFF016,D0
-	move.w	#$CC01,$DFF034	; resets button read
-	btst	#14,D0
-	movem.l	(sp)+,D0/A0
+	movem.l	D0,-(sp)
+	move.l  buttons_state(pc),d0
+    not.l   d0
+    btst    #JPB_BTN_BLU,d0
+	movem.l	(sp)+,D0
 	rts
 
 LoadFile:
-	STORE_REGS	D0-D1/A0-A1
-	moveq	#0,D0
-	moveq	#-1,D1
-	JSRGEN	ReadFile
-	RESTORE_REGS	D0-D1/A0-A1
+	movem.l	D1/A0-A2,-(a7)
+    move.l  _resload(pc),a2
+    jsr     (resload_LoadFile,a2)
+	movem.l	(a7)+,D1/A0-A2
 	moveq	#0,D0
 	RTS
 
-trainer:
-	dc.l	0
-ExtBase:
-	dc.l	0
+_resload
+    dc.l    0
+buttons_state
+    dc.l    0
 introname:
 	dc.b	"INTRO.BIN",0
 	even
-
-
-MemErr:
-	Mac_printf	"** Not enough memory to run Puggsy!"
-	JMPABS	CloseAll
-
-FileErr:
-	Mac_printf	"** File ''INTRO.BIN'' missing!"
-	JMPABS	CloseAll
