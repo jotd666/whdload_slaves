@@ -15,7 +15,9 @@
  This install requires WHDLoad to be in the path. It can be found in the
  WHDLoad package.
 
- It can be quit by pressing num 'k' (key can be changed with Tooltype "QuitKey=").
+ It can be quit by pressing right amiga key
+ (key can be changed with Tooltype "QuitKey=" but with that game it's not
+  easy to find something that's not used).
 
 
  The installed program requires 2.0 MB ChipMem and 7.0 MB OtherMem (16 MB with PRELOAD)
@@ -45,7 +47,7 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
-  Version 1.0 (25.12.2020) done by JOTD
+  Version 1.0 (28.12.2020) done by JOTD
   - automatic executable selection depending on cpu/fpu (or manual)
   - self-modifying code removed (fonts were trashed)
   - CD32 joypad support for some frequently used keys (see below)
@@ -55,20 +57,37 @@
  Installation:
  
  the game wasn't distributed in floppies but only in an archive of a beta
- version. To install, just create a "data" directory and unpack the files there
+ version or CU amiga CD version.
+ To install manually, just create a "data" directory and unpack the files there
  
  Versions:
  
- there are a lot of executables around for this game. 3 of them are supported, the
- others (3 newer beta versions) are complete bogus/not working
+ there are a lot of executables around for this game. 4 of them are supported, the
+ others (newer beta versions). Not all of them are working.
  
- - TFX (554340 bytes): base 68020/nofpu version
+ - TFX (554340 bytes): base 68020/nofpu version (working on 68040/68060)
  - TFX.FPU (503340 bytes): 68020/68881 fpu version
- - TFX.040 (599152 bytes): 68040/fpu version
+ - TFX.??? (599152 bytes): 68020+FPU (from DamienD@EAB collection, wonder where you got that
+   this is a version with unmerged hunks and SYMBOLS!!! I love when that happens!)
+ - TFX.floppy (555644): original CD, never tried this version
+ - TFX.020 (571008 bytes) linked in HOL: 68020+FPU, almost destroyed by Hunk Wizard
+   chip/fast hunks merged but I could convert those dynamically to chip so it runs!)
+   This last HOL version is a newer 1997 build of the game with probable bug fixes
+
+ Below are unusable/corrupt versions (no thanks to Hunk Wizard tool):
+ - TFX.030 (HOL)
+ - TFX.strip (68040, HOL)
+ - TFX.040 (original from CU amiga CD)
    
  The slave tries to select the best executable for your configuration but if
  for some reason it doesn't work, it can be selected manually.
 
+ You can select between 4 versions:
+ - TFX (68020, no fpu, on CD, also working on 68040/68060)
+ - TFX.FPU (68020/030, 68881/82 fpu, on CD)
+ - TFX.020 (68020/030, 68881/82 fpu, newer, data in chip, download at https://is.gd/A6yk2T)
+ - TFX.040 (68020/030, 68881/82 fpu, wrong name, symbols, NOT the one on CD)
+ 
  Joypad controls:
  
  Obviously I couldn't map the million keys required but at least a few
@@ -79,12 +98,14 @@
  BLU:     switch weapons (return)
  YEL:     lock to target (Z)
  RED:     fire (original controls)
- GRN:     max power (*)
- PLAY:    pause (P)
+ GRN:     increase afterburner (*)
+ PLAY:    options screen (key left to "1", tilda something)
 
  FORWARD+REVERSE+YELLOW: quit to workbench
  
  Todo:
  
+ - patch the FPU versions to be compatible with 68040/68060 FPUs
+ - profile the game to see where it could be faster
  - maybe try to make the bogus exes work
- - see if game can be made faster
+ 

@@ -55,6 +55,7 @@ left-ALT J Jettison all air-to-ground weaponry
 left-ALT + cursors left/right - rudder control
 Z lock onto a target
 
+The "`" (Tilde key - top left of keyboard) brings up the settings. You can change detail and Quit from there. 
 
 From: andrew.korn(at)ecm.emap.com (Andrew Korn)
 Newsgroups: comp.sys.amiga.games
@@ -138,14 +139,5 @@ left-ALT + cursors left/right - rudder control
 (changes plane heading without banking, this is only effective at
 speeds below 300 knots, great for correcting your runway approach) 
 
+info compiled by Angus. Many thanks
 
-
--- joypad?
-
-+ and -for throttle
-M for Map
-P for Pause
-Return for change weapon system
-Fire for erm..... firing
-B is for Ground targets
-Not sure how to cycle Air Targets 

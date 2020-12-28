@@ -61,8 +61,12 @@ CACHE
 SEGTRACKER
 
 slv_Version	= 17
+; if WHDLF_ClearMem is set the TFX.FPU version crashes when starting the game
+; this is probably a programming error with this version, made up by non-zero memory
+; (sometimes it's the other way round): check the compiler warnings a*holes...
+
 slv_Flags	= WHDLF_NoError|WHDLF_Examine|WHDLF_Req68020|WHDLF_ReqAGA
-slv_keyexit	= $27	; 'K' (as num pad is used)
+slv_keyexit	= $67	; right amiga (as num pad is used)
 
 	include	kick31.s
 IGNORE_JOY_DIRECTIONS    
@@ -92,7 +96,8 @@ DECL_VERSION:MACRO
 assign
 	dc.b	"did",0
 slv_config
-	dc.b	"C4:L:executable:auto,TFX (68020),TFX_FPU (68020+FPU),TFX_040 (68040);"
+	dc.b	"C3:L:executable:auto,TFX (plain 68020),TFX.FPU (68020+FPU),TFX.020 (68020+FPU 1997),TFX.040 (68020+FPU beta);"
+	dc.b	"C4:B:run configuration program first;"
 	dc.b	"C5:B:skip intro;"
 	dc.b	0	
 	EVEN
@@ -101,7 +106,7 @@ slv_name		dc.b	"TFX"
 	dc.b	" (DEBUG/CHIP MODE)"
 	ENDC
 			dc.b	0
-slv_copy		dc.b	"1995 Digital Image Design",0
+slv_copy		dc.b	"1995-1997 Digital Image Design",0
 slv_info		dc.b	"adapted by JOTD",10,10
 		dc.b	"Version "
 		DECL_VERSION
@@ -113,26 +118,23 @@ slv_CurrentDir:
 program_table:
     dc.w    program-program_table
     dc.w    program_fpu-program_table
-    dc.w    program_040-program_table
+    dc.w    program_new_fpu-program_table
+    dc.w    program_040-program_table   ; that one isn't really a 68040 version
     
-offset_table:
-    dc.w    12958    
-    dc.w    12838
-    dc.w    13574
-keycode_table:
-    dc.l    $411c6,$397a6,$3F7DE
-int2_hook_table:
-    dc.l    $410f0,$396d4,$3f70c
-    
-; 68020, no fpu
+config:
+    dc.b    "config",0
+; 68020, no fpu, version on CD
 program:
     dc.b    "TFX",0
-; 68040 or higher
+; 68040 or higher, this is not the version on CD
 program_040:
 	dc.b	"TFX.040",0
-; 68020 with FPU
+; 68020 with FPU, version is on CD
 program_fpu:
 	dc.b	"TFX.FPU",0
+; 68020 with FPU, newer
+program_new_fpu:
+	dc.b	"TFX.020",0
 
 args		dc.b	10
 args_end
@@ -144,6 +146,23 @@ args_end
 	DECL_VERSION
 	EVEN
 
+PATCH_XXXLIB_OFFSET:MACRO
+	movem.l	d0-d1/a0-a1,-(a7)
+	move.l	A6,A1
+	add.l	#_LVO\1,A1
+	lea	old_\1(pc),a0
+	move.l	2(A1),(A0)
+	move.w	#$4EF9,(A1)+	
+	pea	new_\1(pc)
+	move.l	(A7)+,(A1)+
+	bra.b	end_patch_\1
+old_\1:
+	dc.l	0
+end_patch_\1:
+	movem.l	(a7)+,d0-d1/a0-a1
+
+	ENDM
+    
 _bootdos
 		clr.l	$0.W
 
@@ -154,14 +173,7 @@ _bootdos
         move.l  $6C.W,(a0)
         lea new_level3_interrupt(pc),a0
         move.l  a0,$6C.W
-        
-        IFD CHIP_ONLY
-
-        move.l  4,a6
-        move.l  #$EB38,d0
-        move.l  #MEMF_CHIP,D1
-        jsr (_LVOAllocMem,a6)
-        ENDC
+       
         
 	; saves registers (needed for BCPL stuff, global vector, ...)
 
@@ -191,23 +203,26 @@ _bootdos
         bne.b   .noauto
     ;load exe
         move.l  attnflags(pc),d0
-        btst    #AFB_68040,d0
-        beq.b   .030
-        btst    #AFB_FPU40,d0
-        beq.b   .030
-        move.l  #3,d1   ; set 68040 executable
-        bra.b   .noauto
-.030
-    ; not 040 or no 040 fpu
         btst    #AFB_68881,d0
         beq.b   .nofpu
+
+;        btst    #AFB_68040,d0
+;        beq.b   .030
+;        btst    #AFB_FPU40,d0
+;        beq.b   .030
+;        move.l  #4,d1   ; set 68040 executable
+;        bra.b   .noauto
+;.030
+    ; not 040 or no 040 fpu
+;        btst    #AFB_68881,d0
+;        beq.b   .nofpu
         move.l  #2,d1   ; set 68020+FPU executable
 
 .nofpu
         moveq.l #1,d1   ; simple 68020
 .noauto
         subq.l  #1,d1
-        cmp.l   #3,d1
+        cmp.l   #4,d1
         bcs.b   .inrange
 
 ; checksum doesn't match, file corrupt
@@ -222,30 +237,25 @@ _bootdos
         add.l   a1,a0       ; program name
         lea program_to_run(pc),a1
         move.l  a0,(a1)
-        ; proper offset to be able to reuse the same patch
-        ; code for text/image skip
-        lea offset_table(pc),a1
-        lea offset(pc),a0        
-        move.w  (a1,d1.w),d0
-        beq.b   .skip1
-        move.w  d0,(a0)
-.skip1
-        ; offset of jump to set keycode
-        lea int2_hook_table(pc),a1        
-        lea int2_hook_offset(pc),a0        
-        move.l  (a1,d1.w*2),d0
-        beq.b   .skip2
-        move.l  d0,(a0)
-.skip2
         
+    IFD CHIP_ONLY
         movem.l a6,-(a7)
 		move.l	$4.w,a6
-
         move.l  #MEMF_PUBLIC,d1
-        move.l  #$11C80,d0
+        move.l  #$11C80-$28,d0
         jsr _LVOAllocMem(a6)
         movem.l (a7)+,a6
-
+    ENDC
+    
+    move.l  run_config(pc),d0
+    beq.b   .skipconf
+    
+        lea config(pc),a0
+		lea	args(pc),a1
+		moveq	#args_end-args,d0
+		sub.l   a5,a5
+		bsr	load_exe    
+.skipconf    
         ; disable mouse
         ; at the same time enable bitplane DMA
         ; this isn't done on 040 version for some reason
@@ -257,6 +267,19 @@ _bootdos
         MOVE.W	#$0020,$dff096
 
 
+        move.l  program_to_run(pc),a0
+        jsr (resload_GetFileSize,a2)
+        cmp.l   #571008,d0
+        bne.b   _nomempatch
+
+        movem.l a6,-(a7)
+		move.l	$4.w,a6
+        PATCH_XXXLIB_OFFSET AllocMem
+        movem.l (a7)+,a6
+        lea mem_patched(pc),a0
+        st.b    (a0)
+_nomempatch
+        
         move.l program_to_run(pc),a0
 		lea	args(pc),a1
 		moveq	#args_end-args,d0
@@ -270,13 +293,21 @@ _quit		pea	TDREASON_OK
 get_version
         move.l  program_to_run(pc),a0
         jsr (resload_GetFileSize,a2)
+        
         cmp.l   #554340,d0
         beq.b   .v020
-        
         cmp.l   #599152,d0
         beq.b   .v040
+        ; versions processed with "hunk wizard" are
+        ; completely fucked up!!!
+;        cmp.l   #709968,d0
+;        beq.b   .v040_orig
         cmp.l   #503340,d0
         beq.b   .vfpu
+        ; FPU "new" (1997) was (almost) spared by
+        ; this junk wizard shit
+        cmp.l   #571008,d0
+        beq.b   .vfpu_new
         
         pea	TDREASON_WRONGVER
         move.l	_resload(pc),-(a7)
@@ -284,30 +315,70 @@ get_version
         rts    
 .v020
         lea pl_020(pc),a0
-        rts
-.v040
-        lea pl_040(pc),a0
+        move.w  #12958,d0
+        move.l  #$410f0,d1
         rts
 .vfpu
         lea pl_fpu(pc),a0
+        move.w  #12838,d0
+        move.l  #$396d4,d1
         rts
+.v040
+        lea pl_040(pc),a0
+        move.w  #13574,d0
+        move.l  #$3f70c,d1
+        rts
+    
+.v040_orig
+        lea pl_040_orig(pc),a0
+        move.w  #13574,d0
+        move.l  #$3f70c,d1
+        rts
+.vfpu_new
+    ; this version needs patching (data/bss hunks)
+
+        lea pl_fpu_new(pc),a0
+        move.w  #13574,d0
+        move.l  #$40c44,d1
+        rts
+
+    
+
+new_AllocMem
+    cmp.l   #$270FC,d0
+    beq.b   .chip
+    cmp.l   #$000182C8,d0
+    bne.b   .no_dataseg
+.chip
+    or.w    #MEMF_CHIP,d1   ; wrong hunk, fix it
+.no_dataseg
+    move.l  old_AllocMem(pc),-(a7)
+    rts
     
 ; < d7: seglist (APTR)
 
 
 patch_main
         bsr get_version
+
+        ; proper offset to be able to reuse the same patch
+        ; code for text/image skip
+        lea offset(pc),a2        
+        move.w  d0,(a2)
+
+        move.l  d7,a1
+        add.l   a1,a1
+        add.l   a1,a1
+        addq.l  #4,a1   ; first seg
+        add.l   d1,a1   ; get keyboard handler end address
+        lea int2_hook_address(pc),a2
+        move.l  a1,(a2)
+
+
         move.l  d7,a1
         move.l  _resload(pc),a2
         jsr	resload_PatchSeg(a2)
         
-        add.l   d7,d7
-        add.l   d7,d7
-        addq.l  #4,d7
-        move.l  d7,a1
-        add.l   int2_hook_offset(pc),a1
-        lea int2_hook_address(pc),a0
-        move.l  a1,(a0)
         rts
 
 pl_020
@@ -335,6 +406,7 @@ pl_040
         PL_START
         ; force FPU as we already checked that with whdload
         ; and kickstart isn't configured properly for that
+        ; (game uses the OS to check that, big mistake :))
         PL_B    $4ea14,$60
 
         ; skip images & text from intro
@@ -354,6 +426,30 @@ pl_040
         ; read joy1
         PL_PSS  $3fb1c,test_fire,2
         PL_END
+
+pl_040_orig     ; this crap doesn't work
+        PL_START
+        ; force FPU as we already checked that with whdload
+        ; and kickstart isn't configured properly for that
+        ;;PL_B    $4ea14,$60
+
+        ; skip images & text from intro
+;        PL_IFC5
+;        PL_PSS  $43a58,pre_display_text_or_image,2
+;        PL_PSS  $43a68,pre_display_text_or_image,2
+;        PL_ENDIF
+        
+ ;       PL_PS   $6464e,fix_smc
+        
+        ; faster blitwait
+;        PL_PS   $4ba4c,wait_blit
+;        PL_S    $4ba52,$4ba68-$4ba52
+;        PL_PS   $4bb08,wait_blit
+;        PL_S    $4bb0E,$4bb24-$4bb0E
+        
+        ; read joy1
+;        PL_PSS  $3fb1c,test_fire,2
+        PL_END
     
 pl_fpu
         PL_START
@@ -371,6 +467,24 @@ pl_fpu
         PL_PSS  $39ae4,test_fire,2
 
         PL_END
+
+pl_fpu_new
+        PL_START
+        ; force FPU
+        PL_B    $50eec,$60
+        ; skip images from intro
+        PL_IFC5
+        PL_PSS  $45368,pre_display_text_or_image,2
+        PL_PSS  $45378,pre_display_text_or_image,2
+        PL_ENDIF
+        
+        PL_PS   $4e7ae,fix_smc
+
+        ; read joy1
+        PL_PSS  $41054,test_fire,2
+
+        PL_END
+
 
 test_fire:
      movem.l    d0,-(a7)
@@ -504,7 +618,7 @@ new_level3_interrupt
     TEST_BUTTON YEL,$31     ; lock to target
     TEST_BUTTON RED,$40     ; fire
     TEST_BUTTON GRN,$5D     ; after burner increase
-    TEST_BUTTON PLAY,$19     ; pause
+    TEST_BUTTON PLAY,$0     ; status screen / pause
 .novbl
     movem.l (a7)+,d0-d3/a0-a1
     move.l  old_level3_interrupt(pc),-(a7)
@@ -546,7 +660,16 @@ load_exe:
 
 	move.l	a4,a0
 
+    ; restore old allocmem now that the hunks have been
+    ; read in chipmem only for FPU new version (TFX.020)
 	movem.l	d7/a6,-(a7)
+    move.b  mem_patched(pc),d0
+    beq.b   .norestore
+    movem.l a6,-(a7)
+    move.l	$4.w,a6
+    move.l  old_AllocMem(pc),(_LVOAllocMem+2,A6)
+    movem.l (a7)+,a6
+.norestore
 
 	move.l	d2,d0			; argument string length
 	move.l	_stacksize(pc),-(a7)	; original stack format
@@ -579,8 +702,10 @@ _stacksize
 		dc.l	0
 
     
-tag		dc.l	WHDLTAG_CUSTOM4_GET
+tag		dc.l	WHDLTAG_CUSTOM3_GET
 executable	dc.l	0
+    dc.l	WHDLTAG_CUSTOM4_GET
+run_config	dc.l	0
         dc.l    WHDLTAG_ATTNFLAGS_GET
 attnflags
         dc.l    0
@@ -591,13 +716,12 @@ program_to_run
 		dc.l	0
 offset
     dc.w    0
-int2_hook_offset
-    dc.l    0
 int2_hook_address
     dc.l    0
 wrongcustom
-    dc.b    "custom exe value out of range 0-3",0
-
+    dc.b    "custom exe value out of range 0-4",0
+mem_patched
+    dc.b    0
 ;============================================================================
 
 	END
