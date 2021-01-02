@@ -43,6 +43,7 @@ BLACKSCREEN
 DEBUG
 ;INITAGA
 HDINIT
+CACHE
 ;HRTMON
 IOCACHE		= 15000
 ;MEMFREE	= $200
@@ -51,7 +52,8 @@ SETPATCH
 STACKSIZE = 20000
 BOOTDOS
 
-slv_Version=16
+
+slv_Version = 17
 slv_Flags	= WHDLF_NoError|WHDLF_Examine|WHDLF_NoKbd
 slv_keyexit	= $5D	; num '*'
 
@@ -69,7 +71,7 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 	
 DECL_VERSION:MACRO
-	dc.b	"1.2"
+	dc.b	"1.3"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -95,6 +97,7 @@ slv_info		dc.b	"adapted by JOTD",10
 slv_CurrentDir:
 	dc.b	"data",0
 slv_config:
+	dc.b    "C5:L:keyboard:auto,us,fr,de;"
 	dc.b	0
 	
 _program:
@@ -112,12 +115,37 @@ _bootdos
 	;get tags
 		lea	(_tag,pc),a0
 		jsr	(resload_Control,a2)
-	
-	;enable cache
-		move.l	#WCPUF_Base_NC|WCPUF_Exp_CB|WCPUF_Slave_CB|WCPUF_IC|WCPUF_DC|WCPUF_BC|WCPUF_SS|WCPUF_SB,d0
-		move.l	#WCPUF_All,d1
-		jsr	(resload_SetCPU,a2)
-
+        move.l  _keyboard_type(pc),d0
+        bne.b   .manual
+        move.l  _language(pc),d1
+        cmp.b	#3,D1
+        beq.b	.german
+        cmp.b	#4,D1
+        beq.b	.french 
+        bra.b   .english
+.french
+        moveq.l #2,d0
+        bra.b   .kbbounds
+.german
+        moveq.l #3,d0
+        bra.b   .kbbounds
+.manual
+        cmp.l   #4,d0
+        bcs.b   .kbbounds
+.english        
+        moveq.l #1,d0   ; us: don't do anything        
+.kbbounds
+        subq.l  #1,d0
+        lea _keyboard_type(pc),a0
+        move.l  d0,(a0)
+        
+        lea    old_kbint(pc),a1
+        lea kbint_hook(pc),a0
+        cmp.l   (a1),a0
+        beq.b   .done
+        move.l  $68.W,(a1)
+        move.l  a0,$68.W
+.done	
 	;open doslib
 		lea	(_dosname,pc),a1
 		move.l	(4),a6
@@ -138,49 +166,23 @@ _quit		pea	TDREASON_OK
 ; < d7: seglist
 
 patch_main
-	move.l	d7,d1
-	moveq	#0,d2
-	bsr	get_section
-	move.l	a0,a1
-	lea	pl_seg0(pc),a0
-	jsr	resload_Patch(a2)
+	move.l	d7,a1
+	lea	pl_main(pc),a0
+	jsr	resload_PatchSeg(a2)
 
-	move.l	d7,d1
-	move.l	#30,d2
-	bsr	get_section
-	move.l	a0,a1
-	lea	pl_seg30(pc),a0
-	jsr	resload_Patch(a2)
 	rts
 
-; < d1 seglist
-; < d2 section #
-; > a0 segment
-get_section
-	move.l	d1,a0
-	subq	#1,d2
-	bmi.b	.out
-.loop
-	move.l	(a0),a0
-	add.l	a0,a0
-	add.l	a0,a0
-	dbf	d2,.loop
-.out
-	addq.l	#4,a0
-	rts
 
-pl_seg0:
+
+pl_main:
 	PL_START
 	PL_PS	$674,cpu_dep_loop
 	PL_PS	$9B4,cpu_dep_loop
-	PL_END
 
 ; removes copy protection (Thanks LockPick)
 
-pl_seg30
-	PL_START
-	PL_L	$27358-$26230,$397C00FF
-	PL_L	$2735C-$26230,$199E600A
+	PL_L	$27358,$397C00FF
+	PL_L	$2735C,$199E600A
 	PL_END
 
 cpu_dep_loop
@@ -232,8 +234,6 @@ _load_exe:
 	cmp.l	#0,A5
 	beq.b	.skip
 	movem.l	d2/d7/a4,-(a7)
-	add.l	d7,d7
-	add.l	d7,d7
 	jsr	(a5)
 	bsr	_flushcache
 	movem.l	(a7)+,d2/d7/a4
@@ -259,13 +259,13 @@ _load_exe:
 	rts
 
 .end
+	jsr	(_LVOIoErr,a6)
 	move.l	a3,-(a7)
-	pea	205			; file not found
+	move.l	d0,-(a7)
 	pea	TDREASON_DOSREAD
 	move.l	(_resload,pc),-(a7)
 	add.l	#resload_Abort,(a7)
 	rts
-
 
 ; < D0: numbers of vertical positions to wait
 _beamdelay
@@ -279,9 +279,71 @@ _beamdelay
 	dbf	d0,.bd_loop1
 	rts
 
+kbint_hook:
+    movem.l  a0-a1/d0-d3,-(a7)
+    move.b  $BFEC01,d0
+    ror.b   #1,d0
+    not.b   d0
+    moveq.l #0,d1
+    bclr    #7,d0
+    sne     d1
+    lea kb_table(pc),a0
+    move.l  _keyboard_type(pc),d2
+    add.l   d2,d2
+    move.w  (a0,d2.w),a1
+    add.w   a1,a0
+    
+.loop
+    move.b  (a0)+,d2
+    bmi.b   .noswap
+    move.b  (a0)+,d3
+    cmp.b   d0,d2
+    bne.b   .loop
+    move.b  d3,d0
 
-_tag		dc.l	WHDLTAG_CUSTOM1_GET
-_custom1	dc.l	0
+.pack
+    tst.b   d1
+    beq.b   .norel
+    bset    #7,d0   ; key released
+.norel
+    not.b   d0
+    rol.b   #1,d0
+    move.b  d0,$BFEC01    
+.noswap
+    movem.l  (a7)+,a0-a1/d0-d3
+    
+    move.l  old_kbint(pc),-(a7)
+    rts
+
+    
+old_kbint:
+    dc.l    0
+
+kb_table:
+    dc.w    us-kb_table,french-kb_table,deutsch-kb_table
+
+us:
+    dc.b    -1
+french:
+    dc.b    $10,$20   ; a <-> q
+    dc.b    $20,$10   ; a <-> q
+    dc.b    $11,$31   ; w <-> z
+    dc.b    $31,$11   ; w <-> z
+    dc.b    $29,$37   ; m <-> ,
+    dc.b    $37,$38   ; m <-> ,
+    dc.b    $39,$29   ; . <-> ;
+    dc.b    $3A,$01   ; / <-> !
+    dc.b    -1    
+deutsch:
+    dc.b    $15,$31   ; y -> z
+    dc.b    $31,$15   ; z -> y
+    dc.b    -1    
+    even
+    
+_tag		dc.l	WHDLTAG_CUSTOM5_GET
+_keyboard_type	dc.l	0
+		dc.l	WHDLTAG_LANG_GET
+_language	dc.l	0
 		dc.l	0
 
 ;============================================================================
