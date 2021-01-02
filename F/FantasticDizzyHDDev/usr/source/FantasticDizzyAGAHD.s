@@ -53,7 +53,7 @@ slv_keyexit	= $5D	; num '*'
 IGNORE_JOY_DIRECTIONS
 EXTSGFONT
 
-	include	kick13.s
+	include	whdload/kick13.s
 	include ReadJoyPad.s
 	include savegame.s
 	

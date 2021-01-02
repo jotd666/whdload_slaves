@@ -68,7 +68,7 @@ slv_Version	= 17
 slv_Flags	= WHDLF_NoError|WHDLF_Examine|WHDLF_Req68020|WHDLF_ReqAGA
 slv_keyexit	= $67	; right amiga (as num pad is used)
 
-	include	kick31.s
+	include	whdload/kick31.s
 IGNORE_JOY_DIRECTIONS    
     include ReadJoyPad.s
     

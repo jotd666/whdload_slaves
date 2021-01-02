@@ -2,10 +2,10 @@
 
 PROGNAME = RuffNTumble
 HDBASE = K:\jff\AmigaHD
-WHDBASE = $(HDBASE)\PROJETS\HDInstall\DONE\WHDLoad
+WHDBASE = $(HDBASE)\PROJETS\HDInstall\DONE
 WHDLOADER = $(PROGNAME).slave
 SOURCE = $(PROGNAME)HD.s
-OPTS =  -DDATETIME -I$(HDBASE)/amiga39_JFF_OS/include -I$(WHDBASE)\Include -I$(WHDBASE) -devpac -nosym -Fhunkexe
+OPTS =  -DDATETIME -I$(HDBASE)/amiga39_JFF_OS/include -I$(WHDBASE)\WHDLoad\Include -I$(WHDBASE) -devpac -nosym -Fhunkexe
 CMD = vasmm68k_mot
 all :  $(WHDLOADER) $(PROGNAME)_512chip.slave
 

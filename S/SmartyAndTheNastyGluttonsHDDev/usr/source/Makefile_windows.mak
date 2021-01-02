@@ -2,10 +2,10 @@
 
 PROGNAME = SmartyAndTheNastyGluttons
 HDBASE = K:\jff\AmigaHD
-WHDBASE = $(HDBASE)\PROJETS\HDInstall\DONE\WHDLoad
+WHDBASE = $(HDBASE)\PROJETS\HDInstall\DONE
 
 CMD = vasmm68k_mot
-OPTS =  -DDATETIME -I$(HDBASE)/amiga39_JFF_OS/include -I$(WHDBASE)\Include -I$(WHDBASE) -devpac -nosym -Fhunkexe -o
+OPTS =  -DDATETIME -I$(HDBASE)/amiga39_JFF_OS/include -I$(WHDBASE)\WHDLoad\Include -I$(WHDBASE) -devpac -nosym -Fhunkexe -o
 
 all :  $(PROGNAME).slave
 

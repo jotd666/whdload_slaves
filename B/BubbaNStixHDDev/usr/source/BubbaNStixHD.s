@@ -66,7 +66,7 @@ slv_keyexit	= $5D	; num '*'
     IFD CD32
 	include	kick31cd32.s    
     ELSE
-	include	kick13.s    
+	include	whdload/kick13.s    
     ENDC
     
 ;============================================================================
@@ -87,7 +87,7 @@ _assign4
 	ENDC
 slv_name		dc.b	"Bubba'N'Stix "
 		IFD CD32
-		dc.b	"CD³²",0
+		dc.b	"CDï¿½ï¿½",0
 		ELSE
 		dc.b	"ECS",0
 		ENDC

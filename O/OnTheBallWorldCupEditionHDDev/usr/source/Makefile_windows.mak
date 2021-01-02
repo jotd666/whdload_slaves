@@ -2,9 +2,9 @@
 
 PROGNAME = OnTheBallWCE
 HDBASE = K:\jff\AmigaHD
-WHDBASE = $(HDBASE)\PROJETS\HDInstall\DONE\WHDLoad
+WHDBASE = $(HDBASE)\PROJETS\HDInstall\DONE
 
-CMD = vasmm68k_mot -DDATETIME -I$(HDBASE)/amiga39_JFF_OS/include -I$(WHDBASE)\Include -I$(WHDBASE) -devpac -nosym -Fhunkexe 
+CMD = vasmm68k_mot -DDATETIME -I$(HDBASE)/amiga39_JFF_OS/include -I$(WHDBASE)\WHDLoad\Include -I$(WHDBASE) -devpac -nosym -Fhunkexe 
 
 all :  $(PROGNAME)ECS.slave $(PROGNAME)AGA.slave
 

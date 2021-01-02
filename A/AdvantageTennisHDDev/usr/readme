@@ -14,7 +14,7 @@
  the WHDLoad package.
  To install from a different drive than DF0: select installation mode Expert.
 
- The installed program requires 0.5 MB ChipMem and 0.5 MB OtherMem.
+ The installed program requires 0.5 MB ChipMem and 1.0 MB OtherMem.
  It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
 
  If you have problems with this installation please try and get a newer

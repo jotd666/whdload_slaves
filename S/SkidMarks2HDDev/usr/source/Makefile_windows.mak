@@ -1,9 +1,9 @@
 PROGNAME = Skidmarks2
 HDBASE = K:\jff\AmigaHD
-WHDBASE = $(HDBASE)\PROJETS\HDInstall\DONE\WHDLoad
+WHDBASE = $(HDBASE)\PROJETS\HDInstall\DONE
 all :  $(PROGNAME).slave $(PROGNAME)_221.islave $(PROGNAME)_22.islave
 
-CMD = vasmm68k_mot -DDATETIME -I$(HDBASE)/amiga39_JFF_OS/include -I$(WHDBASE)\Include -I$(WHDBASE) -devpac -nosym -Fhunkexe
+CMD = vasmm68k_mot -DDATETIME -I$(HDBASE)/amiga39_JFF_OS/include -I$(WHDBASE)\WHDLoad\Include -I$(WHDBASE) -devpac -nosym -Fhunkexe
 
 $(PROGNAME).slave : $(PROGNAME)HD.s
 	wdate.py> datetime

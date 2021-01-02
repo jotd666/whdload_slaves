@@ -67,7 +67,7 @@ BOOTFILENAME	MACRO
 	dc.b	"ACS",0
 	ENDM
 
-	include	kick13.s
+	include	whdload/kick13.s
 
 ;============================================================================
 

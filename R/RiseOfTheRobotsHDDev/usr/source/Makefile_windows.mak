@@ -2,8 +2,8 @@
 
 PROGNAME = RiseOfTheRobots
 HDBASE = K:\jff\AmigaHD
-WHDBASE = $(HDBASE)\PROJETS\HDInstall\DONE\WHDLoad
-PREFIX = vasmm68k_mot -DDATETIME -I$(HDBASE)/amiga39_JFF_OS/include -I$(WHDBASE)\Include -I$(WHDBASE) -devpac -nosym -Fhunkexe -o 
+WHDBASE = $(HDBASE)\PROJETS\HDInstall\DONE
+PREFIX = vasmm68k_mot -DDATETIME -I$(HDBASE)/amiga39_JFF_OS/include -I$(WHDBASE)\WHDLoad\Include -I$(WHDBASE) -devpac -nosym -Fhunkexe -o 
 
 
 all : $(PROGNAME)AGA.slave $(PROGNAME)CD32.slave $(PROGNAME)ECS.slave

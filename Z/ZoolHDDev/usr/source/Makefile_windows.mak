@@ -2,13 +2,13 @@
 
 PROGNAME = Zool
 HDBASE = K:\jff\AmigaHD
-WHDBASE = $(HDBASE)\PROJETS\HDInstall\DONE\WHDLoad
+WHDBASE = $(HDBASE)\PROJETS\HDInstall\DONE
 WHDLOADER = $(PROGNAME).slave
 SOURCE = $(PROGNAME)HD.s
 
 all :  $(PROGNAME).slave $(PROGNAME)AGA.slave $(PROGNAME)CD32.slave
 
-CMD = vasmm68k_mot -DDATETIME -I$(HDBASE)/amiga39_JFF_OS/include -I$(WHDBASE)\Include -I$(WHDBASE) -devpac -nosym -Fhunkexe -o 
+CMD = vasmm68k_mot -DDATETIME -I$(HDBASE)/amiga39_JFF_OS/include -I$(WHDBASE)\WHDLoad\Include -I$(WHDBASE) -devpac -nosym -Fhunkexe -o 
 
 $(PROGNAME).slave : $(SOURCE)
 	wdate.py> datetime

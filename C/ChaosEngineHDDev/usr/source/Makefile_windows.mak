@@ -2,9 +2,9 @@
 
 PROGNAME = ChaosEngine
 HDBASE = K:\jff\AmigaHD
-WHDBASE = $(HDBASE)\PROJETS\HDInstall\DONE\WHDLoad
+WHDBASE = $(HDBASE)\PROJETS\HDInstall\DONE
 SOURCE = $(PROGNAME)HD.s
-CMD = vasmm68k_mot -DDATETIME -I$(HDBASE)/amiga39_JFF_OS/include -I$(WHDBASE)\Include -I$(WHDBASE) -devpac -nosym -Fhunkexe -o
+CMD = vasmm68k_mot -DDATETIME -I$(HDBASE)/amiga39_JFF_OS/include -I$(WHDBASE)\WHDLoad\Include -I$(WHDBASE) -devpac -nosym -Fhunkexe -o
 DEPS = shared.s ReadJoyPad.s
 
 all :  $(PROGNAME)CD32.slave $(PROGNAME)AGA.slave $(PROGNAME)ECS.slave

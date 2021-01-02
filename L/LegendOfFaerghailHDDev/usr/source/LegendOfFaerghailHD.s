@@ -62,7 +62,7 @@ slv_Version	= 17
 slv_Flags	= WHDLF_Examine|WHDLF_ClearMem
 slv_keyexit	= $5D	; num '*'
 
-	include	kick13.s
+	include	whdload/kick13.s
 
 ;0003066	LegendOfFaerghail	4	Hello JOTD, great page with incredible work!! problem: display is flickering	2014-09-22	2014-09-23	affecté	ouvert	JOTD
 ;0002867	LegendOfFaerghail	4	Game instructs to press E-key but only works with D-key	2013-11-20	2014-07-13	confirmé	ouvert	JOTD

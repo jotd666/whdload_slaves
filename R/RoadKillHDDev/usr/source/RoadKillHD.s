@@ -61,7 +61,7 @@ slv_Version	= 17
 slv_Flags	= WHDLF_NoError|WHDLF_Examine|WHDLF_Req68020|WHDLF_ReqAGA
 slv_keyexit	= $5D	; num '*'
 
-	include	kick31.s
+	include	whdload/kick31.s
 
 ;============================================================================
 
@@ -92,7 +92,7 @@ _assign2
 _assign3
 	dc.b	"RoadKill3",0
 
-slv_name		dc.b	"RoadKill AGA/CD³²"
+slv_name		dc.b	"RoadKill AGA/CDï¿½ï¿½"
 	IFD	CHIP_ONLY
 	dc.b	" (DEBUG MODE)"
 	ENDC

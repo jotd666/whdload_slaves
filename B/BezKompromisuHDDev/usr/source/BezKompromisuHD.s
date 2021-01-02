@@ -62,7 +62,7 @@ slv_Version	= 16
 slv_Flags	= WHDLF_NoError|WHDLF_Examine
 slv_keyexit	= $5D	; num '*'
 
-	include	kick31.s
+	include	whdload/kick31.s
 
 ;============================================================================
 

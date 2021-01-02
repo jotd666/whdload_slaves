@@ -79,7 +79,7 @@ BOOTFILENAME:MACRO
 	IFND BARFLY
 BOOTFILENAME = 1
 	ENDC
-	include	kick13.s
+	include	whdload/kick13.s
 
 ;============================================================================
 

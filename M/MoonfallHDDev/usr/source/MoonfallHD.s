@@ -66,7 +66,7 @@ slv_keyexit	= $5D	; num '*'
 
 HD_Cyls = 1000
 
-	include	kick13.s
+	include	whdload/kick13.s
 
 ;============================================================================
 
