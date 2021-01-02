@@ -1,0 +1,69 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Dizzy Collection" © 1991 Code Masters - 2 disks
+
+ This install requires WHDLoad and DIC to be in the path. Both can be found in
+ the WHDLoad package.
+ To install from a different drive than DF0: select installation mode Expert.
+
+ Disk 1 & 2 both require 0.5 MB Chip Mem (+ 1.8 MB for PRELOAD)
+
+
+ History:
+
+ Version 2.0 (02-Jan-2020) done by JOTD:
+ - all games: add proper quitkey for 68000 (issue #0004898)
+ - fixed keyboard problem on some disk 1 games (thanks to ross@eab for helping)
+ - support for 2-button joysticks for Magic Dizzy, Treasure Island Dizzy, 
+   Fantasy World Dizzy for jump (issue #0004898)
+ - disk 1 now only needs 512k chip (issue #0004898)
+ - adapted to whdload v17
+ - source code fully reworked & included
+ 
+ Version 1.2 (13-Jun-2003) done by Bored Seal:
+ - Magicland Dizzy: BPLCON0 access fixed, mem usage fixed
+ - Fast Food, Treasure Island Dizzy: snoop bugs fixed
+ 
+ Version 1.1 (07-Sep-2001) done by Bored Seal:
+ - bplcon2 code causing 'green gfx filter' removed
+ - less memory usage, decrunchers run in fast ram now
+ 
+ Version 1.0 (10-Apr-2000) done by Bored Seal:
+ - Full load from HD
+ - RNC disk protections removed
+ - CPU dependent loops fixed [Kwik Snax, Fast Food, Fantasy World Dizzy]
+ - Blitter waits inserted [Fantasy World Dizzy, Fast Food]
+ - BPLCON0,BPLCON2 access fixed [Magicland Dizzy]
+ - All decrunchers relocated in Fast RAM
+ - Trainer option (set CUSTOM1=1 for unlimited lives)
+   [Magicland Dizzy, Fast Food, Kwik Snax, Fantasy World Dizzy]
+ - Keyboard routine fixed [Kwik Snax]
+ - NI/ROM icon (created by JHZ)
+ - Quit option (your default key)
+
+CHEAT [Treasure Island Dizzy]:
+Pause game with "P" and type "EGGSONLEGS". Now you are invincible.
+It doesn't work for traps.
+
+Thanks go to Chris Vella for disk image.
+
+         Bug report form, full WHDLoad package and other installs:
+                          http://www.whdload.de
+
+Some games benefit from joypad controls when option is ticked:
+
+    Red                  - Fire
+    Blue                 - Jump
+    Play                 - Pause 
+    Play+Forward+Yellow -  Quit
+
+CD32 support from Treasure Island Dizzy was lifted off Codetapper install for the
+same standalone game (the code is identical)
