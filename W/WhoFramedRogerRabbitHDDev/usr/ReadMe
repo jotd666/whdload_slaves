@@ -30,28 +30,45 @@
  version of this package from the WHDLoad WWW-Page. If that doesn't help try
  some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
  that also fails, please inform the author via the Bug-Report-Form which
- can be accessed on the WHDLoad WWW-Page.
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
 
  For the full WHDLoad package, other installs and updates refer to:
 	http://www.whdload.de/
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 1.1 (xx.yy.202?) done by JOTD:
- - 2 versions supported (SPS160 and another one)
- - protection REALLY removed, no need for LockPick, it was trivial
- - CUSTOM1 bit 0 set: skips first part (car race)
- - TODO (v2)/TOTEST ALL LEVELS: CUSTOM1 bit 1 set: infinite lives
+ version 2.0 (05.01.2021) done by JOTD:
+ - 2 versions supported (SPS160 and the pre-release)
+ - protection really removed (issue #0004021)
+ - music replay fixed
+ - CUSTOM1 bits used to set various trainers/levelskips
+ - CUSTOM3 skips introduction
  - adapted to new kickemu
  - changed from diskimages to real files (needs reinstalling)
  
  version 1.0 (08.11.2004) done by JOTD:
  - initial release
- - document protection removed (thanks LockPick)
+ - document protection removed (thanks LockPick): note it didn't work
  - documentation included
  - source code included
 
-Note: both versions were incredibly very different. It looks that the game
-has been rewritten from/to C from/to assembly! And uses a different loading scheme too.
-The non-SPS version has an extra "loading zone" screen too. I wonder which version
-is the best and if it behaves the same with such a radical change.
+Notes:
+
+- both versions were incredibly very different. It seems that the game has been completely
+rewritten from C (prerelease) to assembly (for SPS160) for no visible in-game difference...
+And uses a different loading scheme too (still using damn overlay hunks!).
+The non-SPS (pre-release) version has an extra "loading zone" screen that was removed (loading
+is probably not hype enough...).
+SPS160 version is reported to work till the end sequence, whereas the pre-release version
+crashes after level 4 is completed (no, I'm not going to fix that, thanks, i don't have a clue
+how to play this damn game)
+
+- how convenient was it that just after I paused that release because I wanted to create a
+trainer for both versions and all levels, Radertified posted in eab.abime.net and published
+the offsets where code should be changed in the rogerrabbit executable for all kinds of trainers
+on all levels, which saved a lot of time (even if the overlayed nature of this damn program made it
+slightly more difficult, check source code). Also proposed a method to completely bypass
+the protection screen. So big thanks!
+
+- a third version was trained by Radertified but is currently not supported. Not worth it... for now.

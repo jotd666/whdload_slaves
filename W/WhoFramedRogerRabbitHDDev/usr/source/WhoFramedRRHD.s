@@ -4,9 +4,9 @@
 	INCLUDE	whdmacros.i
 	INCLUDE	lvo/dos.i
 
-CHIPONLY
+;CHIPONLY
 	IFD BARFLY
-	OUTPUT	"AncientArtOfWar.slave"
+	OUTPUT	"WhoFramedRogerRabbit.slave"
 	IFND	CHIPONLY
 	BOPT	O+				;enable optimizing
 	BOPT	OG+				;enable optimizing
@@ -63,7 +63,7 @@ slv_keyexit	= $5D	; num '*'
 
 
 DECL_VERSION:MACRO
-	dc.b	"1.1"
+	dc.b	"2.0"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -82,6 +82,7 @@ slv_name	dc.b	"Who Framed Roger Rabbit"
 			dc.b	0
 slv_copy	dc.b	"1988 Silent/Buena Vista",0
 slv_info		dc.b	"adapted by JOTD",10,10
+		dc.b	"Thanks to Radertified@EAB for trainer offsets",10,10
 		dc.b	"Thanks to Tony Aksnes for disk images",10,10
 		dc.b	"Version "
 		DECL_VERSION
@@ -90,8 +91,14 @@ slv_CurrentDir:
 	dc.b	"data",0
 
 slv_config
-        dc.b    "C1:X:skip race parts:0;"
+        dc.b    "C1:X:skip level 1 and 3:0;"
         dc.b    "C1:X:infinite lives:1;"
+        dc.b    "C1:X:invincibility:2;"
+        dc.b    "C1:X:full speed levels 1 and 3:3;"
+        dc.b    "C1:X:skip level 2:4;"
+        dc.b    "C1:X:penguins can't replace napkins level 2:5;"
+        dc.b    "C1:X:infinite time level 4:6;"
+        dc.b    "C3:B:skip introduction;"
 		dc.b	0
 
 program:
@@ -142,12 +149,6 @@ _bootdos
     lea	_stacksize(pc),a2
     move.l	4(a7),(a2)
 
-    IFD CHIPONLY__
-    move.l  #$6C20+$150,d0
-    move.l  4,a6
-    move.l  #MEMF_CHIP,d1
-    jsr (_LVOAllocMem,a6)
-    ENDC
         
 		move.l	(_resload,pc),a2		;A2 = resload
 
@@ -185,10 +186,10 @@ _bootdos
 		lea	program(pc),a0
 		lea	args(pc),a1
 		moveq	#args_end-args,d0
-		lea	patch_exe_v1(pc),a5
+		lea	patch_exe_c160(pc),a5
         cmp.l   #1,d1
         beq.b   .go
-		lea	patch_exe_v2(pc),a5
+		lea	patch_exe_prerelease(pc),a5
         ;cmp.l   #2,d0
         ;beq.b   .go
 .go
@@ -251,32 +252,35 @@ wait_blit
 	rts    
 ; < d7: seglist (APTR)
 
-patch_exe_v1
+patch_exe_c160
 	move.l	(_resload,pc),a2
-	lea	pl_main_v1(pc),a0
+	lea	pl_main_c160(pc),a0
 .do
 	move.l	d7,a1
 	jsr	(resload_PatchSeg,a2)
 
 	rts
     
-patch_exe_v2
+patch_exe_prerelease
 	move.l	(_resload,pc),a2
-	lea	pl_main_v2(pc),a0
+	lea	pl_main_prerelease(pc),a0
 .do
 	move.l	d7,a1
 	jsr	(resload_PatchSeg,a2)
 
 	rts
-pl_main_v1
+pl_main_c160
     PL_START
-    PL_P    $FA,overlay_jump_v1
-    PL_P    $11A,overlay_jump_v1_2
+    PL_P    $FA,overlay_jump_c160
+    PL_P    $11A,overlay_jump_c160_2
+    
+    PL_PS   $35d2,fix_dma_write_d0
+    
     PL_END
     
     ; this is the version that I originally supported. No wonder why I was lazy
     ; and did a diskfile install: the startup code is difficult to fool with bootdos
-pl_main_v2
+pl_main_prerelease
     PL_START
     ; when performing a CreateProc from bootdos, program thinks it's been started from
     ; workbench and does the GetMsg shit which locks up the game: let's just disable that
@@ -286,11 +290,34 @@ pl_main_v2
     ; so it kind of looped...
     ;; PL_P    $68A4,create_process 
     ; hook after LoadSeg called with NULL seglist (overlay load)
-    PL_PS   $005e2a,overlay_jump_v2
+    PL_PS   $005e2a,overlay_jump_prerelease
+    
+    PL_IFC3
+    PL_NOP  $00029a,4
+    PL_ENDIF
+    
+    PL_PS   $2676,fix_dma_write_d0
+    
     PL_END
+    
+fix_dma_write_d0
+    MOVE.W  D0,$00DFF096
+	move.w  d0,-(a7)
+	move.w	#4,d0
+.bd_loop1
+	move.w  d0,-(a7)
+    move.b	$dff006,d0	; VPOS
+.bd_loop2
+	cmp.b	$dff006,d0
+	beq.s	.bd_loop2
+	move.w	(a7)+,d0
+	dbf	d0,.bd_loop1
+	move.w	(a7)+,d0
+
+    rts
 
 ; <D1: loaded segment (BCPL), 0 then code
-overlay_jump_v2
+overlay_jump_prerelease
     movem.l d0-d1/a0-a2,-(a7)
     move.l  _resload(pc),a2
     add.l   d1,d1
@@ -300,17 +327,33 @@ overlay_jump_v2
     cmp.l   #$0c6c010e,($4416c-$43898,a1)
     bne.b   .no_part_1
 
-    lea pl_part_1_v2(pc),a0
+    lea pl_part_1_prerelease(pc),a0
     jsr resload_Patch(a2)
-    bra.b   .out
+    bra   .out
 .no_part_1
     cmp.l   #$4eac816a,($44C2C-$43898,a1)
     bne.b   .no_prot
-    lea pl_protect_part_v2(pc),a0
+
+    lea pl_protect_part_prerelease(pc),a0
     jsr resload_Patch(a2)
+    bra   .out
     
 .no_prot
-    ;;blitz
+    cmp.l   #$522c839e,($013300-$123b4,a1)
+    bne.b   .no_level2
+    lea pl_part_2_prerelease(pc),a0
+    jsr resload_Patch(a2)
+    bra   .out
+     
+.no_level2
+    cmp.l   #$19704000,($014894-$014886,a1)
+    bne.b   .no_level4
+    lea pl_part_4_prerelease(pc),a0
+    jsr resload_Patch(a2)
+    bra   .out
+    
+.no_level4
+    ;move.l  a1,$100
 .out   
     movem.l (a7)+,d0-d1/a0-a2
     ; original
@@ -319,46 +362,65 @@ overlay_jump_v2
 	TST.L   (A0)                 ;005e2e: 4a90    
     rts
 
+
+
+    
 ; prot part: $3D0DA NOP $3CC7C start
-pl_protect_part_v2
+pl_protect_part_prerelease
     PL_START
-    PL_L  $44C2C-$43898,$70004E71 ; disable password check
+    ;PL_L  $44C2C-$43898,$70004E71 ; disable password check JOTD version
+    PL_B    $123A,$60   ; return forced
+    PL_NOP  $13AE,2     ; password check (Radertified@eab)
     PL_END
     
-pl_part_1_v2
+pl_part_1_prerelease
     PL_START
-    ; infinite fails on oil slicks
-    ;;PL_NOP      $3eb24-$3bdf6,6
+    
+    PL_IFC1X    1     ; level 1 & 3: infinite fails on oil slicks
+    PL_NOP      $3eb22,2
+    PL_ENDIF    
+    PL_IFC1X    2     ; invincibility
+    PL_NOP      $3c906,2    
+    PL_ENDIF
+    PL_IFC1X    3       ; full speed
+    PL_W    $3c8f8+2,$10    ; full speed (game)
+    PL_W    $3d9a4+2,$10    ; full speed (game init)
+    PL_ENDIF
     ; ends race immediately
-    PL_IFC1X    0
+    PL_IFC1X    0       ; skip level 1-3
     PL_W   $4416e-$43898,$8    ; tests against low x value => ends
     PL_ENDIF
     PL_END
     
-
-; prot
-;;00044C00 0000 526d                OR.B #$6d,D0
-;;00044C04 fffc                     ILLEGAL
-;;00044C06 6010                     BT .B #$10 == $00044c18 (T)
-;;00044C08 5180                     SUBQ.L #$08,D0
-;;00044C0A 6700 ff56                BEQ.W #$ff56 == $00044b62 (F)
-;;00044C0E 5b80                     SUBQ.L #$05,D0
-;;00044C10 6700 ff40                BEQ.W #$ff40 == $00044b52 (F)
-;;00044C14 6000 ff5a                BT .W #$ff5a == $00044b70 (T)
-;;00044C18 6000 feb2                BT .W #$feb2 == $00044acc (T)
-;;00044C1C 302d fffc                MOVE.W (A5,-$0004) == $0002df36 [0004],D0
-;;>d
-;;00044C20 41ed ff59                LEA.L (A5,-$00a7) == $0002de93,A0
-;;00044C24 4230 0000                CLR.B (A0,D0.W,$00) == $0002df22 [44]
-;;00044C28 486d ffe8                PEA.L (A5,-$0018) == $0002df22
-;;00044C2C 4eac 816a                JSR (A4,-$7e96) == $00026fd0
-;;00044C30 584f                     ADDAQ.W #$04,A7
-;;00044C32 2f00                     MOVE.L D0,-(A7) [00044c40]
-;;00044C34 486d ff59                PEA.L (A5,-$00a7) == $0002de93
-;;00044C38 486d ffe8                PEA.L (A5,-$0018) == $0002df22
-;;00044C3C 4eac 81ac                JSR (A4,-$7e54) == $00027012    string compare for entered password
-;;00044C40 4fef 000c                LEA.L (A7,$000c) == $0002de8e,A7
-
+pl_part_2_prerelease
+    PL_START
+    ; trainer level 2
+    PL_IFC1X    1    ; infinite lives
+    PL_NOP  $013300-$123b4,4
+    PL_ENDIF
+    PL_IFC1X    5  ; level 2 Prevent Penguins From Replacing Napkins
+    PL_NOP  $0127ea-$123b4,2     
+    PL_ENDIF
+    PL_IFC1X    4   ; skip level 2
+	PL_B    $01290e-$123b4,$42
+	PL_NOP  $012912-$123b4,4
+    PL_ENDIF
+    PL_END
+    
+pl_part_4_prerelease
+    PL_START
+    ; trainer level 4
+    PL_IFC1X    1   ; infinite lives
+    PL_NOP  $014a20-$014886,4    
+    PL_ENDIF   
+    PL_IFC1X    2    ; invincibility: 
+    PL_B      $018bfe-$014886,$60    ; Weasels Can't Kill You
+    PL_B      $019dc4-$014886,$60    ; invincibility: Dip Can't Kill You
+    PL_ENDIF
+    PL_IFC1X    6    ; infinite time
+    PL_NOP  $016b34-$014886,4    
+    PL_ENDIF
+    PL_END
 
 
 create_process
@@ -366,27 +428,56 @@ create_process
   ;      	JSR	(_LVOCreateProc,A6)	;0068a4: 4eaeff76 dos.library (off=-138)
     illegal
 
-overlay_jump_v1:
+; called just before jumping to some
+; overlayed code that just got loaded
+; loaded code doesn't correspond to exact
+; segments start
+overlay_jump_c160:
+    move.l  _resload(pc),a2
+    movem.l d0-d1/a0-a1,-(a7)
     cmp.l   #$487800fa,($E22-$DF6,a1)
     bne.b   .no_part_1
-    movem.l d0-d1/a0-a1,-(a7)
-    move.l  _resload(pc),a2
-    lea pl_part_1_v1(pc),a0
+    lea pl_part_1_c160(pc),a0
     jsr resload_Patch(a2)
-    movem.l (a7)+,d0-d1/a0-a1
+    bra .launch
 .no_part_1   
     cmp.l   #$426dffe0,($34-$2c,a1)
     bne.b   .no_protect_part
-    movem.l d0-d1/a0-a1,-(a7)
-    move.l  _resload(pc),a2
-    lea pl_protect_part_v1(pc),a0
+    lea pl_protect_part_c160(pc),a0
     jsr resload_Patch(a2)
-    movem.l (a7)+,d0-d1/a0-a1
+    bra .launch
 .no_protect_part
+    cmp.l   #$520013C0,($D60,a1)
+    bne.b   .no_part2_c160
+    lea pl_part_2_c160(pc),a0
+    jsr resload_Patch(a2)    
+    bra .launch    
+.no_part2_c160
+    cmp.l   #$41FAFC5A,($0005A2-$00059A,a1)
+    bne.b   .no_intro
+    lea pl_intro_c160(pc),a0
+    jsr resload_Patch(a2)
+    bra   .launch
+.no_intro
+    cmp.l   #$3e2f003e,(8,a1)
+    bne.b   .no_part4_c160
+    lea pl_part_4_c160(pc),a0
+    jsr resload_Patch(a2)
+    bra   .launch
+.no_part4_c160
+
+.launch    
+    movem.l (a7)+,d0-d1/a0-a1
 	MOVEM.L	(A7)+,D2-D7/A2-A7
     move.l  a1,$100
 	JMP	(A1)
 
+pl_intro_c160
+    PL_START
+    PL_IFC3
+    PL_B    $0005E8-$00059A,$60
+    PL_ENDIF
+    PL_END    
 
 ; train part 2
 ;00035F20 0001 ed66                OR.B #$66,D1
@@ -394,12 +485,13 @@ overlay_jump_v1:
 ;00035F26 13c0 0001 ed66           MOVE.B D0,$0001ed66 [04] <=== nop
 ;00035F2C 6100 fdb4                BSR.W #$fdb4 == $00035ce2
 
-pl_protect_part_v1
+pl_protect_part_c160
     PL_START
-    PL_NOP  $3d08a-$3cc2c,2 ; remove password check
+    PL_NOP  $3d08a-$3cc2c,2 ; remove password check ($45E)
+    PL_B  $328,$60 ; remove password screen completely
     PL_END
     
-pl_part_1_v1
+pl_part_1_c160
     PL_START
     ; ends race immediately
     PL_IFC1X    0
@@ -410,12 +502,43 @@ pl_part_1_v1
     PL_NOP      $3eb24-$3bdf6,6
     PL_ENDIF
     PL_END
+
+pl_part_2_c160
+    PL_START
+    ; trainer level 2
+    PL_IFC1X    1    ; infinite lives
+    PL_NOP  $13D4C-$012fec,2
+    PL_ENDIF
+    PL_IFC1X    5  ; level 2 Prevent Penguins From Replacing Napkins
+    PL_NOP  $13298-$012fec,2     
+    PL_ENDIF
+    PL_IFC1X    4   ; skip level 2
+    PL_W  $013270-$012fec,$4279    
+    PL_NOP  $013276-$012fec,2    
+    PL_ENDIF
+    PL_END
+    
+pl_part_4_c160
+    PL_START
+    ; trainer level 4
+    PL_IFC1X    1   ; infinite lives
+    PL_NOP  $016b88-$016526,2    
+    PL_ENDIF   
+    PL_IFC1X    2    ; invincibility: 
+    PL_B      $01a666-$016526,$60    ; Weasels Can't Kill You
+    PL_B      $01b6ca-$016526,$60    ; invincibility: Dip Can't Kill You
+    PL_ENDIF
+    PL_IFC1X    6    ; infinite time
+    PL_NOP  $18350-$016526,2    
+    PL_ENDIF
+    PL_END
+    
     
 end_race_pos
     move.w  #$120,d0
     RTS
     
-overlay_jump_v1_2:
+overlay_jump_c160_2:
     MOVEA.L	D7,A3
     movem.l d0-d1/a0-a2,-(a7)
     lea pl_intro(pc),a0
