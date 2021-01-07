@@ -30,6 +30,13 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 2.0 (07.01.2021) done by JOTD:
+ - protection screen completely skipped (issue #0001330)
+ - highscore save unless trainer is used (issue #0002955)
+ - trainer infinite lives & energy
+ - joypad/second button controls added
+
+
  version 1.2 (06.12.2020) done by JOTD:
  - added quitkey for 68000 machines (issue #0004855)
  
@@ -52,3 +59,12 @@
 
  Thanx to:
  - Jan Krolzig for original disk images.
+
+ Joypad controls:
+ - blue: switch item (space)
+ - play: pause/resume (p)
+ - green: start game (F1)
+ - yellow: enter password (F2)
+ - reverse+forward: give up (esc)
+ - reverse+forward+yellow: quit to workbench (quitkey)
+ 

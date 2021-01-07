@@ -2,7 +2,7 @@
 
 (set #multiple-versions "")		;set to <> "" if there are multiple versions
 (set #sub-dir "")			;sub directory containing data files
-(set #highs-file "highs")		;name of high scores file
+(set #highs-file "Globdule.high")		;name of high scores file
 
 (set #readme-file "ReadMe")		;name of readme file
 (set #man-file "Manual")		;name of manual file

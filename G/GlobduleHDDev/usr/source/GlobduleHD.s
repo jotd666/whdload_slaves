@@ -39,8 +39,8 @@ EXPMEMSIZE = $80000
 
 _base
 		SLAVE_HEADER		;ws_Security + ws_ID
-		dc.w	10		;ws_Version
-		dc.w	WHDLF_Disk|WHDLF_NoError|WHDLF_EmulTrap	;ws_flags
+		dc.w	17		;ws_Version
+		dc.w	WHDLF_NoError|WHDLF_EmulTrap	;ws_flags
 		IFD	CHIP_ONLY
 		dc.l	CHIPMEMSIZE+EXPMEMSIZE
 		ELSE
@@ -61,6 +61,14 @@ _expmem
 		dc.w	_name-_base		;ws_name
 		dc.w	_copy-_base		;ws_copy
 		dc.w	_info-_base		;ws_info
+		dc.w	0                       ;ws_kickname
+		dc.l	0                       ;ws_kicksize
+		dc.w	0                       ;ws_kickcrc
+		dc.w	_config-_base		;ws_config
+_config
+    dc.b    "C1:X:Trainer Infinite Lives:0;"
+    dc.b    "C1:X:Trainer Infinite Energy:1;"
+	dc.b	0
 
 ;============================================================================
 
@@ -70,7 +78,7 @@ _expmem
 
 
 DECL_VERSION:MACRO
-	dc.b	"1.2"
+	dc.b	"2.0"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -96,19 +104,24 @@ _info		dc.b	"adapted & fixed by Mr Larmer & JOTD",10,10
 		dc.b	0
 		even
 
+KEYBOARD_CODE_LENGTH = 124  ; $CA-$4E
+HIGHSCORE_TABLE_LENGTH = $DA
+PAL_HI_OFFSET = $2d96c
+NTSC_HI_OFFSET = $2d9de
 
-
-;	dc.b	'$VER: Globdule HD by Mr.Larmer/Wanted Team - V1.0 (07.01.99)',0
-;	CNOP 0,2
-
+IGNORE_JOY_DIRECTIONS
+    include    ReadJoyPad.s
+    
 ;======================================================================
 start	;	A0 = resident loader
 ;======================================================================
-
+ 
         ;;move.w  #0,$DFF1DC   ; force NTSC
 		lea	_resload(pc),a1
 		move.l	a0,(a1)			;save for later use
 
+        bsr _detect_controller_types
+        
 		lea	$100.w,A0
 		moveq	#0,D0
 		move.l	#$400,D1
@@ -134,7 +147,7 @@ start	;	A0 = resident loader
 		move.l	d0,$B54.W	; extmem
 
 		move.l	_resload(pc),a2
-		lea	pl_boot_pal(pc),a0
+		lea	pl_boot(pc),a0
 		sub.l	a1,a1
 		jsr	resload_Patch(a2)
 
@@ -165,14 +178,14 @@ get_expmem
 	ENDC
 	rts
 
-pl_boot_pal
+pl_boot
 		PL_START
 		PL_W	$10E,$6012		; skip set cache
 		PL_NOP	$12C,2		; skip clear zero page
 		PL_W	$140,$6006		; skip wrong access to CIA
 
 		PL_NOP	$226,2
-		PL_PS	$228,patch_pal
+		PL_PS	$228,patch_main
 
 		PL_P	$252,Load
 
@@ -189,7 +202,7 @@ _chiprevbits
 
 ;--------------------------------
 
-patch_pal
+patch_main
 	movem.l	d0-d1/a0-a2,-(a7)
 	move.l	_resload(pc),a2
 	lea	pl_main(pc),a0
@@ -207,64 +220,202 @@ pl_main
 
 ;--------------------------------
 
-patch1_ok
-	illegal
-;;		move.w	#$6034,$8299C		; skip manual protection
-
-		move.l	$1512.w,a0
-		jmp	(a6)
 
 patch1
-	movem.l	d0-d1/a0-a2,-(a7)
+	movem.l	d0-d1/a0-a4,-(a7)
 	bsr	get_expmem
+    lea borrowed_code(pc),a3
 	move.l	_resload(pc),a2
 	move.l	d0,a0
 
 	cmp.w	#$4EB9,$1130(a0)
 	beq.b	.ntsc
 .pal
+    move.l  #PAL_HI_OFFSET,d1
+    add.l   #$204e,d0
 	lea	pl_pal(pc),a0
 	bra.b	.do
 .ntsc
+    move.l  #NTSC_HI_OFFSET,d1
+    add.l   #$209c,d0
 	lea	pl_ntsc(pc),a0
 .do
+    bsr load_hiscores
+    move.l  d0,a4
+    move.l  #KEYBOARD_CODE_LENGTH-1,d0
+.copy
+    move.b  (a4)+,(a3)+
+    dbf d0,.copy
+    
 	bsr	get_expmem	
 	move.l	d0,a1
 	jsr	resload_Patch(a2)
-	movem.l	(a7)+,d0-d1/a0-a2
+	movem.l	(a7)+,d0-d1/a0-a4
 
 	move.l	$1512.w,a0
 	jmp	(a6)
 
+    
+save_hiscores
+    MOVE.W	#$000a,D2		;8b186: 343c000a
+	MOVE.W	#$0020,D1		;8b18a: 323c0020  
+    
+	movem.l	d0-d1/a0-a2,-(a7)
+    move.l  hiscores_address(pc),a1
+    lea highscores(pc),a0
+    move.l  _resload(pc),a2
+    move.l  #HIGHSCORE_TABLE_LENGTH,d0
+    jsr (resload_SaveFile,a2)
+	movem.l	(a7)+,d0-d2/a0-a1
+    rts
+    
+load_hiscores
+	movem.l	d0-d2/a0-a1,-(a7)
+    move.l  d1,d2
+	bsr	get_expmem	
+    add.l   d0,d2
+    ; compute & save hiscores address
+    lea hiscores_address(pc),a0
+    move.l  d2,(a0)
+
+    lea highscores(pc),a0
+    jsr (resload_GetFileSize,a2)
+    tst.l   d0
+    beq.b   .out
+
+    move.l  d2,a1
+    lea hiscores_address(pc),a0
+    lea highscores(pc),a0
+    jsr (resload_LoadFile,a2)    
+.out
+	movem.l	(a7)+,d0-d2/a0-a1
+    rts
+    ; pal lives 0008F443=0030 00091FC3=0030 00092047=0030
 pl_pal
 	PL_START
-	PL_W	$299C,$6034		; skip manual protection
+    PL_NOP  $104C,6         ; skip manual protection
+	;PL_W	$299C,$6034		; all protection codes work
 	PL_PS   $2030,kb_hook
+    PL_PSS  $1ece,vbl_hook,2
+    PL_PS   $733e,test_fire
+    PL_S    $7344,8  
+
+    PL_IFC1
+    PL_IFC1X    0
+    PL_NOP  $3372,2 ; infinite lives
+    PL_ENDIF
+    PL_IFC1X    1
+    PL_NOP  $5fca,2 ; infinite energy
+    PL_ENDIF
+    PL_ELSE
+    PL_PSS   $b186,save_hiscores,2
+    PL_ENDIF
 	PL_END
 
 
 pl_ntsc
 	PL_START
-	PL_W	$29EA,$6034		; skip manual protection
+    PL_NOP  $104C,6         ; skip manual protection
+	;PL_W	$29EA,$6034		; all protection codes work
 	PL_R	$1130			; skip country check
 	PL_PS   $207e,kb_hook
+    PL_PSS  $1f1c,vbl_hook,2
+    PL_PS   $739a,test_fire
+    PL_S    $739a+6,8
+
+    PL_IFC1
+    PL_IFC1X    0
+    PL_NOP  $33ce,2 ; infinite lives
+    PL_ENDIF
+    PL_IFC1X    1
+    PL_NOP  $6026,2 ; infinite energy
+    PL_ENDIF
+    PL_ELSE
+    PL_PSS   $af62,save_hiscores,2
+    PL_ENDIF
+
+
 	PL_END
 
+TEST_BUTTON:MACRO
+    move.b  #\2,d1  ; pressed: put keycode
+    btst    #JPB_BTN_\1,d2
+    beq.b   .nochange_\1
+    btst    #JPB_BTN_\1,d0
+    bne.b   .pressed_\1
+    bset    #7,d1
+.pressed_\1    
+    ; call copy of the original keyboard handler processing
+    ; (store keycode in 3 different ways)
+    bsr     put_keycode
+.nochange_\1
+    ENDM
+
+test_fire:
+    move.l  joy1(pc),d0
+    btst    #JPB_BTN_RED,d0
+    sne d0
+    ext.w   d0    
+    rts
+    
+vbl_hook
+    movem.l d0-d2/a0-a1,-(a7)
+    ; don't waste cycles reading input at 50Hz, game
+    ; updates are 25Hz
+    lea alternate_input_read(pc),a0
+    move.b  (a0),d0
+    bchg    #0,d0
+    move.b  d0,(a0)
+    bne   .nochange
+    
+    lea prev_buttons_state(pc),a0
+    move.l  (a0),d1     ; get previous state
+	moveq	#1,d0
+	bsr	_joystick
+    move.l  joy1(pc),d0
+    move.l  d0,(a0)     ; save previous state for next time
+    ; now D0 is current joypad state
+    ;     D1 is previous joypad state
+    ; xor to d2 to get what has changed quickly
+    move.l  d0,d2
+    eor.l   d1,d2
+    beq   .nochange   ; cheap-o test just in case no input has changed
+    ; d2 bears changed bits (buttons pressed/released)
+    btst    #JPB_BTN_REVERSE,d0
+    beq.b   .noesc
+    TEST_BUTTON FORWARD,$45
+    btst    #JPB_BTN_REVERSE,d0
+    beq.b   .noesc
+    btst    #JPB_BTN_YEL,d0
+    bne _quit
+.noesc
+    TEST_BUTTON BLU,$40     ; switch fruit
+    TEST_BUTTON GRN,$50
+    TEST_BUTTON YEL,$51
+    TEST_BUTTON PLAY,$19     ; pause
+.nochange    
+    movem.l (a7)+,d0-d2/a0-a1
+    MOVE.W	#$0020,$dff09c  ; original code
+    rts
+
+    
+    
 kb_hook:
     movem.l d1,-(a7)
     ror.b   #1,d1
     not.b   d1
     cmp.b   _keyexit(pc),d1
-    bne.b   .noquit
-	pea	TDREASON_OK
-	move.l	_resload(pc),-(a7)
-	addq.l	#resload_Abort,(a7)
-	rts    
-.noquit
+    beq.b   _quit
+
     movem.l (a7)+,d1
     MOVE.B	#$40,3584(A0)
     rts
-    
+
+_quit
+	pea	TDREASON_OK
+	move.l	_resload(pc),-(a7)
+	addq.l	#resload_Abort,(a7)
+	rts        
 ;--------------------------------
 
 Load
@@ -421,6 +572,17 @@ lbC000A22:
 
 _resload	dc.l	0		;address of resident loader
 
+put_keycode:
+    MOVE.L	D0,-(A7)
+borrowed_code:
+    ds.b    KEYBOARD_CODE_LENGTH
+    MOVE.L	(A7)+,D0
+    rts
+    
+prev_buttons_state
+    dc.l    0
+alternate_input_read
+    dc.w    0
 ;--------------------------------
 ; IN:	d0=offset d1=size d2=disk a0=dest
 ; OUT:	d0=success
@@ -437,7 +599,11 @@ _flushcache:
 	jsr	resload_FlushCache(a2)
 	move.l	(a7)+,a2
 	rts
-
+hiscores_address
+        dc.l    0
+highscores:
+    dc.b    "Globdule.high",0
+    
 ;======================================================================
 
 	END

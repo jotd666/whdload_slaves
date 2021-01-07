@@ -40,15 +40,15 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 3.0 (19.12.2020) done by JOTD:
+ version 3.0 (xx.01.2021) done by JOTD:
  - adapted to whdload 17
  - added proper joypad controls (floppy & cd32)
  - reassembled with kickemu 3.1 + cd32 emulation
  - skip intro (CUSTOM5, cd32 version)
  - cd32 version now no longer requires kick3.1 to run
- - todo fix crash during intro real miggy TOTEST 
  - fixed classic 2-button controls for standard joystick (issue #0004907)
  - added levelskip
+ - version/filesize check at bootup
  
  version 2.2 (01.01.2003) done by JOTD:
  - CD³² version supported
@@ -79,4 +79,7 @@ to launch stix. With a 2-button joystick use the 2 button option (which is diffe
 and cd32 version: button 2 launches stix in the floppy version, and jumps in the cd32 version, whereas
 pressing fire longer launches stix)
 
+files "bubba" and "intro" (cd32 only) must be unpacked for the game to run properly
+This is done by the installer script (you need xfddecrunch). If the game quits with
+"unsupported version", that probably means that that part has been skipped.
 

@@ -9,7 +9,7 @@
 (set #highs-file "highs")		;name of high scores file
 (set #exename "bubba")		        ;name of executable program
 (set #last-file "disk.0")          ;last file the imager should create
-(set #prefix @app-name)                       ;name of slave, directory
+(set #prefix "BubbaNStix")                       ;name of slave, directory
 
 ;----------------------------
 ; copy file including icon if exist
