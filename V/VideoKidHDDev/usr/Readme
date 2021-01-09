@@ -32,6 +32,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
  
+ Version 2.1 (09.01.2021) done by JOTD:
+ - help skips level when joypad controls isn't active (issue #0004942)
+
  Version 2.0 (13.12.2020) done by JOTD:
  - joypad controls (issue #0004900)
  - adapted to whdload v17

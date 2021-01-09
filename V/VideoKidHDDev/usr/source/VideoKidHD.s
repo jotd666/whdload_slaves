@@ -60,7 +60,7 @@ slv_config:
 		dc.b	0
         
 DECL_VERSION:MACRO
-	dc.b	"2.0"
+	dc.b	"2.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -322,10 +322,6 @@ level3_interrupt_hook
 	MOVE.W	$1e57c,D0		;1c894: 3039000
     rts    
 .vbl
-    cmp.b   #$5F,current_rawkey
-    bne.b   .nolevelskip
-    move.w  #1,level_completed_flag
-.nolevelskip
     ; vblank: take over
     ; read joypad
     lea .prev_joy(pc),a0
@@ -399,6 +395,14 @@ keyboard_interrupt
     beq.b   quit
     move.l  current_rawkey_address(pc),a0
 	MOVE.B	D0,(a0)       ; game location for rawkey  
+
+    ; in-game only
+    cmp.l   #current_rawkey,a0
+    bne.b   .nolevelskip
+    cmp.b   #$5F,current_rawkey
+    bne.b   .nolevelskip
+    move.w  #1,level_completed_flag
+.nolevelskip
 
 	BSET	#$06,$bfee01
 	move.l	#2,d0
