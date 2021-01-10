@@ -65,7 +65,7 @@ slv_Version	= 17
 ; this is probably a programming error with this version, made up by non-zero memory
 ; (sometimes it's the other way round): check the compiler warnings a*holes...
 
-slv_Flags	= WHDLF_NoError|WHDLF_Examine|WHDLF_Req68020|WHDLF_ReqAGA
+slv_Flags	= WHDLF_NoError|WHDLF_Examine|WHDLF_Req68020|WHDLF_EmulLineF|WHDLF_ReqAGA
 slv_keyexit	= $67	; right amiga (as num pad is used)
 
 	include	whdload/kick31.s
@@ -126,7 +126,9 @@ config:
 ; 68020, no fpu, version on CD
 program:
     dc.b    "TFX",0
-; 68040 or higher, this is not the version on CD
+; this is not the version on CD, and wrongly called "TFX.040"
+; (renamed from TFX.???) Basically this is a 68020 FPU development version
+; with symbols left in (thanks to the programmer who leaked it, helped a lot!)
 program_040:
 	dc.b	"TFX.040",0
 ; 68020 with FPU, version is on CD
@@ -201,22 +203,27 @@ _bootdos
 
         move.l  executable(pc),d1
         bne.b   .noauto
-    ;load exe
+    ;automatic mode
+        move.l  attnflags(pc),d0
+        btst    #AFB_68040,d0
+        beq.b   .test_fpu
+        ; 68040 or 68060. Check if we have FPU available
+      ; check for 040 FPU, fails on 68060 atm there's no
+      ; way to make 060 run a FPU version anyway
+        btst    #AFB_FPU40,d0
+        beq.b   .nofpu
+        ; 68040/060 with FPU, we can automatically select one of the FPU
+        ; executables, the best being the newest one from 1997 hosted on
+        ; hall of light (https://is.gd/A6yk2T)
+        move.l  #3,d1   ; set 68020+FPU executable, 1997
+        bra.b   .noauto
+.test_fpu
         move.l  attnflags(pc),d0
         btst    #AFB_68881,d0
         beq.b   .nofpu
 
-;        btst    #AFB_68040,d0
-;        beq.b   .030
-;        btst    #AFB_FPU40,d0
-;        beq.b   .030
-;        move.l  #4,d1   ; set 68040 executable
-;        bra.b   .noauto
-;.030
-    ; not 040 or no 040 fpu
-;        btst    #AFB_68881,d0
-;        beq.b   .nofpu
-        move.l  #2,d1   ; set 68020+FPU executable
+
+        move.l  #3,d1   ; set 68020+FPU executable
 
 .nofpu
         moveq.l #1,d1   ; simple 68020
@@ -225,7 +232,6 @@ _bootdos
         cmp.l   #4,d1
         bcs.b   .inrange
 
-; checksum doesn't match, file corrupt
         pea	wrongcustom(pc)
         pea	(TDREASON_FAILMSG).w
         move.l	_resload(pc),a0
@@ -246,9 +252,35 @@ _bootdos
         jsr _LVOAllocMem(a6)
         movem.l (a7)+,a6
     ENDC
-    
-    move.l  run_config(pc),d0
-    beq.b   .skipconf
+        ; for 68040/68060 only, with FPU
+        ; now we have to enable FPU on 68060, whdload turns it off
+        ; by default (thanks Bert for reminding it to me BEFORE I waste
+        ; a lot of time on that issue)
+        
+        move.l  attnflags(pc),d0
+        btst    #AFB_68060,d0
+        beq.b   .no060
+		move.l	#WCPUF_FPU,d0
+		move.l	#WCPUF_FPU,d1
+        move.l  _resload(pc),a2
+		jsr	(resload_SetCPU,a2)
+.no060
+    ; check for 040 FPU, fails on 68060 atm there's no
+    ; way to make 060 run a FPU version
+        move.l  attnflags(pc),d0
+        btst    #AFB_FPU40,d0
+        beq.b   .no040fpu
+        lea program(pc),a0
+        ; if the user asked for the nofpu version, let them have it
+        cmp.l  program_to_run(pc),a0
+        beq.b   .no040fpu
+        ; FPU executable, on 040/060 equipped with FPU
+        ; install 68881/68882 emulation program
+        bsr install_fp_exe
+.no040fpu
+        
+        move.l  run_config(pc),d0
+        beq.b   .skipconf
     
         lea config(pc),a0
 		lea	args(pc),a1
@@ -629,6 +661,39 @@ old_level3_interrupt
 buttons_state
     dc.l    0
 
+; < a0: program name
+; < a1: arguments
+; < d0: argument string length
+; < a5: patch routine (0 if no patch routine)
+
+
+install_fp_exe:
+	movem.l	d0-a6,-(a7)
+    lea fpsp_name(pc),a0
+	move.l	a0,d1
+	jsr	(_LVOLoadSeg,a6)
+	move.l	d0,d7			;D7 = segment
+	beq	.end			;file not found
+    add.l   d7,d7
+    add.l   d7,d7
+    move.l  d7,a3
+	move.l	_stacksize(pc),-(a7)	; original stack format
+	movem.l	(_saveregs,pc),d1-d7/a1-a2/a4-a6	; original registers (BCPL stuff)
+	jsr	(4,a3)		; call program
+	addq.l	#4,a7
+
+
+	movem.l	(a7)+,d0-a6
+	rts
+    
+.end    
+	jsr	(_LVOIoErr,a6)
+    pea fpsp_name(pc)
+	move.l	d0,-(a7)
+	pea	TDREASON_DOSREAD
+	move.l	(_resload,pc),-(a7)
+	add.l	#resload_Abort,(a7)
+	rts
     
 ; < a0: program name
 ; < a1: arguments
@@ -718,10 +783,12 @@ offset
     dc.w    0
 int2_hook_address
     dc.l    0
+fpsp_name
+    dc.b    "fpsp",0
 wrongcustom
     dc.b    "custom exe value out of range 0-4",0
 mem_patched
     dc.b    0
+    cnop    0,4
 ;============================================================================
 
-	END

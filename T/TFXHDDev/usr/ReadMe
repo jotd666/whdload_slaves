@@ -47,6 +47,13 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+  Version 1.1 (xx.01.2021) done by JOTD:
+  - patched the CPU vectors so the FPU versions run on 68040/68060 FPUs, using
+    a rebuilt version of Motorola FPSP emulation code, integrated in the slave :)
+  - modified TFX executable autodetect now that the FPU versions can be used with
+    68040 and 68060 processors. Make sure to copy the "fpsp" file in "data" directory
+    if you're upgrading your installation
+    
   Version 1.0 (28.12.2020) done by JOTD
   - automatic executable selection depending on cpu/fpu (or manual)
   - self-modifying code removed (fonts were trashed)
@@ -75,8 +82,8 @@
    This last HOL version is a newer 1997 build of the game with probable bug fixes
 
  Below are unusable/corrupt versions (no thanks to Hunk Wizard tool):
- - TFX.030 (HOL)
- - TFX.strip (68040, HOL)
+ - TFX.030 (HOL https://is.gd/A6yk2T)
+ - TFX.strip (68040, HOL https://is.gd/XfxhAL)
  - TFX.040 (original from CU amiga CD)
    
  The slave tries to select the best executable for your configuration but if
@@ -105,7 +112,6 @@
  
  Todo:
  
- - patch the FPU versions to be compatible with 68040/68060 FPUs
  - profile the game to see where it could be faster
  - maybe try to make the bogus exes work
  
