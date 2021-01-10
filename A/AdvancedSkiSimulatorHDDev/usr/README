@@ -39,6 +39,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 2.1 (10.01.2021) done by JOTD:
+ - reduced memory requirements (issue #0004943)
+ 
  version 2.0 (08.01.2021) done by JOTD:
  - another version (SPS1805) supported (issue #0004408)
  - music fixed
