@@ -202,12 +202,29 @@ _bootdos
 		bsr	_dos_assign
 
         move.l  executable(pc),d1
-        bne.b   .noauto
+        bne   .noauto
     ;automatic mode
         move.l  attnflags(pc),d0
         btst    #AFB_68040,d0
-        beq.b   .test_fpu
-        ; 68040 or 68060. Check if we have FPU available
+        beq   .test_fpu
+        ; is this a 68060?
+        btst    #AFB_68060,d0
+        beq.b   .plain_040
+        movem.l a6,-(a7)
+        move.l  $4,a6
+        lea get_060_id(pc),a5
+        jsr (_LVOSupervisor,a6)
+        movem.l (a7)+,a6
+
+;68060 has ID register that shows the type of CPU (PCR) which also includes FPU-disabled bit.
+;PCR=0430xxxx = 68060
+;PCR=0431xxxx = 68EC060 or 68LC060
+        swap    d0        
+        cmp.w   #$431,d0
+        beq.b   .nofpu      ; 680EC060 or 68LC060
+        bra.b   .assume_fpu
+.plain_040
+        ; 68040. Check if we have FPU available
       ; check for 040 FPU, fails on 68060 atm there's no
       ; way to make 060 run a FPU version anyway
         btst    #AFB_FPU40,d0
@@ -221,12 +238,14 @@ _bootdos
         move.l  attnflags(pc),d0
         btst    #AFB_68881,d0
         beq.b   .nofpu
-
-
-        move.l  #3,d1   ; set 68020+FPU executable
-
+.assume_fpu
+        ; set 68020+FPU latest executable
+        ; this is the optimal case because the latest executable...
+        ; contains the latest fixes, and also uses FPU
+        move.l  #3,d1
+        bra.b   .noauto
 .nofpu
-        moveq.l #1,d1   ; simple 68020
+        moveq.l #1,d1   ; 68020 or higher but no fpu
 .noauto
         subq.l  #1,d1
         cmp.l   #4,d1
@@ -252,21 +271,34 @@ _bootdos
         jsr _LVOAllocMem(a6)
         movem.l (a7)+,a6
     ENDC
-        ; for 68040/68060 only, with FPU
+        ; for 68040/68060 only, FPU assumed (we have checked it in the "auto"
+        ; executable selection, but the user can force it, note that it will probably
+        ; fail but just in case of a strange Vampire-like board that isn't properly detected...
         ; now we have to enable FPU on 68060, whdload turns it off
         ; by default (thanks Bert for reminding it to me BEFORE I waste
-        ; a lot of time on that issue)
-        
+        ; a lot of time on that issue)        
+
         move.l  attnflags(pc),d0
         btst    #AFB_68060,d0
         beq.b   .no060
+
+        lea program(pc),a0
+        ; 68060, if the user asked for the nofpu version, let them have it
+        cmp.l  program_to_run(pc),a0
+        beq.b   .no060
+
+        ; FPU executable, on 060
+        ; install 68881/68882 emulation program
+        
+        bsr install_fp_exe_060
+
 		move.l	#WCPUF_FPU,d0
 		move.l	#WCPUF_FPU,d1
         move.l  _resload(pc),a2
 		jsr	(resload_SetCPU,a2)
+        bra.b   .no040fpu       ; no need to test for 68040 FPU
 .no060
-    ; check for 040 FPU, fails on 68060 atm there's no
-    ; way to make 060 run a FPU version
+    ; check for 040 FPU (not 060 FPU!)
         move.l  attnflags(pc),d0
         btst    #AFB_FPU40,d0
         beq.b   .no040fpu
@@ -276,7 +308,7 @@ _bootdos
         beq.b   .no040fpu
         ; FPU executable, on 040/060 equipped with FPU
         ; install 68881/68882 emulation program
-        bsr install_fp_exe
+        bsr install_fp_exe_040
 .no040fpu
         
         move.l  run_config(pc),d0
@@ -322,6 +354,12 @@ _quit		pea	TDREASON_OK
 		move.l	(_resload,pc),a2
 		jmp	(resload_Abort,a2)
 
+get_060_id:
+    mc68060
+    movec  pcr,d0
+    mc68020
+    rte
+    
 get_version
         move.l  program_to_run(pc),a0
         jsr (resload_GetFileSize,a2)
@@ -666,11 +704,15 @@ buttons_state
 ; < d0: argument string length
 ; < a5: patch routine (0 if no patch routine)
 
-
+install_fp_exe_040:
+    lea fpsp_name_040(pc),a0
+    bra install_fp_exe
+install_fp_exe_060:
+    lea fpsp_name_060(pc),a0
 install_fp_exe:
 	movem.l	d0-a6,-(a7)
-    lea fpsp_name(pc),a0
 	move.l	a0,d1
+    move.l  a0,a3
 	jsr	(_LVOLoadSeg,a6)
 	move.l	d0,d7			;D7 = segment
 	beq	.end			;file not found
@@ -681,14 +723,13 @@ install_fp_exe:
 	movem.l	(_saveregs,pc),d1-d7/a1-a2/a4-a6	; original registers (BCPL stuff)
 	jsr	(4,a3)		; call program
 	addq.l	#4,a7
-
-
+    ; do NOT UnloadSeg as the program needs to remain loaded
 	movem.l	(a7)+,d0-a6
 	rts
     
 .end    
 	jsr	(_LVOIoErr,a6)
-    pea fpsp_name(pc)
+    move.l  a3,-(a7)
 	move.l	d0,-(a7)
 	pea	TDREASON_DOSREAD
 	move.l	(_resload,pc),-(a7)
@@ -783,8 +824,10 @@ offset
     dc.w    0
 int2_hook_address
     dc.l    0
-fpsp_name
-    dc.b    "fpsp",0
+fpsp_name_040
+    dc.b    "fpsp040",0
+fpsp_name_060
+    dc.b    "fpsp060",0
 wrongcustom
     dc.b    "custom exe value out of range 0-4",0
 mem_patched

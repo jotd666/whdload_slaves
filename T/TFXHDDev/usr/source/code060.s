@@ -1,4 +1,4 @@
-; Motorola MC68881/82 FPU emulation code for 68040
+; Motorola MC68881/82 FPU emulation code for 68060
 ;
 ; adapted from RTEM by JOTD in january 2021
 ;
@@ -30,7 +30,7 @@
 ; artistic freedom :)) converted from C to asm by JOTD
 
     opt a+
-    MC68040
+    MC68060
 _entry:
 
 ; 
@@ -67,25 +67,45 @@ vectorconvert:
     moveq.l #0,d0
     rts
 
-    ; include the big fp emulation code by Motorola
-    include fp.s
+    ; include the big fp emulation code by Motorola (as binary, to avoid rebuilding it)
+    include fskel060_mot.s
 
-
+    ; the memory handlers, assuming memory isn't translated (read in supervisor space)
+    include os_simple.s
+    
 handler_table:
-    dc.l 11,  _fpspEntry_fline
-    dc.l 48,  _fpspEntry_bsun
-    dc.l 49,  _fpspEntry_inex
-    dc.l 50,  _fpspEntry_dz
-    dc.l 51,  _fpspEntry_unfl
-    dc.l 52,  _fpspEntry_operr
-    dc.l 53,  _fpspEntry_ovfl
-    dc.l 54,  _fpspEntry_snan
-    dc.l 55,  _fpspEntry_unsupp
+    dc.l 11,_060_fpsp_fline
+    dc.l 48,_060_fpsp_bsun
+    dc.l 49,_060_fpsp_inex
+    dc.l 50,_060_fpsp_dz
+    dc.l 51,_060_fpsp_unfl
+    dc.l 52,_060_fpsp_operr
+    dc.l 53,_060_fpsp_ovfl
+    dc.l 54,_060_fpsp_snan
+    dc.l 55,_060_fpsp_unsupp
     dc.l  0
+
     
     ; reduced that table from 100 values to 16 since only 9 are used.
 M68040FPSPUserExceptionHandlers
     ds.l    $10
     
+
+    ; JOTD lame stubs let's hope that they're not called
+_060_isp_done
+    illegal
+    dc.w    0
+_060_fpsp_bsun
+    illegal
+    dc.w    1
+buserr
+    illegal
+    dc.w    2
+trap
+    illegal
+    dc.w    3
+
+
+
 
     
