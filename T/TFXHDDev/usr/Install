@@ -10,8 +10,8 @@
 (set #man-file "Manual")		;name of manual file
 (set #hint-file "Hints")		;name of hint file
 (set #sol-file "Solution")		;name of solution file
-(set #extra-file "fpsp")		;name of extra file
-(set #extra2-file "Extra2")		;name of second extra file
+(set #extra-file "fpsp040")		;name of extra file
+(set #extra2-file "fpsp060")		;name of second extra file
 (set #extra3-file "Extra3")		;name of third extra file
 (set #prefix "TFX")			;name of slave, directory
 (set #prefix-slave "")
@@ -1188,8 +1188,11 @@
     )
   )
 )
-; copy floating point emulation program
+; copy floating point emulation program (68040)
 (set #copy-file #extra-file)
+(P_CopyFile)
+; copy floating point emulation program (68060)
+(set #copy-file #extra2-file)
 (P_CopyFile)
 
 

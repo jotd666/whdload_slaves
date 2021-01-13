@@ -91,21 +91,40 @@ M68040FPSPUserExceptionHandlers
     ds.l    $10
     
 
-    ; JOTD lame stubs let's hope that they're not called
 _060_isp_done
-    illegal
-    dc.w    0
+    rte
+    ; JOTD lame stubs let's hope that they're not called
 _060_fpsp_bsun
     illegal
-    dc.w    1
+    trap #1
 buserr
     illegal
-    dc.w    2
+    trap #2
 trap
     illegal
-    dc.w    3
+    trap #3
 
+    IFEQ    1
+funimp_gen
+    ; should not go below on a 47E4A9DC f200 5c32                FMOVECR.X #0x32 [#1.000000e+00],FP0
+funimp_gen_op:
+	bsr.l		_load_fop		# load
 
+	clr.l		%d0
+	mov.b		FPCR_MODE(%a6),%d0	# fetch rnd mode
 
+	mov.b		1+EXC_CMDREG(%a6),%d1
+	andi.w		&0x003f,%d1		# extract extension bits
+	lsl.w		&0x3,%d1		# shift right 3 bits
+	or.b		STAG(%a6),%d1		# insert src optag bits
+
+	lea		FP_DST(%a6),%a1		# pass dst ptr in a1
+	lea		FP_SRC(%a6),%a0		# pass src ptr in a0
+
+	mov.w		(tbl_trans.w,%pc,%d1.w*2),%d1
+	jsr		(tbl_trans.w,%pc,%d1.w*1) # emulate
+    ENDC
+    ; jumps to 4036 add: 	short		tbl_trans - tbl_trans	# $12-6 ftentox unnorm fails zero!!!
+    
 
     

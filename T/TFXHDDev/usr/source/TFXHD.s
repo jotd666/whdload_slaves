@@ -292,6 +292,7 @@ _bootdos
         
         bsr install_fp_exe_060
 
+        
 		move.l	#WCPUF_FPU,d0
 		move.l	#WCPUF_FPU,d1
         move.l  _resload(pc),a2
@@ -724,7 +725,16 @@ install_fp_exe:
 	jsr	(4,a3)		; call program
 	addq.l	#4,a7
     ; do NOT UnloadSeg as the program needs to remain loaded
+
+    ; test (temp)
+;    lea .wtf(pc),a0
+;    MC68040
+;    fmove.l   a0,FPIAR
+;.wtf
+;    dc.l    $f2005c32       ; unsupported FPU FMOVECR
+
 	movem.l	(a7)+,d0-a6
+
 	rts
     
 .end    

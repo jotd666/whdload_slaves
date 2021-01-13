@@ -60,6 +60,7 @@
 ;
 	;|.global		_060_fpsp_done
 _060_fpsp_done:
+    rte     ; jotd: let's avoid another branch
 	bra.l	 _060_isp_done	; do the same as isp_done
 
 ;
