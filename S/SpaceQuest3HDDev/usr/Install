@@ -364,6 +364,12 @@
 (P_CopyFile #highs-file)
 (P_Install)
 
+  (copyfiles
+    (help @copyfiles-help)
+    (source "res_mt32.cfg")
+    (dest #dest)
+    (pattern "#?")
+  )
 
 (if (= #copy_startup 1)
 (

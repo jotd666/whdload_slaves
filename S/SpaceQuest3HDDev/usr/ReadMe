@@ -8,7 +8,7 @@
  CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
  PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
- This install applies to "Space Quest III - The Pirates of Pestulon" © 1989 Sierra.
+ This install applies to "Space Quest 3 - The Pirates of Pestulon" © 1989 Sierra.
 
  This install requires WHDLoad to be in the path. It can be found in the
  WHDLoad package.
@@ -38,19 +38,27 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 1.2-B (13.07.14)
+ version 2.0 (17.01.2021)
+ - german version: found a way to avoid entering umlauts by using the alternate
+   spelling (ue, oe) instead. Example: type "oeffnen" and it will switch to the umlaut
+   syntax that the game understands (issue #0004644)
+ - source rework so the new sound patch system can be dynamically chosen for german version
+   which has MT32 support (issue #0004957)
+ - source rework also provides selectable keyboard layout (english, french, german)
+   
+ version 1.2-B (13.07.2014)
  - reassembled with latest kickemu
  - added notes for german users & savegame notes
 
- version 1.2 (08.01.06)
+ version 1.2 (08.01.2006)
  - fixed access fault in english version (not found in the german version)
 
- version 1.1 (08.09.03)
+ version 1.1 (08.09.2003)
  - german version supported
  - game saves are now located in the current directory, not "saves" anymore
  - adapted to WHDLoad v16
 
- version 1.0 (26.07.03) done by JOTD:
+ version 1.0 (26.07.2003) done by JOTD:
  - initial release
  - original quit option activated
  - save games to HD
@@ -59,9 +67,16 @@
 
  GERMAN USERS PLEASE READ:
  - The game has been reported as buggy because users could not enter special
-   german chars. It is not true. To enter "offnen" with a "trema" on the 'o',
+   german chars (umlauts). It is not true. To enter "offnen" with a "trema" on the 'o',
    press o, then press the "trema" key => character o is replaced by the
-   character o+trema
+   character o+trema. That was the original way of doing it. The new slave version
+   is able to detect "oe" and "ue" sequences and replaces them by the corresponding umlaut.
+   Deleting an umlaut expands back to the sequence, just in case the umlaut is not what the user
+   wanted.
+   
+ ENGLISH USERS PLEASE READ:
+ - The english version is an early version without MT32 sound support. The german version has
+   MT32 sound support, but can be switched to full english with the language menu (sierra / sprache)
 
  SAVING GAME ADVICE
  - like most whdload installed games, after saving your position to disk, avoid

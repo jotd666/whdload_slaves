@@ -1,30 +1,22 @@
 ;*---------------------------------------------------------------------------
-;  :Program.	SpaceQuest3HD.asm
-;  :Contents.	Slave for "SpaceQuest3"
-;  :Author.	JOTD, from Wepl sources
-;  :Original	v1 
-;  :Version.	$Id: SpaceQuest3HD.asm 1.2 2002/02/08 01:18:39 wepl Exp wepl $
-;  :History.	%DATE% started
+;  :Modul.	kick13.asm
+;  :Contents.	kickstart 1.3 booter
+;  :Author.	Wepl
+;  :Original.
+;  :Version.	$Id: kick13.asm 1.2 2001/09/20 19:46:12 wepl Exp wepl $
+;  :History.	19.10.99 started
+;		20.09.01 ready for JOTD ;)
 ;  :Requires.	-
 ;  :Copyright.	Public Domain
 ;  :Language.	68000 Assembler
-;  :Translator.	Devpac 3.14, Barfly 2.9
+;  :Translator.	Barfly V2.9
 ;  :To Do.
 ;---------------------------------------------------------------------------*
 
-	INCDIR	Include:
-	INCLUDE	whdload.i
-	INCLUDE	whdmacros.i
-	INCLUDE	lvo/dos.i
-
-;DEBUG
-
 	IFD BARFLY
-	OUTPUT	"SpaceQuest3.slave"
-	IFND	DEBUG
+	OUTPUT	"LeisureSuitLarry3.Slave"
 	BOPT	O+				;enable optimizing
 	BOPT	OG+				;enable optimizing
-	ENDC
 	BOPT	ODd-				;disable mul optimizing
 	BOPT	ODe-				;disable mul optimizing
 	BOPT	w4-				;disable 64k warnings
@@ -34,101 +26,109 @@
 
 ;============================================================================
 
-CHIPMEMSIZE	= $80000
-FASTMEMSIZE	= $C0000
-NUMDRIVES	= 1
-WPDRIVES	= %0000
 
-	IFND	DEBUG
-BLACKSCREEN
-	ELSE
+;CHIP_ONLY
+CHIP_ALIGN = $9870
+
+    IFD CHIP_ONLY
+CHIPMEMSIZE	= $120000
+FASTMEMSIZE	= $0000
 HRTMON
-	ENDC
-
-;DISKSONBOOT
-DOSASSIGN
-;INITAGA
-HDINIT
-IOCACHE		= 45000
-;MEMFREE	= $200
-;NEEDFPU
+BOOTEARLY
+    ELSE
+CHIPMEMSIZE	= $80000
+FASTMEMSIZE	= $80000
+    ENDC
+    
+IOCACHE = 50000
+SEGTRACKER
+;
 ;SETPATCH
-CBDOSLOADSEG
-
-slv_Version	= 16
-slv_Flags	= WHDLF_NoError|WHDLF_Examine
-slv_keyexit	= $5D	; num '*'
 
 ;============================================================================
 
-	include	whdload/kick13.s
+PATCH_KEYBOARD = 1
+PATCH_MT32 = 1
+MAINPROG        ; english version has "sq3" alternate "prog" main name
+CRACKIT = 1
+
 
 ;============================================================================
 
+	include	"sierra_hdinit.s"
+   
 	IFD BARFLY
+	IFND	.passchk
 	DOSCMD	"WDate  >T:date"
+.passchk
+	ENDC
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.2-B"
+	dc.b	"2.0"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
 	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
+	ENDC
 	ENDM
-
 	dc.b	"$","VER: slave "
 	DECL_VERSION
-	dc.b	$A,$D,0
+	dc.b	0
+slv_name		dc.b	"Space Quest 3 - The Pirates of Pestulon",0
 
-slv_name		dc.b	"Space Quest III - The Pirates of Pestulon",0
+    IFD CHIP_ONLY
+    dc.b    " (DEBUG/CHIP MODE)"
+    ENDC
+    dc.b    0
 slv_copy		dc.b	"1989 Sierra",0
 slv_info		dc.b	"adapted & fixed by JOTD",10,10
 			dc.b	"Thanks to BTTR for disk images",10,10
 			dc.b	"Version "
 		DECL_VERSION
 		dc.b	0
-slv_CurrentDir:
-	dc.b	"data",0
-	EVEN
+_rename_file:
+    rts
+    
+    IFD CHIP_ONLY
+_bootearly:
 
-_assign_df0
-	dc.b	"DF0",0
-	EVEN
-
-;============================================================================
-
-; < D0: BSTR filename
-; < D1: seglist
-
-_cb_dosLoadSeg
-	move.l	_resload(pc),a2
-
-	add.l	D1,D1		
-	add.l	D1,D1	
-	move.l	d1,d7
-
-	; now D7 is APTR to seglist
-
-	lsl.l	#2,d0
-	move.l	d0,a0
-
-	cmp.b	#'X',1(a0)
-	beq	.skip_xlan
-	cmp.b	#3,(a0)
-	beq.b	.prog1
-	cmp.b	#4,(a0)
-	beq.b	.prog2
-	bra.b	.skip_prog
-.prog1
+    IFD CHIP_ALIGN
+    movem.l d0-d1/a0-a1/a6,-(a7)
+    ; we have to waste $30000 kb before we can properly align first segment!
+    move.l  #$30000,d0
+    move.l  #MEMF_CHIP,d1
+    move.l  $4.W,a6
+    jsr (_LVOAllocMem,a6)
+    move.l  #CHIP_ALIGN,d0
+    move.l  #MEMF_CHIP,d1
+    move.l  $4.W,a6
+    jsr (_LVOAllocMem,a6)
+    movem.l (a7)+,d0-d1/a0-a1/a6
+    ENDC
+    rts
+    ENDC
+    
+_specific_patch
+    add.l   d1,d1
+    add.l   d1,d1  
+    
 	move.w	#0,d2
 	bsr	_get_section
-	cmp.w	#$4EF9,(a0)
-	bne.b	.skip_prog
-.prog2
-	; sq3/prog
-
-	move.w	#3,d2
+    cmp.l   #$4e55ffda,6(a0)
+    beq.b   .german
+    cmp.l   #$4e55fa66,6(a0)
+    beq.b   .english
+    
+	pea	TDREASON_WRONGVER
+	move.l	_resload(pc),-(a7)
+	addq.l	#resload_Abort,(a7)
+	rts
+.english    
+	move.w	#3,d2    
 	bsr	_get_section
 	; close stuff: quit
 	add.l	#$226,a0
@@ -144,46 +144,44 @@ _cb_dosLoadSeg
 	bsr	_get_section
 	move.l	a0,a1
 	lea	pl_af_uk(pc),a0
+    move.l  _resload(pc),a2
 	jsr	resload_Patch(a2)
-	bra.b	.noqg
+	moveq.l	#0,d0    
+	bra.b	.out
 .noquk
 	; german, quit
+.german
+    lea pl_german(pc),a0
+    move.l  d1,a1
+    addq.l  #4,a1
+    move.l  _resload(pc),a2
+    jsr resload_Patch(a2)
 
-	move.w	#0,d2
-	bsr	_get_section
-
-	; close stuff: quit
-	add.l	#$1EF58,a0
-	cmp.l	#$4EAEFF2E,(a0)
-	bne.b	.noqg
-	move.w	#$4EF9,(a0)+
-	pea	_quit(pc)
-	move.l	(a7)+,(a0)
 .noqg
+	moveq.l	#1,d0    ; no generic patches
 	; assign for saves
 
-	move.w	#0,d2
-	bsr	_get_section
-	lea	_prog_start(pc),a1
-	move.l	2(a0),(a1)
-	pea	_assign_it(pc)
-	move.l	(a7)+,2(a0)
-
-.skip_prog
+	;move.w	#0,d2
+	;bsr	_get_section
+	;lea	_prog_start(pc),a1
+	;move.l	2(a0),(a1)
+	;pea	_assign_it(pc)
+	;move.l	(a7)+,2(a0)
+    
+    
+.out
 	rts
 
-
-.skip_xlan
-	move.w	#0,d2
-	bsr	_get_section
-	move.l	#$70004E75,(a0)
-	rts
-
+pl_german
+     PL_START
+     PL_PSS $05978,insert_umlaut,4
+     PL_PSS $059ee,cancel_umlaut,4
+     PL_P   $1EF58,_quit
+     PL_END
 pl_af_uk
 	PL_START
 	PL_PS	$8422-$7E44,avoid_af
 	PL_END
-
 
 ; there is some indirection mixup at some point,
 ; but this is an harmless access fault, since the game
@@ -206,44 +204,6 @@ avoid_af
 	add.l	#$4C-$2A,(a7)	; skip the rest of the crap
 	rts
 
-_quit
-		PEA	TDREASON_OK
-		MOVE.L	_resload(PC),-(A7)
-		add.l	#resload_Abort,(a7)
-		rts
-
-_assign_it:
-	movem.l	d0-a6,-(a7)
-	lea	_dosname(pc),a1
-	moveq.l	#0,d0
-	move.l	$4.W,a6
-	jsr	_LVOOpenLibrary(a6)
-	move.l	d0,a6
-
-	lea	_assign_df0(pc),a0
-	sub.l	a1,a1
-	bsr	_dos_assign
-
-	movem.l	(a7)+,d0-a6
-
-	move.l	_prog_start(pc),-(a7)
-	rts
-
-; < d7 seglist
-; < d2 section #
-; > a0 segment
-_get_section
-	move.l	d7,a0
-	subq	#1,d2
-	bmi.b	.out
-.loop
-	move.l	(a0),a0
-	add.l	a0,a0
-	add.l	a0,a0
-	dbf	d2,.loop
-.out
-	addq.l	#4,a0
-	rts
-
-_prog_start
-	dc.l	0
+_mainprog:
+    dc.b    3,"sq3",0     ; bcpl string
+    even
