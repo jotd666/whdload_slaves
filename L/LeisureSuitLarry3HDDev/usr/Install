@@ -126,6 +126,12 @@
         (dest #dest)
         (pattern "#?")
       )
+      (copyfiles
+        (help @copyfiles-help)
+        (source "res_mt32.cfg")
+        (dest #dest)
+        (pattern "#?")
+      )
 
 (P_VersionCheck 1)
 

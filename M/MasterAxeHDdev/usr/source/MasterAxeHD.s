@@ -34,7 +34,7 @@ _base
 		dc.l	$180000		;ws_BaseMemSize
 		dc.l	0		;ws_ExecInstall
 		dc.w	start-_base	;ws_GameLoader
-		dc.w	0		;ws_CurrentDir
+		dc.w	data-_base		;ws_CurrentDir
 		dc.w	0		;ws_DontCache
 _keydebug	dc.b	$0		;ws_keydebug
 _keyexit	dc.b	$5F		;ws_keyexit = Help
@@ -49,7 +49,9 @@ _expmem
 		dc.w	_config-_base		;ws_config
 _config
     dc.b	0
-    
+data
+        dc.b    "data",0
+        
 ;============================================================================
 
 	IFD BARFLY
@@ -58,7 +60,7 @@ _config
 
 
 DECL_VERSION:MACRO
-	dc.b	"2.0"
+	dc.b	"2.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"

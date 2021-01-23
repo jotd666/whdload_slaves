@@ -33,12 +33,12 @@
 ;============================================================================
 
 	IFD CHIP_ONLY
-CHIPMEMSIZE	= $100000
+CHIPMEMSIZE	= $C0000
 FASTMEMSIZE	= $00000
 HRTMON
 	ELSE
 CHIPMEMSIZE	= $80000
-FASTMEMSIZE	= $80000
+FASTMEMSIZE	= $40000
 BLACKSCREEN
 	ENDC
 NUMDRIVES	= 1
@@ -62,7 +62,7 @@ slv_Version	= 17
 slv_Flags	= WHDLF_NoError|WHDLF_Examine|WHDLF_EmulTrap|WHDLF_ClearMem
 slv_keyexit	= $5D	; num '*'
 
-	INCLUDE	kick13.s
+	INCLUDE	whdload/kick13.s
 
 ;============================================================================
 
@@ -89,7 +89,7 @@ end_patch_\1:
 
 
 DECL_VERSION:MACRO
-	dc.b	"3.0"
+	dc.b	"3.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"

@@ -35,6 +35,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+  Version 2.1 (23.01.2021) done by JOTD
+  - fixed install script and slave data directory (issue #0004963, #0004948)
+  
   Version 2.0 (10.01.2021) done by JOTD
   - removed AGA-only restriction (issue #0004945)
   - fixed music on fast machines (still not perfect)

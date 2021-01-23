@@ -40,6 +40,12 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 2.4 (23.01.2021) done by JOTD:
+ - german version: found a way to avoid entering umlauts by using the alternate
+   spelling (ue, oe) instead. Example: type "oeffnen" and it will switch to the umlaut
+   syntax that the game understands
+ - german version: no more access fault when quitting
+ 
  version 2.3 (30.10.2020) done by JOTD:
  - removed "SEGTRACKER" switch that Sierra games don't seem to like (issue #0004840)
  
@@ -119,5 +125,15 @@
   will NOT work.
 
  If you can, use the german/english version that comes in 5 disks. Since 2.1, it has copy protection
- removed, and even if it starts in german (which can be a problem for the questions at startup), you can switch
- language to english by the menu afterwards.
+ removed, and even if it starts in german (which can be a problem for the questions at startup),
+ you can switch language to english by the "sierra / sprache" menu afterwards.
+ 
+ GERMAN USERS PLEASE READ:
+ - The game (Space Quest 3) has been reported as buggy because users could not enter special
+   german chars (umlauts). It is not true. To enter "offnen" with a "trema" on the 'o',
+   press o, then press the "trema" key => character o is replaced by the
+   character o+trema. That was the original way of doing it. The new slave version
+   is able to detect "oe" and "ue" sequences and replaces them by the corresponding umlaut.
+   Deleting an umlaut expands back to the sequence, just in case the umlaut is not what the user
+   wanted.
+ 

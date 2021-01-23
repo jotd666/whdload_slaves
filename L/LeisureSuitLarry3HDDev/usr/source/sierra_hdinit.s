@@ -30,7 +30,7 @@ HD_Cyls			= 1000
 
 ;============================================================================
 
-	INCLUDE	kick13.s
+	INCLUDE	whdload/kick13.s
 
 ;============================================================================
 
@@ -364,6 +364,69 @@ deutsch:
     dc.b    -1    
     even
     ENDC
+UMLAUT_O = $94
+UMLAUT_U = $81
+UMLAUT_A = $84
+insert_umlaut:
+    tst.w   16(A5)
+    beq.b   .normal     ; do nothing, first char
+    cmp.b   #'e',-5(A5)
+    bne.b   .normal         ; no need
+    ; 'e' was typed. What is the previous char
+    cmp.b   #'a',-1(a0,d0.w)
+    beq.b   .umlaut_a
+    cmp.b   #'o',-1(a0,d0.w)
+    beq.b   .umlaut_o
+    cmp.b   #'u',-1(a0,d0.w)
+    beq.b   .umlaut_u
+    bra.b   .normal
+.umlaut_a
+    ; change 'a' to 'umlaut a', don't add a character
+    move.b  #UMLAUT_A,-1(a0,d0.w)
+    bra.b   .out
+.umlaut_o
+    ; change 'o' to 'umlaut o', don't add a character
+    move.b  #UMLAUT_O,-1(a0,d0.w)
+    bra.b   .out
+.umlaut_u
+    ; change 'o' to 'umlaut o', don't add a character
+    move.b  #UMLAUT_U,-1(a0,d0.w)
+    bra.b   .out
+.normal
+    ; store character in buffer
+	MOVE.B	-5(A5),0(A0,D0.W)	;05978: 11adfffb0000
+    ; one more character    
+	ADDQ.W	#1,16(A5)		;0597e: 526d0010
+.out
+    rts
+cancel_umlaut:
+    ; delete a character. If it's an umlaut, just replace it
+    ; by the character without umlaut plus "e"
+    ; (else it's impossible to enter ue or oe sequences)
+    cmp.b   #UMLAUT_A,0(A1,D0.W)
+    beq.b   .umlaut_a
+    cmp.b   #UMLAUT_U,0(A1,D0.W)
+    beq.b   .umlaut_u
+    cmp.b   #UMLAUT_O,0(A1,D0.W)
+    beq.b   .umlaut_o
+    bra.b   .normal
+.umlaut_a
+    move.b  #'a',0(A1,D0.W)
+    bra.b   .umlaut_out
+.umlaut_u
+    move.b  #'u',0(A1,D0.W)
+    bra.b   .umlaut_out
+.umlaut_o
+    move.b  #'o',0(A1,D0.W)
+.umlaut_out
+    move.b  #'e',1(A1,D0.W)
+	;subq.W	#1,-16(A5)		;0597e: 526d0010
+	ADDQ.W	#1,-10(A5)		;059f4: 526dfff6
+    rts
+.normal
+	MOVE.B	1(A0),0(A1,D0.W)	;059ee: 13a800010000
+	ADDQ.W	#1,-10(A5)		;059f4: 526dfff6
+    rts
 	IFD	PATCH_SOUND
 _patch_sound:
 	cmp.l	#CHIPMEMSIZE,A1

@@ -38,6 +38,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 2.1 (2x.01.2021)
+ - MT32 switch didn't work at all on german version (issue #0004959)
+ 
  version 2.0 (17.01.2021)
  - german version: found a way to avoid entering umlauts by using the alternate
    spelling (ue, oe) instead. Example: type "oeffnen" and it will switch to the umlaut

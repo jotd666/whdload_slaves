@@ -50,10 +50,12 @@
   Version 1.1 (xx.01.2021) done by JOTD:
   - patched the CPU vectors so the FPU versions run on 68040/68060 FPUs, using
     a rebuilt version of Motorola FPSP emulation code, integrated in the slave :)
+  - directly patched some unsupported FPU instructions for faster operation on 68040/68060
   - modified TFX executable autodetect now that the FPU versions can be used with
     68040 and 68060 processors. Make sure to copy the "fpsp040" (resp "fpsp060") file in "data" directory
     if you're upgrading your installation
-    
+  - note: this version requires whdload 18.7 or newer.
+  
   Version 1.0 (28.12.2020) done by JOTD
   - automatic executable selection depending on cpu/fpu (or manual)
   - self-modifying code removed (fonts were trashed)

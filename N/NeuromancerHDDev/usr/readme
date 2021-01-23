@@ -15,7 +15,7 @@
 
 Requirements:
 
- The installed program requires 0.5 MB ChipMem and 1.5 MB OtherMem.
+ The installed program requires 0.5 MB ChipMem and 1.0 MB OtherMem.
  It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
 
 
@@ -44,6 +44,9 @@ Requirements:
 
 History:
  
+ Version 3.1 (13.01.2021) done by JOTD:
+ - reduced memory requirements (issue #0004947)
+ 
  Version 3.0 (21.12.2020) done by JOTD:
  - proper sound fix (avoids lockups on very fast machines,
    that also explains why it failed on version 1.0 probably)
@@ -68,8 +71,5 @@ History:
  - Docfile/walkthrough included
    
 
-
 Thanks to Bert Jahn for writing kickemu.s kickstart interface system.
 
-KickDOS was adapted from OSEmu by JOTD
-OSEmu done by Harry/MrLarmer/Bert/JOTD

@@ -27,7 +27,7 @@
 ;============================================================================
 
 
-;;CHIP_ONLY
+;CHIP_ONLY
 
 
     IFD CHIP_ONLY
@@ -40,15 +40,16 @@ FASTMEMSIZE	= $80000
     ENDC
     
 IOCACHE = 50000
-; SEGTRACKER doesn't work well with Sierra games...
-;;SEGTRACKER
+; segtracker doesn't work yet here, triggers errors in ROM
+;SEGTRACKER
 ;
 ;SETPATCH
 
 ;============================================================================
 
-PATCH_KEYBOARD = 1     ; seems to crash the game!
+PATCH_KEYBOARD = 1
 PATCH_MT32 = 1
+PATCH_SOUND = 1
 
 CRACKIT = 1
 
@@ -66,7 +67,7 @@ CRACKIT = 1
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"2.3"
+	dc.b	"2.4"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -218,25 +219,33 @@ _specific_patch
 pl_v3
     PL_START
     PL_PS   $03d3a,_crack_1_v3
+
+     PL_PSS $08b74,insert_umlaut,4
+     PL_PSS $08bea,cancel_umlaut,4
+     PL_P   $2221c,_quit    
     PL_END
     
-; previous cracks have been done in 2003 by me, but I completely forgot how I did that, on a real amiga, without
-; memory watches :)
+; previous cracks have been done in 2003 by me, but I completely forgot how
+; I did that, on a real amiga, without memory watches :)
 ;
-; so now that I'm old and not that patient, I used a different method. The password is stored as a 16-bit number
-; so if you know the proper password, it's easy to search for that number in memory. Also enter things like 57005
+; so now that I'm old and not that patient, I used a different method. The 
+; password is stored as a 16-bit number so if you know the proper password, it's
+; easy to search for that number in memory. Also enter things like 57005
 ; and look for $DEAD
 ; with an emulator, use memwatches
 ; the game accesses the entered value to copy it somewhere else (first memwatch), then watch the value where it's copied
 ; and it takes you directly where the value is compared to the proper value
 ;
-; for the locker part, same thing: I don't remember how I did at all (not to mention that the code / sections
-; are completely different so it's out of the question to adapt old cracks)
-; I figured out that the proper combination is stored as 3 consecutive 16-bit digits. Ex if the code is 17 19 12
-; in memory you'll find $0011 $0013 $000C. It's at 2 locations in the memory, so it's not too difficult (the code is checked on
+; for the locker part, same thing: I don't remember how I did at all (not to mention
+; that the code / sections are completely different so it's out of the
+; question to adapt old cracks)
+; I figured out that the proper combination is stored as 3 consecutive
+; 16-bit digits. Ex if the code is 17 19 12
+; in memory you'll find $0011 $0013 $000C. It's at 2 locations in
+; the memory, so it's not too difficult (the code is checked on
 ; then highest location of the 2)
-; If you search your entered combination (after 2 enters, so the game doesn't start
-; the check yet) you find the 2-number sequence somewhere else.
+; If you search your entered combination (after 2 enters, so the game
+; doesn't start the check yet) you find the 2-number sequence somewhere else.
 ; anyway, the test ends up at the exact same location as the first protection
  
 _crack_1_v3:
