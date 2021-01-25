@@ -40,6 +40,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 3.1 (25.01.2021) done by JOTD:
+ - fixed title screen not showing (issue #0004961)
+
  version 3.0 (12.01.2021) done by JOTD:
  - added proper joypad controls (floppy & cd32)
  - cd32 version now no longer requires kick3.1 to run, now both use 1.3

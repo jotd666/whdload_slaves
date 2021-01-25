@@ -35,9 +35,15 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+  Version 2.2 (24.01.2021) done by JOTD
+  - access fault fixed (fight in bar level)
+  - 68000 addressing errors fixed (x2): game now runs on 68000 (issue #0004949)
+  - added trainer: infinite energy
+  - added trainer: low energy for opponent
+  
   Version 2.1 (23.01.2021) done by JOTD
   - fixed install script and slave data directory (issue #0004963, #0004948)
-  
+
   Version 2.0 (10.01.2021) done by JOTD
   - removed AGA-only restriction (issue #0004945)
   - fixed music on fast machines (still not perfect)
@@ -49,3 +55,18 @@
   
   Version 1.0 (1997) done by JOTD
   - JST version
+
+ notes:
+ 
+ - it's funny that this game actually RUNS on a 68000 provided there's
+   2MB chipmem available. I always thought that this game was AGA but it
+   is actually ECS/OCS, it just uses 2MB chipmem and a couple of odd-address
+   long/word reads that are incompatible with the 68000 CPU.
+   I guess they could have sold some copies to A600/2MB chip owners
+   but they didn't even try.
+ 
+ - the game features superb animated parallax floors (like SNES SF2), but
+   surprisingly they didn't think of putting them on the first level... only
+   on ALL other levels. I had to cheat to see them, since the game is frustratingly
+   difficult.
+   

@@ -41,7 +41,7 @@ FASTMEMSIZE	= $80000
     ENDC
     
 IOCACHE = 50000
-SEGTRACKER
+;SEGTRACKER
 ;
 ;SETPATCH
 
@@ -51,7 +51,7 @@ PATCH_KEYBOARD = 1
 PATCH_MT32 = 1
 MAINPROG        ; english version has "sq3" alternate "prog" main name
 CRACKIT = 1
-
+;CHANGE_SAVEDIR   ; not needed / would require patching german version too
 
 ;============================================================================
 
@@ -65,7 +65,7 @@ CRACKIT = 1
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"2.0"
+	dc.b	"2.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"

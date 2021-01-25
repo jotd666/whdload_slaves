@@ -371,6 +371,11 @@
     (pattern "#?")
   )
 
+;    (set #save (tackon #dest "save"))
+;    (makedir #save
+;      (help @makedir-help)
+;    )
+
 (if (= #copy_startup 1)
 (
 ; replace startup sequence because makedir is not supported

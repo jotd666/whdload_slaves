@@ -66,7 +66,7 @@ _config
 
 
 DECL_VERSION:MACRO
-	dc.b	"2.0"
+	dc.b	"2.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -111,6 +111,10 @@ start	;	A0 = resident loader
 		jsr	(resload_Control,a2)
 
         ; relocate stack in fastmem (Bert)
+        ; without this (and the removal of stack location
+        ; at $200 there are probably conflicts/stack overflow
+        ; issues because slave uses just too much stack)
+       
 		move.l  _expmem(pc),d0
         add.l   #$1000,d0
         move.l  d0,a7
@@ -133,13 +137,27 @@ start	;	A0 = resident loader
 
 pl_boot
 	PL_START
-	PL_PS	$DE,MY_TITLE
-	PL_PS	$11A,MY_GAME
-	;;PL_P	$12A,MY_MAINIRQ
-	PL_P	$142,MY_LOADER
-	PL_P	$1D4,MY_SAVE
+    PL_NOP  $26,6      ; no more stack relocation
+    PL_P    $36,jump_200
 	PL_END
 
+jump_200
+    lea	pl_200(pc),a0
+    sub.l   a1,a1
+    jsr	resload_Patch(a2)
+    jmp $200.W
+
+pl_200
+	PL_START
+    PL_NOP  $234,6      ; no more stack relocation
+	PL_PS	$2A2,MY_TITLE
+	PL_PS	$2DE,MY_GAME
+	;;PL_P	$12A,MY_MAINIRQ
+	PL_P	$306,MY_LOADER
+	PL_P	$398,MY_SAVE    
+	PL_END
+
+    
 MY_TITLE
 	MOVEM.L	D0-D1/A0-A2,-(A7)
 
@@ -175,7 +193,7 @@ MY_GAME
 	JMP	GAME
 
 MY_LOADER
-	MOVEM.L	D0-A6,-(A7)
+	MOVEM.L	D0-D5/A0-A2,-(A7)
 
 	CMP.B	#$B0,D0
 	BEQ	.LOAD_SCORES
@@ -221,7 +239,7 @@ MY_LOADER
 	LEA	SCORES_NAME(PC),A0
 	jsr (resload_LoadFile,a2)    
 .out
-	MOVEM.L	(A7)+,D0-A6
+	MOVEM.L	(A7)+,D0-D5/A0-A2
 	RTS
 	
 MY_SAVE
@@ -318,7 +336,7 @@ vblank_hook:
     TEST_BUTTON PLAY,$19    ; "P" pause
     btst    #JPB_BTN_REVERSE,d0
     beq.b   noesc
-wtf    
+nonlocal_label  ; so macros can reuse .local labels    
     TEST_BUTTON GRN,$57 ; reverse+green: quit current game (F8) 
     TEST_BUTTON FORWARD,$45
     btst    #JPB_BTN_REVERSE,d0

@@ -48,6 +48,8 @@ _expmem
 		dc.w	0                       ;ws_kickcrc
 		dc.w	_config-_base		;ws_config
 _config
+    dc.b    "C1:X:Trainer infinite energy:0;"
+    dc.b    "C1:X:Trainer opponent low energy:1;"
     dc.b	0
 data
         dc.b    "data",0
@@ -60,7 +62,7 @@ data
 
 
 DECL_VERSION:MACRO
-	dc.b	"2.1"
+	dc.b	"2.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -151,16 +153,85 @@ pl_prog1:
 	PL_W	$120238,$6016
     PL_PS   $00120436,quit_hook
     PL_PSS  $121A8C,dma_wait,2
-    
+    PL_PS   $00004afa,fix_address_error_1
+    PL_PS   $0000491A,quit_hook_2
+    PL_PS   $79BC,fix_address_error_2
+    PL_PSS  $793e,fix_access_fault,4
+    PL_IFC1X    0
+    PL_PSS      $0079d4,damage,2   ; infinite energy
+    PL_ENDIF
+    PL_IFC1X    1
+    PL_PS      $155C,set_health
+    PL_ENDIF
     PL_END
 pl_prog2:
     PL_START
 	PL_W	$1202AC,$6010
 	PL_W	$1202CC,$6016
     PL_PSS  $00121206,dma_wait,2
-    PL_PS   $0000491A,quit_hook_2
+
     PL_END
 
+set_health
+    cmp.l   #$EDBC,A5
+    beq.b   .opponent
+    MOVE.W	#$0064,26(A5)		;00155c: 3b7c0064001a4
+    rts
+.opponent
+    MOVE.W	#$4,26(A5)		;00155c: 3b7c0064001a
+    rts
+    
+; EDD6: opponent stamina, base A4=$EDBC
+damage
+    cmp.l   #$ED46-26,a4
+    beq.b   .skip
+    SUB.W	D0,26(A4)		;0079d4: 916c001a
+.skip
+	MOVE.B	D0,132(A4)		;0079d8: 19400084
+    rts
+
+fix_access_fault
+    cmp.l   #$200000,a3
+    bcc.b   .bail_out   ; haopens when fighting the guy in the bar
+.loop
+	CMPI.B	#$ff,(A3)		;00793e: 0c1300ff
+	BEQ.S	.out		;007942: 6734
+	CMP.B	(A3)+,D0		;007944: b01b
+	BNE.S	.loop		;007946: 66f6
+    rts
+.bail_out
+.out
+    add.l   #$78-$44,(a7)
+    rts
+    
+fix_address_error_1:
+    move.l  d0,-(a7)
+    bsr     get_long
+    move.l       d0,$4bf8.W
+    move.l  (a7)+,d0
+    rts
+
+fix_address_error_2
+    MOVEQ	#0,D0			;0079bc: 7000
+	MOVE.B	26(A0),D0		;0079be: 3028001a
+    lsl.w   #8,d0
+	MOVE.B	27(A0),D0		;0079be: 3028001a
+    rts
+    
+; < A0: address
+; > D0: longword
+get_long
+	move.l	a0,-(a7)
+	move.b	(a0)+,d0
+	lsl.l	#8,d0
+	move.b	(a0)+,d0
+	lsl.l	#8,d0
+	move.b	(a0)+,d0
+	lsl.l	#8,d0
+	move.b	(a0)+,d0
+	move.l	(a7)+,a0
+	rts
+    
 dma_wait
 	move.w	#6,d0   ; make it 7 if still issues
 .bd_loop1

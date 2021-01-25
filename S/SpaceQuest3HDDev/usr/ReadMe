@@ -38,8 +38,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 2.1 (2x.01.2021)
+ version 2.1 (24.01.2021) done by JOTD:
  - MT32 switch didn't work at all on german version (issue #0004959)
+ - fixed crash on 68000 (issue #0004960)
  
  version 2.0 (17.01.2021)
  - german version: found a way to avoid entering umlauts by using the alternate

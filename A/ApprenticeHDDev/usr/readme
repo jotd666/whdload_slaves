@@ -28,6 +28,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 2.1 (24.01.2021) done by JOTD:
+ - fixed random crash on some configurations (issue #0004962)
+
  version 2.0 (10.01.2021) done by JOTD:
  - joypad controls, including optional button to jump
  - full slave rewrite

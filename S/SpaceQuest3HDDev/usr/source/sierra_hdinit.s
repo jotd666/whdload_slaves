@@ -54,7 +54,6 @@ PATCH_DOSLIB_OFFSET:MACRO
 	ext.w	D0
 	ext.l	D0
 	move.l	D0,(A0)		; moves to d0_value_xxx
-
 	move.w	#$4EF9,(A1)+	
 	pea	new_\1_init(pc)
 	move.l	(A7)+,(A1)+
@@ -162,6 +161,18 @@ _cb_dosLoadSeg
 
 .nootherpatches
 .skip_prog
+
+
+    IFD PATCH_MT32    
+    movem.l d0-d7/a0-a6,-(a7)
+    move.l  _mt32_support(pc),d0
+    beq.b   .nomt32
+
+    bsr patch_mt32_open
+.nomt32
+    movem.l (a7)+,d0-d7/a0-a6
+    ENDC 
+    
 	; sound driver patch
 
 	IFD	PATCH_SOUND
@@ -205,15 +216,21 @@ _cb_dosLoadSeg
 	even
     
 
+
+    IFD PATCH_MT32
+patch_mt32_open    
+	lea	_dosname(pc),a1
+	move.l	$4.W,a6
+	jsr	_LVOOldOpenLibrary(a6)
+    move.l  d0,a6
+    PATCH_DOSLIB_OFFSET Open
+    PATCH_DOSLIB_OFFSET Lock
+
 ; if those files aren't here, MT32 sound doesn't work but
 ; there is no error message, so it can be frustrating to try
 ; to figure out what is wrong (specially when the installation
 ; has been done manually or using old installers)
-
-    IFD PATCH_MT32
-patch_mt32_open
-    PATCH_DOSLIB_OFFSET Open
-    PATCH_DOSLIB_OFFSET Lock
+; so check them and exit with a proper error message
     
     lea	.mt32_driver(pc),a0
     move.l	_resload(pc),a2
@@ -490,6 +507,15 @@ _get_section
 ; < D1: seglist APTR
 
 _generic_patches:
+	movem.l	d0-d1/a0-a2/a6,-(a7)
+
+    move.l  d1,-(a7)
+	lea	_dosname(pc),a1
+	move.l	$4.W,a6
+	jsr	_LVOOldOpenLibrary(a6)
+	move.l	d0,a6   ; A6 = dosbase
+    move.l  (a7)+,d1
+    
 	; section 3
 
 	move.w	#3,d2
@@ -511,14 +537,23 @@ _generic_patches:
 .spq
 	; section 11: savedisk/unlock bug
 
+    IFD CHANGE_SAVEDIR
 	move.l	#11,d2
 	bsr	_get_section
 	add.l	#$37A,a0
     cmp.l   #$226d0008,(a0)
-    beq.b   .nosave
+    beq.b   .save
+	move.l	#11,d2
+	bsr	_get_section
+    add.l   #$058dc-$05554,a0    
+    cmp.l   #$226d0008,(a0)
+    bne.b   .nosave
+.save    
 	move.l	#$4E714EB9,(a0)+
 	pea	_savedrive(pc)
 	move.l	(a7)+,(a0)
+    ENDC
+    
 .nosave
 
 	move.l	#11,d2
@@ -531,26 +566,14 @@ _generic_patches:
 
 	; no more dos.DeleteFile (avoids os swaps)
 
-	movem.l	d0-d1/a0-a2/a6,-(a7)
-	lea	.dosname(pc),a1
-	move.l	$4.W,a6
-	jsr	_LVOOldOpenLibrary(a6)
-	
-	move.l	d0,a6
+
     move.l  d0,a0
 	add.w	#_LVODeleteFile,a0
 	move.w	#$4EF9,(a0)+
 	lea	_deletefile(pc),a1
 	move.l	a1,(a0)
 
-    IFD PATCH_MT32
-    move.l  _mt32_support(pc),d0
-    beq.b   .nomt32
-    
-    bsr patch_mt32_open
-.nomt32
-    ENDC
-    
+   
 	; enable caches
 
 	move.l	_resload(pc),a2
@@ -562,28 +585,60 @@ _generic_patches:
 
 	rts
 
-
-.dosname
-	dc.b	"dos.library",0
-	even
-
-_deletefile:
-	moveq.l	#-1,D0
+; < A0 filename
+    IFD CHANGE_SAVEDIR
+must_exist
+	movem.l	d0-d1/a0-a1/a3/a6,-(a7)
+	move.l	a0,d1
+    move.l  d1,-(a7)
+	lea	_dosname(pc),a1
+	move.l	$4.W,a6
+	jsr	_LVOOldOpenLibrary(a6)
+	move.l	d0,a6   ; A6 = dosbase
+    move.l  (a7)+,d1
+    
+	move.l	d1,a3
+	move.l	#ACCESS_READ,d2
+	jsr	_LVOLock(a6)
+	move.l	d0,d1
+	beq.b	.error
+	jsr	_LVOUnLock(a6)
+	movem.l	(a7)+,d0-d1/a0-a1/a3/a6
 	rts
 
+.error
+	jsr	(_LVOIoErr,a6)
+	move.l	a3,-(a7)
+	move.l	d0,-(a7)
+	pea	TDREASON_DOSREAD
+	move.l	(_resload,pc),-(a7)
+	add.l	#resload_Abort,(a7)
+	rts
+
+    ; change save drive
 _savedrive:
 	move.l	a0,-(A7)
 	move.l	(8,a5),a1
-	lea	.s(pc),a0
+	lea	_savename(pc),a0
+    ; check if "save" directory exists
+    bsr must_exist
 .copy
 	move.b	(a0)+,(a1)+
 	bne.b	.copy
 	move.l	(a7)+,a0
 	rts
 
-.s:
+_savename:
 	dc.b	"SYS:save",0
 	even
+    
+    ENDC
+    
+_deletefile:
+	moveq.l	#-1,D0
+	rts
+
+
 	
 _wrong_version:
 		pea	TDREASON_WRONGVER
@@ -623,7 +678,5 @@ _keyboard_type	dc.l	0
 _mt32_support	dc.l	0
     ENDC
 		dc.l	0
-align_mem
-    dc.l    0
     
     

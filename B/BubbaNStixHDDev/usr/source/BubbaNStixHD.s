@@ -83,7 +83,7 @@ slv_keyexit	= $5D	; num '*'
 	DOSCMD	"WDate  >T:date"
 	ENDC
 DECL_VERSION:MACRO
-	dc.b	"3.0"
+	dc.b	"3.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -576,9 +576,12 @@ end_unpack
     ; (this is here we could remove the stealthy protection check but no
     ; need since the proper value is at the proper address)
     bsr _flushcache
+    ; d1 is 0, ensure Z flag is set else title screen & music are skipped!!
+    ; (calling flushcache preserves registers but not CCR)      
+    tst.l   d1
 	MOVEM.L	(A7)+,D0-D7/A0-A6	;037d4: 4cdf7fff
-	RTS				;037d8: 4e75
-
+    rts
+    
 
     
 ; < a0: program name
