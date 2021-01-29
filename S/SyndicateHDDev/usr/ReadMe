@@ -35,7 +35,7 @@
  an appropriate requester.
  Additionally the file "kick34005.A500.RTB" must be installed in the same
  directory as the kickstart image. It can be found in the archive 
- "util/boot/skick345.lha" on aminet.
+ "util/boot/skick346.lha" on aminet.
 
  If you have problems with this installation please try and get a newer
  version of this package from the WHDLoad WWW-Page. If that doesn't help try
@@ -48,6 +48,9 @@
 	http://www.whdload.de/
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
+
+ version 2.5 (xx.xx.2021) done by JOTD:
+ - better support for SPS405 and SPS1887 floppy versions
 
  version 2.4 (01.04.2020) done by JOTD:
  - CD³² version: (really) no more error because of joypad or mouse not found (improved lowlevel lib emulation) (issue #0001054)

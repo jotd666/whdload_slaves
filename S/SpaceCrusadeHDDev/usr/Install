@@ -5,6 +5,7 @@
 (set #readme-file "ReadMe")		;name of readme file
 (set #man-file "Manual")		;name of manual file
 (set #hint-file "Dashboard")		;name of hint file
+(set #hint-file2 "Hints")		;name of hint file
 (set #sol-file "Solution")		;name of solution file
 (set #highs-file "highs")		;name of high scores file
 (set #prefix "SpaceCrusade")                       ;name of slave, directory
@@ -389,6 +390,8 @@
 (set #copy-file #man-file)
 (P_CopyFile)
 (set #copy-file #hint-file)
+(P_CopyFile)
+(set #copy-file #hint2-file)
 (P_CopyFile)
 (set #copy-file #sol-file)
 (P_CopyFile)
