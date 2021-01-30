@@ -40,7 +40,13 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 1.2 (26.06.2016)
+ version 1.3 (30.01.2021) done by JOTD:
+ - Now 1111 skips the protection but still shows the intro (issue #0004971)
+ - 2222 skips the protection and the intro and jumps directly to the game
+   (that should have been done in version 1.1 already but actually did not,
+   and I really don't remember why, well, now that's fixed...)
+
+ version 1.2 (26.06.2016) done by JOTD:
  - Fixed 68000/68010 compatibility (issue #0002896 of LSL3, also applies here)
 
   version 1.1-B (12/03/2016)

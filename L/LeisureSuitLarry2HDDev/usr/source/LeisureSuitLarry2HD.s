@@ -47,7 +47,7 @@ MAINPROG
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.2"
+	dc.b	"1.3"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -64,7 +64,9 @@ DECL_VERSION:MACRO
 slv_name		dc.b	"Leisure Suit Larry 2",0
 slv_copy		dc.b	"1990 Sierra",0
 slv_info		dc.b	"Adapted & fixed by JOTD",10,10
-			dc.b	"Enter 1111 at protection screen",10,10
+			dc.b	"At protection screen:",10,10
+			dc.b	"Enter 1111 to pass protection",10
+			dc.b	"Enter 2222 to pass protection & intro",10,10
 			dc.b	"Thanks to BTTR for disk images",10,10
 			dc.b	"Version "
 			DECL_VERSION
@@ -81,7 +83,8 @@ _mainprog:
 
 _specific_patch
 	; section 14:protection
-
+    add.l   d1,d1
+    add.l   d1,d1
 	move.w	#14,d2
 	bsr	_get_section
 	add.l	#$E7E-$2FC,a0
@@ -97,7 +100,7 @@ _crack
 	MOVEM.L	8(A5),A0-A2		;4E: 4CED07000008
 	MOVEM.L	D0-D1,-(A7)		;54: 48E7C000
 	MOVE.L	.flag(pc),D0		;58: 203900000000
-	BNE.S	.lb_0008		;5E: 6644
+	BNE	.lb_0008		;5E: 6644
 	MOVE	#$03FF,D0		;60: 303C03FF
 .lb_0002:
 	LEA	.lb_0009(PC),A0		;64: 41FA004A
@@ -106,7 +109,7 @@ _crack
 	CMP.B	(A1)+,D1		;6A: B219
 	BEQ.S	.lb_0004		;6C: 6706
 	DBF	D0,.lb_0003		;6E: 51C8FFF8
-	BRA.S	.lb_0008		;72: 6030
+	BRA	.lb_0008		;72: 6030
 .lb_0004:
 	ADDQ.L	#1,A0			;74: 5288
 .lb_0005:
@@ -116,14 +119,25 @@ _crack
 	BNE.S	.lb_0002		;7C: 66E6
 	BRA.S	.lb_0005		;7E: 60F6
 .lb_0006:
-	MOVE	#$0010,D0		;80: 303C0010
-.lb_0007:
+    add.l   #15*9,a1    ; skip all standard telephone codes
 	ADDQ.L	#5,A1			;84: 5A89
-	MOVE.B	#$31,(A1)+		;86: 12FC0031
-	MOVE.B	#$31,(A1)+		;8A: 12FC0031
-	MOVE.B	#$31,(A1)+		;8E: 12FC0031
-	MOVE.B	#$31,(A1)+		;92: 12FC0031
-	DBF	D0,.lb_0007		;96: 51C8FFEC
+    ; this overwrites Al Lowe's birthday code (0724)
+    ; that starts the game immediately, without intro
+    ; now replaced by 2222
+    move.b  #$32,d0
+	MOVE.B	d0,(A1)+		;86: 12FC0031
+	MOVE.B	d0,(A1)+		;8A: 12FC0031
+	MOVE.B	d0,(A1)+		;8E: 12FC0031
+	MOVE.B	d0,(A1)+		;92: 12FC0031
+    ; this overwrites another undocumented code (7915)
+    ; that starts the game, but with intro
+    ; now replaced by 1111
+    move.b  #$31,d0
+	ADDQ.L	#5,A1			;84: 5A89
+	MOVE.B	d0,(A1)+		;86: 12FC0031
+	MOVE.B	d0,(A1)+		;8A: 12FC0031
+	MOVE.B	d0,(A1)+		;8E: 12FC0031
+	MOVE.B	d0,(A1)+		;92: 12FC0031
 
 	lea	.flag(pc),a1
 	move.l	#-1,(a1)

@@ -5,10 +5,9 @@
 ; - Colonel's Bequest
 ; - Leisure Suit Larry 2
 ; - Leisure Suit Larry 3
+; - Quest For Glory
+; - ManHunter
 
-
-	INCDIR	Include:
-	INCDIR	osemu:
 	INCLUDE	whdload.i
 	INCLUDE	whdmacros.i
 	INCLUDE	lvo/intuition.i
@@ -21,16 +20,64 @@ WPDRIVES	= %0000
 CBDOSLOADSEG
 
 
-slv_Version	= 16
-slv_Flags	= WHDLF_NoError|WHDLF_Examine
+slv_Version	= 17
+slv_Flags	= WHDLF_NoError|WHDLF_Examine|WHDLF_ClearMem
 slv_keyexit	= $5D	; num '*'
 
+; if we don't set this, some games think they're running on floppy
+; and ask for disks... (example: Leisure Suit Larry 3 latest version)
+HD_Cyls			= 1000
+
 ;============================================================================
 
-	INCLUDE	kick13.s
+	INCLUDE	whdload/kick13.s
 
 ;============================================================================
 
+PATCH_DOSLIB_OFFSET:MACRO
+	movem.l	d0-d1/a0-a1,-(a7)
+	move.l	A6,A1
+	add.l	#_LVO\1,A1
+    cmp.w	#$4EF9,(A1)
+    beq.b   end_patch_\1    ; already done
+	moveq	#0,D0
+	move.w	4(A1),D0
+	addq.l	#4,D0
+	add.l	D0,A1
+
+	lea	old_\1(pc),a0
+	move.l	A1,(A0)+
+
+	move.l	A6,A1
+	add.l	#_LVO\1,A1
+	move.b	1(A1),D0
+	ext.w	D0
+	ext.l	D0
+	move.l	D0,(A0)		; moves to d0_value_xxx
+
+	move.w	#$4EF9,(A1)+	
+	pea	new_\1_init(pc)
+	move.l	(A7)+,(A1)+
+	bra.b	end_patch_\1
+new_\1_init
+	move.l	d0_value_\1(pc),d0
+	bra	new_\1
+old_\1:
+	dc.l	0
+d0_value_\1
+	dc.l	0
+end_patch_\1:
+	movem.l	(a7)+,d0-d1/a0-a1
+	ENDM
+    
+slv_config:
+    IFD PATCH_MT32
+    dc.b    "C4:B:MT-32 sound;"
+    ENDC
+    IFD PATCH_KEYBOARD
+	dc.b    "C5:L:keyboard:us,fr,de;"	
+    ENDC
+	dc.b	0
 
 slv_CurrentDir
 	dc.b	"data",0
@@ -51,7 +98,7 @@ _cb_dosLoadSeg
 	; skip Kixx intro program
 
 	cmp.b	#'X',1(a0)
-	beq.b	.skip_xlan
+	beq.w	.skip_xlan
 
 	lea	.prog(pc),a1
 	move.l	a0,a3
@@ -70,6 +117,7 @@ _cb_dosLoadSeg
 	cmp.b	(a3)+,d2
 	beq.b	.cmpstr2
 	ENDC
+	
 	bra.b	.skip_prog
 
 	; prog
@@ -81,15 +129,40 @@ _cb_dosLoadSeg
 	bne.b	.skip_prog	; Pixie frontend loaded instead of main interpreter
 
 	movem.l	d1-a6,-(a7)
+    movem.l d0-d1/a0-a2,-(a7)
+    move.l  _resload(pc),a2
+    lea	(_tag,pc),a0
+    jsr	(resload_Control,a2)
+    IFD PATCH_KEYBOARD
+    move.l  _keyboard_type(pc),d0
+    cmp.l   #3,d0
+    bcs.b   .kbbounds
+    moveq.l #0,d0
+.kbbounds
+    
+    lea    old_kbint(pc),a1
+    lea kbint_hook(pc),a0
+    cmp.l   (a1),a0
+    beq.b   .done
+    move.l  $68.W,(a1)
+    move.l  a0,$68.W
+.done
+    ENDC
+    movem.l (a7)+,d0-d1/a0-a2
+    lsr.l   #2,d1
+    move.l  d1,a1
+    moveq.l #0,d0   ; so if specific patch is empty generic patches is done    
 	bsr	_specific_patch
 	movem.l	(a7)+,D1-a6
 	tst.l	d0
 	bne.b	.nootherpatches
 
+
+
+    
 	bsr	_generic_patches
 
 .nootherpatches
-	bsr	_patch_kb
 .skip_prog
 	; sound driver patch
 
@@ -115,7 +188,7 @@ _cb_dosLoadSeg
 	move.l	#$4E714EB9,(a0)+
 	pea	_patch_sound(pc)
 	move.l	(a7)+,(a0)
-	bra.b	.out
+	bra	.out
 .nosnd
 	ENDC
 
@@ -132,7 +205,228 @@ _cb_dosLoadSeg
 .prog:
 	dc.b	4,"prog",0
 	even
+    
 
+; if those files aren't here, MT32 sound doesn't work but
+; there is no error message, so it can be frustrating to try
+; to figure out what is wrong (specially when the installation
+; has been done manually or using old installers)
+
+    IFD PATCH_MT32
+patch_mt32_open
+    PATCH_DOSLIB_OFFSET Open
+    PATCH_DOSLIB_OFFSET Lock
+    
+    lea	.mt32_driver(pc),a0
+    move.l	_resload(pc),a2
+    jsr	resload_GetFileSize(a2)
+    tst.l   d0
+    bne.b   .okay
+    pea	.missingmt32_message(pc)
+    bra .failfile
+.okay
+    lea	.serial_device(pc),a0
+    move.l	_resload(pc),a2
+    jsr	resload_GetFileSize(a2)
+    tst.l   d0
+    bne.b   .okayser
+    pea	.missingserialdev_message(pc)
+    bra .failfile
+.okayser
+    lea	.resmt32(pc),a0
+    move.l	_resload(pc),a2
+    jsr	resload_GetFileSize(a2)
+    tst.l   d0
+    bne.b   .okayres
+    pea	.missingres_message(pc)
+    bra .failfile
+.okayres
+    rts
+.failfile
+    pea	TDREASON_FAILMSG
+    move.l	(_resload,pc),-(a7)
+    add.l	#resload_Abort,(a7)
+    rts
+
+.mt32_driver:
+    dc.b    "mt32.drv",0
+.missingmt32_message
+    dc.b    "file 'mt32.drv' is missing.",10
+    dc.b    "Make sure that game was properly (re)installed",0
+.serial_device
+    dc.b    "devs/serial.device",0
+.missingserialdev_message
+    dc.b    "file 'devs/serial.device' is missing.",10
+    dc.b    "Make sure that game was properly (re)installed",0
+.resmt32
+    dc.b    "res_mt32.cfg",0
+.missingres_message
+    dc.b    "file 'res_mt32.cfg' is missing.",10
+    dc.b    "Make sure that game was properly (re)installed",0
+    even
+    
+new_Lock
+    move.l  d1,a0
+    bsr _rename_mt32
+    bsr _rename_file        ; must be defined by specific program
+    move.l  a0,d1
+    move.l  old_Lock(pc),-(a7)
+    rts
+   
+new_Open
+    move.l  d1,a0
+    bsr _rename_mt32
+    bsr _rename_file
+    move.l  a0,d1
+    move.l  old_Open(pc),-(a7)
+    rts
+
+_rename_mt32:
+    cmp.b   #'C',(9,a0)   ; RESOURCE.CFG
+    bne.b   .nores
+    cmp.b   #'F',(10,a0)
+    bne.b   .nores
+    cmp.b   #'R',(a0)
+    bne.b   .nores
+    lea .mt32resname(pc),a0
+.nores
+    rts
+.mt32resname
+    dc.b    "res_mt32.cfg",0
+        even
+strip_colon
+    ; strip colon if volume name is whdload
+    move.l  d1,a0
+    cmp.b   #':',(7,a0)
+    bne.b   .nocolon
+    addq.l  #8,a0
+.nocolon
+    rts
+
+    ENDC
+    IFD PATCH_KEYBOARD
+kbint_hook:
+    movem.l  a0-a1/d0-d3,-(a7)
+    move.b  $BFEC01,d0
+    ror.b   #1,d0
+    not.b   d0
+    moveq.l #0,d1
+    bclr    #7,d0
+    sne     d1
+    lea kb_table(pc),a0
+    move.l  _keyboard_type(pc),d2
+    add.l   d2,d2
+    move.w  (a0,d2.w),a1
+    add.w   a1,a0
+    
+.loop
+    move.b  (a0)+,d2
+    bmi.b   .noswap
+    move.b  (a0)+,d3
+    cmp.b   d0,d2
+    bne.b   .loop
+    move.b  d3,d0
+
+.pack
+    tst.b   d1
+    beq.b   .norel
+    bset    #7,d0   ; key released
+.norel
+    not.b   d0
+    rol.b   #1,d0
+    move.b  d0,$BFEC01    
+.noswap
+    movem.l  (a7)+,a0-a1/d0-d3
+    
+    move.l  old_kbint(pc),-(a7)
+    rts
+
+    
+old_kbint:
+    dc.l    0
+
+kb_table:
+    dc.w    us-kb_table,french-kb_table,deutsch-kb_table
+
+us:
+    dc.b    -1
+french:
+    dc.b    $10,$20   ; a <-> q
+    dc.b    $20,$10   ; a <-> q
+    dc.b    $11,$31   ; w <-> z
+    dc.b    $31,$11   ; w <-> z
+    dc.b    $29,$37   ; m <-> ,
+    dc.b    $37,$38   ; m <-> ,
+    dc.b    -1    
+deutsch:
+    dc.b    $15,$31   ; y -> z
+    dc.b    $31,$15   ; z -> y
+    dc.b    -1    
+    even
+    ENDC
+UMLAUT_O = $94
+UMLAUT_U = $81
+UMLAUT_A = $84
+insert_umlaut:
+    tst.w   16(A5)
+    beq.b   .normal     ; do nothing, first char
+    cmp.b   #'e',-5(A5)
+    bne.b   .normal         ; no need
+    ; 'e' was typed. What is the previous char
+    cmp.b   #'a',-1(a0,d0.w)
+    beq.b   .umlaut_a
+    cmp.b   #'o',-1(a0,d0.w)
+    beq.b   .umlaut_o
+    cmp.b   #'u',-1(a0,d0.w)
+    beq.b   .umlaut_u
+    bra.b   .normal
+.umlaut_a
+    ; change 'a' to 'umlaut a', don't add a character
+    move.b  #UMLAUT_A,-1(a0,d0.w)
+    bra.b   .out
+.umlaut_o
+    ; change 'o' to 'umlaut o', don't add a character
+    move.b  #UMLAUT_O,-1(a0,d0.w)
+    bra.b   .out
+.umlaut_u
+    ; change 'o' to 'umlaut o', don't add a character
+    move.b  #UMLAUT_U,-1(a0,d0.w)
+    bra.b   .out
+.normal
+    ; store character in buffer
+	MOVE.B	-5(A5),0(A0,D0.W)	;05978: 11adfffb0000
+    ; one more character    
+	ADDQ.W	#1,16(A5)		;0597e: 526d0010
+.out
+    rts
+cancel_umlaut:
+    ; delete a character. If it's an umlaut, just replace it
+    ; by the character without umlaut plus "e"
+    ; (else it's impossible to enter ue or oe sequences)
+    cmp.b   #UMLAUT_A,0(A1,D0.W)
+    beq.b   .umlaut_a
+    cmp.b   #UMLAUT_U,0(A1,D0.W)
+    beq.b   .umlaut_u
+    cmp.b   #UMLAUT_O,0(A1,D0.W)
+    beq.b   .umlaut_o
+    bra.b   .normal
+.umlaut_a
+    move.b  #'a',0(A1,D0.W)
+    bra.b   .umlaut_out
+.umlaut_u
+    move.b  #'u',0(A1,D0.W)
+    bra.b   .umlaut_out
+.umlaut_o
+    move.b  #'o',0(A1,D0.W)
+.umlaut_out
+    move.b  #'e',1(A1,D0.W)
+	;subq.W	#1,-16(A5)		;0597e: 526d0010
+	ADDQ.W	#1,-10(A5)		;059f4: 526dfff6
+    rts
+.normal
+	MOVE.B	1(A0),0(A1,D0.W)	;059ee: 13a800010000
+	ADDQ.W	#1,-10(A5)		;059f4: 526dfff6
+    rts
 	IFD	PATCH_SOUND
 _patch_sound:
 	cmp.l	#CHIPMEMSIZE,A1
@@ -140,15 +434,30 @@ _patch_sound:
 	cmp.l	_expmem(pc),a1
 	bcc.b	.ok
 
-	; address problem: MSB has been cleared
+	; address problem: MSB has been tampered with
 	; restore it
+
+	; MSB from 1 to 5
 	
+	move.l	a1,d0
+	ror.l	#8,d0
+	cmp.b	#5,d0
+	bcc.b	.restore_msb	
+
+	clr.b	d0
+	rol.l	#8,d0
+	bra.b	.out
+
+.restore_msb
+	; MSB completely broken
+
 	move.l	a1,d0
 	move.l	d1,-(a7)
 	move.b	_expmem(pc),d1
 	ror.l	#8,d1
 	or.l	d1,d0
 	move.l	(a7)+,d1
+.out
 	move.l	d0,a1
 .ok
 	MOVE.L	$0010(A1),D0
@@ -199,14 +508,20 @@ _generic_patches:
 	move.l	#11,d2
 	bsr	_get_section
 	add.l	#$37A,a0
+    cmp.l   #$226d0008,(a0)
+    beq.b   .nosave
 	move.l	#$4E714EB9,(a0)+
 	pea	_savedrive(pc)
 	move.l	(a7)+,(a0)
+.nosave
 
 	move.l	#11,d2
 	bsr	_get_section
 	add.l	#$368,a0
+    cmp.w   #$2f0e,(a0)
+    bne.b   .nosunlock
 	move.w	#$600A,(a0)	; skip unlock of root dir: crashes kickemu in dos mode
+.nosunlock
 
 	; no more dos.DeleteFile (avoids os swaps)
 
@@ -215,12 +530,21 @@ _generic_patches:
 	move.l	$4.W,a6
 	jsr	_LVOOldOpenLibrary(a6)
 	
-	move.l	d0,a0
+	move.l	d0,a6
+    move.l  d0,a0
 	add.w	#_LVODeleteFile,a0
 	move.w	#$4EF9,(a0)+
 	lea	_deletefile(pc),a1
 	move.l	a1,(a0)
 
+    IFD PATCH_MT32
+    move.l  _mt32_support(pc),d0
+    beq.b   .nomt32
+    
+    bsr patch_mt32_open
+.nomt32
+    ENDC
+    
 	; enable caches
 
 	move.l	_resload(pc),a2
@@ -242,12 +566,19 @@ _deletefile:
 	rts
 
 _savedrive:
+	move.l	a0,-(A7)
 	move.l	(8,a5),a1
-	move.l	#'SYS:',(a1)+
-	move.l	#'save',(a1)+
-	move.b	#0,(a1)
+	lea	.s(pc),a0
+.copy
+	move.b	(a0)+,(a1)+
+	bne.b	.copy
+	move.l	(a7)+,a0
 	rts
 
+.s:
+	dc.b	"SYS:save",0
+	even
+	
 _wrong_version:
 		pea	TDREASON_WRONGVER
 		move.l	_resload(pc),-(a7)
@@ -260,26 +591,7 @@ _quit
 		add.l	#resload_Abort,(a7)
 		rts
 
-_patch_kb
-	lea	.ackkb(pc),A0
-	lea	.oldkb(pc),A1
-	move.l	$68.W,(A1)
-	move.l	A0,$68.W
-	rts
-
-.ackkb:
-	bset	#6,$BFEE01
-	movem.l	D0,-(A7)
-	moveq.l	#2,D0
-	bsr	_beamdelay
-	bclr	#6,$BFEE01
-	movem.l	(A7)+,D0
-	move.l	.oldkb(pc),-(A7)
-	rts
-
-.oldkb:
-	dc.l	0
-
+	IFEQ	1
 ; < D0: numbers of vertical positions to wait
 _beamdelay
 .bd_loop1
@@ -291,8 +603,16 @@ _beamdelay
 	move.w	(a7)+,d0
 	dbf	d0,.bd_loop1
 	rts
-
+	ENDC
 
 _tag		dc.l	WHDLTAG_CUSTOM1_GET
 _custom1	dc.l	0
+    IFD PATCH_KEYBOARD
+    dc.l	WHDLTAG_CUSTOM5_GET
+_keyboard_type	dc.l	0
+    ENDC
+    IFD PATCH_MT32
+    dc.l	WHDLTAG_CUSTOM4_GET
+_mt32_support	dc.l	0
+    ENDC
 		dc.l	0
