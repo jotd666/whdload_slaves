@@ -75,7 +75,7 @@ slv_keyexit     = $59   ;F10
 ;============================================================================
 
 
-        INCLUDE kick13.s
+        INCLUDE whdload/kick13.s
 
         include ReadJoyPad.s
 
@@ -83,7 +83,7 @@ slv_keyexit     = $59   ;F10
 
 
 DECL_VERSION:MACRO
-	dc.b	"2.1"
+	dc.b	"2.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -541,8 +541,8 @@ jump_a2_floppy
     
     
 .no_end
-    ; should not happen
-    illegal
+    ; nothing to do (game over)
+    bsr _flushcache
 .jump
 	JSR	(A2)			;2c61a: 4e92
 	MOVEM.L	(A7)+,D4/A0-A1		;2c61c: 4cdf0310

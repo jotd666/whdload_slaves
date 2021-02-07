@@ -98,7 +98,7 @@ _config:	dc.b    "C1:X:Infinite Lives:0;"			; ws_config
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"2.1"
+	dc.b	"2.4"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -117,7 +117,7 @@ _info    dc.b  "Adapted & fixed by JOTD & Abaddon",10
       dc.b  "Version "
       DECL_VERSION
       dc.b  0
-_savename   dc.b  "highs",0
+_savename   dc.b  "NewZealandStory.highs",0
       dc.b  0
 
 
@@ -402,17 +402,9 @@ wait_blit
 
 read_tracks:
 	movem.l	D0-d7/a0-A6,-(a7)
-	and.l	#$FFFF,D0
-	and.l	#$FFFF,D1
 
-	mulu	#$B,D0
-	add.l	D0,D0
-	lsl.l	#8,D0    ; * $1600: offset
-
-	mulu	#$B,D1
-	add.l	D1,D1
-	lsl.l	#8,D1    ; * $1600 (length)
-
+	mulu.w	#512*11,d0
+	mulu.w	#512*11,d1
 	moveq.l	#1,D2    ; 1 disk only
 	move.l	_resload(pc),a2
 	jsr	resload_DiskLoad(a2)
@@ -478,11 +470,11 @@ kb_int:
 
 ; WHD-EXIT CODE
 ;============================================================================
-_exit		pea	TDREASON_OK
-		bra	_end
-_debug		pea	TDREASON_DEBUG
+_exit		pea	(TDREASON_OK).w
+		bra.b	_end
+_debug		pea	(TDREASON_DEBUG).w
 _end		move.l	(_resload,pc),-(a7)
-		add.l	#resload_Abort,(a7)
+		addq.l	#resload_Abort,(a7)
 		rts
 
 
@@ -558,20 +550,26 @@ _Menu		movem.l	D0-d7/a0-A6,-(A7)		; preserve reg
 	;	beq	.exit1
 
 		lea	reload(pc),a0
-		cmp.b	#$FF,$2FF
-		bne	.exit2
+		cmp.b	#$FF,$2FF.w
+		bne.b	.exit2
 
 .exit1		movem.l	(A7)+,D0-d7/a0-A6	; restore regs
 		lea	$3174.W,a0		; original code
 		moveq	#$F,d1
 		rts
 
-.exit2		move.b	#$FF,$2FF
-		waitvb
+.exit2		move.b	#$FF,$2FF.w
+	bsr.b	WaitRaster
 		movem.l	(A7)+,D0-d7/a0-A6	; restore regs		
 		JMP	BASE_ADDRESS
 
 
+WaitRaster
+.wait	btst	#0,$dff005
+	beq.b	.wait
+.wait2	btst	#0,$dff005
+	bne.b	.wait2
+	rts
 
 ; *** load / save highscores (HH)
 
@@ -582,21 +580,21 @@ _savescore
         move.l  startlevel(pc),d0
         bne.b   .skip               ; no save if trainer
 		move.l	_resload(PC),A2
-		move.l	#$60,D0			; data length
+		moveq	#$60,D0			; data length
 		moveq.l	#0,D1			; offset of zero
 		lea	_savename(pc),A0	; filename
 		lea   version(pc),a4
-		cmp   #2,(a4)			; check version
-		beq   .ver2save
+		cmp.w	#2,(a4)			; check version
+		beq.b	.ver2save
 .ver1save
-		lea	$4828,A1		; position of ver 1 scores
-		cmp.w	#$3E8,$4FBA		; Check in-game cheat active ver 1
+		lea	$4828.w,A1		; position of ver 1 scores
+		cmp.w	#$3E8,$4FBA.w		; Check in-game cheat active ver 1
 		beq.b	.skip			; dont save if active
-		bra	.save
+		bra.b	.save
 
 .ver2save
-		lea   $47E0,A1			; position of ver 2 scores
-		cmp.w  #$3E8,$4F48		; Check in-game cheat active ver 2
+		lea	$47E0.w,A1		; position of ver 2 scores
+		cmp.w	#$3E8,$4F48.w		; Check in-game cheat active ver 2
 		beq.b .skip			; dont save if active
 
 .save		jsr	(resload_SaveFileOffset,a2)   
@@ -620,21 +618,21 @@ _loadscore
 	move.l	(_resload,pc),a2
 	jsr	(resload_GetFileSize,a2)	; get highscore filesize
 	tst.l	d0				; check exists
-	beq	.skip				; skip loadscore
+	beq.b	.skip				; skip loadscore
 
 	move.l	_resload(PC),A2
-	move.l	#$60,D0				;data length
-	moveq.l	#0,D1				;offset of zero
+	moveq	#$60,D0				;data length
+	moveq	#0,D1				;offset of zero
 	lea	_savename(pc),A0		;filename
             
 	lea	version(pc),a3			; link version
 	cmp	#2,(a3)				; check for version 2
-	beq	.ver2
+	beq.b	.ver2
 
-.ver1	lea	$4828,a1			; ver1 highscore position
-	bra	.jump
+.ver1	lea	$4828.w,a1			; ver1 highscore position
+	bra.b	.jump
 
-.ver2	lea	$47E0,a1			; ver2 highscore position
+.ver2	lea	$47E0.w,a1			; ver2 highscore position
 
 .jump	jsr	(resload_LoadFileOffset,a2)	; Load scores
 
@@ -660,11 +658,11 @@ _startlives
 
 
 ; *** in game cheat activated - to allow levelskip (HH)
-_cheat_v1	move.w		#$3E8,$4FBA		; activate levelskip
+_cheat_v1	move.w		#$3E8,$4FBA.w		; activate levelskip
 		bsr		_cheat_share
 		jmp		$b7bc			; return to code
 
-_cheat_v2      	move.w		#$3E8,$4F48 		; activate levelskip
+_cheat_v2      	move.w		#$3E8,$4F48.w 		; activate levelskip
 		bsr		_cheat_share
         	jmp		$BA3C			; return to code
 

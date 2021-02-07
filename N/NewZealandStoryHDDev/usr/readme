@@ -29,10 +29,11 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 2.4 (xx.11.2020) done by JOTD:
+ version 2.4 (06.02.2021) done by JOTD:
  - merged version 2.2 bugfixes that I overlooked (but most fixes from broken 2.1 were
    already been fixed). Means just optimize the slave code, nothing more
-   
+ - renamed highscore files back to "NewZealandStory.highs" (issue #0004831)
+
  version 2.3 (12.09.2020) done by JOTD
  - restored original title picture (can be paused with BUTTONWAIT)
  - self-modifying code removed: end screen was completely trashed

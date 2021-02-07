@@ -60,12 +60,14 @@ BOOTDOS
 CACHE
 SEGTRACKER
 
-slv_Version	= 17
+slv_Version	= 18
 ; if WHDLF_ClearMem is set the TFX.FPU version crashes when starting the game
 ; this is probably a programming error with this version, made up by non-zero memory
 ; (sometimes it's the other way round): check the compiler warnings a*holes...
 
-slv_Flags	= WHDLF_NoError|WHDLF_Examine|WHDLF_Req68020|WHDLF_EmulLineF|WHDLF_ReqAGA
+; EmulLineF should be necessary with FPU emulation but it's even better
+; to set private7 and be able to write in whdload vbr
+slv_Flags	= WHDLF_NoError|WHDLF_Examine|WHDLF_Req68020|WHDLF_ReqAGA
 slv_keyexit	= $67	; right amiga (as num pad is used)
 
 	include	whdload/kick31.s
@@ -97,8 +99,9 @@ assign
 	dc.b	"did",0
 slv_config
 	dc.b	"C3:L:executable:auto,TFX (plain 68020),TFX.FPU (68020+FPU),TFX.020 (68020+FPU 1997),TFX.040 (68020+FPU beta);"
-	dc.b	"C4:B:run configuration program first;"
-	dc.b	"C5:B:skip intro;"
+	dc.b	"C4:X:run configuration program first:0;"
+	dc.b	"C4:X:skip intro:1;"
+	dc.b	"C5:B:no FPU direct fixes;"
 	dc.b	0	
 	EVEN
 slv_name		dc.b	"TFX"
@@ -263,14 +266,6 @@ _bootdos
         lea program_to_run(pc),a1
         move.l  a0,(a1)
         
-    IFD CHIP_ONLY
-        movem.l a6,-(a7)
-		move.l	$4.w,a6
-        move.l  #MEMF_PUBLIC,d1
-        move.l  #$11C80-$28,d0
-        jsr _LVOAllocMem(a6)
-        movem.l (a7)+,a6
-    ENDC
         ; for 68040/68060 only, FPU assumed (we have checked it in the "auto"
         ; executable selection, but the user can force it, note that it will probably
         ; fail but just in case of a strange Vampire-like board that isn't properly detected...
@@ -312,7 +307,8 @@ _bootdos
         bsr install_fp_exe_040
 .no040fpu
         
-        move.l  run_config(pc),d0
+        move.l  sequence_control(pc),d0
+        btst    #0,d0
         beq.b   .skipconf
     
         lea config(pc),a0
@@ -330,6 +326,15 @@ _bootdos
         MOVE.W	#$83c0,$dff096
         CLR.W	$dff140
         MOVE.W	#$0020,$dff096
+
+    IFD CHIP_ONLY
+        movem.l a6,-(a7)
+		move.l	$4.w,a6
+        move.l  #MEMF_PUBLIC,d1
+        move.l  #$6D00,d0
+        jsr _LVOAllocMem(a6)
+        movem.l (a7)+,a6
+    ENDC
 
 
         move.l  program_to_run(pc),a0
@@ -364,6 +369,8 @@ get_060_id:
 get_version
         move.l  program_to_run(pc),a0
         jsr (resload_GetFileSize,a2)
+        
+        sub.l   a1,a1   ; default: no fpu patchlist
         
         cmp.l   #554340,d0
         beq.b   .v020
@@ -409,6 +416,7 @@ get_version
     ; this version needs patching (data/bss hunks)
 
         lea pl_fpu_new(pc),a0
+        lea pl_fpu_new_040(pc),a1
         move.w  #13574,d0
         move.l  #$40c44,d1
         rts
@@ -431,7 +439,9 @@ new_AllocMem
 
 patch_main
         bsr get_version
-
+        lea fpu_patchlist(pc),a2
+        move.l  a1,(a2)     ; store for later use
+        
         ; proper offset to be able to reuse the same patch
         ; code for text/image skip
         lea offset(pc),a2        
@@ -441,21 +451,32 @@ patch_main
         add.l   a1,a1
         add.l   a1,a1
         addq.l  #4,a1   ; first seg
+        IFD CHIP_ONLY
+        move.l  a1,$FC.W
+        ENDC
+        
         add.l   d1,a1   ; get keyboard handler end address
         lea int2_hook_address(pc),a2
         move.l  a1,(a2)
 
 
         move.l  d7,a1
-        move.l  _resload(pc),a2
+        move.l  _resload(pc),a2        
         jsr	resload_PatchSeg(a2)
         
+        move.l  fpu_patchlist(pc),d0
+        beq.b   .no_fpu_patches
+        move.l  d0,a0
+        move.l  d7,a1
+        jsr	resload_PatchSeg(a2)
+        
+.no_fpu_patches
         rts
 
 pl_020
         PL_START
         ; skip images/text from intro
-        PL_IFC5
+        PL_IFC4X    1
         ; we have to skip images/text until we reach 16 displays (amounts
         ; to the number of text/images screen shown during the intro
         ; because this routine is also used to display images in menu
@@ -471,6 +492,7 @@ pl_020
         ; read joy1
         PL_PSS  $41504,test_fire,2
 
+        
         PL_END
     
 pl_040
@@ -481,7 +503,7 @@ pl_040
         PL_B    $4ea14,$60
 
         ; skip images & text from intro
-        PL_IFC5
+        PL_IFC4X    1
         PL_PSS  $43a58,pre_display_text_or_image,2
         PL_PSS  $43a68,pre_display_text_or_image,2
         PL_ENDIF
@@ -521,13 +543,35 @@ pl_040_orig     ; this crap doesn't work
         ; read joy1
 ;        PL_PSS  $3fb1c,test_fire,2
         PL_END
-    
+
+JSR_FINTRZ_X_FP0_FP1 = $100
+JSR_FINTRZ_X_FP1_FP0 = $106
+JSR_FINTRZ_X_FP1_FP2 = $10c
+JSR_FINTRZ_X_FP2_FP1 = $112
+JSR_FMOVECR_X_0x0f_0_000000e_00_FP0 = $118
+JSR_FMOVECR_X_0x0f_0_000000e_00_FP6 = $11e
+JSR_FMOVECR_X_0x32_1_000000e_00_FP0 = $124
+JSR_FMOVECR_X_0x32_1_000000e_00_FP1 = $12a
+JSR_FMOVECR_X_0x32_1_000000e_00_FP2 = $130
+JSR_FMOVECR_X_0x32_1_000000e_00_FP5 = $136
+JSR_FMOVECR_X_0x0f_0_000000e_00_FP1 = $13C
+
+; opcodes for fsub.x dx,dx (4 bytes, fit in FMOVECR code space)
+ZERO_FP0 = $F2000028
+ZERO_FP1 = $F20004A8
+ZERO_FP2 = $F2000928
+ZERO_FP3 = $F2000DA8
+ZERO_FP4 = $F2001228
+ZERO_FP5 = $F20016A8
+ZERO_FP6 = $F2001B28
+ZERO_FP7 = $F2001FA8
+
 pl_fpu
         PL_START
         ; force FPU
         PL_B    $48f1c,$60
         ; skip images from intro
-        PL_IFC5
+        PL_IFC4X    1
         PL_PSS  $3d8d8,pre_display_text_or_image,2
         PL_PSS  $3d8e8,pre_display_text_or_image,2
         PL_ENDIF
@@ -539,12 +583,13 @@ pl_fpu
 
         PL_END
 
+
 pl_fpu_new
         PL_START
         ; force FPU
         PL_B    $50eec,$60
         ; skip images from intro
-        PL_IFC5
+        PL_IFC4X    1
         PL_PSS  $45368,pre_display_text_or_image,2
         PL_PSS  $45378,pre_display_text_or_image,2
         PL_ENDIF
@@ -553,9 +598,274 @@ pl_fpu_new
 
         ; read joy1
         PL_PSS  $41054,test_fire,2
+        PL_END
+       
+pl_fpu_new_040:
+        PL_IFC5
+        PL_ELSE
+        ; fpu patches
+        ; those are computed by running the game with CHIP_ONLY
+        ; (to align memory segment) then running a script that does
+        ;m $FC 1
+        ;w 0 $3FC
+        ;g
+        ;d rA0 1
+        ;g
+        ;d rA0 1
+        ;g 
+        ; and so on...
+        ; then capture the winuae debugger console output, save as "debug_trace.txt"
+        ; and run the analyse_fpu_excepts.py to generate patchlist,
+        ; zeropage patches and offsets. Manually it's just horrible and error prone
+        ;
+        ; trig operations aren't considered
+        ; all operations that are not seen (because not played enough)
+        ; are processed by FPU emulation. Slower, but will work
+        
+        PL_L	$4874,$4EB80000+JSR_FINTRZ_X_FP1_FP0
+        PL_L	$4890,$4EB80000+JSR_FINTRZ_X_FP1_FP0
+        PL_L	$48ac,$4EB80000+JSR_FINTRZ_X_FP1_FP0
+        PL_L	$d386,$4EB80000+JSR_FINTRZ_X_FP0_FP1
+        PL_L	$d65a,$4EB80000+JSR_FINTRZ_X_FP1_FP0
+        PL_L	$e928,$4EB80000+JSR_FINTRZ_X_FP0_FP1
+        PL_L	$ebc6,$4EB80000+JSR_FINTRZ_X_FP0_FP1
+        PL_L	$ec0e,$4EB80000+JSR_FINTRZ_X_FP0_FP1
+        PL_L	$ed7c,$4EB80000+JSR_FINTRZ_X_FP1_FP0
+        PL_L	$10b4a,$4EB80000+JSR_FINTRZ_X_FP1_FP0
+        PL_L	$15fd0,$4EB80000+JSR_FINTRZ_X_FP0_FP1
+        PL_L	$1600e,$4EB80000+JSR_FINTRZ_X_FP0_FP1
+        PL_L	$16072,$4EB80000+JSR_FINTRZ_X_FP0_FP1
+        PL_L	$160da,$4EB80000+JSR_FINTRZ_X_FP1_FP0
+        PL_L	$1ab84,$4EB80000+JSR_FMOVECR_X_0x32_1_000000e_00_FP0
+        PL_L	$1ab84,$4EB80000+JSR_FMOVECR_X_0x32_1_000000e_00_FP0
+        PL_L	$1ee6c,$4EB80000+JSR_FINTRZ_X_FP0_FP1
+        PL_L	$29b76,$4EB80000+JSR_FINTRZ_X_FP1_FP0
+        PL_L	$2afe2,$4EB80000+JSR_FINTRZ_X_FP1_FP2
+        PL_L	$2b042,$4EB80000+JSR_FINTRZ_X_FP1_FP2
+        PL_L	$2b0a0,$4EB80000+JSR_FINTRZ_X_FP0_FP1
+        PL_L	$2d376,$4EB80000+JSR_FINTRZ_X_FP1_FP2
+        PL_L	$2d388,$4EB80000+JSR_FINTRZ_X_FP1_FP2
+        PL_L	$2d394,$4EB80000+JSR_FINTRZ_X_FP0_FP1
+        PL_L	$2d84c,$4EB80000+JSR_FMOVECR_X_0x32_1_000000e_00_FP0
+        PL_L	$2de7e,$4EB80000+JSR_FMOVECR_X_0x32_1_000000e_00_FP0
+        PL_L	$2e202,$4EB80000+JSR_FINTRZ_X_FP1_FP0
+        PL_L	$2e36a,$4EB80000+JSR_FINTRZ_X_FP2_FP1
+        PL_L	$2e6c6,$4EB80000+JSR_FMOVECR_X_0x32_1_000000e_00_FP2
+        PL_L	$2e79c,$4EB80000+JSR_FINTRZ_X_FP0_FP1
+        PL_L	$2e7c0,$4EB80000+JSR_FINTRZ_X_FP2_FP1
+        PL_L	$30c54,$4EB80000+JSR_FINTRZ_X_FP0_FP1
+        PL_L	$30c72,$4EB80000+JSR_FINTRZ_X_FP0_FP1
+        PL_L	$30c90,$4EB80000+JSR_FINTRZ_X_FP0_FP1
+        PL_L	$316d8,$4EB80000+JSR_FMOVECR_X_0x32_1_000000e_00_FP0
+        PL_L	$318d8,$4EB80000+JSR_FMOVECR_X_0x32_1_000000e_00_FP0
+        PL_L	$3228a,$4EB80000+JSR_FMOVECR_X_0x32_1_000000e_00_FP1   
+        PL_L	$310b0,$4EB80000+JSR_FMOVECR_X_0x32_1_000000e_00_FP0
+        PL_L	$31bd8,$4EB80000+JSR_FMOVECR_X_0x32_1_000000e_00_FP5
+        PL_L	$1d54c,$4EB80000+JSR_FINTRZ_X_FP0_FP1
+        PL_L	$1d55e,$4EB80000+JSR_FINTRZ_X_FP0_FP1
+        PL_L	$1d570,$4EB80000+JSR_FINTRZ_X_FP0_FP1
+;        PL_L	$2f30e,ZERO_FP0
+;        PL_L	$2f336,ZERO_FP0
+;        PL_L	$2f3d6,ZERO_FP0
+;        PL_L	$34b8a,ZERO_FP0
+;        PL_L	$5182a,ZERO_FP1
+;        PL_L	$34d5a,ZERO_FP0
+;        PL_L	$35438,ZERO_FP1
+;        PL_L	$5106e,ZERO_FP0
+;        PL_L	$5181e,ZERO_FP0
+;        PL_L	$2b08e,ZERO_FP6
 
+    ; old patches needed a jsr then a jump, when a sub with itself is enough
+        PL_L	$2f30e,$4EB80000+JSR_FMOVECR_X_0x0f_0_000000e_00_FP0
+        PL_L	$2f336,$4EB80000+JSR_FMOVECR_X_0x0f_0_000000e_00_FP0
+        PL_L	$2f3d6,$4EB80000+JSR_FMOVECR_X_0x0f_0_000000e_00_FP0
+        PL_L	$34b8a,$4EB80000+JSR_FMOVECR_X_0x0f_0_000000e_00_FP0
+        PL_L	$5182a,$4EB80000+JSR_FMOVECR_X_0x0f_0_000000e_00_FP1
+        PL_L	$34d5a,$4EB80000+JSR_FMOVECR_X_0x0f_0_000000e_00_FP0
+        PL_L	$35438,$4EB80000+JSR_FMOVECR_X_0x0f_0_000000e_00_FP1
+        PL_L	$5106e,$4EB80000+JSR_FMOVECR_X_0x0f_0_000000e_00_FP0
+        PL_L	$5181e,$4EB80000+JSR_FMOVECR_X_0x0f_0_000000e_00_FP0
+        PL_L	$2b08e,$4EB80000+JSR_FMOVECR_X_0x0f_0_000000e_00_FP6
+
+        PL_ENDIF
         PL_END
 
+install_zero_page_patches:
+    movem.l a1,-(a7)
+    lea needs_fpu_patches(pc),a1
+    st.b    (a1)
+    movem.l (a7)+,a1
+    
+	patch	JSR_FINTRZ_X_FP0_FP1,FINTRZ_X_FP0_FP1
+	patch	JSR_FINTRZ_X_FP1_FP0,FINTRZ_X_FP1_FP0
+	patch	JSR_FINTRZ_X_FP1_FP2,FINTRZ_X_FP1_FP2
+	patch	JSR_FINTRZ_X_FP2_FP1,FINTRZ_X_FP2_FP1
+	patch	JSR_FMOVECR_X_0x32_1_000000e_00_FP0,FMOVECR_X_0x32_1_000000e_00_FP0
+	patch	JSR_FMOVECR_X_0x32_1_000000e_00_FP1,FMOVECR_X_0x32_1_000000e_00_FP1
+	patch	JSR_FMOVECR_X_0x32_1_000000e_00_FP2,FMOVECR_X_0x32_1_000000e_00_FP2
+    patch   JSR_FMOVECR_X_0x32_1_000000e_00_FP5,FMOVECR_X_0x32_1_000000e_00_FP5
+    
+	patch	JSR_FMOVECR_X_0x0f_0_000000e_00_FP0,FMOVECR_X_0x0f_0_000000e_00_FP0
+	patch	JSR_FMOVECR_X_0x0f_0_000000e_00_FP6,FMOVECR_X_0x0f_0_000000e_00_FP6
+    patch   JSR_FMOVECR_X_0x0f_0_000000e_00_FP1,FMOVECR_X_0x0f_0_000000e_00_FP1
+	rts
+    
+    
+    IFEQ    1
+FMOVECR_X_0x32_1_000000e_00_FP:MACRO
+FMOVECR_X_0x32_1_000000e_00_FP\1:
+     FMOVECR    #$32,FP\1
+     rts
+     ENDM
+FMOVECR_X_0x0f_0_000000e_00_FP:MACRO
+FMOVECR_X_0x0f_0_000000e_00_FP\1:
+     FMOVECR    #$f,FP\1
+     rts
+     ENDM    
+     ENDC
+    ; direct FPU emulated calls, without run-time decoding
+    ; or trap overhead, a drag for small calls like those
+
+FMOVECR_X_0x32_1_000000e_00_FP:MACRO
+FMOVECR_X_0x32_1_000000e_00_FP\1:
+     ;; fmove.x #1,fp\1 works only on 68040 not 060
+     ;; (unimplemented effective address)
+     ;; fmove.s is okay in that case
+     fmove.s		#1,fp\1
+     ;move.l a0,-(a7)
+     ;lea    one_80bits(pc),a0
+     ;fmovem.x  (a0),fp\1
+     ;move.l (a7)+,a0
+     rts
+     ENDM
+
+FMOVECR_X_0x0f_0_000000e_00_FP:MACRO
+FMOVECR_X_0x0f_0_000000e_00_FP\1:
+     fmove.s		#0,fp\1
+     rts
+     ENDM
+
+FINTRZ_X_FPx_FPy:MACRO
+FINTRZ_X_FP\1_FP\2:
+    move.l  d0,-(a7)
+    fmove   fpcr,-(a7)
+    fmove   #$10,fpcr   ; rounding toward zero
+    fmove.l fp\1,d0
+    fmove.l d0,fp\2
+    fmove   (a7)+,fpcr
+    move.l  (a7)+,d0
+    rts
+    ENDM
+     mc68040
+     FMOVECR_X_0x32_1_000000e_00_FP 0
+     FMOVECR_X_0x32_1_000000e_00_FP 1
+     FMOVECR_X_0x32_1_000000e_00_FP 2
+     FMOVECR_X_0x32_1_000000e_00_FP 5
+     
+     FMOVECR_X_0x0f_0_000000e_00_FP 0
+     FMOVECR_X_0x0f_0_000000e_00_FP 1
+     FMOVECR_X_0x0f_0_000000e_00_FP 5
+     FMOVECR_X_0x0f_0_000000e_00_FP 6
+
+    FINTRZ_X_FPx_FPy 0,1
+    FINTRZ_X_FPx_FPy 1,0
+    FINTRZ_X_FPx_FPy 1,2
+    FINTRZ_X_FPx_FPy 2,1
+    
+;one_80bits:
+;    dc.l    $3fff0000,$80000000,$00000000
+
+    mc68020
+
+
+
+; < a0: program name
+; < a1: arguments
+; < d0: argument string length
+; < a5: patch routine (0 if no patch routine)
+
+install_fp_exe_040:
+    lea fpsp_name_040(pc),a0
+    bra install_fp_exe
+install_fp_exe_060:
+    lea fpsp_name_060(pc),a0
+install_fp_exe:
+    ; direct patches to avoid using emulation
+    bsr install_zero_page_patches
+	movem.l	d0-a6,-(a7)
+	move.l	a0,d1
+    move.l  a0,a3
+	jsr	(_LVOLoadSeg,a6)
+	move.l	d0,d7			;D7 = segment
+	beq	.end			;file not found
+    add.l   d7,d7
+    add.l   d7,d7
+    move.l  d7,a3
+	move.l	_stacksize(pc),-(a7)	; original stack format
+	movem.l	(_saveregs,pc),d1-d7/a1-a2/a4-a6	; original registers (BCPL stuff)
+    move.l  4,A6
+    lea .do_super(pc),a5
+    jsr _LVOSupervisor(A6)
+	addq.l	#4,a7
+    ; do NOT UnloadSeg as the program needs to remain loaded
+
+    IFEQ    1
+    mc68040
+    fmove.x   #24.56,fp0
+    bsr FINTRZ_X_FP0_FP1
+    dc.l    $F2000083
+    fmove.x   #-24.56,fp0
+    bsr FINTRZ_X_FP0_FP1
+    dc.l    $F2000083
+    ENDC
+
+    IFD CHIP_ONLY
+    ; redirect to our version (only for debug)
+    lea fpvec(pc),a0
+    movec   vbr,a1
+    move.l  ($2C,a1),(a0)
+    lea customvec(pc),a0
+    move.l  a0,($2C,a1)
+    ENDC
+    
+	movem.l	(a7)+,d0-a6
+
+	rts
+    
+.do_super:
+    jsr (4,a3)
+    rte
+    
+.end    
+	jsr	(_LVOIoErr,a6)
+    move.l  a3,-(a7)
+	move.l	d0,-(a7)
+	pea	TDREASON_DOSREAD
+	move.l	(_resload,pc),-(a7)
+	add.l	#resload_Abort,(a7)
+	rts
+ 
+    IFD CHIP_ONLY
+fpvec
+    dc.l    0
+customvec
+    movem.l  d0/a0,-(a7)
+    move.l  10(a7),a0
+    move.l  -(a0),d0
+    clr.b   d0
+    cmp.l   #$f2001c00,d0    ; fcos/fsin/fatan ... FP7,FP0
+    beq.b   .ok
+    move.l  (a0),d0
+    cmp.l   #$f200068a,d0    ;                 FATAN.X FP1,FP5
+    beq.b   .ok
+
+    move.w  #$F00,$3FC    
+.ok
+    movem.l (a7)+,D0/a0
+    ; jump to fpvec
+    move.l  fpvec(pc),-(a7)
+    rts
+    ENDC
 
 test_fire:
      movem.l    d0,-(a7)
@@ -699,53 +1009,6 @@ old_level3_interrupt
     dc.l    0
 buttons_state
     dc.l    0
-
-; < a0: program name
-; < a1: arguments
-; < d0: argument string length
-; < a5: patch routine (0 if no patch routine)
-
-install_fp_exe_040:
-    lea fpsp_name_040(pc),a0
-    bra install_fp_exe
-install_fp_exe_060:
-    lea fpsp_name_060(pc),a0
-install_fp_exe:
-	movem.l	d0-a6,-(a7)
-	move.l	a0,d1
-    move.l  a0,a3
-	jsr	(_LVOLoadSeg,a6)
-	move.l	d0,d7			;D7 = segment
-	beq	.end			;file not found
-    add.l   d7,d7
-    add.l   d7,d7
-    move.l  d7,a3
-	move.l	_stacksize(pc),-(a7)	; original stack format
-	movem.l	(_saveregs,pc),d1-d7/a1-a2/a4-a6	; original registers (BCPL stuff)
-	jsr	(4,a3)		; call program
-	addq.l	#4,a7
-    ; do NOT UnloadSeg as the program needs to remain loaded
-
-    ; test (temp)
-;    lea .wtf(pc),a0
-;    MC68040
-;    fmove.l   a0,FPIAR
-;.wtf
-;    dc.l    $f2005c32       ; unsupported FPU FMOVECR
-
-	movem.l	(a7)+,d0-a6
-
-	rts
-    
-.end    
-	jsr	(_LVOIoErr,a6)
-    move.l  a3,-(a7)
-	move.l	d0,-(a7)
-	pea	TDREASON_DOSREAD
-	move.l	(_resload,pc),-(a7)
-	add.l	#resload_Abort,(a7)
-	rts
-    
 ; < a0: program name
 ; < a1: arguments
 ; < d0: argument string length
@@ -821,11 +1084,12 @@ _stacksize
 tag		dc.l	WHDLTAG_CUSTOM3_GET
 executable	dc.l	0
     dc.l	WHDLTAG_CUSTOM4_GET
-run_config	dc.l	0
+sequence_control	dc.l	0
         dc.l    WHDLTAG_ATTNFLAGS_GET
 attnflags
         dc.l    0
-        
+        dc.l    WHDLTAG_Private7     
+        dc.l    -1   ; allow to write in vbr directly
 		dc.l	0
         
 program_to_run
@@ -834,6 +1098,8 @@ offset
     dc.w    0
 int2_hook_address
     dc.l    0
+fpu_patchlist
+    dc.l    0
 fpsp_name_040
     dc.b    "fpsp040",0
 fpsp_name_060
@@ -841,6 +1107,8 @@ fpsp_name_060
 wrongcustom
     dc.b    "custom exe value out of range 0-4",0
 mem_patched
+    dc.b    0
+needs_fpu_patches
     dc.b    0
     cnop    0,4
 ;============================================================================

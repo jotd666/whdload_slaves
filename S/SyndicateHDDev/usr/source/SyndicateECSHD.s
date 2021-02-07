@@ -30,8 +30,8 @@
 
 ;============================================================================
 
-CHIPMEMSIZE	= $FF000
-FASTMEMSIZE	= $80000
+CHIPMEMSIZE	= $80000
+FASTMEMSIZE	= $C0000
 NUMDRIVES	= 1
 WPDRIVES	= %0000
 
@@ -65,7 +65,7 @@ slv_keyexit	= $5D	; num '*'
 
 
 DECL_VERSION:MACRO
-	dc.b	"2.3"
+	dc.b	"2.6"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -185,7 +185,7 @@ patch_main
 	cmp.l	#$285F4E75,$CB6(a1)
 	bne.b	.noflop2
 
-	; CAPS 739 "SYN" file (314720) bytes
+	; SPS 739 "SYN" file (314720) bytes
 
 	patch	$100,do_flush
 	move.l	d7,a1
@@ -198,7 +198,7 @@ patch_main
 	cmp.l	#$33C000DF,$B3C(a1)
 	bne.b	.out
 
-	; CAPS 1887 "SYN" file (315736 bytes)
+	; SPS 1887 "SYN" file (315736 bytes)
 
 	lea	saved_addr(pc),a0
 	move.l	$B5A(a1),(a0)
@@ -262,6 +262,8 @@ active_loop_3:
 	add.l	#8,(A7)
 	rts
 
+; 739 and 405 are very close
+; 1887 looks older (doesn't have VBR support)
 pl_739:
 	PL_START
 	PL_L	$13CB6,$4EF80100	; VBL install -> crash
@@ -269,8 +271,53 @@ pl_739:
 	PL_PS	$B6A6,active_loop_1
 	PL_PS	$27C36,active_loop_2
 	PL_PS	$3842A,active_loop_3
+    PL_PS   $1447C,kbint_hook
+	PL_END
+pl_405:
+	PL_START
+	PL_L	$13bba,$4EF80100	; VBL install -> crash
+	PL_L	$13a66,$72004E71	; VBR stuff
+	PL_PS	$0b5aa,active_loop_1
+	PL_PS	$27b4e,active_loop_2
+	PL_PS	$38342,active_loop_3
+    PL_PS   $14380,kbint_hook
 	PL_END
 
+pl_1887:
+	PL_START
+
+	PL_PS	$0b68e,active_loop_1
+	PL_PS	$28080,active_loop_2
+	PL_PS	$3885a,active_loop_3
+    PL_P    $13af2,flush_and_allow_interrupts
+    PL_P    $13ad4,flush_and_allow_interrupts_2
+    PL_PS   $142f8,kbint_hook
+	PL_END
+
+kbint_hook:
+    move.l  d0,-(a7)
+    not.b   d0
+    ror.b   #1,d0
+    cmp.b   _keyexit(pc),d0
+    beq _quit    
+    move.l  (a7)+,d0
+    MOVE.B	#$00,($C00,A1)		;142f8: 137c00000c00
+    rts
+    
+    ; at segment 0 offset 13b44 there's a routine that performs SMC
+    ; on a VBL hook. Flushing the cache ensures that the address isn
+    ; properly updated
+flush_and_allow_interrupts
+    bsr _flushcache
+	MOVE.W	#$c020,$dff09a
+	MOVEM.L	(A7)+,D0/A1/A6		;13afa: 4cdf4201
+	RTS				;13afe: 4e75
+
+flush_and_allow_interrupts_2
+    bsr _flushcache
+	MOVE.W	D0,$dff09a
+    rts
+    
 ; < a0: program name
 ; < a1: arguments
 ; < d0: argument string length

@@ -31,13 +31,13 @@
 
 ;============================================================================
 
-CHIP_ONLY = 1
+;CHIP_ONLY
     IFD CHIP_ONLY
-CHIPMEMSIZE	= $180000
+CHIPMEMSIZE	= $110000
 FASTMEMSIZE	= $0
     ELSE
-CHIPMEMSIZE	= $100000
-FASTMEMSIZE	= $80000
+CHIPMEMSIZE	= $80000
+FASTMEMSIZE	= $100000
     ENDC
 NUMDRIVES	= 1
 WPDRIVES	= %0000
@@ -54,6 +54,7 @@ IOCACHE		= 300
 ;SETPATCH
 BOOTDOS
 CACHE
+NO68020
 
 slv_Version	= 17
 ; no clearmem: access fault on $CCCCCCCC
@@ -63,13 +64,13 @@ slv_Flags	= WHDLF_NoError|WHDLF_Examine|WHDLF_ClearMem
 slv_keyexit	= $5D	; num '*'
 
 
-;DUMMY_CD_DEVICE = 1
-;USE_DISK_LOWLEVEL_LIB
-;USE_DISK_NONVOLATILE_LIB
+INIT_LOWLEVEL
+INIT_NONVOLATILE
+
 
 ;============================================================================
 
-	INCLUDE	kick31cd32.s
+	INCLUDE	whdload/kick31.s
 
 ;============================================================================
 
@@ -80,7 +81,7 @@ slv_keyexit	= $5D	; num '*'
 
 
 DECL_VERSION:MACRO
-	dc.b	"2.4"
+	dc.b	"2.6"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -96,7 +97,11 @@ _assign1
 _assign2
 	dc.b	"Syndicate",0
 
-slv_name		dc.b	"Syndicate CD³²",0
+slv_name		dc.b	"Syndicate CD³²"
+        IFD CHIP_ONLY
+        dc.b    " (DEBUG/CHIP mode)"
+        ENDC
+        dc.b    0
 slv_copy		dc.b	"1993 Bullfrog",0
 slv_info		dc.b	"adapted by JOTD",10,10
 			dc.b	"Version "
@@ -143,8 +148,6 @@ _bootdos
 		lea	_assign1(pc),a0
 		sub.l	a1,a1
 		bsr	_dos_assign
-
-		bsr	_patch_cd32_libs
   
 
 		lea	(tag,pc),a0
@@ -208,12 +211,23 @@ pl_main
 	PL_START
 	PL_L	$11B98,$72004E71	; VBR stuff
 	PL_L	$11CEC,$4EF80100	; SMC
+    PL_PS   $12784,kbint_hook
     ; avoid "mouse or joypad required" spurious error
     ; (lowlevel first readings can be wrong, so we're going to
     ; trust the user and ignore this bloody error)    
     ;;PL_S    $53e,$00564-$53E
 	PL_END
 
+kbint_hook:
+    move.l  d0,-(a7)
+    not.b   d0
+    ror.b   #1,d0
+    cmp.b   _keyexit(pc),d0
+    beq _quit    
+    move.l  (a7)+,d0
+    MOVE.B	#$00,($C00,A1)		;142f8: 137c00000c00
+    rts
+    
 do_flush
 	bsr	_flushcache
 	MOVEA.L	(A7)+,A4		;13CB6: 285F

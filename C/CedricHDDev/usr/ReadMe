@@ -37,6 +37,9 @@
  or     aminet:dev/misc/whdload#?
  and    aminet:game/patch/
 
+ version 2.2 (05.02.2021) done by JOTD:
+ - crash on game over fixed (issue #0004969)
+ 
  version 2.1 (08.06.2020) done by JOTD:
  - forgot a VBR read, access fault on some machines, but not in WinUAE, damn (issue #0004720)
  - defaults to english language except if system locale is german (issue #0004721)

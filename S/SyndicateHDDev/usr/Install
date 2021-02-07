@@ -16,25 +16,6 @@
 ; copy file including icon if exist
 ; #copy-file - name of file to copy
 
-(procedure P_CopyMandatoryFile
-  (if
-    (exists #copy-file)
-    (
-      (copyfiles
-        (help @copyfiles-help)
-        (source #copy-file)
-        (dest (tackon #dest "libs"))
-      )
-    )
-    (
-      (abort ("Cannot find file %s" #copy-file))
-    )
-  )
-)
-;----------------------------
-; copy file including icon if exist
-; #copy-file - name of file to copy
-
 (procedure P_CopyFile
   (if
     (exists #copy-file)
@@ -397,27 +378,7 @@
 (P_CopyFile)
 (select #version
 (P_Install)
-(
-(set #copy-file "LIBS:nonvolatile.library")
-(P_CopyMandatoryFile)
-(set #copy-file "LIBS:lowlevel.library")
-(P_CopyMandatoryFile)
-
-    (set #nvdest (tackon #dest "prefs/env-archive/sys"))
-    (makedir #nvdest
-      (help @makedir-help)
-    )
-      (copyfiles
-        (help @copyfiles-help)
-        (source "nv_location")
-        (dest #nvdest )
-      )
-(makedir (tackon #dest "save/SYN")
-  (help @makedir-help)
-)
-
 (P_CDInstall)
-)
 )
 (if (= #newstuff 1)
   (openwbobject #dest-org)

@@ -39,6 +39,11 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 1.5 (xx.xx.2021) done by JOTD:
+ - added quitkey for 68000 in game
+ - fixed sound effects on fast machines (issue #0004980)
+ - fixed lockup when quitting the current mission TODO
+ 
  version 1.4 (15.04.2020) done by JOTD:
  - added quitkey for 68000 (issue #0004154)
  - fixed keyboard interrupt
