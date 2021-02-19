@@ -4,7 +4,7 @@
 		INCLUDE	whdmacros.i
 
 		IFD BARFLY
-		OUTPUT	"TinyGalaga.slave"
+		OUTPUT	"TinyInvaders.slave"
 		BOPT	O+			;enable optimizing
 		BOPT	OG+			;enable optimizing
 		BOPT	ODd-			;disable mul optimizing
@@ -13,6 +13,8 @@
 		BOPT	wo-			;disable warnings
 		SUPER				;disable supervisor warnings
 		ENDC
+
+;CHIP_ONLY
 
     IFD CHIP_ONLY
 CHIPMEM = $100000
@@ -59,7 +61,7 @@ DECL_VERSION:MACRO
 	ENDC
 	ENDM
 	
-_name		dc.b	"Tiny Galaga"
+_name		dc.b	"Tiny Invaders"
     IFD CHIP_ONLY
     dc.b    " (DEBUG/CHIP MODE)"
     ENDC
@@ -72,7 +74,7 @@ _info		dc.b	"adapted by JOTD",10
 
 _data		dc.b	"data",0
 program:
-	dc.b	"aYS_Tiny_Galaga",0
+	dc.b	"aYS_Tiny_Invaders",0
 
 _config
         dc.b    "C3:B:keep LMB as quit button;"
@@ -121,43 +123,41 @@ _start						;a0 = resident loader
 
 pl_boot
 	PL_START
-    PL_P    $1736e,end_unpack
+    PL_P    $9496,end_unpack
     PL_P $16,jump_decrunch
 	PL_END
 
 pl_main
 	PL_START
     ; skip OS shit
-    PL_S    $7c,$b8-$7C
-    PL_PS   $136,alloc_chipmem_1
-    PL_PS   $688,alloc_chipmem_2
-    PL_PS   $16c,alloc_fastmem
-    PL_S    $1A6,$1cc-$1A6
-    PL_S    $220,$240-$220
+    PL_S    $018,$04a-$018
+    PL_PS   $0c8,alloc_chipmem_1
+    PL_PS   $50A,alloc_chipmem_2
+    PL_PS   $106,alloc_fastmem
+    PL_S    $1c0,$01e0-$1c0
+    PL_S    $0152,$0272-$0252
     
-    PL_ORW  $2bc+2,8    ; enable keyboard
-    PL_ORW  $6e2+2,8    ; enable keyboard
-    PL_S    $262,$6a6-$262  ; this is a 68000, don't touch vbr, mmu...
-    PL_R    $2532              ; skip debug code
+    PL_ORW  $0242+2,8    ; enable keyboard
+    PL_S    $01fa,$0628-$02fa  ; this is a 68000, don't touch vbr, mmu...
+    PL_R    $0d5e              ; skip debug code
     PL_IFC3
     PL_ELSE
-    PL_NOP  $4ac,2                ; skip LMB quit
-    PL_B    $510,$60            ; skip LMB quit
+    PL_NOP  $02a8,2                ; skip LMB quit
+    PL_B    $0352,$60            ; skip LMB quit
     PL_ENDIF
-    PL_STR  $13885,<FIGHTER CAPTURED>   ; fix text
-    PL_P    $512,_quit
+    PL_P    $0356,_quit
 	PL_END
     
 alloc_chipmem_1
-    move.l  #MEMBASE,D0
+    move.l  #MEMBASE,D0 ; $00057804 bytes
     rts
 alloc_chipmem_2
-    move.l  #MEMBASE+$4B008,D0
+    move.l  #MEMBASE+$00057900,D0   ; $00010004 bytes
     rts
 alloc_fastmem    
-    ; chip only mode
+    ; chip only mode, alloc top chip
     IFD    CHIP_ONLY
-    move.l  #MEMBASE+$5B010,D0
+    move.l  #MEMBASE+$00067A00,D0
     ELSE
     move.l  _expmem(pc),d0
     add.l   #$2F000,d0

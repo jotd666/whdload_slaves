@@ -1,19 +1,19 @@
 ; $Id: Install 1.26 2014/04/09 01:53:32 wepl Exp wepl $
 
 (set #multiple-versions "")		;set to <> "" if there are multiple versions
-(set #version 0)			;set if no multiple versions 0=RawDIC 1=Patcher 2=DIC 3=Files 4=CD 5=SingleFile 6=Arcadia
+(set #version 3)			;set if no multiple versions 0=RawDIC 1=Patcher 2=DIC 3=Files 4=CD 5=SingleFile 6=Arcadia
 (set #sub-dir "data")			;sub directory containing data files
 (set #highs-file "highs")		;name of high scores file
 
 (set #readme-file "ReadMe")		;name of readme file
 (set #readme2-file "ReadMe2")		;name of second readme file
 (set #man-file "Manual")		;name of manual file
-(set #hint-file "Hints")		;name of hint file
+(set #hint-file "Quickdocs Hints")	;name of hint file
 (set #sol-file "Solution")		;name of solution file
-(set #extra-file "Extra")		;name of extra file
+(set #extra-file "Maps")		;name of extra file
 (set #extra2-file "Extra2")		;name of second extra file
 (set #extra3-file "Extra3")		;name of third extra file
-(set #prefix "KingsQuest")			;name of slave, directory
+(set #prefix @app-name)			;name of slave, directory
 (set #prefix-slave "")
 
 (set #ico_suffix_00 "inf")		;Icon suffixes (not all of these must exist)
@@ -27,7 +27,7 @@
 (set #ico_suffix_14 "newcfou")
 (set #ico_suffix_15 "newirek")
 (set #ico_suffix_16 "newirek2")
-(set #ico_suffix_20 "newirek3")
+(set #ico_suffix_20 "colicon")
 (set #ico_suffix_21 "colicon2")
 (set #ico_suffix_22 "colicon3")
 (set #ico_suffix_23 "colexot")
@@ -39,7 +39,7 @@
 (set #ico_suffix_29 "colzarkov")
 (set #ico_suffix_30 "colirek")
 (set #ico_suffix_31 "colirek2")
-(set #ico_suffix_32 "colirek3")
+(set #ico_suffix_32 "colmura")
 (set #ico_suffix_40 "boxicon")
 (set #ico_suffix_41 "boxicon2")
 (set #ico_suffix_42 "boxirek")
@@ -58,7 +58,7 @@
 (set #ico_desc_14 "NewIcon CFou!")
 (set #ico_desc_15 "NewIcon Irek")
 (set #ico_desc_16 "NewIcon Irek 2")
-(set #ico_desc_20 "NewIcon Irek 3")
+(set #ico_desc_20 "OS3.5 Icon")
 (set #ico_desc_21 "OS3.5 Icon 2")
 (set #ico_desc_22 "OS3.5 Icon 3")
 (set #ico_desc_23 "OS3.5 Exotica")
@@ -70,7 +70,7 @@
 (set #ico_desc_29 "OS3.5 Dr.Zarkov")
 (set #ico_desc_30 "OS3.5 Irek")
 (set #ico_desc_31 "OS3.5 Irek 2")
-(set #ico_desc_32 "OS3.5 Irek 3")
+(set #ico_desc_32 "OS3.5 Murakami")
 (set #ico_desc_40 "OS3.5 BoxIcon")
 (set #ico_desc_41 "OS3.5 BoxIcon 2")
 (set #ico_desc_42 "OS3.5 BoxIcon Irek")
@@ -110,7 +110,7 @@
       ; and icon. If you set #prefix-slave it only changes the slave name.
       ; You may also set the #sub-dir here if this is not required with all
       ; versions
-      ;
+      ;                                                                         §
       (select #version
 	; 0 = RawDIC
         ("")
@@ -176,51 +176,86 @@
       ;the following lines must be copied and adjusted for multiple disk images
 
       (set #CI_disknum 1)
-      ;(set #CI_diskname ("%s Disk %ld" @app-name #CI_disknum))
-      (set #CI_diskname ("%s" @app-name))
-      (set #CI_disklen 236544)
+      (set #CI_diskname ("%s Disk %ld" @app-name #CI_disknum))
+      (set #CI_disklen 901120)
       (set #CI_skiptrk "")
       (P_CreateImage)
 
+      ;for example...
+      (set #CI_disknum 2)
+      (set #CI_diskname ("%s Disk %ld" @app-name #CI_disknum))
+      (P_CreateImage)
 
     )
 
     (				;----- 3 = DOS (Files) -----
 
-      ;if the disk can be requested by the volume name:
-      (set #AD_disk " KQ1")
-      (set #AD_diskname "Disk 1")	;this optional, default is #AD_disk
+      (set #AD_disk " ")
+      (set #AD_diskname "Darkmere Disk 1")
       (P_AskDisk)
-      (set #CI_disknum 1)
-      (set #CI_diskname ("%s" @app-name))
-      (set #CI_disklen 901120)
-      (set #CI_skiptrk "1")
-      (set #bkdest #dest)
-      (set #dest "T:")
-      (P_CreateImage)    
-
       (copyfiles
         (help @copyfiles-help)
-        (source "unadf")
+        (source ("%s:" #AD_disk))
         (dest #dest)
+	(pattern "~(darkmere#?)")
       )
-      
-      (set #dest #bkdest)
-        
-        ; extract image to temp dir
-       (run "T:unadf T:disk.1 DEST=T:")
-       ; change protection (enable read!)
-       (run "c:protect T:KQ1/sierra RWED")
-       ; now copy the files in the final destination
+      (set #AD_disk "Darkmere Data Disk 1")
+      (set #AD_diskname "Darkmere Disk 2")
+      (P_AskDisk)
       (copyfiles
         (help @copyfiles-help)
-        (source "T:KQ1")
+        (source ("%s:" #AD_disk))
         (dest #dest)
-	    (pattern "(data|sierra)")
+	(all)
       )
-      ; create "save" dir (default game save path)
-       (makedir (tackon #dest "save")
-        (help @makedir-help)
+      (set #AD_disk "Darkmere Data Disk 2")
+      (set #AD_diskname "Darkmere Disk 3")
+      (P_AskDisk)
+      (copyfiles
+        (help @copyfiles-help)
+        (source ("%s:" #AD_disk))
+        (dest #dest)
+	(all)
+      )
+      (set #AD_disk "Darkmere Data Disk 3")
+      (set #AD_diskname "Darkmere Disk 4")
+      (P_AskDisk)
+      (copyfiles
+        (help @copyfiles-help)
+        (source ("%s:" #AD_disk))
+        (dest #dest)
+	(all)
+      )
+      (if
+	(= 0
+	  (askchoice
+	    (prompt ("\nDo you have a Save Disk of %s to install?\n" @app-name))
+	    (help @askoptions-help)
+	    (choices "Yes" "No")
+	  )
+	)
+	(
+	  (set #last-file "SaveDisk")	;last file the imager should create
+	  (copyfiles
+	    (help @copyfiles-help)
+	    (source ("%sSave.ISlave" #prefix))
+	    (dest #dest)
+	  )
+	  (P_AskSrcDrvRaw)
+	  (working "calling RawDIC...")
+	  (run ("CD \"%s\"\nRawDIC SLAVE=%sSave.islave SOURCE=%s\nDelete %sSave.ISlave Quiet" #dest #prefix #CI_drive #prefix))
+	  (if (exists (tackon #dest #last-file))
+	    ("")
+	    (abort "Disk imaging was not successful!\nRawDIC was unable to create all needed files!")
+	  )
+	)
+	(
+	  (copyfiles
+	    (help @copyfiles-help)
+	    (source "SaveDisk")
+	    (dest #dest)
+	  )
+	)
       )
 
     )
@@ -1128,14 +1163,14 @@
 (set #program "WHDLoad")
 (P_ChkRun)
 
-;(set #program "RawDIC")
-;(P_ChkRun)
+(set #program "RawDIC")
+(P_ChkRun)
 
-;(set #program "Patcher")
-;(P_ChkRun)
+(set #program "Patcher")
+(P_ChkRun)
 
-;(set #program "DIC")
-;(P_ChkRun)
+(set #program "DIC")
+(P_ChkRun)
 
 (if (getenv "WHDLInstPath")
   (set @default-dest (getenv "WHDLInstPath"))
@@ -1210,7 +1245,6 @@
     )
   )
 )
-(set #version 3)
 (set #copy-file #highs-file)
 (P_CopyFile)
 (P_MakeImages)

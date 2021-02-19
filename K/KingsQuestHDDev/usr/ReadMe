@@ -25,7 +25,7 @@
  an appropriate requester.
  Additionally the file "kick34005.A500.RTB" must be installed in the same
  directory as the kickstart image. It can be found in the archive 
- "util/boot/skick345.lha" on aminet.
+ "util/boot/skick346.lha" on aminet.
 
  If you have problems with this installation please try and get a newer
  version of this package from the WHDLoad WWW-Page. If that doesn't help try
@@ -39,13 +39,23 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
-
- version 1.1 (30.05.03)
+ version 2.0 (19.02.2021) done by JOTD:
+ - uses real files, no need to modify/copy the original disk to install (issue #0002962)
+ - Herdnon disk protection now cleanly removed (way easier with WinUAE than on a real Amiga!)
+ - rewritten from scratch
+ - added international keyboard patch (because there's some typing involved in the game)
+ - needs reinstalling (obviously), using provided install script that isn't the simplest part
+ - also works with cracked version (the cracked version used a modified version of the protection
+   so it still reads the disk and all, and performs decryption. That was the version I used to create
+   versions 1.x, but the new method is cleaner)
+ - source code included
+ 
+ version 1.1 (30.05.2003)
  - noticed that it won't work if the disk is not fixed (s/startup-sequence added)
    install script does the necessary fixes to the source disk
  - added Byte Bandit antivirus protection (found it on a copy of King's Quest I)
 
- version 1.0 (24.05.03) done by JOTD:
+ version 1.0 (24.05.2003) done by JOTD:
  - initial release
  - use fastmemory
  - quit option quits to system
@@ -56,13 +66,10 @@
 
  notes:
  
- - since original version has no startup sequence, and the game fails inexplicably
-   but if there is one, installer script asks you if you want to modify your 
-   original disk. If you don't want to, use a backup to install, and answer
-   yes, or the install will quit.
-   Best way to do it is to mount a FMS disk, copy the original disk there, then
-   install from the FMS virtual floppy.
+ - sorry the old v1.x versions sucked, specially the install part
+ - v2.0 uses UnADF (http://aminet.net/package/disk/misc/UnADF) from Andrew Bell (included). It also
+   requires DIC (whdload package) to create an image of the disk to be able to rip it
+ - the main file is read-protected on the original disk. Protection is changed when installing to HD.
+   this damn read-protection is the reason why the files can't be directly copied from the disk without
+   modifying it.
 
- - another solution would be to backup disk, create a startup sequence
-   (file s/startup-sequence) containing "sierra" in it and use the installer
-   on the copy of the disk.

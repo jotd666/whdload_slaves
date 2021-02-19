@@ -1,0 +1,111 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER
+ EXPRESS OR IMPLIED, STATUTORY OR OTHERWISE.
+ THE ENTIRE RISK AS TO USE, RESULTS AND PERFORMANCE OF THE PACKAGE IS
+ ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE TO BE DEFECTIVE, YOU
+ ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING, REPAIR OR OTHER
+ REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY
+ DAMAGE CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE
+ OWNER OR A THIRD PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF
+ DAMAGE.
+
+ That install applies to "Darkmere" © 1992/93 Core Design - 4 disks
+ Slave requires WHDLoad V17+.
+ Game needs 512k Chipmem, 1Mb fastmem & about 3Mb of Fastmem (for preload option)
+ It can be quit by pressing F10 (key can be changed with Tooltype "QuitKey=").
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+    for full WHDLoad package and other installs refer to:
+        http://www.whdload.de/
+    or	aminet:dev/misc/whdload#?
+    and	aminet:game/patch/
+
+ History
+ -------
+
+ version 2.0 (xx.02.2021) done by JOTD
+ - fixed memory allocation (caused fatal issues at level 2)
+ - self-modifying code properly fixed (no more cache flush)
+ - more efficient blitterwaits
+ - selectable trainer: infinite magic, advice, and energy
+ - checks "SaveDisk" at startup (else it's not possible to create it, thus
+   not possible to save to hard disk afterwards!)
+ - access fault properly fixed
+ - uses only 512k of chip memory, and fast memory for the program (faster)
+ - stack relocated in fast memory
+ - added joypad controls, game is now fully controllable with joypad. With pre-set
+   savegames, it is even possible to play on a CD32 using whdload or cd32load (untested)
+ - non-empty savegame file with start of levels 2 and 3 provided (thanks kremiso@eab)
+ - readme reworked
+ - toggleable save to hard disk or floppy with CUSTOM5=1 and
+   F9 key. Press F9 to toggle to floppy (red flash), press F9
+   to toggle back to hard drive (green flash). That allows to load
+   a saved game from floppy and save it back to hard drive (by losing
+   one magic or potion, that's true... unless trainer is on) or the
+   other way round.
+ 
+ version 1.2 (18.2.2016) done by Wepl
+ - made 68000 compatible and added quitkey
+ - selection for the splash window added
+ - solution added
+ - updated install script, copies two files less
+
+ version 1.1 (3.7.2006) done by Wepl
+ - taglist termination fixed
+ - decruncher speedup, slave is cacheable now
+ - now default is save to hard drive, not to floppy
+ - docs and icons added
+ - new install script
+ - slave source included
+
+ version 1.0 done by MiCK
+ - RN disk protection removed
+ - Savegames redirected to HD
+ - Music player fixed
+ - Blitter waits inserted
+ - Cool Icons (created by Frank)
+ - Some access faults fixed
+ - Decrunch routine relocated in fastmem
+ - CUSTOM1 tooltype can be used to load/save games from HD or floppy
+   (0=hd ; 1=floppy)
+ - Infinite help (advice & magic)
+
+ CD32 joypad controls:
+
+ - controls menu: blue (space)
+ - pause: play (P)
+ - english: yellow (1)
+ - french: green (2)
+ - german: reverse (3)
+ - italian: forward (4)
+ - quit to wb: reverse+forward+yellow (quitkey)
+
+ note: old savegames could be an issue, specially on level 2. Some users had gone
+ pretty far in the game, then got stopped by unexplained crashes. Fixing the memory
+ allocation fixed some crashes but the game state was still corrupt. That didn't
+ happen with floppy versions, and hopefully not now with bigger memory allocation.
+ 
+ That bug also explains why I didn't shave the memory requirements too close,
+ requiring 1MB fast instead of the standard 512k. It could work with 512k fast only
+ but since the symptom is corrupt gamesaves after hours of play, I'm not going to
+ gamble on that. Rebuild the slave with 512k fast if you want, and try to complete the
+ game, I'm interested in the results.
+ 
+ --------------------------------------------------------------------------
+
+ Thanks to : - Carlo Pirri for original disk images
+             - Jean-Francois Fabre (JOTD) for his help (well now, I took over :))
+
+
+ MiCK.
+
+ --------------------------------------------------------------------------
+
+
