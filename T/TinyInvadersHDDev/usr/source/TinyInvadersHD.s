@@ -54,7 +54,7 @@ _expmem		dc.l	EXPMEM			;ws_ExpMem
 
 
 DECL_VERSION:MACRO
-	dc.b	"1.0"
+	dc.b	"1.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -118,7 +118,7 @@ _start						;a0 = resident loader
         move.l  d0,a1
         lea pl_boot(pc),a0
         jsr resload_PatchSeg(a2)      
- 		move.l	game_address(pc),-(a7)
+ 		move.l	game_address(pc),-(a7)        
         rts
 
 pl_boot
@@ -142,7 +142,7 @@ pl_main
     PL_R    $0d5e              ; skip debug code
     PL_IFC3
     PL_ELSE
-    PL_NOP  $02a8,2                ; skip LMB quit
+    PL_NOP  $02a8,4                ; skip LMB quit
     PL_B    $0352,$60            ; skip LMB quit
     PL_ENDIF
     PL_P    $0356,_quit

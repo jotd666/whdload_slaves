@@ -16,7 +16,6 @@
 	INCLUDE	whdload.i
 	INCLUDE	whdmacros.i
 	INCLUDE	lvo/dos.i
-	INCLUDE	lvo/intuition.i
     
 ;CHIP_ONLY
 	IFD BARFLY
