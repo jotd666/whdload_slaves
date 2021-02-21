@@ -1,0 +1,127 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Switchblade 2" © 1991 Gremlin Graphics
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ Supports 1 Disk version, GBH Budget release
+
+ Slave requires WHDLOAD V17+.
+ Game requires 0.5 MB Chip Mem and 4k Other Mem
+ (+ 0.8 other memory for preload option)
+
+
+Version 1.4 (21.02.2021) done by JOTD:
+- optional 2-button control: second/blue button jumps, yellow high jumps
+ (issue #0004954)
+- joypad controls (play: pause, optional blue & yellow for jumps,
+  reverse+forward+yellow: quit to wb)
+- small invincibility trainer fix
+
+Version 1.3 (01.11.2018) by StingRay:
+- RawDIC imager
+- Disk access removed
+- Memory requirements reduced to 0.5 MB chip and 4k other memory
+- Quit key changed to F10
+- Blitter waits added (x4)
+- Interrupts fixed
+- Lots of trainer options added
+- High score saving fixed (didn't work correctly in the previous versions!)
+- 68000 quitkey support for the complete game including intro
+- Interrupts fixed
+- New install script
+
+Version 1.2 by Harry:
+- Trainer added, quitkey-2 toggles the life loss. Note: The game will not
+  save highscores anymore once you used the trainer
+- Quitkey support for 68000 CPUs
+- The following changes were done by Codetapper:
+- Data files now installed in data subdirectory
+- Colour bit fixes (x18)
+- RomIcon, NewIcon and GlowIcon included
+
+Version 1.1 by Galahad:
+- Decruncher relocated to Fast Ram
+- Delay for intro added and exit from intro with fire button added
+- Changed Quit key to 'Del'
+
+Version 1.0 by Galahad:
+- Full load from Hard drive
+- Lame-o-Protect removed
+- 1x Bus error removed (Exits would not open if not removed)
+- Load/Save Hiscores to Hard drive
+- Quit option is 'F9'
+
+
+
+
+CHEAT MODE:
+- Taken from Sweet Cheater by Keith Krellwitz!
+- On the title screen, type "LEVELn" and press fire to start on the
+  corresponding level.  Where 'n' is the level number like "LEVEL2"
+  to go to level two.
+
+Thanks to John Regent for disk image.
+
+EXTRA NOTES:
+Because some games operate on interrupts slightly differently than others,
+I had to extend the base memory from 512k to nearly 772k.  This means that
+the intro music will play properly without cutting out all the time.
+Seeing as most people have a hell of a lot more memory than this install
+requires, I hardly think its extravagant!
+
+The secret game has been REMOVED!  For those that are aware, on the
+original you would type 'Chrome' on the titlescreen.  This has been removed
+for two reasons:
+
+1) Codetapper of Action has already fixed this game seperately
+2) It takes up over 100k of drive space
+
+Hardly seems the point to duplicate the work of others!
+
+The disk format was originally SS-MFM (Shaun Southern), I have ripped the
+custom disk format to install the game as REAL files instead.
+
+This install was done on a Amiga 68o6o, so I'm quite confident it will
+work!!  :)
+
+The Imager is written to take care of the GBH budget release, and whilst I
+am sure Gremlin did not change it from the original release, you attempt to
+install this game AT YOUR OWN RISK!
+
+Have a merry christmas and a happy new year........ :)
+
+
+
+NOTES V1.3 (StingRay)
+---------------------
+When I saw an updated version of the Switchblade 2 patch on the WHDLoad site
+some days ago I checked it and first thing I noticed was the custom imager
+used to read the disk. So I quickly made a RawDIC imager and when testing
+it I started updating the patch code as well. The high score saving didn't
+work properly in the previous versions (try it!) and has been redone, your
+scores are saved correctly now! The name of the high score file has been
+changed to "Switchblade2.high", it is NOT compatible with the old high score
+file! I have also added a lot of trainers which can be selected in the
+WHDLoad splash screen, the available in-game keys can be displayed by pressing
+"Help" during the game. High score saving will be disabled if any trainer
+options are used.
+
+The pictures in the intro are shown for 5 seconds or until fire or either
+mouse button is pressed.
+
+
+StingRay, 01-Nov-2018
+
+
+         Bug report form, full WHDLoad package and other installs:
+                          http://www.whdload.de
