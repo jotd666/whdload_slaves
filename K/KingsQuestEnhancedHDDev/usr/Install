@@ -325,6 +325,20 @@
 
 (P_CopyFile #highs-file)
 (P_Install)
+  (copyfiles
+    (help @copyfiles-help)
+    (source "res_mt32.cfg")
+    (dest #dest)
+    (pattern "#?")
+  )
+  
+    ; copy extra files for MT32 support
+     (copyfiles
+        (help @copyfiles-help)
+        (source "serial.device")
+        (dest (tackon #dest "devs"))
+      )
+      
 (if (= #newstuff 1)
   (openwbobject #dest-org)
 )

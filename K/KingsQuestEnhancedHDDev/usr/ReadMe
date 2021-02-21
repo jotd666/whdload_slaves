@@ -40,15 +40,21 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 1.1-B (04.01.14) done by JOTD:
+ version 1.2 (21.02.2021) done by JOTD:
+ - fixed crash when saving on 68000 (issue #0005022)
+ - MT32 direct support (needs reinstalling or at least copying .cfg file
+   and serial.device in the existing installation)
+ - keyboard layout selection
+
+ version 1.1-B (04.01.2014) done by JOTD:
  - reassembled without DEBUG (fastmem enabled now!)
 
- version 1.1 (02.01.14) done by JOTD:
+ version 1.1 (02.01.2014) done by JOTD:
  - fixed CPU dependent loop which made game crash at startup on fast machines/WinUAE (issue #1831)
  - reassembled for WHDload V17.2
  - source code included
 
- version 1.0 (26.07.03) done by JOTD:
+ version 1.0 (26.07.2003) done by JOTD:
  - initial release
  - saves redirected to "save" directory
  - solution included
