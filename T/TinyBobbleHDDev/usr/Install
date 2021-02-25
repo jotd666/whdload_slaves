@@ -2,7 +2,7 @@
 
 (set #multiple-versions "")		;set to <> "" if there are multiple versions
 (set #version 0)			;set if no multiple versions 0=RawDIC 1=Patcher 2=DIC 3=Files 4=CD 5=SingleFile 6=Arcadia
-(set #sub-dir "data")			;sub directory containing data files
+(set #sub-dir "")			;sub directory containing data files
 (set #highs-file "highs")		;name of high scores file
 
 (set #readme-file "ReadMe")		;name of readme file

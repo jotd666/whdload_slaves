@@ -30,7 +30,7 @@
  History
  -------
 
- version 2.0 (xx.02.2021) done by JOTD
+ version 2.0 (21.02.2021) done by JOTD
  - fixed memory allocation (caused fatal issues at level 2)
  - self-modifying code properly fixed (no more cache flush)
  - more efficient blitterwaits
@@ -49,9 +49,10 @@
    to toggle back to hard drive (green flash). That allows to load
    a saved game from floppy and save it back to hard drive (by losing
    one magic or potion, that's true... unless trainer is on) or the
-   other way round.
+   other way round, but you can use infinite magic for this.
+   This is a debug option only.
  
- version 1.2 (18.2.2016) done by Wepl
+ version 1.2 (18.02.2016) done by Wepl
  - made 68000 compatible and added quitkey
  - selection for the splash window added
  - solution added

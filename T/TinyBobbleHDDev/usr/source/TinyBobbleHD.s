@@ -1,189 +1,198 @@
-;*---------------------------------------------------------------------------
-;  :Program.	BoppinHD.asm
-;  :Contents.	Slave for "Boppin"
-;  :Author.	JOTD, from Wepl sources
-;  :Original	v1 
-;  :Version.	$Id: BoppinHD.asm 1.2 2002/02/08 01:18:39 wepl Exp wepl $
-;  :History.	%DATE% started
-;  :Requires.	-
-;  :Copyright.	Public Domain
-;  :Language.	68000 Assembler
-;  :Translator.	Devpac 3.14, Barfly 2.9
-;  :To Do.
-;---------------------------------------------------------------------------*
 
-	INCDIR	Include:
-	INCLUDE	whdload.i
-	INCLUDE	whdmacros.i
-	INCLUDE	lvo/dos.i
+		INCDIR	include:
+		INCLUDE	whdload.i
+		INCLUDE	whdmacros.i
+        INCLUDE	exec/memory.i
+        INCLUDE	lvo/exec.i
+
+		IFD BARFLY
+		OUTPUT	"TinyBobble.slave"
+		BOPT	O+			;enable optimizing
+		BOPT	OG+			;enable optimizing
+		BOPT	ODd-			;disable mul optimizing
+		BOPT	ODe-			;disable mul optimizing
+		BOPT	w4-			;disable 64k warnings
+		BOPT	wo-			;disable warnings
+		SUPER				;disable supervisor warnings
+		ENDC
 
 ;CHIP_ONLY
-	IFD BARFLY
-	OUTPUT	"TinyBobble.slave"
-	IFND	CHIP_ONLY
-	BOPT	O+				;enable optimizing
-	BOPT	OG+				;enable optimizing
-	ENDC
-	BOPT	ODd-				;disable mul optimizing
-	BOPT	ODe-				;disable mul optimizing
-	BOPT	w4-				;disable 64k warnings
-	BOPT	wo-			;disable optimizer warnings
-	SUPER
-	ENDC
 
-;============================================================================
+STACKSIZE = $1000
+EXECSIZE = $6A000
 
+    IFD CHIP_ONLY
+CHIPMEM = $E0000
+EXPMEM = STACKSIZE
 
-	IFD	CHIP_ONLY
-HRTMON
-CHIPMEMSIZE	= $100000
-FASTMEMSIZE	= $0000
-	ELSE
-;;BLACKSCREEN
-CHIPMEMSIZE	= $80000
-FASTMEMSIZE	= $80000
-	ENDC
-
-NUMDRIVES	= 1
-WPDRIVES	= %0000
-
-;DISKSONBOOT
-DOSASSIGN
-;INITAGA
-HDINIT
-IOCACHE		= 10000
-;MEMFREE	= $200
-;NEEDFPU
-;SETPATCH
-;STACKSIZE = 10000
-BOOTDOS
-CACHE
-
-slv_Version	= 17
-slv_Flags	= WHDLF_NoError|WHDLF_Examine|WHDLF_ClearMem
-slv_keyexit	= $5D	; num '*'
-
-	include	whdload/kick13.s
-IGNORE_JOY_DIRECTIONS
-    include     ReadJoyPad.s
+    ELSE
+CHIPMEM = $80000
+EXPMEM = $70000+STACKSIZE
+    ENDC
     
-;============================================================================
+;======================================================================
 
+_base		SLAVE_HEADER			;ws_Security + ws_ID
+		dc.w	17			;ws_Version
+		dc.w	WHDLF_NoError 		;ws_flags
+		dc.l	CHIPMEM			;ws_BaseMemSize
+		dc.l	0			;ws_ExecInstall
+		dc.w	_start-_base		;ws_GameLoader
+		dc.w	0		;ws_CurrentDir
+		dc.w	0			;ws_DontCache
+_keydebug	dc.b	0			;ws_keydebug
+_keyexit	dc.b	$59			;ws_keyexit = F10
+; add $1000 so game doesn't go access fault by overwriting
+; top of stack...
+_expmem		dc.l	EXPMEM+$1000			;ws_ExpMem
+		dc.w	_name-_base		;ws_name
+		dc.w	_copy-_base		;ws_copy
+		dc.w	_info-_base		;ws_info
+		dc.w	0                       ;ws_kickname
+		dc.l	0                       ;ws_kicksize
+		dc.w	0                       ;ws_kickcrc
+		dc.w	_config-_base		;ws_config
+		
+;============================================================================
 	IFD BARFLY
 	DOSCMD	"WDate  >T:date"
 	ENDC
 
+
 DECL_VERSION:MACRO
-	dc.b	"1.0"
+	dc.b	"1.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
 	ENDC
-	IFD	DATETIME
-		dc.b	" "
-		incbin	datetime
-	ENDC
 	ENDM
-	dc.b	"$","VER: slave "
-	DECL_VERSION
-	dc.b	0
-
-
-
-slv_name		dc.b	"Tiny Bobble"
-	IFD	CHIP_ONLY
-	dc.b	" (DEBUG/CHIP MODE)"
-	ENDC
-			dc.b	0
-slv_copy		dc.b	"2020 Pink^abyss",0
-slv_info		dc.b	"adapted by JOTD",10,10
+	
+_name		dc.b	"Tiny Bobble"
+    IFD CHIP_ONLY
+    dc.b    " (DEBUG/CHIP MODE)"
+    ENDC
+    dc.b    0
+_copy		dc.b	"2020 pink^abyss",0
+_info		dc.b	"adapted by JOTD",10
 		dc.b	"Version "
 		DECL_VERSION
 		dc.b	0
-slv_CurrentDir:
-	dc.b	"data",0
 
-
+_data		dc.b	"data",0
 program:
 	dc.b	"aYs_tinybobble",0
-args		dc.b	10
-args_end
-	dc.b	0
-slv_config
-	;dc.b    "C1:X:trainer start with 9.000.000$:0;"
-    dc.b    "C2:B:blue/second button jumps;"
-	dc.b	0
 
-; version xx.slave works
+_config
+    dc.b    "C2:X:blue/second button jumps player 1:0;"
+    dc.b    "C2:X:blue/second button jumps player 2:1;"
+        ;dc.b    "C3:B:keep LMB as quit button;"
+		dc.b	0
 
-	dc.b	"$","VER: slave "
-	DECL_VERSION
-	dc.b	0
-	EVEN
+		EVEN
+
+IGNORE_JOY_DIRECTIONS
+    include     ReadJoyPad.s
 
 
-_bootdos
-		clr.l	$0.W
+;======================================================================
+_start						;a0 = resident loader
+;======================================================================
 
+		lea	_resload(pc),a1
+		move.l	a0,(a1)			;save for later use
+
+        ; install fake exec for AllocMem & AvailMem
+        lea $1000.W,A6
+        move.l  A6,4.W
+        move.l  #$FF,d0
+        move.l  #$4AFC4AFC,d1   ; trash other vectors just in case...
+.loop
+        move.l  d1,-(a6)
+        dbf d0,.loop
+        move.l  4.W,a6
+        lea (_LVOAllocMem,a6),a0
+        move.w  #$4EF9,(a0)+
+        pea fake_allocmem(pc)
+        move.l  (a7)+,(a0)
+        lea (_LVOAvailMem,a6),a0
+        move.w  #$4EF9,(a0)+
+        pea fake_availmem(pc)
+        move.l  (a7)+,(a0)
+        lea (_LVOCopyMem,a6),a0
+        move.w  #$4EF9,(a0)+
+        pea fake_copymem(pc)
+        move.l  (a7)+,(a0)
+    
+    
+        ;;bsr _SetupKeyboard
         bsr _detect_controller_types
         lea controller_joypad_0(pc),a0
         clr.b   (a0)        ; no need to read port 0 extra buttons...
-	; saves registers (needed for BCPL stuff, global vector, ...)
-
-		lea	(_saveregs,pc),a0
-		movem.l	d1-d7/a1-a2/a4-a6,(a0)
-		lea	_stacksize(pc),a2
-		move.l	4(a7),(a2)
-
-		move.l	_resload(pc),a2		;A2 = resload
-        lea	(tag,pc),a0
-        jsr	(resload_Control,a2)
-
-	
-	;open doslib
-		lea	(_dosname,pc),a1
-		move.l	(4),a6
-		jsr	(_LVOOldOpenLibrary,a6)
-		move.l	d0,a6			;A6 = dosbase
         
-        IFD CHIP_ONLY
-        movem.l a6,-(a7)
-		move.l	$4.w,a6
-        move.l  #$48C0,d0
-        move.l  #MEMF_CHIP,d1
-        jsr _LVOAllocMem(a6)
-        movem.l (a7)+,a6
-        ENDC
 
-    
-	;load exe
-		lea	program(pc),a0
-		lea	args(pc),a1
-		moveq	#args_end-args,d0
-		lea	patch_main(pc),a5
-		bsr	load_exe
-	;quit
-_quit		pea	TDREASON_OK
-		move.l	(_resload,pc),a2
-		jmp	(resload_Abort,a2)
+        ; chip already configured
+        ; set fastmem. Note: in chip_only mode
+        ; the fastmem size will be 0
+        move.l  _expmem(pc),a3        
+        lea free_fastmem(pc),a0
+        move.l  a3,(a0)+    ; start
 
+        add.l   #EXPMEM-$1000,a3   ; minus stack
+        move.l  a3,(a0) ; top
 
+        move.l  _expmem(pc),A7
+        add.l   #EXPMEM,A7 ; stack on top of fastmem
+        
+        ; now allocate memory for executable
+        move.l  #EXECSIZE,d0
+        move.l  #0,d1
+        move.l  4,a6
+        jsr (_LVOAllocMem,a6)
+        
+        addq.l  #8,d0
+        lea game_address(pc),a0        
+        move.l  d0,(a0)
 
+        lea	tag(pc),a0
+		move.l	_resload(pc),a2
+		jsr	resload_Control(a2)
+		
+		lea	program(pc),a0	;Load main file
+		move.l	game_address(pc),a1
+        sub.l   #8,a1   ; for segments + align
+		move.l	a1,a5
+		bsr	_LoadFile
+        bsr	_Relocate
+        ; patch decrunch
 
-patch_main
-	lea	pl_unp(pc),a0
-    move.l  d7,a1
-	jsr	resload_PatchSeg(a2)
-	rts
+        move.l  game_address(pc),d0
+        subq.l  #4,d0
+        lsr.l   #2,d0
+        move.l  d0,a1
+        lea pl_boot(pc),a0
+        jsr resload_PatchSeg(a2)      
+ 		move.l	game_address(pc),-(a7)        
+        rts
 
-; apply on SEGMENTS
-pl_unp
-    PL_START
-    PL_P    $000bc,end_unpack
-    PL_END
- 
+pl_boot
+	PL_START
+    PL_P    $BC,end_unpack
+    PL_S    $8,$40-$8
+	PL_END
+
 pl_main
-    PL_START
+	PL_START
+    ; skip OS shit
+    PL_S    $86,$B8-$86
+    PL_S    $218,$23E-$218
+    PL_S    $2DA,$2FA-$2DA
+    
+    ;PL_PS   $0c8,alloc_chipmem_1
+    ;PL_PS   $50A,alloc_chipmem_2
+    ;PL_PS   $106,alloc_fastmem
+    ;PL_S    $1c0,$01e0-$1c0
+    ;PL_S    $0152,$0272-$0252
+    
     ; skip read at $F0FF60
     PL_S    $01800,$16
     PL_W    $01820,$588f
@@ -194,7 +203,10 @@ pl_main
     PL_NOP  $19a04,6
     PL_S    $19a0e,$1A-$E
     ; remove vbr read & other MMU registers shit
+    PL_NOP  $36E,6
     PL_B  $00374,$60
+    ; quit
+    PL_P    $5f4,_quit
     ; vbl hook
     PL_PSS  $2602,vbl_hook,2
     ; keyboard hook
@@ -362,13 +374,20 @@ second_button:
 
 	; using 2nd button data, tamper with JOYxDAT value
 	movem.l	d2/a0,-(a7)
+    
+    move.l  button_config(pc),d2
 	lea	joy0_buttons(pc),a0
     cmp.l   #$DFF00A,a1
     beq.b   .port0
+    ; port 1, check if active
+    btst    #0,d2
+    beq.b   .no_blue
     lea	joy1_buttons(pc),a0
 .port0
-	move.l	(a0),d2	; read buttons value
-	
+    btst    #1,d2
+    beq.b   .no_blue
+.test
+	move.l	(a0),d2	; read buttons values
 	; cancel UP from joydat. Copying bit 9 to bit 8 so EOR yields 0
 	bclr	#8,d3
 	btst	#9,d3
@@ -405,13 +424,6 @@ read_fire
     move.l  (a7)+,d1
     rts
     
-end_unpack
-    lea (4,a3),a1
-    move.l  _resload(pc),a2
-    lea (4,a3),a1
-    lea pl_main(pc),a0
-    jsr (resload_Patch,a2)
-    jmp (4,a3)
     
     ; not really super-helpful as game already has "ESC"
     ; as a quit key
@@ -458,100 +470,220 @@ get_version:
 .out
 	movem.l	(a7)+,d1/a0/a1
 	rts
+ 
+jump_decrunch
+    jmp (a4)
+    
+CIAA_PRA = $bfe001
+CIAA_SDR = $BFEC01
 
 
 
-; < a0: program name
-; < a1: arguments
-; < d0: argument string length
-; < a5: patch routine (0 if no patch routine)
-
-
-load_exe:
-	movem.l	d0-a6,-(a7)
-	move.l	d0,d2
-	move.l	a0,a3
-	move.l	a1,a4
-	move.l	a0,d1
-	jsr	(_LVOLoadSeg,a6)
-
-	move.l	d0,d7			;D7 = segment
-	beq	.end			;file not found
-
-	;patch here
-	cmp.l	#0,A5
-	beq.b	.skip
-	movem.l	d2/d7/a4,-(a7)
-
-	;get tags
+end_unpack
+    lea (4,a3),a1
     move.l  _resload(pc),a2
-    lea (segments,pc),a0
-    move.l  d7,(a0)
-    lea	(tagseg,pc),a0
-	jsr	(resload_Control,a2)
+    lea (4,a3),a1
+    lea pl_main(pc),a0
+    jsr (resload_Patch,a2)
+    jmp (4,a3)
+
+    
+    ;include whdload/keyboard.s
+
+;======================================================================
+_LoadFile	movem.l	d0-d1/a0-a2,-(sp)
+		move.l	_resload(pc),a2
+		jsr	resload_LoadFile(a2)
+		movem.l	(sp)+,d0-d1/a0-a2
+		rts
+
+;======================================================================
+
+_Relocate	movem.l	d0-d1/a0-a2,-(sp)
+		move.l	a5,a0
+        clr.l   -(a7)                   ;TAG_DONE
+        pea     -1                      ;true
+        pea     WHDLTAG_LOADSEG
+        pea     8                       ;8 byte alignment
+        pea     WHDLTAG_ALIGN
+        move.l  a7,a1                   ;tags		move.l	_resload(pc),a2
+		jsr	resload_Relocate(a2)
+        add.w   #5*4,a7
+        movem.l	(sp)+,d0-d1/a0-a2
+		rts
+
+    ; AllocMem/AvailMem emulation. No need to go full kickemu
+    ; since the game never frees the memory it allocates,
+    ; making implementation of AllocMem & AvailMem (almost)
+    ; trivial. Well, I have added fastmem support to OSEmu so
+    ; I can assure you that is trivial in comparison!
+    
+fake_allocmem
+    move.l  d2,-(a7)
+    move.l  d1,d2
+    and.l   #MEMF_CHIP+MEMF_FAST,d2 ; keep only those
+    btst    #MEMB_CHIP,d2
+    beq.b   .fast
+.chip
+    lea free_chipmem(pc),a0
+    bra.b .alloc
+.fast
+    lea free_fastmem(pc),a0
+.alloc
+    ; round size on 4 bytes
+    move.l  d0,d1
+    and.b   #$FC,d1
+    cmp.b   d0,d1
+    beq.b   .aligned
+    addq.l  #4,d1
+    move.l  d1,d0       ; new size rounded on 4 bytes
+.aligned
+    ; get available memory
+    move.l  (4,a0),d1
+    sub.l   (a0),d1
+    cmp.l   d0,d1
+    bcs.b   .not_enough
+    ; enough memory available, allocate
+    move.l  d0,d1   ; size
+    move.l  (a0),d0 ; address
+    add.l   d1,(a0) ; update memory start
+
+    ; temp compute free memory
+    lea free_chipmem(pc),a0
+    move.l  (4,a0),$100
+    move.l  (a0),d2
+    sub.l   d2,$100
+    lea free_fastmem(pc),a0
+    move.l  (4,a0),$104
+    move.l  (a0),d2
+    sub.l  d2,$104
 
 
-	jsr	(a5)
-	bsr	_flushcache
-	movem.l	(a7)+,d2/d7/a4
-.skip
-	;call
-	move.l	d7,a3
-	add.l	a3,a3
-	add.l	a3,a3
+    move.l  (a7)+,d2
+    
+    
+    tst.l   d0
+    rts
+    
+.not_enough
+    tst.l   d2
+    bne.b   .out
+    ; no particular memory required: perform a second pass
+    ; with chipmem
+    move.l  #MEMF_CHIP,d2
+    bra.b   .chip
+.out
+    moveq.l #0,d0
+    move.l  (a7)+,d2
+    rts
 
-	move.l	a4,a0
+fake_copymem
+    movem.l d2-d3,-(a7)
+    ; borrowed from JST code :)
+	cmp.l	A0,A1
+	beq.b	.exit		; same regions: out
+	bcs.b	.copyfwd	; A1 < A0: copy from start
 
-	movem.l	d7/a6,-(a7)
+	tst.l	D0
+	beq.b	.exit		; length 0: out
 
-	move.l	d2,d0			; argument string length
-	move.l	_stacksize(pc),-(a7)	; original stack format
-	movem.l	(_saveregs,pc),d1-d7/a1-a2/a4-a6	; original registers (BCPL stuff)
-	jsr	(4,a3)		; call program
-	addq.l	#4,a7
+	; here A0 > A1, copy from end
 
-	movem.l	(a7)+,d7/a6
+	add.l	D0,A0		; adds length to A0
+	cmp.l	A0,A1
+	bcc.b	.cancopyfwd	; A0+D0<=A1: can copy forward (optimized)
+	add.l	D0,A1		; adds length to A1 too
 
-	;remove exe
+.copybwd:
+	move.b	-(A0),-(A1)
+	subq.l	#1,D0
+	bne.b	.copybwd
 
-	move.l	d7,d1
-	jsr	(_LVOUnLoadSeg,a6)
+.exit
+    movem.l (a7)+,d2-d3
+    rts
+.cancopyfwd:
+	sub.l	D0,A0		; restores A0 from A0+D0 operation
+.copyfwd:
+	move.l	A0,D1
+	btst	#0,D1
+	bne.b	.fwdbytecopy	; src odd: byte copy
+	move.l	A1,D1
+	btst	#0,D1
+	bne.b	.fwdbytecopy	; dest odd: byte copy
 
-	movem.l	(a7)+,d0-a6
-	rts
+	move.l	D0,D2
+	lsr.l	#4,D2		; divides by 16
+	move.l	D2,D3
+	beq.b	.fwdbytecopy	; < 16: byte copy
 
-.end
-	jsr	(_LVOIoErr,a6)
-	move.l	a3,-(a7)
-	move.l	d0,-(a7)
-	pea	TDREASON_DOSREAD
-	move.l	(_resload,pc),-(a7)
-	add.l	#resload_Abort,(a7)
-	rts
+.fwd4longcopy
+	move.l	(A0)+,(A1)+
+	move.l	(A0)+,(A1)+
+	move.l	(A0)+,(A1)+
+	move.l	(A0)+,(A1)+
+	subq.l	#1,D2
+	bne.b	.fwd4longcopy
 
-_saveregs
-		ds.l	16,0
-_stacksize
-		dc.l	0
-orig_vbl
+	lsl.l	#4,D3		; #of bytes*16 again
+	sub.l	D3,D0		; remainder of 16 division
+
+.fwdbytecopy:
+	tst.l	D0
+	beq.b	.exit
+.fwdbytecopy_loop:
+	move.b	(A0)+,(A1)+
+	subq.l	#1,D0
+	bne.b	.fwdbytecopy_loop
+	bra.b	.exit
+    
+    ; we're ignoring MEMF_LARGEST, assuming free memory is all contiguous
+fake_availmem
+    btst    #MEMB_CHIP,d1
+    beq.b   .fast
+    lea free_chipmem(pc),a0
+    bra.b .calc
+.fast
+    lea free_fastmem(pc),a0
+.calc
+    move.l  (4,a0),d0
+    sub.l   (a0),d0
+    rts
+
+free_chipmem:
+    dc.l    $1000   ; start
+    dc.l    CHIPMEM
+
+    
+    ; initialized dynamically at startup
+free_fastmem
+    dc.l    0   ; start
+    dc.l    0   ; top
+    
+
+		
+		
+;======================================================================
+_resload	dc.l	0			;Resident loader
+game_address
     dc.l    0
+    
 tag
-		dc.l	WHDLTAG_CUSTOM5_GET
-skip_intro_flag	dc.l	0
-		dc.l	WHDLTAG_CUSTOM4_GET
-start_division	dc.l	0
+		dc.l	WHDLTAG_CUSTOM2_GET
+button_config	dc.l	0
     dc.l    0
-tagseg
-        dc.l    WHDLTAG_DBGSEG_SET
-segments:
-		dc.l	0
-		dc.l	0
+        dc.l   0
+;======================================================================
+
+_quit		pea	TDREASON_OK
+		bra	_end
+_wrongver	pea	TDREASON_WRONGVER
+_end		move.l	(_resload,pc),-(a7)
+		add.l	#resload_Abort,(a7)
+		rts
 prev_joy1   dc.l    0
 loaded_highscore
     dc.l    0
 highname
     dc.b    "highscore",0
-    
-;============================================================================
-
-	END
+		END
