@@ -27,6 +27,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
  
+ version 1.2 (26.02.2021) done by JOTD:
+ - fixed crash when quitting
+ 
  version 1.1 (22.02.2021) done by JOTD:
  - removed the need to use kickstart emulation
    (saves 256kb of memory too)

@@ -1,0 +1,107 @@
+Short:    HD-Installer for Super Cars V1.3
+Author:   Codetapper/Action (codetapper@gmail.com)
+Version:  1.3
+Type:     game/patch
+
+This patch applies to "Super Cars" (c) 1990 Magnetic Fields/Gremlin - 1 or 2
+disks. Supported: Original 2 disk version - SPS 1527 (Jean-François Fabre)
+                  16 bit Hit Machine/GBH 1 disk version - SPS 1523 (Ronny)
+                  Hit Squad 1 disk version - SPS 1528 (Matthew Thompson)
+
+REQUIREMENTS:
+- Slave requires WHDLoad V13+
+- Game requires 512kb chip mem (+0.8Mb other memory for preload option for
+  the 1 disk version, or 1.3Mb memory for the 2 disk version)
+
+Version 2.0: (21-xxx-2021) done by JOTD:
+- added cd32 joypad controls with optional suppress
+  of up/down replaced by forward/reverse
+- slightly changed blitterwait
+
+Version 1.3: (21-Apr-2015) done by Codetapper/Action:
+- Updated imager to handle some GBH editions more efficiently. The game
+  slave itself has not changed!
+- Source code included
+
+Version 1.2: (13-Jun-2013) done by Codetapper/Action:
+- Stackframe fix added for 68010 users (thanks to Dennis for the bug report)
+- Updated installer script
+
+Version 1.1: (08-Jun-2002) done by Codetapper/Action:
+- Modified the delay code on the Gremlin logo so it now works on emulators
+- Instructions included
+- Added a Normal and MagicWB icon
+- Quit key changed to 'F10'
+
+Version 1.0: (25-Jan-2000) done by Codetapper/Action:
+- Full load from HD
+- 3 versions supported
+- Stackframe fix for 68020+ processors
+- Protection removed
+- Blitter wait inserted
+- Loads and save fastest laps and best performances (unless you cheat)
+- Loads and saves settings (name, money, car, level, tracks completed,
+  engine, body, fuel, tyre damage, weapons, car upgrades and car dealer
+  status at any point when you press 'S')
+- 'P' key added for pause (as specified in the documentation)
+- Keyboard acknowledge routine rewritten (on 2 versions)
+- Gremlin logo and intro can be bypassed with fire or either mouse button
+- RomIcon, NewIcon and OS3.5 Colour Icon (created by me!)
+- Quit option (default key is '*' on keypad)
+
+CD32 JOYPAD CONTROLS:
+- play: pause (p/space)
+- reverse+forward (while paused): aborts current game (esc)
+- reverse: throws rear missile (replaces "down")
+- forward: throws front missile (replaces "up")
+- reverse+forward+yellow: quits to workbench (quitkey)
+
+note that 2 button joysticks aren't useful here, since blue button isn't used
+
+CHEAT MODE:
+- Enter your name as any of the following for various effects:
+
+           Start on the second level with $20000 _______ "ODIE"
+           Start on the third level with $50000 ________ "BIGC"
+           Start with $500000 __________________________ "RICH"
+
+Whenever you press 'S', the settings are saved to disk (unless you cheated
+and used *any* of the above codewords). To recall your previously saved 
+settings, enter "LOAD" as your name. "LOAD" will appear as the default name 
+if a save file was found. The name will be replaced in game by the original
+name you used from when you first created the save game.
+
+This install has taken me a long time, but the game is one of my favourites
+of all time so it deserves a quality fix. The save feature in particular
+took ages simply because it saves everything about the current game so you
+can resume it in it's exact state later!
+
+Tom Meades kindly sent his GBH version of this game and it seems that the
+disk was duplicated with multiple runs of the sync markers on the disk. 
+Sometimes the imager found the "wrong" one and would then complain about 
+checksum errors. I have altered the imager to search for the next sync,
+but the slave itself did not require updating.
+
+Please note that if you are using WinUAE, you will experience some weird
+crashes if you are not using cycle exact settings.
+
+Greetings to Jean-François Fabre for the original JST install, all Action 
+members, my testing crew and the entire WHDLoad team!
+
+
+Codetapper/Action (21-Apr-2015)
+
+
+         Bug report form, full WHDLoad package and other installs:
+                          http://www.whdload.de/
+
+            ________  ________  ________  ____  ________  ________
+           _)       \_)       \_)       \_)   \_)       \_)       \
+   __ ___ /___/     /   /_____/\  /     /     /   /     /   /     /
+  /_//__// \___    /   /     /CT\/     /     /   /     /   /     /
+        /___/     /___      /   /     /_____/___      /___/     /___ __
+            \____/    \____/    \____/          \____/    \____//__//_/
+
+
+           Visit the Action website for more of our productions:
+                        http://www.codetapper.com/

@@ -15,7 +15,6 @@
 ;---------------------------------------------------------------------------*
 
 	INCDIR	Include:
-	INCDIR	osemu:
 	INCLUDE	whdload.i
 	INCLUDE	whdmacros.i
 	INCLUDE	lvo/dos.i
@@ -33,65 +32,83 @@
 
 ;============================================================================
 
-CHIPMEMSIZE	= $100000
+	IFD	CHIP_ONLY
+CHIPMEMSIZE = $100000
+FASTMEMSIZE = 0
+HRTMON
+	ELSE
+CHIPMEMSIZE	= $80000
 FASTMEMSIZE	= $80000
+BLACKSCREEN
+	ENDC
 NUMDRIVES	= 1
 WPDRIVES	= %0000
 
-BLACKSCREEN
-;DEBUG
 ;DISKSONBOOT
 ;DOSASSIGN
+
+;INITAGA
+BOOTDOS
 HDINIT
 ;HRTMON
 IOCACHE		= 10000
 ;MEMFREE	= $200
 ;NEEDFPU
-SETPATCH
+;SETPATCH
+STACKSIZE = 7000
+CACHE
+SEGTRACKER
 
 ;============================================================================
 
-KICKSIZE	= $40000			;34.005
-BASEMEM		= CHIPMEMSIZE
-EXPMEM		= KICKSIZE+FASTMEMSIZE
+
+slv_Version	= 17
+slv_Flags	= WHDLF_NoError|WHDLF_Examine|WHDLF_EmulTrap
+slv_keyexit	= $5D	; num '*'
 
 ;============================================================================
 
-_base		SLAVE_HEADER			;ws_Security + ws_ID
-		dc.w	15			;ws_Version
-		dc.w	WHDLF_NoError|WHDLF_EmulPriv|WHDLF_EmulTrap|WHDLF_Examine	;ws_flags
-		dc.l	BASEMEM			;ws_BaseMemSize
-		dc.l	0			;ws_ExecInstall
-		dc.w	_start-_base		;ws_GameLoader
-		dc.w	_data-_base		;ws_CurrentDir
-		dc.w	0			;ws_DontCache
-_keydebug	dc.b	0			;ws_keydebug
-_keyexit	dc.b	$59			;ws_keyexit = F10
-_expmem		dc.l	EXPMEM			;ws_ExpMem
-		dc.w	_name-_base		;ws_name
-		dc.w	_copy-_base		;ws_copy
-		dc.w	_info-_base		;ws_info
-
-;============================================================================
-
+	include		"whdload/kick13.s"
+	
 	IFD BARFLY
 	DOSCMD	"WDate  >T:date"
 	ENDC
 
-	CNOP 0,4
-_name		dc.b	"Combat Air Patrol",0
-_copy		dc.b	"1991 Psygnosis",0
-_info		dc.b	"adapted & fixed by JOTD",10
-		dc.b	"from Wepl excellent KickStarter 34.005",10,10
-		dc.b	"CUSTOM1=1 skips introduction",10,10
-		dc.b	"Version 1.2 "
+DECL_VERSION:MACRO
+	dc.b	"1.3"
 	IFD BARFLY
+		dc.b	" "
 		INCBIN	"T:date"
 	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
+	ENDC
+	ENDM
+slv_name		dc.b	"Combat Air Patrol"
+        IFD CHIP_ONLY
+        dc.b    "(DEBUG/CHIP mode)"
+        ENDC
+        
+        dc.b    0
+slv_copy		dc.b	"1993 Psygnosis",0
+slv_info		dc.b	"adapted & fixed by JOTD",10
+		dc.b	"from Wepl excellent KickStarter 34.005",10,10
+		dc.b	"Version "
+		DECL_VERSION
 		dc.b	0
-_data:
+
+slv_CurrentDir:
 	dc.b	"data",0
-	EVEN
+slv_config:
+        dc.b    "C1:X:Skip introduction:0;"
+		dc.b	0
+	even
+; version xx.slave works
+
+	dc.b	"$","VER: slave "
+	DECL_VERSION
+	dc.b	0
 
 _program:
 	dc.b	"cap.amg",0
@@ -108,18 +125,8 @@ _args_end
 _start	;	A0 = resident loader
 ;============================================================================
 
-	;initialize kickstart and environment
-		bra	_boot
-
 _bootdos
-	bsr	_patchkb
-
-	move.l	(_resload),a2		;A2 = resload
-
-	;enable cache
-		move.l	#WCPUF_Base_NC|WCPUF_Exp_NC|WCPUF_Slave_CB|WCPUF_IC|WCPUF_DC|WCPUF_BC|WCPUF_SS|WCPUF_SB,d0
-		move.l	#WCPUF_All,d1
-		jsr	(resload_SetCPU,a2)
+	move.l	(_resload,pc),a2		;A2 = resload
 
 	;get tags
 		lea	(_tag,pc),a0
@@ -131,7 +138,7 @@ _bootdos
 		jsr	(_LVOOldOpenLibrary,a6)
 		move.l	d0,a6			;A6 = dosbase
 
-		move.l	_custom1(pc),d0
+		move.l	skip_intro(pc),d0
 		bne.b	.skipintro
 
 	;lock intro directory
@@ -141,7 +148,7 @@ _bootdos
 		move.l	#ACCESS_READ,d2
 		jsr	(_LVOLock,a6)
 		move.l	d0,d1
-		beq.b	_end3
+		beq	_end3
 
 		jsr	(_LVOCurrentDir,a6)
 		move.l	d0,-(a7)
@@ -180,7 +187,7 @@ _bootdos
 		beq	_end			; file not found
 
 		bsr	_patch_exe
-		bsr	_flushcache
+
 	;call
 		move.l	d7,a1
 		add.l	a1,a1
@@ -197,12 +204,15 @@ _bootdos
 		move.l	d7,d1
 		jsr	(_LVOUnLoadSeg,a6)
 _quit
-		pea	TDREASON_OK
-		jmp	(resload_Abort,a2)
+	pea	TDREASON_OK
+	move.l	_resload(pc),-(a7)
+	addq.l	#resload_Abort,(a7)
+	rts
 
 _end
 		pea	_program(pc)
-		pea	205			; file not found
+        jsr	(_LVOIoErr,a6)
+        move.l	d0,-(a7)
 		pea	TDREASON_DOSREAD
 		move.l	(_resload,pc),-(a7)
 		add.l	#resload_Abort,(a7)
@@ -210,173 +220,230 @@ _end
 
 _end2
 		pea	_intro(pc)
-		pea	205			; file not found
+        jsr	(_LVOIoErr,a6)
+        move.l	d0,-(a7)
 		pea	TDREASON_DOSREAD
 		move.l	(_resload,pc),-(a7)
 		add.l	#resload_Abort,(a7)
 		rts
 _end3
 		pea	_introdir(pc)
-		pea	205			; file not found
+        jsr	(_LVOIoErr,a6)
+        move.l	d0,-(a7)
 		pea	TDREASON_DOSREAD
 		move.l	(_resload,pc),-(a7)
 		add.l	#resload_Abort,(a7)
 		rts
 
-_patch_exe:
-	movem.l	D0-A6,-(A7)
+_patch_exe
+    move.l  d7,a1
+    move.l  _resload(pc),a2
+    lea pl_main(pc),a0
+    jsr (resload_PatchSeg,a2)
+    
+	move.l	attnflags(pc),d0
+	btst	#AFB_68020,d0
+	beq	.68k
 
-	move.l	D7,A3
-	add.l	a3,a3
-	add.l	a3,a3
+    move.l  d7,a1
+    lea pl_main_020(pc),a0
+    jsr (resload_PatchSeg,a2)
 
-	move.l	A3,A0
-	move.l	A0,A1
-	add.l	#$30000,A1
-	lea	.ecsshit(pc),A2
-	moveq.l	#8,D0
-.loop1
-	bsr	_hexsearch
-	cmp.l	#0,A0
-	beq.b	.skipecs
-	move.w	#$600A,(A0)+
-	bra.b	.loop1
-.skipecs
-	move.l	A3,A0
-	move.l	A0,A1
-	add.l	#$60000,A1
-	lea	.ecsshit2(pc),A2
-	moveq.l	#8,D0
-	bsr	_hexsearch
-	cmp.l	#0,A0
-	beq.b	.skipecs2
-	move.w	#$4EB9,(A0)+
-	pea	_waitblit1(pc)
-	move.l	(a7)+,(A0)
-.skipecs2
-
-
-	; SMC on a AND.W  #immop changing all the time
-
-	move.l	A3,A0
-	move.l	A0,A1
-	add.l	#$60000,A1
-	lea	.smc1(pc),A2
-	move.l	#8,D0
-	bsr	_hexsearch
-	cmp.l	#0,A0
-	beq.b	.skipsmc1
-	move.w	#$4E4F,-4(A0)
-	lea	_andd1(pc),A0
-	move.l	A0,$BC.W
-.skipsmc1
-
-	; the SMC which causes flashes: wrong JMP because of caches/prefetch
-
-	move.l	A3,A0
-	move.l	A0,A1
-	add.l	#$30000,A1
-	lea	.smc2(pc),A2
-	move.l	#10,D0
-	bsr	_hexsearch
-	cmp.l	#0,A0
-	beq.b	.skipsmc2
-	move.w	#$4E4E,8(A0)
 	lea	_trapjmp(pc),A0
 	move.l	A0,$B8.W
-.skipsmc2
+ 
+.68k
+    rts
 
-	move.l	A3,A0
-	move.l	A0,A1
-	add.l	#$30000,A1
-	lea	.smc3(pc),A2
-	move.l	#14,D0
-	bsr	_hexsearch
-	cmp.l	#0,A0
-	beq.b	.skipsmc3
-	move.w	#$4E4E,12(A0)
-	lea	_trapjmp(pc),A0
-	move.l	A0,$B8.W
-.skipsmc3
+pl_main_020:
+    PL_START
+    PL_W    $245ba,$4E4E
+    PL_W    $251ac,$4E4E
+    
+    PL_PS   $35d94,flush_smc
+    PL_END
 
-	move.l	A3,A0
-	move.l	A0,A1
-	add.l	#$60000,A1
-	lea	.diskstuff(pc),A2
-	moveq.l	#8,D0
-	bsr	_hexsearch
-	cmp.l	#0,A0
-	beq.b	.skipflop
-	move.w	#$4E75,(A0)
-.skipflop
+flush_smc
+    bsr _flushcache
+    ; original code, changed a bit
+	CLR.W	D0			;35d94: 4240
+	MOVE.B	(A0)+,D0		;35d96: 1018
+	bne.S	.return		;35d98: 6738
+    addq.l  #4,a7
+.return    
+    rts
+    
+; patches a double blitwait pattern like
+;    LAB_0840:
+;    	BTST	#6,DMACONR		;115c4: 0839000600dff002
+;    	BNE.S	LAB_0840		;115cc: 66f6
+;    LAB_0841:
+;    	BTST	#6,DMACONR		;115ce: 0839000600dff002
+;    	BNE.S	LAB_0841		;115d6: 66f6
+;
+; the problem with that pattern is that the blitwait is incorrect
+; for some machines (which probably explains that it's repeated)
+; and thus the double blitwait has to be added, but then it's inefficient
+; on machines that don't have the blitwait bug
+;
+; patching those 2 loops makes the code faster
+ 
+PL_BLT:MACRO
+    PL_PS   \1,_waitblit
+    PL_S    \1+6,$d8-$ca
+    ENDM
+    
+pl_main:
+    PL_START
+    ; skip debug crap checking 'eddy' in $C
+    PL_S    $37012,$2a-$12
+    ; skip cacr tampering
+    PL_S    $2b186,$c2-$86
+    ; no PAL force or fmode zero
+    PL_S    $2b13e,$4a-$3e
+    PL_S    $2b172,$4a-$3e
+    ; blitter waits
+    PL_PS   $1d768,_waitblit1
+    
+    PL_BLT  $11588
+    PL_BLT  $11592
+    PL_BLT  $1159c
+    PL_BLT  $115a6
+    PL_BLT  $115b0
+    PL_BLT  $115ba
+    PL_BLT  $115c4
+    PL_BLT  $11880
+    PL_BLT  $118e6
+    PL_BLT  $174e4
+    PL_BLT  $1752c
+    PL_BLT  $1d6d8
+    PL_BLT  $2a51a
+    PL_BLT  $2a5c2
+    PL_BLT  $2a5f6
+    PL_BLT  $2a626
+    PL_BLT  $2a656
+    PL_BLT  $2a68a
+    PL_BLT  $2a6c0
+    PL_BLT  $2a6f2
+    PL_BLT  $2a724
+    PL_BLT  $2a75e
+    PL_BLT  $2a794
+    PL_BLT  $2a7c6
+    PL_BLT  $2a7fe
+    PL_BLT  $2a832
+    PL_BLT  $2a868
+    PL_BLT  $2a8a0
+    PL_BLT  $2a8d2
+    PL_BLT  $2a902
+    PL_BLT  $2a938
+    PL_BLT  $2a968
+    PL_BLT  $2a998
+    PL_BLT  $2a9cc
+    PL_BLT  $2aa02
+    PL_BLT  $2aa34
+    PL_BLT  $2aa68
+    PL_BLT  $2aa9e
+    PL_BLT  $2aad0
+    PL_BLT  $2ab0a
+    PL_BLT  $2ab40
+    PL_BLT  $2ab78
+    PL_BLT  $2abac
+    PL_BLT  $2abe4
+    PL_BLT  $2ac16
+    PL_BLT  $2ac4a
+    PL_BLT  $2ac80
+    PL_BLT  $2acb4
+    PL_BLT  $2acea
+    PL_BLT  $2ad24
+    PL_BLT  $2ad5c
+    PL_BLT  $2ad90
+    PL_BLT  $2adc8
+    PL_BLT  $2cdc4
+    PL_BLT  $2ce0e
+    PL_BLT  $2ce74
+    PL_BLT  $2cece
+    PL_BLT  $2cf0e
+    PL_BLT  $2cf80
+    PL_BLT  $2cfac
+    PL_BLT  $2cffe
+    PL_BLT  $2d02a
+    PL_BLT  $2d070
+    PL_BLT  $335b2
+    PL_BLT  $33608
+    PL_BLT  $3365a
+    PL_BLT  $3460c
+    PL_BLT  $3466c
+    PL_BLT  $346a2
+    PL_BLT  $3470e
+    PL_BLT  $3473a
+    PL_BLT  $347e6
+    PL_BLT  $34850
+    PL_BLT  $348c0
+    PL_BLT  $3493c
+    PL_BLT  $34980
+    PL_BLT  $349c4
+    PL_BLT  $34a0e
+    PL_BLT  $34a52
+    PL_BLT  $34a9c
+    PL_BLT  $34ae0
+    PL_BLT  $34b34
+    PL_BLT  $34b76
+    PL_BLT  $34bbc
+    PL_BLT  $34be8
+    PL_BLT  $34c3e
+    PL_BLT  $34c68
+    PL_BLT  $34c92
+    PL_BLT  $34cd6
+    PL_BLT  $34d28
+    PL_BLT  $34d54
+    PL_BLT  $34daa
+    PL_BLT  $34dd4
+    PL_BLT  $34dfe
+    PL_BLT  $3502a
+    PL_BLT  $3507e
+    PL_BLT  $35136
+    PL_BLT  $351ba
+    PL_BLT  $351f6
+    PL_BLT  $3524c
+    PL_BLT  $35292
+    PL_BLT  $352fc
+    PL_BLT  $3532a
+    PL_BLT  $35382
+    PL_BLT  $35480
+    PL_BLT  $354f6
+    PL_BLT  $35520
+    PL_BLT  $3556c
+    PL_BLT  $355e0
+    PL_BLT  $3560a
+    PL_BLT  $35652
+    PL_BLT  $356c2
+    PL_BLT  $356ec
+    PL_BLT  $35734
+    PL_BLT  $35798
+    PL_BLT  $357d6
+    PL_BLT  $35838
+    PL_BLT  $3587e
+    PL_BLT  $358e4
+    PL_BLT  $35996
+    PL_BLT  $359f0
+    PL_BLT  $35a1e
+    PL_BLT  $35a76
+    PL_BLT  $35a9c
+    PL_BLT  $35afa
+    PL_BLT  $372ae
 
-	move.l	A3,A0
-	move.l	A0,A1
-	add.l	#$30000,A1
-	lea	.bytes(pc),A2
-	moveq.l	#6,D0
-	bsr	_hexsearch
-	cmp.l	#0,A0
-	beq.b	.skip
-	move.w	#$4EB9,(a0)+
-	pea	_kbint(pc)
-	move.l	(a7)+,(a0)+
-	move.w	#$6006,(A0)
-.skip
-
-	move.l	A3,A0
-	move.l	A0,A1
-	add.l	#$30000,A1
-	lea	.cacr(pc),A2
-	moveq.l	#6,D0
-	bsr	_hexsearch
-	cmp.l	#0,A0
-	beq.b	.skipcacr
-	move.w	#$6036,(A0)
-.skipcacr
-
-	move.l	A3,A0
-	move.l	A0,A1
-	add.l	#$30000,A1
-	lea	.prot(pc),A2
-	moveq.l	#8,D0
-	bsr	_hexsearch
-	cmp.l	#0,A0
-	beq.b	.skip2
-	move.l	#$10C14E71,(A0)
-.skip2
-	movem.l	(a7)+,d0-a6
-	rts
-.smc1:
-	dc.l	$14014602,$83158315
-.smc2:
-	dc.l	$303B000E,$323B100C
-	dc.w	$4EF9
-.smc3:
-	dc.l	$30310002,$23311004,$C043C243
-	dc.w	$4EF9
-
-.ecsshit:
-	dc.l	$3D7C2020,$01DC3D7C
-.ecsshit2:
-	dc.l	$317C01F0,$00404268
-.waitblit:
-	dc.l	$08390006,$DFF002
-	dc.w	$66F6
-	dc.l	$08390006,$DFF002
-	dc.w	$66F6
-
-.diskstuff:
-	dc.l	$33FC4000,$DFF024
-.bytes:
-	dc.l	$103900BF
-	dc.w	$EC01
-.prot:
-	dc.l	$B2186608
-	dc.l	$51C8FFF4
-.cacr:
-	dc.l	$20780014
-	dc.w	$21FC
+    
+    ; protection
+    PL_L    $16b12,$10C14E71
+    ; disk banging
+    PL_R    $37724
+    ; keyboard
+    PL_PSS   $2b368,_kbint,8
+    ; fix that smc on 68k too because it's just stupid
+    PL_NOP  $36080,6            ; don't change operand
+    PL_L    $36098,$C2434E71    ; and.w d3,d1 because d3 is the value!
+    
+    PL_END
 
 _andd1
 	move.l	A0,-(a7)
@@ -390,46 +457,13 @@ _waitblit1:
 	bsr	_waitblit
 	move.w	#$1F0,($40,A0)
 	rts
-_waitblit2
-	bsr	_waitblit
-	rts
+
 
 _waitblit:
-	TST.B	dmaconr+_custom
 	BTST	#6,dmaconr+_custom
-	BNE.S	.wait
-	bra.s	.end
 .wait
-	TST.B	$BFE001
-	TST.B	$BFE001
 	BTST	#6,dmaconr+_custom
 	BNE.S	.wait
-	TST.B	dmaconr+_custom
-.end
-	rts
-
-_hexsearch:
-	movem.l	D1/D3/A1-A2,-(A7)
-.addrloop:
-	moveq.l	#0,D3
-.strloop:
-	move.b	(A0,D3.L),D1	; gets byte
-	cmp.b	(A2,D3.L),D1	; compares it to the user string
-	bne.b	.notok		; nope
-	addq.l	#1,D3
-	cmp.l	D0,D3
-	bcs.b	.strloop
-
-	; pattern was entirely found!
-
-	bra.b	.exit
-.notok:
-	addq.l	#1,A0	; next byte please
-	cmp.l	A0,A1
-	bcc.b	.addrloop	; end?
-	sub.l	A0,A0
-.exit:
-	movem.l	(A7)+,D1/D3/A1-A2
 	rts
 
 ; corrects SMC $4EF9(address changing all the time)
@@ -458,26 +492,6 @@ _kbint:
 	rts
 
 
-_patchkb
-	lea	.ackkb(pc),A0
-	lea	.oldkb(pc),A1
-	move.l	$68.W,(A1)
-	move.l	A0,$68.W
-	rts
-
-.ackkb:
-	bset	#6,$BFEE01
-	movem.l	D0,-(A7)
-	moveq.l	#2,D0
-	bsr	_beamdelay
-	bclr	#6,$BFEE01
-	movem.l	(A7)+,D0
-	move.l	.oldkb(pc),-(A7)
-	rts
-
-.oldkb:
-	dc.l	0
-
 ; < D0: numbers of vertical positions to wait
 _beamdelay
 .bd_loop1
@@ -491,13 +505,10 @@ _beamdelay
 	rts
 
 _tag		dc.l	WHDLTAG_CUSTOM1_GET
-_custom1	dc.l	0
+skip_intro	dc.l	0
+		dc.l	WHDLTAG_ATTNFLAGS_GET
+attnflags
+	dc.l	0
 		dc.l	0
-
-;============================================================================
-
-	INCLUDE	kick13.s
-
-;============================================================================
 
 	END

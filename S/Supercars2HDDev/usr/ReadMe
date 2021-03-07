@@ -32,6 +32,11 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+Version 1.3 (28.02.2021) done by JOTD:
+
+- changed green/blue buttons to launch weapons by reverse/forward
+- reverse+forward quits current game only when game is paused
+
 Version 1.2 (10.11.2020) done by JOTD:
 
 - NTSC option removed, monitor detection is now automatic
@@ -69,11 +74,11 @@ KEYS:
   for full cheat details)
 - +/- to move the position of the status panel (useful for NTSC users)
 
-JOYPAD CONTROLS:
-- blue: front weapon
-- green: rear weapon
+CD32 JOYPAD CONTROLS:
+- forward: front weapon
+- reverse: rear weapon
 - play: pause
-- fwd+rev: quit current game
+- fwd+rev (when paused): quit current game
 - fwd+rev+yellow: quit current game
 
 CHEAT MODE:
@@ -94,7 +99,7 @@ A big apology to everyone that has been waiting so long for this install.
 I've got no excuses other than being very busy.  I hope you'll at least
 agree that this is the ultimate version of the game!  Enjoy!
 
-This install is compatible with CAPS ID 224.
+This install is compatible with SPS224.
 
 Greetings to Jean-François Fabre for the original JST install, Frank for
 the great icons, Wepl for the mighty WHDLoad, all Action members, my

@@ -103,7 +103,7 @@ _config
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.2"
+	dc.b	"1.3"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -324,28 +324,28 @@ read_joydat_xx:
 	beq.b	.noneed
 	bset	#0,d0	; xor 0 and 1 yields 0 cos bit1=1
 .noneed
-	btst	#JPB_BTN_GRN,d2
-	beq.b	.no_green
-	; set DOWN because blue pressed
+	btst	#JPB_BTN_REVERSE,d2
+	beq.b	.no_rev
+	; set DOWN because reverse pressed
 	bclr	#0,d0
 	btst	#1,d0
-	bne.b	.no_green
+	bne.b	.no_rev
 	bset	#0,d0	; xor 0 and 1 yields 1 cos bit1=0
-.no_green:
+.no_rev:
 	bclr	#8,d0
 	btst	#9,d0
 	beq.b	.noneed2
 	bset	#8,d0	; xor 8 and 9 yields 8 cos bit9=1
 .noneed2
 
-	btst	#JPB_BTN_BLU,d2
-	beq.b	.no_blue
-	; set UP because green pressed
+	btst	#JPB_BTN_FORWARD,d2
+	beq.b	.no_fwd
+	; set UP because forward pressed
 	bclr	#8,d0
 	btst	#9,d0
-	bne.b	.no_blue
+	bne.b	.no_fwd
 	bset	#8,d0	; xor 0 and 1 yields 1 cos bit1=0
-.no_blue:
+.no_fwd:
     rts
 
 _wait_button
@@ -401,6 +401,7 @@ _level3_hook:
 	MOVEM.L	(A7)+,D0-D7/A0-A6	;7b2d8: 4cdf7fff
 	RTE				;7b2dc: 4e73
  
+pause_flag = $74bec
 _test_buttons
     movem.l  d0-d1/a0,-(a7)
     lea previous_joy1_buttons(pc),a0
@@ -411,14 +412,16 @@ _test_buttons
     bne.b   .nopause        ; was already pressed
     btst    #JPB_BTN_PLAY,d0
     beq.b   .nopause
-    eor.w   #1,$74bec
+    eor.w   #1,pause_flag
 .nopause
     btst    #JPB_BTN_REVERSE,d0
     beq.b   .noesc
     btst    #JPB_BTN_FORWARD,d0
     beq.b   .noesc
-    btst    #JPB_BTN_YEL,d0
-    bne   _exit
+    ; simulate ESC only if paused so it can't conflict
+    ; with missile/weapon launch
+    tst.w   pause_flag
+    beq.b   .noesc
     move.w  #$45,$74f90
 .noesc
     movem.l  (a7)+,d0-d1/a0

@@ -20,6 +20,9 @@
  (+ 0.8 other memory for preload option)
 
 
+Version 1.5 (xx.03.2021) done by JOTD:
+- read joypad less often (reduces screen glitches?)
+
 Version 1.4 (21.02.2021) done by JOTD:
 - optional 2-button control: second/blue button jumps, yellow high jumps
  (issue #0004954)

@@ -1,9 +1,9 @@
 ; $Id: Install 1.26 2014/04/09 01:53:32 wepl Exp wepl $
 
-(set #multiple-versions "")		;set to <> "" if there are multiple versions
-(set #version 0)			;set if no multiple versions 0=RawDIC 1=Patcher 2=DIC 3=Files 4=CD 5=SingleFile 6=Arcadia
-(set #sub-dir "data")			;sub directory containing data files
-(set #highs-file "highs")		;name of high scores file
+(set #multiple-versions "2")		;set to <> "" if there are multiple versions
+(set #version 3)			;set if no multiple versions 0=RawDIC 1=Patcher 2=DIC 3=Files 4=CD 5=SingleFile 6=Arcadia
+(set #sub-dir "")			;sub directory containing data files
+(set #highs-file "SuperCars.highs")	;name of high scores file
 
 (set #readme-file "ReadMe")		;name of readme file
 (set #readme2-file "ReadMe2")		;name of second readme file
@@ -13,7 +13,7 @@
 (set #extra-file "Extra")		;name of extra file
 (set #extra2-file "Extra2")		;name of second extra file
 (set #extra3-file "Extra3")		;name of third extra file
-(set #prefix "KingsQuest4")			;name of slave, directory
+(set #prefix @app-name)			;name of slave, directory
 (set #prefix-slave "")
 
 (set #ico_suffix_00 "inf")		;Icon suffixes (not all of these must exist)
@@ -27,7 +27,7 @@
 (set #ico_suffix_14 "newcfou")
 (set #ico_suffix_15 "newirek")
 (set #ico_suffix_16 "newirek2")
-(set #ico_suffix_20 "newirek3")
+(set #ico_suffix_20 "colicon")
 (set #ico_suffix_21 "colicon2")
 (set #ico_suffix_22 "colicon3")
 (set #ico_suffix_23 "colexot")
@@ -39,7 +39,7 @@
 (set #ico_suffix_29 "colzarkov")
 (set #ico_suffix_30 "colirek")
 (set #ico_suffix_31 "colirek2")
-(set #ico_suffix_32 "colirek3")
+(set #ico_suffix_32 "colmura")
 (set #ico_suffix_40 "boxicon")
 (set #ico_suffix_41 "boxicon2")
 (set #ico_suffix_42 "boxirek")
@@ -58,7 +58,7 @@
 (set #ico_desc_14 "NewIcon CFou!")
 (set #ico_desc_15 "NewIcon Irek")
 (set #ico_desc_16 "NewIcon Irek 2")
-(set #ico_desc_20 "NewIcon Irek 3")
+(set #ico_desc_20 "OS3.5 Icon")
 (set #ico_desc_21 "OS3.5 Icon 2")
 (set #ico_desc_22 "OS3.5 Icon 3")
 (set #ico_desc_23 "OS3.5 Exotica")
@@ -70,7 +70,7 @@
 (set #ico_desc_29 "OS3.5 Dr.Zarkov")
 (set #ico_desc_30 "OS3.5 Irek")
 (set #ico_desc_31 "OS3.5 Irek 2")
-(set #ico_desc_32 "OS3.5 Irek 3")
+(set #ico_desc_32 "OS3.5 Murakami")
 (set #ico_desc_40 "OS3.5 BoxIcon")
 (set #ico_desc_41 "OS3.5 BoxIcon 2")
 (set #ico_desc_42 "OS3.5 BoxIcon Irek")
@@ -93,12 +93,8 @@
 	  ; because the number of the #version remains unchanged
 	  ;
 	  (choices
-		"Original release (RawDIC)"
-		"Alternate version (Patcher)"
-		"Budget re-release (DIC)"
-		"Hit-Squad version (Files)"
-		"CD/CDTV/CD³² version (Files)"
-		"Defjam compact (Single File)"
+		"1 disk version (16 Bit Hit Machine/Hit Squad)"
+		"2 disk version (Original release)"
 	  )
           (help @askchoice-help)
         )
@@ -110,12 +106,17 @@
       ; and icon. If you set #prefix-slave it only changes the slave name.
       ; You may also set the #sub-dir here if this is not required with all
       ; versions
-      ;
+      ;                                                                         §
       (select #version
-	; 0 = RawDIC
-        ("")
-	; 1 = Patcher
-        ("")
+	; 0 = 1 disk version
+        (
+          (set #last-file "Disk.1")		;last file the imager should create
+        )
+	; 1 = 2 disk version
+        (
+          (set #last-file "Disk.2")		;last file the imager should create
+          (set #version 0)			;Back to RawDIC version 0
+        )
 	; 2 = DIC
         ("")
 	; 3 = Files
@@ -140,7 +141,6 @@
 (procedure P_MakeImages
   (select #version
     (				;----- 0 = RawDIC -----
-      (set #last-file "Disk.1")		;last file the imager should create
       (copyfiles
         (help @copyfiles-help)
         (source ("%s.ISlave" #prefix))
@@ -176,56 +176,94 @@
       ;the following lines must be copied and adjusted for multiple disk images
 
       (set #CI_disknum 1)
-      ;(set #CI_diskname ("%s Disk %ld" @app-name #CI_disknum))
-      (set #CI_diskname ("%s" @app-name))
-      (set #CI_disklen 236544)
+      (set #CI_diskname ("%s Disk %ld" @app-name #CI_disknum))
+      (set #CI_disklen 901120)
       (set #CI_skiptrk "")
       (P_CreateImage)
 
+      ;for example...
+      (set #CI_disknum 2)
+      (set #CI_diskname ("%s Disk %ld" @app-name #CI_disknum))
+      (P_CreateImage)
 
     )
 
     (				;----- 3 = DOS (Files) -----
 
       ;if the disk can be requested by the volume name:
-      (set #AD_disk "KQ4 #1")
+      (set #AD_disk "cf2-1")
       (set #AD_diskname "Disk 1")	;this optional, default is #AD_disk
       (P_AskDisk)
       (copyfiles
         (help @copyfiles-help)
         (source ("%s:" #AD_disk))
         (dest #dest)
-         (all)
-      )
-      (set #AD_disk "KQ4 #2")
-      (set #AD_diskname "Disk 2")	;this optional, default is #AD_disk
-      (P_AskDisk)
-      (copyfiles
-        (help @copyfiles-help)
-        (source ("%s:" #AD_disk))
-        (dest #dest)
-         (all)
-      )
-      (set #AD_disk "KQ4 #3")
-      (set #AD_diskname "Disk 3")	;this optional, default is #AD_disk
-      (P_AskDisk)
-      (copyfiles
-        (help @copyfiles-help)
-        (source ("%s:" #AD_disk))
-        (dest #dest)
-         (all)
-      )
-      (set #AD_disk "KQ4 #4")
-      (set #AD_diskname "Disk 4")	;this optional, default is #AD_disk
-      (P_AskDisk)
-      (copyfiles
-        (help @copyfiles-help)
-        (source ("%s:" #AD_disk))
-        (dest #dest)
-         (all)
+	(pattern "~(disk1|mapm#?|s|cf2.rel|ssboot)")
       )
 
+      ;if the disk can be identified by a file on it:
+      (set #AD_filereq "disk1")
+      (set #AD_diskname "Disk #2")	;required
+      (P_AskDisk)
+      (copyfiles
+        (help @copyfiles-help)
+        (source ("%s:" #AD_dev))
+        (dest #dest)
+	(pattern "~(disk2)")
+      )
 
+      ;if there is no way to identify the disk:
+      (set #AD_diskname "Disk Nª 3")
+      (P_AskDiskDev)
+      (copyfiles
+        (help @copyfiles-help)
+        (source ("%s:" #AD_drive))
+        (dest #dest)
+	(pattern "~(disk3|hi#?|ic#?|mapm1.spt|morp#?|ps#?|ra#?)")
+      )
+
+      ;extract files from an archive using XAD
+      (set #archive
+      	(askfile
+	  (prompt (cat "Where is the \"" @app-name "\" archive file located ?"))
+       	  (help @askfile-help)
+	  (default "NuxP2.lha")
+      	)
+      )
+      (set #files "~(NuxeliaP/readme.txt)")
+      (P_XADUnfile)
+      ;move/rename some contents
+      (rename (tackon #dest "NuxeliaP/BKG") (tackon #dest "BKG"))
+      (rename (tackon #dest "NuxeliaP/BOB") (tackon #dest "BOB"))
+      (rename (tackon #dest "NuxeliaP/GFX") (tackon #dest "GFX"))
+      (rename (tackon #dest "NuxeliaP/LEV") (tackon #dest "LEV"))
+      (rename (tackon #dest "NuxeliaP/SFX") (tackon #dest "SFX"))
+      (rename (tackon #dest "NuxeliaP/nuxeliap.exe") (tackon #dest "nuxeliap.exe"))
+      ;delete obsolete parts, remaining directories
+      (run ("Delete \"%s\" All Quiet Force" (tackon #dest "NuxeliaP")))
+
+      ;example: decompress a packed file
+      (set #file (tackon #dest "Enemy"))
+      (P_XFDDecrunch)
+
+      ;example: copy a file supplied with the install
+      (copyfiles
+        (help @copyfiles-help)
+	(source "supplied.file.name")
+        (dest #dest)
+      )
+
+      ;example: create additional save directory
+      (makedir
+	(tackon #dest "save")
+	(help @makedir-help)
+      )
+
+      ;example: set additional tooltype in the icon
+      (tooltype
+	(dest (tackon #dest-org #icon_newname))
+	(settooltype "Config" "C1:L:Language:default,deutsch,english,français")
+      )
 
     )
 
@@ -1132,14 +1170,14 @@
 (set #program "WHDLoad")
 (P_ChkRun)
 
-;(set #program "RawDIC")
-;(P_ChkRun)
+(set #program "RawDIC")
+(P_ChkRun)
 
-;(set #program "Patcher")
-;(P_ChkRun)
+(set #program "Patcher")
+(P_ChkRun)
 
-;(set #program "DIC")
-;(P_ChkRun)
+(set #program "DIC")
+(P_ChkRun)
 
 (if (getenv "WHDLInstPath")
   (set @default-dest (getenv "WHDLInstPath"))
@@ -1214,7 +1252,6 @@
     )
   )
 )
-(set #version 3)
 (set #copy-file #highs-file)
 (P_CopyFile)
 (P_MakeImages)

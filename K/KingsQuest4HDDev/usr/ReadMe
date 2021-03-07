@@ -27,7 +27,7 @@
  an appropriate requester.
  Additionally the file "kick34005.A500.RTB" must be installed in the same
  directory as the kickstart image. It can be found in the archive 
- "util/boot/skick345.lha" on aminet.
+ "util/boot/skick346.lha" on aminet.
 
  If you have problems with this installation please try and get a newer
  version of this package from the WHDLoad WWW-Page. If that doesn't help try
@@ -41,10 +41,15 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 1.1 (14.06.03)
+ version 2.0 (2021)
+ - changed diskimages to real files (needs reinstalling)
+ - added configurable keyboard
+ - merged protections, now protection screen no longer appears
+ 
+ version 1.1 (14.06.2003)
  - BTTR version supported
  
- version 1.0 (09.06.03) done by JOTD:
+ version 1.0 (09.06.2003) done by JOTD:
  - initial release
  - document protection removed
  - full use of fastmem & caches for awesome speed
