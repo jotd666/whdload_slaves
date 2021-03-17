@@ -1,0 +1,94 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Lure Of The Temptress" © 1992 Virgin
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+Requirements:
+
+ The installed program requires 0.5 MB ChipMem and 1.0 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+
+History
+
+ version 2.0 (18.03.2021) done by JOTD & Stingray
+ - install adapted to whdload v17, ditched JST source code
+ - sound/music fixed on fast machines
+ - fixed decrunch code (I don't know how it could work properly before!)
+ - BUTTONWAIT now allows to wait 5 seconds (or buttonpress) for
+   startup intro screens and text screens (issue #0003240)
+ - RawDIC imager (by Stingray, issue #0004274)
+
+ version 1.4 (22.03.2003) done by JOTD
+ - italian version supported
+ - source code included
+ - fixed install script: now diskimages are called disk.1, disk.2, and so on.
+ - fixed install script: special case for german version (disk.1 is shorter)
+ - fixed install script: now copies doc & readme
+
+ version 1.3 (21.03.2003) done by JOTD - test release
+ - access fault fixed: click on cask (Harry)
+ - access fault fixed: pull skull, go through door (Kempy)
+
+ version 1.2-B (10.03.2003) done by JOTD
+ - fixed install script. disk.1 was ripped too short -> intro problems
+
+ version 1.2 (around 2001)
+ - WHDLoad port from JST slave source with help from Harry
+
+ version 1.x (1996)
+ - JST versions
+ - 5 versions supported (french, 2 english, german, italian)
+ - Decrunch routines relocated in fast memory for more speed
+ - Convenient installer script
+ - Nice icon by Frank
+ - Manual protection removed
+ - Now can use real fastmem as extension mem (stupid reloc routine fixed)
+ - Load/saves to HD (tested with all versions)
+ - Tool included to convert the game save disk to files (ripsaves)
+   useable by the HD load/save option
+ - 'Format' option resets game saves.
+ - BUTTONWAIT tooltype allows to see the title screen (press LMB or Fire to skip)
+ - Game documentation included
+
+
+
+NOTES
+
+This game really needed a HD install. I think it's unplayable from floppy.
+
+There's an old tool that we didn't port which is called "ripsaves", which allows
+to rip floppy savegames. It can be run either from WB or CLI. From CLI
+it accepts an argument (0 to 3) for the floppy unit. (e.g: ripsaves 1 for DF1:)
+
+Thanks to Walter Geriolz and Thomas Lorenz for sending me the disks (well, next time,
+we'll coordinate better).
+Thanks for the people who sent the other disk images.
+
+Sorry for the delay but this one meant a lot of work for me. I hope you'll appreciate.
+
+Supported versions:
+
+english (SPS2030 and SPS2031)
+italian (SPS2028)
+french (SPS2040)
+german
+
+
+*PLEASE READ*
+
+You have to first 'format' a disk to make saves work. This will create a
+file called 'luresave.dir'. Then only you can save/load.
+
+
+JOTD
