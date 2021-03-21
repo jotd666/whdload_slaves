@@ -40,6 +40,12 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 1.3 (13.03.2021) done by JOTD:
+ - reduced OS swaps when saving (also needs reinstallation or at least
+   copy empty "savegame" file as "kq1sg.000", "kq1sg.001" and so on in "data/save".
+   Existing savegames can be kept. Just copy the "savegame" file in other slots to
+   avoid whdload os flashing   
+
  version 1.2 (21.02.2021) done by JOTD:
  - fixed crash when saving on 68000 (issue #0005022)
  - MT32 direct support (needs reinstalling or at least copying .cfg file

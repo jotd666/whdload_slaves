@@ -41,10 +41,11 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 2.0 (2021)
+ version 2.0 (09.03.2021)
  - changed diskimages to real files (needs reinstalling)
  - added configurable keyboard
  - merged protections, now protection screen no longer appears
+ - fixed sound issue (issue #0005042)
  
  version 1.1 (14.06.2003)
  - BTTR version supported

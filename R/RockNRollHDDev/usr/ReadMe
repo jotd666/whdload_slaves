@@ -1,0 +1,84 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Rock'n Roll" (c) 1989 Rainbow Arts, both original and
+ rerelease version.
+
+You will have to install it with that install to run it from hd.
+That install needs WHDLoad and RawDIC in the path (eg in c:).
+
+Default quitkey is numerical *. You may change it in the icon with QUITKEY= .
+
+Notes: 	Try COUNTRY or MAGIC MAP instead of your name, or the levelchoice
+	with RAINBOW ARTS.
+    New version of the slave simplifies code entry: just enter the level
+    number (2 digits) and that's it.
+	Do not edit the highscorefile, or the game wont work anymore.
+    
+Additional note: There is one defective charge of that rerelease. I managed
+	to restore the defective data and included it (encrypted) in the
+	imager. If you have that charge too (it crashes in level 7 or 8) you
+	need to install your very original disk and not a backup, or the
+	defective track (#5) cant be recognized and will not be restored.
+
+The install is tested with 2 MB on an A1200, and on an 18 MB 68030.
+
+Since my installs are freeware, and although i try to make them as reliable
+as possible, you use them wholly on your own risk.
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+Version 2.1 (21.03.2021) by JOTD
+- reduced memory requirements to 512kb chip (issue #4764)
+- trainer: infinite lives
+- trainer: infinite money
+- trainer: level select
+- simplified level codes entry
+- option to pre-set RAINBOW ARTS as player name so code
+  entry is asked afterwards
+- source code cleanup
+
+Version 2.0 (24.02.2013) by Wepl
+- new system friendly RawDIC imager
+- extra imager included which is able to extract your highscores from
+  disk, even from a cracked disk because scores are saved on cylinder
+  80 in a non standard format in original and cracked releases;
+  just run "rawdic RocknRoll_HS.ISlave" and copy the created file 'rrhigh'
+  to the installed game data directory
+- blitwaits in the intro added
+- intro can be skipped via Custom1 tooltype
+- highscores are divided by 10 to avoid overflow at 1000000 which is
+  easiley reached in a normal play through (via jumping back you can
+  get even higher scores, although I doubt that somebody will do because
+  of the time needed to)
+- leading zeros in the highscore table removed
+- title scrolling fixed
+- button control on map display fixed
+- disk loader optimized to require less resload calls (2 disk version)
+- source and docs included
+- new icons
+
+older versions done by Harry
+- fixed stackframe error
+- Several dbf-delays replaced.
+- Crash after completion of the game (hopefully) fixed (Not tested 
+  already, completing the game with the shortest way takes at
+  least 2.5 h and 2 times testplaying is enough to me).
+     

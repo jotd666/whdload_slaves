@@ -35,6 +35,12 @@ REQUIREMENTS:
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
  
+version 1.5: (10-march-2021) done by JOTD
+- removed "leave original level codes" as they work even with
+  special level codes activated
+- CUSTOM2 now becomes the option to enable jump with second button
+  (following my convention for second button jump options)
+
 version 1.4: (11-may-2019) done by JOTD
 - fixed low jump on floppy version when in 2-button mode
 
@@ -124,7 +130,7 @@ If you use any cheat your high scores will not be saved!
 
 Be aware if you are installing the disk version, the Story disk is disk 3!
 
-Greetings to Jean-François Fabre (JOTD) for the original JST install and the
+Greetings to Jean-Francois Fabre (JOTD) for the original JST install and the
 Project F fix, all Action members, Galahad for technical assistance, Frank
 for superb icons, Chris, Carlo and Xavier for supplying this great game and
 the entire WHDLoad team!

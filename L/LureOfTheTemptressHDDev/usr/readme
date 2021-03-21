@@ -25,7 +25,7 @@ History
  - install adapted to whdload v17, ditched JST source code
  - sound/music fixed on fast machines
  - fixed decrunch code (I don't know how it could work properly before!)
- - BUTTONWAIT now allows to wait 5 seconds (or buttonpress) for
+ - BUTTONWAIT now allows to wait 6 seconds (or buttonpress) for
    startup intro screens and text screens (issue #0003240)
  - RawDIC imager (by Stingray, issue #0004274)
 

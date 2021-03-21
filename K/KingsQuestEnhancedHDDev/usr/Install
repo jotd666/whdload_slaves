@@ -319,10 +319,80 @@
   )
 )
 
-    (makedir (tackon #dest "save")
+(set #savedest (tackon #dest "save"))
+
+    (makedir #savedest
       (help @makedir-help)
     )
 
+;copy empty savegames to avoid too many OS swaps
+ (copyfiles
+    (help @copyfiles-help)
+    (source "savegame")
+    (dest #savedest)
+    (newname "kq1sg.000")
+  )
+ (copyfiles
+    (help @copyfiles-help)
+    (source "savegame")
+    (dest #savedest)
+    (newname "kq1sg.001")
+  )
+ (copyfiles
+    (help @copyfiles-help)
+    (source "savegame")
+    (dest #savedest)
+    (newname "kq1sg.002")
+  )
+ (copyfiles
+    (help @copyfiles-help)
+    (source "savegame")
+    (dest #savedest)
+    (newname "kq1sg.003")
+  )
+ (copyfiles
+    (help @copyfiles-help)
+    (source "savegame")
+    (dest #savedest)
+    (newname "kq1sg.003")
+  )
+ (copyfiles
+    (help @copyfiles-help)
+    (source "savegame")
+    (dest #savedest)
+    (newname "kq1sg.004")
+  )
+ (copyfiles
+    (help @copyfiles-help)
+    (source "savegame")
+    (dest #savedest)
+    (newname "kq1sg.005")
+  )
+ (copyfiles
+    (help @copyfiles-help)
+    (source "savegame")
+    (dest #savedest)
+    (newname "kq1sg.006")
+  )
+ (copyfiles
+    (help @copyfiles-help)
+    (source "savegame")
+    (dest #savedest)
+    (newname "kq1sg.007")
+  )
+ (copyfiles
+    (help @copyfiles-help)
+    (source "savegame")
+    (dest #savedest)
+    (newname "kq1sg.008")
+  )
+ (copyfiles
+    (help @copyfiles-help)
+    (source "savegame")
+    (dest #savedest)
+    (newname "kq1sg.009")
+  )
+  
 (P_CopyFile #highs-file)
 (P_Install)
   (copyfiles
@@ -338,7 +408,8 @@
         (source "serial.device")
         (dest (tackon #dest "devs"))
       )
-      
+
+     
 (if (= #newstuff 1)
   (openwbobject #dest-org)
 )

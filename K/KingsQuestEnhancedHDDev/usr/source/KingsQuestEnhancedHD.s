@@ -64,7 +64,7 @@ PATCH_MT32 = 1
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.2"
+	dc.b	"1.3"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -99,6 +99,17 @@ _specific_patch
     lea     pl_main(pc),a0
     move.l  _resload(pc),a2
     jsr resload_PatchSeg(a2)
+
+    lea	(_dosname,pc),a1
+    move.l	(4),a6
+    jsr	(_LVOOldOpenLibrary,a6)
+    move.l  d0,a0
+    ; no more delete (to avoid OS swaps on savegames)
+    ; done in generic patches, but we can't enable them
+	add.w	#_LVODeleteFile,a0
+	move.w	#$4EF9,(a0)+
+	lea	_deletefile(pc),a1
+	move.l	a1,(a0)
 
 	moveq.l	#1,d0    ; no generic patches
 	rts

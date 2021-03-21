@@ -1,3 +1,11 @@
+; slave for "Tiny Bobble"
+;
+; history
+; - first release used kickstart emulation
+; - next release got rid of kickstart but failed
+;   relocating exec hunks properly, resulting in some
+;   (not all) trashed graphics due to improper blits from fastmem
+; - last update fixed that chunk reloc: game runs properly
 
 		INCDIR	include:
 		INCLUDE	whdload.i
@@ -16,6 +24,7 @@
 		SUPER				;disable supervisor warnings
 		ENDC
 
+
 ;CHIP_ONLY
 
 STACKSIZE = $1000
@@ -23,18 +32,18 @@ EXECSIZE = $6A000
 
     IFD CHIP_ONLY
 CHIPMEM = $E0000
-EXPMEM = STACKSIZE
+EXPMEM = STACKSIZE*2
 
     ELSE
 CHIPMEM = $80000
-EXPMEM = $70000+STACKSIZE
+EXPMEM = $70000+STACKSIZE*2
     ENDC
     
 ;======================================================================
 
 _base		SLAVE_HEADER			;ws_Security + ws_ID
 		dc.w	17			;ws_Version
-		dc.w	WHDLF_NoError 		;ws_flags
+		dc.w	WHDLF_NoError|WHDLF_ClearMem 		;ws_flags
 		dc.l	CHIPMEM			;ws_BaseMemSize
 		dc.l	0			;ws_ExecInstall
 		dc.w	_start-_base		;ws_GameLoader
@@ -60,7 +69,7 @@ _expmem		dc.l	EXPMEM+$1000			;ws_ExpMem
 
 
 DECL_VERSION:MACRO
-	dc.b	"1.1"
+	dc.b	"1.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -97,7 +106,13 @@ IGNORE_JOY_DIRECTIONS
 ;======================================================================
 _start						;a0 = resident loader
 ;======================================================================
-
+        lea _custom,a6
+        move.w  #$7FFF,dmacon(a6)
+        move.l  #$FFFFFFFE,$100.W
+        move.l  #$100,cop1lc(a6)
+        move.w  #$200,bplcon0(a6)
+        
+        
 		lea	_resload(pc),a1
 		move.l	a0,(a1)			;save for later use
 
@@ -137,11 +152,15 @@ _start						;a0 = resident loader
         lea free_fastmem(pc),a0
         move.l  a3,(a0)+    ; start
 
-        add.l   #EXPMEM-$1000,a3   ; minus stack
+        add.l   #EXPMEM-STACKSIZE*2,a3   ; minus stack
         move.l  a3,(a0) ; top
 
         move.l  _expmem(pc),A7
-        add.l   #EXPMEM,A7 ; stack on top of fastmem
+        add.l   #EXPMEM,A7 ; ssp stack on top of fastmem
+        move.l  A7,A0        
+        sub.l   #STACKSIZE,A0   ; usb stack just below
+        move.l  A0,USP
+        move.w  #0,SR
         
         ; now allocate memory for executable
         move.l  #EXECSIZE,d0
@@ -171,7 +190,7 @@ _start						;a0 = resident loader
         move.l  d0,a1
         lea pl_boot(pc),a0
         jsr resload_PatchSeg(a2)      
- 		move.l	game_address(pc),-(a7)        
+ 		move.l	game_address(pc),-(a7)
         rts
 
 pl_boot
@@ -206,7 +225,8 @@ pl_main
     PL_NOP  $36E,6
     PL_B  $00374,$60
     ; quit
-    PL_P    $5f4,_quit
+    PL_P    $5f4,_quit  ; not a normal quit
+    PL_P    $1892,_quit
     ; vbl hook
     PL_PSS  $2602,vbl_hook,2
     ; keyboard hook
@@ -504,11 +524,19 @@ _Relocate	movem.l	d0-d1/a0-a2,-(sp)
         clr.l   -(a7)                   ;TAG_DONE
         pea     -1                      ;true
         pea     WHDLTAG_LOADSEG
+    IFND CHIP_ONLY        
+        move.l  #$1000,-(a7)       ;chip area
+        pea     WHDLTAG_CHIPPTR        
+    ENDC
         pea     8                       ;8 byte alignment
         pea     WHDLTAG_ALIGN
         move.l  a7,a1                   ;tags		move.l	_resload(pc),a2
 		jsr	resload_Relocate(a2)
+    IFND CHIP_ONLY        
+        add.w   #7*4,a7
+    ELSE
         add.w   #5*4,a7
+    ENDC
         movem.l	(sp)+,d0-d1/a0-a2
 		rts
 
@@ -519,6 +547,7 @@ _Relocate	movem.l	d0-d1/a0-a2,-(sp)
     ; I can assure you that is trivial in comparison!
     
 fake_allocmem
+    
     move.l  d2,-(a7)
     move.l  d1,d2
     and.l   #MEMF_CHIP+MEMF_FAST,d2 ; keep only those
@@ -548,6 +577,7 @@ fake_allocmem
     move.l  (a0),d0 ; address
     add.l   d1,(a0) ; update memory start
 
+    IFEQ    1
     ; temp compute free memory
     lea free_chipmem(pc),a0
     move.l  (4,a0),$100
@@ -557,11 +587,12 @@ fake_allocmem
     move.l  (4,a0),$104
     move.l  (a0),d2
     sub.l  d2,$104
-
+    ENDC
+    
 
     move.l  (a7)+,d2
     
-    
+
     tst.l   d0
     rts
     
@@ -571,7 +602,7 @@ fake_allocmem
     ; no particular memory required: perform a second pass
     ; with chipmem
     move.l  #MEMF_CHIP,d2
-    bra.b   .chip
+    bra   .chip
 .out
     moveq.l #0,d0
     move.l  (a7)+,d2
@@ -651,7 +682,11 @@ fake_availmem
     rts
 
 free_chipmem:
+    IFD CHIP_ONLY
     dc.l    $1000   ; start
+    ELSE
+    dc.l    $15000  ; chip hunk comes first
+    ENDC
     dc.l    CHIPMEM
 
     

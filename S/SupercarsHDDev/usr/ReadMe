@@ -1,12 +1,9 @@
-Short:    HD-Installer for Super Cars V1.3
-Author:   Codetapper/Action (codetapper@gmail.com)
-Version:  1.3
-Type:     game/patch
+
 
 This patch applies to "Super Cars" (c) 1990 Magnetic Fields/Gremlin - 1 or 2
-disks. Supported: Original 2 disk version - SPS 1527 (Jean-François Fabre)
-                  16 bit Hit Machine/GBH 1 disk version - SPS 1523 (Ronny)
-                  Hit Squad 1 disk version - SPS 1528 (Matthew Thompson)
+disks. Supported: Original 2 disk version - SPS1527 (Jean-François Fabre)
+                  16 bit Hit Machine/GBH 1 disk version - SPS1523 (Ronny)
+                  Hit Squad 1 disk version - SPS1528 (Matthew Thompson)
 
 REQUIREMENTS:
 - Slave requires WHDLoad V13+
@@ -18,22 +15,22 @@ Version 2.0: (21-xxx-2021) done by JOTD:
   of up/down replaced by forward/reverse
 - slightly changed blitterwait
 
-Version 1.3: (21-Apr-2015) done by Codetapper/Action:
+Version 1.3: (21-Apr-2015) done by Codetapper:
 - Updated imager to handle some GBH editions more efficiently. The game
   slave itself has not changed!
 - Source code included
 
-Version 1.2: (13-Jun-2013) done by Codetapper/Action:
+Version 1.2: (13-Jun-2013) done by Codetapper:
 - Stackframe fix added for 68010 users (thanks to Dennis for the bug report)
 - Updated installer script
 
-Version 1.1: (08-Jun-2002) done by Codetapper/Action:
+Version 1.1: (08-Jun-2002) done by Codetapper:
 - Modified the delay code on the Gremlin logo so it now works on emulators
 - Instructions included
 - Added a Normal and MagicWB icon
 - Quit key changed to 'F10'
 
-Version 1.0: (25-Jan-2000) done by Codetapper/Action:
+Version 1.0: (25-Jan-2000) done by Codetapper:
 - Full load from HD
 - 3 versions supported
 - Stackframe fix for 68020+ processors

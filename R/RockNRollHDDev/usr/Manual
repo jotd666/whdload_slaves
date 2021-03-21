@@ -1,0 +1,311 @@
+                       Rock'n Roll Complete Manual
+
+                              Package info :
+                           --------------------
+
+  Welcome to the world of Rock'n Roll! You are at the beginning of an 
+  exciting adventure, set in a strange and foreign world, during which
+  you will be confronted by both good and evil with plenty of challenges
+  and surprises to keep you busy. Rock'n Roll is filled with crazy yet
+  unique action, with ten great Rock'n Roll tracks and a massive overall
+  hi-score table. Your task is to guide a ferocious rolling ball through
+  a total of 32 levels and seven continents, each with it's own particular
+  peculiarities, signature tune and landscape. The path is marked, but 
+  watch out for secret shortcuts and obstacles that deduct energy from
+  your ball. And, beware that the ball doesn't fall into the precipice!
+
+
+
+                               Introduction :
+                            --------------------
+
+  Welcome to the world of Rock'n Roll, which is constituted of 7 continents,
+  each with its own particular peculiarities, signature tune and landscape.
+
+  Your task is to guide the ball through a total of 32 levels. The path is 
+  marked but watch out for rumours giving tips regarding secret short-cuts.
+  Fundamentally, there are three things which you must be aware of in
+  order to reach the finish unscathed. Firstly, certain obstacles will 
+  deduct energy from your ball. Secondly, the ball must not be allowed 
+  to fall into the precipice. And, thirdly, there is a time limit in some
+  zones, so move fast!
+
+  If you solve certain puzzles in some zones you will be rewarded with a 
+  variety of bonuses, all will be revealed as you progress.
+
+
+                                 Loading :
+                              ---------------
+
+  a) Set up your Amiga in the usual way. Refer to your User's manual if
+     required.
+  b) Switch on your monitor or TV, then your Amiga. Place the program
+     disk in the drive. After a brief period the game will begin to load.
+
+  [Returning of defective disks omitted.]
+
+
+                                Controls :
+                             ----------------
+
+  In this game, you can only control the ball with a mouse. Keyboard and
+  joystick controls are not available. The faster the mouse is moved in
+  a given direction, the faster the ball will roll across the landscape.
+  Extra options may be accessed by pressing the right mouse button, and
+  utilized by pressing the left one. Key 'F1' turns music on/off; 'F2'
+  turns sound effects on/off; Esc restarts the level less one life and
+  Delete ends the game.
+
+
+                          Building and blasting :
+                       -----------------------------
+
+  To build a path, select the appropriate 'extra' symbol. Then, keeping
+  the left mouse button pressed, roll the ball over the area you wish to
+  build the path. To explode a bomb simply select the bomb symbol, and
+  press the left mouse button when the ball is situated on the spot you
+  wish the bomb to explode. The bomb is automatically lit and will 
+  explode shortly afterwards.
+
+
+                            Screen structure :
+                         ------------------------
+
+  +---------------------------------------------------+
+  |     AAAA         BBBBBBBBBBBBBBB         CCCC     |
+  +--+---------------------------------------------+--+
+  |  |                                             |  |
+  |  |                                             |  |
+  |  |                                             |  |
+  |  |                                             |  |
+  |  |        OOOOOOOOOOOOOOOOOOOOOOOOOOOO         |  |
+  |  |                                             |  |
+  |  |                                             |  |
+  |  |                                             |  |
+  |  |                                             |  |
+  +--+---------+--+-----------------+-------------++--+
+  | DDDDDDDD D |  |                 |             | N |
+  |            |  |  HHHH H         |  KK  MM  MM | N |
+  | EEEEEEEE E |  |                 |  KK  MM  MM | N |
+  |            |  |  IIII I         |             | N |
+  | FFFFFFFF F |  |                 |  LL  MM  MM | N |
+  |            |  |  JJJJ J         |  LL  MM  MM | N |
+  | GGGGGGGG G |  |                 |             | N |
+  +------------+--+-----------------+-------------+---+
+
+  Area Meaning
+   A   Number of current level
+   B   Name of current level
+   C   Time limit
+   D   Fastest time for current level
+   E   Your individual time
+   F   All time highscore
+   G   Your individual score
+   H   Money in your account
+   I   Duration of special equipment
+   J   Display of energy reserves
+   K   The number of speed-ups being used
+   L   Extra selector
+   M   Keys to unlock various doors
+   N   Number of balls remaining
+   O   The playing field
+
+
+                            Features and Tips :
+                         -------------------------
+
+Shopping Tips :
+
+  To buy an extra you must simply roll the ball over the appropriate symbol.
+  The price is shown to the right of the symbol.The money will be booked
+  from your accound and the shop will then close. If you haven't got enough
+  money to pay for the extra, there is an alternative. It is possible to pay
+  with energy. To make such a risky deal the ball needs to remain on the
+  symbol for few seconds. Only than will such an errangement be accepted
+  (providing you have enough energy).
+
+Speed Up :
+
+  The right tip for all high-speed freaks. Whoever shops here will armour
+  their ball with effective additional power. Up to four of these 'Speed-
+  Ups's' can be used simultaneously. Unfortu-nately this speed-thrill re-
+  mains for only 90 seconds, after which the ball will change down a grear.
+
+Armor :
+
+  High-Tech makes it possible ! If you go for this extra your ball will be
+  wrapped in a tough, protecting shell for a short period of time. Although
+  the ball cannot penetrate the normal barriers, fragile ones are no longer
+  problematic obstacles.
+
+Repair-Set :
+
+  Unfortunately some of the tracks may be interrupted. This is where the re-
+  pair-sets come in useful with which you can build a new path. You should
+  use these repair-sets sparingly as there are seldom more sets than are ab-
+  solutely necessary ....... !
+
+Parachute :
+
+  Despite the fact that parachuting may not be your favorite passtime, you
+  will soon learn to value them very much ! They can be your last hope when
+  you roll off of the path into the precipice. If you react fast enough and
+  open the parachute before the ball hits the ground, you will once again
+  have saved a life.
+
+Continue :
+
+  If you should be lucky enough to come across one of these shops, don't
+  stop to think. If you possess one of these powerful extras, you are able
+  to continue playing in the level where you lost your last ball. Is that
+  an offer ????
+
+Bombs :
+
+  Bombs: Warning ! Explosives ! These bombs tend to be quite dangerous but
+  very effective. It's never a bad thing to have one or more of these in
+  your pack. But don't hang around too long in the explosive area - that
+  could be painful.... !
+
+Spikes :
+
+  It's no secret that control is difficult on an icy surface. Spikes with
+  which it is possible to equip your ball for a short time, naturally make
+  stopping easier. The question remains, through, can you buy something more
+  important with your money ??
+
+?????? :
+
+n  Hummmmm. We didn't really want to give anything away about that. We will
+  just say enough for you to know that it's always worth popping into this
+  shop. Information which will make life easier will be given in return for
+  an admittedly high price.
+
+Keyboard :
+
+  Due to circumstances beyound our control, german keyboard layout exchanging
+  'Z' and 'Y' keys is active. This will in no way affect the enjoyment you
+  will experience playing Rock'n'Roll.
+
+
+                              Game Elements :
+                           ---------------------
+
+Keys & Doors :
+
+  Restricting doors can be opened with the appropriate keys (distinguished
+  by colour). You need only roll against the door-the door will be opened if
+  the correct key is handy.
+
+Diamonds :
+
+  The players eyes widen in delight. These diamonds will be collected in
+  your account. A red diamond is worth 300 bonus points, a yellow diamond
+  is worth 700 poits, a green diamond is worth 1500 bonus points and a blue
+  diamond is worth 4000 bonus points.
+
+Ice :
+
+  Without spikes you must be extremly careful - on ice you'll be slipping all
+  over the place. Slow down !
+
+Fragile Platforms :
+
+  Not all platforms are plaesant. It is only possible to roll over these
+  fragile platforms 1, 2 or 3 times, depending on how strong they are, after
+  which they disappear. Therefore think carefully about where you roll !
+
+Eggs :
+
+  If you roll the ball over these eggs, you will, of course, squash them.
+  It seems at first sight as though there is no adventage in this, but who
+  knows... Pleasant Surprises rarely come at the wrong time.
+
+Eyes :
+
+  The more eyes thet are collected, the more of the level map you will be
+  able to see. For technical reason this element is not available on the C64.
+  
+Fragil Barriers :
+
+  Unlike the fragile platforms the fragile barriers are not unpleasant. 
+  Armored balls can ram obstacles away and free a new path - who knows, 
+  perhaps you'll build a short-cut.... !
+
+Small Balls :
+
+  These small ball are definitely not simple obstacles. A new platform will 
+  always appear in the area where they are pushed over the edge into the pre-
+  cipice. This is a safe, although somewhat strange way to build a new
+  track.
+
+Acid :
+
+  Acid also has unpleasant effects on your ball. Energy-loss will result.
+
+Bombs :
+
+  Do not make the mistake of thinking that bombs can be exploded anywhere.
+  That would be much too easy. Bombs can only be ignited on special, rein-
+  forced platforms. The areas which are left after the bomb has exploded
+  are not necessarily precipices. The result will be different from level
+  to level.
+
+Tubes :
+
+  The tubes are favoured means of transport. If you roll in one side, you
+  will automatically come out at the other side.
+
+Teleports :
+
+  The telepoter is for urgent cases. Practically without time-loss you will
+  be transported to another area.
+
+Explosions :
+
+  You should wait for exactly the right moment to get past these obstacles.
+  If you fail, you will lose energy.
+
+Switches :
+
+  The switchers are a devilish affair. Nobody knows the exact effect of
+  each individual switch - this varies from level to level and from switch
+  to switch.
+
+Ventilators :
+
+  In some areas a harsh wind blows. Ths tends to be due to ventilators which
+  can cause gusty and uneven gales.
+
+Magnets :
+
+  In contrast to the ventilators which blow your ball away from them, mag-
+  nets pull the ball towards them. Absolute concentration is needed to con-
+  quer them.
+
+Money :
+
+  You will also come across problems with Rock'n Roll if you do not possess
+  the appropriate change. 100, 300 or 500 coins will be credited to your
+  account when you collect the respective symbols.
+
+Arrows :
+
+  Unpleasant are these arrows. Your ball cannot resist their influence. It
+  will automatically be pushed in the direction of the arrows. Skillful
+  players can perhaps overcome the power of one or two arrows which happen
+  to be pointing in the wrong direction.
+
+Energy Barriers & sliding doors :
+  
+  With both of these you must wait for the right moment and then speed through.
+
+
+                              Hall of Fame :
+                           --------------------
+
+  The best Rock'n Rollers may register themselves on the high score lists.
+  There is a classic style Highscore List for player who have scored the 
+  most points and a special Highscore List for the speediest ball-rollers
+  on each level.
+
