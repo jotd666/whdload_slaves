@@ -1,0 +1,75 @@
+Short : HD-Installer for Myth V1.3
+Type : game/patch
+Author : Mr. Larmer (original install), Bored Seal (´*´ marked features), 
+         StingRay ('x' marked features), JOTD ('+' marked features)
+
+This patch applies to "Myth" by System 3 (c) 1992 - 3 disks or 1 CD.
+Slave requires WHDLOAD V17+.
+Game requires 1MB ChipRAM (+ 2.8MB for PreLoad)
+
+FEATURES:
+- Game loads entirely from HD
+- Floppy and CD32 versions are supported
+- RNC copylock protection removed
+- Game bug fixed: move.w A1,-(A7) -> move.l A1,-(A7)
+- Game bug fixed: clr.l $1C -> clr.l $1C(A6)
+- Two access faults removed
+- Music player dma loop corrected
+* WaitButton for flaming Myth logo added
+* Decruncher moved in fast RAM
+* Blitter waits added (3x)
+* CPU dependent loops patched
+x delay for loading texts added
+x Timing fixed
+x Unlimited Lives trainer added
+x keyboard routine rewritten
+- Lot of nice icons
+- Quit option (your default key)
++ 512 chipmem & fastmem
++ joypad controls
+
+HISTORY:
+
+Version 1.4 (17-Apr-2021) done by JOTD
+- now uses only 512k chipmem, and code runs in fastmem
+- full joypad controls (issue #0003551) + possible jump with second button
+- changed delay loop to avoid lockup on game over
+
+Version 1.3a (13-Aug-2016)
+- wrong blitter wait patch fixed
+- delay for System 3 text and Myth anim after game over added
+
+Version 1.3 (12-Aug-2016) done by StingRay
+- uninitalised copperlist problem fixed
+- 2 more blitter waits added
+- updated to use WHDLoad v17+ features
+- unlimited lives trainer added
+- delay for loading texts added
+- keyboard routine rewritten and 68000 quitkey support added
+- timing fixed
+- end sequence patched
+
+Version 1.2 (14-Jun-2010) * Bored Seal
+- slave updated for WHD10+, decruncher in fast RAM
+- blitter waits and cpu dependent delays patched, waitbutton for Myth logo
+
+Version 1.1 (27-Jul-1998)- Mr.Larmer
+            (01-Sep-2003) - Wepl - new install script for CD32 support, other icons added
+
+Version 1.0 - Mr.Larmer - first release
+
+         Bug report form, full WHDLoad package and other installs:
+                           http://www.whdload.de
+				
+joypad controls:
+
+- reverse: previous weapon
+- forward: next weapon
+- play: pause
+- blue: jump (if CUSTOM2 is set)
+- green: select weapon (blue if CUSTOM2 is not set)
+- reverse+yellow: quit current game
+- reverse+forward+yellow: quit to workbench
+
+
+                
