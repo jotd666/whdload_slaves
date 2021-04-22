@@ -28,11 +28,18 @@
 	SUPER
 	ENDC
 
+;CHIP_ONLY
+
+EXPMEMSIZE = $50000
 
 _base	SLAVE_HEADER					; ws_security + ws_id
 	dc.w	17					; ws_version (was 15)
 	dc.w	WHDLF_NoError|WHDLF_EmulTrap
-	dc.l	$100000					; ws_basememsize
+	IFD	CHIP_ONLY
+	dc.l	$80000+EXPMEMSIZE					; ws_basememsize
+	ELSE
+	dc.l	$80000					; ws_basememsize
+	ENDC
 	dc.l	0					; ws_execinstall
 	dc.w	start-_base		; ws_gameloader
 	dc.w	_data-_base					; ws_currentdir
@@ -42,7 +49,11 @@ _keydebug
 _keyexit
 	dc.b	$59					; ws_keyexit
 _expmem
-	dc.l	$0					; ws_expmem
+	IFD	CHIP_ONLY
+	dc.l	0
+	ELSE
+	dc.l	EXPMEMSIZE					; ws_expmem
+	ENDC
 	dc.w	_name-_base				; ws_name
 	dc.w	_copy-_base				; ws_copy
 	dc.w	_info-_base				; ws_info
@@ -62,7 +73,7 @@ _config
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.7"
+	dc.b	"1.8"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -73,7 +84,11 @@ DECL_VERSION:MACRO
 	ENDC
 	ENDM
 _data   dc.b    'data',0
-_name	dc.b	'--> Pinball Dreams <--',0
+_name	dc.b	'--> Pinball Dreams <--'
+		IFD	CHIP_ONLY
+		dc.b 	" (DEBUG/CHIP mode)"
+		ENDIF
+		dc.b	0
 _copy	dc.b	'1992 Digital Illusions',0
 _info
     dc.b   '----------------------',10,'Installed and fixed by',10,'Galahad of Fairlight & JOTD',10
@@ -100,6 +115,8 @@ name:
 	include	ReadJoyPad.s
 	
 start:
+	lea	$80000,A7
+	
 	LEA	_resload(PC),A1
 	MOVE.L	A0,(A1)
 	bsr	_detect_controller_types
@@ -107,27 +124,17 @@ start:
 	lea	event_queue_pointer(pc),a0
 	move.l	a2,(a0)
 	
+	IFD	CHIP_ONLY
+	lea	_expmem(pc),a0
+	move.l	#$80000,(a0)
+	ENDC
+	
 	LEA	tags(PC),A0	
 	MOVEA.L	_resload(PC),A2
 	JSR	resload_Control(A2)
 	LEA	name(PC),A0
-	lea	$10000,a1
-	bsr	_LoadFile		
-	move.l	si(pc),d0
-	lea	$100.w,a0
-	move.l	a0,a2
-copy_bits:
-	MOVE.B	(A1)+,(A0)+
-	DBF	D0,copy_bits
-	MOVE.L	#$4e754ef9,D1
-	lea	$104a.w,a0
-	LEA	loader2(PC),A1
-	MOVE.W	D1,(A0)+
-	MOVE.L	A1,(A0)
-	lea	$1180.w,a0		;Save hiscore
-	LEA	saver(PC),A1
-	MOVE.W	D1,(A0)+
-	MOVE.L	A1,(A0)
+	lea	$100,a1
+	bsr	_LoadFile
 	
 	lea	depacka(pc),a0
 	lea	$1ab6.w,a1
@@ -137,20 +144,12 @@ copy_bits:
 copy_depac:
 	MOVE.B	(A1)+,(A0)+
 	DBF	D0,copy_depac
-	
-	move.w	d1,(a3)+
-	move.l	a4,(a3)			;Depacker patched!		
-	swap	d1			;Switch to RTS
-	move.w	d1,$17fc.w		;Disk stuff!
-	move.w	d1,$18c2.w		;Stop disk request
-	
-	move.l	#$600000d6,$15e.w	;Remove extra ram
-
+		
 	lea	pl_boot(pc),a0
 	sub.l	a1,a1
 	move.l	_resload(pc),a3
 	jsr	resload_Patch(a3)
-	jmp	(a2)			;Execute Pinball Dreams!
+	jmp	$100.W			;Execute Pinball Dreams!
 
 start_menu
 	movem.l	d0-d2/a0-a2,-(a7)
@@ -166,6 +165,12 @@ start_menu
 pl_boot
 	PL_START
 	PL_PSS	$2C4,start_menu,6
+	PL_L	$15E,$600000d6		;Remove extra ram
+	PL_R	$17fc		;Disk stuff!
+	PL_R	$18c2		;Stop disk request
+	PL_P	$1ab6,depacka
+	PL_P	$104a,loader2
+	PL_P	$1180,saver
 	PL_END
 pl_main
 	PL_START
@@ -249,7 +254,7 @@ read_function_keys
 
 saver:
 	movem.l	d0/a0-a2,-(a7)
-	move.l	pos+2(pc),a0		;$80000
+	move.l	_expmem(pc),a0		;$80000
 	move.l	a0,a1
 	move.l	#$00010000,(a0)+
 	move.l	#$2f000000,(a0)+
@@ -274,7 +279,7 @@ loader2:
 	lea	name(pc),a0
 	move.l	a0,a5
 	move.l	d0,(a0)			;We now have filename!
-pos:	lea	$80000,a1
+	move.l	_expmem(pc),a1
 	bsr	_LoadFile
 	move.l	d0,d1
 	move.l	d0,d7			;Specially for STEEL WHEEL!
@@ -489,8 +494,11 @@ level3_interrupt
     move.w  _custom+intreqr,d0
     btst    #5,d0
     beq.b   .copper
+    ; block ALL interrupts
+    move.w  #$4000,_custom+intena
     ; this is VBL, read joypad here, seems to cause trouble if done
-    ; somewhere else
+    ; somewhere else, because reading potentiometers are better done
+    ; at the start of the vertical blank, or else they could be not available
     bsr _joystick
     move.l  control_by_joy_directions(pc),d0
     beq.b   .nojoy0
@@ -501,6 +509,7 @@ level3_interrupt
     move.l	d0,(a0)		
 .nojoy0
     move.w  #$20,_custom+intreq
+    move.w  #$C000,_custom+intena   ; enable interrupts again
     bra.b   .out
 .copper
     move.l  sync_flag_value(pc),a0
@@ -544,12 +553,12 @@ joypad_controls:
 	bsr.b	read_controls
 	tst.b	D0
 	beq.b	.zap
-	movem.l	d0-d7/a1-a6,-(a7)
+	movem.l	d1-d7/a2-a6,-(a7)
 	move.l	key_code_address(pc),a3
 	move.b	d0,(A3)
 	move.l	update_controls_address(pc),a3
 	jsr		(a3)	; update controls because a key was pressed/released
-	movem.l	(a7)+,d0-d7/a1-a6
+	movem.l	(a7)+,d1-d7/a2-a6
 .zap
 	movem.l	(a7)+,d0/a0/a1
 	RTS

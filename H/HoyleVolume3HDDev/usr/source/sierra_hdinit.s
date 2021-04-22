@@ -26,7 +26,7 @@ slv_keyexit	= $5D	; num '*'
 
 ;============================================================================
 
-	INCLUDE	kick13.s
+	INCLUDE	whdload/kick13.s
 
 ;============================================================================
 
@@ -229,6 +229,7 @@ patch_mt32_open
     
 new_Lock
     bsr strip_colon
+    bsr _rename_mt32
     bsr _rename_file        ; must be defined by specific program
     move.l  a0,d1
     move.l  old_Lock(pc),-(a7)
@@ -237,10 +238,24 @@ new_Lock
 new_Open
     bsr strip_colon
     bsr _rename_file
+    bsr _rename_mt32
     move.l  a0,d1
     move.l  old_Open(pc),-(a7)
     rts
 
+_rename_mt32:
+    cmp.b   #'C',(9,a0)   ; RESOURCE.CFG
+    bne.b   .nores
+    cmp.b   #'F',(10,a0)
+    bne.b   .nores
+    cmp.b   #'R',(a0)
+    bne.b   .nores
+    lea .mt32resname(pc),a0
+.nores
+    rts
+.mt32resname
+    dc.b    "res_mt32.cfg",0
+        even
 strip_colon
     ; strip colon if volume name is whdload
     move.l  d1,a0

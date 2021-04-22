@@ -8,7 +8,7 @@
  CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
  PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
- This install applies to "Theme Park (AGA/ECS)" © 1991-1993 Bullfrog.
+ This install applies to "Theme Park" © 1991-1993 Bullfrog.
 
  This install requires WHDLoad to be in the path. It can be found in the
  WHDLoad package.
@@ -25,13 +25,20 @@
  an appropriate requester.
  Additionally the file "kick34005.A500.RTB" must be installed in the same
  directory as the kickstart image. It can be found in the archive 
- "util/boot/skick345.lha" on aminet.
+ "util/boot/skick346.lha" on aminet.
 
  * AGA version
 
  - requires 2.0 MB ChipMem and 1.0 MB OtherMem.
  - It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
- - The game requires an installed A1200 or A4000 Kickstart 3.1 image.
+ - same kickstart requirements as ECS version
+
+ * CD32 version
+
+ - requires 2.0 MB ChipMem and 1.0 MB OtherMem.
+ - It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+ 
+ The game requires an installed A1200 or A4000 Kickstart 3.1 image.
  The kickstart image must be located in the directory "Devs:Kickstarts" and
  must be named "kick40068.A1200" (resp kick40068.A4000). 
  The image can be extracted from a A1200 (resp A4000) with tools like 'GrabKick'
@@ -40,7 +47,7 @@
  an appropriate requester.
  Additionally the file "kick40068.A1200.RTB" (resp "kick40068.A4000.RTB")
  must be installed in the same directory as the kickstart image.
- It can be found in the archive "util/boot/skick345.lha" on aminet.
+ It can be found in the archive "util/boot/skick346.lha" on aminet.
 
  If you have problems with this installation please try and get a newer
  version of this package from the WHDLoad WWW-Page. If that doesn't help try
@@ -54,10 +61,18 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 2.1 (20.03.05)
+ version 3.0 (22.04.2021) done by JOTD
+ - support for CD32 version (issue #0001752)
+ - fixed issue #0000806
+ - fixed issue #0003024
+ - fixed a lot of incorrect patches
+ - AGA version runs on kickstart 1.3
+ - removed flashing yellow color at startup (floppy versions)
+ 
+ version 2.1 (20.03.2005)
  - slight source cleanup
 
- version 2.0 (01.05.04) done by JOTD:
+ version 2.0 (01.05.2004) done by JOTD:
  - ECS/AGA slaves fully rewritten for KickEmu / WHDLoad v16
  - install script/readme fixed
  - manual & hints included
@@ -70,3 +85,7 @@
  - empty dbf loop fixed
  - access fault fixed
  - nice icons included
+
+notes: CD32 version is supported now, but not really interesting as keyboard
+isn't enabled to enter company details. Sounds like a quick cash-in job
+(the animation is nice but is not installed to hard drive because it's 55MB+)

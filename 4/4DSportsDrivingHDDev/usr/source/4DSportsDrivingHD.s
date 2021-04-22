@@ -69,7 +69,7 @@ slv_Version	= 16
 slv_Flags	= WHDLF_NoError|WHDLF_Examine
 slv_keyexit	= $5D	; num '*'
 
-	INCLUDE	kick13.s
+	INCLUDE	whdload/kick13.s
 
 ;============================================================================
 
@@ -78,7 +78,7 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.1"
+	dc.b	"1.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -230,6 +230,8 @@ pl_main
 	PL_W	$2E77A-$6568,$9E	; fix move to intreqr
 	PL_NOP	$6D36,2		; removes protection
 
+    ;;PL_PSS  $1AFCC,cpu_dep_loop,6
+    PL_I    $1AFCC  ; temp illegal
     ; write 000x
     
     PL_PS   $28196,after_dma_write_d1
@@ -243,16 +245,49 @@ pl_main
     PL_PS   $28366,dma_write_4
     PL_PS   $283A4,dma_write_8
 
-
+    PL_PSS  $315A2,text_call,2
+    PL_PSS  $3165A,text_call,2
+    PL_PSS  $31732,text_call,2
+    PL_PSS  $33B0E,bltclear_call,2
+    PL_PSS  $34576,bltbitmap_call,4
     ; write 800x
     ;PL_PS   $28356,dma_write_8001
     ;PL_PS   $28350,dma_write_8002
     ;PL_PS   $2838E,dma_write_8004
     ;PL_PS   $283CC,dma_write_8008
     
+    ; avoid a stop channel loop that lasts too long
+    ; (and probably highly unnecessary now)
+    ; because we have added a proper delay after dma write
+    ; caused a super long wait after losing or ending the race
+    
+    PL_R    $28224
 	PL_END
 
+bltclear_call
+	JSR	_LVOBltClear(A6)	;(graphics.library)
+	MOVEA.L	8(A5),A0		;33B12: 206D0008
+    bsr wait_blit
+    rts
+bltbitmap_call
+	JSR	_LVOBltBitMap(A6)	;(graphics.library)
+	MOVEM.L	-24(A5),D4-D7/A2	;3457A: 4CED04F0FFE8
+    bsr wait_blit
+    rts
+    
+text_call
+	MOVE.L	D7,-(A7)		;315A2: 2F07
+	JSR	_LVOText(A6)	;(graphics.library)
+	MOVE.L	(A7)+,D7		;315A8: 2E1F
+    bsr wait_blit
+    rts
 
+wait_blit
+	TST.B	$BFE001
+.wait
+	BTST	#6,dmaconr+$DFF000
+	BNE.S	.wait
+    rts
     
 ; < a0: program name
 ; < a1: arguments

@@ -24,7 +24,7 @@
 	SUPER
 	ENDC
 
-;;CHIP_ONLY
+;CHIP_ONLY
 ;============================================================================
 
 ;CHIPMEMSIZE	= $180000
@@ -34,7 +34,7 @@ CHIPMEMSIZE = $100000
 FASTMEMSIZE	= $0
     ELSE
 CHIPMEMSIZE	= $80000
-FASTMEMSIZE	= $80000
+FASTMEMSIZE	= $90000    ; $80000 works but sound is crap
 BLACKSCREEN
     ENDC
 ;HRTMON
@@ -60,7 +60,7 @@ PATCH_MT32
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.0"
+	dc.b	"1.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -88,16 +88,6 @@ slv_info		dc.b	"Adapted & fixed by JOTD",10,10
 ; < A0: filename
 ; > A0: new name
 _rename_file:
-    cmp.b   #'C',(9,a0)   ; RESOURCE.CFG
-    bne.b   .nores
-    cmp.b   #'F',(10,a0)
-    bne.b   .nores
-    cmp.b   #'R',(a0)
-    bne.b   .nores
-    lea .mt32resname(pc),a0
-    move.l  a0,d1
-    rts
-.nores
     cmp.b   #'1',(a0)
     bne.b   .nopat
     cmp.b   #'.',(1,a0)
@@ -110,8 +100,6 @@ _rename_file:
     
 .nopat
     rts
-.mt32resname
-    dc.b    "res_mt32.cfg",0
 .1palname
     dc.b    "101.pat",0
     even

@@ -22,15 +22,12 @@
 	Tooltype "QuitKey=").
 	
 	
-	Soundtracker playback fixed. Drive accesses / copy protection removed.
-    Cache problem fixed. Bug not running with Kick3.1 fixed. Byte write to 
-	custom.aud1vol fixed. Highscores saving redirected to harddisk.
-	Little trainer added, press HELP in the shop (but highscores wont be
-	saved once used).
-
-
-	if you have problems with this installation please report them via
-	the WHDLoad Bug-Report-Form.
+    If you have problems with this installation please try and get a newer
+    version of this package from the WHDLoad WWW-Page. If that doesn't help try
+    some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+    that also fails, please inform the author via the Bug-Report-Form which
+    can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+    at http://mantis.whdload.de
 
 	for full WHDLoad package and other installs refer to:
 		http://www.whdload.de/
@@ -40,14 +37,14 @@
 
 	Wepl 1997/98
 
-    version 3.2 (08.05.2020):
+    version 3.2 (08.05.2020) done by JOTD:
     - fixed crash in some configs due to constant in the middle of 
       slave code (issue #0004598)
     - removed possible slowdown when loading due to joypad detection
       in some configs
     - removed 1MB chip slave which is useless
     
-    version 3.1 (03.05.2020):
+    version 3.1 (03.05.2020) done by JOTD:
     - fixed crash when using cheat key (issue #0004599)
     - providing 1MB fullchip slave (trying to fix issue #0004598)
     
@@ -85,4 +82,12 @@
 
     version 1.0 (1997/1998) by Wepl:
     - first release
+	- Soundtracker playback fixed
+    - Drive accesses / copy protection removed.
+    - Cache problem fixed
+    - Bug not running with Kick3.1 fixed
+    - Byte write to custom.aud1vol fixed
+    - Highscores saving redirected to harddisk.
+	- Little trainer added, press HELP in the shop (but highscores wont be
+	saved once used).
 

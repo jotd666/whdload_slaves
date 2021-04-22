@@ -18,7 +18,7 @@
    To install from a different drive than DF0: select Expert as
    installation mode.
 
-   You need 0.5 MB ChipMem and 1.1 MB OtherMem.
+   You need 0.5 MB ChipMem and 1.5 MB OtherMem (plus 2 MB for PRELOAD)
    You can quit the game by pressing F10 (key can be changed with
    Tooltype "QuitKey=").
 
@@ -47,6 +47,12 @@ Slave requires WHDLOAD V17+.
 Game requires 1.3 MB Chip Mem (+ 2.3 other memory for preload option)
 
 History:
+
+Version 1.8 (10.04.2021): done by JOTD
+
+- older versions actually required 1MB chip. This version really
+  requires 512k chipmem and a little fastmem
+- minor source code cleanup
 
 Version 1.7 (12.07.2020): done by JOTD
 

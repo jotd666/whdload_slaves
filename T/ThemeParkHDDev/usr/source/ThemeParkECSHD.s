@@ -15,7 +15,6 @@
 ;---------------------------------------------------------------------------*
 
 	INCDIR	Include:
-	INCDIR	osemu:
 	INCLUDE	whdload.i
 	INCLUDE	whdmacros.i
 	INCLUDE	lvo/dos.i
@@ -32,9 +31,14 @@
 	ENDC
 
 ;============================================================================
-
+;CHIP_ONLY
+    IFD CHIP_ONLY
+CHIPMEMSIZE	= $140000
+FASTMEMSIZE	= $0 
+    ELSE
 CHIPMEMSIZE	= $80000
 FASTMEMSIZE	= $C0000
+    ENDC
 NUMDRIVES	= 1
 WPDRIVES	= %0000
 
@@ -49,6 +53,7 @@ IOCACHE		= 90000
 SETPATCH
 BOOTDOS
 CACHE
+SEGTRACKER
 
 ;============================================================================
 
@@ -57,7 +62,7 @@ slv_Version	= 16
 slv_Flags	= WHDLF_NoError|WHDLF_Examine
 slv_keyexit	= $5D	; num '*'
 
-	INCLUDE	kick13.s
+	INCLUDE	whdload/kick13.s
 
 
 
@@ -68,14 +73,18 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	incbin	slave_version
+	dc.b    "3.0"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
 	ENDC
 	ENDM
 
-slv_name		dc.b	"Theme Park (ECS)",0
+slv_name		dc.b	"Theme Park (ECS)"
+    IFD CHIP_ONLY
+    dc.b    " (DEBUG/CHIP mode)"
+    ENDC    
+            dc.b    0
 slv_copy		dc.b	"1991 Bullfrog",0
 slv_info		dc.b	"adapted by JOTD",10
 		dc.b	"from Wepl excellent KickStarter 34.005",10,10
@@ -94,7 +103,7 @@ _args_end
 
 	dc.b	"$","VER: slave "
 	DECL_VERSION
-	dc.b	$A,$D,0
+	dc.b	$A,0
 
 	EVEN
 
@@ -103,7 +112,7 @@ _args_end
 	;initialize kickstart and environment
 
 _bootdos
-	move.l	(_resload),a2		;A2 = resload
+	move.l	(_resload,pc),a2		;A2 = resload
 
 	;open doslib
 		lea	(_dosname,pc),a1
@@ -116,16 +125,16 @@ _bootdos
 		move.l	a0,d1
 		jsr	(_LVOLoadSeg,a6)
 		move.l	d0,d7			;D7 = segment
-		beq	.end
+		beq	_end
 
 		clr.l	$0.W			; fix kickemu problem
 
 		move.l	d7,a5
+		bsr	_patch_exe
+
 		add.l	a5,a5
 		add.l	a5,a5
 		addq.l	#4,a5
-		bsr	_patch_exe
-
 
 	;call
 		lea	(_args,pc),a0
@@ -139,22 +148,34 @@ _bootdos
 	;remove exe
 		move.l	d7,d1
 		jsr	(_LVOUnLoadSeg,a6)
-
+_quit
 		pea	TDREASON_OK
 		jmp	(resload_Abort,a2)
 
-.end		moveq	#0,d0
-		rts
+_end	jsr	(_LVOIoErr,a6)
+	move.l	a3,-(a7)
+	move.l	d0,-(a7)
+	pea	TDREASON_DOSREAD
+	move.l	(_resload,pc),-(a7)
+	add.l	#resload_Abort,(a7)
+	rts
 
 _patch_exe
 	move.l	_resload(pc),a2
 	lea	_pl_main(pc),a0
 	move.l	a5,a1
-	jsr	resload_Patch(a2)
+	jsr	resload_PatchSeg(a2)
 
 	rts
 
-
+_keyboard_hook
+	MOVE.W	D0,D1			;56478: 3200
+	NOT.B	D1			;5647a: 4601
+	ROR.B	#1,D1			;5647c: e219
+    cmp.b   _keyexit(pc),d1
+    beq _quit
+    rts
+    
 _set_intena:
 	bsr	_flushcache
 	move.w	#$8020,$DFF09A
@@ -176,6 +197,7 @@ _pl_main:
 	PL_PS	$4ACAE,_avoid_af	; avoid access fault (actually read in $0)
 	PL_P	$4A9B4,_set_intena	; avoid SMC in JMP
 	PL_PS	$4B286,_emulate_dbf	; fix infinite loop
+    PL_PS   $4A57C,_keyboard_hook
 	PL_END
 
 

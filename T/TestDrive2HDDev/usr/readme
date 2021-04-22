@@ -8,7 +8,7 @@
  CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
  PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
- This install applies to "Test Drive II - The Duel" © 1991 Accolade.
+ This install applies to "Test Drive 2 - The Duel" © 1991 Accolade.
  You can also install level disks and car disks.
  
  This install requires WHDLoad to be in the path. It can be found in the
@@ -48,6 +48,10 @@ Thanks go to:
 - Toni Wilen (WinUAE) for expert advice & WinUAE, the only program that justifies using Windows
 
 History:
+
+ version 1.5 (31.03.2021) done by JOTD:
+ - added keyboard controls (issue #0004770)
+ - added trainer: infinite lives
 
  version 1.4 (21.02.2020) done by JOTD:
  - another version supported (issue #0004372). Note that this version doesn't have speed regulation

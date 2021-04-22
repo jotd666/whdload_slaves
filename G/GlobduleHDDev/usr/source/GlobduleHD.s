@@ -68,6 +68,7 @@ _expmem
 _config
     dc.b    "C1:X:Trainer Infinite Lives:0;"
     dc.b    "C1:X:Trainer Infinite Energy:1;"
+    dc.b    "C1:X:Trainer help skips levels:2;"
 	dc.b	0
 
 ;============================================================================
@@ -78,7 +79,7 @@ _config
 
 
 DECL_VERSION:MACRO
-	dc.b	"2.0"
+	dc.b	"2.1-B"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -121,6 +122,10 @@ start	;	A0 = resident loader
 		move.l	a0,(a1)			;save for later use
 
         bsr _detect_controller_types
+		
+		move.l	_resload(pc),a2
+		lea	(_tag,pc),a0
+		jsr	(resload_Control,a2)
         
 		lea	$100.w,A0
 		moveq	#0,D0
@@ -129,7 +134,6 @@ start	;	A0 = resident loader
 		bsr.w	_LoadDisk
 
 		move.l	#$400,D0
-		move.l	_resload(pc),a2
 		jsr	resload_CRC16(a2)
 
 		cmp.w	#$7F78,D0
@@ -222,7 +226,7 @@ pl_main
 
 
 patch1
-	movem.l	d0-d1/a0-a4,-(a7)
+	movem.l	d0-d2/a0-a4,-(a7)
 	bsr	get_expmem
     lea borrowed_code(pc),a3
 	move.l	_resload(pc),a2
@@ -233,11 +237,13 @@ patch1
 .pal
     move.l  #PAL_HI_OFFSET,d1
     add.l   #$204e,d0
+	move.l	#$F3AE,d2
 	lea	pl_pal(pc),a0
 	bra.b	.do
 .ntsc
     move.l  #NTSC_HI_OFFSET,d1
     add.l   #$209c,d0
+	move.l	#$f422,d2
 	lea	pl_ntsc(pc),a0
 .do
     bsr load_hiscores
@@ -246,11 +252,15 @@ patch1
 .copy
     move.b  (a4)+,(a3)+
     dbf d0,.copy
-    
+   
 	bsr	get_expmem	
+	add.l	d0,d2
+	lea	level_flag_address(pc),a1
+	move.l	d2,(a1)
 	move.l	d0,a1
+
 	jsr	resload_Patch(a2)
-	movem.l	(a7)+,d0-d1/a0-a4
+	movem.l	(a7)+,d0-d2/a0-a4
 
 	move.l	$1512.w,a0
 	jmp	(a6)
@@ -293,8 +303,13 @@ load_hiscores
     ; pal lives 0008F443=0030 00091FC3=0030 00092047=0030
 pl_pal
 	PL_START
-    PL_NOP  $104C,6         ; skip manual protection
-	;PL_W	$299C,$6034		; all protection codes work
+    ; skip manual protection but no password at end of level 1!!!    
+    ;;PL_NOP  $104C,6
+    ;;PL_NOP  $2986,4         ; no wait for password
+
+    ; show protection
+	PL_W	$299C,$6034		; all protection codes work
+
 	PL_PS   $2030,kb_hook
     PL_PSS  $1ece,vbl_hook,2
     PL_PS   $733e,test_fire
@@ -315,8 +330,10 @@ pl_pal
 
 pl_ntsc
 	PL_START
-    PL_NOP  $104C,6         ; skip manual protection
-	;PL_W	$29EA,$6034		; all protection codes work
+    ; skip manual protection screen, no password at end of level 1!!!    
+    ; so we can't do this
+    ;;PL_NOP  $104C,6         
+	PL_W	$29EA,$6034		; all protection codes work
 	PL_R	$1130			; skip country check
 	PL_PS   $207e,kb_hook
     PL_PSS  $1f1c,vbl_hook,2
@@ -401,13 +418,24 @@ vbl_hook
     
     
 kb_hook:
-    movem.l d1,-(a7)
+    move.l d1,-(a7)
     ror.b   #1,d1
     not.b   d1
+	
     cmp.b   _keyexit(pc),d1
     beq.b   _quit
-
-    movem.l (a7)+,d1
+    cmp.b   #$5F,d1
+    bne.b	.nolskip
+	move.l	trainer(pc),d1
+	btst	#2,d1
+	beq.b	.nolskip
+	; skip level
+	move.l	a0,-(a7)
+	move.l	level_flag_address(pc),a0
+	move.l	#$FFFF0001,(a0)	; end level + completed
+	move.l	(a7)+,a0
+.nolskip:
+    move.l (a7)+,d1
     MOVE.B	#$40,3584(A0)
     rts
 
@@ -601,6 +629,12 @@ _flushcache:
 	rts
 hiscores_address
         dc.l    0
+_tag		dc.l	WHDLTAG_CUSTOM1_GET
+trainer	dc.l	0
+
+		dc.l	0
+level_flag_address
+			dc.l	0
 highscores:
     dc.b    "Globdule.high",0
     

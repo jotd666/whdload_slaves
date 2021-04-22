@@ -14,13 +14,12 @@
 ;---------------------------------------------------------------------------*
 
 	INCDIR	Include:
-	INCDIR	osemu:
 	INCLUDE	lvo/dos.i
 	INCLUDE	lvo/exec.i
 	INCLUDE	whdload.i
 	INCLUDE	whdmacros.i
 
-;DEBUG
+;CHIP_ONLY
 
 	IFD BARFLY
 	OUTPUT	"AnotherWorld.Slave"
@@ -35,7 +34,7 @@
 
 ;============================================================================
 
-	IFND	DEBUG
+	IFND	CHIP_ONLY
 CHIPMEMSIZE	= $80000
 FASTMEMSIZE	= $80000
 BLACKSCREEN
@@ -55,7 +54,8 @@ HDINIT
 ;MEMFREE	= $100
 ;NEEDFPU
 ;SETPATCH
-
+CBDOSREAD
+SEGTRACKER
 ;============================================================================
 
 
@@ -63,26 +63,34 @@ slv_Version	= 16
 slv_Flags	= WHDLF_NoError|WHDLF_Examine
 slv_keyexit	= $5D	; num '*'
 
-	INCLUDE	kick13.s
-
+	INCLUDE	whdload/kick13.s
+IGNORE_JOY_DIRECTIONS    
+    INCLUDE ReadJoyPad.s
+    
 ;============================================================================
 
+	IFD BARFLY
 	IFND	.passchk
 	DOSCMD	"WDate  >T:date"
 .passchk
 	ENDC
-
+    ENDC
+    
 DECL_VERSION:MACRO
-	dc.b	"2.4"
+	dc.b	"2.6"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
+	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
 	ENDC
 	ENDM
 
 	dc.b	"$","VER: slave "
 	DECL_VERSION
-	dc.b	$A,$D,0
+	dc.b	$D,0
 
 slv_name		dc.b	"Another World",0
 slv_copy		dc.b	"1991 Delphine Software",0
@@ -106,13 +114,18 @@ _program:
 	;initialize kickstart and environment
 
 
-_bootdos	move.l	(_resload),a2		;A2 = resload
+_bootdos	move.l	(_resload,pc),a2		;A2 = resload
 
+    bsr get_version
+    bsr _detect_controller_types
+    
+    
 	;open doslib
 		lea	(_dosname,pc),a1
 		move.l	(4),a6
 		jsr	(_LVOOldOpenLibrary,a6)
 		move.l	d0,a6			;A6 = dosbase
+
 
 	;load exe
 		lea	_program(pc),a0
@@ -122,9 +135,12 @@ _bootdos	move.l	(_resload),a2		;A2 = resload
 		beq	.end
 
 	;patch
-
-	bsr	_patchexe
-	bsr	_flushcache
+		move.l	d7,a1
+		add.l	a1,a1
+		add.l	a1,a1
+        addq.l  #4,a1
+        
+        bsr	_patchexe
 
 	;call
 		move.l	d7,a1
@@ -144,67 +160,206 @@ _bootdos	move.l	(_resload),a2		;A2 = resload
 	;remove exe
 		move.l	d7,d1
 		jsr	(_LVOUnLoadSeg,a6)
-
-		pea	TDREASON_OK
-		jmp	(resload_Abort,a2)
-
-.end		
+        bra.b _quit
+.end
 	jsr	(_LVOIoErr,a6)
 	move.l	a3,-(a7)
 	move.l	d0,-(a7)
 	pea	TDREASON_DOSREAD
+    
 	move.l	(_resload,pc),-(a7)
 	add.l	#resload_Abort,(a7)
 	rts
-
-_patchexe:
-	movem.l	D0-A6,-(A7)
-	add.l	d7,d7
-	add.l	d7,d7
-	move.l	D7,A1
-	LEA.L	$7F00(A1),A0
-
-.2	MOVE.W	(A1),D0
-	AND.W	#$F1FF,D0
-	CMP.W	#$3039,D0
-	BNE.S	.1
-	MOVE.L	6(A1),D0
-	AND.L	#$FFF8FFFF,D0
-	CMP.L	#$51C8FFFE,D0
-	BNE.S	.1
-
-	MOVE.L	2(A1),6(A1)
-	move.w	#$4EB9,(A1)
-	pea	TIME(pc)
-	move.l	(A7)+,2(A1)
-
-.1	ADDQ.W	#2,A1
-	CMP.L	A0,A1
-	BLO.S	.2
+_quit
+		pea	TDREASON_OK
+        move.l  _resload(pc),a2
+		jmp	(resload_Abort,a2)
 
 
-	; jotd
+get_version:
+	movem.l	d1/a1,-(a7)
+	lea	_program(pc),A0
+	move.l	_resload(pc),a2
+	jsr	resload_GetFileSize(a2)
 
-	move.l	D7,A0
-	LEA.L	$7F00(A0),A1
-	lea	.code_entered(pc),a2
-	moveq	#6,d0
-	bsr	_hexsearch
-	cmp.l	#0,a0
-	beq.b	.sk
-	
-	move.w	#$4EB9,(a0)+
-	pea	enter_code_test(pc)
-	move.l	(a7)+,(a0)
-.sk
+	cmp.l	#28896,D0       ; fr/kixx/us
+	beq.b	.ok
 
-	movem.l	(a7)+,D0-A6
+	cmp.l	#28964,d0
+	beq.b	.ok
+	cmp.l	#28948,d0       ; sps 2377
+	beq.b	.ok
 
+	pea	TDREASON_WRONGVER
+	move.l	_resload(pc),-(a7)
+	addq.l	#resload_Abort,(a7)
 	rts
+.ok
+     lea    _progsize(pc),a0
+     move.l d0,(a0)
+	 movem.l	(a7)+,d1/a1
+     rts
+     
+_patchexe
+    ; install vbl hook which counts vblank
+    ; and also reads controllers
+    lea old_level3_interrupt(pc),a0
+    move.l  $6C.W,(a0)
+    lea new_level3_interrupt(pc),a0
+    move.l  a0,$6C.W
 
-.code_entered
-	dc.l	$B83C0033
-	dc.w	$6700
+    move.l  _progsize(pc),d0
+    cmp.l   #28948,d0
+    beq.b   .fr_2377
+    cmp.l   #28896,d0
+    bne.b   .uk
+    move.w  $3E(a1),d0
+    cmp.w   #$66FE,d0
+    beq.b   .fr
+    ; us
+    lea pl_us(pc),a0
+    bra.b   .patch
+.fr_2377
+    lea pl_fr_2377(pc),a0
+    bra.b   .patch
+.fr
+    lea pl_fr(pc),a0    ; kixx is identical
+    bra.b   .patch
+.uk
+    lea pl_uk(pc),a0
+.patch    
+    jsr resload_Patch(a2)
+    rts
+    
+pl_fr
+    PL_START
+    PL_PSS  $4bf8-6,dma_delay,4
+    PL_PSS  $4c24-6,dma_delay,4
+    PL_PSS  $5000-6,dma_delay,4
+    PL_PSS  $5170-6,dma_delay,4
+    PL_PSS    $3820,wait_blit,2
+    PL_PSS    $3e72,wait_blit,2
+    PL_PSS    $3fc0,wait_blit,2
+    PL_END
+pl_fr_2377
+    PL_START
+    PL_PSS  $4c38-6,dma_delay,4
+    PL_PSS  $4c64-6,dma_delay,4
+    PL_PSS  $5036-6,dma_delay,4
+    PL_PSS  $51a6-6,dma_delay,4
+    
+    PL_PSS    $386e,wait_blit,2
+    PL_PSS    $3ec0,wait_blit,2
+    PL_PSS    $400e,wait_blit,2
+    PL_END
+
+pl_uk
+    PL_START
+    PL_PSS  $4c48-6,dma_delay,4
+    PL_PSS  $4c74-6,dma_delay,4
+    PL_PSS  $5046-6,dma_delay,4
+    PL_PSS  $51b6-6,dma_delay,4
+    PL_PSS    $3872,wait_blit,2
+    PL_PSS    $3ec4,wait_blit,2
+    PL_PSS    $4012,wait_blit,2
+    PL_END
+pl_us
+    PL_START
+    PL_PSS  $4bf8-6,dma_delay,4
+    PL_PSS  $4c24-6,dma_delay,4
+    PL_PSS  $5000-6,dma_delay,4
+    PL_PSS  $5170-6,dma_delay,4
+    PL_PSS    $3824,wait_blit,2
+    PL_PSS    $3e76,wait_blit,2
+    PL_PSS    $3fc4,wait_blit,2
+    PL_END
+    
+TEST_BUTTON:MACRO
+    btst    #JPB_BTN_\1,d1
+    beq.b   .nochange_\1
+    move.b  #\2,d3
+    btst    #JPB_BTN_\1,d0
+    bne.b   .pressed_\1
+    bset    #7,d3   ; released
+.pressed_\1
+
+    not.b   d3
+    rol.b   #1,d3
+    move.b  d3,$bfec01 ; store keycode
+.nochange_\1
+    ENDM
+   
+    
+wait_blit
+	TST.B	$BFE001
+.wait
+	BTST	#6,dmaconr+$DFF000
+	BNE.S	.wait
+	rts
+; just keycode
+new_level3_interrupt
+    movem.l d0-d3/a0-a1,-(a7)
+    move.w  _custom+intreqr,d0
+    btst    #5,d0
+    beq   .novbl
+    bsr vblank
+.novbl    
+    movem.l (a7)+,d0-d3/a0-a1
+    move.l  old_level3_interrupt(pc),-(a7)
+    rts    
+    
+    
+vblank
+    movem.l a0-a1/d0-d1/d3,-(a7)
+    ; vblank interrupt, read joystick/mouse
+    lea counter(pc),a1
+	ADDQ.b	#1,(A1)
+    move.b  (a1),d0     ; read every 40ms
+    btst    #0,d0
+    beq   .nochange
+    lea prev_buttons_state(pc),a0
+    move.l  (a0),d1     ; get previous state
+	moveq	#1,d0
+	bsr	_read_joystick
+    ; xor to d1 to get what has changed quickly
+    eor.l   d0,d1
+    beq.b   .nochange   ; cheap-o test just in case no input has changed
+    move.l  d0,(a0)     ; save previous state for next time
+    ; now D0 is current joypad state
+    ;     D1 is previous joypad state
+    ; d1 bears changed bits (buttons pressed/released)
+    btst    #JPB_BTN_REVERSE,d0
+    beq.b   .noquit
+    btst    #JPB_BTN_FORWARD,d0
+    beq.b   .noquit
+    btst    #JPB_BTN_YEL,d0
+    bne _quit
+.noquit    
+    ;TEST_BUTTON REVERSE,$4A
+    ;TEST_BUTTON FORWARD,$5E
+    TEST_BUTTON BLU,$33     ; 'C'
+    TEST_BUTTON GRN,$21     ; 'S' sound on/off
+    TEST_BUTTON PLAY,$19     ; pause
+.nochange
+    movem.l (a7)+,a0-a1/d1-d0/d3
+	RTS				;585c: 4e75
+
+dma_delay
+	move.w  d0,-(a7)
+	move.w	#4,d0   ; make it 7 if still issues
+.bd_loop1
+	move.w  d0,-(a7)
+    move.b	$dff006,d0	; VPOS
+.bd_loop2
+	cmp.b	$dff006,d0
+	beq.s	.bd_loop2
+	move.w	(a7)+,d0
+	dbf	d0,.bd_loop1
+	;;;addq.l	#2,(a7)  harmful if not used with PSS!!
+	move.w	(a7)+,d0
+	rts 
+
+    
 
 enter_code_test
 	movem.l	d0/a0,-(a7)
@@ -225,7 +380,7 @@ enter_code_test
 .enter_code
 	ext.l	d0
 	add.l	d0,8(a7)	; perform BEQ	
-	bra.b	.out
+	bra	.out
 .nothing	
 	addq.l	#2,8(a7)	; skip rest of BEQ
 .out
@@ -254,46 +409,15 @@ PATCHTIME
 	DBF	D1,.4
 	RTS
 
-
-;< A0: start
-;< A1: end
-;< A2: bytes
-;< D0: length
-;> A0: address or 0 if not found
-
-_hexsearch:
-	movem.l	D1/D3/A1-A2,-(A7)
-.addrloop:
-	moveq.l	#0,D3
-.strloop:
-	move.b	(A0,D3.L),D1	; gets byte
-	cmp.b	(A2,D3.L),D1	; compares it to the user string
-	bne.b	.notok		; nope
-	addq.l	#1,D3
-	cmp.l	D0,D3
-	bcs.b	.strloop
-
-	; pattern was entirely found!
-
-	bra.b	.exit
-.notok:
-	addq.l	#1,A0	; next byte please
-	cmp.l	A0,A1
-	bcc.b	.addrloop	; end?
-	sub.l	A0,A0
-.exit:
-	movem.l	(A7)+,D1/D3/A1-A2
-	rts
-
 ; < d1 - file pos
 ; < a0 - name
 ; < a1 - buffer
 
 _cb_dosRead
 	cmp.b	#'1',5(a0)
-	bne.b	.out
+	bne	.out
 	cmp.b	#'0',4(a0)
-	bne.b	.out
+	bne	.out
 
 ;	cmp.l	#$1A000,d1
 ;	bcs.b	.out
@@ -303,7 +427,7 @@ _cb_dosRead
 	cmp.l	#$1B5EE,d1	; protection load
 	beq.b	.prot
 
-	bra.b	.out
+	bra	.out
 .prot
 	move.l	a2,-(a7)
 
@@ -343,7 +467,7 @@ _cb_dosRead
 	move.b	#$0A,(a2)+
 	move.b	#$9E,(a2)
 
-	bra.b	.skip
+	bra	.skip
 
 .v1
 	; version 1 (french)
@@ -361,7 +485,7 @@ _cb_dosRead
 	move.b	#$09,(a2)+
 	move.b	#$f1,(a2)
 
-	bra.b	.skip
+	bra	.skip
 
 .skip
 	; cracked versions or unsupported originals
@@ -372,7 +496,14 @@ _cb_dosRead
 .out
 
 	rts
-
+counter
+    dc.w    0
+_progsize
+    dc.l    0
+prev_buttons_state
+        dc.l    0
+old_level3_interrupt        
+        dc.l    0
 ;============================================================================
 
 	END

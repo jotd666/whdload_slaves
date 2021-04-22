@@ -24,7 +24,7 @@
  an appropriate requester.
  Additionally the file "kick34005.A500.RTB" must be installed in the same
  directory as the kickstart image. It can be found in the archive 
- "util/boot/skick345.lha" on aminet.
+ "util/boot/skick346.lha" on aminet.
 
 
  If you have problems with this installation please try and get a newer
@@ -39,24 +39,33 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 2.4 (18.03.06)
+ version 2.6 (19.04.2021) done by JOTD:
+ - reinstated support for another french version (SPS2377)
+ 
+ version 2.5 (18.04.2021) done by JOTD:
+ - added joypad controls (also fixes issue #0005136)
+ - fixed blitterwaits
+ - added level codes (thanks Pascal)
+ - added french solution (thanks Pascal)
+ 
+ version 2.4 (18.03.2006)
  - left mouse button and 2nd/blue joystick button can be used
    alongside to "C" to enter a code (useful for those CD³² compilations :))
 
- version 2.3 (15.02.06)
+ version 2.3 (15.02.2006)
  - adapted to WHDLoad v16
 
- version 2.2 (30.06.03)
+ version 2.2 (30.06.2003)
  - support for Kixx version (and restored support for all cracked versions
    that I had broken since v2.0)
  - reworked install script so US version may be installed as "OutOfThisWorld"
  - source code included
  - included excellent Out Of This World icons by Frank
 
- version 2.1 (01.05.03) done by JOTD
+ version 2.1 (01.05.2003) done by JOTD
  - added US (Interplay) version support (originally supported by old patch)
 
- version 2.0 (01.02.03) done by JOTD/Harry
+ version 2.0 (01.02.2003) done by JOTD/Harry
  - reworked for Kick 1.3 (OSEmu no longer used)
  - reworked install script (no need for the Patcher anymore)
  - use of fast memory & caches
@@ -72,3 +81,29 @@
  - protection removed (at install time)
  - empty dbf loops fixed
  - uses brand new (at the time) OSEmu by Harry
+
+joypad controls:
+
+- blue/second button: enter code
+- green: toggle sound
+- play: pause
+- forward+backward+yellow: quit to wb
+
+level codes:
+
+LEVEL 1  : EDJI
+LEVEL 2  : HICI
+LEVEL 3  : FLLD
+LEVEL 4  : EDIL
+LEVEL 5  : FADK
+LEVEL 6  : LDCI
+LEVEL 7  : ICAH
+LEVEL 8  : LDIJ
+LEVEL 9  : LALD
+LEVEL 10 : KJIA
+LEVEL 11 : LFEK
+LEVEL 12 : FLAK
+LEVEL 13 : LAEA
+LEVEL 14 : FIEI
+LEVEL 15 : GABK
+LEVEL 16 : KCGB

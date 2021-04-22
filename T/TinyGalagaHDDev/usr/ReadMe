@@ -27,8 +27,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 1.0-B (xx.02.2021):
+ version 1.1 (22.04.2021):
  - icon by DanyPPC
+ - version bump (fixes issue #0005143)
 
  version 1.0 (07.02.2021) done by JOTD:
  - OS stuff skipped

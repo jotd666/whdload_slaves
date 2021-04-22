@@ -26,7 +26,7 @@
 ;        JPB_BTN_BLU	= $17
 ; < d1.l = raw joy[01]dat value read from input port
 ;
-POTGO_RESET = $FF00
+
 	IFND	EXEC_TYPES_I
 	INCLUDE	exec/types.i
 	ENDC
@@ -88,7 +88,7 @@ _detect_controller_types:
 	beq.b	.wait
 	rts
 .detect
-		movem.l	d1-d5/a0-a1,-(a7)
+		movem.l	d1-d6/a0-a1,-(a7)
 	
 		tst.l	d0
 		bne.b	.port1
@@ -96,11 +96,13 @@ _detect_controller_types:
 		moveq	#CIAB_GAMEPORT0,d3	; red button ( port 0 )
 		moveq	#10,d4			; blue button ( port 0 )
 		move.w	#$f600,d5		; for potgo port 0
+		moveq	#joy0dat,d6		; port 0
 		bra.b	.buttons
 .port1
 		moveq	#CIAB_GAMEPORT1,d3	; red button ( port 1 )
 		moveq	#14,d4			; blue button ( port 1 )
 		move.w	#$6f00,d5		; for potgo port 1
+		moveq	#joy1dat,d6		; port 1
 
 .buttons
 		lea	$DFF000,a0
@@ -137,40 +139,42 @@ _detect_controller_types:
 .gamecont5	dbf	d1,.gamecont3
 
 		bclr	d3,ciaddra(a1)		;set bit to in at ciapra
-		move.w	#POTGO_RESET,potgo(a0)	;changed from ffff to ff00, according to robinsonb5@eab
+		move.w	#$ff00,potgo(a0)	;changed from ffff, according to robinsonb5@eab
 		
 		or.b	#$C0,ciapra(a1)	;reset port direction
 
 		; test only last bits
 		and.w	#03,D0
 		
-		movem.l	(a7)+,d1-d5/a0-a1
+		movem.l	(a7)+,d1-d6/a0-a1
 		rts
-		
-_joystick:
+	
+; reads both joysticks buttons and store the values in joy0/joy1
+; all registers are preserved
 
-;	moveq	#0,d0
-;	bsr	_read_joystick
-;
-;		movem.l	a0,-(a7)	; put input 0 output in joy0
-;		lea	joy0(pc),a0
-;		move.l	d0,(a0)		
-;		movem.l	(a7)+,a0
-		
-    movem.l	d0-d1/a0,-(a7)	; put input 1 output in joy1
+_read_joysticks_buttons:
+	; save D1 cos it'll be overwritten by the directions, that
+	; we don't care about
+	IFND	IGNORE_JOY_DIRECTIONS
+	movem.l	d1,-(a7)
+	ENDC
+	movem.l	d0/a0,-(a7)
+	moveq	#0,d0
+	bsr	_read_joystick
+
+	lea	joy0_buttons(pc),a0
+	move.l	d0,(a0)		
 
 	moveq	#1,d0
 	bsr	_read_joystick
 
-
-		lea	joy1(pc),a0
-		move.l	d0,(a0)		
+	lea	joy1_buttons(pc),a0
+	move.l	d0,(a0)		
 	
-		;lea	potgo(pc),a0
-		;move.w	#$ffff,a0
-
-		movem.l	(a7)+,d0-d1/a0
-
+	movem.l	(a7)+,d0/a0
+	IFND	IGNORE_JOY_DIRECTIONS
+	movem.l	(a7)+,d1
+	ENDC
 	rts	
 
 _read_joystick:
@@ -302,9 +306,8 @@ _read_joystick:
 
 ;==========================================================================
 
-joy0		dc.l	0		
-joy1		dc.l	0
-
+joy0_buttons		dc.l	0		
+joy1_buttons		dc.l	0
 controller_joypad_0:
 	dc.b	$FF	; set: joystick 0 is a joypad, else joystick
 controller_joypad_1:

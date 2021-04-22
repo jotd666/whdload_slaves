@@ -38,6 +38,11 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 1.2 (21.03.2021) done by JOTD:
+ - long delay when ending a race removed (side effect
+   of music fix) (issue #0005034)
+ - fixed graphical errors on displayed texts
+   
  version 1.1 (09.09.2020)
  - music properly fixed (issue #004800)
  - enabled caches everywhere so Vampire and other non MMU

@@ -33,7 +33,7 @@
 
     )
     (
-
+       ; AGA
       (set #AD_disk "TP1")
       (P_disk)
       (copyfiles
@@ -70,6 +70,40 @@
       (run ("cd \"%s\"\nxfdDecrunch park" #dest))
 
     )
+    (
+       ; CD32
+      (set #AD_disk "Theme Park")
+      (P_disk)
+      (copyfiles
+        (help @copyfiles-help)
+        (source ("%s:" #AD_disk))
+        (dest #dest)
+        (pattern "main")
+      )
+        (set #data (tackon #dest "data"))
+        (makedir #data
+          (help @makedir-help)
+          (infos)
+        )     
+        (makedir (tackon #data "incdata")
+          (help @makedir-help)
+          (infos)
+        )     
+        
+      (copyfiles
+        (help @copyfiles-help)
+        (source ("%s:data" #AD_disk))
+        (dest (tackon #dest "data"))
+        (pattern "~(incdata)")
+      )
+     (copyfiles
+       (help @copyfiles-help)
+       (source ("%s:data/incdata" #AD_disk))
+       (dest (tackon #data "incdata"))
+       (pattern "~(zzz.cdxl)")
+     )
+
+    )    
   )
 )
 
@@ -238,13 +272,14 @@
     (askchoice
       (prompt ("Which version of %s do you like to install?" @app-name))
       (default 0)
-      (choices "ECS" "AGA")
+      (choices "ECS" "AGA" "CD32")
       (help @askchoice-help)
     )
   )
 
 (select #version
 (set #chiptype "ECS")
+(set #chiptype "AGA")
 (set #chiptype "AGA")
 )
 

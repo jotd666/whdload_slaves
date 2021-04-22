@@ -1,0 +1,82 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "California Games" © 1988 Epyx/Westwood Associates
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ Thanks to Angus Manwaring for sending the original!
+ 
+ REQUIREMENTS:
+ - Slave requires WHDLoad V16+ and an installed A500 Kickstart 1.3 image
+ - Game requires 512k chip mem and 512k other mem (+1.1Mb other memory for
+   preload option)
+ 
+ History:
+ 
+ Version 1.1 (20.04.2021) done by JOTD:
+ - reassembled with new kickemu, fixes 68000/68010 crash (issue #0005137)
+ - uses fastmem and only 512kb chipmem
+ - readme reworked
+ - source code included
+
+ Version 1.0 (21.12.2003) done by Codetapper:
+ - Full load from HD
+ - Copy protection removed (Herndon HLS Duplication/encryption/disk check x2)
+ - Loads and saves best scores
+ - 2 versions supported (original and quartex crack)
+ - Manual included
+ - RomIcon, NewIcon and OS3.5 Colour Icons (created by me!) and 2 Exoticons
+   (taken from http://exotica.fix.no)
+ - Quit option (default key is 'F10')
+ 
+ Yet another Herndon protected game bites the dust!  Ben Herndon must have
+ had a few complaints from people about his copy protection failing on newer
+ Amigas and so adjusted it slightly.  Between the loops of self modifying
+ code he setup an $800 byte area of nop's which was called to try and knock
+ out the prefetch and cache problems.  I imagine that it still would have
+ failed on 040/060 Amigas due to the large cache size but it should now work
+ on all Amigas!  To try and be clever he also encrypted the game twice
+ instead of the usual once!
+ 
+ There are a couple of graphical glitches in the game - the surfer has a
+ missing line down the middle when facing left and the woman that catches
+ the frisbee in the flying disk event is not correctly drawn all the time.
+ You will just have to live with these problems! I believe they are related
+ to changes in sprites on AGA machines.
+ 
+ You must have a registered version of WHDLoad to play this game!
+ 
+ If you have an unmodified version of this game with a blank high score
+ table please contact me as I would like to include clean scores in the
+ install!
+ 
+ Thanks to Angus for the original, Captain^HIT and Angus for testing, Wepl
+ for the superb Kickstart 1.3 interface, all Action members and the WHDLoad
+ team!  Happy new year everyone!
+
+
+Codetapper (31-Dec-2003)
+
+
+         Bug report form, full WHDLoad package and other installs:
+                          http://www.whdload.de/
+
+            ________  ________  ________  ____  ________  ________
+           _)       \_)       \_)       \_)   \_)       \_)       \
+   __ ___ /___/     /   /_____/\  /     /     /   /     /   /     /
+  /_//__// \___    /   /     /CT\/     /     /   /     /   /     /
+        /___/     /___      /   /     /_____/___      /___/     /___ __
+            \____/    \____/    \____/          \____/    \____//__//_/
+
+
+           Visit the Codetapper website for more of our productions:
+                           http://codetapper.com

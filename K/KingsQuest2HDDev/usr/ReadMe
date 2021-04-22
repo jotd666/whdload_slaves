@@ -39,6 +39,10 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 2.0 (27.03.2021):
+ - rewritten to use real files, got rid of diskimages and hacks
+ - 3 versions supported
+ 
  version 1.3 (24.07.2016):
  - adapted to whdload v16
  - fixed issue #0003487 on 68000 machines
@@ -65,11 +69,9 @@
  - solution included
  - source code included
 
- notes:
- 
- - since original version has no startup sequence, and the game fails inexplicably
-   but if there is one, installer script asks you if you want to modify your 
-   original disk. If you don't want to, use a backup to install, and answer
-   yes, or the install will quit.
-   Best way to do it is to mount a FMS disk, copy the original disk there, then
-   install from the FMS virtual floppy.
+
+supported versions:
+
+SPS520: unprotected, standard files
+SPS2126: unprotected (exactly the same as 520, with a startup-sequence)
+SPS: HLS disk protected, install procedure is different with diskimaging+unadf

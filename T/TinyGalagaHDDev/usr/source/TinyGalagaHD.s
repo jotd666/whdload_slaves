@@ -52,10 +52,14 @@ _expmem		dc.l	EXPMEM			;ws_ExpMem
 
 
 DECL_VERSION:MACRO
-	dc.b	"1.0"
+	dc.b	"1.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
+	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
 	ENDC
 	ENDM
 	

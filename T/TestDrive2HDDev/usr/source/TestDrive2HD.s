@@ -57,7 +57,7 @@ CBDOSLOADSEG
 ;============================================================================
 
 
-slv_Version	= 16
+slv_Version	= 17
 slv_Flags	= WHDLF_NoError|WHDLF_Examine
 slv_keyexit	= $5D	; num '*'
 
@@ -72,7 +72,7 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.4"
+	dc.b	"1.5"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -85,12 +85,15 @@ DECL_VERSION:MACRO
 
 _tdboot
 	dc.b	"tdboot",0
+slv_config
+	dc.b    "C1:X:trainer infinite lives:0;"	
+	dc.b	0
 
 slv_name		dc.b	"Test Drive II"
 	IFD	CHIP_ONLY
 	dc.b	" (chip only)"
 	ENDC
-	dc.l	0
+	dc.b	0
 slv_copy		dc.b	"1989 Accolade",0
 slv_info		dc.b	"adapted by JOTD",10
 		dc.b	"from Wepl excellent KickStarter 34.005",10,10
@@ -253,6 +256,13 @@ beamdelay
 
 _bootdos	move.l	(_resload,pc),a2		;A2 = resload
 
+        lea    old_kbint(pc),a1
+        lea kbint_hook(pc),a0
+        cmp.l   (a1),a0
+        beq.b   .done
+        move.l  $68.W,(a1)
+        move.l  a0,$68.W
+.done
 
 	;open doslib
 		lea	(_dosname,pc),a1
@@ -330,10 +340,6 @@ _patchexe:
 	movem.l	(a7)+,d0-a6
 	rts
 
-.prot1:
-	dc.l	$584F6626,$41EC81E8
-.prot2:
-	dc.l	$584F6732,$0C6D0003
 
 get_version:
 	movem.l	a0,-(a7)
@@ -371,6 +377,19 @@ pl_main_v1
 ;	PL_PS	$0016BE,sync_dot_fade_1	; works but too scattered
 	PL_PS	$0016C8,sync_dot_fade_2
 	PL_P	$00588A,set_copper
+    
+    ; keyboard support
+	PL_PS	$001A1A,read_joydat
+	PL_PS	$00EAA2,read_joydat
+    
+    PL_PS   $001A02,read_fire1
+    PL_PSS  $00EA8E,read_fire2,2
+    
+    PL_IFC1X    0
+    ;PL_W    $59B6,10   ; start with 10 lives
+    PL_NOP  $005D0E,4
+    PL_ENDIF
+
 	PL_END
 	
 pl_main_v2
@@ -383,7 +402,83 @@ pl_main_v2
 	
 ;;	PL_PS	$005CBA+$010468,sync_dot_fade_2
 	PL_P	$004654,set_copper
+
+    ; keyboard support
+	PL_PS	$000C78,read_joydat
+	PL_PS	$00D976,read_joydat 
+
+    PL_PS   $000C60,read_fire1
+    PL_PSS  $00D962,read_fire2,2
+
+    PL_IFC1X    0
+    PL_NOP  $004AD8,4
+    PL_ENDIF
 	PL_END
+
+read_fire1:
+    MOVE.B  $00BFE001,D0
+    move.l  a0,-(a7)
+    lea keyboard_table(pc),a0
+    tst.b   ($40,a0)    ; space key
+    beq.b   .no_space
+    bclr    #7,d0
+.no_space    
+    move.l  (a7)+,a0
+    rts
+
+read_fire2:
+     move.w d0,-(a7)
+     bsr    read_fire1
+     btst   #7,d0
+     movem.w    (a7)+,d0
+     rts
+   
+read_joydat
+    move.w  _custom+joy1dat,d0
+    move.l  a0,-(a7)
+    lea keyboard_table(pc),a0
+    tst.b   ($4C,a0)    ; up key
+    beq.b   .no_up
+	; set UP
+	bset	#8,d0
+	bclr	#9,d0
+    bra.b   .no_down
+.no_up    
+    tst.b   ($4D,a0)    ; down key
+    beq.b   .no_down
+	; set DOWN
+	bset	#0,d0
+	bclr	#1,d0
+.no_down    
+    tst.b   ($4F,a0)    ; left key
+    beq.b   .no_left
+	; set LEFT
+	bset	#9,d0
+    tst.b   ($4C,a0)    ; up key
+    bne.b   .diag_left_up
+    bset    #8,d0
+    bra.b   .no_right
+.diag_left_up
+	bclr	#8,d0
+    bra.b   .no_right    
+.no_left
+    tst.b   ($4E,a0)    ; right key
+    beq.b   .no_right
+	; set RIGHT
+	bset	#1,d0
+    tst.b   ($4D,a0)    ; down key
+    bne.b   .diag_right_down
+    bset    #0,d0
+    bra.b   .no_right    
+.diag_right_down
+	bclr	#0,d0
+    
+.no_right   
+
+    
+    move.l  (a7)+,a0
+    rts
+    
 
 sync_dot_fade_1:
 	movem.l	d0-d1/a0,-(a7)
@@ -440,32 +535,33 @@ sync_dot_fade_2:
 .divider_counter
 	dc.l	DOT_FADE_NB_CALLS
 	
-;< A0: start
-;< A1: end
-;< A2: bytes
-;< D0: length
-;> A0: address or 0 if not found
 
-_hexsearch:
-	movem.l	D1/D3/A1-A2,-(A7)
-.addrloop:
-	moveq.l	#0,D3
-.strloop:
-	move.b	(A0,D3.L),D1	; gets byte
-	cmp.b	(A2,D3.L),D1	; compares it to the user string
-	bne.b	.notok		; nope
-	addq.l	#1,D3
-	cmp.l	D0,D3
-	bcs.b	.strloop
+    
+kbint_hook:
+    movem.l  a5/d0-d3,-(a7)
+	LEA	$00BFD000,A5
+    ; we can't test this as this clears ICR and fucks up ROM code
+;	MOVEQ	#$08,D0
+;	AND.B	$1D01(A5),D0
+;	BEQ	.nokey
+	MOVE.B	$1C01(A5),D0
+    ror.b   #1,d0
+    not.b   d0
+    and.w   #$FF,d0
+    bclr    #7,d0
+    seq d1      ; D1 = $FF if key up
+    lea keyboard_table(pc),a5
+    move.b  d1,(a5,d0.w)
+.nokey    
+    movem.l  (a7)+,a5/d0-d3
+    
+    move.l  old_kbint(pc),-(a7)
+    rts
+    
+keyboard_table:
+    ds.b    $100,0
+        
+old_kbint:
+    dc.l    0
+    
 
-	; pattern was entirely found!
-
-	bra.b	.exit
-.notok:
-	addq.l	#1,A0	; next byte please
-	cmp.l	A0,A1
-	bcc.b	.addrloop	; end?
-	sub.l	A0,A0
-.exit:
-	movem.l	(A7)+,D1/D3/A1-A2
-	rts

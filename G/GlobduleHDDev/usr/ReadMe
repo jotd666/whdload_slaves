@@ -30,6 +30,15 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 2.1-B (18.04.2021) done by JOTD:
+ - fixed memory layout (debug code remaining), now slaves only requires 512k chip again
+
+ version 2.1 (17.04.2021) done by JOTD:
+ - added levelskip trainer (help key)
+ - rolled back complete skip of protection screen (issue #0005078),
+   cancels issue #0001330 that's too much work reverse engineering why
+   skipping the whole screen then prevents from getting to level 2.
+ 
  version 2.0 (07.01.2021) done by JOTD:
  - protection screen completely skipped (issue #0001330)
  - highscore save unless trainer is used (issue #0002955)
