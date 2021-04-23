@@ -40,6 +40,13 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
  
+ version 2.0 (23.04.2020) done by JOTD:
+ - fixed crash when saving on 68000 machines (issue #0005145)
+ - the only supported version is SPS2222. Another version used to be supported
+   but I don't have it anymore. Contact me if you get an unsupported version message
+ - dynamic support for MT32 sound (custom4). Game needs to be reinstalled or extra
+   files copied to "data" subdir (res_mt32.cfg, mt32.drv, serial.device)
+
  version 1.3 (20.01.2019) done by JOTD:
  - added support for Roland MT32 (issue #0004048): unpack the "mt32_support.zip"
    archive into "data" directory, overwriting the "resource.cfg" file and adding

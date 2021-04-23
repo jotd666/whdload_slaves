@@ -8,6 +8,8 @@
 (set #sol-file "Solution")		;name of solution file
 (set #code-file1 "codes1_640200.raw")		;name of high scores file
 (set #code-file2 "codes2_640200.raw")		;name of high scores file
+(set #midi-file1 "res_mt32.cfg")		;name of high scores file
+(set #midi-file2 "mt32.drv")		;name of high scores file
 (set #prefix "SpaceQuestEnhanced")                       ;name of slave, directory
 (set #exename "prog")
 
@@ -367,9 +369,21 @@
     (makedir (tackon #dest "save")
       (help @makedir-help)
     )
+    (makedir (tackon #dest "devs")
+      (help @makedir-help)
+    )
 
 (P_CopyFile #code-file1)
 (P_CopyFile #code-file2)
+(P_CopyFile #midi-file1)
+(P_CopyFile #midi-file2)
+      (copyfiles
+        (help @copyfiles-help)
+        (source "serial.device")
+        (dest (tackon #dest "devs"))
+        
+      )
+
 (P_Install)
 (if (= #newstuff 1)
   (openwbobject #dest-org)
