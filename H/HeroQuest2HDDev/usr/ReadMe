@@ -1,0 +1,77 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Hero Quest 2 - Legacy Of Sorasil" © 1993-1994 Gremlin.
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ The installed program requires 0.5 MB ChipMem and 0.5 MB OtherMem.
+ It can be quit by pressing numerical '*'
+ (key can be changed with Tooltype "QuitKey=").
+
+ The game requires an installed A500 Kickstart 1.3 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick346.lha" on aminet.
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page.
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+
+
+ version 1.1 (23.04.2021) done by JOTD:
+ - support for packed version (SPS1455) as well (unpacked version still supported), so simplified install script
+   no need for PROPACK anymore now
+ - really fixed programmming error during title (issue #0003405)
+ - fixed crash when quitting with upper left menu (issue #0004818)
+ - music fixed
+   
+ version 1.0
+ - rewritten for KickFS/Whdload v16
+ - savegame working now (issue #002995)
+ - manual protection removed
+ - game needs to be reinstalled / main "questII" file needs to be unpacked using propack
+   (Propack full archive can be found here: http://aminet.net/util/pack/RNC_ProPack.lha)
+
+ version 0.9-B (03.10.2002) done by JOTD:
+ - Features:
+ 
+   * WHDLoad HD loader no longer using OSEmu, now using KickDOS
+   * Install script rewritten
+   * Quit key (numerical '*', change with QUITKEY)
+   * Programming error removed (caused access faults during title)
+   * Nice GI icons by NinjaW
+   * Docs included
+
+ version 0.9 (03.10.02) done by JOTD:
+ - initial release.
+
+
+
+NinjaW told me about an undocumented interesting menu:
+During game, click on the upper left corner with right mouse button, and a control
+menu will appear. This menu allows to return to main and to exit to DOS (which works :))
+
+Thanks to Thomas Lorenz for the original disks.
+
