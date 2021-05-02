@@ -27,6 +27,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 1.2 (24.04.2021):
+ - added trainer (infinite lives/start with 4 lives) (issue #0005159)
+ 
  version 1.1 (22.04.2021):
  - icon by DanyPPC
  - version bump (fixes issue #0005143)

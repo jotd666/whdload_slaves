@@ -14,6 +14,8 @@
 		SUPER				;disable supervisor warnings
 		ENDC
 
+;CHIP_ONLY
+
     IFD CHIP_ONLY
 CHIPMEM = $100000
 EXPMEM = 0
@@ -52,7 +54,7 @@ _expmem		dc.l	EXPMEM			;ws_ExpMem
 
 
 DECL_VERSION:MACRO
-	dc.b	"1.1"
+	dc.b	"1.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -79,6 +81,8 @@ program:
 	dc.b	"aYS_Tiny_Galaga",0
 
 _config
+        dc.b    "C1:X:trainer infinite lives:0;"
+        dc.b    "C1:X:start with 4 lives:1;"
         dc.b    "C3:B:keep LMB as quit button;"
 		dc.b	0
 
@@ -150,6 +154,19 @@ pl_main
     PL_ENDIF
     PL_STR  $13885,<FIGHTER CAPTURED>   ; fix text
     PL_P    $512,_quit
+    
+    PL_IFC1X    0
+    ; no life taken when shot
+    PL_NOP    $7438,2
+    ; no life taken when ship captured
+    PL_NOP    $aee6,2
+    ; chip mode: 8C1EC.W holds number of ships
+    PL_ENDIF
+    
+    PL_IFC1X    1
+    PL_W    $75fc+2,4
+    PL_ENDIF
+    
 	PL_END
     
 alloc_chipmem_1

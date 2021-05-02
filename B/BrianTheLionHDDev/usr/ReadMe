@@ -1,0 +1,112 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Brian The Lion" © 1994 Psygnosis/Reflections.
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ SUPPORTED VERSIONS:
+ - original ECS release (supported by Carlo Pirri)
+ - original AGA release (supported by Philippe Bovier)
+ - Computer Combat pack (AGA) release (supported by Wolfgang Unger)
+
+ ECS:
+ 
+ The installed program requires 0.5 MB ChipMem and 1.5 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ AGA:
+ 
+ The installed program requires 2.0 MB ChipMem and 3.5 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ Version 2.0 (02.05.2021) done by JOTD:
+ - joypad controls
+ - optional jump with second button
+ - adapted to whdload v17
+ - improved & fixed trainer
+ - quitkey in Way Forward level (ECS)
+ - simplified level passwords: 2,3,4,5 and 6 for cheat
+ - ECS version now uses 512k chipmem and fastmem instead of 1MB chip 
+
+ 
+ Version 1.4 (15-Feb-2015) done by Wepl:
+ - fixed OCS slave to work on 68000 (issue #3298)
+ - added quitkey and enabled caches in OCS slave
+ - new install script
+ - many icons, manual and hints added
+
+ Version 1.3 (05-Jul-2010) done by Wepl:
+ - Access fault in underwater bonus stage removed
+ - Access fault in Way Forward level (before boss appears) removed
+ - Trainer added (set CUSTOM1=1 for unlimited lives and energy
+   (except Way Forward level)
+ - decruncher in fast ram
+ - interrupt code improved
+
+ Version 1.2 (28-Jun-2006) done by Bored Seal:
+ - slave uses Fast RAM now (OCS)
+ - disk access removed (OCS & AGA)
+ 
+ Version 1.1 (01-May-2001) done by Bored Seal:
+ - another AGA version supported (thanks Philippe)
+
+ Version 1.0 (27-Mar-2001) done by Bored Seal:
+ - first public release
+ - Manual protection removed
+ - NI/ROM icon (created by JHZ)
+ - Quit option (your default key)
+
+joypad controls:
+
+- red: fire
+- blue: jump (if option is set)
+- play: pause (except in Way Forward level)
+- fwd+bwd: quit game (except in Way Forward level, ESC doesn't work either!)
+- fwd+bwd+yellow: quit to workbench (during game except in Way Forward level)
+
+Original level codes:
+
+The Spooky Ruins sXr7vgqaGP  (or 2)
+The Way Forward	 sXqkKgqaGd  (or 3)
+Graveyard	     sXqkKgqaGI  (or 4)
+Eeek!	         sXqkK0KaGU  (or 5)
+
+Enter "Mr*Pumpkin" (now just "6") as a password in the AGA version of the game.
+The screen will flash to confirm correct code entry.
+
+Then, press [Caps Lock] and one of the following keys to activate the
+corresponding cheat function.
+
+Effect 	Key
+Nine hit points	 H
+Nine lives	L
+Nine of each power-up and nine credits 	J
+999 gems	K
+Full map 	O
+Unknown	F
+Unknown	D
+
+Note: For the ECS version, enter "Mrs*Turnip" as a password or just "6" :)
+

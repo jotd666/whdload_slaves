@@ -29,6 +29,10 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 2.5 (25.04.2021) done by JOTD:
+ - fixed score bug display when score is > 999999. Now score
+   gets locked at this value (issue #0004477)
+   
  version 2.4 (06.02.2021) done by JOTD:
  - merged version 2.2 bugfixes that I overlooked (but most fixes from broken 2.1 were
    already been fixed). Means just optimize the slave code, nothing more
