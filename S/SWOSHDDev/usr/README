@@ -1,0 +1,108 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Sensible World Of Soccer" © 1994-97 Sensible Software
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ The installed program requires 1.0 MB ChipMem and 2.0 MB OtherMem.
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+ 
+ Currently supported versions:
+ ------------------------------------
+ SWOS v0.9       94-95 2 Disk version
+ SWOS v1.1       94-95 2 Disk version
+ SWOS            95-96 2 Disk version
+ SWOS UPDATE     95-96 2 Disk version
+ SWOS v1.0       94-95 2 Disk version
+ SWOS EURO96     95-96 2 Disk version
+ SWOS v1.52 (v1) 96-97 2 Disk version
+ SWOS v1.52 (v2) 96-97 2 Disk version*	F I N A L
+ ------------------------------------
+ (*) added support since last slave release)
+ 
+ version 2.0 (06.05.2021) done by JOTD:
+ - fixed long time slowdown issue by making the game use fastmem
+   (issue #0000003)
+ - fixed memory requirements to use only 1MB chip (issue #0002283)
+ - quit key on 68000 machines (except for 1994 v0.9 version)
+ - snoop bugs removed (except for 1994 v0.9 version)
+ - reworked source code
+ - reworked readme file
+ - source code included
+ 
+ version 1.x (2001) done by Galahad:
+ - initial release
+ - Full load from Hard drive (REAL files)
+ - Lame-o-Protect removed (Copylock)/(2x Copylock in versions 1.52)
+ - Load/Save Seasons/Tactics/Leagues/Careers/Highlights/Diy to Hard Drive
+ - Memory bus error fixed!
+ - Bus error fixed! (Highlights)
+ - CACR code removed
+ - Divide by Zero code removed
+ - RomIcon, NewIcon (x2) and GlowIcon (also x2) (all created by Frank!)
+ - Quit option is 'Del'
+
+ 
+ 
+Thanks goto the following guys for making this install possible:
+-----------------------------------------------
+Vulture			;Initial two versions
+Dr.Zarkov		;Six more versions
+Mario Sarno		;Latest version
+James-Maurice Battle	;ANOTHER latest version
+John Regent		;The FINAL version!
+Frank			;For the great icons
+-----------------------------------------------
+Their testing and patience have enabled SWOS WHDLoad to become a reality!
+
+Thanks also to the MANY people that have sent email thanking me for
+this install.
+
+EXTRA NOTES:
+These currently supported versions of SWOS have been tested on 68o3o
+and 68o6o and now operate as they should.
+
+45 Seperate saves are still allowed.
+
+KNOWN BUGS:
+SWOS still has one bug in the game which is present in the original.
+
+If you want to view a HIGHLIGHT, you MUST have already loaded a game and
+played!  It does not matter if you only play on the pitch for 2 seconds or
+2 hours, the HIGHLIGHTS option expects you to have already loaded a game,
+otherwise it will hang.
+
+For purists of SWOS, you know this already ;)
+
+
+
+Signed Galahad of Fairlight
+
+NOTE FROM MAINTAINER:
+
+ Version 2.0 has been adapted to use fastmem to overcome the most annoying
+ slowdown bug on accelerated amigas. I didn't take the time to test all features
+ (load/save) on all versions. That should work exactly as before. Please report bugs
+ when found and specify your version if you can / attach the "SWOS2" file
+
+JOTD
