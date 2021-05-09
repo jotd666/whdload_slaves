@@ -30,8 +30,11 @@
 	ENDC
 
 ;============================================================================
-
-CHIPMEMSIZE	= $100000   ; 512k works but sound is crap
+    IFD HALFMEG
+CHIPMEMSIZE	= $80000   ; 512k works but sound is crap
+    ELSE
+CHIPMEMSIZE	= $100000
+    ENDC
 FASTMEMSIZE	= $80000
 NUMDRIVES	= 1
 WPDRIVES	= %0000
@@ -68,7 +71,7 @@ slv_keyexit	= $5D	; num '*'
 	DOSCMD	"WDate  >T:date"
 	ENDC
 DECL_VERSION:MACRO
-	dc.b	"2.0"
+	dc.b	"2.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -78,7 +81,11 @@ DECL_VERSION:MACRO
 		incbin	datetime
 	ENDC
 	ENDM
-slv_name		dc.b	"Space Quest I (Enhanced)",0
+slv_name		dc.b	"Space Quest I (Enhanced)"
+    IFD HALFMEG
+    dc.b    " (512k chip)"
+    ENDC
+    dc.b    0
 slv_copy		dc.b	"1991 Sierra",0
 slv_info		dc.b	"adapted & fixed by JOTD",10
 		dc.b	"from Wepl excellent KickStarter 34.005",10,10
@@ -504,7 +511,7 @@ end_patch_\1:
 _patch_mt32_open
     movem.l d0-d1/a0-a1/a6,-(a7)
     move.l  _mt32_support(pc),d0
-    beq.b   .nomt32
+    beq   .nomt32
     lea  .dosname(pc),a1
     moveq.l #0,d0
     move.l  4,a6
@@ -535,6 +542,17 @@ _patch_mt32_open
     add.l	#resload_Abort,(a7)
     rts
 .okay2
+    lea	.mt32_res(pc),a0
+    move.l	_resload(pc),a2
+    jsr	resload_GetFileSize(a2)
+    tst.l   d0
+    bne.b   .okay3
+    pea	.missingmt32res_message(pc)
+    pea	TDREASON_FAILMSG
+    move.l	(_resload,pc),-(a7)
+    add.l	#resload_Abort,(a7)
+    rts
+.okay3
 .nomt32
     movem.l (a7)+,d0-d1/a0-a1/a6
     rts
@@ -543,6 +561,11 @@ _patch_mt32_open
     dc.b    "mt32.drv",0
 .missingmt32_message
     dc.b    "file mt32.drv is missing.",10
+    dc.b    "Make sure that game was properly installed",0
+.mt32_res:
+    dc.b    "res_mt32.cfg",0
+.missingmt32res_message
+    dc.b    "file res_mt32.cfg is missing.",10
     dc.b    "Make sure that game was properly installed",0
 .serial:
     dc.b    "devs/serial.device",0

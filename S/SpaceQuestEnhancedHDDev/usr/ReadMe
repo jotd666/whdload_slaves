@@ -40,7 +40,12 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
  
- version 2.0 (23.04.2020) done by JOTD:
+ version 2.1 (08.05.2021) done by JOTD:
+ - fixed installation issue that prevented MT32 to work (issue #0005160)
+ - provided 512k chip slave. Sound is really degraded/bad with that one. If you
+   have 1MB chipmem use the standard slave. Enable midi if you can too!
+   
+ version 2.0 (23.04.2021) done by JOTD:
  - fixed crash when saving on 68000 machines (issue #0005145)
  - the only supported version is SPS2222. Another version used to be supported
    but I don't have it anymore. Contact me if you get an unsupported version message
@@ -76,4 +81,8 @@
  note: when using MT32, quit properly when music is not playing. WHDLoad doesn't stop
  the midi play. If you quit without doing this, just run the game again and let it cut
  the sound, then quit.
+ 
+ a file in the installation was not named properly and not checked... Murphy's law
+ there was a file "res_mt32cfg" in the install pack that needs to be copied and named "res_mt32.cfg".
+ (now the name is fixed in the install BTW). That or re-install from scratch.
  

@@ -36,14 +36,15 @@
  The installed program requires 2.0 MB ChipMem and 1.0 MB OtherMem (15MB with PRELOAD,
  100 MB (!) with PRELOAD & speech on)
 
- The game requires an installed A1200 or A4000 Kickstart 3.1 image.
+ The game requires an installed A600, A1200 or A4000 Kickstart 3.1 image.
  The kickstart image must be located in the directory "Devs:Kickstarts" and
- must be named "kick40068.A1200" (resp kick40068.A4000). 
+ must be named "kick40063.A600" (resp kick40068.A1200 or kick40068.A4000). 
  The image can be extracted from a A1200 (resp A4000) with tools like 'GrabKick'
  or similar which can be found on aminet.
  If the image is of wrong version or altered in any way WHDLoad will quit with
  an appropriate requester.
- Additionally the file "kick40068.A1200.RTB" (resp "kick40068.A4000.RTB")
+ Additionally the file "kick40063.A600.RTB", (resp "kick40068.A1200.RTB" or
+ "kick40068.A4000.RTB")
  must be installed in the same directory as the kickstart image.
  It can be found in the archive "util/boot/skick346.lha" on aminet.
 
@@ -58,6 +59,10 @@
 	http://www.whdload.de/
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
+
+  Version 2.2 (08.05.2021) done by JOTD:
+  - allows CD32 version to run on a 68000/68010 machine (issue #0005141). You
+    will need the 3.1 A600 kickstart which supports 68000 CPU.
 
   Version 2.1 (03.02.2019) still done by JOTD:
   - fixed a bug in the sound replay (CD³²): program is now loaded in fast memory,
@@ -118,3 +123,7 @@ Notes
   - Due to the size of the game, the long introduction, the amount of bugs,
     and the tests, this install was very time consuming.
     I hope you'll appreciate it.
+  - The CD32 version was recently adapted to be 68000 friendly. A 68000 can't
+    cope with more than 16MB so the talkie version can't be preloaded but at
+    least it will work (with flashes but will work)
+    

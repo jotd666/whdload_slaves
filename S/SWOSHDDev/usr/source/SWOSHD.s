@@ -20,13 +20,32 @@
     ENDC
   
 ;CHIP_ONLY
+
+PROGRAM_LOCATION_OFFSET = $80000
+
     IFD CHIP_ONLY
-CHIPMEMSIZE = $200000
+CHIPMEMSIZE = $180000+PROGRAM_LOCATION_OFFSET
 FASTMEMSIZE = 0    
     ELSE
 CHIPMEMSIZE = $100000
-FASTMEMSIZE = $100000    
+FASTMEMSIZE = $80000+PROGRAM_LOCATION_OFFSET
     ENDC
+
+; 1MB chip + 1,5MB slow mem prog @ $D00000
+; D5 07000000: fastmem: 07 = 0111 = 1.5MB
+; D6 07000003: chipmem: 03 = 0011 = 1MB
+; D7 00280000 : total memory
+
+; chip 2MB: prog @ $180000
+; D5 00000000: no fastmem
+; D6 0000000F: chipmem: 1111 = 2MB         
+; D7 00200000: total memory
+
+; autocompute bit masks (not very useful, as the memory routine
+; is so obscure and buggy that it is completely skipped)
+CHIPBITS = (1<<(CHIPMEMSIZE/$80000))-1
+FASTBITS = ((1<<(FASTMEMSIZE/$80000))-1)<<24
+    
 ;======================================================================
 
 base
@@ -48,7 +67,7 @@ _expmem:
 
 
 DECL_VERSION:MACRO
-	dc.b	"2.0"
+	dc.b	"2.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -110,9 +129,9 @@ Start	;	A0 = resident loader
         ENDC
 
         ; configure other expmem buffer
-        lea half_expmem_top(pc),a1
+        lea program_location(pc),a1
         move.l  _expmem(pc),a0       
-        add.l   #$80000,a0
+        add.l   #PROGRAM_LOCATION_OFFSET,a0
         move.l  a0,(a1)
         
 		lea	root(pc),a0        
@@ -139,14 +158,13 @@ file_ok:
 		move.l	d0,(a0)
 		lea	Swos.prg(pc),a0
 	
-        move.l  _expmem(pc),a1
-        add.l   #$80000,a1
+        move.l  program_location(pc),a1
 
 		bsr	_LoadFileDEC
 		;bsr	remove_hogs
 		lea	swos_version(pc),a0
 		move.l	d0,(a0)
-		move.l	half_expmem_top(pc),a0
+		move.l	program_location(pc),a0
 		move.l	_expmem(pc),a1
 ;a0 = Program
 ;a1 = relocation table
@@ -163,7 +181,7 @@ file_ok:
 ;		bne.s	continue_relocation
 relocate:
 		movem.l	d0-d1/a0-a2,-(a7)
-		move.l	half_expmem_top(pc),d1				; load location!
+		move.l	program_location(pc),d1				; load location!
         sub.l   #$100000,d1             ; base address
 		move.l	reloc_size(pc),d0		;Size of relocation table!
 		move.l	a0,a2
@@ -197,8 +215,6 @@ continue_relocation:
 		move.l	(a2),d2
 		move.l	#$4ef96002,d0
 		move.l	#$70004e75,d1
-		lea	generic(pc),a5
-		lea	Copylock(pc),a4
 		lea	gen(pc),a1
 ;		cmp.l	#363958,d2
 ;		beq	swos_xxx       ; SPS841, unsupported
@@ -216,6 +232,8 @@ continue_relocation:
 		beq	swos_152
 		cmp.l	#356964,d2
 		beq	swos_1522
+		cmp.l	#334640,d2
+		beq	swos_german
         
         pea	TDREASON_WRONGVER
         move.l	_resload(pc),-(a7)
@@ -225,7 +243,7 @@ continue_relocation:
 remove_hogs:
 		movem.l	d0/a0,-(a7)
 		move.l	reloc_size(pc),d0	;Size of file!
-		move.l	half_expmem_top(pc),a0		;$180000
+		move.l	program_location(pc),a0		;$180000
 loopblit:
 		cmp.w	#$33fc,(a0)
 		bne.s	_notblit
@@ -309,14 +327,7 @@ pl_9495_2
     PL_PS   $756a,access	
     ;PL_W	$552c,$6002,	;TESTTESTTEST    
     
-    ; jotd
-    ; fix snoop bugs
-    ;PL_PSS  $2398,fix_snoop_bug,4
-    ;PL_ORW  $20be,$200  ; colorbit bplcon0
-    ;PL_L  $20c8,$01FE0000  ; remove bplcon3 write
-    ;PL_L  $20cc,$01FE0000  ; remove bplcon4 write
-    ;PL_R    $fe0   ; floppy shit
-    ;PL_R    $156a   ; floppy shit
+
     
     PL_END 
 
@@ -375,7 +386,7 @@ pl_euro
     PL_L    $5d78+4,$3efc4e75
     ;Fake send to loader
     PL_L    $438,$70004E75
-    PL_P    $667a,fix_memory_routine_euro
+    PL_P    $667a,fix_memory_routine_9697
     PL_P    $4ac,dir_remover
     PL_PS   $51a78,Load_Season
     PL_PS   $51c38,Load_Season	;Load Highlights!
@@ -442,6 +453,47 @@ pl_9697_1
     
     PL_END
 ;--------------------------------------
+swos_german:
+		move.l	#$9cdde,(a1)		;Area where to load root!
+
+        lea pl_german(pc),a0
+        bra patch_with_patchlist
+        
+
+pl_german
+    PL_START
+    PL_W    $d4,$6002       ; fix zero div
+    PL_W    $130,$6002       ; cacr
+    ; copylock
+    PL_L    $1bea,$26bc7158
+    PL_L    $1bea+4,$3efc4e75
+    ;Fake send to loader
+    PL_L    $450,$70004E75
+    PL_P    $24ec,fix_memory_routine_9495_2
+    PL_P    $4c4,dir_remover
+    PL_PS   $4c820,Load_Season	;Load Highlights!
+    PL_P	$2d8,Delete_File
+    PL_P    $5d8,Loader    ;Patch fileloader!
+    PL_R    $3e6		;Format Disk name removed
+    PL_P	$2be,Saver	;Save option patched
+    PL_PS	$3bd04,Load_directory
+    PL_PS	$3bdf6,Load_directory	;Load Save directory
+    PL_PS   $75a2,access	
+   
+    ; jotd
+    PL_PS   $2F4C,kb_hook
+    ; fix snoop bugs
+    PL_PSS  $37a0,fix_snoop_bug,4
+    PL_ORW  $34c6,$200  ; colorbit bplcon0
+    PL_L  $34d0,$01FE0000  ; remove bplcon3 write
+    PL_L  $34d4,$01FE0000  ; remove bplcon4 write
+    PL_R    $fd8   ; floppy shit
+    PL_R    $156a   ; floppy shit    ; jotd
+
+    
+    PL_END
+
+
 swos_1522:  ; 9697_2
 		move.l	#$4999e,(a1)		;Area where to load root!
 
@@ -489,12 +541,17 @@ swos_9697:
         
         lea pl_9697(pc),a0
 patch_with_patchlist
-        move.l	half_expmem_top(pc),a1
+        move.l	program_location(pc),a1
         move.l  _resload(pc),a2
         jsr (resload_Patch,a2)
-        
-generic:	
-        move.l	half_expmem_top(pc),a0
+     
+
+        ; set registers D5-D7 to expected values
+        move.l  #CHIPMEMSIZE+FASTMEMSIZE,D7
+        move.l  #FASTBITS,d5
+        move.l  #CHIPBITS|FASTBITS,d6       
+
+        move.l	program_location(pc),a0
 		jmp	(a0)			;Execute program!		
 
 pl_9697
@@ -536,22 +593,32 @@ fix_snoop_bug
     rts
 
 
-
+; replaces memory detection routine that pokes into every location
+; from $80000 to $20*$80000 ...
+; in the end we just store the amount of chipmem, and use fastmem
+; for the executable. Game doesn't handle/use more fastmem apparently
+;
+; if we set the proper value game tries to read outside memory bounds
+; damn this memory management is a nightmare
+;
+; previous version of the slave wrote the value $200000 in a wrong
+; location, leaving the actual location at 0, and the game worked
+; so maybe it should be left as is.
 FIX_MEM_ROUTINE:MACRO
 fix_memory_routine_\1
-    move.l  a0,-(a7)
-    move.l  _expmem(pc),a0
-    add.l   #\2,a0
-    MOVE.L #CHIPMEMSIZE,(a0)
-    move.l  (a7)+,a0
     rts
+;    move.l  a0,-(a7)
+;    move.l  _expmem(pc),a0
+;    add.l   #\2+PROGRAM_LOCATION_OFFSET,a0
+;    MOVE.L #CHIPMEMSIZE,(a0)
+;    move.l  (a7)+,a0
+;    rts
     ENDM
 
     
-    FIX_MEM_ROUTINE euro,$5880
-    FIX_MEM_ROUTINE 9697_1,$58A4
+    FIX_MEM_ROUTINE 9697_1,$589c
     FIX_MEM_ROUTINE 9495,$1676
-    FIX_MEM_ROUTINE 9495_2,$171A
+    FIX_MEM_ROUTINE 9495_2,$1712
     FIX_MEM_ROUTINE 9596,$1718
     FIX_MEM_ROUTINE 9697,$5878
 
@@ -775,7 +842,7 @@ reloc_size:
 		dc.l	0
 swos_version:
 		dc.l	0
-half_expmem_top
+program_location
     dc.l    0
 ;--------------------------------
 ; IN:	d0=offset d1=size d2=disk a0=dest

@@ -19,15 +19,16 @@
  The installed program requires 2.0 MB ChipMem and 1.0 MB OtherMem.
  It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
 
- The game requires an installed A1200 Kickstart 3.1 image.
+ The game requires an installed A1200 or A4000 Kickstart 3.1 image.
  The kickstart image must be located in the directory "Devs:Kickstarts" and
- must be named "kick40068.A1200". The image can be extracted from a A1200 with
- tools like 'GrabKick' or similar which can be found on aminet.
+ must be named "kick40068.A1200" (resp kick40068.A4000). 
+ The image can be extracted from a A1200 (resp A4000) with tools like 'GrabKick'
+ or similar which can be found on aminet.
  If the image is of wrong version or altered in any way WHDLoad will quit with
  an appropriate requester.
- Additionally the file "kick40068.A1200.RTB" must be installed in the same
- directory as the kickstart image. It can be found in the archive 
- "util/boot/skick345.lha" on aminet.
+ Additionally the file "kick40068.A1200.RTB" (resp "kick40068.A4000.RTB")
+ must be installed in the same directory as the kickstart image.
+ It can be found in the archive "util/boot/skick346.lha" on aminet.
 
  If you have problems with this installation please try and get a newer
  version of this package from the WHDLoad WWW-Page. If that doesn't help try
@@ -41,10 +42,15 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 1.1 (14.01.03)
+ version 2.0 (09.05.2021) done by JOTD:
+ - changed save system to avoid issues with nonvolatile libs (issue #0005170)
+ - reassembled with newest kickemu
+ - using emulated lowlevel library should fix some rare joypad issues
+
+ version 1.1 (14.01.2003)
  - fixed bug when overwriting a savegame file
 
- version 1.0-B (08.01.03)
+ version 1.0-B (08.01.2003)
  - fixed install script (installed only 3 disks out of 4 for the floppy version
    and asked for the wrong CD label on the CD³² version). Thanks to Tony for
    reporting it.

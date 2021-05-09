@@ -357,21 +357,6 @@
 (set #copy-file #highs-file)
 (P_CopyFile)
 
-    (set #savedest (tackon #dest "Speris"))
-    (makedir #savedest
-      (help @makedir-help)
-    )
-
-    (set #nvdest (tackon #dest "prefs/env-archive/sys"))
-    (makedir #nvdest
-      (help @makedir-help)
-    )
-      (copyfiles
-        (help @copyfiles-help)
-        (source "nv_location")
-        (dest #nvdest )
-      )
-
 
 (select #version
 (P_Install)

@@ -13,7 +13,6 @@
 ;---------------------------------------------------------------------------*
 
 	INCDIR	Include:
-	INCDIR	osemu:
 	INCLUDE	whdload.i
 	INCLUDE	whdmacros.i
 	INCLUDE	lvo/dos.i
@@ -31,44 +30,33 @@
 
 ;============================================================================
 
+
 CHIPMEMSIZE	= $1FF000
 FASTMEMSIZE	= $80000
+
 NUMDRIVES	= 1
 WPDRIVES	= %0000
 
 ;BLACKSCREEN
 ;DISKSONBOOT
 DOSASSIGN
-DEBUG
+;INITAGA
 HDINIT
-;HRTMON
 IOCACHE		= 10000
 ;MEMFREE	= $200
 ;NEEDFPU
 ;SETPATCH
+;STACKSIZE = 10000
+BOOTDOS
+;CACHECHIPDATA
+CACHE
+SEGTRACKER
 
-;============================================================================
+slv_Version	= 17
+slv_Flags	= WHDLF_NoError|WHDLF_Examine|WHDLF_EmulPriv|WHDLF_ReqAGA|WHDLF_Req68020
+slv_keyexit	= $5D	; num '*'
 
-KICKSIZE	= $80000			;40.068
-BASEMEM		= CHIPMEMSIZE
-EXPMEM		= KICKSIZE+FASTMEMSIZE
-
-;============================================================================
-
-_base		SLAVE_HEADER			;ws_Security + ws_ID
-		dc.w	15			;ws_Version
-		dc.w	WHDLF_NoError|WHDLF_EmulPriv|WHDLF_Examine	;ws_flags
-		dc.l	BASEMEM			;ws_BaseMemSize
-		dc.l	0			;ws_ExecInstall
-		dc.w	_start-_base		;ws_GameLoader
-		dc.w	_data-_base		;ws_CurrentDir
-		dc.w	0			;ws_DontCache
-_keydebug	dc.b	0			;ws_keydebug
-_keyexit	dc.b	$5D			;ws_keyexit = F10
-_expmem		dc.l	EXPMEM			;ws_ExpMem
-		dc.w	_name-_base		;ws_name
-		dc.w	_copy-_base		;ws_copy
-		dc.w	_info-_base		;ws_info
+	include	kick31cd32.s
 
 ;============================================================================
 
@@ -76,56 +64,69 @@ _expmem		dc.l	EXPMEM			;ws_ExpMem
 	DOSCMD	"WDate  >T:date"
 	ENDC
 
-	CNOP 0,4
-_assign1
-	dc.b	8,"speris-1",0
-	CNOP 0,4
-_assign2
-	dc.b	8,"speris-2",0
-	CNOP 0,4
-_assign3
-	dc.b	8,"speris-3",0
-	CNOP 0,4
-_assign4
-	dc.b	8,"speris-4",0
-
-_name		dc.b	"The Speris Legacy",0
-_copy		dc.b	"1996 Binary Emotions",0
-_info		dc.b	"Installed by JOTD",10,10
-		dc.b	"Thanks to Tony Aksnes for disk images",10,10		
-		dc.b	"Version 1.0 "
+DECL_VERSION:MACRO
+	dc.b	"2.0"
 	IFD BARFLY
+		dc.b	" "
 		INCBIN	"T:date"
 	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
+	ENDC
+	ENDM
+	dc.b	"$","VER: slave "
+	DECL_VERSION
+	dc.b	0
+
+_assign1
+	dc.b	"speris-1",0
+_assign2
+	dc.b	"speris-2",0
+	CNOP 0,4
+_assign3
+	dc.b	"speris-3",0
+_assign4
+	dc.b	"speris-4",0
+
+slv_name		dc.b	"The Speris Legacy",0
+slv_copy		dc.b	"1996 Binary Emotions",0
+slv_info		dc.b	"Installed by JOTD",10,10
+		dc.b	"Thanks to Tony Aksnes & Galahad for disk images",10,10	
+		dc.b	"Version "
+		DECL_VERSION
 		dc.b	0
-_data:
+slv_CurrentDir:
 	dc.b	"data",0
-	EVEN
 
 _program:
 	dc.b	"speris.exe",0
 _args		dc.b	10
 _args_end
 	dc.b	0
+slv_config
+	dc.b	0
+
+; version xx.slave works
+
+	dc.b	"$","VER: slave "
+	DECL_VERSION
+	dc.b	0
 	EVEN
-
-;============================================================================
-_start	;	A0 = resident loader
-;============================================================================
-
-	;initialize kickstart and environment
-		bra	_boot
 
 _bootdos
 	clr.l	$0.W
 
-	move.l	(_resload),a2		;A2 = resload
+	move.l	(_resload,pc),a2		;A2 = resload
+		lea	_tag(pc),a0
+		jsr	resload_Control(a2)
 
 	;enable cache
 	;	move.l	#WCPUF_Base_NC|WCPUF_Exp_CB|WCPUF_Slave_CB|WCPUF_IC|WCPUF_DC|WCPUF_BC|WCPUF_SS|WCPUF_SB,d0
 	;	move.l	#WCPUF_All,d1
 	;	jsr	(resload_SetCPU,a2)
-
+        bsr _patch_cd32_libs
+        
 	;open doslib
 		lea	(_dosname,pc),a1
 		move.l	(4),a6
@@ -148,6 +149,7 @@ _bootdos
 
 	;load exe
 		lea	_program(pc),a0
+        move.l  a0,a3
 		move.l	a0,d1
 		jsr	(_LVOLoadSeg,a6)
 		move.l	d0,d7			;D7 = segment
@@ -200,12 +202,14 @@ _quit		pea	TDREASON_OK
 		jmp	(resload_Abort,a2)
 
 _end
-		pea	_program(pc)
-		pea	205			; file not found
-		pea	TDREASON_DOSREAD
-		move.l	(_resload,pc),-(a7)
-		add.l	#resload_Abort,(a7)
-		rts
+	jsr	(_LVOIoErr,a6)
+	move.l	a3,-(a7)
+	move.l	d0,-(a7)
+	pea	TDREASON_DOSREAD
+	move.l	(_resload,pc),-(a7)
+	add.l	#resload_Abort,(a7)
+	rts
+
 
 
 
@@ -398,15 +402,9 @@ _hexreplacelong:
 .exit
 	movem.l	(A7)+,A0-A1/D0-D1
 	rts
-
-;============================================================================
-
-	IFEQ	KICKSIZE-$40000
-	INCLUDE	kick13.s
-	ELSE
-	INCLUDE	kick31.s
-	ENDC
-
-;============================================================================
-
-	END
+_tag		dc.l	WHDLTAG_CUSTOM1_GET
+_custom1	dc.l	0
+    dc.l    WHDLTAG_LANG_GET
+_language
+        dc.l    0
+		dc.l	0

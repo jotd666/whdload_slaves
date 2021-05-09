@@ -55,8 +55,10 @@ IOCACHE		= 10000
 ;NEEDFPU
 ;SETPATCH
 ;STACKSIZE = 10000
+NO68020
 BOOTDOS
 CACHE
+SEGTRACKER
 HD_Cyls = 1000
 
 
@@ -68,13 +70,13 @@ slv_keyexit	= $5D	; num '*'
 
 ;============================================================================
 
-	INCLUDE	kick31.s
+	INCLUDE	whdload/kick31.s
 
 ;============================================================================
 
 
 DECL_VERSION:MACRO
-	dc.b	"2.1"
+	dc.b	"2.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -126,6 +128,8 @@ _bootdos
 	move.l	(_resload,pc),a2		;A2 = resload
 
 	;get tags
+		lea     (_tag,pc),a0
+		jsr     (resload_Control,a2)
 	
 		IFD	USE_FASTMEM
 		move.l	#SPRITE_BUFFER_LENGTH,d0
@@ -236,8 +240,9 @@ _patch_exe
 
 	lea		program_start(pc),a0
 	move.l	a1,(a0)
-	move.l	a1,$100.w	; debug
-	
+
+    patch   $100,avoid_bus_error
+    
 	; copy data in the buffer
 	IFD	USE_FASTMEM
 	move.l	a1,a2
@@ -261,7 +266,12 @@ _patch_exe
 	ENDC
 	
 	move.l	_resload(pc),a2
+    move.l  attnflags(pc),d0
 	lea	pl_main(pc),a0
+    btst    #AFB_68020,d0
+    bne.b   .020
+	lea	pl_68000(pc),a0
+.020    
 	jsr	resload_Patch(a2)
 	rts
 program_start:
@@ -331,6 +341,7 @@ pl_main
 	PL_PS	$CB0C,avoid_af		; access fault #1
 	PL_PS	$D7DA,patch_allocmem	; not sure about the Z flag unset (move.l D0,A3)
 
+    PL_S    $D674,$D698-$D674   ; skip freeanim library open
 	; a problem with freeanim?
 	; well, DMACON register was not properly set
 
@@ -350,8 +361,15 @@ pl_main
 	PL_P	$046FFE,sound_routine
 	
 	ENDC
-	
 	PL_END
+    
+pl_68000
+	PL_START
+    PL_L    $00E548,$4EB80100
+    PL_L    $00E556,$4EB80100
+    PL_L    $00E564,$4EB80100
+    PL_L    $00E572,$4EB80100
+	PL_NEXT pl_main
 
 
 	IFD	USE_FASTMEM
@@ -423,7 +441,24 @@ _alloc_save
 	dc.l	0
 	ENDC
 
-
+avoid_bus_error
+    move.l  a1,d0
+    btst    #1,d0
+    beq.b   .even
+	move.b	(a1)+,d0
+	lsl.l	#8,d0
+	move.b	(a1)+,d0
+	lsl.l	#8,d0
+	move.b	(a1)+,d0
+	lsl.l	#8,d0
+	move.b	(a1)+,d0
+    ADDA.L	D0,A2    
+	rts
+.even
+    move.l  (a1)+,d0
+    ADDA.L	D0,A2    
+    rts
+    
 DMACON_DX:MACRO
 dmacon_d\1
 	btst	#15,d\1
@@ -561,7 +596,10 @@ _load_exe:
 	rts
 
 
-
+_tag		dc.l	WHDLTAG_ATTNFLAGS_GET
+attnflags	dc.l	0
+		
+		dc.l	0
 
 ;============================================================================
 

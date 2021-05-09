@@ -30,6 +30,7 @@
  Currently supported versions:
  ------------------------------------
  SWOS v0.9       94-95 2 Disk version
+ SWOS german     94-95 2 Disk version
  SWOS v1.1       94-95 2 Disk version
  SWOS            95-96 2 Disk version
  SWOS UPDATE     95-96 2 Disk version
@@ -39,6 +40,9 @@
  SWOS v1.52 (v2) 96-97 2 Disk version*	F I N A L
  ------------------------------------
  (*) added support since last slave release)
+ 
+ version 2.1 (09.05.2021) done by JOTD:
+ - german version supported (issue #0002640)
  
  version 2.0 (06.05.2021) done by JOTD:
  - fixed long time slowdown issue by making the game use fastmem
@@ -69,6 +73,7 @@ Thanks goto the following guys for making this install possible:
 Vulture			;Initial two versions
 Dr.Zarkov		;Six more versions
 Mario Sarno		;Latest version
+Irek            ;German 94-95 version
 James-Maurice Battle	;ANOTHER latest version
 John Regent		;The FINAL version!
 Frank			;For the great icons
