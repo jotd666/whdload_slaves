@@ -84,11 +84,12 @@ base
 	dc.b	"C1:X:Start with Max. Money:5;"
 	dc.b	"C1:X:In-Game Keys (Press HELP during game):6;"
 	dc.b	"C2:B:Second button jumps;"
-	dc.b	"C3:L:Start at Level:1,2,3,4,5,6,7"
+	dc.b	"C3:L:Start at Level:1,2,3,4,5,6,7;"
+    dc.b    "C4:B:disable blitter waits (slow machines)"
 	dc.b	0
 
 DECL_VERSION:MACRO
-	dc.b	"1.4"
+	dc.b	"1.5"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -107,9 +108,8 @@ DECL_VERSION:MACRO
 .name	dc.b	'--< S W i T C H B L A D E  I I >--',0
 .copy	dc.b	'1991 Gremlin Graphics',0
 .info	dc.b	'Installed and fixed by',10
-	dc.b	'Galahad of Fairlight and Harry',10
-	dc.b	10
-	dc.b	"StingRay/[S]carab^Scoopex",10
+	dc.b	'Galahad of Fairlight, Harry,',10
+	dc.b	"StingRay/[S]carab^Scoopex and JOTD",10
 	IFD	DEBUG
 	dc.b	"DEBUG!!! "
 	ENDC
@@ -126,8 +126,9 @@ Hiscore:
 	
 	dc.b	"$VER: slave "
 	DECL_VERSION
-	dc.b	0
+	dc.b	10,0
 	EVEN
+IGNORE_JOY_DIRECTIONS
 	include	ReadJoyPad.s
 	
 TAGLIST	dc.l	WHDLTAG_CUSTOM3_GET
@@ -299,7 +300,7 @@ PLGAME	PL_START
 	PL_P	$19de8,AckVBI
 	PL_PS	$18e52,.CheckQuit
 
-
+    PL_IFC4
 	PL_PS	$1afa6,.wblit1
 	PL_PS	$1b012,.wblit2
 	PL_PS	$1bf80,.wblit3
@@ -310,7 +311,7 @@ PLGAME	PL_START
 	PL_PS	$190aa,.wblit4
 	PL_PSS	$19364,.wblit6,2
 	PL_PS	$19396,.wblit4
-	
+    PL_ENDIF
 
 ; unlimited lives
 	PL_IFC1X	0
@@ -349,20 +350,8 @@ PLGAME	PL_START
 	PL_B	$108ce,$4a
 	PL_ENDIF
 
-	PL_IFC2
-    PL_PS    $19838-$400,.read_joy0dat
-    PL_PS    $19864-$400,.read_joy0dat
-    PL_PS    $19890-$400,.read_joy0dat
-    PL_PS    $198ba-$400,.read_joy0dat
-    PL_PS    $198d8-$400,.read_joy0dat
-    PL_PS    $198f6-$400,.read_joy0dat
-	PL_PS	$19f4a-$400,.start_climbing_ladder
-	PL_PS	$19f8c-$400,.do_jump
-	PL_ENDIF
-	
-	PL_PS	$1A184-$400,.vbl_hook
-	PL_S	$1A18A-$400,$D4-$8A
-	
+
+    
 ; invincibility
 	PL_IFC1X	4
 	PL_B	$16e34,$60
@@ -384,6 +373,20 @@ PLGAME	PL_START
 	PL_PS	$f7c4,.EnableKeys	; and enable them again after name has been entered
 	PL_ENDIF
 
+	PL_IFC2
+    PL_PS    $19838-$400,.read_joy0dat
+    PL_PS    $19864-$400,.read_joy0dat
+    PL_PS    $19890-$400,.read_joy0dat
+    PL_PS    $198ba-$400,.read_joy0dat
+    PL_PS    $198d8-$400,.read_joy0dat
+    PL_PS    $198f6-$400,.read_joy0dat
+	PL_PS	$19f4a-$400,.start_climbing_ladder
+	PL_PS	$19f8c-$400,.do_jump
+	
+    ; read joypad from vbl
+	PL_PS	$1A184-$400,.vbl_hook
+	PL_S	$1A18A-$400,$D4-$8A
+	PL_ENDIF
 
 	PL_SA	$19dfc,$19eae		; disable CHROME cheat
 
@@ -779,7 +782,10 @@ TEST_BUTTON:MACRO
 	MOVE.L	d0,(a0)+
 	MOVE.L	d0,(a0)+
 	MOVE.L	d0,(a0)
-
+    lea read_once_out_of_2(pc),a0
+    eor.b   #1,(a0)
+    beq.b   .nochange
+    
     lea prev_buttons_state(pc),a0
     lea	.rawkey,a1
     move.l  (a0),d1     ; get previous state
@@ -965,3 +971,5 @@ WaitRaster
 
 prev_buttons_state
 		dc.l	0
+read_once_out_of_2
+    dc.b    0

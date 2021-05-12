@@ -20,7 +20,7 @@
  (+ 0.8 other memory for preload option)
 
 
-Version 1.5 (0x.05.2021) done by JOTD:
+Version 1.5 (13.05.2021) done by JOTD:
 - optional disable blitterwaits with CUSTOM4 (slow machines) (issue #0005161)
 - read joypad less often (reduces screen glitches?)
 - joypad controls only active with 2/3-button option set
