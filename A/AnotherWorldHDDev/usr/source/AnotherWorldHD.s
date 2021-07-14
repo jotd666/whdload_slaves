@@ -77,7 +77,7 @@ IGNORE_JOY_DIRECTIONS
     ENDC
     
 DECL_VERSION:MACRO
-	dc.b	"2.6"
+	dc.b	"2.7"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -187,6 +187,8 @@ get_version:
 
 	cmp.l	#28964,d0
 	beq.b	.ok
+	cmp.l	#28864,d0
+	beq.b	.ok
 	cmp.l	#28948,d0       ; sps 2377
 	beq.b	.ok
 
@@ -211,6 +213,8 @@ _patchexe
     move.l  _progsize(pc),d0
     cmp.l   #28948,d0
     beq.b   .fr_2377
+    cmp.l   #28864,d0
+    beq.b   .uk2
     cmp.l   #28896,d0
     bne.b   .uk
     move.w  $3E(a1),d0
@@ -227,6 +231,9 @@ _patchexe
     bra.b   .patch
 .uk
     lea pl_uk(pc),a0
+    bra.b   .patch
+.uk2
+    lea pl_uk2(pc),a0
 .patch    
     jsr resload_Patch(a2)
     rts
@@ -262,6 +269,16 @@ pl_uk
     PL_PSS    $3872,wait_blit,2
     PL_PSS    $3ec4,wait_blit,2
     PL_PSS    $4012,wait_blit,2
+    PL_END
+pl_uk2
+    PL_START
+    PL_PSS  $4bd8-6,dma_delay,4
+    PL_PSS  $4c04-6,dma_delay,4
+    PL_PSS  $4fe0-6,dma_delay,4
+    PL_PSS  $5150-6,dma_delay,4
+    PL_PSS    $380c,wait_blit,2
+    PL_PSS    $3e5e,wait_blit,2
+    PL_PSS    $3fac,wait_blit,2
     PL_END
 pl_us
     PL_START

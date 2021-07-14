@@ -11,7 +11,7 @@
 ; a program written by JOTD in 2016
 ;
 ; todo: remaining issues
-; score ignition pal BCD around $A0D0
+; score ignition pal BCD around $A0D0 ($A0EE)
 ;       steel wheel pal around $A1C0: W $A1BF $30: 3 billon score
 ;       beat box: W $A2F5 $30: 3 billion score
 	INCDIR	Include:
@@ -73,7 +73,7 @@ _config
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.8"
+	dc.b	"1.9"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -440,6 +440,16 @@ skip:	movem.l	(a7)+,d0-d1/a0-a6
 	move.l	(a0)+,(a2)+
 	move.l	(a0)+,(a2)+
 	
+    move.l  (a0)+,d0
+    beq.b   .no_ignition_fix
+    ; slot is non-zero for ignition table: fix some message display
+    ; that crashes the game (access fault or hard reset even on floppy)
+    move.l  d0,a1
+    move.l  (2,a1),(a2)+    ; store value to test
+    move.w  #$4EB9,(a1)+
+    pea     ignition_fix(pc)
+    move.l  (a7)+,(a1)
+.no_ignition_fix
 	move.l	_resload(pc),a2
 	jsr	resload_FlushCache(a2)
 .launch_table
@@ -458,12 +468,14 @@ ignition_table:
 	dc.l	$9d8b	; value written after MOVE.B	CIAA_SDR,D0 / BSET	#6,CIAA_CRA
 	dc.l	$73f2	; keyboard routine, near CMP.B	#$4d,D0
 	dc.l	$cee0	; copperlist to watch
+    dc.l    $6bae   ; routine to skip if operand msb is nonzero
+
 steel_wheel_table
-	dc.l	$3f5a,$9e45,$74b8,$d9e8
+	dc.l	$3f5a,$9e45,$74b8,$d9e8,0
 beatbox_table
-	dc.l	$3f5a,$9f7b,$75ee,$d6a2
+	dc.l	$3f5a,$9f7b,$75ee,$d6a2,0
 nightmare_table
-	dc.l	$3f5a,$9ecd,$7580,$da18
+	dc.l	$3f5a,$9ecd,$7580,$da18,0
 
 
 ignition_ntsc_table:
@@ -471,12 +483,13 @@ ignition_ntsc_table:
 	dc.l	$9d71	; value written after MOVE.B	CIAA_SDR,D0 / BSET	#6,CIAA_CRA
 	dc.l	$73d8	; keyboard routine, near CMP.B	#$4d,D0
 	dc.l	$ceca	; copperlist to watch
+    dc.l    $6b94   ; routine to skip if operand msb is nonzero
 steel_wheel_ntsc_table
-	dc.l	$3f5a,$9e2b,$749e,$d9ce
+	dc.l	$3f5a,$9e2b,$749e,$d9ce,0
 beatbox_ntsc_table
-	dc.l	$3f5a,$9f61,$75d4,$d688
+	dc.l	$3f5a,$9f61,$75d4,$d688,0
 nightmare_ntsc_table
-	dc.l	$3f5a,$9eb3,$7566,$d9fe
+	dc.l	$3f5a,$9eb3,$7566,$d9fe,0
 
 ; those variables must remain contiguous
 sync_flag_value:
@@ -487,8 +500,26 @@ update_controls_address:
 	dc.l	0
 copper_address_to_check:
 	dc.l	0
+ignition_address_to_check:
+    dc.l    0
 ; end of contiguous area
 
+ignition_fix
+    movem.l  d0/a0,-(a7)
+    move.l  ignition_address_to_check(pc),a0
+    tst.l   (a0)
+    beq.b   .ok
+     ; bogus address MSB ($2920xxxx) can be encountered when completing
+     ; the planets and going up the left ramp
+    tst.b   (a0)
+    beq.b   .ok
+    clr.l   (a0)        ; address is invalid and is going to crash the game
+.ok
+    tst.l   (a0)    ; again
+    movem.l  (a7)+,d0/a0
+    rts
+    
+    
 level3_interrupt
     movem.l d0/a0,-(a7)
     move.w  _custom+intreqr,d0
@@ -797,7 +828,7 @@ _resload:
 _LoadFile:
 		movem.l	d0-d1/a0-a2,-(a7)
 		move.l	_resload(pc),a2
-		jsr	resload_LoadFile(a2)
+		jsr	resload_LoadFileDecrunch(a2)
 		lea	si(pc),a0
 		move.l	d0,(a0)
 		movem.l	(a7)+,d0-d1/a0-a2

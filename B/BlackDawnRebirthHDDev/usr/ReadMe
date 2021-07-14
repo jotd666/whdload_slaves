@@ -37,6 +37,12 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
  
+ version 1.1 (18.05.2021) done by JOTD:
+ - removed hardware banging in-game NTSC change that trashes display on exit.
+   PAL users: either add NTSC tooltype / start with NTSC switch or play in PAL.
+   Note: intro used to run in PAL mode and game switches to NTSC... Ugly.
+ - changed icon to original icon of this game
+ 
  version 1.0 (14.05.2021) done by JOTD:
  - initial release
  - source code included

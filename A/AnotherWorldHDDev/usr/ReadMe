@@ -39,6 +39,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 2.7 (02.06.2021) done by JOTD:
+ - reinstated support for another english version
+ 
  version 2.6 (19.04.2021) done by JOTD:
  - reinstated support for another french version (SPS2377)
  

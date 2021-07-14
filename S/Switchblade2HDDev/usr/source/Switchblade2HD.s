@@ -89,7 +89,7 @@ base
 	dc.b	0
 
 DECL_VERSION:MACRO
-	dc.b	"1.5"
+	dc.b	"1.6"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -128,7 +128,8 @@ Hiscore:
 	DECL_VERSION
 	dc.b	10,0
 	EVEN
-IGNORE_JOY_DIRECTIONS
+
+IGNORE_RAW_JOYDAT
 	include	ReadJoyPad.s
 	
 TAGLIST	dc.l	WHDLTAG_CUSTOM3_GET
@@ -149,7 +150,9 @@ Start	;	A0 = resident loader
 	jsr	resload_Control(a2)
 
 	bsr	_detect_controller_types
-	
+	lea third_button_maps_to(pc),a0
+    move.l  #JPF_BTN_YEL,(a0)
+    
 ; stingray, V1.3
 
 ; load boot
@@ -447,7 +450,7 @@ PLGAME	PL_START
 	rts
 
 .start_climbing_ladder
-	move.l	joy1_buttons(pc),d0
+	move.l	joy1(pc),d0
 	btst	#JPB_BTN_UP,d0
 	bne.b	.climb		; if it wasn't "up", then jump
 	add.l	#$3C,(a7)	; jump
@@ -462,7 +465,7 @@ PLGAME	PL_START
 	
 .do_jump
 	move.l	D0,-(a7)
-	move.l	joy1_buttons(pc),d0
+	move.l	joy1(pc),d0
 	btst	#JPB_BTN_BLU,d0
 	bne.b	.jump		; if it wasn't "up", then do nothing
 	btst	#JPB_BTN_YEL,d0
@@ -786,11 +789,11 @@ TEST_BUTTON:MACRO
     eor.b   #1,(a0)
     beq.b   .nochange
     
-    lea prev_buttons_state(pc),a0
+    lea joy1(pc),a0
     lea	.rawkey,a1
     move.l  (a0),d1     ; get previous state
-	bsr	_read_joysticks_buttons
-	move.l	joy1_buttons(pc),d0
+    moveq.l #1,d0
+	bsr	_read_joystick
     cmp.l   d0,d1
     beq.b   .nochange   ; cheap-o test just in case no input has changed
     move.l  d0,(a0)     ; save previous state for next time
@@ -818,7 +821,7 @@ TEST_BUTTON:MACRO
 	beq.b	.from_shop	; shop: no buttons
 	
 	movem.l	d1/a0,-(a7)
-	move.l	joy1_buttons(pc),d1
+	move.l	joy1(pc),d1
 	move.l	$DFF00A,D0
 	; here just make BLU exactly like UP
 	; we'll sort out the difference later in the game

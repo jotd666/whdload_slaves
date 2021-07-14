@@ -45,7 +45,20 @@
 	BITDEF	JP,BTN_RED,$16
 	BITDEF	JP,BTN_BLU,$17
 
-; optional call to differentiate 2-button joystick from CD32 joypad
+POTGO_RESET = $FF00  	; was $FFFF but changed, thanks to robinsonb5@eab
+
+	XDEF	_detect_controller_types
+	XDEF	_read_joystick
+
+; if IGNORE_JOY_DIRECTIONS is set, also don't return
+; joydat in D1
+; if IGNORE_RAW_JOYDAT is set, don't return joydat in D1
+; but still read joystick movements
+    IFD IGNORE_JOY_DIRECTIONS
+IGNORE_RAW_JOYDAT
+    ENDC
+    
+; optional call to differentiate 2/3-button joystick from CD32 joypad
 ; default is "all joypads", but when using 2-button joystick second button,
 ; the problem is that all bits are set (which explains that pressing 2nd button usually
 ; triggers pause and/or both shoulder buttons => quit game)
@@ -56,10 +69,8 @@
 ; advantage:
 ; less CPU time consumed while trying to read ghost buttons
 ;
-; set IGNORE_JOY_DIRECTIONS to avoid direction readings (when they're not needed, like
-; ... most of the time when remapping buttons in games)
-
 _detect_controller_types:
+    movem.l d0/a0,-(a7)
 	moveq	#0,d0
 	bsr		.detect
 	; ignore first read
@@ -76,6 +87,7 @@ _detect_controller_types:
 	bsr		.detect
 	lea	controller_joypad_1(pc),a0
 	move.b	D0,(A0)
+    movem.l (a7)+,d0/a0
 	rts
 
 .wvbl:
@@ -88,7 +100,7 @@ _detect_controller_types:
 	beq.b	.wait
 	rts
 .detect
-		movem.l	d1-d6/a0-a1,-(a7)
+		movem.l	d1-d5/a0-a1,-(a7)
 	
 		tst.l	d0
 		bne.b	.port1
@@ -96,13 +108,11 @@ _detect_controller_types:
 		moveq	#CIAB_GAMEPORT0,d3	; red button ( port 0 )
 		moveq	#10,d4			; blue button ( port 0 )
 		move.w	#$f600,d5		; for potgo port 0
-		moveq	#joy0dat,d6		; port 0
 		bra.b	.buttons
 .port1
 		moveq	#CIAB_GAMEPORT1,d3	; red button ( port 1 )
 		moveq	#14,d4			; blue button ( port 1 )
 		move.w	#$6f00,d5		; for potgo port 1
-		moveq	#joy1dat,d6		; port 1
 
 .buttons
 		lea	$DFF000,a0
@@ -139,49 +149,43 @@ _detect_controller_types:
 .gamecont5	dbf	d1,.gamecont3
 
 		bclr	d3,ciaddra(a1)		;set bit to in at ciapra
-		move.w	#$ff00,potgo(a0)	;changed from ffff, according to robinsonb5@eab
+		move.w	#POTGO_RESET,potgo(a0)	;changed from ffff to ff00, according to robinsonb5@eab
 		
 		or.b	#$C0,ciapra(a1)	;reset port direction
 
 		; test only last bits
 		and.w	#03,D0
 		
-		movem.l	(a7)+,d1-d6/a0-a1
+		movem.l	(a7)+,d1-d5/a0-a1
 		rts
-	
-; reads both joysticks buttons and store the values in joy0/joy1
-; all registers are preserved
+		
+_joystick:
 
-_read_joysticks_buttons:
-	; save D1 cos it'll be overwritten by the directions, that
-	; we don't care about
-	IFD	IGNORE_JOY_DIRECTIONS
-	movem.l	d1,-(a7)
-	ENDC
-	movem.l	d0/a0,-(a7)
-;	moveq	#0,d0
-;	bsr	_read_joystick
+	moveq	#0,d0
+	bsr	_read_joystick
 
-;	lea	joy0_buttons(pc),a0
-;	move.l	d0,(a0)		
+		movem.l	a0,-(a7)	; put input 0 output in joy0
+		lea	joy0(pc),a0
+		move.l	d0,(a0)		
+		movem.l	(a7)+,a0
 
 	moveq	#1,d0
 	bsr	_read_joystick
 
-	lea	joy1_buttons(pc),a0
-	move.l	d0,(a0)		
+		movem.l	a0,-(a7)	; put input 1 output in joy1
+		lea	joy1(pc),a0
+		move.l	d0,(a0)		
 	
-	movem.l	(a7)+,d0/a0
-	IFD	IGNORE_JOY_DIRECTIONS
-	movem.l	(a7)+,d1
-	ENDC
+		movem.l	(a7)+,a0
+
 	rts	
 
 _read_joystick:
-		IFD	IGNORE_JOY_DIRECTIONS
-		movem.l	d1,-(a7)
-		ENDC
+    IFD    IGNORE_RAW_JOYDAT
+		movem.l	d1-d7/a0-a1,-(a7)
+    ELSE
 		movem.l	d2-d7/a0-a1,-(a7)
+    ENDC
 	
 		tst.l	d0
 		bne.b	.port1
@@ -205,7 +209,7 @@ _read_joystick:
 
 		moveq	#0,d7
 
-		IFND		IGNORE_JOY_DIRECTIONS
+    IFND    IGNORE_JOY_DIRECTIONS
 		move.w	0(a0,d6.w),d0		;get joystick direction
 		move.w	d0,d6
 
@@ -230,9 +234,9 @@ _read_joystick:
 		add.w	d7,d7
 
 		swap	d7
-		ENDC
-		
-	;two buttons
+	ENDC
+    
+	;two/three buttons
 
 		btst	d4,potinp(a0)	;check button blue (normal fire2)
 		seq	d7
@@ -251,7 +255,7 @@ _read_joystick:
 
 		moveq	#0,d0
 		tst.b	d2
-		beq.b	.no_further_button_test
+		beq.b	.read_third_button
 		
 		bset	d3,ciaddra(a1)	;set bit to out at ciapra
 		bclr	d3,ciapra(a1)	;clr bit to in at ciapra
@@ -282,33 +286,44 @@ _read_joystick:
 
 .gamecont5	dbf	d1,.gamecont3
 
-.no_further_button_test
-
 		bclr	d3,ciaddra(a1)		;set bit to in at ciapra
-		move.w	#$ff00,potgo(a0)	;changed from ffff, according to robinsonb5@eab
+.no_further_button_test
+		move.w	#POTGO_RESET,potgo(a0)	;changed from ffff, according to robinsonb5@eab
+
 
 		swap	d0		; d0 = state
 		or.l	d7,d0
-		IFND	IGNORE_JOY_DIRECTIONS
+
+    IFND    IGNORE_RAW_JOYDAT        
 		moveq	#0,d1		; d1 = raw joydat
 		move.w	d6,d1
-		ENDC
-		
+	ENDC
+    
 		or.b	#$C0,ciapra(a1)	;reset port direction
 
+    IFD    IGNORE_RAW_JOYDAT        
+		movem.l	(a7)+,d1-d7/a0-a1
+    ELSE
 		movem.l	(a7)+,d2-d7/a0-a1
-		IFD	IGNORE_JOY_DIRECTIONS
-		movem.l	(a7)+,d1
-		ENDC
+    ENDC
 		rts
-
+.read_third_button
+        subq.l  #2,d4   ; shift from DAT*Y to DAT*X
+        btst	d4,potinp(a0)	;check third button
+        bne.b   .no_further_button_test
+        or.l    third_button_maps_to(pc),d7
+        bra.b    .no_further_button_test
+       
 ;==========================================================================
 
 ;==========================================================================
 
-joy0_buttons		dc.l	0		
-joy1_buttons		dc.l	0
+joy0		dc.l	0		
+joy1		dc.l	0
+third_button_maps_to:
+    dc.l    JPF_BTN_PLAY
 controller_joypad_0:
 	dc.b	$FF	; set: joystick 0 is a joypad, else joystick
 controller_joypad_1:
 	dc.b	$FF
+	

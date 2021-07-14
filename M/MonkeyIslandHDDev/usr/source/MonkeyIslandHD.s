@@ -67,7 +67,7 @@ slv_Version	= 16
 slv_Flags	= WHDLF_NoError|WHDLF_Examine
 slv_keyexit	= $5D	; num '*'
 
-	INCLUDE	kick13.s
+	INCLUDE	whdload/kick13.s
 
 ;============================================================================
 
@@ -76,7 +76,7 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"3.6"
+	dc.b	"3.7"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -317,8 +317,16 @@ pl_main
     PL_W    $01508,$4294	; clr.l (A0) -> clr.l (A4)
     
     PL_PSS   $00aae,fix_dma_1,2
+    
+    PL_S  $1642,8
+    PL_P    $165A,end_level6_interrupt
     PL_END
     
+end_level6_interrupt
+	MOVEM.L	(A7)+,D0/A6		;0165a: 4cdf4001
+	MOVE.W	#$2000,_custom+intreq		;01642: 33fc200000dff09c
+	MOVE.W	#$2000,_custom+intreq		;01642: 33fc200000dff09c
+	RTE				;0165e: 4e73
     
 new_Open:
 	move.l	D0,-(A7)

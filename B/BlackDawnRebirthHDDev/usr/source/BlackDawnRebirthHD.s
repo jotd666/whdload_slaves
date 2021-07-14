@@ -73,7 +73,7 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.0"
+	dc.b	"1.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -166,7 +166,7 @@ _bootdos
 		lea	program(pc),a0
 		lea	args(pc),a1
 		moveq	#args_end-args,d0
-		sub.l   a5,a5
+		lea patch_main(pc),a5
 		bsr	load_exe
 	;quit
 _quit		pea	TDREASON_OK
@@ -176,17 +176,7 @@ _quit		pea	TDREASON_OK
 ; < d7: seglist (APTR)
 
 patch_main
-	bsr	get_version
-
 	lea	pl_main(pc),a0
-.original    
-    IFD    CHIP_ONLY
-    move.l  d7,a1
-    add.l  a1,a1
-    add.l  a1,a1
-    addq.l  #4,a1
-    move.l  a1,$100.W
-    ENDC
     
     move.l  d7,a1
 	jsr	resload_PatchSeg(a2)
@@ -199,11 +189,24 @@ patch_main
 ; apply on SEGMENTS
 pl_main
     PL_START
-
+    PL_P   $29290,set_word
     ;PL_PS   $40918,set_copper
     PL_END
  
- set_copper:
+set_word
+	BTST	#0,D0			;29290: 08000000
+	BNE.S	LAB_0601		;29294: 6604
+    cmp.l   #$DFF1DC,A0     ; avoid NTSC change
+    beq.b   .skip
+	MOVE.W	D3,(A0)			;29296: 3083
+.skip
+	RTS				;29298: 4e75
+LAB_0601:
+	MOVE.B	D3,1(A0)		;2929a: 11430001
+	LSR.W	#8,D3			;2929e: e04b
+	MOVE.B	D3,(A0)			;292a0: 1083
+	RTS				;292a2: 4e75
+    
 get_version:
 	movem.l	d1/a0/a1,-(a7)
 	lea	program(pc),A0

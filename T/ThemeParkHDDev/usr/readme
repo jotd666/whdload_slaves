@@ -61,6 +61,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 3.1 (20.06.2021) done by JOTD
+ - fixed crash when quitting (issue #0005239)
+ 
  version 3.0 (22.04.2021) done by JOTD
  - support for CD32 version (issue #0001752)
  - fixed issue #0000806

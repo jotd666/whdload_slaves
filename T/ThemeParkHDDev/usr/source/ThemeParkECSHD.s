@@ -73,7 +73,7 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b    "3.0"
+	dc.b    "3.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -149,8 +149,10 @@ _bootdos
 		move.l	d7,d1
 		jsr	(_LVOUnLoadSeg,a6)
 _quit
-		pea	TDREASON_OK
-		jmp	(resload_Abort,a2)
+	pea	TDREASON_OK
+	move.l	(_resload,pc),-(a7)
+	add.l	#resload_Abort,(a7)
+	rts
 
 _end	jsr	(_LVOIoErr,a6)
 	move.l	a3,-(a7)

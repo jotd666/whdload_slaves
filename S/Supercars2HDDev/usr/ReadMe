@@ -32,6 +32,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+- todo: remove "insert disk" screen
+- todo: remove "early drive" advert
+
 Version 1.3 (28.02.2021) done by JOTD:
 
 - changed green/blue buttons to launch weapons by reverse/forward

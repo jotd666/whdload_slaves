@@ -41,6 +41,9 @@
  ------------------------------------
  (*) added support since last slave release)
  
+ version 2.2 (xx.05.2021) done by JOTD:
+ - fixed install script
+ 
  version 2.1 (09.05.2021) done by JOTD:
  - german version supported (issue #0002640)
  

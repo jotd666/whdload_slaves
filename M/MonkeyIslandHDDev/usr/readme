@@ -66,6 +66,9 @@ Notes:
 
 History:
 
+ Version 3.7 (08.07.2021) done by JOTD:
+ - fixed music going too fast for some machines (issue #0004970)
+
  Version 3.6 (29.11.2020):
  - fixed sound glitches (issue #0004882)
  - improved source code

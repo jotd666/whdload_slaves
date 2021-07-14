@@ -20,6 +20,10 @@
  (+ 0.8 other memory for preload option)
 
 
+Version 1.6 (14.07.2021) done by JOTD:
+- fixed up not working to climb ladders bug (issue #0005205 introduced in 1.5)
+- support for three button joystick: third button used for big jump
+
 Version 1.5 (13.05.2021) done by JOTD:
 - optional disable blitterwaits with CUSTOM4 (slow machines) (issue #0005161)
 - read joypad less often (reduces screen glitches?)

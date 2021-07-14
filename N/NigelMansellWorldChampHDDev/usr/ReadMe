@@ -24,7 +24,7 @@
  an appropriate requester.
  Additionally the file "kick34005.A500.RTB" must be installed in the same
  directory as the kickstart image. It can be found in the archive 
- "util/boot/skick345.lha" on aminet.
+ "util/boot/skick346.lha" on aminet.
 
 
  If you have problems with this installation please try and get a newer
@@ -39,6 +39,12 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 2.0 ()
+ - TODO: enable fastmem CD32 version (copperlist issue)
+ - TODO: fix various crashes in AGA/ECS
+ - separate ECS version using only 512kb chip
+ - TODO: installer redone from scratch
+ 
  version 1.3 (25.01.06) done by JOTD
  - support for CD³² version (not very good, but allows to play) with joystick
  - fixed bug that made results music played wrong when using fastmem on AGA version

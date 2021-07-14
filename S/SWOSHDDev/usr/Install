@@ -1,6 +1,6 @@
 ;****************************	;SWOS installer by Codetapper/Action 18/02/2001
 
-(set #sub-dir "")		;sub directory containing data files
+(set #sub-dir "data")		;sub directory containing data files
 (set #readme-file "ReadMe")	;name of readme file
 (set #cleanup "")		;files to delete after install
 

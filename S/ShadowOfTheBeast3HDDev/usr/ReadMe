@@ -15,10 +15,18 @@
 
 REQUIREMENTS:
 - Slave requires WHDLoad V17+ and RawDIC
-- Game requires 512Kb chip mem & 512Kb fast mem (+2.9Mb other memory for preload option)
+- Game requires 512Kb chip mem (+2.9Mb other memory for preload option)
 
+Version 2.0 - done by JOTD (14.07.2021)
+- now uses 512k of chipmem only (issue #0005286)
+- install script fixed (issue #0005291)
+- BUTTONWAIT to be able to see old man HAM pic & mission pics (issue #0005288)
+- fixed/reduced graphic glitches (joypad controls) (issue #0005293)
+- enabling button for jump skipped intro screens
+
+ 
 Version 1.7 - done by JOTD (08.06.2020)
-- CUSTOM2: blue/second button jumps instead of up (and ladders are properly handled)
+- CUSTOM2: blue/second button jumps instead of up (and ladders are properly handled) (issue #0005274)
 - Trainer: infinite lives / in-game keys now enabled only with the trainer
 - Skip introduction now mapped to CUSTOM4
 
@@ -82,6 +90,17 @@ and if in-game cheat keys are on:
 
 - FORWARD: invincibility (cursor right)
 - BACKWARDS: remove invincibility (cursor left)
+
+Notes for 2.0 (JOTD):
+
+I had to introduce a new CUSTOM3 switch to enable joypad controls. In previous versions, joypad was read
+very frequently and the joypad read routine (with all buttons) is rather slow (thanks to the way it's done in
+the hardware) and in this particular game triggers graphical glitches. What I did is:
+
+- read second button "classically" without the CD32 joypad routine
+- if CUSTOM3 is set, read the joypad fully every 200 milliseconds, which is enough to trigger meta actions
+  and also switch weapon (green button if blue=jump). Graphical glitches can still occur, but attenuated compared
+  to the previous version. If it works for you, well, that's good.
 
 Notes for 1.7 (JOTD):
 

@@ -8,7 +8,7 @@
 (set #sol-file "Solution")		;name of solution file
 (set #highs-file "highs")		;name of high scores file
 (set #last-file "disk.0")          ;last file the imager should create
-(set #prefix "NigelMansellWC")                       ;name of slave, directory
+(set #prefix "NigelMansellWorldChamp")                       ;name of slave, directory
 
 ;----------------------------
 ; copy file including icon if exist
