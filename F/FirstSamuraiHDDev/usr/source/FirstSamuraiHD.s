@@ -33,15 +33,15 @@
 
 _base		SLAVE_HEADER		;ws_Security + ws_ID
 		dc.w	17		;ws_Version
-		dc.w	WHDLF_Disk|WHDLF_NoError|WHDLF_EmulTrap	;ws_flags
-		dc.l	$100000		;ws_BaseMemSize
+		dc.w	WHDLF_NoError|WHDLF_EmulTrap	;ws_flags
+		dc.l	$80000		;ws_BaseMemSize
 		dc.l	0		;ws_ExecInstall
 		dc.w	Start-_base	;ws_GameLoader
 		dc.w	0		;ws_CurrentDir
 		dc.w	0		;ws_DontCache
 _keydebug	dc.b	0		;ws_keydebug = none
 _keyexit	dc.b	$5F		;ws_keyexit = Help
-_expmem		dc.l	0		;ws_ExpMem
+_expmem		dc.l	$80000		;ws_ExpMem
 		dc.w	_name-_base	;ws_name
 		dc.w	_copy-_base	;ws_copy
 		dc.w	_info-_base	;ws_info
@@ -65,7 +65,7 @@ _config
 	DOSCMD	"WDate  >T:date"
 	ENDC
 DECL_VERSION:MACRO
-	dc.b	"2.0"
+	dc.b	"2.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -96,6 +96,9 @@ Start	;	A0 = resident loader
 	clr.l	current_level_select	; we'll use $4 to store some data
 	
 	bsr	_detect_controller_types
+    lea third_button_maps_to(pc),a0
+    move.l  #JPF_BTN_GRN,(a0)
+    
 	bsr	calibrate_delay_loop
 
 		;get tags
@@ -124,7 +127,7 @@ Start	;	A0 = resident loader
 	moveq	#1,d2
 	bsr.w	_LoadDisk
 
-	move.l	#$80000,0.w			; ext mem
+	move.l	_expmem(pc),0.w			; ext mem
 
 	lea	BOOT_ADDRESS,A1
 	lea	pl_boot_ecs(pc),a0
@@ -150,7 +153,7 @@ Start	;	A0 = resident loader
 		moveq	#1,d2
 		bsr.w	_LoadDisk
 
-		move.l	#$80000,-4(a0)			; ext mem
+		move.l	_expmem(pc),-4(a0)			; ext mem
 		move.l	A0,A1
 		lea	pl_boot_aga(pc),a0
 		jsr	resload_Patch(a2)
@@ -939,7 +942,7 @@ exit
 		rts
 
 set_max_specials_910:
-	moveq.w	#10,d0
+	move.w	#10,d0
 	MOVE.W	D0,$2faaa
 	MOVE.W	D0,$2faa2
 	rts

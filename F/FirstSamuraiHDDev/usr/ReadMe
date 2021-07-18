@@ -17,7 +17,7 @@
  To install from a different drive than DF0: select Expert as
  installation mode.
  
- You need 1.0 MB ChipMem and 0.5 MB OtherMem.
+ You need 0.5 MB ChipMem and 1.0 MB OtherMem (plus 2 MB for PRELOAD)
  You can quit the game by pressing Help (key can be changed with
  Tooltype "QuitKey=").
 
@@ -40,6 +40,10 @@
 
 History:
 		  
+ Version 2.1 (16.07.2021) done by JOTD:
+ - 3-button joystick support
+ - only 512k chipmem required now
+
  Version 2.0 (31.08.2019) done by JOTD (features added only for ECS original)
  - CUSTOM3=1 forces introduction skip (which could be achieved by holding fire...)
  - CUSTOM2=1 enables jump with second button (easier to play & perform rear sword/kicks)
@@ -86,8 +90,8 @@ History:
  - FWD+REV+PLAY: quit to workbench
  - PLAY: pause (fire to unpause)
  - FWD+REV: quit current game
- - GREEN: enables bell
- - BLUE: jump (if jump option selected)
+ - GREEN: enables bell special (also third button)
+ - BLUE: jump (if jump option selected) (also second button)
  
  Joypad controls - Menu:
  - FWD+REV+PLAY: quit to workbench
@@ -106,6 +110,7 @@ History:
  - FWD+REV+PLAY: quit to workbench
  - BLUE: simulate ENTER (so no keyboard is required at all)
 
- Note: if you have a 2-button joystick (and not a joypad), blue button will still work
+ Note: if you have a 2-button joystick (and not a joypad), blue button will still work,
+ and if you have a 3-button joystick, the third button will act as green (enable specials)
  
  
