@@ -1,0 +1,95 @@
+
+			 CABAL
+
+Typed in by THE TWINS of TRILOGY. Edited by PARASITE.
+
+
+SCENARIO
+The coin-op sensation that throws you deep into enemy territory with
+little more than a low-powered, single shot repeater for protection.
+With superior marksmanship and lighting reactions you can increase the
+odds - in your favour.
+
+Capture enhanced weaponry, including grenades, and now you can really
+make your mark!.....That is, until you come face to face with the enemy
+gunships, tanks and submarines. Equip yourself for some stunning arcade
+action, load up and FIRE!!!!
+
+CONTROLS
+This is a one or two player game,and can be played with joystick in
+port 2.
+
+JOYSTICK
+
+Without Fire
+                           Move sight up
+                                  |
+                    Move sight    |    Move sight
+                     up/left  \   |   / up/right
+                               \  |  /
+                                \ | /
+     Move sight/man left ---------+--------- Move sight/man right
+                                / | \
+                               /  |  \
+                   Move sight /   |   \ Move sight
+                      down/left   |   down/right
+                                  |
+                           Move sight down
+
+With Fire
+
+                       Move sight/fire gun up
+                                  |
+                                  |
+                                  |
+                                  |
+                                  |
+Move sight/fire gun left ---------+--------- Move sight/fire gun right
+                                  |
+                                  |
+                                  |
+                                  |
+                                  |
+                      Move sight/fire gun down
+
+STATUS AND SCORING
+The top of the status panel from left to right displays:
+ Numbers of lives remaining, current player, and score.
+The bottom of the status panel from left to right displays:
+ Grenades and enemy damage.
+An extra life will be awarded every 10.000 points.
+The blue enemy damage indicator will gradually turn red as more enemies
+are destroyed. When completely red the section is complete.
+
+Points are awarded as follows:-
+
+Soldiers           10 points
+Marines            45 points
+Tank 1            100 points
+Tank 2            110 points
+Truck             150 points
+Frogman            95 points
+Moterbikes        300 points
+Buildings          10 points
+Helicopter/Plane 1500 points
+Grenades          125 points
+Bullets             5 points
+Bonus Score Icons 100, 200 or 300 points
+
+GAMEPLAY
+There are five levels each with four stages. During the first four
+stages of each level you must eliminate all enemies, tanks,
+helicopters, planes and cars. At the end of the fourth stage of each
+level you will meet a very tough adversary.
+ You have a constant supply of fire power. Certain objects, when
+destroyed will give you bonus items such as extra grenades, bonus
+scores, bazookas or machine guns.
+
+HINTS AND TIPS
+ * Save grenades for crowds and buildings
+ * Collect extra weapons for better fire power
+ * Blow up all buildings
+ * Hide behind barrels and walls etc.
+
+End.
+
