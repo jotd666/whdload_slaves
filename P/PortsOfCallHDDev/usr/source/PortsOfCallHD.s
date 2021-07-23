@@ -13,7 +13,6 @@
 ;---------------------------------------------------------------------------*
 
 	INCDIR	Include:
-	INCDIR	osemu:
 	INCLUDE	whdload.i
 	INCLUDE	whdmacros.i
 	INCLUDE	lvo/dos.i
@@ -56,6 +55,7 @@ IOCACHE		= 10000
 ;SETPATCH
 ;STACKSIZE = 10000
 BOOTDOS
+SEGTRACKER
 CACHE
 FONTHEIGHT = 8
 
@@ -73,7 +73,7 @@ slv_keyexit	= $5D	; num '*'
 
 
 DECL_VERSION:MACRO
-	dc.b	"1.1"
+	dc.b	"1.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -99,6 +99,8 @@ slv_CurrentDir:
 
 _program:
 	dc.b	"PortsOfCall",0
+_program_german:
+	dc.b	"PortsOfCallG",0
 _args		dc.b	10
 _args_end
 	dc.b	0
@@ -109,6 +111,16 @@ _args_end
 	DECL_VERSION
 	EVEN
 
+
+GETFILESIZE:MACRO
+	movem.l	d1/a0/a1/a2,-(a7)
+	move.l	_resload(pc),a2
+	lea	\1(pc),a0
+	jsr	resload_GetFileSize(a2)
+	movem.l	(a7)+,d1/a0/a1/a2
+    tst.l   d0
+	ENDM
+    
 _bootdos
 		clr.l	$0.W
 
@@ -119,7 +131,7 @@ _bootdos
 		lea	_stacksize(pc),a2
 		move.l	4(a7),(a2)
 
-		move.l	(_resload),a2		;A2 = resload
+		move.l	(_resload,pc),a2		;A2 = resload
 
 	;get tags
 		lea	(_tag,pc),a0
@@ -136,8 +148,13 @@ _bootdos
 ;		sub.l	a1,a1
 ;		bsr	_dos_assign
 
-	;load exe
 		lea	_program(pc),a0
+        GETFILESIZE _program
+        bne.b   .ok
+	;load exe
+		lea	_program_german(pc),a0
+        GETFILESIZE _program_german
+.ok
 		lea	_args(pc),a1
 		moveq	#_args_end-_args,d0
 		sub.l	a5,a5
@@ -150,33 +167,38 @@ _quit		pea	TDREASON_OK
 ; < d7: seglist (APTR)
 
 
-GETFILESIZE:MACRO
-	movem.l	d1/a1/a2,-(a7)
-	move.l	_resload(pc),a2
-	lea	\1(pc),a0
-	jsr	resload_GetFileSize(a2)
-	movem.l	(a7)+,d1/a1/a2
-	ENDM
 
 patch_main
 	move.l	d7,a1
-	add.l	#4,a1
 	GETFILESIZE	_program
 	cmp.l	#177784,d0
 	beq.b	.rerelease
 	cmp.l	#178996,d0
 	beq.b	.v1
+    tst.l   d0
+    beq.b   wrong_version
+    GETFILESIZE	_program_german
+	cmp.l	#179944,d0
+	beq.b	.german
 	bra	wrong_version
 .rerelease
 	rts
 .v1
 	lea	pl_v1(pc),a0
-	jsr	resload_Patch(a2)
+	jsr	resload_PatchSeg(a2)
+	rts
+.german
+	lea	pl_german(pc),a0
+	jsr	resload_PatchSeg(a2)
 	rts
 
 pl_v1
 	PL_START
 	PL_B	$60,$38B2	; protection removed (thanks LockPick)
+	PL_END
+pl_german
+	PL_START
+	PL_B	$60,$393c	; protection removed (thanks LockPick)
 	PL_END
 
 wrong_version
@@ -205,8 +227,6 @@ _load_exe:
 	cmp.l	#0,A5
 	beq.b	.skip
 	movem.l	d2/d7/a4,-(a7)
-	add.l	d7,d7
-	add.l	d7,d7
 	jsr	(a5)
 	bsr	_flushcache
 	movem.l	(a7)+,d2/d7/a4
@@ -246,7 +266,7 @@ _load_exe:
 	rts
 
 _saveregs
-		blk.l	16,0
+		ds.l	16,0
 _stacksize
 		dc.l	0
 
