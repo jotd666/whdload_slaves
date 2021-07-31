@@ -21,8 +21,10 @@ Version 2.0 - done by JOTD (14.07.2021)
 - now uses 512k of chipmem only (issue #0005286)
 - install script fixed (issue #0005291)
 - BUTTONWAIT to be able to see old man HAM pic & mission pics (issue #0005288)
+- meta controls are now optional (CD32 joypad)
+- 3 button joystick support
 - fixed/reduced graphic glitches (joypad controls) (issue #0005293)
-- enabling button for jump skipped intro screens
+- enabling button for jump wrongly skipped intro screens
 
  
 Version 1.7 - done by JOTD (08.06.2020)
@@ -81,7 +83,7 @@ joypad controls:
 - BLUE (second button on a 2 button joystick):
    - weapon change (space) (if CUSTOM2=0)
    - jump (if CUSTOM2=1)
-- GREEN: weapon change (if CUSTOM2=0)
+- GREEN (or third button): weapon change (if CUSTOM2=0)
 - START: pause (P)
 - GREEN+YELLOW: restart part (HELP)
 - FORWARD+BACKWARDS: quit current game (F10)

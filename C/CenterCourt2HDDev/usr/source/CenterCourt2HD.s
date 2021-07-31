@@ -19,7 +19,7 @@
 
 ;CHIP_ONLY
 	IFD BARFLY
-	OUTPUT	"CenterCourts2.slave"
+	OUTPUT	"CenterCourt2.slave"
 	IFND	CHIP_ONLY
 	BOPT	O+				;enable optimizing
 	BOPT	OG+				;enable optimizing
@@ -75,7 +75,7 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.0"
+	dc.b	"1.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -88,9 +88,10 @@ DECL_VERSION:MACRO
 	dc.b	"$","VER: slave "
 	DECL_VERSION
 	dc.b	0
-
-;assign
-;	dc.b	"Boppin",0
+assign
+	dc.b	"ENV",0
+ram
+	dc.b	"RAM:",0
 
 slv_name		dc.b	"Center Court 2"
 	IFD	CHIP_ONLY
@@ -187,6 +188,9 @@ _bootdos
 		jsr	(_LVOOldOpenLibrary,a6)
 		move.l	d0,a6			;A6 = dosbase
 
+		lea     (assign,pc),a0
+		lea     (ram,pc),a1
+		bsr     _dos_assign
 
 	;load exe
 		lea	tennis_organizer(pc),a0

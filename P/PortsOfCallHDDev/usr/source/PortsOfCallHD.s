@@ -30,16 +30,16 @@
 
 ;============================================================================
 
-;DEBUG
+;CHIP_ONLY
 
-	IFD	DEBUG
+	IFD	CHIP_ONLY
 HRTMON
-CHIPMEMSIZE	= $100000
+CHIPMEMSIZE	= $C0000
 FASTMEMSIZE	= $0000
 	ELSE
 BLACKSCREEN
 CHIPMEMSIZE	= $80000
-FASTMEMSIZE	= $80000
+FASTMEMSIZE	= $40000
 	ENDC
 
 NUMDRIVES	= 1
@@ -57,7 +57,7 @@ IOCACHE		= 10000
 BOOTDOS
 SEGTRACKER
 CACHE
-FONTHEIGHT = 8
+;;FONTHEIGHT = 8
 
 slv_Version	= 16
 slv_Flags	= WHDLF_NoError|WHDLF_Examine
@@ -73,19 +73,24 @@ slv_keyexit	= $5D	; num '*'
 
 
 DECL_VERSION:MACRO
-	dc.b	"1.2"
+	dc.b	"1.3"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
 	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
+	ENDC
 	ENDM
+
 
 _assign
 	dc.b	"PortsOfCall",0
 
 slv_name		dc.b	"Ports Of Call"
-	IFD	DEBUG
-	dc.b	" (DEBUG MODE)"
+	IFD	CHIP_ONLY
+	dc.b	" (DEBUG/Chip MODE)"
 	ENDC
 	dc.b	0
 slv_copy		dc.b	"1989 International Software Development",0
@@ -107,7 +112,7 @@ _args_end
 
 ; version xx.slave works
 
-	dc.b	"$","VER: slave "
+	dc.b	"$VER: slave "
 	DECL_VERSION
 	EVEN
 
@@ -157,7 +162,7 @@ _bootdos
 .ok
 		lea	_args(pc),a1
 		moveq	#_args_end-_args,d0
-		sub.l	a5,a5
+		lea patch_main(pc),a5
 		bsr	_load_exe
 	;quit
 _quit		pea	TDREASON_OK
@@ -172,11 +177,11 @@ patch_main
 	move.l	d7,a1
 	GETFILESIZE	_program
 	cmp.l	#177784,d0
-	beq.b	.rerelease
+	beq.b	.rerelease      ; or crack!
 	cmp.l	#178996,d0
 	beq.b	.v1
     tst.l   d0
-    beq.b   wrong_version
+    bne.b   wrong_version
     GETFILESIZE	_program_german
 	cmp.l	#179944,d0
 	beq.b	.german
@@ -194,11 +199,11 @@ patch_main
 
 pl_v1
 	PL_START
-	PL_B	$60,$38B2	; protection removed (thanks LockPick)
+	PL_B	$38B2,$60	; protection removed (thanks LockPick)
 	PL_END
 pl_german
 	PL_START
-	PL_B	$60,$393c	; protection removed (thanks LockPick)
+	PL_B	$393c,$60	; protection removed (thanks LockPick)
 	PL_END
 
 wrong_version
@@ -247,6 +252,11 @@ _load_exe:
 	addq.l	#4,a7
 
 	movem.l	(a7)+,d7/a6
+    ; quit, as unloading exe seems to crash (corrupt memlist?)
+	pea	TDREASON_OK
+	move.l	_resload(pc),-(a7)
+	addq.l	#resload_Abort,(a7)
+	rts
 
 	;remove exe
 

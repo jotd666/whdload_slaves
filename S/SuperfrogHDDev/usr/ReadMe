@@ -35,11 +35,12 @@ REQUIREMENTS:
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
  
-version 1.5: (10-march-2021) done by JOTD
+version 1.5: (28-july-2021) done by JOTD
 - removed "leave original level codes" as they work even with
   special level codes activated
 - CUSTOM2 now becomes the option to enable jump with second button
   (following my convention for second button jump options)
+- 3-button joystick support (third button: pause)
 
 version 1.4: (11-may-2019) done by JOTD
 - fixed low jump on floppy version when in 2-button mode

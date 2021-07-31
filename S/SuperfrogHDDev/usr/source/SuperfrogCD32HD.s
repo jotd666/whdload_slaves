@@ -80,7 +80,7 @@ _expmem		dc.l	0			;ws_ExpMem
 	DOSCMD	"WDate  >T:date"
 	ENDC
 DECL_VERSION:MACRO
-	dc.b	"1.3"
+	dc.b	"1.5"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -112,8 +112,7 @@ _LastKeypress	dc.b	0
 _CheatFlag	dc.b	0
 _Registered	dc.b	0
 _config
-        dc.b    "C1:X:blue/second button jumps:0;"
-        dc.b    "C2:X:preserve original level codes:0;"
+        dc.b    "C2:B:blue/second button jumps;"
 		dc.b	0
 		EVEN
 
@@ -134,11 +133,8 @@ _Clear		clr.l	(a0)+
 		move.l	_resload(pc),a2
 		jsr	resload_Control(a2)
 
-		bsr	_detect_controller_type
+		bsr	_detect_controller_types
 		
-;		move.l	_Private3(pc),d2
-;		tst.l	d2
-;		ble	_NotRegistered
 
 		lea	_Registered(pc),a0
 		move.b	#-1,(a0)
@@ -207,10 +203,7 @@ _PL_Game	PL_START
 		PL_NOP	$398,$4		;jsr _LVORemIntServer(a6)
 		PL_NOP	$4ae,$4		;Escape no longer quits game
 		PL_B	$faa,$60		;Escape during game will not quit
-		PL_IFC2
-		PL_ELSE		
 		PL_P	$29cc,_GetLevel		;Allow 0000xx codes to work!
-		PL_ENDIF
 		PL_P	$31b0,_CopyNameIn	;Copies name into high score table
 		PL_PS	$7e14,_OpenDosLibrary	;Open dos library
 		PL_W	$7e1a,$4e71
@@ -226,7 +219,7 @@ _PL_Game	PL_START
 		PL_PS	$1ce82,_AF_ProjectF	;Access fault in Project F
 		PL_PS	$1ce9a,_AF_ProjectF	;Access fault in Project F
 
-		PL_IFC1
+		PL_IFC2
 		; this particular joydat read is used for jump, others, well
 		; are used for other stuff... (maybe other directions, other parts of the game/menu)
         PL_PS	$011c16,read_joy1dat_d0
@@ -314,7 +307,8 @@ _Keybd
 	movem.l	A0,-(a7)
 	; here we're going to inject pause/esc too
 	moveq.l	#0,d1
-	bsr	_read_joystick_port_1
+	moveq.l	#1,d0
+	bsr	_read_joystick
 	lea	buttons_state(pc),a0
 	move.l	d0,(a0)
 	btst	#JPB_BTN_PLAY,d0
@@ -487,7 +481,8 @@ _Encrypt	move.l	#160,d0			;Set d0 = length
 		rts
 
 ;======================================================================
-		include	ReadJoybuttons.s
+IGNORE_JOY_DIRECTIONS
+			include	ReadJoyPad.s
 
 buttons_state
 	dc.l	0

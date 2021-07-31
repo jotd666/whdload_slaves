@@ -8,7 +8,7 @@
  CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
  PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
- This install applies to "Center Courts 2" © 1996-1997 G. Fritsch
+ This install applies to "Center Courts 2" © 1996-1997 G. Fritsche
 
  This install requires WHDLoad to be in the path. It can be found in the
  WHDLoad package.
@@ -44,6 +44,10 @@
 
 
 
+ version 1.1 (29.07.2021) done by JOTD:
+ - can run with any diskfont.library (issue #0005319)
+ - fixed misc typos
+ 
  version 1.0 (24.07.2021) done by JOTD:
  - VBR accesses removed
 

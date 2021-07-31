@@ -83,15 +83,14 @@ _expmem		dc.l	EXTMEMSIZE			;ws_ExpMem
 		dc.w	_config-_base		;ws_config
 		
 _config
-        dc.b    "C1:X:blue/second button jumps:0;"
-        dc.b    "C2:X:preserve original level codes:0;"
+        dc.b    "C2:B:blue/second button jumps;"
 		dc.b	0
 
 	IFD BARFLY
 	DOSCMD	"WDate  >T:date"
 	ENDC
 DECL_VERSION:MACRO
-	dc.b	"1.4"
+	dc.b	"1.5"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -106,7 +105,7 @@ DECL_VERSION:MACRO
 
 _name		dc.b	"Superfrog"
 	IFD	CHIP_ONLY
-	dc.b	" (debug mode)"
+	dc.b	" (DEBUG/CHIP mode)"
 	ENDC
 	dc.b	0
 _copy		dc.b	"1993 Team 17",0
@@ -123,7 +122,7 @@ _Highs		dc.b	"Superfrog.highs",0
 _DiskNumber	dc.b	1
 _LastKeypress	dc.b	0
 _CheatFlag	dc.b	0
-_Registered	dc.b	0
+
 		EVEN
 
 ;======================================================================
@@ -137,13 +136,8 @@ _restart	lea	_Tags(pc),a0
 		move.l	_resload(pc),a2
 		jsr	resload_Control(a2)
 		
-		bsr	_detect_controller_type
-;		move.l	_Private3(pc),d2
-;		tst.l	d2
-;		ble	_NotRegistered
+		bsr	_detect_controller_types
 
-		lea	_Registered(pc),a0
-		move.b	#-1,(a0)
 
 _NotRegistered	lea	_Track0(pc),a0
 		lea	$10000,a1
@@ -159,8 +153,8 @@ _NotRegistered	lea	_Track0(pc),a0
 
 _PL_Boot	PL_START
 		PL_W	$2a,$200		;Colour bit fix
-		PL_W	$6c,$4e71		;Trap #0
-		PL_L	$9c,$4e714e71		;Don't load track 1
+		PL_NOP	$6c,2		;Trap #0
+		PL_NOP	$9c,4		;Don't load track 1
 		PL_PS	$a0,_SetA0ToTrack1	;lea $7c180,a0
 		PL_P	$cc,_PatchTrack1	;jmp $7c180
 		PL_P	$534,_Loader		;Patch Rob Northen loader
@@ -183,8 +177,9 @@ _PatchTrack1	movem.l	d0-d1/a0-a2,-(sp)
 		ELSE
 		move.l	_expmem(pc),a1
 		ENDC
-		
-		sub.l	a2,a2			;Further expansion memory
+		;Further expansion memory
+        ;only useful to avoid loading
+		sub.l	a2,a2			
 		lea	$80000,sp
 		jmp	$7c180
 
@@ -216,10 +211,7 @@ _Main		movem.l	d0-d1/a0-a2,-(sp)
 		jmp	(a1)
 
 _PL_Main	PL_START
-		PL_IFC2
-		PL_ELSE
 		PL_P	$2444,_GetLevel		;Allow 0000xx codes to work!
-		PL_ENDIF
 		PL_R	$281e			;Built in load/save high scores in menu
 		PL_P	$2c12,_CopyNameIn	;Copies name into high score table
 		PL_P	$b098,_Loader		;Patch Rob Northen loader
@@ -262,7 +254,7 @@ _PL_Main	PL_START
 ;        PL_PS	$011210,read_joy1dat_d0
 ;        PL_PS	$011322,read_joy1dat_d0
 
-		PL_IFC1
+		PL_IFC2
 		; this/those particular joydat read is used for jump, others, well
 		; are used for other stuff... (maybe other directions, other parts of the game/menu)
 		
@@ -362,7 +354,8 @@ _Keybd
 	movem.l	A0,-(a7)
 	; here we're going to inject pause/esc too
 	moveq.l	#0,d1
-	bsr	_read_joystick_port_1
+    moveq.l #1,d0
+	bsr	_read_joystick
 	lea	buttons_state(pc),a0
 	move.l	d0,(a0)
 	btst	#JPB_BTN_PLAY,d0
@@ -427,8 +420,6 @@ _Keybd
 .NoSkipLevel	cmp.b	#$58,d0			;Check for F9 key
 	bne	_SameKeyDown
 
-	move.b	_Registered(pc),d0
-	beq	_SameKeyDown
 
 	;Trainer options: $876-$879: Time remaining as ASCII
 	;                      $82e: Lives
@@ -751,8 +742,8 @@ _debug		pea	TDREASON_DEBUG
 _end		move.l	(_resload,pc),-(a7)
 		add.l	#resload_Abort,(a7)
 		rts
-
-			include	ReadJoybuttons.s
+IGNORE_JOY_DIRECTIONS
+			include	ReadJoyPad.s
 			
 _Track0		dc.l	$524E4301,$E00,$A63,$8353B84C,$12011
 		dc.l	$192AB366,$36343433,$44544862,$A8EE6C39,$E0456100
