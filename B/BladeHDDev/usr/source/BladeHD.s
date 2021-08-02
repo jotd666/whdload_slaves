@@ -62,6 +62,7 @@ CACHE
 slv_Version	= 17
 slv_keyexit	= $5D	; num '*'
     IFD AGA
+INITAGA
 slv_Flags	= WHDLF_NoError|WHDLF_Examine|WHDLF_ReqAGA|WHDLF_ClearMem
 	include	whdload/kick31.s
     ELSE
@@ -111,13 +112,17 @@ slv_info		dc.b	"adapted by JOTD",10,10
 slv_CurrentDir:
 	dc.b	"data",0
 
+intro:
+	dc.b	"intro",0
 program:
 	dc.b	"blade",0
 args		dc.b	10
 args_end
 	dc.b	0
 slv_config
-	;dc.b    "C1:X:Trainer Infinite lives:0;"
+    IFD AGA
+	dc.b    "C1:B:skip intro;"
+    ENDC
 	dc.b	0
 
 ; version xx.slave works
@@ -139,6 +144,8 @@ _bootdos
 		move.l	4(a7),(a2)
 
 		move.l	_resload(pc),a2		;A2 = resload
+		lea	(tag,pc),a0
+		jsr	(resload_Control,a2)
 
 	
 	;open doslib
@@ -156,6 +163,16 @@ _bootdos
 		lea	assign2(pc),a0
 		lea gfx(pc),a1
 		bsr	_dos_assign
+        ELSE
+        move.l  skip_intro(pc),d0
+        bne.b   .nointro
+		lea	intro(pc),a0
+		lea	args(pc),a1
+		moveq	#args_end-args,d0
+        ; no VBR or anything to fix in intro
+		sub.l   a5,a5
+		bsr	load_exe
+.nointro        
         ENDC
         
 	;load exe
@@ -170,18 +187,14 @@ _quit		pea	TDREASON_OK
 		jmp	(resload_Abort,a2)
 
 ; < d7: seglist (APTR)
+SEGMENT_SIZE = $20000
 
 patch_main
-	lea	pl_main(pc),a0
-
-    
+	lea	pl_main(pc),a0    
     move.l  d7,a1
 	jsr	resload_PatchSeg(a2)
-.skip
-	rts
-
-
-
+    rts
+    
 ; apply on SEGMENTS
 pl_main
     PL_START
@@ -189,13 +202,55 @@ pl_main
     PL_DATA $0066e,4
     sub.l   a0,a0
     nop
-    IFND    AGA
+    
+    ; fix color bit
+    PL_ORW  $086dc+2,$200   ; AGA
+    PL_ORW  $09810+2,$200   ; ECS status
+    PL_ORW  $0989c+6,$200   ; another ECS copperlist (ECS game?)
+    
+    IFD    AGA
+    PL_PSS    $0139a,alloc_screen_memory,4
+    PL_P    $013c2,free_screen_memory
+    
+    ELSE
     ;;PL_S    $102,$3A    ; force ECS (not really needed)
     ENDC
 
     PL_END
+
+    IFD    AGA
+
+    ; the remaining memory after the menu gfx HAS to be 0
+    ; but it is not: menu screen memory fills it with some non-zero
+    ; data, and afterwards some more chip is allocated: status bar is
+    ; trashed
+    ;    
+    ; fixes one of the issues with main game (trashed
+    ; bottom display) 
+    ; alloc only once the first time
+alloc_screen_memory
+    lea  allocated_buffer(pc),a0
+    tst.l   (a0)
+    bne.b   .ok
+	MOVE.L	#$00010002,D1		;0139a: 223c00010002
+	JSR	(_LVOAllocMem,A6)	;013a0: 4eaeff3a exec.library (off=-198)
+    lea allocated_buffer(pc),a0
+    move.l  d0,(a0)     ; store
+.ok
+    move.l  (a0),d0
+    rts
     
-    
+; hook on menu screen memory free and clear it
+; but don't free it as some other stuff can allocate
+; and trash the memory
+free_screen_memory
+    move.l   #$00014000/4-1,d1
+.clr
+    clr.l   (a1)+
+    dbf d1,.clr
+    ; don't free memory, keep it allocated
+    rts
+    ENDC
 ; < a0: program name
 ; < a1: arguments
 ; < d0: argument string length
@@ -218,12 +273,6 @@ load_exe:
 	beq.b	.skip
 	movem.l	d2/d7/a4,-(a7)
 
-	;get tags
-    move.l  _resload(pc),a2
-    lea (segments,pc),a0
-    move.l  d7,(a0)
-    lea	(tag,pc),a0
-	jsr	(resload_Control,a2)
 
 
 	jsr	(a5)
@@ -270,12 +319,14 @@ _stacksize
 		dc.l	0
 
 tag		dc.l	WHDLTAG_CUSTOM1_GET
-custom1	dc.l	0
-        dc.l    WHDLTAG_DBGSEG_SET
-segments:
+skip_intro	dc.l	0
+
 		dc.l	0
 		dc.l	0
 
+allocated_buffer
+    dc.l    0
+        
 ;============================================================================
 
 	END

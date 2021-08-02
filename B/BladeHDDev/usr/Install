@@ -195,7 +195,7 @@
         (help @copyfiles-help)
         (source ("%s:" #AD_disk))
         (dest #dest)
-	(pattern "~(s|Data2.lha)")
+	(pattern "~(s|c|Data2.lha)")
       )
 
     (copyfiles
@@ -217,10 +217,14 @@
     )
     (makedir #agadata)
 
+(select #slave-version
+(
     (set #ocsdata
      (tackon #dest "OCSData/")
     )
     (makedir #ocsdata)
+)
+(    
     
     (set #unpacking "unpacking...")
     
@@ -229,7 +233,12 @@
     (cat
     "T:lha -x -q x Blade1:Data2.lha " #sound
     )
-    )    
+    )
+)
+)
+
+(select #slave-version
+(
       ;if the disk can be requested by the volume name:
       (set #AD_disk "Blade2")
       (set #AD_diskname "Disk 2")	;this optional, default is #AD_disk
@@ -241,21 +250,28 @@
      (pattern "#?.gfx")
      (files)
     )
-
-    (complete 60)
-
     (copyfiles
      (help @copyfiles-help)
      (source "Blade2:MODBlade.mus")
      (dest #ocsdata)
     )
-      
+    
+)
+(
     (working #unpacking)
     (run
      (cat
      "T:lha -x -q x Blade2:Data3.lha " #sound
      )
     )
+)
+)
+
+
+      ; ECS doesn't need disks 3 and 4
+(select #slave-version
+("")
+(
       
       ;if the disk can be requested by the volume name:
       (set #AD_disk "Blade3")
@@ -285,10 +301,8 @@
         (dest #dest)
 	(pattern "~(s)")
       )
-
-      ;example: decompress a packed file
-     ; (set #file (tackon #dest "DAWNII"))
-     ; (P_XFDDecrunch)
+)
+)
         
 
 
@@ -1212,7 +1226,28 @@
 )
 
 (P_SelectVersion)
-(if (= #prefix-slave "") (set #prefix-slave #prefix))
+
+
+      (set #slave-version
+        (askchoice
+          (prompt ("Which version of %s slave would you like to install?" @app-name))
+          (default 0)
+	
+	  (choices
+		"Original release (ECS)"
+		"Original release (AGA)"
+
+	  )
+          (help @askchoice-help)
+        )
+      )
+      
+       (select #slave-version
+       (set #prefix-slave (cat #prefix "ECS"))
+       (set #prefix-slave (cat #prefix "AGA"))
+       )
+       
+       
 
 (set #dest
   (askdir
