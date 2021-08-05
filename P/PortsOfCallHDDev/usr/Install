@@ -9,7 +9,20 @@
 (set #prefix "PortsOfCall")                 ;name of slave, directory
 
 (procedure P_Install
-      (set #AD_disk "PoC")
+
+
+(until
+  (or (exists "PoC:" (noreq)) (exists " Pocmer:" (noreq)))
+  (message
+    ("\nInsert %s disk in any drive!\n" @app-name)
+    (all)
+  )
+)
+(if (exists "PoC:" (noreq))
+(set #AD_disk ("PoC" #diskno))
+(set #AD_disk (" PoCmer" #diskno))
+)
+
       (P_disk)
       (copyfiles
         (help @copyfiles-help)

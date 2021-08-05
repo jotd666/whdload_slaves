@@ -73,7 +73,7 @@ slv_keyexit	= $5D	; num '*'
 
 
 DECL_VERSION:MACRO
-	dc.b	"1.3"
+	dc.b	"1.4"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -180,6 +180,11 @@ patch_main
 	beq.b	.rerelease      ; or crack!
 	cmp.l	#178996,d0
 	beq.b	.v1
+	cmp.l	#178556,d0  ; another rerelease unprotected version (french)
+	beq.b	.rerelease
+    cmp.l   #178724,d0  ; another rerelease unprotected version (german)
+	beq.b	.rerelease
+    
     tst.l   d0
     bne.b   wrong_version
     GETFILESIZE	_program_german
@@ -201,6 +206,7 @@ pl_v1
 	PL_START
 	PL_B	$38B2,$60	; protection removed (thanks LockPick)
 	PL_END
+
 pl_german
 	PL_START
 	PL_B	$393c,$60	; protection removed (thanks LockPick)
