@@ -41,6 +41,10 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 1.1 (xx.08.2021) done by JOTD
+ - not enough memory: no music or sfx during the game
+ - fixed another access fault
+ 
  version 1.0 (18.07.2021) done by JOTD
  - nasty interrupt bug that locked the game at startup fixed
  - access fault fixed

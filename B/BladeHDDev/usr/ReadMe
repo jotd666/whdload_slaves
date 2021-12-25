@@ -53,6 +53,10 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
  
+ version 1.1 (02.0x.2021) done by JOTD:
+ - added small introduction that was missing (AGA version)
+ - added file check for AGA version to see if install worked properly
+ 
  version 1.0 (02.08.2021) done by JOTD:
  - choice to install AGA or ECS versions (2 different slaves, different files copied), supported version SPS1801
  - merged install script with original script (which required assign to "work:")

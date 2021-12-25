@@ -188,7 +188,21 @@
     (				;----- 3 = DOS (Files) -----
 
       ;if the disk can be requested by the volume name:
-      (set #AD_disk "MissionAndromeda")
+      
+
+(until
+  (or (exists "MissionAndromeda:" (noreq)) (exists "Mission Andromeda:" (noreq)))
+  (message
+    ("\nInsert %s disk in any drive!\n" @app-name)
+    (all)
+  )
+)
+(if (exists "MissionAndromeda:" (noreq))
+(set #AD_disk ("MissionAndromeda" #diskno))
+(set #AD_disk ("Mission Andromeda" #diskno))
+)
+      
+      
       (set #AD_diskname "Disk 1")	;this optional, default is #AD_disk
       (P_AskDisk)
       (copyfiles
