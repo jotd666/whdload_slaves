@@ -37,6 +37,10 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
  
+ version 1.1 ():
+ - fixed speed on level 2+
+ - added icon by coldacid@eab
+
  version 1.0 (25.12.2021) done by JOTD:
  - initial release
  - 2 versions supported (the one with the status bar and the one without)
