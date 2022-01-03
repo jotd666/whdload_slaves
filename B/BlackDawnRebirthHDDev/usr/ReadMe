@@ -37,6 +37,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
  
+ version 1.1-B (01.01.2022) done by JOTD:
+ - fixed install (issue #005422)
+ 
  version 1.1 (18.05.2021) done by JOTD:
  - removed hardware banging in-game NTSC change that trashes display on exit.
    PAL users: either add NTSC tooltype / start with NTSC switch or play in PAL.

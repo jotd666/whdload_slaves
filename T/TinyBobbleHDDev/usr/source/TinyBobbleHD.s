@@ -69,12 +69,20 @@ _expmem		dc.l	EXPMEM+$1000			;ws_ExpMem
 
 
 DECL_VERSION:MACRO
-	dc.b	"1.2"
+	dc.b	"1.3"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
 	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
+	ENDC
 	ENDM
+
+	dc.b	"$","VER: slave "
+	DECL_VERSION
+	dc.b	0
 	
 _name		dc.b	"Tiny Bobble"
     IFD CHIP_ONLY
@@ -83,6 +91,7 @@ _name		dc.b	"Tiny Bobble"
     dc.b    0
 _copy		dc.b	"2020 pink^abyss",0
 _info		dc.b	"adapted by JOTD",10
+		dc.b	"trained by Ross",10,10
 		dc.b	"Version "
 		DECL_VERSION
 		dc.b	0
@@ -92,6 +101,7 @@ program:
 	dc.b	"aYs_tinybobble",0
 
 _config
+    dc.b    "C1:X:trainer infinite lives:0;"
     dc.b    "C2:X:blue/second button jumps player 1:0;"
     dc.b    "C2:X:blue/second button jumps player 2:1;"
         ;dc.b    "C3:B:keep LMB as quit button;"
@@ -249,6 +259,11 @@ pl_main
     ; hiscore save & load
     PL_PS    $1803e,load_highs
     PL_PSS   $11736,save_highs,2
+	
+	PL_IFC1X	0
+	PL_NOP	$1e7a2,2	; infinite lives (thanks Ross)
+	PL_ENDIF
+	
     PL_END
 
 wait_tof
@@ -444,6 +459,10 @@ read_fire
     move.l  (a7)+,d1
     rts
     
+; 000C37DE=0003 000CC1C8=0002 000CC1CA=0003
+; 000CC1E2=0034 000CC232=0002 000CC234=0003 000CC24C=0034
+; 000CC29C=0002 000CC29E=0003 000CC2B6=0034 000CC50A=0003
+; 000CC5A4=0003 000CD05E=0002 >
     
     ; not really super-helpful as game already has "ESC"
     ; as a quit key
