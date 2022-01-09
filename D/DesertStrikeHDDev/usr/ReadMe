@@ -39,7 +39,6 @@
 	Blue		- Always fires Hydra
 	Green		- Always Fires Hellfire
  - Custom5=1 - Skip Intro
- - ButtonWait - Force NTSC
  - Supports two versions
  
  If CD32 pad is detected, the controls below are enabled no matter what:
@@ -48,6 +47,11 @@
 	Play+Forward+Reverse 	- Quit
 	Green+Forward+Reverse 	- Abort Game
 
+ With a third button joystick:
+ 
+     second button          - switches weapons
+	 third button 			- Bring Up Map Screen/Exit Map screen
+	 
  If CUSTOM4 is not set, the controls stick to "classic" with extras:
  
     Blue / Forward: changes weapon (original game only used blue/2nd button)
@@ -55,7 +59,12 @@
  History:
  --------
  
- 12.may.2019 - V3.1 by Keith Krellwitz/Abaddon & JOTD:
+ Version 3.2 (09.january.2022) by JOTD:
+ - support for 3-joystick button. Third button brings map (F10) (issue #0005348)
+ - fixed potential sound issues (CPU dependent loops)
+ - removed BUTTONWAIT to force NTSC. Use NTSC tooltype
+ 
+ Version 3.1 (12.may.2019) by Keith Krellwitz/Abaddon & JOTD:
  - Removed division by 0 at the end of the intro (no need for novbrmove tooltype)
  - added automatic joypad detection
  - CUSTOM4 now allows alternate CD32 controls, but with classic controls (no CUSTOM4)
@@ -65,7 +74,7 @@
  - music cpu active loops fixed
  - Fixed issue with copperlist being corrupted when restarting level (because of previous copper fix)
  
- 13.mar.2016 - V3.0 by Keith Krellwitz/Abaddon:
+ Version 3.0 (13.mar.2016) by Keith Krellwitz/Abaddon:
  - Removed all JST specific code and converted to use patchlists
  - Added Level Select 
  - Added Trainer - Infinite Power, Fuel, Hellfire, Hydra, and Cannon
@@ -83,7 +92,7 @@
  - Custom5=1 - Skip Intro - Jumps to the Main Menu
  - Not Publicly Released
   
- 21.jan.2013 - V2.3 by Keith Krellwitz/Abaddon:
+ Version 2.3 (21.jan.2013) by Keith Krellwitz/Abaddon:
  - Custom4=1 - Enable CD32 joypad support
  	Red 			- Fire
 	Yellow 			- Bring Up Map Screen/Exit Map screen
@@ -91,7 +100,7 @@
  	Play+Forward+Reverse 	- Quit
  	Green+Forward+Reverse 	- Abort Game
   
- 07.july.2007 - V2.2 by JOTD:
+ Version 2.2 (07.july.2007) by JOTD:
  - no need for NOVBRMOVE anymore
  - reworked install & icons
  - source code included

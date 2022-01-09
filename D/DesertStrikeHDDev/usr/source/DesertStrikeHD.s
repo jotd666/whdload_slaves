@@ -98,7 +98,7 @@ base
                 SLAVE_HEADER            	;ws_Security + ws_ID
                 dc.w    18              	;ws_Version
                 dc.w    WHDLF_NoError|WHDLF_EmulTrap|WHDLF_ClearMem|WHDLF_NoDivZero  ;|WHDLF_EmulDivZero    ;ws_flags
-                dc.l    $100000    	     	;ws_BaseMemSize
+                dc.l    $100000    	     	;ws_BaseMemSize can't use fast memory would have to be 24 bit memory
                 dc.l    0               	;ws_ExecInstall
                 dc.w    _start-base      	;ws_GameLoader
                 dc.w    0                       ;ws_CurrentDir
@@ -117,7 +117,7 @@ _expmem         dc.l    $0              	;ws_ExpMem
 ;======================================================================
 
 DECL_VERSION:MACRO
-	dc.b	"3.1"
+	dc.b	"3.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -160,10 +160,6 @@ _start   ;       A0 = resident loader
 
 		bsr	_detect_controller_types
 		
-        	move.l  	_ButtonWait(pc),d0          
-        	beq.b     	.noforcentsc
-		move.w		#0,$dff1dc		;Switch to NTSC
-.noforcentsc
 		
 		bsr		_Degrade
 		
@@ -511,13 +507,15 @@ _PL_JSR3_1	PL_START
 
 		
 _PL_JSR3_2	PL_START
+		PL_PSS		$37C2,dbf_fix_d7,2	; audio dma cpu dependent loop wait
+		PL_PSS		$380e,dbf_fix_d6,2	; audio dma cpu dependent loop wait
 		PL_PS		$f92,_CheckQuit_2		; keyboard menu
-		PL_IFC4						; *** CD32 Joypad - Main Manu - Abaddon
+		;PL_IFC4						; *** CD32 Joypad - Main Menu - Abaddon
 		PL_PS		$1326,_CD32_Read3
 		PL_PS		$1330,_CD32_FireMenu
 		PL_PSS		$1196,_CD32_FireJoy0,2
 		PL_B		$119e,$67			; Change to bne check
-		PL_ENDIF
+		;PL_ENDIF
 		PL_END
 
 _PL_JSR3_2_BLITTER
@@ -573,7 +571,7 @@ _WaitBlitter
 ;======================================================================
 
 dbf_fix:
-	move.w	#8,d0	; $12C DBF, usually soundtracker
+	move.w	#4,d0	; $12C DBF, usually soundtracker
 .bd_loop1
 	move.w  d0,-(a7)
     move.b	$dff006,d0	; VPOS
@@ -583,6 +581,31 @@ dbf_fix:
 	move.w	(a7)+,d0
 	dbf	d0,.bd_loop1
 	addq.l	#2,(a7)
+	rts
+	
+dbf_fix_d7:
+	move.w	#6,d7	; $12C DBF, usually soundtracker
+.bd_loop1
+	move.w  d7,-(a7)
+    move.b	$dff006,d7	; VPOS
+.bd_loop2
+	cmp.b	$dff006,d7
+	beq.s	.bd_loop2
+	move.w	(a7)+,d7
+	dbf	d7,.bd_loop1
+	
+	rts
+dbf_fix_d6:
+	move.w	#6,d6	; $12C DBF, usually soundtracker
+.bd_loop1
+	move.w  d6,-(a7)
+    move.b	$dff006,d6	; VPOS
+.bd_loop2
+	cmp.b	$dff006,d6
+	beq.s	.bd_loop2
+	move.w	(a7)+,d6
+	dbf	d6,.bd_loop1
+	
 	rts
 
 ; original game just did an RTE
@@ -852,7 +875,7 @@ _CD32_FireMap
 		move.b		($bfe001),d1
 		movem.l		d0,-(sp)
 		move.l		joy1(pc),d0
-		btst.l		#JPB_BTN_RED,d0
+		btst		#JPB_BTN_RED,d0
 		beq		.exit
 		move.b		#$7e,d1
 .exit		movem.l		(sp)+,d0
@@ -908,26 +931,26 @@ _CD32_Abort
 
 _CD32_Keys
 		movem.l         d0-d3/a0-a1,-(sp)
-		move.w		#$59,d3		; F10
 		move.l		joy1(pc),d1
 		lea		_held_button(pc),a1
+		move.l	(a1),d3
 		; play & yellow act the same
-		move.l	#JPB_BTN_PLAY,d2
-		btst.l		d2,d1
+		btst		#JPB_BTN_PLAY,d1
 		bne.b		.pressed
-		move.l	#JPB_BTN_YEL,d2
-		btst.l		d2,d1
+		btst		#JPB_BTN_YEL,d1
 		beq.b		.NotPressed
 .pressed
-		btst.l		#JPB_BTN_PLAY,(a1)
-		bne		.exit
-		bset.l		#JPB_BTN_PLAY,(a1)
-		move.l		d3,d0
+		btst		#JPB_BTN_PLAY,d3
+		bne.b		.exit
+		bset		#JPB_BTN_PLAY,d3
+		move.l	d3,(a1)
+		move.b		#$59,d0		; F10 key emulation
 		move.l		_ExtBase(pc),a0
 		add.l		#$9b4,a0
 		jsr		(a0)
 		bra		.exit
-.NotPressed	bclr		#JPB_BTN_PLAY,(a1)
+.NotPressed	bclr		#JPB_BTN_PLAY,d3
+			move.l	d3,(a1)
 .exit
 .done	movem.l         (sp)+,d0-d3/a0-a1
 		rts

@@ -38,6 +38,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 2.3 (05.01.2022) done by JOTD:
+ - support for 3 button joysticks (third button: night vision)
+ 
  version 2.2 (29.08.2020) done by JOTD:
  - fixed introduced bugs when fixing wrong blitterwait routines (issue #0004790)
  - added quitkey on 68000
