@@ -73,18 +73,10 @@ PL_PSA	MACRO
 	PL_S	\1+6,\3-(\1+6)	; with NOPS so we use standard skip
 	ENDM
 
-USE_FASTMEM = 1
 
-	IFND	USE_FASTMEM
-CHIPMEMSIZE = $100000
-FASTMEMSIZE = 0
-	ELSE
-CHIPMEMSIZE = $80000
-FASTMEMSIZE = $80000
-	ENDC
 	
 DECL_VERSION:MACRO
-	dc.b	"1.7"
+	dc.b	"2.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -99,7 +91,7 @@ base
 		SLAVE_HEADER		;ws_Security + ws_ID
 		dc.w	17		;ws_Version
 		dc.w	WHDLF_NoError|WHDLF_EmulTrap|WHDLF_ClearMem	;ws_flags
-		dc.l	CHIPMEMSIZE		;ws_BaseMemSize
+		dc.l	$80000		;ws_BaseMemSize
 		dc.l	0		;ws_ExecInstall
 		dc.w	Start-base	;ws_GameLoader
 		IFD	DEBUGSTING
@@ -111,7 +103,7 @@ base
 _keydebug	dc.b	0		;ws_keydebug = none
 _keyexit	dc.b	$58		;ws_keyexit = F9
 _expmem:
-		dc.l	FASTMEMSIZE		;ws_ExpMem
+		dc.l	0		;ws_ExpMem
 		dc.w	_name-base	;ws_name
 		dc.w	_copy-base	;ws_copy
 		dc.w	_info-base	;ws_info
@@ -120,10 +112,7 @@ _expmem:
 		dc.w	0                       ;ws_kickcrc
 		dc.w	_config-base		;ws_config
 
-_name		dc.b	'Shadow of the Beast III'
-		IFD	DEBUG
-		dc.b	" (DEBUG/CHIP MODE)"
-		ENDC
+_name		dc.b	'Shadow of the Beast 3'
 			dc.b	0
 _copy		dc.b	'1992 Psygnosis',0
 _info		dc.b	'Installed and fixed by Mr.Larmer',10,10
@@ -142,17 +131,19 @@ _dir
 
 		even
 _config
+        dc.b    "BW;"
 		dc.b	"C1:X:Infinite lives/retries:0;"
 		dc.b	"C1:X:Enable original in-game keys:1;"
 		dc.b	"C2:B:Enable second button for jump;"
 		dc.b	"C4:B:Skip Intro;"
 		dc.b	0
 
-	dc.b	"$","VER: slave "
+	dc.b	"$VER: slave "
 	DECL_VERSION
 	dc.b	0
 	CNOP 0,2
-	
+
+IGNORE_JOY_DIRECTIONS	
 	include	ReadJoyPad.s
 
 ;======================================================================
@@ -182,21 +173,16 @@ Start	;	A0 = resident loader
 		pea	Load(pc)
 		move.l	(A7)+,$270(A0)
 
-		move.l	#$80000,D0
-		IFND	USE_FASTMEM
-		move.l	D0,D1	; 512K extstart, 512K size
-		ELSE
-		move.l	D0,D1	; 512K size
-		move.l	_expmem(pc),D0	; fastmem extstart
-		ENDC
-		
+		moveq.l #0,d0   ; exp start
+		moveq.l #0,d1   ; exp size
         bsr _flushcache
-        
+
 		jmp	$C2(A0)
 
 ;--------------------------------
 
-Patch	lea	PLBOOT(pc),a0		; stingray, 13-jun-2016: patch list!
+Patch	
+    lea	PLBOOT(pc),a0		; stingray, 13-jun-2016: patch list!
 	pea	$7c000
 	move.l	(a7),a1
 	move.l	_resload(pc),a2
@@ -213,6 +199,10 @@ PLBOOT	PL_START
 	PL_R	$b40				; disable drive access
 	PL_P	$dae,LoadDOS
 
+    PL_IFBW
+    PL_PSS $108,wait_ham,8
+
+    PL_ENDIF
 ; fixes by stingray
 	PL_ORW	$276+2,1<<9			; set Bplcon0 color bit
 	PL_ORW	$396+2,1<<9			; set Bplcon0 color bit
@@ -229,7 +219,20 @@ PLBOOT	PL_START
 
 	PL_END
 
-
+wait_ham
+.loop
+	btst	#6,$bfe001
+	beq.b	.out
+	btst	#7,$bfe001
+	beq.b	.out
+	bra.b	.loop
+.out
+    ; I suppose clear copperlist colors
+	MOVE.W	#$0000,2(A0)		;7c108: 317c00000002
+	LEA	4(A0),A0		;7c10e: 41e80004
+	DBF	D0,.out		;7c112: 51c8fff4
+    rts
+    
 ;--------------------------------
 
 ; all intro patches done by stingray, June 2016
@@ -307,25 +310,59 @@ PLINTRO_NTSC
 ;--------------------------------
 
 
+space_address = $29A
 
 
-CheckJoypad:
-	movem.l	D0-D1/A0,-(sp)
-	cmp.b	#$7F,($29A).W	; space pressed
+joypad_extra_controls:
+	cmp.b	#$7F,space_address.W	; space pressed
 	bne.b	.sksp
 	lea	spaceemu(pc),A0
 	tst.l	(A0)
 	beq.b	.sksp
 	clr.l	(A0)
-	move.b	#$7E,($29A).W	; space released
+	move.b	#$7E,space_address.W	; space released
 .sksp
 
     move.l  joy_buttons(pc),d0
 	tst.l	D0
-	beq	.exit
+	beq	int3_exit
+
+	; ** alternate button: change weapon
+	
+    move.l  space_emu_bit(pc),d1
+	btst	d1,D0
+	beq.b	int3_exit
+
+	lea	spaceemu(pc),A0
+	move.l	#1,(A0)
+	move.b	#$7F,space_address.W		; space pressed
+
+int3_exit
+	move.w	#$20,(intreq,A6)
+	MOVEM.L	(A7)+,D2-D7/A0-A5	;07bd6: 4cdf3ffc
+	MOVE.L	(A7)+,D1		;07bda: 221f
+	MOVE.L	(A7)+,D0		;07bdc: 201f
+	MOVEA.L	(A7)+,A6		;07bde: 2c5f
+	RTE				;07be0: 4e73
+
+
+
+joypad_meta_controls:
+	cmp.b	#$7F,space_address.W	; space pressed
+	bne.b	.sksp
+	lea	spaceemu(pc),A0
+	tst.l	(A0)
+	beq.b	.sksp
+	clr.l	(A0)
+	move.b	#$7E,space_address.W	; space released
+.sksp
+
+    move.l  joy_buttons(pc),d0
+	tst.l	D0
+	beq	int3_exit
 	lea	command(pc),A0
 
-	; ** button 2: change weapon
+	; ** alternate button: change weapon
 	
     move.l  space_emu_bit(pc),d1
 	btst	d1,D0
@@ -333,16 +370,16 @@ CheckJoypad:
 
 	lea	spaceemu(pc),A0
 	move.l	#1,(A0)
-	move.b	#$7F,($29A).W		; space pressed
-	bra	.exit
+	move.b	#$7F,space_address.W		; space pressed
+	bra.b   int3_exit
 
 	; ** start: pause
 .1
 	btst	#JPB_BTN_PLAY,D0
 	beq.b	.2
 
-	move.l	#COMM_PAUSE,(A0)
-	bra.b	.exit
+	move.w	#COMM_PAUSE,(A0)
+	bra.b	int3_exit
 
 	; ** forward: cheat on
 .2
@@ -352,15 +389,15 @@ CheckJoypad:
 	btst	#JPB_BTN_REVERSE,D0
 	beq.b	.3ok
 	; BWD+FWD at the same time: quit game: TODO
-	move.l	#COMM_QUITGAME,(A0)
-	bra.b	.exit
+	move.w	#COMM_QUITGAME,(A0)
+	bra.b	int3_exit
 .3ok
     move.l  cheat_bits(pc),d1
     btst    #1,d1
-    beq.b   .exit
+    beq.b   int3_exit
     ; only active when cheat keys are on
 	move.b	#1,$2CB.W   ; cheat on
-	bra.b	.exit
+	bra	int3_exit
 
 	; ** back: cheat off
 
@@ -368,7 +405,7 @@ CheckJoypad:
 	btst	#JPB_BTN_REVERSE,D0
 	beq.b	.4
 	clr.b	$2CB.W
-	bra.b	.exit
+	bra	int3_exit
 
 	; *** green+yellow: restart part
 .4
@@ -377,61 +414,57 @@ CheckJoypad:
 	btst	#JPB_BTN_YEL,D0
 	beq.b	.5
 
-	move.l	#COMM_RESTART,(A0)
-	bra	.exit
+	move.w	#COMM_RESTART,(A0)
+	;bra	.exit
 .5
 
-.exit
-	movem.l	(sp)+,D0-D1/A0
-	move.w	#$20,(intreq,A6)
-	rts
-
+    bra   int3_exit
+    
 JoyPatch:
+	move.w	D0,-(sp)
 .loop
-	move.l	D0,-(sp)
-	move.l	command(pc),D0
+	move.w	command(pc),D0
 	bne.b	.action
-	move.l	(sp)+,D0
 .cont
 	tst.b	($30E).W
 	beq.b	.loop
+	move.w	(sp)+,D0
 	rts
 
 .action
-	move.l	A0,-(sp)
+	move.w	A0,-(sp)
 	lea	command(pc),A0
-	clr.l	(A0)
-	move.l	(sp)+,A0	
+	clr.w	(A0)
+	move.w	(sp)+,A0	
 
-	cmp.l	#COMM_RESTART,D0
+	cmp.w	#COMM_RESTART,D0
 	beq.b	.rest
 
-	cmp.l	#COMM_PAUSE,D0
+	cmp.w	#COMM_PAUSE,D0
 	beq.b	.pause
 	
-	cmp.l	#COMM_QUITGAME,D0
+	cmp.w	#COMM_QUITGAME,D0
 	beq.b	.quitgame
 
-	move.l	(sp)+,D0
+	move.w	(sp)+,D0
 	bra.b	.cont
 
 .weapon
-	move.l	(sp)+,D0
+	move.w	(sp)+,D0
 	jmp	($7E0C).W	
 
 .pause
-	move.l	(sp)+,D0
+	move.w	(sp)+,D0
 	jmp	($7DF4).W	
 .rest
-	move.l	(sp)+,D0
+	move.w	(sp)+,D0
 	jmp	($7E68).W
 .quitgame
-	move.l	(sp)+,D0
+	move.w	(sp)+,D0
 	jmp	($7E52).W	
 
 
 ;--------------------------------
-
 Loader		lea	$70000,a0
 		pea	Patch2(pc)
 		move.l	(A7)+,$6C(a0)
@@ -492,7 +525,7 @@ Patch_X
 
 pl_post_intro:
 	PL_START
-	PL_IFC2
+	PL_IFC4
 	; skip reflections & sotb title screens
 	PL_S	$15E,$23A-$15E		
 	PL_ENDIF
@@ -520,11 +553,18 @@ Patch3_PAL:
 Patch3_NTSC:
 	jsr	$702E4
 go	
+    
+	movem.l	D0-D1/A0-A2,-(a7)
     ; decide between cd32 joypad and joystick
 	bsr	_detect_controller_types
-    
+    ; just in case of a third button joystick, set to green
+    lea third_button_maps_to(pc),a0
+    move.l  #JPF_BTN_GRN,(a0)
 
-	movem.l	D0-D1/A0-A2,-(a7)
+    ; force joystick
+    ;lea controller_joypad_1(pc),a0
+    ;clr.b   (a0)
+   
     lea space_emu_bit(pc),a0
     move.l  second_button_jumps(pc),d0
     beq.b   .blujumps
@@ -555,6 +595,8 @@ pl_main
 	; *** which overrides some of the memory (jotd)
 	PL_W	$4AFC,$6024
 	
+    ; wait on mission screen
+    PL_PS   $6B39E,.wait_button 
 	; *** installs the quit patch (jotd)
 
 	PL_PS	$7BEE,kbint2
@@ -568,20 +610,25 @@ pl_main
     PL_IFC1X    1
 	PL_NOP	$7D2C,2
 	PL_ENDIF
-    
-	; *** patch for joypad (jotd)
 
-	PL_PS	$7BD0,CheckJoypad
+	; *** patch for joypad (jotd)
+    ; *** install joystick/joypad read
+
+
+	PL_P	$7BD0,joypad_meta_controls
 	PL_P	$7778,JoyPatch
+
+    
     PL_PSS  $7bc0,read_fire,2
 
     PL_IFC2
-    PL_PSS  $07b72,joypad_button_jump,2
+    PL_PSS   $07b72,.vbl_hook_1,2
     PL_PS   $05c64,is_jump_because_up
 
     PL_ELSE
-    PL_PSS  $07b72,joypad_up_jump,2    
+    PL_PSS  $07b72,.vbl_hook_2,2    
     PL_ENDIF
+    
     
 ; stingray, 13-jun-2016
 	PL_PS	$5632,.fixreplays
@@ -589,6 +636,37 @@ pl_main
 
 	PL_END
 
+
+
+
+.vbl_hook_1
+	bsr.b	.read_joy
+	bra	joypad_button_jump
+.vbl_hook_2
+	bsr.b	.read_joy
+	bra	joypad_up_jump
+
+.read_joy
+    ; read once
+	moveq.l	#1,D0	; port 1
+	bsr	_read_joystick
+.store
+    lea joy_buttons(pc),a0
+    move.l  d0,(a0)
+    rts
+
+  
+.wait_button
+    JSR $0000ad62
+.loopw
+	btst	#6,$bfe001
+	beq.b	.out
+	btst	#7,$bfe001
+	beq.b	.outw
+	bra.b	.loopw
+.outw
+    rts
+    
 .fixreplay_gameover
 	pea	FixAudXVol(pc)
 	move.w	#$4ef9,$b624
@@ -644,17 +722,8 @@ is_jump_because_up
 	MOVE.B	#$01,$29C.W ; original
     rts
     
-joypad_read:
-    movem.l d0/a0,-(a7)
-	moveq.l	#1,D0	; port 1
-	bsr	_read_joystick
-    lea joy_buttons(pc),a0
-    move.l  d0,(a0)
-    movem.l (a7)+,d0/a0
-    rts
     
 joypad_up_jump:
-    bsr joypad_read
     MOVE.W	joy1dat(A6),D0		;07b72: 302e000c    original
 	BTST	#9,D0			;07b76: 08000009        original
     RTS
@@ -663,7 +732,6 @@ joypad_button_jump:
     MOVE.W	joy1dat(A6),D0		;07b72: 302e000c    original
 
 	movem.l	d1,-(a7)
-    bsr joypad_read
 	move.l	joy_buttons(pc),d1
 
     ; if not on ladder:
@@ -1014,6 +1082,8 @@ cheat_bits
         dc.l    0
 		dc.l	WHDLTAG_CUSTOM2_GET
 second_button_jumps
+		dc.l	WHDLTAG_CUSTOM3_GET
+full_joypad_controls
 		dc.l	0
 
 		dc.l	0
@@ -1024,4 +1094,7 @@ spaceemu:
 joy_buttons
 	dc.l	0
 command
-	dc.l	0
+	dc.w	0
+actual_controller_joypad_1:
+	dc.b	$FF
+    

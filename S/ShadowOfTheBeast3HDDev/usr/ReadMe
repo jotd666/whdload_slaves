@@ -17,7 +17,11 @@ REQUIREMENTS:
 - Slave requires WHDLoad V17+ and RawDIC
 - Game requires 512Kb chip mem (+2.9Mb other memory for preload option)
 
-Version 2.0 - done by JOTD (14.07.2021)
+Version 2.1 (27.02.2022) done by JOTD 
+- fixed graphic glitches (joypad controls) and 3-button joystick support (issue #0005420)
+- meta controls are always active if CD32 joypad is connected (CUSTOM3 is gone)
+
+Version 2.0 (14.07.2021) done by JOTD 
 - now uses 512k of chipmem only (issue #0005286)
 - install script fixed (issue #0005291)
 - BUTTONWAIT to be able to see old man HAM pic & mission pics (issue #0005288)
@@ -27,18 +31,18 @@ Version 2.0 - done by JOTD (14.07.2021)
 - enabling button for jump wrongly skipped intro screens
 
  
-Version 1.7 - done by JOTD (08.06.2020)
+Version 1.7 (08.06.2020) done by JOTD 
 - CUSTOM2: blue/second button jumps instead of up (and ladders are properly handled) (issue #0005274)
 - Trainer: infinite lives / in-game keys now enabled only with the trainer
 - Skip introduction now mapped to CUSTOM4
 
-Version 1.6 - done by JOTD (august-2017)
+Version 1.6 (august-2017) done by JOTD 
 - changed memory map from 1MB chip to 512K chip & 512K fast
 - added code to detect joystick (with 2 buttons)/joypad
 - removed CUSTOM1: button 2 or joypad now always active (depending on which is connected)
 - CUSTOM2 also skips Reflections & title screen
 
-Version 1.5 - done by StingRay (15-Jun-2016)
+Version 1.5 (15-Jun-2016) done by StingRay 
 - Intro patches completely redone, PAL version now fully supported
 - Disk accesses removed
 - Bplcon0 color bit fixes
@@ -48,7 +52,7 @@ Version 1.5 - done by StingRay (15-Jun-2016)
 - ByteKiller decruncher optimised and error check added
 
 
-Version 1.4 - done by JOTD (15-may-2016)
+Version 1.4 (15-may-2016) done by JOTD 
 - CUSTOM1=1 enables joypad controls
 - Quit key works on 68000
 - Source code included under the GPL license
@@ -93,16 +97,11 @@ and if in-game cheat keys are on:
 - FORWARD: invincibility (cursor right)
 - BACKWARDS: remove invincibility (cursor left)
 
-Notes for 2.0 (JOTD):
+Notes for 2.1 (JOTD):
 
-I had to introduce a new CUSTOM3 switch to enable joypad controls. In previous versions, joypad was read
-very frequently and the joypad read routine (with all buttons) is rather slow (thanks to the way it's done in
-the hardware) and in this particular game triggers graphical glitches. What I did is:
-
-- read second button "classically" without the CD32 joypad routine
-- if CUSTOM3 is set, read the joypad fully every 200 milliseconds, which is enough to trigger meta actions
-  and also switch weapon (green button if blue=jump). Graphical glitches can still occur, but attenuated compared
-  to the previous version. If it works for you, well, that's good.
+Finally got rid of joypad related glitches. Thanks to other experiences in amiga game development, I figured
+out that joypad read was done too soon and perturbated the original game screen sync, resulting in
+some horrible glitches in some parts. Moving that joypad read later in the sequence fixed the bugs
 
 Notes for 1.7 (JOTD):
 

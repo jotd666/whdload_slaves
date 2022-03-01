@@ -24,6 +24,10 @@
    You can quit the game by pressing F10 (key can be changed with
    Tooltype "QuitKey=").
 
+ Version 1.5 (09-Jan-2022) done by JOTD:
+ - fixed install script (issue #0005399)
+ - added 3-button support (third button pauses the game)
+ 
  Version 1.4 (06-Oct-2020) done by JOTD:
  - added more joypad control options:
    * leave 'up' for missile (else 2-button joysticks can't be used in 2-player mode)

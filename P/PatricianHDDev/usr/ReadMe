@@ -38,17 +38,21 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 1.3 (27.03.05)
+ version 1.4 (27.02.2022)
+ - reassembled with latest kickemu
+ - newicon slave name fixed (issue #0005499)
+ 
+ version 1.3 (27.03.2005)
  - another german version supported (thanks Christian)
  - now 6 versions supported !!
 
- version 1.2 (14.03.05)
+ version 1.2 (14.03.2005)
  - fixed patch error on french version (thanks Xavier)
 
- version 1.1 (10.03.05)
+ version 1.1 (10.03.2005)
  - french & another german version supported
 
- version 1.0 (27.02.05) done by JOTD:
+ version 1.0 (27.02.2005) done by JOTD:
  - initial release
  - 2 english & 2 german versions supported
  - manual protection removed

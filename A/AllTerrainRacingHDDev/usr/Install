@@ -108,10 +108,10 @@
 	; 2 = DIC
         ("")
 	; 3 = Files
-	(set #prefix ("%s%s" #prefix "CD32"))
+	("")
 	; 4 = CD Files
 	(
-	  (set #prefix-slave (cat #prefix "CDTV"))
+	  (set #prefix-slave (cat #prefix "CD32"))
 	  (set #sub-dir "data")
 	)
 	; 5 = Single File

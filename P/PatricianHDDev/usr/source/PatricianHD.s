@@ -13,7 +13,6 @@
 ;---------------------------------------------------------------------------*
 
 	INCDIR	Include:
-	INCDIR	osemu:
 	INCLUDE	whdload.i
 	INCLUDE	whdmacros.i
 	INCLUDE	lvo/dos.i
@@ -65,12 +64,17 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.3"
+	dc.b	"1.4"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
 	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
+	ENDC
 	ENDM
+
 
 slv_name		dc.b	"The Patrician / Der Patrizier",0
 slv_copy		dc.b	"1992-1993 Ascon",0
@@ -102,7 +106,7 @@ program_patch
 	dc.l	0
 
 _bootdos
-	move.l	(_resload),a2		;A2 = resload
+	move.l	(_resload,pc),a2		;A2 = resload
 
 	;get tags
 		lea	(_tag,pc),a0
@@ -466,8 +470,9 @@ _load_exe:
 	rts
 
 .end
+	jsr	(_LVOIoErr,a6)
 	move.l	a3,-(a7)
-	pea	205			; file not found
+	move.l	d0,-(a7)
 	pea	TDREASON_DOSREAD
 	move.l	(_resload,pc),-(a7)
 	add.l	#resload_Abort,(a7)
