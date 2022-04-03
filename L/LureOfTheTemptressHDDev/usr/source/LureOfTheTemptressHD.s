@@ -64,7 +64,7 @@ _expmem
 ;DEBUG
 
 DECL_VERSION:MACRO
-	dc.b	"2.0"
+	dc.b	"2.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -152,18 +152,6 @@ wait_intro_screen
 	LEA	$71144,A1
     rts
     
-	
-DiskRoutine:
-	MOVEM.L	D2-D7/A0-A6,-(A7)
-
-	; *** load the file, A0/A1 match
-;	cmp.l	#'Chip',(a0)
-;	bne.b	.sss
-;	nop
-;.sss
-	move.l	_resload(pc),a2
-	jsr	(resload_LoadFile,a2)		
-
 
 loader:
 	move.l	D0,-(sp)
@@ -207,7 +195,7 @@ pl_french:
 
 	; *** copy protection
 
-	PL_L	$19734,$42404E75
+	PL_P	$19734,skip_protection
 
 	; *** kb interrupt - french
 
@@ -280,7 +268,7 @@ pl_english_2030
 
 	; *** copy protection
 
-	PL_L	$19776,$42404E75
+	PL_P	$19776,skip_protection
 
 	; *** kb interrupt - english
 
@@ -350,7 +338,7 @@ pl_english_2031
 
 	; *** copy protection - english 2
 
-	PL_L	$1971C,$42404E75
+	PL_P	$1971C,skip_protection
 
 	; *** kb interrupt - english 2
 
@@ -416,7 +404,7 @@ pl_italian
 
 	; *** copy protection - italian
 
-	PL_L	$1970C,$42404E75
+	PL_P	$1970C,skip_protection
 
 	; *** kb interrupt - italian
 
@@ -547,15 +535,26 @@ _avoid_af2:
 	moveq	#0,d0
 	rts
 
+skip_protection
+	lea	enable_wait(pc),a0
+	clr.w	(a0)		; no more wait now
+	
+	clr.w	d0
+	rts
+	
+
 wait_to_read_text
     movem.l d0-d1/a0/a2,-(a7)
     ; not needed first time
+	move.w	enable_wait(pc),d0
+	beq.b	.nowait
     lea first_time(pc),a0
     tst.b   (a0)
     beq.b   .wait
     clr.b   (a0)
     bra.b   .waitrel
 .wait
+	; also should not be activated after the intro has played
     move.l  _resload(pc),a2
     move.l  #60,d0      ; add 6 seconds, user can click on a button
     jsr (resload_Delay,a2)
@@ -564,6 +563,7 @@ wait_to_read_text
 .waitrel
     btst    #6,$bfe001
     beq.b   .waitrel
+.nowait
     movem.l (a7)+,d0-d1/a0/a2
 
     ; original code
@@ -597,7 +597,7 @@ pl_german
 
 	; *** copy protection
 
-	PL_W	$198E0,$604A
+	PL_P	$198E0,skip_protection
 
 	; *** kb interrupt
 
@@ -667,19 +667,18 @@ ReadSectors2:
 
 	; ** try to figure out if this is a game load
 
-	cmp.w	#$8C,D2		; length
-	beq	.test2
-	cmp.w	#$8B,D2		; length (for french version)
-	bne	.hdload
-.test2
-	cmp.l	#$4000,A0	; buffer
-	bne	.hdload
+;	cmp.w	#$8C,D2		; length
+;	beq	.test2
+;	cmp.w	#$8B,D2		; length (for french version)
+;	bne	.hdload
+;.test2
+;	cmp.l	#$4000,A0	; buffer
+;	bne	.hdload
 
-	; *** we can reasonably assume that it's a savegame
-	; *** read the savegame data from floppy
-
-	bra	BypassLoad
-
+	; this is when the game loads a "restart" game save
+	; so the tests above are useless because load & save
+	; are already intercepted at a higher level
+	
 .hdload
 	move.l	D0,-(sp)
 	moveq.l	#0,D0
@@ -687,6 +686,7 @@ ReadSectors2:
 	subq	#1,D0			; 1,2,3,4
 	bsr	ReadSectors
 	move.l	(sp)+,D0
+.out
 	rts
 
 ReadSectors:
@@ -921,6 +921,8 @@ _tags
 buttonwait
 		dc.l	0
 		dc.l	0
+enable_wait
+	dc.w	$FFFF
 first_time
     dc.w    $FFFF
 version

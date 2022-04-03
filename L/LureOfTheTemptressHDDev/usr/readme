@@ -21,6 +21,10 @@ Requirements:
 
 History
 
+ version 2.1 (02.04.2022) done by JOTD
+ - fixed spurious delay/button click when loading (issue #0005501)
+ - fixed crash on restart, restart now works - it was borked since first version (issue #0005501)
+ 
  version 2.0 (18.03.2021) done by JOTD & Stingray
  - install adapted to whdload v17, ditched JST source code
  - sound/music fixed on fast machines
@@ -74,6 +78,9 @@ it accepts an argument (0 to 3) for the floppy unit. (e.g: ripsaves 1 for DF1:)
 Thanks to Walter Geriolz and Thomas Lorenz for sending me the disks (well, next time,
 we'll coordinate better).
 Thanks for the people who sent the other disk images.
+
+Huge thanks to Stingray for help with the rawdic imager, which involved blitter decoding
+which I suck at.
 
 Sorry for the delay but this one meant a lot of work for me. I hope you'll appreciate.
 
