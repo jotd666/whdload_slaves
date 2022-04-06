@@ -29,6 +29,13 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 2.0 (06.04.2022) done dy JOTD:
+ - added joypad controls (issue #5542)
+ - added trainer
+ - fixed keyboard
+ - added 68000 quitkey
+ - added manual
+ 
  version 1.2 (03.08.2008) done dy JOTD:
  - removed checksum protections
  - fixed another protection and now sound works !!! (after 5 1/2 years!)
@@ -47,6 +54,13 @@
 
  version 1.0 done by JOTD
  - initial JST release
+ 
+ joypad controls:
+ 
+ - second/blue button: toggle shield (SPACE)
+ - third/green button: smart bomb (any key)
+ - play: pause (P)
+ - reverse+forward: quit current game (ESC)
  
  notes:
 

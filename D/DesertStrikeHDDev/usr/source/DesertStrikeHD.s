@@ -92,20 +92,27 @@
 		DOSCMD	"WDate  >T:date"
 		ENDC
 
+	IFD	USE_512K_CHIP
+CHIPMEMSIZE = $80000
+EXPMEMSIZE = $80000
+	ELSE
+CHIPMEMSIZE = $100000
+EXPMEMSIZE = $0
+	ENDC
 ;======================================================================
 
 base
                 SLAVE_HEADER            	;ws_Security + ws_ID
                 dc.w    18              	;ws_Version
-                dc.w    WHDLF_NoError|WHDLF_EmulTrap|WHDLF_ClearMem|WHDLF_NoDivZero  ;|WHDLF_EmulDivZero    ;ws_flags
-                dc.l    $100000    	     	;ws_BaseMemSize can't use fast memory would have to be 24 bit memory
+                dc.w    WHDLF_NoError|WHDLF_EmulTrap|WHDLF_ClearMem|WHDLF_NoDivZero    ;ws_flags
+                dc.l    CHIPMEMSIZE    	     	;ws_BaseMemSize can't use fast memory would have to be 24 bit memory
                 dc.l    0               	;ws_ExecInstall
                 dc.w    _start-base      	;ws_GameLoader
                 dc.w    0                       ;ws_CurrentDir
                 dc.w    0               	;ws_DontCache
 _keydebug       dc.b    $58             	;ws_keydebug = F9
 _keyexit        dc.b    $5d             	;ws_keyexit = * keypad
-_expmem         dc.l    $0              	;ws_ExpMem
+_expmem         dc.l    EXPMEMSIZE         	;ws_ExpMem
                 dc.w    _name-base      	;ws_name
                 dc.w    _copy-base      	;ws_copy
                 dc.w    _info-base      	;ws_info
@@ -117,7 +124,7 @@ _expmem         dc.l    $0              	;ws_ExpMem
 ;======================================================================
 
 DECL_VERSION:MACRO
-	dc.b	"3.2"
+	dc.b	"3.3"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -127,7 +134,11 @@ DECL_VERSION:MACRO
 		incbin	datetime
 	ENDC
 	ENDM
-_name           dc.b    "Desert Strike - Return to the Gulf",0
+_name           dc.b    "Desert Strike - Return to the Gulf"
+		IFD	USE_512K_CHIP
+		dc.b	" (512C)"
+		ENDC
+				dc.b	0
 _copy           dc.b    "1993 Electronic Arts",0
 _info           dc.b    "by JOTD & Abaddon since 1996",10,10
 				dc.b	"CD32 controls: Blue/Forward=change weapon",10
@@ -160,6 +171,20 @@ _start   ;       A0 = resident loader
 
 		bsr	_detect_controller_types
 		
+		IFD	USE_512K_CHIP
+		; check 24 bit mem
+		move.l	_expmem(pc),d0
+		and.l	#$FF000000,d0
+		beq.b	.ok
+		pea	wrong_expmem(pc)
+		pea	(TDREASON_FAILMSG).w
+		move.l	_resload(pc),a0
+		jmp	resload_Abort(a0)
+.ok
+		ELSE
+		lea		_expmem(pc),a0
+		move.l	#$80000,(a0)
+		ENDC
 		
 		bsr		_Degrade
 		
@@ -226,8 +251,10 @@ _Patch800
 
 		move.l		_Custom3(pc),d0			; Skip Blitter Patches
 		bne		.skip
+		move.l	_expmem(pc),a1
 		lea		_PL_800_BLITTER(pc),a0		
-		bsr		_Patch
+		move.l		_resload(pc),a2
+		jsr		resload_Patch(a2)
 		
 .skip		movem.l		(sp)+,d0-d7/a0-a6
 				
@@ -255,7 +282,7 @@ _JsrIntro2
 		cmp.l		#$48E77FFC,(A0)
 		bne		.exit
 
-		lea		_ExtBase(pc),a1
+		lea		_expmem(pc),a1
 		move.l		$210E,(a1)
 
 		lea		_PL_MAIN(pc),a0
@@ -286,15 +313,17 @@ _JsrLoader3
 		bne		.patch3
 		
 		bsr		_PatchStartLevel
+	
+		; JOTD: found out that there are 2 versions really slightly different
+		; and that SPS112 support was broken when I fixed the sound issues in 2021
+		; making the game crash on startup menu
 		
-		lea		_PL_JSR3_2(pc),a0
+		lea		_PL_JSR3_2_SPS112(pc),a0
+		cmp.l	#$4E714E71,$2384.W
+		beq.b	.patch22
+		lea		_PL_JSR3_2_ALT(pc),a0
+.patch22
 		bsr		_Patch
-
-		move.l		_Custom3(pc),d0			; Skip Blitter Patches
-		bne		.go
-		lea		_PL_JSR3_2_BLITTER(pc),a0		
-		bsr		_Patch
-
 		bra		.go
 .patch3
 		cmp.l		#$48E7FFFE,$1A170
@@ -315,7 +344,7 @@ _JsrLoader3
 
 		; bugfix (A0 was fixed at $200)
 
-		move.l		_ExtBase(pc),A0
+		move.l		_expmem(pc),A0
 		add.l		#$1bcea,a0
 		move.l		(a0),a0
 
@@ -323,7 +352,7 @@ _JsrLoader3
 		
 anim_hook_v2:
 	movem.l	d0/a0-a2,-(a7)
-	move.l	_ExtBase(pc),a0
+	move.l	_expmem(pc),a0
 	add.l	#$182F2,a0		; location of the password string
 	lea	.offset(pc),a1
 	
@@ -401,18 +430,16 @@ _JsrLoader4
 
 		cmp.l		#$33c700df,$36d5c
 		bne		.patch2
-		move.l		_Custom3(pc),d0			; Skip Blitter Patches
-		bne		.patch2
 		lea		_PL_JSR4_1_BLITTER(pc),a0		
 		bsr		_Patch
+.patch2
 
-.patch2		
 		movem.l		(sp)+,d0-d7/a0-a6
 		bsr		_FlushCache
 		movea.l 	$3286,a0
 		rts
 
-_Patch
+_Patch:
 		sub.l		a1,a1
 		move.l		_resload(pc),a2
 		jsr		resload_Patch(a2)
@@ -443,8 +470,8 @@ _PL_800
 
 _PL_800_BLITTER
 		PL_START
-		PL_PS		$812d0,_WaitBlit1
-		PL_PSS		$813a6,_WaitBlitter,6
+		PL_PS		$12d0,_WaitBlit1
+		PL_PSS		$13a6,_WaitBlitter,6
 		PL_END
 		
 _PL_MAIN	PL_START
@@ -505,10 +532,21 @@ _PL_JSR3_1	PL_START
 		PL_PS		$31e0,_JsrLoader4
 		PL_END
 
-		
-_PL_JSR3_2	PL_START
+; SPS112 has a lot of NOPs inserted in 2384, alternate version doesn't
+_PL_JSR3_2_SPS112
+		PL_START
+		PL_PSS		$37CC,dbf_fix_d7,2	; audio dma cpu dependent loop wait
+		PL_PSS		$3818,dbf_fix_d6,2	; audio dma cpu dependent loop wait
+		PL_NEXT		_PL_JSR3_2_common
+_PL_JSR3_2_ALT
+		PL_START
 		PL_PSS		$37C2,dbf_fix_d7,2	; audio dma cpu dependent loop wait
 		PL_PSS		$380e,dbf_fix_d6,2	; audio dma cpu dependent loop wait
+		PL_NEXT		_PL_JSR3_2_common
+		
+; common code (below $2384)
+_PL_JSR3_2_common
+		PL_START
 		PL_PS		$f92,_CheckQuit_2		; keyboard menu
 		;PL_IFC4						; *** CD32 Joypad - Main Menu - Abaddon
 		PL_PS		$1326,_CD32_Read3
@@ -516,13 +554,17 @@ _PL_JSR3_2	PL_START
 		PL_PSS		$1196,_CD32_FireJoy0,2
 		PL_B		$119e,$67			; Change to bne check
 		;PL_ENDIF
-		PL_END
-
-_PL_JSR3_2_BLITTER
-		PL_START	
+		
+		PL_IFC3
+		
+		PL_ELSE
 		PL_PS		$1dac,_WaitBlit1
 		PL_PSS		$194e,_WaitBlitter,6
-		PL_END		
+
+		PL_ENDIF
+		
+		PL_END
+
 
 _PL_JSR3_3	PL_START
 		PL_P		$1a40c,_ReadSectors
@@ -549,9 +591,12 @@ _PL_JSR3_4	PL_START
 		PL_END
 
 _PL_JSR4_1_BLITTER
-		PL_START	
+		PL_START
+		PL_IFC3
+		PL_ELSE
 		PL_PS		$36d5c,_WaitBlit1
 		PL_PSS		$36b7a,_WaitBlitter,6
+		PL_ENDIF
 		PL_END
 
 ;======================================================================
@@ -593,8 +638,8 @@ dbf_fix_d7:
 	beq.s	.bd_loop2
 	move.w	(a7)+,d7
 	dbf	d7,.bd_loop1
-	
 	rts
+	
 dbf_fix_d6:
 	move.w	#6,d6	; $12C DBF, usually soundtracker
 .bd_loop1
@@ -652,7 +697,7 @@ _PatchTrainer
 		move.l		_Custom1(pc),d0
 		beq		.skip
 		move.b		#$5,d3
-.skip		move.l		_ExtBase(pc),a0
+.skip		move.l		_expmem(pc),a0
 		add.l		#$17b4c,a0		; $97b4c
 		move.b 		d3,(a0)
 		movem.l		(sp)+,d0/a0
@@ -708,8 +753,8 @@ _MemoryConfig
 		lea		$200.w,a1
 		move.l		#'ETC!',(a1)+
 		move.l		#$208,(a1)+
-		move.l		#$80000,(a1)+
-		move.l		_ExtBase(pc),(a1)+
+		move.l		#$80000,(a1)+		; size
+		move.l		_expmem(pc),(a1)+	; location
 		move.w		#$5,(a1)+
 		move.l		#$7fbe0,(a1)+
 		move.l		#$420,(a1)+
@@ -753,7 +798,7 @@ _Read2ndButton_old
 
 _Check2ndButton
 		movem.l		d0/a0/a1,-(sp)
-		move.l		_ExtBase(pc),a0
+		move.l		_expmem(pc),a0
 		add.l		#$186d6,a0
 		lea		_Fire2Pressed(pc),a1
 		tst.l		(a1)
@@ -922,7 +967,7 @@ _CD32_Abort
 		beq		.exit
 		btst		#JPB_BTN_GRN,d1
 		beq		.exit
-		move.l		_ExtBase(pc),a0
+		move.l		_expmem(pc),a0
 		add.l		#$17514,a0
 		move.w		#$c0,(a0)
 .exit		movem.l         (sp)+,d1/a0
@@ -945,7 +990,7 @@ _CD32_Keys
 		bset		#JPB_BTN_PLAY,d3
 		move.l	d3,(a1)
 		move.b		#$59,d0		; F10 key emulation
-		move.l		_ExtBase(pc),a0
+		move.l		_expmem(pc),a0
 		add.l		#$9b4,a0
 		jsr		(a0)
 		bra		.exit
@@ -958,10 +1003,10 @@ _CD32_Keys
 
 _CD32_ZeroOutKeys					; Need to clear otherwise in order for the
 		movem.l		a0,-(sp)		; Map button to work correctly
-		move.l		_ExtBase(pc),a0
+		move.l		_expmem(pc),a0
 		add.l		#$14b58,a0
 		jsr		(a0)
-		move.l		_ExtBase(pc),a0
+		move.l		_expmem(pc),a0
 		add.l		#$17514,a0
 		move.w		#0,(a0)
 		movem.l		(sp)+,a0
@@ -973,7 +1018,7 @@ WEAPON_HELLFIRE = 2
 
 _cd32_one_weapon_per_button						; Updated the fire buttons
 		movem.l         d0/a0,-(sp)
-		move.l		_ExtBase(pc),a0
+		move.l		_expmem(pc),a0
 		add.l		#$17524,a0		; Weapon Select
 		move.l		joy1(pc),d0
 		btst		#JPB_BTN_RED,d0		; Red Button always fires the cannon - regardless of the 
@@ -1030,7 +1075,7 @@ _CopperList
 		
 ;======================================================================
 
-_ExtBase	dc.l	$80000
+
 _IntroAddr	dc.l	0
 _Fire2Pressed	dc.l	0
 _currdisk	dc.w	0
@@ -1060,6 +1105,9 @@ _end      move.l  (_resload,pc),-(a7)
           add.l   #resload_Abort,(a7)
           rts
 
+wrong_expmem
+	dc.b	"512k chip slave requires 24-bit memory expansion",0
+	
 ;======================================================================
 
         END

@@ -19,7 +19,7 @@ CHIPMEMSIZE = $80000
 
 
 _base		SLAVE_HEADER			;ws_Security + ws_ID
-		dc.w	13			;ws_Version
+		dc.w	17			;ws_Version
 		dc.w	WHDLF_NoError|WHDLF_EmulTrap|WHDLF_NoKbd|WHDLF_ClearMem
 		dc.l	CHIPMEMSIZE		;ws_BaseMemSize
 		dc.l	0			;ws_ExecInstall
@@ -34,14 +34,23 @@ _expmem
 		dc.w	_name-_base		;ws_name
 		dc.w	_copy-_base		;ws_copy
 		dc.w	_info-_base		;ws_info
-
+		dc.w	0                       ;ws_kickname
+		dc.l	0                       ;ws_kicksize
+		dc.w	0                       ;ws_kickcrc
+		dc.w	_config-_base		;ws_config
+		
+_config:
+	dc.b	"C1:X:trainer infinite lives:0;"
+	dc.b	"C1:X:trainer infinite bombs:1;"
+		dc.b	0
+		
 	IFD BARFLY
 	DOSCMD	"WDate  >T:date"
 	ENDC
 
 
 DECL_VERSION:MACRO
-	dc.b	"1.2"
+	dc.b	"2.0"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -63,6 +72,9 @@ _info		dc.b	"installed & fixed by JOTD",10
 		dc.b	0
 
 		even
+	
+IGNORE_JOY_DIRECTIONS
+		include	ReadJoyPad.s
 
 ; version supported: SPS 1555
 
@@ -75,7 +87,8 @@ _info		dc.b	"installed & fixed by JOTD",10
 
 _Start
 	clr.l	$4.W
-
+	bsr		_detect_controller_types
+	
 	lea	CHIPMEMSIZE-$100,A7
 
 	lea	_resload(pc),a1
@@ -321,9 +334,22 @@ patchlist_400_v1555
 	PL_W	$1B818,$4E71
 	ENDC
 
+	PL_IFC1X	0
+	PL_NOP	$0714a,6		; infinite lives
+	PL_ENDIF
+	PL_IFC1X	1
+	PL_NOP	$0969a,6		; infinite smart bombs
+	PL_ENDIF
+	
+	
 	PL_P	$1AD3C,_writescores
 	PL_PS	$1631C,_main_game_50004
 
+	; read joypad
+	PL_PS	$0e170,level3_interrupt_hook
+	
+	; keyboard handshake
+	PL_PS	$FE32,kb_handshake
 	
 	; specific dbf fixes for sound
 
@@ -364,25 +390,94 @@ patchlist_400_v1555
 	PL_PS	$0D312,_move_d0_dff040
 
 	PL_PS	$CF0A,_move_fwm
-	PL_L	$CF10,$4E714E71
+	PL_NOP	$CF10,4
 
 	PL_P	$EAAE,_waitblit	; used a potentially problematic waitblit
 
 	; copper lists
 
 	PL_PS	$FEFE,move_dmacon_copperlist
-	PL_W	$FEFE+6,$4E71
+	PL_NOP	$FEFE+6,2
 
 	; other strange SNOOP bugs
 
 	PL_PS	$136C2,watch_blitter_source_d0
 	PL_PS	$13642,watch_blitter_source_dff04c
-	PL_L	$13642+6,$4E714E71
+	PL_NOP	$13642+6,4
 	PL_PS	$115B0,fix_read_custom_1
-	PL_W	$115B6,$4E71
+	PL_NOP	$115B6,2
 	PL_PS	$115D0,fix_read_custom_2
 	PL_END
+	
 
+_quit
+	pea	TDREASON_OK
+	move.l	_resload(pc),-(a7)
+	addq.l	#resload_Abort,(a7)
+	rts
+
+kb_handshake
+	cmp.b	_keyexit(pc),d0
+	beq.b	_quit
+	move.l	#2,d0
+
+.bd_loop1
+	move.w  d0,-(a7)
+    move.b	$dff006,d0	; VPOS
+.bd_loop2
+	cmp.b	$dff006,d0
+	beq.s	.bd_loop2
+	move.w	(a7)+,d0
+	dbf	d0,.bd_loop1
+	rts
+	
+key_pressed_ascii_code = $FDE4
+key_pressed_flag = $cb8
+CIAA_SDR = $BFEC01
+
+BUTTON_PRESSED:MACRO
+	btst	#JPB_BTN_\1,d0
+	beq.b	.no_\1
+	move.b	#\2,CIAA_SDR
+	bra.b	.next\@
+.no_\1
+	btst	#JPB_BTN_\1,d1
+	beq.b	.next\@
+	clr.b	CIAA_SDR
+.next\@
+	ENDM
+	
+level3_interrupt_hook
+	movem.l	d0-d1/A0,-(a7)
+	lea		joypad_state(pc),a0
+	move.l	(a0),d1		; previous state
+	bsr		_read_joystick
+	move.l	d0,(a0)
+
+	BUTTON_PRESSED	BLU,$7F
+	BUTTON_PRESSED	PLAY,$CD
+	btst	#JPB_BTN_GRN,d0
+	beq.b	.no_green
+	; pressed but is this the first time?
+	btst	#JPB_BTN_GRN,d1
+	bne.b	.no_green
+	; first pressed
+	; any key works
+	move.b	#'A',key_pressed_ascii_code
+.no_green
+	btst	#JPB_BTN_FORWARD,d0
+	beq.b	.no_esc
+	btst	#JPB_BTN_REVERSE,d0
+	beq.b	.no_esc
+	move.b	#$75,CIAA_SDR
+.no_esc	
+	movem.l	(a7)+,D0-d1/a0
+	
+	cmp.l	#0,a0	; orig
+	rts
+	
+	
+	
 fix_read_custom_1
 	move.w	#0,d0
 	movem.l	d1,-(a7)
@@ -457,7 +552,7 @@ _pl_50004
 	PL_START
 	PL_L	$5A98,$FFFFFFFE
 	PL_PS	$8974,_fix_cl1
-	PL_L	$897A,$4E714E71
+	PL_NOP	$897A,4
 	PL_END
 
 _main_game_50004:
@@ -564,5 +659,7 @@ _flushcache:
 	move.l	(A7)+,A2
 	rts
 
+joypad_state
+	dc.l	0
 _hiscname:
 	dc.b	"Highs",0

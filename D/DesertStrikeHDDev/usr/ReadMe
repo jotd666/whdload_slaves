@@ -59,8 +59,9 @@
  History:
  --------
  
- Version 3.3 (xx.april.2022) by JOTD:
+ Version 3.3 (03.april.2022) by JOTD:
  - separate slave which runs on 512k chip / 24-bit expansion
+ - fixed support for SPS112 (sound fix broke support in v3.2, issue #0005486)
  
  Version 3.2 (09.january.2022) by JOTD:
  - support for 3-joystick button. Third button brings map (F10) (issue #0005348)
