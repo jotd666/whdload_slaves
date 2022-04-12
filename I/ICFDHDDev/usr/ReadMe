@@ -38,18 +38,26 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 2.0 (08.11.10) done by JOTD:
+ version 2.1 (13.04.2022) done by JOTD:
+ - support for another antheads version of the executable (issue #002550)
+ - included fix from Spyridon Papakotsis (issue #0003900)
+ - support for spanish fanmade version (requested by Toni Galvez, who 
+   also did the spanish voice, yes this fan version has translated SOUND too). Well
+   it worked out of the box, but now that's official.
+ - support for italian fanmade version (issue #0005217)
+ 
+ version 2.0 (08.11.2010) done by JOTD:
  - more CPU-dependent loops removed: game is now slower on fast machines
  - sound samples now play OK (donkey)
 
- version 1.2 (09.03.08) done by JOTD:
+ version 1.2 (09.03.2008) done by JOTD:
  - SPS version 14 supported
 
- version 1.1 (09.06.07) done by JOTD:
+ version 1.1 (09.06.2007) done by JOTD:
  - fixed blitter wait
  - adapted to data disk (Antheads / ICFD II)
 
- version 1.0 (05.09.05) done by JOTD:
+ version 1.0 (05.09.2005) done by JOTD:
  - install script supports free version from cinemaware site
    (with faulty disk 3). Instead of including the 200K file, I made
    a program to copy as much of the file as possible from the disk, and
@@ -58,7 +66,7 @@
  - re-assembled slave
  - source code included
 
- version 0.1 (20.11.02) done by JOTD:
+ version 0.1 (20.11.2002) done by JOTD:
  - initial pre-release
  - many icons provided
  - manual included
@@ -70,3 +78,16 @@
    where you have to press "fire" in order to continue. I think that this is the "do you want to restart
    from a saved game" screen, only this is black for some strange reason. I'm not fixing this.
    Solution: skip the intro or press fire when it happens.
+
+ - The fix included in the newest 2022 release (http://m68k.aminet.net/package/game/patch/ICFDesert_fix): This program fixes the "Billy Bob Bug", which causes the game to
+   crash if you choose to "Flee" when Billy Bob Morse pulls out a knife
+   at the Neptune Hall, on the 6th day.
+
+  - I ended up supporting a very strange executable version for "Antheads". This "dshell" file
+   is slightly bigger than the others and starts with strong encryption and trace vector decoder. But
+   it's neither Rob Northen nor Ben Herdnon. And the disk seemed unprotected too...
+   I skipped the decryption, let WinUAE handle that, just give me the real entry point, let's fix 
+   a few missed relocs and (after a few hours struggling) it runs.
+   Not sure of what it brings to the game... There were already working versions of "dshell"
+   running Antheads but for some reason that one had encryption on it so I HAD to make it work too.
+	

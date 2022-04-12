@@ -39,6 +39,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 1.0-B (10.04.2022):
+ - added proper icon (by the game creator itself)
+ 
  version 1.0 (03.04.2022) done by JOTD
  - initial release
  - VBR accesses removed

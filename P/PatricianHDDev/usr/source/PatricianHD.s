@@ -30,14 +30,18 @@
 
 ;============================================================================
 
-CHIPMEMSIZE	= $100000
-FASTMEMSIZE	= $50000
+CHIPMEMSIZE	= $80000
+FASTMEMSIZE	= $120000
 NUMDRIVES	= 1
 WPDRIVES	= %0000
 
 BLACKSCREEN
 ;DISKSONBOOT
-DEBUG
+; with DEBUG the slave can crash when can't allocate memory for IOCACHE
+; we use a big IOCACHE value to avoid flashes in savegames
+; but IOCACHE is allocated for each file handle and this game seems to use
+; a lot of concurrent file handles, which explains the relative big fastmem size
+;DEBUG	
 ;INITAGA
 HDINIT
 ;HRTMON
@@ -64,7 +68,7 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.4"
+	dc.b	"1.5"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -96,7 +100,7 @@ _args_end
 
 	dc.b	"$","VER: slave "
 	DECL_VERSION
-		dc.b	$A,$D,0
+		dc.b	$A,0
 
 	EVEN
 

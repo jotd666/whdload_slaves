@@ -9,7 +9,7 @@
 (set #hint-file "Hints")		;name of hint file
 (set #sol-file "Solution")		;name of solution file
 (set #extra-file "simplecopy")		;name of extra file
-(set #extra2-file "Extra2")		;name of second extra file
+(set #extra2-file "icfd_fix")		;name of second extra file
 (set #extra3-file "Extra3")		;name of third extra file
 (set #prefix "ICFD")	;name of slave, directory
 (set #version_suffix "")		;
@@ -78,8 +78,7 @@
 ; Make the disk images for the install
 
 (procedure P_MakeImages
-  (select #version
-    (
+(
      (set #numdisks 3)
      (set #diskindex 1)
      (while (<= #diskindex #numdisks)
@@ -101,6 +100,8 @@
  
   (set #file "BACKS1")
 
+  (if (= 0 #faulty_disk_3)
+  (
   (if
      (<> 0 (run ("%s -size 172000 Desert3:%s T:backs1.beg" (tackon #dest-org "simplecopy") #file)))
      (abort ("\"simplecopy\" has failed to partially copy the file \"%s\"" #file))
@@ -112,7 +113,37 @@
   (delete "T:backs1.beg")
   (delete (tackon #dest-org "simplecopy"))
   )
- )
+  (
+     ; no issues, just copy the file
+      (copyfiles
+        (help @copyfiles-help)
+        (source ("%s:%s" #AD_disk #file))
+        (dest #dest)
+      )  
+  )
+  )
+  
+; apply aminet fix on data file (first opus only)
+  (if (exists (tackon #dest "desert.dat")) 
+  (
+  (if
+     (<> 0 (run ("%s %s" (tackon #dest-org "icfd_fix") #dest)))
+     (message ("\"icfd_fix\" has failed to patch the data file"))
+  )
+  )
+  )
+  
+  (delete (tackon #dest-org "icfd_fix"))
+; some versions have the main exe crunched
+(set #file (tackon #dest "dshell"))
+(set #shellsize #file)
+
+(if (< 120000 #shellsize)
+(
+  (P_XFDDecrunch) 
+)
+)
+)
 )
 
 ;----------------------------
@@ -636,6 +667,17 @@
   (infos)
 )
 
+  (set #faulty_disk_3
+    (askbool
+      (prompt
+        "Did you have issues with the install (Cinemaware website images) ?"
+      )
+      (default 1)
+      (choices "Yes" "No")
+      (help @askbool-help)
+    )
+  )
+  
 ;----------------------------
 
 (P_MakeIcons)

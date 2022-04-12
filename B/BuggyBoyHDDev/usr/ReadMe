@@ -1,0 +1,65 @@
+Short:    HD-Installer for Buggy Boy V1.2
+Author:   Codetapper/Action (codetapper@hotmail.com), ICQ: 26051687
+Uploader: Codetapper/Action (codetapper@hotmail.com)
+Version:  1.2
+Type:     game/patch
+
+This patch applies to "Buggy Boy" (c) 1988 Elite - 1 disk.
+This version supports: - Original version (Wolfgang Unger)
+                       - Tenstar pack (Adrian Simpson and Carlo Pirri)
+
+REQUIREMENTS:
+- Slave requires WHDLoad V17+.
+- Game requires 512kb chip mem (+0.4Mb other memory for preload option)
+
+FEATURES:
+- Full load from HD
+- Copy protection removed
+- Loads and saves high scores
+- All files can be compressed to save space (FImp, Propack etc)
+- All operating system calls emulated (a mini OSEmu you might say!)
+- Atari ST palette access fault removed (lea $ffff824c,a2)
+- Keyboard handler added
+- Instructions included
+- Buttonwait tooltype added for title picture
+- RomIcon, NewIcon and GlowIcon (all created by Frank!)
+- Quit option (default key is 'F10')
+
+Version 1.3 (.04.2022) done by Codetapper / JOTD:
+- better joypad routine (with 3 button joystick support)
+
+Version 1.2 done by Codetapper:
+- Also supports the Tenstar pack version
+- Added 2 Exotic icons (taken from http://exotica.fix.no)
+
+Version 1.1:
+- Colour bit fix in bplcon0 (x2)
+
+
+Do not use the flag NOWRITECACHE with this game or it will lock up after
+saving the high scores.
+
+The copy protection and encryption in this game was quite interesting but
+eventually it succumbed! If you think you're a legend at this game, try it
+with caches enabled on a grunty Amiga :)
+
+Greetings to Wolfgang, Adrian and Carlo for the original, Carlo and Frank for 
+testing, all Action members and the WHDLoad team!
+
+
+Codetapper/Action (23-Nov-2001)
+
+
+         Bug report form, full WHDLoad package and other installs:
+                          http://www.whdload.de/
+
+            ________  ________  ________  ____  ________  ________
+           _)       \_)       \_)       \_)   \_)       \_)       \
+   __ ___ /___/     /   /_____/\  /     /     /   /     /   /     /
+  /_//__// \___    /   /     /CT\/     /     /   /     /   /     /
+        /___/     /___      /   /     /_____/___      /___/     /___ __
+            \____/    \____/    \____/          \____/    \____//__//_/
+
+
+           Visit the Action website for more of our productions:
+                           https://codetapper.com/

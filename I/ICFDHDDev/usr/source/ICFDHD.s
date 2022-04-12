@@ -22,8 +22,16 @@
 
 ;============================================================================
 
+;CHIP_ONLY
+
+	IFD	CHIP_ONLY
+CHIPMEMSIZE	= $100000
+FASTMEMSIZE	= $0
+	ELSE
 CHIPMEMSIZE	= $80000
 FASTMEMSIZE	= $80000
+	ENDC
+	
 NUMDRIVES	= 1
 WPDRIVES	= %0000
 
@@ -31,11 +39,11 @@ WPDRIVES	= %0000
 ;DISKSONBOOT
 DOSASSIGN
 HDINIT
+DEBUG
 ;HRTMON
 IOCACHE		= 10000
 ;MEMFREE	= $200
 ;NEEDFPU
-;SETPATCH
 CACHE
 BOOTDOS
 
@@ -46,8 +54,7 @@ slv_Version	= 16
 slv_Flags	= WHDLF_NoError|WHDLF_Examine
 slv_keyexit	= $5D	; num '*'
 
-	INCLUDE	kick13.s
-
+	INCLUDE	whdload/kick13.s
 
 
 ;============================================================================
@@ -79,7 +86,11 @@ DECL_VERSION:MACRO
 	DECL_VERSION
 	dc.b	$A,$D,0
 
-slv_name		dc.b	"It Came From The Desert I/II",0
+slv_name		dc.b	"It Came From The Desert I/II"
+		IFD		CHIP_ONLY
+		dc.b	" (debug/chip mode)"
+		ENDC
+				dc.b	0
 slv_copy		dc.b	"1989 Cinemaware/Mirrorsoft",0
 slv_info		dc.b	"adapted & fixed by JOTD",10,10
 		dc.b	"Version "
@@ -96,7 +107,10 @@ args_end
 	dc.b	0
 	EVEN
 
+
+
 ;============================================================================
+
 
 	;initialize kickstart and environment
 
@@ -111,14 +125,16 @@ _bootdos
 		lea	_stacksize(pc),a2
 		move.l	4(a7),(a2)
 
-	move.l	(_resload),a2		;A2 = resload
+	move.l	(_resload,pc),a2		;A2 = resload
 
 	;open doslib
 		lea	(_dosname,pc),a1
 		move.l	(4),a6
 		jsr	(_LVOOldOpenLibrary,a6)
 		move.l	d0,a6			;A6 = dosbase
-
+		lea		dosbase(pc),a0
+		move.l	d0,(a0)
+		
 	;assigns
 		lea	_assign1(pc),a0
 		sub.l	a1,a1
@@ -137,6 +153,14 @@ _bootdos
 		bsr	_dos_assign
 
 
+	move.l	a6,-(a7)
+	IFD	CHIP_ONLY
+	move.l	#$20000-$1c0c0,d0
+	move.l	#MEMF_CHIP,d1
+	move.l	4,a6
+	jsr		_LVOAllocMem(a6)
+	ENDC
+	move.l	(a7)+,a6
 	;load exe
 		lea	program(pc),a0
 		lea	args(pc),a1
@@ -155,6 +179,56 @@ patch_main
 	addq.l	#4,a1
 	move.l	_resload(pc),a2
 	bsr	get_version
+	; d1 = 0: patch immediately
+	tst.b	d1
+	beq	.patch
+	
+	; else, emulate trace vector decoder routine
+	; unpack decrypted part (that we ripped from an execution from
+	; WinUAE with a working config)
+	;
+	; that part was NOT a piece of cake but with winuae it was done in
+	; a few hours. I'm sure Stingray would have blasted that with a cleaner
+	; solution in 30 minutes but he's busy somewhere else so ... :)
+	;
+	; that TVD part was NOT Rob Northen, and was NOT Ben Herdnon. It was something
+	; hybrid. And I don't even know if the disk is protected after all...
+	
+	movem.l	a0-a2,-(a7)
+
+	; compute future A4 value
+	move.l	d7,a3
+	move.l	(a3),d0	; data segment
+	add.l	d0,d0
+	add.l	d0,d0	; as APTR
+	addq.l	#4,d0	; segment start
+	lea		varzone(pc),a0
+	add.l	#32768-2,d0
+
+	move.l	d0,(a0)
+
+	move.l	a1,a6
+
+	lea		decrypted(pc),a0
+	jsr		resload_Decrunch(a2)
+
+	; move data, the encrypted part does that
+	
+	lea		($5A40,a6),a3
+	lea		($4FF8,a6),a4
+	move.l	#($24544-$5A40)/4-1,d0
+.copy
+	move.l	(a3)+,(a4)+
+	dbf	d0,.copy
+
+	; what is missing there is "just" 3 relocation entries (the rest is position independent!)
+	; - the variable zone address (that we computed properly with segment address
+	;   and stored in "varzone"
+	; - the first jump at offset 0 that skips decrypted start data to entry
+	; - the address of the load reloc segment in A4 routine
+	;
+	movem.l	(a7)+,a0-a2
+.patch
 	jsr	resload_Patch(a2)
 	rts
 
@@ -169,20 +243,28 @@ VERSION_PL:MACRO
 	ENDM
 
 get_version:
-	movem.l	d0-d1/a1,-(a7)
+	movem.l	d0/a1,-(a7)
 	lea	program(pc),A0
 	move.l	_resload(pc),a2
 	jsr	resload_GetFileSize(a2)
-
+	clr		d1
+	
 	cmp.l	#160332,D0
 	beq.b	.main_1
 
 	cmp.l	#170972,d0
 	beq.b	.main_antheads
+	
 
 	cmp.l	#160428,D0
 	beq.b	.main_sps14		; SPS version 14
-
+	
+	cmp.l	#173588,d0
+	bne.b	.wrong_version
+	st.b	d1
+	
+	bra.b	.main_antheads_sps
+.wrong_version
 	pea	TDREASON_WRONGVER
 	move.l	_resload(pc),-(a7)
 	addq.l	#resload_Abort,(a7)
@@ -190,10 +272,11 @@ get_version:
 
 	VERSION_PL	main_1
 	VERSION_PL	main_antheads
+	VERSION_PL	main_antheads_sps
 	VERSION_PL	main_sps14
-
+	nop
 .out
-	movem.l	(a7)+,d0-d1/a1
+	movem.l	(a7)+,d0/a1
 	rts
 
 ; < D0: numbers of "ticks" to wait
@@ -339,7 +422,54 @@ pl_main_antheads
 	PL_PS	$10D14,move_d0_dmacon
 	PL_PS	$20B0A,wait_blit_2
 	PL_END
+	
+pl_main_antheads_sps
+	PL_START
+	; needs to fix the startup
+	PL_PS	0,jump_to_real_entry
+	; needs to correct just one call
+	PL_PS	$20410,load_a4_base
+	
+	; fix lock
+	;;PL_PSS	$22B06,fix_root_lock,2
+	
+	; quit on error
+	PL_I	$22a48
+	PL_I	$23408
+	PL_END
+	
+pl_xxx
+	PL_START
+	; difficult-to-find cpu-dependent loops
+	; (found with a tool I have written in Python
+	; to detect cpu-dependent loops)
+	PL_PS	$36e2,emulate_delay_4a5
+	PL_PS	$0aa3a,emulate_delay_10894a4
+;;	PL_PS	$9xxx,emulate_delay_2a5
+	PL_PS	$11a5c,emulate_delay_10a5
+	PL_PS	$11c86,emulate_delay_16a5
+	PL_PS	$13eb0,emulate_delay_4a5_2
 
+	PL_PS	$18798,active_d1_loop
+	PL_PS	$10ca6,move_d6_dmacon
+	PL_PS	$10cee,move_d6_dmacon
+	PL_PS	$10cfa,move_d0_dmacon
+	PL_PS	$20aee,wait_blit_2
+	PL_END
+
+	
+		
+jump_to_real_entry
+	add.l	#$22998,(a7)
+	add.l	#2,(a7)		; skip load a4
+	bsr		load_a4_base
+	rts
+	
+load_a4_base
+	move.l		varzone(pc),a4
+	rts
+	
+	
 wait_blit_3
 	bsr	wait_blit	
 	move.w	10854(a4),$dff044
@@ -476,12 +606,17 @@ load_exe:
 
 
 _saveregs
-		blk.l	16,0
+		ds.l	16,0
 _stacksize
 		dc.l	0
 
 tag		dc.l	WHDLTAG_CUSTOM1_GET
 custom1	dc.l	0
 		dc.l	0
-
+dosbase
+	dc.l	0
+varzone
+	dc.l	0
+decrypted
+	incbin	"decrypt.rnc"
 ;============================================================================
