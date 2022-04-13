@@ -45,6 +45,7 @@
    also did the spanish voice, yes this fan version has translated SOUND too). Well
    it worked out of the box, but now that's official.
  - support for italian fanmade version (issue #0005217)
+ - black screen at startup instead of 1.3 dos screen
  
  version 2.0 (08.11.2010) done by JOTD:
  - more CPU-dependent loops removed: game is now slower on fast machines
@@ -76,8 +77,11 @@
  
  - The "Anthead" version works but if you leave the intro running, you'll face a black screen
    where you have to press "fire" in order to continue. I think that this is the "do you want to restart
-   from a saved game" screen, only this is black for some strange reason. I'm not fixing this.
+   from a saved game" screen, only this is black. Seems that it's an original game bug,
+   the color palette in the second copperlist gets zeroed instead of being normal.
+   I could fix this but this is minor, and fixing would be quite tedious. Maybe if someone donates $$$...
    Solution: skip the intro or press fire when it happens.
+   
 
  - The fix included in the newest 2022 release (http://m68k.aminet.net/package/game/patch/ICFDesert_fix): This program fixes the "Billy Bob Bug", which causes the game to
    crash if you choose to "Flee" when Billy Bob Morse pulls out a knife

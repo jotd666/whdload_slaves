@@ -35,7 +35,7 @@ FASTMEMSIZE	= $80000
 NUMDRIVES	= 1
 WPDRIVES	= %0000
 
-;BLACKSCREEN
+BLACKSCREEN
 ;DISKSONBOOT
 DOSASSIGN
 HDINIT
@@ -75,16 +75,19 @@ _assign5
 	dc.b	"DSAVE",0
 
 DECL_VERSION:MACRO
-	dc.b	"2.0"
+	dc.b	"2.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
 	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
+	ENDC
 	ENDM
-
 	dc.b	"$","VER: slave "
 	DECL_VERSION
-	dc.b	$A,$D,0
+	dc.b	0
 
 slv_name		dc.b	"It Came From The Desert I/II"
 		IFD		CHIP_ONLY
