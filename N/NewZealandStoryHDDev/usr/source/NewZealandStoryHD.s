@@ -87,6 +87,8 @@ _config:	dc.b    "C1:X:Infinite Lives:0;"			; ws_config
 		dc.b    "C2:B:Enable 2 Button Support;"
         dc.b    "C4:L:Start level:1_1,1_2,1_3,1_4,2_1,2_2,2_3,2_4,3_1,3_2,3_3,3_4,"
                 dc.b    "4_1,4_2,4_3,4_4,5_1,5_2,5_3,5_4;"
+		dc.b    "C5:X:Disable blitter waits (slow machines):0;"
+		dc.b    "C5:X:Disable speed regulation (slow machines):1;"
         dc.b    "BW;"
 		dc.b    0
 	
@@ -98,7 +100,7 @@ _config:	dc.b    "C1:X:Infinite Lives:0;"			; ws_config
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"2.4"
+	dc.b	"2.6"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -125,7 +127,7 @@ _savename   dc.b  "NewZealandStory.highs",0
 
    dc.b  "$","VER: slave "
    DECL_VERSION
-   dc.b  0
+   dc.b  10,0
 
     even
     
@@ -133,7 +135,7 @@ _savename   dc.b  "NewZealandStory.highs",0
     
 BASE_ADDRESS = $400
 
-
+; score:sps2xxx: $6424B
 
 ;======================================================================
 start ;  A0 = resident loader
@@ -204,7 +206,7 @@ next_part:
    ; this was probably to make up for the RN copy protection boot
    ; sequence that I (jotd) cowardly skipped
 
-	lea   $404,A1
+	lea   $404.w,A1
 ;;;     move.w   #$B83,D0
 	move.w   #$C00,D0
 .tr
@@ -254,10 +256,10 @@ _endgame	movem.l	D0/A0,-(A7)		; preseve regs
 		beq	.ver2
 
 .ver1		movem.l	(A7)+,D0/A0		; restore regs
-		jmp	$40DC			; goto "Game Over" buttonwait
+		jmp	$40DC.w			; goto "Game Over" buttonwait
 
 .ver2		movem.l	(A7)+,D0/A0		; restore regs
-		jmp	$40DA			; goto "Game Over" buttonwait
+		jmp	$40DA.w			; goto "Game Over" buttonwait
 
    
    
@@ -286,11 +288,11 @@ _endround
 
 .ver1		movem.l	(sp)+,a2-a6		; reg restore
 		movem.l	(a7)+,a0-a1		; original code
-		jmp	$4714
+		jmp	$4714.w
 
 .ver2		movem.l	(sp)+,a2-a6		; reg restore
 		movem.l	(a7)+,a0-a1		; original code
-		jmp	$46D6
+		jmp	$46D6.w
 
 
 ; *** 2 button support - launch jump (HH)
@@ -344,7 +346,7 @@ _ride		movem.l  D1/A1,-(A7)    ; preserve reg
       
 		move.l  joy1(pc),d1
 		btst  #JPB_BTN_BLU,d1			; test for blue
-		beq.b	.exit	; not true, skip outine
+		beq.b	.exit	; not true, skip routine
 
 		bset	#2,d7	; set jump!
 
@@ -383,17 +385,6 @@ wait_blit_D2A5:
 
 
 wait_blit
-	;TST.B dmaconr+$DFF000
-	;BTST  #6,dmaconr+$DFF000
-	;BNE.S .wait
-	;bra.s .end
-.wait
-	;TST.B $BFE001
-	;TST.B $BFE001
-	;BTST  #6,dmaconr+$DFF000
-	;BNE.S .wait
-	;TST.B dmaconr+$DFF000
-.end   
 	BLITWAIT    ; WHDload macro (HH)
 	rts
 
@@ -697,10 +688,13 @@ pl_boot
    ; *** patch cia/disk stuff
    PL_R  $9DA
 
+   PL_IFC5
+   PL_ELSE
    PL_P  $C6,wait_blit_D0A2
    PL_P  $CC,wait_blit_D2A5
    PL_P  $CC,wait_blit_D2A5
-
+   PL_ENDIF
+   
    ; *** patch joystick second button routines (HH)
    PL_P  $D2,jump_patch
    PL_P  $D8,hold_patch
@@ -720,7 +714,11 @@ pl_boot_v1
    PL_START
    ; regulation
    
+   PL_IFC5X	1
+   PL_PS	$4242,mainloop_hook_no_regulation
+   PL_ELSE
    PL_PS    $42A2,mainloop_hook
+   PL_ENDIF
    
    ; install vbl hook
    
@@ -738,8 +736,12 @@ pl_boot_v1
    ; ** levelskip with joypad too
    PL_PS    $043f6,check_skip_key
 
+   ; block score at 999999
+   PL_PS    $0547e,fix_score_display_v1
+
    ; *** patch blitter waits (JOTD)
-   
+	PL_IFC5X	0
+	PL_ELSE
 	PL_L  $C1C4,$4EB800C6
 	PL_L  $C1DE,$4EB800C6
 	PL_L  $C1F8,$4EB800C6
@@ -747,7 +749,8 @@ pl_boot_v1
 
 	PL_L  $BDCA,$4EB800CC
 	PL_L  $C27A,$4EB800CC
-   
+    PL_ENDIF
+	
    ; *** score related bugfixes (HH)
 
 	PL_P  $B76C,_endgame   ; use "Game Over" buttonwait on outro
@@ -791,13 +794,17 @@ pl_boot_v1
 	PL_NEXT  pl_boot
 
        
-
+; v2875
 pl_boot_v2
    PL_START
    PL_PSS     $0bde2,vbl_hook,2
 
+   PL_IFC5X	1
+   PL_PS    $04298,mainloop_hook_no_regulation
+   PL_ELSE
    PL_PS    $04298,mainloop_hook
-
+   PL_ENDIF
+   
    ; fix end screen (self-modifying code)
    PL_PS    $0b09e,store_a1
    PL_PS    $0b0a8,get_d3
@@ -805,8 +812,12 @@ pl_boot_v2
    ; ** levelskip with joypad too
    PL_PS    $043e6,check_skip_key
 
+   ; block score at 999999
+   PL_PS    $0540c,fix_score_display_v2
+   
   ; *** patch blitter waits (JOTD)
-
+	PL_IFC5X	0
+	PL_ELSE
 	PL_L	$B8F4,$4EB800C6
 	PL_L	$B90E,$4EB800C6
 	PL_L	$B928,$4EB800C6
@@ -814,7 +825,8 @@ pl_boot_v2
 
 	PL_L	$C042,$4EB800CC
 	PL_L	$B9AA,$4EB800CC
-
+	PL_ENDIF
+	
   ; *** score-related bugfixes (HH)
 	PL_P	$B9E8,_endgame		; use "Game Over" buttonwait on outro
 	PL_B	$48E7,$02		; limit name-entry delete to 3 characters
@@ -854,6 +866,22 @@ pl_boot_v2
     
 	PL_NEXT	pl_boot
 
+fix_score_display_v1
+    MOVE.L	658(A6),D0
+    cmp.l   #1000000,d0
+    bcs.b   .ok
+    move.l  #999999,d0
+.ok
+    rts
+
+fix_score_display_v2
+    MOVE.L	144(A6),D0
+    cmp.l   #1000000,d0
+    bcs.b   .ok
+    move.l  #999999,d0
+.ok
+    rts
+    
 ; returns Z flag if not level skip
 
 check_skip_key
@@ -912,6 +940,7 @@ PAUSE_RAWKEY = $3177
 
 mainloop_hook:
     bsr vbl_reg
+mainloop_hook_no_regulation
     ; pause test from keyboard
     btst    #1,PAUSE_RAWKEY
     beq.b   .nopause
