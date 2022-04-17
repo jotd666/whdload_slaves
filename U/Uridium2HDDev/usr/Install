@@ -1,0 +1,417 @@
+;================================================================================
+; CONFIGURATION SECTION
+
+(set #CFG_APPNAME   "Uridium 2")
+(set #CFG_APPSLV    "Uridium2.slave")
+(set #CFG_APPGUI    "Uridium 2")
+(set #CFG_APPGUIINF "Game")
+(set #CFG_APPVER    "R0801.1")
+(set #CFG_APPCOPY   "1997-2001")
+
+;================================================================================
+
+;------------------------------------------------------------------------------------
+; checks if given program is reachable via the path, if not abort install
+
+(procedure P_CheckRun (
+	(if (<> 0 (run (cat "Which <>NIL: " #VP1)))(
+	    (abort
+			(cat
+				"Could not find the program\n\n"
+				"'" #VP1 "'\n\n"
+				"which is required to perform the installation!\n\n"
+				"Please install the '" #VP1 "' program ensuring that"
+				" it is accessible on the path, then try the installation again."
+			)
+		)
+	))
+))
+
+;------------------------------------------------------------------------------------
+; create installation directories if required
+
+(procedure P_InstallDirs (
+	;
+	; Create data dir if required
+	;
+	(if (<> 2 (exists #VDATDIR))(
+		(makedir #VDATDIR
+			(prompt "The directory '" #VDATDIR "' will now be created")
+			(help @makedir-help)
+			(confirm)
+		)
+	))
+))
+
+
+;------------------------------------------------------------------------------------
+; make game data
+
+(procedure P_InstallGame (
+	;
+	; if we have disk images in the VDESTDIR, assume the user
+	; is upgrading a v.1x installation and move them to VDATDIR
+	;
+	(set #VT1 (tackon #VDESTDIR "Disk.1"))
+	(if (= 1 (exists #VT1))(
+		(working "Moving existing disk images")
+		(copyfiles
+			(prompt "Moving existing disk image")
+			(help @copyfiles-help)
+			(source #VT1)
+			(dest #VDATDIR)
+			(optional fail force)
+		)
+	))
+
+	(set #VT1 (tackon #VDESTDIR "Disk.2"))
+	(if (= 1 (exists #VT1))(
+		(working "Moving existing disk images")
+		(copyfiles
+			(prompt "Moving existing disk image")
+			(help @copyfiles-help)
+			(source #VT1)
+			(dest #VDATDIR)
+			(optional fail force)
+		)
+	))
+
+	;
+	; Set path to game data file
+	;
+	(set #VDATFILE (tackon #VDATDIR "Disk.1"))
+
+	;
+	; install data files if not found
+	;
+	(if (<> 1 (exists #VDATFILE))(
+		;
+		; tell user what is happening
+		;
+		(message
+			(cat
+				"\n\n\nThe installer will now create the game data files\n"
+				"Follow the prompts to insert the game disks when required\n\n"
+				"Click 'Proceed' when ready."
+			)
+		)
+
+		;
+		; call the imager slave
+		;
+		(working "Creating data files in '" #VDATDIR "'")
+
+		(copyfiles
+			(prompt "Copying data file creation slave")
+			(help @copyfiles-help)
+			(source "ISlave")
+			(dest #VDATDIR)
+			(nogauge)
+			(optional fail force)
+		)
+
+		(set @execute-dir #VDATDIR)
+		(run (cat "RawDIC SLAVE=ISlave"))
+		(set @execute-dir #VOLDEXEDIR)
+
+		(delete (tackon #VDATDIR "ISlave") (optional force))
+	))
+
+	;
+	; check the main data file was created
+	;
+	(if (<> 1 (exists #VDATFILE))(
+		(abort (cat	"\n*** DATA FILES NOT CREATED! ***\n\n"
+					"The installer could not extract the game data files.\n\n"
+					"Please contact the author for further information\n"
+		))
+	))
+
+	;
+	; upgrade v1.x high scores
+	;
+	(set #VT1 (tackon #VDESTDIR "u2info.bin"))
+	(if (= 1 (exists #VT1))(
+		(working "Upgrading v1.x High Score Table")
+		(set #VT2
+			(run (cat "U2HSConv12 " #VT1 " " (tackon #VDATDIR "Disk.2")))
+		)
+
+		(if (= 0 #VT2)(
+			(delete #VT1 (optional nofail force))
+		))
+	))
+))
+
+;------------------------------------------------------------------------------------
+; install WHDLoad slave program
+
+(procedure P_InstallSlave (
+
+	(working "Installing slave program")
+
+    ; first, clean up previous installations
+	(set #VT1 (tackon #VDESTDIR "Disk.1"))
+	(if (= 1 (exists #VT1)) (delete #VT1 (optional nofail force)) )
+
+	(set #VT1 (tackon #VDESTDIR "Disk.2"))
+	(if (= 1 (exists #VT1)) (delete #VT1 (optional nofail force)) )
+
+	(set #VT1 (tackon #VDESTDIR "u2config.bin"))
+	(if (= 1 (exists #VT1)) (delete #VT1 (optional nofail force)) )
+
+	(set #VT1 (tackon #VDESTDIR "WHDLoad"))
+	(if (= 1 (exists #VT1)) (delete #VT1 (optional nofail force)) )
+
+    (set #VT1 (tackon #VDESTDIR "Uridium-II_HD"))
+	(if (= 1 (exists #VT1)) (delete #VT1 (optional nofail force)) )
+
+    (set #VT1 (tackon #VDESTDIR "Uridium-II_HD.info"))
+    (set #VT2 (tackon #VDESTDIR "Uridium II.info"))
+	(if (= 1 (exists #VT2))
+		(if (= 1 (exists #VT1)) (delete #VT1 (optional nofail force)) )
+		(if (= 1 (exists #VT1)) (rename #VT1 #VT2) )
+	)
+
+	; get chip memory size version information
+	(if (< #VVERINFA 0)(
+		(if (database "chiprev" "AA")
+			(set #VVERINFA 2)
+			(set #VVERINFA 1)
+		)
+	))
+
+	; copy slave program
+	(set #VT1 "Slave")
+	(if (>= #VVERINFA 0) (set #VT1 (cat #VT1 #VVERINFA)) )
+
+	(copyfiles
+		(prompt "Copying slave program")
+		(help @copyfiles-help)
+		(source #VT1)
+		(newname #CFG_APPSLV)
+		(dest #VDESTDIR)
+		(nogauge)
+		(optional fail force)
+	)
+
+))
+
+;------------------------------------------------------------------------------------
+; install GUI
+
+(procedure P_InstallGUI (
+	; copy GUI program if it exists
+	(if (= 1 (exists "GUI"))(
+		(copyfiles
+			(prompt "Copying GUI program")
+			(help @copyfiles-help)
+			(source "GUI")
+			(newname #CFG_APPGUI)
+			(dest #VDESTDIR)
+			(nogauge)
+			(optional fail force)
+		)
+	))
+
+	; see if the user wants or needs to install an icon
+
+	(set #VT1 (cat #CFG_APPGUI ".info"))
+	(if (= 0 (exists (tackon #VDESTDIR #VT1)))(
+		; no icon exists, quietly copy one in
+		(set #VT2 1)
+	)(
+		; icon exists, ask user if they want to overwrite it
+		(set #VT2
+			(askbool
+				(prompt (cat "Do you want to replace the \"" #CFG_APPGUI "\" icon ?"))
+				(default 1)
+				(help @askchoice-help)
+			)
+		)
+	))
+
+	; install the icon if required
+
+	(if (= 1 #VT2)(
+		; get choice of icon format
+		(set #VT3
+			(askchoice
+				(prompt "Which type of icon would you like to install for " #CFG_APPGUI " ?")
+				(choices "Standard" "NewIcon" "OS3.5+ Coloricon")
+				(help @askchoice-help)
+			)
+		)
+		(if (= 0 #VT3)
+			(set #VT3 ".oi")
+			(if (= 1 #VT3)
+				(set #VT3 ".ni")
+				(if (= 2 #VT3)
+					(set #VT3 ".ci")
+				)
+			)
+		)
+
+		; install the icon
+		(copyfiles
+			(prompt "Copying icon")
+			(help @copyfiles-help)
+			(source (cat #CFG_APPGUIINF #VT3))
+			(newname #VT1)
+			(dest #VDESTDIR)
+			(noposition)
+			(nogauge)
+			(optional fail force)
+		)
+	))
+
+	; set required icon tooltypes
+
+	(working "Setting icon tooltypes")
+	(set #VT1 (tackon #VDESTDIR #CFG_APPGUI))
+
+	(if (<> 1 (exists "GUI"))(
+		; no GUI, set WHDLoad tooltypes
+		(tooltype (dest #VT1) (setstack 16384))
+
+		(set #VT2 "0d180cd9")
+		(iconinfo (dest #VT1) (gettooltype "PRELOAD" "#VT2"))
+		(if (= "0d180cd9" #VT2)(
+			(tooltype (dest #VT1) (settooltype "PRELOAD" ""))
+		))
+
+		(set #VT2 "0d180cd9")
+		(iconinfo (dest #VT1) (gettooltype "SLAVE" "#VT2"))
+		(if (<> #CFG_APPSLV #VT2)(
+			(tooltype (dest #VT1) (settooltype "SLAVE" #CFG_APPSLV))
+		))
+
+		(set #VT2 "0d180cd9")
+		(iconinfo (dest #VT1) (gettooltype "BUTTONWAIT" "#VT2"))
+		(if (= "0d180cd9" #VT2)(
+			(tooltype (dest #VT1) (settooltype "BUTTONWAIT" ""))
+		))
+
+		(set #VT2 "0d180cd9")
+		(iconinfo (dest #VT1) (getdefaulttool "#VT2"))
+		(if (= "0d180cd9" #VT2)(
+			(tooltype (dest #VT1) (setdefaulttool "WHDLoad"))
+		))
+	)(
+		; GUI, set default tooltypes
+		(tooltype (dest #VT1) (setstack 16384))
+	))
+))
+
+;------------------------------------------------------------------------------------
+; install instructions
+
+(procedure P_InstallReadme (
+	; does the user want to install the readme?
+	(set #VT1
+		(askbool
+			(prompt (cat "Do you want to install the \"" #CFG_APPGUI "\" readme ?"))
+			(default 1)
+			(help @askchoice-help)
+		)
+	)
+
+	; copy the readme if required
+	(if (= 1 #VT1)(
+		(copyfiles
+			(prompt "Copying readme")
+			(help @copyfiles-help)
+			(source "Instructions")
+			(newname (cat #CFG_APPNAME ".readme"))
+			(dest #VDESTDIR)
+			(infos)
+			(noposition)
+			(nogauge)
+			(optional nofail force)
+		)
+	))
+))
+
+;------------------------------------------------------------------------------------
+(welcome (cat "Welcome to the " #CFG_APPNAME " HD Installer"))
+
+;
+; initialise
+;
+(set @app-name #CFG_APPNAME)
+(set #VOLDEXEDIR @execute-dir)
+(set #VVERINFA -1)
+(set #VVERINFB -1)
+(set #VVERINFC -1)
+(set #VDESTDIR @default-dest)
+
+;
+; check settings
+;
+(if	(< @user-level 1)              (abort "You must select 'Expert' or 'Intermediate' user level"))
+(if	(< @installer-version 2818051) (abort "This product requires at least version 43.3 of the Installer program"))
+
+;
+; check required programs are available
+;
+(set #VP1 "RawDIC")
+(P_CheckRun)
+(set #VP1 "WHDLoad")
+(P_CheckRun)
+
+;
+; welcome message
+;
+(message "\n\n\nWelcome to the " #CFG_APPNAME " HD Installer " #CFG_APPVER "\n\n"
+		 "© " #CFG_APPCOPY " Halibut Software\n\n"
+		 "Please read the documentation thoroughly "
+		 "before attempting to use this installer!\n\n"
+		 "Click 'Proceed' to begin..."
+)
+
+;
+; get directory to install in
+;
+(set #VDESTDIR
+	(askdir
+		(prompt "Where would you like the game installed?\n"
+				"If you have an existing installation select that directory,\n"
+				"otherwise create / select the directory to install the game into."
+		)
+		(help @askdir-help)
+		(default @default-dest)
+		(disk)
+		(newpath)
+	)
+)
+(set #VDESTDIR (expandpath #VDESTDIR))
+(set @default-dest #VDESTDIR)
+(set #VDATDIR  (tackon #VDESTDIR "data/"))
+
+;
+; create the installation directories
+;
+(P_InstallDirs)
+
+;
+; install the game data
+;
+(P_InstallGame)
+
+;
+; install the slave
+;
+(P_InstallSlave)
+
+;
+; install the GUI and/or icons
+;
+(P_InstallGUI)
+
+;
+; install the readme
+;
+(P_InstallReadme)
+
+;=======================================================================
+;$VER: Uridium II Installer script R0801.1 © 1997-2001 Halibut Software 

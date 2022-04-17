@@ -17,15 +17,18 @@
  ECS: The installed program requires 0.5 MB ChipMem and 1.5 MB OtherMem.
  It can be quit by pressing Num '*' (key can be changed with Tooltype "QuitKey=").
 
- The game requires an installed A1200 Kickstart 3.1 image.
+ The game requires an installed A1200 or A4000 Kickstart 3.1 image.
  The kickstart image must be located in the directory "Devs:Kickstarts" and
- must be named "kick40068.A1200". The image can be extracted from a A1200 with
- tools like 'GrabKick' or similar which can be found on aminet.
+ must be named "kick40068.A1200" (resp kick40068.A4000). 
+ The image can be extracted from a A1200 (resp A4000) with tools like 'GrabKick'
+ or similar which can be found on aminet.
  If the image is of wrong version or altered in any way WHDLoad will quit with
  an appropriate requester.
- Additionally the file "kick40068.A1200.RTB" must be installed in the same
- directory as the kickstart image. It can be found in the archive 
- "util/boot/skick344.lha" on aminet.
+ Additionally the file "kick40068.A1200.RTB" (resp "kick40068.A4000.RTB")
+ must be installed in the same directory as the kickstart image.
+ It can be found in the archive "util/boot/skick346.lha" on aminet.
+
+ ECS version requires a A600 kick 3.1 image ("kick40068.A600" and "kick40068.A600.RTB")
 
  If you have problems with this installation please try and get a newer
  version of this package from the WHDLoad WWW-Page. If that doesn't help try
@@ -39,12 +42,19 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 1.2 (02.01.03)
+ version 2.0 (17.04.2022)
+ - AGA version: fixed crash at level 3 (issue #0003228,#0000312)		
+ - added trainer infinite lives (you'll need it, the game is super hard)
+ - added preset level codes
+ - fixed blitter errors (letters not displaying properly)
+ - reworked source
+ 
+ version 1.2 (02.01.2003)
  - Reassembled with a change for Kickstart emulation, now the game
    works in PAL mode on a NTSC amiga (PAL tooltype must be set)
    (thanks to Chris Vella our American tester for the bug report)
 
- version 1.1 (15.12.02)
+ version 1.1 (15.12.2002)
  - ECS version supported, password protection removed
  - Manual added
 
@@ -52,3 +62,19 @@
  - initial release, using new kickstart 3.1 interface
  - nice icon by Chris Vella
  - sourcecode included
+
+ To use the level codes, use "options" then "enter password". You'll find that
+ the password has been pre-set
+ 
+ level codes
+ 
+ Level 2	7AED4B234D22
+ Level 3	FAED4B234D22
+ Level 4	7ACF4B234900
+ Level 5	FACF4B234900
+ 
+ Notes:
+ 
+ AGA version came first, with quite a lot of (now fixed) bugs.
+ ECS version came afterwards, with fixed bugs and better code (and password protection :))
+ 

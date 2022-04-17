@@ -1,0 +1,177 @@
+Short:    HD Installer for Uridium II
+Author:   girv@girvnet.org.uk (John Girvin)
+Uploader: girv@girvnet.org.uk (John Girvin)
+Type:     game/patch
+Replaces: game/patch/U2Install.lha
+Requires: Installer 43.3+, WHDLoad 14.0+
+
+
+TITLE
+
+    WHD_UridiumII release 0801.1
+    
+
+DESCRIPTION
+
+    This is a hard drive installation package for the
+    Andrew Braybrook / Graftgold game "Uridium 2".
+
+
+REQUIREMENTS
+
+    Requires an original copy of the game.
+
+    Requires version 43.3 or later of the standard Amiga "Installer" program
+    or a compatible equivalent.
+
+    Requires version 17 or later of the WHDLoad package by Bert Jahn.
+    WHDLoad is available from:
+
+            http://www.whdload.de
+
+    Please consider registering this fine package to help support future
+    development of hard drive installers for your favourite Amiga games!
+
+
+INSTALLING THE GAME
+
+    Extract all files in the product archive to your system.
+    They will be extracted to a drawer called "WHD_UridiumII"
+
+    Double click on the "Install" icon present in the extraction
+    directory and follow the instructions given by the Installer
+    program.
+
+    The game will be installed to a directory you select on your
+    hard drive. You will be alerted if installation fails for any
+    reason, please contact the author if this happens.
+
+
+PLAYING THE GAME
+
+    Open the game drawer created during installation and click on the
+    "Uridium 2" icon. The game will then start.
+
+    The following tooltypes may be specified in the "Uridium II" icon:
+
+      BUTTONWAIT    : wait for button presses before continuing at various
+                      points in the game.
+
+
+    The following keys may be used while the game is running:
+
+      1           : activate "LAND NOW!"
+      2           : give players 5 lives
+      3/4         : adjust player 1 weapon
+      5/6         : adjust player 2 weapon
+
+      F10         : quit game and return to Workbench
+
+
+BUGS/CAVEATS
+
+    This product is provided "as is" and is used at your own risk.
+
+    The author is not liable for any loss or damage caused by the
+    use or misuse of this product.
+
+    When running the installer it is advisable to disable any virus
+    checking or debugging software you may have running.
+
+
+AUTHOR
+
+    John Girvin
+
+    E-Mail: girv@girvnet.org.uk
+
+    WWW:    http://www.girvnet.org.uk
+
+    ICQ:    15651883
+
+
+HISTORY
+
+Version 2.0 (2022) done by JOTD:
+- Full rework of the slave, converted to whdload 17
+- Use of fast memory re-enabled
+- 512k chipmem slave provided instead of 1MB chip
+- fixed access fault (pressing F1 in the menu)
+- fixed sound replay
+- added quick docs
+ 
+0801.1  08/2001
+		- version checks moved from installer script into slave
+		- miscellaneous installer script improvements
+		- changed trainer keys as they clashed with in-game menus - DOH!
+		
+0701.2  07/2001
+		- fixed stupid, fatal bug in slaves
+
+0701.1  07/2001
+		- no longer requires CRC16 program to install
+		- added NewIcon and OS3.5+ ColorIcon
+		
+0401.1  04/2001
+		- moved to new release numbering system
+		- requires WHDLoad 14.0+
+		- high scores are now saved as required instead of at the end
+		- added buttonwait feature
+		- removed some left over floppy access code
+
+1.00    06/1997
+		- first version
+
+1.01    06/1997
+		- fixed address error bug in slave
+		- added "upgrade" option to installer script
+
+1.02    07/1997
+		- slave now gives Uridium-II correct CPU/chipset values
+		  (previously told it you had a 68000/ECS machine)
+		- removed manual protection
+
+1.03    07/1997
+		- handles 2 versions of Uridium II
+		- changed high-score saving method to save only at quit time
+
+1.04    07/1997
+		- added "Land Now" and weapon select trainers
+		- game now uses at most 1Mb of chip memory when running
+
+1.05    09/1997
+		- automatically disables cache for 68040 machines
+		- 2Mb chipmem machines can use extended samples again (broken in 1.04)
+
+
+
+
+
+
+LICENCE
+
+    This product is copyrighted freeware.
+
+    No payment is required to use this product, although donations
+    will be welcomed!
+
+    © 2001 Halibut Software. No modifications may be made to any
+    files or data that comprise the product without the express
+    written consent of the author.
+
+    Freely distributable, provided other licence requirements are
+    adhered to. No charge may be made for this product except for
+    reasonable handling and/or media costs.
+
+
+ACKNOWLEDGEMENTS
+
+    "Uridium 2" is © Andrew Braybrook / Graftgold
+
+    WHDLoad is © Bert Jahn
+
+    Thanks to Angus Manwaring for the original disk and the constant
+    hassling and testing
+
+======================================================================
+$VER: WHD_UridiumII documentation 0801.1 © 1997-2001 Halibut Software

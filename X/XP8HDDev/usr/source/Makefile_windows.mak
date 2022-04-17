@@ -3,11 +3,15 @@
 PROGNAME = XP8
 HDBASE = K:\jff\AmigaHD
 WHDBASE = $(HDBASE)\PROJETS\HDInstall\DONE
-WHDLOADER = $(PROGNAME).slave
 SOURCE = $(PROGNAME)HD.s
 
-all :  $(WHDLOADER)
+CMD = vasmm68k_mot -DDATETIME -I$(HDBASE)/amiga39_JFF_OS/include -I$(WHDBASE)\WHDLoad\Include -I$(WHDBASE) -devpac -nosym -Fhunkexe
 
-$(WHDLOADER) : $(SOURCE)
+all :  XP8AGA.slave XP8ECS.slave
+
+XP8AGA.slave: $(SOURCE)
 	wdate.py> datetime
-	vasmm68k_mot -DDATETIME -I$(HDBASE)/amiga39_JFF_OS/include -I$(WHDBASE)\WHDLoad\Include -I$(WHDBASE) -devpac -nosym -Fhunkexe -o $(WHDLOADER) $(SOURCE)
+	$(CMD) -DAGAVER -o XP8AGA.slave $(SOURCE)
+XP8ECS.slave : $(SOURCE)
+	wdate.py> datetime
+	$(CMD)  -o XP8ECS.slave $(SOURCE)
