@@ -85,15 +85,13 @@ slv_keyexit	= $5D	; num '*'
 
 ;============================================================================
 
-;============================================================================
-
 	IFD BARFLY
 	DOSCMD	"WDate  >T:date"
 	ENDC
 
 
 DECL_VERSION:MACRO
-	dc.b	"2.0"
+	dc.b	"2.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -289,8 +287,8 @@ pl_main
 	PL_B	$167E,$60	; manual protection
 	PL_B	$A60E,$60	; manual protection
 	PL_IFC1X	0	; infinite lives
-	PL_NOP	$0e6a2,6
-	PL_B	$0e6a2+6,$60
+	PL_NOP	$0e6a2,4
+	PL_B	$0e6a2+4,$60
 	PL_ENDIF
 	ENDC
 	PL_END

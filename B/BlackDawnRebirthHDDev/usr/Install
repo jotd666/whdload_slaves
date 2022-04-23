@@ -10,7 +10,7 @@
 (set #man-file "Manual")		;name of manual file
 (set #hint-file "Hints")		;name of hint file
 (set #sol-file "Solution")		;name of solution file
-(set #extra-file "Extra")		;name of extra file
+(set #extra-file "trainer")		;name of extra file
 (set #extra2-file "Extra2")		;name of second extra file
 (set #extra3-file "Extra3")		;name of third extra file
 (set #prefix "BlackDawnRebirth")			;name of slave, directory

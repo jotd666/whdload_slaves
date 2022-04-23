@@ -38,6 +38,10 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 2.2 (2022) done by JOTD:
+ - support for another antheads version (issue #0005596)
+ - TODO fix encrypted version just for curiosity sake
+ 
  version 2.1 (13.04.2022) done by JOTD:
  - support for another antheads version of the executable (issue #002550)
  - included fix from Spyridon Papakotsis (issue #0003900)

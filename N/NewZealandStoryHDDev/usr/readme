@@ -29,7 +29,10 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 2.5 (xx.04.2022) done by JOTD:
+ version 2.6 (23.04.2022) done by JOTD:
+ - fixed crash in "disable speed regulation" mode (issue #0005602)
+ 
+ version 2.5 (14.04.2022) done by JOTD:
  - fixed score bug display when score is > 999999. Now score
    gets locked at this value (issue #0004477)
  - CUSTOM5 bits allows to disable blitterwaits and/or speed regulation
@@ -62,7 +65,7 @@ Version 2.2 (StingRay)
 
 Version 2.1 (Hungry Horace)
 - Configuration features for WHDLoad v17 added
-- Fixed 68000 specific bug causing a black screen on game loadin
+- Fixed 68000 specific bug causing a black screen on game loading
  
  version 2.0 (16.11.2008) done by Hungry Horace
  - Load / Save scores to HD (file 'highs')

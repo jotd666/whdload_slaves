@@ -64,7 +64,7 @@ _expmem
 ;DEBUG
 
 DECL_VERSION:MACRO
-	dc.b	"2.1"
+	dc.b	"2.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -166,8 +166,6 @@ loader:
 .skip
 	move.l	(sp)+,D0
 
-	bsr	PatchAccessFault
-
 	lea	version(pc),A0
 
 	cmp.l	#'Date',$59F0.W
@@ -237,6 +235,12 @@ pl_french:
 
     ; menu text wait
     PL_PS   $260e8,wait_to_read_text
+
+	; access fault avoidance
+	PL_PS	$18288,_avoid_af2
+	
+	; fix unmasked D1 MSW
+	PL_P	$21524,fix_unmasked_d1_msw
 
 	PL_END
 	
@@ -315,6 +319,12 @@ pl_english_2030
     
     PL_PS   $25f90,wait_to_read_text
 
+	; access fault avoidance
+	PL_PS	$18286,_avoid_af2
+	
+	; fix unmasked D1 MSW
+	PL_P	$214ea,fix_unmasked_d1_msw
+
 	PL_END
 	
 PatchEnglish_SPS2031:
@@ -381,6 +391,12 @@ pl_english_2031
    
     PL_PS   $25f30,wait_to_read_text
 
+	; access fault avoidance
+	PL_PS	$18270,_avoid_af2
+	
+	; fix unmasked D1 MSW
+	PL_P	$21492,fix_unmasked_d1_msw
+
 	PL_END
 	
 PatchItalian:
@@ -389,6 +405,7 @@ PatchItalian:
 
 	move.l	#VER_ITALIAN,(A0)
 
+	
 	lea	pl_italian(pc),a0
 	sub.l	a1,a1
 	move.l	_resload(pc),a2
@@ -447,6 +464,13 @@ pl_italian
 
 
     PL_PS   $25f78,wait_to_read_text
+	
+	; access fault avoidance
+	PL_PS	$18260,_avoid_af2
+	
+	; fix unmasked D1 MSW
+	PL_P	$2148c,fix_unmasked_d1_msw
+	
 	PL_END
 	
 PatchUnknown:
@@ -455,73 +479,6 @@ PatchUnknown:
 	addq.l	#resload_Abort,(a7)
 	rts
 
-; works for all versions
-
-PatchAccessFault:
-	movem.l	d0-a6,-(a7)
-	; access fault #1 - programming error
-
-	lea	$1E000,a0
-	lea	$24000,a1
-	lea	.afpattern_1(pc),a2
-	moveq	#8,d0
-	bsr	.hexsearch
-	cmp.l	#0,a0
-	beq.b	.skip1
-	move.b	#$d6,2(a0)	; add.l d1,a3 -> add.w d1,a3
-.skip1
-	; access fault #2 - jump table error
-
-	lea	$17000,a0
-	lea	$1A000,a1
-	lea	.afpattern_2(pc),a2
-	moveq	#8,d0
-	bsr	.hexsearch
-	cmp.l	#0,a0
-	beq.b	.skip2
-	move.w	#$4EB9,(a0)+
-	pea	_avoid_af2(pc)
-	move.l	(a7)+,(a0)+
-.skip2
-	bsr	_flushcache
-	movem.l	(a7)+,d0-a6
-	rts
-
-.afpattern_1:
-	dc.l	$2653D7C1,$D6C04E75
-.afpattern_2:
-	dc.l	$246D0002,$301AE548
-.hexsearch:
-;< A0: start
-;< A1: end
-;< A2: bytes
-;< D0: length
-;> A0: address or 0 if not found
-
-	movem.l	D1/D3/A1-A2,-(A7)
-.addrloop:
-	moveq.l	#0,D3
-.strloop:
-	move.b	(A0,D3.L),D1	; gets byte
-	cmp.b	(A2,D3.L),D1	; compares it to the user string
-	bne.b	.notok		; nope
-	addq.l	#1,D3
-	cmp.l	D0,D3
-	bcs.b	.strloop
-
-	; pattern was entirely found!
-
-	bra.b	.exit
-.notok:
-	addq.l	#1,A0	; next byte please
-	cmp.l	A0,A1
-	bcc.b	.addrloop	; end?
-	sub.l	A0,A0
-.exit:
-	movem.l	(A7)+,D1/D3/A1-A2
-	rts
-
-
 _avoid_af2:
 	move.l	(2,a5),a2
 	cmp.l	#$4000,a2
@@ -529,9 +486,14 @@ _avoid_af2:
 	cmp.l	#$80000,a2
 	bcc.b	.avoid
 	move.w	(a2)+,d0
+	cmp.w	#40,d0
+	; > 40: bogus address too as index is too high (issue #0005576)
+	bcc.b	.avoid
 	rts
 
 .avoid
+	; figured out that setting to 0 makes game jump to first address
+	; of the table, which seems harmless
 	moveq	#0,d0
 	rts
 
@@ -542,6 +504,19 @@ skip_protection
 	clr.w	d0
 	rts
 	
+fix_unmasked_d1_msw
+	move.l	d1,-(a7)
+	; add D1 to A3, but sometimes D1 msw is not zero
+	; naive fix is to do ADD.L => ADD.W but this is a
+	; problem when D1 > $7FFF because add becomes signed
+	; so we have to keep adding a long
+	swap	d1
+	clr.w	d1
+	swap	d1
+	ADDA.L	D1,A3			;2148c: d7c1
+	move.l	(a7)+,d1
+	ADDA.W	D0,A3			;2148e: d6c0
+	RTS				;21490: 4e75
 
 wait_to_read_text
     movem.l d0-d1/a0/a2,-(a7)
@@ -639,6 +614,12 @@ pl_german
 
     ; wait for intro text (loading is so fast now)
     PL_PS   $261ee,wait_to_read_text
+
+	; access fault avoidance
+	PL_PS	$18434,_avoid_af2
+	
+	; fix unmasked D1 MSW
+	PL_P	$2168c,fix_unmasked_d1_msw
     
 	PL_END
 

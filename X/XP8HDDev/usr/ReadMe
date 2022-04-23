@@ -42,6 +42,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 2.1 (22.04.2022)
+ - fixed crashed in trainer for ECS version (issue #0005598)
+ 
  version 2.0 (17.04.2022)
  - AGA version: fixed crash at level 3 (issue #0003228,#0000312)		
  - added trainer infinite lives (you'll need it, the game is super hard)

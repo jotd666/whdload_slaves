@@ -1,0 +1,102 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+This install applies to "Lethal Weapon" © 1992 Ocean - 1 disk.
+Thanks to Steven Becker and Sun 68 for sending the originals!
+
+REQUIREMENTS:
+- Slave requires WHDLoad V17+.
+- Game requires 0.5Mb chip mem and 0.5Mb other mem (+0.9Mb other memory 
+  for preload option)
+
+Version 2.0 (20.04.2022) done by JOTD:
+
+- added trainer (infinite ammo & lives)
+- added optional second button jump (wasn't a piece of cake)
+- added & typo fixed manual
+- music replay fixed
+
+Version 1.3: (2001) done by Codetapper:
+- Fixed incompatibility problem on one version (thanks to Bored Seal
+  for the bug report!)
+
+Version 1.2: (Codetapper)
+- Now uses 512k chip and 512k other memory (rather than 1Mb chip)
+- Game's version of decruncher relocated to fast memory
+- Tested with 2 versions
+- Colour bit fixes (x3)
+- Snoop bugs fixed (x3)
+- Blitter wait added
+- Rob Northen copylock bypassed correctly
+- Another access fault fixed
+- Quit key is now detected in code (so 68000 users can quit)
+- RomIcon, NewIcon and GlowIcon (created by me!) and 2 Exotic icons
+  (taken from http://exotica.fix.no)
+
+Previous versions: (Keith Krellwitz)
+- Full load from HD
+- Access fault fixed
+- Quit option (default key is 'F10')
+
+
+CHEAT MODE:
+- Taken from Sweet Cheater by Keith Krellwitz!
+- During play press and hold any of the following:
+
+     'ALT', 'Y', ANY NUMBER (0-9)....................Skip levels.
+     'ALT', 'Y', 'I'..................Turns off sprite collision.
+     'ALT', 'Y', 'K'.........................Increase ammunition.
+     'ALT', 'Y', 'L'..............................Increase lives.
+     'ALT', 'Y', 'M'..........Removes game sprites and platforms.
+     'ALT', 'Y', 'N'..........Replace game sprites and platforms.
+     'ALT', 'Y', 'Q'...................................Game over.
+
+  If you jump onto the notice board next to the mission 1 entrance and
+  push up, you'll be able to collect 4 extra lives.
+
+  On mission 3, jump along the 4th platform, jump up and keep pushing up
+  and you'll climb the wall.  When you reach the top, walk to the left
+  and keep going until you reach the edge of the screen.  There you will
+  find 10 magnifying glasses, one gun, a round of bullets and an extra
+  life.
+
+                            (LEVEL CODES)
+
+                     1-"KUIRFR"        3-"RDRKBA"
+                     2-"BEIFCF"        4-"LYLSUA"
+
+
+One version of this game has a main file incompatible with the internal
+RNC decruncher in the most recent versions of WHDLoad. This has now been
+fixed. The other access fault is a really nasty one which I have done my
+best to bypass but if the game suddenly quits in debug mode, please
+contact me and explain where exactly you were in the game when it
+occurred.
+
+Thanks to Keith Krellwitz for the original install, Bored Seal for the
+bug report and to Steven Becker and Sun 68 for sending the originals!
+
+
+Codetapper/Action (29-Nov-2001)
+
+
+         Bug report form, full WHDLoad package and other installs:
+                          http://www.whdload.de
+
+            ________  ________  ________  ____  ________  ________
+           _)       \_)       \_)       \_)   \_)       \_)       \
+   __ ___ /___/     /   /_____/\  /     /     /   /     /   /     /
+  /_//__// \___    /   /     /CT\/     /     /   /     /   /     /
+        /___/     /___      /   /     /_____/___      /___/     /___ __
+            \____/    \____/    \____/          \____/    \____//__//_/
+
+
+           Visit the Action website for more of our productions:
+                           http://codetapper.com

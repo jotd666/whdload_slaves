@@ -53,7 +53,8 @@ IOCACHE		= 10000
 ;MEMFREE	= $200
 ;NEEDFPU
 ;SETPATCH
-;STACKSIZE = 10000
+; without a bigger stacksize the game crashes
+STACKSIZE = 10000
 BOOTDOS
 SEGTRACKER
 CACHE
@@ -73,7 +74,7 @@ slv_keyexit	= $5D	; num '*'
 
 
 DECL_VERSION:MACRO
-	dc.b	"1.4"
+	dc.b	"1.5"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -186,10 +187,14 @@ patch_main
 	beq.b	.rerelease
     
     tst.l   d0
-    bne.b   wrong_version
+    bne.b   wrong_version		; with this executable name, all other sizes mean wrong version
+	
+	; now let's check german exe
+	
     GETFILESIZE	_program_german
 	cmp.l	#179944,d0
 	beq.b	.german
+	; else wrong version (unknown exe name)
 	bra	wrong_version
 .rerelease
 	rts

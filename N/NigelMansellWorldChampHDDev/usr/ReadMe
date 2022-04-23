@@ -39,17 +39,17 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 2.0 ()
+ version 2.0 (2022)
  - TODO: enable fastmem CD32 version (copperlist issue)
- - TODO: fix various crashes in AGA/ECS
+ - fixed various crashes in AGA/ECS (issue #0005417, #0005253)
  - separate ECS version using only 512kb chip
  - TODO: installer redone from scratch
  
- version 1.3 (25.01.06) done by JOTD
+ version 1.3 (25.01.2006) done by JOTD
  - support for CD³² version (not very good, but allows to play) with joystick
  - fixed bug that made results music played wrong when using fastmem on AGA version
 
- version 1.2 (19.11.05) done by JOTD
+ version 1.2 (19.11.2005) done by JOTD
  - fixed GURU in AGA version (not enough memory configured in slave)
  - adapted to WHDLoad v16
 
@@ -57,7 +57,7 @@
  - fixed slave name in newexot icon (thanks Tony for reporting it)
  - support for AGA version
 
- version 1.0 (12.01.03) done by JOTD
+ version 1.0 (12.01.2003) done by JOTD
  - initial release
  - Use of fast memory for amazing speed
  - 2 versions supported

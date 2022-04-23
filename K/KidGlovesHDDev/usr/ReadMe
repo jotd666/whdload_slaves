@@ -29,7 +29,10 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 1.2 (01.07.06) done by JOTD:
+ version 1.3 (14.04.2022) done by JOTD:
+ - fixed address error on 68000 (issue #0005570)
+ 
+ version 1.2 (01.07.2006) done by JOTD:
  - fixed keyboard problem
  - quit key works on 68000
  - rewritten readme/install

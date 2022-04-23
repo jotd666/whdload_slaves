@@ -37,6 +37,10 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
  
+ version 1.2 (23.04.2022) done by JOTD:
+ - added support for alpha-1 flashtro (issue #0005208)
+   (which adds megatrainer)
+   
  version 1.1-B (01.01.2022) done by JOTD:
  - fixed install (issue #005422)
  
@@ -49,3 +53,6 @@
  version 1.0 (14.05.2021) done by JOTD:
  - initial release
  - source code included
+
+Note: to upgrade from 1.1 to 1.2 and benefit from flashtro, either reinstall
+or just copy "trainer" file into "data" directory

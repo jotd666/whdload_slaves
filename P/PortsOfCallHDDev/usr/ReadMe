@@ -40,6 +40,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 1.5 (17.04.2022)
+ - fixed crash after title screen (issue #0005462, #0005335)
+ 
  version 1.4 (06.08.2021) done by JOTD:
  - 2 other versions officially supported (german & french) (issue #0005324)
  

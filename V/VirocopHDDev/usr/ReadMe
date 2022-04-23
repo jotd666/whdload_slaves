@@ -23,15 +23,16 @@
  The installed program requires 2.0 MB ChipMem and 0.5 MB OtherMem.
  It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
 
- The game requires an installed A1200 Kickstart 3.1 image.
+ The game requires an installed A1200 or A4000 Kickstart 3.1 image.
  The kickstart image must be located in the directory "Devs:Kickstarts" and
- must be named "kick40068.A1200". The image can be extracted from a A1200 with
- tools like 'GrabKick' or similar which can be found on aminet.
+ must be named "kick40068.A1200" (resp kick40068.A4000). 
+ The image can be extracted from a A1200 (resp A4000) with tools like 'GrabKick'
+ or similar which can be found on aminet.
  If the image is of wrong version or altered in any way WHDLoad will quit with
  an appropriate requester.
- Additionally the file "kick40068.A1200.RTB" must be installed in the same
- directory as the kickstart image. It can be found in the archive 
- "util/boot/skick346.lha" on aminet.
+ Additionally the file "kick40068.A1200.RTB" (resp "kick40068.A4000.RTB")
+ must be installed in the same directory as the kickstart image.
+ It can be found in the archive "util/boot/skick346.lha" on aminet.
 
  version 1.5 (01.04.2020):
  - controller issue fixed once and for all with all control options for both gameports.

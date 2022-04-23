@@ -50,6 +50,7 @@ BOOTDOS
 CBDOSLOADSEG
 FONTHEIGHT=8
 SETPATCH
+SEGTRACKER
 
 slv_Version	= 16
 slv_Flags	= WHDLF_NoError|WHDLF_Examine
@@ -65,7 +66,7 @@ slv_keyexit	= $5D	; num '*'
 	DOSCMD	"WDate  >T:date"
 	ENDC
 DECL_VERSION:MACRO
-	dc.b	"1.2"
+	dc.b	"1.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"

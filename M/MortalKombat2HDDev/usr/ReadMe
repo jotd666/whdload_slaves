@@ -1,0 +1,102 @@
+
+
+This patch applies to "Mortal Kombat 2" (c) 1994 Acclaim - 3/4 disks.
+Thanks to Carlo Pirri and Mad-Matt for the 3 disk version and Chris
+Vella for the 4 disk US version!
+
+REQUIREMENTS:
+- Slave requires WHDLoad V17+.
+- 1MB chip slave requires 1Mb chip mem/1.5Mb fast mem (+2.9Mb other memory for preload option)
+- 512k chip slave requires 512k chip mem/2Mb fast mem (+2.9Mb other memory for preload option)
+
+FEATURES:
+- Full load from HD
+- 2 versions supported
+- RNC copylock removed (x2)
+- Decruncher relocated to fast memory
+- Slaves included for both 512k and 1Mb chip machines (more speech/effects)
+- Snoop bug removed (move.b #0,$bfd200)
+- Colour bit fix
+- Instructions included (including summary of all moves)
+- RomIcon, NewIcon and GlowIcon (created by me!)
+- Quit option (default key is 'F10')
+
+CHEAT MODE:
+- Taken from Sweet Cheater by Keith Krellwitz and Codetapper!
+- On the screen where you can select between {START} and {OPTIONS},
+  type "FIONA".  The screen will flash green.  This turns off the
+  blood.  To reactivate the blood type it again and the screen will
+  flash red.
+- Select options from that same screen and type "ZEDWEB".  A new
+  option (DIAGNOSTICS) should appear at the bottom of the screen.
+  Select this option and you will be given a list of cheat options.
+  Note that the above code assumes a French keymap is used, for
+  most English speaking countries type in "WEDZEB" to activate the
+  cheat. For German keyboards, type "YEDWEB".
+
+Previous memory configuration info:
+
+If you have 2Mb of chip memory you should run the AGA version of the game
+(it doesn't require the AGA chipset but all AGA machines have 2Mb chip so I
+named it that!) as you will get a lot more speech and effects in most parts
+of the game.  If you do not have enough memory to preload all images and
+play the AGA version, simply use the normal slave to save some memory.
+
+BUT:
+
+The game really detects 512k chip or 1MB chip. The rest of the memory can be
+fast memory, it doesn't matter. For some reason, the memory needs to be
+aligned on 0.5mb boundary which explains that it requires more fastmem than
+it should.
+It also used to detect 32 bit memory and act weird, where there's no reason
+for that, so I disabled that test.
+
+GREETINGS TO:
+- Mr Larmer for his assistance on the nasty copylock (and for the 
+  magnificent copylock decoder)
+- Mick for his JST source
+- Jean-François Fabre for patching the original from the Prestige crack
+  all those years ago
+- Bert Jahn for constantly updating WHDLoad 
+- Galahad/Fairlight for constant assistance :)
+- The rest of the WHDLoad team (Bored Seal, Harry, Psygore)
+- Frank for the French lessons, testing and superb icons
+- And my great original suppliers Carlo, Chris and Mad-Matt!
+
+Enjoy this superb game on HD and put those floppies away for good!
+
+Codetapper/Action (01-Apr-2001)
+
+History:
+
+Version 1.2 (23.04.2022) done by JOTD:
+- New memory configurations for slaves: 512k chip or 1MB chip (issue #0005489)
+  (removed 2MB chip configuration as the 1MB extra memory can be fast)
+- New memory config probably fixes long loading times with 1MB chip only (issue #0002986)
+- Able to use 32 bit fastmem for expansion (game limited to 24-bit)
+- Trainer
+- Ability to enable trainer diagnostics original screen (ZEDWEB cheat)
+- Ability to enable bloodless mode (FIONA cheat)
+- CUSTOM2=1 enables 2-button joystick option (no need to set it in options)
+- fixed 2-button joystick issue (issue #0004133)
+
+Version 1.1.1 (2012-09-02) by Wepl, PiterG
+- docs updated concerning fatality of Shan Tsung Kintaro, thanks Piter
+
+Version 1.1 (2012-08-23) by Wepl
+- stack moved to fastmem to avoid crashes because low stack
+
+
+         Bug report form, full WHDLoad package and other installs:
+                          http://www.whdload.de/
+
+            ________  ________  ________  ____  ________  ________
+           _)       \_)       \_)       \_)   \_)       \_)       \
+   __ ___ /___/     /   /_____/\  /     /     /   /     /   /     /
+  /_//__// \___    /   /     /CT\/     /     /   /     /   /     /
+        /___/     /___      /   /     /_____/___      /___/     /___ __
+            \____/    \____/    \____/          \____/    \____//__//_/
+
+
+           Visit the Action website for more of our productions:
+                           http://codetapper.com

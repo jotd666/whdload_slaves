@@ -20,15 +20,16 @@
 
  It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
 
- The game requires an installed A1200 Kickstart 3.1 image.
+ The game requires an installed A1200 or A4000 Kickstart 3.1 image.
  The kickstart image must be located in the directory "Devs:Kickstarts" and
- must be named "kick40068.A1200". The image can be extracted from a A1200 with
- tools like 'GrabKick' or similar which can be found on aminet.
+ must be named "kick40068.A1200" (resp kick40068.A4000). 
+ The image can be extracted from a A1200 (resp A4000) with tools like 'GrabKick'
+ or similar which can be found on aminet.
  If the image is of wrong version or altered in any way WHDLoad will quit with
  an appropriate requester.
- Additionally the file "kick40068.A1200.RTB" must be installed in the same
- directory as the kickstart image. It can be found in the archive 
- "util/boot/skick345.lha" on aminet.
+ Additionally the file "kick40068.A1200.RTB" (resp "kick40068.A4000.RTB")
+ must be installed in the same directory as the kickstart image.
+ It can be found in the archive "util/boot/skick346.lha" on aminet.
 
 
  If you have problems with this installation please try and get a newer
@@ -42,11 +43,20 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 1.0 (14.09.03) done by JOTD:
+ version 1.1 (16.04.2022) done by JOTD:
+ - reassembled with latest kickemu
+ - added segtracker to try to track down access faults
+ 
+ version 1.0 (14.09.2003) done by JOTD:
  - initial release
  - hacked original install script so it's more convenient
  - flexible install script
  - VBR/CACR accessed removed
  - supports v1.0, v1.2 & v1.4 of the "BIPRO" file (aminet & other updates)
 
-Notes: don't run game during the installation unless you have a PAL screen handy.
+Notes:
+
+- don't run game during the installation unless you have a PAL screen handy.
+- if you find access faults and you can create a savegame or a WinUAE savestate just before, I'm interested
+- same thing for protection bit. If you encounter it, please send me a savestate.
+

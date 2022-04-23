@@ -61,10 +61,14 @@ _expmem
 
 
 DECL_VERSION:MACRO
-	dc.b	"1.2"
+	dc.b	"1.3"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
+	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
 	ENDC
 	ENDM
 
@@ -81,8 +85,9 @@ _info		dc.b	"adapted & fixed by Abaddon/JOTD",10,10
 
 	dc.b	"$","VER: slave "
 	DECL_VERSION
-	dc.b	$A,$D,0
-
+	dc.b	$A,0
+	even
+	
 ;======================================================================
 start	;	A0 = resident loader
 ;======================================================================
@@ -127,13 +132,16 @@ start	;	A0 = resident loader
 fix:
 	andi.l	#$5ffff,d2
 	move.l	d2,a2
-	tst.w	(a2)
-	bne		.ok
+	; can't use tst.w as this would break on 68000
+	; on odd addresses
+	tst.b	(a2)
+	bne.b		.ok
+	tst.b	(1,a2)
+	bne.b		.ok
 	jmp		$17ec6
 .ok
 	jmp		$17ed2
-.fuck
-	jmp		$17eec
+
 
 
 pl_main

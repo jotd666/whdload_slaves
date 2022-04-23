@@ -688,7 +688,7 @@ pl_boot
    ; *** patch cia/disk stuff
    PL_R  $9DA
 
-   PL_IFC5
+   PL_IFC5X	0
    PL_ELSE
    PL_P  $C6,wait_blit_D0A2
    PL_P  $CC,wait_blit_D2A5
@@ -715,7 +715,7 @@ pl_boot_v1
    ; regulation
    
    PL_IFC5X	1
-   PL_PS	$4242,mainloop_hook_no_regulation
+   PL_PS	$42A2,mainloop_hook_no_regulation
    PL_ELSE
    PL_PS    $42A2,mainloop_hook
    PL_ENDIF

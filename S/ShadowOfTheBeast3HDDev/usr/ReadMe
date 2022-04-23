@@ -17,6 +17,8 @@ REQUIREMENTS:
 - Slave requires WHDLoad V17+ and RawDIC
 - Game requires 512Kb chip mem (+2.9Mb other memory for preload option)
 
+- fixed newicon slave name (issue #0005523)
+
 Version 2.1 (27.02.2022) done by JOTD 
 - fixed graphic glitches (joypad controls) and 3-button joystick support (issue #0005420)
 - meta controls are always active if CD32 joypad is connected (CUSTOM3 is gone)

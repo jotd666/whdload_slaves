@@ -28,6 +28,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
  
+ version 2.1 (23.04.2022)
+ - support for the latest version on itch.io (issue #0005594)
+ 
  version 2.0 (28.10.2019)
  - removed need for kickstart, allowing to run on 2MB chip
  - full chip and with fastmem version included

@@ -4,7 +4,6 @@
 	INCLUDE	whdmacros.i
 	INCLUDE	exec/exec.i
 
-;CHIP_ONLY
 	IFD BARFLY
 	OUTPUT	"Rygar.slave"
 	IFND	CHIP_ONLY
@@ -72,7 +71,7 @@ _config
 
 
 DECL_VERSION:MACRO
-	dc.b	"2.0"
+	dc.b	"2.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -86,6 +85,9 @@ DECL_VERSION:MACRO
 ;============================================================================
 
 _name		dc.b	"Rygar"
+		IFD		CHIP_ONLY
+		dc.b	" (2MB chip)"
+		ENDC
 			dc.b	0
 _copy		dc.b	"2019 Seismic Minds",0
 _info		dc.b	"adapted by JOTD",10,10
@@ -132,7 +134,6 @@ start
 	;	lea	(tag,pc),a0
 	;	jsr	(resload_Control,a2)
 	
-		bsr	check_version 
 	;load exe
 		lea	program(pc),a0
 		lea	base_address(pc),a1
@@ -162,7 +163,9 @@ start
 		
 		move.l	base_address(pc),a1
 		move.l	(_resload,pc),a2
-		lea	pl_main(pc),a0
+
+		bsr	check_version
+
 		jsr	(resload_Patch,a2)
 		move.l	base_address(pc),a1
 		jmp	(A1)
@@ -178,7 +181,11 @@ check_version:
 	move.l	_resload(pc),a2
 	jsr	resload_GetFileSize(a2)
 
+	lea		pl_main_v1(pc),a0
 	cmp.l	#190920,D0	; final
+	beq.b	.ok
+	lea		pl_main_v2(pc),a0
+	cmp.l	#191212,D0	; really final (itch.io)
 	beq.b	.ok
 	cmp.l	#0,D0
 	beq.b	.ok		; let LoadSeg fail if file not found
@@ -253,15 +260,20 @@ vblank_hook
 	lea	_custom,a5		; stolen from game
 	; enable level 2 interrupts
 	move.w	#$8008,(intena,a5)
-	; read joypad
-	bsr	_update_buttons_status
-	
 	rts
+	
+vblank_hook_joy
+	lea	_custom,a5		; stolen from game
+	; enable level 2 interrupts
+	move.w	#$8008,(intena,a5)
+	; read joypad
+	bra	_update_buttons_status
+	
 
 fix_af:
 	cmp.l	#$8000,d2
 	bcs	.no_af
-	moveq.w	#0,d0
+	clr.w	d0
 	rts
 .no_af
 	MOVE.B	(0,A0,D2.W),D0		;01014: 10302000
@@ -313,7 +325,87 @@ init_game_hook:
 	MOVE.W	#$0002,(21542,A4)	;1b9f6: 397c00025426
 	rts
 	
-pl_main
+pl_main_v2
+	PL_START
+	; remove VBR/return 0 when asked
+	PL_P	$03b14,get_zero_vbr
+	PL_P	$03c68,get_zero_vbr
+	PL_P	$03dae,get_zero_vbr
+	
+	; trainer infinite lines
+	PL_IFC1
+	PL_NOP	$087f0,4
+	PL_NOP	$08964,4
+	PL_ENDIF
+	
+	; typo in title
+	; typo in title
+	PL_STR	$22E18,<ARY WARRIOR >
+	
+	PL_P	$FC,read_file
+	; fix access fault when D2
+	PL_PS	$0101c,fix_af
+	
+	; for some reason 1) level2 interrupt is off and
+	; 2) level2 intrequest is off
+	PL_PS	$03dc6,vblank_hook
+	PL_NOP	$03fc2,2
+	PL_W	$03fce,$3280		; clear last pressed key
+	PL_PS	$03fd8,clear_sdr
+	
+	; completely disable second button read, we'll use joypad routine
+	; for that
+	; seems that it works properly now, no need to fix it
+	;PL_R	$076d2
+	;PL_NOP	$1bbf0,8
+	;PL_PSS	$5498,second_button_test,2
+	
+	
+	;;PL_PS	$1B9F6,init_game_hook
+	
+	; the following patches are there to make the game
+	; independent from the operating system
+
+	; remove LoadView calls
+	PL_R	$03b7e
+	PL_R	$03bbc
+	PL_R	$03c2e
+	; get vbr returns zero without having to call Supervisor
+	PL_L	$03af4,$70004E75
+	PL_L	$03c4c,$70004E75
+	; avoids the call, but lets the game install vbl handler
+	PL_W	$3d7A,$7000
+	PL_S	$3d7C,$7E-$74
+	
+	PL_W	$03c70,$7000
+	PL_S	$03c72,$03c74-$3C6A
+	
+	; fake doslib, so D0 != 0
+	PL_L	$052b2,$70FF4E75
+	; no more messages printed
+	PL_R	$052d0
+	
+	; emulate allocmem
+	PL_P	$0529a,allocmem
+	; make sure noone calls those syscalls (not enabled)
+	;PL_I	$5226		; freemem
+	;PL_I	$5272
+	;PL_I	$f26a
+	;PL_I	$f27a
+	;PL_I	$f2a4
+	;PL_I	$f2b4
+	;PL_I	$f2c8
+	; no more Forbid or CloseLibrary
+	PL_R	$03be8
+	PL_R	$052c2
+	
+	; jump to game startup immediately
+	;;PL_S	$0,$000a0
+
+	
+	PL_END
+	
+pl_main_v1
 	PL_START
 	; remove VBR/return 0 when asked
 	PL_P	$03b0c,get_zero_vbr
@@ -334,7 +426,7 @@ pl_main
 	
 	; for some reason 1) level2 interrupt is off and
 	; 2) level2 intrequest is off
-	PL_PS	$3da6,vblank_hook
+	PL_PS	$3da6,vblank_hook_joy
 	PL_NOP	$3fa2,2
 	PL_W	$3fae,$3280		; clear last pressed key
 	PL_PS	$3FB8,clear_sdr
@@ -388,7 +480,8 @@ pl_main
 	PL_S	$0,$9A
 
 	
-	PL_END
+	PL_END	
+	
 read_file
 	tst.l	d0
 	bmi.b	.skip	; motor or something

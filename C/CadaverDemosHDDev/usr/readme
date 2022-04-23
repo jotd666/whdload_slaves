@@ -37,6 +37,9 @@
 
 History:
 
+ version 1.2 (23.04.2022) done by JOTD
+ - added quitkey for 68000 (issue #0005583)
+ 
  version 1.1 (13.07.2019)
  - adapted to whdload v17 (issue #0004146)
  - changed CUSTOM tooltypes

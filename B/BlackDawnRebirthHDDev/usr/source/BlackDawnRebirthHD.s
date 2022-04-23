@@ -73,7 +73,7 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.1"
+	dc.b	"1.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -103,12 +103,15 @@ slv_CurrentDir:
 
 intro:
 	dc.b	"intro",0
+flashtro:
+	dc.b	"trainer",0
 program:
 	dc.b	"BD",0
 args		dc.b	10
 args_end
 	dc.b	0
 slv_config
+	dc.b    "C1:X:show flashtro:0;"
 	dc.b    "C3:B:skip introduction;"
 	dc.b	0
 
@@ -143,16 +146,30 @@ _bootdos
 		jsr	(_LVOOldOpenLibrary,a6)
 		move.l	d0,a6			;A6 = dosbase
         
-;       IFD CHIP_ONLY
-;       movem.l a6,-(a7)
-;		move.l	$4.w,a6
-;       move.l  #$02268,d0
-;       move.l  #MEMF_CHIP,d1
-;       jsr _LVOAllocMem(a6)
-;       movem.l (a7)+,a6
-;       ENDC
+       IFD CHIP_ONLY
+       movem.l a6,-(a7)
+		move.l	$4.w,a6
+       move.l  #$50000-$44520,d0
+       move.l  #MEMF_CHIP,d1
+       jsr _LVOAllocMem(a6)
+       movem.l (a7)+,a6
+       ENDC
 
-    
+	;load exe
+		move.l	trainer_flags(pc),d0
+		btst	#0,d0
+		beq.b	.skip_flashtro
+		lea	flashtro(pc),a0
+		lea	args(pc),a1
+		moveq	#args_end-args,d0
+		lea	patch_train(pc),a5
+		bsr	load_exe
+		; copy trainer memory flags set by flashtro
+		lea	$7FF00,a0
+		lea	flashtro_trainer_flags(pc),a1
+		move.l	(a0)+,(a1)+
+		move.b	(a0)+,(a1)+
+.skip_flashtro
         move.l  skip_intro(pc),d0
         bne.b   .skip
 	;load exe
@@ -173,17 +190,76 @@ _quit		pea	TDREASON_OK
 		move.l	(_resload,pc),a2
 		jmp	(resload_Abort,a2)
 
+
+patch_train
+	lea	pl_train(pc),a0   
+    move.l  d7,a1
+	jsr	resload_PatchSeg(a2)
+	rts
+
+	
 ; < d7: seglist (APTR)
 
 patch_main
-	lea	pl_main(pc),a0
-    
+	lea	pl_main(pc),a0   
     move.l  d7,a1
 	jsr	resload_PatchSeg(a2)
-.skip
+
+	; trainer
+	lea		trainer_patchlists(pc),a3
+	lea		trainer_flags(pc),a4
+	move.l	a3,a5
+	move.w	#4,d6
+.loop
+	move.w	(a5)+,a0	; get next patchlist
+	add.l	a3,a0	
+	tst.b	(a4)+
+	beq.b	.no_train
+	move.l	d7,a1
+	jsr	resload_PatchSeg(a2)
+.no_train
+	dbf	d6,.loop
 	rts
 
+CENTRAL_OFFSET = $0d1fa
 
+pl_train_unpacked
+	PL_START
+	PL_R	$0184	; remove vpos wait that locks up with whdload
+	PL_P	$012a,get_vbr
+	PL_P	$1030,get_vbr
+	PL_END
+	
+pl_train
+	PL_START
+	PL_P	$1ba,end_unpack
+	PL_END
+	
+pl_health
+	PL_START
+	PL_NOP	(CENTRAL_OFFSET+9688),2
+	PL_END
+pl_stamina
+	PL_START
+	PL_NOP	(CENTRAL_OFFSET+25178),2	
+	PL_END
+pl_energy
+	PL_START
+	PL_NOP	CENTRAL_OFFSET,2		
+	PL_NOP	(CENTRAL_OFFSET+50),2		
+	PL_NOP	(CENTRAL_OFFSET-50),2		
+	PL_NOP	(CENTRAL_OFFSET+100),2		
+	PL_END
+pl_ammo
+	PL_START
+	PL_NOP	(CENTRAL_OFFSET+15874),4
+	PL_NOP	(CENTRAL_OFFSET+16108),4
+	PL_END
+pl_one_hit_kills
+	PL_START
+	PL_W	(CENTRAL_OFFSET+26612),$4290		
+	PL_W	(CENTRAL_OFFSET+28988),$4290	
+	PL_END
 
 
 ; apply on SEGMENTS
@@ -193,6 +269,10 @@ pl_main
     ;PL_PS   $40918,set_copper
     PL_END
  
+get_vbr
+	clr.l	d0
+	rte
+	
 set_word
 	BTST	#0,D0			;29290: 08000000
 	BNE.S	LAB_0601		;29294: 6604
@@ -206,7 +286,17 @@ LAB_0601:
 	LSR.W	#8,D3			;2929e: e04b
 	MOVE.B	D3,(A0)			;292a0: 1083
 	RTS				;292a2: 4e75
-    
+
+end_unpack
+	MOVEM.L	(A7)+,D0-D7/A0-A6	;001c6: 4cdf7fff
+	movem.l	d0-d1/a0-a2,-(a7)
+	move.l	20(a7),a1		; return address
+	lea	pl_train_unpacked(pc),a0
+	move.l	_resload(pc),a2
+	jsr		resload_Patch(a2)
+	movem.l (a7)+,d0-d1/a0-a2
+	RTS				;001ca: 4e75
+   
 get_version:
 	movem.l	d1/a0/a1,-(a7)
 	lea	program(pc),A0
@@ -225,7 +315,6 @@ get_version:
 	moveq	#1,d0
     bra.b   .out
     nop
-
 
 .out
 	movem.l	(a7)+,d1/a0/a1
@@ -301,10 +390,31 @@ _stacksize
 
 tag		dc.l	WHDLTAG_CUSTOM3_GET
 skip_intro	dc.l	0
+	dc.l	WHDLTAG_CUSTOM1_GET
+trainer_flags	dc.l	0
 
 		dc.l	0
 		dc.l	0
+trainer_patchlists
+	dc.w	pl_health-trainer_patchlists
+	dc.w	pl_stamina-trainer_patchlists
+	dc.w	pl_energy-trainer_patchlists
+	dc.w	pl_ammo-trainer_patchlists
+	dc.w	pl_one_hit_kills-trainer_patchlists
+flashtro_trainer_flags
+unl_health
+	dc.b	0
+unl_stamina
+	dc.b	0
+unl_energy
+	dc.b	0
+unl_ammo
+	dc.b	0
+one_hit_kills
+	dc.b	0
+	dc.b	0
 
+	
 ;============================================================================
 
 	END

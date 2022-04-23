@@ -41,6 +41,9 @@
 
 History:
 
+ version 1.4-B () still done by JOTD:
+ - fixed newicon SLAVE tooltype (issue #0005500)
+ 
  version 1.4 (09.03.2020) still done by JOTD:
  - reduced chipmem size back to 512k (was 1MB in 1.3 due to debug code left in old slave)
 

@@ -12,14 +12,11 @@
 	SUPER				;disable supervisor warnings
 	OUTPUT	CadaverDemo.slave
 
-	DOSCMD	"WDate  >T:date"
-	ENDC
-	IFD BARFLY
 	DOSCMD	"WDate	>T:date"
 	ENDC
 	
 DECL_VERSION:MACRO
-	dc.b	"1.1"
+	dc.b	"1.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -109,40 +106,24 @@ _start
 	beq.b	.v1
 	bra.b	_v3
 .v1:
-	; *** trainer?
 
-	move.l	_trainer(pc),D0
-	beq	.go
-	move.l	#$4E714E71,D0
-	move.l	D0,$A02C
-	move.l	D0,$14172
+	sub.l	a1,a1
+	lea		_patchlist_v1(pc),a0
+	jsr		(resload_Patch,a2)
 .go
-
 	move.l	#CACRF_EnableI,D0
 	move.l	D0,D1
 	jsr	(resload_SetCACR,a2)
-
 	bsr	_flushcache
 	jmp	(A3)
 
 .v2:
-	; *** trainer?
+	sub.l	a1,a1
+	lea		_patchlist_v2(pc),a0
+	jsr		(resload_Patch,a2)
 
-	move.l	_trainer(pc),D0
-	beq	.skip2
-	move.l	#$4E714E71,D0
-	move.l	D0,$B1BC
-	move.l	D0,$151E2
-.skip2
 	bra.b	.go
-
 _v3:
-	move.l	_trainer(pc),D0
-	beq	.go
-	move.w	#$4E71,$8976
-.go
-
-	bsr	_flushcache
 
 	move.w	#$2700,SR
 
@@ -170,12 +151,34 @@ _patch_it:
 	movem.l	(a7)+,D0-A6
 	rts
 
+_patchlist_v1:
+	PL_START
+	PL_IFC1
+	PL_NOP	$A02C,4
+	PL_NOP	$14172,4
+	PL_ENDIF
+	
+	PL_PS	$0018096,_kb_test_v1
+	PL_END
+	
+_patchlist_v2:
+	PL_START
+	PL_IFC1
+	PL_NOP	$B1BC,4
+	PL_NOP	$151E2,4
+	PL_ENDIF
+	PL_PS	$19102,_kb_test_v2
+	PL_END
+	
 _patchlist_v3:
 	PL_START
 	PL_B	$C298,$66	; inverts interrupt 3 VBL check (was wrong)
-	PL_L	$C4EA,$4E714E71
-	PL_W	$C4EE,$4E71	; removes kb interrupt acknowledge (was too early)
+	PL_NOP	$C4EA,6   ; removes kb interrupt acknowledge (was too early)
 	PL_P	$C506,_ack_kb	; properly acknowledge interrupt
+	PL_IFC1
+	PL_NOP	$8976,2
+	PL_ENDIF	
+	PL_PS	$c532,_kb_test_v3
 	PL_END
 
 _ack_kb:
@@ -184,7 +187,30 @@ _ack_kb:
 _rte:
 	rte
 
+_kb_test_v1
+	movea.l $00005c30,a1		; original 
+	cmp.b	_keyexit(pc),d0
+	beq.b	_quit
+	rts
+	
+_kb_test_v2
+	movea.l $00005c00,a1		; original 
+	cmp.b	_keyexit(pc),d0
+	beq.b	_quit
+	rts
+_kb_test_v3
+	movea.l $0000c552,a1		; original 
+	cmp.b	_keyexit(pc),d0
+	beq.b	_quit
+	rts
+	
+_quit
+	pea	TDREASON_OK
+	move.l	_resload(pc),-(a7)
+	addq.l	#resload_Abort,(a7)
+	rts
 
+ 
 ; ----------------------------------------------
 
 _flushcache:
@@ -204,8 +230,7 @@ _wrong_version:
 
 _tag		dc.l	WHDLTAG_CUSTOM2_GET
 _level	dc.l	0
-		dc.l	WHDLTAG_CUSTOM1_GET
-_trainer	dc.l	0
+
 		dc.l	0
 
 _resload:
