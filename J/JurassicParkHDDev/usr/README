@@ -1,0 +1,66 @@
+
+	THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER
+	EXPRESS OR IMPLIED, STATUTORY OR OTHERWISE.
+	THE ENTIRE RISK AS TO USE, RESULTS AND PERFORMANCE OF THE PACKAGE IS
+	ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE TO BE DEFECTIVE, YOU
+	ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING, REPAIR OR OTHER
+	REMEDIATION.
+	UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY
+	DAMAGE CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE
+	OWNER OR A THIRD PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF
+	DAMAGE.
+
+	That install applies to "Jurassic Park" © 1993 Ocean
+	done by Mr.Larmer/Wanted Team.
+
+	That install requires WHDLoad and The Patcher to be in the path.
+	Both can be found in the whdload package.
+	To install from a different drive than DF0: select Expert as
+	installation mode.
+
+	You need 1.0 MB ChipMem and 0.5 MB OtherMem for ECS version.
+
+	You need 2.0 MB ChipMem and 0.5 MB OtherMem for AGA version.
+	You need AGA chipset.
+	You need at least a 68020 processor.
+
+	You can quit the game by pressing F10 (key can be changed with
+	Tooltype "QuitKey=")
+
+	if you have problems with this installation please report them via
+	the Bug-Report-Form which can be accessed on 
+	http://www.fh-zwickau.de/~jah/whdload/
+
+	for full WHDLoad package and other installs refer to:
+		http://www.fh-zwickau.de/~jah/whdload/
+	or	aminet:dev/misc/whdload#?
+	and	aminet:game/patch/
+
+	Features:
+	- all protections removed (5 days hard work)
+	- two bugs fixed in 3D game ( clr.w $E -> clr.w $E(A0) )
+	- one access fault removed in 2D game
+	- support another version
+
+	Thanx to:
+	- Jeff for file images (AGA),
+	- Chris Vella for original disk images (AGA),
+	- Abaddon for another version (AGA),
+	- Kim Fyson for original disk images (ECS).
+
+	Version ECS 1.1, AGA 1.3 (Wepl/25.08.99):
+	- cleanup for compatibility with whdload v10
+
+	Version AGA 1.4 by Psygore (28.02.2001):
+	- needs WHDLoad 13+
+	- caches enabled
+
+	Version AGA/ECS 1.5 by JOTD (02.08.2016):
+	- AGA & ECS: enabled Mr Larmer trainer: infinite ammo & lives (uses WHDLoad 17 dynamic buttons)
+        - ECS version: fixed crash at slave startup, probably worked with very old whdload versions, but not latest
+	- AGA version: removed memory clear that prevented the slave from running with CD32load on a real CD32
+	- source code included
+
+	Version ECS 1.6 (12.08.2016):
+	- added quitkey for 68000 machines
+	- added manual (taken from Lemon Amiga)
