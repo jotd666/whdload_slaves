@@ -33,7 +33,7 @@
 
 ;CHIP_ONLY
     IFD CHIP_ONLY
-CHIPMEMSIZE	= $110000
+CHIPMEMSIZE	= $180000
 FASTMEMSIZE	= $0
     ELSE
 CHIPMEMSIZE	= $80000
@@ -81,7 +81,7 @@ INIT_NONVOLATILE
 
 
 DECL_VERSION:MACRO
-	dc.b	"2.6"
+	dc.b	"2.7"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -109,6 +109,8 @@ slv_info		dc.b	"adapted by JOTD",10,10
 	dc.b	0
 slv_config:
     dc.b    "C1:B:skip introduction;"
+    dc.b    "C2:L:language:english,french,italian;"
+    dc.b    "C3:B:disable speed regulation;"
 	dc.b	0
 
 slv_CurrentDir:
@@ -143,7 +145,8 @@ _bootdos
 		move.l	(4),a6
 		jsr	(_LVOOldOpenLibrary,a6)
 		move.l	d0,a6			;A6 = dosbase
-
+		lea		_dosbase(pc),a0
+		move.l	d0,(a0)
 	;assigns
 		lea	_assign1(pc),a0
 		sub.l	a1,a1
@@ -152,6 +155,16 @@ _bootdos
 
 		lea	(tag,pc),a0
 		jsr	(resload_Control,a2)
+
+        IFD CHIP_ONLY
+		; chip-only mode: exe starts at $20000
+        movem.l a6,-(a7)
+		move.l	$4.w,a6
+        move.l  #$20000-$1B2B8-$AD8,d0
+        move.l  #MEMF_CHIP,d1
+        jsr _LVOAllocMem(a6)
+        movem.l (a7)+,a6
+        ENDC
 
         move.l  skip_intro(pc),d0
         bne.b   .sk
@@ -163,6 +176,32 @@ _bootdos
 		lea	patch_intro(pc),a5
 		bsr	_load_exe
 .sk
+	; now check if lang.def exists in RAM:
+	lea	 _langdef_load(pc),a0
+	move.l	a0,d1
+	move.l	#MODE_OLDFILE,d2
+	move.l	_dosbase(pc),a6
+	jsr		(_LVOOpen,a6)
+	tst.l	d0
+	bne.b	.exists		; exists: use the setting set from intro
+	; doesn't exist: create it
+	lea	 _langdef_load(pc),a0
+	move.l	a0,d1
+	move.l	#MODE_NEWFILE,d2
+	move.l	_dosbase(pc),a6
+	jsr		(_LVOOpen,a6)
+	; write proper language from CUSTOM2
+	move.l	d0,d4
+	lea	language+2(pc),a0
+	move.l	d0,d1
+	move.l	a0,d2
+	move.l	#2,d3
+	jsr		_LVOWrite(a6)
+	move.l	d4,d0
+.exists
+	move.l	d0,d1
+	jsr		(_LVOClose,a6)
+
 	;load exe
 		lea	_program(pc),a0
 		lea	_args(pc),a1
@@ -192,6 +231,13 @@ patch_main
 	patch	$100,do_flush
 	move.l	d7,a1
 	add.l	#4,a1
+	
+	lea	rawkey_code_1_address(pc),a0
+	add.l	#$20f30,a1
+	move.l	(2,a1),(a0)
+	
+	move.l	d7,a1
+	add.l	#4,a1
 	lea	pl_main(pc),a0
 	move.l	_resload(pc),a2
 	jsr	resload_Patch(a2)
@@ -209,15 +255,78 @@ pl_intro
 
 pl_main
 	PL_START
+	PL_PS	$20f30,read_rawkey_code
 	PL_L	$11B98,$72004E71	; VBR stuff
 	PL_L	$11CEC,$4EF80100	; SMC
     PL_PS   $12784,kbint_hook
+
+	PL_IFC3
+	PL_ELSE
+	PL_PS	$1117c,mainloop_hook
+	PL_PS	$12024,vbl_hook
+	PL_ENDIF
+	
+	; removes an infinite loop when F1 is pressed during game
+	PL_PS	$32b92,wait_f1_release
+	
     ; avoid "mouse or joypad required" spurious error
     ; (lowlevel first readings can be wrong, so we're going to
-    ; trust the user and ignore this bloody error)    
-    ;;PL_S    $53e,$00564-$53E
+    ; trust the user and ignore this bloody error)  
+    PL_S    $53e,$00564-$53E
 	PL_END
 
+mainloop_hook
+    movem.l d1/a0-a1,-(a7)
+    moveq.l #0,d1       ; the bigger the longer the wait
+    lea vbl_counter(pc),a0
+    move.w  (a0),d0
+    cmp.w   #10,d0
+    bcc.b   .nowait     ; first time called/lost sync/pause/whatever
+    ; wait till at least x vblanks passed after last zeroing
+.wait
+    cmp.w   (a0),d1
+    bcc.b   .wait
+.nowait
+    clr.w   (a0)
+    movem.l (a7)+,d1/a0-a1
+    rts
+    
+	MOVEQ	#0,D0			;1117c: 7000
+	MOVE.W	(16,A5),D0		;1117e: 302d0010
+	rts
+
+vbl_hook
+	move.l	a0,d0
+    lea vbl_counter(pc),a0
+    addq.w  #1,(a0)
+	move.l	d0,a0
+	clr.l	d0	; original
+	rts
+	
+wait_f1_release
+	move.l	a0,-(a7)
+	lea		$BFEC01,a0
+.loop
+	move.b	(a0),d0
+	cmp.b	#$5F,d0
+	beq.b	.loop
+	
+	move.l	(a7)+,a0
+	rts
+	
+; F1 raw (unshifted/unnegged: $5E)
+read_rawkey_code
+	move.l	a0,-(a7)
+	move.l	rawkey_code_1_address(pc),a0
+	move.b	(a0),d0
+	cmp.b	#$5F,d0
+	bne.b	.no_f1
+	clr.b	(a0)		; clear keycode immediately
+.no_f1
+	move.l	(a7)+,a0
+	rts
+	
+	
 kbint_hook:
     move.l  d0,-(a7)
     not.b   d0
@@ -307,8 +416,19 @@ _load_exe:
 
 tag		dc.l	WHDLTAG_CUSTOM1_GET
 skip_intro	dc.l	0
+	dc.l	WHDLTAG_CUSTOM2_GET
+language	dc.l	0
 
 		dc.l	0
+_dosbase
+	dc.l	0
+rawkey_code_1_address
+	dc.l	0
+vbl_counter
+	dc.w	0
+_langdef_load:
+	DC.B	"ram:lang.def",0
+
 ;============================================================================
 
 	END

@@ -49,7 +49,7 @@ STACKSIZE = 6000
 BOOTDOS
 CACHE
 
-slv_Version	= 16
+slv_Version	= 17
 slv_Flags	= WHDLF_NoError|WHDLF_Examine
 slv_keyexit	= $5D	; num '*'
 
@@ -65,7 +65,7 @@ slv_keyexit	= $5D	; num '*'
 
 
 DECL_VERSION:MACRO
-	dc.b	"2.6"
+	dc.b	"2.7"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -85,7 +85,13 @@ slv_info	dc.b	"adapted by JOTD",10,10
 		dc.b	0
 slv_CurrentDir:
 	dc.b	"data",0
-
+	
+slv_config:
+    dc.b    "C1:B:skip introduction;"
+    ;dc.b    "C2:L:language:english,french,italian;"
+    dc.b    "C3:B:disable speed regulation;"
+	dc.b	0
+	
 _intro
 	dc.b	"intro",0
 
@@ -122,11 +128,14 @@ _bootdos
 
 		bsr	check_version
 	;load intro
+		move.l	skip_intro(pc),d0
+		bne.b	.skip_intro
 		lea	_intro(pc),a0
 		lea	_noargs(pc),a1
 		moveq	#_noargs_end-_noargs,d0
 		lea	patch_intro(pc),a5
 		bsr	_load_exe
+.skip_intro
 	;load exe
 		lea	_program(pc),a0
 		lea	_args(pc),a1
@@ -154,19 +163,19 @@ check_version
 	cmp.l	#313952,d0
 	beq.b	.ok
 	cmp.l	#315736,d0
-	beq.b	.ok
+	bne.b	wrongver
 
+.ok
+	rts
+wrongver
 	pea	TDREASON_WRONGVER
 	move.l	_resload(pc),-(a7)
 	addq.l	#resload_Abort,(a7)
 	rts	
-.ok
-	rts
-
 ; < d7: seglist (APTR)
 
 patch_main
-	move.l	_resload(pc),a2
+	patch	$100,do_flush
 	move.l	d7,a1
 	add.l	#4,a1
 
@@ -176,9 +185,8 @@ patch_main
 
 	; CAPS 405 "SYN" file (313952 bytes)
 
-	patch	$100,do_flush
-	move.l	#$4EF80100,$BBA(a1)	; SMC -> crash
-	move.l	#$72004E71,$A66(a1)	; VBR stuff
+	lea	pl_405(pc),a0
+
 	bra.b	.out
 
 .tryukflop
@@ -187,25 +195,25 @@ patch_main
 
 	; SPS 739 "SYN" file (314720) bytes
 
-	patch	$100,do_flush
-	move.l	d7,a1
-	add.l	#4,a1
 	lea	pl_739(pc),a0
-	jsr	resload_Patch(a2)
 
 	bra.b	.out
 .noflop2
 	cmp.l	#$33C000DF,$B3C(a1)
-	bne.b	.out
+	bne.b	wrongver
 
 	; SPS 1887 "SYN" file (315736 bytes)
 
 	lea	saved_addr(pc),a0
 	move.l	$B5A(a1),(a0)
-	pea	do_flush_2(pc)
-	move.w	#$4EF9,$B58(a1)
-	move.l	(a7)+,$B5A(a1)
+
+	lea	pl_1887(pc),a0
 .out
+	move.l	d7,a1
+	add.l	#4,a1
+	move.l	_resload(pc),a2
+	jsr	resload_Patch(a2)
+
 	rts
 
 do_flush_2
@@ -272,6 +280,12 @@ pl_739:
 	PL_PS	$27C36,active_loop_2
 	PL_PS	$3842A,active_loop_3
     PL_PS   $1447C,kbint_hook
+	
+	PL_IFC3
+	PL_ELSE
+	PL_PS	$130FE,mainloop_hook
+	PL_PSS	$13FDA,vbl_hook,4
+	PL_ENDIF
 	PL_END
 pl_405:
 	PL_START
@@ -281,6 +295,11 @@ pl_405:
 	PL_PS	$27b4e,active_loop_2
 	PL_PS	$38342,active_loop_3
     PL_PS   $14380,kbint_hook
+	PL_IFC3
+	PL_ELSE
+	PL_PS	$13002,mainloop_hook
+	PL_PSS	$13ede,vbl_hook,4
+	PL_ENDIF
 	PL_END
 
 pl_1887:
@@ -292,8 +311,45 @@ pl_1887:
     PL_P    $13af2,flush_and_allow_interrupts
     PL_P    $13ad4,flush_and_allow_interrupts_2
     PL_PS   $142f8,kbint_hook
+	PL_P	$13B58,do_flush_2
+	
+	PL_IFC3
+	PL_ELSE
+	PL_PS	$12faa,mainloop_hook
+	PL_PSS	$13e5e,vbl_hook,4
+	PL_ENDIF
+	
 	PL_END
 
+mainloop_hook
+    movem.l d1/a0-a1,-(a7)
+    clr.l d1       ; the bigger the longer the wait, 0 min value
+    lea vbl_counter(pc),a0
+    move.l  (a0),d0
+    cmp.l   #10,d0
+    bcc.b   .nowait     ; first time called/lost sync/pause/whatever
+    ; wait till at least x vblanks passed after last zeroing
+.wait
+    cmp.l   (a0),d1
+    bcc.b   .wait
+.nowait
+    clr.l   (a0)
+    movem.l (a7)+,d1/a0-a1
+    rts
+    
+	MOVEQ	#0,D0			;1117c: 7000
+	MOVE.W	(16,A5),D0		;1117e: 302d0010
+	rts
+	
+vbl_hook
+	AND.W	_custom+intenar,D0		;13ede: c07900dff01c
+	ANDI.W	#$4020,D0		;13ee4: 02404020
+	beq.b	.no_vbl
+    lea vbl_counter(pc),a0
+    addq.l  #1,(a0)
+.no_vbl
+	rts
+	
 kbint_hook:
     move.l  d0,-(a7)
     not.b   d0
@@ -386,7 +442,8 @@ beamdelay
 	rts
 
 _tag		dc.l	WHDLTAG_CUSTOM1_GET
-_custom1	dc.l	0
+skip_intro	dc.l	0
 		dc.l	0
-
+vbl_counter
+	dc.l	0
 	END

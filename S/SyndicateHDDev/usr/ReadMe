@@ -51,6 +51,14 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 2.7 (26.04.2022) done by JOTD:
+ - CD32: possible to select language at startup (and skip intro)
+ - fixed random quit that was broken since 2.5 (issue #0005595)
+ - On CD32 version, pressing F1 key to toggle SFX froze the game
+  (original game bug, issue #0005595, floppy versions work ok)
+ - added speed regulation (game was running too fast on fast machines)
+ - re-enabled forgotten fixes in some floppy versions
+ 
  version 2.6 (01.02.2021) done by JOTD:
  - reduced chipmem requirements for both floppy and cd³² versions
 
