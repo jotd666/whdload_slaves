@@ -1,9 +1,9 @@
 ;****************************
 
-(set #readme-file "README")	;name of readme file
+(set #readme-file "Readme")	;name of readme file
 (set #cleanup "")		;files to delete after install
-(set #last-file "Jurassic.d4")	;last file the imager should create
-
+(set #last-file "disk.4")	;last file the imager should create
+(set #prefix "JurassicPark")
 ;****************************
 ;----------------------------
 ; Checks if given program is reachable via the path
@@ -33,7 +33,7 @@
 (set #program "WHDLoad")
 (P_chkrun)
 
-(set #program "Patcher")
+(set #program "RawDIC")
 (P_chkrun)
 
 (if
@@ -59,13 +59,13 @@
 
 (set @default-dest
   (askdir
-    (prompt ("Where should \"%s\" installed ?\nA drawer \"%s\" will automatically created." @app-name @app-name))
+    (prompt ("Where should \"%s\" installed ?\nA drawer \"%s\" will automatically created." #prefix #prefix))
     (help @askdir-help)
     (default @default-dest)
     (disk)
   )
 )
-(set #dest (tackon @default-dest @app-name))
+(set #dest (tackon @default-dest #prefix))
 (if
   (exists #dest)
   (
@@ -91,7 +91,7 @@
 ;----------------------------
 
 (if
-  (exists ("%s.newicon" @app-name))
+  (exists ("%s.newicon" #prefix))
   (set #icon
     (askchoice
       (prompt "\nWhich icon do you like to install ?\n")
@@ -103,17 +103,17 @@
   (set #icon 0)
 )
 (select #icon
-  (set #icon ("%s.inf" @app-name))
-  (set #icon ("%s.newicon" @app-name))
+  (set #icon ("%s.inf" #prefix))
+  (set #icon ("%s.newicon" #prefix))
 )
 (copyfiles
   (help @copyfiles-help)
   (source #icon)
-  (newname ("%s.info" @app-name))
+  (newname ("%s.info" #prefix))
   (dest #dest)
 )
 (if
-  (exists ("%sECS.slave" @app-name))
+  (exists ("%sECS.slave" #prefix))
   (set #slave
     (askchoice
       (prompt "\nWhich version do you like to install ?\n")
@@ -125,13 +125,13 @@
   (set #slave 0)
 )
 (select #slave
-  (set #slave ("%sAGA.slave" @app-name))
-  (set #slave ("%sECS.slave" @app-name))
+  (set #slave ("%sAGA.slave" #prefix))
+  (set #slave ("%sECS.slave" #prefix))
 )
 (copyfiles
   (help @copyfiles-help)
   (source #slave)
-  (newname ("%s.slave" @app-name))
+  (newname ("%s.slave" #prefix))
   (dest #dest)
 )
 (if
@@ -151,15 +151,19 @@
   )
 )
 
-(run ("Assign \"%s:\" \"%s\"" @app-name #dest))
-(run ("Patcher -p%s.imager -s%s" @app-name #CI_drive))
-(run ("Assign \"%s:\" Remove" @app-name))
+  (copyfiles
+	(help @copyfiles-help)
+	(source ("%s.ISlave" #prefix))
+	(dest #dest)
+  )
 
-(if
-  (exists (tackon #dest #last-file))
-  ("")
-  (abort "Diskimaging not successful !\nThe Patcher could'nt create all needed files !")
-)
+ (working "calling RawDIC...")
+  (run ("CD \"%s\"\nRawDIC SLAVE=%s.islave SOURCE=%s\nDelete %s.ISlave Quiet" #dest #prefix #CI_drive #prefix))
+  (if (exists (tackon #dest #last-file))
+	("")
+	(abort "Disk imaging was not successful!\nRawDIC was unable to create all needed files!")
+  )
+
 
 ;----------------------------
 

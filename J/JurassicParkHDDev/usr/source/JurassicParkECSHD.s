@@ -63,7 +63,7 @@ _expmem
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.6"
+	dc.b	"2.0"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -103,9 +103,12 @@ Start	;	A0 = resident loader
 		lea	_resload(pc),a1
 		move.l	a0,(a1)			;save for later use
 
-		moveq	#CACRF_EnableI,d1
-		move.l	d1,d0
-		jsr	resload_SetCACR(a0)
+		move.l	_resload(pc),a2
+		; enable cache in chipmem, damn 3D game only uses chip...
+		move.l  #WCPUF_Base_WT|WCPUF_IC|WCPUF_DC,d0
+		move.l  #WCPUF_Base|WCPUF_IC|WCPUF_DC,d1
+		move.l  (_resload,pc),a2
+		jsr     (resload_SetCPU,a2)
 
 		lea	$FE.w,A0
 		move.l	A0,USP
@@ -157,7 +160,11 @@ Start	;	A0 = resident loader
         move.l  #$80000,$132.W
         ENDC
 		
-
+		move.l	_expmem(pc),d0
+		lea _expmem_end(pc),a0
+		add.l	#$80000,d0
+		move.l	d0,(a0)
+		
 		lea		pl_boot(pc),a0
 		sub.l	a1,a1
 		move.l	_resload(pc),a2
@@ -178,7 +185,7 @@ pl_boot:
 		PL_END
 
 
-Name		dc.b	'Jurassic.d'
+Name		dc.b	'disk.'
 DiskNr		dc.b	'0',0
 		even
 
@@ -347,48 +354,15 @@ Patch1
 .not_2D
 		cmp.l	#$10,$16546		; if copylock
 		bne.w	.not_3D
+		; crap 3D section not even using fastmem...
+		movem.l	d0-d1/a0-a2,-(a7)
+		sub.l  a1,a1
+		move.l  _resload(pc),a2
+		lea pl_3d(pc),a0
+		jsr resload_Patch(a2)
+		movem.l	(a7)+,d0-d1/a0-a2
 
-		move.l	#$4E714EB9,$B788
-		pea	CheckCopylock3(pc)
-		move.l	(A7)+,$B78C
 
-		move.l	#$4268000E,$CEC2	; clr.w $E -> clr.w $E(A0)
-		move.w	#$4E71,$CEC6
-		move.l	#$4268000E,$CED8	; clr.w $E -> clr.w $E(A0)
-		move.w	#$4E71,$CEDC
-
-		move.b	#$60,$935E		; check clear proc copylock 4
-		move.b	#$60,$9496		; check clear proc copylock 4
-		move.b	#$60,$A356		; skip check load proc
-		move.w	#$4E71,$AA8A		; skip check load proc
-		move.b	#$60,$ABAA		; check decode copylock 4 proc
-		move.b	#$60,$1CAB0		; check decode copylock 4 proc
-		move.w	#$4E71,$1D286		; skip decode copylock 4
-		move.w	#$4EF9,$1D29E
-		pea	Copylock4a(pc)
-		move.l	(A7)+,$1D2A0
-		move.w	#$4E71,$1DBC8		; skip clear copylock 4
-		move.w	#$4E71,$1DBCE		; skip clear copylock 4
-
-		movem.l	d0,-(a7)
-		move.l	_trainer(pc),d0
-		beq.b	.skip
-		move.w	#$6006,$CF00		; ammo
-		move.w	#$6072,$10462		; energy
-		move.w	#$4E71,$10484		; lives
-.skip
-		movem.l	(a7)+,d0
-
-		move.w	#$4EF9,$14996
-		pea	Decrunch(pc)
-		move.l	(A7)+,$14998
-
-		move.w	#$4EF9,$16540
-		pea	Copylock3(pc)
-		move.l	(A7)+,$16542
-
-		move.l	#$33400008,$18B72	; correct custom_audio_vol
-		move.l	#$33400008,$18B9A
 .not_3D
 .exit
 		jmp	$7C00.w
@@ -416,6 +390,39 @@ pl_outro:
 	PL_L	$B10E,$33400008
 	PL_END
 	
+pl_3d
+	PL_START
+	PL_PSS	$B788,CheckCopylock3,2
+
+	PL_L	$CEC2,$4268000E	; clr.w $E -> clr.w $E(A0)
+	PL_NOP	$CEC6,2
+	PL_L	$CED8,$4268000E	; clr.w $E -> clr.w $E(A0)
+	PL_NOP	$CEDC,2
+
+	PL_B	$935E,$60		; check clear proc copylock 4
+	PL_B	$9496,$60		; check clear proc copylock 4
+	PL_B	$A356,$60		; skip check load proc
+	PL_NOP	$AA8A,2		; skip check load proc
+	PL_B	$ABAA,$60		; check decode copylock 4 proc
+	PL_B	$1CAB0,$60		; check decode copylock 4 proc
+	PL_NOP	$1D286,2		; skip decode copylock 4
+	PL_P	$1D29E,Copylock4a
+	PL_NOP	$1DBC8,2		; skip clear copylock 4
+	PL_NOP	$1DBCE,2		; skip clear copylock 4
+
+
+	PL_IFC1
+	PL_W	$CF00,$6006,		; ammo
+	PL_W	$10462,$6072		; energy
+	PL_NOP	$10484,2		; lives
+	PL_ENDIF
+	
+	PL_P	$14996,Decrunch
+	PL_P	$16540,Copylock3
+	PL_L	$18B72,$33400008	; correct custom_audio_vol
+	PL_L	$18B9A,$33400008
+	PL_END
+		
 pl_2d
     PL_START
 	PL_PS	$007DE,kbint
@@ -438,8 +445,64 @@ pl_2d
     PL_L    $30418,$33400008   ; correct custom_audio_vol
     PL_L    $30440,$33400008
 
+	PL_PS	$1b1fa,avoid_af
+	PL_S	$1b1fa+6,$9b26c-$9b1fa-$6
     PL_END
     
+avoid_af
+	cmp.l	_expmem_end(pc),a2
+	bcs.b	.ok
+	; above end of expmem: zeroes
+	lea	.fake_buffer+2(pc),a2
+	clr.w	d0
+.ok
+	move.w	d0,-(a7)		; save d0
+	
+	; A2+/- D0 is out of bounds (A2 is out of bounds too)
+	NEG.W	D0			;9b1fa: 4440
+	MOVE.B	-1(A2,D0.W),D0		;9b1fc: 103200ff
+	LSL.W	#8,D0			;9b200: e148
+	MOVE.W	D0,(A3)+		;9b202: 36c0
+	MOVE.W	(a7),D0		;9b204: 3039000b6cd2
+	NEG.W	D0			;9b20a: 4440
+	MOVE.B	0(A2,D0.W),D0		;9b20c: 10320000
+	LSL.W	#8,D0			;9b210: e148
+	MOVE.W	D0,(A3)+		;9b212: 36c0
+	MOVE.W	(a7),D0		;9b214: 3039000b6cd2
+	NEG.W	D0			;9b21a: 4440
+	MOVE.B	1(A2,D0.W),D0		;9b21c: 10320001
+	LSL.W	#8,D0			;9b220: e148
+	MOVE.W	D0,(A3)+		;9b222: 36c0
+	MOVEQ	#0,D0			;9b224: 7000
+	MOVE.B	-1(A2,D0.W),D0		;9b226: 103200ff
+	LSL.W	#8,D0			;9b22a: e148
+	MOVE.W	D0,(A3)+		;9b22c: 36c0
+	MOVEQ	#0,D0			;9b22e: 7000
+	MOVE.B	0(A2,D0.W),D0		;9b230: 10320000
+	LSL.W	#8,D0			;9b234: e148
+	MOVE.W	D0,(A3)+		;9b236: 36c0
+	MOVEQ	#0,D0			;9b238: 7000
+	MOVE.B	1(A2,D0.W),D0		;9b23a: 10320001
+	LSL.W	#8,D0			;9b23e: e148
+	MOVE.W	D0,(A3)+		;9b240: 36c0
+	MOVE.W	(a7),D0		;9b242: 3039000b6cd2
+	MOVE.B	-1(A2,D0.W),D0		;9b248: 103200ff
+	LSL.W	#8,D0			;9b24c: e148
+	MOVE.W	D0,(A3)+		;9b24e: 36c0
+	MOVE.W	(a7),D0		;9b250: 3039000b6cd2
+	MOVE.B	0(A2,D0.W),D0		;9b256: 10320000
+	LSL.W	#8,D0			;9b25a: e148
+	MOVE.W	D0,(A3)+		;9b25c: 36c0
+	MOVE.W	(a7),D0		;9b25e: 3039000b6cd2
+	MOVE.B	1(A2,D0.W),D0		;9b264: 10320001
+	LSL.W	#8,D0			;9b268: e148
+	MOVE.W	D0,(A3)+		;9b26a: 36c0
+	
+	addq.w	#2,a7
+	rts
+.fake_buffer
+	dc.l	0
+	
 Copylock
 		move.w	#$FFFF,(A2)
 		move.l	#$A235617C,D0
@@ -544,7 +607,7 @@ Load
 ;--------------------------------
 
 _resload	dc.l	0		;address of resident loader
-
+_expmem_end	dc.l	0
 ;--------------------------------
 ; IN:	d0=size d1=offset a0=name a1=address
 ; OUT:	d0=success

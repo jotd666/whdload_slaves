@@ -50,7 +50,7 @@ _expmem
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.5"
+	dc.b	"2.0"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -99,14 +99,24 @@ Start	;	A0 = resident loader
 ;		move.l	D3,-$FC(A3)		; D3=$11C A3=$100
 ;		move.l	#$11C,4.w		; this code is used in RNC/2
 						; decruncher in bootblock
+						
+		; enable caches, ripped from Psygore slave
+;		MOVE.L	#$0000393e,D0		;086: 203c0000393e
+;		MOVE.L	#$00007f3f,D1		;08c: 223c00007f3f
+;		MOVEA.L	(_resload,PC),A2	;092: 247a0368
+;		jsr	resload_SetCPU(a2)
+
+		; enable cache in chipmem, damn game only uses chip...
+		move.l  #WCPUF_Base_WT|WCPUF_IC|WCPUF_DC,d0
+		move.l  #WCPUF_Base|WCPUF_IC|WCPUF_DC,d1
+		move.l  (_resload,pc),a2
+		jsr     (resload_SetCPU,a2)
+		
+
 		lea	Tags(pc),a0
 		move.l	_resload(pc),a2
 		jsr	resload_Control(a2)
 
-		; enable caches, ripped from Psygore slave
-		MOVE.L	#$0000393e,D0		;086: 203c0000393e
-		MOVE.L	#$00007f3f,D1		;08c: 223c00007f3f
-		MOVEA.L	(_resload,PC),A2	;092: 247a0368
 		
 		move.l	_monitor(pc),D0
 		cmp.l	#PAL_MONITOR_ID,D0
@@ -160,7 +170,7 @@ go
 		bsr	ClearCache
 		jmp	$100.w
 
-Name		dc.b	'Jurassic.d'
+Name		dc.b	'disk.'
 DiskNr		dc.b	'0',0
 		even
 
