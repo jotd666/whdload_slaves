@@ -80,7 +80,7 @@ slv_config:
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.2"
+	dc.b	"1.3"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -282,8 +282,24 @@ _PL_OrigMain	PL_START
 		PL_IFC1X	6
 		PL_PSS	$0bb24,set_fiona_mode,2
 		PL_ENDIF
+		
+		PL_PS	$05638,fix_sound_af
 		PL_END
 
+;======================================================================
+
+fix_sound_af:
+	cmp.l	#CHIPMEMSIZE,a1
+	bcs.b	.ok
+	; exit routine immediately
+	move.l	(a7)+,a0
+	addq.l	#4,a7
+	rts
+	
+.ok
+	MOVE.W	2(A1),2(A2)
+	rts
+	
 ;======================================================================
 
 set_fiona_mode:
