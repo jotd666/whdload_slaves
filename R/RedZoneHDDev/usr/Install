@@ -11,6 +11,7 @@
 (set #extra-file "Extra")		;name of extra file
 (set #extra2-file "Extra2")		;name of second extra file
 (set #extra3-file "Extra3")		;name of third extra file
+(set #exe-file "fast_object")		;name of third extra file
 (set #prefix "RedZone")			;name of slave, directory
 (set #version_suffix "")		;
 
@@ -696,6 +697,8 @@
   )
 )
 (set #copy-file #highs-file)
+(P_CopyFile)
+(set #copy-file #exe-file)
 (P_CopyFile)
 (P_MakeImages)
 (if (= #newstuff 1)

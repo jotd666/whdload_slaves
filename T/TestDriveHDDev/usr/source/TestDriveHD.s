@@ -62,7 +62,7 @@ CACHE
 SEGTRACKER
 
 slv_Version	= 17
-slv_Flags	= WHDLF_NoError|WHDLF_Examine
+slv_Flags	= WHDLF_NoError|WHDLF_Examine|WHDLF_ClearMem
 slv_keyexit	= $5D	; num '*'
 
 	include	whdload/kick13.s
@@ -74,7 +74,7 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.2"
+	dc.b	"1.3"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -122,6 +122,13 @@ slv_config
 _bootdos
 		clr.l	$0.W
 
+        lea    old_kbint(pc),a1
+        lea kbint_hook(pc),a0
+        cmp.l   (a1),a0
+        beq.b   .done
+        move.l  $68.W,(a1)
+        move.l  a0,$68.W
+.done
 	; saves registers (needed for BCPL stuff, global vector, ...)
 
 		lea	(_saveregs,pc),a0
@@ -131,6 +138,7 @@ _bootdos
 
 		move.l	_resload(pc),a2		;A2 = resload
 
+	bsr		get_version
 	
 	;open doslib
 		lea	(_dosname,pc),a1
@@ -175,6 +183,11 @@ _patchlist_1:
 	PL_L	$434,$DFF002
 	PL_L	$444,$DFF096
 	PL_S	$59A,$52
+	PL_PS	$00188a,read_joydat
+	PL_PS	$00541a,read_joydat
+    PL_PS   $005402,read_fire1
+    PL_PS   $001872,read_fire1
+	
 	PL_END
 
 _patch_trackdisk
@@ -251,24 +264,84 @@ _sendio:
 	moveq.l	#0,D0
 	rts
 
+read_fire1:
+    MOVE.B  $00BFE001,D0
+    move.l  a0,-(a7)
+    lea keyboard_table(pc),a0
+    tst.b   ($40,a0)    ; space key
+    beq.b   .no_space
+    bclr    #7,d0
+.no_space    
+    move.l  (a7)+,a0
+    rts
+
+read_fire2:
+     move.w d0,-(a7)
+     bsr    read_fire1
+     btst   #7,d0
+     movem.w    (a7)+,d0
+     rts
+	 
+read_joydat
+    move.w  _custom+joy1dat,d0
+    move.l  a0,-(a7)
+    lea keyboard_table(pc),a0
+    tst.b   ($4C,a0)    ; up key
+    beq.b   .no_up
+	; set UP
+	bset	#8,d0
+	bclr	#9,d0
+    bra.b   .no_down
+.no_up    
+    tst.b   ($4D,a0)    ; down key
+    beq.b   .no_down
+	; set DOWN
+	bset	#0,d0
+	bclr	#1,d0
+.no_down    
+    tst.b   ($4F,a0)    ; left key
+    beq.b   .no_left
+	; set LEFT
+	bset	#9,d0
+    tst.b   ($4C,a0)    ; up key
+    bne.b   .diag_left_up
+    bset    #8,d0
+    bra.b   .no_right
+.diag_left_up
+	bclr	#8,d0
+    bra.b   .no_right    
+.no_left
+    tst.b   ($4E,a0)    ; right key
+    beq.b   .no_right
+	; set RIGHT
+	bset	#1,d0
+    tst.b   ($4D,a0)    ; down key
+    bne.b   .diag_right_down
+    bset    #0,d0
+    bra.b   .no_right    
+.diag_right_down
+	bclr	#0,d0
+    
+.no_right   
+    move.l  (a7)+,a0
+    rts
+	
 get_version:
 	movem.l	d1/a1,-(a7)
-	lea	.progname(pc),A0
+	lea	program(pc),A0
 	move.l	_resload(pc),a2
 	jsr	resload_GetFileSize(a2)
 
-	cmp.l	#207068,D0
-	beq.b	.chris
+	cmp.l	#90112,D0
+	beq.b	.crack
 
-	cmp.l	#206760,d0
-	beq.b	.alt
 
 	pea	TDREASON_WRONGVER
 	move.l	_resload(pc),-(a7)
 	addq.l	#resload_Abort,(a7)
 	rts
 
-.chris
+.crack
 	moveq	#1,d0
 	bra.b	.out
 .alt
@@ -277,8 +350,6 @@ get_version:
 .out
 	movem.l	(a7)+,d1/a1
 	rts
-.progname
-	dc.b	"boppin",0
 	even
 
 
@@ -358,6 +429,34 @@ _doio_save:
 _sendio_save:
 	dc.l	0
 
+    
+kbint_hook:
+    movem.l  a5/d0,-(a7)
+	LEA	$00BFD000,A5
+    ; we can't test this as this clears ICR and fucks up ROM code
+;	MOVEQ	#$08,D0
+;	AND.B	$1D01(A5),D0
+;	BEQ	.nokey
+	MOVE.B	$1C01(A5),D0
+    ror.b   #1,d0
+    not.b   d0
+    and.w   #$FF,d0
+    lea keyboard_table(pc),a5
+    bclr    #7,d0
+    seq (a5,d0.w) ; D1 = $FF if key up
+
+.nokey    
+    movem.l  (a7)+,a5/d0
+    
+    move.l  old_kbint(pc),-(a7)
+    rts
+    
+keyboard_table:
+    ds.b    $100,0
+        
+old_kbint:
+    dc.l    0
+	
 _trdname:
 	dc.b	"trackdisk.device",0
 	even

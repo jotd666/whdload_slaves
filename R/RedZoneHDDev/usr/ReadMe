@@ -14,7 +14,7 @@
  in the WHDLoad package.
  To install from a different drive than DF0: select installation mode Expert.
 
- The installed program requires 1.0 MB ChipMem and 0.5 MB OtherMem.
+ The installed program requires 0.5 MB ChipMem and 0.5 MB OtherMem.
  It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
 
  If you have problems with this installation please try and get a newer
@@ -28,10 +28,16 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 3.0:
- - CUSTOM1 skips introduction
+ version 3.0 (13.05.2022) done by JOTD:
+ - executable rebuilt/fixed for much better framerate on machines
+   equipped with fast memory. Use CUSTOM2 to disable and play
+   with original buggy & slow executable
+ - CUSTOM4 bits skips/shortens introduction
+ - set CUSTOM1 for no damage
+ - option to enable high detail
+ - chipmem reduced to 512kb
  
- version 2.0 (05.05.05) done by JOTD:
+ version 2.0 (05.05.2005) done by JOTD:
  - rest of SMC fixed to work with instruction cache (better framerate)
  - RawDIC imager (use new RawDIC 4.0), direct wwp/ipf support
  - reworked install & readme
@@ -60,4 +66,11 @@
    a lot of self modifying code, and runs in chipmem only: worst configuration for
    a 3D game !!! Shame on the coders.
  - Needs RawDIC v4.0
-
+ - Fortunately, after 17 years of stalled project & failures, I restarted
+   working on relocating the executable to use fast memory and that time it worked,
+   and improves the game greatly. Also most
+   self-modifying code is fixed to be able to use caches properly on high-end
+   machines. Source code of the new executable can be found at https://github.com/jotd666/FastRedZone
+ - To upgrade from a previous installation, just copy "fast_object" to "data"
+   directory. You can delete "object" too to save a few Kbs if you don't plan to
+   play with the original executable.

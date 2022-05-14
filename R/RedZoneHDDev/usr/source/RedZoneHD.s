@@ -5,7 +5,7 @@
 ; smc @ $A1B6, $A220, ...
 
 ; controls???
-; blitz (switch controls)
+
 
 ;;    ; SMC for 3D writes
 ;;LAB_00AD:
@@ -30,10 +30,17 @@
 ;;	MOVE.W	EXT_014b.W,D0		;091fc: 30385f56
 
 
-;RELOCATE_TO_CHIP
 
+;CHIP_ONLY
+
+	IFD	CHIP_ONLY
 FASTSIZE = $1000
-CHIPMEMSIZE = $100000
+CHIPMEMSIZE = $180000
+	ELSE
+FASTSIZE = $81000
+CHIPMEMSIZE = $80000
+	
+	ENDC
 CHIP_BASE = $8000
 	
 	INCDIR	Include:
@@ -71,9 +78,12 @@ _expmem
 		dc.w	slv_config-_base
 
 slv_config:
-		dc.b    "C1:X:Skip intro movie:0;"
-        dc.b    "C1:X:Skip intro screens:1;"
-        dc.b    "C1:X:Fast intro screens:2;"
+ 		dc.b    "C1:X:no damage:0;"
+        dc.b    "C2:B:use original exe;"
+        dc.b    "C3:B:enable high detail by default;"
+		dc.b    "C4:X:Skip intro movie:0;"
+        dc.b    "C4:X:Skip intro screens:1;"
+        dc.b    "C4:X:Fast intro screens:2;"
 		dc.b	0
 	even
 
@@ -85,7 +95,7 @@ slv_config:
 ;DEBUG
 
 DECL_VERSION:MACRO
-	dc.b	"2.0"
+	dc.b	"3.0"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -102,8 +112,8 @@ DECL_VERSION:MACRO
 _whddata:
 		dc.b	"data",0
 _name		dc.b	"Red Zone"
-		IFD	DEBUG
-		dc.b	" (DEBUG MODE)"
+		IFD	CHIP_ONLY
+		dc.b	" (chip/debug MODE)"
 		ENDC
 		dc.b	0
 _copy		dc.b	"1992 Psygnosis",0
@@ -120,12 +130,30 @@ _info		dc.b	"installed & fixed by JOTD",10
 	dc.b	"$","VER: slave "
 	DECL_VERSION
 	dc.b	0
-
+object_name
+	dc.b	"fast_object",0
+	even
+	
 _start	
 	lea	_resload(pc),a1
 	move.l	a0,(a1)			;save for later use
 	move.l	a0,a2			;A2 = resload
 
+	lea	(_tag,pc),a0
+	jsr	(resload_Control,a2)
+
+	move.l	use_original_exe(pc),d0
+	beq.b	.out
+	
+	move.l	#WCPUF_Base_NC|WCPUF_Exp_CB|WCPUF_Slave_CB|WCPUF_IC|WCPUF_DC|WCPUF_BC|WCPUF_SS|WCPUF_SB,d0
+	move.l	#WCPUF_All,d1
+	jsr	(resload_SetCPU,a2)
+
+.out
+	IFND	CHIP_ONLY
+	lea	progstart(pc),a0
+	move.l	_expmem(pc),(a0)
+	ENDC
 	
 	; init: freezes all interrupts
 
@@ -161,9 +189,6 @@ _start
 	move.l	a0,$dff080	; avoids snoop problem
 
 
-	;;move.l	_expmem(pc),$DFF0A0
-
-	
 	jmp	$410.W
 
 mainname:
@@ -186,12 +211,20 @@ DiskRoutine:
 
 
 .dr_FileRead:
-	; *** load the file, A0/A1 match
-;	cmp.l	#'Chip',(a0)
-;	bne.b	.sss
-;	blitz
-;	nop
-;.sss
+	move.l	use_original_exe(pc),d0
+	bne.b	.orig
+	; reworked version: change load address from $8000 to required
+	cmp.l	#$8000,a1
+	bne.b	.orig
+
+	; main "object" code, relocated version
+	; load it directly at the proper location
+	lea		object_name(pc),a0
+	move.l	progstart(pc),a1
+	
+
+.orig
+
 	move.l	_resload(pc),a2
 	jsr	(resload_LoadFile,a2)		
 
@@ -252,8 +285,99 @@ Jump7000:
 	jsr	(resload_Patch,A2)
 	movem.l	(A7)+,D0/D1/A0-A2
 
-	jmp	$7000.W
+    or.w #$0700,sr
+    lea.l $00007000,a0
+    adda.l #$0005644c,a0
+    lea.l $0005d44c,a1
+.copy
+    move.l -(a0),-(a1)
+    cmpa.l #$00007000,a1
+    bge.b .copy
+	bsr	_flushcache
+	; jump to intro
+	jmp	$8000
+	
+Jump8000:
+	
+	movem.l	D0/D1/A0-A2,-(A7)
 
+	clr.w	$9B4.W
+	move.l	enable_high_details(pc),d0
+	beq.b	.low
+	move.w	#$4,$9B4.W	; 020 cpu 
+.low
+
+	move.l	use_original_exe(pc),d0
+	bne	.official
+ 
+	cmp.w	#$4,$9B4.W	; 020 cpu 
+	bne.b	.no020
+	move.w	#$8,$9B4.W	; 020+ cpu exclusive setting
+	
+.no020
+	
+	IFD	CHIP_ONLY
+	; put crap in the original zone
+	; just in case the game jumps here
+	; (if winuae memory protection isn't active
+	; or a custom chip accesses there)
+	lea		$8000,a0
+	lea		$520ca,a1
+	move.w	#$CCCC,d0
+.copy
+	move.w	d0,(a0)+
+	cmp.l	a0,a1
+	bne.b	.copy
+	
+	move.l	#$520ca-$8000,d0                   ;one longword
+	lea     $8000,a0                ;address
+	move.l  (_resload,pc),a2
+	jsr     (resload_ProtectRead,a2)
+	move.l	#$520ca-$8000,d0                   ;one longword
+	lea     $8000,a0                ;address
+	move.l  (_resload,pc),a2
+	jsr     (resload_ProtectWrite,a2)
+	ENDC
+	
+	lea		progbase(pc),a0
+	move.l	progstart(pc),(a0)
+	
+	move.l	_expmem(pc),a7
+	add.l	#FASTSIZE,a7
+	
+	move.l  progstart(pc),a0
+    bsr   _Relocate	
+
+	move.l	_resload(pc),a0
+	move.b	_keyexit(pc),d0
+	move.l	progstart(pc),-(a7)
+	rts
+	
+.official
+
+	pea	_emu_bra(pc)
+	move.l	(a7)+,$B4.W
+	pea	_emu_jsr(pc)
+	move.l	(a7)+,$B8.W
+	pea	_emu_jmp(pc)
+	move.l	(a7)+,$BC.W
+
+	movem.l	_resload(pc),A2
+	move.l	progbase(pc),a1
+	sub.l	#$8000,a1
+	lea	pl_main(pc),A0
+	jsr	(resload_Patch,A2)
+
+	movem.l	(A7)+,D0/D1/A0-A2
+	lea	CHIP_BASE,A7
+	move.l	a7,usp		; game puts USP to A7 at some moment
+	
+	move.l	progbase(pc),a0
+	sub.l	#$8000,a0
+	add.l	#$229D8,a0
+
+
+	jmp	(a0)
 
 
 smctable_1
@@ -266,32 +390,27 @@ smctable_4
 	dc.l	$B24E,0
 
 
-Jump8000:
-	
-	movem.l	D0/D1/A0-A2,-(A7)
-
-	pea	_emu_bra(pc)
-	move.l	(a7)+,$B4.W
-	pea	_emu_jsr(pc)
-	move.l	(a7)+,$B8.W
-	pea	_emu_jmp(pc)
-	move.l	(a7)+,$BC.W
-
-	movem.l	_resload(pc),A2
-	sub.l	a1,a1
-	lea	pl_main(pc),A0
-	jsr	(resload_Patch,A2)
-
-	
-	movem.l	(A7)+,D0/D1/A0-A2
-	lea	CHIP_BASE,A7
-	move.l	a7,usp		; game puts USP to A7 at some moment
-	move.w	#$4,$9B4.W	
-	lea $229D8,a0
-
-	jmp	(a0)
-
-
+_Relocate	movem.l	d0-d1/a0-a2,-(sp)
+        clr.l   -(a7)                   ;TAG_DONE
+;        pea     -1                      ;true
+;        pea     WHDLTAG_LOADSEG
+		IFND		CHIP_ONLY
+        move.l  chipstart(pc),-(a7)       ;chip area
+        pea     WHDLTAG_CHIPPTR        
+        pea     8                       ;8 byte alignment
+        pea     WHDLTAG_ALIGN
+		ENDC
+        move.l  a7,a1                   ;tags		
+		move.l	_resload(pc),a2
+		jsr	resload_Relocate(a2)
+		IFND		CHIP_ONLY
+        add.w   #5*4,a7
+		ELSE
+		addq.w	#4,a7
+		ENDC
+		
+        movem.l	(sp)+,d0-d1/a0-a2
+		rts    
 
 FixIntroAF:
 	cmp.l	#$80000,A1
@@ -301,7 +420,17 @@ FixIntroAF:
 	dbf	D0,.copy
 .skip
 	rts
-	
+	; ATM 80000 and C00000 are poked in object.s:@3d076
+progstart
+    dc.l    $100000
+progbase
+	dc.l	$8000
+chipstart
+	IFD		CHIP_ONLY
+	dc.l	$C0000		; 750kb
+	ELSE
+	dc.l	$8000
+	ENDC
 _resload:
 	dc.l	0
 
@@ -315,7 +444,7 @@ _pintro:	PL_START
 		PL_P	$5805A,DiskRoutine
 		PL_P	$5804C,Jump8000
 		PL_PS	$86FE,FixIntroAF
-		PL_IFC1X    0
+		PL_IFC4X    0
 		PL_NOP	$8054,4
 		PL_ENDIF
         
@@ -324,12 +453,37 @@ _pintro:	PL_START
 PL_P_RELOC:MACRO
     PL_P    $\1,jump_\1
     ENDM
+
+PATCH_DBF:MACRO
+    PL_W    $\2,\1+$4E40
+    ENDM
+    
+
+_tag		
+		dc.l	WHDLTAG_CUSTOM2_GET
+use_original_exe	dc.l	0
+	dc.l	WHDLTAG_CUSTOM3_GET
+enable_high_details	dc.l	0
+		dc.l	0
     
 pl_main:	PL_START
 	; vbl count 5 => 1???
 		;;PL_W	$22d32,1
 		; skip loop
 		; PL_S	$22d28,$3A-$28
+		
+		; trainer
+		PL_IFC1X	0
+		PL_NOP	$41696,8
+		PL_NOP	$45034,6
+		PL_NOP	$4509a,6
+		PL_NOP	$452ae,8
+		PL_NOP	$45b4e,6
+		PL_NOP	$49aa0,6
+		PL_ENDIF
+		
+		; skip expansion memory test that is broken anyway
+		PL_S	$3D076,$12a-$76
 		
 		PL_I	$229b4	; just in case someone jumps in the ORI zone just before
 		
@@ -339,6 +493,8 @@ pl_main:	PL_START
 		PL_S	$22A8E,$22AAE-$22A8E	; skip floppy stuff
 		PL_P	$514D2,DiskRoutine	; disk load
 
+        ; skip dummy trap handlers
+        PL_S    $22aae,$c2-$ae
 		; SMC
 
 		;;PL_W	$09200,$4E4D		; BRA, Duff's device to draw stuff
@@ -358,10 +514,10 @@ pl_main:	PL_START
 		PL_W	$3D354,$4E4F		; JMP
 
 		; intercept indirect jumps
-		PL_P	$D452,jmp_a0_1
-		PL_P	$DA06,jmp_a6_1
-		PL_P	$DA42,jmp_a6_1
-		PL_P	$D1F0,jsr_loop_1
+		;PL_P	$D452,jmp_a0_1
+		;PL_P	$DA06,jmp_a6_1
+		;PL_P	$DA42,jmp_a6_1
+		;PL_P	$D1F0,jsr_loop_1
 		;PL_PS	$3D384,jsr_2
 
 		PL_PS	$4FB0E,FixJsrBug
@@ -378,30 +534,24 @@ pl_main:	PL_START
 	;	PL_W	$CE9E,$42E7
 	;	PL_W	$CEA2,$44DF
 ;;		ENDC
-		PL_IFC1X    1
+		PL_IFC4X    1
 		PL_W	$238ce,$6014
         PL_L    $238D6,1
 		PL_ENDIF
 
-        PL_IFC1X    2
+        PL_IFC4X    2
         PL_L    $238D6,1
         PL_ENDIF
         
+        ;;PL_I    $22ed6      ; blitter interrupt... game doesn't use it!
         ; fastmem relocs
-        ;;PL_P_RELOC    b8de    ; has smc
-        PL_P_RELOC    c4f0      ; no glitches
-        PL_P_RELOC    f31a      ; no glitches
-        PL_P_RELOC    949a
-        PL_P_RELOC    8a4a
-        PL_P_RELOC    8a2e
+
 		PL_END
 
-        
-	
+
+    
 jsr_2:
 	MOVEA.L	0(A0,D0),A0		;3D384: 20700000
-	blitz
-	nop
 	JMP	(A0)			;3D388: 4E90
 
 jsr_loop_1
@@ -418,11 +568,6 @@ jsr_loop_1
 
 jmp_a6_1
 	ADDA	D5,A6			;0DA06: DCC5
-
-	blitz
-	nop
-	nop
-	nop
 	JMP	(A6)			;0DA08: 4ED6
 	RTS				;0DA0A: 4E75
 
@@ -434,6 +579,10 @@ jmp_a0_1:
 
 	JMP	(A0)			;0D456: 4ED0
 
+    
+
+
+    
 ; corrects SMC $4EF9(address changing all the time)
 ; emulate JMP from trap. rather easy
 
@@ -486,7 +635,7 @@ _emu_jsr:
     ; sanity
     cmp.l   #CHIPMEMSIZE,a0
     bcs.b   .ok
-   blitz
+   
     nop
     nop
     illegal
@@ -515,7 +664,7 @@ FixJsrBug:
     ; sanity
     cmp.l   #CHIPMEMSIZE,a0
     bcs.b   .ok
-   blitz
+
     nop
     nop
     illegal
@@ -525,7 +674,7 @@ FixJsrBug:
     ENDC
 	jmp	(A0)
 .nojsr
-   blitz
+
     nop
     nop
 	rts
@@ -553,8 +702,4 @@ _flushcache:
 	jsr	(resload_FlushCache,a2)
 	move.l	(A7)+,A2
 	rts
-
-    include relocated_code.s
-
-
 

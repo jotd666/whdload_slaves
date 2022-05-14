@@ -13,19 +13,18 @@
  This install requires WHDLoad to be in the path. It can be found in the
  WHDLoad package.
 
- The installed program requires 1.5 MB ChipMem and 1.0 MB OtherMem and AGA chipset.
+ The installed program requires 1.0 MB ChipMem and 1.0 MB OtherMem.
  It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
 
- The game requires an installed A1200 or A4000 Kickstart 3.1 image.
+ The game requires an installed A500 Kickstart 1.3 image.
  The kickstart image must be located in the directory "Devs:Kickstarts" and
- must be named "kick40068.A1200" (resp kick40068.A4000). 
- The image can be extracted from a A1200 (resp A4000) with tools like 'GrabKick'
- or similar which can be found on aminet.
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
  If the image is of wrong version or altered in any way WHDLoad will quit with
  an appropriate requester.
- Additionally the file "kick40068.A1200.RTB" (resp "kick40068.A4000.RTB")
- must be installed in the same directory as the kickstart image.
- It can be found in the archive "util/boot/skick346.lha" on aminet.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick346.lha" on aminet.
 
  If you have problems with this installation please try and get a newer
  version of this package from the WHDLoad WWW-Page. If that doesn't help try
@@ -39,6 +38,11 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 1.2 (xx.05.2022)
+ - runs on 68000 + 1MB chip + kickstart 1.3 (issue #0005633)
+ - 3-button joystick support (third=rear bomb)
+ - TODO: test fire!!!
+ 
  version 1.1 (18.05.2020)
  - added icon by Solo Kazuki
  - fixed potential lockup at startup
