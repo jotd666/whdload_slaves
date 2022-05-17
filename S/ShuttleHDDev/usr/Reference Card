@@ -1,0 +1,760 @@
+
+
+        CLEANED UP FOR THE -AMIGA and ATARI ST- BY SCOOTER [SKID ROW]
+
+                             Fairlight PC Division                             
+                              USA-DoX Department
+                              Proudly Presents
+the instructions to SHUTTLE
+ ---------------------------
+ KEYBOARD CONTROLS:
+
+ To move around the screens, press E to scroll down, X to scroll
+ up, S to scroll right, and D to scroll left.
+ For those running Space Shuttle without a mouse, the above mouse
+ controls can be emulated by the keyboard as follows:  to operate
+ the switches, use the Shift and Home keys together to simulate the
+ left mouse button, and Shift and Pg Up for the right button.  USing
+ Shift together with the keypad cursor keys [2,4,6,&8] emulates
+ the pointer movement.  Thus all mouse functions described above
+ can be emulated by using these keys.
+
+ MOUSE CONTROL:
+
+ Once in the simulator, you can scroll around your chosen panels
+ simply by moving the mouse:  when the pointer comes to the edge of
+ the screen, the screen will scroll in that direction.
+ To move the switches wither up or down, or from left to right,
+ click the left mouse button for up,or left, or the right mouse
+ button for down, or to move the mouse to the right.  Where a switch
+ has more than 2 settings, continue to click the button in the
+ required direction.
+
+ Clicking the left and right mouse buttons simultaneously brings up
+ the menu bar, while clicking them again removes it.
+ Finally, when in the PANEL OVERVIEW view, clicking the right mouse
+ button scrolls you round the different views, while the left button
+ selects the one you are currently on.
+
+ GAME RUNNING ICON:
+
+ This appears whenever you are running the simulator, and denotes that
+ it is in progress.  Occasionally other symbols will flash inside this
+ icon:
+
+ '/' - Time Running
+ 'M' - Message on Teleprinter from Ground Control - press f7 to read
+ 'S' - Time Skip facility is in operation
+ 'T' - Time Advance facility is in operation
+
+ When you pause the game, whichever of these symbols is on the screen at
+ the time will flash
+
+ Now select NEXT MISSION from the MISSIONS menu, and you'll see the text
+ for the first mission.  Select ACCEPT, if you want to accept it, and
+ you'll find yourself already in the air, watching the 747, with the
+ Shuttle on top, just before separation.  From here on in, you have to
+ guide the Orbiter down to a safe landing.  Once this mission is
+ successfully completed, you'll be able to select the next mission,
+ TEST LAUNCH KENNEDY, which will allow you to go through the whole
+ launch procedure.
+
+ Before starting the mission, go back to the game Set Up option, select
+ start position, then select Launch Pad, then click DONE, and you're
+ ready to start the mission.  Select NEXT MISSION from the main menu,
+ skip past the mission text as before, and you'll find yourself
+ looking at the Orbiter sitting on the launch pad.
+
+ Now you have 2 Options:
+
+ 1. sit and wait while it goes through proper pre-launch countdown,
+    which takes 5 hours!
+ 2. simply set the SKIP facility(within the Windows Menu Option). This
+    can also be done with the Orbiter menu within the Main Menu.  Set it
+    to a time just before launch, i.e., T-30 seconds, then select
+    Time Skip from the ACTIONS menu.  Next select SKIP within the
+    ACTIONS menu, and it will take you to the required point.  This
+    will take time, of course, but the view is worth the wait.  The
+    Orbiter is now about to launch-the rest is up to you!
+
+ KEY CONTROLS
+
+ NORMAL KEYS (without SHIFT, CTRL, or ALT
+
+ CURSOR UP          Pitch Down
+ CURSOR DOWN        Pitch Up
+ CURSOR LEFT        Roll Left
+ CURSOR RIGHT       Roll Right
+ '                  Yaw Left
+ .                  Yaw Right
+ E                  Move Up Across Panel
+ X                  Move Down Across Panel
+ S                  Move Left Across Panel
+ D                  Move Right Across Panel
+ F                  Use Front RHC
+ A                  Use aft RHC
+ P                  Pause the game
+ T                  Time Advance the game
+ -/=                Speed Brake/Throttle Control
+ []                 Move Selected Joint
+ RETURN             Grab payload using RMS
+ DELETE             Release Grabbed Payload
+ SPACE              Moves around panels in PANEL OVERVIEW.
+
+ Keys With SHIFT held down:
+
+ Home               Left Mouse Button
+ PgUp               Right Mouse Button
+ CUR UP             Move Pointer Up
+ CUR DOWN           Move Pointer Down
+ CUR LEFT           Move Pointer Left
+ CUR RIGHT          Move Pointer Right
+
+ Keys With ALT held down:
+
+ P                  Toggle "Game Running" icon ON/OFF
+ []                 Slow Movement of RMS joint @ 0.2
+ CUR UP             -Z Translates SHUTTLE
+ CUR DOWN           +Z Translates SHUTTLE
+ CUR LEFT           -Y Translates SHUTTLE
+ CUR RIGHT          +Y Translates SHUTTLE
+ +                  +X Translates SHUTTLE
+ -                  -X Translates SHUTTLE
+
+ Keys Used on the Numeric Keypad:
+ +/-                Scroll through display on Aft CRT
+ Home               Camera Roll Left
+ End                Camera Roll Right
+ PgUp               Camera Pitch Up
+ PgDn               Camera Pitch Down
+ Ins                Camera Yaw Left
+ Del                Camera Yaw Right
+
+ CONTROL Key Sequences:
+
+ Control C + Y      Turn The Cursor On
+         C + N      Turn The Cursor Off
+ Control F + Y      Turn Sound On
+         F + N      Turn Sound Off
+ Control G + A      Arm Landing Gear
+         G + D      Drop Landing Gear
+ Control H + 1      Full On Auto
+         H + 2      First Simulation
+         H + 3      First Command
+         H + 4      Veteran
+         H + 5      Fully Manual
+         H + 0      Automatic Selection
+
+ Control J + 1      Select Shoulder Yaw
+         J + 2      Select Shoulder Pitch
+         J + 3      Select Elbow Pitch
+         J + 4      Select Wrist Pitch
+         J + 5      Select Wrist Yaw
+         J + 6      Select Wrist Roll
+
+ Control L + S      Save log File
+ Control P + F      GoTo Front Panel
+         P + A      GoTo Aft Panel
+         P + C      GoTo Center Panel
+         P + L      GoTo Left Panel
+         P + R      GoTo Right Panel
+         P + O      GoTo Overhead Panel
+         P + M      GoTo Right-aft Panel
+         P + N      GoTo Lower-aft Panel
+         P + H      Slow Sown Panel Movement(use up to 3 times)
+         P + J      Speed Up Panel Movement
+
+ Control Q + Y      Quit To Main Menu
+         Q + N      Return To Simulator
+         Q + D      Return To DOS
+
+ Control S + T      Start Time Skip
+         S + P      Start Time Skip and pause when finished
+         S + C      Turn Off Comms.
+ Control T + T      Time Advance
+         T + P      Time Advance and Pause
+ Control W + T      Open Time Advance Window
+         W + S      Open Time Skip Window
+         W + D      Open Time of Day Window
+         W + M      Open MET Window
+         W + C      Open Detail Complexity Window
+         W + G      Open Ground View Window
+         W + H      Open Help Level Window
+         W + L      Open Log Options Window
+
+ FUNCTION Keys:
+
+ No shift/ctrl/alt:           SHIFT +:            ALT +:
+
+ f1 Last Panel                Select Panel
+ f2 Left HUD                  Right HUD
+ f3 Left Window               Right Window
+ f4 Left AFT                  Right AFT
+ f5 Left Payload Bay          Right Payload Bay
+ f6 Inside MMU                Release MMU         Attach MMU
+ f7 Mission Control Text      External Tank View
+ f8 Ground View               Sel Ground View     Roaming MMU View
+ f9 CCTV View                 Crawler View        747 View
+ f10Roaming Camera            Left SRB Camera     Right SRB View
+
+ MMU Keys:
+
+ ROTATION:
+
+ U                  Pitch Up
+ N                  Pitch Down
+ H                  Roll Left
+ J                  Roll Right
+ B                  Yaw Left
+ M                  Yaw Right
+
+ TRANSLATION:
+
+ ALT + U            -Z Translate
+ ALT + N            +Z Translate
+ ALT + H            -Y Translate
+ ALT + J            +Y Translate
+ ALT + B            -X Translate
+ ALT + M            +X Translate
+
+ GETTING STARTED
+
+ MAIN MENU:
+
+ Space Shuttle is controlled by 2 menu systems, the MAIN MENU, for all
+ applications prior to launch, and the SIMULATOR MENU, for all in-flight
+ operations.  Both menu bars appear at the top of the screen.  The MAIN
+ MENU contains information that will be useful in familiarizing you with
+ the Space Shuttle and its systems, and to help you choose the level of
+ customizing you require, as well as Launch and Landing Sites and the
+ mission details.
+
+ 1. ORBITER
+    The first menu option contains 4 further sub-options:
+
+    1. ABOUT SPACE SHUTTLE
+       Gives the publishing and development credits for SPACE SHUTTLE
+
+    2. RUNNING DEMO
+       This takes you straight to the launch pad, where you're taken
+       through a typical mission that demonstrates the many different
+       functions and aspects of SPACE SHUTTLE.  In this demo, you'll see
+       the Orbiter launch init orbit and deploy a satellite.  This demo
+       lasts for about 15 minutes and allows you just to sit back and watch.
+       To access this demo, first load up the game as detailed above.  To
+       bypass the loading screen, hit the space bar(or click the left mouse
+       button).  Now, select RUNNING DEMO from the ORBITER menu at the
+      opening screen and sit back and watch the shuttle launch and deploy
+       its satellite.  To quit the demo, press ESC to access the
+       SIMULATOR MENU, then select MISC, and then QUIT TI MAIN MENU.  This
+       will take you back to the main menu.
+
+
+    3. GAME SET UP
+       This feature allows you to customize the various aspects of the
+       game.  This has 6 further options within it, which appear in a
+       window called "SELECT WINDOW" whenever you select "GAME SETUP".
+       From here, by selecting with the mouse and then clicking on the
+       OPEN icon, you go to the following:
+
+       This feature brings up another window that allows you to start
+       either from VAB [Vehicle Assembly Building] ROLLOUT, i.e., right
+       from the beginning, LAUNCH PAD, IN-ORBIT or LANDING.  You click
+       on the required button, then remove this second window by
+       clicking on the box in the top left hand corner.
+
+       TIMER ADVANCE: Clicking on TIMER ADVANCE first brings another
+       window onto the screen, in which are two options:
+       ADVANCE BY - This feature allows you to move to any point in
+       the simulator you want: just type in the required time.  When
+       When the simulator is started, you'll see a letter "T" in the
+       GAME RUNNING ICON that denotes that the simulator is now in
+       TIME ADVANCE mode.  While in this mode, the simulator pauses
+       until it finds the required point.  When it has done so, the
+       letter "T" will disappear, and you'll be returned to normal
+       real time.  The time advance will stop, however, if a message
+       comes up for an in-flight operation to be carried out.
+
+       DISPLAY RATE: This feature allows you to customize the rate at
+       which the view is updated.  For instance, if you type in
+       10 MINUTES, then every new frame you'll see will be points 10
+       minutes apart.  Of course, these views wouldn't change at this
+       speed in real time, only within the simulator.
+       TIME SKIP SET: This differs form TIMER ADVANCE, above, only in
+       that it simply allows you to jump to a designated point in the
+       mission. Selecting this option brings up another window, in which
+       a box marked 'ADVANCE TO' appears, set out in hours, minutes and
+       second. Below this are two icons marked 'T+', meaning time after
+       lift off, and 'T-' meaning time before lift off.
+
+     To reach a set point in time within the mission, simply select "t-'
+     or 'T+' and type in the required time. The simulator will then time
+     advance until it has reached this point, skipping though time at a
+     rate of approximately one minute of simulator time to one second of
+     real time.
+
+     DETAIL COMPLEXITY: This feature allows you to set the map and/or the
+     shape complexities. In each case, a choice of levels is offered. The
+     choice of complexities will of course effect the speed of the simulator.
+     HELP LEVEL: This sets the level of communications between you and the
+     computes, with the following choices:
+
+             FULL-ON AUTO
+             FIRST SIMULATION
+             FIRST COMMAND
+             VETERAN
+             FULL MANUAL
+
+     These help levels range from NOVICE to EXPERIENCED VETERAN with the
+     most guidance offered at the FULL-ON AUTO level.
+
+     SET TIME OF DAY: This brings up a window of the same title, inside
+     which are two main boxes, each with times in hours and minutes,
+     entitled 'TIME OF DAY' and 'LENGTH OF DAY'.
+
+       TIME OF DAY allows you to set the time of day, based on Eastern
+       Daylight Time, to whatever you required. This can come in useful,
+       for example, if you're on the dark side of the planet trying to
+       retrieve a satellite - setting the time to daylight hours in this
+       instance would be extremely useful!
+       LENGTH OF DAY allows you to determine how long a day within the
+       simulator takes in real time. For example, setting this to one
+       minute, say, means that the Earth then rotates once a minute, i.e.
+       you'll see 30 seconds of light and 30 seconds of darkness every
+       minute of the mission.
+
+    4. QUIT: Enables you to exit SPACE SHUTTLE. THE SIMULATOR. note:
+       pressing ESC while in the MAIN MENU also exits the program.
+
+    2. LOG: This menu provides you with many facilities both before,
+       during and after missions. If you go straight into a mission without
+       creating your own log, and then use the Log Save option once in flight,
+       your log will be saved out as 'Vektor Graphix Ltd"
+       "LOG" contains several options which enable you to maintain a
+       commander's log:
+
+     1. NEW LOG: Enables you to enter in your name as you're given command
+     of a space shuttle orbiter for the first time. After you've entered
+     your name, your log is cleared and all subsequent missions will have
+     their details logged.
+
+     You can save your log on auto or manual by pressing th appropriate
+     button on this panel: auto means that the log is saved automatically,
+     and manual allows you to save the log at any time you want, using
+     the in-flight simulator menu log save facility.
+     Finally, when you insert your name in the box provided, it is always
+     done in over-write mode, i.ie, whatever you type in will automatically
+     type over anything that is there already.
+
+     2. RELOAD: Enables you to reload a previously saved log from disk.
+     Selecting this option brings up a window title 'SELECT LOG FILE', which
+     contains a list of all previously saved logs. Beneath this are two icons
+
+     'ABORT', which takes you back to the MAIN MENU and 'LOAD' to load an
+     old log, simply select the one required from the list and then
+     press 'LOAD'. This will then take you straight into the selected log. If
+     a mission was in progress at the time the log was saved, the the
+     mission is continued from that point.
+
+     3.INFO: This feature gives you information about the space shuttle itself.
+
+     with a sub-menu containing many of the orbiter's different aspects
+     for further on-screen information.
+
+     Click on the required section, and a screen of illustrations and infor-
+     mation comes on screen. At the bottom of these screens are three
+     icons, in the form of book pages. These allow you scroll forwards,
+     backwards, and return to the MAIN MENU.
+
+     4.SITES: This selection gives you two further options:
+     LAUNCH SITES: Allows you to see the two launch sites, KENNEDY SPACE
+     CENTER, or VANENBURG AIR FORCE BASE, in a short demo that zooms in
+     from orbit down to the site in question. To return o the menu screen,
+     simply press the ESCAPE key.
+
+     LANDING SITES: This selection shows the two landing sites, KENNEDY SPACE
+     CENTER and the primary site, EDWARDS AIR FORCE BASE, in th same way as
+     the launch sites, by way of a short demo, which can be quit in the
+     same way.
+
+     5.MISSIONS: This feature allows you to select which mission you wish
+     to perform. When you start with a new Commander, the only option
+     available at the beginning is NEXT MISSION. Selecting this displays the
+     mission objectives of the next full mission on the screen. Press 'ACCEPT'
+     to start the mission, or 'ABORT' to cancel. During a full mission,
+
+     Mission Control will expect you to be familiar enough with the shuttle to
+     respond to their commands.
+
+     As with all the missions in SPACE SHUTTLE THE SIMULATOR the first thing
+     you see after selecting this mission is a page of mission text. At the
+     bottom of the page are two buttons; 'ACCEPT', which you select to
+     start the mission and 'ABORT' which take you back to the MAIN MENU.These
+     icons don't appear if you're re-playing a mission.
+     This first training mission is entitled ALT [747] MISSION and in it
+     you'll launch from the back of a 747 transport plane near the
+     glideslope for an unpowered landing ad Edwards Air Force Base.
+     WARNING: on this first test mission, almost all the controls are set
+     for you when on Full-ON Auto. However, the LANDING GEAR isn't
+     so don't forget to put it down! You will also be requested to turn on
+     the Heads Up Displays.
+
+     After completing this first mission, you'll see a screen entitled MIS-
+     SION OBJECTIVES, which tells you how you fared in the mission.
+     When you click on OK at this screen, you're returned to the Main menu.
+     Selecting missions again either allows you to run the mission again,
+     either for fun or because you just failed it, or to continue on to the
+     next one.
+
+     Once a full mission has been successfully completed, it objectives
+     will be added to the Mission menu so that you can re-attempt a
+     similar mission at any time in the future As you become more experi-
+     enced as a commander, Mission Control will select you for more
+     difficult mission.
+
+     SIMULATOR MENU: This menu is split into six categories:
+
+     1.ACTIONS: This menu allows you access to various primary in-flight
+     commands.
+
+     PILOT'S HUD with this feature you can turn the pilot's heads up display
+     on or off without having to go to the respective panel.
+
+     COMMANDER'S HUD does the same as the above for the commander's hud.
+     TIMER ADVANCE allows you mouse access to this facility, offering two
+     further sub-options:
+
+             Advance - activates the facility according to the limits you've
+             set Advance, Pause to Next Comms - activates the timer advance,
+             but only as fas the next communications from Ground Control, at
+             which point it resumes the normal countdown.
+
+     TIME SKIP similar to TIMER ADVANCE, this feature gain offers two sub-     options:
+
+
+           Skip - sets the pre-determined skip facility running
+           (see main menu, game set up, time skip above)
+
+           Skip, Pause - skips to the predetermined time, then pauses until
+           you're ready to continue
+
+           Turn Off Comms - does just that. But beware, this is NOT for
+           turning off the teleprinter. Using this switch means that you will
+           no longer get any communications from Ground Control and therefore
+           means that you'll have no idea of what you're supposed to be doing.
+           It also means that you cannot switch them back on again.
+
+     REQUEST MISSION COMMS: All missions within SPACE SHUTTLE begin after T+55
+     minutes. By this point, you'll have successfully launched the shuttle
+     into orbit, and prepared it for the mission. NOw go to the ACTION menu
+     select REQUEST MISSION COMMS, and up they'll come, telling you
+     everything you need to know about the progress of the mission. If you
+     select this before you're at the right point in time, the comms will
+     tell you you don't need them just yet.
+
+     REQUEST LANDING COMMS: Once your mission is complete, you'll be ready
+     to return home. As with the mission comms above, go to the ACTION menu.
+     select REQUEST LANDING COMMS and they will appear. As above if you
+     select them before time, you'll be told politely that they're not
+     quite necessary yet.
+
+     2.PANELS: This is a quick way for you to get to the panel you want
+     quickly [or to locate a particular panel if you're not sure where it is,
+     of course] Under this heading is the following list of panels:
+
+             FRONT PANEL
+             AFT PANEL
+             CENTER PANEL
+             LEFT PANEL
+             RIGHT PANEL
+             OVERHEAD PANEL
+             RIGHT AFT PANEL
+             LOWER AFT PANEL
+             OVERVIEWS PANEL
+
+     The last of these Overviews takes you to a series of diagrammatic
+     representations of the orbiter's operating stations. There are five of
+     these that may be seen from the pilot's point of view. Move the cursor
+     around this and you'll find that the different panels are highlighted
+     as you go over them. Click on the required panel with the left mouse
+     button and you'll be taken to it straight away. Use the right mouse
+     button or space bar to go to the next Overview screen: Once the last on
+     has been displayed, it starts again at the beginning.
+
+
+     3.GO TO: This is similar to 'PANELS' above, except that GOTO offers you
+     more detailed lists of the orbiter's available functions. For instance,
+     pilot's instrument power, anti-skid light and so on.
+
+     4.WINDOWS: This allows you access to all the various in-game set up
+     windows available within the MAIN MENU. These are as follows:
+
+    TIME ADV
+    TIME SKIP
+    TIME OF DAY
+
+    MET - Short for MISSION ELAPSED TIMER, this brings up a window
+            showing the time elapsed so far on the current mission.
+            This can be moved to any desired point on the screen
+            simply by clicking and holding the mouse pointer onto the
+            top of the window and moving it around. To remove the MET
+            simply click on the small box in the top left hand corner
+            of the window.
+
+    COMPLEXITY
+
+    FIXED VIEWS - Brings up a window with a list of all the different
+                      fixed views available - note that these are not
+                      available in orbit
+                      Once you have chosen a view, pressing F8 will select
+                      the chosen view as the default for the F8 key for
+                      the rest of your current stay within SPACE SHUTTLE
+
+    HELP LEVEL - Help levels cannot be increased once a simulation has
+                     been started. Help levels can only be reduced during
+                     an ongoing simulation.
+
+    LOG OPTIONS - Brings up a window of the same name. The 'AUTO' log
+                      save time feature will allow you to set the time
+                      that the log is saved, i.e. every 5 minutes, every
+                      10 minutes and so on. Of course, this only applies
+                      if you choose to have th log saved automatically. At
+                      the bottom of the window are three buttons.
+                      M - MANUAL LOG SAVE
+                      A - AUTO LOG SAVE
+                      OK - quits the window
+                      If you wish to save any new configuration, you must
+                      use the OK button - clicking the CLOSE WINDOW button
+                      at the top of the box will simply abandon any
+                      changes you might have made
+
+    5. VIEWS- Gives a submenu of all the different viewpoints available.
+              selecting any one of them will take you to the viewpoint.
+
+    6.MISC
+
+            PAUSE
+            LOG SAVE
+            MAIN MENU
+            QUIT TO DOS
+ -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+                                REFERENCE
+
+ -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+ This  section gives a description of, and any necessary background to
+ each and every part and function of the Space Shuttle.  The reference
+ section is split into 3 major activities, LAUNCH, ON ORBIT OPERATIONS,
+ AND LANDING, with each aspect of the shuttle being covered under that
+ section for which it has the most relevance.  In the case of an item being
+ equally as important to more than one stage of the Shuttle's activities,
+ we have given the full description and background, where applicable, in
+ the first such occurance.
+
+ SUMMARY OF PANELS:
+
+ The controls and instrumentation of the real Space Shuttle are
+ understandably complex.  SPACE SHUTTLE accurately reproduces the
+ layout and functions of all of the genuine shuttle controls.
+
+ The FLIGHT DECK is split into 2 main stations:
+
+ The FORWARD station, at which are seated the Commander[right] and the
+ Pilot[left].
+
+ The AFT Station, from which the RMS is controlled during orbit.
+
+ The instrument panels are labeled according to their positions:
+
+ F             front PANEL
+ O             overhead PANEL
+ L             left PANEL
+ R             right PANEL
+ C             center PANEL
+ A             aft PANEL
+ M             right aft PANEL
+ N             lower aft PANEL
+
+ FORWARD PANEL:
+
+ F2            Commander's Control Panel - CSS/AUTO buttons, Speed Brak
+ F3            HUD Power, Trim Controls
+ F4            Pilot's Control Panel - as F2
+ F6            Commander's Main Panel - Landing Gear,Direction Altitude etc
+ F7            CRT Main Panel, pressure gauges
+ F8            Pilot's Main Panel - as F6
+
+ LEFT PANEL:
+
+ L1            Fire Suppressio
+ L2            Nose Wheel Steering, Anti-Skid Controls & Life Suppor
+
+ CENTER PANEL:
+
+ C2            Keypads, CRT Control
+ C3            DAP, SRB/ET Sep, Air Data probe controls etc.
+RIGHT PANEL:
+
+ R1            Power Distribution
+ R2            APU/Hydraulics/ET Umbilical
+ R4            MPS/Hydraulics
+ R12           Keypad/CRT, fuel/water
+ R13L          PLB/MMU/KU antenna
+
+ OVERHEAD PANEL:
+
+ O1            GPC Status, Pressure/Temps
+ O3            RCS/OMS Pressure, Timers
+ O5            Pilot's Communication Controls
+ O6            GPC's, Star Tracker
+ O7            Tacan, RCS
+ O8            Radar Altimeter, OMS
+ O9            Commander's Communication Controls
+ AFT PANEL:
+
+ A3            CCTV Monitors
+ A4            Timers
+ A6            Orbital DAP
+ A7            Video Control, RHC
+ A8            RMS Controls
+ A14           RMS Arm and KU Antenna jettison controls
+
+ LAUNCH
+ WATER SPRAY BOTTLES:
+
+ These are located in the aft fuselage of the Orbiter, and are used to
+ cool down the power unit, lube oil, and hydraulic systems during both
+ the ascent and de-orbit phases.  There are 3 boilers in all, and they
+ store water in a bellows-type storage tank pressurized by gasseous nitrogen.
+ Along with 3 APUs and the hydraulic pumps, the water spray boilers are
+ in operation 5 minutes before take-off, although the boilers are
+ pre-activated 45 minutes before this.  One of these boilers is also briefly
+ opened one day before de-orbit during a flight control system check out.
+
+ BOILER N2 Supply 1/2/3 [PANEL R2] - controls the nitrogen shut off valves,
+ which maintain water pressure in the boilers.
+
+ APU Fuel/H2O QTY [PANEL F8] - allows the water quantity of each boiler to
+ be displayed on the 1/2/3 METERS on the same panel.
+
+ 1/2/3 [PANEL R2] -
+
+ i]  Operates the two boiler controllers.  When the relevant switch is at
+     position A, the A Controller for that boiler is powered, and likewise
+     for position B.  When at OFF, electrical power is removed from both
+     controllers.
+
+ ii] Operates the electrical heaters when in orbit to prevent water freeze
+     up in orbit.  The heaters apply to the same boilers as do the power
+     switches, and the access method is also the same.
+
+ 1/2/3 [PANEL R2] - enables the relevant controller selected by the
+ previous switch.  When enabled, the READY signal appears on the
+ corresponding APU/HYD READY TO START talkback indicator on PANEL R2, as
+ long as the following has been actioned: N2 shut-off valve is opened,
+ steam vent nozzle temperature is >130F, and the hydraulic fluid bypass
+ valve is in the correct position with regard to the hydraulic fluid
+ temperature.
+
+ Problems - As the boilers and heaters are immediately concerned with
+ the smooth running of the APU's on ascent, you must check to make
+ certain that they are reading and operating correctly at all times.
+ Once the pilot has initiated the pre-start sequence, he confirms that
+ the water spray boilers are activated before he does anything else.  At
+ T - 5 minutes the pilot starts the 3 power units by setting the APU CNTL
+ switches to START/RUN and checking the hydraulic pressure gauges for an
+ indication of approximately 600 - 1000 psi.  He then pressurizes the main
+ pump and looks for about 3000 psi on the gauges.  All 3 hydraulic main
+ pump pressures must be greater than 2800 psi by T - 4 minutes or the
+ automatic launch sequence will abort the launch!  This is not
+ something that the pilot can do anything about, of course, and the
+ Shuttle must be returned for a complete check over.
+
+ CRT DISPLAY SYSTEM:
+
+ The MCDS on the Orbiter crew compartment flight deck allows onboard
+ monitoring of Orbiter systems, computer software processing, and
+ manual control for flight crew data and software manipulation.  The
+ system is composed of 3 types of hardware: display electronic units[DEUs],
+ display units that include the CRTs, and keyboard units, which together
+ communicate with the GPCs over the display/keyboard data bus network.
+ The MCDS provides almost immediate response to flight crew inquiries
+ through displays, graphs, trajectory plots, and predictions about flight
+ progress.  The crew controls the vehicle system operation through the use
+
+ of keyboards in conjunction with the display units.
+ Three keyboards are located on the flight deck: two on the left and
+ right sides of the flight deck center console [PANEL C2] and one on
+ the flight deck at the side aft flight station [PANEL R12].  Depending
+ on crew requirements and preferences, each of the front keyboards can
+ communicate with any of the front DEUs: the aft keyboard, however, is
+ only wired to display on the aft DEU.
+
+ Problems - If the CRTs go, there is little the crew can do about it.
+ The likelihood of all of them going at once is extremely remote.  The
+ only thing the crew can do to replace a blown CRT with one of the
+ others - i.e., if one of the front CRTs went, the crew could replace
+ it with the aft one.  This simulator is not, for obvious reasons, able
+ to recreate this emergency.
+
+ GENERAL PURPOSE COMPUTERS [GPCs]:
+ Almost all of the operations carried out by the Space Shuttle are
+ controlled or overseen by the main computer system.  The DPS [Data
+ Processing System] consists of 5 general purpose computers [GPCs]
+ connected to the many hundreds of feedback censors and actuators
+ throughout the Shuttle.  These are each made up of a Central
+ Processing Unit [CPU] and an input/output processor [IOP], and each
+ of the 5 do a different job.  All five are IBM Ap-101 computers, and
+ contain a memory area for storing data and software.  They are
+ collectively referred to as Shuttle's Main Memory, into which are
+ loaded all the flight and operational informational systems.  The
+ system software controls the computer systems and monitors
+ communication between them.  It also supports the user interface
+ modules to provide interaction with the crew.
+
+ The application software consists of specific modules to manage
+ navigation and control at various stages of the mission.  Each
+ major module of operations or OPS has a number associated with it:
+
+ OPS 1 Ascent
+ OPS 2 On Orbit
+ OPS 3 Reentry
+ OPS 4 Orbit Operations
+ OPS 6 RTLS [loaded along with OPS 1]
+ OPS 8 On Orbit Checkout
+ OPS 9 Computer Utilities
+
+ Each major OPS also has a particular CRT display associated with it.
+
+ GPC POWER ON/OFF [PANEL 06] - First of all you have to turn things on.
+ These switches are guarded, as, for one, they control 600 watts of
+ power each, and moreover the GPCs should not be able to be turned off
+ inadvertantly.
+
+ GPC OUTPUT [PANEL 06] - has three positions: BACKUP, NORMAL & TERMINATE.
+ BACKUP is only used for the GPC containing the BFS, which stops it
+ being used until needed; All switches for operating GPCs will be set at
+ NORMAL, whereas the GPCs controlling systems management [i.e., on-orbit
+ operations} will be positioned at TERMINATE, as they shouldn't be
+ commanding anything during the flight phases.
+
+ MODE [PANEL 06] - three positions" RUN, STBY & HALT. Normally if these
+ switches are put into HALT in the RUN position, the software is precluded
+ from operating. However, if the switches are put into STBY, the software
+ can still not be executed, but the GPC is in a software controlled state.
+ Normal practice is to go from HALT to STBY and then to RUN, and vice
+ versa, as this gives the software a chance to ready and clean itself up.
+ ORBITER FLIGHT COMPUTER SOFTWARE - refers to all the various software
+ commands that are typed in at the relevant moment by the flight crew.
+ PROBLEMS - If the main GPC fails, the shuttle has its own backup flight
+ system, or BFS, which is loaded into the GPCs and the mass memory unit.
+ As it's only concerned with the emergency ascent, insertion into orbit
+ or de-orbit of the shuttle, it has a great deal less information stored
+ although any of the GPCs could become a BFS if necessary. Remember, GPC 5
+ must be switched on at the pre-launch phase, otherwise the shuttle won't
+ take off.
+ Other than this, however, for the purposes of SPACE SHUTTLE - THE
+ SIMULATOR, the BFS won't be operable.
+
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-

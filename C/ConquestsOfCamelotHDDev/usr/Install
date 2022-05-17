@@ -341,6 +341,15 @@
       (help @makedir-help)
     )
 
+    ; copy urbi script files that crack the game
+      (copyfiles
+        (help @copyfiles-help)
+        (source "")
+        (dest #dest)
+        (pattern "script.???")
+      )
+
+
 (P_Install)
 
 (if (= #newstuff 1)
