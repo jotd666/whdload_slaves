@@ -79,6 +79,7 @@ _expmem
 
 slv_config:
  		dc.b    "C1:X:no damage:0;"
+ 		dc.b    "C1:X:cheat keys:1;"
         dc.b    "C2:B:use original exe;"
         dc.b    "C3:B:enable high detail by default;"
 		dc.b    "C4:X:Skip intro movie:0;"
@@ -95,7 +96,7 @@ slv_config:
 ;DEBUG
 
 DECL_VERSION:MACRO
-	dc.b	"3.0"
+	dc.b	"3.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"

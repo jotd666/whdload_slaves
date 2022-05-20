@@ -28,6 +28,13 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 3.1 (18.05.2022) done by JOTD:
+ - fixed access fault when finishing a lap (hopefully)
+ - crash on replay (because it was still missing relocs...)
+ - added option for cheat keys (only for new exe)
+ - caution: make sure you upgrate "fast_object" in the data directory,
+   version provided in 3.0 still has bugs
+ 
  version 3.0 (13.05.2022) done by JOTD:
  - executable rebuilt/fixed for much better framerate on machines
    equipped with fast memory. Use CUSTOM2 to disable and play
@@ -54,9 +61,15 @@
  - Doc file included
  - Nice icons by Frank and Bored Seal
 
+ cheat keys:
+ - S: skip qualification, proceed to race
+ - K: kill player
+ - E: erase player damage
+ 
  thanks:
 
  - Bored Seal for providing me WARPS of this game (through Angus, I believe)
+ - Angus for extensive testing and support for everything 3D :)
  - All the WHDLoad team for interesting discussions and support
  - Bert for fixing the SMC detection in WHDLoad
 
@@ -74,3 +87,6 @@
  - To upgrade from a previous installation, just copy "fast_object" to "data"
    directory. You can delete "object" too to save a few Kbs if you don't plan to
    play with the original executable.
+ - There are still bugs, I believe they are original. The worst is the "ability"
+   to get stuck in walls even with the direction keys.
+   
