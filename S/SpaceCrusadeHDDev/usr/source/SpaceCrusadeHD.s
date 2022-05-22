@@ -12,7 +12,7 @@
 	ENDC
 _base	SLAVE_HEADER					; ws_security + ws_id
 	dc.w	17					; ws_version (was 11)
-	dc.w	WHDLF_NoError|WHDLF_EmulTrap|WHDLF_NoDivZero|WHDLF_ClearMem
+	dc.w	WHDLF_NoError|WHDLF_ClearMem
 	dc.l	$80000					; ws_basememsize
 	dc.l	0					; ws_execinstall
 	dc.w	start-_base		; ws_gameloader
@@ -34,14 +34,14 @@ _expmem
 ;---
 _config
 ;	dc.b	"BW;"
-; dc.b    "C1:X:Infinite lives:0;"
+	dc.b    "C3:B:Boot on expansion disk;"
 	dc.b	0
 	IFD BARFLY
 	DOSCMD	"WDate  >T:date"
 	ENDC
 	
 DECL_VERSION:MACRO
-	dc.b	"2.0"
+	dc.b	"3.0"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -56,19 +56,26 @@ _name	dc.b	'Space Crusade',0
 _copy	dc.b	'1991 Gremlin',0
 _info
     dc.b   'Install & fix by JOTD',10
+	dc.B	"Version "
 	DECL_VERSION
 	dc.b	0
 
 	even
 	
 start:
+	clr.l	$4.W
 	lea		_resload(pc),a1
 	move.l	a0,(a1)
 	move.l	a0,a2
+	lea	(_tag,pc),a0
+	jsr	(resload_Control,a2)
+	
+	move.l	expansion(pc),d0
+	bne.b	.expansion
 	
 	moveq	#1,D2
-	move.l	#$1600,D0
-	move.l	#$4D000,D1
+	move.l	#$1600,D0		; offset
+	move.l	#$4D000,D1		; len
 	lea	$8000,A0
 	jsr		resload_DiskLoad(a2)
 
@@ -83,19 +90,195 @@ start:
 	move.w	#$83D0,dmacon+$DFF000
 	jmp	$8006
 
+.expansion
+	moveq	#3,D2
+	move.l	#$2E32,D0
+	move.l	#$4700,D1
+	lea	$10000,A0
+	jsr		resload_DiskLoad(a2)
+	
+	lea	$10000,A0
+	lea	$235C.W,A1
+	jsr		resload_Decrunch(a2)
+
+	
+	; *** blitter
+
+	bsr	PatchBlitExp
+
+	sub.l	a1,a1
+	lea		pl_boot_expansion(pc),a0
+	jsr		resload_Patch(a2)
+
+
+	; *** transfer boot
+
+	lea	$8296,A6
+	LEA	$73542,A5
+	MOVE	#$00E1,D7
+LAB_0000:
+	MOVE	(A6)+,(A5)+
+	DBF	D7,LAB_0000
+
+	move.w	#$2700,SR
+	bsr	_flushcache
+	move.w	#$8210,dmacon+$DFF000
+	jmp	$73542
+
+PatchBlitExp:
+	MOVEM.L	D0-A6,-(a7)
+
+	move.l	#$35400058,D0
+	move.l	#$4EB800C6,D1
+	lea	$2A00.W,A0
+	lea	$2C00.W,A1
+	bsr	HexReplaceLong
+
+	move.l	#$35410058,D0
+	move.l	#$4EB800CC,D1
+	lea	$2A00.W,A0
+	lea	$2C00.W,A1
+	bsr	HexReplaceLong
+
+	move.l	#$35470058,D0
+	move.l	#$4EB800D2,D1
+	lea	$6E00.W,A0
+	lea	$7C00.W,A1
+	bsr	HexReplaceLong
+
+	MOVEM.L	(a7)+,d0-a6
+	rts
+
+jump_2366
+	CLR.L	$17A.W
+	JMP	$2366.W
+
+	
+decrunch_exp:
+
+	move.l	_resload(pc),a2
+	jsr		resload_Decrunch(a2)
+
+	cmp.w	#$4EB9,$834C
+	bne	.patched
+
+	; unpacked from $8270 to $5F252
+	lea		pl_main_exp(pc),a0
+	sub.l	a1,a1
+	jsr		resload_Patch(a2)
+
+.patched
+	rts
+pl_main_exp
+	PL_START
+	PL_PS	$834C,SkipCheckDisk
+	PL_PS	$8360,SkipPassword
+
+	; *** remove format check
+
+	PL_W	$9BC6,$600E
+
+	; *** replace load dir
+
+	PL_PS	$991E,ReadSaveData
+	
+	PL_PSS	$0bc4a,soundtracker_loop,2
+	PL_PSS	$0bc5e,soundtracker_loop,2
+	
+	PL_END
+	
+SkipCheckDisk:
+	move.b	#1,$189.W
+	rts
+
+SkipPassword:
+	move.b	#1,$187.W
+	rts
+
+
+pl_boot_expansion
+	PL_START
+	PL_P	$2566,ReadSectorsExp
+
+	; *** keyboard quit key
+
+	PL_PS	$69EC,KbInt
+
+	; *** kb fix acknowledge kb
+
+	PL_NOP	$6A06,2
+
+	; *** decrunch relocated, and patch after decrunch
+
+	PL_P	$7FAE,decrunch_exp
+	
+	; code to be relocated in 73xxx
+	PL_P	$833c,jump_2366
+	
+	; rest
+	PL_P	$C6,WaitBlitD0
+	PL_P	$CC,WaitBlitD1
+	PL_P	$D2,WaitBlitD7
+	PL_PS	$6F26,PatchBlitD7A5
+	PL_PS	$6F34,PatchBlitD7A5
+	PL_PS	$6F42,PatchBlitD7A5
+	PL_PS	$6F50,PatchBlitD7A5
+	PL_PS	$6F64,PatchBlitD7A5
+
+	PL_PS	$71E8,PatchBlitD7A6
+	PL_PS	$71F6,PatchBlitD7A6
+	PL_PS	$7204,PatchBlitD7A6
+	PL_PS	$7212,PatchBlitD7A6
+	PL_PS	$7220,PatchBlitD7A6
+
+	PL_PS	$74AC,PatchBlitD7A6
+	PL_PS	$74BA,PatchBlitD7A6
+	PL_PS	$74C8,PatchBlitD7A6
+	PL_PS	$74D6,PatchBlitD7A6
+	PL_PS	$74E4,PatchBlitD7A6
+	PL_END
+	
+
 pl_boot
 	PL_START
 	PL_P	$43F2C,_robread
 	PL_P	$43EC8,PatchProg1
 
+	PL_PS	$8614,vbl_hook
 	PL_PA	$7FFC,PatchProg2
+	
+	PL_PSS	$092a8,soundtracker_loop,2
+	PL_PSS	$092bc,soundtracker_loop,2
 	PL_END
 	
 FlushNJump:
 	bsr	PatchBlit
 	
 	JMP	$73668
+	
+soundtracker_loop
+	move.w  d0,-(a7)
+	move.w	#4,d0   ; make it 7 if still issues
+.bd_loop1
+	move.w  d0,-(a7)
+    move.b	$dff006,d0	; VPOS
+.bd_loop2
+	cmp.b	$dff006,d0
+	beq.s	.bd_loop2
+	move.w	(a7)+,d0
+	dbf	d0,.bd_loop1
+	move.w	(a7)+,d0
+	rts 
 
+vbl_hook
+    addq.w #$01,$00008690
+	move.b	$BFEC01,d0
+	not.b	d0
+	ror.b	#1,d0
+	cmp.b	_keyexit(pc),d0
+	beq	_quit
+	rts
+	
 PatchBlit:
 	MOVEM.L	D0-A6,-(a7)
 
@@ -129,7 +312,7 @@ pl_blit:
 	PL_START
 
 	PL_PS	$7D14,Patch24Bit
-	PL_PS	$6A10,KbInt1
+	PL_PS	$6A10,KbInt
 	PL_PS	$2380,PatchProtect
 
 	PL_L	$7366A,$7FF00		; changes stack location
@@ -271,6 +454,41 @@ pl_protect
 	PL_END
 
 
+ReadSectorsExp:
+	cmp.b	#1,D3
+	beq	WriteSectors
+	cmp.b	#2,D3
+	beq	FormatSectors
+
+	moveq	#2,d0		; disk #3
+	bsr	_robread
+.exit
+	moveq	#0,D0
+	rts
+
+WriteSectors:
+	cmp.b	#$B,D1
+	bne	WrongSave
+	cmp.b	#$1,D2
+	bne	WrongSave
+
+	bsr	WriteSaveData
+	moveq	#0,D0
+	rts
+
+FormatSectors:
+	moveq	#0,d0
+	rts
+
+WrongSave
+	pea	.ErrTxt(pc)
+	pea	(TDREASON_FAILMSG).w
+	move.l	_resload(pc),a0
+	jmp	resload_Abort(a0)
+.ErrTxt
+	dc.b	"Corrupt savegame",0
+	even
+	
 ReadSaveDataHD:
 	lea	savename(pc),A0
 	lea	savebuff(pc),A1
@@ -334,7 +552,7 @@ Patch24Bit:
 	move.l	(a7)+,D0
 	rts
 
-KbInt1:
+KbInt:
 	move.l	D0,-(sp)
 	ror.b	#1,D0
 	not.b	D0
@@ -360,18 +578,22 @@ PatchProg1:
 	move.l	(A0)+,(A1)+
 	dbf	D7,.loop
 
+	
 	movem.l	d0-d1/a0-a2,-(a7)
 	sub.l	a1,a1
-	lea		pl_prog1(pc),a0
+	lea		pl_main(pc),a0
 	move.l	_resload(pc),a2
 	jsr		resload_Patch(a2)
 	movem.l	(a7)+,d0-d1/a0-a2
 	jmp	(A2)
 	
-pl_prog1
+pl_main
 	PL_START
 	PL_P	$251A,ReadSectors2
-	PL_P	$7FFC,FlushNJump	
+	PL_P	$7FFC,FlushNJump
+	; "fix" trashed bottom of display in menu, lame but
+	; works by hiding the 2 last lines
+	PL_W	$3028,$28C1	
 	PL_END
 	
 ReadSectors2:
@@ -530,6 +752,10 @@ save_changed:
 
 _resload
 	dc.l	0
+_tag		dc.l	WHDLTAG_CUSTOM3_GET
+expansion	dc.l	0
+
+		dc.l	0	
 savename:
 	dc.b	"spcrus.sav",0
 	even

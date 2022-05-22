@@ -80,7 +80,7 @@ slv_config:
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.3"
+	dc.b	"1.4"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -97,7 +97,7 @@ _name		dc.b	"Mortal Kombat 2"
 		ENDC
 		dc.b	0
 _copy		dc.b	"1994 Acclaim",0
-_info		dc.b	"Installed by Codetapper/Action!",10
+_info		dc.b	"Installed by Codetapper/Action! & JOTD",10
 		dc.b	"Version "
 		DECL_VERSION
 		dc.b	-1,"Greetings to Mr Larmer, Mick, Jean-François Fabre,"
@@ -233,6 +233,7 @@ _OrigMain	movem.l	d0-d1/a0-a2,-(sp)
 
 		move.w	#0,d0			;Attn flags
 		move.w	d0,d1
+		; A0-A3 contains memory blocks
 		jmp	$4200.w
 
 _PL_OrigMain	PL_START
@@ -511,7 +512,61 @@ _Keyboard	cmp.b	_keyexit(pc),d0
 
 ;======================================================================
 
-_Decrunch	movem.l	d0-d7/a0-a6,-(sp)
+SHIFT_OFFSET = -$80
+UNPACKED_LEN = $8C00
+WRONG_ADDRESS = $77400
+
+_Decrunch
+	movem.l	d1-d7/a0-a6,-(sp)
+	
+	IFD		HALF_MEG_CHIP
+	; game loads data at $77400 but decrunched length
+	; makes the end at exactly $80000, which makes the
+	; decruncher trigger an access fault just after $80000 if
+	; chipmem is just 512k (no impact for 1MB)
+	; (decruncher bug reads 3 or 4 bytes too much after the limit)
+	; so we move the data and move it back afterwards
+	cmp.l	#WRONG_ADDRESS,a0
+	bne	.no_access_fault
+
+	; let's move the unpacked data just before
+	move.l	a0,a2
+	move.l	4(a2),d0	; unpacked length
+	cmp.l	#UNPACKED_LEN,d0
+	bne	.no_access_fault
+	move.l	8(a2),d0	; packed length
+
+	
+	lea	(SHIFT_OFFSET,a2),a3	; there's some room there
+	lsr.w	#2,d0
+	add.l	#10,d0
+.copy
+	move.l	(a2)+,(a3)+
+	dbf		d0,.copy
+	lea	(SHIFT_OFFSET,a0),a0	; source
+	; same dest
+	move.l	a0,a1
+	move.l	_resload(pc),a2
+	jsr		resload_Decrunch(a2)
+	; now move memory back
+	lea		WRONG_ADDRESS+UNPACKED_LEN,a1	; final dest (end)
+	lea		(SHIFT_OFFSET,a1),a0			; source (end)
+	move.w	#UNPACKED_LEN/4-1,d1
+.copy2
+	move.l	-(a0),-(a1)
+	dbf		d1,.copy2
+	bra.b	.out
+.no_access_fault
+	ENDC	
+	
+	move.l	_resload(pc),a2
+	jsr		resload_Decrunch(a2)
+
+.out
+	movem.l	(sp)+,d1-d7/a0-a6
+	rts
+	
+	movem.l	d0-d7/a0-a6,-(sp)
 		lea	(-$180,sp),sp
 		movea.l	sp,a2
 		bsr.w	_ReadLong

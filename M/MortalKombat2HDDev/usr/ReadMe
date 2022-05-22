@@ -69,6 +69,9 @@ Codetapper/Action (01-Apr-2001)
 
 History:
 
+Version 1.4 (21.05.2022) done by JOTD:
+- Fixed access fault in 512k chip slave (unpacker issue)
+
 Version 1.3 (29.04.2022) done by JOTD:
 - Fixed crash in NTSC mode (issue #0005618)
 
@@ -103,3 +106,6 @@ Version 1.1 (2012-08-23) by Wepl
 
            Visit the Action website for more of our productions:
                            http://codetapper.com
+
+Note: if you skip title screen, music isn't going to play in options menu (non-issue #0005638)
+

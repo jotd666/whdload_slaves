@@ -39,11 +39,12 @@ So if you saved a game, don't quit by a reset or you lose your changes.
 On the contrary, if you accidentally format your games, just quit be a reset and
 the games won't be erased.
 
- version 3.0 (xx.0x.2022) done by JOTD:
- - slave rewritten
- - added quitkey for 68000 CPU (issue #0004975)
+ version 3.0 (22.05.2022) done by JOTD:
+ - slave rewritten, same slave for original & expansion
+   (CUSTOM3=1 boots on disk.3 which is expansion disk)
+ - added quitkey for 68000 CPU in the menu (issue #0004975)
+ - fixed sound replay issues
  - added hints file
- - blitterwaits fixed
 
  version 2.2 (19.03.2003)
  - ooops, sorry, forgot an 'ILLEGAL' breakpoint in slave release

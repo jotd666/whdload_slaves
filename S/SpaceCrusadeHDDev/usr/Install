@@ -4,8 +4,8 @@
 (set #sub-dir "")                  ;name of the sub-directory if any
 (set #readme-file "ReadMe")		;name of readme file
 (set #man-file "Manual")		;name of manual file
-(set #hint-file "Dashboard")		;name of hint file
-(set #hint-file2 "Hints")		;name of hint file
+(set #dash-file "Dashboard")		;name of hint file
+(set #hint-file "Hints")		;name of hint file
 (set #sol-file "Solution")		;name of solution file
 (set #highs-file "highs")		;name of high scores file
 (set #prefix "SpaceCrusade")                       ;name of slave, directory
@@ -324,20 +324,12 @@
 ))
 
 
-(if (bitand #opts 1)
 (copyfiles
   (help @copyfiles-help)
   (source ("%s%s.Slave" #prefix ""))
   (dest #dest)
 )
-)
-(if (bitand #opts 2)
-(copyfiles
-  (help @copyfiles-help)
-  (source ("%s%s.Slave" #prefix "ExpDisk"))
-  (dest #dest)
-)
-)
+
 
 (set #isnewicon 0)
 
@@ -389,9 +381,9 @@
 (P_CopyFile)
 (set #copy-file #man-file)
 (P_CopyFile)
-(set #copy-file #hint-file)
+(set #copy-file #dash-file)
 (P_CopyFile)
-(set #copy-file #hint2-file)
+(set #copy-file #hint-file)
 (P_CopyFile)
 (set #copy-file #sol-file)
 (P_CopyFile)
