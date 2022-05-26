@@ -1,0 +1,44 @@
+Short : HD-Installer for Guardian CD32
+Type : game/patch
+Author : Jean-François Fabre (JOTD)
+
+Install-Script & HD-loader © 2000-2001 Jean-François Fabre
+
+Guardian CD32 is © 1994 Acid Software
+
+Features:
+
+- Uses WHDLoad/OSEmu for a clean execution
+- Install script
+- No need for joypad, now emulated by function keys
+- New OSEmu version, joypad buttons emulated
+- CD access removed
+- Quit key (numerical '*'). Original exit is still valid
+- Save/load hiscore (in the Guardian.nvd directory)
+- Nice icon by Exoticons
+- Docfile included
+
+To do:
+
+- 2 player mode
+
+----
+
+OSEmu is an AmigaOS emulation module originally written by Harry and
+maintained/improved by Mr Larmer, Bert Jahn and me.
+
+First, OSEmu was written to run A500 games, but now it can run CD32 games,
+and can emulate the joypad with function keys:
+
+F5: blue
+F6: green
+F7: yellow
+F8: play/pause
+F9: left ear
+F10:right ear
+
+Of course joystick fire button is equal to red CD32 joypad button, and if you've
+got a 2 differentiated button joystick, the second button matches the blue CD32
+joypad button.
+
+CD32 joypad is now fully emulated (port 1)

@@ -4,20 +4,19 @@
 (set #sub-dir "data")                  ;name of the sub-directory if any
 (set #readme-file "ReadMe")		;name of readme file
 (set #man-file "Manual")		;name of manual file
-(set #hint-file "Codes")		;name of hint file
+(set #hint-file "Hints")		;name of hint file
 (set #sol-file "Solution")		;name of solution file
-(set #code-file1 "103.SCR")		;name of high scores file
-(set #code-file2 "400.SCR")		;name of high scores file
-(set #midi-file1 "res_mt32.cfg")		;name of high scores file
-(set #midi-file2 "mt32.drv")		;name of high scores file
-(set #prefix "SpaceQuestEnhanced")                       ;name of slave, directory
-(set #exename "prog")
+(set #highs-file "highs")		;name of high scores file
+(set #exename "sw")		        ;name of executable program
+(set #last-file "sp11")          ;last file the imager should create
+(set #prefix @app-name)                       ;name of slave, directory
+
 
 ;----------------------------
 ; copy file including icon if exist
 ; #copy-file - name of file to copy
 
-(procedure P_CopyFile #copy-file
+(procedure P_CopyFile
   (if
     (exists #copy-file)
     (
@@ -49,7 +48,7 @@
 ; checks if given program is installed, if not abort install
 ; #program - to check
 
-(procedure P_ChkRun #program
+(procedure P_ChkRun
   (if
     (= 0 (run ("cd SYS:\nWhich %s" #program)))
     ("")
@@ -78,73 +77,7 @@
 
 (procedure P_Install
 
-
-(set #AD_disk "SQ1_Startup")
-(P_disk)
-      (copyfiles
-        (help @copyfiles-help)
-        (source ("%s:" #AD_disk))
-        (dest #dest)
-        (pattern "~(.#?|#?.info)")
-      )
-(set #AD_disk "SQ1#1")
-(P_disk)
-      (copyfiles
-        (help @copyfiles-help)
-        (source ("%s:" #AD_disk))
-        (dest #dest)
-        (pattern "~(.#?|Install|#?.info)")
-      )
-(set #AD_disk "SQ1#2")
-(P_disk)
-      (copyfiles
-        (help @copyfiles-help)
-        (source ("%s:" #AD_disk))
-        (dest #dest)
-        (pattern "~(c|l|s|t|.#?|#?.info)")
-      )
-(set #AD_disk "SQ1#3")
-(P_disk)
-      (copyfiles
-        (help @copyfiles-help)
-        (source ("%s:" #AD_disk))
-        (dest #dest)
-        (pattern "~(c|l|s|t|.#?|#?.info)")
-      )
-(set #AD_disk "SQ1#4")
-(P_disk)
-      (copyfiles
-        (help @copyfiles-help)
-        (source ("%s:" #AD_disk))
-        (dest #dest)
-        (pattern "~(c|l|s|t|.#?|#?.info)")
-      )
-(set #AD_disk "SQ1#5")
-(P_disk)
-      (copyfiles
-        (help @copyfiles-help)
-        (source ("%s:" #AD_disk))
-        (dest #dest)
-        (pattern "~(c|l|s|t|.#?|#?.info)")
-      )
-
-(set #sizethreshold 130000)
-
-(set #exesize (getsize (tackon #dest #exename)))
-
-(if (< #exesize #sizethreshold )
-(
-(working)
-
-(run ("cd \"%s\"\nxfdDecrunch %s" #dest #exename))
-
-)
-)
-)
-;****************************
-
-
-  (if
+(if
     (= 0 (run ("cd SYS:\nWhich XFDDecrunch")))
     ("")
     (abort
@@ -156,6 +89,89 @@
       )
     )
    )
+   
+(set #program "RawDIC")
+(P_ChkRun)
+
+(set #AD_disk "Guardian")
+(P_disk)
+      (copyfiles
+        (help @copyfiles-help)
+        (source ("%s:" #AD_disk))
+        (dest #dest)
+        (pattern "~(c|l|s|.#?|#?.info)")
+      )
+(working)
+
+(if
+(<> 0 (run ("cd \"%s\"\nxfdDecrunch %s" #dest #exename)))
+(abort ("XFDDecrunch failed to decompress file \"%s\"" #exename))
+)
+
+; rip MFM data disk
+
+(if
+  (= @user-level 2)
+  (
+    (set #CI_drive
+      (askchoice
+	(prompt "Select source drive for diskimages")
+	(default 0)
+	(choices "DF0:" "DF1:" "DF2:" "DF3:")
+	(help @askchoice-help)
+      )
+    )
+    (select #CI_drive
+      (set #CI_drive "DF0:")
+      (set #CI_drive "DF1:")
+      (set #CI_drive "DF2:")
+      (set #CI_drive "DF3:")
+    )
+    (set #ignore " IGNOREERRORS")
+  )
+  (set #CI_drive "DF0:")
+  (set #ignore "")
+)
+
+(copyfiles
+  (help @copyfiles-help)
+  (source ("%s.islave" #prefix))
+  (dest #dest)
+)
+
+(working)
+(run ("CD \"%s\"\nRawDIC SLAVE=%s.islave RETRIES 10 SOURCE=%s%s\nDelete %s.islave" #dest #prefix #CI_drive #ignore #prefix))
+
+(if
+  (exists (tackon #dest #last-file))
+  ("")
+  (abort "Diskimaging was not successful!\nRawDIC was unable to create all needed files!")
+)
+
+
+)
+
+(procedure P_CDInstall
+
+
+(set #AD_disk "Guardian")
+  (askdisk
+    (dest #AD_disk)
+    (prompt ("\nInsert \"%s\" CD in the CD-ROM drive!" #AD_disk))
+    (help @askdisk-help)
+  )
+
+      (copyfiles
+        (help @copyfiles-help)
+        (source ("%s:" #AD_disk))
+        (dest #dest)
+        (pattern "~(c|l|s|.#?|#?.info)")
+      )
+)
+
+
+
+;****************************
 
 (if
   (< @installer-version (+ (* 44 65536) 10))
@@ -188,9 +204,23 @@
   )
 )
 
-(P_ChkRun "WHDLoad")
+(set #program "WHDLoad")
+(P_ChkRun)
 
-(set #suffix "")   ; replace by suffix if dic slave is peculiar
+  (set #version
+    (askchoice
+      (prompt ("Which version of %s do you like to install?" @app-name)
+        (default 0)
+        (choices  "Floppy disk version" "CD32 version")
+        (help @askchoice-help)
+      )
+    )
+   )
+(select #version
+(set #suffix "")
+(set #suffix "CD32")
+)
+
 (if
   (getenv "WHDLInstPath")
   (set @default-dest (getenv "WHDLInstPath"))
@@ -275,14 +305,14 @@
     (makedir #icon-dir
       (help @makedir-help)
     )
-    (if #icon-nor ((set #icon-suf "inf")       (set #icon-name #icon-nor)  (P_Icon)))
-    (if #icon-rom ((set #icon-suf "romicon")   (set #icon-name #icon-rom)  (P_Icon)))
-    (if #icon-new ((set #icon-suf "newicon")   (set #icon-name #icon-new)  (P_Icon)))
-    (if #icon-col ((set #icon-suf "coloricon") (set #icon-name #icon-col)  (P_Icon)))
-    (if #icon-glo ((set #icon-suf "glowicon")  (set #icon-name #icon-glo)  (P_Icon)))
-    (if #icon-exo ((set #icon-suf "exoticon")  (set #icon-name #icon-exo)  (P_Icon)))
-    (if #icon-nex ((set #icon-suf "newexot")   (set #icon-name #icon-nex)  (P_Icon)))
-    (if #icon-gex ((set #icon-suf "glowexot")  (set #icon-name #icon-gex)  (P_Icon)))
+    (if #icon-nor ((set #icon-suf "inf")      (set #icon-name "Normal")          (P_Icon)))
+    (if #icon-rom ((set #icon-suf "romicon")  (set #icon-name "RomIcon")         (P_Icon)))
+    (if #icon-new ((set #icon-suf "newicon")  (set #icon-name "NewIcon")         (P_Icon)))
+    (if #icon-col ((set #icon-suf "coloricon")(set #icon-name "OS3.5 Icon")      (P_Icon)))
+    (if #icon-glo ((set #icon-suf "glowicon") (set #icon-name "Glow Icon")       (P_Icon)))
+    (if #icon-exo ((set #icon-suf "exoticon") (set #icon-name "Exoticon")        (P_Icon)))
+    (if #icon-nex ((set #icon-suf "newexot")  (set #icon-name "Exotic NewIcon")  (P_Icon)))
+    (if #icon-gex ((set #icon-suf "glowexot") (set #icon-name "Exotic GlowIcon") (P_Icon)))
 
     (if (= #newstuff 1)
        (openwbobject #icon-dir)
@@ -351,10 +381,14 @@
   (setstack 10240)
   (noposition)
 )
-(P_CopyFile #readme-file)
-(P_CopyFile #man-file)
-(P_CopyFile #hint-file)
-(P_CopyFile #sol-file)
+(set #copy-file #readme-file)
+(P_CopyFile)
+(set #copy-file #man-file)
+(P_CopyFile)
+(set #copy-file #hint-file)
+(P_CopyFile)
+(set #copy-file #sol-file)
+(P_CopyFile)
 (if
   (= #sub-dir "")
   ("")
@@ -365,26 +399,12 @@
     )
   )
 )
-
-    (makedir (tackon #dest "save")
-      (help @makedir-help)
-    )
-    (makedir (tackon #dest "devs")
-      (help @makedir-help)
-    )
-
-(P_CopyFile #code-file1)
-(P_CopyFile #code-file2)
-(P_CopyFile #midi-file1)
-(P_CopyFile #midi-file2)
-      (copyfiles
-        (help @copyfiles-help)
-        (source "serial.device")
-        (dest (tackon #dest "devs"))
-        
-      )
-
+(set #copy-file #highs-file)
+(P_CopyFile)
+(select #version
 (P_Install)
+(P_CDInstall)
+)
 (if (= #newstuff 1)
   (openwbobject #dest-org)
 )

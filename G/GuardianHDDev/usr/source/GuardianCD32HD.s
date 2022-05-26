@@ -35,8 +35,8 @@
 CHIPMEMSIZE	= $200000
 FASTMEMSIZE	= $0
     ELSE
-CHIPMEMSIZE	= $100000
-FASTMEMSIZE	= $100000
+CHIPMEMSIZE	= $180000
+FASTMEMSIZE	= $80000
     ENDC
 NUMDRIVES	= 1
 WPDRIVES	= %0000
@@ -104,9 +104,10 @@ slv_info		dc.b	"adapted by JOTD",10,10
 		DECL_VERSION
 	dc.b	0
 slv_config:
-;    dc.b    "C1:B:skip introduction;"
-;    dc.b    "C2:L:language:english,french,italian;"
- ;   dc.b    "C3:B:disable speed regulation;"
+    dc.b    "C1:X:trainer infinite lives:0;"
+    dc.b    "C1:X:trainer infinite energy:1;"
+    dc.b    "C1:X:trainer infinite smart bombs:2;"
+    dc.b    "C1:X:trainer infinite missiles:3;"
 	dc.b	0
 
 slv_CurrentDir:
@@ -184,7 +185,7 @@ _quit		pea	TDREASON_OK
 patch_main
 	move.l	d7,a1
 	add.l	#4,a1
-		blitz
+
 	lea	pl_main(pc),a0
 	move.l	_resload(pc),a2
 	jsr	resload_Patch(a2)
@@ -195,6 +196,21 @@ pl_main
 	PL_START
 	PL_NOP	$0a836,2
 	PL_P	$044ba,read_joy
+	
+	PL_IFC1X	0
+	PL_NOP		$0d7f6,6
+	PL_ENDIF
+	PL_IFC1X	1
+	PL_NOP		$03d62,8
+	PL_NOP		$03d6c,8
+	PL_NOP		$03dae,8
+	PL_ENDIF
+	PL_IFC1X	2
+	PL_NOP		$06ef4,6
+	PL_ENDIF
+	PL_IFC1X	3
+	PL_NOP		$070b2,6
+	PL_ENDIF
 	PL_END
 
 read_joy:
