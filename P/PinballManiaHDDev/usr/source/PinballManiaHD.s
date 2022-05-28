@@ -149,9 +149,13 @@ _cb_dosLoadSeg:
 	bne.b	.tables		; corrupt overlay exe shit
 	; menu
 	movem.l	d0-d1/a0-a2,-(a7)
-	lea	pl_menu(pc),a0
 	lea	(4,a3),a1
 	
+	lea	($0447E,a1),a3
+	lea	menu_rawkey_address(pc),a0
+	move.l	a3,(a0)		; store address
+	
+	lea	pl_menu(pc),a0
 	move.l	_resload(pc),a2
 	jsr	resload_Patch(a2)
 	movem.l	(a7)+,d0-d1/a0-a2
@@ -180,7 +184,10 @@ _cb_dosLoadSeg:
 
 pl_menu
 	PL_START
+	PL_PSS	$00498,vbl_hook_intro,2
 	PL_L	$000fe,$70004E71	; VBR
+	PL_NOP	$014ac,6
+	PL_PS	$014c4,keyboard_read
 	PL_END
 	
 pl_tables
@@ -189,7 +196,16 @@ pl_tables
 	PL_PS	$118,set_memory_type
 	PL_END
 
-
+keyboard_read
+	; clear rawkey code now, not before kb interrupt has been tested
+	move.l	a0,-(a7)
+	move.l	menu_rawkey_address(pc),a0
+	clr.b	(a0)
+	move.l	(a7)+,a0
+	MOVE.B	(3072,A0),D1		;014c4: 12280c00
+	ROR.B	#1,D1			;014c8: e219
+	rts
+	
 ; < D0: joypad bits
 ; < D1: previous joypad bits
 ; < D2: bit to test
@@ -392,7 +408,7 @@ _pl_table1:
 _pl_table2:
 	PL_START
 	PL_PSS	$c76,keyboard_hook,2
-	PL_PS	$bf2,vbl_hook
+	PL_PS	$c0a,vbl_hook
 	PL_NEXT	_pl_table_common
 
 _pl_table3:
@@ -405,14 +421,14 @@ _pl_table3:
 	PL_PS	$27A2,_fix_af_3
 	
 	PL_PSS	$c8a,keyboard_hook,2
-	PL_PS	$c06,vbl_hook
+	PL_PS	$c1e,vbl_hook
 
 	PL_NEXT	_pl_table_common
 
 _pl_table4:
 	PL_START
 	PL_PSS	$c76,keyboard_hook,2
-	PL_PS	$bf2,vbl_hook
+	PL_PS	$c0a,vbl_hook
 	PL_NEXT	_pl_table_common
 	
 _pl_table_common
@@ -543,6 +559,53 @@ _bootdos
 		pea	TDREASON_OK
 		jmp	(resload_Abort,a2)
 
+TEST_BUTTON:MACRO
+    btst    #JPB_BTN_\1,d1
+    beq.b   .nochange_\1
+    move.b  #\2,d3
+    btst    #JPB_BTN_\1,d0
+    bne.b   .pressed_\1
+    clr.b	d3   ; released
+.pressed_\1
+    move.b  d3,(a1) ; store keycode
+.nochange_\1
+    ENDM
+	
+vbl_hook_intro
+	MOVE.W	(30,A5),D0		;00498: 302d001e
+	AND.W	(28,A5),D0		;0049c: c06d001c
+	btst	#5,d0
+	beq	.no_vbl
+	movem.l	D0-D3/A0-A1,-(a7)
+    lea prev_buttons_state(pc),a0
+    move.l menu_rawkey_address(pc),a1
+    move.l  (a0),d1     ; get previous state
+	moveq	#1,d0
+	move.l	D1,-(a7)
+	bsr	_read_joystick
+	move.l	(a7)+,D1
+    cmp.l   d0,d1
+    beq   .nochange   ; cheap-o test just in case no input has changed
+    move.l  d0,(a0)     ; save previous state for next time
+    ; now D0 is current joypad state
+    ;     D1 is previous joypad state
+    ; xor to d1 to get what has changed quickly
+    eor.l   d0,d1
+    ; d1 bears changed bits (buttons pressed/released)
+    TEST_BUTTON RED,$50
+    TEST_BUTTON BLU,$51
+    TEST_BUTTON GRN,$52
+    TEST_BUTTON YEL,$53
+    TEST_BUTTON REVERSE,$54
+    TEST_BUTTON FORWARD,$55
+    TEST_BUTTON PLAY,$45     ; ESC
+.nochange    
+
+	movem.l	(a7)+,D0-D3/A0-A1
+.no_vbl
+	rts
+	
+	
 
 _patch_mania:
 	move.l	d7,a1
@@ -629,13 +692,16 @@ control_by_joy_directions
 	dc.l	WHDLTAG_CUSTOM3_GET
 start_table	dc.l	0
 		dc.l	0
-
+menu_rawkey_address
+	dc.l	0
 table_index
 	dc.w	0
 	; the queue can hold 30 events, more than enough
 event_queue:
 	ds.b	32
 event_queue_pointer:
+	dc.l	0
+prev_buttons_state
 	dc.l	0
 	
 ; < a0: program name

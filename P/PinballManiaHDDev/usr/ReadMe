@@ -13,19 +13,19 @@
  This install requires WHDLoad to be in the path. It can be found in the
  WHDLoad package.
 
- The installed program requires 2.0 MB ChipMem and 1.3 MB OtherMem.
+ The installed program requires 1.5 MB ChipMem and 1.3 MB OtherMem.
  It can be quit by pressing F10 (key can be changed with Tooltype "QuitKey=").
 
- The game requires an installed A1200 Kickstart 3.1 image.
+ The game requires an installed A1200 or A4000 Kickstart 3.1 image.
  The kickstart image must be located in the directory "Devs:Kickstarts" and
- must be named "kick40068.A1200". The image can be extracted from a A1200 with
- tools like 'GrabKick' or similar which can be found on aminet.
+ must be named "kick40068.A1200", or kick40068.A4000. 
+ The image can be extracted from a A1200 (resp A4000) with tools like 'GrabKick'
+ or similar which can be found on aminet.
  If the image is of wrong version or altered in any way WHDLoad will quit with
  an appropriate requester.
- Additionally the file "kick40068.A1200.RTB" must be installed in the same
- directory as the kickstart image. It can be found in the archive 
- "util/boot/skick345.lha" on aminet.
-
+ Additionally the file "kick40068.A1200.RTB" or  "kick40068.A4000.RTB" must
+ be installed in the same directory as the kickstart image.
+ It can be found in the archive "util/boot/skick346.lha" on aminet.
 
  If you have problems with this installation please try and get a newer
  version of this package from the WHDLoad WWW-Page. If that doesn't help try
@@ -39,30 +39,92 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 1.4 (30.05.10)
+ version 2.0 (28.05.2022) done by JOTD:
+ - running from fast memory to avoid slowdowns with accelerator boards (issue #0000465)
+ - full joypad control (issue #0004686)
+ 
+ version 1.4 (30.05.2010)
  - Tarantula access fault workaround (being sitting on my harddrive for a long while, untested)
  - no longer requires separate A1200/A4000 slaves
 
- version 1.3-B (08.10.03)
+ version 1.3-B (08.10.2003)
  - fixed keyboard problem appeared in v1.3 (which is unusable BTW)
 
- version 1.3 (18.10.03)
+ version 1.3 (18.10.2003)
  - support for A4000 ROM
  - adapted for WHDLoad v16
 
- version 1.2 (21.04.03)
+ version 1.2 (21.04.2003)
  - fixed another access fault in "Kick Off" table
  - reassembled with new kick31/kickfs
  - reduced fastmem usage
 
- version 1.1 (10.01.03)
+ version 1.1 (10.01.2003)
  - fixed all VBR accesses (sorry, I thought I had removed them)
  - fixed many access faults in "Kick Off" table
 
- version 1.0 (05.01.03) done by JOTD:
+ version 1.0 (05.01.2003) done by JOTD:
  - initial release
  - removed VBR accesses
  - highscore sorted (I was told it did not work properly)
  - save scores to HD, in game directory
  - sourcecode included
  - icons by Exoticons
+
+
+
+CD³² joypad controls: 
+
+Red           - start game                (F1)
+Down		  - launch ball               (return)
+Rev/Forward   - left/right flippers       (left/right shift)
+Up            - nudge table upwards       (space bar)
+Play		  - pause game                (p)
+Green         - quit                      (ESC)
+Yellow        - confirm quit              (Y)
+Blue          - right flipper
+Left          - left flipper
+
+menu options:
+- red: Tarantula
+- blue: Jail Break
+- yellow: Kick-off
+- green: Jackpot
+
+If CUSTOM2 is set the controls try to use only standard joystick (port 1) inputs so:
+
+Red           - start game / add a player (numerical enter)
+Down		  - launch ball               (return)
+Up            - nudge table upwards       (space bar)
+Right         - right flipper
+Left          - left flipper
+
+control keys are achieved through joystick (port 0)
+
+Joy2 button 1  - escape
+Joy2 left      - Y
+Joy2 right     - N
+
+menu options:
+- left: F1/Tarantula
+- right: F2/Jail Break
+- down: F3/Kick-off
+- up: F4/Jackpot
+- reverse: F5/options
+- forward: F6/configure keys (do not do that with joypad controls!)
+- play: esc
+
+Of course, that setting isn't practical with a joystick because you cannot use left+right at the same time, but
+the person who asked for this feature wants to create an arcade cabinet so it's not a problem activating left+right
+
+to enter hiscore, you need keyboard. If you don't have a keyboard, you can
+still skip this part by entering "Y" (yellow), "P" (play) or "space" (up). It won't
+be your initials, okay, just change your name to Yander Price and it will be fine.
+
+(with CUSTOM2 set, use the joystick in port 0 left/right to enter Y or N)
+
+Finally after almost 20 years this game uses fast memory. This was extremely easy to fix
+because pinball code is well-written, only the overlay loader is broken and forces chip
+memory even on program code.
+
+The new release of the slave allows game to run properly on accelerator boards.

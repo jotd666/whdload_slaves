@@ -38,6 +38,11 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 1.5 (2022) done by JOTD
+ - added BUTTONWAIT to see intro pic
+ - added joypad controls
+ - skipped code protection
+ 
  version 1.4 (22.12.2007) done by JOTD
  - reassembled with latest kickemu (now quitkey works on 68000 too)
  - source code cleanup
@@ -66,3 +71,12 @@
  - Codewheel protection removed (thanks LockPick)
  - Doc files included
  - Nice icons by Frank and Exoticon
+
+CD32 joypad controls:
+
+- red: fire
+- blue/2nd button: select weapon
+- yellow: target select
+- green: flare
+- reverse: less thrust
+- forward: more thrust

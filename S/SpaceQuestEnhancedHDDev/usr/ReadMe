@@ -40,6 +40,10 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
  
+ version 2.2 (26.05.2022) done by JOTD:
+ - removed copy protection using UrBi script files
+   (check at the bottom of the readme to see how to upgrade)
+ 
  version 2.1 (08.05.2021) done by JOTD:
  - fixed installation issue that prevented MT32 to work (issue #0005160)
  - provided 512k chip slave. Sound is really degraded/bad with that one. If you
@@ -86,3 +90,7 @@
  there was a file "res_mt32cfg" in the install pack that needs to be copied and named "res_mt32.cfg".
  (now the name is fixed in the install BTW). That or re-install from scratch.
  
+ COPY PROTECTION:
+ 
+ To benefit from copy-protection (hacked scripts by UrBi) either reinstall the game or
+ just copy the files 103.SCR and 400.SCR in "data"
