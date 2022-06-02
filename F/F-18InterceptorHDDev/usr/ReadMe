@@ -38,6 +38,10 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+- All text disappears extremely quickly (no time to read mission description for example).
+- In the demo mode when the plane is viewed from the outside on the carrier it pops in and out of existence (doesn't seem to happen very often in normal mode)
+- 3rd person view the heading/speed/height indicators have graphical glitches (like they're being drawn to the active display or maybe missing blitter waits elsewhere) 
+
  version 1.5 (2022) done by JOTD
  - added BUTTONWAIT to see intro pic
  - added joypad controls

@@ -14,7 +14,6 @@
 ;---------------------------------------------------------------------------*
 
 	INCDIR	Include:
-	INCDIR	osemu:
 	INCLUDE	whdload.i
 	INCLUDE	whdmacros.i
 	INCLUDE	lvo/dos.i
@@ -66,28 +65,36 @@ DOSASSIGN
 BLACKSCREEN
 BOOTDOS
 CACHE
+IOCACHE = 10000
 
+;CHIP_ONLY
 ; amount of memory available for the system
+	IFD	CHIP_ONLY
+CHIPMEMSIZE	= $100000
+FASTMEMSIZE	= $0000
+	ELSE
 CHIPMEMSIZE	= $80000
 FASTMEMSIZE	= $50000
-;CHIPMEMSIZE	= $100000
-;FASTMEMSIZE	= $0000
-
+	ENDC
+	
 ; protection removal: offset  1ce70 : 13fc00ff -> 13fc0001
 ; 40A54 end of line
 
 ;============================================================================
 
 
-slv_Version	= 16
+slv_Version	= 17
 slv_Flags	= WHDLF_NoError|WHDLF_Examine
 slv_keyexit	= $5D	; num '*'
 
 
 ;============================================================================
 
-	INCLUDE	kick13.s
-
+	INCLUDE	whdload/kick13.s
+IGNORE_JOY_DIRECTIONS
+IGNORE_JOY_PORT0
+	include	ReadJoyPad.s
+	
 ;============================================================================
 
 	IFD BARFLY
@@ -95,19 +102,28 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.4"
+	dc.b	"2.0"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
+	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
 	ENDC
 	ENDM
 
 	dc.b	"$","VER: slave "
 	DECL_VERSION
-	dc.b	$A,$D,0
+	dc.b	$A,0
 
 slv_CurrentDir		dc.b	"data",0
-slv_name		dc.b	"F/A-18 Interceptor",0
+slv_name		dc.b	"F/A-18 Interceptor"
+			IFD		CHIP_ONLY
+			dc.B	" (debug/chip mode)"
+			ENDC
+			
+			dc.b	0
 slv_copy		dc.b	"1988 Intellisoft/Electronic Arts",0
 slv_info		dc.b	"Install & fix by JOTD",10
 		dc.b	"Version "
@@ -118,6 +134,12 @@ _assign1:
 	dc.b	"DF0",0
 _assign2:
 	dc.b	"F18",0
+
+slv_config:
+	dc.b	"BW;"
+    dc.b    "C3:B:disable speed regulation;"
+
+	dc.b	0
 
 _program:
 	dc.b	"f-18 interceptor",0
@@ -138,6 +160,11 @@ _bootdos
 		lea	(_tag,pc),a0
 		jsr	(resload_Control,a2)
 		
+	; detect joypads, with interrupts disabled
+	move.l	(4),a6
+	jsr	_LVODisable(a6)
+	bsr	_detect_controller_types
+	jsr	_LVOEnable(a6)
 
 	; stores most significant quadbit for later
 
@@ -146,6 +173,12 @@ _bootdos
 	lea	_msq(pc),A0
 	move.b	D0,(A0)
 
+	;open gfxlib
+		lea	(_gfxname,pc),a1
+		move.l	(4),a6
+		jsr	(_LVOOldOpenLibrary,a6)
+		lea	GraphicsBase(pc),a0
+		move.l	d0,(a0)			;A6 = dosbase
 	;open doslib
 		lea	(_dosname,pc),a1
 		move.l	(4),a6
@@ -194,8 +227,6 @@ load_exe:
 	cmp.l	#0,A5
 	beq.b	.skip
 	movem.l	d2/d7/a4,-(a7)
-	add.l	d7,d7
-	add.l	d7,d7
 	jsr	(a5)
 	bsr	_flushcache
 	movem.l	(a7)+,d2/d7/a4
@@ -247,72 +278,172 @@ _beamdelay
 	rts
 
 _patchexe
-	movem.l	D0-A6,-(A7)
-
-	move.l	d7,d1		; seglist
+	move.l	d7,a1		; seglist
 
 	; remain compatible with unit-a crack, well spread
 
 	pea	_unita_trap0(pc)
 	move.l	(a7)+,$80.W
-
-	; section 1: cpu dependent loop
-
-	move.w	#0,d2
-	bsr	.get_section
-	add.l	#$8E2,a0
-	move.w	#$4EB9,(a0)+
-	pea	_emulate_empty_loop(pc)
-	move.l	(a7)+,(a0)
-
-	; section 20: protection
-
-	move.w	#20,d2
-	bsr	.get_section
-	add.l	#$71C-$274,a0
-
-	move.b	#1,$73-$58(A0)		; flag telling that protection was passed
-
-	; section 8: access fault #1
-
-	move.w	#8,d2
-	bsr	.get_section
-	add.l	#$D7C-$1D8,a0
-
-	cmp.l	#$22584A51,(a0)
-	bne	_wrong_version
-
-	move.l	#$4EB80100,(A0)
+	
 	patch	$100,_fix_af_1
 
+	move.l	_resload(pc),a2
+	lea		pl_main(pc),a0
+	jsr		resload_PatchSeg(a2)
+	
+	rts
+
+	
+pl_main
+	PL_START
+	; section 1: cpu dependent loop
+
+	PL_PS	$8E2,_emulate_empty_loop
+	
+	; section 20: protection
+
+	; flag telling that protection was passed
+	PL_B	$19737,1
+	PL_B	$3a964,1
+	PL_NOP	$01a78,6
+	
+	; section 8: access fault #1
+	PL_L	$fd7c,$4EB80100
+	
 	; section 9: access fault #2
 
-	move.w	#9,d2
-	bsr	.get_section
-	add.l	#$1462-$AEC,a0
+	PL_PSS	$11468,_fix_af_2,2
 
-	move.l	#$4EB80106,6(A0)
-	patch	$106,_fix_af_2
+	; sound
+	
+	PL_P	$451c8,sound_delay
+	
+	PL_PSS	$01590,keyboard_test,2
+	
+	
+	PL_IFBW
+	PL_PS	$006b4,wait_pic
+	PL_ENDIF
+	
+	PL_IFC3
+	PL_PS	$092e6,vbl_hook_no_regulation
+	PL_ELSE
+	PL_PS	$08286,speed_regulation
+	PL_PS	$092e6,vbl_hook
+	PL_ENDIF
+	PL_END
 
-	movem.l	(A7)+,D0-A6
+wait_bovp
+	; wait but maybe several times (speed regulation)
+	MOVE.L	A6,-(A7)		;48f64: 2f0e
+	MOVEA.L	8+4+4(A7),A0		;48f66: 206f0008
+	MOVEA.L	GraphicsBase(pc),A6		;48f6a: 2c790000a77a
+	JSR	(_LVOWaitBOVP,A6)	;48f70: 4eaefe6e graphics.library (off=-402)
+	MOVEA.L	(A7)+,A6		;48f74: 2c5f
+	RTS				;48f76: 4e75
+	
+speed_regulation
+    move.l d2,-(a7)
+	bsr.b	wait_bovp
+	
+    moveq.l #3,d2       ; the bigger the longer the wait
+    lea vbl_counter(pc),a0
+    move.w  (a0),d0
+	
+    sub.w   d0,d2
+    bcs.b   .nowait     ; first time called/lost sync/pause/whatever
+.wait
+    bsr.b	wait_bovp
+    dbf		d2,.wait
+.nowait
+    clr.w   (a0)
+    move.l (a7)+,d2
 	rts
 
-; < d1 seglist
-; < d2 section #
-; > a0 segment
-.get_section
-	move.l	d1,a0
-	subq	#1,d2
-	bmi.b	.exit
-.loop
-	move.l	(a0),a0
-	add.l	a0,a0
-	add.l	a0,a0
-	dbf	d2,.loop
-.exit
-	addq.l	#4,a0
-	rts
+wait_pic:
+.loop1
+	btst	#7,$BFE001
+	beq.b	.loop1
+	btst	#6,$BFE001
+	beq.b	.loop1
+.loop2
+	btst	#6,$BFE001
+	beq.b	.out
+	btst	#7,$BFE001
+	bne.b	.loop2
+.out
+	MOVE.L	A6,-(A7)		;48c60: 2f0e
+	MOVEA.L	$4,A6		;48c62: 2c790000a378
+	MOVEA.L	8(A7),A1		;48c68: 226f0008
+	JSR	(_LVOCloseLibrary,A6)	;48c6c: 4eaefe62 exec.library (off=-414)
+	MOVEA.L	(A7)+,A6		;48c70: 2c5f
 
+	rts
+	
+vbl_hook
+	; add to counter
+	move.l	a0,-(a7)
+    lea vbl_counter(pc),a0
+    addq.w  #1,(a0)
+	move.l	(a7)+,a0
+vbl_hook_no_regulation
+	bsr		_joystick
+	move.w	_custom+joy0dat,d0
+	rts
+	
+; d1 & d2: current & previous joystates
+
+TESTKEY:MACRO
+	btst	#JPB_BTN_\1,d1
+	beq.b	.no_\1
+	; play pressed, was it the first time
+	btst	#JPB_BTN_\1,d2
+	bne.b	.out_\1	; already pressed
+
+	move.b    #\2,d0	; play pressed
+	bra.b	.out_\1
+.no_\1
+	; blue not pressed, was it the first time
+	btst	#JPB_BTN_\1,d2
+	beq.b	.out_\1
+	move.b    #\2+$80,d0	; play released
+.out_\1
+    ENDM
+	
+keyboard_test
+	movem.l	a0/d1/d2,-(a7)
+	move.l	joy1(pc),d1
+	lea		prev_joy1(pc),a0
+	move.l	(a0),d2		; d2: previous
+	move.l	d1,(a0)		; store current
+	
+	TESTKEY	PLAY,$19
+	TESTKEY	BLU,$44	; select weapon
+	TESTKEY	YEL,$14	; target select
+	TESTKEY	GRN,$23	; F flare
+	TESTKEY	REVERSE,$0B	; thrust down
+	TESTKEY	FORWARD,$0C	; thrust up
+	
+	movem.l	(a7)+,a0/d1/d2
+	
+	MOVE.B	D0,-1(A6)		;01590: 1d40ffff
+	CMPI.B	#$ff,D0			;01594: 0c0000ff
+
+	rts
+	
+	
+sound_delay
+	moveq	#4,d0
+.bd_loop1
+	move.w  d0,-(a7)
+    move.b	$dff006,d0	; VPOS
+.bd_loop2
+	cmp.b	$dff006,d0
+	beq.s	.bd_loop2
+	move.w	(a7)+,d0
+	dbf	d0,.bd_loop1
+	MOVEM.L	(A7)+,D0-D3/A0-A4	;451d2: 4cdf1f0f
+	RTS				;451d6: 4e75
 _unita_trap0
 	moveq	#0,d0
 	RTE
@@ -320,17 +451,12 @@ _unita_trap0
 ; must be a while(i++<10000); or something like that in C
 
 _emulate_empty_loop:
+	REPT	10
+	move.w	#$F00,$DFF180
+	ENDR
 	add.l	#10,(a7)	; skip rest of active cpu loop
 	rts
 
-	move.l	(8,a6),d0
-	divu	#10,d0
-	swap	d0
-	clr	d0
-	swap	d0
-	bsr	_beamdelay
-	add.l	#10,(a7)	; skip rest of active cpu loop
-	rts
 
 _fix_af_1
 	movem.l	D0,-(A7)
@@ -348,17 +474,16 @@ _fix_af_1
 	rts
 
 _fix_af_2
-	movem.l	D0,-(A7)
-	move.l	(2,A1),d0
-	move.l	d0,a2
-	rol.l	#8,D0
-	tst.b	D0
+	move.l	(2,A1),D7
+	move.l	D7,a2
+	rol.l	#8,D7
+	tst.b	D7
 	beq.b	.ok
-	or.b	_msq(pc),d0
-	ror.l	#8,D0
-	move.l	D0,A2
+	or.b	_msq(pc),D7
+	ror.l	#8,D7
+	move.l	D7,A2
 .ok
-	movem.l	(A7)+,D0
+	MOVE.L	4(A2),D7
 	rts
 
 _wrong_version
@@ -379,12 +504,22 @@ _seglist:
 _msq:
 	dc.w	0
 _saveregs
-		blk.l	16,0
+		ds.l	16,0
 _stacksize
 		dc.l	0
-
+prev_joy1
+	dc.l	0
+GraphicsBase
+	dc.l	0
+vbl_counter
+	dc.w	0
+_gfxname
+	dc.b	"graphics.library",0
+	even
 ;============================================================================
 
+big_buf
+	ds.l	$10000
 
 ;============================================================================
 
