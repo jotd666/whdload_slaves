@@ -1,0 +1,128 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "7 Cities Of Gold" © 1985 Ozark Softscape / Electronic Arts.
+
+ This install requires WHDLoad and DIC to be in the path. Both can be found in
+ the WHDLoad package.
+ To install from a different drive than DF0: select installation mode Expert.
+
+ The installed program requires 0.5 MB ChipMem and 0.6 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ The game requires an installed A1000 Kickstart 1.1 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick31340.A1000". The image can be extracted from a A1000 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick31340.A1000.RTB" must be installed in the same
+ directory as the kickstart image. It can be normally found in the archive 
+ "util/boot/skick346.lha" on aminet, except that this time the .RTB file was
+ specially created for this installer, so you'll find it in the package.
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page.
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 2.0 (05.06.2022) done by JOTD:
+ - switching to kick 1.1 (after writing it :)) fixed most
+   graphical & color bugs
+ - fixed issue #0000860
+ - fixed issue #0000904
+ - fixed issue #0001959
+ - adapted to whdload v17. It's possible to select the savedisk from
+   splash screen now.
+ - requires A1000 31.34 ROM now. I can't distribute it, even if it is
+   super old and buggy.
+ 
+ version 1.1 (13.02.2005)
+ - fixed ship position (ship gfx is still a bit wierd due to wrong palette)
+
+ version 1.0 (20.12.2004) done by JOTD:
+ - initial release
+ - fixed broken graphics.library 1.1 stuff (triggered access fault)
+ - removed exec.FreeMem() call which crashed right at the start
+ - fixed MOVE SR,Dx calls on 68010+ (locks up a 68010+ with KickEmu)
+ - fixed wrong clearmem loops which broke system memory lists
+ - joystick port swapped from mouse port to usual joystick port
+   (I don't think there are some A1000 users running WHDLoad, but otherwise tell me)
+ - disks swaps handled -> games are saved/loaded from HD
+   (Use CUSTOM1=x where x is the suffix of "disk.x" save diskfile, default is 2)
+ - disk protection removed
+ - nice icon by Exoticons
+ - source code included
+ - hintfile included
+
+Savegame instructions:
+
+When saving/loading games, you can use CUSTOM1 to set the index of the save disk.
+If not set, disk.2 is assumed. If the file does not exist, create it using the game
+options (make historical disk or create another world). If you start the game
+and the save disk does not exist you're thrown out back to WB with a message
+Beware of overwriting your save disks. Use CUSTOM1=3 for "another world" for instance.
+
+If you had an old map disk and you want to use it, just use DIC to create a disk image,
+ and copy it in the installed game directory as "disk.2".
+A simpler process applies to savegame disk images (retrieved from a website for instance):
+Just name them "disk.<something>" and copy them in the installed game directory.
+
+Release notes: 
+
+I've been trying to fix this one for ages! I remember Gerald Yuen sending me a copy
+of his disk in 1995 for me to fix it!! Of course, protected track was not properly
+copied so it would not have worked, but that was the easiest thing to fix after all!
+It took almost 10 years to come up with a working fix for WHDLoad (actually I seriously
+started the work in april 2002 after having successfully fixed Archon & other EOA stuff)
+The game did not even work on a 68010+ or with kickstart above 1.1 for various reasons:
+
+- MOVE SR,Dx
+- broken FreeMem
+- write leak on a loop -> memory lists damaged -> no alloc possible
+- graphics lib mishandling
+- ship bad location (ViewPort/Sprite problem?)
+
+You see it was a tough one. I hope you'll appreciate the effort.
+
+Thanks go to:
+
+- Denis Lechevallier for IPF image
+- Some German user (who will recognise himself) & Gerald for sending a copy of the disk
+- The CAPS/SPS team for debug logs (wasn't of any use this time but who knows?) and for
+  the CAPS/SPS format I could test the game with.
+- Bert for KickEmu & WHDLoad (still some small bugs but we're managing through them :) )
+- Tim Ruehsen for IRA disassembler
+- Hidehiko & TjLazer for reporting the ship position bug
+- Tony Wilen & all UAE team for WinUAE, without which this install would not have appeared
+  (checked with CAPS image on Kickstart 1.1 to see how it behaved and to calibrate ship position)
+
+To do:
+
+- support another version (maybe)
+
+Final (?) notes:
+
+- Despite all the efforts trying to fix a 1985 A1000 game for 1.3 kickstart, 
+  this game was just impossible to fix properly because it just was too
+  old even for kickstart 1.2. So the only solution that worked to fix all
+  the color/position/other bugs was to create a kickstart emulation for
+  ROM 1.1 including the .RTB file (which wasn't a piece of cake). Now the game
+  runs without any issues.
+- The kickstart ROM required to make this game run is not as common as others.
+  It's also illegal to share/download and I doubt most of you have A1000s to dump
+  the ROM from, but yes, google is your friend to find all amiga roms...
+  
