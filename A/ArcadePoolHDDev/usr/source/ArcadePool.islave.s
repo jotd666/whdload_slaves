@@ -30,13 +30,15 @@
 		incdir	Include:
 		include	RawDIC.i
 
+	IFD	BARFLY
 		OUTPUT	"ArcadePool.islave"
 
 		IFND	.passchk
 		DOSCMD	"WDate  >T:date"
 .passchk
 		ENDC
-
+	ENDC
+	
 		SLAVE_HEADER
 		dc.b	1	; Slave version
 		dc.b	0	; Slave flags
@@ -44,9 +46,13 @@
 		dc.l	Text	; Pointer to the text displayed in the imager window
 
 		dc.b	"$VER:"
-Text		dc.b	"Arcade Pool PDos imager V1.0",10
+Text		dc.b	"Arcade Pool PDos imager V1.1",10
 		dc.b	"by Codetapper/Action/JOTD on "
+		IFD		BARFLY
 		INCBIN	"T:date"
+		ELSE
+		INCBIN	datetime
+		ENDC
 		dc.b	0
 		cnop	0,4
 
@@ -62,7 +68,7 @@ DSK_1		dc.l	0		; Pointer to next disk structure
 		dc.l	0		; Called after a disk has been read
 
 TL_1		TLENTRY	000,003,$1600,SYNC_STD,DMFM_STD
-		TLENTRY	004,159,$1800,$1448,_DMFM_RNPDos_D1
+		TLENTRY	004,158,$1800,$1448,_DMFM_RNPDos_D1
 		TLEND
 
 ;======================================================================

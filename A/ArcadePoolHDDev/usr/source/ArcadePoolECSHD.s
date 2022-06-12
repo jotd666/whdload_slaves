@@ -30,7 +30,7 @@ CHIPMEMSIZE	= $100000
 FASTMEMSIZE	= $100000
 	ENDC
 
-	include	"ArcadePoolXXXHD.asm"
+	include	"ArcadePoolXXXHD.s"
 
 patch_boot
 	; ECS

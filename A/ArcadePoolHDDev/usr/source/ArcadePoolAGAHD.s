@@ -36,7 +36,7 @@ FASTMEMSIZE	= $100000
 	INCLUDE	whdload.i
 
 
-	include	"ArcadePoolXXXHD.asm"
+	include	"ArcadePoolXXXHD.s"
 
 
 patch_boot

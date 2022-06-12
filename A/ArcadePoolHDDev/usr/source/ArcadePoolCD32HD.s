@@ -63,9 +63,8 @@ slv_Version	= 16
 slv_Flags	= WHDLF_NoError|WHDLF_Examine|WHDLF_ClearMem
 slv_keyexit	= $5D	; num '*'
 
-DUMMY_CD_DEVICE
 
-	include	kick31cd32.s
+	include	whdload/kick31.s
 
 ;============================================================================
 
@@ -75,12 +74,19 @@ DUMMY_CD_DEVICE
 
 
 DECL_VERSION:MACRO
-	dc.b	"3.0"
+	dc.b	"3.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
 	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
+	ENDC
 	ENDM
+	dc.b	"$VER: slave "
+	DECL_VERSION
+	dc.b	0
 
 ;assign
 ;	dc.b	"CD0",0
@@ -123,7 +129,7 @@ _bootdos
 		lea	_stacksize(pc),a2
 		move.l	4(a7),(a2)
 
-		move.l	(_resload),a2		;A2 = resload
+		move.l	(_resload,pc),a2		;A2 = resload
 
 	;get tags
 		lea	(tag,pc),a0
@@ -292,8 +298,135 @@ load_exe:
 	add.l	#resload_Abort,(a7)
 	rts
 
+
+CDDEVICE_ID = $CDDECDDE
+
+	INCLUDE	cddevice.s
+
+PATCH_IO:MACRO
+	move.l	$4.W,a0
+	add.w	#_LVO\1+2,a0
+	lea	.\1_save\@(pc),a1
+	move.l	(a0),(a1)
+	lea	.\1\@(pc),a1
+	move.l	a1,(a0)
+	bra.b	.cont\@
+.\1_save\@:
+	dc.l	0
+.\1\@:
+	cmp.l	#CDDEVICE_ID,IO_DEVICE(a1)
+	beq	cddevice_\1
+
+	move.l	.\1_save\@(pc),-(A7)
+	rts
+.cont\@
+	ENDM
+	
+
+
+
+_patch_cd32_libs:
+	movem.l	D0-A6,-(A7)
+
+	;redirect calls: opendevice/closedevice
+
+
+	move.l	4.W,a0
+	add.w	#_LVOOpenDevice+2,a0
+	lea	_opendev_save(pc),a1
+	move.l	(a0),(a1)
+	lea	_opendev(pc),a1
+	move.l	a1,(a0)
+
+	move.l	4.W,a0
+	add.w	#_LVOCloseDevice+2,a0
+	lea	_closedev_save(pc),a1
+	move.l	(a0),(a1)
+	lea	_closedev(pc),a1
+	move.l	a1,(a0)
+
+	PATCH_IO	DoIO
+	PATCH_IO	SendIO
+	PATCH_IO	CheckIO
+	PATCH_IO	WaitIO
+	PATCH_IO	AbortIO
+
+	bsr	_flushcache
+
+	movem.l	(A7)+,D0-A6
+	rts
+
+_closedev:
+	move.l	IO_DEVICE(a1),D0
+	cmp.l	#CDDEVICE_ID,D0
+	beq.b	.out
+
+.org
+	move.l	_closedev_save(pc),-(a7)
+	rts
+
+.out
+	moveq	#0,D0
+	rts
+
+_opendev:
+	movem.l	D0,-(a7)
+	bsr	.get_long
+	cmp.l	#'cd.d',D0
+	beq.b	.cddevice
+	bra.b	.org
+
+	; cdtv device
+.cddevice
+	move.l	#CDDEVICE_ID,IO_DEVICE(a1)
+.exit
+	movem.l	(A7)+,D0
+	moveq.l	#0,D0
+	rts
+
+.org
+	movem.l	(A7)+,D0
+	move.l	_opendev_save(pc),-(a7)
+	rts
+
+; < A0: address
+; > D0: longword
+.get_long
+	move.l	a0,-(a7)
+	move.b	(a0)+,d0
+	lsl.l	#8,d0
+	move.b	(a0)+,d0
+	lsl.l	#8,d0
+	move.b	(a0)+,d0
+	lsl.l	#8,d0
+	move.b	(a0)+,d0
+	move.l	(a7)+,a0
+	rts
+
+
+; 68000 compliant way to get a long at any address
+; < A0: address
+; > D0: longword
+get_long_a1
+	move.l	a1,-(a7)
+	move.b	(a1)+,d0
+	lsl.l	#8,d0
+	move.b	(a1)+,d0
+	lsl.l	#8,d0
+	move.b	(a1)+,d0
+	lsl.l	#8,d0
+	move.b	(a1)+,d0
+	move.l	(a7)+,a1
+	rts
+
+
+_opendev_save:
+	dc.l	0
+_closedev_save:
+	dc.l	0
+
 _saveregs
-		blk.l	16,0
+		ds.l	16,0
 _stacksize
 		dc.l	0
 

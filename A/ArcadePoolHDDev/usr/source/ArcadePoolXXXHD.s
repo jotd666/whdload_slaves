@@ -13,7 +13,6 @@
 ;---------------------------------------------------------------------------*
 
 	INCDIR	Include:
-	INCDIR	osemu:
 	INCLUDE	whdload.i
 	INCLUDE	whdmacros.i
 	INCLUDE	lvo/dos.i
@@ -63,13 +62,21 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 
+
 DECL_VERSION:MACRO
-	dc.b	"3.0"
+	dc.b	"3.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
 	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
+	ENDC
 	ENDM
+	dc.b	"$VER: slave "
+	DECL_VERSION
+	dc.b	0
 
 slv_name		dc.b	"Arcade Pool "
 	IFD	AGA
@@ -217,6 +224,4 @@ tag		dc.l	WHDLTAG_CUSTOM1_GET
 custom1	dc.l	0
 		dc.l	0
 
-;============================================================================
 
-	END
