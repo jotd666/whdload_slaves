@@ -26,18 +26,17 @@
 	Tooltype "QuitKey=")
 
 
-	if you have problems with this installation please try first to get
-	a newer version of this install from 
-		http://www.whdload.de/
-	if that doesn't help try some Tooltypes like NOCACHE, NOAUTOVEC,
-	NOVBRMOVE, NOMMU, PAL or NTSC. if that also doesn't help inform the
-	author via the Bug-Report-Form which can be accessed on
-		http://www.whdload.de/
-
-	for full WHDLoad package and other installs refer to:
-		http://www.whdload.de/
-	or	aminet:dev/misc/whdload#?
-	and	aminet:game/patch/
+    If you have problems with this installation please try and get a newer
+    version of this package from the WHDLoad WWW-Page. If that doesn't help try
+    some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+    that also fails, please inform the author via the Bug-Report-Form which
+    can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+    at http://mantis.whdload.de
+   
+    For the full WHDLoad package, other installs and updates refer to:
+   	http://www.whdload.de/
+    or	aminet:dev/misc/whdload#?
+    and	aminet:game/patch/
 
 
 	Features:
@@ -54,10 +53,12 @@ Mr.Larmer/Wanted Team in 2000.
  - TODO floppy version: uses 512k chipmem and fastmem instead of 1MB chipmem
  - floppy version: unpacking done in fast memory
  - TODO floppy version: address error fixed on 68000 (issue #0005656)
- - TODO floppy version: added a "force blitter fix" option for fast 68000 machines
- - TODO floppy version: added quitkey for 68000 machines
+ - floppy version: added a "disable blitter fix" option
+ - floppy version: added quitkey for 68000 machines (menu & game, not intro)
+ - floppy version: CUSTOM2 enables jump with 2nd/blue button
  - TODO floppy version: joypad controls
- - TODO floppy version: trainer
+ - TODO floppy version: trainer nrg/oxy (NW)
+ - floppy version: trainer infinite lives
  
  version 1.2 (2009) (unreleased) done by Wepl:
  - blithog reenabled #2078

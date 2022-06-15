@@ -2,14 +2,14 @@
 ;  :Modul.	kick11.s
 ;  :Contents.	interface code and patches for kickstart 1.1 (Amiga 1000 PAL)
 ;  :Author.	Wepl, JOTD, Psygore
-;  :Version.	$Id: kick12.s 1.41 2021/08/04 21:21:47 wepl Exp wepl $
+;  :Version.	$Id: kick11.s 1.41 2021/08/04 21:21:47 wepl Exp wepl $
 ;  :History.	17.04.02 created from kick12.s from JOTD
 ;
 ;		02.08.21 patch for gfx_WaitBlit added
 ;  :Requires.	-
 ;  :Copyright.	Public Domain
 ;  :Language.	68000 Assembler
-;  :Translator.	Barfly 2.9, Asm-Pro 1.16, PhxAss 4.38
+;  :Translator.	vasm, Barfly 2.9, Asm-Pro 1.16, PhxAss 4.38
 ;  :To Do.
 ;---------------------------------------------------------------------------*
 
@@ -22,7 +22,7 @@
 	INCLUDE	graphics/gfxbase.i
 
 KICKVERSION	= 31
-KICKCRC		= $6490				;31.340
+KICKCRC		= $6490				;31.034
 
 ;============================================================================
 
@@ -158,7 +158,7 @@ kick_reboot	move.l	(_expmem,pc),a0
 		jmp	(2,a0)				;original entry
 
 kick_patch	PL_START
-		PL_S	$ce,$fe-$d2
+		PL_S	$ce,$fe-$ce
 		PL_L	$106,$02390002			;skip LED power off (and.b #~CIAF_LED,$bfe001)
 		PL_CW	$132				;color00 $444 -> $000
 		PL_S	$136,$148-$136			;avoid overwriting vector table
@@ -1031,7 +1031,7 @@ _debug4		tst	-4	;invalid lock specified
 
 ;============================================================================
 
-slv_kickname	dc.b	"31340.a1000",0
+slv_kickname	dc.b	"31034.a1000",0
 _keyboarddelay	dc.b	0
 	EVEN
 _tags		dc.l	WHDLTAG_CBSWITCH_SET

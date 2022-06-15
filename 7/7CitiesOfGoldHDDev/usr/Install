@@ -347,7 +347,7 @@
   (noposition)
 )
 ; for this time only copy the .RTB file if not present
-(set #rtb_file_name "kick31340.A1000.RTB")
+(set #rtb_file_name "kick31034.A1000.RTB")
 (set #target_rtb (tackon "DEVS:kickstarts" #rtb_file_name))
 (if
 	(exists #target_rtb)

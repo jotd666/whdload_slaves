@@ -19,11 +19,11 @@
 
  The game requires an installed A1000 Kickstart 1.1 image.
  The kickstart image must be located in the directory "Devs:Kickstarts" and
- must be named "kick31340.A1000". The image can be extracted from a A1000 with
+ must be named "kick31034.A1000". The image can be extracted from a A1000 with
  tools like 'GrabKick' or similar which can be found on aminet.
  If the image is of wrong version or altered in any way WHDLoad will quit with
  an appropriate requester.
- Additionally the file "kick31340.A1000.RTB" must be installed in the same
+ Additionally the file "kick31034.A1000.RTB" must be installed in the same
  directory as the kickstart image. It can be normally found in the archive 
  "util/boot/skick346.lha" on aminet, except that this time the .RTB file was
  specially created for this installer, so you'll find it in the package.
@@ -39,6 +39,10 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 2.1 (11.06.2022) done by JOTD:
+ - fixed issue for 68000/68010 machines (issue #0005683)
+ - renamed kickstart file from 31340 to 31034.
+ 
  version 2.0 (05.06.2022) done by JOTD:
  - switching to kick 1.1 (after writing it :)) fixed most
    graphical & color bugs

@@ -35,6 +35,8 @@
  Version 2.0 (17.05.2022) done by JOTD:
  
  - rewritten from scratch, using my JST source
+ - fixed to be able to use 32 bit fast memory / 512k chip
+   (game should be much faster now)
  - quitkey on 68000
  - no longer needs kickstart emulation
  - savegame feature restored

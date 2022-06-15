@@ -125,7 +125,8 @@ slv_name		dc.b	"F/A-18 Interceptor"
 			
 			dc.b	0
 slv_copy		dc.b	"1988 Intellisoft/Electronic Arts",0
-slv_info		dc.b	"Install & fix by JOTD",10
+slv_info		dc.b	"Adapted by JOTD",10,10
+			dc.b	"Thanks to paraj for speed regulation fix",10,10
 		dc.b	"Version "
 		DECL_VERSION
 		dc.b	0
@@ -222,6 +223,14 @@ load_exe:
 	jsr	(_LVOLoadSeg,a6)
 	move.l	d0,d7			;D7 = segment
 	beq	.end			;file not found
+        lea     _seglist(pc),a0
+        move.l  d7,(a0)
+
+        moveq   #71,d0
+        bsr     _getseg
+        add.l   #357,d0
+        lea     _ingamevaraddr(pc),a0
+        move.l  d0,(a0)
 
 	;patch here
 	cmp.l	#0,A5
@@ -336,28 +345,35 @@ pl_main
 wait_bovp
 	; wait but maybe several times (speed regulation)
 	MOVE.L	A6,-(A7)		;48f64: 2f0e
-	MOVEA.L	8+4+4(A7),A0		;48f66: 206f0008
+	MOVEA.L	8+4(A7),A0		;48f66: 206f0008
 	MOVEA.L	GraphicsBase(pc),A6		;48f6a: 2c790000a77a
 	JSR	(_LVOWaitBOVP,A6)	;48f70: 4eaefe6e graphics.library (off=-402)
 	MOVEA.L	(A7)+,A6		;48f74: 2c5f
 	RTS				;48f76: 4e75
 	
 speed_regulation
-    move.l d2,-(a7)
-	bsr.b	wait_bovp
+        ; Determine frame interval (d0)
+
+        move.l _ingamevaraddr(pc),a0
+        moveq   #4,d0 ; In game minimum frame interval
+        tst.b   (a0)
+        bne.b   .notext
+        ; Displaying text, don't want to wait one frame
+        ; every time (too slow)
+        moveq   #0,d0
+        lea     text_counter(pc),a0
+        subq.w  #1,(a0)
+        bpl.b   .notext
+        move.w  #4,(a0)
+        moveq   #1,d0
+.notext
 	
-    moveq.l #3,d2       ; the bigger the longer the wait
-    lea vbl_counter(pc),a0
-    move.w  (a0),d0
-	
-    sub.w   d0,d2
-    bcs.b   .nowait     ; first time called/lost sync/pause/whatever
+        lea     vbl_counter(pc),a0
 .wait
-    bsr.b	wait_bovp
-    dbf		d2,.wait
-.nowait
-    clr.w   (a0)
-    move.l (a7)+,d2
+        cmp.w   (a0),d0
+        bhi.b   .wait
+        clr.w   (a0)
+        bsr.b   wait_bovp
 	rts
 
 wait_pic:
@@ -449,11 +465,15 @@ _unita_trap0
 	RTE
 
 ; must be a while(i++<10000); or something like that in C
+; happens a few times
+; - title
+; - after the "welcome" message
 
 _emulate_empty_loop:
-	REPT	10
-	move.w	#$F00,$DFF180
-	ENDR
+	move.l	D0,-(a7)
+	move.w	#200,d0
+	bsr		_beamdelay
+	move.l	(a7)+,d0
 	add.l	#10,(a7)	; skip rest of active cpu loop
 	rts
 
@@ -492,7 +512,17 @@ _wrong_version
 	addq.l	#resload_Abort,(a7)
 	rts
 
-;---------------
+_getseg:
+        move.l  _seglist(pc),a0
+        bra.b   .iter
+.loop:  add.l   a0,a0
+        add.l   a0,a0
+        move.l  (a0),a0
+.iter:  dbf     d0,.loop
+        move.l  a0,d0
+        lsl.l   #2,d0
+        addq.l  #4,d0
+        rts
 
 _tag		dc.l	WHDLTAG_CUSTOM1_GET
 _custom1	dc.l	0
@@ -513,13 +543,17 @@ GraphicsBase
 	dc.l	0
 vbl_counter
 	dc.w	0
+text_counter
+        dc.w    0
+
+_ingamevaraddr
+        dc.l    0
+
 _gfxname
 	dc.b	"graphics.library",0
 	even
 ;============================================================================
 
-big_buf
-	ds.l	$10000
 
 ;============================================================================
 

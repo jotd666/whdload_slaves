@@ -42,10 +42,12 @@
 - In the demo mode when the plane is viewed from the outside on the carrier it pops in and out of existence (doesn't seem to happen very often in normal mode)
 - 3rd person view the heading/speed/height indicators have graphical glitches (like they're being drawn to the active display or maybe missing blitter waits elsewhere) 
 
- version 1.5 (2022) done by JOTD
- - added BUTTONWAIT to see intro pic
+ version 2.0 (11.06.2022) done by JOTD
+ - added speed regulation (thanks to paraj for a proper fix)
  - added joypad controls
- - skipped code protection
+ - added BUTTONWAIT to see intro pic
+ - better delays e.g. in splash screen
+ - skipped code protection completely
  
  version 1.4 (22.12.2007) done by JOTD
  - reassembled with latest kickemu (now quitkey works on 68000 too)
