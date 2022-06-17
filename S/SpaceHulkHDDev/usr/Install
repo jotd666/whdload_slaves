@@ -6,7 +6,7 @@
 (set #hint-file "Hints")		;name of hint file
 (set #sol-file "Solution")		;name of solution file
 (set #highs-file "highs")		;name of high scores file
-(set #prefix @app-name)			;name of slave, directory
+(set #prefix "SpaceHulk")			;name of slave, directory
 
 (set #ico_suffix_00 "inf")		;Icon suffixes (not all of these must exist)
 (set #ico_suffix_01 "magicwb")

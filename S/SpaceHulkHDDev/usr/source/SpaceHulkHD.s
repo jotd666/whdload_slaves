@@ -101,6 +101,18 @@ _Start
 	MOVEA.L	#$7FF00,A7
 
 	lea	_exename(pc),a0
+	move.l	a0,a4
+	jsr	(resload_GetFileSize,a2)
+	
+	lea		uk_info(pc),a5
+	cmp.l	#203088,d0
+	beq.b	.ok
+	pea	TDREASON_WRONGVER
+	move.l	_resload(pc),-(a7)
+	addq.l	#resload_Abort,(a7)
+	rts
+.ok
+	move.l	a4,a0
 	move.l	A3,A1
 	jsr	(resload_LoadFile,a2)
 
@@ -108,22 +120,41 @@ _Start
 	sub.l	A1,A1
 	jsr	(resload_Relocate,a2)
 
-	lea	_pmain(pc),a0
+	move.w	(a5),D0	; patchlist (relative pointer)
+	move.l	a5,a0
+	add.w	d0,a0
 	move.l	A3,A1
 	jsr	(resload_Patch,a2)
 	
 	move.w	#$2700,SR
 	lea		game_address(pc),a0
 	move.l	a3,a1
-	add.l	#$11514,a1
+	add.l	(2,a5),a1
 	move.l	a1,(a0)
 	
-	jmp	$94(a3)
+	jmp	(a3)
 
+uk_info
+	dc.w	pl_main_uk-uk_info
+	dc.l	$11514
 _resload:
 	dc.l	0
 
-_pmain:		PL_START
+pl_main_uk:
+		PL_START
+		PL_S	0,$94
+		IFEQ	1
+		; galahad fixes, I don't see what they do...
+		PL_S	0,$64
+		PL_NOP	$90,4
+		PL_NOP	$DC,4
+		PL_R	$1386
+		PL_NOP	$156A,2
+		PL_R	$3BA
+		PL_R	$442
+		PL_NOP	$17B4,12
+		ENDC
+		
 		PL_W	$1C92,$6006		; avoid SNOOP bug (potgo)
 		PL_R	$E7C		; skip drive stuff
 		PL_P	$2F52,_readfile		; disk read routine
@@ -261,31 +292,38 @@ _waitblit
 .end
 	rts
 
-_readfile:
-	cmp.w	#1,d0
-	beq.b	_savefile
-	tst.w	D0
-	bne.b	.exit
-	movem.l	d1/a0-a2,-(A7)
-	addq.l	#4,A0			; skips 'DFx:'
-	move.l	_resload(pc),a2
-	JSR	(resload_LoadFile,a2)
-	movem.l	(A7)+,d1/a0-a2
-.exit
-	moveq	#0,D0
-	rts
+; < A0: filename
+; < A1: destination
+; < D0: 0 read, 1 write
+; > D0: 0 OK
+; > D1: size
 
-_savefile:
-	movem.l	d1/a0-a2,-(A7)
-	addq.l	#4,A0			; skips 'DFx:'
-	move.l	d1,d0			; size
+_readfile:
+	movem.l	a0-a3,-(A7)
 	move.l	_resload(pc),a2
-	JSR	(resload_SaveFile,a2)
-	movem.l	(A7)+,d1/a0-a2
+	addq.l	#4,A0			; skips 'DFx:'
+	move.l	a0,a3
+	cmp.w	#1,d0
+	beq.b	.savefile
+	tst.w	D0
+	bne.b	.xx
+	JSR	(resload_LoadFile,a2)
 .exit
+	move.l	a3,a0
+	jsr		resload_GetFileSize(a2)
+	move.l	d0,d1
+	movem.l	(A7)+,a0-a3
+
 	moveq	#0,D0
 	rts
+.xx
+	illegal
 	
+.savefile:
+	move.l	d1,d0			; size
+	JSR	(resload_SaveFile,a2)
+	bra.b	.exit
+
 ; < D0: numbers of vertical positions to wait
 _beamdelay
 .bd_loop1
@@ -310,4 +348,5 @@ expmem_mask
 	dc.l	0
 _exename:
 	dc.b	"hulk",0
-
+savegame_name
+	dc.b	"SQUADINF.nn3",0
