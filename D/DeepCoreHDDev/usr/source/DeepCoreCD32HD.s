@@ -85,20 +85,31 @@ slv_keyexit	= $59	;F10
 	ENDC
 	ENDC
 
+DECL_VERSION:MACRO
+	dc.b	"2.0"
+	IFD BARFLY
+		dc.b	" "
+		INCBIN	"T:date"
+	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
+	ENDC
+	ENDM
 slv_CurrentDir		dc.b	"data",0
 slv_name		dc.b	"Deep Core CD³²",0
 slv_copy		dc.b	"1993 ICE",0
-slv_info		dc.b	"adapted by Wepl",10
-		dc.b	"Version 1.0 "
-	IFD BARFLY
-		INCBIN	"T:date"
-	ENDC
+slv_info		dc.b	"adapted by Wepl & JOTD",10
+		dc.b	"Version "
+		DECL_VERSION
 		dc.b	0
 _cd32		dc.b	"cd32",0
 _loader		dc.b	"loader.exe",0
 slv_config
 	dc.b	"BW;"
-	;dc.b    "C3:B:skip introduction;"
+	dc.b    "C1:X:infinite lives:0;"
+	dc.b    "C1:X:infinite oxygen:1;"
+	dc.b    "C2:B:use 2nd button for jump;"
 	dc.b	0
 
 	EVEN
@@ -162,7 +173,9 @@ _dosload	exg.l	a0,a1
 _dosload2	movem.l	d0-d2/a0-a2,-(a7)
 		addq.l	#5,a0			;skip "CD32:"
 		move.l	_resload(pc),a2
+		move.w	#$4000,_custom+intena
 		jsr	(resload_LoadFileDecrunch,a2)
+		move.w	#$C000,_custom+intena
 
 		lea	_pl_loaderintro_101(pc),a0
 		cmp.l	#158246,d0
@@ -195,7 +208,7 @@ _dosload2	movem.l	d0-d2/a0-a2,-(a7)
 		lea	_pl_game_101(pc),a0
 		cmp.w	#$87ac,d2
 		beq	.crcok
-		lea	_pl_game_100,a0
+		lea	_pl_game_100(pc),a0
 		cmp.w	#$2af,d2
 		beq	.crcok
 		pea	TDREASON_WRONGVER
@@ -208,7 +221,7 @@ _dosload2	movem.l	d0-d2/a0-a2,-(a7)
 		dbf	d0,.game1
 		bra	.patch
 .not_game
-		lea	_pl_outro,a0
+		lea	_pl_outro(pc),a0
 		cmp.l	#327680,d0
 		beq	.patch
 .quit
@@ -227,6 +240,7 @@ _dosload2	movem.l	d0-d2/a0-a2,-(a7)
 
 _pl_loaderintro_101
 		PL_START			;1000c0 jmp offset 1f700
+
 		PL_S	$1f7cc,$d6-$cc		;cacr
 		PL_PS	$1fdfc,_b3
 		PL_PS	$1fe80,_b4
@@ -304,6 +318,7 @@ _lace3		lea	_custom,a6		;original
 		rts
 
 _pl_fireintro	PL_START			;12f0e0 jmp offset 31844
+
 	;	PL_I	$31844
 		PL_P	$317d4,_dosload2
 		PL_P	$3180e,_dosload2
@@ -317,7 +332,7 @@ _pl_fireintro	PL_START			;12f0e0 jmp offset 31844
 .option		btst	#14,(potinp,a6)		;original
 		beq	.rts
 		movem.l	d0-d1/a0-a1/a6,-(a7)
-		lea	_lowlevelname,a1
+		lea	_lowlevelname(pc),a1
 		move.l	4,a6
 		jsr	(_LVOOldOpenLibrary,a6)
 		move.l	d0,a6
@@ -326,22 +341,60 @@ _pl_fireintro	PL_START			;12f0e0 jmp offset 31844
 		movem.l	(a7)+,_MOVEMREGS
 .rts		rts
 
+GAME_START = $101b28
+
 _pl_game	PL_START			;101b28 jmp offset 13c58
+
 		PL_P	$13e0e,_dosload
 		PL_B	$1f3e9,1		;ReadJoyPort port=1
-		PL_PS	$1f3ee,_inputhook
+		PL_PSS	$120f12-GAME_START,_inputhook,4	; note: offset was wrong
 		PL_B	$1f583,1		;ReadJoyPort port=1
 		PL_B	$1f58f,1		;ReadJoyPort port=1
 		PL_B	$1f59d,1		;ReadJoyPort port=1
 		PL_ORW	$211a6,INTF_PORTS	;enable keyboard
+
+		PL_IFC1X	0
+		PL_NOP		$1214c2-GAME_START,8	; lives
+		PL_ENDIF
+
+		PL_IFC1X	1
+		PL_NOP		$12162e-GAME_START,6	; oxygen
+		PL_ENDIF
+
 		PL_END
 
 _pl_game_101	PL_START			;101b28 jmp offset 13c58
+
+		PL_IFC2
+		PL_PSS	$11edde-GAME_START,_readjoy,2
+		PL_ENDIF
+		
+		; access fault
+		PL_PS	$120612-GAME_START,_fix_access_fault_101
+		PL_PSS	$120638-GAME_START,_fix_access_fault_2,6
+		
+		PL_PSS	$117830-GAME_START,_door_enter_test_101,2
+		
+
+
 		PL_S	$13eb2,$c6-$b2		;cacr
 		PL_ORW	$13fc2,INTF_PORTS	;enable keyboard
 		PL_NEXT	_pl_game
 
 _pl_game_100	PL_START			;101b28 jmp offset 13c58
+
+		PL_IFC2
+		PL_PSS	$11ede0-GAME_START,_readjoy,2
+		PL_ENDIF
+		
+		; access fault
+		PL_PS	$120614-GAME_START,_fix_access_fault_100
+		PL_PSS	$12063a-GAME_START,_fix_access_fault_2,6
+		
+		PL_PSS	$11783c-GAME_START,_door_enter_test_100,2
+		
+		
+		
 		PL_S	$13ebe,$c6-$b2		;cacr
 		PL_ORW	$13fce,INTF_PORTS	;enable keyboard
 		PL_NEXT	_pl_game
@@ -466,19 +519,94 @@ _bx2
 		dbf	d7,.2
 		rts
 
+
+_readjoy
+	MOVE.W	(12,A6),D0		;1ee6a: 302e000c
+
+	move.l	d1,-(a7)
+	move.l	joy1(pc),d1
+	; cancel UP from joydat. Copying bit 9 to bit 8 so EOR yields 0
+	bclr	#8,d0
+	btst	#9,d0
+	beq.b	.noneed
+	bset	#8,d0	; xor 8 and 9 yields 0 cos bit9=1
+.noneed
+	btst	#JPB_BUTTON_BLUE,d1
+	beq.b	.no_blue
+	; set UP because blue pressed
+	bclr	#8,d0
+	btst	#9,d0
+	bne.b	.no_blue
+	bset	#8,d0	; xor 8 and 9 yields 1 cos bit9=1
+.no_blue:
+	move.l	(a7)+,d1	
+	; original
+	BTST	#1,D0			;1ee6e: 08000001
+	rts
+	
+_fix_access_fault_100
+	and.l	#$FFFFFF,d0	; 24 bit style access fault I hope...
+	TST.W	$11f4ae
+	rts
+
+_fix_access_fault_101
+	and.l	#$FFFFFF,d0	; 24 bit style access fault I hope...
+	TST.W	$11f4ac
+	rts
+	
+_fix_access_fault_2
+	cmp.l	#CHIPMEMSIZE,A1
+	bcc.b	.out
+	; looks like setting chip address in a copperlist
+	MOVE.L	D1,(A1)			;12063a: 2281
+	MOVE.W	D0,(4,A0)		;12063c: 31400004
+	SWAP	D0			;120640: 4840
+	MOVE.W	D0,(A0)			;120642: 3080
+	SWAP	D0			;120644: 4840
+.out
+	rts
+
+_door_enter_test_101
+	CMPI.B	#$09,$11eeb8
+	bne.b	_do_enter
+	rts
+	
+_door_enter_test_100
+	CMPI.B	#$09,$11eeba
+	beq.b	_de_end
+_do_enter
+	; alternate method: button 3 / green
+	movem.l	d0,-(a7)
+	move.l	joy1(pc),d0
+	not.l	d0		; inverted logic!
+	btst	#JPB_BUTTON_GREEN,d0
+	movem.l	(a7)+,d0
+_de_end
+	rts	
+
+_quit
+	pea	TDREASON_OK
+	move.l	_resload(pc),-(a7)
+	addq.l	#resload_Abort,(a7)
+	rts
+
 _inputhook	jsr	(_LVOGetKey,a6)
+		cmp.b	_keyexit(pc),D0
+		beq.b	_quit
 		cmp.b	#$19,d0			;p
 		beq	.pause
 		move.l	a6,-(a7)
 		lea	_custom,a6
 		cmp.b	#$45,d0			;esc
 		bne	.2
-		jmp	$101b28+$1f54e
-.2		jsr	$101b28+$1f5b4
+		jmp	GAME_START+$1f54e
+.2		jsr	GAME_START+$1f5b4
 		move.l	(a7)+,a6
 
 .quit		moveq	#1,d0
 		jsr	(_LVOReadJoyPort,a6)
+		lea	joy1(pc),a0
+		move.l	d0,(a0)
 		lea	_custom,a6		;original
 		rts
 
@@ -494,6 +622,8 @@ _inputhook	jsr	(_LVOGetKey,a6)
 		bne	.p3
 		bra	.quit
 		
+joy1
+	dc.l	0
 _lowlevelname
 	dc.b	"lowlevel.library",0
 ;============================================================================

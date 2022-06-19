@@ -1,0 +1,97 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Sensible Golf" © 1993 1995 Sensible Software.
+
+ This install requires WHDLoad to be in the path. It can be found in
+ the WHDLoad package.
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+Supported versions:
+2 Disk version, Original Release v1.0
+2 Disk version, Original Release v1.1
+2 Disk version, Prodigy Release  v1.2
+
+Slave requires WHDLOAD V17+.
+Game requires 0.5 MB Chip Mem and 1.0 MB other mem (+ 1.2 other memory for preload option)
+
+Thanks to John Regent for    20.07.1995 disk images
+Thanks to Karpow/Scoopex for 18.07.1995 disk images
+Thanks to Frank for the installer and icons
+
+Version 1.3 (19.06.2022) done by JOTD:
+- using fast memory for better speed, and 512k chipmem only
+- fixes crash in options menu (issue #0003369)
+- faster depack of main program (uses a modified RNC unpacker, file is seen
+  as corrupt by standard RNC unpackers)
+- quitkey on 68000 machines
+- snoop bugs removed
+- must register restriction removed
+- source code included
+
+Version 1.2 (2003) done by Galahad:
+- MMU Snoop Bug fixed
+- Old Debug code removed!
+- Memory requirements reduced
+
+Version 1.0:
+- Full load from Hard drive (REAL Files)
+- Load/Save/Delete Tournaments/Seasons to Hard drive
+- Now you can save Options to Hard drive
+- Depack routine relocated to Fast Ram
+- Manual + Hints included
+- You must be registered to play this install
+- Quit option is 'F10'
+
+Thanks to Codetapper and Toaks for mentioning that Sensible Golf utterly 
+refused to work on their MMU equipped machines.  One piece of code was still 
+accessing a disk routine that triggered a fault on MMU equipped machines, and 
+the other piece of code was a piece of old debug code that I hadn't fully 
+removed!  Everything now works as  it should on all Amigas! ;)  It's a little 
+dissapointing  though when over 1200 people download the game, and only now 
+does anyone say anything!
+
+If you have already installed the game, just copy the slave file over instead
+of reinstalling all over again.
+
+EXTRA NOTES (Galahad):
+
+Arghhhhhh!!!!! I had to totally recode the slave as I managed to overwrite
+the original source code with something else!! :(
+
+Still, its all redone, and another version supported, and you get some nice
+icons from Frank ;)
+
+You can only save your options (Menu Music, Ambience, Difficulty etc) when
+you save a game.  The slave will then save out your chosen options.
+
+45 Separate saves are allowed.
+
+All files needed by the slave are generated on first runtime by the slave.
+
+MORE NOTES (JOTD):
+
+When saving a tournament, you have to quit whdload to be able to reload it the
+first time you give it a name. Not a big deal, and Galahad did a great job on this
+already this saving system is not so trivial to adapt to whdload.
+
+
+Regards, Galahad, JOTD, John, Karpow and Frank.

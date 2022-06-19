@@ -49,16 +49,18 @@
 
 Mr.Larmer/Wanted Team in 2000.
 
- version 2.0 (2022) done by JOTD:
- - TODO floppy version: uses 512k chipmem and fastmem instead of 1MB chipmem
- - floppy version: unpacking done in fast memory
- - TODO floppy version: address error fixed on 68000 (issue #0005656)
- - floppy version: added a "disable blitter fix" option
+ version 2.0 (18.06.2022) done by JOTD:
  - floppy version: added quitkey for 68000 machines (menu & game, not intro)
- - floppy version: CUSTOM2 enables jump with 2nd/blue button
- - TODO floppy version: joypad controls
- - TODO floppy version: trainer nrg/oxy (NW)
- - floppy version: trainer infinite lives
+ - CUSTOM2 enables jump with 2nd/blue button
+ - floppy version: uses 512k chipmem and fastmem instead of 1MB chipmem
+ - floppy version: unpacking done in fast memory
+ - floppy version: added a "disable blitter fix" option
+ - full joypad controls (green to enter doors)
+ - trainer infinite lives & oxygen
+ - floppy version: added highscore save
+ - floppy version: added original function keys weapon select
+ - floppy version: fixed access fault
+ - added manual (thanks to Hexae)
  
  version 1.2 (2009) (unreleased) done by Wepl:
  - blithog reenabled #2078
@@ -66,7 +68,8 @@ Mr.Larmer/Wanted Team in 2000.
  - no longer requires registered whdload
  - blitter routine (_b2/3) not patched on 68020 and below
  - cpu/video flags init fixed
- - intro sound finally fixed
+ - intro sound finally fixed (issue #000371, issue #0002447)
+ - supported CD32 version (issue #0000454)
 
  version 1.1 (18.08.2000) done by Wepl:
  - many blitwaits inserted, two blitter routines rewritten
@@ -78,3 +81,34 @@ Mr.Larmer/Wanted Team in 2000.
  - should work now on 040/060
  note: extremely bad code style this game!
 
+joypad controls:
+
+- red: fire
+- blue: jump/elevator up (if option is set)
+- green: enter door (red+blue)
+- play: pause
+- reverse+forward: quit current game
+
+Passwords (from Lemon amiga):
+
+2	REANIMATOR
+3	PSYCHONAUT
+
+Type one of the following codes during game play to view various messages.
+
+    johan lindahh
+    i like fairlight
+    j.lindahh
+    i like dm
+    hunterr
+    sauroo
+    i like atari => game over!!
+    jenn 
+
+notes from JOTD:
+
+game is highy buggy and still crashes or has glitches from time to time
+I'm not sure if it's fully playable, but enjoy what you can. Clearly
+they wanted to remake Gods in a nuclear plant or whatever: same jump, same
+muscles, same graphics (to some extent) same shield-like bonuses, bouncing
+sound for bonuses... Except that Gods is way better and less buggy too.

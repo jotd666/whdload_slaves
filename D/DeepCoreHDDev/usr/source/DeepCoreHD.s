@@ -18,12 +18,12 @@
 ;  :To Do.
 ;---------------------------------------------------------------------------*
 
-
-	IFD BARFLY
-
 	INCDIR	Includes:
 	INCLUDE	whdload.i
 	INCLUDE	whdmacros.i
+
+	IFD BARFLY
+
 	OUTPUT	"wart:d/deepcore/DeepCore.Slave"
 	BOPT	O+				;enable optimizing
 	BOPT	OG+				;enable optimizing
@@ -31,16 +31,6 @@
 	BOPT	ODe-				;disable mul optimizing
 	BOPT	w4-				;disable 64k warnings
 	SUPER
-
-	ELSE
-
-	INCDIR	Include:
-	INCLUDE	whdload.i
-	INCLUDE	whdmacros.i
-
-	OUTPUT	dh1:demos/DeepCore/DeepCore.slave
-	OPT	O+ OG+			;enable optimizing
-
 	ENDC
 
 	IFD	CHIP_ONLY
@@ -76,7 +66,10 @@ _expmem
     dc.w    _config-_base
 _config
 	dc.b	"BW;"
-	;dc.b    "C1:X:Boot on expansion disk:0;"
+	dc.b    "C1:X:infinite lives:0;"
+	dc.b    "C1:X:infinite oxygen:1;"
+	dc.b    "C1:X:F1-F4 weapon select:2;"
+	dc.b    "C2:B:use 2nd button for jump;"
 	dc.b    "C3:B:skip introduction;"
 	dc.b    "C4:B:disable blitter fixes for slow machines;"
 	dc.b	0
@@ -108,7 +101,7 @@ _name	dc.b	'Deep Core'
 		
 		dc.b	0
 _copy	dc.b	'1993 ICE',0
-_info	dc.b	'Installed and fixed by Mr.Larmer & Wepl',10
+_info	dc.b	'Adapted by Mr.Larmer/Wepl/JOTD',10
 		dc.b	"Version "
 		DECL_VERSION
 	dc.b	-1,'Greetings to Chris Vella,',10
@@ -127,6 +120,8 @@ Start	;	A0 = resident loader
 		move.l	a0,(a1)			;save for later use
 		move.l	a0,a2
 
+		bsr		_detect_controller_types
+		
 		IFD		CHIP_ONLY
 		lea		_expmem(pc),a0
 		move.l	#$80000,(a0)		; fake expansion
@@ -349,14 +344,14 @@ _30000
 		
 pl_7e000
 		PL_START
-		PL_PS	$CA,Patch6
-		PL_PS	$FC,Patch6
-		PL_PS	$1D4,Patch6
-		PL_PS	$232,Patch6
+		PL_PS	$CA,patch_menu
+		PL_PS	$FC,patch_menu
+		PL_PS	$1D4,patch_menu
+		PL_PS	$232,patch_menu
 		
-		PL_PS	$12C,Patch5
-		PL_PS	$140,Patch5
-		PL_PS	$17A,Patch5
+		PL_PS	$12C,patch_main_game
+		PL_PS	$140,patch_main_game
+		PL_PS	$17A,patch_main_game
 		
 		PL_R	$2B8		; remove check ext mem
 
@@ -374,10 +369,9 @@ pl_7e000
 
 ;--------------------------------
 
-Patch5
+patch_main_game
 		movem.l	d0-d1/a0-a2,-(a7)
 
-		blitz
 		
 		move.w	#($2ca-$96)/4-1,d0
 		lea	$25496,a0
@@ -389,9 +383,9 @@ Patch5
 .l3		move.l	#$1800000,(a0)+
 		dbf	d0,.l3
 		
-		lea		pl_5(pc),a0
-		sub.l	a1,a1
 		move.l	_resload(pc),a2
+		lea		pl_main_game(pc),a0
+		sub.l	a1,a1
 		jsr		resload_Patch(a2)
 
 		movem.l	(a7)+,d0-d1/a0-a2
@@ -400,7 +394,7 @@ Patch5
 
 		jmp	$15780
 		
-pl_5:
+pl_main_game:
 		PL_START
 		PL_PS	$17F50,HeadUp
 		PL_PS	$17F68,HeadDown
@@ -447,6 +441,29 @@ pl_5:
 		PL_PS	$21f46,_f5
 		PL_PS	$21f9c,_f5
 		
+		PL_PSS	$22c6e,_kbhook,2
+		PL_IFC2
+		PL_PSS	$1ee6a,_readjoy,2
+		PL_ENDIF
+		
+		; access fault
+		PL_PS	$206a4,_fix_access_fault
+		PL_PSS	$206ca,_fix_access_fault_2,6
+		
+		PL_PSS	$177cc,_door_enter_test,2
+		
+		PL_IFC1X	0
+		PL_NOP		$2140c,8	; lives
+		PL_ENDIF
+		PL_IFC1X	1
+		PL_NOP		$21578,6	; oxygen
+		PL_ENDIF
+		PL_IFC1X	2
+		PL_NOP		$20f7c,2	; Function keys select weapons
+		PL_ENDIF
+		
+		PL_ORW	$22c10+2,$0020	; enable VBLank
+		PL_PA	$22c00+2,_level_3_interrupt
 		PL_IFC4
 		; don't patch anything
 		PL_ELSE
@@ -494,6 +511,118 @@ pl_5:
 		jsr	(resload_ProtectWrite,a2)
 		movem.l	(a7)+,_MOVEMREGS
 	ENDC
+
+_fix_access_fault
+	and.l	#$FFFFFF,d0	; 24 bit style access fault I hope...
+	tst.w	$1f53e
+	rts
+_fix_access_fault_2
+	cmp.l	#CHIPMEMSIZE,A1
+	bcc.b	.out
+	; looks like setting chip address in a copperlist
+	MOVE.L	D1,(A1)			;12063a: 2281
+	MOVE.W	D0,(4,A0)		;12063c: 31400004
+	SWAP	D0			;120640: 4840
+	MOVE.W	D0,(A0)			;120642: 3080
+	SWAP	D0			;120644: 4840
+.out
+	rts	rts
+	
+_door_enter_test
+	CMPI.B	#$09,$1ef44		;177cc: 0c390009000
+	beq.b	.end
+	; alternate method: button 3 / green
+	movem.l	d0,-(a7)
+	move.l	joy1(pc),d0
+	not.l	d0		; inverted logic!
+	btst	#JPB_BTN_GRN,d0
+	movem.l	(a7)+,d0
+.end
+	rts
+	
+
+rawkey = $22C88
+
+TESTKEY:MACRO
+	btst	#JPB_BTN_\1,d0
+	beq.b	.no_\1
+	; play pressed, was it the first time
+	btst	#JPB_BTN_\1,d1
+	bne.b	.out_\1	; already pressed
+
+	move.b    #\2,(a0)	; play pressed
+	bra.b	.out_\1
+.no_\1
+	; blue not pressed, was it the first time
+	btst	#JPB_BTN_\1,d1
+	beq.b	.out_\1
+	move.b    #\2+$80,(a0)	; play released
+.out_\1
+    ENDM
+	
+
+_level_3_interrupt
+	move.l	d0,-(a7)
+	move.w	_custom+intreqr,d0
+	btst	#5,d0
+	beq.b	.copper
+	movem.l	a0/d1,-(a7)
+	lea		joy1(pc),a0
+	move.l	(a0),d1	; previous
+	bsr		_joystick
+	move.l	(a0),d0
+	lea		rawkey,a0
+	
+	TESTKEY	PLAY,$19
+	btst	#JPB_BTN_REVERSE,d0
+	beq.b	.noesc
+	TESTKEY	FORWARD,$45
+.noesc
+	
+	move.w	#$20,_custom+intreq
+	movem.l	(a7)+,a0/d1
+	move.l	(a7)+,d0
+	rte
+.copper
+	move.l	(a7),d0
+	move.l	#$0022c8a,(a7)	; jump to copper interrupt
+	rts
+	
+_kbhook:
+	cmp.b	_keyexit(pc),d0
+	beq.b		_quit
+	and.b #$bf,$00bfee01
+	rts
+	
+_readjoy
+	MOVE.W	(12,A6),D0		;1ee6a: 302e000c
+
+	move.l	d1,-(a7)
+	move.l	joy1(pc),d1
+	; cancel UP from joydat. Copying bit 9 to bit 8 so EOR yields 0
+	bclr	#8,d0
+	btst	#9,d0
+	beq.b	.noneed
+	bset	#8,d0	; xor 8 and 9 yields 0 cos bit9=1
+.noneed
+	btst	#JPB_BTN_BLU,d1
+	beq.b	.no_blue
+	; set UP because blue pressed
+	bclr	#8,d0
+	btst	#9,d0
+	bne.b	.no_blue
+	bset	#8,d0	; xor 8 and 9 yields 1 cos bit9=1
+.no_blue:
+	move.l	(a7)+,d1	
+	; original
+	BTST	#1,D0			;1ee6e: 08000001
+	rts
+	
+_quit
+	pea	TDREASON_OK
+	move.l	_resload(pc),-(a7)
+	addq.l	#resload_Abort,(a7)
+	rts
 
 
 _f2		bsr	_blitwait
@@ -631,32 +760,58 @@ Head
 		move.l	(a7)+,a0
 		rts
 
+HIGHSCORE_LEN = $10E
+HIGHSCORE_ADDRESS = $6248C
 ;--------------------------------
-
-Patch6
+; MOVE.W	#$c018,intena(A6)		;60fea: 3d7cc018009a
+patch_menu
 	;	and.w	#~DMAF_BLITHOG,$608a8	;disable blitpri
 	;	and.w	#~DMAF_BLITHOG,$609a8	;disable blitpri
 	;	and.w	#~DMAF_BLITHOG,$60fe6	;disable blitpri
 
-		move.w	#$4EF9,$61380
-		pea	ChangeDisk(pc)
-		move.l	(a7)+,$61382
+		movem.l	d0-d1/a0-a2,-(a7)
 
-		move.w	#$6008,$63D46		; skip set drive
-		move.w	#$6008,$63D64
-
-		move.w	#$4EF9,$63DE4
-		pea	Load(pc)
-		move.l	(a7)+,$63DE6
-
-		patchs	$60e26,_f1
-		patchs	$60ede,_f1
-		patchs	$61138,_f20
-		patchs	$60e88,_f1
-		patch	$60e66,_f30
-
+		move.l	_resload(pc),a2
+		lea		hiscore(pc),a0
+		jsr		resload_GetFileSize(a2)	; $108 bytes
+		tst.l	d0
+		beq.b	.skip
+		lea		hiscore(pc),a0
+		lea		HIGHSCORE_ADDRESS,a1
+		jsr		resload_LoadFile(a2)	; $10E bytes
+.skip	
+		
+		lea		$60000,a1
+		lea		pl_menu(pc),a0
+		move.l	_resload(pc),a2
+		jsr		resload_Patch(a2)
+		movem.l	(a7)+,d0-d1/a0-a2
 		jmp	$60800
 
+pl_menu
+		PL_START
+		
+		PL_PSS	$1056,_kbhook,2
+		PL_P	$1380,ChangeDisk
+
+		PL_W	$3D46,$6008		; skip set drive
+		PL_W	$3D64,$6008
+
+		PL_P	$3DE4,Load
+
+		PL_PS	$0e26,_f1
+		PL_PS	$0ede,_f1
+		PL_PS	$1138,_f20
+		PL_PS	$0e88,_f1
+		PL_P	$0e66,_f30
+	
+		PL_IFC1
+		
+		PL_ELSE
+		PL_PSS	$9fe,save_highscores,4
+		PL_ENDIF
+		PL_END
+	
 _f20		bsr	_blitwait
 		move.l	#$ffff0000,$44(a6)
 		addq.l	#2,(a7)
@@ -665,6 +820,21 @@ _f20		bsr	_blitwait
 _f30		movem.l	(a7)+,d7/a0/a1
 		bra	_blitwait
 
+save_highscores
+	movem.l	d0-d1/a0-a2,-(a7)
+	move.l	_resload(pc),a2
+	lea		hiscore(pc),a0
+	lea		HIGHSCORE_ADDRESS,a1
+	move.l	#HIGHSCORE_LEN,d0
+	jsr		resload_SaveFile(a2)	; $10E bytes
+	movem.l	(a7)+,d0-d1/a0-a2
+	
+	; original: wait for fire released
+.w
+	btst.b	#7,$BFE001
+	beq.b	.w
+	rts
+	
 ;--------------------------------
 
 Load:
@@ -886,8 +1056,13 @@ _buttonwait	dc.l	0
 		dc.l	WHDLTAG_CUSTOM3_GET
 _skip_intro:
 		dc.l	0
+		dc.l	WHDLTAG_CUSTOM1_GET
+_trainer:
+		dc.l	0
 		dc.l	0
 
+hiscore
+	dc.b	"deepcore.high",0
 ;======================================================================
 
 	END
