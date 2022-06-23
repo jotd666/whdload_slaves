@@ -1,0 +1,183 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Jimmy White's Whirlwind Soccer" © 1991 Virgin.
+
+ This install requires WHDLoad and RawDIC to be in the path. Both can be found in
+ the WHDLoad package.
+ To install from a different drive than DF0: select installation mode Expert.
+
+ The installed program requires 0.5 MB ChipMem and 0.5 MB OtherMem.
+ It can be quit by pressing F10 (key can be changed with Tooltype "QuitKey=").
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+ 
+REQUIREMENTS
+
+    Requires an original copy of the game. Four versions are supported.
+
+    Requires version 44.10 or later of the standard Amiga "Installer"
+    program or a compatible equivalent.
+
+    Requires version 16.0 or later of the WHDLoad package by Bert Jahn. 
+
+INSTALLING THE GAME
+
+    Extract all files in the product archive to your system.
+    They will be extracted to a drawer called "WHD_JimmyWhiteSnooker"
+
+    Double click on the "Install" icon present in the extraction
+    directory and follow the instructions given by the Installer
+    program.
+
+    The game will be installed to a directory you select on your
+    hard drive. You will be alerted if installation fails for any
+    reason, please contact the author if this happens.
+
+    If you have saved games or high scores you may also install these
+    to hard drive using an extra installation script that will be
+    placed into the game's directory. Double click on the icon to
+    start the script.
+
+
+PLAYING THE GAME
+
+    Open the game drawer created during installation and click on the
+    "JimmyWhiteSnooker" icon. The game will then start.
+
+    The manual protection has been removed.
+
+    Loading, saving and re-initialising of games and scores to
+    hard disk is fully supported using the existing in-game menus.
+
+    The following keys may be used while the game is running:
+      F10 = quit game and return to Workbench
+
+
+BUGS/CAVEATS
+
+    This product is provided "as is" and is used at your own risk.
+
+    The author is not liable for any loss or damage caused by the
+    use or misuse of this product.
+
+    When running the installer it is advisable to disable any virus
+    checking or debugging software you may have running.
+
+
+ORIGINAL AUTHOR
+
+    John Girvin
+
+    E-Mail:    girv@girvnet.org.uk
+
+    WWW:       http://www.girvnet.org.uk
+
+    ICQ:       15651883
+
+    DONATIONS: PayPal: payments@girvnet.org.uk
+               NoChex: payments@girvnet.org.uk
+
+
+HISTORY
+
+ Version 2.1 (2022) done by JOTD:
+ - fixed music
+ - added quitkey on 68000
+ - now uses 512k chipmem instead of 516k
+ - reworked source code, replaced missing Girv's specific source code that
+   isn't provided anywhere, but can be guessed so that's okay :)
+ 
+    2.00    10/2004
+      - back once again!
+      - uses standard release numbering system
+      - uses standard WHDLoad installer script
+      - WHDLoad v16.0 compatible
+      - rewrote and combined slaves into one
+      - fixed access errors in game
+      - rewrote data extractor as RawDIC imager
+
+    1.00    01/1998
+      - first version
+
+    1.01    01/1998
+      - added options to install saved games
+
+    1.02    02/1998
+      - added support for two more game versions
+
+    1.03    03/1998
+      - fixed illegal address access problem in slave
+
+    1.04    03/1999
+      - now shareware
+      - added suport for another game version
+      - added ability to upgrade existing installation
+      - improved method used to remove disk protection
+
+    1.05    04/1999
+      - fixed stupid mistake that broke all v1.04 slaves
+      - improved method used to remove disk protection
+
+    0401.1  04/2001
+      - now freeware again
+      - moved to new release numbering system
+      - WHDLoad v14.0 compatible
+      - improved manual protection removal
+      - fixed interrupt handlers in game
+      - fixed keyboard handler in game
+      - fixed access errors in game
+      - rewrote savegame extractor to use RawDIC
+      - misc. installer script improvements
+
+
+
+LICENCE
+
+    This product is copyrighted freeware.
+
+    No payment is required to use this product, although donations
+    will be welcomed! Send donations via PayPal or NoChex to
+    payments@girvnet.org.uk Thanks!
+
+    © 1998-2004 Halibut Software. No modifications may be made to
+    any files or data that comprise the product without the express
+    written consent of the author.
+
+    Freely distributable, provided other licence requirements are
+    adhered to. No charge may be made for this product except for
+    reasonable handling and/or media costs.
+
+
+ACKNOWLEDGEMENTS
+
+	"Jimmy White's Whirlwind Snooker" is © Archer Maclean/Virgin Games
+
+    WHDLoad is © Bert Jahn
+
+    Thanks to all those who lent me their precious original disks!
+
+    Thanks in particular to "Den of Iniquity" for the original disks,
+    drawing a NewIcon for the install and for the chats about sci-fi
+    books and so on.
+
+    Thanks to Mr. Lamer/Wanted Team for the checksum code from Archer
+    Maclean's Pool, which helped greatly in deprotecting Jimmy White's
+    Whirlwind Snooker. Respect and may he Rest In Peace.

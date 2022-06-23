@@ -54,7 +54,7 @@ _expmem
 _config
 	dc.b	0
 DECL_VERSION:MACRO
-	dc.b	"1.3"
+	dc.b	"1.4"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -105,6 +105,25 @@ Start	;	A0 = resident loader
 		IFD	CHIP_ONLY
 		move.l	#$80000,(a0)
 		ENDC
+
+		; avoids an access fault when decrunching SPS version: RN unpacker
+		; reads 4 bytes before expansion memory...
+		;
+		; it doesn't happen with the other non SPS version (but RN archive is
+		; seen as corrupt by all Windows & XFDdecrunch unpackers!)
+		;
+		; once unpacked, both versions only differ by build date...
+		;
+		lea	golf(pc),a0
+		move.l	_resload(pc),a2
+		jsr		(resload_GetFileSize,a2)
+		lea	golf(pc),a0
+		cmp.l	#124636,d0
+		bne.b	.notsps
+		lea		_expmem(pc),a1
+		add.l	#$4,(a1)
+.notsps
+
 		
 		lea	_addr_cbbe4(pc),a0
 		move.l	_expmem(pc),d0
@@ -149,14 +168,11 @@ filepresent2:
 		bsr	_LoadFile
 		move.l	a1,a0
 		moveq	#0,d0
-		;SS Boot RNC DEpacker is different from others
-		;RNC unpackers can't unpack the "GOLF" file
-		bsr		rn_unpack
-			
+		bsr		rn_unpack_main
+
 		; now load reloc table and apply relocs
 		lea	$10000,a1
 		lea	golf_rel(pc),a0
-		move.l	_resload(pc),a2
 		jsr	(resload_LoadFileDecrunch,a2)
 		
 		lsr.l	#2,d0
@@ -165,7 +181,7 @@ filepresent2:
 		; reloc table has spurious elements, check that
 		; addresses are included between $80000 and $FFF00 it seems
 		; that's more or less what SSBOOT does
-		; OE how to create something more complex than it should be...
+		; OR how to create something more complex than it should be...
 		move.l	_expmem(pc),a0
 		lea		$10000,a1
 .reloc_loop
@@ -524,11 +540,18 @@ _SaveFile:
 		movem.l	d0-d1/a0-a2,-(a7)
 		move.l	_resload(pc),a2
 		jsr	resload_SaveFile(a2)
-au:		movem.l	(a7)+,d0-d1/a0-a2
+		movem.l	(a7)+,d0-d1/a0-a2
 		rts
 ;==========================================
 
 rn_unpack
+		movem.l	d0-d1/a0-a2,-(a7)
+		move.l	_resload(pc),a2
+		jsr	resload_Decrunch(a2)
+		movem.l	(a7)+,d0-d1/a0-a2
+		rts
+
+rn_unpack_main
 	MOVEM.L	D0-D7/A0-A6,-(A7)	;636: 48e7fffe
 	LEA	-384(A7),A7		;63a: 4feffe80
 	MOVEA.L	A7,A2			;63e: 244f

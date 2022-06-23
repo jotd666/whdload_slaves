@@ -1,0 +1,148 @@
+;Standard Patcher-install-script
+;****************************
+
+(set #readme-file "Readme")	;name of readme file
+(set #cleanup "")		;files to delete after install
+(set #last-file "disk.1")	;last file the imager should create
+
+;****************************
+;----------------------------
+; Checks if given program is reachable via the path
+; if not abort install
+; IN:  #program - to check
+; OUT: -
+
+(procedure P_chkrun
+  (if
+    (= 0 (run ("cd SYS:\nWhich %s" #program)))
+    ("")
+    (abort ("You must install \"%s\" first !\nIt must be accessible via the path.\nYou can find it in the whdload package." #program))
+  )
+)
+
+;****************************
+
+(set #program "WHDLoad")
+(P_chkrun)
+
+(set #program "Patcher")
+(P_chkrun)
+
+(if
+  (exists #readme-file)
+  (if 
+    (= 0 (run ("SYS:Utilities/Multiview %s" #readme-file)))
+    ("")
+    (run ("SYS:Utilities/More %s" #readme-file))
+  )
+)
+
+(if
+  (= @user-level 2)
+  (
+    (set #CI_drive
+      (askchoice
+	(prompt "Select source drive for diskimages")
+	(default 0)
+	(choices "DF0:" "DF1:" "DF2:" "DF3:")
+	(help @askchoice-help)
+      )
+    )
+    (if
+      (= #CI_drive 0)
+      (set #CI_drive "DF0:")
+    )
+    (if
+      (= #CI_drive 1)
+      (set #CI_drive "DF1:")
+    )
+    (if
+      (= #CI_drive 2)
+      (set #CI_drive "DF2:")
+    )
+    (if
+      (= #CI_drive 3)
+      (set #CI_drive "DF3:")
+    )
+  )
+  (
+    (set #CI_drive "DF0:")
+  )
+)
+
+(set @default-dest
+  (askdir
+    (prompt ("Where should \"%s\" installed ?\nA drawer \"%s\" will automatically created." @app-name @app-name))
+    (help @askdir-help)
+    (default @default-dest)
+    (disk)
+  )
+)
+(set #dest (tackon @default-dest @app-name))
+(if
+  (exists #dest)
+  (
+    (set #choice
+      (askbool
+        (prompt ("\nDirectory \"%s\" already exists.\n Should it be deleted ?" #dest))
+        (default 1)
+        (choices "Delete" "Skip")
+        (help @askbool-help)
+      )
+    )
+    (if
+      (= #choice 1)
+      (run ("Delete \"%s\" \"%s.info\" All" #dest #dest))
+    )
+  )
+)
+(makedir #dest
+  (help @makedir-help)
+  (infos)
+)
+
+;----------------------------
+
+(copyfiles
+  (help @copyfiles-help)
+  (source ("%s.inf" @app-name ))
+  (newname ("%s.info" @app-name ))
+  (dest #dest)
+)
+(copyfiles
+  (help @copyfiles-help)
+  (source ("%s.slave" @app-name ))
+  (dest #dest)
+)
+(if
+  (exists #readme-file)
+  (
+    (copyfiles
+      (help @copyfiles-help)
+      (source #readme-file)
+      (dest #dest)
+    )
+    (copyfiles
+      (help @copyfiles-help)
+      (source ("%s.info" #readme-file))
+      (dest #dest)
+    )
+  )
+)
+
+(run ("Assign \"%s:\" \"%s\"" @app-name #dest))
+(run ("Patcher -p%s.imager -s%s" @app-name #CI_drive))
+(run ("Assign \"%s:\" Remove" @app-name))
+
+(if
+  (exists (tackon #dest #last-file))
+  ("")
+  (abort "Diskimaging not successful !\nThe Patcher could'nt create all needed files !")
+)
+
+;----------------------------
+
+(run ("Delete %s ALL QUIET FORCE" #cleanup))    ;delete temporary files
+
+(exit)
+

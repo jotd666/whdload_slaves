@@ -8,7 +8,7 @@
  CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
  PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
- This install applies to "Sensible Golf" © 1993 1995 Sensible Software.
+ This install applies to "Sensible Golf" © 1995 Sensible Software.
 
  This install requires WHDLoad to be in the path. It can be found in
  the WHDLoad package.
@@ -36,6 +36,11 @@ Game requires 0.5 MB Chip Mem and 1.0 MB other mem (+ 1.2 other memory for prelo
 Thanks to John Regent for    20.07.1995 disk images
 Thanks to Karpow/Scoopex for 18.07.1995 disk images
 Thanks to Frank for the installer and icons
+
+Version 1.4 (22.06.2022) done by JOTD:
+- support for SPS version (SPSID 200). It was supported but crashed
+  with an access fault when unpacking with MMU on because of RN unpack bug
+- fixed install script (issue #0005704)
 
 Version 1.3 (19.06.2022) done by JOTD:
 - using fast memory for better speed, and 512k chipmem only
@@ -93,5 +98,10 @@ When saving a tournament, you have to quit whdload to be able to reload it the
 first time you give it a name. Not a big deal, and Galahad did a great job on this
 already this saving system is not so trivial to adapt to whdload.
 
+This game uses Rob Northen compression (RNC) which has a lot of bugs, reading either too
+far after unpacked data (preventing to create a proper 512k chip slave for a while) or
+before start of unpacked program (for SPS "GOLF" packed version). The non-SPS version
+has a "GOLF" packed version that no windows or Amiga unpacker (propack, xfddecrunch) can
+unpack properly. The SPS version unpacks fine with those tools. Go figure...
 
 Regards, Galahad, JOTD, John, Karpow and Frank.
