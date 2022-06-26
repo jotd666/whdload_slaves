@@ -1,13 +1,13 @@
 
 	SECTION	ISlave,CODE
-	OPT	O+,W-,P=68000
+	;;***OPT	O+,W-,P=68000
 
 	; RawDIC imager slave for Jimmy White's Whirlwind Snooker
 	; (c) 1998-2004 Halibut Software
 
 	INCDIR	INCLUDE:
 	INCLUDE	RawDIC.i
-	INCLUDE	SlaveMacros.i
+
 
 ;--------------------------------
 
@@ -86,9 +86,7 @@ _d1_final:	movem.l	d0-7/a0-6,-(a7)
 
 	dc.b	"$VER: "
 _txt:	dc.b	"Jimmy White Snooker imager "
-	INCLUDE	Version.i
-	dc.b	10
-	INCLUDE	Copyright.i
+
 	dc.b	0
 	EVEN
 

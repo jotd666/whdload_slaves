@@ -41,7 +41,7 @@ _expmem:	dc.l	EXPMEM_SIZE	; ws_ExpMem
 	DOSCMD	"WDate  >T:date"
 	ENDC
 DECL_VERSION:MACRO
-	dc.b	"2.0"
+	dc.b	"2.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -59,7 +59,7 @@ _mainname:	dc.b	"Main",0
 
 _wsname:	dc.b	"Jimmy White's Whirlwind Snooker",0
 _wscopy:	dc.b	"1991 Archer Maclean",0
-_wsinfo:	dc.b	10,"adapted by Girv & JOTD",10,10
+_wsinfo:	dc.b	10,"adapted by Girv & JOTD",10
 	dc.b	"Version "
 	DECL_VERSION
 	dc.b	0	
@@ -74,13 +74,15 @@ _wsinfo:	dc.b	10,"adapted by Girv & JOTD",10,10
 
 _start:
 	bsr	_initialise
+	move.l	_resload(pc),a2
 
-	lea	_mainname(pc),a0	; load game code
 	move.l	_vd_mainaddr(pc),a1
 	move.l	a1,-(a7)
-	move.l	_resload(pc),a2
-	jsr	resload_LoadFile(a2)
-	
+	cmp.l	#VD_FILE_BUF,a1
+	beq.b	.already_loaded
+	lea	_mainname(pc),a0	; load game code
+	jsr	resload_LoadFileDecrunch(a2)
+.already_loaded	
 	move.l	_vd_p0_pl(pc),a0	; patch game code and start game
 	lea	_base(pc),a1
 	add.l	a1,a0
@@ -107,6 +109,14 @@ _p0_pl_v1:	PL_START
 	PL_PSS	$40324,audio_channel_1_off,2
 	PL_PSS	$4038c,audio_channel_2_off,2
 	PL_PSS	$403f4,audio_channel_3_off,2
+	
+	PL_PSS	$39728,ack_interrupt,2
+	PL_W	$39730,$4EF9	; kill keyboard code
+	PL_PA	$3967a+2,level_2_triggered
+	PL_PA	$3968a+2,keycode
+	PL_P	$2860e,level_2_interrupt
+	PL_ORW	$283ec+2,8	; enable keyboard
+	
 	PL_END
 
 _p0_pl_v2:	PL_START
@@ -116,6 +126,25 @@ _p0_pl_v2:	PL_START
 	PL_P	$28620,_lev3_int
 	PL_PS	$28544,_lev4_int
 	PL_W	$28544+6,$4a41
+	
+	PL_PS	$40486,audio_channel
+	PL_PS	$40512,audio_channel
+	PL_PS	$40506,enable_dma
+	PL_P	$405f6,soundtracker_loop
+	
+	PL_PSS	$402da,audio_channel_0_off,2
+	PL_PSS	$40340,audio_channel_1_off,2
+	PL_PSS	$403a8,audio_channel_2_off,2
+	PL_PSS	$40410,audio_channel_3_off,2
+	
+	PL_PSS	$39770,ack_interrupt,2
+	PL_W	$39778,$4EF9	; kill keyboard code
+	PL_PA	$396c2+2,level_2_triggered
+	PL_PA	$396d2+2,keycode
+	PL_P	$28656,level_2_interrupt
+	PL_ORW	$28434+2,8	; enable keyboard
+	
+
 	PL_END
 
 _p0_pl_v3:	PL_START
@@ -125,6 +154,24 @@ _p0_pl_v3:	PL_START
 	PL_P	$287f2,_lev3_int
 	PL_PS	$2870e,_lev4_int
 	PL_W	$2870e+6,$4a41
+	
+	PL_PS	$406be,audio_channel
+	PL_PS	$4074a,audio_channel
+	PL_PS	$4073e,enable_dma
+	PL_P	$4082e,soundtracker_loop
+	
+	PL_PSS	$40512,audio_channel_0_off,2
+	PL_PSS	$40578,audio_channel_1_off,2
+	PL_PSS	$405e0,audio_channel_2_off,2
+	PL_PSS	$40648,audio_channel_3_off,2
+	
+	PL_PSS	$3993a,ack_interrupt,2
+	PL_W	$39942,$4EF9	; kill keyboard code
+	PL_PA	$3987e+2,level_2_triggered
+	PL_PA	$3988e+2,keycode
+	PL_P	$28828,level_2_interrupt
+	PL_ORW	$285fe+2,8	; enable keyboard
+	
 	PL_END
 
 _p0_pl_v4:	PL_START
@@ -134,6 +181,24 @@ _p0_pl_v4:	PL_START
 	PL_P	$2862c,_lev3_int
 	PL_PS	$28550,_lev4_int
 	PL_W	$28550+6,$4a41
+	
+	PL_PS	$404be,audio_channel
+	PL_PS	$4054a,audio_channel
+	PL_PS	$4053e,enable_dma
+	PL_P	$4062e,soundtracker_loop
+	
+	PL_PSS	$40312,audio_channel_0_off,2
+	PL_PSS	$40378,audio_channel_1_off,2
+	PL_PSS	$403e0,audio_channel_2_off,2
+	PL_PSS	$40448,audio_channel_3_off,2
+	
+	PL_PSS	$3977c,ack_interrupt,2
+	PL_W	$39784,$4EF9	; kill keyboard code
+	PL_PA	$396ce+2,level_2_triggered
+	PL_PA	$396de+2,keycode
+	PL_P	$28662,level_2_interrupt
+	PL_ORW	$28440+2,8	; enable keyboard
+	
 	PL_END
 
 ;--------------------------------
@@ -171,9 +236,7 @@ _p1_pl_v1:	PL_START
 	PL_NOP	$11ed6,12	; anti manual protection
 	PL_L	$1203c,$3228004a	;  move.w d1,$4a(a0)
 	PL_P	$4a37e,_diskaccess	; intercept disk access
-	PL_PS	$3968a,_keyboard1	; intercept keyboard handshake code
-	PL_NOP	$3968a+$9e,8
-	PL_PS	$3968a+$9e+$18,_keyboard2
+	
 	PL_END
 
 _p1_pl_v2:	PL_START
@@ -184,9 +247,7 @@ _p1_pl_v2:	PL_START
 	PL_NOP	$17340,12
 	PL_L	$174da,$3228004a
 	PL_P	$4a39e,_diskaccess
-	PL_PS	$396d2,_keyboard1
-	PL_NOP	$396d2+$9e,8
-	PL_PS	$396d2+$9e+$18,_keyboard2
+
 	PL_END
 
 _p1_pl_v3:	PL_START
@@ -197,9 +258,7 @@ _p1_pl_v3:	PL_START
 	PL_NOP	$17524,12
 	PL_L	$176be,$3228004a
 	PL_P	$4a5de,_diskaccess
-	PL_PS	$3988e,_keyboard1
-	PL_NOP	$3988e+$ac,8
-	PL_PS	$3988e+$ac+$18,_keyboard2
+
 	PL_END
 
 _p1_pl_v4:	PL_START
@@ -210,9 +269,7 @@ _p1_pl_v4:	PL_START
 	PL_NOP	$11ef6,12
 	PL_L	$12090,$3228004a
 	PL_P	$4a3de,_diskaccess
-	PL_PS	$396de,_keyboard1
-	PL_NOP	$396de+$9e,8
-	PL_PS	$396de+$9e+$18,_keyboard2
+
 	PL_END
 
 ;--------------------------------
@@ -264,18 +321,47 @@ _csum3:	move.l	a0,-(a7)
 
 ;--------------------------------
 
-	; fixed keyboard handshake code
+level_2_interrupt
 
-_keyboard1:	move.b	ciasdr+_ciaa,d0
-	cmp.b	_keyexit(pc),d0
-	beq	_exit
-	clr.b	ciasdr+_ciaa
-	or.b	#CIACRAF_SPMODE,ciacra+_ciaa
+	movem.l	D0/A0/A5,-(a7)
+	LEA	$00BFD000,A5
+	MOVEQ	#$08,D0
+	AND.B	$1D01(A5),D0
+	BEQ	.nokey
+	MOVE.B	$1C01(A5),D0
+	lea		keycode(pc),a0
+	move.b	d0,(a0)
+	NOT.B	D0
+	ROR.B	#1,D0		; raw key code here
+	lea		level_2_triggered(pc),a0
+	move.w	#8,(a0)
+    cmp.b   _keyexit(pc),d0
+    beq   _exit
+
+	BSET	#$06,$1E01(A5)
+	move.l	#2,d0
+.bd_loop1
+	move.w  d0,-(a7)
+    move.b	$dff006,d0	; VPOS
+.bd_loop2
+	cmp.b	$dff006,d0
+	beq.s	.bd_loop2
+	move.w	(a7)+,d0
+	dbf	d0,.bd_loop1
+	BCLR	#$06,$1E01(A5)	; acknowledge key
+
+.nokey
+	movem.l	(a7)+,d0/a0/a5
+	move.w	#8,$dff09c
+	rte
+
+ack_interrupt
+	move.l	a0,-(a7)
+	lea		level_2_triggered(pc),a0
+	clr.w	(a0)
+	move.l	(a7)+,a0
 	rts
-
-_keyboard2:	and.b	#~(CIACRAF_SPMODE),ciacra+_ciaa
-	rts
-
+	
 ;--------------------------------
 
 	; fixed level 3 interrupt handling routine
@@ -463,14 +549,13 @@ _initialise:	movem.l	d0-d7/a0-a6,-(a7)
 ;	move.l	_resload(pc),a2
 ;	jsr	resload_Control(a2)
 
-	move.l	#VD_FILE_LEN,d0
-	MOVEQ.L	#0,D1		;446: 223c00002c00
 	LEA	VD_FILE_BUF,A1		;44e: 41f900010000
 	lea	VD_FILE_NAM(pc),a0
 	MOVEA.L	_resload(PC),A2		;454: 247a0192
 	MOVEM.L	D0/A1,-(A7)		;458: 48e740a0
-	JSR	resload_LoadFileOffset(A2)			;45c: 4eaa0028
+	JSR	resload_LoadFileDecrunch(A2)			;45c: 4eaa0028
 	MOVEM.L	(A7)+,D0/A0		;460: 4cdf0501
+	move.l	#VD_FILE_LEN,d0
 	JSR	resload_CRC16(A2)			;464: 4eaa0030
 	cmp.w	#$f5d9,d0
 	beq.b	version_1
@@ -525,7 +610,7 @@ _abort:      move.l	_resload(pc),-(a7)
 VD_FILE_NAM:	dc.b "Main",0
 	EVEN
 VD_FILE_LEN:	equ	$1400
-VD_FILE_BUF:	equ	$10000
+VD_FILE_BUF:	equ	$5ed0
 
 ;-----
 
@@ -542,6 +627,7 @@ _vd_l3i_coper:  dc.l	0
 _vd_l3i_vertb:  dc.l	0
 _vd_l3i_blit:   dc.l	0
 
+
 ;-----
 
 RELOC_MOVEL:MACRO
@@ -550,20 +636,7 @@ RELOC_MOVEL:MACRO
 		ENDM
 
 
-_setvars_version_1
-
-;	VD_VERSION	1,$f5d9	; v1 original
-;	dc.l	_p0_pl_v1-_base
-;	dc.l	_p1_pl_v1-_base
-;	dc.l	$00005ed0
-;	dc.l	$000282e6
-;	dc.l	$00004f82
-;	dc.l	$0000f8c1
-;	dc.l	$00040092
-;	dc.l	$00000001
-;	dc.l	$00039ce8
-;	dc.l	$00027794
-;	dc.l	$0002861a
+_setvars_version_1; v1 original (SPS513)
 
 	RELOC_MOVEL	_p0_pl_v1-_base,_vd_p0_pl  
 	RELOC_MOVEL	_p1_pl_v1-_base,_vd_p1_pl  
@@ -578,7 +651,7 @@ _setvars_version_1
 	RELOC_MOVEL	$0002861a,_vd_l3i_blit
 	rts
 
-_setvars_version_2
+_setvars_version_2; v2 beau jolly
 	RELOC_MOVEL	_p0_pl_v2-_base,_vd_p0_pl  
 	RELOC_MOVEL	_p1_pl_v2-_base,_vd_p1_pl  
 	RELOC_MOVEL	$00005ed0,_vd_mainaddr
@@ -592,7 +665,7 @@ _setvars_version_2
 	RELOC_MOVEL	$00028662,_vd_l3i_blit
 	rts
 	
-_setvars_version_3
+_setvars_version_3; v3 hit squad
 	RELOC_MOVEL	_p0_pl_v3-_base,_vd_p0_pl  
 	RELOC_MOVEL	_p1_pl_v3-_base,_vd_p1_pl  
 	RELOC_MOVEL	$00005ed2,_vd_mainaddr
@@ -606,7 +679,7 @@ _setvars_version_3
 	RELOC_MOVEL	$00028834,_vd_l3i_blit
 	rts
 	
-_setvars_version_4
+_setvars_version_4; v4 virgin
 	RELOC_MOVEL	_p0_pl_v4-_base,_vd_p0_pl  
 	RELOC_MOVEL	_p1_pl_v4-_base,_vd_p1_pl  
 	RELOC_MOVEL	$00005ed0,_vd_mainaddr
@@ -621,51 +694,13 @@ _setvars_version_4
 	rts
 	
 
-;	VD_VERSION	2,$fa92	; v2 beau jolly
-;	dc.l	_p0_pl_v2-_base
-;	dc.l	_p1_pl_v2-_base
-;	dc.l	$00005ed0
-;	dc.l	$0002832e
-;	dc.l	$00004f82
-;	dc.l	$0000f9e3
-;	dc.l	$000400ae
-;	dc.l	$00000001
-;	dc.l	$00039d30
-;	dc.l	$000277dc
-;	dc.l	$00028662
-;
-;	VD_VERSION	3,$8886	; v3 hit squad
-;	dc.l	_p0_pl_v3-_base
-;	dc.l	_p1_pl_v3-_base
-;	dc.l	$00005ed2
-;	dc.l	$000284f8
-;	dc.l	$00004f82
-;	dc.l	$00002cd0
-;	dc.l	$000402e6
-;	dc.l	$00000001
-;	dc.l	$00039f44
-;	dc.l	$000279f2
-;	dc.l	$00028834
-;
-;	VD_VERSION	4,$e147	; v4 virgin
-;	dc.l	_p0_pl_v4-_base
-;	dc.l	_p1_pl_v4-_base
-;	dc.l	$00005ed0
-;	dc.l	$0002833a
-;	dc.l	$00004f82
-;	dc.l	$0000fdc5
-;	dc.l	$000400e6
-;	dc.l	$00000001
-;	dc.l	$00039d3c
-;	dc.l	$000277e8
-;	dc.l	$0002866e
-;
-;	VD_VERSION_END
-
 ;--------------------------------
 
 _resload:    dc.l 0
-
+level_2_triggered
+	dc.w	0
+keycode
+	dc.b	0
 ;-----
 
 

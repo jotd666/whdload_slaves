@@ -8,7 +8,7 @@
  CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
  PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
- This install applies to "Jimmy White's Whirlwind Soccer" © 1991 Virgin.
+ This install applies to "Jimmy White's Whirlwind Soccer" © 1991 Archer Maclean.
 
  This install requires WHDLoad and RawDIC to be in the path. Both can be found in
  the WHDLoad package.
@@ -41,7 +41,7 @@ REQUIREMENTS
 INSTALLING THE GAME
 
     Extract all files in the product archive to your system.
-    They will be extracted to a drawer called "WHD_JimmyWhiteSnooker"
+    They will be extracted to a drawer called "JimmyWhiteSnookerHD"
 
     Double click on the "Install" icon present in the extraction
     directory and follow the instructions given by the Installer
@@ -98,12 +98,19 @@ ORIGINAL AUTHOR
 
 HISTORY
 
+ Version 2.2 (26.06.2022) done by JOTD:
+ - "main" program needed unpacking, else wrong version was displayed
+ - faster startup (only unpacks once in most versions at startup)
+ 
  Version 2.1 (2022) done by JOTD:
  - fixed music
+ - re-did keyboard routine (Girv tried to fix it but it was unfixable...)
  - added quitkey on 68000
  - now uses 512k chipmem instead of 516k
  - reworked source code, replaced missing Girv's specific source code that
    isn't provided anywhere, but can be guessed so that's okay :)
+ 
+ older versions by Girv
  
     2.00    10/2004
       - back once again!
