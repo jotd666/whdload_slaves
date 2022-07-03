@@ -1,0 +1,1359 @@
+                         The Humble Guy's HumbleDox
+     
+                                   Presents
+   
+              Jimmy White's 'Whirlwind Snooker: Complete Game Manual
+ 
+
+Jimmy White's 'Whirlwind' Snooker
+
+CREDITS:
+         
+Conceived & Written by Archer Maclean
+Visuals & Sound FX by Archer Maclean
+Music by Michael Powell
+Manual by Gary Penn
+Manual Design & Artwork by Definition
+         
+CONTENTS              
+
+LOADING
+
+THE TITLE SEQUENCE                 pg.4
+OPTIONS                            pg.5
+GAME CONTROL                       pg.6
+CHOOSING AN OPTION                 pg.7
+START ONE PLAYER GAME              pg.7
+START TWO PLAYER GAME              pg.8
+TWO PLAYER PRACTICE                pg.9
+SET UP TRICK SHOT                  pg.10
+ENTER DEMO MODE                    pg.10
+DISK FEATURES                      pg.11
+RETURN TO TABLE                    pg.14
+PLAYING SNOOKER                    pg.15
+CONTROL DURING PLAY                pg.15
+WHAT YOU CAN EXPECT TO SEE         pg.16
+THE BREAK                          pg.18
+POTTING A BALL                     pg.18
+CHOOSING A COLOUR                  pg.18
+THE COMPUTER IS THINKING           pg.18 
+ICON CONTROL                       pg.19 
+USING THE KEYBOARD                 pg.26
+USING THE MOUSE ON THE TABLE       pg.27 
+FOLLOWING THE SHOT                 pg.27
+USING THE TRICK SHOT EDITER        pg.29
+USING THE COMPUTER TO TAKE SHOTS   pg.31 
+SOLVING GAME PROBLEMS              pg.31 
+A TRICK SHOT                       pg.32 
+GETTING STARTED                    pg.33 
+THE ART OF SPIN AND SWERVE         pg.37 
+TOP SPIN                           pg.38 
+BACK SPIN                          pg.39 
+SIDE SPIN                          pg.40 
+SWERVE                             pg.42 
+HEAD ON SHOT                       pg.42 
+ANGLE SHOT ON BALL                 pg.43 
+THE COMPUTER OPPONENTS             pg.44 
+
+
+WELCOME
+         
+Welcome to Jimmy White's Whirlwhid Snooker, by far and away the 
+finest computer-based snooker simulation in the world. Jimmy White's 
+Whirlwind Snooker adheres to the rules of real snooker, and the 
+balls obey the laws of physics to the letter. Jimmy White's 
+Whirlwind Snooker allows one or two players to practice against each 
+other, set up and perform trick shots or compete against each other 
+or four increasingly challenging computer-controlled opponents (one 
+of whom is Jimmy White himself), and plenty more besides. This 
+manual has been produced to ensure that you get the very best out of 
+this premium product. If you should find either the program or the 
+manual unsatisfactory in any way, drop us a line detailing in full 
+the cause of your disatisfaction. This will help us avoid repeating 
+any similar problems in the future. 
+
+CAUTION
+
+Diskettes are magnetic media, just like cassette tapes such as 
+Desmond Decker: The Collection. Do not expose diskettes to x-rays or 
+intense magnetic fields as the data they hold will be erased. Do not 
+attempt to 'back-up' this data as it may be destroyed in the process 
+and is an infringement of copyright, and Virgin Games Ltd accepts no 
+responsiblity for disks damaged as a direct result of infringement 
+of copyright. 
+
+LOADING JIMMY WHITE'S SNOOKER
+
+To enjoy this product to the full you will need a Compatible Mouse 
+and a Disk of Little WHIRLWIND Consequence for the sole purpose of 
+the storage of scores and games. 
+
+If your Amiga is turned on, turn it off. After at least 30 seconds, 
+turn on your Amiga. This will remove any virus which may be present 
+and so minimise the risk of infecting and possibly destroying your 
+Jimmy White ' s Whirlwind Snooker disk . Insert the Jimmy White ' s 
+Whirlwind Snooker disk into the internal disk drive. The program 
+will load and run automatically. If the mouse is to be used to play 
+Jimmy White's Whirlwind Snooker it must be plugged into its usual 
+hole - ie, the port marked ' I JOYSTICK'. Otherwise, you can use the 
+keyboard. 
+
+LOADING PROBLEMS 
+
+Should Jimmy White's Whirlwind Snooker fail to load, turn off your 
+machine and remove any extraneous external peripherals such as 
+printers (leave the monitor or television connected) before 
+repeating the loading procedure. If Jimmy White's Whirlwind Snooker 
+still refuses to - ah - play ball, as it were, then pop the faulty 
+disk (not the packaging) into a suitably-sized jiffy bag or padded 
+envelope, along with your name and address. To aid the 
+trouble-shooting department, please provide in as much detail as 
+possible your equipment configuration (not forgetting any RAM 
+expansion devices). Send the package to: JWWS Replacements, Virgin 
+Games Ltd, 338A Ladbroke Grove, London W10 5AH. Virgin Games Ltd 
+will endeavour to replace the fault disk within 28 days of its 
+receipt. 
+
+THE TITLE SEQUENCE
+
+When you see this title sequence you will know that Jimmy White's 
+Whirlwind Snooker has loaded successfully. To pass this sequence at 
+any time press either of the two mouse buttons or  any key other 
+than 'Ctrl', 'Caps Lock'or either of the two, 'SHIFT', 'Alt' or 'A' 
+keys. 
+
+If the title sequence has not been passed after approximately one 
+minute, the program enters a short computer-controlled demonstration 
+mode which serves to show 10 different types of sllot. Simply press 
+the 'Esc' key to quit this demonstration. 
+
+When the title sequence is passed for the first time you will be 
+asked to enter a password, which is found within the History Manual. 
+The page number, the line on which the word will be tound and the 
+number of the word itself along the line are given - for example, 
+PAGE 4, LINE 1, WORD 1 is appropriately enough,'JlMMY'. Use the 
+keyboard to type the password then press RETURN. 
+
+If the password is incorrect you will begiven two further chances to 
+get it right. lf you enter three IIONS incorrect passwords the game 
+will fail to work, in which case turn off your computer and fol low 
+the loading procedure from scratch again. If the password is correct 
+you will be presented with the GAME CONTROL menu from which play can 
+begin. 
+
+OPTIONS
+
+Jimmy White's Whirlwind Snooker has many options. Most of them are 
+displayed in panels - or 'windows' - thus ... 
+
+Some options have windows of their own. When such an option is 
+selected, its window is placed on top of the previous one. You can 
+remove - or 'close' - this new window and return to the previous one 
+by selecting CANCEL. 
+
+If no key is pressed and the mouse isn't moved in any way for 
+approximately one minute al1d GAME CONTROL that' s during any 
+selection, too - the title sequence is replayed. Note that the table 
+arrangement shown below the Game Control window will be reset too. 
+Press the 'Esc' key to return to the GAME CONTROL menu from any of 
+its related option windows. 
+
+GAME CONTROL
+
+1. START ONE PLAYER GAME 
+
+Play for real against one of four computer-controlled opponents 
+including Jimmy himself. 
+
+2. START TWO PLAYER GAME 
+
+Play for real against a human-controlled opponent. 
+
+3. TWO PLAYER PRACTICE 
+
+Play for laughs against a human-controlled opponent. 
+
+4. SET UP TRICK SHOT 
+
+Arrange the balls to set up trick shots or solve problems from any 
+other game mode. You can also create and play the situation of your 
+choice as this option doubles up as a handy single- player practice. 
+
+5. ENTER DEMO MODE 
+
+Watch two computer opponents play to see how it's done. 
+
+6. DISK FEATURES 
+
+Save games to disk for later use or load games, scores and breaks 
+from disk. 
+
+7. OPTIONS 
+
+Remove all saved games and scores from disks. You can also return to 
+the title screen sequence from here. 
+
+8. RETURN TO TABLE 
+
+Resume play from the table set-up shown below the Game Control 
+panel. 
+
+CHOOSING AN OPTION
+
+WITH THE MOUSE 
+
+Move the arrow so that it points to the desired option. Press the 
+left-hand mouse button to highlight the option in question thus ... 
+
+Pressing the right-hand button selects the highlighted option. 
+
+WITH THE KEYBOARD 
+
+Use the up and down arrow - or 'cursor' - keys to move the highlight 
+up and down through the options. Press the RETURN key to select the 
+highlighted option. 
+
+CANCEL 
+
+Maybe you selected the wrong option or perhaps you changed your 
+mind. Either way, highlight and select CANCEL when it's available to 
+return to the previous menu of options and game state. 
+
+START ONE PLAYER GAME
+
+You cannot UNDO the last shot played (see PLAYING SNOOKER). You 
+cannot use the computer to determine the best possible shot (see 
+PLAYING SNOOKER). You can save the game to disk for later use (see 
+DISK FEATURES). Any worthwhile human-produced scores and breaks will 
+be saved to disk once the game reaches a conclusion (see SAVING 
+SCORES AND BREAKS). 
+
+ENTER NAME 1 
+
+Before you do anything else, enter your name - a maximum of eight 
+characters without spaces. You can only use the 26 letters of the 
+alphabet - no other keyboard characters (such as numbers) are 
+available. Well, other than the backspace key for deleting the 
+character to the left of the cursor. If you attempt to begin play 
+without entering your name the highlight will return to ENTER NAME 
+and you will have to enter something. The name is considered entered 
+when the RETURN key is pressed. 
+
+PLAY AGAINST
+
+Satisfied with your name? Good. Now choose an opponent (as you can 
+see, the difficulty levels are show on the right of the names). 
+Highlight and select the desired opponent to bein a one player game 
+(see THE COMPUTER OPPONENTS).
+
+HEAD OR TAILS ...
+
+Having started a Two Player Game, a 'coin' is 'tossed' to determine 
+who will break. The result is shown thus ... 
+
+To begin play, select OK - either by pointing to it and pres.shlg 
+the right-hand mouse button or by simply pressing the 'RETURN ' key. 
+See PLAYING SNOOKER for details of how to play. 
+
+START TWO PLAYER GAME
+
+You can UNDO the last shot played (see PLAYING SNOOKER). You can use 
+the computer to pot any ball for you or to determine the best 
+possible shot. You can save the pratice game to disk for later use 
+(see DISK FEATURES). Any worthwhile scores and breaks are NOT saved 
+to disk once the practice game reaches a conclusion. 
+
+ENTER NAME 
+
+Two names must be entered (unless they already have been via the two 
+player game option). 
+
+START PRACTICE GAME 
+
+Highlight and select this to begin the practice session. 
+
+HEAD OR TAILS ... 
+
+Having started a Two Player Practice game, a 'coin' is 'tossed' to 
+deterrnine who will break. The result is shown thus ... 
+
+To begin play, select OK - either by pointing to it and pressing the 
+right-hand mouse button or by simply pressing the 'RETURN' key. See 
+PLAYING SNOOKER for details of how to play. 
+
+SET UP TRICK SHOT 
+
+You can UNDO the last shot played (see PLAYING SNOOKER). You can use 
+the computer to determine the best possible shot. You can save the 
+trick shot to disk for later use (see DISK FEATURES). Note that 
+scores are not kept in Trick Shot mode. 
+
+START TRICK SHOT EDITOR 
+
+Highlight and select to enter the Trick Shot Editor. 
+
+See USING THE TRICK SHOT EDITOR for details of how to use it. 
+
+ENTER DEMO MODE
+
+Watching two computer-controlled opponents battle it out on the 
+table can prove both absorbing and educational. Press the 'Esc' key 
+during the demonstration to return to the GAME CONTROL menu. Note 
+that while the cue is in motion the 'Esc' key has no immediate 
+effect. You cannot save a demo game to disk. Any worthwhile scores 
+and breaks are not saved to disk. 
+
+BEGIN DEMO GAME FROM THE START 
+
+Select this to see a complete game unfold before your very eyes. 
+
+START DEMO GAME FROM CURRENT LAYOUT 
+
+Select this to begin play from the layout shown below the GAME 
+CONTROL window. Now you can see how the game that was previously in 
+play unfolds in the hands of the professionals. You can also use 
+this feature in conjunction with previously saved games to see how 
+the computer would handle them (certain trick shots can also be 
+used). Load the saved game then quit to the GAME CONTROL menu. Now 
+select ENTER DEMO MODE and choose to begin it from the current 
+layout. 
+
+DISK FEATURES
+
+LOAD AN OLD GAME FROM DISK 
+
+Selecting this option presents you with a choice of 15 'slots' on 
+the disk, each containing a previously saved game. Slots with no 
+title are empty. To load the saved game of your choice simply select 
+it (using either the mouse or keyboard). Once the saved game has 
+loaded you resume play from it. 
+
+If you cannot remember the contents of any of the saved games simply 
+highlight the saved game title in question to view the table 
+arrangement below the panel. Holding down the left-hand mouse button 
+allows you to move the highlight up and down the selection of saved 
+games and view them. 
+
+CANNOT LOAD AN EMPTY FILE 
+
+You cannot load an empty file, so don't try. This is what you are 
+shown if you do. 
+
+SAVE CURRENT GAME TO DISK 
+
+Selecting this option presents you with a choice of 15 ' slots ' on 
+the disk to which games can be saved. Pressing the RETURN key 
+returns you to the Game Control menu. Otherwise, select the desired 
+slot, be it an empty slot (shown as a line of 27 dots) or an 
+existing one to be overwritten, as you would an option. Now use the 
+keyboard to enter a name for the saved game. The name may be up to 
+27 characters in length. Unlike the player names, saved game names 
+CAN include spaces, numbers, full stops and dashes. The BACKSPACE 
+key removes the last character entered. Press RETURN to register the 
+name and save the game. You will then be returned to the GAME 
+CONTROL menu. 
+
+To allow you to distinguish between the four possible saved game 
+types a three-letter code is added to the title of the game saved. 
+You can see these in a column to the far right of the DISK FEATURES 
+panel. 
+
+One Player Games are saved with the extension IPG. 
+
+Two Player Games are saved with the extension 2PG. 
+
+Trick Shots are saved with the extension TRK. 
+
+Practice Games are saved with the extension PRC. 
+
+Note that with a slot highlighted, pressing the RETURN key 
+automatically creates a title for the saved game. 
+
+One Player Games will be saved as ONE V [COMPUTER PLAYER NAME] 
+[SCORE]. 
+
+Two Player Games will be saved as ONE V TWO [SCORE]. 
+
+Trick Shots will be saved as TRICK SHOT. 
+
+Pratice Games will be saved as ONE V TWO ISCOREl. 
+
+SAVING SCORES AND BREAKS 
+
+When a One or Two Player Game reaches its conclusion, the best 
+human-produced scores and breaks are saved to disk. Note that this 
+is provided a suitable disk is in the computer's internal drive - 
+ie, a disk formatted for the purpose of storing scores and breaks 
+(this includes the Jimmy White's Whirlwind Snooker disk) - and that 
+the scores and breaks are high enough to merit saving in the first 
+place. 
+
+VIEW BEST BREAKS 1 PG AND 2PG 
+
+Calls up this display of best breaks ... 
+
+VIEW BEST SCORES 
+
+Calls up this display of best scores. There is a separate table for 
+each of the four levels of computer opponent and the two player 
+game. 
+
+COPYING SAVED GAMES 
+
+Here's a useful means of copying saved games to another disk. Take 
+your save disk and insert it into the computer's internal drive. Use 
+the SAVE option to call up the saved games or scores (this actually 
+loads every saved game from disk). Remove this save disk and insert 
+the disk to which the games are to be copied (ensure that it is 
+formatted). Now use the SAVE option - it will save not only the game 
+in question but the entire selection of saved games to the new disk. 
+
+OPTIONS 
+
+The two options which cater for disk management are both used in the 
+same way. If there's a problem erasing data, you will be warned with 
+a 'CLUNK!' sound and this window ... 
+
+Select CANCEL to return to the GAME CONTROL menu. 
+
+ERASE ALL SAVED GAMES ON DISK 
+
+Selecting this option calls up this window ... 
+
+Select YES to remove any saved games on the disk. You will then be 
+returned to the GAME CONTROL menu. Note that this does not affect 
+the rest of the disk. 
+
+This option also serves to create save game slots on a small section 
+of a disk not previously used for saving games. Ensure that the 
+write-protect tab is enabled, ie, the hole is closed. Insert the 
+disk into the internal drive then select the ERASE option to create 
+the save game slots on the disk. 
+
+ERASE ALL SCORE DATA ON DISK 
+
+Selecting this option calls up this window ... 
+
+Select YES to remove any scores and breaks saved on the disk. You 
+will then be returned to the GAME CONTROL menu. Note that this does 
+not affect the rest of the disk. 
+
+QUIT TO TITLE SCREEN SEQUENCE 
+
+If you have a hankering to see that pretty swirling whirlwind 
+pattern again, select this option. 
+
+RETURN TO TABLE 
+
+Selecting this option from the outset will take you straight into 
+the TRICK SHOT mode. Otherwise, play will resume from the point at 
+which it was abandoned - even if the computer was thinking.
+
+PLAYING SNOOKER
+
+There are three means to this end - two of them are mouse 
+orientated, the other is via the keyboard. All are accessable at 
+once. As with choosing options, the mouse moves an arrow. By 
+pointing this arrow at an icon and pressing or pressing and holding 
+down the left-hand or right-hand mouse button (or both even) the 
+icon's function is activated. This arow can also be used directly on 
+the table and balls to activate certain functions. 
+
+CONTROL DURING PLAY
+
+A mix of mouse and keyboard control is recommended. Author Archer 
+Maclean prefers to use only the icons for applying chalk, fine 
+control of aim and actually taking a shot. Everything else  he does 
+by using the mouse directly on the table and balls. 
+
+The table is viewed from almost every possible angle via a remote 
+camera which is effectively attached to the end of the cue. The 
+camera 'focuses' on the central point shown here and its movement is 
+relative to this point. 
+
+At the top of the screen is a control panel packed with small 
+descriptive pictures of available functions - or 'icons'. These 
+icons are selected by pointing at them with the mouse-controlled 
+arrow and then pressing or pressing and holding down the left-hand 
+or right-hand mouse button or both at once. Some functions behave 
+differently depending on which mouse button has been pressed. Others 
+behave the same regardless of which button is used to activate them. 
+Note that this panel can also be placed down the left-hand side of 
+the screen 
+
+WHAT YOU CAN EXPECT TO SEE
+
+THE BALLS ARE IN MOTION 
+
+To show that a shot is in play and that balls are in motion, the 
+mouse-controlled arrow undergoes a small transformation to look like 
+this ... 
+
+Some functions are understandably not available while the shot is 
+being played. The functions that can be used are detailed in 
+CONTROLS. 
+
+THE BREAK
+
+The winner of the toss gets to break first. This player also gets to 
+move the cue ball around the 'D' at the top of the table. Simply use 
+the mouse to point the arrow at the cue ball then hold down the 
+left-hand mouse button the arrow wi 11 charge into a black hand to 
+show that the ball has been 'grabbed'. You can now move the cue ball 
+around the 'D' - but NOT outside it or through the three coloured 
+bal ls in the 'D ' . Note that the cue ball is actual ly correctly 
+positioned for a suitable break - all you have to do is set the 
+power and spin as you see fit. 
+
+POTTING A BALL
+
+When a ball is potted in real snooker it hardly makes a sound. When 
+a ball is potted in Jimmy Whites Whirlwind Snooker, a 'popping' 
+sound is heard, just to let you know that it has gone in, and this 
+small table appears in the control panel ... 
+
+As you can see, the ball potted is shown next to the table 'map' and 
+the pocket is highlighted. 
+
+CHOOSING A COLOR
+
+With a red in the bag, so to speak, you now must choose a colour to 
+pot, as indicated by this icon in the control panel.
+
+THE COMPUTER IS THINKING..
+
+Use the mouse to move the arrow to point to the desired colour ball 
+on the table then press the left-hand mouse button. Alternatively, 
+press the equivalent number key (but NOT on the keypad) to choose, 
+eg, key '2' for yellow, key '7' for black. 
+
+This clock symbol is shown whenever the computer is thinking. It 
+could be the computer opponent considering its next move or maybe 
+you asked for help with the best possible shot available. Whatever 
+the reason, the mouse pointer is not available while the computer 
+thinks. Press the 'Esc' key if you wish to quit to the GAME CONTROL 
+menu. 
+
+FOUL
+
+Any player who breaks the rules of snooker is penalised accordingly. 
+With the points from the foul awarded to the 'innocent' player, a 
+window is displayed .... 
+
+The 'innocent' player now has to choose whether to play a shot as 
+normal or to make the 'guilty' player play again. Point the arrow at 
+the desired letter and press a mouse button to make a choice. 
+Alternatively, press either 'A' or 'B' on the keyboard.
+
+TINK!
+
+If a function cannot be performed, it won't be and a 'TINK!' sound 
+will be heard.
+
+Simply use the mouse to move the arrow so it points to the desired 
+function icon then press a mouse button to activate it.
+
+VIEW Q BALL
+
+You have to be 'on' the cue ball to take a shot. If the TAKE SHOT 
+cue ball icon has a cross on it, you are 'on' the cue ball. 
+Otherwise, press the left-hand mouse button to go straight in close 
+to the cue ball thus..
+
+A second press of the left-hand mouse button will rotate the view 
+through 180 degrees thus..
+
+Press the right-hand mouse button to go straight to this view. If you 
+are already 'on' the cue ball, the view will be rotated through 180 
+degrees.
+
+VIEW LINE
+
+View the direction in which the cue ball will travel if it 
+uninterrupted and no spin is applied. Note that activating this 
+function takes you to the cue ball if you weren't already 'on' it.
+
+Press the left-hand mouse button to toggle on and off a single view 
+line projected from the centre of the cue ball.
+
+Press the right-hand mouse button to toggle on and off a double view 
+line. The second view line shows the angle at which an uninterrupted 
+cue ball without any spin applied will rebound off a cushion.
+
+CONTROL
+
+Press the left-hand mouse button to return to the GAME CONTROL menu. 
+Press the right-hand mouse button to call up a HELP menu...
+
+CHALK CUE
+
+Press either mouse button to apply chalk to the tip of the cue. This 
+is used to improve the cue tip's 'grip' and so minimise the 
+possibility of miscueing. Note that when playing a straight shot - 
+ie, no spin is applied - you do not need any chalk. The greater the 
+spin applied, the more chalk is applied (there is still a remote 
+chance of miscueing however).
+
+TOP SPIN
+
+Press either mouse button to move the hit point on the cue ball up 
+from the centre to the top. The higher the hit point on the cue 
+ball, the greater the top spin applied. Top spin is also used to 
+swerve the cue ball (see THE ART OF SPIN AND SWERVE). Note that 
+using this function takes you to the cue ball if you weren't already 
+'on' it.
+
+SIDE SPIN (left)
+
+Press either mouse button to move the hit point on the cue ball to 
+the left from the centre. The further the hit point is to the left 
+on the cue ball, the greater the left-hand side spin. Side spin is 
+also used to swerve the cue ball (see THE ART OF SPIN AND SWERVE). 
+Note that using this function takes you to the cue ball if you 
+weren't already 'on' it.
+
+SIDE SPIN (right) 
+
+Press either mouse button to move the hit point on the cue ball to 
+the right from the centre. The further the hit point is to the right 
+on the cue ball, the greater the right-hand side spin. Side spin is 
+also used to swerve the cue ball (see THE ART OF SPIN AND SWERVE). 
+Note that using this function takes you to the cue ball if you 
+weren't already 'on' it.
+
+BACK SPIN 
+
+Press either mouse button to move the hit point on the cue ball down 
+from the centre to the bottom. The lower the hit point on the cue 
+ball, the greater the back spin applied. Back spin is also used to 
+swerve the cue ball (see THE ART OF SPIN AND SWERVE). Note that 
+using this function takes you to the cue ball if you weren't already 
+'on' it.
+
+TAKE SHOT 
+
+Press either mouse button to call the cue into view and take the 
+shot. The cue ball is always hit directly up the screen. Note that 
+you must be 'on' the cue ball in order to take the shot. This is 
+indicated by a cross in the centre of the TAKE SHOT cue ball icon.
+
+The cross shows the point of impact of the cue on the cue ball. If 
+you are not 'on' the cue ball, go to it by selecting the TAKE SHOT, 
+VIEW LINE, VIEW Q BALL or SPIN icons.
+
+If you are 'on' the cue ball but the shot is blocked from a 
+particular angle, say, by another ball or a cushion, then 'NO' is 
+displayed in the centre of the TAKE SHOT cue ball icon thus...
+
+You cannot take a shot while 'NO' is displayed so move around and up 
+and over the cue ball until the cross reappears. Whenever the cue 
+ball is up against a cushion or behind another ball, the range of 
+possible impact points is automatically calculated and displayed on 
+the TAKE SHOT cue ball icon as you move around the cue ball. Note 
+that by pressing and holding down either mouse button as the shot is 
+taken you can actually follow the cue ball and first ball it hits 
+(see FOLLOWING THE SHOT). You can also manipulate the table or move 
+'on' to balls while the balls are in motion.
+
+SCREEN TYPE 
+
+Press either mouse button to toggle the positioning of the icon 
+panel, either above the table or to the side. It's advisable to 
+position the panel at the side when playing up or down the table. 
+Place the panel at the top of the screen when playing across the 
+table.
+
+PLAN VIEW 
+
+View the table from above. There are eight different views 
+available. With the control panel positioned at the top of the 
+screen, the table is viewed from the sides. When the control panel 
+is positioned to the left of the screen, the table is viewed from 
+the top and bottom.
+
+Press the left-hand mouse button to call up the first plan view 
+thus...
+
+A second press of the left-hand mouse button calls up a plan view 
+from the other end or side of the table...
+
+A third press calls up a closer look at one end or side of the 
+table...
+
+A fourth press calls up a closer look at the other end or side of 
+the other end of the table...
+
+A fifth press would call up the first plan view again, and so on.
+
+Pressing the right-hand mouse button will take you back to the 
+original 'in- play' view of the table. Pressing the right-hand moust 
+button a second time however will return you to the last plan view 
+selected with the left-hand mouse button. So, if you find a plan 
+view to your liking and don't wish to step through time and time 
+again with the left-hand mouse button, simply call up the desired 
+plan view (using the left-hand mouse button of course) then press the 
+right-hand mouse button to 'remember' it. If you end up getting 
+stuck between two plan views, select the TAKE SHOT icon to return to 
+the original 'in-play' view.
+
+VIEW ANGLE 
+
+Increase the angle between the camera and the table, ie, the end or 
+side of the table displayed at the top of the screen is 'lifted up' 
+so that the camera looks 'over' the table.
+
+This is especially useful for raising the view and forming a 
+'bridge' over balls when the cue ball is blocked.
+
+Decrease the angle between the camera and table, ie, the end or side 
+of the table displayed at the top of the screen is 'pushed down' so 
+that the camera looks 'along' the table thus..
+
+Press and hold down the left-hand mouse button to slowly affect the 
+view angle.
+
+Press and hold down the right-hand mouse button to affect the view 
+angle at a 'medium' speed.
+
+Press and hold down BOTH mouse buttons to quickly affect the view 
+angle.
+
+CUE LEFT
+
+Rotates the table anticlockwise.
+
+Press and hold the left-hand mouse button to rotate the table at a 
+slow speed.
+
+Press and hold the right-hand mouse button to rotate the table at a 
+'medium' speed.
+
+Press and hold BOTH buttons to rotate the table at a high speed.
+
+CUE RIGHT 
+
+Rotates the table clockwise.
+
+Press and hold the left-hand mouse button to rotate the table at a 
+slow speed.
+
+Press and hold the right-hand mouse button to rotate the table at a 
+'medium' speed.
+
+Press and hold BOTH buttons to rotate the table at a high speed.
+
+SET POWER
+
+Choose the strength of the shot. This ranges from Zilch Power to 
+Lots Of Power. Press and hold down either mouse button then move the 
+mouse up and down to decrease and increase the cue power. The length 
+of the cue in its box acts as a rough indication of the strength of 
+the shot. The shorter the cue, the more powerful the shot. There are 
+88 shot strengths in total (and with 23,040 possible angles and 81 
+different spin points that's a staggering 164 million possible 
+shots). The relative strengths of the determined graduations of cue 
+power are shown below (the distances given are approximate and 
+assume that the cue ball encounters no other balls on its travels, 
+and that no form of spin is applied to the cue ball).
+
+ZILCH POWER
+
+The cue ball will travel approximately half its diameter.
+
+LOW POWER 
+
+The cue ball will travel the distance of approximately two balls.
+
+MEDIUM POWER 
+
+The cue ball will travel around three quarters the length of the 
+table.
+
+LOTS OF POWER 
+
+The cue ball will travel the length of the table approximately four 
+and a quarter times.
+
+INFORMATION
+
+In a One or Two Player Game or Two Player Practice game, pressing 
+the left-hand mouse button calls up this score information window.
+
+This window shows, from the top, the maximum points available from 
+the balls remaining, whether either player needs any snookers to 
+win, the best break so far, the actual scores in board and 
+traditional slider form - Player 1 is at the top, Player 2 is below. 
+Shown above and below the player's scores are the quantities of 
+balls potted. At the bottom of this window the type of game in play 
+is shown.
+
+Press and hold down the left-hand mouse button to keep this window 
+on screen.
+
+In Trick Shot mode, pressing the left-hand mouse button calls up a 
+Trick Shot control summary window.
+
+ASK COMPUTER FOR BEST SHOT
+
+Pressing the right-hand mouse button asks the computer to calculate 
+and set up the best possible shot - either a pot or safety. Note 
+that this function is only available in the Two Player Practice or 
+Trick Shot options.
+
+UNDO
+
+When you point to an icon its function is shown here. However, if 
+you point to this window when playing a Two Player Practice or Trick 
+Shot, the word 'UNDO' is shown. Pressing either mouse button cancels 
+the last shot taken (or in action) and resets the table to the 
+arrangement prior to the shot.
+
+ZOOM IN
+
+Take a closer look at the action.
+
+ZOOM OUT
+
+Take a step back from the action.
+
+
+USING THE KEYBOARD 
+
+V		View Line
+H		Side Spin (Left)
+J		Side Spin (Right)
+N		Back Spin
+U		Top Spin
+M		Centralise Hit Point
+Z		Zoom In
+X		Zoom Out
+Q		View Q Ball
+P		Plan View
+C		Chalk Cue
+W		Screen Type
+/		Information
+S		Compute Best Shot (If Available)
+A		Answer Question
+B		Answer Question
+Cursor Up	View Angle (Decrease)
+Cursor Down	View Angle (Increase)
+Cursor Left	Cue Left
+Cursor Right	Cue Right
+[		Cue Left (Fine Control)
+]		Cue Right (Fine Control)
+1		Place Red (TRO)
+2		Place (TRO)/Nominate (During Game) Yellow
+3		Place (TRO)/Nominate (During Game) Green
+4		Place (TRO)/Nominate (During Game) Brown
+5		Place (TRO)/Nominate (During Game) Blue
+6		Place (TRO)/Nominate (During Game) Pink
+7		Place (TRO)/Nominate (During Game) Black
+0		Clear Table (TRO)
+Backspace	Relay Table (TRO)
+Esc		Game Control *
+=		Set Cue Power (Increase)
+-		Set Cue Power (Decrease)
+Return		Take Shot (Hold To Follow Cue Ball)
+Undo		Undo (If Available)
+Control		Repeat Previous Key Command
+Shift		Repeat Previous Key Command
+Alternate	Repeat Previous Key Command
+
+* Note that when the 'Esc' key is pressed during Two Player Practice 
+or Trick Shot the last shot taken (or in action) is cancelled and 
+the table reset to the arrangement prior to the shot. The point or 
+points acquired from the shot are removed. When playing a One or Two 
+Player Game, pressing the 'Esc' key does not have this effect. 
+Whilst balls are moving, the game waits until the current shot has 
+ended.
+
+USING THE MOUSE ON THE TABLE 
+
+This is probably the most 'natural' method of playing Jimmy White's 
+'Whirlwind' Snooker. As is the case with the icon control, 
+combinations of mouse buttons being pressed or pressed and held down 
+produces different functions. Here, however, the functions depend on 
+whether the arrow is pointed at a ball or an empty area of table.
+
+Move the arrow so it points to any area of the screen other than the 
+icon panel or a ball. Press and hold down only the left-hand mouse 
+button - the arrow will turn into this.
+
+You can now rotate the table in a clockwise or anticlockwise 
+direction by using the mouse to 'draw' a circle around the camera's 
+focal point (see WHAT YOU CAN EXPECT TO SEE). The faster the mouse 
+is moved, the faster the table rotates. The nearer the arrow is to 
+the centre of the camera's focal point, the faster the table rotates.
+
+Press and hold down only the right-hand mouse button while pointing 
+at the table - the arrow will turn into this.
+
+Moving the mouse in a forward direction makes the camera zoom in on 
+the table. Moving the mouse in a reverse direction makes the camera 
+zoom out from the table (see ZOOM IN and ZOOM OUT in the ICON 
+CONTROLS section).
+
+Press and hold down both mouse buttons - the arrow will turn into 
+this.. 
+
+You can now rotate and tilt the table in any direction by using the 
+mouse to 'draw' a circle around the camera's focal point (see WHAT 
+YOU CAN EXPECT TO SEE). The faster the mouse is moved, the faster 
+the table rotates and tilts. The nearer the arrow is to the centre 
+of the camera's focal point, the faster the table rotates and tilts.
+
+Use the mouse to point the arrow at any ball on the table. Pressing 
+the left- hand mouse button puts you 'on' that ball. A second press 
+of the left-hand mouse button while pointing at the ball in question 
+rotates the table through 180 degrees. Note that this has a 
+different effect in Trick Shot mode (see TRICK SHOT). If the ball 
+touched by the arrow is not the cue ball, pressing the right-hand 
+button lines up the centre of the ball in question with the centre 
+of the cue ball and the view is adjusted accordingly.
+
+If either view line is active, touching any ball other than the cue 
+ball with the arrow and pressing the right-hand button has a 
+different effect. In a One or Two Player Game, this action lines up 
+the view line to run through the centre of the cue ball and that of 
+the ball which was touched (this does not necessarily set up a 
+perfect shot). In a Two Player Practice game or Trick Shot mode, the 
+computer sets the parameters necessary to ensure that the ball 
+touched is potted. All you have to do is take the shot. Used in 
+conjunction with the UNDO function, this aids the understanding of 
+angles.
+
+FOLLOWING THE SHOT 
+
+As soon as the shot has been taken you may wish to follow the 
+action. You could use the four plan views. Alternatively, you can 
+enjoy a super-fast and impressive viewpoint as the camera swoops 
+around the table following the cue ball. This is done by immediately 
+holding down either mouse button or by ensuring that the arrow 
+points to the TAKE SHOT icon and the mouse buttons are used as 
+follows...
+
+Pressing and holding down the left-hand mouse button makes the 
+camera follow the cue ball and the first ball hit by the cue ball 
+from a viewpoint behind the cue ball. The same effect is achieved by 
+pressing and holding down the 'RETURN' key.
+
+Pressing and holding down the right-hand mouse button makes the 
+camera follow the angle of the cue ball from the point at which the 
+shot was taken.
+
+Pressing and holding down both mouse buttons makes the camera follow 
+the cue ball from behind. Alternatively, point to the VIEW Q BALL 
+icon and press the right-hand button to raise the camera off the 
+table. Now press and hold down the left-hand button to follow the 
+cue ball from behind but at a higher viewpoint.
+
+USING THE TRICK SHOT EDITOR 
+
+Almost all the functions available in a One or Two Player Game or 
+Two Player Practice are available within this option. Those which 
+behave differently or simply do not work are detailed here.
+
+The major difference between Trick Shot mode and the Game and 
+Practice options is that the balls can be arranged at your leisure. 
+To move any ball on the table, use the mouse to point the arrow at 
+the desired ball and press the left-hand mouse button to move to it 
+(pressing the right-hand button takes you to the ball but also lines 
+up its centre with that of the cue ball in the process). Press and 
+hold down the left-hand mouse button while pointing to the ball and 
+move the mouse to move the ball around the table. The arrow will turn 
+into a black hand to show that the ball has been 'grabbed'.
+
+It shouldn't come as any great surprise to learn that you cannot 
+place one ball on top of another. You cannot place balls outside of 
+the table, on the cushions or in the pockets either.
+
+To remove any ball other than the cue ball from the table, grab it (so the
+arrow becomes a hand) then press the 'DELETE' key.
+
+You will notice that there are a few additions to the panel of icons 
+- the collection of coloured balls in particular. These are used to 
+place the balls on the table in one of two ways - either in circular 
+form around the camera's focal point (see WHAT YOU CAN EXPECT TO 
+SEE) thus...
+
+Use the mouse to point the arrow at one of the ball icons. Press the 
+left-hand mouse button to place the ball in question around the 
+camera's focal point. Pressing the right-hand mouse button places 
+the ball in a straight line ahead of the camera's focal point. 
+Pressing the number keys (not on the keypad) - eg, key '1' for a 
+red, key '7' for a black - also places the corresponding balls but 
+in the arrangement last used (the default is the circular pattern). 
+Note that you cannot place a ball if it already exists on the table.
+
+CLR 
+
+Use the mouse to point the arrow at this icon. Press the left-hand 
+mouse button to clear the table of every ball except the cue ball 
+(the same effect is achieved by pressing the '0' key - but not on 
+the keypad). Press the right-hand button to relay the table from 
+scratch. The same effect is achieved by pressing the BACKSPACE key.
+
+UNDO 
+
+Select this function with the left-hand mouse button to reset the 
+table to the layout used prior to CLRing the table or playing a 
+shot. Pressing the 'UNDO' key has the same effect.
+
+Exiting from the Trick Shot mode to the Game Control menu UNDOes the 
+previous shot or CLRance.
+
+Use the left-hand mouse button to select the INFO icon or 
+press the '?' key to call up a summary of controls.
+
+USING THE COMPUTER TO TAKE SHOTS 
+
+If you need a little help potting a ball simply ask the computer to 
+do it for you. First, activate a view line. Now point to the ball 
+you wish to pot. Press the right-hand mouse button to make the 
+computer set the approximate angle and power settings necessary to 
+pot the ball.
+
+SOLVING GAME PROBLEMS 
+
+If you find yourself stumped when it comes to playing a shot within 
+a game situation, try this for size... Press the 'Esc' key to exit 
+to the Game Control menu. Now, select the Trick Shot option to play 
+the shot in a more flexible environment - ie, you can use the 
+computer to show you how the shot should be taken (see USING THE 
+COMPUTER TO TAKE SHOTS and ASK COMPUTER FOR BEST SHOT). You can also 
+use the Trick Shot option in the same way to solve saved games.
+
+A TRICK SHOT TIP 
+
+People aren't perfect. Setting up the snooker balls on a real table 
+is open to a very small margin of error. This is reproduced here. 
+The pack of reds is relaid with every new game. To see this effect 
+in action, follow these simple steps from within the Trick Shot 
+option...
+
+Relay the table by pointing to 'CLR' and pressing the right-hand 
+mouse button. Zoom in on a red ball and adjust the view so that the 
+pack is seen as a triangle with the apex at the top of the screen.
+
+Now relay the table. With each press of the right-hand mouse button 
+you will see the reds shuffle slightly as they are relaid. The 
+program never produces the same layout twice.
+
+If the mouse isn't moved in any way and no key is pressed for 
+approximately four minutes during the Trick Shot mode, the program 
+returns to the Game Control menu. Note that this only occurs in the 
+Trick Shot mode.
+
+GETTING STARTED 
+
+Welcome to this brief guide to getting started with JWWS. Before you 
+attempt to play for real we recommend that you get a feel for the 
+controls and the way that the balls work by using the Trick Shot 
+option.
+
+So, select the SET UP TRICK SHOT option from the GAME CONTROL menu. 
+You will be presented with the usual startup view of the table.
+
+This is actually a perfect break position - but more of that later. 
+There are three main methods of playing JWWS. The first is by using 
+the panel of small boxes ('icons') at the top of the screen. Each 
+icon has its own function (some have more than one) which is 
+activated by using the mouse-controlled arrow you see on screen. 
+Move the arrow so that it points to the desired function. Now 
+pressing or pressing and holding down the left-hand mouse button, 
+the right- hand mouse button or both mouse buttons will activate the 
+function.
+
+The second method of control is the keyboard. The functions are 
+simply activated by pressing the respective key (see the KEYBOARD 
+SUMMARY).
+
+Method Three is to use the mouse to manipulate the table and balls. 
+The keyboard or icons are then used to activate certain functions, 
+such as actually taking the shot. All three methods of control are 
+available at once, so feel free to use any blend you see fit.
+
+Right, your first shot. And seeing as the table's all set for a 
+break, this might as well be it. When you first enter the Trick Shot 
+option (or, indeed, any other option which involves actual play), 
+the cue ball is always positioned for a perfect break. All that's 
+required of the player is to set the strength of the shot.
+
+Use the mouse to move the arrow to point to the SCREEN TYPE icon. 
+Now press either the left-hand or right-hand mouse button to move 
+the panel of icons at the top of the screen to the left-hand side. 
+(Alternatively, press the 'W' key). This makes setting the cue power 
+a little easier. It also helps generally when playing a shot up or 
+down the table as more of it's shown when the panel's placed 
+vertically. When playing across the table, place the panel in the 
+vertical position.
+
+Point to the SET POWER cue and press and hold down either the left-hand or
+right-hand mouse button. Move the mouse up and down to adjust the power so
+that the cue's tip is next to the top of the icon description window 
+thus..
+
+(Alternatively, you could use the '=' and '-' keys). This is the 
+near-perfect power setting for a healthy break - so let's do it. 
+Point to the TAKE SHOT icon and press either mouse button to take 
+the shot. (Alternatively, pressing the 'RETURN' key has the same 
+effect). The arrow will change to show that the shot is being taken 
+and will stay that way until the balls are no longer in motion. The 
+cue ball should end up somewhere in the baulk region ..
+
+If the cue ball hit the blue on the way back, that's just bad luck. 
+Now let's take that shot again, but with a difference. Point to the 
+incon description window and press the left-hand mouse button to 
+return the table layout to before the shot (you should hear a 
+popping sound too).
+
+Point to the TAKE SHOT icon again and this time press and hold down 
+the left- hand mouse button to take the shot. The camera view will 
+follow the cue ball and the first ball it hit. Select UNDO and play 
+the shot again, this time holding down the right-hand mouse button 
+as you play the shot. The camera will now follow the angle of the 
+cue ball. Holding down both buttons whle the shot is taken makes the 
+camera follow the angle of the first ball hit by the cue ball. Try 
+it.
+
+A fourth means of following the shot takes you right into the heart 
+of the action. By pointing to the VIEW Q BALL icon and pressing the 
+left-hand mouse button while the shot is being played, you can 
+follow the cue ball from directly behind. (Alternatively, press and 
+hold the 'Q' key or hold down the 'RETURN' key while the shot is 
+played).
+
+With a few practice breaks under your belt, let's try potting a ball 
+- any ball. How about the yellow in the top corner pocket? First, 
+move the brown ball out of the way. Point to the brown ball and 
+press the left-hand mouse button. You should be 'taken' to the brown 
+ball so that it is now the focus of your attention. Still pointing 
+to the brown ball, press and hold down the left-hand mouse button to 
+'grab' the brown ball (The arrow should turn into a black hand to 
+indicate that the ball is 'grabbed'). Use the mouse to move the 
+brown ball out of the way (This method is used to move any ball 
+around the table in Trick Shot mode).
+
+Select the VIEW Q BALL icon (or press the 'Q' key) to go to the cue 
+ball. To find the yellow ball you need to move the table round a 
+bit. Point to the CUE LEFT/CUE RIGHT icon and press the left-hand 
+mouse button or use the left and right arrow keys on the keyboard to 
+perform the same function.
+
+Alternatively, use the mouse to move the arrow so that it points to 
+a clear area of the table. Press and hold down the left-hand mouse 
+button (the arrow pointer should have changed shape). Now use the 
+mouse to 'draw' a circle around the cue ball and so rotate the 
+table. The faster the mouse is moved, the faster the table rotates.
+
+Still holding down the left-hand mouse button, press and hold down 
+the right- hand mouse button (the arrow pointer should have changed 
+shape again). Now the mouse can be used to turn the table through 
+all sorts of angles (The angle vertical adjustment is also available 
+in icon from and via the keyboard - ie, the up and down arrow keys).
+
+Release both mouse buttons and press the right-hand mouse button 
+while pointing the arrow to a clear area of the table. Moving the 
+mouse will take you closer to or further from the table (For further 
+details of using the mouse on the table see USING THE MOUSE ON THE 
+TABLE). (This function is also available in icon form on the 
+vertical panel and via the keyboard - ie, the 'Z' and 'X' keys).
+
+Anyway, back to the yellow ball... With the yellow ball in sight 
+'grab' the cue ball and move it slightly further down the table to 
+make the shot a little easier to take. To help line up the shot, 
+point to the yellow ball and press the left-hand mouse button. This 
+will line up the centre of the yellow ball with that of the cue 
+ball. Now point to the cue ball and press the right-hand mouse 
+button to view the yellow ball again. When lining up a shot it pays 
+to make use of the VIEW LINE icon. Point to it and press the 
+left-hand mouse button. A single broken view line should appear 
+thus..
+
+This view line shows where the shot will send the cue ball. Now you 
+can adjust the intended angle of contact between the cue ball and 
+the yellow ball by moving the table as before. Happy? Then take the 
+shot...
+
+So the yellow didn't go in, eh? Fortunately in Trick Shot mode (and 
+Two Player Practice for that matter) you can ask the computer for 
+help. Select the VIEW LINE option but press the right-hand mouse 
+button instead of the left-hand one. This calls up a double view 
+line, the second one showing the angle at which the cue ball will 
+rebound from a cushion - provided the shot is a normal one (ie, no 
+spin is applied). Now point to the yellow ball and press the 
+right-hand mouse button. If it's possible to pot the ball the 
+computer will set up the approximate angle and power necessary to do 
+so. All you have to do is take the shot. Note that the computer 
+doesn't actually check to see if the ball will definitely go in - 
+more often than not it does, but it's not guaranteed.
+
+You can also use the computer to find the best available shot, be it 
+a safety shot or a pot. Point to the INFORMATION icon and press the 
+right-hand mouse button. The computer will think for as long as is 
+necessary. When the computer's finished thinking, you can take the 
+shot.
+
+So there you have it: you should now appreciate how straightforward 
+Jimmy White's Whirlwind Snooker is to play. There's plenty more for 
+you to discover - just don't be afraid to experiment (remember the 
+UNDO function) and above all have fun!
+
+THE ART OF SPIN AND SWERVE 
+
+It makes sense to plan ahead in Snooker. Setting up the next shot is 
+never easy, but it does help to at least know roughly where the cue 
+ball will go before the shot's played. This is where spin comes in 
+useful.
+
+Select the SET UP TRICK SHOT option if you aren't already using it. 
+Point to the 'CLR' icon and press the left-hand mouse button to 
+clear the table of every ball but the cue ball. Point to any of the 
+balls in the icon panel and press the left-hand mouse button to 
+place it in front of the cue ball. Now 'grab' the ball and place it 
+in the centre of the table. Use the mouse to point to the colour 
+ball with the arrow then press the right-hand mousebutton to line up 
+its centre with that of the cue ball. Now point to the cue ball and 
+press the right-hand button to return to the cue ball and face the 
+colour ball thus..
+
+Now you are ready to learn about SPIN and SWERVE. Take a normal 
+shot, ie, simply set the power to something sensible - say, MEDIUM 
+POWER - and point to the TAKE SHOT icon and press the left-hand 
+mouse button. Note the way that the cue ball pretty much stops in 
+its tracks once contact is made with the colour ball. Select UNDO to 
+return the table layout to before the shot took place.
+
+TOP SPIN 
+
+Point to the TOP SPIN icon and keep pressing the left-hand mouse 
+button until the cross on the TAKE SHOT cue ball icon is at the very 
+top, thus setting the top spin to the maximum (Alternatively, press 
+the 'U' key). Point to the CHALK CUE icon and apply three dabs of 
+chalk with three presses of the mouse button (the flashing icon and 
+chalking sounds will show you that the cue tip is being chalked). 
+(Pressing the 'C' key has the same effect). Now take the shot.
+
+As you will see, the cue ball does not stop when contact is made 
+with the colour ball. Instead the effect is a follow through shot - 
+the cue ball follows the ball it strikes.
+
+That's all very well for straight shots - when you get them. What 
+about when the cue ball has to hit the colour ball at an angle?
+
+Select UNDO to return the table to the layout before the shot. 
+'Grab' the cue ball and move it slightly to the right.
+
+Release the mouse button then point to the VIEW LINE icon and press 
+either button to turn on either view line and check that the cue 
+ball will hit the colour ball, but at an angle. Now take the shot.
+
+You will see the angle at which the cue ball will leave the colour 
+ball once contact is made. Select UNDO then set the top spin to the 
+maximum. Apply chalk then take the shot.
+
+With top spin applied, the cue ball still follows to a certain 
+extent the ball it struck. Note that top spin is never passed on to 
+the balls hit by the cue ball, and that all top spin is removed when 
+the cue ball makes contact with a cushion.
+
+BACK SPIN 
+
+With the cue ball lined up with the colour ball, point to the BACK 
+SPIN icon and keep pressing the left-hand mouse button until the 
+cross on the TAKE SHOT cue ball icon is at the very top, thus 
+setting the back spin to maximum (Alternatively, use the 'N' key). 
+Chalk the cue 3 timews before taking the shot.
+
+As you will see, the cue ball does not stop when contact is made 
+with the colour ball. Instead, the effect is a screw back shot - the 
+cue ball seems to rebound from the ball it strikes and shoots off in 
+the opposite direction.
+
+And what happens if the cue ball doesn't hit the colour ball 
+straight on?  Select UNDO and apply maximum backspin before chalking 
+the cue three times and taking the shot..
+
+You can see that the cue ball still screws back to a certain extent 
+from the ball it strikes. Note that back spin is never passed on to 
+the ballshit by the cue ball, and that all back spin is removed when 
+the cue ball makes contact with a cushion.
+
+SIDE SPIN 
+
+A cue ball with side spin applied behaves quite differently to one 
+under the influence of top or back spin. Whereas top and back spin 
+affect the cue ball one it has struck another ball, side spin really 
+comes into effect when the cue ball strikes a cushion. The extent of 
+the effect depends on the power of the shot and how long the cue 
+ball has been in motion. Note that side spin is never passed on to 
+the balls hit by the cue ball.
+
+Use the 'CLR' icon to clear the table as before. Activate the double 
+view line and rotate the table so that you face a side cushion and 
+the two view lines overlap.
+
+This means that when the shot is taken the cue ball will bounce straight
+back in the direction from which it came. Try it, we will now see how 
+side spin affects how the cue ball bounces off the cushion.
+
+Point to the SIDE SPIN icon to the right of the cue ball. Keep 
+pressing the left-hand mouse button until the cross on the TAKE SHOT 
+cue ball icon is as far to the right as possible, thus setting the 
+right-hand spin to the maximum (Alternatively, press the 'J' key). 
+Chalk the cue three times and take the shot. The cue ball bounces 
+off the cushion and to the right. The greater the right-hand spin, 
+the further to the right the cue ball rebounds.
+
+Obviously applying left-hand spin (the SIDE SPIN icon to the left of 
+the TAKE SHOT icon) sees the cue ball rebounding off to the left. 
+Alternatively, you can use the 'H' key for left-hand side spin.
+
+BREAKING OFF IN STYLE!
+
+We have already seen how easy it is to perform a decent break. Now try
+taking a break with side spin applied (don't forget to chalk the cue).
+
+SWERVE 
+
+Swerve shots are surprisingly easy to perform - and often prove 
+useful. A combination of top or back spin is all that's required. 
+The severity of the swerve depends on the degree of spins required 
+and the strength of the shot. It also helps if no other ball gets in 
+the way of the cue ball.
+
+Clear the table as before. Set the top spin and right-hand spin to 
+the maximum. Chalk the cue and take the shot. The swerve to the left 
+should easily be in evidence. To make the ball swerve to the right 
+simply apply left-hand spin and top spin before chalking the cue and 
+taking the shot.
+
+HEAD ON SHOT 
+
+ANGLE SHOT ON TARGET BALL 
+
+A JIMMY TIP
+
+When performing a shot which involves any form of spin, such as a 
+swerve shot, don't forget to chalk your cue. Otherwise you may 
+miscue and ruin the shot. Three dabs of chalk will always be enough.
+
+THE COMPUTER OPPONENTS 
+
+Here's a quick low-down on the breaks you can expect to see from the 
+computer- controlled opponents. It's worth bearing in mind that the 
+lower intelligence opponents are more than capable of performing 
+fouls and miscues. They have even been known to lose the white to a 
+pocket on occasions!
+
+TOM typically makes breaks around the 13 mark.
+
+DICK makes breaks of around 23 points.
+
+HARRY makes breaks of around 45 points.
+
+JIMMY ... Hey! Don't let this man onto the table! When Jimmy gets to 
+work you can expect nothing less than 140s! 
+
+Fixed by RYGAR
+~~~~~ ~~ ~~~~~

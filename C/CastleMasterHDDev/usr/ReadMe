@@ -1,0 +1,71 @@
+That patch applies to Castle Master (c) 1990 Incentive Software/Domark.
+Original release, a rerelease, the Virtual Reality 1 rerelease and 
+another rerelease on Amiga Games Compilation #1 are supported.
+
+This install has the slave-version 1.20.
+It needs WHDLoad 10 or higher in the path (eg in c:). For the Amiga
+Games Compilation #1 you need additionally xfddecrunch in the path
+(from aminet:util/pack/xfdmaster.lha).
+
+Fixed:  Sound replay.
+
+Default quitkey is numerical *. Change it with the QUITKEY-tooltype.
+
+Notes:	That install features the partial-os-emulation by the WEPL/
+          Mr.Larmer/me. Due the big files the install is this time even 
+          useable with few ram.
+        Select your language with CUSTOM1 (1-deutsch, 2-english, 
+          3-français), since im not going to implement screen- and 
+          windowmanagement in the OSEmu for a cli-selections-menu.
+          However i cant recommend to play the german version in the 
+          original release since it has some serious translation errors 
+          (In the rerelease the translation has been corrected). Please
+          note that only the english language is supported in the
+          Virtual Reality rerelease.
+        I recommend playing the game without caches, since its a bit
+          too fast with (but runs).
+
+Cheatmode: Start the game, hold left shift+L and press the right mouse 
+          button about 25 times. 4 boxes should appear: Unlimited lives, 
+          10 keys, end sequence or rock travel.
+
+Solution: Maps and hints can be found in the install.
+
+History:
+ Version 2.0 (03.07.2022)
+ - fixed support for SPS447 (didn't work at all, issue #0005092)
+ - better support for SPS612: Castle Master 2 / The Crypt is selectable
+ - optional skip intro
+ - using fast memory
+ - converted to kickemu
+ - quitkey on 68000
+ - fixed install script for varying label disk
+ 
+ Version 1.20.1 - 2011-oct-16 icons added and install script changed
+			     (Irek/Wepl)
+ Version 1.20 - 2011-sep-25 Another rerelease adapted, map for cellar
+                             added. (Harry)
+ Version 1.12 - 2011-sep-04 icons and docs added, new install script,
+			     files moved to a data directory,
+			     thanks to Irek Kloska for icons (Wepl)
+ Version 1.11 - 2011-aug-28 Another rerelease adapted. (Harry)
+ Version 1.10 - 2001-jan-27 Rerelease adapted. (Harry)
+ Version 1.00 - 1998-oct-26 Initial release. (Harry)
+
+The install is tested with on a 2 MB A1200, on an 18 MB 68030 and on E-UAE.
+
+Disclaimer: Although i try to make my installs as reliable as possible, you 
+          use them wholly on your own risk.
+
+Full whdload package:	aminet:dev/misc/whdload#?.lha
+Other installs:		http://www.whdload.de/
+Report bugs with the bug report form on that page.
+
+Have fun, Harry and Wepl.
+
+Notes from JOTD:
+
+- the slave needed refreshing, some versions support were broken, and it didn't
+  allow to run Castle Master 2 from SPS612
+- another 3D game that didn't use fastmem for absolutely no reason. Should be faster
+- on WinUAE the game is super-fast, I may add speed regulation later.

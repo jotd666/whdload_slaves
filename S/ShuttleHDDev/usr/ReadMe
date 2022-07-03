@@ -36,6 +36,9 @@
  can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
  at http://mantis.whdload.de 
  
+ Version 1.1 (xx.07.2022) done by JOTD:
+ - added quitkey for 68000 machines (issue #0005653)
+ 
  Version 1.0 (17.05.2022) done by JOTD:
  - using fastmemory for much better framerate
  - fixed fastmem data block bug (by NOT using fastmem for data, grrrr)

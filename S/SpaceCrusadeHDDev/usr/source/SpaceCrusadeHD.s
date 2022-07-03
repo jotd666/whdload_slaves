@@ -35,13 +35,14 @@ _expmem
 _config
 ;	dc.b	"BW;"
 	dc.b    "C3:B:Boot on expansion disk;"
+	dc.b    "C4:B:Skip gremlin logo;"
 	dc.b	0
 	IFD BARFLY
 	DOSCMD	"WDate  >T:date"
 	ENDC
 	
 DECL_VERSION:MACRO
-	dc.b	"3.0"
+	dc.b	"3.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -55,7 +56,7 @@ _data   dc.b    0
 _name	dc.b	'Space Crusade',0
 _copy	dc.b	'1991 Gremlin',0
 _info
-    dc.b   'Install & fix by JOTD',10
+    dc.b   'adapted by JOTD',10
 	dc.B	"Version "
 	DECL_VERSION
 	dc.b	0
@@ -249,6 +250,11 @@ pl_boot
 	
 	PL_PSS	$092a8,soundtracker_loop,2
 	PL_PSS	$092bc,soundtracker_loop,2
+	
+	PL_IFC4
+	PL_NOP	$0852e,2
+	PL_ENDIF
+	
 	PL_END
 	
 FlushNJump:
@@ -315,8 +321,11 @@ pl_blit:
 	PL_PS	$6A10,KbInt
 	PL_PS	$2380,PatchProtect
 
+	PL_P	$80AC,jumper	; never reached...
+	
 	PL_L	$7366A,$7FF00		; changes stack location
 
+	PL_P	$07b74,flush_and_jump_a6
 
 
 	PL_P	$C6,WaitBlitD0
@@ -345,7 +354,13 @@ pl_blit:
 	PL_PSS	$7AE2,CheckA0AA,2	
 	PL_END
 	
+jumper
+	jmp	$234A.W
 	
+flush_and_jump_a6
+	ADDA.L	D7,A6			;07b74: ddc7
+	JMP	(A6)			;07b76: 4e96
+
 CheckA0AA:
 	cmp.w	#$3E30,$A0AA
 	bne.b	.sk
@@ -428,6 +443,9 @@ WaitBlitD7:
 
 
 PatchProtect:
+	; at this point, the program at $8000 something has been loaded
+	; with protection & save/load, keeping the middleware below $8000
+	; active
 	movem.l	d0-d1/a0-a2,-(a7)
 	sub.l	a1,a1
 	lea		pl_protect(pc),a0
@@ -439,16 +457,11 @@ PatchProtect:
 
 pl_protect
 	PL_START
-	PL_W	$17C,1
+	PL_W	$17C,1	; protection passed
 	PL_W	$80C4,$6004; removes protection
-
 	PL_W	$98FC,$6048; skip format check for saves
-
-	PL_NOP	$9648,2
-	PL_PS	$964A,WriteSaveData
-
-	PL_NOP	$9676,2
-	PL_PS	$9678,ReadSaveData
+	PL_PSS	$9648,WriteSaveData,2
+	PL_PSS	$9676,ReadSaveData,2
 
 ;	PL_W	$845E,$7002; activates expansion mission disk
 	PL_END
@@ -489,50 +502,29 @@ WrongSave
 	dc.b	"Corrupt savegame",0
 	even
 	
-ReadSaveDataHD:
+WriteSaveData:
+	MOVEM.L	D1-A6,-(a7)
+	move.l	a0,a1
 	lea	savename(pc),A0
-	lea	savebuff(pc),A1
-	move.l	_resload(pc),a2
-	jsr		resload_LoadFile(a2)
-
-	rts
-
-WriteSaveDataHD:
-	lea	savename(pc),A0
-	lea	savebuff(pc),A1
 	move.l	#$200,D0
 	move.l	_resload(pc),a2
 	jsr		resload_SaveFile(a2)
-
-	rts
-
-WriteSaveData:
-	MOVEM.L	D0-A6,-(a7)
-	lea	savebuff(pc),A1
-	move.l	#$7F,D0
-.copy
-	move.l	(A0)+,(A1)+
-	dbf	D0,.copy
-
-	bsr	WriteSaveDataHD
-
-
-	MOVEM.L	(a7)+,d0-a6
+	MOVEM.L	(a7)+,d1-a6
 	moveq	#0,D0
 	rts
 
 ReadSaveData:
 	MOVEM.L	D0-A6,-(a7)
-	lea	savebuff(pc),A1
-	move.l	(A1),D0
-
-	cmp.l	#'FUCK',D0
-	beq	.quit
+	move.l	_resload(pc),a2
+	move.l	a0,a3		; save
+	lea	savename(pc),A0
+	jsr		resload_GetFileSize(a2)
+	tst.l	d0
+	beq.b	.quit
 	
-	move.l	#$7F,D0
-.copy
-	move.l	(A1)+,(A0)+
-	dbf	D0,.copy
+	lea	savename(pc),A0
+	move.l	a3,a1
+	jsr		resload_LoadFile(a2)
 
 	MOVEM.L	(a7)+,d0-a6
 	moveq	#0,D0
@@ -746,9 +738,7 @@ wait_blit
 	BTST	#6,dmaconr+$DFF000
 	BNE.S	.wait
 	rts
-	
-save_changed:
-	dc.l	0
+
 
 _resload
 	dc.l	0
@@ -759,6 +749,3 @@ expansion	dc.l	0
 savename:
 	dc.b	"spcrus.sav",0
 	even
-savebuff:
-	dc.b	"FUCK"
-	ds.l	$90,0
