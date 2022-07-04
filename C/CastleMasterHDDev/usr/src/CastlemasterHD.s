@@ -13,11 +13,11 @@
 
 CRC_V1	= $6a43	;original with RN copylock (SPS447)
 CRC_V2	= $a5d1	;rerelease (SPS2773)
-CRC_V3  = $6f13 ;Amiga Games Compilation #1
+CRC_V3  = $6f13 ;Amiga Games Compilation #1, based on cracked SPS2773
 CRC_V4  = $3F61; Virtual Reality Compilation (Together with the Crypt) (SPS612)
 V_SPS447	= 1
 V_SPS2773	= 2
-V_COMPIL   = 3
+V_SPScompil   = 3
 V_SPS612     = 4
 
 		INCDIR	Includes:
@@ -42,7 +42,7 @@ V_SPS612     = 4
 
 
 ;============================================================================
-;CHIP_ONLY
+CHIP_ONLY
 
 	IFD	CHIP_ONLY
 CHIPMEMSIZE	= $100000
@@ -117,7 +117,7 @@ slv_CurrentDir:
 	
 slv_config:
 	dc.b	"C1:L:language:english,german;"
-	dc.b	"C2:L:intro:show,skip select knight,skip select princess;"
+	dc.b	"C2:L:intro:show,skip select prince,skip select princess;"
 	dc.b	"C3:B:Castle Master 2;"
 	dc.b	0
 	
@@ -151,7 +151,7 @@ _bootdos
 	CMP.W	#CRC_V2,D0
 	BEQ.W	.V2
 	CMP.W	#CRC_V3,D0
-	BEQ.W	NOTSUPP
+	BEQ.W	.V3
 	CMP.W	#CRC_V4,D0
 	BEQ.W	.V4
 	BRA.W	NOTSUPP
@@ -160,6 +160,9 @@ _bootdos
 	bra.s	.VA
 
 .V2	MOVE.B	#V_SPS2773,(A0)
+	bra.s	.VA
+
+.V3	MOVE.B	#V_SPScompil,(A0)
 	bra.s	.VA
 
 .V4	MOVE.B	#V_SPS612,(A0)
@@ -206,6 +209,7 @@ _bootdos
 	MOVE.W	#$83E0,$DFF096
 	MOVE.W	#$200,$DFF100
 
+	
 	MOVE.B	VERSION(PC),D0
 	lea		pl_boot_447(pc),a0
 	CMP.B	#V_SPS447,D0
@@ -218,9 +222,10 @@ _bootdos
 	lea		pl_boot_612(pc),a0
 	CMP.B	#V_SPS612,D0
 	BEQ.S	.patch
-	
-
-		illegal
+	lea		pl_boot_compil(pc),a0
+	CMP.B	#V_SPScompil,D0
+	BEQ.S	.patch
+	illegal
 .patch
 	
 	move.l	a1,a3
@@ -249,9 +254,11 @@ pl_boot_447
 	PL_END
 	
 pl_boot_2773
+pl_boot_compil
 	PL_START
 	PL_W	$68,$74
 	PL_PS	$18a,PATCHINTRO
+	PL_L	$134,$4EAEFFD6	; restore original code (compil crack)
 	PL_END
 	
 pl_boot_612
@@ -282,6 +289,7 @@ PATCHINTRO
 	MOVE.B	VERSION(PC),D0
 	PI_MACRO	447
 	PI_MACRO	2773
+	PI_MACRO	compil
 	illegal
 .patch
 	MOVEQ.L	#0,D0
@@ -300,12 +308,19 @@ pl_intro_447
 	PL_START
 	PL_PS	$B88,PATCHMAIN
 	PL_PSS	$1228,soundtracker_loop,2
-	PL_W	$2606,$E3D6		;PROTECTION INTRO
+	PL_S	$40,$9dc-$40
 	PL_PS	$a54,set_program_address
 	PL_PS	$e44,kbint_hook	
+
+	; skip intro & character select
+	PL_IFC2
+	PL_S	$22,$40-$22
+	PL_ENDIF
+
 	PL_END
 	
 pl_intro_2773
+pl_intro_compil
 	PL_START
 	PL_PS	$1e6,PATCHMAIN
 	PL_PSS	$866,soundtracker_loop,2
@@ -315,6 +330,9 @@ pl_intro_2773
 	PL_IFC2
 	PL_S	$22,$40-$22
 	PL_ENDIF
+	; restore original code (compil crack)
+	PL_L	$c68,$4EAEFFD6
+	PL_L	$160,$4EAEFFD6
 	
 	PL_END
 	
@@ -404,6 +422,9 @@ PATCHMAIN
 	lea		pl_main_2773(pc),a0
 	CMP.B	#V_SPS2773,D7
 	beq.S	.PVA
+	lea		pl_main_compil(pc),a0
+	CMP.B	#V_SPScompil,D7
+	beq.S	.PVA
 	ILLEGAL
 	
 .PVA
@@ -442,6 +463,7 @@ pl_main_612_2
 	PL_PS	$33d40-$2C000,kbint_hook
 	PL_END
 	
+pl_main_compil
 pl_main_2773
 	PL_START
 	PL_PSS	$7df8,soundtracker_loop,2
