@@ -1,45 +1,63 @@
-That patch applies to Castle Master (c) 1990 Incentive Software/Domark.
-Original release, a rerelease, the Virtual Reality 1 rerelease and 
-another rerelease on Amiga Games Compilation #1 are supported.
 
-This install has the slave-version 1.20.
-It needs WHDLoad 10 or higher in the path (eg in c:). For the Amiga
-Games Compilation #1 you need additionally xfddecrunch in the path
-(from aminet:util/pack/xfdmaster.lha).
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
-Fixed:  Sound replay.
+ This install applies to "Castle Master" © 1990 Incentive Software/Domark.
 
-Default quitkey is numerical *. Change it with the QUITKEY-tooltype.
+ Original release, a rerelease, the Virtual Reality 1 rerelease and 
+ another rerelease on Amiga Games Compilation #1 are supported.
 
-Notes:	That install features the partial-os-emulation by the WEPL/
-          Mr.Larmer/me. Due the big files the install is this time even 
-          useable with few ram.
-        Select your language with CUSTOM1 (1-deutsch, 2-english, 
-          3-français), since im not going to implement screen- and 
-          windowmanagement in the OSEmu for a cli-selections-menu.
-          However i cant recommend to play the german version in the 
-          original release since it has some serious translation errors 
-          (In the rerelease the translation has been corrected). Please
-          note that only the english language is supported in the
-          Virtual Reality rerelease.
-        I recommend playing the game without caches, since its a bit
-          too fast with (but runs).
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
 
-Cheatmode: Start the game, hold left shift+L and press the right mouse 
-          button about 25 times. 4 boxes should appear: Unlimited lives, 
-          10 keys, end sequence or rock travel.
+ The installed program requires 0.5 MB ChipMem and 1.5 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
 
-Solution: Maps and hints can be found in the install.
+ For the Amiga Games Compilation #1 you need additionally xfddecrunch in
+ the path (from aminet:util/pack/xfdmaster.lha).
+
+ The game requires an installed A500 Kickstart 1.3 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick346.lha" on aminet.
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
 
 History:
- Version 2.0 (03.07.2022)
+
+ Version 2.0 (08.07.2022) done by JOTD:
  - fixed support for SPS447 (didn't work at all, issue #0005092)
  - better support for SPS612: Castle Master 2 / The Crypt is selectable
- - optional skip intro
- - using fast memory
+   (you'll have to reinstall the game to enable it)
+ - optional skip intro & select character from whdload splash screen
+ - using fast memory for better speed (issue #0002818)
+ - added adjustable speed regulation for ... slower speed :)
  - converted to kickemu
- - quitkey on 68000
+ - quitkey on 68000 (issue #0003640)
+ - added proper delay after save/load
  - fixed install script for varying label disk
+
  
  Version 1.20.1 - 2011-oct-16 icons added and install script changed
 			     (Irek/Wepl)
@@ -57,15 +75,26 @@ The install is tested with on a 2 MB A1200, on an 18 MB 68030 and on E-UAE.
 Disclaimer: Although i try to make my installs as reliable as possible, you 
           use them wholly on your own risk.
 
-Full whdload package:	aminet:dev/misc/whdload#?.lha
-Other installs:		http://www.whdload.de/
-Report bugs with the bug report form on that page.
+Notes: Select your language with CUSTOM1 (1-deutsch, 2-english, 
+          3-français), since im not going to implement screen- and 
+          windowmanagement in the OSEmu for a cli-selections-menu.
+          However i cant recommend to play the german version in the 
+          original release since it has some serious translation errors 
+          (In the rerelease the translation has been corrected). Please
+          note that only the english language is supported in the
+          Virtual Reality rerelease.
 
+Cheatmode: Start the game, hold left shift+L and press the right mouse 
+          button about 25 times. 4 boxes should appear: Unlimited lives, 
+          10 keys, end sequence or rock travel.
+		  
 Have fun, Harry and Wepl.
 
 Notes from JOTD:
 
 - the slave needed refreshing, some versions support were broken, and it didn't
-  allow to run Castle Master 2 from SPS612
-- another 3D game that didn't use fastmem for absolutely no reason. Should be faster
-- on WinUAE the game is super-fast, I may add speed regulation later.
+  allow to run Castle Master 2 from SPS612 (needs reinstalling)
+- another 3D game that didn't use fastmem for absolutely no reason.
+  After relocating the music in chipmem, everything runs file. 
+  Should be faster now.
+

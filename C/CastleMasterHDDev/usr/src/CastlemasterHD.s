@@ -1,7 +1,7 @@
 ;*---------------------------------------------------------------------------
-;  :Program.	castlemasterslave.asm
-;  :Contents.	Slave for "Castle Master"
-;  :Author.	Harry
+;  :Program.	CastleMasterHD.s
+;  :Contents.	Slave for "Castle Master" / "Castle Master 2"
+;  :Author.	Harry/Wepl/JOTD
 ;  :History.	20.10.1998/27.1.2001
 ;		04.09.11 Wepl: data directory added
 ;  :Requires.	whdload-package :)
@@ -10,6 +10,9 @@
 ;  :Translator.	ASM-One 1.25
 ;  :To Do.
 ;---------------------------------------------------------------------------*
+
+; this source can create slaves for CM or CM2 standalone depending on
+; CM2_STANDALONE define.
 
 CRC_V1	= $6a43	;original with RN copylock (SPS447)
 CRC_V2	= $a5d1	;rerelease (SPS2773)
@@ -42,7 +45,7 @@ V_SPS612     = 4
 
 
 ;============================================================================
-CHIP_ONLY
+;CHIP_ONLY
 
 	IFD	CHIP_ONLY
 CHIPMEMSIZE	= $100000
@@ -100,15 +103,20 @@ DECL_VERSION:MACRO
 	ENDC
 	ENDM
 
-slv_name	dc.b	"Castlemaster"
+slv_name
+		IFD	CM2_STANDALONE
+		dc.b	"Castlemaster 2"		
+		ELSE
+		dc.b	"Castlemaster"
+		ENDC
 		IFD	CHIP_ONLY
 		dc.b	" (CHIP/debug mode)"
 		ENDC
 		
 			dc.b	0
-slv_copy	dc.b	"1990 Incentive Software/Domark",0
-slv_info	dc.b	"adapted by Harry/Wepl/JOTD",10,10
-		dc.b	"from Wepl excellent KickStarter 34.005",10,10
+slv_copy	
+			dc.b	"1990 Incentive Software/Domark",0
+slv_info	dc.b	"adapted by Galahad/Harry/Wepl/JOTD",10,10
 		dc.b	"Version "
 		DECL_VERSION
 		dc.b	0
@@ -116,12 +124,18 @@ slv_CurrentDir:
 	dc.b	"data",0
 	
 slv_config:
+	IFND	CM2_STANDALONE
 	dc.b	"C1:L:language:english,german;"
 	dc.b	"C2:L:intro:show,skip select prince,skip select princess;"
 	dc.b	"C3:B:Castle Master 2;"
+	ENDC
+	dc.b	"C4:L:speed:unregulated,fast,slow,slower;"
 	dc.b	0
 	
-
+neo_file
+	dc.b	"thecrypt.neo",0
+no_cm2_text
+	dc.b	"Sorry this version doesn't contain Castle Master 2",0
 ;======================================================================
 
 
@@ -129,9 +143,24 @@ slv_config:
 	DECL_VERSION
 		dc.b	0
 		even
+		
+_vbl_counter
+	dc.w	0
 
 _program_memory
 	dc.l	0
+_music_memory
+	dc.l	0
+_mainloop_first_jsr
+	dc.l	0
+	
+MODULE_SIZE = $265ee-$d6ac
+
+MAINLOOP_OFFSET_447  = $9352
+MAINLOOP_OFFSET_2773 = $8ad4
+MAINLOOP_OFFSET_612_1 = $3531e-$2c000
+MAINLOOP_OFFSET_612_2 = $34d8e-$2c000
+
 
 _bootdos
 	MOVE.L	_resload(PC),A2
@@ -140,6 +169,22 @@ _bootdos
 	LEA.L	STFILE(PC),A0
 	LEA.L	$30000,A1
 	JSR	(resload_LoadFileOffset,a2)
+	;get tags
+	lea     (_tag,pc),a0
+	jsr     (resload_Control,a2)
+
+	IFD	CM2_STANDALONE
+	lea	_is_cm2(pc),a0
+	move.l	#1,(a0)
+	ENDC
+	
+	move.l	_is_cm2(pc),d0
+	beq.b	.no_cm2
+	lea	neo_file(pc),a0
+	jsr		(resload_GetFileSize,a2)
+	tst.l	d0
+	beq		no_cm2_error
+.no_cm2
 
 	MOVE.L	#$400,D0
 	LEA.L	$30000,A0
@@ -166,7 +211,9 @@ _bootdos
 	bra.s	.VA
 
 .V4	MOVE.B	#V_SPS612,(A0)
+
 .VA
+
 	IFND	CHIP_ONLY
 	move.l	$4,a6
 	move.l	#$6A000-$2C000,d0
@@ -178,9 +225,6 @@ _bootdos
 	illegal
 .ok
 	ENDC
-	;get tags
-	lea     (_tag,pc),a0
-	jsr     (resload_Control,a2)
 	move.l	_language_setting(pc),d0
 
 	TST.L	D0
@@ -219,7 +263,11 @@ _bootdos
 	CMP.B	#V_SPS2773,D0
 	BEQ.S	.patch
 	
-	lea		pl_boot_612(pc),a0
+	lea		pl_boot_612_cm(pc),a0
+	move.l	_is_cm2(pc),d1
+	beq.b	.cm1
+	lea		pl_boot_612_cm2(pc),a0
+.cm1
 	CMP.B	#V_SPS612,D0
 	BEQ.S	.patch
 	lea		pl_boot_compil(pc),a0
@@ -261,17 +309,20 @@ pl_boot_compil
 	PL_L	$134,$4EAEFFD6	; restore original code (compil crack)
 	PL_END
 	
-pl_boot_612
+pl_boot_612_cm2:
 	PL_START
-	PL_IFC3
 	PL_W	$76,$7032	; CM 2
 	PL_W	$190,$7032	; CM 2
-	PL_ELSE
+	PL_NEXT	pl_boot_612
+pl_boot_612_cm:
+	PL_START
 	PL_W	$76,$7031	; first opus
 	PL_W	$190,$7031	; first opus
-	PL_ENDIF
-	PL_PS	$18A,PATCHINTRO_612
+	PL_NEXT	pl_boot_612
 	
+pl_boot_612
+	PL_START
+	PL_PS	$18A,PATCHINTRO_612
 	PL_S	$78,$be-$78		; skip version select
 	PL_END
 
@@ -338,11 +389,7 @@ pl_intro_compil
 	
 pl_intro_612
 	PL_START
-	PL_IFC3
-	PL_PS	$24a,PATCHMAIN_612_2
-	PL_ELSE
-	PL_PS	$24a,PATCHMAIN_612_1
-	PL_ENDIF
+	PL_PS	$24a,PATCHMAIN_612
 	PL_PSS	$b00,soundtracker_loop,2
 	IFND	CHIP_ONLY
 	PL_PS	$d4,set_program_address
@@ -365,6 +412,13 @@ set_program_address
 	; and allows to debug the game easily
 	lea		$80000,a0
 	ELSE
+	; a0 points to original memory for the main program
+	; instead, we'll use that to store the music module
+	move.l	a1,-(a7)
+	add.l	#1000,a0	; original
+	lea		_music_memory(pc),a1
+	move.l	a0,(a1)
+	move.l	(a7)+,a1
 	; set a block of fast memory
 	move.l	_program_memory(pc),a0
 	ENDC
@@ -388,11 +442,18 @@ get_character
 .no_change
 	rts
 	
+PATCHMAIN_612
+	move.l	_is_cm2(pc),d0
+	bne.b	PATCHMAIN_612_2
 PATCHMAIN_612_1
 	ext.w	d1	; $31 or $32 (character)
 		
 	MOVEM.L	D0/D1/A0-A2,-(A7)
 	move.l	a6,a1
+	move.l	#MAINLOOP_OFFSET_612_1,d0
+	lea		_mainloop_first_jsr(pc),a2
+	move.l	(2,a1,d0.l),(a2)
+	bsr		relocate_music
 	lea		pl_main_612_1(pc),a0
 	move.l	_resload(pc),a2
 	jsr		(resload_Patch,a2)
@@ -406,6 +467,11 @@ PATCHMAIN_612_2
 		
 	MOVEM.L	D0/D1/A0-A2,-(A7)
 	move.l	a6,a1
+	move.l	#MAINLOOP_OFFSET_612_2,d0
+	lea		_mainloop_first_jsr(pc),a2
+	move.l	(2,a1,d0.l),(a2)
+	bsr		relocate_music
+
 	lea		pl_main_612_2(pc),a0
 	move.l	_resload(pc),a2
 	jsr		(resload_Patch,a2)
@@ -416,23 +482,31 @@ PATCHMAIN_612_2
 	
 PATCHMAIN
 	MOVE.B	VERSION(PC),D7
+	move.l	#MAINLOOP_OFFSET_447,d0
 	lea		pl_main_447(pc),a0
 	CMP.B	#V_SPS447,D7
 	beq.S	.PVA
+	move.l	#MAINLOOP_OFFSET_2773,d0
 	lea		pl_main_2773(pc),a0
 	CMP.B	#V_SPS2773,D7
 	beq.S	.PVA
+	; same version as 2773
+	move.l	#MAINLOOP_OFFSET_2773,d0
 	lea		pl_main_compil(pc),a0
 	CMP.B	#V_SPScompil,D7
 	beq.S	.PVA
 	ILLEGAL
 	
 .PVA
-	MOVEM.L	D0/D1/A0-A2,-(A7)
+	MOVEM.L	D0/D1/A0-A3,-(A7)
 	move.l	a6,a1
+	lea		_mainloop_first_jsr(pc),a2
+	move.l	(2,a1,d0.l),(a2)
+	bsr		relocate_music
+	
 	move.l	_resload(pc),a2
 	jsr		(resload_Patch,a2)
-	MOVEM.L	(A7)+,D0/D1/A0-A2
+	MOVEM.L	(A7)+,D0/D1/A0-A3
 
 	; here: D0 = language ($45=english)
 	; D1 = character ($31=prince, $32=princess)
@@ -447,6 +521,15 @@ pl_main_447
 	PL_PS	$2746,skip_access_fault
 	PL_S	$274C,$58-$4C
 	PL_PS	$8304,kbint_hook
+	
+	PL_R	$804a	; floppy cia write
+	PL_PS	$8030,big_delay
+	PL_PS	$8080,big_delay
+
+	PL_IFC4
+	PL_PS	$1090,vbl_hook
+	PL_PS	MAINLOOP_OFFSET_447,mainloop_hook
+	PL_ENDIF
 	PL_END
 	
 pl_main_612_1
@@ -454,6 +537,13 @@ pl_main_612_1
 	PL_S	$34550-$2C000,$34eec-$34550	; skip copylock
 	PL_PSS	$334d0-$2C000,soundtracker_loop,2
 	PL_PS	$342d0-$2C000,kbint_hook
+	PL_R	$34016-$2C000	; floppy cia write
+	PL_PS	$33ffc-$2C000,big_delay
+	PL_PS	$34046-$2C000,big_delay
+	PL_IFC4
+	PL_PS	$1090,vbl_hook
+	PL_PS	MAINLOOP_OFFSET_612_1,mainloop_hook
+	PL_ENDIF
 	PL_END
 	
 pl_main_612_2
@@ -461,6 +551,13 @@ pl_main_612_2
 	PL_S	$33fc0-$2C000,$3495c-$33fc0	; skip copylock
 	PL_PSS	$334d0-$2C000,soundtracker_loop,2
 	PL_PS	$33d40-$2C000,kbint_hook
+	PL_PS	$33a6c-$2C000,big_delay
+	PL_PS	$33abc-$2C000,big_delay
+	PL_R	$33a86-$2C000	; floppy cia write
+	PL_IFC4
+	PL_PS	$1090,vbl_hook
+	PL_PS	MAINLOOP_OFFSET_612_2,mainloop_hook
+	PL_ENDIF
 	PL_END
 	
 pl_main_compil
@@ -468,12 +565,90 @@ pl_main_2773
 	PL_START
 	PL_PSS	$7df8,soundtracker_loop,2
 	PL_PS	$83f2,kbint_hook
+	PL_R	$2e78	; floppy cia write
+	PL_PS	$2e5e,big_delay
+	PL_PS	$2ede,big_delay
+
+	PL_IFC4
+	PL_PS	$1050,vbl_hook
+	PL_PS	MAINLOOP_OFFSET_2773,mainloop_hook
+	PL_ENDIF
 	PL_END
 
+mainloop_hook:
+	; regulate
+	bsr		vbl_reg
+	; jump to original routine
+	move.l	_mainloop_first_jsr(pc),-(a7)
+	rts
+	
+vbl_reg:    
+    movem.l d0-d1/a0,-(a7)
+    move.l _speed_regulation(pc),d1       ; the bigger the longer the wait
+    lea _vbl_counter(pc),a0
+    move.w  (a0),d0
+    cmp.w   #10,d0
+    bcc.b   .nowait     ; first time called/lost sync/pause/whatever
+    ; wait till at least x vblanks passed after last zeroing
+.wait
+    cmp.w   (a0),d1
+    bcc.b   .wait
+.nowait
+    clr.w   (a0)
+    movem.l (a7)+,d0-d1/a0
+    rts
+	
+vbl_hook
+    move.w  _custom+intreqr,d0
+	btst	#5,d0
+	beq.b	.novbl
+    move.l a0,-(a7)
+    btst    #5,d0
+    beq.b   .novbl
+    ; add to counter
+    lea _vbl_counter(pc),a0
+    addq.w  #1,(a0)
+    movem.l (a7)+,a0
+.novbl
+	rts
+	
 	;MOVE.L	#$C944C944,$2D58(A6)	;PROTECTION MAIN
 	;MOVE.L	#$60000992,$2D5C(A6)	; WTF remainder of harry code
 	
-	; this code is completely buggy, it reads the first instrument name
+relocate_music
+	IFND	CHIP_ONLY
+	; patch reference to module in code
+	; (depends on the version)
+	; and copy module data in chipmem since code
+	; is in fastmem now
+	;
+	lea		module_offset_table(pc),a3
+	move.b	VERSION(pc),d0
+	cmp.b	#V_SPS612,d0
+	bne.b	.no_612
+	; special case
+	move.l	_is_cm2(pc),d1
+	beq.b	.no_612
+	addq.b	#1,d0
+.no_612
+	subq.b	#1,d0
+	ext.w	d0
+	lsl.w	#2,d0
+	move.l	(a3,d0.w),a3
+	add.l	a6,a3
+	move.l	(a3),a1		; source address where the module is
+	move.l	_music_memory(pc),a2	; dest address in chipmem
+	move.l	a2,(a3)	; replace pointer in the code
+	; copy module data to chip
+	move.l	#MODULE_SIZE/4-1,d0	; length
+.copy
+	move.l	(a1)+,(a2)+
+	dbf		d0,.copy
+	move.l	a6,a1
+	ENDC
+	rts
+	
+	; onv447 this code is completely buggy, it reads the first instrument name
 	; as a pointer, triggering access fault
 	; (other versions don't have this issue)
 skip_access_fault
@@ -497,6 +672,18 @@ _quit
 	addq.l	#resload_Abort,(a7)
 	rts
 
+big_delay
+	move.l	#$16e360/$28,d0
+.bd_loop1
+	move.w  d0,-(a7)
+    move.b	$dff006,d0	; VPOS
+.bd_loop2
+	cmp.b	$dff006,d0
+	beq.s	.bd_loop2
+	move.w	(a7)+,d0
+	subq.l	#1,d0
+	bpl.b	.bd_loop1
+	rts 
 soundtracker_loop
 	move.w  d0,-(a7)
 	move.w	#7,d0   ; make it 7 if still issues
@@ -522,14 +709,34 @@ LANGUAGE
 VERSION	dc.b	0
 	EVEN
 
+module_offset_table
+	dc.l	$4F8	; V447
+	dc.l	$3f4	; V_SPS2773
+	dc.l	$3f4	; V_SPScompil
+	dc.l	$4f8	; V612
+	dc.l	$4f8	; V612 (CM2, same offset)
+
 NOTSUPP
 	PEA	TDREASON_WRONGVER
 	move.l	(_resload,pc),-(a7)
 	add.l	#resload_Abort,(a7)
 	rts
+
+no_cm2_error
+	pea	no_cm2_text(pc)
+	pea	(TDREASON_FAILMSG).w
+	move.l	_resload(pc),a0
+	jmp	resload_Abort(a0)
+	
 	
 _tag		dc.l	WHDLTAG_CUSTOM1_GET
 _language_setting	dc.l	0
 		dc.l	WHDLTAG_CUSTOM2_GET
 _character_setting	dc.l	0
+		dc.l	WHDLTAG_CUSTOM3_GET
+_is_cm2	dc.l	0
+		dc.l	WHDLTAG_CUSTOM4_GET
+_speed_regulation	dc.l	0
 		dc.l	0
+
+	
