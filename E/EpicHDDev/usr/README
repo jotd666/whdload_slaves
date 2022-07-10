@@ -1,0 +1,66 @@
+
+
+	THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER
+	EXPRESS OR IMPLIED, STATUTORY OR OTHERWISE.
+	THE ENTIRE RISK AS TO USE, RESULTS AND PERFORMANCE OF THE PACKAGE IS
+	ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE TO BE DEFECTIVE, YOU
+	ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING, REPAIR OR OTHER
+	REMEDIATION.
+	UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY
+	DAMAGE CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE
+	OWNER OR A THIRD PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF
+	DAMAGE.
+
+
+	That install applies to "Epic" and "Epic mission disk" © 1992 Ocean.
+
+	The mission disk will only work together with the standard version
+	of "Epic".
+
+
+	That install requires WHDLoad and DIC to be in the path. Both
+	can be found in the WHDLoad package.
+	To install from a different drive than DF0: select Expert as
+	installation mode.
+
+
+	You need 1.0 MB ChipMem and 1.0 MB OtherMem.
+	You can quit the game by pressing F10 (key can be changed with
+	Tooltype "QuitKey=")
+
+
+	Highscores are saved to HD.
+
+
+	ATTENTION! The mission code "CEPHEUS" (mission 3) will
+	crash the game. This was also a problem of both disk
+	versions i have seen.
+	I have not found the reason for this yet, however, all
+	other codes work fine.
+
+	To get the code for mission 4 you'll have to finish
+	both, mission 2 and 3 without dying, but as these
+	missions are damn easy, i assume everybody should be
+	able to do so.
+
+
+	The "CUSTOM1" tooltype is used as a switch for starting
+	the standard or mission disk game.
+
+
+	if you have problems with this installation please report them via
+	the Bug-Report-Form which can be accessed on 
+	http://www.fh-zwickau.de/~jah/whdload/
+
+	for full WHDLoad package and other installs refer to:
+		http://www.fh-zwickau.de/~jah/whdload/
+	or	aminet:dev/misc/whdload#?
+	and	aminet:game/patch/
+
+
+todo:
+
+- fix sound (dma wait?)
+- enable real fastmem (runs in $8xxxx)
+- quitkey on 68000
+- update readme

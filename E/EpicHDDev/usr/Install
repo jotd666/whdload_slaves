@@ -1,0 +1,177 @@
+;****************************
+
+(set #readme-file "README") ;name of readme file
+(set #last-disk 3)          ;amount of disks
+(set #disk-size 901120)     ;size of each disk
+
+;****************************
+;----------------------------
+; Checks if given program is reachable via the path
+; if not abort install
+; IN:  #program - to check
+; OUT: -
+
+(procedure P_chkrun
+  (if
+    (= 0 (run ("cd SYS:\nWhich %s" #program)))
+    ("")
+    (abort ("You must install \"%s\" first !\nIt must be accessible via the path.\nYou can find it in the whdload package." #program))
+  )
+)
+
+;----------------------------
+; Create disk-Image using DIC
+; IN:  #dest        - DestinationPath
+;      #CI_diskname - DiskName
+;      #CI_diskno   - DiskNumber
+;      #CI_drive    - DriveToReadFrom
+; OUT: -
+
+(procedure P_image
+  (message ("\nInsert \"%s\" into drive %s !\n\n(make sure it's the right disk because it will not checked)" #CI_diskname #CI_drive))
+  (if
+    (= 0 
+      (run ("cd \"%s\"\nDIC %s FD=%ld LD=%ld SIZE=%ld >CON:///1000//CLOSE" #dest #CI_drive #CI_diskno #CI_diskno #disk-size))
+    )
+    ("")
+    (abort "\"DIC\" has failed to create a diskimage")
+  )
+)
+
+;****************************
+
+(if
+  (exists #readme-file)
+  (if
+    (= 0 (run ("SYS:Utilities/Multiview %s" #readme-file)))
+    ("")
+    (run ("SYS:Utilities/More %s" #readme-file))
+  )
+)
+
+(set #program "WHDLoad")
+(P_chkrun)
+
+(set #program "DIC")
+(P_chkrun)
+
+; in expert mode ask for source drive
+(if
+  (= @user-level 2)
+  (
+    (set #CI_drive
+      (askchoice
+	(prompt "Select source drive for diskimages")
+	(default 0)
+	(choices "DF0:" "DF1:" "RAD:" "Enter Device")
+	(help @askchoice-help)
+      )
+    )
+    (select #CI_drive
+      (set #CI_drive "DF0:")
+      (set #CI_drive "DF1:")
+      (set #CI_drive "RAD:")
+      (set #CI_drive
+        (askstring
+          (prompt "Select source drive for diskimages")
+          (default "DF0:")
+          (help @askstring-help)
+        )
+      )
+    )
+  )
+  (set #CI_drive "DF0:")
+)
+
+(set @default-dest
+  (askdir
+    (prompt ("Where should \"%s\" installed ?\nA drawer \"%s\" will automatically created." @app-name @app-name))
+    (help @askdir-help)
+    (default @default-dest)
+    (disk)
+  )
+)
+(set #dest (tackon @default-dest @app-name))
+(if
+  (exists #dest)
+  (
+    (set #choice
+      (askbool
+        (prompt ("\nDirectory \"%s\" already exists.\n Should it be deleted ?" #dest))
+        (default 1)
+        (choices "Delete" "Skip")
+        (help @askbool-help)
+      )
+    )
+    (if
+      (= #choice 1)
+      (run ("Delete \"%s\" \"%s.info\" All" #dest #dest))
+    )
+  )
+)
+(makedir #dest
+  (help @makedir-help)
+  (infos)
+)
+
+;----------------------------
+
+(copyfiles
+  (help @copyfiles-help)
+  (source ("%s.slave" @app-name))
+  (dest #dest)
+)
+(if
+  (exists ("%s.newicon" @app-name))
+  (set #icon
+    (askchoice
+      (prompt "\nWhich icon do you like to install ?\n")
+      (default 0)
+      (choices "Normal" "NewIcon")
+      (help @askchoice-help)
+    )
+  )
+  (set #icon 0)
+)
+(select #icon
+  (set #icon ("%s.inf" @app-name))
+  (set #icon ("%s.newicon" @app-name))
+)
+(copyfiles
+  (help @copyfiles-help)
+  (source #icon)
+  (newname ("%s.info" @app-name))
+  (dest #dest)
+)
+(if
+  (exists #readme-file)
+  (copyfiles
+    (help @copyfiles-help)
+    (source #readme-file)
+    (dest #dest)
+  )
+)
+(if
+  (exists ("%s.info" #readme-file))
+  (copyfiles
+    (help @copyfiles-help)
+    (source ("%s.info" #readme-file))
+    (dest #dest)
+  )
+)
+
+(set #CI_diskno 1)
+(while
+  (<= #CI_diskno #last-disk)
+  (
+    (set #CI_diskname ("%s Disk %ld" @app-name #CI_diskno))
+    (P_image)
+    (run ("FileNote Disk.%ld %s Quiet" #CI_diskno @app-name))
+    (set #CI_diskno (+ #CI_diskno 1))
+  )
+)
+
+;----------------------------
+
+(exit)
+

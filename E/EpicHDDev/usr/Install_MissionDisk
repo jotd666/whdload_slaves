@@ -1,0 +1,39 @@
+
+;****************************
+;----------------------------
+; Checks if given program is reachable via the path
+; if not abort install
+; IN:  #program - to check
+; OUT: -
+
+(procedure P_chkrun
+  (if
+    (= 0 (run ("cd SYS:\nWhich %s" #program)))
+    ("")
+    (abort ("You must install \"%s\" first !\nIt must be accessible via the path.\nYou can find it in the whdload package." #program))
+  )
+)
+
+(set @default-dest
+  (askdir
+    (prompt ("Where is Epis installed ?\n"))
+    (help @askdir-help)
+    (default @default-dest)
+    (disk)
+  )
+)
+
+;----------------------------
+
+(copyfiles
+  (help @copyfiles-help)
+  (source ("Epic_Mission:mission"))
+  (dest @default-dest)
+)
+
+(copyfiles
+  (help @copyfiles-help)
+  (source ("%s.inf" @app-name))
+  (newname ("%s.info" @app-name))
+  (dest @default-dest)
+)
