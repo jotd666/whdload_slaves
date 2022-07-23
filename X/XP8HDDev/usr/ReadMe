@@ -42,6 +42,10 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 2.2 (22.xx.2022)
+ - reassembled to use cpu caches
+ - joypad controls !!!!
+ 
  version 2.1 (22.04.2022)
  - fixed crashed in trainer for ECS version (issue #0005598)
  
@@ -80,4 +84,4 @@
  
  AGA version came first, with quite a lot of (now fixed) bugs.
  ECS version came afterwards, with fixed bugs and better code (and password protection :))
- 
+ Note that the music in both versions are slightly different. Same tune but different key!

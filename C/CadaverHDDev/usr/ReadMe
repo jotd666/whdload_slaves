@@ -29,6 +29,17 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 3.0 (14.07.2022):
+ - re-enabled 512k expansion memory, which allows the game to be faster
+   and have more sounds (check the pond monster at start)
+ - added joypad controls (issue #0004176)
+ - fixed lockup on startup (failed NTSC/region lock on WinUAE)
+ - fixed sound/music play on fast machines
+ - map scrolling was too fast on fast machines. Regulated speed so it's useable
+ - changed CUSTOMx flags: CUSTOM1 bits now control trainer, CUSTOM5 selects levels
+ - F3/F4 cheat keys replaced by F5/F6 as F3/F4 are used as expert game control keys
+ - BUTTONWAIT allows to see Bitmap Bros logo at startup
+ 
  version 2.4 (10.06.2019):
  - fixed some parasite file dump that I had added for reverse-engineering purposes
    and which made the game crash after a while (issue #0004132)
@@ -82,13 +93,20 @@ There are 3 versions I know of:
    for savegames (much better). The tool provided to rip the saves from floppy disk
    only works for this version.
 
+Joypad controls:
+
+- fire/red: jump
+- button2/blue: show current object (space)
+- button3/green: show inventory (return)
+- yellow: toggle object in hand/hide (H)
+- forward: map (F1)
 
 THANKS GO TO:
 
 - Steve Kelly for allowing me to release any patch for the Bitmap Bros games.
 - Keiron Wilkinson for providing me unprotected V1.03 (I only had V0.01).
 - Bernard & Dominique Kubler for the chocolates. Finalement, j'ai terminé ce patch
-  un peu grâce à vous :-)
+  un peu grâce àvous :-)
 - Jari Pakarinen for his extensive beta testing on V0.01 saves and for his report
   about the crash on exit.
 - Carlo Pirri for sending v0.01 original
@@ -98,3 +116,4 @@ THANKS GO TO:
   protection.
 - Kametyken for his excellent website about the Bros. games:
   http://www.gods-country.de
+

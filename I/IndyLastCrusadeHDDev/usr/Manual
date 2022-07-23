@@ -1,0 +1,166 @@
+Indiana Jones and the Last Crusade (Graphic Adventure)
+
+Getting Started
+
+NOTE: It is recommended that you first make backup copies of all disks 
+and put the originals in a safe place. The disks are not copy protected, 
+so to copy them just follow the instructions that came with your computer.
+
+You can play from either a hard disk drive or a floppy disk drive. 
+From a floppy drive, insert Indiana Jones and the Last Crusade Disk 1 in your disk drive (DF0:) 
+and boot off this disk. Open the disk icon and double-click on the Indy icon (the Indy hat and whip). 
+If your Amiga has at least one megabyte of RAM, you can play Indy using two drives. 
+Leave Indy Disk 2 in your external drive (DF1:) and swap Disk 1 and Disk 3 in your internal drive as requested.
+
+ATTENTION 512K USERS: If you are using a 512K Amiga with external drives, 
+please disconnect all external drives and boot off Indy Disk 1. 
+Follow the instructions on the screen, and insert the other disks when prompted.
+
+To install Indy on a hard disk, 
+first use your Workbench menu to create an empty file drawer called "Indy3". 
+Without opening the "Indy3" drawer, insert Disk 1 into the drive, double-click on its icon, 
+and drag both the Indy and Rooms icons into the new hard disk drawer. 
+Insert Disk 2 into the drive, double-click on its icon, and drag its Rooms icon into the new hard disk drawer. 
+Then insert Disk 3 into the drive, double-click on its icon, and drags its Rooms icon into the new hard disk drawer.
+(Note: If you open the hard disk drawer before moving the icons, 
+take care not to drag the second and third Rooms icon on top of the first one) 
+If you do so accidentally, simply delete the hard disk Rooms drawer 
+and re-copy the Rooms icons from all three disks.)
+
+To load the game from your hard disk, open the "Indy3" hard disk drawer, and double-click on the Indy icon.
+
+Amiga Reference Card
+Mouse Control
+
+Use your mouse to move the cursor around. You may select any of the verbs or inventory items below 
+by clicking on them with your left mouse button.
+
+You may use your right mouse button to override cut-scenes while playing the game.
+
+Keyboard Controls
+
+All of the verbs used in the game can also be selected by using keyboard commands. 
+Each key corresponds to one verb. Pressing the appropriate key once is equivalent 
+to moving the cursor over the verb and pushing the mouse button; 
+pressing the key twice is the same as double-clicking on the verb.
+
+The keys are mapped according to the layout of the verbs on the screen:
+
+   Q        W       E          R          T
+
+   Push     Open    Walk to    Use        (Talk)
+
+   A        S       D          F          G
+
+   Pull     Close   Pick up    Turn on    (Travel)
+
+   Z        X       C          V          B
+
+   Give     Look    What is    Turn off   (To Henry/To Indy)
+
+The verbs on the far right (in parentheses) are not always available on the screen. 
+See the game manual for more information about them.
+
+You can also select inventory items from the keyboard. 
+On the screen you will see six items at most in the inventory list. 
+Use the following keys to select one:
+
+   Y                    U                    O
+
+   Upper left item      Upper right item     Scroll list up
+
+   H                    J                    L
+
+   Middle left item     Middle right item    Scroll list down
+
+   N                    M
+
+   Lower left item      Lower right item
+
+Function and Command Keys
+
+   Save or Load a Game    F5     (Only when the verbs are available)
+   Bypass a Cut-Scene     ESC or second mouse button
+   Restart a Game         F8
+   Pause the Game         Space bar
+   Message Line Speed:    Faster    >
+                          Slower    <
+   Sounds Off/On          ALT s
+   Exit Game              ALT x
+
+Fighting Controls
+
+Use these keys to control Indy in a fight. See your game manual for further instruction.
+
+Indy is on the left                 | Indy is on the right
+                                    |
+7         8           9             | 7            8            9
+                                    |
+Step back Block high  Punch high    | Punch high   Block high   Step back
+                                    |
+4         5            6            | 4            5            6
+                                    |
+Step back Block middle Punch middle | Punch middle Block middle Step back
+                                    |
+1         2            3            | 1            2            3
+                                    |
+Step back Block low    Punch low    | Punch low    Block low    Step back
+
+
+Biplane Controls
+
+Indy escapes from Germany in a biplane after he has found Henry, his father.
+
+In the game you will control Indy as he flies the plane, 
+while Henry tries to shoot down the enemy planes. 
+Manoeuvre to keep away from the enemy to give Henry time to line up his shot. 
+See your game manual for further instructions.
+
+7                    8                  9
+
+Fly to upper left    Fly upwards        Fly to upper right
+
+4                    5                  6
+
+Fly to left          Fly straight       Fly to right
+
+1                    2                  3
+
+Fly to lower left    Fly down           Fly to lower right
+
+
+Save/Load Instructions
+
+If you are playing from floppy disks, you will need to prepare a blank, 
+formatted disk BEFORE you start to play. The disk will become your save/load disk. 
+Hard disk players will have their games saved in the directory with the game files.
+
+Press F5 when you want to check your current Indy Quotient or save or load a game. 
+If you are playing from floppy disks, you will be asked to insert your save/load game disk.
+
+Once the save/load game screen is displayed, you can move the cursor and click 
+on either SAVE, LOAD, or PLAY. The SAVE option will not be available during the opening sequence 
+or after Indy has failed in his quest.
+
+To SAVE:
+
+Click on the SAVE option. The current list of saved games will be displayed 
+in slots along the left side of the screen. Select a slot by pointing the cursor at it and clicking. 
+Now you will be able to type a new name for that slot or use the backspace key to change the existing name. 
+Pressing ENTER will reactivate the cursor. Click the cursor on OK to save the game, 
+or CANCEL if you have changed your mind and do not wish to save it.
+
+To LOAD:
+
+Click on the LOAD option. The current list of saved games will be displayed 
+in slots along the left side of the screen. Select a slot by pointing the cursor to it and clicking. 
+Move the cursor to OK to load the game, or CANCEL if you have changed your mind and do not wish to load it.
+
+Series IQ points will be updated each time you save or load a game. 
+If you are playing from floppy disks, you can transfer Series points from one save/load game disk to another 
+by loading a game from one floppy and saving it on a new one.
+
+To start fresh with a new set of Series points: 
+If you are playing from a hard disk you must delete all save game files 
+(all files named save game with different extensions). 
+If you are playing from a floppy disk, just use a new formatted disk for your save/load game disk.

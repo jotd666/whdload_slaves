@@ -29,6 +29,12 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 4.0 (24.07.2022):
+ - relocate program in fastmem to avoid game slowdowns (issue #0004569)
+ - reworked trainer options
+ - trainer option added: save game at any level (for level 2 and last level)
+ - joypad controls: second/blue button to jump, play/third button to pause
+
  version 3.4 (01.05.2020):
  - fixed corruption and crash when saving/loading (issue #0004589)
 
@@ -81,16 +87,18 @@ In-game keys:
  - Ctrl-R: quit current game & go to main game menu
  - Ctrl-S: sound on/off
  - Ctrl-L: load game (from main game menu)
- - Ctrl-G: save game (level 3 and higher)
+ - Ctrl-G: save game (level 3 and higher, but not last level)
+   (if cheat is set, game can be saved at any level)
  - Ctrl-V: show game version
  - Ctrl-Q: quit to workbench (used to reboot) (QWERTY keyboard)
  - Ctrl-A: restart level (QWERTY keyboard)
- - Shift-L: skip levels but not above to level 4 unless CUSTOM1 is set, sets timer to 15 minutes
+ - Shift-L: skip levels but not above to level 4 & sets timer to 15 minutes
+   (if cheat is set timer isn't changed and all levels can be skipped)
  - Space: show remaining time
  - Esc: pause
  - Joystick/Numerical keypad:  directions
  - Fire/Right Amiga: fire
- - 0 on keypad: give up fight
+ - 5 on keypad: give up fight
 
 Notes:
 
@@ -98,3 +106,10 @@ Notes:
  - If trainer (infinite time/energy) is set, Ctrl-G has no effect, and high scores are not saved
  - when using trainer infinite energy and falling in pits
    the level doesn't auto-restart. Use Ctrl-A to restart level manually
+ - the second/blue button jumps, but "up" is not suppressed. This was too complex to
+   reverse-engineer for sword fight and pull up when hanging, and most of all not
+   that annoying to still have "up" for jump in that case. The second button jump is
+   still a very good asset with the joypad to avoid failing a diagonal jump and dying...
+ - reloc tables were specially created to be able to run that game from fast memory.
+   To upgrade your installation, just copy those .reloc files in the game data directory.
+   The slave selects the proper one automatically according to game version.

@@ -26,14 +26,25 @@
 	SUPER
 	ENDC
 
-;CHIP_ONLY = 1
+;RELOC_ENABLED = 1
+; when relocated, PC is shifted by $102000
+
+;;CHIP_ONLY = 1
 ; there seems to exist some spare memory up to $7E7E0 more than enough
 ; but this memory is used later on
 SAVESCREEN = $7A000
 SAVESCREENSIZE = $3000
 
+	IFD	RELOC_ENABLED
+RELOC_MEM = $4A000
+	ELSE
+RELOC_MEM = 0
+	ENDC
+	
+FASTMEMSIZE = $80000
+
 	IFD	CHIP_ONLY
-CHIPMEMSIZE = $100000+SAVESCREENSIZE
+CHIPMEMSIZE = $80000+FASTMEMSIZE+RELOC_MEM
 	ELSE
 CHIPMEMSIZE = $80000		;ws_BaseMemSize
 	ENDC
@@ -54,7 +65,7 @@ _keydebug	dc.b	$0		;ws_keydebug
 _keyexit	dc.b	$5F		;ws_keyexit = Help
 _expmem	
 	IFND	CHIP_ONLY	
-	dc.l	$80000+SAVESCREENSIZE			;ws_ExpMem
+	dc.l	FASTMEMSIZE+SAVESCREENSIZE+RELOC_MEM			;ws_ExpMem
 	ELSE
 	dc.l	0
 	ENDC
@@ -73,7 +84,7 @@ _expmem
 	ENDC
 	
 DECL_VERSION:MACRO
-	dc.b	"3.4"
+	dc.b	"4.0"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -95,13 +106,25 @@ _info		dc.b	"adapted & fixed by JOTD & Harry",10,10
 		even
 
 _config
-        dc.b    "C1:X:Trainer Infinite Energy/Time:0;"
-		dc.b    "C2:X:Levelskip does not steal time:0;"
+        dc.b    "C1:X:Trainer Infinite Time:0;"
+        dc.b    "C1:X:Trainer Infinite Energy:1;"
+		dc.b    "C1:X:Super levelskip:2;"
+		dc.b    "C2:B:second button jumps;"
+		dc.b    "C3:B:Save from any level;"
 		dc.b	0
-	even
+		
+		even
+	
+	
+_reloc_base
+	dc.l	$1000
+	
 MAX_LEVEL = $D
 BASE_ADDRESS = $7E800
 
+IGNORE_JOY_DIRECTIONS
+	include	ReadJoyPad.s
+	
 ;======================================================================
 start	;	A0 = resident loader
 ;======================================================================
@@ -113,11 +136,16 @@ start	;	A0 = resident loader
 	lea	(_tag,pc),a0
 	jsr	(resload_Control,a2)
 
-	lea	_expmem(pc),a0
 	IFD	CHIP_ONLY
+	lea	_expmem(pc),a0
 	move.l	#$80000,(a0)
 	ENDC
-
+	IFD	RELOC_ENABLED
+	lea		_reloc_base(pc),a0
+	move.l	_expmem(pc),d0
+	add.l	#FASTMEMSIZE+SAVESCREENSIZE,d0
+	move.l	d0,(a0)
+	ENDC
 
 	lea	$10000,a7
 	move	#$2700,SR
@@ -139,7 +167,7 @@ start	;	A0 = resident loader
 	moveq	#1,d1		; UK 1a
 	cmp.l	#$F020,d0
 	beq.b	.vok
-	moveq	#1,d1		; UK 1b
+	moveq	#5,d1		; UK 1b
 	cmp.l	#$4599,d0
 	beq.b	.vok
 	moveq	#2,d1		; US? boot is completely different
@@ -162,6 +190,14 @@ start	;	A0 = resident loader
 .vok
 	lea	version(pc),a3
 	move.l	d1,(a3)
+	
+	; set address for pause flag
+	lea		game_paused_flag_address(pc),a3
+	lea		pause_address_table(pc),a1
+	add.l	d1,d1
+	add.l	d1,d1
+	move.l	(a1,d1.l),(a3)
+	
 	lea	BASE_ADDRESS,A1
 	jsr	resload_Patch(a2)
 		
@@ -186,11 +222,13 @@ pl_boot_1
 
 	; disk load
 
+	PL_R	$7edce-$7E800	; drive stuff
+	PL_R	$7ec4a-$7E800	; skip interrupt vector set
 	PL_P	$624,read_tracks
 	PL_W	$1E6,$6006
 	PL_W	$A6,$6044
 	PL_P	$298,_exit
-	PL_L	$22A,$4E714E71
+	PL_NOP	$22A,4
 	PL_P	$22E,patch_program
 	PL_END
 
@@ -207,7 +245,7 @@ pl_boot_2
 	PL_W	$A8,$6044
 
 	; main patch
-	PL_L	$22C,$4E714E71
+	PL_NOP	$22C,4
 	PL_P	$230,patch_program
 
 	; safety
@@ -289,41 +327,106 @@ PATCH_VERSION:MACRO
 	jsr	resload_Patch(a2)
 
 	movem.l	(a7)+,d0-d1/a0-a2
-	jmp	\2
+	lea	\2,a0
+	add.l	_reloc_base(pc),a0
+	sub.w	#$1000,a0
+	jmp	(a0)
 	ENDM
+
+PROGRAM_SIZE = $46800  ; $2F*$1800 tracks
+PROGRAM_START = $0532c
+; just for protect write, no need to be super-accurate
+; too high => risk of false alarm
+; slightly too low => probably doesn't matter
+PROGRAM_END = $001f7ca
 
 patch_program
 	movem.l	d0-d1/a0-a2,-(A7)
+	move.l	_resload(pc),a2
 
 	; *** removes protection level (common to both (all?) versions)
 
 	move.l	#-1,$6378.W
+	IFD		RELOC_ENABLED
+	
+	; copy program
 
-	sub.l	a1,a1
-	move.l	_resload(pc),a2
+	
+	move.l	#PROGRAM_SIZE/4,d0
+	lea		$1000.W,a0
+	move.l	_reloc_base(pc),A1
+.copy
+	move.l	(a0)+,(a1)+
+	subq.l	#1,d0
+	bne.b	.copy
+	
+	; load reloc table
+	
+	lea	_reloc_table_address(pc),a1
+	lea		reloc_file_name_table(pc),a0
+	
+	move.l	version(pc),D0
+	add.l	d0,d0
+	add.w	(a0,d0.l),a0	; relative => absolute name
+	jsr		resload_LoadFileDecrunch(a2)
+
+	; relocate
+	move.l	_reloc_base(pc),a0
+	lea		(-$1000,a0),a1	; reloc base -$1000
+	move.l	a1,d1
+	lea	_reloc_table_address(pc),a1
+.reloc
+	move.l	(a1)+,d0
+	beq.b	.end
+	add.l	d1,(a0,d0.l)
+	bra.b	.reloc
+.end
+	; debug: add MMU protect on old program $ -> $ for v1
+	IFD	CHIP_ONLY
+	move.l	#PROGRAM_END-PROGRAM_START,d0                   ;one longword
+	lea     PROGRAM_START,a0                ;address
+	move.l  (_resload,pc),a2
+	jsr     (resload_ProtectRead,a2)
+	move.l	#PROGRAM_END-PROGRAM_START,d0                   ;one longword
+	lea     PROGRAM_START,a0                ;address
+	move.l  (_resload,pc),a2
+	jsr     (resload_ProtectWrite,a2)
+	
+	ENDC
+
+	ENDC
+	
+	move.l	_reloc_base(pc),A1
+	; make it like memory is absolute
+	; as patchlist base is zero
+	sub.w	#$1000,a1
 
 	move.l	version(pc),D0
 	cmp.l	#1,d0
-	bne	version2
+	bne.b	version2
 
 	; version 1, first one I patched
 	PATCH_VERSION	1,$1F662
 
 version2:
 	cmp.l	#2,d0
-	bne	version3
+	bne.b	version3
 	PATCH_VERSION	2,$1F636
 
 version3:
 	cmp.l	#3,d0
-	bne	version4
-
+	bne.b	version4
 	PATCH_VERSION	3,$1F63A
-	cmp.l	#4,d0
-	bne	version5
 version4
+	cmp.l	#4,d0
+	bne.b	version5
 	PATCH_VERSION	4,$1F65E
 version5
+	cmp.l	#5,d0
+	bne.b	version6
+	; version 1b slightly different
+	PATCH_VERSION	1,$1F662
+version6	
 	; not possible to reach
 	illegal
 	
@@ -346,25 +449,31 @@ pl_v1
 	PL_P	$C910,savehigh_v1
 	PL_P	$C972,loadhigh_v1
 
-	PL_IFC1
+	PL_PSS	$19fac,vbl_hook,2
+	
+	PL_IFC2
+	PL_PS	$1B8C6,read_joydat
+	PL_ENDIF
+	
+	PL_IFC3
+	; save at any level
+	PL_S	$1900C,$20-$C
+	PL_ENDIF
+	
+	PL_IFC1X	0
 	; time--
 
-	PL_L	$1926A,$4E714E71
-	PL_W	$1926E,$4E71
+	PL_NOP	$1926A,6
 
-
+	PL_ENDIF
+	
+	PL_IFC1X	1
 	; infinite energy
 
 	PL_PS	$C622,trainer_v1
-
-	; time=15 (levelskip)
-
-	PL_B	$190D6,$60
-	; levelskip up to level 12
-
-	PL_B	$19097,MAX_LEVEL
-	PL_ELSE
-	PL_IFC2
+	PL_ENDIF
+	
+	PL_IFC1X	2
 	; time=15 (levelskip)
 
 	PL_B	$190D6,$60
@@ -372,7 +481,13 @@ pl_v1
 
 	PL_B	$19097,MAX_LEVEL
 	PL_ENDIF
-	PL_ENDIF
+
+; replaces STOP blitter interrupt wait by active blitwaits
+;	PL_IFC5
+;	PL_P	$53AA,blitter_1
+;	PL_P	$53d6,blitter_2
+;	PL_ENDIF
+	
 	PL_END
 
 
@@ -386,6 +501,11 @@ pl_v2
 
 	PL_PS	$1A2F0,kbint
 
+	PL_IFC3
+	; save at any level
+	PL_S	$18fda,$20-$C
+	PL_ENDIF
+
 	; *** if exception exit
 
 ;	PL_P	$7F38E,error
@@ -397,37 +517,32 @@ pl_v2
 	PL_P	$C902,savehigh_v2
 	PL_P	$C95E,loadhigh_v2
 
-	PL_IFC1
+	PL_IFC1X	0
 	; time-
 
-	PL_L	$19238,$4E714E71
-	PL_W	$1923C,$4E71
+	PL_NOP	$19238,6
+	PL_ENDIF
+	
+	PL_IFC1X	1
 	; *** infinite energy
 
 	PL_PS	$C626,trainer_v2
-
-	; *** time=15 (levelskip)
-
-	PL_W	$190A6,$703C
-	PL_W	$1909C,$703C
-
-	; levelskip up to level 12
-
-	PL_B	$19065,MAX_LEVEL
-	PL_ELSE
-	PL_IFC2
-	; *** time=15 (levelskip)
-
-	PL_W	$190A6,$703C
-	PL_W	$1909C,$703C
-
-	; levelskip up to level 12
-
-	PL_B	$19065,MAX_LEVEL
 	PL_ENDIF
+	
+	PL_IFC1X	2
+	; *** time=15 (levelskip)
+
+	PL_W	$190A6,$703C
+	PL_W	$1909C,$703C
+
+	; levelskip up to level 12
+
+	PL_B	$19065,MAX_LEVEL
+
 	PL_ENDIF
 	PL_END
 	
+; german
 pl_v3:
 	PL_START
 	; *** removes unexpected exception
@@ -438,6 +553,11 @@ pl_v3:
 
 	PL_PS	$1A2FA,kbint
 
+	PL_IFC3
+	; save at any level
+	PL_S	$18fe4,$20-$C
+	PL_ENDIF
+
 	; *** load/save
 
 	PL_P	$C748,savegame_v3
@@ -447,27 +567,26 @@ pl_v3:
 		  
 	; time--
 
-	PL_IFC1
+	PL_IFC1X	0
 	PL_NOP	$19242,4
 	PL_NOP	$19246,2
 	PL_NOP	$12246,2
-
-	; time=15 (levelskip)
-    PL_B	 $190AE,$60
-		  ; max level for levelskip
-	PL_B	 $1906F,MAX_LEVEL
-		  
+	PL_ENDIF
+	
+	PL_IFC1X	1
 	; *** infinite energy
 
 	PL_PS	$C5FA,trainer_v3
-	PL_ELSE
-	PL_IFC2
+	PL_ENDIF
+	
+	PL_IFC1X	2
 	; time=15 (levelskip)
     PL_B	 $190AE,$60
 		  ; max level for levelskip
 	PL_B	 $1906F,MAX_LEVEL
 	PL_ENDIF
-	PL_ENDIF
+	
+
 	PL_END
 
 ; version 4 - French version "Prince de Perse"
@@ -482,6 +601,11 @@ pl_v4:
 
 	PL_PS	$1A31E,kbint
 
+	PL_IFC3
+	; save at any level
+	PL_S	$19008,$20-$C
+	PL_ENDIF
+
 	; *** load/save
 
 	PL_P	$C76C,savegame_v4
@@ -492,33 +616,29 @@ pl_v4:
 
 	; time--
 
-	PL_IFC1
+	PL_IFC1X	0
 	PL_NOP	$19266,4
 	PL_NOP	$1226A,2
-    
+    PL_ENDIF
+	
 	; *** time=15 (levelskip)
+	PL_IFC1X	1
 
 	PL_B $190D2,$60
 
 	; levelskip up to level 12
 
 	PL_B $19093,MAX_LEVEL
-
+	PL_ENDIF
+	
+	PL_IFC1X	2
 	; *** infinite energy
 
 	PL_PS	$C61E,trainer_v4
-	PL_ELSE
-	PL_IFC2
-	; *** time=15 (levelskip)
 
-	PL_B $190D2,$60
-
-	; levelskip up to level 12
-
-	PL_B $19093,MAX_LEVEL
-	PL_ENDIF
 	PL_ENDIF
 	PL_END
+
 
 	DEF_TRAINER		1,$47AD4
 	DEF_TRAINER		2,$479FC
@@ -530,8 +650,58 @@ pl_v4:
 	DEF_SAVELOAD_HIGH	3,$49BB4
 	DEF_SAVELOAD_HIGH	4,$49BD8	; ???
 
-
-
+read_joydat:
+	movem.l	d0/a0,-(a7)
+	move.l	joypad_state(pc),d0
+	MOVE.W	_custom+joy1dat,D2
+	; ATM leave "up" alone. Just simulate it with blue button
+;	move.l	_GameAddress(pc),a0
+;	cmp.b	#7,$4813(a0)		; project-F ? don't do anything
+;	beq.b	.no_blue
+	; cancel UP from joydat. Copying bit 9 to bit 8 so EOR yields 0
+;	bclr	#8,D2
+;	btst	#9,D2
+;	beq.b	.noneed
+;	bset	#8,D2	; xor 8 and 9 yields 0 cos bit9=1
+;.noneed
+	btst	#JPB_BTN_BLU,d0
+	beq.b	.no_blue
+	; set UP because blue pressed
+	bclr	#8,D2
+	btst	#9,D2
+	bne.b	.no_blue
+	bset	#8,D2	; xor 8 and 9 yields 1 cos bit9=1
+.no_blue:
+	movem.l	(a7)+,d0/a0
+	RTS
+	
+vbl_hook
+	move.w	#$20,_custom+intreq	; original
+	moveq.l	#1,d0
+	bsr		_read_joystick
+	lea		joypad_state(pc),a0
+	move.l	d0,(a0)
+	btst	#JPB_BTN_PLAY,d0
+	beq.b	.no_pause
+	move.l	game_paused_flag_address(pc),a0
+	move.l	#-1,(a0)
+.no_pause	
+	rts
+	
+blitter_1
+	move.w	D0,_custom+bltsize
+	bsr.b	wait_blit
+	UNLK	A6			;053d0: 4e5e
+	RTS				;053d2: 4e75
+	
+blitter_2
+	move.w	D0,_custom+bltsize
+wait_blit
+	TST.B	$BFE001
+.wait
+	BTST	#6,dmaconr+$DFF000
+	BNE.S	.wait
+	rts
 ; < A1: buffer
 loadhigh
 	lea	highname(pc),a0
@@ -586,23 +756,27 @@ loadgame_v2
 	movem.l	d1-a6,-(a7)
 	lea	savegame_buffer(pc),a1
 	bsr	loadgame
-	move.l	(A1)+,$47A34
-	move.l	(A1)+,$47A38
-	move.l	(A1)+,$47A2C
-	move.l	(A1)+,$47A30
-	move.l	#1,$46FFE	; tell the game not to reset life/time
+	move.l	_reloc_base(pc),a0
+	add.l	#$46000,a0
+	move.l	(A1)+,$A34(a0)
+	move.l	(A1)+,$A38(a0)
+	move.l	(A1)+,$A2C(a0)
+	move.l	(A1)+,$A30(a0)
+	move.l	#1,-2(a0)	; tell the game not to reset life/time
 	movem.l	(a7)+,d1-a6
 	rts
 
 loadgame_v3
 	movem.l	d1-a6,-(a7)
 	bsr	loadgame
+	move.l	_reloc_base(pc),a0
+	add.l	#$46000,a0
 	lea	savegame_buffer(pc),a1
-	move.l	(A1)+,$47AE4
-	move.l	(A1)+,$47AE8
-	move.l	(A1)+,$47ADC
-	move.l	(A1)+,$47AE0
-	move.l	#1,$470AE
+	move.l	(A1)+,$AE4
+	move.l	(A1)+,$AE8
+	move.l	(A1)+,$ADC
+	move.l	(A1)+,$AE0
+	move.l	#1,$0AE(a0)
 	movem.l	(a7)+,d1-a6
 	rts
 
@@ -610,11 +784,13 @@ loadgame_v4
 	movem.l	d1-a6,-(a7)
 	lea	savegame_buffer(pc),a1
 	bsr	loadgame
-	move.l	(A1)+,$47B08
-	move.l	(A1)+,$47B0C
-	move.l	(A1)+,$47B00
-	move.l	(A1)+,$47B04
-	move.l	#1,$470D2
+	move.l	_reloc_base(pc),a0
+	add.l	#$46000,a0
+	move.l	(A1)+,$B08(a0)
+	move.l	(A1)+,$B0C(a0)
+	move.l	(A1)+,$B00(a0)
+	move.l	(A1)+,$B04(a0)
+	move.l	#1,$0D2(a0)
 
 	movem.l	(a7)+,d1-a6
 	rts
@@ -622,10 +798,12 @@ loadgame_v4
 savegame_v1
 	movem.l	d1-a6,-(a7)
 	lea	savegame_buffer(pc),a1
-	move.l	$47AB8,(A1)+
-	move.l	$47B10,(A1)+
-	move.l	$47B04,(A1)+
-	move.l	$47B08,(A1)+
+	move.l	_reloc_base(pc),a0
+	add.l	#$46000,a0
+	move.l	$AB8(a0),(A1)+
+	move.l	$B10(a0),(A1)+
+	move.l	$B04(a0),(A1)+
+	move.l	$B08(a0),(A1)+
 	bsr	savegame
 	movem.l	(a7)+,d1-a6
 	rts
@@ -633,10 +811,13 @@ savegame_v1
 savegame_v2
 	movem.l	d1-a6,-(a7)
 	lea	savegame_buffer(pc),a1
-	move.l	$63A6.W,(A1)+		; level
-	move.l	$47A38,(A1)+		; max energy
-	move.l	$47A2C,(A1)+		; minutes left
-	move.l	$47A30,(A1)+		; milli-minutes???
+	move.l	_reloc_base(pc),a0
+	move.l	($53A6,a0),(A1)+
+
+	add.l	#$46000,a0
+	move.l	$A38(a0),(A1)+		; max energy
+	move.l	$A2C(a0),(A1)+		; minutes left
+	move.l	$A30(a0),(A1)+		; milli-minutes???
 	bsr	savegame
 	movem.l	(a7)+,d1-a6
 	rts
@@ -644,10 +825,12 @@ savegame_v2
 savegame_v3
 	movem.l	d1-a6,-(a7)
 	lea	savegame_buffer(pc),a1
-	move.l	$63A6.W,(A1)+
-	move.l	$47AE8,(A1)+
-	move.l	$47ADC,(A1)+
-	move.l	$47AE0,(A1)+
+	move.l	_reloc_base(pc),a0
+	move.l	($53A6,a0),(A1)+
+	add.l	#$46000,a0
+	move.l	$AE8(a0),(A1)+
+	move.l	$ADC(a0),(A1)+
+	move.l	$AE0(a0),(A1)+
 	bsr	savegame
 	movem.l	(a7)+,d1-a6
 	rts
@@ -655,10 +838,12 @@ savegame_v3
 savegame_v4
 	movem.l	d1-a6,-(a7)
 	lea	savegame_buffer(pc),a1
-	move.l	$47AB4,(A1)+
-	move.l	$47B0C,(A1)+
-	move.l	$47B00,(A1)+
-	move.l	$47B04,(A1)+
+	move.l	_reloc_base(pc),a0
+	add.l	#$46000,a0
+	move.l	$AB4(a0),(A1)+
+	move.l	$B0C(a0),(A1)+
+	move.l	$B00(a0),(A1)+
+	move.l	$B04(a0),(A1)+
 	bsr	savegame
 	movem.l	(a7)+,d1-a6
 	rts
@@ -751,10 +936,12 @@ version
 	dc.l	0
 _tag		dc.l	WHDLTAG_CUSTOM1_GET
 trainer		dc.l	0
-		dc.l	WHDLTAG_CUSTOM2_GET
-unlimited_levelskip	dc.l	0
 		dc.l	0
 
+joypad_state
+	dc.l	0
+game_paused_flag_address
+	dc.l	0
 ;--------------------------------
 
 _resload	dc.l	0		;address of resident loader
@@ -781,6 +968,38 @@ _loaddisk	movem.l	d0-d1/a0-a2,-(a7)
 		movem.l	(a7)+,d0-d1/a0-a2
 		rts
 
+pause_address_table
+	dc.l	$470da
+	dc.l	$47002
+	dc.l	$470b2
+	dc.l	$470d6
+	dc.l	$470da
+	
+reloc_file_name_table
+	dc.w	0
+	dc.w	reloc_uk1a-reloc_file_name_table
+	dc.w	reloc_us2-reloc_file_name_table
+	dc.w	reloc_de3-reloc_file_name_table
+	dc.w	reloc_fr4-reloc_file_name_table
+	dc.w	reloc_uk1b-reloc_file_name_table
+
+reloc_uk1a:
+	dc.b	"prince_uk1a.reloc",0
+reloc_us2:
+	dc.b	"prince_us2.reloc",0
+reloc_de3:
+	dc.b	"prince_de3.reloc",0
+reloc_fr4:
+	dc.b	"prince_fr4.reloc",0
+reloc_uk1b:
+	dc.b	"prince_uk1b.reloc",0
+
+	even
+	
 	include	savegame.s
-		  
+	IFD	RELOC_ENABLED
+_reloc_table_address
+	ds.b	10000
+	ENDC
+	
 

@@ -177,6 +177,12 @@
   (source ("%s%s.Slave" #prefix #suffix))
   (dest #dest)
   (newname ("%s.slave" #prefix)))
+ (copyfiles
+  (help @copyfiles-help)
+  (source "")
+  (dest #dest)
+  (pattern "#?.reloc"))
+ 
 (if (exists ("%s.glowexot"  #prefix)) ((set #icon 7)(set #icnt (+ 1 #icnt))(set #icon-gex "Exotic GlowIcon")) (set #icon-gex ""))
 (if (exists ("%s.newexot"   #prefix)) ((set #icon 6)(set #icnt (+ 1 #icnt))(set #icon-nex "Exotic NewIcon"))  (set #icon-nex ""))
 (if (exists ("%s.exoticon"  #prefix)) ((set #icon 5)(set #icnt (+ 1 #icnt))(set #icon-exo "Exoticon"))        (set #icon-exo ""))
