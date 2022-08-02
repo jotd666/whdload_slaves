@@ -1,0 +1,44 @@
+
+                                  DRILLER
+                                  -------
+
+                    Edited by Parasite and Codetapper!
+
+
+INTRODUCTION
+------------
+This document assumes a basic knowledge of the gameplay of DRILLER, as
+given in the program manual.
+
+Control of the game is, at present, via keyboard or mouse-driven icons.
+The keyboard controls mimic exactly what the icons do.  Here is a summary
+of control.  The "Btn" column indicates which button on the mouse should be
+pressed to perform the function - most icons are dual purpose, the usual
+function being accessed using the LEFT mouse button.
+
+
+Key                  Icon                         Btn     Function
+------------------------------------------------------------------
+Cursor up / O        Upward arrow                 [L]     Move forward
+Cursor down / K      Downward arrow               [L]     Move back
+Cursor left / Q      Leftward arrow               [L]     Turn left
+Cursor right / W     Rightward arrow              [L]     Turn right
+
+0                    Anywhere on main screen      [L]     Fire
+
+R                    Up arrow with ground         [L]     Rise up
+F                    Down arrow with ground       [L]     Fall down
+
+N                    Leftward arrow               [R]     Tilt left
+M                    Rightward arrow              [R]     Tilt right
+P                    Up arrow with ground         [R]     Look up
+L                    Down arrow with ground       [R]     Look down
+
+D                    Drilling rig                 [L]     Place rig
+C                    Drilling rig                 [R]     Cancel drilling
+                     (If you are in a neutral
+                     sector this icon is
+                     covered)
+
+F10                  Striped cover at top         [R]     Exit game
+                     Striped cover at top         [L]     Restart game

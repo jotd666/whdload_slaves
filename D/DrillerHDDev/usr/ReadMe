@@ -1,0 +1,90 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Driller" © 1988 Incentive Software/Domark - 1 disk
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ The installed program requires 0.5 MB ChipMem and 1.0 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ The game requires an installed A500 Kickstart 1.3 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick346.lha" on aminet.
+
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page.
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 2.1 (02.08.2022) done by JOTD:
+ - added quitkey on 68000
+ 
+ version 2.0 (01.08.2022) done by JOTD:
+ - support for fast memory for great speed and 512k chip only
+ - speed regulation added (game is too fast with fastmem!)
+ - adapted for WHDLoad v17
+ - nice icons included
+ - source code included
+ - readme file rewritten
+
+ version 1.0 (21-Apr-2002) done by Codetapper:
+ - Supports 3 versions
+ - Full load from HD
+ - Loads and saves games to HD
+ - Copy protection removed (MFM track/manual protection/encryption)
+ - Empty DBF loop fixed
+ - 4 Colour Icon, MagicWB Icon, RomIcon, NewIcon, OS3.5 Colour Icon (created by 
+   me!) and 2 Exoticons (taken from http://exotica.fix.no)
+ - Quit option (default key is 'PrtSc' on the numeric keypad)
+
+The unusual amount of chip memory required for this game is due to the fact
+that 2 of the 3 supported versions contain an extra file called "title.seq"
+which is an animated rotating Incentive logo. If anyone is desperate to have
+a version without the intro and which only requires 512k chip memory, 
+contact me and I'll make a special version.
+
+Note from JOTD: now uses fastmem so 512k chipmem is enough.
+
+
+Greetings to Carlo, Mike, Galahad, Chris, Frank, Andreas, Amigaboy, all
+Action members and the WHDLoad team!
+
+
+Codetapper/Action (23-Apr-2002)
+
+
+         Bug report form, full WHDLoad package and other installs:
+                          http://www.whdload.de/
+
+            ________  ________  ________  ____  ________  ________
+           _)       \_)       \_)       \_)   \_)       \_)       \
+   __ ___ /___/     /   /_____/\  /     /     /   /     /   /     /
+  /_//__// \___    /   /     /CT\/     /     /   /     /   /     /
+        /___/     /___      /   /     /_____/___      /___/     /___ __
+            \____/    \____/    \____/          \____/    \____//__//_/
+
+
+           Visit the Action website for more of our productions:
+                           http://codetapper.com

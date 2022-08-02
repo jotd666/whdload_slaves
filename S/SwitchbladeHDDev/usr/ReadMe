@@ -1,0 +1,63 @@
+Short:    HD-Installer for Switchblade V1.3
+Author:   Codetapper/Action (codetapper@hotmail.com), ICQ: 26051687
+Uploader: Codetapper/Action (codetapper@hotmail.com)
+Version:  1.3
+Type:     game/patch
+
+This patch applies to "Switchblade" (c) 1989 Core Design/Gremlin - 1 disk.
+Supported: - Original release (Adrian Simpson)
+           - Axel's Magic Hammer/Switchblade compilation (Keith Krellwitz)
+           - Kixx budget release (DJ Mike)
+
+REQUIREMENTS:
+- Slave requires WHDLoad V13+.
+- Game requires 512k chip mem (+300k other memory for preload option)
+
+FEATURES: (15-Dec-2001)
+- Full load from HD
+- Loads and saves high scores
+- Protection removed
+- Stack frame fix
+- Keyboard routine fixed
+- Blitter waits added (x25)
+- Instructions included
+- Trainer added (set CUSTOM1=1 to enable level selector with keys 1-5)
+- Switchblade file can be compressed to save space (FImp, Propack etc)
+- RomIcon, NewIcon and GlowIcon (created by me!)
+- Quit option (default key is 'F10')
+
+VERSION 1.1: (19-Dec-2001)
+- Also supports the compilation version (thanks Keith!)
+
+VERSION 1.2: (01-Sep-2002)
+- Also supports the Kixx budget release (thanks DJ Mike!)
+- Fixed bug in the RawDIC imager for the compilation version
+
+VERSION 1.3: (10-Feb-2003)
+- Added infinite lives trainer (set CUSTOM2=1 or Help to toggle)
+
+CHEAT MODE:
+- Taken from Sweet Cheater by Keith Krellwitz!
+- On the high score table, enter "POOKY".  Use '1'-'5' to select the level.
+
+Thanks to Adrian Simpson, Keith Krellwitz and DJ Mike for the originals,
+Adrian for requesting the infinite lives trainer, Wepl for WHDLoad, all
+Action members and the WHDLoad team!
+
+
+Codetapper/Action (10-Feb-2003)
+
+
+         Bug report form, full WHDLoad package and other installs:
+                          http://www.whdload.de/
+
+            ________  ________  ________  ____  ________  ________
+           _)       \_)       \_)       \_)   \_)       \_)       \
+   __ ___ /___/     /   /_____/\  /     /     /   /     /   /     /
+  /_//__// \___    /   /     /CT\/     /     /   /     /   /     /
+        /___/     /___      /   /     /_____/___      /___/     /___ __
+            \____/    \____/    \____/          \____/    \____//__//_/
+
+
+           Visit the Action website for more of our productions:
+                           http://zap.to/action/
