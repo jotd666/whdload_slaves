@@ -26,10 +26,11 @@
 	SUPER
 	ENDC
 
-;RELOC_ENABLED = 1
+RELOC_ENABLED = 1
 ; when relocated, PC is shifted by $102000
 
-;;CHIP_ONLY = 1
+;CHIP_ONLY = 1
+
 ; there seems to exist some spare memory up to $7E7E0 more than enough
 ; but this memory is used later on
 SAVESCREEN = $7A000
@@ -38,7 +39,10 @@ SAVESCREENSIZE = $3000
 	IFD	RELOC_ENABLED
 RELOC_MEM = $4A000
 	ELSE
+	; not relocated: slave is a debug slave
+	; (I don't want to distribute a non-relocated slave)
 RELOC_MEM = 0
+CHIP_ONLY = 1
 	ENDC
 	
 FASTMEMSIZE = $80000
@@ -84,7 +88,7 @@ _expmem
 	ENDC
 	
 DECL_VERSION:MACRO
-	dc.b	"4.0"
+	dc.b	"4.3"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -93,7 +97,6 @@ DECL_VERSION:MACRO
 
 _name		dc.b	"Prince Of Persia"
     IFD CHIP_ONLY
-    
     dc.b    " (DEBUG/CHIP MODE)"
     ENDC
     dc.b 0
@@ -113,6 +116,9 @@ _config
 		dc.b    "C3:B:Save from any level;"
 		dc.b	0
 		
+		dc.b	"$VER: PrinceOfPersia "
+		DECL_VERSION
+		dc.b	0
 		even
 	
 	
@@ -132,6 +138,8 @@ start	;	A0 = resident loader
 	lea	_resload(pc),a1
 	move.l	a0,(a1)			;save for later use
 
+	bsr	_detect_controller_types
+	
 	move.l	a0,a2
 	lea	(_tag,pc),a0
 	jsr	(resload_Control,a2)
@@ -191,12 +199,15 @@ start	;	A0 = resident loader
 	lea	version(pc),a3
 	move.l	d1,(a3)
 	
-	; set address for pause flag
-	lea		game_paused_flag_address(pc),a3
+	; set address for pause flag (not relocated)
 	lea		pause_address_table(pc),a1
+	subq.l	#1,d1
 	add.l	d1,d1
 	add.l	d1,d1
-	move.l	(a1,d1.l),(a3)
+	move.l	(a1,d1.l),d0
+
+	lea		game_paused_flag_address(pc),a1
+	move.l	d0,(a1)
 	
 	lea	BASE_ADDRESS,A1
 	jsr	resload_Patch(a2)
@@ -501,6 +512,12 @@ pl_v2
 
 	PL_PS	$1A2F0,kbint
 
+	PL_PSS	$19f7a,vbl_hook,2
+
+	PL_IFC2
+	PL_PS	$1b894,read_joydat
+	PL_ENDIF
+
 	PL_IFC3
 	; save at any level
 	PL_S	$18fda,$20-$C
@@ -553,6 +570,12 @@ pl_v3:
 
 	PL_PS	$1A2FA,kbint
 
+	PL_PSS	$19f84,vbl_hook,2
+
+	PL_IFC2
+	PL_PS	$1b89e,read_joydat
+	PL_ENDIF
+
 	PL_IFC3
 	; save at any level
 	PL_S	$18fe4,$20-$C
@@ -601,6 +624,12 @@ pl_v4:
 
 	PL_PS	$1A31E,kbint
 
+	PL_PSS	$19fa8,vbl_hook,2
+
+	PL_IFC2
+	PL_PS	$1b8c2,read_joydat
+	PL_ENDIF
+
 	PL_IFC3
 	; save at any level
 	PL_S	$19008,$20-$C
@@ -621,8 +650,16 @@ pl_v4:
 	PL_NOP	$1226A,2
     PL_ENDIF
 	
-	; *** time=15 (levelskip)
+	
 	PL_IFC1X	1
+	; *** infinite energy
+
+	PL_PS	$C61E,trainer_v4
+
+	PL_ENDIF
+
+	; *** time=15 (levelskip)
+	PL_IFC1X	2
 
 	PL_B $190D2,$60
 
@@ -630,13 +667,7 @@ pl_v4:
 
 	PL_B $19093,MAX_LEVEL
 	PL_ENDIF
-	
-	PL_IFC1X	2
-	; *** infinite energy
 
-	PL_PS	$C61E,trainer_v4
-
-	PL_ENDIF
 	PL_END
 
 
@@ -742,7 +773,6 @@ startword
 
 loadgame_v1
 	movem.l	d1-a6,-(a7)
-	lea	savegame_buffer(pc),a1
 	bsr	loadgame
 	move.l	(A1)+,$47B0C
 	move.l	(A1)+,$47B10
@@ -754,56 +784,49 @@ loadgame_v1
 
 loadgame_v2
 	movem.l	d1-a6,-(a7)
-	lea	savegame_buffer(pc),a1
 	bsr	loadgame
-	move.l	_reloc_base(pc),a0
-	add.l	#$46000,a0
-	move.l	(A1)+,$A34(a0)
-	move.l	(A1)+,$A38(a0)
-	move.l	(A1)+,$A2C(a0)
-	move.l	(A1)+,$A30(a0)
-	move.l	#1,-2(a0)	; tell the game not to reset life/time
+	move.l	(A1)+,$47A34
+	move.l	(A1)+,$47A38
+	move.l	(A1)+,$47A2C
+	move.l	(A1)+,$47A30
+	move.l	#1,$46FFE	; tell the game not to reset life/time
 	movem.l	(a7)+,d1-a6
 	rts
 
 loadgame_v3
 	movem.l	d1-a6,-(a7)
 	bsr	loadgame
-	move.l	_reloc_base(pc),a0
-	add.l	#$46000,a0
-	lea	savegame_buffer(pc),a1
-	move.l	(A1)+,$AE4
-	move.l	(A1)+,$AE8
-	move.l	(A1)+,$ADC
-	move.l	(A1)+,$AE0
-	move.l	#1,$0AE(a0)
+	move.l	(A1)+,$47AE4
+	move.l	(A1)+,$47AE8
+	move.l	(A1)+,$47ADC
+	move.l	(A1)+,$47AE0
+	move.l	#1,$470AE	; tell the game not to reset life/time
 	movem.l	(a7)+,d1-a6
 	rts
 
 loadgame_v4
 	movem.l	d1-a6,-(a7)
-	lea	savegame_buffer(pc),a1
 	bsr	loadgame
-	move.l	_reloc_base(pc),a0
-	add.l	#$46000,a0
-	move.l	(A1)+,$B08(a0)
-	move.l	(A1)+,$B0C(a0)
-	move.l	(A1)+,$B00(a0)
-	move.l	(A1)+,$B04(a0)
-	move.l	#1,$0D2(a0)
+	move.l	(A1)+,$47B08
+	move.l	(A1)+,$47B0C
+	move.l	(A1)+,$47B00
+	move.l	(A1)+,$47B04
+	move.l	#1,$470D2	; tell the game not to reset life/time
 
 	movem.l	(a7)+,d1-a6
 	rts
 
+; savegames v1/v4 differ from v2/v3, I don't remember why
+; but it seems to work (both values are identical)
+; not changing that...
+
 savegame_v1
 	movem.l	d1-a6,-(a7)
 	lea	savegame_buffer(pc),a1
-	move.l	_reloc_base(pc),a0
-	add.l	#$46000,a0
-	move.l	$AB8(a0),(A1)+
-	move.l	$B10(a0),(A1)+
-	move.l	$B04(a0),(A1)+
-	move.l	$B08(a0),(A1)+
+	move.l	$47AB8,(A1)+
+	move.l	$47B10,(A1)+
+	move.l	$47B04,(A1)+
+	move.l	$47B08,(A1)+
 	bsr	savegame
 	movem.l	(a7)+,d1-a6
 	rts
@@ -811,13 +834,11 @@ savegame_v1
 savegame_v2
 	movem.l	d1-a6,-(a7)
 	lea	savegame_buffer(pc),a1
-	move.l	_reloc_base(pc),a0
-	move.l	($53A6,a0),(A1)+
+	move.l	$63A6.W,(A1)+		; level
 
-	add.l	#$46000,a0
-	move.l	$A38(a0),(A1)+		; max energy
-	move.l	$A2C(a0),(A1)+		; minutes left
-	move.l	$A30(a0),(A1)+		; milli-minutes???
+	move.l	$47A38,(A1)+		; max energy
+	move.l	$47A2C,(A1)+		; minutes left
+	move.l	$47A30,(A1)+		; milli-minutes???
 	bsr	savegame
 	movem.l	(a7)+,d1-a6
 	rts
@@ -825,12 +846,10 @@ savegame_v2
 savegame_v3
 	movem.l	d1-a6,-(a7)
 	lea	savegame_buffer(pc),a1
-	move.l	_reloc_base(pc),a0
-	move.l	($53A6,a0),(A1)+
-	add.l	#$46000,a0
-	move.l	$AE8(a0),(A1)+
-	move.l	$ADC(a0),(A1)+
-	move.l	$AE0(a0),(A1)+
+	move.l	$63A6.W,(A1)+
+	move.l	$47AE8,(A1)+
+	move.l	$47ADC,(A1)+
+	move.l	$47AE0,(A1)+
 	bsr	savegame
 	movem.l	(a7)+,d1-a6
 	rts
@@ -838,12 +857,10 @@ savegame_v3
 savegame_v4
 	movem.l	d1-a6,-(a7)
 	lea	savegame_buffer(pc),a1
-	move.l	_reloc_base(pc),a0
-	add.l	#$46000,a0
-	move.l	$AB4(a0),(A1)+
-	move.l	$B0C(a0),(A1)+
-	move.l	$B00(a0),(A1)+
-	move.l	$B04(a0),(A1)+
+	move.l	$47AB4,(A1)+
+	move.l	$47B0C,(A1)+
+	move.l	$47B00,(A1)+
+	move.l	$47B04,(A1)+
 	bsr	savegame
 	movem.l	(a7)+,d1-a6
 	rts
@@ -998,6 +1015,7 @@ reloc_uk1b:
 	
 	include	savegame.s
 	IFD	RELOC_ENABLED
+	even
 _reloc_table_address
 	ds.b	10000
 	ENDC

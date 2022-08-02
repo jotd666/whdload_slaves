@@ -74,7 +74,7 @@ PL_PSA	MACRO
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"3.0"
+	dc.b	"3.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -88,9 +88,9 @@ DECL_VERSION:MACRO
 HEADER	SLAVE_HEADER		; ws_security + ws_ID
 	dc.w	17		; ws_version
 	dc.w	FLAGS		; flags
-	dc.l	524288		; ws_BaseMemSize
+	dc.l	$80000		; ws_BaseMemSize
 	dc.l	0		; ws_ExecInstall
-	dc.w	Patch-HEADER	; ws_GameLoader
+	dc.w	_start-HEADER	; ws_GameLoader
 	IFD	DEBUG
 	dc.w	.dir-HEADER	; ws_CurrentDir
 	ELSE
@@ -119,7 +119,8 @@ HEADER	SLAVE_HEADER		; ws_security + ws_ID
 	dc.b	"C1:X:Unlimited Bombs:2;"
     dc.b    "C2:B:Use 2nd button to jump;"
 	dc.b	"C3:B:In-Game Keys;"
-    dc.b    "C5:B:disable rasterbeam fixes;"
+    dc.b    "C5:X:disable rasterbeam fixes:0;"
+    dc.b    "C5:X:disable music fixes:1;"
 	;dc.b	"C2:L:Start at Level:1,2,3,4,5"
 	dc.b	0
 
@@ -160,11 +161,12 @@ BUTTONWAIT	dc.l	0
 
 resload	dc.l	0
 
+IGNORE_JOY_DIRECTIONS
 	INCLUDE	ReadJoyPad.s
 
 CURRENT_LEVEL = $5A8
 
-Patch	
+_start	
     lea	resload(pc),a1
 	move.l	a0,(a1)
 	move.l	a0,a2
@@ -216,7 +218,6 @@ Patch
 	bsr	BK30_Decrunch
 	
 	
-
 ; patch
 	lea	PLBOOT(pc),a0
 	jsr	resload_Patch(a2)
@@ -247,7 +248,8 @@ PLBOOT	PL_START
 	PL_PSS	$3ec,SetKbd,2		; don't install new level 2 interrupt
 	PL_END
 
-.patch	movem.l	d0-a6,-(a7)
+.patch	
+	movem.l	d0-a6,-(a7)
 	lea	PLBOOT400(pc),a0
 	lea	$400.w,a1
 
@@ -342,9 +344,9 @@ PLBOOT400
 	PL_P	$e2,AckVBI
 	PL_PS	$249c,.movep	; emulate moveP instruction
 	PL_ORW	$4374+2,1<<9	; set Bplcon0 color bit
-	;;PL_P	$1920,.readpad	; read CD32 joypad
-
-    PL_IFC5
+	PL_PS	$3966-$400,.tfmx_loaded
+	
+    PL_IFC5X	0
     PL_ELSE
     ; try to fix flickering in the various game main loops
     ; where the parameters were finely adjusted to A500 timings
@@ -423,6 +425,27 @@ PLBOOT400
 	bne.b	.waitmap
 	jsr	$400+$c86.w	; fade down map screen
 	sf	$d6a.w
+	rts
+	
+.tfmx_loaded
+	cmp.w	#$33EE,$6cfa2
+	bne.b	.done
+	movem.l	d0-d1/a1-a2,-(a7)
+	move.l	resload(pc),a2
+	sub.l	a1,a1
+	lea		pl_tfmx(pc),a0
+	jsr		resload_Patch(a2)
+	movem.l	(a7)+,d0-d1/a1-a2
+.done
+	
+	MOVEA.L	4(A7),A0		;3966: original: move.l (a7)+,a0
+	; TFMX routine is loaded now
+	MOVE.W	-(A0),D7		;3968: 3e20
+	CLR.W	(A0)			;396a: 4250
+	; fix the jsr before we restored A0 from stack
+	; we needed those 6 bytes badly for our JSR ...
+	move.l	(a7),4(a7)
+	addq.l	#4,A7
 	rts
 	
 .checkjoy
@@ -564,14 +587,43 @@ PLBOOT400
 
 
 store_old_pos_and_read_joystick
-	movem.l	a0,-(a7)
 	; save previous joystick input
 	lea	previous_joy(pc),a0
 	move.l	joy1(pc),(a0)
-	bsr	_joystick
-	movem.l	(a7)+,a0
+	moveq	#1,d0
+	bsr	_read_joystick
+	lea	joy1(pc),a0
+	move.l	d0,(a0)		
 	rts
 	
+pl_tfmx
+	PL_START
+    PL_IFC5X	1
+    PL_ELSE
+	PL_PSS	$6cfa2,tfmx_fix_dmacon_1,2
+	PL_PS	$6cf1e,tfmx_fix_dmacon_2
+	PL_ENDIF
+	PL_END
+	
+tfmx_fix_dmacon_2
+	MOVE.W	d0,_custom+dmacon
+	bra.b	soundtracker_loop
+tfmx_fix_dmacon_1
+	MOVE.W	50(A6),_custom+dmacon
+soundtracker_loop
+	move.w  d0,-(a7)
+	move.w	#7,d0   ; make it 7 if still issues
+.bd_loop1
+	move.w  d0,-(a7)
+    move.b	$dff006,d0	; VPOS
+.bd_loop2
+	cmp.b	$dff006,d0
+	beq.s	.bd_loop2
+	move.w	(a7)+,d0
+	dbf	d0,.bd_loop1
+	;;;addq.l	#2,(a7)  harmful if not used with PSS!!
+	move.w	(a7)+,d0
+	rts 	
 ; we'll change A6 to point not to $DFF00C but to our copy
 hack_up:
 	movem.l	d0/a0,-(a7)
@@ -614,7 +666,11 @@ _orig
     MOVE.L #$01,D3
 	RTS
 read_joy:
+	move.l	d0,d1
+	move.l	a0,d2
 	bsr		store_old_pos_and_read_joystick	; read and store for later
+	move.l	d1,d0
+	move.l	d2,a0
 	bra		_orig
 level_table
 	dc.w	0	; first walking level
@@ -640,19 +696,21 @@ game_over
     
     
 joypad_controls:
+	movem.l	a0/d0/d1,-(a7)
 	tst.w	$359e.W	; pause flag
 	beq.b	.noread
+	move.l	A0,-(a7)
 	bsr		store_old_pos_and_read_joystick	; read and store for later
+	move.l	(a7)+,a0
 .noread
 
-	movem.l	a0/d0/d1,-(a7)
 	move.l	joy1(pc),d0
 	move.l	previous_joy(pc),d1
 	btst	#JPB_BTN_PLAY,d1
 	bne.b	.nopause
 	
 	btst	#JPB_BTN_PLAY,d0
-	beq.b	.nopause
+	beq.b	.nopause	
 	move.b	#$19,(A0)	; "P"
 
 .nopause
@@ -666,11 +724,11 @@ joypad_controls:
 	btst	#JPB_BTN_FORWARD,d0
 	beq.b	.noesc
 	move.b	#$45,(A0)	; "ESC"
-    move.l  a1,-(a7)
+    move.l  a1,d0
     ; note down keyboard address
     lea keyboard_address(pc),a1
     move.l  a0,(a1)
-    move.l  (a7)+,a1
+    move.l  d0,a1
 .noesc
 	movem.l	(a7)+,a0/d0/d1
 	RTS

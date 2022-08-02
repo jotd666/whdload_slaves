@@ -29,6 +29,14 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 3.2 (02.08.2022) done by JOTD:
+ - normal controls (no second button) were broken, fixed (issue #0005747)
+ - fixed non-working unpause bug
+ 
+ version 3.1 (30.07.2022) done by JOTD:
+ - fixed TFMX music replay (issue #0005724). Since it uses some CPU time, it can
+   be disabled.
+   
  version 3.0-B (04.05.2020) done by JOTD:
  - fixed install script which was broken since a few releases
  

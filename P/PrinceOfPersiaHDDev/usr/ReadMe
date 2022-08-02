@@ -29,7 +29,20 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 4.0 (24.07.2022):
+ version 4.3 (02.08.2022) done by JOTD:
+ - joypad support for some game versions was still not working (issue #0005745)
+ - added proper joystick/joypad detection at startup
+ - fixed trainer on some versions
+ - pause option on joypad working again
+ 
+ version 4.2 (29.07.2022) done by JOTD:
+ - forgot joypad support of some game versions (issue #0005739)
+ - game crashed at startup on 68000/68010 (issue #0005736)
+ 
+ version 4.1 (28.07.2022) done by JOTD:
+ - fixed game load that was broken in v4.0
+ 
+ version 4.0 (24.07.2022) done by JOTD:
  - relocate program in fastmem to avoid game slowdowns (issue #0004569)
  - reworked trainer options
  - trainer option added: save game at any level (for level 2 and last level)
