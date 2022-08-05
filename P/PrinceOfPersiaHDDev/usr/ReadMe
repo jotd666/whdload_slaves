@@ -29,6 +29,15 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 4.4 (05.08.2022) done by JOTD:
+ - on US and german versions, saving/loading a game was broken
+ - fixed: no music on princess intermission after completing level 1
+   caution: you need to copy the new reloc.#? files into the data dir
+ - fix PAL versions display when NTSC tooltype is set
+   (super-smooth game, this also makes the game easier time-wise) (issue #0005745)
+ - added option to completely disable "up" in favor of second button.
+   this is a request from Hexaae. I don't find it convenient, but ok...
+   
  version 4.3 (02.08.2022) done by JOTD:
  - joypad support for some game versions was still not working (issue #0005745)
  - added proper joystick/joypad detection at startup
@@ -126,3 +135,9 @@ Notes:
  - reloc tables were specially created to be able to run that game from fast memory.
    To upgrade your installation, just copy those .reloc files in the game data directory.
    The slave selects the proper one automatically according to game version.
+ - NTSC tooltype can be used on PAL versions but that's considered as cheating because the
+   game is super fast and the time limit isn't adjusted accordingly
+ - Just found out that the protection level was completely disabled
+   from german original. I guess they didn't bother encoding the german manual
+   into the game for that.
+ 

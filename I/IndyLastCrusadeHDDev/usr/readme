@@ -42,6 +42,10 @@
 
 History:
 
+ version 2.1 (04.08.2022) done by JOTD:
+ - v2.0 music/sound fix introduced flickers in some rooms,
+   the flickers now are greatly reduced (issue #0005599)
+ 
  version 2.0 (20.03.2020) done by JOTD:
  - fixed freezes and wrongly playing music, same issue as Loom (issue #0004042, probably #0003019)
  - install script updated to support the 2 ways disk 2 and disk 3 are named

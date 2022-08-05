@@ -73,7 +73,7 @@ slv_keyexit	= $5D	; num '*'
 
 
 DECL_VERSION:MACRO
-	dc.b	"2.0"
+	dc.b	"2.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -93,7 +93,7 @@ slv_info		dc.b	"Installed by JOTD",10
 		dc.b	0
 
 
-	dc.b	"$","VER: slave "
+	dc.b	"$VER: slave "
 	DECL_VERSION
 	dc.b	0
 
@@ -411,13 +411,13 @@ _crackinfo:
 	incbin	"crack.bin"
 	
 _dmadelay
-	movem.l	D0,-(A7)
+	move.l	D0,-(A7)
 	; dma enable should be followed by a wait
 	; now that the code runs from fastmem/on fast amigas
 	; some sfx could be wrongly played
-	moveq.l	#7,d0
+	moveq.l	#0,d0
 	bsr	_beamdelay
-	movem.l	(a7)+,D0
+	move.l	(a7)+,D0
 	rts
 
 

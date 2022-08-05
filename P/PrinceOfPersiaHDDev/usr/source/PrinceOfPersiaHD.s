@@ -41,7 +41,7 @@ RELOC_MEM = $4A000
 	ELSE
 	; not relocated: slave is a debug slave
 	; (I don't want to distribute a non-relocated slave)
-RELOC_MEM = 0
+RELOC_MEM = SAVESCREENSIZE
 CHIP_ONLY = 1
 	ENDC
 	
@@ -88,7 +88,7 @@ _expmem
 	ENDC
 	
 DECL_VERSION:MACRO
-	dc.b	"4.3"
+	dc.b	"4.4"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -102,7 +102,8 @@ _name		dc.b	"Prince Of Persia"
     dc.b 0
 _copy		dc.b	"1990 Jordan Mechner/Broderbund",0
 _info		dc.b	"adapted & fixed by JOTD & Harry",10,10
-		dc.b	"Thanks to Wepl for savegame system",10,10
+		dc.b	"Thanks to Wepl for savegame system",10
+		dc.b	"Thanks to Hexaae for testing & bug reports",10,10
 		dc.b	"Version "
 		DECL_VERSION
 	dc.b	0
@@ -112,7 +113,8 @@ _config
         dc.b    "C1:X:Trainer Infinite Time:0;"
         dc.b    "C1:X:Trainer Infinite Energy:1;"
 		dc.b    "C1:X:Super levelskip:2;"
-		dc.b    "C2:B:second button jumps;"
+		dc.b    "C2:X:second button jumps:0;"
+		dc.b    "C2:X:up disabled:1;"
 		dc.b    "C3:B:Save from any level;"
 		dc.b	0
 		
@@ -335,6 +337,11 @@ trainer_v\1
 
 PATCH_VERSION:MACRO
 	lea	pl_v\1(pc),a0
+	move.l	monitor(pc),d0
+	cmp.l	#NTSC_MONITOR_ID,d0
+	bne.b	.patch_\1
+	lea	pl_v\1_ntsc(pc),a0	
+.patch_\1
 	jsr	resload_Patch(a2)
 
 	movem.l	(a7)+,d0-d1/a0-a2
@@ -357,7 +364,7 @@ patch_program
 
 	; *** removes protection level (common to both (all?) versions)
 
-	move.l	#-1,$6378.W
+	move.l	#-1,$6378.W		; 3 instead?
 	IFD		RELOC_ENABLED
 	
 	; copy program
@@ -393,15 +400,16 @@ patch_program
 	bra.b	.reloc
 .end
 	; debug: add MMU protect on old program $ -> $ for v1
+	; winuae: w 0 $532c $1f7ca-$532C
 	IFD	CHIP_ONLY
 	move.l	#PROGRAM_END-PROGRAM_START,d0                   ;one longword
 	lea     PROGRAM_START,a0                ;address
 	move.l  (_resload,pc),a2
-	jsr     (resload_ProtectRead,a2)
+	;jsr     (resload_ProtectRead,a2)
 	move.l	#PROGRAM_END-PROGRAM_START,d0                   ;one longword
 	lea     PROGRAM_START,a0                ;address
 	move.l  (_resload,pc),a2
-	jsr     (resload_ProtectWrite,a2)
+	;jsr     (resload_ProtectWrite,a2)
 	
 	ENDC
 
@@ -440,8 +448,13 @@ version5
 version6	
 	; not possible to reach
 	illegal
-	
 
+pl_v1_ntsc
+	PL_START
+	PL_W	$1ba9e+2,$2c81	; DIWSTRT
+	PL_W	$1baa6+2,$f4c1	; DIWSTOP
+	PL_NEXT	pl_v1
+	
 pl_v1
 	PL_START
 
@@ -502,6 +515,7 @@ pl_v1
 	PL_END
 
 
+pl_v2_ntsc
 pl_v2
 	PL_START
 	; removes unexpected exception
@@ -560,6 +574,12 @@ pl_v2
 	PL_END
 	
 ; german
+pl_v3_ntsc
+	PL_START
+	PL_W	$1ba76+2,$2c81	; DIWSTRT
+	PL_W	$1ba7e+2,$f4c1	; DIWSTOP
+	PL_NEXT	pl_v3
+
 pl_v3:
 	PL_START
 	; *** removes unexpected exception
@@ -613,6 +633,12 @@ pl_v3:
 	PL_END
 
 ; version 4 - French version "Prince de Perse"
+
+pl_v4_ntsc
+	PL_START
+	PL_W	$1ba9a+2,$2c81	; DIWSTRT
+	PL_W	$1baa2+2,$f4c1	; DIWSTOP
+	PL_NEXT	pl_v4
 
 pl_v4:
 	PL_START
@@ -681,20 +707,21 @@ pl_v4:
 	DEF_SAVELOAD_HIGH	3,$49BB4
 	DEF_SAVELOAD_HIGH	4,$49BD8	; ???
 
+	
 read_joydat:
 	movem.l	d0/a0,-(a7)
-	move.l	joypad_state(pc),d0
 	MOVE.W	_custom+joy1dat,D2
+	move.l	button_controls(pc),d0
+	btst	#1,d0
+	beq.b	.noneed
 	; ATM leave "up" alone. Just simulate it with blue button
-;	move.l	_GameAddress(pc),a0
-;	cmp.b	#7,$4813(a0)		; project-F ? don't do anything
-;	beq.b	.no_blue
 	; cancel UP from joydat. Copying bit 9 to bit 8 so EOR yields 0
-;	bclr	#8,D2
-;	btst	#9,D2
-;	beq.b	.noneed
-;	bset	#8,D2	; xor 8 and 9 yields 0 cos bit9=1
-;.noneed
+	bclr	#8,D2
+	btst	#9,D2
+	beq.b	.noneed
+	bset	#8,D2	; xor 8 and 9 yields 0 cos bit9=1
+.noneed
+	move.l	joypad_state(pc),d0
 	btst	#JPB_BTN_BLU,d0
 	beq.b	.no_blue
 	; set UP because blue pressed
@@ -771,112 +798,99 @@ highname	dc.b	'prince.high',0
 startword
 	dc.l	'POPS'
 
+SAVEBASE_V1 = $47B04
+SAVEBASE_V2 = $47A2C
+SAVEBASE_V3 = $47ADC
+SAVEBASE_V4 = $47B00
+
+	
 loadgame_v1
 	movem.l	d1-a6,-(a7)
+	lea		SAVEBASE_V1,a0
 	bsr	loadgame
-	move.l	(A1)+,$47B0C
-	move.l	(A1)+,$47B10
-	move.l	(A1)+,$47B04
-	move.l	(A1)+,$47B08
 	move.l	#1,$470D6
 	movem.l	(a7)+,d1-a6
 	rts
 
 loadgame_v2
 	movem.l	d1-a6,-(a7)
+	lea		SAVEBASE_V2,a0
 	bsr	loadgame
-	move.l	(A1)+,$47A34
-	move.l	(A1)+,$47A38
-	move.l	(A1)+,$47A2C
-	move.l	(A1)+,$47A30
 	move.l	#1,$46FFE	; tell the game not to reset life/time
 	movem.l	(a7)+,d1-a6
 	rts
 
 loadgame_v3
 	movem.l	d1-a6,-(a7)
+	lea		SAVEBASE_V3,a0
 	bsr	loadgame
-	move.l	(A1)+,$47AE4
-	move.l	(A1)+,$47AE8
-	move.l	(A1)+,$47ADC
-	move.l	(A1)+,$47AE0
 	move.l	#1,$470AE	; tell the game not to reset life/time
 	movem.l	(a7)+,d1-a6
 	rts
 
 loadgame_v4
 	movem.l	d1-a6,-(a7)
+	lea		SAVEBASE_V4,a0
 	bsr	loadgame
-	move.l	(A1)+,$47B08
-	move.l	(A1)+,$47B0C
-	move.l	(A1)+,$47B00
-	move.l	(A1)+,$47B04
 	move.l	#1,$470D2	; tell the game not to reset life/time
 
 	movem.l	(a7)+,d1-a6
 	rts
 
-; savegames v1/v4 differ from v2/v3, I don't remember why
-; but it seems to work (both values are identical)
-; not changing that...
-
 savegame_v1
 	movem.l	d1-a6,-(a7)
+	lea		SAVEBASE_V1,a0
 	lea	savegame_buffer(pc),a1
-	move.l	$47AB8,(A1)+
-	move.l	$47B10,(A1)+
-	move.l	$47B04,(A1)+
-	move.l	$47B08,(A1)+
 	bsr	savegame
 	movem.l	(a7)+,d1-a6
 	rts
 
 savegame_v2
 	movem.l	d1-a6,-(a7)
+	lea		SAVEBASE_V2,a0
 	lea	savegame_buffer(pc),a1
-	move.l	$63A6.W,(A1)+		; level
-
-	move.l	$47A38,(A1)+		; max energy
-	move.l	$47A2C,(A1)+		; minutes left
-	move.l	$47A30,(A1)+		; milli-minutes???
 	bsr	savegame
 	movem.l	(a7)+,d1-a6
 	rts
 	
 savegame_v3
 	movem.l	d1-a6,-(a7)
+	lea		SAVEBASE_V3,a0
 	lea	savegame_buffer(pc),a1
-	move.l	$63A6.W,(A1)+
-	move.l	$47AE8,(A1)+
-	move.l	$47ADC,(A1)+
-	move.l	$47AE0,(A1)+
 	bsr	savegame
 	movem.l	(a7)+,d1-a6
 	rts
 
 savegame_v4
 	movem.l	d1-a6,-(a7)
+	lea		SAVEBASE_V4,a0
 	lea	savegame_buffer(pc),a1
-	move.l	$47AB4,(A1)+
-	move.l	$47B0C,(A1)+
-	move.l	$47B00,(A1)+
-	move.l	$47B04,(A1)+
 	bsr	savegame
 	movem.l	(a7)+,d1-a6
 	rts
 
 
 loadgame
-    movem.l a2,-(a7)
+    movem.l a0/a2,-(a7)
 	bsr	loadsave_prepro
 	bsr	_sg_load
 	bsr	loadsave_postpro
 	lea	savegame_buffer(pc),a1
-    movem.l (a7)+,a2
+    movem.l (a7)+,a0/a2
+	
+	move.l	(A1)+,(8,a0)
+	move.l	(A1)+,(12,a0)
+	move.l	(A1)+,(a0)
+	move.l	(A1)+,(4,a0)
 	move.l	#$10,d0
 	rts
 
 savegame
+	move.l	(-$4C,a0),(A1)+   		; level
+	move.l	(12,a0),(A1)+     		; max energy
+	move.l	(a0),(A1)+        		; minutes left
+	move.l	(4,a0),(A1)+      		; milli-minutes???
+
     movem.l a2,-(a7)
 	move.l	trainer(PC),d0
 	bne.s	.skip		;no save on trainer
@@ -951,8 +965,14 @@ kbint:
 
 version
 	dc.l	0
-_tag		dc.l	WHDLTAG_CUSTOM1_GET
+_tag
+		dc.l	WHDLTAG_CUSTOM1_GET
 trainer		dc.l	0
+		dc.l	WHDLTAG_CUSTOM2_GET
+button_controls		dc.l	0
+	dc.l	WHDLTAG_MONITOR_GET
+monitor
+	dc.l	0
 		dc.l	0
 
 joypad_state
@@ -1000,16 +1020,15 @@ reloc_file_name_table
 	dc.w	reloc_fr4-reloc_file_name_table
 	dc.w	reloc_uk1b-reloc_file_name_table
 
+reloc_uk1b:		; same reloc tables
 reloc_uk1a:
-	dc.b	"prince_uk1a.reloc",0
+	dc.b	"prince_uk1.reloc",0
 reloc_us2:
 	dc.b	"prince_us2.reloc",0
 reloc_de3:
 	dc.b	"prince_de3.reloc",0
 reloc_fr4:
 	dc.b	"prince_fr4.reloc",0
-reloc_uk1b:
-	dc.b	"prince_uk1b.reloc",0
 
 	even
 	
