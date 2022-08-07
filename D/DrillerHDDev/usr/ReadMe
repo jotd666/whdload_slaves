@@ -38,6 +38,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 2.2 (07.08.2022) done by JOTD:
+ - fixed bug while adding quitkey for one version (issue #0005761)
+ 
  version 2.1 (02.08.2022) done by JOTD:
  - added quitkey on 68000
  

@@ -77,7 +77,7 @@ IGNORE_JOY_DIRECTIONS
     ENDC
     
 DECL_VERSION:MACRO
-	dc.b	"2.7"
+	dc.b	"2.8"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -110,6 +110,10 @@ _program:
 	EVEN
 
 ;============================================================================
+
+NOT_PATCHED = 0
+JUST_PATCHED = 1
+CONFIRM_PATCHED = 2
 
 	;initialize kickstart and environment
 
@@ -247,6 +251,7 @@ pl_fr
     PL_PSS    $3820,wait_blit,2
     PL_PSS    $3e72,wait_blit,2
     PL_PSS    $3fc0,wait_blit,2
+	PL_PS	$499a,enter_code_test
     PL_END
 pl_fr_2377
     PL_START
@@ -258,6 +263,7 @@ pl_fr_2377
     PL_PSS    $386e,wait_blit,2
     PL_PSS    $3ec0,wait_blit,2
     PL_PSS    $400e,wait_blit,2
+	PL_PS	$49da,enter_code_test
     PL_END
 
 pl_uk
@@ -269,6 +275,7 @@ pl_uk
     PL_PSS    $3872,wait_blit,2
     PL_PSS    $3ec4,wait_blit,2
     PL_PSS    $4012,wait_blit,2
+	PL_PS	$49ea,enter_code_test
     PL_END
 pl_uk2
     PL_START
@@ -279,6 +286,7 @@ pl_uk2
     PL_PSS    $380c,wait_blit,2
     PL_PSS    $3e5e,wait_blit,2
     PL_PSS    $3fac,wait_blit,2
+	PL_PS	$497a,enter_code_test
     PL_END
 pl_us
     PL_START
@@ -289,6 +297,7 @@ pl_us
     PL_PSS    $3824,wait_blit,2
     PL_PSS    $3e76,wait_blit,2
     PL_PSS    $3fc4,wait_blit,2
+ 	PL_PS	$499a,enter_code_test
     PL_END
     
 TEST_BUTTON:MACRO
@@ -377,31 +386,33 @@ dma_delay
 	rts 
 
     
+NB_SAVED_REGS = 3*4	; must follow number of saved registers * 4
 
 enter_code_test
-	movem.l	d0/a0,-(a7)
-	move.l	8(a7),a0	; return address
+	movem.l	d0-d1/a0,-(a7)
+	move.l	NB_SAVED_REGS(a7),a0	; return address
 	moveq	#0,d0
 	move.w	(a0),d0		; offset of the BEQ
 
+	
 	cmp.b	#$33,d4		; 'C' key
 	beq.b	.enter_code
 	btst	#6,$bfe001	; left mouse
 	beq.b	.enter_code
-	btst	#14,$dff016	; second button / blue CD32 button
-	bne.b	.nothing
-	move.w	#$cc01,$dff034
-	bra.b	.enter_code
 
 	bra.b	.nothing
 .enter_code
+	move.w	_protection_patched(pc),d1
+	cmp.w	#CONFIRM_PATCHED,d1
+	bne.b	.nothing		; too soon to enter code
+
 	ext.l	d0
-	add.l	d0,8(a7)	; perform BEQ	
+	add.l	d0,NB_SAVED_REGS(a7)	; perform BEQ	
 	bra	.out
 .nothing	
-	addq.l	#2,8(a7)	; skip rest of BEQ
+	addq.l	#2,NB_SAVED_REGS(a7)	; skip rest of BEQ
 .out
-	movem.l	(a7)+,d0/a0
+	movem.l	(a7)+,d0-d1/a0
 	rts
 
 TIME	MOVEM.L	D1/A0,-(A7)
@@ -444,11 +455,27 @@ _cb_dosRead
 	cmp.l	#$1B5EE,d1	; protection load
 	beq.b	.prot
 
+	cmp.l	#$30000,d1
+	bcs	.out		; not reading intro part yet
+	
+	lea	_protection_patched(pc),a0
+	tst.w	(a0)
+	beq	.out	; not patched yet
+	move.w	#CONFIRM_PATCHED,(a0)
 	bra	.out
 .prot
 	move.l	a2,-(a7)
 
-.v3
+	; note that the protection has been patched
+	; we can't use code enter just now until protection
+	; screen has completed
+	; (or at least we reached the protection offset, kixx version
+	; is already cracked)
+	lea		_protection_patched(pc),a2
+	move.w	#JUST_PATCHED,(a2)
+
+	move.l	(a7),a2
+
 	; version 3 (supported with patched file on disk,
         ; but not at the same offset)
 	; 114621: 0A 80 29 1E 09 EA 0A 80 29
@@ -465,7 +492,7 @@ _cb_dosRead
 	move.b	#$07,(a2)+
 	move.b	#$0a,(a2)+
 	move.b	#$71,(a2)
-	bra	.skip
+	bra	.patched
 
 .v2
 	; version 2 (UK)
@@ -484,7 +511,7 @@ _cb_dosRead
 	move.b	#$0A,(a2)+
 	move.b	#$9E,(a2)
 
-	bra	.skip
+	bra.b	.patched
 
 .v1
 	; version 1 (french)
@@ -502,9 +529,8 @@ _cb_dosRead
 	move.b	#$09,(a2)+
 	move.b	#$f1,(a2)
 
-	bra	.skip
-
-.skip
+.patched
+.skip	
 	; cracked versions or unsupported originals
 	; land here, nothing is patched, so the
 	; protection is left intact
@@ -515,6 +541,8 @@ _cb_dosRead
 	rts
 counter
     dc.w    0
+_protection_patched
+	dc.w	NOT_PATCHED
 _progsize
     dc.l    0
 prev_buttons_state

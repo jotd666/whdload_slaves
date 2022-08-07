@@ -79,7 +79,7 @@ BOOTDOS
 
 
 DECL_VERSION:MACRO
-	dc.b	"2.1"
+	dc.b	"2.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -401,7 +401,8 @@ _Version3	lea	$128(a0),a6		;Decrypt the program
 		movea.l	a6,a5
 		jmp	(a0)
 
-_PL_Game_V3	PL_START
+_PL_Game_V3
+		PL_START
 		PL_L	$29c8,$4eb80100		;Empty d1 loop (4000)
 		PL_PS	$2d28,_LongD0Loop	;1500000 empty d0 loop
 		PL_S	$2d2e,$34-$2e
@@ -416,7 +417,7 @@ _PL_Game_V3	PL_START
 		PL_PSS	VBLHOOK_OFFSET_2498-PROGRAM_START_OFFSET_V3,vbl_hook,4
 		PL_ENDIF
 		
-		PL_PS	$b6a0,kb_hook
+		PL_PS	$b6a0-PROGRAM_START_OFFSET_V3,kb_hook
 		
 		PL_END
 
