@@ -1,0 +1,113 @@
+Short:    HD Installer for Killing Cloud
+Author:   girv@girvnet.org.uk (John Girvin)
+Uploader: girv@girvnet.org.uk (John Girvin)
+Type:     game/patch
+Requires: Installer 43.3+, WHDLoad 14.0+
+
+
+TITLE
+
+    WHD_KillnCloud release 1
+
+
+DESCRIPTION
+
+    This is release 1 of a hard drive installation package for the
+    Vektor Grafix game "Killing Cloud".
+
+
+REQUIREMENTS
+
+    Requires an original copy of the game.
+
+    Requires version 14.0 or later of the WHDLoad package by Bert Jahn.
+    WHDLoad is available from:
+
+            http://www.whdload.org
+
+    Please consider registering this fine package to help support future
+    development of hard drive installers for your favourite Amiga games!
+
+
+INSTALLING THE GAME
+
+    Extract all files in the product archive to your system.
+    They will be extracted to a drawer called "WHD_KillingCloud"
+
+    Double click on the "Install" icon present in the extraction
+    directory and follow the instructions given by the Installer
+    program.
+
+    The game will be installed to a directory you select on your
+    hard drive. You will be alerted if installation fails for any
+    reason.
+
+
+PLAYING THE GAME
+
+    Open the game drawer created during installation and click on the
+    "KillingCloud" icon. The game will then start.
+
+    The following keys may be used while the game is running:
+
+      F10: quit game and return to Workbench
+
+
+BUGS/CAVEATS
+
+    This product is provided "as is" and is used at your own risk.
+
+    The author is not liable for any loss or damage caused by the
+    use or misuse of this product.
+
+    When running the installer it is advisable to disable any virus
+    checking or debugging software you may have running.
+
+
+AUTHOR
+
+    John Girvin
+
+    E-Mail: girv@girvnet.org.uk
+
+    WWW:    http://www.girvnet.org.uk
+
+    ICQ:    15651883
+
+
+HISTORY
+
+    R1      11/2001
+            - first release
+            - supports two versions of the game
+            - removed self modifying code
+            - removed cpu speed dependent delays
+            - removed manual protection
+            - enabled instruction cache
+
+
+LICENCE
+
+    This product is copyrighted freeware.
+
+    No payment is required to use this product, although donations
+    of any kind are always welcome!
+
+    © 2001 Halibut Software. No modifications may be made to any
+    files or data that comprise the product without the express
+    consent of the author.
+
+    Freely distributable, provided other licence requirements are
+    adhered to. No charge may be made for this product except for
+    reasonable handling and/or media costs.
+
+
+ACKNOWLEDGEMENTS
+
+    "Killing Cloud" is © 1990 Vektor Grafix
+
+    WHDLoad is © Bert Jahn
+
+    Thanks to Angus Manwaring and Carlo Pirri for supplying disk
+    images, testing and for their infinite patience.
+
