@@ -97,7 +97,7 @@ _config
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"2.1"
+	dc.b	"2.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -106,7 +106,11 @@ DECL_VERSION:MACRO
 		dc.b	" "
 		incbin	datetime
 	ENDC
-	ENDM
+    ENDM
+    dc.b	"$VER: slave "
+	DECL_VERSION
+	dc.b	0
+
 
 _name		dc.b	"Turrican 2",0
 _copy		dc.b	"1991 Factor 5, Rainbow Arts",0
@@ -120,6 +124,7 @@ _data		dc.b	"data",0
 _pics		dc.b	'PICS',0
 _main		dc.b	'MAIN',0
 	EVEN
+IGNORE_JOY_DIRECTIONS
     include ReadJoyPad.s
     
     
@@ -138,6 +143,8 @@ _start	;	A0 = resident loader
         beq.b   .skip
         lea smart_bomb_bit(pc),a0
         move.l  #JPB_BTN_GRN,(a0)
+		lea		third_button_maps_to(pc),a0
+		move.l	#JPF_BTN_GRN,(a0)
 .skip
         IFND    CDTV_VERSION
         
@@ -222,6 +229,8 @@ _plm		PL_START
 		PL_DATA	$1f4d4,6
 			move.b	($43,a5),d1	;TFMX Pro, Don Adan
 			nop
+            
+        PL_PS   $1f07e-$c0,dma_wait_d0
 		PL_END
 
 _plm1		PL_START
@@ -263,6 +272,9 @@ _plm1		PL_START
         PL_PS   $69D8-$C0,vbl_hook
         PL_ORW    $141e-$C0,$20
     ;	PL_I	$1480			;smc
+    
+        
+        
         PL_NEXT	_plm
 
 _plm2		PL_START
@@ -438,6 +450,9 @@ _pl_cdtv		PL_START
 
     PL_PS   $06300-$C0,vbl_hook
     ;PL_ORW    $141e-$C0,$20
+    
+    PL_PS   $1f07e-$c0,dma_wait_d0
+    
 
     PL_END
     ENDC
@@ -446,7 +461,14 @@ vbl_hook
 	MOVE.W	_custom+intreqr,D0
     btst    #5,d0
     beq.b   .novbl
-    bsr     _joystick
+	movem.l	d0/a0,-(a7)
+	moveq	#1,d0
+	bsr	_read_joystick
+
+	lea	joy1(pc),a0
+	move.l	d0,(a0)
+	movem.l	(a7)+,d0/a0
+
 .novbl
     rts
     
@@ -525,7 +547,6 @@ unpause:
     
 ; D1 is set with joy settings 
 meta_controls
-    ;bsr _joystick
     move.l  joy1(pc),d1
     btst    #JPB_BTN_REVERSE,d1
     beq.b   .noquit
@@ -628,12 +649,14 @@ _pl_tfmx:
 	PL_P	$2111e,_snd
     ; this doesn't fix the wrong replay (winuae worst settings) but seems
     ; to make it slightly better
+	
     PL_PSS  $3F5EC-$20700,_dma_wait_1,2
     PL_PSS  $3F674-$20700,_dma_wait_2,2
     PL_PSS  $3FCE6-$20700,_dma_wait_3,2
-    PL_PS  $3F5B0-$20700,_dma_wait_4
+    PL_PS   $3F5B0-$20700,_dma_wait_4
     PL_END
-    
+
+dma_wait_d0:    
 _dma_wait_4
     MOVE.W D0,$00dff096
     bra soundtracker_loop
@@ -646,6 +669,7 @@ _dma_wait_2:
 _dma_wait_1:
     MOVE.W ($0054,A6),$00dff096
 soundtracker_loop
+   
 	move.w  d0,-(a7)
 	move.w	#8,d0
 .bd_loop1

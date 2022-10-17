@@ -59,7 +59,7 @@ slv_keyexit	= $5D	; num '*'
 
 
 DECL_VERSION:MACRO
-	dc.b	"1.0"
+	dc.b	"1.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -78,7 +78,7 @@ slv_name		dc.b	"BombJack Beer Edition"
 	dc.b	" (DEBUG MODE)"
 	ENDC
 			dc.b	0
-slv_copy		dc.b	"2018 McGeezer",0
+slv_copy		dc.b	"2018-2022 McGeezer",0
 slv_info		dc.b	"adapted by JOTD",10,10
 		dc.b	"Version "
 		DECL_VERSION
@@ -138,7 +138,12 @@ check_version:
 	move.l	_resload(pc),a2
 	jsr	resload_GetFileSize(a2)
 
+	lea		patch_list_to_use(pc),a1
+	lea		pl_main_v1(pc),a0
 	cmp.l	#383304,D0
+	beq.b	.ok
+	lea		pl_main_v2(pc),a0
+	cmp.l	#360688,d0
 	beq.b	.ok
 	cmp.l	#0,D0
 	beq.b	.ok		; let LoadSeg fail if file not found
@@ -149,25 +154,35 @@ check_version:
 	addq.l	#resload_Abort,(a7)
 	rts
 .ok
+	move.l	a0,(a1)
 	movem.l	(a7)+,d0-d1/a1
 	rts
 ; < d7: seglist (APTR)
 
 patch_exe
 	move.l	(_resload,pc),a2
-	lea	pl_main(pc),a0
+	move.l	patch_list_to_use(pc),a0
 	move.l	d7,a1
 	jsr	(resload_PatchSeg,a2)
 	rts
 
 	
-pl_main
+pl_main_v1
 	PL_START
 	; remove VBR/return 0 when asked
 	PL_NOP	$7256,6
 	PL_P	$ace4,get_zero_vbr
 	; re-enable level 2 interrupt
 	PL_PS	$3FC,enable_keyboard_interrupt
+	PL_END
+	
+pl_main_v2
+	PL_START
+	; remove VBR/return 0 when asked
+	PL_P	$0aed2,get_zero_vbr
+	PL_P	$0b13e,get_zero_vbr
+	; re-enable level 2 interrupt
+	PL_PS	$003f4,enable_keyboard_interrupt
 	PL_END
 	
 get_zero_vbr:
@@ -248,7 +263,9 @@ _stacksize
 tag		dc.l	WHDLTAG_CUSTOM1_GET
 custom1	dc.l	0
 		dc.l	0
-
+patch_list_to_use
+	dc.l	0
+	
 ;============================================================================
 
 	END

@@ -8,7 +8,7 @@
  CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
  PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
- This install applies to "Bombjack - Beer edition" © 2018 McGeezer.
+ This install applies to "Bombjack - Beer edition" © 2018-2022 McGeezer.
 
  This install requires WHDLoad to be in the path. It can be found in the
  WHDLoad package.
@@ -37,6 +37,10 @@
 	http://www.whdload.de/
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
+ 
+ version 1.1 (08.10.2022):
+ - support for new version with original music (issue #0005789)
+ - install script (only for new version)
  
  version 1.0-B (11.01.2019):
  - added nice icon by Hexaae (submitted in #0004033)

@@ -48,11 +48,13 @@
 	the standard or mission disk game.
 
 
-
-todo:
-
-- fix sound (dma wait?)
-- enable real fastmem (runs in $8xxxx)
-- quitkey on 68000
-- update readme
+Version 2.0 (18.10.2022) done by JOTD:
+- enabled caches for better speed (issue #0002560)
+- enabled real fastmem for better speed (issue #0001414)
+- soundtracker sound timing fixed
 - added manual & solution
+- added quitkey on 68000
+- todo fix CEPHEUS
+
+
+

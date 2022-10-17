@@ -66,3 +66,5 @@ the "go raiding" sequence cannot be completed if there's no CD audio playing:
 the CD track is also used as a timer: once it's over, you lose by timeout.
 In this version, the time is infinite (I just could not emulate the timer feature
 easily, I think you'll forgive me).
+
+If you have crashes at startup, use NOCACHE

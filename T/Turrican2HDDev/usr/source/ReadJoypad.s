@@ -66,14 +66,14 @@ _detect_controller_types:
 	moveq	#0,d0
 	bsr		.detect
 	; ignore first read
-	bsr	_wvbl
+	bsr	.wvbl
 	moveq	#0,d0
 	bsr		.detect
 	
 	lea	controller_joypad_0(pc),a0
 	move.b	D0,(A0)
 	
-	bsr	_wvbl
+	bsr	.wvbl
 	
 	moveq	#1,d0
 	bsr		.detect
@@ -82,8 +82,15 @@ _detect_controller_types:
     movem.l (a7)+,d0/a0
 	rts
 
-
-    
+.wvbl:
+	; wait for VBL
+	lea	$DFF000,a0
+	move.w	#$7FFF,intreq(a0)
+.wait
+	move.w	intreqr(a0),d0
+	btst	#5,d0
+	beq.b	.wait
+	rts
 .detect
 		movem.l	d1-d5/a0-a1,-(a7)
 	
@@ -143,27 +150,15 @@ _detect_controller_types:
 		
 		movem.l	(a7)+,d1-d5/a0-a1
 		rts
-
-_wvbl:
-    movem.l d0/a0,-(a7)
-	; wait for VBL
-	lea	$DFF000,a0
-	move.w	#$7FFF,intreq(a0)
-.wait
-	move.w	intreqr(a0),d0
-	btst	#5,d0
-	beq.b	.wait
-    movem.l (a7)+,d0/a0
-	rts
-    
+		
 _joystick:
 
-		movem.l	d0/a0,-(a7)	; put input 0 output in joy0
-;	moveq	#0,d0
-;	bsr	_read_joystick
+		movem.l	a0,-(a7)	; put input 0 output in joy0
+	moveq	#0,d0
+	bsr	_read_joystick
 
-;		lea	joy0(pc),a0
-;		move.l	d0,(a0)		
+		lea	joy0(pc),a0
+		move.l	d0,(a0)		
 
 	moveq	#1,d0
 	bsr	_read_joystick
@@ -171,12 +166,16 @@ _joystick:
 		lea	joy1(pc),a0
 		move.l	d0,(a0)		
 	
-		movem.l	(a7)+,d0/a0
+		movem.l	(a7)+,a0
 
 	rts	
 
 _read_joystick:
+    IFD    IGNORE_JOY_DIRECTIONS        
 		movem.l	d1-d7/a0-a1,-(a7)
+    ELSE
+		movem.l	d2-d7/a0-a1,-(a7)
+    ENDC
 	
 		tst.l	d0
 		bne.b	.port1
@@ -200,6 +199,7 @@ _read_joystick:
 
 		moveq	#0,d7
 
+    IFND    IGNORE_JOY_DIRECTIONS
 		move.w	0(a0,d6.w),d0		;get joystick direction
 		move.w	d0,d6
 
@@ -224,8 +224,9 @@ _read_joystick:
 		add.w	d7,d7
 
 		swap	d7
-		
-	;two buttons
+	ENDC
+    
+	;two/three buttons
 
 		btst	d4,potinp(a0)	;check button blue (normal fire2)
 		seq	d7
@@ -244,7 +245,7 @@ _read_joystick:
 
 		moveq	#0,d0
 		tst.b	d2
-		beq.b	.no_further_button_test
+		beq.b	.read_third_button
 		
 		bset	d3,ciaddra(a1)	;set bit to out at ciapra
 		bclr	d3,ciapra(a1)	;clr bit to in at ciapra
@@ -283,18 +284,34 @@ _read_joystick:
 		swap	d0		; d0 = state
 		or.l	d7,d0
 
-		
+    IFND    IGNORE_JOY_DIRECTIONS        
+		moveq	#0,d1		; d1 = raw joydat
+		move.w	d6,d1
+	ENDC
+    
 		or.b	#$C0,ciapra(a1)	;reset port direction
 
+    IFD    IGNORE_JOY_DIRECTIONS        
 		movem.l	(a7)+,d1-d7/a0-a1
+    ELSE
+		movem.l	(a7)+,d2-d7/a0-a1
+    ENDC
 		rts
-
+.read_third_button
+        subq.l  #2,d4   ; shift from DAT*Y to DAT*X
+        btst	d4,potinp(a0)	;check third button
+        bne.b   .no_further_button_test
+        or.l    third_button_maps_to(pc),d7
+        bra.b    .no_further_button_test
+       
 ;==========================================================================
 
 ;==========================================================================
 
 joy0		dc.l	0		
 joy1		dc.l	0
+third_button_maps_to:
+    dc.l    JPF_BTN_PLAY
 controller_joypad_0:
 	dc.b	$FF	; set: joystick 0 is a joypad, else joystick
 controller_joypad_1:

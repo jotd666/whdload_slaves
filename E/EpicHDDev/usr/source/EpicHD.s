@@ -28,37 +28,73 @@
 	SUPER
 	ENDC
 
+CHIP_ONLY
+
+	IFD	CHIP_ONLY
+CHIPMEMSIZE=$100000
+FASTMEMSIZE=$0	
+	ELSE
+CHIPMEMSIZE=$80000
+FASTMEMSIZE=$80000
+	ENDC
+	
+EXPMEM_LIST_ADDRESS = $9C78
+
 ;======================================================================
 
 _base		SLAVE_HEADER			;ws_Security + ws_ID
-		dc.w	10			;ws_Version
+		dc.w	17			;ws_Version
 		dc.w	WHDLF_NoError|WHDLF_EmulTrap|WHDLF_NoDivZero	;ws_flags
-		dc.l	$100000			;ws_BaseMemSize
+		dc.l	CHIPMEMSIZE			;ws_BaseMemSize
 		dc.l	0			;ws_ExecInstall
 		dc.w	_start-_base		;ws_GameLoader
 		dc.w	0			;ws_CurrentDir
 		dc.w	0			;ws_DontCache
 _keydebug	dc.b	0			;ws_keydebug
 _keyexit	dc.b	$59			;ws_keyexit
-_expmem		dc.l	$80000			;ws_ExpMem
+_expmem		dc.l	FASTMEMSIZE			;ws_ExpMem
 		dc.w	_name-_base		;ws_name
 		dc.w	_copy-_base		;ws_copy
 		dc.w	_info-_base		;ws_info
-
+		dc.w	0                       ;ws_kickname
+		dc.l	0                       ;ws_kicksize
+		dc.w	0                       ;ws_kickcrc
+		dc.w	_config-_base		;ws_config
+_config
+    dc.b    "C1:B:select mission disk;"
+    dc.b	0
 ;============================================================================
 
 	IFD BARFLY
+	IFND	.passchk
 	DOSCMD	"WDate  >T:date"
+.passchk
+	ENDC
 	ENDC
 
-_name		dc.b	'Epic & Mission Disk',0
-_copy		dc.b	'1992 Ocean',0
-_info		dc.b	'fixed and installed by Graham and Wepl',$A
-		dc.b	'on '
+DECL_VERSION:MACRO
+	dc.b	"2.0"
 	IFD BARFLY
+		dc.b	" "
 		INCBIN	"T:date"
 	ENDC
-		dc.b	' V1.4',-1
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
+	ENDC
+	ENDM
+	
+_name		dc.b	'Epic & Mission Disk'
+	IFD	CHIP_ONLY
+	dc.b	" (debug/chip mode)"
+	ENDC
+	
+			dc.b	0
+_copy		dc.b	'1992 Ocean',0
+_info		dc.b	'adapted by Graham/Wepl/JOTD',$A
+		dc.b	"Version "
+		DECL_VERSION
+		dc.b	-1
 		dc.b	'Entrycodes:',10
 		dc.b	'2-AURIGA  3-CEPHEUS  4-APUS  5-MUSCA',10
 		dc.b	'6-PYXIS  7-CETUS  8-FORNAX  9-CAELUM  10-CORVUS',10
@@ -80,12 +116,16 @@ _start	;	A0 = resident loader
 	move.l	a0,(a1)
 	move.l	a0,a2			;A2 = _resload
 
+	IFD		CHIP_ONLY
+	lea		_expmem(pc),a0
+	move.l	#$80000,(a0)
+	ENDC
+	
 	lea	$100,a0
 	moveq	#-2,d0
 	move.l	d0,(a0)
 	move.l	a0,_custom+cop1lc
 
-	ifeq 0
 	move.w	#$7FFF,d0
 	lea	(_custom).l,a0
 	move.w	d0,(intena,a0)
@@ -96,7 +136,6 @@ _start	;	A0 = resident loader
 	lea	($7FDF0).l,sp
 	move.l	sp,usp
 	adda.w	#$200,sp
-	endc
 
 	lea	($800).w,a0
 	move.w	#$15FF,d0
@@ -105,10 +144,19 @@ _start	;	A0 = resident loader
 
 	addq.w	#1,($406E).w
 
-	move.l	#CACRF_EnableI,d0
-	move.l	d0,d1
-;	jsr	(resload_SetCACR,a2)
+WCPU_VAL = WCPUF_Exp_CB|WCPUF_Slave_CB|WCPUF_IC|WCPUF_DC|WCPUF_BC|WCPUF_SS|WCPUF_SB
 
+	IFD		CHIP_ONLY
+	; chip/debug mode: just set instruction cache
+	move.l	#WCPUF_Base_WT|WCPU_VAL,d0
+	ELSE
+	;setup cache
+	move.l	#WCPUF_Base_NC|WCPU_VAL,d0
+	ENDC
+	move.l	#WCPUF_All,d1
+	jsr	(resload_SetCPU,a2)	
+	
+	
 	lea	(_tags,pc),a0
 	jsr	(resload_Control,a2)
 	move.l	(_c1,pc),d0
@@ -131,12 +179,14 @@ _missiongame
 
 	lea	_plm2(pc),a0
 	move.l	(a7),a1
+
+	
 	move.l	_resload(pc),a2
 	jmp	(resload_Patch,a2)
 
 _plm1	PL_START
 	PL_P	$90a,_copydata_v2	;copylock which reads
-	PL_P	$b08,_setexp
+	PL_P	$b08,_setexp_mission
 	PL_P	$1616,_decrunch
 	PL_L	$1922,$70014E75		;checkdisk
 	PL_R	$19d4			;disk access
@@ -165,26 +215,38 @@ _plm1	PL_START
 	rts
 	
 _plm2	PL_START
-	PL_PS	$2e,.copypatch
+	PL_PS	$2e,_copypatch_m2
 	PL_PS	$601e,_keyboard
 	PL_W	$9152,$602e
 	PL_PS	$9192,_patch_num
 	PL_S	$9198,$a8
-	PL_I	$9ac8
 	PL_P	$24734,_snoopssp1
 	PL_PS	$2718e,_bw1
 	PL_PS	$271d2,_bw3
 	PL_PS	$27244,_bw2
+	
+	; jotd: added fixes for sound / caches
+	
+	PL_PS	$2384a,_sound_wait_2
+	PL_S	$23850,$e
+	
+	; "remove trap" 68000 vector replaced by a flush
+	PL_P	$5cf2,_flushcache_trap
+	
+	; patches reloc at startup
+	;PL_PS	$ba8e,_reloc_loop
+	;PL_S	$ba8e+6,$ac-$94
+	
 	PL_END
 
-.copypatch	move.b	(a0)+,(a1)+
-	dbra	d0,.copypatch
+_copypatch_m2	move.b	(a0)+,(a1)+
+	dbra	d0,_copypatch_m2
 
 	lea	_plm1(pc),a0
 	sub.l	a1,a1
 	jsr	(resload_Patch,a2)
 
-	movea.w	#$94,a1
+	lea	$94.w,a1
 	bra.w	patch_intrts
 
 	IFEQ 1
@@ -204,8 +266,8 @@ _plm2	PL_START
 	rts
 	ENDC
 
-_setexp	move.l	_expmem(pc),(a0)+		;expmem start
-	;move.l	#$80000,(a0)+
+_setexp_mission
+	move.l	_expmem(pc),(a0)+		;expmem start
 	move.l	#$80000,(a0)+		;expmem length
 	clr.l	(a0)+
 	clr.l	(a0)+
@@ -257,16 +319,18 @@ _normalgame	lea	($6000).w,a0
 	pea	TDREASON_WRONGVER
 	jmp	(resload_Abort,a2)
 
-_normalgame_v1	jsr	($610C).w
+_normalgame_v1	
+	jsr	($610C).w
 	lea	($864).w,a0
 	move.l	#$2200,d0
 	move.l	#$3000,d1
 	moveq	#1,d2
 	bsr.w	_diskload
-	bsr.w	.patchmain
+	bsr.w	_patchmain
 	jsr	($86C).w
 	jsr	($898).w
-	lea	($9C78).l,a0
+	; search expansion memory blocks
+	lea	EXPMEM_LIST_ADDRESS,a0
 .search	move.l	(a0),d0
 	beq.b	.found
 	addq.l	#8,a0
@@ -279,34 +343,68 @@ _normalgame_v1	jsr	($610C).w
 	lea	(CODE.MSG,pc),a0
 	move.l	a0,d1
 	move.l	(_long,pc),d2
-	jsr	($8B0).w
-	movea.l	(_long,pc),a0
-	lea	(.copypatch,pc),a1
-	move.w	#$4EB9,($2C,a0)
-	move.l	a1,($2E,a0)
-	lea	(_keyboard,pc),a1
-	move.w	#$4EB9,($5FCE,a0)
-	move.l	a1,($5FD0,a0)
-	lea	($4000,a0),a2
-	move.w	#$602E,($5152,a2)
-	lea	(_patch_num,pc),a1
-	move.w	#$4EB9,($5192,a2)
-	move.l	a1,($5194,a2)
-	move.w	#$60A6,($5198,a2)
+	jsr	($8B0).w		; load file
+	
+	movea.l	(_long,pc),a1
+	lea		pl_prog_v1(pc),a0
+	move.l	_resload(pc),a2
+	jsr		resload_Patch(a2)
+	bsr		_get_attn_flags
+	move.w	d0,$4074.W
+	; start game
 	bsr.w	_loadhighs_v1
-	jmp	(a0)
+	move.l	(_long,pc),-(a7)
+	rts
+	
 
-.setexp	lea	($9C78).l,a0
-	move.l	#$80000,d0
+_get_attn_flags
+	move.l	_attnflags(pc),d1
+	moveq	#0,d0
+	btst	#AFB_68020,d1
+	beq.b	.out
+	move.w	#$8,d0
+	btst	#AFB_68030,d1
+	beq.b	.out
+	move.w	#$C,d0
+.out
+	; finally set 68000
+	moveq	#0,d0
+	rts
+	
+_enablecache
+	movem.l	d0-d1/a0-a2,-(a7)
+	move.l	#CACRF_EnableI|CACRF_EnableD,d0
+	move.l	d0,d1
+	move.l	_resload(pc),a2
+	jsr	(resload_SetCACR,a2)
+	movem.l	(a7)+,d0-d1/a0-a2
+	rts
+	
+_disablecache
+	movem.l	d0-d1/a0-a2,-(a7)
+	move.l	#CACRF_EnableI|CACRF_EnableD,d1
+	clr.l	d0
+	move.l	_resload(pc),a2
+	jsr	(resload_SetCACR,a2)
+	movem.l	(a7)+,d0-d1/a0-a2
+	rts
+	
+_flushcache_trap
+	bsr	_flushcache
+	rte
+	
+_setexp_v1
+	lea	EXPMEM_LIST_ADDRESS,a0
+	move.l	_expmem(pc),d0
 	move.l	d0,(a0)
 	jsr	($BD6).w
 	jmp	($BE2).w
 
-.copypatch	move.b	(a0)+,(a1)+
-	dbra	d0,.copypatch
-	bra.w	.patchmain
+_copypatch	move.b	(a0)+,(a1)+
+	dbra	d0,_copypatch
+	bra.w	_patchmain
 
-.copydata	movem.l	d0/a0/a1,-(sp)
+_copydata	movem.l	d0/a0/a1,-(sp)
 	lea	(_data_v1,pc),a1
 	move.w	#$1FF,d0
 .copy	move.l	(a1)+,(a0)+
@@ -315,7 +413,7 @@ _normalgame_v1	jsr	($610C).w
 	st	d0
 	rts
 
-.loadnum	movem.l	d0-d7/a0-a6,-(sp)
+_loadnum	movem.l	d0-d7/a0-a6,-(sp)
 	move.w	d0,($1886).w
 	move.w	#$20,($188C).w
 	move.l	#$1600,d1
@@ -328,7 +426,9 @@ _normalgame_v1	jsr	($610C).w
 	clr.w	($4072).w
 	rts
 
-.patchmain	lea	($2384).w,a0
+_patchmain	
+
+	lea	($2384).w,a0
 	move.w	#$1A,d0
 .copyskip	move.w	#$6004,(a0)+
 	dbra	d0,.copyskip
@@ -336,23 +436,42 @@ _normalgame_v1	jsr	($610C).w
 	move.w	#$F8,d0
 .copyrts	move.w	#$4E75,(a0)+
 	dbra	d0,.copyrts
-	move.w	#$4E71,($18BA).w
-	lea	(.setexp,pc),a0
-	move.w	#$4EF9,($B06).w
-	move.l	a0,($B08).w
-	lea	(.loadnum,pc),a0
-	move.w	#$4EF9,($1B30).w
-	move.l	a0,($1B32).w
-	lea	(.copydata,pc),a0
-	move.w	#$4EF9,($902).w
-	move.l	a0,($904).w
-	move.w	#$603E,($2338).w
-	lea	(_savehighs,pc),a0
-	move.w	#$4EF9,($1D80).w
-	move.l	a0,($1D82).w
+	
+	suba.l	a1,a1
+	lea		pl_v1(pc),a0
+	move.l	_resload(pc),a2
+	jsr		resload_Patch(a2)
+	
 	suba.l	a1,a1
 	bra.w	patch_intrts
 
+pl_v1
+	PL_START
+	PL_NOP	$18BA,2
+	PL_P	$B06,_setexp_v1
+	PL_P	$1B30,_loadnum
+	PL_P	$902,_copydata
+	PL_W	$2338,$603E
+	PL_P	$1D80,_savehighs
+	
+	; snoop/blitter bugs
+	PL_S	$22B0,$10
+	PL_PSS	$21d6,_blitwait_1,4
+	PL_END
+
+_blitwait_1
+	bsr		_waitblit
+	MOVE.L	D0,64(A6)		;21d6: 2d400040
+	MOVE.W	#$0041,88(A6)		;21da: 3d7c00410058
+	rts
+
+_waitblit
+	TST.B	$BFE001
+.wait
+	BTST	#6,dmaconr+$DFF000
+	BNE.S	.wait
+	rts
+	
 _loadhighs_v1	movem.l	d0-d7/a0-a6,-(sp)
 	move.l	a0,-(sp)
 	lea	(_highs,pc),a0
@@ -377,7 +496,8 @@ _normalgame_v2	jsr	($61BE).w
 	bsr.w	_patchmain_v2
 	jsr	($86C).w
 	jsr	($898).w
-	lea	($9C78).l,a0
+	; scan memory chunks
+	lea	EXPMEM_LIST_ADDRESS,a0
 .search	move.l	(a0),d0
 	beq.b	.found
 	addq.l	#8,a0
@@ -391,24 +511,158 @@ _normalgame_v2	jsr	($61BE).w
 	move.l	a0,d1
 	move.l	(_long,pc),d2
 	jsr	($8B0).w
-	movea.l	(_long,pc),a0
-	lea	(_copypatch_v2,pc),a1
-	move.w	#$4EB9,($2C,a0)
-	move.l	a1,($2E,a0)
-	lea	(_keyboard,pc),a1
-	move.w	#$4EB9,($6022,a0)
-	move.l	a1,($6024,a0)
-	lea	($4000,a0),a2
-	move.w	#$602E,($51A2,a2)
-	lea	(_patch_num,pc),a1
-	move.w	#$4EB9,($51E2,a2)
-	move.l	a1,($51E4,a2)
-	move.w	#$60A6,($51E8,a2)
+	
+	movea.l	(_long,pc),a1
+	lea		pl_prog_v2(pc),a0
+	move.l	_resload(pc),a2
+	jsr		resload_Patch(a2)
 	bsr.w	_loadhighs_v2
-	jmp	(a0)
+	; start game
+	move.l	(_long,pc),-(a7)
+	rts
+	
+pl_prog_v1
+	PL_START
+	PL_PS	$2C,_copypatch
+	PL_PS	$5FCE,_keyboard
+	PL_W	$9152,$602E
+	PL_PS	$9192,_patch_num
+	PL_W	$9198,$60A6
+	
+	; jotd: added fixes
 
-_setexp_v2	lea	($9C78).l,a0
-	move.l	#$80000,d0
+	; quit with 68000
+	PL_PSS	$5fec,_keyboard_hook,4
+	
+	; more classic way of handling interrupts
+	PL_W	$5e3e+2,$0000
+	PL_W	$5e4a+2,$0020
+	PL_W	$5e52+2,$8000
+	PL_W	$5e5c+2,$0000
+	PL_W	$5e6c+2,$8000
+	
+	; super fast text
+	;PL_NOP	$1ec16,4
+	
+	; flush smc to avoid alien-like text
+	; when key is pressed (text display speedup)
+	; smc is right after that @exp+$6f54 written
+	; from @exp+6e94
+	PL_PS	$6f4e,_char_smc
+		
+	; forces different vectors for cache handling
+	; (disable, enable, flush)
+	;;PL_NOP	$5cb2,2
+	
+	; patch cache traps
+	;PL_P	$5cfc,_enablecache_trap
+	;PL_P	$5d0c,_disablecache_trap
+	;PL_P	$5D18,_flushcache_trap
+	
+	; "remove trap" 68000 vector replaced by a flush
+	; all operations (set/disable/flush cache) just flush
+	; cache (even if I leave enable/disable alone by reenabling
+	; the 68020 vectors above, the text is still garbled without
+	; manual smc fix
+	PL_P	$5cec,_flushcache_trap
+
+	; fixes sound
+	PL_PS	$254de,_sound_wait_2
+	PL_S	$254e4,$f2-$e4
+
+	; patches reloc at startup
+	PL_PS	$ba8e,_reloc_loop
+	PL_S	$ba8e+6,$ac-$94
+
+	; dma sound loops
+	PL_PSS	$290fa,_sound_wait,2
+	PL_PSS	$29110,_sound_wait,2
+	PL_PSS	$29842,_sound_wait,2
+	PL_PSS	$29858,_sound_wait,2
+	
+	; CACR writes
+;	PL_I	$5CFC
+;	PL_I	$5D0C
+;	PL_I	$5d18
+	PL_END
+	
+pl_prog_v2
+	PL_START
+	PL_PS	$2C,_copypatch_v2
+	PL_PS	$6022,_keyboard
+	PL_W	$91A2,$602E
+	PL_PS	$91E2,_patch_num
+	PL_W	$91E8,$60A6
+	
+	PL_PSS	$6040,_keyboard_hook,4
+
+	; jotd: added fixes for SMC
+	; (else as cpu detection has been fixed as 68000,
+	; game crashes)
+	PL_P	$5cf2,_flushcache_trap
+	
+	; patches reloc at startup (not really necessary)
+	PL_PS	$bada,_reloc_loop
+	PL_S	$bada+6,$ac-$94
+
+	; flush smc to avoid alien-like text
+	; when key is pressed (text display speedup)
+	PL_PS	$6fa2,_char_smc
+
+	; dma sound loops
+	PL_PSS	$291c4,_sound_wait,2
+	PL_PSS	$291da,_sound_wait,2
+	PL_PSS	$2990c,_sound_wait,2
+	PL_PSS	$29922,_sound_wait,2
+
+	PL_END
+	
+_char_smc
+	; original
+	ANDI.W	#$003f,D0		;86f4e: 0240003f
+	ADD.W	D0,D0			;86f52: d040
+	bra		_flushcache
+	
+_keyboard_hook
+	BSET	#0,3584(A1)		;85fec: 08e900000e00
+	NOT.B	D2			;85ff2: 4602
+	ROR.B	#1,D2			;85ff4: e21a
+	cmp.b	_keyexit(pc),d2
+	beq		_abort_ok
+	rts
+	
+	
+_sound_wait_2
+	move.w  d0,-(a7)
+	move.w	#2,d0   ; make it 7 if still issues
+.bd_loop1
+	move.w  d0,-(a7)
+    move.b	$dff006,d0	; VPOS
+.bd_loop2
+	cmp.b	$dff006,d0
+	beq.s	.bd_loop2
+	move.w	(a7)+,d0
+	dbf	d0,.bd_loop1
+	move.w	(a7)+,d0
+	rts
+	
+_sound_wait
+	move.w  d0,-(a7)
+	move.w	#4,d0   ; make it 7 if still issues
+.bd_loop1
+	move.w  d0,-(a7)
+    move.b	$dff006,d0	; VPOS
+.bd_loop2
+	cmp.b	$dff006,d0
+	beq.s	.bd_loop2
+	move.w	(a7)+,d0
+	dbf	d0,.bd_loop1
+	move.w	(a7)+,d0
+	rts 
+	
+_setexp_v2	
+	lea	EXPMEM_LIST_ADDRESS,a0
+	move.l	_expmem(pc),d0
 	move.l	d0,(a0)
 	jsr	($CC8).w
 	jmp	($CD6).w
@@ -462,46 +716,52 @@ _patchmain_v2	lea	($249A).w,a0
 	move.w	#$4EF9,($1E96).w
 	move.l	a0,($1E96).w
 	movea.w	#$14A,a1
-patch_intrts	move.l	#$4E714EB9,d0
-	lea	(_intrts1,pc),a0
-	move.l	d0,($2486,a1)
-	move.l	a0,($248A,a1)
-	lea	(_intrts2,pc),a0
-	move.l	d0,($2498,a1)
-	move.l	a0,($249C,a1)
-	lea	(_intrts4,pc),a0
-	move.l	d0,($24A4,a1)
-	move.l	a0,($24A8,a1)
-	lea	(_intrts8,pc),a0
-	move.l	d0,($24BE,a1)
-	move.l	a0,($24C2,a1)
-	move.l	d0,($24CA,a1)
-	move.l	a0,($24CE,a1)
-	lea	(_intrts40,pc),a0
-	move.l	d0,($24F0,a1)
-	move.l	a0,($24F4,a1)
-	lea	(_intrts20,pc),a0
-	move.l	d0,($2500,a1)
-	move.l	a0,($2504,a1)
-	lea	(_intrts10,pc),a0
-	move.l	d0,($2514,a1)
-	move.l	a0,($2518,a1)
-	lea	(_intrts800,pc),a0
-	move.l	d0,($2544,a1)
-	move.l	a0,($2548,a1)
-	lea	(_intrts1000,pc),a0
-	move.l	d0,($2550,a1)
-	move.l	a0,($2554,a1)
-	lea	(_intrts2000,pc),a0
-	move.l	d0,($2576,a1)
-	move.l	a0,($257A,a1)
-	move.l	d0,($2582,a1)
-	move.l	a0,($2586,a1)
-	lea	(_intrts4000,pc),a0
-	move.l	d0,($258E,a1)
-	move.l	a0,($2592,a1)
-	rts
+	
+patch_intrts
+	lea		pl_intrts(pc),a0
+	move.l	_resload(pc),a2
+	jmp		resload_Patch(a2)
+	
 
+pl_intrts
+	PL_START
+	PL_PSS	$2486,_intrts1,2
+	PL_PSS	$2498,_intrts2,2
+	PL_PSS	$24A4,_intrts4,2
+	PL_PSS	$24BE,_intrts8,2
+	PL_PSS	$24CA,_intrts8,2
+	PL_PSS	$24F0,_intrts40,2
+	PL_PSS	$2500,_intrts20,2
+	PL_PSS	$2514,_intrts10,2
+	PL_PSS	$2544,_intrts800,2
+	PL_PSS	$2550,_intrts1000,2
+	PL_PSS	$2576,_intrts2000,2
+	PL_PSS	$2582,_intrts2000,2
+	PL_PSS	$258E,_intrts4000,2
+	PL_END
+	
+_reloc_loop
+.lb_0491:
+	ADDA.L	D1,A0			;8ba8e: d1c1
+	MOVE.L	(A0),D4			;8ba90: 2810
+	SUB.L	D5,D4			;8ba92: 9885
+	BPL.S	.lb_0492		;8ba94: 6a06
+	MOVE.L	4(A2,D4.W),D4		;8ba96: 28324004
+	BRA.S	.lb_0493		;8ba9a: 6002
+.lb_0492:
+	ADD.L	D0,D4			;8ba9c: d880
+.lb_0493:
+	; changes some jumps dynamically (at start)
+	MOVE.L	D4,(A0)			;8ba9e: 2084
+.lb_0494:
+	MOVE.B	(A1)+,D1		;8baa0: 1219
+	CMP.B	D2,D1			;8baa2: b202
+	BHI.S	.lb_0491		;8baa4: 62e8
+	LEA	254(A0),A0		;8baa6: 41e800fe
+	BEQ.S	.lb_0494		;8baaa: 67f4
+	bra		_flushcache
+
+	
 _loadhighs_v2	movem.l	d0-d7/a0-a6,-(sp)
 	move.l	a0,-(sp)
 	lea	(_highs,pc),a0
@@ -531,8 +791,6 @@ _keyboard	moveq	#0,d2
 	move.l	d2,-(sp)
 	not.b	d2
 	ror.b	#1,d2
-	cmp.b	#$78,d2
-	beq.w	_abort_ok
 	cmp.b	(_keyexit,pc),d2
 	beq.w	_abort_ok
 	move.l	(sp)+,d2
@@ -1854,6 +2112,9 @@ _data_v2	dc.l	$78C
 
 _tags	dc.l	WHDLTAG_CUSTOM1_GET
 _c1	dc.l	0
+	dc.l	WHDLTAG_ATTNFLAGS_GET
+_attnflags
+	dc.l	0
 	dc.l	0
 _resload	dc.l	0
 _long	dc.l	0
