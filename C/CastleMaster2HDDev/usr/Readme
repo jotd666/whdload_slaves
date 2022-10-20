@@ -60,6 +60,9 @@ Thanks to Slinka & Yoyo for the image
 
 History:
 
+ Version 2.0-B (20.10.2022) done by JOTD:
+ - fixed install script
+
  Version 2.0 (08.07.2022) done by JOTD:
  - using fast memory for better speed
  - added adjustable speed regulation for ... slower speed :)

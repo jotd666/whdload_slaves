@@ -16,6 +16,8 @@
 	INCDIR	Includes:
 	INCLUDE	whdload.i
 	INCLUDE whdmacros.i
+        INCLUDE	exec/memory.i
+        INCLUDE	lvo/exec.i
 
 	IFD	BARFLY
 	OUTPUT	"wart:e/Epic/Epic.Slave"
@@ -28,14 +30,18 @@
 	SUPER
 	ENDC
 
-CHIP_ONLY
+;CHIP_ONLY
+
+CHIPMEMSTART=$2000
+EXPMEMSIZE=$80000
+CHIPMEMSIZE=$C0000
 
 	IFD	CHIP_ONLY
-CHIPMEMSIZE=$100000
-FASTMEMSIZE=$0	
+FAKEFASTMEMSIZE=EXPMEMSIZE
+FASTMEMSIZE=$0
 	ELSE
-CHIPMEMSIZE=$80000
-FASTMEMSIZE=$80000
+FASTMEMSIZE=EXPMEMSIZE
+FAKEFASTMEMSIZE=0
 	ENDC
 	
 EXPMEM_LIST_ADDRESS = $9C78
@@ -45,7 +51,7 @@ EXPMEM_LIST_ADDRESS = $9C78
 _base		SLAVE_HEADER			;ws_Security + ws_ID
 		dc.w	17			;ws_Version
 		dc.w	WHDLF_NoError|WHDLF_EmulTrap|WHDLF_NoDivZero	;ws_flags
-		dc.l	CHIPMEMSIZE			;ws_BaseMemSize
+		dc.l	CHIPMEMSIZE+FAKEFASTMEMSIZE			;ws_BaseMemSize
 		dc.l	0			;ws_ExecInstall
 		dc.w	_start-_base		;ws_GameLoader
 		dc.w	0			;ws_CurrentDir
@@ -118,7 +124,7 @@ _start	;	A0 = resident loader
 
 	IFD		CHIP_ONLY
 	lea		_expmem(pc),a0
-	move.l	#$80000,(a0)
+	move.l	#CHIPMEMSIZE,(a0)
 	ENDC
 	
 	lea	$100,a0
@@ -137,14 +143,8 @@ _start	;	A0 = resident loader
 	move.l	sp,usp
 	adda.w	#$200,sp
 
-	lea	($800).w,a0
-	move.w	#$15FF,d0
-.clr	clr.l	(a0)+
-	dbra	d0,.clr
-
-	addq.w	#1,($406E).w
-
 WCPU_VAL = WCPUF_Exp_CB|WCPUF_Slave_CB|WCPUF_IC|WCPUF_DC|WCPUF_BC|WCPUF_SS|WCPUF_SB
+	move.l	_resload(pc),a2
 
 	IFD		CHIP_ONLY
 	; chip/debug mode: just set instruction cache
@@ -155,6 +155,68 @@ WCPU_VAL = WCPUF_Exp_CB|WCPUF_Slave_CB|WCPUF_IC|WCPUF_DC|WCPUF_BC|WCPUF_SS|WCPUF
 	ENDC
 	move.l	#WCPUF_All,d1
 	jsr	(resload_SetCPU,a2)	
+	
+	lea		main_file_name(pc),a0
+	jsr		resload_GetFileSize(a2)
+	tst.l	d0
+	beq	.standard_versions
+	; enable dma (else black screen)
+	move.w	#$83C0,_custom+dmacon
+	; this is epic 3 disk HD-installable version
+	; install fake exec for AllocMem & AvailMem
+	lea $1000.W,A6
+	move.l  A6,4.W
+	move.l  #$FF,d0
+	move.l  #$4AFC4AFC,d1   ; trash other vectors just in case...
+.loop
+	move.l  d1,-(a6)
+	dbf d0,.loop
+	move.l  4.W,a6
+	lea (_LVOAllocMem,a6),a0
+	move.w  #$4EF9,(a0)+
+	pea fake_allocmem(pc)
+	move.l  (a7)+,(a0)
+	lea (_LVOAvailMem,a6),a0
+	move.w  #$4EF9,(a0)+
+	pea fake_availmem(pc)
+	move.l  (a7)+,(a0)
+
+	; configure fake memory
+	; chip already configured
+	; set fastmem. Note: in chip_only mode
+	; the fastmem size will be 0
+	move.l  _expmem(pc),a3
+	add.l	#$30000,a3	; program size is $2fxxx
+	lea free_fastmem(pc),a0
+	move.l  a3,(a0)+    ; start
+
+	add.l   #EXPMEMSIZE,a3   ; minus stack
+	move.l  a3,(a0) ; top
+	
+	lea		main_file_name(pc),a0
+	move.l	_expmem(pc),a1
+	jsr		resload_LoadFileDecrunch(a2)
+	move.l  _expmem(pc),a0
+    clr.l   -(a7)                   ;TAG_DONE
+    move.l  a7,a1                   ;tags	
+	move.l	_resload(pc),a2
+	jsr	resload_Relocate(a2)
+	addq.w	#4,a7
+	move.l	_expmem(pc),a1
+	lea		pl_prog_v3(pc),a0
+	jsr		resload_Patch(a2)
+	move.l	_expmem(pc),-(a7)
+	rts
+	
+.standard_versions
+	lea	($800).w,a0
+	move.w	#$15FF,d0
+.clr	clr.l	(a0)+
+	dbra	d0,.clr
+
+	addq.w	#1,($406E).w
+
+
 	
 	
 	lea	(_tags,pc),a0
@@ -233,9 +295,6 @@ _plm2	PL_START
 	; "remove trap" 68000 vector replaced by a flush
 	PL_P	$5cf2,_flushcache_trap
 	
-	; patches reloc at startup
-	;PL_PS	$ba8e,_reloc_loop
-	;PL_S	$ba8e+6,$ac-$94
 	
 	PL_END
 
@@ -268,7 +327,7 @@ _copypatch_m2	move.b	(a0)+,(a1)+
 
 _setexp_mission
 	move.l	_expmem(pc),(a0)+		;expmem start
-	move.l	#$80000,(a0)+		;expmem length
+	move.l	#EXPMEMSIZE,(a0)+		;expmem length
 	clr.l	(a0)+
 	clr.l	(a0)+
 	rts
@@ -438,14 +497,14 @@ _patchmain
 	dbra	d0,.copyrts
 	
 	suba.l	a1,a1
-	lea		pl_v1(pc),a0
+	lea		pl_bsw_v1(pc),a0
 	move.l	_resload(pc),a2
 	jsr		resload_Patch(a2)
 	
 	suba.l	a1,a1
 	bra.w	patch_intrts
 
-pl_v1
+pl_bsw_v1
 	PL_START
 	PL_NOP	$18BA,2
 	PL_P	$B06,_setexp_v1
@@ -521,6 +580,83 @@ _normalgame_v2	jsr	($61BE).w
 	move.l	(_long,pc),-(a7)
 	rts
 	
+
+pl_prog_v3
+	PL_START
+	; version with executable (runs from HD) is
+	; poorly done, and has a big CHIP section to make
+	; sure that the game crawls on accelerated amigas...
+	; relocate copperlists to chip when using fast for code
+    PL_L	$27c86+2,$1010
+    PL_L	$27d90+2,$1010
+    PL_L	$27f54+2,$1010
+
+    PL_L	$27c94+2,$1800
+    PL_L	$27f5e+2,$1800
+    PL_L	$27d9a+2,$1800
+ 		
+	; uncomment => no intro music
+	;PL_R	$2d1fe
+	
+	; skip manual protection
+	PL_B	$09bbe,$60
+
+	; skip exec.disable & enable
+	PL_S	$90,8
+	PL_S	$A8,8
+	; skip cpu detection, assuming 68000
+	PL_S	$2eb0e,$6c-$0e	
+	; quit to os
+	PL_P	$2e510,_abort_ok
+	
+	; PL_R	$2d1fe ; to skip intro
+	; disk I/O
+	PL_P	$2e8f0,open_file_read
+	PL_P	$2e924,open_file_write
+	PL_PS	$2e968,read_file_hook
+	PL_S	$2e96e,$10	; skip and store nb bytes read
+	PL_P	$2e9b0,write_file
+	
+	; various os calls which need to be removed
+	PL_R	$2e8ce	; close_dos_library
+	PL_R	$2e98a
+	PL_R	$2e872	; open dos library
+	PL_R	$2e612
+	PL_R	$2e624
+	PL_R	$2e5b2	; skip wb startup & bogus dos calls
+	; os calls that should not be reached
+	PL_I	$2e65c
+	
+	PL_PS	$06f8e,_keyboard
+	
+	; patches reloc at startup
+	PL_PS	$0cc30,_reloc_loop
+	PL_S	$0cc30+6,$ac-$94
+	
+	; jotd: added fixes for SMC
+	; (else as cpu detection has been fixed as 68000,
+	; game crashes)
+	PL_P	$2ebbe,_flushcache_trap
+	; flush cache after reading THREEDEE.BIN code file
+	PL_S	$2ef2a,$48-$2a
+	PL_P	$2ef4a,_flushcache
+	
+	; flush smc to avoid alien-like text
+	; when key is pressed (text display speedup)
+	PL_PS	$7f8e,_char_smc
+
+	; dma sound loops
+	PL_PSS	$2d586,_sound_wait,2
+	PL_PSS	$2d59c,_sound_wait,2
+	PL_PSS	$2dcce,_sound_wait,2
+	PL_PSS	$2dce4,_sound_wait,2
+
+	; fixes sound
+	PL_PS	$26e50,_sound_wait_2
+	PL_S	$26e56,$f4-$e4
+
+	PL_END
+	
 pl_prog_v1
 	PL_START
 	PL_PS	$2C,_copypatch
@@ -530,9 +666,6 @@ pl_prog_v1
 	PL_W	$9198,$60A6
 	
 	; jotd: added fixes
-
-	; quit with 68000
-	PL_PSS	$5fec,_keyboard_hook,4
 	
 	; more classic way of handling interrupts
 	PL_W	$5e3e+2,$0000
@@ -594,8 +727,6 @@ pl_prog_v2
 	PL_PS	$91E2,_patch_num
 	PL_W	$91E8,$60A6
 	
-	PL_PSS	$6040,_keyboard_hook,4
-
 	; jotd: added fixes for SMC
 	; (else as cpu detection has been fixed as 68000,
 	; game crashes)
@@ -622,14 +753,6 @@ _char_smc
 	ANDI.W	#$003f,D0		;86f4e: 0240003f
 	ADD.W	D0,D0			;86f52: d040
 	bra		_flushcache
-	
-_keyboard_hook
-	BSET	#0,3584(A1)		;85fec: 08e900000e00
-	NOT.B	D2			;85ff2: 4602
-	ROR.B	#1,D2			;85ff4: e21a
-	cmp.b	_keyexit(pc),d2
-	beq		_abort_ok
-	rts
 	
 	
 _sound_wait_2
@@ -667,7 +790,8 @@ _setexp_v2
 	jsr	($CC8).w
 	jmp	($CD6).w
 
-_copypatch_v2	move.b	(a0)+,(a1)+
+_copypatch_v2
+	move.b	(a0)+,(a1)+
 	dbra	d0,_copypatch_v2
 	bra.w	_patchmain_v2
 
@@ -680,7 +804,8 @@ _copydata_v2	movem.l	d0/a0/a1,-(sp)
 	st	d0
 	rts
 
-_loadnum_v2	movem.l	d0-d7/a0-a6,-(sp)
+_loadnum_v2	
+	movem.l	d0-d7/a0-a6,-(sp)
 	move.w	d0,($199A).w
 	move.w	#$20,($19A0).w
 	move.l	#$1600,d1
@@ -693,7 +818,8 @@ _loadnum_v2	movem.l	d0-d7/a0-a6,-(sp)
 	clr.w	($4072).w
 	rts
 
-_patchmain_v2	lea	($249A).w,a0
+_patchmain_v2
+	lea	($249A).w,a0
 	move.w	#10,d0
 .copyskip	move.w	#$6004,(a0)+
 	dbra	d0,.copyskip
@@ -701,28 +827,32 @@ _patchmain_v2	lea	($249A).w,a0
 	move.w	#$F8,d0
 .copyrts	move.w	#$4E75,(a0)+
 	dbra	d0,.copyrts
-	move.w	#$4E71,($19CE).w
-	lea	(_setexp_v2,pc),a0
-	move.w	#$4EF9,($B84).w
-	move.l	a0,($B86).w
-	lea	(_loadnum_v2,pc),a0
-	move.w	#$4EF9,($1C46).w
-	move.l	a0,($1C48).w
-	lea	(_copydata_v2,pc),a0
-	move.w	#$4EF9,($90A).w
-	move.l	a0,($90C).w
-	move.w	#$603E,($244E).w
-	lea	(_savehighs,pc),a0
-	move.w	#$4EF9,($1E96).w
-	move.l	a0,($1E96).w
-	movea.w	#$14A,a1
+	sub.l	a1,a1
+	move.l	_resload(pc),a2
+	lea		pl_bsw_v2(pc),a0
+	jsr		resload_Patch(a2)
 	
+	movea.w	#$14A,a1	
 patch_intrts
 	lea		pl_intrts(pc),a0
 	move.l	_resload(pc),a2
 	jmp		resload_Patch(a2)
 	
-
+pl_bsw_v2
+	PL_START
+	PL_NOP	$19CE,2
+	PL_P	$B84,_setexp_v2
+	PL_P	$1C46,_loadnum_v2
+	PL_P	$90A,_copydata_v2
+	PL_W	$244E,$603E
+	PL_P	$1E96,_savehighs
+	
+	; snoop/blitter bugs
+	PL_S	$23c6,$10
+	PL_PSS	$22ec,_blitwait_1,4
+	
+	PL_END
+	
 pl_intrts
 	PL_START
 	PL_PSS	$2486,_intrts1,2
@@ -1084,6 +1214,165 @@ JRGB	MACRO
 	bra.w	.82A
 
 .910	rts
+
+; < D1: filename
+
+open_file_read
+	MOVEM.L	D0-D7/A0-A6,-(A7)
+	lea		current_file_name(pc),a0
+	move.l	d1,(a0)
+	move.l	d1,a0
+	move.l	_resload(pc),a2
+	jsr		resload_GetFileSize(a2)
+	lea		current_file_size(pc),a0
+	move.l	d0,(a0)
+	lea		current_file_position(pc),a0
+	clr.l	(a0)
+	MOVEM.L	(A7)+,D0-D7/A0-A6
+	RTS
+	
+open_file_write
+	MOVEM.L	D0-D7/A0-A6,-(A7)
+	lea		current_file_name(pc),a0
+	move.l	d1,(a0)
+	lea		current_file_size(pc),a0
+	clr.l	(a0)
+	lea		current_file_position(pc),a0
+	clr.l	(a0)
+	MOVEM.L	(A7)+,D0-D7/A0-A6
+	RTS
+	
+; < D2: buffer
+; < D3: length
+; > D0: nb bytes read
+read_file_hook
+	move.l	_resload(pc),a2
+;   success,error = resload_LoadFileOffset(size, offset, name, address)
+      ;    D0     D1                         D0     D1     A0      A1
+	lea	current_file_position(pc),a3
+	move.l	(a3),d1
+	move.l	d3,d4
+	add.l	d1,d4
+	cmp.l	current_file_size(pc),d4
+	bcs.b	.ok
+	; adjust to match end of file
+	move.l	current_file_size(pc),d3
+	sub.l	d1,d3
+.ok
+	move.l	d3,d0
+	move.l	d2,a1
+	move.l	current_file_name(pc),a0
+	jsr	resload_LoadFileOffset(a2)
+	add.l	d3,(a3)
+	move.l	d3,d0	; size read
+	RTS				;2e922: 4e75
+; < D2: buffer
+; < D3: length
+write_file
+	MOVEM.L	D0-D7/A0-A6,-(A7)
+	move.l	d3,d0
+	lea	current_file_position(pc),a3
+	move.l	(a3),d1
+	move.l	_resload(pc),a2
+	move.l	d2,a1
+	move.l	current_file_name(pc),a0	
+	jsr	resload_SaveFileOffset(a2)
+	add.l	d3,(a3)
+	MOVEM.L	(A7)+,D0-D7/A0-A6	;2e91e: 4cdf7fff
+	RTS				;2e922: 4e75
+
+
+    ; AllocMem/AvailMem emulation. No need to go full kickemu
+    ; since the game never frees the memory it allocates,
+    ; making implementation of AllocMem & AvailMem (almost)
+    ; trivial. Well, I have added fastmem support to OSEmu so
+    ; I can assure you that is trivial in comparison!
+    
+fake_allocmem
+    
+    move.l  d2,-(a7)
+    move.l  d1,d2
+    and.l   #MEMF_CHIP+MEMF_FAST,d2 ; keep only those
+    btst    #MEMB_CHIP,d2
+    beq.b   .fast
+.chip
+    lea free_chipmem(pc),a0
+    bra.b .alloc
+.fast
+    lea free_fastmem(pc),a0
+.alloc
+    ; round size on 4 bytes
+    move.l  d0,d1
+    and.b   #$FC,d1
+    cmp.b   d0,d1
+    beq.b   .aligned
+    addq.l  #4,d1
+    move.l  d1,d0       ; new size rounded on 4 bytes
+.aligned
+    ; get available memory
+    move.l  (4,a0),d1
+    sub.l   (a0),d1
+    cmp.l   d0,d1
+    bcs.b   .not_enough
+    ; enough memory available, allocate
+    move.l  d0,d1   ; size
+    move.l  (a0),d0 ; address
+    add.l   d1,(a0) ; update memory start
+
+    IFEQ    1
+    ; temp compute free memory
+    lea free_chipmem(pc),a0
+    move.l  (4,a0),$100
+    move.l  (a0),d2
+    sub.l   d2,$100
+    lea free_fastmem(pc),a0
+    move.l  (4,a0),$104
+    move.l  (a0),d2
+    sub.l  d2,$104
+    ENDC
+    
+
+    move.l  (a7)+,d2
+    
+
+    tst.l   d0
+    rts
+    
+.not_enough
+    tst.l   d2
+    bne.b   .out
+    ; no particular memory required: perform a second pass
+    ; with chipmem
+    move.l  #MEMF_CHIP,d2
+    bra   .chip
+.out
+    moveq.l #0,d0
+    move.l  (a7)+,d2
+    rts
+
+    
+    ; we're ignoring MEMF_LARGEST, assuming free memory is all contiguous
+fake_availmem
+    btst    #MEMB_CHIP,d1
+    beq.b   .fast
+    lea free_chipmem(pc),a0
+    bra.b .calc
+.fast
+    lea free_fastmem(pc),a0
+.calc
+    move.l  (4,a0),d0
+    sub.l   (a0),d0
+    rts
+
+free_chipmem:
+    dc.l    CHIPMEMSTART   ; start
+    dc.l    CHIPMEMSIZE-CHIPMEMSTART
+
+    ; initialized dynamically at startup
+free_fastmem
+    dc.l    0   ; start
+    dc.l    0   ; top
+
 
 _data_v1	dc.l	$77E
 	dc.l	$11000C
@@ -2118,5 +2407,12 @@ _attnflags
 	dc.l	0
 _resload	dc.l	0
 _long	dc.l	0
-
+current_file_position
+	dc.l	0
+current_file_size
+	dc.l	0
+current_file_name
+	dc.l	0
+main_file_name
+	dc.b	"EPIC",0
 	end

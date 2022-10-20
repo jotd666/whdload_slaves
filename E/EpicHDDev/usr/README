@@ -24,7 +24,7 @@
 	installation mode.
 
 
-	You need 1.0 MB ChipMem and 1.0 MB OtherMem.
+	You need 0.5 MB ChipMem and 1.0 MB OtherMem.
 	You can quit the game by pressing F10 (key can be changed with
 	Tooltype "QuitKey=")
 
@@ -34,7 +34,7 @@
 
 	ATTENTION! The mission code "CEPHEUS" (mission 3) will
 	crash the game. This was also a problem of both disk
-	versions i have seen.
+	versions i have seen (HD version is ok!)
 	I have not found the reason for this yet, however, all
 	other codes work fine.
 
@@ -43,18 +43,31 @@
 	missions are damn easy, i assume everybody should be
 	able to do so.
 
-
 	The "CUSTOM1" tooltype is used as a switch for starting
 	the standard or mission disk game.
 
+    On the hard disk installable version, the "CEPHEUS" mission
+	code works properly.
+	
+Version 2.0 (xx.10.2022) done by JOTD:
 
-Version 2.0 (18.10.2022) done by JOTD:
 - enabled caches for better speed (issue #0002560)
 - enabled real fastmem for better speed (issue #0001414)
+- reduced chipmem requirements to 512k
+- slave with 1MB chip requirements provided so there's music
+  in the HD installed version
+- supports another version (3 disk installable, issue #0005708)
+- document protection removed in HD installable version
+- relocated copperlists in chipmem in HD installable version so
+  code can run in fastmem
 - soundtracker sound timing fixed
 - added manual & solution
-- added quitkey on 68000
-- todo fix CEPHEUS
 
+TODO: 1MB & 512k chip slave
+TODO: sfx in fast... snoop them
+TODO: access fault HD version mission 1
 
+Version 1.x done by Wepl
+
+- previous releases, run in chipmem only
 
