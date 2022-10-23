@@ -58,14 +58,14 @@ Version 2.0 (xx.10.2022) done by JOTD:
   in the HD installed version
 - supports another version (3 disk installable, issue #0005708)
 - document protection removed in HD installable version
-- relocated copperlists in chipmem in HD installable version so
-  code can run in fastmem
+- relocated copperlists & sounds in chipmem in HD installable
+  version so code can run in fastmem
 - soundtracker sound timing fixed
 - added manual & solution
 
 TODO: 1MB & 512k chip slave
-TODO: sfx in fast... snoop them
-TODO: access fault HD version mission 1
+TODO: access fault HD version mission 1 why????
+TODO: try to complete mission 1 in HD version...
 
 Version 1.x done by Wepl
 

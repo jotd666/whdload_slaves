@@ -203,11 +203,55 @@ WCPU_VAL = WCPUF_Exp_CB|WCPUF_Slave_CB|WCPUF_IC|WCPUF_DC|WCPUF_BC|WCPUF_SS|WCPUF
 	jsr	resload_Relocate(a2)
 	addq.w	#4,a7
 	move.l	_expmem(pc),a1
+	patch	$120,_load_sound_buffer
 	lea		pl_prog_v3(pc),a0
 	jsr		resload_Patch(a2)
+	
+	; copy sound data from exe to chipmem
+	move.l	#$2CF50-$2B766,d0
+	move.l	d0,d2
+	move.l	#MEMF_CHIP,d1
+	bsr		fake_allocmem
+	lea		sound_buffer(pc),a0
+	move.l	d0,(a0)
+	move.l	d0,a1
+	move.l	_expmem(pc),a0
+	add.l	#$2B766,a0
+	lsr.l	#2,d2
+	subq.l	#1,d2
+.copy
+	move.l	(a0)+,(a1)+
+	dbf		d2,.copy
+	move.l	_expmem(pc),a1
+	; relocate short sound buffer to chipmem
+	move.l	#$62-$2a,d0
+	move.l	d0,d2
+	move.l	#MEMF_CHIP,d1
+	bsr		fake_allocmem
+	move.l	d0,a0
+	lsr.l	#2,d2
+	subq.l	#1,d2
+.clear
+	clr.l	(a0)+
+	dbf		d2,.clear
+	
+	
+	move.l	_expmem(pc),a1
+	lea		.offsets(pc),a0
+.reloc
+	move.l	(a0)+,d1
+	bmi.b	.out
+	move.l	d0,(a1,d1.L)
+	bra.b	.reloc
+.out
+
+	bsr	_flushcache
 	move.l	_expmem(pc),-(a7)
 	rts
 	
+.offsets:
+        dc.l	$ce+2,$26e2c+2,$26e32+2,$27b36+2,-1
+		
 .standard_versions
 	lea	($800).w,a0
 	move.w	#$15FF,d0
@@ -298,6 +342,10 @@ _plm2	PL_START
 	
 	PL_END
 
+_load_sound_buffer
+	move.l	sound_buffer(pc),a0
+	rts
+	
 _copypatch_m2	move.b	(a0)+,(a1)+
 	dbra	d0,_copypatch_m2
 
@@ -583,6 +631,9 @@ _normalgame_v2	jsr	($61BE).w
 
 pl_prog_v3
 	PL_START
+	; load sound in chipmem
+	PL_L	$2a4be,$4EB80120
+	
 	; version with executable (runs from HD) is
 	; poorly done, and has a big CHIP section to make
 	; sure that the game crawls on accelerated amigas...
@@ -595,6 +646,8 @@ pl_prog_v3
     PL_L	$27f5e+2,$1800
     PL_L	$27d9a+2,$1800
  		
+	; fix access fault
+	;;PL_PS	$13bf8,_avoid_af
 	; uncomment => no intro music
 	;PL_R	$2d1fe
 	
@@ -747,6 +800,18 @@ pl_prog_v2
 	PL_PSS	$29922,_sound_wait,2
 
 	PL_END
+	
+_avoid_af
+	cmp.l	#CHIPMEMSIZE,a0
+	bcc.b	.skip	; bogus address
+	MOVEM.L	24(A0),D0-D2
+	rts
+.skip
+	; bogus: next value
+	move.w	#$F00,$DFF180
+	add.l	#$c14-$bfe,(a7)
+	rts
+	
 	
 _char_smc
 	; original
@@ -1299,6 +1364,7 @@ fake_allocmem
     lea free_chipmem(pc),a0
     bra.b .alloc
 .fast
+	; not reached here, program only allocates chipmem
     lea free_fastmem(pc),a0
 .alloc
     ; round size on 4 bytes
@@ -2412,6 +2478,8 @@ current_file_position
 current_file_size
 	dc.l	0
 current_file_name
+	dc.l	0
+sound_buffer
 	dc.l	0
 main_file_name
 	dc.b	"EPIC",0
