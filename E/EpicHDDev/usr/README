@@ -47,7 +47,7 @@
 	the standard or mission disk game.
 
     On the hard disk installable version, the "CEPHEUS" mission
-	code works properly.
+	code works properly. The "mission disk" isn't supported here.
 	
 Version 2.0 (xx.10.2022) done by JOTD:
 
@@ -56,16 +56,18 @@ Version 2.0 (xx.10.2022) done by JOTD:
 - reduced chipmem requirements to 512k
 - slave with 1MB chip requirements provided so there's music
   in the HD installed version
+- soundtracker sound timing fixed
 - supports another version (3 disk installable, issue #0005708)
 - document protection removed in HD installable version
 - relocated copperlists & sounds in chipmem in HD installable
   version so code can run in fastmem
-- soundtracker sound timing fixed
 - added manual & solution
 
 TODO: 1MB & 512k chip slave
+HD version:
 TODO: access fault HD version mission 1 why????
-TODO: try to complete mission 1 in HD version...
+TODO: try to complete mission 1 in HD version... just move fwd??
+TODO: trashed display dma turned on too soon at start
 
 Version 1.x done by Wepl
 
