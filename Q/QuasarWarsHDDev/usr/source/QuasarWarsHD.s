@@ -1,16 +1,3 @@
-;*---------------------------------------------------------------------------
-;  :Program.	Liberation.asm
-;  :Contents.	Slave for "Liberation"
-;  :Author.	JOTD, from Wepl sources
-;  :Original	v1 
-;  :Version.	$Id: Liberation.asm 1.2 2002/02/08 01:18:39 wepl Exp wepl $
-;  :History.	%DATE% started
-;  :Requires.	-
-;  :Copyright.	Public Domain
-;  :Language.	68000 Assembler
-;  :Translator.	Devpac 3.14, Barfly 2.9
-;  :To Do.
-;---------------------------------------------------------------------------*
 
 	INCDIR	Include:
 	INCLUDE	whdload.i
@@ -19,7 +6,7 @@
 	INCLUDE	lvo/intuition.i
 
 
-;CHIPONLY
+;CHIP_ONLY
 
 	IFD BARFLY
 	OUTPUT	"QuasarWars.slave"
@@ -38,13 +25,14 @@
 
 ;============================================================================
 
-	IFD	CHIPONLY
+	IFD	CHIP_ONLY
 CHIPMEMSIZE	= $200000
 FASTMEMSIZE	= $0
 HRTMON
 	ELSE
-CHIPMEMSIZE	= $180000
-FASTMEMSIZE	= $80000
+BLACKSCREEN
+CHIPMEMSIZE	= $100000
+FASTMEMSIZE	= $100000
 	ENDC
 NUMDRIVES	= 1
 WPDRIVES	= %1111
@@ -53,7 +41,6 @@ WPDRIVES	= %1111
 DOSASSIGN
 ;DEBUG
 HDINIT
-INITAGA
 ;IOCACHE		= 10000
 ;MEMFREE	= $200
 ;NEEDFPU
@@ -63,18 +50,19 @@ CACHE
 ;;STACKSIZE=20000
 IGNORE_JOY_DIRECTIONS
 
+
 ;============================================================================
 
 
 slv_Version	= 17
-slv_Flags	= WHDLF_NoError|WHDLF_Examine|WHDLF_ReqAGA
+slv_Flags	= WHDLF_NoError|WHDLF_Examine
 slv_keyexit	= $5D	; num '*'
 
 
 
 ;============================================================================
 
-	INCLUDE	kick31.s
+	INCLUDE	whdload/kick13.s
     include ReadJoyPad.s
 
 ;============================================================================
@@ -85,7 +73,7 @@ slv_keyexit	= $5D	; num '*'
 
 
 DECL_VERSION:MACRO
-	dc.b	"1.1"
+	dc.b	"1.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -100,7 +88,7 @@ DECL_VERSION:MACRO
 	dc.b	0
 slv_name
 		dc.b	"Quasar Wars"
-	IFD	CHIPONLY
+	IFD	CHIP_ONLY
 	dc.b	" (DEBUG/CHIP MODE)"
 	ENDC
 	dc.b	0
@@ -140,24 +128,12 @@ _args_end
 
 _bootdos
 	; configure the button emulation
-
     bsr _detect_controller_types
+
     
 	move.l	_resload(pc),a2		;A2 = resload
 
-    ; doing this in debug mode allows code to be located
-    ; in exactly $x0000 !!
-    ; look at $100 value. If higher than $x0000, alloc less
-    ; else alloc more
-    ;
-    ; this is slightly more complex here because the program
-    ; auto-unpacks
-    IFD CHIPONLY
-	move.l	(4),a6
-    move.l  #MEMF_CHIP,D1
-    move.l  #$C290-$28,d0
-    jsr (_LVOAllocMem,a6)
-    ENDC
+
 
 
 	;open doslib
@@ -171,10 +147,26 @@ _bootdos
 		DO_ASSIGN	assign_d1
 		DO_ASSIGN	assign_d2
 
+
+    ; doing this in debug mode allows code to be located
+    ; in exactly $x0000 !!
+    ; look at $100 value. If higher than $x0000, alloc less
+    ; else alloc more
+    ;
+    ; this is slightly more complex here because the program
+    ; auto-unpacks
+    IFD CHIP_ONLY
+	move.l	a6,-(a7)
+	move.l	(4),a6
+    move.l  #MEMF_CHIP,D1
+    move.l  #$C290-$28,d0
+    jsr (_LVOAllocMem,a6)
+	move.l	(a7)+,a6
+    ENDC
 	;load program
 
 		lea	progname(pc),A0
-
+	
 	;load exe
 		lea	_args(pc),a1
 		moveq	#_args_end-_args,d0
@@ -190,6 +182,7 @@ _quit		pea	TDREASON_OK
 patch_exe:
 	lea	pl_boot(pc),a0
 	move.l	d7,a1
+	
 	move.l	_resload(pc),a2
 	jsr	resload_PatchSeg(a2)
 	rts
@@ -236,11 +229,11 @@ end_pause
     add.l   #$78fc,A0		;53f50: 207c000578fc
     movem.l d0-d1,-(a7)
     bsr wait_vbl
-    move.l  joy1_buttons(pc),d0
-    bsr _read_joysticks_buttons
+    move.l  joy1(pc),d0
+    bsr _read_joystick
     btst    #JPB_BTN_PLAY,d0
     bne.b   .noplay
-    move.l  joy1_buttons(pc),d0
+    move.l  joy1(pc),d0
     btst    #JPB_BTN_PLAY,d0
     beq.b   .noplay
     bset    #1,(3,a0)   ; P    
@@ -263,9 +256,9 @@ wait_vbl:
     
 read_joypad:
     movem.l d0-d1/A0,-(a7)
-    move.l  joy1_buttons(pc),d1
-    bsr _read_joysticks_buttons
-    move.l  joy1_buttons(pc),d0
+    move.l  joy1(pc),d1
+    bsr _read_joystick
+    move.l  joy1(pc),d0
     move.l  basemem(pc),a0
     btst    #JPB_BTN_FORWARD,d0
     beq.b   .nofwd
@@ -336,7 +329,7 @@ swout:
 read_fire:
     movem.l d0,-(a7)
     ;;bsr _read_joysticks_buttons
-    move.l  joy1_buttons(pc),d0
+    move.l  joy1(pc),d0
     btst    #JPB_BTN_RED,d0
     movem.l (a7)+,d0
     eor #4,ccr    ; flip Z

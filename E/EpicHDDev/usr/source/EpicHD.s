@@ -16,8 +16,8 @@
 	INCDIR	Includes:
 	INCLUDE	whdload.i
 	INCLUDE whdmacros.i
-        INCLUDE	exec/memory.i
-        INCLUDE	lvo/exec.i
+	INCLUDE	exec/memory.i
+	INCLUDE	lvo/exec.i
 
 	IFD	BARFLY
 	OUTPUT	"wart:e/Epic/Epic.Slave"
@@ -34,8 +34,12 @@
 
 CHIPMEMSTART=$2000
 EXPMEMSIZE=$80000
+	IFD	ONEMEG_CHIP
 CHIPMEMSIZE=$C0000
-
+	ELSE
+CHIPMEMSIZE=$80000	
+	ENDC
+	
 	IFD	CHIP_ONLY
 FAKEFASTMEMSIZE=EXPMEMSIZE
 FASTMEMSIZE=$0
@@ -54,7 +58,7 @@ _base		SLAVE_HEADER			;ws_Security + ws_ID
 		dc.l	CHIPMEMSIZE+FAKEFASTMEMSIZE			;ws_BaseMemSize
 		dc.l	0			;ws_ExecInstall
 		dc.w	_start-_base		;ws_GameLoader
-		dc.w	0			;ws_CurrentDir
+		dc.w	_data-_base			;ws_CurrentDir
 		dc.w	0			;ws_DontCache
 _keydebug	dc.b	0			;ws_keydebug
 _keyexit	dc.b	$59			;ws_keyexit
@@ -67,8 +71,13 @@ _expmem		dc.l	FASTMEMSIZE			;ws_ExpMem
 		dc.w	0                       ;ws_kickcrc
 		dc.w	_config-_base		;ws_config
 _config
+	IFND	ONEMEG_CHIP
     dc.b    "C1:B:select mission disk;"
+	ENDC
     dc.b	0
+_data
+	dc.b	"data",0
+	
 ;============================================================================
 
 	IFD BARFLY
@@ -90,7 +99,12 @@ DECL_VERSION:MACRO
 	ENDC
 	ENDM
 	
-_name		dc.b	'Epic & Mission Disk'
+_name		
+	IFD	ONEMEG_CHIP
+	dc.b	'Epic (1MB chip)'	
+	ELSE
+	dc.b	'Epic & Mission Disk'
+	ENDC
 	IFD	CHIP_ONLY
 	dc.b	" (debug/chip mode)"
 	ENDC
@@ -104,7 +118,10 @@ _info		dc.b	'adapted by Graham/Wepl/JOTD',$A
 		dc.b	'Entrycodes:',10
 		dc.b	'2-AURIGA  3-CEPHEUS  4-APUS  5-MUSCA',10
 		dc.b	'6-PYXIS  7-CETUS  8-FORNAX  9-CAELUM  10-CORVUS',10
-		dc.b	'Warning: CEPHEUS will crash Epic!',0
+		IFND	ONEMEG_CHIP
+		dc.b	'Warning: CEPHEUS will crash Epic!'
+		ENDC
+		dc.b	0
 mission.MSG	dc.b	'mission',0
 CODE.MSG	dc.b	'CODE',0
 _num		dc.b	1
@@ -160,8 +177,6 @@ WCPU_VAL = WCPUF_Exp_CB|WCPUF_Slave_CB|WCPUF_IC|WCPUF_DC|WCPUF_BC|WCPUF_SS|WCPUF
 	jsr		resload_GetFileSize(a2)
 	tst.l	d0
 	beq	.standard_versions
-	; enable dma (else black screen)
-	move.w	#$83C0,_custom+dmacon
 	; this is epic 3 disk HD-installable version
 	; install fake exec for AllocMem & AvailMem
 	lea $1000.W,A6
@@ -552,20 +567,6 @@ _patchmain
 	suba.l	a1,a1
 	bra.w	patch_intrts
 
-pl_bsw_v1
-	PL_START
-	PL_NOP	$18BA,2
-	PL_P	$B06,_setexp_v1
-	PL_P	$1B30,_loadnum
-	PL_P	$902,_copydata
-	PL_W	$2338,$603E
-	PL_P	$1D80,_savehighs
-	
-	; snoop/blitter bugs
-	PL_S	$22B0,$10
-	PL_PSS	$21d6,_blitwait_1,4
-	PL_END
-
 _blitwait_1
 	bsr		_waitblit
 	MOVE.L	D0,64(A6)		;21d6: 2d400040
@@ -631,6 +632,13 @@ _normalgame_v2	jsr	($61BE).w
 
 pl_prog_v3
 	PL_START
+	; enable dma at the right time (not too soon else display is trashed)
+	PL_P	$27d68,enable_dma
+	; return "active" dmacon value even if real dmacon value is "down"
+	; (when restoring "system" dmacon)
+	PL_PS	$06d96,get_system_dmacon
+	;PL_PSS	$06c90,save_system_registers_hook,2
+	
 	; load sound in chipmem
 	PL_L	$2a4be,$4EB80120
 	
@@ -812,7 +820,24 @@ _avoid_af
 	add.l	#$c14-$bfe,(a7)
 	rts
 	
+get_system_dmacon
+	move.w	#$83C0,d0
+	rts
+
+save_system_registers_hook
+	move.w	#$7FFF,_custom+intena
+	move.w	#$83C0,_custom+dmacon
+	rts
 	
+enable_dma
+	; enable dma (else black screen)
+	; not at start else screen is trashed before ocean logo
+	move.w	#$83C0,_custom+dmacon
+	MOVE.L	(A7)+,_custom+cop1lc
+	rts
+.counter
+	dc.l	0
+		
 _char_smc
 	; original
 	ANDI.W	#$003f,D0		;86f4e: 0240003f
@@ -902,6 +927,21 @@ patch_intrts
 	lea		pl_intrts(pc),a0
 	move.l	_resload(pc),a2
 	jmp		resload_Patch(a2)
+
+
+pl_bsw_v1
+	PL_START
+	PL_NOP	$18BA,2
+	PL_P	$B06,_setexp_v1
+	PL_P	$1B30,_loadnum
+	PL_P	$902,_copydata
+	PL_W	$2338,$603E
+	PL_P	$1D80,_savehighs
+	
+	; snoop/blitter bugs
+	PL_S	$22B0,$10
+	PL_PSS	$21d6,_blitwait_1,4
+	PL_END
 	
 pl_bsw_v2
 	PL_START
@@ -916,6 +956,8 @@ pl_bsw_v2
 	PL_S	$23c6,$10
 	PL_PSS	$22ec,_blitwait_1,4
 	
+	; another checksum
+	PL_B	$0ac4,$60
 	PL_END
 	
 pl_intrts

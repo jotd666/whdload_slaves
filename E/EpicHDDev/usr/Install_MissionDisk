@@ -16,7 +16,7 @@
 
 (set @default-dest
   (askdir
-    (prompt ("Where is Epis installed ?\n"))
+    (prompt ("Where is Epic "data" direction located ?\n"))
     (help @askdir-help)
     (default @default-dest)
     (disk)
