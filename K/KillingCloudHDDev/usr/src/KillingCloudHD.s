@@ -8,19 +8,26 @@
 	INCLUDE	whdload.i
 	INCLUDE	whdmacros.i
 
+;CHIP_ONLY
+
+
 RELOC_ENABLED = 1
 	IFD	RELOC_ENABLED
-RELOC_MEM = $80000
+RELOC_MEM = $30000
 	ELSE
 RELOC_MEM = 0
 	ENDC
 
 ;==========================================================================
 
-
+	IFD	CHIP_ONLY
 BASMEM_SIZE	equ	$80000+RELOC_MEM
 EXPMEM_SIZE	equ	$8000
+	ELSE
+BASMEM_SIZE	equ	$80000
+EXPMEM_SIZE	equ	$8000+RELOC_MEM
 	
+	ENDC
 ;==========================================================================
 
 	; WHDLoad slave header structure
@@ -71,7 +78,12 @@ _start:	bsr	_initialise
 
 	IFD		RELOC_ENABLED
 	lea		_reloc_base(pc),a0
+	IFD		CHIP_ONLY
 	add.l	#$80000,(a0)
+	ELSE
+	move.l	_expmem(pc),d0
+	add.l	d0,(a0)
+	ENDC
 	ENDC
 	
 	bsr		check_version
@@ -203,8 +215,9 @@ _p1:	bsr	_fadewait	; finish off loader screen fade
 	move.l	(a0)+,(a1)+
 	dbf		d0,.copy2
 	ENDC
-	blitz
-	; protect mem: w 0 $819c $2C600-$819C
+	; protect mem: 
+	; w 0 $819c $2C600-$819C
+	; w 1 $81000 $719C
 	
 	move.l	_reloc_base(pc),a0
 	lea		(-$1000,a0),a1	; reloc base -$1000
@@ -214,11 +227,12 @@ _p1:	bsr	_fadewait	; finish off loader screen fade
 	jsr		resload_Patch(a2)
 
 	; set CPU and cache options
-
+	IFND	RELOC_ENABLED
 	move.l	#WCPUF_Base_WT|WCPUF_Exp_CB|WCPUF_Slave_CB|WCPUF_IC|WCPUF_BC|WCPUF_SS|WCPUF_SB,d0
 	move.l	#WCPUF_All,d1
 	jsr	resload_SetCPU(a2)
-
+	ENDC
+	
 	movem.l	(a7)+,d0-7/a0-6
 	move.l	_reloc_base(pc),-(a7)
 	rts	; start game
@@ -277,12 +291,13 @@ pl_main_common:
 
 	PL_END
 
-set_end_program_memory_limits
-	MOVEA.L	$01006.W,A0		;082bc: 20781006	; after this program
-	sub.l	_reloc_base(pc),a0
-	lea		($1000,a0),a0
-	MOVE.L	$0100a.W,D0		;082c0: 2038100a
-	rts
+
+;set_end_program_memory_limits
+;	MOVEA.L	$01006.W,A0		;082bc: 20781006	; after this program
+;	sub.l	_reloc_base(pc),a0
+;	lea		($1000,a0),a0
+;	MOVE.L	$0100a.W,D0		;082c0: 2038100a
+;	rts
 	
 ;--------------------------------
 
@@ -519,12 +534,17 @@ _initialise:	movem.l	d0-7/a0-6,-(a7)
 
 	; decrunch & initialise smc rendering code replacement
 
-	lea	_smc1_rendercode(pc),a0	; decrunch it to expmem
 	move.l	_expmem(pc),a1
+	IFND	CHIP_ONLY
+	add.l	#RELOC_MEM,a1
+	ENDC
+	lea		_smc_chunks(pc),a0
+	move.l	a1,(a0)
+	lea	_smc1_rendercode(pc),a0	; decrunch it to expmem
 	move.l	_resload(pc),a2
 	jsr	resload_Decrunch(a2)
 
-	move.l	_expmem(pc),a0	; init pointers to each instance
+	move.l	_smc_chunks(pc),a0	; init pointers to each instance
 	lea	32(a0),a0	; a0=offset list / base
 	lea	_smc1_rendertab(pc),a1	; a1=pointer table
 	moveq	#32-1,d7
@@ -607,6 +627,9 @@ _program_size
 	dc.l	$2b800
 version
 	dc.l	0
+	
+_smc_chunks
+	dc.l	0
 ;-----
 
 reloc_v1
@@ -624,6 +647,6 @@ reloc_file_name_table
 	dc.w	reloc_v1-reloc_file_name_table
 
 _reloc_table_address
-	ds.b	12000
+	ds.b	13000
 	ENDC
 ;--------------------------------
