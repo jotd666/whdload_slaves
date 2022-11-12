@@ -1,3 +1,7 @@
+; 11.11.2022, jotd
+; - fixed patch offset which crashed in intro
+; - relocation to fastmem for good FPS
+;
 ; 07.10.2018, stingray
 ; - code optimised, quitkey SMC removed
 ; - default quitkey changed to F10
@@ -242,7 +246,9 @@ Patch	lea	resload(pc),a1
 	ENDC
 	
 	; debug: add MMU protect on old program $ -> $ for v1
-	; en: w 0 $800 $11800
+	; some code is copied by the game at the end of
+	; chipmem ($1135C). Too complex/not worth fixing that
+	; en: w 0 $800 $11350-$800
 	; fr: w 0 $800 $11100
 	ENDC
 	

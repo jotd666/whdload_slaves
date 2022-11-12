@@ -74,6 +74,10 @@ The demo also has poor framerate. Actual game has a good framerate, so it's cool
 
  History:
  --------
+ version 2.0-B (11.11.2022) done by JOTD:
+ - fixed crash when saving game (issue #0005861). You need to update ".reloc" files
+   (slave date changes but that not important, .reloc files are)
+
  version 2.0 (05.11.2022) done by JOTD:
  - relocated program in fastmem for better framerate (all 3 versions supported)
  - fixed crash in demo (wrong timing delay patch)

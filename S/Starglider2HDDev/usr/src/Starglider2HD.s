@@ -32,6 +32,7 @@
 
 RELOC_ENABLED = 1
 ;CHIP_ONLY
+;UNRELOC_ENABLED
 
 	IFD	RELOC_ENABLED
 RELOC_MEM = $67000
@@ -52,6 +53,9 @@ FASTMEMSIZE = 0
 	ELSE
 CHIPMEMSIZE = BASE_CHIP_SIZE		;ws_BaseMemSize
 FASTMEMSIZE = SOUNDMEMSIZE+RELOC_MEM
+	IFND	UNRELOC_ENABLED
+UNRELOC_ENABLED
+	ENDC
 	ENDC
 
 
@@ -63,7 +67,7 @@ _base		SLAVE_HEADER			;ws_Security + ws_ID
 		dc.l	CHIPMEMSIZE			;ws_BaseMemSize
 		dc.l	0			;ws_ExecInstall
 		dc.w	_start-_base		;ws_GameLoader
-		dc.w	0			;ws_CurrentDir
+		dc.w	_data-_base			;ws_CurrentDir
 		dc.w	0			;ws_DontCache
 _keydebug	dc.b	0			;ws_keydebug
 _keyexit	dc.b	$58			;ws_keyexit = F9
@@ -75,7 +79,8 @@ _expmem		dc.l	FASTMEMSIZE			;ws_ExpMem
 		dc.l	0                       ;ws_kicksize
 		dc.w	0                       ;ws_kickcrc
 		dc.w	_config-_base		;ws_config
-
+_data
+	dc.b	"data",0
 _config
 	dc.b	"C4:B:disable speed regulation;"
 		dc.b	0
@@ -99,6 +104,9 @@ DECL_VERSION:MACRO
 	ENDM
 
 _name		dc.b	'Starglider 2'
+		IFD	CHIP_ONLY
+		dc.b	" (chip only)"
+		ENDC
 			dc.b	0
 _copy		dc.b	'1988 Argonaut Software',0
 _info		dc.b	'fixed and installed by Graham/Wepl/JOTD',10,10
@@ -146,8 +154,13 @@ _start	;	A0 = resident loader
 	ELSE
 	lea		_sound_base(pc),a0
 	move.l	_expmem(pc),(a0)
-	
 	ENDC
+	
+	; set CPU and cache options
+	move.l	#WCPUF_Base_WT|WCPUF_Exp_CB|WCPUF_Slave_CB|WCPUF_IC|WCPUF_BC|WCPUF_SS|WCPUF_SB,d0
+	move.l	#WCPUF_All,d1
+	jsr	resload_SetCPU(a2)
+
 	
 	lea	(_sound,pc),a0
 	move.l	_sound_base(pc),a1
@@ -162,7 +175,7 @@ _start	;	A0 = resident loader
 	jsr	(resload_CRC16,a2)
 	lea	pl_address(pc),a3
 	lea	_pl1(pc),a0
-	lea	$11602,a1		; minus base
+	lea	$12602-$1000,a1		; minus base
 	cmp.w	#$abeb,d0
 	beq	.ok
 	cmp.w	#$2a15,d0
@@ -174,9 +187,10 @@ _start	;	A0 = resident loader
 	pea	TDREASON_WRONGVER
 	jmp	(resload_Abort,a2)
 
-	add.l	_reloc_base(pc),a1
 	
-.ok	lea	_cylinder(pc),a6
+.ok
+	add.l	_reloc_base(pc),a1
+	lea	_cylinder(pc),a6
 	move.l	a1,(a6)
 	move.l	a0,(a3)
 	
@@ -200,7 +214,7 @@ _start	;	A0 = resident loader
 	bra.b	.reloc
 .end
 
-	IFND	CHIP_ONLY
+	IFD	UNRELOC_ENABLED
 	; fastmem mode
 	; load the file again at the original location
 	; so parts that need chip are there
@@ -242,19 +256,9 @@ _start	;	A0 = resident loader
 	ENDC
 	
 	ENDC
-	blitz
-
-
 	move.l	_reloc_base(pc),a1
 	move.l	pl_address(pc),a0
 	jsr	(resload_Patch,a2)
-
-	; TODO relocate/patch chip: sprites, sounds, copperlists
-	
-
-	;move.l	#CACRF_EnableI,d0
-	;move.l	d0,d1
-	;jsr	(resload_SetCACR,a2)
 
 	move.l	_reloc_base(pc),-(a7)
 	rts
