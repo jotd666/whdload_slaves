@@ -1,0 +1,78 @@
+
+
+	THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER
+	EXPRESS OR IMPLIED, STATUTORY OR OTHERWISE.
+	THE ENTIRE RISK AS TO USE, RESULTS AND PERFORMANCE OF THE PACKAGE IS
+	ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE TO BE DEFECTIVE, YOU
+	ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING, REPAIR OR OTHER
+	REMEDIATION.
+	UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY
+	DAMAGE CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE
+	OWNER OR A THIRD PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF
+	DAMAGE.
+
+
+	That install applies to "Starglider 2" © 1988 Argonaut Software.
+
+
+	That install requires WHDLoad to be in the path. It can be found in
+	the WHDLoad package.
+
+
+	History:
+	
+	Version 2.0 (13.11.2022) done by JOTD:
+	- computed relocs to be able to install into fast memory for
+	  better framerate (to upgrade copy the .reloc/.unreloc files)
+ 	- added speed regulation (now this could run too fast)
+    - moved data files to "data"
+	
+	Version 1.2.1 done by Wepl (24.07.2005)
+	- imager fixed to work also with PAL version again
+
+	Version 1.2 done by Wepl (11.07.2005)
+	- support for another version (US release) added, thanks to
+	  Garry Cardinal for media
+	- now the title sound is also ripped and played in the game, this
+	  was completely missing in previous version, to update from an
+	  old install you have to reinstall to get the missing file
+	- savedisk handling optimized, file grows now as required
+	- regional lock in US version removed
+	- some snoop bugs removed
+	- files (except diskimage which is savedisk) can be compressed
+	  using ProPack/FImp
+	- manual and solution added
+	- some icons added
+	- source included
+
+	all previous work by Graham
+
+	Version 1.1 - Replaced WHDLoad imager with RawDIC imager.
+	    - Removed code protection for 100%.
+
+	Version 1.0 - Initial release.
+	    - original provided by Wolfgang Unger.
+
+
+	You need 0.5 MB ChipMem and 0.5 MB OtherMem.
+	You can quit the game by pressing F9 (key can be changed with
+	Tooltype "QuitKey=").
+
+
+	Use the CUSTOM1 tooltype to use different savegame disks.
+	(i.e. CUSTOM1=7 will use diskimage seven to save games/highscores)
+
+ 
+	If you have problems with this installation please try and get a newer
+	version of this package from the WHDLoad WWW-Page. If that doesn't help try
+	some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+	that also fails, please inform the author via the Bug-Report-Form which
+	can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+	at http://mantis.whdload.de 
+
+    Notes:
+	There are 2/3 versions around. The relocation work (long & tedious) was
+	performed on the latest version (sept 1988). If you own the older version,
+	the slave just applies a delta to convert to the latest version so patches
+	can be reused.
+	To play the old version (july 1988) you have to use the older slave.

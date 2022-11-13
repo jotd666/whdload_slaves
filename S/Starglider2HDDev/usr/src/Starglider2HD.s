@@ -31,7 +31,7 @@
 	ENDC
 
 RELOC_ENABLED = 1
-;CHIP_ONLY
+CHIP_ONLY
 ;UNRELOC_ENABLED
 
 	IFD	RELOC_ENABLED
@@ -58,6 +58,10 @@ UNRELOC_ENABLED
 	ENDC
 	ENDC
 
+; buffer used to load reloc & delta tables
+; it's in chipmem but it doesn't matter much
+AUX_BUFFER = $68000
+V1_FILE_SIZE = 419308
 
 ;======================================================================
 
@@ -115,9 +119,11 @@ _info		dc.b	'fixed and installed by Graham/Wepl/JOTD',10,10
 		dc.b	0
 _filename	dc.b	'Starglider2',0
 _sound		dc.b	'Starglider2.sound',0
+_delta	dc.b	"starglider2.delta",0
 _reloc_v1	dc.b	"starglider2_v1.reloc",0
 _unreloc_v1	dc.b	"starglider2_v1.unreloc",0
-_reloc_v2	dc.b	"starglider2_v2.reloc",0
+; not necessary, we're using wdelta
+;_reloc_v2	dc.b	"starglider2_v2.reloc",0
 _disk		dc.b	'Disk.'
 _disknum	dc.b	0,0,0,0
 
@@ -166,29 +172,76 @@ _start	;	A0 = resident loader
 	move.l	_sound_base(pc),a1
 	jsr	(resload_LoadFileDecrunch,a2)
 	
+	; load the file again at the original location
+	; so parts that need chip are there
+	; in fastmem mode it's not possible to know if the chip
+	; zone is accessed wrongly since there are exceptions
 	lea	(_filename,pc),a0
-	move.l	_reloc_base(pc),a1
+	lea		$1000.W,a1
 	jsr	(resload_LoadFileDecrunch,a2)
+	;;move.l	d0,d5		; size of decrunched file
+	move.l	#V1_FILE_SIZE/4,d5	; size of v1 decrunched file
 	
-	move.l	_reloc_base(pc),a0
+	lea		$1000.W,a0
 	move.l	#$1000,d0
 	jsr	(resload_CRC16,a2)
 	lea	pl_address(pc),a3
 	lea	_pl1(pc),a0
 	lea	$12602-$1000,a1		; minus base
 	cmp.w	#$abeb,d0
-	beq	.ok
+	beq	.v1
 	cmp.w	#$2a15,d0
-	beq	.ok
-	lea	_pl2(pc),a0
-	lea	$1119a,a1
-	cmp.w	#$836f,d0
-	beq	.ok
+	beq	.v1
+	cmp.w	#$836f,d0		; v2 (older)
+	beq	.v2
 	pea	TDREASON_WRONGVER
 	jmp	(resload_Abort,a2)
-
+.v2
+	IFD	RELOC_ENABLED
+; convert to version 1 using wdelta, relocs are too time-consuming
+; to redo
+	movem.l	a0-a1,-(a7)
+	lea		AUX_BUFFER,a1
+	lea		_delta(pc),a0
+	jsr		resload_LoadFileDecrunch(a2)
+	; apply delta
+	lea		$1000.W,a0
+	move.l	_reloc_base(pc),a1
+	lea		AUX_BUFFER,a2             ;wdelta	
+	move.l	_resload(pc),a4		; using a2 isn't a good idea here :)
+	jsr		resload_Delta(a4)
+	move.l	a4,a2
 	
-.ok
+	; delta was applied, now copy back to original location
+	lea		$1000,a1
+	move.l	_reloc_base(pc),a0
+.copychip
+	move.l	(a0)+,(a1)+
+	subq.l	#1,d5
+	bne.b	.copychip
+	
+	movem.l	(a7)+,a0-a1
+	ELSE
+	; no reloc, no delta no nothing
+	lea	_pl2(pc),a0
+	lea	$1119a,a1	
+	ENDC
+	
+	bra.b	.cont
+.v1
+; just copy chip code into reloc
+	IFD	RELOC_ENABLED
+	movem.l	a0-a1,-(a7)
+	lea		$1000,a0
+	move.l		_reloc_base(pc),a1
+.copy
+	move.l	(a0)+,(a1)+
+	subq.l	#1,d5
+	bne.b	.copy
+	movem.l	(a7)+,a0-a1
+	ENDC
+	
+.cont
 	add.l	_reloc_base(pc),a1
 	lea	_cylinder(pc),a6
 	move.l	a1,(a6)
@@ -201,7 +254,6 @@ _start	;	A0 = resident loader
 	lea		_reloc_v1(pc),a0
 	jsr		resload_LoadFileDecrunch(a2)
 
-	
 	; relocate
 	move.l	_reloc_base(pc),a0
 	lea		(-$1000,a0),a1	; reloc base -$1000
@@ -216,10 +268,6 @@ _start	;	A0 = resident loader
 
 	IFD	UNRELOC_ENABLED
 	; fastmem mode
-	; load the file again at the original location
-	; so parts that need chip are there
-	; in fastmem mode it's not possible to know if the chip
-	; zone is accessed wrongly since there are exceptions
 	;
 	; that's why the unreloc table is only applied in the case
 	; of fastmem. In the case of CHIP_ONLY, all is relocated 
@@ -230,13 +278,10 @@ _start	;	A0 = resident loader
 	; add MMU protect on old program
 	; winuae: w 0 $1000 $665ea
 
-	lea	(_filename,pc),a0
-	lea		$1000.W,a1
-	jsr	(resload_LoadFileDecrunch,a2)
 	
 	; unrelocate
 	; use $68000 (out of program memory) for unreloc table
-	lea		$68000,a1
+	lea		AUX_BUFFER,a1
 	lea		_unreloc_v1(pc),a0
 	jsr		resload_LoadFileDecrunch(a2)
 	
@@ -244,7 +289,7 @@ _start	;	A0 = resident loader
 	move.l	_reloc_base(pc),a0
 	lea		(-$1000,a0),a1	; reloc base -$1000
 	move.l	a1,d1
-	lea		$68000,a1
+	lea		AUX_BUFFER,a1
 .unreloc
 	move.l	(a1)+,d0
 	beq.b	.endu

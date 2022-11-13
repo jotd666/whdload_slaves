@@ -1,0 +1,140 @@
+			 STARGLIDER 2  
+
+Taken from an ST SEWER SOFTWARE docs disk. Edited by Parasite. 
+
+Control Devices 
+The Icarus can be controlled by either the mouse or a joystick, and
+additional keys are used for features such as weapons selection, and utility
+functions. The mouse should be connected to the first port and the
+joystick to the second port. 
+Mouse Control 
+The mouse controls the Icarus in the most direct and responsive way -
+moving the mouse left and right makes the Icarus roll - you can roll the
+craft all the way round by 360 degrees, or simply fly upside down
+(but remember to take your InvertoGrav headache tablets first). Move the
+mouse forwards to make the nose of the Icarus dip and fly downwards, and pull
+back on the mouse to raise the nose, and make the Icarus pull up. To fire
+the currently selected weapon, press the left mouse button. The right
+button is the Icarus' speed control - when pressed down, pushing the mouse
+forwards makes the craft accelerate, and pulling back makes it decelerate.
+
+Joystick Control 
+Operation of the joystick follows the same principles as the mouse, except
+that since it is centrally sprung, fine control of the craft is not as
+effortless as with a mouse. Pushing the joystick left and right causes the
+Icarus to roll, and pushing forwards and backwards causes it to accelerate 
+and decelerate. To fire the currently selected weapon, press the fire button
+As there is no second joystick button, speed control is slightly different 
+when using a joystick. STARGLIDER 2 uses a joystick control known as One Hand
+Mode, and this basically makes the one fire double as both mouse buttons. To
+accelerate and decelerate, simply hold down the fire button and push the
+joystick button forwards and backwards. Alternatively, One Hand Mode can be
+switched off from the Options Menu, and weapons can be fired by pressing the
+Space Bar on thekeyboard - this will stop unwanted firing of weapons when
+altering the Icarus' speed. 
+
+Keys
+STARGLIDER 2 utilises a number of keys, some of which need to be used
+frequently, and others only once during a game, or possibly not at all. 
+They are as follows: -
+
+Game control keys 
+Select weapon SHIFT 
+Fire weapon SPACE or mouse/joystick button
+Stardrive ON/OFF D 
+Identify object under cross-hair I 
+Audio analysis of nearest object A 
+Status Report R 
+Tractor beam ON/OFF T 
+Rotate the tractor beamed object left/right < and >
+Move tractor beamed object towards craft M
+Collect tractor beamed object C 
+Toggle Fixed/Floating cross-hair sights F
+Toggle patchwork landscape ON/OFF P 
+Toggle the projected shadows ON/OFF S Abort game ESC
+
+Pause game BACKSPACE 
+Keys operative when game is paused : Inventory mode I
+
+Give object (to cooperative depots) G Exit Inventory mode E
+
+Jettison object J 
+Continue game <Any other key> 
+View keys
+
+These keys allow you to select the position from which the Icarus is
+displayed and viewed. The craft can either be seen from inside the
+cockpit, or as an outside view - it is best to experiment with the various
+options. Keys prefixed with the letter n denote the numeric keypad: 
+
+Cockpit view 1
+Cockpit view - Icarus locked to Z- axis 2
+Cockpit view - Icarus locked to X- axis 3
+Cockpit view - Icarus locked to Z and X axes 4
+Outside view 5 
+Outside view - Icarus locked to Z axis 6
+Outside view - Icarus locked to X axis 7
+Outside view - Icarus locked to Z and X axes 8
+Toggle the Cockpit/Outside view of the Icarus. ENTER
+The numeric keys select different positions for both the inside and
+outside view. For outside views, most of the options are disabled whilst
+inside a tunnel network. 
+Left rear view n1 
+Rear view n2 
+Right rear view n3 
+Left view n4 
+Down view n5 
+Right view n6 
+Left front view n7 
+Front view n8 
+Right front view n9 
+By using the following keys, you can define a completely custom viewing
+position.
+
+Rotate view left - Cursor Left 
+Rotate view right - Cursor Right 
+Rotate view up - Cursor Up 
+Rotate view down - Cursor Down 
+Move viewpoint further from Icarus - Move viewpoint closer to Icarus + or 0
+Utility Functions 
+The following function keys perform utility tasks.
+Sound effects ON/OFF F1 
+Save game position to disk F10 
+To save a game position, you will need a blank disk. STARGLIDER 2 uses its
+own custom format, so do not read or write to this disk using the normal 
+filing system.
+
+Options Menu 
+Press the Space Bar while the title screen is being displayed to reach
+the Options Menu. This allows you to define or select a number of user
+options, as follows:- 
+0 Select joystick ON/OFF 
+1 Select one-hand-mode ON/OFF 
+2 Select Fixed cross-hair sight ON/OFF
+3 Cross-hair autocentre X,Y,XY,OFF 
+4 Change mouse scaling 
+5 Load a saved game 
+6 Load the hi-score table 
+7 Display the hi-score table 
+8 Painting with Rolf 
+9 Restart an interrupted game 
+All of the above are self explanatory except option 8. As a bonus, you are
+able to examine all the shapes in STARGLIDER 2, rotating them, changing their
+size, and painting with them, with fine control over the cycle sequence of
+animated shapes. Use the mouse to move the shape around the screen. To make
+the shape larger and smaller, hold down the right button and move the mouse
+backwards and forwards. The various feature keys are as follows:-
+
+Rotate shape forwards and backwards in X-axis - X and S
+Rotate shape forwards and backwards in Y-axis - Y and T
+Rotate shape forwards and backwards in Z-axis - Z and A
+Stop shape rotating P 
+Reset shape to start position R 
+Cycle through the shapes < and > 
+Start animation, cycling forwards - Cursor Up
+Start animation,cycling backwards - Cursor Down
+Single step animation one frame forwards - Cursor Right
+Single step animation one frame backwards - Cursor Left
+End animation sequence E 
+Draw with a shape/clear screen toggle D Alter scale of objects n0 to n8
+Return to Options Menu - ESC 
