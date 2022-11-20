@@ -1,0 +1,47 @@
+Short : HD-Installer for Fighter Bomber - Activision
+Type  : game/patch
+Author: Galahad / Fairlight (galahadfairlight@yahoo.co.uk)
+ 
+ This install applies to "Fighter Bomber" © 1989 Activision
+ Slave requires WHDLoad V15+.
+ Game needs 0.5MB Of Chipmem & 1.0MB of Fastmem (for preload option)
+
+ SUPPORTED VERSIONS
+ ------------------
+ 
+ - 2 Disk Original release
+
+ FEATURES
+ --------
+ - Full Loading from HD
+ - Lame-o-Protect removed (Copylock and Manual Protection)
+ - System Friendly Imager used
+ - Stack frame fixed
+ - Address error fixed
+ - Pilots Log Load/Save to HD
+ - Designer Load/Save to HD
+ - Depacker relocated to Fast Ram
+ - Skip Intro (Hold down Left mouse button whilst loading)
+ - Quit Option (DEL key)
+
+ FEATURES - v1.1
+ 
+ - Memory requirements reduced, only needs 512k chipmem now
+   not 1meg 
+
+ EXTRA NOTES
+ -----------
+ 
+ A classic game for the Amiga, showing its age slightly, but still a great game.
+ 99 Designer game saves are possible, Pilots Log is generated on first runtime.
+ 
+ The language selector never worked because there are is no French text in the game!
+ The format option has also been removed, it is unneccesary.
+ Not much else to say, other than I would much rather fix 20 Fighter Bomber versions
+ than have to bother with 1 more version of Crackdown!!!
+ 
+ Enjoy
+ 
+Kindest Regards, Galahad of Fairlight
+
+END.

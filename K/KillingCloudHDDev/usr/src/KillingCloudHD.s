@@ -50,7 +50,8 @@ _expmem:	dc.l	EXPMEM_SIZE	;ws_ExpMem
 	dc.l	0                       ;ws_kicksize
 	dc.w	0                       ;ws_kickcrc
 	dc.w	_config-_base		;ws_config
-_config	
+_config
+	dc.b	"C3:B:enable cpu assisted blitter;"
     dc.b	0
 
 ;==========================================================================
@@ -249,6 +250,16 @@ pl_main_1
 	PL_START
 	PL_P	$17972,_tl_setdisk
 	PL_PS	$17226,_fadewait	; remove manual protection
+
+	PL_IFC3
+	PL_PS	$d1f8,set_blit_custom_base
+	PL_PSS	$0d288,do_the_blit_1,2
+	PL_PSS	$0d2f4,do_the_blit_2,2
+	
+	PL_PS	$0c96a,load_table_a4_d4
+	PL_PS	$d1ee,load_table_a4_d0
+	PL_ENDIF
+	
 	PL_NEXT		pl_main_common
 pl_main_2
 	PL_START
@@ -291,7 +302,67 @@ pl_main_common:
 
 	PL_END
 
+load_table_a4_d0:
+	bsr.b	load_table_a4
+	ADD.W	D0,D0			;0c96e: d844
+	rts
+load_table_a4_d4:
+	bsr.b	load_table_a4
+	ADD.W	D4,D4			;0c96e: d844
+	rts
+	
+load_table_a4
+	LEA	$18e8.W,A4		;0c96a: 49f818e8
+	move.w	d0,-(a7)
+	move.b	blitter_active(pc),d0
+	bne.b	.real_blitter
+	add.l	_reloc_base(pc),a4
+	sub.w	#$1000,a4
+.real_blitter
+	move.w	(a7)+,d0
+	rts
+	
+set_blit_custom_base
+	lea		blitter_active(pc),a5
+	eor.b	#1,(a5)		; toggle
+	beq.b	.real
+	; cpu
+	lea		blitter_struct(pc),a5
+	rts
+.real
+	lea		_custom,a5
+	rts
+	
+blitter_active:
+	dc.w	0
+blitter_struct
+	ds.b	BlitterState_SIZEOF,0
+	
+do_the_blit_1
+	MOVE.W	D0,bltdmod(A5)		;0d288: 3b400066
+	; main blit of most 3D (filled polygons)
+	; without that write, only cockpit and bitmaps are displayed
+	; nothing is filled or erased,
+	; only lines appear on the display
+	bra.b	do_the_blit_end
 
+
+do_the_blit_2
+	MOVE.L	A1,bltdpt(A5)		;0d2f4: 2b490054
+	
+do_the_blit_end
+	MOVE.W	D4,bltsize(A5)		;0d2f8: 3b440058
+	cmp.l	#_custom,a5
+	beq.b	.out	; real blit
+	exg.l	a5,a0
+	bsr		blt_wait
+	exg.l	a0,a5
+.out
+	rts
+
+
+	include	K:\jff\AmigaHD\PROJETS\GameRelocs\utils\cpu_blitter.s
+	
 ;set_end_program_memory_limits
 ;	MOVEA.L	$01006.W,A0		;082bc: 20781006	; after this program
 ;	sub.l	_reloc_base(pc),a0
@@ -635,7 +706,11 @@ _smc_chunks
 reloc_v1
 	dc.b	"KillingCloud_v1.reloc",0
 _cwdname:	dc.b	"data",0
-_wsname:	dc.b	"The Killing Cloud",0
+_wsname:	dc.b	"The Killing Cloud"
+	IFD	CHIP_ONLY
+	dc.b	" (chip/debug mode)"
+	ENDC
+			dc.b	0
 _wscopy:	dc.b	"1991 Vektor Grafix",0
 _wsinfo:	dc.b	10,"adapted by Girv & JOTD",10
 	DECL_VERSION
