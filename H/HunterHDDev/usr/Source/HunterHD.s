@@ -106,7 +106,11 @@ _config
     dc.b	0
 
 	
-_name	DC.B	"Hunter",0
+_name	DC.B	"Hunter"
+	IFD	CHIP_ONLY
+	dc.b	" (chip/debug mode)"
+	ENDC
+		dc.b	0
 _copy	DC.B	"1991 Activision",0
 _info	dc.b	"adapted by Harry, StingRay/[S]carab^Scoopex & JOTD",10,10
 	IFD	DEBUG
