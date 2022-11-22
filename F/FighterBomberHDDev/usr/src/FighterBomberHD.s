@@ -19,20 +19,46 @@
 	;OPT	O+ OG+			;enable optimizing
 	ENDC
 	
+PROGRAM_START = $500
+PROGRAM_SIZE = $4F200-PROGRAM_START
+RELOC_TABLE_ADDRESS = PROGRAM_START+PROGRAM_SIZE
+SAVEMEM = $32000
+
+CHIP_ONLY
+
+RELOC_ENABLED = 1
+	IFD	RELOC_ENABLED
+RELOC_MEM = $50000+SAVEMEM
+	ELSE
+RELOC_MEM = 0
+	ENDC
+
+;==========================================================================
+
+	IFD	CHIP_ONLY
+BASMEM_SIZE	equ	$80000+RELOC_MEM
+EXPMEM_SIZE	equ	0
+	ELSE
+BASMEM_SIZE	equ	$80000
+EXPMEM_SIZE	equ	RELOC_MEM
+	
+	ENDC
+	
 ;======================================================================
 
 base
 		SLAVE_HEADER		;ws_Security + ws_ID
 		dc.w	17		;ws_Version
 		dc.w	WHDLF_NoError|WHDLF_EmulTrap	;ws_flags
-		dc.l	$b2000		;ws_BaseMemSize
+		dc.l	BASMEM_SIZE		;ws_BaseMemSize
 		dc.l	0		;ws_ExecInstall
 		dc.w	Start-base	;ws_GameLoader
 		dc.w	0		;ws_CurrentDir
 		dc.w	0		;ws_DontCache
 _keydebug	dc.b	0		;ws_keydebug = none
 _keyexit	dc.b	$46		;ws_keyexit = Del
-		dc.l	0		;ws_ExpMem
+_expmem
+		dc.l	EXPMEM_SIZE		;ws_ExpMem
 		dc.w	_name-base	;ws_name
 		dc.w	_copy-base	;ws_copy
 		dc.w	_info-base	;ws_info
@@ -54,7 +80,11 @@ DECL_VERSION:MACRO
 	ENDC
 	ENDM
 
-_name	dc.b	'-> F I G H T E R  B O M B E R <-',0
+_name	dc.b	'Fighter Bomber'
+		IFD		CHIP_ONLY
+		dc.b	" (chip/debug mode)"
+		ENDC
+		dc.b	0
 _copy	dc.b	'1989 Activision',0
 _info	dc.b	'-----------------------',10
 	dc.b	'Installed and fixed by',10
@@ -72,6 +102,11 @@ _config
     ;dc.b    "C1:B:infinite ammo;"
     dc.b	0
 
+reloc_file_name_table
+	dc.b	"fighterbomber.reloc",0
+unreloc_file_name_table
+	dc.b	"fighterbomber.unreloc",0
+	
 	CNOP 0,2
 
 
@@ -81,6 +116,23 @@ Start	;	A0 = resident loader
 
 		lea	_resload(pc),a1
 		move.l	a0,(a1)			;save for later use
+
+		IFD		CHIP_ONLY
+		lea		_expmem(pc),a0
+		move.l	#$80000,(a0)
+		ENDC
+		
+		lea		save_buffer(pc),a1
+		IFD		RELOC_ENABLED
+		lea		_reloc_base(pc),a0
+		move.l	_expmem(pc),d0
+		add.l	d0,(a0)
+		add.l	#SAVEMEM,d0
+		move.l	d0,(a1)
+		ELSE
+		move.l	_expmem(pc),(a1)
+		ENDC
+	
 		moveq	#0,d0
 		lea	log(pc),a0
 		bsr	_checkfile
@@ -141,7 +193,58 @@ gamepatch:
 		move.l	save_buffer(pc),a1
 		bsr	_LoadFile
 
-		IFND	RELOC_ENABLED
+		IFD		RELOC_ENABLED
+		; copy program
+		
+		move.l	#PROGRAM_SIZE,d0
+		lsr.l	#2,d0
+		lea		PROGRAM_START,a0
+		move.l	_reloc_base(pc),A1
+.copy
+		move.l	(a0)+,(a1)+
+		subq.l	#1,d0
+		bne.b	.copy
+		
+		; load reloc table
+		
+		lea		RELOC_TABLE_ADDRESS,a1
+		lea		reloc_file_name_table(pc),a0
+		jsr		resload_LoadFileDecrunch(a2)
+
+		; relocate
+		move.l	_reloc_base(pc),a0
+		lea		(-PROGRAM_START,a0),a1	; expansion mem
+		move.l	a1,d1
+		lea		RELOC_TABLE_ADDRESS,a1
+.reloc
+		move.l	(a1)+,d0
+		beq.b	.end
+		add.l	d1,(a0,d0.l)
+		bra.b	.reloc
+.end
+		lea		RELOC_TABLE_ADDRESS,a1
+		lea		unreloc_file_name_table(pc),a0
+		jsr		resload_LoadFileDecrunch(a2)
+
+		; unrelocate
+		move.l	_reloc_base(pc),a0
+		lea		(-PROGRAM_START,a0),a1	; expansion mem
+		move.l	a1,d1
+		lea		RELOC_TABLE_ADDRESS,a1
+.unreloc
+		move.l	(a1)+,d0
+		beq.b	.endu
+		sub.l	d1,(a0,d0.l)
+		bra.b	.unreloc
+.endu
+		
+		; protect mem: 
+		; w 0 $1000 $24A
+		; w 1 $124C $9D4-$24C
+		; w 2 $1A82 $4E500-$1A82
+		blitz
+		
+		ELSE
 		lea	depack(pc),a0
 		lea	$258be,a1
 		move.l	a1,a2
@@ -180,8 +283,8 @@ copydata2:
 		lea		pl_main(pc),a0
 		move.l	_reloc_base(pc),a1
 		move.l	a1,-(a7)
+		sub.w	#PROGRAM_START,a1
 		jsr		resload_Patch(a2)
-		add.l	#$500,(a7)
 		rts
 		
 ;----------------------------------
@@ -205,10 +308,14 @@ logger_save:
 ;---------------------------------------------------
 do_save:
 		move.l	$36166,a1
+		add.l	_reloc_base(pc),a1
+		add.l	#PROGRAM_START,a1
+		move.l	a1,-(a7)
 		move.w	#$0fff,d0
 clear:		clr.l	(a1)+
 		dbra	d0,clear
-		move.l	$36166,a1
+		move.l	(a7)+,a1
+
 		moveq	#0,d0
 		moveq	#-1,d3
 		bra.s	load_save
@@ -242,6 +349,8 @@ saver:		move.b	(a0)+,(a1)+
 		lea	save(pc),a0
 		move.l	save_buffer(pc),a1
 		move.l	#$31800,d0
+		add.l	_reloc_base(pc),d0
+		add.l	#PROGRAM_START,d0
 		bsr	_SaveFile
 skip_saver:
 		movem.l	(a7)+,d0-d7/a0-a6
@@ -271,6 +380,10 @@ Loader:
 		mulu	#$200,d0
 		mulu	#$200,d1		
 		bsr	_LoadDisk
+		
+		sub.l	_reloc_base(pc),a0
+		sub.w	#PROGRAM_START,a0
+		
 		cmp.l	#$10000,a0
 		beq.s	wait
 		cmp.l	#$500,a0
@@ -331,18 +444,22 @@ _checkfile:
 		jsr	resload_GetFileSize(a2)
 		movem.l	(a7)+,d1/a0-a2
 		rts
+		
+		IFND	RELOC_ENABLED
 speedup2:
 		ds.b	$1bb34-$1b8fc
 speedup:
 		ds.b	$20714-$20518
 depack:
 		ds.b	$2596e-$258be
+		ENDC
+		
 ;----------------------------------
 
 _reloc_base
-	dc.l	0
+	dc.l	PROGRAM_START
 save_buffer
-	dc.l	$80000
+	dc.l	0
 	
 ;======================================================================
 
