@@ -408,14 +408,6 @@ p2_patchlist_v2:
 
 ;--------------------------------
 
-_smc1_setrenderd0:
-	move.l	d4,-(a7)	; set smc1 rendering for colour d0
-	move.l	d0,d4
-	bsr.s	_smc1_setrender
-	move.l	(a7)+,d4
-	lea	$1808.w,a3
-	move.w	d0,d1
-	rts
 
 _smc1_setrender:
 	movem.l	d4/a0-1,-(a7)	; set smc1 rendering for colour d4
@@ -660,14 +652,14 @@ VD_DISK_BUF:	equ	$10000
 
 
 	;VD_VERSION	1,$38a2	; v1: imageworks
-	dc.l	$17972	; _vd_setdsk
-	dc.l	$17226	; _vd_manprot
-	dc.l	$5ba62	; _vd_sfxwait
-
-	;VD_VERSION	2,$fa18	; v2: jst install, imageworks/mirrorsoft
-	dc.l	$17982	; _vd_setdsk
-	dc.l	$17236	; _vd_manprot
-	dc.l	$5ba42	; _vd_sfxwait
+;	dc.l	$17972	; _vd_setdsk
+;	dc.l	$17226	; _vd_manprot
+;	dc.l	$5ba62	; _vd_sfxwait
+;
+;	;VD_VERSION	2,$fa18	; v2: jst install, imageworks/mirrorsoft
+;	dc.l	$17982	; _vd_setdsk
+;	dc.l	$17236	; _vd_manprot
+;	dc.l	$5ba42	; _vd_sfxwait
 
 
 ;--------------------------------
