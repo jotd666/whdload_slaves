@@ -1,0 +1,380 @@
+LIFE & DEATH WALKTHROUGH 
+
+TAKEN FROM THE IBM AND FIXED BY [RYGAR]
+
+   (courtesy GB)
+ 1 Setting up, Picking Staff,
+    Diagnosing Appendicitis
+ 2 Surgery, Performing
+    Appendectomies
+ 3 Diagnosing and Performing
+    Aortal Aneurysms, Endgame
+
+ LIFE & DEATH
+    Part 1
+
+ So you've spent half your life hacking at Orcs, obliterating alien hordes,
+and dragging leisure-suited misfits around the world. Now you're looking to do
+something useful for humanity. Well, your timing is great. Toolworks General
+is looking for a few good surgeons to assume the burden of a few
+appendectomies, infections, and vascular grafts. No problem at all!
+
+ When you start the game, you'll need to sign in on the receptionist's
+clipboard. She'll welcome you and prompt you to go to the classroom, but let's
+not do that yet. Using whichever input device you have (a mouse is ideal for
+this game), set your difficulty level to Novice until you've successfully
+completed both operations. Erase the scrawl in the box at the bottom of the
+option screen by clicking on the small Erase checkbox; then draw your own
+initials in the space provided. You can turn off the sound at this point, but
+don't unless you absolutely have to: The sounds of the EKG and of the clamps
+closing are extremely useful.
+
+ Click outside the box to signify you're done setting parameters. Now you're
+ready to hand-pick your surgical staff and start seeing patients. Since your
+first operation will be an appendectomy, let's go into the Staff room and 
+choose knowledgeable and cooperative assistants. Otherwise they'll be of no
+help at all in the OR (Operating Room).
+
+ Look over the six files by first clicking on the filing cabinet, and then on
+each name (NOT in the small check-box). You'll get a photo and brief
+description of each staff member. Gregory Danielson is a must for
+appendectomies; click on his check-box. But that means that you will NOT want
+Beverly Kabes on your staff, nor will you want Laurelee Menzies (whose area of
+expertise is irrelevant to this operation). Kim Brewer would be a good choice
+if you're looking for a general nurse to assist; if you have trouble keeping
+your eye on the EKG, then pick Ken Shepherd instead of Kim. If you're
+anticipating trouble with incisions, David Manglier would also be a decent
+alternative. My personal picks are Danielson and Brewer.
+
+ Click on the door of the Staff room to leave and head into the Classroom.
+Watch the blackboard and listen closely; the advice is basic (most can be
+found in the manual). When class is over, click on the door and the
+receptionist will tell you where your patient is.
+
+ In the patient's room, there's no need to look at the clipboard yet. The
+patients' complaints all sound the same, and your main diagnostic tool is to
+palpate the abdomen, so click on the abdomen of whoever's in bed. Click all
+around the area; be sure to get each quadrant at least once or you'll be
+reprimanded further on down the line. In this, the first half of the game,
+here are the guidelines for diagnosing: If there is no pain response anywhere
+on the abdomen, that signals intestinal gas and should be OBSERVED. If there
+is pain response all over the abdomen, that signals an infection and should be
+MEDICATED. If there is pain only in some parts of the abdomen, that could be
+either appendicitis or kidney stones; you MUST take an X-RAY (even if the pain
+is only on the patient's left side and thus unlikely to be appendicitis). If
+there are kidney stones, they'll appear as a clump of small white dots ABOVE
+the pelvis (surrounded by black). If such stones appear, your action should be
+REFERRAL (since urology is not the field you're in). If no stones are present,
+that's appendicitis! Click on OPERATE on the clipboard and exit the patient's
+room.
+ If you've just booted up, you'll be advised to check in on the phone(the copy
+protection). Do that if you need to; the receptionist should then inform you
+that they're waiting for you in OR. Head for the OR and here we go!
+
+ LIFE & DEATH
+    Part 2
+
+ On the upper right is the section of the patient's body with which you'll be
+working. Beneath the body is a message box (it may not appear instantly) where
+words of encouragement,advice, and scorn will appear from your two assistants.
+Next to it is a small bottle representing the current fluid connected to the
+patient's IV. At the left is the EKG and the anesthetic machinery, and below
+that are a tray and two drawers (currently closed) with all the instruments
+you'll need to operate. You can see that the anesthetic is OFF and the
+breathing and heartbeat are regular. You'll want to learn to keep your ears
+tuned to that EKG; if the pitch changes or if the constant beeping stops,
+you'll have to turn your attention to the problem.Although you have assistants
+who will be commenting along the way,I'm going to assume you're in this alone.
+
+ The two kinds of heart problems you'll run across are PVC and Bradycardia.
+With PVC, the EKG will drop in pitch and the line will plummet and bounce back
+(see the manual for a picture). The cure for this is a quick injection of
+Lidocaine, already in a hypo in the bottom drawer (marked with an "L"). PVC is
+easy to remember because it will look like a "V" on the EKG. Bradycardia shows
+a relatively flat EKG, and the beep will stop altogether; this requires an
+injection of Atropine, marked with an "A" and sitting next to the Lidocaine.
+Think of "A" going with "B" and you can easily recall Atropine going with
+Bradycardia. (These sorts of mnemonics are exactly what help most medical
+students get through school.)
+
+ Once in a while, the patient's blood pressure will drop. This will happen
+without fail if you don't start the patient on IV blood before you begin
+cutting. If the heart rate does drop,put blood in the IV and quickly clamp and
+cauterize all bleeders. But if the rate drops to 50, immediately inject the
+patient with Dopamine (in the bottom drawer, marked "D"). You only have one
+hypo of Dopamine and unlimited hypos of Atropine and Dopamine.
+
+ Since the patient's still awake,you're not likely to run into EITHER problem!
+So let's get down to some hacking and slashing of an entirely new kind.
+
+ Open the bottom drawer (just click the fingertips on the end of the drawer),
+and open the top drawer. From the top drawer: Click on soap to wash; click on
+gloves. Click on the large bottle with the "A" on it (it's antiseptic).Holding
+the button down, move the antiseptic cloth all over the skin; try not to leave
+any unwiped areas.The area will be shaded with black dots to show where you've
+wiped. Return the antiseptic to the drawer, and pick up the sterile drape (the
+folded cloth on the left). The cursor will change to a square; place this
+square all the way to the upper left corner of the abdominal window so that
+the corner of the square fits neatly into the corner of the window(don't leave
+any visible area in between) and click. You should get a very thin, almost
+unnoticeable line around the abdomen -- virtually no drape at all. This is
+crucial since you'll need every available millimeter of space with which to
+operate. If the square cursor vanishes and is replaced by the hand, and the
+abdomen window flickers slightly, you've done it right. (A comment in the
+message box may confirm it.)
+
+ Close the top drawer. Turn on the gas. Pick up the hypo labeled "B" (the
+antibiotics) in the bottom drawer, and move it over to the skin; click to
+inject, and the hypo will vanish. Get a bottle of blood (it LOOKS like blood)
+from the drawer, and click it on the full bottle next to the message window;
+that bottle should change to blood. This will prevent the patient's blood
+pressure from dropping as you make your first incision. Close the bottom
+drawer, and pick up your scalpel.
+
+ You'll be making a McBurney's incision (page 92 of Lindstrom's notes). From
+your point of view, you'll be making a single,straight cut from the upper left
+corner of the abdomen to the lower right corner. Make the line as long as
+possible; this is also crucial because it determines the size of the wound
+you're creating, and you need a BIG wound to get at the appendix. So,start and
+end as close to the very corners as you can (without cutting the drape).
+Incision technique isn't easy; you'll need to learn to cut as straight as
+possible while also cutting QUICKLY (which helps to keep the incision neat).
+Practice is the only solution here.
+
+ Make that incision in the abdomen. Then drop the scalpel, pick up the forceps
+(lying horizontally above the scissors) and clamp a bleeder (the widening
+circles of red that will appear along the incision). As you clamp, you should
+hear a "click" and you'll probably get a comment affirming the action. Another
+forceps will have appeared; clamp all the bleeders. When all the bleeders have
+stopped spreading, pick up the cauterizer (looks like a soldering iron on the
+left edge of the tray) and click once LIGHTLY on each bleeder. You may need to
+do this 2 or 3 times on each, but eventually you'll have cauterized them all.
+Then remove each clamp, one at a time, and using either sponge or suction hose
+(S-shaped), remove the blood.
+
+ Pick up the skin spreader(the butterfly-shaped mechanism at the bottom of the
+tray), and click it on the incision.The skin will peel away and reveal a layer
+of subcutaneous fat. Congratulations! Get somebody in the room to wipe your
+forehead.
+
+ All the while, of course, you'll be listening to the EKG and injecting the
+proper fluid when necessary. Also keep your eye on that bottle; when the blood
+is about to run out (don't wait till the last moment), put in a bottle of
+Glucose from the bottom drawer.
+
+ Now do the same thing to the subcutaneous fat that you did to the skin;incise
+at the same angle, clamp bleeders, cauterize, remove clamps, and wipe clean.
+Again, be sure to go to the very corners for your incision, but be careful not
+to cut _beyond_ the corners to the skin above. Retract the fat to reveal the
+oblique muscle tissue.
+
+ The oblique muscle (and the transversus muscle below)has no blood vessels and
+will not cause bleeders. Cut the oblique muscle layer exactly as in the last
+two layers, going from corner to corner and making a straight, neat incision.
+The next layer -- the transversus muscle --is striated in the other direction.
+Don't cut at the usual angle; cut "with the grain" from upper right to lower
+left. Keep making those incisions as long as possible. Retracting the
+transversus will reveal the peritoneum, through which you can vaguely see the
+end of the large intestine (which covers the appendix).
+
+ The peritoneum calls for very delicate incising. Unless you have version 1.03
+of the program (or better),forget what the manual tells you about incising the
+peritoneum and listen carefully.You're going to cut diagonally from upper left
+to lower right with the scissors. FIRST, pick the spot where you're going to
+start the incision. Pick up the scalpel and click once just at that point;
+you're scraping the peritoneum but not cutting it. Don't draw a line, just
+click once and let go. Put the scalpel down and get the forceps; clamp the
+forceps just a pixel or two below where you just scraped. With the forceps in
+place, pick up the scalpel again and click once more on the same point you
+scraped; a large black dot should appear.Drop the scalpel, remove the forceps,
+pick up the scissors and start clicking. Make each click a little farther down
+and to the right of the last, but not too far or the program will think you've
+started a new incision. Don't make your first snip right on the black dot;make it a bit
+further down/right. Continue all the way to the lower right corner and use the
+skin retractor.
+
+ Voila! There's that lovely large intestine, covered with infected fluid (the
+black shading). From the bottom drawer, take the test tube,and click it on the
+abdomen to get a fluid sample. Close the drawer and get the suction tube;start
+to suction off the liquid, and it'll come right up. Put down the hose.
+
+ Click the fingertips at the bottom of the large intestine. Provided you've
+made the incisions long enough, the cecum will flip up into sight. If the
+incisions aren't as large as they need to be, you won't be able to get at this
+area, and you'll have to abandon the operation. But let's hope for the best.
+
+ Open the top drawer and get the roll of gauze. Click the gauze at the base of
+the cecum, and the cecum becomes packed and immobilized. Close the drawer. I
+assume you're still watching the IV and the EKG? Of course you are.
+
+ Once again, click the fingertips at the base of the cecum to expose more
+intestine. Click the fingertips at the base of this new intestine, and the
+appendix pops up, pointing to the right. Take a clamp, the L-shaped object in
+the center of the tray. Clamp the tip of the appendix,all the way to the right
+and just above the bottom edge. If you clamp in the wrong spot, the appendix
+may rupture; in that case, take the drainer from the top drawer (the red bulb)
+and drain the appendix before continuing. If you've clamped the appendix
+correctly, it will be lifted and the underside exposed. You're doing great if
+you're still with me; put the game on pause and play some golf.
+
+ You're going to nick the mesoappendix membrane. Pick up the scalpel.There's a
+red line, or shadow, running the length of the appendix. You'll nick --a quick
+click -- at a point slightly to the right and about a fifth of the way up that
+red line. If you mess up, you'll know it...and they'll show you in class the
+proper place to nick. Assuming you've clicked in the right place, you'll get
+another big black dot with a small white dot in the center. Put down the
+scalpel and take the needle and thread. Click once at the center of that dot
+to suture the mesoappendix artery.
+
+ Get the scalpel. To sever and remove the artery and membrane, you click once
+directly on that long red shadow, a pixel or so below the bottom edge of the
+clamp. The clamp appears spread; use the lower of the two clamp ends as a
+reference point. Click just below that end, and the membrane vanishes. Now get
+another clamp and clamp the base of that long, red shadow; Danielson should
+confirm that the LOWER clamp is in place. Get another clamp and clamp at about
+the middle of the shadow; Danielson will remark that the HIGHER clamp is in
+place. Get the needle and thread,click once between the two clamps,and a small
+"purse string" suture should appear. Click the scalpel just above the suture,
+and off it goes. The appendix is gone. All the clamps except one will vanish.
+Remove that clamp and click the fingers on the cecum to tuck in the wound. A
+small hole appears on the cecum; click the needle on that once to make a
+Z-string suture across the hole. Put away the needle, and click the fingertips
+on the base of the cecum.That'll instantly remove the gauze and tuck
+everything back into place. You're ready to close!
+
+ To close each layer, pick up the skin retractor. Move it all the way to the
+right of the window; it will be almost entirely off the screen. Click it once
+and the peritoneum closes. Put down the retractor, pick up the needle, and
+place sutures along the closed incision. They don't have to be touching, but
+they should be fairly close together. You'll need to make a lot of them.
+
+ Once you've finished suturing the peritoneum, take the spreader and click it
+all the way on the right as you did just before. The transversus muscle
+layer closes; suture it the same way. Now close and suture the oblique
+muscle layer and the subcutaneous fat layer. Close the skin layer, but don't
+suture it. Secure it with the X-shaped skin clips in the upper left corner of
+the tray. Put them close enough together to touch. Turn off the gas, and let
+the patient go to Recovery. Congratulations! This was the hard part.
+
+ When the program evaluates the surgery,you'll be told to go to Medical School
+if your performance was not perfect. If it was perfect,you'll be congratulated
+for having performed an appendectomy and sent to medical school anyway! But
+now you'll be promoted to deal with a different set of problems, and
+appendectomies will become a thing of the past.
+
+ LIFE & DEATH
+    Part 3
+
+ Your new crop of patients will have one of three possible conditions:
+arthritis, immature aneurysms, and mature aneurysms. The diagnosis is just
+nearly as straightforward as in the previous part of the game. Carefully
+palpate all areas of each patient's abdomen. Be certain to palpate several
+times just below the navel. If the patient has pain all over the abdomen,
+take an X-RAY.You'll probably find that the spine is practically a solid white
+mass; this indicates arthritis and requires MEDICATION. If the patient's
+response topalpation under the navel is "That feels like a lump" or some
+mention of a lump, that's probably an aneurysm. Do an ULTRASOUND SCAN to
+determine its size. If it's less than "5 cm" in diameter (use the ruler up
+above the ultrascan screen to judge), it's immature and should not be operated
+upon. Check OBSERVE. If the aneurysm is 5 cm or larger (as it probably will
+be), you'll have to OPERATE!
+
+ Before you go into the OR,though, you'll want to readjust your staff. Be sure
+to include Laurelee Menzies, the resident expert on aneurysms. Your other
+assistant should be either Kim Brewer, Bev Kabes, or Ken Shepherd. Head into
+the. You'll note a few new items on the trays, but don't be intimidated. Next
+to conquering the appendix, this one's almost a cakewalk.
+
+ Open the bottom and top drawers. Use the soap and the gloves (in that order
+please!). Apply the antiseptic (this time you have a whole abdomen to work
+with). Put on the drape, and as before, you're going to leave as much room to
+operate with as possible. Close the top drawer, turn on the gas, inject with
+the "B" hypo (there's a new one marked "H" for Heparin, which you'll need in a
+bit). Hang a bottle of blood on the IV and pick up your scalpel.
+
+ This time you won't be making any McBurney's incisions. Cutting smoothly,
+incise the abdomen straight down the middle from as far on top to as close to
+the bottom as you can without touching the drape.There shouldn't be much drape
+there, anyway...only a line or two on top and bottom.Work quickly to clamp all
+the bleeders with the forceps. The cauterizer is gone;we now have a ligator --
+a pretzel-shaped loop on the tray. Pick it up and center it over each bleeder;
+click once to ligate each bleeder. When you've gotten them all, remove the
+forceps and wipe the area clean. Separate the skin with the skin retractor. Do
+the same with the rippling subcutaneous fat layer. Always be vigilant for
+problems with the EKG; act quickly with Atropine, Lidocaine, and Dopamine when
+necessary.
+
+ Now you're down to the muscle layer, the rectus abdominus. This one won't
+bleed. Cut down the linea alba, the thick white portion at the center. Spread
+using the retractor. You'll be looking at the preperitoneum, which is incised
+the same way the peritoneum was:Click with the scalpel to scrape, elevate just
+below with forceps, click again with scalpel to nick a hole,remove forceps and
+snip all the way down with the scissors. Be cautious not to make your snips so
+far apart that you appear to be making a separate incision; this will puncture
+the intestines. But do try to make the incision straight...neatness counts.
+
+ After snipping the preperitoneum, spread it. Using your fingertips, click on
+the bottom of the chest to push the intestines out of way.In the top drawer
+you'll see a small bag (called the gut bag).Click the bag on the intestines at
+the top of the screen to keep them clean, tidy, and out of the way. Underneath
+the intestines is the postperitoneum, and underneath that, the murky shape of
+the aneurysm. Scrape, elevate, nick and snip the postperitoneum exactly as you
+did with the preperitoneum. Spread it and there's the aneurysm, the swelling
+just above where the two iliac arteries merge.
+
+ In the bottom drawer, take the Heparin and inject it before proceeding. This
+prevents embolisms in 100% of my cases so far! I wouldn't know what to do if
+there WAS an embolism. Click the fingertips at the base of the aneurysm and
+rubber tubing will appear in place. The aneurysm is now immobilized and ready
+for action!
+
+ Take a clamp (NOT a hemostat) and clamp either of the iliac arteries, then
+clamp the other one. Put another clamp on the small vessel (mesenteric artery)
+extending from the center of the aorta, close to where they come together.Then
+put a clamp at the top of the aneurysm, right where it comes into view. Work
+quickly at this point; you've cut off the blood supply to the legs!
+
+ Take the scalpel and nick the mesenteric artery just above the clamp (not
+between the clamp and the aorta). A bleeder will appear; ligate it. You're
+going to incise the aorta with the scalpel.Don't start right at the top! Start
+about a quarter of the way down the aneurysm or the incision will be too long,
+and you'll have to abort the operation. Make the incision straight and clean;
+don't bring it quite all the way to the bottom. Use the skin retractor to
+expose the clot. Remove the clot with your fingertips;take the Y-shaped dacron
+graft from the bottom drawer and put it in place.
+
+ The graft has to be sutured into place. Take the needle and put three sutures
+into each of the graft's three ends (nine sutures altogether). You should be
+able to see each of the three sutures connecting the graft to the artery
+walls. Put down the needle.
+
+ Before you can complete the suturing, you have to close the artery walls
+around the graft. With your fingertips, click at the junctures of the graft
+(the three ends) until the flaps of vessel tissue close around them. Then take
+the needle up and suture three times at each juncture again,for a total of six
+sutures in each of the three branches. Pick up the retractor and close the
+aorta around the graft. Suture the aortal incision with close stitches.
+
+ The next step is a test of your previous work.Remove one of the iliac clamps.
+Then remove the next. Finally remove the clamp at the top, re-establishing the
+flow of blood through the aorta. If no bleeders appear, you've made it! If
+bleeders do appear, replace the three clamps, starting with the two iliac
+clamps. Resuture the incision and try again.
+
+ Once the aorta is repaired, remove the rubber tubing. Then un-retract the
+postperitoneum. Suture it. Remove the gut bag and replace the intestines.
+Un-retract the preperitoneum and suture it. Un-retract the next two layers
+(chest muscle and subcutaneous fat). After un-retracting the skin, close it 
+with skin clips instead of stitches. Turn off the gas, and pick up your
+diploma in the Chief of Surgery's office.
+
+ You retire wealthy, and your name will vanish from the receptionist's
+clipboard. Should you want to relive past glories,head into the Staff room and
+click on the file cabinet. Again,hearty congratulations: I'll catch you on the
+back 9!
+
+ LIFE & DEATH is published by The Software Toolworks and distributed by
+Electronic Arts.
+
+> TAKEN FROM THE IBM SCENE AND FIXED BY [RYGAR] <
+

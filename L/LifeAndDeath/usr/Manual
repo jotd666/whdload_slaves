@@ -1,0 +1,1006 @@
+                                 SKID ROW
+ 
+                                 presents  
+
+                               LIFE & DEATH
+
+                        OPERATING PROCEDURES MANUAL
+                                    &
+                                DIAGNOSTIC 
+                                   and 
+                             TREATMENT METHODS 
+
+Page 2 \/
+
+                               LIFE AND DEATH
+                        OPERATING PROCEDURES MANUAL
+                          FOR THE COMMODORE AMIGA
+
+Life & Death is a game for fun, not education.  Nothing that appears in
+or on the package, manual or the software program is in any way intended
+to be a statement or representation of fact or medical opinion applicable
+to any situation other than the playing of the computer game.  No
+representation or warranty is made that any statement, diagram or image
+is accurate as a fact or valid as an opinion concerning any anatomical,
+medical, surgical or health matter.  UNDER NO CIRCUMSTANCES should any
+person rely upon or be influenced by these materials in making any
+health related decision.  You, of course, should consult qualified 
+medical personnel whenever you have any questions or problems concerning
+health or medical matters.
+
+Requirements
+
+Life & Death runs on any Commodore Amiga computer with at least 512K
+of memory.  If you are running a 512K Amiga, you should turn off any
+external drives before running this game.  A mouse is required.
+
+Definition of terms
+
+Throughout this manual terminology native to mouse devices will be used.
+
+The cursor marks a location on the screen with a pointer arrow.  The cursor
+location can be changed by sliding the mouse.  The location of the cursor
+represents the area where you may begin an action.
+
+Once the cursor has been moved into position, the left mouse button
+is used to activate an object or begin a process.  Press and release
+the mouse button, while the cursor is over the object you wish to
+activate.  This procedure is called clicking.
+
+Dragging is much like clicking.  While over an object press the left
+mouse button but do not release it.  Instead, move the cursor to a
+new position on the screen Moving the cursor with the button pressed 
+is called dragging..
+
+During the operation, the cursor will be represented by a small hand.
+This miniature image is called an icon..  The small hand icon 
+symbolizes an empty hand.  The icon can be changed by clicking on an 
+item.  If, for example, you were to move the hand icon over the image
+of the scalpel and press the button, the cursor icon would change from
+the hand to the scalpel symbolizing grasping the scalpel.  If you click
+the cursor on an empty area of the tray, while you have the scalpel in
+your hand, the cursor will change to your hand, symbolizing dropping
+the scalpel.
+
+Moving around the hospital
+
+To move around the hospital, use your mouse.  To enter or leave a room, 
+click on the door.  To pick up a clipboard, click on it.  To put a 
+clipboard down, move the 
+
+Page 3 \/
+
+mouse icon off the clipboard and click.  While viewing lessons in the 
+classroom, click on the chalkboard to ask the instructor to put up the 
+next lesson.  To leave the hospital, exit through the doors at the far 
+end of the hall.  Feel free to explore all of the rooms and objects at 
+Toolworks General Hospital.
+
+When clicking, always use the tip (upper left) of the mouse arrow to
+indicate where you want to go or what you want to pick up.  The arrow will
+turn into an hour glass when the program is busy.
+
+Signing in
+
+Before you can be assigned any patients, you must inform the hospital staff
+that you have arrived.  Nurse Pierce will offer you the sign-in clipboard 
+in the main hall.  Click on the clipboard and you will be presented with a 
+sign-in sheet.  If you are a returning doctor, just click on your name.
+
+Once you have signed in, the program will remember everything about you,
+even if you leave the hospital and come back to play another time.
+
+Diagnosing a patient
+
+To diagnose a patient, you should first read the patient's reported
+symptoms.  These symptoms can be found on the clipboard at the foot of the
+patient's bed.  Click on the clipboard to pick it up.  To put the clipboard
+down, move the icon off the clipboard and click.
+
+To preform a physical examination of the patient, click on the patient's
+body.  You will be presented with a close-up of the torso.  To palpate a
+particular region, move the mouse to the area and click.  Note the patient's
+responses.  To end a physical examination click on the bed covers.
+
+The patient's clipboard is also used to order a particular treatment or more
+tests.  Use your mouse to put a check mark in the appropriate box.  You must
+put your initials in the space provided in order for the staff to carry out
+your request.  Remember to put the clipboard down when you have finished 
+with it.
+
+Medical school
+
+Whenever the chief of surgery feels that you need schooling, you will be
+instructed to report to the medical school.  Most of the lessons in medical
+school are written on the chalkboard.  The classroom is also outfitted
+with audio-visual equipment that will sometimes be used after an
+unsuccessful surgery.
+
+Page 4 \/
+
+Answering a page
+
+When Nurse Pierce gives you a message that someone has called, it is in 
+your best interest to return the call.  Use the beeper that came with 
+your Life and Death package to determine the number where they can be 
+reached.  Line up the person's name (eg. Morgan) and where they called 
+from (eg. Pathology) in the top beeper window.  The correct phone number is
+contained in the window corresponding to the phone line used for the call. 
+Pick up the phone on the main desk and dial this number.  When dialing the  
+phone, you may push the phone buttons by clicking the mouse button over 
+the phone number image.
+
+Surgery
+
+When you first start surgery, the mouse icon will be in the shape of a 
+hand.  Click on an instrument to pick it up.  Use the tip of the finger 
+to point to what you want to pick up.  The icon will change to a 
+representation of the instrument you are currently holding.  To put an  
+instrument down, click anywhere on the operating tray. To use an 
+instrument, move the icon to the appropriate place and click.  For some
+instruments, such as the scalpel, sponge, suction and antiseptic, you must 
+click and drag the mouse to use them properly.
+
+To open a drawer, first put down any instrument you might be holding and
+click on the drawer handle.  Use the same procedure to close the drawer.
+When removing forceps from the patient's body, line up the hand with the
+forceps handle.
+
+To retract a tissue layer, pick up the retractor and click near the
+incision.  To close a tissue layer, click on the right mouse button on 
+the layer to be closed.
+
+While in surgery, the following keys are active:
+
+S: Turns sound on and off.
+P: Pauses the game.  To resume the game, press any key.
+
+Hospital Policies and Guidelines
+
+The Hospital Policies and Guidelines clipboard is used to set the Life &
+Death game parameters.  To have this clipboard handed to you, click on any
+intercom.
+
+To select or unselect an option on the Policies clipboard, place a check
+mark (or remove the check mark) in the appropriate box by clicking with 
+the mouse.
+
+"Quiet hours in effect" means that the sound will be turned off while
+playing the game.
+
+"Patients may speak" means that the digitized patients' voices will be
+turned on.  Patients may not speak while quiet hours are in effect.
+
+There are three play levels available: Novice, Intermediate and Advanced.
+
+If you have not yet signed in, the bottom of the Policies clipboard will
+contain an option called "Remove surgeon from sign up".  To remove a 
+doctors name from the sign-up list, choose this option.  The program will 
+display the sign-up 
+
+Page 5 \/
+
+clipboard, at which time you may choose a surgeon to remove by clicking 
+his or her name.  Before the name is actually deleted, you will be
+asked to confirm the surgeon's removal by clicking the appropriate box.
+
+NOTE: Each new surgeon starts at the novice level.  If you would like a 
+more challenging game, choose the intermediate or advanced play level. 
+At the more difficult levels, you will encounter bleeders and abnormal 
+EKG patterns more often.  The comments by the staff members will be less 
+helpful.  Also, you will need to be more precise in placing clamps, using 
+the cauterizer and making incisions.
+
+For those surgeons who desire a challenge of nightmarish proportions,
+"Nightmare Mode" is available.  Click the appropriate box.
+
+Page 6 \/
+
+                    DIAGNOSTIC and TREATMENT METHODS
+                  FROM THE DESK OF: DR DAVID LINDSTROM
+
+Page 7 \/
+
+We have found that diagnostic and treatment methods among first year
+residences sometimes differ.  To ensure that everyone here at Toolworks
+General works under the same guidelines, we have included the following
+excerpt from "Anatomy and the Surgical Technique," by Drs. Robert
+Merl and Simon Newman (copyright 1938, 1956, 1987, reprinted with
+permission of STW medical press).
+
+Table of contents
+
+Chapter Four - Some Pathology and Treatment                         8
+
+Chapter Five - Basic Surgical Techniques and the Abdominal Area    11
+
+Appendix                                                           16
+
+Page 8 \/
+
+Chapter Four:
+Some Pathology and Treatment
+
+Appendicitis
+
+Indications: Appendicitis is the infection and inflammation of the 
+vermiform appendix, a superfluous, finger-sized appendage to the cecum
+at the junction of the small and large intestine.  Appendicitis can be
+marked by any combination of loss-of-appetite, nausea, vomiting,
+diarrhoea, high fever and acute abdominal pain.
+
+Treatment Surgery is indicated in cases of appendicitis.
+
+Bacterial Infection
+
+Indications: Bacterial infection is the assault upon the body by a 
+bacteria or germ.  As the body's defenses attempt to expel the
+bacteria, certain symptoms manifest themselves.  These can include
+abdominal discomfort, vomiting, diarrhoea, high fever and runny nose.
+
+Treatment: Bed rest and medication are required.
+
+Intestinal Gas
+
+Indication: Symptoms include abdominal pain, generalized weakness
+and dizziness.
+
+Treatment: Observation and bed rest.
+
+Kidney Stones
+
+Indications: Small precipitates composed of mineral salts extracted
+from urine sometimes become lodged in the ducts of the kidneys.  These
+renal calculi can cause extreme discomfort in the lower back and flank
+area.  The stones, while rarely fatal, are extremely painful and should
+be treated immediately.  Kidney stones will appear on an X-ray as small
+dots above the pelvis.
+
+Treatment: Kidney-stone patients should be referred to a urologist.
+
+Aneurysms
+
+Indications: When a blood vessel wall becomes diseased or begins to
+weaken, the blood vessel begins to dilate (stretch), forming what is
+known as an aneurysm.  Should the artery walls become rough from
+deterioration, the blood within may clot and form an embolism, 
+further stretching the aneurysm.  If the aneurysm occurs in a large
+artery, the potential bursting of the artery is life-threatening.
+A particularly dangerous aneurysm occurs in the aorta, the main
+blood-carrying artery.  Aneurysms of the descending, or abdominal,
+aorta can often be felt as a pulsating mass in the abdomen.
+The most common symptom is abdominal pain.
+
+Ultrasonic scans reveal aneurysms as solid white lumps.
+
+Treatment: If an aneurysm swells to a dangerous level, 5 to 6 cm in
+diameter, the blood vessel's wall must be supported with a dacron
+graft.  Since aneurysms commonly occur in older patients who have
+less stable systems, surgeons must take care to avoid needless
+surgery.
+
+Page 9 \/
+
+Arthritis
+
+Indications: Arthritis is the erosion of joints and their surrounding 
+tissues.  Arthritis is often found among older patients and can be
+extremely painful.
+
+Treatment: Arthritis is very difficult to treat.  The most successful
+treatments include cautious exercise and pain-relief medication.
+
+Diagnosis
+
+Definition: Diagnosis is the study of symptoms in an effort to discover 
+the ailment caused a patient's discomfort.  This process involves 
+gathering as much information as possible about the patient and his or
+her symptoms before proceeding with treatment.  Some of the tools found
+to me most useful are the patient's own report of symptoms, the abdominal
+exam, the X-ray and the ultrasonic scan.
+
+Patient's Reported Symptoms:
+Symptoms reported by the patient provide a starting point for diagnosis.
+These symptoms are often written on a clipboard at the foot of the 
+patient's bed.
+
+Abdominal Exam:
+The abdominal exam is often an extension of the patient's report of
+symptoms.  By palpating the abdomen and listening to the patient, the
+tending physician can gain a more detailed understanding of the symptoms.
+To perform an abdominal exam, palpate various locations on the patient's
+abdomen and note the responses.  (For more information on examinations,
+refer to your Operating Procedures Manual.)
+
+X-ray:
+An X-ray is the image of electromagnetic radiation passed through a
+body and then captured on film.  Before it reaches the film below,
+the radiation passes through porous material, such as skin and muscle,
+but is absorbed by solid masses, especially bone.  X-rays, therefore,
+show solid masses such as bone but ignore less dense cartilage.
+
+Ultrasonic Scan:
+An ultrasonic scan is similar to sonar.  During an ultrasonic scan,
+sound waves are focused on a body and scanned by a computer.  The
+recorded wave-forms are translated into images of the masses off of
+which the sound bounced.  Ultrasonic scans show the more porous cartilage
+that is ignored by X-rays.
+
+In Conclusion: After the initial evaluation, the physician uses the 
+clipboard at the foot of the patient's bed to request treatment or
+additional diagnostic options.  A hospital staff is not allowed to
+carry out a physician's requests that do not include his or her
+initials.
+
+Surgery
+
+Orientation:
+Before a surgeon enters the operating room, he or she must consider the
+following aspects of surgical procedure: First, he or she must be mentally
+prepared to finish the operation once it has begun.  A mental checklist
+of the steps involved is often used as preparation.  Second, the surgeon
+must constantly monitor the patient's vital signs.  Even though the
+surgical team will help, the
+
+Page 10 \/
+
+main responsibility for the patient's well-being is that of the surgeon
+in charge.  Third, every surgeon must be very familiar with the medical
+instruments he or she must utilize.
+
+Vital Signs
+
+Introduction:
+Several devices constantly report the patient's vital statistics during
+an operation.  The electrocardiogram (EKG), clock and blood pressure 
+gauge display the primary information.  The IV bottle and anaesthetic
+dial display secondary information.
+
+The EKG:
+The EKG is an electronic representation of a heartbeat and is used to
+monitor abnormalities in heart operation.  Conditions for which surgeons
+must be on the alert are Premature Ventricular Contraction (PVC) and
+Bradycardia.
+
+PVC:
+PVC is thought to arise from an imbalance in the electrical system of
+the heart and is characterized by a drop in the EKG line.  If not
+medicated, PVC may lead to Ventricular Fibrillation, Characterized 
+by a rapidly modulating EKG line, absent of normal heart rhythm.
+This condition is usually fatal.
+
+Bradycardia: 
+Bradycardia occurs when the heart becomes weak or tired and slows or 
+skips beats.  If proper medication is administered , the normal heart
+rhythm is usually restored.  If not, the can lose strength and stop
+beating.
+
+Blood Pressure:
+The blood pressure gauge describes the measure of pressure the heart
+exerts on the blood vessel walls as it pushes blood against them.  It is
+expressed in two numbers, the systolic pressure and the diastolic 
+pressure.  The systolic pressure, the peak level, measures the maximum
+pressure of the blood exerted against the vessel walls as the heart
+contracts.  The diastolic pressure represents the force of blood
+exerted against the walls as the heart relaxes.  Blood pressure can
+drop from prolonged anesthesia or blood loss.
+
+Surgical Clock:
+The clock displays elapsed time from the start of the surgery.  Surgeons
+always work carefully, while trying to avoid unnecessarily prolonging
+an operation.
+
+The IV Bottle:
+The IV bottle shows the type and remaining quantity of fluid being
+infused into the patient.  IV bottles should not be allowed to empty,
+since the injection point may become clotted and hinder further IV
+administration.  A steady flow of glucose solution should be administered
+to the patient even when a specific transfusion is unnecessary.
+
+Anaesthetic:
+The anaesthetic dial displays the status of the anaesthetic valve.
+Generally, if the dial points to "on," the valve is open, and the patient
+is being anaesthetized.  If the dial points to "off," the valve is closed,
+anaesthetic is not being introduced into the respiration chamber, and
+the patient is breathing only oxygen-rich air.  Making sure the patient
+is fully anaesthetized before commencing the operation is intensely 
+important to any surgeon.  The alternative is quite uncomfortable for
+the patient.
+
+Page 11 \/
+
+Chapter Five:
+Basic Surgical Techniques and the Abdominal Area
+
+In this chapter, we will look at the basic structure of the abdominal
+cavity and the organs and muscle groups found there.  Then, we will
+discuss the general procedure for surgery in the abdominal area,
+around which specific operations can be built.  Finally, we will look 
+at two surgeries that take place in the abdominal area: the 
+appendectomy and the aneurysm graft.  Both surgeries make use of the
+general procedure as a frame for the particular techniques involved.
+
+Basics of the Abdomen
+
+The human body has several layers of tissue surrounding the skeleton
+and internal organs.  The outermost layer, known commonly as the
+skin, protects the body from viral and bacterial infections.  The
+fatty layers underneath store excess nutrients for later use.  Muscles
+provide strength and structure.
+
+Tissue Layers
+
+Skin:
+The inner vascular, sensitive dermis and dead outer epidermis comprise
+the skin layer.  The skin provides a protective cover that holds the
+body together.
+
+Subcutaneous fat:
+Fat is adipose tissue, containing cells distended with oil, that stored
+excess nutrients for use by the body.  The subcutaneous fat layer covers
+the lower frontal abdomen just below the skin.
+
+Muscle Groups
+
+Rectus abdominus:
+The rectus abdominus is a muscle group just below the subcutaneous
+fat layer.  Known as the stomach muscles by laypersons, the rectus
+abdominus is characterized by the rippling effect visible across the
+abdomen.
+
+Linea Alba:
+The thin connective tissue between the left and right halves of the
+rectus abdominus is called the linea alba.  If is often incised 
+vertically to provide access through the rectus abdominus to the
+abdomen.
+
+External Oblique:
+These muscle groups, one on the right and one on the left, cover the
+sides of the abdominal wall from the bottom of the ribs to the top of
+the pelvis.
+
+Transversus Abdominus:
+Lying just below the external oblique, the transversus muscle tissue
+connects at the top of the pelvis and the side of the stomach.  The
+muscle cells run at right angles to those of the external oblique.
+
+Preperitoneum:
+The preperitoneum is a delicate opaque membranous tissue separating
+the
+
+Page 12 \/
+
+abdominal muscle layers and the organs of the abdomen.
+
+Postperitoneum:
+This thin membranous tissue, located just below the intestines, covers
+and protects the kidneys and aorta.
+
+Organs
+
+Intestines:
+One of the major organs of the abdomen, the intestines are responsible
+for the digestion of food and compacting of waste.  The small intestine
+secretes gastric juices to break down food particles into valuable 
+nutrients.  The large intestine compacts waste food material for
+expulsion.
+
+Aorta:
+The aorta is the largest artery in the body.  It is the major vessel
+carrying blood to the abdomen and legs.  Just below the umbilicus or
+"belly button," and aorta splits into the left and right iliac 
+arteries which transport the blood to the legs.
+
+Basic Surgical Techniques
+
+The initial and final steps of most surgeries follow a standardized
+regimen.  This procedure can be used as the start and end of most
+abdominal surgeries.
+
+Surface Preparation
+
+Thorough cleansing and proper attire are required in an operating
+theatre.  The surgeon must scrub with sterile, antiseptic cleanser,
+then dress in an approved, sterile surgical gown.  The face must
+be covered with a sterile mask, and a fresh pair of surgical latex
+gloves must be worn.  The patient's skin must be similarly prepared.
+Scrub the uncovered skin with antiseptic and then cover the unaffected
+regions with a sterile drape.
+
+Initial Medications
+
+When you are ready, add anaesthetic to the patient's air mixture.  
+Before incising, inject antibiotics to prevent infection after the
+operation begins.  Keep a steady glucose IV dripping to balance
+fluid loss.
+
+Incising
+
+Introduction:
+The most basic procedure in an operation is the incision and retraction
+of the top tissue layer.  To remove or manipulate an offending organ
+or appendage, the surgeon must first sever the protective tissue 
+layers which cover it.  Since there are numerous levels of tissues,
+the surgeon must make incisions long enough to allow ample space in
+which to operate after pulling back the tissue layers.
+
+Procedure:
+
+The first step in this process is to incise the tissue layer.  Generally,
+this is done with the scalpel.  Applying moderate pressure, draw the
+scalpel downward across the layer.  Always incise parallel to the muscle
+cells to insure proper healing.
+
+If the layer is an especially thin or delicate one such as the 
+peritoneal layer, do not use the scalpel to incise.  Instead, raise
+a bit of the tissue with forceps and nick it carefully with the
+scalpel.  Then use the scissors to continue the incision from the
+
+Page 13 \/
+
+nicking point.  This method protects the peritoneal layer as well as
+the sensitive organs below.
+
+Controlling Bleeders
+
+Introduction:
+If the layer is vascular (containing veins and arteries), it will bleed.
+The point at which an incision crosses a vein or artery is called a
+bleeder.  These bleeding vessels must be sealed to prevent traumatic
+blood loss.  Use forceps to clamp the bleeders off and temporarily 
+stop the bleeding.  Then use either a cauterizer or a ligator to
+permanently seal each bleeder.
+
+Cauterizer:
+To use a cauterizer, place the tip of the cauterizer on the clamped
+end of the vessel and coagulate.  (For specific instructions, consult
+your Operating Procedures Manual.)
+
+Ligator: 
+To use a ligator, encircle the tip of the clamped bleeder with the
+ligation string and tie off the bleeder tautly.  (For specific 
+instructions, consult your Operating Procedures Manual.)
+
+Retracting
+
+Once the tissue layer is free of bleeders; it may be retracted.  Use the
+retractors to pull back the incised layer.  Slip the blade ends of the
+retractor into the wound and stretch the tissue apart near the incision.
+Be sure your incision is long enough before you attempt to retract.
+If the incision is not long enough, the wound cannot be retracted 
+without damaging the tissue layer.
+
+The incise-ligate / cauterize-retract sequence is repeated until the
+necessary organs or appendages are exposed.  Some layers, of course,
+do not contain blood vessels or arteries, so the ligate / cauterize
+step is unnecessary.
+
+The actual corrective phase of the operation continues at this point.
+
+Closing the Patient
+
+After the operation is complete and you are ready to close the patient,
+gently release the retractor blades.  You must unretract the tissue
+layers by sliding the retractor blades together and then removing the
+retractor (Refer to your Operating Procedures Manual for specific
+instrument procedure.)  At this point, carefully suture the incision
+closed so the patient's wounds will heal.  If you place a suture in
+an incorrect area, it can be removed with the scissors.  You must use
+enough sutures or the wound will not heal.  At the skin level, use
+adhesive skin strips to close the wound rather than sutures.  This
+helps reduce scarring.
+
+Special Techniques
+
+In addition to the general surgical techniques described above,
+each operation requires the mastery of specific techniques to
+bring it to completion.  The rest of this chapter is devoted to
+discussions of the appendectomy and aneurysm grafting techniques.
+
+Page 14 \/
+
+Appendectomy
+
+Introduction:
+The vermiform appendix is located in the lower-right quadrant of the
+patient's abdomen.  Due to its placement and the form of the
+musculature in this area, you must use diagonal muscle split incisions
+to reach it.
+
+Procedure:
+Incise from the patient's upper right to lower left, using what is
+called a McBurneys Incision, through most of the layers.  However,
+take care not to use McBurney's incisions where it may cause
+incisions to cross muscle tissue.  Make certain when incising the
+peritoneum that the colon is not accidentally punctured.
+
+After incising and retracting the peritoneum, take a sample of the
+abdominal fluids; analysis of this specimen will help you prescribe
+proper medication during the patient's recuperation.  Use suction to
+remove the abdominal fluid.  Gently lift the cecum from the abdominal
+cavity until the appendix is free.  The appendix is just underneath
+the cecum.  To elevate, clamp the appendix at its tip.
+
+The mesoappendix membrane must be incised, and the artery running 
+parallel to the appendix must be tied off and severed before the
+appendix can be removed.  Nick the membrane with the scalpel near the
+cecum alongside the mesenteric artery.  Then tie off the mesenteric
+artery with a suture through the nick you've just made.  Carefully
+sever the mesenteric artery from the appendix with the scalpel at
+the tip of the clamp.
+
+Because the infected appendix is filled with offensive fluid, it
+should be clamped off.  To do so, place a clamp at the base of the
+appendix and another slightly higher.  Then, sew a draw-string
+suture between the clamps and sever the appendix.  To ensure proper
+healing of the stump, invert it with you hand and suture the end of
+the cecum closed.  After, replace the cecum into the abdomen and
+close the patient.  If the appendix ruptures during the surgery,
+immediately insert a drain hose into the appendix and allow it to
+drain.
+
+Aneurysm Grafting
+
+Introduction:
+Grafting the aorta is a highly sensitive operation.  The aorta is the
+major blood-carrying vessel in the body.  To remove the clot forming
+the dilation and graft the vessel walls, the aorta must be clamped off,
+stopping precious blood flow to the legs.  As the aorta remains closed
+longer, the probability of abnormal heart rhythms increases dramatically.
+
+Procedure:
+Begin the operation using standard incisions and retractions.  The 
+incision at the rectus abdominus must be made on the linea alba.
+Be sure not to incise the intestines when cutting the preperitoneum.
+The intestines must be lifted from the abdomen and stabilized with
+an intestinal bag so that the preperitoneum can be incised.  Use
+extreme caution when incising the preperitoneum because the aorta
+underneath could be pierced.
+
+There should be ample room to mobilize the aorta past the 
+postperitoneum.  Lay rubber tubing under the aorta with your hand.
+An injection of heparin at this stage will keep the blood from
+clotting and causing embolisms.  Carefully clamp
+
+Page 15 \/
+
+the left and right arteries below the aneurysm and the mesenteric
+artery in the middle of the aorta.  Finally, stop the blood flow
+through the aneurysm by applying a clamp just above the aneurysm.
+Cut the mesenteric artery close to the aorta and ligate it.
+
+The aortal incision should be made along the center of the vessel.
+This incision must be long enough to remove the clot and insert a
+graft.  Lift the clot from the artery with your hand and insert
+the dacron graft.  Suture the graft ends to the aorta walls,
+close the aortal incision and suture.
+
+The aorta must next be checked for leaks.  Release the iliac clamps
+first and then the aorta clamp to examine the area for bleeding.
+If the graft leaks, it will need to be resutured.  Finish by
+demobilizing the aorta and closing the patient.
+
+Page 16 \/
+
+Appendix:
+Glossary
+
+Anaesthesia: A general anaesthetic produces a total lack of bodily 
+             sensation and consciousness.  A local anaesthetic blocks
+             the nerves surrounding an area to be operated on so 
+             that the sensation of pain cannot reach the brain.
+
+Aneurysm: Local dilation or stretching of a blood vessel due to 
+          deterioration, injury or disease of the vessel wall.  This
+          condition creates a pulsating mass over which a "murmur"
+          sound can be heard.
+
+Antibiotic: Antibacterial material, of which penicillin is perhaps
+            the best known, obtained from fungi and bacteria.
+
+Antiseptic: A material that is destructive to microorganisms that lead to
+            disease, fermentation or putrefaction.
+
+Aorta: The major artery that emanates from the left ventricle of the
+       heart.
+
+Artery: A vessel that transports blood from the heart to various 
+        tissues in the body.
+
+Arthritis: Inflammation of joints and / or the surrounding tissues.
+
+Atropine: A drug introduced prior to anaesthetic to lessen the secretion
+          in both bronchial and salivary systems and to prevent cardiac
+          depression by quickening the heartbeat.
+
+Bacteria: Bacteria are a group of microorganisms.  The average size of
+          these small cells is approximately one micron in transverse 
+          diameter.  Some are pathogenic (disease-producing) to humans.
+
+Blood Pressure: The blood pressure is the measure of pressure the heart
+                exerts on the blood vessel walls as it pushes blood 
+                through them.  It is expressed in two numbers, the 
+                systolic pressure and the diastolic pressure.  The 
+                systolic pressure, the peak level, measures the maximum
+                pressure of the blood exerted against the vessel walls 
+                as the heart contracts.  The diastolic pressure represents 
+                the force of blood exerted against the walls as the heart 
+                relaxes.
+
+Bradycardia: A retarded rate of heart contraction producing a slowed
+             pulse rate.
+
+Calculus (calcuci): An abnormal cohesion of mineral substances that can
+                    form in
+
+Page 17 \/
+
+                    the passageways that transmit the body's secretions,
+                    or in the organs that serve as reservoirs for them.
+                    Renal calculi are those located within the kidney.
+
+Cauterizer: An instrument that uses a heated filament to burn or scar
+            tissues and thus coagulate bleeding blood vessels.
+
+Cecum: The roughly 6 cm cul-de-sac that lies below the terminal ileum
+       forming the first part of the large intestine.
+
+Clamp: An instrument used in surgery to grasp, join, compress or 
+       support an organ, tissue or vessel.
+
+Coagulate: Changing a substance from a fluid to a gel, to clot.
+
+Dacron Graft: A smooth, pliable plastic tube that is placed within
+              the aorta in order to stabilize the artery well.
+
+Dopamine: Dopamine is a stimulant used to reverse radical drops in
+          blood pressure.
+
+Drain: The drain is used to siphon offensive fluid from a wound, or in
+       the case of an appendectomy, the appendix.  Insert the end of
+       the drain into the incision and let the fluid drain out.
+       Remove the drain when the fluid has been removed.
+
+Electrocardiogram: The record (also referred to as an EKG) made by an
+                   electrocardiograph, an instrument that receives the
+                   electrical current produced by a heart's contraction
+                   and records it on a moving drum of graph paper or
+                   L.E.D. display.
+
+Embolism: A solid mass, clot or bubble obstructing a blood vessel.
+
+Fluid Vial: A receptacle used to hold a patient's bodily fluids often
+            taken during an operation.
+
+Forceps: An instrument used for holding, seizing or retracting.
+
+Gauze: A thin, meshed material used in a multitude of surgical
+       procedures.
+
+Glucose: Dextrose, blood sugar, corn sugar, grape sugar or starch
+         sugar.
+
+Page 18 \/
+
+         In this form, carbohydrates are absorbed through the intestinal
+         tract and carried by the blood throughout the body.
+
+Heparin: A fast-acting anticoagulant drug.
+
+Intestinal Bag: A receptacle, sometimes called a "gut bag," used
+                during an operation to hold the intestines out of
+                the way of the surgeon as he or she operates.
+
+Intravenous catheter: A hollow tube of variable length used to introduce
+                      fluids into the body, by way of the veins.
+
+IV Bottle: A container for fluid that is fed into the body intravenously
+           (through a vein).
+
+Kidney Stones: Small precipitates, calculi, composed of mineral salts
+               extracted from urine.  These "stones" often become lodged
+               in the ducts of the kidneys.
+
+Lidocaine: A local anaesthetic recognized as effective as an 
+           antiarrhythmic agent.
+
+Ligator: An instrument used to bind or tie vessels that are deep or
+         nearly inaccessible.
+
+Lumen: The smooth interior of a tube such as an artery or intestine.
+
+Palpate: To feel or examine by touch.
+
+Pelvis: The bony, saucer-shaped cavity that protects the bladder, rectum
+        and reproductive organs.
+
+Precipitate: A deposit of solid matter that has separated or settled from
+             a solution.
+
+Premature Ventricular Contraction: Also known as PVC, results from the
+                                   premature contraction of the ventricles
+                                   (lower chambers of the heart.)  This
+                                   "early" or "weak" beat of the heart
+                                   causes an irregular pulse.
+
+Retractors: An instrument for drawing aside the edges of a wound.
+
+Saline: Relating to or containing salt, salty.
+
+Scalpel: A pointed knife with a convex edge.
+
+Scissors: Very delicate layers of tissue are cut using scissors.  This
+          instrument is often used instead of a scalpel because scissors
+          can cut tissues without applying pressure to the tender organs
+          underneath.
+
+Page 19 \/
+
+Skin Clips: Small plastic adhesive clips used to hold the skin layer 
+            closed after incising.
+
+Suction: The suction is a small vacuum hose for removing oily fluids.
+         Deposits of blood or infected fluid can be removed by
+         applying the suction tip to the affected area.
+
+Suture: The material, often nylon or cat gut, used to unite two
+        surfaces of tissue by means of a stitch.
+
+Thrombosis: The formation of a blood clot or clots within the chambers
+            of the heart or in a blood vessel.
+
+Ultrasonic scan: Sound vibrations of a high frequency focused into
+                 a beam whose echoes provide diagnostic information
+                 about the body's different physical properties.
+
+Ventricular Fibrillation: An uncoordinated quivering, as opposed to any
+                          kind of synchronized beat, of the heart's
+                          ventricles (the two lower chambers of the heart).
+                          This condition is usually fatal.
+
+Vermiform: Slender and worm-like in structure.
+
+X-ray: Short rays of the electromagnetic spectrum that are passed through
+       the body and then captured on photographic film.  X-rays are often
+       used to examine irregularities in skeletal formation.
+  
+SKID ROW  SKID ROW  SKID ROW  SKID ROW  SKID ROW  SKID ROW  SKID ROW
+
+                             SKID ROW
+
+                             presents
+  
+                      DAVID A. LINDSTROM, M.D.
+                       A MEDICAL CORPORATION
+                       1229 SOUTHEAST TOWER
+                         45 LINCOLN DRIVE
+                   LOS ANGELES, CALIFORNIA 90024
+  
+MEMO
+
+DT: 9/10/88
+TO: All First-Year Residents
+FM: Dr. David Lindstrom, Chief of Surgery
+RE: Welcome
+
+As Chief of Surgery, I would like to extend my heartfelt welcome to 
+each of you.  While you are probably anxious to begin your duties,
+please take a moment to examine the orientation materials enclosed.
+
+1.  The "New Resident Orientation" (rev. 9/88) handout (attached to 
+this memo), detailing basic hospital procedures of patient admittance,
+diagnosis and the use of message papers.
+
+2.  The Life & Death Operating Procedures and Reference manual, 
+explaining how to get started, with a copy of chapters IV, V and
+Appendix A of Merl and Newman's classic text "Anatomy and the
+Surgical Technique" (Copyright 1938, 1956, 1987, reprinted with
+permission of STW Medical Press).  While our medical center is a 
+general admitting facility, we take special pride in our Department
+of Abdominal Surgery, founded in 1943 by Drs. Robert Merl and Simon
+Newman.  Due to our expertise, many patients with abdominal complaints
+are transferred to TGH and - even as a resident - you can expect to see
+many such cases.  This reprint should help refresh your memory 
+regarding the techniques and terminology of abdominal surgery.
+
+3.  A history of surgery.  It has long been the belief of the hospital
+Board of Directors that modern medical instruction, with its emphasis
+on technique, neglects the more human aspects of the healing arts.
+This document is intended, in small measure, to correct this oversight.
+
+During the day, you can often find me in the classroom where I give 
+daily lectures.  I will be more than happy to respond to any problems
+you may be having with diagnosis or surgical techniques.  Once again,
+welcome to Toolworks General.
+
+Toolworks General Hospital
+New Resident Orientation
+(Rev. 9/88)
+
+Welcome to Toolworks General
+----------------------------
+We know that the first few days as a surgical resident can be difficult,
+so we have put together this orientation handout.  Use it to familiarize
+yourself with the layout of TGH and the procedures you will be expected
+to follow.  Refer to the "Operating Procedures Manual" (enclosed) in
+any instances that you feel more specific instructions are required.
+Good luck!
+
+Your Responsibilities
+---------------------
+You will be working on the eight floor, under the auspices of the
+Department of Abdominal Surgery.  This is a separate unit with its
+own personnel staffing, record keeping and teaching facilities.
+As you know, your job is to diagnose patients (after ordering any
+necessary tests), prescribe treatments or drugs and - when appropriate
+- operate.
+
+In short, you have all the privileges and responsibilities of any other
+surgeon in the hospital.  About the only difference is that Dr. 
+Lindstrom will be tracking your progress and offering guidance when
+needed.
+
+Upon Arrival
+------------
+When you arrive at the start of your shift, the first thing you should
+do is check in at the Nurse's Station.  Hospital policy requires that
+all residents sign in before cases will be assigned.  Monica Pierce,
+the Charge Nurse, keeps track of the sign-in list.  Once you sign in
+with Monica, she will make sure you will receive any messages and let
+you know if you have patients waiting.
+
+Hospital Paging System
+----------------------
+The Board of Directors has installed, at great expense, a hospital
+message paging system.  The paging system assures that all physicians
+can be located immediately so that test results, medical histories
+and other critical information can be passed to you quickly and
+efficiently.  All physicians (except when in surgery) are required to
+carry their beepers and to respond as soon as possible to a page.
+
+Failure to respond in a timely manner will result in dismissal from the
+staff and termination of your hospital privileges.
+
+When your beeper goes off, return as soon as possible to the Nurse's
+Station.  Nurse Pierce will relay the message and make a phone available
+so you can return the call.  If you are uncertain how to operate your
+beeper, please see the more detailed instructions located in your
+"Operating Procedure Manual," also found in this information packet.
+
+The Floor Plan
+--------------
+Aside from the Nurse's Station, there are several other areas with which
+you should become familiar.  Across the hall from the Nurse's Station is
+the Classroom, where Dr. Lindstrom holds daily lectures (along with special
+sessions for residents needing extra instruction.)  The Classroom is
+fully equipped for audio-visual presentations and will become an
+integral part of your continuing education in abdominal surgery.
+
+Patient Rooms
+-------------
+The numbered doors at the end of the hall lead to patient's rooms.  While
+on duty, you are the attending physician for all patients on the floor.
+It is your responsibility to look in on the patients and check their
+progress.  An up-to-date medical history for each patient may be found
+on the clipboard at the base of the patient's bed.  If you feel additional
+test, medication or surgical prep is indicated, mark the appropriate 
+action on the clipboard.  See the "Operating Procedures Manual" for more
+specific instructions on surgery as well as ordering medication and
+tests.
+
+The Personnel Office
+--------------------
+Shelly Marks administers the personnel office.  We recommend that you
+visit Shelly to select your surgical team.  You will find that, while
+each staff member is skilled and competent, all have slightly different
+educational backgrounds, experience and personalities.  It may take a
+while to discover the combination of talent and personality with which
+you feel most comfortable while in the operating theatre.
+
+The Operating Theatre
+---------------------
+The double doors to the left of the Nurse's Station lead to the 
+Operating Theatre.  After surgical prep is ordered, the patient will
+be brought to the OR when ready.
+
+SKID ROW  SKID ROW  SKID ROW  SKID ROW  SKID ROW  SKID ROW  SKID ROW

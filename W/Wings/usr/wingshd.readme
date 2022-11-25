@@ -1,0 +1,34 @@
+Short : HD-Installer for Wings
+Type : game/patch
+Author : Jean-François Fabre (JOTD)
+
+Install-Script & HD-loader © 2001 Jean-François Fabre
+
+Wings is © 1990 Cinemaware
+
+Features:
+
+- Runs fully from HD using WHDLoad with OSEmu
+- Convenient install script
+- Quit key (numerical '*', or configurable with QUITKEY)
+- Docfile included
+- Original quit menu still active (and saves pilot data)
+- Document protection removed (thanks Skid Row)
+- Nice icons by Chris Vella and Frank
+
+Note:
+
+- The game works OK in DOS mode, except that I'm not sure the music is played.
+
+- I started working on this game in November 2000, but I had a hell of a time
+  understanding and emulating overlay executables with OSEmu. I also re-wrote
+  console.device emulation (I could have avoided that since now KickEmu/KickDos
+  makes it possible :) )
+  Now it works, and it will allow to make some other patches when overlay exe
+  is used.
+
+- The game should be downloadable from www.cinemaware.com in the next weeks/months
+
+- You may experiment some slight gfx problems (at level 3). I spent a lot of time
+  trying to fix it, but I could not. So I give it up (I'm not as good as I used
+  to be ;))

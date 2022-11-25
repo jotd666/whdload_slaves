@@ -1,0 +1,22 @@
+Short : HD-Installer for Killerball
+Type : game/patch
+Author : Jean-François Fabre (jffabre@free.fr)
+
+Install-Script & HD-loader © 2000-2002 JOTD
+
+Killerball is © 1990 Microids
+
+Features:
+
+- Uses WHDLoad & OSEmu
+- Uses fastmem/caches for awesome speed
+- prefetch/cache bug removed. Now works with caches
+- music/sound fixed (DBF delays inserted)
+- Save/loads games to HD without OS swaps
+- Manual protection removed
+- Quit key (numerical '*')
+
+History:
+
+v1.1: initial WHDLoad release. Some fixes
+v1.0: JST release

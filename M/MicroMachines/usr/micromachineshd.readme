@@ -1,0 +1,18 @@
+Short: HD Installer for MicroMachines
+Author: JOTD (Jean-François Fabre)
+Type:     game/patch
+
+This install-pack requires the MicroMachines original disk and the WHDLoad program
+available at http://www.whdload.org
+
+Features:
+
+- Access fault removed
+- SNOOP bugs removed
+- Disk protection removed
+- Decrunch routines relocated in fast memory for even better load speed
+- QUITKEY quits anytime
+- Nice icon by Exoticons
+- Convenient Install script
+
+Thanks for Juergen Urbanek for full testing.

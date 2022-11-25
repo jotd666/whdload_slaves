@@ -1,0 +1,66 @@
+
+
+(if
+  (getenv "WHDLInstPath")
+  (set @default-dest (getenv "WHDLInstPath"))
+)
+
+(set #mathtrans "mathtrans.library")
+
+(if
+   (exists ("LIBS:%s" #mathtrans))
+   ("")
+   (abort ("file %s not found in LIBS:" #mathtrans))
+)
+
+
+;ask the user to select a directory to install the game into
+(set default-dest
+     (askdir (prompt "Where is " @app-name " installed?\n")
+                     (help @askdir-help)
+                     (default @default-dest)
+                     (newpath)
+             )
+)
+(set @default-dest default-dest)
+
+(run ("setenv WHDLInstPath \"%s\"\ncopy ENV:WHDLInstPath ENVARC:" @default-dest))
+
+
+(copyfiles 
+        (help @copyfiles-help)
+	(source ("%s.slave" @app-name))
+        (dest @default-dest)
+)
+
+(copyfiles 
+        (help @copyfiles-help)
+	(source ("LIBS:%s" #mathtrans))
+        (dest (tackon @default-dest "libs"))
+)
+(copyfiles 
+        (help @copyfiles-help)
+	(source "Jouster3HiScores")
+        (dest @default-dest)
+)
+
+
+  (set #icon
+    (askchoice
+      (prompt "\nWhich icon do you like to install ?\n")
+      (default 0)
+      (choices "Original Icon" "Chris ColorIcon")
+      (help @askchoice-help)
+    )
+  )
+
+(select #icon
+  (set #icon ("%s.inf" @app-name))
+  (set #icon ("%s.coloricon" @app-name))
+)
+(copyfiles
+  (help @copyfiles-help)
+  (source #icon)
+  (newname ("%s.info" @app-name))
+  (dest @default-dest)
+)

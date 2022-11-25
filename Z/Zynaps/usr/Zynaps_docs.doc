@@ -1,0 +1,106 @@
+                            Zynaps docs
+                         by MERKWooD/MAAD
+
+SCENARIO
+
+Zynaps is a shoot-em-up set in an alien infested planetary system.
+
+The game begins with our hero escaping in a Scorpion fighter from an alien
+space station out into deep space. Battle continues through asteroid storms
+to a nearby planet from where, equipped with weaponry and hyperspace units
+taken from destroyed alien craft, he sets out in search of the secret alien
+stronghold.
+
+After many terrifying battles fought throughout the solar system our hero
+discovers the location of the alien base and the final conflict can begin...
+
+CONTROLS
+
+Use a joystick to simulate up, down, left, right and fire. During the titles
+sequence:
+
+F1 selects one or two player games
+F2 selects one or two joysticks
+
+During play the fire button fires weapons or when held down activates the
+fuel scoop. Some weapons require the fire button to be held down before they
+will fire. To pause the game during play press ESC. Press fire to restart or
+Q to quit game.
+
+THE SCORPION ATTACK FIGHTER:
+
+The MK1 Scorpion is supplied with a wider range of sophisticated equipment
+and weaponry powered by an internally mounted fuel scoop.
+
+Propulsion:        The main drive units can be operated at four power levels
+                   ranging from low power for delicate control in tight
+                   spaces, to a maximum setting for high speed combat in
+                   deep space.
+
+WEAPON SYSTEMS
+
+Pulse Lasers:      Ideal for heavy duty alien blasting. These wing mounted
+                   lasers also have four power settings.
+
+Plasma Bombs:      Two independent bomb throwers provide awesome destructive
+                   power against groundbased targets.
+
+Homing Missiles:   These self propelled missiles carry scaled down planet
+                   bursting warheads and, once locked onto target, will
+                   destroy almost any large alien craft.
+
+Seeker Missiles:   The ultimate in intelligent weaponry. Seeker missiles
+                   carry automatic target acquisition circuitry designed to
+                   lock onto any target they are able to destroy.
+
+THE FUEL SCOOP
+
+This provides the power to activate the Scorpion's main systems. To activate
+a piece of equipment (weapons, propulsion, etc) collect sufficient fuel to
+highlight the desired equipment in the WEAPONRY ACTIVATION INDICATOR, then
+collect one more piece of fuel with the scoop in ACTIVATION mode.
+
+To go into activation mode hold down the fire button until the ship changes
+from yellow to blue and keep it depressed while picking up the fuel. The new
+equipment will be activated, or it's power setting increased and the
+indicator reset to position one - Speedup.
+
+The WEAPONRY ACTIVATION INDICATOR displays, in order:
+
+SPEEDUP              Increase speed
+FIREPOWER            Increase laser power
+BOMBS                Activate bomb thrower 
+MISSILES             Enable missile targeting
+
+THE OPPOSITION
+
+The opposition in Zynaps comes in five dangerous varieties:
+
+Spacecraft:          Small flying craft can usually be destroyed with one hit                  
+                     from a laser, bomb or seeker missile. Homming missiles
+                     cannot lock-on.
+
+Ground               Dangerous planet-bound defence installations require
+Installations:       multiple laser hits or a single bomb or seeker missile
+                     to destroy them.
+
+Alien Command        Large flying craft, heavily armed and well protected.
+Ships:               These can be destroyed with multiple laser hits or
+                     homming missiles.
+
+Mother Ships:        Giant aliens - like the command ships only more so!
+
+Natural Hazards:     These consist largely of asteroids and other flying
+                     debris - keep well clear!
+
+Warning:             Alien craft are known to be well armed with a variety
+                     of missiles, homming missiles and mines!
+
+Scoring:             Points are awarded for blasting individual aliens and
+                     special bonuses for destroying complete formations of
+                     more dangerous aliens.
+                     Bonus lives are awarded at 10,000 points and every
+                     20,000 thereafter.
+
+Enjoy the game, hope the docs help     MERKWooD/MAAD
+

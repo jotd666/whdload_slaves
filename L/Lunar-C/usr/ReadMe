@@ -1,0 +1,57 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Lunar-C CD³²" © 1993 Mindscape, part of the
+ Lunar-C/Overkill CD³² compilation.
+
+ Thanks to Tony Aksnes for providing the original CD-ROM
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ The installed program requires 2.0 MB ChipMem and 1.0 MB OtherMem.
+ It can be quit by pressing F10 (key can be changed with Tooltype "QuitKey=").
+
+ The game requires an installed A1200 Kickstart 3.1 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick40068.A1200". The image can be extracted from a A1200 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick40068.A1200.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick344.lha" on aminet.
+
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page.
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 1.0-B (26.01.03)
+ - added color icons by Dr Zarkov, Captain HIT, and Aldo Bianchi
+ - fixed install script
+
+ version 1.0 (18.01.03) done by JOTD:
+ - initial release of this Project-X hideous copy with terrible gameplay
+ - adjusted memory size to avoid sound problems
+
+                                (LEVEL CODES, from SweetCheater)
+
+                        Security Zone---"MEBBHKSBAL"
+                        Cooling Chamber-"MFDCRHOCCS"
+                        Energy Duct-----"WJRICCDFEU"
+                        Mystery Code------"BYL ERAI"

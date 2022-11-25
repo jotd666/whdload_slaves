@@ -1,0 +1,521 @@
+
+        _____       __      ___  ____       _______    ______
+       / ___/\  /\  \ \    / _/ / __ \     /_  ___ \  /\____/\  /\      /\
+      / / _/ / / /__/\/   / /  / /  \ \     / /__/ / / /   / / / /     / /
+      \ \ \_/ /    __/   / /  / /   /\/    / //___/ / /   / / / /     / /
+    /\ \ \   / /\ \     / /  / /   / /    / / \ \  / /   / / / / __  / /
+   / /__\ \ / /__\ \__ / /_ / /___/ /    / /__ \ \_\/___/ /  \ \/ /\/ / 
+   \/____\/ \/__/ \__/ \/_/ \/_____/     \/__/  \________/    \/_/\_\/-bbox 
+
+              Presents the docs to Wings from Cinemaware!
+
+Gotta get this outta the way first: greetings to Freddy Kreuger and all
+non-Iraqi military personnel in the Persian Gulf theatre of war.
+
+            
+                                 Introduction
+
+  Thank you for purchasing Wings (you better do it!), Cinemaware's first
+Personal Combat Simulator. Stricly speaking, Wings is not an interactive
+movie, nor could it be called a military flight simulator, and yet it
+combines elements of both to create a unique interactive experience.
+
+  Wings is not a game about winning or losing. In fact, there is no way to
+lose the game, and the only winner is the player with enough skill and
+determination to face over 230 different missions and see the war through to
+its end. It isn't easy. You find new challenges and surprises at every step,
+and your opponents' skills and aircraft dramatically improve as the war
+progresses.
+
+  The game is historically accurate wherever possible. The Das Rittmeister
+character that you meet at the end of 1916 is fictionalized, as well as the
+56th Aerosquadron itself, which represents a typical English, American, or
+French fighter unit. The real 56th squadron was an elite unit made up of the
+top pilots of England. They traded flight tactics and tested new SE5's before
+returning to their units to share their newly acquired knowledge.
+
+  Welcome to WWI. It is March 2, 1916. You're about to find out what it was
+ really like to be an Allied pilot in the Great War. Good luck, Lieutenant.
+
+                            Before Loading the Game
+
+  Before loading Wings, make backup copies of both disks. Make sure that the
+copies are named "reel 1" and "reel 2". Put the originals in a safe place
+and play the game from the copies.
+  Caution: do not write protect reel 2, as games are saved to this disk.
+  Hard disk installation: you can install Wings to you HD. On reel 1 is a
+file named READ_ME.INSTALL that explains the procedure.
+
+                             Loading Instructions
+
+  Connect a joystick and turn on your monitor. Insert reel 1 into df0: (if
+you have 2 drives, insert reel 2 into df1:) and turn on your computer (1000
+owners, boot using kickstart v1.2 or later). If you're using only one disk
+drive, follow the prompts for switching disks. Once the game is loaded, the
+title sequence begins. You can bypass this by pressing the fire button.
+
+                                 Flight School
+
+  If you are playing Wings for the first time, you will go directly to Flight
+School after the title sequence. The menu selection let you Add Pilot, Delete
+Pilot, View Pilot, Earn Wings, Join Squadron, and Quit/Exit. The options
+available at any given time are highlighted.
+
+  One pilot, Waldo P. Barnstormer, has already earned his wings when you
+arrive at Flight School. You may use him as your alter ego if you want to
+jump right into the game. Or, create a new pilot and go through the pilot
+training sessions to earn your own wings.
+
+  ADD PILOT select this option and the Add Pilot screen appears (you can add
+up to 10 pilots). Type in your pilot's name and press RETURN (2nd Lieutenant
+is your first rank). The box at the bottom of the screen lets you set your
+pilot's abilities. Use the joystick to click on the bars (or use cursor keys)
+to change the ability levels. The bar color changes from red (low) to yellow
+(adequate) to green (good), depending on the level of ability assigined.
+
+  The Ability Points indicator at the top of the box shows how many points
+that you can assign. When you create a new pilot, he has 40 points assinged
+to each ability, plus 40 more that you can distribute between his abilites.
+This is the only time you can actively adjust these numbers. During the game,
+these abilities increase or decrease according to your performance in battle.
+
+  After making your selections, press ESC to go back to the Flight School
+screen.
+
+  DELETE PILOT  select this option to remove a pilot from the Flight School
+roster.
+
+  VIEW PILOT  select this option to see any Flight School pilot's statistics.
+You'll notice that most of these categories have no figures while you're in
+school. Later, after you've seen a few battles, you'll learn what these mean.
+
+  EARN WINGS  select this option to go to Flight School. You must pass 
+training in order to join the 56th Aerosquadron. You'll be assigned training
+missions (strafing, bombing, or flying), which are excellent practice for the
+real thing. Once you succeed at one of the training missions, you earn your
+wings and are eligible to Join Squadron.
+
+  JOIN SQUADRON select this option after earning your wings to join the 56th
+Aerosquadron. Make this selection, then choose which qualified pilot you wish
+to be in the game (only one pilot at a time can join the 56th). You must give
+a password to be allowed in the 56th Aerosquadron, and you can find that
+password in your Pilot's Briefing Manual (HAHAHAHA! password removed by SKID
+ROW!)
+
+  After you give the correct password, you receive a briefing from your
+commanding officer, Col. Charles Farrah, at the 56th HQ. Then the Squadron
+Roster appears, where you see all the members of the 56th listed by rank, 
+the # of missions they've flown, and enemy plans they've downed. Select
+CONTINUE GAME. A company journal appears-your diary of the war. Pages turn
+automatically to the current day's entry-read it carefuly, as it often has
+vital information about your upcomming missions. Press FIRE to go to your
+first mission.
+
+  QUIT/EXIT If you haven't joined the 56th, this ends the game session. If
+you have a pilot in the 56th, QUIT/EXIT takes you to the Main Menu.
+ 
+                                  Main Menu
+
+  If you have a saved game, the Main Menu appears after the title sequence.
+You can also access this menu from other points in the game.
+
+  The Main Menu has 5 selections: REVIEW PILOTS, CONTINUE GAME, NEW GAME,
+FLIGHT SCHOOL, EXIT/SAVE. use the joystick to move the cursor arrow to the
+desired selection; press fire to select.
+
+  REVIEW PILOTS  select this option to view the Squadron Roster. This lists
+all the members of the 56th by rank, # of missions flown, and enemy pilots
+downed. From this screen you can select Current Pilot, Memorial (list of
+the 20 best Wings players), or Exit (to return to the Main Menu).
+
+  CONTINUE GAME  anytime the game take you to the Main Menu, select this
+option to resume playing the current game.
+
+  NEW GAME  select this option and you see the prompt DELETE GAME IN 
+PROGRESS? Select YES to start a new game. If you have a game in progress
+that you don't want to lose select NO, then CONTINUE GAME (or Exit/Save
+to save the game).
+
+  FLIGHT SCHOOL select this option to create and train pilots.
+
+  EXIT/SAVE select this option to end the current session and save the game.
+Only one game at a time may be save on Reel 2. If you wish to save more than
+one game, make copies of Reel 2 and use a different copy for each game.
+
+                             Aerial Combat Missions
+
+  In any aerial combat mission, your flying skill is of paramount importance.
+You must be able to evade enemy fire, maneuver to get enemy targets in your
+sights, an occaisonally land a badly crippled airplane without crashing.
+Enemy planes and the baskets of enemy observation balloons are easily
+distinguished by their red coloring; Allied aircraft are light brown.
+
+  If you can see bushes, you are flying VERY low. To maintain level flight, 
+keep your the horizon line inside your circular gunsight. If you stall
+(your engine coughs and you start to dive), don't panic. Release the stick
+for a moment to regain lost airspeed, then ease it back to return to level 
+flight.
+
+  Missions aren't over until all enemy planes and balloons have been shot 
+down (make sure that your enemy actually hits the ground; a damaged plane CAN
+recover and come back to attack you). You can ditch (land you plane) to make
+a hasty exit from any aerial combat missions. Of course, this is frowned upon
+by Wing HQ.
+
+  Look araound by pressing these keys on the number pad: 8-forward; 4-left;
+6-right; 2-back. Press fire to shoot your machine guns.
+
+  NOTE: when you are facing forward, watch for your pilot's head to turn left
+or right; that is the direction of the nearest enemy plane.
+
+  Before each aerial combat mission you receive mission orders that include
+the date, type of mission, and who (if anyone) will be flying with you
+(including how many missions each of you has flown and how many confirmed
+kills you've made).
+
+  After you your mission orders and take off (click on FLY), a "movie card"
+appears. Important information about the upcoming battle is included in these
+messages.
+
+  There are four types of aerial combat missions.
+
+  PATROL Destroy all enemy aircraft (you may meet anywhere from 1 to 10). If
+any enemy planes get by you and your comrades, you fail your mission.
+
+  BALLOON BUSTING Destroy all enemy balloons (1-5) and any palnes protecting
+them. You will also be under anti-aircraft fire from the ground.
+
+  ESCORT Ensure the safety of the bomber or recon plane you are assigned to
+escort by destroying all enemy aircraft. If you lose the plane that you're
+escorting, you fail your mission.
+
+  PROTECT Destroy all enemy planes and ensure the safety of the Allied base
+or balloons you are assigned to protect. If the base is hit or the balloons
+destroyed, you fail your mission.
+
+  At the end of each aerial combat mission you recieve a Post Flight Log.
+This mission report tells you whether your mission was a success or a
+failure, the name of all 56th pilots involved, their status (OK, downed,
+etc>), and how many planes and/or balloons each pilot shot down.
+
+  If you are unlucky enough to go down and can't make a smooth landing, your
+pilot will be killed. This means that you must go back to Flight School and
+create a new persona to continue the war.
+
+                               Strafing Missions
+
+  In any strafing mission, your shooting skill is vital. Press fire to shoot
+your machine guns and watch slightly ahead of your plane for the flashing
+streaks where the bullets hit the ground. Some targets require several hits 
+to finish them off. You must be able to hit enemy trucks, trains, tents,
+ infantrymen, etc., and avoid hitting ambulances, and red-cross tents. You
+must also avoid being hit by ground fire. You can't die in a strafing
+mission, but you can be shot down by repeated machine-gun hits or a single
+hit from a large anti-aircraft gun.
+
+  Before each strafing mission you receive a set of mission orders that
+include the date, the type of mission (your primary target), any secondary
+targets, and what to avaoid hitting. In order to succeed in a strafing 
+mission, you  must destroy 50% or more of your primary objective targets (in
+a train  strafing mission, you must destroy 50% of the cars as well as the
+engine). Destroying secondary targets improves you pilot's ratings.
+ 
+  At the end of each strafing mission, the Post Flight Log tells you 
+whether your mission was a success or a failure, how many rounds of
+ammunition you shot, what percentage of your shots hot a target, and your 
+status. It also tells you how many of those targets you destroyed and
+what percentage of the targets you destroyed.
+
+                                Bombing Missions
+
+
+  You first bombing mission comes later in the game, as bombs were in 
+short supply at the beginning of the war. When you do get bombs, good aim
+is crucial. You must be able to hit enemy targets and avoid hitting
+hospitals, churches (what fun is that?), schools, and ambulances (all of
+which are marked by a red cross). You can't die in a bombing mission, but you
+can be shot down by direct hits from anti-aircraft fire (close shell bursts
+rock your plane and make it uncontrollable for several seconds).
+
+  You can see how many bombs you're carrying (max of 10) by looking at the 
+underside of your wings. Press fire to shoot your machine guns. To drop a
+bomb, press fire while simultaneously tapping back on the joystick.
+
+  Before each bombing mission you receive a set of mission orders that
+include the date, the type of mission (your primary target), any secondary
+tagets, and what to avoid hitting.
+
+  After you see the mission orders, a recon photo of the target area is
+diplayed. On the photo you'll see your primary targets circled in red (if
+your primary target is a moving taget such as a submarine or a train, you 
+won't see a recon photo). In order to succeed in a bombing mission, you
+must destroy all of your primary objective targets. Destroying secondary
+targets improves your pilot's ratings.
+
+  At the end of each bombing mission, the Post Flight Log tells you 
+whether you mission was a success or failure, how many bombs you carried,
+how many bombs you dropped, how many targets were part of your primary and
+secondary abjectives, and how many of those targets you destroyed.
+
+                              Aerial Combat Flying
+
+  All functions of flying your plane in Wings are controlled by the joystick.
+Pushing the joystick forward or pulling it back operates the elevators
+(located on the tail of the plane) and points the nose of the plane down
+(diving) or up (climbing). Airspeed increases are accomplished by diving.
+Pushing the joystick left or right operates the ailerons (the wing flaps) and
+causes one wing to drop and the other to lift, enabling rolls and turns.
+
+  There are three methods of control, from which all aerobatics maneuvers are
+derived: roll, pitch and yaw. Think of your plane as having three axes. The
+first axis runs from the nose to the tail, and rotation arounf this axis is
+called a roll (turning over). The second axis runs from wingtip to wingtip
+and rotation around it it called pitch (diving and climbing). The third axis
+passes vertically through the center of the plane and rotation around it is
+called yaw (turning left or right).
+
+  ROLL To execute a roll, push the joystick all the way to the left or right
+and hold it. Level off by centering the joystick when the horizon is level.
+
+  PITCH To climb from level flight, pull the joystick back. Listen to the 
+engine sounds and you'll notice that the engine slows down as you climb. If
+you climb to steeply, you lose too much airspeed and stall the plane. Push
+the joystick forward to dive, which increases you speed and can correct a
+stall if done in time.
+
+  YAW To turn, push the joystick left or right to bank the plane, then center
+the joystick. The plane continues in a full turn. To stop turning, level the
+plane.
+
+  On the next few pages are several aerobatic maneavers you can perform in
+your SE5. A little fancy wing-work can help you evade the huns in a dogfight;
+but, don't forget, the object here is to shoot your taget and get out alive!
+
+  CAUTION: When doing aerobatics of any sort, be sure you have enough
+altitude to complete the maneuver without hitting the ground! Loops are
+especially dangerous in WWI aircraft, as you always come out of a loop
+at a lower altitude than when you began it.
+
+  ONE-HALF ROLL TO INVERTED FLIGHT From upright level flight, push the 
+joystick all the way to the right (to the left, if you want to roll left).
+As you approach upside-down position, keep in mind that pulling back on the
+joystick noses the plane toward the ground and pushing forward pitches it 
+skyward. Level off when inverted.
+  [Note: lots of nifty diagrams here.....BUY THE GAME TO SEE THEM! They can't
+be done in ansi, sorry.]
+
+  ONE-HALF ROLL FROM INVERTED FLIGHT From inverted level flight, push the 
+joystick all the way to the right. As you appraoch the upright position,
+center the stick.
+
+  SLOW ROLL From upright level flight, push the joystick all the way to the 
+right. To stop rolling, center the stick.
+
+  FOUR-POINT HESITATION ROLL Push the joystick to the right to begin the
+roll. Briefly center the stick at the 1/4, 1/2, and 3/4 points of this roll.
+To stop rolling at the end of the roll, center the stick.
+
+  EIGHT-POINT HESITATION ROLL Same thing as the four-point roll. Just stop at
+every 1/8 point of the roll.
+
+  ONE-HALF LOOP TO INVERTED FLIGHT  Start at a reasonalby high altitude and
+dive to increase airspeed. At the bottom of the dive, pull sharply back on
+the stick until you loop into inverted flight. Center the stick to level out.
+
+  ONE-HALF LOOP FROM INVERTED FLIGHT From inverted flight, pull back on the
+stick until you loop into upright flight. Center the stick to level out.
+
+                               ADVANCED MANEUVERS
+                        ATTEMPT ONLY FROM HIGH ALTITUDES
+
+
+  INSIDE LOOP Start at a reasonably high altitude and dive to increase 
+airspeed.
+
+  At the bottom of your dive, pull sharply back on the stick to climb and
+loop.
+
+  Continue holding back on the stick all the way through the loop, until
+you finish in upright level flight.
+
+  ONE-HALF CUBAN 8 Start at a reasonably high altitude and dive to increase
+airspeed.
+
+  At the bottom of the dive, pull sharply back on the stick to climb and
+loop. Continue to hold back on the stick through the top of the loop until
+you are nosing directly down.
+
+  At the 3/4 point of the loop, center the stick. Push right on the stick to 
+do a 1/2 roll to upright position; center the stick to stop roll. As you come
+upright, pull back on the stick until you are level in horizontal flight.
+
+  SPLIT S  Do a 1/2 roll right to inverted position. Pull the stick back to 
+pitch downward, until you level out when you reach horizontal position.
+
+  IMMELMANN TURN  Start at a high altitude. Dive to increase airspeed. At
+the bottom of your dive, pull back on the stick to climb and loop until you
+are in level flight. Then release the stick. Roll right to upright flight and
+center the stick to stop the roll.
+
+                                    RATINGS
+
+  To view your status in Wings, select REVIEW PILOTS from the Main Menu, then
+select Current Pilot from the Squadron Roster screen.
+
+  The status screen is divided into 4 sections. The first section shows your
+rank; name; # of missions; # of times you ditched or were downed; # of 
+reprimands you've received; and # of times you were victorious in each type
+of mission (dogfights, bombing raids, and strafing runs).
+
+  The second section shows your confirmed kills, broken down by monoplanes,
+biplanes, triplanes (five planes and you're an ACE!), and balloons.
+
+  The third section lists your personal stats: flying ability, mechanical
+aptitude, shooting ability, and stamina. You set these levels when you create
+your pilot, then your performance in battle affects them from that point.
+
+  Successful missions affect all four of these favorably; an unsuccessful
+mission affects them all negatively. The amount of effect is determined by
+the mission's difficulty level. Successful missions positively affect your
+entire squadron. Repeated failure has a negative effect on the squadron's
+morale.
+
+  FLYING ABILTY  The general maneuverability of your airplane (how fast you
+can fly and turn) is affected by this ability.
+
+  MECHANICAL APTITUDE  This rating affects how well your plane holds up in
+the air, whether or not the guns jam, and how much functionality and control
+you have if you are hit.
+
+  SHOOTING ABILITY  The level of this ability affects the # of hits that you
+need in order to take out enemy aircraft. It also determines the accuracy and
+range of you machine guns.
+
+  STAMINA  The level of stamina determines how well you're able to survive
+crashes. Rookie pilots tend to be killed instantly in mid-air collisions, 
+while pilots with high stamina may get a chance to land.
+
+  Certain activities in successful missions can favorably affect particular
+ratings. In a strafing mission, if you hit the required # of primary
+targets, then take out a majority of your secondary targets, your shooting
+ablility increases. Hitting all the supply areas in a successful strafing
+mission also ads more to your shooting ablilty. If you sustain no hits to
+your plane during a successful strafing mission, you get a signifigant
+increase in mechanical aptitude. The more hits you sustain, the smaller 
+the increase. Getting shot down results in a decrease in mechanical 
+aptitude (even in a successful mission).
+
+  After you hit your primary targets in a bombing mission, you get extra
+flying ablity for success at hitting seconday targets. If you avoid being
+hit by anti-aircraft flak during a successful bombing mission, you get extra
+stamina.
+
+  When you abilty levels change, the "nickname" you get for each category
+changes on your status screen. The chart below shows some of the changes you
+may see, starting with the lowest possible rating.
+  
+      FLYING        MECHANICAL        SHOOTING        STAMINA
+  Sitting Duck      Butterfingers     Pea Shooter     Door Mat
+  Clay Pidgeon I    Apprentice I      Marksman I      Lead Belly I
+  Clay Pidgeon II   Apprentice II     Marksman II     Lead Belly II
+  Sky Falcon I      Grease Monkey I   Sharpshooter I  Granite Gut I
+      ?                 ?                 ?               ?
+      ?                 ?                 ?               ?
+      ?                 ?                 ?               ?
+      ?                 ?                 ?               ?
+
+  When you win a medal, it appears in its appropriate niche in the bottom
+window. Medals and promotions are awarded based on the pilot's successes and
+the mood at Wing HQ. Mood is affected by how the squadron does as a unit.
+Keep this is mind next time one of your buddies sweeps in and steals a
+hard-earned kill just as you were about to deliver the finishing blow.
+
+                               WINNING AND LOSING
+ 
+  You can't really lose the game, but you can lose a pilot. Naturally, if
+your pilot dies, he's out of the picture. If you fail at three missions in a
+row, you recieve a severe warning from you C.O. You get a second warning with
+your 4th consecutive failure, and you're thrown out of the squadron with five
+failures in a row. Just one success in between these failures will keep you
+in the air.
+
+  Your pilot can also be given a dishonorable discharge for behaviour
+unbecoming an officer of the 56th Aerosquadron. Unacceptable behavior
+includes shooting down one of yur own planes or balloons, or shooting any
+object marked with a red cress (ambulances, hospitals, schools, and
+churches). Each time you do one of these dastardly dees, you get a reprimand.
+Three reprimands and you're out!
+
+  You can win Wings by Surviving until Armistice Day. The last mission is on
+Nov 10, 1918. When you make it through that mission, you've made it through
+the war and to victory!
+
+                              STRATEGY AND TACTICS
+
+    AERIAL COMBAT MISSIONS  At the beginning of a mission where the enemy is
+in front, circle around and attack from behind. When your group is
+outnumbered you can't afford this luxury, because you risk losing your
+wingmen who are counting on you for cover. In this situation, attack quickly,
+spltting the opposition, then dive out before you sustain too much damage.
+This tactic can save your buddies' lives by diverting enemy fire. And on the
+really tough missions, you're going to need all the help that you can get up
+there!
+
+  Use the numeric keypad to look around. Don't let the enemy surprise you!
+
+  If you see an enemy pilot in front of you, don't try to fly straight at
+him. Figure out which direction he's headed and fly to where you think he is
+going.
+
+  To avoid enemy fire during a dogfight, keep dodging, don't fly at a
+constant altitude, and, if you get hit, dive or climb immediately.
+
+  There are three ways to avoid Archie (anti-aircraft) fire when going after
+an enemy balloon: fly over the balloon and dive straight down on top of it
+(this strategy was used by many pilots); fly around the shell bursts and
+attack from the rear; or strafe the anti-aircraft gun and destroy it (dive
+straight down at the beginnin of a balloon busting mission and you'll usually
+find the anti-aircraft gun).
+
+  Be careful when attacking an enemy plane head-on, especially when it is
+above you. A well placed burst could send him spiraling out of control-and
+right into your flight path!
+
+  When following a banking target, lead him with your shots.
+
+  Don't shoot Allied anti-aircraft guns!
+
+  STRAFING AND BOMBING MISSIONS  When you recieve mission orders, your 
+mission objective is the primary target you must destroy.
+
+  STRAFING MISSIONS  Keep moving and try to hit the infantry before they
+crouch down to shoot. This helps keep your plane in one piece.
+
+  If you don't have time to take out the anti-aircraft gun, watch where the 
+shell bursts are hitting and fly around that spot. It only takes one hit from
+an Archie to end your mission in a hurry.
+
+  When you're strafing infantry, get them before they can escape to the right
+or left side of the screen.
+
+  BOMBING MISSIONS  Keep moving to avoid the anti-aircraft gun.
+
+  When you're ready to drop your bombs, wait for the guns to fire; then, move
+in quickly and release your deadly cargo before they can fire again.
+
+  When enemy planes come in, quickly take them out (if you can't avoid them).
+They'll interfere with you and keep you from getting to your target.
+
+
+
+
+
+  That was the instruction manual; I will NOT type in the "Aviator's Briefing
+Manual for the First World War" as that is 80 pages! It is also just a  bunch
+of interesting stuff about WWI that you don't need to play. However, if
+anyone wants the stats for the planes, let me know and I will type them up.
+Otherwise, YOU CAN BUY THE GAME TO READ THAT MANUAL!!!!!!!!!!!!!
+
+
+                                                   Mictlantecuhtli/Skid Row
+
