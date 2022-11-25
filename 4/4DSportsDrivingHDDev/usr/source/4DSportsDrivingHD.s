@@ -32,7 +32,12 @@
 
 ;============================================================================
 
+;USE_PROFILING
 
+	IFD	USE_PROFILING
+CHIP_ONLY	
+	ENDC
+	
 ;CHIP_ONLY
 
 	IFD	CHIP_ONLY
@@ -63,6 +68,8 @@ BOOTDOS
 ; doesn't have a MMU so whdload doesn't enable caches at all
 ; despite CACHE define (which doesn't cache chipmem)
 CACHECHIPDATA
+
+
 ;============================================================================
 
 slv_Version	= 16
@@ -158,6 +165,13 @@ _bootdos
 		jmp	(resload_Abort,a2)
 
 patch_main
+	IFD	USE_PROFILING
+	move.l	#$10000,d0
+	lea		$100.W,a1
+	bsr		init_allocated_address	
+	bsr		install_profiler_vbl_hook
+	ENDC
+	
 	move.l	D7,A1
 	addq.l	#4,A1
 
@@ -349,6 +363,10 @@ load_exe:
 	add.l	#resload_Abort,(a7)
 	rts
 
+	IFD	USE_PROFILING
+	include	profiler.s
+	ENDC
+	
 _saveregs
 		ds.l	16,0
 _stacksize

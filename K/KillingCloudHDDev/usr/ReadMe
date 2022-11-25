@@ -8,11 +8,20 @@
 
 HISTORY
 
- Version 2.0 (2022) done by JOTD
+ Version 2.0 (11.2022) done by paraj:
+ - faster draw operation on fast machines
+ - takes advantage of AGA fmode for even better speed
+ - fixed more self-modifying code
+
+ Version 2.0 beta (xx.11.2022) done by JOTD
  - now uses fast memory for better speed
  - restored slave source code with missing bits
  - added more document files (hints, keys...)
  - adapted to whdload 17
+ - quitkey on 68000/NOVBRMOVE
+ - keyboard fixed
+ - only one version supported now
+ - TODO: relocation of "backup" part crashes???
  
  Version R1 (11/2001) done by Girv
  - first release
@@ -22,6 +31,12 @@ HISTORY
  - removed manual protection
  - enabled instruction cache
 
+NOTE:
+
+If you get "unsupported version", it means that your version
+is no longer supported for newer features. Relocating the executable
+in fast memory took a lot of time and I'm not redoing it for the other
+version... Use old slave instead
 
 LICENCE
 

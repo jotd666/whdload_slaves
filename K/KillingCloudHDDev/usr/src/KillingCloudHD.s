@@ -9,14 +9,16 @@
 	INCLUDE	whdmacros.i
 
 ;CHIP_ONLY
-
+ALLOC_DEBUG=0
 
 RELOC_ENABLED = 1
 	IFD	RELOC_ENABLED
-RELOC_MEM = $30000
+RELOC_MEM = $80000
 	ELSE
 RELOC_MEM = 0
 	ENDC
+
+PROGRAM_START = $1000
 
 ;==========================================================================
 
@@ -41,6 +43,7 @@ _base:	SLAVE_HEADER		;ws_Security + ws_ID
 	dc.w	_cwdname-_base	;ws_CurrentDir
 	dc.w	0
 	dc.b	$58	;ws_keydebug
+_keyexit
 	dc.b	$59	;ws_keyexit
 _expmem:	dc.l	EXPMEM_SIZE	;ws_ExpMem
 	dc.w	_wsname-_base	;ws_name
@@ -51,6 +54,12 @@ _expmem:	dc.l	EXPMEM_SIZE	;ws_ExpMem
 	dc.w	0                       ;ws_kickcrc
 	dc.w	_config-_base		;ws_config
 _config	
+	dc.b	"C1:B:Use original drawing code;"
+	dc.b	"C2:B:Don't change fetch mode for AGA;"
+	IFND	CHIP_ONLY
+	dc.b	"C3:B:No fast RAM alloc;"
+	ENDC
+	dc.b	"C5:B:Show FPS;"
     dc.b	0
 
 ;==========================================================================
@@ -74,7 +83,8 @@ DECL_VERSION:MACRO
 
 ;==========================================================================
 
-_start:	bsr	_initialise
+_start:
+        bsr	_initialise
 
 	IFD		RELOC_ENABLED
 	lea		_reloc_base(pc),a0
@@ -132,8 +142,9 @@ check_version:
 	lea		version(pc),a4
 	cmp.w	#$38a2,d0
 	beq.b	version_1
-	cmp.w	#$fa18,d0
-	beq.b	version_2
+	; no relocs for that version. Removing support, use old slave
+	;cmp.w	#$fa18,d0
+	;beq.b	version_2
 	bra	_badver
 	
 version_1
@@ -178,7 +189,7 @@ _p1:	bsr	_fadewait	; finish off loader screen fade
 	
 	move.l	_program_size(pc),d0
 	lsr.l	#2,d0
-	lea		$1000.W,a0
+	lea		PROGRAM_START.W,a0
 	move.l	_reloc_base(pc),A1
 .copy
 	move.l	(a0)+,(a1)+
@@ -216,9 +227,10 @@ _p1:	bsr	_fadewait	; finish off loader screen fade
 	dbf		d0,.copy2
 	ENDC
 	; protect mem: 
-	; w 0 $819c $2C600-$819C
-	; w 1 $81000 $719C
-	
+	IFNE	0
+w 0 $819c $2C600-$819C
+w 1 $81000 $719C
+	ENDC
 	move.l	_reloc_base(pc),a0
 	lea		(-$1000,a0),a1	; reloc base -$1000
 
@@ -228,7 +240,7 @@ _p1:	bsr	_fadewait	; finish off loader screen fade
 
 	; set CPU and cache options
 	IFND	RELOC_ENABLED
-	move.l	#WCPUF_Base_WT|WCPUF_Exp_CB|WCPUF_Slave_CB|WCPUF_IC|WCPUF_BC|WCPUF_SS|WCPUF_SB,d0
+	move.l	#WCPUF_Base_WT|WCPUF_Exp_CB|WCPUF_Slave_CB|WCPUF_IC|WCPUF_DC|WCPUF_BC|WCPUF_SS|WCPUF_SB,d0
 	move.l	#WCPUF_All,d1
 	jsr	resload_SetCPU(a2)
 	ENDC
@@ -289,16 +301,262 @@ pl_main_common:
 	PL_P	$ca2e,_smc1_rendera
 	PL_P	$cc46,_smc1_renderb
 
+	PL_PS   $0d988,_flush_cache_0d988
+	PL_IFC1
+	PL_ELSE
+	PL_P    $0d1c8,_cpu_draw_shape
+	PL_ENDIF
+	PL_IFC2
+	PL_ELSE
+	PL_PS   $08ba4,_use_fmode3
+	PL_ENDIF
+
+	IFD		RELOC_ENABLED
+	PL_PS	$0f31c,fetch_word
+	ENDC
+	
+	IFND	CHIP_ONLY
+	PL_IFC3
+	PL_ELSE
+        PL_P    $08256,_faststack
+	PL_P    $082e2,_alloc
+	PL_P    $086aa,_free
+	PL_ENDIF
+	ENDC
+	
+	PL_IFC5
+	PL_P    $08c7e,_update_fps_counter
+	PL_ENDIF
+;        PL_PS $0b03a,_debughalt
+
+	PL_PSS	$9266,_keyboard_hook,2
 	PL_END
 
+;--------------------------------
 
-;set_end_program_memory_limits
-;	MOVEA.L	$01006.W,A0		;082bc: 20781006	; after this program
-;	sub.l	_reloc_base(pc),a0
-;	lea		($1000,a0),a0
-;	MOVE.L	$0100a.W,D0		;082c0: 2038100a
-;	rts
+fetch_word:
+	; this address is built from a byte stream
+	MOVEA.L	D0,A0			;0f31c: 2040
+	MOVEQ	#0,D2			;0f31e: 7400
+	; apply dynamic relocation
+	cmp.l	#$80000,a0
+	bcc.b	.ok
+	add.l	_reloc_base(pc),a0
+	sub.w	#PROGRAM_START,a0
+.ok
+	MOVE.W	(A0),D2			;0f320: 3410
+	rts
 	
+_keyboard_hook
+	; missing 75us handshake time
+	moveq	#2,d1		; waste that register, it's preserved
+	bsr	beamdelay
+	cmp.b	_keyexit(pc),d0
+	beq	_exit
+	MOVE.B	#$19,$bfee01
+	rts
+	
+; < D0: numbers of vertical positions to wait
+beamdelay
+.bd_loop1
+	move.w  d1,-(a7)
+    move.b	$dff006,d1	; VPOS
+.bd_loop2
+	cmp.b	$dff006,d1
+	beq.s	.bd_loop2
+	move.w	(a7)+,d1
+	dbf	d1,.bd_loop1
+	rts
+	
+        IFNE ALLOC_DEBUG
+SerPutchar:
+        btst.b  #13-8,$dff000+serdatr
+        move.l  d0,-(sp)
+        and.w   #$ff,d0
+        or.w    #$100,d0       ; stop bit
+        move.w  d0,$dff030
+        move.l  (sp)+,d0
+        rts
+	
+SerPutMsg:
+        movem.l  d0/a0,-(sp)
+spLoop:
+        move.b  (a0)+,d0
+        beq     spDone
+        bsr     SerPutchar
+        bra     spLoop
+spDone:
+        movem.l  (sp)+,d0/a0
+        rts
+SerPutCrLf:
+        move.l  d0,-(sp)
+        moveq   #13,d0
+        bsr     SerPutchar
+        moveq   #10,d0
+        bsr     SerPutchar
+        move.l  (sp)+,d0
+        rts
+SerPutSpace:
+        move.l  d0,-(sp)
+        moveq   #' ',d0
+        bsr     SerPutchar
+        move.l  (sp)+,d0
+        rts
+SerPutNum:
+        movem.l d0-d2,-(sp)
+        move.l  d0,d1
+        moveq   #7,d2
+spnLoop:
+        rol.l   #4,d1
+        move.w  d1,d0
+        and.b   #$f,d0
+        add.b   #$30,d0
+        cmp.b   #$39,d0
+        ble.b   spnPrint
+        add.b   #39,d0
+spnPrint:
+        bsr     SerPutchar
+        dbf     d2,spnLoop
+        movem.l (sp)+,d0-d2
+        rts
+
+PRINT_MSG macro
+        move.l  a0,-(sp)
+        lea     .msg\@(pc),a0
+        bsr     SerPutMsg
+        move.l  (sp)+,a0
+        bra .out\@
+.msg\@:
+        dc.b \1
+        dc.b 0
+        even
+.out\@:
+        endm
+PRINT_NUM macro
+        move.l  d0,-(sp)
+        move.l  \1,d0
+        bsr     SerPutNum
+        move.l  (sp)+,d0
+        endm
+PRINT_NL macro
+        bsr SerPutCrLf
+        endm
+PR macro
+        PRINT_MSG <\1,'='>
+        PRINT_NUM \2
+        PRINT_NL
+        endm
+_debughalt:
+        PRINT_MSG "Halting at PC="
+        move.l  d0,-(sp)
+        move.l  4(sp),d0
+        sub.l   _expmem(pc),d0
+        PRINT_NUM d0
+        move.l  (sp)+,d0
+        PRINT_NL
+        PR "D0",d0
+        PR "D1",d1
+        PR "D2",d2
+        PR "D3",d3
+        PR "D4",d4
+        PR "D5",d5
+        PR "D6",d6
+        PR "D7",d7
+        PR "A0",a0
+        PR "A1",a1
+        PR "A2",a2
+        PR "A3",a3
+        PR "A4",a4
+        PR "A5",a5
+        PR "A6",a6
+        PR "A7",a7
+.x:     bra .x
+        ENDC ; ALLOC_DEBUG
+_faststack:
+        move.w  #$4000,intena+$dff000
+        move.l  usp,a0
+        add.l   _expmem(pc),a0
+        move.l  a0,usp
+        ; Relocating SSP to fast mem gives issues (keyboard not working; sequence when entering plane skipped)
+        move.l  _expmem(pc),a0
+        add.l   #$1000,a0
+        move.l  a0,sp
+        move.w  #$c000,intena+$dff000
+	ANDI.W	#$dfff,SR		;08256: 027cdfff
+	MOVE.W	#$8400,$dff096;DMACON		;0825a: 33fc840000dff096
+	;JMP	lb_17118		;08262: 4ef900017118
+        move.l  _expmem(pc),a0
+        add.l   #$17118,a0
+        jmp     (a0)
+_alloc:
+        movem.l d2/a6,-(a7)
+        IFNE ALLOC_DEBUG
+        PRINT_MSG "Alloc PC=$"
+        move.l  8(sp),d2
+        sub.l   _expmem(pc),d2
+        PRINT_NUM d2
+        PRINT_MSG " Size=$"
+        PRINT_NUM d0
+        ENDC
+	MOVE.W	$0101c.W,D2		;082e6: 3438101c
+	MOVEQ	#4,D1			;082ea: 7204
+	SUBA.L	A0,A0			;082ec: 91c8
+        move.l  _expmem(pc),a6
+        add.l   #$086f2,a6
+	JSR	(a6)    		;082ee: 4eb9000086f2
+        move.l  8(sp),d2 ; return address
+        sub.l   _expmem(pc),d2
+        lea     .whitelist(pc),a6
+.l:
+        move.l  (a6)+,d0
+        beq.b   .na
+        cmp.l   d0,d2
+        bne.b   .l
+        add.l   _expmem(pc),a0
+.na:
+        IFNE ALLOC_DEBUG
+        PRINT_MSG " -> $"
+        PRINT_NUM a0
+        PRINT_NL
+        ENDC
+	MOVE.L	A0,D0			;082f4: 2008
+	BNE.S	.ok              	;082f6: 6602
+	MOVEQ	#-3,D0			;082f8: 70fd
+.ok:
+        ; flags (probably N) must be set on exit
+        movem.l (a7)+,d2/a6
+        rts
+.whitelist:
+        dc.l $0aa46     ; Main shape structure/edge lists
+        ;dc.l $0e59a
+        ;dc.l $0eaba ; TODO - Some kind of resize? seems to join blocks together somehow
+        ;dc.l $14582 ; TODO
+        dc.l $145aa
+        dc.l $1412e
+        dc.l $153be
+        dc.l $16bc6
+        dc.l $1e9a2
+        dc.l 0 ; end
+_free:
+        IFNE ALLOC_DEBUG
+        PRINT_MSG "Free  PC=$"
+        move.l  4(sp),d0 ; always called with return address=$8324, so go up once on stack
+        sub.l   _expmem(pc),d0
+        PRINT_NUM d0
+        PRINT_MSG " Ptr=$"
+        PRINT_NUM a0
+        PRINT_NL
+        ENDC ; ALLOC_DEBUG
+        move.l  _expmem(pc),a1
+        cmpa.l  a1,a0
+        blt.b   .notexp
+        suba.l  a1,a0
+.notexp:
+        add.l   #$086b2,a1
+        ; orig code + jump back
+        movem.l a2-a3,-(sp)
+        move.l  -8(a0),d0
+        jmp     (a1)
 ;--------------------------------
 
 _p2:	movem.l	d0-7/a0-6,-(a7)
@@ -520,9 +778,11 @@ _tl_setdisk:	movem.l	d0/a0,-(a7)
 	moveq	#0,d0
 	rts
 
-;--------------------------------
 
 _initialise:	movem.l	d0-7/a0-6,-(a7)
+        IFNE ALLOC_DEBUG
+        move.w  #30,serper+$dff000
+        ENDC
 
 	lea	_resload(pc),a1	; save resloader address
 	move.l	a0,(a1)
@@ -575,6 +835,343 @@ _exit:       pea	TDREASON_OK.l
 _abort:      move.l	_resload(pc),-(a7)
 	add.l	#resload_Abort,(a7)
 	rts
+
+;--------------------------------
+screenw=320
+screenh=200
+nbpl=4
+
+bplrowwords=screenw/16
+bplrowbytes=bplrowwords*2
+rowdelta=bplrowbytes*nbpl
+
+;--------------------------------
+; FPS counter
+
+onedigit macro
+        divu.w  #10,d0
+        swap    d0
+        moveq   #$f,d1
+        and.l   d0,d1
+        bsr     _drawdigit
+        clr.w   d0
+        swap    d0
+        endm
+
+_update_fps_counter:
+        movem.l d0-d7/a0-a6,-(sp)
+        move.l  (a0),a2
+
+        ; Read CIAB tod
+        moveq   #0,d0
+        move.b  $bfda00,d0
+        swap    d0
+        move.b  $bfd900,d0
+        lsl.w   #8,d0
+        move.b  $bfd800,d0
+        lea     _last_time(pc),a0
+        move.l  (a0),d1
+        move.l  d0,(a0)
+        sub.l   d1,d0
+        ; d0=delta
+
+        move.l  $11bc+2,a2
+        move.l  (a2),d1
+        beq     .out
+        move.l  d1,a2
+
+        move.l  d0,d1
+        beq     .out
+
+        move.l  #50*100*312,d0
+        divu    d1,d0
+        and.l   #$ffff,d0
+        lea     (bplrowbytes-1,a2),a2
+        onedigit
+        onedigit
+        moveq   #10,d1
+        bsr     _drawdigit
+        onedigit
+        onedigit
+
+.out:
+        movem.l (sp)+,d0-d7/a0-a6
+
+        ; Original code:
+	SF	$011cc+2.W		;08c7e: 51f811ce
+	RTS				;08c82: 4e75
+
+_drawdigit:
+        lsl.w   #3,d1
+        lea     (_char_data,pc,d1.l),a0
+        move.l  a2,a1
+        moveq   #8-1,d3
+.l:
+        move.b  (a0)+,d2
+        move.b  d2,(a1)
+        move.b  d2,1*bplrowbytes(a1)
+        move.b  d2,2*bplrowbytes(a1)
+        move.b  d2,3*bplrowbytes(a1)
+        add.w   #rowdelta,a1
+        dbf     d3,.l
+        subq.l  #1,a2
+        rts
+
+_char_data:
+        dc.b    %00111100, %01100110, %01101110, %01111110, %01110110, %01100110, %00111100, %00000000  ; 0
+        dc.b    %00011000, %00111000, %01111000, %00011000, %00011000, %00011000, %00011000, %00000000  ; 1
+        dc.b    %00111100, %01100110, %00000110, %00001100, %00011000, %00110000, %01111110, %00000000  ; 2
+        dc.b    %00111100, %01100110, %00000110, %00011100, %00000110, %01100110, %00111100, %00000000  ; 3
+        dc.b    %00011100, %00111100, %01101100, %11001100, %11111110, %00001100, %00001100, %00000000  ; 4
+        dc.b    %01111110, %01100000, %01111100, %00000110, %00000110, %01100110, %00111100, %00000000  ; 5
+        dc.b    %00011100, %00110000, %01100000, %01111100, %01100110, %01100110, %00111100, %00000000  ; 6
+        dc.b    %01111110, %00000110, %00000110, %00001100, %00011000, %00011000, %00011000, %00000000  ; 7
+        dc.b    %00111100, %01100110, %01100110, %00111100, %01100110, %01100110, %00111100, %00000000  ; 8
+        dc.b    %00111100, %01100110, %01100110, %00111110, %00000110, %00001100, %00111000, %00000000  ; 9
+        dc.b    %00000000, %00000000, %00000000, %00000000, %00000000, %00011000, %00011000, %00000000  ; .
+
+;--------------------------------
+; Flush cache for SMC done from function at $0d78e
+;
+_flush_cache_0d988:
+        movem.l d0-d1/a0-a2,-(sp)
+        move.l  _resload(pc),a2
+        jsr     resload_FlushCache(a2)
+        movem.l (sp)+,d0-d1/a0-a2
+        ; original code
+	MOVEQ	#-16,D2			;0d988: 74f0
+	MOVE.W	D1,D3			;0d98a: 3601
+	MOVE.W	D0,D1			;0d98c: 3200
+        rts
+
+;--------------------------------
+; AGA fetch modes
+;
+_use_fmode3:
+        btst.b  #9-8,vposr(a0)
+        beq.b   .noaga
+        move.w  #3,fmode(a0)
+        move.w  #$38,ddfstrt(a0)
+        move.w  #$b8,ddfstop(a0)
+.noaga:
+        ; Original instruction
+        MOVE.W  #$8300,dmacon(A0) ;08ba4: 317c83000096
+        rts
+
+
+;--------------------------------
+; CPU drawing routines
+
+; y=0 is at the bottom of the screen
+        rsreset
+d_x0            rs.w 1 ; 0
+d_y0            rs.w 1 ; 2
+d_x1            rs.w 1 ; 4
+d_y1            rs.w 1 ; 6
+                rs.w 1 ; 8
+                rs.w 1 ; 10
+                rs.w 1 ; 12
+                rs.w 1 ; 14
+d_rectflag      rs.b 1 ; 16
+d_nodrawflag    rs.b 1 ; 17
+d_startxl       rs.l 1 ; 18
+d_stopxl        rs.l 1 ; 22
+                       ; 26
+
+
+        ; \1 = mask register
+DoMasked macro
+        move.l  \1,d0
+        not.l   d0
+        move.l  3*bplrowbytes(a0),d3
+        move.l  d7,d4
+        and.l   \1,d4
+        and.l   d0,d3
+        or.l    d3,d4
+        move.l  d4,3*bplrowbytes(a0)
+
+        move.l  2*bplrowbytes(a0),d3
+        move.l  d6,d4
+        and.l   \1,d4
+        and.l   d0,d3
+        or.l    d3,d4
+        move.l  d4,2*bplrowbytes(a0)
+
+        move.l  1*bplrowbytes(a0),d3
+        move.l  a3,d4
+        and.l   \1,d4
+        and.l   d0,d3
+        or.l    d3,d4
+        move.l  d4,1*bplrowbytes(a0)
+
+        move.l  (a0),d3
+        move.l  a2,d4
+        and.l   \1,d4
+        and.l   d0,d3
+        or.l    d3,d4
+        move.l  d4,(a0)+
+        endm
+
+DoRow macro
+        ifeq \1
+        and.l   d1,d2
+        DoMasked d2
+        else
+        DoMasked d1
+        rept (\1-1)
+        move.l  d7,3*bplrowbytes(a0)
+        move.l  d6,2*bplrowbytes(a0)
+        move.l  a3,1*bplrowbytes(a0)
+        move.l  a2,(a0)+
+        endr
+        DoMasked d2
+        endc
+        endm
+
+MakeRowFunc macro
+RowFunc\<n>
+        DoRow n
+        rts
+        endm
+n set 0
+        rept bplrowwords/2
+        MakeRowFunc
+n set n+1
+        endr
+
+MakeRectFunc macro
+RectFunc\<n>
+.yloop:
+        move.l  a1,a0
+        DoRow   n
+        lea     -rowdelta(a1),a1
+        dbf     d5,.yloop
+        rts
+        endm
+n set 0
+        rept bplrowwords/2
+        MakeRectFunc
+n set n+1
+        endr
+
+_cpu_draw_shape:
+        tst.b   d_nodrawflag(a0)
+        beq.b   .DoDraw
+        rts
+.DoDraw:
+        movem.l	d0-d7/a0/a2-a6,-(a7)
+
+	move.w  d_y0(a0),d1
+        move.w  d_y1(a0),d5
+        sub.w   d1,d5
+
+        move.w  #screenh-1,d2
+        sub.w   d1,d2
+        mulu.w  #rowdelta,d2
+	move.l  (a2),a1
+        lea     (a1,d2.w),a1
+
+        ; expand d0 -> a2/a3/d6/d7 bitplane masks
+        lsr.w   #1,d0
+        subx.l  d6,d6
+        move.l  d6,a2
+        lsr.w   #1,d0
+        subx.l  d6,d6
+        move.l  d6,a3
+        lsr.w   #1,d0
+        subx.l  d6,d6
+        lsr.w   #1,d0
+        subx.l  d7,d7
+
+        tst.b   d_rectflag(a0)
+        bne     .DrawRect
+
+        move.l  d_startxl(a0),a4
+        move.l  d_stopxl(a0),a5
+.LineLoop:
+        move.w  (a4)+,d0 ; startx
+        move.w  (a5)+,d2 ; stopx
+
+        moveq   #-32,d1
+        move.w  d0,d3
+        and.w   d1,d3   ;d3=x0&-32
+        move.w  d2,d4
+        and.w   d1,d4   ;d4=x1&-32
+        eor.w   d3,d0   ;d0=x0&31
+        eor.w   d4,d2   ;d2=x1&31
+        sub.w   d3,d4
+        blt     .NextLine
+        lsr.w   #5,d4   ; d4=number of longwords (non-inclusive)
+        moveq   #-1,d1
+        lsr.l   d0,d1   ; d1=fwm
+        move.l  d2,d0
+        moveq   #1,d2
+        ror.l   #1,d2   ; d2=$80000000
+        asr.l   d0,d2   ; d2=lwm
+        lsr.w   #3,d3   ; byte offset of starting word
+        lea     (a1,d3.w),a0   ; adjust destination
+
+        ; d1=fwm/d2=lwm/d4=xcount/d5=ycount/a0=dest
+        add.w   d4,d4
+        move.w  RowFuncTable(pc,d4.w),d4
+        jsr     RowFuncTable(pc,d4.w)
+.NextLine:
+        lea     -rowdelta(a1),a1
+        dbf     d5,.LineLoop
+        bra     .Out
+
+.DrawRect:
+        ; a0=draw struct a1=dest,a2-a5 bitplane masks,d5=count for dbf
+        move.w  d_x0(a0),d0
+        move.w  d_x1(a0),d2
+
+        moveq   #-32,d1
+        move.w  d0,d3
+        and.w   d1,d3   ;d3=x0&-32
+        move.w  d2,d4
+        and.w   d1,d4   ;d4=x1&-32
+        eor.w   d3,d0   ;d0=x0&31
+        eor.w   d4,d2   ;d2=x1&31
+        sub.w   d3,d4
+        lsr.w   #5,d4   ; d4=number of longwords (non-inclusive)
+        moveq   #-1,d1
+        lsr.l   d0,d1   ; d1=fwm
+        move.l  d2,d0
+        moveq   #1,d2
+        ror.l   #1,d2   ; d2=$80000000
+        asr.l   d0,d2   ; d2=lwm
+        lsr.w   #3,d3   ; byte offset of starting word
+        add.w   d3,a1   ; adjust destination
+
+        ; d1=fwm/d2=lwm/d4=xcount/d5=ycount/a0=dest
+        add.w   d4,d4
+        move.w  RectFuncTable(pc,d4.w),d4
+        jsr     RectFuncTable(pc,d4.w)
+.Out:
+	movem.l	(a7)+,d0-d7/a0/a2-a6
+        rts
+
+RectTableEntry macro
+        dc.w    RectFunc\<n>-RectFuncTable
+        endm
+
+RectFuncTable:
+n set 0
+        rept bplrowwords/2
+        RectTableEntry
+n set n+1
+        endr
+
+RowTableEntry macro
+        dc.w    RowFunc\<n>-RowFuncTable
+        endm
+
+RowFuncTable:
+n set 0
+        rept bplrowwords/2
+        RowTableEntry
+n set n+1
+        endr
 
 ;--------------------------------
 
@@ -632,12 +1229,19 @@ _smc_chunks
 	dc.l	0
 ;-----
 
+_last_time
+        dc.l    0
+;-----
 reloc_v1
 	dc.b	"KillingCloud_v1.reloc",0
 _cwdname:	dc.b	"data",0
-_wsname:	dc.b	"The Killing Cloud",0
+_wsname:	dc.b	"The Killing Cloud"
+			IFD		CHIP_ONLY
+			dc.b	" (chip/debug mode)"
+			ENDC
+			dc.b	0
 _wscopy:	dc.b	"1991 Vektor Grafix",0
-_wsinfo:	dc.b	10,"adapted by Girv & JOTD",10
+_wsinfo:	dc.b	10,"adapted by Girv, JOTD & paraj",10
 	DECL_VERSION
 	dc.b	0
 	EVEN
