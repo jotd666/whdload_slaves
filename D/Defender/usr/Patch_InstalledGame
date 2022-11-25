@@ -1,0 +1,59 @@
+;try to figure out a place where the user usually installs his games
+(if (exists "Games:" (noreq) )
+    (set @default-dest "Games:")
+    (if (exists "SYS:Games" (noreq) )
+        (set @default-dest "SYS:Games")
+        (if (exists "Work:Games" (noreq) )
+            (set @default-dest "Work:Games")
+            (if (exists "JEUX:" (noreq) )
+               (set @default-dest "JEUX:")
+               (set @default-dest "SYS:")
+            )
+        )
+    )
+)
+
+;ask the user to select a directory to install the game into
+(set default-dest
+     (askdir (prompt "Where is " @app-name " installed?\n")
+                     (help @askdir-help)
+                     (default @default-dest)
+                     (newpath)
+             )
+)
+(set @default-dest default-dest)
+
+
+
+(copyfiles 
+        (help @copyfiles-help)
+	(source "OSEmu.400")
+        (dest @default-dest)
+)
+
+(copyfiles 
+        (help @copyfiles-help)
+	(source ("%s.slave" @app-name))
+        (dest @default-dest)
+)
+
+
+  (set #icon
+    (askchoice
+      (prompt "\nWhich icon do you like to install ?\n")
+      (default 0)
+      (choices "NewIcon" "GlowIcon")
+      (help @askchoice-help)
+    )
+  )
+
+(select #icon
+  (set #icon ("%s.newicon" @app-name))
+  (set #icon ("%s.glowicon" @app-name))
+)
+(copyfiles
+  (help @copyfiles-help)
+  (source #icon)
+  (newname ("%s.info" @app-name))
+  (dest @default-dest)
+)

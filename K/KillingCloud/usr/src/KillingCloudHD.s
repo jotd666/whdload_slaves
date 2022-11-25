@@ -3,13 +3,16 @@
 
 	; WHDLoad slave for Killing Cloud
 	; (c) 2001-2002 Halibut Software
-
+	; heavily reworked by JOTD & parj in 2022
+	
 	INCDIR	INCLUDE:
 	INCLUDE	whdload.i
 	INCLUDE	whdmacros.i
 
 ;CHIP_ONLY
 ALLOC_DEBUG=0
+
+; 5BAD4: dmacon write (extra sfx or music code)
 
 RELOC_ENABLED = 1
 	IFD	RELOC_ENABLED
@@ -341,6 +344,8 @@ fetch_word:
 	; apply dynamic relocation
 	cmp.l	#$80000,a0
 	bcc.b	.ok
+	cmp.l	#$819c,a0
+	bcs.b	.ok
 	add.l	_reloc_base(pc),a0
 	sub.w	#PROGRAM_START,a0
 .ok
@@ -1219,7 +1224,7 @@ main_patchlist
 part2_patchlist
 	dc.l	0
 _reloc_base
-	dc.l	$1000
+	dc.l	PROGRAM_START
 _program_size
 	dc.l	$2b800
 version

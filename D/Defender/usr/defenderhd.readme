@@ -1,0 +1,23 @@
+Short : Install for Defender
+Type : game/patch
+Author : Jean-François Fabre (JOTD)
+Uploader : Jean-François Fabre (JOTD)
+
+Install-Script © 2001 Jean-François Fabre
+
+
+The patch can be applied to a already installed version of the game.
+
+Defender is available on aminet (game/shoot/defender.lha)
+
+Features:
+
+- Uses WHDLoad/OSEmu for clean OS operation/degrading
+- WHDLoad quit key added (numerical '*')
+
+Notes:
+
+As the author says this is the perfect defender clone.
+It did not work in DOS mode on my config, so I quickly adapted it
+to OSEmu and it works. A 10 minute job, but worth it.
+

@@ -1,0 +1,28 @@
+Short:    explode.library 7.0, 68040/60 bugfix
+Author:   calkowsk@usctoux1.cto.us.edu.pl (Grzegorz Calkowski)
+Uploader: calkowsk@usctoux1.cto.us.edu.pl     
+Type:     util/libs
+
+explode.library 7.0
+-------------------
+
+This is a bug-fix of the explode.library, library needed by executables
+crunched with TurboImploder - old but still the best cruncher for executables.
+However, the library has a bug hidden for nearly 5 years!  Although authors
+claim that decrunching routines are aware of 68040's copyback mode - this is
+not truth!  They clear caches ONLY when an executable calls the decrunching
+routine of explode.library directly.  However, after the library has patched
+LoadSeg() and NewLoadSeg() vectors...  pooof!  That's no longer the case!  In
+effect, small files, when imploded, can randomly crash on 040 machines.  This
+also applies to 68060 CPU, which has even bigger datacache.
+
+As I still use TurboImploder I decided to disasemble it and fix the bug :) Also
+I removed 1.3 support code and did few optimizations, what made the library
+slightly shorter.
+
+This version is based on explode.library 6.0.64 (28.10.91!!) by Peter Struijk
+and Albert J.Brouwer.  I hope I didn't violate copyright by releasing this
+bug-fix ;)
+
+-gc
+

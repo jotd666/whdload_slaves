@@ -1,0 +1,102 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+
+This patch applies to "Treasure Island Dizzy" (c) 1989 Codemasters - 1 disk.
+
+Supported versions: - Original release (Mad-Matt)
+                    - Version 2 (Irek Kloska)
+                    - Cartoon Collection (Chris Vella)
+                    - Big Six CD³² Compilation (Marcus Naylor)
+
+REQUIREMENTS:
+- Slave requires WHDLoad V17+
+- Game requires 512k chip mem (+0.2Mb other memory for preload option)
+
+
+Version 1.3 (20-Dec-2020) done by JOTD:
+- Improved joypad read allowing 2-button joysticks to work too
+- CD32 joypad controls also blocks "up" from jumping
+- game data now needs to be located in "data" directory (instead of
+  current directory)
+- reworked readme
+- source code included
+
+Version 1.2 (20-Dec-2011) done by Codetapper:
+- Also supports the disk with "Version 2" written on it (thanks Irek!)
+- Set CUSTOM3=1 to enable CD32 joypad controller:
+        Red                  - Fire
+        Blue                 - Jump
+        Play                 - Pause 
+        Play+Forward+Reverse - Quit
+
+Version 1.1 (01-Apr-2002) done by Codetapper:
+- Also supports the Big Six CD³² compilation version
+- Instructions included
+- NewIcon replaced with extended newicon (120x96)
+
+Version 1.0 (17-Feb-2001) done by Codetapper:
+- Full load from HD
+- 2 versions supported
+- RNC copylock bypassed
+- Decruncher relocated to fast memory
+- Fixed CIA register accesses ($bfe0ff->$bfe001 and 2x$bfe2ff->$bfe201)
+- RomIcon, NewIcon and GlowIcon (created by me!)
+- Quit option (default key is 'F10')
+
+CHEAT MODE:
+- Taken from Sweet Cheater by Keith Krellwitz!
+
+  During play, type any of the following:
+
+          "ICANFLY"_____________________Lets you fly.
+          "EGGSONLEGS"_________________Invincibility.
+          "EGGONASPRING"___________________High jump.
+
+  Hold down 'S', 'P', 'A', 'C', and 'SPACE KEY'.  Now press 'C' to
+  disappear (space makes you reappear).  When you have disappeared, 'M'
+  key moves the map around.
+
+  Here are some objects, and where to use them:
+
+          CHEST                     - Below the cliff
+          SNORKEL                   - In the water
+          GRAVEDIGGER SPADE         - In the grave on island 2
+          MAGIC STONE               - Totem pole (island 2)
+          DETONATOR AND DYNAMITE    - Mine (island 1)
+          AXE & BIBLE               - Bridge (island 1)
+          POGO STICK                - Pogo place on ship
+          GOLD COINS                - The shop
+          FIRE PROOF SUIT           - Smuggler's cave (island 2)
+          BRANDY                    - Shop
+          GOLD EGG                  - Shop
+          BRASS KEY                 - Smuggler's cave
+          CROWBAR                   - Rock in water
+
+Greetings to Mad-Matt, Chris, Irek, Marcus, Wepl, all Action members, my 
+testing crew and the WHDLoad team!
+
+
+Codetapper/Action (20-Dec-2011)
+
+
+         Bug report form, full WHDLoad package and other installs:
+                          http://www.whdload.de/
+
+            ________  ________  ________  ____  ________  ________
+           _)       \_)       \_)       \_)   \_)       \_)       \
+   __ ___ /___/     /   /_____/\  /     /     /   /     /   /     /
+  /_//__// \___    /   /     /CT\/     /     /   /     /   /     /
+        /___/     /___      /   /     /_____/___      /___/     /___ __
+            \____/    \____/    \____/          \____/    \____//__//_/
+
+
+           Visit the Action website for more of our productions:
+                        http://www.codetapper.com/

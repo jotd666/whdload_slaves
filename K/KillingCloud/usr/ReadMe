@@ -8,20 +8,18 @@
 
 HISTORY
 
- Version 2.0 (11.2022) done by paraj:
- - faster draw operation on fast machines
- - takes advantage of AGA fmode for even better speed
- - fixed more self-modifying code
-
- Version 2.0 beta (xx.11.2022) done by JOTD
- - now uses fast memory for better speed
- - restored slave source code with missing bits
- - added more document files (hints, keys...)
- - adapted to whdload 17
- - quitkey on 68000/NOVBRMOVE
- - keyboard fixed
- - only one version supported now
- - TODO: relocation of "backup" part crashes???
+ Version 2.0 (26.11.2022) done by JOTD & paraj:
+ - paraj: faster draw operation on fast machines
+ - paraj: takes advantage of AGA fmode for even better speed
+ - paraj: fixed more self-modifying code
+ - paraj: relocated stack in fastmem for better speed
+ - JOTD: now uses fast memory for better speed
+ - JOTD: restored slave source code with missing bits
+ - JOTD: added more document files (hints, keys...)
+ - JOTD: adapted to whdload 17
+ - JOTD: quitkey on 68000/NOVBRMOVE
+ - JOTD: keyboard fixed
+ - JOTD: only one version supported now
  
  Version R1 (11/2001) done by Girv
  - first release
@@ -31,9 +29,14 @@ HISTORY
  - removed manual protection
  - enabled instruction cache
 
-NOTE:
+NOTES:
 
-If you get "unsupported version", it means that your version
+- The game is MUCH faster thanks to 1) relocation in fast memory (hard work) but
+mostly 2) re-write of blitter drawing routines so they use CPU instead, plus a lot
+more optimizations from paraj. He already helped with the latest F/18 interceptor fixes.
+Big Kudos to him!
+
+- If you get "unsupported version", it means that your version
 is no longer supported for newer features. Relocating the executable
 in fast memory took a lot of time and I'm not redoing it for the other
 version... Use old slave instead
