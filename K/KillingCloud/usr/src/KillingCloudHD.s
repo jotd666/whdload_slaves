@@ -356,7 +356,10 @@ _keyboard_hook
 	; missing 75us handshake time
 	moveq	#2,d1		; waste that register, it's preserved
 	bsr	beamdelay
-	cmp.b	_keyexit(pc),d0
+	move.b  d0,d1
+	not.b   d1
+	ror.b   #1,d1
+	cmp.b	_keyexit(pc),d1
 	beq	_exit
 	MOVE.B	#$19,$bfee01
 	rts
