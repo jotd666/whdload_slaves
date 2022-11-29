@@ -3,18 +3,18 @@
 
 	; WHDLoad slave for Killing Cloud
 	; (c) 2001-2002 Halibut Software
-	; heavily reworked by JOTD & parj in 2022
+	; heavily reworked by JOTD & paraj in 2022
 	
 	INCDIR	INCLUDE:
 	INCLUDE	whdload.i
 	INCLUDE	whdmacros.i
 
-;CHIP_ONLY
+CHIP_ONLY
 ALLOC_DEBUG=0
 
 ; 5BAD4: dmacon write (extra sfx or music code)
 
-RELOC_ENABLED = 1
+;RELOC_ENABLED = 1  ; now set in makefile defines
 	IFD	RELOC_ENABLED
 RELOC_MEM = $80000
 	ELSE
@@ -62,13 +62,14 @@ _config
 	IFND	CHIP_ONLY
 	dc.b	"C3:B:No fast RAM alloc;"
 	ENDC
+	dc.b	"C4:B:fast intro screens;"
 	dc.b	"C5:B:Show FPS;"
     dc.b	0
 
 ;==========================================================================
 
 DECL_VERSION:MACRO
-	dc.b	"2.0"
+	dc.b	"2.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -145,9 +146,11 @@ check_version:
 	lea		version(pc),a4
 	cmp.w	#$38a2,d0
 	beq.b	version_1
-	; no relocs for that version. Removing support, use old slave
-	;cmp.w	#$fa18,d0
-	;beq.b	version_2
+	; no relocs for that version. Removing support
+	IFND	RELOC_ENABLED
+	cmp.w	#$fa18,d0
+	beq.b	version_2
+	ENDC
 	bra	_badver
 	
 version_1
@@ -273,6 +276,10 @@ pl_main_2
 	
 pl_main_common:
 	PL_START
+	PL_IFC4
+	PL_NOP	$1807a,2
+	PL_ENDIF
+	
 	; fix <$8000 addresses that were accessed PC-relative
 	; into short leas (lower part of memory < $81something cannot
 	; be relocated because of the short addressing)
@@ -332,7 +339,7 @@ pl_main_common:
 	PL_ENDIF
 ;        PL_PS $0b03a,_debughalt
 
-	PL_PSS	$9266,_keyboard_hook,2
+	PL_PSS	$9266,_keyboard_hook,6
 	PL_END
 
 ;--------------------------------
@@ -356,6 +363,8 @@ _keyboard_hook
 	; missing 75us handshake time
 	moveq	#2,d1		; waste that register, it's preserved
 	bsr	beamdelay
+	NOT.B	D0			;0926e: 4600
+	ROR.B	#1,D0			;09270: e218
 	cmp.b	_keyexit(pc),d0
 	beq	_exit
 	MOVE.B	#$19,$bfee01

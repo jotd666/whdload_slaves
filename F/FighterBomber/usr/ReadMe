@@ -3,16 +3,25 @@ Type  : game/patch
 Author: Galahad / Fairlight (galahadfairlight@yahoo.co.uk)
  
  This install applies to "Fighter Bomber" © 1989 Activision
- Slave requires WHDLoad V15+.
+ Slave requires WHDLoad V17+.
  Game needs 0.5MB Of Chipmem & 1.0MB of Fastmem (for preload option)
 
- SUPPORTED VERSIONS
- ------------------
+ History:
  
- - 2 Disk Original release
-
- FEATURES
- --------
+ Version 2.0 (2022) done by JOTD:
+ - provided relocation tables so game can run from fastmem for better speed
+ - adapted to whdload 17
+ - TODO remaining smc trashed 3D (and 2D) graphics
+ - TODO fastmem sounds
+ - TODO immediate plane crash on starting!! (covert): 
+    * search bogus labels in data code??
+	* lookup for $24 read? (copylock key)
+ 
+ Version 1.1 done by Galahad:
+ - Memory requirements reduced, only needs 512k chipmem now
+   not 1meg
+   
+ Version 1.0 done by Galahad:
  - Full Loading from HD
  - Lame-o-Protect removed (Copylock and Manual Protection)
  - System Friendly Imager used
@@ -24,10 +33,11 @@ Author: Galahad / Fairlight (galahadfairlight@yahoo.co.uk)
  - Skip Intro (Hold down Left mouse button whilst loading)
  - Quit Option (DEL key)
 
- FEATURES - v1.1
+ SUPPORTED VERSIONS
+ ------------------
  
- - Memory requirements reduced, only needs 512k chipmem now
-   not 1meg 
+ - 2 Disk Original release
+
 
  EXTRA NOTES
  -----------

@@ -285,7 +285,7 @@ _SMC1_B\1:	movea.l	$12(a6),a2
 	addq.w	#1,d6
 	ror.w	#1,d4
 	bcc.s	.lCE88
-	addq.l	#2,a0
+	addq.w	#2,a0
 .lCE88	add.w	d3,d5
 	dbmi	d7,.lCE7C
 	dbpl	d7,.lCF1E
@@ -336,7 +336,7 @@ _SMC1_B\1:	movea.l	$12(a6),a2
 .lCF1E	addq.w	#1,d6
 	ror.w	#1,d4
 	bcc.s	.lCF26
-	addq.l	#2,a0
+	addq.w	#2,a0
 .lCF26	lea	-$A0(a0),a0
 	add.w	d2,d5
 	dbmi	d7,.lCE72
@@ -350,14 +350,14 @@ _SMC1_B\1:	movea.l	$12(a6),a2
 .lCF4C	addq.w	#1,d6
 	ror.w	#1,d4
 	bcc.s	.lCF54
-	addq.l	#2,a0
+	addq.w	#2,a0
 .lCF54	add.w	d3,d5
 	dbmi	d7,.lCF4C
 	dbpl	d7,.lCF1E
 	rts
 .lCF60	neg.w	d3
-	addq.l	#2,a2
-	addq.l	#2,a3
+	addq.w	#2,a2
+	addq.w	#2,a3
 	cmp.w	d3,d7
 	bgt	.lD04E
 	move.w	d0,d1
@@ -380,7 +380,7 @@ _SMC1_B\1:	movea.l	$12(a6),a2
 	dbmi	d3,.lCFBC
 	dbpl	d3,.lCFF4
 	rts
-.lCFE2	subq.l	#2,a3
+.lCFE2	subq.w	#2,a3
 .lCFE4	lea	$A0(a0),a0
 	add.w	d7,d5
 	dbmi	d3,.lCFBC
@@ -400,7 +400,7 @@ _SMC1_B\1:	movea.l	$12(a6),a2
 	dbmi	d3,.lCFBC
 	dbpl	d3,.lCFF4
 	rts
-.lD022	subq.l	#2,a3
+.lD022	subq.w	#2,a3
 .lD024	addq.w	#1,d6
 	ror.w	#1,d1
 	ror.w	#1,d0
