@@ -1,312 +1,558 @@
-;*---------------------------------------------------------------------------
-;  :Program.	TheSettlersHD.asm
-;  :Contents.	Slave for "TheSettlers"
-;  :Author.	JOTD, from Wepl sources
-;  :Original	v1 
-;  :Version.	$Id: TheSettlersHD.asm 1.2 2002/02/08 01:18:39 wepl Exp wepl $
-;  :History.	%DATE% started
-;  :Requires.	-
-;  :Copyright.	Public Domain
-;  :Language.	68000 Assembler
-;  :Translator.	Devpac 3.14, Barfly 2.9
-;  :To Do.
-;---------------------------------------------------------------------------*
+***************************************************************************
+*             /                                                           *
+*       _____.__ _                                         .___.          *
+*      /    /_____________.  _________.__________.________ |   |________  *
+*  ___/____      /    ____|_/         |         /|        \|   ._      /  *
+*  \     \/      \    \     \    /    |    :___/¯|    \    \   |/     /   *
+*   \_____________\___/_____/___/_____|____|     |____|\_____________/    *
+*     -========================/===========|______\================-      *
+*                                                                         *
+*   .---.----(*(       THE SETTLERS WHDLOAD SLAVE           )*)---.---.   *
+*   `-./                                                           \.-'   *
+*                                                                         *
+*                      (c)oded by JOTD+StingRay                           *
+*                      ------------------------                           *
+*                            February 2013                                *
+*                                                                         *
+*                                                                         *
+***************************************************************************
 
-	INCDIR	Include:
+***********************************
+*** History			***
+***********************************
+
+; 13-Jul-2016	- access fault fix in french version was wrong
+;		  (PL_PS used instead of PL_PSS), fixed
+;		- cache is now disabled during intro
+;		- blitter wait added
+;		- WHDLoad v17+ features used now (config)
+;		- Bplcon3/4 and FMODE access disabled
+
+; 27-Feb-2013	- keyboard support for intro added, quit key works fine
+;		  now
+
+; 26-Feb-2013	- worked out a generic approach for my fixes/crack patch
+;		  so that supporting different version could be done
+;		  easily
+;		- support for English, French and the 2 German versions
+;		  added
+;		- intro part supported
+;		- JOTD's access fault fix added
+
+; 25-Feb-2013	- work started
+;		- keyboard bug fixed!
+;		- cracked the game in a way that any checksums will not
+;		  matter anymore!
+;		  checksums!
+;		- completely new source as I had to change so much
+;		  that adding it to the old source would have been a lot
+;		  of unnecessary extra work. so I did it "My Way". :)
+
+
+	INCDIR	SOURCES:Include/
 	INCLUDE	whdload.i
 	INCLUDE	whdmacros.i
-	INCLUDE	lvo/dos.i
+	;INCLUDE	lvo/dos.i
 
-	IFD BARFLY
-	OUTPUT	"TheSettlers.slave"
-	BOPT	O+				;enable optimizing
-	BOPT	OG+				;enable optimizing
-	BOPT	ODd-				;disable mul optimizing
-	BOPT	ODe-				;disable mul optimizing
-	BOPT	w4-				;disable 64k warnings
-	BOPT	wo-			;disable optimizer warnings
-	SUPER
-	ENDC
+; absolute skip
+PL_SA	MACRO
+	PL_S	\1,\2-(\1)
+	ENDM
+
+MC68020	MACRO
+	ENDM
 
 ;============================================================================
 
+	IFD	LOWMEM
+CHIPMEMSIZE	= $80000
+FASTMEMSIZE	= $100000*2
+	ELSE
 CHIPMEMSIZE	= $100000
-FASTMEMSIZE	= $400000
+FASTMEMSIZE	= $100000*4
+	ENDC
 NUMDRIVES	= 1
 WPDRIVES	= %0000
 
 BLACKSCREEN
-;DISKSONBOOT
-DOSASSIGN
-;DEBUG
-HDINIT
-;HRTMON
-IOCACHE		= 10000
-;MEMFREE	= $200
-NEEDFPU
-;SETPATCH
+;BOOTBLOCK
 BOOTDOS
-
-CRACKIT = 1
+;BOOTEARLY
+;CBDOSLOADSEG
+;CBDOSREAD
+CBKEYBOARD
+SEGTRACKER
+CACHE
+;DEBUG
+;DISKSONBOOT
+;DOSASSIGN
+FONTHEIGHT	= 8
+HDINIT
+HRTMON
+;INITAGA
+;INIT_AUDIO
+;INIT_GADTOOLS
+;INIT_LOWLEVEL
+;INIT_MATHFFP
+IOCACHE		= 1024
+;JOYPADEMU
+;MEMFREE	= $200
+;NEEDFPU
+;NO68020
+POINTERTICKS	= 1
+;PROMOTE_DISPLAY
+;STACKSIZE	= 6000
+;TRDCHANGEDISK
 
 ;============================================================================
 
-
-slv_Version	= 16
+slv_Version	= 17
 slv_Flags	= WHDLF_NoError|WHDLF_Examine|WHDLF_EmulTrap
-slv_keyexit	= $5D	; num '*'
-
-
-;============================================================================
-
-	INCLUDE	kick13.s
+slv_keyexit	= $59	; F10
 
 ;============================================================================
 
-	IFD BARFLY
-	DOSCMD	"WDate  >T:date"
-	ENDC
+	INCLUDE	whdload/kick13.s
+
+;============================================================================
+
+
+slv_CurrentDir	IFD	DEBUG
+		dc.b	"SOURCES:WHD_Slaves/TheSettlers/data_de",0
+		ELSE
+		dc.b	"data",0
+		ENDIF
 
 
 DECL_VERSION:MACRO
-	dc.b	"1.5"
+	dc.b	"1.7"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
 	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
+	ENDC
 	ENDM
-
-	dc.b	"$","VER: slave "
-	DECL_VERSION
-	dc.b	$A,$D,0
-
-slv_name	dc.b	"The Settlers / Die Siedler",0
+	
+slv_name	dc.b	"The Settlers/Die Siedler",0
 slv_copy	dc.b	"1993 Blue Byte",0
-slv_info	dc.b	"adapted by JOTD",10
+
+slv_info	dc.b	"adapted by JOTD & StingRay",10
 		dc.b	"from Wepl excellent KickStarter 34.005",10,10
-		dc.b	"Set CUSTOM1=1 to skip introduction",10,10
 		dc.b	"Thanks to Tony Aksnes & Wepl for disk images",10,10
 		dc.b	"Thanks to Olivier Schott for testing & bugreports",10,10
+		IFD	DEBUG
+		dc.b	"DEBUG!!! "
+		ENDC
 		dc.b	"Version "
-	IFND	CRACKIT
-		dc.b	"(uncracked) "
-	ENDC
-	IFD BARFLY
-		INCBIN	"T:date"
-	ENDC
+		DECL_VERSION
 		dc.b	0
-slv_CurrentDir:
-	dc.b	"data",0
-	EVEN
-
-_intro:
-	dc.b	"mcp",0
-_intro_args:
-	dc.b	"SCPT",0
-_intro_args_end:
+slv_config
+    dc.b    "C1:B:Skip introduction;"
+		dc.b	0
+	dc.b	"$VER: The Settlers "
+	DECL_VERSION
 	dc.b	0
-_program_uk:
-	dc.b	"TheSettlers",0
-_program_de:
-	dc.b	"DieSiedler",0
-_args		dc.b	10
-_args_end
-	dc.b	0
-	EVEN
-_german:
-	dc.l	0
-_program:
-	dc.l	0
+		CNOP	0,4
 
-;============================================================================
-
-	;initialize kickstart and environment
+	IFD BOOTDOS
 
 _bootdos
-	clr.l	$0.W
+	lea	_dosname(pc),a1
+	move.l	$4.w,a6
+	jsr	_LVOOldOpenLibrary(a6)
+	move.l	d0,a6
 
-;;	bsr	_patchkb
-
-	move.l	(_resload),a2		;A2 = resload
-
-	;get tags
-		lea	(_tag,pc),a0
-		jsr	(resload_Control,a2)
-
-	;open doslib
-		lea	(_dosname,pc),a1
-		move.l	(4),a6
-		jsr	(_LVOOldOpenLibrary,a6)
-		move.l	d0,a6			;A6 = dosbase
-
-		lea	_program_uk(pc),a3
-		move.l	a3,d1
-		move.l	#ACCESS_READ,d2
-		jsr	(_LVOLock,a6)
-		move.l	d0,d1
-		bne.b	.ok
-
-		lea	_german(pc),a3
-		move.l	#1,(a3)
-
-		lea	_program_de(pc),a3
-		move.l	a3,d1
-		move.l	#ACCESS_READ,d2
-		jsr	(_LVOLock,a6)
-		move.l	d0,d1
-		bne.b	.ok
-
-		move.l	a3,-(A7)
-		pea	205			; file not found
-		pea	TDREASON_DOSREAD
-		move.l	(_resload,pc),-(a7)
-		add.l	#resload_Abort,(a7)
-		rts
-.ok
-		jsr	(_LVOUnLock,a6)
-
-		lea	_program(pc),a0
-		move.l	a3,(a0)
-
-		move.l	_custom1(pc),d0
-		bne.b	.skipintro
-
-	;load exe
-		lea	_intro(pc),a0
-		move.l	a0,d1
-		jsr	(_LVOLoadSeg,a6)
-		move.l	d0,d7			;D7 = segment
-		beq	_end			;file not found
+	move.l	_resload(pc),a2
+	lea	TAGLIST(pc),a0
+	jsr	resload_Control(a2)
 
 
-	;patch here
-		bsr	_patch_intro
-		bsr	_flushcache
+	move.l	#-2,$4c0.w
+	move.l	#-2,$377d0
 
-	;disable cache for intro
-		move.l	#WCPUF_Base_NC|WCPUF_Exp_NC|WCPUF_Slave_CB|WCPUF_IC|WCPUF_DC|WCPUF_BC|WCPUF_SS|WCPUF_SB,d0
-		move.l	#WCPUF_All,d1
-		jsr	(resload_SetCPU,a2)
+	move.l	NOINTRO(pc),d0
+	bne.b	.nointro
 
-	;call
-		move.l	d7,a1
-		add.l	a1,a1
-		add.l	a1,a1
-		lea	(_intro_args,pc),a0
-		move.l	(4,a7),d0		;stacksize
-		sub.l	#5*4,d0			;required for MANX stack check
-		movem.l	d0/d7/a2/a6,-(a7)
-		moveq	#_intro_args_end-_intro_args,d0
-		jsr	(4,a1)
-		movem.l	(a7)+,d1/d7/a2/a6
+; disable cache during intro
+	move.l	#WCPUF_Base_NC|WCPUF_Exp_NC|WCPUF_Slave_CB|WCPUF_IC|WCPUF_DC|WCPUF_BC|WCPUF_SS|WCPUF_SB,d0
+	move.l	#WCPUF_All,d1
+	jsr	resload_SetCPU(a2)
 
-	;remove exe
-		move.l	d7,d1
-		jsr	(_LVOUnLoadSeg,a6)
+	lea	.intro(pc),a0
+	lea	.cmdi(pc),a3		; command line
+	moveq	#.cmdi_end-.cmdi,d5		; length of command line arguments
+	moveq	#0,d0
+	move.w	#$a2-0,d1
 
+	bsr.b	.dopatch		; patch and run intro
 
-.skipintro:
-	;enable cache for intro
-		move.l	#WCPUF_Base_NC|WCPUF_Exp_CB|WCPUF_Slave_CB|WCPUF_IC|WCPUF_DC|WCPUF_BC|WCPUF_SS|WCPUF_SB,d0
-		move.l	#WCPUF_All,d1
-		jsr	(resload_SetCPU,a2)
+; and enable it again
+	move.l	_resload(pc),a2
+	move.l	#WCPUF_Base_NC|WCPUF_Exp_CB|WCPUF_Slave_CB|WCPUF_IC|WCPUF_DC|WCPUF_BC|WCPUF_SS|WCPUF_SB,d0
+	move.l	#WCPUF_All,d1
+	jsr	resload_SetCPU(a2)
 
-	;load exe
-		move.l	_program(pc),d1
-		jsr	(_LVOLoadSeg,a6)
-		move.l	d0,d7			;D7 = segment
-		beq	_end			;file not found
+.nointro
 
 
-	;patch here
-		bsr	_patch_exe
-		bsr	_flushcache
+; check which game is installed (german/int.)
+	lea	.game(pc),a0
+	addq.w	#1,RunGame-.game(a0)
+	move.l	a0,d7
+	move.l	a0,d1
+	move.l	#MODE_OLDFILE,d2
+	jsr	_LVOOpen(a6)
+	move.l	d0,d1
+	beq.b	.nofile
+	jsr	_LVOClose(a6)
+	move.l	d7,a0
+	bra.b	.dogame
 
-	;call
-		move.l	d7,a1
-		add.l	a1,a1
-		add.l	a1,a1
-		lea	(_args,pc),a0
-		move.l	(4,a7),d0		;stacksize
-		sub.l	#5*4,d0			;required for MANX stack check
-		movem.l	d0/d7/a2/a6,-(a7)
-		moveq	#_args_end-_args,d0
-		jsr	(4,a1)
-		movem.l	(a7)+,d1/d7/a2/a6
+.nofile	lea	.gameDE(pc),a0
 
-	;remove exe
-		move.l	d7,d1
-		jsr	(_LVOUnLoadSeg,a6)
 
-	;quit
-_quit		pea	TDREASON_OK
-		move.l	(_resload,pc),a2
-		jmp	(resload_Abort,a2)
+; load game
+.dogame	move.w	#$3696,d0		; start of texts in german version
+	move.w	#$38c0-$3696,d1		; end, good for CRC
+	lea	.cmd(pc),a3		; command line
+	moveq	#.cmdlen,d5		; length of command line
 
-_end
-		move.l	_program(pc),-(A7)
-		pea	205			; file not found
-		pea	TDREASON_DOSREAD
-		move.l	(_resload,pc),-(a7)
-		add.l	#resload_Abort,(a7)
-		rts
-
-_patch_intro:
-	movem.l	d0-a6,-(A7)
-
-	move.l	d7,a3
-	add.l	a3,a3
-	add.l	a3,a3
-
-	move.l	a3,a0
-	lea	$1200(a0),a1
-
-	lea	_pvbr(pc),A2
-	moveq.l	#4,D0
-	bsr	_hexsearch
-	cmp.l	#0,A0
-	beq.b	.skip0
-	move.l	#$4E717000,(A0)
-.skip0
-	move.l	a3,a0
-	lea	$1200(a0),a1
-
-	lea	_pcacr(pc),A2
-	moveq.l	#4,D0
-	bsr	_hexsearch
-	cmp.l	#0,A0
-	beq.b	.skip1
-	move.l	#$4E714E71,(A0)
-.skip1
-	lea	_jmpa6(pc),A2
-	moveq.l	#2,D0
-	move.l	a3,a0
-	lea	$1200(a0),a1
-.loop
-	bsr	_hexsearch
-	cmp.l	#0,A0
-	beq.b	.skip2
-	move.w	#$4E40,(a0)+
-	bra.b	.loop
-.skip2
-	pea	_handle_jmpa6(pc)
-	move.l	(a7)+,$80.W
-
-	movem.l	(a7)+,d0-a6
+.dopatch
+	lea	PT_GAME(pc),a1
+.go	bsr.b	.LoadAndPatch
+	bsr.b	.run
+	move.w	RunGame(pc),d0
+	bne.w	QUIT
 	rts
 
-_handle_jmpa6:
-	move.l	A0,-(A7)
-	lea	.next(pc),a0
-	move.l	a0,6(a7)	; change TRAP return address
-	move.l	(a7)+,a0
-	RTE			; goes to .next
-.next
-	bsr	_flushcache
-	jmp	(A6)
+; a3.l: command line
+; d5.l: length of command line
 
-_avoid_subq_af:
-	move.l	($34,a0),a0
+.run	move.l	d7,a1
+	add.l	a1,a1
+	add.l	a1,a1
+	movem.l	d7/a6,-(a7)
+	move.l	a3,a0
+	move.l	d5,d0
+	addq.w	#4,a1
+	move.w	RunGame(pc),d1
+	beq.b	.nogame
+	move.l	a1,CODESTART-.cmd(a0)
+.nogame	jsr	(a1)
+	movem.l	(a7)+,d7/a6
+	move.l	d7,d1
+	jmp	_LVOUnLoadSeg(a6)
+
+; d0.w: start offset for version check
+; d1.w: length for version check
+; a0.l: file name
+; a1.l: patch table
+; a6.l: dos base
+; ---
+; d7: segment
+
+.LoadAndPatch
+	move.w	d0,d3
+	moveq	#0,d4
+	move.w	d1,d4
+
+	move.l	a0,d6
+	move.l	a1,a5
+	move.l	a0,d1
+	jsr	_LVOLoadSeg(a6)
+	move.l	d0,d7
+	beq.b	.error
+
+	move.l	d7,a0
+	add.l	a0,a0
+	add.l	a0,a0
+	lea	4(a0,d3.w),a0
+	move.l	d4,d0
+	move.l	_resload(pc),a2
+	jsr	resload_CRC16(a2)
+	move.w	d0,d2
+
+; d0: checksum
+	move.l	a5,a0
+.find	movem.w	(a0)+,d0/d1		; checksum, offset to variables
+	cmp.w	#-1,d0			; do not remove this! checksum can
+	beq.b	.out			; have the sign bit set so just
+	tst.w	d0			; bmi.b is not going to work!
+	beq.b	.wrongver
+	cmp.w	d0,d2
+	beq.b	.found
+	addq.w	#2,a0
+	bra.b	.find
+
+; unsupported/unknown version
+.wrongver
+	pea	(TDREASON_WRONGVER).w
+	bra.b	EXIT
+
+
+.found	move.w	d1,VARS-PT_GAME(a5)
+	add.w	(a0),a5
+
+
+	move.l	a5,a0
+.patch	move.l	d7,a1
+	move.l	_resload(pc),a2
+	jsr	resload_PatchSeg(a2)
+.out	rts
+
+.error	jsr	_LVOIoErr(a6)
+	move.l	d6,-(a7)
+	move.l	d0,-(a7)
+	pea	(TDREASON_DOSREAD).w
+	bra.b	EXIT
+
+
+.cmd	dc.b	" ",10			; -f: floppy mode, -s: single player
+.cmdlen	= *-.cmd			; -m0...9: map size
+
+.intro		dc.b	"mcp",0
+.cmdi		dc.b	"SCPT",10
+.cmdi_end
+	dc.b	0
+
+.game	dc.b	"TheSettlers",0
+.gameDE	dc.b	"DieSiedler",0
+	CNOP	0,4
+
+
+QUIT	pea	(TDREASON_OK).w
+EXIT	move.l	_resload(pc),a2
+	jmp	resload_Abort(a2)
+
+
+; format: checksum, offset to vars (a5), offset to patch list
+PT_GAME	dc.w	$2205,$6eec,PLGAMEDE-PT_GAME	; german version
+	dc.w	$8b87,$6ede,PLGAMEDE_2-PT_GAME	; german version #2
+	dc.w	$06aa,$6eda,PLGAMEEN-PT_GAME	; english version
+	dc.w	$91d1,$6ef6,PLGAMEFR-PT_GAME	; french version
+
+; intro
+	dc.w	$f284,0,PLINTRO-PT_GAME
+	dc.w	0				; end of tab
+
+PLINTRO	PL_START
+	PL_B	$41c,$60		; skip VBR access
+	PL_B	$2f12,$60		; skip CACR access
+
+	PL_PS	$2b80,.key
+
+	PL_PSS	$5cc,.fixcop,6
+
+	PL_I	$5cc
+
+	PL_PS	$10fc,.flush
+
+	;PL_I	$220
+	;PL_R	$3f4
+
+
+	PL_PS	$de4,.flush1
+	PL_PS	$278a,.flush2
+	PL_PSS	$5ec,.flush3,2
+
+;	PL_P	$1008,.test
+	PL_END
+
+;.test	btst	#2,$dff016
+;	bne.b	.test
+;	movem.l	(a7)+,d2-d7/a0-a2/a5
+;	rts
+
+.flush1	bsr	FlushCache
+	move.l	d0,$12(a6)
+	moveq	#0,d0
+	rts
+
+.flush2	bsr	FlushCache
+	cmp.l	#"GA01",d0
+	rts
+
+.flush3
+	bsr	FlushCache
+	move.l	$18(a4),a0
+	tst.w	10(a0)
+	rts
+
+
+.flush	move.l	a0,-(a7)
+	move.l	_resload(pc),a0
+	jsr	resload_FlushCache(a0)
+	move.l	(a7)+,a0
+	addq.l	#7,d1
+	and.b	#$f8,d1
+	rts
+
+
+.fixcop	btst	#2,$dff016
+	bne.b	.fixcop
+	move.l	$44(a5),a1
+	move.l	$26(a1),$dff080
+	rts
+
+.key	move.b	$bfec01,d0
+	ror.b	d0
+	not.b	d0
+	cmp.b	_keyexit(pc),d0
+	beq.w	QUIT
+	move.b	$bfed01,d0		; original code
+	rts
+
+
+FlushCache
+	move.l	a0,-(a7)
+	move.l	_resload(pc),a0
+	jsr	resload_FlushCache(a0)
+	move.l	(a7)+,a0
+	rts
+
+
+; German version (SPS 0401)
+PLGAMEDE
+	PL_START
+	PL_W	$6a5a,$7a00		; moveq #0,d5 -> disable prot. check
+	PL_PS	$3940,.fix		; restore protection opcode
+
+	PL_ORW	$24b24+2,1<<3		; enable level 2 interrupt (save games)
+
+	; access fault when soldiers enter the castle
+	PL_PSS	$ECCE-$20,FixAccessFault,2
+
+
+	PL_PSS	$8b72,WaitBlit1,2
+
+	PL_NEXT	PLCOMMON
+	PL_END
+
+.fix	move.l	#$2691c,d0		; routine offset
+	move.l	#$6a5a,d1		; offset to opcode
+	bra.w	CrackMagic
+
+WaitBlit1
+	tst.b	$02(a6)
+.wblit	btst	#6,$02(a6)
+	bne.b	.wblit
+	move.l	#$ffffffff,$44(a6)
+	rts
+
+
+; German version #2
+PLGAMEDE_2
+	PL_START
+	PL_W	$6a4c,$7a00		; moveq #0,d5 -> disable prot. check
+	PL_PS	$3932,.fix		; restore protection opcode
+
+	PL_ORW	$24ab4+2,1<<3		; enable level 2 interrupt (save games)
+
+	; access fault when soldiers enter the castle
+	PL_PSS	$EC66-$20,FixAccessFault,2
+
+
+	PL_PSS	$8b60,WaitBlit1,2
+
+	PL_NEXT	PLCOMMON
+	PL_END
+
+
+.fix	move.l	#$2688c,d0		; routine offset
+	move.l	#$6a4c,d1		; offset to opcode
+	bra.w	CrackMagic
+
+
+; English version (SPS 0143)
+PLGAMEEN
+	PL_START
+	PL_W	$6a48,$7a00		; moveq #0,d5 -> disable prot. check
+	PL_PS	$392e,.fix		; restore protection opcode
+
+	PL_ORW	$24a2e+2,1<<3		; enable level 2 interrupt (save games)
+
+	; access fault when soldiers enter the castle
+	PL_PSS	$ECBC-$20,FixAccessFault,2
+
+	PL_PSS	$8b60,WaitBlit1,2
+
+	PL_NEXT	PLCOMMON
+	PL_END
+
+
+.fix	move.l	#$26826,d0		; routine offset
+	move.l	#$6a48,d1		; offset to opcode
+	bra.b	CrackMagic
+
+
+; French version (SPS 2378)
+PLGAMEFR
+	PL_START
+	PL_W	$6a64,$7a00		; moveq #0,d5 -> disable prot. check
+	PL_PS	$3938,.fix		; restore protection opcode
+
+	PL_ORW	$24a76+2,1<<3		; enable level 2 interrupt (save games)
+
+	; access fault when soldiers enter the castle
+	PL_PSS	$ECD8-$20,FixAccessFault,2
+
+	PL_PSS	$8b7c,WaitBlit1,2
+
+	PL_NEXT	PLCOMMON
+	PL_END
+
+
+.fix	move.l	#$2686e,d0		; routine offset
+	move.l	#$6a64,d1		; offset to opcode
+	bra.b	CrackMagic
+
+
+
+
+; common patches for all versions of the game
+PLCOMMON
+	PL_START
+	PL_B	$104,$60		; skip VBR access
+	PL_ORW	$1cb6+2,1<<3		; enable level 2 interrupt (passwords)
+
+	PL_SA	$f20,$f32		; skip Bplcon3,4 and FMode access
+	PL_END
+
+
+
+
+; this routine performs the "checksum checks do not matter" magic. :)
+
+; d0.l: offset to routine to call
+; d1.l: offset to opcode to restore
+CrackMagic
+	moveq	#0,d2
+	move.w	VARS(pc),d2
+	sub.l	d2,d1
+	move.w	#$ba40,(a5,d1.l)	; cmp.w d0,d5
+	sub.l	d2,d0
+	jmp	(a5,d0.l)		; call original routine
+
+
+_cb_keyboard
+	move.w	RunGame(pc),d1		; do not store any key
+	beq.b	.no			; while the intro is running!
+	move.l	CODESTART(pc),a5
+	add.w	VARS(pc),a5
+	rol.b	d0
+	not.b	d0
+	btst	#0,d0
+	beq.b	.no
+	move.b	d0,$1f5(a5)
+.no	rts
+
+
+; JOTD's fix for the access fault
+FixAccessFault
+	move.l	$34(a0),a0
 	move.l	d0,-(a7)
 	move.l	a0,d0
 	rol.l	#8,d0
@@ -318,272 +564,19 @@ _avoid_subq_af:
 	; commit sub only if MSB is 0 or matches expansion mem
 	; (not 100% satisfactory but seems to work)
 
-	subq.b	#1,(8,a0)
-.skip
-	move.l	(a7)+,d0
+	subq.b	#1,8(a0)
+
+.skip	move.l	(a7)+,d0
 	rts
 
-_patch_exe:
-	movem.l	d0-a6,-(A7)
+CODESTART	dc.l	0		; start of program code
+VARS		dc.w	0		; offset to variables (a5)
+RunGame		dc.w	0
 
-	move.l	d7,a3
-	add.l	a3,a3
-	add.l	a3,a3
-	addq.l	#4,a3
-
-	lea	-$20(a3),a1
-	move.l	_german(pc),d0
-	bne.b	.gotoger
-
-	cmp.l	#'LIQU',$38C2(a1)
-	beq.b	.french_v1
-	cmp.l	#'DENT',$38B6(a1)
-	beq.b	.uk_v1
-
-	bra	_wrong_version
-
-.uk_v1
-	lea	_pl_english(pc),a0
-.patch
-	move.l	_resload(pc),a2
-	jsr	resload_Patch(a2)
-	movem.l	(a7)+,d0-a6
-	rts
-
-.french_v1:
-	lea	_pl_french_v1(pc),a0
-	bra.b	.patch
-
-.gotoger
-	cmp.l	#'BITT',$38B0(a1)
-	beq.b	.gerv1
-	cmp.l	#'BITT',$38BE(a1)
-	beq.b	.gerv2
-	bra	_wrong_version
-.gerv1:
-	lea	-$20(a3),a1
-	lea	_pl_german_v1(pc),a0
-	bra	.patch
-.gerv2:
-	lea	-$20(a3),a1
-	lea	_pl_german_v2(pc),a0
-	bra	.patch
+TAGLIST	dc.l	WHDLTAG_CUSTOM1_GET
+NOINTRO	dc.l	0		; skip intro
+	dc.l	TAG_END
 
 
-_jmpa6
-	dc.w	$4ED6
-
-_pvbr:
-	dc.l	$4E7A0801
-
-_pcacr:
-	dc.l	$4E7B1002
-
-_wrong_version:
-	pea	TDREASON_WRONGVER
-	move.l	_resload(pc),-(a7)
-	addq.l	#resload_Abort,(a7)
-	rts
-
-
-; Amigapatchlist compliant
-_pl_german_v1:
-	PL_START
-	IFD	CRACKIT
-        PL_L	$6a6e,$4e714E71
-        PL_B	$7d00,$60
-        PL_B	$ba7A,$60
-	PL_B	$c3aa,$60
-	PL_B	$cc94,$60
-	PL_B	$17be2,$60
-	PL_W	$25124,$4e71
 	ENDC
 
-	; access fault when soldiers enter the castle
-
-	PL_W	$EC66,$4E71
-	PL_PS	$EC68,_avoid_subq_af
-
-	; empty DBF
-
-	PL_PS	$6594,_emu_dbf_50
-
-	; VBR
-
-	PL_L	$132,$70004E71
-	PL_END
-
-
-; Amigapatchlist compliant
-
-_pl_german_v2:
-	PL_START
-
-	IFD	CRACKIT
-	PL_L	$6a7c,$4e714E71
-	PL_B    $7d12,$60
-	PL_B    $bac0,$60
-	PL_B    $c3ca,$60
-	PL_B	$ccFC,$60
-	PL_B	$17c50,$60
-	PL_W	$251B4,$4e71
-	ENDC
-
-	; access fault when soldiers enter the castle
-
-	PL_W	$ECCE,$4E71
-	PL_PS	$ECD0,_avoid_subq_af
-
-	; VBR
-
-	PL_L	$132,$70004E71
-
-	; empty DBF
-
-	PL_PS	$65a2,_emu_dbf_50
-
-	PL_END
-
-
-; Amigapatchlist compliant
-
-_pl_english:
-        PL_START
-
-	; protection
-
-	IFD	CRACKIT
-	PL_L	$6a6a,$4e714e71
-	PL_B    $7d00,$60
-	PL_B    $baae,$60
-	PL_B    $c3b8,$60
-	PL_B    $ccea,$60
-	PL_B    $17c3e,$60
-	PL_W    $250be,$4e71
-	ENDC
-
-	; access fault when soldiers enter the castle
-
-	PL_W	$ECBC,$4E71
-	PL_PS	$ECBE,_avoid_subq_af
-
-	; VBR
-
-	PL_L	$132,$70004E71
-
-	; empty DBF
-
-	PL_PS	$6590,_emu_dbf_50
-
-        PL_END
-
-_pl_french_v1:
-	PL_START
-	; protection, adapted from UK
-
-	IFD	CRACKIT
-	PL_L    $6a86,$4e714E71
-	PL_B	$7d1c,$60
-	PL_B    $bacA,$60
-	PL_B    $c3d4,$60
-	PL_B    $cd06,$60
-	PL_B    $17c5a,$60
-	PL_W    $25106,$4e71
-	ENDC
-
-	; VBR
-
-	PL_L	$132,$70004E71
-
-	; empty DBF
-
-	PL_PS	$659A,_emu_dbf_50
-
-	; access fault when soldiers enter the castle
-
-	PL_W	$ECD8,$4E71
-	PL_PS	$ECDA,_avoid_subq_af
-
-	PL_END
-
-_emu_dbf_50:
-	moveq	#1,d0
-	bra	_beamdelay
-
-_patchkb
-	IFEQ	KICKSIZE-$40000
-
-	lea	.ackkb(pc),A0
-	lea	.oldkb(pc),A1
-	move.l	$68.W,(A1)
-	move.l	A0,$68.W
-	rts
-
-.ackkb:
-	bset	#6,$BFEE01
-	movem.l	D0,-(A7)
-	moveq.l	#2,D0
-	bsr	_beamdelay
-	bclr	#6,$BFEE01
-	movem.l	(A7)+,D0
-	move.l	.oldkb(pc),-(A7)
-	rts
-
-.oldkb:
-	dc.l	0
-
-; < D0: numbers of vertical positions to wait
-_beamdelay
-.bd_loop1
-	move.w  d0,-(a7)
-        move.b	$dff006,d0	; VPOS
-.bd_loop2
-	cmp.b	$dff006,d0
-	beq.s	.bd_loop2
-	move.w	(a7)+,d0
-	dbf	d0,.bd_loop1
-	rts
-	ELSE
-	rts
-	ENDC
-
-
-;< A0: start
-;< A1: end
-;< A2: bytes
-;< D0: length
-;> A0: address or 0 if not found
-
-_hexsearch:
-	movem.l	D1/D3/A1-A2,-(A7)
-.addrloop:
-	moveq.l	#0,D3
-.strloop:
-	move.b	(A0,D3.L),D1	; gets byte
-	cmp.b	(A2,D3.L),D1	; compares it to the user string
-	bne.b	.notok		; nope
-	addq.l	#1,D3
-	cmp.l	D0,D3
-	bcs.b	.strloop
-
-	; pattern was entirely found!
-
-	bra.b	.exit
-.notok:
-	addq.l	#1,A0	; next byte please
-	cmp.l	A0,A1
-	bcc.b	.addrloop	; end?
-	sub.l	A0,A0
-.exit:
-	movem.l	(A7)+,D1/D3/A1-A2
-	rts
-
-;---------------
-
-_tag		dc.l	WHDLTAG_CUSTOM1_GET
-_custom1	dc.l	0
-		dc.l	0
-
-;============================================================================
-
-	END

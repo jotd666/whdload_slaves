@@ -29,6 +29,10 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 3.1 (01.12.2022):
+ - really re-enabled 512k expansion memory, which allows the game to be faster
+   and have more sounds (check the pond monster at start)
+ 
  version 3.0 (14.07.2022):
  - re-enabled 512k expansion memory, which allows the game to be faster
    and have more sounds (check the pond monster at start)

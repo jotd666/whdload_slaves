@@ -37,7 +37,7 @@
 	ENDC
 	ENDC
 
-LOW_MEMORY
+;LOW_MEMORY
 ;CHIP_ONLY
 
 	IFD	LOW_MEMORY
@@ -54,7 +54,7 @@ FASTMEMSIZE = $80000
 	ENDC
 	
 DECL_VERSION:MACRO
-	dc.b	"3.0"
+	dc.b	"3.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
