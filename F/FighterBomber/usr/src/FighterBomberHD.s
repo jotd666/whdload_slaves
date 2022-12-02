@@ -30,7 +30,7 @@ RELOC_ENABLED = 1
 	IFD	RELOC_ENABLED
 RELOC_MEM = $50000+SAVEMEM
 	ELSE
-RELOC_MEM = 0
+RELOC_MEM = SAVEMEM
 	ENDC
 
 ;==========================================================================
@@ -49,7 +49,7 @@ EXPMEM_SIZE	equ	RELOC_MEM
 base
 		SLAVE_HEADER		;ws_Security + ws_ID
 		dc.w	17		;ws_Version
-		dc.w	WHDLF_NoError|WHDLF_EmulTrap	;ws_flags
+		dc.w	WHDLF_NoError|WHDLF_EmulTrap|WHDLF_ClearMem	;ws_flags
 		dc.l	BASMEM_SIZE		;ws_BaseMemSize
 		dc.l	0		;ws_ExecInstall
 		dc.w	Start-base	;ws_GameLoader
@@ -98,6 +98,7 @@ _info	dc.b	'-----------------------',10
 save:	dc.b	'FB_Save',0
 log:	dc.b	'FB_PilotsLog',0
 _config
+	dc.b	"BW;"
 	dc.b	"C5:B:skip intro;"
     ;dc.b    "C1:B:infinite ammo;"
     dc.b	0
@@ -105,7 +106,11 @@ _config
 reloc_file_name_table
 	dc.b	"fighterbomber.reloc",0
 unreloc_file_name_table
-	dc.b	"fighterbomber.unreloc",0
+	dc.b	"fighterbomber.unreloc"
+	IFD		CHIP_ONLY
+	dc.b	"_chip"
+	ENDC
+	dc.b	0
 	
 	CNOP 0,2
 
@@ -120,7 +125,14 @@ Start	;	A0 = resident loader
 		IFD		CHIP_ONLY
 		lea		_expmem(pc),a0
 		move.l	#$80000,(a0)
+		
+		; set CPU and cache options
 		ENDC
+
+		move.l	_resload(pc),a2
+		move.l	#WCPUF_Base_WT|WCPUF_Exp_CB|WCPUF_Slave_CB|WCPUF_IC|WCPUF_DC|WCPUF_BC|WCPUF_SS|WCPUF_SB,d0
+		move.l	#WCPUF_All,d1
+		jsr	resload_SetCPU(a2)
 		
 		lea		save_buffer(pc),a1
 		IFD		RELOC_ENABLED
@@ -133,6 +145,9 @@ Start	;	A0 = resident loader
 		move.l	_expmem(pc),(a1)
 		ENDC
 	
+		pea		smc_trap(pc)
+		move.l	(a7)+,$B8.W	; trap #14
+		
 		moveq	#0,d0
 		lea	log(pc),a0
 		bsr	_checkfile
@@ -165,6 +180,17 @@ copylock:
 		move.l	#$8488ffc4,d0		;Copylock Serial Key
 		move.l	d0,$24.w		;Secondary store
 		rts		
+wait_and_load
+	JSR	$7e800
+.loop
+	btst	#6,$bfe001
+	beq.b	.out
+	btst	#7,$bfe001
+	beq.b	.out
+	bra.b	.loop
+.out	
+	rts
+	
 		
 pl_boot:
 	PL_START
@@ -175,6 +201,9 @@ pl_boot:
 	PL_P	$9A,patch			;Patch before intro
 	PL_P	$FC,gamepatch		;Game patcher!
 	PL_P	$104,copylock		;Patch Copylock Routine!
+	PL_IFBW
+	PL_PS	$86,wait_and_load
+	PL_ENDIF
 	PL_END
 	
 	
@@ -188,7 +217,6 @@ patch:
 
 
 gamepatch:
-
 		lea	save(pc),a0
 		move.l	save_buffer(pc),a1
 		bsr	_LoadFile
@@ -204,9 +232,9 @@ gamepatch:
 		move.l	(a0)+,(a1)+
 		subq.l	#1,d0
 		bne.b	.copy
-		
+				
 		; load reloc table
-		
+		move.l	_resload(pc),a2
 		lea		RELOC_TABLE_ADDRESS,a1
 		lea		reloc_file_name_table(pc),a0
 		jsr		resload_LoadFileDecrunch(a2)
@@ -238,12 +266,20 @@ gamepatch:
 		bra.b	.unreloc
 .endu
 		
+	IFNE	0
 		; protect mem: 
-		; w 0 $1000 $24A
-		; w 1 $124C $9D4-$24C
-		; w 2 $1A82 $4E500-$1A82
-		blitz
-		
+w 0 $1000 $24A
+w 1 $124C $9D4-$24C
+w 2 $1A82 $4E500-$1A82
+		; unprotect mem: 
+w 0
+w 1
+w 2
+		; protect for smc: 
+w 0 $80500 $4E000 none
+smc 0
+	ENDC
+	
 		ELSE
 		lea	depack(pc),a0
 		lea	$258be,a1
@@ -285,6 +321,13 @@ copydata2:
 		move.l	a1,-(a7)
 		sub.w	#PROGRAM_START,a1
 		jsr		resload_Patch(a2)
+		
+		; patch base mem so snoop bugs are fixed
+		move.l	_resload(pc),a2
+		lea		pl_main_snoop(pc),a0
+		sub.l	a1,a1
+		jsr		resload_Patch(a2)		
+		
 		rts
 		
 ;----------------------------------
@@ -399,6 +442,12 @@ wait		cmp.b	$dff006,d1
 skip:		movem.l	(a7)+,d0-d7/a0-a6
 		moveq	#0,d0
 		rts
+
+pl_main_snoop
+	PL_START
+	PL_W	$2e5ec,$200		; fix snoop
+	PL_L	$2e5ee,$01000200	; overwrite bogus entry
+	PL_END
 	
 pl_main
 	PL_START
@@ -412,9 +461,201 @@ pl_main
 	PL_L	$30ed8,$600000d6	;Remove FORMAT option!
 	PL_P	$2eeba,logger_save
 	PL_PS	$2ee68,logger_load
-	PL_END
+	
+	PL_PS	$143c6,cpu_dependent_loop_d2
+	PL_PS	$143f8,cpu_dependent_loop_d0
+	PL_PSS	$1464a,cpu_dependent_loop_d0_2,2
 	
 	
+	IFD		RELOC_ENABLED
+	PL_P	$1ff34,reloc_d1
+	;PL_P	$1f5dc,reloc_d0	; address compared to is unrelocated nothing to do!!
+	PL_P	$1fdd8,jump_reloc
+	PL_PS	$219d0,reloc_a5
+	
+	; fix hardcoded sprite pointers in copperlist
+	; (not needed in fastmem, but more convenient for chip debug)
+	IFD		CHIP_ONLY
+	PL_AW	$0c270,$8	; adds $80000
+	PL_AW	$2c622,$8	; adds $80000
+	PL_AW	$2e6a8,$8	; adds $80000
+	PL_AW	$35600,$8	; adds $80000 to hardcoded sprite address
+	PL_AW	$35608,$8	; adds $80000
+	ENDC
+	ENDC
+	
+	; a lot of smc moving RTS or NOP, handle that by trap #14
+    PL_W	$0f00a,$4E4E
+    PL_W	$1acbe,$4E4E
+    PL_W	$1acf8,$4E4E
+    PL_W	$1adba,$4E4E
+    PL_W	$1af14,$4E4E
+    PL_W	$2c1c8,$4E4E
+    PL_W	$2c332,$4E4E
+    PL_W	$2df40,$4E4E
+    PL_W	$2e0ce,$4E4E
+    PL_W	$2e7da,$4E4E
+    PL_W	$2e924,$4E4E
+    PL_W	$2ee4a,$4E4E
+    PL_W	$33f48,$4E4E
+    PL_W	$3632e,$4E4E
+    PL_W	$36336,$4E4E
+    PL_W	$46b6c,$4E4E
+    PL_W	$46c92,$4E4E
+	
+	; after setting a jump
+	PL_PS	$33d32,flush_after_smc
+	PL_PS	$14dd4,flush_after_smc_2
+	PL_PS	$179d8,smc_179d8
+	PL_P	$344dc,smc_344dc
+	PL_PSS	$33f70,smc_33f70,4
+	PL_PS	$3790a,smc_3790A
+	PL_PSS	$f026,smc_f026,2
+	PL_NEXT	pl_main_snoop
+	
+cpu_dependent_loop_d2
+	exg.l	d0,d2
+	bsr.b	cpu_dependent_loop_d0
+	exg.l	d0,d2
+	rts
+	
+cpu_dependent_loop_d0
+	swap	D0
+	clr.w	D0
+	swap	D0
+	divu.w	#$20,D0	; $28 without nop, $20 (random) with nop
+	swap	D0
+	clr.w	D0
+	swap	D0
+	bsr	beamdelay
+	move.w	#$FFFF,d0
+	rts
+	
+cpu_dependent_loop_d0_2
+	MOVE.W	#$03e8,D0
+emulate_dbf_d0:
+	swap	D0
+	clr.w	D0
+	swap	D0
+	divu.w	#$28,D0	; $28 without nop
+	swap	D0
+	clr.w	D0
+	swap	D0
+	bsr	beamdelay
+	move.w	#$FFFF,d0
+	rts
+
+smc_179d8
+	move.l	a1,-(a7)
+	move.l	_reloc_base(pc),a1
+	add.l	#$17A06-PROGRAM_START,a1
+	move.l	a0,(a1)
+	move.l	(a7)+,a1
+	bra	_flushcache
+
+smc_344dc
+	MOVEM.L	(A7)+,D0-D2		;344dc: 4cdf0007
+	bra	_flushcache
+	
+smc_33f70:
+	move.l	a1,-(a7)
+	move.l	_reloc_base(pc),a1
+	add.l	#$33fa2-PROGRAM_START,a1
+	move.l	#$fc000000,(a1)
+	move.l	(a7)+,a1
+	bra	_flushcache
+	
+smc_3790A:
+	movem.l	a1,-(a7)
+	move.l	_reloc_base(pc),a1
+	add.l	#$3793e-PROGRAM_START,a1
+	move.w	d1,(a1)
+	bsr	_flushcache
+	tst.w	(a1)		; CCR is tested on return
+	movem.l	(a7)+,a1
+	rts
+
+smc_f026:
+	move.l	a1,-(a7)
+	move.l	_reloc_base(pc),a1
+	add.l	#$f114-PROGRAM_START,a1
+	move.w	#$0078,(a1)
+	move.l	(a7)+,a1
+	bra	_flushcache
+	
+; < D0: numbers of vertical positions to wait
+beamdelay
+.bd_loop1
+	move.w  d0,-(a7)
+        move.b	$dff006,d0	; VPOS
+.bd_loop2
+	cmp.b	$dff006,d0
+	beq.s	.bd_loop2
+	move.w	(a7)+,d0
+	dbf	d0,.bd_loop1
+	rts
+	
+flush_after_smc
+	MOVE.W	#$0180,D0		;33d32: 303c0180
+	MOVEQ	#31,D1			;33d36: 721f
+	bra		_flushcache
+	
+flush_after_smc_2
+	SUBQ.L	#1,A4			;14dd4: 538c
+	ADD.W	D4,D2			;14dd6: d444
+	ADDX.W	D0,D6			;14dd8: dd40
+	bra		_flushcache
+
+smc_trap
+	movem.l	d0/a0,-(a7)
+	move.l	10(a7),a0	; return address
+	move.w	(a0),d0		; data to write (nop or rts)
+	move.l	(2,a0),a0	; where to write
+	move.w	d0,(a0)
+	bsr		_flushcache
+	movem.l	(a7)+,d0/a0
+	add.l	#6,(2,a7)		; skip the rest of the instruction
+	rte
+	
+	; relocate dynamically, the data is in a
+	; binary stream and longs are on odd addresses...
+jump_reloc
+	add.l	_reloc_base(pc),a1
+	sub.w	#PROGRAM_START,a1
+	MOVE.L	A0,-(A7)		;1fdd8: 2f08
+	JSR	(A1)			;1fdda: 4e91
+	MOVEA.L	(A7)+,A0		;1fddc: 205f
+	rts
+	; same thing, and without that plane crashes
+	; on covert mission right at start!
+reloc_a5
+	add.l	_reloc_base(pc),a5
+	sub.w	#PROGRAM_START,a5
+	cmp.l	#0,a5	; original
+	rts
+	; same thing, unidentified part
+reloc_d1
+	MOVE.B	(A0)+,D1		;1ff34: 1218
+	LSL.L	#8,D1			;1ff36: e189
+	MOVE.B	(A0)+,D1		;1ff38: 1218
+
+	add.l	_reloc_base(pc),d1
+	sub.w	#PROGRAM_START,d1
+	rts
+	
+	; same thing, unidentified part
+reloc_d0
+	; original just adds 4
+	add.l	_reloc_base(pc),d0
+	sub.w	#PROGRAM_START-4,d0
+	rts
+	
+_flushcache:
+	move.l	a2,-(a7)
+	move.l	_resload(pc),a2
+	jsr	resload_FlushCache(a2)
+	move.l	(a7)+,a2
+	rts	
 ;--------------------------------
 
 _resload	dc.l	0		;address of resident loader
