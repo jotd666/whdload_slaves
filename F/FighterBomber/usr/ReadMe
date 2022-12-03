@@ -13,9 +13,7 @@ Author: Galahad / Fairlight (galahadfairlight@yahoo.co.uk)
  - adapted to whdload 17
  - TODO remaining smc trashed 3D (and 2D) graphics
  - TODO fastmem sounds
- - TODO immediate plane crash on starting!! (covert): 
-    * search bogus labels in data code??
-	* lookup for $24 read? (copylock key)
+ - TODO sprite trash in fastmem (freeflight)
  
  Version 1.1 done by Galahad:
  - Memory requirements reduced, only needs 512k chipmem now

@@ -1,12 +1,11 @@
 ;*---------------------------------------------------------------------------
-;  :Program.	MK.Asm
-;  :Contents.	Slave for "Mortal Kombat" from A<<LAIM ENTERTAINMENT
-;  :Author.	Galahad of Fairlight
-;  :History.	09.01.01
+;  :Program.	FighterBomberHD.s
+;  :Contents.	Slave for "Fighter Bomber" from Activision/Vectorgrafx
+;  :Author.	Galahad of Fairlight / JOTD / paraj
 ;  :Requires.	-
 ;  :Copyright.	Public Domain
 ;  :Language.	68000 Assembler
-;  :Translator.	PhxAs
+;  :Translator.	PhxAs, vasm, barfly
 ;  :To Do.
 ;---------------------------------------------------------------------------*
 
@@ -212,6 +211,7 @@ pl_boot:
 patch:
 		move.w	#$4e75,$11280		;Remove RTE
 		move.w	#$4e71,$110c4		;Remove move.w sr,-(a7)
+		bsr		_flushcache
 		jmp	$10000
 ;----------------------------------
 
@@ -466,6 +466,7 @@ pl_main
 	PL_PS	$143f8,cpu_dependent_loop_d0
 	PL_PSS	$1464a,cpu_dependent_loop_d0_2,2
 	
+	PL_PS	$179d8,fix_smc_address
 	
 	IFD		RELOC_ENABLED
 	PL_P	$1ff34,reloc_d1
@@ -506,12 +507,29 @@ pl_main
 	; after setting a jump
 	PL_PS	$33d32,flush_after_smc
 	PL_PS	$14dd4,flush_after_smc_2
+	; various smc
 	PL_PS	$179d8,smc_179d8
 	PL_P	$344dc,smc_344dc
 	PL_PSS	$33f70,smc_33f70,4
 	PL_PS	$3790a,smc_3790A
 	PL_PSS	$f026,smc_f026,2
+	PL_PSS	$15086,smc_15086,2
+	PL_PSS	$14fae,smc_14fae,2
+	PL_PS	$14ec0,smc_14ec0
+	PL_PS	$214cc,smc_214cc
+	PL_PS	$21842,smc_21842
 	PL_NEXT	pl_main_snoop
+	
+fix_smc_address
+	move.l	a1,-(a7)
+	move.l	_reloc_base(pc),a1
+	; emulate MOVE.L	A0,$17a06, smc
+	;lb_17a04:
+	;MOVEA.L	#$ffffffff,A0		;17a04: 207cffffffff
+	add.l	#$17A06-PROGRAM_START,a1
+	move.l	a0,(a1)
+	move.l	(a7)+,a1
+	bra		_flushcache
 	
 cpu_dependent_loop_d2
 	exg.l	d0,d2
@@ -545,10 +563,23 @@ emulate_dbf_d0:
 	move.w	#$FFFF,d0
 	rts
 
+smc_214cc
+	MOVE.W	#$0018,D2		;214cc: 343c0018
+	SUBQ.W	#1,D2			;214d0: 5342
+	bra		_flushcache
+	
 smc_179d8
 	move.l	a1,-(a7)
 	move.l	_reloc_base(pc),a1
 	add.l	#$17A06-PROGRAM_START,a1
+	move.l	a0,(a1)
+	move.l	(a7)+,a1
+	bra	_flushcache
+	
+smc_21842
+	move.l	a1,-(a7)
+	move.l	_reloc_base(pc),a1
+	add.l	#$21938-PROGRAM_START,a1
 	move.l	a0,(a1)
 	move.l	(a7)+,a1
 	bra	_flushcache
@@ -575,6 +606,30 @@ smc_3790A:
 	movem.l	(a7)+,a1
 	rts
 
+smc_14ec0
+	move.l	a1,-(a7)
+	move.l	_reloc_base(pc),a1
+	add.l	#$150b8-PROGRAM_START,a1
+	clr.b	(a1)
+	move.l	(a7)+,a1
+	bra	_flushcache
+
+smc_14fae
+	move.l	a1,-(a7)
+	move.l	_reloc_base(pc),a1
+	add.l	#$14fe0-PROGRAM_START,a1
+	BCHG	#4,(a1)
+	move.l	(a7)+,a1
+	bra	_flushcache
+	
+smc_15086
+	move.l	a1,-(a7)
+	move.l	_reloc_base(pc),a1
+	add.l	#$150b8-PROGRAM_START,a1
+	BCHG	#4,(a1)
+	move.l	(a7)+,a1
+	bra	_flushcache
+	
 smc_f026:
 	move.l	a1,-(a7)
 	move.l	_reloc_base(pc),a1
