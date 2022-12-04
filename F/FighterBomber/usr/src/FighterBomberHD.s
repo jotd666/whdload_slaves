@@ -144,8 +144,11 @@ Start	;	A0 = resident loader
 		move.l	_expmem(pc),(a1)
 		ENDC
 	
-		pea		smc_trap(pc)
+		pea		smc_trap14(pc)
 		move.l	(a7)+,$B8.W	; trap #14
+
+		pea		smc_trap15(pc)
+		move.l	(a7)+,$BC.W	; trap #15
 		
 		moveq	#0,d0
 		lea	log(pc),a0
@@ -503,11 +506,16 @@ pl_main
     PL_W	$36336,$4E4E
     PL_W	$46b6c,$4E4E
     PL_W	$46c92,$4E4E
+
+	; smc involving JMP $xxxx.L, handled with trap #15
+    PL_W	$0f056,$4E4F
+    PL_W	$14df2,$4E4F
 	
 	; after setting a jump
 	PL_PS	$33d32,flush_after_smc
 	PL_PS	$14dd4,flush_after_smc_2
 	; various smc
+	PL_P	$1772c,smc_1772c
 	PL_PS	$179d8,smc_179d8
 	PL_P	$344dc,smc_344dc
 	PL_PSS	$33f70,smc_33f70,4
@@ -637,6 +645,16 @@ smc_f026:
 	move.w	#$0078,(a1)
 	move.l	(a7)+,a1
 	bra	_flushcache
+
+smc_1772c
+	;MOVE.W	D2,lb_1bec8+2		;1772c: 33c20001beca
+	;RTS				;17732: 4e75
+	move.l	a0,-(a7)
+	move.l	_reloc_base(pc),a0
+	add.l	#$1beca-PROGRAM_START,a0
+	move.w	d2,(a0)
+	move.l	(a7)+,a0
+	bra	_flushcache
 	
 ; < D0: numbers of vertical positions to wait
 beamdelay
@@ -661,7 +679,7 @@ flush_after_smc_2
 	ADDX.W	D0,D6			;14dd8: dd40
 	bra		_flushcache
 
-smc_trap
+smc_trap14
 	movem.l	d0/a0,-(a7)
 	move.l	10(a7),a0	; return address
 	move.w	(a0),d0		; data to write (nop or rts)
@@ -670,6 +688,14 @@ smc_trap
 	bsr		_flushcache
 	movem.l	(a7)+,d0/a0
 	add.l	#6,(2,a7)		; skip the rest of the instruction
+	rte
+
+	; Fix for JMP $xxxx.L smc
+smc_trap15
+	move.l	a0,-(a7)
+	move.l	6(a7),a0 ; return address
+	move.l	(a0),6(a7)
+	move.l	(a7)+,a0
 	rte
 	
 	; relocate dynamically, the data is in a
