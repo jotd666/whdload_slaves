@@ -21,6 +21,8 @@
 *** History			***
 ***********************************
 
+; 2022 (JOTD is back) - fixed intro properly
+;
 ; 13-Jul-2016	- access fault fix in french version was wrong
 ;		  (PL_PS used instead of PL_PSS), fixed
 ;		- cache is now disabled during intro
@@ -62,8 +64,16 @@ PL_SA	MACRO
 MC68020	MACRO
 	ENDM
 
+CHIP_ONLY
+
 ;============================================================================
 
+	IFD	CHIP_ONLY
+CHIPMEMSIZE	= $200000
+FASTMEMSIZE	= $0
+HRTMON
+	ELSE
+BLACKSCREEN
 	IFD	LOWMEM
 CHIPMEMSIZE	= $80000
 FASTMEMSIZE	= $100000*2
@@ -71,10 +81,12 @@ FASTMEMSIZE	= $100000*2
 CHIPMEMSIZE	= $100000
 FASTMEMSIZE	= $100000*4
 	ENDC
+	ENDC
+	
 NUMDRIVES	= 1
 WPDRIVES	= %0000
 
-BLACKSCREEN
+
 ;BOOTBLOCK
 BOOTDOS
 ;BOOTEARLY
@@ -83,12 +95,13 @@ BOOTDOS
 CBKEYBOARD
 SEGTRACKER
 CACHE
+; DEBUG is used locally but also makes kickemu less laxists
+; on some dos stuff and can fail where it would have worked without it
 ;DEBUG
 ;DISKSONBOOT
 ;DOSASSIGN
 FONTHEIGHT	= 8
 HDINIT
-HRTMON
 ;INITAGA
 ;INIT_AUDIO
 ;INIT_GADTOOLS
@@ -107,7 +120,7 @@ POINTERTICKS	= 1
 ;============================================================================
 
 slv_Version	= 17
-slv_Flags	= WHDLF_NoError|WHDLF_Examine|WHDLF_EmulTrap
+slv_Flags	= WHDLF_NoError|WHDLF_ClearMem|WHDLF_Examine|WHDLF_EmulTrap
 slv_keyexit	= $59	; F10
 
 ;============================================================================
@@ -136,16 +149,17 @@ DECL_VERSION:MACRO
 	ENDC
 	ENDM
 	
-slv_name	dc.b	"The Settlers/Die Siedler",0
+slv_name	dc.b	"The Settlers/Die Siedler"
+		IFD		CHIP_ONLY
+			dc.b	" (chip/debug mode)"
+		ENDC
+			dc.b	0
 slv_copy	dc.b	"1993 Blue Byte",0
 
 slv_info	dc.b	"adapted by JOTD & StingRay",10
 		dc.b	"from Wepl excellent KickStarter 34.005",10,10
 		dc.b	"Thanks to Tony Aksnes & Wepl for disk images",10,10
 		dc.b	"Thanks to Olivier Schott for testing & bugreports",10,10
-		IFD	DEBUG
-		dc.b	"DEBUG!!! "
-		ENDC
 		dc.b	"Version "
 		DECL_VERSION
 		dc.b	0
@@ -174,26 +188,26 @@ _bootdos
 	move.l	#-2,$377d0
 
 	move.l	NOINTRO(pc),d0
-	bne.b	.nointro
+	bne	.nointro
 
-; disable cache during intro
-	move.l	#WCPUF_Base_NC|WCPUF_Exp_NC|WCPUF_Slave_CB|WCPUF_IC|WCPUF_DC|WCPUF_BC|WCPUF_SS|WCPUF_SB,d0
-	move.l	#WCPUF_All,d1
-	jsr	resload_SetCPU(a2)
-
+	; align exe memory on round value for intro
+	IFD CHIP_ONLY
+	movem.l a6,-(a7)
+	move.l	$4.w,a6
+	move.l  #$20000-$1976C,d0
+	move.l  #MEMF_CHIP,d1
+	jsr _LVOAllocMem(a6)
+	movem.l (a7)+,a6
+	ENDC
+		
 	lea	.intro(pc),a0
 	lea	.cmdi(pc),a3		; command line
 	moveq	#.cmdi_end-.cmdi,d5		; length of command line arguments
 	moveq	#0,d0
 	move.w	#$a2-0,d1
 
-	bsr.b	.dopatch		; patch and run intro
 
-; and enable it again
-	move.l	_resload(pc),a2
-	move.l	#WCPUF_Base_NC|WCPUF_Exp_CB|WCPUF_Slave_CB|WCPUF_IC|WCPUF_DC|WCPUF_BC|WCPUF_SS|WCPUF_SB,d0
-	move.l	#WCPUF_All,d1
-	jsr	resload_SetCPU(a2)
+	bsr.b	.dopatch		; patch and run intro
 
 .nointro
 
@@ -339,17 +353,20 @@ PT_GAME	dc.w	$2205,$6eec,PLGAMEDE-PT_GAME	; german version
 	dc.w	0				; end of tab
 
 PLINTRO	PL_START
+	;;PL_S	$13b6,$1428-$13b6	; temp skip blitter emu
+	
 	PL_B	$41c,$60		; skip VBR access
 	PL_B	$2f12,$60		; skip CACR access
 
 	PL_PS	$2b80,.key
 
 	PL_PSS	$5cc,.fixcop,6
-
-	PL_I	$5cc
+	;PL_I	$5cc
 
 	PL_PS	$10fc,.flush
-
+	
+	;;PL_PS	$2bec,jsr_a2
+	
 	;PL_I	$220
 	;PL_R	$3f4
 
@@ -358,7 +375,10 @@ PLINTRO	PL_START
 	PL_PS	$278a,.flush2
 	PL_PSS	$5ec,.flush3,2
 
+	PL_PS	$cc0,.flush4
 ;	PL_P	$1008,.test
+
+	PL_PSS	$13AC,blit_1,4
 	PL_END
 
 ;.test	btst	#2,$dff016
@@ -366,6 +386,44 @@ PLINTRO	PL_START
 ;	movem.l	(a7)+,d2-d7/a0-a2/a5
 ;	rts
 
+; before calling each file init
+.flush4
+	movem.l	d0-d1/a0-a2,-(a7)
+
+	MOVEA.L	D4,A6			;0cc0: 2c44
+	ADDA.L	(A6),A6			;0cc2: ddd6
+	MOVE.L	A6,D5			;0cc4: 2a0e
+;	cmp.l	#$3d7cc80f,$849E-$6F50(a6)
+;	bne.b	.x
+;	blitz
+	nop
+;.x
+	cmp.l	#$426d0088,$e210-$DC44(a6)
+	bne.b	.no_part1
+	move.l	_resload(pc),a2
+	lea		pl_intro_2(pc),a0
+	move.l	a6,a1
+	jsr		resload_Patch(a2)
+.no_part1
+	; children running needs blitter fix
+	move.l	a6,-(a7)
+	lea		$c824-$6F50(a6),a6
+	cmp.l	#$3d7ced94,(a6)
+	bne.b	.x
+	; install blit wait
+	move.w	#$4EB9,(a6)+
+	pea		.fix_blitwait_children(pc)
+	move.l	(a7)+,(a6)
+.x
+	move.l	(a7)+,a6
+	movem.l	(a7)+,d0-d1/a0-a2
+	bsr	FlushCache
+	rts
+	
+.fix_blitwait_children
+	move.w #$ed94,(bltsize,a6)
+	bra		wait_blit
+	
 .flush1	bsr	FlushCache
 	move.l	d0,$12(a6)
 	moveq	#0,d0
@@ -405,7 +463,42 @@ PLINTRO	PL_START
 	move.b	$bfed01,d0		; original code
 	rts
 
+blit_1:
+	MOVE.W	#$0000,(bltdmod,A3)		;13ac: 377c00000066
+	MOVE.W	D1,(bltsize,A3)		;13b2: 37410058
+	; waiting here fixes the lockup issues with fast machines
+	bra		wait_blit
+	
+wait_blit
+	TST.B	$BFE001
+.wait
+	BTST	#6,dmaconr+$DFF000
+	BNE.S	.wait
+	rts
 
+; part 1 scrolling & sky	
+; 00088558 3d7c c80f 0058           move.w #$c80f,(a6,$0058) == $00dff058
+
+pl_intro_2
+	PL_START
+	; fix color bit
+	PL_PSS	$8e20c-$8DC44,set_copperlist,2
+	; fix forgotten blitwait (trashed children & dog)
+	PL_P	$8f0b0-$8DC44,wait_blit_1
+	PL_END
+	
+wait_blit_1
+	MOVEM.L	(A7)+,D5-D7/A2-A4	;8f0b0: 4cdf1ce0
+	bra		wait_blit
+	
+	
+set_copperlist
+	move.l	d0,a0
+	move.w	#$200,(2,a0)	; set color bit
+	MOVE.L	D0,cop1lc(A5)		;8e20c: 2b400080
+	CLR.W	copjmp1(A5)			;8e210: 426d0088
+	rts
+	
 FlushCache
 	move.l	a0,-(a7)
 	move.l	_resload(pc),a0
@@ -479,6 +572,7 @@ PLGAMEEN
 
 	PL_PSS	$8b60,WaitBlit1,2
 
+	PL_NOP	$00586,6		; disable infinite wait at start on some machines
 	PL_NEXT	PLCOMMON
 	PL_END
 

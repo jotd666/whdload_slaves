@@ -40,7 +40,7 @@
  version 1.7 (xx.12.2022) done by Stingray & JOTD:
  - provided a "low memory" slave for OCS amigas. Music & sounds
    are reduced, but at least game can be played
- - disabled caches during the intro (issue #0002889)
+ - intro blitter issues fixed, now runs on fast machines/emulators (issue #0002889)
  - 68000/010/??? intro bug, black screen on 68020+ with sound... (issue #0003700)
  - issue 0004215 crash on 68000 when starting game
  
