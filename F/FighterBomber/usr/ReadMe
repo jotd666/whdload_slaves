@@ -9,12 +9,14 @@ Author: Galahad / Fairlight (galahadfairlight@yahoo.co.uk)
  History:
  
  Version 2.0 (2022) done by JOTD & paraj:
- - provided relocation tables so game can run from fastmem for better speed
+ - provided relocation tables so game can run from fastmem for
+   better speed
  - adapted to whdload 17
- - fixed remaining smc which trashed graphics
+ - fixed remaining smc which trashed graphics without hindering
+   performance too much (reduced cache flushes)
+ - added extra 68020+ optimizations
  - TODO fastmem sounds
  - TODO sprite trash in fastmem (freeflight)
- - TODO lockup with high roll % (freeflight)
  
  Version 1.1 done by Galahad:
  - Memory requirements reduced, only needs 512k chipmem now

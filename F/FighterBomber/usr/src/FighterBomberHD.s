@@ -23,7 +23,8 @@ PROGRAM_SIZE = $4F200-PROGRAM_START
 RELOC_TABLE_ADDRESS = PROGRAM_START+PROGRAM_SIZE
 SAVEMEM = $32000
 
-CHIP_ONLY
+;CHIP_ONLY
+;USE_PROFILER
 
 RELOC_ENABLED = 1
 	IFD	RELOC_ENABLED
@@ -37,7 +38,13 @@ SHOWFPS=0 ; =0 => disable, 1 => show fps, 2 => use last_time as counter
 ;==========================================================================
 
 	IFD	CHIP_ONLY
+	IFD	USE_PROFILER
+	; let's party with 2MB chip so we can use profiler memory in $180000
+BASMEM_SIZE	equ	$200000
+	ELSE
 BASMEM_SIZE	equ	$80000+RELOC_MEM
+	ENDC
+	
 EXPMEM_SIZE	equ	0
 	ELSE
 BASMEM_SIZE	equ	$80000
@@ -94,11 +101,15 @@ _name	dc.b	'Fighter Bomber'
 		IFD		CHIP_ONLY
 		dc.b	" (chip/debug mode)"
 		ENDC
+		IFD		USE_PROFILER
+		dc.b	" (profiling on)"
+		ENDC
+		
 		dc.b	0
 _copy	dc.b	'1989 Activision',0
 _info	dc.b	'-----------------------',10
 	dc.b	'Installed and fixed by',10
-	dc.b	'Galahad of Fairlight & JOTD',10
+	dc.b	'Galahad of Fairlight & JOTD & paraj',10
 	dc.b	'Version '
 	DECL_VERSION
 	dc.b	10
@@ -116,10 +127,11 @@ _config
 reloc_file_name_table
 	dc.b	"fighterbomber.reloc",0
 unreloc_file_name_table
-	dc.b	"fighterbomber.unreloc"
+	dc.b	"fighterbomber."
 	IFD		CHIP_ONLY
-	dc.b	"_chip"
+	dc.b	"chip_"
 	ENDC
+	dc.b	"unreloc"
 	dc.b	0
 	
 	CNOP 0,2
@@ -139,10 +151,22 @@ Start	;	A0 = resident loader
 		; set CPU and cache options
 		ENDC
 
+		IFD		USE_PROFILER
+		lea		$180000,a0	; buffer start
+		move.l	#$10000,d0	; buffer size
+		lea		$100.W,a1	; where to read control & write start & size (example $100.W)
+		bsr		init_fixed_address
+		
+		ENDC
+		
 		move.l	_resload(pc),a2
 		move.l	#WCPUF_Base_WT|WCPUF_Exp_CB|WCPUF_Slave_CB|WCPUF_IC|WCPUF_DC|WCPUF_BC|WCPUF_SS|WCPUF_SB,d0
 		move.l	#WCPUF_All,d1
 		jsr	resload_SetCPU(a2)
+		
+		lea	(_tag,pc),a0
+		jsr	(resload_Control,a2)
+
 		
 		lea		save_buffer(pc),a1
 		IFD		RELOC_ENABLED
@@ -337,6 +361,11 @@ copydata2:
 		
 		move.l	_resload(pc),a2
 		lea		pl_main(pc),a0
+		move.l	attnflags(pc),d0
+		btst	#AFB_68020,d0
+		beq.b	.p
+		lea		pl_main_020(pc),a0	; more fixes
+.p
 		move.l	_reloc_base(pc),a1
 		move.l	a1,-(a7)
 		sub.w	#PROGRAM_START,a1
@@ -469,6 +498,20 @@ pl_main_snoop
 	PL_L	$2e5ee,$01000200	; overwrite bogus entry
 	PL_END
 
+pl_main_020:
+	PL_START
+	; optimize for 020+ in the loop which is frequently called
+	; (15000-150c8)
+	PL_L	$14f56,$d2f02200    ;            adda.w (a0,d2.w*2,$00),a1
+	PL_NOP	$14f56+4,2
+	PL_L	$1502e,$d2f02200    ;            adda.w (a0,d2.w*2,$00),a1
+	PL_NOP	$15032,2
+	; that one is more interesting as it's in the critical path
+	; when blitter is ready
+	PL_AW	$15084,2	; skip the NOP
+	PL_NOP	$1508e,2	
+	PL_L	$15090,$d2f02200    ;            adda.w (a0,d2.w*2,$00),a1
+	PL_NEXT	pl_main
 pl_main
 	PL_START
 	PL_CB	$14878			;Fix Address Error
@@ -491,12 +534,6 @@ pl_main
 
 	PL_PS	$0b05e,keyboard_hook
 
-	; ------
-	; Temp sprite fixes
-	PL_L	$101f6+2,$0000c2b2 ;101f6: 13c00000c2b2
-	PL_L	$101fc+2,$0000c3fe ;101fc: 13c00000c3fe
-	PL_L	$10206+2,$0000c2b4 ;10206: 13c00000c2b4
-	PL_L	$1020c+2,$0000c400 ;1020c: 13c00000c400
 
 	PL_PS	$143c6,cpu_dependent_loop_d2
 	PL_PS	$143f8,cpu_dependent_loop_d0
@@ -586,7 +623,22 @@ pl_main
 	PL_PSS	$f026,smc_f026,2
 	PL_PS	$214cc,smc_214cc
 	PL_PS	$21842,smc_21842
+	
+	; profiling
+	IFD		USE_PROFILER
+	PL_PS	$0b0da,vbl_hook
+	PL_S	$0b0e0,$12
+	ENDC
+	
+	
 	PL_NEXT	pl_main_snoop
+	
+	IFD		USE_PROFILER
+vbl_hook
+	move.l	$42(a7),d0	; PC
+	move.l	A7,a0		; supervisor
+	bra		profiler_vbl_hook
+	ENDC
 	
 fix_smc_address
 	move.l	a1,-(a7)
@@ -806,7 +858,7 @@ reloc_d0
 	rts
 
 COUNT macro
-	if SHOWFPS=2
+	ifeq SHOWFPS-2
 	move.l	a0,-(sp)
 	lea	last_time(pc),a0
 	addq.l	#1,(a0)
@@ -890,7 +942,7 @@ last_time: dc.l 0
 update_fps_counter:
         movem.l d1-d7/a0-a6,-(sp)
 
-	if SHOWFPS<>2
+	ifne SHOWFPS-2
         ; Read CIAB tod
         moveq   #0,d0
         move.b  $bfda00,d0
@@ -915,12 +967,14 @@ update_fps_counter:
 	move.l	d7,a2
 
         lea     (bplrowbytes-1,a2),a2
-	if SHOWFPS<>2
+	ifne SHOWFPS-2
         move.l  d0,d1
         beq     .out
         move.l  #50*100*312,d0
         divu    d1,d0
-        and.l   #$ffff,d0
+		swap	d0
+		clr.w	d0
+		swap	d0
         onedigit
         onedigit
         moveq   #10,d1
@@ -928,7 +982,9 @@ update_fps_counter:
         onedigit
         onedigit
 	else
-	and.l	#$ffff,d0
+		swap	d0
+		clr.w	d0
+		swap	d0
 	rept 5
 	onedigit
 	endr
@@ -1067,6 +1123,13 @@ _reloc_base
 	dc.l	PROGRAM_START
 save_buffer
 	dc.l	0
+
+_tag		dc.l	WHDLTAG_ATTNFLAGS_GET
+attnflags	dc.l	0
+		dc.l	0	
+	IFD	USE_PROFILER
+	include	profiler.s
+	ENDC
 	
 ;======================================================================
 
