@@ -32,6 +32,8 @@ RELOC_MEM = $50000+SAVEMEM
 RELOC_MEM = SAVEMEM
 	ENDC
 
+SHOWFPS=0 ; =0 => disable, 1 => show fps, 2 => use last_time as counter
+
 ;==========================================================================
 
 	IFD	CHIP_ONLY
@@ -42,6 +44,15 @@ BASMEM_SIZE	equ	$80000
 EXPMEM_SIZE	equ	RELOC_MEM
 	
 	ENDC
+
+;======================================================================
+screenw=320
+screenh=200
+nbpl=4
+
+bplrowwords=screenw/16
+bplrowbytes=bplrowwords*2
+rowdelta=bplrowbytes*nbpl
 	
 ;======================================================================
 
@@ -144,11 +155,17 @@ Start	;	A0 = resident loader
 		move.l	_expmem(pc),(a1)
 		ENDC
 	
+		pea		smc_trap13(pc)
+		move.l	(a7)+,$B4.W	; trap #13
+
 		pea		smc_trap14(pc)
 		move.l	(a7)+,$B8.W	; trap #14
 
 		pea		smc_trap15(pc)
 		move.l	(a7)+,$BC.W	; trap #15
+
+		bsr	init_jump_target1
+		bsr	init_jump_target2
 		
 		moveq	#0,d0
 		lea	log(pc),a0
@@ -451,7 +468,7 @@ pl_main_snoop
 	PL_W	$2e5ec,$200		; fix snoop
 	PL_L	$2e5ee,$01000200	; overwrite bogus entry
 	PL_END
-	
+
 pl_main
 	PL_START
 	PL_CB	$14878			;Fix Address Error
@@ -464,13 +481,29 @@ pl_main
 	PL_L	$30ed8,$600000d6	;Remove FORMAT option!
 	PL_P	$2eeba,logger_save
 	PL_PS	$2ee68,logger_load
-	
+
+	ifne SHOWFPS
+	PL_PS	$0c198,update_fps_counter
+	PL_PS	$2e3ec,update_fps_counter
+	endc
+
+	PL_PS	$0c012,use_fmode3
+
+	PL_PS	$0b05e,keyboard_hook
+
+	; ------
+	; Temp sprite fixes
+	PL_L	$101f6+2,$0000c2b2 ;101f6: 13c00000c2b2
+	PL_L	$101fc+2,$0000c3fe ;101fc: 13c00000c3fe
+	PL_L	$10206+2,$0000c2b4 ;10206: 13c00000c2b4
+	PL_L	$1020c+2,$0000c400 ;1020c: 13c00000c400
+
 	PL_PS	$143c6,cpu_dependent_loop_d2
 	PL_PS	$143f8,cpu_dependent_loop_d0
 	PL_PSS	$1464a,cpu_dependent_loop_d0_2,2
 	
 	PL_PS	$179d8,fix_smc_address
-	
+
 	IFD		RELOC_ENABLED
 	PL_P	$1ff34,reloc_d1
 	;PL_P	$1f5dc,reloc_d0	; address compared to is unrelocated nothing to do!!
@@ -507,13 +540,43 @@ pl_main
     PL_W	$46b6c,$4E4E
     PL_W	$46c92,$4E4E
 
+	; trap 13
+    PL_W	$20e94,$4E4D
+
 	; smc involving JMP $xxxx.L, handled with trap #15
+	; this one isn't used in game, so don't bother
+	;MOVE.L	#lb_0f11c,lb_0f056+2	;0efec: 23fc0000f11c0000f058
+	;MOVE.L	#lb_0f05e,lb_0f056+2	;0eff8: 23fc0000f05e0000f058
     PL_W	$0f056,$4E4F
-    PL_W	$14df2,$4E4F
+
+
+	; Heavily used SMC
+	PL_PSS	$14c38,set_target1_15000,4
+	PL_PSS	$14c46,set_target1_14ef4,4
+	PL_PS	$14ee4,call_target1
+
+
+	; This SMC is heavily used, so handle it specially
+	PL_PSS	$14e58,set_target2_14dc8,4
+	PL_PSS	$14e76,set_target2_14dc8,4
+	PL_PSS	$14ea0,set_target2_14dc8,4
+	PL_PSS	$15196,set_target2_14e48,4
+	PL_PSS	$15326,change_target2,32
+	PL_PS	$14df2,call_target2
+
+
+	;CLR.B	lb_14fdc+4		;14eba: 423900014fe0
+	;CLR.B	lb_150b4+4		;14ec0: 4239000150b8
+	PL_PS	$14ec0,smc_14ec0
+
+	;BCHG	#4,lb_14fdc+4		;14fae: 0879000400014fe0
+	PL_PSS	$14fae,smc_14fae,2
+	;BCHG	#4,lb_150b4+4		;15086: 08790004000150b8
+	PL_PSS	$15086,smc_15086,2
+
 	
 	; after setting a jump
 	PL_PS	$33d32,flush_after_smc
-	PL_PS	$14dd4,flush_after_smc_2
 	; various smc
 	PL_P	$1772c,smc_1772c
 	PL_PS	$179d8,smc_179d8
@@ -521,9 +584,6 @@ pl_main
 	PL_PSS	$33f70,smc_33f70,4
 	PL_PS	$3790a,smc_3790A
 	PL_PSS	$f026,smc_f026,2
-	PL_PSS	$15086,smc_15086,2
-	PL_PSS	$14fae,smc_14fae,2
-	PL_PS	$14ec0,smc_14ec0
 	PL_PS	$214cc,smc_214cc
 	PL_PS	$21842,smc_21842
 	PL_NEXT	pl_main_snoop
@@ -556,7 +616,7 @@ cpu_dependent_loop_d0
 	bsr	beamdelay
 	move.w	#$FFFF,d0
 	rts
-	
+
 cpu_dependent_loop_d0_2
 	MOVE.W	#$03e8,D0
 emulate_dbf_d0:
@@ -614,16 +674,26 @@ smc_3790A:
 	movem.l	(a7)+,a1
 	rts
 
+need_clear: dc.w 0 ; Very rarely (ever?) need to clear/flush, but function >200 times/frame, so only flush if needed
 smc_14ec0
-	move.l	a1,-(a7)
+	movem.l	a1,-(a7)
+	lea	need_clear(pc),a1
+	tst.w	(a1)
+	beq.b	.noclear
+	clr.w	(a1)
 	move.l	_reloc_base(pc),a1
 	add.l	#$150b8-PROGRAM_START,a1
 	clr.b	(a1)
 	move.l	(a7)+,a1
 	bra	_flushcache
+.noclear:
+	move.l	(a7)+,a1
+	rts
 
 smc_14fae
 	move.l	a1,-(a7)
+	lea	need_clear(pc),a1
+	st	(a1)
 	move.l	_reloc_base(pc),a1
 	add.l	#$14fe0-PROGRAM_START,a1
 	BCHG	#4,(a1)
@@ -632,6 +702,8 @@ smc_14fae
 	
 smc_15086
 	move.l	a1,-(a7)
+	lea	need_clear(pc),a1
+	st	(a1)
 	move.l	_reloc_base(pc),a1
 	add.l	#$150b8-PROGRAM_START,a1
 	BCHG	#4,(a1)
@@ -672,12 +744,14 @@ flush_after_smc
 	MOVE.W	#$0180,D0		;33d32: 303c0180
 	MOVEQ	#31,D1			;33d36: 721f
 	bra		_flushcache
-	
-flush_after_smc_2
-	SUBQ.L	#1,A4			;14dd4: 538c
-	ADD.W	D4,D2			;14dd6: d444
-	ADDX.W	D0,D6			;14dd8: dd40
-	bra		_flushcache
+
+	; fix for smc of a4
+smc_trap13
+	; MOVEA.L	#$ffffffff,A4		;20e94: 287cffffffff
+	move.l	2(a7),a4
+	move.l	(a4),a4
+	addq.l	#4,(2,a7)		; skip the rest of the instruction
+	rte
 
 smc_trap14
 	movem.l	d0/a0,-(a7)
@@ -730,8 +804,18 @@ reloc_d0
 	add.l	_reloc_base(pc),d0
 	sub.w	#PROGRAM_START-4,d0
 	rts
+
+COUNT macro
+	if SHOWFPS=2
+	move.l	a0,-(sp)
+	lea	last_time(pc),a0
+	addq.l	#1,(a0)
+	move.l	(sp)+,a0
+	endc
+	endm
 	
 _flushcache:
+	COUNT
 	move.l	a2,-(a7)
 	move.l	_resload(pc),a2
 	jsr	resload_FlushCache(a2)
@@ -775,9 +859,210 @@ speedup:
 depack:
 		ds.b	$2596e-$258be
 		ENDC
-		
-;----------------------------------
 
+; 4.53 -> 4.98fps (meh)
+use_fmode3:
+        btst.b  #9-8,vposr(a6)
+        beq.b   .noaga
+        move.w  #$0003,fmode(a6)
+        move.w  #$00b8,ddfstop(a6)
+	rts
+.noaga
+	MOVE.W	#$00d0,ddfstop(A6)		;0c012: 3d7c00d00094
+        rts
+
+;--------------------------------
+; FPS counter
+
+	ifne SHOWFPS
+
+onedigit macro
+        divu.w  #10,d0
+        swap    d0
+        moveq   #$f,d1
+        and.l   d0,d1
+        bsr     _drawdigit
+        clr.w   d0
+        swap    d0
+        endm
+
+last_time: dc.l 0
+update_fps_counter:
+        movem.l d1-d7/a0-a6,-(sp)
+
+	if SHOWFPS<>2
+        ; Read CIAB tod
+        moveq   #0,d0
+        move.b  $bfda00,d0
+        swap    d0
+        move.b  $bfd900,d0
+        lsl.w   #8,d0
+        move.b  $bfd800,d0
+        lea     last_time(pc),a0
+        move.l  (a0),d1
+        move.l  d0,(a0)
+        sub.l   d1,d0
+        ; d0=delta
+	else
+        lea     last_time(pc),a0
+	move.l	(a0),d0
+	clr.l	(a0)
+	endc
+
+	;move.l	_reloc_base(pc),a0
+	;add.l	#$01a7a-PROGRAM_START,a0
+	move.l	$1a7a.w,d7 ; not relocated
+	move.l	d7,a2
+
+        lea     (bplrowbytes-1,a2),a2
+	if SHOWFPS<>2
+        move.l  d0,d1
+        beq     .out
+        move.l  #50*100*312,d0
+        divu    d1,d0
+        and.l   #$ffff,d0
+        onedigit
+        onedigit
+        moveq   #10,d1
+        bsr     _drawdigit
+        onedigit
+        onedigit
+	else
+	and.l	#$ffff,d0
+	rept 5
+	onedigit
+	endr
+	endc
+
+.out:
+	;MOVE.L	lb_01a7a_bitplanes_1,D0		;0c198: 203900001a7a
+	move.l	d7,d0
+        movem.l (sp)+,d1-d7/a0-a6
+
+	rts	
+
+_drawdigit:
+        lsl.w   #3,d1
+        lea     (_char_data,pc,d1.l),a0
+        move.l  a2,a1
+        moveq   #8-1,d3
+.l:
+        move.b  (a0)+,d2
+        move.b  d2,(a1)
+        move.b  d2,1*bplrowbytes(a1)
+        move.b  d2,2*bplrowbytes(a1)
+        move.b  d2,3*bplrowbytes(a1)
+        add.w   #rowdelta,a1
+        dbf     d3,.l
+        subq.l  #1,a2
+        rts
+
+_char_data:
+        dc.b    %00111100, %01100110, %01101110, %01111110, %01110110, %01100110, %00111100, %00000000  ; 0
+        dc.b    %00011000, %00111000, %01111000, %00011000, %00011000, %00011000, %00011000, %00000000  ; 1
+        dc.b    %00111100, %01100110, %00000110, %00001100, %00011000, %00110000, %01111110, %00000000  ; 2
+        dc.b    %00111100, %01100110, %00000110, %00011100, %00000110, %01100110, %00111100, %00000000  ; 3
+        dc.b    %00011100, %00111100, %01101100, %11001100, %11111110, %00001100, %00001100, %00000000  ; 4
+        dc.b    %01111110, %01100000, %01111100, %00000110, %00000110, %01100110, %00111100, %00000000  ; 5
+        dc.b    %00011100, %00110000, %01100000, %01111100, %01100110, %01100110, %00111100, %00000000  ; 6
+        dc.b    %01111110, %00000110, %00000110, %00001100, %00011000, %00011000, %00011000, %00000000  ; 7
+        dc.b    %00111100, %01100110, %01100110, %00111100, %01100110, %01100110, %00111100, %00000000  ; 8
+        dc.b    %00111100, %01100110, %01100110, %00111110, %00000110, %00001100, %00111000, %00000000  ; 9
+        dc.b    %00000000, %00000000, %00000000, %00000000, %00000000, %00011000, %00011000, %00000000  ; .
+
+	endc ; SHOWFPS
+
+;----------------------------------
+; SMC jump at $14ee4
+target1: dc.l 0 ;$14ef4
+
+init_jump_target1:
+set_target1_14ef4:
+	movem.l	a0/a1,-(sp)
+	lea	target1(pc),a0
+	move.l	_reloc_base(pc),a1
+	add.l	#$14ef4-PROGRAM_START,a1
+	move.l	a1,(a0)
+	movem.l	(sp)+,a0/a1
+	rts
+
+set_target1_15000:
+	movem.l	a0/a1,-(sp)
+	lea	target1(pc),a0
+	move.l	_reloc_base(pc),a1
+	add.l	#$15000-PROGRAM_START,a1
+	move.l	a1,(a0)
+	movem.l	(sp)+,a0/a1
+	rts
+
+call_target1:
+	move.l	target1(pc),(a7)
+	rts
+
+;----------------------------------
+; SMC jump at $14df2
+target2: dc.l 0 ;$14dc8
+
+init_jump_target2:
+set_target2_14dc8:
+	movem.l	a0/a1,-(sp)
+	lea	target2(pc),a0
+	move.l	_reloc_base(pc),a1
+	add.l	#$14dc8-PROGRAM_START,a1
+	move.l	a1,(a0)
+	movem.l	(sp)+,a0/a1
+	rts
+
+set_target2_14e48:
+	movem.l	a0/a1,-(sp)
+	lea	target2(pc),a0
+	move.l	_reloc_base(pc),a1
+	add.l	#$14e48-PROGRAM_START,a1
+	move.l	a1,(a0)
+	movem.l	(sp)+,a0/a1
+	rts
+
+	;CMPI.L	#lb_14e48,lb_14df2+2	;15326: 0cb900014e4800014df4
+	;BEQ.W	.lb_15342		;15330: 67000010
+	;MOVE.L	#lb_14e66,lb_14df2+2	;15334: 23fc00014e6600014df4
+	;BRA.W	.lb_1534c		;1533e: 6000000c
+;.lb_15342:
+	;MOVE.L	#lb_14e84,lb_14df2+2	;15342: 23fc00014e8400014df4
+;.lb_1534c:
+change_target2:
+	movem.l	a0/a1,-(sp)
+	lea	target2(pc),a0
+	move.l	_reloc_base(pc),a1
+	add.l	#$14e48-PROGRAM_START,a1
+	cmp.l	(a0),a1
+	beq.b	.out
+	add.l	#$14e66-$14e48,a1
+	move.l	a1,(a0)
+.out:
+	movem.l	(sp)+,a0/a1
+	rts
+
+call_target2:
+	move.l	target2(pc),(a7)
+	rts
+
+;----------------------------------
+keyboard_hook:
+	cmp.b	_keyexit(pc),d0
+	bne.b	.noquit
+	pea	TDREASON_OK.l
+	move.l	_resload(pc),a0
+	jmp	resload_Abort(a0)
+.noquit:
+	move.l	d0,-(sp)
+	moveq	#2,d0 ; delay
+	bsr	beamdelay
+	move.l	(sp)+,d0
+
+	MOVE.B	#$00,3072(A0)		;0b05e: 117c00000c00
+	rts
+
+;----------------------------------
 _reloc_base
 	dc.l	PROGRAM_START
 save_buffer
