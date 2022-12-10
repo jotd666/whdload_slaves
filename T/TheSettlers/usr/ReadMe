@@ -37,12 +37,12 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 1.7 (xx.12.2022) done by Stingray & JOTD:
+ version 1.7 (08.12.2022) done by Stingray & JOTD:
+ - intro blitter issues fixed, now runs on fast machines/emulators (issue #0002889)
+ - intro bug fixed, black screen on 68020+ with sound... (issue #0003700, maybe same as #0002889)
+ - intro doesn't need to press RMB when exiting now. Quietly reboots to main game
  - provided a "low memory" slave for OCS amigas. Music & sounds
    are reduced, but at least game can be played
- - intro blitter issues fixed, now runs on fast machines/emulators (issue #0002889)
- - 68000/010/??? intro bug, black screen on 68020+ with sound... (issue #0003700)
- - issue 0004215 crash on 68000 when starting game
  
  version 1.6 (28.02.2013) done by StingRay
  - Keyboard in intro and game fixed, level passwords and names

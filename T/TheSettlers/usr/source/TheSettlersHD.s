@@ -22,6 +22,7 @@
 ***********************************
 
 ; 2022 (JOTD is back) - fixed intro properly
+;              - fixed intro/game transition seamlessly
 ;
 ; 13-Jul-2016	- access fault fix in french version was wrong
 ;		  (PL_PS used instead of PL_PSS), fixed
@@ -64,7 +65,7 @@ PL_SA	MACRO
 MC68020	MACRO
 	ENDM
 
-CHIP_ONLY
+;CHIP_ONLY
 
 ;============================================================================
 
@@ -95,7 +96,7 @@ BOOTDOS
 CBKEYBOARD
 SEGTRACKER
 CACHE
-; DEBUG is used locally but also makes kickemu less laxists
+; DEBUG is used locally but also makes kickemu less laxist
 ; on some dos stuff and can fail where it would have worked without it
 ;DEBUG
 ;DISKSONBOOT
@@ -189,7 +190,12 @@ _bootdos
 
 	move.l	NOINTRO(pc),d0
 	bne	.nointro
-
+	
+	lea		RunIntro(pc),a0
+	tst.w	(a0)
+	beq.b	.nointro
+	clr.w	(a0)	; only run intro once, not after reboot
+	
 	; align exe memory on round value for intro
 	IFD CHIP_ONLY
 	movem.l a6,-(a7)
@@ -236,7 +242,7 @@ _bootdos
 
 .dopatch
 	lea	PT_GAME(pc),a1
-.go	bsr.b	.LoadAndPatch
+.go	bsr		.LoadAndPatch
 	bsr.b	.run
 	move.w	RunGame(pc),d0
 	bne.w	QUIT
@@ -379,6 +385,11 @@ PLINTRO	PL_START
 ;	PL_P	$1008,.test
 
 	PL_PSS	$13AC,blit_1,4
+	
+	; reboot before intro triggers a recoverable alert which needs RMB
+	; to exit from, and confuses the users into believing that the game
+	; locked up
+	PL_P	$05c8,reboot
 	PL_END
 
 ;.test	btst	#2,$dff016
@@ -395,7 +406,6 @@ PLINTRO	PL_START
 	MOVE.L	A6,D5			;0cc4: 2a0e
 ;	cmp.l	#$3d7cc80f,$849E-$6F50(a6)
 ;	bne.b	.x
-;	blitz
 	nop
 ;.x
 	cmp.l	#$426d0088,$e210-$DC44(a6)
@@ -463,6 +473,14 @@ PLINTRO	PL_START
 	move.b	$bfed01,d0		; original code
 	rts
 
+reboot
+	lea	.doit(pc),a5
+	move.l	$4.W,a6
+	jsr	_LVOSupervisor(a6)
+.doit
+	move.w	#$2700,SR
+	bra	kick_reboot
+	
 blit_1:
 	MOVE.W	#$0000,(bltdmod,A3)		;13ac: 377c00000066
 	MOVE.W	D1,(bltsize,A3)		;13b2: 37410058
@@ -572,7 +590,7 @@ PLGAMEEN
 
 	PL_PSS	$8b60,WaitBlit1,2
 
-	PL_NOP	$00586,6		; disable infinite wait at start on some machines
+	PL_NOP	$00586,6		; disable long wait at start
 	PL_NEXT	PLCOMMON
 	PL_END
 
@@ -666,6 +684,7 @@ FixAccessFault
 CODESTART	dc.l	0		; start of program code
 VARS		dc.w	0		; offset to variables (a5)
 RunGame		dc.w	0
+RunIntro	dc.w	1
 
 TAGLIST	dc.l	WHDLTAG_CUSTOM1_GET
 NOINTRO	dc.l	0		; skip intro

@@ -24,7 +24,7 @@
  an appropriate requester.
  Additionally the file "kick34005.A500.RTB" must be installed in the same
  directory as the kickstart image. It can be found in the archive 
- "util/boot/skick345.lha" on aminet.
+ "util/boot/skick346.lha" on aminet.
 
  If you have problems with this installation please try and get a newer
  version of this package from the WHDLoad WWW-Page. If that doesn't help try
@@ -38,12 +38,26 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 1.1 (09.11.04)
+ version 1.2 (10.12.2022)
+ - added 2/3/button/joypad controls (CUSTOM2=1) (issue #0005692)
+ - updated keys manual
+ 
+ version 1.1 (09.11.2004)
  - fixed access fault during game (weapon 2, '.' keypad)
  - reworked for WHDLoad 16
  - source code included
 
- version 1.0 (15.10.02) done by JOTD:
+ version 1.0 (15.10.2002) done by JOTD:
  - initial release
  - manual protection removed (thanks LockPick)
  - fixed access fault on exit
+
+Joypad controls:
+
+- red/fire: first weapon
+- blue/2nd button: second weapon
+- green/3rd button: moving joystick when pressed moves the lance
+- yellow: heal knight
+- play: heal dragon
+- reverse: slow down
+- forward: accelerate
