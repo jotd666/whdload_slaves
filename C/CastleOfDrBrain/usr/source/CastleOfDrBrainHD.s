@@ -13,7 +13,6 @@
 ;---------------------------------------------------------------------------*
 
 	INCDIR	Include:
-	INCDIR	osemu:
 	INCLUDE	whdload.i
 	INCLUDE	whdmacros.i
 	INCLUDE	lvo/dos.i
@@ -33,8 +32,8 @@
 ;============================================================================
 
 CHIPMEMSIZE	= $80000
-FASTMEMSIZE	= $80000
-NUMDRIVES	= 1
+FASTMEMSIZE	= $80000*2	; stingray: increased to 1MB as otherwise
+NUMDRIVES	= 1		; game quits due to lack of memory
 WPDRIVES	= %0000
 
 BLACKSCREEN
@@ -70,7 +69,7 @@ slv_keyexit	= $5D	; num '*'
 
 
 DECL_VERSION:MACRO
-	dc.b	"1.0"
+	dc.b	"1.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"

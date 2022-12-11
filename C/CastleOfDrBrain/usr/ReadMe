@@ -31,15 +31,21 @@
  version of this package from the WHDLoad WWW-Page. If that doesn't help try
  some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
  that also fails, please inform the author via the Bug-Report-Form which
- can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
- at http://mantis.whdload.de
+ can be accessed on the WHDLoad WWW-Page.
 
  For the full WHDLoad package, other installs and updates refer to:
 	http://www.whdload.de/
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 1.0 (16.03.06) done by JOTD:
+ version 1.1 (23.12.2015) done by StingRay:
+ - increased fastmem size to 1MB to avoid game quitting due to lack
+   of memory (Mantis issue #2399), thanks to Mailman for bug report
+   and providing save games which made it easy to reproduce the problem
+ - uses latest KickEmul  
+ - missing icon added
+
+ version 1.0 (16.03.2006) done by JOTD:
  - initial release
  - manual included
  - solution included
@@ -47,9 +53,3 @@
  - access fault fixed on english version (ID: 1287)
  - codes included (thanks to Skid Row)
  - source code included
-
-issue #0004043 suggests to enable MT-32 support by:
-
-- Resource.cfg must be edited to use mt32.drv instead of amigasnd.drv
-- Also rename 9.pat to 1.pat
-- And (needed but not mentionned in issue): serial.device from kick 1.3 must be copied in "data/devs"
