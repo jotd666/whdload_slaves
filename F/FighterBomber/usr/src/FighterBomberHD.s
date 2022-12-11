@@ -33,7 +33,7 @@ RELOC_MEM = $50000+SAVEMEM
 RELOC_MEM = SAVEMEM
 	ENDC
 
-SHOWFPS=0 ; =0 => disable, 1 => show fps, 2 => use last_time as counter
+SHOWFPS=1 ; =0 => disable, 1 => show fps, 2 => use last_time as counter
 
 ;==========================================================================
 
@@ -121,6 +121,9 @@ log:	dc.b	'FB_PilotsLog',0
 _config
 	dc.b	"BW;"
 	dc.b	"C5:B:skip intro;"
+	ifne SHOWFPS
+	dc.b	"C4:B:fps counter;"
+	endc
     ;dc.b    "C1:B:infinite ammo;"
     dc.b	0
 
@@ -526,8 +529,10 @@ pl_main
 	PL_PS	$2ee68,logger_load
 
 	ifne SHOWFPS
+	PL_IFC4
 	PL_PS	$0c198,update_fps_counter
 	PL_PS	$2e3ec,update_fps_counter
+	PL_ENDIF
 	endc
 
 	PL_PS	$0c012,use_fmode3
@@ -629,7 +634,8 @@ pl_main
 	PL_PS	$0b0da,vbl_hook
 	PL_S	$0b0e0,$12
 	ENDC
-	
+
+	PL_PS	$13226,fix_blitter_src_13226
 	
 	PL_NEXT	pl_main_snoop
 	
@@ -639,6 +645,18 @@ vbl_hook
 	move.l	A7,a0		; supervisor
 	bra		profiler_vbl_hook
 	ENDC
+
+
+fix_blitter_src_13226
+	; a5 is used as blitter source, so don't relocate
+	; LEA	lb_13aa8(PC),A5		;13222: 4bfa0884
+	sub.l	_reloc_base(pc),a5
+	add.l	#PROGRAM_START,a5
+	; original code
+	;MOVEA.L	lb_01a7a_bitplanes_1,A0		;13226: 207900001a7a
+	move.l	$1a7a.w,a0
+	rts
+
 	
 fix_smc_address
 	move.l	a1,-(a7)
