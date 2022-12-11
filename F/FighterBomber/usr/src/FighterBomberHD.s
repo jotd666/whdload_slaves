@@ -120,11 +120,11 @@ save:	dc.b	'FB_Save',0
 log:	dc.b	'FB_PilotsLog',0
 _config
 	dc.b	"BW;"
-	dc.b	"C5:B:skip intro;"
 	ifne SHOWFPS
 	dc.b	"C4:B:fps counter;"
 	endc
-    ;dc.b    "C1:B:infinite ammo;"
+ 	dc.b	"C5:B:skip intro;"
+   ;dc.b    "C1:B:infinite ammo;"
     dc.b	0
 
 reloc_file_name_table
@@ -634,7 +634,7 @@ pl_main
 	PL_PS	$0b0da,vbl_hook
 	PL_S	$0b0e0,$12
 	ENDC
-
+	
 	PL_PS	$13226,fix_blitter_src_13226
 	
 	PL_NEXT	pl_main_snoop
@@ -645,8 +645,6 @@ vbl_hook
 	move.l	A7,a0		; supervisor
 	bra		profiler_vbl_hook
 	ENDC
-
-
 fix_blitter_src_13226
 	; a5 is used as blitter source, so don't relocate
 	; LEA	lb_13aa8(PC),A5		;13222: 4bfa0884
@@ -656,7 +654,6 @@ fix_blitter_src_13226
 	;MOVEA.L	lb_01a7a_bitplanes_1,A0		;13226: 207900001a7a
 	move.l	$1a7a.w,a0
 	rts
-
 	
 fix_smc_address
 	move.l	a1,-(a7)
@@ -834,13 +831,22 @@ smc_trap14
 	add.l	#6,(2,a7)		; skip the rest of the instruction
 	rte
 
-	; Fix for JMP $xxxx.L smc
+	; Fix for JMP $xxxx.L smc @ $F056
 smc_trap15
 	move.l	a0,-(a7)
 	move.l	6(a7),a0 ; return address
+	cmp.l	#$123456,(a0)
+	bne.b	.set
+	; set our routine which does nothing
+	pea		.nothing(pc)
+	move.l	(a7)+,(a0)
+.set
 	move.l	(a0),6(a7)
 	move.l	(a7)+,a0
 	rte
+	
+.nothing
+	rts
 	
 	; relocate dynamically, the data is in a
 	; binary stream and longs are on odd addresses...
