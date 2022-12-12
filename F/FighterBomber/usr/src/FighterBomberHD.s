@@ -258,8 +258,20 @@ pl_boot:
 patch:
 		move.w	#$4e75,$11280		;Remove RTE
 		move.w	#$4e71,$110c4		;Remove move.w sr,-(a7)
+		; SMC patch
+		move.l	a0,-(sp)
+		lea	smc_patch_4ad08(pc),a0
+		move.w	#$4eb9,$4ad08 ; JSR abs.L
+		move.l	a0,$4ad0a
+		move.l	(sp)+,a0
 		bsr		_flushcache
 		jmp	$10000
+
+smc_patch_4ad08:
+		addq.l	#4,(sp) ; adjust return address to skip rest of instruction
+		move.l #$0004ad42,$0004ad3c ; original instruction
+		bra	_flushcache
+
 ;----------------------------------
 
 
@@ -379,7 +391,7 @@ copydata2:
 		lea		pl_main_snoop(pc),a0
 		sub.l	a1,a1
 		jsr		resload_Patch(a2)		
-		
+
 		rts
 		
 ;----------------------------------
@@ -478,7 +490,7 @@ Loader:
 		
 		sub.l	_reloc_base(pc),a0
 		sub.w	#PROGRAM_START,a0
-		
+
 		cmp.l	#$10000,a0
 		beq.s	wait
 		cmp.l	#$500,a0
@@ -537,15 +549,12 @@ pl_main
 
 	PL_PS	$0c012,use_fmode3
 
-	PL_PS	$0b05e,keyboard_hook
-
+	PL_PS	$0b026,keyboard_hook
 
 	PL_PS	$143c6,cpu_dependent_loop_d2
 	PL_PS	$143f8,cpu_dependent_loop_d0
 	PL_PSS	$1464a,cpu_dependent_loop_d0_2,2
 	
-	PL_PS	$179d8,fix_smc_address
-
 	IFD		RELOC_ENABLED
 	PL_P	$1ff34,reloc_d1
 	;PL_P	$1f5dc,reloc_d0	; address compared to is unrelocated nothing to do!!
@@ -636,7 +645,7 @@ pl_main
 	ENDC
 	
 	PL_PS	$13226,fix_blitter_src_13226
-	
+
 	PL_NEXT	pl_main_snoop
 	
 	IFD		USE_PROFILER
@@ -645,6 +654,7 @@ vbl_hook
 	move.l	A7,a0		; supervisor
 	bra		profiler_vbl_hook
 	ENDC
+
 fix_blitter_src_13226
 	; a5 is used as blitter source, so don't relocate
 	; LEA	lb_13aa8(PC),A5		;13222: 4bfa0884
@@ -654,17 +664,6 @@ fix_blitter_src_13226
 	;MOVEA.L	lb_01a7a_bitplanes_1,A0		;13226: 207900001a7a
 	move.l	$1a7a.w,a0
 	rts
-	
-fix_smc_address
-	move.l	a1,-(a7)
-	move.l	_reloc_base(pc),a1
-	; emulate MOVE.L	A0,$17a06, smc
-	;lb_17a04:
-	;MOVEA.L	#$ffffffff,A0		;17a04: 207cffffffff
-	add.l	#$17A06-PROGRAM_START,a1
-	move.l	a0,(a1)
-	move.l	(a7)+,a1
-	bra		_flushcache
 	
 cpu_dependent_loop_d2
 	exg.l	d0,d2
@@ -835,18 +834,9 @@ smc_trap14
 smc_trap15
 	move.l	a0,-(a7)
 	move.l	6(a7),a0 ; return address
-	cmp.l	#$123456,(a0)
-	bne.b	.set
-	; set our routine which does nothing
-	pea		.nothing(pc)
-	move.l	(a7)+,(a0)
-.set
 	move.l	(a0),6(a7)
 	move.l	(a7)+,a0
 	rte
-	
-.nothing
-	rts
 	
 	; relocate dynamically, the data is in a
 	; binary stream and longs are on odd addresses...
@@ -1128,18 +1118,31 @@ call_target2:
 
 ;----------------------------------
 keyboard_hook:
+	;d0/d1/a0 saved by isr
+	lea	$bfe001,a0
+	tst.b	ciaicr(a0)
+	move.b	ciasdr(a0),d1
+	; keyboard ack
+	bset.b	#6,ciacra(a0)
+	clr.b	ciasdr(a0)
+	moveq	#2,d0
+	bsr	beamdelay
+	bclr.b	#6,ciacra(a0)
+	; ---
+	ror.b	#1,d1
+	not.b	d1
+	move.b	d1,d0
 	cmp.b	_keyexit(pc),d0
 	bne.b	.noquit
 	pea	TDREASON_OK.l
 	move.l	_resload(pc),a0
 	jmp	resload_Abort(a0)
 .noquit:
-	move.l	d0,-(sp)
-	moveq	#2,d0 ; delay
-	bsr	beamdelay
-	move.l	(sp)+,d0
-
-	MOVE.B	#$00,3072(A0)		;0b05e: 117c00000c00
+	move.l	_reloc_base(pc),a0
+	add.l	#$0b096-PROGRAM_START,a0
+	st	(a0) ; set "key pressed" flag for busy loop at $2ec4e
+	move.w	#$0008,intreq+$dff000 ; make sure interrupt is acknowledge twice
+	add.l	#$38,(a7) ; Return to $0b064
 	rts
 
 ;----------------------------------
