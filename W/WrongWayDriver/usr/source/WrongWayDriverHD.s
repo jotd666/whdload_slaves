@@ -16,27 +16,25 @@
 		SUPER				;disable supervisor warnings
 		ENDC
 
-CHIP_ONLY
+;CHIP_ONLY
 STACKSIZE = $1000
 
     IFD CHIP_ONLY
-CHIPMEM = $100000
+CHIPMEM = $80000
 EXPMEM = STACKSIZE*2
-MEMBASE = $30000
     ELSE
 CHIPMEM = $80000
-EXPMEM = $40000+STACKSIZE*2
-MEMBASE = $1000
+EXPMEM = $80000
     ENDC
     
 CHIP_START = $FF8-$1D0
-PROGRAM_SIZE = $22E2E
+PROGRAM_SIZE = $23300
 
 ;======================================================================
 
 _base		SLAVE_HEADER			;ws_Security + ws_ID
 		dc.w	17			;ws_Version
-		dc.w	WHDLF_NoError 		;ws_flags
+		dc.w	WHDLF_NoError|WHDLF_ClearMem 		;ws_flags
 		dc.l	CHIPMEM			;ws_BaseMemSize
 		dc.l	0			;ws_ExecInstall
 		dc.w	_start-_base		;ws_GameLoader
@@ -124,7 +122,9 @@ _start						;a0 = resident loader
         ; chip already configured
         ; set fastmem. Note: in chip_only mode
         ; the fastmem size will be 0
-        move.l  _expmem(pc),a3        
+		IFND	CHIP_ONLY
+        move.l  _expmem(pc),a3
+		add.l	#PROGRAM_SIZE,a3
         lea free_fastmem(pc),a0
         move.l  a3,(a0)+    ; start
 
@@ -132,7 +132,11 @@ _start						;a0 = resident loader
         move.l  a3,(a0) ; top
 
         move.l  _expmem(pc),A7
-        add.l   #EXPMEM,A7 ; ssp stack on top of fastmem
+        add.l   #EXPMEM-STACKSIZE*2,A7 ; ssp stack on top of fastmem
+		ELSE
+		lea		CHIPMEM,A7
+		ENDC
+
         move.l  A7,A0        
         sub.l   #STACKSIZE,A0   ; usb stack just below
         move.l  A0,USP
@@ -171,6 +175,8 @@ _start						;a0 = resident loader
 pl_boot
 	PL_START
     PL_P    $bc,end_unpack
+	PL_W	$104,$4A43		; tst d3
+	PL_NOP	$106,4			; skip color write
     PL_S    $8,$40-$8       ; skip intro text
 	PL_END
 
@@ -192,30 +198,118 @@ pl_main
 	; skip graphics lib call
 	PL_S	$001fa,$00220-$1FA
 	PL_S	$002b8,$002d8-$002b8
+	; bplcon3 write
+	PL_NOP	$0033e,8
+	PL_NOP	$0bb36,8
+	; copperlist fix
+	PL_PS	$0e7da,fix_copperlist_1
+	PL_PS	$02a2c,fix_copperlist_2
+	; bltdmod write
+	PL_W	$06220,$4268	; word clear not long clear
+	; extra wait blit, doesn't change much
+	PL_PS	$12946,wait_blit_1
+	PL_PS	$129fe,wait_blit_2
+	PL_PSS	$12cb6,wait_blit_3,2
+	PL_PSS	$0e748,wait_blit_4,2
+	PL_PSS	$0e764,wait_blit_4,2
+	PL_PS	$0d1ee,wait_blit_5
+	PL_PSS	$0dd82,wait_blit_6,2
+	;PL_PS	$08780,wait_blit_7
+	PL_PSS	$08764,wait_blit_8,2
+	;PL_PS	$08820,wait_blit_9
+	PL_PSS	$863E,wait_blit_10,2
 	PL_END
-    
-alloc_chipmem_1
-    move.l  #MEMBASE,D0
-    rts
-alloc_chipmem_2
-    move.l  #MEMBASE+$493e4,D0
-    rts
-alloc_fastmem    
-    ; chip only mode
-    IFD    CHIP_ONLY
-    move.l  #MEMBASE+$5B010,D0
-    ELSE
-    move.l  _expmem(pc),d0
-    add.l   #$2F000,d0
-    ENDC
-    
-    rts
-
+  
     
 CIAA_PRA = $bfe001
 CIAA_SDR = $BFEC01
 
+wait_blit
+	TST.B	$BFE001
+.wait
+	BTST	#6,dmaconr+$DFF000
+	BNE.S	.wait
+	rts
 
+wait_blit_1
+	bsr		wait_blit
+	ADDQ.W	#1,A1			;12946: 5249
+	MOVE.W	A1,D0			;12948: 3009
+	CMP.W	A5,D0			;1294a: b04d
+	rts
+	
+wait_blit_2
+	bsr		wait_blit
+	MOVEA.W	D3,A3			;129fe: 3643
+	MOVEQ	#0,D1			;12a00: 7200
+	MOVE.W	D4,D1			;12a02: 3204
+	rts
+	
+wait_blit_3
+	bsr	wait_blit
+	MOVE.W	D1,(88,A0)		;12cb6: 31410058
+	ADDQ.W	#1,(92+4,A7)		;12cba: 526f005c
+	bra		wait_blit
+
+wait_blit_4
+	bsr	wait_blit
+	MOVE.W	D4,(24,A2)		;0e764: 35440018
+	ADD.W	(112+4,A7),D5		;0e768: da6f0070
+	bra		wait_blit
+wait_blit_5
+	bsr		wait_blit
+	ADDQ.W	#1,D6			;0d1ee: 5246
+	CMP.W	(124+4,A7),D6		;0d1f0: bc6f007c
+	rts
+wait_blit_6
+	bsr		wait_blit
+	ADD.W	(72+4,A7),D7		;0dd82: de6f0048
+	MOVE.W	(72+4,A7),D6		;0dd86: 3c2f0048
+	rts
+	
+wait_blit_7
+	move.w a0,($0018,a3)
+	move.l	#$8222,(a7)
+	;add.l	#$EA9C,(a7)
+	bra		wait_blit
+	
+wait_blit_8	
+	MOVE.W	D6,(24,A3)		;08764: 37460018
+	ADDQ.W	#1,(66+4,A7)		;08768: 526f0042
+	bra		wait_blit
+
+wait_blit_9
+	MOVE.W	A3,(88,A2)		;08820: 354b0058
+	move.l	#$848E,(a7)
+	;add.w	#$ec68,(a7)
+	bra		wait_blit
+	
+
+wait_blit_10
+	MOVE.W	D5,(24,A3)		;0863e: 37450018
+	LEA	(14278,A4),A4		;08642: 49ec37c6
+	bra		wait_blit
+	
+fix_copperlist_1
+	MOVE.W	#$0040,(150,A0)
+	move.l	a0,-(a7)
+	move.l	d0,a0	; copperlist start
+	move.w	#$5600,$6178A-$616EC(a0)	; fix bplcon0 issue
+	move.w	#$0200,$61822-$616EC(a0)	; fix bplcon0 issue
+	move.w	#$4200,$61892-$616EC(a0)	; fix bplcon0 issue
+	move.l	(a7)+,a0
+	rts
+	
+fix_copperlist_2
+	MOVE.W	#$0040,(150,A0)
+	move.l	a0,-(a7)
+	move.l	d0,a0	; copperlist start
+	move.w	#$5600,$6338e-$632F0(a0)	; fix bplcon0 issue
+	move.w	#$0200,$63426-$632F0(a0)	; fix bplcon0 issue
+	move.w	#$4200,$63496-$632F0(a0)	; fix bplcon0 issue
+	move.l	(a7)+,a0
+	rts
+	
     
 end_unpack
     movem.l d0-d1/a0-a2,-(a7)
@@ -234,6 +328,9 @@ end_unpack
     ; making implementation of AllocMem & AvailMem (almost)
     ; trivial. Well, I have added fastmem support to OSEmu so
     ; I can assure you that is trivial in comparison!
+	; 
+	; MEMF_CLEAR is not emulated, not needed here because slave
+	; is configured with WHDLF_ClearMem (else it fails)
     
 fake_allocmem
     move.l  d2,-(a7)
@@ -277,10 +374,7 @@ fake_allocmem
     sub.l  d2,$104
     ENDC
     
-
     move.l  (a7)+,d2
-    
-
     tst.l   d0
     rts
     
@@ -374,9 +468,10 @@ fake_availmem
 
 free_chipmem:
     IFD CHIP_ONLY
-    dc.l    $1000+PROGRAM_SIZE   ; start
+    dc.l    CHIP_START+PROGRAM_SIZE   ; start
     ELSE
-    dc.l    $15000  ; chip hunk comes first
+	; fastmem
+    dc.l    CHIP_START  ; chip hunk comes first
     ENDC
     dc.l    CHIPMEM
 

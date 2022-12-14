@@ -8,12 +8,12 @@
  CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
  PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
- This install applies to "Tiny Galaga" © 2020 pink^abyss
+ This install applies to "Wrong Way Driver" © 2021 pink^abyss
 
  This install requires WHDLoad to be in the path. It can be found in the
  WHDLoad package.
 
- The installed program requires 0.5 MB ChipMem and 0.5 MB OtherMem.
+ The installed program requires 0.5 MB ChipMem and 1.0 MB OtherMem.
 
  If you have problems with this installation please try and get a newer
  version of this package from the WHDLoad WWW-Page. If that doesn't help try
@@ -27,23 +27,20 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 1.0-B (xx.02.2021):
- - icon by DanyPPC
-
- version 1.0 (07.02.2021) done by JOTD:
+ version 1.0 (14.12.2022) done by JOTD:
  - OS stuff skipped
  - added quitkey
- - ability to ignore LMB to quit
+ - fixed snoop bugs
  - source code included
 
 Notes:
 
 There is no installer.
-Just put the "aYS_Tiny_Galaga" file where the .slave resides 
+Just put the "WrongWayDriver" file where the .slave resides 
 
 To run the game just type in a shell where the files are located:
 
-whdload TinyGalaga.slave PRELOAD
+whdload WrongWayDriver.slave PRELOAD
 
 (no need for PRELOAD as there's only one file but it avoids one OS swap)
 
