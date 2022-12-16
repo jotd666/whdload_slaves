@@ -27,10 +27,11 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 1.0 (14.12.2022) done by JOTD:
+ version 1.0 (17.12.2022) done by JOTD:
  - OS stuff skipped
  - added quitkey
- - fixed snoop bugs
+ - snoop bugs fixed
+ - blitter bugs fixed (opponent cars trashed on fast machines)
  - source code included
 
 Notes:

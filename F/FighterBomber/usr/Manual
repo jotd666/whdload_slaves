@@ -1,0 +1,764 @@
+
+
+
+
+
+                                 FIGHTER BOMBER
+
+     Taken from an ST SEWER SOFTWARE docs disk. Typed in by POMPEY PIRATES.
+     Extras by ALIEN. Edited by Parasite.
+
+
+     QUICK REFERENCE GUIDE
+
+     FLIGHT CONTROLS
+     Cursors         -       Pitch and roll
+     < >             -       Rudder
+     1               -       10% thrust
+                             press 1 again to cut the engine(s)
+     2               -       20% thrust
+     ...
+     9               -       90% thrust
+     0               -       100% thrust
+                             press 0 again for afterburners
+     = -             -       (main keyboard) Fine thrust control
+     B               -       Air brakes
+     W               -       Wheel brakes
+
+     VIEW CONTROLS
+     F1              -       Cockpit view
+     F2              -       Look around view (keys as View plane)
+     F3              -       Weapon view
+     F4              -       Enemy aircraft view
+     F5              -       Control tower view
+     F6              -       Rear view
+     F7              -       Left view
+     Shift+F7        -       Right view
+     F8              -       Satellite view
+     F9              -       Track view
+     F10             -       View plane
+                             4,6 = pan left/right
+                             2,8 = pan up/down
+                             keypad + and - keys will zoom in some views
+
+     WEAPON CONTROLS
+     Return          -       Select weapon
+     Space           -       Fire weapon
+     S               -       Select air target (for Sidewinder, Aphid)
+     Backspace       -       Select ground target (for Maverick, Kerry)
+     C               -       Chaff
+     F               -       Flare
+
+     INFORMATION WINDOWS
+     U               -       Alter window mode (weapons, waypoints, off)
+     N               -       Next waypoint
+
+     MISCELLANEOUS
+     Shift+E         -       Eject
+     H               -       Disengage fuel probe from tanker
+     R               -       Change radar range (3, 6, 12, 25 miles)
+     P               -       Pause/unpause game
+     Esc             -       Go back a level during menus or
+                             quit back to level select from free flight mode
+     Alternate+T     -       Accelerated time- hold them down (free flight only)
+
+
+
+
+
+
+
+
+
+     CREW BRIEFING
+     An expectant hush fell over the briefing room as the powerful figure of Major
+     Lance 'Deadeye' Mulchay took the stage. Glancing around the unusally
+     crowded room, he leant his enormous, battle-scarred frame against the edge of
+     his lectern. With a tap on the microphone, and a nod to his staff officers
+     standing at the back, he began.
+
+     "Don't worry fellas, I ain't gonna sing." How many times had he said that, he
+     wondered, and at how many briefings. The War was a long time ago, but he felt
+     every minute of it.
+
+     "Ladies and gentlemen, and you flyers at the back there, welcome to Ellsworth
+     Air Force Base." A nod to his left, and a series of slides began to appear on
+     the screen behind him.
+
+     "This is the annual Strategic Air Command Bombing Competition; ten years ago,
+     the awesome collection of firepower out there on the tarmac would have been
+     an unthinkable sight on a US Base. But in these days of detente, and goodwill
+     to all men, even the Russkies," he paused for a laugh befitting a man of his
+     seniority, "ha ha - only kidding comrades; where was I? Oh yeah - in these
+     days when the cold war is becoming a fading memory, we of the free world can
+     welcome pilots from all over to join us and test their capabilities against
+     the best competition a defence budget can buy. This doesn't mean we're gonna
+     let them out again, though, eh boys? Ha ha."
+
+     The Soviet contingent merely smiled, content in the knowledge that in a few
+     hours they were going to get the chance to wipe the smile of this ageing
+     ace's face for good. The Major continued.
+
+     "Behind me you see an aviation legend - The Lancaster Bomber. Without that
+     baby the map of Europe might well be different today. An enormous beast, it
+     could deliver a payload of staggering weight and destructive power. But it
+     had one major problem - it was just too darn BIG. Little Messerschmitts used
+     to creep up behind it and blow it out of the air. So we had to guard it, with
+     other fighters like the Spitifire here, and the Hurricane. This was the same
+     with all those big guys - the Wellington, the Stirling, our own B-17 and so
+     on. Near the end of the war it became obvious that what we wanted was both,
+     all in one plane. So we had the Mosquito, and later the F-100, and the
+     British Lightning, that began to combine the speed of a fighter with the pay-
+     load capacity of a bomber, and all in a much smaller package." Deadeye paused,
+     for dramatic effect, and to smooth his moustache for the ladies. Both worked -
+     the audience was his.
+
+     ** Techie note here... since when was the Lightning a bomber, Activision?? **
+
+     "And now we have the bunch of death machines you see outside - the ultimate in
+     flying destruction, Multi-Role Combat Aircraft from all over, from the Soviets'
+     Mig 27 to our own F-15. And in a few hours you will see just what those babies
+     can do. They will fly against each other in mock battle, they will take out
+     strategic targets around this and the neighbouring states - without any
+     warheads, I can assure you, " he added for the benefit of a few front-benchers
+     who had begun to look worried about the idea of armed MiG 27s flying over the
+     Mid-West.
+
+     "Oh, I don't know, Chief," came a voice from the back. "There's a few parts of
+     Montana I guess we wouldn't miss."
+
+
+
+
+
+
+
+
+
+     "OK Kowalski, very funny - now button it, or you're peeling potatoes all next
+     week." One thing Major Mulcahy hated worse than a smart-ass flyer, it was one
+     who got a bigger laugh than himself. But he recovered.
+
+     "So, fellow officers, welcome guests, and members of the press, prepare
+     yourselves for a display of combat flying that'll knock your socks off, and
+     may the best man win," he said, peering at the Curtis E LeMay Trophy that
+     stood in pride of place, waiting to won by the top team of the day.
+
+     "As long as it's us, of course," he whispered quietly to himself.
+
+     Sitting at the rear of the briefing room was a lone pilot with a hard task
+     ahead of him. He knew the competition - every good pilot did - but this
+     didn't make it any easier. He had to prove to his superiors that he was the
+     best, that he was ready to go up against anything the enemy could throw at
+     him and come out on top. And this trophy was the way to do it.
+
+     He had already had a look around the area before landing his jet, checking
+     out the four US states that would be the arena for the mock battle. Some of
+     the most spectacular scenery in the west was here - Mount Rushmore, the
+     famous monument to the four historic presidents, Devil's Tower national
+     monument (how many times had he seen 'Close Encounters' - almost as many as
+     'Top Gun' he guessed), and the plains and towns and cities of the American
+     Mid-West, heartland to the world's leading nation.
+
+     He knew the missions he must accomplish in order to score maximum points, to
+     gain the title Ace of Aces, and he knew it was going to be tough - but then,
+     no-one ever said war was easy.
+
+     In FIGHTER BOMBER, you are that pilot. But first you must ready yourself with
+     a series of training missions. Sure, you've flown those runs a hundred times,
+     but never was the prize this big, never was the competition this hot.
+
+     You have your pick of the best of the world's technology, and also the choice
+     of combat enemies. This doesn't make life any easier, though - any one of the
+     pilots gathered at Ellsworth could take this trophy.
+
+     It's your job to see that they don't.
+
+     THE CURTIS E LeMAY TROPHY
+
+     The Curtis E LeMay Bombing Trophy, the prize every aspiring Bomber Squadron
+     hopes to gain, is presented in honour of the retired Commander in Chief of
+     SAC.
+
+     It's first victor, in 1958, was the 92nd Bomb Wing of the USAF in a B-52D.
+     From 1977 to 1982, the USAF FB-111A stood victorious, while in more recent
+     years the trophy has been snatched twice by the British 617 and 27 squadrons,
+     both using the Tornado.
+
+     AIRCRAFT SELECTION
+     FIGHTER BOMBER features seven different aircraft for you to fly. These are:
+
+             The McDonnell Douglas F-15E Strike Eagle - United States Air Force
+             The McDonnell Douglas F-4E Phantom - USAF
+             The General Dynamics F-111F Aardvark - USAF
+             The Panavia Tornado IDS - Royal Air Force
+             The Panavia Tornado IDS - Luftwaffe
+
+
+
+
+
+
+
+
+             The Saab AJ37 Viggen - Royal Swedish Air Force
+             The Mikoyan-Gurevich Mig-27 Flogger D - Soviet Air Force (CCCP)
+
+     Information on the ability of each of these machines can be found by clicking
+     INFO on each aircraft. ** This isn't totally accurate; for instance, the '27
+     really IS a pile of crap, and everybody knows it! Also, the 'Aardvark' is
+     actually an electronic counter-measures platform, not a bomber. **
+
+     These planes are displayed for selection as soons as the game is loaded. A 2D
+     and 3D representation of the various aircraft featured are available to you
+     along with historical and technical information. We suggest you take advantage
+     of this information as later missions will expect you to recognise instantly
+     the kind of aircraft you are engaging.
+
+     Selection is made with the mouse as normal.
+
+     ENEMY AIRCRAFT SELECTION
+
+     Uniquely, FIGHTER BOMBER allows you to select the kind of enemy
+     aircraft you will encounter in your various missions. Each enemy
+     aircraft will respond to you differently and you will soon learn which
+     will present the greatest challenge in the various theatres of engagement.
+
+     FB features seven different aircraft for you to fly against. These are:
+             The F-14 Tomcat - United States Navy (USN)
+             The F-16 Falcon - USAF
+             The F-5 Tigershark - USN/USAF
+             The Mikoyan-Gurevich MiG-29 Fulcrum - CCCP
+             The Sukhoi Su-27 Flanker - CCCP
+             The Dassault Mirage 2000 - Armee de l'air (France)
+             The Mikoyan-Gurevich MiG-31 Foxhound - CCCP
+
+     PILOT'S LOG
+     Press SPACE to enter a new pilot on the roster screen. Type in the name and
+     press RETURN. Press RETURN again to select a pilot.
+
+     Every time you fly, your progress is recorded and filed against your flight
+     log. So leave your Pompey Pirates disk 22 write-enabled!
+
+     MISSION SELECTION
+     For your first flight in FB, we recommend you select FREE FLIGHT. This will
+     allow you to familiarise yourself with the flight controls and become
+     proficient at some of the more complex manoeuvres you will need to master.
+
+     FREE FLIGHT differs to every other stage of FB in that it is the only option
+     that allows you to choose where you start from, and use ACCELERATED TIME-
+     skip all that boring uneventful flying!
+
+     The start-point options available to you are as follows:
+             MT RUSHMORE     Allows the programmers to show off
+             ON RUNWAY       Starts you on the runway at Ellsworth
+             AT 30000 FT     Allows practice of high altitude manoeuvres
+             ABOVE BRIDGE    Allows you to practice bombing runs
+             OVER CITY       Allows you to fly over Rapid City
+             BEHIND TANKER   Allows practice of inflight refuelling
+             LINED UP        Allows practice of landing procedure
+
+     Once you are accustomed to your controls and environment, then you can attempt
+
+
+
+
+
+
+
+
+     the first of the qualification missions.
+
+     THE MISSIONS
+     Each mission is only available when the previous one has been completed. To
+     start with, only operation 'Sleeper' is available under COVERT.
+
+     Once a mission has ended, the mission briefing screen will appear, allowing
+     you to examine the route flown and your mission report.
+
+     To continue, click on END, then select NEW MISSION for a... new mission!!
+
+     ** Don't worry if you get blown out of the sky... your pilot doesn't die,
+     remember this is all simulated war... you just get another unsuccessful
+     mission on your flight log. Also, if you want a look at the missions you're
+     not yet eligible for, when selecting a pilot, enter your name as "HOORAY FOR
+     MICK". You can then play any mission, but you're stuck with that name! Other
+     boring messages can be got by typing the following in for your pilot name:
+     "KYLIE", "SO WHAT IF I DO" and "BUCKAROO". **
+
+     MISSION BRIEFING
+     The options are:
+             MISSION TEXT    Your mission brief... read carefully and REMEMBER!
+             AREA RECON      Check out any map area from a camera aircraft
+             TARGET RECON    Check out any target from a camera aircraft
+             TARGET INFO     Tells you what any target is
+             OK              Commence mission
+
+     MISSION DESIGN
+     Options are:
+             SELECT AIR BASE Select the mission starting point, any of the
+                             flashing diamonds. It is not compulsory to land
+                             at that base- you may land anywhere that's got
+                             a runway!
+             ADD TARGET      Select a target and then position it on the map
+             REFUEL POINT    Select the altitude and position of the tanker
+             DELETE LAST     Clears the last target entered
+             RECONNAISSANCE  Allows you to view target areas in order to aid
+                             area and target recognition. Target info can also
+                             be obtained
+             MISSION TEXT    Allows you to enter your description of the mission
+             DISK MENU       Allows you to LOAD/SAVE missions
+             TEST MISSION    Allows you to fly the mission, after which you get
+                             the normal briefing, and are then returned to the
+                             designer
+             END             Leaves the mission designer
+
+     ** To save missions, you will need a seperate blank disk. You cannot save
+     on the FB disk! You can format a disk from within the disk menu. Then click
+     on the blank area at the bottom of the file selector box, type in your
+     filename, press RETURN, and finally click SAVE or LOAD. **
+
+     ARMING
+     After choosing the mission, you must arm your aircraft appropriately.
+
+     Weapons are selected by clicking over the weapon's graphic and dragging it
+     to the small underside view of the aircraft. If a pylon is available for a
+     weapon, it will flash. Not all pylons are suitable for all weapons. Some
+     pylons can carry multiple weapons, e.g. three Mavericks.
+
+
+
+
+
+
+
+
+
+     AUTO ARM will arm your machine with a suitable payload, but it is often
+     better to choose yourself. One exception is with the F-15E; manually loading
+     with Mavericks will give you 13 in total. Auto arm will give you 14 for some
+     reason... hell, don't knock it, that's the kind of bug I like!
+
+     Weapons available are:
+     1. 23/27 mm Cannon
+     Used for close combat, many aircraft of the late 60's and early 70's were
+     built without a cannon. The philosophy behind this being that with the
+     advent of sophisticated guided missiles, an aircraft would never get within
+     cannon range. The experience of the Vietnam war proved the fallacy of this.
+     Most modern aircraft are equipped with a cannon either internally or as a
+     centrally mounted pod taking up the centreline pylon.
+
+     2. Air to air missile (AAM)
+     AIM-9L Sidewinder / Bofors Rb-24 / AA-8 Aphid
+     Weight:         195 lb (88.5 kg)
+     Performance:    Mach 2.5 in 2.2 seconds
+     Range:          11 miles (17.7 km)
+     Mission time:   60 secs max.
+     Warhead:        25 lb (11.4 kg) blast/fragmentation with active laser IR
+                     proximity fuse
+     The Sidewinder is an AAM guided to the target by locking on to the heat
+     emitted by an enemy aircraft's tailpipe. Afterburners make especially
+     attractive targets to such a missile! As the missile locks on to a target,
+     a rising growl sounds in the pilot's headset until it reaches peek intensity
+     at which point it is locked on, and the pilot should fire. When the laser
+     proximity fuse senses it is close enough to a target, it explodes, sending
+     out hundreds of preformed rods into the target.
+
+     3. Air to surface missile (ASM)
+     AGM-65A Maverick / Bofors Rb-75 / AS-7 Kerry
+     Weight:         635 lb (288 kg)
+     Performance:    Classified
+     Range:          Up to 25 miles after Mach 1.2 release at altitude
+     Warhead:        282 lb steel cased blast/fragmentation or 83 lb shaped charge
+     The AGM-65A is a video guided ASM. The pilot selects the missile, causing it's
+     gyro to spin up to speed and light up a weapon ready indicator on his control
+     panel. The image from the video camera is swung round on to the target and the
+     pilot engages lock mode. He then uses either the video display or his head-up
+     display sight to lock on to the target. The weapon is then released. After
+     release the weapon remains locked on to the video image of the target and
+     intelligently tracks it, even if it's moving. In the event of the image being
+     interrupted the missile will follow it's last known trajectory. Even if the
+     warhead fails to detonate, the heat caused by the impact would kill or disable
+     a tank's crew for instance.
+
+     4. AGM-88A HARM
+     Type:           Anti Radiation missile
+     Weight:         796 lb (361 kg)
+     Performance:    Mach 2+
+     Range:          About 11 miles
+     Warhead:        Fragmentation with proximity fuse
+     The AGM-88A is a kind of missile developed as a direct result of the ever-
+     increasing technology used in modern air warfare. The missile uses the very
+     radiation emitted by a ground radar tracking station to home in on. The pilot,
+     suspecting an enemy is in the vicinity, can fire the missile 'blind'. If the
+
+
+
+
+
+
+
+
+     enemy emits any kind of electromagnetic radiation, the missile will lock on.
+
+     5. Mk 13/18 Paveway II LGB
+     Type:           Laser-guided unpowered bomb
+     Weight:         1,030 lb (467.6 kg)
+     Performance:    Freefall
+     Range:          Dependent on rlease altitude
+     Warhead:        High explosive
+     The Laser Guided Bomb is a system designed to improve the accuracy of
+     conventional bombs. The target is illuminated with laser light, either by the
+     launch aircraft, a second aircraft, or even friendly ground troops. A ring of
+     sensors around the nose of the bomb detects the reflected laser light and by
+     passing signals to the movable controls surfaces of the bomb, keep it aligned
+     with the target. The system is cheap, effective and requires no modification
+     to the aircraft.
+
+     6. General Purpose Bomb
+     Type:           Unguided unpowered bomb
+     Weight:         1,000 lb (454.6 kg)
+     Performance:    as for LGB
+     Range:          as for LGB
+     Warhead:        as for LGB (** an LGB is one of these with bits bolted on **)
+     The accuracy of these babies has in the past been soley dependent on the skill
+     of the crew, wind, etc. With today's modern aircraft the computer takes over
+     calculating velocity, altitude, wind-shear, etc. The pilot is told when to
+     press the button and the computers do the rest. ** But not in this game. Great
+     huh, we're reduced to guessing when to drop the damn things. Take my advice
+     and never use the useless pieces of junk! **
+
+     7. JP-233 MWI - Airfield Denial Weapon
+     Type:           Submunition dispenser
+     Weight:         11,200 lb (5,080 kg)
+     Payload:        Various bomblets
+     The JP-233 is a series of submunition dispensers for parachute retarded
+     payloads which include pavement cratering bomblets and anti-personnel
+     mines with or without delayed action fuses. It's main use is for denying
+     enemy forces their airfields. ** The bomblets spread in a generally broad
+     pattern, so cutting a swathe across all the nice clean tarmac! But, seeing
+     as there are no missions requiring runway denial, you'll never need this
+     weapon. Another cockup from Vektor! **
+
+     8. BOZ-100 ECM Pod - Chaff and IR Decoy flare dispenser
+     Weight:         1,000 lb (454 kg)
+     Such devices are often fitted internally, but this is an externally carried
+     one. It enables the aircraft under attack from missiles to defend itself
+     in two ways: An IR guided missile follows strong heat emissions, so flares
+     will fool it into tracking the flare instead of your tailpipe, and chaff;
+     hundreds of strips of metal; will create an attractive radar target for radar
+     guided missiles. Don't worry about running out of either chaff or flares- you
+     have an infinite supply.
+
+     9. Durandal - Runway Penetration Bomb
+     Weight:         430 lb (195 kg)
+     Warhead:        High explosive
+     The Durandal is a simple but effective method of cratering and this rendering
+     useless enemy paved landing strips. The weapon is released as lows as 185 ft
+     and is immediately retarded by a parachute, causing it to point nose down. The
+     rocket motor then fires the warhead deep into the concrete, from where it
+
+
+
+
+
+
+
+
+     explodes upwards, creating a crater of up to 2,000 square feet! ** See note
+     above about JP-233. **
+
+     10. Rocket Pods
+     These have been the mainstay of the ground attack arsenal since WW2. The pilot
+     aims the aircraft at the ground target and fires a salvo of high explosive
+     shells direct in the line of flight, just like using the cannon. This is
+     particularly effective against mobile armour.
+
+     11. ALARM - Air Launched Anti Radiation Missile
+     Weight:         390 lb
+     Performance:    Awful
+     Range:          Abysmal
+     Propulsion:     Two stage solid propellant motor
+     Warhead:        Yes
+     ALARM is the British equivalent of the US HARM missile. It is fired in the
+     general direction of enemy positions (e.g. SAM sites) and climbs to around
+     40,000 ft. It then pitches nose down and falls slowly, under a drogue
+     parachute, while searching for hostile radio/radar emmissions. As soon as
+     the enemy 'switches back on', the missile locks on the target and fires it's
+     secondary motor, homing in on the enemy position. ** The real thing's range
+     might be classified, but in the game it seems to be a paltry 2 miles!! I've
+     found it next to useless, and it's probably better to use Mavericks and lock
+     on visually- tricky, as radar sites are so tiny, and the closer you get, the
+     more likely it is that you will intrude in it's radar net, and so be fired
+     upon. Hey Sledge, looks like they've simulated it perfectly... the real
+     thing doesn't work either, does it? Ha ha! **
+
+     Okay, that's the original manual except for all the useless bumf and trimmings
+     at the end (which is in the game itself anyway- the INFO selections for the
+     different aircraft). The rest of this is all my own work as they say...
+
+     THE AIRCRAFT
+     F-15E           Originally a dedicated medium/short range fighter. Modified to
+                     the two seat F-15E, and strengthened to carry heavy ground
+                     attack payloads. Fast, manoeuvreable and carries a seriously
+                     large amount of weapons. Take it!
+     F-4E            Ancient (1960's), but a good workhorse. Designed as a fighter
+                     too, but more than adequate as a bomber. Used as such to great
+                     effect in Vietnam. Not particularly brilliant in any respect,
+                     but certainly not lacking either.
+     F-111F          Another golden oldie, the 'F' designation means Fighter as
+                     always, but the F-111 really isn't up to the job. Poor
+                     manoeuvrablity and sluggish handling will put you in hot
+                     water when under attack from other aircraft. On the other
+                     hand, it can carry a large amount of weapons comfortably
+                     over large distances- witness the Libya raid of a couple of
+                     years ago.
+     Tornado         Designed as a bomber primarily, and damn good at it's job. It
+                     has since been modified to the ADV (Air Defence Variant) type,
+                     which is the RAF's equivalent of the F-15. So no problems in
+                     the air to air combat department! Payload is excellent, it
+                     responds well and it's a good all-round choice.
+     Viggen          The aerial Volvo. Tough, dependable, and extremely good at
+                     running rings around bandits. Payload isn't so hot... only a
+                     light load can be carried, and not as large a range as the
+                     Tornado or F-15. Fuel conserving isn't high on this baby's
+                     list of priorities, either. The real thing has been designed
+
+
+
+
+
+
+
+
+                     to use motorways as landing strips in case of paved runways
+                     being destroyed. Whether you can do that in the game is as
+                     yet a mystery... try it!
+     Flogger         Oh dear... Well, one point in it's favour is that the Soviets
+                     have a fighter version- the MiG 23-, so you can probably hold
+                     your own in a dogfight. Unfortunately, payload is limited and
+                     fuel is another problem. I'd only go for this if all the
+                     other planes had been nuked or something...
+
+     And the opposition...
+     F-14            Ooooh... you are in deep you-know-what if one of these shows
+                     up! Designed as a tough, fast, highly manoeuvrable long/medium
+                     and short range fighter, it's got missiles with YOUR name on
+                     them! It's size will give you an advantage if you engage at
+                     high speeds- if you have a smaller aircraft you'll be turning
+                     tighter than the F-14.
+     F-16            Hell, you fly one in Falcon- you should know all about these!
+                     Fast, tiny, mega manoeuvrable and seriously bad news if you're
+                     weighed down with bombs! If you don't get it on the first pass
+                     you better run for it, cos these guys are HOT in dogfights!
+     F-5             Used by the US Navy Agressors squadron to simulate Soviet
+                     aircraft (go watch Top Gun). Performance below that of the
+                     F-16, but not by much. You might think these guys are an easy
+                     option- not so. The speed and ferocity with which the F-5s
+                     attack in the game has to be seen to be believed!
+     MiG-29          The Soviet F-16? Nasty meeting one of these at close range...
+                     hit him quick or he'll be all over you!
+     Su-27           Wow, a gap in my knowledge... looks like a tougher, possibly
+                     long range variation of the MiG-29/F-16. Maybe even as deadly
+                     as the F-15 would be if you were faced with one!
+     Mirage 2000     Ha ha ha... a frog plane! Meant to be a good all round fighter
+                     but probably has problems at low speeds and altitudes, so a
+                     dogfight won't be particularly worrying. Watch out if he tries
+                     to sneak up on you at high altitude, though!
+     MiG-31          No, not the Firefox! Still bad news though... almost
+                     definitely the Soviet F-15, this one. Large, heavy, and not
+                     primarily a dogfighter, it's more of a long range fighter.
+                     This is my favourite adversary... it's so big, it can't really
+                     worry me in a dogfight- it can't turn tight enough and ends up
+                     making high speed passes and hoping for a good missile shot.
+
+     COCKPIT DISPLAY
+     The cockpit is mostly just decoration. The bits you'll need to worry about
+     are as follows:
+
+     ADI/Artificial Horizon: the brown/blue ball shows the attitude of your plane
+     to the horizon. Sod all use really.
+
+     Radar: switchable to ranges of 25/12/6/3 miles. Some aircraft (e.g. Tornado)
+     have better radars. When locked on to an air target, the target's radar blip
+     changes color with the better radars.
+
+     Target display: this window shows either 'NO AIR/GROUND TARGET', the altitude,
+     speed, bearing of an air target or a zoomed picture of a ground target.
+
+     Information window: switchable to show current waypoint/current weapon ammo.
+
+     Undercarriage indicators: if all three are green, your wheels are ready to
+
+
+
+
+
+
+
+
+     kiss concrete. If all three are grey or black, the wheels are safely retracted
+     and if there's any combination (e.g. one green, two grey), it's time to take
+     up a new career- like maybe skydiving!
+
+     Stall light: if this lights up, it means you've passed below the point at
+     which your airspeed is sufficient to keep you aloft. The aircraft will nose-
+     dive- wait until your airspeed goes up again to around 120 Kts and then pull
+     up to avoid ploughing some farmer's field for free.
+
+     IR light: if this lights up and beeps, there is an infra-red homing missile
+     coming for a visit. Throw out some flares!!
+
+     RH light: if this lights up and beeps, Mister Radar Homing Missile is about
+     to arrive. Use some chaff, or die. Simple, huh?
+
+     Message window: just tells you about major events in your locale. For example,
+     incredibly interesting things like 'CHAFF RELEASED', 'TARGET DESTROYED', 'PULL
+     UP YOU CRAZY IDIOT' etc. etc.
+
+     Air brake light: if it's on, so's the air brake.
+
+     Wheel brake light: no doubt you can figure this one out.
+
+     Fire light: hmmmm... never had it light up myself, so maybe it's just more
+     decoration. Anyway, if it does light up, I'd recommend a nice invigorating
+     walk home. Either that, or stay in the plane and burn to death!
+
+     Fuel indicator: when it hits the bottom, you're flying a bad tempered glider!
+
+     Thrust indicator: shows level of engine power being used. Turns yellow when
+     afterburner is being used.
+
+     Compass: wow, who needs it?
+
+     Airspeed indicator: the dial with KTS written on it. Totally useless. Use the
+     HUD instead!
+
+     Altimeter: the dial with FT written on it. Useless again.
+
+     AND ON THE HEAD UP DISPLAY
+     Altitude: shown on the right, above 'FT'.
+
+     Airspeed: shown on the left, above 'KTS'.
+
+     Heading: shown at the top (HDG).
+
+     Current weapon: shown bottom left. If 'ARM' is above it, the weapon is armed
+     and ready to fire. If it's 'LOCK' tben it's locked on to a target, it nothing
+     is showing above it, there's no ammo left.
+
+     Weapon sight: shown in centre, if weapon has a sight that is!
+
+     LANDING YOUR AIRCRAFT
+     (nope, nothing about this in the manual)
+
+     REMEMBER the landing instructions you are given in the mission text. If you
+     are given a number for the runway you need to land on, note it down. If you
+     are given discretion about landing, you can land at any airfield- even the
+
+
+
+
+
+
+
+
+     civilian ones- on any runway. To figure out what runway you need from the
+     number given...
+     Runway number   Runway points
+          36            North
+          18            South
+     The runway will also have the number on the tarmac! The number is actually
+     the heading needed to land on it divided by 10, e.g. runway 18=180 degrees.
+     Also, in some missions you're told to use runways like '36L' or '18R'. The
+     R and L mean left and right of course, so take the runway on the left or
+     right, whatever you've been told.
+
+     Now, once you've got the runway in sight, drop thrust to 20% to get your
+     speed down. When at about 300 Kts, push it back up to 40%. Align yourself
+     with the runway you're going to land on- you may find having a Maverick
+     sight up will help. Point at the end of the runway closest to you, drop
+     speed to below 300 Kts and lower the undercarriage. Keep thrust at around
+     40% to keep from stalling. You should be aiming for crossing the runway
+     threshold at about 100 Ft and 190 Kts. Once over the threshold, pull the
+     nose up level, drop thrust to 10% (or even cut the engine if you want
+     to be flash... but no second chances if you foul up, because you won't
+     get the thrust to pull up) and hit the air brakes to drop speed to around
+     140 Kts if you aren't that slow already. Now you should be sinking gently
+     onto the tarmac- keep that nose straight now! The lack of airspeed will
+     cause altitude loss naturally, so don't point the nose down unless you
+     fancy digging a crater! When the wheels hit the tarmac (did you bounce?
+     Yes? You useless idiot!), cut the engine, hit the airbrakes if they're
+     not already on, wait a sec and then hit the wheelbrakes. Wait till you
+     roll to a stop, and voila! Landing complete! On some missions you're
+     required to land at more than one airfield- to pick up and drop secret cargoes
+     at secret airfields. Just land and take off as normal.
+
+     INFLIGHT REFUELLING
+     This is incredibly tricky to start with! The FREE FLIGHT practice option
+     is of limited use- to actually make some practical use of it, you'll have
+     to alter your heading a lot and get well off the perfect approach you're
+     lumbered with! For the real thing, you will probably fly right past the
+     tanker as it flies head to head with you. So, hit the airbrakes, pull
+     round as tightly as possible and follow it. Match altitude as exactly as
+     possible, keep the wings level and use the rudder to position yourself
+     exactly behind the tanker. Now keep your speed at around 350 Kts and let
+     the tanker crew do the work. The tanker should line itself up pretty well,
+     and drift towards you. When the refuelling basket is just about to hit
+     your probe (or even if it's just missed and you're about to overshoot),
+     hit the airbrakes again. The probe should lock firmly into the basket, and
+     you are now 'snouting' successfully! Disengage when your fuel is full, and
+     dive away to avoid hitting the tanker. A tip: the tanker always heads due
+     South when the crew sight you, so try and get the tanker heading to be 180,
+     then match the heading yourself.
+
+     AIR TO AIR COMBAT
+     When you first realise somebody's got their eye on you, turn hard towards
+     them to get into firing position quickly! If they're very close or you can't
+     see them even though the radar says they're right next to you, break hard
+     away from their radar position- this means they're very close- maybe even
+     below you, and that's bad news- collisions aren't fun! If you can eyeball
+     them, hit them quick with missiles- but do wait for a good steady lock-on
+     tone. Hear any beeps? You're in trouble- somebody's REALLY got their eye
+     on you- that's a missile warning. Hit the flares and break hard right or
+
+
+
+
+
+
+
+
+     left- or even up if you're desperate. Trade altitude for speed to shake off
+     any annoying bogies- though the F-16 and it's counterparts won't be held off
+     for long by doing this. Most important lesson: hit any bandits QUICKLY, or
+     you won't be around to try again! If you think you have the time, try using
+     the enemy aircraft view- the position your plane is shown in will help you
+     find the enemy. Finally, never underestimate your opponent, or the risk of
+     collision. A collision is NOT an unlikely event- keep an eye on the radar at
+     all times. If he's getting close, dive as steeply as possible (or climb with
+     afterburner). A tip: if you're out of missiles and cannon, just keep using
+     flares and go home. The enemy will exhaust his missile supply and just follow
+     you to annoy you. Then the only risk is that he'll try a kamikaze run on you!
+
+     WEAPON DELIVERY
+     Pretty straight forward- only bombs, JP-233 and ALARMs seem to tricky to
+     use. The JP-233 spreads it's bomblets well ahead of the point you release
+     it, depending on your airspeed. Use satellite view on free flight mode to
+     practice using it successfully. The standard unguided bombs are much the
+     same, but require even greater accuracy. The ALARM (much like the real
+     thing I'm told), is pretty useless. You've got to within 3 miles of an
+     active radar, and you have to use it like a rocket pod- point the plane
+     at the target and then release the weapon. Only use the ALARM if you
+     can't afford a Maverick! Mavericks really are useful- flying at around 500 ft,
+     they can be locked on to a target at around 16 miles, and fired immediately.
+     Then you can turn away and forget about it! If all else fails, go for a low
+     speed, low altitude pass with your cannon centred on the target, and let rip.
+     The cannon is remarkably good at it's job in this game!
+
+     Air to air weapons are different- the cannon is used in much the same way,
+     but I wouldn't advise getting that close to a bandit because of the collision
+     risk. Instead, take him out with a Sidewinder (or equivalent). Press S to lock
+     on to the target, manoeuvre so he's in your sights, wait for the circle to
+     lock on the target square, and when the circle is red and you get a steady
+     lock-on tone, hit fire. Splash one MiG! (Or whatever...)

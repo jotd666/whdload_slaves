@@ -63,7 +63,12 @@ DECL_VERSION:MACRO
 		dc.b	" "
 		INCBIN	"T:date"
 	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
+	ENDC
 	ENDM
+	
 	
 _name		dc.b	"Wrong Way Driver"
     IFD CHIP_ONLY
@@ -81,9 +86,11 @@ program:
 	dc.b	"WrongWayDriver",0
 
 _config
-        dc.b    "C3:B:keep LMB as quit button;"
-		dc.b	0
+ 		dc.b	0
 
+		dc.b	"$VER: WrongWayDriver slave "
+		DECL_VERSION
+		dc.b	$A,0
 		EVEN
 
 ;======================================================================
@@ -164,6 +171,7 @@ _start						;a0 = resident loader
         ; patch decrunch
 
         move.l  game_address(pc),d0
+		
         subq.l  #4,d0
         lsr.l   #2,d0
         move.l  d0,a1
@@ -206,14 +214,20 @@ pl_main
 	PL_PS	$02a2c,fix_copperlist_2
 	; bltdmod write
 	PL_W	$06220,$4268	; word clear not long clear
-	; extra wait blit, doesn't change much
+	; extra wait blits
+	; a combination of those extra wait blits fix the
+	; trashed opponent & bonuses issue on fast machines
+	; not sure which ones are really needed and which are
+	; not, this isn't going to slow down the game since
+	; those blits are only done when preparing data
 	PL_PS	$12946,wait_blit_1
-	PL_PS	$129fe,wait_blit_2
+	PL_PS	$12950,wait_blit_2
 	PL_PSS	$12cb6,wait_blit_3,2
 	PL_PSS	$0e748,wait_blit_4,2
 	PL_PSS	$0e764,wait_blit_4,2
 	PL_PS	$0d1ee,wait_blit_5
 	PL_PSS	$0dd82,wait_blit_6,2
+	PL_PSS	$07afe,wait_blit_11,2
 	;PL_PS	$08780,wait_blit_7
 	PL_PSS	$08764,wait_blit_8,2
 	;PL_PS	$08820,wait_blit_9
@@ -230,7 +244,13 @@ wait_blit
 	BTST	#6,dmaconr+$DFF000
 	BNE.S	.wait
 	rts
-
+	
+wait_blit_11
+	bsr		wait_blit
+	move.l a1,(16,a3)	;07afe: 11ae27490010
+	MOVE.L	A5,12(A3)		;07b02: 274d000c
+	rts
+	
 wait_blit_1
 	bsr		wait_blit
 	ADDQ.W	#1,A1			;12946: 5249
@@ -239,20 +259,18 @@ wait_blit_1
 	rts
 	
 wait_blit_2
+	; after blit loop, force wait
 	bsr		wait_blit
-	MOVEA.W	D3,A3			;129fe: 3643
-	MOVEQ	#0,D1			;12a00: 7200
-	MOVE.W	D4,D1			;12a02: 3204
+	MOVEA.L	96+4(A7),A3		;12950: 266f0060
+	MOVE.W	A6,D6			;13950: 3c0e
 	rts
 	
 wait_blit_3
-	bsr	wait_blit
 	MOVE.W	D1,(88,A0)		;12cb6: 31410058
 	ADDQ.W	#1,(92+4,A7)		;12cba: 526f005c
 	bra		wait_blit
 
 wait_blit_4
-	bsr	wait_blit
 	MOVE.W	D4,(24,A2)		;0e764: 35440018
 	ADD.W	(112+4,A7),D5		;0e768: da6f0070
 	bra		wait_blit
