@@ -256,17 +256,21 @@ pl_boot:
 ;-----------------------------------
 ;Intro Patch
 patch:
-		move.w	#$4e75,$11280		;Remove RTE
-		move.w	#$4e71,$110c4		;Remove move.w sr,-(a7)
-		; SMC patch
-		move.l	a0,-(sp)
-		lea	smc_patch_4ad08(pc),a0
-		move.w	#$4eb9,$4ad08 ; JSR abs.L
-		move.l	a0,$4ad0a
-		move.l	(sp)+,a0
-		bsr		_flushcache
-		jmp	$10000
+	movem.l	d0-d1/a0-a2,-(a7)
+	lea		$10000,a1
+	lea		pl_intro(pc),a0
+	move.l	_resload(pc),a2
+	jsr		resload_Patch(a2)
+	movem.l	(a7)+,d0-d1/a0-a2
+	jmp	$10000
 
+pl_intro
+	PL_START
+	PL_R	$1280		;Remove RTE
+	PL_NOP	$10c4,2		;Remove move.w sr,-(a7)
+	PL_PS	$3ad08,smc_patch_4ad08
+	PL_END
+	
 smc_patch_4ad08:
 		addq.l	#4,(sp) ; adjust return address to skip rest of instruction
 		move.l #$0004ad42,$0004ad3c ; original instruction

@@ -31,12 +31,13 @@
 
  History:
  
- Version 2.0 (xx.12.2022) done by JOTD & paraj:
+ Version 2.0 (16.12.2022) done by JOTD & paraj:
  - provided relocation tables so game can run from fastmem for
    better speed
  - adapted to whdload 17
  - fixed remaining smc which trashed graphics without hindering
    performance too much (reduced cache flushes)
+ - fixed self-modifying code that crashed the intro
  - added extra 68020+ optimizations
  
  Version 1.1 done by Galahad:
