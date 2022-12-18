@@ -26,7 +26,7 @@
  an appropriate requester.
  Additionally the file "kick34005.A500.RTB" must be installed in the same
  directory as the kickstart image. It can be found in the archive 
- "util/boot/skick345.lha" on aminet.
+ "util/boot/skick346.lha" on aminet.
 
  If you have problems with this installation please try and get a newer
  version of this package from the WHDLoad WWW-Page. If that doesn't help try
@@ -40,7 +40,15 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 1.0 (10.09.03) done by JOTD:
+ version 2.0 (23.12.2022) done by JOTD:
+ - now uses real files, no longer diskimages, which allows
+   original version to be really supported (else a copy had to
+   be used in the previous install) (issue #0004979)
+ - fixed blitter issues on fast machines (blitter wait not called
+   between graphics.library calls)
+ - ability to skip introduction
+ 
+ version 1.0 (10.09.2003) done by JOTD:
  - initial release
  - disk protection removed
  - full use of fastmem & caches for awesome speed
@@ -49,3 +57,13 @@
  - manual included
  - icons by Exoticon
  - source code included
+
+ Notes:
+
+    Upgrading from 1.0 to 2.0 requires reinstalling but you can do it from the
+ v1.0 disk.x images as they're DOS disk images that can be mounted or even
+ selected from the installer.
+
+    The new install takes a while from floppies because there are more than
+ 500 files! Disk 3 is specially slow to install. Use "install from disk images"
+ for better speed.

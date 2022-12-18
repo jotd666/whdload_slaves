@@ -1,0 +1,204 @@
+;****************************
+
+(set #readme-file "ReadMe")		;name of readme file
+(set #highs-file "highs")		;name of high scores file
+(set #cleanup "")			;files to delete after install
+(set #last-file "IK+.Image")		;last file the imager should create
+
+;****************************
+;----------------------------
+; checks if given program is installed, if not abort install
+; #program - to check
+
+(procedure P_ChkRun
+  (if
+    (= 0 (run ("cd SYS:\nWhich %s" #program)))
+    ("")
+    (abort
+      (cat
+	"You must install \"" #program "\" first!\n"
+	"It must be accessible via the path.\n"
+	"You can find it in the WHDLoad package."
+      )
+    )
+  )
+)
+
+;****************************
+
+(if
+  (exists #readme-file)
+  (if
+    (= 0 (run ("SYS:Utilities/Multiview %s" #readme-file)))
+    ("")
+    (run ("SYS:Utilities/More %s" #readme-file))
+  )
+)
+
+(set #program "WHDLoad")
+(P_ChkRun)
+
+(set #program "RawDIC")
+(P_ChkRun)
+
+(set @default-dest
+  (askdir
+    (prompt ("Where should \"%s\" be installed?\nA drawer \"%s\" will be automatically created." @app-name @app-name))
+    (help @askdir-help)
+    (default @default-dest)
+    (disk)
+  )
+)
+(set #dest (tackon @default-dest @app-name))
+(if
+  (exists #dest)
+  (
+    (set #choice
+      (askbool
+        (prompt ("\nDirectory \"%s\" already exists.\n Should it be deleted?" #dest))
+        (default 1)
+        (choices "Delete" "Skip")
+        (help @askbool-help)
+      )
+    )
+    (if
+      (= #choice 1)
+      (run ("Delete \"%s\" \"%s.info\" All" #dest #dest))
+    )
+  )
+)
+(makedir #dest
+  (help @makedir-help)
+  (infos)
+)
+
+;----------------------------
+
+(if
+  (exists ("%s.newicon" @app-name))
+  (set #icon
+    (askchoice
+      (prompt "\nWhich icon would you like to install?\n")
+      (default 0)
+      (choices "Normal" "NewIcon")
+      (help @askchoice-help)
+    )
+  )
+  (set #icon 0)
+)
+(select #icon
+  (set #icon ("%s.inf" @app-name))
+  (set #icon ("%s.newicon" @app-name))
+)
+(copyfiles
+  (help @copyfiles-help)
+  (source #icon)
+  (newname ("%s.info" @app-name))
+  (dest #dest)
+)
+(tooltype
+  (dest (tackon #dest @app-name))
+  (settooltype "Slave" ("%s.Slave" @app-name))
+  (settooltype "PreLoad" "")
+  (setdefaulttool "WHDLoad")
+  (setstack 10240)
+  (noposition)
+)
+(copyfiles
+  (help @copyfiles-help)
+  (source ("%s.Slave" @app-name ))
+  (dest #dest)
+)
+(if
+  (exists #readme-file)
+  (copyfiles
+    (help @copyfiles-help)
+    (source #readme-file)
+    (dest #dest)
+  )
+)
+(if
+  (exists ("%s.info" #readme-file))
+  (
+    (copyfiles
+      (help @copyfiles-help)
+      (source ("%s.info" #readme-file))
+      (dest #dest)
+    )
+    (tooltype
+      (dest (tackon #dest #readme-file))
+      (noposition)
+    )
+  )
+)
+(if
+  (exists #highs-file)
+  (copyfiles
+    (help @copyfiles-help)
+    (source #highs-file)
+    (dest #dest)
+  )
+)
+
+(set #ver
+  (askchoice
+    (prompt "\nWhich version of IK+ do you own ?")
+    (default 0)
+    (choices "Normal Floppy Disk" "CDTV Version")
+    (help @askchoice-help)
+  )
+)
+
+(select #ver
+  (
+    (if
+      (= @user-level 2)
+      (
+        (set #CI_drive
+          (askchoice
+            (prompt "Select source drive for diskimages")
+            (default 0)
+            (choices "DF0:" "DF1:" "DF2:" "DF3:")
+            (help @askchoice-help)
+          )
+        )
+        (select #CI_drive
+          (set #CI_drive "DF0:")
+          (set #CI_drive "DF1:")
+          (set #CI_drive "DF2:")
+          (set #CI_drive "DF3:")
+        )
+        (set #ignore " IGNOREERRORS")
+      )
+      (set #CI_drive "DF0:")
+      (set #ignore "")
+    )
+    (copyfiles
+      (help @copyfiles-help)
+      (source ("%s.islave" @app-name))
+      (dest #dest)
+    )
+    (working)
+    (run ("CD \"%s\"\nRawDIC SLAVE=%s.islave SOURCE=%s%s\nDelete %s.islave" #dest @app-name #CI_drive #ignore @app-name))
+    (if
+      (exists (tackon #dest #last-file))
+      ("")
+      (abort "Diskimaging was not successful!\nRawDIC was unable to create all needed files!")
+    )
+  )
+  (
+    (message "Please insert your IK+ CD.")
+    (copyfiles
+      (help @copyfiles-help)
+      (source "cdtv_test:IK+")
+      (dest #dest)
+      (newname "IK+.Image")
+    )
+  )
+)
+
+;----------------------------
+
+(run ("Delete %s ALL QUIET FORCE" #cleanup))    ;delete temporary files
+
+(exit)
