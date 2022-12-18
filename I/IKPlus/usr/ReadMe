@@ -1,0 +1,81 @@
+
+	THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER
+	EXPRESS OR IMPLIED, STATUTORY OR OTHERWISE.
+	THE ENTIRE RISK AS TO USE, RESULTS AND PERFORMANCE OF THE PACKAGE IS
+	ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE TO BE DEFECTIVE, YOU
+	ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING, REPAIR OR OTHER
+	REMEDIATION.
+	UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY
+	DAMAGE CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE
+	OWNER OR A THIRD PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF
+	DAMAGE.
+
+	That install applies to "IK+" © 1988 Archer Maclean.
+	The original disk release, the HitSquad rerelease and the CDTV
+	version are supported.
+
+	That install requires WHDLoad and RawDIC to be in the path.
+	Both can be found in the WHDLoad package.
+	To install from a different drive than DF0: select Expert as
+	installation mode.
+
+	You need 0.5 MB ChipMem and 0.5 MB OtherMem.
+	You can quit the game by pressing F10 (key can be changed with
+	Tooltype "QuitKey="). If you want to play in "yawn" speed, selectable
+	pressing F10, you must set an different QuitKey.
+
+	To save disk disk space you can compress the file "IK+.Image" with
+	ProPack or FImp (but without extension!).
+
+	if you have problems with this installation please try first to get
+	a newer version of this install from 
+		http://www.whdload.de/
+	if that does'nt help try some Tooltypes like NOCACHE, NOAUTOVEC,
+	NOVBRMOVE, NOMMU, PAL or NTSC. if that also does'nt help inform the
+	author via the Bug-Report-Form which can be accessed on
+		http://www.whdload.de/
+
+	Wepl in September 1997, November 1998.
+	StingRay in June 2016.
+	
+	version 1.9 (18.12.2022) by JOTD:
+	- samples in bouncing ball bonus round are now played properly
+	  on real machines (like on my 68060) (issue #0005537)
+	- added cheatkeys: 1: white player wins, 2: red player wins
+    - highscores not saved if cheat is used
+
+	version 1.8 (26.11.2017) by StingRay:
+	- CPU dependent DMA wait fixed, samples are now played properly
+	  on fast machines (issue #3644)
+
+	version 1.7 (14.08.2016) by StingRay:
+	- NTSC support changed, only music is replayed at PAL speed, everything
+	  else runs at NTSC speed (Mantis issue #3455)
+	- slave code optimised
+
+	version 1.6 (27.06.2016) by StingRay:
+	- writes to INTREQR fixed
+	- full NTSC support, replayer and all timing related stuff adapted
+	  to run at the same speed as on PAL
+	- timing on fast machines fixed (fix can be disabled with CUSTOM1)
+	- bonus rounds can be disabled with CUSTOM2
+	- graphics bugs in bonus round (IK+ shield) fixed
+	- WHDLoad v17+ features used
+	- source code included
+
+	version 1.5 (29.08.2001) by Wepl:
+	- highscore saving fixed
+	- strange interrupt handling fixed
+
+	version 1.4 (01.08.2001) by Wepl:
+	- highscore saving added
+	- version check added
+
+	version 1.3 (14.07.2001) by Wepl:
+	- supports another version, thanks to Jan Vieten for sending it
+	- new imager
+
+
+
+
+
