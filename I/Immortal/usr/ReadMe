@@ -14,7 +14,7 @@
  the WHDLoad package.
  To install from a different drive than DF0: select installation mode Expert.
 
- The installed program requires 1.0 MB ChipMem and 1.5 MB OtherMem.
+ The installed program requires 0.5 MB ChipMem and 1.5 MB OtherMem.
  It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
 
  If you have problems with this installation please try and get a newer
@@ -29,6 +29,10 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 3.1 (19.12.2022) done by JOTD:
+ - reduced info in splash screen so game title is visible (issue #0005912)
+ - 3-button joystick supported (3rd button: music on/off)
+ 
  version 3.0 (16.06.2018) done by JOTD:
  - fixed a huge loading bug that prevents level 7 and 8 to work properly (crashes/ trashed gfx)
  - added functions keys F2-F8 to enter valid preset passwords for levels 2 => 8
@@ -38,13 +42,7 @@
    everything that depletes your energy doesn't anymore, which makes the game MUCH easier)
  - ability to set your password through CUSTOM tooltype, and recall it with TAB in the "enter certificate"
    screen
- - added joypad/2nd button controls:
-   * 2nd button / blue: pause/select item (alongside with spacebar)
-   * rev/fwd: set preset passwords in "enter certificate" screen
-   * yellow: enter CUSTOM certificate if present (like TAB)
-   * green: toggle music on/off (like CTRL+S)
-   * rev+fwd+play (hold several seconds): give up current game
-   * rev+fwd+play+red: quit to workbench
+ - added joypad/2nd button controls
 
  
  version 2.1 (25.02.2017) done by JOTD:
@@ -75,3 +73,17 @@
 7	8DDFB62010AC1 	C250F63010AC1
 8	E011F730178C1 	A890B730178C1
 
+ Enhanced controls:
+ 
+ Joypad
+   * 2nd button / blue: pause/select item (alongside with spacebar)
+   * rev/fwd: set preset passwords in "enter certificate" screen
+   * yellow: enter CUSTOM certificate if present (like TAB)
+   * green/third button: toggle music on/off (like CTRL+S)
+   * rev+fwd+play (hold several seconds): give up current game
+   * rev+fwd+play+red: quit to workbench
+
+ Keyboard
+   * TAB: recall password contained in "CUSTOM" option/tooltype
+   * function keys F2-F8 enter valid preset passwords for levels 2 => 8
+   * F9 key restarts the game

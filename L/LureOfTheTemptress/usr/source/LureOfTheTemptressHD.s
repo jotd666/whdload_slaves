@@ -172,7 +172,7 @@ loader:
 	beq	PatchGerman1
 
 
-PatchFrench1:
+; french
 	cmp.l	#'ichi',$59F0.W
 	bne	PatchEnglish1
 

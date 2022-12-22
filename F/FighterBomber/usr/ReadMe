@@ -40,7 +40,8 @@
  - fixed self-modifying code that crashed the intro
  - added extra 68020+ optimizations
  - reworked install script
-
+ - added manual, hints, cheats
+ 
  Version 1.1 done by Galahad:
  - Memory requirements reduced, only needs 512k chipmem now
    not 1meg
@@ -62,7 +63,7 @@
  
  - 2 Disk Original release (SPS1135)
 
- SPS1134 (copylock protected) isn't supported and won't be because
+ SPS1134 isn't supported and won't be because
  relocation work takes a looong time and I'm not doing that another time
  for that game.
  
