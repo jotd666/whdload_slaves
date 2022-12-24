@@ -29,7 +29,7 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 3.1 (19.12.2022) done by JOTD:
+ version 3.1 (24.12.2022) done by JOTD:
  - reduced info in splash screen so game title is visible (issue #0005912)
  - 3-button joystick supported (3rd button: music on/off)
  

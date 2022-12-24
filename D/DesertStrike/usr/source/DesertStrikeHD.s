@@ -141,7 +141,7 @@ _name           dc.b    "Desert Strike - Return to the Gulf"
 				dc.b	0
 _copy           dc.b    "1993 Electronic Arts",0
 _info           dc.b    "by JOTD & Abaddon since 1996",10,10
-				dc.b	"CD32 controls: Blue/Forward=change weapon",10
+				dc.b	"CD32 controls: Blue=change weapon",10
 				dc.b	"Yellow/Play=status",10,10
 				dc.b	"Alt CD32 controls: Red=cannon, Blue=hydra",10
 				dc.b	"Green=hellfire, Yellow/Play=status",10,10
@@ -151,11 +151,13 @@ _info           dc.b    "by JOTD & Abaddon since 1996",10,10
 
 _config
 		dc.b    "BW;"
-        dc.b    "C1:X:Trainer Infinite Lives/Energy:0;"
+        dc.b    "C1:X:Trainer Infinite Lives:0;"
+        dc.b    "C1:X:Trainer Infinite Energy:1;"
+        dc.b    "C1:X:Trainer Infinite Weapons:2;"
 		dc.b    "C2:L:Select Starting Level:Air Superiority,Scud Buster,Embassy City,Nuclear Storm,The End;"
-        dc.b    "C3:X:Disable Blitter Patches:0;"
-        dc.b    "C4:X:Enable alternate CD32 Joypad controls:0;"
-        dc.b    "C5:X:Skip Intro:0;"
+        dc.b    "C3:B:Disable Blitter Patches;"
+        dc.b    "C4:B:Enable alternate CD32 Joypad controls;"
+        dc.b    "C5:B:Skip Intro;"
         dc.b    0
         even
 
@@ -169,12 +171,20 @@ _start   ;       A0 = resident loader
 		lea     	(_Tags,pc),a0
 		jsr     	(resload_Control,a2)
 
+		
 		bsr	_detect_controller_types
+
+		move.l	_alt_cd32_controls(pc),d0
+		beq.b	.no_alt
+		lea		third_button_maps_to(pc),a0
+		move.l	#JPF_BTN_GRN,(a0)
+.no_alt
 		
 		IFD	USE_512K_CHIP
 		; check 24 bit mem
 		move.l	_expmem(pc),d0
 		and.l	#$FF000000,d0
+		bra.b	.ok
 		beq.b	.ok
 		pea	wrong_expmem(pc)
 		pea	(TDREASON_FAILMSG).w
@@ -185,6 +195,11 @@ _start   ;       A0 = resident loader
 		lea		_expmem(pc),a0
 		move.l	#$80000,(a0)
 		ENDC
+
+		lea	_ammo_type(pc),a1
+		move.l		_expmem(pc),a0
+		add.l		#$17524,a0		; Weapon Select
+		move.l	a0,(a1)
 		
 		bsr		_Degrade
 		
@@ -209,6 +224,7 @@ _start   ;       A0 = resident loader
 		move.l		0(a0,d7.w),d0		; Offset
 		moveq		#1,d2
 		lea		$58000,a0
+
 		move.l		(_resload,pc),a2
 		jsr		(resload_DiskLoad,a2)	
 
@@ -233,8 +249,6 @@ _start   ;       A0 = resident loader
 		lea		_PL_BOOT(pc),a0		
 		bsr		_Patch
 		
-		move.l		_resload(PC),a0
-		jsr		resload_FlushCache(a0)
 		movem.l		(sp)+,d0-d7/a0-a6
 		
 		bsr		_MemoryConfig
@@ -244,25 +258,18 @@ _start   ;       A0 = resident loader
 _Patch800
 		movem.l		d0-d7/a0-a6,-(sp)
 		lea		_IntroAddr(pc),a1
-		move.l		$86A,(a1)
+		move.l		$86A.W,(a1)
 
 		lea		_PL_800(pc),a0		
 		bsr		_Patch
 
-		move.l		_Custom3(pc),d0			; Skip Blitter Patches
-		bne		.skip
-		move.l	_expmem(pc),a1
-		lea		_PL_800_BLITTER(pc),a0		
-		move.l		_resload(pc),a2
-		jsr		resload_Patch(a2)
-		
-.skip		movem.l		(sp)+,d0-d7/a0-a6
+		movem.l		(sp)+,d0-d7/a0-a6
 				
 		lea		$2714.w,a7
 		move		#$2700,sr
 		move.w		#$1ff,dmacon+$dff000
 
-		bsr		_FlushCache
+		
 		jmp		$840.W
 
 		
@@ -442,9 +449,20 @@ _JsrLoader4
 _Patch:
 		sub.l		a1,a1
 		move.l		_resload(pc),a2
-		jsr		resload_Patch(a2)
-		rts
+		jmp		resload_Patch(a2)
 
+clip_exp_msb
+	and.l	#$0FFFFFFF,d2
+	cmp.l	#$100000,d2
+	bcs.b	.chip
+	move.l	d0,-(a7)
+	move.l	_expmem(pc),d0
+	and.l	#$F0000000,d0
+	or.l	d0,d2
+	move.l	(a7)+,d0
+.chip
+	rts
+	
 ;======================================================================
 ;Patchlists
 ;======================================================================
@@ -455,10 +473,16 @@ _PL_BOOT	PL_START
 		PL_P		$5916A,_Decrunch
 		PL_R		$58962				; remove insert disk 1
 		PL_R		$5880a				; remove disk access
+		
+		; fix issues with 32-bit code when relocating
+		PL_B		$59568+2,$7F		; better MSB clipping
+		PL_B		$59574+2,$7F		; better MSB clipping
+		PL_B		$595d4+2,$7F		; better MSB clipping
 		PL_END
 
 _PL_800
 		PL_START
+		PL_NOP		$0830,6		; remove CACR access
 		PL_P		$12d4,_ReadSectors
 		PL_P		$1840,_Decrunch
 		PL_PS		$868,_JsrIntro
@@ -466,13 +490,15 @@ _PL_800
 		PL_R		$ee0				; remove disk access
 		PL_R		$e7a				; remove disk access
 		;PL_PA		$86a,_IntroAddr
+		
+		; fix issues with 32-bit code when relocating
+		PL_B		$1e14+2,$7F		; better MSB clipping
+		PL_B		$1e80+2,$7F		; better MSB clipping
+		PL_B		$1e20+2,$7F		; better MSB clipping
+
 		PL_END
 
-_PL_800_BLITTER
-		PL_START
-		PL_PS		$12d0,_WaitBlit1
-		PL_PSS		$13a6,_WaitBlitter,6
-		PL_END
+
 		
 _PL_MAIN	PL_START
 		PL_P		$1C566,_ReadSectors
@@ -491,11 +517,19 @@ _PL_MAIN	PL_START
 		
 		PL_PSS		$24c,install_other_interrupts,$60-$4c+4
 
-		PL_IFC1 					; Trainer
+		PL_IFC1X	0 					; Trainer
 		PL_W		$7cba,$6046			; Infinite Lives $98362
+		PL_ENDIF
+		PL_IFC1X	1
 		PL_NOP		$dde,6				; Infinite Fuel 98356
+		PL_ENDIF
 		;PL_NOP		$ac70,400			; Infinite Power f6e36 - sub @ 8AC7E
-		PL_B		$d5f4,$60			; Infinite Hellfire Missiles f7088
+		PL_IFC1X	2
+		PL_B		$d5f4,$60			; Infinite ammo (Hellfire Missiles f7088)
+		PL_ENDIF
+		
+		PL_IFC1
+		; enabled if a trainer option is set (why?)
 		PL_PS		$6cc,_PatchTrainer
 		PL_ENDIF
 		PL_PS		$9888,_CD32_Read1		; *** CD32 Joypad - Main Screen - Abaddon
@@ -506,12 +540,13 @@ _PL_MAIN	PL_START
 		PL_PSS		$98A0,cd32_weapon_switch_off,2
 		PL_ELSE
 		;;PL_PSS		$A9C,_Read2ndButton,2		; 2nd button detect in VBLANK interrupt
+		PL_PSS		$9890,_cd32_fire_current_weapon_test,2		; Converted to use 3 fire buttons - one for each weapon
 		; change weapon with 2nd button or FORWARD
 		PL_PSS		$98a0,cd32_weapon_switch,2
 		PL_B		$98a8,$67
 		PL_ENDIF
 		
-		;PL_PSS		$9890,_CD32_Fire,2
+		PL_PSS		$d80e,_ammo_test,2
 		PL_PS		$e7e8,_CD32_ZeroOutKeys		; *** CD32 Joypad - Map Screen - Abaddon
 		PL_PS		$105ba,_CD32_Read1
 		PL_PSS		$105c4,_CD32_FireMap2,4
@@ -520,6 +555,12 @@ _PL_MAIN	PL_START
 		PL_IFC5
 		PL_NOP		$676,6				; Skip Intro
 		PL_ENDIF
+		
+		; fix issues with 32-bit code when relocating
+		PL_B		$14e46+2,$7F		; better MSB clipping
+		PL_B		$14e52+2,$7F		; better MSB clipping
+		PL_B		$14eb0+2,$7F		; better MSB clipping
+
 		PL_END
 
 		
@@ -615,6 +656,66 @@ _WaitBlitter
 ; added JOTD fixes
 ;======================================================================
 
+copy_data
+	movem.l	d0/d1,-(a7)
+	; try to fix target if wrong expmem
+	move.l	a2,d0
+	cmp.l	#$100000,d0
+	bcs.b	.chip
+	move.l	_expmem(pc),d1
+	and.l	#$FF000000,d1
+	or.l	d1,d0
+	move.l	d0,a2
+	movem.l	(a7)+,d0/d1
+.chip
+LAB_00DE:
+	MOVE.L	(A3)+,(A2)+		;595aa: 24db
+	SUBQ.L	#1,D1			;595ac: 5381
+	BNE.W	LAB_00DE		;595ae: 6600fffa
+	
+_ammo_test
+	; not working with hellfire, launched on button release
+	move.l	d0,-(a7)
+	move.l	a0,-(a7)
+	move.l		_ammo_type(pc),a0
+	cmp.b		#WEAPON_HELLFIRE,(a0)
+	movem.l	(a7)+,a0
+	beq.b	.fired
+	
+	; we're going to check raw joypad, see if any fire is pressed
+
+	move.l	joy1(pc),d0
+	; possible fire buttons
+	btst	#JPB_BTN_RED,d0
+	bne.b	.fired
+	btst	#JPB_BTN_BLU,d0
+	bne.b	.fired
+	btst	#JPB_BTN_GRN,d0
+	bne.b	.fired
+	; no buttons are actually fired
+	; means that fire was pressed to enable strafing
+	; using the rev/fwd
+	move.l	(a7)+,d0
+	bra.b	.no_ammo_no_noise
+	
+.fired
+	move.l	(a7)+,d0
+	; test ammo before firing
+	TST.W	18(A3)			;8d80e: 4a6b0012
+	bgt.b	.set
+
+.no_ammo
+	; no ammo
+	add.l	#$1E-$10,(a7)
+.set
+	rts
+.no_ammo_no_noise
+	addq.l	#4,A7
+	MOVE.L	(A7)+,D0		;8d860: 201f
+	MOVE	#$0004,CCR		;8d862: 44fc0004
+	RTS				;8d866: 4e75
+
+	
 dbf_fix:
 	move.w	#4,d0	; $12C DBF, usually soundtracker
 .bd_loop1
@@ -775,26 +876,10 @@ _Degrade
 		jsr		(resload_SetCACR,a2)
 		rts
 
+	
 ;======================================================================
 ; Second Fire Button Support
 ;======================================================================
-
-	IFEQ	1
-_Read2ndButton_old
-		movem.l		d0/a6,-(sp)
-		lea		_Fire2Pressed(pc),a6
-		move.l		#0,(a6)
-
-		move.w		$dff016,d0
-		btst		#14,D0
-		bne		.exit
-		move.l		#-1,(a6)
-		move.w		#$cc01,$dff034
-.exit
-		movem.l		(sp)+,d0/a6
-		move.w		#$70,$dff000+intreq
-		rts
-	ENDC
 
 _Check2ndButton
 		movem.l		d0/a0/a1,-(sp)
@@ -901,13 +986,36 @@ _CD32_FireJoy0							;
 		movem.l		(sp)+,d0
 		rts
 
-_CD32_Fire
-		movem.l		d0,-(sp)
-		move.l		joy1(pc),d0
-		btst		#JPB_BTN_RED,d0
-		movem.l		(sp)+,d0
+_CD32_Fire:
+		movem.l		d1,-(sp)
+		move.l		joy1(pc),d1
+		btst		#JPB_BTN_RED,d1
+		movem.l		(sp)+,d1
 		rts
 
+; < D1: joystick state (decoded from _joystick)
+; <> D0: game decoded controls
+_handle_strafe
+	move.l	a0,-(a7)
+	move.l		_ammo_type(pc),a0
+	cmp.b		#WEAPON_HELLFIRE,(a0)
+	movem.l	(a7)+,a0
+	beq.b	.no_rev
+	
+	btst	#JPB_BTN_FORWARD,d1
+	beq.b	.no_fwd
+	; left+fire
+	bset	#3,d0
+	bset	#6,d0
+.no_fwd
+	btst	#JPB_BTN_REVERSE,d1
+	beq.b	.no_rev
+	; right+fire
+	bset	#2,d0
+	bset	#6,d0
+.no_rev
+	rts
+	
 _CD32_FireMap2
 		move.b		($bfe001),d2
 		movem.l		d0,-(sp)
@@ -935,11 +1043,8 @@ cd32_weapon_switch_off
 cd32_weapon_switch
 		movem.l		d0,-(sp)
 		move.l		joy1(pc),d0
-		btst		#JPB_BTN_FORWARD,d0
-		bne.b		.pressed
-		; forward not pressed? test for blue
+		; test for blue
 		btst	#JPB_BTN_BLU,d0
-.pressed		
 		movem.l		(sp)+,d0
 		rts
 
@@ -1016,30 +1121,41 @@ WEAPON_CANNON = 0
 WEAPON_HYDRA = 1
 WEAPON_HELLFIRE = 2
 
+_cd32_fire_current_weapon_test
+		movem.l         d1/a0,-(sp)
+		move.l		joy1(pc),d1
+		bsr			_handle_strafe	; affects d0
+		not.l	d1
+		btst		#JPB_BTN_RED,d1	; test fire
+		movem.l         (sp)+,d1/a0
+		rts
+
+
 _cd32_one_weapon_per_button						; Updated the fire buttons
-		movem.l         d0/a0,-(sp)
-		move.l		_expmem(pc),a0
-		add.l		#$17524,a0		; Weapon Select
-		move.l		joy1(pc),d0
-		btst		#JPB_BTN_RED,d0		; Red Button always fires the cannon - regardless of the 
+		movem.l         d1/a0,-(sp)
+		move.l		joy1(pc),d1
+		bsr			_handle_strafe	; affects d0
+
+		move.l		_ammo_type(pc),a0
+		btst		#JPB_BTN_RED,d1		; Red Button always fires the cannon - regardless of the 
 		beq		.checkhydra		; weapon select
 		move.b		#WEAPON_CANNON,(a0)
-		btst		#JPB_BTN_RED,d0
+		btst		#JPB_BTN_RED,d1
 		bra		.exit
 .checkhydra
-		btst		#JPB_BTN_BLU,d0		; Blue Button always fires the hydra - regardless of the 
+		btst		#JPB_BTN_BLU,d1		; Blue Button always fires the hydra - regardless of the 
 		beq		.checkhellfire		; weapon select
 		move.b		#WEAPON_HYDRA,(a0)
-		btst		#JPB_BTN_BLU,d0
+		btst		#JPB_BTN_BLU,d1
 		bra		.exit
 .checkhellfire
-		btst		#JPB_BTN_GRN,d0		; Green Button always fires the hellfire - regardless of the 
+		btst		#JPB_BTN_GRN,d1		; Green Button always fires the hellfire - regardless of the 
 		beq		.exit			; weapon select
 		move.b		#WEAPON_HELLFIRE,(a0)
-		btst		#JPB_BTN_GRN,d0
+		btst		#JPB_BTN_GRN,d1
 
 .exit	
-		movem.l         (sp)+,d0/a0
+		movem.l         (sp)+,d1/a0
 		rts
 		
 		
@@ -1087,6 +1203,8 @@ _Custom1	dc.l    0
 _start_level	dc.l    0
          	dc.l    WHDLTAG_CUSTOM3_GET
 _Custom3	dc.l    0
+         	dc.l    WHDLTAG_CUSTOM4_GET
+_alt_cd32_controls	dc.l    0
          	dc.l    WHDLTAG_CUSTOM5_GET
 _Custom5	dc.l    0
  		dc.l    WHDLTAG_BUTTONWAIT_GET
@@ -1104,7 +1222,9 @@ _wrongver pea     TDREASON_WRONGVER
 _end      move.l  (_resload,pc),-(a7)
           add.l   #resload_Abort,(a7)
           rts
-
+_ammo_type
+	dc.l	0
+	
 wrong_expmem
 	dc.b	"512k chip slave requires 24-bit memory expansion",0
 	

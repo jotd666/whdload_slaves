@@ -59,6 +59,14 @@
  History:
  --------
  
+ Version 3.4 (03.xx.2022) by JOTD:
+ - TODO re-do abaddon blitter fixes
+ - patched for 32-bit fastmem support, using only 512k chipmem (not trivial),
+   no need for 2 slaves now.
+ - support for strafe with joypad reverse / forward (without firing !)
+ - 3rd button launches hellfire in alternate controls mode (issue #0005348)
+ 
+ 
  Version 3.3 (03.april.2022) by JOTD:
  - separate slave which runs on 512k chip / 24-bit expansion
  - fixed support for SPS112 (sound fix broke support in v3.2, issue #0005486)
@@ -98,11 +106,7 @@
   
  Version 2.3 (21.jan.2013) by Keith Krellwitz/Abaddon:
  - Custom4=1 - Enable CD32 joypad support
- 	Red 			- Fire
-	Yellow 			- Bring Up Map Screen/Exit Map screen
- 	Play 			- Pause 
- 	Play+Forward+Reverse 	- Quit
- 	Green+Forward+Reverse 	- Abort Game
+ 
   
  Version 2.2 (07.july.2007) by JOTD:
  - no need for NOVBRMOVE anymore
@@ -129,6 +133,20 @@
  
  10 GUYS AND INFINITE AMMO-"BQQQAEZ"
 
+ Joypad controls
+ 
+  	Red 			- Fire
+	Yellow 			- Bring Up Map Screen/Exit Map screen
+ 	Play 			- Pause 
+	Forward         - Strafe right
+	Reverse         - Strafe left
+ 	Play+Forward+Reverse 	- Quit
+ 	Green+Forward+Reverse 	- Abort Game
+
+ Note that strafe with reverse/forward doesn't work with hellfire. It's because
+ of the special way that the game launches hellfire: when button is released.
+ 
+ 
  Todo:
  
  - add support to automatic password entry in other version
