@@ -164,11 +164,11 @@ _joystick:
 	moveq	#1,d0
 	bsr	_read_joystick
 
-		movem.l	a0,-(a7)	; put input 1 output in joy1
-		lea	joy1(pc),a0
-		move.l	d0,(a0)		
-	
-		movem.l	(a7)+,a0
+	movem.l	a0,-(a7)	; put input 1 output in joy1
+	lea	joy1(pc),a0
+	move.l	d0,(a0)		
+
+	movem.l	(a7)+,a0
 
 	rts	
 

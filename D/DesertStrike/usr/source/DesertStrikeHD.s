@@ -92,12 +92,14 @@
 		DOSCMD	"WDate  >T:date"
 		ENDC
 
-	IFD	USE_512K_CHIP
-CHIPMEMSIZE = $80000
-EXPMEMSIZE = $80000
-	ELSE
+;CHIP_ONLY
+
+	IFD	CHIP_ONLY
 CHIPMEMSIZE = $100000
 EXPMEMSIZE = $0
+	ELSE
+CHIPMEMSIZE = $80000
+EXPMEMSIZE = $80000
 	ENDC
 ;======================================================================
 
@@ -124,7 +126,7 @@ _expmem         dc.l    EXPMEMSIZE         	;ws_ExpMem
 ;======================================================================
 
 DECL_VERSION:MACRO
-	dc.b	"3.3"
+	dc.b	"4.0"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -135,8 +137,8 @@ DECL_VERSION:MACRO
 	ENDC
 	ENDM
 _name           dc.b    "Desert Strike - Return to the Gulf"
-		IFD	USE_512K_CHIP
-		dc.b	" (512C)"
+		IFD	CHIP_ONLY
+		dc.b	" (debug/chip mode)"
 		ENDC
 				dc.b	0
 _copy           dc.b    "1993 Electronic Arts",0
@@ -171,6 +173,10 @@ _start   ;       A0 = resident loader
 		lea     	(_Tags,pc),a0
 		jsr     	(resload_Control,a2)
 
+	;enable cache
+		move.l	#WCPUF_Base_NC|WCPUF_Exp_CB|WCPUF_Slave_CB|WCPUF_IC|WCPUF_DC|WCPUF_BC|WCPUF_SS|WCPUF_SB,d0
+		move.l	#WCPUF_All,d1
+		jsr	(resload_SetCPU,a2)
 		
 		bsr	_detect_controller_types
 
@@ -180,18 +186,7 @@ _start   ;       A0 = resident loader
 		move.l	#JPF_BTN_GRN,(a0)
 .no_alt
 		
-		IFD	USE_512K_CHIP
-		; check 24 bit mem
-		move.l	_expmem(pc),d0
-		and.l	#$FF000000,d0
-		bra.b	.ok
-		beq.b	.ok
-		pea	wrong_expmem(pc)
-		pea	(TDREASON_FAILMSG).w
-		move.l	_resload(pc),a0
-		jmp	resload_Abort(a0)
-.ok
-		ELSE
+		IFD	CHIP_ONLY
 		lea		_expmem(pc),a0
 		move.l	#$80000,(a0)
 		ENDC
@@ -201,7 +196,6 @@ _start   ;       A0 = resident loader
 		add.l		#$17524,a0		; Weapon Select
 		move.l	a0,(a1)
 		
-		bsr		_Degrade
 		
 		move.l		#$10400,d3		; load datatable
 		movea.l		d3,a0
@@ -263,6 +257,10 @@ _Patch800
 		lea		_PL_800(pc),a0		
 		bsr		_Patch
 
+		move.l	_expmem(pc),a1
+		lea		_PL_800_BLITTER(pc),a0		
+		move.l		_resload(pc),a2
+		jsr		resload_Patch(a2)
 		movem.l		(sp)+,d0-d7/a0-a6
 				
 		lea		$2714.w,a7
@@ -277,7 +275,7 @@ _JsrIntro
 		bsr		_FlushCache
 		move.l		_Custom5(pc),d0			; Skip Intro
 		bne		.skip
-		move.l		_IntroAddr(pc),-(sp)
+		move.l		_IntroAddr(pc),-(sp)	; expmem+2
 .skip		
 		rts
 
@@ -443,7 +441,7 @@ _JsrLoader4
 
 		movem.l		(sp)+,d0-d7/a0-a6
 		bsr		_FlushCache
-		movea.l 	$3286,a0
+		movea.l 	$3286.W,a0
 		rts
 
 _Patch:
@@ -451,17 +449,7 @@ _Patch:
 		move.l		_resload(pc),a2
 		jmp		resload_Patch(a2)
 
-clip_exp_msb
-	and.l	#$0FFFFFFF,d2
-	cmp.l	#$100000,d2
-	bcs.b	.chip
-	move.l	d0,-(a7)
-	move.l	_expmem(pc),d0
-	and.l	#$F0000000,d0
-	or.l	d0,d2
-	move.l	(a7)+,d0
-.chip
-	rts
+
 	
 ;======================================================================
 ;Patchlists
@@ -498,7 +486,14 @@ _PL_800
 
 		PL_END
 
-
+_PL_800_BLITTER
+		PL_START
+		PL_IFC3
+		PL_ELSE
+		PL_PS		$12d0,_WaitBlit1
+		PL_PSS		$13a6,_WaitBlitter,6
+		PL_ENDIF
+		PL_END
 		
 _PL_MAIN	PL_START
 		PL_P		$1C566,_ReadSectors
@@ -561,9 +556,33 @@ _PL_MAIN	PL_START
 		PL_B		$14e52+2,$7F		; better MSB clipping
 		PL_B		$14eb0+2,$7F		; better MSB clipping
 
+		; blitter
+		PL_PSS	$5c14,blit1,2
+		PL_PSS	$5298,blit2,2
+		PL_P	$537a,blit3
 		PL_END
 
-		
+blit1		
+	CMPI.W	#$ffff,D3		;85c14: 0c43ffff
+	BEQ.b	.out		;85c18: 6700e1d2
+	rts
+.out
+	addq.l	#4,a7
+	bra		_WaitBlitter
+
+blit2
+	CMPI.B	#$04,D4			;8: 0c040004
+	BCS.b	.out		;8529c: 6500eb4e
+	rts
+.out
+	addq.l	#4,a7
+	bra		_WaitBlitter
+
+blit3
+	MOVE.L	#$ffffffff,(A1)	;8537a: 237cffffffff0000
+	bra		_WaitBlitter
+
+	
 _PL_JSR3_1	PL_START
 		PL_P		$3af4,_ReadSectors
 		PL_P		$4060,_Decrunch			; decrunch
@@ -648,30 +667,12 @@ _PL_JSR4_1_BLITTER
 	
 _WaitBlit1
 		move.w		d7,$dff058
-		bra		_WaitBlitter
 _WaitBlitter
 		BLITWAIT	
 		rts
 ;======================================================================
 ; added JOTD fixes
 ;======================================================================
-
-copy_data
-	movem.l	d0/d1,-(a7)
-	; try to fix target if wrong expmem
-	move.l	a2,d0
-	cmp.l	#$100000,d0
-	bcs.b	.chip
-	move.l	_expmem(pc),d1
-	and.l	#$FF000000,d1
-	or.l	d1,d0
-	move.l	d0,a2
-	movem.l	(a7)+,d0/d1
-.chip
-LAB_00DE:
-	MOVE.L	(A3)+,(A2)+		;595aa: 24db
-	SUBQ.L	#1,D1			;595ac: 5381
-	BNE.W	LAB_00DE		;595ae: 6600fffa
 	
 _ammo_test
 	; not working with hellfire, launched on button release
@@ -862,20 +863,6 @@ _MemoryConfig
 		move.w		#$300,(a1)+
 		clr.l		(a1)+
 		rts
-
-;======================================================================
-; Cache Degrader
-;======================================================================
-
-_Degrade
-		moveq.l		#0,D0
-		move.l		#CACRF_CopyBack,D1;
-		and.l		#CACRF_EnableI|CACRF_EnableD,d0	;mask bits allowed in whdload
-		and.l		#CACRF_EnableI|CACRF_EnableD,d1	;mask bits allowed in whdload
-		move.l		_resload(PC),a2
-		jsr		(resload_SetCACR,a2)
-		rts
-
 	
 ;======================================================================
 ; Second Fire Button Support
@@ -1224,9 +1211,6 @@ _end      move.l  (_resload,pc),-(a7)
           rts
 _ammo_type
 	dc.l	0
-	
-wrong_expmem
-	dc.b	"512k chip slave requires 24-bit memory expansion",0
 	
 ;======================================================================
 
