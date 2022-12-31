@@ -41,12 +41,23 @@
 
 History:
 
+TODO:
+V2.0
+- fr: saveslot check @1abd2
+- fr blitter issue
+- fr buttonwait
+same for en/de (diff asm bcomp)
+
+V2.2
+adapt
+
  version 2.0 (29.12.2022) done by JOTD:
  - dropped disk images for real files (reinstall needed from "disk.1" file),
    also fixes the "savegame corrupt bug" when using diskimages which is
    a nice bonus (I didn't remember that this bug existed)
  - selectable save slots (rename DMGAME.DAT in DMGAME_0.DAT from
    your existing "disk.2" image.
+ - added BUTTONWAIT to see the title
 
  
  version 1.3 (20.05.2020) done by JOTD:

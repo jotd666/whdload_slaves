@@ -1,30 +1,34 @@
 ;*---------------------------------------------------------------------------
-;  :Modul.	kick13.asm
-;  :Contents.	kickstart 1.3 booter
-;  :Author.	Wepl
-;  :Original.
-;  :Version.	$Id: kick13.asm 1.2 2001/09/20 19:46:12 wepl Exp wepl $
-;  :History.	19.10.99 started
-;		20.09.01 ready for JOTD ;)
+;  :Program.	ChaosStrikesBackHD.asm
+;  :Contents.	Slave for "Chaos Strikes Back"
+;  :Author.	Harry
+;  :History.	20.03.2017
 ;  :Requires.	-
 ;  :Copyright.	Public Domain
 ;  :Language.	68000 Assembler
-;  :Translator.	Barfly V2.9
-;  :To Do.
+;  :Translator.	Barfly V1.131
+;  :To Do.	adapt CSB 3.5
 ;---------------------------------------------------------------------------*
 
-	INCDIR	Include:
-	INCDIR	osemu:
+
+
+
+		INCDIR	"ASM-ONE:include3.0/"
+	INCLUDE	own/whdload.i
+	INCLUDE	own/whdmacros.i
 	INCLUDE	dos/dos.i
-	INCLUDE	lvo/dos.i
-	INCLUDE	lvo/exec.i
-	INCLUDE	whdload.i
-	INCLUDE	whdmacros.i
+	INCLUDE	dos/dosextens.i
+	INCLUDE lvo/graphics.i
+	INCLUDE exec/exec.i
+	INCLUDE lvo/exec.i
+	INCLUDE lvo/dos.i
+	INCLUDE lvo/expansion.i
+	INCLUDE graphics/displayinfo.i
 
 	IFD BARFLY
-	OUTPUT	"ChaosStrikesBack.Slave"
-	BOPT	O-				;enable optimizing
-	BOPT	OG-				;enable optimizing
+;	OUTPUT	"ChaosStrikesBack.Slave"
+;	BOPT	O-				;enable optimizing
+;	BOPT	OG-				;enable optimizing
 	BOPT	ODd-				;disable mul optimizing
 	BOPT	ODe-				;disable mul optimizing
 	BOPT	w4-				;disable 64k warnings
@@ -34,8 +38,8 @@
 
 ;============================================================================
 
-CHIPMEMSIZE	= $FF000
-FASTMEMSIZE	= $80000
+CHIPMEMSIZE	= $100000
+FASTMEMSIZE	= $0000
 NUMDRIVES	= 2
 WPDRIVES	= %0010	; disk 2 is save game
 
@@ -59,20 +63,21 @@ slv_keyexit	= $5D	; num '*'
 
 ;============================================================================
 
-	IFND	.passchk
-	DOSCMD	"WDate  >T:date"
-.passchk
-	ENDC
+;	IFND	.passchk
+;	DOSCMD	"WDate  >T:date"
+;.passchk
+;	ENDC
 
-DECL_VERSION:MACRO
-	dc.b	"1.1"
-	IFD BARFLY
-		dc.b	" "
-		INCBIN	"T:date"
-	ENDC
-	ENDM
+;DECL_VERSION:MACRO
+;	dc.b	"1.1"
+;	IFD BARFLY
+;		dc.b	" "
+;		INCBIN	"T:date"
+;	ENDC
+;	ENDM
 
-slv_CurrentDir		dc.b	"data",0
+;slv_CurrentDir		dc.b	"data",0
+slv_CurrentDir		dc.b	0
 slv_name		dc.b	"Chaos Strikes Back",0
 slv_copy		dc.b	"1989-1990 FTL/Software Heaven",0
 slv_info		dc.b	"adapted & fixed by Harry/JOTD",10,10
@@ -80,13 +85,13 @@ slv_info		dc.b	"adapted & fixed by Harry/JOTD",10,10
 		dc.b	"which is the current savegame disk",10
 		dc.b	"default: x=3",10,10
 		dc.b	"Set CUSTOM2=1 to start on utility disk",10,10
-		dc.b	"Version "
-		DECL_VERSION
+		dc.b	"Version 1.21 (2019-10-04)"
+;		DECL_VERSION
 		dc.b	0
 
 
 	dc.b	"$","VER: slave "
-	DECL_VERSION
+	dc.b	"1.21 (2019-10-04)"
 	dc.b	$A,$D,0
 
 	EVEN
@@ -136,12 +141,35 @@ _cb_dosLoadSeg
 		lsl.l	#2,d0
 		move.l	d0,a0
 
-		cmp.l	#'BJEL',1(A0)	; BJELoad_R BSTR
+		cmp.b	#'V',1(a0)
+		bne.s	.nextprog
+		cmp.b	#'e',2(a0)
+		bne.s	.nextprog
+		cmp.b	#'r',3(a0)
+		bne.s	.nextprog
+		cmp.b	#'s',4(a0)
+		bne.s	.nextprog
+		move.w	#$4ef9,$c0.w
+		pea	_chkkaosver(pc)
+		move.l	(a7)+,$c2.w
+		move.l	d1,a0
+		move.l	#$4ef800c0,(a0)
+		rts
+
+.nextprog
+		;cmp.l	#'BJEL',1(A0)	; BJELoad_R BSTR
+		cmp.b	#'B',1(a0)
+		bne.s	.skip
+		cmp.b	#'J',2(a0)
+		bne.s	.skip
+		cmp.b	#'E',3(a0)
+		bne.s	.skip
+		cmp.b	#'L',4(a0)
 		bne.b	.skip
 
 		move.l	d1,A3
+		move.l	a3,$d4.w	;for debugging
 		bsr	_patch_bjeload
-		bsr	_patch_kb
 		rts
 .skip
 		; skip program
@@ -150,8 +178,70 @@ _cb_dosLoadSeg
 		move.l	#$70004E75,(A0)
 		rts
 
+_chkkaosver
+	move.b	_trd_disk(pc),d0
+	cmp.b	#1,d0
+	bne.w	.skverdetect
+
+;load first $1000 bytes of "KAOS" for version detection
+
+	movem.l	D1-a6,-(A7)
+;	lea	_dosbase(pc),a3
+	lea	_dosname(pc),a1
+	moveq	#0,D0
+	move.l	$4.W,a6
+	jsr	_LVOOpenLibrary(a6)
+	move.l	d0,a6
+;	move.l	d0,(a3)
+
+	lea.l	_kaosname(pc),a0
+	move.l	a0,d1
+	move.l	#MODE_OLDFILE,d2
+	jsr	(_LVOOpen,a6)
+	move.l	d0,d7
+	beq.w	_wrongver
+
+	move.l	d7,d1
+	move.l	#$50000,d2
+	move.l	#$1000,d3
+	jsr	_LVORead(a6)
+
+	move.l	d7,d1
+	jsr	_LVOClose(a6)
+		
+	move.l	#$1000,d0
+	move.l	#$50000,a0
+	move.l	_resload(pc),a2
+	jsr	(resload_CRC16,a2)
+	movem.l	(a7)+,d1-a6
+
+;	illegal
+
+	cmp.w	#$6527,d0	;crc 3.5
+	beq.s	.ver35
+
+	cmp.w	#$a2d4,d0	;crc 3.1 tri-language
+	bne.w	_wrongver
+
+	moveq	#1,d0
+	bra.s	.allver
+
+.ver35	moveq	#2,d0
+
+.allver
+	lea	_kaosver(pc),a0
+	move.b	d0,(a0)
+
+.skverdetect
+	moveq	#0,d0
+	rts
+
+_wrongver
+		PEA	TDREASON_WRONGVER
+		bra.s	_exitwhd
 _quit
 		PEA	TDREASON_OK
+_exitwhd
 		MOVE.L	_resload(PC),-(A7)
 		add.l	#resload_Abort,(a7)
 		rts
@@ -176,6 +266,7 @@ _patch_bjeload:
 	rts
 
 .v1
+
 	; install JOTD callback
 
 	pea	_patch_1(pc)
@@ -187,16 +278,24 @@ _patch_bjeload:
 	lea	_pl_main_patch(pc),a0
 	move.l	_resload(pc),a2
 	jsr	resload_Patch(a2)
+;.1	btst	#7,$bfe001
+;	bne.s	.1
 
 	move.b	_trd_disk(pc),d0
 	cmp.b	#1,d0
-	bne.b	.out		; don't patch utility disk
+	bne.w	.out		; don't patch utility disk
 
 	move.l	a3,a1
 	lea	_pl_main_protect(pc),a0
 	move.l	_resload(pc),a2
 	jsr	resload_Patch(a2)
 
+	move.l	d0,-(a7)
+	move.b	_kaosver(pc),d0
+	cmp.b	#1,d0
+	bne.s	.out2
+
+;3.1 tri-language
 	; install harry original 1st segment
 
 	lea	_harry_patch(pc),a2
@@ -212,6 +311,7 @@ _patch_bjeload:
 	pea	_jsr_and_flush(pc)
 	move.l	(a7)+,$218(a2)
 
+.out2	move.l	(a7)+,d0
 .out
 	MOVEM.L	(A7)+,A0-A2
 	RTS
@@ -231,6 +331,15 @@ _pl_main_protect:
 	; Harry crack routines
 
 	PL_START
+;	PL_W	$390,$4e71
+	PL_W	$692,$4e71
+	PL_W	$694,$4e71
+	PL_W	$6a2,$4e71
+	PL_W	$6a4,$4e71
+	PL_W	$746,$4e71
+	PL_W	$748,$4e71
+	PL_W	$840,$4e71
+	PL_W	$842,$4e71
 	PL_W	$434-$28,$302d
 	PL_W	$438-$28,$6006
 	PL_W	$6d0-$28,$302d
@@ -269,7 +378,102 @@ _patch_1:
 	move.l	D0,-(A7)
 	move.l	_last_opened_file(pc),d0
 	cmp.l	#'KAOS',D0
-	bne.b	.nomain
+	bne.w	.nomain
+
+	move.l	a0,$d0.w	;store kaos pointer for debugging
+	move.b	_kaosver(pc),d0
+	cmp.b	#2,d0
+	bne.w	.test2
+				;patch here 3.5
+
+;.1	btst	#7,$bfe001
+;	bne.s	.1
+
+;	move.l	#$4a548-$350f0,d0
+;	move.l	#$4e714e71,0(a0,d0.l)
+
+	move.l	#$383a2-$350f0,d0	;guru
+;	move.b	#$60,0(a0,d0.l)
+	move.w	#$4afc,2(a0,d0.l)
+
+	move.l	#$3ab4e-$350f0,d0	;int diskrout?
+	move.w	#$6032,0(a0,d0.l)
+	move.l	#$4eb800e0,$88-$4e(a0,d0.l)
+	move.w	#$6016,$8c-$4e(a0,d0.l)
+	move.l	#$3abdc-$350f0,d0	;end?
+;	move.w	#$602a,0(a0,d0.l)
+	move.w	#$600a,0(a0,d0.l)
+	move.w	#$6016,$14(a0,d0.l)
+
+	move.l	#$49872-$350f0,d0	;end int rout
+	move.w	#$4e75,0(a0,d0.l)
+
+	move.l	#$39afa-$350f0,d0	;start int drive
+	move.w	#$6050,0(a0,d0.l)
+;	move.w	#$4eb9,0(a0,d0.l)
+;	pea	_patch_ts3(pc)
+;	move.l	(a7)+,2(a0,d0.l)
+;	move.w	#$604a,6(a0,d0.l)
+
+	move.l	#$4783a-$350f0,d0	;int start dma
+	move.l	#$70006026,0(a0,d0.l)
+	move.l	#$4eb800e0,-6(a0,d0.l)
+	move.w	#$4e71,-2(a0,d0.l)
+	move.w	#$4ef9,$e0.w
+	pea	_patch_ts2(pc)
+	move.l	(a7)+,$e2.w
+
+	move.l	#$3aae8-$350f0,d0	;start int trackcheck
+	move.w	#$6030,0(a0,d0.l)
+
+	move.l	#$4e44e-$350f0,d0	;trackcheck
+	move.b	#$60,0(a0,d0.l)
+
+	move.l	#$3c682-$350f0,d0	;trackcheck
+	move.l	#$600000ac,0(a0,d0.l)
+
+	move.l	#$3b6a8-$350f0,d0	;trackcheck
+	move.w	#$7e0a,0(a0,d0.l)
+	move.l	#$6000018e,2(a0,d0.l)
+
+	move.l	#$553fe-$350f0,d0	;trackcheck
+	move.w	#$4eb9,0(a0,d0.l)
+	pea	_patch_ts1(pc)
+	move.l	(a7)+,2(a0,d0.l)
+;	move.l	#$3d7c0088,0(a0,d0.l)
+	move.w	#$6066,6(a0,d0.l)
+
+	move.l	#$44610-$350f0,d0	;trackcheck
+	move.w	#$6038,0(a0,d0.l)
+;	move.w	#$6024,0(a0,d0.l)
+
+	move.l	#$5a074-$350f0,d0	;trackcheck
+	move.l	#$7c014e71,0(a0,d0.l)
+
+	move.l	#$52596-$350f0,d0	;chksum $443f
+	move.l	#$303c443f,0(a0,d0.l)	;move.w #$,d0
+	move.l	#$55842-$350f0,d0	;chksum $5711
+	move.l	#$303c5711,0(a0,d0.l)
+	move.l	#$55e04-$350f0,d0	;chksum $843f
+	move.l	#$303c843f,0(a0,d0.l)
+	move.l	#$5aca0-$350f0,d0	;chksum $843f
+	move.l	#$303c843f,0(a0,d0.l)
+
+	move.l	#$5cff2-$350f0,d0
+	move.w	#$4afc,0(a0,d0.l)	;reboot
+
+	move.l #$53946-$39898,d0	;write jmp to hidden rout. 1
+	move.l #$4eb800c6,0(a0,d0.l)
+	move.w #$4ef9,$c6.w
+	pea.l	_patch_makejmp(pc)
+	move.l	(a7)+,$c8.w
+
+
+	bra.s	.nomain
+
+.test2
+	cmp.b	#1,d0
+	bne.s	.nomain
 
 	bsr	_patch_kaos
 .nomain
@@ -281,6 +485,148 @@ _patch_1:
 	jmp	(A0)
 .return
 	dc.l	0
+
+_patch_makejmp
+	move.l	(a7),$c(a7)
+	lea.l	$c(a7),a7	;orig instr.
+;now hang into the calling routine (a3)
+
+	cmp.l	#$41fa003a,(a3)
+	bne.s	.skip
+	cmp.l	#$4258227a,4(a3)
+	bne.s	.skip
+	cmp.l	#$002222d8,8(a3)
+	bne.s	.skip
+	cmp.l	#$3290207a,$c(a3)
+	bne.s	.skip
+	cmp.l	#$001e3f3a,$10(a3)
+	bne.s	.skip
+	cmp.l	#$4e904fef,$22(a3)
+	bne.s	.skip
+
+	move.l	a0,-(a7)
+	move.w	#$4e71,$22(a3)
+	move.l	#$4eb800fa,$24(a3)
+
+	move.w	#$4ef9,$fa.w
+	pea.l	_patch_gfxdat(pc)
+	move.l	(a7)+,$fc.w
+
+	move.l	(a7)+,a0
+	rts
+.skip	illegal
+	rts
+
+_patch_gfxdat
+;orig. instr.
+;	JSR	(A0)
+;	LEA	$a(a7),A7
+	movem.l	a1/a2,-(a7)
+	lea.l	.jmpback(pc),a2
+	move.l	8(a7),a1
+	move.l	2(a1),(a2)
+;check for right subroutine
+	cmp.l	#$4e560000,(a0)
+	bne.s	.skip
+	cmp.l	#$48e71f18,4(a0)
+	bne.s	.skip
+	cmp.l	#$286e0008,8(a0)
+	bne.s	.skip
+	cmp.l	#$206e000c,$c(a0)
+	bne.s	.skip
+	cmp.l	#$0c470463,$48(a0)
+	bne.s	.skip
+
+	move.l	#$4eb800f4,$1a(a0)
+	move.w	#$4ef9,$f4.w
+	pea.l	_patch_gfxdatgetd3(pc)
+	move.l	(a7)+,$f6.w
+	move.w	#$58,$20(a0)
+
+;.skip
+	movem.l	(a7)+,a1/a2
+.skip2	lea	4(a7),a7
+	jsr	(A0)	;orig
+	lea	$a(a7),a7
+	dc.w	$4ef9
+.jmpback
+	dc.l	$0
+	rts
+
+.skip	movem.l	(a7)+,a1/a2
+	cmp.l	#$4e560000,(a0)
+	bne.s	.skip2
+	cmp.l	#$48e71f3e,4(a0)
+	bne.s	.skip2
+	cmp.l	#$2a6e000c,8(a0)
+	bne.s	.skip2
+	cmp.l	#$08ed0000,$c(a0)
+	bne.s	.skip2
+	cmp.l	#$000c66f8,$10(a0)
+	bne.s	.skip2
+	move.w	#$6054,4(a0)
+;.1	move.w	#$f00,$dff180
+;	btst	#7,$bfe001
+;	bne.s	.1
+;	illegal
+	bra.s	.skip2
+
+_patch_gfxdatgetd3
+	move.l	a0,-(a7)
+	lea	_tabled3(pc),a0
+	move.b	-1(a0),d6
+	move.b	0(a0,d6.w),d3	
+
+	addq.b	#$1,d6
+	cmp.b	#$c,d6
+	bne.s	.1
+	moveq	#0,d6
+.1	move.b	d6,-1(a0)
+	move.l	(a7)+,a0
+	rts
+	even
+_byterandomd3
+	dc.b	$00
+_tabled3
+	dc.b	$C8,$CA,$CB,$C6
+	dc.b	$C9,$CC,$CF,$CD
+	dc.b	$CE,$D2,$D0,$D1
+
+	even	
+
+_patch_ts1
+	move.w	$dff00a,d4
+	and.w	#$ff,d4
+	add.w	#$88,d4
+	move.w	d4,-2(a6)
+	rts
+
+_patch_ts2
+	moveq	#4,d0
+	move.w	d0,-$3604(a5)
+
+	MOVE.L	-$1ef6(a5),A0
+	MOVE.W	#$4F6,D0
+.1	MOVE.W	#$1440,0(A0,D0.W)
+	ADDQ.W	#2,D0
+	CMP.W	#$8C8,D0
+	BNE.S	.1
+	ADDQ.W	#2,D0
+	MOVE.W	#$1014,0(A0,D0.W)
+	ADDQ.W	#2,D0
+	MOVE.W	#$1004,0(A0,D0.W)
+
+	move.w	#$2000,$dff09c
+	move.w	#$a000,$dff09a
+;	CLR.B	-$357C(A5)
+;	MOVEQ	#1,D0
+	RTS
+
+
+
+_patch_ts3
+	move.l	8(a6),$cc.w
+	rts
 
 _patch_dos
 	move.l	_dosbase(pc),-(a7)
@@ -606,25 +952,6 @@ _harry_patch:
 	incbin	"harrypatch.bin"
 
 
-_patch_kb
-	lea	.ackkb(pc),A0
-	lea	.oldkb(pc),A1
-	move.l	$68.W,(A1)
-	move.l	A0,$68.W
-	rts
-
-.ackkb:
-	bset	#6,$BFEE01
-	movem.l	D0,-(A7)
-	moveq.l	#2,D0
-	bsr	_beamdelay
-	bclr	#6,$BFEE01
-	movem.l	(A7)+,D0
-	move.l	.oldkb(pc),-(A7)
-	rts
-
-.oldkb:
-	dc.l	0
 
 ; < D0: numbers of vertical positions to wait
 _beamdelay
@@ -652,5 +979,9 @@ _custom2	dc.l	0
 
 _dosname
 	dc.b	"dos.library",0
+_kaosname
+	dc.b	"KAOS.FTL",0
+_kaosver
+	dc.b	0
 	END
 
