@@ -41,25 +41,16 @@
 
 History:
 
-TODO:
-V2.0
-- blitter issue when printing characters names top left
-- buttonwait v2.x
-- fr v20 OK
-- uk v20 OK
-- de v22 crash at start / lockup even with meynaf crack
-- uk v22 OK mouse pointer visible
-- v36 resume saveslot name not set in french/german (to re-test)
-
-
- version 2.0 (29.12.2022) done by JOTD:
+ version 2.0 (01.01.2023) done by JOTD:
+ - supports 5 versions (fixes issue #0005944)
  - dropped disk images for real files (reinstall needed from "disk.1" file),
    also fixes the "savegame corrupt bug" when using diskimages which is
    a nice bonus (I didn't remember that this bug existed)
- - selectable save slots (rename DMGAME.DAT in DMGAME_0.DAT from
-   your existing "disk.2" image.
+ - fixed graphical issue when printing characters names top left
+   on fast machines
+ - optional selectable save slots (rename DMGAME.DAT in DMGAME_x.DAT (x=0-9)
+   from your existing "disk.2" image to use an old savegame.
  - added BUTTONWAIT to see the title
-
  
  version 1.3 (20.05.2020) done by JOTD:
  - added trainer: no damage for the party (issue #0004682)
@@ -85,8 +76,24 @@ V2.0
 
 Notes:
 
-- Only re-release is supported right now (FTL/Psygnosis, V3.6, 1992)
-  V1.0 and V2.x are not supported right now, but that could change as
-  the first step was to get more control on the game loader, which is now
-  done with the conversion from diskimage to files.
 - Trainer gives infinite stamina, but is not perfect. Other player stats may be lowered.
+
+- Previous slave versions only supported V3.6 (unprotected, multilanguage) and with
+  diskimages. For completeness sake, now all versions are supported. A big help came
+  from http://dmweb.free.fr/ and specially Meynaf crack of french version 2.0 which I
+  enhanced and adapted for whdload (some checksums needed to be removed 
+  for full HD operation).
+
+- When a saveslot is selected, it's active until whdload quits.
+
+- on V3.6 game used to separate saves according to language, but it
+  seems useless. Saved slot in french mode seems to work with english language.
+  
+- Supported versions exhaustive list:
+  * V2.0 french
+  * V2.0 english
+  * V2.2 english
+  * V2.2 german
+  * V3.6 multilanguage (FTL/Psygnosis)
+  
+  If you have an unsupported version please submit a report.

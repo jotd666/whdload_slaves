@@ -14,6 +14,8 @@
 	INCLUDE	whdload.i
 	INCLUDE	whdmacros.i
 	INCLUDE	lvo/dos.i
+	INCLUDE	lvo/intuition.i
+	INCLUDE	intuition/intuitionbase.i
 
 	IFD BARFLY
 	OUTPUT	"DungeonMaster.slave"
@@ -69,7 +71,7 @@ STACKSIZE = 4000
 ; data files must have "devs" in them. Official installation
 ; omits it so it boots with a black screen but shifts the
 ; disassemblies I made
-CHIP_ONLY
+;CHIP_ONLY
 ; amount of memory available for the system
 	IFD	CHIP_ONLY
 CHIPMEMSIZE	= $120000
@@ -139,7 +141,11 @@ _dmsave_assign:
 slv_config:
 	dc.b	"BW;"
     dc.b    "C1:X:trainer no damage:0;"
-    dc.b    "C5:L:save slot:0,1,2,3,4,5,6,7,8,9:0;"
+    dc.b    "C5:L:save slot:disabled,"
+	REPT	9
+	dc.b	"slot ",REPTN+'0',','
+	ENDR
+	dc.b	"slot 9;"
 	dc.b	0
 
 _procname_v3:
@@ -157,13 +163,13 @@ _args_end:
 	dc.b	0
 	even
 
-;               startup name          exec patchlist       savename  fill
+;               startup name          exec patchlist       savename  buttonwait
 _patch_table
 	dc.w	_program_v36-_patch_table,pl_bjeload-_patch_table,-9084,0	; v36
-	dc.w	_program_v2-_patch_table,pl_exec_v22-_patch_table,-7858,0	; v22 (uk)
-	dc.w	_program_v2-_patch_table,pl_exec_6036-_patch_table,-7810,0	; v20 (fr)
-	dc.w	_program_v2-_patch_table,pl_exec_6036-_patch_table,-7902,0	; v20 (uk)
-	dc.w	_program_v2-_patch_table,pl_exec_6036-_patch_table,-7810,0	; v22 (de, same as fr)
+	dc.w	_program_v2-_patch_table,pl_exec_v22-_patch_table,-7858,-31482	; v22 (uk)
+	dc.w	_program_v2-_patch_table,pl_exec_6036-_patch_table,-7810,-31482	; v20 (fr)
+	dc.w	_program_v2-_patch_table,pl_exec_6036-_patch_table,-7902,-31482	; v20 (uk)
+	dc.w	_program_v2-_patch_table,pl_exec_6036-_patch_table,-7810,-31482	; v22
 	
 VERSION_36 = 0
 VERSION_22_uk = 1
@@ -171,6 +177,24 @@ VERSION_20_fr = 2
 VERSION_20_uk = 3
 VERSION_22_de = 4
 
+
+PATCH_XXXLIB_OFFSET:MACRO
+	movem.l	d0-d1/a0-a1,-(a7)
+	move.l	A6,A1
+	add.l	#_LVO\1,A1
+	lea	old_\1(pc),a0
+	move.l	2(A1),(A0)
+	move.w	#$4EF9,(A1)+	
+	pea	new_\1(pc)
+	move.l	(A7)+,(A1)+
+	bra.b	end_patch_\1
+old_\1:
+	dc.l	0
+end_patch_\1:
+	movem.l	(a7)+,d0-d1/a0-a1
+    ENDM
+	
+	
 ;============================================================================
 
 	;initialize kickstart and environment
@@ -196,8 +220,33 @@ _bootdos
 		; set slot selected by CUSTOM5
 		lea	_savegame_char(pc),a0
 		move.l	_savegame_slot(pc),d0
-		add.b	#'0',d0
+		add.b	#'0'-1,d0
 		move.b	d0,(a0)
+
+		lea		_gfxname(pc),a1
+		move.l	$4.w,a6
+		jsr	(_LVOOldOpenLibrary,a6)
+		move.l	d0,a6
+
+		; wait after graphics.library calls, else
+		; some graphics can be trashed. RectFill is
+		; probably the culprit (top left character name
+		; sometimes trashed on fast machines).
+		;
+		; this is very common mistake in games, seen
+		; multiple times. All hardware banging calls are
+		; done properly (calling WaitBlit each time it's needed)
+		; but most devs at the time ignored/forgot that even if
+		; the OS handles the blitter, you're still responsible
+		; for it not being active when you call the functions
+		; (which is a design flaw retrospectively, but also maybe
+		; in order to maximize performance)
+		;
+		; or it's a mixup between syscalls & hardware banging
+		; which is responsible. Nevermind, this is now fixed.
+		
+        PATCH_XXXLIB_OFFSET RectFill
+        PATCH_XXXLIB_OFFSET BltBitMap
 
 	;open doslib
 		lea	(_dosname,pc),a1
@@ -205,7 +254,7 @@ _bootdos
 		jsr	(_LVOOldOpenLibrary,a6)
 		move.l	d0,a6			;A6 = dosbase
 		lea		_dosbase(pc),a0
-		move.l	d0,(a0)
+		move.l	a6,(a0)
 		
 	;assigns
 		lea	_assign1(pc),a0
@@ -222,21 +271,24 @@ _bootdos
 
 		; align exe memory on round value
         IFD CHIP_ONLY
+        movem.l a6,-(a7)
+		move.l	$4.w,a6		
 		move.l	_dosbase(pc),$100.W	; debug Dos calls
 		move.l	_version(pc),d0
 		cmp.l	#VERSION_22_uk,d0
 		bne.b	.no_align
-        movem.l a6,-(a7)
-		move.l	$4.w,a6
         move.l  #$20000-$1B778,d0		; align	"exec" on $20000
         move.l  #$30000-$1B778-$F0F0,d0	; align "swoosh" on $30000
         move.l  #MEMF_CHIP,d1
-        jsr _LVOAllocMem(a6)
-        movem.l (a7)+,a6
-		
+        jsr _LVOAllocMem(a6)		
 .no_align
+        movem.l (a7)+,a6
+
         ENDC
-		
+		; pre-fetch some properties for later
+		; > A0: boot exe name
+		; sets savename offset & buttonwait patch
+		; routine offset (which is overwritten by buttonwait)
 		lea		_patch_table(pc),a1
 		move.l	_version(pc),d0
 		add.l	d0,d0
@@ -244,9 +296,16 @@ _bootdos
 		add.l	d0,d0	; *8
 		move.w	(a1,d0.w),a0
 		add.l	a1,a0
-		move.w	(4,a1,d0.w),d0
-		lea		_savename_offset(pc),a1
-		move.w	d0,(a1)
+		add.w	d0,a1	; set proper version structure
+		move.l	_savegame_slot(pc),d0
+		beq.b	.slot_disabled
+		move.w	(4,a1),d0
+		lea		_savename_offset(pc),a3
+		move.w	d0,(a3)
+.slot_disabled
+		move.w	(6,a1),d0
+		lea		_bw_patch_offset(pc),a3
+		move.w	d0,(a3)
 	;load exe
 		lea	_args(pc),a1
 		moveq	#_args_end-_args,d0
@@ -308,7 +367,28 @@ _check_version
 	move.l	#VERSION_22_de,(a3)
 	rts
 
-
+zap_pointer:
+	movem.l	d0-d3/a0-a2/a6,-(a7)
+	move.l	4.W,a6
+	move.l	#MEMF_CHIP|MEMF_CLEAR,d1
+	move.l	#12,d0
+	jsr	(_LVOAllocMem,a6)
+	move.l	d0,a2		; save for later
+	
+	lea	(_intname,pc),a1
+	jsr	(_LVOOldOpenLibrary,a6)
+	move.l	d0,a6
+	move.l	ib_ActiveWindow(a6),a0
+	move.l	a2,a1
+	moveq	#1,d0
+	moveq	#1,d1
+	moveq	#0,d2
+	moveq	#0,d3
+	jsr	_LVOSetPointer(a6)
+	
+	movem.l	(a7)+,d0-d3/a0-a2/a6
+	rts
+	
 ; < a0: program name
 ; < a1: arguments
 ; < d0: argument string length
@@ -456,7 +536,10 @@ pl_dm_v22_uk
 	PL_PSS	$1b72e,expect_game_disk,4
 	; skip another "is savedisk in drive" flag check
 	; right after savegame file has been opened
-	PL_NOP	$1b7da,4
+	; but don't skip if savegame not found else it crashes
+	PL_W	$1b7d4+2,$3
+	PL_B	$1b7da,$67
+	
 	; skip hardware disk read
 	; (encountered when saving game)
 	; meynaf didn't patch it so it probably does
@@ -492,6 +575,9 @@ pl_dm_v22_uk
 	PL_I	$1a0b4
 	PL_I	$1a0e0
 
+	PL_IFBW
+	PL_PSS	$2b1b4,buttonwait_title,6
+	PL_ENDIF
 
     PL_IFC1X    0
     PL_NOP      $1eea6,4   ; no damage when hitting walls
@@ -509,7 +595,9 @@ pl_dm_v20_fr
 	PL_PSS	$1b68e,expect_game_disk,4
 	; skip another "is savedisk in drive" flag check
 	; right after savegame file has been opened
-	PL_NOP	$1b73a,4
+	; but don't skip if savegame not found else it crashes
+	PL_W	$1b734+2,3	; test for "3": no savegame found
+	PL_B	$1b73a,$67	; invert condition
 	; skip hardware disk read
 	; (encountered when saving game)
 	; meynaf didn't patch it so it probably does
@@ -538,6 +626,11 @@ pl_dm_v20_fr
 	; jotd addons to be able to disable prot routine
 	PL_NOP	$1b46a,4	; skip checksum
 	PL_NOP	$1b474,4	; skip test (BNE)
+
+	PL_IFBW
+	PL_PSS	$2af54,buttonwait_title,6
+	PL_ENDIF
+
 	; 3 checksum routines, should not be called
 	; meynaf & jotd patches should avoid them, but
 	; if they're activated at least it will crash loudly
@@ -552,6 +645,7 @@ pl_dm_v20_fr
     PL_NOP      $1edf4,4   ; no damage when hitting walls
     PL_ENDIF
 
+
 	PL_END
 	
 pl_dm_v20_uk
@@ -565,7 +659,9 @@ pl_dm_v20_uk
 	PL_PSS	$1b59a,expect_game_disk,4
 	; skip another "is savedisk in drive" flag check
 	; right after savegame file has been opened
-	PL_NOP	$1b646,4
+	; but don't skip if savegame not found else it crashes
+	PL_W	$1b640+2,3	; test for "3": no savegame found
+	PL_B	$1b646,$67	; invert condition
 	
 	; skip hardware disk read
 	; (encountered when saving game)
@@ -594,72 +690,106 @@ pl_dm_v20_uk
 	; jotd addons to be able to disable prot routine
 	PL_NOP	$1b376,4	; skip checksum
 	PL_NOP	$1b380,4	; skip test (BNE)
+	
+	PL_IFBW
+	PL_PSS	$2af64,buttonwait_title,6
+	PL_ENDIF
+
 	; 3 checksum routines, should not be called
 	; meynaf & jotd patches should avoid them, but
 	; if they're activated at least it will crash loudly
 	PL_I	$16bb8
 	PL_I	$19f3c
 	PL_I	$19f68
-
+	
     PL_IFC1X    0
     PL_NOP      $1ed12,4   ; no damage when hitting walls
     PL_ENDIF
-
 	PL_END
 	
 pl_dm_v22_de
 	PL_START
 	; trackdisk patch
-	PL_P	$23E8A,check_disk_in_drive
+	PL_P	$23eba,check_disk_in_drive
 	; able to save on current dir
-	PL_P	$242b2,which_disk_test
+	PL_P	$242e2,which_disk_test
 	
-	PL_PSS	$1a6ca,expect_save_disk,4
-	PL_PSS	$1b68e,expect_game_disk,4
+	PL_PSS	$1a6b2,expect_save_disk,4
+	PL_PSS	$1b5fc,expect_game_disk,4
 	; skip another "is savedisk in drive" flag check
 	; right after savegame file has been opened
-	PL_NOP	$1b73a,4
+	; but don't skip if savegame not found else it crashes
+	PL_W	$1b71c+2,$3
+	PL_B	$1b722,$67
+	
 	; skip hardware disk read
 	; (encountered when saving game)
 	; meynaf didn't patch it so it probably does
 	; nothing, but requires floppy in drive
-	PL_S	$1a864,$1aaae-$1a864
+	PL_S	$1a84c,$1aaae-$1a864
 	
-	PL_NOP	$242cc,2		; force savedisk
+	PL_NOP	$242fc,2		; force savedisk
 	; remove dos.Rename for saves (whdload doesn't support rename)
 	; useless as we use the bytes of the caller to select save slot
-	;PL_R	$2b218
-	PL_PSS	$1abdc,set_proper_savegame_slot,8
+	;PL_R	$2bxxxx218
+	PL_PSS	$1abc4,set_proper_savegame_slot,8
+
 	
 	; other protection??? leave as is ATM
 	; if users report lockups, it's probably the issue
-	;PL_I	$242a4
-	;PL_I	$235d0	
+	;PL_I	$242d4
+	;PL_I	$23600	
 
 	; meynaf crack
-	PL_B	$0bf18,$60
-	PL_R	$1399e
-	PL_B	$177f0,$60
-	PL_B	$18b66,$60
-	PL_B	$19dd4,$60
-	PL_B	$1a250,$60
-	PL_L	$23f78,$7004E75
+	PL_B	$0bf18,$60		; same as fr 20
+	PL_R	$1399e	; same as fr 20
+	PL_B	$177dc,$60
+	PL_B	$18b52,$60
+	PL_B	$19db8,$60
+	PL_B	$1a238,$60
+	PL_L	$23fa8,$7004E75
 	; jotd addons to be able to disable prot routine
-	PL_NOP	$1b46a,4	; skip checksum
-	PL_NOP	$1b474,4	; skip test (BNE)
+	PL_NOP	$1b452,4	; skip checksum
+	PL_NOP	$1b45c,4	; skip test (BNE)
 	; 3 checksum routines, should not be called
 	; meynaf & jotd patches should avoid them, but
 	; if they're activated at least it will crash loudly
-	PL_I	$16ca4
-	PL_I	$1a030
-	PL_I	$1a05c
+	PL_I	$16c90
+	PL_I	$1a01a
+	PL_I	$1a044
+
+	PL_IFBW
+	PL_PSS	$2af84,buttonwait_title,6
+	PL_ENDIF
 
 
     PL_IFC1X    0
-    PL_NOP      $1edf4,4   ; no damage when hitting walls
+    PL_NOP      $1edfc,4   ; no damage when hitting walls
     PL_ENDIF
 	PL_END
 
+; call graphics.library function then wait
+DECL_GFX_WITH_WAIT:MACRO
+new_\1
+    pea .next(pc)
+	move.l	old_\1(pc),-(a7)
+	rts
+.next:
+    bra wait_blit
+    ENDM
+    
+
+    ; the calls where a wait is useful
+    DECL_GFX_WITH_WAIT  RectFill
+    DECL_GFX_WITH_WAIT  BltBitMap
+	
+wait_blit
+	TST.B	$BFE001
+.wait
+	BTST	#6,dmaconr+$DFF000
+	BNE.S	.wait
+	rts
+	
 strlen_fr
 	MOVEA.L	4(A7),A0		;2af74: 206f0004
 	cmp.b	#'A',(a0)
@@ -687,13 +817,31 @@ strlen_fr
 	SUBQ.L	#1,D0			;2af82: 5380
 	RTS				;2af84: 4e75
 	
+buttonwait_title
+	move.l	D0,-(a7)
+	move.w	_bw_patch_offset(pc),d0
+	PEA	$000239c0		;2af64: 4879000239c0
+	JSR	(A4,d0.W)		;2af6a: 4eac8506 (links:jmp=lb_24632)
+	ADDQ.W	#4,A7			;2af6e: 584f
+	move.l	(a7)+,d0
+	bra		buttonwait
+	
 set_proper_savegame_slot
-	movem.l	d0/A1,-(a7)
+	movem.l	d0-d1/A1,-(a7)
 	lea		_savegame_name(pc),a1
 	move.w	_savename_offset(pc),d0
+	beq.b	.skip
+	move.l	_version(pc),d1
+	cmp.l	#VERSION_36,d1
+	beq.b	.a5
 	move.l	a1,(A4,d0.w)
-	movem.l	(a7)+,d0/A1
+	bra.b	.skip
+.a5
+	move.l	a1,(A5,d0.w)
+.skip
+	movem.l	(a7)+,d0-d1/A1
 	rts
+
 
 
 expect_save_disk:
@@ -726,6 +874,7 @@ loadseg_hook:
 	movem.l	(a7)+,d0/a2
 	rts
 .patch_dm
+	bsr		zap_pointer
 	move.l	_version(pc),d0
 	add.l	d0,d0
 	lea		pl_dm_list(pc),a0
@@ -917,6 +1066,8 @@ _seglist:
 
 _savename_offset
 	dc.w	0
+_bw_patch_offset
+	dc.w	0
 _saveregs
 	ds.l	16,0
 _stacksize
@@ -929,6 +1080,8 @@ _current_task
 	dc.l	0
 _dosbase
 	dc.l	0
+_intname
+	dc.b	"intuition.library",0
 _gfxname
 	dc.b	"graphics.library",0
 _savegame_name
