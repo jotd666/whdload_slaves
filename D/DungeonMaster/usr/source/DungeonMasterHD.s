@@ -1,15 +1,12 @@
 ;*---------------------------------------------------------------------------
-;  :Program.	PortalHD.asm
-;  :Contents.	Slave for "FA18Interceptor" from 
+;  :Program.	DungeonMasterHD.asm
+;  :Contents.	Slave for "Dungeon Master" from 
 ;  :Author.	JOTD
 ;  :Original	
-;  :Version.	$Id: battleisle.asm 0.5 2000/11/26 21:13:41 jah Exp $
-;  :History.	23.05.01 started
-;		23.05.01 finished
 ;  :Requires.	-
 ;  :Copyright.	Public Domain
 ;  :Language.	68000 Assembler
-;  :Translator.	Devpac 3.14, Barfly 2.9
+;  :Translator.	Devpac 3.14, Barfly 2.9, vasm
 ;  :To Do.
 ;---------------------------------------------------------------------------*
 
@@ -19,7 +16,7 @@
 	INCLUDE	lvo/dos.i
 
 	IFD BARFLY
-	OUTPUT	"Portal.slave"
+	OUTPUT	"DungeonMaster.slave"
 	BOPT	O+				;enable optimizing
 	BOPT	OG+				;enable optimizing
 	BOPT	ODd-				;disable mul optimizing
@@ -160,23 +157,19 @@ _args_end:
 	dc.b	0
 	even
 
-; v2.0
-; fr 177304
-; uk 177324
-; de ??????
-
+;               startup name          exec patchlist       savename  fill
 _patch_table
-	dc.w	_program_v36-_patch_table,pl_bjeload-_patch_table
-	dc.w	_program_v2-_patch_table,pl_exec_v22-_patch_table
-	dc.w	_program_v2-_patch_table,pl_exec_v20_fr-_patch_table
-	dc.w	_program_v2-_patch_table,pl_exec_v20_uk-_patch_table
-	dc.w	_program_v2-_patch_table,pl_exec_v20_de-_patch_table
+	dc.w	_program_v36-_patch_table,pl_bjeload-_patch_table,-9084,0	; v36
+	dc.w	_program_v2-_patch_table,pl_exec_v22-_patch_table,-7858,0	; v22 (uk)
+	dc.w	_program_v2-_patch_table,pl_exec_6036-_patch_table,-7810,0	; v20 (fr)
+	dc.w	_program_v2-_patch_table,pl_exec_6036-_patch_table,-7902,0	; v20 (uk)
+	dc.w	_program_v2-_patch_table,pl_exec_6036-_patch_table,-7810,0	; v22 (de, same as fr)
 	
 VERSION_36 = 0
-VERSION_22 = 1
+VERSION_22_uk = 1
 VERSION_20_fr = 2
 VERSION_20_uk = 3
-VERSION_20_de = 4
+VERSION_22_de = 4
 
 ;============================================================================
 
@@ -229,8 +222,9 @@ _bootdos
 
 		; align exe memory on round value
         IFD CHIP_ONLY
+		move.l	_dosbase(pc),$100.W	; debug Dos calls
 		move.l	_version(pc),d0
-		cmp.l	#VERSION_22,d0
+		cmp.l	#VERSION_22_uk,d0
 		bne.b	.no_align
         movem.l a6,-(a7)
 		move.l	$4.w,a6
@@ -247,8 +241,12 @@ _bootdos
 		move.l	_version(pc),d0
 		add.l	d0,d0
 		add.l	d0,d0
+		add.l	d0,d0	; *8
 		move.w	(a1,d0.w),a0
 		add.l	a1,a0
+		move.w	(4,a1,d0.w),d0
+		lea		_savename_offset(pc),a1
+		move.w	d0,(a1)
 	;load exe
 		lea	_args(pc),a1
 		moveq	#_args_end-_args,d0
@@ -287,7 +285,7 @@ _check_version
 .v2x:
 	cmp.l	#6036,d0
 	beq.b	.v20
-	move.l	#VERSION_22,(a3)
+	move.l	#VERSION_22_uk,(a3)
 	rts
 .v20
 	; 2.0 has 3 languages
@@ -297,17 +295,17 @@ _check_version
 	beq.b	.v20_fr
 	cmp.l	#177324,d0
 	beq.b	.v20_uk
-	;cmp.l	#177324,d0
-	;beq.b	.v20_de
-	bra.b	.unknown	; TODO german
+	cmp.l	#177352,d0
+	beq.b	.v22_de
+	bra.b	.unknown
 .v20_uk
 	move.l	#VERSION_20_uk,(a3)
 	rts
 .v20_fr
 	move.l	#VERSION_20_fr,(a3)
 	rts
-.v20_de
-	move.l	#VERSION_20_de,(a3)
+.v22_de
+	move.l	#VERSION_22_de,(a3)
 	rts
 
 
@@ -402,8 +400,9 @@ _patchexe
 	move.l	_version(pc),d0
 	add.l	d0,d0
 	add.l	d0,d0
+	add.l	d0,d0
 	move.l	a2,a0
-	add.w	(2,a2,d0.l),a0
+	add.w	(2,a2,d0.l),a0		; proper patchlist
 	
 	move.l	_resload(pc),a2
 	jmp		resload_Patch(a2)
@@ -420,11 +419,9 @@ buttonwait
 .out
 	rts
 	
-; version 2.0 fr
+; version 2.0 & some 2.2: same "exec" file
 
-pl_exec_v20_de:
-pl_exec_v20_uk:	; TODO
-pl_exec_v20_fr:
+pl_exec_6036:
 	PL_START
 	PL_NOP	$762,4	; stupid delay
 	PL_R	$16ac	; can't close workbench
@@ -432,7 +429,7 @@ pl_exec_v20_fr:
 	PL_P	$134e,loadseg_hook
 	PL_END
 
-; version 2.2
+; version 2.2 (uk) smaller "exec" file
 
 pl_exec_v22:
 	PL_START
@@ -448,18 +445,71 @@ pl_swoosh
 	PL_NOP	$0039c,6
 	PL_END
 	
-pl_dm_v22
+pl_dm_v22_uk
 	PL_START
+	; trackdisk patch
+	PL_P	$2402e,check_disk_in_drive
+	; able to save on current dir
+	PL_P	$24456,which_disk_test
 	
+	PL_PSS	$1a74e,expect_save_disk,4
+	PL_PSS	$1b72e,expect_game_disk,4
+	; skip another "is savedisk in drive" flag check
+	; right after savegame file has been opened
+	PL_NOP	$1b7da,4
+	; skip hardware disk read
+	; (encountered when saving game)
+	; meynaf didn't patch it so it probably does
+	; nothing, but requires floppy in drive
+	PL_S	$1a8e8,$1ab32-$1a8e8
+	
+	PL_NOP	$24470,2		; force savedisk
+	; remove dos.Rename for saves (whdload doesn't support rename)
+	; useless as we use the bytes of the caller to select save slot
+	;PL_R	$2b218
+	PL_PSS	$1ac60,set_proper_savegame_slot,8
+	
+	; other protection??? leave as is ATM
+	; if users report lockups, it's probably the issue
+	;PL_I	$24448
+	;PL_I	$2352e
+	
+	; meynaf crack
+	PL_B	$0bf08,$60
+	PL_R	$13976
+	PL_B	$1787c,$60
+	PL_B	$18bf2,$60
+	PL_B	$19e58,$60
+	PL_B	$1a2d4,$60
+	PL_L	$2411c,$7004E75
+	; jotd addons to be able to disable prot routine
+	PL_NOP	$1b4ee,4	; skip checksum
+	PL_NOP	$1b4f8,4	; skip test (BNE)
+	; 3 checksum routines, should not be called
+	; meynaf & jotd patches should avoid them, but
+	; if they're activated at least it will crash loudly
+	PL_I	$16d30
+	PL_I	$1a0b4
+	PL_I	$1a0e0
+
+
+    PL_IFC1X    0
+    PL_NOP      $1eea6,4   ; no damage when hitting walls
+    PL_ENDIF	
 	PL_END
 	
 pl_dm_v20_fr
 	PL_START
-	PL_P	$2b21e,xxx		; TEMP rename
 	; trackdisk patch
 	PL_P	$23E8A,check_disk_in_drive
 	; able to save on current dir
 	PL_P	$242b2,which_disk_test
+	
+	PL_PSS	$1a6ca,expect_save_disk,4
+	PL_PSS	$1b68e,expect_game_disk,4
+	; skip another "is savedisk in drive" flag check
+	; right after savegame file has been opened
+	PL_NOP	$1b73a,4
 	; skip hardware disk read
 	; (encountered when saving game)
 	; meynaf didn't patch it so it probably does
@@ -467,12 +517,15 @@ pl_dm_v20_fr
 	PL_S	$1a864,$1aaae-$1a864
 	
 	PL_NOP	$242cc,2		; force savedisk
-	PL_R	$2b218			; remove dos.Rename for saves
+	; remove dos.Rename for saves (whdload doesn't support rename)
+	; useless as we use the bytes of the caller to select save slot
+	;PL_R	$2b218
+	PL_PSS	$1abdc,set_proper_savegame_slot,8
 	
 	; other protection??? leave as is ATM
 	; if users report lockups, it's probably the issue
-	;PL_I	$242a4	; TEMP
-	;PL_I	$235d0	; TEMP
+	;PL_I	$242a4
+	;PL_I	$235d0
 	
 	; meynaf crack
 	PL_B	$0bf18,$60
@@ -486,28 +539,168 @@ pl_dm_v20_fr
 	PL_NOP	$1b46a,4	; skip checksum
 	PL_NOP	$1b474,4	; skip test (BNE)
 	; 3 checksum routines, should not be called
-	; meynaf & jotd patches should avoid them
+	; meynaf & jotd patches should avoid them, but
+	; if they're activated at least it will crash loudly
 	PL_I	$16ca4
 	PL_I	$1a030
 	PL_I	$1a05c
 	; fix spelling "ANNULLER" => "ANNULER"
-	PL_L	$03fa6+10,$4C455200
+	; by patching strlen and check for string
+	PL_P	$2af74,strlen_fr
+
+    PL_IFC1X    0
+    PL_NOP      $1edf4,4   ; no damage when hitting walls
+    PL_ENDIF
+
 	PL_END
 	
 pl_dm_v20_uk
 	PL_START
+	; trackdisk patch
+	PL_P	$23e9a,check_disk_in_drive
+	; able to save on current dir
+	PL_P	$242c2,which_disk_test
 	
+	PL_PSS	$1a5d6,expect_save_disk,4
+	PL_PSS	$1b59a,expect_game_disk,4
+	; skip another "is savedisk in drive" flag check
+	; right after savegame file has been opened
+	PL_NOP	$1b646,4
+	
+	; skip hardware disk read
+	; (encountered when saving game)
+	; meynaf didn't patch it so it probably does
+	; nothing, but requires floppy in drive
+	; strangely in the uk version this looks like it's disabled
+	PL_S	$1a770,$1a9ba-$1a770
+	
+	PL_NOP	$242dc,2		; force savedisk
+	; we use the bytes of the rename caller to select save slot
+	PL_PSS	$1aae8,set_proper_savegame_slot,8
+
+	; other protection??? leave as is ATM
+	; if users report lockups, it's probably the issue
+	;PL_I	$24294
+	;PL_I	$234dc
+	
+	; meynaf crack
+	PL_B	$0bebc,$60
+	PL_R	$13942
+	PL_B	$177f0,$60
+	PL_B	$17704,$60
+	PL_B	$19ce0,$60
+	PL_B	$1a15c,$60
+	PL_L	$23f88,$7004E75
+	; jotd addons to be able to disable prot routine
+	PL_NOP	$1b376,4	; skip checksum
+	PL_NOP	$1b380,4	; skip test (BNE)
+	; 3 checksum routines, should not be called
+	; meynaf & jotd patches should avoid them, but
+	; if they're activated at least it will crash loudly
+	PL_I	$16bb8
+	PL_I	$19f3c
+	PL_I	$19f68
+
+    PL_IFC1X    0
+    PL_NOP      $1ed12,4   ; no damage when hitting walls
+    PL_ENDIF
+
 	PL_END
 	
-pl_dm_v20_de
+pl_dm_v22_de
 	PL_START
+	; trackdisk patch
+	PL_P	$23E8A,check_disk_in_drive
+	; able to save on current dir
+	PL_P	$242b2,which_disk_test
 	
+	PL_PSS	$1a6ca,expect_save_disk,4
+	PL_PSS	$1b68e,expect_game_disk,4
+	; skip another "is savedisk in drive" flag check
+	; right after savegame file has been opened
+	PL_NOP	$1b73a,4
+	; skip hardware disk read
+	; (encountered when saving game)
+	; meynaf didn't patch it so it probably does
+	; nothing, but requires floppy in drive
+	PL_S	$1a864,$1aaae-$1a864
+	
+	PL_NOP	$242cc,2		; force savedisk
+	; remove dos.Rename for saves (whdload doesn't support rename)
+	; useless as we use the bytes of the caller to select save slot
+	;PL_R	$2b218
+	PL_PSS	$1abdc,set_proper_savegame_slot,8
+	
+	; other protection??? leave as is ATM
+	; if users report lockups, it's probably the issue
+	;PL_I	$242a4
+	;PL_I	$235d0	
+
+	; meynaf crack
+	PL_B	$0bf18,$60
+	PL_R	$1399e
+	PL_B	$177f0,$60
+	PL_B	$18b66,$60
+	PL_B	$19dd4,$60
+	PL_B	$1a250,$60
+	PL_L	$23f78,$7004E75
+	; jotd addons to be able to disable prot routine
+	PL_NOP	$1b46a,4	; skip checksum
+	PL_NOP	$1b474,4	; skip test (BNE)
+	; 3 checksum routines, should not be called
+	; meynaf & jotd patches should avoid them, but
+	; if they're activated at least it will crash loudly
+	PL_I	$16ca4
+	PL_I	$1a030
+	PL_I	$1a05c
+
+
+    PL_IFC1X    0
+    PL_NOP      $1edf4,4   ; no damage when hitting walls
+    PL_ENDIF
 	PL_END
 
-xxx
-		blitz
-		rts
-		
+strlen_fr
+	MOVEA.L	4(A7),A0		;2af74: 206f0004
+	cmp.b	#'A',(a0)
+	bne.b	.no
+	cmp.b	#'N',(1,a0)
+	bne.b	.no
+	cmp.b	#'N',(2,a0)
+	bne.b	.no
+	cmp.b	#'U',(3,a0)
+	bne.b	.no
+	cmp.b	#'L',(4,a0)
+	bne.b	.no
+	; fix typo
+	move.b	#'E',(5,a0)
+	move.b	#'R',(6,a0)
+	move.b	#0,(7,a0)
+.no
+	; original code
+	MOVE.L	A0,D0			;2af78: 2008
+.lb_2af7a:
+	TST.B	(A0)+			;2af7a: 4a18
+	BNE.S	.lb_2af7a		;2af7c: 66fc
+	SUBA.L	D0,A0			;2af7e: 91c0
+	MOVE.L	A0,D0			;2af80: 2008
+	SUBQ.L	#1,D0			;2af82: 5380
+	RTS				;2af84: 4e75
+	
+set_proper_savegame_slot
+	movem.l	d0/A1,-(a7)
+	lea		_savegame_name(pc),a1
+	move.w	_savename_offset(pc),d0
+	move.l	a1,(A4,d0.w)
+	movem.l	(a7)+,d0/A1
+	rts
+
+
+expect_save_disk:
+expect_game_disk:
+	bsr	set_proper_savegame_slot
+	moveq.l	#1,d0		; save disk is present
+	rts
 which_disk_test:
 	moveq.l	#1,d0		; save disk is present
 	rts
@@ -542,10 +735,10 @@ loadseg_hook:
 
 pl_dm_list:
 	dc.w	0
-	dc.w	pl_dm_v22-pl_dm_list
+	dc.w	pl_dm_v22_uk-pl_dm_list
 	dc.w	pl_dm_v20_fr-pl_dm_list
 	dc.w	pl_dm_v20_uk-pl_dm_list
-	dc.w	pl_dm_v20_de-pl_dm_list
+	dc.w	pl_dm_v22_de-pl_dm_list
 
 
 fix_autodetach_v2x
@@ -562,7 +755,7 @@ fix_autodetach_v2x
 pl_kaos
 	PL_START
     PL_P      $406b8-$3a4ee,check_disk_in_drive
-	PL_PSS	$3c486-$3a4ee,check_main_disk_for_savegame,2
+	PL_PSS	$3c486-$3a4ee,check_main_disk_for_savegame_kaos,2
 	PL_PS	$5ba3e-$3a4ee,check_main_disk
 	; don't delete backup file
 	PL_NOP	$5c00e-$3a4ee,4
@@ -683,7 +876,7 @@ check_main_disk
 	; at the same time, change savegame filename to put
 	; our savename instead, from now on game uses that pointer
 	; (done there because it's called at game start)
-	bsr		set_proper_savegame_slot_v3
+	bsr		set_proper_savegame_slot
 	
 	moveq.l	#0,d0	; main disk inserted
 	move.w	d0,-16446(A5)
@@ -693,24 +886,19 @@ set_savegame_slot_from_resume_v3
 	; original code
 	JSR	154(A5)			;5cb12: 4ead009a
 	SUBQ.W	#1,D0			;5cb16: 5340
-	bsr		set_proper_savegame_slot_v3
+	bsr		set_proper_savegame_slot
 	tst.w	d0
 	rts
 	
-set_proper_savegame_slot_v3
-	movem.l	A1,-(a7)
-	lea		_savegame_name(pc),a1
-	move.l	a1,-9084(A5)
-	movem.l	(a7)+,A1
-	rts
 	
-check_main_disk_for_savegame
+check_main_disk_for_savegame_kaos
 	moveq	#1,d0		; save disk inserted
 	move.w	d0,-16446(A5)
 	MOVE.W	D0,-2(A6)		;3c48a: 3d40fffe
 	rts
 	
 check_disk_in_drive
+	bsr		set_proper_savegame_slot
 	moveq	#1,d0
 	rts
 
@@ -726,7 +914,8 @@ _savegame_slot
 		dc.l	0
 _seglist:
 	dc.l	0
-_msq:
+
+_savename_offset
 	dc.w	0
 _saveregs
 	ds.l	16,0

@@ -43,13 +43,14 @@ History:
 
 TODO:
 V2.0
-- fr: saveslot check @1abd2
-- fr blitter issue
-- fr buttonwait
-same for en/de (diff asm bcomp)
+- blitter issue when printing characters names top left
+- buttonwait v2.x
+- fr v20 OK
+- uk v20 OK
+- de v22 crash at start / lockup even with meynaf crack
+- uk v22 OK mouse pointer visible
+- v36 resume saveslot name not set in french/german (to re-test)
 
-V2.2
-adapt
 
  version 2.0 (29.12.2022) done by JOTD:
  - dropped disk images for real files (reinstall needed from "disk.1" file),
