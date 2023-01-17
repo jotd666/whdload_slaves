@@ -1,0 +1,83 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Xxx" © 19xx Xxx.
+
+ Requirements:
+ -------------
+ This install requires WHDLoad version 18.0, DIC, RawDIC and The Patcher to be in the path.
+ These programs can be found in the WHDLoad package.
+ To install from a different drive than DF0: select installation mode Expert.
+
+ The installed program requires x.x MB ChipMem and 0.5 MB OtherMem.
+ It can be quit by pressing F10 (key can be changed with Tooltype "QuitKey=").
+
+ The game requires an installed A500 Kickstart 1.3 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate message.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive
+ "util/boot/skick346.lha" on aminet.
+
+ The game requires an installed A600/A1200/A4000 Kickstart 3.1 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick40063.A600", "kick40068.A1200" or "kick40068.A4000". The
+ image can be extracted from a A600/A1200/A4000 with tools like 'GrabKick' or
+ similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate message.
+ Additionally the file "kick40063.A600.RTB", "kick40068.A1200.RTB" or
+ "kick40068.A4000.RTB" must be installed in the same directory as the kickstart
+ image. It can be found in the archive "util/boot/skick346.lha" on aminet.
+
+ Features:
+ ---------
+ The game is designed for joypad use only. To make it playable with a joystick
+ too, a joypad emulation via the keyboard has been implemented. The default
+ joypad to keyboard assignment is as follows:
+	Blue - Stop		- F1
+	Green - Shuffle		- F2
+	Yellow - Repeat		- F3
+	Grey - Play/Pause	- F4
+	Left Ear - Reverse	- F5
+	Right Ear - Forward	- F6
+ You can change the keys using the Custom tooltype. The template for the string
+ is "Blue/K,Green/K,Yellow/K,Grey/K,LeftEar/K,RightEar/K,Force/S".
+ Example to set Grey button to Space and Blue to Del:
+	Custom=grey $40 blue $46 force
+ To get lowlevel.library detect a joystick you must move the stick right/left
+ or up/down a few times. After this the emulation will start to work.
+ You can also add/use the option Force to the Custom tooltype to disable the
+ auto sensing of the lowlevel.library and to force it to assume a joystick is
+ connected.
+
+
+ History:
+ --------
+ version 1.0 (17.01.2022) done by Xxx:
+ - initial release
+
+
+ Contact:
+ --------
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, EXPCHIP, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page.
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
