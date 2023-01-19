@@ -68,8 +68,8 @@ BOOTDOS
 CACHE
 IOCACHE = 10000
 STACKSIZE = 24000		; game needs at least 23500
-
-CHIP_ONLY
+SEGTRACKER
+;CHIP_ONLY
 ; amount of memory available for the system
 	IFD	CHIP_ONLY
 CHIPMEMSIZE	= $120000
@@ -121,8 +121,9 @@ slv_name		dc.b	"Soul Crystal"
 			ENDC
 			
 			dc.b	0
-slv_copy		dc.b	"199x xxxx",0
+slv_copy		dc.b	"1992 Starbyte",0
 slv_info		dc.b	"Adapted by JOTD",10,10
+		dc.b	"Thanks to Tori The Smurf for help",0
 		dc.b	"Version "
 		DECL_VERSION
 		dc.b	0
@@ -135,16 +136,14 @@ _assign3:
 	dc.b	"SoulCrystalC",0
 _assign4:
 	dc.b	"SoulCrystalD",0
+_assign5:
+	dc.b	"SoulSave",0
 
 slv_config:
-	;dc.b	"C5:B:skip introduction;"
+	dc.b	"C5:B:skip introduction;"
 	dc.b	0
 
-_intro:
-	dc.b	"SoulCrystal.boot",0
 
-_program:
-	dc.b	"main",0
 _args:
 	dc.b	10
 _args_end:
@@ -195,7 +194,8 @@ _bootdos
         IFD CHIP_ONLY
         movem.l a6,-(a7)
 		move.l	$4.w,a6
-        move.l  #$30000-$208A8,d0
+        move.l  #$30000-$20F08,d0	; align boot on $30000
+        move.l  #$30000-$26368,d0	; align main prog on $30000
         move.l  #MEMF_CHIP,d1
         jsr _LVOAllocMem(a6)
         movem.l (a7)+,a6
@@ -222,22 +222,18 @@ _bootdos
 		lea	_assign4(pc),a0
 		sub.l	a1,a1
 		bsr	_dos_assign
+		lea	_assign5(pc),a0
+		sub.l	a1,a1
+		bsr	_dos_assign
 
 
 	;load exe
-		move.l	_skip_intro(pc),d0
-		bne.b	.si
-		lea	_intro(pc),a0
+		lea	_bootname(pc),a0
 		lea	_args(pc),a1
 		moveq	#_args_end-_args,d0
-		lea	_patch_intro(pc),a5
+		lea	_patch_boot(pc),a5
 		bsr	load_exe
 .si		
-		lea	_program(pc),a0
-		lea	_args(pc),a1
-		moveq	#_args_end-_args,d0
-		lea	_patchexe(pc),a5
-		bsr	load_exe
 	;quit
 _quit		pea	TDREASON_OK
 		move.l	(_resload,pc),a2
@@ -317,32 +313,31 @@ _beamdelay
 	rts
 
 
-_patch_intro:
+_patch_boot:
 	move.l	d7,a1		; seglist
 	move.l	_resload(pc),a2
-	lea		pl_intro(pc),a0
+	lea		pl_boot(pc),a0
 	jsr		resload_PatchSeg(a2)
-	
-	move.l	d7,a1		; seglist
-	add.l	a1,a1
-	add.l	a1,a1
-	addq.w	#4,a1
-	blitz
 	rts
 	
-pl_intro
+pl_boot:
 	PL_START
-	PL_PSS	$392,load_segments,2
+	; skip scripts (assign...) that don't work
+	; executing scripts that don't exist, etc.
+	; (assigns are done & work using _dos_assign from slave)
+	PL_B	$148,$60
+
+	PL_IFC5
+	PL_NOP	$188,4	; skip intro load & execute
+	PL_ENDIF
+	
+	PL_PSS	$1b0,run_ram_install,2
+	PL_PSS	$1EC,run_main,2
+	
+	; intro: better wait for program termination (less CPU demanding)
 	PL_PSS	$3e2,wait_program_end,4
 	PL_END
 	
-_patchexe
-	move.l	d7,a1		; seglist
-	move.l	_resload(pc),a2
-	lea		pl_main(pc),a0
-	jsr		resload_PatchSeg(a2)
-	
-	rts
 	
 wait_program_end:
 .loop
@@ -356,14 +351,30 @@ wait_program_end:
 	BNE.b	.loop
 	rts
 	
-load_segments:
-	; check name
-	move.l	D1,-(a7)
-	MOVEA.L	_dosbase(PC),A6	;392: 2c7affac
-	JSR	(_LVOLoadSeg,A6)	;396: 4eaeff6a dos.library (off=-150)
-	move.l	(a7)+,a0
-	; patch according to name in a0
+run_main:
+	MOVEA.L	_dosbase(PC),A6	;1ec: 2c7a0152
+	JSR	(_LVOLoadSeg,A6)	;1f0: 4eaeff22 dos.library (off=-222)
+	move.l	d0,-(a7)
+	move.l	d0,a1
+	movem.l	d0-d1/a0-a2,-(a7)
+	lea		pl_main(pc),a0
+	move.l	_resload(pc),a2
+	jsr		resload_PatchSeg(a2)
+	movem.l	(a7)+,d0-d1/a0-a2
+	add.l	a1,a1
+	add.l	a1,a1
+	jsr		(4,a1)
+	
+	move.l	(a7)+,d1
+	MOVEA.L	_dosbase(PC),A6	;1ec: 2c7a0152
+	JSR	(_LVOUnLoadSeg,A6)	;1f0: 4eaeff22 dos.library (off=-222)
+	
 	rts
+	
+pl_main
+	PL_START
+	PL_B	$10caa,$60
+	PL_END
 	
 ; call graphics.library function then wait
 DECL_GFX_WITH_WAIT:MACRO
@@ -380,6 +391,8 @@ new_\1
     ;DECL_GFX_WITH_WAIT  RectFill
     ;DECL_GFX_WITH_WAIT  Text
    
+
+   
 wait_blit
 	TST.B	$BFE001
 .wait
@@ -387,16 +400,6 @@ wait_blit
 	BNE.S	.wait
 	rts
 	
-pl_main
-	PL_START
-	PL_B	$3B4,$66
-	PL_P	$10E8,_quit
-
-
-	PL_L	$2eEE6,$70004E75
-	
-	PL_END
-
 _tag		dc.l	WHDLTAG_CUSTOM1_GET
 _custom1	dc.l	0
 		dc.l	WHDLTAG_CUSTOM5_GET
@@ -412,6 +415,8 @@ _stacksize
 		dc.l	0
 _dosbase
 	dc.l	0
+_bootname:
+	dc.b	"SoulCrystal.boot",0
 _gfxname
 	dc.b	"graphics.library",0
 	

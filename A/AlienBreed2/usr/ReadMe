@@ -30,6 +30,10 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
  
+ version 1.6 (xx.01.2023) done by JOTD & ztronzo:
+ - AGA version: added modding options (strafe/no player block) (issue #0005948)
+ - ECS version: better blitterwaits which fixes graphical glitches on A1000 (issue #0005999)
+ 
  version 1.5 (24.04.2020) done by JOTD:
  - ECS version added quitkey for 68000 machines (issue #0004202)
  
@@ -39,10 +43,10 @@
  - Slaves adapted to WHDLoad v17
  - Added cheat mode to AGA version (100000 credits, 99 keys, 99 lives)
 
- version 1.3 (11.05.05) done by JOTD
+ version 1.3 (11.05.2005) done by JOTD
  - another ECS version supported (only slight changes)
 
- version 1.2 (01.03.05) done by JOTD:
+ version 1.2 (01.03.2005) done by JOTD:
  - support for fastmem in ECS slave (loading is much faster)
  - fixed access fault in ECS version with rebouncer weapon (Garry C.)
  - enabled original Mr Larmer trainer with CUSTOM1=1 on ECS version
@@ -51,17 +55,17 @@
  - check in slaves to avoid version mixups (ECS files with AGA slave...)
  - reworked install script
 
- version 1.1 (03.01.03) done by JOTD:
+ version 1.1 (03.01.2003) done by JOTD:
  - support for fastmem in AGA slave (loading is much faster)
  - impossible to shoot on first life fixed (ECS/AGA)
  - manual included
  - source code rework and various improvements on AGA version
  - source code included
 
- version 1.0 (23.03.01) done by Mr.Larmer:
+ version 1.0 (23.03.2001) done by Mr.Larmer:
  - AGA & ECS versions supported
 
- version 1.0 (16.03.01) done by Mr.Larmer:
+ version 1.0 (16.03.2001) done by Mr.Larmer:
  - ECS version supported only
 
 Original Cheat mode (ECS and AGA versions, thx to www.lemonamiga.com):
@@ -89,3 +93,14 @@ Level codes:
 15: 998112
 16: 125332
 17: 091233
+
+Explanation of the mods added by ztronzo:
+
+Strafe Mode while holding fire:
+
+=> You can move around holding fire button 1 to keep the direction of the player while shooting
+
+Allow human players to pass through each other (2P mode):
+
+=> No collision between human players (Human players can pass through each other in 2 player mode)"
+

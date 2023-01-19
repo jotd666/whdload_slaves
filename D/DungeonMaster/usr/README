@@ -41,6 +41,8 @@
 
 History:
 
+TODO save slot problem at least on V2.2
+
  version 2.0 (01.01.2023) done by JOTD:
  - supports 5 versions (fixes issue #0005944)
  - dropped disk images for real files (reinstall needed from "disk.1" file),

@@ -240,11 +240,11 @@
     ;    (dest #dest)
     ;  )
 
-      ;example: create additional save directory
-   ;   (makedir
-	;(tackon #dest "save")
-	;(help @makedir-help)
-   ;   )
+      ;create additional save directory
+      (makedir
+	(tackon #dest "SCSavedGames")
+	(help @makedir-help)
+      )
 
  
     )

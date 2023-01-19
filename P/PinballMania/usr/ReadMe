@@ -39,6 +39,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 2.1 (03.01.2023) done by JOTD:
+ - added support for SPS0896 (only SPS0804 was supported earlier) (issue #0005913)
+ 
  version 2.0 (28.05.2022) done by JOTD:
  - running from fast memory to avoid slowdowns with accelerator boards (issue #0000465)
  - full joypad control (issue #0004686)

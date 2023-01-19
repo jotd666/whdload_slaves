@@ -84,7 +84,7 @@ IGNORE_JOY_PORT0
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"2.0"
+	dc.b	"2.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -151,11 +151,16 @@ _cb_dosLoadSeg:
 	movem.l	d0-d1/a0-a2,-(a7)
 	lea	(4,a3),a1
 	
+	lea	pl_menu_804(pc),a0
 	lea	($0447E,a1),a3
-	lea	menu_rawkey_address(pc),a0
-	move.l	a3,(a0)		; store address
-	
-	lea	pl_menu(pc),a0
+	lea	menu_rawkey_address(pc),a2
+	cmp.w	#4239,($014ac,a1)
+	beq.b	.804
+	; newly supported version
+	lea	pl_menu_896(pc),a0
+	lea	($439e,a1),a3
+.804
+	move.l	a3,(a2)		; store address
 	move.l	_resload(pc),a2
 	jsr	resload_Patch(a2)
 	movem.l	(a7)+,d0-d1/a0-a2
@@ -182,13 +187,24 @@ _cb_dosLoadSeg:
 	movem.l	(a7)+,d0-d1/a0-a2/a6
 	rts
 
+pl_menu_804
+	PL_START
+	PL_NOP	$014ac,6
+	PL_PS	$014c4,keyboard_read
+	PL_NEXT	pl_menu
+	
+pl_menu_896
+	PL_START
+	PL_NOP	$013ea,6
+	PL_PS	$01402,keyboard_read
+	PL_NEXT	pl_menu
+
 pl_menu
 	PL_START
 	PL_PSS	$00498,vbl_hook_intro,2
 	PL_L	$000fe,$70004E71	; VBR
-	PL_NOP	$014ac,6
-	PL_PS	$014c4,keyboard_read
 	PL_END
+	
 	
 pl_tables
 	PL_START
