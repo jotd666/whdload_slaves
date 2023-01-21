@@ -34,10 +34,11 @@
 
  History:
  --------
- version 1.0 (xx.01.2023) done by JOTD:
+ version 1.0 (21.01.2023) done by JOTD:
  - initial release
  - copy protection removed
  - ability to skip intro (CUSTOM5=1)
+ - ability to watch end sequence (CUSTOM5=3)
  - TODO: music replay fixed 
 
  Contact:

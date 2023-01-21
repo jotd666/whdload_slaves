@@ -1,6 +1,6 @@
 ;*---------------------------------------------------------------------------
-;  :Program.	PortalHD.asm
-;  :Contents.	Slave for "FA18Interceptor" from 
+;  :Program.	SoulCrystalHD.s
+;  :Contents.	Slave for "Soul Crystal" 
 ;  :Author.	JOTD
 ;  :Original	
 ;  :Version.	$Id: battleisle.asm 0.5 2000/11/26 21:13:41 jah Exp $
@@ -67,7 +67,7 @@ BLACKSCREEN
 BOOTDOS
 CACHE
 IOCACHE = 10000
-STACKSIZE = 24000		; game needs at least 23500
+STACKSIZE = 5000
 SEGTRACKER
 ;CHIP_ONLY
 ; amount of memory available for the system
@@ -123,7 +123,7 @@ slv_name		dc.b	"Soul Crystal"
 			dc.b	0
 slv_copy		dc.b	"1992 Starbyte",0
 slv_info		dc.b	"Adapted by JOTD",10,10
-		dc.b	"Thanks to Tori The Smurf for help",0
+		dc.b	"Thanks to Tori The Smurf for help",10,10
 		dc.b	"Version "
 		DECL_VERSION
 		dc.b	0
@@ -140,7 +140,8 @@ _assign5:
 	dc.b	"SoulSave",0
 
 slv_config:
-	dc.b	"C5:B:skip introduction;"
+	dc.b	"C5:X:skip introduction:0;"
+	dc.b	"C5:X:watch end sequence:1;"
 	dc.b	0
 
 
@@ -174,8 +175,8 @@ end_patch_\1:
 _bootdos
 		lea		_stacksize(pc),a0
 		move.l	(4,a7),(a0)		; store stacksize
-		sub.l	#5*4,(a0)			;required for MANX stack check
-	
+		sub.l	#5*4,(a0)			;required for MANX stack check		
+		
 		move.l	(_resload,pc),a2	;a2 = resload
 
 	;get tags
@@ -196,10 +197,40 @@ _bootdos
 		move.l	$4.w,a6
         move.l  #$30000-$20F08,d0	; align boot on $30000
         move.l  #$30000-$26368,d0	; align main prog on $30000
+        move.l  #$40000-$21E60,d0	; align endpart prog on $40000 (skip intro!)
         move.l  #MEMF_CHIP,d1
         jsr _LVOAllocMem(a6)
         movem.l (a7)+,a6
         ENDC
+
+		; allocates "top of chipmem" structure where boot
+		; program stores a shared structure which is
+		; AbsAlloc'ed by boot from $80000 to bottom by 100
+		; bytes decrements (!!!) and that
+		; the RAMInstall, EndPart and Main programs look for
+		; by starting from $80000 and decreasing by 100 until
+		; marker is found!! (this is utterly bad practice and stupid)
+		;
+		; in the original program top is $80000 which causes
+		; issues: access faults reading at $80000 looking for
+		; the ACA[ marker. Moving the topchip by -100 doesn't solve
+		; the issue either, I don't want to debug this.
+		;
+		; For a simpler solution, I'm allocating the structure here
+		; (in chipmem, as part of this structure is a copperlist)
+		; then pass it to each program so it doesn't have to scan
+		; the memory (and it works!)
+		;
+
+        movem.l a6,-(a7)
+		move.l	$4.w,a6
+        move.l  #100,d0
+        move.l  #MEMF_CHIP,d1
+        jsr _LVOAllocMem(a6)
+		lea	boot_topchip_structure(pc),a0
+		move.l	d0,(a0)
+        movem.l (a7)+,a6
+
 
 	;open doslib
 		lea	(_dosname,pc),a1
@@ -230,7 +261,7 @@ _bootdos
 	;load exe
 		lea	_bootname(pc),a0
 		lea	_args(pc),a1
-		moveq	#_args_end-_args,d0
+		moveq.l	#_args_end-_args,d0
 		lea	_patch_boot(pc),a5
 		bsr	load_exe
 .si		
@@ -319,24 +350,7 @@ _patch_boot:
 	lea		pl_boot(pc),a0
 	jsr		resload_PatchSeg(a2)
 	rts
-	
-pl_boot:
-	PL_START
-	; skip scripts (assign...) that don't work
-	; executing scripts that don't exist, etc.
-	; (assigns are done & work using _dos_assign from slave)
-	PL_B	$148,$60
 
-	PL_IFC5
-	PL_NOP	$188,4	; skip intro load & execute
-	PL_ENDIF
-	
-	PL_PSS	$1b0,run_ram_install,2
-	PL_PSS	$1EC,run_main,2
-	
-	; intro: better wait for program termination (less CPU demanding)
-	PL_PSS	$3e2,wait_program_end,4
-	PL_END
 	
 	
 wait_program_end:
@@ -352,17 +366,31 @@ wait_program_end:
 	rts
 	
 run_main:
+	pea		pl_main(pc)
+	bsr		run_exe
+	addq.l	#4,a7
+	rts
+run_ram_install:
+	pea		pl_ram_install(pc)
+	bsr		run_exe
+	addq.l	#4,a7
+	rts
+
+run_exe:	
 	MOVEA.L	_dosbase(PC),A6	;1ec: 2c7a0152
 	JSR	(_LVOLoadSeg,A6)	;1f0: 4eaeff22 dos.library (off=-222)
+	move.l	(4,a7),a0
 	move.l	d0,-(a7)
 	move.l	d0,a1
 	movem.l	d0-d1/a0-a2,-(a7)
-	lea		pl_main(pc),a0
 	move.l	_resload(pc),a2
 	jsr		resload_PatchSeg(a2)
 	movem.l	(a7)+,d0-d1/a0-a2
 	add.l	a1,a1
 	add.l	a1,a1
+	; a0/d0 are supposed to be the arguments but who cares?
+	lea		_args(pc),a0
+	moveq.l	#_args_end-_args,d0
 	jsr		(4,a1)
 	
 	move.l	(a7)+,d1
@@ -371,10 +399,98 @@ run_main:
 	
 	rts
 	
+before_create_proc:
+	movem.l	d0-d1/a0-a2,-(a7)
+	move.l	d0,a1
+	add.l	a1,a1
+	add.l	a1,a1
+	addq.l	#4,a1		; first segment
+	cmp.l	#$80000,(2,a1)
+	bne.b	.intro
+	lea		pl_endpart(pc),a0
+	move.l	_resload(pc),a2
+	jsr		resload_Patch(a2)
+.intro
+	movem.l	(a7)+,d0-d1/a0-a2
+	move.l	#5000,d4	; stack size
+	rts
+	
+; --- patchlists
+
+
+pl_boot:
+	PL_START
+	PL_PSS	$0ae,set_topmem_boot,6
+	
+	; skip scripts (assign...) that don't work
+	; executing scripts that don't exist, etc.
+	; (assigns are done & work using _dos_assign from slave)
+	PL_B	$148,$60
+
+	; skips address $80000 when trying to AllocAbs
+	; (other programs look for a "ACA[" string from $80000
+	; (which seems to be the nick for Chris Link BTW)
+	; downwards and thus the program triggers an access fault
+	; on $80000
+	PL_AL	$9c+2,-100
+	
+	PL_IFC5X	0
+	PL_NOP	$188,4	; skip intro load & execute
+	PL_ENDIF
+	
+	PL_PSS	$1b0,run_ram_install,2
+
+	PL_IFC5X	1
+	PL_NOP	$1F0,4	; no main execute
+	PL_ELSE
+	PL_PSS	$1EC,run_main,2
+	PL_ENDIF
+	
+	; intro: better wait for program termination (less CPU demanding)
+	PL_PSS	$3e2,wait_program_end,4
+	
+	PL_PS	$3ae,before_create_proc
+	PL_P	$228,_quit
+	PL_END
+	
+	
 pl_main
 	PL_START
-	PL_B	$10caa,$60
+	PL_PSS	$10,set_topmem_main,2
+	PL_B	$10caa,$60	; remove password protection
 	PL_END
+	
+pl_ram_install
+	PL_START
+	PL_PSS	$10,set_topmem_raminstall,2
+	PL_END
+
+pl_endpart:
+	PL_START
+	PL_PS	0,set_topmem_endpart
+	PL_IFC5X	1
+	PL_B	$a6,$60	; force "win" sequence
+	PL_ENDIF
+	PL_END
+	
+set_topmem_boot:
+	move.l	boot_topchip_structure(pc),d0
+	rts
+
+set_topmem_endpart:
+	move.l	boot_topchip_structure(pc),a0
+	rts
+
+set_topmem_main:
+	move.l	boot_topchip_structure(pc),-32504(A5)
+	rts
+	
+set_topmem_raminstall:
+	move.l	boot_topchip_structure(pc),-32276(A5)
+	rts
+	
+	
+
 	
 ; call graphics.library function then wait
 DECL_GFX_WITH_WAIT:MACRO
@@ -414,6 +530,8 @@ _saveregs
 _stacksize
 		dc.l	0
 _dosbase
+	dc.l	0
+boot_topchip_structure:
 	dc.l	0
 _bootname:
 	dc.b	"SoulCrystal.boot",0
