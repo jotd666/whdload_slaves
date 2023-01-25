@@ -21,14 +21,17 @@
   
 ;CHIP_ONLY
 
+; probably more than enough!
+TEAM_BUFFER_SIZE = $40000
+
 PROGRAM_LOCATION_OFFSET = $80000
 
     IFD CHIP_ONLY
 CHIPMEMSIZE = $180000+PROGRAM_LOCATION_OFFSET
-FASTMEMSIZE = 0    
+FASTMEMSIZE = TEAM_BUFFER_SIZE
     ELSE
 CHIPMEMSIZE = $100000
-FASTMEMSIZE = $80000+PROGRAM_LOCATION_OFFSET
+FASTMEMSIZE = $80000+PROGRAM_LOCATION_OFFSET+TEAM_BUFFER_SIZE
     ENDC
 
 ; 1MB chip + 1,5MB slow mem prog @ $D00000
@@ -67,7 +70,7 @@ _expmem:
 
 
 DECL_VERSION:MACRO
-	dc.b	"2.1"
+	dc.b	"2.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -99,8 +102,6 @@ _info	dc.b	'-------------------------',10
 	dc.b	0
 	dc.b	-1
 	CNOP 0,2
-Copylock:
-	dc.l	$26bc7158,$3efc4e75
 
 root:	dc.b	'GALAHAD.ROOT',0
 Swos.rel:
@@ -124,6 +125,9 @@ Start	;	A0 = resident loader
 		lea	_resload(pc),a1
 		move.l	a0,(a1)			;save for later use
         IFD CHIP_ONLY
+		; put team buffer in expmem
+		lea	data_buffer(pc),a0
+		move.l	_expmem(pc),(a0)
         lea _expmem(pc),a0
         move.l  #$100000,(a0)   ; simulate expmem
         ENDC
@@ -133,7 +137,11 @@ Start	;	A0 = resident loader
         move.l  _expmem(pc),a0       
         add.l   #PROGRAM_LOCATION_OFFSET,a0
         move.l  a0,(a1)
-        
+        IFND	CHIP_ONLY
+		add.l	#$80000,a0
+		lea		data_buffer(pc),a1
+		move.l	a0,(a1)
+		ENDC
 		lea	root(pc),a0        
 		bsr	_check
 		tst.l	d0
@@ -272,8 +280,7 @@ pl_9495
     PL_W    $6a,$6002       ; fix zero div
     PL_W    $c6,$6002       ; cacr
     ; copylock
-    PL_L    $19e6,$26bc7158
-    PL_L    $19e6+4,$3efc4e75
+    PL_P    $19e6,copylock
     ;Fake send to loader
     PL_L    $3d2,$70004E75
     PL_P    $22da,fix_memory_routine_9495     ; 101676
@@ -307,11 +314,19 @@ swos_9495_2:
 
 pl_9495_2
     PL_START
+	; aka SPS 840
+	PL_PA	$17dc+2,data_buffer
+	; removes size check
+	; which is stupid as at this point the file
+	; may be RNC packed. We have no idea of the actual
+	; file size!
+	PL_NOP	$1814,2		; no size check
+	PL_PA	$1816+2,data_buffer
+
     PL_W    $d4,$6002       ; fix zero div
     PL_W    $130,$6002       ; cacr
     ; copylock
-    PL_L    $1bea,$26bc7158
-    PL_L    $1bea+4,$3efc4e75
+    PL_P    $1bea,copylock
     ;Fake send to loader
     PL_L    $450,$70004E75
     PL_P    $24ec,fix_memory_routine_9495_2     ; 10171A
@@ -327,6 +342,14 @@ pl_9495_2
     PL_PS   $756a,access	
     ;PL_W	$552c,$6002,	;TESTTESTTEST    
     
+    ; jotd
+    ; fix snoop bugs
+    ;PL_PSS  $2398,fix_snoop_bug,4
+    ;PL_ORW  $20be,$200  ; colorbit bplcon0
+    ;PL_L  $20c8,$01FE0000  ; remove bplcon3 write
+    ;PL_L  $20cc,$01FE0000  ; remove bplcon4 write
+    ;PL_R    $fe0   ; floppy shit
+    ;PL_R    $156a   ; floppy shit
 
     
     PL_END 
@@ -339,11 +362,15 @@ swos_9596:
 		
 pl_9596
     PL_START
+	; allows to read team files of any size
+	PL_PA	$17e2+2,data_buffer
+	PL_NOP	$181a,2		; no size check
+	PL_PA	$181c+2,data_buffer	; no buffer re-set
+
     PL_W    $CC,$6002       ; fix zero div
     PL_W    $128,$6002       ; cacr
     ; copylock
-    PL_L    $1bfa,$26bc7158
-    PL_L    $1bfa+4,$3efc4e75
+    PL_P    $1bfa,copylock
     ;Fake send to loader
     PL_L    $448,$70004E75
     PL_P    $24fc,fix_memory_routine_9596
@@ -380,10 +407,14 @@ swos_euro:
 
 pl_euro
     PL_START
+	; jotd: proper sized buffer for big team files
+	PL_PA	$5944+2,data_buffer
+	PL_NOP	$597e,4			; no size check
+	PL_PA	$5982+2,data_buffer
+	
     PL_W    $CC,$6002       ; fix zero div
     ; copylock
-    PL_L    $5d78,$26bc7158
-    PL_L    $5d78+4,$3efc4e75
+    PL_P    $5d78,copylock
     ;Fake send to loader
     PL_L    $438,$70004E75
     PL_P    $667a,fix_memory_routine_9697
@@ -420,6 +451,11 @@ swos_152:
 
 pl_9697_1
     PL_START
+	; proper sized buffer for big team files
+	PL_PA	$5968+2,data_buffer
+	PL_NOP	$59a2,4			; no size check
+	PL_PA	$59a6+2,data_buffer
+	
     PL_W    $CC,$6002       ; fix zero div
     ; copylock
     PL_W    $5d80,$26bc
@@ -462,11 +498,15 @@ swos_german:
 
 pl_german
     PL_START
+	; jotd: proper sized buffer for big team files
+	PL_PA	$17dc+2,data_buffer
+	PL_NOP	$1814,2			; no size check
+	PL_PA	$1816+2,data_buffer
+
     PL_W    $d4,$6002       ; fix zero div
     PL_W    $130,$6002       ; cacr
     ; copylock
-    PL_L    $1bea,$26bc7158
-    PL_L    $1bea+4,$3efc4e75
+    PL_P    $1bea,copylock
     ;Fake send to loader
     PL_L    $450,$70004E75
     PL_P    $24ec,fix_memory_routine_9495_2
@@ -500,9 +540,14 @@ swos_1522:  ; 9697_2
         lea pl_9697_2(pc),a0
         bra patch_with_patchlist
         
-
+; offsets similar to "euro" version
 pl_9697_2
     PL_START
+	; jotd: proper sized buffer for big team files
+	PL_PA	$5944+2,data_buffer
+	PL_NOP	$597e,4			; no size check
+	PL_PA	$5982+2,data_buffer
+
     PL_W    $CC,$6002       ; fix zero div
     ; copylock
     PL_W    $5d54,$26bc
@@ -542,10 +587,9 @@ swos_9697:
         lea pl_9697(pc),a0
 patch_with_patchlist
         move.l	program_location(pc),a1
-        move.l  _resload(pc),a2
+		        move.l  _resload(pc),a2
         jsr (resload_Patch,a2)
      
-
         ; set registers D5-D7 to expected values
         move.l  #CHIPMEMSIZE+FASTMEMSIZE,D7
         move.l  #FASTBITS,d5
@@ -556,10 +600,16 @@ patch_with_patchlist
 
 pl_9697
     PL_START
+	; jotd: proper sized buffer for big team files
+	PL_PA	$5944+2,data_buffer
+	PL_NOP	$597e,4		; no size check
+	PL_PA	$5982+2,data_buffer
+
+	
+	
     PL_W    $CC,$6002       ; fix zero div
-    ; copylock
-    PL_L    $5D78,$26bc7158
-    PL_L    $5D78+4,$3efc4e75
+    ; copylock (checked at +$1fe70: EORI.L	#$715829de,D0)
+    PL_P    $5D78,copylock
     ;Fake send to loader
     PL_L    $438,$70004E75
     PL_P    $667A,fix_memory_routine_9697
@@ -819,7 +869,7 @@ quit
 Load_directory:
 	movem.l	a0-a2,-(a7)
 	lea	root(pc),a0
-	bsr.s	_LoadFile
+	bsr	_LoadFile
 	movem.l	(a7)+,a0-a2
 	moveq	#0,d0
 	tst.l	d0
@@ -829,10 +879,14 @@ Save_directory:
 	lea	root(pc),a0
 	move.l	gen(pc),a1
 	move.l	_filesize+2(pc),d0		;Size of directory track!
-	bsr.s	_SaveFile
+	bsr	_SaveFile
 	movem.l	(a7)+,d0/a0-a2
 	rts
 
+copylock:
+    MOVE.L #$71583efc,(A3)
+    rts
+    
 ;---------------
 
 _resload	dc.l	0		;address of resident loader
@@ -844,6 +898,9 @@ swos_version:
 		dc.l	0
 program_location
     dc.l    0
+data_buffer
+	dc.l	0
+	
 ;--------------------------------
 ; IN:	d0=offset d1=size d2=disk a0=dest
 ; OUT:	d0=success

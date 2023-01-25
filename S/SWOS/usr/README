@@ -13,7 +13,7 @@
  This install requires WHDLoad to be in the path. It can be found in the
  WHDLoad package.
 
- The installed program requires 1.0 MB ChipMem and 2.0 MB OtherMem.
+ The installed program requires 1.0 MB ChipMem and 2.5 MB OtherMem.
 
  If you have problems with this installation please try and get a newer
  version of this package from the WHDLoad WWW-Page. If that doesn't help try
@@ -41,7 +41,8 @@
  ------------------------------------
  (*) added support since last slave release)
  
- version 2.2 (xx.05.2021) done by JOTD:
+ version 2.2 (xx.01.2023) done by JOTD:
+ - allows to load big team.xxx files (requires 256k more memory)
  - fixed install script
  
  version 2.1 (09.05.2021) done by JOTD:
