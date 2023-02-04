@@ -1,0 +1,128 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Walker" © 1993 DMA Design/Psygnosis - 3 disks.
+
+ Thanks to Chris Vella for sending the original!
+ 
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+
+ The installed program requires 0.5/0.7 MB ChipMem and 1.0 MB OtherMem.
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ History:
+ 
+ version 1.1 (17.12.2022) done by JOTD:
+ - fixed potential crash on Terrible Fire hardware (issue #0005975)
+ - reworked readme file
+ 
+ version 1.0 (2002) done by Codetapper:
+ - original release
+
+
+REQUIREMENTS:
+- Slave requires WHDLoad V13+.
+- Game requires 512k chip mem and 516k other mem (+2.1Mb other to preload)
+- Game with speech requires 776k chip mem and 516k other mem (+2.1Mb other
+  memory to preload or 4.5Mb if you decrunch the files)
+
+FEATURES:
+- Full load from HD
+- Loads and saves high scores (unless you cheat!)
+- All files can be depacked to make loading almost instant!
+- Decruncher relocated to fast memory
+- Includes 2 slaves, one with speech and one without
+- Intro can be skipped after it has decrunched with the fire button
+- Mega trainer added (adapted from Ltd/Backlash's trainer)
+- Start an easy game with joystick up and fire (aswell as 'F1')
+- Start the arcade game with joystick left/right and fire (aswell as 'F3')
+- Toggle speech on and off with joystick down and fire (aswell as 'F5')
+- Loading routine optimised (no longer bothers checking which disk is in)
+- Fixed access fault in RNC depacking routine
+- Instructions included
+- Normal, MagicWB, 2 RomIcons, 2 NewIcons and 2 OS3.5 Colour Icons (created 
+  by me!) and 1 OS3.5 Colour Icon (created by Frank)
+- Quit option (default key is 'F10')
+
+TRAINER KEYS:
+- F6 - Toggle no overheating of your guns
+- F7 - Toggle infinite energy
+- F8 - Toggle shooting anywhere (so you can shoot behind you!)
+- F9 - Toggle infinite lives
+- Del - Skip the current level
+
+
+Here is my long awaited ultimate patch of this superb Psygnosis game!
+
+During the install procedure you will be asked if you wish to decrunch the
+data files.  This will mean you need 4.5Mb of memory instead of 2Mb to
+preload the files but the game will load almost instantly.  While the files
+decrunch the screen will flash green 25 times (once per file) to show it is
+working.  This was hard work due to the fact that the intro loads the file
+frontend.ppc to a temporary location and then relocates it and decrunches!
+
+The annoying 1 minute delay on the Walker intro picture while it plays the
+tune has been removed.  After the Walker pic has appeared for a few seconds
+the main files will have decrunched and you can hit either the mouse or
+joystick button to skip it.
+
+On the title screen, you can use the joystick to start the game instead of
+the function keys.  This is useful for people who burn games for playing on
+the CD³² (hi Riempie!)
+
+I have used Del for the level skip rather than the Help key since the built
+in cheat mode for the game uses it and there might be some key combination
+which does something cool which I haven't found out yet.
+
+There is a slave included with speech disabled. This is because the speech 
+must be located in chip memory and WHDLoad does not allow an optional chip
+memory segment. If you have a plain Amiga without any expansion memory, use
+the NoSpeech slave to run the game as the other one will probably not work.
+
+A few people asked me to center the display in the game.  Unfortunately due
+to the way the game sets up the screen it can't be done.  There are complex
+copperlists which are made up from a number of different memory locations
+and if you alter the DIWStrt and DIWStop values you get a lot of corrupt
+graphics on the left hand side. You'll just have to live with it :(
+
+Special greetings must go to Jean-François Fabre for the original JST
+install and for some of the joystick support code on the title screen.
+
+Thanks to Chris Vella for the original, Pavel Narozny and Frank for ideas,
+Frank again for great icons, Mad Matt for testing, Ltd/Backlash for the
+great trainer on the Fairlight version, Wepl for the superb WHDLoad, all
+Action members and the WHDLoad team!
+
+
+Codetapper/Action (19-Jun-2002)
+
+
+            ________  ________  ________  ____  ________  ________
+           _)       \_)       \_)       \_)   \_)       \_)       \
+   __ ___ /___/     /   /_____/\  /     /     /   /     /   /     /
+  /_//__// \___    /   /     /CT\/     /     /   /     /   /     /
+        /___/     /___      /   /     /_____/___      /___/     /___ __
+            \____/    \____/    \____/          \____/    \____//__//_/
+
+
+           Visit the Action website for more of our productions:
+                           http://codetapper.com
