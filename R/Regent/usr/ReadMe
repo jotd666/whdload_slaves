@@ -34,12 +34,10 @@
 
  History:
  --------
- version 1.0 (xx.01.2023) done by JOTD:
+ version 1.0 (04.02.2023) done by JOTD:
  - initial release
  - fixed to run with 32-bit fast memory
  - copy protection completely skipped
- - ability to skip intro (CUSTOM5=1)
- - TODO proper quit
 
  Contact:
  --------

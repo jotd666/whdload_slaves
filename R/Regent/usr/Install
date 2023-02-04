@@ -198,7 +198,7 @@
         (help @copyfiles-help)
         (source ("%s:" #AD_disk))
         (dest #dest)
-	    (pattern "~(#?.info|s|l)")
+	    (pattern "~(#?.info|s|l|c)")
       )
      (set #AD_disk "Regent_Disk_1")
       (set #AD_diskname "Disk 2")	;this optional, default is #AD_disk

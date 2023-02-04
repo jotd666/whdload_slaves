@@ -127,6 +127,8 @@ slv_info		dc.b	"Adapted by JOTD",10,10
 		DECL_VERSION
 		dc.b	0
 
+_assign0:
+	dc.b	"df0",0
 _assign1:
 	dc.b	"REGENT_Disk_0",0
 _assign2:
@@ -141,7 +143,6 @@ _assign5_target:
 	dc.b	"rgb",0
 
 slv_config:
-	dc.b	"C5:X:skip introduction:0;"
 	dc.b	0
 
 
@@ -150,23 +151,6 @@ _args:
 _args_end:
 	dc.b	0
 	even
-
-
-PATCH_XXXLIB_OFFSET:MACRO
-	movem.l	d0-d1/a0-a1,-(a7)
-	move.l	A6,A1
-	add.l	#_LVO\1,A1
-	lea	old_\1(pc),a0
-	move.l	2(A1),(A0)
-	move.w	#$4EF9,(A1)+	
-	pea	new_\1(pc)
-	move.l	(A7)+,(A1)+
-	bra.b	end_patch_\1
-old_\1:
-	dc.l	0
-end_patch_\1:
-	movem.l	(a7)+,d0-d1/a0-a1
-    ENDM
 	
 ;============================================================================
 
@@ -203,8 +187,11 @@ _bootdos
 		move.l	d0,a6			;A6 = dosbase
 		lea		_dosbase(pc),a0
 		move.l	d0,(a0)
-		
+
 	;assigns
+		lea	_assign0(pc),a0
+		sub.l	a1,a1
+		bsr	_dos_assign		; for savefile
 		lea	_assign1(pc),a0
 		sub.l	a1,a1
 		bsr	_dos_assign
@@ -221,10 +208,16 @@ _bootdos
 		lea	_assign5_target(pc),a1
 		bsr	_dos_assign
 
-
-	;load exe
-		move.l	_skip_intro(pc),d0
-		bne.b	.skintro
+		; intro is played after the game has quit
+		; intro doesn't quit...
+		; game doesn't seem to quit either...
+		; we'll never see the intro :)
+		lea		_play_intro(pc),a0
+		tst.w	(a0)
+		bne.b	.intro
+		st		(a0)
+		bra.b	.skintro
+.intro
 		lea	_introname(pc),a0
 		lea	_args(pc),a1
 		moveq.l	#_args_end-_args,d0
@@ -339,6 +332,7 @@ pl_main
 	PL_NOP	$307aa,2		; protection check (not useful now)
 	PL_NOP	$00222,6		; completely bypasses protection check 
 	PL_P	$33b46,fix_openlibrary
+	PL_P	$342f6,kick_reboot	; intercept close screen & quit
 	PL_END
 
 fix_openlibrary:
@@ -381,10 +375,7 @@ wait_blit
 	BNE.S	.wait
 	rts
 	
-_tag		dc.l	WHDLTAG_CUSTOM1_GET
-_custom1	dc.l	0
-		dc.l	WHDLTAG_CUSTOM5_GET
-_skip_intro	dc.l	0
+_tag		
 		dc.l	0
 _seglist:
 	dc.l	0
@@ -396,6 +387,8 @@ _stacksize
 		dc.l	0
 _dosbase
 	dc.l	0
+_play_intro
+	dc.w	0
 _mainname:
 	dc.b	"REGENT",0
 _introname:
