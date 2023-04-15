@@ -41,6 +41,11 @@
 
 History:
 
+ version 1.4 (13.04.2023) done by JOTD:
+ - added check for important system file without which
+   the game fails without any explicit reason
+   (issue #0006003, #0005860)
+ 
  version 1.3 (14.05.2022) done by JOTD:
  - added keyboard controls (issue #0005456)
  
@@ -73,4 +78,5 @@ Notes:
   copy with MFMWarp, too bad), although I could decrypt a lot of the
   startup code, for nothing... Must be Hernon protection, I could crack it now
   (did that on Final Assault) but why bother?
-
+- Thanks to Stingray for pointing out that if devs/system-configuration is missing
+  game runs but ends up failing with trashed graphics.

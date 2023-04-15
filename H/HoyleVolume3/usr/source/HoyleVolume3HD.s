@@ -60,7 +60,7 @@ PATCH_MT32
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.1"
+	dc.b	"1.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -73,7 +73,7 @@ DECL_VERSION:MACRO
 	dc.b	"$","VER: slave "
 	DECL_VERSION
 	dc.b	0
-slv_name		dc.b	"Hoyle Volume III"
+slv_name		dc.b	"Hoyle Volume 3"
     IFD CHIP_ONLY
     dc.b       "(DEBUG/CHIP MODE)"
     ENDC
@@ -109,17 +109,73 @@ _rename_file:
 
 _specific_patch
     move.l  _resload(pc),a2
-    lea pl_main(pc),a0
-    jsr (resload_PatchSeg,a2)
+	movem.l	a1,-(a7)
+	move.l	a1,d1
+	add.l	d1,d1
+	add.l	d1,d1
+	move.w	#23,d2
+	bsr	_get_section
+	move.l	a0,a1
+    lea		pl_main_v100(pc),a0
+	cmp.l	#$0c681234,($F6C0-$0f294,a1)
+	beq.b	.v100
+    lea		pl_main_v110(pc),a0
+.v100
+	movem.l	(a7)+,a1
+	jsr (resload_PatchSeg,a2)
+	
 	moveq.l	#0,d0       ; 0 means apply generic patches too
 	rts
 
-pl_main
+pl_main_v100
     PL_START
     PL_PS   $f6c0,avoid_af
     PL_PS   $f7d0,avoid_af
     PL_PS   $f62c,avoid_af
     PL_END
+pl_main_v110
+    PL_START
+    ;PL_PS   $f6b8,avoid_af
+    ;PL_PS   $f7c4,avoid_af
+    ;PL_PS   $f628,avoid_af
+    PL_END
+
+PATCH_DOSLIB_OFFSET:MACRO
+	movem.l	d0-d1/a0-a1,-(a7)
+	move.l	A6,A1
+	add.l	#_LVO\1,A1
+    cmp.w	#$4EF9,(A1)
+    beq.b   end_patch_\1    ; already done
+	moveq	#0,D0
+	move.w	4(A1),D0
+	addq.l	#4,D0
+	add.l	D0,A1
+
+	lea	old_\1(pc),a0
+	move.l	A1,(A0)+
+
+	move.l	A6,A1
+	add.l	#_LVO\1,A1
+	move.b	1(A1),D0
+	ext.w	D0
+	ext.l	D0
+	move.l	D0,(A0)		; moves to d0_value_xxx
+
+	move.w	#$4EF9,(A1)+	
+	pea	new_\1_init(pc)
+	move.l	(A7)+,(A1)+
+	bra.b	end_patch_\1
+new_\1_init
+	move.l	d0_value_\1(pc),d0
+	bra	new_\1
+old_\1:
+	dc.l	0
+d0_value_\1
+	dc.l	0
+end_patch_\1:
+	movem.l	(a7)+,d0-d1/a0-a1
+	ENDM
+    
     
 avoid_af:
     cmp.l   #0,a0

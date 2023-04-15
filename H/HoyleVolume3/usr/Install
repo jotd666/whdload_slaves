@@ -6,7 +6,7 @@
 (set #man-file "Manual")		;name of manual file
 (set #hint-file "Hints")		;name of hint file
 (set #sol-file "Solution")		;name of solution file
-(set #prefix "HoyleVolumeIII")                       ;name of slave, directory
+(set #prefix "HoyleVolume3")                       ;name of slave, directory
 
 ;----------------------------
 ; copy file including icon if exist

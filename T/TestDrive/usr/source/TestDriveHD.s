@@ -47,6 +47,8 @@ FASTMEMSIZE	= $20000
 NUMDRIVES	= 1
 WPDRIVES	= %0000
 
+FONTHEIGHT	= 8
+
 ;DISKSONBOOT
 DOSASSIGN
 ;INITAGA
@@ -74,7 +76,7 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.3"
+	dc.b	"1.4"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -104,6 +106,12 @@ slv_info		dc.b	"adapted by JOTD",10,10
 slv_CurrentDir:
 	dc.b	"data",0
 
+sysconf:
+	dc.b	"devs/system-configuration",0
+	; if this file is missing then game get strange fonts
+	; and even crashes
+sysconf_error:
+	dc.b	"File devs/system-configuration is missing!",0
 program:
 	dc.b	"TD",0
 args		dc.b	"p",10
@@ -122,6 +130,7 @@ slv_config
 _bootdos
 		clr.l	$0.W
 
+		
         lea    old_kbint(pc),a1
         lea kbint_hook(pc),a0
         cmp.l   (a1),a0
@@ -137,7 +146,16 @@ _bootdos
 		move.l	4(a7),(a2)
 
 		move.l	_resload(pc),a2		;A2 = resload
-
+		lea		sysconf(pc),a0
+		jsr		resload_GetFileSize(a2)
+		tst.l	d0
+		bne.b	.scok
+	pea	sysconf_error(pc)
+	pea	(TDREASON_FAILMSG).w
+	move.l	_resload(pc),a0
+	jmp	resload_Abort(a0)
+		
+.scok
 	bsr		get_version
 	
 	;open doslib

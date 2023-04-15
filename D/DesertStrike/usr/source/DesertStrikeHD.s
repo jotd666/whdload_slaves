@@ -126,7 +126,7 @@ _expmem         dc.l    EXPMEMSIZE         	;ws_ExpMem
 ;======================================================================
 
 DECL_VERSION:MACRO
-	dc.b	"4.0"
+	dc.b	"4.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -195,7 +195,10 @@ _start   ;       A0 = resident loader
 		move.l		_expmem(pc),a0
 		add.l		#$17524,a0		; Weapon Select
 		move.l	a0,(a1)
-		
+		lea		heli_struct_address(pc),a1
+		move.l	_expmem(pc),a0
+		add.l	#$76FF6,a0
+		move.l	a0,(a1)
 		
 		move.l		#$10400,d3		; load datatable
 		movea.l		d3,a0
@@ -302,9 +305,10 @@ _JsrIntro2
 		add.l		#$e,A0				; Add $e to skip the division by 0
 		rts
 
+; code jumps in $200 in menu, team brief
 _JsrLoader3
 		movem.l		d0-d7/a0-a6,-(sp)
-	
+		
 		cmp.l		#$48E77FFC,$3AF4.W
 		bne		.patch2
 		
@@ -333,7 +337,7 @@ _JsrLoader3
 .patch3
 		cmp.l		#$48E7FFFE,$1A170
 		bne		.patch4
-
+		; team brief
 		lea		_PL_JSR3_3(pc),a0
 		bsr		_Patch
 		bra		.go
@@ -450,6 +454,9 @@ _Patch:
 		jmp		resload_Patch(a2)
 
 
+	IFND	CHIP_ONLY
+FIX_24_BIT = 1
+	ENDC
 	
 ;======================================================================
 ;Patchlists
@@ -462,10 +469,13 @@ _PL_BOOT	PL_START
 		PL_R		$58962				; remove insert disk 1
 		PL_R		$5880a				; remove disk access
 		
+		IFD		FIX_24_BIT
 		; fix issues with 32-bit code when relocating
 		PL_B		$59568+2,$7F		; better MSB clipping
 		PL_B		$59574+2,$7F		; better MSB clipping
 		PL_B		$595d4+2,$7F		; better MSB clipping
+		ENDC
+		
 		PL_END
 
 _PL_800
@@ -480,10 +490,12 @@ _PL_800
 		;PL_PA		$86a,_IntroAddr
 		
 		; fix issues with 32-bit code when relocating
+		IFD		FIX_24_BIT		
 		PL_B		$1e14+2,$7F		; better MSB clipping
 		PL_B		$1e80+2,$7F		; better MSB clipping
 		PL_B		$1e20+2,$7F		; better MSB clipping
-
+		ENDC
+		
 		PL_END
 
 _PL_800_BLITTER
@@ -535,7 +547,7 @@ _PL_MAIN	PL_START
 		PL_PSS		$98A0,cd32_weapon_switch_off,2
 		PL_ELSE
 		;;PL_PSS		$A9C,_Read2ndButton,2		; 2nd button detect in VBLANK interrupt
-		PL_PSS		$9890,_cd32_fire_current_weapon_test,2		; Converted to use 3 fire buttons - one for each weapon
+		;;PL_PSS		$9890,_cd32_fire_current_weapon_test,2		; Converted to use 3 fire buttons - one for each weapon
 		; change weapon with 2nd button or FORWARD
 		PL_PSS		$98a0,cd32_weapon_switch,2
 		PL_B		$98a8,$67
@@ -551,15 +563,20 @@ _PL_MAIN	PL_START
 		PL_NOP		$676,6				; Skip Intro
 		PL_ENDIF
 		
+		IFD		FIX_24_BIT
 		; fix issues with 32-bit code when relocating
 		PL_B		$14e46+2,$7F		; better MSB clipping
 		PL_B		$14e52+2,$7F		; better MSB clipping
 		PL_B		$14eb0+2,$7F		; better MSB clipping
-
+		ENDC
+		
 		; blitter
+		PL_IFC3
+		PL_ELSE		
 		PL_PSS	$5c14,blit1,2
 		PL_PSS	$5298,blit2,2
 		PL_P	$537a,blit3
+		PL_ENDIF
 		PL_END
 
 blit1		
@@ -612,6 +629,7 @@ _PL_JSR3_2_common
 		PL_PS		$1326,_CD32_Read3
 		PL_PS		$1330,_CD32_FireMenu
 		PL_PSS		$1196,_CD32_FireJoy0,2
+		PL_PSS		$1092,vblank_menu_hook,6
 		PL_B		$119e,$67			; Change to bne check
 		;PL_ENDIF
 		
@@ -632,7 +650,7 @@ _PL_JSR3_3	PL_START
 		PL_R		$19fb2				; led off
 		PL_R		$1a018				; remove disk access
 		PL_IFC4						; Check if CD32 joypad enable
-		PL_PSS		$cdc,_CD32_Read4,2
+		PL_PSS		$cdc,_CD32_Read4,2	; team brief - in vblank
 		PL_B		$ce4,$66			; Replace with cd32 joy 0 check red button
 		PL_PSS		$ce8,_CD32_Fire,2
 		PL_B		$cf0,$67			; Replace with cd32 joy 0 check red button
@@ -677,6 +695,8 @@ _WaitBlitter
 _ammo_test
 	; not working with hellfire, launched on button release
 	move.l	d0,-(a7)
+	cmp.l	heli_struct_address(pc),a3
+	bne.b	.fired		; enemies are also using this routine!
 	move.l	a0,-(a7)
 	move.l		_ammo_type(pc),a0
 	cmp.b		#WEAPON_HELLFIRE,(a0)
@@ -923,6 +943,14 @@ _Decrunch
 
 		include ReadJoypad.s
 
+vblank_menu_hook:
+	movem.l	d0-d7/A0-A6,-(sp)
+	bsr		_joystick
+	jsr		$10c4.w
+	move.w	#$20,_custom+intreq
+	movem.l		(sp)+,d0-d7/A0-A6
+	rts
+	
 _CD32_Read1	movem.l		d0-d7/A0-A6,-(sp)		; Game screen joypad read
 		bsr		_joystick
 		bsr		_CD32_Quit
@@ -941,13 +969,12 @@ _CD32_Read2	movem.l		d0-d7/A0-A6,-(sp)		; Map screen joypad read
 		rts
 
 _CD32_Read3	movem.l		d0-d7/A0-A6,-(sp)		; Main menu screen joypad read
-		bsr		_joystick
 		bsr		_CD32_Quit
 		movem.l		(sp)+,d0-d7/A0-A6
 		move.w		($dff00c),d0
 		rts
 
-_CD32_Read4	movem.l		d0-d7/A0-A6,-(sp)		; Main menu screen joypad read
+_CD32_Read4	movem.l		d0-d7/A0-A6,-(sp)		; team brief menu screen joypad read
 		bsr		_joystick
 		bsr		_CD32_Quit
 		bsr		_CD32_FireJoy0
@@ -1210,6 +1237,8 @@ _end      move.l  (_resload,pc),-(a7)
           add.l   #resload_Abort,(a7)
           rts
 _ammo_type
+	dc.l	0
+heli_struct_address
 	dc.l	0
 	
 ;======================================================================

@@ -42,6 +42,9 @@
 
  History:
 
+ version 3.3-B
+ - just reworked source code for vasm
+ 
  version 3.3 (01.05.2018)
  - second button routine rewritten again, seems to work better
    (previous version second button for loops had a tendency to stop working after a while)

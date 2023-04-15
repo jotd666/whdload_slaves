@@ -59,12 +59,17 @@
  History:
  --------
  
+ Version 4.1 (2023) by JOTD:
+ - enemies weren't firing in v4.0 (issue #0006008)
+ - mouse works properly in menu (issue #0006032)
+
  Version 4.0 (25.12.2022) by JOTD:
  - patched for 32-bit fastmem support, using only 512k chipmem (not trivial),
    no need for 2 slaves now. As a bonus, game should be slightly smoother.
  - support for strafe with joypad reverse / forward (without firing !) (not for hellfire)
  - 3rd button launches hellfire in alternate controls mode (issue #0005348)
  - improved blitter fixes
+ - COMPLETELY UNUSABLE, PLEASE UPGRADE
  
  
  Version 3.3 (03.april.2022) by JOTD:
@@ -147,7 +152,7 @@
  - strafe with reverse/forward doesn't work with hellfire. It's because
    of the special way that the game launches hellfire: when button is released.
 
- - The game saw that real 32-bit memory could not work. The relocation routines
+ - The game made sure that real 32-bit memory could not work. The relocation routines
    for the embedded executables masked the higher 8 bits of addresses. Removing
    that mask allows the game to work on 32-bit memory.
  

@@ -39,11 +39,14 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 2.0 (2022)
+ version 2.0 (2023)
  - TODO: enable fastmem CD32 version (copperlist issue)
- - fixed various crashes in AGA/ECS (issue #0005417, #0005253)
+ - fixed various crashes in AGA/ECS (issue #0005417, #0005253, #0006091)
  - separate ECS version using only 512kb chip
  - TODO: installer redone from scratch
+ - fixed blitter issues in title & menu
+ - fixed colorburst copperlist issues
+ - wrong patch fixed on the ECS version
  
  version 1.3 (25.01.2006) done by JOTD
  - support for CD³² version (not very good, but allows to play) with joystick
@@ -82,3 +85,6 @@
 	7:FreeWheelController
 
  not sure if it works, just dug it out from the executable symbols :)
+
+Note: the AGA slave can run the ECS version (with more memory) but the ECS slave
+doesn't recognize the AGA versions.
