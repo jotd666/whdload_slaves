@@ -35,14 +35,15 @@ EMULFLAGS	= WHDLF_EmulTrap|WHDLF_EmulChk|WHDLF_EmulDivZero|WHDLF_EmulTrapV
 FLAGS		= WHDLF_NoError|WHDLF_ClearMem|EMULFLAGS
 QUITKEY		= $46		; Del
 ;DEBUG
-CHIP_ONLY
 
 ; absolute skip
 PL_SA	MACRO
 	PL_S	\1,\2-(\1)
 	ENDM
 
+;CHIP_ONLY
 RELOC_ENABLED
+;UNRELOC_ENABLED
 
 	IFD	RELOC_ENABLED
 EXPMEMSIZE = $80000
@@ -78,6 +79,7 @@ HEADER	SLAVE_HEADER		; ws_security + ws_ID
 	dc.w	dir-HEADER	; ws_CurrentDir
 	dc.w	0		; ws_DontCache
 	dc.b	0		; ws_KeyDebug
+_keyexit:
 	dc.b	QUITKEY		; ws_KeyExit
 _expmem:
 	dc.l	FASTMEMSIZE		; ws_ExpMem
@@ -94,7 +96,9 @@ _expmem:
 	dc.w	.config-HEADER	; ws_config
 
 
-.config	dc.b	0
+.config	
+    dc.b    "C1:X:Trainer no timer - fast qualifying:0;"
+	dc.b	0
 
 dir	IFD	DEBUG
 	dc.b	"SOURCES:WHD_Slaves/DaysOfThunder/"
@@ -118,7 +122,12 @@ DECL_VERSION:MACRO
 	ENDC
 	ENDM
 
-name	dc.b	"Days of Thunder",0
+name	dc.b	"Days of Thunder"
+		IFD		CHIP_ONLY
+		dc.b	" (debug/chip mode)"
+		ENDC
+		
+		dc.b	0
 copy	dc.b	"1990 Mindscape",0
 info	dc.b	"installed by StingRay/[S]carab^Scoopex & JOTD",10
 	IFD	DEBUG
@@ -314,16 +323,38 @@ PLGAME	PL_START
 	PL_W	$11bfe-$300,$4e73		; fix Div0 exception
 	PL_W	$11c1e-$300,$4e73		; fix TrapV exception
 	PL_W	$11c34-$300,$4e73		; fix Chk exception
-	PL_I	$0b2b8-$300				; bogus code made illegal
-	PL_I	$0d912-$300				; bogus code made illegal
+	PL_I	$0b2b8-$300				; bogus code made illegal (won't happen)
 	PL_I	$03d94-$300				; infinite loop
 	
-	PL_P	$1a10a-$300,soundtracker_loop
+	PL_P	$1a10a-$300,soundtracker_loop_d0
+	PL_PSS	$01aba-$300,soundtracker_loop_d7,2
+	PL_PSS	$18be6-$300,soundtracker_loop_d7,2
+	PL_PSS	$18c60-$300,soundtracker_loop_d7,2
+	
+	PL_PSS	$18bb0-$300,soundtracker_loop_d7,2
+	PL_PSS	$18c30-$300,soundtracker_loop_d7,2
+	PL_PSS	$18c9a-$300,soundtracker_loop_d7,2
 	
 	PL_PS	$0d8fa-$300,fix_smc_d8fa
 	; same SMC twice
-	PL_PSS	$0ec00-$300,fix_smc_ec00,2
-	PL_PSS	$0f912-$300,fix_smc_ec00,2
+	PL_PSS	$ebfc-$300,fix_smc_ebfc,2
+	PL_PSS	$f912-$300,fix_smc_ebfc,2
+	; duff device #1 (we're overwriting robustness code)
+	PL_PS	$0d90c-$300,fix_duff_device_1
+	PL_PS	$0eb96-$300,fix_duff_device_2
+	; same SMC twice
+	PL_PS	$0ecc0-$300,fix_smc_ecc0
+	PL_PS	$0f9d6-$300,fix_smc_ecc0
+
+	; trainer: no timer
+	PL_IFC1X	0
+	PL_NOP	$0401e-$300,4	; no timer: super 0 time!!!
+	PL_NOP	$040a4-$300,2	; instant qualifying after 1 lap
+	PL_ENDIF
+	
+	IFD		RELOC_ENABLED
+	PL_PSS	$19FF4-$300,load_sound,2
+	ENDC
 	PL_END
 
 .emulate_dbf
@@ -361,6 +392,26 @@ PLGAME	PL_START
 	moveq	#0,d0
 	move.b	Key(pc),d0
 	not.b	d0
+	move.w	d0,-(a7)
+	ror.b	#1,d0
+	cmp.b	_keyexit(pc),d0
+	beq		QUIT
+	
+	IFEQ	1
+	cmp.b	#1,d0
+	bne.b	.no_one
+	move.l	a0,-(a7)
+	move.l	_expmem(pc),a0
+	; adds a lap
+	;add.l	#$39f8a,a0		; main status struct
+	;addq.w	#1,(66,a0)
+	add.l	#$3ca30,a0
+	move.w	#1,(a0)
+	move.l	(a7)+,a0
+.no_one
+	ENDC
+	
+	move.w	(a7)+,d0
 	move.l	_expmem(pc),-(a7)
 	add.l	#$4B30,(a7)
 	rts
@@ -376,8 +427,13 @@ PLGAME	PL_START
 	move.w	#1<<5,$dff09c
 	rts
 	
-soundtracker_loop
-	move.w  d0,-(a7)
+load_sound:
+	move.l	_expmem(pc),a5
+	lea		$1a8d2,A0		;19ff4: 41fa08dc
+	add.l	#$18f04,A5	;19ff8: 4bfaef0a
+	rts
+	
+soundtracker_loop_d0
 	move.w	#4,d0   ; make it 7 if still issues
 .bd_loop1
 	move.w  d0,-(a7)
@@ -387,22 +443,73 @@ soundtracker_loop
 	beq.s	.bd_loop2
 	move.w	(a7)+,d0
 	dbf	d0,.bd_loop1
-	move.w	(a7)+,d0
 	rts 
 
+soundtracker_loop_d7
+	move.w	#4,d7   ; make it 7 if still issues
+.bd_loop1
+	move.w  d7,-(a7)
+    move.b	$dff006,d7	; VPOS
+.bd_loop2
+	cmp.b	$dff006,d7
+	beq.s	.bd_loop2
+	move.w	(a7)+,d7
+	dbf	d7,.bd_loop1
+	rts 
+
+fix_smc_ecc0:
+	ADDQ.W	#1,D6			;0ecc0: 5246
+	LEA	160(A2),A2		;0ecc2: 45ea00a0
+	; too many SMC occurrences ahead: flush cache instead
+	bra.b	_flushcache
+	
+fix_smc_f9f0:
+	LEA	10(A1),A1		;0f9f0: 43e9000a
+	move.l	a0,-(a7)
+	move.l	(4,a7),a0
+	sub.w	(a0),d5
+	move.l	(a7)+,a0
+	addq.w	#2,(a7)
+	rts
+	
+fix_duff_device_1:
+	move.l	d1,-(a7)
+	moveq	#0,d1
+	move.w	d0,d1
+	add.w	#14,d1			; make up for early jump
+	add.l	d1,(4,a7)		; emulate SMC bra
+	move.l	(a7)+,d1
+	rts
+	
+fix_duff_device_2:
+	AND.L	D0,(A3)			;0eb96: c193
+	AND.L	D3,D1			;0eb98: c283
+	OR.L	D1,(A3)+		;0eb9a: 839b
+	bra.b		_flushcache		; temporary
+	
 fix_smc_d8fa:
 	move.l	(a7),a2		; return address
 	move.w	(a2),d1		; emulate SMC
 	ADDA.W	D0,A0			;0d8fa: d0c0
 	MOVEA.L	A6,A2			;0d8fc: 244e
+	addq.l	#2,(a7)		; skip data
 	rts
-	
+
+
+_flushcache:
+	move.l	a2,-(a7)
+	move.l	resload(pc),a2
+	jsr	resload_FlushCache(a2)
+	move.l	(a7)+,a2
+	rts
+
 	; we let the fake/bogus smc comparison happen but we ignore
 	; the result as it's not reliable
 	; then we do something correct. Tricky but less tricky than
 	; a TRAP before the value (we don't have room to patch before the test
 	; because lb_0ebfc can be branched to)
-fix_smc_ec00:
+	; this is untested as I didn't reach that point
+fix_smc_ebfc:
 	movem.l	d0/a0,-(a7)
 	move.l	(8,a7),a0		; return address
 	move.w	(-8,a0),d0		; real value to compare to
@@ -417,6 +524,7 @@ fix_smc_ec00:
 .pass
 	rts
 	
+
 WaitRaster
 	move.l	d0,-(a7)
 .wait	move.l	$dff004,d0

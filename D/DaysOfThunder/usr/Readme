@@ -1,0 +1,109 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Days of Thunder" © 1990 Mindscape.
+
+ Requirements:
+ -------------
+ This install requires WHDLoad to be in the path.
+ To install from a different drive than DF0: select installation mode Expert.
+
+ The installed game requires 0.5 MB ChipMem (+0.5 MB OtherMem for preload).
+ It can be quit by pressing Del (key can be changed with Tooltype "QuitKey=").
+
+
+
+ Features:
+ ---------
+ - Full load from HD
+ - Stack frame errors fixed (x3)
+ - Keyboard handling fixed
+ - Interrupts fixed
+ - NewIcon/RomIcon (created by JHZ)
+ - Source code included as usual
+ - Quit option that works on 68000 machines (default key is 'Del')
+
+
+ Here's the new and updated patch for this rather craptastic game. I couldn't
+ be bothered to spend more time than necessary on it so no trainers or any
+ other special features this time. I doubt anyone will seriously play
+ this game anyway.
+
+ The old patch crashed in the introduction part, this has been fixed.
+ The crashes were caused by not properly emulated exceptions, these
+ exceptions were caused by "great" code in the vector routines, instead
+ of doing it properly, coder just used chk/trap/div0 exceptions to
+ catch certain errors. It's one of the worst and slowest vector routines
+ I've ever seen in a game. No more comments needed, really!
+
+
+ There also were some disk accesses in the old patch and some other
+ problems, these have all been fixed now!
+
+
+ "Enjoy" the game from HD.
+
+ Sting, 02-Jul-2015
+
+
+ Greetings to all in Scarab and Scoopex, the WHDLoad team, PMC,
+ Musashi5150, Skan, Slummy, Loaderror, Frequent, Wayne Kerr, Mr.Spiv,
+ Alpha One, CFou!, Paradroid, Audiomonster, Bonefish, Vention,
+ Slammer, Axis, Tim, Triace, Britelite and all the other usual suspects. :)
+
+ Special greetings to all Golf MK1 fans worldwide and all classic
+ car owners/drivers. :)
+
+ Extra greetings to the usual suspects on #amigascne, see you all at
+ Revision 2016! :)
+
+
+ History:
+ --------
+
+ version 2.0 (2023) done by JOTD:
+ - relocated to fast memory for high speed on fast machines
+ - self-modifying code fixed
+ - sound fixed
+ - alternate controls
+ - trainer: no timer & qualification after 1 lap
+ - added quitkey on 68000
+ - added manual from lemon
+
+ version 1.1 (02.07.2015) done by StingRay:
+ - patch rewritten
+ - crashes in intro part fixed
+ - disk accesses removed
+ - keyboard handling fixed and 68000 quitkey support added
+ - default quitkey changed to Del
+ - new install script
+ - source code included
+
+ version 1.0 (19.09.1999) done by Bored Seal:
+ - initial version
+
+Thanks to Andrew David Barker for disk image and support ;).
+
+Bored Seal
+
+
+ Contact:
+ --------
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, EXPCHIP, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page.
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
