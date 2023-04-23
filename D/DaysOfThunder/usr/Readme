@@ -19,18 +19,6 @@
  It can be quit by pressing Del (key can be changed with Tooltype "QuitKey=").
 
 
-
- Features:
- ---------
- - Full load from HD
- - Stack frame errors fixed (x3)
- - Keyboard handling fixed
- - Interrupts fixed
- - NewIcon/RomIcon (created by JHZ)
- - Source code included as usual
- - Quit option that works on 68000 machines (default key is 'Del')
-
-
  Here's the new and updated patch for this rather craptastic game. I couldn't
  be bothered to spend more time than necessary on it so no trainers or any
  other special features this time. I doubt anyone will seriously play
@@ -68,22 +56,23 @@
  History:
  --------
 
- version 2.0 (2023) done by JOTD:
+ version 2.0 (23.04.2023) done by JOTD:
  - relocated to fast memory for high speed on fast machines
  - self-modifying code fixed
  - sound fixed
- - alternate controls
  - trainer: no timer & qualification after 1 lap
- - added quitkey on 68000
  - added manual from lemon
 
  version 1.1 (02.07.2015) done by StingRay:
  - patch rewritten
  - crashes in intro part fixed
  - disk accesses removed
+ - interrupts fixed
+ - Stack frame errors fixed (x3)
  - keyboard handling fixed and 68000 quitkey support added
  - default quitkey changed to Del
  - new install script
+ - NewIcon/RomIcon (created by JHZ)
  - source code included
 
  version 1.0 (19.09.1999) done by Bored Seal:

@@ -150,6 +150,10 @@ _info           dc.b    "by JOTD & Abaddon since 1996",10,10
 		dc.b    "Version "
                 DECL_VERSION
                 dc.b    0
+	dc.b	0
+	dc.b	"$","VER: slave "
+	DECL_VERSION
+	dc.b	10,0	
 
 _config
 		dc.b    "BW;"

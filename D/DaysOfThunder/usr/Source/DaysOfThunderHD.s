@@ -43,7 +43,6 @@ PL_SA	MACRO
 
 ;CHIP_ONLY
 RELOC_ENABLED
-;UNRELOC_ENABLED
 
 	IFD	RELOC_ENABLED
 EXPMEMSIZE = $80000
@@ -111,7 +110,7 @@ _unreloc_file
 	dc.b	"dot.unreloc",0
 
 DECL_VERSION:MACRO
-	dc.b	"1.2"
+	dc.b	"2.0"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -327,9 +326,9 @@ PLGAME	PL_START
 	PL_I	$03d94-$300				; infinite loop
 	
 	PL_P	$1a10a-$300,soundtracker_loop_d0
-	PL_PSS	$01aba-$300,soundtracker_loop_d7,2
-	PL_PSS	$18be6-$300,soundtracker_loop_d7,2
-	PL_PSS	$18c60-$300,soundtracker_loop_d7,2
+	PL_PSS	$01aba-$300,loop_d7_big,2
+	PL_PSS	$18be2-$300,soundtracker_loop_d7,2
+	PL_PSS	$18c5c-$300,soundtracker_loop_d7,2
 	
 	PL_PSS	$18bb0-$300,soundtracker_loop_d7,2
 	PL_PSS	$18c30-$300,soundtracker_loop_d7,2
@@ -337,8 +336,8 @@ PLGAME	PL_START
 	
 	PL_PS	$0d8fa-$300,fix_smc_d8fa
 	; same SMC twice
-	PL_PSS	$ebfc-$300,fix_smc_ebfc,2
-	PL_PSS	$f912-$300,fix_smc_ebfc,2
+	PL_PSS	$ec00-$300,fix_smc_ebfc,2
+	PL_PSS	$f916-$300,fix_smc_ebfc,2
 	; duff device #1 (we're overwriting robustness code)
 	PL_PS	$0d90c-$300,fix_duff_device_1
 	PL_PS	$0eb96-$300,fix_duff_device_2
@@ -392,12 +391,11 @@ PLGAME	PL_START
 	moveq	#0,d0
 	move.b	Key(pc),d0
 	not.b	d0
-	move.w	d0,-(a7)
-	ror.b	#1,d0
-	cmp.b	_keyexit(pc),d0
-	beq		QUIT
 	
 	IFEQ	1
+	move.w	d0,-(a7)
+	ror.b	#1,d0
+	
 	cmp.b	#1,d0
 	bne.b	.no_one
 	move.l	a0,-(a7)
@@ -409,9 +407,9 @@ PLGAME	PL_START
 	move.w	#1,(a0)
 	move.l	(a7)+,a0
 .no_one
+	move.w	(a7)+,d0
 	ENDC
 	
-	move.w	(a7)+,d0
 	move.l	_expmem(pc),-(a7)
 	add.l	#$4B30,(a7)
 	rts
@@ -445,8 +443,13 @@ soundtracker_loop_d0
 	dbf	d0,.bd_loop1
 	rts 
 
+loop_d7_big:
+	move.w	#200,d7	; approx
+	bra.b	d7_loop
+	
 soundtracker_loop_d7
 	move.w	#4,d7   ; make it 7 if still issues
+d7_loop:
 .bd_loop1
 	move.w  d7,-(a7)
     move.b	$dff006,d7	; VPOS
@@ -472,6 +475,11 @@ fix_smc_f9f0:
 	addq.w	#2,(a7)
 	rts
 	
+	; superman's comment:
+	; I noticed however that there is a NOVBRMOVE tool type set by default
+	; and if I remove that then it works with NOCACHE but not without. 
+	
+	; this is more elegant but I have a doubt about this code...
 fix_duff_device_1:
 	move.l	d1,-(a7)
 	moveq	#0,d1
@@ -480,6 +488,15 @@ fix_duff_device_1:
 	add.l	d1,(4,a7)		; emulate SMC bra
 	move.l	(a7)+,d1
 	rts
+	
+fix_duff_device_1_brutal:
+	move.l	a0,-(a7)
+	move.l	_expmem(pc),a0
+	add.l	#$0d91a,a0
+	move.w	d0,(a0)
+	move.l	(a7)+,a0
+	addq.l	#6,(a7)		; skip illegal code
+	bra.b	_flushcache
 	
 fix_duff_device_2:
 	AND.L	D0,(A3)			;0eb96: c193
@@ -602,10 +619,7 @@ SetLev2IRQ
 .nocustom	
 	
 
-
 	or.b	#1<<6,$e00(a1)			; set output mode
-
-
 
 	cmp.b	HEADER+ws_keydebug(pc),d0	
 	bne.b	.nodebug
@@ -617,7 +631,7 @@ SetLev2IRQ
 
 
 .nodebug
-	cmp.b	HEADER+ws_keyexit(pc),d0
+	cmp.b	_keyexit(pc),d0
 	beq.b	.exit
 	
 

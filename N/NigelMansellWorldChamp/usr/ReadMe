@@ -39,11 +39,11 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 2.0 (2023)
+ version 2.0 (04.2023) done by JOTD
  - TODO: enable fastmem CD32 version (copperlist issue)
  - fixed various crashes in AGA/ECS (issue #0005417, #0005253, #0006091)
  - separate ECS version using only 512kb chip
- - TODO: installer redone from scratch
+ - installer redone from scratch
  - fixed blitter issues in title & menu
  - fixed colorburst copperlist issues
  - wrong patch fixed on the ECS version
