@@ -1,0 +1,59 @@
+Short:    HD-Installer for Total Eclipse V1.0
+Author:   Codetapper/Action (codetapper@hotmail.com), ICQ: 26051687
+Uploader: Codetapper/Action (codetapper@hotmail.com)
+Version:  1.0
+Type:     game/patch
+
+This patch applies to "Total Eclipse" (c) 1989 Incentive Software/Domark 
+- 1 disk. Thanks to Carlo Pirri and Mike West for sending the originals!
+
+REQUIREMENTS:
+- Slave requires WHDLoad V15+ and an installed A500 Kickstart 1.3 image
+- Game requires 512k chip mem and 256k other mem (+0.4Mb for preload option)
+
+FEATURES: (23-Apr-2002)
+- Supports 3 versions
+- Full load from HD
+- Loads and saves games to HD
+- Copy protection removed on 2 versions (MFM track/Rob Northen copylock)
+- Empty DBF loops fixed (x2)
+- Stack relocated to fast memory
+- Quick key instructions included
+- 4 Colour Icon, MagicWB Icon, RomIcon, NewIcon, OS3.5 Colour Icon (created by 
+  me!) and 2 Exoticons (taken from http://exotica.fix.no)
+- Quit option (default key is 'F10')
+
+The kickstart image must be located in the directory "Devs:Kickstarts"
+and must be named "kick34005.A500". The image can be extracted from an
+A500 with tools like "GrabKick" or similar which can be found on Aminet.
+If the image is the wrong version or altered in any way, WHDLoad will
+quit with an appropriate error message. 
+
+Additionally the file "kick34005.A500.RTB" must be installed in the same
+directory as the kickstart image. It can be found in the archive 
+"util/boot/skick343.lha" on Aminet.
+
+A huge thank you must go to Mike West for supplying the copylocked version
+of the game and staying up half the night decoding it with the great
+CopyLockDecoder by Mr Larmer!
+
+Greetings also to Carlo, Mr Larmer, Galahad, Andreas, Amigaboy, all Action
+members and the WHDLoad team!
+
+
+Codetapper/Action (23-Apr-2002)
+
+
+         Bug report form, full WHDLoad package and other installs:
+                          http://www.whdload.de/
+
+            ________  ________  ________  ____  ________  ________
+           _)       \_)       \_)       \_)   \_)       \_)       \
+   __ ___ /___/     /   /_____/\  /     /     /   /     /   /     /
+  /_//__// \___    /   /     /CT\/     /     /   /     /   /     /
+        /___/     /___      /   /     /_____/___      /___/     /___ __
+            \____/    \____/    \____/          \____/    \____//__//_/
+
+
+           Visit the Action website for more of our productions:
+                           http://zap.to/action/
