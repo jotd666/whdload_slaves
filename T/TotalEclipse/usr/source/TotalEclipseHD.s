@@ -48,14 +48,22 @@
 		SUPER				;disable supervisor warnings
 		ENDC
 
-;============================================================================
+;CHIP_ONLY
 
-CHIPMEMSIZE	= $80000
+;============================================================================
+	IFD		CHIP_ONLY
+CHIPMEMSIZE	= $A0000
 FASTMEMSIZE	= $0
+	ELSE
+BLACKSCREEN
+CHIPMEMSIZE	= $80000
+FASTMEMSIZE	= $80000
+	ENDC
+	
 NUMDRIVES	= 1
 WPDRIVES	= %0000
 
-BLACKSCREEN
+
 ;DEBUG
 ;DISKSONBOOT
 ;DOSASSIGN
@@ -65,63 +73,69 @@ IOCACHE		= 10000
 ;MEMFREE	= $200
 ;NEEDFPU
 ;SETPATCH
+BOOTDOS
+
 
 ;============================================================================
 
-KICKSIZE	= $40000			;34.005
-BASEMEM		= CHIPMEMSIZE
-EXPMEM		= KICKSIZE+FASTMEMSIZE
+
+slv_Version	= 17
+slv_BaseFlags	= WHDLF_NoError|WHDLF_Examine
+	IFD	AGA
+slv_Flags	= slv_BaseFlags|WHDLF_ReqAGA
+	ELSE
+slv_Flags   = slv_BaseFlags
+	ENDC
+	
+slv_keyexit	= $5D	; num '*'
 
 ;============================================================================
 
-_base		SLAVE_HEADER			;ws_Security + ws_ID
-		dc.w	15			;ws_Version
-		dc.w	WHDLF_NoError|WHDLF_EmulPriv|WHDLF_Examine	;ws_flags
-		dc.l	BASEMEM			;ws_BaseMemSize
-		dc.l	0			;ws_ExecInstall
-		dc.w	_start-_base		;ws_GameLoader
-		dc.w	_Data-_base		;ws_CurrentDir
-		dc.w	0			;ws_DontCache
-_keydebug	dc.b	0			;ws_keydebug
-_keyexit	dc.b	$59			;ws_keyexit = F10
-_expmem		dc.l	EXPMEM+$1000		;ws_ExpMem
-		dc.w	_name-_base		;ws_name
-		dc.w	_copy-_base		;ws_copy
-		dc.w	_info-_base		;ws_info
+		INCLUDE	"whdload/kick13.s"
+
 
 ;============================================================================
 
-		CNOP 0,4
-_name		dc.b	"Total Eclipse",0
-_copy		dc.b	"1989 Incentive Software/Domark",0
-_info		dc.b	"Installed by Codetapper/Action",10
-		dc.b	"Version 1.0 "
-		IFD	BARFLY
-		IFND	.passchk
-		DOSCMD	"WDate  >T:date"
-.passchk
-		ENDC
+DECL_VERSION:MACRO
+	dc.b	"1.1"
+	IFD BARFLY
+		dc.b	" "
 		INCBIN	"T:date"
-		ELSE
-		dc.b	"(23.04.2002)"
-		ENDC
+	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
+	ENDC
+	ENDM
+		CNOP 0,4
+slv_name		dc.b	"Total Eclipse"
+	IFD		CHIP_ONLY
+	dc.b	" (chip/debug mode)"
+	ENDC
+	dc.b	0
+slv_copy		dc.b	"1989 Incentive Software/Domark",0
+slv_info		dc.b	"Installed by Codetapper & JOTD",10
+		dc.b	"Version "
+		DECL_VERSION
 		dc.b	-1,"Thanks to Carlo Pirri and Mike West"
 		dc.b	10,"for sending the originals!"
 		dc.b	0
-_Data		dc.b	"data",0
+slv_CurrentDir:		dc.b	"data",0
 _MainFile	dc.b	"2",0
 _MainFile_V3	dc.b	"0.tec",0
 _NotFoundMsg	dc.b	"The intro file '0.tec' or '2' could not be found!",0
 _FailedLoadMsg	dc.b	"Failed to load the intro file!",10,"Check it is a standard Amiga executable",10,"and hasn't been compressed!",0
 _args		dc.b	10
 _args_end
+
+slv_config:
+		dc.b	0
+	dc.b	"$","VER: slave "
+	DECL_VERSION
+	dc.b	10,0	
+    even
 		EVEN
 
-;============================================================================
-_start						;a0 = resident loader
-;============================================================================
-						
-		bra	_boot			;initialize kickstart and environment
 
 _bootdos	move.l	_resload(pc),a2		;a2 = resload
 
@@ -149,9 +163,10 @@ _LoadIntro	move.l	a0,d1			;Load exe
 		add.l	a0,a0
 		add.l	a0,a0
 		add.l	#4,a0
-
+	
 		cmp.l	#$4afc23c0,$ee(a0)	;Check for encrypted game (jmp CONTROL)
-		beq	_Intro_V3
+		beq	_wrongver
+		;;beq	_Intro_V3
 
 		cmp.l	#'KEV.',$30(a0)		;KEV.library protected version
 		beq	_IntroOK		;from Virtual Worlds compilation (Carlo Pirri)
@@ -171,6 +186,16 @@ _CommonIntro	IFD DEBUG
 		jsr	(resload_Control,a2)
 		add.w	#12,a7
 		ENDC
+
+		; align exe memory on round value
+        IFD CHIP_ONLY
+        movem.l a6,-(a7)
+		move.l	$4.w,a6
+        move.l  #$40000-$31108,d0
+        move.l  #MEMF_CHIP,d1
+        jsr _LVOAllocMem(a6)
+        movem.l (a7)+,a6
+        ENDC
 
 		lea	_PL_LowMem(pc),a0
 		sub.l	a1,a1
@@ -198,6 +223,7 @@ _PL_LowMem	PL_START
 _PL_Intro	PL_START
 		PL_L	$30,'dos.'		;KEV.library->dos.library
 		PL_L	$400,$4eb8010c		;lea ($1c,a6),a0 to jump to game
+		PL_L	$276,MEMF_CLEAR				; enable fastmem for game
 		PL_END
 
 ;============================================================================
@@ -245,29 +271,19 @@ _Game		movem.l	d0-d1/a0-a2/a6,-(sp)	;Patch main game
 		cmp.l	$438(a6),d0
 		bne	_wrongver
 
-_Version1	lea	_PL_GameV1(pc),a0
+_Version1	
+		; VirtualWorlds
+		lea	_PL_GameV1(pc),a0
 		move.l	a6,a1
 		move.l	_resload(pc),a2
 		jsr	resload_Patch(a2)
 
-		move.l	_expmem(pc),d0		;Stack to fast memory
-		add.l	#EXPMEM,d0
-		add.l	#$ffc,d0
-		add.l	#$8000,a6
-		move.l	d0,$7d4(a6)
-		move.l	d0,$9ea(a6)
+
 		bra	_StartGame
 
 _Version2	lea	_PL_GameV2(pc),a0
 		move.l	a6,a1
 		jsr	resload_Patch(a2)
-
-		move.l	_expmem(pc),d0		;Stack to fast memory
-		add.l	#EXPMEM,d0
-		add.l	#$ffc,d0
-		add.l	#$8000,a6
-		move.l	d0,$84e(a6)
-		move.l	d0,$a4e(a6)
 
 _StartGame	movem.l	(sp)+,d0-d1/a0-a2/a6
 		lea	$1c(a6),a0		;Stolen code
@@ -359,11 +375,5 @@ _wrongver	pea	TDREASON_WRONGVER
 _end		move.l	(_resload,pc),-(a7)
 		add.l	#resload_Abort,(a7)
 		rts
-
-;============================================================================
-
-		INCLUDE	"whdload/kick13.s"
-
-;============================================================================
 
 		END

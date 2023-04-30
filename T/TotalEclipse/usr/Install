@@ -6,7 +6,7 @@
 (set #hint-file "Hints")		;name of hint file
 (set #sol-file "Solution")		;name of solution file
 (set #highs-file "highs")		;name of high scores file
-(set #prefix @app-name)			;name of slave, directory
+(set #prefix "TotalEclipse")			;name of slave, directory
 
 (procedure P_Install
   (set #version

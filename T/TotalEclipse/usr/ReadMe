@@ -1,15 +1,45 @@
-Short:    HD-Installer for Total Eclipse V1.0
-Author:   Codetapper/Action (codetapper@hotmail.com), ICQ: 26051687
-Uploader: Codetapper/Action (codetapper@hotmail.com)
-Version:  1.0
-Type:     game/patch
 
-This patch applies to "Total Eclipse" (c) 1989 Incentive Software/Domark 
-- 1 disk. Thanks to Carlo Pirri and Mike West for sending the originals!
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
-REQUIREMENTS:
-- Slave requires WHDLoad V15+ and an installed A500 Kickstart 1.3 image
-- Game requires 512k chip mem and 256k other mem (+0.4Mb for preload option)
+ This install applies to "Total Eclipse" © 1989 Incentive Software/Domark.
+ Thanks to Carlo Pirri and Mike West for sending the originals!
+
+ This install requires WHDLoad to be in the path. It can be found
+ in the WHDLoad package.
+ To install from a different drive than DF0: select installation mode Expert.
+
+ The installed program requires 0.5 MB ChipMem and 1 MB OtherMem.
+ It can be quit by pressing Del (key can be changed with Tooltype "QuitKey=").
+
+ The game requires an installed A500 Kickstart 1.3 image.
+ The kickstart image must be located in the directory "Devs:Kickstarts" and
+ must be named "kick34005.A500". The image can be extracted from a A500 with
+ tools like 'GrabKick' or similar which can be found on aminet.
+ If the image is of wrong version or altered in any way WHDLoad will quit with
+ an appropriate requester.
+ Additionally the file "kick34005.A500.RTB" must be installed in the same
+ directory as the kickstart image. It can be found in the archive 
+ "util/boot/skick346.lha" on aminet.
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+ 
 
 FEATURES: (23-Apr-2002)
 - Supports 3 versions
@@ -23,15 +53,6 @@ FEATURES: (23-Apr-2002)
   me!) and 2 Exoticons (taken from http://exotica.fix.no)
 - Quit option (default key is 'F10')
 
-The kickstart image must be located in the directory "Devs:Kickstarts"
-and must be named "kick34005.A500". The image can be extracted from an
-A500 with tools like "GrabKick" or similar which can be found on Aminet.
-If the image is the wrong version or altered in any way, WHDLoad will
-quit with an appropriate error message. 
-
-Additionally the file "kick34005.A500.RTB" must be installed in the same
-directory as the kickstart image. It can be found in the archive 
-"util/boot/skick343.lha" on Aminet.
 
 A huge thank you must go to Mike West for supplying the copylocked version
 of the game and staying up half the night decoding it with the great
@@ -41,7 +62,14 @@ Greetings also to Carlo, Mr Larmer, Galahad, Andreas, Amigaboy, all Action
 members and the WHDLoad team!
 
 
-Codetapper/Action (23-Apr-2002)
+Codetapper (23-Apr-2002)
+
+ version 1.1 (30.04.2023) done by JOTD
+ - relocated main game in fastmem for increased framerate
+   (note: one version isn't supported, contact me if you have it)
+
+ version 1.0 (23.04.2002) done by Codetapper
+ - first release
 
 
          Bug report form, full WHDLoad package and other installs:
@@ -56,4 +84,4 @@ Codetapper/Action (23-Apr-2002)
 
 
            Visit the Action website for more of our productions:
-                           http://zap.to/action/
+                           https://codetapper.com
