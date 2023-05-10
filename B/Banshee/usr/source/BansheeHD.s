@@ -28,10 +28,17 @@
 	SUPER
 	ENDC
 
+SEGTRACKER
+CHIP_ONLY
 ;============================================================================
 
 CHIPMEMSIZE	= $1FF000
-FASTMEMSIZE	= $80000
+	IFD		CHIP_ONLY
+FASTMEMSIZE	= $0000
+	ELSE
+FASTMEMSIZE = $80000	
+	ENDC
+	
 NUMDRIVES	= 1
 WPDRIVES	= %0000
 
@@ -53,13 +60,15 @@ HISCORE_LEN = $F0
 DUMMY_CD_DEVICE = 1
 USE_DISK_NONVOLATILE_LIB = 1
 
-slv_Version	= 16
+slv_Version	= 17
 slv_Flags	= WHDLF_NoError|WHDLF_Examine|WHDLF_Req68020|WHDLF_ReqAGA|WHDLF_NoKbd
 slv_keyexit	= $5D	; num '*'
 
 ;============================================================================
 
 	include	kick31cd32.s
+IGNORE_JOY_DIRECTIONS
+	include	ReadJoyPad.s
 
 ;============================================================================
 
@@ -84,7 +93,7 @@ _assign_5
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"3.3"
+	dc.b	"4.0"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -98,7 +107,11 @@ DECL_VERSION:MACRO
 	DECL_VERSION
 	dc.b	0
 
-slv_name		dc.b	"Banshee AGA/CD남",0
+slv_name		dc.b	"Banshee AGA/CD남"
+		IFD		CHIP_ONLY
+		dc.b	" (debug/chip mode)"
+		ENDC
+		dc.b	0
 slv_copy		dc.b	"1992 Core Design",0
 slv_info		dc.b	"adapted & fixed by JOTD",10
 			dc.b	"Thanks to BTTR for disk images",10,10
@@ -107,7 +120,12 @@ slv_info		dc.b	"adapted & fixed by JOTD",10
 			dc.b	0
 slv_CurrentDir:
 	dc.b	"data",0
-
+slv_config:
+;		dc.b    "C1:L:Start with lives:5,25,45;"			
+;		dc.b    "C2:B:Infinite power weapons;"			
+;		dc.b    "C3:B:Don't steal power weapons at level 89;"			
+;        dc.b    "C4:X:Trainer Infinite Lives & Ammo:0;"
+		dc.b	0
 
 _intro:
 	dc.b	"picture.exe",0
@@ -132,7 +150,8 @@ _bootdos
 	;for CD남 version
 	
 		bsr	_patch_cd32_libs
-
+		bsr	_detect_controller_types
+		
 	;open doslib
 		lea	(_dosname,pc),a1
 		move.l	(4),a6
@@ -194,111 +213,60 @@ _emu_copylock:
 	movem.l	(A7)+,D1/A0
 	rts
 
-
+pl_floppy:
+	PL_START
+	; fix access faults
+	PL_PS	$0111a6,_move_a4_d0
+	PL_PS	$011d1e,_move_a4_d3
+	
+    PL_PS	$011ce0,_move_a4_d6
+    PL_PS	$0172d0,_move_a4_d6
+    PL_PS	$0172fc,_move_a4_d6
+    PL_PS	$01735c,_move_a4_d6
+    PL_PS	$01828c,_move_a4_d6	
+	PL_PS	$00857a,move_potgo_d2
+	PL_PS	$07299e,_emu_copylock
+	PL_L	$07299e+6,$600008AC		; skip to copylock end
+	
+	PL_END
+	
 ; < d7: seglist
 
 _patch_exe:
-	movem.l	D0-D1/A0-A2,-(A7)
-	move.l	d7,A3
+	movem.l	D0-D1/A0-A2,-(A7)	
 
 	bsr	install_joy_reader
 
-	; A3: hunk #0
+	move.l	_resload(pc),a2
+	lea		pl_floppy(pc),a0
+	move.l	d7,a1
+	jsr		(resload_PatchSeg,a2)
+	
+	movem.l	(A7)+,D0-D1/A0-A2
+	rts
 
-	bsr	.get_bounds_0
-	lea	.movea4_d0(pc),a2
-	moveq.l	#6,D0
-	bsr	_hexsearch
-	cmp.l	#0,A0
-	beq.b	.sk1
 
-	move.w	#$4EB9,(A0)+
-	pea	_move_a4_d0(pc)
-	move.l	(a7)+,(a0)
-.sk1
-	bsr	.get_bounds_0
 
-	lea	.movea4_d3(pc),a2
-	moveq.l	#6,D0
-	bsr	_hexsearch
-	cmp.l	#0,A0
-	beq.b	.sk2
-	move.w	#$4EB9,(A0)+
-	pea	_move_a4_d3(pc)
-	move.l	(a7)+,(a0)
 
-.sk2
-	bsr	.get_bounds_0
-	lea	.movea4_d6(pc),a2
-	moveq.l	#6,D0
-.loop3
-	bsr	_hexsearch
-	cmp.l	#0,A0
-	beq.b	.sk3
-	move.w	#$4EB9,(A0)+
-	pea	_move_a4_d6(pc)
-	move.l	(a7)+,(a0)+
-	bra.b	.loop3
-.sk3
+;	lea	.move75(pc),a2
+;	moveq.l	#6,D0
+;	bsr	_hexsearch
+;	cmp.l	#0,A0
+;	beq.b	.sk5b
+;
+;	; CD남 version: any key pauses the game
+;	; but quits immediately afterwards. This is stupid
+;
+;	move.w	#$6006,2(A0)
+;.sk5b
 
-	bsr	.get_bounds_0
-	moveq.l	#8,D0
-	lea	.movepotgod0(pc),a2
-	bsr	_hexsearch
-	cmp.l	#0,A0
-	beq.b	.sk4
-
-	move.w	#$4EB9,(A0)+
-	pea	move_potgo_d2(pc)
-	move.l	(A7)+,(A0)
-
-.sk4
-	bsr	.get_bounds_0
-	lea	.savehiscore(pc),a2
-	move.l	#16,D0
-	bsr	_hexsearch
-	cmp.l	#0,A0
-	beq.b	.sk5
-	move.w	#$4EB9,(A0)+
-	pea	_save_hiscore(pc)
-	move.l	(A7)+,(A0)
-
-.sk5
-	bsr	.get_bounds_0
-
-	lea	.move75(pc),a2
-	moveq.l	#6,D0
-	bsr	_hexsearch
-	cmp.l	#0,A0
-	beq.b	.sk5b
-
-	; CD남 version: any key pauses the game
-	; but quits immediately afterwards. This is stupid
-
-	move.w	#$6006,2(A0)
-.sk5b
-
-	movem.l	(A7),D0-D1/A0-A2
-
-	move.l	D7,A3
-	move.l	(A3),A0	; next hunk: hunk #1
-	add.l	A0,A0
-	add.l	A0,A0
-	move.l	A0,A3
-
-	move.l	A0,A1
-	add.l	#27000,A1
-	lea	.scorestart(pc),a2
-	moveq.l	#8,D0
-	bsr	_hexsearch
-	cmp.l	#0,A0
-	beq.b	.sk6
 
 	; save score buffer address for later
 
-	addq.l	#2,A0
-	lea	_score_address(pc),a1
-	move.l	A0,(A1)
+	; get_section 1
+	; add $01b2d6
+;	lea	_score_address(pc),a1
+;	move.l	A0,(A1)
 
 	; loads score
 
@@ -327,14 +295,6 @@ _patch_exe:
 	move.l	#$600008AC,(A0)+	; goto copylock end
 .sk7
 
-	movem.l	(A7)+,D0-D1/A0-A2
-	rts
-
-.get_bounds_0:
-	lea	4(A3),A0
-	move.l	A0,A1
-	add.l	#$18600,A1
-	rts
 
 .move75
 	dc.w	$670A
@@ -344,18 +304,7 @@ _patch_exe:
 .rncdecrunch:
 	dc.l	$48E7FFFC,$4FEFFE80
 	dc.w	$244F
-.movea4_d0:
-	dc.l	$3028008A
-	dc.w	$B054
-.movea4_d3:
-	dc.l	$3628008A
-	dc.w	$B654
-.movea4_d6:
-	dc.l	$3C28008A
-	dc.w	$BC54
-.movepotgod0
-	dc.l	$143900DF
-	dc.l	$F0161602
+
 .copylock:
 	dc.l	$42937004,$7200487A
 	dc.w	$000A
@@ -392,19 +341,19 @@ joy_reader
 	; only VBL interrupt is of interest here
 
 	movem.l	d0/a0,-(a7)
+	bsr		_joystick
 	lea	dff016_value(pc),a0
-	move.b	$dff016,d0
+	move.l	joy1(pc),d0
 	st.b	(a0)
-	btst	#6,d0	; port 1
+	btst	#JPB_BTN_BLU,d0	; port 1
 	bne.b	.no1
 	bclr	#6,(a0)
 .no1
-	btst	#2,d0	; port 1
+	move.l	joy0(pc),d0
+	btst	#JPB_BTN_BLU,d0	; port 1
 	bne.b	.no0
 	bclr	#2,(a0)
 .no0
-	move.w	#$FF00,potgo+$DFF000	; reset POTGO
-.rts
 	movem.l	(a7)+,a0/d0
 .skip
 	move.l	old_int_3(pc),-(a7)
@@ -497,8 +446,7 @@ _load_exe:
 	cmp.l	#0,A5
 	beq.b	.skip
 	movem.l	d2/d7/a4,-(a7)
-	add.l	d7,d7
-	add.l	d7,d7
+
 	jsr	(a5)
 	bsr	_flushcache
 	movem.l	(a7)+,d2/d7/a4

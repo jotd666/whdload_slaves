@@ -64,9 +64,9 @@ KICKCD32 = 1
 	IFD	USE_DISK_NONVOLATILE_LIB
 	FAIL	"Cannot use nonvolatile disk lib with kick 1.x"
 	ENDC
-	include	"kick13.s"
+	include	"whdload/kick13.s"
 	ELSE
-	include	"kick31.s"
+	include	"whdload/kick31.s"
 	ENDC
 	ENDC
 

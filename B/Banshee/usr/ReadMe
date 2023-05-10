@@ -42,8 +42,12 @@
 
  History:
 
- version 3.3-B
- - just reworked source code for vasm
+ version 4.0 (2023) done by JOTD:
+ - TODO: trainer
+ - TODO: fixed hiscore save
+ - TODO: joypad controls
+ - TODO: re-adapt for CD32
+ - TODO: adapt to cfou crack
  
  version 3.3 (01.05.2018)
  - second button routine rewritten again, seems to work better
