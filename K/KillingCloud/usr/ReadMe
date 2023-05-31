@@ -29,6 +29,10 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ Version 2.3 (xx.xx.2023) done by paraj & JOTD:
+ - fixed missing reloc (level 5)
+ - fixed nasty protection check that trashed bomb location on level 5
+
  Version 2.2 (29.11.2022) done by JOTD:
  - fixed crash on "city info" menu (needs updating of .reloc file)
  - added an option to speed up "imageworks presents" logo
@@ -70,6 +74,18 @@ Big Kudos to him!
 is no longer supported for newer features. Relocating the executable
 in fast memory took a lot of time and I'm not redoing it for the other
 version... Use old slave instead
+
+LEVEL CODES (courtesy of hol.abime.net)
+
+Mission 02-"A66TRDEX" Mission 03-"2WWTR7EX"
+
+Mission 04-"Q44FRCE2" Mission 05-"3XX8RCCM"
+
+Mission 06-"XXX8VCCN" Mission 07-"4338VCCN"
+
+Mission 08-"W3Q8VCAM" Mission 09-"63QTGDEX"
+
+Mission 10-"CA2TG7EF"
 
 LICENCE
 

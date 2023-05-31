@@ -41,9 +41,14 @@
  ------------------------------------
  (*) added support since last slave release)
  
- version 2.2 (xx.01.2023) done by JOTD:
+ version 2.2 (xx.0x.2023) done by JOTD:
  - allows to load big team.xxx files (requires 256k more memory)
  - fixed install script
+ - reworked file load/save completely (which fixed load/save tactic bug)
+ - TODO: access fault editing custom teams, league (byte read 100152) (test old version)
+ - TODO: save/load highlights/seasons/leagues/...
+ - TODO: remove "fake send to loader" make work without it
+ - TODO: run in chip only
  
  version 2.1 (09.05.2021) done by JOTD:
  - german version supported (issue #0002640)

@@ -19,7 +19,11 @@
 	;OPT	O+ OG+			;enable optimizing
     ENDC
   
+; chiponly triggers an access fault when trying to play
+; let's hope we're not going to need that
 ;CHIP_ONLY
+
+BUFFER_SIZE = $400
 
 ; probably more than enough!
 TEAM_BUFFER_SIZE = $40000
@@ -108,6 +112,8 @@ Swos.rel:
 	dc.b	'SWOS2.REL',0
 Swos.prg:
 	dc.b	'SWOS2',0
+_savedir:
+	dc.b	'SAVE',0
 _savename:
 	dc.b	'SAVE/'
 _fi:	ds.b	14
@@ -141,9 +147,10 @@ Start	;	A0 = resident loader
 		add.l	#$80000,a0
 		lea		data_buffer(pc),a1
 		move.l	a0,(a1)
+		
 		ENDC
 		lea	root(pc),a0        
-		bsr	_check
+		bsr	_GetFileSize
 		tst.l	d0
 		bne.s	file_ok
 		move.l	_expmem(pc),a0
@@ -271,7 +278,6 @@ _notblit:	addq.l	#2,a0
 ;---------------------------------------
 
 swos_9495:
-		move.l	#$506,(a1)		;Area where to load root!
         lea pl_9495(pc),a0
         bra patch_with_patchlist
 
@@ -307,7 +313,6 @@ pl_9495
     PL_END
     
 swos_9495_2:
-		move.l	#$9cdde,(a1)		;Area where to load root!
 
         lea pl_9495_2(pc),a0
         bra patch_with_patchlist
@@ -355,7 +360,6 @@ pl_9495_2
     PL_END 
 
 swos_9596:
-		move.l	#$9cdea,(a1)		;Area where to load root!
 
         lea pl_9596(pc),a0
         bra patch_with_patchlist
@@ -400,7 +404,6 @@ pl_9596
     PL_END 
 ;-----------------------------
 swos_euro:
-		move.l	#$4993e,(a1)		;Area where to load root!
 
         lea pl_euro(pc),a0
         bra patch_with_patchlist
@@ -444,8 +447,6 @@ pl_euro
     
 ;-----------------------------
 swos_152:
-		move.l	#$4999e,(a1)		;Area where to load root!
-
         lea pl_9697_1(pc),a0
         bra patch_with_patchlist
 
@@ -465,16 +466,12 @@ pl_9697_1
     ;Fake send to loader
     PL_L    $438,$70004E75
     PL_P    $670a,fix_memory_routine_9697_1
-    PL_P    $4ac,dir_remover
     PL_PS   $51a1a,Load_Season
     PL_PS   $51bda,Load_Season	;Load Highlights!
     PL_P	$2c0,Delete_File
-    PL_P    $5c0,Loader    ;Patch fileloader!
     PL_R    $3ce		;Format Disk name removed
-    PL_P	$2a6,Saver	;Save option patched
-    PL_PS	$3fc6a,Load_directory
-    PL_PS	$3fd5c,Load_directory	;Load Save directory
-    PL_PS   $76a4,access	
+    ;PL_P	$2a6,Saver	;Save option patched
+    PL_PS   $76a4,access
     ;PL_W	$552c,$6002,	;TESTTESTTEST    
     
     ; jotd
@@ -487,11 +484,11 @@ pl_9697_1
     PL_R    $fd0   ; floppy shit
     PL_R    $155a   ; floppy shit
     
+	PL_R	$e7e
+	PL_P	$5C0,rob_northen_loader
     PL_END
 ;--------------------------------------
 swos_german:
-		move.l	#$9cdde,(a1)		;Area where to load root!
-
         lea pl_german(pc),a0
         bra patch_with_patchlist
         
@@ -677,6 +674,144 @@ dir_remover:
     TST.W D0
     rts
     
+rob_northen_loader:
+	move.l	a3,-(a7)
+	add.w	d0,d0
+	lea		rob_commands_table(pc),a3
+	add.w	(a3,d0.w),a3
+	jsr		(a3)
+	move.l	(a7)+,a3
+	rts
+
+; < A0: name
+; > A0: name prepended with "SAVE/" if .TAC file, else unchanged
+fix_filename:
+	move.l	a0,a2
+.loop
+	tst.b	(a2)+
+	bne.b	.loop
+	subq.l	#1,a2
+	cmp.b	#'C',-(a2)
+	bne.b	.no_tac
+	cmp.b	#'A',-(a2)
+	bne.b	.no_tac
+	cmp.b	#'T',-(a2)
+	bne.b	.no_tac
+	cmp.b	#'.',-(a2)
+	bne.b	.no_tac
+	; .TAC file: copy to buffer with "SAVE/"
+	lea		_fi(pc),a3
+	move.l	a0,a2
+.copy
+	move.b	(a2)+,(a3)+
+	bne.b	.copy
+	lea	_savename(pc),a0
+.no_tac
+	rts
+	
+rob_commands_table:
+	dc.w	rob_load-rob_commands_table
+	dc.w	rob_save-rob_commands_table
+	dc.w	rob_delete-rob_commands_table
+	dc.w	rob_list_directory-rob_commands_table
+	dc.w	rob_format_disk-rob_commands_table
+	dc.w	rob_get_file_size-rob_commands_table
+	dc.w	nothing-rob_commands_table
+	dc.w	nothing-rob_commands_table
+	
+rob_load:
+	movem.l	d0-d7/a0-a6,-(a7)
+	move.l	a0,a2
+	bsr		fix_filename
+	bsr	_LoadFile
+	movem.l	(a7)+,d0-d7/a0-a6
+	move.l	size(pc),d1
+	moveq	#0,d0
+	rts
+	
+rob_save:
+	movem.l	d0-d7/a0-a6,-(a7)
+	bsr		fix_filename
+	move.l	d1,d0		; size
+	bsr	_SaveFile
+	movem.l	(a7)+,d0-d7/a0-a6
+	move.l	size(pc),d1
+	moveq	#0,d0
+	rts
+	
+rob_delete:
+	movem.l	d0-d7/a0-a6,-(a7)
+	bsr	_Deletefile
+	movem.l	(a7)+,d0-d7/a0-a6
+	moveq	#0,d0
+	rts
+	
+rob_format_disk:
+	moveq	#0,d0
+	rts
+
+rob_get_file_size:
+	bsr		_GetFileSize
+	move.l	d0,d1
+	moveq	#0,d0
+	rts
+	
+rob_list_directory:
+	movem.l	d0-d7/a0-a6,-(a7)
+	move.l	_resload(pc),a2
+	; skip colon
+	moveq	#0,d1
+.sk
+	move.b	(a0,d1.w),d0
+	beq.b	.out
+	cmp.b	#':',d0
+	beq.b	.colon
+	addq	#1,d1
+	bra.b	.sk
+.colon
+	; colon found: skip it
+	addq.w	#1,a0
+	add.w	d1,a0
+.out
+	lea		_savedir(pc),a0
+	; a0: directory path, stripped from drive prefix
+	; a1: buffer, save it
+	move.l	a1,a3
+	lea		listdir_buffer(pc),a1
+	move.l	#BUFFER_SIZE,D0
+	jsr		resload_ListFiles(a2)
+	lea		size(pc),a0
+	move.w	d0,(a0)				; number of files
+	beq.b	.empty
+	subq	#1,d0			; minus one for dbf
+	
+	lea		listdir_buffer(pc),a1
+.copy_loop:
+	moveq	#0,d1
+.copy_file:
+	move.b	(a1)+,(2,a3,d1.w)
+	beq.b	.copyout
+	addq	#1,d1
+	bra.b	.copy_file
+	; set name length
+.copyout:
+	move.b	d1,(1,a3)
+	; try to mimic rob output...
+	move.b	#$FD,(a3)
+	add.w	#$20,a3		; next entry
+	dbf		d0,.copy_loop
+	
+.empty:	
+	movem.l	(a7)+,d0-d7/a0-a6
+	move.w	size(pc),d1
+	moveq	#0,d0
+	rts
+	
+nothing:
+	blitz
+	nop
+	rts
+	
 _flushcache:
 	move.l	a2,-(a7)
 	move.l	_resload(pc),a2
@@ -686,7 +821,7 @@ _flushcache:
 
 request:
 		
-; Fixes bug with Highlights play!
+; Fixes bug with Highlights play! JOTD: potential issue if A1 is in fast!!!
 access:
 	adda.l	$18(a5),a1			;Game
 	move.l	a1,d1
@@ -898,16 +1033,18 @@ swos_version:
 		dc.l	0
 program_location
     dc.l    0
-data_buffer
+data_buffer:
 	dc.l	0
-	
+listdir_buffer:
+	ds.b	BUFFER_SIZE
+	dc.l	0		; safety
 ;--------------------------------
 ; IN:	d0=offset d1=size d2=disk a0=dest
 ; OUT:	d0=success
 
 		cnop	0,4
 
-_check:
+_GetFileSize:
 		movem.l	d1/a0-a2,-(a7)
 		move.l	_resload(pc),a2
 		jsr	resload_GetFileSize(a2)

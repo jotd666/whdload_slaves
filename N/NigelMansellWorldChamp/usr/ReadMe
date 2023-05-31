@@ -13,7 +13,8 @@
  This install requires WHDLoad to be in the path. It can be found in the
  WHDLoad package.
 
- The installed program requires 1.0 MB ChipMem and 2.0 MB OtherMem.
+ AGA: The installed program requires 1.0 MB ChipMem and 2.0 MB OtherMem.
+ ECS: The installed program requires 0.5 MB ChipMem and 1 MB OtherMem.
  It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
 
  The game requires an installed A500 Kickstart 1.3 image.
@@ -41,12 +42,18 @@
 
  version 2.0 (04.2023) done by JOTD
  - TODO: enable fastmem CD32 version (copperlist issue)
+ - TODO: test control options
+ - TODO: AGA version now seen as unsupported
+ - TODO: game save
  - fixed various crashes in AGA/ECS (issue #0005417, #0005253, #0006091)
  - separate ECS version using only 512kb chip
+ - another (unprotected) ECS version supported (issue #0006085)
+ - protection screen completely skipped
  - installer redone from scratch
  - fixed blitter issues in title & menu
  - fixed colorburst copperlist issues
  - wrong patch fixed on the ECS version
+ - CD32 slave updated for whdload 17
  
  version 1.3 (25.01.2006) done by JOTD
  - support for CD³² version (not very good, but allows to play) with joystick
@@ -87,4 +94,6 @@
  not sure if it works, just dug it out from the executable symbols :)
 
 Note: the AGA slave can run the ECS version (with more memory) but the ECS slave
-doesn't recognize the AGA versions.
+doesn't recognize the AGA versions. The versions aren't recognized by installer script,
+so when installing the ECS version make sure to select "ECS". Selecting "AGA" will also work
+but then your installation won't be compatible with ECS machines.

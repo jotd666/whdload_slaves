@@ -69,7 +69,7 @@ _config
 ;==========================================================================
 
 DECL_VERSION:MACRO
-	dc.b	"2.2"
+	dc.b	"2.3"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -236,6 +236,11 @@ _p1:	bsr	_fadewait	; finish off loader screen fade
 	IFNE	0
 w 0 $819c $2C600-$819C
 w 1 $81000 $719C
+; when missing reloc found eg access at $27456
+; use this to search unrelocated address in memory
+; s 00027456
+; should show up in $80000-$A0000 with CHIP_ONLY set
+
 	ENDC
 	move.l	_reloc_base(pc),a0
 	lea		(-$1000,a0),a1	; reloc base -$1000
@@ -267,11 +272,13 @@ pl_main_1
 	PL_START
 	PL_P	$17972,_tl_setdisk
 	PL_PS	$17226,_fadewait	; remove manual protection
+	PL_AL	$22392,$400			; remove nasty protection check if protection is skipped
 	PL_NEXT		pl_main_common
 pl_main_2
 	PL_START
 	PL_P	$17982,_tl_setdisk
 	PL_PS	$17236,_fadewait	; remove manual protection
+	PL_AL	$223d0,$400			; remove nasty protection check if protection is skipped
 	PL_NEXT		pl_main_common
 	
 pl_main_common:
@@ -291,6 +298,9 @@ pl_main_common:
 	
 	;PL_PSS	$82bc,set_end_program_memory_limits,2
 	;PL_S	$082b4,$d2-$b4
+	
+	; manually relocate vectors
+	PL_PSS	$836a,set_interrupt_vectors,2
 	
 	PL_W	$81aa,0	; keep interrupts enabled
 	PL_P	$9606,_trackload	; patch trackloader
@@ -343,6 +353,13 @@ pl_main_common:
 	PL_END
 
 ;--------------------------------
+
+set_interrupt_vectors
+	LEA	$01090-PROGRAM_START,A0		;0836a: 41f81090
+	add.l	_reloc_base(pc),a0
+	LEA	$64.W,A1		;0836e: 43f80064
+	rts
+	
 
 fetch_word:
 	; this address is built from a byte stream
