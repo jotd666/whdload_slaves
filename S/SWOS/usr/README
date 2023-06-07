@@ -41,14 +41,12 @@
  ------------------------------------
  (*) added support since last slave release)
  
- version 2.2 (xx.0x.2023) done by JOTD:
+ version 2.2 (07.06.2023) done by JOTD:
+ - reworked file load/save completely (which fixed load/save tactic bug)
+ - highlights/seasons/leagues/careers are loaded/saved in "save" directory
  - allows to load big team.xxx files (requires 256k more memory)
  - fixed install script
- - reworked file load/save completely (which fixed load/save tactic bug)
- - TODO: access fault editing custom teams, league (byte read 100152) (test old version)
- - TODO: save/load highlights/seasons/leagues/...
- - TODO: remove "fake send to loader" make work without it
- - TODO: run in chip only
+ - workaround for random access fault when selecting teams (not systematic)
  
  version 2.1 (09.05.2021) done by JOTD:
  - german version supported (issue #0002640)
@@ -119,4 +117,17 @@ NOTE FROM MAINTAINER:
  (load/save) on all versions. That should work exactly as before. Please report bugs
  when found and specify your version if you can / attach the "SWOS2" file
 
+ Version 2.2 has been improved by removing the complex (and probably cornercase buggy)
+ Galahad cached dir version. Now teams can be edited, saved, and loaded back.
+ While testing, I noticed a random bug. Game tends to crash with access fault when
+ selecting a team. It's not that frequent, but it happens. I've tried to limit the impact
+ of the bug, but if you see that the game is not behaving properly, just quit and restart.
+ 
+ On this version, all user data (career, diy, tactics, ...) is saved in "SAVE" directory.
+ When loading a tactic, other file types are shown (same as when operating from floppy).
+ Just ignore them.
+ 
+ This version also allows to load bigger uncompressed teams files without having to RNC-pack them. It
+ doesn't remove the uncompressed size team limitation, though.
+ 
 JOTD

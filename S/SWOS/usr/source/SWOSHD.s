@@ -23,7 +23,7 @@
 ; let's hope we're not going to need that
 ;CHIP_ONLY
 
-BUFFER_SIZE = $400
+BUFFER_SIZE = $800
 
 ; probably more than enough!
 TEAM_BUFFER_SIZE = $40000
@@ -107,16 +107,15 @@ _info	dc.b	'-------------------------',10
 	dc.b	-1
 	CNOP 0,2
 
-root:	dc.b	'GALAHAD.ROOT',0
 Swos.rel:
 	dc.b	'SWOS2.REL',0
 Swos.prg:
 	dc.b	'SWOS2',0
 _savedir:
 	dc.b	'SAVE',0
-_savename:
+_save_filepath:
 	dc.b	'SAVE/'
-_fi:	ds.b	14
+_save_filename:	ds.b	14
 	dc.b	"$","VER: slave "
     DECL_VERSION
 	dc.b	10,0	
@@ -149,23 +148,9 @@ Start	;	A0 = resident loader
 		move.l	a0,(a1)
 		
 		ENDC
-		lea	root(pc),a0        
-		bsr	_GetFileSize
-		tst.l	d0
-		bne.s	file_ok
-		move.l	_expmem(pc),a0
-		move	#0,d0
-		move.w	#1400,d0		;Size of file to save
-		move.w	#(1400/4)-1,d1
-		moveq	#0,d2
-clear_root:
-		move.l	d2,(a0)+
-		dbra	d1,clear_root
-		lea	root(pc),a0
-		move.l	_expmem(pc),a1
-		bsr	_SaveFile
+
+		patch	$100,avoid_big_value
 		
-file_ok:
 		lea	Swos.rel(pc),a0		
         move.l  _expmem(pc),a1
 		bsr	_LoadFileDEC
@@ -230,7 +215,7 @@ continue_relocation:
 		move.l	(a2),d2
 		move.l	#$4ef96002,d0
 		move.l	#$70004e75,d1
-		lea	gen(pc),a1
+
 ;		cmp.l	#363958,d2
 ;		beq	swos_xxx       ; SPS841, unsupported
 		cmp.l	#341138,d2
@@ -290,16 +275,7 @@ pl_9495
     ;Fake send to loader
     PL_L    $3d2,$70004E75
     PL_P    $22da,fix_memory_routine_9495     ; 101676
-    PL_P    $446,dir_remover
-    PL_PS   $4cd52,Load_Season
-    PL_PS   $4cefe,Load_Season	;Load Highlights!
-    PL_P	$26e,Delete_File
-    PL_P    $53c,Loader    ;Patch fileloader!
-    PL_R    $37c		;Format Disk name removed
-    PL_P	$254,Saver	;Save option patched
-    PL_PS	$3c470,Load_directory
-    PL_PS	$3c562,Load_directory	;Load Save directory
-  
+    PL_R    $37c		;Format Disk name removed  
     
     ; jotd
     ; fix snoop bugs
@@ -309,6 +285,8 @@ pl_9495
     ;PL_L  $20cc,$01FE0000  ; remove bplcon4 write
     ;PL_R    $fe0   ; floppy shit
     ;PL_R    $156a   ; floppy shit
+	
+	PL_P	$5d8,rob_northen_loader   ; not sure!
     
     PL_END
     
@@ -335,15 +313,7 @@ pl_9495_2
     ;Fake send to loader
     PL_L    $450,$70004E75
     PL_P    $24ec,fix_memory_routine_9495_2     ; 10171A
-    PL_P    $4c4,dir_remover
-    PL_PS   $4c49e,Load_Season
-    PL_PS   $4c65c,Load_Season	;Load Highlights!
-    PL_P	$2d8,Delete_File
-    PL_P    $5d8,Loader    ;Patch fileloader!
     PL_R    $3e6		;Format Disk name removed
-    PL_P	$2be,Saver	;Save option patched
-    PL_PS	$3bbdc,Load_directory
-    PL_PS	$3bcce,Load_directory	;Load Save directory
     PL_PS   $756a,access	
     ;PL_W	$552c,$6002,	;TESTTESTTEST    
     
@@ -356,6 +326,7 @@ pl_9495_2
     ;PL_R    $fe0   ; floppy shit
     ;PL_R    $156a   ; floppy shit
 
+	PL_P	$5d8,rob_northen_loader
     
     PL_END 
 
@@ -378,15 +349,7 @@ pl_9596
     ;Fake send to loader
     PL_L    $448,$70004E75
     PL_P    $24fc,fix_memory_routine_9596
-    PL_P    $4bc,dir_remover
-    PL_PS   $4dc28,Load_Season
-    PL_PS   $4dde6,Load_Season	;Load Highlights!
-    PL_P	$2d0,Delete_File
-    PL_P    $5d0,Loader    ;Patch fileloader!
     PL_R    $3de		;Format Disk name removed
-    PL_P	$2b6,Saver	;Save option patched
-    PL_PS	$3cd90,Load_directory
-    PL_PS	$3ce82,Load_directory	;Load Save directory
     PL_PS   $7518,access	
     PL_R    $3db44          ;Removes disk requesters!
     ;PL_W	$552c,$6002,	;TESTTESTTEST    
@@ -400,7 +363,11 @@ pl_9596
     ;PL_L  $20cc,$01FE0000  ; remove bplcon4 write
     PL_R    $fe0   ; floppy shit
     PL_R    $156a   ; floppy shit
+
+	PL_P	$5D0,rob_northen_loader
     
+	PL_L	$4a832,$4EB80100
+	
     PL_END 
 ;-----------------------------
 swos_euro:
@@ -421,17 +388,8 @@ pl_euro
     ;Fake send to loader
     PL_L    $438,$70004E75
     PL_P    $667a,fix_memory_routine_9697
-    PL_P    $4ac,dir_remover
-    PL_PS   $51a78,Load_Season
-    PL_PS   $51c38,Load_Season	;Load Highlights!
-    PL_P	$2c0,Delete_File
-    PL_P    $5c0,Loader    ;Patch fileloader!
     PL_R    $3ce		;Format Disk name removed
-    PL_P	$2a6,Saver	;Save option patched
-    PL_PS	$3fcf0,Load_directory
-    PL_PS	$3fde2,Load_directory	;Load Save directory
     PL_PS   $7614,access	
-    ;PL_W	$552c,$6002,	;TESTTESTTEST    
     
     ; jotd
     PL_PS   $1B44,kb_hook
@@ -443,6 +401,9 @@ pl_euro
     PL_R    $fd0   ; floppy shit
     PL_R    $155a   ; floppy shit
     
+	PL_P	$5C0,rob_northen_loader
+	PL_L	$4dff6,$4EB80100
+	
     PL_END
     
 ;-----------------------------
@@ -466,11 +427,6 @@ pl_9697_1
     ;Fake send to loader
     PL_L    $438,$70004E75
     PL_P    $670a,fix_memory_routine_9697_1
-    PL_PS   $51a1a,Load_Season
-    PL_PS   $51bda,Load_Season	;Load Highlights!
-    PL_P	$2c0,Delete_File
-    PL_R    $3ce		;Format Disk name removed
-    ;PL_P	$2a6,Saver	;Save option patched
     PL_PS   $76a4,access
     ;PL_W	$552c,$6002,	;TESTTESTTEST    
     
@@ -486,6 +442,9 @@ pl_9697_1
     
 	PL_R	$e7e
 	PL_P	$5C0,rob_northen_loader
+
+	PL_L	$4df98,$4EB80100
+
     PL_END
 ;--------------------------------------
 swos_german:
@@ -507,14 +466,7 @@ pl_german
     ;Fake send to loader
     PL_L    $450,$70004E75
     PL_P    $24ec,fix_memory_routine_9495_2
-    PL_P    $4c4,dir_remover
-    PL_PS   $4c820,Load_Season	;Load Highlights!
-    PL_P	$2d8,Delete_File
-    PL_P    $5d8,Loader    ;Patch fileloader!
     PL_R    $3e6		;Format Disk name removed
-    PL_P	$2be,Saver	;Save option patched
-    PL_PS	$3bd04,Load_directory
-    PL_PS	$3bdf6,Load_directory	;Load Save directory
     PL_PS   $75a2,access	
    
     ; jotd
@@ -527,12 +479,12 @@ pl_german
     PL_R    $fd8   ; floppy shit
     PL_R    $156a   ; floppy shit    ; jotd
 
-    
+ 	PL_P	$5D8,rob_northen_loader
+   
     PL_END
 
 
 swos_1522:  ; 9697_2
-		move.l	#$4999e,(a1)		;Area where to load root!
 
         lea pl_9697_2(pc),a0
         bra patch_with_patchlist
@@ -552,17 +504,10 @@ pl_9697_2
     ;Fake send to loader
     PL_L    $438,$70004E75
     PL_P    $6664,fix_memory_routine_9697   ; same address as 9697
-    PL_P    $4ac,dir_remover
-    PL_PS   $51914,Load_Season
-    PL_PS   $51ad4,Load_Season	;Load Highlights!
-    PL_P	$2c0,Delete_File
-    PL_P    $5c0,Loader    ;Patch fileloader!
     PL_R    $3ce		;Format Disk name removed
-    PL_P	$2a6,Saver	;Save option patched
-    PL_PS	$3fb64,Load_directory
-    PL_PS	$3fc56,Load_directory	;Load Save directory
     PL_PS   $75fe,access	
-    ;PL_W	$552c,$6002,	;TESTTESTTEST    
+  
+    PL_R    $407e0          ;Removes disk requesters!
     
     ; jotd
     PL_PS   $1B44,kb_hook
@@ -573,14 +518,16 @@ pl_9697_2
     PL_L  $20cc,$01FE0000  ; remove bplcon4 write
     PL_R    $fd0   ; floppy shit
     PL_R    $155a   ; floppy shit
-    
+   
+	PL_P	$5C0,rob_northen_loader
+	; 4a120 can become corrupt
+	PL_L	$4de92,$4EB80100
+   
     PL_END
     
 ;-----------------------------
 swos_9697:
-		
-		move.l	#$4993e,(a1)		;Area where to load root!
-        
+		        
         lea pl_9697(pc),a0
 patch_with_patchlist
         move.l	program_location(pc),a1
@@ -610,18 +557,9 @@ pl_9697
     ;Fake send to loader
     PL_L    $438,$70004E75
     PL_P    $667A,fix_memory_routine_9697
-    PL_P    $4ac,dir_remover
-    PL_PS   $51a5e,Load_Season
-    PL_PS   $51c1e,Load_Season	;Load Highlights!
-    PL_P	$2c0,Delete_File
-    PL_P    $5c0,Loader    ;Patch fileloader!
     PL_R    $3ce		;Format Disk name removed
-    PL_P	$2a6,Saver	;Save option patched
-    PL_PS	$3fd22,Load_directory
-    PL_PS	$3fe14,Load_directory	;Load Save directory
     PL_PS   $7614,access
-    PL_W    $4144a,$6008	;Removes last bug!		
-    ;PL_W	$552c,$6002,	;TESTTESTTEST    
+    PL_W    $4144a,$6008	;Removes last bug!		  
     
     ; jotd
     PL_PS   $1B44,kb_hook
@@ -632,6 +570,10 @@ pl_9697
     PL_L  $20cc,$01FE0000  ; remove bplcon4 write
     PL_R    $fd0   ; floppy shit
     PL_R    $155a   ; floppy shit
+
+	PL_P	$5C0,rob_northen_loader
+	PL_L	$4dfec,$4EB80100
+
     PL_END
     
 fix_snoop_bug
@@ -639,6 +581,27 @@ fix_snoop_bug
 	move.W	#$200,bplcon0(A6)	; colorbit
     rts
 
+avoid_big_value:
+	tst.w	d0
+	beq.b	.fail
+	cmp.w	#$50,d0
+	bcs.b	.ok
+.fail
+	; value in D0 is bogus, this will trigger an access fault
+	; clear it, the called routine will run in degraded mode, it doesn't
+	; seem to change anything.
+	;
+	; but fix this value in memory to avoid more issues
+	; this will degrade gameplay but won't crash
+
+	move.w	#1,(-2,a0)
+	addq.w	#4,a7
+	MOVEM.L	(A7)+,D0-D7/A0-A6
+	rts
+.ok
+	SUBQ.W	#1,D0			;14dfec: 5340
+	rts
+	
 
 ; replaces memory detection routine that pokes into every location
 ; from $80000 to $20*$80000 ...
@@ -669,10 +632,6 @@ fix_memory_routine_\1
     FIX_MEM_ROUTINE 9596,$1718
     FIX_MEM_ROUTINE 9697,$5878
 
-dir_remover:
-    MOVEQ #0,d0
-    TST.W D0
-    rts
     
 rob_northen_loader:
 	move.l	a3,-(a7)
@@ -684,30 +643,53 @@ rob_northen_loader:
 	rts
 
 ; < A0: name
-; > A0: name prepended with "SAVE/" if .TAC file, else unchanged
+; > A0: name prepended with "SAVE/" if .TAC,.PRE,.DIY,.SEA,.CAR, .HIL file,
+; and DF0: prefix removed
+; else unchanged
+
 fix_filename:
 	move.l	a0,a2
+	cmp.b	#':',(3,a0)
+	bne.b	.loop
+	addq.w	#4,a0		; skip DF0:
 .loop
 	tst.b	(a2)+
 	bne.b	.loop
-	subq.l	#1,a2
-	cmp.b	#'C',-(a2)
-	bne.b	.no_tac
-	cmp.b	#'A',-(a2)
-	bne.b	.no_tac
-	cmp.b	#'T',-(a2)
-	bne.b	.no_tac
-	cmp.b	#'.',-(a2)
-	bne.b	.no_tac
-	; .TAC file: copy to buffer with "SAVE/"
-	lea		_fi(pc),a3
+	subq.w	#1,a2	; back
+	; try to match one of the save extensions
+	move.b	-(a2),d0
+	ror.l	#8,d0
+	move.b	-(a2),d0
+	ror.l	#8,d0
+	move.b	-(a2),d0
+	ror.l	#8,d0
+	move.b	-(a2),d0
+	ror.l	#8,d0
+	lea		_ext_table(pc),a3
+.comp
+	move.l	(a3)+,d2
+	beq.b	.no_userdata
+	cmp.l	d0,d2
+	bne.b	.comp
+	
+	; user data file: copy to buffer with "SAVE/"
+	lea		_save_filename(pc),a3
 	move.l	a0,a2
 .copy
 	move.b	(a2)+,(a3)+
 	bne.b	.copy
-	lea	_savename(pc),a0
-.no_tac
+	lea	_save_filepath(pc),a0
+.no_userdata
 	rts
+	
+_ext_table:
+	dc.l	".DIY"
+	dc.l	".PRE"
+	dc.l	".SEA"
+	dc.l	".CAR"
+	dc.l	".TAC"
+	dc.l	".HIL"
+	dc.l	0
 	
 rob_commands_table:
 	dc.w	rob_load-rob_commands_table
@@ -721,7 +703,6 @@ rob_commands_table:
 	
 rob_load:
 	movem.l	d0-d7/a0-a6,-(a7)
-	move.l	a0,a2
 	bsr		fix_filename
 	bsr	_LoadFile
 	movem.l	(a7)+,d0-d7/a0-a6
@@ -741,6 +722,7 @@ rob_save:
 	
 rob_delete:
 	movem.l	d0-d7/a0-a6,-(a7)
+	bsr		fix_filename
 	bsr	_Deletefile
 	movem.l	(a7)+,d0-d7/a0-a6
 	moveq	#0,d0
@@ -751,8 +733,11 @@ rob_format_disk:
 	rts
 
 rob_get_file_size:
+	movem.l	d2-d7/a0-a6,-(a7)	
+	bsr		fix_filename
 	bsr		_GetFileSize
 	move.l	d0,d1
+	movem.l	(a7)+,d2-d7/a0-a6
 	moveq	#0,d0
 	rts
 	
@@ -808,7 +793,7 @@ rob_list_directory:
 	rts
 	
 nothing:
-	blitz
+
 	nop
 	rts
 	
@@ -831,157 +816,6 @@ access:
 	rts
 
 
-	
-
-
-Loader:
-	movem.l	d0-d7/a0-a6,-(a7)
-	addq.l	#4,a0				;Skip DF0:
-	cmp.l	#'data',(a0)
-	beq.s	_ok
-	cmp.l	#'graf',(a0)
-	beq.s	_ok
-	cmp.l	#'soun',(a0)
-	beq.s	_ok
-	lea	_fi(pc),a3
-copy_fi4:
-	move.b	(a0)+,(a3)+
-	bne.s	copy_fi4
-	clr.b	(a3)
-	lea	_savename(pc),a0
-_ok:	bsr	_LoadFile
-	movem.l	(a7)+,d0-d7/a0-a6
-	move.l	size(pc),d1
-	moveq	#0,d0
-	tst.l	d0
-	rts
-
-
-Load_Highlights:
-Load_Season:
-	movem.l	d0-d7/a0-a6,-(a7)
-	lea	_fi(pc),a2
-copy_fi2:
-	move.b	(a0)+,(a2)+
-	bne.s	copy_fi2	
-	clr.b	(a2)
-	lea	_savename(pc),a0
-	bsr	_LoadFile
-	movem.l	(a7)+,d0-d7/a0-a6
-	moveq	#0,d0
-	tst.l	d0
-	rts
-;A0 = Filename to delete
-Delete_File:
-	movem.l	d0-d7/a0-a6,-(a7)
-	move.l	gen(pc),a1		;File listing
-	move.l	a1,a3			;For later!
-	move.l	a1,a2			;Preserve so we can adjust file count
-	addq.l	#4,a1			;Skip file amount stuff!
-get_filename_delete:
-	movem.l	a0-a1,-(a7)		;Preserve both filename pointers
-_continue:
-	move.b	(a0)+,d0		;Take from Gamefile
-	cmp.b	(a1)+,d0		;Comp with directory file
-	bne.s	_not_same
-	tst.b	d0
-	bne.s	_continue
-	movem.l	(a7)+,a0-a1		;SAME FILE FOUND HERE!
-	bra.s	_delete
-	
-_not_same:
-	movem.l	(a7)+,a0-a1		;NOT SAME FILE FOUND!
-	lea.l	$20(a1),a1		;Skip to next filename!
-	bra.s	get_filename_delete	
-; A1 = Pointer to filename in directory to remove!
-_delete:
-	subq.w	#1,(a2)			;This reduces count by 1
-	lea	((1400-4)-$20)(a3),a3	;So we can shift correct size!
-	move.l	a1,a2
-	lea.l	$20(a2),a2		;Skip to next filename to copy!
-redo_directory:
-	move.b	(a2)+,(a1)+
-	cmp.l	a1,a3
-	bne.s	redo_directory
-	lea	_fi(pc),a3
-copy_fi3:
-	move.b	(a0)+,(a3)+
-	bne.s	copy_fi3
-	clr.b	(a3)
-	lea	_savename(pc),a0	
-	bsr	_Deletefile		;Delete actual save file!
-	bsr	Save_directory
-	movem.l	(a7)+,d0-d7/a0-a6
-	moveq	#0,d0
-	tst.l	d0
-	rts
-
-;on entry: a0 = Filename
-;          a1 = Data to save
-;          d1 = Size of data to save
-Saver:
-	movem.l	d0-d7/a0-a6,-(a7)
-	movem.l	d0-d2/a0-a5,-(a7)
-	move.l	gen(pc),a2		;Root track location
-	moveq	#0,d0
-	move.l	a2,a3
-	move.l	a2,a5
-	addq.l	#4,a2			;Skip filedata
-	move.l	a0,a4
-get_slot:
-	move.l	a2,a3
-	move.l	a0,a4
-	tst.l	(a2)
-	beq.s	_emptyslot
-check_next_char:
-	move.b	(a4)+,d2
-	cmp.b	(a3)+,d2
-	bne.s	_not_same_filename	
-	tst.b	d2
-	bne.s	check_next_char	
-	bra.s	_samename
-_not_same_filename:
-	lea	$20(a2),a2		;Get next slot!
-	addq.w	#1,d0
-	cmp.w	#44,d0			;Max amount of saves allowed!
-	beq.s	_emptyslot_plus
-	bra.s	get_slot
-_emptyslot:
-	addq.w	#1,(a5)			;Add 1 to file counter!
-_emptyslot_plus:
-	move.l	a2,a5
-	moveq	#0,d0
-_fill_slot:
-	addq.b	#1,d0		
-	move.b	(a0)+,(a2)+		;Copy filename to roottrack!
-	bne.s	_fill_slot
-	clr.b	(a2)			;Make sure the filename is null!
-	subq.b	#1,d0			;Make length correct!
-	move.b	d0,-1(a5)		;How many chars in filename!
-_samename:
-	movem.l	(a7)+,d0-d2/a0-a5
-	moveq	#0,d0
-	exg	d0,d1
-	lea	_fi(pc),a3
-copy_fi:
-	move.b	(a0)+,(a3)+
-	bne.s	copy_fi
-	clr.b	(a3)+
-	lea	_savename(pc),a0
-	bsr	_SaveFile
-	lea	root(pc),a0
-	move.l	gen(pc),a1
-_filesize:
-	move.l	#1400,d0		;Size of directory track!
-	bsr	_SaveFile
-	movem.l	(a7)+,d0-d7/a0-a6
-	moveq	#0,d0
-	tst.l	d0
-	rts
-
-
-gen:	dc.l	$DEADC0DE
-
 
 
 kb_hook
@@ -1000,24 +834,6 @@ quit
 	addq.l	#resload_Abort,(a7)
 	rts
     
-;A1 = Area to load directory track!
-Load_directory:
-	movem.l	a0-a2,-(a7)
-	lea	root(pc),a0
-	bsr	_LoadFile
-	movem.l	(a7)+,a0-a2
-	moveq	#0,d0
-	tst.l	d0
-	rts
-Save_directory:
-	movem.l	d0/a0-a2,-(a7)
-	lea	root(pc),a0
-	move.l	gen(pc),a1
-	move.l	_filesize+2(pc),d0		;Size of directory track!
-	bsr	_SaveFile
-	movem.l	(a7)+,d0/a0-a2
-	rts
-
 copylock:
     MOVE.L #$71583efc,(A3)
     rts

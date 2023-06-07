@@ -29,10 +29,14 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- Version 2.3 (xx.xx.2023) done by paraj & JOTD:
- - fixed missing reloc (level 5)
- - fixed nasty protection check that trashed bomb location on level 5
-
+ Version 2.3 (03.06.2023) done by paraj & JOTD:
+ - fixed nasty protection check that trashed bomb location on level 5 (good find paraj!)
+ - fixed missing reloc (levels 5,6,7,8)
+ - added a lot of options to skip intro screens
+ - added level selection
+ - added level codes
+ - TODO: max of everything (inventory is at $581e (cannon rounds), $5820 (MG rounds), $5822 (life support flag), $5824 (reserve fuel tank flag), $28474 (number of nets) and $28476 (number of pups).
+ 
  Version 2.2 (29.11.2022) done by JOTD:
  - fixed crash on "city info" menu (needs updating of .reloc file)
  - added an option to speed up "imageworks presents" logo
