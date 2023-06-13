@@ -22,6 +22,7 @@ AFB_68060=7
         ENDC
 
 SER_OUTPUT=0
+FPS_COLOR=15
 
 ;CHIP_ONLY
 	IFD BARFLY
@@ -102,7 +103,7 @@ DECL_VERSION:MACRO
 	dc.b	"$","VER: slave "
 	DECL_VERSION
 	dc.b	0
-
+	
 assign
 	dc.b	"did",0
 slv_config
@@ -359,8 +360,8 @@ _bootdos
         bne.b   .gotbuf
         movem.l a6,-(a7)
 		move.l	$4.w,a6
-        move.l  #MEMF_PUBLIC,d1
-        move.l  #bplbytes*8,d0
+        move.l  #MEMF_PUBLIC!MEMF_CLEAR,d1
+        move.l  #bplbytes*8+($72418-$71758),d0 ; extra stuff is for sprites
         jsr _LVOAllocMem(a6)
         lea     fast_buf(pc),a6
         move.l  d0,(a6)
@@ -432,11 +433,16 @@ get_version
 .v020
         lea pl_020(pc),a0
         lea ptrs_020(pc),a5
+        btst.b  #AFB_68060,attnflags+3(pc)
+        beq.b   .not060
+        lea     pl_020_060(pc),a1 ; abuse fpu patch list register
+.not060
         move.w  #12958,d0
         move.l  #$410f0,d1
         rts
 .vfpu
         lea pl_fpu(pc),a0
+        lea ptrs_fpu(pc),a5
         move.w  #12838,d0
         move.l  #$396d4,d1
         rts
@@ -457,11 +463,10 @@ get_version
 
         lea pl_fpu_new(pc),a0
         lea pl_fpu_new_040(pc),a1
+        lea ptrs_fpu_new(pc),a5
         move.w  #13574,d0
         move.l  #$40c44,d1
         rts
-
-    
 
 new_AllocMem
     cmp.l   #$270FC,d0
@@ -498,7 +503,7 @@ patch_main
         ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
         tst.l   a5
-        beq.b   .noptrs
+        beq     .noptrs
 
         movem.l d0-d3/a2-a3,-(sp)
         lea     sections(pc),a3
@@ -513,7 +518,6 @@ patch_main
         tst.l   a2
         bne.b   .sections
 
-        clr.w   $100.w
         move.l  a5,a2
 .ptrs:
         move.w  (a2)+,d0
@@ -524,6 +528,28 @@ patch_main
         move.l  d0,(a5,d1.w)
         bra.b   .ptrs
 .done:
+
+        lea     ptrs_020(pc),a2
+        cmp.l   a2,a5
+        bne     .not020v
+        ; Alright, one more stupid speedup
+        ; We relocate _logbase to fast mem
+
+        lea     logbase(pc),a3
+        lea     _logbase_ptr(pc),a2
+        move.l  a3,(a2)
+        move.l  a3,d1
+
+        lea     logbase_patchoffsets(pc),a2
+        move.l  sections(pc),a3
+.patch:
+        move.l  (a2)+,d0
+        bmi.b   .not020v
+        move.l  d1,(a3,d0.l)
+        bra.b   .patch
+
+.not020v
+
         movem.l (sp)+,d0-d3/a2-a3
 
 .noptrs:
@@ -561,7 +587,8 @@ bplbytes=rowbytes*200
 sections  ds.l 15 ; "040" version has 15 sections
 last_time ds.l 1
 fast_buf  ds.l 1
-old_buf   ds.l 1
+old_bufs  ds.l 2
+logbase   ds.l 1
 
 _screen1_ptr ds.l 1
 _vblank_clock_ptr ds.l 1
@@ -571,11 +598,10 @@ _vblank_clock_ptr ds.l 1
 @ThreeScreenSwap_ptr ds.l 1
 _SetPage_ptr ds.l 1
 _SetLogbase_ptr ds.l 1
-
 _logbase_ptr ds.l 1
 _current_page_ptr ds.l 1
-
 PlotColour_ptr ds.l 1
+_sprogtab_ptr ds.l 1
 
 PTRSTART macro
 .tabstart       set *
@@ -606,6 +632,8 @@ ptrs_040 PTRSTART
         MKPTR   @ThreeScreenSwap_ptr,$3e5c2
         MKPTR   _SetPage_ptr,$4a052
         MKPTR   _SetLogbase_ptr,$4a878
+        PTRSECTION 7,$71434
+        MKPTR   _sprogtab_ptr,$71736
         PTRSECTION 8,$71740
         MKPTR   _logbase_ptr,$73890
         MKPTR   _current_page_ptr,$73894
@@ -625,8 +653,68 @@ ptrs_020 PTRSTART
         MKPTR   _SetLogbase_ptr,$4b028
         MKPTR   PlotColour_ptr,$6bd04
         PTRSECTION 2,$751cc
-        MKPTR   _current_page_ptr,$78d68
         MKPTR   _logbase_ptr,$78d64
+        MKPTR   _current_page_ptr,$78d68
+        MKPTR   _sprogtab_ptr,$76c0a
+        PTREND
+
+pl_020_060
+        PL_START
+        PL_P    $6aea8,_qmul
+        PL_P    $5a672,xTranslate
+        PL_PSS  $619d2,_HorizonFadeProj_619d2,2
+        PL_PSS  $619f2,_HorizonFadeProj_619f2,2
+        PL_PSS  $61a26,_HorizonFadeProj_61a26,2
+        PL_PSS  $61a02,_HorizonFadeProj_DivsL,2
+        PL_PSS  $61a36,_HorizonFadeProj_DivsL,2
+        PL_END
+
+logbase_patchoffsets:
+        dc.l $0191c,$019f8,$0357e,$138a0,$13962,$17290,$172e4,$175ea
+        dc.l $175f8,$31882,$3188c,$31894,$319c4,$319ce,$319d6,$32ea2
+        dc.l $32ec4,$33088,$330b4,$33352,$33396,$33674,$336a8,$3383c
+        dc.l $33854,$338b6,$338d8,$37604,$37624,$389ba,$389d8,$43914
+        dc.l $4393a,$464ac,$464ba,$46d4a,$46d5a,$4aa7e,$4abd0,$4b000
+        dc.l $4b012,$4b022,$4b038,$4b052,$4b088,$4b0de,$4b108,$4b1f6
+        dc.l $4bcc6,$4bce2,$4bd16,$4bd1c,$4bddc,$4be0c,$4bf0e,$4c15c
+        dc.l $4c402,$4c756,$4ca4e,$4cac8,$4cc5c,$4cd78,$4d2fe,$4d5c4
+        dc.l $4d60a,$4d64a,$4d7d2,$4d84e,$4d906,$4dabe,$4dbcc,$4dcea
+        dc.l $4df80,$6b0c8,$6b0f6,$6b940,$6ddec,-1
+
+ptrs_fpu PTRSTART
+        PTRSECTION 0,$00000
+        MKPTR   @ThreeScreenSwap_ptr,$38586
+        MKPTR   _screen1_ptr,$4407c
+        MKPTR   _vblank_clock_ptr,$4523c
+        MKPTR   @Control_ptr,$12d1e
+        MKPTR   @HandleEjection_ptr,$0060e
+        MKPTR   @RemoveDeadMissiles_ptr,$22b30
+        MKPTR   _SetPage_ptr,$43d2e
+        MKPTR   _SetLogbase_ptr,$44526
+        PTRSECTION 7,$6b058
+        MKPTR   _sprogtab_ptr,$6b35a
+        PTRSECTION 8,$6b364
+        MKPTR   _current_page_ptr,$6d4b8
+        MKPTR   _logbase_ptr,$6d4b4
+        PTRSECTION 12,$92d64
+        MKPTR   PlotColour_ptr,$93ac8
+        PTREND
+
+ptrs_fpu_new PTRSTART
+        PTRSECTION 0,$00000
+        MKPTR   @ThreeScreenSwap_ptr,$3f99e
+        MKPTR   _screen1_ptr,$4ce00
+        MKPTR   _vblank_clock_ptr,$4d884
+        MKPTR   @Control_ptr,$14fbe
+        MKPTR   @HandleEjection_ptr,$0082a
+        MKPTR   @RemoveDeadMissiles_ptr,$271ee
+        MKPTR   _SetPage_ptr,$4c44a
+        MKPTR   _SetLogbase_ptr,$4cc70
+        MKPTR   PlotColour_ptr,$6a4b8
+        PTRSECTION 1,$6cccc
+        MKPTR   _current_page_ptr,$71600
+        MKPTR   _logbase_ptr,$715fc
+        MKPTR   _sprogtab_ptr,$6f4a2
         PTREND
 
 CALLPTR macro
@@ -645,19 +733,25 @@ one_digit macro
         endm
 
 start_frame:
-        movem.l d0/a0-a1,-(sp)
 	    ;BSR.W	LAB_0144		        ;01464: 610008c0 (@Control thunk)
 	    ;BSR.W	@HandleEjection		    ;01468: 6100f1ea
         CALLPTR @Control
         CALLPTR @HandleEjection
 
+        ; Swap chip mem buffers
+
+        movem.l d0/a0-a2,-(sp)
         move.w  ([_logbase_ptr,pc]),d0
         lea     ([_screen1_ptr,pc],d0.w),a0
-        lea     old_buf(pc),a1
+        lea     old_bufs(pc),a1
+        move.l  (a0),(a1)+
+        move.l  fast_buf(pc),a2
+        move.l  a2,(a0)
+        add.l   #bplbytes*8,a2
+        lea     ([_sprogtab_ptr,pc],d0.w),a0
         move.l  (a0),(a1)
-        move.l  fast_buf(pc),(a0)
-
-        movem.l (sp)+,d0/a0-a1
+        move.l  a2,(a0)
+        movem.l (sp)+,d0/a0-a2
         rts
 
 
@@ -666,6 +760,7 @@ do_swap_screen:
 
         move.w  ([_logbase_ptr,pc]),d0
         lea     ([_screen1_ptr,pc],d0.w),a5
+        lea     ([_sprogtab_ptr,pc],d0.w),a4
 
         move.l  (a5),a2
         add.l   #rowbytes+4*bplbytes,a2
@@ -686,7 +781,7 @@ do_swap_screen:
         CHECK_NO_FAST_ALLOC
         bne     .nofast
 
-        move.l  old_buf(pc),a0
+        move.l  old_bufs(pc),a0
         move.l  fast_buf(pc),a1
         move.l  a0,(a5) ; Restore screen buffer
         move.w  #bplbytes*8/16-1,d0
@@ -697,11 +792,30 @@ do_swap_screen:
         move.l  (a1)+,(a0)+
         dbf     d0,.copy
 
+        ; a1 now points to spite buffer in fast mem
+
+        move.l  4+old_bufs(pc),a0
+        move.l  a0,(a4) ; Restore spritebuf
+
+        ; a little tricky, copy sprite buffer back to chip mem, but avoid control words, etc.
+        ; TODO: Maybe not all stuff actually needs to be copied...
+        move.w  #402-1,d0
+.copy2:
+        move.l  (a1)+,(a0)+
+        dbf     d0,.copy2
+        add.w   #16,a0
+        add.w   #16,a1
+        move.w  #402-1,d0
+.copy3:
+        move.l  (a1)+,(a0)+
+        dbf     d0,.copy3
+
+
         ; Swap without sync
         move.l  _current_page_ptr(pc),a3
         move.l  sections(pc),a6
-        moveq   #0,d0
-        move.w  (a3),d0
+        moveq   #1,d0
+        and.w   (a3),d0
         move.l  d0,-(sp)
         CALLPTR _SetPage
         move.w  (a3),d0
@@ -712,7 +826,6 @@ do_swap_screen:
         addq.w  #4,sp
 .nofast:
         movem.l (sp)+,d0-d7/a0-a6
-
 
         ; Original code
         CHECK_NO_FAST_ALLOC
@@ -728,8 +841,14 @@ _drawdigit:
         moveq   #8-1,d3
 .l:
         move.b  (a0)+,d2
+        move.b  d2,d4
+        not.b   d4
         rept 8
-        move.b  d2,(REPTN-4)*bplbytes(a1)
+        ifne (FPS_COLOR>>REPTN)&1
+        or.b    d2,(REPTN-4)*bplbytes(a1)
+        else
+        and.b   d4,(REPTN-4)*bplbytes(a1)
+        endc
         endr
         add.w   #rowbytes,a1
         dbf     d3,.l
@@ -1050,6 +1169,384 @@ apply_mask:
         endr
 apply_mask_end:
 
+_qmul:
+        movem.l d2-d7,-(sp)
+        bsr     smul64
+        move.l  d0,(a0)+
+        move.l  d1,(a0)
+        movem.l (sp)+,d2-d7
+        rts
+
+; Dumb helper macro that uses memory to avoid register complications
+; Assumes a1/a2 points to temp storage
+MULS_L macro
+        move.l  \1,(a1)
+        move.l  \3,(a2)
+        movem.l d0-d7,-(sp)
+        move.l  (a1),d0
+        move.l  (a2),d1
+        bsr     smul64
+        move.l  d0,(a1)
+        move.l  d1,(a2)
+        movem.l (sp)+,d0-d7
+        move.l  (a1),\2
+        move.l  (a2),\3
+        endm
+
+MULS_SETUP macro
+        movem.l a1-a2,-(sp)
+        lea     smulstore(pc),a1
+        lea     4(a1),a2
+        endm
+
+MULS_CLEANUP macro
+        movem.l (sp)+,a1-a2
+        endm
+
+smulstore: ds.l 2
+xTranslate:
+        MULS_SETUP
+; Replace the following code. Could probably be optimized, but being
+; too clever about which registers need to hold what values is risky...
+;	MULS.L	D0,D3:D4		;5a672: 4c004c03
+	MULS_L	D0,D3,D4
+;	MULS.L	D1,D4:D5		;5a676: 4c015c04
+ 	MULS_L	D1,D4,D5
+;	MULS.L	D2,D5:D6		;5a67a: 4c026c05
+        MULS_L  D2,D5,D6
+	ADD.L	D4,D3			;5a67e: d684
+	ADD.L	D5,D3			;5a680: d685
+	MOVEM.L	(A0)+,D4-D5/D7		;5a682: 4cd800b0
+;	MULS.L	D0,D6:D4		;5a686: 4c004c06
+	MULS_L	D0,D6,D4
+;	MULS.L	D1,D4:D5		;5a68a: 4c015c04
+	MULS_L	D1,D4,D5
+;	MULS.L	D2,D5:D7		;5a68e: 4c027c05
+	MULS_L	D2,D5,D7
+	ADD.L	D4,D6			;5a692: dc84
+	ADD.L	D5,D6			;5a694: dc85
+;	MULS.L	(A0)+,D7:D0		;5a696: 4c180c07
+	MULS_L	(A0)+,D7,D0
+;	MULS.L	(A0)+,D4:D1		;5a69a: 4c181c04
+	MULS_L	(A0)+,D4,D1
+;	MULS.L	(A0)+,D5:D2		;5a69e: 4c182c05
+	MULS_L	(A0)+,D5,D2
+	ADD.L	D4,D7			;5a6a2: de84
+	ADD.L	D5,D7			;5a6a4: de85
+;	RTS				;5a6a6: 4e75
+        MULS_CLEANUP
+        rts
+
+
+; More MULS.L's. There's even DIVS.L below that could be included.
+; Probably could be simplified, but this will have to do for now...
+
+_HorizonFadeProj_619d2:
+        MULS_SETUP
+;	MULS.L	D0,D4:D2		;619d2: 4c002c04
+;	MULS.L	D1,D5:D6		;619d6: 4c016c05
+	MULS_L	D0,D4,D2
+	MULS_L	D1,D5,D6
+        MULS_CLEANUP
+        rts
+_HorizonFadeProj_619f2:
+        MULS_SETUP
+;	MULS.L	D0,D4:D2		;619f2: 4c002c04
+;	MULS.L	D1,D5:D3		;619f6: 4c013c05
+	MULS_L	D0,D4,D2
+	MULS_L	D1,D5,D3
+        MULS_CLEANUP
+        rts
+_HorizonFadeProj_61a26:
+        MULS_SETUP
+;	MULS.L	D0,D4:D2		;61a26: 4c002c04
+;	MULS.L	D1,D5:D3		;61a2a: 4c013c05
+	MULS_L	D0,D4,D2
+	MULS_L	D1,D5,D3
+        MULS_CLEANUP
+        rts
+
+; muls.l d0,d0:d1
+; trashes d2-d7
+; Adapted from https://web.archive.org/web/20190109005441/http://www.hackersdelight.org/hdcodetxt/muldws.c.txt
+smul64:
+        move.l  #$ffff,d7
+        moveq   #16,d6
+        move.l  d1,d2
+        asr.l   d6,d2
+        and.l   d7,d1
+        move.l  d0,d4
+        asr.l   d6,d4
+        and.l   d7,d0
+        move.l  d1,d3
+        mulu.w  d0,d3
+        move.l  d3,d5
+        lsr.l   d6,d5
+        muls.l  d2,d0
+        add.l   d5,d0
+        move.l  d0,d5
+        and.l   d7,d5
+        muls.l  d4,d1
+        add.l   d5,d1
+        muls.l  d4,d2
+        asr.l   d6,d0
+        add.l   d0,d2
+        move.l  d1,d0
+        asr.l   d6,d0
+        add.l   d2,d0
+        lsl.l   d6,d1
+        and.l   d7,d3
+        add.l   d3,d1
+        rts
+
+
+_HorizonFadeProj_DivsL:
+        movem.l d0-d1/a0-a1,-(sp)
+	BFEXTS	D2{0:1},D3		;61a36: ebc23001
+	;DIVS.L	D6,D3:D2		;61a3a: 4c462c03
+        move.l  d2,d0
+        move.l  d3,d1
+        move.l  d6,d2
+        bsr     SDiv646
+        move.l  d1,d3
+        move.l  d0,d2
+        movem.l (sp)+,d0-d1/a0-a1
+        rts
+
+        ; divs.l    d2,d1:d0
+        ; Thanks to Thomas Richter
+        ;https://eab.abime.net/showthread.php?t=104901
+        ;; signed 64/32 divide, 68060 function
+SDiv646:
+    movem.l    d2-d7/a2-a5,-(sp)
+
+    sub.l    a2,a2        ;sign flag divisor
+    sub.l    a3,a3        ;sign flag dividend
+    move.l    d0,a4
+    move.l    d1,a5        ;save original contents
+
+    move.l    d2,d7        ;save divisor
+    bpl.s    1$        ;make positive
+    addq.w    #1,a2        ;set flag
+    neg.l    d7
+1$:
+
+    move.l    d0,d6
+    move.l    d1,d5        ;save dividend
+    bpl.s    2$
+    addq.w    #1,a3        ;set flag
+    neg.l    d6
+    negx.l    d5        ;invert
+2$:
+    tst.l    d5        ;is the high non-zero? If so, full divide
+    bne.s    3$
+
+    tst.l    d6        ;is low zero?
+    beq.s    10$        ;yes, we are done
+
+    ;; here low <> 0
+    cmp.l    d6,d7        ;is the divisor <= lo (dividend)
+    bls.s    5$        ;yes, use a 32-bit divide
+
+    exg.l    d5,d6        ;q = 0, r = dividend
+    bra.s    6$        ;can't divide, done
+5$:    
+    divul.l    d7,d5:d6                    ;# it's only a 32/32 bit div!
+    bra.b    6$
+3$:    ;; full 64 bit case here. do we have an overflow?
+    cmp.l    d5,d7
+    bls.s    7$        ;yes
+    ;; here full 64/32 divide
+    bsr    AlgorithmD    ;perform classical algorithm D from Knuth
+    ;; remainder in d6, quotient in d5
+6$:    ;done here, check whether there is a sign switch
+    cmp.w    #0,a3
+    beq.s    8$
+    neg.l    d5        ;remainder has the same sign as dividend
+8$:
+    cmp.w    a2,a3        ;same signs of divisor and dividend?
+    beq.s    9$
+
+    cmp.l    #$80000000,d6    ;representable as 32-bit negative number?
+    bhi.s    7$        ;overflow
+    neg.l    d6        ;make a 2s complement for quotient
+    bra.s    10$
+9$:                ;here positive
+    tst.l    d6        ;will fit into 32 bits?
+    bmi.s    7$        ;overflow if not
+10$:                ;here done
+    move.l    d5,d1        ;remainder -> d1
+    move.l    d6,d0        ;quotient -> d0
+    andi.b    #$fc,ccr    ;clear V and C
+    bra.s    11$
+7$:
+    move.l    a4,d0        ;restore original register content
+    move.l    a5,d1
+    ori.b    #$2,ccr        ;set overflow bit
+11$:
+    movem.l    (sp)+,d2-d7/a2-a5
+    rts
+
+    ;; division algorithm. This is either a
+    ;; full algorithmD from Knuth "The Art of Programming", Vol.2
+    ;; or using a 32:16 division in case the divisor fits
+    ;; into 16 bits.
+    ;; This algorithm divides d5:d6 by d7
+AlgorithmD:    
+    swap    d7
+    tst.w    d7
+    bne.s    1$
+    ;; ok, we only need to divide by 16 bits, so
+    ;; things are somewhat simpler
+    swap    d7        ; restore divisor
+    ;; note that we already know that the division
+    ;; does not overflow (checked upwards)
+    moveq    #0,d1
+
+    swap    d5        ; same as r*b if previous step rqd
+    swap    d6        ; get u3 to lsw position
+    move.w    d6,d5        ; rb + u3
+
+    divu.w    d7,d5
+
+    move.w    d5,d1        ; first quotient word
+    swap    d6        ; get u4
+    move.w    d6,d5        ; rb + u4
+
+    divu.w    d7,d5
+
+    swap    d1
+    move.w    d5,d1        ; 2nd quotient 'digit'
+    clr.w    d5        
+    swap    d5        ;now remainder
+    move.l    d1,d6        ; and quotient
+    rts    
+1$:
+    swap d7            ; restore divisor
+    ;; classical algorithm D.
+    ;; In this algorithm, the divisor is treated as a 2 digit (word) number
+    ;; which is divided into a 3 digit (word) dividend to get one quotient
+    ;; digit (word). After subtraction, the dividend is shifted and the
+    ;; process repeated. Before beginning, the divisor and quotient are
+    ;; 'normalized' so that the process of estimating the quotient digit
+    ;; will yield verifiably correct results..
+    moveq    #0,d4                        ;all the flags in d4
+ddnchk:
+    ;; normalize/upshift the divisor to use full 32 bits, adjust dividend with it.
+    ;; the number of shifts goes into d4
+    ;; note that d7 is at least 0x00010000
+    tst.l    d7
+    bmi.b    ddnormalized
+ddnchk2:
+    addq.l    #$1,d4                        ;count in d4
+    lsl.l    #$1,d6                        ;# shift u4,u3 with overflow to u2
+    roxl.l    #$1,d5                        ;# shift u1,u2 
+    lsl.l    #$1,d7                        ;# shift the divisor
+    bpl.b    ddnchk2
+
+    swap    d4                        ;keep lo-word free
+
+ddnormalized:
+    ;; Now calculate an estimate of the quotient words (msw first, then lsw).
+    ;; The comments use subscripts for the first quotient digit determination.
+    move.l    d7,d3                        ;# divisor
+    move.l    d5,d2                        ;# dividend mslw
+    swap    d3
+    swap    d2
+    move.w    #$ffff,d1                    ;# use max trial quotient word
+    cmp.w    d3,d2                        ;# V1 = U1 ?
+    beq.b    ddadj0
+
+    move.l    d5,d1
+    divu.w    d3,d1                        ;# use quotient of mslw/msw
+ddadj0:
+
+    ;; now test the trial quotient and adjust. This step plus the
+    ;; normalization assures (according to Knuth) that the trial
+    ;; quotient will be at worst 2 too large.
+    ;; NOTE: We do not perform step D3 here. This is not required, as
+    ;; D4 is sufficient for adjusting a quotient that has been guessed
+    ;; "too large". At most, it can be off by two (easy to prove).
+
+    move.l    d7,d2        ;V1V2->d2
+
+    ;; at this stage, d1 is scaled by 1<<16. Evaluate the 32x32 product d1'0xd7->d2(hi),d3(lo)
+    ;; d0,d2,d3,d6 are scratches
+
+    move.l    d7,d0        ;V1V2->d0
+    swap     d2        ;get hi of d7 = V1
+    mulu.w    d1,d0        ;V2*q: scaled by 2^16, must be split in higher/lower pair
+    mulu.w    d1,d2        ;V1*q: the upper 32 bit = V1*q, must be scaled by 2^32
+    move.l    d0,d3        ;get lo
+    clr.w    d0        ;clear lo
+    swap    d3        ;part of it
+    swap    d0        ;swap: scale by 2^16: This must be added to hi
+    clr.w    d3        ;shift up by 16
+    add.l    d0,d2        ;add to hi
+
+    sub.l    d3,d6        
+    subx.l    d2,d5        ; subtract double precision
+    bcc.s    dd2nd        ; no carry, do next quotient digit
+
+    ;; need to add back divisor longword to current ms 3 digits of dividend
+    ;; - according to Knuth, this is done only 2 out of 65536 times for random
+    ;; divisor, dividend selection.
+    ;;
+    ;; thor: computations show that this loop is run at most twice.
+    ;; this is better than knuth in this specific case because we
+    ;; avoid the multiplications in D3 and this step here (D4) is 
+    ;; only addition.
+
+    move.l    d7,d3
+    move.l    d7,d2        ; add V1V20 back to U1U2U3U4
+    swap    d3
+    clr.w    d2
+    clr.w    d3
+    swap    d2        ; d3 now ls word of divisor
+ddaddup:
+    subq.l    #$1,d1        ; q is one too large
+    add.l    d3,d6        ; aligned with 3rd word of dividend
+    addx.l    d2,d5
+    bcc    ddaddup        ; until we're positive again
+dd2nd:
+    tst.l    d4
+    bmi.s    ddremain
+
+;# first quotient digit now correct. store digit and shift the
+;# (subtracted) dividend 
+    move.w    d1,d4        ;keep hi-quotient
+    swap    d5
+    swap    d6
+    move.w    d6,d5
+    clr.w    d6        ;shift remainder up by 16 bits
+    bset    #31,d4        ;second digit
+    bra.s    ddnormalized
+ddremain:
+;# add 2nd word to quotient, get the remainder.
+    swap    d1
+    move.w    d4,d1        ;get result of previous division
+    swap    d1        ;restore order
+    swap    d4        ;restore normalization counter
+
+;# shift down one word/digit to renormalize remainder.
+    move.w    d5,d6
+    swap    d6
+    swap    d5
+    clr.l    d7
+    move.b    d4,d7
+    beq.s    ddrn
+    ;; shift d5:d6 to the right by d7 bits, d5 is high
+    move.l    d5,d0
+    lsr.l    d7,d6        ; shift low out
+    ror.l    d7,d0        ; move low bits of high to high
+    lsr.l    d7,d5        ; shift high down
+    eor.l    d5,d0        ; high bits are in d0
+    or.l    d0,d6        ; into d6
+ddrn:
+    move.l    d6,d5        ; remainder
+    move.l    d1,d6
+    rts
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
@@ -1216,11 +1713,39 @@ pl_fpu
         PL_PSS  $3d8d8,pre_display_text_or_image,2
         PL_PSS  $3d8e8,pre_display_text_or_image,2
         PL_ENDIF
-        
-        PL_PS   $46272,fix_smc
 
         ; read joy1
         PL_PSS  $39ae4,test_fire,2
+
+        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+        PL_IFC4X    2 ; "Original rendering code"
+
+        PL_PS   $46272,fix_smc
+
+        PL_IFC4X    3 ; "Show FPS"
+        PL_PSS  $016f6,do_swap_screen,2
+        PL_ENDIF
+
+        PL_ELSE ; New rendering code
+
+        ; Alternative SMC fix
+        PL_W    $4617e,$3f3e    ; Also preserve A6
+        PL_W    $464a6,$7cfc    ; and restore it again
+        PL_W    $46476,$4e96    ; jsr (a6)
+        PL_PS   $46180,draw_mono_image_setup
+
+        PL_NOP  $45e6c,4                ; Never use blitter in _MaskSprite
+        PL_P    $45544,box              ; _ClipBox
+        PL_P    $4556c,box              ; _Box
+        PL_P    $457a4,draw_line_normal ; _DrawLine
+        PL_P    $47abc,draw_line_strip  ; _DrawStipLine
+
+        ;; @PlayLevel
+        PL_PSS  $0150c,start_frame,2
+        PL_PSS  $016f6,do_swap_screen,2
+        PL_ENDIF
+        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 
         PL_END
 
@@ -1234,11 +1759,39 @@ pl_fpu_new
         PL_PSS  $45368,pre_display_text_or_image,2
         PL_PSS  $45378,pre_display_text_or_image,2
         PL_ENDIF
-        
-        PL_PS   $4e7ae,fix_smc
 
         ; read joy1
         PL_PSS  $41054,test_fire,2
+
+        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+        PL_IFC4X    2 ; "Original rendering code"
+
+        PL_PS   $4e7ae,fix_smc
+
+        PL_IFC4X    3 ; "Show FPS"
+        PL_PSS  $019fc,do_swap_screen,2
+        PL_ENDIF
+
+        PL_ELSE ; New rendering code
+
+        ; Alternative SMC fix
+        PL_W    $4e6ba,$3f3e    ; Also preserve A6
+        PL_W    $4e9e2,$7cfc    ; and restore it again
+        PL_W    $4e9b2,$4e96    ; jsr (a6)
+        PL_PS   $4e6bc,draw_mono_image_setup
+
+        PL_NOP  $4e3a8,4                ; Never use blitter in _MaskSprite
+        PL_P    $4dba0,box              ; _ClipBox
+        PL_P    $4dbc8,box              ; _Box
+        PL_P    $4de00,draw_line_normal ; _DrawLine
+        PL_P    $500dc,draw_line_strip  ; _DrawStipLine
+
+        ;; @PlayLevel
+        PL_PSS  $017f8,start_frame,2
+        PL_PSS  $019fc,do_swap_screen,2
+        PL_ENDIF
+        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
         PL_END
        
 pl_fpu_new_040:
