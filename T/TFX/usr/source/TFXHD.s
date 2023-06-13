@@ -17,6 +17,12 @@
 	INCLUDE	whdmacros.i
 	INCLUDE	lvo/dos.i
 
+        IFND AFB_68060
+AFB_68060=7
+        ENDC
+
+SER_OUTPUT=0
+
 ;CHIP_ONLY
 	IFD BARFLY
 	OUTPUT	"TFX.slave"
@@ -71,17 +77,19 @@ slv_Flags	= WHDLF_NoError|WHDLF_Examine|WHDLF_Req68020|WHDLF_ReqAGA
 slv_keyexit	= $67	; right amiga (as num pad is used)
 
 	include	whdload/kick31.s
-IGNORE_JOY_DIRECTIONS    
+IGNORE_JOY_DIRECTIONS
     include ReadJoyPad.s
-    
+    include serial.s
+
 ;============================================================================
+
 
 	IFD BARFLY
 	DOSCMD	"WDate  >T:date"
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.0"
+	dc.b	"1.x (EXPERIMENTAL) "
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -101,6 +109,8 @@ slv_config
 	dc.b	"C3:L:executable:auto,TFX (plain 68020),TFX.FPU (68020+FPU),TFX.020 (68020+FPU 1997),TFX.040 (68020+FPU beta);"
 	dc.b	"C4:X:run configuration program first:0;"
 	dc.b	"C4:X:skip intro:1;"
+	dc.b	"C4:X:original rendering code:2;"
+	dc.b	"C4:X:show frame rate:3;"
 	dc.b	"C5:B:no FPU direct fixes;"
 	dc.b	0	
 	EVEN
@@ -116,7 +126,6 @@ slv_info		dc.b	"adapted by JOTD",10,10
 		dc.b	0
 slv_CurrentDir:
 	dc.b	"data",0
-
     even
 program_table:
     dc.w    program-program_table
@@ -150,6 +159,15 @@ args_end
 	dc.b	"$","VER: slave "
 	DECL_VERSION
 	EVEN
+
+CHECK_NO_FAST_ALLOC macro
+        btst.b #2,sequence_control+3(pc)
+        endm
+
+CHECK_SHOW_FPS macro
+        btst.b #3,sequence_control+3(pc)
+        endm
+
 
 PATCH_XXXLIB_OFFSET:MACRO
 	movem.l	d0-d1/a0-a1,-(a7)
@@ -192,7 +210,7 @@ _bootdos
 	;get tags
 		lea	(tag,pc),a0
 		jsr	(resload_Control,a2)
-	
+
 	;open doslib
 		lea	(_dosname,pc),a1
 		move.l	(4),a6
@@ -265,7 +283,7 @@ _bootdos
         add.l   a1,a0       ; program name
         lea program_to_run(pc),a1
         move.l  a0,(a1)
-        
+
         ; for 68040/68060 only, FPU assumed (we have checked it in the "auto"
         ; executable selection, but the user can force it, note that it will probably
         ; fail but just in case of a strange Vampire-like board that isn't properly detected...
@@ -336,6 +354,25 @@ _bootdos
         movem.l (a7)+,a6
     ENDC
 
+        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+        CHECK_NO_FAST_ALLOC
+        bne.b   .gotbuf
+        movem.l a6,-(a7)
+		move.l	$4.w,a6
+        move.l  #MEMF_PUBLIC,d1
+        move.l  #bplbytes*8,d0
+        jsr _LVOAllocMem(a6)
+        lea     fast_buf(pc),a6
+        move.l  d0,(a6)
+        movem.l (a7)+,a6
+        bne.b   .gotbuf
+
+        pea	outofmemory(pc)
+        pea	(TDREASON_FAILMSG).w
+        move.l	_resload(pc),a0
+        jmp	resload_Abort(a0)
+.gotbuf:
+        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
         move.l  program_to_run(pc),a0
         jsr (resload_GetFileSize,a2)
@@ -365,12 +402,13 @@ get_060_id:
     movec  pcr,d0
     mc68020
     rte
-    
+
 get_version
         move.l  program_to_run(pc),a0
         jsr (resload_GetFileSize,a2)
         
         sub.l   a1,a1   ; default: no fpu patchlist
+        sub.l   a5,a5   ; no pointer list
         
         cmp.l   #554340,d0
         beq.b   .v020
@@ -393,6 +431,7 @@ get_version
         rts    
 .v020
         lea pl_020(pc),a0
+        lea ptrs_020(pc),a5
         move.w  #12958,d0
         move.l  #$410f0,d1
         rts
@@ -402,6 +441,7 @@ get_version
         move.l  #$396d4,d1
         rts
 .v040
+        lea ptrs_040(pc),a5
         lea pl_040(pc),a0
         move.w  #13574,d0
         move.l  #$3f70c,d1
@@ -454,7 +494,45 @@ patch_main
         IFD CHIP_ONLY
         move.l  a1,$FC.W
         ENDC
-        
+
+        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+        tst.l   a5
+        beq.b   .noptrs
+
+        movem.l d0-d3/a2-a3,-(sp)
+        lea     sections(pc),a3
+        move.l  a1,(a3)+
+        move.l  -4(a1),a2
+.sections:
+        add.l   a2,a2
+        add.l   a2,a2
+        addq.l  #4,a2
+        move.l  a2,(a3)+
+        move.l  -4(a2),a2
+        tst.l   a2
+        bne.b   .sections
+
+        clr.w   $100.w
+        move.l  a5,a2
+.ptrs:
+        move.w  (a2)+,d0
+        bmi.b   .done
+        move.w  (a2)+,d1
+        move.l  sections(pc,d0.w*4),d0
+        add.l   (a2)+,d0
+        move.l  d0,(a5,d1.w)
+        bra.b   .ptrs
+.done:
+        movem.l (sp)+,d0-d3/a2-a3
+
+.noptrs:
+        IFNE SER_OUTPUT
+        move.w  #30,serper+$dff000
+        ENDC
+
+        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
         add.l   d1,a1   ; get keyboard handler end address
         lea int2_hook_address(pc),a2
         move.l  a1,(a2)
@@ -473,6 +551,508 @@ patch_main
 .no_fpu_patches
         rts
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+screenw=320
+screenh=200
+rowbytes=screenw/8
+bplbytes=rowbytes*200
+
+sections  ds.l 15 ; "040" version has 15 sections
+last_time ds.l 1
+fast_buf  ds.l 1
+old_buf   ds.l 1
+
+_screen1_ptr ds.l 1
+_vblank_clock_ptr ds.l 1
+@Control_ptr ds.l 1
+@HandleEjection_ptr ds.l 1
+@RemoveDeadMissiles_ptr ds.l 1
+@ThreeScreenSwap_ptr ds.l 1
+_SetPage_ptr ds.l 1
+_SetLogbase_ptr ds.l 1
+
+_logbase_ptr ds.l 1
+_current_page_ptr ds.l 1
+
+PlotColour_ptr ds.l 1
+
+PTRSTART macro
+.tabstart       set *
+.cursec         set 0
+.secstart       set 0
+        endm
+PTREND macro
+        dc.w -1
+        endm
+PTRSECTION macro
+.cursec set \1
+.secstart set \2
+        endm
+
+MKPTR macro
+        dc.w    .cursec
+        dc.w    \1-.tabstart
+        dc.l    \2-.secstart
+        endm
+
+ptrs_040 PTRSTART
+        PTRSECTION 0,$00000
+        MKPTR   _screen1_ptr,$4aa08
+        MKPTR   _vblank_clock_ptr,$4b474
+        MKPTR   @Control_ptr,$14736
+        MKPTR   @HandleEjection_ptr,$00654
+        MKPTR   @RemoveDeadMissiles_ptr,$26966
+        MKPTR   @ThreeScreenSwap_ptr,$3e5c2
+        MKPTR   _SetPage_ptr,$4a052
+        MKPTR   _SetLogbase_ptr,$4a878
+        PTRSECTION 8,$71740
+        MKPTR   _logbase_ptr,$73890
+        MKPTR   _current_page_ptr,$73894
+        PTRSECTION 12,$99170
+        MKPTR   PlotColour_ptr,$99edc
+        PTREND
+
+ptrs_020 PTRSTART
+        PTRSECTION 0,$00000
+        MKPTR   @ThreeScreenSwap_ptr,$3ff92
+        MKPTR   _screen1_ptr,$4b1b8
+        MKPTR   _vblank_clock_ptr,$4bbd0
+        MKPTR   @Control_ptr,$130ea
+        MKPTR   @HandleEjection_ptr,$0072e
+        MKPTR   @RemoveDeadMissiles_ptr,$3463c
+        MKPTR   _SetPage_ptr,$4a992
+        MKPTR   _SetLogbase_ptr,$4b028
+        MKPTR   PlotColour_ptr,$6bd04
+        PTRSECTION 2,$751cc
+        MKPTR   _current_page_ptr,$78d68
+        MKPTR   _logbase_ptr,$78d64
+        PTREND
+
+CALLPTR macro
+        jsr     ([\1_ptr,pc])
+        endm
+JMPPTR macro
+        jmp     ([\1_ptr,pc])
+        endm
+
+one_digit macro
+        divu    #10,d0
+        swap    d0
+        bsr     _drawdigit
+        clr.w   d0
+        swap    d0
+        endm
+
+start_frame:
+        movem.l d0/a0-a1,-(sp)
+	    ;BSR.W	LAB_0144		        ;01464: 610008c0 (@Control thunk)
+	    ;BSR.W	@HandleEjection		    ;01468: 6100f1ea
+        CALLPTR @Control
+        CALLPTR @HandleEjection
+
+        move.w  ([_logbase_ptr,pc]),d0
+        lea     ([_screen1_ptr,pc],d0.w),a0
+        lea     old_buf(pc),a1
+        move.l  (a0),(a1)
+        move.l  fast_buf(pc),(a0)
+
+        movem.l (sp)+,d0/a0-a1
+        rts
+
+
+do_swap_screen:
+        movem.l d0-d7/a0-a6,-(sp)
+
+        move.w  ([_logbase_ptr,pc]),d0
+        lea     ([_screen1_ptr,pc],d0.w),a5
+
+        move.l  (a5),a2
+        add.l   #rowbytes+4*bplbytes,a2
+.again:
+        move.l  ([_vblank_clock_ptr,pc]),d0
+        lea     last_time(pc),a0
+        move.l  (a0),d1
+        move.l  d0,(a0)
+        sub.l   d1,d0
+        beq.b   .again
+
+        CHECK_SHOW_FPS
+        beq.b   .nofps
+        one_digit
+        one_digit
+.nofps:
+
+        CHECK_NO_FAST_ALLOC
+        bne     .nofast
+
+        move.l  old_buf(pc),a0
+        move.l  fast_buf(pc),a1
+        move.l  a0,(a5) ; Restore screen buffer
+        move.w  #bplbytes*8/16-1,d0
+.copy:
+        move.l  (a1)+,(a0)+
+        move.l  (a1)+,(a0)+
+        move.l  (a1)+,(a0)+
+        move.l  (a1)+,(a0)+
+        dbf     d0,.copy
+
+        ; Swap without sync
+        move.l  _current_page_ptr(pc),a3
+        move.l  sections(pc),a6
+        moveq   #0,d0
+        move.w  (a3),d0
+        move.l  d0,-(sp)
+        CALLPTR _SetPage
+        move.w  (a3),d0
+        eor.w   #1,d0
+        move.w  d0,(a3)
+        move.w  d0,2(sp)
+        CALLPTR _SetLogbase
+        addq.w  #4,sp
+.nofast:
+        movem.l (sp)+,d0-d7/a0-a6
+
+
+        ; Original code
+        CHECK_NO_FAST_ALLOC
+        beq.b   .fast
+        CALLPTR @ThreeScreenSwap
+.fast:
+        JMPPTR @RemoveDeadMissiles
+
+_drawdigit:
+        lea     (_char_data,pc,d0.w*8),a0
+        subq.l  #1,a2
+        move.l  a2,a1
+        moveq   #8-1,d3
+.l:
+        move.b  (a0)+,d2
+        rept 8
+        move.b  d2,(REPTN-4)*bplbytes(a1)
+        endr
+        add.w   #rowbytes,a1
+        dbf     d3,.l
+        rts
+
+_char_data:
+        dc.b    %00111100, %01100110, %01101110, %01111110, %01110110, %01100110, %00111100, %00000000  ; 0
+        dc.b    %00011000, %00111000, %01111000, %00011000, %00011000, %00011000, %00011000, %00000000  ; 1
+        dc.b    %00111100, %01100110, %00000110, %00001100, %00011000, %00110000, %01111110, %00000000  ; 2
+        dc.b    %00111100, %01100110, %00000110, %00011100, %00000110, %01100110, %00111100, %00000000  ; 3
+        dc.b    %00011100, %00111100, %01101100, %11001100, %11111110, %00001100, %00001100, %00000000  ; 4
+        dc.b    %01111110, %01100000, %01111100, %00000110, %00000110, %01100110, %00111100, %00000000  ; 5
+        dc.b    %00011100, %00110000, %01100000, %01111100, %01100110, %01100110, %00111100, %00000000  ; 6
+        dc.b    %01111110, %00000110, %00000110, %00001100, %00011000, %00011000, %00011000, %00000000  ; 7
+        dc.b    %00111100, %01100110, %01100110, %00111100, %01100110, %01100110, %00111100, %00000000  ; 8
+        dc.b    %00111100, %01100110, %01100110, %00111110, %00000110, %00001100, %00111000, %00000000  ; 9
+        dc.b    %00000000, %00000000, %00000000, %00000000, %00000000, %00011000, %00011000, %00000000  ; .
+
+box:
+        link.w  a6,#0
+        movem.l d0-d7/a0-a3,-(sp)
+        move.w  14(a6),d0       ; x0
+        move.w  18(a6),d1       ; y0
+        move.w  22(a6),d2       ; x1
+        move.w  26(a6),d3       ; y1
+        move.w  10(a6),d4       ; color
+
+        ; _ClipBox
+        cmp.w   #screenh,d1
+        bcc.b   .out
+        cmp.w   #screenh,d3
+        bcs.b   .clipped
+        move.w  #screenh-1,d3
+.clipped:
+        move.l  a6,a3   ; preserve a6
+        bsr     draw_rect
+        move.l  a3,a6
+.out:
+        movem.l (sp)+,d0-d7/a0-a3
+        unlk    a6
+        rts
+
+; d0 = x0, d1 = y0, d2 = x1, d3 = y1, d4 = color
+; Could be optimized further with dedicated functions (and using move.l for longer spans)
+; But this will do for now.
+; d0-d7/a0-a2/a6 trashed
+draw_rect:
+        cmp.w   d0,d2
+        bls     .out
+        sub.w   d1,d3
+        move.w  d3,d5   ; d5 = yiter
+        bmi     .out
+
+        and.w   #$ff,d4
+        lsl.w   #5,d4
+        lea     ([PlotColour_ptr,pc],d4.w),a0 ; Plotting function
+
+        ; Current screen buffer (can still be in chip mem in the menus)
+        move.w  ([_logbase_ptr,pc]),d7
+        move.l  ([_screen1_ptr,pc],d7.w),a1
+
+        mulu.w  #rowbytes,d1
+        add.l   d1,a1
+        add.l   #3*bplbytes,a1 ; point to 3rd plane
+        move.w  d2,d1
+
+        moveq   #-32,d2
+        move.w  d1,d3
+        and.w   d2,d3
+        and.w   d0,d2
+        eor.w   d2,d0
+        eor.w   d3,d1
+        sub.w   d2,d3
+        lsr.w   #5,d3   ; d3 = number of longs (non-inclusive)
+        lsr.w   #3,d2
+        add.w   d2,a1   ; starting long
+        moveq   #-1,d4
+        lsr.l   d0,d4   ; d4 = first long mask
+        move.l  #$80000000,d0
+        asr.l   d1,d0   ; d0 = last long mask
+
+        moveq   #screenw/32,d7
+        sub.w   d3,d7
+        lsl.w   #2,d7   ; d7 = screen modulo
+
+        subq.w  #1,d3
+        bpl.b   .longer
+        and.l   d4,d0
+        move.l  d0,d2
+        move.l  d0,d6
+        not.l   d6
+        lea     .yiter1(pc),a6
+.yloop1:
+        jmp     (a0)
+.yiter1:
+        add.w   d7,a1
+        dbf     d5,.yloop1
+.out:
+        rts
+
+.longer
+        move.l  d3,a2   ; preseve d3
+.yloop2:
+        move.l  a2,d3   ; xiter count
+        ; first long
+        move.l  d4,d2
+        move.l  d4,d6
+        not.l   d6
+        lea     .xiter(pc),a6
+        jmp     (a0)
+.xloop:
+        ; this part could be replaced by move.l's
+        moveq   #-1,d2
+        moveq   #0,d6
+        jmp     (a0)
+.xiter:
+        addq.w  #4,a1
+        dbf     d3,.xloop
+        ; final long
+        move.l  d0,d2
+        move.l  d0,d6
+        not.l   d6
+        lea     .yiter2(pc),a6
+        jmp     (a0)
+.yiter2:
+        add.w   d7,a1
+        dbf     d5,.yloop2
+        rts
+
+draw_line_normal:
+        link.w  a6,#0
+        movem.l d0-d7/a0-a3,-(sp)
+        move.w  14(a6),d0       ; x0
+        move.w  18(a6),d1       ; y0
+        move.w  22(a6),d2       ; x1
+        move.w  26(a6),d3       ; y1
+        move.w  10(a6),d4       ; color
+        moveq   #-1,d5          ; pattern
+        bsr     draw_line
+        movem.l (sp)+,d0-d7/a0-a3
+        unlk    a6
+        rts
+
+draw_line_strip:
+        link.w  a6,#0
+        movem.l d0-d7/a0-a3,-(sp)
+        move.w  14(a6),d0       ; x0
+        move.w  18(a6),d1       ; y0
+        move.w  22(a6),d2       ; x1
+        move.w  26(a6),d3       ; y1
+        move.w  10(a6),d4       ; color
+        move.b  31(a6),d5       ; pattern
+        move.b  d5,d6
+        lsr.w   #8,d5
+        move.b  d6,d5
+        bsr     draw_line
+        movem.l (sp)+,d0-d7/a0-a3
+        unlk    a6
+        rts
+
+; d0 = x0, d1 = y0, d2 = x1, d3 = y1, d4 = color, d5 = pattern
+; d0-d7/a0-a3 trashed
+draw_line:
+        cmp.w   #screenw,d0
+        bcc     .out
+        cmp.w   #screenw,d2
+        bcc     .out
+        cmp.w   #screenh,d1
+        bcc     .out
+        cmp.w   #screenh,d3
+        bcs     .ok
+.out:
+        rts
+.ok:
+        ; Current screen buffer (can still be in chip mem in the menus)
+        move.w  ([_logbase_ptr,pc]),d7
+        move.l  ([_screen1_ptr,pc],d7.w),a0
+
+        add.l   #3*bplbytes,a0 ; Third plane
+
+        lsl.w   #5,d4
+        lea     plot(pc,d4.w),a2
+        move.w  d5,a3   ; preseve pattern
+
+        move.w  d1,d4
+        moveq   #rowbytes,d5
+        mulu.w  d5,d4
+        add.l   d4,a0
+
+        moveq   #1,d4
+        sub.w   d0,d2
+        bcc.b   .xpos
+        moveq   #-1,d4
+        neg.w   d2
+.xpos
+        sub.w   d1,d3
+        bcc.b   .ypos
+        moveq   #-rowbytes,d5
+        neg.w   d3
+.ypos:
+        move.w  a3,d1
+        move.w  d5,a3
+
+        ; d0=x, d1=pattern, d2 = abs(dx), d3=abs(dy), d4=sgn(dx), a3=sgn(dy)*rowbytes
+        cmp.w   d3,d2
+        bcc     .xdominant
+
+        ; y dominant
+        move.w  d3,d5
+        move.w  d3,d6
+        lsr.w   #1,d6   ; err = dyabs/2
+.yloop:
+        ror.w   #1,d1
+        bcc.b   .noplot1
+        move.w  d0,d7
+        lsr.w   #3,d7
+        lea     (a0,d7.w),a1
+        move.w  d0,d7
+        not.w   d7
+        jsr     (a2)
+.noplot1:
+        add.w   d2,d6   ; err += dxabs
+        cmp.w   d3,d6
+        bcs.b   .noxstep
+        sub.w   d3,d6
+        add.w   d4,d0   ; x += sgn(dx)
+.noxstep:
+        add.w   a3,a0   ; y += sgn(dy)
+        dbf     d5,.yloop
+        rts
+
+.xdominant:
+        move.w  d2,d5
+        move.w  d2,d6
+        lsr.w   #1,d6 ; err = dxabs/2
+
+.xloop:
+        ror.w   #1,d1
+        bcc.b   .noplot2
+        move.w  d0,d7
+        lsr.w   #3,d7
+        lea     (a0,d7.w),a1
+        move.w  d0,d7
+        not.w   d7
+        jsr     (a2)
+.noplot2:
+        add.w   d3,d6   ; err += dyabs
+        cmp.w   d2,d6
+        bcs.b   .noystep
+        sub.w   d2,d6   ; err -= dxabs
+        add.w   a3,a0   ; y += sgn(dy)
+.noystep:
+        add.w   d4,d0   ; x += sgn(dx)
+        dbf     d5,.xloop
+
+        rts
+
+make_plot_func macro
+        rept 8
+        ifne ((\1>>REPTN)&1)
+        bset.b  d7,(REPTN-3)*bplbytes(a1)
+        else
+        bclr.b  d7,(REPTN-3)*bplbytes(a1)
+        endc
+        endr
+        rts
+        endm
+
+plot:
+.color set 0
+        rept 256
+        make_plot_func .color
+.color set .color+1
+        endr
+        if *-plot<>256*32
+        error Invalid function size
+        endc
+
+draw_mono_image_setup:
+        MOVEA.L	(20,A6),A0		;4c38c: 206e0014
+        MOVE.W	(14,A6),D0		;4c390: 302e000e
+        MOVE.W	(18,A6),D1		;4c394: 322e0012
+
+        ; Grab  color (d2 is free)
+        moveq   #0,d2
+        move.b	(11,a6),d2
+        mulu.w  #(apply_mask_end-apply_mask)/256,d2
+        lea     apply_mask(pc,d2.l),a6
+
+        add.l   #$4c398-$4c29e,(sp) ; fix return address
+        rts
+
+; d3 = ormask, d4 = andmask, a3/a4 bitbplanes
+make_apply_mask macro
+        rept 4
+        ifne ((\1>>REPTN)&1)
+        or.w    d3,REPTN*bplbytes(a3)
+        else
+        and.w   d4,REPTN*bplbytes(a3)
+        endc
+        endr
+        rept 4
+        ifne ((\1>>(4+REPTN))&1)
+        or.w    d3,REPTN*bplbytes(a4)
+        else
+        and.w   d4,REPTN*bplbytes(a4)
+        endc
+        endr
+        add.l   #$4c5aa-$4c590,(sp) ; fix return address
+        rts
+        endm
+
+apply_mask:
+.color set 0
+        rept 256
+        make_apply_mask .color
+.color set .color+1
+        endr
+apply_mask_end:
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
 pl_020
         PL_START
         ; skip images/text from intro
@@ -486,11 +1066,40 @@ pl_020
         ;PL_NOP  $44528,4
         PL_ENDIF
         
-        PL_PS   $4CC02,fix_smc
         ;PL_P    $4111c,end_level2_int
         
         ; read joy1
         PL_PSS  $41504,test_fire,2
+
+        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+        PL_IFC4X    2 ; "Original rendering code"
+
+        PL_PS   $4CC02,fix_smc
+
+        PL_IFC4X    3 ; "Show FPS"
+        PL_PSS  $018a6,do_swap_screen,2
+        PL_ENDIF
+
+        PL_ELSE ; New rendering code
+
+        ; Alternative SMC fix
+        PL_W    $4cb0e,$3f3e    ; Also preserve A6
+        PL_W    $4ce36,$7cfc    ; and restore it again
+        PL_W    $4ce06,$4e96    ; jsr (a6)
+        PL_PS   $4cb10,draw_mono_image_setup
+
+        PL_NOP  $4c800,4                ; Never use blitter in _MaskSprite
+        PL_P    $4bed8,box              ; _ClipBox
+        PL_P    $4bf00,box              ; _Box
+        PL_P    $4c138,draw_line_normal ; _DrawLine
+        PL_P    $6dd04,draw_line_strip  ; _DrawStipLine
+
+        ; @PlayLevel
+        PL_PSS  $016b0,start_frame,2
+        PL_PSS  $018a6,do_swap_screen,2
+        PL_ENDIF
+        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 
         
         PL_END
@@ -507,17 +1116,49 @@ pl_040
         PL_PSS  $43a58,pre_display_text_or_image,2
         PL_PSS  $43a68,pre_display_text_or_image,2
         PL_ENDIF
-        
+
+        ; read joy1
+        PL_PSS  $3fb1c,test_fire,2
+
+        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+        PL_IFC4X    2 ; "Original rendering code"
+
         PL_PS   $4c38a,fix_smc
-        
+
         ; faster blitwait
         PL_PS   $4ba4c,wait_blit
         PL_S    $4ba52,$4ba68-$4ba52
         PL_PS   $4bb08,wait_blit
         PL_S    $4bb0E,$4bb24-$4bb0E
-        
-        ; read joy1
-        PL_PSS  $3fb1c,test_fire,2
+
+        PL_IFC4X    3 ; "Show FPS"
+        PL_PSS  $01632,do_swap_screen,2
+        PL_ENDIF
+
+        PL_ELSE ; New rendering code
+
+        ; Remaning (major) accessers of chip mem:
+        ; _DrawSpriteImage ($4d076) ~15000/sec (compared to ~192K/sec for copy of fast buffer to chip)
+        ; _logbase (section 8) being in chip mem! >6000/sec
+
+        ; Alternative SMC fix
+        PL_W    $4c296,$3f3e    ; Also preserve A6
+        PL_W    $4c5be,$7cfc    ; and restore it again
+        PL_W    $4c58e,$4e96    ; jsr (a6)
+        PL_PS   $4c298,draw_mono_image_setup
+
+        PL_NOP  $4bf84,4                ; Never use blitter in _MaskSprite
+        PL_P    $4b77c,box              ; _ClipBox
+        PL_P    $4b7a4,box              ; _Box
+        PL_P    $4b9dc,draw_line_normal ; _DrawLine
+        PL_P    $4dc04,draw_line_strip  ; _DrawStipLine
+
+        ; @PlayLevel
+        PL_PSS  $01464,start_frame,2
+        PL_PSS  $01632,do_swap_screen,2
+        PL_ENDIF
+        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
         PL_END
 
 pl_040_orig     ; this crap doesn't work
@@ -1106,6 +1747,8 @@ fpsp_name_060
     dc.b    "fpsp060",0
 wrongcustom
     dc.b    "custom exe value out of range 0-4",0
+outofmemory
+    dc.b    "could not allocate fast buffer"
 mem_patched
     dc.b    0
 needs_fpu_patches
