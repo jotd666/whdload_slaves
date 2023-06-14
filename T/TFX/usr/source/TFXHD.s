@@ -409,6 +409,7 @@ get_version
         jsr (resload_GetFileSize,a2)
         
         sub.l   a1,a1   ; default: no fpu patchlist
+        sub.l   a2,a2   ; no 060 patches
         sub.l   a5,a5   ; no pointer list
         
         cmp.l   #554340,d0
@@ -433,22 +434,21 @@ get_version
 .v020
         lea pl_020(pc),a0
         lea ptrs_020(pc),a5
-        btst.b  #AFB_68060,attnflags+3(pc)
-        beq.b   .not060
-        lea     pl_020_060(pc),a1 ; abuse fpu patch list register
-.not060
+        lea pl_020_060(pc),a2
         move.w  #12958,d0
         move.l  #$410f0,d1
         rts
 .vfpu
         lea pl_fpu(pc),a0
         lea ptrs_fpu(pc),a5
+        ;lea pl_fpu_060(pc),a2
         move.w  #12838,d0
         move.l  #$396d4,d1
         rts
 .v040
         lea ptrs_040(pc),a5
         lea pl_040(pc),a0
+        lea pl_040_060(pc),a2
         move.w  #13574,d0
         move.l  #$3f70c,d1
         rts
@@ -463,6 +463,7 @@ get_version
 
         lea pl_fpu_new(pc),a0
         lea pl_fpu_new_040(pc),a1
+        lea pl_fpu_new_060(pc),a2
         lea ptrs_fpu_new(pc),a5
         move.w  #13574,d0
         move.l  #$40c44,d1
@@ -484,6 +485,7 @@ new_AllocMem
 
 patch_main
         bsr get_version
+        move.l  a2,-(sp) ; store 060 patch list
         lea fpu_patchlist(pc),a2
         move.l  a1,(a2)     ; store for later use
         
@@ -573,8 +575,19 @@ patch_main
         move.l  d0,a0
         move.l  d7,a1
         jsr	resload_PatchSeg(a2)
-        
+
 .no_fpu_patches
+
+        move.l  (sp)+,d0
+        beq.b   .no_060_patches
+        btst.b  #AFB_68060,attnflags+3(pc)
+        beq.b   .no_060_patches
+        move.l  d0,a0
+        move.l  d7,a1
+        move.l  _resload(pc),a2
+        jsr	resload_PatchSeg(a2)
+
+.no_060_patches
         rts
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -589,6 +602,7 @@ last_time ds.l 1
 fast_buf  ds.l 1
 old_bufs  ds.l 2
 logbase   ds.l 1
+last_lines ds.l 1
 
 _screen1_ptr ds.l 1
 _vblank_clock_ptr ds.l 1
@@ -602,6 +616,7 @@ _logbase_ptr ds.l 1
 _current_page_ptr ds.l 1
 PlotColour_ptr ds.l 1
 _sprogtab_ptr ds.l 1
+_PalNtsc_ptr ds.l 1
 
 PTRSTART macro
 .tabstart       set *
@@ -622,7 +637,7 @@ MKPTR macro
         dc.l    \2-.secstart
         endm
 
-ptrs_040 PTRSTART
+ptrs_040 PTRSTART ; "tfx.040"
         PTRSECTION 0,$00000
         MKPTR   _screen1_ptr,$4aa08
         MKPTR   _vblank_clock_ptr,$4b474
@@ -632,6 +647,7 @@ ptrs_040 PTRSTART
         MKPTR   @ThreeScreenSwap_ptr,$3e5c2
         MKPTR   _SetPage_ptr,$4a052
         MKPTR   _SetLogbase_ptr,$4a878
+        MKPTR   _PalNtsc_ptr,$4a08e
         PTRSECTION 7,$71434
         MKPTR   _sprogtab_ptr,$71736
         PTRSECTION 8,$71740
@@ -641,7 +657,18 @@ ptrs_040 PTRSTART
         MKPTR   PlotColour_ptr,$99edc
         PTREND
 
-ptrs_020 PTRSTART
+pl_040_060
+        PL_START
+        PL_P    $99e5c,_qmul
+        PL_P    $67cea,xTranslate
+        PL_PSS  $6a44e,_HorizonFadeProj_MulsL4256,2
+        PL_PSS  $6a46e,_HorizonFadeProj_MulsL4253,2
+        PL_PSS  $6a4a2,_HorizonFadeProj_MulsL4253,2
+        PL_PSS  $6a47e,_HorizonFadeProj_DivsL,2
+        PL_PSS  $6a4b2,_HorizonFadeProj_DivsL,2
+        PL_END
+
+ptrs_020 PTRSTART ; "tfx"
         PTRSECTION 0,$00000
         MKPTR   @ThreeScreenSwap_ptr,$3ff92
         MKPTR   _screen1_ptr,$4b1b8
@@ -651,6 +678,7 @@ ptrs_020 PTRSTART
         MKPTR   @RemoveDeadMissiles_ptr,$3463c
         MKPTR   _SetPage_ptr,$4a992
         MKPTR   _SetLogbase_ptr,$4b028
+        MKPTR   _PalNtsc_ptr,$4a9ce
         MKPTR   PlotColour_ptr,$6bd04
         PTRSECTION 2,$751cc
         MKPTR   _logbase_ptr,$78d64
@@ -662,9 +690,9 @@ pl_020_060
         PL_START
         PL_P    $6aea8,_qmul
         PL_P    $5a672,xTranslate
-        PL_PSS  $619d2,_HorizonFadeProj_619d2,2
-        PL_PSS  $619f2,_HorizonFadeProj_619f2,2
-        PL_PSS  $61a26,_HorizonFadeProj_61a26,2
+        PL_PSS  $619d2,_HorizonFadeProj_MulsL4256,2
+        PL_PSS  $619f2,_HorizonFadeProj_MulsL4253,2
+        PL_PSS  $61a26,_HorizonFadeProj_MulsL4253,2
         PL_PSS  $61a02,_HorizonFadeProj_DivsL,2
         PL_PSS  $61a36,_HorizonFadeProj_DivsL,2
         PL_END
@@ -681,7 +709,7 @@ logbase_patchoffsets:
         dc.l $4d60a,$4d64a,$4d7d2,$4d84e,$4d906,$4dabe,$4dbcc,$4dcea
         dc.l $4df80,$6b0c8,$6b0f6,$6b940,$6ddec,-1
 
-ptrs_fpu PTRSTART
+ptrs_fpu PTRSTART ; "tfx.fpu"
         PTRSECTION 0,$00000
         MKPTR   @ThreeScreenSwap_ptr,$38586
         MKPTR   _screen1_ptr,$4407c
@@ -691,6 +719,7 @@ ptrs_fpu PTRSTART
         MKPTR   @RemoveDeadMissiles_ptr,$22b30
         MKPTR   _SetPage_ptr,$43d2e
         MKPTR   _SetLogbase_ptr,$44526
+        MKPTR   _PalNtsc_ptr,$43d6a
         PTRSECTION 7,$6b058
         MKPTR   _sprogtab_ptr,$6b35a
         PTRSECTION 8,$6b364
@@ -700,7 +729,7 @@ ptrs_fpu PTRSTART
         MKPTR   PlotColour_ptr,$93ac8
         PTREND
 
-ptrs_fpu_new PTRSTART
+ptrs_fpu_new PTRSTART ; "tfx.020"
         PTRSECTION 0,$00000
         MKPTR   @ThreeScreenSwap_ptr,$3f99e
         MKPTR   _screen1_ptr,$4ce00
@@ -711,11 +740,24 @@ ptrs_fpu_new PTRSTART
         MKPTR   _SetPage_ptr,$4c44a
         MKPTR   _SetLogbase_ptr,$4cc70
         MKPTR   PlotColour_ptr,$6a4b8
+        MKPTR   _PalNtsc_ptr,$4c486
         PTRSECTION 1,$6cccc
         MKPTR   _current_page_ptr,$71600
         MKPTR   _logbase_ptr,$715fc
         MKPTR   _sprogtab_ptr,$6f4a2
         PTREND
+
+pl_fpu_new_060
+        PL_START
+        PL_P    $6a438,_qmul
+        PL_P    $60002,xTranslate
+        PL_PSS  $62766,_HorizonFadeProj_MulsL4256,2
+        PL_PSS  $62786,_HorizonFadeProj_MulsL4253,2
+        PL_PSS  $627ba,_HorizonFadeProj_MulsL4253,2
+        PL_PSS  $62796,_HorizonFadeProj_DivsL,2
+        PL_PSS  $627ca,_HorizonFadeProj_DivsL,2
+        PL_END
+
 
 CALLPTR macro
         jsr     ([\1_ptr,pc])
@@ -765,16 +807,53 @@ do_swap_screen:
         move.l  (a5),a2
         add.l   #rowbytes+4*bplbytes,a2
 .again:
-        move.l  ([_vblank_clock_ptr,pc]),d0
+        move.l  ([_vblank_clock_ptr,pc]),d1
         lea     last_time(pc),a0
-        move.l  (a0),d1
-        move.l  d0,(a0)
-        sub.l   d1,d0
+        move.l  (a0),d2
+        move.l  d1,(a0)
+        sub.l   d2,d1
         beq.b   .again
 
         CHECK_SHOW_FPS
-        beq.b   .nofps
+        beq     .nofps
+
+        ; note: graphics.library resets CIAB TOD every frame
+        moveq   #0,d0
+        move.b  $bfda00,d0
+        swap    d0
+        move.b  $bfd900,d0
+        lsl.w   #8,d0
+        move.b  $bfd800,d0
+
+        move.w  #313,d2
+        move.w  #50*10,d3
+        tst.w   ([_PalNtsc_ptr,pc]) ; $20 = Pal / $00 = Ntsc
+        bne.b   .pal
+        move.w  #262,d2
+        move.w  #60*10,d3
+.pal:
+        mulu.w  d2,d1
+        add.l   d0,d1
+        ; Low pass filter the FPS
+        lea     last_lines(pc),a0
+        move.l  (a0),d0
+        sub.l   d0,d1
+        asr.l   #2,d1
+        add.l   d0,d1
+        move.l  d1,(a0)
+
+        mulu.w  d3,d2 ; 10*lines
+        move.l  d2,d0
+        divu.w  d1,d0
+        and.l   #$ffff,d0
+
         one_digit
+        move.l  d0,d5
+        moveq   #10,d0
+        bsr     _drawdigit
+        move.l  d5,d0
+        one_digit
+        beq.b   .nofps ; Skip leading 0
         one_digit
 .nofps:
 
@@ -798,16 +877,23 @@ do_swap_screen:
         move.l  a0,(a4) ; Restore spritebuf
 
         ; a little tricky, copy sprite buffer back to chip mem, but avoid control words, etc.
-        ; TODO: Maybe not all stuff actually needs to be copied...
-        move.w  #402-1,d0
+        ; note: sprites only use 2 colors
+        move.w  #100-1,d0
 .copy2:
         move.l  (a1)+,(a0)+
+        move.l  (a1)+,(a0)+
+        addq.l  #8,a0
+        addq.l  #8,a1
         dbf     d0,.copy2
-        add.w   #16,a0
-        add.w   #16,a1
-        move.w  #402-1,d0
+        moveq   #32,d0
+        add.l   d0,a0
+        add.l   d0,a1
+        move.w  #100-1,d0
 .copy3:
         move.l  (a1)+,(a0)+
+        move.l  (a1)+,(a0)+
+        addq.l  #8,a0
+        addq.l  #8,a1
         dbf     d0,.copy3
 
 
@@ -1109,9 +1195,17 @@ draw_line:
 make_plot_func macro
         rept 8
         ifne ((\1>>REPTN)&1)
+        ifeq (REPTN-3)
+        bset.b  d7,(a1)
+        else
         bset.b  d7,(REPTN-3)*bplbytes(a1)
+        endc
+        else
+        ifeq (REPTN-3)
+        bclr.b  d7,(a1)
         else
         bclr.b  d7,(REPTN-3)*bplbytes(a1)
+        endc
         endc
         endr
         rts
@@ -1123,7 +1217,8 @@ plot:
         make_plot_func .color
 .color set .color+1
         endr
-        if *-plot<>256*32
+.end_plot
+        ifne (.end_plot-plot)-(256*32)
         error Invalid function size
         endc
 
@@ -1241,7 +1336,7 @@ xTranslate:
 ; More MULS.L's. There's even DIVS.L below that could be included.
 ; Probably could be simplified, but this will have to do for now...
 
-_HorizonFadeProj_619d2:
+_HorizonFadeProj_MulsL4256:
         MULS_SETUP
 ;	MULS.L	D0,D4:D2		;619d2: 4c002c04
 ;	MULS.L	D1,D5:D6		;619d6: 4c016c05
@@ -1249,18 +1344,10 @@ _HorizonFadeProj_619d2:
 	MULS_L	D1,D5,D6
         MULS_CLEANUP
         rts
-_HorizonFadeProj_619f2:
+_HorizonFadeProj_MulsL4253:
         MULS_SETUP
 ;	MULS.L	D0,D4:D2		;619f2: 4c002c04
 ;	MULS.L	D1,D5:D3		;619f6: 4c013c05
-	MULS_L	D0,D4,D2
-	MULS_L	D1,D5,D3
-        MULS_CLEANUP
-        rts
-_HorizonFadeProj_61a26:
-        MULS_SETUP
-;	MULS.L	D0,D4:D2		;61a26: 4c002c04
-;	MULS.L	D1,D5:D3		;61a2a: 4c013c05
 	MULS_L	D0,D4,D2
 	MULS_L	D1,D5,D3
         MULS_CLEANUP
