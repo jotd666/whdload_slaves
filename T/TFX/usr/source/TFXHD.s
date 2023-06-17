@@ -16,12 +16,13 @@
 	INCLUDE	whdload.i
 	INCLUDE	whdmacros.i
 	INCLUDE	lvo/dos.i
+        INCLUDE devices/timer.i
 
         IFND AFB_68060
 AFB_68060=7
         ENDC
+_LVOReadEClock=-60
 
-SER_OUTPUT=0
 FPS_COLOR=15
 
 ;CHIP_ONLY
@@ -112,6 +113,8 @@ slv_config
 	dc.b	"C4:X:skip intro:1;"
 	dc.b	"C4:X:original rendering code:2;"
 	dc.b	"C4:X:show frame rate:3;"
+        dc.b    "C4:X:start action mode:4;"
+        dc.b    "C4:X:uncapped frame rate:5;"
 	dc.b	"C5:B:no FPU direct fixes;"
 	dc.b	0	
 	EVEN
@@ -226,6 +229,11 @@ _bootdos
         move.l  executable(pc),d1
         bne   .noauto
     ;automatic mode
+        CHECK_NO_FAST_ALLOC
+        ; In "fast" mode, the plain 020 version is preferable. It has more features, and
+        ; even on 060 TFX.040 (the other candidate) is only marginally faster.
+        beq     .nofpu
+
         move.l  attnflags(pc),d0
         btst    #AFB_68040,d0
         beq   .test_fpu
@@ -358,12 +366,21 @@ _bootdos
         ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
         CHECK_NO_FAST_ALLOC
         bne.b   .gotbuf
+
+        ; Enable all caches (only CPU writes to chipmem)
+	move.l	#WCPUF_Base_WT|WCPUF_Exp_CB|WCPUF_Slave_CB|WCPUF_IC|WCPUF_DC|WCPUF_BC|WCPUF_SS|WCPUF_SB,d0
+	move.l	#WCPUF_All&~WCPUF_FPU,d1
+        move.l  _resload(pc),a2
+	jsr	resload_SetCPU(a2)
+
         movem.l a6,-(a7)
-		move.l	$4.w,a6
+	move.l	$4.w,a6
         move.l  #MEMF_PUBLIC!MEMF_CLEAR,d1
-        move.l  #bplbytes*8+($72418-$71758),d0 ; extra stuff is for sprites
+        move.l  #bplbytes*8+($72418-$71758)+16,d0 ; extra stuff is for sprites
         jsr _LVOAllocMem(a6)
         lea     fast_buf(pc),a6
+        add.l   #15,d0
+        and.b   #-16,d0
         move.l  d0,(a6)
         movem.l (a7)+,a6
         bne.b   .gotbuf
@@ -373,6 +390,18 @@ _bootdos
         move.l	_resload(pc),a0
         jmp	resload_Abort(a0)
 .gotbuf:
+
+        CHECK_SHOW_FPS
+        beq     .nofps
+        move.l  a6,-(sp)
+        move.l  $4.w,a6
+        lea     timer_name(pc),a0
+        moveq   #UNIT_MICROHZ,d0
+        lea     timerreq(pc),a1
+        moveq   #0,d1
+        jsr     _LVOOpenDevice(a6)
+        move.l  (sp)+,a6
+.nofps
         ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
         move.l  program_to_run(pc),a0
@@ -404,6 +433,10 @@ get_060_id:
     mc68020
     rte
 
+timer_name:
+        TIMERNAME
+        even
+
 get_version
         move.l  program_to_run(pc),a0
         jsr (resload_GetFileSize,a2)
@@ -433,20 +466,17 @@ get_version
         rts    
 .v020
         lea pl_020(pc),a0
-        lea ptrs_020(pc),a5
         lea pl_020_060(pc),a2
         move.w  #12958,d0
         move.l  #$410f0,d1
         rts
 .vfpu
         lea pl_fpu(pc),a0
-        lea ptrs_fpu(pc),a5
         ;lea pl_fpu_060(pc),a2
         move.w  #12838,d0
         move.l  #$396d4,d1
         rts
 .v040
-        lea ptrs_040(pc),a5
         lea pl_040(pc),a0
         lea pl_040_060(pc),a2
         move.w  #13574,d0
@@ -464,7 +494,6 @@ get_version
         lea pl_fpu_new(pc),a0
         lea pl_fpu_new_040(pc),a1
         lea pl_fpu_new_060(pc),a2
-        lea ptrs_fpu_new(pc),a5
         move.w  #13574,d0
         move.l  #$40c44,d1
         rts
@@ -504,8 +533,6 @@ patch_main
 
         ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-        tst.l   a5
-        beq     .noptrs
 
         movem.l d0-d3/a2-a3,-(sp)
         lea     sections(pc),a3
@@ -520,41 +547,8 @@ patch_main
         tst.l   a2
         bne.b   .sections
 
-        move.l  a5,a2
-.ptrs:
-        move.w  (a2)+,d0
-        bmi.b   .done
-        move.w  (a2)+,d1
-        move.l  sections(pc,d0.w*4),d0
-        add.l   (a2)+,d0
-        move.l  d0,(a5,d1.w)
-        bra.b   .ptrs
-.done:
-
-        lea     ptrs_020(pc),a2
-        cmp.l   a2,a5
-        bne     .not020v
-        ; Alright, one more stupid speedup
-        ; We relocate _logbase to fast mem
-
-        lea     logbase(pc),a3
-        lea     _logbase_ptr(pc),a2
-        move.l  a3,(a2)
-        move.l  a3,d1
-
-        lea     logbase_patchoffsets(pc),a2
-        move.l  sections(pc),a3
-.patch:
-        move.l  (a2)+,d0
-        bmi.b   .not020v
-        move.l  d1,(a3,d0.l)
-        bra.b   .patch
-
-.not020v
-
         movem.l (sp)+,d0-d3/a2-a3
 
-.noptrs:
         IFNE SER_OUTPUT
         move.w  #30,serper+$dff000
         ENDC
@@ -588,6 +582,27 @@ patch_main
         jsr	resload_PatchSeg(a2)
 
 .no_060_patches
+
+        move.l  program_to_run(pc),a2
+        lea     program(pc),a5
+        cmp.l   a5,a2
+        bne     .not020v
+        ; Alright, one more stupid speedup
+        ; We relocate _logbase to fast mem
+
+        lea     logbase(pc),a3
+        lea     _logbase_ptr(pc),a2
+        move.l  a3,(a2)
+        move.l  a3,d1
+
+        lea     logbase_patchoffsets(pc),a2
+        move.l  sections(pc),a3
+.patch
+        move.l  (a2)+,d0
+        bmi.b   .not020v
+        move.l  d1,(a3,d0.l)
+        bra.b   .patch
+.not020v
         rts
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -598,11 +613,12 @@ rowbytes=screenw/8
 bplbytes=rowbytes*200
 
 sections  ds.l 15 ; "040" version has 15 sections
-last_time ds.l 1
 fast_buf  ds.l 1
 old_bufs  ds.l 2
 logbase   ds.l 1
-last_lines ds.l 1
+timerreq  ds.b IOTV_SIZE
+last_time ds.l 2
+last_fps  ds.l 1
 
 _screen1_ptr ds.l 1
 _vblank_clock_ptr ds.l 1
@@ -618,45 +634,6 @@ PlotColour_ptr ds.l 1
 _sprogtab_ptr ds.l 1
 _PalNtsc_ptr ds.l 1
 
-PTRSTART macro
-.tabstart       set *
-.cursec         set 0
-.secstart       set 0
-        endm
-PTREND macro
-        dc.w -1
-        endm
-PTRSECTION macro
-.cursec set \1
-.secstart set \2
-        endm
-
-MKPTR macro
-        dc.w    .cursec
-        dc.w    \1-.tabstart
-        dc.l    \2-.secstart
-        endm
-
-ptrs_040 PTRSTART ; "tfx.040"
-        PTRSECTION 0,$00000
-        MKPTR   _screen1_ptr,$4aa08
-        MKPTR   _vblank_clock_ptr,$4b474
-        MKPTR   @Control_ptr,$14736
-        MKPTR   @HandleEjection_ptr,$00654
-        MKPTR   @RemoveDeadMissiles_ptr,$26966
-        MKPTR   @ThreeScreenSwap_ptr,$3e5c2
-        MKPTR   _SetPage_ptr,$4a052
-        MKPTR   _SetLogbase_ptr,$4a878
-        MKPTR   _PalNtsc_ptr,$4a08e
-        PTRSECTION 7,$71434
-        MKPTR   _sprogtab_ptr,$71736
-        PTRSECTION 8,$71740
-        MKPTR   _logbase_ptr,$73890
-        MKPTR   _current_page_ptr,$73894
-        PTRSECTION 12,$99170
-        MKPTR   PlotColour_ptr,$99edc
-        PTREND
-
 pl_040_060
         PL_START
         PL_P    $99e5c,_qmul
@@ -667,24 +644,6 @@ pl_040_060
         PL_PSS  $6a47e,_HorizonFadeProj_DivsL,2
         PL_PSS  $6a4b2,_HorizonFadeProj_DivsL,2
         PL_END
-
-ptrs_020 PTRSTART ; "tfx"
-        PTRSECTION 0,$00000
-        MKPTR   @ThreeScreenSwap_ptr,$3ff92
-        MKPTR   _screen1_ptr,$4b1b8
-        MKPTR   _vblank_clock_ptr,$4bbd0
-        MKPTR   @Control_ptr,$130ea
-        MKPTR   @HandleEjection_ptr,$0072e
-        MKPTR   @RemoveDeadMissiles_ptr,$3463c
-        MKPTR   _SetPage_ptr,$4a992
-        MKPTR   _SetLogbase_ptr,$4b028
-        MKPTR   _PalNtsc_ptr,$4a9ce
-        MKPTR   PlotColour_ptr,$6bd04
-        PTRSECTION 2,$751cc
-        MKPTR   _logbase_ptr,$78d64
-        MKPTR   _current_page_ptr,$78d68
-        MKPTR   _sprogtab_ptr,$76c0a
-        PTREND
 
 pl_020_060
         PL_START
@@ -708,44 +667,6 @@ logbase_patchoffsets:
         dc.l $4c402,$4c756,$4ca4e,$4cac8,$4cc5c,$4cd78,$4d2fe,$4d5c4
         dc.l $4d60a,$4d64a,$4d7d2,$4d84e,$4d906,$4dabe,$4dbcc,$4dcea
         dc.l $4df80,$6b0c8,$6b0f6,$6b940,$6ddec,-1
-
-ptrs_fpu PTRSTART ; "tfx.fpu"
-        PTRSECTION 0,$00000
-        MKPTR   @ThreeScreenSwap_ptr,$38586
-        MKPTR   _screen1_ptr,$4407c
-        MKPTR   _vblank_clock_ptr,$4523c
-        MKPTR   @Control_ptr,$12d1e
-        MKPTR   @HandleEjection_ptr,$0060e
-        MKPTR   @RemoveDeadMissiles_ptr,$22b30
-        MKPTR   _SetPage_ptr,$43d2e
-        MKPTR   _SetLogbase_ptr,$44526
-        MKPTR   _PalNtsc_ptr,$43d6a
-        PTRSECTION 7,$6b058
-        MKPTR   _sprogtab_ptr,$6b35a
-        PTRSECTION 8,$6b364
-        MKPTR   _current_page_ptr,$6d4b8
-        MKPTR   _logbase_ptr,$6d4b4
-        PTRSECTION 12,$92d64
-        MKPTR   PlotColour_ptr,$93ac8
-        PTREND
-
-ptrs_fpu_new PTRSTART ; "tfx.020"
-        PTRSECTION 0,$00000
-        MKPTR   @ThreeScreenSwap_ptr,$3f99e
-        MKPTR   _screen1_ptr,$4ce00
-        MKPTR   _vblank_clock_ptr,$4d884
-        MKPTR   @Control_ptr,$14fbe
-        MKPTR   @HandleEjection_ptr,$0082a
-        MKPTR   @RemoveDeadMissiles_ptr,$271ee
-        MKPTR   _SetPage_ptr,$4c44a
-        MKPTR   _SetLogbase_ptr,$4cc70
-        MKPTR   PlotColour_ptr,$6a4b8
-        MKPTR   _PalNtsc_ptr,$4c486
-        PTRSECTION 1,$6cccc
-        MKPTR   _current_page_ptr,$71600
-        MKPTR   _logbase_ptr,$715fc
-        MKPTR   _sprogtab_ptr,$6f4a2
-        PTREND
 
 pl_fpu_new_060
         PL_START
@@ -782,7 +703,7 @@ start_frame:
 
         ; Swap chip mem buffers
 
-        movem.l d0/a0-a2,-(sp)
+        movem.l d0-d1/a0-a2,-(sp)
         move.w  ([_logbase_ptr,pc]),d0
         lea     ([_screen1_ptr,pc],d0.w),a0
         lea     old_bufs(pc),a1
@@ -793,7 +714,7 @@ start_frame:
         lea     ([_sprogtab_ptr,pc],d0.w),a0
         move.l  (a0),(a1)
         move.l  a2,(a0)
-        movem.l (sp)+,d0/a0-a2
+        movem.l (sp)+,d0-d1/a0-a2
         rts
 
 
@@ -804,56 +725,49 @@ do_swap_screen:
         lea     ([_screen1_ptr,pc],d0.w),a5
         lea     ([_sprogtab_ptr,pc],d0.w),a4
 
-        move.l  (a5),a2
-        add.l   #rowbytes+4*bplbytes,a2
-.again:
-        move.l  ([_vblank_clock_ptr,pc]),d1
-        lea     last_time(pc),a0
-        move.l  (a0),d2
-        move.l  d1,(a0)
-        sub.l   d2,d1
-        beq.b   .again
-
         CHECK_SHOW_FPS
         beq     .nofps
 
-        ; note: graphics.library resets CIAB TOD every frame
-        moveq   #0,d0
-        move.b  $bfda00,d0
-        swap    d0
-        move.b  $bfd900,d0
-        lsl.w   #8,d0
-        move.b  $bfd800,d0
-
-        move.w  #313,d2
-        move.w  #50*10,d3
-        tst.w   ([_PalNtsc_ptr,pc]) ; $20 = Pal / $00 = Ntsc
-        bne.b   .pal
-        move.w  #262,d2
-        move.w  #60*10,d3
-.pal:
-        mulu.w  d2,d1
-        add.l   d0,d1
-        ; Low pass filter the FPS
-        lea     last_lines(pc),a0
-        move.l  (a0),d0
-        sub.l   d0,d1
-        asr.l   #2,d1
-        add.l   d0,d1
+        sub.w   #TV_SIZE,sp
+        move.l  timerreq+IO_DEVICE(pc),a6
+        move.l  sp,a0
+        jsr     _LVOReadEClock(a6)
+        mulu.l  #10,d0          ; d0 = 10*EclockRate
+        move.l  (sp),d2
+        move.l  4(sp),d1        ; d2:d1 = current tim
+        lea     last_time(pc),a0
+        move.l  (a0),d4
+        move.l  4(a0),d3        ; d4:d3 = last time
+        move.l  d2,(a0)+
         move.l  d1,(a0)
+        add.w   #TV_SIZE,sp
 
-        mulu.w  d3,d2 ; 10*lines
-        move.l  d2,d0
-        divu.w  d1,d0
-        and.l   #$ffff,d0
+        sub.l   d3,d1
+        subx.l  d4,d2
+        tst.l   d2
+        bne     .nofps   ; Don't update if it's been a long time
 
+        divs.l  d1,d0
+
+        ; apply simple low pass filter to fps
+        lea     last_fps(pc),a2
+        move.l  (a2),d1
+        sub.l   d1,d0
+        asr.l   #3,d0
+        add.l   d1,d0
+        move.l  d0,(a2)
+
+        move.l  (a5),a2
+        add.l   #rowbytes+4*bplbytes,a2
         one_digit
         move.l  d0,d5
         moveq   #10,d0
         bsr     _drawdigit
         move.l  d5,d0
         one_digit
-        beq.b   .nofps ; Skip leading 0
+        beq.b   .nofps ; Skip leading 0's
+        one_digit
+        beq.b   .nofps ; Skip leading 0's
         one_digit
 .nofps:
 
@@ -896,10 +810,8 @@ do_swap_screen:
         addq.l  #8,a1
         dbf     d0,.copy3
 
-
         ; Swap without sync
         move.l  _current_page_ptr(pc),a3
-        move.l  sections(pc),a6
         moveq   #1,d0
         and.w   (a3),d0
         move.l  d0,-(sp)
@@ -952,6 +864,56 @@ _char_data:
         dc.b    %00111100, %01100110, %01100110, %00111100, %01100110, %01100110, %00111100, %00000000  ; 8
         dc.b    %00111100, %01100110, %01100110, %00111110, %00000110, %00001100, %00111000, %00000000  ; 9
         dc.b    %00000000, %00000000, %00000000, %00000000, %00000000, %00011000, %00011000, %00000000  ; .
+
+click_state: dc.w 0
+find_click_box:
+        ; d7/a5 free
+        lea     click_state(pc),a5
+        move.w  (a5),d7
+        cmp.w   #2,d7
+        beq     .out
+
+        addq.w  #1,(a5)
+        moveq   #5,d0   ; Select arcade
+        tst.w   d7
+        beq     .ret
+        moveq   #1,d0   ; Select start
+.ret:
+        addq.l  #4,a7 ; drop return adddress from stack
+        ; and exit routine
+	MOVEM.L	(A7)+,D2-D5/D7/A5	;45cd8: 4cdf20bc
+	ADDA.W	#$001c,A7		;45cdc: defc001c
+
+        ; Fake mouse button click
+	bset.b  #0,(55+4,A7)
+
+	RTS				;45ce0: 4e75
+.out:
+        ; original code
+	CLR.B	(51+4,A7)			;45b94: 422f0033
+	MOVE.L	D0,D7			;45b98: 2e00
+	MOVEQ	#0,D5			;45b9a: 7a00
+        rts
+
+find_click_box_020:
+        lea     click_state(pc),a0
+        cmp.w   #2,(a0)
+        beq     .out
+        moveq   #5,d0   ; Select arcade
+        tst.w   (a0)
+        beq     .ret
+        moveq   #1,d0   ; Select start
+.ret:
+        addq.w  #1,(a0)
+        bset.b  #0,(63+4,a7) ; Mouse click
+        rts
+.out:
+	;EXT.L	D1			;47d48: 48c1
+	;BSR.W	LAB_2030		;47d4a: 6100f9ba
+        ext.l   d1
+        move.l  sections(pc),a0
+        add.l   #$47706,a0
+        jmp     (a0)
 
 box:
         link.w  a6,#0
@@ -1636,6 +1598,9 @@ ddrn:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+PL_BRAW macro
+        PL_L    \1,$60000000!((\2-(\1+2))&$ffff)
+        endm
 
 pl_020
         PL_START
@@ -1655,7 +1620,6 @@ pl_020
         ; read joy1
         PL_PSS  $41504,test_fire,2
 
-        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
         PL_IFC4X    2 ; "Original rendering code"
 
         PL_PS   $4CC02,fix_smc
@@ -1682,10 +1646,33 @@ pl_020
         PL_PSS  $016b0,start_frame,2
         PL_PSS  $018a6,do_swap_screen,2
         PL_ENDIF
-        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+        PL_IFC4X        4 ; "Impatient mode"
+        PL_BRAW $42bbe,$42c68           ; @fast_quit
+        PL_L    $33904,$70017001        ; Choose to load old save
+        PL_L    $337fa,$70007000        ; Choose save slot 0
+        PL_PSS  $46586,find_click_box,2 ; Straight to arcade mode
+        PL_R    $4b60a                  ; _VSync
+        PL_ENDIF
 
-        
+        PL_IFC4X        5 ; Uncapped frame rate
+        PL_W    $282b6,$0000 ; Disable frame rate limit
+        PL_ENDIF
+
+        PL_GA   $3ff92,@ThreeScreenSwap_ptr
+        PL_GA   $4b1b8,_screen1_ptr
+        PL_GA   $4bbd0,_vblank_clock_ptr
+        PL_GA   $130ea,@Control_ptr
+        PL_GA   $0072e,@HandleEjection_ptr
+        PL_GA   $3463c,@RemoveDeadMissiles_ptr
+        PL_GA   $4a992,_SetPage_ptr
+        PL_GA   $4b028,_SetLogbase_ptr
+        PL_GA   $4a9ce,_PalNtsc_ptr
+        PL_GA   $6bd04,PlotColour_ptr
+        PL_GA   $78d64,_logbase_ptr
+        PL_GA   $78d68,_current_page_ptr
+        PL_GA   $76c0a,_sprogtab_ptr
+
         PL_END
     
 pl_040
@@ -1704,7 +1691,6 @@ pl_040
         ; read joy1
         PL_PSS  $3fb1c,test_fire,2
 
-        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
         PL_IFC4X    2 ; "Original rendering code"
 
         PL_PS   $4c38a,fix_smc
@@ -1740,8 +1726,36 @@ pl_040
         ; @PlayLevel
         PL_PSS  $01464,start_frame,2
         PL_PSS  $01632,do_swap_screen,2
+
         PL_ENDIF
-        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+        PL_IFC4X        4 ; "Impatient mode"
+        PL_BRAW $42132,$421de           ; @fast_quit
+        PL_L    $25a96,$70017001        ; Choose to load old save
+        PL_L    $25970,$70007000        ; Choose save slot 0
+        PL_PSS  $45b94,find_click_box,2 ; Straight to arcade mode
+        PL_R    $4aeae                  ; _VSync
+        ;PL_P    $462c0,debug_opt ; Script is saved in _text_file ((17730,A4),A0)
+        PL_ENDIF
+
+        PL_IFC4X        5 ; Uncapped frame rate
+        ; @GetFramerate
+        PL_W    $1a372,$7000 ; Disable frame rate limit
+        PL_ENDIF
+
+        PL_GA $4aa08,_screen1_ptr
+        PL_GA $4b474,_vblank_clock_ptr
+        PL_GA $14736,@Control_ptr
+        PL_GA $00654,@HandleEjection_ptr
+        PL_GA $26966,@RemoveDeadMissiles_ptr
+        PL_GA $3e5c2,@ThreeScreenSwap_ptr
+        PL_GA $4a052,_SetPage_ptr
+        PL_GA $4a878,_SetLogbase_ptr
+        PL_GA $4a08e,_PalNtsc_ptr
+        PL_GA $71736,_sprogtab_ptr
+        PL_GA $73890,_logbase_ptr
+        PL_GA $73894,_current_page_ptr
+        PL_GA $99edc,PlotColour_ptr
 
         PL_END
 
@@ -1804,7 +1818,6 @@ pl_fpu
         ; read joy1
         PL_PSS  $39ae4,test_fire,2
 
-        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
         PL_IFC4X    2 ; "Original rendering code"
 
         PL_PS   $46272,fix_smc
@@ -1831,8 +1844,34 @@ pl_fpu
         PL_PSS  $0150c,start_frame,2
         PL_PSS  $016f6,do_swap_screen,2
         PL_ENDIF
-        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+        PL_IFC4X        4 ; "Impatient mode"
+        PL_BRAW $3bfa2,$3c04c           ; @fast_quit
+        PL_L    $21e04,$70017001        ; Choose to load old save
+        PL_L    $21cfa,$70007000        ; Choose save slot 0
+        PL_PS   $3f93e,find_click_box   ; Straight to arcade mode
+        PL_R    $44c76                  ; _VSync
+        PL_ENDIF
+
+
+        PL_IFC4X        5 ; Uncapped frame rate
+        PL_W    $17e20+2,$0000 ; Disable frame rate limit
+        PL_ENDIF
+
+
+        PL_GA   $38586,@ThreeScreenSwap_ptr
+        PL_GA   $4407c,_screen1_ptr
+        PL_GA   $4523c,_vblank_clock_ptr
+        PL_GA   $12d1e,@Control_ptr
+        PL_GA   $0060e,@HandleEjection_ptr
+        PL_GA   $22b30,@RemoveDeadMissiles_ptr
+        PL_GA   $43d2e,_SetPage_ptr
+        PL_GA   $44526,_SetLogbase_ptr
+        PL_GA   $43d6a,_PalNtsc_ptr
+        PL_GA   $6b35a,_sprogtab_ptr
+        PL_GA   $6d4b8,_current_page_ptr
+        PL_GA   $6d4b4,_logbase_ptr
+        PL_GA   $93ac8,PlotColour_ptr
 
         PL_END
 
@@ -1850,7 +1889,6 @@ pl_fpu_new
         ; read joy1
         PL_PSS  $41054,test_fire,2
 
-        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
         PL_IFC4X    2 ; "Original rendering code"
 
         PL_PS   $4e7ae,fix_smc
@@ -1877,10 +1915,36 @@ pl_fpu_new
         PL_PSS  $017f8,start_frame,2
         PL_PSS  $019fc,do_swap_screen,2
         PL_ENDIF
-        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+        PL_IFC4X        4 ; "Impatient mode"
+        PL_BRAW $4385c,$4391c           ; @fast_quit
+        PL_L    $2631e,$70017001        ; Choose to load old save
+        PL_L    $261f8,$70007000        ; Choose save slot 0
+        PL_PS   $47d48,find_click_box_020 ; Straight to arcade mode
+        PL_R    $4d2be                  ; _VSync
+        PL_ENDIF
+
+        ; Not supported as it's too slow anyway
+        ;PL_IFC4X        5 ; Uncapped frame rate
+        ;PL_W    $,$0000 ; Disable frame rate limit
+        ;PL_ENDIF
+
+        PL_GA   $3f99e,@ThreeScreenSwap_ptr
+        PL_GA   $4ce00,_screen1_ptr
+        PL_GA   $4d884,_vblank_clock_ptr
+        PL_GA   $14fbe,@Control_ptr
+        PL_GA   $0082a,@HandleEjection_ptr
+        PL_GA   $271ee,@RemoveDeadMissiles_ptr
+        PL_GA   $4c44a,_SetPage_ptr
+        PL_GA   $4cc70,_SetLogbase_ptr
+        PL_GA   $6a4b8,PlotColour_ptr
+        PL_GA   $4c486,_PalNtsc_ptr
+        PL_GA   $71600,_current_page_ptr
+        PL_GA   $715fc,_logbase_ptr
+        PL_GA   $6f4a2,_sprogtab_ptr
 
         PL_END
-       
+
 pl_fpu_new_040:
         PL_IFC5
         PL_ELSE

@@ -1,3 +1,7 @@
+        IFND SER_OUTPUT
+SER_OUTPUT=0
+        ENDC
+
         IFEQ SER_OUTPUT
 PRINT_MSG macro
         endm
