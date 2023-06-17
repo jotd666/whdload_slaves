@@ -90,7 +90,7 @@ IGNORE_JOY_DIRECTIONS
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.x (EXPERIMENTAL) "
+	dc.b	"1.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -121,7 +121,7 @@ slv_name		dc.b	"TFX"
 	ENDC
 			dc.b	0
 slv_copy		dc.b	"1995-1997 Digital Image Design",0
-slv_info		dc.b	"adapted by JOTD",10,10
+slv_info		dc.b	"adapted by JOTD & paraj",10,10
 		dc.b	"Version "
 		DECL_VERSION
 		dc.b	0
@@ -1217,7 +1217,10 @@ plot:
         make_plot_func .color
 .color set .color+1
         endr
-.end_plot
+.end_plot:
+; note: this fails with -devpac mode because of the last bclr
+; not being optimized, so each func size ends up with 34 bytes!
+; just avoid -devpac mode and it's fine!
         ifne (.end_plot-plot)-(256*32)
         error Invalid function size
         endc

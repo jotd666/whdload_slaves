@@ -47,6 +47,13 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+  Version 2.0 (15.06.2023) done by paraj:
+  - display update rework, resulting in huge FPS speedup, specially on
+    fast machines like 68060 and pistorm
+  - blitter routines replaced by CPU routines to be able to use a fastmem
+    backbuffer
+  - fixed self-modifying code to avoid cache flushes (more speed!)
+  
   Version 1.1 (xx.02.2021) done by JOTD:
   - patched the CPU vectors so the FPU versions run on 68040/68060 FPUs, using
     a rebuilt version of Motorola FPSP emulation code, integrated in the slave :)
@@ -113,8 +120,5 @@
 
  FORWARD+REVERSE+YELLOW: quit to workbench
  
- Todo:
- 
- - profile the game to see where it could be faster
- - maybe try to make the bogus exes work
+
  
