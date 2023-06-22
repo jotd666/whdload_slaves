@@ -47,12 +47,14 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
-  Version 2.0 (15.06.2023) done by paraj:
-  - display update rework, resulting in huge FPS speedup, specially on
-    fast machines like 68060 and pistorm
-  - blitter routines replaced by CPU routines to be able to use a fastmem
-    backbuffer
-  - fixed self-modifying code to avoid cache flushes (more speed!)
+  Version 2.0 (xx.yy.2023) done by paraj:
+  - major rework of rendering code (buffer is now in fast ram until final display)
+  - option to show fps
+  - options to uncap fps (only for benchmarking - game might have issues)
+  - option to start in action mode (requires an active player in first slot)
+  - option to still use original rendering code
+  - plain 020 version is now default unless original rendering code is used (other versions lack
+    features, and won't be well supported going forward)
   
   Version 1.1 (xx.02.2021) done by JOTD:
   - patched the CPU vectors so the FPU versions run on 68040/68060 FPUs, using
