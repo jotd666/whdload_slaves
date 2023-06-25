@@ -93,7 +93,7 @@ IGNORE_JOY_DIRECTIONS
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.x (EXPERIMENTAL) "
+	dc.b	"2.0"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -127,7 +127,7 @@ slv_name		dc.b	"TFX"
 	ENDC
 			dc.b	0
 slv_copy		dc.b	"1995-1997 Digital Image Design",0
-slv_info		dc.b	"adapted by JOTD",10,10
+slv_info		dc.b	"adapted by JOTD & paraj",10,10
 		dc.b	"Version "
 		DECL_VERSION
 		dc.b	0

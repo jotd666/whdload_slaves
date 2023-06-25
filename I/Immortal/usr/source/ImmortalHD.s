@@ -82,7 +82,7 @@ _config		dc.b	"C1:B:Infinite energy",0
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"3.0"
+	dc.b	"3.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -103,13 +103,8 @@ _name		dc.b	"The Immortal"
 		dc.b	0
 _copy		dc.b	"1990 Electronic Arts",0
 _info		dc.b	"adapted & fixed by JOTD",10,10
-		dc.b	"Enhanced controls:",10,10
-		dc.b	"CD32 blue/2nd joystick button to pause/select",10
-		dc.b	"CD32 bwd+rev+play to quit current game (hold), +red: quit to WB",10
-		dc.b    "CD32 green: toggle music on/off",10
-		dc.b	"F2-F8/CD32 bwd/fwd to paste preset level code",10
-		dc.b	"TAB/CD32 yellow to paste CUSTOM level code",10
-		dc.b	"F9: reboot game",10,10
+		dc.b	"Check the readme for joypad/keyboard controls",10,10
+
 		dc.b	"Version "
 		DECL_VERSION
 		dc.b	0
@@ -132,6 +127,9 @@ start	;	A0 = resident loader
 	
 	move.l	#$676,4.W
 	moveq.l	#0,d4
+	
+	lea		third_button_maps_to(pc),a0
+	move.l	#JPF_BTN_GRN,(a0)
 	
 	;get certificate
 	lea	(custom_password,pc),a0
@@ -231,11 +229,10 @@ pl_loader1
 	PL_PS	$24642,WaitD6
 	PL_PS	$2465A,WaitD6
 
-;	PL_P	$27144,dma_wait
-	PL_PSS	$271E6,sound_dma_1,4
-	PL_PSS	$272D4,sound_dma_2,4
-	PL_PSS	$273C4,sound_dma_3,4
-	PL_PSS	$274B4,sound_dma_4,4
+	PL_PS	$271d2,sound_dma_1
+	PL_PS	$272c0,sound_dma_2
+	PL_PS	$273b0,sound_dma_3
+	PL_PS	$274a0,sound_dma_4
 		
 	PL_PSS	$26134,read_alphanum,2
 	PL_PSS	$11f68,set_space_press,2
@@ -252,6 +249,9 @@ pl_loader1
 	; just crack
 	PL_PS	$10EC6,virtual_machine_hook
 	PL_ENDIF
+	
+	; disable blthog to speed up blitter vs cpu
+	;PL_NOP	$24080,6
 	
 	; remove protection (all inputs pass the protection)
 	; (adapted from a crack from Black Hawk/Paradox)
@@ -592,31 +592,25 @@ read_alphanum:
 ; on the other hand the DBF delay after setting sound DMA is needed
 
 sound_dma_1:
-	move.w	#$8201,150(A5)
+	move.w	#$1,dmacon(A5)
 	bra	wait_sound
 sound_dma_2:
-	move.w	#$8202,150(A5)
+	move.w	#$2,dmacon(A5)
 	bra	wait_sound
 sound_dma_3:
-	move.w	#$8204,150(A5)
+	move.w	#$4,dmacon(A5)
 	bra	wait_sound
 sound_dma_4:
-	move.w	#$8208,150(A5)
+	move.w	#$8,dmacon(A5)
 	bra	wait_sound
 
 wait_sound:
 	movem.l	D0,-(A7)
-	moveq.l	#7,D0
+	moveq.l	#6,D0
 	bsr	beam_delay
 	movem.l	(A7)+,D0	
 	rts
 	
-dma_wait
-	movem.l	d0,-(a7)
-	move.l	#10,d0
-	bsr	delay
-	movem.l	(a7)+,d0
-	rts
 
 delay:
 	move.l	D0,-(sp)
