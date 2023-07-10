@@ -57,13 +57,18 @@ _expmem:	dc.l	EXPMEM_SIZE	;ws_ExpMem
 	dc.w	0                       ;ws_kickcrc
 	dc.w	_config-_base		;ws_config
 _config	
-	dc.b	"C1:B:Use original drawing code;"
-	dc.b	"C2:B:Don't change fetch mode for AGA;"
+	dc.b	"C1:X:max out all weapons:0;"
+	dc.b	"C2:X:Use original drawing code:0;"
+	dc.b	"C2:X:Don't change fetch mode for AGA:1;"
+	dc.b	"C2:X:Show FPS:2;"
 	IFND	CHIP_ONLY
 	dc.b	"C3:B:No fast RAM alloc;"
 	ENDC
-	dc.b	"C4:B:fast intro screens;"
-	dc.b	"C5:B:Show FPS;"
+	dc.b	"C4:X:fast intro screens:0;"
+	dc.b	"C4:X:skip credits:1;"
+	dc.b	"C4:X:Skip mission info and armory:2;"
+
+	dc.b	"C5:L:start level:1,2,3,4,5,6,7,8,9,10;"
     dc.b	0
 
 ;==========================================================================
@@ -159,7 +164,7 @@ version_1
 	lea	p2_patchlist_v1(pc),a1
 	move.l	a1,(a2)
 	move.l	#$5ba62,(a3)
-	move.l	#1,(a4)
+	move.l	#1,(a4)	
 	rts
 version_2
 	lea	pl_main_2(pc),a1
@@ -245,6 +250,14 @@ w 1 $81000 $719C
 	move.l	_reloc_base(pc),a0
 	lea		(-$1000,a0),a1	; reloc base -$1000
 
+
+	move.l	_start_level(pc),d0
+	beq.b	.sksl
+    move.l	a1,a3
+	add.l	#$18294,a3
+	addq	#1,d0
+	move.w	d0,(a3)	 ; Default starting level 6 (changeable 1..10)
+.sksl:
 	
 	move.l	main_patchlist(pc),a0
 	jsr		resload_Patch(a2)
@@ -270,6 +283,35 @@ P1PL_TXT1:	MACRO
 
 pl_main_1
 	PL_START
+	PL_IFC1X	0
+	PL_W	$1829a+2,$FF	; 255 nets
+	PL_W	$182a2+2,$FF	; 255 pups
+	PL_W	$19dbe+2,$7FFF	; 16000+ MG rounds
+	PL_W	$19dca+2,$7FFF	; 16000+ MG rounds
+	PL_W	$19dd6+2,$7FFF	; 16000+ MG rounds
+	PL_W	$19de2+2,$7FFF	; 16000+ MG rounds
+	PL_W	$19dee+2,$7FFF	; 16000+ cannon rounds
+	PL_W	$19dfa+2,$7FFF	; 16000+ cannon rounds
+	PL_W	$19e06+2,$7FFF	; 16000+ cannon rounds
+	PL_W	$19e18+2,$7FFF	; 16000+ cannon rounds
+	PL_NOP	$19e16,2		; enable life support
+	PL_NOP	$19e28,2		; enable fuel tank
+	PL_ENDIF
+	
+	; can turn cloud off on any mission
+	PL_NOP	$1d274,2
+	
+	PL_IFC4X	0
+	PL_NOP	$1807a,2
+	PL_ENDIF
+	
+	PL_IFC4X	1
+    PL_W $181fa,$601c ;  (palette corrupted, but shouldn't matter)
+	PL_ENDIF
+	PL_IFC4X	2
+    PL_W $17260,$6026 
+	PL_ENDIF
+	
 	PL_P	$17972,_tl_setdisk
 	PL_PS	$17226,_fadewait	; remove manual protection
 	PL_AL	$22392,$400			; remove nasty protection check if protection is skipped
@@ -283,9 +325,6 @@ pl_main_2
 	
 pl_main_common:
 	PL_START
-	PL_IFC4
-	PL_NOP	$1807a,2
-	PL_ENDIF
 	
 	; fix <$8000 addresses that were accessed PC-relative
 	; into short leas (lower part of memory < $81something cannot
@@ -322,11 +361,11 @@ pl_main_common:
 	PL_P	$cc46,_smc1_renderb
 
 	PL_PS   $0d988,_flush_cache_0d988
-	PL_IFC1
+	PL_IFC2X	0
 	PL_ELSE
 	PL_P    $0d1c8,_cpu_draw_shape
 	PL_ENDIF
-	PL_IFC2
+	PL_IFC2X	1
 	PL_ELSE
 	PL_PS   $08ba4,_use_fmode3
 	PL_ENDIF
@@ -344,7 +383,7 @@ pl_main_common:
 	PL_ENDIF
 	ENDC
 	
-	PL_IFC5
+	PL_IFC2X	2
 	PL_P    $08c7e,_update_fps_counter
 	PL_ENDIF
 ;        PL_PS $0b03a,_debughalt
@@ -749,11 +788,10 @@ _fadewait:	movem.l	d0-7/a0-6,-(a7)
 ;--------------------------------
 
 	; replacement for dbf loop delay in soundfx routine
-	; tuneable via CUSTOM1
 
 _sfxwait:	movem.l	d1/a0,-(a7)
 	lea	vhposr+_custom,a0
-	move.l	_ct_ct1(pc),d1
+	move.w	#4,d1
 .dw_loop1:	move.b	(a0),d0
 .dw_loop2:	cmp.b	(a0),d0
 	beq.s	.dw_loop2
@@ -1233,12 +1271,9 @@ _resload:    dc.l 0
 
 ;-----
 
-_ctl_tags:	dc.l	WHDLTAG_VERSION_GET
-_ct_ver:	dc.l	0
-	dc.l	WHDLTAG_REVISION_GET
-_ct_rev:	dc.l	0
-	dc.l	WHDLTAG_CUSTOM1_GET
-_ct_ct1:	dc.l	0
+_ctl_tags:
+	dc.l	WHDLTAG_CUSTOM5_GET
+_start_level:	dc.l	0
 	dc.l	0
 
 ;-----
