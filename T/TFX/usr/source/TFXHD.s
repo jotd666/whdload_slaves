@@ -93,7 +93,7 @@ IGNORE_JOY_DIRECTIONS
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"2.0"
+	dc.b	"2.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -116,7 +116,8 @@ slv_config
 	dc.b	"C4:X:original rendering code:2;"
 	dc.b	"C4:X:show frame rate:3;"
         dc.b    "C4:X:start action mode:4;"
-        dc.b    "C4:X:uncapped frame rate:5;"
+        dc.b    "C4:X:uncapped frame rate (unsupported):5;"
+        dc.b    "C4:X:1-frame limit (unsupported):6;"
 
 	dc.b	"C5:B:no FPU direct fixes;"
 	dc.b	0	
@@ -472,25 +473,22 @@ get_version
         lea pl_020(pc),a0
         lea pl_020_060(pc),a2
         move.w  #12958,d0
-        move.l  #$410f0,d1
         rts
 .vfpu
         lea pl_fpu(pc),a0
         ;lea pl_fpu_060(pc),a2
         move.w  #12838,d0
-        move.l  #$396d4,d1
         rts
 .v040
         lea pl_040(pc),a0
         lea pl_040_060(pc),a2
         move.w  #13574,d0
-        move.l  #$3f70c,d1
         rts
     
 .v040_orig
         lea pl_040_orig(pc),a0
         move.w  #13574,d0
-        move.l  #$3f70c,d1
+        ;move.l  #$3f70c,d1
         rts
 .vfpu_new
     ; this version needs patching (data/bss hunks)
@@ -499,7 +497,6 @@ get_version
         lea pl_fpu_new_040(pc),a1
         lea pl_fpu_new_060(pc),a2
         move.w  #13574,d0
-        move.l  #$40c44,d1
         rts
 
 new_AllocMem
@@ -519,9 +516,14 @@ new_AllocMem
 patch_main
         bsr get_version
         move.l  a2,-(sp) ; store 060 patch list
+
+        ; Don't apply FPU patches if the handlers haven't been installed..
+        tst.b   needs_fpu_patches(pc)
+        beq.b   .skip_fpu_patches
         lea fpu_patchlist(pc),a2
         move.l  a1,(a2)     ; store for later use
-        
+.skip_fpu_patches:
+
         ; proper offset to be able to reuse the same patch
         ; code for text/image skip
         lea offset(pc),a2        
@@ -537,15 +539,21 @@ patch_main
 
         ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+        IFNE SER_OUTPUT
+        move.w  #30,serper+$dff000
+        ENDC
 
         movem.l d0-d3/a2-a3,-(sp)
         lea     sections(pc),a3
         move.l  a1,(a3)+
         move.l  -4(a1),a2
+        moveq   #-1,d0
 .sections:
+        addq.l  #1,d0
         add.l   a2,a2
         add.l   a2,a2
         addq.l  #4,a2
+        SERPRINTF <"Section %2ld: %08lX",13,10>,d0,a2
         move.l  a2,(a3)+
         move.l  -4(a2),a2
         tst.l   a2
@@ -553,21 +561,12 @@ patch_main
 
         movem.l (sp)+,d0-d3/a2-a3
 
-        IFNE SER_OUTPUT
-        move.w  #30,serper+$dff000
-        ENDC
-
         ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-        add.l   d1,a1   ; get keyboard handler end address
-        lea int2_hook_address(pc),a2
-        move.l  a1,(a2)
-
-
         move.l  d7,a1
-        move.l  _resload(pc),a2        
+        move.l  _resload(pc),a2
         jsr	resload_PatchSeg(a2)
-        
+
         move.l  fpu_patchlist(pc),d0
         beq.b   .no_fpu_patches
         move.l  d0,a0
@@ -634,6 +633,17 @@ patch_main
         bra.b   .reloc
 
 .not020v
+
+        ; Handle NTSC tool type
+
+        move.l  _pal50_ptr(pc),a0
+        cmp.l   #NTSC_MONITOR_ID,monitor(pc)
+        sne.b   (a0)
+        bne.b   .pal
+        move.l  _PalNtsc_ptr(pc),a0
+        clr.w   (a0)
+.pal:
+
         rts
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -665,8 +675,10 @@ _current_page_ptr ds.l 1
 PlotColour_ptr ds.l 1
 _sprogtab_ptr ds.l 1
 _PalNtsc_ptr ds.l 1
+_pal50_ptr ds.l 1
 _texture_ptr_ptr ds.l 1
 depth_ptr ds.l 1
+WaitingForVsync_ptr ds.l 1
 
 pl_040_060
         PL_START
@@ -812,10 +824,10 @@ do_swap_screen:
         bsr     _drawdigit
         move.l  d5,d0
         one_digit
+        rept 3
         beq.b   .nofps ; Skip leading 0's
         one_digit
-        beq.b   .nofps ; Skip leading 0's
-        one_digit
+        endr
 .nofps:
 
         CHECK_NO_FAST_ALLOC
@@ -985,6 +997,26 @@ box:
 .out:
         movem.l (sp)+,d0-d7/a0-a3
         unlk    a6
+        rts
+
+wait_vsync_enabled: dc.w 0
+
+enable_vsync_wait:
+        lea     wait_vsync_enabled(pc),a0
+        move.w  #1,(a0)
+        rts
+
+wait_vsync:
+        tst.w   wait_vsync_enabled(pc)
+        beq.b   .out
+        movem.l d0/a0,-(sp)
+        move.l  WaitingForVsync_ptr(pc),a0
+        move.w  #1,(a0)
+.wait:
+        tst.w   (a0)
+        bne.b   .wait
+        movem.l (sp)+,d0/a0
+.out:
         rts
 
 ; d0 = x0, d1 = y0, d2 = x1, d3 = y1, d4 = color
@@ -2247,6 +2279,33 @@ qsort:
         lea     2(a3),a0
         bra.b   qsort
 
+skip_some_updates:
+	MOVE.W	(500,A4),D0		;01708: 302c01f4
+	EXT.L	D0			;0170c: 48c0
+        bne.b   .done
+        addq.l  #4,(sp) ; skip following bsr.w
+.done:
+        rts
+
+zoom_fix1:
+	DIVS.L	#$0000001e,D1		;2dbf2: 4c7c18010000001e
+        bne.b   .ok
+        moveq   #1,d1
+.ok:
+        rts
+
+skip_model:
+        ; skip model update if no frames have passed since last time
+        tst.w   (500,a4)
+        bne.b   .ok
+        addq.l  #4,sp
+	MOVEM.L	(A7)+,D2-D3		;2cd10: 4cdf000c
+	ADDA.W	#$0018,A7		;2cd14: defc0018
+	RTS				;2cd18: 4e75
+.ok:
+	MOVEQ	#1,D0			;2caa2: 7001
+	CMP.B	(498,A4),D0		;2caa4: b02c01f2
+        rts
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -2266,9 +2325,10 @@ pl_020
         ;PL_NOP  $44518,4   ; this works but skips also stuff from main menu!
         ;PL_NOP  $44528,4
         PL_ENDIF
-        
+
         ;PL_P    $4111c,end_level2_int
-        
+        PL_GA   $410f0,int2_hook_address
+
         ; read joy1
         PL_PSS  $41504,test_fire,2
 
@@ -2302,10 +2362,6 @@ pl_020
         PL_PSS  $016b0,start_frame,2
         PL_PSS  $018a6,do_swap_screen,2
 
-        ; Fix sorting when number of objects is at max
-        PL_PSS  $594d6,do_sort,26
-        PL_PSS  $59556,do_sort,12
-        PL_GA   $5642e,depth_ptr ; LAB_267F
         PL_ENDIF ; New rendering code
 
         PL_IFC4X        4 ; "Impatient mode"
@@ -2313,11 +2369,8 @@ pl_020
         PL_L    $33904,$70017001        ; Choose to load old save
         PL_L    $337fa,$70007000        ; Choose save slot 0
         PL_PSS  $46586,find_click_box,2 ; Straight to arcade mode
-        PL_R    $4b60a                  ; _VSync
-        PL_ENDIF
-
-        PL_IFC4X        5 ; Uncapped frame rate
-        PL_W    $282b6,$0000 ; Disable frame rate limit
+        PL_P    $4b60a,wait_vsync       ; _VSync
+        PL_PSS  $015ca,enable_vsync_wait,2 ; Re-enable vsync in @PlayLevel (for menus)
         PL_ENDIF
 
         PL_GA   $3ff92,@ThreeScreenSwap_ptr
@@ -2329,16 +2382,40 @@ pl_020
         PL_GA   $4a992,_SetPage_ptr
         PL_GA   $4b028,_SetLogbase_ptr
         PL_GA   $4a9ce,_PalNtsc_ptr
+        PL_GA   $a1fb6,_pal50_ptr
         PL_GA   $6bd04,PlotColour_ptr
         PL_GA   $78d64,_logbase_ptr
         PL_GA   $78d68,_current_page_ptr
         PL_GA   $76c0a,_sprogtab_ptr
         PL_GA   $5ba1c,_texture_ptr_ptr
+        PL_GA   $4bbaa,WaitingForVsync_ptr
+
+        ;PL_PS   $2edaa,temp_temp
+        ; framerate = (500,A4)
+        PL_IFC4X        5 ; Uncapped frame rate
+        PL_W    $282b6,$0000 ; Disable frame rate limit
+        PL_PS   $016e8,skip_some_updates
+        PL_PS   $01708,skip_some_updates
+        PL_PSS  $2dbf2,zoom_fix1,2
+        PL_PS   $2caa2,skip_model
+        PL_ENDIF
+        PL_IFC4X        6 ; One-frame limit
+        PL_W    $282b6,$0001
+        PL_PSS  $2dbf2,zoom_fix1,2
+        PL_ENDIF
+
+        PL_W    $4c4d8,$6024 ; Avoid double missile fire from joystick press
+
+        ; Fix sorting when number of objects is at max
+        PL_PSS  $594d6,do_sort,26
+        PL_PSS  $59556,do_sort,8
+        PL_GA   $5642e,depth_ptr ; LAB_267F
 
         PL_END
 
 pl_040
         PL_START
+
         ; force FPU as we already checked that with whdload
         ; and kickstart isn't configured properly for that
         ; (game uses the OS to check that, big mistake :))
@@ -2352,6 +2429,8 @@ pl_040
 
         ; read joy1
         PL_PSS  $3fb1c,test_fire,2
+
+        PL_GA   $3f70c,int2_hook_address
 
         PL_IFC4X    2 ; "Original rendering code"
 
@@ -2389,10 +2468,6 @@ pl_040
         PL_PSS  $01464,start_frame,2
         PL_PSS  $01632,do_swap_screen,2
 
-        PL_PSS  $66ca6,do_sort,26
-        PL_PSS  $66d26,do_sort,12
-        PL_GA   $63bfe,depth_ptr
-
         PL_ENDIF ; New rendering code
 
         PL_IFC4X        4 ; "Impatient mode"
@@ -2400,7 +2475,8 @@ pl_040
         PL_L    $25a96,$70017001        ; Choose to load old save
         PL_L    $25970,$70007000        ; Choose save slot 0
         PL_PSS  $45b94,find_click_box,2 ; Straight to arcade mode
-        PL_R    $4aeae                  ; _VSync
+        PL_P    $4aeae,wait_vsync       ; _VSync
+        PL_PSS  $0137e,enable_vsync_wait,2 ; Re-enable vsync in @PlayLevel (for menus)
         ;PL_P    $462c0,debug_opt ; Script is saved in _text_file ((17730,A4),A0)
         PL_ENDIF
 
@@ -2418,10 +2494,16 @@ pl_040
         PL_GA $4a052,_SetPage_ptr
         PL_GA $4a878,_SetLogbase_ptr
         PL_GA $4a08e,_PalNtsc_ptr
+        PL_GA $9e742,_pal50_ptr
         PL_GA $71736,_sprogtab_ptr
         PL_GA $73890,_logbase_ptr
         PL_GA $73894,_current_page_ptr
         PL_GA $99edc,PlotColour_ptr
+        PL_GA $4b44e,WaitingForVsync_ptr
+
+        PL_PSS  $66ca6,do_sort,26
+        PL_PSS  $66d26,do_sort,8
+        PL_GA   $63bfe,depth_ptr
 
         PL_END
 
@@ -2484,6 +2566,8 @@ pl_fpu
         ; read joy1
         PL_PSS  $39ae4,test_fire,2
 
+        PL_GA   $396d4,int2_hook_address
+
         PL_IFC4X    2 ; "Original rendering code"
 
         PL_PS   $46272,fix_smc
@@ -2516,7 +2600,8 @@ pl_fpu
         PL_L    $21e04,$70017001        ; Choose to load old save
         PL_L    $21cfa,$70007000        ; Choose save slot 0
         PL_PS   $3f93e,find_click_box   ; Straight to arcade mode
-        PL_R    $44c76                  ; _VSync
+        PL_P    $44c76,wait_vsync       ; _VSync
+        PL_PSS  $01426,enable_vsync_wait,2
         PL_ENDIF
 
 
@@ -2534,13 +2619,14 @@ pl_fpu
         PL_GA   $43d2e,_SetPage_ptr
         PL_GA   $44526,_SetLogbase_ptr
         PL_GA   $43d6a,_PalNtsc_ptr
+        PL_GA   $9832e,_pal50_ptr
         PL_GA   $6b35a,_sprogtab_ptr
         PL_GA   $6d4b8,_current_page_ptr
         PL_GA   $6d4b4,_logbase_ptr
         PL_GA   $93ac8,PlotColour_ptr
+        PL_GA   $45216,WaitingForVsync_ptr
 
         PL_END
-
 
 pl_fpu_new
         PL_START
@@ -2554,6 +2640,8 @@ pl_fpu_new
 
         ; read joy1
         PL_PSS  $41054,test_fire,2
+
+        PL_GA   $40c44,int2_hook_address
 
         PL_IFC4X    2 ; "Original rendering code"
 
@@ -2587,7 +2675,8 @@ pl_fpu_new
         PL_L    $2631e,$70017001        ; Choose to load old save
         PL_L    $261f8,$70007000        ; Choose save slot 0
         PL_PS   $47d48,find_click_box_020 ; Straight to arcade mode
-        PL_R    $4d2be                  ; _VSync
+        PL_P    $4d2be,wait_vsync       ; _VSync
+        PL_PSS  $016fe,enable_vsync_wait,2
         PL_ENDIF
 
         ; Not supported as it's too slow anyway
@@ -2605,9 +2694,11 @@ pl_fpu_new
         PL_GA   $4cc70,_SetLogbase_ptr
         PL_GA   $6a4b8,PlotColour_ptr
         PL_GA   $4c486,_PalNtsc_ptr
+        PL_GA   $79c0e,_pal50_ptr
         PL_GA   $71600,_current_page_ptr
         PL_GA   $715fc,_logbase_ptr
         PL_GA   $6f4a2,_sprogtab_ptr
+        PL_GA   $4d85e,WaitingForVsync_ptr
 
         PL_END
 
@@ -3001,7 +3092,7 @@ new_level3_interrupt
     beq.b   .noquit
     btst    #JPB_BTN_YEL,d0
     bne     _quit
-.noquit    
+.noquit
     move.l int2_hook_address(pc),a1
     ; d2 bears changed bits (buttons pressed/released)
     TEST_BUTTON FORWARD,$5E ; thrust +
@@ -3091,18 +3182,28 @@ _saveregs
 _stacksize
 		dc.l	0
 
-    
-tag		dc.l	WHDLTAG_CUSTOM3_GET
-executable	dc.l	0
-    dc.l	WHDLTAG_CUSTOM4_GET
-sequence_control	dc.l	0
-        dc.l    WHDLTAG_ATTNFLAGS_GET
+                dc.b    'TAGSHERE' ; Make this section easier to find in .whdl_dump
+                ; And make sure all tags are saved
+tag
+                dc.l    WHDLTAG_CUSTOM1_GET, 0
+                dc.l    WHDLTAG_CUSTOM2_GET, 0
+                dc.l	WHDLTAG_CUSTOM3_GET
+executable
+                dc.l	0
+                dc.l	WHDLTAG_CUSTOM4_GET
+sequence_control
+                dc.l	0
+                dc.l    WHDLTAG_CUSTOM5_GET, 0
+                dc.l    WHDLTAG_ATTNFLAGS_GET
 attnflags
-        dc.l    0
-        dc.l    WHDLTAG_Private7     
-        dc.l    -1   ; allow to write in vbr directly
-		dc.l	0
-        
+                dc.l    0
+                dc.l    WHDLTAG_Private7
+                dc.l    -1   ; allow to write in vbr directly
+                dc.l    WHDLTAG_MONITOR_GET
+monitor
+                dc.l    0
+                dc.l	0
+
 program_to_run
 		dc.l	0
 offset
