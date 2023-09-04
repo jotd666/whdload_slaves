@@ -47,7 +47,7 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- Version 2.1 (XX.07.2023) done by paraj:
+ Version 2.1 (09.08.2023) done by paraj:
   - fix bug when maximum number of screen objects reached
   - fix glitchy mouse cursor in config/quit menu
   - NTSC tool type support
