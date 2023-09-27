@@ -13,7 +13,7 @@
 (set #extra-file "Extra")		;name of extra file
 (set #extra2-file "Extra2")		;name of second extra file
 (set #extra3-file "Extra3")		;name of third extra file
-(set #prefix @app-name)			;name of slave, directory
+(set #prefix "FatalNoise")			;name of slave, directory
 (set #prefix-slave "")
 
 (set #ico_suffix_00 "inf")		;Icon suffixes (not all of these must exist)
@@ -174,16 +174,19 @@
     (				;----- 2 = DIC (Disk Images) -----
 
       ;the following lines must be copied and adjusted for multiple disk images
-      ;(set #AD_disk "SmartyAndTheNastyGluttons")
-      ;(set #AD_diskname "Game Disk")	;this optional, default is #AD_disk
-      (P_AskDisk)
-
+  
       (set #CI_disknum 1)
       (set #CI_diskname ("%s Disk %ld" @app-name #CI_disknum))
       (set #CI_disklen 901120)
       (set #CI_skiptrk "")
       (P_CreateImage)
- 
+      (set #CI_disknum 2)
+      (set #CI_diskname ("%s Disk %ld" @app-name #CI_disknum))
+      (P_CreateImage)
+      (set #CI_disknum 3)
+      (set #CI_diskname ("%s Disk %ld" @app-name #CI_disknum))
+      (P_CreateImage)
+
 
     )
 
