@@ -323,7 +323,7 @@ _closedev_save_2:
 
 	INCLUDE	kickproc.s
 	INCLUDE	kickdos.s
-	INCLUDE	kick13.s
+	INCLUDE	whdload/kick13.s
 
 ;============================================================================
 

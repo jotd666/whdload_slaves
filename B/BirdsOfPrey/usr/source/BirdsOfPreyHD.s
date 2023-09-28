@@ -59,7 +59,7 @@ slv_Flags	= WHDLF_NoError|WHDLF_Examine|WHDLF_ClearMem|WHDLF_NoDivZero
 slv_keyexit	= $5D	; num '*'
 
 
-	INCLUDE	kick13.s
+	INCLUDE	whdload/kick13.s
 
 ;============================================================================
 

@@ -77,7 +77,7 @@ slv_keyexit =	$5D			;ws_keyexit = F10
 
 ;============================================================================
 
-	INCLUDE	kick13.s	; 13 also works but sound is strange
+	INCLUDE	whdload/kick13.s	; 13 also works but sound is strange
 
 ;============================================================================
 

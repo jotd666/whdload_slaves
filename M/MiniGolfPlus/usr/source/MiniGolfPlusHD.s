@@ -261,7 +261,7 @@ _beamdelay
 ;============================================================================
 
 	IFEQ	KICKSIZE-$40000
-	INCLUDE	kick13.s
+	INCLUDE	whdload/kick13.s
 	ELSE
 	INCLUDE	kick31.s
 	ENDC

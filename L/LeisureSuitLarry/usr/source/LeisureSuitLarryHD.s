@@ -977,4 +977,4 @@ _patch_boot
 	incbin	"sierraboot.bin"
 
 
-	INCLUDE	kick13.s
+	INCLUDE	whdload/kick13.s

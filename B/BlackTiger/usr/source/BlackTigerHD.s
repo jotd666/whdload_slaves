@@ -76,7 +76,7 @@ slv_Version	= 16
 slv_Flags	= WHDLF_NoError|WHDLF_EmulTrap
 slv_keyexit	= $5D	; num '*'
 
-	INCLUDE	kick13.s
+	INCLUDE	whdload/kick13.s
 
 ;============================================================================
 
