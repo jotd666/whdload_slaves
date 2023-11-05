@@ -29,9 +29,14 @@
 	ENDC
 
 ;============================================================================
-
-CHIPMEMSIZE	= $80000
-FASTMEMSIZE	= $80000
+CHIP_ONLY
+	IFD	CHIP_ONLY
+CHIPMEMSIZE	= $200000
+FASTMEMSIZE	= $0000
+	ELSE
+CHIPMEMSIZE	= $100000
+FASTMEMSIZE	= $100000
+	ENDC
 NUMDRIVES	= 1
 WPDRIVES	= %1111
 
@@ -47,7 +52,7 @@ BOOTBLOCK
 
 
 slv_Version	= 17
-slv_Flags	= WHDLF_NoError|WHDLF_Examine|WHDLF_EmulPriv|WHDLF_EmulTrap
+slv_Flags	= WHDLF_NoError|WHDLF_Examine|WHDLF_EmulTrap
 slv_keyexit	= $5D	; num '*'
 
 ;============================================================================
@@ -69,7 +74,7 @@ DECL_VERSION:MACRO
 	ENDM
 
 slv_name		dc.b	"City Cars",0
-slv_copy		dc.b	"1996 ???",0
+slv_copy		dc.b	"1996 Allan Sturgess",0
 slv_info		dc.b	"adapted by JOTD",10
 			dc.b	"Version "
 			DECL_VERSION
@@ -77,11 +82,32 @@ slv_info		dc.b	"adapted by JOTD",10
 slv_CurrentDir:
 	dc.b	0
 slv_config:
-        ;dc.b    "C1:X:Infinite energy & smart bombs:0;"
+        ;dc.b    "C5:B:skip introduction;"
 		dc.b	0
+		
+libname:
+	dc.b	"sturgess_disk.library",0
 	EVEN
 
 
+    ; for kick 3.1 use for dos too
+PATCH_XXXLIB_OFFSET:MACRO
+	movem.l	d0-d1/a0-a1,-(a7)
+	move.l	A6,A1
+	add.l	#_LVO\1,A1
+	lea	old_\1(pc),a0
+	move.l	2(A1),(A0)
+	move.w	#$4EF9,(A1)+	
+	pea	new_\1(pc)
+	move.l	(A7)+,(A1)+
+	bra.b	end_patch_\1
+old_\1:
+	dc.l	0
+end_patch_\1:
+	movem.l	(a7)+,d0-d1/a0-a1
+
+	ENDM		
+	
 ;============================================================================
 ; bootblock from "Disk.1" has been loaded, no dos.library available
 
@@ -92,134 +118,171 @@ slv_config:
 _bootblock:
 	movem.l	d0-d1/a0-a2,-(a7)
 	
-	bsr	_detect_controller_types
+
+	; align exe memory on round value
+	IFD CHIP_ONLY
+	movem.l a6,-(a7)
+	move.l	$4.w,a6
+	move.l  #$10000-$05A08-$4AB0,d0
+	move.l  #MEMF_CHIP,d1
+	jsr _LVOAllocMem(a6)
+	movem.l (a7)+,a6
+	ENDC
 	
 	move.l	a4,a1
 	lea	pl_boot(pc),a0
 	move.l	_resload(pc),a2
-	;jsr	resload_Patch(a2)
+	jsr	resload_Patch(a2)
+	
+	lea	(_tag,pc),a0
+	jsr	(resload_Control,a2)
+	
 	movem.l	(a7)+,d0-d1/a0-a2
 	jmp	($c,a4)
 
 pl_boot
 	PL_START
-	PL_P	$2E,jumper
+	PL_P	$00102,jumper
 	PL_END
 
-jumper
-	move.w	$7F0E4,d0
-	cmp.w	#$4EF9,d0
-	beq.b	.v1
-
-	move.w	$7F3CE,d0
-	cmp.w	#$4EF9,d0
-	beq.b	.v2
-
-	pea	TDREASON_WRONGVER
-	move.l	_resload(pc),-(a7)
-	addq.l	#resload_Abort,(a7)
-	rts
-
-.v1
-	patch	$7F0E4,patch_loader_v1
-	bra.b	.go
-.v2
-	patch	$7F3CE,patch_loader_v2
-.go
-	bsr	_flushcache
-	jmp	$7F000
-
-patch_loader_v1
-	movem.l	d0-d1/a0-a2,-(a7)
-	lea	pl_loader_v1(pc),a0
-	lea	$38000,a1
+	
+jumper:
+	move.l	a5,a1
+	lea		pl_boot2(pc),a0
 	move.l	_resload(pc),a2
-	jsr	resload_Patch(a2)
-	movem.l	(a7)+,d0-d1/a0-a2
-	jmp	$38000
-
-patch_loader_v2
-	movem.l	d0-d1/a0-a2,-(a7)
-	lea	pl_loader_v2(pc),a0
-	lea	$38000,a1
-	move.l	_resload(pc),a2
-	jsr	resload_Patch(a2)
-
-	lea	_trd_disk(pc),a0
-	move.b	#2,(a0)			; switch to game disk
-
-	movem.l	(a7)+,d0-d1/a0-a2
-	jmp	$38000
-
-pl_loader_v1
+	jsr		resload_Patch(a2)
+	jmp		(a5)
+	
+pl_boot2:
 	PL_START
-	PL_PS	$42C,check_for_keyboard
-;;	PL_PS	$426,kb_interrupt
-;;	PL_W	$42C,$6004
-
-	PL_PS	$2476,joy_button_2
-
-	PL_IFC1
-	; infinite smart bombs
-	PL_NOP	$3C5F4-$38000,6
-	; infinite energy
-	PL_NOP	$3BD60-$38000,6	; collision
-	PL_NOP	$3BDE0-$38000,8 ; shots
-	PL_ENDIF
+	PL_P	$488,wait_and_return	; replaces dos.Delay, else it locks up!!
+	;PL_NOP	$36c,4			; remove freemem
+	PL_PS	$4ae,patch_intro
 	PL_END
 
-pl_loader_v2
-	PL_START
-	PL_S	$B6,$10		; skip "insert disk" request
-	PL_NEXT	pl_loader_v1	; same code
-
-check_for_keyboard:
-	CMP.B $0003a48a,D0
-	bne.b	.keypress
-	; no key press: check if joypad pressed
-	movem.l	D0,-(a7)
-	move.l	joy1(pc),d0
-	btst	#JPB_BTN_PLAY,d0
-	movem.l	(a7)+,d0
-.keypress
+wait_and_return:
+	move.w	#40,d1
+.w
+	move.w	#1000,d0
+	bsr		beamdelay
+	dbf		d1,.w
 	rts
 
-joy_button_2
-	; emulate POTGO with joypad read routine
-	movem.l	d0,-(a7)
-	move.w	#-1,d2
-	bsr	_joystick
-	move.l	joy0(pc),d0
-	btst	#JPB_BTN_BLU,d0
-	beq.b	.no_b2_0
-	bclr	#10,d2		; right mouse button
-.no_b2_0:
-	move.l	joy1(pc),d0
-	btst	#JPB_BTN_BLU,d0
-	beq.b	.no_b2_1
-	bclr	#14,d2		; second button
-.no_b2_1:
-	; quit to wb with fwd+rev+play
-	btst		#JPB_BTN_REVERSE,d0
-	beq		.exit
-	btst		#JPB_BTN_FORWARD,d0
-	beq		.exit
-	btst		#JPB_BTN_PLAY,d0
-	beq		.exit
-	pea     TDREASON_OK
-    move.l  (_resload,pc),-(a7)
-    add.l   #resload_Abort,(a7)
-    rts	
-.exit
-	movem.l	(a7)+,d0
+
+	
+patch_intro:
+	move.l	(a7),a1
+	move.l	(a1),a1
+	move.l	a1,(a7)
+	lea		pl_intro(pc),a0
+	move.l	_resload(pc),a2
+	jsr		resload_Patch(a2)
+	
+	rts
+
+; < A3: source
+; < A5: end (redundant with D3=size)
+; < A4: destination	
+copy_program_memory:
+	movem.l	d3/a3-a5,-(a7)
+.loop
+	CMPA.L	A3,A5			;3966e: bbcb
+	BEQ.S	.out		;39670: 670c
+	MOVE.B	(A3)+,(A4)+		;39672: 18db
+	SUBQ.L	#1,D3			;39674: 5383
+	ADDQ.L	#1,D0			;39676: 5280
+	TST.L	D3			;39678: 4a83
+	beq.b	.out
+	BRA.S	.loop		;3967c: 60f0
+.out
+	movem.l	(a7)+,d3/a3-a5
+	; check if something must be patched in what is been loaded
+	; (use "S proggy rA1 rA5-rA3" to save)
+	; only problem is that this loading copy routine comes BEFORE
+	; relocation. Just be careful when patching. Fortunately there are
+	; a lot of room with PC-relative shit
+	movem.l	d0-d1/a0-a2,-(a7)
+	move.l	_resload(pc),a2
+	move.l	a4,a1
+	add.l	#$27530,a4
+	cmp.l	#$30390dff,(a4)
+	bne.b	.not1
+	lea		pl_main(pc),a0
+	jsr		resload_Patch(a2)
+	bra.b	.done
+.not1
+	cmp.l	#$496E7365,($E76-$9D8,a1)
+	bne.b	.not2
+	lea		required_disk(pc),a0
+	lea		($e18-$9D8,a1),a4
+	move.l	a4,(a0)
+	lea		pl_loader2(pc),a0
+	jsr		resload_Patch(a2)
+	bra.b	.done
+	nop
+.not2
+.done
+	movem.l	(a7)+,d0-d1/a0-a2
 	rts
 	
+disk_change:
+	movem.l	a0/a1,-(a7)
+	lea	_trd_disk(pc),a0
+	move.l	required_disk(pc),a1
+	move.b	(1,a1),(a0)		; currently requested disk
+	lea	_trd_chg(pc),a0
+	move.b	#%1111,(a0)	; disk changed
+	movem.l	(a7)+,a0/a1
+	rts
+	
+ecs_test:
+	move.l	chiprev_bits(pc),d0
+	and.l	#SETCHIPREV_ECS,d0
+	bne.b	.ecs
+	moveq	#0,d0	; ATM OCS
+	rts
+.ecs
+	move.w	#$FC,d0		; ECS is all that this game supports
+	rts
+	
+pl_loader2:
+	PL_START
+	PL_NOP	$2bf1a-$2b9d8,2
+	PL_NOP	$2bf24-$2b9d8,2
+	PL_P	$2bf26-$2b9d8,disk_change
+	PL_END
+	
+pl_main:
+	PL_START
+	PL_PS	$c7470-$9FF40,ecs_test
+	PL_PS	$c9440-$9FF40,keyboard_hook
+	PL_END
+	
+pl_intro:
+	PL_START
+	;PL_NOP	$3803c-$37f40,4		; skip intro/protection, but doesn't work afterwards!
+	
+	PL_PSS	$3966e-$37f40,copy_program_memory,10
+	PL_R	$38b62	; disk ready
+	
+	PL_NOP	$38b64-$37f40,16	; skip CIA floppy poke
+	PL_NOP	$38b82-$37f40,8	; skip CIA floppy poke
+	PL_R	$38c34-$37f40		; skip a whole routine full of CIA shit
+	PL_R	$38c02-$37f40		; skip a whole routine full of CIA shit
+	PL_R	$38b90-$37f40		; skip CIA floppy poke
+	PL_R	$38ba2-$37f40		; skip CIA floppy poke
+	
+	PL_NOP	$4387a-$37f40,2		; skip protection check
+	PL_I	$38052-$37f40		; skip infinite loop
+	PL_END
+	
 
-		
-	; old code, only button 2 was supported
-	;move.w	$dff016,d2	; orig	
-	;move.w	#$CC01,$dff034	; ack, fixes 2nd button press on joystick
-	;rts
+keyboard_hook:
+	move.b	$BFEC01,d0
+	cmp.b	_keyexit(pc),d0
+	beq.b	quit
+	rts
+	
 
 ; < D0: numbers of vertical positions to wait
 beamdelay
@@ -237,44 +300,16 @@ quit		pea	TDREASON_OK
 		move.l	(_resload,pc),a2
 		jmp	(resload_Abort,a2)
 
-	IFEQ	1
-kb_interrupt:
-	move.b	$BFEC01,D0
 
-	movem.l	D0/D1,-(sp)
-	moveq.l	#0,D1
+_tag		dc.l	WHDLTAG_CHIPREVBITS_GET
+chiprev_bits
+		dc.l	0
+		dc.l	0
 
-	move.b	$BFEC01,D0
-	not.b	D0
-	ror.b	#1,D0
+ 
 
-
-	cmp.b	#$40,D0
-	bne	.nospace
-	moveq	#1,D1
-.nospace
-	cmp.b	#$45,D0
-	bne	.noesc
-	moveq	#1,D1
-.noesc
-	btst	#3,$BFED01
-	beq.b	.exit
-
-	move.b	#$0,$BFED01
-
-	bset	#$06,$BFEE01
-	moveq.l	#3,D0
-	bsr	beamdelay
-	bclr	#$06,$BFEE01		; acknowledge keyboard
-	move.w	#$8,$DFF000+intreq
-.exit
-	tst.l	D1
-	movem.l	(sp)+,D0/D1
-	rts
-	ENDC
-
-	include	"ReadJoyPad.s"
-	
+required_disk:
+	dc.l	0
 ;============================================================================
 
 	END
