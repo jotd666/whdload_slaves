@@ -26,7 +26,7 @@
  Additionally the file "kick31034.A1000.RTB" must be installed in the same
  directory as the kickstart image. It can be normally found in the archive 
  "util/boot/skick346.lha" on aminet, except that this time the .RTB file was
- specially created for this installer, so you'll find it in the package.
+ specially created for this installer, so you'll find it in this package.
 
  If you have problems with this installation please try and get a newer
  version of this package from the WHDLoad WWW-Page. If that doesn't help try
@@ -103,7 +103,9 @@ The game did not even work on a 68010+ or with kickstart above 1.1 for various r
 - graphics lib mishandling
 - ship bad location (ViewPort/Sprite problem?)
 
-You see it was a tough one. I hope you'll appreciate the effort.
+You see it was a tough one. I hope you'll appreciate the effort. Specially because
+I ditched all the fixes and came out with Kick 1.1 kickstart, after having honed
+my code relocation skills on games like Red Zone.
 
 Thanks go to:
 
@@ -114,8 +116,7 @@ Thanks go to:
 - Bert for KickEmu & WHDLoad (still some small bugs but we're managing through them :) )
 - Tim Ruehsen for IRA disassembler
 - Hidehiko & TjLazer for reporting the ship position bug
-- Tony Wilen & all UAE team for WinUAE, without which this install would not have appeared
-  (checked with CAPS image on Kickstart 1.1 to see how it behaved and to calibrate ship position)
+- Tony Wilen & all UAE team for WinUAE
 
 To do:
 
@@ -133,3 +134,9 @@ Final (?) notes:
   It's also illegal to share/download and I doubt most of you have A1000s to dump
   the ROM from, but yes, google is your friend to find all amiga roms...
   
+For the ROM, use any of below:
+
+- amiga-os-110-pal.rom from Amiga Forever
+- Kickstart v1.1 r32.034 (1986-02)(Commodore)(A1000)(PAL)[!].rom from TOSEC.
+
+CRC32 of the rom is EC86DAE2. Just rename it to kick31034.A1000
