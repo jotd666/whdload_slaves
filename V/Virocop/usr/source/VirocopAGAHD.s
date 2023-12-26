@@ -62,7 +62,8 @@ slv_keyexit	= $5D	; num '*'
 
 ;============================================================================
 
-	INCLUDE	kick31cd32.s
+	INCLUDE	whdload/kick31.s
+	INCLUDE	whdload/lowlevel.s
 
 ;============================================================================
 
@@ -70,7 +71,7 @@ slv_keyexit	= $5D	; num '*'
 	DOSCMD	"WDate  >T:date"
 	ENDC
 DECL_VERSION:MACRO
-	dc.b	"1.5"
+	dc.b	"1.6"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -93,7 +94,8 @@ _assign3
 
 slv_name		dc.b	"Virocop AGA",0
 slv_copy		dc.b	"1992 Graftgold",0
-slv_info		dc.b	"adapted by JOTD",10
+slv_info		dc.b	"adapted by JOTD",10,10
+				dc.b	"Use functions keys F1-F5 for options",10,10
 		dc.b	"Version "
 		DECL_VERSION
 		dc.b	0
@@ -162,17 +164,8 @@ _bootdos
 		sub.l	a1,a1
 		bsr	_dos_assign
 
-		; force joypad/joystick in port 1 (my autosense code does not
-		; work at least with WinUAE, so I'm forcing it)
-
-	IFND	USE_DISK_LOWLEVEL_LIB
-	lea	OSM_JOYPAD1KEYS(pc),a0
-	move.w	#$4019,2(a0)	; SPACE = switch weapon, P = pause
-	move.w	#$4545,4(a0)	; both charcoal: ESC so ESC quits the game in pause mode
-	;lea	port_1_attribute(pc),a0
-	;move.l	#JP_TYPE_GAMECTLR,(a0)
-
-	bsr	_patch_cd32_libs
+	; force joypad/joystick in port 1 (my autosense code does not
+	; work at least with WinUAE, so I'm forcing it)
    
     movem.l a6,-(a7)
     lea	(lowlname,pc),a1
@@ -195,7 +188,7 @@ _bootdos
     JSR	(_LVOSetJoyPortAttrsA,A6)
 .noforcej1
     movem.l (a7)+,a6
-    ENDC
+
     
  
     
@@ -339,6 +332,9 @@ _load_exe:
 
 _tag		dc.l	WHDLTAG_CUSTOM1_GET
 _forcejoy	dc.l	0
+    dc.l    WHDLTAG_LANG_GET
+_language
+        dc.l    0
 		dc.l	0
 joytags:
         dc.l    SJA_Type,SJA_TYPE_JOYSTK,0    

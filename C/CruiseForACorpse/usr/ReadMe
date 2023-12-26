@@ -39,6 +39,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 2.3 (25.12.2023) done by JOTD:
+ - added support for the official italian version (issue #0006233)
+ 
  version 2.2 (21.11.2020) done by JOTD:
  - added support for the NTSC/US Gold version (issue #0004861)
  

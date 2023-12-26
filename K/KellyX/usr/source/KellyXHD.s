@@ -13,7 +13,6 @@
 ;---------------------------------------------------------------------------*
 
 	INCDIR	Include:
-	INCDIR	osemu:
 	INCLUDE	whdload.i
 	INCLUDE	whdmacros.i
 	INCLUDE	lvo/dos.i
@@ -31,12 +30,18 @@
 
 ;============================================================================
 
+	IFD	CHIP_ONLY
+HRTMON
+CHIPMEMSIZE	= $FF000
+FASTMEMSIZE	= $0000
+	ELSE
+BLACKSCREEN
 CHIPMEMSIZE	= $80000
 FASTMEMSIZE	= $50000
+	ENDC
 NUMDRIVES	= 1
 WPDRIVES	= %0000
 
-BLACKSCREEN
 ;DISKSONBOOT
 HDINIT
 ;HRTMON
@@ -47,26 +52,15 @@ SETPATCH
 
 ;============================================================================
 
-KICKSIZE	= $40000			;34.005
-BASEMEM		= CHIPMEMSIZE
-EXPMEM		= KICKSIZE+FASTMEMSIZE
+;STACKSIZE = 10000
+BOOTDOS
+CACHE
 
-;============================================================================
+slv_Version	= 16
+slv_Flags	= WHDLF_NoError|WHDLF_Examine
+slv_keyexit	= $5D	; num '*'
 
-_base		SLAVE_HEADER			;ws_Security + ws_ID
-		dc.w	15			;ws_Version
-		dc.w	WHDLF_NoError|WHDLF_EmulPriv|WHDLF_Examine	;ws_flags
-		dc.l	BASEMEM			;ws_BaseMemSize
-		dc.l	0			;ws_ExecInstall
-		dc.w	_start-_base		;ws_GameLoader
-		dc.w	_data-_base		;ws_CurrentDir
-		dc.w	0			;ws_DontCache
-_keydebug	dc.b	0			;ws_keydebug
-_keyexit	dc.b	$5D			;ws_keyexit = F10
-_expmem		dc.l	EXPMEM			;ws_ExpMem
-		dc.w	_name-_base		;ws_name
-		dc.w	_copy-_base		;ws_copy
-		dc.w	_info-_base		;ws_info
+	include	whdload/kick13.s
 
 ;============================================================================
 
@@ -74,17 +68,33 @@ _expmem		dc.l	EXPMEM			;ws_ExpMem
 	DOSCMD	"WDate  >T:date"
 	ENDC
 
-_name		dc.b	"Kelly X",0
-_copy		dc.b	"1989 Virgin Mastertronic",0
-_info		dc.b	"adapted & fixed by JOTD",10
-		dc.b	"from Wepl excellent KickStarter 34.005",10,10
-		dc.b	"Thanks to Tony Aksnes for diskimage",10,10
-		dc.b	"Version 1.0 "
+DECL_VERSION:MACRO
+	dc.b	"1.1"
 	IFD BARFLY
+		dc.b	" "
 		INCBIN	"T:date"
 	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
+	ENDC
+	ENDM
+; version xx.slave works
+
+	dc.b	"$","VER: slave "
+	DECL_VERSION
+	dc.b	0
+slv_name		dc.b	"Kelly X"
+	IFD	CHIP_ONLY
+	dc.b	" (DEBUG/CHIP MODE)"
+	ENDC
+			dc.b	0
+slv_copy		dc.b	"1989 Virgin Mastertronic",0
+slv_info		dc.b	"adapted by JOTD",10,10
+		dc.b	"Version "
+		DECL_VERSION
 		dc.b	0
-_data:
+slv_CurrentDir:
 	dc.b	"data",0
 	EVEN
 
@@ -105,18 +115,13 @@ _start	;	A0 = resident loader
 _bootdos
 	clr.l	$0.W
 
-;;	bsr	_patchkb
 
-	move.l	(_resload),a2		;A2 = resload
+	move.l	(_resload,pc),a2		;A2 = resload
 
 	;get tags
 		lea	(_tag,pc),a0
 		jsr	(resload_Control,a2)
 
-	;enable cache
-		move.l	#WCPUF_Base_NC|WCPUF_Exp_CB|WCPUF_Slave_CB|WCPUF_IC|WCPUF_DC|WCPUF_BC|WCPUF_SS|WCPUF_SB,d0
-		move.l	#WCPUF_All,d1
-		jsr	(resload_SetCPU,a2)
 
 	;open doslib
 		lea	(_dosname,pc),a1
@@ -172,12 +177,13 @@ _bootdos
 		jmp	(resload_Abort,a2)
 
 _end
-		pea	_program(pc)
-		pea	205			; file not found
-		pea	TDREASON_DOSREAD
-		move.l	(_resload,pc),-(a7)
-		add.l	#resload_Abort,(a7)
-		rts
+	jsr	(_LVOIoErr,a6)
+	move.l	a3,-(a7)
+	move.l	d0,-(a7)
+	pea	TDREASON_DOSREAD
+	move.l	(_resload,pc),-(a7)
+	add.l	#resload_Abort,(a7)
+	rts
 
 _pl_zpage:
 	PL_START
@@ -206,7 +212,6 @@ _pl_main:
 	PL_L	$39D0,$4EB80100
 
 	; dbf	d1
-	PL_L	$CD6E,$4EB80106
 	PL_L	$13FC,$4EB80106
 
 	; dbf	d2
@@ -225,6 +230,10 @@ _pl_main:
 	; save hiscores
 
 	PL_L	$E80,$4EB8011E
+	
+	; keyboard timing & quit key for 68000
+	PL_PS	$cd6c,kb_int
+
 	PL_END
 
 _save_highs:
@@ -238,6 +247,16 @@ _save_highs:
 	sub.l	#$46A,(a7)
 	rts
 
+kb_int:
+	move.l	d0,-(a7)
+	cmp.b	_keyexit(pc),d0
+	beq	_quit
+	moveq	#3,d0
+	bsr		_beamdelay
+	
+	move.l	(a7)+,d0
+	rts
+	
 _int3:
 	move.w	$dff01e,d0
 	and.w	#$20,d0		; discard blitter/copper interrupts
@@ -279,6 +298,9 @@ _emu_dbf_d6
 _emu_nop_dbf_d0:
 	add.l	d0,d0
 _emu_dbf_d0
+	swap	D0
+	clr.w	D0
+	swap	D0
 	divu.w	#$28,D0
 	swap	D0
 	clr.w	D0
@@ -299,18 +321,17 @@ _beamdelay
 _tag		dc.l	WHDLTAG_BUTTONWAIT_GET
 _bwait		dc.l	0
 		dc.l	0
-
+		
+_quit	
+	pea	TDREASON_OK
+	move.l	(_resload,pc),a2
+	jmp	(resload_Abort,a2)
+		
 _hiscore_ptr:
 	dc.l	0
 
 _hiscore_name:
 	dc.b	"highs",0
 	even
-
-;============================================================================
-
-	INCLUDE	whdload/kick13.s
-
-;============================================================================
 
 	END

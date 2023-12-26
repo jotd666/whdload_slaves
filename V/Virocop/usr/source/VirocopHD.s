@@ -69,7 +69,8 @@ _expmem		dc.l    $0			;ws_ExpMem
                 dc.w	0			;ws_kickcrc
                 dc.w	_config-base		;ws_config
 
-;======================================================================
+
+	;======================================================================
 DECL_VERSION:MACRO
 	dc.b	"1.0"
 	IFD BARFLY
@@ -89,6 +90,9 @@ _info           dc.b    "Installed by Keith Krellwitz",10
                 dc.b    "Version "
                 DECL_VERSION
                 dc.b    0
+	dc.b	"$","VER: slave "
+	DECL_VERSION
+	dc.b	0
                 EVEN
 
 

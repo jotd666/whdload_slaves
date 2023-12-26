@@ -34,6 +34,11 @@
  must be installed in the same directory as the kickstart image.
  It can be found in the archive "util/boot/skick346.lha" on aminet.
 
+ version 1.6 (26.12.2023):
+ - reworked input, removed keyboard emulation of joypad (fixes issue #0006200)
+ - reminding function keys in start screen, I didn't do anything
+ but it's not obvious
+ 
  version 1.5 (01.04.2020):
  - controller issue fixed once and for all with all control options for both gameports.
    As mouse/joystick autodetect isn't great, it is now possible to force mouse or joystick
