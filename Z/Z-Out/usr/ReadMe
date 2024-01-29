@@ -1,0 +1,101 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Z-Out" © 1991 Advantec/Rainbow Arts
+
+ This install requires WHDLoad and DIC to be in the path. Both can be found in
+ the WHDLoad package.
+ To install from a different drive than DF0: select installation mode Expert.
+
+ The installed program requires 0.5 MB ChipMem and 0.5 MB OtherMem.
+ It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page.
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+ version 3.6
+ - added CD32 pad controls to move pods around like cursor keys
+ - fixed typos in the manual
+ - TODO: fix "write protection" on highscore!!!
+ 
+ version 3.5 (01.05.2018):
+ - added automatic CD32 joypad detection, which enables extra pad controls for player 1:
+   * green button: toggles autofire (like "A")
+   * blue button: lock/free shield (same as 2nd button)
+   * play: pause
+   * fwd+bwd: quit current game
+ - added CUSTOM1 to enable autofire by default (no need to press "A" anymore)
+   
+ version 3.4 (30.04.16):
+ - enabled VBL interrupt during game (for key remap)
+
+ version 3.3 (29.12.13) done by JOTD
+ - fixed CPU dependent loops (hopefully fixes the music)
+
+ version 3.2 (05.07.07) done by JOTD
+ - merged the 2-player weapon fix (which was removed by the major
+   3.0 slave rewrite)
+
+ version 3.1 (05.02.05) done by JOTD
+ - checks and aborts if NTSC tooltype is set (avoids lockup)
+ - minor source rework
+
+ version 3.0 (10.01.05) done by Harry:
+ - fully rewritten by Harry
+ - fixed graphic bug at level 5 (well done Harry!!)
+ - high-scores are now saved
+ - high-scores input is now fixed (it was completely buggy)
+ - source code included
+ - reworked readme, icons & install (JOTD)
+ - invincibility cheat changed from J+K to I+J (A1200 problems)
+
+ version 2.x (2002-2003)
+ - First WHDload release
+ - Patch for non-EC CPUs (real 32 bit)
+ - Interrupt handling does cause freezes anymore on fast CPUs
+ - Debugged 2 player game (done by anonymous)
+ - Convienient installer script
+ - Protection removed
+ - Hi-scores removed (caused problems)
+ - Advantec logo recentered (thanks to Harry for the fix)
+ - Keyboard routine patched
+ - CUSTOM4 tooltype (set to 1) allows autofire on by default (avoids pressing 'A')
+ - Access faults removed
+ - Nice set of icons added, by Chris Vella, Frank, Exoticons, and Gideon Cresswell.
+ - Rewritten install script to use new WHDLoad templates (v2.1)
+ - SNOOP bug fixed (v2.1)
+
+ version 1.x (1997)
+ - JST releases
+
+
+Notes:
+
+- Ignore the system requester telling there's a checksum error during the installation.
+- The J+K invincibility cheatmode has been replaced by J+I because the J+K key combination
+  is not possible on the A1200 keyboard (cheap hardware, 2 keys on the same line
+  cannot be pressed at the same time...)
+- On WinUAE there are several issues: intro stars all aligned (first time), and hiscore position shifted. Also
+  disk appears as write protected.
+
+Cheats (thanks LemonAmiga):
+
+Level select	Hold J and press 1 to 8
+Stage select	[Keypad 1] to [Keypad 3], well too bad for A600s :)
+Unlimited lives	J + I  (as J + K doesn't work on A1200)
+

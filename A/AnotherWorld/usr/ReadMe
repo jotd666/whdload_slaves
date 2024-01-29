@@ -39,6 +39,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 2.9 (08.01.2024) done by JOTD:
+ - fixed lockup at startup
+ 
  version 2.8 (06.08.2022) done by JOTD:
  - fixed freeze if code enter was requested on the protection screen (issue #0005759)
    (note: this is an original game bug, as pressing "C" freezes the game)
