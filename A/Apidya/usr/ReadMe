@@ -1,0 +1,177 @@
+DESCRIPTION
+
+    GAME     : Apidya
+    PUBLISHER: Play Byte (Blue Byte)
+    SPSID    : 0764 2465
+    HOL      : http://hol.abime.net/3281
+
+    VERSION  : 2.05
+    DATE     : 09/2009
+
+
+REQUIREMENTS
+
+    Requires an original copy of the game.
+
+    Requires 0.5Mb of chip memory.
+
+    Requires version 44.10 or later of the standard Amiga "Installer"
+    program or a compatible equivalent.
+
+    Requires version 16.9 or later of the WHDLoad package by Bert Jahn.
+    WHDLoad is available from:
+
+            http://www.whdload.de
+
+    Please consider registering WHDLoad or making a donation to help
+    support future development of more hard drive installers for your
+    favourite Amiga games and demos!
+
+
+INSTALLING THE GAME
+
+    Extract all files in the release archive to your system.
+
+    Double click on the "Install" icon present in the extraction
+    directory and follow the instructions given by the Installer
+    program.
+
+    The game will be installed to a directory you select on your
+    hard drive. You will be alerted if installation fails for any
+    reason, please contact the author if this happens.
+
+
+PLAYING THE GAME
+
+    Open the game drawer created during installation and click on the
+    icon to start the game.
+
+    The following keys may be used while the game is running:
+      F10 = quit game and return to Workbench
+
+    Registered WHDLoad users have the following additional features:
+
+      - the "Speed Of Light" bonus game on level 4 is enabled
+
+      - high scores and options are loaded and saved from hard disk
+
+      - the CUSTOM1-4 tooltypes may be used to activate cheats in the game:
+          CUSTOM1 =   1 to activate infinite lives
+          CUSTOM2 =   1 to activate invulnerability
+          CUSTOM3 =   1 to keep your weapons after death
+          CUSTOM4 = 1-5 to set the starting level 1-5
+
+        Note that enabling any of these trainers will disable the high score
+        saving and loading functions.
+
+
+LICENCE
+
+    This product is free software
+    © 2008-2009 Halibut Software / John Girvin, All Rights Reserved.
+
+    No payment is required to use this product. If you have paid to
+    buy, rent, download or otherwise obtain or use this product in any
+    way you should contact the author immediately.
+
+    THE FULL TERMS OF THE LICENCE AGREEMENT MAY BE FOUND IN THE FILE
+    "LICENCE" WHICH MUST ACCOMPANY THIS DOCUMENT. IF THIS FILE IS NOT
+    PRESENT, CONTACT THE AUTHOR.
+
+    LICENCE BREACHES MAY CONSTITUTE COPYRIGHT INFRINGEMENT PUNISHABLE
+    UNDER RELEVANT LAW.
+
+    The licence terms in summary are as follows:
+
+      - You are free to copy and distribute this work under the
+        following conditions:
+        - you must give the original author credit
+        - you may not use this work for commercial purposes
+        - you may not alter, transform, or build upon this work
+
+      - For any reuse or distribution, you must make clear to
+        others the licence terms of this work.
+
+      - Any of these conditions can be waived if you get permission
+        from the author.
+
+      - Your fair use and other rights are in no way affected by
+        the above.
+
+
+AUTHOR
+
+    John Girvin
+
+    E-Mail:    girv [at] girv [dot] net
+
+               PGP KeyID: 0x84FDE50C
+               PGP or S/MIME signed/encrypted mail welcome.
+
+    WWW:       http://www.girv.net
+
+    ICQ:       15651883
+
+    DONATIONS: PayPal: payments [at] girv [dot] net
+
+
+HISTORY
+
+    1.xx
+      - earlier releases by Mr. Larmer and Harry
+
+    2.00    01/2008
+      - requires WHDLoad 16.5+
+      - new version, rewritten from scratch
+      - all features of 1.xx retained
+      - supports two versions of the game
+      - all levels, subgames, guardians and intermediate screens patched
+      - keyboard handling fixed
+      - quitkey works on continue screen
+      - access faults fixed in level 2, level 2 guardian, level 4
+      - cpu delay loops fixed
+      - many copperlist problems fixed
+      - many blitterwait problems fixed
+      - cpu cache options set properly
+      - new trainers created
+      - new icons created
+
+    2.01    02/2008
+      - removed leftover debug code that set initial score to 20,000
+
+    2.02    02/2008
+      - fixed bug that had disabled the bonus round on level 4
+      - fixed copperlist and blitterwait problems in level 4 bonus round
+      - removed beamcon0 access
+
+    2.03    03/2008
+      - can enter bonus round on level 2-2 while invulnerable
+      - can enter bonus round on level 4-1 while invulnerable
+
+    2.04    04/2008
+      - fixed instruction stream fault when collecting power ups
+      - fixed access fault in collision detection
+
+    2.05    09/2009
+      - removed self modifying code in TFMX7V music replay
+      - updated installer script
+
+      
+ACKNOWLEDGEMENTS
+
+    "Apidya" is © Play Byte
+
+    WHDLoad is © Bert Jahn
+
+    Thanks to the EAB team for extensive testing and bug reports.
+
+    Thanks to KillerGorilla for spotting the "Speed Of Light" tune on the
+    sound test menu was unused in the game, and so putting me on the scent
+    of the bonus game lost for 16 years.
+    
+    Thanks to Don Adan / Wanted Team for information on the TFMX7V
+    music replay routine self modifying code.
+    
+;================================================================================
+;$VER: Apidya ReadMe 2.05 © 2008-2009 Halibut Software
+;================================================================================
