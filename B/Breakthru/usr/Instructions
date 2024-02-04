@@ -1,0 +1,49 @@
+Data East's BreakThru for Amiga computers.
+
+(Version 1.0)
+
+Your Mission: To retrieve the PK430 secret fighter plane stolen from your country and fly it back. There is no time to weigh our options, you must drive deep into enemy territory to recover the PK430 using the military’s most advanced land vehicle, capable of leaping high into the air at the push of a button. This is a one-way trip pilot, you’re coming back home in that fighter jet, or not at all.
+
+Gameplay: Breakthru is a horizontal shoot 'em up where the player controls an armed vehicle, with the first button shooting the main gun while the second button is used for jumping. During levels the player must face off against enemy soldiers, turrets and vehicles, as well as various obstacles along the way. The player can run over drums and crates, while other obstacles will cause the player to lose a life, so you must either avoid or jump over them. 
+
+Keep a look out for powerups that give access to a powerful three-way gun, but time will be limited and you must jump high to obtain them, else they will be captured by the enemy.
+
+Score extra lives on 20k, 40k, 60k, 80k and 100k
+
+P - Pause/Un-pause game
+
+M - Return to title screen 
+
+ESC - Quit to desktop from the title screen.
+
+ 
+
+Recommended Requirements:
+
+2 button controller (essential requirement)
+
+An Amiga with at least 1MB Chip and 1MB of either chip, fast or slow ram.
+
+Any cpu at running at 14MHz or better (fast ram and harddrive highly recommend, else you will experience slowdowns)
+
+Currently, an Amiga .adf file is available. You can simply drag the disk to your desktop, to install on your hard drive, then run the exe. A WHDLoad installer and CD32 version may be available in the future.
+
+(Disclaimer: Please use this file at your own risk. I accept no responsibility for any damage it may cause. However, there really should be no issue whatsoever). 
+
+Also works with an emulator such as WinUAE.
+
+----------------------------------------------------
+
+Massive thank you to everyone who has donated, left comments, reviews and suggestions to date. This motivates future updates and projects.
+
+----------------------------------------------------
+
+To Do:
+
+Incorporate sound FX
+Add name input to high score entry
+CD32 version
+Any bug fixes and adjustments required
+-----------------------------------------------------------
+
+Created with Erik Hogan's amazing Scorpion Engine.
