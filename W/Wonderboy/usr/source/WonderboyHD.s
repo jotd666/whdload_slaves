@@ -23,7 +23,7 @@
 ;STACKSIZE=$20000
 
 	IFD BARFLY
-	OUTPUT	"Breakthru.Slave"
+	OUTPUT	"Wonderboy.Slave"
 	BOPT	O+				;enable optimizing
 	BOPT	OG+				;enable optimizing
 	BOPT	ODd-				;disable mul optimizing
@@ -35,15 +35,15 @@
 
 ;============================================================================
 
-; seems to work with $C0000+$C0000
+
 	IFND	CHIP_ONLY
 CHIPMEMSIZE	= $100000
-FASTMEMSIZE	= $100000
+FASTMEMSIZE	= $200000
 BLACKSCREEN
 DEBUG
 	ELSE
-CHIPMEMSIZE	= $200000
-FASTMEMSIZE	= $0000
+CHIPMEMSIZE	= $80000
+FASTMEMSIZE	= $80000
 HRTMON
 	ENDC
 
@@ -54,11 +54,11 @@ WPDRIVES	= %1111
 BOOTDOS
 CACHE
 HDINIT
-;DOSASSIGN
+DOSASSIGN
 ;MEMFREE	= $100
 ;NEEDFPU
 ;SETPATCH
-SEGTRACKER
+;SEGTRACKER
 ;============================================================================
 
 
@@ -79,7 +79,7 @@ slv_keyexit	= $5D	; num '*'
     ENDC
     
 DECL_VERSION:MACRO
-	dc.b	"1.1"
+	dc.b	"2.0"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -94,13 +94,13 @@ DECL_VERSION:MACRO
 	DECL_VERSION
 	dc.b	0
 
-slv_name		dc.b	"Breakthru"
+slv_name		dc.b	"Wonderboy"
 		IFD		CHIP_ONLY
 		dc.b	" (debug/chip mode)"
 		ENDC
 			dc.b	0
-slv_copy		dc.b	"2024 Acidbottle",0
-slv_info		dc.b	"adapted by JOTD",10,10
+slv_copy		dc.b	"2022 Acidbottle",0
+slv_info		dc.b	"adapted by CFou! & JOTD",10,10
 		dc.b	"Version "
 		DECL_VERSION
 		dc.b	0
@@ -112,7 +112,7 @@ _args:
 _args_end:
 	dc.b	0
 _program:
-	dc.b	"breakthru-ami.exe",0
+	dc.b	"wonderboy.exe",0
 
 	EVEN
 
@@ -132,15 +132,11 @@ _bootdos
 		jsr	(_LVOOldOpenLibrary,a6)
 		move.l	d0,a6			;A6 = dosbase
 
-	;assigns
-;		lea	assign(pc),a0
-;		sub.l	a1,a1
-;		bsr	_dos_assign
 
     IFD CHIP_ONLY
     move.l  a6,-(a7)
     move.l  4,a6
-    move.l  #$20000-$0199b8,d0
+    move.l  #$20000-$00019430,d0
     move.l  #MEMF_CHIP,d1
     jsr     _LVOAllocMem(a6)
     move.l  (a7)+,a6
@@ -199,8 +195,6 @@ _quit
 
      
 _patchexe
-    ; install vbl hook which counts vblank
-    ; and also reads controllers
 
     lea pl_unpack(pc),a0 
     jsr resload_Patch(a2)
@@ -211,17 +205,12 @@ pl_unpack:
 	PL_P		$0015a,end_decrunch
     PL_END
 	
-pl_main_old:
-    PL_START
-	PL_B		$2511a,$60	; skip VBR read
-	PL_B		$30818,$60	; skip VBR read
-	PL_P		$252d4,read_vbr
-    PL_END
 pl_main:
     PL_START
-	PL_B		$447d2-$20000,$60	; skip VBR read
-	PL_P		$4498c-$20000,read_vbr
-	PL_B		$4fed0-$20000,$60	; skip VBR read
+	PL_B		$43770-$20000,$60	; skip VBR read
+	PL_P		$4555e-$20000,read_vbr
+	PL_B		$4e468-$20000,$60	; skip VBR read
+	PL_R		$481b4-$20000		; skip vblank sync at start that locks up!
     PL_END
 
 

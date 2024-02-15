@@ -40,6 +40,9 @@
  and	aminet:game/patch/
 
 
+ version 1.1 (14.02.2024) done by JOTD
+ - changed to run v1.1 version (won't work on v1.0 anymore)
+ 
  version 1.0 (04.02.2024) done by JOTD
  - initial release
  - VBR access removed
