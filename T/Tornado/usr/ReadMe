@@ -28,7 +28,7 @@
  an appropriate requester.
  Additionally the file "kick40068.A1200.RTB" (resp "kick40068.A4000.RTB")
  must be installed in the same directory as the kickstart image.
- It can be found in the archive "util/boot/skick345.lha" on aminet.
+ It can be found in the archive "util/boot/skick346.lha" on aminet.
 
  The game requires an installed A500 Kickstart 1.3 image.
  The kickstart image must be located in the directory "Devs:Kickstarts" and
@@ -38,7 +38,7 @@
  an appropriate requester.
  Additionally the file "kick34005.A500.RTB" must be installed in the same
  directory as the kickstart image. It can be found in the archive 
- "util/boot/skick345.lha" on aminet.
+ "util/boot/skick346.lha" on aminet.
 
  If you have problems with this installation please try and get a newer
  version of this package from the WHDLoad WWW-Page. If that doesn't help try
@@ -52,10 +52,16 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 1.1 (04.05.04) done by JOTD:
+ version 2.0 (xx.03.2024) done by paraj:
+ - AGA: New rendering code that keeps screen buffer in fast RAM for as long as possible (for speed up)
+ - AGA: Options to show fps/use original rendering code/limit fps/auto start
+ - AGA: Fixed analogue joystick calibration
+ - AGA: Changed default quit key to numpad '/'.
+
+ version 1.1 (04.05.2004) done by JOTD:
  - ECS version supported: display problem fixed for AGA machines
 
- version 1.0 (10.04.04) done by JOTD:
+ version 1.0 (10.04.2004) done by JOTD:
  - display problem on ECS version fixed for AGA machines
  - access fault fixed in AGA version
  - rewritten installer
@@ -64,4 +70,3 @@
  - keys quickdox included
  - source code included
 
-Try AGA version with CHIPCACHE, this may improve speed a lot.
