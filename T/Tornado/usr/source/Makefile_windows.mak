@@ -3,11 +3,15 @@
 PROGNAME = Tornado
 HDBASE = K:\jff\AmigaHD
 WHDBASE = $(HDBASE)\PROJETS\HDInstall\DONE
-WHDLOADER = $(PROGNAME).slave
+WHDLOADER = 
 SOURCE = $(PROGNAME)HD.s
+ASM = vasmm68k_mot -DDATETIME -I$(HDBASE)/amiga39_JFF_OS/include -I$(WHDBASE)\WHDLoad\Include -I$(WHDBASE) -nosym -Fhunkexe
 
-all :  $(WHDLOADER)
+all :  $(PROGNAME)AGA.slave $(PROGNAME)ECS.slave
 
-$(WHDLOADER) : $(SOURCE)
+$(PROGNAME)AGA.slave : $(PROGNAME)AGAHD.s
 	wdate.py> datetime
-	vasmm68k_mot -DDATETIME -I$(HDBASE)/amiga39_JFF_OS/include -I$(WHDBASE)\WHDLoad\Include -I$(WHDBASE) -devpac -nosym -Fhunkexe -o $(WHDLOADER) $(SOURCE)
+	$(ASM) -o $(PROGNAME)AGA.slave $(PROGNAME)AGAHD.s
+$(PROGNAME)ECS.slave : $(PROGNAME)ECSHD.s
+	wdate.py> datetime
+	$(ASM) -o $(PROGNAME)ECS.slave $(PROGNAME)ECSHD.s
