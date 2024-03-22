@@ -74,7 +74,7 @@ _config
 
 
 DECL_VERSION:MACRO
-	dc.b	"1.5"
+	dc.b	"1.6"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -177,8 +177,8 @@ pl_boot
 		PL_START
 		PL_P	$D2,patch1
 
-		PL_W	$29A,$4E71		; fix get stack data
-		PL_W	$2A8,$4E71
+		PL_NOP	$29A,2		; fix get stack data
+		PL_NOP	$2A8,2
 
 		PL_P	$542,load
 		PL_END
@@ -258,7 +258,8 @@ pl_2_v1
 	PL_PS	$23630,fix_af_1
 	PL_NOP	$77D8,4	; skip levels with "N"
     
-    PL_PSS   $1A8F4,keyboard,4    ; quit key on 68000
+    PL_PSS  $1A8F4,keyboard,4    ; quit key on 68000
+	PL_P	$1e4c0,wait_blit	; replace blitter wait
 	PL_END
 
 
@@ -278,9 +279,19 @@ pl_2_v2
 	PL_NOP	$77E2,4	; skip levels with "N"
 
     PL_PSS   $1A8EE,keyboard,4    ; quit key on 68000
+	PL_P	$1e4ba,wait_blit	; replace blitter wait
 
 	PL_END
 
+; original routine doesn't test BFE001 first so timing issues
+; can occur on some machines (issue #5999)
+wait_blit
+	TST.B	$BFE001
+.wait
+	BTST	#6,dmaconr+$DFF000
+	BNE.S	.wait
+	rts
+	
 keyboard:
     MOVE.B $00bfec01,D0
     ror.b   #1,d0

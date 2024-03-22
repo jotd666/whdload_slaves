@@ -30,7 +30,7 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
  
- version 1.6 (xx.01.2023) done by JOTD & ztronzo:
+ version 1.6 (24.03.2024) done by JOTD & ztronzo:
  - AGA version: added modding options (strafe/no player block) (issue #0005948)
  - ECS version: better blitterwaits which fixes graphical glitches on A1000 (issue #0005999)
  

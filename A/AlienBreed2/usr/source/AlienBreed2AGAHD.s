@@ -70,7 +70,7 @@ _expmem
 
 
 DECL_VERSION:MACRO
-	dc.b	"1.4"
+	dc.b	"1.6"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -86,9 +86,9 @@ _name		dc.b	"Alien Breed 2 AGA"
 	ENDC
 	dc.b	0
 _copy		dc.b	"1993 Team 17",0
-_info		dc.b	"adapted by Mr.Larmer & JOTD",10,10
+_info		dc.b	"adapted by Mr.Larmer & JOTD",10
+		dc.b	"mods by ztronzo",10,10
 		dc.b	"Greetings to Chris Vella",10,10
-		dc.b	"Press 'N' to skip levels",10,10
 		dc.b	"Version "
 		DECL_VERSION
 		dc.b	0
@@ -105,7 +105,12 @@ _info		dc.b	"adapted by Mr.Larmer & JOTD",10,10
 	ENDC
 
 _config
-        dc.b    "C1:X:Start with 99 lives 99 keys 100000 credits:0;"
+        dc.b    "C1:X:Start with 100000 credits:0;"
+        dc.b    "C1:X:Start with 99 lives:1;"
+        dc.b    "C1:X:Start with 99 keys:2;"
+        dc.b    "C1:X:Use N to skip levels:3;"
+        dc.b    "C2:X:Strafe Mode while holding fire:0;"
+        dc.b    "C2:X:No collision between human players:1;"
 		dc.b	0
 	
 highsname	dc.b	"AB2.highs",0
@@ -230,16 +235,71 @@ _pl_3:
 	PL_W	$3742,$602A	; remove some checks (fire/floppy)
 	PL_W	$37E6,$6008
 
-	PL_L	$7702,$4E714E71	; enables "N" to skip levels
-	PL_IFC1
+	PL_IFC1X	0
 	PL_L	$1AA2,100000	; money
+	PL_ENDIF
+	PL_IFC1X	1
 	PL_W	$1AA8,99	; lives
+	PL_ENDIF
+	PL_IFC1X	2
 	PL_W	$1AAA,99	; keys
+	PL_ENDIF
+	PL_IFC1X	3
+	PL_NOP	$7702,4	; enables "N" to skip levels
 	PL_ENDIF
 	PL_PS	$1A640,Keyboard	; possible to quit with NOVBRMOVE set
 	PL_PS	$233C4,fix_af_1	; issue #0002183 access fault
+
+	; new modding options, added by ztronzo
+	PL_IFC2X	0
+	PL_PSS	$13520,.strafe_start,26 ; enable strafe mode for each player while shooting
+	PL_ENDIF
+	PL_IFC2X	1
+	PL_W	$1157C,$6000	; allows human players to walk through each other
+	PL_ENDIF
+	
 	PL_END
 
+.strafe_start
+	cmpa.L #$00DFF00C,A2
+	bne.b	.strafe_check_player1
+	beq.b	.strafe_check_player2
+	;bt.b .no_strafe
+
+.strafe_check_player1
+	BTST.B #$07,$00bfe001
+	beq.b	.strafe_player1
+	bra.b .no_strafe
+	
+.strafe_check_player2
+	BTST.B #$06,$00bfe001	
+	beq.b	.strafe_player2
+	bra.b .no_strafe
+		
+.strafe_player1
+	cmpa.L #$00DFF00C,A2
+	bne.b	.strafe_done
+
+.strafe_player2
+	cmpa.L #$00DFF00C,A2
+	beq.b	.strafe_done
+	
+.no_strafe 	; restoring original instructions without strafe START
+	TST.W D0
+	BPL.B .no_strafe_cmp2
+	NEG.W D0
+.no_strafe_cmp1	CMP.W #$0004,D0
+	BHI.B .no_strafe_sub
+	bra.B .no_strafe_add
+.no_strafe_cmp2	CMP.W #$0004,D0
+	BMI.B .no_strafe_sub
+	bra.B .no_strafe_add
+.no_strafe_sub	SUB.W #$01,$0068(A0)
+	bra.B .strafe_done
+.no_strafe_add	ADD.W #$01,$0068(A0) 	; restoring original instructions without strafe END
+	
+.strafe_done
+	rts
 
 ; JFF: did not see it by myself but saw a register log...
 ; Access fault with rebounder weapon
