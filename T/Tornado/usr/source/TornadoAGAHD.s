@@ -73,7 +73,7 @@ slv_keyexit	= $5c	; numpad '/' (asterisk is used for "Master warning reset")
 slv_name		dc.b	"Tornado AGA",0
 slv_copy		dc.b	"1994 Digital Integration",0
 slv_info		dc.b	"adapted & fixed by JOTD & paraj",10
-                        dc.b    "Version 2.0 RC2",10
+                        dc.b    "Version 2.0",10
 		        INCBIN	datetime
 		        dc.b	0
 slv_CurrentDir:
@@ -966,6 +966,32 @@ LoadRGB32WorkAround
                 move.w  #$c000,_custom+intena
                 rts
 
+; Credits to Aardvark@EAB (https://eab.abime.net/showpost.php?p=1674571&postcount=72)
+
+JoyFix		;if Pot read value is less than calibrated minimum then store calibrated min value instead
+		movem.l	a1-a2,-(sp)
+		move.l	CalibratedMin,a1
+		move.l	PotStore,a2
+		cmp	(a1),d1
+		bmi	.AdjustPotY
+		move.w	d1,(a2)
+		bra.s	.JoyFixX
+.AdjustPotY
+		move.w	(a1),(a2)
+.JoyFixX
+		lsr.w	#$08,d0
+		add.w	#2,a1
+		add.w	#2,a2
+		cmp	(a1),d0
+		bmi	.AdjustPotX
+		move.w	d0,(a2)
+		movem.l	(sp)+,a1-a2
+		rts
+.AdjustPotX
+		move.w	(a1),(a2)
+		movem.l	(sp)+,a1-a2
+		rts
+
 flight_patch    PL_START
                 PL_GA   $0067e,BackBufferPtr
 
@@ -1004,6 +1030,12 @@ flight_patch    PL_START
 
                 PL_ENDIF ; Rendering code
 
+		PL_GA	$123c8,CalibratedMin	; MinY and MinX values from calibration
+		PL_GA	$520A6,PotStore		; address where game stores processed Dff014 reads
+		PL_PS	$52060,JoyFix		; jsr to Dff014 read routine in 'flight' segment
+		PL_S	$52066,8
+		PL_NOP	$5206a,4
+
                 PL_END
 
 
@@ -1027,6 +1059,8 @@ timerreq        ds.b IOTV_SIZE
 lasttime        ds.l 2
 SavedBackBuf    ds.l 1
 TempBufPtr      ds.l 1
+CalibratedMin	ds.l 1
+PotStore	ds.l 1
 
 fake_cust       ds.w 256
 
