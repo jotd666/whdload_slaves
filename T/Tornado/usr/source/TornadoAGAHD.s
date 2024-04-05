@@ -13,13 +13,12 @@
 ;---------------------------------------------------------------------------*
 
 	INCDIR	Include:
-	INCDIR	osemu:
 	INCLUDE	whdload.i
 	INCLUDE	whdmacros.i
 	INCLUDE	lvo/dos.i
 	INCLUDE	lvo/graphics.i
-        INCLUDE lvo/timer.i
-        INCLUDE devices/timer.i
+	INCLUDE lvo/timer.i
+	INCLUDE devices/timer.i
 
 	IFD BARFLY
 	OUTPUT	"TornadoAGA.slave"
@@ -70,11 +69,24 @@ slv_keyexit	= $5c	; numpad '/' (asterisk is used for "Master warning reset")
 	DOSCMD	"WDate  >T:date"
 	ENDC
 
+
+DECL_VERSION:MACRO
+	dc.b	"2.0"
+	IFD BARFLY
+		dc.b	" "
+		INCBIN	"T:date"
+	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
+	ENDC
+	ENDM
+
 slv_name		dc.b	"Tornado AGA",0
 slv_copy		dc.b	"1994 Digital Integration",0
 slv_info		dc.b	"adapted & fixed by JOTD & paraj",10
-                        dc.b    "Version 2.0",10
-		        INCBIN	datetime
+                        dc.b    "Version "
+		        DECL_VERSION
 		        dc.b	0
 slv_CurrentDir:
 	dc.b	"data",0
@@ -93,6 +105,9 @@ _program:
 	dc.b	"shell",0
 _args		dc.b	10
 _args_end
+	dc.b	0
+	dc.b	"$VER: Tornado AGA "
+	DECL_VERSION
 	dc.b	0
 	EVEN
 
@@ -967,7 +982,6 @@ LoadRGB32WorkAround
                 rts
 
 ; Credits to Aardvark@EAB (https://eab.abime.net/showpost.php?p=1674571&postcount=72)
-
 JoyFix		;if Pot read value is less than calibrated minimum then store calibrated min value instead
 		movem.l	a1-a2,-(sp)
 		move.l	CalibratedMin,a1
@@ -991,7 +1005,6 @@ JoyFix		;if Pot read value is less than calibrated minimum then store calibrated
 		move.w	(a1),(a2)
 		movem.l	(sp)+,a1-a2
 		rts
-
 flight_patch    PL_START
                 PL_GA   $0067e,BackBufferPtr
 
@@ -1035,7 +1048,6 @@ flight_patch    PL_START
 		PL_PS	$52060,JoyFix		; jsr to Dff014 read routine in 'flight' segment
 		PL_S	$52066,8
 		PL_NOP	$5206a,4
-
                 PL_END
 
 

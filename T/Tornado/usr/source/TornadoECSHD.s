@@ -13,7 +13,6 @@
 ;---------------------------------------------------------------------------*
 
 	INCDIR	Include:
-	INCDIR	osemu:
 	INCLUDE	whdload.i
 	INCLUDE	whdmacros.i
 	INCLUDE	lvo/dos.i
@@ -49,6 +48,18 @@ SETPATCH
 CBDOSLOADSEG
 BOOTDOS
 
+DECL_VERSION:MACRO
+	dc.b	"2.0"
+	IFD BARFLY
+		dc.b	" "
+		INCBIN	"T:date"
+	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
+	ENDC
+	ENDM
+
 ;============================================================================
 
 
@@ -78,10 +89,8 @@ disk4:
 slv_name		dc.b	"Tornado ECS",0
 slv_copy		dc.b	"1994 Digital Integration",0
 slv_info		dc.b	"adapted & fixed by JOTD",10
-			dc.b	"Version 1.0 "
-	IFD BARFLY
-		INCBIN	"T:date"
-	ENDC
+			dc.b	"Version "
+			DECL_VERSION
 		dc.b	0
 slv_CurrentDir:
 	dc.b	"data",0
@@ -92,6 +101,10 @@ _program:
 _args		dc.b	10
 _args_end
 	dc.b	0
+	dc.b	"$VER: Tornado ECS "
+	DECL_VERSION
+	dc.b	0
+	EVEN
 	EVEN
 
 ;============================================================================
@@ -162,7 +175,7 @@ fix_af_smv:
 _bootdos
 	clr.l	$0.W
 
-	move.l	(_resload),a2		;A2 = resload
+	move.l	(_resload,pc),a2		;A2 = resload
 
 	;enable cache
 		move.l	#WCPUF_Base_NC|WCPUF_Exp_CB|WCPUF_Slave_CB|WCPUF_IC|WCPUF_DC|WCPUF_BC|WCPUF_SS|WCPUF_SB,d0
