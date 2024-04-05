@@ -52,11 +52,11 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 2.0 (xx.03.2024) done by paraj:
+ version 2.0 (04.04.2024) done by paraj:
  - AGA: New rendering code that keeps screen buffer in fast RAM for as long as possible (for speed up)
  - AGA: Options to show fps/use original rendering code/limit fps/auto start
- - AGA: Fixed analogue joystick calibration
  - AGA: Changed default quit key to numpad '/'.
+ - AGA: Analogue joystick fixes (calibration/in game, thanks to Aardvark@EAB)
 
  version 1.1 (04.05.2004) done by JOTD:
  - ECS version supported: display problem fixed for AGA machines
