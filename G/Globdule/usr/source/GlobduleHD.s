@@ -79,7 +79,7 @@ _config
 
 
 DECL_VERSION:MACRO
-	dc.b	"2.1-B"
+	dc.b	"2.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -303,13 +303,15 @@ load_hiscores
     ; pal lives 0008F443=0030 00091FC3=0030 00092047=0030
 pl_pal
 	PL_START
-    ; skip manual protection but no password at end of level 1!!!    
-    ;;PL_NOP  $104C,6
-    ;;PL_NOP  $2986,4         ; no wait for password
+    ; skip manual protection    
+    ;PL_NOP  $104C,6
+    ;PL_NOP  $2986,4         ; no wait for password
+	;PL_B	$2984,$41		; set "A" so password is not empty else no password at end of level
 
     ; show protection
-	PL_W	$299C,$6034		; all protection codes work
-
+	;PL_W	$299C,$6034		; all protection codes work
+	PL_PSS	$299a,copy_correct_password,2
+	
 	PL_PS   $2030,kb_hook
     PL_PSS  $1ece,vbl_hook,2
     PL_PS   $733e,test_fire
@@ -333,7 +335,9 @@ pl_ntsc
     ; skip manual protection screen, no password at end of level 1!!!    
     ; so we can't do this
     ;;PL_NOP  $104C,6         
-	PL_W	$29EA,$6034		; all protection codes work
+	;PL_W	$29EA,$6034		; all protection codes work
+	PL_PSS	$29e8,copy_correct_password,2
+	
 	PL_R	$1130			; skip country check
 	PL_PS   $207e,kb_hook
     PL_PSS  $1f1c,vbl_hook,2
@@ -368,6 +372,12 @@ TEST_BUTTON:MACRO
 .nochange_\1
     ENDM
 
+copy_correct_password:
+	move.L	(A1)+,(A0)+		;8299a: b388
+	move.W	(A1)+,(A0)+		;829a0: b348
+	clr.b	d0		; set Z flag
+	rts
+	
 test_fire:
     move.l  joy1(pc),d0
     btst    #JPB_BTN_RED,d0
