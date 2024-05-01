@@ -1,21 +1,54 @@
-Short:    HD-Installer for Tearaway Thomas V1.0
-Author:   Codetapper/Action (codetapper@whdload.org), ICQ: 26051687
-Uploader: Codetapper/Action (codetapper@whdload.org)
-Version:  1.0
-Type:     game/patch
-Requires: WHDLoad 10, 512k chip mem
 
-This patch applies to "Tearaway Thomas" (c) 1992 Head-On Technology Ltd.
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS OR
+ IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+ PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+ TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+ REPAIR OR OTHER REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+ CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
+ PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
+
+ This install applies to "Tearaway Thomas" © 1992 Head-On Technology Ltd.
+
+ This install requires WHDLoad to be in the path. It can be found in the
+ WHDLoad package.
+ 
+ Game requires 0.5Mb chip mem (+0.6Mb other memory for preload option)
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
+
+
+
+History:
+
+ version 1.1 (xx.05.2024) done by JOTD:
+ - adapted to whdload 17
+ - original trainer options available in splash menu
+ - infinite time trainer
+ - added missing blitter waits
+ - high score save (unless you cheat) TODO
+ - source code included (thanks Codetapper for providing it so swiftly)
+
+ version 1.0 (2000) done by Codetapper/Action:
+ - Full load from HD
+ - RomIcon, NewIcon and GlowIcon (created by me!)
+ - Quit option (default key is '*' on keypad)
+
+
 Thanks to Carlo Pirri for the original.
 
-REQUIREMENTS:
-- Slave requires WHDLoad V10+.
-- Game requires 0.5Mb chip mem (+0.6Mb other memory for preload option)
 
 FEATURES:
-- Full load from HD
-- RomIcon, NewIcon and GlowIcon (created by me!)
-- Quit option (default key is '*' on keypad)
 
 CHEAT MODE:
 - These cheats were taken from Sweet Cheater by Keith Krellwitz!
@@ -48,7 +81,7 @@ Codetapper/Action (02-Sep-2000)
 
 
          Bug report form, full WHDLoad package and other installs:
-                          http://www.whdload.org/
+                          http://www.whdload.de/
 
             ________  ________  ________  ____  ________  ________
            _)       \_)       \_)       \_)   \_)       \_)       \
@@ -59,4 +92,4 @@ Codetapper/Action (02-Sep-2000)
 
 
            Visit the Action website for more of our productions:
-                           http://zap.to/action/
+                           http://codetapper.com

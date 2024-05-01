@@ -14,11 +14,12 @@
 		SUPER				;disable supervisor warnings
 		ENDC
 
+; hiscores at 750
 ;======================================================================
 
 _base		SLAVE_HEADER			;ws_Security + ws_ID
 		dc.w	17			;ws_Version
-		dc.w	WHDLF_NoError		;ws_flags
+		dc.w	WHDLF_NoError|WHDLF_ClearMem		;ws_flags
 		dc.l	$80000			;ws_BaseMemSize
 		dc.l	0			;ws_ExecInstall
 		dc.w	_Start-_base		;ws_GameLoader
@@ -35,9 +36,11 @@ _expmem		dc.l	0			;ws_ExpMem
 		dc.w	0                       ;ws_kickcrc
 		dc.w	_config-_base		;ws_config
 _config
-;	dc.b	"BW;"
-   ; dc.b    "C1:X:Trainer Infinite Lives & Ammo:0;"
-   ; dc.b    "C2:B:use blue/second button to jump;"
+   dc.b    "C1:X:Trainer Infinite Time:0;"
+   dc.b    "C1:X:Trainer Infinite Lives:1;"
+   dc.b    "C1:X:Trainer Invincibility:2;"
+   dc.b    "C1:X:Up and down to change level:3;"
+ 
    ; dc.b    "C3:L:Start with lives:2,3,4,5,6,7;"			
     dc.b	0
 ;============================================================================
@@ -79,15 +82,9 @@ _Start	;	A0 = resident loader
 
 		lea	_resload(pc),a1
 		move.l	a0,(a1)			;save for later use
-
-_restart	lea	$10000,a0
-		lea	$75d00,a1
-_ClearMem	clr.l	(a0)+
-		cmpa.l	a0,a1
-		bcc	_ClearMem
 		
 		lea	_Hex400(pc),a0
-		lea	$400,a1
+		lea	$400.w,a1
 		move.l	_resload(pc),a2
 		jsr	resload_LoadFileDecrunch(a2)
 
@@ -108,16 +105,59 @@ _ClearMem	clr.l	(a0)+
 _FastVersion	lea	$7e84c,a0		;$1fc bytes/sector image
 		pea	_Loader1fc(pc)
 
-_StartGame	move.w	#$4ef9,(a0)+
+_StartGame	
+		move.w	#$4ef9,(a0)+
 		move.l	(sp)+,(a0)+
 
-		lea	$476,a0			;Add quit key
-		move.w	#$4eb9,(a0)+
-		pea	_keybd(pc)
-		move.l	(sp)+,(a0)+
+		lea		pl_main(pc),a0
+		sub.l	a1,a1
+		move.l	_resload(pc),a2
+		jsr		resload_Patch(a2)
+	
+		jmp	$440.W			;Start game
 
-		jmp	$440			;Start game
-
+pl_main:
+	PL_START
+	PL_PS	$476,_keybd		;Add quit key
+	
+	PL_PS	$7da8,blit_wait_1
+	PL_PS	$7fD0,blit_wait_1
+	PL_PSS	$8042,blit_wait_2,2
+	
+	PL_IFC1X	0
+	PL_W	$7302,$4a39
+	PL_ENDIF
+	PL_IFC1X	1
+	PL_B	$c726,$60
+	PL_ENDIF
+	PL_IFC1X	2
+	PL_PS	$a9a8,ironman_thomas
+	PL_ENDIF
+	PL_IFC1X	3
+	PL_NOP	$c830,4
+	PL_ENDIF
+	PL_END
+	
+blit_wait_1:
+	LSL.W	#7,D0			;7fd0: ef48
+	LEA	0(A3,D0.L),A4		;7fd2: 49f30800
+	bra.b	wait_blit
+	
+blit_wait_2:
+	LEA	0(A3,D0.L),A4		;8042: 49f30800
+	LEA	512(A0),A0		;8046: 41e80200
+	bra.b	wait_blit
+	
+ironman_thomas:
+	st	d1		| Invincibility
+	rts
+wait_blit:
+	TST.B	$BFE001
+.wait
+	BTST	#6,dmaconr+$DFF000
+	BNE.S	.wait
+	rts
+	
 ;7c4ac = keymap replacement (add later if there is any need) so all
 ;keymaps will work with the game. Lowercase letters only required.
 
