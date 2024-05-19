@@ -48,6 +48,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 4.0 (19.05.2024) done by JOTD:
+ - refactored CD32 version with more modern libs emulations
+
  version 3.4 (09.09.2020):
  - fixed crash at startup on some configurations for v1.05 (ECS)
  - bumped AGA slave version to 3.4 (but nothing changed)

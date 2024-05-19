@@ -60,25 +60,24 @@ INITAGA
 ;SETPATCH
 BOOTDOS
 CACHE
+INIT_LOWLEVEL
+INIT_NONVOLATILE
 
 ;============================================================================
 
 
 slv_Version	= 17
-slv_Flags	= WHDLF_NoError|WHDLF_Examine|WHDLF_ClearMem
+slv_Flags	= WHDLF_NoError|WHDLF_Examine|WHDLF_ReqAGA|WHDLF_ClearMem
 slv_keyexit	= $5D	; num '*'
 
-QUIT_JOYPAD_MASK = JPF_BUTTON_FORWARD|JPF_BUTTON_REVERSE|JPF_BUTTON_PLAY
 
-DUMMY_CD_DEVICE = 1
-;USE_DISK_LOWLEVEL_LIB
-;USE_DISK_NONVOLATILE_LIB
+
 
 ; pal: +$013a4 train start level << 2 ($4: first world, $8 second, $C third, $10 fourth)
 ; seg0 +$cc02: nop any number of keys
 ;============================================================================
 
-	INCLUDE	kick31cd32.s
+	INCLUDE	whdload/kick31.s
 
 ;============================================================================
 
@@ -88,7 +87,7 @@ DUMMY_CD_DEVICE = 1
 
 
 DECL_VERSION:MACRO
-	dc.b	"3.4"
+	dc.b	"4.0"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -134,9 +133,134 @@ _exename_ntsc:
 _args		dc.b	10
 _args_end
 	dc.b	0
-lowlname:
-    dc.b    "lowlevel.library",0    
+   
 	EVEN
+
+
+CDDEVICE_ID = $CDDECDDE
+
+	INCLUDE	cddevice.s
+
+PATCH_IO:MACRO
+	move.l	$4.W,a0
+	add.w	#_LVO\1+2,a0
+	lea	.\1_save\@(pc),a1
+	move.l	(a0),(a1)
+	lea	.\1\@(pc),a1
+	move.l	a1,(a0)
+	bra.b	.cont\@
+.\1_save\@:
+	dc.l	0
+.\1\@:
+	cmp.l	#CDDEVICE_ID,IO_DEVICE(a1)
+	beq	cddevice_\1
+
+	move.l	.\1_save\@(pc),-(A7)
+	rts
+.cont\@
+	ENDM
+	
+
+_patch_cd32_libs:
+	movem.l	D0-A6,-(A7)
+
+	;redirect calls: opendevice/closedevice
+
+
+	move.l	4.W,a0
+	add.w	#_LVOOpenDevice+2,a0
+	lea	_opendev_save(pc),a1
+	move.l	(a0),(a1)
+	lea	_opendev(pc),a1
+	move.l	a1,(a0)
+
+	move.l	4.W,a0
+	add.w	#_LVOCloseDevice+2,a0
+	lea	_closedev_save(pc),a1
+	move.l	(a0),(a1)
+	lea	_closedev(pc),a1
+	move.l	a1,(a0)
+
+	PATCH_IO	DoIO
+	PATCH_IO	SendIO
+	PATCH_IO	CheckIO
+	PATCH_IO	WaitIO
+	PATCH_IO	AbortIO
+
+	bsr	_flushcache
+
+	movem.l	(A7)+,D0-A6
+	rts
+
+_closedev:
+	move.l	IO_DEVICE(a1),D0
+	cmp.l	#CDDEVICE_ID,D0
+	beq.b	.out
+
+.org
+	move.l	_closedev_save(pc),-(a7)
+	rts
+
+.out
+	moveq	#0,D0
+	rts
+
+_opendev:
+	movem.l	D0,-(a7)
+	bsr	.get_long
+	cmp.l	#'cd.d',D0
+	beq.b	.cddevice
+	bra.b	.org
+
+	; cdtv device
+.cddevice
+	move.l	#CDDEVICE_ID,IO_DEVICE(a1)
+.exit
+	movem.l	(A7)+,D0
+	moveq.l	#0,D0
+	rts
+
+.org
+	movem.l	(A7)+,D0
+	move.l	_opendev_save(pc),-(a7)
+	rts
+
+; < A0: address
+; > D0: longword
+.get_long
+	move.l	a0,-(a7)
+	move.b	(a0)+,d0
+	lsl.l	#8,d0
+	move.b	(a0)+,d0
+	lsl.l	#8,d0
+	move.b	(a0)+,d0
+	lsl.l	#8,d0
+	move.b	(a0)+,d0
+	move.l	(a7)+,a0
+	rts
+
+
+; 68000 compliant way to get a long at any address
+; < A0: address
+; > D0: longword
+get_long_a1
+	move.l	a1,-(a7)
+	move.b	(a1)+,d0
+	lsl.l	#8,d0
+	move.b	(a1)+,d0
+	lsl.l	#8,d0
+	move.b	(a1)+,d0
+	lsl.l	#8,d0
+	move.b	(a1)+,d0
+	move.l	(a7)+,a1
+	rts
+
+
+_opendev_save:
+	dc.l	0
+_closedev_save:
+	dc.l	0
+
 
 ; +$0542 read joy port 1 routine (firepal)
 ;============================================================================
@@ -145,20 +269,6 @@ lowlname:
 
 _bootdos
 	; configure the button emulation
-
-	bsr	_patch_cd32_libs
-
-	IFND	USE_DISK_LOWLEVEL_LIB
-	lea	OSM_JOYPAD1KEYS(pc),a0
-	move.w	#$4019,2(a0)	; SPACE = bomb, P = pause
-	move.w	#$4545,4(a0)	; both charcoal: ESC so ESC quits the game in pause mode
-
-	move.l	_resload(pc),a2		;A2 = resload
-    lea	(tag,pc),a0
-    jsr	(resload_Control,a2)
-
-    movem.l (a7)+,a6    
-	ENDC
 
 
 	;open doslib
@@ -171,6 +281,8 @@ _bootdos
 		sub.l	a1,a1
 		bsr	_dos_assign
 
+		bsr	_patch_cd32_libs
+		
 	;load program
 
 		lea	_exename_pal(pc),A0
