@@ -41,8 +41,11 @@
  ------------------------------------
  (*) added support since last slave release)
  
- version 2.3 (xx.xx.2024) done by JOTD:
- - fixed bug that crashed the game when tactic is changed/loaded (issue #0006185)
+ version 2.3 (19.05.2024) done by JOTD:
+ - fixed bug that crashed the game when tactic is changed/loaded (issue #0006185). The bug
+   is there since the first version of the slave, but somehow hidden below
+   another bug which also made tactics not useable.
+ - england teams are now selectable again
  - game now looks in "data" directory for files, just like the installer copies them.
    so you can move back the files into a "data" folder, if you didn't fix that with
    a "data" tooltype already.

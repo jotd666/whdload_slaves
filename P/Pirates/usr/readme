@@ -27,7 +27,7 @@
  an appropriate requester.
  Additionally the file "kick34005.A500.RTB" must be installed in the same
  directory as the kickstart image. It can be found in the archive 
- "util/boot/skick345.lha" on aminet.
+ "util/boot/skick346.lha" on aminet.
 
  * CD³²/unofficial AGA version *
 
@@ -42,7 +42,7 @@
  an appropriate requester.
  Additionally the file "kick40068.A1200.RTB" (resp "kick40068.A4000.RTB")
  must be installed in the same directory as the kickstart image.
- It can be found in the archive "util/boot/skick345.lha" on aminet.
+ It can be found in the archive "util/boot/skick346.lha" on aminet.
 
  If you have problems with this installation please try and get a newer
  version of this package from the WHDLoad WWW-Page. If that doesn't help try
@@ -56,8 +56,10 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 1.5
+ version 1.5 (19.05.2024)
  - install script rewritten & enhanced
+ - CD32 version updated for better saved games
+ - ECS version memory upgraded
  - added glowicon
 
  version 1.4 (30.11.2004)

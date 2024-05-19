@@ -14,7 +14,6 @@
 ;---------------------------------------------------------------------------*
 
 	INCDIR	Include:
-	INCDIR	osemu:
 	INCLUDE	whdload.i
 	INCLUDE	whdmacros.i
 	INCLUDE	lvo/dos.i
@@ -47,6 +46,10 @@ INIT_AUDIO
 BOOTDOS
 HDINIT
 
+INIT_LOWLEVEL
+INIT_NONVOLATILE
+
+
 ; calculate minimal amount of free memory
 ;	if the symbol MEMFREE is defined after each call to exec.AllocMem the
 ;	size of the largest free memory chunk will be calculated and saved at
@@ -68,7 +71,7 @@ slv_Version	= 16
 slv_Flags	= WHDLF_NoError|WHDLF_Examine
 slv_keyexit	= $5D	; num '*'
 
-	INCLUDE	kick31cd32.s
+	INCLUDE	whdload/kick31.s
 
 ;============================================================================
 
@@ -76,14 +79,21 @@ slv_keyexit	= $5D	; num '*'
 	DOSCMD	"WDate  >T:date"
 	ENDC
 
+
+DECL_VERSION:MACRO
+	dc.b	"1.5"
+	IFD BARFLY
+		dc.b	" "
+		INCBIN	"T:date"
+	ENDC
+	ENDM
+	
 slv_CurrentDir		dc.b	"data",0
 slv_name		dc.b	"Pirates! (Gold) AGA/CD³²",0
 slv_copy		dc.b	"1993 Microprose",0
 slv_info		dc.b	"Install/fix by JOTD",10
-		dc.b	"Version 2.2 "
-	IFD BARFLY
-		INCBIN	"T:date"
-	ENDC
+		dc.b	"Version "
+	DECL_VERSION
 		dc.b	0
 
 _exename_english:
@@ -92,6 +102,11 @@ _exename_german:
 	dc.b	"pirates_german",0
 _arguments:
 	dc.b	10,0
+
+	dc.b	"$","VER: slave "
+	DECL_VERSION
+		dc.b	$A,$D,0
+
 	even
 
 _bootdos
@@ -101,7 +116,6 @@ _bootdos
 	lea	(_tag,pc),a0
 	jsr	(resload_Control,a2)
 		
-	bsr	_patch_cd32_libs
 
 	;open doslib
 		lea	(_dosname,pc),a1
@@ -193,8 +207,7 @@ _load_exe:
 
 _tag		dc.l	WHDLTAG_CUSTOM1_GET
 _custom1	dc.l	0
-		dc.l	WHDLTAG_LANG_GET
-_language	dc.l	0
+
 		dc.l	WHDLTAG_CUSTOM5_GET
 _custom5	dc.l	0
 		dc.l	0

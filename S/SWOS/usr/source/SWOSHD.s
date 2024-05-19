@@ -20,7 +20,7 @@
   
 ; chiponly triggers an access fault when trying to play
 ; let's hope we're not going to need that
-CHIP_ONLY
+;CHIP_ONLY
 
 BUFFER_SIZE = $800
 
@@ -75,7 +75,7 @@ _expmem:
 
 
 DECL_VERSION:MACRO
-	dc.b	"2.2"
+	dc.b	"2.3"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -382,7 +382,7 @@ pl_9596
 
 	PL_P	$5D0,rob_northen_loader
     
-	PL_L	$4a832,$4EB80100
+	;;PL_L	$4a832,$4EB80100
 	
     PL_END 
 ;-----------------------------
@@ -422,7 +422,7 @@ pl_euro
     PL_R    $155a   ; floppy shit
     
 	PL_P	$5C0,rob_northen_loader
-	PL_L	$4dff6,$4EB80100
+	;;PL_L	$4dff6,$4EB80100
 	
     PL_END
     
@@ -471,7 +471,7 @@ pl_9697_1
 	PL_R	$e7e
 	PL_P	$5C0,rob_northen_loader
 
-	PL_L	$4df98,$4EB80100
+	;;PL_L	$4df98,$4EB80100
 
     PL_END
 ;--------------------------------------
@@ -554,7 +554,7 @@ pl_0842
    
 	PL_P	$5C0,rob_northen_loader
 	; 4a120 can become corrupt
-	PL_L	$4de92,$4EB80100
+	;PL_L	$4de92,$4EB80100
    
     PL_END
     
@@ -610,7 +610,7 @@ pl_9697
     PL_R    $155a   ; floppy shit
 
 	PL_P	$5C0,rob_northen_loader
-	PL_L	$4dfec,$4EB80100
+	;;PL_L	$4dfec,$4EB80100
 
     PL_END
     

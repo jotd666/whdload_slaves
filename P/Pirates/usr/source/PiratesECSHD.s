@@ -13,7 +13,6 @@
 ;---------------------------------------------------------------------------*
 
 	INCDIR	Include:
-	INCDIR	osemu:
 	INCLUDE	whdload.i
 	INCLUDE	whdmacros.i
 	INCLUDE	lvo/dos.i
@@ -40,7 +39,7 @@ FASTMEMSIZE	= $C0000
 NUMDRIVES	= 1
 WPDRIVES	= %0000
 
-;BLACKSCREEN
+BLACKSCREEN
 ;DISKSONBOOT
 DOSASSIGN
 HDINIT
@@ -48,10 +47,11 @@ HDINIT
 IOCACHE		= 3000
 ;MEMFREE	= $200
 ;NEEDFPU
-SETPATCH
+;SETPATCH
 BOOTDOS
 CBDOSLOADSEG
 CACHE
+STACK = 6000
 
 ;============================================================================
 
@@ -62,33 +62,42 @@ slv_keyexit	= $5D	; num '*'
 
 	INCLUDE	whdload/kick13.s
 
-
-
 ;============================================================================
 
 	IFD BARFLY
 	DOSCMD	"WDate  >T:date"
 	ENDC
 
-slv_name		dc.b	"Pirates!",0
-slv_copy		dc.b	"1990 Microprose",0
-slv_info		dc.b	"adapted by JOTD",10
+
+DECL_VERSION:MACRO
+	dc.b	"1.5"
+	IFD BARFLY
+		dc.b	" "
+		INCBIN	"T:date"
+	ENDC
+	ENDM
+
+slv_name	dc.b	"Pirates!",0
+slv_copy	dc.b	"1990 Microprose",0
+slv_info	dc.b	"adapted by JOTD",10
 		dc.b	"from Wepl excellent KickStarter 34.005",10,10
 		dc.b	"Use CUSTOM=<savegame name>.pir",10
 		dc.b	"to reload a saved game",10,10
-		dc.b	"Version 1.4 "
-	IFD BARFLY
-		INCBIN	"T:date"
-	ENDC
+		dc.b	"Version "
+		DECL_VERSION
 		dc.b	0
 slv_CurrentDir:
 	dc.b	"data",0
-	EVEN
 
 _program:
 	dc.b	"Pirates!",0
 _args
-	blk.b	$22,0
+	ds.b	$22,0
+
+	dc.b	"$","VER: slave "
+	DECL_VERSION
+		dc.b	$A,$D,0
+
 	EVEN
 _arglen
 	dc.l	0
@@ -201,14 +210,25 @@ hex_search:
 	rts
 
 _bootdos
-	move.l	(_resload),a2		;A2 = resload
+	lea	(_saveregs,pc),a0
+		movem.l	d1-d3/d5-d7/a1-a2/a4-a6,(a0)
+		move.l	(a7)+,(11*4,a0)
+		move.l	(_resload,pc),a2	;A2 = resload
+
+	;open doslib
+		lea	(_dosname,pc),a1
+		move.l	(4),a6
+		jsr	(_LVOOldOpenLibrary,a6)
+		lea	(_dosbase,pc),a0
+		move.l	d0,(a0)
+		move.l	d0,a6			;A6 = dosbase
 
 	;get tags
-		lea	_args(pc),a0
+	lea	_args(pc),a0
 
-		move.l	#$20,d0
-		moveq.l	#0,d1
-		jsr	(resload_GetCustom,a2)
+	move.l	#$20,d0
+	moveq.l	#0,d1
+	jsr	(resload_GetCustom,a2)
 
 	;get length
 		lea	_args(pc),a0
@@ -221,12 +241,6 @@ _bootdos
 		lea	_arglen(pc),a1
 		move.l	a0,(a1)
 
-	;open doslib
-		lea	(_dosname,pc),a1
-		move.l	(4),a6
-		jsr	(_LVOOldOpenLibrary,a6)
-		move.l	d0,a6			;A6 = dosbase
-
 	;load exe
 		lea	_program(pc),a0
 		move.l	a0,d1
@@ -235,23 +249,61 @@ _bootdos
 		beq	_end			;file not found
 
 	;call
-		move.l	d7,a1
-		add.l	a1,a1
-		add.l	a1,a1
-		lea	(_args,pc),a0
-		move.l	(4,a7),d0		;stacksize
-		sub.l	#5*4,d0			;required for MANX stack check
-		movem.l	d0/d7/a2/a6,-(a7)
+		move.l	d7,d1
 		move.l	_arglen(pc),d0
-		jsr	(4,a1)
-		movem.l	(a7)+,d1/d7/a2/a6
-
+		lea	_args(pc),a0
+		bsr	.call
 	;remove exe
 		move.l	d7,d1
 		jsr	(_LVOUnLoadSeg,a6)
 
 		pea	TDREASON_OK
 		jmp	(resload_Abort,a2)
+
+
+; D0 = ULONG arg length
+; D1 = BPTR  segment
+; A0 = CPTR  arg string
+
+.call		lea	(_callregs,pc),a1
+		movem.l	d2-d7/a2-a6,(a1)
+		move.l	(a7)+,(11*4,a1)
+		move.l	d0,d4
+		lsl.l	#2,d1
+		move.l	d1,a3
+		move.l	a0,a4
+	;create longword aligend copy of args
+		lea	(_callargs,pc),a1
+		move.l	a1,d2
+.callca		move.b	(a0)+,(a1)+
+		subq.w	#1,d0
+		bne	.callca
+	;set args
+		move.l	(_dosbase,pc),a6
+		jsr	(_LVOInput,a6)
+		lsl.l	#2,d0		;BPTR -> APTR
+		move.l	d0,a0
+		lsr.l	#2,d2		;APTR -> BPTR
+		move.l	d2,(fh_Buf,a0)
+		clr.l	(fh_Pos,a0)
+		move.l	d4,(fh_End,a0)
+	;call
+		move.l	d4,d0
+		move.l	a4,a0
+		movem.l	(_saveregs,pc),d1-d3/d5-d7/a1-a2/a4-a6
+		jsr	(4,a3)
+	;return
+		movem.l	(_callregs,pc),d2-d7/a2-a6
+		move.l	(_callrts,pc),a0
+		jmp	(a0)
+
+	CNOP 0,4
+_saveregs	ds.l	11
+_saverts	dc.l	0
+_dosbase	dc.l	0
+_callregs	ds.l	11
+_callrts	dc.l	0
+_callargs	ds.b	208
 
 _end
 		pea	_program(pc)
@@ -267,45 +319,6 @@ _quit
 		add.l	#resload_Abort,(a7)
 		rts
 
-
-; change preferences
-
-	IFEQ	1
-_patchintuition:
-	lea	.intuiname(pc),A1
-	moveq.l	#0,D0
-	move.l	$4.W,A6
-	jsr	_LVOOpenLibrary(a6)
-	move.l	D0,A6
-
-	lea	-232(A7),A7
-	
-	move.l	A7,A0
-	move.l	#232,D0
-	jsr	_LVOGetPrefs(a6)
-
-	move.l	A7,A0
-	; set WB colors to 0
-	clr.w	pf_color0(a0)
-	clr.w	pf_color1(a0)
-	clr.w	pf_color2(a0)
-	clr.w	pf_color3(a0)
-
-	move.l	A7,A0
-	move.l	#232,D0
-	moveq	#-1,D1
-	jsr	_LVOSetPrefs(a6)
-
-	lea	232(A7),A7
-	move.l	A6,A1
-	move.l	$4.W,A6
-	JSR	_LVOCloseLibrary(a6)
-
-	rts
-.intuiname:
-	dc.b	"intuition.library",0
-	even
-	ENDC
 
 ;============================================================================
 
