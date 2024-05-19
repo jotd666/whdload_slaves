@@ -10,7 +10,6 @@
 ;  :To Do.
 ;---------------------------------------------------------------------------*
 
-	INCDIR	sys:include/
 	INCLUDE	whdload.i
 	INCLUDE	whdmacros.i
 
@@ -21,7 +20,7 @@
   
 ; chiponly triggers an access fault when trying to play
 ; let's hope we're not going to need that
-;CHIP_ONLY
+CHIP_ONLY
 
 BUFFER_SIZE = $800
 
@@ -33,9 +32,11 @@ PROGRAM_LOCATION_OFFSET = $80000
     IFD CHIP_ONLY
 CHIPMEMSIZE = $180000+PROGRAM_LOCATION_OFFSET
 FASTMEMSIZE = TEAM_BUFFER_SIZE
+PROGRAM_FASTMEMSIZE = 0
     ELSE
 CHIPMEMSIZE = $100000
-FASTMEMSIZE = $80000+PROGRAM_LOCATION_OFFSET+TEAM_BUFFER_SIZE
+PROGRAM_FASTMEMSIZE = $80000+PROGRAM_LOCATION_OFFSET
+FASTMEMSIZE = PROGRAM_FASTMEMSIZE+TEAM_BUFFER_SIZE
     ENDC
 
 ; 1MB chip + 1,5MB slow mem prog @ $D00000
@@ -51,18 +52,18 @@ FASTMEMSIZE = $80000+PROGRAM_LOCATION_OFFSET+TEAM_BUFFER_SIZE
 ; autocompute bit masks (not very useful, as the memory routine
 ; is so obscure and buggy that it is completely skipped)
 CHIPBITS = (1<<(CHIPMEMSIZE/$80000))-1
-FASTBITS = ((1<<(FASTMEMSIZE/$80000))-1)<<24
+FASTBITS = ((1<<(PROGRAM_FASTMEMSIZE/$80000))-1)<<24
     
 ;======================================================================
 
 base
 		SLAVE_HEADER		;ws_Security + ws_ID
 		dc.w	10		;ws_Version
-		dc.w	WHDLF_NoError|WHDLF_EmulTrap	;ws_flags
+		dc.w	WHDLF_NoError|WHDLF_EmulTrap|WHDLF_ClearMem	;ws_flags
 		dc.l	CHIPMEMSIZE		;ws_BaseMemSize
 		dc.l	0		;ws_ExecInstall
 		dc.w	Start-base	;ws_GameLoader
-		dc.w	0		;ws_CurrentDir
+		dc.w	_data-base		;ws_CurrentDir
 		dc.w	0		;ws_DontCache
 _keydebug	dc.b	0		;ws_keydebug = none
 _keyexit	dc.b	$46		;ws_keyexit = Del
@@ -107,6 +108,10 @@ _info	dc.b	'-------------------------',10
 	dc.b	-1
 	CNOP 0,2
 
+_data:
+	dc.b	"data",0
+	; slave loads "SWOS2" program, which is designed for A1200...
+	; (original SSBOOT program loads SWOS for < kick3.1+68020)
 Swos.rel:
 	dc.b	'SWOS2.REL',0
 Swos.prg:
@@ -231,7 +236,7 @@ continue_relocation:
 		cmp.l	#357226,d2
 		beq	swos_152
 		cmp.l	#356964,d2
-		beq	swos_1522
+		beq	swos_0842		; SPS842
 		cmp.l	#334640,d2
 		beq	swos_german
         
@@ -272,8 +277,13 @@ pl_9495
     PL_W    $c6,$6002       ; cacr
     ; copylock
     PL_P    $19e6,copylock
-    ;Fake send to loader
-    PL_L    $3d2,$70004E75
+	
+    ; Fake send to loader, but we still need to update current disk or whatnot
+	; else it crashes when loading tactics because disk changes and state is
+	; not updated in the game
+	PL_S	$3d2+6,$4b6-$456
+
+	
     PL_P    $22da,fix_memory_routine_9495     ; 101676
     PL_R    $37c		;Format Disk name removed  
     
@@ -310,8 +320,11 @@ pl_9495_2
     PL_W    $130,$6002       ; cacr
     ; copylock
     PL_P    $1bea,copylock
-    ;Fake send to loader
-    PL_L    $450,$70004E75
+    ; Fake send to loader, but we still need to update current disk or whatnot
+	; else it crashes when loading tactics because disk changes and state is
+	; not updated in the game
+	PL_S	$456,$4b6-$456
+	
     PL_P    $24ec,fix_memory_routine_9495_2     ; 10171A
     PL_R    $3e6		;Format Disk name removed
     PL_PS   $756a,access	
@@ -346,8 +359,11 @@ pl_9596
     PL_W    $128,$6002       ; cacr
     ; copylock
     PL_P    $1bfa,copylock
-    ;Fake send to loader
-    PL_L    $448,$70004E75
+    ; Fake send to loader, but we still need to update current disk or whatnot
+	; else it crashes when loading tactics because disk changes and state is
+	; not updated in the game
+	PL_S	$44e,$4ae-$44e
+
     PL_P    $24fc,fix_memory_routine_9596
     PL_R    $3de		;Format Disk name removed
     PL_PS   $7518,access	
@@ -385,8 +401,12 @@ pl_euro
     PL_W    $CC,$6002       ; fix zero div
     ; copylock
     PL_P    $5d78,copylock
-    ;Fake send to loader
-    PL_L    $438,$70004E75
+
+    ; Fake send to loader, but we still need to update current disk or whatnot
+	; else it crashes when loading tactics because disk changes and state is
+	; not updated in the game
+	PL_S	$43e,$49e-$43e
+
     PL_P    $667a,fix_memory_routine_9697
     PL_R    $3ce		;Format Disk name removed
     PL_PS   $7614,access	
@@ -424,14 +444,20 @@ pl_9697_1
     PL_W    $5de4,$26bc
     PL_L    $5de6,$cfd1efe7
     PL_L    $5d82,$71583efc
-    ;Fake send to loader
-    PL_L    $438,$70004E75
+	
+	
     PL_P    $670a,fix_memory_routine_9697_1
     PL_PS   $76a4,access
     ;PL_W	$552c,$6002,	;TESTTESTTEST    
     
     ; jotd
     PL_PS   $1B58,kb_hook
+
+    ; Fake send to loader, but we still need to update current disk or whatnot
+	; else it crashes when loading tactics because disk changes and state is
+	; not updated in the game
+	PL_S	$43e,$49e-$43e
+
     ; fix snoop bugs
     PL_PSS  $23ac,fix_snoop_bug,4
     PL_ORW  $20d2,$200  ; colorbit bplcon0
@@ -439,7 +465,9 @@ pl_9697_1
     PL_L  $20e0,$01FE0000  ; remove bplcon4 write
     PL_R    $fd0   ; floppy shit
     PL_R    $155a   ; floppy shit
-    
+   
+
+   
 	PL_R	$e7e
 	PL_P	$5C0,rob_northen_loader
 
@@ -463,13 +491,17 @@ pl_german
     PL_W    $130,$6002       ; cacr
     ; copylock
     PL_P    $1bea,copylock
-    ;Fake send to loader
-    PL_L    $450,$70004E75
+
     PL_P    $24ec,fix_memory_routine_9495_2
     PL_R    $3e6		;Format Disk name removed
     PL_PS   $75a2,access	
    
     ; jotd
+    ; Fake send to loader, but we still need to update current disk or whatnot
+	; else it crashes when loading tactics because disk changes and state is
+	; not updated in the game
+	PL_S	$456,$4b6-$456
+	
     PL_PS   $2F4C,kb_hook
     ; fix snoop bugs
     PL_PSS  $37a0,fix_snoop_bug,4
@@ -484,13 +516,12 @@ pl_german
     PL_END
 
 
-swos_1522:  ; 9697_2
-
-        lea pl_9697_2(pc),a0
+swos_0842:  ; SPS 0842 96/76
+        lea pl_0842(pc),a0
         bra patch_with_patchlist
         
 ; offsets similar to "euro" version
-pl_9697_2
+pl_0842
     PL_START
 	; jotd: proper sized buffer for big team files
 	PL_PA	$5944+2,data_buffer
@@ -501,8 +532,10 @@ pl_9697_2
     ; copylock
     PL_W    $5d54,$26bc
     PL_L    $5d56,$cfd1efe7
-    ;Fake send to loader
-    PL_L    $438,$70004E75
+    ; Fake send to loader, but we still need to update current disk or whatnot
+	; else it crashes when loading tactics because disk changes and state is
+	; not updated in the game
+	PL_S	$442,$49e-$442
     PL_P    $6664,fix_memory_routine_9697   ; same address as 9697
     PL_R    $3ce		;Format Disk name removed
     PL_PS   $75fe,access	
@@ -529,13 +562,13 @@ pl_9697_2
 swos_9697:
 		        
         lea pl_9697(pc),a0
-patch_with_patchlist
+patch_with_patchlist:
         move.l	program_location(pc),a1
 		        move.l  _resload(pc),a2
         jsr (resload_Patch,a2)
      
         ; set registers D5-D7 to expected values
-        move.l  #CHIPMEMSIZE+FASTMEMSIZE,D7
+        move.l  #CHIPMEMSIZE+PROGRAM_FASTMEMSIZE,D7
         move.l  #FASTBITS,d5
         move.l  #CHIPBITS|FASTBITS,d6       
 
@@ -554,8 +587,7 @@ pl_9697
     PL_W    $CC,$6002       ; fix zero div
     ; copylock (checked at +$1fe70: EORI.L	#$715829de,D0)
     PL_P    $5D78,copylock
-    ;Fake send to loader
-    PL_L    $438,$70004E75
+
     PL_P    $667A,fix_memory_routine_9697
     PL_R    $3ce		;Format Disk name removed
     PL_PS   $7614,access
@@ -563,6 +595,12 @@ pl_9697
     
     ; jotd
     PL_PS   $1B44,kb_hook
+
+    ; Fake send to loader, but we still need to update current disk or whatnot
+	; else it crashes when loading tactics because disk changes and state is
+	; not updated in the game
+	PL_S	$43e,$49e-$43e
+
     ; fix snoop bugs
     PL_PSS  $2398,fix_snoop_bug,4
     PL_ORW  $20be,$200  ; colorbit bplcon0

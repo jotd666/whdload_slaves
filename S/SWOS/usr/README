@@ -41,6 +41,12 @@
  ------------------------------------
  (*) added support since last slave release)
  
+ version 2.3 (xx.xx.2024) done by JOTD:
+ - fixed bug that crashed the game when tactic is changed/loaded (issue #0006185)
+ - game now looks in "data" directory for files, just like the installer copies them.
+   so you can move back the files into a "data" folder, if you didn't fix that with
+   a "data" tooltype already.
+
  version 2.2 (07.06.2023) done by JOTD:
  - reworked file load/save completely (which fixed load/save tactic bug)
  - highlights/seasons/leagues/careers are loaded/saved in "save" directory
@@ -131,3 +137,6 @@ NOTE FROM MAINTAINER:
  doesn't remove the uncompressed size team limitation, though.
  
 JOTD
+
+
+ 
