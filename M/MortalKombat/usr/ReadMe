@@ -1,0 +1,101 @@
+Short:    HD-Installer for Mortal Kombat V0.9
+Author:   Codetapper/Action (codetapper@hotmail.com), ICQ: 26051687
+Uploader: Codetapper/Action (codetapper@hotmail.com)
+Version:  0.9
+Type:     game/patch
+
+This patch applies to "Mortal Kombat" (c) 1993 Acclaim - 2 disks.
+Thanks to Jean-François Fabre for the original JST install and rob2file
+imager, and to Chris Vella and Carlo Pirri for sending the originals!
+
+REQUIREMENTS:
+- Slave requires WHDLoad V10+.
+- Disk game requires 1Mb chip mem (+1.95Mb other memory for preload option)
+
+FEATURES:
+- Full load from HD
+- RNC copylock removed
+- Loads and save high scores (unless you cheat!)
+- Decruncher relocated to fast memory
+- 2 button mode bug fixed (thanks to Jeff)
+- 2 Snoop bugs removed (move.b #0,$bfd200 and move.w ($6c,a6),(6,a5))
+- RomIcon, NewIcon and GlowIcon (created by me!)
+- Quit option (default key is 'F10')
+
+CHEAT MODE:
+- Taken from Sweet Cheater by Keith Krellwitz!
+
+  On the screen where you select to start the game or options, type
+  "CATHULU" and the new selection {CHEATMODE} will appear.  Enter the
+  cheat menu and type "RJC" and a statistics screen will appear, press
+  'SPACE' to return to selection menu.
+  
+  On the screen that tells you about {CODES}, type "VAMPIRE" the words
+  will turn white and you should hear a sound.  This will turn off the
+  blood (WHY!!).
+
+                               (DEATH MOVES)
+        
+                    KANO:
+            
+                        Opponent to the right:  L,L,F
+                        Opponent to the left:   R,R,F
+                
+                    SCORPION:
+
+                        Opponent to the right:  D,D,F
+                        Opponent to the left:   D,D,F
+            
+                    RAIDEN:
+            
+                        Opponent to the right:  R,L,L,L,F
+                        Opponent to the left:   L,R,R,R,F
+                
+                    SONYA:
+            
+                        Opponent to the right:  R,R,L,L,F
+                        Opponent to the left:   L,L,R,R,F
+                
+                    LIU KANG:
+            
+                        Opponent to the right:  D,L,U,R,D
+                        Opponent to the left:   D,R,U,L,D
+
+                    SUB-ZERO:
+            
+                        Opponent to the right:  R,D,R,F
+                        Opponent to the left:   L,D,L,F
+
+                    JOHNNY CAGE:
+            
+                        Opponent to the right:  R,R,R,F
+                        Opponent to the left:   L,L,L,F
+
+The saving of high scores turned out to be a nightmare as the game just
+hangs after saving due to the O/S trashing cop2lc.
+
+There are still a couple of obscure access faults (present in the original)
+so play the game without the MMU tooltype until I find time to fix them.
+This should only affect the end sequence of some characters and also on
+the Options screen, certain combinations trigger a fault.
+
+Greetings to all Action members, my testing crew and the WHDLoad team!
+Special greetings to Mad-Matt and Carlo for testing this fine game!
+
+
+Codetapper/Action (11-Feb-2001)
+
+
+         Bug report form, full WHDLoad package and other installs:
+                          http://www.whdload.de/
+
+            ________  ________  ________  ____  ________  ________
+           _)       \_)       \_)       \_)   \_)       \_)       \
+   __ ___ /___/     /   /_____/\  /     /     /   /     /   /     /
+  /_//__// \___    /   /     /CT\/     /     /   /     /   /     /
+        /___/     /___      /   /     /_____/___      /___/     /___ __
+            \____/    \____/    \____/          \____/    \____//__//_/
+
+
+           Visit the Action website for more of our productions:
+                           http://codetapper.com
