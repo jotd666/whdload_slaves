@@ -1,5 +1,12 @@
+# By default, ignore everything in repository root 
+# all tracked files are in "usr" subdirs
+/*
+# but we won't be considering those extensions as well
 *.islave
 *.slave
 *.asm
 *.bak
 _UAEFSDB.___
+# track files in "usr"
+!/usr
+
