@@ -1,16 +1,16 @@
-#added by python script
+include ../../options.mk
 
 PROGNAME = BubbaNStix
-HDBASE = K:\jff\AmigaHD
-WHDBASE = $(HDBASE)\PROJETS\HDInstall\DONE
+
+
 
 SOURCE = $(PROGNAME)HD.s
 
 all :  $(PROGNAME).slave $(PROGNAME)CD32.slave
 
 $(PROGNAME).slave : $(SOURCE)
-	wdate.py> datetime
-	vasmm68k_mot -DDATETIME -I$(HDBASE)/amiga39_JFF_OS/include -I$(WHDBASE)\WHDLoad\Include -I$(WHDBASE) -devpac -nosym -Fhunkexe -o $(PROGNAME).slave $(SOURCE)
+	$(WDATE)
+	$(VASM) -o $(PROGNAME).slave $(SOURCE)
 $(PROGNAME)CD32.slave : $(SOURCE)
-	wdate.py> datetime
+	$(WDATE)
 	vasmm68k_mot -DCD32 -DDATETIME -I$(HDBASE)/amiga39_JFF_OS/include -I$(WHDBASE)\WHDLoad\Include -I$(WHDBASE) -devpac -nosym -Fhunkexe -o $(PROGNAME)CD32.slave $(SOURCE)

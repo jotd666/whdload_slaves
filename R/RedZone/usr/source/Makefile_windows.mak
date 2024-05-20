@@ -1,8 +1,8 @@
-#added by python script
+include ../../options.mk
 
 PROGNAME = RedZone
-HDBASE = K:\jff\AmigaHD
-WHDBASE = $(HDBASE)\PROJETS\HDInstall\DONE
+
+
 WHDLOADER = $(PROGNAME).slave
 ISLAVE = $(PROGNAME).islave
 SOURCE = $(PROGNAME)HD.s
@@ -12,10 +12,10 @@ all :  $(WHDLOADER) $(ISLAVE) $(EXE)
 ASM = vasmm68k_mot -maxerrors=0 -DDATETIME -I$(HDBASE)/amiga39_JFF_OS/include -I$(WHDBASE)\WHDLoad\Include -I$(WHDBASE) -devpac -nosym -Fhunkexe -o 
 
 $(WHDLOADER) : $(SOURCE) relocated_code.s
-	wdate.py> datetime
+	$(WDATE)
 	$(ASM) $(WHDLOADER) $(SOURCE)
 $(ISLAVE) : $(PROGNAME).islave.s
-#wdate.py> datetime
+#$(WDATE)
 	$(ASM) $(ISLAVE) $(PROGNAME).islave.s
 
 $(EXE) : object.s

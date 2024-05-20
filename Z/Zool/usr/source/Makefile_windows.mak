@@ -1,21 +1,21 @@
-#added by python script
+include ../../options.mk
 
 PROGNAME = Zool
-HDBASE = K:\jff\AmigaHD
-WHDBASE = $(HDBASE)\PROJETS\HDInstall\DONE
+
+
 WHDLOADER = $(PROGNAME).slave
 SOURCE = $(PROGNAME)HD.s
 
 all :  $(PROGNAME).slave $(PROGNAME)AGA.slave $(PROGNAME)CD32.slave
 
-CMD = vasmm68k_mot -DDATETIME -I$(HDBASE)/amiga39_JFF_OS/include -I$(WHDBASE)\WHDLoad\Include -I$(WHDBASE) -devpac -nosym -Fhunkexe -o 
+CMD = $(VASM) -o 
 
 $(PROGNAME).slave : $(SOURCE)
-	wdate.py> datetime
+	$(WDATE)
 	$(CMD) $(PROGNAME).slave $(SOURCE)
 $(PROGNAME)AGA.slave : $(PROGNAME)AGAHD.s
-	wdate.py> datetime
+	$(WDATE)
 	$(CMD) $(PROGNAME)AGA.slave $(PROGNAME)AGAHD.s
 $(PROGNAME)CD32.slave : $(PROGNAME)CD32HD.s lowlevel.s
-	wdate.py> datetime
+	$(WDATE)
 	$(CMD) $(PROGNAME)CD32.slave $(PROGNAME)CD32HD.s

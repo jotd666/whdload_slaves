@@ -1,9 +1,9 @@
 PROGNAME = BeyondDarkCastle
 WHDLOADER = $(PROGNAME).slave
 SOURCE = $(PROGNAME)HD.s
-WHDBASE = K:\jff\AmigaHD\PROJETS\WHDLoad
+W\PROJETS\WHDLoad
 all :  $(WHDLOADER)
 
 $(WHDLOADER) : $(SOURCE)
-	wdate.py> datetime
+	$(WDATE)
 	vasmm68k_mot -DDATETIME -IK:/jff/AmigaHD/amiga39_JFF_OS/include -I$(WHDBASE)\WHDLoad\Include -phxass -nosym -Fhunkexe -o $(WHDLOADER) $(SOURCE)

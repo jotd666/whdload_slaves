@@ -1,17 +1,17 @@
-#added by python script
+include ../../options.mk
 
 PROGNAME = Paperboy
-HDBASE = K:\jff\AmigaHD
-WHDBASE = $(HDBASE)\PROJETS\HDInstall\DONE
+
+
 WHDLOADER = $(PROGNAME).slave
 SOURCE = $(PROGNAME)HD.s
 
 all :  $(WHDLOADER) $(PROGNAME).islave
 
 $(WHDLOADER) : $(SOURCE)
-	wdate.py> datetime
-	vasmm68k_mot -DDATETIME -I$(HDBASE)/amiga39_JFF_OS/include -I$(WHDBASE)\WHDLoad\Include -I$(WHDBASE) -devpac -nosym -Fhunkexe -o $(WHDLOADER) $(SOURCE)
+	$(WDATE)
+	$(VASM) -o $(WHDLOADER) $(SOURCE)
 
 $(PROGNAME).islave: $(PROGNAME).islave.s
-	wdate.py> datetime
-	vasmm68k_mot -DDATETIME -I$(HDBASE)/amiga39_JFF_OS/include -I$(WHDBASE)\WHDLoad\Include -I$(WHDBASE) -devpac -nosym -Fhunkexe -o $(PROGNAME).islave $(PROGNAME).islave.s
+	$(WDATE)
+	$(VASM) -o $(PROGNAME).islave $(PROGNAME).islave.s

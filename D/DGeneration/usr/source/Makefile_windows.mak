@@ -1,5 +1,5 @@
 PROGNAME = DGeneration
-WHDBASE = K:\jff\AmigaHD\PROJETS\HDInstall\DONE\WHDLoad
+W\PROJETS\HDInstall\DONE\WHDLoad
 all :  $(PROGNAME)ECS.slave $(PROGNAME)AGA.slave $(PROGNAME)CD32.slave
 
 $(PROGNAME)ECS.slave : $(PROGNAME)ECSHD.s

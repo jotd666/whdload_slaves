@@ -1,5 +1,5 @@
 PROGNAME = IndyFateOfAtlantis
-WHDBASE = K:\jff\AmigaHD\PROJETS\HDInstall\DONE\WHDLoad
+W\PROJETS\HDInstall\DONE\WHDLoad
 all :  $(PROGNAME).slave
 
 $(PROGNAME).slave : $(PROGNAME)HD.s

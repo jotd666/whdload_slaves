@@ -1,8 +1,8 @@
-#added by python script
+include ../../options.mk
 
 PROGNAME = Dune
-HDBASE = K:\jff\AmigaHD
-WHDBASE = $(HDBASE)\PROJETS\HDInstall\DONE
+
+
 WHDLOADER = $(PROGNAME).slave
 WHDLOADERFLOP = $(PROGNAME)_floppy.slave
 SOURCE = $(PROGNAME)HD.s
@@ -10,8 +10,8 @@ SOURCE = $(PROGNAME)HD.s
 all :  $(WHDLOADER) $(WHDLOADERFLOP)
 
 $(WHDLOADERFLOP) : $(SOURCE)
-	wdate.py> datetime
+	$(WDATE)
 	vasmm68k_mot -DFLOPPY_VERSION -DDATETIME -I$(HDBASE)/amiga39_JFF_OS/include -I$(WHDBASE)\WHDLoad\Include -I$(WHDBASE) -devpac -nosym -Fhunkexe -o $(WHDLOADERFLOP) $(SOURCE)
 $(WHDLOADER) : $(SOURCE)
-	wdate.py> datetime
-	vasmm68k_mot -DDATETIME -I$(HDBASE)/amiga39_JFF_OS/include -I$(WHDBASE)\WHDLoad\Include -I$(WHDBASE) -devpac -nosym -Fhunkexe -o $(WHDLOADER) $(SOURCE)
+	$(WDATE)
+	$(VASM) -o $(WHDLOADER) $(SOURCE)

@@ -1,8 +1,8 @@
-#added by python script
+include ../../options.mk
 
 PROGNAME = Prey
-HDBASE = K:\jff\AmigaHD
-WHDBASE = $(HDBASE)\PROJETS\HDInstall\DONE
+
+
 WHDLOADER = 
 SOURCE = $(PROGNAME)HD.s
 ASM = vasmm68k_mot -DDATETIME -I$(HDBASE)/amiga39_JFF_OS/include -I$(WHDBASE)\WHDLoad\Include -I$(WHDBASE) -devpac -nosym -Fhunkexe
@@ -10,6 +10,6 @@ ASM = vasmm68k_mot -DDATETIME -I$(HDBASE)/amiga39_JFF_OS/include -I$(WHDBASE)\WH
 all :  $(PROGNAME).slave
 
 $(PROGNAME).slave : $(PROGNAME)HD.s
-	wdate.py> datetime
+	$(WDATE)
 	$(ASM) -o $(PROGNAME).slave $(PROGNAME)HD.s
 
