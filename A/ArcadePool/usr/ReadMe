@@ -53,7 +53,12 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 3.0 (01.07.06) done by JOTD:
+ version 3.1 (20.05.2024) done by JOTD:
+ - another version supported (same but with invalid track in the end)
+ - reworked slave for new kickemu (else no display!)
+ - reduced memory requirements for AGA
+ 
+ version 3.0 (01.07.2006) done by JOTD:
  - 2 floppy versions and CD³² version supported
  - rewritten for KickEmu (no longer uses OSEmu)
  - nice icon from exoticons

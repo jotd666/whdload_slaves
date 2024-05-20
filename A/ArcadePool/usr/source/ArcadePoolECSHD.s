@@ -18,9 +18,9 @@
 
 ;============================================================================
 
-;DEBUG
+;CHIP_ONLY
 
-	IFD	DEBUG
+	IFD	CHIP_ONLY
 HRTMON
 CHIPMEMSIZE	= $100000
 FASTMEMSIZE	= $0000
@@ -34,9 +34,9 @@ FASTMEMSIZE	= $100000
 
 patch_boot
 	; ECS
-	lea	$FD800,a5
-patch_memory:
-	moveq.l	#1,d0
+	lea	CHIPMEMSIZE-$2800,a5
+detect_chipset:
+	moveq.l	#1,d0	; ECS
 	rts
 
 patch_1_v1

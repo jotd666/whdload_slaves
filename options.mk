@@ -9,4 +9,5 @@ WHDBASE = $(THIS_DIR)
 
 # standard date gen & build commands
 WDATE = wdate.py> datetime
-VASM = vasmm68k_mot -DDATETIME -I$(HDBASE) -I$(WHDBASE) -pic -devpac -nosym -Fhunkexe
+VASM_NOPIC = vasmm68k_mot -DDATETIME -I$(HDBASE) -I$(WHDBASE) -devpac -nosym -Fhunkexe
+VASM = $(VASM_NOPIC) -pic

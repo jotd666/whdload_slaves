@@ -46,7 +46,7 @@
 		dc.l	Text	; Pointer to the text displayed in the imager window
 
 		dc.b	"$VER:"
-Text		dc.b	"Arcade Pool PDos imager V1.1",10
+Text		dc.b	"Arcade Pool PDos imager V1.2",10
 		dc.b	"by Codetapper/Action/JOTD on "
 		IFD		BARFLY
 		INCBIN	"T:date"
@@ -67,8 +67,10 @@ DSK_1		dc.l	0		; Pointer to next disk structure
 		dc.l	0		; Called before a disk is read
 		dc.l	0		; Called after a disk has been read
 
-TL_1		TLENTRY	000,003,$1600,SYNC_STD,DMFM_STD
-		TLENTRY	004,158,$1800,$1448,_DMFM_RNPDos_D1
+TL_1	
+		TLENTRY	000,003,$1600,SYNC_STD,DMFM_STD
+		TLENTRY	004,157,$1800,$1448,_DMFM_RNPDos_D1
+		TLENTRY	158,159,$1600,SYNC_STD,DMFM_NULL	; v2 has invalid track, v1 has empty RN track
 		TLEND
 
 ;======================================================================

@@ -18,32 +18,31 @@
 
 ;============================================================================
 
-;DEBUG
+;CHIP_ONLY		; doesn't work anyway, crashes at startup
 
+INIT_AGA
 AGA
-
-	IFD	DEBUG
+	IFD	CHIP_ONLY
 HRTMON
 CHIPMEMSIZE	= $200000
-FASTMEMSIZE	= $0000
+FASTMEMSIZE	= $000
 	ELSE
 BLACKSCREEN
 CHIPMEMSIZE	= $200000	; cannot set less because of AGA mode
-FASTMEMSIZE	= $100000
+FASTMEMSIZE	= $80000
 	ENDC
 
 	INCDIR	Include:
 	INCLUDE	whdload.i
-
 
 	include	"ArcadePoolXXXHD.s"
 
 
 patch_boot
 	; AGA
-	lea	$1FD800,a5
-patch_memory
-	moveq.l	#2,d0
+	lea	CHIPMEMSIZE-$2800,a5
+detect_chipset
+	moveq.l	#2,d0; AGA
 	rts
 
 patch_1_v1

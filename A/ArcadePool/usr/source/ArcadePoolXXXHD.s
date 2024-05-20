@@ -39,7 +39,7 @@ DISKSONBOOT
 IOCACHE		= 10000
 ;MEMFREE	= $200
 ;NEEDFPU
-;SETPATCH
+SETPATCH
 ;STACKSIZE = 10000
 CACHE
 
@@ -85,8 +85,8 @@ slv_name		dc.b	"Arcade Pool "
 			dc.b	"ECS"
 	ENDC
 	
-	IFD	DEBUG
-	dc.b	" (DEBUG MODE)"
+	IFD	CHIP_ONLY
+	dc.b	" (DEBUG/chip MODE)"
 	ENDC
 			dc.b	0
 slv_copy		dc.b	"1994 Team 17",0
@@ -99,16 +99,17 @@ slv_CurrentDir:
 
 	dc.b	"$","VER: slave "
 	DECL_VERSION
-	dc.b	$A,$D,0
+	dc.b	$A,0
 	EVEN
 
 _bootblock
+	; enable dma, seems to be missing, used to work without
+	; but now it's needed
+	move.w	#$83FF,dmacon+_custom
+	
 	movem.l	a0-a2/a6/d0-d1,-(A7)
 
-	;get tags
-	lea	(tag,pc),a0
-	move.l	_resload(pc),a2
-	jsr	(resload_Control,a2)
+
 
 	lea	pl_bootblock(pc),a0
 	move.l	a4,a1
@@ -122,6 +123,7 @@ _bootblock
 
 	lea	(-$400,a5),a1
 		
+	
 	move.l	$DC6(A1),d0
 	cmp.l	#$48E77FFC,D0
 	bne	.v2
@@ -160,15 +162,18 @@ pl_bootblock:
 pl_v1
 	PL_START
 	PL_P	$DC6,read_sectors
-	PL_P	$826,patch_memory
 	PL_PS	$48A,patch_1_v1
-	PL_END
+	PL_NEXT	pl_boot_common
 
 pl_v2
 	PL_START
 	PL_P	$DEC,read_sectors
-	PL_P	$826,patch_memory
 	PL_PS	$48A,patch_1_v2
+	PL_NEXT	pl_boot_common
+	
+pl_boot_common
+	PL_START
+	PL_P	$826,detect_chipset
 	PL_END
 
 setint3_1:
@@ -219,9 +224,5 @@ read_sectors
 	moveq	#0,d0
 	rts
 
-
-tag		dc.l	WHDLTAG_CUSTOM1_GET
-custom1	dc.l	0
-		dc.l	0
 
 
