@@ -3,7 +3,7 @@
 THIS_DIR := $(dir $(abspath $(firstword $(MAKEFILE_LIST))))/../../
 
 # change to your includes base
-HDBASE = K:\jff\AmigaHD\amiga39_JFF_OS\include
+HDBASE ?= K:\jff\AmigaHD\amiga39_JFF_OS\include
 # unpack whdload dev in this dir at start
 WHDBASE = $(THIS_DIR)
 
