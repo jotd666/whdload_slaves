@@ -52,6 +52,16 @@
 	SUPER
 	ENDC
 
+
+CHIP_ONLY
+	IFD	CHIP_ONLY
+CHIPMEMSIZE = $80000+$77000+$b000
+EXPMEMSIZE = 0
+	ELSE
+CHIPMEMSIZE = $80000
+EXPMEMSIZE = $77000+$b000	
+	ENDC
+	
 	STRUCTURE globals,$120
 		LONG	_resload
 		LONG	_code1
@@ -65,15 +75,15 @@
 
 _base		SLAVE_HEADER			;ws_Security + ws_ID
 		dc.w	17			;ws_Version
-		dc.w	WHDLF_Disk|WHDLF_NoError;ws_flags
-		dc.l	$80000			;ws_BaseMemSize
+		dc.w	WHDLF_NoError;ws_flags
+		dc.l	CHIPMEMSIZE			;ws_BaseMemSize
 		dc.l	0			;ws_ExecInstall
 		dc.w	_start-_base		;ws_GameLoader
 		dc.w	0			;ws_CurrentDir
 		dc.w	0			;ws_DontCache
 		dc.b	0			;ws_keydebug
 		dc.b	$5F			;ws_keyexit = Help
-_expmem		dc.l	$77000+$b000		;ws_ExpMem
+_expmem		dc.l	EXPMEMSIZE		;ws_ExpMem
 		dc.w	_name-_base		;ws_name
 		dc.w	_copy-_base		;ws_copy
 		dc.w	_info-_base		;ws_info
@@ -90,7 +100,7 @@ _expmem		dc.l	$77000+$b000		;ws_ExpMem
 .config	dc.b	"BW;"
 	dc.b	"C1:B:Save Game Configuration;"
 	dc.b	"C2:B:Save Highscores;"
-	dc.b	"C3:B:change 2P keys;"
+	dc.b	"C3:B:change 2P keys ZX to AS;"
 	dc.b	0
 	CNOP	0,2
 
@@ -103,22 +113,39 @@ _expmem		dc.l	$77000+$b000		;ws_ExpMem
 	ENDC
 	ENDC
 
-_name		dc.b	"Lotus Turbo Challenge II",0
+
+DECL_VERSION:MACRO
+	dc.b	"1.13"
+	IFD BARFLY
+		dc.b	" "
+		INCBIN	"T:date"
+	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
+	ENDC
+	ENDM
+	
+_name		dc.b	"Lotus Turbo Challenge 2"
+			IFD		CHIP_ONLY
+			dc.b	" (CHIP/DEBUG mode)"
+			ENDC
+			dc.b	0
 _copy		dc.b	"1991 Magnetic Fields Ltd., Gremlin Ltd.",0
 _info		dc.b	"Installed and fixed by Wepl & StingRay",10
-			dc.b	"A1200 Keyboard fix by JOTD",10
-		dc.b	"Version 1.13 "
-		IFD	BARFLY
-		INCBIN	"T:date"
-		ELSE
-		dc.b	"(xx.06.2024)"
-		ENDC
+			dc.b	"A1200 Keyboard fix by JOTD",10,10
+		dc.b	"Version "
+		DECL_VERSION
 		dc.b	-1
 		dc.b	"Greetings to Mr.Larmer,",10
 		dc.b	"Harry and Wolfgang Unger",0
 _cfg		dc.b	"config",0
 _highs		dc.b	"highs",0
 _hightext	dc.b	"  all time best scores  "
+
+	dc.b	"$","VER: slave "
+	DECL_VERSION
+	dc.b	10,0	
 	EVEN
 
 ;============================================================================
@@ -128,6 +155,11 @@ _start	;	A0 = resident loader
 		move.l	a0,(_resload)			;save for later use
 		move.l	a0,a2
 
+		IFD	CHIP_ONLY
+		lea		_expmem(pc),a0
+		move.l	#$80000,(a0)
+		ENDC
+	
 		lea	(_tags,pc),a0
 		jsr	(resload_Control,a2)
 
@@ -210,20 +242,29 @@ _v14		move.l	(_expmem,pc),d0
 .cpy		move.l	(a0)+,(a1)+
 		dbf	d0,.cpy
 
-		patch	$bb6,_load
-		patch	$1138,_gfx1			;gfx einschlag
-		ret	$16bc.w				;protection
-		clr.b	$1188.w				;bad clist
-
-		move.w	#$4E75,$AD6.w			;track0
-		move.w	#$4E75,$AFE.w			;motoron
-		move.w	#$4E75,$B2E.w			;motoroff
-
-		patch	$11BC,Decrunch
-
-		move.b	#$60,$16A8.w			;skip check display mode
-
+		lea		pl_v14(pc),a0
+		sub.l	a1,a1
+		jsr	(resload_Patch,a2)
+		
+	
 		jmp	$a1c.w
+
+pl_v14:
+	PL_START
+	PL_P	$bb6,_load
+	PL_P	$1138,_gfx1			;gfx einschlag
+	PL_R	$16bc				;protection
+	PL_CB	$1188				;bad clist
+
+	PL_R	$AD6			;track0
+	PL_R	$AFE			;motoron
+	PL_R	$B2E			;motoroff
+
+	PL_P	$11BC,Decrunch
+
+	PL_B	$16A8,$60			;skip check display mode
+	PL_END
+
 
 ;--------------------------------
 
@@ -327,22 +368,14 @@ _savecode	move.l	(2,a0),a2
 		bcc.b	.cpy
 		rts
 
+; + F7A2: compare to space cmp.w #$0040,(a3,$2fb4) == $0008afb4 [ffe0]
+
 ;--------------------------------
 
 _v1_main	bsr.b	_savecode
-
+		
 		move.l	a0,a1
 
-		move.l	(_c1,pc),d0
-		beq.b	.c1
-		patchs	$1ab0(a1),_cfgsave
-.c1		move.l	(_c2,pc),d0
-		beq.b	.c2
-		patchs	$2a2a(a1),_highsave
-.c2		move.l	(_wb,pc),d0
-		beq.b	.wb
-		patchs	$1d40(a1),_buttonwait
-.wb
 		
 	;	skip	$132-$d4,$728d4			;exp mem check (no exp mem)
 	;	move.w	#$604A,$728DE			;ext mem check (1mb chip)
@@ -353,9 +386,18 @@ _v1_main	bsr.b	_savecode
 		jmp	(resload_Patch,a2)
 
 .pl	PL_START
+	PL_IFBW
+	PL_PS	$1d40,_buttonwait
+	PL_ENDIF
+	PL_IFC2
+	PL_PS	$1ab0,_cfgsave
+	PL_ENDIF
+	PL_IFC1
+	PL_PS	$2a2a,_highsave
+	PL_ENDIF
 	PL_S	$102,$158-$102				;exp mem check (512k fast)
 	PL_PS	$26e,_init
-	PL_P	$2ba,_flush_a4
+	PL_P	$2ba,_jump_exp_v1
 	PL_S	$165c,$1706-$165c			;skip protection check
 	PL_PS	$18a0,_specswait
 	PL_PA	$1c06,SubGame
@@ -1467,7 +1509,7 @@ _v23		move.l	(a7),a1
 	PL_W	$fc,$207c				;movea.l #,a0
 	PL_S	$102,$15c-$102				;exp mem check
 	PL_PS	$272,_init2
-	PL_P	$2be,_flush_a4
+	PL_P	$2be,_jump_exp_v2
 	PL_PS	$182c,_specswait2
 	PL_PA	$1b84,SubGame
 	PL_PS	$2bd4,_highfix
@@ -1478,13 +1520,49 @@ _v23		move.l	(a7),a1
 	PL_PS	$2d90,CheckQuit
 	PL_END
 
-_flush_a4	bsr	_flushcache
+_jump_exp_v1
+	movem.l	d0-d1/a0-a2,-(a7)
+	move.l	a4,a1
+	move.l	_resload.w,a2	
+	lea		pl_prog_v1(pc),a0
+	jsr	resload_Patch(a2)
+	movem.l	(a7)+,d0-d1/a0-a2
+	jmp	(a4)
+_jump_exp_v2
+	movem.l	d0-d1/a0-a2,-(a7)
+	move.l	a4,a1
+	move.l	_resload.w,a2	
+	lea		pl_prog_v1(pc),a0
+	jsr	resload_Patch(a2)
+	blitz
+	movem.l	(a7)+,d0-d1/a0-a2
+		jmp	(a4)
+_jump_exp_v5
+	movem.l	d0-d1/a0-a2,-(a7)
+	move.l	a4,a1
+	move.l	_resload.w,a2	
+	lea		pl_prog_v1(pc),a0
+	jsr	resload_Patch(a2)
+	blitz
+	movem.l	(a7)+,d0-d1/a0-a2
 		jmp	(a4)
 
 _intack		move.w	#$40,($9c,a6)
 		tst.w	(2,a6)
 		rte
 
+key_left = $20
+key_right = $21
+
+pl_prog_v1:
+	PL_START
+	PL_IFC3
+	PL_B	$f69e-$d27e+3,key_left	; Z => A
+	PL_B	$f6a4-$d27e+3,key_right	; X => S
+	PL_B	$f6bc-$d27e+3,key_left+$80	; Z => A (release)
+	PL_B	$f6c2-$d27e+3,key_right+$80	; X => S (release)
+	PL_ENDIF
+	PL_END
 ;--------------------------------
 
 _v3		lea	$200.w,a0			;destination
@@ -1724,7 +1802,7 @@ _pl5_50000	PL_START
 		PL_S	$1616,$e-6			;skip trap #0
 		;the following is the main at offset $1800
 		PL_PS	$1a6e,_init
-		PL_P	$1aba,_flush_a4
+		PL_P	$1aba,_jump_exp_v5
 		PL_S    $2e5c,$1706-$165c	        ;skip protection check
 		PL_PS	$30a0,_specswait
 		PL_PA	$3406,SubGame
