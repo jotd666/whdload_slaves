@@ -1,7 +1,7 @@
 ;*---------------------------------------------------------------------------
 ;  :Program.	Lotus2.asm
-;  :Contents.	Slave for "Lotus II" from Gremlin
-;  :Author.	Wepl, StingRay
+;  :Contents.	Slave for "Lotus 2" from Gremlin
+;  :Author.	Wepl, StingRay, JOTD
 ;  :Original.	v1 original 1	harry
 ;		v2 Amiga Fun	ungi
 ;		v3 Trilogy	Juergen Urbanek <J.Urbanek@t-online.de>
@@ -9,28 +9,29 @@
 ;		v5 NTSC ReCrack	Christopher Lakatos <ljc@sympatico.ca>
 ;				Chris Vella
 ;  :Version.	$Id: Lotus2.asm 1.12 2010/03/09 21:07:36 wepl Exp wepl $
-;  :History.	12.10.98
-;		21.07.99 compatibility with whdload v10
-;		21.09.99 version 1.2 finished
-;		16.09.99 support for v3 (lotus trilogy) added
-;		29.09.99 caches disabled because csppc
-;		22.06.00 support for v4 added
-;		15.01.01 snoop and highscores fixed
-;		18.02.01 one cache bug fixed
-;		08.05.01 clist bug in v2 fixed
-;		14.07.01 remaining snoop bugs removed
-;		07.08.03 bitter int acknowledge bug fixed
-;		22.02.07 support for v5 added
-;		27.02.07 waitvb hang on Elan spec screen fixed on NTSC
-;		17.02.10 call _highinit* also if custom2 is not set and
+;  :History.	12.10.1998
+;		21.07.1999 compatibility with whdload v10
+;		21.09.1999 version 1.2 finished
+;		16.09.1999 support for v3 (lotus trilogy) added
+;		29.09.1999 caches disabled because csppc
+;		22.06.2000 support for v4 added
+;		15.01.2001 snoop and highscores fixed
+;		18.02.2001 one cache bug fixed
+;		08.05.2001 clist bug in v2 fixed
+;		14.07.2001 remaining snoop bugs removed
+;		07.08.2003 bitter int acknowledge bug fixed
+;		22.02.2007 support for v5 added
+;		27.02.2007 waitvb hang on Elan spec screen fixed on NTSC
+;		17.02.2010 call _highinit* also if custom2 is not set and
 ;			 with that half the scores too
-;		15.08.16 StingRay: source made 100% pc-relative and compatible
+;		15.08.2016 StingRay: source made 100% pc-relative and compatible
 ;			 with ASM-One/Pro, minor code optimising
 ;			 68000 quitkey support for v1 added
-;		16.08.16 68000 quitkey support for the 4 other versions added
+;		16.08.2016 68000 quitkey support for the 4 other versions added
 ;			 more code optimising, still nothing major
 ;			 WHDLoad v17+ features used (config)
-;		30.05.22 another Lotus Trilogy version supported
+;		30.05.2022 another Lotus Trilogy version supported
+;		12.06.2024 keyboard remap for A1200 keyboard, slave refactored
 ;  :Requires.	-
 ;  :Copyright.	Public Domain
 ;  :Language.	68000 Assembler
@@ -53,7 +54,7 @@
 	ENDC
 
 
-CHIP_ONLY
+;CHIP_ONLY
 	IFD	CHIP_ONLY
 CHIPMEMSIZE = $80000+$77000+$b000
 EXPMEMSIZE = 0
@@ -208,8 +209,6 @@ _tags		dc.l	WHDLTAG_CUSTOM1_GET
 _c1		dc.l	0
 		dc.l	WHDLTAG_CUSTOM2_GET
 _c2		dc.l	0
-		dc.l	WHDLTAG_BUTTONWAIT_GET
-_wb		dc.l	0
 		dc.l	0
 
 ;============================================================================
@@ -424,21 +423,11 @@ CheckQuit
 
 ;--------------------------------
 
-_v4_main	bsr	_savecode
+_v4_main	
+	
+		bsr	_savecode
 
 		move.l	a0,a1
-
-		move.l	(_c1,pc),d0
-		beq.b	.c1
-		patchs	$1ad4(a1),_cfgsave
-.c1		move.l	(_c2,pc),d0
-		beq.b	.c2
-		patchs	$2a4e(a1),_highsave
-.c2		move.l	(_wb,pc),d0
-		beq.b	.wb
-		patchs	$1d64(a1),_buttonwait
-.wb
-		
 		move.l	(_expmem,pc),($fe,a1)		;exp mem check (512k fast)
 		
 		lea	.pl(pc),a0
@@ -446,8 +435,19 @@ _v4_main	bsr	_savecode
 		jmp	(resload_Patch,a2)
 
 .pl	PL_START
+	PL_IFBW
+	PL_PS	$1d64,_buttonwait
+	PL_ENDIF
+	PL_IFC2
+	PL_PS	$1ad4,_cfgsave
+	PL_ENDIF
+	PL_IFC1
+	PL_PS	$2a4e,_highsave
+	PL_ENDIF
+
 	PL_S	$102,$158-$102				;exp mem check (512k fast)
 	PL_PS	$26e,_init
+	PL_P	$a6e-$7b4,_jump_exp_v4
 	PL_S	$168e,$1738-$168e			;skip protection check
 	PL_PS	$18d2,_specswait
 	PL_PA	$1c2a,SubGame
@@ -1490,22 +1490,22 @@ _v2		lea	$200,a0				;destination
 _v23		move.l	(a7),a1
 		
 		move.l	(_expmem,pc),($fe,a1)
-		
-		move.l	(_c1,pc),d0
-		beq.b	.c1
-		patchs	$1a2e(a1),_cfgsave2
-.c1		move.l	(_c2,pc),d0
-		beq.b	.c2
-		patchs	$29a8(a1),_highsave2
-.c2		move.l	(_wb,pc),d0
-		beq	.wb
-		patchs	$1cbe(a1),_buttonwait2
-.wb
+
 		lea	.pl(pc),a0
 		move.l	_resload,a2
 		jmp	(resload_Patch,a2)
 
 .pl	PL_START
+	PL_IFBW
+	PL_PS	$1cbe,_buttonwait
+	PL_ENDIF
+	PL_IFC2
+	PL_PS	$1a2e,_cfgsave
+	PL_ENDIF
+	PL_IFC1
+	PL_PS	$29a8,_highsave
+	PL_ENDIF
+
 	PL_W	$fc,$207c				;movea.l #,a0
 	PL_S	$102,$15c-$102				;exp mem check
 	PL_PS	$272,_init2
@@ -1521,6 +1521,7 @@ _v23		move.l	(a7),a1
 	PL_END
 
 _jump_exp_v1
+_jump_exp_v5
 	movem.l	d0-d1/a0-a2,-(a7)
 	move.l	a4,a1
 	move.l	_resload.w,a2	
@@ -1532,20 +1533,19 @@ _jump_exp_v2
 	movem.l	d0-d1/a0-a2,-(a7)
 	move.l	a4,a1
 	move.l	_resload.w,a2	
-	lea		pl_prog_v1(pc),a0
+	lea		pl_prog_v2(pc),a0
 	jsr	resload_Patch(a2)
-	blitz
 	movem.l	(a7)+,d0-d1/a0-a2
-		jmp	(a4)
-_jump_exp_v5
+	jmp	(a4)
+_jump_exp_v4
 	movem.l	d0-d1/a0-a2,-(a7)
 	move.l	a4,a1
 	move.l	_resload.w,a2	
-	lea		pl_prog_v1(pc),a0
+	lea		pl_prog_v4(pc),a0
 	jsr	resload_Patch(a2)
-	blitz
 	movem.l	(a7)+,d0-d1/a0-a2
-		jmp	(a4)
+	jmp	(a4)
+
 
 _intack		move.w	#$40,($9c,a6)
 		tst.w	(2,a6)
@@ -1554,6 +1554,7 @@ _intack		move.w	#$40,($9c,a6)
 key_left = $20
 key_right = $21
 
+; V1 and V5
 pl_prog_v1:
 	PL_START
 	PL_IFC3
@@ -1563,6 +1564,28 @@ pl_prog_v1:
 	PL_B	$f6c2-$d27e+3,key_right+$80	; X => S (release)
 	PL_ENDIF
 	PL_END
+	
+pl_prog_v2:
+	PL_START
+	PL_IFC3
+	PL_B	$f5fc-$d294+3,key_left	; Z => A
+	PL_B	$f602-$d294+3,key_right	; X => S
+	PL_B	$f61a-$d294+3,key_left+$80	; Z => A (release)
+	PL_B	$f620-$d294+3,key_right+$80	; X => S (release)
+	PL_ENDIF
+	PL_END
+	
+pl_prog_v4:
+	PL_START
+	PL_IFC3
+	PL_B	$f690-$d27e+3,key_left	; Z => A
+	PL_B	$f696-$d27e+3,key_right	; X => S
+	PL_B	$f6ae-$d27e+3,key_left+$80	; Z => A (release)
+	PL_B	$f6b4-$d27e+3,key_right+$80	; X => S (release)
+	PL_ENDIF
+	PL_END
+	
+
 ;--------------------------------
 
 _v3		lea	$200.w,a0			;destination
@@ -1779,19 +1802,19 @@ _v5		lea	$60000,a0			;destination
 
 		move.l	(_expmem,pc),($18fe,a3)		;exp mem check (512k fast)
 
-		move.l	(_c1,pc),d0
-		beq.b	.c1
-		patchs	$1800+$1ab0(a3),_cfgsave
-.c1		move.l	(_c2,pc),d0
-		beq.b	.c2
-		patchs	$1800+$2a2a(a3),_highsave
-.c2		move.l	(_wb,pc),d0
-		beq.b	.wb
-		patchs	$1800+$1d40(a3),_buttonwait
-.wb
 		jmp	$5f10c
 
 _pl5_50000	PL_START
+		PL_IFBW
+		PL_PS	$1800+$1d40,_buttonwait
+		PL_ENDIF
+		PL_IFC2
+		PL_PS	$1800+$1ab0,_cfgsave
+		PL_ENDIF
+		PL_IFC1
+		PL_PS	$1800+$2a2a,_highsave
+		PL_ENDIF
+
 		PL_R	$8D6				;track0
 		PL_R	$8FE				;motoron
 		PL_R	$92E				;motoroff

@@ -64,7 +64,7 @@ _expmem
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"2.2"
+	dc.b	"2.3"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -133,6 +133,7 @@ start:
 	move.W	#$06d5,D1		;068: 323c06d5
 	bra.b	.loadboot
 .sector_6d7:
+	move.W	#$06d7,D1		;068: 323c06d5
 	move.W	#$06d7,D1		;068: 323c06d5
 
 .loadboot
@@ -433,7 +434,7 @@ pl_main_fr:
 	PL_P	$13720,rn_diskload
 	PL_P	$dc58,set_current_savedisk_name
 	PL_P	$dc58+6,get_current_savedisk_size
-	PL_W	$dd04,$FF5A
+	PL_W	$dd02+2,$FF5A
     PL_NOP  $67A,6      ; remove call to password check program
 	PL_PSS	$8E6,active_dbf_loop_1,6
 	PL_PSS	$d332,active_dbf_loop_2,6
@@ -454,7 +455,7 @@ pl_main_en:
 	PL_P	$13730,rn_diskload
 	PL_P	$DC66,set_current_savedisk_name
 	PL_P	$DC6C,get_current_savedisk_size
-	PL_W	$DD12,$FF5A
+	PL_W	$DD10+2,$FF5A
     PL_NOP  $67A,6      ; remove call to password check program
 	PL_PSS	$8e6,active_dbf_loop_1,6	;MOVE.W	#$1388,D6
 	PL_PSS	$d340,active_dbf_loop_2,6	;MOVE.W	#$03e8,D0
@@ -474,7 +475,7 @@ pl_main_sp:
 	PL_P	$153fc,rn_diskload
 	PL_P	$f806,set_current_savedisk_name
 	PL_P	$f80c,get_current_savedisk_size
-	PL_W	$f8bc,$FF50 ; branch a little after
+	PL_W	$f8ba+2,$FF50 ; branch a little after
     PL_NOP  $958,6      ; remove call to password check program
     PL_PS   $90C,emulate_copylock_sp
 	PL_PSS	$c02,active_dbf_loop_1,6	;MOVE.W	#$1388,D6
@@ -500,7 +501,7 @@ pl_main_de:
 	PL_P	$1371c,rn_diskload
 	PL_P	$dc54,set_current_savedisk_name
 	PL_P	$dc5a,get_current_savedisk_size
-	PL_W	$dcfe,$FF5A
+	PL_W	$dcfe+2,$FF5A
 	PL_NOP	$676,6      ; remove call to password check program
 	PL_PSS	$8e2,active_dbf_loop_1,6
 	PL_PSS	$d32e,active_dbf_loop_2,6
@@ -536,7 +537,7 @@ jump_c000_en:
 decrunch
 ; this decrunch code is copied from french version
 	MOVEM.L	D1-D7/A0-A6,-(A7)	;941f6: 48e77ffe
-	MOVEA.L	A0,A1			;941fa: 2248
+	MOVEA.L	A0,A1			;941fa: 2248 forces in-place
 	BSR.W	.lab_0B2C		;941fc: 6100015a
 	CMP.L	#$524e4301,D0		;94200: b0bc524e4301
 	BNE.S	.lab_0B14		;94206: 6654

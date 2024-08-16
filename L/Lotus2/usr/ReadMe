@@ -8,7 +8,7 @@
  CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
  PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
- That install applies to "Lotus Turbo Challenge II" © 1991 Magnetic Fields
+ That install applies to "Lotus Turbo Challenge 2" © 1991 Magnetic Fields
  Ltd. and Gremlin Ltd.
  Supported is the original release, the version from "Lotus Trilogy", the
  Amiga Fun rerelease and the North America release (which is in real a
@@ -22,14 +22,16 @@
  It can be quit by pressing Help (key can be changed with Tooltype
  "QuitKey=").
 
- If you have problems with this installation please try first to get a newer
- version of this package from the WHDLoad's WWW-Page. If that doesn't help try
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
  some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
- that also doesn't succeeds inform the author via the Bug-Report-Form which
- can be accessed on the WHDLoad's WWW-Page.
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
 
  For full WHDLoad package, other installs and updates refer to:
-	http://www.whdload.org/
+	http://www.whdload.de/
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
@@ -42,6 +44,8 @@
    changed and loaded on startup
  - setting Tooltype "Custom2=1" the highscores will be saved automatically
    after a player has entered it
+ - setting Tooltype "Custom3=1" the Z+X keys will be replaced by A+S so A1200
+   users can play with the keyboard as player 2 (else there's a keyboard conflict)
  - manual protection from the original release removed
  - some bugs removed and delays inserted
 
@@ -53,40 +57,52 @@
  Thanks to Mr.Larmer for the old Lotus2-Install from which the decruncher
  source and some infos has been used and to Harry and Ungi for images and
  testing.
+ 
+ Version 1.13 (12.06.2024) done by JOTD:
+ - option to remap 2P keys to A and S (A1200 keyboard limitations)
 
- Wepl in August 1999.
- StingRay in August 2016/May 2022.
+ Version 1.12 (30.05.2022) done by StingRay:
+ - support for another Lotus Trilogy CD version added (issue #5648)
+ - new install script
 
- Version 1.3 (16.09.1999)
- - support for the "Lotus Trilogy" version added
+ Version 1.11 (16.08.2016) done by StingRay:
+ - 68000 quitkey support added (Mantis #3531)
+ - WHDLoad v17+ features used (config)
 
- Version 1.4 (08.07.2000)
- - support for another version added
+ Version 1.10 (09.03.2010) done by Wepl:
+ - the scores are also halfed if Custom2 is not set now, thanks to
+   Retroplay for the report (issue #2244)
 
- Version 1.6 (18.02.2001)
- - highscores fixed, half score now to avoid overflow
- - no more Snoop problems
-
- Version 1.8 (08.08.2003)
- - finally found the interrupt acknowledge problem, now works on all cpu's
-   with full caches
- - remaining snoop bugs fixed
-
- Version 1.9 (22.02.2007)
+ Version 1.9 (22.02.2007) done by Wepl:
  - support for the US version added (this version is in real the Company
    crack with the crack messages removed)
    thanks to Christopher Lakatos and Chris Vella for the image
  - the delay on car specs screen has been fixed to not hang when NTSC
    display is active (Richard Williams)
 
- Version 1.10 (09.03.2010)
- - the scores are also halfed if Custom2 is not set now, thanks to
-   Retroplay for the report (issue #2244)
+ Version 1.8 (08.08.2003) done by Wepl:
+ - finally found the interrupt acknowledge problem, now works on all cpu's
+   with full caches
+ - remaining snoop bugs fixed
 
- Version 1.11 (16.08.2016) done by StingRay:
- - 68000 quitkey support added (Mantis #3531)
- - WHDLoad v17+ features used (config)
+ Version 1.6 (18.02.2001) done by Wepl:
+ - highscores fixed, half score now to avoid overflow
+ - no more Snoop problems
 
- Version 1.12 (30.05.2022) done by StingRay:
- - support for another Lotus Trilogy CD version added (issue #5648)
- - new install script
+ Version 1.4 (08.07.2000) done by Wepl:
+ - support for another version added
+
+ Version 1.3 (16.09.1999) done by Wepl:
+ - support for the "Lotus Trilogy" version added
+
+ Wepl in August 1999.
+ StingRay in August 2016/May 2022.
+ JOTD in June 2024
+ 
+
+
+
+
+
+
+ 

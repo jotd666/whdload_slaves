@@ -53,8 +53,11 @@
 		dc.b	"$VER: "
 _text		dc.b	"Lotus2 Imager",10
 		dc.b	"Done by Wepl, Version 1.1 "
+	IFD	BARFLY
 	DOSCMD	"WDate >T:date"
 	INCBIN	"T:date"
+	
+	ENDC
 		dc.b	".",0
 	EVEN
 

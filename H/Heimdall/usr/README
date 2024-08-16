@@ -29,7 +29,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 2.2 (13.04.2020) done by JOTD:
+ version 2.3 (16.08.2024) done by JOTD:
+ - fixed crash when saving on german version (issue #0006531)
+
  - fixed crash at startup on real machines (WTF??) (issue #0004471)
  - relocated decruncher in fast memory for better loading speed
  - improved quitkey on 68000
