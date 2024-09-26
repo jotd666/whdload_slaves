@@ -1,25 +1,7 @@
 ;*---------------------------------------------------------------------------
-;  :Program.	TheBluesBrothers.asm
-;  :Contents.	Slave for "The Blues Brothers" from Titus
-;  :Author.	Mr.Larmer of Wanted Team, StingRay
-;  :History.	23.06.01.
-;       2019 (JOTD)
-;       - added CD32 joypad controls
-;       - added option to jump with second button
-;		21.11.17 (StingRay)
-;		- byte write to volume register fixed
-;		- default quitkey changed to Del
-;		- main.prg is now loaded directly, loader stuff removed
-;		- patch now uses real files
-;		- illegal copperlist entry fixed
-;		- interrupts fixed
-;		22.11.17
-;		- protection check removal simplified
-;		- 68000  quitkey support
-;		23.11.17
-;		- trainer options added
-;		- WHDLoad v17+ needed now (config)
-;		- sample player fixed (took a while!)
+;  :Program.	TapperHD.s
+;  :Contents.	Slave for "Tapper" from Old Bob
+;  :Author.	JOTD
 ;  :Requires.	-
 ;  :Copyright.	Public Domain
 ;  :Language.	68000 Assembler
@@ -75,12 +57,7 @@ _expmem		dc.l	0
 	dc.w	.config-HEADER	; ws_config
 
 
-.config	dc.b	"C1:X:Unlimited Lives:0;"
-	    dc.b	"C1:X:Unlimited Energy:1;"
-        dc.b    "C2:X:blue/second button jumps:0;"
-		dc.b	"C3:X:use disk.1 image instead of files:0;"
-        dc.b    "C4:L:Start level:The Department Store,The Warehouse,The Jail,The Sewer,The High Rises,The Gig;"
-	dc.b	0
+.config		dc.b	0
 
 ;============================================================================
 
@@ -99,7 +76,7 @@ DECL_VERSION:MACRO
 _data		dc.b	"data",0
 
 _name		dc.b	"Tapper",0
-_copy		dc.b	"2021 ??",0
+_copy		dc.b	"2023 Old Bob",0
 _info		dc.b	"adapted by JOTD",10,10
 		dc.b	"Version "
 		DECL_VERSION
