@@ -1,68 +1,79 @@
-; $Id: Install 1.19 2011/09/04 23:12:35 wepl Exp wepl $
+; $Id: Install 1.26 2014/04/09 01:53:32 wepl Exp wepl $
 
 (set #multiple-versions "")		;set to <> "" if there are multiple versions
-(set #version 3)			;set if no multiple versions 0=RawDIC 1=Patcher 2=DIC 3=Files 4=CD 5=SingleFile 6=Arcadia
+(set #version 0)			;set if no multiple versions 0=RawDIC 1=Patcher 2=DIC 3=Files 4=CD 5=SingleFile 6=Arcadia
 (set #sub-dir "data")			;sub directory containing data files
 (set #highs-file "highs")		;name of high scores file
 
 (set #readme-file "ReadMe")		;name of readme file
+(set #readme2-file "ReadMe2")		;name of second readme file
 (set #man-file "Manual")		;name of manual file
 (set #hint-file "Hints")		;name of hint file
 (set #sol-file "Solution")		;name of solution file
-(set #extra-file "")		;name of extra file
-(set #extra2-file "")		;name of second extra file
+(set #extra-file "Extra")		;name of extra file
+(set #extra2-file "Extra2")		;name of second extra file
 (set #extra3-file "Extra3")		;name of third extra file
-(set #reloc-file "dot.reloc")		;name of extra file
-(set #unreloc-file "dot.unreloc")		;name of second extra file
 (set #prefix @app-name)			;name of slave, directory
 (set #prefix-slave "")
 
 (set #ico_suffix_00 "inf")		;Icon suffixes (not all of these must exist)
 (set #ico_suffix_01 "magicwb")
 (set #ico_suffix_02 "romicon")
-(set #ico_suffix_03 "newicon")
-(set #ico_suffix_04 "newicon2")
-(set #ico_suffix_05 "newicon3")
-(set #ico_suffix_06 "newcfou")
-(set #ico_suffix_07 "colicon")
-(set #ico_suffix_08 "colicon2")
-(set #ico_suffix_09 "colicon3")
-(set #ico_suffix_10 "colexot")
-(set #ico_suffix_11 "colfrank")
-(set #ico_suffix_12 "colchris")
-(set #ico_suffix_13 "colcode")
-(set #ico_suffix_14 "colcfou")
-(set #ico_suffix_15 "colcfou2")
-(set #ico_suffix_16 "colzarkov")
-(set #ico_suffix_17 "colirek")
-(set #ico_suffix_18 "colirek2")
-(set #ico_suffix_19 "boxicon")
-(set #ico_suffix_20 "boxirek")
+(set #ico_suffix_03 "romirek")
+(set #ico_suffix_10 "newicon")
+(set #ico_suffix_11 "newicon2")
+(set #ico_suffix_12 "newicon3")
+(set #ico_suffix_13 "newexot")
+(set #ico_suffix_14 "newcfou")
+(set #ico_suffix_15 "newirek")
+(set #ico_suffix_16 "newirek2")
+(set #ico_suffix_20 "colicon")
+(set #ico_suffix_21 "colicon2")
+(set #ico_suffix_22 "colicon3")
+(set #ico_suffix_23 "colexot")
+(set #ico_suffix_24 "colfrank")
+(set #ico_suffix_25 "colchris")
+(set #ico_suffix_26 "colcode")
+(set #ico_suffix_27 "colcfou")
+(set #ico_suffix_28 "colcfou2")
+(set #ico_suffix_29 "colzarkov")
+(set #ico_suffix_30 "colirek")
+(set #ico_suffix_31 "colirek2")
+(set #ico_suffix_32 "colmura")
+(set #ico_suffix_40 "boxicon")
+(set #ico_suffix_41 "boxicon2")
+(set #ico_suffix_42 "boxirek")
 
 ;Icon descriptions (max 21 chars if you have > 9 entries, or 27 chars otherwise.
 ;These are renamed to "gamename.info" so no illegal characters like :/* etc
 ;		  "123456789012345678901234567"
 (set #ico_desc_00 "Normal")
-(set #ico_desc_01 "MagicWB Icon")
-(set #ico_desc_02 "RomIcon by JHZ")
-(set #ico_desc_03 "NewIcon by JHZ")
-(set #ico_desc_04 "NewIcon by StingRay 2")
-(set #ico_desc_05 "NewIcon by StingRay 3")
-(set #ico_desc_06 "NewIcon by CFou!")
-(set #ico_desc_07 "OS3.5 Icon")
-(set #ico_desc_08 "OS3.5 Icon 2")
-(set #ico_desc_09 "OS3.5 Icon 3")
-(set #ico_desc_10 "OS3.5 Icon by Exotica")
-(set #ico_desc_11 "OS3.5 Icon by Frank")
-(set #ico_desc_12 "OS3.5 Icon by Chris Vella")
-(set #ico_desc_13 "OS3.5 Icon by Codetapper")
-(set #ico_desc_14 "OS3.5 Icon by CFou!")
-(set #ico_desc_15 "OS3.5 Icon by CFou! 2")
-(set #ico_desc_16 "OS3.5 Icon by Dr.Zarkov")
-(set #ico_desc_17 "OS3.5 Icon by Irek")
-(set #ico_desc_18 "OS3.5 Icon by Irek 2")
-(set #ico_desc_19 "OS3.5 BoxIcon")
-(set #ico_desc_20 "OS3.5 BoxIcon by Irek")
+(set #ico_desc_01 "MagicWB")
+(set #ico_desc_02 "RomIcon")
+(set #ico_desc_03 "RomIcon Irek")
+(set #ico_desc_10 "NewIcon")
+(set #ico_desc_11 "NewIcon 2")
+(set #ico_desc_12 "NewIcon 3")
+(set #ico_desc_13 "NewIcon Exotica")
+(set #ico_desc_14 "NewIcon CFou!")
+(set #ico_desc_15 "NewIcon Irek")
+(set #ico_desc_16 "NewIcon Irek 2")
+(set #ico_desc_20 "OS3.5 Icon")
+(set #ico_desc_21 "OS3.5 Icon 2")
+(set #ico_desc_22 "OS3.5 Icon 3")
+(set #ico_desc_23 "OS3.5 Exotica")
+(set #ico_desc_24 "OS3.5 Frank")
+(set #ico_desc_25 "OS3.5 Chris Vella")
+(set #ico_desc_26 "OS3.5 Codetapper")
+(set #ico_desc_27 "OS3.5 CFou!")
+(set #ico_desc_28 "OS3.5 CFou! 2")
+(set #ico_desc_29 "OS3.5 Dr.Zarkov")
+(set #ico_desc_30 "OS3.5 Irek")
+(set #ico_desc_31 "OS3.5 Irek 2")
+(set #ico_desc_32 "OS3.5 Murakami")
+(set #ico_desc_40 "OS3.5 BoxIcon")
+(set #ico_desc_41 "OS3.5 BoxIcon 2")
+(set #ico_desc_42 "OS3.5 BoxIcon Irek")
 
 ;---------------------------------------------------------------------
 ; Which version does the user want to install? This routine doesn't need
@@ -82,12 +93,12 @@
 	  ; because the number of the #version remains unchanged
 	  ;
 	  (choices
-		"OCS version)"
-		"AGA Version"
-		""
-		""
-		""
-		""
+		"Original release (RawDIC)"
+		"Alternate version (Patcher)"
+		"Budget re-release (DIC)"
+		"Hit-Squad version (Files)"
+		"CD/CDTV/CD³² version (Files)"
+		"Defjam compact (Single File)"
 	  )
           (help @askchoice-help)
         )
@@ -99,21 +110,23 @@
       ; and icon. If you set #prefix-slave it only changes the slave name.
       ; You may also set the #sub-dir here if this is not required with all
       ; versions
-      ;                                                                         §
+      ;
       (select #version
-	; 0 = OCS
+	; 0 = RawDIC
         ("")
-	; 1 = AGA
-	(set #prefix-slave ("%s%s" #prefix "AGA"))
+	; 1 = Patcher
+        ("")
 	; 2 = DIC
         ("")
 	; 3 = Files
-	(set #prefix ("%s%s" #prefix "AGA"))
+        ("")
+	;(set #prefix ("%s%s" #prefix "AGA"))
 	; 4 = CD Files
-	(
-	  (set #prefix-slave (cat #prefix "CDTV"))
-	  (set #sub-dir "data")
-	)
+        ("")
+	;(
+	;  (set #prefix-slave (cat #prefix "CDTV"))
+	;  (set #sub-dir "data")
+	;)
 	; 5 = Single File
 	("")
       )
@@ -126,8 +139,8 @@
 
 (procedure P_MakeImages
   (select #version
-    (				;----- 0 = RawDIC  -----
-      (set #last-file "06")		;last file the imager should create
+    (				;----- 0 = RawDIC -----
+      (set #last-file "sound")		;last file the imager should create
       (copyfiles
         (help @copyfiles-help)
         (source ("%s.ISlave" #prefix))
@@ -140,23 +153,22 @@
         ("")
         (abort "Disk imaging was not successful!\nRawDIC was unable to create all needed files!")
       )
-
-	(set #file (tackon #dest "00"))
-	(P_XFDDecrunch)
-
     )
 
-    (				;----- 1 = AGA  -----
-      (set #AD_disk "(C) D. Parsons 1996")
-      (set #AD_diskname ("Og"))	;this optional, default is #AD_disk
-      (P_AskDisk)
+    (				;----- 1 = Patcher -----
+      (set #last-file "Disk.1")		;last file the imager should create
       (copyfiles
         (help @copyfiles-help)
-        (source ("%s:" #AD_disk))
+        (source ("%s.imager" #prefix))
         (dest #dest)
-	(pattern "(OgAGA)")
       )
-
+      (P_AskSrcDrvRaw)
+      (working "calling Patcher...")
+      (run ("CD \"%s\"\nPatcher -p%s.imager -s%s\nDelete %s.imager Quiet" #dest @app-name #CI_drive @app-name))
+      (if (exists (tackon #dest #last-file))
+        ("")
+        (abort "Disk imaging was not successful!\nThe Patcher was unable to create all needed files!")
+      )
     )
 
     (				;----- 2 = DIC (Disk Images) -----
@@ -166,30 +178,89 @@
       (set #CI_disknum 1)
       ;(set #CI_diskname ("%s Disk %ld" @app-name #CI_disknum))
       (set #CI_diskname ("%s" @app-name))
-      (set #CI_disklen 901120)
+      (set #CI_disklen 236544)
       (set #CI_skiptrk "")
       (P_CreateImage)
-
-      ;(set #CI_disknum 2)
-      ;(set #CI_diskname ("%s Disk %ld" @app-name #CI_disknum))
-      ;(P_CreateImage)
 
 
     )
 
     (				;----- 3 = DOS (Files) -----
 
-
-      (set #AD_disk "DOT-TJC-V1cCOMd2")
-      (set #AD_diskname "Days of Thunder")	;this optional, default is #AD_disk
+      ;if the disk can be requested by the volume name:
+      (set #AD_disk "cf2-1")
+      (set #AD_diskname "Disk 1")	;this optional, default is #AD_disk
       (P_AskDisk)
       (copyfiles
         (help @copyfiles-help)
         (source ("%s:" #AD_disk))
         (dest #dest)
-	(pattern "~(s|#?.info|loader)")
+	(pattern "~(disk1|mapm#?|s|cf2.rel|ssboot)")
       )
 
+      ;if the disk can be identified by a file on it:
+      (set #AD_filereq "disk1")
+      (set #AD_diskname "Disk #2")	;required
+      (P_AskDisk)
+      (copyfiles
+        (help @copyfiles-help)
+        (source ("%s:" #AD_dev))
+        (dest #dest)
+	(pattern "~(disk2)")
+      )
+
+      ;if there is no way to identify the disk:
+      (set #AD_diskname "Disk Nª 3")
+      (P_AskDiskDev)
+      (copyfiles
+        (help @copyfiles-help)
+        (source ("%s:" #AD_drive))
+        (dest #dest)
+	(pattern "~(disk3|hi#?|ic#?|mapm1.spt|morp#?|ps#?|ra#?)")
+      )
+
+      ;extract files from an archive using XAD
+      (set #archive
+      	(askfile
+	  (prompt (cat "Where is the \"" @app-name "\" archive file located ?"))
+       	  (help @askfile-help)
+	  (default "NuxP2.lha")
+      	)
+      )
+      (set #files "~(NuxeliaP/readme.txt)")
+      (P_XADUnfile)
+      ;move/rename some contents
+      (rename (tackon #dest "NuxeliaP/BKG") (tackon #dest "BKG"))
+      (rename (tackon #dest "NuxeliaP/BOB") (tackon #dest "BOB"))
+      (rename (tackon #dest "NuxeliaP/GFX") (tackon #dest "GFX"))
+      (rename (tackon #dest "NuxeliaP/LEV") (tackon #dest "LEV"))
+      (rename (tackon #dest "NuxeliaP/SFX") (tackon #dest "SFX"))
+      (rename (tackon #dest "NuxeliaP/nuxeliap.exe") (tackon #dest "nuxeliap.exe"))
+      ;delete obsolete parts, remaining directories
+      (run ("Delete \"%s\" All Quiet Force" (tackon #dest "NuxeliaP")))
+
+      ;example: decompress a packed file
+      (set #file (tackon #dest "Enemy"))
+      (P_XFDDecrunch)
+
+      ;example: copy a file supplied with the install
+      (copyfiles
+        (help @copyfiles-help)
+	(source "supplied.file.name")
+        (dest #dest)
+      )
+
+      ;example: create additional save directory
+      (makedir
+	(tackon #dest "save")
+	(help @makedir-help)
+      )
+
+      ;example: set additional tooltype in the icon
+      (tooltype
+	(dest (tackon #dest-org #icon_newname))
+	(settooltype "Config" "C1:L:Language:default,deutsch,english,français")
+      )
 
     )
 
@@ -210,9 +281,9 @@
     )
 
     (				;----- 5 = DOS (Select a single file on an unknown disk) -----
-      (set #SF_prompt "Please select the Vaginal Massacre file")
-      (set #SF_default_filename "VaginalMassacre")
-      (set #SF_new_filename "VaginalMassacre")
+      (set #SF_prompt "Please select the xxxxxx file (xxxxxx bytes)")
+      (set #SF_default_filename "xxxxxx")
+      (set #SF_new_filename #SF_default_filename)
       (P_SelectFile)
       (if (= #SF_filename "")
         (abort ("Disk imaging was not successful!\nCould not locate the required file\n%s\n" #SF_default_filename))
@@ -223,9 +294,6 @@
         (dest #dest)
         (newname #SF_new_filename)
       )
-	(set #file (tackon #dest #SF_new_filename))
-	(P_XFDDecrunch)
-	
     )
 
     (				;----- 6 = Arcadia
@@ -280,16 +348,6 @@
 ; change the line(s) below to (set #icon_set_slave_preload "true")
 
 (procedure P_MakeIcons
-  ; Uncomment the following lines if you have a separate intro slave/icon
-  ;(set #icon_desc "intro")
-  ;(set #icon_prefix ("%s%s" #prefix #icon_desc))
-  ;(set #icon_newname ("%s 1MB" #prefix))
-  ;(set #icon_slave #prefix-slave)
-  ;(set #icon_set_slave_preload "")
-  ;(set #icon_set_deftool_stack "true")
-  ;(P_CopySlave)
-  ;(P_SelectIcon)
-
   (set #icon_desc "game")
   (set #icon_prefix #prefix)
   (set #icon_slave #prefix-slave)
@@ -297,6 +355,13 @@
   (set #icon_set_deftool_stack "true")
   (P_CopySlave)
   (P_SelectIcon)
+
+  ; Uncomment the following lines if you have a multiple slave/icon
+  ;(set #icon_desc "Extended RAM")
+  ;(set #icon_newname ("%s AGA" #prefix))
+  ;(set #icon_slave ("%sAGA" #prefix-slave))
+  ;(P_CopySlave)
+  ;(P_SelectIcon)
 )
 
 
@@ -341,6 +406,22 @@
 )
 
 ;----------------------------
+; unpack archive using XAD package
+; IN:  #archive - archive to extract (full path)
+;      #files   - files to extract, pattern possible
+; OUT: -
+
+(procedure P_XADUnfile
+  (set #program "xadunfile")
+  (set #package "XAD (aminet:util/pack/xadmaster.lha)")
+  (P_ChkRun_Package)
+  (if
+    (<> 0 (run ("%s \"%s\" DEST \"%s\" FILE \"%s\" NOABS >CON:///1000//CLOSE" #program #archive #dest #files)))
+    (abort ("\"%s\" has failed to decompress the archive \"%s\"" #program #archive))
+  )
+)
+
+;----------------------------
 ; variables to handle disk image files
 
 (set #DI_mode 9)
@@ -367,17 +448,18 @@
 	  "CAPS/SPS images or warp files (ipf,mfm,wrp,wwp,...)"
 	)
 	(help
-	  "To install from 'real floppy disks' you have to insert your physically disks into"
+	  "To install from 'real floppy disks' you have to insert your physical disks into"
 	  " any of your floppy drives.\n\n"
-	  "To install from 'disk images' you must have installed the DiskImage package"
-	  " (aminet:disk/misc/diskimage.lha). Required is DEVS:diskimage.device and the"
-	  " program DiskImageCtrl in the path.\n\n"
+	  "To install from 'disk images' you must have installed one of the DiskImage packages"
+	  " (aminet:disk/misc/diskimage.lha or aminet:disk/misc/diskimage.mk68-aos.tar.bz2)."
+	  " Required is DEVS:diskimage.device and the program DiskImageCtrl/MountDiskImage"
+	  " in the path.\n\n"
 	  "To install from 'warp files' you must additionally have installed"
-	  " the TrackWarp package (http://www.whdload.de/whdload/TrackWarp15.lha). Required"
+	  " the TrackWarp package (http://www.whdload.de/whdload/TrackWarp16.lha). Required"
 	  " is LIBS:trackwarp.library and the program tw2adf in the path. tw2adf must have"
 	  " version 1.1 or better.\n\n"
-	  "To install from 'CAPS images' you must additionally have installed the"
-	  " capsimage.device in DEVS: (http://www.caps-project.org/)\n\n"
+	  "To install from 'SPS/CAPS images' you must additionally have installed the"
+	  " capsimage.device in DEVS: (http://www.softpres.org/)\n\n"
 	  @askchoice-help
 	)
       )
@@ -414,10 +496,10 @@
 
 (procedure PDI_Insert
   (if
-    (<> 0 (run ("DiskImageCtrl Drive=%s: ReadOnly Image=\"%s\" >CON:///1000//CLOSE/AUTO" #DI_dev #DI_image)))
+    (<> 0 (run ("%s Drive=%s: %s Insert=\"%s\" >CON:///1000//CLOSE/AUTO" #DI_cmd #DI_dev #DI_ro #DI_image)))
     (abort
 	"Sorry, could not load the Image to the Device.\n"
-	"Make sure you have correctly installed aminet:disk/misc/diskimage.lha,\n"
+	"Make sure you have correctly installed " #DI_package ",\n"
 	"you have selected the right disk image\n"
 	"and there are enough free ressources."
     )
@@ -434,7 +516,7 @@
   (set #program "tw2adf")
   (set #package "TrackWarp (http://www.whdload.de/whdload/TrackWarp15.lha)")
   (P_ChkRun_Package)
-  (run ("DiskImageCtrl Drive=%s: Eject >CON:///1000//CLOSE/AUTO" #DI_dev))
+  (run ("%s Drive=%s: Eject >CON:///1000//CLOSE/AUTO" #DI_cmd #DI_dev))
   (if
     (<> 0 (run ("tw2adf \"%s\" %s Quiet Overwrite >CON:///1000//CLOSE/AUTO" #DI_image #DI_imagetmp)))
     (abort
@@ -453,9 +535,21 @@
 ; OUT: -
 
 (procedure PDI_Mount
-  (set #program "DiskImageCtrl")
-  (set #package "DiskImage (aminet:disk/misc/diskimage.lha)")
+  (if (= 37 (/ (getversion "DEVS:diskimage.device") 65536))
+    (
+      (set #program "DiskImageCtrl")
+      (set #DI_ro "ReadOnly")
+      (set #package "DiskImage (aminet:disk/misc/diskimage.lha)")
+    )
+    (
+      (set #program "MountDiskImage")
+      (set #DI_ro "WP")
+      (set #package "DiskImage (aminet:disk/misc/diskimage.mk68-aos.tar.bz2)")
+    )
+  )
   (P_ChkRun_Package)
+  (set #DI_cmd #program)
+  (set #DI_package #package)
   (if (getassign #DI_dev "d")
     ("")
     (
@@ -482,7 +576,7 @@
 	(<> 0 (run ("mount %s: FROM %s >CON:///1000//CLOSE/AUTO" #DI_dev #DI_mount)))
         (abort
 	  "Sorry, could not mount the Device " #DI_dev ":.\n"
-	  "Make sure you have correctly installed the package " #package "\n"
+	  "Make sure you have correctly installed the package " #DI_package "\n"
 	  "and there are enough free ressources and Unit #9 is not already used."
         )
       )
@@ -499,8 +593,9 @@
 (procedure PDI_Eject
   (if (or (= #DI_mode 1) (= #DI_mode 2))
     (if
-      (<> 0 (run ("DiskImageCtrl Drive=%s: Eject >CON:///1000//CLOSE/AUTO" #DI_dev)))
+      (<> 0 (run ("%s Drive=%s: Eject >CON:///1000//CLOSE/AUTO" #DI_cmd #DI_dev)))
       (message "Could not eject the Image from the Device.")
+      (run ("assign %s: DISMOUNT" #DI_dev))
     )
   )
 )
@@ -892,29 +987,35 @@
 
 (procedure P_SelectIcon
   (if #icon_newname ("") (set #icon_newname #icon_prefix))
-  (set #icon 0)
   (set #icnt 0)
-  (if (exists ("%s.%s" #icon_prefix #ico_suffix_20)) ((set #icon 20)(set #icnt (+ 1 #icnt))(set #icon_20 #ico_desc_20)) (set #icon_20 ""))
-  (if (exists ("%s.%s" #icon_prefix #ico_suffix_19)) ((set #icon 19)(set #icnt (+ 1 #icnt))(set #icon_19 #ico_desc_19)) (set #icon_19 ""))
-  (if (exists ("%s.%s" #icon_prefix #ico_suffix_18)) ((set #icon 18)(set #icnt (+ 1 #icnt))(set #icon_18 #ico_desc_18)) (set #icon_18 ""))
-  (if (exists ("%s.%s" #icon_prefix #ico_suffix_17)) ((set #icon 17)(set #icnt (+ 1 #icnt))(set #icon_17 #ico_desc_17)) (set #icon_17 ""))
-  (if (exists ("%s.%s" #icon_prefix #ico_suffix_16)) ((set #icon 16)(set #icnt (+ 1 #icnt))(set #icon_16 #ico_desc_16)) (set #icon_16 ""))
-  (if (exists ("%s.%s" #icon_prefix #ico_suffix_15)) ((set #icon 15)(set #icnt (+ 1 #icnt))(set #icon_15 #ico_desc_15)) (set #icon_15 ""))
-  (if (exists ("%s.%s" #icon_prefix #ico_suffix_14)) ((set #icon 14)(set #icnt (+ 1 #icnt))(set #icon_14 #ico_desc_14)) (set #icon_14 ""))
-  (if (exists ("%s.%s" #icon_prefix #ico_suffix_13)) ((set #icon 13)(set #icnt (+ 1 #icnt))(set #icon_13 #ico_desc_13)) (set #icon_13 ""))
-  (if (exists ("%s.%s" #icon_prefix #ico_suffix_12)) ((set #icon 12)(set #icnt (+ 1 #icnt))(set #icon_12 #ico_desc_12)) (set #icon_12 ""))
-  (if (exists ("%s.%s" #icon_prefix #ico_suffix_11)) ((set #icon 11)(set #icnt (+ 1 #icnt))(set #icon_11 #ico_desc_11)) (set #icon_11 ""))
-  (if (exists ("%s.%s" #icon_prefix #ico_suffix_10)) ((set #icon 10)(set #icnt (+ 1 #icnt))(set #icon_10 #ico_desc_10)) (set #icon_10 ""))
-  (if (exists ("%s.%s" #icon_prefix #ico_suffix_09)) ((set #icon 9) (set #icnt (+ 1 #icnt))(set #icon_09 #ico_desc_09)) (set #icon_09 ""))
-  (if (exists ("%s.%s" #icon_prefix #ico_suffix_08)) ((set #icon 8) (set #icnt (+ 1 #icnt))(set #icon_08 #ico_desc_08)) (set #icon_08 ""))
-  (if (exists ("%s.%s" #icon_prefix #ico_suffix_07)) ((set #icon 7) (set #icnt (+ 1 #icnt))(set #icon_07 #ico_desc_07)) (set #icon_07 ""))
-  (if (exists ("%s.%s" #icon_prefix #ico_suffix_06)) ((set #icon 6) (set #icnt (+ 1 #icnt))(set #icon_06 #ico_desc_06)) (set #icon_06 ""))
-  (if (exists ("%s.%s" #icon_prefix #ico_suffix_05)) ((set #icon 5) (set #icnt (+ 1 #icnt))(set #icon_05 #ico_desc_05)) (set #icon_05 ""))
-  (if (exists ("%s.%s" #icon_prefix #ico_suffix_04)) ((set #icon 4) (set #icnt (+ 1 #icnt))(set #icon_04 #ico_desc_04)) (set #icon_04 ""))
-  (if (exists ("%s.%s" #icon_prefix #ico_suffix_03)) ((set #icon 3) (set #icnt (+ 1 #icnt))(set #icon_03 #ico_desc_03)) (set #icon_03 ""))
-  (if (exists ("%s.%s" #icon_prefix #ico_suffix_02)) ((set #icon 2) (set #icnt (+ 1 #icnt))(set #icon_02 #ico_desc_02)) (set #icon_02 ""))
-  (if (exists ("%s.%s" #icon_prefix #ico_suffix_01)) ((set #icon 1) (set #icnt (+ 1 #icnt))(set #icon_01 #ico_desc_01)) (set #icon_01 ""))
-  (if (exists ("%s.%s" #icon_prefix #ico_suffix_00)) ((set #icon 0) (set #icnt (+ 1 #icnt))(set #icon_00 #ico_desc_00)) (set #icon_00 ""))
+  (if (exists ("%s.%s" #icon_prefix #ico_suffix_42)) (set #icon #ico_suffix_42 #icnt (+ 1 #icnt) #icon_42 #ico_desc_42) (set #icon_42 ""))
+  (if (exists ("%s.%s" #icon_prefix #ico_suffix_41)) (set #icon #ico_suffix_41 #icnt (+ 1 #icnt) #icon_41 #ico_desc_41) (set #icon_41 ""))
+  (if (exists ("%s.%s" #icon_prefix #ico_suffix_40)) (set #icon #ico_suffix_40 #icnt (+ 1 #icnt) #icon_40 #ico_desc_40) (set #icon_40 ""))
+  (if (exists ("%s.%s" #icon_prefix #ico_suffix_32)) (set #icon #ico_suffix_32 #icnt (+ 1 #icnt) #icon_32 #ico_desc_32) (set #icon_32 ""))
+  (if (exists ("%s.%s" #icon_prefix #ico_suffix_31)) (set #icon #ico_suffix_31 #icnt (+ 1 #icnt) #icon_31 #ico_desc_31) (set #icon_31 ""))
+  (if (exists ("%s.%s" #icon_prefix #ico_suffix_30)) (set #icon #ico_suffix_30 #icnt (+ 1 #icnt) #icon_30 #ico_desc_30) (set #icon_30 ""))
+  (if (exists ("%s.%s" #icon_prefix #ico_suffix_29)) (set #icon #ico_suffix_29 #icnt (+ 1 #icnt) #icon_29 #ico_desc_29) (set #icon_29 ""))
+  (if (exists ("%s.%s" #icon_prefix #ico_suffix_28)) (set #icon #ico_suffix_28 #icnt (+ 1 #icnt) #icon_28 #ico_desc_28) (set #icon_28 ""))
+  (if (exists ("%s.%s" #icon_prefix #ico_suffix_27)) (set #icon #ico_suffix_27 #icnt (+ 1 #icnt) #icon_27 #ico_desc_27) (set #icon_27 ""))
+  (if (exists ("%s.%s" #icon_prefix #ico_suffix_26)) (set #icon #ico_suffix_26 #icnt (+ 1 #icnt) #icon_26 #ico_desc_26) (set #icon_26 ""))
+  (if (exists ("%s.%s" #icon_prefix #ico_suffix_25)) (set #icon #ico_suffix_25 #icnt (+ 1 #icnt) #icon_25 #ico_desc_25) (set #icon_25 ""))
+  (if (exists ("%s.%s" #icon_prefix #ico_suffix_24)) (set #icon #ico_suffix_24 #icnt (+ 1 #icnt) #icon_24 #ico_desc_24) (set #icon_24 ""))
+  (if (exists ("%s.%s" #icon_prefix #ico_suffix_23)) (set #icon #ico_suffix_23 #icnt (+ 1 #icnt) #icon_23 #ico_desc_23) (set #icon_23 ""))
+  (if (exists ("%s.%s" #icon_prefix #ico_suffix_22)) (set #icon #ico_suffix_22 #icnt (+ 1 #icnt) #icon_22 #ico_desc_22) (set #icon_22 ""))
+  (if (exists ("%s.%s" #icon_prefix #ico_suffix_21)) (set #icon #ico_suffix_21 #icnt (+ 1 #icnt) #icon_21 #ico_desc_21) (set #icon_21 ""))
+  (if (exists ("%s.%s" #icon_prefix #ico_suffix_20)) (set #icon #ico_suffix_20 #icnt (+ 1 #icnt) #icon_20 #ico_desc_20) (set #icon_20 ""))
+  (if (exists ("%s.%s" #icon_prefix #ico_suffix_16)) (set #icon #ico_suffix_16 #icnt (+ 1 #icnt) #icon_16 #ico_desc_16) (set #icon_16 ""))
+  (if (exists ("%s.%s" #icon_prefix #ico_suffix_15)) (set #icon #ico_suffix_15 #icnt (+ 1 #icnt) #icon_15 #ico_desc_15) (set #icon_15 ""))
+  (if (exists ("%s.%s" #icon_prefix #ico_suffix_14)) (set #icon #ico_suffix_14 #icnt (+ 1 #icnt) #icon_14 #ico_desc_14) (set #icon_14 ""))
+  (if (exists ("%s.%s" #icon_prefix #ico_suffix_13)) (set #icon #ico_suffix_13 #icnt (+ 1 #icnt) #icon_13 #ico_desc_13) (set #icon_13 ""))
+  (if (exists ("%s.%s" #icon_prefix #ico_suffix_12)) (set #icon #ico_suffix_12 #icnt (+ 1 #icnt) #icon_12 #ico_desc_12) (set #icon_12 ""))
+  (if (exists ("%s.%s" #icon_prefix #ico_suffix_11)) (set #icon #ico_suffix_11 #icnt (+ 1 #icnt) #icon_11 #ico_desc_11) (set #icon_11 ""))
+  (if (exists ("%s.%s" #icon_prefix #ico_suffix_10)) (set #icon #ico_suffix_10 #icnt (+ 1 #icnt) #icon_10 #ico_desc_10) (set #icon_10 ""))
+  (if (exists ("%s.%s" #icon_prefix #ico_suffix_03)) (set #icon #ico_suffix_03 #icnt (+ 1 #icnt) #icon_03 #ico_desc_03) (set #icon_03 ""))
+  (if (exists ("%s.%s" #icon_prefix #ico_suffix_02)) (set #icon #ico_suffix_02 #icnt (+ 1 #icnt) #icon_02 #ico_desc_02) (set #icon_02 ""))
+  (if (exists ("%s.%s" #icon_prefix #ico_suffix_01)) (set #icon #ico_suffix_01 #icnt (+ 1 #icnt) #icon_01 #ico_desc_01) (set #icon_01 ""))
+  (if (exists ("%s.%s" #icon_prefix #ico_suffix_00)) (set #icon #ico_suffix_00 #icnt (+ 1 #icnt) #icon_00 #ico_desc_00) (set #icon_00 ""))
+  (if (= #icnt 0) (abort "no icon found"))
   (if (> #icnt 1) (
     (if (= #newstuff 1) (
       (set #icon-dir ("T:%s Icons" #icon_prefix))
@@ -925,12 +1026,6 @@
       (if #icon_01 ((set #icon-suf #ico_suffix_01) (set #icon-name #ico_desc_01) (P_Icon)))
       (if #icon_02 ((set #icon-suf #ico_suffix_02) (set #icon-name #ico_desc_02) (P_Icon)))
       (if #icon_03 ((set #icon-suf #ico_suffix_03) (set #icon-name #ico_desc_03) (P_Icon)))
-      (if #icon_04 ((set #icon-suf #ico_suffix_04) (set #icon-name #ico_desc_04) (P_Icon)))
-      (if #icon_05 ((set #icon-suf #ico_suffix_05) (set #icon-name #ico_desc_05) (P_Icon)))
-      (if #icon_06 ((set #icon-suf #ico_suffix_06) (set #icon-name #ico_desc_06) (P_Icon)))
-      (if #icon_07 ((set #icon-suf #ico_suffix_07) (set #icon-name #ico_desc_07) (P_Icon)))
-      (if #icon_08 ((set #icon-suf #ico_suffix_08) (set #icon-name #ico_desc_08) (P_Icon)))
-      (if #icon_09 ((set #icon-suf #ico_suffix_09) (set #icon-name #ico_desc_09) (P_Icon)))
       (if #icon_10 ((set #icon-suf #ico_suffix_10) (set #icon-name #ico_desc_10) (P_Icon)))
       (if #icon_11 ((set #icon-suf #ico_suffix_11) (set #icon-name #ico_desc_11) (P_Icon)))
       (if #icon_12 ((set #icon-suf #ico_suffix_12) (set #icon-name #ico_desc_12) (P_Icon)))
@@ -938,18 +1033,35 @@
       (if #icon_14 ((set #icon-suf #ico_suffix_14) (set #icon-name #ico_desc_14) (P_Icon)))
       (if #icon_15 ((set #icon-suf #ico_suffix_15) (set #icon-name #ico_desc_15) (P_Icon)))
       (if #icon_16 ((set #icon-suf #ico_suffix_16) (set #icon-name #ico_desc_16) (P_Icon)))
-      (if #icon_17 ((set #icon-suf #ico_suffix_17) (set #icon-name #ico_desc_17) (P_Icon)))
-      (if #icon_18 ((set #icon-suf #ico_suffix_18) (set #icon-name #ico_desc_18) (P_Icon)))
-      (if #icon_19 ((set #icon-suf #ico_suffix_19) (set #icon-name #ico_desc_19) (P_Icon)))
       (if #icon_20 ((set #icon-suf #ico_suffix_20) (set #icon-name #ico_desc_20) (P_Icon)))
+      (if #icon_21 ((set #icon-suf #ico_suffix_21) (set #icon-name #ico_desc_21) (P_Icon)))
+      (if #icon_22 ((set #icon-suf #ico_suffix_22) (set #icon-name #ico_desc_22) (P_Icon)))
+      (if #icon_23 ((set #icon-suf #ico_suffix_23) (set #icon-name #ico_desc_23) (P_Icon)))
+      (if #icon_24 ((set #icon-suf #ico_suffix_24) (set #icon-name #ico_desc_24) (P_Icon)))
+      (if #icon_25 ((set #icon-suf #ico_suffix_25) (set #icon-name #ico_desc_25) (P_Icon)))
+      (if #icon_26 ((set #icon-suf #ico_suffix_26) (set #icon-name #ico_desc_26) (P_Icon)))
+      (if #icon_27 ((set #icon-suf #ico_suffix_27) (set #icon-name #ico_desc_27) (P_Icon)))
+      (if #icon_28 ((set #icon-suf #ico_suffix_28) (set #icon-name #ico_desc_28) (P_Icon)))
+      (if #icon_29 ((set #icon-suf #ico_suffix_29) (set #icon-name #ico_desc_29) (P_Icon)))
+      (if #icon_30 ((set #icon-suf #ico_suffix_30) (set #icon-name #ico_desc_30) (P_Icon)))
+      (if #icon_31 ((set #icon-suf #ico_suffix_31) (set #icon-name #ico_desc_31) (P_Icon)))
+      (if #icon_32 ((set #icon-suf #ico_suffix_32) (set #icon-name #ico_desc_32) (P_Icon)))
+      (if #icon_40 ((set #icon-suf #ico_suffix_40) (set #icon-name #ico_desc_40) (P_Icon)))
+      (if #icon_41 ((set #icon-suf #ico_suffix_41) (set #icon-name #ico_desc_41) (P_Icon)))
+      (if #icon_42 ((set #icon-suf #ico_suffix_42) (set #icon-name #ico_desc_42) (P_Icon)))
       (openwbobject #icon-dir)
     ))
+    ;the following statement should enable proportional font for 'askchoice'
+    ;according to the docs, but doesn't seems to change anything
+    ;(set #icon_00 ("%c[2p%s" 27 #icon_00))
     (set #icon
       (askchoice
         (prompt ("\nWhich %s icon would you like to install?\n" #icon_desc))
-	(choices #icon_00 #icon_01 #icon_02 #icon_03 #icon_04 #icon_05 #icon_06 #icon_07 #icon_08 #icon_09
-		 #icon_10 #icon_11 #icon_12 #icon_13 #icon_14 #icon_15 #icon_16 #icon_17 #icon_18 #icon_19
-		 #icon_20)
+	(choices #icon_00 #icon_01 #icon_02 #icon_03
+		 #icon_10 #icon_11 #icon_12 #icon_13 #icon_14 #icon_15 #icon_16
+		 #icon_20 #icon_21 #icon_22 #icon_23 #icon_24 #icon_25 #icon_26 #icon_27 #icon_28 #icon_29
+		 #icon_30 #icon_31 #icon_32
+		 #icon_40 #icon_41 #icon_42)
         (default #icon)
         (help @askchoice-help)
       )
@@ -958,19 +1070,11 @@
       (closewbobject #icon-dir)
       (run ("Delete \"%s\" All Quiet Force" #icon-dir))
     ))
-  ))
-  (if (> #icnt 0) (
     (select #icon
       (set #icon #ico_suffix_00)
       (set #icon #ico_suffix_01)
       (set #icon #ico_suffix_02)
       (set #icon #ico_suffix_03)
-      (set #icon #ico_suffix_04)
-      (set #icon #ico_suffix_05)
-      (set #icon #ico_suffix_06)
-      (set #icon #ico_suffix_07)
-      (set #icon #ico_suffix_08)
-      (set #icon #ico_suffix_09)
       (set #icon #ico_suffix_10)
       (set #icon #ico_suffix_11)
       (set #icon #ico_suffix_12)
@@ -978,37 +1082,49 @@
       (set #icon #ico_suffix_14)
       (set #icon #ico_suffix_15)
       (set #icon #ico_suffix_16)
-      (set #icon #ico_suffix_17)
-      (set #icon #ico_suffix_18)
-      (set #icon #ico_suffix_19)
       (set #icon #ico_suffix_20)
-    )
-    (copyfiles
-      (help @copyfiles-help)
-      (source ("%s.%s" #icon_prefix #icon))
-      (newname ("%s.info" #icon_newname))
-      (dest #dest)
-    )
-    ;installer has problems on deleting tooltypes with newicons
-    (if (<> (substr #icon 0 3) "new")
-      (tooltype
-	(dest (tackon #dest #icon_newname))
-        (settooltype "Slave")
-        (settooltype "PreLoad")
-      )
-    )
-    (tooltype
-      (dest (tackon #dest #icon_newname))
-      (settooltype "PreLoad" "")
-      (settooltype "Slave" ("%s.Slave" #icon_slave))
-    )
-    (tooltype
-      (dest (tackon #dest #icon_newname))
-      (setdefaulttool "WHDLoad")
-      (setstack 10240)
-      (noposition)
+      (set #icon #ico_suffix_21)
+      (set #icon #ico_suffix_22)
+      (set #icon #ico_suffix_23)
+      (set #icon #ico_suffix_24)
+      (set #icon #ico_suffix_25)
+      (set #icon #ico_suffix_26)
+      (set #icon #ico_suffix_27)
+      (set #icon #ico_suffix_28)
+      (set #icon #ico_suffix_29)
+      (set #icon #ico_suffix_30)
+      (set #icon #ico_suffix_31)
+      (set #icon #ico_suffix_32)
+      (set #icon #ico_suffix_40)
+      (set #icon #ico_suffix_41)
+      (set #icon #ico_suffix_42)
     )
   ))
+  (copyfiles
+    (help @copyfiles-help)
+    (source ("%s.%s" #icon_prefix #icon))
+    (newname ("%s.info" #icon_newname))
+    (dest #dest)
+  )
+  ;installer has problems on deleting tooltypes with newicons
+  (if (<> (substr #icon 0 3) "new")
+    (tooltype
+      (dest (tackon #dest #icon_newname))
+      (settooltype "Slave")
+      (settooltype "PreLoad")
+    )
+  )
+  (tooltype
+    (dest (tackon #dest #icon_newname))
+    (settooltype "PreLoad" "")
+    (settooltype "Slave" ("%s.Slave" #icon_slave))
+  )
+  (tooltype
+    (dest (tackon #dest #icon_newname))
+    (setdefaulttool "WHDLoad")
+    (setstack 10240)
+    (noposition)
+  )
 )
 
 ;****************************
@@ -1039,6 +1155,12 @@
   (if (= 0 (run ("SYS:Utilities/Multiview %s" #readme-file)))
     ("")
     (run ("SYS:Utilities/More %s" #readme-file))
+  )
+)
+(if (exists #readme2-file)
+  (if (= 0 (run ("SYS:Utilities/Multiview \"%s\"" #readme2-file)))
+    ("")
+    (run ("SYS:Utilities/More \"%s\"" #readme2-file))
   )
 )
 
@@ -1103,6 +1225,8 @@
 (P_MakeIcons)
 (set #copy-file #readme-file)
 (P_CopyFile)
+(set #copy-file #readme2-file)
+(P_CopyFile)
 (set #copy-file #man-file)
 (P_CopyFile)
 (set #copy-file #hint-file)
@@ -1125,12 +1249,6 @@
     )
   )
 )
-
-(set #copy-file #reloc-file)
-(P_CopyFile)
-(set #copy-file #unreloc-file)
-(P_CopyFile)
-
 (set #copy-file #highs-file)
 (P_CopyFile)
 (P_MakeImages)

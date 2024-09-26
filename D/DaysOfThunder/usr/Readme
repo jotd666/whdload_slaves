@@ -56,6 +56,9 @@
  History:
  --------
 
+ version 2.0-B (22.08.2024) done by JOTD:
+ - fixed installer script (issue #0006552)
+ 
  version 2.0 (23.04.2023) done by JOTD:
  - relocated to fast memory for high speed on fast machines
  - self-modifying code fixed
