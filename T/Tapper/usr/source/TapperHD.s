@@ -45,14 +45,14 @@
 	DOSCMD	"WDate  >T:date"
 	ENDC
 
-CHIPMEMSIZE = $80000
+CHIPMEMSIZE = $100000
 
 ;============================================================================
 
 HEADER
 _base		SLAVE_HEADER			;ws_Security + ws_ID
 		dc.w	17			;ws_Version
-		dc.w	WHDLF_NoError|WHDLF_ClearMem	;ws_flags
+		dc.w	WHDLF_NoError|WHDLF_NoKbd|WHDLF_ClearMem	;ws_flags
 		dc.l	CHIPMEMSIZE		;ws_BaseMemSize
 		dc.l	0			;ws_ExecInstall
 		dc.w	_start-_base		;ws_GameLoader
@@ -135,7 +135,6 @@ _start	;	A0 = resident loader
 	MOVE.L	#$ffffffff,D5		;00f6: 2a3cffffffff
 	MOVE.L	#$92492492,D6		;00fc: 2c3c92492492
 	MOVE.L	#$00023645,D7		;0102: 2e3c00023645
-	MOVEA.L	#$00dff186,A1		;0108: 227c00dff186
 .1:
 	MOVE.L	(A0),D0			;010e: 2010
 	EOR.L	D6,D0			;0110: bd80
@@ -146,51 +145,77 @@ _start	;	A0 = resident loader
 	CMP.L	D5,D7			;011a: be85
 	BNE.S	.1		;011c: 66f0
 
-; patch
-	;;movem.l	d0-d2/a0-a2,-(a7)
-	
-
 	
 	lea		pl_main(pc),a0
 	lea		LOAD_ADDRESS,a1
 	move.l	resload(pc),a2
 	jsr	resload_Patch(a2)
+	
+	pea		keyboard_interrupt(pc)
+	move.l	(a7)+,$68.w
+	
+	move.w	#$C008,_custom+intena
+	
+	MOVE.L	#$00007fff,D1
+	jmp	LOAD_ADDRESS+$C
 
-	jmp	LOAD_ADDRESS
 
 
+keyboard_interrupt
+	movem.l	D0/A5,-(a7)
+	LEA	$00BFD000,A5
+	MOVEQ	#$08,D0
+	AND.B	$1D01(A5),D0
+	BEQ	.nokey
+	MOVE.B	$1C01(A5),D0
+	NOT.B	D0
+	ROR.B	#1,D0		; raw key code here
 
+    cmp.b   _keyexit(pc),d0
+    beq.b   _quit
+
+
+	BSET	#$06,$1E01(A5)
+	move.l	#2,d0
+	bsr	beamdelay
+	BCLR	#$06,$1E01(A5)	; acknowledge key
+
+.nokey
+	movem.l	(a7)+,d0/a5
+	move.w	#8,$dff09c
+	rte
+
+
+; < D0: numbers of vertical positions to wait
+beamdelay
+.bd_loop1
+	move.w  d0,-(a7)
+    move.b	$dff006,d0	; VPOS
+.bd_loop2
+	cmp.b	$dff006,d0
+	beq.s	.bd_loop2
+	move.w	(a7)+,d0
+	dbf	d0,.bd_loop1
+	rts
+kb_ack:
+kb_delay:
+	bset	#6,$BFEE01
+	movem.l	D0,-(A7)
+	moveq.l	#2,D0
+	bsr	beamdelay
+	movem.l	(A7)+,D0
+	bclr	#6,$BFEE01
+	rts
 
 pl_main:
 	PL_START
 
 	PL_END
 
-	
-.checkquit
-	move.b	$bfec01,d0
-	ror.b	d0
-	not.b	d0
 
 
-
-	cmp.b	_base+ws_keyexit(pc),d0
-	beq.w	QUIT
-	move.b	$bfec01,d0
-	rts	
-
-
-.load	move.l	a6,a1
-	move.l	resload(pc),a2
-	jsr	resload_LoadFileDecrunch(a2)
-	movem.l	(a7)+,d0-a6
-	moveq	#0,d0
-	unlk	a6
-	rts
-
-
-QUIT	pea	(TDREASON_OK).w
-EXIT	move.l	resload(pc),-(a7)
+_quit	pea	(TDREASON_OK).w
+	move.l	resload(pc),-(a7)
 	addq.l	#resload_Abort,(a7)
 	rts
 

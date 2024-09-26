@@ -8,13 +8,13 @@
  CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
  PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
- This install applies to "The Blues Brothers" © 1991 Titus.
+ This install applies to "Tapper" © 2023 Old Bob
 
- This install requires WHDLoad and RawDIC to be in the path. Both can be found
+ This install requires WHDLoad to be in the path. Both can be found
  in the WHDLoad package.
  To install from a different drive than DF0: select installation mode Expert.
 
- The installed program requires 0.5 MB ChipMem and 0.5 MB OtherMem.
+ The installed program requires 1.0 MB ChipMem.
  It can be quit by pressing Del (key can be changed with Tooltype "QuitKey=").
 
  If you have problems with this installation please try and get a newer
@@ -29,74 +29,7 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 1.6 (17.07.2019):
- - fixed issues #0004142, #0004148: removed non-68000 compliant longword move
- 
- version 1.5 (10.07.2019):
- - fixed issue #0004149 (exited when pressing 2nd button on a non-joypad)
- 
- version 1.4 (29.06.2019) done by JOTD:
- - fixed access fault on level 5
- - added in-game level select with reverse/forward CD32 pad (+/-)
-   on character selection screen. Press forward to increase start
-   level, reverse to decrease it.
-   
- version 1.3 (21.06.2019) done by JOTD:
- - added CUSTOM2 to jump with second/blue button
- - added CD32 pad controls for pause/esc/quit to WB/toggle music/filter
- - merged trainer with original trainer which allows to select
-   start level with level number + space
- - added CUSTOM3 which allows to use disk image (disk.1) of the pre 1.2 versions
- - added level select (CUSTOM4)
- 
- version 1.2 (23.11.2017) done by StingRay:
- - patch uses real files now, game has to be reinstalled (RawDIC 5.0 required)
- - byte write to volume register fixed
- - sample player fixed (issue #3742)
- - illegal copperlist entry fixed
- - interrupts fixed
- - trainer options added
- - 68000 quitkey support
- - default quitkey changed to Del
- - new install script
 
- version 1.1 (04.03.2005) done by JOTD
- - another version supported
- - rewritten install script
- - music fixed (soundtracker replay routine bug), works properly with CACHE option
- - source code included
- - cheat added
- - updated documentation
+ version 1.0 (xx.09.2024) done by JOTD:
+ - added quit key to otherwise unquittable game
 
- version 1.0 (23.06.2001) done by Mr.Larmer:
- - disk protection removed
-
-
-
- IMPORTANT NOTICE FOR UPGRADE FROM 1.0 TO 1.1:
-
- You'll have to reinstall the game from floppy
-
- CHEAT (courtesy from Sweetcheater by Abaddon)
-
- On the character select screen, type "WALLOO" (the background will 
- change to maroon).  Press a number ('1'-'6') then the 'SPACEBAR' to
- go to the corresponding level (with infinite lives)
- (note: this cheat is already included in the slave, except that infinite
-  lives can be done separately)
-
- When finishing a level, get the second of the two flags, and you'll
- keep your record collection through to the next level.
-
-
- NOTES FOR V1.3+
- --------------
-
- I (StingRay) have changed the patch to use real files. This means
- you have to reinstall the game (unless you use CUSTOM3=1 to use old data),
- the RawDIC imager requires at least RawDIC V5.0! The imager handles
- the NON-DOS parts as well as the DOS parts of the disk so it also
- saves the "main.prg" file!
-
- I have also added trainer options and fixed the problem with samples
- not being played properly.
