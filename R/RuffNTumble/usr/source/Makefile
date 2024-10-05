@@ -1,6 +1,17 @@
-PROGRAM = RuffNTumble
+include ../../options.mk
 
-all :  $(PROGRAM).slave
+PROGNAME = RuffNTumble
 
-$(PROGRAM).slave : $(PROGRAM)HD.asm
-	basm $<
+
+WHDLOADER = $(PROGNAME).slave
+SOURCE = $(PROGNAME)HD.s
+
+all :  $(WHDLOADER) 
+#$(PROGNAME)_512chip.slave
+
+$(WHDLOADER): $(SOURCE)
+	$(WDATE)
+	$(VASM) -o $(WHDLOADER) $(SOURCE)
+
+#$(PROGNAME)_512chip.slave: $(SOURCE)
+#	$(VASM) -DUSE_FASTMEM -o $(PROGNAME)_512chip.slave $(SOURCE)

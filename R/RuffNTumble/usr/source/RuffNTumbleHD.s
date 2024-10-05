@@ -303,6 +303,10 @@ TEST_BUTTON:MACRO
 	
 inside_vbi:
 	addq.l	#1,$399E.W	; original code
+ ;   btst    #0,$399E.W
+ ;   beq.b   .ok
+ ;   rts
+;.ok
 	movem.l	D0-D1/A0,-(A7)
 	moveq	#1,d0
 	bsr	_read_joystick
@@ -908,11 +912,15 @@ end_rob_decrunch:
 
 	rts
 
+fix_32bit_address:
+	and.l	#$FFFFFF,d0
+
+	rts
 Patch24BitMonster:
 	move.w	$28(A0),D0
 	move.l	D0,-(sp)
 	move.l	$24(A0),D0
-	and.l	#$FFFFFF,D0
+	bsr.b		fix_32bit_address
 	move.l	D0,A2
 	move.l	(sp)+,D0
 	rts
@@ -945,7 +953,7 @@ Remove24BitCalls:
 trap_24_bit:
 	move.l	D0,-(sp)
 	move.l	(A0),D0
-	and.l	#$FFFFFF,D0	; 24 bit address only
+	bsr.b		fix_32bit_address
 	move.l	D0,A4
 	move.l	(sp)+,D0
 	rte
@@ -954,7 +962,7 @@ patch_24_bit_level_1_1:
 patch_24_bit_level_2_1:
 	move.l	D0,-(sp)
 	move.l	$24(A0),D0
-	and.l	#$FFFFFF,D0	; 24 bit address only
+	bsr.b		fix_32bit_address
 	move.l	D0,A1
 	move.l	(sp)+,D0
 	move.w	D0,D1
@@ -967,7 +975,7 @@ patch_24_bit_level_1_2:
 
 	move.l	D0,-(sp)
 	move.l	A1,D0
-	and.l	#$FFFFFF,D0	; 24 bit address only
+	bsr.b		fix_32bit_address
 	move.l	D0,A1
 	move.l	(sp)+,D0
 
@@ -982,13 +990,30 @@ patch_24_bit_level_2_3:
 
 	move.l	D0,-(sp)
 	move.l	A1,D0
-	and.l	#$FFFFFF,D0	; 24 bit address only
+	bsr		fix_32bit_address
 	move.l	D0,A1
 	move.l	(sp)+,D0
 
 	rts
 
 
+uae_break:
+	* sends a WinUAE command to enter WinUAE debugger
+	move.l	d0,-(a7)
+	pea     0.w
+	pea     0.w
+	pea     .1003-.1002
+	pea     .1002(pc)
+	pea     -1.w
+	pea     82.w
+	jsr     $f0ff60
+	lea     24(sp),sp
+	move.l	(a7)+,d0
+    rts
+.1002:
+		dc.b	"AKS_ENTERDEBUGGER 1",0
+.1003:
+        even
 read_sectors
 	movem.l	d1-d2/a0-a2,-(A7)
 	bsr	_detect_controller_types
@@ -1098,7 +1123,7 @@ hex_search:
 	movem.l	(A7)+,D1/D3/A1-A2
 	rts
 
-extbase
+extbase:
 	dc.l	$80000
 level
 	dc.l	0
