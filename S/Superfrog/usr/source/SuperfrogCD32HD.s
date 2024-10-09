@@ -57,7 +57,7 @@ BASEMEM		equ	$1f0000
 ;======================================================================
 
 _base		SLAVE_HEADER			;ws_Security + ws_ID
-		dc.w	17			;ws_Version
+		dc.w	19			;ws_Version
 		dc.w	WHDLF_NoError|WHDLF_NoKbd		;ws_flags
 		dc.l	BASEMEM			;ws_BaseMemSize
 		dc.l	0			;ws_ExecInstall
@@ -80,7 +80,7 @@ _expmem		dc.l	0			;ws_ExpMem
 	DOSCMD	"WDate  >T:date"
 	ENDC
 DECL_VERSION:MACRO
-	dc.b	"1.5"
+	dc.b	"1.6"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -90,6 +90,11 @@ DECL_VERSION:MACRO
 		incbin	datetime
 	ENDC
 	ENDM
+
+		dc.b	"$","VER: slave "
+		DECL_VERSION
+		dc.b	0
+
 	
 _name		dc.b	"Superfrog CD³²",0
 _copy		dc.b	"1994 Team 17",0

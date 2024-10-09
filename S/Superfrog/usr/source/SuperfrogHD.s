@@ -64,7 +64,7 @@ EXTMEMSIZE = $80000
 ;======================================================================
 
 _base		SLAVE_HEADER			;ws_Security + ws_ID
-		dc.w	17			;ws_Version
+		dc.w	19			;ws_Version
 		dc.w	WHDLF_EmulTrap|WHDLF_NoError|WHDLF_NoKbd	;ws_flags
 		dc.l	BASEMEMSIZE			;ws_BaseMemSize
 		dc.l	0			;ws_ExecInstall
@@ -90,7 +90,7 @@ _config
 	DOSCMD	"WDate  >T:date"
 	ENDC
 DECL_VERSION:MACRO
-	dc.b	"1.5"
+	dc.b	"1.6"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -100,6 +100,11 @@ DECL_VERSION:MACRO
 		incbin	datetime
 	ENDC
 	ENDM
+	
+	dc.b	"$","VER: slave "
+	DECL_VERSION
+	dc.b	0
+
 	
 ;============================================================================
 
