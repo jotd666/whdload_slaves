@@ -1,4 +1,13 @@
-all : StarRay.slave
+include ../../options.mk
 
-StarRay.slave: StarRayHD.asm
-	basm  StarRayHD.asm
+PROGNAME = StarRay
+
+
+WHDLOADER = $(PROGNAME).slave
+SOURCE = $(PROGNAME)HD.s
+
+all :  $(WHDLOADER)
+
+$(WHDLOADER) : $(SOURCE)
+	$(WDATE)
+	$(VASM) -o $(WHDLOADER) $(SOURCE)

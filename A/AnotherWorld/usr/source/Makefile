@@ -1,5 +1,13 @@
-all : AnotherWorld.slave
+include ../../options.mk
 
-AnotherWorld.slave : anotherworldhd.asm
-	basm anotherworldhd.asm
+PROGNAME = AnotherWorld
 
+
+WHDLOADER = $(PROGNAME).slave
+SOURCE = $(PROGNAME)HD.s
+
+all :  $(WHDLOADER)
+
+$(WHDLOADER) : $(SOURCE)
+	$(WDATE)
+	$(VASM) -o $(WHDLOADER) $(SOURCE)

@@ -1,6 +1,13 @@
+include ../../options.mk
+
 PROGNAME = PinballMania
 
-all : $(PROGNAME).slave
 
-$(PROGNAME).slave: $(PROGNAME)HD.asm
-	basm $(PROGNAME)HD.asm
+WHDLOADER = $(PROGNAME).slave
+SOURCE = $(PROGNAME)HD.s
+
+all :  $(WHDLOADER)
+
+$(WHDLOADER) : $(SOURCE)
+	$(WDATE)
+	$(VASM) -o $(WHDLOADER) $(SOURCE)

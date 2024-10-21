@@ -1,7 +1,13 @@
+include ../../options.mk
+
 PROGNAME = Globdule
 
-all : $(PROGNAME).slave
 
-$(PROGNAME).slave : $(PROGNAME)HD.asm
-	basm $?
+WHDLOADER = $(PROGNAME).slave
+SOURCE = $(PROGNAME)HD.s
 
+all :  $(WHDLOADER)
+
+$(WHDLOADER) : $(SOURCE)
+	$(WDATE)
+	$(VASM) -o $(WHDLOADER) $(SOURCE)

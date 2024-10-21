@@ -1,10 +1,13 @@
-PROJECT = PrinceOfPersia
+include ../../options.mk
 
-all : $(PROJECT).slave $(PROJECT).islave
+PROGNAME = PrinceOfPersia
 
-$(PROJECT).slave: $(PROJECT)HD.asm
-	basm $?
 
-$(PROJECT).islave: $(PROJECT).islave.s
-	basm $?
+WHDLOADER = $(PROGNAME).slave
+SOURCE = $(PROGNAME)HD.s
 
+all :  $(WHDLOADER)
+
+$(WHDLOADER) : $(SOURCE)
+	$(WDATE)
+	$(VASM) -o $(WHDLOADER) $(SOURCE)

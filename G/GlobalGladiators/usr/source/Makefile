@@ -1,6 +1,13 @@
-GAME = GlobalGladiators
+include ../../options.mk
 
-all : $(GAME).slave
+PROGNAME = GlobalGladiators
 
-$(GAME).slave: $(GAME)hd.asm
-	basm $(GAME)hd.asm
+
+WHDLOADER = $(PROGNAME).slave
+SOURCE = $(PROGNAME)HD.s
+
+all :  $(WHDLOADER)
+
+$(WHDLOADER) : $(SOURCE)
+	$(WDATE)
+	$(VASM) -o $(WHDLOADER) $(SOURCE)

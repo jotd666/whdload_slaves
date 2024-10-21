@@ -1,8 +1,13 @@
+include ../../options.mk
+
 PROGNAME = F-18Interceptor
+
+
 WHDLOADER = $(PROGNAME).slave
-SOURCE = $(PROGNAME)HD.asm
+SOURCE = $(PROGNAME)HD.s
 
 all :  $(WHDLOADER)
 
 $(WHDLOADER) : $(SOURCE)
-	basm $(SOURCE)
+	$(WDATE)
+	$(VASM) -o $(WHDLOADER) $(SOURCE)

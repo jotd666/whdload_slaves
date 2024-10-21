@@ -1,8 +1,13 @@
-PROGNAME = DataStorm
-WHDLOADER = $(PROGNAME).slave
-SOURCE = $(PROGNAME)HD.asm
+include ../../options.mk
 
-all : $(WHDLOADER)
+PROGNAME = DataStorm
+
+
+WHDLOADER = $(PROGNAME).slave
+SOURCE = $(PROGNAME)HD.s
+
+all :  $(WHDLOADER)
 
 $(WHDLOADER) : $(SOURCE)
-	basm $(SOURCE)
+	$(WDATE)
+	$(VASM) -o $(WHDLOADER) $(SOURCE)

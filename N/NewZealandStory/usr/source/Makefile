@@ -1,6 +1,13 @@
-PROGRAM = NewZealandStory
-all : $(PROGRAM).slave
+include ../../options.mk
 
-$(PROGRAM).slave: $(PROGRAM)HD.asm
-	basm $?
+PROGNAME = NewZealandStory
 
+
+WHDLOADER = $(PROGNAME).slave
+SOURCE = $(PROGNAME)HD.s
+
+all :  $(WHDLOADER)
+
+$(WHDLOADER) : $(SOURCE)
+	$(WDATE)
+	$(VASM) -o $(WHDLOADER) $(SOURCE)

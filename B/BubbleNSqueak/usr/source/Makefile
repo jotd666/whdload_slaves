@@ -1,9 +1,13 @@
 PROGNAME = BubbleNSqueak
+W\PROJETS\HDInstall\DONE\WHDLoad
+SHARED = BubbleShared.s ReadJoyPad.s
+CMD = vasmm68k_mot -DDATETIME -IK:/jff/AmigaHD/amiga39_JFF_OS/include -I$(WHDBASE) -phxass -nosym -Fhunkexe
 
-all : $(PROGNAME).slave
+all :  $(PROGNAME)AGA.slave $(PROGNAME)ECS.slave
 
-$(PROGNAME).slave : $(PROGNAME)HD.asm
-	basm $?
-
-$(PROGNAME)CD32.slave : $(PROGNAME)CD32HD.asm
-	basm $?
+$(PROGNAME)AGA.slave : $(PROGNAME)AGAHD.s $(SHARED)
+	$(WDATE)
+	$(CMD) -o $(PROGNAME)AGA.slave $(PROGNAME)AGAHD.s
+$(PROGNAME)ECS.slave : $(PROGNAME)ECSHD.s $(SHARED)
+	$(WDATE)
+	$(CMD) -o $(PROGNAME)ECS.slave $(PROGNAME)ECSHD.s

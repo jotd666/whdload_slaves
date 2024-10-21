@@ -1,19 +1,21 @@
-all : ZoolAGA.slave ZoolAF.slave ZoolECS.slave ZoolCD32.slave zool.islave
+include ../../options.mk
 
-ZoolAGA.slave: zoolagahd.asm
-	basm $?
+PROGNAME = Zool
 
-ZoolAF.slave: zoolafHD.asm
-	basm zoolafHD.asm
 
-ZoolECS.slave: ZoolECSHD.asm
-	basm $?
+WHDLOADER = $(PROGNAME).slave
+SOURCE = $(PROGNAME)HD.s
 
-ZoolCD32.slave: zoolcd32hd.asm
-	basm $?
+all :  $(PROGNAME).slave $(PROGNAME)AGA.slave $(PROGNAME)CD32.slave
 
-fungusdec.bin: fungusdec.asm
-	phxass  fungusdec.asm TO fungusdec.bin
+CMD = $(VASM) -o 
 
-zool.islave: zool.islave.s
-	basm $?
+$(PROGNAME).slave : $(SOURCE)
+	$(WDATE)
+	$(CMD) $(PROGNAME).slave $(SOURCE)
+$(PROGNAME)AGA.slave : $(PROGNAME)AGAHD.s
+	$(WDATE)
+	$(CMD) $(PROGNAME)AGA.slave $(PROGNAME)AGAHD.s
+$(PROGNAME)CD32.slave : $(PROGNAME)CD32HD.s lowlevel.s
+	$(WDATE)
+	$(CMD) $(PROGNAME)CD32.slave $(PROGNAME)CD32HD.s

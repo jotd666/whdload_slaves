@@ -1,8 +1,9 @@
-PROGNAME = Beast3
+PROGNAME = ShadowOfTheBeast3
 WHDLOADER = $(PROGNAME).slave
-SOURCE = $(PROGNAME)HD.asm
+SOURCE = $(PROGNAME)HD.s
 
 all :  $(WHDLOADER)
 
-$(WHDLOADER) : $(SOURCE)
-	basm $(SOURCE)
+$(WHDLOADER) : $(SOURCE) ReadJoyPad.s
+	$(WDATE)
+	vasmm68k_mot -DDATETIME -IK:/jff/AmigaHD/amiga39_JFF_OS/include -IK:/jff\AmigaHD\PROJETS\HDInstall\DONE\WHDLoad -devpac -nosym -Fhunkexe -o $(WHDLOADER) $(SOURCE)

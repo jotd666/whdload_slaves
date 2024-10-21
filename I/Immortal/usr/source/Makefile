@@ -1,7 +1,13 @@
-all : Immortal.slave
+include ../../options.mk
 
-ImmortalHD : ImmortalHD.asm
-	phxass ImmortalHD.asm I=include:
+PROGNAME = Immortal
 
-Immortal.slave: ImmortalHD.asm
-	basm ImmortalHD.asm
+
+WHDLOADER = $(PROGNAME).slave
+SOURCE = $(PROGNAME)HD.s
+
+all :  $(WHDLOADER)
+
+$(WHDLOADER) : $(SOURCE)
+	$(WDATE)
+	$(VASM) -o $(WHDLOADER) $(SOURCE)

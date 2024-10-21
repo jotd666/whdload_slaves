@@ -1,9 +1,13 @@
+include ../../options.mk
+
 PROGNAME = AsterixGetafix
 
-all : $(PROGNAME).slave
 
-$(PROGNAME).slave : $(PROGNAME)HD.asm
-	basm $?
+WHDLOADER = $(PROGNAME).slave
+SOURCE = $(PROGNAME)HD.s
 
-$(PROGNAME)CD32.slave : $(PROGNAME)CD32HD.asm
-	basm $?
+all :  $(WHDLOADER)
+
+$(WHDLOADER) : $(SOURCE)
+	$(WDATE)
+	vasmm68k_mot -DDATETIME -I$(HDBASE)/amiga39_JFF_OS/include -I$(WHDBASE)\WHDLoad\Include -I$(WHDBASE) -nosym -Fhunkexe -o $(WHDLOADER) $(SOURCE)
