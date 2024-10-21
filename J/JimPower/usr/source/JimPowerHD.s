@@ -74,7 +74,7 @@ PL_PSA	MACRO
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"3.2"
+	dc.b	"3.3"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -86,7 +86,7 @@ DECL_VERSION:MACRO
 	ENDM
 	
 HEADER	SLAVE_HEADER		; ws_security + ws_ID
-	dc.w	17		; ws_version
+	dc.w	19		; ws_version
 	dc.w	FLAGS		; flags
 	dc.l	$80000		; ws_BaseMemSize
 	dc.l	0		; ws_ExecInstall
@@ -159,15 +159,15 @@ STARTLEVEL	dc.l	0
 BUTTONWAIT	dc.l	0	
 		dc.l	TAG_END
 
-resload	dc.l	0
+_resload	dc.l	0
 
-IGNORE_JOY_DIRECTIONS
+
 	INCLUDE	ReadJoyPad.s
 
 CURRENT_LEVEL = $5A8
 
 _start	
-    lea	resload(pc),a1
+    lea	_resload(pc),a1
 	move.l	a0,(a1)
 	move.l	a0,a2
 	
@@ -228,7 +228,7 @@ _start
 
 
 QUIT	pea	(TDREASON_OK).w
-EXIT	move.l	resload(pc),a2
+EXIT	move.l	_resload(pc),a2
 	bsr.b	KillSys
 	jmp	resload_Abort(a2)
 
@@ -275,7 +275,7 @@ PLBOOT	PL_START
 .noBombsTrainer
 
 
-	move.l	resload(pc),a2
+	move.l	_resload(pc),a2
 	jsr	resload_Patch(a2)
 
 	move.l	CPUFLAGS(pc),d0
@@ -284,7 +284,7 @@ PLBOOT	PL_START
 	
 	lea	PLBLIT(pc),a0
 	lea	$400.w,a1
-	move.l	resload(pc),a2
+	move.l	_resload(pc),a2
 	jsr	resload_Patch(a2)
 
 .noblit
@@ -320,7 +320,7 @@ PLBLIT	PL_START
 
 .FlushCache
 	move.l	a0,-(a7)
-	move.l	resload(pc),a0
+	move.l	_resload(pc),a0
 	jsr	resload_FlushCache(a0)
 	move.l	(a7)+,a0
 	rts
@@ -431,7 +431,7 @@ PLBOOT400
 	cmp.w	#$33EE,$6cfa2
 	bne.b	.done
 	movem.l	d0-d1/a1-a2,-(a7)
-	move.l	resload(pc),a2
+	move.l	_resload(pc),a2
 	sub.l	a1,a1
 	lea		pl_tfmx(pc),a0
 	jsr		resload_Patch(a2)
@@ -565,7 +565,7 @@ PLBOOT400
 	mulu.w	#512,d1
 
 	movem.l	d0-a6,-(a7)
-	move.l	resload(pc),a2
+	move.l	_resload(pc),a2
 	jsr	resload_DiskLoad(a2)
 	movem.l	(a7)+,d0-a6
 

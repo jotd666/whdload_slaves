@@ -152,7 +152,7 @@ _detect_controller_types:
 ; reads both joysticks buttons and store the values in joy0/joy1
 ; all registers are preserved
 
-_read_joysticks_buttons:
+_joystick:
 	; save D1 cos it'll be overwritten by the directions, that
 	; we don't care about
 	IFND	IGNORE_JOY_DIRECTIONS

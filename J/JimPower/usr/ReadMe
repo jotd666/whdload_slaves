@@ -29,6 +29,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 3.3 (xx.xx.2024) done by JOTD:
+ - adapted to whdload 19 (ReadJoyPort)
+
  version 3.2 (02.08.2022) done by JOTD:
  - normal controls (no second button) were broken, fixed (issue #0005747)
  - fixed non-working unpause bug

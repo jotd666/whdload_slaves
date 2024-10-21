@@ -51,7 +51,6 @@
 	ENDC
 
 	STRUCTURE	globals,$100
-		LONG	_resload
 		LONG	_chipptr
 		LONG	_clist
 		LONG	_joystate
@@ -75,7 +74,7 @@ FASTMEMSIZE = $80000
 ;============================================================================
 
 _base		SLAVE_HEADER			;ws_Security + ws_ID
-		dc.w	17			;ws_Version
+		dc.w	19			;ws_Version
     IFD AGA_VERSION
 		dc.w	WHDLF_NoError|WHDLF_ClearMem|WHDLF_ReqAGA		;ws_flags
     ELSE
@@ -157,14 +156,14 @@ _info		dc.b	"adapted by Wepl & JOTD",10
 ; have to redefine the quit/debug functions. Fortunately keyboard.s allows that
 
 _debug		pea	TDREASON_DEBUG.w
-_quit		move.l	(_resload),-(a7)		;no ',pc' because used absolut
+_quit		move.l	(_resload,pc),-(a7)		;no ',pc' because used absolut
 		addq.l	#resload_Abort,(a7)
 		rts
 _exit		pea	TDREASON_OK.w
 		bra	_quit
         
         IFD AGA_VERSION
-		INCLUDE	keyboard.s
+		INCLUDE	whdload/keyboard.s
         ENDC
 		INCLUDE ReadJoyPad.s
         
@@ -173,7 +172,8 @@ _exit		pea	TDREASON_OK.w
 _Start		;	A0 = resident loader
 ;============================================================================
 	;save resload base
-		move.l	a0,(_resload)			;save
+		lea		(_resload,pc),a1
+		move.l	a0,(a1)			;save
 		move.l	a0,a5				;A5 = resload
 		sf	(_decinit)			;decruncher not init
 
@@ -627,7 +627,7 @@ keyboard_interrupt_ecs
     
 read_file
     movem.l a0-a2,-(a7)
-    move.l  (_resload),a2
+    move.l  (_resload,pc),a2
     addq.l  #4,a0
     jsr (resload_LoadFileDecrunch,a2)
     move.l  d0,d1   ; length
@@ -725,7 +725,7 @@ _getlang	clr.l	-(a7)
 		clr.l	-(a7)
 		pea	WHDLTAG_LANG_GET
 		move.l	a7,a0
-		move.l	(_resload),a1
+		move.l	(_resload,pc),a1
 		jsr	(resload_Control,a1)
 		addq.l	#4,a7
 		move.l	(a7)+,d0
@@ -787,7 +787,7 @@ _allocmem	addq.l	#7,d0				;round up
 
 _loader		addq.l	#4,a0				;skip "df0:"
 		move.l	a2,-(a7)
-		move.l	(_resload),a2
+		move.l	(_resload,pc),a2
 		jsr	(resload_LoadFileDecrunch,a2)
 		move.l	(a7)+,a2
 		moveq	#0,d0				;return code
@@ -801,7 +801,7 @@ _decrunch	bset	#0,(_decinit)
 		move.w	#($9266-$8e02)/4-1,d0
 .cp		move.l	(a0)+,(a1)+
 		dbf	d0,.cp
-		move.l	(_resload),a0
+		move.l	(_resload,pc),a0
 		jsr	(resload_FlushCache,a0)
 		movem.l	(a7)+,d0/a0-a1
 
@@ -816,7 +816,7 @@ _decrunch	bset	#0,(_decinit)
 
 _loadercd	addq.l	#6,a0				;skip "Oscar:"
 		move.l	d2,a1
-		move.l	(_resload),a2
+		move.l	(_resload,pc),a2
 		jsr	(resload_LoadFileDecrunch,a2)
 		add.l	#14,(a7)
 		rts
@@ -877,6 +877,8 @@ _readpad_v4
 ;--------------------------------
 
 _exe		dc.b	"exe",0
+_resload:
+	dc.l	0
 
 
 
