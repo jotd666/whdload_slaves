@@ -29,6 +29,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 1.1 (22.10.2024) done by JOTD:
+ - adapted for WHDload 19
+
  version 1.0 (16.08.2020):
  - initial release
  - CUSTOM2 to use second/blue button to jump
@@ -44,11 +47,11 @@
  - highscores saved & loaded to/from file (unless you cheat)
  - nice icon by coldacid
 
-TODO: not done yet, but planned
+not done yet, but planned
 
- - TODO: quit current game (esc)
- - TODO: level select: load proper tileset
- - TODO: quit in end sequence
+ - quit current game (esc)
+ - level select: load proper tileset
+ - quit in end sequence
 
 
 

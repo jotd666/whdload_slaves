@@ -32,7 +32,7 @@ FASTMEMSIZE = $80000
 
 _base
 		SLAVE_HEADER		;ws_Security + ws_ID
-		dc.w	17		;ws_Version
+		dc.w	19		;ws_Version
 		dc.w	WHDLF_NoError|WHDLF_EmulTrap	;ws_flags
 		dc.l	CHIPMEMSIZE		;ws_BaseMemSize
 		dc.l	0		;ws_ExecInstall

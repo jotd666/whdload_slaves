@@ -39,7 +39,7 @@ IGNORE_JOY_DIRECTIONS = 1
 
 _base
 		SLAVE_HEADER		;ws_Security + ws_ID
-		dc.w	17		;ws_Version
+		dc.w	19		;ws_Version
 		dc.w	WHDLF_NoError|WHDLF_EmulTrap|WHDLF_ClearMem	;ws_flags
 		IFD	USE_FASTMEM
 		dc.l	CHIPMEMSIZE		;ws_BaseMemSize
@@ -80,7 +80,7 @@ _config
 
 
 DECL_VERSION:MACRO
-	dc.b	"2.7"
+	dc.b	"2.8"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -802,6 +802,7 @@ end_rob_decrunch:
 
 	CHECK_PATCHED	$58CB0,1
 	
+	
 	SET_COPPER	$5826C
 
 	
@@ -916,6 +917,7 @@ fix_32bit_address:
 	and.l	#$FFFFFF,d0
 
 	rts
+	
 Patch24BitMonster:
 	move.w	$28(A0),D0
 	move.l	D0,-(sp)
@@ -1010,10 +1012,12 @@ uae_break:
 	lea     24(sp),sp
 	move.l	(a7)+,d0
     rts
+		
 .1002:
 		dc.b	"AKS_ENTERDEBUGGER 1",0
 .1003:
         even
+	
 read_sectors
 	movem.l	d1-d2/a0-a2,-(A7)
 	bsr	_detect_controller_types

@@ -61,7 +61,7 @@
 ;======================================================================
 
 _base		SLAVE_HEADER			;ws_Security + ws_ID
-		dc.w	17			;ws_Version
+		dc.w	19			;ws_Version
 		dc.w	WHDLF_NoError|WHDLF_ClearMem	       ;ws_flags
 		dc.l	$80000			;ws_BaseMemSize
 		dc.l	0			;ws_ExecInstall
@@ -97,7 +97,7 @@ _config
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"2.2"
+	dc.b	"2.3"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -135,8 +135,6 @@ _start	;	A0 = resident loader
 		move.l	a0,(a1)
 		move.l	a0,a3			;A3 = resload
 
-        bsr _detect_controller_types
-        
 		lea	_tags(pc),a0
 		jsr	(resload_Control,a3)
         move.l  _button_jumps(pc),d0
@@ -146,6 +144,9 @@ _start	;	A0 = resident loader
 		lea		third_button_maps_to(pc),a0
 		move.l	#JPF_BTN_GRN,(a0)
 .skip
+
+        bsr _detect_controller_types
+        
         IFND    CDTV_VERSION
         
 		lea	_60000(pc),a0

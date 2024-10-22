@@ -28,6 +28,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 2.8 (22.10.2024) done by JOTD:
+ - adapted for WHDload 19
+
  version 2.7 (20.04.2020) done by JOTD:
  - streamlined joypad read code to be more compatible with third party CD32 adapters
  

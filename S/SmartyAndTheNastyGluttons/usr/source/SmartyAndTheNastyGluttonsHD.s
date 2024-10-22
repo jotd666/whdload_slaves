@@ -33,7 +33,7 @@ FASTMEMSIZE = $80000
 ;============================================================================
 
 _base		SLAVE_HEADER			;ws_Security + ws_ID
-		dc.w	17			;ws_Version
+		dc.w	19			;ws_Version
 		dc.w	WHDLF_NoError|WHDLF_ClearMem		;ws_flags
 _upchip		dc.l	CHIPMEMSIZE			;ws_BaseMemSize 
 						;floppy vers need only $177000
@@ -73,7 +73,7 @@ _config
 	
 
 DECL_VERSION:MACRO
-	dc.b	"1.0"
+	dc.b	"1.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -480,13 +480,13 @@ wait_vblank
 	BEQ.S	.wait		;317f2: 67f6
     ; read joystick at start of vblank interrupt
     lea joy1_prev_buttons(pc),a0
-    move.l  joy1_buttons(pc),d1
+    move.l  joy1(pc),d1
     move.l  d1,(a0)
     
 	moveq	#1,d0
 	bsr	_read_joystick
     
-	lea	joy1_buttons(pc),a0
+	lea	joy1(pc),a0
 	move.l	d0,(a0)
     
     ; quit to wb ?
@@ -562,7 +562,7 @@ beamdelay
 read_joy_directions_subitems
     movem.l d2,-(a7)
     movem.l d0/a0,-(a7)
-    move.l  joy1_buttons(pc),d0
+    move.l  joy1(pc),d0
 	move.w	$DFF00C,D2
 	; cancel UP from joydat. Copying bit 9 to bit 8 so EOR yields 0
 	bclr	#8,D2
@@ -590,7 +590,7 @@ read_joy_directions_subitems
 read_joy_directions
     movem.l d2,-(a7)
     movem.l d0/a0,-(a7)
-    move.l  joy1_buttons(pc),d0
+    move.l  joy1(pc),d0
 	move.w	$DFF00C,D2
 	; cancel UP from joydat. Copying bit 9 to bit 8 so EOR yields 0
 	bclr	#8,D2
@@ -615,7 +615,7 @@ read_joy_directions
     
 read_joy_button
     movem.l d0,-(a7)
-    move.l  joy1_buttons(pc),d0
+    move.l  joy1(pc),d0
     not.l   d0
     btst    #JPB_BTN_RED,d0
     movem.l (a7)+,d0
