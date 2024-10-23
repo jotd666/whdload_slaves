@@ -38,6 +38,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 1.4 (22.10.2024) done by JOTD:
+ - adapted for WHDload 19
+
  version 1.3 (08.11.2020) done by JOTD:
  - smart bombs now work with 2-button joysticks (issue #0004852)
  - added joypad controls (pause, quit)

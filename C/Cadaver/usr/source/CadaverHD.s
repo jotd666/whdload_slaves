@@ -54,7 +54,7 @@ FASTMEMSIZE = $80000
 	ENDC
 	
 DECL_VERSION:MACRO
-	dc.b	"3.1"
+	dc.b	"3.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -66,7 +66,7 @@ DECL_VERSION:MACRO
 	ENDM
 
 _base		SLAVE_HEADER			;ws_Security + ws_ID
-		dc.w	17			;ws_Version
+		dc.w	19			;ws_Version
 		dc.w	WHDLF_NoError|WHDLF_EmulTrap|WHDLF_ClearMem|WHDLF_EmulLineF
 		dc.l	CHIPMEMSIZE			;ws_BaseMemSize
 		dc.l	0			;ws_ExecInstall

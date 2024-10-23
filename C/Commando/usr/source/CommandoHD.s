@@ -63,7 +63,7 @@
 
 base
 		SLAVE_HEADER			;ws_Security + ws_ID
-		dc.w	17			;ws_Version
+		dc.w	19			;ws_Version
 		dc.w	WHDLF_NoError|WHDLF_EmulTrap|WHDLF_ClearMem ;ws_flags
 		dc.l	$80000			;ws_BaseMemSize
 		dc.l	0			;ws_ExecInstall
@@ -85,7 +85,7 @@ _expmem		dc.l    0			;ws_ExpMem
 
 
 DECL_VERSION:MACRO
-	dc.b	"1.3"
+	dc.b	"1.4"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -459,7 +459,7 @@ _CD32_Fire
 		movem.l         d0/d2/a0,-(sp)
 		move.l		joy1(pc),d2
 		move.l		#JPB_BTN_RED,d0
-		btst.l		d0,d2
+		btst		d0,d2
 		beq		.NotPressed
 		move.b		#$7c,d1
 .NotPressed	movem.l         (sp)+,d0/d2/a0
@@ -495,9 +495,9 @@ _CD32_TitleButtons
 		move.l		#JPB_BTN_REVERSE,d1
 		btst.l		d1,d2
 		beq		.NotPressed
-		btst.l		d1,(a0)
+		btst		d1,(a0)
 		bne		.CheckNext
-		bset.l		d1,(a0)
+		bset		d1,(a0)
 		move.b		#1,d0
 		rts
 .NotPressed	bclr		d1,(a0)
@@ -505,9 +505,9 @@ _CD32_TitleButtons
 		move.l		#JPB_BTN_FORWARD,d1
 		btst.l		d1,d2
 		beq		.NotPressed2
-		btst.l		d1,(a0)
+		btst		d1,(a0)
 		bne		.CheckKey
-		bset.l		d1,(a0)
+		bset		d1,(a0)
 		move.b		#2,d0
 		rts
 .NotPressed2	bclr		d1,(a0)
@@ -544,11 +544,11 @@ _CD32_Pause
 		move.l		joy1(pc),d2
 		lea		_held_button(pc),a0
 		move.l		#JPB_BTN_PLAY,d1
-		btst.l		d1,d2
+		btst		d1,d2
 		beq		.NotPressed
-		btst.l		d1,(a0)
+		btst		d1,(a0)
 		bne		.done
-		bset.l		d1,(a0)
+		bset		d1,(a0)
 		move.b		#$ff,($9653)
 		bra		.done
 .NotPressed	bclr		d1,(a0)

@@ -14,7 +14,7 @@
 ;DEBUG
 
 _base		SLAVE_HEADER			;ws_Security + ws_ID
-		dc.w	17			;ws_Version
+		dc.w	19			;ws_Version
 		dc.w	WHDLF_NoError|WHDLF_EmulTrap|WHDLF_NoKbd|WHDLF_ClearMem
 		IFD	DEBUG
 		dc.l	$100000
@@ -48,7 +48,7 @@ _expmem
 	ENDC
 		
 DECL_VERSION:MACRO
-	dc.b	"1.2"
+	dc.b	"1.3"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -267,7 +267,7 @@ test_end_level:
 	cmp.b	#$5F,376(A5)	; test if help pressed
 	beq.b	.end
 	; now we'll test for a joypad combination: all 4 front buttons pressed
-	
+	nop
 .end
 	rts
 

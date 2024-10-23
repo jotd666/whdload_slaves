@@ -29,6 +29,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 3.2 (23.10.2024) done by JOTD:
+ - adapted for WHDload 19
+
  version 3.1 (01.12.2022):
  - really re-enabled 512k expansion memory, which allows the game to be faster
    and have more sounds (check the pond monster at start)

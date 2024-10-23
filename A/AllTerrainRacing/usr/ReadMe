@@ -24,6 +24,9 @@
    You can quit the game by pressing F10 (key can be changed with
    Tooltype "QuitKey=").
 
+ Version 1.6 (23-Oct-2024) done by JOTD:
+ - adapted for whdload 19
+ 
  Version 1.5 (09-Jan-2022) done by JOTD:
  - fixed install script (issue #0005399)
  - added 3-button support (third button pauses the game)
