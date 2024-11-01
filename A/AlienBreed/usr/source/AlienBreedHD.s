@@ -1,92 +1,111 @@
-;*---------------------------------------------------------------------------
-;  :Program.	AlienBreed.asm
-;  :Contents.	Slave for "Alien Breed" from Team 17
-;  :Author.	Mr.Larmer of Wanted Team
-;  :History.	21.03.2001
-;  :Requires.	-
-;  :Copyright.	Public Domain
-;  :Language.	68000 Assembler
-;  :Translator.	Asm-One 1.44
-;  :To Do.
-;---------------------------------------------------------------------------*
+***************************************************************************
+*             /                                                           *
+*       _____.__ _                                         .___.          *
+*      /    /_____________.  _________.__________.________ |   |________  *
+*  ___/____      /    ____|_/         |         /|        \|   ._      /  *
+*  \     \/      \    \     \    /    |    :___/¯|    \    \   |/     /   *
+*   \_____________\___/_____/___/_____|____|     |____|\_____________/    *
+*     -========================/===========|______\================-      *
+*                                                                         *
+*   .---.----(*(       ALIEN BREED WHDLOAD SLAVE            )*)---.---.   *
+*   `-./                                                           \.-'   *
+*                                                                         *
+*                         (c)oded by StingRay                             *
+*                         --------------------                            *
+*                               July 2018                                 *
+*                                                                         *
+*                                                                         *
+***************************************************************************
 
-	INCDIR	Include:
-	INCLUDE	whdload.i
-	INCLUDE	whdmacros.i
+***********************************
+*** History			***
+***********************************
+
+; 25-Jul-2018	- music wasn't replayed properly in main menu, reason was a
+;		  wrong interrupt fix, main interrupt code must be called at
+;		  the end of the VBI in main menu
+;		- CUSTOM3 can be used to run the "1MB Required" part, thanks
+;		  to Bored Seal for the idea :)
+
+; 24-Jul-2018	- help screen removed for now!
+;		- patch is finished for now
+
+; 22-Jul-2018	- added "help screen" to display in-game keys when help
+;		  has been pressed, not sure it'll stay though as I didn't
+;		  find a 100% reliable solution for the screen memory yet
+
+; 21-Jul-2018	- fixed the problem with opening/closing map screen with
+;		  joypad, rawkey is now cleared each VBI before reading
+;		  the joypad buttons, seems to work reliable
+
+; 20-Jul-2018	- proper pause handling now when using joypad
+;		- access fault fix fixed :) no more refresh bugs
+
+; 19-Jul-2018	- Joypad routine now uses actual bits instead of bit numbers
+;		  so checking if 2 or more button have been pressed
+;		  simultaneously is possible, logic adapted (and -> eor)
+
+; 18-Jul-2018	- rewritten joypad reading code fixed :)
+;		- joypad code works properly now
+;		- joypad base code optimised a bit
+
+; 17-Jul-2018	- a few problems regarding joypad emulation fixed
+;		- Joypad reading code rewritten, also not tested yet
+
+; 16-Jul-2018	- some more in-game keys added
+;		- quit key works in main menu now too
+;		- default quitkey changed back to F10
+;		- end picture patched, game can be quit using either mouse/
+;		  joystick buttons or using quitkey
+;		- main menu patched, VBI fixed, SMC fixed, high-score
+;		  load/save added
+;		- added JOTD's Joypad reading code, it needs to be enabled
+;		  with CUSTOM2 and is untested so far
+
+; 15-Jul-2018	- Intex computer patched, annoying "efford" typo fixed,
+;		  start with max. money and unlimited money trainers now
+;		  implemented, cache flush after relocating embedded exe
+;		  in Intex Computer exe added
+;		- start with all weapons and map trainer added
+
+; 14-Jul-2018	- interrupts fixed
+;		- ButtonWait support for mission texts
+;		- 68000 quitkey support for main game
+;		- lots of trainer options added
+;		- Reset (GURU TIME cheat) patched to quit back to DOS
+
+; 13-Jul-2018	- decryption for title part fixed, no more crash in snoop
+; a Friday :)	  mode
+;		- started to patch main game, starts now but needs more
+;		  fixes
+;		- Bplcon0 color bit fixes, long writes to $dff100 fixed,
+;		  access faults fixed
+
+; 12-Jul-2018	- generic decrypter for all encrypted files coded
+
+; 11-Jul-2018	- work started
 
 
-	IFD BARFLY
-	OUTPUT	"AlienBreed.slave"
-	BOPT	O+				;enable optimizing
-	BOPT	OG+				;enable optimizing
-	BOPT	ODd-				;disable mul optimizing
-	BOPT	ODe-				;disable mul optimizing
-	BOPT	w4-				;disable 64k warnings
-	BOPT	wo-			;disable optimizer warnings
-	SUPER
-	ENDC
+	INCDIR	SOURCES:INCLUDE/
+	INCLUDE	WHDLoad.i
 
-Prot	=	0	; you must set NoVBRMove and protection will be stop
-			; at trap #2 (screen flashed)
-;DEBUG = 1
-	
-;======================================================================
+FLAGS		= WHDLF_NoError|WHDLF_EmulTrap|WHDLF_ClearMem|WHDLF_NoKbd
+QUITKEY		= $59		; F10
+;DEBUG
 
-_base
-		SLAVE_HEADER			;ws_Security + ws_ID
-		dc.w	17			;ws_Version
-		dc.w	WHDLF_NoError|WHDLF_EmulTrap|WHDLF_NoKbd	;ws_flags
-	ifne	Prot
-		dc.l	$120000			;ws_BaseMemSize
-	else
-		IFD	DEBUG		
-		dc.l	$100000
-		ELSE
-		dc.l	$80000			;ws_BaseMemSize
-		ENDC
-	endc
-		dc.l	0			;ws_ExecInstall
-		dc.w	start-_base		;ws_GameLoader
-		dc.w	0			;ws_CurrentDir
-		dc.w	0			;ws_DontCache
-_keydebug	dc.b	0			;ws_keydebug
-_keyexit	dc.b	$5D			;ws_keyexit = '*'
-_expmem
-	ifne	Prot
-		dc.l	$0			;ws_ExpMem
-	else
-		IFD	DEBUG		
-		dc.l	$0
-		ELSE
-		dc.l	$80000			;ws_ExpMem
-		ENDC
-	endc
-		dc.w	_name-_base		;ws_name
-		dc.w	_copy-_base		;ws_copy
-		dc.w	_info-_base		;ws_info
-		dc.w	0                       ;ws_kickname
-		dc.l	0                       ;ws_kicksize
-		dc.w	0                       ;ws_kickcrc
-		dc.w	_config-_base		;ws_config
+; absolute skip
+PL_SA	MACRO
+	PL_S	\1,\2-(\1)
+	ENDM
 
-;============================================================================
+; jsr+absolute skip
+PL_PSA	MACRO
+	PL_PS	\1,\2		; could use PSS here but it fills memory
+	PL_S	\1+6,\3-(\1+6)	; with NOPS so we use standard skip
+	ENDM
 
-
-	IFD BARFLY
-	IFND	.passchk
-	DOSCMD	"WDate  >T:date"
-.passchk
-	ENDC
-	ENDC
-
-_config
-	    dc.b	"BW;"
-        dc.b    "C1:X:Infinite Lives & Ammo & keys & credits:0;"
-        dc.b    "C2:X:Enable original cheat keys (F7 levelskip/F9 megacheat):0;"
-		dc.b	0
-		
 DECL_VERSION:MACRO
-	dc.b	"2.2"
+	dc.b	"2.4"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -96,589 +115,759 @@ DECL_VERSION:MACRO
 		incbin	datetime
 	ENDC
 	ENDM
+
+HEADER	SLAVE_HEADER		; ws_security + ws_ID
+	dc.w	19		; ws_version
+	dc.w	FLAGS		; flags
+	dc.l	524288		; ws_BaseMemSize
+	dc.l	0		; ws_ExecInstall
+	dc.w	Patch-HEADER	; ws_GameLoader
+	IFD	DEBUG
+	dc.w	.dir-HEADER	; ws_CurrentDir
+	ELSE
+	dc.w	0		; ws_CurrentDir
+	ENDC
+	dc.w	0		; ws_DontCache
+	dc.b	0		; ws_KeyDebug
+	dc.b	QUITKEY		; ws_KeyExit
+	dc.l	$80000		; ws_ExpMem
+	dc.w	.name-HEADER	; ws_name
+	dc.w	.copy-HEADER	; ws_copy
+	dc.w	.info-HEADER	; ws_info
+
+; v16
+	dc.w	0		; ws_kickname
+	dc.l	0		; ws_kicksize
+	dc.w	0		; ws_kickcrc
+
+; v17
+	dc.w	.config-HEADER	; ws_config
+
+
+.config	dc.b	"BW;"
+	dc.b	"C2:B:Enable Joypad Support;"
+	dc.b	"C3:B:Enable ""No Extra Memory Found"" Part;"
+	dc.b	"C1:X:Unlimited Lives:0;"
+	dc.b	"C1:X:Unlimited Energy:1;"
+	dc.b	"C1:X:Unlimited Ammo:2;"
+	dc.b	"C1:X:Unlimited Keys:3;"
+	dc.b	"C1:X:Unlimited Money:4;"
+	dc.b	"C1:X:Start with max. Money:5;"
+	dc.b	"C1:X:Start with max. Keys:6;"
+	dc.b	"C1:X:Start with all Weapons and Map:7;"
+	dc.b	"C1:X:In-Game Keys:8;"
+	dc.b	0
+
+.dir	IFD	DEBUG
+	dc.b	"SOURCES:WHD_Slaves/AlienBreed",0
+	ENDC
+
+.name	dc.b	"Alien Breed",0
+.copy	dc.b	"1991 Team 17",0
+.info	dc.b	"installed by Mr.Larmer/JOTD (until V2.2)",-1
+	dc.b	"StingRay/[S]carab^Scoopex (V2.3 recode)",-1
+	IFD	DEBUG
+	dc.b	"DEBUG!!! "
+	ENDC
+	DECL_VERSION
+	dc.b	0
+HighName	dc.b	"AlienBreed.high",0
+
 	dc.b	"$","VER: slave "
 	DECL_VERSION
 	dc.b	0
 
-_name		dc.b	"Alien Breed"
-		IFD	DEBUG
-		dc.b	" (DEBUG MODE)"
-		ENDC
-		dc.b	0
-_copy		dc.b	"1991 Team 17",0
-_info		dc.b	"fixed by Mr.Larmer",10,10
-		dc.b	"additional enhancements by JOTD",10,10
-		dc.b	"Version "
-		DECL_VERSION
-		dc.b	-1
-		dc.b	"Greetings to Helmut Motzkau",0
-DiskNr		dc.b	1
-		even
-
-GET_EXPMEM:MACRO	
-	IFD	DEBUG
-	move.l	#$80000,\1
-	ELSE
-	move.l	_expmem(pc),\1
-	ENDC
-	ENDM
-	
-;======================================================================
-start	;	A0 = resident loader
-;======================================================================
-
-		lea	_resload(pc),a1
-		move.l	a0,(a1)			;save for later use
-
-		move.l	a0,a2
-		lea	(_tag,pc),a0
-		jsr	(resload_Control,a2)
+	CNOP	0,2
 
 
-		lea	$60000,a0
-		moveq	#0,d0
-		move.l	#$400,d1
-		moveq	#1,d2
-		bsr.w	_LoadDisk
+TAGLIST		dc.l	WHDLTAG_ATTNFLAGS_GET
+CPUFLAGS	dc.l	0
+		dc.l	WHDLTAG_CUSTOM1_GET
+TRAINEROPTIONS	dc.l	0
+		dc.l	WHDLTAG_CUSTOM2_GET
+JOYPADSUPPORT	dc.l	0
+		dc.l	WHDLTAG_CUSTOM3_GET
+NOEXTRAMEMPART	dc.l	0
+		dc.l	TAG_END
 
-		move.w	#0,SR
-		move.w	#$8240,$DFF096
+TR_INGAMEKEYS	= 8		; bit for in-game keys options
 
-		move.w	#$4EF9,$B8(a0)
-		pea	Boot(pc)
-		move.l	(a7)+,$BA(a0)
-		
-		bsr	_flushcache
-		jmp	$3E(a0)
+_resload:
+resload:
+	dc.l	0
 
-IGNORE_JOY_DIRECTIONS
-		include	ReadJoyPad.s
-		
-;--------------------------------
+	include	ReadJoyPad.s
 
-Copy_A3
-		movem.l	d0/a2/a3,-(a7)
-		sub.w	#$70,a7
-		lea	(a7),a2
-		bsr.b	Copy2
-		bsr	_flushcache
-		movem.l	$70(a7),d0/a2/a3
-Leave
-		jsr	(a7)
-		add.w	#$70+12,a7
-		rts
+Patch	lea	resload(pc),a1
+	move.l	a0,(a1)
+	move.l	a0,a2
 
-;--------------------------------
+	lea	TAGLIST(pc),a0
+	jsr	resload_Control(a2)
 
-Copy2
-.copy
-		cmp.w	#$47FA,(a3)
-		beq.b	.lea3
-		cmp.w	#$49FA,(a3)
-		beq.b	.lea4
-		cmp.w	#$40C7,(a3)		; move.w SR,d7
-		beq.b	.sr
-		move.w	(a3)+,(a2)+
-		cmp.b	#$60,-2(a3)
-		bne.b	.copy
-		cmp.w	#$49FA,(a3)
-		beq.b	.lea4
-		move.w	#$4E75,(a2)+
-		move.l	#$548B4E75,(a2)		; addq.l #2,a3
-		rts
-.sr
-		move.w	#$2008,d7		; SR value
-		addq.l	#2,a3
-		bra.b	.copy
-.lea3
-		move.w	#$47F9,(a2)+
-		bra.b	.do
-.lea4
-		move.w	#$49F9,(a2)+
-.do
-		addq.l	#2,a3
-		move.l	a3,d0
-		add.w	(a3)+,d0
-		move.l	d0,(a2)+
-		bra.b	.copy
+; install keyboard irq
+	bsr	SetLev2IRQ
 
-;--------------------------------
+	move.l	NOEXTRAMEMPART(pc),d0
+	beq.b	.normal
+	moveq	#22,d0
+	moveq	#78,d1
+	lea	$40000,a0
+	move.l	a0,a5
+	bsr	Loader
+	lea	PLNOMEM_PRE(pc),a0
+	lea	$40000,a1
+	jsr	resload_Patch(a2)
+	jmp	$40000
+.normal	
 
-Boot
-		lea	$600B8,a3
+; load and decrypt title
+	moveq	#100,d0
+	moveq	#80,d1
+	lea	$30000,a0
+	move.l	a0,a5
+	bsr	Loader
 
-		move.l	#$49FA032C,(a3)
-		move.w	#$47FA,4(a3)
-.go2
-		bsr.b	Copy_A3
+	move.l	#80*512,d0
+	jsr	resload_CRC16(a2)
+	cmp.w	#$f265,d0		; SPS 998
+	beq.b	.ok
 
-		cmp.l	#$6033E,a3
-		bne.b	.go2
+.wrongver
+	pea	(TDREASON_WRONGVER).w
+	bra.w	EXIT
 
-		movem.l	$100.w,d0-a6
-		move.w	d2,(a6)
+.ok
 
-		clr.l	4.w
-
-		lea	$70000,a0
-		move.l	#$400,d0
-		move.l	#$2800,d1
-		moveq	#1,d2
-		bsr.w	_LoadDisk
-
-		lea	(a0,d1.w),a0
-		move.w	#$13FF,d0
-		move.w	#$FFFE,d1
-.loop
-		eor.w	d1,-(a0)
-		rol.w	#1,d1
-		dbf	d0,.loop
-
-		lea	$7FFFC,a7
-		GET_EXPMEM	(A7)
-		move.w	#0,SR
-		lea	$7F800,a7
-
-		lea	$70826,a0
-.go
-		bsr.b	Copy_A0
-
-		cmp.l	#$70ABE,a0
-		bne.b	.next
-
-		lea	$70F2A-$70ABE(a0),a0
-.next
-		cmp.l	#$70F9C,a0
-		bne.b	.next2
-
-		lea	$713EE-$70F9C(a0),a0
-.next2
-		cmp.l	#$715FE,a0
-		bne.b	.next3
-
-		lea	$715EC-$715FE(a0),a0
-.next3
-		cmp.l	#$71864,a0
-		bne.b	.go
-
-		move.w	#$4EF9,$70FDA-$71864(a0)
-		pea	Load(pc)
-		move.l	(a7)+,$70FDC-$71864(a0)
-
-		pea	Patch(pc)
-		move.l	(a7)+,$7187E-$71864(a0)		; jmp $30000
-
-		bsr	_flushcache
-		jmp	(a0)
-
-;--------------------------------
-
-Copy_A0
-		movem.l	d0/a0/a2,-(a7)
-		sub.w	#$70,a7
-		lea	(a7),a2
-		bsr.b	Copy
-		bsr	_flushcache
-		movem.l	$70(a7),d0/a0/a2
-		bra.w	Leave
-
-;--------------------------------
-
-Copy
-.copy
-		cmp.w	#$41FA,(a0)
-		beq.b	.lea
-		move.w	(a0)+,(a2)+
-		cmp.w	#$51c8,-2(a0)
-		bne.b	.copy
-		move.w	(a0)+,(a2)+
-		cmp.w	#$41FA,(a0)
-		beq.b	.lea
-		move.w	#$4E75,(a2)
-		rts
-.lea
-		move.w	#$41F9,(a2)+
-		addq.l	#2,a0
-		move.l	a0,d0
-		add.w	(a0)+,d0
-		move.l	d0,(a2)+
-		bra.b	.copy
-
-;--------------------------------
-
-Patch
-		lea	$30014,a0
-.copy
-		bsr.b	Copy_A0
-
-		cmp.l	#$20000,a0
-		bne.b	.next0
-
-		lea	$30E72,a0
-.next0
-		cmp.l	#$30F5C,a0
-		bne.b	.next
-
-		move.w	#$4EF9,$31606-$30F5C(a0)
-		pea	Load(pc)
-		move.l	(a7)+,$31608-$30F5C(a0)
-
-		lea	$70000,a0
-		jsr	$315F8
-
-		lea	$319C6,a0
-.next
-		cmp.l	#$31A64,a0
-		bne.b	.next1
-		bsr	_flushcache
-		jsr	(a0)
-
-		lea	$30F6E,a0
-.next1
-		cmp.l	#$310C2,a0
-		bne.b	.next2
-
-		jsr	$31A88-$310C2(a0)
-
-		lea	$310D4,a0
-.next2
-		cmp.l	#$312D2,a0
-		bne.b	.next3
-
-		jsr	$31AB2-$312D2(a0)
-
-		lea	$312D6,a0
-.next3
-		cmp.l	#$3157E,a0
-		bne.b	.copy
-
-		pea	Patch2(pc)
-		move.l	(a7)+,$32048-$3157E(a0)		; jmp $8000
-		bsr	_flushcache
-		jsr	$31AE0-$3157E(a0)
-		bsr	_flushcache
-		jmp	$31590
-
-;--------------------------------
-
-Patch2
-		lea	$8788,a0
-.copy
-		bsr.w	Copy_A0
-
-		cmp.l	#$A32E,a0
-		bne.b	.copy
-
-		move.w	#$4EF9,$100.w
-		pea	Patch3(pc)
-		move.l	(a7)+,$102.w
-		move.w	#$100,$A3BA-$A32E(a0)
-		bsr	_flushcache
-		jmp	(a0)
-
-;--------------------------------
-
-Patch3
-		clr.w	$100.w
-		clr.l	$102.w
-
-	move.l	a0,-(a7)
-	lea	Patch4(pc),a0
-	ifne	Prot
-	sub.l	#$80000,a0
-	else
-	IFD	DEBUG
-	sub.l	#$80000,a0
-	ELSE
-	sub.l	_expmem(pc),a0
-	ENDC
-	endc
-	move.l	a0,$2E(a5)		; a5=expmem
-	move.l	(a7)+,a0
-	bsr	_flushcache
-	jmp	$400.w
-
-;--------------------------------
-
-Patch4
-	movem.l	d0-d1/a0-a2/A4,-(a7)
-	
-	bsr	_detect_controller_types
-	
-	move.l	a5,a1	; expansion mem
-	
-	
-	add.l	#$A000,a1
-	addq.l	#4,$697A(a1)		; fix access fault
-	addq.l	#4,$69CE(a1)
-
-	lea	pl_main(pc),a0
-	move.l	_resload(pc),a2
+; patch
+	lea	PLTITLE(pc),a0
 	move.l	a5,a1
+	move.l	resload(pc),a2
 	jsr	resload_Patch(a2)
 
-	GET_EXPMEM	A4
+	lea	$7fffc,a7
+	lea	$7f800,a0
+	move.l	a0,USP
 
+
+; store ext. mem ptr
+	move.l	HEADER+ws_ExpMem(pc),d0
+; memory is aligned like this in the original but this is
+; not necessary
+	;add.l	#$60000,d0
+	;and.l	#$fff80000,d0
+	move.l	d0,$7fffc
+
+
+; create code at $3f4.w
+	lea	$3f4.w,a0
+	move.l	#$53e2577e,d5
+	move.l	#$4b83c5be,d6
+	move.l	#$000041fa,d7
+
+	move.l	#$1E1B57A1,d2
+	move.l	#$BB83F582,d3
+	move.l	#$7FFF0F8F,d4
+
+	eor.l	d2,d5
+	eor.l	d3,d6
+	eor.l	d4,d7
+	move.l	d5,(a0)+
+	move.l	d6,(a0)+
+	move.l	d7,(a0)
+	move.l	d5,$200.w
 	
-	move.l	A4,d0
-	add.l	#$85A,d0
-	move.l	d0,2(a5)
 
 
-	bsr	_flushcache
-	movem.l	(a7)+,d0-d1/a0-a2/A4
-	jmp	(a5)			; expmem
+; set default VBI
+	pea	AckVBI(pc)
+	move.l	(a7)+,$6c.w
 
-; keyboard handshake timer
-_ack_kb:
-	move.b	#$FF,$bfec01
-	move.l  d0,-(a7)
-	moveq	#2,d0
-.bd_loop1
-	move.w  d0,-(a7)
-        move.b	$dff006,d0	; VPOS
-.bd_loop2
-	cmp.b	$dff006,d0
-	beq.s	.bd_loop2
-	move.w	(a7)+,d0
-	dbf	d0,.bd_loop1
-	move.l	(a7)+,d0
+; and start game
+	jmp	(a5)
+
+
+
+QUIT	pea	(TDREASON_OK).w
+EXIT	move.l	resload(pc),a2
+	bsr.b	KillSys
+	jmp	resload_Abort(a2)
+
+
+KillSys	move.w	#$7fff,$dff09a
+	bsr	WaitRaster
+	move.w	#$7ff,$dff096
+	move.w	#$7fff,$dff09c
 	rts
-	
-pl_main:
+
+AckVBI	move.w	#1<<4+1<<5+1<<6,$dff09c
+	move.w	#1<<4+1<<5+1<<6,$dff09c
+	rte
+
+PLNOMEM_PRE
 	PL_START
-	PL_IFBW
-	PL_PS	$E976,mission_text
-	PL_ENDIF
-	PL_IFC1
-	; not efficient, credit value is somehow reset when entering shop
-	;PL_PS	$117C,set_max_credits
-	PL_PSS	$D294,set_max_credits,2
-	PL_B	$804E,$4A	; energy
-	PL_B	$8052,$4A
-	PL_B	$A6AA,$4A
-	PL_B	$749C,$4A	; lives
-	PL_B	$D950,$4A	; ammo
-	PL_B	$7BA8,$4A	; keys
-	PL_B	$D964,$4A	; magazines
-	PL_B	$2D8E,$4A	; time
-	PL_B	$2D9E,$4A
-	PL_ENDIF
-	PL_IFC2
-	; check cheat keys active: always
-	PL_NOP	$E08,4
-	PL_ENDIF
-	
-	PL_PSS	$2004E,read_ciasdr,4	; keyboard
-	PL_PS	$A6D6,Protection
-	PL_PS	$A000+$561A,ChangeDisk
-	
-	PL_P	$ADA6,Load
-
-	; allows to quit after the end sequence
-	; unfortunately this crashes the game!!! strange
-	;;PL_P	$CF8,game_end
-	
-	; removes fire button to connect to intex
-
-	PL_NOP	$7E32,2
-	
-	; replaces RMB check by RMB+button 2
-
-	;;PL_PS	$7E3E,_button_test	; no longer needed, joypad test issues the spacebar keycode
-;	PL_PS	$80D2,_button_test
-
-	; keyboard fix
-
-	PL_PSS	$2009C,_ack_kb,2
-	
+	PL_P	$6f4,.patchNoMem1	; patch after decrunching
 	PL_END
-	IFEQ	1
-game_end
-	btst	#6,$bfe001
-	beq.b	.quit
-	btst	#7,$bfe001
-	beq.b	.quit
-	move.b	$bfec01,d0
-	not.b	d0
-	ror.b	#1,d0
-	cmp.b	_keyexit(pc),d0
-	bne.b	game_end
-.quit
-	pea	TDREASON_OK
-	move.l	_resload(pc),-(a7)
-	addq.l	#resload_Abort,(a7)
+
+.patchNoMem1
+	lea	PLNOMEM1(pc),a0
+	lea	$60000+$20,a1
+	move.l	resload(pc),a2
+	jsr	resload_Patch(a2)
+	jmp	$60020
+
+PLNOMEM1
+	PL_START
+	PL_P	$ae,.patchNoMem		; now patch the real decrunched part
+
+	PL_SA	$6c,$70			; skip pea $40(a4)
+	PL_W	$7a,$4e71		; disable rts
+	PL_L	$38+2,$60000		; don't trash decruncher code
+	PL_END
+
+.patchNoMem
+	lea	PLNOMEM(pc),a0
+	move.l	a4,a1
+	move.l	resload(pc),a2
+	jsr	resload_Patch(a2)
+
+	move.w	#$7fff,(a5)
+	move.w	#$7fff,4(a5)		; disable DMA, original code
+	move.w	d5,sr			; SR: 0, original code
+	jmp	(a4)
+
+PLNOMEM	PL_START
+	PL_PS	$1e,.enableKbd
+	PL_END
+
+.enableKbd
+	bsr	SetLev2IRQ
+	move.w	#$8380,$96(a6)		; original code, enable DMA
 	rts
-	ENDC
-mission_text
-	btst	#6,$bfe001
-	beq.b	.release
-	btst	#7,$bfe001
-	bne.b	mission_text
-.release
-	btst	#6,$bfe001
-	beq.b	mission_text
-	btst	#7,$bfe001
-	beq.b	mission_text
-	
-	move.l	#$20,D0		; original code
+
+
+PLTITLE	PL_START
+	PL_P	$1606,Loader
+	PL_P	$ab66,AckVBI
+	PL_ORW	$e7c+2,1<<3		; enable level 2 interrupts
+	PL_P	$2046,.patch_premain	; file 1c_15
+	PL_END
+
+.patch_premain
+	lea	PLPREMAIN(pc),a0
+	pea	$8000
+	move.l	(a7),a1
+	move.l	resload(pc),a2
+	jmp	resload_Patch(a2)
+
+FlushCache
+	move.l	resload(pc),a0
+	jsr	resload_FlushCache(a0)
+	movem.l	(a7)+,d0-a6		; original code
 	rts
-		
-read_ciasdr
-	move.b	$bfec01,d0
-	not.b	d0
-	ror.b	#1,d0
-	cmp.b	_keyexit(pc),d0
-	bne.b	.noquit
-	; quitkey works for 68000 now :)
-	pea	TDREASON_OK
-	move.l	_resload(pc),-(a7)
-	addq.l	#resload_Abort,(a7)
+
+PLPREMAIN
+	PL_START
+	PL_P	$241a,.patchmain
+	PL_P	$253e,FlushCache	; flush cache after relocating
+	PL_END
+	
+
+
+; main file has been decrypted and relocated, patch it
+.patchmain
+	movem.l	d0-a6,-(a7)
+
+	lea	PLMAIN(pc),a0
+	move.l	a5,a1
+	move.l	resload(pc),a2
+	jsr	resload_Patch(a2)
+
+; patch copperlists in data section
+; data section relocation start is $600
+; data section offset in executable is $7ee84
+	lea	PLMAIN_CHIP(pc),a0
+	lea	$600.w,a1
+	jsr	resload_Patch(a2)
+
+; load high scores
+	lea	HighName(pc),a0
+	move.l	a5,a1
+	add.l	#$200bc,a1
+	jsr	resload_GetFileSize(a2)
+	tst.l	d0
+	beq.b	.noHigh
+	lea	HighName(pc),a0
+	move.l	a5,a1
+	add.l	#$200bc,a1
+	jsr	resload_LoadFile(a2)
+.noHigh
+
+
+; install trainers
+	move.l	TRAINEROPTIONS(pc),d0
+
+; unlimited lives
+	lsr.l	#1,d0
+	bcc.b	.noUnlimitedLives
+	eor.b	#$19,$749c(a5)		; subq.w <-> tst.w
+
+.noUnlimitedLives
+
+; unlimited energy
+	lsr.l	#1,d0
+	bcc.b	.noUnlimitedEnergy
+	move.l	#$bcd4,d1		; player 1
+	move.w	#1,(a5,d1.l)
+	move.w	#1,2(a5,d1.l)		; player 2
+.noUnlimitedEnergy
+
+; unlimited ammo
+	lsr.l	#1,d0
+	bcc.b	.noUnlimitedAmmo
+	move.l	#$d950,d1
+	eor.b	#$19,(a5,d1.l)		; subq.w <-> tst.w
+.noUnlimitedAmmo
+
+; unlimited keys
+	lsr.l	#1,d0
+	bcc.b	.noUnlimitedKeys
+	move.w	#1,$7b3a(a5)
+.noUnlimitedKeys
+
+; unlimited money (done in the PLINTEXCOMPUTER patch list)
+	lsr.l	#1,d0
+.noUnlimitedMoney
+
+; start with max. money (done in the PLINTEXCOMPUTER patch list)
+	lsr.l	#1,d0
+.noMaxMoney
+
+; start with max. keys
+	lsr.l	#1,d0
+	bcc.b	.noMaxKeys
+	pea	30000
+	move.l	(a7),$5a5a(a5)		; player 1
+	move.l	(a7)+,$61fa(a5)		; player 2
+.noMaxKeys
+
+; start  with all weapons and map
+	lsr.l	#1,d0
+	bcc.b	.noAllWeapons
+	move.w	#%11111111,$28a0+2(a5)
+	;addq.w	#1,$794(a5)		; "has map" flag is cleared in init part
+	move.w	#$4e71,$d9c(a5)
+.noAllWeapons
+
+
+	move.l	JOYPADSUPPORT(pc),d0
+	beq.b	.noJoypad
+	bsr	_detect_controller_types
+.noJoypad
+
+	movem.l	(a7)+,d0-a6
+
+.nomain	lea	$7fc00,a7		; original code
+	jmp	(a5)
+	
+PLMAINMENU
+	PL_START
+	PL_PS	$2d2,.sethiflag		; set "high score achieved" flag
+	PL_PS	$9e,.savehighscores
+	PL_PSA	$181e,.SaveVBI,$1828	; don't modify VBI code
+	PL_P	$1834,.RestoreVBI	; restore old VBI
+	PL_P	$18d8,.AckVBI
+	PL_END
+
+.AckVBI	move.l	HEADER+ws_ExpMem(pc),-(a7)
+	add.l	#$1644,(a7)		; call main interrupt code
 	rts
-.noquit	
-	movem.l	d0,-(a7)
-	movem.l	d1,-(a7)
-	move.b	controller_joypad_1(pc),d0
-	beq	.onlyjoystick
-	; read the joypad buttons and send proper keycode
-	bsr	_read_joysticks_buttons
-	move.l	joy1_buttons(pc),d0
-	moveq.l	#0,d1
-	
-	bclr	#JPB_BTN_GRN,d0
-	beq.b	.nowchg
-	move.b	#$64,d1	; code for "L-alt"
-.nowchg	
-	; we have cleared this green button flag if pressed
-    ; now OR d0 with the contents of joy0 buttons
-	; (since apart from weapon change, both players buttons perform the same actions)
-	or.l	joy0_buttons(pc),d0
-	; now we can test both joypads buttons at the same time :)
-	btst	#JPB_BTN_GRN,d0
-	beq.b	.nowchgp2
-	move.b	#$65,d1	; code for "R-alt"
-.nowchgp2
-	
-	; this button could be pressed on a non-joypad (2-button joystick)
-	btst	#JPB_BTN_BLU,d0
-	beq.b	.nointex
-	move.b	#$40,d1	; code for "space"
-.nointex
-	btst	#JPB_BTN_PLAY,d0
-	bne.b	.pause
-	; reset pause press flag
-	movem.l	A0,-(a7)
-	lea	pause_pressed(pc),a0
-	clr.b	(a0)
-	movem.l	(a7)+,a0
-	bra.b	.nopause
-.pause
-	movem.l	A0,-(a7)
-	lea	pause_pressed(pc),a0
+
+.SaveVBI
+	move.l	a0,-(a7)
+	lea	.oldVBI(pc),a0
+	move.l	$6c.w,(a0)
+	move.l	(a7)+,a0
+	rts
+
+.RestoreVBI
+	move.l	.oldVBI(pc),$6c.w
+	rts
+
+.oldVBI	dc.l	0
+
+.savehighscores
+	movem.l	d0-a6,-(a7)
+
+	lea	.hiflag(pc),a0
 	tst.b	(a0)
-	bne.b	.dont_press_again
-.presspause
-	move.b	#$19,d1	; code for "P"
-	st.b	(a0)
-.dont_press_again	
-	movem.l	(a7)+,a0
-.nopause
-	btst	#JPB_BTN_YEL,d0
-	beq.b	.nomap
-	move.b	#$37,d1	; code for "M"
-.nomap
-	btst	#JPB_BTN_FORWARD,d0
-	beq.b	.noesc
-	btst	#JPB_BTN_REVERSE,d0
-	beq.b	.noesc
-	move.b	#$45,d1	; code for "ESC"
-.noesc
-	tst.b	d1
-	beq.b	.nobuttonpress	; no button pressed, don't clobber keyboard
-	move.w	d1,d0
-	movem.l	(a7)+,d1
-	addq.l	#4,A7	; do not restore D0!
-.set_carry_and_quit
-	rol.b	#1,d0
-	ror.b	#1,d0
-	rts
-.nobuttonpress
-	movem.l	(a7)+,d1
-.nojoypad
-	movem.l	(a7)+,d0	; restore D0 value: keyboard code
-	bra.b	.set_carry_and_quit
-	rts
-; not a joypad: just read 2nd button, no need to read all the others & the pause
-; logic wasting CPU cycles for no chance of ever reading any extra buttons
-.onlyjoystick
-	moveq.l	#1,d0
-	bsr	_read_joystick
-	moveq.l	#0,d1
-	; this button could be pressed on a non-joypad (2-button joystick)
-	btst	#JPB_BTN_BLU,d0
-	beq.b	.noesc
-	move.b	#$40,d1	; code for "L-alt"
-	bra.b	.noesc
-	
-set_max_credits
-	movem.l	d0-d1/a0-a2,-(a7)
-	move.l	_resload(pc),a2
-	lea	pl_credits(pc),a0
-	sub.l	a1,a1
-	jsr	(resload_Patch,a2)
-	movem.l	(a7)+,d0-d1/a0-a2
-	
-	GET_EXPMEM	a0
+	beq.b	.nohigh
+	sf	(a0)
 
-	; set a lot of credits each time entering shop
-	; I don't really see the relation between the value and the
-	; displayed value, but let's say it's a lot of cash
-	move.l	#$00100010,($7A4,a0)
+	move.l	TRAINEROPTIONS(pc),d0	; no saving if any trainers are used
+	bne.b	.nohigh
+	lea	HighName(pc),a0
+	move.l	HEADER+ws_ExpMem(pc),a1
+	add.l	#$200bc,a1
+	move.l	resload(pc),a2
+	move.l	#$6f4-$654,d0		; size
+	jsr	resload_SaveFile(a2)
+.nohigh
+
+	movem.l	(a7)+,d0-a6
+
+	moveq	#8,d0			; optimised original code
+	rts
+
+
+.sethiflag
+	move.l	a0,-(a7)
+	lea	.hiflag(pc),a0
+	st	(a0)
+	move.l	(a7)+,a0
+
+	clr.b	(a0)+			; original code
+	clr.b	(a0)+
+	clr.b	(a0)+
 	
 	rts
 
-pl_credits
+.hiflag	dc.b	0
+	dc.b	0
+
+PLINTEXCOMPUTER
 	PL_START
-	; remove the credit subtract in various places in the shop
-	PL_NOP	$2BB1E,6
-	PL_NOP	$2B23E,2
-	PL_NOP	$2BB2C,2
+	PL_P	$a8a,FlushCache		; there is an exe embedded, flush
+					; cache after relocating
+	PL_B	$2471+14,"A"		; fix "efford" typo :)
+
+; unlimited money
+	PL_IFC1X	4
+	PL_W	$be6,$4e71		; sub.l d1,(a5) -> nop (tools)
+	PL_W	$14d2,$4e71		; sub.l d0,d1 -> nop (weapons)
+
+	PL_ENDIF
 	PL_END
-_flushcache:
-	move.l	a2,-(a7)
-	move.l	_resload(pc),a2
-	jsr	resload_FlushCache(a2)
-	move.l	(a7)+,a2
+
+PLMAIN_CHIP
+	PL_START
+	PL_ORW	($83fc2-$7ee84)+2,1<<9	; set Bplcon0 color bit
+	PL_ORW	($8457e-$7ee84)+2,1<<9	; set Bplcon0 color bit
+	PL_END
+
+
+
+PLMAIN	PL_START
+	PL_SA	$f4c6,$f4d0		; skip long write to $dff100
+	PL_P	$239ae,FlushCache	; flush cache after relocating
+	PL_P	$ada6,Loader	
+	PL_PS	$f61a,ChangeDisk
+	;PL_AL	$10978+2,4		; fix access fault
+	;PL_AL	$10982+2,4		; fix access fault
+	PL_PS	$10904,.fix
+
+	PL_PSS	$21274,AckLev4,2
+	PL_PSS	$17bc,AckVBI_R,2
+	PL_PSS	$17da,AckCOP_R,2
+	PL_PS	$2004e,.checkkeys
+	PL_P	$be2a,QUIT		; reset ("GURU TIME" cheat) -> quit
+
+	PL_PS	$e754,.PatchMainMenu
+	PL_PS	$d2a8,.PatchIntexComputer
+
+
+	PL_IFBW
+	PL_PS	$e976,.WaitButtonMissionText
+	PL_ENDIF
+
+	PL_P	$cf2,.PatchEnd
+
+; Mr.Larmer patches
+	PL_PS	$a6d6,Protection
+
+; JOTD patches
+
+	PL_END
+
+.fix	move.l	(a0)+,d0
+	bne.b	.dest_ok
+	addq.l	#4,d0
+.dest_ok
+	move.l	d0,a1
+	move.w	-4(a1),d0
 	rts
 
-;--------------------------------
 
-Protection
-	ifne	Prot
-		lea	$C6874,a0
-.copy
-		bsr.w	Copy_A0
+.PatchMainMenu
+	movem.l	d0-a6,-(a7)
+	lea	PLMAINMENU(pc),a0
+	lea	($a8edc-$7ee84)+$600,a1
+	move.l	resload(pc),a2
+	jsr	resload_Patch(a2)
+	movem.l	(a7)+,d0-a6
+	move.w	#1<<15+1<<3,$dff09a	; enable level 2 interrupts in main menu
+	rts
 
-		cmp.l	#$C68D0,a0
-		bne.b	.copy
+.PatchEnd
+	move.l	HEADER+ws_ExpMem(pc),a0
+	add.l	#$20f20,a0
+	jsr	(a0)			; call original routine
 
-		move.w	#$4EB9,$C7636
-		pea	Decode(pc)
-		move.l	(a7)+,$C7638
+	move.l	#100000*10,d0		; more than 27 hours should be enough :)
+	move.l	resload(pc),a0
+	jsr	resload_Delay(a0)
+	bra.w	QUIT
 
-		pea	(a2)
-		jsr	$C759C
-		jsr	$C75D6
-		move.l	(a7)+,a2
 
-		jmp	$C68DC		; go to trace code
-	endc
-		eor.b	#$4E,$458.w	; this code is forgot in cracked version :)
+.PatchIntexComputer
+	movem.l	d0-a6,-(a7)
+	move.l	a0,a5
+
+	lea	PLINTEXCOMPUTER(pc),a0
+
+; $600: start of relocated data section
+; $a8edc: offset to intex computer executable in binary
+; $7ee84: start offset of data section in binary
+	lea	($a8edc-$7ee84)+$600,a1
+
+	move.l	resload(pc),a2
+	jsr	resload_Patch(a2)
+
+	lea	TRAINEROPTIONS(pc),a0
+	tst.w	.moneyset-TRAINEROPTIONS(a0)
+	bne.b	.noMaxMoney
+	addq.w	#1,.moneyset-TRAINEROPTIONS(a0)
+	move.l	(a0),d0
+	btst	#5,d0
+	beq.b	.noMaxMoney
+
+; set 500000 credits
+	move.l	a5,a0
+	move.l	#500000*2*50,(a0)
+.noMaxMoney
+
+	movem.l	(a7)+,d0-a6
+	jmp	($a8edc-$7ee84)+$600
+
+.moneyset	dc.w	0
+
+
+.WaitButtonMissionText
+	move.l	a0,-(a7)
+	moveq	#10*10,d0	; 10 seconds
+	move.l	resload(pc),a0
+	jsr	resload_Delay(a0)
+	move.l	(a7)+,a0
+	moveq	#32,d0		; optimised original code
+	rts
+
+
+.pause_status	dc.w	0
+
+
+.checkkeys
+	bsr.w	.getkey
+	ror.b	d0
+	not.b	d0
+	cmp.b	HEADER+ws_keyexit(pc),d0
+	beq.w	QUIT
+
+
+; check joypad buttons
+	move.l	JOYPADSUPPORT(pc),d1
+	beq.b	.nojoypad
+
+
+; clear raw key to avoid problems (f.e. with map screen)
+	move.l	HEADER+ws_ExpMem(pc),a0
+	add.l	#$200ba,a0
+	clr.b	(a0)
+
+	move.w	d0,-(a7)
+	bsr	ReadJoypad
+	move.w	(a7)+,d0
+	tst.b	d2			; was a button pressed?
+	;beq.b	.nojoypad
+	bmi.w	QUIT
+
+
+	lea	.pause_status(pc),a0
+	cmp.w	#$19,d2
+	bne.b	.noP
+
+	tst.b	(a0)
+	beq.b	.first_time
+
+	moveq	#0,d2			; clear key code -> wait until
+	bra.b	.ok			; button has pressed again
+
+
+.first_time
+	st	(a0)			; set pause_status flag
+	bra.b	.ok
+
+
+.noP	clr.b	(a0)
+
+
+.ok	move.b	d2,d0			; yes, return mapped key
+	beq.b	.nojoypad
+	lsl.b	d0
+	not.b	d0
+	rts
+.nojoypad
+
+	move.l	TRAINEROPTIONS(pc),d1
+	btst	#TR_INGAMEKEYS,d1
+	beq.b	.nokeys
+
+	move.l	HEADER+ws_ExpMem(pc),a5	; start of executable
+	lea	.TAB(pc),a0
+.search	movem.w	(a0)+,d1/d2
+	cmp.b	d0,d1
+	bne.b	.next
+
+	jsr	.TAB(pc,d2.w)
+	bra.b	.nokeys
+
+.next	tst.w	(a0)
+	bne.b	.search
+
+.nokeys
+
+.getkey	move.b	$bfec01,d0
+	rts
+
+.TAB	dc.w	$36,.SkipLevel-.TAB	; n - skip level
+	dc.w	$12,.RefreshEnergy-.TAB	; e - refresh energy
+	dc.w	$27,.MaxKeys-.TAB	; k - get max. keys
+	dc.w	$20,.RefreshAmmo-.TAB	; a - refresh ammo
+	dc.w	$28,.RefreshLives-.TAB	; l - refresh lives
+	dc.w	$25,.GetMap-.TAB 	; h - get hand map
+	dc.w	$11,.GetWeapons-.TAB	; w - get all weapons
+	dc.w	0			; end of tab
+
+.SkipLevel
+	move.w	#1,$822(a5)
+	rts
+
+.RefreshEnergy
+	move.w	#$40,$58fa+$150(a5)	; player 1
+	move.w	#$40,$609a+$150(a5)	; player 2
+	rts
+
+.MaxKeys
+	move.w	#30000,$58fa+$160(a5)	; player 1
+	move.w	#30000,$609a+$160(a5)	; player 2
+	rts
+
+.RefreshAmmo
+	move.w	#32,$58fa+$15c(a5)	; player 1
+	move.w	#32,$609a+$15c(a5)	; player 2
+	rts
+
+.RefreshLives
+	move.w	#4,$58fa+$154(a5)	; player 1
+	move.w	#4,$609a+$154(a5)	; player 2
+
+.GetMap	move.w	#1,$794(a5)
+	rts
+
+.GetWeapons
+	move.w	#%11111111,d2
+	move.w	d2,$58fa+$192(a5)	; player 1
+	move.w	d2,$609a+$192(a5)	; player 2
+	rts
+
+
+; returns result in d2, either mapped rawkey or 0 if no button was pressed
+; -1 if quit
+ReadJoypad
+	lea	.joy(pc),a0		; read joystick in port 2 only
+	move.b	controller_joypad_1(pc),d0
+	beq.b	.joy_only
+	lea	.pad(pc),a0		; read full CD32 pad
+.joy_only
+	jsr	(a0)
+
+	moveq	#0,d2
+	lea	.TAB(pc),a0
+.loop	move.l	joy0(pc),d0
+	move.l	(a0)+,d1		; port
+	beq.b	.port0
+	move.l	joy1(pc),d0
+	subq.b	#1,d1
+	beq.b	.port1
+	or.l	joy0(pc),d0	; both ports
+.port1
+
+.port0
+
+	move.l	(a0)+,d1
+	move.l	(a0)+,d3
+
+	and.l	d1,d0
+	eor.l	d1,d0
+	bne.b	.no_button
+	move.w	d3,d2
+
+.no_button
+	tst.l	(a0)			; check all entries in table
+	bpl.b	.loop
+	rts
+
+.pad	bra.w	_joystick
+
+.joy	moveq	#1,d0			; port 1
+	bsr	_read_joystick
+	lea	joy1(pc),a0
+	move.l	d0,(a0)
+	rts
+
+
+; joypad port (0,1,both), joypad button, mapped rawkey
+.TAB	dc.l	1,JPF_BTN_GRN,$64	; left alt, change weapons player 1
+	dc.l	0,JPF_BTN_GRN,$65	; right alt, change weapons player 2
+	dc.l	2,JPF_BTN_YEL,$37	; M, open map
+	dc.l	2,JPF_BTN_BLU,$40	; Space, enter intex computer
+	dc.l	2,JPF_BTN_PLAY,$19	; P, pause
+
+	dc.l	2,JPF_BTN_FORWARD+JPF_BTN_REVERSE,$45	; ESC
+	dc.l	2,JPF_BTN_FORWARD+JPF_BTN_REVERSE+JPF_BTN_PLAY,-1	; quit
+	dc.l	-1			; end of tab
+
+	CNOP	0,2
+
+
+
+AckVBI_R
+	move.w	#1<<5,$dff09c
+	move.w	#1<<5,$dff09c
+	rts
+
+AckCOP_R
+	move.w	#1<<4,$dff09c
+	move.w	#1<<4,$dff09c
+	rts
+
+AckLev4	move.w	#$400,$dff09c
+	move.w	#$400,$dff09c
+	rts
+
+ChangeDisk
+	move.l	a0,-(a7)
+	lea	DiskNum(pc),a0
+	move.b	#2,(a0)
+	move.l	(a7)+,a0
+	rts
+
+
+
+Protection	eor.b	#$4E,$458.w	; this code is forgot in cracked version :)
 
 		lea	Track(pc),a0
 		moveq	#8-1,d0
-.copy
-		move.l	(a0)+,(a2)+
+.copy		move.l	(a0)+,(a2)+
 		dbf	d0,.copy
 
 ;		move.l	#$77000000,d0
@@ -699,116 +888,400 @@ Protection
 		move.l	#$55555555,d7
 
 ; read track 0_0 from disk 2 with SYNC $8924 to $200 ptr
-; and calculated values are leaved in d0-d7 !
+; and calculated values are left in d0-d7 !
 
 		rts
 Track
 		dc.l	$8924912A,$AAAA552A,$AAAAAAA4,$A9254449
 		dc.l	$5149112A,$AAAA92AA,$AAAAAAAA,$AAAAAAAA
 
-;--------------------------------
 
-	ifne	Prot
-Decode
-		move.l	-4(a0),d0
-		eor.l	d0,(a0)
-
-		moveq	#0,d0
-		move.w	(a0),d0
-		lsr.w	#1,d0
-		lea	Size(pc),a1
-		move.b	(a1,d0.w),d0
-		btst	#0,1(a0)
-		bne.b	.skip
-		lsr.b	#4,d0
-.skip
-		and.w	#$F,d0
-		beq.b	.error		; if 0 ist isn't support opcode size
-		subq.w	#1,d0
-.back
-		bsr.b	.calc_dest
-.copy
-		move.w	(a0)+,(a1)+
-		dbf	d0,.copy
-		rts
-.calc_dest
-		move.l	d1,-(a7)
-		move.l	a0,d1
-		sub.l	#$C6000,d1
-		lea	$100000,a1
-		add.l	d1,a1
-		move.l	(a7)+,d1
-		rts
-
-;--------------------------------------
-
-.error
-.m
-		move.w	$dff006,$dff180
-
-		btst	#6,$bfe001
-		bne.b	.m
-.m1
-		btst	#6,$bfe001
-		beq.b	.m1
-
-;	move.w	#$60FE,$C7592
-
-		bra.b	.back
-	endc
-
-;--------------------------------
-
-Load
-		movem.l	d0-d2/a0-a2,-(a7)
-
-		mulu	#$200,d0
-		mulu	#$200,d1
-		lea	DiskNr(pc),a1
-		moveq	#0,d2
-		move.b	(a1),d2
-		bsr.b	_LoadDisk
-
-		movem.l	(a7)+,d0-d2/a0-a2
-		moveq	#0,d0
-		rts
-
-;--------------------------------
-
-ChangeDisk
-		move.l	a0,-(a7)
-		lea	DiskNr(pc),a0
-		move.b	#2,(a0)
-		move.l	(a7)+,a0
-		rts
-
-;--------------------------------
-
-_resload	dc.l	0		;address of resident loader
-
-pause_pressed
-		dc.w	0
-		
-;--------------------------------
-; IN:	d0=offset d1=size d2=disk a0=dest
-; OUT:	d0=success
-
-_LoadDisk	movem.l	d0-d1/a0-a2,-(a7)
-		move.l	_resload(pc),a2
-		jsr	resload_DiskLoad(a2)
-		movem.l	(a7)+,d0-d1/a0-a2
-		rts
-
-;======================================================================
+Loader	bsr.b	.load
+	movem.l	d0-a6,-(a7)
+	bsr	Decrypt_AB		; decrypt file if necessary
+	movem.l	(a7)+,d0-a6
+	moveq	#0,d0			; no errors
+	rts
 
 
-_tag		dc.l	WHDLTAG_CUSTOM1_GET
-_custom1	dc.l	0
-		dc.l	0
+.load	movem.l	d0-a6,-(a7)
+	mulu.w	#512,d0
+	mulu.w	#512,d1
+	move.b	DiskNum(pc),d2
+	move.l	resload(pc),a1
+	jsr	resload_DiskLoad(a1)
+	movem.l	(a7)+,d0-a6
+	rts
 
-	ifne	Prot
-Size
-		incbin 'ist'
-	endc
+DiskNum	dc.b	1
+	dc.b	0
 
-	END
+
+WaitRaster
+.wait	btst	#0,$dff005
+	beq.b	.wait
+.wait2	btst	#0,$dff005
+	bne.b	.wait2
+	rts
+
+
+
+***********************************
+*** Level 2 IRQ			***
+***********************************
+
+SetLev2IRQ
+	pea	.int(pc)
+	move.l	(a7)+,$68.w
+
+	move.b	#1<<7|1<<3,$bfed01		; enable keyboard interrupts
+	tst.b	$bfed01				; clear all CIA A interrupts
+	and.b	#~(1<<6),$bfee01		; set input mode
+
+	move.w	#1<<3,$dff09c			; clear ports interrupt
+	move.w	#1<<15|1<<14|1<<3,$dff09a	; and enable it
+	rts
+
+.int	movem.l	d0-d1/a0-a2,-(a7)
+	lea	$dff000,a0
+	lea	$bfe001,a1
+
+
+	btst	#3,$1e+1(a0)			; PORTS irq?
+	beq.b	.end
+
+	btst	#3,$d00(a1)			; KBD irq?
+	beq.b	.end
+
+	moveq	#0,d0
+	move.b	$c00(a1),d0
+	not.b	d0
+	ror.b	d0
+	
+	or.b	#1<<6,$e00(a1)			; set output mode
+
+
+	cmp.b	HEADER+ws_keyexit(pc),d0
+	beq.w	QUIT
+	
+
+.nokeys	moveq	#3-1,d1
+.loop	move.b	$6(a0),d0
+.wait	cmp.b	$6(a0),d0
+	beq.b	.wait
+	dbf	d1,.loop
+
+
+	and.b	#~(1<<6),$e00(a1)	; set input mode
+.end	move.w	#1<<3,$9c(a0)
+	move.w	#1<<3,$9c(a0)		; twice to avoid a4k hw bug
+	movem.l	(a7)+,d0-d1/a0-a2
+	rte
+
+
+
+
+; generic decrypter for all encrypted Alien Breed files
+; stingray, 12.07.2018 (13.07.: CLEANCODE added, file 2 decryption fixed)
+; code works with full caches
+; done for my version of the Alien Breed WHDLoad patch
+
+; if CLEANCODE is set to 1, all encrypted code will be
+; cleared with NOP, this way only the real code is left for easy
+; disassembling
+
+CLEANCODE	= 1			; 1: clear encryption code with NOPs
+
+
+; d0.w: start (sector)
+; d1.w: length (sectors)
+; a0.l: start of encrypted data
+
+Decrypt_AB
+	move.l	a0,a5
+	mulu.w	#512,d1
+	lea	(a0,d1.l),a6		; a6: end of encrypted file
+	
+	lea	.FTAB(pc),a0
+	
+.search	movem.w	(a0)+,d2/d3		; start sector, offset to routine
+	cmp.w	d0,d2
+	beq.b	.found
+	tst.w	(a0)
+	bne.b	.search
+	rts
+
+.found	jmp	.FTAB(pc,d3.w)		; decrypt file
+
+
+.FTAB	dc.w	2,.file1-.FTAB
+	dc.w	$64,.file2-.FTAB
+	dc.w	$1da,.file3-.FTAB
+	dc.w	$1c5,.file4-.FTAB
+	dc.w	$16,.file5-.FTAB	; no extra memory detected
+	dc.w	0			; end of tab
+
+
+.file1	move.l	a6,a0
+	move.w	#$2800/2-1,d0
+	moveq	#-2,d1
+.loop0	eor.w	d1,-(a0)
+	rol.w	#1,d1
+	dbf	d0,.loop0
+
+	lea	$826(a5),a4
+	lea	$f9c(a5),a6
+	bsr.b	.decrypt
+
+	lea	$13e0(a5),a4
+	lea	$2800(a5),a6
+	bra.b	.decrypt
+
+
+; at offset $6a98 is unused/forgotten code to encrypt the important
+; routines
+.file2	lea	$14(a5),a4
+	lea	$197a(a5),a6
+	bsr.b	.decrypt
+	lea	$19c6(a5),a4
+	lea	$2bd6(a5),a6
+	bra.b	.decrypt
+	
+	
+
+.file3	move.l	a5,a4
+	lea	$17f8(a5),a6
+	bsr.b	.decrypt
+
+	lea	$5d7c(a5),a4
+	lea	$30*512(a5),a6
+	bra.b	.decrypt
+
+.file4	lea	$788(a5),a4
+	bra.b	.decrypt
+
+.file5	move.l	a5,a4
+
+
+
+; a4.l: start of decryption
+; a5.l: start of file
+; a6.l: end of decryption
+
+.decrypt
+.find	cmp.w	#$41fa,(a4)		; lea xxx(pc),a0
+	beq.b	.start_found
+
+	addq.w	#2,a4
+
+	cmp.l	a6,a4
+	bcs.b	.find
+	rts
+
+.start_found
+	move.w	4+2(a4),d0		; loop counter
+	lea	.TAB(pc),a3
+
+.find_opcode
+	move.w	(a3)+,d3		; offset to check
+	movem.w	(a3)+,d1/d2		; opcode/routine offset
+	cmp.w	(a4,d3.w),d1
+	beq.b	.instruction_found
+	tst.w	(a3)
+	bne.b	.find_opcode
+	rts
+
+.instruction_found
+	move.w	2(a4),a0		; offset to destination
+	lea	2(a4,a0.w),a0
+
+	lea	.TAB(pc,d2.w),a1
+
+	jsr	(a1)			; call init code
+	addq.w	#2,a1
+
+.decrypt_loop
+	jsr	(a1)			; call decryption code
+	dbf	d0,.decrypt_loop
+
+; search for dbf opcode to find end of decryption loop
+.find_end
+	cmp.w	#$51c8,(a4)
+	beq.b	.end_found
+	IFNE	CLEANCODE
+	move.w	#$4e71,(a4)+		; encryption code -> nop
+	ELSE				; so real code is left only
+	addq.w	#2,a4			
+	ENDC
+	cmp.l	a6,a4
+	bcs.b	.find_end
+	rts	
+
+
+
+.end_found
+	IFNE	CLEANCODE
+	move.l	#$4e714e71,(a4)+	; disable dbf d0,xxx
+	ELSE
+	addq.w	#4,a4			; skip dbf d0,xxx
+	ENDC
+	;move.l	a4,a2			; a2: current decryption loop (debug)
+
+	bra.b	.decrypt
+
+
+; offset to check, opcode, routine offset
+.TAB	dc.w	8,$4460,.NegAx-.TAB	; neg.w -(ax) 
+	dc.w	8,$0a60,.EorI-.TAB	; eor.w #xxx,-(ax)
+	dc.w	8,$0460,.SubI-.TAB	; sub.w #xxx,-(ax)
+	dc.w	12,$d360,.AddDx-.TAB	; add.w d1,-(ax)
+	dc.w	8,$4660,.NotAx-.TAB	; not.w -(ax)
+	dc.w	12,$b360,.EorDx-.TAB	; eor.w d1,-(ax)
+	dc.w	12,$9360,.SubDx-.TAB	; sub.w d1,-(ax)
+	dc.w	8,$e6e0,.RorAx-.TAB	; ror.w -(ax) 
+	dc.w	8,$e7e0,.RolAx-.TAB	; rol.w -(ax) 
+	dc.w	8,$0660,.AddI-.TAB	; add.w #xxx,-(ax)
+	dc.w	8,$4258,.Clr-.TAB	; clr.w (ax)+
+	dc.w	4,$4298,.Clr-.TAB	; clr.l (ax)+
+	dc.w	34,$3e20,.Large-.TAB	; move.w -(a0),d7 -> large decryption loop
+	dc.w	0			; end of tab
+
+
+.NegAx	bra.b	.NegAx_Init
+	neg.w	-(a0)
+	rts
+
+.NegAx_Init
+	rts
+
+.NotAx	bra.b	.NotAx_Init
+	not.w	-(a0)
+	rts
+
+.NotAx_Init
+	rts
+
+.RorAx	bra.b	.RorAx_Init
+	ror.w	-(a0)
+	rts
+
+.RorAx_Init
+	rts
+
+.RolAx	bra.b	.RolAx_Init
+	rol.w	-(a0)
+	rts
+
+.RolAx_Init
+	rts
+
+.EorI	bra.b	.EorI_Init
+	move.w	8+2(a4),d1
+	eor.w	d1,-(a0)
+	rts
+
+.EorI_Init
+	rts
+
+
+.SubI	bra.b	.SubI_Init
+	move.w	8+2(a4),d1
+	sub.w	d1,-(a0)
+	rts
+
+.SubI_Init
+	rts
+
+.AddI	bra.b	.AddI_Init
+	add.w	d1,-(a0)
+	rts
+
+.AddI_Init
+	move.w	8+2(a4),d1
+	rts
+
+
+.AddDx	bra.b	.AddDx_Init
+
+	add.w	d1,-(a0)
+	rol.w	d2,d1
+	rts
+
+.AddDx_Init
+	move.w	8+2(a4),d1
+	moveq	#1,d2
+	cmp.w	#$e359,14(a4)		; rol.w #1,d1
+	beq.b	.rol
+	neg.w	d2			; -> ror.w #1,d1
+.rol	rts	
+
+.EorDx	bra.b	.EorDx_Init
+
+	eor.w	d1,-(a0)
+	rol.w	d2,d1
+	rts
+
+.EorDx_Init
+	bra.b	.AddDx_Init
+	
+
+.SubDx	bra.b	.SubDx_Init
+
+	sub.w	d1,-(a0)
+	rol.w	d2,d1
+	rts
+
+.SubDx_Init
+	bra.b	.AddDx_Init
+
+.Clr	bra.b	.ClrInit
+
+	rts
+
+.ClrInit
+	moveq	#0,d0			; clear loop counter -> do nothing
+
+; special case: two clr.l (a0)+ instructions without loop
+; clr.l (a0)+
+; clr.l (a0)+
+	cmp.w	#$4298,6(a4)		; clr.l (a0)+
+	bne.b	.nospecial
+	move.w	#$51c8,4(a4)		; add fake dbf so our "search for end"
+					; routine will work
+.nospecial
+	rts
+
+
+.Large	bra.b	.LargeInit
+
+
+	move.w	-(a0),d7
+	eor.w	d1,d7
+	ror.w	d2,d7
+	rol.w	d6,d7
+	sub.w	d5,d7
+	add.w	d6,d7
+	swap	d1
+	ror.w	#4,d7
+	swap	d2
+	sub.w	d2,d7
+	rol.w	#8,d7
+	eor.w	#$C0DE,d7
+	add.w	d2,d7
+	eor.l	d1,d2
+	sub.w	d2,d7
+	move.w	d7,(a0)
+	sub.l	d7,d6
+	eor.l	d7,d5
+	add.l	d7,d5
+	rts
+	
+
+.LargeInit
+	move.l	8+2(a4),d1		; key 1
+	move.l	14+2(a4),d2		; key 2
+	moveq	#0,d7
+	move.l	#'L.K.',d6
+	move.l	#'S.B.',d5
+	rts
+

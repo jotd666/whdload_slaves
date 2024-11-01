@@ -105,7 +105,7 @@ EXPMEMSIZE = $80000
 
 base
                 SLAVE_HEADER            	;ws_Security + ws_ID
-                dc.w    18              	;ws_Version
+                dc.w    19              	;ws_Version
                 dc.w    WHDLF_NoError|WHDLF_EmulTrap|WHDLF_ClearMem|WHDLF_NoDivZero    ;ws_flags
                 dc.l    CHIPMEMSIZE    	     	;ws_BaseMemSize can't use fast memory would have to be 24 bit memory
                 dc.l    0               	;ws_ExecInstall

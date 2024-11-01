@@ -14,20 +14,38 @@
  the WHDLoad package.
  To install from a different drive than DF0: select installation mode Expert.
 
- The installed program requires 1.0 MB ChipMem and 0.5 MB OtherMem.
- It can be quit by pressing '*' (key can be changed with Tooltype "QuitKey=").
+ The installed program requires 0.5 MB ChipMem and 0.5 MB OtherMem.
+ It can be quit by pressing 'F10' (key can be changed with Tooltype "QuitKey=").
 
  If you have problems with this installation please try and get a newer
  version of this package from the WHDLoad WWW-Page. If that doesn't help try
  some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
  that also fails, please inform the author via the Bug-Report-Form which
- can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
- at http://mantis.whdload.de
+ can be accessed on the WHDLoad WWW-Page.
 
  For the full WHDLoad package, other installs and updates refer to:
 	http://www.whdload.de/
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
+
+ version 2.3a (25.07.2018) done by StingRay:
+ - music wasn't replayed properly in main menu (wrong interrupt fix)
+ - CUSTOM3 can now be used to run the "Not Enough Memory" part, thanks
+   to Bored Seal for the idea :)
+ - info how to quit to DOS using CD32 pad in readme added
+
+ version 2.3 (24.07.2018) done by StingRay:
+ - patch redone
+ - high-score load/save (saving disabled if trainer options are used)
+ - new install script (Mantis issue #3901)
+ - default quitkey changed to F10
+ - Bplcon0 color bit fixes
+ - long write to $dff100 fixed
+ - quitkey works everywhere in game now
+ - reset (GURU TIME cheat) patched to quit back to DOS
+ -  "efford" typo fixed
+ - interrupts fixed
+ - self-modifying code fixed
 
  version 2.2 (18.05.2018) done by JOTD:
  - added 2nd player joypad controls
@@ -72,29 +90,55 @@
  - when I first time seen game code, i thought this is unpatchable. about
    950 decode loops which have 20kb, but for what I have brain ;)
 
+ comment from StingRay on the protection:
+ - well, Mr. Antiaction tried hard but in the end: yet another useless
+   protection! :)
+
 Keys/joypad buttons:
    - Space/second/blue button: enter Intex Computer System
    - M/yellow button: holo-map
    - Alt keys/green button: weapon selection
    - P/play button: pause
-   - ESC/fwd+reverse buttons: quit
+   - ESC/fwd+reverse buttons: quit current game
+   - Fwd/revers+play buttons: quit to DOS
 
-Original cheat/gametesting keys:
-   - F6: level destruct
-   - F7: level skip
-   - F9: cross walls, all weapons available, no self-destruct timer
-   (note that pressing F9 cannot be undone)
-   - F1: game over
-   - F4: lose life
-   - F?: other function keys effects are unknown
 
-notes:
+NOTES V2.3 (StingRay):
+----------------------
 
-- on WinUAE turn off JIT/use NOCACHE for the game to start
-- quitkey works on 68000, but only from inside the game
-  (won't work from the menu or the end sequence)
+I actually only wanted to fix the broken install script (see Mantis #3901)
+but when I checked the patch code I found it rather unmaintainable and
+ended up recoding the patch from scratch. The decryption is now done MUCH
+cleaner than in the previous versions, my decryption code works with all
+caches and JIT enabled (WinUAE)! It was fun to code the decrypter and not
+exactly hard, the complete protection is one of those "not that bad but not
+exactly hard to defeat if you know what you are doing" kind of things, the
+trace vector decoder in the main game wasn't anything special at all either.
+
+I have added a lot trainer options, if in-game keys are enabled, the following
+extra keys can be used:
+
+E - refresh energy
+L - refresh lives
+K - get max. keys
+H - get hand map
+W - get all weapons
+A - refresh ammo
+N - skip level
+
+
+I actually tried to add a help screen which displays the in-game keys if help
+has been pressed but as I couldn't find free space for the screen memory I
+dropped it. Might try to add it again in a later version of the patch.
+
+Please also note that high-score saving is disabled if any trainers are used.
+
+
+
 
 "release notes" (found somewhere I don't remember where):
+StingRay: these notes are found in the decrypted executable of the main
+game code.
 
 ZALIEN BREED V1.3, =SB= 14-Oct-91    
 Main program code by Andreas Tadic and Peter Tuleby, Graphics and game design 
