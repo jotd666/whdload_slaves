@@ -70,7 +70,7 @@ _expmem
 
 
 DECL_VERSION:MACRO
-	dc.b	"1.6"
+	dc.b	"1.7"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -236,13 +236,16 @@ _pl_3:
 	PL_W	$37E6,$6008
 
 	PL_IFC1X	0
-	PL_L	$1AA2,100000	; money
+	PL_L	$1AA2,100000	; money p1
+	PL_L	$1AE0,100000	; money p2
 	PL_ENDIF
 	PL_IFC1X	1
-	PL_W	$1AA8,99	; lives
+	PL_W	$1AA8,99	; lives p1
+	PL_W	$1AE6,99	; lives p2 = p1 + $3e
 	PL_ENDIF
 	PL_IFC1X	2
-	PL_W	$1AAA,99	; keys
+	PL_W	$1AAA,99	; keys p1
+	PL_W	$1AE8,99	; keys p2
 	PL_ENDIF
 	PL_IFC1X	3
 	PL_NOP	$7702,4	; enables "N" to skip levels
@@ -251,6 +254,9 @@ _pl_3:
 	PL_PS	$233C4,fix_af_1	; issue #0002183 access fault
 
 	; new modding options, added by ztronzo
+	PL_PS	$13506,.player_rotate_start ; enabled by default to allow rotation using 4-player parallel port adapter if available or with mapped dual sticks on emulators
+	
+	
 	PL_IFC2X	0
 	PL_PSS	$13520,.strafe_start,26 ; enable strafe mode for each player while shooting
 	PL_ENDIF
@@ -259,6 +265,80 @@ _pl_3:
 	PL_ENDIF
 	
 	PL_END
+
+
+
+.player_rotate_start
+
+		cmpa.L #$00DFF00C,A2
+		beq		.check_port4 ; player 1
+
+		clr.l d0 ; no move
+.check_port3_up		btst    #0,$bfe101
+		bne .check_port3_down
+		eor.w     #$0100,d0 		; joy3 up
+.check_port3_down		btst    #1,$bfe101
+		bne .check_port3_left
+		eor.w     #$0001,d0 		; joy3 down
+.check_port3_left		btst    #2,$bfe101
+		bne .check_port3_right
+		eor.w     #$0300,d0 		; joy3 left
+.check_port3_right	btst    #3,$bfe101
+		bne .check_port3_end
+		eor.w     #$0003,d0 		; joy3 right
+.check_port3_end
+		bra		.check_port4_end
+
+.check_port4
+		clr.l d0 ; no move
+.check_port4_up		btst    #4,$bfe101
+		bne .check_port4_down
+		eor.w     #$0100,d0 		; joy4 up
+.check_port4_down		btst    #5,$bfe101 
+		bne .check_port4_left
+		eor.w     #$0001,d0 		; joy4 down
+.check_port4_left		btst    #6,$bfe101
+		bne .check_port4_right
+		eor.w     #$0300,d0 		; joy4 left
+.check_port4_right	btst    #7,$bfe101
+		bne .check_port4_end
+		eor.w     #$0003,d0 		; joy4 right
+.check_port4_end
+
+	CLR.W D1
+	CMP.W #$0100,D0
+	BEQ.B .player_rotate
+	ADD.W #$01,D1
+	CMP.W #$0103,D0
+	BEQ.B .player_rotate
+	ADD.W #$01,D1
+	CMP.W #$0003,D0
+	BEQ.B .player_rotate
+	ADD.W #$01,D1
+	CMP.W #$0002,D0
+	BEQ.B .player_rotate
+	ADD.W #$01,D1	
+	CMP.W #$0001,D0
+	BEQ.B .player_rotate
+	ADD.W #$01,D1
+	CMP.W #$0301,D0
+	BEQ.B .player_rotate
+	ADD.W #$01,D1
+	CMP.W #$0300,D0
+	BEQ.B .player_rotate
+	ADD.W #$01,D1
+	CMP.W #$0200,D0
+	BEQ.B .player_rotate
+	BRA	.player_rotate_end
+
+.player_rotate
+	move.w D1,$0066(A0)
+	move.w D1,$0068(A0)
+.player_rotate_end
+	MOVEA.L (A0,$0062),A1
+	CLR.L D0
+	rts
+
 
 .strafe_start
 	cmpa.L #$00DFF00C,A2
