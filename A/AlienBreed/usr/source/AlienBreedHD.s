@@ -156,6 +156,9 @@ HEADER	SLAVE_HEADER		; ws_security + ws_ID
 	dc.b	"C1:X:Start with max. Keys:6;"
 	dc.b	"C1:X:Start with all Weapons and Map:7;"
 	dc.b	"C1:X:In-Game Keys:8;"
+ 	dc.b	"C1:X:No collision between human players:9;"
+	dc.b	"C1:X:Strafe Mode when hold fire:10;"
+	dc.b	"C1:X:Dual Stick support w/parallel 4-joy adapter:11;"
 	dc.b	0
 
 .dir	IFD	DEBUG
@@ -166,6 +169,7 @@ HEADER	SLAVE_HEADER		; ws_security + ws_ID
 .copy	dc.b	"1991 Team 17",0
 .info	dc.b	"installed by Mr.Larmer/JOTD (until V2.2)",-1
 	dc.b	"StingRay/[S]carab^Scoopex (V2.3 recode)",-1
+	dc.b	"extra trainer options by ztronzo",-1
 	IFD	DEBUG
 	dc.b	"DEBUG!!! "
 	ENDC
@@ -459,6 +463,12 @@ PLPREMAIN
 	move.w	#$4e71,$d9c(a5)
 .noAllWeapons
 
+; start  	No collision between human players:8;"
+	lsr.l	#2,d0 ;shift additionl 1 for TS_INGAMEKEYS
+	bcc.b	.skipNoCollision
+	move.w	#$6012,$76C6(a5)
+	move.w	#$6012,$7736(a5)
+.skipNoCollision
 
 	move.l	JOYPADSUPPORT(pc),d0
 	beq.b	.noJoypad
@@ -585,9 +595,178 @@ PLMAIN	PL_START
 ; Mr.Larmer patches
 	PL_PS	$a6d6,Protection
 
+; ztronzo patches START
+	PL_IFC1X	10
+	PL_PS	$6BC0,.strafe_start
+	PL_PSS	$6B96,.players_rotate_start,6			;4037CB96 3028 0140
+	PL_ENDIF
+; ztronzo patches END
+
 ; JOTD patches
 
 	PL_END
+
+
+.players_rotate_start
+    MOVE.B D0,-(A7)  ; Push D0 onto the stack
+    cmp.W   #$f00c,$2(A0)		; Check if player 1 ($f00c) or player 2 ($f00a)
+    bne   .player2_rotate_start
+
+.player1_rotate_start
+	btst.b	#$07,$00bfe001		; Player 1 joystick check for compatibility with strafe mode
+    bne .player1_rotate_check
+	CLR.W	D0					; Clear byte so rotation is skipped later for compatibility with strafe mode
+
+.player1_rotate_check
+    btst #0,$bfe101   ; Check Up
+    bne .p1_check_down   ; If not Up, check Down
+    move.b #1,D0      ; D0 = 1 (Up)
+
+    btst #2,$bfe101   ; Check Up-Left
+    bne .p1_check_up_right; If not Up-Left, check Down-Left
+    move.b #8,D0      ; D0 = 8 (Up-Left)
+    bra .p1_rotate_end          ; Skip to end
+
+.p1_check_up_right 
+    btst #3,$bfe101   ; Check Up-Right
+    bne .p1_rotate_end          ; If not Up-Right, skip to end
+    move.b #2,D0      ; D0 = 2 (Up-Right)
+    bra .p1_rotate_end          ; Skip to end
+
+.p1_check_down:
+    btst #1,$bfe101   ; Check Down
+    bne .p1_check_left   ; If not Down, check Left
+    move.b #5,D0      ; D0 = 5 (Down)
+
+    btst #2,$bfe101   ; Check Down-Left
+    bne .p1_check_down_right
+    move.b #6,D0      ; D0 = 6 (Down-Left)
+    bra .p1_rotate_end          ; Skip to end
+
+.p1_check_down_right 
+    btst #3,$bfe101   ; Check Down-Right
+    bne .p1_rotate_end          ; If not Down-Right, skip to end
+    move.b #4,D0      ; D0 = 4 (Down-Right)
+    bra .p1_rotate_end          ; Skip to end
+
+.p1_check_left:
+    btst #2,$bfe101   ; Check Left
+    bne .p1_check_right   ; If not Left, check Right
+    move.b #7,D0      ; D0 = 7 (Left)
+    bra .p1_rotate_end           ; Skip to end
+
+.p1_check_right:
+    btst #3,$bfe101		; Check Right
+    bne .p1_rotate_end          	; If not Right, skip to end
+    move.b #3,D0      	; D0 = 3 (Right)
+    bra .p1_rotate_end	; Skip to end
+.p1_rotate_end:		bra .p2_rotate_end
+
+
+.player2_rotate_start
+	btst.b	#$06,$00bfe001		; Player 2 joystick check for compatibility with strafe mode
+    bne .player2_rotate_check
+	CLR.W	D0					; Clear byte so rotation is skipped later for compatibility with strafe mode
+.player2_rotate_check
+    cmp.W   #$f00a,$2(A0)		; confirm player 2 ($f00a)
+    bne   .p2_rotate_end
+	
+    btst #4,$bfe101   ; Check Up
+    bne .p2_check_down   ; If not Up, check Down
+    move.b #1,D0      ; D0 = 1 (Up)
+
+    btst #6,$bfe101   ; Check Up-Left
+    bne .p2_check_up_right; If not Up-Left, check Down-Left
+    move.b #8,D0      ; D0 = 8 (Up-Left)
+    bra .p2_rotate_end          ; Skip to end
+
+.p2_check_up_right 
+    btst #7,$bfe101   ; Check Up-Right
+    bne .p2_rotate_end          ; If not Up-Right, skip to end
+    move.b #2,D0      ; D0 = 2 (Up-Right)
+    bra .p2_rotate_end          ; Skip to end
+
+.p2_check_down:
+    btst #5,$bfe101   ; Check Down
+    bne .p2_check_left   ; If not Down, check Left
+    move.b #5,D0      ; D0 = 5 (Down)
+
+    btst #2,$bfe101   ; Check Down-Left
+    bne .p2_check_down_right
+    move.b #6,D0      ; D0 = 6 (Down-Left)
+    bra .p2_rotate_end          ; Skip to end
+
+.p2_check_down_right 
+    btst #7,$bfe101   ; Check Down-Right
+    bne .p2_rotate_end          ; If not Down-Right, skip to end
+    move.b #4,D0      ; D0 = 4 (Down-Right)
+    bra .p2_rotate_end          ; Skip to end
+
+.p2_check_left:
+    btst #6,$bfe101   ; Check Left
+    bne .p2_check_right   ; If not Left, check Right
+    move.b #7,D0      ; D0 = 7 (Left)
+    bra .p2_rotate_end           ; Skip to end
+
+.p2_check_right:
+    btst #7,$bfe101   ; Check Right
+    bne .p2_rotate_end          ; If not Right, skip to end
+    move.b #3,D0      ; D0 = 3 (Right)
+    bra .p2_rotate_end          ; Skip to end
+.p2_rotate_end:
+
+    CMP.B #1,D0          ; Compare D0 with 1
+    BLT   .players_rotate_end  ; If D0 < 1, branch to out of range
+    CMP.B #8,D0          ; Compare D0 with 8
+    BGT   .players_rotate_end  ; If D0 > 8, branch to out of range
+	MOVE.W  D0,$0140(A0)
+	
+.players_rotate_end
+
+	MOVE.B (A7)+,D0  ; Pop D0 from the stack
+				CMP.W #$0009,D0		; original code 4037CB96
+				BMI.W .4037cba2		; original code
+				MOVE.W #$0000,D0	; original code
+.4037cba2							; original code should continue with TST.W D0
+	rts
+
+.strafe_start
+    cmp.W   #$f00c,$2(A0)		; Check if player 1 ($f00c) or player 2 ($f00a)
+    bne   .check_player2_joystick
+	btst #0,$bfe101   ; Check if bits from parallel port are already in use
+    beq .strafe_done
+	btst #1,$bfe101   ; Check
+    beq .strafe_done
+	btst #2,$bfe101   ; Check
+    beq .strafe_done
+	btst #3,$bfe101   ; Check
+    beq .strafe_done
+	btst.b	#$07,$00bfe001		; Player 1 joystick check
+    beq .strafe_done
+	
+.check_player2_joystick
+    cmp.W   #$f00a,$2(A0)		; confirm player 2 ($f00a)
+    bne		.no_strafe
+	btst #4,$bfe101   ; Check if bits from parallel port are already in use
+    beq .strafe_done
+	btst #5,$bfe101   ; Check
+    beq .strafe_done
+	btst #6,$bfe101   ; Check
+    beq .strafe_done
+	btst #7,$bfe101   ; Check
+	beq .strafe_done
+    btst.b	#$06,$00bfe001	    ; Player 2 joystick check
+    beq .strafe_done
+
+.no_strafe
+    MOVE.W  D0,$0140(A0)    ; Restore original instructions without strafe
+
+.strafe_done
+	MOVE.W  D2,D0    ; Restore original instructions strafe
+    rts
+
+
+
 
 .fix	move.l	(a0)+,d0
 	bne.b	.dest_ok
@@ -1284,4 +1463,3 @@ Decrypt_AB
 	move.l	#'L.K.',d6
 	move.l	#'S.B.',d5
 	rts
-
