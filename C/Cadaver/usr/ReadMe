@@ -29,6 +29,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 3.3 (xx.xx.202x) done by JOTD:
+ - Updated cheat keys text & readme
+ 
  version 3.2 (23.10.2024) done by JOTD:
  - adapted for WHDload 19
 
@@ -108,6 +111,13 @@ Joypad controls:
 - yellow: toggle object in hand/hide (H)
 - forward: map (F1)
 
+Trainer:
+
+Once "invincibility" trainer is set, you still have to enable it manually using F5
+(screen flashes green) and disable it using F6 (screen flashes red). I'm not going to
+spoil the game for you, but keeping trainer on can prevent you from progressing at some
+point in the game.
+
 THANKS GO TO:
 
 - Steve Kelly for allowing me to release any patch for the Bitmap Bros games.
@@ -121,6 +131,5 @@ THANKS GO TO:
 - Mr Larmer and Harry for their tools to decrypt copylock code: Mr Larmer for
   his copylock decoder tool, and Harry for his source I adapted to remove the
   protection.
-- Kametyken for his excellent website about the Bros. games:
-  http://www.gods-country.de
+
 

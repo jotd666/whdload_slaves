@@ -54,6 +54,7 @@ IOCACHE		= 10000
 SETPATCH
 STACKSIZE = 8000
 FONTHEIGHT     = 8
+SEGTRACKER
 
 ;============================================================================
 
@@ -89,7 +90,7 @@ end_patch_\1:
 
 
 DECL_VERSION:MACRO
-	dc.b	"3.1"
+	dc.b	"3.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -137,7 +138,6 @@ _args_end
 	;initialize kickstart and environment
 
 _bootdos	
-
         move.l	_resload(pc),a2		;A2 = resload
         
 	;get tags
@@ -270,7 +270,11 @@ new_Draw
 	movem.l	(a7)+,d0-d1/a0-a1
 	rts
 
-_moved0branch
+_moved0branch:
+	move.l	2(a7),a0		; return address (we can trash a0)
+	move.l	(a0),a0
+	move.b	d0,(a0)			; change code (branch test instruction)
+	bsr		_flushcache		; but flush cache
 	RTE
 
 _patchexe:
@@ -279,13 +283,13 @@ _patchexe:
 
 	; install trap handlers
 
-	lea	_moved0branch(pc),a0
+	lea	_moved0branch(pc),a0	; trap #c
 	move.l	a0,$B0.W
-	lea	_movebd1(pc),a0
+	lea	_movebd1(pc),a0		; trap #d
 	move.l	a0,$B4.W
-	lea	_movewd0(pc),a0
+	lea	_movewd0(pc),a0		; trap #e
 	move.l	a0,$B8.W
-	lea	_movebd0(pc),a0
+	lea	_movebd0(pc),a0		; trap #f
 	move.l	a0,$BC.W
 
 	; patch file
@@ -351,7 +355,7 @@ pl_main:
 	PL_W    $2F50,$4E4D
     
     ; section 8
-    PL_W	$82A8,$4E4C
+    PL_W	$82A8,$4E4C			; trap #12
     
     ; section 9
 	; remove password protection
@@ -360,8 +364,8 @@ pl_main:
 
     ; section 10
 	; fix bug for games loaded from title screen
-	PL_NOP	$AB58,4
-	PL_PS	$A350,_restore_bne; remove the redraw while in game
+	;PL_NOP	$AB58,4
+	;PL_PS	$A350,_restore_bne; remove the redraw while in game
 
     PL_IFC4
     
