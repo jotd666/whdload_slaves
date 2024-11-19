@@ -68,7 +68,7 @@ IOCACHE        = 1024
 SETPATCH
 ;============================================================================
 
-slv_Version     = 17
+slv_Version     = 19
 slv_Flags       = WHDLF_NoError|WHDLF_NoKbd|WHDLF_Examine|WHDLF_EmulTrap
 slv_keyexit     = $59   ;F10
 
@@ -83,7 +83,7 @@ slv_keyexit     = $59   ;F10
 
 
 DECL_VERSION:MACRO
-	dc.b	"2.2"
+	dc.b	"2.3"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"

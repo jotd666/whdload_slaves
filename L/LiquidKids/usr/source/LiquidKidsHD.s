@@ -44,7 +44,7 @@
 ;======================================================================
 
 _base	SLAVE_HEADER	;ws_Security + ws_ID
-	dc.w	17		;ws_Version
+	dc.w	19		;ws_Version
 	dc.w	WHDLF_NoError|WHDLF_EmulTrap ; |WHDLF_NoKbd	;ws_flags
 	dc.l	$80000	;ws_BaseMemSize
 	dc.l	0	;ws_ExecInstall
@@ -73,7 +73,7 @@ _config
    DOSCMD   "WDate  >T:date"
    ENDC
 DECL_VERSION:MACRO
-	dc.b	"1.2"
+	dc.b	"1.3"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -91,6 +91,11 @@ _info	dc.b	"Installed by CFou!",10
 	dc.b	-1,"Thanks to Wolf for supplying this unreleased game!"
 	dc.b	-1,"And Codetapper for his slave's beta source"
 	dc.b	0
+	
+	dc.b	"$VER: Liquid Kids slave"
+	DECL_VERSION
+	dc.b	10,0
+	
 	EVEN
 	include	'ReadJoyPad.s'
 	

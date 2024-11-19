@@ -115,7 +115,7 @@ _read_joystick:
 	bclr	#JPB_BTN_PLAY,d0
 	or.l	d1,d0
 .1:
-	movem.l (a7)+,d1/a0-a2
+	movem.l (a7)+,d1-d2/a0-a2
     
 	rts
 	

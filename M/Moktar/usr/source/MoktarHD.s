@@ -62,7 +62,7 @@ IOCACHE		= 10000
 BOOTDOS
 CACHE
 
-slv_Version	= 17
+slv_Version	= 19
 slv_Flags	= WHDLF_NoError|WHDLF_Examine
 slv_keyexit	= $5D	; num '*'
 
@@ -329,6 +329,7 @@ read_joy_directions:
 	beq.b	.noquit
 	btst	#JPB_BTN_FORWARD,d0
 	beq.b	.noquit
+    ; not done...
 	nop
 .noquit
 

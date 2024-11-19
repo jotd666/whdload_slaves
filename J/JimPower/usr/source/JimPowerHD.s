@@ -140,7 +140,11 @@ HEADER	SLAVE_HEADER		; ws_security + ws_ID
 	dc.b	0
 	CNOP	0,2
 
-
+	dc.b	"$VER: Jim Power slave "
+	DECL_VERSION
+	dc.b	10,0
+	even
+	
 TAGLIST		dc.l	WHDLTAG_ATTNFLAGS_GET
 CPUFLAGS	dc.l	0
 

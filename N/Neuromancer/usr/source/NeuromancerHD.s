@@ -90,7 +90,7 @@ end_patch_\1:
 
 
 DECL_VERSION:MACRO
-	dc.b	"3.2"
+	dc.b	"3.3"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -275,6 +275,7 @@ _moved0branch:
 	move.l	(a0),a0
 	move.b	d0,(a0)			; change code (branch test instruction)
 	bsr		_flushcache		; but flush cache
+	addq.w	#4,(2,a7)
 	RTE
 
 _patchexe:

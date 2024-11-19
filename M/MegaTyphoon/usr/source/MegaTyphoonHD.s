@@ -56,7 +56,7 @@ CACHE
 ;============================================================================
 
 
-slv_Version	= 17
+slv_Version	= 19
 slv_Flags	= WHDLF_NoError|WHDLF_Examine
 slv_keyexit	= $5D	; num '*'
 
@@ -70,7 +70,7 @@ IGNORE_JOY_DIRECTIONS
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.3"
+	dc.b	"1.4"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -109,7 +109,7 @@ _args_end
 
 ; version xx.slave works
 
-	dc.b	"$","VER: slave "
+	dc.b	"$VER: slave "
 	DECL_VERSION
 	dc.b	0
 
@@ -227,7 +227,7 @@ pl_main
 	PL_END
 
 read_buttons
-    move.l  joy1_buttons(pc),d1
+    move.l  joy1(pc),d1
     btst    #JPB_BTN_RED,d1
     bne.b   .red
     bset    #7,d0   ; original
@@ -245,9 +245,11 @@ vbl_hook_2
     movem.l d0/d1/a0,-(a7)
     lea previous_buttons(pc),a0
     move.l  (a0),d1
-    move.l  joy1_buttons(pc),(a0)
-    bsr _read_joysticks_buttons
-    move.l  joy1_buttons(pc),d0
+    move.l  joy1(pc),(a0)
+	moveq	#1,d0
+    bsr _read_joystick
+	lea		joy1(pc),a0
+	move.l	d0,(a0)
     btst    #JPB_BTN_REVERSE,d0
     beq.b   .noesc
     btst    #JPB_BTN_FORWARD,d0

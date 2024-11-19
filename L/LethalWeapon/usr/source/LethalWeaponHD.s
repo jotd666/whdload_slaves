@@ -26,7 +26,7 @@ FASTMEMSIZE = $80000
 ;======================================================================
 
 _base		SLAVE_HEADER			;ws_Security + ws_ID
-		dc.w	17			;ws_Version
+		dc.w	19			;ws_Version
 		dc.w	WHDLF_NoError|WHDLF_EmulTrap	;ws_flags
 		dc.l	CHIPMEMSIZE			;ws_BaseMemSize
 		dc.l	0			;ws_ExecInstall
@@ -79,9 +79,15 @@ _info		dc.b	"Adapted by Abaddon/Codetapper/JOTD",10
 		dc.b	-1,"Thanks to Steven Becker and Sun 68"
 		dc.b	10,"for sending the originals!"
 		dc.b	0
+
+	dc.b	"$VER: slave "
+	DECL_VERSION
+	dc.b	0
+
+
 		EVEN
 
-IGNORE_JOY_DIRECTIONS
+
 	include	ReadJoyPad.s
 	
 ;======================================================================

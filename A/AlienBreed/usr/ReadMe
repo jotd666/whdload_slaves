@@ -28,6 +28,10 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 2.4 (19.11.2024) done by JOTD/ztronzo:
+ - adapted for whdload 19
+ - more cheat options
+
  version 2.3a (25.07.2018) done by StingRay:
  - music wasn't replayed properly in main menu (wrong interrupt fix)
  - CUSTOM3 can now be used to run the "Not Enough Memory" part, thanks

@@ -47,7 +47,7 @@ KEYCODE_OFFSET = $1852
 
 _base
 		SLAVE_HEADER		;ws_Security + ws_ID
-		dc.w	17		;ws_Version
+		dc.w	19		;ws_Version
 		dc.w	WHDLF_ClearMem|WHDLF_EmulTrap|WHDLF_NoDivZero|WHDLF_NoError|WHDLF_NoKbd	;ws_flags
 		IFD	DEBUG
 		dc.l	CHIPMEMSIZE+EXPMEMSIZE		;ws_BaseMemSize
@@ -82,7 +82,7 @@ _config		dc.b	"C1:B:Infinite energy",0
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"3.1"
+	dc.b	"3.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"

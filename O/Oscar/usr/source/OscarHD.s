@@ -117,7 +117,7 @@ _config
 	
 
 DECL_VERSION:MACRO
-	dc.b	"2.3"
+	dc.b	"2.5"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"

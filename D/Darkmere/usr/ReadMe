@@ -11,7 +11,7 @@
  DAMAGE.
 
  That install applies to "Darkmere" © 1992/93 Core Design - 4 disks
- Slave requires WHDLoad V17+.
+ Slave requires WHDLoad V19+.
  Game needs 512k Chipmem, 1Mb fastmem & about 3Mb of Fastmem (for preload option)
  It can be quit by pressing F10 (key can be changed with Tooltype "QuitKey=").
 
