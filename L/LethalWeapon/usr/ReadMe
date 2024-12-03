@@ -16,8 +16,10 @@ REQUIREMENTS:
 - Game requires 0.5Mb chip mem and 0.5Mb other mem (+0.9Mb other memory 
   for preload option)
 
-Version 2.0 (20.04.2022) done by JOTD:
+Version 2.1 (26.11.2024) done by JOTD:
+- adapted to whdload v19
 
+Version 2.0 (20.04.2022) done by JOTD:
 - added trainer (infinite ammo & lives)
 - added optional second button jump (wasn't a piece of cake)
 - added & typo fixed manual

@@ -126,7 +126,7 @@ _expmem         dc.l    EXPMEMSIZE         	;ws_ExpMem
 ;======================================================================
 
 DECL_VERSION:MACRO
-	dc.b	"4.1"
+	dc.b	"4.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"

@@ -30,7 +30,7 @@
 
 _base
 		SLAVE_HEADER		;ws_Security + ws_ID
-		dc.w	17		;ws_Version
+		dc.w	19		;ws_Version
 		dc.w	WHDLF_Disk|WHDLF_NoError|WHDLF_EmulTrap|WHDLF_NoKbd	;ws_flags
 		dc.l	$80000		;ws_BaseMemSize
 		dc.l	0		;ws_ExecInstall
@@ -53,7 +53,7 @@ _expmem		dc.l	0		;ws_ExpMem
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.3"
+	dc.b	"1.4"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -153,8 +153,11 @@ pop_dma
 
 _flushcache:
 	move.l	a2,-(a7)
+	move.w	sr,-(a7)
+	move.w	#$2700,SR	; freezing interrupts to avoid whdload reentrant call
 	move.l	_resload(pc),a2
 	jsr	resload_FlushCache(a2)
+	move.w	(a7)+,sr
 	move.l	(a7)+,a2
 	rts
 

@@ -59,6 +59,9 @@
  History:
  --------
  
+ Version 4.2 (26.11.2024) done by JOTD:
+ - adapted to whdload v19
+ 
  Version 4.1 (2023) by JOTD:
  - enemies weren't firing in v4.0 (issue #0006008)
  - mouse works properly in menu (issue #0006032)
