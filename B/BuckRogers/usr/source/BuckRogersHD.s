@@ -3,7 +3,7 @@
 ;  :Contents.	Slave for "BuckRogers"
 ;  :Author.	JOTD, from Wepl sources
 ;  :Original	v1 
-;  :Version.	$Id: BuckRogersHD.asm 1.2 2002/02/08 01:18:39 wepl Exp wepl $
+;  :Version.	$Id: BuckRogersHD.asm 1.x 2024/12/06 $
 ;  :History.	%DATE% started
 ;  :Requires.	-
 ;  :Copyright.	Public Domain
@@ -12,7 +12,7 @@
 ;  :To Do.
 ;---------------------------------------------------------------------------*
 
-	INCDIR	Include:
+	INCDIR	Include
 	INCLUDE	whdload.i
 	INCLUDE	whdmacros.i
 	INCLUDE	lvo/dos.i
@@ -75,7 +75,7 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.2"
+	dc.b	"1.3"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -100,8 +100,10 @@ slv_CurrentDir:
 	dc.b	$A,$D,0
 
 	CNOP 0,4
-_assign
+assign1
 	dc.b	"Buck2",0
+assign2
+	dc.b	"Buck3",0
 
 	EVEN
 
@@ -166,7 +168,10 @@ _bootdos
 		PATCH_DOSLIB_OFFSET	DeleteFile
 
 	;assigns
-		lea	_assign(pc),a0
+		lea	assign1(pc),a0
+		sub.l	a1,a1
+		bsr	_dos_assign
+		lea	assign2(pc),a0
 		sub.l	a1,a1
 		bsr	_dos_assign
 
@@ -187,20 +192,20 @@ new_DeleteFile
 
 new_Open
 	cmp.l	#MODE_NEWFILE,d2
-	bne.b	.out
+	bne	.out
 
 	; is it written in "save" dir?
 	move.l	d1,a0	; filename
 	cmp.b	#'s',(a0)+
-	bne.b	.out
+	bne	.out
 	cmp.b	#'a',(a0)+
-	bne.b	.out
+	bne	.out
 	cmp.b	#'v',(a0)+
-	bne.b	.out
+	bne	.out
 	cmp.b	#'e',(a0)+
-	bne.b	.out
+	bne	.out
 	cmp.b	#'/',(a0)+
-	bne.b	.out
+	bne	.out
 
 	movem.l	d0/d3/a2,-(a7)
 
@@ -317,7 +322,7 @@ patch_main
 	moveq	#12,d2
 	bsr	get_section
 	jsr	resload_Patch(a2)
-	bra.b	out
+	bra	out
 
 out
 	lea	pl_section_4(pc),a0

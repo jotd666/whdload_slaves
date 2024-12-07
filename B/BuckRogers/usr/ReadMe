@@ -39,6 +39,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 1.3 (06.12.2024) done by aardvark82:
+ - added missing assign which triggered a requester far in the game (issue #0006405)
+ 
  version 1.2 (06.05.2014) done by JOTD:
  - character creation and save fix & speedup (issue #003006)
  - fixed access fault on "exit to workbench" menu

@@ -1,0 +1,123 @@
+
+
+	THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER
+	EXPRESS OR IMPLIED, STATUTORY OR OTHERWISE.
+	THE ENTIRE RISK AS TO USE, RESULTS AND PERFORMANCE OF THE PACKAGE IS
+	ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE TO BE DEFECTIVE, YOU
+	ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING, REPAIR OR OTHER
+	REMEDIATION.
+	UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY
+	DAMAGE CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE
+	OWNER OR A THIRD PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF
+	DAMAGE.
+
+
+	That install applies to "Midnight Resistance" � 1990 Ocean.
+
+
+	That install requires WHDLoad and The Patcher to be in the path.
+	Both can be found in the WHDLoad package.
+	To install from a different drive than DF0: select Expert as
+	installation mode.
+
+
+	You need 0.5 MB ChipMem and 0.5 MB OtherMem.
+	You can quit the game by pressing F10 (key can be changed with
+	Tooltype "QuitKey=").
+
+
+	if you have problems with this installation please try first to get
+	a newer version of this install from 
+		http://www.whdload.de/
+	if that does'nt help try some Tooltypes like NOCACHE, NOAUTOVEC,
+	NOVBRMOVE, NOMMU, PAL or NTSC. if that also does'nt help inform the
+	author via the Bug-Report-Form which can be accessed on the same URL.
+
+	for full WHDLoad package and other installs refer to:
+		http://www.whdload.de/
+	or	aminet:dev/misc/whdload#?
+	and	aminet:game/patch/
+
+
+	Features:
+	- keyboard handling fixed,
+	- nice MWB/NI icons included,
+
+	Wepl gives thanx to:
+	- Chris Vella for original disk image,
+	- Wolfgang Unger for second version.
+
+	Horace also thanks:
+	- StingRay for advice with the code.
+	- TCD, Retro-Nerd & Boo-Boo for continued testing.
+	- Wepl for the original slave and sources.
+	- Asman, Wepl and Girv for the CD32 button reading code.
+
+	
+	Original slave by Mr.Larmer/Wanted Team in 1998.
+
+	Version 1.3 (09.01.2002) by Wepl:
+
+	- Support for HitSquad version added
+	- New imager, uses files now
+	- All files can compressed using FImp/ProPack
+	- Snoop bugs fixed
+
+	Version 1.4 (04.04.2008) by Wepl:
+
+	- Removed a strange check which caused one version to
+	  fail on uae, thanks to Toni Wilen for research
+	- New install script
+	- Icons and hints added
+	- Source included
+
+	Version 1.5 (20.10.09) by Hungry Horace:
+
+	- High Score table load/save (to file: MidnightResistance.highs)
+	- Optional Patch to double the palette colours, correcting the
+		error made in the game's conversion
+	- Second-fire buttons can now be used to activate second weapon
+	- CD32 Controls Added
+		- Blue for Second Weapon
+		- Green for extra Jump button
+		- Yellow to toggle sound-fx/music
+		- Play to pause the game
+	- Fixed bug preventing player 2 from using second weapon 
+	  	whilst moving.
+
+	- Additional Options on CUSTOM1
+		1 = Double-Brightness Palette
+		2 = CD32 Control Mode (both ports)
+		4 = Switch Green/Blue CD32 buttons, or use 
+			second fire button to jump.
+	   - Add values together for combinations of the above 
+		(e.g. CUSTOM1=3 to enable Brightness and CD32 Controls)
+		
+	- Trainers on CUSTOM2
+		1 = Infinite Lives
+		2 = Infinite Credits
+		4 = Infinite Ammo (both weapons)
+		8 = Infinite Money
+	   - Add values together for combinatations of the above 
+		(e.g. CUSTOM2=6 to enable infinite Credits and Ammo)
+			
+	- Trainers on CUSTOM3
+		0 = Nothing	/  1 = Supercharge on
+		2 = Barrier on	/  3 = Supercharge & Barrier on
+
+	- Trainer on CUSTOM4 sets Weapon 1
+		0 = None 	/  1 = Shotgun
+		2 = Blue thing	/  3 = Auto
+		4 = Fire	/  5 = Three-Way
+
+	- Trainer on CUSTOM5 sets Weapon 2
+		0 = None	/  1 = Homing Missiles
+		2 = Nitro	/  3 = Shower
+	
+	- High Score saving is disabled if any of CUSTOM2/3/4/5 are used
+
+	Version 1.6 (10.07.13) by Hungry Horace:
+
+	- Fixed bug on CUSTOM4 Trainer
+	- Improved second button support
+	- Configuration Features for WHDLoad v17+ added
