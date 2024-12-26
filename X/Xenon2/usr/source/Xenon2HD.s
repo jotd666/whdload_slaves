@@ -144,7 +144,7 @@ _start	;	A0 = resident loader
 	;install keyboard quitter
 		bsr	_SetupKeyboard
 	;load exe
-		lea	(_x2),a0
+		lea	(_x2,pc),a0
 		lea	($400),a1
 		move.l	a1,a4			;A4 = address
 		jsr	(resload_LoadFileDecrunch,a5)
@@ -152,7 +152,7 @@ _start	;	A0 = resident loader
 		sub.l	a1,a1
 		jsr	(resload_Relocate,a5)
 
-		lea	_px2,a0
+		lea	_px2(pc),a0
 		sub.l	a1,a1
 		jsr	(resload_Patch,a5)
 
@@ -161,7 +161,7 @@ _start	;	A0 = resident loader
 		bne	.1
 		move.w	#4,($12,a4)		;3=pal 4=ntsc
 .1
-		lea	(_gametrainer),a0
+		lea	(_gametrainer,pc),a0
 		move.l	(_custom1,pc),d0
 		bne	.trained
 		lea	(_notrainer,pc),a0
@@ -185,7 +185,7 @@ _start	;	A0 = resident loader
 		beq	.nolmb
 		move.l	#$bfe001,$35092+4	;second fire button -> LMB
 .nolmb
-		lea	(_vbi),a0
+		lea	(_vbi,pc),a0
 		move.l	a0,($6c)
 		move.w	#INTF_SETCLR|INTF_INTEN|INTF_VERTB,(intena,a6)
 		move.w	#INTF_VERTB,(intreq,a6)
@@ -265,7 +265,7 @@ _savehighs	addq.l	#2,a7			;original
 		movem.l	d0/a0,-(a7)
 		bsr	_crypt
 		move.l	a0,a1
-		lea	(_highs),a0
+		lea	(_highs,pc),a0
 		move.l	(RESLOAD),a2
 		jsr	(resload_SaveFile,a2)
 		movem.l	(a7)+,d0/a0
@@ -286,15 +286,15 @@ _gametrainer	move.w	#9,($cd0)		;ships
 		move.l	#100000,($ca0)		;cash
 		rts
 
-_x2		dc.b	"x2",0
+_x2		dc.b	"X2",0
 	EVEN
 
 _resload = RESLOAD
 
 	IFD	BARFLY
-	INCLUDE	Sources:whdload/keyboard.s
+	INCLUDE	Sources:whdload/keyboard.s147
 	ELSE
-	INCLUDE	keyboard.s
+	INCLUDE	whdload/keyboard.s
 	ENDC
 	
 ;======================================================================
@@ -385,7 +385,7 @@ _v2_2		move.l	#$52*$1600,d0		;offset
 		jsr	(resload_GetFileSize,a5)
 		cmp.l	#$fc-$66+$28,d0
 		bne	.nohighs
-		lea	(_highs),a0
+		lea	(_highs,pc),a0
 		lea	$8368-$28,a1
 		pea	(a1)
 		jsr	(resload_LoadFileDecrunch,a5)
@@ -610,7 +610,7 @@ _v4		move.l	#$400,d0		;offset
 		jsr	(resload_DiskLoad,a5)
 
 		pea	$14000+$281b6
-		pea	_v4_load
+		pea	_v4_load(pc)
 		bra	_v45_2
 		
 ;============== version 5
@@ -663,7 +663,7 @@ _v5_2		bsr	_v5_load1
 		jsr	(resload_DiskLoad,a5)
 
 		pea	$400
-		pea	_v5_load2
+		pea	_v5_load2(pc)
 		
 _v45_2		lea	$14006,a0
 		lea	$400,a1
@@ -671,7 +671,7 @@ _v45_2		lea	$14006,a0
 		tst.l	d0
 		beq	_wrongver
 		
-		lea	.pl,a0
+		lea	.pl(pc),a0
 		lea	$400,a1
 		jsr	(resload_Patch,a5)
 		
@@ -745,7 +745,7 @@ _v6	;	bra	_v6main
 		lea	$4b570,a0
 		lea	$400,a1
 		bsr	_v6decrunch
-		lea	.pl,a0
+		lea	.pl(pc),a0
 		lea	0,a1
 		jsr	(resload_Patch,a5)
 		
@@ -783,7 +783,7 @@ _v6main		lea	_custom,a6
 		lea	$e0c,a1
 		bsr	_v6decrunch
 		
-		lea	.pl,a0
+		lea	.pl(pc),a0
 		sub.l	a1,a1
 		jsr	(resload_Patch,a5)
 

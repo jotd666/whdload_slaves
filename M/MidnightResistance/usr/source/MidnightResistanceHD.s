@@ -48,7 +48,7 @@
 
 base
 		SLAVE_HEADER			;ws_Security + ws_ID
-		dc.w	17			;ws_Version
+		dc.w	19			;ws_Version
 		dc.w	WHDLF_NoError|WHDLF_EmulTrap	;ws_flags
 		dc.l	$80000			;ws_BaseMemSize
 		dc.l	0			;ws_ExecInstall
@@ -86,12 +86,16 @@ _config:	dc.b    "C1:X:Use Double-Brightness Palette:0;"			; ws_config
 	ENDC
 
 DECL_VERSION:MACRO
-   dc.b  "1.6"
-   IFD BARFLY
-      dc.b  " "
-      INCBIN   "T:date"
-   ENDC
-   ENDM
+	dc.b	"1.7"
+	IFD BARFLY
+		dc.b	" "
+		INCBIN	"T:date"
+	ENDC
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
+	ENDC
+	ENDM
 
 ; version xx.slave works
 
@@ -105,7 +109,7 @@ _name		dc.b	"Midnight Resistance",0
 		dc.b	0
 _copy		dc.b	"1990 Ocean/Special FX",0
 _info		dc.b	"Adapted by Mr.Larmer/Wanted Team and Wepl",10
-		dc.b	"Additions by Hungry Horace",10,10
+		dc.b	"Additions by Hungry Horace & JOTD",10,10
      		dc.b  "Version "
 		DECL_VERSION
 		dc.b  0
@@ -157,6 +161,8 @@ Start	;	A0 = resident loader
 		lea	_resload(pc),a2
 		move.l	a0,(a2)
 	
+		bsr		_detect_controller_types
+		
 	;	move.l	a0,(_resload)
 		move.l	a0,a2			;A2 = resload
 	
