@@ -27,7 +27,7 @@
  an appropriate requester.
  Additionally the file "kick34005.A500.RTB" must be installed in the same
  directory as the kickstart image. It can be found in the archive 
- "util/boot/skick345.lha" on aminet.
+ "util/boot/skick346.lha" on aminet.
 
  If you have problems with this installation please try and get a newer
  version of this package from the WHDLoad WWW-Page. If that doesn't help try
@@ -40,6 +40,10 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 1.22 (xx.xx.2025) done by JOTD:
+ - adapted to whdload v17
+ - reinstated fastmem (TODO!!)
+ 
  version 1.21 (04.10.19) done by Harry:
  - fix for hangup in version 3.5 (hopefully) - please report if it doesnt work
 
