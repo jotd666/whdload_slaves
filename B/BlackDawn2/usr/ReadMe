@@ -8,7 +8,7 @@
  CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
  PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
- This install applies to "Black Dawn II" © 1994 Andrew Campbell
+ This install applies to "Black Dawn 2" © 1994 Andrew Campbell
 
  This install requires WHDLoad to be in the path. It can be found in the
  WHDLoad package.
@@ -37,6 +37,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
  
+ version 1.1 (21.03.2025) done by JOTD:
+ - Ross fixed version was not properly patched...
+
  version 1.0 (07.06.2020) done by JOTD:
  - initial release
  - removed floppy-dependent code: now able to save to hard drive

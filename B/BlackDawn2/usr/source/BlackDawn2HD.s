@@ -73,7 +73,7 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.0"
+	dc.b	"1.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -95,7 +95,7 @@ slv_name		dc.b	"Black Dawn II"
 	dc.b	" (DEBUG/CHIP MODE)"
 	ENDC
 			dc.b	0
-slv_copy		dc.b	"1994 xx",0
+slv_copy		dc.b	"1994 Andrew Campbell",0
 slv_info		dc.b	"adapted by JOTD",10,10
 		dc.b	"Version "
 		DECL_VERSION
@@ -296,7 +296,7 @@ do_jump
 	ADDA.L	A1,A1			;0015a: d3c9
 	ADDA.L	A1,A1			;0015c: d3c9
     movem.l A1,-(a7)
-	lea	pl_main(pc),a0
+	lea	pl_main_ross(pc),a0
     move.l  _resload(pc),a2
 	jsr	resload_Patch(a2)
     movem.l (a7)+,A1

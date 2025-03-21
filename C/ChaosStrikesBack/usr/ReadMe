@@ -40,9 +40,11 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 1.22 (xx.xx.2025) done by JOTD:
+ version 1.22 (07.03.2025) done by JOTD:
  - adapted to whdload v17
- - reinstated fastmem (TODO!!)
+ - reinstated fastmem from 1.1 for better speed
+ - changed the way CUSTOM1 disk selection works: 0: disk.3, 1: disk.4
+   ... or just use the splash screen
  
  version 1.21 (04.10.19) done by Harry:
  - fix for hangup in version 3.5 (hopefully) - please report if it doesnt work
@@ -72,7 +74,7 @@
 
  Important Notes:
 
- - select active game disk using CUSTOM1=# of disk image (start from 3)
+ - select active game disk using CUSTOM1=# of disk image (start from 0: disk.3)
  - boot on custom disk using the "UtilityDisk" icon (the one with CUSTOM2 set)
  - re-run the install script to import your savegames, caution: CSB games are imported
    as 'disk.3', DM games are imported as 'disk.4'. Rename previous savegames if needed.
