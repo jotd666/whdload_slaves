@@ -13,7 +13,7 @@
 (set #extra-file "Extra")		;name of extra file
 (set #extra2-file "Extra2")		;name of second extra file
 (set #extra3-file "Extra3")		;name of third extra file
-(set #prefix "BlackDawnII")			;name of slave, directory
+(set #prefix "BlackDawn2")			;name of slave, directory
 (set #prefix-slave "")
 
 (set #ico_suffix_00 "inf")		;Icon suffixes (not all of these must exist)
