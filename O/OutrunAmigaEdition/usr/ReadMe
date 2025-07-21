@@ -35,6 +35,12 @@
 Notes:
 
 There is no installer.
-Just put the .slave in a directory and the data files under "data"
+Just put the .slave and .info in a directory and the data files under "data"
 
-whdload Outrun.slave PRELOAD
+Outrun.slave
+Outrun.info
+data/Outrun
+data/gfx
+...
+
+
