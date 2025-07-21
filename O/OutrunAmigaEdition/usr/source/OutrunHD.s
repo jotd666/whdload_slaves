@@ -48,7 +48,7 @@ WPDRIVES	= %0000
 
 ;DISKSONBOOT
 DOSASSIGN
-;INITAGA
+INITAGA
 HDINIT
 ;IOCACHE		= 10000
 ;MEMFREE	= $200
@@ -56,7 +56,9 @@ HDINIT
 ;SETPATCH
 ;STACKSIZE = 10000
 BOOTDOS
-CACHE
+; enabling cache in chipmem seems important for this game
+; (c2p shit?)
+CACHECHIPDATA
 
 slv_Version	= 17
 slv_Flags	= WHDLF_NoError|WHDLF_Examine|WHDLF_ClearMem|WHDLF_ReqAGA
@@ -88,7 +90,7 @@ DECL_VERSION:MACRO
 
 
 
-slv_name		dc.b	"Outrun AGA"
+slv_name		dc.b	"OutRun: Amiga Edition"
 	IFD	CHIP_ONLY
 	dc.b	" (DEBUG/CHIP MODE)"
 	ENDC
