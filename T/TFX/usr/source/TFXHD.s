@@ -65,10 +65,10 @@ IOCACHE		= 10000
 ;SETPATCH
 STACKSIZE = 20000
 BOOTDOS
-CACHE
+DCACHE
 SEGTRACKER
 
-slv_Version	= 18
+slv_Version	= 19
 ; if WHDLF_ClearMem is set the TFX.FPU version crashes when starting the game
 ; this is probably a programming error with this version, made up by non-zero memory
 ; (sometimes it's the other way round): check the compiler warnings a*holes...
@@ -93,7 +93,7 @@ IGNORE_JOY_DIRECTIONS
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"2.1"
+	dc.b	"2.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -679,6 +679,26 @@ _pal50_ptr ds.l 1
 _texture_ptr_ptr ds.l 1
 depth_ptr ds.l 1
 WaitingForVsync_ptr ds.l 1
+
+write_dmacon_d0:
+	move.w	d0,_custom+dmacon
+	bra.b	dma_sound_loop
+	
+write_dmacon_d4:
+	move.w	d4,_custom+dmacon
+dma_sound_loop:
+	move.w  d0,-(a7)
+	moveq	#7,d0   ; make it 7 if still issues
+.bd_loop1
+	move.w  d0,-(a7)
+    move.b	$dff006,d0	; VPOS
+.bd_loop2
+	cmp.b	$dff006,d0
+	beq.s	.bd_loop2
+	move.w	(a7)+,d0
+	dbf	d0,.bd_loop1
+	move.w	(a7)+,d0
+	rts 
 
 pl_040_060
         PL_START
@@ -2504,6 +2524,11 @@ pl_040
         PL_PSS  $66ca6,do_sort,26
         PL_PSS  $66d26,do_sort,8
         PL_GA   $63bfe,depth_ptr
+
+		; audio fix
+		PL_PSS	$4136a,write_dmacon_d0,4
+		PL_PS	$40c5c,write_dmacon_d4
+		PL_S	$40c6e,$40c82-$40c6e
 
         PL_END
 

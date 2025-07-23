@@ -47,6 +47,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ Version 2.2 (22.07.2025) done by JOTD:
+  - Enabled data cache by default
+  
  Version 2.1 (09.08.2023) done by paraj:
   - fix bug when maximum number of screen objects reached
   - fix glitchy mouse cursor in config/quit menu
