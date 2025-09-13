@@ -91,7 +91,8 @@
  note: old savegames could be an issue, specially on level 2. Some users had gone
  pretty far in the game, then got stopped by unexplained crashes. Fixing the memory
  allocation fixed some crashes but the game state was still corrupt. That didn't
- happen with floppy versions, and hopefully not now with bigger memory allocation.
+ happen with floppy versions (well, it appears that it does, actually!),
+ but was tested fully working now with bigger memory allocation.
  
  That bug also explains why I didn't shave the memory requirements too close,
  requiring 1MB fast instead of the standard 512k. It could work with 512k fast only
