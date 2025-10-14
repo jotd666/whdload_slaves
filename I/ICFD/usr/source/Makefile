@@ -1,9 +1,13 @@
+include ../../options.mk
+
 PROGNAME = ICFD
 
-all : $(PROGNAME).slave
 
-$(PROGNAME).slave : $(PROGNAME)HD.asm
-	basm $?
+WHDLOADER = $(PROGNAME).slave
+SOURCE = $(PROGNAME)HD.s
 
-$(PROGNAME)CD32.slave : $(PROGNAME)CD32HD.asm
-	basm $?
+all :  $(WHDLOADER)
+
+$(WHDLOADER) : $(SOURCE)
+	$(WDATE)
+	$(VASM) -o $(WHDLOADER) $(SOURCE)

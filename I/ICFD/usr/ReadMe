@@ -38,9 +38,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 2.2 (2022) done by JOTD:
- - support for another antheads version (issue #0005596)
- - TODO fix encrypted version just for curiosity sake
+ version 2.2 (14.10.2025) done by JOTD:
+ - support for another (german) antheads version (issue #0005596)
+ - Antheads SPS version (encrypted version) fixed properly (was unstable in 2.1)
  
  version 2.1 (13.04.2022) done by JOTD:
  - support for another antheads version of the executable (issue #002550)

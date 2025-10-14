@@ -25,7 +25,7 @@
 ;CHIP_ONLY
 
 	IFD	CHIP_ONLY
-CHIPMEMSIZE	= $100000
+CHIPMEMSIZE	= $120000
 FASTMEMSIZE	= $0
 	ELSE
 CHIPMEMSIZE	= $80000
@@ -46,6 +46,8 @@ IOCACHE		= 10000
 ;NEEDFPU
 CACHE
 BOOTDOS
+;STACKSIZE = 10000
+;SETPATCH
 
 ;============================================================================
 
@@ -75,7 +77,7 @@ _assign5
 	dc.b	"DSAVE",0
 
 DECL_VERSION:MACRO
-	dc.b	"2.1"
+	dc.b	"2.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -177,7 +179,7 @@ _quit		pea	TDREASON_OK
 
 ; < d7: seglist (APTR)
 
-patch_main
+patch_main:
 	move.l	d7,a1
 	addq.l	#4,a1
 	move.l	_resload(pc),a2
@@ -197,7 +199,7 @@ patch_main
 	; that TVD part was NOT Rob Northen, and was NOT Ben Herdnon. It was something
 	; hybrid. And I don't even know if the disk is protected after all...
 	
-	movem.l	a0-a2,-(a7)
+	movem.l	a0-a6,-(a7)
 
 	; compute future A4 value
 	move.l	d7,a3
@@ -206,10 +208,10 @@ patch_main
 	add.l	d0,d0	; as APTR
 	addq.l	#4,d0	; segment start
 	lea		varzone(pc),a0
-	add.l	#32768-2,d0
+	add.l	#$BADA-$3ADC,d0		; location of variables in segment
 
 	move.l	d0,(a0)
-
+	
 	move.l	a1,a6
 
 	lea		decrypted(pc),a0
@@ -219,18 +221,18 @@ patch_main
 	
 	lea		($5A40,a6),a3
 	lea		($4FF8,a6),a4
-	move.l	#($24544-$5A40)/4-1,d0
+	move.l	#($24548-$5A40)/4-1,d0
 .copy
 	move.l	(a3)+,(a4)+
 	dbf	d0,.copy
-
+	
 	; what is missing there is "just" 3 relocation entries (the rest is position independent!)
 	; - the variable zone address (that we computed properly with segment address
 	;   and stored in "varzone"
 	; - the first jump at offset 0 that skips decrypted start data to entry
 	; - the address of the load reloc segment in A4 routine
 	;
-	movem.l	(a7)+,a0-a2
+	movem.l	(a7)+,a0-a6
 .patch
 	jsr	resload_Patch(a2)
 	rts
@@ -252,15 +254,18 @@ get_version:
 	jsr	resload_GetFileSize(a2)
 	clr		d1
 	
+	
 	cmp.l	#160332,D0
 	beq.b	.main_1
 
 	cmp.l	#170972,d0
 	beq.b	.main_antheads
 	
-
 	cmp.l	#160428,D0
 	beq.b	.main_sps14		; SPS version 14
+	
+	cmp.l	#170956,D0
+	beq.b	.main_antheads_ger		; from C. Gleisbergh
 	
 	cmp.l	#173588,d0
 	bne.b	.wrong_version
@@ -275,6 +280,7 @@ get_version:
 
 	VERSION_PL	main_1
 	VERSION_PL	main_antheads
+	VERSION_PL	main_antheads_ger
 	VERSION_PL	main_antheads_sps
 	VERSION_PL	main_sps14
 	nop
@@ -343,29 +349,21 @@ emulate_delay_16a5:
 	addq.l	#8,(A7)
 	rts
 
-emulate_delay_12812a4:
-	movem.l	D0,-(A7)
-	move.l	-12812(A4),D0
+; same code in various versions with various a4 offsets
+EMULATE_DELAY_XXX:MACRO
+emulate_delay_\1a4:
+	move.l	D0,-(A7)
+	move.l	-\1(A4),D0
 	bsr	cpu_delay_emulation
-	movem.l	(a7)+,d0
+	move.l	(a7)+,d0
 	addq.l	#6,(A7)
 	rts
-
-emulate_delay_12820a4:
-	movem.l	D0,-(A7)
-	move.l	-12820(A4),D0
-	bsr	cpu_delay_emulation
-	movem.l	(a7)+,d0
-	addq.l	#6,(A7)
-	rts
-
-emulate_delay_10894a4:	; antheads
-	movem.l	D0,-(A7)
-	move.l	-10894(A4),D0
-	bsr	cpu_delay_emulation
-	movem.l	(a7)+,d0
-	addq.l	#6,(A7)
-	rts
+	ENDM
+	
+	EMULATE_DELAY_XXX	12812
+	EMULATE_DELAY_XXX	12820
+	EMULATE_DELAY_XXX	10894
+	EMULATE_DELAY_XXX	10886
 
 
 pl_main_sps14
@@ -384,7 +382,7 @@ pl_main_sps14
 	PL_PS	$F4D2,move_d6_dmacon
 	PL_PS	$F51A,move_d6_dmacon
 	PL_PS	$F526,move_d0_dmacon
-	PL_PS	$1eae6,wait_blit_3
+	PL_PS	$1eae0,wait_blit_1
 	PL_END
 
 pl_main_1
@@ -403,7 +401,7 @@ pl_main_1
 	PL_PS	$F454,move_d6_dmacon
 	PL_PS	$F49C,move_d6_dmacon
 	PL_PS	$F4A8,move_d0_dmacon
-	PL_PS	$1EA92,wait_blit_1
+	PL_PS	$1EA8C,wait_blit_1
 	PL_END
 
 pl_main_antheads
@@ -423,32 +421,18 @@ pl_main_antheads
 	PL_PS	$10CC0,move_d6_dmacon
 	PL_PS	$10D08,move_d6_dmacon
 	PL_PS	$10D14,move_d0_dmacon
-	PL_PS	$20B0A,wait_blit_2
+	PL_PS	$20b04,wait_blit_1
 	PL_END
-	
-pl_main_antheads_sps
-	PL_START
-	; needs to fix the startup
-	PL_PS	0,jump_to_real_entry
-	; needs to correct just one call
-	PL_PS	$20410,load_a4_base
-	
-	; fix lock
-	;;PL_PSS	$22B06,fix_root_lock,2
-	
-	; quit on error
-	PL_I	$22a48
-	PL_I	$23408
-	PL_END
-	
-pl_xxx
+
+pl_main_antheads_ger:
 	PL_START
 	; difficult-to-find cpu-dependent loops
 	; (found with a tool I have written in Python
 	; to detect cpu-dependent loops)
+	PL_PS	$36c8,emulate_delay_4a5
 	PL_PS	$36e2,emulate_delay_4a5
-	PL_PS	$0aa3a,emulate_delay_10894a4
-;;	PL_PS	$9xxx,emulate_delay_2a5
+	PL_PS	$aa3a,emulate_delay_10886a4
+	;
 	PL_PS	$11a5c,emulate_delay_10a5
 	PL_PS	$11c86,emulate_delay_16a5
 	PL_PS	$13eb0,emulate_delay_4a5_2
@@ -457,8 +441,59 @@ pl_xxx
 	PL_PS	$10ca6,move_d6_dmacon
 	PL_PS	$10cee,move_d6_dmacon
 	PL_PS	$10cfa,move_d0_dmacon
-	PL_PS	$20aee,wait_blit_2
+	PL_PS	$20ae8,wait_blit_1
+	; better blitwaits
+	PL_PSS	$20b32,wait_blit,4
+	PL_PSS	$20bd6,wait_blit,4
+    PL_PSS	$0f936,wait_blit,4
+    PL_PSS	$0f9d4,wait_blit,4
+    PL_PSS	$0fa10,wait_blit,4
+    PL_PSS	$0fa60,wait_blit,4
+    PL_PSS	$0fb00,wait_blit,4
+    PL_PSS	$12a30,wait_blit,4
+    PL_PSS	$12bc8,wait_blit,4
+    PL_PSS	$12d3a,wait_blit,4
+    PL_PSS	$12e32,wait_blit,4
+    PL_PSS	$12f0e,wait_blit,4
+    PL_PSS	$12f70,wait_blit,4
+    PL_PSS	$1300e,wait_blit,4
+    PL_PSS	$130f4,wait_blit,4
+    PL_PSS	$131ba,wait_blit,4
+    PL_PSS	$1322a,wait_blit,4
+    PL_PSS	$132a6,wait_blit,4
+    PL_PSS	$132fa,wait_blit,4
+    PL_PSS	$13348,wait_blit,4
+    PL_PSS	$133a4,wait_blit,4
+    PL_PSS	$13408,wait_blit,4
+    PL_PSS	$20b32,wait_blit,4
+    PL_PSS	$20bd6,wait_blit,4
 	PL_END
+	
+pl_main_antheads_sps:
+	PL_START
+	; needs to fix the startup
+	PL_PS	0,jump_to_real_entry
+	; needs to correct just one call
+	PL_PS	$20410,load_a4_base
+	; also there, as the variable base seems not relocated
+	; patch the routine for simplicity sake
+	PL_P	$22a10,load_a4_base
+	
+	; plus the usual fixes that I forgot when I supported that
+	; encrypted version...
+	; it appears that after decrypting the offsets are 100% identical
+	; to the newly unsupported version!
+	; only 3 locations are different:
+	; - jump at start
+	; - load variables in a4
+	; - offset of a4 variables
+	;
+	; Christoph Gleisberg version was a real Rosetta Stone for that game
+	; it showed that I had forgotten to fix the last one (offset of a4 variables)
+	; which made SPS version of Antheads buggy on 2.1 (trashed graphics on keypresses in the intro
+	; and more...)
+	;
+	PL_NEXT	pl_main_antheads_ger
 
 	
 		
@@ -466,46 +501,23 @@ jump_to_real_entry
 	add.l	#$22998,(a7)
 	add.l	#2,(a7)		; skip load a4
 	bsr		load_a4_base
-	rts
+	rts		; jumps at segstart+$229A0
 	
 load_a4_base
 	move.l		varzone(pc),a4
 	rts
 	
-	
-wait_blit_3
-	bsr	wait_blit	
-	move.w	10854(a4),$dff044
-	addq.l	#2,(a7)
-	rts
-
-wait_blit_1
-	bsr	wait_blit	
-	move.w	10846(a4),$dff044
-	addq.l	#2,(a7)
-	rts
-
-wait_blit_2
-	bsr	wait_blit	
-	move.w	13454(a4),$dff044
-	addq.l	#2,(a7)
-	rts
-
-wait_blit
-	TST.B	dmaconr+$DFF000
-	BTST	#6,dmaconr+$DFF000
-	BNE.S	.wait
-	bra.s	.end
+wait_blit_1:
+	EXT.L	D5			;20ae8: 48c5
+	MOVE.L	44(A5),D7		;20aea: 2e2d002c
+wait_blit:
+	TST.B	$BFE001
 .wait
-	TST.B	$BFE001
-	TST.B	$BFE001
 	BTST	#6,dmaconr+$DFF000
 	BNE.S	.wait
-	TST.B	dmaconr+$DFF000
-.end
 	rts
 
-move_d6_dmacon
+move_d6_dmacon:
 	move	d6,$dff096	; sound
 	move.l	d1,-(a7)
 	moveq	#7,d1
@@ -513,7 +525,7 @@ move_d6_dmacon
 	move.l	(a7)+,d1
 	rts
 
-move_d0_dmacon
+move_d0_dmacon:
 	move	d0,$dff096	; sound
 	move.l	d1,-(a7)
 	moveq	#7,d1
