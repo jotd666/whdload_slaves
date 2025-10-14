@@ -1,0 +1,130 @@
+Short : HD Installer for Brat
+Author: Keith Krellwitz, Jean-François Fabre (jffabre@free.fr),
+        DJ Mike (djmike@crystalmike.com)
+Version: 3.0
+Type: game/patch
+Requires: WHDLoad 19, RawDIC 5, 512k chip mem
+
+This patch applies to "Brat" © 1991 Image Works.
+
+Supports the original 2-disk release (SPS #2789).
+You will need to reinstall if updating from v2.0 or before.
+
+REQUIREMENTS
+
+- Original disk or compatible disk image
+  (Cracks have not been tested and are not supported)
+- Slave requires WHDLoad 19+
+- RawDIC 5 for the imager
+- Game requires 512k chip memory
+  (+ approx 1.45MB other memory for preload option)
+
+FEATURES
+
+- Game loads fully from HD
+- Uses real files, which can be compressed with Propack/CrunchMania/FImp/XPK
+- Quit game at any time (default key F10), including on 68000 machines
+- Copylock protection removed x2
+- Highscores loaded and saved to disk
+- Game bug fixed that ignored new highscores unless first in the table
+- Blitter waits added
+- CPU-dependent (empty DBF) loops fixed
+- Access fault in keyboard routine fixed
+- Stack+decruncher moved to fast memory if available
+- Fire button skips Imageworks logo animation
+- Trainers added - set CUSTOM1 with any of the following:
+  + 1 for infinite lives
+  + 2 for infinite milk
+  + 4 for infinite bridges
+  + 8 for infinite money
+- Set starting milk with CUSTOM2=1-99
+- Color/New/Rom Icons included
+- Source code included
+
+HISTORY
+
+Version 3.0 (2025-10-02) by DJ Mike:
+- Patch rewritten with modern WHDLoad functionality
+- Uses real files extracted with RawDIC imager (requires reinstall)
+- Another copylock protection removed that prevented game working properly
+  (Mantis issue #2384, issue #5050)
+- Highscores stored to disk
+- Game bug fixed that ignored new highscores unless first in the table
+- Snoop error fixed
+- Stack moved to fast memory
+- Fire button skips Imageworks logo animation
+- New+MagicWB icons added
+- Source code included
+
+Version 2.0 (2001-06-04) by JOTD:
+- enabled access to levels of disk 2 (!) (thanks Frank for noticing it!!)
+- added decrunch in fastmem
+- fixed dbf loops for music
+- fixed keyboard timing
+- adapted for WHDLoad, QUITKEY quits game
+- added Frank's nice icons
+- added level codes (thanks to some LSD disk)
+
+Version 1.0-1.2 by Abaddon:
+- JST original releases
+
+BRAT LEVEL CODES
+
+ LEVEL:       CODE:
+ 2            MIHEMOTO
+ 3            SASUTOZO
+ 4            SUMATZEE
+ 5            NOKITAGO
+ 6            ITSANONO
+ 7            MOZIMATO
+ 8            HOZITOMO
+ 9            MOKITEMO
+ 10           ZUMOHATO
+ 11           CHANASTU
+ 12           NAGAITSU
+
+WORDS FROM THE AUTHOR
+
+This was an interesting one to pick up. There is a sneaky extra copylock
+protection the game does its best to hide, by loading the code in 512-byte
+chunks while the opening logos are being displayed. Each chunk is at a
+different location on the disk, and also reversed and bitshifted, to make it
+harder to see what is going on. Once the game has loaded all these, it
+unscrambles and runs the copylock, but using routines called indirectly to
+further hide it. Failing this protection check causes the game to break
+the first level to be uncompletable, and also make the screen size gradually
+reduce if you let the demo mode run.
+
+However, the copylock is identical to the one called in the intro, in plain
+sight, so it was really only a matter of adding an extra call to wire the
+correct key where the game is expecting it. But kudos to the developer for
+making an effort to disguise the second check!
+
+There is also a bug with the highscores that I've fixed - you only got your
+name in the table if your score was the highest of all. The code was clearly
+intended to slot your score in, but failed due to a wrong size used when
+scanning the table.
+
+Enjoy! :-)
+
+--- DJ Mike (2nd October 2025)
+
+Note from Jeff:
+
+Keith gave up game patching some time ago, but left me all his source (do
+you think he would sort them? nooooo :)). So thanks to him, I was able to
+enhance the loader and create a WHDLoad version for this nice-looking game.
+
+Thanks to Carlo Pirri for supplying the original.
+
+         Bug report form, full WHDLoad package and other installs:
+                          http://www.whdload.de
+
+THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER EXPRESS
+OR IMPLIED, STATUTORY OR OTHERWISE. THE ENTIRE RISK AS TO USE, RESULTS AND
+PERFORMANCE OF THE PACKAGE IS ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE
+TO BE DEFECTIVE, YOU ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING,
+REPAIR OR OTHER REMEDIATION.
+UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY DAMAGE
+CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A
+THIRD PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
