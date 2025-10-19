@@ -8,7 +8,7 @@
  CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
  PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
- This install applies to "Another World" © 1991 Delphine Software
+ This install applies to "Powder" © 1998 Five Stars VG Studio
 
  This install requires WHDLoad to be in the path. It can be found in the
  WHDLoad package.
@@ -39,81 +39,6 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 2.9 (08.01.2024) done by JOTD:
- - fixed lockup at startup
- 
- version 2.8 (06.08.2022) done by JOTD:
- - fixed freeze if code enter was requested on the protection screen (issue #0005759)
-   (note: this is an original game bug, as pressing "C" freezes the game)
-
- version 2.7 (02.06.2021) done by JOTD:
- - reinstated support for another english version
- 
- version 2.6 (19.04.2021) done by JOTD:
- - reinstated support for another french version (SPS2377)
- 
- version 2.5 (18.04.2021) done by JOTD:
- - added joypad controls (also fixes issue #0005136)
- - fixed blitterwaits
- - added level codes (thanks Pascal)
- - added french solution (thanks Pascal)
- 
- version 2.4 (18.03.2006)
- - left mouse button and 2nd/blue joystick button can be used
-   alongside to "C" to enter a code (useful for those CD³² compilations :))
-
- version 2.3 (15.02.2006)
- - adapted to WHDLoad v16
-
- version 2.2 (30.06.2003)
- - support for Kixx version (and restored support for all cracked versions
-   that I had broken since v2.0)
- - reworked install script so US version may be installed as "OutOfThisWorld"
- - source code included
- - included excellent Out Of This World icons by Frank
-
- version 2.1 (01.05.2003) done by JOTD
- - added US (Interplay) version support (originally supported by old patch)
-
- version 2.0 (01.02.2003) done by JOTD/Harry
- - reworked for Kick 1.3 (OSEmu no longer used)
- - reworked install script (no need for the Patcher anymore)
- - use of fast memory & caches
- - codewheel protection: French and UK versions supported
- - added loads of icons by Exoticons, Trodas & others
- - added walkthrough and codes
-
- version 1.1 (1999) done by JOTD
- - adapted slave for new OSEmu module
-
- version 1.0 (sometime around 1998) done by Harry
- - initial release
- - protection removed (at install time)
- - empty dbf loops fixed
- - uses brand new (at the time) OSEmu by Harry
-
-joypad controls:
-
-- blue/second button: enter code (keyboard: C)
-- green: toggle sound
-- play: pause
-- forward+backward+yellow: quit to wb
-
-level codes:
-
-LEVEL 1  : EDJI
-LEVEL 2  : HICI
-LEVEL 3  : FLLD
-LEVEL 4  : EDIL
-LEVEL 5  : FADK
-LEVEL 6  : LDCI
-LEVEL 7  : ICAH
-LEVEL 8  : LDIJ
-LEVEL 9  : LALD
-LEVEL 10 : KJIA
-LEVEL 11 : LFEK
-LEVEL 12 : FLAK
-LEVEL 13 : LAEA
-LEVEL 14 : FIEI
-LEVEL 15 : GABK
-LEVEL 16 : KCGB
+ version 1.0 (19.10.2025) done by JOTD
+ - vbr accesses removed
+ - trainer added (infinite lives)

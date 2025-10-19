@@ -91,8 +91,12 @@ DECL_VERSION:MACRO
 	DECL_VERSION
 	dc.b	0
 
-slv_name		dc.b	"Powder",0
-slv_copy		dc.b	"1998 wtf",0
+slv_name		dc.b	"Powder"
+	IFD	CHIP_ONLY
+	dc.b	" (DEBUG/CHIP MODE)"
+	ENDC
+			dc.b	0
+slv_copy		dc.b	"1998 Five Stars VG Studio",0
 slv_info		dc.b	"adapted by JOTD",10,10
 		dc.b	"Version "
 		DECL_VERSION
@@ -133,6 +137,14 @@ _bootdos	move.l	(_resload,pc),a2		;A2 = resload
 		jsr	(_LVOOldOpenLibrary,a6)
 		move.l	d0,a6			;A6 = dosbase
 
+        IFD CHIP_ONLY
+        movem.l a6,-(a7)
+		move.l	$4.w,a6
+        move.l  #$10000-$B638,d0
+        move.l  #MEMF_CHIP,d1
+        jsr _LVOAllocMem(a6)
+        movem.l (a7)+,a6
+        ENDC
 
 	;load exe
 		lea	_program(pc),a0
@@ -216,6 +228,9 @@ _patchexe
     
 pl_main:
     PL_START
+	PL_IFC1X	0
+	PL_R	$09328
+	PL_ENDIF
 	PL_P	$002ea,zero_vbr
     PL_END
 
