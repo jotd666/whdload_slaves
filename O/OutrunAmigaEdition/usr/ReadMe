@@ -28,14 +28,19 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
  
+ version 1.1 (19.10.2025) done by JOTD:
+ - added support for latest versions (040 and non 040)
+ 
  version 1.0 (17.07.2025) done by JOTD:
-
  - source code included
 
 Notes:
 
 There is no installer.
 Just put the .slave and .info in a directory and the data files under "data"
+
+Akiko support is disabled, whdload doesn't tolerate direct access
+to Akiko hardware registers.
 
 Outrun.slave
 Outrun.info

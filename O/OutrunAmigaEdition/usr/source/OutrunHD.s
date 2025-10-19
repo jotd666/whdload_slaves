@@ -57,7 +57,7 @@ HDINIT
 ;STACKSIZE = 10000
 BOOTDOS
 ; enabling cache in chipmem seems important for this game
-; (c2p shit?)
+; (c2p shit?). CACHE doesn't cut it...
 CACHECHIPDATA
 
 slv_Version	= 17
@@ -74,7 +74,7 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.0"
+	dc.b	"1.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -104,6 +104,8 @@ slv_CurrentDir:
 	dc.b	"data",0
 
 
+program_040:
+	dc.b	"outrun_040",0
 program:
 	dc.b	"outrun",0
 args		dc.b	10
@@ -154,13 +156,25 @@ _bootdos
         ENDC
 
     ; store exe file size once and for all
+	    move.l  attnflags(pc),d0
+        btst    #AFB_68040,d0
+        beq   .no040
+		lea program_040(pc),a0
+		jsr		resload_GetFileSize(a2)
+		tst.l	d0
+		beq		.no040
+		lea	file_size(pc),a0
+		move.l	d0,(a0)
+		lea program_040(pc),a0
+		bra.b	.cont
+.no040:
 		lea	program(pc),a0
 		jsr		resload_GetFileSize(a2)
 		lea	file_size(pc),a0
 		move.l	d0,(a0)
+.cont:
 		
 	;load exe
-		lea		program(pc),a0
 		lea	args(pc),a1
 		moveq	#args_end-args,d0
 		lea	patch_main(pc),a5
@@ -171,8 +185,12 @@ _quit		pea	TDREASON_OK
 		jmp	(resload_Abort,a2)
 
 
-patch_main
-	lea	pl_main(pc),a0
+patch_main:
+	bsr		get_version
+	add.w	d0,d0
+	lea		pl_table(pc),a0
+	add.w	(a0,d0.w),a0
+	
     move.l  d7,a1
 	jsr	resload_PatchSeg(a2)
 
@@ -181,33 +199,61 @@ patch_main
 	add.l	a1,a1
 	rts
 
+pl_table:
+	dc.w	pl_040-pl_table
+	dc.w	pl_nocpu-pl_table
+	dc.w	pl_main_old-pl_table
+	
 ; apply on SEGMENTS
-pl_main:
+pl_main_old:
     PL_START
 	PL_L	$18E,$70004E71
     PL_END
- 
+
+pl_040:
+    PL_START
+	PL_L	$1DE,$70004E71
+    PL_L	$0005e,$70004E71		; remove akiko detection
+	PL_W	$62,$4E71
+    PL_END
+pl_nocpu:
+    PL_START
+	PL_L	$001c8,$70004E71		; remove vbr access
+    PL_L	$0005e,$70004E71		; remove akiko detection
+	PL_W	$62,$4E71
+	PL_END
+
+
 
     
 get_version:
 	movem.l	d1/a0/a1,-(a7)
-	lea	program(pc),A0
-	move.l	_resload(pc),a2
-	jsr	resload_GetFileSize(a2)
+	move.l	file_size(pc),d0
 
-	cmp.l	#757908,D0
-	beq.b	.original
+	cmp.l	#757908,d0
+	beq.b	.old_version
+	
+	cmp.l	#678848,D0
+	beq.b	.version_040
+    
+	cmp.l	#679268,D0
+	beq.b	.version_nocpu
     
 	pea	TDREASON_WRONGVER
 	move.l	_resload(pc),-(a7)
 	addq.l	#resload_Abort,(a7)
 	rts
 
-.original
-	moveq	#1,d0
+.old_version
+	moveq	#2,d0
+	bra.b	.out
+	
+.version_040
+	moveq	#0,d0
     bra.b   .out
-    nop
-
+  
+.version_nocpu:
+	moveq	#1,d0
 
 .out
 	movem.l	(a7)+,d1/a0/a1
@@ -295,6 +341,9 @@ file_size
 	dc.l	0
 	
 tag
+                dc.l    WHDLTAG_ATTNFLAGS_GET
+attnflags:
+                dc.l    0
 		dc.l	WHDLTAG_CUSTOM2_GET
 button_config	dc.l	0
     dc.l    0
