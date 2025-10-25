@@ -74,7 +74,7 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.1"
+	dc.b	"1.3"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -84,7 +84,7 @@ DECL_VERSION:MACRO
 		incbin	datetime
 	ENDC
 	ENDM
-	dc.b	"$","VER: slave "
+	dc.b	"$VER: slave "
 	DECL_VERSION
 	dc.b	0
 
@@ -172,6 +172,7 @@ _bootdos
 		jsr		resload_GetFileSize(a2)
 		lea	file_size(pc),a0
 		move.l	d0,(a0)
+		lea	program(pc),a0
 .cont:
 		
 	;load exe
@@ -200,8 +201,10 @@ patch_main:
 	rts
 
 pl_table:
-	dc.w	pl_040-pl_table
-	dc.w	pl_nocpu-pl_table
+	dc.w	pl_040_091-pl_table
+	dc.w	pl_nocpu_091-pl_table
+	dc.w	pl_040_092-pl_table
+	dc.w	pl_nocpu_092-pl_table
 	dc.w	pl_main_old-pl_table
 	
 ; apply on SEGMENTS
@@ -210,15 +213,28 @@ pl_main_old:
 	PL_L	$18E,$70004E71
     PL_END
 
-pl_040:
+pl_040_091:
     PL_START
 	PL_L	$1DE,$70004E71
     PL_L	$0005e,$70004E71		; remove akiko detection
 	PL_W	$62,$4E71
     PL_END
-pl_nocpu:
+pl_nocpu_091:
     PL_START
 	PL_L	$001c8,$70004E71		; remove vbr access
+    PL_L	$0005e,$70004E71		; remove akiko detection
+	PL_W	$62,$4E71
+	PL_END
+
+pl_040_092:
+    PL_START
+	PL_L	$001e2,$70004E71
+    PL_L	$0005e,$70004E71		; remove akiko detection
+	PL_W	$62,$4E71
+    PL_END
+pl_nocpu_092:
+    PL_START
+	PL_L	$001cc,$70004E71		; remove vbr access
     PL_L	$0005e,$70004E71		; remove akiko detection
 	PL_W	$62,$4E71
 	PL_END
@@ -239,13 +255,19 @@ get_version:
 	cmp.l	#679268,D0
 	beq.b	.version_nocpu
     
+	cmp.l	#679324,D0
+	beq.b	.version_040_092
+    
+	cmp.l	#679728,D0
+	beq.b	.version_nocpu_092
+    
 	pea	TDREASON_WRONGVER
 	move.l	_resload(pc),-(a7)
 	addq.l	#resload_Abort,(a7)
 	rts
 
 .old_version
-	moveq	#2,d0
+	moveq	#4,d0
 	bra.b	.out
 	
 .version_040
@@ -254,6 +276,13 @@ get_version:
   
 .version_nocpu:
 	moveq	#1,d0
+
+.version_040_092
+	moveq	#2,d0
+    bra.b   .out
+  
+.version_nocpu_092:
+	moveq	#3,d0
 
 .out
 	movem.l	(a7)+,d1/a0/a1

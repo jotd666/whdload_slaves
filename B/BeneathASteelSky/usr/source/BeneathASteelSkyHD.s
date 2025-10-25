@@ -31,7 +31,7 @@
 ;============================================================================
 
 CHIPMEMSIZE	= $80000
-FASTMEMSIZE	= $A0000
+FASTMEMSIZE	= $B0000
 NUMDRIVES	= 1
 WPDRIVES	= %0000
 
