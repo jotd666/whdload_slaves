@@ -8,7 +8,7 @@
  CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
  PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
- This install applies to "Cruise For A Corpse / Croisi√®re pour un cadavre" © 1991 Delphine
+ This install applies to "Cruise For A Corpse / Croisiere pour un cadavre" © 1991 Delphine
 
  This install requires WHDLoad to be in the path. It can be found in the
  WHDLoad package.
@@ -39,6 +39,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 2.4 (26.10.2025) done by JOTD:
+ - added support for the unofficial italian version (issue #0006549)
+ 
  version 2.3 (25.12.2023) done by JOTD:
  - added support for the official italian version (issue #0006233)
  

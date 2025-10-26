@@ -84,7 +84,7 @@ ram_string:
 
 
 DECL_VERSION:MACRO
-	dc.b	"2.3"
+	dc.b	"2.4"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -175,6 +175,8 @@ get_version:
 
 	cmp.l	#105080,D0
 	beq		.italian
+	cmp.l	#105152,D0
+	beq		.italian_fanmade
 
 	cmp.l	#104864,d0
 	beq.b	.spanish
@@ -199,6 +201,7 @@ get_version:
 	VERSION_PL	german,31892
 	VERSION_PL	american,31892
 	VERSION_PL	italian,31892
+	VERSION_PL	italian_fanmade,31892
 
 
 .out
@@ -276,7 +279,7 @@ pl_spanish:
 	PL_START
 	PL_P	$246,quit_to_dos
 	PL_P	$610,fake_open_trd	; do not detect DFx: for save games
-	PL_L	$C0E,$4E714E71		; fix access fault
+	PL_NOP	$C0E,4		; fix access fault
 	PL_PS	$2E08,intena_flush
 	PL_PS	$2E2A,intena_flush
 	PL_PS	$30A0,intena_flush
@@ -294,10 +297,26 @@ pl_italian:
 	PL_P	$00610,fake_open_trd	; do not detect DFx: for save games
 	PL_NOP	$00c0e,$4		; access fault
 	PL_PS	$02e38,intena_flush
-	PL_PS	$2E86,intena_flush
+	PL_PS	$030d0,intena_flush
 	PL_PS	$02e5a,intena_flush
 	PL_PS	$030f2,intena_flush
 	PL_L	$05a94,$4EB80100		; crack
+	PL_PS	$0c25c,dma_sound_wait
+	PL_PS	$0c28a,dma_sound_wait
+	PL_PS	$0c2f0,dma_sound_wait
+	PL_PS	$0345e,active_ffff_loop
+	PL_END
+	
+pl_italian_fanmade:
+	PL_START
+	PL_P	$240,quit_to_dos
+	PL_P	$00610,fake_open_trd	; do not detect DFx: for save games
+	PL_NOP	$00c0e,$4		; access fault
+	PL_PS	$02e38,intena_flush
+	PL_PS	$02e5a,intena_flush
+	PL_PS	$030d0,intena_flush
+	PL_PS	$030f2,intena_flush
+	PL_L	$05a9a,$4EB80100		; crack
 	PL_PS	$0c25c,dma_sound_wait
 	PL_PS	$0c28a,dma_sound_wait
 	PL_PS	$0c2f0,dma_sound_wait
