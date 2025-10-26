@@ -218,6 +218,8 @@ patch_main
 	lea	patch_table(pc),a1
     cmp.l   #3,d0
     beq.b   .english_encrypted
+    cmp.l   #4,d0
+    beq.b   .english_encrypted_2
 	add.w   d0,d0
     lea patch_table(pc),a0
     add.w  (a1,d0.w),a0
@@ -231,6 +233,12 @@ patch_main
 
     rts
     
+.english_encrypted_2
+    move.l  d7,-(a7)
+    ; save segment (encrypted version will need it)
+    bsr save_first_segment
+    illegal		; TODO
+	
 .english_encrypted
     move.l  d7,-(a7)
     ; save segment (encrypted version will need it)
@@ -467,6 +475,7 @@ dma_sound_wait_2:
 	dbf	d0,.bd_loop1
 	move.w	(a7)+,d0
     rts
+	
 get_version:
 	movem.l	d1/a1,-(a7)
 	lea	program(pc),A0
@@ -478,6 +487,9 @@ get_version:
 
 	cmp.l	#85156,d0
 	beq.b	.french_noprotection
+
+	cmp.l	#83488,d0
+	beq.b	.us_encrypted_chris
 
 	cmp.l	#88524,d0
 	beq.b	.us_encrypted
@@ -501,6 +513,9 @@ get_version:
 	bra.b	.out
 .us_encrypted
 	moveq	#3,d0
+	bra	.out
+.us_encrypted_chris
+	moveq	#4,d0
 	bra	.out
 .out
 	movem.l	(a7)+,d1/a1

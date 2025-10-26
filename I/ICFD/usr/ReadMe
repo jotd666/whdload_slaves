@@ -38,7 +38,7 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 2.2 (14.10.2025) done by JOTD:
+ version 2.2 (26.10.2025) done by JOTD:
  - support for another (german) antheads version (issue #0005596)
  - Antheads SPS version (encrypted version) fixed properly (was unstable in 2.1)
  
@@ -78,14 +78,15 @@
  - solution included
 
  Notes:
- 
+ - To install "ICFD II - Antheads" you still have to unroll the install procedure located in install disk to create
+   floppies 2 and 3 with the contents of the first opus + some patched files. Then you can run this installer
+
  - The "Anthead" version works but if you leave the intro running, you'll face a black screen
    where you have to press "fire" in order to continue. I think that this is the "do you want to restart
    from a saved game" screen, only this is black. Seems that it's an original game bug,
    the color palette in the second copperlist gets zeroed instead of being normal.
    I could fix this but this is minor, and fixing would be quite tedious. Maybe if someone donates $$$...
-   Solution: skip the intro or press fire when it happens.
-   
+   Solution: skip the intro or press fire when it happens. 
 
  - The fix included in the newest 2022 release (http://m68k.aminet.net/package/game/patch/ICFDesert_fix): This program fixes the "Billy Bob Bug", which causes the game to
    crash if you choose to "Flee" when Billy Bob Morse pulls out a knife

@@ -180,6 +180,17 @@ _quit		pea	TDREASON_OK
 ; < d7: seglist (APTR)
 
 patch_main:
+	; compute future A4 value (only useful for Antheads SPS encrypted)
+	move.l	d7,a3
+	move.l	(a3),d0	; data segment
+	add.l	d0,d0
+	add.l	d0,d0	; as APTR
+	addq.l	#4,d0	; segment start
+	lea		varzone(pc),a0
+	add.l	#$BADA-$3ADC,d0		; location of variables in segment
+	move.l	d0,(a0)
+
+
 	move.l	d7,a1
 	addq.l	#4,a1
 	move.l	_resload(pc),a2
@@ -200,17 +211,6 @@ patch_main:
 	; hybrid. And I don't even know if the disk is protected after all...
 	
 	movem.l	a0-a6,-(a7)
-
-	; compute future A4 value
-	move.l	d7,a3
-	move.l	(a3),d0	; data segment
-	add.l	d0,d0
-	add.l	d0,d0	; as APTR
-	addq.l	#4,d0	; segment start
-	lea		varzone(pc),a0
-	add.l	#$BADA-$3ADC,d0		; location of variables in segment
-
-	move.l	d0,(a0)
 	
 	move.l	a1,a6
 
@@ -424,8 +424,36 @@ pl_main_antheads
 	PL_PS	$20b04,wait_blit_1
 	PL_END
 
+pl_main_antheads_sps:
+	PL_START
+	; needs to fix the startup
+	PL_PS	0,jump_to_real_entry
+	; needs to correct just one call
+	PL_PS	$20410,load_a4_base
+	; also there, as the variable base seems not relocated
+	; patch the routine for simplicity sake
+	PL_P	$22a10,load_a4_base
+	
+	; plus the usual fixes that I forgot when I supported that
+	; encrypted version...
+	; it appears that after decrypting the offsets are 100% identical
+	; to the newly unsupported version!
+	; only 3 locations are different:
+	; - jump at start
+	; - load variables in a4
+	; - offset of a4 variables
+	;
+	; Christoph Gleisberg version was a real Rosetta Stone for that game
+	; it showed that I had forgotten to fix the last one (offset of a4 variables)
+	; which made SPS version of Antheads buggy on 2.1 (trashed graphics on keypresses in the intro
+	; and more...)
+	;
+	PL_NEXT	pl_main_antheads_ger
+	
 pl_main_antheads_ger:
 	PL_START
+
+
 	; difficult-to-find cpu-dependent loops
 	; (found with a tool I have written in Python
 	; to detect cpu-dependent loops)
@@ -469,31 +497,7 @@ pl_main_antheads_ger:
     PL_PSS	$20bd6,wait_blit,4
 	PL_END
 	
-pl_main_antheads_sps:
-	PL_START
-	; needs to fix the startup
-	PL_PS	0,jump_to_real_entry
-	; needs to correct just one call
-	PL_PS	$20410,load_a4_base
-	; also there, as the variable base seems not relocated
-	; patch the routine for simplicity sake
-	PL_P	$22a10,load_a4_base
-	
-	; plus the usual fixes that I forgot when I supported that
-	; encrypted version...
-	; it appears that after decrypting the offsets are 100% identical
-	; to the newly unsupported version!
-	; only 3 locations are different:
-	; - jump at start
-	; - load variables in a4
-	; - offset of a4 variables
-	;
-	; Christoph Gleisberg version was a real Rosetta Stone for that game
-	; it showed that I had forgotten to fix the last one (offset of a4 variables)
-	; which made SPS version of Antheads buggy on 2.1 (trashed graphics on keypresses in the intro
-	; and more...)
-	;
-	PL_NEXT	pl_main_antheads_ger
+
 
 	
 		
