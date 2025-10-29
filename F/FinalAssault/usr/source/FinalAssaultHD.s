@@ -17,7 +17,7 @@
 	INCLUDE	whdmacros.i
 	INCLUDE	lvo/dos.i
 
-;;CHIP_ONLY
+;CHIP_ONLY
 	IFD BARFLY
 	OUTPUT	"FinalAssault.slave"
 	IFND	CHIP_ONLY
@@ -74,7 +74,7 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.2"
+	dc.b	"1.3"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -217,9 +217,9 @@ patch_main
 	bsr	get_version
 	lea	patch_table(pc),a1
     cmp.l   #3,d0
-    beq.b   .english_encrypted
+    beq.b   english_encrypted
     cmp.l   #4,d0
-    beq.b   .english_encrypted_2
+    beq   english_encrypted_2
 	add.w   d0,d0
     lea patch_table(pc),a0
     add.w  (a1,d0.w),a0
@@ -233,16 +233,43 @@ patch_main
 
     rts
     
-.english_encrypted_2
-    move.l  d7,-(a7)
-    ; save segment (encrypted version will need it)
-    bsr save_first_segment
-    illegal		; TODO
-	
-.english_encrypted
-    move.l  d7,-(a7)
-    ; save segment (encrypted version will need it)
-    bsr save_first_segment
+
+; how to intercept decrpytion on winuae: it's pretty simple
+; first boot the original IPF/RAW game and right away use
+; f $1D000 $70000
+; so first time program is called (not ROM or libs or runback) it stops
+; if mem is too low you stumble on "runback" program
+; on english_encrypted_2 version, it stops (most of the time) at 1DBA8 
+; and jumps to TVD at 2D1B8
+; to fix addresses, better make a snapshot when game is loading, as it's kind
+; of random
+;
+; use a memory watchpoint to see when the JSR location is changed
+; (w 0 $1DBAC 2 W)
+; The location has changed to reflect the new TVD decryption routine, which is not
+; decrypted yet. Put a memwatch there and you'll intercept the first decryption
+;
+;0002d40c b150                     eor.w d0,(a0) [48e7]
+;0002d40e 51cb fff4                dbf.w d3,#$fff4 == $0002d404 (F)
+;0002d412 60dc                     bra.b #$dc == $0002d3f0 (T)
+;
+; a few bytes earlier you stumble on the tables init
+;
+;0002d5a0 246d 001a                movea.l ($001a,a5) == $0002d6ea [000185b8],a2
+;0002d5a4 3400                     move.w d0,d2
+; the key in D0 has already changed hence the snapshot feature. Now you know
+; where to add a breakpoint to get the value of the key as load address doesn't change
+; (can be done with a calculation but it's not very convenient)
+; 0002d5b6 43fa fbe0                lea.l (-$0420,pc) == $0002d198,a1 => this is the key list
+; length of key data is $540 (starts by assign + Ben Herdnon copyright text)
+
+; do "f $1D000 $1E000" again to catch the second decryption start
+; you end up at the same address (but the data is different)
+; in the end the program start is at 1DB48
+;
+; DECRYPT_PASS  arg1,arg2,arg3
+; arg1: pass number (for different routines)
+; arg2: offset of the JSR for startup once decrypted (decrypted jsr - start jsr)	
 
     
 DECRYPT_PASS:MACRO
@@ -250,7 +277,7 @@ us_encrypted_start_\1:
 	MOVEA.L	first_segment(pc),A0		;2fa86: 206d0024    ; start ($20000)
     move.l  a0,d0
     add.l   #\2,d0
-    move.l  d0,(2,a0)       ; adjust jump/jsr
+    move.l  d0,(2,a0)       ; adjust jump/jsr of the decrypted startup
     ; now decrypt the rest of the executable
 	lea decrypt_offset_len_table_\1(pc),A2		;2fa78: this table isn't in clear at start, we ripped it
 	MOVE.W	#\3,D2			;2fa7c: this key was ripped too
@@ -266,7 +293,7 @@ us_encrypted_start_\1:
 	MOVEA.L	first_segment(pc),A0		;2fa86: 206d0024    ; start ($20000)
 	ADDA.L	D0,A0			;2fa8a: d1c0
 	ADDA.L	D0,A0			;2fa8c: d1c0
-	lea decrypt_keys_\1(pc),A1		;2fa86: 206d0024    ; start ($20000)
+	lea decrypt_keys_\1(pc),A1		;2fa86: 206d0024
 	SUBQ.W	#2,D3			;2fa92: 5543
 .LAB_000C:
 	MOVE.W	(A0)+,D0		;2fa94: 3018
@@ -282,6 +309,10 @@ us_encrypted_start_\1:
 ; executable is encrypted, and the encrypted executable is
 ; encrypted a second time (same tool), so it needs 2 almost identical
 ; passes to decrypt
+english_encrypted
+    move.l  d7,-(a7)
+    ; save segment (encrypted version will need it)
+    bsr save_first_segment
 
     DECRYPT_PASS    1,$F130,$66CB
     DECRYPT_PASS    2,$E99C,$5D7C
@@ -291,7 +322,20 @@ us_encrypted_start_\1:
     jsr resload_PatchSeg(a2)
     rts
     
+english_encrypted_2
+    move.l  d7,-(a7)
+    ; save segment (encrypted version will need it)
+    bsr save_first_segment
     
+    DECRYPT_PASS    3,$1cc58-$DB48,$31D6
+    DECRYPT_PASS    4,$1c4d2-$DB48,$D77B
+    move.l  (a7)+,a1
+	lea pl_english_2(pc),a0
+    move.l  _resload(pc),a2
+    jsr resload_PatchSeg(a2)
+    rts
+    
+   
 patch_table:
     dc.w    pl_english-patch_table
     dc.w    pl_french-patch_table
@@ -309,6 +353,21 @@ pl_english
     PL_ENDIF
     PL_IFBW
     PL_PSS   $0c01c,after_title_english,4
+    PL_ENDIF
+    PL_END
+    
+pl_english_2:
+    PL_START
+    PL_PSS  $e50c,dma_sound_wait_1,2
+    PL_PSS  $e51e,dma_sound_wait_2,2
+    PL_IFC5
+    PL_ELSE
+    PL_PSS  $016D6,speed_regulation_game_english,2
+    PL_PS   $0c36e,speed_regulation_preparation_english
+    PL_PS   $0c44a,speed_regulation_preparation_english
+    PL_ENDIF
+    PL_IFBW
+    PL_PSS   $0c004,after_title_english,4
     PL_ENDIF
     PL_END
     
@@ -342,7 +401,7 @@ pl_chamonix_2281
     PL_ENDIF
     PL_END
 
-save_first_segment    
+save_first_segment:
     lea first_segment(pc),a2
     add.l   d7,d7
     add.l   d7,d7
@@ -641,6 +700,50 @@ decrypt_offset_len_table_2:
      dc.w   $724C,$0033,$7281,$00FF,$7382,$0040,$73C4,$0031
      dc.w   $73F7,$0491,$0000,$0000
     
+decrypt_offset_len_table_3:
+	dc.w	$0003,$0536,$0539,$0536,$0A6F,$0536,$0FA5,$0536
+	dc.w	$14DB,$0536,$1A11,$0536,$1F47,$0536,$247D,$0536
+	dc.w	$29B3,$0536,$2EE9,$0536,$341F,$0536,$3955,$0536
+	dc.w	$3E8B,$0536,$43C1,$0536,$48F7,$0536,$4E2D,$0536
+	dc.w	$5363,$0536,$5899,$0536,$5DCF,$0536,$6305,$041C
+	dc.w	$6729,$000D,$673F,$005C,$679D,$012C,$68D2,$000A
+	dc.w	$68E1,$0011,$68F4,$0006,$6902,$001E,$6922,$0014
+	dc.w	$693B,$013A,$6A7B,$0005,$6A88,$0044,$6ACE,$0006
+	dc.w	$6AD6,$0008,$6AE6,$0011,$6AF9,$0007,$6B02,$0049
+	dc.w	$6B4D,$000F,$6B62,$0029,$6B8D,$0017,$6BA6,$008C
+	dc.w	$6C34,$0005,$6C3B,$001A,$6C5B,$000B,$6C68,$0006
+	dc.w	$6C70,$0008,$6C83,$0009,$6C97,$0015,$6CB5,$0006
+	dc.w	$6CC5,$0010,$6CD7,$000F,$6CE8,$001B,$6D1D,$000F
+	dc.w	$6D2E,$0025,$6D55,$0007,$6D61,$0010,$6D73,$0012
+	dc.w	$6D90,$005F,$6E0F,$0056,$6E6A,$0021,$6E92,$0119
+	dc.w	$6FBE,$0101,$70C1,$0008,$70CB,$0097,$7164,$001D
+	dc.w	$7183,$0006,$718B,$0006,$7193,$0006,$719B,$000B
+	dc.w	$71A8,$001D,$71CA,$000C,$71D8,$0058,$7232,$000F
+	dc.w	$7243,$0033,$7278,$00FF,$7379,$0040,$73BB,$0031
+	dc.w	$73EE,$0536,$7924,$01F3,$7B19,$000F,$0000,$0000
+
+decrypt_offset_len_table_4:
+	dc.w	$0003,$0536,$0539,$0536,$0A6F,$0536,$0FA5,$0536
+	dc.w	$14DB,$0536,$1A11,$0536,$1F47,$0536,$247D,$0536
+	dc.w	$29B3,$0536,$2EE9,$0536,$341F,$0536,$3955,$0536
+	dc.w	$3E8B,$0536,$43C1,$0536,$48F7,$0536,$4E2D,$0536
+	dc.w	$5363,$0536,$5899,$0536,$5DCF,$0536,$6305,$041C
+	dc.w	$6729,$000D,$673F,$005C,$679D,$012C,$68D2,$000A
+	dc.w	$68E1,$0011,$68F4,$0006,$6902,$001E,$6922,$0014
+	dc.w	$693B,$013A,$6A7B,$0005,$6A88,$0044,$6ACE,$0006
+	dc.w	$6AD6,$0008,$6AE6,$0011,$6AF9,$0007,$6B02,$0049
+	dc.w	$6B4D,$000F,$6B62,$0029,$6B8D,$0017,$6BA6,$008C
+	dc.w	$6C34,$0005,$6C3B,$001A,$6C5B,$000B,$6C68,$0006
+	dc.w	$6C70,$0008,$6C83,$0009,$6C97,$0015,$6CB5,$0006
+	dc.w	$6CC5,$0010,$6CD7,$000F,$6CE8,$001B,$6D1D,$000F
+	dc.w	$6D2E,$0025,$6D55,$0007,$6D61,$0010,$6D73,$0012
+	dc.w	$6D90,$005F,$6E0F,$0056,$6E6A,$0021,$6E92,$0119
+	dc.w	$6FBE,$0101,$70C1,$0008,$70CB,$0097,$7164,$001D
+	dc.w	$7183,$0006,$718B,$0006,$7193,$0006,$719B,$000B
+	dc.w	$71A8,$001D,$71CA,$000C,$71D8,$0058,$7232,$000F
+	dc.w	$7243,$0033,$7278,$00FF,$7379,$0040,$73BB,$0031
+	dc.w	$73EE,$048A,$0000,$0000,$0000,$0000,$0000,$0000
+
 ; this is the data+code that the program starts to decrypt (2 passes)
 ; when it starts. those bytes are used as a key for the final decryption    
 ; we could have let the code run but that involved a lot of system calls
@@ -654,6 +757,10 @@ decrypt_keys_1:
     incbin  "decrypt_keys_1.bin"
 decrypt_keys_2:
     incbin  "decrypt_keys_2.bin"
+decrypt_keys_3:
+    incbin  "decrypt_keys_3.bin"
+decrypt_keys_4:
+    incbin  "decrypt_keys_4.bin"
 voies_string
     dc.b    "voies",0
     
