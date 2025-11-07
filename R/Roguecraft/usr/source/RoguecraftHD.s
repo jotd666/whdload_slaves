@@ -39,7 +39,6 @@ _expmem
     dc.w    _config-_base
 ;---
 _config
-;	dc.b	"BW;"
 	dc.b    "C1:X:Infinite energy:0;"
 	dc.b    "C1:X:Max energy at start:1;"
 	dc.b    "C1:X:Max strength at start:2;"
@@ -48,7 +47,7 @@ _config
 	DOSCMD	"WDate  >T:date"
 	ENDC
 DECL_VERSION:MACRO
-	dc.b	"2.0"
+	dc.b	"1.0"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -59,21 +58,29 @@ DECL_VERSION:MACRO
 	ENDC
 	ENDM
 _data   dc.b    0
-_name	dc.b	'Roguecraft',0
+_name	dc.b	'Roguecraft (v1.5)',0
 _copy	dc.b	'2025 Badger Punch Games',0
 _info
 	dc.b	'modded & trained by JOTD',10,10
-    dc.b   'Version 1.5',0
+	dc.b	"Version "
+	DECL_VERSION
+	dc.b	0
+	
 _kickname   dc.b    0
 ;--- version id
     dc.b	0
     even
 
 CIAA_SDR	EQU	$BFEC01
-LAB_0003:
-	dc.b	$00	;66
+
+
+	dc.b	"$","VER: slave "
+	DECL_VERSION
+	dc.b	0
+	
 program_name:
 	DC.B	'roguecraft.exe',0
+	even
 start:
 	LEA	_resload(PC),A1	;076: 43fa012c
 	MOVE.L	A0,(A1)			;07a: 2288
@@ -143,9 +150,6 @@ start:
 
 pl_main:
 	PL_START
-	PL_B	$0014fa+3,1
-	
-
 
 	PL_IFC1X	0
 	PL_NOP	$0042de,6
@@ -174,9 +178,12 @@ load_file:
 
 save_file:
 	MOVEM.L	A0-A2,-(A7)		;140: 48e700e0
+	move.l	trainer(pc),d0
+	bne		.skip
 	MOVE.L	D1,D0			;144: 2001
 	MOVEA.L	_resload(PC),A2	;146: 247a005c
 	JSR	resload_SaveFile(A2)	;14a (offset=c)
+.skip:
 	MOVEM.L	(A7)+,A0-A2		;14e: 4cdf0700
 	MOVEQ	#0,D0			;152: 7000
 	RTS				;154: 4e75
@@ -198,8 +205,6 @@ exit_debug:
 	BRA.S	LAB_0009		;174: 600a
 exit_normally:
 	PEA	-1.W			;176: 4878ffff
-	BRA.S	LAB_0009		;17a: 6004
-	PEA	9.W			;17c: 48780009
 LAB_0009:
 	MOVE.L	_resload(PC),-(A7)	;180: 2f3a0022
 	ADDQ.L	#4,(A7)			;184: 5897
@@ -208,6 +213,7 @@ LAB_0009:
 tags:
 	dc.l	WHDLTAG_BUTTONWAIT_GET
 	dc.l	0
+trainer:
 	dc.l	WHDLTAG_CUSTOM1_GET
 	dc.l	0			;194: 00000000
 	dc.l	WHDLTAG_MONITOR_GET
