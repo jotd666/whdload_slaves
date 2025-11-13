@@ -24,7 +24,7 @@ CHIPMEMSIZE = $1FF000
 
 _base
 		SLAVE_HEADER			;ws_Security + ws_ID
-		dc.w	17			;ws_Version
+		dc.w	19			;ws_Version
 		dc.w	WHDLF_NoError|WHDLF_EmulTrap|WHDLF_ClearMem|WHDLF_ReqAGA|WHDLF_Req68020		;ws_flags
 		dc.l	CHIPMEMSIZE		;ws_BaseMemSize
 		dc.l	$0			;ws_ExecInstall
@@ -63,6 +63,7 @@ _config
     dc.b    "BW;"
     dc.b    "C1:X:Trainer Infinite Energy:0;"
     dc.b    "C1:X:Trainer 99 Lives:1;"
+    dc.b    "C1:X:Trainer Infinite Specials:2;"
 	dc.b	0
     even
         
@@ -147,7 +148,11 @@ pl_main
     PL_ENDIF
     PL_IFC1X    1
 	PL_PSS	$ECE,set_lives,2
+    PL_ENDIF   
+    PL_IFC1X    2
+    PL_NOP  $14858,4    ; do not check number of weapons
     PL_ENDIF
+    
     
     PL_PS   $640,_joypad_buttons_loop_aga
     PL_PS   $83e,_pause_test_aga

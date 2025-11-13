@@ -8,5 +8,17 @@
 *.bak
 _UAEFSDB.___
 # track files in "usr"
-!usr/**
+
+WHDLoad
+# files 2 levels below are work files, tracked files are in "usr"
+*/*/disasm
+*/*/*.info
+*/*/*.s
+*/*/*.lnk
+*/*/Makefile
+*/*/run*
+*/*/datetime
+*/*/Build
+*/*/build.bat
+
 

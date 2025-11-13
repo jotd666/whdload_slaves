@@ -5,7 +5,7 @@
 	ENDC
     ENDC
 DECL_VERSION:MACRO
-	dc.b	"2.1"
+	dc.b	"2.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -81,7 +81,7 @@ _joypad_buttons_loop_\1:
     btst    #JPB_BTN_GRN,d0
     beq.b   .noquit
     bra _exit
-.noquit 
+.noquit
     TEST_BUTTON BLU,20,p1
     TEST_BUTTON YEL,15,p1
     ; player 1 can change player 2 ability

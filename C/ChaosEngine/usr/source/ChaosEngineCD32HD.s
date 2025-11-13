@@ -127,17 +127,13 @@ _args		dc.b	10
 _args_end
 	dc.b	0
 	EVEN
-
+_language:
+	dc.l	0
 ;============================================================================
 
 	;initialize kickstart and environment
 
 _bootdos
-	IFND	USE_DISK_LOWLEVEL_LIB
-	lea	OSM_JOYPAD1KEYS(pc),a0
-	move.l	#$40606119,(a0)	; raw keycodes
-	ENDC
-
 	move.l	_resload(pc),a2		;A2 = resload
     
     ;get password
@@ -159,8 +155,8 @@ _bootdos
 
     bsr	_patch_cd32_libs
     bsr	force_joysticks
+	
 	;load exe
-
 
 
 		lea	_program(pc),a0
@@ -219,12 +215,16 @@ patch_main
 ; make-up for the game bug: calls the routine without the tag id
 ; and it doesn't work (you'd have to disconnect mouse from port 0)
 
-force_joysticks
+force_joysticks:
 	movem.l	d0-a6,-(a7)
 	lea	.lowlevel_name(pc),a1
 	moveq	#0,d0
 	move.l	$4.W,a6
 	jsr	_LVOOpenLibrary(a6)
+	tst.l	d0
+	bne		.1
+	illegal
+.1:
 	move.l	d0,a6
 
 	lea	.joytag(pc),a1

@@ -25,7 +25,7 @@
 	BOPT	w4-			;disable 64k warnings
     ENDC
     
-;;CHIP_ONLY = 1
+;CHIP_ONLY = 1
 
     IFD CHIP_ONLY
 CHIPMEMSIZE = $FF000
@@ -36,14 +36,13 @@ FASTMEMSIZE = $7F000
     ENDC
     
 	STRUCTURE	globals,$200
-		LONG	_resload
 		WORD	_dchk
 		WORD	_disk
 
 ;======================================================================
 
 _base		SLAVE_HEADER			;ws_Security + ws_ID
-		dc.w	17			;ws_Version
+		dc.w	19			;ws_Version
 		dc.w	WHDLF_Disk|WHDLF_NoError|WHDLF_EmulTrap	;ws_flags
 _upchip		dc.l	CHIPMEMSIZE			;ws_BaseMemSize
 		dc.l    0			;ws_ExecInstall
@@ -60,7 +59,8 @@ _expmem		dc.l	FASTMEMSIZE			;ws_ExpMem
 		dc.l	0                       ;ws_kicksize
 		dc.w	0                       ;ws_kickcrc
 		dc.w	_config-_base		;ws_config
-
+_resload:
+	dc.l	0
 ;============================================================================
     include ReadJoyPad.s
     include shared.s
@@ -71,6 +71,7 @@ _config
     dc.b    "BW;"
     dc.b    "C1:X:Trainer Infinite Energy:0;"
     dc.b    "C1:X:Trainer 99 Lives:1;"
+    dc.b    "C1:X:Trainer Infinite Specials:2;"
 	dc.b	0
 
 ;============================================================================
@@ -91,12 +92,13 @@ _info		dc.b	"installed by Wepl & JOTD",10,10
 _Start		;	A0 = resident loader
 ;======================================================================
 
-		move.l	a0,(_resload)		;save for later using
+		lea		_resload(pc),a1
+		move.l	a0,(a1)		;save for later using
 		move.w	#0,(_dchk)
 		move.w	#1,(_disk)
 
 
-		move.l	(_resload),a3
+		move.l	(_resload,pc),a3
 		move.l	#CACRF_EnableI,d0	;enable instruction cache
 		move.l	d0,d1    		;mask
 		jsr	(resload_SetCACR,a3)
@@ -117,7 +119,7 @@ _Start		;	A0 = resident loader
         ; compute CRC before decrunch & relocate else it will vary
  		move.l  a4,a0
 		move.l	#$10000,d0
-		move.l	(_resload),a3
+		move.l	(_resload,pc),a3
 		jsr	(resload_CRC16,a3)
         move.l  d0,d5
         
@@ -175,7 +177,9 @@ pl_v1:
     PL_NOP  $756,6
     PL_PSS   $e76,set_lives,2
     PL_ENDIF
-    
+    PL_IFC1X    2
+    PL_NOP  $14B2A,4    ; do not check number of weapons
+    PL_ENDIF   
     PL_PS   $38e6,_level3_interrupt_hook
 
     PL_IFBW
@@ -194,6 +198,9 @@ pl_sps106:
     PL_ENDIF
     PL_IFC1X 1
     PL_PSS   $e7c,set_lives,2
+    PL_ENDIF
+    PL_IFC1X    2
+    PL_NOP  $14b46,4    ; do not check number of weapons
     PL_ENDIF
     
 
@@ -287,7 +294,7 @@ _loader		movem.l	d1-d3/a0-a2,-(a7)
 		move.l	d2,d1		;size
 		moveq	#0,d2
 		move.w	(_disk),d2	;disk
-		move.l	(_resload),a2
+		move.l	(_resload,pc),a2
 		jsr	(resload_DiskLoad,a2)
 		movem.l	(a7)+,d1-d3/a0-a2
 		moveq	#0,d0
@@ -295,7 +302,7 @@ _loader		movem.l	d1-d3/a0-a2,-(a7)
 		rts
 
 _exit		pea	TDREASON_OK.w
-		move.l	(_resload),-(a7)
+		move.l	(_resload,pc),-(a7)
 		add.l	#resload_Abort,(a7)
 		rts
 ;--------------------------------
