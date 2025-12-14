@@ -146,12 +146,6 @@ Controls:
  - R-shift or yellow: select special (cpu)
  - both shifts or green+yellow: swap special weapon
  - [When paused] SPC+both ALTs (blue+yellow+green): quit
-
- Player 2: keys 567890
-
- (original version switched to keyboard when joypad wasn't available,
-  but my lowlevel implementation forces joypads, so it uses my internal
-  emulation. Amounts to the same thing)
   
  ECS/AGA Floppy joypad buttons:
  
