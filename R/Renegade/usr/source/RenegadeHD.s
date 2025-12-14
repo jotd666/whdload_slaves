@@ -90,7 +90,7 @@ DECL_VERSION:MACRO
 
 
 
-slv_name		dc.b	"OutRun: Amiga Edition"
+slv_name		dc.b	"Renegade (AGA)"
 	IFD	CHIP_ONLY
 	dc.b	" (DEBUG/CHIP MODE)"
 	ENDC
@@ -194,6 +194,7 @@ pl_version1:
     PL_START
 	PL_L	$000434,$70004E71		; remove vbr access
 	PL_PS	$44ad2c,fix_access_fault_1
+	PL_PS	$44ac8e,fix_access_fault_1
 	PL_END
 
 fix_access_fault_1:
