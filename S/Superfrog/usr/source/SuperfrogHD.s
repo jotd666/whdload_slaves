@@ -29,6 +29,8 @@
 ;		28.08.05 - v1.2
 ;		         - Supports the CD version released by Islona (thanks Xavier!)
 ;		         - CD32 version will no longer quit the entire game when you press Escape
+;		17.04.26 - v1.7 by Arise from decay
+;				 - added more trainerkeys
 ; Requires:	WHDLoad 10+
 ; Copyright:	Public Domain
 ; Language:	68000 Assembler
@@ -38,12 +40,12 @@
 ; 		$82432 = Look for level code
 ;---------------------------------------------------------------------------*
 
-		INCDIR	Include:
+		INCDIR	Includes:
 		INCLUDE	whdload.i
 		INCLUDE	whdmacros.i
 
 		IFD BARFLY
-		OUTPUT	"Superfrog.slave"
+		OUTPUT	"HD2:util/dev/whdload/Superfrog/Superfrog.slave"
 		BOPT	O+			;enable optimizing
 		BOPT	OG+			;enable optimizing
 		BOPT	ODd-			;disable mul optimizing
@@ -84,13 +86,14 @@ _expmem		dc.l	EXTMEMSIZE			;ws_ExpMem
 		
 _config
         dc.b    "C2:B:blue/second button jumps;"
+		dc.b	"C3:B:Show Crystal cracktro;"
 		dc.b	0
 
 	IFD BARFLY
 	DOSCMD	"WDate  >T:date"
 	ENDC
 DECL_VERSION:MACRO
-	dc.b	"1.6"
+	dc.b	"1.7"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -115,15 +118,19 @@ _name		dc.b	"Superfrog"
 	dc.b	0
 _copy		dc.b	"1993 Team 17",0
 _info		dc.b	"Installed by Codetapper/Action! & JOTD",10
+			dc.b	"Additional keys by ArisefromDecay",10,10
 		dc.b	"Version "
 		DECL_VERSION
-		
-		dc.b	10,-1,"Keys: Help - Skip current level            "
-		dc.b	10,"        F9 - Toggle infinite lives and time"
-		dc.b	-1,"Thanks to Chris Vella for the disk version, and to"
+		dc.b	10,"F1-F5 Toggles:"
+		dc.b	10,"Lives, time, energy, bounce, invisibility"
+		dc.b	10,"1/2-3/4 Dec/Inc speed-jumpheight"
+		dc.b	10,"X-Open exit"
+		dc.b	10,"Help-Skip level",10
+		dc.b	10,"Thanks to Chris Vella for the disk version, and to"
 		dc.b	10,"Carlo Pirri and Xavier Bodenand for the CD versions!"
 		dc.b	0
 _Highs		dc.b	"Superfrog.highs",0
+_Cracktro	dc.b	"crystal.rnc",0
 _DiskNumber	dc.b	1
 _LastKeypress	dc.b	0
 _CheatFlag	dc.b	0
@@ -143,6 +150,25 @@ _restart	lea	_Tags(pc),a0
 		
 		bsr	_detect_controller_types
 
+;LoadCracktro	
+		clr.l	-(a7)
+		clr.l	-(a7)
+		pea	WHDLTAG_CUSTOM3_GET
+		move.l	a7,a0
+		jsr	(resload_Control,a2)
+		tst.l	(4,a7)
+		beq	_NotRegistered
+		lea	_Cracktro(pc),a0
+		lea $58000,a1
+		move.l	a1,a5
+		move.l	_resload(pc),a2
+		jsr resload_LoadFileDecrunch(a2)
+
+;		 lea _pl_crystal,a0
+;		 move.l	 a5,a1
+;		 jsr (resload_Patch,a2)
+
+		jsr	(a5)
 
 _NotRegistered	lea	_Track0(pc),a0
 		lea	$10000,a1
@@ -166,6 +192,19 @@ _PL_Boot	PL_START
 		PL_P	$6da,_DecrunchATN	;Decrunch ATN!
 		PL_END
 
+;_pl_crystal
+;		 PL_START
+;		 PL_END
+
+.keyboard	 
+	move.b	$bfec01,d0
+
+	movem.l	d0-d1/a0-a2,-(sp)
+	ror.b	#1,d0
+	not.b	d0
+	cmp.b	_keyexit(pc),d0
+	beq	_exit
+	rts
 ;======================================================================
 
 _PatchTrack1	movem.l	d0-d1/a0-a2,-(sp)
@@ -193,6 +232,7 @@ _PL_Track1	PL_START
 		PL_P	$33a4,_DecrunchATN	;Decrunch ATN!
 		PL_P	$3680,_Loader		;Patch Rob Northen loader
 		PL_END
+
 
 ;======================================================================
 
@@ -422,24 +462,130 @@ _Keybd
 	move.l	#1,$a06(a1)
 	bra	_SetCheat
 
-.NoSkipLevel	cmp.b	#$58,d0			;Check for F9 key
-	bne	_SameKeyDown
+.NoSkipLevel	cmp.b	#$50,d0			;Check for F1 key (Lives)
+	bne	_Nof1
 
 
 	;Trainer options: $876-$879: Time remaining as ASCII
 	;                      $82e: Lives
-	;                      $834: Score
-
-
-	eor.w	#$317c^$6004,$de6(a1)		;Set game over lives = -1 (move.w #$ffff,$8082e) $317c $ffff $0058
+	;                      $834: Score #
+	;                      $830: Energy
+	;                      $86e: JumpHeight (FFFD=min FFF4=max)
+	;                      $859: Speed (03=min 0c=max)
+	;                      $14:	 Collision (FFFF=off 0000=on)
+	;                      $821: Coins in hex
+	;                      $862: Invisibility counter
+	eor.w	#$317c^$6004,$de6(a1)			;Set game over lives = -1 (move.w #$ffff,$8082e) $317c $ffff $0058
 	eor.l	#$53680058^$4e714e71,$e24(a1)	;Infinite lives (subq.w #1,($58,a0))
-	add.l	#$11000,a1	; a1 = $91000
-	eor.w	#$33fc^$6006,$a1a(a1)		;Set game over lives = -1 (move.w #$ffff,$8082e) $33fc $ffff $0008 $082e
-	eor.l	#$532800a3^$4e714e71,$d6a(a1)	;Infinite time (subq.b #1,($a3,a0))              $5328 $00a3
+	add.l	#$11000,a1
+	
+	eor.w	#$33fc^$6006,$a1a(a1)			;Set game over lives = -1 (move.w #$ffff,$8082e) $33fc $ffff $0008 $082e
 	add.l	#$b000,a1
-	eor.l	#$53680058^$4e714e71,$4D4(a1)    ; $9c4d4	;Infinite lives (subq.w #1,($58,a0))
+	eor.l	#$53680058^$4e714e71,$4D4(a1)	; $9c4d4   ;Infinite lives (subq.w #1,($58,a0))
+	sub.l	#$1c000,a1
+	
+	lea	_CheatFlag(pc),a0					;Set flag to say user is a cheat
+	move.b	#-1,(a0)
+	bsr	_FlushLibs
 
-_SetCheat	lea	_CheatFlag(pc),a0	;Set flag to say user is a cheat
+_Nof1		cmp.b	#$51,d0					;Check F2 key (Time)
+	bne _Nof2
+	add.l	#$11000,a1
+	eor.l	#$532800a3^$4e714e71,$d6a(a1)   ;Infinite time (subq.b #1,($a3,a0))              $5328 $00a3
+	sub.l	#$11000,a1
+
+	lea	_CheatFlag(pc),a0					;Set flag to say user is a cheat
+	move.b	#-1,(a0)
+	bsr	_FlushLibs
+
+_Nof2		cmp.b	#$52,d0					;Check F3 key (Energy)
+	bne	_Nof3
+	add.l	#$1c000,a1
+	eor.l   #$5368005a^$4e714e71,$60c(a1)	;Energy (subq.w #1,($5a,a0)
+	sub.l	#$1c000,a1
+
+	lea	_CheatFlag(pc),a0					;Set flag to say user is a cheat
+	move.b	#-1,(a0)
+	bsr	_FlushLibs
+
+_Nof3		cmp.b	#$53,d0 				;Check F4 key (Bounce from enemy)
+	bne _Nof4
+	add.l 	#$1c000,a1
+	eori.b	#1,$61b(a1)						;Bounce (move.w #1,(3a,a0) --> move.w #0,(3a,a0) )
+	sub.l	#$1c000,a1
+
+	lea	_CheatFlag(pc),a0					;Set flag to say user is a cheat
+	move.b	#-1,(a0)
+	bsr	_FlushLibs
+
+_Nof4		cmp.b	#$54,d0					;Check F5 key (Collision)
+	bne	_Nof5
+;	 not.w	 ($14,a1)						;This cancels all sprite collisions
+	tst.b	$862(a1)
+	bne		_Invon
+	move.w	#$7fff,$862(a1)					;This gives invisibility pill for a long time
+	bra	_Nof5
+	
+	lea	_CheatFlag(pc),a0					;Set flag to say user is a cheat
+	move.b	#-1,(a0)
+	bsr	_FlushLibs
+
+_Invon	move.w	#$0000,$862(a1)				;Invisibility off
+
+	lea	_CheatFlag(pc),a0					;Set flag to say user is a cheat
+	move.b	#-1,(a0)
+	bsr	_FlushLibs
+
+
+_Nof5		cmp.b	#$03,d0					;Check 3 key
+	bne	_No3key
+	cmpi.w	#$fffd,$86e(a1)					;Already min?
+	beq	_No3key
+	addq.w	#1,$86e(a1)						;Decrease height by adding 1
+
+	lea	_CheatFlag(pc),a0					;Set flag to say user is a cheat
+	move.b	#-1,(a0)
+	bsr	_FlushLibs
+
+_No3key		cmp.b	#$04,d0					;Check 4 key
+	bne	_No4key
+	cmpi.w	#$fff4,$86e(a1)					;Already max?
+	beq _No4key
+	subq.w	#1,$86e(a1)						;Increase height by subtracting 1
+
+	lea	_CheatFlag(pc),a0					;Set flag to say user is a cheat
+	move.b	#-1,(a0)
+	bsr	_FlushLibs
+
+_No4key		cmp.b	#$01,d0					;Check 1 key
+	bne	_No1key
+	cmpi.w	#$3,$858(a1)					;Already slow?
+	beq	_No1key
+	subq.w	#1,$858(a1)						;Slow down by subtracting 1
+
+	lea	_CheatFlag(pc),a0					;Set flag to say user is a cheat
+	move.b	#-1,(a0)
+	bsr	_FlushLibs
+
+_No1key		cmp.b	#$02,d0					;Check 2 key
+	bne	_No2key
+	cmpi.w	#$c,$858(a1)					;Already fast?
+	beq	_No2key
+	addq.w	#1,$858(a1)						;Speed up by adding 1
+
+    lea	_CheatFlag(pc),a0					;Set flag to say user is a cheat
+	move.b	#-1,(a0)
+	bsr	_FlushLibs
+
+_No2key		cmp.b	#$32,d0					;Check X key
+	bne	_SameKeyDown
+	clr.w	$832(a1)						;Clear coins
+	movem.l	d0-d2/a1-a2,-(a7)				;Save regs
+	add.l	#$8000,a1                       ;Jsr offset too big
+	jsr		$63e(a1)						;Jsr to ingame routine
+	movem.l	(a7)+,d0-d2/a1-a2				;Restore regs
+
+_SetCheat	lea	_CheatFlag(pc),a0			;Set flag to say user is a cheat
 	move.b	#-1,(a0)
 	bsr	_FlushLibs
 

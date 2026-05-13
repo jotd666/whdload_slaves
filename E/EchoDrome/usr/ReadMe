@@ -39,6 +39,9 @@
  and	aminet:game/patch/
  
 
+ version 1.1 (13.05.2026) done by JOTD:
+ - debug code removed that triggered access faults
+ 
  version 1.0 (12.05.2026) done by JOTD:
  - initial release, support for v1.1
  - quit key added

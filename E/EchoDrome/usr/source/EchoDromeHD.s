@@ -73,7 +73,7 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.0"
+	dc.b	"1.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -87,8 +87,6 @@ DECL_VERSION:MACRO
 	DECL_VERSION
 	dc.b	0
 
-assign
-	dc.b	"ZippyRace",0
 
 slv_name		dc.b	"Echodrome"
 	IFD	CHIP_ONLY
@@ -216,7 +214,15 @@ pl_prog
 	PL_W	$1030a,$7000
 	PL_NOP	$1030c,6
 	PL_PS	$1b7c6,keyboard_hook
-    PL_END
+	
+	; remove winuae debug detection
+	PL_NOP	$1e30c,4
+	PL_W	$1e310,$7000
+	PL_NOP	$1e36a,4
+	PL_W	$1e36e,$7000
+	PL_NOP	$20c00,4
+ 	PL_W	$20c04,$7000
+   PL_END
     
 get_version:
 	movem.l	d1/a0/a1,-(a7)

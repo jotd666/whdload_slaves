@@ -34,6 +34,14 @@ REQUIREMENTS:
 	http://www.whdload.de/
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
+
+version 1.7: (18.04.2026) done by Arise from Decay
+- added more ingame trainerkeys
+  F1 Toggle infinite lives, F2 Toggle infinite time, F3 toggle infinite energy
+  F4 Toggles bounce off enemies, F5 Toggles Invisibility (not infinite but for very long)
+  1,2 Decreases or increases speed, 3,4 Decreases or increases jumpheight
+  X opens levelexit
+- added optional crackintro by crystal (copy crystal.exe to install directory)
  
 version 1.6: (9-oct-2024) done by JOTD:
 - adapted to WHDLoad 19, now uses internal joypad read routine

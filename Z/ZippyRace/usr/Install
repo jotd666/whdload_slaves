@@ -15,7 +15,7 @@
 (set #extra3-file "Extra3")		;name of third extra file
 (set #prefix "ZippyRace")			;name of slave, directory
 (set #prefix-slave "")
-(set #single_disk_name "ZippyRaceA500")
+(set #single_disk_name "ZippyRace")
 
 (set #ico_suffix_00 "inf")		;Icon suffixes (not all of these must exist)
 (set #ico_suffix_01 "magicwb")

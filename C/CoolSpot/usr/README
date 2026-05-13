@@ -13,15 +13,19 @@
 	full whdload package:	aminet:dev/misc/whdload#?.lha
 	other installs:		http://www.whdload.de/
 
-        v2.1 (17.04.2016) done by JOTD
-        - added quitkey for 68000 machines
+    version 2.2 (13.05.2026) done by JOTD/arisefromdecay
+    - added megatrainer (arisefromdecay)
+	- cleaned up source slave (jotd)
 
-	v2.0 (12.04.2016) done by JOTD
+    version 2.1 (17.04.2016) done by JOTD
+    - added quitkey for 68000 machines
+
+	version 2.0 (12.04.2016) done by JOTD
 	- chipmem usage lowered to 0.5MB
 	- fixed spurious level 6 interrupt that locks up the game (CD32 but can happen on non-CD32 configs)
 	- source code included
 	
-	v1.x done by Mr.Larmer
+	version 1.x done by Mr.Larmer
 	
 	Thanx to Vaughn Tovey for original disks image.
 
