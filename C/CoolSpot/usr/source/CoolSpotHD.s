@@ -180,26 +180,22 @@ kb_routine:
 	beq		.notrainerkeys
 	cmp.b	#$14,d0			;check t key
 	bne	.noT
-	move.w	#$fff,$dff180
 	eor.b  #$19,$d754 		;subq <-> tst
 
 .noT
 	cmp.b	#$12,d0 		;check e key
 	bne	.noE
-	move.w	#$f00,$dff180
 	eori.b	#$db,$108a4 	;subq <-> tst
 
 .noE	
 	cmp.b	#$28,d0			;check l key
 	bne	.noL
-	move.w	#$00f,$dff180
 	eor.b  #$19,$7868		;subq <-> tst
 	eor.b  #$19,$7912
 
 .noL
 	cmp.b  #$17,d0			;check i key
 	bne	.noI
-	move.w	#$0f0,$dff180
 	eori.b	#6,$10850		;subq <-> tst
 	eori.b	#6,$10886
 
