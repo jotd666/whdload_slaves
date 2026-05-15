@@ -1,5 +1,5 @@
 
-	INCDIR	Include:
+	INCDIR	Includes:
 	INCLUDE	exec/execbase.i
 	INCLUDE	whdload.i
 
@@ -7,10 +7,10 @@
 	BOPT	w4-			;disable 64k warnings
 	BOPT	wo-			;disable optimizer warnings
 	SUPER				;disable supervisor warnings
-	OUTPUT	Overdrive.slave
+	OUTPUT	hd2:util/dev/whdload/overdrive/Overdrive.slave
 	ENDC
 
-CHIPONLY
+;CHIPONLY
 	IFD	CHIPONLY
 CHIPMEMSIZE = $100000
 FASTMEMSIZE = $0
@@ -22,7 +22,7 @@ RECORDSIZE = $18CA
 BOOTBASE = $78000
 
 _base		SLAVE_HEADER			;ws_Security + ws_ID
-		dc.w	13			;ws_Version
+		dc.w	17			;ws_Version
 		dc.w	WHDLF_NoError|WHDLF_EmulTrap|WHDLF_ClearMem
 		dc.l	CHIPMEMSIZE		;ws_BaseMemSize
 		dc.l	0			;ws_ExecInstall
@@ -33,9 +33,13 @@ _keydebug	dc.b	0			;ws_keydebug
 _keyexit	dc.b	$5D			;ws_keyexit = num '*'
 _whd_expmem	dc.l	FASTMEMSIZE		;ws_ExpMem
 
-		dc.w	_name-_base		;ws_name
-		dc.w	_copy-_base		;ws_copy
-		dc.w	_info-_base		;ws_info
+			dc.w	_name-_base		;ws_name
+			dc.w	_copy-_base		;ws_copy
+			dc.w	_info-_base		;ws_info
+			dc.w	0			;ws_kickname
+			dc.l	0			;ws_kicksize
+			dc.w	0			;ws_crc
+			dc.w	_config-_base		;ws_config
 
 
 	IFD BARFLY
@@ -44,15 +48,26 @@ _whd_expmem	dc.l	FASTMEMSIZE		;ws_ExpMem
 
 _name		dc.b	"Overdrive",0
 _copy		dc.b	"1993 Team 17 & Psionic Systems",0
-_info		dc.b	"installed & fixed by JOTD",10
-		dc.b	"Version 2.0 "
+_info		dc.b	"installed & fixed by JOTD",10,10
+			dc.b	"Trainer added by Arise from Decay",10,10		 
+
+		dc.b	"Version 2.1 "
 	IFD BARFLY
 		INCBIN	"T:date"
 	ENDC
 		dc.b	0
+_config
+	dc.b	"C1:X:Unlimited Fuel:0;"
+	dc.b	"C1:X:Unlimited Time:1;"
+	dc.b	"C1:X:Unlimited Money:2;"
+	dc.b	"C1:X:Unlimited Turbo-time:3;"
+	dc.b	"C1:X:Always win:4;"
+	dc.b	"C1:X:Ingame keys:5;"
+	dc.b	"C4:B:Skip Team17 & Psionic logos"
+	dc.b	0
 
+_CheatFlag	dc.b 0
 		even
-
 _start	
 	IFND	CHIPONLY
 	lea	_expmem(pc),a1
@@ -111,7 +126,18 @@ _start
 
 	move.l	_expmem(pc),$FFC.W	; like in Assassin
 
-	move.l	a0,-(A7)
+;Check if any trainer is on (custom1)
+		clr.l	-(a7)
+		clr.l	-(a7)
+		pea	WHDLTAG_CUSTOM1_GET
+		move.l	a7,a0
+		jsr	(resload_Control,a2)
+		tst.l	(4,a7)
+		beq	.cont
+		lea	_CheatFlag(pc),a0			;Set flag to say user is a cheater
+		move.b	#-1,(a0)
+
+.cont	 move.l  a0,-(A7)
 	move.l	_resload(PC),a0
 	jsr	resload_FlushCache(A0)	;preserves all registers
 	move.l	(A7)+,a0
@@ -149,6 +175,9 @@ read_sectors_11b:
 
 pl_1
 	PL_START
+	PL_IFC4
+	PL_S	$e,$7e					;skip logos
+	PL_ENDIF
 	PL_P	$0154,patch_loader_2
 	PL_P	$1BFA,read_sectors_12b
 	PL_P	$1484,read_sectors_11b
@@ -184,9 +213,33 @@ patch_loader_2
 
 pl_2
 	PL_START
+	PL_IFC1X 0
+	PL_B	$5f2a,$4a				;Unlimited fuel
+	PL_ENDIF
+	PL_IFC1X 1
+	PL_NOPS	$ad04,1        			;Unlimited time
+	PL_ENDIF
+	PL_IFC1X 2
+	PL_NOPS $c976,4					;Unlimited money
+	PL_ENDIF
+	PL_IFC1X 3
+	PL_B	$7fba,$4a				;Unlimited Turbo Time
+	PL_B	$a4fe,$4a
+	PL_B	$a61a,$4a
+	PL_B	$a66c,$4a
+	PL_B	$a850,$4a
+	PL_ENDIF
+	PL_IFC1X 4
+	PL_NOPS $625e,2					;Always win
+	PL_NOPS $6264,2
+	PL_ENDIF
+	PL_IFC1X 5
+	PL_PS	$1174,kbinttrainer
+	PL_ELSE
+	PL_PS	$1174,kbint
+	PL_ENDIF
 	PL_P	$14BD8,read_sectors_12b
 	PL_P	$14FEC,read_sectors_11b
-	PL_PS	$1174,kbint
 	PL_W	$14A8A,$6024	; remove a flash during 'accessing disk message'
 	PL_P	$13854,load_records
 	PL_P	$13956,save_records
@@ -210,13 +263,15 @@ load_records:
 
 save_records:
 	movem.l	d0-a6,-(a7)
+	move.b	_CheatFlag(pc),d0
+	bne	nosave
 	lea	record_name(pc),a0
 	move.l	_expmem(pc),A1
 	add.l	#$EAC2,A1
 	move.l	_resload(pc),a2
 	move.l	#RECORDSIZE,d0
 	jsr	resload_SaveFile(a2)
-	movem.l	(a7)+,d0-a6
+nosave	  movem.l (a7)+,d0-a6
 	rts
 
 
@@ -233,12 +288,88 @@ read_sectors_12b:
 kbint:
 	clr.b	$BFEE01
 	cmp.b	_keyexit(pc),D0
+	bne		.exit
+
+	pea	TDREASON_OK
+	move.l	(_resload,pc),-(a7)
+	add.l	#resload_Abort,(a7)  
+
+.exit rts
+
+kbinttrainer:
+	clr.b	$BFEE01
+	cmp.b	_keyexit(pc),D0
 	bne.b	.noquit
 
 	pea	TDREASON_OK
 	move.l	(_resload,pc),-(a7)
 	add.l	#resload_Abort,(a7)
+
 .noquit
+	movem.l	a1-a2,-(a7)
+	move.l	_expmem(pc),a1
+	cmp.b	#$23,d0					;check f key = fuel
+	bne		.noF
+	eor.b	#$db,$5f2a(a1)			;subq <-> tst
+
+.noF	
+	cmp.b	#$14,d0        			;check t key = time
+	bne		.noT
+	move.l	_expmem(pc),a1
+	add.l	#$a000,a1
+	eori.w	#$8d7b,$d04(a1)         ;abcd <-> nop
+
+.noT
+	cmp.b	#$32,d0  				;check x key = turbo time
+	bne		.noX
+	move.l	_expmem(pc),a1
+	eori.b	#8,$7fba(a1)
+	add.l	#$a000,a1
+	eor.b	#$19,$4fe(a1)
+	eori.b	#8,$61a(a1)
+	eori.b	#8,$66c(a1)
+	eori.b	#8,$850(a1)
+
+.noX
+	cmp.b	#$11,d0					;check w key = always win
+	bne 	.noW
+	move.l	_expmem(pc),a1
+	eori.l	#$20714e7d,$625e(a1)    ;-> 2x nop
+	eori.l	#$20714e5b,$6264(a1)    ;-> 2x nop
+
+.noW
+	cmp.b	#$5f,d0					;check help key = skip,win race
+	bne		.noHELP
+	move.l	_expmem(pc),a1
+	move.w	#0,$7d4(a1)
+	add.l	#$6e000,a1
+	move.w	#9,$32a(a1)
+
+.noHELP
+	cmp.b	#$37,d0					;check m key = money
+	bne		.noM
+	move.l	_expmem(pc),a1
+	add.l	#$c000,a1
+	eori.w	#$cf78,$976(a1)         ;sbcd <-> nop x4
+	eori.w	#$cf78,$978(a1)
+	eori.w	#$cf78,$97a(a1)
+	eori.w	#$cf78,$97c(a1)
+
+.noM
+	cmp.b	#$1,d0 					;check 1 key = tyre
+	bne		.no1
+	move.l	_expmem(pc),a1
+	add.l	#$10000,a1
+	move.w	#7,$976(a1)
+
+.no1
+	cmp.b	#$2,d0					;check 2 key = steering
+	bne		.nokey
+	move.l	_expmem(pc),a1
+	add.l	#$10000,a1
+	move.w	#7,$97c(a1)
+
+.nokey	  movem.l (a7)+,a1-a2
 	rts
 
 read_rob_sectors:
