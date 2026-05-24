@@ -10,7 +10,7 @@
 
  This install applies to "Banshee" © 1992 Core Design.
 
- This install requires WHDLoad to be in the path. It can be found in the
+ This install requires WHDLoad v19 to be in the path. It can be found in the
  WHDLoad package.
 
  The installed program requires 2.0 MB ChipMem and 1.5 MB OtherMem.
@@ -42,12 +42,10 @@
 
  History:
 
- version 4.0 (2023) done by JOTD:
- - TODO: trainer
- - TODO: fixed hiscore save
- - TODO: joypad controls
- - TODO: re-adapt for CD32
- - TODO: adapt to cfou crack
+ version 4.0 (24.04.2026) done by Arise from Decay/JOTD:
+ - trainer added
+ - uses whdload read joypad routine
+ - patchlists rewritten
  
  version 3.3 (01.05.2018)
  - second button routine rewritten again, seems to work better

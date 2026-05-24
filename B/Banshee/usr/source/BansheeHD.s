@@ -4,6 +4,7 @@
 ;  :Author.	JOTD, from Wepl sources
 ;  :Original	v1 
 ;  :Version.	$Id: BansheeHD.asm 1.2 2002/02/08 01:18:39 wepl Exp wepl $
+;				05.04.2026	Trainer added
 ;  :History.	%DATE% started
 ;  :Requires.	-
 ;  :Copyright.	Public Domain
@@ -12,13 +13,13 @@
 ;  :To Do.
 ;---------------------------------------------------------------------------*
 
-	INCDIR	Include:
+	INCDIR	Includes:
 	INCLUDE	whdload.i
 	INCLUDE	whdmacros.i
 	INCLUDE	lvo/dos.i
 
 	IFD BARFLY
-	OUTPUT	"Banshee.slave"
+	OUTPUT	"HD2:util/dev/whdload/banshee/Banshee.slave"
 	BOPT	O+				;enable optimizing
 	BOPT	OG+				;enable optimizing
 	BOPT	ODd-				;disable mul optimizing
@@ -29,7 +30,7 @@
 	ENDC
 
 SEGTRACKER
-CHIP_ONLY
+;CHIP_ONLY
 ;============================================================================
 
 CHIPMEMSIZE	= $1FF000
@@ -42,10 +43,10 @@ FASTMEMSIZE = $80000
 NUMDRIVES	= 1
 WPDRIVES	= %0000
 
-;BLACKSCREEN
+BLACKSCREEN
 ;DISKSONBOOT
 DOSASSIGN
-DEBUG
+;DEBUG
 INITAGA
 HDINIT
 ;HRTMON
@@ -60,7 +61,7 @@ HISCORE_LEN = $F0
 DUMMY_CD_DEVICE = 1
 USE_DISK_NONVOLATILE_LIB = 1
 
-slv_Version	= 17
+slv_Version	= 19
 slv_Flags	= WHDLF_NoError|WHDLF_Examine|WHDLF_Req68020|WHDLF_ReqAGA|WHDLF_NoKbd
 slv_keyexit	= $5D	; num '*'
 
@@ -87,7 +88,7 @@ _assign_5
 	
 	IFD BARFLY
 	IFND	.passchk
-	DOSCMD	"WDate  >T:date"
+;	 DOSCMD	 "WDate  >T:date"
 .passchk
 	ENDC
 	ENDC
@@ -114,21 +115,20 @@ slv_name		dc.b	"Banshee AGA/CD³²"
 		dc.b	0
 slv_copy		dc.b	"1992 Core Design",0
 slv_info		dc.b	"adapted & fixed by JOTD",10
-			dc.b	"Thanks to BTTR for disk images",10,10
+			dc.b	"Trainer added by Arise from Decay",10,10
 			dc.b	"Version "
 			DECL_VERSION
 			dc.b	0
 slv_CurrentDir:
 	dc.b	"data",0
 slv_config:
-;		dc.b    "C1:L:Start with lives:5,25,45;"			
-;		dc.b    "C2:B:Infinite power weapons;"			
-;		dc.b    "C3:B:Don't steal power weapons at level 89;"			
-;        dc.b    "C4:X:Trainer Infinite Lives & Ammo:0;"
+		dc.b	"C1:X:Unlimited Energy:0;"
+        dc.b    "C1:X:Unlimited Lives:1;"
+		dc.b    "C1:X:Unlimited Loops:2;"
 		dc.b	0
-
 _intro:
 	dc.b	"picture.exe",0
+
 _program:
 	dc.b	"bans.exe",0
 _args		dc.b	10
@@ -175,7 +175,7 @@ _bootdos
 		sub.l	a1,a1
 		bsr	_dos_assign
 
-	;load intro
+ 	;load intro
 		lea	_intro(pc),a0
 		lea	_args(pc),a1
 		moveq	#_args_end-_args,d0
@@ -213,22 +213,115 @@ _emu_copylock:
 	movem.l	(A7)+,D1/A0
 	rts
 
+
+; patch according to version
+
+VERSION_PL:MACRO
+.\1
+	lea	pl_\1(pc),a0
+	bra.b	.out
+	ENDM
+
+get_version:
+	movem.l	d0-d1/a1,-(a7)
+	lea	.progname(pc),A0
+	move.l	_resload(pc),a2
+	jsr	resload_GetFileSize(a2)
+
+	cmp.l	#154408,D0
+	beq.b	.floppy
+
+	cmp.l	#149524,d0
+	beq.b	.cd32
+
+
+	pea	TDREASON_WRONGVER
+	move.l	_resload(pc),-(a7)
+	addq.l	#resload_Abort,(a7)
+	rts
+
+	VERSION_PL	floppy
+	VERSION_PL	cd32
+	nop
+.out
+	movem.l	(a7)+,d0-d1/a1
+	rts
+.progname
+	dc.b	"bans.exe",0
+	even
+
 pl_floppy:
 	PL_START
 	; fix access faults
 	PL_PS	$0111a6,_move_a4_d0
 	PL_PS	$011d1e,_move_a4_d3
-	
-    PL_PS	$011ce0,_move_a4_d6
-    PL_PS	$0172d0,_move_a4_d6
-    PL_PS	$0172fc,_move_a4_d6
-    PL_PS	$01735c,_move_a4_d6
-    PL_PS	$01828c,_move_a4_d6	
+	PL_PS	$011ce0,_move_a4_d6
+	PL_PS	$0172d0,_move_a4_d6
+	PL_PS	$0172fc,_move_a4_d6
+	PL_PS	$01735c,_move_a4_d6
+	PL_PS	$01828c,_move_a4_d6
 	PL_PS	$00857a,move_potgo_d2
 	PL_PS	$07299e,_emu_copylock
 	PL_L	$07299e+6,$600008AC		; skip to copylock end
-	
+	PL_IFC1X	1
+	PL_NOPS $104ac,2		;lives
+	PL_ENDIF
+	PL_IFC1X	2
+	PL_NOPS $d78c,2			;loops
+	PL_ENDIF
+	PL_IFC1X	0
+	PL_NOPS	$1088a,2
+	PL_NOPS $10898,2		;energy
+	PL_NOPS	$108a6,2
+	PL_NOPS	$108b8,2
+	PL_NOPS	$108c0,2
+	PL_ENDIF
 	PL_END
+	
+pl_cd32:
+	PL_START
+	; fix access faults
+	PL_PS	$10888,_move_a4_d0
+	PL_PS	$11400,_move_a4_d3
+	PL_PS	$113c2,_move_a4_d6
+	PL_PS	$16962,_move_a4_d6
+	PL_PS	$1698e,_move_a4_d6
+	PL_PS	$169ee,_move_a4_d6
+	PL_PS	$1791e,_move_a4_d6
+	PL_PS	$07c2a,move_potgo_d2
+	
+	; direct patch of joyport read
+	; lowlevel library code is legacy plus for some
+	; reason now it doesn't work except for buttons.
+	; replacing by whdload v19 ReadJoyPad which has
+	; the same interface directly at the location
+	; where the executable calls it
+	PL_P	$632,read_joy_port
+	PL_PSS	$638,read_joy_port,4
+
+	PL_IFC1X	1
+	PL_NOPS $00fb8e,2		;lives
+	PL_ENDIF
+	PL_IFC1X	2
+	PL_NOPS $00ce6e,2			;loops
+	PL_ENDIF
+	PL_IFC1X	0
+	PL_NOPS	$0ff6c,2
+	PL_NOPS $0ff7a,2		;energy
+	PL_NOPS	$0ff88,2
+	PL_NOPS	$0ff9a,2
+	PL_NOPS	$0ffa2,2
+	PL_ENDIF
+	PL_END
+
+read_joy_port:
+	move.l	A2,-(A7)	
+	move.l	_resload(pc),a2
+	moveq	#0,d2
+	move.b	d0,d2
+	jsr		resload_ReadJoyPort(a2)
+	move.l	(A7)+,A2
+	rts
 	
 ; < d7: seglist
 
@@ -238,7 +331,7 @@ _patch_exe:
 	bsr	install_joy_reader
 
 	move.l	_resload(pc),a2
-	lea		pl_floppy(pc),a0
+	bsr		get_version
 	move.l	d7,a1
 	jsr		(resload_PatchSeg,a2)
 	
@@ -247,69 +340,6 @@ _patch_exe:
 
 
 
-
-;	lea	.move75(pc),a2
-;	moveq.l	#6,D0
-;	bsr	_hexsearch
-;	cmp.l	#0,A0
-;	beq.b	.sk5b
-;
-;	; CD³² version: any key pauses the game
-;	; but quits immediately afterwards. This is stupid
-;
-;	move.w	#$6006,2(A0)
-;.sk5b
-
-
-	; save score buffer address for later
-
-	; get_section 1
-	; add $01b2d6
-;	lea	_score_address(pc),a1
-;	move.l	A0,(A1)
-
-	; loads score
-
-	bsr	_load_hiscore
-.sk6
-	move.l	(A3),A0	; next hunk: #2
-	add.l	A0,A0
-	add.l	A0,A0
-	move.l	A0,A3
-	move.l	(A3),A0	; next hunk: #3
-	add.l	A0,A0
-	add.l	A0,A0
-	move.l	A0,A3
-	move.l	A0,A1
-	add.l	#2700,A1
-	lea	.copylock(pc),a2
-	moveq.l	#8,D0
-	bsr	_hexsearch
-	cmp.l	#0,A0
-	beq.b	.sk7
-
-	addq.l	#2,A0
-	move.w	#$4EB9,(A0)+
-	pea	_emu_copylock(pc)
-	move.l	(A7)+,(A0)+
-	move.l	#$600008AC,(A0)+	; goto copylock end
-.sk7
-
-
-.move75
-	dc.w	$670A
-	dc.l	$13FC0075
-.scorestart:
-	dc.l	$20FF2032,$30303030
-.rncdecrunch:
-	dc.l	$48E7FFFC,$4FEFFE80
-	dc.w	$244F
-
-.copylock:
-	dc.l	$42937004,$7200487A
-	dc.w	$000A
-.savehiscore:
-	dc.l	$20BC0000,$0000217C,$0,$00045088
 
 MOVEA4DX:MACRO
 _move_a4_d\1:
@@ -370,11 +400,14 @@ _save_hiscore:
 	bne.B	.skip
 
 	movem.l	D0-D1/A0-A2,-(A7)
+	move.l	_custom1(pc),d0
+	bne.b	.train
 	move.l	_score_address(pc),A1
 	move.l	#HISCORE_LEN,D0
 	lea	_savename(pc),A0
 	move.l	_resload(pc),A2
 	jsr	resload_SaveFile(a2)
+.train:
 	movem.l	(A7)+,D0-D1/A0-A2
 .skip
 	rts
@@ -396,36 +429,6 @@ move_potgo_d2:
 	rts
 
 
-
-;< A0: start
-;< A1: end
-;< A2: bytes
-;< D0: length
-;> A0: address or 0 if not found
-
-_hexsearch:
-	movem.l	D1/D3/A1-A2,-(A7)
-.addrloop:
-	moveq.l	#0,D3
-.strloop:
-	move.b	(A0,D3.L),D1	; gets byte
-	cmp.b	(A2,D3.L),D1	; compares it to the user string
-	bne.b	.notok		; nope
-	addq.l	#1,D3
-	cmp.l	D0,D3
-	bcs.b	.strloop
-
-	; pattern was entirely found!
-
-	bra.b	.exit
-.notok:
-	addq.l	#1,A0	; next byte please
-	cmp.l	A0,A1
-	bcc.b	.addrloop	; end?
-	sub.l	A0,A0
-.exit:
-	movem.l	(A7)+,D1/D3/A1-A2
-	rts
 
 
 ; < a0: program name

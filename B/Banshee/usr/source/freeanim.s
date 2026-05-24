@@ -6,13 +6,13 @@
 *   INITIALIZATION                                                       *
 **************************************************************************
 
-FRANINIT	move.l	_franbase,d0
+FRANINIT	move.l	_franbase(pc),d0
 		beq	.init
 		rts
 
 .init		move.l	#10,d0		; at random
 		move.l	#2,d1		; at random
-		lea	_franname,a0
+		lea	_franname(pc),a0
 		bsr	_InitLibrary
 		lea	_franbase(pc),a0
 		move.l	d0,(a0)
