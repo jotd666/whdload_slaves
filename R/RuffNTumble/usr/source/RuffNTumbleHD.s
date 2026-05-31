@@ -69,6 +69,9 @@ _expmem
 _config
         dc.b    "BW;"
         dc.b    "C2:B:use 2nd/blue button for jump;"
+		dc.b	"C3:X:Trainer lives:0;"
+		dc.b	"C3:X:Trainer health:1;"
+		dc.b	"C3:X:Trainer ammo:2;"
 		dc.b	0
 		even
 		
@@ -80,7 +83,7 @@ _config
 
 
 DECL_VERSION:MACRO
-	dc.b	"2.8"
+	dc.b	"2.9"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -93,7 +96,7 @@ DECL_VERSION:MACRO
 
 _name		dc.b	"Ruff'N'Tumble"
 		dc.b	0
-_copy		dc.b	"1994 Wonderkind/Renegade",0
+_copy		dc.b	"1994 Wunderkind/Renegade",0
 _info		dc.b	"adapted & fixed by JOTD",10,10
 		dc.b	"CD32 controls by Earok:",10,10
 		dc.b	"Menu: bwd enable options",10
@@ -102,6 +105,8 @@ _info		dc.b	"adapted & fixed by JOTD",10,10
 		dc.b	"Game: bwd+fwd quits game",10
 		dc.b	"      bwd replays",10
 		dc.b	"      play pauses",10,10
+		dc.b	"Trainer added by Arise from Decay",10
+
 		
 		dc.b	"Version "
 		DECL_VERSION
@@ -220,6 +225,7 @@ patch_loader_1
 
 pl_loader
 	PL_START
+	PL_NOPS	$E000,4
     PL_PS   $A8E,read_fire
     PL_S    $A8E+6,$AB2-$A8E-6  ; skip useless/potentially harmful cia code
 	PL_IFC2
@@ -233,6 +239,21 @@ pl_loader
 	PL_PS	$96E,kback
 	PL_W	$974,$6018
 	PL_B	$8DF,$1F	; fix BTST.B $DFF01E!!
+	PL_IFC3X 0
+	PL_B	$50,$ff		;Custom 3X0 Lives
+	PL_ELSE
+	PL_B	$50,$00		;no live trainer
+	PL_ENDIF
+	PL_IFC3X 1
+	PL_B	$52,$ff     ;Custom 3X1	Health
+	PL_ELSE
+	PL_B	$52,$00		;no health trainer
+	PL_ENDIF
+	PL_IFC3X 2
+	PL_B	$54,$ff    	;Custom 3X2	Ammo
+	PL_ELSE
+	PL_B	$54,$00		;no ammo trainer
+	PL_ENDIF
 	PL_PS	$906,inside_vbi
 	PL_P	$14F0,decrunch_and_patch
 
@@ -307,6 +328,7 @@ inside_vbi:
  ;   beq.b   .ok
  ;   rts
 ;.ok
+	bsr	.trainer
 	movem.l	D0-D1/A0,-(A7)
 	moveq	#1,d0
 	bsr	_read_joystick
@@ -344,6 +366,7 @@ inside_vbi:
 	btst #JPB_BTN_REVERSE,d0
 	beq .noreset
 	Move.l #$30303030,CODE_LOCATION	;no code
+
 
 .noreset
 
@@ -392,6 +415,24 @@ inside_vbi:
 	lea	previous_joypad_input(pc),a0
 	move.l	D0,(a0)	; store previous inputs
 	movem.l	(a7)+,D0-D1/A0
+	rts
+	
+	;Trainer added by Arise from decay
+.trainer
+	tst.b	$50				;check if bit is set for unlimited lives
+	beq .nolives
+	move.b	#6,$3e6e
+.nolives
+	tst.b	$52				;check if bit is set for unlimited health
+	beq	.nohealth
+	move.b	#5,$3e51
+	move.b	#5,$3e53
+.nohealth
+	tst.b	$54				;check if bit is set for unlimited ammo
+	beq	.noammo
+	move.l	#$02f002f0,$3e32
+	move.w  #$02f0,$3e3a
+.noammo 
 	rts
 	
 button_2_pressed:
