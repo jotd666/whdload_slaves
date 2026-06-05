@@ -1,6 +1,11 @@
 ; Resourced by whdslave_resourcer v0.92
 ; a program written by JOTD in 2016-2019
 ;
+; IRA V2.10 (Jun  1 2022) (c)1993-1995 Tim Ruehsen
+; (c)2009-2015 Frank Wille, (c)2014-2019 Nicolas Bastien
+
+EXPMEM_SIZE = $2f0000
+
 	INCDIR	Include:
 	INCLUDE	whdload.i
 	INCLUDE	whdmacros.i
@@ -26,7 +31,7 @@ _keydebug
 _keyexit
 	dc.b	$59					; ws_keyexit
 _expmem
-	dc.l	$2f0000					; ws_expmem
+	dc.l	EXPMEM_SIZE					; ws_expmem
 	dc.w	_name-_base				; ws_name
 	dc.w	_copy-_base				; ws_copy
 	dc.w	_info-_base				; ws_info
@@ -58,15 +63,15 @@ _name	dc.b	'Roguecraft DX',0
 _copy	dc.b	'2026 Badger Punch Games',0
 _info
 	dc.b	"trainer by Arise from decay",10
-    DECL_VERSION
+    dc.b	"Version "
+	DECL_VERSION
 _kickname   dc.b    0
 ;--- version id
     dc.b	0
     even
-; IRA V2.10 (Jun  1 2022) (c)1993-1995 Tim Ruehsen
-; (c)2009-2015 Frank Wille, (c)2014-2019 Nicolas Bastien
+
 CIAA_SDR	EQU	$BFEC01
-LAB_0003:
+progname:
 	DC.B	'RoguecraftDX.exe',0
 	dc.b	$00	;7b
 start:
@@ -74,23 +79,22 @@ start:
 	MOVE.L	A0,(A1)			;080: 2288
 	MOVEA.L	A0,A2			;082: 2448
 	MOVEA.L	_expmem(PC),A0		;084: 207aff9a
-	ADDA.L	#$002efe00,A0		;088: d1fc002efe00
+	ADDA.L	#EXPMEM_SIZE-$200,A0		;088: d1fc002efe00
 	MOVEA.L	A0,A7			;08e: 2e48
 	LEA	-1024(A0),A0		;090: 41e8fc00
-	MOVE.L	A0,USP			;094: 4e60
-	LEA	tags(PC),A0		;096: 41fa00ee
-	JSR	resload_Control(A2)	;9a (offset=34)
-	MOVE.L	#$00003b3d,D0		;09e: 203c00003b3d
-	MOVE.L	#$00007f3f,D1		;0a4: 223c00007f3f
-	JSR	resload_SetCPU(A2)	;aa (offset=60)
+	MOVE.L	A0,USP			;094: 4e60  setting USP is probably useless as game remains in supervisor
+	; reading the tags is useless, nothing is done with it!
+	;LEA	tags(PC),A0		;096: 41fa00ee
+	;JSR	resload_Control(A2)	;9a (offset=34)
 
-	; standard SetCPU values
+	; standard SetCPU values (they learned from my feedback on their first slave as they used
+	; those exact values here :))
 	move.l	#WCPUF_Base_NC|WCPUF_Exp_CB|WCPUF_Slave_CB|WCPUF_IC|WCPUF_DC|WCPUF_BC|WCPUF_SS|WCPUF_SB,d0
 	move.l	#WCPUF_All,d1
 	JSR	resload_SetCPU(A2)
 
 
-	LEA	LAB_0003(PC),A0		;0ae: 41faffba
+	LEA	progname(PC),A0		;0ae: 41faffba
 	MOVEA.L	_expmem(PC),A1		;0b2: 227aff6c
 	MOVEA.L	_resload(PC),A2	;0b6: 247a00ea
 	JSR	resload_LoadFile(A2)	;ba (offset=8)
@@ -124,7 +128,7 @@ start:
 	MOVE.L	(A7)+,(A2)		;11e: 249f
 	MOVEA.L	_expmem(PC),A0		;120: 207afefe
 	MOVE.L	#$44454144,D0		;124: 203c44454144 "CDAC"
-	bsr.b		_flushcache
+	bsr.b		_flushcache		; added cache flush for good measure!
 	JMP	(A0)			;12a: 4ed0
 
 
@@ -175,20 +179,14 @@ exit:
 	ADDQ.L	#4,(A7)			;182: 5897
 	RTS				;184: 4e75
 
-tags:
-	OR.B	D0,D4			;186: 8800
-	ORI.B	#$00,D7			;188: 00070000
-	DC.B	$0	;18c
-	DC.B	$0	;18d
-	DC.B	$88	;18e
-	DC.B	$0	;18f
-	DC.B	$0	;190
-	DC.B	$8	;191
-	dc.l	0			;192: 00000000
-	dc.w $8800
-	dc.l $00020000
-	dc.l	0			;19c: 00000000
-	dc.w	0
+;tags:
+;	dc.l	WHDLTAG_CUSTOM1_GET
+;	dc.l	0
+;	dc.l	WHDLTAG_CUSTOM2_GET
+;	dc.l	0
+;	dc.l	WHDLTAG_MONITOR_GET
+;	dc.l	0
+;	dc.l	0			;19c: 00000000
 _resload:
 	dc.l	0			;1a2: 00000000
 
