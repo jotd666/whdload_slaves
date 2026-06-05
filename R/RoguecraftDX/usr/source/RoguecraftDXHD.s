@@ -6,11 +6,11 @@
 
 EXPMEM_SIZE = $2f0000
 
-	INCDIR	Include:
+	INCDIR	Includes:
 	INCLUDE	whdload.i
 	INCLUDE	whdmacros.i
 	IFD BARFLY
-	OUTPUT	"RoguecraftDX.slave"
+	OUTPUT	"Hd2:util/dev/whdload/RoguecraftDX/RoguecraftDX.slave"
 	;BOPT	O+				;enable optimizing
 	;BOPT	OG+				;enable optimizing
 	BOPT	ODd-				;disable mul optimizing
@@ -35,20 +35,27 @@ _expmem
 	dc.w	_name-_base				; ws_name
 	dc.w	_copy-_base				; ws_copy
 	dc.w	_info-_base				; ws_info
-    dc.w    0     ; kickstart name
-    dc.l    $0         ; kicksize
-    dc.w    $0         ; kickcrc
-    dc.w    _config-_base
+	dc.w    0     ; kickstart name
+	dc.l    $0         ; kicksize
+	dc.w    $0         ; kickcrc
+	dc.w    _config-_base
 ;---
 _config
 ;	dc.b	"BW;"
-; dc.b    "C1:X:Infinite lives:0;"
+	dc.b    "C1:X:Infinite health:0;"
+	dc.b	"C1:X:Start with max health:1;"
+	dc.b	"C1:X:Start with max strength:2;"
+	dc.b	"C2:L:Startlevel:1-The Wilderness,2-The Cave of Mild Unease,3-Get the Gold!,"
+	dc.b	"4-Spectral Shenanigans,5-Clucking Hell!,6-Snarky Slime Pit,7-The Gauntlet of Pain,"
+	dc.b	"8-Yung and Beautiful,9-Hail and Kill... stuff,10-It just gets darker,"
+	dc.b	"11-Old Things never die,12-Behold the monsters!,13-No rest for the wicked,"
+	dc.b	"14-The Crypt of Decay,15-It Waits Dreaming...;"
 	dc.b	0
 	IFD BARFLY
 	DOSCMD	"WDate  >T:date"
 	ENDC
 DECL_VERSION:MACRO
-	dc.b	"1.1"
+	dc.b	"1.0"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -62,15 +69,20 @@ _data   dc.b    0
 _name	dc.b	'Roguecraft DX',0
 _copy	dc.b	'2026 Badger Punch Games',0
 _info
-	dc.b	"trainer by Arise from decay",10
-    dc.b	"Version "
+	dc.b	"Trainer by Arise from decay",10
+	dc.b	"Version "
 	DECL_VERSION
 _kickname   dc.b    0
 ;--- version id
-    dc.b	0
-    even
+	dc.b	0
+	even
 
 CIAA_SDR	EQU	$BFEC01
+
+	dc.b	"$","VER: slave "
+	DECL_VERSION
+	dc.b	0
+	
 progname:
 	DC.B	'RoguecraftDX.exe',0
 	dc.b	$00	;7b
@@ -84,8 +96,9 @@ start:
 	LEA	-1024(A0),A0		;090: 41e8fc00
 	MOVE.L	A0,USP			;094: 4e60  setting USP is probably useless as game remains in supervisor
 	; reading the tags is useless, nothing is done with it!
-	;LEA	tags(PC),A0		;096: 41fa00ee
-	;JSR	resload_Control(A2)	;9a (offset=34)
+	; Arise from decay: enabled tagreading again, needed for cheat-flag
+	LEA	   tags(PC),A0	   ;096: 41fa00ee
+	JSR	   resload_Control(A2) ;9a (offset=34)
 
 	; standard SetCPU values (they learned from my feedback on their first slave as they used
 	; those exact values here :))
@@ -126,9 +139,21 @@ start:
 	MOVE.W	#$4ef9,(A2)+		;116: 34fc4ef9
 	PEA	save(PC)		;11a: 487a0022
 	MOVE.L	(A7)+,(A2)		;11e: 249f
+
+	movea.L	_resload(PC),A2	;0de: 247a00c4
+	movea.l	 _expmem(pc),a1
+	lea		pl_trainer(pc),a0
+	jsr	resload_Patch(a2)
+
 	MOVEA.L	_expmem(PC),A0		;120: 207afefe
 	MOVE.L	#$44454144,D0		;124: 203c44454144 "CDAC"
-	bsr.b		_flushcache		; added cache flush for good measure!
+	
+	move.l	startlv(pc),d7
+	beq		.nolvselect
+	addq	#1,d7
+	move.b	d7,$18cb(a0)
+	
+.nolvselect	bsr.b		_flushcache		; added cache flush for good measure!
 	JMP	(A0)			;12a: 4ed0
 
 
@@ -138,6 +163,29 @@ _flushcache:
 	jsr	resload_FlushCache(a2)
 	move.l	(a7)+,a2
 	rts
+
+pl_trainer
+	PL_START
+	PL_IFC1X	0
+	PL_NOP	$4bd0,2			; final boss damage sub.b d3,d0
+	PL_NOP	$5258,2			; enemy damage sub.b d3,d0
+	PL_NOP	$5a5c,2			; environment damage subq.b d3,d0
+	PL_NOP	$2c53e,2		; poisoned subq.b #1,d0
+	PL_ENDIF
+	PL_IFC1X	1
+	PL_B	$17a0+3,8		; health warrior
+	PL_B	$17a8+3,8 		; max health warrior
+	PL_B    $17f6+3,8		; health rogue
+	PL_B    $17fe+3,8		; max health rogue
+	PL_B    $184c+3,8		; health wizard
+	PL_B    $1854+3,8		; max health wizard
+	PL_ENDIF
+	PL_IFC1X	2
+	PL_B	$17B0+3,9		; strength warrior
+	PL_B	$1806+3,9		; strength rogue
+	PL_B	$185c+3,9		; strength wizard
+	PL_ENDIF
+	PL_END
 	
 load:
 	MOVEM.L	D1-D3/A0-A3,-(A7)	;12c: 48e770f0
@@ -148,10 +196,14 @@ load:
 
 save:
 	MOVEM.L	A0-A2,-(A7)		;13e: 48e700e0
+	move.l	trainer(pc),d0
+	bne		.skip
+	move.l	startlv(pc),d0
+	bne	    .skip
 	MOVE.L	D1,D0			;142: 2001
 	MOVEA.L	_resload(PC),A2	;144: 247a005c
 	JSR	resload_SaveFile(A2)	;148 (offset=c)
-	MOVEM.L	(A7)+,A0-A2		;14c: 4cdf0700
+.skip	MOVEM.L	(A7)+,A0-A2		;14c: 4cdf0700
 	MOVEQ	#0,D0			;150: 7000
 	RTS				;152: 4e75
 
@@ -179,14 +231,14 @@ exit:
 	ADDQ.L	#4,(A7)			;182: 5897
 	RTS				;184: 4e75
 
-;tags:
-;	dc.l	WHDLTAG_CUSTOM1_GET
-;	dc.l	0
-;	dc.l	WHDLTAG_CUSTOM2_GET
-;	dc.l	0
+tags:
+			dc.l	WHDLTAG_CUSTOM1_GET
+trainer:	dc.l	0
+			dc.l	WHDLTAG_CUSTOM2_GET
+startlv:	dc.l	0
 ;	dc.l	WHDLTAG_MONITOR_GET
 ;	dc.l	0
-;	dc.l	0			;19c: 00000000
+   dc.l	   0		   ;19c: 00000000
 _resload:
 	dc.l	0			;1a2: 00000000
 

@@ -101,16 +101,14 @@ DECL_VERSION:MACRO
 _name		dc.b	"Superfrog CD³²",0
 _copy		dc.b	"1994 Team 17",0
 _info		dc.b	"Installed by Codetapper/Action! & JOTD",10
-			dc.b	"Additional keys by ArisefromDecay",10,10
-		dc.b	"Version "
-		DECL_VERSION
+			dc.b	"Additional keys by ArisefromDecay",10
 		dc.b	10,"F1-F5 Toggles:"
 		dc.b	10,"Lives, time, energy, bounce, invisibility"
 		dc.b	10,"1/2-3/4 Dec/Inc speed-jumpheight"
-		dc.b	10,"X-Open exit",10
-		dc.b	10,"Help-Skip level"
-		dc.b	10,"Thanks to Chris Vella for the disk version, and to"
-		dc.b	10,"Carlo Pirri + Xavier Bodenand for the CD versions!"
+		dc.b	10,"X-Open exit"
+		dc.b	10,"Help-Skip level",10,10
+		dc.b	"Version "
+		DECL_VERSION
 		dc.b	0
  
 _Data		dc.b	"data",0
@@ -385,40 +383,28 @@ _Keybd
 		eor.w	#$33fc^$6006,(a0,d0.l)			;Set game over lives = -1 (move.w #$ffff,$8082e)
 		move.l	#$1cca8,d0
 		eor.l	#$53680058^$4e714e71,(a0,d0.l)	;Infinite lives (subq.w #1,($58,a0))
-		
-		lea	_CheatFlag(pc),a0					;Set flag to say user is a cheat
-		move.b	#-1,(a0)
-		bsr	_FlushLibs
+		bra	_SetCheat
 
 _Nof1	cmp.b	#$51,d0							;Check for F2 key
 		bne	_Nof2
 	    move.l  _GameAddress(pc),a0
 		move.l	#$1251a,d0
 		eor.l	#$532800a3^$4e714e71,(a0,d0.l)	;Infinite time (subq.b #1,($a3,a0))
-		
-		lea	_CheatFlag(pc),a0					;Set flag to say user is a cheat
-		move.b	#-1,(a0)
-		bsr	_FlushLibs
+		bra	_SetCheat
 
 _Nof2	cmp.b	#$52,d0							;Check for F3 key
 		bne	_Nof3
 		move.l	_GameAddress(pc),a0
 		add.l	#$1cc00,a0
 		eor.l	#$5368005a^$4e714e71,$1e0(a0)	;Infinite energy (subq.w #1,(5a,a0))
-		
-		lea	_CheatFlag(pc),a0					;Set flag to say user is a cheat
-		move.b	#-1,(a0)
-		bsr	_FlushLibs
+		bra	_SetCheat
 
 _Nof3	cmp.b	#$53,d0							;Check for F4 key
 		bne		_Nof4
 		move.l	_GameAddress(pc),a0
 		add.l	#$1cc00,a0
 		eori.b	#1,$1ef(a0)						;Bounce from enemy (move.w #1 -> move.w #0)
-
-		lea	_CheatFlag(pc),a0					;Set flag to say user is a cheat
-		move.b	#-1,(a0)
-		bsr	_FlushLibs
+		bra	_SetCheat
 
 _Nof4	cmp.b	#$54,d0							;Check for F5 key
 		bne	_Nof5
@@ -426,17 +412,10 @@ _Nof4	cmp.b	#$54,d0							;Check for F5 key
 		tst.b	$cb6(a0)						;Checks if already invisible
 		bne		_Invon
 		move.w	#$7fff,$cb6(a0)					;This gives invisibility for a long time
-
-		lea	_CheatFlag(pc),a0					;Set flag to say user is a cheat
-		move.b	#-1,(a0)
-		bsr	_FlushLibs
+		bra	_SetCheat
 
 _Invon	move.w	#$0000,$cb6(a0)
-		
-		lea	_CheatFlag(pc),a0					;Set flag to say user is a cheat
-		move.b	#-1,(a0)
-		bsr	_FlushLibs
-
+		bra	_SetCheat
 
 _Nof5		cmp.b	#$03,d0						;Check 3 key
 		bne	_No3key
@@ -444,10 +423,7 @@ _Nof5		cmp.b	#$03,d0						;Check 3 key
 		cmpi.w	#$fffd,$cc2(a0)					;Already min?
 		beq	_No3key
 		addq.w	#1,$cc2(a0)						;Decrease height by adding 1
-
-		lea	_CheatFlag(pc),a0					;Set flag to say user is a cheat
-		move.b	#-1,(a0)
-		bsr	_FlushLibs
+		bra	_SetCheat
 
 _No3key		cmp.b	#$04,d0						;Check 4 key
 		bne	_No4key
@@ -455,10 +431,7 @@ _No3key		cmp.b	#$04,d0						;Check 4 key
 		cmpi.w	#$fff4,$cc2(a0)					;Already max?
 		beq _No4key
 		subq.w	#1,$cc2(a0)						;Increase height by subtracting 1
-		
-		lea	_CheatFlag(pc),a0					;Set flag to say user is a cheat
-		move.b	#-1,(a0)
-		bsr	_FlushLibs
+		bra	_SetCheat
 
 _No4key		cmp.b	#$01,d0						;Check 1 key
 		bne	_No1key
@@ -466,10 +439,7 @@ _No4key		cmp.b	#$01,d0						;Check 1 key
 		cmpi.w	#$3,$cac(a0)					;Already slow?
 		beq	_No1key
 		subq.w	#1,$cac(a0)						;Slow down by subtracting 1
-
-		lea	_CheatFlag(pc),a0					;Set flag to say user is a cheat
-		move.b	#-1,(a0)
-		bsr	_FlushLibs
+		bra	_SetCheat
 
 _No1key		cmp.b	#$02,d0						;Check 2 key
 		bne	_No2key
@@ -477,12 +447,9 @@ _No1key		cmp.b	#$02,d0						;Check 2 key
 		cmpi.w	#$c,$cac(a0)					;Already fast?
 		beq	_No2key
 		addq.w	#1,$cac(a0)						;Speed up by adding 1
-		
-		lea	_CheatFlag(pc),a0					;Set flag to say user is a cheat
-		move.b	#-1,(a0)
-		bsr	_FlushLibs
+		bra	_SetCheat
 
-_No2key		cmp.b	#$18,d0
+_No2key		cmp.b	#$32,d0 					;Check X Key
 		bne	_SameKeyDown
 		move.l	_GameAddress(pc),a0
 		clr.w	$c86(a0)						;Clear coins

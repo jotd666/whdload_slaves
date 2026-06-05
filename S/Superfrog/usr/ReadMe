@@ -18,7 +18,7 @@
             - CD version by Islona (Xavier Bodenand)
 
 REQUIREMENTS:
-- Slave requires WHDLoad V17+.
+- Slave requires WHDLoad V19+.
 - Disk game requires 0.5Mb chip mem & 0.5Mb fast mem (+2.9Mb other memory for preload option)
 - CD32 game requires 2Mb chip mem (+3.8Mb other memory for preload option)
   CD32 intro requires 1.2Mb chip mem (+750kb other memory for preload option)
@@ -35,7 +35,7 @@ REQUIREMENTS:
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
-version 1.7: (18.04.2026) done by Arise from Decay
+version 1.7: (05.06.2026) done by Arise from Decay
 - added more ingame trainerkeys
   F1 Toggle infinite lives, F2 Toggle infinite time, F3 toggle infinite energy
   F4 Toggles bounce off enemies, F5 Toggles Invisibility (not infinite but for very long)
@@ -157,8 +157,6 @@ mainly adding CD32 joypad support for floppy and CD32 versions.
 
 JOTD (24-feb-2019)
 
-         Bug report form, full WHDLoad package and other installs:
-                          http://www.whdload.de/
 
             ________  ________  ________  ____  ________  ________
            _)       \_)       \_)       \_)   \_)       \_)       \
@@ -169,4 +167,4 @@ JOTD (24-feb-2019)
 
 
            Visit the Action website for more of our productions:
-                           http://zap.to/action/
+                          https://codetapper.com/
