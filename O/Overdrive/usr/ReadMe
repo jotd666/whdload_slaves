@@ -14,7 +14,7 @@
  in the WHDLoad package.
  To install from a different drive than DF0: select installation mode Expert.
 
- The installed program requires 1.0 MB ChipMem and 0.5 MB OtherMem.
+ The installed program requires 0.5 MB ChipMem and 1.5 MB OtherMem.
  It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
 
  If you have problems with this installation please try and get a newer
@@ -29,11 +29,15 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 2.0 (25.05.04)
+ version 2.1 (05.06.2026) done by Arise from decay & JOTD
+ - only needs 512k of chipmem instead of 1MB
+ - comprehensive trainer added by Arise from decay
+ 
+ version 2.0 (25.05.2004) done by JOTD
  - rewritten slave completely for WHDLoad
  - fixed load/save records (old record files are no longer valid!)
 
- version 1.4 (01.11.02)
+ version 1.4 (01.11.2002) done by JOTD
  - rewritten install script for WHDLoad
  - new imager, from Codetapper PDOS imagers
  - shorter slave (does not include boot data anymore)
@@ -41,8 +45,22 @@
  - source code included
  - warning: old images are not compatible (and were trashed anyway)
 
- version 1.x (??.??.97) done by JOTD:
+ version 1.x (??.??.1997) done by JOTD:
  - Save/Load records on hard drive
  - Decrunch routines relocated in fast memory
  - Full use of fast memory
  - Fixed an annoying white->black fade when accessing a disk (loss of time, aggressive).
+
+note from JOTD:
+
+At least: now only needs 512k of chipmem (fixed stupid decrunch bug
+by moving expansion memory by 16 bytes!). I can't believe that I left that issue
+so long in this slave. Thanks to Arise from decay for updating it for trainer,
+inadvertantly enabling fastmem (but without MMU on his system), which made me wonder
+why it didn't work anymore for a long time (until he told me he changed it!).
+Then I fixed it by just adding a few bytes, at start so decrunch won't read out
+of bounds, and the game is probably even smoother and loads faster.
+
+This game is super hard and well deserves a good trainer!
+   
+   

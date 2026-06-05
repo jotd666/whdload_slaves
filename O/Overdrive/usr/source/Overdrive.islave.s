@@ -76,9 +76,6 @@ DSK_2		dc.l	0		; Pointer to next disk structure
 TL_1		TLENTRY	000,001,$1600,SYNC_STD,DMFM_STD
 		TLENTRY	002,159,$1800,$1448,_DMFM_RNPDos_D1
 		TLEND
-TL_2		TLENTRY	000,001,$1600,SYNC_STD,DMFM_STD
-		TLENTRY	002,159,$1800,$1448,_DMFM_RNPDos_D1
-		TLEND
 
 ;======================================================================
 
