@@ -1,0 +1,39 @@
+
+ THIS PACKAGE COMES WITH ABSOLUTELY NO WARRANTY OF ANY KIND, EITHER
+ EXPRESS OR IMPLIED, STATUTORY OR OTHERWISE.
+ THE ENTIRE RISK AS TO USE, RESULTS AND PERFORMANCE OF THE PACKAGE IS
+ ASSUMED BY YOU AND IF THE PACKAGE SHOULD PROVE TO BE DEFECTIVE, YOU
+ ASSUME THE ENTIRE COST OF ALL NECESSARY SERVICING, REPAIR OR OTHER
+ REMEDIATION.
+ UNDER NO CIRCUMSTANCES, CAN THE AUTHOR BE HELD RESPONSIBLE FOR ANY
+ DAMAGE CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE
+ OWNER OR A THIRD PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF
+ DAMAGE.
+
+ That install applies to "Roguecraft" © 2025 Badger Punch Games
+ Slave requires WHDLoad V17+.
+ Game needs 1Mb Chipmem, 1Mb fastmem
+ It can be quit by pressing F10 (key can be changed with Tooltype "QuitKey=").
+
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+    for full WHDLoad package and other installs refer to:
+        http://www.whdload.de/
+    or	aminet:dev/misc/whdload#?
+    and	aminet:game/patch/
+
+ History
+ -------
+
+ version 1.0 (07.11.2025) done by JOTD
+ - proper cache configuration to avoid music lagging when switching rooms
+ - trainer
+ - source code included
+
+ This .slave replaces the official .slave provided by the game developpers.
+ It has been created using my whd_slave_resourcer.py resourcing tool.
