@@ -42,12 +42,15 @@ _config
 	dc.b    "C1:X:Infinite energy:0;"
 	dc.b    "C1:X:Max energy at start:1;"
 	dc.b    "C1:X:Max strength at start:2;"
+	dc.b	"C2:L:Startlevel:1 - The Cave of Mild Unease,2 - Nook of Nasty Surprises,3 - Get the Gold!,"
+	dc.b	"4 - Spectral Shenanigans,5 - Clucking Hell!,6 - Snarky Slime Pit,7 - The Gauntlet of Pain,"
+	dc.b	"8 - Yung and Beautiful,9 - Hail and Kill... stuff,10 - It Waits Dreaming.."
 	dc.b	0
 	IFD BARFLY
 	DOSCMD	"WDate  >T:date"
 	ENDC
 DECL_VERSION:MACRO
-	dc.b	"1.0"
+	dc.b	"1.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -61,7 +64,8 @@ _data   dc.b    0
 _name	dc.b	'Roguecraft (v1.5)',0
 _copy	dc.b	'2025 Badger Punch Games',0
 _info
-	dc.b	'modded & trained by JOTD',10,10
+	dc.b	'modded & trained by JOTD',10
+	dc.b	'trainer improved by Arisefromdecay',10,10
 	dc.b	"Version "
 	DECL_VERSION
 	dc.b	0
@@ -146,13 +150,21 @@ start:
 	; tell the exe that whdload is in charge!
 	MOVEA.L	_expmem(PC),A0		;122: 207afefc
 	MOVE.L	#$44454144,D0		;126: 203c44454144
+	move.l	startlv(pc),d7
+	beq		.nolvselect
+	addq	#1,d7
+	move.b	d7,$166f(a0)
+.nolvselect
 	JMP	(A0)			;12c: 4ed0
 
 pl_main:
 	PL_START
 
 	PL_IFC1X	0
-	PL_NOP	$0042de,6
+;	 PL_NOP	 $0042de,6
+	PL_NOP	$4856,2			; enemy damge sub.b d3,d0
+	PL_NOP	$4fc2,2			; environment damage subq.b #$01,d0
+	PL_NOP	$42d8,2			; final boss damage sub.b d3,d0
 	PL_ENDIF
 	PL_IFC1X	1
 	PL_B	$001544+3,8
@@ -180,6 +192,8 @@ save_file:
 	MOVEM.L	A0-A2,-(A7)		;140: 48e700e0
 	move.l	trainer(pc),d0
 	bne		.skip
+	move.l	startlv(pc),d0
+	bne		.skip
 	MOVE.L	D1,D0			;144: 2001
 	MOVEA.L	_resload(PC),A2	;146: 247a005c
 	JSR	resload_SaveFile(A2)	;14a (offset=c)
@@ -191,6 +205,8 @@ save_file:
 	RTS				;156: 4e75
 
 keyboard_hook:
+	movem.l	d0-d1/a0-a1,-(a7)
+	movea.l	_expmem(PC),a0
 	MOVE.B	CIAA_SDR,D0		;158: 103900bfec01
 	NOT.B	D0			;15e: 4600
 	ROR.B	#1,D0			;160: e218
@@ -198,6 +214,7 @@ keyboard_hook:
 	BEQ.S	exit_normally		;166: 670e
 	CMP.B	_keydebug(PC),D0		;168: b03afeb4
 	BEQ.S	exit_debug		;16c: 6702
+	movem.l (a7)+,d0-d1/a0-a1
 	RTS				;16e: 4e75
 
 exit_debug:
@@ -213,11 +230,12 @@ LAB_0009:
 tags:
 	dc.l	WHDLTAG_BUTTONWAIT_GET
 	dc.l	0
-trainer:
 	dc.l	WHDLTAG_CUSTOM1_GET
-	dc.l	0			;194: 00000000
+trainer:	dc.l	0			;194: 00000000
 	dc.l	WHDLTAG_MONITOR_GET
 	dc.l	0
+	dc.l	WHDLTAG_CUSTOM2_GET
+startlv:	dc.l	0
 	dc.l	0
 _resload:
 	dc.l	0			;1a2: 00000000
