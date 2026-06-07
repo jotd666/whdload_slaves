@@ -30,6 +30,10 @@
  History
  -------
 
+ version 1.1 () done by JOTD:
+ - fixed color burst bit in copperlists
+ - file "RoguecraftDX.exe" can be packed using propack or imploder data
+ 
  version 1.0 (05.06.2026) done by JOTD/Arise from decay
  - trainer added (no scores or achievements will be saved when trainer is enabled :)
 

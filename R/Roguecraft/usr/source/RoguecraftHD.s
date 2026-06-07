@@ -141,6 +141,12 @@ start:
 	PEA	save_file(PC)		;11c: 487a0022
 	MOVE.L	(A7)+,(A2)		;120: 249f
 
+	MOVEA.L	_expmem(PC),A0		;122: 207afefc
+	move.l	startlv(pc),d7
+	beq		.nolvselect
+	addq	#1,d7
+	move.b	d7,$166f(a0)
+.nolvselect
 
 	MOVEA.L	_resload(PC),A2	;0de: 247a00c4
 	move.l	_expmem(pc),a1
@@ -150,11 +156,6 @@ start:
 	; tell the exe that whdload is in charge!
 	MOVEA.L	_expmem(PC),A0		;122: 207afefc
 	MOVE.L	#$44454144,D0		;126: 203c44454144
-	move.l	startlv(pc),d7
-	beq		.nolvselect
-	addq	#1,d7
-	move.b	d7,$166f(a0)
-.nolvselect
 	JMP	(A0)			;12c: 4ed0
 
 pl_main:
