@@ -30,7 +30,8 @@
 ;		         - Supports the CD version released by Islona (thanks Xavier!)
 ;		         - CD32 version will no longer quit the entire game when you press Escape
 ;		17.04.26 - v1.7 by Arise from decay
-;				 - added more trainerkeys
+;				 - added trainer options
+;				 - added more ingamekeys
 ; Requires:	WHDLoad 10+
 ; Copyright:	Public Domain
 ; Language:	68000 Assembler
@@ -86,6 +87,11 @@ _expmem		dc.l	EXTMEMSIZE			;ws_ExpMem
 		
 _config
         dc.b    "C2:B:blue/second button jumps;"
+		dc.b	"C3:X:Infinite lives:0;"
+		dc.b	"C3:X:Infinite time:1;"
+		dc.b	"C3:X:Infinite energy:2;"
+		dc.b	"C3:X:Bounce off enemys:3;"
+		dc.b	"C3:X:Ingame keys:5;"
 		dc.b	0
 
 	IFD BARFLY
@@ -117,21 +123,20 @@ _name		dc.b	"Superfrog"
 	dc.b	0
 _copy		dc.b	"1993 Team 17",0
 _info		dc.b	"Installed by Codetapper/Action! & JOTD",10
-			dc.b	"Additional keys by ArisefromDecay",10,10
+			dc.b	"Additional keys by ArisefromDecay",10
 		dc.b	10,"F1-F5 Toggles:"
 		dc.b	10,"Lives, time, energy, bounce, invisibility"
-		dc.b	10,"1/2-3/4 Dec/Inc speed-jumpheight"
-		dc.b	10,"X-Open exit"
-		dc.b	10,"Help-Skip level",10
-		dc.b	10,"Thanks to Chris Vella for the disk version, and to"
-		dc.b	10,"Carlo Pirri and Xavier Bodenand for the CD versions!"
+		dc.b	10,"1/2 - 3/4:"
+		dc.b	10,"Dec/Inc speed-jumpheight"
+		dc.b	10,"X:Open exit"
+		dc.b	10,"Help:Skip level",10
+
 		dc.b	"Version "
 		DECL_VERSION
 		dc.b	0
 _Highs		dc.b	"Superfrog.highs",0
 _DiskNumber	dc.b	1
 _LastKeypress	dc.b	0
-_CheatFlag	dc.b	0
 
 		EVEN
 
@@ -228,7 +233,11 @@ _PL_Main	PL_START
 		PL_L	$baac,$70004e75		;Check for disk in drive
 		PL_P	$ce58,_DecrunchATN	;Decrunch ATN! in fastmem
 		PL_L	$11bb6,$3fc		;move.l #$ffffffff,$dff084
+		PL_IFC3X	5
+		PL_PS	$16008,_Trainerkeys
+		PL_ELSE
 		PL_PS	$16008,_Keybd		;Detect quit key
+		PL_ENDIF
 		PL_PS	$1c514,_AF_ProjectF	;Access fault in Project F
 		PL_PS	$1c52c,_AF_ProjectF	;Access fault in Project F
 		PL_PS	$1c570,_AF_ProjectF	;Access fault in Project F
@@ -271,6 +280,23 @@ _PL_Main	PL_START
         PL_PS	$0114c8,read_joy1dat_d0		; one of those 2 control higher jump (on presse)
         PL_PS	$011374,read_joy1dat_d0
         PL_PS	$011a42,read_joy1dat_d0 	; this one controls initial jump
+		PL_ENDIF
+		PL_NEXT PL_Trainer
+		PL_END
+PL_Trainer
+		PL_START
+		PL_IFC3X	0   					; infinite lives
+		PL_NOPS	$e24,2
+		PL_NOPS	$1c4d4,2
+		PL_ENDIF
+		PL_IFC3X	1						; infinite time
+		PL_NOPS	$11d6a,2
+		PL_ENDIF
+		PL_IFC3X	2						; infinite energy
+		PL_NOPS	$1c60c,2
+		PL_ENDIF
+		PL_IFC3X	3						; Bounce off enemys
+		PL_B	$1c61b,0
 		PL_ENDIF
 		PL_END
 
@@ -400,6 +426,70 @@ _Keybd
 	move.b	$bfec01,d0		;Stolen code
 .zpress
 	movem.l	(a7)+,d1
+	movem.l	d0-d1/a0-a2,-(sp)
+	ror.b	#1,d0
+	not.b	d0
+	cmp.b	_keyexit(pc),d0
+	beq	_exit
+
+	IFD	CHIP_ONLY
+	lea	$80000,a1		;Expansion memory
+	ELSE
+	move.l	_expmem(pc),a1
+	ENDC
+
+	move.b	_LastKeypress(pc),d1	;If the same key is still
+	cmp.b	d0,d1			;down, do not do anything!
+	beq	_SameKeyDown1
+
+	lea	_LastKeypress(pc),a0	;Store this keypress
+	move.b	d0,(a0)
+
+_SameKeyDown1	movem.l	(sp)+,d0-d1/a0-a2
+	rts
+
+_Trainerkeys
+	movem.l	d1,-(a7)
+	movem.l	A0,-(a7)
+	; here we're going to inject pause/esc too
+	moveq.l	#0,d1
+	moveq.l #1,d0
+	bsr	_read_joystick
+	lea	buttons_state(pc),a0
+	move.l	d0,(a0)
+	btst	#JPB_BTN_PLAY,d0
+	bne.b	.pause
+	; reset pause press flag
+	lea	pause_pressed(pc),a0
+	clr.b	(a0)
+	bra.b	.nopause
+.pause
+	lea	pause_pressed(pc),a0
+	tst.b	(a0)
+	bne.b	.dont_press_again
+.presspause
+	move.b	#$19,d1	; code for "P"
+	st.b	(a0)
+.dont_press_again	
+.nopause
+	movem.l	(a7)+,a0
+	btst	#JPB_BTN_FORWARD,d0
+	beq.b	.noesc
+	btst	#JPB_BTN_REVERSE,d0
+	beq.b	.noesc
+	move.b	#$45,d1	; code for "ESC"
+.noesc
+	tst.b	d1
+	beq.b	.nobuttonpress	; no button pressed, don't clobber keyboard
+	move.w	d1,d0
+	; inverse serialization of the keycode
+	not.b	d0
+	rol.b	#1,d0
+	bra.b	.zpress
+.nobuttonpress	; no button pressed, read keyboard
+	move.b	$bfec01,d0		;Stolen code
+.zpress
+	movem.l	(a7)+,d1
 	
 	
 	movem.l	d0-d1/a0-a2,-(sp)
@@ -448,10 +538,6 @@ _Keybd
 	eor.l	#$53680058^$4e714e71,$4D4(a1)	; $9c4d4   ;Infinite lives (subq.w #1,($58,a0))
 	sub.l	#$1c000,a1
 	bsr	_SetCheat
-	bsr _Flashscreen
-;	 lea _CheatFlag(pc),a0					 ;Set flag to say user is a cheat
-;	 move.b	 #-1,(a0)
-;	 bsr _FlushLibs
 
 _Nof1		cmp.b	#$51,d0					;Check F2 key (Time)
 	bne _Nof2
@@ -459,10 +545,6 @@ _Nof1		cmp.b	#$51,d0					;Check F2 key (Time)
 	eor.l	#$532800a3^$4e714e71,$d6a(a1)   ;Infinite time (subq.b #1,($a3,a0))              $5328 $00a3
 	sub.l	#$11000,a1
 	bsr	_SetCheat
-	bsr _Flashscreen
-;	 lea _CheatFlag(pc),a0					 ;Set flag to say user is a cheat
-;	 move.b	 #-1,(a0)
-;	 bsr _FlushLibs
 
 _Nof2		cmp.b	#$52,d0					;Check F3 key (Energy)
 	bne	_Nof3
@@ -470,21 +552,13 @@ _Nof2		cmp.b	#$52,d0					;Check F3 key (Energy)
 	eor.l   #$5368005a^$4e714e71,$60c(a1)	;Energy (subq.w #1,($5a,a0)
 	sub.l	#$1c000,a1
 	bsr	_SetCheat
-;	 lea _CheatFlag(pc),a0					 ;Set flag to say user is a cheat
-;	 move.b	 #-1,(a0)
-;	 bsr _FlushLibs
 
 _Nof3		cmp.b	#$53,d0 				;Check F4 key (Bounce from enemy)
 	bne _Nof4
 	add.l 	#$1c000,a1
 	eori.b	#1,$61b(a1)						;Bounce (move.w #1,(3a,a0) --> move.w #0,(3a,a0) )
 	sub.l	#$1c000,a1
-	lea	_CheatFlag(pc),a0					;Set flag to say user is a cheat
-	move.b	#-1,(a0)
-	bsr	_FlushLibs
-;	 lea _CheatFlag(pc),a0					 ;Set flag to say user is a cheat
-;	 move.b	 #-1,(a0)
-;	 bsr _FlushLibs
+	 bsr _SetCheat
 
 _Nof4		cmp.b	#$54,d0					;Check F5 key (Collision)
 	bne	_Nof5
@@ -495,15 +569,9 @@ _Nof4		cmp.b	#$54,d0					;Check F5 key (Collision)
 	bsr	_SetCheat
 	bra	_Nof5
 	
-;	 lea _CheatFlag(pc),a0					 ;Set flag to say user is a cheat
-;	 move.b	 #-1,(a0)
-;	 bsr _FlushLibs
 
 _Invon	move.w	#$0000,$862(a1)				;Invisibility off
 	bsr	_SetCheat
-;	 lea _CheatFlag(pc),a0					 ;Set flag to say user is a cheat
-;	 move.b	 #-1,(a0)
-;	 bsr _FlushLibs
 
 
 _Nof5		cmp.b	#$03,d0					;Check 3 key
@@ -512,9 +580,6 @@ _Nof5		cmp.b	#$03,d0					;Check 3 key
 	beq	_No3key
 	addq.w	#1,$86e(a1)						;Decrease height by adding 1
 	bsr	_SetCheat
-;	 lea _CheatFlag(pc),a0					 ;Set flag to say user is a cheat
-;	 move.b	 #-1,(a0)
-;	 bsr _FlushLibs
 
 _No3key		cmp.b	#$04,d0					;Check 4 key
 	bne	_No4key
@@ -522,9 +587,6 @@ _No3key		cmp.b	#$04,d0					;Check 4 key
 	beq _No4key
 	subq.w	#1,$86e(a1)						;Increase height by subtracting 1
 	bsr	_SetCheat
-;	 lea _CheatFlag(pc),a0					 ;Set flag to say user is a cheat
-;	 move.b	 #-1,(a0)
-;	 bsr _FlushLibs
 
 _No4key		cmp.b	#$01,d0					;Check 1 key
 	bne	_No1key
@@ -532,9 +594,6 @@ _No4key		cmp.b	#$01,d0					;Check 1 key
 	beq	_No1key
 	subq.w	#1,$858(a1)						;Slow down by subtracting 1
 	bsr	_SetCheat
-;	 lea _CheatFlag(pc),a0					 ;Set flag to say user is a cheat
-;	 move.b	 #-1,(a0)
-;	 bsr _FlushLibs
 
 _No1key		cmp.b	#$02,d0					;Check 2 key
 	bne	_No2key
@@ -542,9 +601,6 @@ _No1key		cmp.b	#$02,d0					;Check 2 key
 	beq	_No2key
 	addq.w	#1,$858(a1)						;Speed up by adding 1
 	bsr	_SetCheat
-;	 lea _CheatFlag(pc),a0					 ;Set flag to say user is a cheat
-;	 move.b	 #-1,(a0)
-;	 bsr _FlushLibs
 
 _No2key		cmp.b	#$32,d0					;Check X key
 	bne	_SameKeyDown
@@ -554,22 +610,15 @@ _No2key		cmp.b	#$32,d0					;Check X key
 	jsr		$63e(a1)						;Jsr to ingame routine
 	movem.l	(a7)+,d0-d2/a1-a2				;Restore regs
 	bsr	_SetCheat
-	bra	_SameKeyDown
 
-_SetCheat	lea	_CheatFlag(pc),a0			;Set flag to say user is a cheat
-	move.b	#-1,(a0)
-	bsr	_FlushLibs
-	rts
 
 _SameKeyDown	movem.l	(sp)+,d0-d1/a0-a2
 		rts
+_SetCheat:
+	bra	_FlushLibs
 
-_Flashscreen
-		  move.w  #$fff,color+_custom
-		waitvb
-;		 btst	 #0,(_custom+vposr+1)
-;		 beq .1
-		rts
+
+
 ;======================================================================
 
 _FlushLibs	movem.l	d0-d1/a0-a2,-(sp)
@@ -647,7 +696,7 @@ _NoHighsFound	movem.l	(sp)+,d0-d1/a0-a3
 
 _SaveHighScores	movem.l	d0-d1/a0-a2,-(sp)
 
-		move.b	_CheatFlag(pc),d0	;Check if user is a cheat
+		move.b	_Cheater(pc),d0	  ;Check if user is a cheat
 		bne	_DoNotSave
 
 		lea	_Highs(pc),a0		;a0 = Filename
@@ -860,8 +909,9 @@ _ATN_37		dc.b	1
 
 ;======================================================================
 _resload	dc.l	0		;address of resident loader
-_Tags		dc.l	WHDLTAG_Private3
-_Private3	dc.l	0
+_Tags:
+			dc.l	WHDLTAG_CUSTOM3_GET
+_Cheater	dc.l	0
 		dc.l	TAG_DONE
 ;======================================================================
 

@@ -24,7 +24,7 @@
 ;		                                 000064 = World 6, level 4
 ;		                                 000071 = Project F
 ;		         - Help key added to skip levels
-;		         - Project F no-enemies bug fixed (huge thanks to Jeff!)
+;		         - Project F no-enemies bug fixed (huge thanks to Jeff aka JOTD!)
 ;		         - Added box icons (thanks to Captain^HIT!)
 ;		28.08.05 - v1.2
 ;		         - Supports the CD version released by Islona (thanks Xavier!)
@@ -101,12 +101,14 @@ DECL_VERSION:MACRO
 _name		dc.b	"Superfrog CD³²",0
 _copy		dc.b	"1994 Team 17",0
 _info		dc.b	"Installed by Codetapper/Action! & JOTD",10
-			dc.b	"Additional keys by ArisefromDecay",10
-		dc.b	10,"F1-F5 Toggles:"
+			dc.b	"Trainer by ArisefromDecay",10
+		dc.b	10,10,"F1 - F5 Toggles:"
 		dc.b	10,"Lives, time, energy, bounce, invisibility"
-		dc.b	10,"1/2-3/4 Dec/Inc speed-jumpheight"
-		dc.b	10,"X-Open exit"
-		dc.b	10,"Help-Skip level",10,10
+		dc.b	10,"1/2 - 3/4:"
+		dc.b	10,"Dec/Inc speed - jumpheight"
+		dc.b	10,"X:Open exit"
+		dc.b	10,"Help:Skip level",10,10
+
 		dc.b	"Version "
 		DECL_VERSION
 		dc.b	0
@@ -120,6 +122,11 @@ _CheatFlag	dc.b	0
 _Registered	dc.b	0
 _config
         dc.b    "C2:B:blue/second button jumps;"
+		dc.b	"C3:X:Infinite lives:0;"
+		dc.b	"C3:X:Infinite time:1;"
+		dc.b	"C3:X:Infinite energy:2;"
+		dc.b	"C3:X:Bounce off enemys:3;"
+		dc.b	"C3:X:Ingame keys:5;"
 		dc.b	0
 		EVEN
 
@@ -216,7 +223,11 @@ _PL_Game	PL_START
 		PL_W	$7e1a,$4e71
 		PL_P	$b6ac,_Loader		;Load file a0 at a1
 		PL_P	$d56c,_DecrunchATN	;ATN! decruncher
+		PL_IFC3X	5
+		PL_PS	$167d0,_Trainerkeys
+		PL_ELSE
 		PL_PS	$167d0,_Keybd
+		PL_ENDIF
 		PL_PS	$1cce8,_AF_ProjectF	;Access fault in Project F
 		PL_PS	$1cd00,_AF_ProjectF	;Access fault in Project F
 		PL_PS	$1cd44,_AF_ProjectF	;Access fault in Project F
@@ -231,8 +242,25 @@ _PL_Game	PL_START
 		; are used for other stuff... (maybe other directions, other parts of the game/menu)
         PL_PS	$011c16,read_joy1dat_d0
 		PL_ENDIF
+		PL_NEXT PL_Trainer
 		PL_END
 
+PL_Trainer
+		PL_START
+		PL_IFC3X	0   					; infinite lives
+		PL_NOPS	$121c8,2
+		PL_NOPS	$1cca8,2
+		PL_ENDIF
+		PL_IFC3X	1						; infinite time
+		PL_NOPS	$1251a,2
+		PL_ENDIF
+		PL_IFC3X	2						; infinite energy
+		PL_NOPS	$1cde0,2
+		PL_ENDIF
+		PL_IFC3X	3						; Bounce off enemys
+		PL_B	$1cdef,0
+		PL_ENDIF
+		PL_END
 ; thanks to robinsonb5@eab for the idea		
 read_joy1dat_d0:
 	movem.l	d1/a0,-(a7)
@@ -310,6 +338,65 @@ _LoadFile	move.l	_resload(pc),a2
 ;======================================================================
 
 _Keybd
+	movem.l	d1,-(a7)
+	movem.l	A0,-(a7)
+	; here we're going to inject pause/esc too
+	moveq.l	#0,d1
+	moveq.l	#1,d0
+	bsr	_read_joystick
+	lea	buttons_state(pc),a0
+	move.l	d0,(a0)
+	btst	#JPB_BTN_PLAY,d0
+	bne.b	.pause
+	; reset pause press flag
+	lea	pause_pressed(pc),a0
+	clr.b	(a0)
+	bra.b	.nopause
+.pause
+	lea	pause_pressed(pc),a0
+	tst.b	(a0)
+	bne.b	.dont_press_again
+.presspause
+	move.b	#$19,d1	; code for "P"
+	st.b	(a0)
+.dont_press_again	
+.nopause
+	movem.l	(a7)+,a0
+	btst	#JPB_BTN_FORWARD,d0
+	beq.b	.noesc
+	btst	#JPB_BTN_REVERSE,d0
+	beq.b	.noesc
+	move.b	#$45,d1	; code for "ESC"
+.noesc
+	tst.b	d1
+	beq.b	.nobuttonpress	; no button pressed, don't clobber keyboard
+	move.w	d1,d0
+	; inverse serialization of the keycode
+	not.b	d0
+	rol.b	#1,d0
+	bra.b	.zpress
+.nobuttonpress	; no button pressed, read keyboard
+	move.b	$bfec01,d0		;Stolen code
+.zpress
+	movem.l	(a7)+,d1
+
+		movem.l	d0-d1/a0-a2,-(sp)
+		ror.b	#1,d0
+		not.b	d0
+		cmp.b	_keyexit(pc),d0
+		beq	_exit
+
+		move.b	_LastKeypress(pc),d1	;If the same key is still
+		cmp.b	d0,d1			;down, do not do anything!
+		beq	_SameKeyDown1
+
+		lea	_LastKeypress(pc),a0	;Store this keypress
+		move.b	d0,(a0)
+
+_SameKeyDown1	movem.l	(sp)+,d0-d1/a0-a2
+		rts
+
+_Trainerkeys
 	movem.l	d1,-(a7)
 	movem.l	A0,-(a7)
 	; here we're going to inject pause/esc too
@@ -533,7 +620,7 @@ _NoHighsFound	movem.l	(sp)+,d0-d1/a0-a3
 
 _SaveHighScores	movem.l	d0-d1/a0-a2,-(sp)
 
-		move.b	_CheatFlag(pc),d0	;Check if user is a cheat
+		move.b	_Cheater(pc),d0	  ;Check if user is a cheat
 		bne	_DoNotSave
 
 		lea	_Highs(pc),a0		;a0 = Filename
@@ -758,8 +845,9 @@ _resload	dc.l	0			;address of resident loader
 _DosBase	dc.l	0
 _GameAddress	dc.l	$400
 _HighScoresAddy	dc.l	0
-_Tags		dc.l	WHDLTAG_Private3
-_Private3	dc.l	0
+_Tags:
+			dc.l	WHDLTAG_CUSTOM3_GET
+_Cheater	dc.l	0
 		dc.l	TAG_DONE
 ;======================================================================
 

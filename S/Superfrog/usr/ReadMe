@@ -35,6 +35,9 @@ REQUIREMENTS:
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+version 1.8: (12.06.2026) done by Arise from Decay
+- added trainer options
+
 version 1.7: (05.06.2026) done by Arise from Decay
 - added more ingame trainerkeys
   F1 Toggle infinite lives, F2 Toggle infinite time, F3 toggle infinite energy
