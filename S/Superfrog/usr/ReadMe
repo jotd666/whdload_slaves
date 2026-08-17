@@ -35,6 +35,9 @@ REQUIREMENTS:
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+version 1.9: (17.08.2026) done by Arise from Decay
+- reworked splashscreen
+
 version 1.8: (12.06.2026) done by Arise from Decay
 - added trainer options
 
