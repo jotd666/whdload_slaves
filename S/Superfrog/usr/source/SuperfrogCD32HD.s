@@ -30,6 +30,7 @@
 ;		         - Supports the CD version released by Islona (thanks Xavier!)
 ;		         - CD32 version will no longer quit the entire game when you press Escape
 ;		18.04.26 - More trainerkeys added by Arise from decay
+;		17.08.26 - Splashscreen reworked
 ;
 ; Requires:	WHDLoad 10+
 ; Copyright:	Public Domain
@@ -82,7 +83,7 @@ _expmem		dc.l	0			;ws_ExpMem
 	DOSCMD	"WDate  >T:date"
 	ENDC
 DECL_VERSION:MACRO
-	dc.b	"1.7"
+	dc.b	"1.9"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -97,22 +98,21 @@ DECL_VERSION:MACRO
 		DECL_VERSION
 		dc.b	0
 
-	
 _name		dc.b	"Superfrog CD³²",0
 _copy		dc.b	"1994 Team 17",0
 _info		dc.b	"Installed by Codetapper/Action! & JOTD",10
-			dc.b	"Trainer by ArisefromDecay",10
-		dc.b	10,10,"F1 - F5 Toggles:"
-		dc.b	10,"Lives, time, energy, bounce, invisibility"
-		dc.b	10,"1/2 - 3/4:"
-		dc.b	10,"Dec/Inc speed - jumpheight"
-		dc.b	10,"X:Open exit"
-		dc.b	10,"Help:Skip level",10,10
-
+			dc.b	"Trainer Arise from Decay",-1
 		dc.b	"Version "
 		DECL_VERSION
+		dc.b	-1,"Ingame Keys:"
+		dc.b	10,"F1-Lives, F2-Time, F3-Energy"
+		dc.b	10,"F4-Bounce, F5-Invisibility"
+		dc.b	10,"1/2-Speed, 3/5-Jumpheight"
+		dc.b	10,"X-Open exit, Help-Skip Level"
+		dc.b	-1,"Thanks to Chris Vella for the disk version, and to"
+		dc.b	10,"Carlo Pirri + Xavier Bodenand for the CD versions!"
 		dc.b	0
- 
+
 _Data		dc.b	"data",0
 _SuperfrogName	dc.b	"SuperfrogCD",0
 _DoNotCache	dc.b	"(SFIntro)",0
@@ -121,7 +121,7 @@ _LastKeypress	dc.b	0
 _CheatFlag	dc.b	0
 _Registered	dc.b	0
 _config
-        dc.b    "C2:B:blue/second button jumps;"
+		dc.b    "C2:B:blue/second button jumps;"
 		dc.b	"C3:X:Infinite lives:0;"
 		dc.b	"C3:X:Infinite time:1;"
 		dc.b	"C3:X:Infinite energy:2;"
@@ -240,7 +240,7 @@ _PL_Game	PL_START
 		PL_IFC2
 		; this particular joydat read is used for jump, others, well
 		; are used for other stuff... (maybe other directions, other parts of the game/menu)
-        PL_PS	$011c16,read_joy1dat_d0
+		PL_PS	$011c16,read_joy1dat_d0
 		PL_ENDIF
 		PL_NEXT PL_Trainer
 		PL_END

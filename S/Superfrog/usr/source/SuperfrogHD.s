@@ -32,6 +32,7 @@
 ;		17.04.26 - v1.7 by Arise from decay
 ;				 - added trainer options
 ;				 - added more ingamekeys
+;		17.08.26 - Splashscreen reworked
 ; Requires:	WHDLoad 10+
 ; Copyright:	Public Domain
 ; Language:	68000 Assembler
@@ -86,7 +87,7 @@ _expmem		dc.l	EXTMEMSIZE			;ws_ExpMem
 		dc.w	_config-_base		;ws_config
 		
 _config
-        dc.b    "C2:B:blue/second button jumps;"
+		dc.b    "C2:B:blue/second button jumps;"
 		dc.b	"C3:X:Infinite lives:0;"
 		dc.b	"C3:X:Infinite time:1;"
 		dc.b	"C3:X:Infinite energy:2;"
@@ -98,7 +99,7 @@ _config
 	DOSCMD	"WDate  >T:date"
 	ENDC
 DECL_VERSION:MACRO
-	dc.b	"1.7"
+	dc.b	"1.9"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -123,16 +124,14 @@ _name		dc.b	"Superfrog"
 	dc.b	0
 _copy		dc.b	"1993 Team 17",0
 _info		dc.b	"Installed by Codetapper/Action! & JOTD",10
-			dc.b	"Additional keys by ArisefromDecay",10
-		dc.b	10,"F1-F5 Toggles:"
-		dc.b	10,"Lives, time, energy, bounce, invisibility"
-		dc.b	10,"1/2 - 3/4:"
-		dc.b	10,"Dec/Inc speed-jumpheight"
-		dc.b	10,"X:Open exit"
-		dc.b	10,"Help:Skip level",10
-
-		dc.b	"Version "
+			dc.b	"Trainer by Arise from Decay",-1
+			dc.b	"Version "
 		DECL_VERSION
+		dc.b	-1,"Ingame Keys:"
+		dc.b	10,"F1-Lives, F2-Time, F3-Energy"
+		dc.b	10,"F4-Bounce, F5-Invisibility"
+		dc.b	10,"1/2-Speed, 3/5-Jumpheight"
+		dc.b	10,"X-Open exit, Help-Skip Level"
 		dc.b	0
 _Highs		dc.b	"Superfrog.highs",0
 _DiskNumber	dc.b	1
@@ -192,7 +191,7 @@ _PatchTrack1	movem.l	d0-d1/a0-a2,-(sp)
 		move.l	_expmem(pc),a1
 		ENDC
 		;Further expansion memory
-        ;only useful to avoid loading
+		;only useful to avoid loading
 		sub.l	a2,a2			
 		lea	$80000,sp
 		jmp	$7c180
@@ -261,12 +260,12 @@ _PL_Main	PL_START
 ;        PL_PS	$0019cc,read_joy1dat_d6
 ;        PL_PS	$0019ee,read_joy1dat_d6
 
-        ;PL_PS	$001590,read_joy1dat_d0
-        ;PL_PS	$0046a8,read_joy1dat_d0
-        ;PL_PS	$005f52,read_joy1dat_d0
-        ;PL_PS	$005f9a,read_joy1dat_d0
-        ;PL_PS	$008160,read_joy1dat_d0
-        ;PL_PS	$00e13e,read_joy1dat_d0
+		;PL_PS	$001590,read_joy1dat_d0
+		;PL_PS	$0046a8,read_joy1dat_d0
+		;PL_PS	$005f52,read_joy1dat_d0
+		;PL_PS	$005f9a,read_joy1dat_d0
+		;PL_PS	$008160,read_joy1dat_d0
+		;PL_PS	$00e13e,read_joy1dat_d0
 ;        PL_PS	$00fe42,read_joy1dat_d7
 
 
@@ -277,9 +276,9 @@ _PL_Main	PL_START
 		; this/those particular joydat read is used for jump, others, well
 		; are used for other stuff... (maybe other directions, other parts of the game/menu)
 		
-        PL_PS	$0114c8,read_joy1dat_d0		; one of those 2 control higher jump (on presse)
-        PL_PS	$011374,read_joy1dat_d0
-        PL_PS	$011a42,read_joy1dat_d0 	; this one controls initial jump
+		PL_PS	$0114c8,read_joy1dat_d0		; one of those 2 control higher jump (on presse)
+		PL_PS	$011374,read_joy1dat_d0
+		PL_PS	$011a42,read_joy1dat_d0 	; this one controls initial jump
 		PL_ENDIF
 		PL_NEXT PL_Trainer
 		PL_END
@@ -389,7 +388,7 @@ _Keybd
 	movem.l	A0,-(a7)
 	; here we're going to inject pause/esc too
 	moveq.l	#0,d1
-    moveq.l #1,d0
+	moveq.l #1,d0
 	bsr	_read_joystick
 	lea	buttons_state(pc),a0
 	move.l	d0,(a0)
@@ -630,7 +629,7 @@ _FlushLibs	movem.l	d0-d1/a0-a2,-(sp)
 ;======================================================================
 
 _Loader		movem.l	d1-d2/a0-a2,-(sp)
-                move.l  _resload(pc),a2		;a0 = dest address
+				move.l  _resload(pc),a2		;a0 = dest address
 		mulu	#$200,d1		;offset (sectors)
 		mulu	#$200,d2		;length (sectors)
 		exg.l	d1,d0			;d0 = offset (bytes)
