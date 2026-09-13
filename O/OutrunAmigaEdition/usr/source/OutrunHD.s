@@ -1,6 +1,6 @@
 ;*---------------------------------------------------------------------------
-;  :Program.	BoppinHD.asm
-;  :Contents.	Slave for "Boppin"
+;  :Program.	OutrunHD.asm
+;  :Contents.	Slave for "Outrun"
 ;  :Author.	JOTD, from Wepl sources
 ;  :Original	v1 
 ;  :Version.	$Id: BoppinHD.asm 1.2 2002/02/08 01:18:39 wepl Exp wepl $
@@ -74,7 +74,7 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.3"
+	dc.b	"1.4"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -95,7 +95,7 @@ slv_name		dc.b	"OutRun: Amiga Edition"
 	dc.b	" (DEBUG/CHIP MODE)"
 	ENDC
 			dc.b	0
-slv_copy		dc.b	"2025 Reassembler",0
+slv_copy		dc.b	"2025-2026 Reassembler",0
 slv_info		dc.b	"adapted by JOTD",10,10
 		dc.b	"Version "
 		DECL_VERSION
@@ -226,6 +226,7 @@ pl_nocpu_091:
 	PL_W	$62,$4E71
 	PL_END
 
+pl_040_093:
 pl_040_092:
     PL_START
 	PL_L	$001e2,$70004E71
@@ -233,6 +234,7 @@ pl_040_092:
 	PL_W	$62,$4E71
     PL_END
 pl_nocpu_092:
+pl_nocpu_093:
     PL_START
 	PL_L	$001cc,$70004E71		; remove vbr access
     PL_L	$0005e,$70004E71		; remove akiko detection
@@ -261,6 +263,12 @@ get_version:
 	cmp.l	#679728,D0
 	beq.b	.version_nocpu_092
     
+	cmp.l	#693340,D0
+	beq.b	.version_040_093
+    
+	cmp.l	#693816,D0
+	beq.b	.version_nocpu_093
+    
 	pea	TDREASON_WRONGVER
 	move.l	_resload(pc),-(a7)
 	addq.l	#resload_Abort,(a7)
@@ -278,11 +286,14 @@ get_version:
 	moveq	#1,d0
 
 .version_040_092
+.version_040_093
 	moveq	#2,d0
     bra.b   .out
   
 .version_nocpu_092:
+.version_nocpu_093:
 	moveq	#3,d0
+
 
 .out
 	movem.l	(a7)+,d1/a0/a1

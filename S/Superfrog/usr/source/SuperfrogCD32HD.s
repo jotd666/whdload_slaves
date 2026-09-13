@@ -125,7 +125,7 @@ _config
 		dc.b	"C3:X:Infinite lives:0;"
 		dc.b	"C3:X:Infinite time:1;"
 		dc.b	"C3:X:Infinite energy:2;"
-		dc.b	"C3:X:Bounce off enemys:3;"
+		dc.b	"C3:X:Bounce off enemies:3;"
 		dc.b	"C3:X:Ingame keys:5;"
 		dc.b	0
 		EVEN

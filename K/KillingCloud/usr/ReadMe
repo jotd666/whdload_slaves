@@ -29,6 +29,10 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ Version 2.4 (13.09.2026): done by JOTD:
+ - Claude A.I. found some wrong relocs, which fixes some game bugs. Slave has no changes
+   Copy the new "KillingCloud_v1.reloc" file in the data directory over the old one.
+ 
  Version 2.3 (10.07.2023) done by paraj & JOTD:
  - fixed nasty protection check that trashed bomb location on level 5 (good find paraj!)
  - fixed missing reloc (levels 5,6,7,8)

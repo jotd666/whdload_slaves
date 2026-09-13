@@ -9,7 +9,7 @@
 	INCLUDE	whdload.i
 	INCLUDE	whdmacros.i
 
-;CHIP_ONLY
+CHIP_ONLY
 ALLOC_DEBUG=0
 
 ; 5BAD4: dmacon write (extra sfx or music code)
@@ -74,7 +74,7 @@ _config
 ;==========================================================================
 
 DECL_VERSION:MACRO
-	dc.b	"2.3"
+	dc.b	"2.4"  ; same as 2.3 jump bumping
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
