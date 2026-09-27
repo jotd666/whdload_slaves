@@ -9,7 +9,7 @@
 	INCLUDE	whdload.i
 	INCLUDE	whdmacros.i
 
-CHIP_ONLY
+;CHIP_ONLY
 ALLOC_DEBUG=0
 
 ; 5BAD4: dmacon write (extra sfx or music code)
