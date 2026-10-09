@@ -1,5 +1,7 @@
 ; Optional rendering changes. All game hooks are absent with CUSTOM2 bit 0 off.
 ; The original game remains the reference for every replacement.
+; PERF_MASK test-build bits: 1=BLIT IRQ, 2=vertices, 4=emit.
+; Keep new routines out of the default until extended validation.
  IFND PERF_MASK
 PERF_MASK = 1
  ENDC
@@ -14,6 +16,7 @@ perf_init:
  lea perf_reset+2(pc),a0
  move.l d0,(a0)
  movem.l (sp)+,d0/a0
+ bsr perf_geometry_init
  rts
 
 perf_patch:
@@ -34,6 +37,12 @@ pl_perf:
  PL_P  $0aed0,perf_draw_exit ; PERF_RANGE h0:0aed0 6 bit=0
  PL_P $3980e,perf_own_blitter ; PERF_RANGE h0:3980e 6 bit=0
  PL_P $39800,perf_disown_blitter ; PERF_RANGE h0:39800 6 bit=0
+ ENDC
+ IFNE PERF_MASK&2
+ PL_P $1440,perf_vertices ; PERF_RANGE h0:01440 6 bit=0
+ ENDC
+ IFNE PERF_MASK&4
+ PL_P $1662,perf_emit ; PERF_RANGE h0:01662 6 bit=0
  ENDC
  PL_END
 
@@ -135,4 +144,9 @@ perf_draw_active: dc.w 0
  IFD VERIFY
 perf_failure: dc.l 0
 perf_blit_windows: dc.l 0
+ ENDC
+
+ include "geometry.s"
+ IFD PERF_TWIN
+ include "geometry_verify.s"
  ENDC
