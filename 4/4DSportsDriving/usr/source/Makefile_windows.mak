@@ -8,6 +8,6 @@ SOURCE = $(PROGNAME)HD.s
 
 all :  $(WHDLOADER)
 
-$(WHDLOADER) : $(SOURCE) driving_tape.s
+$(WHDLOADER) : $(SOURCE) driving_tape.s performance.s
 	$(WDATE)
 	$(VASM) -o $(WHDLOADER) $(SOURCE)

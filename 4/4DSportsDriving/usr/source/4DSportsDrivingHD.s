@@ -85,7 +85,7 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.2"
+	dc.b	"1.3-beta"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -111,6 +111,10 @@ slv_info		dc.b	"Installed & fixed by JOTD",10,10
 		dc.b	"Version "
 		DECL_VERSION
 		dc.b	0
+
+slv_config
+	dc.b "C2:X:Experimental rendering optimizations:0;",0
+	even
 
 program:
 	dc.b	"stunts",0
@@ -165,6 +169,7 @@ _bootdos
 		jmp	(resload_Abort,a2)
 
 patch_main
+	bsr perf_init
 	IFD VERIFY
 	movem.l d0-a6,-(sp)
 	lea tape_game(pc),a0
@@ -186,6 +191,7 @@ patch_main
 	lea	pl_main(pc),a0
 	move.l	_resload(pc),a2
 	jsr	resload_Patch(a2)
+	bsr perf_patch
 	rts
 
     
@@ -388,11 +394,15 @@ _stacksize
 
 tag		dc.l	WHDLTAG_CUSTOM1_GET
 _custom1	dc.l	0
+		dc.l	WHDLTAG_CUSTOM2_GET
+_custom2	dc.l	0
 		dc.l	WHDLTAG_CUSTOM5_GET
 _custom5	dc.l	0
 		dc.l	0
 
 ;============================================================================
+
+	include "performance.s"
 
 	IFD VERIFY
 	include "driving_tape.s"
