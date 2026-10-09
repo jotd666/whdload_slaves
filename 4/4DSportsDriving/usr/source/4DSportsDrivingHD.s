@@ -180,6 +180,9 @@ patch_main
 	lea tape_game(pc),a0
 	move.l d7,(a0)
 	addq.l #4,(a0)
+	IFD SIM_PHYSICS
+	bsr sim_physics_selftest
+	ENDC
 	bsr tape_start
 	IFD SIM_PROBE
 	bsr sim_clock_install
@@ -432,6 +435,10 @@ perf_attnflags	dc.l	0
 	IFD SIM_SCHEDULE
 	include "simulation_schedule.s"
 	ENDC
+	ENDC
+	IFD SIM_PHYSICS
+	include "simulation_physics.s"
+	include "simulation_physics_verify.s"
 	ENDC
 	include "driving_tape.s"
 	IFD SIM_PROBE
