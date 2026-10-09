@@ -1,9 +1,10 @@
 ; Optional rendering changes. All game hooks are absent with CUSTOM2 bit 0 off.
 ; The original game remains the reference for every replacement.
 ; PERF_MASK test-build bits: 1=BLIT IRQ, 2=vertices, 4=emit, 8=backface,
-; 16=parent rotation, 32=state clear, 64=primitive depth/header. Keep new routines out of the default until validation.
+; 16=parent rotation, 32=state clear, 64=primitive depth/header.
+; All validated paths are selected; state clear is additionally 68000-only.
  IFND PERF_MASK
-PERF_MASK = 1
+PERF_MASK = 127
  ENDC
 
 perf_init:

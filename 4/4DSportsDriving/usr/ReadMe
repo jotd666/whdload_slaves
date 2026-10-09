@@ -39,10 +39,21 @@
  and	aminet:game/patch/
 
  version 1.3-beta:
- - optional rendering optimizations (CUSTOM2=1), off by default
+ - optional rendering optimizations (CUSTOM2=1), off by default; select the
+   rendering option in the WHDLoad startup window, or add CUSTOM2=1
  - suppress redundant blitter interrupts only while the game owns the blitter
    inside primitive drawing; preserve queued work and prior interrupt state
- - beta: extended testing on other memory and CPU configurations is pending
+ - faster vertex processing, primitive emission, backface tests, parent-relative
+   rotation and primitive depth/header bookkeeping, validated against native
+   results
+ - faster state clear on 68000; 68010 and later retain the original clear loop
+ - CUSTOM2=0 preserves the original bytes at every optimization hook
+ - verified in FS-UAE on 68000 (512 KB chip + 1536 KB slow RAM) and 68020
+   (2 MB chip + 4 MB fast RAM), including graphics levels, replay, crashes
+   and native race finishes; real-hardware testing remains welcome
+ - stationary FULL/Normal starting-scene display rate improved about 11.8%
+   on both tested machines, measured over 250 sampled PAL fields per option;
+   this is a scene-specific result, not a moving-race benchmark
 
  version 1.2 (21.03.2021) done by JOTD:
  - long delay when ending a race removed (side effect
