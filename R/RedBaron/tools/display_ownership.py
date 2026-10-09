@@ -45,9 +45,13 @@ def analyse(path, sim, buffers):
                 if kind == 6:
                     visible.add(role)
                     last_fetch[addr] = slot
-                if (kind == 5 and reg == 0) or (kind == 2 and reg == 0x1102):
-                    field_writes.append(dict(field=field.index, line=slot//227,
-                        hpos=slot%227, role=role, kind=kind, offset=addr-base))
+            destinations = ([addr] if kind == 5 and reg == 0 else
+                            [a for a, _ in frames.cpu_write_words(field.dma, i)])
+            for destination in destinations:
+                for role, base in enumerate(buffers):
+                    if base <= destination < base+40000:
+                        field_writes.append(dict(field=field.index, line=slot//227,
+                            hpos=slot%227, role=role, kind=kind, offset=destination-base))
         shown.append(sorted(visible))
         writes.extend(field_writes)
         for w in field_writes:

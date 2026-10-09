@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Count sim:3154a publications and locate their 24 word writes in PAL DMA slots.
+"""Count sim:3154a publications and locate their 24 word values (word or longword writes) in PAL DMA slots.
 Only complete, matching MOVEM writes receive a measured beam position. Chunk joins
 have one missing field; incomplete publications remain explicit, never interpolated.
 """
@@ -7,6 +7,23 @@ import argparse,json,struct
 from collections import defaultdict,deque
 from pathlib import Path
 import barto
+
+def cpu_write_words(dma, offset):
+    """Decode Barto word/longword chip writes into big-endian memory words.
+
+    AGA records a 32-bit chip access in one slot; both halves share that slot.
+    The record's data integer itself is little-endian, like the trace header.
+    """
+    if dma[offset+29] != 2:
+        return []
+    access = struct.unpack_from('<H', dma, offset)[0]
+    address = struct.unpack_from('<I', dma, offset+12)[0]
+    if access == 0x1102:
+        return [(address, struct.unpack_from('<H', dma, offset+2)[0])]
+    if access == 0x1104:
+        value = struct.unpack_from('<I', dma, offset+2)[0]
+        return [(address, value >> 16), (address+2, value & 0xffff)]
+    return []
 
 def analyse(paths,sim):
     rows=[];offset=0;chunks=[]
@@ -17,11 +34,8 @@ def analyse(paths,sim):
         for f in t.fields:
             for k in range(len(f.dma)//f.dma_size):
                 i=k*f.dma_size
-                # Barto CPU word write: type 2, register/access code $1102.
-                if f.dma[i+29]!=2 or struct.unpack_from('<H',f.dma,i)[0]!=0x1102:continue
-                addr=struct.unpack_from('<I',f.dma,i+12)[0]
-                data=struct.unpack_from('<H',f.dma,i+2)[0]
-                writes[addr].append((f.index,k,data))
+                for addr,data in cpu_write_words(f.dma,i):
+                    writes[addr].append((f.index,k,data))
         candidates={}
         for f in t.fields:
             cycles=0
@@ -37,7 +51,7 @@ def analyse(paths,sim):
                             if data!=expected[0]:continue
                             sequence=[(fi,k,data)];last=(fi,k)
                             for j,w in enumerate(expected[1:],1):
-                                choices=[q for q in writes[dest+2*j] if q[2]==w and last<q[:2] and q[0]<=fi+1]
+                                choices=[q for q in writes[dest+2*j] if q[2]==w and last<=q[:2] and q[0]<=fi+1]
                                 if not choices:break
                                 q=min(choices);sequence.append(q);last=q[:2]
                             if len(sequence)==24:matches.append(sequence)
