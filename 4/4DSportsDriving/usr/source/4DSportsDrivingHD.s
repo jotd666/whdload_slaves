@@ -293,6 +293,10 @@ pl_main
     PL_PS $F7A6,sim_a4000_delay10
     PL_PSS $F842,sim_a4000_terrain,42
     PL_PS $FD64,sim_a4000_skid_loss
+    PL_PSS $F7DA,sim_a4000_spin_begin,2
+    PL_PS $FD46,sim_a4000_spin_slip
+    PL_PSS $C3C4,sim_a4000_spin_test,2
+    PL_PS $C3E0,sim_a4000_spin_rotate
     ENDC
     IFD SIM_SCHEDULE
     PL_PSS $70E0,sim_schedule_poll,2

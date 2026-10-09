@@ -25,6 +25,8 @@ sim_a4000_arm:
 ; steering +0, acceleration +2, distance +4, gear +6, wheel pairs +8..23.
 ; Suspension fractions: extension +24..31, return +32..39, bias +40..47.
 ; Terrain loss uses an unsigned Q16 carry at +48; skid loss uses fifths at +50.
+; Spin displacement: fifths at +52, cached common step at +54 ($8000=unset).
+; Native +$3E remains nominal angular rate; its damping is not yet converted.
 sim_a4000_car:
  lea -$85e(a4),a0
  cmpa.l a0,a1
@@ -280,7 +282,7 @@ sim_a4000_private: dcb.b SIM_PRIVATE_BYTES,0
 
  even
  dc.b "4DA4STAT"
- dc.w 5,15
+ dc.w 6,16
 sim_a4000_gear_calls: dc.l 0
 sim_a4000_wheel_calls: dc.l 0
 sim_a4000_contact_calls: dc.l 0
@@ -293,6 +295,7 @@ sim_a4000_delay10_calls: dc.l 0
 sim_a4000_delay30_calls: dc.l 0
 sim_a4000_terrain_calls: dc.l 0,0,0,0
 sim_a4000_skid_calls: dc.l 0
+sim_a4000_spin_step_calls: dc.l 0
 
 ; $10234..$10248 and $1024A..$10260, within native suspension $10012.
 ; Preserve its geometry/penetration branches and cap at extension 384. Both
@@ -492,4 +495,87 @@ sim_a4000_skid_loss:
  movem.l (sp)+,d1-d2/a0-a1
 .native:
  move.w d0,-2(a5)
+ rts
+
+; $F7DA..$F7E2, executed for each car even when airborne. Invalidate the
+; shared angular displacement before either consumer, preserving the native
+; contact test. All physics paths leave +$3E as the nominal angular rate.
+sim_a4000_spin_begin:
+ move.l 8(a5),a0
+ cmp.w #50,-$15fa(a4)
+ bne .native
+ movem.l d0/a0-a1,-(sp)
+ move.l a0,a1
+ bsr sim_a4000_car
+ move.w #$8000,54(a0)
+ movem.l (sp)+,d0/a0-a1
+.native:
+ tst.b $c1(a0)
+ rts
+
+; Calculate once per car update, not once per consumer. Grounded slip uses
+; this first at $FD46; airborne cars can reach $C3C4 without that call. Zero
+; actual displacement is a valid cached result and must NOT rerun the divider.
+; Preserve all except D0 and N/Z/V/C, including X for the original ANDI site.
+sim_a4000_spin_step:
+ movem.l d1/a0-a1,-(sp)
+ moveq #0,d1
+ addx.w d1,d1
+ move.w d1,-(sp)
+ move.l 8(a5),a1
+ bsr sim_a4000_car
+ move.w 54(a0),d0
+ cmp.w #$8000,d0
+ bne .done
+ move.w $3e(a1),d0
+ beq .stopped
+ lea 52(a0),a0
+ bsr sim_rate_20_to_50
+ move.w d0,2(a0)
+ lea sim_a4000_spin_step_calls(pc),a1
+ addq.l #1,(a1)
+ bra .done
+.stopped:
+ clr.w 52(a0)
+ clr.w 54(a0)
+.done:
+ move.w (sp)+,d1
+ lsr.w #1,d1
+ movem.l (sp)+,d1/a0-a1
+ rts
+
+; $FD46..$FD4C: same step is subtracted from the travel/body slip angle.
+sim_a4000_spin_slip:
+ cmp.w #50,-$15fa(a4)
+ bne .native
+ bsr sim_a4000_spin_step
+ bra .apply
+.native:
+ move.w $3e(a1),d0
+.apply:
+ sub.w d0,(a0)
+ rts
+
+; $C3C4..$C3CC: a zero fractional step skips the actual rotation matrix.
+sim_a4000_spin_test:
+ cmp.w #50,-$15fa(a4)
+ bne .native
+ bsr sim_a4000_spin_step
+ bra .mask
+.native:
+ move.w $3e(a0),d0
+.mask:
+ and.w #$3ff,d0
+ rts
+
+; $C3E0..$C3E6: use the SAME step, with the native matrix sign convention.
+sim_a4000_spin_rotate:
+ cmp.w #50,-$15fa(a4)
+ bne .native
+ bsr sim_a4000_spin_step
+ bra .negate
+.native:
+ move.w $3e(a0),d0
+.negate:
+ neg.w d0
  rts

@@ -136,11 +136,20 @@ sim_fixture_before:
  moveq #1,d1
 .input:
  IFD SIM_FIXTURE_OFFROAD
- ; Accelerate straight for three seconds, then hold right. Ordinary control
- ; input drives onto terrain; the fixture does not change surface flags/data.
+ ; Accelerate straight, then hold right. Delay the turn to exercise spin
+ ; at greater speed without changing the car, track or surface state.
+ IFND SIM_FIXTURE_TURN_SECONDS
+SIM_FIXTURE_TURN_SECONDS = 3
+ ENDC
+ IFLT SIM_FIXTURE_TURN_SECONDS
+ FAIL "SIM_FIXTURE_TURN_SECONDS must be 0..30"
+ ENDC
+ IFGT SIM_FIXTURE_TURN_SECONDS-30
+ FAIL "SIM_FIXTURE_TURN_SECONDS must be 0..30"
+ ENDC
  moveq #1,d1
  move.w -$15fa(a4),d0
- mulu #3,d0
+ mulu #SIM_FIXTURE_TURN_SECONDS,d0
  cmp.w -$940(a4),d0
  bhi .offroad_input
  moveq #5,d1

@@ -204,6 +204,9 @@ sim_physics_selftest:
  bsr sim_delay_hooks_selftest
  tst.w d0
  bne .failed
+ bsr sim_spin_hooks_selftest
+ tst.w d0
+ bne .failed
  ENDC
  movem.l (sp)+,d0-a6
  rts
@@ -215,11 +218,13 @@ sim_physics_selftest:
  even
  IFD SIM_A4000
 SIM_DELAY_HOOK_TESTS = 18
+SIM_SPIN_HOOK_TESTS = 135
  ELSE
 SIM_DELAY_HOOK_TESTS = 0
+SIM_SPIN_HOOK_TESTS = 0
  ENDC
  dc.b "4DPHYTST"
- dc.w 6,(sim_rate_cases_end-sim_rate_cases)/8+(sim_steering_cases_end-sim_steering_cases)/14+(sim_distance_cases_end-sim_distance_cases)/8+(sim_approach_cases_end-sim_approach_cases)/12+(sim_airborne_cases_end-sim_airborne_cases)/12+(sim_extension_cases_end-sim_extension_cases)/10+(sim_engine_cases_end-sim_engine_cases)/4+(sim_duration_cases_end-sim_duration_cases)/8+(sim_terrain_cases_end-sim_terrain_cases)/10+(sim_skid_cases_end-sim_skid_cases)/12+SIM_DELAY_HOOK_TESTS
+ dc.w 7,(sim_rate_cases_end-sim_rate_cases)/8+(sim_steering_cases_end-sim_steering_cases)/14+(sim_distance_cases_end-sim_distance_cases)/8+(sim_approach_cases_end-sim_approach_cases)/12+(sim_airborne_cases_end-sim_airborne_cases)/12+(sim_extension_cases_end-sim_extension_cases)/10+(sim_engine_cases_end-sim_engine_cases)/4+(sim_duration_cases_end-sim_duration_cases)/8+(sim_terrain_cases_end-sim_terrain_cases)/10+(sim_skid_cases_end-sim_skid_cases)/12+SIM_DELAY_HOOK_TESTS+SIM_SPIN_HOOK_TESTS
 sim_physics_passed: dc.l 0
 sim_physics_test_fraction: dc.w 0,0
 sim_physics_test_position: dc.l 0
@@ -319,4 +324,130 @@ sim_delay_test_native: dc.w 5,10,30
 sim_delay_test_50: dc.w 13,25,75
 sim_delay_test_mode: dc.w 0
 sim_delay_test_car: dcb.b $d0,0
+ ENDC
+
+ IFD SIM_A4000
+; Directly exercise the four installed hooks: three modes, nine nominal rates,
+; five updates each. Body-first order covers the airborne consumer; the real
+; spin fixture covers slip-first order. Repeated reads must not spend carry.
+sim_spin_hooks_selftest:
+ movem.l d1-a6,-(sp)
+ lea sim_delay_test_mode(pc),a4
+ adda.l #$15fa,a4
+ lea sim_spin_test_frame(pc),a5
+ lea sim_delay_test_car(pc),a0
+ move.l a0,8(a5)
+ lea sim_a4000_private(pc),a6
+ moveq #0,d5
+.mode:
+ lea sim_delay_test_modes(pc),a2
+ move.w (a2,d5.w),-$15fa(a4)
+ lea sim_spin_hook_cases(pc),a2
+ moveq #8,d4
+.case:
+ move.l 8(a5),a0
+ move.w (a2),$3e(a0)
+ clr.w 52(a6)
+ move.w #$1234,54(a6)
+ clr.w $36(a0)
+ moveq #0,d7
+.tick:
+ move.l 8(a5),a0
+ move.b d7,$c1(a0)
+ bsr sim_a4000_spin_begin
+ move.w (a2),d6
+ cmp.w #4,d5
+ bne .expected
+ move.w d7,d0
+ add.w d0,d0
+ move.w 2(a2,d0.w),d6
+.expected:
+ ; Original masked-read site preserves X for both incoming states.
+ move.w d7,d2
+ and.w #1,d2
+ lsr.w #1,d2
+ move.l 8(a5),a0
+ bsr sim_a4000_spin_test
+ moveq #0,d2
+ addx.w d2,d2
+ move.w d7,d3
+ and.w #1,d3
+ cmp.w d3,d2
+ bne .failed
+ move.w d6,d3
+ and.w #$3ff,d3
+ cmp.w d3,d0
+ bne .failed
+ move.l 8(a5),a0
+ bsr sim_a4000_spin_rotate
+ move.w d6,d3
+ neg.w d3
+ cmp.w d3,d0
+ bne .failed
+ move.l 8(a5),a1
+ lea $36(a1),a0
+ move.w (a0),d3
+ sub.w d6,d3
+ bsr sim_a4000_spin_slip
+ cmp.w (a0),d3
+ bne .failed
+ move.l 8(a5),a0
+ bsr sim_a4000_spin_test
+ move.w d6,d3
+ and.w #$3ff,d3
+ cmp.w d3,d0
+ bne .failed
+ move.l 8(a5),a0
+ move.w $3e(a0),d0
+ cmp.w (a2),d0
+ bne .failed
+ cmp.w #4,d5
+ bne .native_state
+ move.w d7,d0
+ add.w d0,d0
+ move.w 12(a2,d0.w),d3
+ cmp.w 52(a6),d3
+ bne .failed
+ cmp.w 54(a6),d6
+ bne .failed
+ bra .passed
+.native_state:
+ tst.w 52(a6)
+ bne .failed
+ cmp.w #$1234,54(a6)
+ bne .failed
+.passed:
+ lea sim_physics_passed(pc),a0
+ addq.l #1,(a0)
+ addq.w #1,d7
+ cmp.w #5,d7
+ blt .tick
+ lea 22(a2),a2
+ dbra d4,.case
+ addq.w #2,d5
+ cmp.w #6,d5
+ blt .mode
+ clr.l 52(a6)
+ lea sim_a4000_spin_step_calls(pc),a0
+ clr.l (a0)
+ moveq #0,d0
+ bra .done
+.failed:
+ moveq #1,d0
+.done:
+ movem.l (sp)+,d1-a6
+ rts
+ even
+sim_spin_test_frame: dc.l 0,0,0
+; Nominal, five expected displacements, five expected fifths remainders.
+sim_spin_hook_cases:
+ dc.w 0,0,0,0,0,0,0,0,0,0,0
+ dc.w 1,0,0,1,0,1,2,4,1,3,0
+ dc.w -1,0,0,-1,0,-1,-2,-4,-1,-3,0
+ dc.w 7,2,3,3,3,3,4,3,2,1,0
+ dc.w -7,-2,-3,-3,-3,-3,-4,-3,-2,-1,0
+ dc.w 1023,409,409,409,409,410,1,2,3,4,0
+ dc.w -1023,-409,-409,-409,-409,-410,-1,-2,-3,-4,0
+ dc.w 32767,13106,13107,13107,13107,13107,4,3,2,1,0
+ dc.w -32768,-13107,-13107,-13107,-13107,-13108,-1,-2,-3,-4,0
  ENDC
