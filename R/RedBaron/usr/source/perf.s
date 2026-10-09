@@ -29,6 +29,9 @@ perf_read_options:
 ; a1 = relocated sim hunk 0, a2 = resload. Preserve the loader's registers.
 ; Add each validated installer here, gated on its own perf_mask bit.
 perf_install_v1:
+	IFD VERIFY
+	bsr verify_copy_originals
+	ENDC
 	rts
 
 ; Check a non-relocated hook range before installing it.

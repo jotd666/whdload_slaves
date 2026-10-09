@@ -192,3 +192,25 @@ The straight 50 MHz 68030 fixture subsequently completed a clean 800-swap window
 over 2,613 fields. An earlier short segment was rejected after a debugger transport
 error (`Invalid hex digit`), rather than treated as mission completion. The valid
 window is separate and starts at the following flight-step checkpoint.
+
+## Original-code and mirror-model references
+
+VERIFY now copies the relocated original bodies at `sim:304d0` (162 bytes),
+`sim:38c82` (330 bytes) and `sim:39df2` (218 bytes) before the performance installer
+can modify them. No game bytes are embedded in source. All three live copies were
+checked byte-for-byte against the original loaded bodies. Static examination found
+no PC-relative reference outside each copied range; absolute data and callback
+references continue to use the game context. Future twins must still isolate their
+output buffers and callback state. The copies alone are not completed twins.
+
+`mirror_model.py` has independent bit-loop and byte-table paths. Host tests cover
+all 65,536 words with both initial low-bit states of the LSR/ROXL accumulator, and
+4/5-plane bitmaps at width/height boundaries including nonzero padding bits. Masks
+are regenerated as OR(planes) with a zero extra word on each row.
+
+One complete live original call was stopped at entry and immediately before RTS: a
+168×102 five-plane dashboard matched both the bitmap and mask model exactly. All
+general registers and SP matched their entry values. SR changes in the original,
+so it is recorded separately rather than incorrectly required to be preserved.
+This validates the model against an original call; replacement assembly and live
+replacement twins remain future gates.

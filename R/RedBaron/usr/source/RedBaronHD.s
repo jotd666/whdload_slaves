@@ -550,5 +550,6 @@ new_DeleteFile:
 	even
 	include "perf.s"
 	IFD VERIFY
+	include "originals.s"
 	include "tape.s"
 	ENDC
