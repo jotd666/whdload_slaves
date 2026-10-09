@@ -104,6 +104,7 @@ tape_task_code:
  move.l #ie_SIZEOF,IO_LENGTH(a1)
  jsr _LVODoIO(a6)
  bsr tape_graphics
+ bsr tape_simulation
  lea tape_frames(pc),a0
  clr.l (a0)
  lea tape_configured(pc),a0
@@ -120,13 +121,41 @@ tape_task_code:
 
 ; Use the game's Ctrl-G command after entering the cockpit.
 tape_graphics:
+ moveq #0,d3
  lea tape_graphics_keys(pc),a3
+ bra.s tape_menu_keys
+tape_simulation:
+ move.l tape_a4(pc),a0
+ cmp.w #10,-$bc(a0)
+ beq.s .done
+ lea tape_dialog_ready(pc),a0
+ clr.l (a0)
+ moveq #1,d3
+ lea tape_simulation_keys(pc),a3
+ bra.s tape_menu_keys
+.done:
+ rts
+tape_menu_keys:
 .next:
  move.w (a3)+,d2
  beq.s .done
  lea tape_event(pc),a0
  move.w (a3)+,ie_Code(a0)
  move.w (a3)+,ie_Qualifier(a0)
+ ; The menu skips checked entries. When FULL is already checked (notably on
+ ; 68020), Return would select the next level and reduce detail.
+ cmp.w #RAW_RETURN,ie_Code(a0)
+ bne.s .send
+ move.l tape_a4(pc),a1
+ tst.w d3
+ bne.s .normal_before
+ tst.b -$7708(a1)
+ beq.s .next
+ bra.s .send
+.normal_before:
+ cmp.w #10,-$bc(a1)
+ beq.s .next
+.send:
  lea tape_io(pc),a1
  jsr _LVODoIO(a6)
 .wait:
@@ -135,9 +164,22 @@ tape_graphics:
  exg a5,a6
  lea tape_event(pc),a0
  cmp.w #$24,ie_Code(a0)
- bne.s .timed
+ bne.s .selection
  move.l tape_dialog_ready(pc),d0
  bne.s .next
+ bra.s .timed
+.selection:
+ cmp.w #RAW_RETURN,ie_Code(a0)
+ bne.s .timed
+ move.l tape_a4(pc),a0
+ tst.w d3
+ bne.s .normal_after
+ tst.b -$7708(a0)
+ beq.s .next
+ bra.s .timed
+.normal_after:
+ cmp.w #10,-$bc(a0)
+ beq.s .next
 .timed:
  subq.w #1,d2
  bne.s .wait
@@ -149,12 +191,28 @@ tape_graphics_keys:
  dc.w 5000,$24,IEQUALIFIER_CONTROL
  dc.w 5,$a4,IEQUALIFIER_CONTROL
  dc.w 200,$e3,0
- dc.w 30,$44,0
+ dc.w 5000,$44,0
  dc.w 100,$c4,0
  dc.w 20,$45,0 ; Escape closes the dialog
  dc.w 50,$c5,0
  dc.w 0
 
+; FULL is checked, so the dialog starts on entry 1. Four cursor-down presses
+; reach Normal (entry 5). This sequence is only needed for the 68020 default.
+tape_simulation_keys:
+ dc.w 5,$63,IEQUALIFIER_CONTROL
+ dc.w 5000,$24,IEQUALIFIER_CONTROL
+ dc.w 5,$a4,IEQUALIFIER_CONTROL
+ dc.w 200,$e3,0
+ REPT 4
+ dc.w 10,$4d,0
+ dc.w 30,$cd,0
+ ENDR
+ dc.w 5000,$44,0
+ dc.w 100,$c4,0
+ dc.w 20,$45,0
+ dc.w 50,$c5,0
+ dc.w 0
 
  CNOP 0,4
  dc.b "4DTAPE!!"
