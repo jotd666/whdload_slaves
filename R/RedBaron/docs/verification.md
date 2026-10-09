@@ -214,3 +214,12 @@ general registers and SP matched their entry values. SR changes in the original,
 so it is recorded separately rather than incorrectly required to be preserved.
 This validates the model against an original call; replacement assembly and live
 replacement twins remain future gates.
+
+## Fast-CPU DMA visibility limitation
+
+The retained 50 MHz 68030 DMA-only follow-up has ten fields, each with 20,000
+bitplane word fetches. The selected framebuffer changes twice. However, the saved
+configuration disables blitter cycle accuracy and the log contains no blitter DMA
+records. An empty list of conflicting writes is therefore **unobservable**, not a
+tear-free pass. P1 still requires the first-draw observer and display-ownership check
+specified by W0.4. CPU cycle accuracy alone is insufficient to validate that check.

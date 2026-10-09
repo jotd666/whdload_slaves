@@ -78,6 +78,13 @@ tearing diagnosis. Swap and subsequent input-observer clocks agree in 798 cases;
 one crosses a CIA tick and one crosses a VBlank. A separate earlier segment that
 stopped on a debugger transport error is excluded.
 
+The retained 68030 configuration has CPU and CPU-memory cycle accuracy enabled,
+but **blitter cycle accuracy disabled**. Its ten-field DMA-only follow-up contains
+bitplane fetches and CPU records, but no blitter DMA records. The 15.28 fps number
+therefore describes that emulator configuration; the absent blitter records cannot
+be interpreted as evidence of no writes into the displayed buffer. The fast-CPU
+tearing check and explicit cache-state verification remain open.
+
 Rates use the emulator's measured PAL rate of 49.92041 fields/s. The A500-equivalent
 run uses the pre-framework VERIFY build; the 68020 run uses the option-framework build
 with no performance patch installed. These are **not** a same-build optimization A/B.
