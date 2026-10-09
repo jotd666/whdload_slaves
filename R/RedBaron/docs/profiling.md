@@ -1,8 +1,39 @@
-# Red Baron: 250-field flight profile
+# Red Baron performance measurements
+
+## Current W1 measurements (verification in progress)
+
+W1a (table mirror) and W1b (chip mirror cache) are implemented for developer/VERIFY
+builds. Normal release enablement remains off until the full matrix and correctness
+gates pass. These controlled runs share one VERIFY image and identical native
+pre-flight setup; only CUSTOM2 changes. See `w1-verification.md` for the contracts
+and evidence. Sound and game-time behavior are unchanged.
+
+| Machine / event-free swap window | OFF fps | W1a fps | W1a+W1b fps |
+| --- | ---: | ---: | ---: |
+| A500-equivalent, 8–108 | 1.880 | 1.878 | 1.876 |
+| 14 MHz 68020, 80–400 | 6.154 | 6.151 | 5.996 |
+| Cached 50 MHz 68030 | Pending | Pending | Pending |
+
+Every reported interval spans at least 2,000 PAL fields. The A500 step-8 states
+match exactly; its steady window stays clamped. The 68020 starts from identical
+state but enters variable dt, so equal-step world/scene states later diverge.
+Its lower cache-on steady rate is retained in the table; this comparison alone
+does not identify the cause. W1 targets dashboard events, not steady geometry.
+
+| Opening mirror sample | OFF main cycles/call | W1a main cycles/call |
+| --- | ---: | ---: |
+| A500-equivalent, two complete calls each | 1,921,245 mean | 692,241 mean |
+| 14 MHz 68020, one complete call each | 809,072 | 649,716 |
+
+W1b removes in-place dashboard mirrors. Cold-build and later cache-hit costs are
+reported separately below as available. These are provisional measured rows;
+the cached-CPU and remaining scene gates are still in progress.
+
+## Original 250-field profile
 
 Captured 2026-10-09. Source baseline: `1904205` (`redbaron`).
 
-## Findings
+## Original findings
 
 The original mixed window contains cockpit redraw events and steady flight. The large
 `sim:304d0` hotspot is the **EDASH-B dashboard bitmap**, mirrored twice per redraw. A cockpit
@@ -725,3 +756,31 @@ step-8 h3 snapshot matches the measured OFF run exactly. The full census reaches
 step 358 with 18 mirrors, 35 message calls and 11 dirty triggers; late-flight
 tracking-regime event counts are not expected to be identical. These A500 rows
 are provisional until the required three-machine matrix is complete.
+
+The A500 W1a+W1b census also reaches step 358, with **zero entries to the game's
+mirror routine**, 35 message calls and 11 dirty triggers. The initial two dashboard
+draws cost **1,149,754 cycles** for the mirrored side (including its one-time cache
+build) and **86,202 cycles** for the ordinary side. These must not be reported as
+hot-cache lookup costs. The corresponding original draws cost 2,005,374 and
+1,988,400 cycles. Swap 8–108 takes **2,661 fields: 1.876 fps**, with no events;
+the step-8 h3 state still matches OFF exactly.
+
+On the 14 MHz 68020, OFF and W1a also have identical complete entry snapshots.
+The opening traces each retain one complete mirror: **809,072 cycles OFF** and
+**649,716 with W1a**. A call crossing the capture boundary is excluded. Event-free
+swap 80–400 takes **2,596 fields (6.154 fps) OFF** and **2,597 fields (6.151 fps)
+with W1a**. Both intervals exceed 2,000 fields. Their dt values range from 248 to
+450, so later equal-step state equality is not a correctness requirement.
+
+All retained A500 event/steady chunks for masks 0, 1 and 3, and the completed
+68020 event/steady chunks for masks 0 and 1, have observable blitter writes and
+**zero active-display write conflicts**. This is scoped to those recorded windows,
+not a universal tear-free guarantee. The cached 68030 and remaining scene checks
+are still pending.
+
+The 68020 W1a+W1b run also starts with an identical h3 snapshot and reaches
+flight exit at step 516 with no in-place mirror calls. Event-free swap 80–400
+spans **2,664 fields (5.996 fps)**, with dt values 279–450. This is lower than
+the OFF result and must not be described as a steady-flight gain. The changed
+frame timing alters the subsequent world trajectory, so an equal-step FPS
+comparison does not isolate code overhead on this tracking-regime machine.

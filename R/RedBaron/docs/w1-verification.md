@@ -182,6 +182,28 @@ and `w1-deferred-step-control-0`. The new VERIFY text is 34,332 bytes, SHA-256
 The W1b run has an active 13,668-byte dashboard cache at step 8, confirming activation.
 The complete performance matrix remains in progress.
 
+## Completed controlled A500 and 68020 primary cases
+
+The OFF, W1a and W1a+W1b primary cases are complete on both machines, using
+VERIFY SHA-256 `99c490efbde1b312d42c77ffeb3b7d348cacb6364b402fa9d15803765485d313`.
+All six boot configurations and binaries are retained. Each case includes an
+opening event trace, a step-8 steady trace, equal-step h3 snapshots and a separate
+fresh-boot census beginning at the exact flight checkpoint. The census has no
+initial screenshot gap and reaches the guarded flight exit with every step retained.
+
+All three A500 step-8 snapshots match exactly. All three 68020 entry snapshots
+match exactly; OFF and cache-on still match at step 8. The 68020 later enters
+different dt histories: at steps 17–20 OFF has dt=450, while cache-on has 341.
+Its step-20 h3 snapshots differ in 733 bytes. This is not a clamped equal-state
+comparison, and those differences are not substituted for twin correctness checks.
+
+The OFF retained snapshots pass all three disabled-range checks on both machines;
+W1a-only snapshots pass both cache-hook checks. All primary event/steady DMA chunks
+on these two machines have observable blitter writes and zero active-display
+write conflicts. These window-scoped findings do not make a universal tear-free
+claim. Current costs, rates and the lower observed 68020 cache-on steady rate are
+recorded in `profiling.md`.
+
 ## Remaining W1 gates
 
 - Finish off/on measurements across the required windows and all three CPUs,
