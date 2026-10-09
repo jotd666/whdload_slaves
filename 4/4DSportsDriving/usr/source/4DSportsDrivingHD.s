@@ -180,6 +180,9 @@ patch_main
 	lea tape_game(pc),a0
 	move.l d7,(a0)
 	addq.l #4,(a0)
+	IFD SIM_A4000
+	bsr sim_a4000_prepare
+	ENDC
 	IFD SIM_PHYSICS
 	bsr sim_physics_selftest
 	ENDC
@@ -273,6 +276,12 @@ pl_main
     PL_P $1033A,sim_a4000_steering
     PL_PSS $C326,sim_a4000_distance,26
     PL_PSS $F60C,sim_a4000_acceleration,10
+    PL_PSS $F29E,sim_a4000_gear38,66
+    PL_PSS $F310,sim_a4000_gear34,66
+    PL_PSS $F36E,sim_a4000_gear_middle,66
+    PL_PSS $CB48,sim_a4000_wheel,142
+    PL_PSS $CC9E,sim_a4000_wheel_contact,2
+    PL_PSS $D1B0,sim_a4000_wheel_contact,2
     ENDC
     IFD SIM_SCHEDULE
     PL_PSS $70E0,sim_schedule_poll,2

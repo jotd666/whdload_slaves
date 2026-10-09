@@ -57,10 +57,27 @@ sim_probe_records:
 
  IFD SIM_FIXTURE
 ; Deterministic consumer-side input fixture, VERIFY only. This is deliberately
-; not a production input scheduler. Samples the first 3.2 game seconds at 10 Hz.
+; not a production input scheduler. Default: first 3.2 seconds at 10 Hz;
+; configurable sample count/cadence permits longer gear/contact coverage.
 ; Snapshots are raw native replay state; compare and classify differences before
 ; selecting a semantic manifest. No fields are masked here.
+ IFND SIM_FIXTURE_SAMPLES
 SIM_FIXTURE_SAMPLES = 32
+ ENDC
+ IFGT SIM_FIXTURE_SAMPLES-64
+ FAIL "SIM_FIXTURE_SAMPLES must be 1..64"
+ ENDC
+ IFLE SIM_FIXTURE_SAMPLES
+ FAIL "SIM_FIXTURE_SAMPLES must be 1..64"
+ ENDC
+ IFND SIM_FIXTURE_SAMPLE_HZ
+SIM_FIXTURE_SAMPLE_HZ = 10
+ ENDC
+ IFNE SIM_FIXTURE_SAMPLE_HZ-5
+ IFNE SIM_FIXTURE_SAMPLE_HZ-10
+ FAIL "SIM_FIXTURE_SAMPLE_HZ must be 5 or 10"
+ ENDC
+ ENDC
 SIM_FIXTURE_STATE_SIZE = $460
  IFD SIM_A4000
 SIM_FIXTURE_RECORD_SIZE = SIM_FIXTURE_STATE_SIZE+10+SIM_PRIVATE_BYTES
@@ -80,6 +97,11 @@ sim_fixture_before:
  tst.b -$68b(a4)
  bne .done
  move.w #1,(a0)
+ IFD SIM_FIXTURE_DROP
+ ; Synthetic initial pose for airborne/contact coverage. Native physics handles
+ ; the fall; 1024 position units is small enough to test an ordinary landing.
+ add.l #1024,-$92a(a4)
+ ENDC
  IFD SIM_A4000
  IFND SIM_A4000_NATIVE
  bsr sim_a4000_arm
@@ -105,13 +127,28 @@ sim_fixture_before:
  bhi .input
  moveq #1,d1
 .input:
+ IFD SIM_FIXTURE_GEARS
+ ; One native upshift input at 0.5s, one downshift at 2.0s.
+ move.w -$15fa(a4),d0
+ lsr.w #1,d0
+ cmp.w -$940(a4),d0
+ bne .not_up
+ or.b #$10,d1
+.not_up:
+ move.w -$15fa(a4),d0
+ add.w d0,d0
+ cmp.w -$940(a4),d0
+ bne .not_down
+ or.b #$20,d1
+.not_down:
+ ENDC
  moveq #0,d0
  move.w -$940(a4),d0
  move.l -$1770(a4),a1
  move.b d1,(a1,d0.l)
  ; Capture BEFORE the native update: sample 0 is the untouched initial state.
  move.w -$15fa(a4),d1
- divu #10,d1
+ divu #SIM_FIXTURE_SAMPLE_HZ,d1
  divu d1,d0
  swap d0
  tst.w d0

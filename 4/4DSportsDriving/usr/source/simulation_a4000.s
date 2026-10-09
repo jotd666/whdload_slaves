@@ -22,7 +22,7 @@ sim_a4000_arm:
  rts
 
 ; a1 vehicle -> a0 private block; no stored pointer is part of replay state.
-; steering +0, acceleration +2, distance +4; other fractions reserved.
+; steering +0, acceleration +2, distance +4, gear +6, wheel pairs +8..23.
 sim_a4000_car:
  lea -$85e(a4),a0
  cmpa.l a0,a1
@@ -117,7 +117,146 @@ sim_a4000_steering:
  movem.l (sp)+,d2-d3
  unlk a5
  rts
+
+; These displaced blocks have only internal relative branches and A4-relative
+; calls. Copy before patching; the original fallthrough becomes the buffer RTS.
+sim_a4000_prepare:
+ move.l tape_game(pc),a0
+ adda.l #$f29e,a0
+ lea sim_native_gear38(pc),a1
+ moveq #72/2-1,d0
+ bsr .copy
+ move.l tape_game(pc),a0
+ adda.l #$f310,a0
+ lea sim_native_gear34(pc),a1
+ moveq #72/2-1,d0
+ bsr .copy
+ move.l tape_game(pc),a0
+ adda.l #$f36e,a0
+ lea sim_native_gear_middle(pc),a1
+ moveq #72/2-1,d0
+ bsr .copy
+ move.l tape_game(pc),a0
+ adda.l #$cb48,a0
+ lea sim_native_wheel(pc),a1
+ moveq #148/2-1,d0
+ bsr .copy
+ move.l _resload(pc),a2
+ jsr resload_FlushCache(a2)
+ rts
+.copy:
+ move.w (a0)+,(a1)+
+ dbra d0,.copy
+ rts
+
+sim_a4000_gear38:
+ cmp.w #50,-$15fa(a4)
+ bne sim_native_gear38
+ movem.l d1-d2/a0-a2,-(sp)
+ move.l 12(a5),a1
+ bsr sim_a4000_car
+ addq.l #6,a0
+ lea $38(a1),a2
+ move.w $3c(a1),d1
+ bra sim_a4000_gear_apply
+sim_a4000_gear34:
+ cmp.w #50,-$15fa(a4)
+ bne sim_native_gear34
+ movem.l d1-d2/a0-a2,-(sp)
+ move.l 12(a5),a1
+ bsr sim_a4000_car
+ addq.l #6,a0
+ lea $34(a1),a2
+ move.w $3a(a1),d1
+ bra sim_a4000_gear_apply
+sim_a4000_gear_middle:
+ cmp.w #50,-$15fa(a4)
+ bne sim_native_gear_middle
+ movem.l d1-d2/a0-a2,-(sp)
+ move.l 12(a5),a1
+ bsr sim_a4000_car
+ addq.l #6,a0
+ lea $38(a1),a2
+ move.l 16(a5),a1
+ move.w $1e(a1),d1
+sim_a4000_gear_apply:
+ lea sim_a4000_gear_calls(pc),a1
+ addq.l #1,(a1)
+ move.w (a2),d0
+ moveq #6,d2
+ bsr sim_approach_50
+ move.w d0,(a2)
+ movem.l (sp)+,d1-d2/a0-a2
+ rts
+
+; Four wheel pairs per car at private +8 (velocity/position words each).
+sim_a4000_wheel:
+ cmp.w #50,-$15fa(a4)
+ bne sim_native_wheel
+ movem.l d0-d4/a0-a2,-(sp)
+ lea sim_a4000_wheel_calls(pc),a0
+ addq.l #1,(a0)
+ moveq #0,d3
+ move.b -3(a5),d3
+ move.l 8(a5),a1
+ bsr sim_a4000_car
+ addq.l #8,a0
+ move.w d3,d0
+ lsl.w #2,d0
+ adda.w d0,a0
+ add.w d3,d3
+ lea $4c(a1),a2
+ adda.w d3,a2
+ lea -$73fc(a4),a1
+ move.w (a1,d3.w),d1
+ move.l -$e6(a5),a1
+ addq.l #4,a1
+ move.w (a2),d0
+ bsr sim_airborne_pair_50
+ move.w d0,(a2)
+ movem.l (sp)+,d0-d4/a0-a2
+ rts
+
+; Both native wheel-velocity zeroing sites: $CC9E and $D1B0, eight bytes.
+; d0.l is twice the wheel index. Preserve incoming X, then replay MOVEA/CLR.
+sim_a4000_wheel_contact:
+ cmp.w #50,-$15fa(a4)
+ bne .native
+ movem.l d0-d2/a0-a1,-(sp)
+ moveq #0,d2
+ addx.b d2,d2
+ move.w d2,-(sp)
+ lea sim_a4000_contact_calls(pc),a0
+ addq.l #1,(a0)
+ move.l 8(a5),a1
+ bsr sim_a4000_car
+ add.w d0,d0
+ lea 8(a0),a0
+ clr.l (a0,d0.w)
+ move.w (sp)+,d2
+ lsr.b #1,d2
+ movem.l (sp)+,d0-d2/a0-a1
+.native:
+ move.l 8(a5),a0
+ clr.w $4c(a0,d0.l)
+ rts
+
+sim_native_gear38: dcb.w 72/2,0
+ rts
+sim_native_gear34: dcb.w 72/2,0
+ rts
+sim_native_gear_middle: dcb.w 72/2,0
+ rts
+sim_native_wheel: dcb.w 148/2,0
+ rts
  even
  dc.b "4DA4PHYS"
  dc.w 1,SIM_PRIVATE_BYTES
 sim_a4000_private: dcb.b SIM_PRIVATE_BYTES,0
+
+ even
+ dc.b "4DA4STAT"
+ dc.w 1,3
+sim_a4000_gear_calls: dc.l 0
+sim_a4000_wheel_calls: dc.l 0
+sim_a4000_contact_calls: dc.l 0
