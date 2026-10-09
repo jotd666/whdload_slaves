@@ -1,7 +1,7 @@
 ; Optional rendering changes. All game hooks are absent with CUSTOM2 bit 0 off.
 ; The original game remains the reference for every replacement.
 ; PERF_MASK test-build bits: 1=BLIT IRQ, 2=vertices, 4=emit, 8=backface,
-; 16=parent rotation. Keep new routines out of the default until validation.
+; 16=parent rotation, 32=state clear, 64=primitive depth/header. Keep new routines out of the default until validation.
  IFND PERF_MASK
 PERF_MASK = 1
  ENDC
@@ -18,6 +18,7 @@ perf_init:
  movem.l (sp)+,d0/a0
  bsr perf_geometry_init
  bsr perf_math_init
+ bsr perf_bookkeeping_init
  rts
 
 perf_patch:
@@ -28,6 +29,17 @@ perf_patch:
  lea pl_perf(pc),a0
  move.l _resload(pc),a2
  jsr resload_Patch(a2)
+ IFNE PERF_MASK&32
+ ; The longword clear only wins on the measured 68000. Faster CPUs keep
+ ; the original byte loop, including its flags and registers.
+ move.l perf_attnflags(pc),d0
+ btst #0,d0 ; AFB_68010: set for 68010 and later processors
+ bne.s .done
+ move.l perf_game(pc),a1
+ lea pl_perf_clear(pc),a0
+ move.l _resload(pc),a2
+ jsr resload_Patch(a2)
+ ENDC
 .done:
  rts
 
@@ -61,7 +73,22 @@ pl_perf:
  ENDC
  PL_NOP $a75c,2 ; PERF_RANGE h0:0a75c 2 bit=0
  ENDC
+ IFNE PERF_MASK&64
+ PL_P $20c8,perf_epilogue ; PERF_RANGE h0:020c8 6 bit=0
+ PL_NOP $20ce,2 ; PERF_RANGE h0:020ce 2 bit=0
+ ENDC
  PL_END
+
+ IFNE PERF_MASK&32
+pl_perf_clear:
+ PL_START
+ IFD PERF_TWIN
+ PL_PS $fc6,book_twin_clear ; PERF_RANGE h0:00fc6 6 bit=0
+ ELSE
+ PL_PS $fc6,perf_clear_body ; PERF_RANGE h0:00fc6 6 bit=0
+ ENDC
+ PL_END
+ ENDC
 
  ; Restrict suppression to owned blitter intervals inside primitive drawing.
 perf_draw_enter:
@@ -171,4 +198,9 @@ perf_blit_windows: dc.l 0
  include "math.s"
  IFD PERF_TWIN
  include "math_verify.s"
+ ENDC
+
+ include "bookkeeping.s"
+ IFD PERF_TWIN
+ include "bookkeeping_verify.s"
  ENDC

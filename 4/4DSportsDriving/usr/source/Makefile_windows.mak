@@ -8,6 +8,6 @@ SOURCE = $(PROGNAME)HD.s
 
 all :  $(WHDLOADER)
 
-$(WHDLOADER) : $(SOURCE) driving_tape.s performance.s geometry.s geometry_verify.s math.s math_verify.s math_cases.i
+$(WHDLOADER) : $(SOURCE) driving_tape.s performance.s geometry.s geometry_verify.s math.s math_verify.s math_cases.i bookkeeping.s bookkeeping_verify.s bookkeeping_cases.i
 	$(WDATE)
 	$(VASM) -o $(WHDLOADER) $(SOURCE)

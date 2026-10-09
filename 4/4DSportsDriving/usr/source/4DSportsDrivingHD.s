@@ -399,6 +399,8 @@ _custom1	dc.l	0
 _custom2	dc.l	0
 		dc.l	WHDLTAG_CUSTOM5_GET
 _custom5	dc.l	0
+		dc.l	WHDLTAG_ATTNFLAGS_GET
+perf_attnflags	dc.l	0
 		dc.l	0
 
 ;============================================================================
