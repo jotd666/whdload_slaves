@@ -204,6 +204,42 @@ write conflicts. These window-scoped findings do not make a universal tear-free
 claim. Current costs, rates and the lower observed 68020 cache-on steady rate are
 recorded in `profiling.md`.
 
+## Fallback invalidation regression and correction
+
+Review found that unsupported orientation bits and failed cache eligibility tests
+could continue through the original mirror path while retaining a cache entry.
+That path can mutate the game bitmap, so a later eligible draw must not reuse the
+old mirrored copy. Both exits now use the existing conservative invalidation path.
+Only a nonvertical, same-orientation fallback can retain the entry.
+
+The lifecycle fixture accepts assembler-only `VERIFY_CACHE_PROBE_FLAGS` and
+`VERIFY_CACHE_PROBE_RESULT` constants. Defaults are 1/1 (the existing vertical
+probe) and emit exactly the same bytes. A 6/2 build sends an unsupported request
+through the actual draw hook; a 2/2 build exercises the small-bitmap eligibility
+failure. Private bitmap storage and clipping keep these probes off the visible
+framebuffer. The verifier requires invalidation before rebuilding the real entry.
+
+`w1-fallback-extra-before` reproduces the old failure, stopping before Abort with
+an allocated cache, four completed build twins and no lifecycle completion.
+After correction, `w1-fallback-extra-after` and `w1-fallback-small-after` both
+reach step 2 with five build twins, one pixel twin and a completed lifecycle
+probe. The unsupported-flags run also retains 65,536 word checks, 64 synthetic
+mirror twins and seven live mirror twins on A500-equivalent memory.
+
+The corrected default VERIFY SHA-256 is
+`5c0918ccbccb27ad301478873e1aeab8398f057211b2749ce7d16fe949f23475`.
+Its size and layout are unchanged: only two conditional-branch displacement bytes
+differ from the primary measurement build. The retained A500 cache-on traces
+observe the unsupported-flags branch 110 times and the failed-lookup branch once;
+the 68020 counts are 123 and one. Neither branch is taken. This audit uses the
+preceding AND/TST data operands because UAE's stored SR can contain stale lazy
+condition flags. There is no instruction-level audit claim for the cached 68030.
+Keep the primary measurements attributed to their retained build; remaining scene
+and whole-call timing runs use the corrected image.
+
+All 33 host checks and the three-range hook audit pass after correction. Normal
+and developer text sizes remain 7,198 and 7,370 bytes.
+
 ## Remaining W1 gates
 
 - Finish off/on measurements across the required windows and all three CPUs,

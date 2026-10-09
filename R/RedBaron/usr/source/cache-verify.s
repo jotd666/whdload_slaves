@@ -200,6 +200,14 @@ cache_verify_header:
 	dc.l 1,0,0,0
 
 
+; Alternate VERIFY-only builds test otherwise unsupported fallback requests.
+; Default values retain the ordinary vertical lifecycle probe byte-for-byte.
+	IFND VERIFY_CACHE_PROBE_FLAGS
+VERIFY_CACHE_PROBE_FLAGS = 1
+	ENDC
+	IFND VERIFY_CACHE_PROBE_RESULT
+VERIFY_CACHE_PROBE_RESULT = 1
+	ENDC
 ; CUSTOM5 bit 8: exercise actual free/draw hooks once with private fixtures.
 ; No debugger target writes, and no game-owned allocation is freed by the probe.
 cache_lifecycle_test:
@@ -257,7 +265,7 @@ cache_lifecycle_test:
 	beq mirror_verify_fail
 	cmp.l cache_state(pc),a0
 	bne mirror_verify_fail
-	; A tiny vertically flipped bitmap must drop the unrelated live cache too.
+	; A tiny bitmap exercises vertical or alternate fallback invalidation.
 	move.l mirror_depth_ptr(pc),a0
 	moveq #0,d0
 	move.w (a0),d0
@@ -292,7 +300,7 @@ cache_lifecycle_test:
 	move.w #199,(a0)+
 	move.l #32760,d0
 	move.l d0,d1
-	moveq #1,d2
+	moveq #VERIFY_CACHE_PROBE_FLAGS,d2
 	lea cache_lifecycle_descriptor(pc),a0
 	bsr cache_lifecycle_draw
 	move.l cache_lifecycle_clip(pc),a0
@@ -303,7 +311,7 @@ cache_lifecycle_test:
 	dbf d0,.restore_clip
 	bsr cache_lifecycle_empty
 	lea cache_lifecycle_descriptor(pc),a0
-	cmp.w #1,16(a0)
+	cmp.w #VERIFY_CACHE_PROBE_RESULT,16(a0)
 	bne mirror_verify_fail
 	move.l 4(a5),a1
 	move.l 8(a5),d0

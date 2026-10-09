@@ -48,9 +48,9 @@ cache_draw:
 	move.w d2,d3
 	or.w 16(a0),d3
 	btst #0,d3
-	bne .vertical
+	bne .invalidate
 	and.w #$fffc,d3
-	bne .fallback
+	bne .invalidate
 	move.w d2,d3
 	move.w 16(a0),d4
 	eor.w d4,d3
@@ -58,7 +58,7 @@ cache_draw:
 	beq .fallback
 	bsr cache_get
 	tst.l d0
-	beq .fallback
+	beq .invalidate
 	IFD VERIFY
 	btst #0,perf_custom5+2(pc)
 	beq.b .no_lifecycle
@@ -105,8 +105,9 @@ cache_draw:
 	move.l d0,60(sp)
 	movem.l (sp)+,d0-a6
 	rts
-.vertical
-	; Conservative single-entry policy: drop on any vertical draw request.
+.invalidate
+	; An unsupported fallback can mutate orientation/planes in the original.
+	; Drop conservatively, including vertical requests and rejected cache inputs.
 	bsr cache_drop
 .fallback
 	movem.l (sp)+,d0-a6
