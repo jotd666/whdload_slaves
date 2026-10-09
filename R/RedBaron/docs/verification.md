@@ -96,3 +96,30 @@ It applies only to sim v1 and preserves the destination width and condition-code
 of the original read. With this change the two 100-field captures matched exactly,
 without filtering differing records. Normal and DEVELOPER builds retain the original
 mouse read. This is a test-input control, not a rendering optimization.
+
+## Shipped/rebuilt opening comparison
+
+The unmodified rebuilt slave and shipped 2.1 slave both reach the main menu without
+the keyboard tape. Each run starts from reset with a read-only breakpoint armed at
+`ps:15b3a`, advances to its 1001st crossing, then records 100 PAL fields.
+
+The visible 640×400 menu pixels match exactly. All 40,000 bytes fetched by bitplane
+DMA in the last two fields also match. Raw screenshots differ outside the game image,
+so their file hashes alone are not an equivalence test.
+
+The post-capture chip dumps differ in 2,011 bytes: 647 in the low-memory page (including
+exception vectors that point into the differently assembled slave/KickEmu), 31 outside
+the displayed bitplanes, and 1,333 in a separate region with sample-like contents. None
+of these bytes were fetched by bitplane DMA in the final two fields. The latter two
+regions still need definitive ownership/phase classification before closing W0.1.
+This is a matching visible opening checkpoint, not a claim of full chip-RAM equality.
+
+## Swap beam positions
+
+The local `frames.py` now matches the actual 24 CPU word writes of the original
+`movem.l d2-d7/a1-a6,(a0)` at `sim:3154a` against DMA addresses and data. It reports
+first/last write beam slots; incomplete matches stay explicit. Summed instruction
+cycles are no longer presented as exact beam positions. At the initial event checkpoint
+of the reproducible 100-field capture, its one publication begins at line 14, horizontal
+slot 139 and ends at slot 185 of the same line. This single publication is insufficient
+to establish tear-free behaviour.

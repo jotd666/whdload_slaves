@@ -29,7 +29,7 @@ Use complete calls within a chunk for cycle costs, and the step/swap logs over a
 | Duration | 250 PAL fields, approximately 5 seconds |
 | Captures | 100 + 100 + 50 recorded fields, with one-field gaps at joins |
 | CPU | 68000, real CPU speed, CPU/memory/blitter cycle-exact settings enabled |
-| Memory | 1 MB chip + 2 MB fast; **not** an A500-equivalent memory baseline |
+| Memory | 1 MB chip + 2 MB fast + 512 KB slow (inherited A500 default); **not** an A500-equivalent memory baseline |
 | Boot | Kickstart 3.1 host, KickEmu 1.3 guest, WHDLoad 20.0 |
 | Game | `RedBaron_v2.1.lha`, supported v1 `sim` executable |
 | Slave | VERIFY build of the fork source |
