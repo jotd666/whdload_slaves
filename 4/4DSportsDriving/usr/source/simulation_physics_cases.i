@@ -187,6 +187,23 @@ sim_approach_cases:
  dc.w 0,10,1,4,1,1
  dc.w 0,-10,1,-4,-1,-1
  dc.w 10,11,6,-4,11,0
+ ; Bias (4) and suspension return (128): complete five-step rate sequences.
+ dc.w 10,0,4,0,9,-3
+ dc.w 9,0,4,-3,7,-1
+ dc.w 7,0,4,-1,6,-4
+ dc.w 6,0,4,-4,4,-2
+ dc.w 4,0,4,-2,2,0
+ dc.w -10,0,4,0,-9,3
+ dc.w 1,0,4,0,0,0
+ dc.w -1,0,4,0,0,0
+ dc.w 384,0,128,0,333,-1
+ dc.w 333,0,128,-1,282,-2
+ dc.w 282,0,128,-2,231,-3
+ dc.w 231,0,128,-3,180,-4
+ dc.w 180,0,128,-4,128,0
+ dc.w 30,0,128,-4,0,0
+ dc.w -384,0,128,0,-333,1
+ dc.w -30,0,128,4,0,0
 sim_approach_cases_end:
 sim_airborne_cases:
  dc.w 0,21,42,0

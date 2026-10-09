@@ -102,6 +102,14 @@ sim_fixture_before:
  ; the fall; 1024 position units is small enough to test an ordinary landing.
  add.l #1024,-$92a(a4)
  ENDC
+ IFD SIM_FIXTURE_SUSPENSION
+ ; Explicit synthetic preload exercises otherwise-zero suspension bias and
+ ; target approach. It is not a normal saved race state or a handling proof.
+ move.w #16,-$8c2(a4)
+ move.w #16,-$8c0(a4)
+ move.w #16,-$8be(a4)
+ move.w #16,-$8bc(a4)
+ ENDC
  IFD SIM_A4000
  IFND SIM_A4000_NATIVE
  bsr sim_a4000_arm

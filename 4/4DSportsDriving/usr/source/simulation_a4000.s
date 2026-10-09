@@ -23,7 +23,7 @@ sim_a4000_arm:
 
 ; a1 vehicle -> a0 private block; no stored pointer is part of replay state.
 ; steering +0, acceleration +2, distance +4, gear +6, wheel pairs +8..23.
-; Four suspension-extension fractions at +24..31.
+; Suspension fractions: extension +24..31, return +32..39, bias +40..47.
 sim_a4000_car:
  lea -$85e(a4),a0
  cmpa.l a0,a1
@@ -142,6 +142,16 @@ sim_a4000_prepare:
  lea sim_native_wheel(pc),a1
  moveq #148/2-1,d0
  bsr .copy
+ move.l tape_game(pc),a0
+ adda.l #$10030,a0
+ lea sim_native_suspension_bias(pc),a1
+ move.w #164/2-1,d0
+ bsr .copy
+ move.l tape_game(pc),a0
+ adda.l #$1011c,a0
+ lea sim_native_suspension_return(pc),a1
+ move.w #262/2-1,d0
+ bsr .copy
  move.l _resload(pc),a2
  jsr resload_FlushCache(a2)
  rts
@@ -243,6 +253,10 @@ sim_a4000_wheel_contact:
  clr.w $4c(a0,d0.l)
  rts
 
+sim_native_suspension_bias: dcb.w 164/2,0
+ rts
+sim_native_suspension_return: dcb.w 262/2,0
+ rts
 sim_native_gear38: dcb.w 72/2,0
  rts
 sim_native_gear34: dcb.w 72/2,0
@@ -258,10 +272,13 @@ sim_a4000_private: dcb.b SIM_PRIVATE_BYTES,0
 
  even
  dc.b "4DA4STAT"
- dc.w 1,3
+ dc.w 2,6
 sim_a4000_gear_calls: dc.l 0
 sim_a4000_wheel_calls: dc.l 0
 sim_a4000_contact_calls: dc.l 0
+sim_a4000_return_above_calls: dc.l 0
+sim_a4000_return_below_calls: dc.l 0
+sim_a4000_bias_calls: dc.l 0
 
 ; $10234..$10248 and $1024A..$10260, within native suspension $10012.
 ; Preserve its geometry/penetration branches and cap at extension 384. Both
@@ -300,4 +317,69 @@ sim_a4000_extension_apply:
  move.w d0,(a2)
  move.l a2,a0
  movem.l (sp)+,d0-d2/a1-a2
+ rts
+
+; $10030..$100D4: native bias moves toward zero by four units per call.
+; Private fractional state is per wheel and independent of extension/return.
+sim_a4000_suspension_bias:
+ cmp.w #50,-$15fa(a4)
+ bne sim_native_suspension_bias
+ movem.l d0-d2/a0-a2,-(sp)
+ move.l 8(a5),a1
+ bsr sim_a4000_car
+ move.w 14(a5),d0
+ add.w d0,d0
+ lea $6c(a1,d0.w),a2
+ lea 40(a0,d0.w),a0
+ move.w (a2),d0
+ beq .apply
+ lea sim_a4000_bias_calls(pc),a1
+ addq.l #1,(a1)
+.apply:
+ moveq #0,d1
+ moveq #4,d2
+ bsr sim_approach_50
+ move.w d0,(a2)
+ movem.l (sp)+,d0-d2/a0-a2
+ rts
+
+; $1011C..$10222: zero-clearance extension approaches bias by 128 per call.
+; Preserve the native asymmetric return value: only approach FROM ABOVE adds
+; old_extension-new_extension to local -2. The caller's geometry uses that
+; residual, so scaling its result a second time would be incorrect.
+sim_a4000_suspension_return:
+ cmp.w #50,-$15fa(a4)
+ bne sim_native_suspension_return
+ movem.l d0-d3/a0-a2,-(sp)
+ move.l 8(a5),a1
+ bsr sim_a4000_car
+ move.w 14(a5),d0
+ add.w d0,d0
+ lea $54(a1,d0.w),a2
+ move.w $6c(a1,d0.w),d1
+ lea 32(a0,d0.w),a0
+ move.w (a2),d0
+ move.w d0,d3
+ cmp.w d1,d3
+ beq .apply
+ blt .below
+ lea sim_a4000_return_above_calls(pc),a1
+ addq.l #1,(a1)
+ bra .apply
+.below:
+ lea sim_a4000_return_below_calls(pc),a1
+ addq.l #1,(a1)
+.apply:
+ move.w #128,d2
+ ; sim_approach_50 uses d1 as scratch: retain original target comparison.
+ move.w d1,-(sp)
+ bsr sim_approach_50
+ move.w (sp)+,d1
+ move.w d0,(a2)
+ cmp.w d1,d3
+ ble .done
+ sub.w d0,d3
+ move.w d3,-2(a5)
+.done:
+ movem.l (sp)+,d0-d3/a0-a2
  rts
