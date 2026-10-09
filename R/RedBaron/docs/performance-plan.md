@@ -5,7 +5,8 @@
 > 2 MB fast, maximum detail) and a static/trace analysis of that capture. **Read the
 > worktree's `AGENTS.md`, then `profiling.md`, then this file.** Every number is a
 > measurement from that capture unless marked *(est.)*; estimates must be replaced by
-> measurements before anything is claimed. No optimization exists yet.
+> measurements before anything is claimed. No optimization exists yet. The user's decisions
+> (2026-10-09) are in §6 and override any option discussed elsewhere.
 
 ## 0. Ground rules
 
@@ -471,6 +472,16 @@ voices *(est.)*; four voices could reach ~24% *(est.)*.
 
 ## 4. Work items, in order
 
+Order:
+1. W0 groundwork.
+2. W1 (the mirror), then W2 (geometry).
+3. W5 (tear-free swap and frame cap).
+4. W6, the frame-rate-independent game speed. Its investigation can run alongside W1–W2 once
+   the W0.6 observers exist.
+5. W4 and W7 later.
+
+W3 (sound) is deferred.
+
 ### W0. Groundwork (required before any patch)
 
 Most of this is the playbook's §12 "ready to improve" list, which Red Baron does not yet meet.
@@ -541,19 +552,21 @@ That decides how much of real play W1 removes, compared with W2.
   0, 40 and 60 to establish what "nominal" dt means in real time.
 
 **W0.7 Patch framework.**
-- **Interface version:** raise `slv_Version` to 17 and add `slv_config`, as `testdrive2` did,
-  or keep 16 and apply sublists from code (decision 1). `PL_IFCx` needs WHDLoad 17.2.
-- **CUSTOM reads:**
-  - read CUSTOM2 (patch mask) and CUSTOM5 (VERIFY instruments) with `resload_Control` before
-    the sim patch list is applied;
-  - read `WHDLTAG_ATTNFLAGS_GET` for the CPU.
+- **Interface version:** raise `slv_Version` to 17 and add `slv_config`, as `testdrive2` did.
+  This follows from decision 1: one splash-window switch, so the ReadMe requires WHDLoad 17+.
+  `PL_IFCx` needs WHDLoad 17.2.
+- **CUSTOM reads:** read these with `resload_Control` before the sim patch list is applied:
+  - CUSTOM2. In release builds any nonzero value selects every verified bit: this is the single
+    "faster rendering" switch. In developer/VERIFY builds it is the per-item mask below.
+  - CUSTOM5, the VERIFY instruments.
+  - `WHDLTAG_ATTNFLAGS_GET`, for the CPU.
 - **Version restriction:** apply performance sublists only in the v1 branch of
   `SIM_VERSION_TEST`.
 - **Byte checks:** at install time, verify the original non-relocated bytes of each hook range,
   and abort with `TDREASON_FAILMSG` on a mismatch (Legends of Valour's practice).
-- **Sound driver hooks:** confirm whether `amigasnd.drv` arrives through `LoadSeg`. If it does,
-  add an `am…` name test to `_cb_dosLoadSeg`. If it is read raw, hook the `sim` call that
-  starts it.
+- **Sound driver hooks:** not needed while sound is deferred (decision 4). Later, confirm
+  whether `amigasnd.drv` arrives through `LoadSeg`. If it does, add an `am…` name test to
+  `_cb_dosLoadSeg`; if it is read raw, hook the `sim` call that starts it.
 - **Builds:** add normal, `DEVELOPER` (individual switches) and `VERIFY` modes to
   `tmp/dev/tools/build.sh`, with separate outputs, and update `Makefile_windows.mak`.
 - **Checker tools:**
@@ -572,7 +585,8 @@ That decides how much of real play W1 removes, compared with W2.
   first check them against the original's traced calls, then against the replacement in the
   fixed window.
 
-**Proposed CUSTOM2 bit map** (for developer/VERIFY builds; release policy is decision 1):
+**Proposed CUSTOM2 bit map.** This is for developer/VERIFY builds. Release builds expose only
+the single switch (decision 1), which turns on every bit that has passed its verification.
 
 | Bit | Item | CPUs |
 |---|---|---|
@@ -583,11 +597,11 @@ That decides how much of real play W1 removes, compared with W2.
 | 4 | G3 vertex transform in registers | all |
 | 5 | G4 back-face dot product | 68000 code, 68020+ variant |
 | 6 | G5 + G6 face loop and object setup in registers | all |
-| 7 | S-sim: interrupt-side `sim` patches | all |
-| 8 | S-drv: driver patches | all |
-| 9 | D1 D-only fills | all |
-| 10 | P1 tear-free swap | measured CPUs only |
-| 11 | P2 frame cap (only if decided) | fast CPUs |
+| 7 | D1 D-only fills | all |
+| 8 | P1 tear-free swap | all (decision 5) |
+| 9 | P2 frame cap | all (decision 5) |
+
+W6, the frame-rate-independent game speed, gets its own bit once its design is approved.
 
 ### W1. Dashboard mirror (`sim:304d0`)
 
@@ -631,8 +645,8 @@ Do W1a and W1b back to back.
     nonzero pad bits, and masks that differ from OR(planes);
   - a live twin on every call in R-event.
 
-**W1b: pre-mirrored chip copy, never mutating the game's buffer (bit 1, the recommended end
-state).**
+**W1b: pre-mirrored chip copy, never mutating the game's buffer (bit 1; the end state; chip
+RAM use is approved, decision 3).**
 - **Hook:** `PL_PS $30412` over `swap d0` + `move.w 16(a0),d0` (6 bytes). It cannot go at
   `sim:30408`, because `sim:30400` branches into `sim:3040a`; audit `sim:30412–30417`.
 - **When a cached draw applies:** the horizontal bit differs (`(req ^ desc+16) & 2`) and
@@ -710,7 +724,10 @@ Every frame pays for it; these candidates total ~600k per steady frame *(est.)*.
   - `sim:3b2d8`: `mulu.l` to 64 bits, guarded by |n| ≤ 2¹⁴.
   - G2, G5 and G7 are CPU-neutral.
 
-### W3. Interrupt and sound tax (exact output)
+### W3. Interrupt and sound tax (exact output): deferred
+
+**Deferred by decision 4:** sound stays exactly as it is for now and will be analysed later. Do
+not implement S1–S9 or B1–B6 without a new decision. The analysis is kept here for that work.
 
 Fixed cost per second, so the saving applies to every scene. Main-loop wall time scales by
 1/(1 − tax): from 15.1% to ~11% is ~1.05× everywhere *(est.)*.
@@ -754,40 +771,88 @@ Fixed cost per second, so the saving applies to every scene. Main-loop wall time
 
 ### W5. Display pacing and fast CPUs
 
-Do this only after W0.4 measures tearing or excess fps on a real configuration.
+Both apply under the faster-rendering switch (decision 5). W0.4's measurements choose the cap
+rate and give P1's cost.
 
-- **P1, tear-free swap (bit 10).** Use the game's own wait: `PL_W $b06,$7001` (`moveq #1,d0`
+- **P1, tear-free swap (bit 8).** Use the game's own wait: `PL_W $b06,$7001` (`moveq #1,d0`
   before the swap).
   - It writes the copper pointers either at or above line 40, or after line 244, so the
     just-hidden buffer is no longer displayed when drawing resumes.
   - Cost: up to ~0.65 field per frame, ~0.2 on average *(est.)*.
-  - Enable it by default only on CPUs where tearing is measured. Verify by trace: no write to
-    the displayed buffer between the copper pickup and line 243.
+  - On the 68000 it only costs time, because the measured margin is 3–4 fields. Measure that
+    cost; if it is significant, report it to the user instead of quietly limiting P1 to fast
+    CPUs.
+  - Verify by trace: no write to the displayed buffer between the copper pickup and line 243.
   - Alternative, for unseen frames: Their Finest Hour's CUSTOM3 pattern, a VBL-side swap
     request plus a wait before drawing into the pending buffer.
-- **P2, frame cap (bit 11, decision 5).** Needed only near ~29 fps at F = 33, where dt's floor
-  of 64 speeds the world up.
-  - Options: hold the swap until ≥ 2 fields since the last one (25 fps), or ≥ 3 ticks.
-  - Expected only on 68040/68060.
+- **P2, frame cap (bit 9).** Hold the swap until a minimum number of fields has passed since
+  the previous one. Two fields gives 25 fps, which is also the ceiling of the tear-free swap's
+  usual cadence.
+  - **Why it matters:** above the cap, dt's floor of 64 makes the world run faster than real
+    time, and frames swapped out before line 42 are never seen.
+  - **What it does not fix:** the floor binds whenever a frame is shorter than F/16 ticks. A
+    25 fps cap (2.37 ticks) therefore protects only Time Scale settings of 36 and above
+    (F ≤ 37.9); the archive's 40 is covered. Lower Time Scale settings need W6.
+  - **Implementation:** wait on a field counter kept by the slave (a VERTB hook, or the CIA
+    lifetime ticks at `sim:30006` converted to fields) next to P1's wait, in the same routine.
 - **68020+ caches:** the slave defines KickEmu's `CACHE`. Record the cache state of every fast-CPU
   figure (playbook §8). The self-modified words at `sim:39d4c` are read as data, so they are
   safe with an instruction cache.
 
-### W6. Game time (optional; decision 2)
+### W6. Frame-rate-independent game speed (the goal; investigate first)
 
-Faster rendering on the 68000 moves the world *toward* its nominal speed: dt is clamped at
-450 while frames exceed ~12.3 fields. That is the designed behaviour, but players will notice
-it. Cockpit messages, lasting 30 frames, will also stay up for less time.
+**Goal (decision 2):** for a given Time Scale, the world runs at the same wall-clock speed at
+any frame rate and on any machine.
 
-**Options:**
-1. **Accept it.** Recommended as the default, with the change noted in the ReadMe.
-2. **Raise the clamp at `sim:3d16/3d1c`** on slow machines, so wall-clock speed is nominal at
-   any fps. Larger steps may destabilise the flight model or collisions, so this needs the
-   W0.6 coupling tests and state checks.
-3. **Fixed-step catch-up**, like Time Compress or Legends of Valour's bit 6: several world steps
-   per render. Costly on the A500, and complex because input is per frame.
+Until this lands, every rendering speedup also speeds up the world on slow machines, because
+dt is clamped at 450 while frames exceed ~12.3 fields (§2.4). That is accepted as an
+intermediate state.
 
-Nothing in W1–W5 depends on this choice.
+**Known couplings to remove** (§2.4):
+- **Slow machines:** the dt clamp at 450 (`sim:3d16/3d1c`).
+- **Fast machines and low Time Scale:** the dt floor of 64.
+- **Counted per frame:**
+  - the message timer (30 frames);
+  - gun-cooldown expiry, which can only happen on a frame;
+  - the throttle step of ±20 per key command;
+  - the render-buffer counters.
+- **Input:** sampled once per frame.
+- **Lag:** dt is measured over the previous frame.
+
+**Investigation, before any design.** It builds on the W0.6 observers. Write the findings and
+a recommended design into a new `docs/game-time.md`, and get the user's approval before
+implementing.
+
+1. **What dt means.** Establish dt in real time for each Time Scale, from per-step position,
+   airspeed and heading logs at Time Scale 0, 40 and 60, and decide what "nominal" speed is.
+2. **Inventory.**
+   - List every dt reader: the helpers `sim:3d68`, `3e0a`, `3e2e`, `3e4a`, `3e5e`, `3e7e` and
+     `3e94`, plus any direct reads of `h3:04834`/`04836`.
+   - List every per-frame counter or decrement in `sim:01098`, `sim:0056c` and the input path.
+   - Find what reads the F = 20 clock `h3:04836` (`sim:21b6e`, `1577e–1589a`, `5a82`/`5b0c`).
+3. **Step-size behaviour.** In VERIFY, force dt (patch `sim:3cee`'s clamp) to 225, 450, 900
+   and ~2,200 over the same input. Compare trajectories against small-step references:
+   flight model, ground contact, bullet hits (tunnelling), AI and collisions. Look for integer
+   truncation at small dt, which Their Finest Hour found at large T.
+4. **Coupling test in the tracking regime** (3–14.5 ticks per frame, e.g. on the 68020 or with
+   a VERIFY delay). Compare world state at equal wall time between a fast and a slowed build,
+   rather than at equal steps.
+
+**Candidate designs** to evaluate with that evidence:
+- **(a) Sub-stepping.** When the frame's dt exceeds 450, run the world step `sim:01098` k
+  times with dt/k ≤ 450, so each step stays inside the original's tested range.
+  - Time Compress already runs several world steps per render (§2.2).
+  - Cost on the 68000: one extra world step (0.28–0.36M) per sub-step. At today's ~27 fields
+    per frame that is k ≈ 3, about +25% of the frame *(est.)*, so it competes with W1/W2's
+    gains.
+- **(b) Fixed world ticks with catch-up,** as in Legends of Valour's 25 Hz simulation: a
+  per-tick input history and catch-up ticks that skip rendering.
+- **(c) Variable step with the clamp raised,** as in Their Finest Hour's per-frame T: only if
+  the step-size tests show the flight model is stable and accurate at large dt.
+- **Per-frame counters:** convert them to time where the original intent is time (the message
+  duration) or keep them per world step.
+- **High frame rates:** remove or lower the floor, keeping any truncation in check with
+  fractional accumulators. P2's cap limits how small dt gets.
 
 ### W7. Later, only with measurements
 
@@ -797,6 +862,7 @@ Nothing in W1–W5 depends on this choice.
   unchanged gauges are redrawn. Skipping them would be an algorithmic change; analyse it first.
 - **The other mirror users** (`sim:28e38` UI corners) and `sim:3045e` vertical flips, if the
   census shows them.
+- **Sound (W3)**, when the user reopens it.
 - **A500-equivalent memory:** with the code in slow RAM, recheck every saving, the blitter
   interplay and the interrupt tax (it is likely higher; the driver's code and samples contend
   for the chip bus).
@@ -806,34 +872,35 @@ Nothing in W1–W5 depends on this choice.
 These are for the measured 68000 + fast configuration; the A500-equivalent needs its W0.4
 baseline first.
 
-| Scene | Today | After W1b | After W1b + W2 + W3 |
+| Scene | Today | After W1b | After W1b + W2 |
 |---|---:|---:|---:|
-| Steady frame | 27–29 fields | unchanged | ~22–24 fields (~2.1–2.3 fps) |
-| Dashboard event (2 frames) | ~59–60 fields each | ~27–30 each | ~22–24 each |
-| The 250-field fixture | 5 frames | ~9 | ~11 |
+| Steady frame | 27–29 fields | unchanged | ~23–25 fields (~2.0–2.2 fps) |
+| Dashboard event (2 frames) | ~59–60 fields each | ~27–30 each | ~23–25 each |
+| The 250-field fixture | 5 frames | ~9 | ~10 |
 
-**World speed** stays clamped in all of these, so it rises with fps: from ~44% to ~53% of
-nominal in steady flight, and roughly doubles during dashboard events.
+**World speed.** Until W6 lands, it stays clamped and rises with fps: from ~44% to ~51% of
+nominal in steady flight, and it roughly doubles during dashboard events. W6's goal is
+nominal speed at any fps; its cost (e.g. sub-steps) comes out of these gains.
 
-The 68020 has not been measured. It should gain more from W1 (the mirror is CPU-bound),
-less from W3, and may need P1.
+The 68020 has not been measured. It should gain more from W1 (the mirror is CPU-bound), and
+P1/P2 apply there.
 
-## 6. Decisions for the user
+## 6. Decisions (user, 2026-10-09)
 
-1. **Options and release policy.**
-   - WHDLoad interface 17 with `slv_config` (requires WHDLoad 17+, as Test Drive II), or stay
-     at 16 with code-driven sublists.
-   - One player-facing "faster rendering" switch that turns on every verified bit (Legends of
-     Valour: always on in release; Test Drive II: a splash option), or individual options off
-     by default (Their Finest Hour).
-2. **Game speed.** Whether faster frames on slow machines may raise the wall-clock world speed
-   toward nominal and shorten message display (§W6, option 1), or whether the speed should be
-   held (options 2/3).
-3. **Chip RAM** for W1b: ~13.7 KB, allocated when the cockpit loads.
-4. **Sound:** whether any of the behaviour or OS changes B1–B6 are acceptable (recommendation:
-   none by default).
-5. **Fast CPUs:** the tear-free swap and a frame cap. On which CPUs, and should they be
-   automatic?
+1. **One "faster rendering" switch** for players.
+   - It turns on every verified performance bit; developer/VERIFY builds keep the individual
+     bits for A/B work.
+   - Shown in the splash window through `slv_config`, which means WHDLoad interface 17
+     (WHDLoad 17+), as in Test Drive II.
+   - **Still open:** the switch's default state, and whether the icons enable it.
+2. **Game speed:** the ultimate goal is frame-rate-independent game speed. It needs
+   investigation first (W6). Until then, faster frames raising the world speed on slow machines
+   is an accepted intermediate state.
+3. **Chip RAM use is allowed** (W1b's ~13.7 KB cache).
+4. **Sound is kept as it is for now** and will be analysed later. W3 is deferred: no S or B
+   changes.
+5. **The tear-free swap and a frame cap apply** (W5, under the switch). The cap rate and P1's
+   68000 cost come from measurement.
 
 ## 7. Local evidence (ignored, this machine)
 
