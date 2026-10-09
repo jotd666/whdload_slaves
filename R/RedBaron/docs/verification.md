@@ -14,7 +14,7 @@ original scope. No rendering optimization is enabled.
 | W0.1 rebuilt equivalence | Passed at the fixed opening checkpoint | None; differing chip storage is classified below |
 | W0.2 continuity | Passed | Manual profile packaging also passed its complete 100-field rerun; see `profiling.md` |
 | W0.3 counters | Passed | Trace, independent swap breakpoints and ring agree on the squadron steps 1–2 interval |
-| W0.4 scenes and machines | Open | All four scenes pass strict cross-boot comparison on the continuity machine; complete event/steady machine costs; cached 68030 first-draw/DMA correlation now passes in the diagnostic window |
+| W0.4 scenes and machines | Open | All four scenes pass strict cross-boot comparison on the continuity machine; cached 68030 event/steady rates and phase-checked routine wall times complete; reconcile the full baseline matrix/build provenance before closing the gate |
 | W0.5 event census | Passed for the complete baseline mission | Top-text branch had zero occurrences; no coverage claim for that branch |
 | W0.6 game time | Passed for the specified clamped step-20 test | Timestamp difference classified by original-code reference audit; Time Scale 0/40/60 motion model and nominal elapsed-time reference verified; broader W6 experiments remain separate |
 | W0.7 framework | Passed | Empty performance-range audits remain explicitly pending until a feature declares ranges |

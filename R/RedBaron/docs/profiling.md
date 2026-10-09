@@ -129,7 +129,7 @@ configuration, WHDLoad arguments and binary with each capture. Older uncached or
 blitter-inexact runs remain separate baselines; changing these settings is not a
 slave performance improvement.
 
-## Current-build cached 50 MHz 68030 baseline
+## Earlier 30,324-byte cached 50 MHz 68030 baseline
 
 The 30,324-byte VERIFY text build, with all performance bits and the first-fill
 diagnostic off, runs the explicit cached/MMU configuration above. **Swap 120–700**
@@ -507,3 +507,47 @@ fields after the publication observer. One late publication produces 5,599
 writes into the fetched display buffer, all behind the raster. See
 `verification.md` for scope, cache conditions and the rejected phase control.
 Its diagnostic overhead is excluded from the rate table above.
+
+## Final W0-build cached 68030 baseline and routine wall times
+
+The 30,380-byte VERIFY text, CUSTOM2=0 and CUSTOM5=0, with the explicit
+MMU/data-cache configuration, completes **swap 120–700** in **2,272 fields**:
+580 frames, **12.7438 fps**, no dashboard events, dt 124/155/186. Its
+event-containing window, **swap 20–516**, completes 496 frames in
+**2,001 fields**, **12.3741 fps**, with 40 mirror calls. The guarded census
+starts at step 20 and reaches flight exit at step 1,033 without gaps.
+The retained evidence is `w0-final-cached030-entry` and
+`w0-final-cached030-census`. The first-fill diagnostic is disabled.
+
+This supersedes the 30,324-byte build's rate for the current binary. The
+small numerical difference is not a rendering improvement: no performance
+patch is enabled, and the VERIFY build/layout changed.
+
+The 68030 core supplies no usable instruction records, so read-only
+entry/return breakpoints measure **inclusive wall time**, with interrupts
+included. They check restored SP and omit incomplete calls. A separate
+breakpoint after the VBlank counter update records 540 consecutive fields;
+the latest observed update is on line 19. Calls with endpoints before
+line 20 or without a corresponding counter-phase sample are excluded,
+not assigned an ambiguous whole-field duration.
+
+| Window | Routine | Accepted calls | Mean PAL fields | Range | Mean ms |
+| --- | --- | ---: | ---: | --- | ---: |
+| R-steady, steps 8–20 | 3D pass | 13 | 2.45490 | 2.42047–2.48040 | 49.176 |
+| R-steady, steps 8–20 | World step | 13 | 0.16358 | 0.14950–0.19060 | 3.277 |
+| R-event, steps 48–71 | Mirror | 23 | 0.86824 | 0.85318–0.88365 | 17.392 |
+| R-event, steps 48–71 | 3D pass | 21 | 2.45895 | 2.31044–2.65069 | 49.257 |
+| R-event, steps 48–71 | World step | 22 | 0.18606 | 0.15860–0.23572 | 3.727 |
+
+Durations end immediately before RTS and must not be compared as main-only
+CPU cycles with the 68000/68020 tables. These short call windows are not
+FPS measurements. The rate windows above exceed 2,000 fields independently.
+
+The first 20 steps provide a controlled observer check: all 77 routine
+entry/return records and the complete step-20 record match a fresh boot
+without the extra VBlank breakpoints exactly. Evidence and raw debugger
+output are in `w0-final-cached030-clock`; `tools/routine_wall_time.py`
+recomputes the summaries and retains excluded calls. The local read-only
+collector is `tools/routine_clock.py --step 120 --out CALL_LOG.json`, run
+from the paused first-flight checkpoint; it leaves the game paused at the
+requested step.
