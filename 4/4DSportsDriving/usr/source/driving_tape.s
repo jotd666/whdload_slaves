@@ -145,7 +145,8 @@ tape_simulation:
  clr.l (a0)
  moveq #1,d3
  lea tape_simulation_keys(pc),a3
- bra.s tape_menu_keys
+ bsr tape_menu_keys
+ bsr tape_restart_normal
 .done:
  rts
 tape_menu_keys:
@@ -434,3 +435,57 @@ tape_seek_play:
  dc.b $4c,$4c,$4f,0,$4e,$4e,$4e,$4e,$4e
  EVEN
  ENDC
+
+; Selecting Normal during a race only changes the next race's setting.
+; Acknowledge the notice, open replay/Menu, and choose Re-start Driving.
+tape_restart_normal:
+ lea tape_restart_keys(pc),a3
+.next:
+ move.w (a3)+,d2
+ beq.s .verify
+ move.w (a3)+,d0
+ bsr.s tape_setup_key
+ bra.s .next
+.verify:
+ move.w #5000,d2
+.wait:
+ exg a5,a6
+ jsr _LVOWaitTOF(a6)
+ exg a5,a6
+ move.l tape_a4(pc),a0
+ tst.b $45(a0)
+ bne.s .retry
+ cmp.w #10,-$15fa(a0)
+ bne.s .retry
+ cmp.b #10,-$173a(a0)
+ beq.s tape_normal_ready
+.retry:
+ dbra d2,.wait
+ lea perf_failure(pc),a0
+ move.l #8,(a0)
+ illegal
+ bra.s .retry
+tape_normal_ready:
+ rts
+
+tape_setup_key:
+ lea tape_event(pc),a0
+ move.w d0,ie_Code(a0)
+ clr.w ie_Qualifier(a0)
+ lea tape_io(pc),a1
+ jsr _LVODoIO(a6)
+.wait:
+ exg a5,a6
+ jsr _LVOWaitTOF(a6)
+ exg a5,a6
+ subq.w #1,d2
+ bne.s .wait
+ rts
+
+tape_restart_keys:
+ dc.w 20,$44,100,$c4 ; acknowledge simulation notice
+ dc.w 20,$45,200,$c5 ; end race, show replay panel
+ dc.w 20,$44,100,$c4 ; activate Menu
+ dc.w 20,$4d,50,$cd  ; Re-start Driving (disabled Evaluation is skipped)
+ dc.w 20,$44,500,$c4
+ dc.w 0
