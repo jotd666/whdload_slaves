@@ -69,6 +69,15 @@ long-window instruments work on both memory/CPU configurations.
 | 68000, 512 KB chip + 1.5 MB slow, no fast | steps 1–120: 119 | 3,649 | 119 | 1.63 fps |
 | 14 MHz 68020, 2 MB chip + 8 MB fast, no slow | steps 1–250: 249 | 2,226 | 249 | 5.58 fps |
 
+A separate **straight-flight** 50 MHz 68030 window (2 MB chip + 8 MB fast, no slow)
+completed 800 swaps in 2,613 PAL fields: **15.28 fps**. It spans steps 186–986 and
+uses the explicit no-bank fixture, so it is not the same scene/input window as the
+two rows above. Of 800 publications, 507 begin between beam lines 40 and 244; this
+shows that swaps are not synchronized to blanking, but is not by itself a complete
+tearing diagnosis. Swap and subsequent input-observer clocks agree in 798 cases;
+one crosses a CIA tick and one crosses a VBlank. A separate earlier segment that
+stopped on a debugger transport error is excluded.
+
 Rates use the emulator's measured PAL rate of 49.92041 fields/s. The A500-equivalent
 run uses the pre-framework VERIFY build; the 68020 run uses the option-framework build
 with no performance patch installed. These are **not** a same-build optimization A/B.
