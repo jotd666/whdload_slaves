@@ -1,7 +1,10 @@
 # W2 geometry implementation
 
-W2 is in progress. Sound, game-time rules and the deferred W1 work are unchanged.
-Each candidate must show a worthwhile steady-flight saving before player enablement.
+G1 core, G2, G3 32-bit misses and G4 are implemented in developer/VERIFY builds.
+Combined CPU results and explicit low-value deferrals appear after the individual
+implementation records below. Cached-CPU per-routine regression checks remain
+pending. Sound, game-time rules and deferred W1 work are unchanged; player
+enablement remains a separate gate.
 
 ## G1 projection core
 
@@ -331,3 +334,37 @@ with a concrete new scene/profile or a larger combined design that clears the
 threshold. Evidence: `candidate-budget.json` in the combined-ON A500/68020
 captures, plus the original `geometry/out-ilevel-*`, `out-kids.txt`,
 `out-392a4.txt` and the disassembly of `sim:3b0f6`.
+
+## Cached 68030 combined result
+
+The same frozen binary completes the OFF/ON window at swaps 120–660. The
+original request to reach step 701 ended at mission exit at step 683; that
+unfinished request is retained as `w2-combined-030-0`, not counted as completed.
+A fresh OFF boot (`w2-combined-030-0-r2`) stops at step 661, and ON
+(`w2-combined-030-60`) uses the same endpoint. Both reach it successfully.
+
+| Setting | Fields / intervals | Observed FPS | Dashboard census |
+| --- | ---: | ---: | --- |
+| OFF | 2,104 / 540 | 12.8123 | 32 message calls, 14 dirty calls, 32 mirrors, 48 rejected draws |
+| W2 ON | 2,101 / 540 | 12.8306 | No dashboard events |
+
+**This is not evidence of a steady-flight FPS gain.** Both windows meet the
+2,000-field requirement, but their world histories diverge with non-clamped dt.
+The OFF endpoint screenshot is the red death-screen transition; ON remains in
+flight. The complete census and endpoint images are retained rather than
+silently excluding the less favorable history. The repeated OFF window exactly
+reproduces the original completed 120–660 census (2,104 fields and the same
+listed event counts).
+
+The separate early-flight entry-to-RTS clocks at steps 8–15 contain seven
+phase-safe complete 3D passes per setting: **49.4958 → 48.9081 ms/pass (−1.19%)**.
+These are inclusive wall times, including interrupts and chip-bus waiting, not
+main CPU cycles. This modest local saving is consistent with drawing dominating
+on the cached machine. The complete-call per-routine regression check remains
+pending; do not infer that every individual path improves from this bundle alone.
+
+The 20-field DMA captures in both settings have observable display ownership
+and no detected active-display conflicts. Unselected hook bytes remain original
+(seven ranges OFF, three W1 ranges with W2 ON). These short checks are not a
+universal tear-free guarantee; W5 remains separate. The binary hash is unchanged
+from the combined A500/68020 checks above.

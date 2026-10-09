@@ -29,7 +29,10 @@ G1 core normalization, G2 trivial screen clipping, G3 32-bit vertex misses and
 G4 low-long dot are implemented behind developer/VERIFY CUSTOM2 bits 2–5, with
 original-checked models and per-call twins. Combined twins pass on all three
 CPUs in banking/dense scenes. The measured bundle gains 5.97% FPS on A500 and
-5.54% on 68020; cached-68030 timing is pending. The player release mask stays zero.
+5.54% on 68020. Cached-68030 early-flight pass wall time falls 1.19%; its
+long-window histories differ, so no steady-flight FPS gain is claimed there.
+Cached-CPU per-routine regression checks remain pending. The player release
+mask stays zero.
 
 The remaining G1/G3 refinements and G5–G9 are explicitly deferred under §3.8,
 not implemented. `w2-verification.md` records the current instruction-cost

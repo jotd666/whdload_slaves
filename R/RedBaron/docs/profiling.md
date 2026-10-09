@@ -1,6 +1,6 @@
 # Red Baron performance measurements
 
-## W2 development checkpoint: projection core
+## W2 individual measurements
 
 The inline normalization candidate at `sim:38c82` is available as developer/VERIFY
 CUSTOM2 bit 2. On the A500-equivalent configuration, short same-build captures give
@@ -10,8 +10,8 @@ Projection-call means fall from 1,595.1 to 1,435.8 and 1,619.5 to 1,428.8 respec
 These are 150/100-field cycle samples, not frame-rate measurements. The candidate
 passes 451 synthetic and 8,569 live CPU twins; exhaustive host normalization checks
 cover both widths. Full conditions, rejected first candidate and build hash are in
-`w2-verification.md`. Wider CPU checks and the rest of W2 remain open; player
-enablement stays off.
+`w2-verification.md`. The current combined CPU results and remaining gates
+appear below; player enablement stays off.
 
 G4's separately measured low-long dot product (`sim:3b1fa`, developer bit 5)
 reduces mean complete 3D-pass costs **2,446,701.5 → 2,378,798.5** main cycles in
@@ -54,8 +54,11 @@ counts, scope and evidence are in `w2-verification.md`. The 68020 pair also gain
 80–400 (2,591 → 2,455 fields, no dashboard events). Its separate cost sample
 shows 5.43% lower whole-pass main cycles and improvements in all four measured
 routines. The 68020 dt is no longer fixed at 450, so its two runs can legitimately
-follow different world states. Cached-68030 timing is still being collected;
-the normal release mask remains zero.
+follow different world states. On cached 68030, seven phase-safe early-flight 3D passes per setting fall from
+**49.4958 to 48.9081 ms (−1.19%)**, inclusive of interrupts and chip-bus waits.
+The long windows are both about 12.8 FPS but have different combat/death events;
+that pair does not establish a steady-flight FPS gain. Its per-routine regression
+check remains pending. The normal release mask remains zero.
 
 ## Running the W2 profile manually
 
