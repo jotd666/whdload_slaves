@@ -8,6 +8,20 @@
 > measurements before anything is claimed. No optimization exists yet. The user's decisions
 > (2026-10-09) are in §6 and override any option discussed elsewhere.
 
+## Implementation update: CPU-specific priorities
+
+The cached 50 MHz 68030 breakdown in `profiling.md` shows a different bottleneck
+from the original 68000 profile. Rectangles and polygons alone take 48.86% of the
+measured 3D-pass wall time. Vertex transform/cache, projection, clipping and back-face
+dot together take 11.95% in the adjacent steady window. These are scoped short
+samples, not a complete frame budget. The 77% figure below always means the whole
+3D pipeline, including drawing; it must not be described as pure maths.
+
+W2 remains useful for the 68000. Specialized accelerated-CPU maths rewrites have
+less headroom; subsequent fast-CPU work should prioritize drawing and chip-bus
+traffic. See the current profiling section before relying on the original estimates.
+This finding does not change the sound/game-time decisions in §6.
+
 ## 0. Ground rules
 
 These restate `AGENTS.md`, the local playbook (`~/.local/share/amiga/new-game-playbook-jotd.md`)

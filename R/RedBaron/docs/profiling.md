@@ -21,6 +21,74 @@ complete calls per setting respectively. Dot-product calls fall from roughly
 not an FPS measurement or a cumulative G1+G4 result. See `w2-verification.md`
 for its independent models, synthetic/live twins, state differences and build hash.
 
+## Cached 68030: drawing is the larger bottleneck
+
+A focused unoptimized 50 MHz 68030 check changes the priority for accelerated
+machines. The 77% figure from the old 68000 profile is the **whole 3D pass**, not
+pure maths. Geometry dominates the older CPU's work, but that conclusion does not
+carry over to a cached CPU with fast RAM.
+
+The configuration is 2 MB chip + 8 MB fast, no slow RAM, MMU enabled, instruction
+and data-cache configuration as in the validated cached baseline, CPU/memory/blitter
+cycle accuracy enabled. Native maximum detail and Time Scale are unchanged.
+CUSTOM2=0, CUSTOM5=512: no performance patches or per-call twins are active.
+The log confirms MMU activation; emulator data-cache modeling is explicitly on.
+
+These are entry-to-RTS **inclusive wall times**, including interrupts and chip-bus
+waiting. The cached core lacks the 68000's usable instruction trace, so debugger
+boundary observations read the VBlank counter and beam position. Counter phase
+is independently checked; endpoints before line 3 or at ambiguous horizontal
+counter boundaries are excluded. Only subordinate calls within accepted complete
+3D passes at the same step contribute to the rows below.
+
+| Sample / accepted steps | Work inside 3D pass | Mean ms/frame | Share of that pass |
+| --- | --- | ---: | ---: |
+| Drawing, 121–125 | Whole 3D pass | 46.915 | 100% |
+| Same | Rectangles (`sim:2fc68`) | 12.846 | 27.38% |
+| Same | Polygons (`sim:2f292`) | 10.076 | 21.48% |
+| Geometry, 127–131 | Whole 3D pass | 46.486 | 100% |
+| Same | Vertex transform/cache (`sim:38dcc`) | 2.664 | 5.73% |
+| Same | Projection wrapper (`sim:38e9c`) | 1.296 | 2.79% |
+| Same | Screen clipping (`sim:39ecc`) | 1.016 | 2.19% |
+| Same | Back-face dot (`sim:3b1fa`) | 0.577 | 1.24% |
+| Lines, 133–137 | Whole 3D pass | 46.872 | 100% |
+| Same | Lines (`sim:2ea28`) | 5.680 | 12.12% |
+| Other, 145–147 | Radius projection (`sim:3b282`) | 0.399 | 0.85% |
+
+Rectangles plus polygons alone account for **48.86%** of the measured 3D pass;
+the four measured geometry categories account for **11.95%** in their adjacent
+window. This is not a complete partition: object setup, traversal and other work
+remain, and small excluded calls make category totals conservative. The line row
+must not be added blindly to the polygon row: polygon fallback can call the line
+routine, and these are different windows. No 16-bit transform/projection calls
+were seen in this sample.
+
+Outside the 3D pass, the last sample also measures **6.468 ms/frame** for the
+cockpit overlay (`sim:2c144`), **6.280 ms/frame** for bitmap draws (`sim:30572`),
+and **3.357 ms/frame** for the world step. Earlier drawing samples additionally
+contain rectangle, polygon and line work outside the 3D pass. These costs reinforce
+the importance of screen drawing on the faster machine, without forming a single
+cross-window frame budget or FPS claim.
+
+Each group captures six frame iterations; counter-phase exclusions leave five
+whole passes for drawing/geometry/lines and three for the final group. The groups
+are adjacent windows from one boot, not independent optimization A/B pairs.
+The first all-routine attempt exceeded breakpoint capacity and recorded no calls.
+Incomplete early line/overlay endpoint sets were excluded; the separate line and
+final overlay captures include all their return paths. Drawing's other complete
+routine samples were retained. These failures are not counted as measurements.
+
+**Implication:** continue exact W2 front-end improvements for the 68000, but do not
+assume they are the largest opportunity on accelerated machines. In particular,
+the original G4 dot accounts for only 1.24% of this 68030 pass; a specialized faster
+CPU multiply implementation has a low ceiling. Drawing/fill/blitter traffic should
+lead subsequent accelerated-CPU work. Whole-routine wall times identify that cost;
+they do not by themselves separate CPU setup, DMA contention and blitter execution.
+
+Evidence: `w2-pipeline-030`, including per-group clock logs, phase-filtered summaries,
+and `breakdown.json`. VERIFY SHA-256:
+`aa34be83f91045a8fbf3394459eff1a74cced3a1a1e1a69f8df9cf4644bdf73d`.
+
 ## Current W1 measurements (further work deferred)
 
 W1a (table mirror) and W1b (chip mirror cache) are implemented for developer/VERIFY
