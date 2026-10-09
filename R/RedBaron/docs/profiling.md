@@ -57,6 +57,40 @@ routines. The 68020 dt is no longer fixed at 450, so its two runs can legitimate
 follow different world states. Cached-68030 timing is still being collected;
 the normal release mask remains zero.
 
+## Running the W2 profile manually
+
+From `tmp/dev`, source `amiga/env.sh` and ensure no other controller is using this
+project's emulator. The normal player build still has a zero release mask; these
+checks use the VERIFY build with its per-feature options and twins disabled.
+`reach_flight.py` builds that variant and reaches the maximum-detail flight fixture:
+
+```sh
+MallocScribble=1 CPU=68000 CHIP_KB=512 FAST_KB=0 \
+EXTRA_ARGS='--slow_memory=1536 --uae_cpu_multiplier=2 --uae_cpu_speed=real --uae_cpu_cycle_exact=true --uae_cpu_memory_cycle_exact=true --uae_blitter_cycle_exact=true' \
+WHD_ARGS='CUSTOM2=60 CUSTOM5=512' \
+python3 tools/reach_flight.py --no-shot --out tmp/prof/my-w2-on
+python3 tools/step_log.py --step 8
+python3 tools/capture_current.py --out tmp/prof/my-w2-on/chunk0 --fields 100
+python3 tools/capture_current.py --out tmp/prof/my-w2-on/chunk1 --fields 100
+python3 tools/capture_current.py --out tmp/prof/my-w2-on/chunk2 --fields 50
+```
+
+This retains **250 recorded PAL fields**. The profiler adds an unrecorded field
+at each chunk start; do not treat joins as continuous instruction traces. Routine
+costs must exclude calls crossing those joins. Repeat from a fresh boot with
+CUSTOM2=0 and a new output directory; keep source/build options unchanged and
+compare the saved `entry.json` slave hashes before interpreting the pair.
+CUSTOM2=60 selects bits 2–5 only, leaving W1 off. CUSTOM5=512 defers activation
+until flight; it enables neither arithmetic twins nor scripted banking.
+
+The local combined-run helper records the longer swap-rate comparison and its
+census: `python3 tools/w2_combined_measure.py --machine a500 --mask 60` (or mask 0).
+Its output directories must not already exist; use `--suffix=-manual` for another
+pair. Use `--machine 020` or `030` for the retained faster-CPU configurations.
+The cached-68030 helper uses inclusive routine wall clocks and DMA traces, not
+instruction-cycle claims. Never run two helpers concurrently. Require at least
+2,000 elapsed fields and inspect dashboard-event counts before quoting FPS.
+
 ## Cached 68030: drawing is the larger bottleneck
 
 A focused unoptimized 50 MHz 68030 check changes the priority for accelerated
