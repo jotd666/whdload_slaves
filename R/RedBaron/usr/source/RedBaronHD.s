@@ -54,7 +54,7 @@ CACHE
 ;============================================================================
 
 
-slv_Version	= 16
+slv_Version	= 17
 slv_Flags	= WHDLF_NoError|WHDLF_Examine
 slv_keyexit	= $5D	; num '*'
 
@@ -75,6 +75,25 @@ DECL_VERSION:MACRO
 		INCBIN	"T:date"
 	ENDC
 	ENDM
+
+; Release default/icon policy remains a user decision. No verified bits yet.
+slv_config
+	IFD VERIFY
+	dc.b "C2:X:Table mirror:0;C2:X:Cached mirror:1;"
+	dc.b "C2:X:Projection:2;C2:X:Clipping:3;C2:X:Vertex transform:4;"
+	dc.b "C2:X:Back-face test:5;C2:X:Face setup:6;C2:X:Clear fills:7;"
+	dc.b "C2:X:Tear-free swap:8;C2:X:Frame cap:9;"
+	ELSE
+	IFD DEVELOPER
+	dc.b "C2:X:Table mirror:0;C2:X:Cached mirror:1;"
+	dc.b "C2:X:Projection:2;C2:X:Clipping:3;C2:X:Vertex transform:4;"
+	dc.b "C2:X:Back-face test:5;C2:X:Face setup:6;C2:X:Clear fills:7;"
+	dc.b "C2:X:Tear-free swap:8;C2:X:Frame cap:9;"
+	ELSE
+	dc.b "C2:B:Faster rendering;"
+	ENDC
+	ENDC
+	dc.b 0
 
 slv_name		dc.b	"Red Baron",0
 slv_copy		dc.b	"1992 Dynamix",0
@@ -104,6 +123,7 @@ _args_end
 	;initialize kickstart and environment
 
 _bootdos
+	bsr perf_read_options
 	move.l	(_resload,pc),a2		;A2 = resload
 
 	;open doslib
@@ -194,6 +214,9 @@ SIM_VERSION_TEST:MACRO
 	cmp.l	#$082A0001,(a0)
 	bne.b	.nov\2
 
+	IFEQ \2-1
+	bsr perf_install_v1
+	ENDC
 	lea	pl_sim_v\2(pc),a0
 	jsr	resload_Patch(a2)
 
@@ -523,6 +546,8 @@ new_DeleteFile:
 	dc.b	"simprefs.prf",0
 	dc.b	0
 
+	even
+	include "perf.s"
 	IFD VERIFY
 	include "tape.s"
 	ENDC

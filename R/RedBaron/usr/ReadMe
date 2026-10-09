@@ -10,7 +10,7 @@
 
  This install applies to "Red Baron" © 1992 Sierra/Dynamix.
 
- This install requires WHDLoad to be in the path. It can be found in the
+ This install requires WHDLoad 17 or later to be in the path. It can be found in the
  WHDLoad package.
 
  The installed program requires 0.5 MB ChipMem and 1.0 MB OtherMem.
@@ -37,6 +37,11 @@
 	http://www.whdload.de/
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
+
+ Development groundwork:
+ - Faster rendering splash switch reserved; no optimized features enabled yet.
+ - Performance patches will apply only to sim v1; v2/v3 keep their existing fixes.
+ - Sound is unchanged. VERIFY instruments are absent from normal builds.
 
  version 2.1 (26.11.2005) done by JOTD
  - german version supported

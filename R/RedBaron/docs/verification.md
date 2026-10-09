@@ -123,3 +123,33 @@ cycles are no longer presented as exact beam positions. At the initial event che
 of the reproducible 100-field capture, its one publication begins at line 14, horizontal
 slot 139 and ends at slot 185 of the same line. This single publication is insufficient
 to establish tear-free behaviour.
+
+## Option and hook-check framework
+
+All builds now declare WHDLoad interface 17 and a splash configuration. Release builds
+show one Faster rendering switch; developer and VERIFY builds expose the individual
+CUSTOM2 bits from the plan. The verified release mask is currently zero: this framework
+installs no optimization. The default-on/off and icon policy remain user decisions.
+
+`resload_Control` reads CUSTOM2 and CPU attention flags before loading the game, and
+CUSTOM5 in VERIFY. The sim v1 version branch alone calls the performance installer.
+The original v2/v3 patch lists are unchanged. VERIFY flight entry on the 68020 confirms
+CUSTOM2=513, CUSTOM5=7, the matching developer mask, and the expected CPU flags.
+Normal and developer outputs contain neither the tape nor step-ring marker.
+
+`perf_check_bytes` provides the fail-message check for non-relocated hook bytes; each
+future installer must invoke it before writing its range. Relocated operands require
+checks computed from live hunk bases. The installer currently has no ranges.
+
+The versioned tools alongside these docs provide:
+
+- `check_disabled.py`: apply original HUNK_RELOC32 records using the live BPTR chain,
+  then compare each declared PERF_RANGE with the corresponding memory dump.
+- `audit_hooks.py`: check whole-instruction boundaries, direct incoming branches and
+  relocation targets inside ranges. Indirect callers still require manual review.
+- `test_checks.py`: synthetic acceptance and rejection cases without game data.
+
+Both audit commands report PENDING when no performance ranges exist; an empty audit
+is not counted as a pass. The parser has also read the original four-hunk sim fixture,
+including all 8,686 code relocations and 541 data-hunk relocations. No game bytes are
+embedded in the tools. The CUSTOM5 consumers and twin infrastructure remain unfinished.
