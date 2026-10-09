@@ -293,3 +293,12 @@ passes; its routine costs are recorded in `profiling.md`.
 a partial call across files. Synthetic tests cover a user-mode interrupt callback,
 a call cut at a chunk boundary and a wrong return stack. It also reproduces the
 established original mirror cost using five complete baseline calls.
+
+## Long-window census accounting
+
+`census_window.py` measures explicit swap-to-swap intervals and attributes work to
+steps after the starting swap through the ending swap. Synthetic tests cover the
+starting-boundary exclusion, the 2,000-field threshold, events inside the interval,
+and missing/duplicate/partial evidence. The retained 68000 + fast census passes
+for swaps 80–180: 100 completed intervals, 2,524 fields, and no dashboard events.
+A step-input interval is not substituted for a swap interval.

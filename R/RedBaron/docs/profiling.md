@@ -129,6 +129,18 @@ intervals without a dashboard event; steps 24–30 are within the scripted right
 and also contain no mirror. Their cross-boot trace checks now pass as described below; the complete machine
 matrix remains outstanding.
 
+The retained census also contains a longer clean interval: **swap 80 to swap 180**
+completes 100 frames in **2,524 PAL fields**, or **1.978 fps**, with no message,
+dirty, full-redraw, top-text or mirror events inside the interval. Every world dt
+is 450. This exceeds the 2,000-field rate requirement on the current 68000 + fast
+build. It is a later scene than the short step-8 trace, so their cycle costs and
+frame rates must not be combined as if they described the same window.
+
+`census_window.py` uses the actual boundary swaps. Measuring input checkpoints
+80–180 instead gives 2,528 fields because input precedes that step's rendering;
+that is a different interval. The tool excludes the starting boundary from its
+frame count and rejects missing or duplicate swaps and incomplete step histories.
+
 ## Current fixed-window cycle checks
 
 The current VERIFY build has identical instruction and DMA records across two
