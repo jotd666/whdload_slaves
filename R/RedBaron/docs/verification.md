@@ -12,7 +12,7 @@ original scope. No rendering optimization is enabled.
 | Item | Status | Remaining acceptance work |
 | --- | --- | --- |
 | W0.1 rebuilt equivalence | Passed at the fixed opening checkpoint | None; differing chip storage is classified below |
-| W0.2 continuity | Passed | Manual profile packaging still needs its end-to-end rerun |
+| W0.2 continuity | Passed | Manual profile packaging also passed its complete 100-field rerun; see `profiling.md` |
 | W0.3 counters | Passed | Trace, independent swap breakpoints and ring agree on the squadron steps 1–2 interval |
 | W0.4 scenes and machines | Open | Select an aircraft-dense window; complete strict repeats and event/steady costs for the machine matrix; resolve screenshot-border differences; complete first-draw coverage |
 | W0.5 event census | Passed for the complete baseline mission | Top-text branch had zero occurrences; no coverage claim for that branch |

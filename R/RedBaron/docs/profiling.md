@@ -400,8 +400,9 @@ Each is followed by a flight-step checkpoint in the same field.
 The recorded field differences were 58, 60, 26 and 29. They are not valid elapsed periods
 across chunk joins. The CIA-tick reconstruction gives approximately **59.2, 60.0, 27.1 and
 28.8 fields**. Do not use the earlier 1.16-fps mixed-window estimate as a steady-state rate.
-The W0 observer/breakpoint validation is documented in `verification.md`; the full
-three-way same-window and cross-boot checks are still prerequisites for optimization claims.
+The W0 observer/breakpoint validation is documented in `verification.md`. The
+three-way same-window check passed; the remaining scene/machine cross-boot checks
+are still prerequisites for optimization claims.
 
 ## Repeat the profiling run manually
 
@@ -414,9 +415,18 @@ python3 tmp/dev/tools/profile_flight.py
 The default is now **one 100-field cycle capture**, with no internal joins. Use `--fields`
 for a shorter window (1–100). It creates a fresh evidence directory and retains the slave,
 assembly listing, memory snapshots, settings and reports. The first native-debugger attach
-may take minutes even though the emulated window is short. This packaging command has not
-yet received a separate end-to-end rerun after the W0 changes; its constituent capture and
-observer operations have been exercised.
+may take minutes even though the emulated window is short.
+
+The complete command passed an end-to-end rerun (`w0-manual-workflow`) with the
+current VERIFY build and default 68000 configuration. It reached the 72-key flight
+checkpoint, saved one 100-field trace, then generated `report.txt` and `metrics.json`
+and left the emulator paused. The trace contains 1,286,718 instruction records,
+100 mouse callbacks, 118 CIA callbacks, three mirror entries and one publication.
+Recorded cycles total 14,210,196 against the nominal 14,210,200; the four-cycle
+accounting difference is retained explicitly. There are
+no internal chunk joins. This verifies the manual workflow, not a new steady FPS
+baseline. Machine overrides require their corresponding RAM/analysis setup; this
+packaging command is validated for its default configuration.
 
 For longer frame-rate measurements use `step_log.py` and `swap_fields.py`, with a start/end
 window from the approved route and at least 2,000 elapsed fields. Both read the VERIFY ring;
