@@ -251,18 +251,31 @@ frame count and rejects missing or duplicate swaps and incomplete step histories
 
 ## Current fixed-window cycle checks
 
-The current VERIFY build has identical instruction and DMA records across two
-fresh boots for the selected 150-field steady window (step 8, chunks 100+50) and
-100-field banking window (step 24). All 640×400 game-image pixels match. Raw PNGs
-have differences only in the three rightmost emulator-border columns, outside the
-game image; those file differences remain recorded rather than silently discarded.
-The steady chunks retain the known one-field gap and are analyzed independently.
+The 30,380-byte VERIFY text build passes strict fresh-boot comparison for the
+100-field opening event, 150-field steady window at step 8 (chunks 100+50),
+and 100-field banking window at step 24. Every instruction/DMA/accounting
+record and full screenshot byte matches. Both boots use `MallocScribble=1` to
+initialize unused host framebuffer storage; see `verification.md`. Earlier
+unscribbled captures retain their recorded border mismatches. The steady
+chunks retain the known one-field gap and are analyzed independently.
 
-On the 68000 + fast-RAM configuration, six complete 3D passes in the steady window
-cost **2.1607–2.2412M main-context cycles**, mean **2.1915M**. Five complete world
-steps cost **0.2749–0.3687M**, mean **0.3282M**. These are another scene/window,
-not an improvement over the earlier profile. The opening squadron window has two
-complete mirrors at **1.8528M and 1.8549M** main cycles.
+On the 68000 + fast-RAM continuity configuration, the maximum-detail ace/bank
+fixture gives these complete-call main-context cycle costs:
+
+| Window | Routine | Complete calls | Mean cycles | Range |
+| --- | --- | ---: | ---: | --- |
+| R-event | Dashboard mirror | 2 | 1,853,636 | 1,852,524–1,854,748 |
+| R-event | 3D pass | 2 | 2,238,834 | 2,237,690–2,239,978 |
+| R-event | World step | 1 | 362,378 | Single complete call |
+| R-steady | 3D pass | 6 | 2,202,846.7 | 2,173,760–2,254,076 |
+| R-steady | World step | 5 | 328,008.8 | 274,440–368,586 |
+| R-bank | 3D pass | 4 | 1,993,287.5 | 1,902,588–2,055,104 |
+| R-bank | World step | 4 | 314,158.5 | 284,560–346,770 |
+
+The steady trace has six publications and no dashboard-event entries. These
+are scene-specific baseline costs, not a speedup or an FPS estimate. Retained
+evidence is `w0-windows-scribble-{a,b}`. The interrupt stack is independently
+confirmed from the VBlank/CIA callbacks and all measured calls restore SP.
 
 The versioned `call_costs.py` uses explicit original entry/RTS offsets and checks
 that SP is restored. It discards open calls at each file boundary and separates

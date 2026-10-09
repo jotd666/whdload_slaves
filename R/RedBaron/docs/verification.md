@@ -14,7 +14,7 @@ original scope. No rendering optimization is enabled.
 | W0.1 rebuilt equivalence | Passed at the fixed opening checkpoint | None; differing chip storage is classified below |
 | W0.2 continuity | Passed | Manual profile packaging also passed its complete 100-field rerun; see `profiling.md` |
 | W0.3 counters | Passed | Trace, independent swap breakpoints and ring agree on the squadron steps 1–2 interval |
-| W0.4 scenes and machines | Open | Rear-view aircraft-rich window passes strict trace/screenshot repeat with initialized host allocation; repeat the other windows under that setting, complete event/steady machine costs and first-draw coverage |
+| W0.4 scenes and machines | Open | All four scenes pass strict cross-boot comparison on the continuity machine; complete event/steady machine costs and first-draw coverage |
 | W0.5 event census | Passed for the complete baseline mission | Top-text branch had zero occurrences; no coverage claim for that branch |
 | W0.6 game time | Open | Complete the Time Scale 0/40/60 velocity interpretation and nominal-speed analysis; identify the timer coupling before relying on broader state equality |
 | W0.7 framework | Passed | Empty performance-range audits remain explicitly pending until a feature declares ranges |
@@ -543,3 +543,29 @@ The tool exits unsuccessfully for any differing field, including screenshot-only
 differences. The original unscribbled pair remains a negative control: all 100
 fields fail only the screenshot comparison. Other scene/machine repeats remain
 separate acceptance work; this result does not close the whole W0.4 gate.
+
+## Four-window strict repeat completed
+
+With initialized host allocation and the reset-armed flight breakpoint, both
+clean ace/bank boots (`w0-windows-scribble-{a,b}`, CUSTOM5=2) match exactly:
+
+| Window | Start | Recorded fields | Strict result |
+| --- | --- | ---: | --- |
+| R-event | Flight step 1, after the entry screenshot | 100 | All records and full screenshot bytes equal |
+| R-steady | Exact step 8 | 100 + 50 | Both chunks equal independently |
+| R-bank | Exact step 24 | 100 | All records and full screenshot bytes equal |
+
+Together with the rear-view squadron repeat, this validates 450 recorded fields
+across all four scene fixtures on the continuity 68000 + fast configuration.
+Both boots retain the same slave, preferences, route and allocation setting.
+The steady chunks retain the known one-field join gap; no continuity is invented.
+Six publications and six complete 3D calls occur in the steady sample, with
+zero mirror, message, dirty, full-redraw or top-text entries. The banking
+fixture holds Right during steps 20–34. The event trace contains two complete
+mirrors; calls crossing its edges are excluded from costs.
+
+The saved comparisons are `event-repeat.json`, `steady0-repeat.json`,
+`steady1-repeat.json` and `bank-repeat.json` in the second boot directory.
+The first directory contains complete-call cost reports, DMA-matched steady
+publications and the event-entry census. This closes scene reproducibility
+for the continuity machine, not the remaining three-machine baseline matrix.
