@@ -214,3 +214,50 @@ its miss path saves 32 bytes of registers. Wider CPU/combined checks remain open
 
 Evidence: `w2-g3-twins-a500`, `w2-g3-a500-{0,16}`. VERIFY SHA-256:
 `1456f8d5b84cf787f3429b7ae6580fcc88ce94903d604bbb3d339610f85853b3`.
+
+## Combined W2 checks on three CPUs
+
+The current frozen VERIFY build enables G1 core, G2, G3 32-bit misses and G4
+with CUSTOM2=60. Six independent boots reach step 40 with all four twins active:
+A500-equivalent, 14 MHz 68EC020 and cached 50 MHz 68030, each in R-bank and
+R-dense. Each boot additionally executes the 451/552/105/208 synthetic cases
+for projection/dot/clipping/vertex respectively. All comparisons pass.
+
+| CPU / scene | Live projection | Live dot | Live clipping | Live vertex |
+| --- | ---: | ---: | ---: | ---: |
+| A500 / bank | 8,569 | 1,896 | 4,187 | 8,729 |
+| A500 / dense | 7,038 | 837 | 2,273 | 4,780 |
+| 68020 / bank | 8,223 | 1,682 | 4,378 | 8,719 |
+| 68020 / dense | 7,026 | 867 | 2,624 | 4,699 |
+| 68030 / bank | 8,841 | 1,743 | 4,346 | 9,114 |
+| 68030 / dense | 6,801 | 858 | 2,169 | 4,526 |
+
+The 68030 uses MMU and modeled instruction/data caches. Both paint observers
+record CACR $2111, with no missed first-draw observations. Their potential
+old-display writes are diagnostics, not proof of visible tearing; twin overhead
+also makes these unsuitable as performance samples. W5 remains open.
+Evidence: `w2-combined-twins-{a500,020,030}-{bank,dense}`.
+
+### Combined A500 timing and state
+
+Separate fresh boots use the same binary, CUSTOM2=0 or 60, CUSTOM5=512 (deferred
+activation only), native maximum detail and unchanged Time Scale. No twins or
+scripted bank run in these timing windows. At swaps 40–140, 100 intervals take
+2,716 fields OFF and 2,563 ON: **1.8380 → 1.9477 FPS (+5.97%)** at 49.92041 Hz.
+Both windows exceed 2,000 fields; their dashboard census contains only swaps,
+and dt remains clamped at 450 throughout.
+
+Equal-step h3 snapshots at steps 8, 40 and 141 differ only in the timer-start
+longword at `h3:03f5a` and elapsed word at `h3:0483a`. Every other byte in the
+captured h3 allocation matches. These comparisons support behavioral continuity;
+correctness of the replacements comes from the models and twins above.
+
+The separate 150-field cost samples contain four complete 3D passes each:
+**2,446,701.5 → 2,236,693.0 main cycles/pass (−8.58%)**. All four routine means
+improve; interrupts and calls cut by capture boundaries are excluded. Both short
+captures in each setting have observable display ownership and zero detected
+active-display conflicts. This is a bounded observation, not a tear-free claim.
+All seven disabled ranges retain original relocated bytes with CUSTOM2=0; with
+60, the three unselected W1 ranges retain them. Evidence:
+`w2-combined-a500-{0,60}`. The rate, state and cost evidence all use SHA-256
+`1456f8d5b84cf787f3429b7ae6580fcc88ce94903d604bbb3d339610f85853b3`.

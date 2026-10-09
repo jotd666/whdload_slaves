@@ -42,10 +42,12 @@ and icons are unchanged. Developer/VERIFY builds retain individual options.
    G2 clipping, G3 32-bit vertex misses and G4 dot product have verified developer
    checkpoints (CUSTOM2 bits 2–5);
    see `w2-verification.md`.
-   Wrapper integration, the 16-bit transform path, wider CPU checks and G5–G9
-   remain open.
-   Each change needs its original-checked Python model and VERIFY twin. This is
-   the dominant steady-flight cost; W1 mainly removes dashboard-event stalls.
+   Combined twins now pass on all three CPUs in banking and dense scenes. The
+   measured A500 steady bundle gains 5.97% FPS. Combined faster-CPU timing is
+   pending; wrapper integration, the 16-bit transform path and G5–G9 still need
+   disposition under the plan’s 3%-of-frame gate.
+   Each change needs its original-checked Python model and VERIFY twin. Geometry is a substantial 68000 cost; cached-68030 measurements instead
+   put drawing ahead of these maths routines. W1 mainly removes dashboard stalls.
 2. **W5:** tear-free publication and a frame cap under the player switch.
    Measure P1's 68000 cost and choose P2's rate from evidence.
 3. **W6 investigation:** continue the game-time investigation and obtain approval

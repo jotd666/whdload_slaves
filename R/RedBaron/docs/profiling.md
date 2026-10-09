@@ -37,6 +37,22 @@ wrapper averages, including unchanged cache hits, fall from 1,109.2 to 936.4 and
 savings. 208 synthetic and 8,729 live comparisons pass; the separate 16-bit path
 is unchanged. Conditions, state comparison and hash are in `w2-verification.md`.
 
+## Combined W2: current A500 result
+
+G1 projection core, G2 trivial clipping, G3 32-bit vertex misses and G4 dot product
+(CUSTOM2=60) improve the measured A500-equivalent steady run from **1.8380 to
+1.9477 FPS (+5.97%)**. This is the bundle's measured result, not the sum of the
+individual routine percentages. At swaps 40–140, the same 100 intervals take
+2,716 fields OFF and 2,563 ON. Both windows exceed 2,000 fields, have no dashboard
+events, and retain dt=450. The separate 150-field samples show **8.58% lower
+3D-pass main cycles** (2,446,701.5 → 2,236,693.0; four complete passes per setting).
+
+The same frozen binary passes all four twins together on A500, 68020 and cached
+68030 in banking and dense scenes. A500 equal-step state differs only in known
+clock fields; disabled-byte and sampled display-ownership checks pass. Detailed
+counts, scope and evidence are in `w2-verification.md`. Combined faster-CPU timing
+is still being collected; the normal release mask remains zero.
+
 ## Cached 68030: drawing is the larger bottleneck
 
 A focused unoptimized 50 MHz 68030 check changes the priority for accelerated
