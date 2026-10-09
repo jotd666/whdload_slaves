@@ -294,3 +294,20 @@ An attempted debugger read-watchpoint experiment is excluded. It stopped
 inconsistently after a positive control and did not reach its requested
 checkpoint reliably. It supplies no consumer-coverage evidence; the result
 above comes from the original executable audit and the retained state test.
+
+## W1 evidence from identical native starting states
+
+The W1 controlled-start fixture leaves the native menu/preferences path unchanged
+and activates rendering patches after the first flight checkpoint. Complete h3
+entry snapshots match across CUSTOM2=0, 1 and 3 on each measured CPU. On the
+68020, OFF and cache-on still match at step 8; at steps 17–20 their dt histories
+are 450 and 341 respectively, and step-20 h3 snapshots differ in 733 bytes.
+
+The cached 68030 censuses reach flight-loop exit at steps 699 (OFF), 817 (table
+mirror) and 1,007 (cache). These results demonstrate why equal-step whole-mission
+FPS and event counts cannot isolate rendering cost in the variable-step regime.
+They do not diagnose every cause of the divergent later mission states, nor prove
+a W6 design. Rendering twins remain the correctness evidence. Time Scale stays
+40 and the game-time implementation remains unchanged pending the requested design
+investigation and approval. The primary W1 evidence and build hash are recorded
+in `profiling.md`.

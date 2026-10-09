@@ -8,13 +8,15 @@ gates pass. These controlled runs share one VERIFY image and identical native
 pre-flight setup; only CUSTOM2 changes. See `w1-verification.md` for the contracts
 and evidence. Sound and game-time behavior are unchanged.
 
-| Machine / event-free swap window | OFF fps | W1a fps | W1a+W1b fps |
+| Machine / measured swap window | OFF fps | W1a fps | W1a+W1b fps |
 | --- | ---: | ---: | ---: |
 | A500-equivalent, 8–108 | 1.880 | 1.878 | 1.876 |
 | 14 MHz 68020, 80–400 | 6.154 | 6.151 | 5.996 |
-| Cached 50 MHz 68030 | Pending | Pending | Pending |
+| Cached 50 MHz 68030, mixed 1–699 | 12.778 | 12.387 | 12.502 |
 
-Every reported interval spans at least 2,000 PAL fields. The A500 step-8 states
+Every reported interval spans at least 2,000 PAL fields. The first two rows are
+event-free; the 68030 row includes different later mission states and is not an
+isolated speedup comparison. The A500 step-8 states
 match exactly; its steady window stays clamped. The 68020 starts from identical
 state but enters variable dt, so equal-step world/scene states later diverge.
 Its lower cache-on steady rate is retained in the table; this comparison alone
@@ -784,3 +786,35 @@ spans **2,664 fields (5.996 fps)**, with dt values 279–450. This is lower than
 the OFF result and must not be described as a steady-flight gain. The changed
 frame timing alters the subsequent world trajectory, so an equal-step FPS
 comparison does not isolate code overhead on this tracking-regime machine.
+
+## Cached 68030 primary results and fallback correction
+
+All three cached-CPU primary cases start with identical complete h3 snapshots.
+The shared **swap 1–699** interval covers 698 frames: OFF takes **2,727 fields
+(12.778 fps)**, W1a **2,813 fields (12.387 fps)** and W1a+W1b **2,787 fields
+(12.502 fps)**. These are mixed intervals with different subsequent world states
+and event counts, not an isolated rendering-speed ratio. The longest completely
+event-free OFF interval is only 1,993 fields, below the required rate window;
+no steady FPS claim is made from it.
+
+The full guarded censuses end at steps 699, 817 and 1,007 respectively. OFF has
+62 mirror entries, W1a 78 and the cache run none. World dt and mission events
+diverge after the common starting state. In the common rate interval, OFF has
+60 mirrors after its boundary swap, W1a has 36 and cache-on has none. Such counts
+must not be compared as if they were identical world trajectories.
+
+The saved settings select 50 MHz, MMU, CPU data-cache modeling and full blitter
+accuracy. The OFF event trace has no active-display write conflicts; W1a has
+**1,961** and cache-on **6,269**. None of those written words is fetched later in
+its field, so these records do not establish a visible tear. All three steady
+traces have zero such conflicts. This remains a display-ownership warning for W5,
+not a tear-free guarantee.
+
+The primary matrix above uses SHA-256
+`99c490efbde1b312d42c77ffeb3b7d348cacb6364b402fa9d15803765485d313`.
+A subsequent reproduced fallback-invalidation defect is fixed in default VERIFY
+SHA-256 `5c0918ccbccb27ad301478873e1aeab8398f057211b2749ce7d16fe949f23475`.
+Only two branch-displacement bytes change, with unchanged layout. Neither branch
+is taken in the retained A500/68020 cache-on CPU traces. Correctness regressions
+pass; see `w1-verification.md`. Remaining scene and call-cost captures use the
+corrected binary, and the older matrix retains its explicit build attribution.
