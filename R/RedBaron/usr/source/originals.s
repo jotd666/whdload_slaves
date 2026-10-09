@@ -3,6 +3,7 @@
 ; inside each body; absolute data/callback references retain the game's context.
 ORIG_MIRROR_SIZE = $30572-$304d0
 ORIG_PROJECT_SIZE = $38dcc-$38c82
+ORIG_DOT_SIZE = $3b282-$3b1fa
 ORIG_CLIP_SIZE = $39ecc-$39df2
 
 verify_copy_originals:
@@ -27,6 +28,12 @@ verify_copy_originals:
 	move.l a2,48(a4)
 	move.w #ORIG_CLIP_SIZE/2-1,d0
 	bsr.b .copy
+	move.l a3,a0
+	adda.l #$3b1fa,a0
+	lea original_dot(pc),a2
+	move.l a2,60(a4)
+	move.w #ORIG_DOT_SIZE/2-1,d0
+	bsr.b .copy
 	move.l _resload(pc),a2
 	jsr resload_FlushCache(a2)
 	movem.l (sp)+,d0-a6
@@ -38,10 +45,12 @@ verify_copy_originals:
 	CNOP 0,4
 originals_header:
 	dc.b "RBORIG01"
-	dc.l 1,3
+	dc.l 1,4
 	dc.l $304d0,ORIG_MIRROR_SIZE,0
 	dc.l $38c82,ORIG_PROJECT_SIZE,0
 	dc.l $39df2,ORIG_CLIP_SIZE,0
+	dc.l $3b1fa,ORIG_DOT_SIZE,0
+original_dot: dcb.b ORIG_DOT_SIZE,0
 original_mirror: dcb.b ORIG_MIRROR_SIZE,0
 original_project: dcb.b ORIG_PROJECT_SIZE,0
 original_clip: dcb.b ORIG_CLIP_SIZE,0

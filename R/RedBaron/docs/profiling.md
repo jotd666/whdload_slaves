@@ -13,6 +13,14 @@ cover both widths. Full conditions, rejected first candidate and build hash are 
 `w2-verification.md`. Wider CPU checks and the rest of W2 remain open; player
 enablement stays off.
 
+G4's separately measured low-long dot product (`sim:3b1fa`, developer bit 5)
+reduces mean complete 3D-pass costs **2,446,701.5 → 2,378,798.5** main cycles in
+R-steady and **2,308,462.0 → 2,254,382.0** in R-bank. There are four and three
+complete calls per setting respectively. Dot-product calls fall from roughly
+1,850 to 700 main cycles. This is another short same-build cycle comparison,
+not an FPS measurement or a cumulative G1+G4 result. See `w2-verification.md`
+for its independent models, synthetic/live twins, state differences and build hash.
+
 ## Current W1 measurements (further work deferred)
 
 W1a (table mirror) and W1b (chip mirror cache) are implemented for developer/VERIFY

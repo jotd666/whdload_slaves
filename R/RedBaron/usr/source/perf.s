@@ -70,6 +70,10 @@ perf_apply_v1:
 	beq.b .no_projection
 	bsr projection_install
 .no_projection
+	btst #5,perf_mask+3(pc)
+	beq.b .no_dot
+	bsr dot_install
+.no_dot
 	rts
 
 ; Check a non-relocated hook range before installing it.

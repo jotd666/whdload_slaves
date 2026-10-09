@@ -79,3 +79,47 @@ Evidence: `w2-g1-a500-{0,4}-r2`; VERIFY SHA-256:
 Wider CPU checks and projection-wrapper integration remain open. The normal
 player mask remains zero. This is a verified development checkpoint, not release
 promotion; further W2 work targets the larger geometry costs.
+
+## G4 back-face dot product
+
+Developer/VERIFY CUSTOM2 bit 5 replaces `sim:3b1fa`. Each signed word/long
+product is computed with two unsigned word multiplies and a conditional low-long
+negation. All sums wrap modulo 2³², just as the low long returned by the original
+three 64-bit products. In particular, the result's sign is the low-long sign;
+no full-width sign test or saturation is introduced.
+
+The sole direct caller is `sim:38f9c` in the callback `sim:38eec`, installed by
+`sim:3a456` in `h3:0a41e`. Its caller at `sim:3b46c` immediately tests d0 and then
+overwrites scratch registers before use. d1/a0/a1 and return flags are dead;
+d2–d7/a2–a6 and SP must be preserved. The hook covers whole LINK/MOVEM instructions
+and has no incoming branch or relocation into its interior. It applies only to v1.
+
+`dot_model.py` checks an independent signed sum against the candidate's split-word
+arithmetic. Both match 421 complete original calls. Ten million deterministic
+random dot products and 552 boundary/synthetic cases pass, including negative
+normal components and the signed long minimum. VERIFY CUSTOM5 bit 11 runs the
+relocated original and candidate, comparing d0, every preserved register and SP.
+The original's absolute multiply calls remain unmodified. The A500-equivalent
+flight reaches step 40 with 552 synthetic plus 1,896 live comparisons and no
+mismatch. Synthetic tables live after observer code to keep PC-relative accesses
+within the 68000's displacement range; they are absent from normal/developer builds.
+
+Same-build A500-equivalent timing (150 steady fields, 100 bank fields):
+
+| Window | Routine | OFF calls / mean main cycles | ON calls / mean main cycles |
+| --- | --- | ---: | ---: |
+| R-steady | dot product | 298 / 1,861.1 | 313 / 718.4 |
+| R-steady | complete 3D pass | 4 / 2,446,701.5 | 4 / 2,378,798.5 |
+| R-bank | dot product | 123 / 1,842.8 | 123 / 692.2 |
+| R-bank | complete 3D pass | 3 / 2,308,462.0 | 3 / 2,254,382.0 |
+
+The complete 3D-pass reductions are 2.78% and 2.34%; these short samples do not
+establish an FPS improvement. Step-8 h3 snapshots differ only in timer timestamps
+at `h3:03f5a` and `h3:03f60`, and elapsed time at `h3:0483a`. Both remain dt-clamped;
+all other bytes match. The timestamps/elapsed input are expected to change when
+rendering takes less wall time; this comparison is not used as the arithmetic proof.
+All five disabled hook ranges retain original bytes. All three build modes compile;
+37 host tests pass. Wider CPU checks remain open; the normal release mask stays zero.
+
+Evidence: `w2-g4-twins-a500`, `w2-g4-a500-{0,32}`. VERIFY SHA-256:
+`aa34be83f91045a8fbf3394459eff1a74cced3a1a1e1a69f8df9cf4644bdf73d`.
