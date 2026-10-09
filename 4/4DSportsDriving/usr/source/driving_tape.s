@@ -125,6 +125,9 @@ tape_task_code:
  lea tape_io(pc),a1
  jsr _LVODoIO(a6)
  ENDC
+ IFD TAPE_SCENARIO
+ bsr tape_scenario
+ ENDC
 .done:	moveq	#0,d0
 	jsr	_LVOWait(a6)
 	bra.s	.done
@@ -325,3 +328,109 @@ tape_dialog_enter:
  move.l (sp)+,a0
  move.w -$bc(a4),-6(a5)
  rts
+
+ IFD TAPE_SCENARIO
+; Scenario coverage uses ordinary input.device events after the normal anchor.
+tape_scenario:
+.wait_frame:
+ exg a5,a6
+ jsr _LVOWaitTOF(a6)
+ exg a5,a6
+ move.l tape_frames(pc),d0
+ cmp.l #40,d0
+ blo.s .wait_frame
+ lea tape_scenario_keys(pc),a3
+.next:
+ move.w (a3)+,d2
+ beq.s tape_scenario_done
+ lea tape_event(pc),a0
+ move.w (a3)+,ie_Code(a0)
+ cmp.w #$ffff,ie_Code(a0)
+ bne.s .key
+ bsr tape_replay_select
+ bra.s .next
+.key:
+ clr.w ie_Qualifier(a0)
+ lea tape_io(pc),a1
+ jsr _LVODoIO(a6)
+.wait:
+ exg a5,a6
+ jsr _LVOWaitTOF(a6)
+ exg a5,a6
+ subq.w #1,d2
+ bne.s .wait
+ bra.s .next
+tape_scenario_done:
+ rts
+tape_scenario_keys:
+ dc.w 10,$cc ; release acceleration
+ dc.w 10,$45 ; Escape ends driving through the native handler
+ dc.w 200,$c5
+ dc.w 1,$ffff ; acknowledge selection of rewind
+ dc.w 500,$44,100,$c4
+ dc.w 3,$ffff ; acknowledge selection of play
+ dc.w 10,$44,500,$c4
+ dc.w 0
+
+; The native replay selection is a4-$74c1. Release each navigation key as
+; soon as the game acknowledges it; timed short presses can be missed.
+tape_replay_select:
+ move.w d2,d4
+ moveq #15,d7
+.select:
+ move.l tape_a4(pc),a0
+ moveq #0,d5
+ move.b -$74c1(a0),d5
+ cmp.w d4,d5
+ beq.s .done
+ cmp.w #8,d5
+ bhi.s tape_scenario_failed
+ lea tape_seek_play(pc),a1
+ cmp.w #1,d4
+ bne.s .table
+ lea tape_seek_rewind(pc),a1
+.table:
+ moveq #0,d6
+ move.b (a1,d5.w),d6
+ lea tape_event(pc),a0
+ move.w d6,ie_Code(a0)
+ clr.w ie_Qualifier(a0)
+ lea tape_io(pc),a1
+ jsr _LVODoIO(a6)
+ move.w #300,d2
+.ack:
+ exg a5,a6
+ jsr _LVOWaitTOF(a6)
+ exg a5,a6
+ move.l tape_a4(pc),a0
+ cmp.b -$74c1(a0),d5
+ bne.s .release
+ dbra d2,.ack
+ bra.s tape_scenario_failed
+.release:
+ or.w #$80,d6
+ lea tape_event(pc),a0
+ move.w d6,ie_Code(a0)
+ lea tape_io(pc),a1
+ jsr _LVODoIO(a6)
+ moveq #29,d2
+.release_wait:
+ exg a5,a6
+ jsr _LVOWaitTOF(a6)
+ exg a5,a6
+ dbra d2,.release_wait
+ dbra d7,.select
+ bra.s tape_scenario_failed
+.done:
+ rts
+tape_scenario_failed:
+ lea perf_failure(pc),a0
+ move.l #7,(a0)
+ illegal
+ bra.s tape_scenario_failed
+tape_seek_rewind:
+ dc.b $4f,0,$4d,$4d,$4d,$4d,$4d,$4e,$4e
+tape_seek_play:
+ dc.b $4c,$4c,$4f,0,$4e,$4e,$4e,$4e,$4e
+ EVEN
+ ENDC
