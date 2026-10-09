@@ -8,7 +8,7 @@
 ; +44: gameplay steps after route completion, +48: gameplay-only anchor,
 ; +52: current caller is flight (1) or UI (0). Pointers initialize only in live slave.
 ; Gameplay steps are input-loop calls, not a validated display-frame counter.
-; Profile at game step 1; Right is held for steps 20..34, released at step 35.
+; Profile at game step 1. CUSTOM5 bit 1 enables Right at steps 20..34; release at 35.
 ; Normal builds contain none of these fixtures.
 RAW_RETURN = $440d
 RAW_TAB = $4209
@@ -153,6 +153,8 @@ tape_flight:
 	move.l (a0),d0
 	move.l tape_keybase(pc),a1
 	clr.b $4e(a1)
+	btst #1,perf_custom5+3(pc)
+	beq.s tape_game_record
 	cmp.l #20,d0
 	blo.s tape_game_record
 	cmp.l #35,d0

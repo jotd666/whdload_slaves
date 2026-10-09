@@ -79,7 +79,7 @@ DECL_VERSION:MACRO
 ; Release default/icon policy remains a user decision. No verified bits yet.
 slv_config
 	IFD VERIFY
-	dc.b "C5:X:Slow drawing verification:0;"
+	dc.b "C5:X:Slow drawing verification:0;C5:X:Right-bank fixture:1;"
 	dc.b "C2:X:Table mirror:0;C2:X:Cached mirror:1;"
 	dc.b "C2:X:Projection:2;C2:X:Clipping:3;C2:X:Vertex transform:4;"
 	dc.b "C2:X:Back-face test:5;C2:X:Face setup:6;C2:X:Clear fills:7;"

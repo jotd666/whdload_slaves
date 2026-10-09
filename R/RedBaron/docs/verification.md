@@ -179,3 +179,16 @@ The interrupted subsequent segment includes UI swaps and is marked incomplete. T
 local swap harness now arms an additional read-only breakpoint at `sim:21f4a`, the
 flight-loop exit, and rejects a capture that did not reach its requested flight step.
 That automatic exit stop still needs a fresh end-to-end mission run.
+
+## Explicit straight and bank fixtures
+
+Banking is now opt-in: CUSTOM5 bit 1 holds Right at steps 20–34 and releases it at
+35. The local `reach_flight.py --bank` sets that bit while preserving other CUSTOM5
+bits. The default fixture keeps Right released. This separates R-bank from the
+long steady-flight setup; older captures explicitly described as mixed still include
+the old unconditional bank. Both current routes reach their requested checkpoints.
+
+The straight 50 MHz 68030 fixture subsequently completed a clean 800-swap window
+over 2,613 fields. An earlier short segment was rejected after a debugger transport
+error (`Invalid hex digit`), rather than treated as mission completion. The valid
+window is separate and starts at the following flight-step checkpoint.
