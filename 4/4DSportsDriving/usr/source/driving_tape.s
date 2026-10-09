@@ -10,6 +10,16 @@
 	INCLUDE	devices/inputevent.i
 
 
+ IFND TAPE_DETAIL
+TAPE_DETAIL = 0 ; FULL; other levels are VERIFY coverage only
+ ENDC
+ IFGT TAPE_DETAIL-4
+ FAIL "TAPE_DETAIL must be 0..4"
+ ENDC
+ IFLT TAPE_DETAIL
+ FAIL "TAPE_DETAIL must be 0..4"
+ ENDC
+
 RAW_RETURN = $44
 RAW_UP = $80
  IFND TAPE_FIRST
@@ -138,23 +148,26 @@ tape_simulation:
 tape_menu_keys:
 .next:
  move.w (a3)+,d2
- beq.s .done
+ beq.w .done
  lea tape_event(pc),a0
  move.w (a3)+,ie_Code(a0)
  move.w (a3)+,ie_Qualifier(a0)
- ; The menu skips checked entries. When FULL is already checked (notably on
- ; 68020), Return would select the next level and reduce detail.
+ ; The menu skips checked entries. Leave an already selected level alone;
+ ; otherwise navigate to the requested VERIFY detail level.
  cmp.w #RAW_RETURN,ie_Code(a0)
- bne.s .send
+ bne.w .send
  move.l tape_a4(pc),a1
  tst.w d3
- bne.s .normal_before
- tst.b -$7708(a1)
- beq.s .next
- bra.s .send
+ bne.w .normal_before
+ cmp.b #TAPE_DETAIL,-$7708(a1)
+ beq.w .next
+ IFNE TAPE_DETAIL
+ bsr tape_detail_select
+ ENDC
+ bra.w .send
 .normal_before:
  cmp.w #10,-$bc(a1)
- beq.s .next
+ beq.w .next
 .send:
  lea tape_io(pc),a1
  jsr _LVODoIO(a6)
@@ -164,28 +177,70 @@ tape_menu_keys:
  exg a5,a6
  lea tape_event(pc),a0
  cmp.w #$24,ie_Code(a0)
- bne.s .selection
+ bne.w .selection
  move.l tape_dialog_ready(pc),d0
- bne.s .next
- bra.s .timed
+ bne.w .next
+ bra.w .timed
 .selection:
  cmp.w #RAW_RETURN,ie_Code(a0)
- bne.s .timed
+ bne.w .timed
  move.l tape_a4(pc),a0
  tst.w d3
- bne.s .normal_after
- tst.b -$7708(a0)
- beq.s .next
- bra.s .timed
+ bne.w .normal_after
+ cmp.b #TAPE_DETAIL,-$7708(a0)
+ beq.w .next
+ bra.w .timed
 .normal_after:
  cmp.w #10,-$bc(a0)
- beq.s .next
+ beq.w .next
 .timed:
  subq.w #1,d2
- bne.s .wait
- bra.s .next
+ bne.w .wait
+ bra.w .next
 .done:
  rts
+ IFNE TAPE_DETAIL
+; Navigate only unchecked graphics entries. The current level is skipped by
+; the game's dialog, so one fewer Down is needed when it precedes the target.
+tape_detail_select:
+ move.w d2,-(sp)
+ moveq #TAPE_DETAIL,d4
+ cmp.b #TAPE_DETAIL,-$7708(a1)
+ bhs.s .count_ready
+ subq.w #1,d4
+.count_ready:
+ tst.w d4
+ beq.s .done
+.down:
+ move.w #$4d,d0
+ moveq #10,d2
+ bsr.s tape_detail_key
+ move.w #$cd,d0
+ moveq #30,d2
+ bsr.s tape_detail_key
+ subq.w #1,d4
+ bne.s .down
+.done:
+ lea tape_event(pc),a0
+ move.w #RAW_RETURN,ie_Code(a0)
+ clr.w ie_Qualifier(a0)
+ move.w (sp)+,d2
+ rts
+tape_detail_key:
+ lea tape_event(pc),a0
+ move.w d0,ie_Code(a0)
+ clr.w ie_Qualifier(a0)
+ lea tape_io(pc),a1
+ jsr _LVODoIO(a6)
+.wait:
+ exg a5,a6
+ jsr _LVOWaitTOF(a6)
+ exg a5,a6
+ subq.w #1,d2
+ bne.s .wait
+ rts
+ ENDC
+
 tape_graphics_keys:
  dc.w 5,$63,IEQUALIFIER_CONTROL
  dc.w 5000,$24,IEQUALIFIER_CONTROL
@@ -197,8 +252,8 @@ tape_graphics_keys:
  dc.w 50,$c5,0
  dc.w 0
 
-; FULL is checked, so the dialog starts on entry 1. Four cursor-down presses
-; reach Normal (entry 5). This sequence is only needed for the 68020 default.
+; One of the five graphics entries is checked and skipped. Four Down presses
+; from the first unchecked entry reach Normal (entry 5).
 tape_simulation_keys:
  dc.w 5,$63,IEQUALIFIER_CONTROL
  dc.w 5000,$24,IEQUALIFIER_CONTROL
