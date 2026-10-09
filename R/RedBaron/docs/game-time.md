@@ -183,8 +183,9 @@ for each lifetime tick; one countdown unit must not be mistaken for one CIA tick
 Local evidence is retained under `w0-time-scale{0,40,60}-cached030` with the
 player objects, first/last h3 snapshots and complete step ring. Reproduce each
 summary with `tools/player_motion.py CAPTURE_DIRECTORY`. W0.6 remains open
-until the timer coupling is resolved. The velocity interpretation and elapsed-time
-reference are established below; neither study authorizes any timing change.
+until the timer coupling is classified. The later sections now provide that
+classification and the verified velocity/elapsed-time reference; neither
+authorizes a timing change.
 
 ## Verified velocity and position interpretation
 
@@ -251,3 +252,45 @@ design, while preserving and testing the original integration quirks as
 separate compatibility choices. This defines the reference to investigate;
 it does not approve a timing change or replace W6's collision/force tests.
 Reproduce the checks with `tools/player_kinematics.py CAPTURE_DIRECTORY`.
+
+## Timestamp coupling classification for the step-locked test
+
+The differing `h3:03f5a` longword is a timer-start timestamp, not an RNG
+seed or a physics clock. An audit of every relocation in the supported sim
+executable finds exactly three references into its six-byte timer object:
+
+| Reference | Callee | Effect |
+| --- | --- | --- |
+| `sim:2abce` | `sim:29760` | Store lifetime CIA ticks and the requested duration |
+| `sim:2ad8a` | `sim:29760` | Same setter |
+| `sim:2b476` | `sim:2977e` | Clear duration and store lifetime ticks minus one |
+
+Both callees are leaf routines. They write through the supplied pointer,
+restore their saved address register, and do not retain or return the timer
+pointer. The callers discard or replace the argument after the call. The
+neighboring `h3:03f44` and `h3:03f50` references are null-terminated strings
+ending before this timer, not bases of a timer array.
+
+The poller `sim:2972c` has one direct caller and one absolute jump stub at
+`sim:20c22`. All five direct callers of that stub and the direct caller pass
+other timer objects: `h3:03f60`, `03f66`, `03f6c`, `03f72`, `03f78` and
+`03f7e`, respectively. None passes `h3:03f5a`. The complete relocation/direct
+call audit and the leaf-body inspection therefore classify the observed
+difference as **clock-dependent timestamp bookkeeping with no consumer in
+the inspected sim v1 timer paths**. No physics or RNG feedback was found
+through this timer. Retained evidence: `timer-reference-audit.json` in the
+local game-time analysis directory, against the original sim hash recorded
+in `profiling.md`.
+
+This resolves the specific W0 coupling observed at step 20: the raw h3
+comparison still correctly reports the timestamp and previous elapsed
+argument, while all other h3 bytes and all 20 native player-history entries
+match. No bytes are silently masked by `compare_h3.py`. This supports the
+scoped clamped-regime test; it does not establish equality of arbitrary
+heap objects, every mission, or the unclamped tracking regime. Those broader
+W6 tests remain required before a timing design is approved.
+
+An attempted debugger read-watchpoint experiment is excluded. It stopped
+inconsistently after a positive control and did not reach its requested
+checkpoint reliably. It supplies no consumer-coverage evidence; the result
+above comes from the original executable audit and the retained state test.
