@@ -657,3 +657,28 @@ appear above. The 68030 values are inclusive wall time, whereas the other
 machines support main-context cycle attribution. Fast-CPU ownership checks
 are scoped to their actual recorded windows. No rendering, sound or game-time
 change is enabled by completion of W0.
+
+
+## W1a initial complete-call check (matrix pending)
+
+The initial W1a implementation uses one VERIFY binary, SHA-256
+`6f84584180b17ce7f5b27e46088dba7630f6c829aa581079cf1317695658b7ac`,
+with CUSTOM2=0/1 and CUSTOM5=0. Two separate 100-field opening captures use
+the continuity configuration (68000, 1 MB chip + 2 MB fast + 512 KB slow).
+They retain the following completed dashboard mirror calls:
+
+| Setting | Complete calls | Mean main cycles | Range |
+| --- | ---: | ---: | --- |
+| Original, CUSTOM2=0 | 2 | 1,853,636 | 1,852,524–1,854,748 |
+| W1a, CUSTOM2=1 | 2 | 630,106 | 629,354–630,858 |
+
+The candidate count includes the hook, option check and entry blitter wait.
+The interrupt stack is established from this capture's callbacks. Calls cut
+at the edges are excluded. `call_costs.py --routine NAME:ENTRY:RTS` accepts
+live replacement endpoints from the retained listing and slave marker, with
+the same SP/context checks as original calls. Evidence is `w1a-{off,on}-entry`.
+
+These are preliminary routine measurements, not the required three-machine
+W1 result or a frame-rate claim. No release bit is promoted. Full fixed-window,
+long-swap and cache measurements remain in progress; correctness evidence and
+remaining gates are in `w1-verification.md`.

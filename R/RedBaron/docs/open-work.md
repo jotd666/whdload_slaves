@@ -4,13 +4,15 @@ The accepted decisions and detailed requirements are in `performance-plan.md`,
 especially §6. `verification.md` is the W0 evidence ledger; `profiling.md`
 contains measured baselines. No performance optimization is enabled yet.
 
-## W0 complete; next: W1a
+## W0 complete; W1 in progress
 
 The final same-build A500-equivalent, A1200/14 MHz 68020 and cached 50 MHz
 68030 event/steady baselines are complete. The acceptance ledger records the
 four strict scene repeats, counter and gap checks, full dashboard census,
 scoped game-time coupling test, patch framework and initial references.
-No performance optimization is enabled. The next coherent feature is W1a.
+W1a is now implemented for developer/VERIFY testing; its full measurement gates
+are pending. The release mask remains zero. See `w1-verification.md` for evidence
+and remaining W1a/W1b work.
 
 ## Implementation order after W0
 

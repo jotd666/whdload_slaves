@@ -32,6 +32,10 @@ perf_install_v1:
 	IFD VERIFY
 	bsr verify_copy_originals
 	ENDC
+	btst #0,perf_mask+3(pc)
+	beq.b .no_mirror
+	bsr mirror_install
+.no_mirror
 	rts
 
 ; Check a non-relocated hook range before installing it.

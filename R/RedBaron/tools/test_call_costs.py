@@ -36,6 +36,14 @@ class CompleteCalls(unittest.TestCase):
         self.assertEqual(result['calls'], [])
         self.assertEqual(len(result['incomplete']), 1)
 
+    def test_replacement_return_in_slave(self):
+        rows = [insn(SIM+0x304d0, 12), insn(0x200000, 100), insn(0x200100, 16)]
+        with patch('call_costs.barto.load', return_value=trace(rows)):
+            result = measure([Path('one')], SIM, 0x8000, 0xa000,
+                             {'mirror': (SIM+0x304d0, 0x200100)})
+        self.assertEqual(result['calls'][0]['main_cycles'], 128)
+        self.assertEqual(result['incomplete'], [])
+
     def test_wrong_return_stack_is_rejected(self):
         rows = [insn(SIM+0x304d0, 40), insn(SIM+0x30570, 16, SP-4)]
         with patch('call_costs.barto.load', return_value=trace(rows)):

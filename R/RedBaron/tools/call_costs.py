@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Measure complete original sim calls, separating the observed interrupt stack.
+"""Measure complete original or replacement calls, separating the observed interrupt stack.
 
 Explicit entry/RTS pairs avoid inferred call trees. Each file is a separate chunk:
 open calls are discarded at joins. The interrupt-stack range must be established
@@ -15,7 +15,9 @@ ROUTINES = {'mirror': (0x304d0, 0x30570), 'world3d': (0x2c552, 0x2c806),
             'world_step': (0x1098, 0x11c8)}
 
 
-def measure(paths, sim, irq_low, irq_high):
+def measure(paths, sim, irq_low, irq_high, overrides=None):
+    routines = {name: (sim+entry, sim+ret) for name, (entry, ret) in ROUTINES.items()}
+    routines.update(overrides or {})
     result = dict(calls=[], incomplete=[], irq_stack=[irq_low, irq_high])
     for path in paths:
         trace = barto.load(path)
@@ -24,8 +26,8 @@ def measure(paths, sim, irq_low, irq_high):
             for pc, cycles, regs in trace.instructions(field):
                 sp = regs[15]
                 irq = irq_low <= sp < irq_high
-                for name, (entry, ret) in ROUTINES.items():
-                    if pc == sim + entry:
+                for name, (entry, ret) in routines.items():
+                    if pc == entry:
                         if irq:
                             raise ValueError(f'{name} entry lies in the supplied interrupt stack')
                         if name in active:
@@ -45,7 +47,7 @@ def measure(paths, sim, irq_low, irq_high):
                         if not call['entry_sp'] - 0x4000 <= sp <= call['entry_sp']:
                             raise ValueError(f'Unexpected stack during {name}: {sp:#x}')
                         call['main_cycles'] += cycles
-                    if pc == sim + ROUTINES[name][1]:
+                    if pc == routines[name][1]:
                         if irq or sp != call['entry_sp']:
                             raise ValueError(f'{name} did not restore its entry stack')
                         call['last_field'] = field.index
@@ -53,7 +55,7 @@ def measure(paths, sim, irq_low, irq_high):
                         del active[name]
         result['incomplete'].extend(active.values())
     result['summary'] = {}
-    for name in ROUTINES:
+    for name in routines:
         rows = [x for x in result['calls'] if x['routine'] == name]
         if rows:
             result['summary'][name] = dict(completed_calls=len(rows),
@@ -69,11 +71,19 @@ def main():
     p.add_argument('--sim', required=True, type=lambda x: int(x, 0))
     p.add_argument('--irq-stack', required=True, help='LOW:HIGH, upper bound excluded')
     p.add_argument('--out', type=Path)
+    p.add_argument('--routine', action='append', default=[], metavar='NAME:ENTRY:RTS',
+                   help='Override/add a routine using absolute live entry and RTS PCs')
     a = p.parse_args()
     low, high = (int(x, 0) for x in a.irq_stack.split(':'))
     if low >= high:
         p.error('Interrupt stack must be a nonempty range')
-    result = measure(a.traces, a.sim, low, high)
+    overrides = {}
+    for spec in a.routine:
+        name, entry, ret = spec.split(':')
+        if name in overrides:
+            p.error('Duplicate routine override')
+        overrides[name] = (int(entry, 0), int(ret, 0))
+    result = measure(a.traces, a.sim, low, high, overrides)
     if a.out:
         a.out.write_text(json.dumps(result, indent=2) + '\n')
     print(json.dumps(result['summary'], indent=2))
