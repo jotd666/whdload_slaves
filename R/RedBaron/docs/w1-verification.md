@@ -240,6 +240,51 @@ and whole-call timing runs use the corrected image.
 All 33 host checks and the three-range hook audit pass after correction. Normal
 and developer text sizes remain 7,198 and 7,370 bytes.
 
+## Corrected-build scene twins on all three machines
+
+All six native bank/dense routes reach gameplay step 40 in flight with the
+corrected default VERIFY image. Each boot passes all 65,536 word checks,
+64 synthetic mirror cases and the complete lifecycle probe. Counts below include
+reference execution; they are correctness coverage, not event/performance counts.
+
+| Machine | Scene | Live mirror twins | Cache-build twins | Pixel twins |
+| --- | --- | ---: | ---: | ---: |
+| a500 | bank | 6 | 5 | 1 |
+| a500 | dense | 6 | 5 | 1 |
+| 020 | bank | 14 | 5 | 9 |
+| 020 | dense | 11 | 5 | 1 |
+| 030 | bank | 6 | 5 | 1 |
+| 030 | dense | 6 | 5 | 1 |
+
+Evidence is `w1-scene-twins-{a500,020,030}-{bank,dense}`. The A500 runs use
+512 KB chip and 1.5 MB slow RAM with no fast RAM. The bank and rear-view screenshots
+were retained; the A500 shots were visually checked. The 68020 dense run has
+invalidated the cache by step 40 while still completing all checks.
+
+The cached 68030 runs additionally enable the optional first-fill diagnostic,
+only for correctness/cache-policy verification. Both read actual CACR `0x2111`,
+with instruction/data cache policy enabled, MMU requested and emulator data-cache
+modeling enabled. Each retains 38 first-fill records with no missed publication;
+14 bank and four dense records flag potentially active old-display fills. These
+instrumented records are not performance measurements or proof of visible tearing.
+The diagnostic stays off in timing runs.
+
+## Cached-CPU selection and timing validation
+
+Read-only whole-call clocks show the cached 68030 table mirror taking 23.157 ms
+against 17.486 ms for the original. The normal player selection therefore clears
+bit 0 on 68030/040/060, retaining the original in-place path. The 040/060 are
+conservative exclusions, not measured results. Bit 1 remains independently
+selectable and builds its private copy with the table routine. Developer and
+VERIFY builds retain explicit masks without this policy filter.
+
+All 35 host tests pass, including conservative rejection of ambiguous horizontal
+counter-boundary samples. All three modes compile: normal text 7,214 bytes,
+developer 7,370 and VERIFY 34,332. The normal-only selection change leaves the
+corrected VERIFY image byte-for-byte unchanged. The release verified mask is
+still zero pending final scene/cached-CPU gates. Costs and exclusions are in
+`profiling.md`.
+
 ## Remaining W1 gates
 
 - Finish off/on measurements across the required windows and all three CPUs,

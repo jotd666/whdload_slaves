@@ -32,6 +32,12 @@ def summarize(log, first, last, rate=49.92041):
         if any(r['vbl'] not in known or r['line'] < threshold for r in [a, b]):
             excluded.append(dict(routine=call['routine'], step=a['step'], reason='Unverified/ambiguous counter phase'))
             continue
+        # A captured VHPOSR read at horizontal zero can retain the preceding
+        # vertical count. Do not invent a line increment to repair that sample.
+        # Exclude the boundary plus one slot of margin at either endpoint.
+        if any(r['hpos'] <= 1 for r in [a, b]):
+            excluded.append(dict(routine=call['routine'], step=a['step'], reason='Ambiguous horizontal-counter boundary'))
+            continue
         slots = (b['vbl']-a['vbl'])*313*227 + (b['line']-a['line'])*227 + b['hpos']-a['hpos']
         if slots <= 0:
             raise ValueError('Nonpositive whole-call duration')

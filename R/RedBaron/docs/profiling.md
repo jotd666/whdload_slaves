@@ -818,3 +818,56 @@ Only two branch-displacement bytes change, with unchanged layout. Neither branch
 is taken in the retained A500/68020 cache-on CPU traces. Correctness regressions
 pass; see `w1-verification.md`. Remaining scene and call-cost captures use the
 corrected binary, and the older matrix retains its explicit build attribution.
+
+## Corrected-build warm dashboard costs
+
+These runs use corrected VERIFY SHA-256
+`5c0918ccbccb27ad301478873e1aeab8398f057211b2749ce7d16fe949f23475`,
+with twin/paint diagnostics off. A500 and 68020 samples begin at each setting's
+first later natural dirty event identified by its census. They measure completed
+calls, not equal-state frame-rate comparisons. The same 168×102 EDASH-B bitmap
+is drawn through `sim:30408`; request 2 is mirrored and request 0 is ordinary.
+
+| Machine / warm draw | OFF main cycles (calls) | W1a main cycles (calls) | W1a+W1b main cycles (calls) |
+| --- | ---: | ---: | ---: |
+| A500, mirrored | 1,940,090 (1) | 715,830 (2) | 31,845 (3) |
+| A500, ordinary | 1,930,434 (1) | 703,760 (2) | 10,713 (3) |
+| 68020, mirrored | 840,277 (2) | 689,456 (3) | 38,073 (4) |
+| 68020, ordinary | 824,497 (2) | 656,225 (3) | 12,876 (4) |
+
+Values are means rounded to whole cycles. The ordinary original draw also pays
+to mirror the game bitmap back. No in-place mirror calls remain in either
+cache-on trace. Cache-on draws still pay for clipping and the original blitter;
+these numbers are not cache-lookup costs. Evidence: `w1-hot-{a500,020}-{0,1,3}`.
+
+The cached 68030 uses read-only entry/return breakpoints and VBlank/beam clocks,
+with counter-phase validation. These are elapsed times including interrupts,
+from entry to just before RTS; they are not main-context CPU cycles. Samples
+come from steps 1–119 of `w1-clock-030-{0,1,3}`. Endpoint records at horizontal
+positions 0/1 are excluded because the captured horizontal wrap can retain the
+preceding vertical count. Ambiguous VBlank-phase endpoints are also excluded;
+17, 17 and 16 dashboard/lookup/mirror records respectively remain excluded.
+A negative duration away from those boundaries is an error, not repaired data.
+
+| Cached 68030 measurement | Calls | Mean elapsed time |
+| --- | ---: | ---: |
+| Original in-place mirror | 33 | 17.486 ms |
+| W1a in-place mirror, including its required entry wait | 29 | 23.157 ms |
+| OFF mirrored dashboard draw | 18 | 20.384 ms |
+| OFF ordinary dashboard draw | 16 | 18.301 ms |
+| W1a mirrored dashboard draw | 11 | 26.812 ms |
+| W1a ordinary dashboard draw | 19 | 24.589 ms |
+| W1b first mirrored draw, including build | 1 | 47.945 ms |
+| W1b cache build alone | 1 | 41.681 ms |
+| W1b later mirrored draw | 19 | 2.936 ms |
+| W1b later ordinary draw | 19 | 0.915 ms |
+| W1b cache hit alone | 21 | 0.01455 ms |
+
+The first ordinary cache-on draw takes 9.750 ms and is excluded from the later
+ordinary mean. There is one observed build; later draws reuse it. The mirror
+regression is a measured whole-call result, including waits and interrupts;
+these clocks do not isolate its microarchitectural cause. Accordingly the normal
+player selection retains the original in-place mirror on 68030 and conservatively
+on unmeasured 68040/68060. Developer/VERIFY masks still allow explicit W1a tests.
+W1b still uses the table once to build its private chip copy. This selection
+policy does not change the existing default-off preference or icon tooltypes.

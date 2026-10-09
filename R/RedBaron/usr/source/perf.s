@@ -18,6 +18,13 @@ perf_read_options:
 	tst.l d0
 	beq.b .selected
 	move.l #PERF_VERIFIED_MASK,d0
+	; The table mirror loses to the original on the measured cached 68030.
+	; Keep the original in-place path on 030 and unmeasured 040/060 players.
+	; DEVELOPER/VERIFY retain explicit bits; the cache still builds on a copy.
+	move.l perf_attnflags(pc),d1
+	and.l #$8c,d1 ; AFF_68030 | AFF_68040 | AFF_68060
+	beq.b .selected
+	bclr #0,d0
 .selected
 	ENDC
 	ENDC
