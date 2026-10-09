@@ -1,7 +1,7 @@
 ; Optional rendering changes. All game hooks are absent with CUSTOM2 bit 0 off.
 ; The original game remains the reference for every replacement.
-; PERF_MASK test-build bits: 1=BLIT IRQ, 2=vertices, 4=emit.
-; Keep new routines out of the default until extended validation.
+; PERF_MASK test-build bits: 1=BLIT IRQ, 2=vertices, 4=emit, 8=backface,
+; 16=parent rotation. Keep new routines out of the default until validation.
  IFND PERF_MASK
 PERF_MASK = 1
  ENDC
@@ -17,6 +17,7 @@ perf_init:
  move.l d0,(a0)
  movem.l (sp)+,d0/a0
  bsr perf_geometry_init
+ bsr perf_math_init
  rts
 
 perf_patch:
@@ -43,6 +44,22 @@ pl_perf:
  ENDC
  IFNE PERF_MASK&4
  PL_P $1662,perf_emit ; PERF_RANGE h0:01662 6 bit=0
+ ENDC
+ IFNE PERF_MASK&8
+ IFD PERF_TWIN
+ PL_P $aad4,math_twin_backface ; PERF_RANGE h0:0aad4 6 bit=0
+ ELSE
+ PL_P $aad4,perf_backface_body ; PERF_RANGE h0:0aad4 6 bit=0
+ ENDC
+ PL_NOP $aada,2 ; PERF_RANGE h0:0aada 2 bit=0
+ ENDC
+ IFNE PERF_MASK&16
+ IFD PERF_TWIN
+ PL_P $a756,math_twin_parent ; PERF_RANGE h0:0a756 6 bit=0
+ ELSE
+ PL_P $a756,perf_parent_body ; PERF_RANGE h0:0a756 6 bit=0
+ ENDC
+ PL_NOP $a75c,2 ; PERF_RANGE h0:0a75c 2 bit=0
  ENDC
  PL_END
 
@@ -149,4 +166,9 @@ perf_blit_windows: dc.l 0
  include "geometry.s"
  IFD PERF_TWIN
  include "geometry_verify.s"
+ ENDC
+
+ include "math.s"
+ IFD PERF_TWIN
+ include "math_verify.s"
  ENDC
