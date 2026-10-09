@@ -5,7 +5,8 @@
 > 2 MB fast, maximum detail) and a static/trace analysis of that capture. **Read the
 > worktree's `AGENTS.md`, then `profiling.md`, then this file.** Every number is a
 > measurement from that capture unless marked *(est.)*; estimates must be replaced by
-> measurements before anything is claimed. No optimization exists yet. The user's decisions
+> measurements before anything is claimed. This opening describes the original baseline;
+> implementation status is recorded below and in `w2-verification.md`. The user's decisions
 > (2026-10-09) are in §6 and override any option discussed elsewhere.
 
 ## Implementation update: CPU-specific priorities
@@ -21,6 +22,21 @@ W2 remains useful for the 68000. Specialized accelerated-CPU maths rewrites have
 less headroom; subsequent fast-CPU work should prioritize drawing and chip-bus
 traffic. See the current profiling section before relying on the original estimates.
 This finding does not change the sound/game-time decisions in §6.
+
+## W2 implementation status
+
+G1 core normalization, G2 trivial screen clipping, G3 32-bit vertex misses and
+G4 low-long dot are implemented behind developer/VERIFY CUSTOM2 bits 2–5, with
+original-checked models and per-call twins. Combined twins pass on all three
+CPUs in banking/dense scenes. The measured bundle gains 5.97% FPS on A500 and
+5.54% on 68020; cached-68030 timing is pending. The player release mask stays zero.
+
+The remaining G1/G3 refinements and G5–G9 are explicitly deferred under §3.8,
+not implemented. `w2-verification.md` records the current instruction-cost
+assessment and distinguishes routine-cost ceilings from estimated savings.
+The historical candidate table below remains the design inventory, not a list
+of completed features. Revisit a deferred item when a concrete profile or larger
+combined design justifies its cost. Sound and game-time decisions are unchanged.
 
 ## 0. Ground rules
 

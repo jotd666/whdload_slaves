@@ -37,7 +37,7 @@ wrapper averages, including unchanged cache hits, fall from 1,109.2 to 936.4 and
 savings. 208 synthetic and 8,729 live comparisons pass; the separate 16-bit path
 is unchanged. Conditions, state comparison and hash are in `w2-verification.md`.
 
-## Combined W2: current A500 result
+## Combined W2: current measured results
 
 G1 projection core, G2 trivial clipping, G3 32-bit vertex misses and G4 dot product
 (CUSTOM2=60) improve the measured A500-equivalent steady run from **1.8380 to
@@ -50,8 +50,12 @@ events, and retain dt=450. The separate 150-field samples show **8.58% lower
 The same frozen binary passes all four twins together on A500, 68020 and cached
 68030 in banking and dense scenes. A500 equal-step state differs only in known
 clock fields; disabled-byte and sampled display-ownership checks pass. Detailed
-counts, scope and evidence are in `w2-verification.md`. Combined faster-CPU timing
-is still being collected; the normal release mask remains zero.
+counts, scope and evidence are in `w2-verification.md`. The 68020 pair also gains **5.54%**, from **6.1654 to 6.5069 FPS** over swaps
+80–400 (2,591 → 2,455 fields, no dashboard events). Its separate cost sample
+shows 5.43% lower whole-pass main cycles and improvements in all four measured
+routines. The 68020 dt is no longer fixed at 450, so its two runs can legitimately
+follow different world states. Cached-68030 timing is still being collected;
+the normal release mask remains zero.
 
 ## Cached 68030: drawing is the larger bottleneck
 

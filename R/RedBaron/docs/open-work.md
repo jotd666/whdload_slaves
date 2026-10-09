@@ -43,9 +43,10 @@ and icons are unchanged. Developer/VERIFY builds retain individual options.
    checkpoints (CUSTOM2 bits 2–5);
    see `w2-verification.md`.
    Combined twins now pass on all three CPUs in banking and dense scenes. The
-   measured A500 steady bundle gains 5.97% FPS. Combined faster-CPU timing is
-   pending; wrapper integration, the 16-bit transform path and G5–G9 still need
-   disposition under the plan’s 3%-of-frame gate.
+   measured steady bundle gains 5.97% FPS on A500 and 5.54% on 68020. Cached
+   68030 timing is pending. Remaining G1/G3 refinements and G5–G9 are deferred
+   under the plan’s 3%-of-frame gate; see the cost assessment in
+   `w2-verification.md`.
    Each change needs its original-checked Python model and VERIFY twin. Geometry is a substantial 68000 cost; cached-68030 measurements instead
    put drawing ahead of these maths routines. W1 mainly removes dashboard stalls.
 2. **W5:** tear-free publication and a frame cap under the player switch.

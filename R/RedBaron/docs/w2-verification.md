@@ -261,3 +261,73 @@ All seven disabled ranges retain original relocated bytes with CUSTOM2=0; with
 60, the three unselected W1 ranges retain them. Evidence:
 `w2-combined-a500-{0,60}`. The rate, state and cost evidence all use SHA-256
 `1456f8d5b84cf787f3429b7ae6580fcc88ce94903d604bbb3d339610f85853b3`.
+
+### Combined 68020 timing
+
+The 14 MHz 68EC020 pair uses the same binary and options as the A500 comparison,
+with the documented A1200 configuration. Swaps 80–400 span 320 intervals:
+2,591 fields OFF and 2,455 ON, or **6.1654 → 6.5069 FPS (+5.54%)**. Both windows
+exceed 2,000 fields and contain no dashboard events. Unlike A500, dt varies below
+450; equal step numbers do not imply identical world states, so this is an observed
+run-rate improvement, not an isolated instruction-speed ratio.
+
+| Routine | OFF mean main cycles | ON mean main cycles |
+| --- | ---: | ---: |
+| Whole 3D pass (5 complete calls each) | 1,541,652.2 | 1,457,992.4 |
+| Projection core | 740.8 | 656.5 |
+| Dot product | 965.6 | 377.0 |
+| Clipping, including fallback | 1,017.7 | 779.5 |
+| Vertex wrapper, including cache hits | 589.2 | 477.0 |
+
+The 40-field cost samples show a 5.43% whole-pass reduction. Both samples have
+observable display ownership and no detected active-display conflicts; all
+unselected hook ranges retain original bytes. Evidence:
+`w2-combined-020-{0,60}`, same frozen SHA-256 as above.
+
+## Remaining candidate assessment
+
+Plan §3.8 explicitly skips changes estimated below 3% of a frame unless free.
+The combined-ON A500 capture has four complete main-context frame intervals,
+measured from one `sim:2c552` entry to the next, averaging **3,175,654 cycles**.
+Thus the current screening threshold is about **95,270 main cycles/frame**.
+This is a screening budget, not a claim that a candidate achieves its estimate.
+Existing models/twins remain required before any deferred code is implemented.
+
+An instruction histogram restricted to complete 3D passes in the retained
+same-build captures gives these remaining routine costs. Self costs exclude
+callees; they are ceilings on savings within those instructions, not achievable
+speedups. Captures contain four A500 and five 68020 complete passes.
+
+| Remaining area | A500 own cycles/pass | 68020 own cycles/pass | Disposition |
+| --- | ---: | ---: | --- |
+| G1 wrapper `sim:38e9c` | 59,823.5 | 27,434.4 | Defer folding: even deleting the whole wrapper is below the A500 gate |
+| G5 face hub `sim:3b41a` | 223,099.5 | 126,232.2 | Defer proposed register rewrite: plan estimate 70–85k saved, not the entire hub cost; moderate verification risk |
+| G6 setup `sim:3b0f6` | 42,069.0 | 21,628.0 | Defer pure inlining; 470.25 A500 calls/pass save only about 16k nominal BSR/RTS cycles, before memory effects |
+| G8 LOD `sim:3a518` | 72,814.5 | 38,137.2 | Defer register rewrite |
+| G8 object dispatch `sim:3a902` | 65,773.0 | 58,557.8 | Defer register rewrite; combined G8 estimate remains 40–80k, not deletion of both routines |
+| G9 flag clear `sim:3a8b4` | 15,425.0 | 11,537.4 | Defer: even deleting the entire routine is below the gate |
+
+G3's unmodified 16-bit cache wrapper appears zero times in the A500 steady
+sample and eight times/pass in the 68020 sample. Other callers still use the
+16-bit transform (25/20 calls per pass respectively). The plan's ~20k saving
+for that extension does not justify a separate replacement/twin lifecycle now.
+This is scene-dependent coverage, not a claim that the 16-bit path is unused.
+
+G7 remains unimplemented. The original census found 39 all-behind faces/frame
+and about 789 cycles per empty near-plane call; the plan estimated ~35k additional
+saving. G2 already makes the later empty screen clip cheaper. Earlier rejection
+needs face-loop tracking and preserved scratch side effects, so it is not a free
+extra branch. Defer under the same gate.
+
+G1 retains the common k=128 path and exact general normalization. Generalized
+power-of-two specializations, wrapper folding, additional register-save tuning
+and CPU-specific arithmetic variants are deferred. The cached-68030 breakdown
+puts all four measured geometry categories together at only 11.95% of its 3D
+pass; drawing is the larger target there.
+
+These are explicit low-value deferrals under the plan, **not claims that G5–G9
+or the remaining G1/G3 extensions have been implemented or verified**. Revisit
+with a concrete new scene/profile or a larger combined design that clears the
+threshold. Evidence: `candidate-budget.json` in the combined-ON A500/68020
+captures, plus the original `geometry/out-ilevel-*`, `out-kids.txt`,
+`out-392a4.txt` and the disassembly of `sim:3b0f6`.
