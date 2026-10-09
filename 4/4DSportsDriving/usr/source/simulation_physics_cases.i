@@ -208,3 +208,23 @@ sim_airborne_cases:
  dc.w -300,-15,-330,0
  dc.l 645
 sim_airborne_cases_end:
+
+; Constant clearance accumulates exactly 2/5 of the A2500 extension increment;
+; the 192 per-step rate cap is scaled, the absolute 384 limit is not.
+sim_extension_cases:
+ dc.w 0,1,0,0,2
+ dc.w 0,1,2,0,4
+ dc.w 0,1,4,1,1
+ dc.w 1,1,1,1,3
+ dc.w 1,1,3,2,0
+ dc.w 0,192,0,76,4
+ dc.w 76,192,4,153,3
+ dc.w 153,192,3,230,2
+ dc.w 230,192,2,307,1
+ dc.w 307,192,1,384,0
+ dc.w 0,193,0,76,4
+ dc.w -384,32767,0,-308,4
+ dc.w 383,2,4,384,0
+ dc.w 384,1,4,384,0
+ dc.w 380,20,0,384,0
+sim_extension_cases_end:

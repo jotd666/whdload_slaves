@@ -23,6 +23,7 @@ sim_a4000_arm:
 
 ; a1 vehicle -> a0 private block; no stored pointer is part of replay state.
 ; steering +0, acceleration +2, distance +4, gear +6, wheel pairs +8..23.
+; Four suspension-extension fractions at +24..31.
 sim_a4000_car:
  lea -$85e(a4),a0
  cmpa.l a0,a1
@@ -230,6 +231,7 @@ sim_a4000_wheel_contact:
  addq.l #1,(a0)
  move.l 8(a5),a1
  bsr sim_a4000_car
+ clr.w 24(a0,d0.w)
  add.w d0,d0
  lea 8(a0),a0
  clr.l (a0,d0.w)
@@ -260,3 +262,42 @@ sim_a4000_private: dcb.b SIM_PRIVATE_BYTES,0
 sim_a4000_gear_calls: dc.l 0
 sim_a4000_wheel_calls: dc.l 0
 sim_a4000_contact_calls: dc.l 0
+
+; $10234..$10248 and $1024A..$10260, within native suspension $10012.
+; Preserve its geometry/penetration branches and cap at extension 384. Both
+; native paths form a0 = car + 2*wheel + $54; the variable path also sets d0.
+sim_a4000_extension_capped:
+ move.w d0,-(sp)
+ move.w #192,d0
+ bsr sim_a4000_extension_apply
+ move.w (sp)+,d0
+ rts
+sim_a4000_extension_variable:
+ move.w 12(a5),d0
+ bsr sim_a4000_extension_apply
+ rts
+sim_a4000_extension_apply:
+ move.w 14(a5),a0
+ adda.l a0,a0
+ adda.l 8(a5),a0
+ adda.l #$54,a0
+ cmp.w #50,-$15fa(a4)
+ beq .new
+ add.w d0,(a0)
+ rts
+.new:
+ movem.l d0-d2/a1-a2,-(sp)
+ move.l a0,a2
+ move.w d0,d2
+ move.l 8(a5),a1
+ bsr sim_a4000_car
+ move.w 14(a5),d0
+ add.w d0,d0
+ lea 24(a0,d0.w),a0
+ move.w d2,d1
+ move.w (a2),d0
+ bsr sim_extension_50
+ move.w d0,(a2)
+ move.l a2,a0
+ movem.l (sp)+,d0-d2/a1-a2
+ rts

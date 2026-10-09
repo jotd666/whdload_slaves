@@ -282,6 +282,8 @@ pl_main
     PL_PSS $CB48,sim_a4000_wheel,142
     PL_PSS $CC9E,sim_a4000_wheel_contact,2
     PL_PSS $D1B0,sim_a4000_wheel_contact,2
+    PL_PSS $10234,sim_a4000_extension_capped,14
+    PL_PSS $1024A,sim_a4000_extension_variable,16
     ENDC
     IFD SIM_SCHEDULE
     PL_PSS $70E0,sim_schedule_poll,2

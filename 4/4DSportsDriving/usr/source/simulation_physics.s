@@ -182,3 +182,27 @@ sim_airborne_pair_50:
  ext.l d0
  movem.l (sp)+,d2-d5
  rts
+
+; Positive-clearance suspension extension from $10226..$10286. The input is
+; geometric wheel clearance, but native code accumulates it into extension on
+; EVERY call. Treat min(clearance,192) as the nominal A2500 extension rate.
+; d0.w extension, d1.w positive clearance; a0 -> signed fifths remainder.
+; Return d0.w extension capped at the native absolute limit 384. Negative
+; penetration correction remains instantaneous in the original routine.
+sim_extension_50:
+ movem.l d1-d2,-(sp)
+ move.w d0,d2
+ move.w d1,d0
+ cmp.w #192,d0
+ ble .rate
+ move.w #192,d0
+.rate:
+ bsr sim_rate_20_to_50
+ add.w d2,d0
+ cmp.w #384,d0
+ blt .done
+ move.w #384,d0
+ clr.w (a0)
+.done:
+ movem.l (sp)+,d1-d2
+ rts
