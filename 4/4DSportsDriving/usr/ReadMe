@@ -10,8 +10,8 @@
 
  This install applies to "4D Sports Driving" © 1992 Mindscape
 
- This install requires WHDLoad to be in the path. It can be found in the
- WHDLoad package.
+ This install requires WHDLoad 17.0 or newer to be in the path. It can be found
+ in the WHDLoad package.
 
  The installed program requires 0.5 MB ChipMem and 0.5 MB OtherMem.
  It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").

@@ -72,7 +72,7 @@ CACHECHIPDATA
 
 ;============================================================================
 
-slv_Version	= 16
+slv_Version	= 17
 slv_Flags	= WHDLF_NoError|WHDLF_Examine
 slv_keyexit	= $5D	; num '*'
 
