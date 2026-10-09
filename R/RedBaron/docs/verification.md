@@ -312,3 +312,57 @@ field. A log without framebuffer blitter writes is reported as unobservable.
 Synthetic tests cover that failure mode and the old-display selection for a swap
 before copper pickup. The current 14 MHz steady trace has observable DMA and no
 active-display conflicts; see `profiling.md` for the measured first-write margins.
+
+## Optional publication/first-fill observer
+
+VERIFY CUSTOM5 bit 3 enables the `RBPAINT1` diagnostic at flight step 1. It hooks
+whole instructions at `sim:3154a` (publication and register restore) and
+`sim:2fd8a` (solid-fill destination and BLTSIZE writes), after checking their bytes.
+Static boundary, incoming-branch and relocation audits pass. Both original ranges
+remain untouched when this diagnostic bit is off. Normal/developer builds exclude
+its code and ring. It is not a performance feature.
+
+Each 40-byte record contains the game step; publication VBlank and beam; first-fill
+VBlank and beam; destination, old-display and new-display pointers; BLTSIZE; a zero
+reserved word; and CIA ticks. The 256-entry ring publishes its count only after a
+record is complete. A pending-publication flag and missed-publication count expose
+swaps without a matching fill. Only the first solid fill into the former display
+is recorded; other drawing paths still require DMA coverage checks.
+
+The header's version, stride, capacity, count and buffer pointer occupy longwords
+after its signature. Offset 28 holds WHDLoad's cache policy; offsets 32–52 hold
+pending/missed counts and the latest publication state. Version 2 adds raw CACR at
+offset 56 and a validity flag at 60. The cache-policy query uses SetCPU with a zero
+mask, so no policy bits change, but that API **flushes caches once at flight entry**.
+The actual CACR read runs through Exec Supervisor only on 68020+; 68000/010 skip it.
+The generic WHDLoad policy must not be mistaken for supported hardware cache bits.
+
+An initial diagnostic used MOVE from SR in user mode on the 68030 and raised a
+privilege-violation Guru. The corrected installer selects MOVE from CCR on 68010+,
+retains MOVE from SR on 68000, and restores with unprivileged MOVE to CCR. The
+uninterrupted 68020 trace checks 145 fill calls and two swaps; the 68000 trace
+checks 260 fills and three swaps. All required general registers and SP agree
+with the original contract, and synchronized saved/restored CCR values match.
+
+Raw debugger/trace SR values away from a synchronizing instruction can be stale:
+the local CPU implementation stores flags separately and assembles SR in MakeSR.
+Comparisons therefore use the state immediately after MOVE from/to CCR (or SR on
+68000), not arbitrary instruction-record SR values. This is separate from the
+earlier rule to classify interrupts by stack rather than supervisor-mode bits.
+
+With blitter cycle accuracy explicitly enabled, the 50 MHz 68030 now exposes
+blitter DMA. A 20-field diagnostic trace records 166,723 framebuffer writes,
+including 5,672 writes into the displayed buffer during lines 42–243. None of
+those addresses is fetched again later in that same field: the writes are behind
+the raster. This violates the proposed strict buffer-ownership rule but does not
+prove visible tearing. The observer reports first fills at matching beam lines;
+its execution adds overhead, so this diagnostic is not an uninstrumented FPS run.
+
+The final version-2 68030 diagnostic reaches step 20 with 18 completed first-fill
+records and no missed publication. Its flight-entry sample reports WHDLoad policy
+`0x3b3d`, but **raw CACR is `0x2000`**: the 68030 instruction- and data-cache enable
+bits are clear. The saved emulator settings also have `cpu_data_cache=false`.
+The policy flags are therefore not sufficient evidence of active hardware caches.
+The cause of this policy/register discrepancy still needs investigation before
+freezing the final fast-CPU measurement matrix; these readings must not be applied
+retroactively to earlier captures.

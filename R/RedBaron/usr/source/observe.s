@@ -54,6 +54,7 @@ observe_step:
 	lea observe_header(pc),a0
 	addq.l #1,20(a0)
 	bsr observe_install_slow
+	bsr paint_install
 	movem.l (sp)+,d0-d2/a0-a2
 	rts
 ; VERIFY_RANGE sim:2d348 6: replace one LEA in the supervisor VBlank callback.
@@ -141,3 +142,5 @@ observe_slow_draw:
 	bne.b .beam
 	rts
 observe_draw_target: dc.l 0
+
+	INCLUDE "paint-observe.s"

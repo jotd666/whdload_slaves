@@ -31,6 +31,7 @@ def analyse(path, sim, buffers):
         if field.dma_size != 58 or len(field.dma)//58 != 313*227:
             raise ValueError('Expected Barto 58-byte DMA records and 313-line PAL fields')
         visible = set()
+        last_fetch = {}
         field_writes = []
         for slot in range(len(field.dma)//58):
             i = slot*58
@@ -43,13 +44,18 @@ def analyse(path, sim, buffers):
                     continue
                 if kind == 6:
                     visible.add(role)
+                    last_fetch[addr] = slot
                 if (kind == 5 and reg == 0) or (kind == 2 and reg == 0x1102):
                     field_writes.append(dict(field=field.index, line=slot//227,
                         hpos=slot%227, role=role, kind=kind, offset=addr-base))
         shown.append(sorted(visible))
         writes.extend(field_writes)
-        conflicts.extend(w for w in field_writes
-                         if w['role'] in visible and 42 <= w['line'] <= 243)
+        for w in field_writes:
+            if w['role'] in visible and 42 <= w['line'] <= 243:
+                address = buffers[w['role']] + w['offset']
+                w['fetched_later_in_field'] = (last_fetch.get(address, -1) >
+                                              w['line']*227 + w['hpos'])
+                conflicts.append(w)
     observable = (counts[5] > 0 and any(w['kind'] == 5 for w in writes)
                   and all(len(s) == 1 for s in shown))
     swaps = frames.analyse([path], sim)['swaps']
@@ -70,7 +76,9 @@ def analyse(path, sim, buffers):
                                  first_write=first, gap_fields=gap))
     return dict(buffers=buffers, fields=len(trace.fields), dma_types=dict(counts),
                 observable=observable, framebuffer_writes=len(writes), shown=shown,
-                active_display_conflicts=conflicts, swap_first_writes=first_writes,
+                active_display_conflicts=conflicts,
+                conflicts_fetched_later=sum(w["fetched_later_in_field"] for w in conflicts),
+                swap_first_writes=first_writes,
                 scope='Only this recorded window; absence of blitter writes is unobservable.')
 
 

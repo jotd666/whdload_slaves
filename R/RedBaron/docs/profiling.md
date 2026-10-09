@@ -82,8 +82,9 @@ The retained 68030 configuration has CPU and CPU-memory cycle accuracy enabled,
 but **blitter cycle accuracy disabled**. Its ten-field DMA-only follow-up contains
 bitplane fetches and CPU records, but no blitter DMA records. The 15.28 fps number
 therefore describes that emulator configuration; the absent blitter records cannot
-be interpreted as evidence of no writes into the displayed buffer. The fast-CPU
-tearing check and explicit cache-state verification remain open.
+be interpreted as evidence of no writes into the displayed buffer. The later optional first-fill diagnostic enables blitter cycle accuracy and makes
+those writes observable; its findings are recorded in `verification.md`. That
+diagnostic is a different configuration from this retained 15.28 fps result.
 
 Rates use the emulator's measured PAL rate of 49.92041 fields/s. The A500-equivalent
 run uses the pre-framework VERIFY build; the 68020 run uses the option-framework build
@@ -144,8 +145,8 @@ buffer during lines 42–243**. Across five measured publications, the first wri
 to the former display buffer begins 0.999–1.135 fields after publication finishes.
 Early publications use the previous field's fetched buffer to identify the old
 display; this field already fetches the new one. This establishes the margin for
-this unoptimized window only. The fast-CPU cache-state check, 68030 first-draw
-observer, and post-optimization tearing checks remain open.
+this unoptimized window only. The optional first-fill/cache observer is documented in `verification.md`;
+post-optimization tearing checks and the complete machine matrix remain open.
 
 ## Dashboard census through flight exit
 
