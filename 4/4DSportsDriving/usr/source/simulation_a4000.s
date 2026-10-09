@@ -24,6 +24,7 @@ sim_a4000_arm:
 ; a1 vehicle -> a0 private block; no stored pointer is part of replay state.
 ; steering +0, acceleration +2, distance +4, gear +6, wheel pairs +8..23.
 ; Suspension fractions: extension +24..31, return +32..39, bias +40..47.
+; Terrain loss uses an unsigned Q16 carry at +48.
 sim_a4000_car:
  lea -$85e(a4),a0
  cmpa.l a0,a1
@@ -152,6 +153,11 @@ sim_a4000_prepare:
  lea sim_native_suspension_return(pc),a1
  move.w #262/2-1,d0
  bsr .copy
+ move.l tape_game(pc),a0
+ adda.l #$f842,a0
+ lea sim_native_terrain(pc),a1
+ moveq #48/2-1,d0
+ bsr .copy
  move.l _resload(pc),a2
  jsr resload_FlushCache(a2)
  rts
@@ -253,6 +259,8 @@ sim_a4000_wheel_contact:
  clr.w $4c(a0,d0.l)
  rts
 
+sim_native_terrain: dcb.w 48/2,0
+ rts
 sim_native_suspension_bias: dcb.w 164/2,0
  rts
 sim_native_suspension_return: dcb.w 262/2,0
@@ -272,7 +280,7 @@ sim_a4000_private: dcb.b SIM_PRIVATE_BYTES,0
 
  even
  dc.b "4DA4STAT"
- dc.w 3,10
+ dc.w 4,14
 sim_a4000_gear_calls: dc.l 0
 sim_a4000_wheel_calls: dc.l 0
 sim_a4000_contact_calls: dc.l 0
@@ -283,6 +291,7 @@ sim_a4000_engine_calls: dc.l 0
 sim_a4000_delay5_calls: dc.l 0
 sim_a4000_delay10_calls: dc.l 0
 sim_a4000_delay30_calls: dc.l 0
+sim_a4000_terrain_calls: dc.l 0,0,0,0
 
 ; $10234..$10248 and $1024A..$10260, within native suspension $10012.
 ; Preserve its geometry/penetration branches and cap at extension 384. Both
@@ -435,3 +444,31 @@ sim_a4000_delay_store:
  move.b d0,$c6(a0)
  movem.l (sp)+,d0-d2/a1
  rts
+
+; $F842..$F872: one through four wheels on surface type four. The native
+; caller copies the resulting +$2C speed to +$2A immediately after this block.
+sim_a4000_terrain:
+ cmp.w #50,-$15fa(a4)
+ bne sim_native_terrain
+ movem.l d0-d3/a0-a2,-(sp)
+ move.l 8(a5),a1
+ bsr sim_a4000_car
+ lea 48(a0),a0
+ move.w -2(a5),d3
+ subq.w #1,d3
+ add.w d3,d3
+ lea sim_terrain_coefficients(pc),a2
+ move.w (a2,d3.w),d2
+ lea -$7374(a4),a2
+ move.w (a2,d3.w),d1
+ lea $2c(a1),a2
+ move.w (a2),d0
+ bsr sim_terrain_drag_50
+ move.w d0,(a2)
+ add.w d3,d3
+ lea sim_a4000_terrain_calls(pc),a0
+ addq.l #1,(a0,d3.w)
+ movem.l (sp)+,d0-d3/a0-a2
+ rts
+; round(65536*k*(1-(1-1/k)^(2/5))), k = 256,192,128,64.
+sim_terrain_coefficients: dc.w 26245,26255,26276,26338

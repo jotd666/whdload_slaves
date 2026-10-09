@@ -135,6 +135,17 @@ sim_fixture_before:
  bhi .input
  moveq #1,d1
 .input:
+ IFD SIM_FIXTURE_OFFROAD
+ ; Accelerate straight for three seconds, then hold right. Ordinary control
+ ; input drives onto terrain; the fixture does not change surface flags/data.
+ moveq #1,d1
+ move.w -$15fa(a4),d0
+ mulu #3,d0
+ cmp.w -$940(a4),d0
+ bhi .offroad_input
+ moveq #5,d1
+.offroad_input:
+ ENDC
  IFD SIM_FIXTURE_GEARS
  ; One native upshift input at 0.5s, one downshift at 2.0s.
  move.w -$15fa(a4),d0

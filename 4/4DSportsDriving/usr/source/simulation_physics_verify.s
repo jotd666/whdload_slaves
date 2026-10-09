@@ -144,6 +144,40 @@ sim_physics_selftest:
  addq.l #1,(a0)
  addq.l #8,a2
  dbra d6,.duration
+ lea sim_terrain_cases(pc),a2
+ move.w #(sim_terrain_cases_end-sim_terrain_cases)/10-1,d6
+.terrain:
+ lea sim_physics_test_fraction(pc),a0
+ move.w 6(a2),(a0)
+ moveq #0,d0
+ move.w (a2),d0
+ moveq #4,d7
+.terrain_five:
+ move.l d0,d5
+ move.w 2(a2),d1
+ move.w 4(a2),d2
+ bsr sim_terrain_drag_50
+ cmp.l d5,d0
+ bhi .failed
+ cmp.w 2(a2),d5
+ bhs .terrain_next
+ cmp.l d5,d0
+ bne .failed
+ tst.w (a0)
+ bne .failed
+.terrain_next:
+ dbra d7,.terrain_five
+ moveq #0,d1
+ move.w 8(a2),d1
+ sub.l d1,d0
+ cmp.l #-2,d0
+ blt .failed
+ cmp.l #2,d0
+ bgt .failed
+ lea sim_physics_passed(pc),a0
+ addq.l #1,(a0)
+ lea 10(a2),a2
+ dbra d6,.terrain
  IFD SIM_A4000
  bsr sim_delay_hooks_selftest
  tst.w d0
@@ -163,7 +197,7 @@ SIM_DELAY_HOOK_TESTS = 18
 SIM_DELAY_HOOK_TESTS = 0
  ENDC
  dc.b "4DPHYTST"
- dc.w 4,(sim_rate_cases_end-sim_rate_cases)/8+(sim_steering_cases_end-sim_steering_cases)/14+(sim_distance_cases_end-sim_distance_cases)/8+(sim_approach_cases_end-sim_approach_cases)/12+(sim_airborne_cases_end-sim_airborne_cases)/12+(sim_extension_cases_end-sim_extension_cases)/10+(sim_engine_cases_end-sim_engine_cases)/4+(sim_duration_cases_end-sim_duration_cases)/8+SIM_DELAY_HOOK_TESTS
+ dc.w 5,(sim_rate_cases_end-sim_rate_cases)/8+(sim_steering_cases_end-sim_steering_cases)/14+(sim_distance_cases_end-sim_distance_cases)/8+(sim_approach_cases_end-sim_approach_cases)/12+(sim_airborne_cases_end-sim_airborne_cases)/12+(sim_extension_cases_end-sim_extension_cases)/10+(sim_engine_cases_end-sim_engine_cases)/4+(sim_duration_cases_end-sim_duration_cases)/8+(sim_terrain_cases_end-sim_terrain_cases)/10+SIM_DELAY_HOOK_TESTS
 sim_physics_passed: dc.l 0
 sim_physics_test_fraction: dc.w 0,0
 sim_physics_test_position: dc.l 0

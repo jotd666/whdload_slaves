@@ -223,3 +223,36 @@ sim_duration_20_to_50:
  addq.l #1,d0
  lsr.l #1,d0
  rts
+
+; Terrain: native v' = v-floor(v/k). Write q=floor(v/k), R=v-k*q:
+; v' = R+(1-1/k)*(v-R). Freeze R for this substep and use h=2/5:
+; loss = q*k*(1-(1-1/k)^h). Recompute q each 50 Hz physics update.
+; This fractional affine step retains the native floor; v<k is a fixed point.
+; d0.w unsigned speed, d1.w native k, d2.w Q16 loss coefficient;
+; a0 -> unsigned Q16 carried loss. Return d0.l unsigned reduced speed.
+; q<=1023 and coefficient<=26338: product plus carry fits unsigned long.
+; The carried loss is in speed units, independent of the current wheel count.
+sim_terrain_drag_50:
+ movem.l d2-d4,-(sp)
+ and.l #$ffff,d0
+ move.l d0,d3
+ move.w d1,d4
+ divu d1,d0
+ tst.w d0
+ beq .floor
+ mulu d2,d0
+ moveq #0,d1
+ move.w (a0),d1
+ add.l d1,d0
+ move.w d0,(a0)
+ swap d0
+ and.l #$ffff,d0
+ sub.l d0,d3
+ cmp.w d4,d3
+ bhs .done
+.floor:
+ clr.w (a0)
+.done:
+ move.l d3,d0
+ movem.l (sp)+,d2-d4
+ rts

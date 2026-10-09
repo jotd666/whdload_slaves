@@ -291,6 +291,7 @@ pl_main
     PL_PS $F6CA,sim_a4000_delay5
     PL_PS $F784,sim_a4000_delay30
     PL_PS $F7A6,sim_a4000_delay10
+    PL_PSS $F842,sim_a4000_terrain,42
     ENDC
     IFD SIM_SCHEDULE
     PL_PSS $70E0,sim_schedule_poll,2
