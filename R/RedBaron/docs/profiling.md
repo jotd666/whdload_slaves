@@ -4,23 +4,30 @@ Captured 2026-10-09. Source baseline: `1904205` (`redbaron`).
 
 ## Findings
 
-The strongest optimization candidate in this short maximum-detail flight is the bitmap
-horizontal-mirroring routine at **`sim:$304d0`**: it accounts for **30.96%** of all recorded
-CPU cycles. Its repeated single-bit reversal alone takes **23.98%**. Geometry processing is
-another substantial cost; sound is also measurable. Blitter busy polling costs **6.49%**,
-so this sample does not support treating blitter waits as the principal bottleneck.
+The original mixed window contains cockpit redraw events and steady flight. The large
+`sim:304d0` hotspot is the **EDASH-B dashboard bitmap**, mirrored twice per redraw. A cockpit
+event redraws both display buffers and costs four mirrors: approximately 7.4M main-context
+cycles. It is not an unconditional per-frame cost. Complete calls cost approximately 1.854M
+main cycles each; six such calls are equivalent to about **31.3%** of a 250-field budget.
+The earlier 30.96% was a raw instruction sum across discontinuous capture chunks and must
+not be used as a complete-call performance baseline.
 
-These are observations from five seconds of early combat, not a steady-state average of
-the entire game. The aircraft is hit before the last screenshot. Six bitmap-mirroring
-calls occur in the first 161 fields, with none in the remaining 89 fields. Their cost is
-real, but their frequency is scene dependent. No optimization has been implemented yet.
+Steady frames take approximately **27–29 fields (1.7–1.8 fps)** in the original 68000 + fast
+configuration. About **77% of main-context steady-frame cycles** are in the `sim:2c552` 3D
+pass. Cockpit-event frames take approximately 59–60 fields. Full analysis and approved work
+order are in `performance-plan.md`; sound work is deferred.
+
+**W0 update:** an independent VERIFY VBlank counter has confirmed one unrecorded field at
+consecutive profile-command joins. The original 100/100/50 files are not a continuous trace.
+Use complete calls within a chunk for cycle costs, and the step/swap logs over at least
+2,000 fields for frame rate. No performance patch has been installed yet.
 
 ## Capture conditions and evidence
 
 | Item | Value |
 | --- | --- |
 | Duration | 250 PAL fields, approximately 5 seconds |
-| Captures | Consecutive 100 + 100 + 50 fields; maximum 100 per profiler command |
+| Captures | 100 + 100 + 50 recorded fields, with one-field gaps at joins |
 | CPU | 68000, real CPU speed, CPU/memory/blitter cycle-exact settings enabled |
 | Memory | 1 MB chip + 2 MB fast; **not** an A500-equivalent memory baseline |
 | Boot | Kickstart 3.1 host, KickEmu 1.3 guest, WHDLoad 20.0 |
@@ -38,20 +45,10 @@ answers No to the pre-flight mission-tape question, applies the preferences and 
 ACCEPT. The optional banking fixture starts at gameplay step 20; this five-second capture
 never reaches it. The profile therefore contains no injected banking input.
 
-The local evidence is under `tmp/dev/tmp/prof/baseline/`, relative to the Red Baron worktree:
-
-- `trace.bin`: fields 0–99; `trace-100-199.bin`: fields 100–199;
-  `trace-200-249.bin`: fields 200–249. Together approximately 1.20 GiB.
-- `slave.slave`, `entry.json`, `after.json`, `emulator.uae`, `manifest.json`.
-- `fast-before.bin` and `fast-after.bin`: the same process's fast RAM at `$200000–$400000`.
-- `report-250.txt`: self/inclusive routine costs, contexts, instructions and call edges.
-- `metrics.json`: exact-PC counters, waits, DMA shares and display-update events.
-- `field-000.png`, `field-099.png`, `field-100.png`, `field-199.png`,
-  `field-200.png`, `field-249.png`: screenshots extracted from the captures without
-  advancing the emulator. `first.png` is the separate pre-capture screenshot.
-
-The earlier `report.txt` covers only the first 100 fields; use **`report-250.txt`**.
-Raw traces, binaries, RAM dumps and screenshots remain ignored local artifacts.
+The retained baseline evidence includes three trace chunks, the exact VERIFY slave,
+before/after fast-memory dumps, emulator settings, routine attribution, exact-PC metrics,
+and extracted screenshots. The evidence manifest records hashes. These generated artifacts
+remain local and ignored; no binary evidence is included in this repository.
 
 Input/build SHA-256:
 
@@ -67,24 +64,18 @@ The parser reads **3,154,859 records** and **35,525,488 CPU cycles**, against th
 budget of 35,525,500 cycles: a difference of 12 cycles over all 250 fields. PCs are present;
 there are no STOP/idle records. Individual fields have small accounting differences from
 instruction costs crossing field boundaries; whole-window totals are the useful comparison.
-No resume or screenshot command was issued between the three capture chunks.
+No resume or screenshot command was issued between chunks, but the profiler itself
+advances through an unrecorded field at each join. Thus the total only covers recorded
+cycles, not the complete elapsed period. Reconstructed call stacks must reset at joins.
 
 Live code is identified from the VERIFY marker and the LoadSeg BPTR chain, rather than a
 cached copy of a preloaded executable. KickEmu and the sound driver are identified by
-byte matching, and the slave by its retained build and live marker. In this boot:
+byte matching, and the slave by its retained build and live marker. Region shares in the **recorded** samples are sim code 88.70%, sound 8.95%,
+KickEmu 1.90%, slave 0.24%, unmapped instructions 0.04%, with approximately 0.16% interrupt
+entry accounting. These are mixed-window raw shares, not normalized completed-call costs.
 
-| Region | Address range, end exclusive | Share of total CPU cycles |
-| --- | --- | ---: |
-| `sim` code | `$3818b0–$3bfc34` | 88.70% |
-| `amigasnd.drv` | `$3d7a48–$3d9990` | 8.95% |
-| KickEmu ROM copy | `$334000–$374000` | 1.90% |
-| WHDLoad slave | `$3fcd60–$3fe6ac` | 0.24% |
-| Unmapped instructions | — | 0.04% |
-| Interrupt-entry accounting | profiler marker | approximately 0.16% |
-
-`sim` hunk 1 is at `$10660`, hunk 2 at `$10a28`, and hunk 3 at `$3bfc40`.
-Offsets below are relative to the **live code hunk**, not file offsets or absolute
-addresses. The file-backed code starts at file offset `$2c`.
+Offsets below refer to `sim` hunk 0, `h3` data/BSS or the sound-driver file. Runtime load
+addresses and chip-buffer pointers are deliberately omitted: they change between builds.
 
 Self attribution uses observed call targets and `LINK A5` prologues. Inclusive attribution
 reconstructs stacks from calls and stack pointers, separating the main and interrupt stacks.
@@ -135,8 +126,8 @@ The routine:
 
 The exact range `$304d0–$30570` costs **10,999,770 cycles**. The 32 shift/rotate
 instructions at `$3050e–$3054c` alone cost **8,518,472 cycles**, or **23.98% of the total**.
-All six observed entries use descriptor `$32e84`. In the pre-capture snapshot it describes
-a 168×102 bitmap, source `$3a0b0`, mask `$3cc84`; the global plane count is five.
+All six observed entries use the first EDASH-B descriptor: a 168×102 bitmap with five
+planes and a separate mask.
 Descriptor fields may change during execution, so these dimensions describe the snapshot.
 Calls start in fields **2, 18, 86, 100, 145 and 160**.
 
@@ -188,85 +179,47 @@ These are chip-bus slot shares, not CPU utilization. Fast-RAM CPU work does not 
 those chip-bus slots. The free share is therefore compatible with a CPU-bound routine.
 
 A display-update candidate is now identified: `$314c0` exchanges framebuffer pointers,
-and `$3154a` writes the six bitplane pointer pairs into the active copper list at `$10a70`.
+and `$3154a` writes the six bitplane pointer pairs into the active copper list at hunk 2 offset `$48`.
 Five such writes occur in fields **60, 118, 178, 204 and 233**, alternating between the
-two buffers (the recorded post-construction pointer values alternate `$1c738/$263c8`).
+two buffers (identified by the two framebuffer roles).
 Each is followed by a flight-step checkpoint in the same field.
 
-The four complete intervals are **58, 60, 26 and 29 fields**: approximately **1.16 display
-updates/second** between the first and last observed updates. Counting the five writes
-against the whole window gives 1.0/second but includes incomplete boundary intervals.
-This is a useful provisional display-update rate, not a fully calibrated FPS claim:
-confirm it against copper/bitplane presentation or a separate swap-only run before
-using it as an optimization acceptance metric. The input-step marker alone is insufficient.
+The recorded field differences were 58, 60, 26 and 29. They are not valid elapsed periods
+across chunk joins. The CIA-tick reconstruction gives approximately **59.2, 60.0, 27.1 and
+28.8 fields**. Do not use the earlier 1.16-fps mixed-window estimate as a steady-state rate.
+The W0 observer/breakpoint validation is documented in `verification.md`; the full
+three-way same-window and cross-boot checks are still prerequisites for optimization claims.
 
 ## Repeat the profiling run manually
 
-The following commands use this machine's **ignored local harness** in `tmp/dev`, its
-installed FS-UAE/Barto debugger, shared Amiga SDK/tools and pristine game archive. Those
-inputs are not shipped by this Git commit. Recreate the harness using the local
-`~/.local/share/amiga/new-game-playbook-jotd.md` when using another checkout or machine.
-
-The convenience command builds the VERIFY slave, starts a fresh game, sets maximum
-detail, takes the three consecutive captures, writes RAM dumps and generates both reports:
+From the worktree root, using the established local harness and shared Amiga inputs:
 
 ```sh
-cd "$HOME/Projects/Red Baron"
 python3 tmp/dev/tools/profile_flight.py
 ```
 
-It creates a timestamped directory below `tmp/dev/tmp/prof/`. To choose a destination:
+The default is now **one 100-field cycle capture**, with no internal joins. Use `--fields`
+for a shorter window (1–100). It creates a fresh evidence directory and retains the slave,
+assembly listing, memory snapshots, settings and reports. The first native-debugger attach
+may take minutes even though the emulated window is short. This packaging command has not
+yet received a separate end-to-end rerun after the W0 changes; its constituent capture and
+observer operations have been exercised.
 
-```sh
-python3 tmp/dev/tools/profile_flight.py --out tmp/prof/manual-profile
-```
+For longer frame-rate measurements use `step_log.py` and `swap_fields.py`, with a start/end
+window from the approved route and at least 2,000 elapsed fields. Both read the VERIFY ring;
+`swap_fields.py` additionally uses read-only breakpoints at `sim:3154a`. It does not patch
+target memory. The full machine/window matrix is still being established in W0.
 
-The destination must not already exist and must have no spaces below `tmp/dev`.
-Paths passed to `--out` are relative to `tmp/dev`, regardless of your shell's directory.
-The wrapper leaves the emulator paused. It implements the individually exercised commands
-below; its complete fresh-boot wrapper path has not been separately rerun after packaging.
+Never insert `cont`, `wait` or `shot` between captures intended to form one experiment.
+Even without those commands, each profile command has an unrecorded alignment interval:
+joined files require explicit gap handling. Extract screenshots from existing trace files;
+a new `shot` advances emulated time too.
 
-For direct control, use a fresh, unused `manual` directory:
+## Current work and limits
 
-```sh
-cd "$HOME/Projects/Red Baron/tmp/dev"
-python3 tools/reach_flight.py --out tmp/prof/manual
-python3 tools/redbaron.py gdb dump binary memory tmp/prof/manual/fast-before.bin 0x200000 0x400000
-python3 tools/redbaron.py profile 100 "$PWD/tmp/prof/manual/trace.bin"
-python3 tools/redbaron.py profile 100 "$PWD/tmp/prof/manual/trace-100-199.bin"
-python3 tools/redbaron.py profile 50 "$PWD/tmp/prof/manual/trace-200-249.bin"
-python3 tools/redbaron.py gdb dump binary memory tmp/prof/manual/fast-after.bin 0x200000 0x400000
-SLAVE="$PWD/tmp/prof/manual/slave.slave" python3 tools/redbaron_report.py \
-  tmp/prof/manual/trace.bin tmp/prof/manual/fast-before.bin \
-  --more-traces tmp/prof/manual/trace-100-199.bin tmp/prof/manual/trace-200-249.bin \
-  --top 25 > tmp/prof/manual/report-250.txt
-python3 tools/profile_metrics.py tmp/prof/manual > tmp/prof/manual/metrics.log
-```
-
-Do not issue `cont`, `wait` or `shot` between capture chunks. `shot` advances one field.
-The native debugger's first attachment can take minutes even though the emulated window
-is only five seconds. Allow approximately 1.3 GB for raw evidence plus analysis memory.
-The profile command fixes this installed emulator's PC-filter window through LLDB;
-that fix is binary-specific and must be rechecked when replacing FS-UAE.
-
-```sh
-python3 tools/redbaron.py cont   # resume; this fixture uses warp mode
-python3 tools/redbaron.py quit   # close this harness's emulator/debugger
-```
-
-The normal interactive launcher remains `tmp/dev/amiga/run.sh` with the normal built slave.
-VERIFY hooks and their scripted input are excluded from that normal build.
-
-## Next work and limits
-
-1. Implement and compare a narrowly scoped bitmap-bit-reversal improvement, with exhaustive
-   16-bit input equivalence and image/mask comparisons, then an identical 250-field capture.
-2. Validate `$3154a` as the display metric and cross-boot state reproducibility before
-   treating timing differences as an A/B benchmark.
-3. Profile another representative scene to determine how often bitmap reflection occurs.
-4. Investigate geometry arithmetic and audio with their own correctness checks.
-
-No 68020 comparison, long mission sample, all-version validation or complete game-time
-model is claimed. The profiler measures the instrumented VERIFY build; its source hooks
-and the single pre-capture screenshot must remain consistent for future comparisons.
-The original archive remains pristine, and no game data or generated binary is committed.
+The old next-work list is superseded by `performance-plan.md`, including its user decisions.
+W0 observers and capture-gap confirmation are implemented; the complete groundwork gate
+has not passed. See `verification.md` for checks and remaining acceptance requirements.
+There are no new performance claims, no sound changes and no game-time implementation.
+Performance candidates remain disabled until their required models, twins, hook audits,
+off-path checks and machine/window measurements pass.
