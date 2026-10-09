@@ -2,7 +2,7 @@
 
 The accepted decisions and detailed requirements are in `performance-plan.md`,
 especially §6. `verification.md` is the W0 evidence ledger; `profiling.md`
-contains measured baselines. No performance optimization is enabled yet.
+contains measured baselines. No performance optimization is enabled in normal builds yet.
 
 ## W0 complete; W1 core implemented, further work deferred
 
@@ -38,7 +38,9 @@ and icons are unchanged. Developer/VERIFY builds retain individual options.
 
 ## Next work
 
-1. **W2 geometry**, beginning with the plan's G1 work in the `sim:2c552` subtree.
+1. **W2 geometry**, continuing in the `sim:2c552` subtree. The G1 projection core
+   has a verified developer checkpoint (CUSTOM2 bit 2); see `w2-verification.md`.
+   Wrapper integration, wider CPU checks and G2–G9 remain open.
    Each change needs its original-checked Python model and VERIFY twin. This is
    the dominant steady-flight cost; W1 mainly removes dashboard-event stalls.
 2. **W5:** tear-free publication and a frame cap under the player switch.
@@ -64,7 +66,7 @@ ordinary development fixtures; 0/60 copies are investigation inputs only.
 Use one binary with option changes for comparisons; all patches remain sim v1 only.
 Each feature needs original-byte checks, whole-instruction/branch/relocation audits,
 CUSTOM-off verification, its model/twin checks and the plan's measurement protocol.
-The three W1 performance ranges pass the static hook audit.
+The four current performance ranges pass the static hook audit.
 Only verified bits may enter the release mask. Keep instruments VERIFY-only and
 normal/developer builds free of their code and data. Recheck frame timing, ownership,
 chip/slow memory pressure and cache conditions after code/layout changes.

@@ -1,5 +1,18 @@
 # Red Baron performance measurements
 
+## W2 development checkpoint: projection core
+
+The inline normalization candidate at `sim:38c82` is available as developer/VERIFY
+CUSTOM2 bit 2. On the A500-equivalent configuration, short same-build captures give
+mean complete 3D-pass costs of **2,446,680.5 → 2,416,049.5 main cycles** in R-steady
+(four calls each), and **2,310,012.0 → 2,269,088.0** in R-bank (three calls each).
+Projection-call means fall from 1,595.1 to 1,435.8 and 1,619.5 to 1,428.8 respectively.
+These are 150/100-field cycle samples, not frame-rate measurements. The candidate
+passes 451 synthetic and 8,569 live CPU twins; exhaustive host normalization checks
+cover both widths. Full conditions, rejected first candidate and build hash are in
+`w2-verification.md`. Wider CPU checks and the rest of W2 remain open; player
+enablement stays off.
+
 ## Current W1 measurements (further work deferred)
 
 W1a (table mirror) and W1b (chip mirror cache) are implemented for developer/VERIFY

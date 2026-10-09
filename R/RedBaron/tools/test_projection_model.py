@@ -1,7 +1,7 @@
 """Reference arithmetic tests; not a substitute for original-call or twin checks."""
 import random
 import unittest
-from projection_model import norm_loop, norm_bl, p38c82, shift, check_calls
+from projection_model import norm_loop, norm_bl, norm_table, norm_inline, p38c82, shift, check_calls
 
 
 class ProjectionTests(unittest.TestCase):
@@ -15,6 +15,8 @@ class ProjectionTests(unittest.TestCase):
         for width in (15,16):
             for value in values:
                 self.assertEqual(norm_loop(value,width), norm_bl(value,width))
+                self.assertEqual(norm_loop(value,width), norm_table(value,width))
+                self.assertEqual(norm_loop(value,width), norm_inline(value,width))
 
     def test_shifts_and_traps(self):
         self.assertEqual(shift(3,32),0)

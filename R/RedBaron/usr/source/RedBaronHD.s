@@ -551,9 +551,11 @@ new_DeleteFile:
 	include "perf.s"
 	include "mirror.s"
 	include "mirror-cache.s"
+	include "projection.s"
 	IFD VERIFY
 	include "originals.s"
 	include "mirror-verify.s"
 	include "cache-verify.s"
+	include "projection-verify.s"
 	include "tape.s"
 	ENDC

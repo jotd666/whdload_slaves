@@ -26,6 +26,37 @@ def norm_bl(v, top):
     if v==0: return 0,0
     L=v.bit_length(); e=L-top
     return ((v>>e) if e>=0 else (v<<-e)), e
+LENGTHS=tuple(v.bit_length() for v in range(256))
+def norm_table(v, top):
+    """Instruction-shaped byte selection used by the G1 normalizer."""
+    if not v: return 0,0
+    high=v>>16
+    if high: byte=high; length=16
+    else: byte=v; length=0
+    if byte>=256: byte>>=8; length+=8
+    length+=LENGTHS[byte]
+    exponent=length-top
+    return (v>>exponent if exponent>=0 else (v<<-exponent)&0xffff),exponent
+
+def norm_inline(v, top):
+    """Current assembly's short-shift cases plus the byte-table fallbacks."""
+    if v<0x10000:
+        if not v: return 0,0
+        if top==15:
+            if v>=0x8000: return v>>1,1
+            if v>=0x4000: return v,0
+        else:
+            if v>=0x8000: return v,0
+            if v>=0x4000: return (v<<1)&0xffff,-1
+        byte=v; exponent=-top
+        if byte>=256: byte>>=8; exponent+=8
+        exponent+=LENGTHS[byte]
+        return (v<<-exponent)&0xffff,exponent
+    byte=v>>16; exponent=16-top
+    if byte>=256: byte>>=8; exponent+=8
+    exponent+=LENGTHS[byte]
+    return v>>exponent,exponent
+
 def shift(q,e):
     e&=0xffff
     if e&0x8000: c=((-e)&0xffff)&63; return (q>>c)&M32 if c<32 else 0
@@ -51,11 +82,11 @@ def check_calls(calls):
     for index, row in enumerate(calls):
         if len(row['inputs']) != 4 or len(row['outputs']) != 4:
             raise ValueError(f'Call {index}: expected four inputs and outputs')
-        for norm in (norm_loop, norm_bl):
+        for norm in (norm_loop, norm_bl, norm_table, norm_inline):
             got = p38c82(*row['inputs'], norm=norm)
             if got != tuple(row['outputs']):
                 raise ValueError(f'Call {index}: {norm.__name__} mismatch {got}')
-    return dict(calls=len(calls), model_checks=2*len(calls), mismatches=0)
+    return dict(calls=len(calls), model_checks=4*len(calls), mismatches=0)
 
 
 if __name__ == '__main__':
