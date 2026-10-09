@@ -314,6 +314,9 @@ pl_sim_v1
 	PL_PS $1ed82,tape_flight
 	PL_P $1ef92,tape_sim_key
 	PL_PS $2d348,observe_vbl
+	; VERIFY_RANGE sim:2d354 6: neutral mouse counters for scripted keyboard route.
+	PL_L $2d354,$323c0000	; move.w #0,d1
+	PL_W $2d358,$4e71	; nop
 	ENDC
 	PL_PS	$A66A,patch_bittest
 	PL_PS	$3089A,kb_delay

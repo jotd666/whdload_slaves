@@ -54,8 +54,10 @@ adjacent byte. The other listed counters retain their original widths.
 - Normal, DEVELOPER and VERIFY builds have separate local outputs. Assembly listings can
   be retained with captures.
 
-The exact same-window three-way comparison and fresh-boot instruction/DMA/screenshot
-comparison remain required before W0.3/W0.4 are complete. The observer adds code and RAM;
+Two fresh boots of the same VERIFY build produced identical instruction records, DMA
+records and screenshots for all 100 recorded fields at the initial flight checkpoint.
+This covers the initial event window; the steady, bank and dense windows and exact
+same-window three-way comparison remain required before W0.3/W0.4 are complete. The observer adds code and RAM;
 performance measurements must consistently use the same instrumentation build.
 
 ## Capture continuity
@@ -81,3 +83,16 @@ each join and exclude incomplete calls from per-call cost comparisons.
 Local tools now mark joins explicitly. Cycle captures default to a single window of at
 most 100 fields. Longer frame-rate and event runs use the ring and swap breakpoints rather
 than joining instruction captures. No game-time implementation or sound change is included.
+
+## Deterministic mouse input
+
+Disabling emulator joystick/mouse input did not neutralize the hardware mouse counters.
+Two fresh boots initially produced identical screenshots but different instruction and
+DMA data. The first differing instruction was the mouse-counter read at `sim:2d354`;
+its returned value changed the interrupt's mouse deltas.
+
+VERIFY therefore replaces that complete six-byte read with `move.w #0,d1` and a NOP.
+It applies only to sim v1 and preserves the destination width and condition-code effects
+of the original read. With this change the two 100-field captures matched exactly,
+without filtering differing records. Normal and DEVELOPER builds retain the original
+mouse read. This is a test-input control, not a rendering optimization.
