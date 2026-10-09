@@ -157,7 +157,7 @@ must not be presented as a complete census from the first instruction of flight.
 Retained VERIFY SHA-256:
 `504738561676440e9d41a8d3a0f6324e88c7d1b1aa500e433a3498c878af4a57`.
 
-## Current-build A500-equivalent baseline
+## Earlier A500-equivalent baseline
 
 The current VERIFY binary, with performance bits off and no scripted bank, runs
 with 512 KB chip, 1.5 MB slow and no fast RAM. The saved configuration confirms
@@ -173,7 +173,7 @@ two complete mirrors at **1,920,832 and 1,922,038 cycles**. These scene-specific
 measurements are unoptimized baselines; the different steady scene on the fast-RAM
 68000 does not support a direct memory-speed comparison.
 
-## Current-build 14 MHz 68020 baseline
+## Earlier A500-host 14 MHz 68020 baseline
 
 The current VERIFY binary, with all performance bits off and no scripted bank,
 completed a clean **swap 80–400** interval: 320 frames in **2,616 PAL fields**,
@@ -551,3 +551,35 @@ recomputes the summaries and retains excluded calls. The local read-only
 collector is `tools/routine_clock.py --step 120 --out CALL_LOG.json`, run
 from the paused first-flight checkpoint; it leaves the game paused at the
 requested step.
+
+## Final W0-build A500-equivalent baseline
+
+The same 30,380-byte VERIFY text used for the final cached 68030 row boots
+with 512 KB chip RAM, 1.5 MB slow RAM and no fast RAM, with PRELOAD and
+CPU/memory/blitter cycle accuracy. All performance and optional diagnostic
+bits are off. The saved configuration confirms the requested memory banks.
+
+The event-free **swap 40–140** interval contains 100 frames in **2,717 PAL
+fields**, **1.8373 fps**, dt=450 throughout. The event-containing **swap 2–72**
+interval contains 70 frames in **2,000 fields**, **1.7472 fps**, including
+four mirror calls over two dashboard-redraw frames. The census retains every
+step from its post-capture start at step 2 through flight exit at step 243.
+
+| Window | Routine | Complete calls | Mean main cycles | Range |
+| --- | --- | ---: | ---: | --- |
+| Opening R-event, 100 fields | Mirror | 2 | 1,920,529 | 1,919,652–1,921,406 |
+| Opening R-event | 3D pass | 2 | 2,912,981 | 2,480,282–3,345,680 |
+| Opening R-event | World step | 1 | 414,442 | Single complete call |
+| R-steady at step 40, 100+50 fields | 3D pass | 6 | 2,123,886 | 2,088,160–2,173,562 |
+| R-steady | World step | 5 | 373,229.6 | 321,684–397,386 |
+
+The steady chunks retain their known one-field gap; incomplete calls are
+excluded. The interrupt stack is established from the traced VBlank/CIA
+callbacks, and all accepted routines restore SP. A fresh boot reproduces
+the 100-field opening capture in every instruction, DMA, accounting and
+full-screenshot byte. Its complete step-40 observer record matches the
+census exactly. Both boots use deterministic host allocation.
+
+Evidence: `w0-final-a500-entry`, `w0-final-a500-repeat` and
+`w0-final-a500-census`. These supersede the older-build A500 numbers for
+future comparisons; no optimization or improvement is claimed.
