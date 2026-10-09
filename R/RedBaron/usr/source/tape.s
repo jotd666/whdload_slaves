@@ -99,6 +99,9 @@ tape_loadseg:
 	lea tape_keybase(pc),a2
 	move.l d2,(a2)
 	lea tape(pc),a2
+	btst #2,perf_custom5+3(pc)
+	beq.s tape_newroute
+	lea tape_dense(pc),a2
 	bra.s tape_newroute
 .sim:
 	cmp.b #'s',1(a0)

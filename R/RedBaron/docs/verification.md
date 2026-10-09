@@ -223,3 +223,33 @@ configuration disables blitter cycle accuracy and the log contains no blitter DM
 records. An empty list of conflicting writes is therefore **unobservable**, not a
 tear-free pass. P1 still requires the first-draw observer and display-ownership check
 specified by W0.4. CPU cycle accuracy alone is insufficient to validate that check.
+
+## Squadron route and frame-counter cross-check
+
+VERIFY CUSTOM5 bit 2 selects a four-versus-four British squadron mission instead of
+the ace mission. It leaves the default mission settings unchanged: Sopwith Snipe
+against Fokker D.VII, same altitude, light wind and partly cloudy sky. The common
+simulation route still declines the mission tape, maximizes detail and accepts the
+panel without changing Time Scale 40. The local entry harness accepts `--dense`;
+`--bank` may be combined with it. Normal and developer builds exclude this route.
+
+The squadron briefing initially has no keyboard focus: three Tabs select Begin
+Mission. The completed route emits 87 keys and reaches the true flight checkpoint.
+This creates a candidate R-dense mission; a later window with several aircraft
+actually in view still needs selection and geometry-count validation.
+
+Two fresh boots with the flight-entry breakpoint armed at reset produced identical
+instruction records, DMA records and screenshot bytes for all 100 recorded fields.
+An earlier pair using asynchronous debugger polling during startup had the same
+images but a two-field entry-clock difference and failed the strict comparison.
+Use a calibrated reset-armed breakpoint for reproducibility checks; its address is
+valid only for that exact build and machine configuration. The observed agreement
+does not establish reproducibility of every later window.
+
+For the same squadron interval, steps 1 to 2, the trace, independent SWAP_ONLY run
+and step ring agree: one publication, 73 elapsed VBlanks and 86 CIA ticks. The two
+step records match byte-for-byte across runs. At the publication the swap breakpoint
+reads beam line 59, horizontal slot 71; the trace records the 24 pointer-word writes
+at slots 76 through 136 on that same line. Both the breakpoint and subsequent step
+record report VBlank count 9,357 and lifetime CIA tick 9,691. This validates the
+three instruments on one shared interval; the longer scene/machine matrix remains.
