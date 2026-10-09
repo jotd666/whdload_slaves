@@ -82,3 +82,32 @@ Before a final recommendation:
 
 Rendering optimizations may still accelerate the world on slow machines until that approved
 work lands, as accepted in plan §6. Sound remains unchanged.
+
+## First slowed-drawing coupling test
+
+One identical VERIFY binary was booted twice with CUSTOM5=0 and CUSTOM5=1. Bit 0
+installs a delay at the first flight step only, leaving menu timing identical. The
+whole six-byte JMP at `sim:015b2` is checked against its expected relocated target
+`sim:2c552`, then replaced by a wrapper that preserves register inputs, SP and X.
+Three stable beam wraps add two whole fields plus an initial partial field before
+tail-calling the original renderer. This is instrumentation, not a game-time fix.
+
+Both complete h3 snapshots were byte-identical at step 1. At step 20, exactly two
+bytes differed, without needing pointer normalization:
+
+| Field | Original drawing | Slowed drawing | Evidence |
+| --- | ---: | ---: | --- |
+| `h3:0483a` elapsed argument | 112 | 124 | Written at `sim:3d58` |
+| `h3:03f5a` timer timestamp | 8,908 | 8,914 | Timer object passed at `sim:2abce`, `sim:2ad8a`, `sim:2b476`; `sim:2976c` copies lifetime CIA ticks to its first longword |
+
+The duration word following that timestamp remained 5. `sim:2972c` tests such timers
+against lifetime CIA ticks. This is a real clock-dependent timer, so it must not be
+silently discarded as arbitrary noise. Its effect over longer windows still needs
+to be established. Every other byte in the complete h3 allocation matched at step 20,
+and both time-step variables remained 450 throughout the 19 intervals.
+
+The delayed run accumulated 46 additional VBlanks and 55 additional CIA ticks. A
+different-step comparison correctly reports differences, providing a negative control
+for the comparison tool. h3 equality does not establish equality of separately
+allocated objects addressed by its pointers; the player-object/time-scale study and
+longer coupling runs remain required before recommending the final timing design.

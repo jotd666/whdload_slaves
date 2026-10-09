@@ -3,6 +3,7 @@ import struct,unittest
 from hunks import read_hunks
 from check_disabled import check
 from audit_hooks import audit
+from compare_h3 import compare
 
 pack=lambda *words:struct.pack('>'+str(len(words))+'I',*words)
 # Two hunks; a relocated pointer in code targets hunk 1 offset 4.
@@ -39,4 +40,17 @@ class CheckerTests(unittest.TestCase):
         h=read_hunks(ORIGINAL);h[0].relocations=[(0,0)]
         errs=audit(h,[(2,8,0,'fixture.s',1)],' 2: 4e71 nop\n 4: 4e71 nop\n 6: 4e75 rts\n')
         self.assertTrue(any('relocation' in e for e in errs))
+class StateTests(unittest.TestCase):
+    def test_pointer_candidates_do_not_hide_other_state(self):
+        a=bytearray(0xbd0c);b=bytearray(a)
+        ma=dict(sim=0x100000,h3=0x150000);mb=dict(sim=0x200000,h3=0x250000)
+        a[10:14]=pack(ma['sim']+42);b[10:14]=pack(mb['sim']+42)
+        r=compare(a,b,ma,mb)
+        self.assertFalse(r['strict_equal'])
+        self.assertTrue(r['equal_after_pointer_candidates'])
+        self.assertEqual(len(r['pointer_candidates']),1)
+        b[20]=1
+        self.assertEqual(compare(a,b,ma,mb)['unexplained_bytes'],1)
+    def test_wrong_snapshot_size_rejected(self):
+        with self.assertRaises(ValueError):compare(bytes(100),bytes(100),{}, {})
 if __name__=='__main__':unittest.main()

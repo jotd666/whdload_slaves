@@ -153,3 +153,29 @@ Both audit commands report PENDING when no performance ranges exist; an empty au
 is not counted as a pass. The parser has also read the original four-hunk sim fixture,
 including all 8,686 code relocations and 541 data-hunk relocations. No game bytes are
 embedded in the tools. The CUSTOM5 consumers and twin infrastructure remain unfinished.
+
+## Slowed-drawing and state comparison
+
+CUSTOM5 bit 0 is now a VERIFY-only slowed-drawing probe, installed at the first true
+flight step. The hook is the complete JMP at `sim:015b2`, which serves the 3D call
+at `sim:007b8`; the four-byte JSR at that call site cannot itself hold a six-byte hook.
+The original opcode and relocated destination are checked before installation. Static
+boundary/branch/relocation audit passed for the stub. The original renderer receives
+its unchanged stack arguments through a tail call.
+
+The off/on runs use the same retained binary, both reach flight, and stay clamped at
+dt=450 through step 20. Entry h3 state matches exactly; step 20 differs only in the
+elapsed argument and one CIA timer timestamp. See `game-time.md` for the explicit
+values and limitations. Normal builds still exclude this probe.
+
+`compare_h3.py` compares the full h3 allocation and separately reports candidate
+relocated pointers into sim or h3. It never labels a normalized comparison as strict
+byte equality. Seven synthetic checker tests now cover changed data, relocated pointer
+candidates, invalid snapshot sizes, hook boundaries and incoming references.
+
+The 68030 mission reached debriefing at flight step 314. The first 200-swap segment
+contains only 745 PAL fields and is too short for the required long-window rate.
+The interrupted subsequent segment includes UI swaps and is marked incomplete. The
+local swap harness now arms an additional read-only breakpoint at `sim:21f4a`, the
+flight-loop exit, and rejects a capture that did not reach its requested flight step.
+That automatic exit stop still needs a fresh end-to-end mission run.
