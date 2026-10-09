@@ -31,7 +31,8 @@ original-checked models and per-call twins. Combined twins pass on all three
 CPUs in banking/dense scenes. The measured bundle gains 5.97% FPS on A500 and
 5.54% on 68020. Cached-68030 early-flight pass wall time falls 1.19%; its
 long-window histories differ, so no steady-flight FPS gain is claimed there.
-Cached-CPU per-routine regression checks remain pending. The player release
+Cached-CPU per-routine checks reject G1 there; original projection is retained
+in the player policy. The reduced CUSTOM2=56 bundle is being verified. The player release
 mask stays zero.
 
 The remaining G1/G3 refinements and G5–G9 are explicitly deferred under §3.8,

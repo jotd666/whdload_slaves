@@ -2,8 +2,8 @@
 
 G1 core, G2, G3 32-bit misses and G4 are implemented in developer/VERIFY builds.
 Combined CPU results and explicit low-value deferrals appear after the individual
-implementation records below. Cached-CPU per-routine regression checks remain
-pending. Sound, game-time rules and deferred W1 work are unchanged; player
+implementation records below. The cached-CPU per-routine check rejects G1 there; verification of the
+remaining G2/G3/G4 bundle is pending. Sound, game-time rules and deferred W1 work are unchanged; player
 enablement remains a separate gate.
 
 ## G1 projection core
@@ -360,11 +360,39 @@ The separate early-flight entry-to-RTS clocks at steps 8–15 contain seven
 phase-safe complete 3D passes per setting: **49.4958 → 48.9081 ms/pass (−1.19%)**.
 These are inclusive wall times, including interrupts and chip-bus waiting, not
 main CPU cycles. This modest local saving is consistent with drawing dominating
-on the cached machine. The complete-call per-routine regression check remains
-pending; do not infer that every individual path improves from this bundle alone.
+on the cached machine. The per-routine check below identifies a G1 regression hidden by this
+bundle result; use the CPU-specific disposition below.
 
 The 20-field DMA captures in both settings have observable display ownership
 and no detected active-display conflicts. Unselected hook bytes remain original
 (seven ranges OFF, three W1 ranges with W2 ON). These short checks are not a
 universal tear-free guarantee; W5 remains separate. The binary hash is unchanged
 from the combined A500/68020 checks above.
+
+### Cached-CPU per-routine check: retain original G1
+
+Six early-flight iterations per fresh boot (steps 8–13) compare the same frozen
+VERIFY binary with CUSTOM2=0 and 60. Return endpoints include the fast and
+fallback paths, and only phase-safe whole calls enter the summaries.
+
+| Routine | OFF calls / mean µs | ON calls / mean µs |
+| --- | ---: | ---: |
+| Projection wrapper | 924 / 7.8100 | 924 / 9.3131 |
+| Dot | 243 / 10.4908 | 255 / 2.8039 |
+| Screen clip, fallback included | 613 / 9.1894 | 631 / 7.1994 |
+| Vertex cache wrapper, hits included | 1,925 / 8.1114 | 1,966 / 6.7108 |
+
+G1 **regresses on this cached 68030**: the projection median also rises from
+7.6123 to 9.0220 µs, so the higher mean is not merely an interrupt outlier.
+The other three routine medians improve. These are inclusive wall times with
+phase exclusions and differing call mixes, not main-cycle measurements.
+Evidence: `w2-math-030-{0,60}`.
+
+The normal player selection now removes G1 bit 2 on 68030, and conservatively
+on unmeasured 68040/68060, alongside its existing W1a exclusion. The release
+mask is still zero; this defines the policy for later promotion rather than
+silently enabling the switch. DEVELOPER/VERIFY deliberately retain explicit
+bits for reproduction. Use CUSTOM2=56 for the candidate cached-CPU W2 bundle
+(G2/G3/G4, original G1); its combined check is pending. A500/68020 retain 60.
+The normal build compiles to 9,094 text bytes. The conditional policy change
+does not change the frozen VERIFY binary.

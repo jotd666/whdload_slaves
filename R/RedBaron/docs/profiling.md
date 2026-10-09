@@ -57,8 +57,11 @@ routines. The 68020 dt is no longer fixed at 450, so its two runs can legitimate
 follow different world states. On cached 68030, seven phase-safe early-flight 3D passes per setting fall from
 **49.4958 to 48.9081 ms (−1.19%)**, inclusive of interrupts and chip-bus waits.
 The long windows are both about 12.8 FPS but have different combat/death events;
-that pair does not establish a steady-flight FPS gain. Its per-routine regression
-check remains pending. The normal release mask remains zero.
+that pair does not establish a steady-flight FPS gain. The per-routine check rejects G1 on cached 68030 (projection wrapper mean
+7.81 → 9.31 µs; the median also regresses). Dot, clipping and vertex routines
+improve. The player policy retains original G1 on 030 and conservatively on
+040/060; developer/VERIFY testing uses CUSTOM2=56 for that W2 bundle, whose
+combined check is pending. A500/68020 use 60. The release mask remains zero.
 
 ## Running the W2 profile manually
 
@@ -89,7 +92,7 @@ until flight; it enables neither arithmetic twins nor scripted banking.
 The local combined-run helper records the longer swap-rate comparison and its
 census: `python3 tools/w2_combined_measure.py --machine a500 --mask 60` (or mask 0).
 Its output directories must not already exist; use `--suffix=-manual` for another
-pair. Use `--machine 020` or `030` for the retained faster-CPU configurations.
+pair. Use `--machine 020` or `030` for the retained faster-CPU configurations; use mask 56 on 030.
 The cached-68030 helper uses inclusive routine wall clocks and DMA traces, not
 instruction-cycle claims. Never run two helpers concurrently. Require at least
 2,000 elapsed fields and inspect dashboard-event counts before quoting FPS.

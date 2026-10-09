@@ -45,7 +45,8 @@ and icons are unchanged. Developer/VERIFY builds retain individual options.
    Combined twins now pass on all three CPUs in banking and dense scenes. The
    measured steady bundle gains 5.97% FPS on A500 and 5.54% on 68020. Cached
    68030 early-flight pass wall time falls 1.19%; its mixed long windows do not
-   establish a steady-flight FPS gain. A per-routine cached-CPU check is pending.
+   establish a steady-flight FPS gain. The per-routine check rejects G1 on 030; the reduced CUSTOM2=56 bundle is
+   being verified.
    Remaining G1/G3 refinements and G5–G9 are deferred
    under the plan’s 3%-of-frame gate; see the cost assessment in
    `w2-verification.md`.
