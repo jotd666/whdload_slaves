@@ -10,6 +10,15 @@
 	INCLUDE	devices/inputevent.i
 
 
+ IFND TAPE_SIMULATION
+TAPE_SIMULATION = 10
+ ENDC
+ IFNE TAPE_SIMULATION-10
+ IFNE TAPE_SIMULATION-20
+ FAIL "TAPE_SIMULATION must be 10 or 20"
+ ENDC
+ ENDC
+
  IFND TAPE_DETAIL
 TAPE_DETAIL = 0 ; FULL; other levels are VERIFY coverage only
  ENDC
@@ -143,14 +152,14 @@ tape_graphics:
  bra.s tape_menu_keys
 tape_simulation:
  move.l tape_a4(pc),a0
- cmp.w #10,-$bc(a0)
+ cmp.w #TAPE_SIMULATION,-$bc(a0)
  beq.s .done
  lea tape_dialog_ready(pc),a0
  clr.l (a0)
  moveq #1,d3
  lea tape_simulation_keys(pc),a3
  bsr tape_menu_keys
- bsr tape_restart_normal
+ bsr tape_restart_simulation
 .done:
  rts
 tape_menu_keys:
@@ -166,15 +175,15 @@ tape_menu_keys:
  bne.w .send
  move.l tape_a4(pc),a1
  tst.w d3
- bne.w .normal_before
+ bne.w .simulation_before
  cmp.b #TAPE_DETAIL,-$7708(a1)
  beq.w .next
  IFNE TAPE_DETAIL
  bsr tape_detail_select
  ENDC
  bra.w .send
-.normal_before:
- cmp.w #10,-$bc(a1)
+.simulation_before:
+ cmp.w #TAPE_SIMULATION,-$bc(a1)
  beq.w .next
 .send:
  lea tape_io(pc),a1
@@ -194,12 +203,12 @@ tape_menu_keys:
  bne.w .timed
  move.l tape_a4(pc),a0
  tst.w d3
- bne.w .normal_after
+ bne.w .simulation_after
  cmp.b #TAPE_DETAIL,-$7708(a0)
  beq.w .next
  bra.w .timed
-.normal_after:
- cmp.w #10,-$bc(a0)
+.simulation_after:
+ cmp.w #TAPE_SIMULATION,-$bc(a0)
  beq.w .next
 .timed:
  subq.w #1,d2
@@ -261,7 +270,8 @@ tape_graphics_keys:
  dc.w 0
 
 ; One of the five graphics entries is checked and skipped. Four Down presses
-; from the first unchecked entry reach Normal (entry 5).
+; from the first unchecked entry reach the unchecked simulation choice.
+; The already-selected simulation choice is also skipped.
 tape_simulation_keys:
  dc.w 5,$63,IEQUALIFIER_CONTROL
  dc.w 5000,$24,IEQUALIFIER_CONTROL
@@ -440,9 +450,9 @@ tape_seek_play:
  EVEN
  ENDC
 
-; Selecting Normal during a race only changes the next race's setting.
+; Selecting a simulation mode during a race changes the next race only.
 ; Acknowledge the notice, open replay/Menu, and choose Re-start Driving.
-tape_restart_normal:
+tape_restart_simulation:
  lea tape_restart_keys(pc),a3
 .next:
  move.w (a3)+,d2
@@ -459,17 +469,17 @@ tape_restart_normal:
  move.l tape_a4(pc),a0
  tst.b $45(a0)
  bne.s .retry
- cmp.w #10,-$15fa(a0)
+ cmp.w #TAPE_SIMULATION,-$15fa(a0)
  bne.s .retry
- cmp.b #10,-$173a(a0)
- beq.s tape_normal_ready
+ cmp.b #TAPE_SIMULATION,-$173a(a0)
+ beq.s tape_simulation_ready
 .retry:
  dbra d2,.wait
  lea perf_failure(pc),a0
  move.l #8,(a0)
  illegal
  bra.s .retry
-tape_normal_ready:
+tape_simulation_ready:
  rts
 
 tape_setup_key:
