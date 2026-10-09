@@ -1,10 +1,10 @@
 # Red Baron performance measurements
 
-## Current W1 measurements (verification in progress)
+## Current W1 measurements (further work deferred)
 
 W1a (table mirror) and W1b (chip mirror cache) are implemented for developer/VERIFY
-builds. Normal release enablement remains off until the full matrix and correctness
-gates pass. These controlled runs share one VERIFY image and identical native
+builds. At the user's request, further W1 work is deferred in favor of geometry. Normal
+release enablement remains off; developer/VERIFY options are available. These controlled runs share one VERIFY image and identical native
 pre-flight setup; only CUSTOM2 changes. See `w1-verification.md` for the contracts
 and evidence. Sound and game-time behavior are unchanged.
 
@@ -29,7 +29,7 @@ does not identify the cause. W1 targets dashboard events, not steady geometry.
 
 W1b removes in-place dashboard mirrors. Cold-build and later cache-hit costs are
 reported separately below as available. These are provisional measured rows;
-the cached-CPU and remaining scene gates are still in progress.
+the unfinished scene and player-enablement checks are deferred (see `open-work.md`).
 
 ## Original 250-field profile
 
@@ -871,3 +871,92 @@ player selection retains the original in-place mirror on 68030 and conservativel
 on unmeasured 68040/68060. Developer/VERIFY masks still allow explicit W1a tests.
 W1b still uses the table once to build its private chip copy. This selection
 policy does not change the existing default-off preference or icon tooltypes.
+
+## Event-containing rates over common intervals
+
+The retained primary measurement build gives these mixed rates. Every interval
+exceeds 2,000 fields and uses the same boundary swaps for all three settings.
+The boundary swap itself is not counted as a completed frame.
+
+| Machine / swaps | OFF fields / fps | W1a fields / fps | W1a+W1b fields / fps |
+| --- | ---: | ---: | ---: |
+| A500, 1–358 | 9,705 / 1.8363 | 9,536 / 1.8689 | 9,457 / 1.8845 |
+| 68020, 1–516 | 4,321 / 5.9498 | 4,250 / 6.0492 | 4,102 / 6.2674 |
+| Cached 68030, 1–699 | 2,727 / 12.7776 | 2,813 / 12.3869 | 2,787 / 12.5025 |
+
+These include dashboard events and late mission transitions. Timing and event
+histories differ after the common starting state; the numbers are observations,
+not isolated code-speed ratios. In particular, do not discard the slower 68030
+rows or generalize the warm-draw savings to steady flight. The per-call results
+justify retaining the original in-place mirror on that CPU. Evidence is each
+primary case's `common-mixed-rate.json`, derived from its complete guarded census.
+
+## Repeating the W1 checks manually
+
+Run from the local development harness after sourcing `amiga/env.sh`. Use a fresh
+output directory per boot and stop only this project's recorded emulator before
+starting another. Do not run a second capture controller alongside a queue.
+
+For controlled comparisons, use the same VERIFY binary and `CUSTOM5=512` for
+every setting: CUSTOM2=0 is OFF, 1 is table-only, 3 is table plus cache, and 2 is
+cache-only (the player policy on the cached 68030). Leave twin and paint bits off.
+For example, an A500-equivalent calibration boot is:
+
+```sh
+MallocScribble=1 CPU=68000 CHIP_KB=512 FAST_KB=0 \
+EXTRA_ARGS='--slow_memory=1536 --uae_cpu_multiplier=2 --uae_cpu_speed=real --uae_cpu_cycle_exact=true --uae_cpu_memory_cycle_exact=true --uae_blitter_cycle_exact=true' \
+WHD_ARGS='CUSTOM2=3 CUSTOM5=512' \
+python3 tools/reach_flight.py --no-shot --out tmp/prof/my-w1-entry
+```
+
+The saved `entry.json` contains the build hash, machine settings and first-flight
+anchor. Set `BOOT_BREAK` to that retained anchor on subsequent fresh boots of the
+same layout; do not copy an address from another build. The common checkpoint
+precedes activation. `capture_current.py --out tmp/prof/my-w1-event --fields 100`
+records the A500 event window; use 40 fields on the 68020 or 20 DMA fields on the
+cached 68030. Advance with `step_log.py --step 8` for the ace steady checkpoint,
+or with `--step 24` for the banking checkpoint. Each profile chunk is separate.
+
+For bank, set CUSTOM5=514; for the rear-view dense fixture, use CUSTOM5=532.
+The current scene matrix uses step 24 and step 8 respectively. These short
+traces provide routine costs and display checks, not FPS. Use the separately
+fresh-booted `dashboard_census.py` run and `census_window.py` swap boundaries
+for rates spanning at least 2,000 fields. For the ace A500 window, start again
+at a fresh no-shot flight checkpoint, then run:
+
+```sh
+python3 tools/dashboard_census.py --out tmp/prof/my-w1-census
+python3 ../../R/RedBaron/tools/census_window.py \
+  tmp/prof/my-w1-census/census.json --start 8 --end 108 \
+  --out tmp/prof/my-w1-census/rate.json
+```
+
+Check the resulting field count and event list; other scenes/CPUs need suitable
+swap boundaries, not an assumed 8–108 rate window. The primary matrix's old binary hash
+is retained explicitly above; rebuilding the corrected image is a new capture.
+
+On a cached 68030 use the documented MMU/data-cache configuration, then collect
+read-only routine clocks instead of instruction costs:
+
+```sh
+python3 tools/w1_clock.py --entry tmp/prof/my-w1-entry --mask 2 \
+  --step 120 --out tmp/prof/my-w1-entry/clock.json
+python3 ../../R/RedBaron/tools/routine_wall_time.py \
+  tmp/prof/my-w1-entry/clock.json --first-step 1 --last-step 119 \
+  --out tmp/prof/my-w1-entry/costs.json
+```
+
+The mask must match the boot. The clock collector takes replacement return
+addresses from that capture's retained listing and validates restored SP. Keep
+its phase exclusions; do not reinterpret elapsed time as main CPU cycles.
+For CPU traces, `call_costs.py` accepts explicit replacement entry/RTS pairs
+with `--routine`, and requires an interrupt-stack interval established from
+that trace's VBlank/CIA callbacks. The local `w1_window_cost_report.py` helper
+performs that derivation for the retained W1 window layout.
+
+Correctness boots use CUSTOM5=864 (deferred activation, mirror/pixel/lifecycle
+twins); add 2 for bank or 20 for dense. CUSTOM5 bit 7 additionally forces chip
+allocation failure. These are separate from timing runs. `mirror_checks.py`
+reads the completed counters; the cache status must also show completed build,
+pixel and lifecycle checks. Model/test checks and the three-range static audit
+are in the versioned tools directory.

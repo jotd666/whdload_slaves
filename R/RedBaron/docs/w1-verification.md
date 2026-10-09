@@ -1,8 +1,8 @@
 # W1 dashboard mirror implementation and evidence
 
-W1 is in progress. W1a is implemented behind developer/VERIFY CUSTOM2 bit 0;
-W1b is implemented behind bit 1. The release verified mask remains zero. Completion
-requires the full measurement matrix and the cache-specific checks below.
+W1 core is implemented; further validation and player enablement are deferred at
+the user's request to prioritize geometry. W1a uses developer/VERIFY CUSTOM2 bit 0;
+W1b is implemented behind bit 1. The release verified mask remains zero. The uncompleted follow-up is listed at the end; it is not claimed as passed.
 
 ## W1a contract
 
@@ -285,14 +285,26 @@ corrected VERIFY image byte-for-byte unchanged. The release verified mask is
 still zero pending final scene/cached-CPU gates. Costs and exclusions are in
 `profiling.md`.
 
-## Remaining W1 gates
+## Stopping point and deferred follow-up
 
-- Finish off/on measurements across the required windows and all three CPUs,
-  including event census, frame rate, complete routine costs and state checks.
-- Check the frozen build on A500-equivalent memory and cached CPUs, with the
-  documented cache policy; the forced-failure and lifecycle probes have passed
-  on the continuity machine.
-- Extend cache-build/pixel twins through the required scenes and full event census;
-  the initial step-20 checks do not establish coverage of every clipping case.
-- Repeat hook/off-path checks for the final build, build all modes and promote
-  only fully verified and measured bits to the single player switch.
+The user requested stopping further W1 work and moving attention to geometry.
+All A500/68020 bank and dense cases completed with corrected VERIFY SHA-256
+`5c0918ccbccb27ad301478873e1aeab8398f057211b2749ce7d16fe949f23475`.
+All their disabled-range checks pass, with observable framebuffer writes and zero
+active-display conflicts in those windows. The corrected cached-68030 bank
+captures completed; the dense queue was stopped during its first case. Do not
+count a directory without a completion record as a successful run.
+
+At the A500 bank checkpoint, cache-on matches all h3 bytes exactly. Table-only
+differs only in the elapsed-clock byte within `h3:0483a`. In dense, table-only
+differs in the timer timestamp `h3:03f5a`; cache-on additionally differs in the
+elapsed clock. Every other byte matches, and dt remains 450. The timer's lack of
+a consumer in the inspected paths is documented in `game-time.md`. These are
+explicitly classified differences, not silently normalized exact matches.
+
+Independent cached-CPU cache-only timing/full-flight twins, the remaining 68030
+scene audits, a completed return-flag contract write-up, and normal player-switch
+enablement checks are deferred. The prepared local final-proof/promotion scripts
+have not run. The normal release mask remains zero. Developer/VERIFY W1 remains
+available with its tested individual bits; all source changes and completed
+measurements are retained. See `open-work.md` for the next work order.

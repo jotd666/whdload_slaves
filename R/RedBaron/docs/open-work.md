@@ -4,38 +4,48 @@ The accepted decisions and detailed requirements are in `performance-plan.md`,
 especially §6. `verification.md` is the W0 evidence ledger; `profiling.md`
 contains measured baselines. No performance optimization is enabled yet.
 
-## W0 complete; W1 in progress
+## W0 complete; W1 core implemented, further work deferred
 
-The final same-build A500-equivalent, A1200/14 MHz 68020 and cached 50 MHz
-68030 event/steady baselines are complete. The acceptance ledger records the
-four strict scene repeats, counter and gap checks, full dashboard census,
-scoped game-time coupling test, patch framework and initial references.
-W1a and W1b are implemented for developer/VERIFY testing. The continuity-machine
-model/twin, failure and lifecycle checks pass. Controlled A500 OFF/W1a/W1a+W1b
-entry and step-8 states match exactly; the full measurement and CPU/scene
-coverage gates remain in progress. The release mask remains zero. See `w1-verification.md` for evidence
-and remaining W1a/W1b work.
+On the user's instruction, W1 work stops here to prioritize the main geometry
+cost. The exact table mirror and chip mirror cache are implemented and committed.
+The models, exhaustive CPU word test, synthetic/live mirror twins, pixel twins,
+allocation-failure and lifecycle probes pass. The fallback-invalidation regression
+is fixed. All three build modes compile and 35 host checks pass.
 
-## Implementation order after W0
+The nine primary machine/option cases, six corrected-build scene twin boots,
+A500/68020 warm-event traces and their bank/dense matrices are complete. Corrected
+68030 bank captures are complete; the dense matrix was stopped during its first
+case. Completed evidence is retained; incomplete captures are not results.
+`profiling.md` records measured costs and rates with their scope and build hashes.
 
-1. **W1a:** exact table-driven dashboard mirror. Keep WaitBlit on entry, build
-   the exhaustive word self-test and copied-input/live twins, then measure all
-   required windows and machines. Declare/audit hook ranges and verify the off path.
-2. **W1b:** approved pre-mirrored chip-RAM cache, with invalidation at
-   `sim:303c6`, allocation-failure fallback, mask/descriptor checks and pixel twins.
-3. **W2:** geometry G1–G9 in the plan's order. Each replacement needs a Python
-   model checked against the original and a VERIFY twin covering its live flags,
-   registers, outputs, uncommon inputs and relevant scenes.
-4. **W5:** tear-free publication and a frame cap under the player switch.
-   Measure P1's 68000 cost and choose P2's rate from evidence. Retain the
-   observed raster/ownership distinction in the fast-CPU checks.
-5. **W6 investigation alongside W1–W2:** extend `game-time.md` with force,
-   ground-contact, collision, projectile and equal-wall-time experiments.
-   Evaluate bounded/fixed simulation steps, the >400 shortcut, signed rounding,
-   input cadence and per-frame counters. Obtain approval for the recommended
-   design before implementing game-time changes.
-6. **W4 and W7:** smaller drawing, world-step and instrument work only after
-   measurement demonstrates value.
+For development, CUSTOM2=3 selects W1a+W1b; CUSTOM2=2 selects only the cache.
+The cached 68030 table mirror is slower than the original, so the normal selection
+policy excludes it on 030/040/060. **The normal release mask remains zero:** player
+switch enablement and its final normal-build checks are deferred. Existing defaults
+and icons are unchanged. Developer/VERIFY builds retain individual options.
+
+### Deferred W1 follow-up
+
+- Finish the cached 68030 dense-scene measurements and saved display/hook audit.
+- Run the prepared independent cached-68030 cache-only timing/full-flight twin
+  check. Earlier cache-only checks passed on the continuity configuration; do not
+  label the unrun cached-CPU extension as passed.
+- Finish the return-flag contract write-up for the cached draw's caller chain.
+- Promote verified bits into the player switch and check normal-build option
+  selection when returning to W1. The prepared local promotion helper has not run.
+- Further clipping/lifecycle or timing refinements only if a concrete issue calls
+  for them; the large existing evidence set is retained.
+
+## Next work
+
+1. **W2 geometry**, beginning with the plan's G1 work in the `sim:2c552` subtree.
+   Each change needs its original-checked Python model and VERIFY twin. This is
+   the dominant steady-flight cost; W1 mainly removes dashboard-event stalls.
+2. **W5:** tear-free publication and a frame cap under the player switch.
+   Measure P1's 68000 cost and choose P2's rate from evidence.
+3. **W6 investigation:** continue the game-time investigation and obtain approval
+   before implementing a timing design.
+4. **W4 and W7:** later measured drawing, world-step and instrument improvements.
 
 ## Decisions still required before release
 
@@ -54,7 +64,7 @@ ordinary development fixtures; 0/60 copies are investigation inputs only.
 Use one binary with option changes for comparisons; all patches remain sim v1 only.
 Each feature needs original-byte checks, whole-instruction/branch/relocation audits,
 CUSTOM-off verification, its model/twin checks and the plan's measurement protocol.
-Empty performance-range audits remain pending until the first feature declares ranges.
+The three W1 performance ranges pass the static hook audit.
 Only verified bits may enter the release mask. Keep instruments VERIFY-only and
 normal/developer builds free of their code and data. Recheck frame timing, ownership,
 chip/slow memory pressure and cache conditions after code/layout changes.
