@@ -446,3 +446,17 @@ has not passed. See `verification.md` for checks and remaining acceptance requir
 There are no new performance claims, no sound changes and no game-time implementation.
 Performance candidates remain disabled until their required models, twins, hook audits,
 off-path checks and machine/window measurements pass.
+
+## Rear-view squadron geometry sample
+
+The VERIFY-only rear-view squadron candidate starts at flight step 8, Time Scale
+40, maximum detail, CUSTOM2=0 and CUSTOM5=20. On the default 68000 + fast setup,
+its 100-field capture has three complete 3D calls: mean **2,266,544 main cycles**,
+range 2,186,006–2,318,154. Two complete world updates average **759,255 main
+cycles**, range 748,338–770,172. Calls cut by either edge are excluded. These are
+scene costs, not a rendering speedup or a long-window FPS measurement.
+
+Each complete 3D pass dispatches seven aircraft models. The strict reset repeat
+matches instruction and DMA records, but whole screenshots still differ outside
+the game image. See `verification.md` for the fixture, geometry counts and the
+remaining screenshot acceptance issue. The baseline machine matrix remains open.

@@ -14,7 +14,7 @@ original scope. No rendering optimization is enabled.
 | W0.1 rebuilt equivalence | Passed at the fixed opening checkpoint | None; differing chip storage is classified below |
 | W0.2 continuity | Passed | Manual profile packaging also passed its complete 100-field rerun; see `profiling.md` |
 | W0.3 counters | Passed | Trace, independent swap breakpoints and ring agree on the squadron steps 1–2 interval |
-| W0.4 scenes and machines | Open | Select an aircraft-dense window; complete strict repeats and event/steady costs for the machine matrix; resolve screenshot-border differences; complete first-draw coverage |
+| W0.4 scenes and machines | Open | Rear-view aircraft-rich window selected; complete strict screenshots and event/steady costs for the machine matrix; resolve screenshot-border differences; complete first-draw coverage |
 | W0.5 event census | Passed for the complete baseline mission | Top-text branch had zero occurrences; no coverage claim for that branch |
 | W0.6 game time | Open | Complete the Time Scale 0/40/60 velocity interpretation and nominal-speed analysis; identify the timer coupling before relying on broader state equality |
 | W0.7 framework | Passed | Empty performance-range audits remain explicitly pending until a feature declares ranges |
@@ -465,3 +465,36 @@ guard. Its object count is a post-cull dispatch count, not a count of visible
 polygons or aircraft. The current forward-view window therefore does **not**
 satisfy R-dense. A controlled view change or different mission setup is required
 before collecting the dense trace and its strict repeat.
+
+## Rear-view squadron fixture
+
+VERIFY CUSTOM5 bit 4 emits one native F2 key event after flight step 2. It leaves
+mission selection independent: combine it with bit 2 for the squadron route
+(CUSTOM5=20). The ordinary forward route and optional bank remain available.
+The event is emitted only after the route has completed and while the input
+caller is the flight loop. Normal and developer binaries remain byte-identical.
+
+The rear view resolves the forward-view scene-selection problem. In steps 2–40,
+the post-cull census records seven additional distinct objects: three model 127
+and four model 128. Their live 318-byte aircraft objects carry aircraft types 9
+and 22 respectively, positions and velocity state; they are not the shared terrain
+conversion descriptor. The early screenshot shows recognizable aircraft silhouettes.
+
+The selected candidate R-dense starts at the exact step-8 flight anchor after a
+reset-armed boot. Its 100-field trace contains three complete 3D passes. Each
+passes all seven aircraft models into `sim:3a902`, alongside 15 scenery models.
+The three passes execute 177/177/181 calls to `sim:38c82` and 85/85/79 calls to
+`sim:3b41a`. This supplies an aircraft-rich geometry window; it is not claimed to
+maximize polygon count or replace the forward steady/bank windows.
+
+Two fresh reset-armed boots of this 30,380-byte VERIFY text match **every
+instruction record, DMA record and accounting field** across all 100 fields.
+All 640×400 game-image pixels match as well. Raw screenshots differ outside the
+game image, including the far-right columns and bottom rows of the emulator
+capture. Strict whole-screenshot equality is therefore **still open**; the
+comparison tool correctly fails instead of filtering those differences away.
+
+Evidence: `w0-rear-search-entry` contains the object census through step 80;
+`w0-dense-rear-a` and `w0-dense-rear-b` contain the reset repeats, binary/listing,
+step-8 checkpoint, memory and trace. `repeat.json` records the strict failure,
+and `pixel-repeat.json` records the exact game-image comparison rectangle.

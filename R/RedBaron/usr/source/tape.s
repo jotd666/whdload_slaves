@@ -9,10 +9,12 @@
 ; +52: current caller is flight (1) or UI (0). Pointers initialize only in live slave.
 ; Gameplay steps are input-loop calls, not a validated display-frame counter.
 ; Profile at game step 1. CUSTOM5 bit 1 enables Right at steps 20..34; release at 35.
+; CUSTOM5 bit 4 emits F2 once after flight step 2, for rear-view scene captures.
 ; Normal builds contain none of these fixtures.
 RAW_RETURN = $440d
 RAW_TAB = $4209
 RAW_RIGHT = $4e00
+RAW_F2 = $5100
 RAW_F10 = $5900
 RAW_ESC = $451b
 	EVEN
@@ -74,6 +76,24 @@ tape_menu_key:
 tape_emit:
 	bra.s tape_return
 tape_menu_key_none:
+; Optional dense-scene search: emit one native F2 event after flight begins.
+; Keep it separate from the squadron route so earlier forward-view fixtures remain available.
+	btst #4,perf_custom5+3(pc)
+	beq.s .none
+	move.l tape_game_steps(pc),d1
+	cmp.l #2,d1
+	blo.s .none
+	move.l tape_inflight(pc),d1
+	tst.l d1
+	beq.s .none
+	lea tape_rear_sent(pc),a1
+	tst.w (a1)
+	bne.s .none
+	move.w #1,(a1)
+	lea tape_events(pc),a1
+	addq.l #1,(a1)
+	move.w #RAW_F2,d0
+	bra.s tape_return
 .none:
 	moveq #0,d0
 tape_return:
@@ -226,6 +246,8 @@ tape_sim:
  ENDC
  dc.w 0
 
+tape_rear_sent: dc.w 0
+	EVEN
 tape_flight_target: dc.l 0
 
 	INCLUDE "observe.s"
