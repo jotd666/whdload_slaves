@@ -162,6 +162,11 @@ _bootdos
 		moveq	#args_end-args,d0
 		lea	patch_main(pc),a5
 		bsr	load_exe
+	IFD VERIFY
+	IFD SIM_PROBE
+	bsr sim_clock_remove
+	ENDC
+	ENDC
 	
 	;quit
 .quit		pea	TDREASON_OK
@@ -176,6 +181,9 @@ patch_main
 	move.l d7,(a0)
 	addq.l #4,(a0)
 	bsr tape_start
+	IFD SIM_PROBE
+	bsr sim_clock_install
+	ENDC
 	movem.l (sp)+,d0-a6
 	ENDC
 	IFD	USE_PROFILING
@@ -414,6 +422,9 @@ perf_attnflags	dc.l	0
 	include "performance.s"
 
 	IFD VERIFY
+	IFD SIM_PROBE
+	include "simulation_clock.s"
+	ENDC
 	include "driving_tape.s"
 	IFD SIM_PROBE
 	include "simulation_verify.s"
