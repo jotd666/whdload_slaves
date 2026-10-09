@@ -128,6 +128,34 @@ configuration, WHDLoad arguments and binary with each capture. Older uncached or
 blitter-inexact runs remain separate baselines; changing these settings is not a
 slave performance improvement.
 
+## Current-build cached 50 MHz 68030 baseline
+
+The 30,324-byte VERIFY text build, with all performance bits and the first-fill
+diagnostic off, runs the explicit cached/MMU configuration above. **Swap 120–700**
+completes 580 frames in **2,280 PAL fields**, **12.699 fps**, without dashboard
+events. Its dt values are 124, 155 and 186. This is an unoptimized steady baseline;
+it is not comparable as a speedup ratio to the old 15.28 fps run, whose blitter and
+cache conditions differed.
+
+A reset-armed fresh boot reproduces every field in the step-120 observer record
+exactly. The corresponding 20-field DMA trace contains **178,570 framebuffer
+writes** and **zero active-display conflicts**. Both live framebuffer allocations
+and their actual bitplane fetches are checked. This 68030 core still supplies no
+instruction records usable for publication matching, so the trace does not provide
+per-call instruction costs or publication-to-first-write margins. The separate
+optional diagnostic supplies those beam observations; its overhead is excluded
+from this frame-rate measurement. Strict cross-boot trace equality is not claimed
+from an observer-record match alone.
+
+The flight-exit-guarded census reaches step 1,015 and retains every step record.
+It observes 73 mirror calls, 62 message calls, 28 dirty triggers and 108 bitmap
+rejects, with no full/top redraw calls after the starting checkpoint. The initial
+screenshot advances one field and can precede part of the first event; these counts
+must not be presented as a complete census from the first instruction of flight.
+
+Retained VERIFY SHA-256:
+`504738561676440e9d41a8d3a0f6324e88c7d1b1aa500e433a3498c878af4a57`.
+
 ## Current-build A500-equivalent baseline
 
 The current VERIFY binary, with performance bits off and no scripted bank, runs
