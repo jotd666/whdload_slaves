@@ -17,6 +17,7 @@ RAW_F10 = $5900
 RAW_ESC = $451b
 	EVEN
 tape_start:
+	bsr observe_start
 	lea tape_marker(pc),a0
 	lea tape_menu_key(pc),a1
 	move.l a1,8(a0)
@@ -153,10 +154,12 @@ tape_flight:
 	move.l tape_keybase(pc),a1
 	clr.b $4e(a1)
 	cmp.l #20,d0
-	blo.s tape_game_anchor
+	blo.s tape_game_record
 	cmp.l #35,d0
-	bhs.s tape_game_anchor
+	bhs.s tape_game_record
 	move.b #1,$4e(a1)
+tape_game_record:
+	bsr observe_step
 tape_game_anchor:
 	nop
 tape_anchor:
@@ -219,3 +222,5 @@ tape_sim:
  dc.w 0
 
 tape_flight_target: dc.l 0
+
+	INCLUDE "observe.s"

@@ -313,6 +313,7 @@ pl_sim_v1
 	IFD VERIFY
 	PL_PS $1ed82,tape_flight
 	PL_P $1ef92,tape_sim_key
+	PL_PS $2d348,observe_vbl
 	ENDC
 	PL_PS	$A66A,patch_bittest
 	PL_PS	$3089A,kb_delay

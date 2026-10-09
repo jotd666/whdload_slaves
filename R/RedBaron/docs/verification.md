@@ -1,0 +1,83 @@
+# Red Baron verification groundwork
+
+The work order and acceptance requirements are in `performance-plan.md`. Performance
+patches are not yet installed. This document records the observer ABI and current W0
+validation; it does not mark the complete W0 gate as passed.
+
+## VERIFY observers
+
+The existing flight-input hook records one entry after incrementing the game-step counter,
+when the scripted menu/preferences route is complete. The additional VBlank hook replaces
+one complete LEA at `sim:2d348`; it reconstructs the original LEA, counts VBlanks and restores
+SR. The callback runs in supervisor interrupt context. Both instruments are VERIFY-only
+and apply only to the existing supported v1 patch list.
+
+The live `RBSTEPS1` header contains seven longwords after its eight-byte signature:
+version, record stride, capacity, committed count, ring pointer, h3 base, sim base.
+A VBlank-count longword follows. Pointers initialize only in the live slave. The ring
+has 256 entries, each 44 bytes. It overwrites the oldest entry on wrap. The committed
+count advances only after all fields of the new record have been written.
+
+| Record byte offset | Type | Meaning |
+| --- | --- | --- |
+| 0 | long | Flight step |
+| 4 | long | Lifetime CIA ticks, `sim:30006` |
+| 8 | long | Beam-position register pair |
+| 12 | long | Display-buffer pointer, `h3:09d66` |
+| 16 | word | Previous elapsed-time argument, `h3:0483a` |
+| 18 | word | World dt, `h3:04834` |
+| 20 | word | Secondary dt, `h3:04836` |
+| 22 | word | Time-scale divisor F, `h3:04838` |
+| 24 | word | Time Scale, `h3:03d56` |
+| 26 | word | View redraw counter, `h3:06716` |
+| 28 | word | Zero-extended **byte** dirty counter, `h3:0711c` |
+| 30 | word | Top-text redraw counter, `h3:045b8` |
+| 32 | long | World/frame counter, `h3:03254` |
+| 36 | word | Message countdown, `h3:04820` |
+| 38 | word | Reserved, zero |
+| 40 | long | VBlank count |
+
+The message-dirty variable is byte-sized: reading a word also includes an unrelated
+adjacent byte. The other listed counters retain their original widths.
+
+## Checks completed
+
+- A VERIFY build reaches the accepted maximum-detail flight checkpoint with observers.
+- The record reports Time Scale 40, F=33 and dt=450 in the measured slow-machine window.
+- Eleven read-only breakpoints at `sim:3154a` agreed with the subsequent step records in
+  both VBlank and CIA-tick counts, for steps 2–12.
+- A single 100-field trace starting after step 12 contained four copper-list updates and
+  four subsequent step-log advances. Their VBlank intervals agreed (23, 26 and 24 fields).
+- The normal slave remains byte-identical to the pre-observer build and contains neither
+  observer marker. This proves exclusion of instrumentation, **not** equivalence with the
+  shipped 2.1 slave; W0.1 is still a separate required check.
+- Normal, DEVELOPER and VERIFY builds have separate local outputs. Assembly listings can
+  be retained with captures.
+
+The exact same-window three-way comparison and fresh-boot instruction/DMA/screenshot
+comparison remain required before W0.3/W0.4 are complete. The observer adds code and RAM;
+performance measurements must consistently use the same instrumentation build.
+
+## Capture continuity
+
+The VBlank observer confirms that this Barto build advances through an unrecorded interval
+when starting a profile command. At consecutive capture boundaries, this is one whole field:
+
+| Requested recorded fields | VBlank advance |
+| ---: | ---: |
+| 20 | 21 |
+| 10 | 11 |
+| 10 | 11 |
+| 1 | 2 |
+| 1 | 2 |
+| 1 | 2 |
+
+The initial interval depends on the starting beam position: an arbitrary mid-field
+checkpoint need not produce an extra complete VBlank count. Completed captures followed
+by another capture have the reproducible one-field gap. Consecutive binary files are
+therefore **not a continuous instruction stream**. Reset reconstructed call stacks at
+each join and exclude incomplete calls from per-call cost comparisons.
+
+Local tools now mark joins explicitly. Cycle captures default to a single window of at
+most 100 fields. Longer frame-rate and event runs use the ring and swap breakpoints rather
+than joining instruction captures. No game-time implementation or sound change is included.
