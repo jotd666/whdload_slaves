@@ -57,6 +57,8 @@ CBDOSLOADSEG
 ;============================================================================
 
 
+; WHDLoad 17 interface (PL_IFCx needs 17.2): nothing here uses the version 20
+; additions (ws_MemConfig, WHDLTAG_EXPMEMSIZE_GET), so older WHDLoads run it too.
 slv_Version	= 17
 slv_Flags	= WHDLF_NoError|WHDLF_Examine
 slv_keyexit	= $5D	; num '*'
@@ -72,7 +74,7 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.5"
+	dc.b	"1.6b"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -86,6 +88,12 @@ DECL_VERSION:MACRO
 _tdboot
 	dc.b	"tdboot",0
 slv_config
+	dc.b "C2:B:Enhanced framerate;"
+	IFD VERIFY
+	dc.b "C3:B:reproducible verification;"
+	dc.b "C4:B:slow renderer verification;"
+	dc.b "C5:X:scripted driving verification:0;C5:X:force engine damage verification:1;C5:X:force fatal crash verification:2;C5:X:sub-unit with zero fraction:3;C5:X:straight driving tape:4;"
+	ENDC
 	dc.b    "C1:X:trainer infinite lives:0;"	
 	dc.b	0
 
@@ -95,7 +103,7 @@ slv_name		dc.b	"Test Drive II"
 	ENDC
 	dc.b	0
 slv_copy		dc.b	"1989 Accolade",0
-slv_info		dc.b	"adapted by JOTD",10
+slv_info		dc.b	"adapted by JOTD and Vesuri",10
 		dc.b	"from Wepl excellent KickStarter 34.005",10,10
 		dc.b	"Version "
 		DECL_VERSION
@@ -299,7 +307,9 @@ _bootdos	move.l	(_resload,pc),a2		;A2 = resload
 		moveq	#_args_end-_args,d0
 		lea	(_args,pc),a0
 
+		bsr render_interrupt_option
 		jsr	(4,a1)
+		bsr render_interrupt_restore
 		movem.l	(a7)+,d1/d7/a2/a6
 
 	;remove exe
@@ -311,6 +321,20 @@ _bootdos	move.l	(_resload,pc),a2		;A2 = resload
 
 .end		moveq	#0,d0
 		rts
+
+	include "simulation.s"
+	include "render.s"
+
+	IFD VERIFY
+; Stress instrument (CUSTOM4): delay only drawing; VBL and task scheduling remain live.
+verify_slow_copper:
+	move.l d0,-(a7)
+	move.w #65535,d0
+.delay
+	dbf d0,.delay
+	move.l (a7)+,d0
+	bra set_copper
+	ENDC
 
 set_copper:
 	movem.l	d0-d1,-(a7)
@@ -324,19 +348,77 @@ set_copper:
 	MOVE.L	A0,$00DFF080
 	rts
 	
+; Intro car (original bug). The copper wrote DDFSTOP on the line above a viewport, at hpos
+; $a4 for 5-plane viewports after their 32-colour palette. When the stop dropped from $a8 to
+; $a0, neither stop matched on that line, the fetch window stayed open and the viewport's first
+; line fetched one extra word: every line then read 2 bytes further, and each intro car showed
+; 16 pixels left for one field. For those viewports, when the new stop is $a0 or less, the move
+; now writes $a8, which always closes that line's window, and the real stop follows after the
+; modulo moves (hpos $b0). Other viewports keep the original single move. Later writes, at or
+; past $d8 or on the viewport's first line, would also work on hardware but leave a stale column
+; at FS-UAE's right edge.
+intro_ddfstop_close:			; replaces the pushes of the DDFSTOP move at $4c50
+	move.l	(a7)+,a1
+	lea	intro_ddfstop_late(pc),a0
+	clr.w	(a0)
+	move.w	-10(a5),d0
+	cmp.w	#$a0,d0
+	bhi.b	.push
+	move.l	4(a5),d1		; the viewport's caller in duel
+	sub.l	a1,d1
+	cmp.l	#$343c-$4c56,d1
+	beq.b	.palette
+	cmp.l	#$4e9a-$4c56,d1
+	bne.b	.push
+.palette
+	move.l	12(a5),a0
+	cmp.b	#5,5(a0)		; planes
+	bne.b	.push
+	lea	intro_ddfstop_late(pc),a0
+	move.w	d0,(a0)
+	move.w	#$a8,d0
+.push
+	move.w	d0,-(a7)
+	move.w	#$94,-(a7)
+	jmp	(a1)
+
+intro_ddfstop:				; replaces clr.w -4(a5); lea 48(sp),sp at $4c8c
+	move.l	(a7)+,a1
+	lea	48(a7),a7
+	clr.w	-4(a5)
+	move.w	intro_ddfstop_late(pc),d0
+	beq.b	.done
+	move.l	a1,-(a7)
+	move.w	d0,-(a7)		; DDFSTOP value
+	move.w	#$94,-(a7)
+	move.l	8(a5),-(a7)		; copper list
+	lea	$46e2-$4c92(a1),a0	; the game's copper move builder
+	jsr	(a0)
+	addq.l	#8,a7
+	move.l	(a7)+,a1
+.done
+	jmp	(a1)
+
+intro_ddfstop_late:
+	dc.w	0			; nonzero: the real DDFSTOP still to be written
+
 _patchexe:
 	movem.l	d0-a6,-(a7)
 
 	lea	pl_main_v1(pc),a0
 	bsr	get_version
 	cmp.l	#2,d0
-	bne.b	.pp
+	bne.b	.v1
 	lea	pl_main_v2(pc),a0
+	bra.b	.pp
+.v1
+	bsr	sim_init
+	lea	pl_main_v1(pc),a0
 .pp
 	move.l	d7,a1
 	move.l	_resload(pc),a2
 	jsr	(resload_PatchSeg,a2)
-	
+	bsr	sim_set_deadline	; v1 only: v2 reads no options
 	movem.l	(a7)+,d0-a6
 	rts
 
@@ -369,6 +451,19 @@ get_version:
 
 pl_main_v1
 	PL_START
+	include "simulation-patches.i"
+	PL_IFC2
+	PL_PS $006c66,render_subunit_main
+	PL_PS $006daa,render_subunit_mirror
+	PL_PS $006474,render_subunit_latch
+	PL_PS $007a34,render_subunit_forward
+	PL_PS $007a78,render_subunit_oncoming
+	PL_PS $00801a,render_subunit_opponent
+	PL_PS $008052,render_subunit_police
+	PL_PS $0073ec,render_subunit_road_angles
+	PL_S $0073f2,$742a-$73f2	; render_subunit_road_angles skips to 0742a
+	PL_PSS $008c90,render_subunit_backdrop,8
+	PL_ENDIF
 	; protection
 	PL_B	$00052A,$60
 	PL_NOP	$0041CA,2
@@ -377,6 +472,8 @@ pl_main_v1
 ;	PL_PS	$0016BE,sync_dot_fade_1	; works but too scattered
 	PL_PS	$0016C8,sync_dot_fade_2
 	PL_P	$00588A,set_copper
+	PL_PSS	$004C50,intro_ddfstop_close,2	; intro car jump
+	PL_PSS	$004C8C,intro_ddfstop,2
     
     ; keyboard support
 	PL_PS	$001A1A,read_joydat
@@ -390,6 +487,24 @@ pl_main_v1
     PL_NOP  $005D0E,4
     PL_ENDIF
 
+	IFD VERIFY
+	; Instruments. PatchSeg applies entries in order: these win at shared offsets.
+	PL_IFC3
+	PL_W $00E9F0,$7200	; RNG without beam position: moveq #0,d1
+	PL_NOP $00E9F2,4
+	PL_ENDIF
+	PL_IFC4
+	PL_P $00588A,verify_slow_copper
+	PL_ENDIF
+	PL_IFC5X 3
+	PL_PS $006c66,render_zero_main
+	PL_PS $006daa,render_zero_mirror
+	PL_ENDIF
+	PL_IFC5
+	PL_PS $001A1A,verify_read_joydat
+	PL_PS $00EAA2,verify_read_joydat
+	PL_ENDIF
+	ENDC
 	PL_END
 	
 pl_main_v2
