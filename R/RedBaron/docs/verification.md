@@ -448,3 +448,20 @@ The mirror and projection host models, original copies and hook checkers provide
 W0's reference infrastructure. Replacement-specific assembly wrappers, synthetic
 inputs and live twins belong to the corresponding W1/W2 acceptance gates. No
 replacement or completed live replacement twin is claimed by this groundwork.
+
+## Dense-scene search: forward squadron view rejected
+
+The current VERIFY build was reset into the four-versus-four squadron route, then
+observed through flight step 200. A read-only breakpoint at `sim:39d30`, after
+object culling and before the model draw dispatch, recorded 4,290 object visits
+over steps 1–199. Every recorded descriptor has flags $10. These are the scenery
+descriptors or the common converted terrain descriptor, not evidence of aircraft
+geometry. The step-200 screenshot also shows no visible aircraft.
+
+The retained `w0-dense-search-entry/scene-census.json` contains each step, object
+identity, flags and model identifier, plus the raw debugger log and final ring.
+The collector stopped at the requested flight anchor and includes a flight-exit
+guard. Its object count is a post-cull dispatch count, not a count of visible
+polygons or aircraft. The current forward-view window therefore does **not**
+satisfy R-dense. A controlled view change or different mission setup is required
+before collecting the dense trace and its strict repeat.
