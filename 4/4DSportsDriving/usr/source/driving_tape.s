@@ -103,6 +103,11 @@ tape_task_code:
  move.l a0,IO_DATA(a1)
  move.l #ie_SIZEOF,IO_LENGTH(a1)
  jsr _LVODoIO(a6)
+ bsr tape_graphics
+ lea tape_frames(pc),a0
+ clr.l (a0)
+ lea tape_configured(pc),a0
+ move.l #1,(a0)
  IFD TAPE_ACCEL
  lea tape_event(pc),a0
  move.w #$4c,ie_Code(a0) ; ordinary raw cursor-up press
@@ -113,6 +118,38 @@ tape_task_code:
 	jsr	_LVOWait(a6)
 	bra.s	.done
 
+; Use the game's Ctrl-G command after entering the cockpit.
+tape_graphics:
+ lea tape_graphics_keys(pc),a3
+.next:
+ move.w (a3)+,d2
+ beq.s .done
+ lea tape_event(pc),a0
+ move.w (a3)+,ie_Code(a0)
+ move.w (a3)+,ie_Qualifier(a0)
+ lea tape_io(pc),a1
+ jsr _LVODoIO(a6)
+.wait:
+ exg a5,a6
+ jsr _LVOWaitTOF(a6)
+ exg a5,a6
+ subq.w #1,d2
+ bne.s .wait
+ bra.s .next
+.done:
+ rts
+tape_graphics_keys:
+ dc.w 5,$63,IEQUALIFIER_CONTROL
+ dc.w 20,$24,IEQUALIFIER_CONTROL
+ dc.w 5,$a4,IEQUALIFIER_CONTROL
+ dc.w 200,$e3,0
+ dc.w 30,$44,0
+ dc.w 100,$c4,0
+ dc.w 20,$45,0 ; Escape closes the dialog
+ dc.w 50,$c5,0
+ dc.w 0
+
+
  CNOP 0,4
  dc.b "4DTAPE!!"
 tape_game: dc.l 0
@@ -121,6 +158,7 @@ tape_frames: dc.l 0
 tape_a4: dc.l 0
 tape_first_field: dc.l 0
 tape_keys_sent: dc.l 0
+tape_configured: dc.l 0
 
 ; Called at game:$74fa, after drawing and before the buffer-index flip.
 ; Mode $45=0 is live driving; e928=0 excludes the attract/replay route.
