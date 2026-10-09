@@ -128,6 +128,11 @@ tape_task_code:
  jsr _LVODoIO(a6)
  bsr tape_graphics
  bsr tape_simulation
+ IFD SIM_FIXTURE
+ ; Graphics-navigation arrow keys can start the current race. Always use
+ ; the native restart route before arming a tick-indexed fixture.
+ bsr tape_restart_simulation
+ ENDC
  lea tape_frames(pc),a0
  clr.l (a0)
  lea tape_configured(pc),a0

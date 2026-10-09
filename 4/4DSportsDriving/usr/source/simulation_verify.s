@@ -9,6 +9,9 @@ sim_probe_entry:
  moveq #0,d2
  addx.b d2,d2              ; save incoming X (MOVEQ preserves it)
  move.w d2,-(sp)
+ IFD SIM_FIXTURE
+ bsr sim_fixture_before
+ ENDC
  lea sim_probe_count(pc),a0
  move.l (a0),d0
  and.l #SIM_PROBE_RECORD_COUNT-1,d0
@@ -51,3 +54,76 @@ sim_probe_count:
  dc.l 0
 sim_probe_records:
  dcb.b SIM_PROBE_RECORD_SIZE*SIM_PROBE_RECORD_COUNT,0
+
+ IFD SIM_FIXTURE
+; Deterministic consumer-side input fixture, VERIFY only. This is deliberately
+; not a production input scheduler. Samples the first 3.2 game seconds at 10 Hz.
+; Snapshots are raw native replay state; compare and classify differences before
+; selecting a semantic manifest. No fields are masked here.
+SIM_FIXTURE_SAMPLES = 32
+SIM_FIXTURE_STATE_SIZE = $460
+SIM_FIXTURE_RECORD_SIZE = SIM_FIXTURE_STATE_SIZE+4
+sim_fixture_before:
+ move.l tape_configured(pc),d0
+ beq .done
+ tst.b $45(a4)
+ bne .done
+ lea sim_fixture_active(pc),a0
+ tst.w (a0)
+ bne .active
+ tst.w -$940(a4)
+ bne .done
+ tst.b -$68b(a4)
+ bne .done
+ move.w #1,(a0)
+.active:
+ ; Throttle for eight seconds, then brake for two, then throttle again.
+ moveq #1,d1
+ move.w -$15fa(a4),d0
+ mulu #8,d0
+ cmp.w -$940(a4),d0
+ bhi .input
+ move.w -$15fa(a4),d0
+ mulu #10,d0
+ cmp.w -$940(a4),d0
+ bls .input
+ moveq #2,d1
+.input:
+ moveq #0,d0
+ move.w -$940(a4),d0
+ move.l -$1770(a4),a1
+ move.b d1,(a1,d0.l)
+ ; Capture BEFORE the native update: sample 0 is the untouched initial state.
+ move.w -$15fa(a4),d1
+ divu #10,d1
+ divu d1,d0
+ swap d0
+ tst.w d0
+ bne .done
+ lea sim_fixture_count(pc),a0
+ cmp.w #SIM_FIXTURE_SAMPLES,(a0)
+ bhs .done
+ moveq #0,d0
+ move.w (a0),d0
+ mulu #SIM_FIXTURE_RECORD_SIZE,d0
+ lea sim_fixture_records(pc),a1
+ adda.l d0,a1
+ move.w -$940(a4),(a1)+
+ move.w -$15fa(a4),(a1)+
+ lea -$a80(a4),a0
+ move.w #SIM_FIXTURE_STATE_SIZE/4-1,d0
+.copy:
+ move.l (a0)+,(a1)+
+ dbf d0,.copy
+ lea sim_fixture_count(pc),a0
+ addq.w #1,(a0)
+.done:
+ rts
+ even
+ dc.b "4DSIMFIX"
+ dc.w 1,SIM_FIXTURE_RECORD_SIZE
+sim_fixture_active: dc.w 0
+sim_fixture_count: dc.w 0
+sim_fixture_records:
+ dcb.b SIM_FIXTURE_SAMPLES*SIM_FIXTURE_RECORD_SIZE,0
+ ENDC
