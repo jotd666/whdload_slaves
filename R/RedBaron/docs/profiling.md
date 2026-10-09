@@ -700,3 +700,28 @@ Evidence is `w1-deferred-entry-{0,1,3}` and `w1-deferred-step-control-0`.
 The fixture changes test setup only; player builds still install at load time.
 The complete three-machine performance matrix remains in progress; no new FPS claim
 is made from this state check.
+
+The controlled OFF A500 census now starts before the first flight checkpoint
+resumes and reaches the flight-loop exit at step 358. It retains every step and
+counts 358 swaps, one full redraw, 18 mirror calls, 37 message calls, 12 dirty
+triggers and 24 clip rejections. **Swap 8–108** completes 100 event-free frames
+in **2,656 PAL fields: 1.880 fps**, with dt=450 throughout. The complete swap
+1–358 interval is 357 frames over 9,705 fields (**1.836 fps**), but includes
+late-flight view transitions with dt values 124–450; it is not a steady-flight
+rate or a clamped-state comparison.
+
+The opening trace retains two original mirror calls at **1,919,746 and 1,922,744
+main-thread cycles** (mean **1,921,245**). The steady step-8 traces retain four
+3D calls averaging **2,419,059.5 cycles** and five world steps averaging
+**344,458.8 cycles**. Chunk-boundary calls are excluded and interrupt stacks
+are established independently from the VBlank and CIA callbacks. These are
+current OFF measurements, not yet a completed optimization comparison.
+
+The matching W1a-only A500 run retains two completed mirrors at **692,132 and
+692,350 main cycles** (mean **692,241**). Its two W1b hook ranges remain original.
+Swap 8–108 takes **2,658 fields: 1.878 fps**, also event-free with dt=450 throughout;
+this steady window shows no gain from a dashboard-event optimization. Its entire
+step-8 h3 snapshot matches the measured OFF run exactly. The full census reaches
+step 358 with 18 mirrors, 35 message calls and 11 dirty triggers; late-flight
+tracking-regime event counts are not expected to be identical. These A500 rows
+are provisional until the required three-machine matrix is complete.

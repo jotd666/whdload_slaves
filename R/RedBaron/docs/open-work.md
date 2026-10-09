@@ -10,8 +10,10 @@ The final same-build A500-equivalent, A1200/14 MHz 68020 and cached 50 MHz
 68030 event/steady baselines are complete. The acceptance ledger records the
 four strict scene repeats, counter and gap checks, full dashboard census,
 scoped game-time coupling test, patch framework and initial references.
-W1a and W1b are implemented for developer/VERIFY testing; lifecycle checks and
-the full measurement gates are pending. The release mask remains zero. See `w1-verification.md` for evidence
+W1a and W1b are implemented for developer/VERIFY testing. The continuity-machine
+model/twin, failure and lifecycle checks pass. Controlled A500 OFF/W1a/W1a+W1b
+entry and step-8 states match exactly; the full measurement and CPU/scene
+coverage gates remain in progress. The release mask remains zero. See `w1-verification.md` for evidence
 and remaining W1a/W1b work.
 
 ## Implementation order after W0
