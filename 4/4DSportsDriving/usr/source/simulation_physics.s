@@ -98,3 +98,87 @@ sim_steering_50:
  move.w d4,d0
  movem.l (sp)+,d2-d5
  rts
+
+; Unsigned forward displacement from $C326: speed*1408 / (20*768).
+; At 50 Hz use denominator 38400, with an unsigned remainder at (a0).
+; d0.w unsigned speed -> d0.l whole displacement. Scratch d1.
+; Max numerator 65535*1408+38399=92311679: DIVU quotient always fits.
+sim_distance_50:
+ mulu #1408,d0
+ moveq #0,d1
+ move.w (a0),d1
+ add.l d1,d0
+ divu #38400,d0
+ swap d0
+ move.w d0,(a0)
+ swap d0
+ and.l #$ffff,d0
+ rts
+
+; Approach target at a nominal A2500 rate (gear actuator uses 6 units/step).
+; d0.w current, d1.w target, d2.w positive rate, a0 -> signed fraction.
+; Return d0.l signed new current, stop exactly at target and clear carry there.
+; Long comparisons avoid signed-word overflow across the full coordinate range.
+sim_approach_50:
+ movem.l d2-d4,-(sp)
+ ext.l d0
+ move.l d0,d3
+ ext.l d1
+ move.l d1,d4
+ cmp.l d3,d4
+ beq .target
+ blt .decrease
+ move.w d2,d0
+ bsr sim_rate_20_to_50
+ add.l d3,d0
+ cmp.l d4,d0
+ blt .done
+ bra .target
+.decrease:
+ move.w d2,d0
+ neg.w d0
+ bsr sim_rate_20_to_50
+ add.l d3,d0
+ cmp.l d4,d0
+ bgt .done
+.target:
+ move.l d4,d0
+ clr.w (a0)
+.done:
+ movem.l (sp)+,d2-d4
+ rts
+
+; Airborne wheel pair from $CB48: v += a; y -= v at nominal 20 Hz.
+; Native Normal repeats the ordered pair. Its constant-a fractional extension
+; for h=2/5 is dv=2a/5, dy=-(2*v/5 + 7*a/25). Here v includes the private
+; velocity fraction. Five steps equal two native pairs exactly without collision/velocity wrap.
+; d0.w old velocity, d1.w acceleration; a0 -> signed velocity/position
+; remainders in fifths/twenty-fifths; a1 -> long position. Return d0.w new v.
+; Position remainder measures downward displacement; subtract its quotient.
+; Scratch d1. Contact/impulse resets and replay storage belong to integration.
+sim_airborne_pair_50:
+ movem.l d2-d5,-(sp)
+ move.w d0,d2
+ move.w d1,d4
+ muls #10,d0
+ move.w (a0),d3
+ ext.l d3
+ add.l d3,d3
+ add.l d3,d0
+ muls #7,d1
+ add.l d1,d0
+ move.w 2(a0),d1
+ ext.l d1
+ add.l d1,d0
+ divs #25,d0
+ swap d0
+ move.w d0,2(a0)
+ swap d0
+ ext.l d0
+ sub.l d0,(a1)
+ move.w d4,d0
+ bsr sim_rate_20_to_50
+ add.w d2,d0
+ ext.l d0
+ movem.l (sp)+,d2-d5
+ rts
