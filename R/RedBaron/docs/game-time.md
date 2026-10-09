@@ -111,3 +111,31 @@ different-step comparison correctly reports differences, providing a negative co
 for the comparison tool. h3 equality does not establish equality of separately
 allocated objects addressed by its pointers; the player-object/time-scale study and
 longer coupling runs remain required before recommending the final timing design.
+
+## Player trajectory already retained by the game
+
+The player pointer is `h3:04578`. The world loop passes it at `sim:010fc` through
+`sim:01102` to `sim:15128`. That routine increments `h3:067c6`, wrapping at 100,
+and copies the player's three position longwords (object bytes 8–19) into the
+12-byte slots at `h3:067cc`. It also copies three orientation words (object bytes
+20–25) into the six-byte slots at `h3:06c7c`. This gives a trajectory observer
+without adding work to the emulated frame loop. Physical distance units and the
+compass convention still require calibration; do not label raw values as metres,
+feet, or degrees yet.
+
+`player_history.py` decodes this ring from a complete h3 snapshot. The caller must
+request only initialized slots. The retained step-20 snapshots from the slowed-
+drawing experiment contain the same **20 successive positions and orientations**,
+including the step-1 position independently retained in the earlier snapshot:
+
+| Checkpoint | Raw position triplet | Raw orientation triplet |
+| --- | --- | --- |
+| Step 1 | 75,970; 323,520; 43,939 | 192; 0; −26,624 |
+| Step 20 | 81,883; 314,679; 44,678 | 192; 0; −26,624 |
+
+The history indices are 39 and 58. This extends the earlier h3 comparison from an
+uninterpreted byte match to a checked player trajectory in the clamped regime:
+slower drawing changes elapsed wall time but leaves those positions unchanged at
+equal steps. It does not prove equality of every heap object, establish nominal
+world speed, or replace the Time Scale 0/40/60 and collision experiments. Airspeed
+still needs its own verified observer.
