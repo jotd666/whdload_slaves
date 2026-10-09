@@ -550,8 +550,10 @@ new_DeleteFile:
 	even
 	include "perf.s"
 	include "mirror.s"
+	include "mirror-cache.s"
 	IFD VERIFY
 	include "originals.s"
 	include "mirror-verify.s"
+	include "cache-verify.s"
 	include "tape.s"
 	ENDC

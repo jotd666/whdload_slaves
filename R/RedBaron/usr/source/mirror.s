@@ -2,7 +2,7 @@
 ; d0-a6 preserved; CCR dead at sim:30424. Scratch never aliases game/blitter data.
 ; 44 bytes saved, versus the original's 44 + 2*rounded-width words.
 ; PERF_RANGE sim:304d0 6 bit=0
-mirror_install:
+mirror_prepare:
 	movem.l d0-a6,-(sp)
 	lea mirror_depth_ptr(pc),a0
 	move.l a1,a3
@@ -12,6 +12,11 @@ mirror_install:
 	move.l a1,d0
 	add.l #$304d6,d0
 	move.l d0,(a0)
+	movem.l (sp)+,d0-a6
+	rts
+mirror_install:
+	movem.l d0-a6,-(sp)
+	bsr mirror_prepare
 	move.l #$304d0,d0
 	moveq #6,d1
 	lea mirror_expected(pc),a0
