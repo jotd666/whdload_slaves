@@ -22,6 +22,8 @@ mirror_install:
 	lea mirror_expected(pc),a0
 	bsr perf_check_bytes
 	IFD VERIFY
+	btst #1,perf_custom5+2(pc)
+	bne.b .no_synthetic
 	bsr mirror_word_selftest
 	btst #5,perf_custom5+3(pc)
 	beq.b .no_synthetic

@@ -187,6 +187,7 @@ tape_game_record:
 	bsr observe_step
 tape_game_anchor:
 	nop
+	bsr perf_activate_deferred
 tape_anchor:
 	movem.l (sp)+,d0/a0-a1
 	move.l a0,-(sp)

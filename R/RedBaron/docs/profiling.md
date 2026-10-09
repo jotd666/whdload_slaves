@@ -682,3 +682,21 @@ These are preliminary routine measurements, not the required three-machine
 W1 result or a frame-rate claim. No release bit is promoted. Full fixed-window,
 long-swap and cache measurements remain in progress; correctness evidence and
 remaining gates are in `w1-verification.md`.
+
+## W1 controlled-start update
+
+Enabling W1 during the native menu/preferences route changes the state that reaches
+flight. The first A500 OFF/W1a pair differs in 3,039 h3 bytes at entry and 1,490 at
+step 8; its performance captures remain exploratory. VERIFY CUSTOM5=512 now
+activates the selected CUSTOM2 bits only after the first recorded flight checkpoint.
+With this fixture, OFF, W1a and W1a+W1b match **all 48,396 h3 bytes**, both at entry and at
+step 8, without pointer normalization or timer exclusions. The recorded steps remain
+at dt=450. All three disabled performance ranges retain the original relocated bytes
+in the OFF run.
+
+This comparison uses the 34,332-byte VERIFY text build, SHA-256
+`99c490efbde1b312d42c77ffeb3b7d348cacb6364b402fa9d15803765485d313`.
+Evidence is `w1-deferred-entry-{0,1,3}` and `w1-deferred-step-control-0`.
+The fixture changes test setup only; player builds still install at load time.
+The complete three-machine performance matrix remains in progress; no new FPS claim
+is made from this state check.

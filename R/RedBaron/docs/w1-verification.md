@@ -125,7 +125,7 @@ performance captures.
 `check_disabled.py --custom2 MASK` checks only ranges whose developer bits are off,
 so independent-option runs can verify the unselected hook as well as all-off runs.
 
-## Lifecycle probe and frozen measurement build
+## Lifecycle probe and first measurement build
 
 CUSTOM5 bit 8 runs a one-shot lifecycle probe after the first successful cache
 lookup. Private allocations form a minimal valid bitmap set; the probe enters
@@ -145,11 +145,42 @@ census begins at step 20 and reaches the actual flight exit with every subsequen
 step retained; its counts include reference execution and are not performance
 measurements or a full-flight main-path event census.
 
-The measurement build is frozen at VERIFY SHA-256
+The first measurement build used VERIFY SHA-256
 `158247428d5de8b4bbe907bae3760a2c6c0e65ad7f3fcb37d8fc87b16883ba03`.
 Both installers explicitly flush instruction/data caches after initializing their
 runtime continuation stubs and applying patches. Keep bits 5–8 off for timing.
 Further code changes require reconsidering the retained same-build comparisons.
+
+## Identical setup for controlled flight measurements
+
+The initial A500 pair (`w1-matrix-a500-0` and `w1-matrix-a500-1`) differs
+in 1,490 h3 bytes at step 8 even though both recorded flight histories have
+clamped dt=450. Fresh captures taken before the first flight checkpoint resumes
+(`w1-entry-control-fixed-0` and `w1-entry-control-fixed-1`) already differ
+in 3,039 bytes. The patches affect pre-flight/UI timing, so these runs do not
+establish equivalent starting states. They remain exploratory captures, separate
+from the controlled measurement matrix. This does not supersede the copied-original
+mirror and framebuffer twins.
+
+VERIFY CUSTOM5 bit 9 (512) defers installation until the first recorded flight
+checkpoint. All CUSTOM2 settings execute the same original pre-flight path and
+the same word self-test. The checkpoint precedes activation; the next input call
+runs with the selected patches installed. Activation preserves registers, checks
+the hook bytes and flushes caches through the existing installers. Its pending
+sim pointer can only be armed by the supported v1 loader. Normal and DEVELOPER
+builds retain installation at load time.
+
+Use this bit consistently across the controlled OFF/ON matrix. It is a measurement
+fixture, not a game-time change. The one-time installation cost belongs to the
+opening interval and must not be attributed to a completed mirror call. The new
+VERIFY image supersedes the first frozen build for same-build comparisons;
+OFF/W1a/W1a+W1b entry and step-8 h3 snapshots now match all 48,396 bytes exactly, with no
+normalization or exclusions. Every recorded dt remains 450. All three OFF hook
+ranges retain their original relocated bytes. Evidence is `w1-deferred-entry-{0,1,3}`
+and `w1-deferred-step-control-0`. The new VERIFY text is 34,332 bytes, SHA-256
+`99c490efbde1b312d42c77ffeb3b7d348cacb6364b402fa9d15803765485d313`.
+The W1b run has an active 13,668-byte dashboard cache at step 8, confirming activation.
+The complete performance matrix remains in progress.
 
 ## Remaining W1 gates
 

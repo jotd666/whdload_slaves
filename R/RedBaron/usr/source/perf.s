@@ -31,7 +31,26 @@ perf_read_options:
 perf_install_v1:
 	IFD VERIFY
 	bsr verify_copy_originals
+	; CUSTOM5 bit 9: identical native setup for timing comparisons. Install only
+	; after the first recorded flight checkpoint, before its original input call.
+	btst #1,perf_custom5+2(pc)
+	beq.b .immediate
+	movem.l d0-a6,-(sp)
+	lea perf_pending_sim(pc),a0
+	move.l a1,(a0)
+	; Do the same preparation/self-tests for every CUSTOM2 mask at boot.
+	bsr mirror_prepare
+	bsr mirror_word_selftest
+	btst #5,perf_custom5+3(pc)
+	beq.b .prepared
+	bsr mirror_synthetic_tests
+.prepared
+	jsr resload_FlushCache(a2)
+	movem.l (sp)+,d0-a6
+	rts
+.immediate
 	ENDC
+perf_apply_v1:
 	btst #0,perf_mask+3(pc)
 	beq.b .no_mirror
 	bsr mirror_install
@@ -81,3 +100,22 @@ perf_custom5:
 	dc.l TAG_DONE
 perf_mask:
 	dc.l 0
+
+	IFD VERIFY
+; Pending sim is set only by the supported v1 loader. Never patch sim v2 here.
+; The anchor's caller saved only d0/a0/a1, so preserve all registers ourselves.
+perf_activate_deferred:
+	movem.l d0-a6,-(sp)
+	lea perf_pending_sim(pc),a0
+	tst.l (a0)
+	beq.b .done
+	move.l (a0),a1
+	clr.l (a0)
+	move.l _resload(pc),a2
+	bsr perf_apply_v1
+.done
+	movem.l (sp)+,d0-a6
+	rts
+perf_pending_sim:
+	dc.l 0
+	ENDC
