@@ -30,6 +30,8 @@ cache_install:
 	ENDC
 	lea cache_patch(pc),a0
 	jsr resload_Patch(a2)
+	; Include the runtime continuation stubs in the cache synchronization.
+	jsr resload_FlushCache(a2)
 	movem.l (sp)+,d0-a6
 	rts
 cache_patch:
@@ -57,6 +59,12 @@ cache_draw:
 	bsr cache_get
 	tst.l d0
 	beq .fallback
+	IFD VERIFY
+	btst #0,perf_custom5+2(pc)
+	beq.b .no_lifecycle
+	bsr cache_lifecycle_test
+.no_lifecycle
+	ENDC
 	; The game owns the descriptor; give the blitter routine a temporary copy.
 	lea -18(sp),sp
 	move.l sp,a0

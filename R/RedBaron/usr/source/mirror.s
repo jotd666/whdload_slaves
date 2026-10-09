@@ -30,6 +30,8 @@ mirror_install:
 	ENDC
 	lea mirror_patch(pc),a0
 	jsr resload_Patch(a2)
+	; Include the runtime continuation stubs in the cache synchronization.
+	jsr resload_FlushCache(a2)
 	movem.l (sp)+,d0-a6
 	rts
 mirror_patch:

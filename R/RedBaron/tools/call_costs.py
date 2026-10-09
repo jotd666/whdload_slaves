@@ -33,7 +33,9 @@ def measure(paths, sim, irq_low, irq_high, overrides=None):
                         if name in active:
                             raise ValueError(f'Unmatched/reentrant {name} entry')
                         active[name] = dict(routine=name, chunk=str(path), first_field=field.index,
-                                            entry_sp=sp, main_cycles=0, irq_cycles=0,
+                                            entry_sp=sp, entry_a0=regs[8], entry_d0=regs[0],
+                                            entry_d1=regs[1], entry_d2=regs[2],
+                                            main_cycles=0, irq_cycles=0,
                                             irq_entry_cycles=0, wall_cycles=0)
                 for name, call in list(active.items()):
                     call['wall_cycles'] += cycles

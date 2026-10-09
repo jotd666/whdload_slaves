@@ -14,6 +14,18 @@ cache_verify_install:
 	add.l #$30418,d0
 	lea cache_reference_tail+2(pc),a0
 	move.l d0,(a0)
+	move.l a1,d0
+	add.l #$30408,d0
+	lea cache_lifecycle_draw+2(pc),a0
+	move.l d0,(a0)
+	move.l a1,d0
+	add.l #$303c6,d0
+	lea cache_lifecycle_free+2(pc),a0
+	move.l d0,(a0)
+	move.l a1,a0
+	adda.l #$305a0,a0
+	lea cache_lifecycle_clip(pc),a2
+	move.l (a0),(a2)
 	movem.l (sp)+,d0-a6
 	rts
 
@@ -185,4 +197,141 @@ cache_verify_plane_size: dc.l 0
 cache_verify_context: dcb.b 76,0
 cache_verify_header:
 	dc.b "RBMCAC01"
-	dc.l 1,0,0
+	dc.l 1,0,0,0
+
+
+; CUSTOM5 bit 8: exercise actual free/draw hooks once with private fixtures.
+; No debugger target writes, and no game-owned allocation is freed by the probe.
+cache_lifecycle_test:
+	btst #0,cache_lifecycle_started+1(pc)
+	bne .return
+	movem.l d0-a6,-(sp)
+	lea cache_lifecycle_started(pc),a0
+	move.w #1,(a0)
+	lea cache_lifecycle_context(pc),a5
+	move.l cache_state(pc),(a5)
+	move.l #16,d0
+	moveq #1,d1
+	move.l 4.w,a6
+	jsr _LVOAllocMem(a6)
+	tst.l d0
+	beq mirror_verify_fail
+	move.l d0,4(a5)
+	moveq #2,d0
+	moveq #2,d1
+	jsr _LVOAllocMem(a6)
+	tst.l d0
+	beq mirror_verify_fail
+	move.l 4(a5),a0
+	move.l #16,(a0)
+	move.l #2,4(a0)
+	lea 12(a0),a1
+	move.l a1,8(a0)
+	move.l d0,12(a0)
+	lea cache_lifecycle_slot(pc),a1
+	move.l a0,(a1)+
+	bsr cache_lifecycle_free
+	bsr cache_lifecycle_empty
+	move.l cache_lifecycle_slot(pc),d0
+	bne mirror_verify_fail
+	move.l (a5),a0
+	bsr cache_get
+	tst.l d0
+	beq mirror_verify_fail
+	; Same bitmap under another descriptor address must evict/rebuild the entry.
+	move.l (a5),a0
+	lea cache_lifecycle_descriptor(pc),a1
+	moveq #8,d0
+.clone
+	move.w (a0)+,(a1)+
+	dbf d0,.clone
+	lea cache_lifecycle_descriptor(pc),a0
+	bsr cache_get
+	tst.l d0
+	beq mirror_verify_fail
+	cmp.l cache_state(pc),a0
+	bne mirror_verify_fail
+	move.l (a5),a0
+	bsr cache_get
+	tst.l d0
+	beq mirror_verify_fail
+	cmp.l cache_state(pc),a0
+	bne mirror_verify_fail
+	; A tiny vertically flipped bitmap must drop the unrelated live cache too.
+	move.l mirror_depth_ptr(pc),a0
+	moveq #0,d0
+	move.w (a0),d0
+	add.w d0,d0
+	addq.l #4,d0
+	move.l d0,8(a5)
+	move.l #$10002,d1
+	move.l 4.w,a6
+	jsr _LVOAllocMem(a6)
+	tst.l d0
+	beq mirror_verify_fail
+	move.l d0,4(a5)
+	lea cache_lifecycle_descriptor(pc),a0
+	move.l d0,(a0)
+	add.l 8(a5),d0
+	subq.l #4,d0
+	move.l d0,4(a0)
+	move.l #$00100001,8(a0)
+	move.l #2,12(a0)
+	clr.w 16(a0)
+	move.l cache_lifecycle_clip(pc),a0
+	lea 12(a5),a1
+	moveq #4,d0
+.save_clip
+	move.w (a0)+,(a1)+
+	dbf d0,.save_clip
+	move.l cache_lifecycle_clip(pc),a0
+	move.w #1,(a0)+
+	clr.w (a0)+
+	move.w #319,(a0)+
+	clr.w (a0)+
+	move.w #199,(a0)+
+	move.l #32760,d0
+	move.l d0,d1
+	moveq #1,d2
+	lea cache_lifecycle_descriptor(pc),a0
+	bsr cache_lifecycle_draw
+	move.l cache_lifecycle_clip(pc),a0
+	lea 12(a5),a1
+	moveq #4,d0
+.restore_clip
+	move.w (a1)+,(a0)+
+	dbf d0,.restore_clip
+	bsr cache_lifecycle_empty
+	lea cache_lifecycle_descriptor(pc),a0
+	cmp.w #1,16(a0)
+	bne mirror_verify_fail
+	move.l 4(a5),a1
+	move.l 8(a5),d0
+	move.l 4.w,a6
+	jsr _LVOFreeMem(a6)
+	move.l (a5),a0
+	bsr cache_get
+	tst.l d0
+	beq mirror_verify_fail
+	cmp.l cache_state(pc),a0
+	bne mirror_verify_fail
+	lea cache_verify_header(pc),a0
+	addq.l #1,20(a0)
+	movem.l (sp)+,d0-a6
+.return
+	rts
+cache_lifecycle_empty:
+	move.l cache_state+24(pc),d0
+	bne mirror_verify_fail
+	move.l cache_state(pc),d0
+	bne mirror_verify_fail
+	rts
+cache_lifecycle_draw:
+	jmp $0.l
+cache_lifecycle_free:
+	jmp $0.l
+cache_lifecycle_clip: dc.l 0
+cache_lifecycle_started: dc.w 0
+cache_lifecycle_slot: dc.l 0
+cache_lifecycle_context: dcb.b 22,0
+cache_lifecycle_descriptor: dcb.b 18,0

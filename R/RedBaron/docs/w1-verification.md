@@ -31,7 +31,7 @@ The installer checks all original hook bytes and runs only for sim v1. The
 hook audit reports one complete range and no incoming branch/relocation into
 its interior. CUSTOM2=0 retains the original relocated bytes in that range.
 Normal and DEVELOPER builds omit the mirror verification marker and code.
-All three modes build successfully, and 31 host tests pass. The initial paired
+All three modes build successfully, and 33 host tests pass. The initial paired
 complete-call measurements are recorded in `profiling.md`; the matrix is pending.
 
 ## Correctness checks
@@ -125,14 +125,39 @@ performance captures.
 `check_disabled.py --custom2 MASK` checks only ranges whose developer bits are off,
 so independent-option runs can verify the unselected hook as well as all-off runs.
 
+## Lifecycle probe and frozen measurement build
+
+CUSTOM5 bit 8 runs a one-shot lifecycle probe after the first successful cache
+lookup. Private allocations form a minimal valid bitmap set; the probe enters
+the game's patched `sim:303c6` and checks that the cache and set-table slot clear.
+It then rebuilds the real entry, replaces its descriptor key with a private clone,
+and switches back. A small private bitmap enters `sim:30408` with a vertical
+request, completely outside a temporarily bounded clip rectangle. This confirms
+vertical invalidation through the real draw path without changing framebuffer
+pixels. The original clip state is restored, private allocations are freed and
+the real cache is rebuilt. A completion counter is written only after all checks.
+
+`w1-final-twins` combines CUSTOM2=3 with CUSTOM5=352 (bits 5, 6 and 8). It reaches
+flight exit at step 371 with **65,536 word checks, 64 synthetic mirror twins,
+720 live mirror twins, five cache-build twins, 63 exact pixel twins and one
+completed lifecycle probe**. These include pre-flight/UI work. The detailed
+census begins at step 20 and reaches the actual flight exit with every subsequent
+step retained; its counts include reference execution and are not performance
+measurements or a full-flight main-path event census.
+
+The measurement build is frozen at VERIFY SHA-256
+`158247428d5de8b4bbe907bae3760a2c6c0e65ad7f3fcb37d8fc87b16883ba03`.
+Both installers explicitly flush instruction/data caches after initializing their
+runtime continuation stubs and applying patches. Keep bits 5–8 off for timing.
+Further code changes require reconsidering the retained same-build comparisons.
+
 ## Remaining W1 gates
 
 - Finish off/on measurements across the required windows and all three CPUs,
   including event census, frame rate, complete routine costs and state checks.
-- Exercise freeing/reloading, vertical invalidation, repeated key changes and
-  repeated cache reuse, retaining counters/state evidence. Both forced allocation
-  failure choices already reach flight step 20; actual low-memory runs remain part
-  of the A500-equivalent matrix.
+- Check the frozen build on A500-equivalent memory and cached CPUs, with the
+  documented cache policy; the forced-failure and lifecycle probes have passed
+  on the continuity machine.
 - Extend cache-build/pixel twins through the required scenes and full event census;
   the initial step-20 checks do not establish coverage of every clipping case.
 - Repeat hook/off-path checks for the final build, build all modes and promote
