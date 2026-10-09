@@ -7,8 +7,8 @@ Captured 2026-10-09. Source baseline: `1904205` (`redbaron`).
 The original mixed window contains cockpit redraw events and steady flight. The large
 `sim:304d0` hotspot is the **EDASH-B dashboard bitmap**, mirrored twice per redraw. A cockpit
 event redraws both display buffers and costs four mirrors: approximately 7.4M main-context
-cycles. It is not an unconditional per-frame cost. Complete calls cost approximately 1.854M
-main cycles each; six such calls are equivalent to about **31.3%** of a 250-field budget.
+cycles. It is not an unconditional per-frame cost. Five complete calls retained within individual chunks cost 1.8526–1.8550M
+main cycles each (mean 1.8541M); six such calls are equivalent to about **31.3%** of a 250-field budget.
 The earlier 30.96% was a raw instruction sum across discontinuous capture chunks and must
 not be used as a complete-call performance baseline.
 
@@ -128,6 +128,28 @@ The census also identifies useful clean windows: steps 8–16 contain eight rend
 intervals without a dashboard event; steps 24–30 are within the scripted right bank
 and also contain no mirror. These are selected checkpoints, still awaiting their
 cross-boot trace checks and the complete machine matrix.
+
+## Current fixed-window cycle checks
+
+The current VERIFY build has identical instruction and DMA records across two
+fresh boots for the selected 150-field steady window (step 8, chunks 100+50) and
+100-field banking window (step 24). All 640×400 game-image pixels match. Raw PNGs
+have differences only in the three rightmost emulator-border columns, outside the
+game image; those file differences remain recorded rather than silently discarded.
+The steady chunks retain the known one-field gap and are analyzed independently.
+
+On the 68000 + fast-RAM configuration, six complete 3D passes in the steady window
+cost **2.1607–2.2412M main-context cycles**, mean **2.1915M**. Five complete world
+steps cost **0.2749–0.3687M**, mean **0.3282M**. These are another scene/window,
+not an improvement over the earlier profile. The opening squadron window has two
+complete mirrors at **1.8528M and 1.8549M** main cycles.
+
+The versioned `call_costs.py` uses explicit original entry/RTS offsets and checks
+that SP is restored. It discards open calls at each file boundary and separates
+the observed interrupt stack, including KickEmu callbacks running in user mode.
+Using SR alone misclassifies those callbacks and inflates the apparent mirror cost.
+Its results reproduce the original baseline's approximately 1.854M mirror cost;
+five baseline calls are complete within chunks. The sixth is cut and is excluded.
 
 ## Validation and attribution
 

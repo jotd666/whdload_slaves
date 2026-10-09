@@ -267,3 +267,17 @@ full-redraw branch, no top-text branch, 44 mirrors and 65 bitmap rejections. Mir
 entry snapshots identify the same 168×102 descriptor in every call. Reject-path
 `a0` is descriptor+8; none of those 65 rejections refers to the dashboard descriptor.
 See `profiling.md` for the scope and current rate. The top-text case was not exercised.
+
+## Steady and banking repeats
+
+Fresh reset-armed boots reproduce every instruction and DMA record in the steady
+window (step 8, 100+50 recorded fields) and banking window (step 24, 100 fields).
+All game-image pixels match. Raw screenshot differences are confined to three
+columns at the emulator's far-right border; full PNG byte equality is not claimed.
+The known chunk gap remains explicit. The steady window contains six complete 3D
+passes; its routine costs are recorded in `profiling.md`.
+
+`call_costs.py` rejects unknown stack contexts and wrong return SP, and never joins
+a partial call across files. Synthetic tests cover a user-mode interrupt callback,
+a call cut at a chunk boundary and a wrong return stack. It also reproduces the
+established original mirror cost using five complete baseline calls.
