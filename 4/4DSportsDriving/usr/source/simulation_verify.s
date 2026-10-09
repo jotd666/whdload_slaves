@@ -62,7 +62,11 @@ sim_probe_records:
 ; selecting a semantic manifest. No fields are masked here.
 SIM_FIXTURE_SAMPLES = 32
 SIM_FIXTURE_STATE_SIZE = $460
+ IFD SIM_A4000
+SIM_FIXTURE_RECORD_SIZE = SIM_FIXTURE_STATE_SIZE+10+SIM_PRIVATE_BYTES
+ ELSE
 SIM_FIXTURE_RECORD_SIZE = SIM_FIXTURE_STATE_SIZE+10
+ ENDC
 sim_fixture_before:
  move.l tape_configured(pc),d0
  beq .done
@@ -76,6 +80,11 @@ sim_fixture_before:
  tst.b -$68b(a4)
  bne .done
  move.w #1,(a0)
+ IFD SIM_A4000
+ IFND SIM_A4000_NATIVE
+ bsr sim_a4000_arm
+ ENDC
+ ENDC
 .active:
  ; Throttle throughout, steering right from 1.0 to 1.5 seconds and left
  ; from 1.5 to 2.0 seconds. Boundaries are exact in all three planned modes.
@@ -125,13 +134,24 @@ sim_fixture_before:
  ; Native replay save omits live RNG byte +$22C. Record all six directly.
  move.l $228(a4),(a1)+
  move.w $22c(a4),(a1)+
+ IFD SIM_A4000
+ lea sim_a4000_private(pc),a0
+ moveq #SIM_PRIVATE_BYTES/4-1,d0
+.private:
+ move.l (a0)+,(a1)+
+ dbra d0,.private
+ ENDC
  lea sim_fixture_count(pc),a0
  addq.w #1,(a0)
 .done:
  rts
  even
  dc.b "4DSIMFIX"
+ IFD SIM_A4000
+ dc.w 3,SIM_FIXTURE_RECORD_SIZE
+ ELSE
  dc.w 2,SIM_FIXTURE_RECORD_SIZE
+ ENDC
 sim_fixture_active: dc.w 0
 sim_fixture_count: dc.w 0
 sim_fixture_records:

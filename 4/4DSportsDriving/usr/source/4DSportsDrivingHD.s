@@ -269,6 +269,11 @@ pl_main
     IFD VERIFY
     IFD SIM_PROBE
     PL_P $E5F2,sim_probe_entry
+    IFD SIM_A4000
+    PL_P $1033A,sim_a4000_steering
+    PL_PSS $C326,sim_a4000_distance,26
+    PL_PSS $F60C,sim_a4000_acceleration,10
+    ENDC
     IFD SIM_SCHEDULE
     PL_PSS $70E0,sim_schedule_poll,2
     PL_PS $7A04,sim_schedule_timer
@@ -438,6 +443,9 @@ perf_attnflags	dc.l	0
 	ENDC
 	IFD SIM_PHYSICS
 	include "simulation_physics.s"
+	IFD SIM_A4000
+	include "simulation_a4000.s"
+	ENDC
 	include "simulation_physics_verify.s"
 	ENDC
 	include "driving_tape.s"
