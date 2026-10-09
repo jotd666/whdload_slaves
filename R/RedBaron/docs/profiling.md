@@ -475,3 +475,35 @@ screenshot bytes. Initializing host allocation removes the unused-border
 differences; every instruction/DMA record and all game pixels also match the
 preceding uninitialized capture. See `verification.md` for the evidence and
 capture setting. The baseline machine matrix remains open.
+
+## Event-containing long-window baseline rates
+
+The complete retained ace-mission censuses also supply bounded R-event rate
+windows. The selection rule is the first complete captured swap through the
+first later swap at least 2,000 PAL fields afterwards. These fixed intervals
+contain dashboard events **and steady frames between them**; they are not
+event-only frame rates. The current-build steady rates above retain their
+separate event-free windows. No optimization is enabled.
+
+| Machine | Swap boundaries | Frames | Fields | Mean fps | Mirror calls / frames with mirrors |
+| --- | --- | ---: | ---: | ---: | --- |
+| A500-equivalent | 3–74 | 71 | 2,022 | 1.7529 | 4 / 2 |
+| 14 MHz 68020 | 4–236 | 232 | 2,003 | 5.7821 | 24 / 12 |
+| Cached 50 MHz 68030 | 1–493 | 492 | 2,003 | 12.2620 | 44 / 22 |
+
+The A500 and 68020 censuses begin after their opening trace captures, so the
+first two/three flight frames are not represented here. Starting-boundary
+work is excluded from both the interval count and event counts. The retained
+`event-window.json` beside each machine's census records the exact selection,
+step history checks and event-bearing steps. Different machine trajectories
+are expected because their dt values differ; these rows are not speedup
+ratios for equal world state. Per-routine event/steady costs remain separate
+measurements, and the remaining baseline-matrix work is tracked in
+`verification.md`.
+
+The newer cached 68030 first-draw diagnostic independently correlates ten
+logged publications with actual framebuffer DMA. Drawing starts 0.1971–0.2443
+fields after the publication observer. One late publication produces 5,599
+writes into the fetched display buffer, all behind the raster. See
+`verification.md` for scope, cache conditions and the rejected phase control.
+Its diagnostic overhead is excluded from the rate table above.

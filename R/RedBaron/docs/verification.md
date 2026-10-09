@@ -14,7 +14,7 @@ original scope. No rendering optimization is enabled.
 | W0.1 rebuilt equivalence | Passed at the fixed opening checkpoint | None; differing chip storage is classified below |
 | W0.2 continuity | Passed | Manual profile packaging also passed its complete 100-field rerun; see `profiling.md` |
 | W0.3 counters | Passed | Trace, independent swap breakpoints and ring agree on the squadron steps 1–2 interval |
-| W0.4 scenes and machines | Open | All four scenes pass strict cross-boot comparison on the continuity machine; complete event/steady machine costs and first-draw coverage |
+| W0.4 scenes and machines | Open | All four scenes pass strict cross-boot comparison on the continuity machine; complete event/steady machine costs; cached 68030 first-draw/DMA correlation now passes in the diagnostic window |
 | W0.5 event census | Passed for the complete baseline mission | Top-text branch had zero occurrences; no coverage claim for that branch |
 | W0.6 game time | Open | Time Scale velocity/position interpretation and nominal elapsed-time reference verified; identify the remaining timer coupling before relying on broader state equality |
 | W0.7 framework | Passed | Empty performance-range audits remain explicitly pending until a feature declares ranges |
@@ -569,3 +569,40 @@ The saved comparisons are `event-repeat.json`, `steady0-repeat.json`,
 The first directory contains complete-call cost reports, DMA-matched steady
 publications and the event-entry census. This closes scene reproducibility
 for the continuity machine, not the remaining three-machine baseline matrix.
+
+## Cached 68030 first-draw/DMA correlation
+
+The 30,380-byte VERIFY text, CUSTOM5=8 and explicit MMU/data-cache settings
+from `profiling.md` produced a 40-field trace at exact flight step 8. The
+first-fill diagnostic reports CACR `0x2111`, no missed publications and
+17 completed records through step 18. This is an instrumented diagnostic,
+not an FPS baseline. The earlier attempted boot used an outdated breakpoint
+and passed flight entry; it is excluded. The accepted fresh boot retains
+its own calibrated checkpoint and complete configuration.
+
+`tools/first_draw.py` correlates ten publications fully inside the trace
+with the first actual CPU/blitter write into each former display buffer.
+Every first write is a blitter write at the logged destination, **21–37 DMA
+slots after the first-fill observer**. Nine also share its beam line; the
+tenth crosses to the next line. The explicit first-field VBlank alignment
+is checked by this correspondence. A one-field-shifted negative control
+fails the tool; absent DMA observability also cannot pass.
+
+First-write gaps are **0.1971–0.2443 PAL fields from the publication observer**,
+which executes before the pointer MOVEM at `sim:3154a`. These are not gaps
+from completion of that MOVEM. For one publication, the observer is at line
+42 and the former display buffer remains the field's fetched buffer. Its
+first write starts on line 106; **5,599 active-display writes** occur during
+that field. None of their addresses is fetched again later in the field.
+This establishes a strict buffer-ownership violation, but no visible tearing
+is proved in the sample: the writes are behind the raster. All other fields
+have no such conflict. The trace contains **371,130 framebuffer writes**
+and observes both framebuffer allocations and blitter destination DMA.
+
+Evidence: `w0-cached030-firstdraw-fixed` contains the entry manifest, saved
+configuration, exact slave, step/paint logs, trace, ownership report and
+`firstdraw-verified.json`. `firstdraw-wrong-phase.json` is the rejected
+negative control. The old eight potential first-fill conflicts without a
+matching trace remain unclassified; they are not silently promoted to
+confirmed tearing. The new correlated diagnostic completes this W0 check
+for the explicit cached machine, alongside the existing 68020 trace.
