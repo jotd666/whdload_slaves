@@ -116,6 +116,11 @@ _bootdos
 		bsr	patch_dos
 
 	;load exe
+	IFD VERIFY
+		movem.l d0-a6,-(sp)
+		bsr tape_start
+		movem.l (sp)+,d0-a6
+	ENDC
 		lea	_program(pc),a0
 		lea	_args(pc),a1
 		moveq	#_args_end-_args,d0
@@ -199,6 +204,11 @@ SIM_VERSION_TEST:MACRO
 ; < D0: BSTR filename
 ; < D1: seglist
 _cb_dosLoadSeg
+	IFD VERIFY
+		movem.l d0-a6,-(sp)
+		bsr tape_loadseg
+		movem.l (sp)+,d0-a6
+	ENDC
 	move.l	_resload(pc),a2
 
 	add.l	d1,d1
@@ -255,7 +265,7 @@ _cb_dosLoadSeg
 	; ps, v1
 	lea	pl_ps_v1(pc),a0
 	jsr	resload_Patch(a2)
-	bra.w	cb_loadseg_done	
+	bra.w	cb_loadseg_done
 .nops_v1
 	move.l	a1,a0
 	add.l	#$2AEF6,a0
@@ -265,7 +275,7 @@ _cb_dosLoadSeg
 	; ps, v2
 	lea	pl_ps_v2(pc),a0
 	jsr	resload_Patch(a2)
-	bra.w	cb_loadseg_done	
+	bra.w	cb_loadseg_done
 
 .nops_v2
 	move.l	a1,a0
@@ -276,7 +286,7 @@ _cb_dosLoadSeg
 	; ps, v3
 	lea	pl_ps_v3(pc),a0
 	jsr	resload_Patch(a2)
-	bra.w	cb_loadseg_done	
+	bra.w	cb_loadseg_done
 
 .nops
 	move.l	d6,a0
@@ -300,6 +310,10 @@ cb_loadseg_done
 
 pl_sim_v1
 	PL_START
+	IFD VERIFY
+	PL_PS $1ed82,tape_flight
+	PL_P $1ef92,tape_sim_key
+	ENDC
 	PL_PS	$A66A,patch_bittest
 	PL_PS	$3089A,kb_delay
 	PL_PS	$3CC74,rename_file
@@ -308,6 +322,9 @@ pl_sim_v1
 
 pl_ps_v1
 	PL_START
+	IFD VERIFY
+	PL_P $15b3a,tape_menu_key
+	ENDC
 	PL_PS	$2B36A,kb_delay
 	PL_END
 
@@ -476,7 +493,7 @@ new_DeleteFile:
 	tst.b	(a0)
 	bne.b	.nextone
 	moveq	#1,d0	; Z flag off
-	bra.w	cb_loadseg_done
+	bra.b	.out
 .nextone
 	move.l	d1,a1	; reload current filename
 .tonext
@@ -501,3 +518,7 @@ new_DeleteFile:
 	dc.b	"sim.out",0
 	dc.b	"simprefs.prf",0
 	dc.b	0
+
+	IFD VERIFY
+	include "tape.s"
+	ENDC
