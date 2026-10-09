@@ -18,7 +18,7 @@ original scope. No rendering optimization is enabled.
 | W0.5 event census | Passed for the complete baseline mission | Top-text branch had zero occurrences; no coverage claim for that branch |
 | W0.6 game time | Open | Complete the Time Scale 0/40/60 velocity interpretation and nominal-speed analysis; identify the timer coupling before relying on broader state equality |
 | W0.7 framework | Passed | Empty performance-range audits remain explicitly pending until a feature declares ranges |
-| W0.8 reference infrastructure | Original copies and mirror model checked | Promote the projection model and document the invocation/output-isolation contract; each future replacement must add its own model and twin |
+| W0.8 reference infrastructure | Passed for the initial references | Mirror/projection models and original copies checked; each future replacement must add its own model and live twin under the contract below |
 
 The W6 forced-dt, collision and equal-wall-time design experiments remain separate
 from this groundwork. W0 does not authorize a game-time implementation. Release
@@ -410,3 +410,41 @@ The explicit data-cache-model boot of the same binary also reports CACR `0x2111`
 and reaches step 20: 18 completed first-fill records, one pending publication and
 zero missed publications. Its eight potential active-display first fills require
 DMA analysis before any claim of visible tearing.
+
+## Reference-model and future twin contract
+
+`projection_model.py` is now independent of the local trace-analysis environment.
+It checks both loop normalization and independent bit-length normalization against
+explicit original input/output records. All **486 complete retained original
+`sim:38c82` calls** match on d0, d1, a0 and a1: 972 model comparisons, no mismatch.
+The ignored scalar fixture is `projection-calls.json` beside the geometry analysis.
+Three host tests also cover normalization boundaries plus 200,000 seeded 32-bit
+samples, shift-count wrapping, signs, zero operands, division by zero, and rejection
+of an incorrect captured output. This is sampled domain coverage, not the W2/G1
+exhaustive 2³² normalization check or verification of a future replacement.
+
+The original-copy ABI is `RBORIG01`, version 1, three entries. Each entry has the
+sim offset, byte count and live copy pointer; pointer fields are at header bytes
+24 (mirror), 36 (projection) and 48 (near-plane clip). Copies are taken after game
+relocation, before performance patch installation, and followed by a cache flush.
+They are executable references, not independent copies of the entire game context.
+
+Each replacement's VERIFY twin must obey this contract:
+
+1. Capture inputs at the original entry, including required globals, preserved
+   registers, live flags and SP. Preserve entry X where an instruction consumes it.
+2. Run the copied original and candidate with identical inputs. For a bitmap,
+   duplicate the descriptor, plane bytes and mask and redirect their pointers.
+   Include padding and canaries. For a geometry routine, isolate its output arrays
+   and restore any global scratch state or callback side effects between paths.
+3. Compare defined outputs and the declared preserved-register/flag/SP contract.
+   Do not require flags to be preserved when the original changes them; identify
+   which callers actually consume them. Record and abort on the first mismatch.
+4. Restore the candidate's intended live result only after comparison. Ensure
+   off-switch bytes still match the relocated original, and exclude every twin
+   and diagnostic from normal/developer builds.
+
+The mirror and projection host models, original copies and hook checkers provide
+W0's reference infrastructure. Replacement-specific assembly wrappers, synthetic
+inputs and live twins belong to the corresponding W1/W2 acceptance gates. No
+replacement or completed live replacement twin is claimed by this groundwork.
