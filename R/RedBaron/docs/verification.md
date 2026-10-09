@@ -253,3 +253,17 @@ reads beam line 59, horizontal slot 71; the trace records the 24 pointer-word wr
 at slots 76 through 136 on that same line. Both the breakpoint and subsequent step
 record report VBlank count 9,357 and lifetime CIA tick 9,691. This validates the
 three instruments on one shared interval; the longer scene/machine matrix remains.
+
+## Completed mission census and exit guard
+
+A fresh reset-armed ace/bank boot was observed from flight step 1 through the
+`sim:21f4a` exit at step 357. The collector drained the ring at step 201 and retained
+every step, with 357 flight swaps and no debriefing records. Its two segments both
+completed normally. This validates the automatic flight-exit guard on a real mission
+ending, replacing the earlier untested status of that guard.
+
+The six attribution breakpoints counted 33 message calls, 13 dirty triggers, one
+full-redraw branch, no top-text branch, 44 mirrors and 65 bitmap rejections. Mirror
+entry snapshots identify the same 168×102 descriptor in every call. Reject-path
+`a0` is descriptor+8; none of those 65 rejections refers to the dashboard descriptor.
+See `profiling.md` for the scope and current rate. The top-text case was not exercised.

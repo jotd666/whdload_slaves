@@ -98,6 +98,37 @@ have one more CIA tick; of 249 68020 intervals, those counts are two and one. Al
 records have identical VBlank/tick counts. This is the short swap-to-input interval,
 not a missing frame. Exact same-window trace/SWAP_ONLY validation remains pending.
 
+## Dashboard census through flight exit
+
+The current unoptimized 68000 + fast-RAM banking fixture was observed from the
+maximum-detail flight checkpoint through the actual flight-loop exit. It completed
+357 swaps in 9,135 PAL fields (**1.95 fps**, a whole-flight mixed window), including
+the late-flight changes of view/scene. This is not an optimization A/B or a substitute
+for the fixed steady/event windows. All 357 step records were retained by draining
+the ring in segments, and the exit breakpoint excluded debriefing.
+
+| Observed path | Calls |
+| --- | ---: |
+| Message routine `sim:3ba2` | 33 |
+| Dirty-rectangle trigger `sim:197ee` | 13 |
+| Full-redraw branch `sim:668` | 1 |
+| Top-text redraw branch `sim:7de` | 0 |
+| Dashboard mirror `sim:304d0` | 44 |
+| Bitmap clip rejection `sim:305c8` | 65 |
+
+All 44 mirrors used the same 168×102 dashboard descriptor, two calls in each of
+22 frames. Thus **22 of 357 frames (6.2%)** invoked the mirror in this mission
+window; the original five-second profile's 31.3% cycle share must not be generalized
+to steady flight or a whole mission. The 65 clip rejections belonged to other
+bitmap descriptors, not the dashboard. No top-text event occurred, so its proposed
+wasted-mirror path remains untested. The initial menu/preferences frames precede
+this census and are not included.
+
+The census also identifies useful clean windows: steps 8–16 contain eight rendered
+intervals without a dashboard event; steps 24–30 are within the scripted right bank
+and also contain no mirror. These are selected checkpoints, still awaiting their
+cross-boot trace checks and the complete machine matrix.
+
 ## Validation and attribution
 
 The parser reads **3,154,859 records** and **35,525,488 CPU cycles**, against the PAL-field
