@@ -126,8 +126,8 @@ this census and are not included.
 
 The census also identifies useful clean windows: steps 8–16 contain eight rendered
 intervals without a dashboard event; steps 24–30 are within the scripted right bank
-and also contain no mirror. These are selected checkpoints, still awaiting their
-cross-boot trace checks and the complete machine matrix.
+and also contain no mirror. Their cross-boot trace checks now pass as described below; the complete machine
+matrix remains outstanding.
 
 ## Current fixed-window cycle checks
 

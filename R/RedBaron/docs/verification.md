@@ -9,7 +9,8 @@ validation; it does not mark the complete W0 gate as passed.
 The existing flight-input hook records one entry after incrementing the game-step counter,
 when the scripted menu/preferences route is complete. The additional VBlank hook replaces
 one complete LEA at `sim:2d348`; it reconstructs the original LEA, counts VBlanks and restores
-SR. The callback runs in supervisor interrupt context. Both instruments are VERIFY-only
+SR. The callback runs on the interrupt stack; KickEmu callbacks can run in user mode,
+so SR alone must not be used to classify interrupt work. Both instruments are VERIFY-only
 and apply only to the existing supported v1 patch list.
 
 The live `RBSTEPS1` header contains seven longwords after its eight-byte signature:
@@ -104,15 +105,26 @@ the keyboard tape. Each run starts from reset with a read-only breakpoint armed 
 `ps:15b3a`, advances to its 1001st crossing, then records 100 PAL fields.
 
 The visible 640×400 menu pixels match exactly. All 40,000 bytes fetched by bitplane
-DMA in the last two fields also match. Raw screenshots differ outside the game image,
-so their file hashes alone are not an equivalence test.
+DMA in the last two fields also match. A fresh repeat also has identical final raw
+PNGs; the earlier pair differed only outside the game image.
 
-The post-capture chip dumps differ in 2,011 bytes: 647 in the low-memory page (including
-exception vectors that point into the differently assembled slave/KickEmu), 31 outside
-the displayed bitplanes, and 1,333 in a separate region with sample-like contents. None
-of these bytes were fetched by bitplane DMA in the final two fields. The latter two
-regions still need definitive ownership/phase classification before closing W0.1.
-This is a matching visible opening checkpoint, not a claim of full chip-RAM equality.
+The post-capture chip dumps differ in 2,011 bytes, now classified by ownership:
+
+- 647 are in the low-memory page, including vectors into the differently assembled
+  slave/KickEmu and unused fill bytes.
+- 31 are in four planes of the inactive framebuffer, within pixels x=80–88,
+  y=47–54. The unchanged pointer-position header at `ps:25a88`, decoded through
+  the mouse callback, places the pointer at (80,47). These differences lie inside
+  its footprint; the active framebuffer remains identical.
+- 1,333 are in the sound driver's eight 224-byte chip buffers. The live allocation
+  pointer and all eight buffer pointers agree between runs. `sound:1526–1584`
+  allocates 1,792 bytes and fills that pointer table, proving ownership. Buffer
+  contents can retain different earlier audio phases; audio-sequence equivalence
+  has not been established.
+
+None of these differing bytes is fetched by bitplane DMA in the final two fields.
+The rebuilt slave passes the fixed visible opening checkpoint with these explicit
+storage differences. Full chip-RAM equality and audio-stream equality are not claimed.
 
 ## Swap beam positions
 
@@ -178,7 +190,7 @@ contains only 745 PAL fields and is too short for the required long-window rate.
 The interrupted subsequent segment includes UI swaps and is marked incomplete. The
 local swap harness now arms an additional read-only breakpoint at `sim:21f4a`, the
 flight-loop exit, and rejects a capture that did not reach its requested flight step.
-That automatic exit stop still needs a fresh end-to-end mission run.
+A later complete mission validates that automatic stop; see the census below.
 
 ## Explicit straight and bank fixtures
 
