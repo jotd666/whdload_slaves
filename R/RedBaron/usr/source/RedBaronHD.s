@@ -104,7 +104,7 @@ _args_end
 	;initialize kickstart and environment
 
 _bootdos
-	move.l	(_resload),a2		;A2 = resload
+	move.l	(_resload,pc),a2		;A2 = resload
 
 	;open doslib
 		lea	(_dosname,pc),a1
@@ -192,7 +192,7 @@ SIM_VERSION_TEST:MACRO
 	lea	pl_sim_v\2(pc),a0
 	jsr	resload_Patch(a2)
 
-	bra.b	.out
+	bra.w	cb_loadseg_done
 .nov\2
 	ENDM
 
@@ -233,7 +233,7 @@ _cb_dosLoadSeg
 	move.l	#$4E714EB9,(a0)+
 	pea	flushit(pc)
 	move.l	(A7)+,(a0)+
-	bra.b	.out
+	bra.w	cb_loadseg_done
 .noredbaron:
 
 	move.l	d6,a0
@@ -255,7 +255,7 @@ _cb_dosLoadSeg
 	; ps, v1
 	lea	pl_ps_v1(pc),a0
 	jsr	resload_Patch(a2)
-	bra.b	.out	
+	bra.w	cb_loadseg_done	
 .nops_v1
 	move.l	a1,a0
 	add.l	#$2AEF6,a0
@@ -265,7 +265,7 @@ _cb_dosLoadSeg
 	; ps, v2
 	lea	pl_ps_v2(pc),a0
 	jsr	resload_Patch(a2)
-	bra.b	.out	
+	bra.w	cb_loadseg_done	
 
 .nops_v2
 	move.l	a1,a0
@@ -276,7 +276,7 @@ _cb_dosLoadSeg
 	; ps, v3
 	lea	pl_ps_v3(pc),a0
 	jsr	resload_Patch(a2)
-	bra.b	.out	
+	bra.w	cb_loadseg_done	
 
 .nops
 	move.l	d6,a0
@@ -294,7 +294,7 @@ _cb_dosLoadSeg
 	SIM_VERSION_TEST	A5A8,2
 	SIM_VERSION_TEST	A5CC,3
 .nosim
-.out
+cb_loadseg_done
 	rts
 
 
@@ -476,7 +476,7 @@ new_DeleteFile:
 	tst.b	(a0)
 	bne.b	.nextone
 	moveq	#1,d0	; Z flag off
-	bra.b	.out
+	bra.w	cb_loadseg_done
 .nextone
 	move.l	d1,a1	; reload current filename
 .tonext
