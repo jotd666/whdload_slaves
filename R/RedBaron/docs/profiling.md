@@ -58,6 +58,30 @@ Input/build SHA-256:
 | Original `sim` | `e9b3889bc6f177e0bcfc74987665cdafbccd984b3a031bdd1f98f6c445dd8839` |
 | Retained VERIFY slave | `ade543bd07d9bdc7dc620033a1e11bf7c667495a5972658bb7c7358b5914bfc5` |
 
+## W0 machine bring-up measurements
+
+These are unoptimized **mixed-flight** windows including cockpit events and the scripted
+right bank, not the final R-steady/R-event measurement matrix. They establish that the
+long-window instruments work on both memory/CPU configurations.
+
+| Configuration | Flight intervals | PAL fields | Observed swaps | Mean display rate |
+| --- | ---: | ---: | ---: | ---: |
+| 68000, 512 KB chip + 1.5 MB slow, no fast | steps 1–120: 119 | 3,649 | 119 | 1.63 fps |
+| 14 MHz 68020, 2 MB chip + 8 MB fast, no slow | steps 1–250: 249 | 2,226 | 249 | 5.58 fps |
+
+Rates use the emulator's measured PAL rate of 49.92041 fields/s. The A500-equivalent
+run uses the pre-framework VERIFY build; the 68020 run uses the option-framework build
+with no performance patch installed. These are **not** a same-build optimization A/B.
+The 68000 remains at dt=450 throughout. The 68020 leaves the clamp, with dt values
+between 248 and 450 in the first 120 steps; world states cannot be expected to match
+at equal step numbers across these two runs. Time Scale remains 40 in both.
+
+Every observed swap has a subsequent step record. Reading the latter can cross a clock
+boundary: of 119 A500 intervals, six have one more VBlank at the input observer and five
+have one more CIA tick; of 249 68020 intervals, those counts are two and one. All other
+records have identical VBlank/tick counts. This is the short swap-to-input interval,
+not a missing frame. Exact same-window trace/SWAP_ONLY validation remains pending.
+
 ## Validation and attribution
 
 The parser reads **3,154,859 records** and **35,525,488 CPU cycles**, against the PAL-field
