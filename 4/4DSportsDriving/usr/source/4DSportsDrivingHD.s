@@ -257,6 +257,7 @@ pl_main
     PL_START
     IFD VERIFY
     ; Complete original instruction: bchg #0,$3b(a4), six bytes.
+    PL_PS $1AAD6,tape_dialog_enter
     PL_PS $74FA,tape_frame
     ENDC
 	PL_W	$2E77A-$6568,$9E	; fix move to intreqr

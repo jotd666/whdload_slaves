@@ -133,6 +133,12 @@ tape_graphics:
  exg a5,a6
  jsr _LVOWaitTOF(a6)
  exg a5,a6
+ lea tape_event(pc),a0
+ cmp.w #$24,ie_Code(a0)
+ bne.s .timed
+ move.l tape_dialog_ready(pc),d0
+ bne.s .next
+.timed:
  subq.w #1,d2
  bne.s .wait
  bra.s .next
@@ -140,7 +146,7 @@ tape_graphics:
  rts
 tape_graphics_keys:
  dc.w 5,$63,IEQUALIFIER_CONTROL
- dc.w 20,$24,IEQUALIFIER_CONTROL
+ dc.w 5000,$24,IEQUALIFIER_CONTROL
  dc.w 5,$a4,IEQUALIFIER_CONTROL
  dc.w 200,$e3,0
  dc.w 30,$44,0
@@ -159,6 +165,7 @@ tape_a4: dc.l 0
 tape_first_field: dc.l 0
 tape_keys_sent: dc.l 0
 tape_configured: dc.l 0
+tape_dialog_ready: dc.l 0
 
 ; Called at game:$74fa, after drawing and before the buffer-index flip.
 ; Mode $45=0 is live driving; e928=0 excludes the attract/replay route.
@@ -195,3 +202,13 @@ tape_event:	dcb.b	ie_SIZEOF,0
 	EVEN
 tape_stack:	dcb.b	1024,0
 tape_stack_end:
+
+; Acknowledge Ctrl-G at the native dialog entry, so slow VERIFY twins cannot
+; miss the key between rendered frames. The replaced instruction is six bytes.
+tape_dialog_enter:
+ move.l a0,-(sp)
+ lea tape_dialog_ready(pc),a0
+ move.l #1,(a0)
+ move.l (sp)+,a0
+ move.w -$bc(a4),-6(a5)
+ rts
