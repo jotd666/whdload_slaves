@@ -165,6 +165,14 @@ _bootdos
 		jmp	(resload_Abort,a2)
 
 patch_main
+	IFD VERIFY
+	movem.l d0-a6,-(sp)
+	lea tape_game(pc),a0
+	move.l d7,(a0)
+	addq.l #4,(a0)
+	bsr tape_start
+	movem.l (sp)+,d0-a6
+	ENDC
 	IFD	USE_PROFILING
 	move.l	#$10000,d0
 	lea		$100.W,a1
@@ -241,6 +249,10 @@ dma_write_8
 
 pl_main
     PL_START
+    IFD VERIFY
+    ; Complete original instruction: bchg #0,$3b(a4), six bytes.
+    PL_PS $74FA,tape_frame
+    ENDC
 	PL_W	$2E77A-$6568,$9E	; fix move to intreqr
 	PL_NOP	$6D36,2		; removes protection
 
@@ -381,5 +393,9 @@ _custom5	dc.l	0
 		dc.l	0
 
 ;============================================================================
+
+	IFD VERIFY
+	include "driving_tape.s"
+	ENDC
 
 	END
