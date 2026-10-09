@@ -39,10 +39,11 @@ and icons are unchanged. Developer/VERIFY builds retain individual options.
 ## Next work
 
 1. **W2 geometry**, continuing in the `sim:2c552` subtree. The G1 projection core,
-   G2 clipping and G4 dot product have verified developer checkpoints (CUSTOM2
-   bits 2, 3 and 5);
+   G2 clipping, G3 32-bit vertex misses and G4 dot product have verified developer
+   checkpoints (CUSTOM2 bits 2–5);
    see `w2-verification.md`.
-   Wrapper integration, wider CPU checks and G3/G5–G9 remain open.
+   Wrapper integration, the 16-bit transform path, wider CPU checks and G5–G9
+   remain open.
    Each change needs its original-checked Python model and VERIFY twin. This is
    the dominant steady-flight cost; W1 mainly removes dashboard-event stalls.
 2. **W5:** tear-free publication and a frame cap under the player switch.
@@ -68,7 +69,7 @@ ordinary development fixtures; 0/60 copies are investigation inputs only.
 Use one binary with option changes for comparisons; all patches remain sim v1 only.
 Each feature needs original-byte checks, whole-instruction/branch/relocation audits,
 CUSTOM-off verification, its model/twin checks and the plan's measurement protocol.
-The six current performance ranges pass the static hook audit.
+The seven current performance ranges pass the static hook audit.
 Only verified bits may enter the release mask. Keep instruments VERIFY-only and
 normal/developer builds free of their code and data. Recheck frame timing, ownership,
 chip/slow memory pressure and cache conditions after code/layout changes.

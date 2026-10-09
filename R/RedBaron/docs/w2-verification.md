@@ -170,3 +170,47 @@ Wider CPU checks and player promotion remain open; the release mask stays zero.
 
 Evidence: `w2-g2-twins-a500`, `w2-g2-a500-{0,8}`. VERIFY SHA-256:
 `c096035c12917791a2444ce3b63b40597337b67d2e2f1af952479cf58e0e67fc`.
+
+## G3 vertex cache-miss transform
+
+Developer/VERIFY CUSTOM2 bit 4 targets the miss at `sim:38e02`, fusing the
+32-bit wrapper's `sim:3afbe` transform and object translation. The original cache
+hit at `sim:38dcc` remains untouched. A single MOVEM.W loads the signed vector;
+the shift count is computed once, and a zero-z path omits three products. Results
+still use signed word multiplies, low-long addition before ASR, and shift counts
+modulo 64. Matrix types 0 and 1 retain their special behavior. The original source
+scratch, transformed scratch, cached coordinates and flag are all written.
+The separate 16-bit path is not changed.
+
+The Python reference and candidate models match 2,014 complete original type-2
+transforms. Inputs are recovered from observed matrix operands and products; an
+all-zero matrix column's unobservable coordinate is represented as zero. No
+inference is made about type 0/1 coverage in that trace. The 200,000 random host
+cases and CPU synthetic cases cover all matrix types and arbitrary word shift
+counts, including signed overflow and the zero-coordinate paths.
+
+VERIFY CUSTOM5 bit 13 compares the relocated original wrapper and fused path,
+restoring the selected vertex state between them. It compares the flag, both
+scratch areas, all three cached results, d2–d7/a2–a6 and SP. d0/d1/a0/a1 are scratch
+at the wrapper's callers; the face loop's next operations read the vertex flag
+and overwrite its condition codes. The synthetic cases cover indices 0/127/254,
+208 combinations of matrices, source vectors, type and scale, and translations
+that exercise long overflow. On A500, 208 synthetic plus 8,729 live comparisons
+through step 40 pass.
+
+| Window | Routine | OFF calls / mean main cycles | ON calls / mean main cycles |
+| --- | --- | ---: | ---: |
+| R-steady | vertex wrapper (hits included) | 1,955 / 1,109.2 | 2,025 / 936.4 |
+| R-steady | complete 3D pass | 4 / 2,446,701.5 | 4 / 2,382,304.5 |
+| R-bank | vertex wrapper (hits included) | 1,068 / 1,226.5 | 1,112 / 998.4 |
+| R-bank | complete 3D pass | 3 / 2,308,462.0 | 3 / 2,244,320.0 |
+
+These are the same 150/100-field same-build A500 windows, not FPS measurements.
+Whole-pass savings are 2.63%/2.78%. Costs include the untouched cache hits and
+recognize both hit/miss return paths. Step-8 h3 differs only in elapsed time at
+`h3:0483a`. Seven disabled hook ranges retain original bytes, all three build
+modes compile and 44 host checks pass. The main implementation adds no allocation;
+its miss path saves 32 bytes of registers. Wider CPU/combined checks remain open.
+
+Evidence: `w2-g3-twins-a500`, `w2-g3-a500-{0,16}`. VERIFY SHA-256:
+`1456f8d5b84cf787f3429b7ae6580fcc88ce94903d604bbb3d339610f85853b3`.

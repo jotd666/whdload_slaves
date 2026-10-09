@@ -29,6 +29,14 @@ and 2,418.1 → 2,108.2 cycles. The same-build 150/100-field samples imply
 1.87%/1.83% whole-pass savings; they do not establish FPS or combined W2 gains.
 Full buffers match in 105 synthetic and 4,187 live twins. See `w2-verification.md`.
 
+G3's merged 32-bit vertex cache-miss path (`sim:38e02`, developer bit 4) gives
+**2,446,701.5 → 2,382,304.5** mean complete 3D-pass main cycles in R-steady and
+**2,308,462.0 → 2,244,320.0** in R-bank (four/three calls per setting). Vertex
+wrapper averages, including unchanged cache hits, fall from 1,109.2 to 936.4 and
+1,226.5 to 998.4 cycles. The 150/100-field samples show 2.63%/2.78% whole-pass
+savings. 208 synthetic and 8,729 live comparisons pass; the separate 16-bit path
+is unchanged. Conditions, state comparison and hash are in `w2-verification.md`.
+
 ## Cached 68030: drawing is the larger bottleneck
 
 A focused unoptimized 50 MHz 68030 check changes the priority for accelerated

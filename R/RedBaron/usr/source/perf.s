@@ -78,6 +78,10 @@ perf_apply_v1:
 	beq.b .no_clip
 	bsr clip_install
 .no_clip
+	btst #4,perf_mask+3(pc)
+	beq.b .no_vertex
+	bsr vertex_install
+.no_vertex
 	rts
 
 ; Check a non-relocated hook range before installing it.

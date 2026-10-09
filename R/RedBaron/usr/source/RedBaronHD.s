@@ -554,6 +554,7 @@ new_DeleteFile:
 	include "projection.s"
 	include "dot.s"
 	include "clip.s"
+	include "vertex.s"
 	IFD VERIFY
 	include "originals.s"
 	include "mirror-verify.s"
@@ -561,7 +562,9 @@ new_DeleteFile:
 	include "projection-verify.s"
 	include "dot-verify.s"
 	include "clip-verify.s"
+	include "vertex-verify.s"
 	include "tape.s"
+	include "vertex-cases.i"
 	include "clip-cases.i"
 	include "projection-cases.i"
 	include "dot-cases.i"
