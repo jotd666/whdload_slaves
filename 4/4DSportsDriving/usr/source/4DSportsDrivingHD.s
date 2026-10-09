@@ -256,6 +256,9 @@ dma_write_8
 pl_main
     PL_START
     IFD VERIFY
+    IFD SIM_PROBE
+    PL_P $E5F2,sim_probe_entry
+    ENDC
     ; Complete original instruction: bchg #0,$3b(a4), six bytes.
     PL_PS $1AAD6,tape_dialog_enter
     PL_PS $74FA,tape_frame
@@ -412,6 +415,9 @@ perf_attnflags	dc.l	0
 
 	IFD VERIFY
 	include "driving_tape.s"
+	IFD SIM_PROBE
+	include "simulation_verify.s"
+	ENDC
 	ENDC
 
 	END
