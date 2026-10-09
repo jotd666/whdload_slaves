@@ -363,6 +363,29 @@ records and no missed publication. Its flight-entry sample reports WHDLoad polic
 `0x3b3d`, but **raw CACR is `0x2000`**: the 68030 instruction- and data-cache enable
 bits are clear. The saved emulator settings also have `cpu_data_cache=false`.
 The policy flags are therefore not sufficient evidence of active hardware caches.
-The cause of this policy/register discrepancy still needs investigation before
-freezing the final fast-CPU measurement matrix; these readings must not be applied
-retroactively to earlier captures.
+The discrepancy is now explained by WHDLoad's documented 68030 default: it
+**disables MMU use unless `MMU` is explicitly requested**. With any memory region
+noncacheable, WHDLoad must disable both caches globally when it cannot use the MMU.
+The slave's KickEmu `CACHE` setup requests BaseMem noncacheable and ExpMem/Slave
+copyback, which decodes exactly to the observed policy. The generic IC/DC flags
+alone cannot override the region constraint.
+
+A fresh boot of the identical VERIFY binary, changing only the WHDLoad arguments
+to `CUSTOM5=8 MMU`, reaches flight and reports the same policy `0x3b3d` but CACR
+**`0x2111`**: instruction cache, instruction burst, data cache and write allocation
+are enabled. The emulator log confirms activation of the 68030 MMU. This controlled
+check supports the explanation; it is not a rendering speedup measurement.
+
+There is a second independent condition: FS-UAE's saved `cpu_data_cache=false`
+bypasses its data-cache access functions even when CACR requests caching. Cached
+68030 measurements must explicitly request and verify `cpu_data_cache=true`, in
+addition to checking the guest register and WHDLoad MMU option. The local WHDLoad
+20.0 documentation's “MMU Usage in WHDLoad” and “CPU Cache Handling” sections and
+the emulator's `set_x_funcs` implementation establish these distinctions. Earlier
+captures retain their original configuration and must not be relabelled as cached
+measurements. Cache-enabled and cache-disabled runs are different machine baselines.
+
+The explicit data-cache-model boot of the same binary also reports CACR `0x2111`
+and reaches step 20: 18 completed first-fill records, one pending publication and
+zero missed publications. Its eight potential active-display first fills require
+DMA analysis before any claim of visible tearing.

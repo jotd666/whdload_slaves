@@ -99,6 +99,35 @@ have one more CIA tick; of 249 68020 intervals, those counts are two and one. Al
 records have identical VBlank/tick counts. This is the short swap-to-input interval,
 not a missing frame. Exact same-window trace/SWAP_ONLY validation remains pending.
 
+## 68030 cache conditions
+
+The optional flight-entry diagnostic resolves an important configuration distinction.
+With the unchanged slave and default WHDLoad arguments, the measured CACR is
+`0x2000` (both caches disabled), despite policy `0x3b3d` requesting IC/DC. WHDLoad
+20.0 disables MMU use by default on a 68030. The slave requests noncacheable BaseMem,
+which forces global cache disable without MMU page attributes.
+
+Adding WHDLoad `MMU` to the same diagnostic binary produces CACR `0x2111`, enabling
+instruction cache/burst and data cache. Explicitly enabling FS-UAE data-cache
+modeling also reaches step 20 with 18 first-fill records and no missed publication.
+The saved configuration must show `cpu_data_cache=true`; the register alone does
+not prove that the emulator models data caching. See `verification.md` for the
+controlled check. These are configuration checks, not optimization results.
+
+For the cached 50 MHz machine, use the following conditions with the existing
+flight-entry harness (CUSTOM5=8 only for the optional diagnostic):
+
+```sh
+CPU=68030 CHIP_KB=2048 FAST_KB=8192 \
+EXTRA_ARGS='--slow_memory=0 --uae_cpu_speed=real --uae_cpu_multiplier=0 --uae_cpu_frequency=50000000 --uae_cpu_cycle_exact=true --uae_blitter_cycle_exact=true --uae_cpu_data_cache=true' \
+WHD_ARGS='MMU' python3 tools/reach_flight.py --out tmp/prof/cached-030-entry
+```
+
+Keep the diagnostic off for frame-rate measurements. Preserve the saved emulator
+configuration, WHDLoad arguments and binary with each capture. Older uncached or
+blitter-inexact runs remain separate baselines; changing these settings is not a
+slave performance improvement.
+
 ## Current-build A500-equivalent baseline
 
 The current VERIFY binary, with performance bits off and no scripted bank, runs
