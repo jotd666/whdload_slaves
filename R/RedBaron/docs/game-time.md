@@ -139,3 +139,50 @@ slower drawing changes elapsed wall time but leaves those positions unchanged at
 equal steps. It does not prove equality of every heap object, establish nominal
 world speed, or replace the Time Scale 0/40/60 and collision experiments. Airspeed
 still needs its own verified observer.
+
+## Time Scale fixtures and first trajectory measurements
+
+`tools/time_scale_fixture.py` copies the installation and changes only the first
+big-endian word of `data/SIMPREFS.PRF`. `sim:47c8/47ce` loads the preference block
+and `sim:480e` copies that word to `h3:03d56`. The source installation stays at
+40; the test copies contain 0 and 60. Only file byte 1 differs in each copy.
+The remaining preferences and the sim executable are unchanged. Each fixture
+retains the original/modified preference hashes and sim hash.
+
+Three clean boots of the same 30,324-byte VERIFY text use the cached 50 MHz
+68030 configuration documented in `profiling.md`: MMU explicitly enabled,
+emulated data cache enabled, accurate CPU and blitter timing, no performance
+bits, no bank input. The native route maximizes detail without changing Time Scale.
+The ring independently confirms settings 0/40/60 and divisors 80/33/10.
+
+Read-only breakpoints collect 35 player objects at flight steps 126–160. The
+35 positions and orientations in each run match the game's own history exactly.
+Each interval contains one world update. The summarizer rejects gaps, duplicate
+ring records, clock reversals, changed settings and native-history mismatches.
+
+| Time Scale | F | Elapsed PAL fields | CIA ticks | dt values observed | Path length, raw units | Raw units per 50 fields | Object word +f6 |
+| ---: | ---: | ---: | ---: | --- | ---: | ---: | --- |
+| 0 | 80 | 201 | 239 | 64, 89, 102, 115 | 3,335.940 | 829.836 | 1280 |
+| 40 | 33 | 136 | 161 | 124, 155 | 5,401.245 | 1,985.752 | 1280 |
+| 60 | 10 | 135 | 160 | 409, 450 | 19,078.014 | 7,065.931 | 1301, 1303 |
+
+Path length sums successive three-dimensional position differences, rather than
+using only the endpoint displacement. These are movement observations, not FPS
+benchmarks: the short equal-step windows do not establish equal scene workload.
+The retained object includes velocity candidates at +ca/+d0 and +f4/+fa.
+`sim:183fa` scales the six words at physics-structure +36 through +40 into
++0c through +16 using `h3:072a6`; that structure begins at player object +be.
+`sim:198a8` separately copies object +f6 to `h3:071b0`. This establishes the
+field relationships, but physical airspeed units still need calibration.
+
+At Time Scale 0 the dt floor is reached; at 60 every sampled dt takes the
+word-doubling branch described above. Consequently the approximate inverse-F
+relationship cannot by itself define physical nominal speed across these runs.
+The CIA handler at `sim:2ffdc` subtracts **four** from the elapsed countdown
+for each lifetime tick; one countdown unit must not be mistaken for one CIA tick.
+
+Local evidence is retained under `w0-time-scale{0,40,60}-cached030` with the
+player objects, first/last h3 snapshots and complete step ring. Reproduce each
+summary with `tools/player_motion.py CAPTURE_DIRECTORY`. W0.6 remains open
+until the airspeed interpretation and timer coupling are resolved; this study
+does not authorize any timing change.
