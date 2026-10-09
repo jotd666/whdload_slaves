@@ -71,7 +71,7 @@ secondary clock require explicit policies. A cap by itself does not solve these 
 
 Before a final recommendation:
 
-1. Identify and log player position, airspeed and heading at Time Scale 0, 40 and 60.
+1. Use the verified position/velocity/heading observations and elapsed-time reference below; extend them to the force and contact tests.
 2. Inventory indirect clock reads and per-world-step/per-render-step counters.
 3. Test forced dt 225/450/900/~2200, including the newly identified >400 paths, against
    smaller-step trajectory, ground-contact, bullet-hit, AI and collision references.
@@ -137,8 +137,7 @@ The history indices are 39 and 58. This extends the earlier h3 comparison from a
 uninterpreted byte match to a checked player trajectory in the clamped regime:
 slower drawing changes elapsed wall time but leaves those positions unchanged at
 equal steps. It does not prove equality of every heap object, establish nominal
-world speed, or replace the Time Scale 0/40/60 and collision experiments. Airspeed
-still needs its own verified observer.
+world speed, or replace the Time Scale 0/40/60 and collision experiments. The velocity observer is now verified in the later section below.
 
 ## Time Scale fixtures and first trajectory measurements
 
@@ -184,5 +183,71 @@ for each lifetime tick; one countdown unit must not be mistaken for one CIA tick
 Local evidence is retained under `w0-time-scale{0,40,60}-cached030` with the
 player objects, first/last h3 snapshots and complete step ring. Reproduce each
 summary with `tools/player_motion.py CAPTURE_DIRECTORY`. W0.6 remains open
-until the airspeed interpretation and timer coupling are resolved; this study
-does not authorize any timing change.
+until the timer coupling is resolved. The velocity interpretation and elapsed-time
+reference are established below; neither study authorizes any timing change.
+
+## Verified velocity and position interpretation
+
+The native forward-velocity word is player object +f6. `sim:198a8` copies it
+to `h3:071b0`, and `sim:1a112` reads that value to position the cockpit
+airspeed indication. It is distinct from the world-coordinate position delta.
+The three native body-velocity words are at +f4/+f6/+f8; their rotated
+world-velocity counterparts are at +fa/+fc/+fe.
+
+`sim:183fa` converts all six words into +ca through +d4 using the factor
+`h3:072a6` and the signed multiply/shift helper `sim:2c346` (via `sim:14b0e`).
+The factor is 220 throughout the retained samples. For forward velocity 1280,
+the converted word is floor(1280 × 220 / 1024) = **275**. All **630 converted
+velocity words** in the 105 snapshots match this calculation. These are
+verified internal velocity units; no conversion to mph or physical distance
+units is asserted.
+
+The airborne position path at `sim:1918a–19234` averages the old and new
+world velocities with word arithmetic, adds the altitude-selected wind from
+`h3:01c86`, and applies `sim:3d68`. `sim:18398` then multiplies by the same
+factor, shifts by ten and carries a signed fractional remainder through
+`sim:18364`. The player's three remainders are at object +100/+102/+104.
+The retained wind is (0, −1, 0) in every altitude band.
+
+`tools/player_kinematics.py` reproduces **all 306 coordinate updates and their
+306 resulting fractional remainders exactly** across the three Time Scale
+windows. It uses observed old/new velocity as input; it does not claim to
+model aerodynamic forces, collisions or ground contact. This check also
+confirms that a step-N observation's dt drives the update to step N+1.
+
+There is an additional rounding quirk: `sim:18398` combines an arithmetic
+right shift of a negative product with a negative remainder. For a product
+of −22,000, the integer contribution is −22 and the remainder is −496.
+Truncating division would instead give −21; substituting that would change
+the trajectory. The host regression checks retain this behavior and the
+dt=400/401 discontinuity and word overflow.
+
+### Nominal elapsed-time reference
+
+A useful reference for W6 is the unbounded elapsed-time coefficient of the
+existing clock: four countdown units per CIA tick imply **1024/F dt units
+per CIA tick**. In the proportional branch, this gives forward motion of
+`native_forward × factor / 1024 × 4/F` position units per CIA tick, before
+wind, turns and integer effects. One PAL CIA tick is approximately 1/59.11 s.
+Thus the reference specifies a wall-time rate in the game's own verified
+units without assuming physical units or mistaking the clamp for elapsed time.
+
+| Time Scale | Nominal forward units/CIA tick | Measured path units/CIA tick |
+| ---: | ---: | ---: |
+| 0 | 13.750 | 13.958 |
+| 40 | 33.333 | 33.548 |
+| 60 | 111.805–111.977 | 119.238 |
+
+Forward motion and three-dimensional ground path are different quantities;
+these columns are not exact speedup ratios. Wind, orientation, per-step
+rounding, the dt floor and the >400 shortcut all remain explicit in the
+exact position model. At Time Scale 60, all sampled steps take the shortcut,
+so dt=409 and dt=450 both multiply their input by two. At Time Scale 40 the
+samples use the proportional branch. This is why the earlier scalar “44%”
+statement cannot define nominal physical speed for all subsystems.
+
+Use this elapsed-time reference when evaluating a future bounded/fixed-step
+design, while preserving and testing the original integration quirks as
+separate compatibility choices. This defines the reference to investigate;
+it does not approve a timing change or replace W6's collision/force tests.
+Reproduce the checks with `tools/player_kinematics.py CAPTURE_DIRECTORY`.

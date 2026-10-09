@@ -16,7 +16,7 @@ original scope. No rendering optimization is enabled.
 | W0.3 counters | Passed | Trace, independent swap breakpoints and ring agree on the squadron steps 1–2 interval |
 | W0.4 scenes and machines | Open | All four scenes pass strict cross-boot comparison on the continuity machine; complete event/steady machine costs and first-draw coverage |
 | W0.5 event census | Passed for the complete baseline mission | Top-text branch had zero occurrences; no coverage claim for that branch |
-| W0.6 game time | Open | Complete the Time Scale 0/40/60 velocity interpretation and nominal-speed analysis; identify the timer coupling before relying on broader state equality |
+| W0.6 game time | Open | Time Scale velocity/position interpretation and nominal elapsed-time reference verified; identify the remaining timer coupling before relying on broader state equality |
 | W0.7 framework | Passed | Empty performance-range audits remain explicitly pending until a feature declares ranges |
 | W0.8 reference infrastructure | Passed for the initial references | Mirror/projection models and original copies checked; each future replacement must add its own model and live twin under the contract below |
 
