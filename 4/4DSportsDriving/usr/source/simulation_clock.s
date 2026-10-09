@@ -1,7 +1,8 @@
 ; Independent display-field clock. Initially enabled only by SIM_PROBE;
 ; production simulation scheduling is connected after its input/state gates.
-; Exec owns the interrupt chain. The handler never calls game/OS routines,
-; reads controls, or runs physics, and returns Z set to continue the chain.
+; Exec owns the interrupt chain. SIM_SCHEDULE optionally samples held controls
+; into a private queue; no physics or OS calls run here. Return Z set to
+; continue the chain.
 
 sim_clock_install:
  movem.l d0-d1/a0-a1/a6,-(sp)
@@ -42,6 +43,11 @@ sim_clock_remove:
 
 sim_clock_interrupt:
  addq.l #1,(a1)
+ IFD SIM_SCHEDULE
+ movem.l d1-d7/a0-a6,-(sp)
+ bsr sim_schedule_field
+ movem.l (sp)+,d1-d7/a0-a6
+ ENDC
  moveq #0,d0
  rts
 

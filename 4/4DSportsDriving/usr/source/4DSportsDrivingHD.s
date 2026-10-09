@@ -266,6 +266,11 @@ pl_main
     IFD VERIFY
     IFD SIM_PROBE
     PL_P $E5F2,sim_probe_entry
+    IFD SIM_SCHEDULE
+    PL_PSS $70E0,sim_schedule_poll,2
+    PL_PS $7A04,sim_schedule_timer
+    PL_PSS $7C0A,sim_schedule_input,2
+    ENDC
     ENDC
     ; Complete original instruction: bchg #0,$3b(a4), six bytes.
     PL_PS $1AAD6,tape_dialog_enter
@@ -424,6 +429,9 @@ perf_attnflags	dc.l	0
 	IFD VERIFY
 	IFD SIM_PROBE
 	include "simulation_clock.s"
+	IFD SIM_SCHEDULE
+	include "simulation_schedule.s"
+	ENDC
 	ENDC
 	include "driving_tape.s"
 	IFD SIM_PROBE
