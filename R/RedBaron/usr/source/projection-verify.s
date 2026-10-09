@@ -44,7 +44,8 @@ projection_verify_sp: dc.l 0
 
 projection_selftest:
 	movem.l d0-a6,-(sp)
-	lea projection_cases(pc),a6
+	lea projection_selftest(pc),a6
+	adda.l #projection_cases-projection_selftest,a6
 	move.w #PROJECTION_CASES-1,d7
 .case
 	movem.l (a6)+,d0-d3
@@ -61,4 +62,3 @@ projection_selftest:
 	dbf d7,.case
 	movem.l (sp)+,d0-a6
 	rts
-	include "projection-cases.i"

@@ -123,3 +123,50 @@ All five disabled hook ranges retain original bytes. All three build modes compi
 
 Evidence: `w2-g4-twins-a500`, `w2-g4-a500-{0,32}`. VERIFY SHA-256:
 `aa34be83f91045a8fbf3394459eff1a74cced3a1a1e1a69f8df9cf4644bdf73d`.
+
+## G2 trivial screen clipping
+
+Developer/VERIFY CUSTOM2 bit 3 replaces `sim:39ecc`. Empty inputs (n ≤ 1),
+polygons uniformly outside one X boundary, and polygons uniformly inside X with
+uniform Y codes use direct paths. Mixed cases and counts beyond the 20-entry
+buffers use the unchanged original body. The inherited-high-word upper-bound
+comparison is retained, including unusual signed bounds.
+
+An all-inside polygon still populates both temporary arrays. A Y rejection after
+an inside X pass retains those temporary coordinates/count and clears only the
+source count. Empty/X-rejected polygons leave array storage untouched. Every path
+leaves `sim:39d4c` holding the Y bounds. The sole caller at `sim:3b55e` immediately
+calls `sim:3b398`, which replaces the scratch registers before their next use;
+d0/d1/a0/a1 and flags are dead. All d2–d7/a2–a6 and SP are preserved.
+
+`clip_model.py` compares an edge-walking reference with uniform-outcode predicates.
+It matches 1,888 original pass classifications and 100,000 random polygons of
+0–8 vertices around arbitrary signed bounds. Mixed-edge interpolation is delegated
+to the original in both the patch and model, not replaced by an approximate formula.
+VERIFY CUSTOM5 bit 12 compares the entire 324-byte source/temporary allocation,
+working bounds, preserved registers and SP after original and candidate runs.
+The reference wrapper is copied before patching and retains its original core calls.
+
+The A500 test reaches step 40 with **105 synthetic and 4,187 live comparisons**,
+no mismatch. Synthetic constant polygons cover counts 0/1/2/8/20, inside and both
+outside boundaries on each axis, negative/cross-sign bounds, and signed extrema.
+Live calls cover mixed-edge fallback. Synthetic case tables now follow observer
+code and use position-independent long offsets; they remain VERIFY-only.
+
+| Window | Routine | OFF calls / mean main cycles | ON calls / mean main cycles |
+| --- | --- | ---: | ---: |
+| R-steady | clipping | 585 / 1,942.3 | 589 / 1,570.3 |
+| R-steady | complete 3D pass | 4 / 2,446,701.5 | 4 / 2,401,021.5 |
+| R-bank | clipping | 358 / 2,418.1 | 369 / 2,108.2 |
+| R-bank | complete 3D pass | 3 / 2,308,462.0 | 3 / 2,266,218.0 |
+
+These same-build 150/100-field samples reduce whole-pass costs by 1.87%/1.83%.
+The timing analyzer recognizes **both** the candidate RTS and original fallback
+RTS; it does not omit the slower mixed cases. All costs exclude interrupts and
+cut calls. Step-8 h3 differs only in `h3:0483a` elapsed time; every other byte
+matches. Six disabled ranges retain original bytes, all three builds compile,
+and 41 host checks pass. G7's earlier all-behind rejection is not implemented yet.
+Wider CPU checks and player promotion remain open; the release mask stays zero.
+
+Evidence: `w2-g2-twins-a500`, `w2-g2-a500-{0,8}`. VERIFY SHA-256:
+`c096035c12917791a2444ce3b63b40597337b67d2e2f1af952479cf58e0e67fc`.

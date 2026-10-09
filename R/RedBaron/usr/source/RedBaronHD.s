@@ -553,12 +553,16 @@ new_DeleteFile:
 	include "mirror-cache.s"
 	include "projection.s"
 	include "dot.s"
+	include "clip.s"
 	IFD VERIFY
 	include "originals.s"
 	include "mirror-verify.s"
 	include "cache-verify.s"
 	include "projection-verify.s"
 	include "dot-verify.s"
+	include "clip-verify.s"
 	include "tape.s"
+	include "clip-cases.i"
+	include "projection-cases.i"
 	include "dot-cases.i"
 	ENDC

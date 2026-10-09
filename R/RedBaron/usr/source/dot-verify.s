@@ -58,7 +58,8 @@ dot_verify_header:
 dot_verify_sp: dc.l 0
 dot_selftest:
 	movem.l d0-a6,-(sp)
-	lea dot_cases(pc),a6
+	lea dot_selftest(pc),a6
+	adda.l #dot_cases-dot_selftest,a6
 	move.w #DOT_CASES-1,d7
 .case
 	move.l #$13579bdf,d2

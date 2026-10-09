@@ -21,6 +21,14 @@ complete calls per setting respectively. Dot-product calls fall from roughly
 not an FPS measurement or a cumulative G1+G4 result. See `w2-verification.md`
 for its independent models, synthetic/live twins, state differences and build hash.
 
+G2's trivial clipping paths (`sim:39ecc`, developer bit 3) reduce mean complete
+3D-pass costs **2,446,701.5 → 2,401,021.5** main cycles in R-steady and
+**2,308,462.0 → 2,266,218.0** in R-bank (four/three complete calls per setting).
+Clipping averages include both fast and original fallback paths: 1,942.3 → 1,570.3
+and 2,418.1 → 2,108.2 cycles. The same-build 150/100-field samples imply
+1.87%/1.83% whole-pass savings; they do not establish FPS or combined W2 gains.
+Full buffers match in 105 synthetic and 4,187 live twins. See `w2-verification.md`.
+
 ## Cached 68030: drawing is the larger bottleneck
 
 A focused unoptimized 50 MHz 68030 check changes the priority for accelerated

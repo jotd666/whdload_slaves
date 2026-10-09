@@ -44,6 +44,15 @@ class CompleteCalls(unittest.TestCase):
         self.assertEqual(result['calls'][0]['main_cycles'], 128)
         self.assertEqual(result['incomplete'], [])
 
+    def test_fast_and_original_fallback_returns(self):
+        rows = [insn(0x200, 12), insn(0x400, 20), insn(0x200, 12), insn(0x600, 40)]
+        with patch('call_costs.barto.load', return_value=trace(rows)):
+            result = measure([Path('one')], SIM, 0x8000, 0xa000,
+                             {'clip': (0x200, (0x400, 0x600))})
+        self.assertEqual([c['main_cycles'] for c in result['calls']], [32, 52])
+        self.assertEqual([c['return_pc'] for c in result['calls']], [0x400, 0x600])
+        self.assertEqual(result['incomplete'], [])
+
     def test_wrong_return_stack_is_rejected(self):
         rows = [insn(SIM+0x304d0, 40), insn(SIM+0x30570, 16, SP-4)]
         with patch('call_costs.barto.load', return_value=trace(rows)):

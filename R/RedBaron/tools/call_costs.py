@@ -18,6 +18,10 @@ ROUTINES = {'mirror': (0x304d0, 0x30570), 'world3d': (0x2c552, 0x2c806),
 def measure(paths, sim, irq_low, irq_high, overrides=None):
     routines = {name: (sim+entry, sim+ret) for name, (entry, ret) in ROUTINES.items()}
     routines.update(overrides or {})
+    returns = {name: (ret,) if isinstance(ret, int) else tuple(ret)
+               for name, (_, ret) in routines.items()}
+    if any(not pcs for pcs in returns.values()):
+        raise ValueError('Every routine needs at least one return')
     result = dict(calls=[], incomplete=[], irq_stack=[irq_low, irq_high])
     for path in paths:
         trace = barto.load(path)
@@ -49,10 +53,11 @@ def measure(paths, sim, irq_low, irq_high, overrides=None):
                         if not call['entry_sp'] - 0x4000 <= sp <= call['entry_sp']:
                             raise ValueError(f'Unexpected stack during {name}: {sp:#x}')
                         call['main_cycles'] += cycles
-                    if pc == routines[name][1]:
+                    if pc in returns[name]:
                         if irq or sp != call['entry_sp']:
                             raise ValueError(f'{name} did not restore its entry stack')
                         call['last_field'] = field.index
+                        call['return_pc'] = pc
                         result['calls'].append(call)
                         del active[name]
         result['incomplete'].extend(active.values())
@@ -74,7 +79,7 @@ def main():
     p.add_argument('--irq-stack', required=True, help='LOW:HIGH, upper bound excluded')
     p.add_argument('--out', type=Path)
     p.add_argument('--routine', action='append', default=[], metavar='NAME:ENTRY:RTS',
-                   help='Override/add a routine using absolute live entry and RTS PCs')
+                   help='Override/add a routine using absolute live entry and comma-separated RTS PCs')
     a = p.parse_args()
     low, high = (int(x, 0) for x in a.irq_stack.split(':'))
     if low >= high:
@@ -84,7 +89,7 @@ def main():
         name, entry, ret = spec.split(':')
         if name in overrides:
             p.error('Duplicate routine override')
-        overrides[name] = (int(entry, 0), int(ret, 0))
+        overrides[name] = (int(entry, 0), tuple(int(x, 0) for x in ret.split(',')))
     result = measure(a.traces, a.sim, low, high, overrides)
     if a.out:
         a.out.write_text(json.dumps(result, indent=2) + '\n')
