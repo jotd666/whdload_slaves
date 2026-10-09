@@ -64,6 +64,10 @@ tape_task_code:
 	moveq	#0,d0
 	jsr	_LVOOpenLibrary(a6)
 	move.l	d0,a5
+ IFD TAPE_PIXELS
+ lea tape_gfx_base(pc),a0
+ move.l d0,(a0)
+ ENDC
 	moveq	#-1,d0
 	jsr	_LVOAllocSignal(a6)
 	lea	tape_port(pc),a2
@@ -489,3 +493,19 @@ tape_restart_keys:
  dc.w 20,$4d,50,$cd  ; Re-start Driving (disabled Evaluation is skipped)
  dc.w 20,$44,500,$c4
  dc.w 0
+
+ IFD TAPE_PIXELS
+; Pixel validation only: finish the native final DMA before taking a snapshot.
+; The production drawer can return while its last plane is still being written.
+tape_draw_complete:
+ jsr -$7f62(a4) ; original primitive drawer call at game:$20c3a
+ movem.l d0-d1/a0-a1/a6,-(sp)
+ move.l tape_gfx_base(pc),a6
+ jsr _LVOWaitBlit(a6)
+tape_pixels_ready:
+ movem.l (sp)+,d0-d1/a0-a1/a6
+ clr.w -2(a5) ; displaced original instruction at game:$20c3e
+ rts
+tape_gfx_base:
+ dc.l 0
+ ENDC

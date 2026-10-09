@@ -259,6 +259,9 @@ pl_main
     ; Complete original instruction: bchg #0,$3b(a4), six bytes.
     PL_PS $1AAD6,tape_dialog_enter
     PL_PS $74FA,tape_frame
+    IFD TAPE_PIXELS
+    PL_PSS $20C3A,tape_draw_complete,2
+    ENDC
     ENDC
 	PL_W	$2E77A-$6568,$9E	; fix move to intreqr
 	PL_NOP	$6D36,2		; removes protection
