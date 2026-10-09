@@ -14,7 +14,7 @@ original scope. No rendering optimization is enabled.
 | W0.1 rebuilt equivalence | Passed at the fixed opening checkpoint | None; differing chip storage is classified below |
 | W0.2 continuity | Passed | Manual profile packaging also passed its complete 100-field rerun; see `profiling.md` |
 | W0.3 counters | Passed | Trace, independent swap breakpoints and ring agree on the squadron steps 1–2 interval |
-| W0.4 scenes and machines | Open | Rear-view aircraft-rich window selected; complete strict screenshots and event/steady costs for the machine matrix; resolve screenshot-border differences; complete first-draw coverage |
+| W0.4 scenes and machines | Open | Rear-view aircraft-rich window passes strict trace/screenshot repeat with initialized host allocation; repeat the other windows under that setting, complete event/steady machine costs and first-draw coverage |
 | W0.5 event census | Passed for the complete baseline mission | Top-text branch had zero occurrences; no coverage claim for that branch |
 | W0.6 game time | Open | Complete the Time Scale 0/40/60 velocity interpretation and nominal-speed analysis; identify the timer coupling before relying on broader state equality |
 | W0.7 framework | Passed | Empty performance-range audits remain explicitly pending until a feature declares ranges |
@@ -498,3 +498,48 @@ Evidence: `w0-rear-search-entry` contains the object census through step 80;
 `w0-dense-rear-a` and `w0-dense-rear-b` contain the reset repeats, binary/listing,
 step-8 checkpoint, memory and trace. `repeat.json` records the strict failure,
 and `pixel-repeat.json` records the exact game-image comparison rectangle.
+
+## Deterministic host screenshot allocation
+
+The 100-field rear-view squadron window at step 8 now passes the strict
+cross-boot comparison: every instruction record, DMA record, accounting value
+and complete screenshot byte is identical. Both fresh boots use
+`MallocScribble=1`, inherited by FS-UAE, with the same 30,380-byte VERIFY text
+and CUSTOM5=20. Evidence: `w0-dense-scribble-{a,b}`; the second directory's
+`repeat.json` reports 100 identical fields. No screenshot crop or comparison
+exception is applied.
+
+The preceding runs differed in unpainted host-framebuffer storage: the three
+rightmost columns and some bottom rows of the 754×576 screenshot. All game
+pixels in the 640×400 image were already identical. The Barto fork's
+`src/od-fs/fsvideo.cpp` allocates the chipset framebuffer with `malloc`;
+`src/barto_gdbserver.cpp` encodes its full width and height. This source is
+consistent with the observed leftover border bytes, although its branch
+revision has not been established as the exact revision of the local binary.
+
+On this macOS host, `MallocScribble=1` initializes allocated storage to `0xaa`.
+An independent allocation check confirms that setting is effective. The first
+initialized capture also matches the preceding uninitialized capture in every
+instruction, DMA and accounting record and all 640×400 game-image pixels.
+The unused border reflects the fill pattern. Thus the setting resolves this
+window's host screenshot nondeterminism without changing its emulated work.
+The earlier `MallocPreScribble` experiment is excluded: that variable was not
+shown to initialize allocations on this host. This is a capture-environment
+setting, not a game patch or performance improvement.
+
+Retained FS-UAE executable SHA-256:
+`ffd5c960322f445e72a02bc47c84312dfb8b189ce8327b55e1211d7fa170148d`.
+Source references: [Barto FS-UAE fork](https://github.com/grahambates/fs-uae/tree/remote_debugger_barto)
+and [Apple allocator manual](https://github.com/apple-oss-distributions/libmalloc/blob/main/man/malloc.3).
+
+Launch fresh reproducibility runs with `MallocScribble=1` in the environment
+and retain that setting with their manifests. Compare raw captures with:
+
+```sh
+python3 R/RedBaron/tools/compare_traces.py LEFT_TRACE RIGHT_TRACE --out comparison.json
+```
+
+The tool exits unsuccessfully for any differing field, including screenshot-only
+differences. The original unscribbled pair remains a negative control: all 100
+fields fail only the screenshot comparison. Other scene/machine repeats remain
+separate acceptance work; this result does not close the whole W0.4 gate.

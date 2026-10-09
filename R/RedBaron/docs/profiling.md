@@ -456,7 +456,9 @@ range 2,186,006–2,318,154. Two complete world updates average **759,255 main
 cycles**, range 748,338–770,172. Calls cut by either edge are excluded. These are
 scene costs, not a rendering speedup or a long-window FPS measurement.
 
-Each complete 3D pass dispatches seven aircraft models. The strict reset repeat
-matches instruction and DMA records, but whole screenshots still differ outside
-the game image. See `verification.md` for the fixture, geometry counts and the
-remaining screenshot acceptance issue. The baseline machine matrix remains open.
+Each complete 3D pass dispatches seven aircraft models. Two fresh boots with
+`MallocScribble=1` now match all 100 fields exactly, including the complete
+screenshot bytes. Initializing host allocation removes the unused-border
+differences; every instruction/DMA record and all game pixels also match the
+preceding uninitialized capture. See `verification.md` for the evidence and
+capture setting. The baseline machine matrix remains open.
