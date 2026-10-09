@@ -98,6 +98,22 @@ have one more CIA tick; of 249 68020 intervals, those counts are two and one. Al
 records have identical VBlank/tick counts. This is the short swap-to-input interval,
 not a missing frame. Exact same-window trace/SWAP_ONLY validation remains pending.
 
+## Current-build A500-equivalent baseline
+
+The current VERIFY binary, with performance bits off and no scripted bank, runs
+with 512 KB chip, 1.5 MB slow and no fast RAM. The saved configuration confirms
+those banks and full CPU/memory/blitter cycle accuracy. **Swap 40–140** completes
+100 frames in **2,717 PAL fields**, **1.837 fps**, with no dashboard events and
+dt=450 throughout. This differs from the earlier mixed banking baseline.
+
+A fresh boot reproduces the complete step-40 observer record byte-for-byte. A
+100+50-field trace at that checkpoint, analyzed as separate chunks, retains six
+complete 3D calls at **2.0853–2.1662M main cycles**, mean **2.1241M**, and six
+world steps at **0.3189–0.3956M**, mean **0.3691M**. The opening event trace has
+two complete mirrors at **1,920,832 and 1,922,038 cycles**. These scene-specific
+measurements are unoptimized baselines; the different steady scene on the fast-RAM
+68000 does not support a direct memory-speed comparison.
+
 ## Current-build 14 MHz 68020 baseline
 
 The current VERIFY binary, with all performance bits off and no scripted bank,
