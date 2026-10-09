@@ -302,3 +302,13 @@ starting-boundary exclusion, the 2,000-field threshold, events inside the interv
 and missing/duplicate/partial evidence. The retained 68000 + fast census passes
 for swaps 80–180: 100 completed intervals, 2,524 fields, and no dashboard events.
 A step-input interval is not substituted for a swap interval.
+
+## 68020 display-ownership check
+
+The versioned `frames.py` locates copper publications through the complete set of
+24 CPU DMA writes. `display_ownership.py` checks CPU and blitter destination writes
+against the two live framebuffer allocations and actual bitplane fetches in each
+field. A log without framebuffer blitter writes is reported as unobservable.
+Synthetic tests cover that failure mode and the old-display selection for a swap
+before copper pickup. The current 14 MHz steady trace has observable DMA and no
+active-display conflicts; see `profiling.md` for the measured first-write margins.

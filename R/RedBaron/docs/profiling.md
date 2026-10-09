@@ -98,6 +98,39 @@ have one more CIA tick; of 249 68020 intervals, those counts are two and one. Al
 records have identical VBlank/tick counts. This is the short swap-to-input interval,
 not a missing frame. Exact same-window trace/SWAP_ONLY validation remains pending.
 
+## Current-build 14 MHz 68020 baseline
+
+The current VERIFY binary, with all performance bits off and no scripted bank,
+completed a clean **swap 80–400** interval: 320 frames in **2,616 PAL fields**,
+**6.106 fps**, with no dashboard events. World dt ranged from 248 to 450. This
+is a steady-flight baseline, whereas the earlier 5.58 fps result was a mixed
+banking window on an older build. They do not establish an improvement.
+
+The saved configuration explicitly selects 68EC020, clock multiplier 4 (about
+14.2 MHz PAL), 2 MB chip and 8 MB fast, no slow RAM, and CPU/memory/blitter cycle
+accuracy. An earlier attempted frequency option was ignored and left multiplier
+2; that run is marked rejected as a 14 MHz baseline. Always validate the saved
+configuration rather than relying on the requested command options.
+
+A fresh boot supplies a 40-field trace at step 80. Its step-80 VBlank, CIA clock
+and recorded state match the census; beam position differs, so strict trace
+reproducibility for this machine is not claimed yet. Five complete 3D calls cost
+**1.3072–1.4135M main CPU cycles**, mean **1.3753M**; five world steps cost
+**0.1775–0.2041M**, mean **0.1929M**. An opening 40-field event trace retains one
+complete mirror at **808,426 main cycles**. A second mirror crosses the capture
+boundary and is excluded. These are CPU-clock cycles: the 68020 trace accounts
+for 284,204 cycles per field, twice the 68000 trace's 142,102. Do not compare raw
+cycle counts across CPUs as elapsed-time ratios.
+
+The steady trace contains 185,707 writes into the two framebuffers, including
+observable blitter destination writes, and **zero writes into the fetched display
+buffer during lines 42–243**. Across five measured publications, the first write
+to the former display buffer begins 0.999–1.135 fields after publication finishes.
+Early publications use the previous field's fetched buffer to identify the old
+display; this field already fetches the new one. This establishes the margin for
+this unoptimized window only. The fast-CPU cache-state check, 68030 first-draw
+observer, and post-optimization tearing checks remain open.
+
 ## Dashboard census through flight exit
 
 The current unoptimized 68000 + fast-RAM banking fixture was observed from the
