@@ -24,7 +24,7 @@ sim_a4000_arm:
 ; a1 vehicle -> a0 private block; no stored pointer is part of replay state.
 ; steering +0, acceleration +2, distance +4, gear +6, wheel pairs +8..23.
 ; Suspension fractions: extension +24..31, return +32..39, bias +40..47.
-; Terrain loss uses an unsigned Q16 carry at +48.
+; Terrain loss uses an unsigned Q16 carry at +48; skid loss uses fifths at +50.
 sim_a4000_car:
  lea -$85e(a4),a0
  cmpa.l a0,a1
@@ -280,7 +280,7 @@ sim_a4000_private: dcb.b SIM_PRIVATE_BYTES,0
 
  even
  dc.b "4DA4STAT"
- dc.w 4,14
+ dc.w 5,15
 sim_a4000_gear_calls: dc.l 0
 sim_a4000_wheel_calls: dc.l 0
 sim_a4000_contact_calls: dc.l 0
@@ -292,6 +292,7 @@ sim_a4000_delay5_calls: dc.l 0
 sim_a4000_delay10_calls: dc.l 0
 sim_a4000_delay30_calls: dc.l 0
 sim_a4000_terrain_calls: dc.l 0,0,0,0
+sim_a4000_skid_calls: dc.l 0
 
 ; $10234..$10248 and $1024A..$10260, within native suspension $10012.
 ; Preserve its geometry/penetration branches and cap at extension 384. Both
@@ -472,3 +473,23 @@ sim_a4000_terrain:
  rts
 ; round(65536*k*(1-(1-1/k)^(2/5))), k = 256,192,128,64.
 sim_terrain_coefficients: dc.w 26245,26255,26276,26338
+
+; $FD64..$FD6A: original doubled absolute slip angle becomes local -2.
+; Both subsequent unsigned speed clamps must see the converted loss.
+sim_a4000_skid_loss:
+ add.w d0,d0
+ cmp.w #50,-$15fa(a4)
+ bne .native
+ movem.l d1-d2/a0-a1,-(sp)
+ lea sim_a4000_skid_calls(pc),a1
+ addq.l #1,(a1)
+ move.l 8(a5),a1
+ bsr sim_a4000_car
+ lea 50(a0),a0
+ move.w $2a(a1),d1
+ move.w $2c(a1),d2
+ bsr sim_skid_loss_50
+ movem.l (sp)+,d1-d2/a0-a1
+.native:
+ move.w d0,-2(a5)
+ rts

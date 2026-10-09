@@ -256,3 +256,22 @@ sim_terrain_drag_50:
  move.l d3,d0
  movem.l (sp)+,d2-d4
  rts
+
+; Convert a nominal A2500 skid loss BEFORE the native pair of speed clamps.
+; d0.w loss (0..1024), d1.w/d2.w unsigned speeds; a0 -> fifths remainder.
+; Return d0.l scaled loss, preserve d1-d3. If either speed will clamp to zero,
+; discard the fraction so a later acceleration cannot inherit stopped skid.
+sim_skid_loss_50:
+ movem.l d1-d3,-(sp)
+ move.w d1,d3
+ cmp.w d2,d3
+ bls .minimum
+ move.w d2,d3
+.minimum:
+ bsr sim_rate_20_to_50
+ cmp.w d3,d0
+ bcs .done
+ clr.w (a0)
+.done:
+ movem.l (sp)+,d1-d3
+ rts
