@@ -4,6 +4,26 @@ The work order and acceptance requirements are in `performance-plan.md`. Perform
 patches are not yet installed. This document records the observer ABI and current W0
 validation; it does not mark the complete W0 gate as passed.
 
+## W0 acceptance ledger
+
+This ledger is the current gate status; historical observations below retain their
+original scope. No rendering optimization is enabled.
+
+| Item | Status | Remaining acceptance work |
+| --- | --- | --- |
+| W0.1 rebuilt equivalence | Passed at the fixed opening checkpoint | None; differing chip storage is classified below |
+| W0.2 continuity | Passed | Manual profile packaging still needs its end-to-end rerun |
+| W0.3 counters | Passed | Trace, independent swap breakpoints and ring agree on the squadron steps 1–2 interval |
+| W0.4 scenes and machines | Open | Select an aircraft-dense window; complete strict repeats and event/steady costs for the machine matrix; resolve screenshot-border differences; complete first-draw coverage |
+| W0.5 event census | Passed for the complete baseline mission | Top-text branch had zero occurrences; no coverage claim for that branch |
+| W0.6 game time | Open | Complete the Time Scale 0/40/60 velocity interpretation and nominal-speed analysis; identify the timer coupling before relying on broader state equality |
+| W0.7 framework | Passed | Empty performance-range audits remain explicitly pending until a feature declares ranges |
+| W0.8 reference infrastructure | Original copies and mirror model checked | Promote the projection model and document the invocation/output-isolation contract; each future replacement must add its own model and twin |
+
+The W6 forced-dt, collision and equal-wall-time design experiments remain separate
+from this groundwork. W0 does not authorize a game-time implementation. Release
+switch default and icon policy remain user decisions before shipping the switch.
+
 ## VERIFY observers
 
 The existing flight-input hook records one entry after incrementing the game-step counter,
@@ -50,15 +70,15 @@ adjacent byte. The other listed counters retain their original widths.
 - A single 100-field trace starting after step 12 contained four copper-list updates and
   four subsequent step-log advances. Their VBlank intervals agreed (23, 26 and 24 fields).
 - The normal slave remains byte-identical to the pre-observer build and contains neither
-  observer marker. This proves exclusion of instrumentation, **not** equivalence with the
-  shipped 2.1 slave; W0.1 is still a separate required check.
+  observer marker. This proves exclusion of instrumentation. The separate shipped-slave
+  comparison is recorded under “Shipped/rebuilt opening comparison” below.
 - Normal, DEVELOPER and VERIFY builds have separate local outputs. Assembly listings can
   be retained with captures.
 
 Two fresh boots of the same VERIFY build produced identical instruction records, DMA
 records and screenshots for all 100 recorded fields at the initial flight checkpoint.
-This covers the initial event window; the steady, bank and dense windows and exact
-same-window three-way comparison remain required before W0.3/W0.4 are complete. The observer adds code and RAM;
+This covers the initial event window. Later sections record the completed three-way
+comparison and the remaining W0.4 scene/repeat limitations. The observer adds code and RAM;
 performance measurements must consistently use the same instrumentation build.
 
 ## Capture continuity
@@ -164,7 +184,8 @@ The versioned tools alongside these docs provide:
 Both audit commands report PENDING when no performance ranges exist; an empty audit
 is not counted as a pass. The parser has also read the original four-hunk sim fixture,
 including all 8,686 code relocations and 541 data-hunk relocations. No game bytes are
-embedded in the tools. The CUSTOM5 consumers and twin infrastructure remain unfinished.
+embedded in the tools. The CUSTOM5 consumers and original-reference infrastructure
+are described below; replacement-specific twins remain gates for their features.
 
 ## Slowed-drawing and state comparison
 

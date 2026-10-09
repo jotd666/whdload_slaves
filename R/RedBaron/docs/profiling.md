@@ -97,7 +97,8 @@ Every observed swap has a subsequent step record. Reading the latter can cross a
 boundary: of 119 A500 intervals, six have one more VBlank at the input observer and five
 have one more CIA tick; of 249 68020 intervals, those counts are two and one. All other
 records have identical VBlank/tick counts. This is the short swap-to-input interval,
-not a missing frame. Exact same-window trace/SWAP_ONLY validation remains pending.
+not a missing frame. The later squadron steps 1–2 check agrees across trace, SWAP_ONLY and the step ring;
+see `verification.md` for its exact scope.
 
 ## 68030 cache conditions
 
