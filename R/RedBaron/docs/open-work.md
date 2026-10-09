@@ -4,13 +4,13 @@ The accepted decisions and detailed requirements are in `performance-plan.md`,
 especially §6. `verification.md` is the W0 evidence ledger; `profiling.md`
 contains measured baselines. No performance optimization is enabled yet.
 
-## Current gate: finish W0
+## W0 complete; next: W1a
 
-Refresh the A500-equivalent and 14 MHz 68020 event/steady measurements on the
-final W0 VERIFY binary, then audit every W0 requirement against retained evidence.
-The final-build cached 68030 measurements are complete. The four scene repeats,
-frame-counter cross-check, capture-gap check, complete dashboard census, scoped
-game-time coupling test, framework and initial reference infrastructure are recorded.
+The final same-build A500-equivalent, A1200/14 MHz 68020 and cached 50 MHz
+68030 event/steady baselines are complete. The acceptance ledger records the
+four strict scene repeats, counter and gap checks, full dashboard census,
+scoped game-time coupling test, patch framework and initial references.
+No performance optimization is enabled. The next coherent feature is W1a.
 
 ## Implementation order after W0
 

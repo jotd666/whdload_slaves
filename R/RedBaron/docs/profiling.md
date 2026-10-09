@@ -414,8 +414,8 @@ The recorded field differences were 58, 60, 26 and 29. They are not valid elapse
 across chunk joins. The CIA-tick reconstruction gives approximately **59.2, 60.0, 27.1 and
 28.8 fields**. Do not use the earlier 1.16-fps mixed-window estimate as a steady-state rate.
 The W0 observer/breakpoint validation is documented in `verification.md`. The
-three-way same-window check passed; the remaining scene/machine cross-boot checks
-are still prerequisites for optimization claims.
+three-way same-window check passed. The final W0 sections below supersede the
+earlier scene/machine limitations; optimization claims still require feature-specific checks.
 
 ## Repeat the profiling run manually
 
@@ -444,7 +444,7 @@ packaging command is validated for its default configuration.
 For longer frame-rate measurements use `step_log.py` and `swap_fields.py`, with a start/end
 window from the approved route and at least 2,000 elapsed fields. Both read the VERIFY ring;
 `swap_fields.py` additionally uses read-only breakpoints at `sim:3154a`. It does not patch
-target memory. The full machine/window matrix is still being established in W0.
+target memory. The completed baseline matrix is summarized below.
 
 Never insert `cont`, `wait` or `shot` between captures intended to form one experiment.
 Even without those commands, each profile command has an unrecorded alignment interval:
@@ -454,8 +454,8 @@ a new `shot` advances emulated time too.
 ## Current work and limits
 
 The old next-work list is superseded by `performance-plan.md`, including its user decisions.
-W0 observers and capture-gap confirmation are implemented; the complete groundwork gate
-has not passed. See `verification.md` for checks and remaining acceptance requirements.
+W0 is complete. See `verification.md` for the acceptance ledger and evidence limits,
+and `open-work.md` for the ordered implementation work and outstanding user decisions.
 There are no new performance claims, no sound changes and no game-time implementation.
 Performance candidates remain disabled until their required models, twins, hook audits,
 off-path checks and machine/window measurements pass.
@@ -474,9 +474,9 @@ Each complete 3D pass dispatches seven aircraft models. Two fresh boots with
 screenshot bytes. Initializing host allocation removes the unused-border
 differences; every instruction/DMA record and all game pixels also match the
 preceding uninitialized capture. See `verification.md` for the evidence and
-capture setting. The baseline machine matrix remains open.
+capture setting. The final machine matrix is recorded below.
 
-## Event-containing long-window baseline rates
+## Earlier-build event-containing long-window baseline rates
 
 The complete retained ace-mission censuses also supply bounded R-event rate
 windows. The selection rule is the first complete captured swap through the
@@ -498,8 +498,7 @@ work is excluded from both the interval count and event counts. The retained
 step history checks and event-bearing steps. Different machine trajectories
 are expected because their dt values differ; these rows are not speedup
 ratios for equal world state. Per-routine event/steady costs remain separate
-measurements, and the remaining baseline-matrix work is tracked in
-`verification.md`.
+measurements. The final-build sections below supersede these historical rows.
 
 The newer cached 68030 first-draw diagnostic independently correlates ten
 logged publications with actual framebuffer DMA. Drawing starts 0.1971–0.2443
@@ -583,3 +582,78 @@ census exactly. Both boots use deterministic host allocation.
 Evidence: `w0-final-a500-entry`, `w0-final-a500-repeat` and
 `w0-final-a500-census`. These supersede the older-build A500 numbers for
 future comparisons; no optimization or improvement is claimed.
+
+
+## Final W0-build A1200 / 14 MHz 68020 baseline
+
+This run uses the specified A1200 host and A1200 Kickstart, 68EC020 at PAL
+multiplier 4 (about 14.2 MHz), 2 MB chip and 8 MB fast RAM, no slow RAM,
+and CPU/memory/blitter cycle accuracy. The saved emulator configuration
+confirms those settings. It uses the same final VERIFY binary as the A500
+and cached 68030, with CUSTOM2=0, CUSTOM5=0 and the existing BaseNC cache
+policy. Earlier A500-host 68020 runs remain compatibility controls only.
+
+The event-free **swap 80–400** interval contains 320 frames in **2,593 PAL
+fields**, **6.1606 fps**, dt 248–450. The event-containing **swap 4–241**
+interval contains 237 frames in **2,007 fields**, **5.8949 fps**, including
+20 mirror calls, eight message calls and eight dirty triggers. The census
+retains all records from its post-capture step 4 through flight exit at 509.
+
+| Window | Routine | Complete calls | Mean main cycles | Range |
+| --- | --- | ---: | ---: | --- |
+| Opening R-event, 40 fields | Mirror | 1 | 809,322 | Single complete call |
+| Opening R-event | 3D pass | 4 | 1,576,117.5 | 1,561,484–1,590,117 |
+| Opening R-event | World step | 3 | 186,790.7 | 170,387–196,207 |
+| R-steady at step 80, 40 fields | 3D pass | 5 | 1,377,861.6 | 1,316,690–1,411,958 |
+| R-steady | World step | 5 | 191,119.6 | 170,735–205,420 |
+
+A fresh boot reproduces every instruction, DMA record, accounting value and
+whole screenshot in the 40-field opening capture. The entire step-80 record,
+including beam position, matches the census. The interrupt stack is confirmed
+from the callbacks; cut calls are excluded and accepted calls restore SP.
+
+The steady trace contains 188,960 framebuffer word writes, with observable
+blitter destinations and **zero active-display conflicts**. All five copper
+publications match their 24 word values. AGA writes two words in one chip slot;
+`frames.py` now decodes that longword format as well as the ECS word format.
+The first write into the former display begins **0.9613–1.1071 fields after
+publication finishes**. This establishes the unoptimized window's margin,
+not tear freedom after future rendering changes. Regression tests require both
+formats to match every register value and reject a corrupted publication.
+
+Evidence: `w0-final-a1200-entry`, `w0-final-a1200-repeat` and
+`w0-final-a1200-census`. To reproduce the machine configuration from the local
+harness directory, source `amiga/env.sh`, then use:
+
+```sh
+MallocScribble=1 AMIGA_MODEL=A1200 KICKSTART="$KICKSTART_A1200" \
+CPU=68EC020 CHIP_KB=2048 FAST_KB=8192 \
+EXTRA_ARGS='--slow_memory=0 --uae_cpu_multiplier=4 --uae_cpu_speed=real --uae_cpu_cycle_exact=true --uae_cpu_memory_cycle_exact=true --uae_blitter_cycle_exact=true' \
+python3 tools/reach_flight.py --out tmp/prof/a1200-calibration
+```
+
+Use the resulting retained flight anchor as `BOOT_BREAK` for fresh fixed-point
+boots; anchors depend on build/layout and are not portable constants. Capture
+40 fields at entry with `capture_current.py`, or advance to step 80 with
+`step_log.py` before the steady capture. Use `dashboard_census.py` for the
+long swap windows; analysis must use the live sim base and callback stack.
+
+## Completed W0 baseline matrix
+
+All final machine rows use VERIFY SHA-256
+`2dc372da8f46efb03988c3df851fae5a3bc37edd2bb8c6020a5b8a3a6451b126`,
+30,380 bytes of text, maximum detail, Time Scale 40 and no optimization bits.
+
+| Machine | Event-free fps | Event-containing fps |
+| --- | ---: | ---: |
+| A500-equivalent, 512 KB chip + 1.5 MB slow | 1.8373 | 1.7472 |
+| A1200, 14 MHz 68020, 2 MB chip + 8 MB fast | 6.1606 | 5.8949 |
+| Cached 50 MHz 68030, 2 MB chip + 8 MB fast | 12.7438 | 12.3741 |
+
+Every rate spans at least 2,000 fields. The rows use the same source binary,
+but CPU-dependent dt produces different world trajectories; these are baseline
+rates, not equal-world-state speedup ratios. Routine costs and sample counts
+appear above. The 68030 values are inclusive wall time, whereas the other
+machines support main-context cycle attribution. Fast-CPU ownership checks
+are scoped to their actual recorded windows. No rendering, sound or game-time
+change is enabled by completion of W0.

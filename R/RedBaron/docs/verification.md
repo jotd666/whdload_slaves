@@ -2,7 +2,7 @@
 
 The work order and acceptance requirements are in `performance-plan.md`. Performance
 patches are not yet installed. This document records the observer ABI and current W0
-validation; it does not mark the complete W0 gate as passed.
+validation. The W0 groundwork gate is complete; future feature gates remain separate.
 
 ## W0 acceptance ledger
 
@@ -14,7 +14,7 @@ original scope. No rendering optimization is enabled.
 | W0.1 rebuilt equivalence | Passed at the fixed opening checkpoint | None; differing chip storage is classified below |
 | W0.2 continuity | Passed | Manual profile packaging also passed its complete 100-field rerun; see `profiling.md` |
 | W0.3 counters | Passed | Trace, independent swap breakpoints and ring agree on the squadron steps 1–2 interval |
-| W0.4 scenes and machines | Open | All four scenes pass strict cross-boot comparison on the continuity machine; cached 68030 event/steady rates and phase-checked routine wall times complete; reconcile the full baseline matrix/build provenance before closing the gate |
+| W0.4 scenes and machines | Passed | Four strict scene repeats; final same-build A500/A1200/cached-68030 event and steady rates/costs; measured first-write ownership on both faster CPUs |
 | W0.5 event census | Passed for the complete baseline mission | Top-text branch had zero occurrences; no coverage claim for that branch |
 | W0.6 game time | Passed for the specified clamped step-20 test | Timestamp difference classified by original-code reference audit; Time Scale 0/40/60 motion model and nominal elapsed-time reference verified; broader W6 experiments remain separate |
 | W0.7 framework | Passed | Empty performance-range audits remain explicitly pending until a feature declares ranges |
@@ -606,3 +606,33 @@ negative control. The old eight potential first-fill conflicts without a
 matching trace remain unclassified; they are not silently promoted to
 confirmed tearing. The new correlated diagnostic completes this W0 check
 for the explicit cached machine, alongside the existing 68020 trace.
+
+
+## Final W0 acceptance audit
+
+The final matrix in `profiling.md` closes W0.4. A500 and A1200 fresh boots
+reproduce their opening traces exactly; their step-40/80 records match the
+full censuses. The cached 68030 has phase-checked routine wall-time samples,
+a separate first-draw/DMA correlation and its documented cross-boot observer
+check. Four scene fixtures independently pass strict full-record/full-PNG
+comparison on the continuity machine. Historical incomplete or rejected
+runs above remain evidence limits, not outstanding W0 tasks.
+
+The A1200 steady trace accounts for all five publications, including AGA's
+32-bit chip accesses, and measures first writes against actual copper pickup.
+No active-display conflicts occur in that trace. The cached 68030 diagnostic
+finds behind-raster ownership violations; it does not establish visible tears.
+Neither result substitutes for checking the future P1 implementation.
+
+All three final build modes assemble. Normal and DEVELOPER outputs contain
+none of the VERIFY, step-ring, paint or original-copy markers. The final
+host suite passes 30 tests, including word/longword publication recognition
+and rejection of corrupted values. Runtime original copies and the mirror,
+projection and motion references retain their separately documented checks.
+The final audit also confirms target-game-only changes, ignored local binary
+evidence, personal unsigned commits and disabled hooks.
+
+W0.1–W0.8 are complete within the ledger's explicit scopes. Uncovered top-text
+census behavior, replacement-specific twins/range audits, broader W6 physics
+experiments, release switch/icon decisions and release packaging are retained
+in `open-work.md`; none is silently counted as verified by this completion.
