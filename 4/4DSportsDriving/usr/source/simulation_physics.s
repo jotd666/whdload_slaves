@@ -1,5 +1,5 @@
 ; A4000 arithmetic kernels. Development-only until all physics/replay gates pass.
-; No native mode hooks yet. Per-vehicle fractions must join the replay extension.
+; Selected development hooks exist. Fractions must join the replay extension.
 ;
 ; Signed rate conversion: d0.w is a nominal A2500 increment; (a0).w is a
 ; signed numerator remainder (-4..4). Return d0.w at 50 Hz, update remainder.
@@ -205,4 +205,21 @@ sim_extension_50:
  clr.w (a0)
 .done:
  movem.l (sp)+,d1-d2
+ rts
+
+; Nominal 20 Hz gear-transition engine decrement is 40: exactly 16 at 50 Hz.
+; Preserve native word wrap here; the existing engine helper subsequently
+; applies its car-spec minimum. d0.w engine state -> d0.w updated engine state.
+sim_engine_decay_50:
+ sub.w #16,d0
+ rts
+
+; Unsigned nominal A2500 duration -> whole 50 Hz ticks, ceil(5*n/2).
+; Round deadlines UP: a 250 ms delay lasts 260 ms, never 240 ms. Known C6
+; assignments 5/10/30 become 13/25/75 and fit the native byte. Return d0.l;
+; the general arithmetic accepts a word, but callers must check storage width.
+sim_duration_20_to_50:
+ mulu #5,d0
+ addq.l #1,d0
+ lsr.l #1,d0
  rts

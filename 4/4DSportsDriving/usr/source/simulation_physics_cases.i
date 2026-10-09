@@ -245,3 +245,35 @@ sim_extension_cases:
  dc.w 384,1,4,384,0
  dc.w 380,20,0,384,0
 sim_extension_cases_end:
+
+; Engine: five 50 Hz steps must equal TWO original subtract-40 word updates.
+sim_engine_cases:
+ dc.w 0,$ffb0
+ dc.w 16,$ffc0
+ dc.w 79,$ffff
+ dc.w 80,0
+ dc.w 800,720
+ dc.w 6000,5920
+ dc.w 65535,65455
+sim_engine_cases_end:
+; Duration input word, padding, expected long. Includes byte-storage boundary.
+sim_duration_cases:
+ dc.w 0,0
+ dc.l 0
+ dc.w 1,0
+ dc.l 3
+ dc.w 2,0
+ dc.l 5
+ dc.w 5,0
+ dc.l 13
+ dc.w 10,0
+ dc.l 25
+ dc.w 30,0
+ dc.l 75
+ dc.w 102,0
+ dc.l 255
+ dc.w 103,0
+ dc.l 258
+ dc.w 65535,0
+ dc.l 163838
+sim_duration_cases_end:

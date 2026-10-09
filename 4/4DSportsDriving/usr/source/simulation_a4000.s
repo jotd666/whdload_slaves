@@ -272,13 +272,17 @@ sim_a4000_private: dcb.b SIM_PRIVATE_BYTES,0
 
  even
  dc.b "4DA4STAT"
- dc.w 2,6
+ dc.w 3,10
 sim_a4000_gear_calls: dc.l 0
 sim_a4000_wheel_calls: dc.l 0
 sim_a4000_contact_calls: dc.l 0
 sim_a4000_return_above_calls: dc.l 0
 sim_a4000_return_below_calls: dc.l 0
 sim_a4000_bias_calls: dc.l 0
+sim_a4000_engine_calls: dc.l 0
+sim_a4000_delay5_calls: dc.l 0
+sim_a4000_delay10_calls: dc.l 0
+sim_a4000_delay30_calls: dc.l 0
 
 ; $10234..$10248 and $1024A..$10260, within native suspension $10012.
 ; Preserve its geometry/penetration branches and cap at extension 384. Both
@@ -382,4 +386,52 @@ sim_a4000_suspension_return:
  move.w d3,-2(a5)
 .done:
  movem.l (sp)+,d0-d3/a0-a2
+ rts
+
+; $F4BC..$F4CA: Normal has already taken its separate 80-unit branch.
+; Preserve A2500's 40; at 50 Hz change only this engine-state decrement to 16.
+sim_a4000_engine_decay:
+ move.l 12(a5),a0
+ adda.l #$22,a0
+ cmp.w #50,-$15fa(a4)
+ beq .new
+ sub.w #40,(a0)
+ rts
+.new:
+ movem.l d0/a1,-(sp)
+ lea sim_a4000_engine_calls(pc),a1
+ addq.l #1,(a1)
+ move.w (a0),d0
+ bsr sim_engine_decay_50
+ move.w d0,(a0)
+ movem.l (sp)+,d0/a1
+ rts
+
+; All nonzero C6 assignments. Other native users only test/decrement the byte;
+; zeroing sites remain valid. Preserve registers and incoming X like MOVE.B.
+sim_a4000_delay5:
+ movem.l d0-d2/a1,-(sp)
+ moveq #5,d0
+ lea sim_a4000_delay5_calls(pc),a1
+ bra sim_a4000_delay_store
+sim_a4000_delay10:
+ movem.l d0-d2/a1,-(sp)
+ moveq #10,d0
+ lea sim_a4000_delay10_calls(pc),a1
+ bra sim_a4000_delay_store
+sim_a4000_delay30:
+ movem.l d0-d2/a1,-(sp)
+ moveq #30,d0
+ lea sim_a4000_delay30_calls(pc),a1
+sim_a4000_delay_store:
+ moveq #0,d2
+ addx.b d2,d2
+ cmp.w #50,-$15fa(a4)
+ bne .store
+ addq.l #1,(a1)
+ bsr sim_duration_20_to_50
+.store:
+ lsr.b #1,d2
+ move.b d0,$c6(a0)
+ movem.l (sp)+,d0-d2/a1
  rts

@@ -286,6 +286,11 @@ pl_main
     PL_PSS $1024A,sim_a4000_extension_variable,16
     PL_PSS $10030,sim_a4000_suspension_bias,158
     PL_PSS $1011C,sim_a4000_suspension_return,256
+    PL_PSS $F4BC,sim_a4000_engine_decay,8
+    PL_PS $F5E4,sim_a4000_delay5
+    PL_PS $F6CA,sim_a4000_delay5
+    PL_PS $F784,sim_a4000_delay30
+    PL_PS $F7A6,sim_a4000_delay10
     ENDC
     IFD SIM_SCHEDULE
     PL_PSS $70E0,sim_schedule_poll,2
