@@ -200,11 +200,62 @@ sim_physics_selftest:
  addq.l #1,(a0)
  lea 12(a2),a2
  dbra d6,.skid
+ lea sim_spin_filter_cases(pc),a2
+ move.w #(sim_spin_filter_cases_end-sim_spin_filter_cases)/24-1,d6
+.spin_filter:
+ lea sim_physics_test_fraction(pc),a0
+ move.w 8(a2),(a0)
+ move.l 4(a2),4(a0)
+ move.w (a2),d0
+ moveq #0,d5
+ moveq #4,d7
+.spin_filter_five:
+ move.w 2(a2),d1
+ bsr sim_spin_filter_50
+ add.l d1,d5
+ dbra d7,.spin_filter_five
+ cmp.w 12(a2),d0
+ bne .failed
+ move.w (a0),d0
+ cmp.w 14(a2),d0
+ bne .failed
+ move.l 4(a0),d0
+ cmp.l 16(a2),d0
+ bne .failed
+ cmp.l 20(a2),d5
+ bne .failed
+ lea sim_physics_passed(pc),a0
+ addq.l #1,(a0)
+ lea 24(a2),a2
+ dbra d6,.spin_filter
+ lea sim_spin_held_cases(pc),a2
+ move.w #(sim_spin_held_cases_end-sim_spin_held_cases)/12-1,d6
+.spin_held:
+ lea sim_physics_test_fraction(pc),a0
+ move.w 2(a2),(a0)
+ move.l 4(a2),4(a0)
+ move.w (a2),d0
+ bsr sim_spin_step_50
+ cmp.w 8(a2),d0
+ bne .failed
+ move.w (a0),d0
+ cmp.w 10(a2),d0
+ bne .failed
+ move.l 4(a0),d0
+ cmp.l 4(a2),d0
+ bne .failed
+ lea sim_physics_passed(pc),a0
+ addq.l #1,(a0)
+ lea 12(a2),a2
+ dbra d6,.spin_held
  IFD SIM_A4000
  bsr sim_delay_hooks_selftest
  tst.w d0
  bne .failed
  bsr sim_spin_hooks_selftest
+ tst.w d0
+ bne .failed
+ bsr sim_spin_resets_selftest
  tst.w d0
  bne .failed
  ENDC
@@ -218,15 +269,15 @@ sim_physics_selftest:
  even
  IFD SIM_A4000
 SIM_DELAY_HOOK_TESTS = 18
-SIM_SPIN_HOOK_TESTS = 135
+SIM_SPIN_HOOK_TESTS = 183
  ELSE
 SIM_DELAY_HOOK_TESTS = 0
 SIM_SPIN_HOOK_TESTS = 0
  ENDC
  dc.b "4DPHYTST"
- dc.w 7,(sim_rate_cases_end-sim_rate_cases)/8+(sim_steering_cases_end-sim_steering_cases)/14+(sim_distance_cases_end-sim_distance_cases)/8+(sim_approach_cases_end-sim_approach_cases)/12+(sim_airborne_cases_end-sim_airborne_cases)/12+(sim_extension_cases_end-sim_extension_cases)/10+(sim_engine_cases_end-sim_engine_cases)/4+(sim_duration_cases_end-sim_duration_cases)/8+(sim_terrain_cases_end-sim_terrain_cases)/10+(sim_skid_cases_end-sim_skid_cases)/12+SIM_DELAY_HOOK_TESTS+SIM_SPIN_HOOK_TESTS
+ dc.w 10,(sim_rate_cases_end-sim_rate_cases)/8+(sim_steering_cases_end-sim_steering_cases)/14+(sim_distance_cases_end-sim_distance_cases)/8+(sim_approach_cases_end-sim_approach_cases)/12+(sim_airborne_cases_end-sim_airborne_cases)/12+(sim_extension_cases_end-sim_extension_cases)/10+(sim_engine_cases_end-sim_engine_cases)/4+(sim_duration_cases_end-sim_duration_cases)/8+(sim_terrain_cases_end-sim_terrain_cases)/10+(sim_skid_cases_end-sim_skid_cases)/12+(sim_spin_filter_cases_end-sim_spin_filter_cases)/24+(sim_spin_held_cases_end-sim_spin_held_cases)/12+SIM_DELAY_HOOK_TESTS+SIM_SPIN_HOOK_TESTS
 sim_physics_passed: dc.l 0
-sim_physics_test_fraction: dc.w 0,0
+sim_physics_test_fraction: dc.w 0,0,0,0
 sim_physics_test_position: dc.l 0
  include "simulation_physics_cases.i"
 
@@ -439,15 +490,147 @@ sim_spin_hooks_selftest:
  rts
  even
 sim_spin_test_frame: dc.l 0,0,0
-; Nominal, five expected displacements, five expected fifths remainders.
+; Nominal, five expected displacements, five expected /1280 remainders.
 sim_spin_hook_cases:
  dc.w 0,0,0,0,0,0,0,0,0,0,0
- dc.w 1,0,0,1,0,1,2,4,1,3,0
- dc.w -1,0,0,-1,0,-1,-2,-4,-1,-3,0
- dc.w 7,2,3,3,3,3,4,3,2,1,0
- dc.w -7,-2,-3,-3,-3,-3,-4,-3,-2,-1,0
- dc.w 1023,409,409,409,409,410,1,2,3,4,0
- dc.w -1023,-409,-409,-409,-409,-410,-1,-2,-3,-4,0
- dc.w 32767,13106,13107,13107,13107,13107,4,3,2,1,0
- dc.w -32768,-13107,-13107,-13107,-13107,-13108,-1,-2,-3,-4,0
+ dc.w 1,0,0,1,0,1,512,1024,256,768,0
+ dc.w -1,0,0,-1,0,-1,-512,-1024,-256,-768,0
+ dc.w 7,2,3,3,3,3,1024,768,512,256,0
+ dc.w -7,-2,-3,-3,-3,-3,-1024,-768,-512,-256,0
+ dc.w 1023,409,409,409,409,410,256,512,768,1024,0
+ dc.w -1023,-409,-409,-409,-409,-410,-256,-512,-768,-1024,0
+ dc.w 32767,13106,13107,13107,13107,13107,1024,768,512,256,0
+ dc.w -32768,-13107,-13107,-13107,-13107,-13108,-256,-512,-768,-1024,0
+ ENDC
+
+ IFD SIM_A4000
+; Inactive/airborne cancellation and the actual-step slip gate. These checks
+; cover pending fractions and differing nominal/actual zero states directly.
+sim_spin_resets_selftest:
+ movem.l d1-a6,-(sp)
+ lea sim_delay_test_mode(pc),a4
+ adda.l #$15fa,a4
+ lea sim_spin_test_frame(pc),a5
+ lea sim_delay_test_car(pc),a0
+ move.l a0,8(a5)
+ lea sim_a4000_private(pc),a6
+ lea sim_spin_reset_cases(pc),a2
+ moveq #23,d6
+.reset:
+ move.w (a2),-$15fa(a4)
+ move.l 8(a5),a0
+ move.w 2(a2),$3e(a0)
+ move.b 5(a2),$c1(a0)
+ move.l #12345,56(a6)
+ tst.w 6(a2)
+ bne .inactive
+ bsr sim_a4000_spin_begin
+ bra .reset_check
+.inactive:
+ bsr sim_a4000_spin_inactive
+.reset_check:
+ moveq #0,d0
+ move.w 8(a2),d0
+ cmp.l 56(a6),d0
+ bne .failed
+ lea sim_physics_passed(pc),a0
+ addq.l #1,(a0)
+ lea 10(a2),a2
+ dbra d6,.reset
+ lea sim_spin_gate_cases(pc),a2
+ moveq #23,d6
+.gate:
+ move.w (a2),-$15fa(a4)
+ move.l 8(a5),a0
+ move.w 2(a2),$3e(a0)
+ move.w 4(a2),54(a6)
+ move.w #123,52(a6)
+ move.w 6(a2),d2
+ lsr.w #1,d2
+ move.l #$12345678,d0
+ bsr sim_a4000_spin_slip_test
+ seq d3
+ moveq #0,d2
+ addx.w d2,d2
+ cmp.w 6(a2),d2
+ bne .failed
+ cmp.l #$12345678,d0
+ bne .failed
+ move.w 2(a2),d1
+ cmp.w #50,(a2)
+ bne .gate_expected
+ move.w 4(a2),d1
+.gate_expected:
+ tst.w d1
+ seq d2
+ cmp.b d2,d3
+ bne .failed
+ cmp.w #123,52(a6)
+ bne .failed
+ lea sim_physics_passed(pc),a0
+ addq.l #1,(a0)
+ addq.l #8,a2
+ dbra d6,.gate
+ clr.l 52(a6)
+ clr.l 56(a6)
+ moveq #0,d0
+ bra .done
+.failed:
+ moveq #1,d0
+.done:
+ movem.l (sp)+,d1-a6
+ rts
+ even
+; mode,nominal,contact,which(0=begin/1=inactive),expected pending carry.
+sim_spin_reset_cases:
+ dc.w 10,0,0,0,12345
+ dc.w 10,0,0,1,12345
+ dc.w 10,0,1,0,12345
+ dc.w 10,0,1,1,12345
+ dc.w 10,1,0,0,12345
+ dc.w 10,1,0,1,12345
+ dc.w 10,1,1,0,12345
+ dc.w 10,1,1,1,12345
+ dc.w 20,0,0,0,12345
+ dc.w 20,0,0,1,12345
+ dc.w 20,0,1,0,12345
+ dc.w 20,0,1,1,12345
+ dc.w 20,1,0,0,12345
+ dc.w 20,1,0,1,12345
+ dc.w 20,1,1,0,12345
+ dc.w 20,1,1,1,12345
+ dc.w 50,0,0,0,0
+ dc.w 50,0,0,1,0
+ dc.w 50,0,1,0,12345
+ dc.w 50,0,1,1,0
+ dc.w 50,1,0,0,12345
+ dc.w 50,1,0,1,12345
+ dc.w 50,1,1,0,12345
+ dc.w 50,1,1,1,12345
+; mode,nominal,cached actual step,incoming X.
+sim_spin_gate_cases:
+ dc.w 10,0,0,0
+ dc.w 10,0,0,1
+ dc.w 10,0,1,0
+ dc.w 10,0,1,1
+ dc.w 10,1,0,0
+ dc.w 10,1,0,1
+ dc.w 10,1,1,0
+ dc.w 10,1,1,1
+ dc.w 20,0,0,0
+ dc.w 20,0,0,1
+ dc.w 20,0,1,0
+ dc.w 20,0,1,1
+ dc.w 20,1,0,0
+ dc.w 20,1,0,1
+ dc.w 20,1,1,0
+ dc.w 20,1,1,1
+ dc.w 50,0,0,0
+ dc.w 50,0,0,1
+ dc.w 50,0,1,0
+ dc.w 50,0,1,1
+ dc.w 50,1,0,0
+ dc.w 50,1,0,1
+ dc.w 50,1,1,0
+ dc.w 50,1,1,1
  ENDC

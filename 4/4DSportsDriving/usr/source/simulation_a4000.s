@@ -25,8 +25,8 @@ sim_a4000_arm:
 ; steering +0, acceleration +2, distance +4, gear +6, wheel pairs +8..23.
 ; Suspension fractions: extension +24..31, return +32..39, bias +40..47.
 ; Terrain loss uses an unsigned Q16 carry at +48; skid loss uses fifths at +50.
-; Spin displacement: fifths at +52, cached common step at +54 ($8000=unset).
-; Native +$3E remains nominal angular rate; its damping is not yet converted.
+; Spin displacement: /1280 carry at +52, cached step at +54 ($8000=unset).
+; Nominal half-filter change uses signed Q16 carry +56..59.
 sim_a4000_car:
  lea -$85e(a4),a0
  cmpa.l a0,a1
@@ -277,12 +277,12 @@ sim_native_wheel: dcb.w 148/2,0
  rts
  even
  dc.b "4DA4PHYS"
- dc.w 1,SIM_PRIVATE_BYTES
+ dc.w 2,SIM_PRIVATE_BYTES
 sim_a4000_private: dcb.b SIM_PRIVATE_BYTES,0
 
  even
  dc.b "4DA4STAT"
- dc.w 6,16
+ dc.w 7,17
 sim_a4000_gear_calls: dc.l 0
 sim_a4000_wheel_calls: dc.l 0
 sim_a4000_contact_calls: dc.l 0
@@ -296,6 +296,7 @@ sim_a4000_delay30_calls: dc.l 0
 sim_a4000_terrain_calls: dc.l 0,0,0,0
 sim_a4000_skid_calls: dc.l 0
 sim_a4000_spin_step_calls: dc.l 0
+sim_a4000_spin_filter_calls: dc.l 0
 
 ; $10234..$10248 and $1024A..$10260, within native suspension $10012.
 ; Preserve its geometry/penetration branches and cap at extension 384. Both
@@ -508,6 +509,13 @@ sim_a4000_spin_begin:
  move.l a0,a1
  bsr sim_a4000_car
  move.w #$8000,54(a0)
+ ; A sub-unit spin request cannot survive losing contact before spin starts.
+ tst.b $c1(a1)
+ bne .keep_filter
+ tst.w $3e(a1)
+ bne .keep_filter
+ clr.l 56(a0)
+.keep_filter:
  movem.l (sp)+,d0/a0-a1
 .native:
  tst.b $c1(a0)
@@ -530,7 +538,7 @@ sim_a4000_spin_step:
  move.w $3e(a1),d0
  beq .stopped
  lea 52(a0),a0
- bsr sim_rate_20_to_50
+ bsr sim_spin_step_50
  move.w d0,2(a0)
  lea sim_a4000_spin_step_calls(pc),a1
  addq.l #1,(a1)
@@ -578,4 +586,68 @@ sim_a4000_spin_rotate:
  move.w $3e(a0),d0
 .negate:
  neg.w d0
+ rts
+
+; $FBEC..$FC0C and $FC2A..$FC4A have identical native ADD/halve blocks.
+; Command is the quotient already calculated by the native DIVS #14.
+sim_a4000_spin_filter:
+ cmp.w #50,-$15fa(a4)
+ bne .native
+ movem.l d1/a1,-(sp)
+ move.w d0,d1
+ move.l 8(a5),a1
+ bsr sim_a4000_car
+ lea 52(a0),a0
+ move.w $3e(a1),d0
+ bsr sim_spin_filter_50
+ move.w d1,2(a0)
+ lea sim_a4000_spin_filter_calls(pc),a0
+ addq.l #1,(a0)
+ movem.l (sp)+,d1/a1
+ move.l 8(a5),a0
+ adda.l #$3e,a0
+ move.w d0,(a0)
+ rts
+.native:
+ move.l 8(a5),a0
+ adda.l #$3e,a0
+ add.w d0,(a0)
+ move.l 8(a5),a0
+ adda.l #$3e,a0
+ move.w (a0),d0
+ ext.l d0
+ divs #2,d0
+ move.w d0,(a0)
+ rts
+
+; $FC10..$FC18 is reached only below the force threshold. If native nominal
+; spin is zero, discard any pending fractional request before its BEQ gate.
+sim_a4000_spin_inactive:
+ move.l 8(a5),a0
+ cmp.w #50,-$15fa(a4)
+ bne .native
+ tst.w $3e(a0)
+ bne .native
+ movem.l a0-a1,-(sp)
+ move.l a0,a1
+ bsr sim_a4000_car
+ clr.l 56(a0)
+ movem.l (sp)+,a0-a1
+.native:
+ tst.w $3e(a0)
+ rts
+
+; $FD2E..$FD36: gate the slip consumer on the same actual angle step as the
+; body matrix. A fractional filter can produce a step while nominal rate is 0.
+sim_a4000_spin_slip_test:
+ move.l 8(a5),a0
+ cmp.w #50,-$15fa(a4)
+ bne .native
+ movem.l d0,-(sp)
+ bsr sim_a4000_spin_step
+ tst.w d0
+ movem.l (sp)+,d0
+ rts
+.native:
+ tst.w $3e(a0)
  rts

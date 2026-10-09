@@ -154,6 +154,23 @@ SIM_FIXTURE_TURN_SECONDS = 3
  bhi .offroad_input
  moveq #5,d1
 .offroad_input:
+ IFD SIM_FIXTURE_RECOVERY
+ ; Countersteer 1.5 seconds after the turn starts, then release at 2.5 s.
+ ; All boundaries are exact in 10, 20 and 50 Hz modes.
+ move.w -$15fa(a4),d0
+ mulu #2*SIM_FIXTURE_TURN_SECONDS+3,d0
+ lsr.l #1,d0
+ cmp.w -$940(a4),d0
+ bhi .recovery_input
+ moveq #9,d1
+ move.w -$15fa(a4),d0
+ mulu #2*SIM_FIXTURE_TURN_SECONDS+5,d0
+ lsr.l #1,d0
+ cmp.w -$940(a4),d0
+ bhi .recovery_input
+ moveq #1,d1
+.recovery_input:
+ ENDC
  ENDC
  IFD SIM_FIXTURE_GEARS
  ; One native upshift input at 0.5s, one downshift at 2.0s.

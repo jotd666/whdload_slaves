@@ -275,3 +275,132 @@ sim_skid_loss_50:
 .done:
  movem.l (sp)+,d1-d3
  rts
+
+; Quantized native half filter, coupled to its post-update angle integration.
+; n=trunc0(word(a+q)/2), rho=(1/2)^(2/5), alpha=2*(1-rho).
+; Freeze the affine target 2*n-a over this step: nominal rate advances using
+; alpha*(n-a)-(1-rho)*R, where R is its carried Q16 fraction.
+; Native integrates the ENDPOINT rate. Its fractional-step equivalent is
+; h*a_new+k*(a_new-a_old), k=h/alpha/(1-1/2)-1/(1-1/2)+1-h.
+; h=2/5; k=0.251925184. Angle uses denominator 1280 and round(1280*k)=322.
+; This is physical integration, not interpolation of rendered states.
+;
+; d0.w old nominal rate, d1.w command; a0 -> angle fraction.w, cache.w,
+; nominal Q16 fraction.l. Return d0.l nominal rate, d1.l actual angle step.
+; Preserve d2-d7. Carry clears at native integer fixed points/stopped spin.
+; Separate word products retain full differences across native ADD.W wraps.
+sim_spin_filter_50:
+ movem.l d2-d7,-(sp)
+ move.w d0,d3
+ add.w d0,d1
+ ext.l d1
+ divs #2,d1
+ ext.l d1
+ move.l d1,d7             ; native quantized endpoint
+ move.w d1,d2
+ muls #31738,d2
+ muls #31738,d0
+ sub.l d0,d2
+ move.l 4(a0),d5          ; old signed Q16 fraction
+ move.l d5,d6
+ bpl .beta_positive
+ neg.l d6
+.beta_positive:
+ mulu #15869,d6
+ tst.l d5
+ bpl .beta_signed
+ neg.l d6
+.beta_signed:
+ bsr sim_spin_trunc_q16
+ sub.l d6,d2
+ add.l d5,d2
+ move.l d2,d6
+ bsr sim_spin_trunc_q16
+ move.w d6,d0
+ add.w d3,d0
+ cmp.w d7,d0
+ beq .target
+ swap d6
+ clr.w d6
+ sub.l d6,d2
+ bra .rate_ready
+.target:
+ moveq #0,d2
+.rate_ready:
+ move.l d2,4(a0)
+ ; Angle numerator: (512+322)*new -322*old, including both rate fractions.
+ move.w d0,d1
+ muls #834,d1
+ move.w d3,d4
+ muls #322,d4
+ sub.l d4,d1
+ move.l d2,d4
+ bpl .new_fraction_positive
+ neg.l d4
+.new_fraction_positive:
+ mulu #834,d4
+ tst.l d2
+ bpl .new_fraction_signed
+ neg.l d4
+.new_fraction_signed:
+ move.l d5,d6
+ bpl .old_fraction_positive
+ neg.l d6
+.old_fraction_positive:
+ mulu #322,d6
+ tst.l d5
+ bpl .old_fraction_signed
+ neg.l d6
+.old_fraction_signed:
+ sub.l d6,d4
+ move.l d4,d6
+ bsr sim_spin_trunc_q16
+ add.l d6,d1
+ move.w (a0),d4
+ ext.l d4
+ add.l d4,d1
+ divs #1280,d1
+ swap d1
+ move.w d1,(a0)
+ swap d1
+ ext.l d1
+ tst.w d0
+ bne .done
+ tst.w d7
+ bne .done
+ clr.w (a0)               ; no residual rotation after the native stop gate
+ moveq #0,d1
+.done:
+ ext.l d0
+ movem.l (sp)+,d2-d7
+ rts
+
+; Signed long Q16 -> signed integer in D6, truncating toward zero.
+sim_spin_trunc_q16:
+ tst.l d6
+ bpl .positive
+ add.l #65535,d6
+.positive:
+ swap d6
+ ext.l d6
+ rts
+
+; Held nominal rate (airborne/alternate path) in the same angle-carry units.
+; d0.w rate, a0 -> angle remainder, cache, signed Q16 rate fraction. Scratch D1.
+sim_spin_step_50:
+ muls #512,d0
+ move.l 4(a0),d1
+ bpl .positive_fraction
+ add.l #127,d1
+.positive_fraction:
+ asr.l #7,d1             ; 512/65536 times the held fractional nominal rate
+ add.l d1,d0
+ move.w (a0),d1
+ ext.l d1
+ add.l d1,d0
+ divs #1280,d0
+ swap d0
+ move.w d0,(a0)
+ swap d0
+ ext.l d0
+ rts
