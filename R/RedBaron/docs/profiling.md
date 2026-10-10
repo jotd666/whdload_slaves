@@ -61,7 +61,10 @@ that pair does not establish a steady-flight FPS gain. The per-routine check rej
 7.81 → 9.31 µs; the median also regresses). Dot, clipping and vertex routines
 improve. The player policy retains original G1 on 030 and conservatively on
 040/060; developer/VERIFY testing uses CUSTOM2=56 for that W2 bundle, whose
-combined check is pending. A500/68020 use 60. The release mask remains zero.
+early-flight check gives 48.8394 ms/pass versus 49.7041 OFF at matching
+accepted steps (−1.74%). Its long window averages 12.9043 FPS with no dashboard
+events, but the different OFF history still precludes a clean FPS gain claim.
+A500/68020 use 60. The final event/bank/dense cost matrix remains open. The release mask remains zero.
 
 ## Running the W2 profile manually
 

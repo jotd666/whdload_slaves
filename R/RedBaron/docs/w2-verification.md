@@ -3,7 +3,7 @@
 G1 core, G2, G3 32-bit misses and G4 are implemented in developer/VERIFY builds.
 Combined CPU results and explicit low-value deferrals appear after the individual
 implementation records below. The cached-CPU per-routine check rejects G1 there; verification of the
-remaining G2/G3/G4 bundle is pending. Sound, game-time rules and deferred W1 work are unchanged; player
+remaining G2/G3/G4 bundle now passes its combined check. Sound, game-time rules and deferred W1 work are unchanged; player
 enablement remains a separate gate.
 
 ## G1 projection core
@@ -393,6 +393,40 @@ on unmeasured 68040/68060, alongside its existing W1a exclusion. The release
 mask is still zero; this defines the policy for later promotion rather than
 silently enabling the switch. DEVELOPER/VERIFY deliberately retain explicit
 bits for reproduction. Use CUSTOM2=56 for the candidate cached-CPU W2 bundle
-(G2/G3/G4, original G1); its combined check is pending. A500/68020 retain 60.
+(G2/G3/G4, original G1); its combined result follows below. A500/68020 retain 60.
 The normal build compiles to 9,094 text bytes. The conditional policy change
 does not change the frozen VERIFY binary.
+
+### Reduced cached-CPU bundle
+
+CUSTOM2=56 (G2/G3/G4, original projection) completes the same-build cached-68030
+check in `w2-combined-030-56`. At the same five phase-safe early-flight steps
+9–13, mean 3D-pass wall time is **48.8394 ms**, against **49.7041 ms** OFF and
+49.0084 ms with all four bits. The reduced bundle is 1.74% below OFF in this
+short sample; it is not a full-frame FPS claim. Mean routine times are 7.6591 µs
+for the unchanged projection wrapper, 2.7998 µs dot, 7.3233 µs clip and
+6.8291 µs vertex wrapper. The original projection bytes are independently
+confirmed by the disabled-range check.
+
+Swaps 120–660 take 2,089 fields for 540 intervals (12.9043 observed FPS), with
+no dashboard events. As above, OFF's different combat/death history prevents a
+clean FPS-speedup claim. The 20-field DMA sample has observable ownership and
+zero detected conflicts; four unselected ranges retain original bytes. The
+retained VERIFY binary hash remains unchanged. The CPU selection is therefore
+60 for A500/68020 and 56 for cached 68030 in developer comparisons; unmeasured
+040/060 player policy conservatively keeps original projection.
+
+### Completion audit still open
+
+The implemented paths have original-checked models, exhaustive/random host
+checks as appropriate, synthetic/live twins, sim-v1-only byte-checked hooks and
+CUSTOM-off evidence. Combined banking/dense twins pass on all three CPUs.
+Steady timing and CPU-specific selection have now been measured on all three.
+Per-feature A500 bank costs also exist in the earlier records.
+
+The plan's full fixed-window **cost** matrix is not yet complete for the final
+bundle: event/banking/dense costs across all CPUs still need a consolidated
+same-build check. Existing short steady samples must not stand in for those
+windows. This does not invalidate the scoped results above, but W2 is not yet
+marked complete. Normal player enablement remains separate, with release mask
+zero and switch/default/icon decisions unchanged.
