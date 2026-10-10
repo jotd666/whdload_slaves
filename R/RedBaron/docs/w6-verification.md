@@ -1841,3 +1841,71 @@ contains DMA but zero instruction records in this cached-68030 mode. It supplies
 no evidence about world memory accesses and must not be used to classify the
 remaining globals. Use an instruction-recording CPU configuration for that audit.
 The owned emulator was quit. No game/slave code changed for this comparison.
+
+
+### Shared display-list order is simulation-visible
+
+An exploratory operand scan of 21 complete world updates in the retained
+A500 `w6-capacity-a500-full/capacity-0` instruction trace identified accesses to
+`h3:07dc8` during world registration/removal. This is older-build evidence used
+to locate a dependency, not current-build equivalence or a complete memory-access
+proof: the exploratory decoder reports unsupported indexed operands explicitly.
+Native inspection confirms the dependency. `sim:0fdf6–0fe04` increments the count
+at `h3:03fa8` and appends a pointer to `h3:07dc8`; `sim:0ff22–0ff5a` searches the
+same active prefix, decrements its count and replaces a removed entry with the
+last pointer. Registration checks the 500-entry capacity at `sim:0fdc6`.
+
+The outer drawing path also writes that count at `sim:006e0`, `00700`, `0071a`
+and `00738`, and reorders the same table. It is distinct from the primary registry
+at `h3:0859e`/`085a0`, which the earlier explicit registry check covered. Re-reading
+the `b6bc9c01…` ordinary/no-render snapshots finds differing active display-list
+order at 33 of 40 checkpoints, starting at tick 6. Counts match in those pairs,
+but 16–30 active pointer positions differ. The raw h3 report already retained
+these bytes; they were not proven harmless. No actual changed collision or AI
+outcome is claimed from that short run.
+
+VERIFY candidate
+`f92e9eeded113644cac9d79b5addc08d988ae51aab984f2bbd3686887a5123ee`
+now leases the shared count and active pointer prefix for the entire outer draw.
+It rejects a count above 500, saves the prefix before native drawing and restores
+both order and count on return. Inactive tail bytes remain explicit in the raw
+inventory: registration unconditionally writes the appended slot before returning,
+and removal reads only entries below the current count. No simulation
+object is removed merely to make the report match. The existing VERIFY bit-13
+owner and sim-v1 installation checks control these additions.
+
+Two native copy cases exercise zero and 500 entries, with a guard after the
+500-entry destination (`time_present_list_result=2`). Four real draws in
+`tmp/dev/tmp/prof/w6-list-owner-030/` capture the table before the restore routine:
+all four demonstrably change it, then return the original active order and count.
+The restored counts are 53, 60, 60 and 60 at completed ticks 39–42. All 133 poses,
+the terrain cache controls and funded clock state also restore exactly; 108 visual
+poses change. `render_phase.py` now checks those properties independently, while
+`world_comparison.py` reports shared-list counts/order explicitly at each world
+boundary, in addition to the primary registry and full raw h3 inventory.
+
+All 170 host tests pass. The larger VERIFY data area requires a full-range address
+for the existing delayed-draw mismatch diagnostic; only that diagnostic reference
+changes in the observer. Native core/input/pose/phase counts remain 426/512/638/133,
+both terrain-store cases and the cache-control case pass, and the live hook audit
+retains 54 selected timing/pacing targets and ten disabled ranges.
+
+
+The paired no-render capture is `tmp/dev/tmp/prof/w6-list-owner-none-030/`.
+Initial executable segments and all 105 tracked allocations (243,855 bytes) match.
+The active display list now matches at every one of the 40 world boundaries,
+alongside all 1,279 registered prefixes, complete player records, primary registry
+order and lifecycle events. With drawing there are 39 updates and 44 draws over
+240 fields / 284 CIA ticks, ending with one unprocessed CIA tick; without drawing,
+39 updates take 239 fields / 283 CIA ticks and end without debt. Every consecutive
+funding interval passes. This is the same diagnostic window, not a new FPS or
+sustained-capacity claim.
+
+All shared allocation differences remain in the previously identified sound
+contexts: payload word 344 and context 2's offset-361 high bit. The rendering-only
+message-background allocation remains explicit. Final h3 differences fall to
+819 bytes, including inactive list slots and other still-unclassified state;
+the result does not certify complete RNG/combat/gameplay equivalence. Both live
+endpoints pass the native counters and byte audits. Static checks report 64 ranges
+and 121 patch destinations with zero errors, subject to their existing limitations.
+Normal/developer slaves retain their W5 hashes. Both owned emulators were quit.

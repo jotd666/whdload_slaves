@@ -102,21 +102,23 @@ schedules and sustained nominal execution; retained time debt alone is insuffici
 
 ## W6 equal-tick state comparison
 
-The cache-coherent VERIFY build `b6bc9c01…` completes the same 39 simulation
+The shared-list-owner VERIFY build `f92e9eed…` completes the same 39 simulation
 updates with 44 draws in 240 fields and with no draws in 239 fields. Exact funding
 passes; endpoint CIA debt is one and zero ticks respectively. These equal-tick
 windows are diagnostic, not a 250-field FPS comparison. Both the leaked terrain
 data and its native cache controls are now restored. Four directly observed draws
-rebuild terrain rather than reusing data restored after an earlier frame; 133
-simulation poses and their clock state survive those draws unchanged. Rebuilding
+rebuild terrain and change the shared display list, then restore its active order,
+count and terrain controls; 133 simulation poses and their clock state survive
+those draws unchanged. Rebuilding
 every draw has a cost that future capacity and 50 FPS measurements must include.
-Complete player records, 1,279 registered prefixes and lifecycle order match at
-40 checkpoints. Shared allocations differ only in identified sound-sequencer
+Complete player records, 1,279 registered prefixes, lifecycle order and the active
+display list match at all 40 checkpoints. The previous build had list-order
+differences at 33 checkpoints; world registration/removal uses that same list. Shared allocations differ only in identified sound-sequencer
 fields; global-state classification and broader gameplay/capacity acceptance remain
 open. See `w6-verification.md` for the evidence and the inter-frame cache issue
 that equal-tick snapshots alone did not cover.
 
-The same build's delayed-drawing correctness fixture completes those 39 updates
+The earlier `b6bc9c01…` build's delayed-drawing correctness fixture completes those 39 updates
 with 29 draws in 249 fields, ending with eleven CIA ticks of debt. Exact funding
 and the same scoped state/lifecycle comparisons pass. Nine same-field update pairs
 show catch-up with no intervening draw, reducing debt from 7–9 ticks to 0–2.

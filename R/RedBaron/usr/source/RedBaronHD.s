@@ -614,6 +614,7 @@ fill_twin_after: dcb.b 20*256*2,0
 	include "time-present-cases.i"
 time_present_cache_buffer: dcb.b TIME_PRESENT_CACHE_CAPACITY*TIME_PRESENT_CACHE_STRIDE,0
 time_model_buffer: dcb.b TIME_MODEL_CAPACITY*TIME_MODEL_STRIDE,0
+time_present_list_buffer: dcb.l 501,0 ; 500 entries plus native test guard
 time_pose_current: dcb.b TIME_POSE_CAPACITY*TIME_POSE_STRIDE,0
 time_pose_previous: dcb.b TIME_POSE_CAPACITY*TIME_POSE_STRIDE,0
 time_blend_output: dcb.b TIME_POSE_CAPACITY*TIME_POSE_STRIDE,0

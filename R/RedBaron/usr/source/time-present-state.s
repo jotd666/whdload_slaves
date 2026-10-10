@@ -47,6 +47,7 @@ time_present_begin:
 	bsr time_devices_owned
 	beq .ready
 	move.w #1,(a1)
+	bsr time_present_list_save
 	bsr time_terrain_cache_begin
 .ready
 	move.l time_loop_sim(pc),d0
@@ -127,6 +128,7 @@ time_present_end:
 	dbf d5,.copy
 	dbf d6,.next
 .clear
+	bsr time_present_list_restore
 	bsr time_terrain_cache_end
 	bsr time_model_restore
 	clr.l (a4)

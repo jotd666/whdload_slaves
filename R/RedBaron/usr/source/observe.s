@@ -118,7 +118,10 @@ observe_install_slow:
 	movem.l (sp)+,d0-a6
 	rts
 .bad
-	pea perf_mismatch(pc)
+	lea .mismatch_base(pc),a0
+.mismatch_base
+	adda.l #perf_mismatch-.mismatch_base,a0
+	pea (a0)
 	pea TDREASON_FAILMSG
 	move.l observe_resload(pc),a2
 	jmp resload_Abort(a2)

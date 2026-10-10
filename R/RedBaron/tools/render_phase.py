@@ -25,6 +25,15 @@ def terrain_cache(before,after,h3,frame):
         raise ValueError('Draw reused terrain state restored after earlier drawing')
 
 
+def shared_list(before,after,h3):
+    count=int.from_bytes(before(h3+0x3fa8,2),'big')
+    if count>500 or before(h3+0x3fa8,2)!=after(h3+0x3fa8,2):
+        raise ValueError('Shared display-list count changed across drawing')
+    if before(h3+0x7dc8,count*4)!=after(h3+0x7dc8,count*4):
+        raise ValueError('Shared active display-list order changed across drawing')
+    return count
+
+
 def check(path):
     metadata=json.loads(path.read_text())
     entry=json.loads((path.parent/'entry.json').read_text())
@@ -42,6 +51,13 @@ def check(path):
             raise ValueError('Rendering changed funded time, debt or world tick counters')
         if terrain:
             terrain_cache(before.read,after.read,metadata['h3'],frame)
+        list_entries=None
+        list_changed=None
+        if any('time_present_list_count:' in line for line in lines):
+            list_entries=shared_list(before.read,after.read,metadata['h3'])
+            rendered=Snapshot(path.parent,frame['list_before_restore'])
+            list_changed=(before.read(metadata['h3']+0x3fa8,2)!=rendered.read(metadata['h3']+0x3fa8,2)
+                          or before.read(metadata['h3']+0x7dc8,list_entries*4)!=rendered.read(metadata['h3']+0x7dc8,list_entries*4))
         count,np=struct.unpack('>HH',before.read(at('time_pose_header'),4))
         current=before.read(at('time_pose_current'),count*STRIDE)
         previous=before.read(at('time_pose_previous'),np*STRIDE)
@@ -66,7 +82,7 @@ def check(path):
         draws=int.from_bytes(state[36:40],'big')
         if int.from_bytes(after.read(at('time_loop_state')+36,4),'big')!=(draws+1)&0xffffffff:
             raise ValueError('Draw counter did not advance once')
-        result.append(dict(tick=int.from_bytes(state[28:32],'big'),poses=count,fraction=fraction,blended=nb,snapped=ns))
+        result.append(dict(tick=int.from_bytes(state[28:32],'big'),poses=count,fraction=fraction,blended=nb,snapped=ns,list_entries=list_entries,list_changed_during_draw=list_changed))
     if not result or not poses or not changed:
         raise ValueError('No real changed pose lease observed')
     return dict(sha256=metadata['sha256'],frames=result,poses_checked=poses,changed_visual_poses=changed,

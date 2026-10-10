@@ -1,3 +1,86 @@
+; Drawing and world registration/removal share h3:03fa8 + h3:07dc8.
+; Preserve the active prefix and count; append always overwrites an inactive slot.
+time_present_list_save:
+	move.l time_pose_h3(pc),a0
+	moveq #0,d0
+	move.w $3fa8(a0),d0
+	cmpi.w #500,d0
+	bhi time_model_bad
+	lea time_present_list_count(pc),a1
+	move.w d0,(a1)
+	adda.l #$7dc8,a0
+	lea .buffer_base(pc),a1
+.buffer_base
+	adda.l #time_present_list_buffer-.buffer_base,a1
+	bra time_present_list_copy
+
+time_present_list_restore:
+	move.l time_pose_h3(pc),a1
+	moveq #0,d0
+	move.w time_present_list_count(pc),d0
+	move.w d0,$3fa8(a1)
+	adda.l #$7dc8,a1
+	lea .buffer_base(pc),a0
+.buffer_base
+	adda.l #time_present_list_buffer-.buffer_base,a0
+	bra time_present_list_copy
+
+; Count is bounded by the native 500-entry registration limit. Copy only the
+; active prefix: stale tail entries are never read without first being replaced.
+time_present_list_copy:
+	tst.w d0
+	beq .done
+	subq.w #1,d0
+.next
+	move.l (a0)+,(a1)+
+	dbf d0,.next
+.done
+	rts
+
+time_present_list_selftest:
+	movem.l d0-a6,-(sp)
+	lea .source_base(pc),a3
+.source_base
+	adda.l #time_model_buffer-.source_base,a3
+	lea .dest_base(pc),a4
+.dest_base
+	adda.l #time_present_list_buffer-.dest_base,a4
+	move.l a3,a0
+	move.l a4,a1
+	moveq #0,d0
+	move.w #500,d7
+.init
+	move.l d0,(a0)+
+	move.l #$76543210,(a1)+
+	addq.l #1,d0
+	dbf d7,.init
+	move.l a3,a0
+	move.l a4,a1
+	moveq #0,d0
+	bsr time_present_list_copy
+	cmpi.l #$76543210,(a4)
+	bne time_model_bad
+	move.l a3,a0
+	move.l a4,a1
+	move.w #500,d0
+	bsr time_present_list_copy
+	move.l a3,a0
+	move.l a4,a1
+	move.w #499,d7
+.check
+	cmpm.l (a0)+,(a1)+
+	bne time_model_bad
+	dbf d7,.check
+	cmpi.l #$76543210,(a1)
+	bne time_model_bad
+	lea time_present_list_result(pc),a0
+	move.l #2,(a0)
+	movem.l (sp)+,d0-a6
+	rts
+
+time_present_list_result: dc.l 0
+time_present_list_count: dc.w 0
+
 ; The native terrain early-out at sim:0f038 reuses both cached visibility and
 ; selected model IDs. Those are restored after our draw, so a later draw must
 ; rebuild, even for an unchanged camera. Keep its key/flag/countdown coherent
@@ -86,6 +169,7 @@ time_terrain_cache_result: dc.l 0
 ; indexing, both X states and zero/nonzero model IDs, then undo the whole lease.
 time_model_terrain_selftest:
 	movem.l d0-a6,-(sp)
+	bsr time_present_list_selftest
 	bsr time_terrain_cache_selftest
 	lea time_model_terrain_frame+120(pc),a5
 	moveq #1,d7

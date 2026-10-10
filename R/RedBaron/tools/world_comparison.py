@@ -13,12 +13,26 @@ from pose_history import registry
 from game_heap import allocations, segments
 from time_capacity import interval
 
+def display_list(read,h3):
+ raw_count=read(h3+0x3fa8,2)
+ if len(raw_count)!=2:raise ValueError('Truncated shared display-list count')
+ count=int.from_bytes(raw_count,'big')
+ if count>500:raise ValueError('Shared display list exceeds native capacity')
+ raw=read(h3+0x7dc8,count*4)
+ if len(raw)!=count*4:raise ValueError('Truncated shared display list')
+ return [int.from_bytes(raw[i:i+4],'big') for i in range(0,len(raw),4)]
+
+
 def compare_states(l,r,h3,sim=None):
  lp=int.from_bytes(l.read(h3+0x4578,4),'big');rp=int.from_bytes(r.read(h3+0x4578,4),'big')
  out=dict(h3=region(l.read(h3,0xbd0c),r.read(h3,0xbd0c)),player_pointer_equal=lp==rp,
           player=region(l.read(lp,0x118),r.read(rp,0x118)))
  lreg=registry(l.read,h3);rreg=registry(r.read,h3)
  out['registry_equal']=lreg==rreg
+ ld=display_list(l.read,h3);rd=display_list(r.read,h3)
+ out['display_list_equal']=ld==rd
+ out['display_list_counts']=[len(ld),len(rd)]
+ if ld!=rd:out['display_list_difference']=dict(left=ld,right=rd)
  out['object_prefix_differences']=[dict(index=j,pointer=p,changes=region(l.read(p,26),r.read(p,26))) for j,p in enumerate(lreg) if p in rreg and l.read(p,26)!=r.read(p,26)]
  out['registered_objects']=len(lreg)
  if sim is not None:

@@ -1,5 +1,5 @@
 import unittest
-from render_phase import dirty_after, terrain_cache
+from render_phase import dirty_after, terrain_cache, shared_list
 
 
 class RenderPhaseTests(unittest.TestCase):
@@ -26,6 +26,22 @@ class RenderPhaseTests(unittest.TestCase):
                                              terrain_reuses=reuses,terrain_keys=keys))
         # Native explicit-refresh argument can bypass the positive-key test.
         terrain_cache(read,read,0,dict(terrain_rebuilds=1,terrain_reuses=0,terrain_keys=[]))
+
+    def test_shared_list_rejects_count_or_order_changes(self):
+        initial=bytearray(0x8598)
+        initial[0x3fa8:0x3faa]=(2).to_bytes(2,'big')
+        initial[0x7dc8:0x7dd0]=bytes.fromhex('0000123400005678')
+        read=lambda address,size:initial[address:address+size]
+        self.assertEqual(shared_list(read,read,0),2)
+        for offset in (0x3fa9,0x7dcb,0x7dcf):
+            changed=bytearray(initial);changed[offset]^=1
+            with self.assertRaises(ValueError):
+                shared_list(read,lambda address,size:changed[address:address+size],0)
+        # Inactive slots are overwritten by registration before becoming active.
+        changed=bytearray(initial);changed[0x7dd0]=1
+        self.assertEqual(shared_list(read,lambda address,size:changed[address:address+size],0),2)
+        initial[0x3fa8:0x3faa]=(501).to_bytes(2,'big')
+        with self.assertRaises(ValueError):shared_list(read,read,0)
 
 
 if __name__=='__main__':unittest.main()

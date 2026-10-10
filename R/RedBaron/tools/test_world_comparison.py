@@ -50,6 +50,22 @@ class WorldComparisonTests(unittest.TestCase):
         self.assertTrue(result['allocation_differences'][0]['layout_changed'])
         self.assertEqual(result['right_only_allocations'], [dict(address=0xc400, size=16)])
 
+    def test_shared_display_list_preserves_order_and_count(self):
+        left, right = Memory(), Memory()
+        for ram in (left,right):
+            ram.data[0x3fa8:0x3faa]=(2).to_bytes(2,'big')
+            ram.data[0x7dc8:0x7dd0]=bytes.fromhex('0000c2000000c300')
+        self.assertTrue(compare_states(left,right,0)['display_list_equal'])
+        right.data[0x7dc8:0x7dd0]=bytes.fromhex('0000c3000000c200')
+        result=compare_states(left,right,0)
+        self.assertFalse(result['display_list_equal'])
+        self.assertEqual(result['display_list_counts'],[2,2])
+        self.assertEqual(result['display_list_difference']['right'],[0xc300,0xc200])
+        right.data[0x3fa8:0x3faa]=(1).to_bytes(2,'big')
+        self.assertEqual(compare_states(left,right,0)['display_list_counts'],[2,1])
+        right.data[0x3fa8:0x3faa]=(501).to_bytes(2,'big')
+        with self.assertRaises(ValueError):compare_states(left,right,0)
+
     def test_rejects_different_tick(self):
         left, right = Memory(), Memory()
         self.assertEqual(same_tick(left, right, 0), 0)
