@@ -515,7 +515,7 @@ Order:
    the W0.6 observers exist.
 5. W4 and W7 later.
 
-W3 (sound) is deferred.
+W3 was reopened by the user’s “Goal: finish W3” request after W2. Exact-output sound work is now active; behavioral/OS alternatives B1–B6 remain separate decisions.
 
 ### W0. Groundwork (required before any patch)
 
@@ -599,9 +599,9 @@ That decides how much of real play W1 removes, compared with W2.
   `SIM_VERSION_TEST`.
 - **Byte checks:** at install time, verify the original non-relocated bytes of each hook range,
   and abort with `TDREASON_FAILMSG` on a mismatch (Legends of Valour's practice).
-- **Sound driver hooks:** not needed while sound is deferred (decision 4). Later, confirm
-  whether `amigasnd.drv` arrives through `LoadSeg`. If it does, add an `am…` name test to
-  `_cb_dosLoadSeg`; if it is read raw, hook the `sim` call that starts it.
+- **Sound driver hooks:** W3 confirmed that `amigasnd.drv` arrives through `LoadSeg`,
+  twice during startup. Match the full filename, handle reloads, and restrict activation
+  to the supported sim v1. See `w3-verification.md`.
 - **Builds:** add normal, `DEVELOPER` (individual switches) and `VERIFY` modes to
   `tmp/dev/tools/build.sh`, with separate outputs, and update `Makefile_windows.mak`.
 - **Checker tools:**
@@ -759,10 +759,9 @@ Every frame pays for it; these candidates total ~600k per steady frame *(est.)*.
   - `sim:3b2d8`: `mulu.l` to 64 bits, guarded by |n| ≤ 2¹⁴.
   - G2, G5 and G7 are CPU-neutral.
 
-### W3. Interrupt and sound tax (exact output): deferred
+### W3. Interrupt and sound tax (exact output): active
 
-**Deferred by decision 4:** sound stays exactly as it is for now and will be analysed later. Do
-not implement S1–S9 or B1–B6 without a new decision. The analysis is kept here for that work.
+**Reopened by the user after W2:** implement and verify the exact-output work. Keep sample data, buffer sizes, interrupt ownership, playback and envelope timing unchanged. B1–B6 are not release defaults; they need separate decisions. Progress and evidence are in `w3-verification.md`.
 
 Fixed cost per second, so the saving applies to every scene. Main-loop wall time scales by
 1/(1 − tax): from 15.1% to ~11% is ~1.05× everywhere *(est.)*.
@@ -932,8 +931,8 @@ P1/P2 apply there.
    investigation first (W6). Until then, faster frames raising the world speed on slow machines
    is an accepted intermediate state.
 3. **Chip RAM use is allowed** (W1b's ~13.7 KB cache).
-4. **Sound is kept as it is for now** and will be analysed later. W3 is deferred: no S or B
-   changes.
+4. **Sound:** the subsequent “Goal: finish W3” reopens exact-output S work after
+   the initial deferral. B1–B6 remain separate behavior/OS decisions.
 5. **The tear-free swap and a frame cap apply** (W5, under the switch). The cap rate and P1's
    68000 cost come from measurement.
 

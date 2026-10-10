@@ -50,6 +50,12 @@ Remaining G1/G3 refinements and G5–G9 are explicitly deferred under the plan's
 measurements and the completion audit. They are not claimed implemented.
 Drawing is the larger measured bottleneck on the cached machine.
 
+## W3 active
+
+The user reopened W3 after W2. Preserve exact sound output; B1–B6 remain separate
+behavior/OS decisions. `w3-verification.md` records the implementation and evidence.
+The normal release mask remains zero.
+
 ## Next work
 
 1. **W5:** tear-free publication and a frame cap under the player switch.

@@ -555,6 +555,7 @@ new_DeleteFile:
 	include "dot.s"
 	include "clip.s"
 	include "vertex.s"
+	include "sound-sequence.s"
 	IFD VERIFY
 	include "originals.s"
 	include "mirror-verify.s"

@@ -1,7 +1,7 @@
 ; Performance patch framework. Only sim v1 calls this module's installer.
 ; No feature is release-enabled until its model, twin and measurements pass.
 PERF_VERIFIED_MASK = 0
-PERF_DEVELOPER_MASK = $3ff
+PERF_DEVELOPER_MASK = $fff
 
 perf_read_options:
 	movem.l d0-a6,-(sp)
@@ -83,6 +83,7 @@ perf_apply_v1:
 	beq.b .no_vertex
 	bsr vertex_install
 .no_vertex
+	bsr sound_sequence_install
 	rts
 
 ; Check a non-relocated hook range before installing it.
