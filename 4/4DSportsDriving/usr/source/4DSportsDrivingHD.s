@@ -162,6 +162,16 @@ _bootdos
 	;get tags
 		lea	(tag,pc),a0
 		jsr	(resload_Control,a2)
+		IFD SIM_SCHEDULE
+		; The field accumulator is validated for PAL only. Reject unsupported
+		; video timing before loading the game or installing any clock hooks.
+		move.l sim_monitor_id(pc),d0
+		cmp.l #PAL_MONITOR_ID,d0
+		beq .pal_clock
+		pea TDREASON_MUSTPAL
+		jmp (resload_Abort,a2)
+.pal_clock:
+		ENDC
 	
 	;open doslib
 		lea	(_dosname,pc),a1
@@ -614,6 +624,10 @@ _custom2	dc.l	0
 _custom5	dc.l	0
 		dc.l	WHDLTAG_ATTNFLAGS_GET
 perf_attnflags	dc.l	0
+		IFD SIM_SCHEDULE
+		dc.l WHDLTAG_MONITOR_GET
+sim_monitor_id: dc.l 0
+		ENDC
 		dc.l	0
 
 ;============================================================================
