@@ -648,6 +648,17 @@ sim_fixture_before:
  clr.w -$832(a4)
  clr.w -$820(a4)
  ENDC
+ IFD SIM_FIXTURE_INVERTED
+ IFD TAPE_OPPONENT
+ FAIL "SIM_FIXTURE_INVERTED requires the stock solo start"
+ ENDC
+ ; Explicit diagnostic pose, never a natural-driving handling reference.
+ ; C614 rebuilds previous wheel samples from the native inverted geometry
+ ; before the first contact query, avoiding inconsistent upright caches.
+ move.w #512,-$912(a4)      ; player+$1C roll, half a revolution
+ move.w #10000,-$904(a4)    ; player+$2A current speed
+ move.w #10000,-$902(a4)    ; player+$2C target speed
+ ENDC
  IFD SIM_FIXTURE_CONTACT_RAMP
  IFD TAPE_OPPONENT
  FAIL "SIM_FIXTURE_CONTACT_RAMP requires the stock solo start"
@@ -833,4 +844,50 @@ sim_fixture_active: dc.w 0
 sim_fixture_count: dc.w 0
 sim_fixture_records:
  dcb.b SIM_FIXTURE_SAMPLES*SIM_FIXTURE_RECORD_SIZE,0
+ ENDC
+
+ IFD SIM_FIXTURE_INVERTED
+ IFND SIM_FIXTURE
+ FAIL "SIM_FIXTURE_INVERTED requires SIM_FIXTURE"
+ ENDC
+; One-time coherent cached wheel positions for the synthetic inverted start.
+; Native C49C has already transformed all four base wheel positions (before
+; forward displacement) into A5-$E2. Subsequent surface/clearance decisions
+; remain native.
+sim_inverted_wheels:
+ movem.l d0-d1/a0-a1,-(sp)
+ moveq #0,d0
+ addx.b d0,d0
+ move.w d0,-(sp)
+ lea sim_inverted_wheels(pc),a0
+ adda.l #tape_configured-sim_inverted_wheels,a0
+ move.l (a0),d0
+ beq .native
+ cmp.w #1,-$940(a4)
+ bne .native
+ lea -$92e(a4),a0
+ cmp.l 8(a5),a0
+ bne .native
+ lea sim_inverted_wheel_count(pc),a1
+ tst.l (a1)
+ bne .native
+ addq.l #1,(a1)
+ lea $74(a0),a1
+ lea -$e2(a5),a0
+ moveq #11,d1
+.copy:
+ move.l (a0)+,d0
+ asr.l #6,d0
+ move.w d0,(a1)+
+ dbra d1,.copy
+.native:
+ move.w (sp)+,d0
+ lsr.w #1,d0             ; restore incoming X; displaced CMP does not change it
+ movem.l (sp)+,d0-d1/a0-a1
+ cmp.b #5,-$1cb(a5)
+ rts
+ even
+ dc.b "4DINVERT"
+ dc.w 1,4
+sim_inverted_wheel_count: dc.l 0
  ENDC

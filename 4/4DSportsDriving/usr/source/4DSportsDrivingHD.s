@@ -374,6 +374,9 @@ pl_main
     ENDC
     IFD SIM_PROBE
     PL_P $E5F2,sim_probe_entry_stub
+    IFD SIM_FIXTURE_INVERTED
+    PL_PS $C614,sim_inverted_wheels_stub
+    ENDC
     IFD SIM_A4000
     PL_P $1033A,sim_a4000_steering
     PL_PSS $7984,sim_sound_consume_stub,64
@@ -1153,6 +1156,16 @@ sim_history_rotate_stub:
  rts
 	ENDC
 	IFD SIM_PROBE
+ IFD SIM_FIXTURE_INVERTED
+sim_inverted_wheels_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_inverted_wheels_stub(pc),a0
+ adda.l #sim_inverted_wheels-sim_inverted_wheels_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+ ENDC
 sim_probe_entry_stub:
  subq.l #4,sp
  movem.l a0,-(sp)
