@@ -177,7 +177,8 @@ patch_main
 	bsr perf_init
 	IFD VERIFY
 	movem.l d0-a6,-(sp)
-	lea tape_game(pc),a0
+	lea patch_main(pc),a0
+	adda.l #tape_game-patch_main,a0
 	move.l d7,(a0)
 	addq.l #4,(a0)
 	IFD SIM_A4000
@@ -189,8 +190,13 @@ patch_main
 	IFD SIM_SCHEDULE
 	bsr sim_schedule_reset_selftest
 	bsr sim_schedule_modal_selftest
+	IFD SIM_A4000
+	bsr sim_history_selftest
 	ENDC
-	bsr tape_start
+	ENDC
+	lea patch_main(pc),a0
+	adda.l #tape_start-patch_main,a0
+	jsr (a0)
 	IFD SIM_PROBE
 	bsr sim_clock_install
 	ENDC
@@ -322,6 +328,11 @@ pl_main
     PL_PSS $C0BA,sim_a4000_opponent_brake,30
     PL_PSS $CB06,sim_a4000_wheel_pass,2
     PL_PSS $CF9E,sim_a4000_contact_distance,2
+    PL_PSS $E07A,sim_history_new_race_stub,4
+    PL_PSS $E548,sim_history_seek_zero_stub,2
+    PL_PS $E65A,sim_history_save_stub
+    PL_PS $E5DA,sim_history_restore_stub
+    PL_PSS $7D08,sim_history_rotate_stub,2
     ENDC
     IFD SIM_SCHEDULE
     PL_PS $1A788,sim_schedule_modal_enter
@@ -487,6 +498,48 @@ perf_attnflags	dc.l	0
 ; WHDLoad patch offsets are signed words. Keep entry stubs close to pl_main,
 ; independent of verification-table size. MOVEM preserves all flags including
 ; X; the reserved stack slot transfers to the target with the original SP.
+	IFD SIM_A4000
+sim_history_new_race_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_history_new_race_stub(pc),a0
+ adda.l #sim_history_new_race-sim_history_new_race_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_history_seek_zero_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_history_seek_zero_stub(pc),a0
+ adda.l #sim_history_seek_zero-sim_history_seek_zero_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_history_save_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_history_save_stub(pc),a0
+ adda.l #sim_history_save-sim_history_save_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_history_restore_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_history_restore_stub(pc),a0
+ adda.l #sim_history_restore-sim_history_restore_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_history_rotate_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_history_rotate_stub(pc),a0
+ adda.l #sim_history_rotate-sim_history_rotate_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+	ENDC
 	IFD SIM_PROBE
 sim_probe_entry_stub:
  subq.l #4,sp
@@ -572,6 +625,7 @@ tape_restart_result_stub:
 	include "simulation_physics.s"
 	IFD SIM_A4000
 	include "simulation_a4000.s"
+	include "simulation_history.s"
 	ENDC
 	include "simulation_physics_verify.s"
 	ENDC

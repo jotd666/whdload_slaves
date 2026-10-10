@@ -453,7 +453,8 @@ tape_replay_select:
 .done:
  rts
 tape_scenario_failed:
- lea perf_failure(pc),a0
+ lea tape_scenario_failed(pc),a0
+ adda.l #perf_failure-tape_scenario_failed,a0
  move.l #7,(a0)
  illegal
  bra.s tape_scenario_failed
@@ -493,7 +494,8 @@ tape_restart_simulation:
  beq.s tape_simulation_ready
 .retry:
  dbra d2,.wait
- lea perf_failure(pc),a0
+ lea tape_simulation_ready(pc),a0
+ adda.l #perf_failure-tape_simulation_ready,a0
  move.l #8,(a0)
  illegal
  bra.s .retry

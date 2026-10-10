@@ -84,7 +84,37 @@ SIM_FIXTURE_RECORD_SIZE = SIM_FIXTURE_STATE_SIZE+10+SIM_PRIVATE_BYTES
  ELSE
 SIM_FIXTURE_RECORD_SIZE = SIM_FIXTURE_STATE_SIZE+10
  ENDC
+
+ IFD SIM_HISTORY_SEEK_TEST
+ IFND SIM_HISTORY_TEST_SPACING
+ FAIL "SIM_HISTORY_SEEK_TEST requires shortened checkpoint spacing"
+ ENDC
+ IFNE SIM_HISTORY_TEST_SPACING-50
+ FAIL "SIM_HISTORY_SEEK_TEST requires checkpoint spacing 50"
+ ENDC
+; Explicit test transition at a completed live tick, then invoke the actual
+; native seek routine with target 55. No fixture inputs are written in replay.
+sim_history_seek_fixture:
+ tst.b $45(a4)
+ bne .done
+ cmp.w #160,-$940(a4)
+ bne .done
+ movem.l d0-a6,-(sp)
+ move.b #2,$45(a4)
+ move.w #55,-(sp)
+ move.l tape_game(pc),a0
+ adda.l #$e518,a0
+ jsr (a0)
+ addq.l #2,sp
+ movem.l (sp)+,d0-a6
+.done:
+ rts
+ ENDC
+
 sim_fixture_before:
+ IFD SIM_HISTORY_SEEK_TEST
+ bsr sim_history_seek_fixture
+ ENDC
  move.l tape_configured(pc),d0
  beq .done
  tst.b $45(a4)

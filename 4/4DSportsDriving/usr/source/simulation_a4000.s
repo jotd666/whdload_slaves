@@ -1,6 +1,6 @@
-; Development-only first-race integration. Requires SIM_FIXTURE/SIM_SCHEDULE.
-; NOT a selectable/replay-capable A4000 release: remaining rate sites and
-; lifecycle hooks are deliberately still pending. Native 10/20 paths survive.
+; Development integration. Requires SIM_FIXTURE/SIM_SCHEDULE.
+; Not yet a selectable A4000 release: disk replay format, remaining rate sites
+; and lifecycle acceptance are pending. Native 10/20 paths survive.
 SIM_PRIVATE_BYTES = 128
 sim_a4000_arm:
  lea sim_a4000_private(pc),a0
@@ -13,6 +13,10 @@ sim_a4000_arm:
  move.w #50,-$bc(a4)
  move.b #50,-$173a(a4)
  move.w #1500,-$ba(a4)
+ IFD SIM_HISTORY_TEST_SPACING
+ ; Short verification interval exercises nonzero private-state seek points.
+ move.w #SIM_HISTORY_TEST_SPACING,-$ba(a4)
+ ENDC
  move.w #30000,$b30(a4)
  move.w #2,-$be(a4)
  lea sim_schedule_rate(pc),a0
