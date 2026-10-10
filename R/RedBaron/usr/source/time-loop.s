@@ -66,6 +66,7 @@ time_loop_install:
 	bsr time_camera_install
 	bsr time_compress_install
 	bsr time_present_selftest
+	bsr time_present_state_install
 	lea time_loop_patch(pc),a0
 	jsr resload_Patch(a2)
 	jsr resload_FlushCache(a2)

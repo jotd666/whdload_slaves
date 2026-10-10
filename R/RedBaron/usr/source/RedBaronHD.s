@@ -575,6 +575,7 @@ new_DeleteFile:
 	include "time-camera.s"
 	include "time-compress.s"
 	include "time-present-core.s"
+	include "time-present-state.s"
 	include "originals.s"
 	include "mirror-verify.s"
 	include "cache-verify.s"
@@ -593,6 +594,7 @@ fill_twin_after: dcb.b 20*256*2,0
 	include "dot-cases.i"
 	include "time-core-cases.i"
 	include "time-present-cases.i"
+time_present_cache_buffer: dcb.b TIME_PRESENT_CACHE_CAPACITY*TIME_PRESENT_CACHE_STRIDE,0
 ; Large VERIFY buffers follow code so observer branches retain 68000 reach.
 observe_buffer: dcb.b OBS_STRIDE*OBS_CAPACITY,0
 time_input_test_queue: dcb.b TIME_INPUT_BYTES,0

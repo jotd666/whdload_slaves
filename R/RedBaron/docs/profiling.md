@@ -62,6 +62,11 @@ These are mutation-inventory counts, not frame costs or proof of render purity.
 The interpolation arithmetic checkpoint passes 638 native position/angle cases
 and 133 exact-phase-to-Q16 cases on A500. It adds no render-only frames and has
 no FPS or gameplay-speed measurement yet.
+The projection-cache ownership checkpoint restores the named object fields after
+three native draws on each of A500 and cached 68030. All six changed cache
+records match the independent byte model and are restored at outer return.
+This is scoped rendering-state isolation, not a complete mutation audit,
+interpolated-frame implementation or gameplay-speed result.
 See `w6-verification.md` for frozen builds and limitations.
 
 ## W5 current measurements

@@ -957,3 +957,52 @@ completed world boundaries (`projection-reader-interrupted.txt` in the A500
 capture). It supplies no reader-coverage evidence and does not close the cache
 consumer audit. The independently completed arithmetic/byte-audit results above
 are retained; the owned emulator was paused and then quit.
+
+
+## Projection-cache ownership around native drawing
+
+The next VERIFY-only, CUSTOM2 bit 13 checkpoint brackets the complete native
+outer draw at `sim:0056c` and `sim:00b16`. At `sim:2c55a`, after replaying the
+original argument loads, it saves the listed normal objects with flag bit 3.
+Compact objects (flag bit 6) have a different layout and are excluded. Each
+28-byte record holds the object pointer, original flag byte, callback pointer
+at byte 26, and eighteen projection bytes at offsets 34–51. The capacity is
+512 listed objects; invalid counts and nested ownership abort explicitly.
+
+The full outer draw retains access to its freshly computed cache, including
+HUD consumers after the 3D pass. On outer return, the hook restores only these
+named fields and clears ownership. It preserves the native return value and
+stack frame. It does not roll back h3, framebuffers, buffer publication, clocks,
+IRQ progress or unrelated object fields. The return hook reproduces native
+NZVC from the return value; full CCR equivalence is not claimed. This is still
+an experimental isolation step: cache consumers, callbacks and model writes
+need complete review and equal-world-tick validation before player use.
+
+`presentation_state.py` independently constructs the exact saved records from
+full RAM snapshots. It compares those records and the active/count header with
+native memory at 3D return, then checks field restoration and cleared ownership
+at outer return. It requires an actual native cache mutation before restoration,
+so an unchanged or unexecuted path cannot pass vacuously. Host tests cover
+selection, compact exclusion, capacity, duplicate pointers, empty lists,
+malformed records and preservation of unrelated memory changes.
+
+Frozen VERIFY text is 171,286 bytes, SHA256
+`88ddd7cb9a7dac7b64d05bc5e5b0ed1bd9f5a55d3cbb0d6eea2bb6d82dd06b14`.
+Evidence directories are `tmp/dev/tmp/prof/w6-present-state-a500/` and
+`tmp/dev/tmp/prof/w6-present-state-030-r3/`. Each contains three complete native
+draws: A500 lists 58/64/55 objects and cached 68030 lists 50/58/58. Each draw
+contains one eligible cache object, an actual projection mutation and an exact
+restoration; all six native records match the byte model. The 68030 collector
+also checks the stack pointer at both native returns. The A500 collector did
+not yet contain those explicit stack assertions.
+
+Both machines pass forty selected timing-hook checks and thirteen disabled
+ranges, plus the 426 clock, 512 input, 638 position/angle and 133 phase native
+self-tests. Static audit covers 53 ranges with zero errors; all 126 host tests
+pass. Normal and developer binaries remain byte-identical to W5.
+
+This three-draw window per CPU does not establish coverage of all clipped
+objects, callbacks, model mutations, object lifecycles or indirect cache readers.
+It adds no interpolated poses or render-only iterations and supplies no FPS,
+capacity or complete gameplay-convergence result. Those acceptance gates remain
+open; the player timing option remains disabled.
