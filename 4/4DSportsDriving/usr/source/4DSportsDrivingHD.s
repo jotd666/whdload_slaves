@@ -271,13 +271,13 @@ pl_main
     PL_START
     IFD VERIFY
     IFD TAPE_OPPONENT
-    PL_PSS $32B0,tape_opponent_main_observe,2
-    PL_PSS $4DC6,tape_opponent_menu_observe,2
-    PL_PSS $179B4,tape_restart_observe,2
-    PL_PS $9CE8,tape_restart_result
+    PL_PSS $32B0,tape_opponent_main_observe_stub,2
+    PL_PSS $4DC6,tape_opponent_menu_observe_stub,2
+    PL_PSS $179B4,tape_restart_observe_stub,2
+    PL_PS $9CE8,tape_restart_result_stub
     ENDC
     IFD SIM_PROBE
-    PL_P $E5F2,sim_probe_entry
+    PL_P $E5F2,sim_probe_entry_stub
     IFD SIM_A4000
     PL_P $1033A,sim_a4000_steering
     PL_PSS $C326,sim_a4000_distance,26
@@ -324,10 +324,10 @@ pl_main
     ENDC
     ENDC
     ; Complete original instruction: bchg #0,$3b(a4), six bytes.
-    PL_PS $1AAD6,tape_dialog_enter
-    PL_PS $74FA,tape_frame
+    PL_PS $1AAD6,tape_dialog_enter_stub
+    PL_PS $74FA,tape_frame_stub
     IFD TAPE_PIXELS
-    PL_PSS $20C3A,tape_draw_complete,2
+    PL_PSS $20C3A,tape_draw_complete_stub,2
     ENDC
     ENDC
 	PL_W	$2E77A-$6568,$9E	; fix move to intreqr
@@ -474,6 +474,82 @@ perf_attnflags	dc.l	0
 		dc.l	0
 
 ;============================================================================
+
+	IFD VERIFY
+; WHDLoad patch offsets are signed words. Keep entry stubs close to pl_main,
+; independent of verification-table size. MOVEM preserves all flags including
+; X; the reserved stack slot transfers to the target with the original SP.
+	IFD SIM_PROBE
+sim_probe_entry_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_probe_entry_stub(pc),a0
+ adda.l #sim_probe_entry-sim_probe_entry_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+	ENDC
+tape_dialog_enter_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea tape_dialog_enter_stub(pc),a0
+ adda.l #tape_dialog_enter-tape_dialog_enter_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+tape_frame_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea tape_frame_stub(pc),a0
+ adda.l #tape_frame-tape_frame_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+	IFD TAPE_PIXELS
+tape_draw_complete_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea tape_draw_complete_stub(pc),a0
+ adda.l #tape_draw_complete-tape_draw_complete_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+	ENDC
+	IFD TAPE_OPPONENT
+tape_opponent_main_observe_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea tape_opponent_main_observe_stub(pc),a0
+ adda.l #tape_opponent_main_observe-tape_opponent_main_observe_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+tape_opponent_menu_observe_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea tape_opponent_menu_observe_stub(pc),a0
+ adda.l #tape_opponent_menu_observe-tape_opponent_menu_observe_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+tape_restart_observe_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea tape_restart_observe_stub(pc),a0
+ adda.l #tape_restart_observe-tape_restart_observe_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+tape_restart_result_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea tape_restart_result_stub(pc),a0
+ adda.l #tape_restart_result-tape_restart_result_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+	ENDC
+	ENDC
 
 	include "performance.s"
 
