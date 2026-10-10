@@ -581,4 +581,5 @@ fill_twin_after: dcb.b 20*256*2,0
 	include "dot-cases.i"
 	include "time-core-cases.i"
 time_input_test_queue: dcb.b TIME_INPUT_BYTES,0
+time_input_observe_queue: dcb.b TIME_INPUT_BYTES,0
 	ENDC

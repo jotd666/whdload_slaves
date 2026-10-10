@@ -54,6 +54,7 @@ observe_step:
 	move.l observe_vbl_count(pc),(a2)+
 	lea observe_header(pc),a0
 	addq.l #1,20(a0)
+	bsr time_input_observe_install
 	bsr observe_install_slow
 	bsr paint_install
 	movem.l (sp)+,d0-d2/a0-a2
@@ -64,6 +65,7 @@ observe_vbl:
 	move.w sr,-(sp)
 	lea observe_vbl_count(pc),a2
 	addq.l #1,(a2)
+	bsr time_input_fixture
 	move.l tape_marker+24(pc),a2
 	adda.l #$2d41c,a2
 	move.w (sp)+,sr
@@ -144,5 +146,6 @@ observe_slow_draw:
 	rts
 observe_draw_target: dc.l 0
 
+	INCLUDE "time-input-observe.s"
 	INCLUDE "time-probe.s"
 	INCLUDE "paint-observe.s"

@@ -105,3 +105,30 @@ another boot. Evidence: `tmp/dev/tmp/prof/w6-input-a500/selftest-result.json`.
 The test buffer and kernel remain VERIFY-only. This is sequential native FIFO
 verification, not a claim of live interrupt interleaving, device capture or an
 implemented game scheduler. The owned emulator is shut down.
+
+
+## Keyboard acquisition hook
+
+VERIFY CUSTOM5 bit 20 installs a checked six-byte replacement for the relocated
+LEA at `sim:308b6`. Its IRQ wrapper timestamps the decoded transition for the next
+CIA boundary, appends the event and restores all incoming registers/flags except
+a0, which receives the original keyboard bitmap address. Native code at
+`sim:308bc` then performs its original bitmap store and key-command FIFO handling.
+The observer does not consume or replace native input. CUSTOM5 bit 21 enables a
+four-transition supervisor-VBlank fixture (Right down/up, Fire down/up) through
+the actual installed hook and original decoded-key tail. It does not cover the
+host key mapping or the CIA serial handshake.
+
+The 68030 fixture uses VERIFY SHA256
+`634ca59a93848d7114673787cf049afece305e5e658f28fb3cc15cd4d674d2f5`,
+text 118,982 bytes. Four independently logged acquisition timestamps match their
+queued eligibility boundaries exactly at acquisition+1. Head/high-water are four,
+tail is zero, and overflow is clear. Four debugger entry/exit register pairs verify
+all exposed registers and status flags, with only the expected a0 and PC changes.
+The native hook's instruction/branch/relocation audit reports zero errors.
+Evidence: `tmp/dev/tmp/prof/w6-input-fixture-030/`. `input_events.py` rejects wrong
+deadlines, overflow and extra/contaminating events rather than filtering them out.
+
+All 82 host checks pass. This proves the observed keyboard producer contract;
+it does not yet connect keyboard events to world ticks, capture mouse/joystick,
+or implement the gameplay loop. The owned test emulator is shut down.
