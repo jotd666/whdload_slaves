@@ -570,6 +570,7 @@ new_DeleteFile:
 	include "time-keys.s"
 	include "time-devices.s"
 	include "time-mouse.s"
+	include "time-rate.s"
 	include "originals.s"
 	include "mirror-verify.s"
 	include "cache-verify.s"

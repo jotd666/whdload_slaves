@@ -56,6 +56,7 @@ time_loop_install:
 	move.l a1,d0
 	addi.l #$21d30,d0
 	move.l d0,(a0)
+	bsr time_rate_install
 	bsr time_pause_selftest
 	bsr time_pause_install
 	bsr time_devices_install
@@ -98,18 +99,18 @@ time_loop_poll:
 .loop
 	cmp.l TIME_LOOP_CURSOR(a0),d3
 	beq .done
-	move.l time_loop_h3(pc),a2
-	move.w $4838(a2),d0
+	addq.l #1,TIME_LOOP_CURSOR(a0)
+	bsr time_keys_advance
+	bsr time_rate_advance
+	move.w time_rate_queue+8(pc),d0
 	cmpi.w #10,d0
 	blo .bad
 	cmpi.w #80,d0
 	bhi .bad
 	moveq #1,d1 ; compression integration is deliberately not claimed here
 	bsr time_core_advance
-	addq.l #1,TIME_LOOP_CURSOR(a0)
 	add.w d1,TIME_LOOP_SERVICES(a0)
 	move.w d0,TIME_LOOP_DUE(a0)
-	bsr time_keys_advance
 	tst.w TIME_LOOP_DUE(a0)
 	beq .loop
 .done
@@ -136,8 +137,10 @@ time_loop_gate:
 	move.l #1,TIME_LOOP_ACTIVE(a0)
 	move.l time_loop_cia(pc),a1
 	move.l (a1),TIME_LOOP_CURSOR(a0)
+	bsr time_rate_reset
 .ready
 	bsr time_keys_start
+	bsr time_rate_fixture
 .wait
 	bsr time_loop_poll
 	tst.w TIME_LOOP_DUE(a0)

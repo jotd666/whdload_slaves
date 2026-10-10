@@ -29,6 +29,11 @@ passes twelve acquisitions and 48 native input/control observations per machine,
 including recentering and CPU-written flag checks, with 98/10 CIA intervals of
 A500/68030 debt. Analog mode and mixed modal/restart input remain unverified.
 These are input correctness checks, not FPS or sustained gameplay-speed results.
+The rate-history candidate subsequently passes eighty native world boundaries
+per CPU across three divisor changes, including 97 CIA intervals of A500 debt.
+World credit, tick counts and secondary credit match the independent rational
+model exactly; execution of secondary services remains open. This is timing
+accounting evidence, not an FPS or complete-gameplay result.
 See `w6-verification.md` for frozen builds and limitations.
 
 ## W5 current measurements

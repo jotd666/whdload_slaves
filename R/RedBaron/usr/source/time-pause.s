@@ -127,9 +127,14 @@ time_pause_irq:
 	beq .done
 	cmpi.w #3,d0
 	beq .seed
+	cmpi.w #4,d0
+	beq .rate
 	cmpi.w #1,d0
 	beq .begin
 	bsr time_pause_apply_end
+	bra .ack
+.rate
+	bsr time_rate_publish
 	bra .ack
 .seed
 	bsr time_keys_seed_irq

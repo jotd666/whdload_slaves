@@ -487,3 +487,56 @@ now follows code to keep growing VERIFY routines within 68000 branch reach.
 Remaining input work includes calibrated analog mode, mixed device/modal/restart
 fixtures and native modifier twins. Service clocks, rate/compression changes,
 interpolated rendering and full gameplay-state/capacity validation remain W6 gates.
+
+
+## Time Scale history with retained debt
+
+The native divisor setter at `sim:03ce4` now publishes a timestamped setting
+through the serialized VBlank handshake. Native `h3:04838` still receives the
+setting immediately, preserving its configuration/UI role. The scheduler uses
+its own historical divisor until its active CIA cursor reaches the setting's
+eligibility boundary. An active change is eligible at publication CIA minus
+excluded modal time plus one. A modal change uses the first active boundary
+after modal entry/resume. Each boundary applies eligible input and rate history
+before funding the exact clock kernel; fractional world credit is never rounded,
+reset or reinterpreted.
+
+The separate 32-record rate FIFO retains all settings while the main task has
+old debt, deduplicates unchanged values, and explicitly faults on overflow or an
+unsupported divisor. Mission initialization seeds the divisor and clears stale
+history. Native private-state tests cover sequence-number wrap, CIA wrap, future
+retention, ordered prefix consumption and full-queue rejection without eviction.
+The modal publication policy is implemented; live changed-setting Preferences
+coverage remains required.
+
+CUSTOM5 bit 25 calls the original main-task divisor API with F=10, 80 and 33.
+It does not write physics, fractional clock phase or consumer state. This tests
+the installed native setter while rendering leaves debt; it is not a Preferences
+UI test. `rate_history.py` independently reconstructs credit using rational
+arithmetic from the entry snapshot and acquisition log. Every observed world
+count, full 128-bit phase, effective divisor, secondary remainder and earned
+service count must match. The secondary service count remains accounting only;
+executing those camera/repeat services independently is still open.
+
+Frozen VERIFY text is 131,076 bytes, SHA256
+`25a6de631488a8ae3beacaad9fac97663431de73871b6a34c3f36c1c36ce561b`.
+Both A500 and cached 68030 pass three native publications and eighty observed
+world boundaries. A500's publication debts are 97, 93 and 84 CIA intervals;
+cached 68030's are 11, 9 and 5. The native configuration divisor differs from the
+historically effective divisor in 21 A500 rows and six cached-68030 rows, while
+all phases and tick counts remain exact. Queue high-water is two and one,
+respectively. This explicitly exercises old-debt isolation; it is not an FPS,
+complete-world-state or sustained-capacity result.
+
+Both captures pass all 25 selected hooks, thirteen disabled sim ranges, the rate
+queue self-test and existing clock/FIFO/pause counters 426 / 512 / 1. Evidence:
+`tmp/dev/tmp/prof/w6-rates-{a500,030}/`, including `rate-initial-clock.bin`,
+`rate-acquisition.bin`, `rate.log`, `rate-result.json` and `byte-audit.json`.
+Both owned emulators are quit. The full host suite has 101 passing tests;
+corruption tests reject retroactive rates, wrong phases, lost ticks, secondary
+accounting errors and overflow. Static audit passes all 38 sim ranges.
+Normal/developer hashes remain byte-identical to W5.
+
+Time Compress is not integrated by this checkpoint: the native scheduler still
+uses multiplier one. Modal rate changes, independent timed services, interpolation
+and the full state/capacity matrix remain required before W6 can be enabled.
