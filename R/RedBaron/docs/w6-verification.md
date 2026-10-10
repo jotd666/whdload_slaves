@@ -905,3 +905,55 @@ or overlapping RAM snapshots and out-of-bank object reads. Its tests inject
 changes in each compared object class and in otherwise unclassified memory.
 This is an initial three-draw cockpit window, not a complete mutation audit,
 heap-equivalence proof, interpolated-render implementation or FPS measurement.
+
+
+## Native interpolation arithmetic
+
+`time-present-core.s` implements three presentation-only arithmetic helpers.
+They are compiled only in VERIFY and self-tested during CUSTOM2 bit 13 setup;
+no render-only iteration or interpolated object write is enabled by this
+checkpoint. The simulation kernel and physics arithmetic are unchanged.
+
+- Signed 32-bit positions use `old + floor((new-old)*fraction/65536)` with an
+  inclusive Q16 fraction range 0–65536. The endpoint difference can require
+  33 signed bits. The 68000 routine uses a 32-bit unsigned magnitude and two
+  16×16 unsigned products, retaining the low product remainder for negative
+  floor rounding. It therefore handles opposite signed-long extremes without
+  wrapping the difference or producing an out-of-range interpolated position.
+- Unsigned 16-bit angles use the signed shortest wrapped difference. Exactly
+  half a turn chooses the negative arc deterministically. The final angle
+  wraps modulo 65536; both endpoints are exact. This is the native angle
+  representation, not a newly imposed degrees conversion.
+- The blend fraction is `floor(world_phase*65536/world_threshold)`, computed
+  using sixteen binary-division steps on a private register copy of the four
+  clock-phase longs. The caller must first drain all due world ticks and supply
+  a phase below the threshold. The phase itself is not changed. This preserves
+  the exact simulation clock and quantizes only visual interpolation.
+
+`presentation_math.py` supplies an independent rational oracle and reproducible
+native vectors. The host tests cover signed extremes, negative rounding, exact
+endpoints, angle wrap/half-turn policy, every possible angle delta at the final
+endpoint, phase bounds/monotonicity and generated-source equivalence. The actual
+68000 self-test checks 638 position/angle cases and 133 four-long phase cases.
+It also checks preservation of scalar input registers and the phase pointer.
+
+Frozen VERIFY text is 156,498 bytes, SHA256
+`37569a11eb2ac307bd3da9568f0a59fb1d123e85fea696595dfaa1315c410ab5`.
+A500 reaches flight with all 638/133 interpolation cases passing, together
+with the existing 426 clock and 512 input cases. Its live byte audit passes
+37 selected timing hooks and thirteen disabled ranges. Evidence:
+`tmp/dev/tmp/prof/w6-present-math-a500/`, including `selftest-result.json`.
+Static audit remains 50 ranges and zero errors; all 124 host tests pass.
+Normal and developer binaries remain byte-identical to W5.
+
+This proves the exercised arithmetic, not rendering integration. The unfinished
+work includes lifecycle-safe pose snapshots, cache/callback isolation, coherent
+camera interpolation, render-only loop dispatch, one-field publication under
+W6, visual/latency measurements and complete equal-world-tick state comparisons.
+
+A subsequent read-watch probe on the known projection-cache longs was explicitly
+interrupted after the client timed out. The recovered debugger counter is zero
+completed world boundaries (`projection-reader-interrupted.txt` in the A500
+capture). It supplies no reader-coverage evidence and does not close the cache
+consumer audit. The independently completed arithmetic/byte-audit results above
+are retained; the owned emulator was paused and then quit.

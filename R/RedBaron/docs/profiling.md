@@ -59,6 +59,9 @@ An initial presentation audit then records three complete native draws, with
 50/58/58 listed objects. The 3D pass changes 353/359/348 h3 bytes, including an
 object projection cache; the player and listed pose prefixes remain unchanged.
 These are mutation-inventory counts, not frame costs or proof of render purity.
+The interpolation arithmetic checkpoint passes 638 native position/angle cases
+and 133 exact-phase-to-Q16 cases on A500. It adds no render-only frames and has
+no FPS or gameplay-speed measurement yet.
 See `w6-verification.md` for frozen builds and limitations.
 
 ## W5 current measurements
