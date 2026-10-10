@@ -180,6 +180,7 @@ time_loop_gate:
 	adda.l #time_pose_header-.pose_reset_base,a1
 	clr.w 12(a1)
 .ready
+	bsr time_input_replay_seed
 	move.l a6,-(sp)
 	lea .pose_capture_base(pc),a6
 .pose_capture_base

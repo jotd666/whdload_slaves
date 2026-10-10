@@ -1,4 +1,4 @@
-"""Compare bank/fire acquisition and held state for equal-tick W6 captures.
+"""Compare bank/fire input histories and held state for equal-tick W6 captures.
 
 Requires the four-transition keyboard fixture and the same executable build.
 Does not establish combat outcomes or substitute for the full state inventory.
@@ -38,6 +38,20 @@ def events(queue,acquisitions,origin,paused,clocks=None):
     return result
 
 
+def scheduled_events(queue,records,origin):
+    if struct.unpack_from('>4H',queue)!=(4,4,0,4):
+        raise ValueError('Scheduled fixture was not consumed exactly')
+    history=[]
+    for i,(key,down) in enumerate(EXPECTED):
+        expected=((origin+32*(i+1))&MASK,key,down,0,0)
+        if struct.unpack_from('>IHHII',records,i*16)!=expected:
+            raise ValueError('Incorrect flight-relative scheduled record')
+        if struct.unpack_from('>IHHII',queue,16+i*16)!=expected:
+            raise ValueError('Scheduled queue differs from fixture record')
+        history.append(dict(deadline=32*(i+1),key=key,down=down,modal=False))
+    return history
+
+
 def validate_consumption(rows,history):
     if not rows or rows[0]['tick']!=0 or rows[0]['consumed'] or rows[0]['popped']:
         raise ValueError('Missing untouched initial input boundary')
@@ -73,9 +87,22 @@ def extract(root):
     origin=rows[0]['cursor']
     for row in rows:row['cursor']=(row['cursor']-origin)&MASK
     final=Snapshot(root,poses['frames'][-1]['banks'])
-    acquired=events(final.read(at('time_input_observe_queue'),4112),
-                    final.read(at('time_input_fixture_log'),32),origin,rows[-1]['paused'],
-                    final.read(at('time_input_fixture_clocks'),64))
+    # Older frozen listings predate the scheduled fixture; acquisition captures
+    # remain supported and are never relabeled as synthetic replay evidence.
+    try:replay_done=at('time_input_replay_done')
+    except ValueError:replay_done=None
+    replay_state=int.from_bytes(final.read(replay_done,2),'big') if replay_done else 0
+    if replay_state not in (0,2):raise ValueError('Scheduled fixture publication incomplete')
+    replay=replay_state==2
+    if replay:
+        acquired=scheduled_events(final.read(at('time_input_observe_queue'),4112),
+                                  final.read(at('time_input_replay_records'),64),origin)
+        kind='scheduled-replay'
+    else:
+        acquired=events(final.read(at('time_input_observe_queue'),4112),
+                        final.read(at('time_input_fixture_log'),32),origin,rows[-1]['paused'],
+                        final.read(at('time_input_fixture_clocks'),64))
+        kind='native-acquisition-fixture'
     for row in rows:del row['paused']
     commands=sum(e['down'] and not e['modal'] for e in acquired)
     if (rows[-1]['consumed'],rows[-1]['popped'])!=(4,commands):
@@ -85,14 +112,15 @@ def extract(root):
     if not any(bytes.fromhex(row['held'])[0x40] for row in rows):
         raise ValueError('No completed update held Fire')
     validate_consumption(rows,acquired)
-    return dict(sha256=entry['slave_sha256'],events=acquired,rows=rows)
+    return dict(sha256=entry['slave_sha256'],input_kind=kind,events=acquired,rows=rows)
 
 
 def compare(left,right):
     if left['sha256']!=right['sha256']:raise ValueError('Different executable builds')
+    if left.get('input_kind')!=right.get('input_kind'):raise ValueError('Different input fixture kinds')
     if left['events']!=right['events']:raise ValueError('Different active-time input histories')
     if left['rows']!=right['rows']:raise ValueError('Different equal-tick input consumption')
-    return dict(sha256=left['sha256'],events=left['events'],rows=left['rows'],
+    return dict(sha256=left['sha256'],input_kind=left.get('input_kind'),events=left['events'],rows=left['rows'],
                 same_input_history=True,limitation='Input agreement only; gameplay state and combat outcomes require separate checks.')
 
 

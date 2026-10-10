@@ -136,6 +136,18 @@ Shared allocation differences remain in the identified sound word and the
 rendering-only message background; 924 global bytes remain explicit in the final
 raw inventory. Combat outcomes and broader gameplay acceptance are still open.
 
+The flight-relative synthetic replay build `4f682c6d…` then completes identical
+bank/fire consumption under ordinary, delayed and no rendering. All three
+40-boundary histories match full player records, 1,352 registered prefixes,
+registry/list ordering and lifecycle events. Their 39 updates take respectively
+244/245/239 PAL fields, with 39/27/0 draws and final CIA debt 5/6/0. Eleven delayed
+same-field catch-up pairs preserve the input/state comparison. These controlled
+fixtures are not 250-field performance samples or full gameplay acceptance.
+The previous physical-acquisition fixture's delayed variant was rejected because
+its Right hold ended before flight activation; it is not an identical-input
+comparison. See `w6-verification.md` for the distinction, fixture isolation,
+remaining global differences and reproducible evidence.
+
 ## W6 coherent clock-boundary capacity checkpoint
 
 VERIFY build `9f72992c…` adds transaction markers for debugger observations of

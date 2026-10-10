@@ -1,7 +1,7 @@
 import copy
 import struct
 import unittest
-from world_controls import EXPECTED,events,compare,validate_consumption
+from world_controls import EXPECTED,events,compare,validate_consumption,scheduled_events
 
 
 class WorldControlsTests(unittest.TestCase):
@@ -63,3 +63,16 @@ class WorldControlsTests(unittest.TestCase):
         validate_consumption(rows,history)
         rows[1]['popped']=1
         with self.assertRaisesRegex(ValueError,'timestamp replay'):validate_consumption(rows,history)
+
+    def test_scheduled_records_are_exact_and_wrap(self):
+        for origin in (100,0xfffffff0):
+            q=bytearray(4112);records=bytearray(64)
+            struct.pack_into('>4H',q,0,4,4,0,4)
+            for i,(key,down) in enumerate(EXPECTED):
+                struct.pack_into('>IHHII',records,i*16,(origin+32*(i+1))&0xffffffff,key,down,0,0)
+            q[16:80]=records
+            self.assertEqual([e['deadline'] for e in scheduled_events(q,records,origin)],[32,64,96,128])
+            q[19]^=1
+            with self.assertRaisesRegex(ValueError,'queue differs'):scheduled_events(q,records,origin)
+            records[3]^=1
+            with self.assertRaisesRegex(ValueError,'flight-relative'):scheduled_events(q,records,origin)

@@ -243,3 +243,96 @@ time_input_option_timing:
 	btst #5,(a0)
 	move.l (sp)+,a0
 	rts
+
+
+; CUSTOM5 bit 31: deterministic scheduled-input fixture for render-schedule
+; comparisons. These are synthetic queue records, NOT keyboard acquisitions.
+; Seed once at world tick zero after native input ownership is ready. Deadlines
+; are relative to the actual flight cursor, independent of setup/drawing time.
+; Keep all physical acquisition fixtures (bits 21/22) separate from this mode.
+time_input_replay_seed:
+	movem.l d0/a0-a1,-(sp)
+	lea .options_base(pc),a0
+.options_base
+	adda.l #perf_custom5-.options_base,a0
+	btst #7,(a0)
+	beq .done
+	lea time_input_replay_done(pc),a1
+	move.w (a1),d0
+	bne .done ; one atomic state: 0 idle, 1 pending, 2 complete
+	lea time_loop_state(pc),a0
+	move.l TIME_LOOP_CURSOR(a0),d0
+	sub.l TIME_LOOP_PAUSED(a0),d0
+	move.l d0,2(a1)
+	move.w #1,(a1) ; publish only after the complete origin
+.done
+	movem.l (sp)+,d0/a0-a1
+	rts
+
+; Called only from the supervisor VBlank observer, after native input seeding.
+; Real producers cannot interleave the four synthetic future records.
+time_input_replay_irq:
+	movem.l d0-a6,-(sp)
+	move.w sr,-(sp)
+	ori.w #$0700,sr
+	lea time_input_replay_done(pc),a4
+	cmpi.w #1,(a4)
+	bne .done
+	lea .options_base(pc),a0
+.options_base
+	adda.l #perf_custom5-.options_base,a0
+	btst #5,1(a0)
+	bne .bad
+	btst #6,1(a0)
+	bne .bad
+	move.w time_keys_ready(pc),d0
+	beq .bad
+	move.l 2(a4),d5
+	lea time_loop_state(pc),a2
+	move.l TIME_LOOP_CURSOR(a2),d0
+	sub.l TIME_LOOP_PAUSED(a2),d0
+	sub.l d5,d0
+	cmpi.l #32,d0
+	bhs .bad ; never install an event after its eligible world boundary
+	move.l time_input_observe_state+8(pc),a0
+	move.w (a0),d0
+	cmp.w 2(a0),d0
+	bne .bad
+	lea time_input_replay_records(pc),a1
+	moveq #0,d4
+.next
+	addi.l #32,d5
+	move.l d5,(a1)
+	move.w #$4e,4(a1)
+	cmpi.w #2,d4
+	blo .key
+	move.w #$40,4(a1)
+.key
+	move.w d4,d0
+	andi.w #1,d0
+	eori.w #1,d0
+	move.w d0,6(a1)
+	clr.l 8(a1)
+	clr.l 12(a1)
+	bsr time_input_push
+	tst.l d0
+	bne .bad
+	adda.w #16,a1
+	addq.w #1,d4
+	cmpi.w #4,d4
+	blo .next
+	move.w #2,(a4)
+.done
+	move.w (sp)+,sr
+	movem.l (sp)+,d0-a6
+	rts
+.bad
+	pea .error(pc)
+	pea TDREASON_FAILMSG
+	move.l observe_resload(pc),a2
+	jmp resload_Abort(a2)
+.error: dc.b "Red Baron: invalid scheduled-input fixture setup",0
+	even
+time_input_replay_done: dc.w 0
+time_input_replay_origin: dc.l 0
+time_input_replay_records: dcb.l 16,0

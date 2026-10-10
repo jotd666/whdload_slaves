@@ -2060,3 +2060,97 @@ consumption, explicit preflight ownership, and independent timestamp replay.
 The final live endpoint passes native counters 426/512/638/133, terrain/cache/list
 cases 2/1/2, all 54 timing/pacing targets and ten disabled ranges. Both owned
 emulators were quit. No slave source or release binary changes in this checkpoint.
+
+
+## Flight-relative scheduled input fixture
+
+The original VBlank acquisition fixture cannot by itself guarantee identical
+flight-relative input under a changed startup render schedule. In
+`tmp/dev/tmp/prof/w6-controls-owner-slow-030/`, the deliberate drawing delay
+moves flight activation past the short Right hold. `world_controls.py` rejects
+that run because no completed update holds Right; its different player states
+must not be reported as a scheduler divergence under identical input. The raw
+capture remains retained. The earlier ordinary/no-render acquisition pair is
+still valid, with its explicitly documented preflight held-only transition.
+
+VERIFY build
+`4f682c6dc6ae6efc0aa4fc6843c00e7a49531869028a4744a014dab27f748a63`
+adds CUSTOM5 bit 31 for a separate **synthetic scheduled-input fixture**. It
+requires the W6 scheduler, rejects simultaneous physical-acquisition fixtures
+(bits 21/22), and does not emulate host keyboard/CIA serial acquisition. It
+publishes Right down/up and Fire down/up at active-flight cursor offsets
+32/64/96/128. The normal input-consumption path processes those records.
+
+The main task publishes the complete flight origin followed by one atomic
+request word. The existing supervisor VBlank observer, after input seeding,
+serializes queue publication and marks the request complete. It rejects an
+unready owner, a nonempty queue, or publication after the first deadline. This
+separates main-task clock-origin publication from supervisor-only interrupt
+masking. The initially attempted main-task masking caused a privilege fault;
+that failed build/capture is retained separately and is not validation evidence.
+The final fixture passes the native delayed-draw run without that fault.
+
+AmigaDOS numeric arguments are signed 32-bit values. Use the signed decimal
+representation of the high-bit CUSTOM5 mask; an unsigned positive representation
+fails before the slave loads. The local boot helper's `--replay` option handles
+this conversion and leaves `--input-fixture` unselected. For example, replay,
+deferred activation and observation with the slow-draw fixture use
+`CUSTOM5=-2146434559`. These flags are development fixtures, not player options.
+
+`world_controls.py` labels scheduled replay separately from native acquisition
+and refuses comparisons between the two kinds. It checks every retained queue
+record against independently constructed flight-relative deadlines, verifies
+complete publication/consumption, and applies the existing independent held-key
+and command-pop replay at every completed tick. The new generator check also
+covers unsigned CIA wrap and rejects altered deadlines or queue records.
+No raw world-state differences are removed by this fixture.
+
+
+The corrected fixture is validated on cached 68030 in three fresh captures:
+`tmp/dev/tmp/prof/w6-replay-normal-030/`, `w6-replay-slow-030-v2/` and
+`w6-replay-none-030/` (the latter two under the same profiling directory).
+All use the frozen build above and CUSTOM2=8192. The independent replay agrees
+at all 40 completed-tick boundaries in every run: Right is held at ticks 5–8,
+Fire at ticks 14–17, all four transitions are consumed, and exactly two one-shot
+commands are popped. This proves scheduled consumption for these fixtures;
+it does not replace the separate native acquisition checks.
+
+| Render schedule | Completed updates | Draws | PAL fields / CIA ticks | Final CIA debt |
+| --- | ---: | ---: | --- | ---: |
+| Ordinary | 39 | 39 | 244 / 288 | 5 |
+| Delayed | 39 | 27 | 245 / 289 | 6 |
+| None | 39 | 0 | 239 / 283 | 0 |
+
+Every consecutive funding interval passes. Eleven delayed-run pairs complete in
+the same PAL field with no intervening draw: 5→6, 9→10, 12→13, 15→16, 18→19,
+21→22, 25→26, 29→30, 33→34, 35→36 and 37→38. Their CIA debt decreases from
+7–10 ticks to 0–3. This includes held bank/fire input during catch-up.
+
+Initial h3, player and all 105 allocations / 243,855 bytes match. Ordinary and
+no-render executable segments match; delayed drawing differs only in the three
+address bytes at `sim:015b5–015b7`, independently checked against the
+`observe_slow_draw` target of the expected JMP at `sim:015b2`. At all 40 equal
+ticks, complete player records, 1,352 registered prefixes, primary registry and
+shared display-list order/count, and lifecycle events match in both comparisons.
+All differing shared allocations are the low byte of payload word 344 in sound
+contexts 0–2. The separately retained 1,800-byte drawing/message background appears
+only with drawing from tick 33. Final raw h3 differences remain 1,233 bytes for
+ordinary/no-render and 1,238 for delayed/no-render; none is silently normalized.
+
+All three native endpoints pass the existing counters (426/512/638/133), terrain
+stores/cache/list cases (2/1/2), 54 selected timing/pacing targets and ten disabled
+ranges. All 184 host tests pass; static audits report 64 ranges and 121 patch
+destinations with zero errors and their existing indirect-target limitations.
+Normal and developer binaries retain their W5 hashes. All owned emulators were
+quit. The fixture is VERIFY-only, and these 40-boundary controlled captures are
+not 250-field performance samples, complete gameplay acceptance, or proof of
+smooth 50 FPS.
+
+For a new local fixture capture, use the existing helper with `--replay` instead
+of `--input-fixture`, adding `--slow` or `--no-render` as appropriate. Run one
+capture at a time and use a new evidence directory. Reproduce retained checks:
+
+```sh
+python3 R/RedBaron/tools/world_controls.py tmp/dev/tmp/prof/w6-replay-slow-030-v2 tmp/dev/tmp/prof/w6-replay-none-030 --out tmp/dev/tmp/prof/w6-replay-slow-030-v2/controls-comparison.json
+python3 R/RedBaron/tools/world_comparison.py tmp/dev/tmp/prof/w6-replay-slow-030-v2 tmp/dev/tmp/prof/w6-replay-none-030 --out tmp/dev/tmp/prof/w6-replay-slow-030-v2/heap-inventory.json
+```
