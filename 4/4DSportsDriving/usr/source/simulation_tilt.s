@@ -266,10 +266,11 @@ sim_tilt_wheels: dcb.w 12,0
 ; Evaluate the native near-level gate at its A2500 reference interval. D0 is
 ; the actual Q8 angle change, D5 the native atan baseline before subtracting
 ; the quarter-turn, A2 the old carry. Preserve D0/D5/A2. D1 returns absolute
-; predicted reference tilt in Q9; C means below the original effective cutoff.
+; maximum actual/reference tilt magnitude in Q9; C means both are below cutoff.
 ; Native table index3 is the first value2. Its rounded-ratio lower boundary
 ; is640/65536, atan=1.59149884 angle units: ceil(Q8)=408. Doubling avoids
-; asymmetric rounding of (5/2)*delta. Only activation uses the reference step.
+; asymmetric rounding of (5/2)*delta. The extrapolated reference can cross
+; zero while the actual state remains steep: require BOTH to be near level.
 sim_tilt_stabilize:
  move.l d0,d1
  asl.l #2,d1
@@ -287,6 +288,21 @@ sim_tilt_stabilize:
  bpl .absolute
  neg.l d1
 .absolute:
+ ; A reference prediction may cross level before the actual50Hz state.
+ ; Require BOTH the reference and actual result to lie in the native band.
+ move.l d0,d3
+ add.l d3,d3
+ add.l d3,d2
+ add.l #$40000,d2
+ and.l #$7ffff,d2
+ sub.l #$40000,d2
+ bpl .actual_absolute
+ neg.l d2
+.actual_absolute:
+ cmp.l d2,d1
+ bhs .gate_range
+ move.l d2,d1
+.gate_range:
  cmp.l #816,d1
  rts
 

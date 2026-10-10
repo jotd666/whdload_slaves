@@ -5,10 +5,10 @@
 ; checkpoints, twenty companions, CRC32 of all preceding bytes. Invalid slots
 ; and unused inputs are zeroed. The epoch is separate from native snapshots.
  IFNE SIM_HISTORY_BYTES-392
- FAIL "Replay ABI8 requires392-byte companions; revise the format explicitly"
+ FAIL "Replay ABI9 requires392-byte companions; revise the format explicitly"
  ENDC
  IFNE SIM_HISTORY_SLOTS-20
- FAIL "Replay ABI8 requires20 checkpoint slots"
+ FAIL "Replay ABI9 requires20 checkpoint slots"
  ENDC
 SIM_REPLAY_PREFIX = $724
 SIM_REPLAY_INPUTS = 30000
@@ -56,7 +56,7 @@ sim_replay_validate:
  bne .bad
  cmp.l #$4c303530,4(a0)   ; L050
  bne .bad
- cmp.l #$00010008,8(a0)  ; format1, physics ABI8
+ cmp.l #$00010009,8(a0)  ; format1, physics ABI9
  bne .bad
  cmp.l #$00320014,12(a0) ; 50Hz,20 slots
  bne .bad
@@ -148,7 +148,7 @@ sim_replay_pack:
  movea.l a6,a0
  move.l #$34445250,(a0)+
  move.l #$4c303530,(a0)+
- move.l #$00010008,(a0)+
+ move.l #$00010009,(a0)+
  move.l #$00320014,(a0)+
  move.l #SIM_REPLAY_PREFIX,(a0)+
  move.l d4,(a0)+

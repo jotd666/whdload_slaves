@@ -51,18 +51,20 @@
    saved A4000 preferences are ignored and A4000 replays are rejected safely
  - CUSTOM2=1 enables rendering optimizations; CUSTOM2=0 is the default
    and retains the original rendering routines
- - A4000 replay physics ABI8 retains fractional steering, body position and
+ - A4000 replay physics ABI9 retains fractional steering, body position and
    tilt; older development A4000 replays are rejected. Native 10/20 Hz
    replays remain supported
  - use a separate extracted copy for testing. Game data and icons are
    unchanged from the v1.2 pack; only the slave and this ReadMe are replaced
  - the preview has been exercised in FS-UAE with 68020, 2 MB ChipMem and
    4 MB FastMem. Sustained 50 Hz capacity on an A4000 is not yet established
- - known limitation: jump/landing pitch still differs from A2500 beyond
-   the current acceptance limit. Broader handling, lifecycle and latency
+ - known limitation: jump height and landing pitch still differ from A2500
+   beyond the current acceptance limits. Broader handling, lifecycle and latency
    validation is unfinished; this is not a final release
 
  version 1.3b (testing):
+ - prevent A4000 pitch/roll stabilization from snapping a non-level actual
+   angle to zero when only its extrapolated A2500 reference crosses level
  - optional rendering optimizations (CUSTOM2=1), off by default; select the
    rendering option in the WHDLoad startup window, or add CUSTOM2=1
  - suppress redundant blitter interrupts only while the game owns the blitter
