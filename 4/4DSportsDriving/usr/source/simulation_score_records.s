@@ -1,6 +1,7 @@
 ; Native high-score load/reset integration. Exact times have the SAME physical
 ; row order as A4-$1784. Native A4-$160A maps displayed/saved row order.
-; Insertion, saved-row reordering and exact UI consumers are separate hooks.
+; Insertion and sorted saving are in simulation_score_insert.s.
+; Exact UI consumers still need their own conversion.
 
 ; A0 native .hig name -> D0=0 and private .hix name, or 1 invalid/too long.
 ; Preserve other registers; never modify the caller's native filename.
@@ -211,7 +212,7 @@ sim_score_reset_hook:
  dc.b "4DSCRECS"
  dc.w 1,SIM_SCORE_EXACT_BYTES
 ; Status:0 native-only,1 exact loaded/saved,2 rejected companion,
-; 3 failed native read,4 invalid filename,5 failed reset save.
+; 3 failed native read,4 invalid filename,5 failed save,6 pending exact save.
 sim_score_record_status: dc.l 0
 sim_score_record_loads: dc.l 0
 sim_score_record_resets: dc.l 0

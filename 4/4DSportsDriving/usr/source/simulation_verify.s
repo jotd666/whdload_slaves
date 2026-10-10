@@ -471,9 +471,15 @@ SIM_SCORE_LOAD_TICK = 160
 ; private queue is closed during disk I/O, as it is for a modal operation.
 ; The external harness stops before this tick executes any physics.
 sim_score_load_fixture:
+ tst.b $45(a4)
+ bne .done
+ tst.b -$16d8(a4)
+ bne .done
  cmp.w #SIM_SCORE_LOAD_TICK,-$940(a4)
  bne .done
  movem.l d0-a6,-(sp)
+ move.l tape_configured(pc),d0
+ beq .restore
  lea sim_score_load_fixture(pc),a0
  adda.l #sim_score_load_test_count-sim_score_load_fixture,a0
  tst.l (a0)
@@ -491,6 +497,11 @@ sim_score_load_fixture:
  lea sim_score_load_fixture(pc),a0
  adda.l #sim_score_load_test_result-sim_score_load_fixture,a0
  move.l d0,(a0)
+ IFD SIM_SCORE_INSERT_TEST
+ lea sim_score_load_fixture(pc),a0
+ adda.l #sim_score_insert_fixture-sim_score_load_fixture,a0
+ jsr (a0)
+ ENDC
  lea sim_score_load_fixture(pc),a0
  adda.l #sim_schedule_modal-sim_score_load_fixture,a0
  move.w (sp)+,(a0)
