@@ -122,18 +122,24 @@ sim_time_cache_reduce:
  rts
 
 ; JMP entry hook: original return/destination/ticks/show-fractions stack ABI.
-; Only the four converted callers promise a full unsigned D0 tick argument.
+; Only the four elapsed-time callers promise a full unsigned D0 tick argument.
+; Results and record callers retain their native word stack arguments.
 sim_time_format_entry:
  movem.l d0-d3/a0,-(sp)
  moveq #0,d2
  addx.w d2,d2
  move.w d2,-(sp)
- cmp.w #50,-$15fa(a4)
- bne .native
  move.l 22(sp),d1
  lea sim_time_format_entry(pc),a0
  adda.l #tape_game-sim_time_format_entry,a0
  sub.l (a0),d1
+ ; The record row formatter temporarily forces 20 Hz, in every physics mode.
+ cmp.l #$3dbe,d1
+ beq .score
+ cmp.l #$3dd0,d1
+ beq .score
+ cmp.w #50,-$15fa(a4)
+ bne .native
  cmp.l #$7720,d1
  beq .wide
  cmp.l #$9308,d1
@@ -152,6 +158,14 @@ sim_time_format_entry:
  beq .opponent
  cmp.l #$58ba,d1
  bne .native
+ bra .opponent
+.score:
+ move.w 8(a5),d0            ; still the caller's native row frame
+ bsr sim_score_row_time
+ move.l 26(sp),a0
+ move.w 32(sp),d1
+ bsr sim_score_format100
+ bra .restore
 .opponent:
  lea sim_results_summary(pc),a0
  move.l 8(a0),d0
@@ -171,6 +185,7 @@ sim_time_format_entry:
  move.l 26(sp),a0
  move.w 32(sp),d1
  bsr sim_time_format50
+.restore:
  move.w (sp)+,d2
  lsr.w #1,d2
  movem.l (sp)+,d0-d3/a0

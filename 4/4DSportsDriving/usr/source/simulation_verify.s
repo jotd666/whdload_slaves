@@ -502,6 +502,11 @@ sim_score_load_fixture:
  adda.l #sim_score_insert_fixture-sim_score_load_fixture,a0
  jsr (a0)
  ENDC
+ IFD SIM_SCORE_DISPLAY_TEST
+ lea sim_score_load_fixture(pc),a0
+ adda.l #sim_score_display_fixture-sim_score_load_fixture,a0
+ jsr (a0)
+ ENDC
  lea sim_score_load_fixture(pc),a0
  adda.l #sim_schedule_modal-sim_score_load_fixture,a0
  move.w (sp)+,(a0)

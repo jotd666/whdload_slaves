@@ -185,7 +185,9 @@ patch_main
 	bsr sim_a4000_prepare
 	ENDC
 	IFD SIM_PHYSICS
-	bsr sim_physics_selftest
+	lea patch_main(pc),a0
+	adda.l #sim_physics_selftest-patch_main,a0
+	jsr (a0)
 	ENDC
 	IFD SIM_SCHEDULE
 	bsr sim_schedule_reset_selftest
@@ -198,6 +200,7 @@ patch_main
 	bsr sim_average_selftest
 	bsr sim_score_selftest
 	bsr sim_score_rank_selftest
+	bsr sim_score_display_selftest
 	bsr sim_score_file_selftest
 	IFD SIM_SCORE_IO_TEST
 	bsr sim_score_io_selftest
@@ -367,6 +370,7 @@ pl_main
     PL_PSS $5F72,sim_score_eligibility_stub,36
     PL_PSS $3E02,sim_score_insert_stub,4
     PL_PSS $4028,sim_score_save_stub,2
+    PL_PSS $3558,sim_score_top_guard_stub,18
     IFD SIM_SCORE_INSERT_TEST
     PL_PSS $3F16,sim_score_insert_test_finish_stub,2
     PL_PSS $3FB0,sim_score_insert_test_reject_stub,2
@@ -720,6 +724,14 @@ sim_score_insert_test_finish_stub:
  movem.l (sp)+,a0
  rts
  ENDC
+sim_score_top_guard_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_score_top_guard_stub(pc),a0
+ adda.l #sim_score_top_guard-sim_score_top_guard_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
 sim_score_eligibility_stub:
  subq.l #4,sp
  movem.l a0,-(sp)
@@ -1026,6 +1038,8 @@ tape_restart_result_stub:
 	include "simulation_score_records.s"
 	include "simulation_score_insert.s"
 	include "simulation_score_insert_verify.s"
+	include "simulation_score_display.s"
+	include "simulation_score_display_verify.s"
 	include "simulation_a4000.s"
 	include "simulation_results.s"
 	include "simulation_results_ui.s"

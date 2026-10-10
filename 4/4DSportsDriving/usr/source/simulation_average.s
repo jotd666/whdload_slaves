@@ -37,8 +37,9 @@ sim_average_finish:
  rts
 
 ; Unsigned D2:D0 / D1 -> D0 quotient, D2 remainder; D3 scratch.
-; Game domain: nonzero divisor <=75000 and numerator <=65535*divisor,
-; so high<divisor and the quotient fits32 bits. Remainder shifts fit32 bits.
+; Require nonzero divisor <=75000 and high<divisor, so the unsigned quotient
+; and shifted remainder fit 32 bits. Average speed additionally bounds the
+; quotient to 65535; exact-score formatting also uses this kernel at 6000/10.
 ; Zero is defensive; the original result guard bypasses zero-time division.
 sim_average_divide:
  tst.l d1
