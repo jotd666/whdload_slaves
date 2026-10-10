@@ -623,6 +623,15 @@ sim_fixture_before:
  tst.b -$68b(a4)
  bne .done
  move.w #1,(a0)
+ IFD SIM_FIXTURE_GEARS
+ ; Explicit fixture configuration, equivalent to choosing Manual before the
+ ; native race initialization: $E36C passes the header byte to $DD6E, whose
+ ; only use of that argument is the car+$CC assignment at $E042. Automatic
+ ; transmission silently ignores the up/down inputs below ($F134 gate).
+ ; Change both header and live configuration so replay describes this race.
+ clr.b -$174b(a4)
+ clr.b -$862(a4)
+ ENDC
  IFD SIM_FIXTURE_OPPONENT_BRAKE
  IFND TAPE_OPPONENT
  FAIL "SIM_FIXTURE_OPPONENT_BRAKE requires TAPE_OPPONENT"
