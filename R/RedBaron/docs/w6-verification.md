@@ -1106,3 +1106,65 @@ branches individually. Live polygon/color-cache restoration, journal capacity
 stress, callback flag/pointer pairs, indirect simulation consumers, full renderer
 mutation coverage and equal-world-tick comparisons remain open. No interpolated
 frames or performance result are claimed at this checkpoint.
+
+
+## Pose history: registry and lifecycle contract
+
+The primary persistent drawing-object registry has a word count at `h3:0859e`
+and pointer array at `h3:085a0`. It is distinct from the filtered/reordered
+render list at `h3:07dc8`. Registration at `sim:0fdbc` checks both list counts
+against 500, marks object byte 1 bit 7 and appends the pointer to both arrays.
+Its successful registry store is at `sim:0fe20`; failed registration returns
+zero without adding an object. Removal at `sim:0feca` clears the membership bit,
+finds the pointer and fills its slot with the final registry element before
+reducing the count (`sim:0ff06–0ff18`). It removes the render-list entry separately.
+`sim:29914` clears both arrays/counts and the camera context for initialization.
+
+The scene builder `sim:0f01c` constructs/caches scenery candidates, then appends
+the persistent registry at `sim:0f5cc–0f5ec`. Later outer-draw helpers filter and
+sort those candidates. Consequently, render order and visibility cannot serve
+as object identity or determine which moving objects receive pose snapshots.
+The successful add and removal paths are concrete lifecycle-observer sites;
+events must be tracked even when removal and reuse happen within one world tick.
+Pointer equality, unchanged model ID and a still-set active flag are not enough
+to distinguish those lifetimes. Scenery enumeration also writes visibility and
+model-selection data (`sim:0f55c/0f572/0f58e/0f5ae`); this extends the outstanding
+render-mutation/consumer audit beyond the aircraft callback journal.
+
+`pose_history.py` defines the executable host reference for the upcoming native
+pose integration. It snapshots the normal-object pose payload (three signed
+long positions at bytes 8–19 and three wrapped word angles at bytes 20–25),
+paired only across consecutive completed world tick IDs, including unsigned
+32-bit tick wrap. Registry add assigns a new generation, removal ends it, and
+an explicit teleport/discontinuity renews it. Pairing requires the same pointer,
+generation and model ID. New/reused objects snap to their current pose; removed
+objects are never written through stale pointers. The model uses the independent
+rational interpolation helpers already checked against native arithmetic.
+
+A view change invalidates the pose pair immediately, including between ticks.
+Mission reset clears the pair and membership. A temporary presentation lease
+preflights all target poses, writes only their pose payloads and restores them
+on exit, including a failed draw. Lifecycle/world updates during the lease are
+rejected; unrelated drawing or IRQ memory changes survive restoration. A camera
+pose modified since capture is rejected instead of silently mixing service-clock
+motion with a world-clock snapshot. A separate coherent camera-service history
+is still needed for that case. The host generation counter is unbounded; native
+integration must explicitly handle token exhaustion without aliasing a lifetime.
+
+Retained `pose-registry.json` inventories in `w6-model-journal-030/` and
+`w6-model-journal-a500/` use the frozen journal build above. At the three
+outer-entry snapshots, cached 68030 has 25/33/33 registered objects and A500
+has 33/37/29. Every registered entry has the normal layout in these windows;
+the camera pointer from `h3:08d72` is registered in every snapshot. The changing
+counts demonstrate why creation/removal cannot be ignored. These draw snapshots
+are not consecutive world-tick captures and contain no lifecycle event log;
+they cannot validate interpolation continuity or rule out same-address reuse.
+
+Seven new host tests cover pose restoration, angle wrap, unrelated progress,
+exception cleanup, same-address reuse, teleport, model/view changes, between-tick
+view changes, tick wrap, stale camera detection, registry reordering and invalid
+registry entries. All 138 host tests pass. This checkpoint does not add native
+pose snapshots or interpolated frames. Remaining work includes native lifecycle
+hooks, complete-tick snapshot boundaries, nonregistered camera handling, all
+moving-object/compact-layout coverage, explicit teleport/mission transitions,
+and validation against live lifecycle events before interpolation is enabled.
