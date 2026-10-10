@@ -1,5 +1,5 @@
 ; W6 single-producer/single-consumer timestamped event queue.
-; Not installed in the game yet. The IRQ owner must serialize multiple producers;
+; Used by VERIFY bit 13. The IRQ owner must serialize multiple producers;
 ; only the producer publishes head and only the consumer publishes tail.
 ; Entry: eligible CIA boundary.l, device/code.w, value.w, payload[2].l.
 ; Header: head.w, tail.w (wrapping sequence numbers), overflow.w, high-water.w,

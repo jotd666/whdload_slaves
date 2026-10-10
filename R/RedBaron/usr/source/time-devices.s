@@ -1,4 +1,4 @@
-; W6 sampled joystick/analog axes/mouse buttons. Mouse motion is not replayed yet.
+; W6 sampled joystick/analog axes/mouse buttons. Motion is in time-mouse.s.
 ; PERF_RANGE sim:2d412 8 bit=13
 ; PERF_RANGE sim:30a4e 6 bit=13
 ; PERF_RANGE sim:30afc 6 bit=13

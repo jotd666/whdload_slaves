@@ -427,3 +427,63 @@ Required input gates still include calibrated analog mode, mouse movement,
 mixed devices with modal/restart transitions and native modifier twins. The
 remaining service clocks, rate/compression transitions, full state comparisons,
 interpolation and sustained-speed/capacity matrix remain required for W6.
+
+
+## Timestamped relative mouse movement
+
+VERIFY bit 13 now acquires the original signed byte-counter deltas at
+`sim:2d35c`. It retains the native physical cursor for menus and uses a separate
+flight position advanced from timestamped delta events. Each event freezes both
+axis limits and becomes eligible at the next active CIA boundary. Clamping is
+performed for every acquisition in order, not once on their summed displacement.
+The flight poll at `sim:1ecd0` reads the private position. World and camera
+recentering at `sim:1e8ec` and `sim:1eb8a` reset that position at their native
+control boundaries, while retaining the original physical writes.
+
+Mouse movement acquired while modal is excluded from flight input. The first
+VBlank sample spanning seed/resume is also excluded; it contains motion from
+before the ownership boundary. Previously queued active-flight motion remains
+intact. This policy is implemented, but a live mixed mouse/modal/restart fixture
+is still required. It does not certify every input transition.
+
+CUSTOM5 bit 24 supplies twelve producer-local X/Y deltas, including signed
+extremes and multiple acquisitions between world updates. Hardware and consumer
+state are not modified by the fixture. `mouse_replay.py` independently rebuilds
+positions, native dead-zone/response outputs and recentering from acquisition
+records. Its native vector file checks 264 word-add/clamp cases; host tests also
+cover all 65,536 counter pairs and every normal X/Y position with every signed
+byte delta. Deliberate corruption tests reject wrong inputs, outputs, reset
+counts, deadlines, overflow and keyboard leakage.
+
+Frozen VERIFY text is 128,828 bytes, SHA256
+`391e8af8b5b447ee02cfb8eb2f5987a903043c1d3d28778ebc3a3a2f9c36bcb2`.
+The final cached-68030 capture passes all twelve acquisitions and 48 native
+post-input/post-world-control observations, with nine moving world ticks and
+three ticks consuming multiple acquisitions. Its maximum observed debt is ten
+CIA intervals. Eighteen native reset entry/exit flag pairs preserve X (both
+incoming values occur) and produce the original NZVC flags. These flags are
+written by CPU instructions: the debugger's cached SR display did not give
+reliable NZVC values at the same sites and is not used as evidence.
+
+The control observation precedes that tick's camera call. Its reset is therefore
+included in the next counter observation; the independent checker accounts for
+that ordering. The captures are checked against their own acquisition history,
+not against each other's tick numbers: their seed/VBlank phases differ. They do
+not prove complete cross-CPU world-state equality.
+
+The final A500 capture passes the same twelve acquisitions, 48 observations,
+nine moving ticks, three multiple-acquisition ticks and eighteen reset flag pairs,
+including both X states. Its maximum observed debt is 98 CIA intervals and queue
+high-water is eleven events, versus three on cached 68030. Both live audits pass
+all 24 selected hooks, thirteen disabled sim ranges and clock/FIFO/pause counters
+426 / 512 / 1; both mouse counters are 264. Evidence:
+`tmp/dev/tmp/prof/w6-mouse-{a500,030}-r2/`, including `mouse.log`,
+`mouse-result.json`, `mouse-flags.bin`, `byte-audit.json` and `selftest-result.json`.
+Both owned emulators are quit.
+The host suite has 98 passing tests; static audit passes all 37 sim ranges.
+Normal/developer hashes remain identical to W5. The large step-observer buffer
+now follows code to keep growing VERIFY routines within 68000 branch reach.
+
+Remaining input work includes calibrated analog mode, mixed device/modal/restart
+fixtures and native modifier twins. Service clocks, rate/compression changes,
+interpolated rendering and full gameplay-state/capacity validation remain W6 gates.

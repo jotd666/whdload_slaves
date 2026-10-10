@@ -24,8 +24,12 @@ exactly-once command checks on A500 and cached 68030, including up to 93 observe
 CIA intervals of A500 debt. This is input-history evidence, not a gameplay-speed
 or FPS claim. The device candidate also passes 48 native input observations
 on each machine for joystick direction/fire and both mouse buttons, with up to
-93/10 CIA intervals of A500/68030 debt. Analog mode and mouse movement remain
-unverified. See `w6-verification.md` for frozen builds and limitations.
+93/10 CIA intervals of A500/68030 debt. The subsequent relative-mouse candidate
+passes twelve acquisitions and 48 native input/control observations per machine,
+including recentering and CPU-written flag checks, with 98/10 CIA intervals of
+A500/68030 debt. Analog mode and mixed modal/restart input remain unverified.
+These are input correctness checks, not FPS or sustained gameplay-speed results.
+See `w6-verification.md` for frozen builds and limitations.
 
 ## W5 current measurements
 

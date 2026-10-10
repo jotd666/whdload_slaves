@@ -569,6 +569,7 @@ new_DeleteFile:
 	include "time-pause.s"
 	include "time-keys.s"
 	include "time-devices.s"
+	include "time-mouse.s"
 	include "originals.s"
 	include "mirror-verify.s"
 	include "cache-verify.s"
@@ -584,6 +585,8 @@ fill_twin_after: dcb.b 20*256*2,0
 	include "projection-cases.i"
 	include "dot-cases.i"
 	include "time-core-cases.i"
+; Large VERIFY buffers follow code so observer branches retain 68000 reach.
+observe_buffer: dcb.b OBS_STRIDE*OBS_CAPACITY,0
 time_input_test_queue: dcb.b TIME_INPUT_BYTES,0
 time_input_observe_queue: dcb.b TIME_INPUT_BYTES,0
 	ENDC

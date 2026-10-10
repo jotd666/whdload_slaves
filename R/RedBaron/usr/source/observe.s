@@ -13,7 +13,9 @@ observe_start:
 	move.l perf_attnflags(pc),a0
 	lea observe_attnflags(pc),a1
 	move.l a0,(a1)
-	lea observe_buffer(pc),a0
+	lea .buffer_base(pc),a0
+.buffer_base
+	adda.l #observe_buffer-.buffer_base,a0
 	lea observe_header(pc),a1
 	move.l a0,24(a1)
 	rts
@@ -84,8 +86,6 @@ observe_header:
 observe_vbl_count: dc.l 0
 observe_resload: dc.l 0
 observe_attnflags: dc.l 0
-observe_buffer:
-	dcb.b OBS_STRIDE*OBS_CAPACITY,0
 
 ; Install only at the first true flight step. Menu timing is identical with the
 ; bit off/on; the test adds delay to drawing, inside the measured frame interval.

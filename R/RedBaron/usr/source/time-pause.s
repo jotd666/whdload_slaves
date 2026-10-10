@@ -182,6 +182,7 @@ time_pause_apply_end:
 	add.l d0,TIME_LOOP_CURSOR(a0)
 	add.l d0,TIME_LOOP_PAUSED(a0)
 	move.l #1,TIME_LOOP_ACTIVE(a0)
+	bsr time_mouse_resume
 	move.l time_loop_h3(pc),a1
 	move.w #225,$4834(a1)
 .done

@@ -1,5 +1,5 @@
 ; W6 flight-loop integration checkpoint, VERIFY only / CUSTOM2 bit 13.
-; Not player enabled: input replay, secondary services and interpolation remain.
+; Not player enabled: service clocks, interpolation and remaining input gates remain.
 ; PERF_RANGE sim:21d28 8 bit=13
 ; PERF_RANGE sim:21e7a 6 bit=13
 ; PERF_RANGE sim:03d5e 6 bit=13
@@ -59,6 +59,7 @@ time_loop_install:
 	bsr time_pause_selftest
 	bsr time_pause_install
 	bsr time_devices_install
+	bsr time_mouse_install
 	bsr time_keys_install
 	lea time_loop_patch(pc),a0
 	jsr resload_Patch(a2)
