@@ -45,7 +45,7 @@ combined design justifies its cost. Sound and game-time decisions are unchanged.
 
 ## 0. Ground rules
 
-These restate `AGENTS.md`, the local playbook (`~/.local/share/amiga/new-game-playbook-jotd.md`)
+These restate `AGENTS.md`, the playbook (AmigaXDev `docs/playbooks/new-game-playbook-jotd.md`)
 and the sibling projects' practice, because they bite.
 
 - Every change ships as a patch in the fork's slave source, `R/RedBaron/usr/source/`, applied
