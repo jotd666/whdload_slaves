@@ -2216,3 +2216,34 @@ zero private-camera leases and no world update during drawing. Clock, list and
 terrain-cache restoration pass. Both native endpoints pass the self-test and
 live patch audits above; both owned emulators were quit. The two scenes are
 separate correctness captures, not an A/B speed comparison.
+
+
+## Sorting-context difference classification
+
+The ordinary/no-render inventories retain differing bytes within the longword
+at `h3:04e1a`. It is the temporary comparator context for `sim:0e470`, not an
+RNG state. `sim:0e498` stores the current key-array pointer before handing the
+`sim:0e428` callback to the sorter. The callback loads that pointer at
+`sim:0e448`, then compares two indexed longwords. A relocation audit of the
+original v1 sim finds only those two references into this four-byte context.
+`tools/sort_context.py` checks those references and the exact original store,
+callback handoff, indexed reads and return bytes. Computed aliases are not
+claimed covered by a relocation scan.
+
+The independent trace checker requires a fresh owner and context publication
+before each observed comparator read, then checks the loaded pointer against
+that publication. Nested owners, stale pointers and reads before initialization
+fail. Incomplete or leading calls are never counted as complete evidence; a
+chunk with no complete comparator use fails instead of passing vacuously.
+
+Retained A500 build `9f72992c…`, `w6-transaction-capacity-a500`, supplies four
+complete lifetimes in its second capacity window: two in `capacity-next-0`
+with 267 comparator reads and two in `capacity-next-1` with 283 reads. All 550
+reads use their current owner's pointer. The other four chunks contain no
+complete qualifying lifetime and are explicitly rejected as evidence. The
+machine's previously measured IRQ stack is excluded from this main-task audit.
+These observations classify the retained pointer after the inspected calls;
+they do not establish full global-state independence, RNG/combat correctness,
+or an exclusion rule. Raw world comparisons continue reporting every differing
+byte. The slave is unchanged. All 195 host tests pass, including rejection of
+changed source contracts and extra references.
