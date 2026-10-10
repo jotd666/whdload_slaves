@@ -240,3 +240,14 @@ Time Compress request, and additionally requires smooth 50 FPS on capable hardwa
 This does not waive the acceptance gates or authorize
 publishing a release. A failed gate should change the recommendation openly,
 not be normalized away in state comparisons.
+
+### Roll-response classification follow-up
+
+The native airborne roll-rate model now matches all 143 constant-bank transitions
+at dt=225 and dt=100, plus eight instruction-traced calculations including
+release/reversal. Native response scales acceleration by the remaining target
+error, with per-step integer rounding. This accounts for the measured roll-rate
+histories, not the complete trajectory difference or physics acceptance.
+The smaller-step reference is a physics sensitivity check; W6 must use the same
+fixed step irrespective of rendering FPS. Keep fixed225 and the existing gates;
+see `w6-verification.md`, “Native bank roll-response classification.”

@@ -2388,3 +2388,52 @@ trajectory for this native integer engine. This is a reason to classify the
 banking result carefully, not permission to accept its whole discrepancy as
 rounding. Control response, force integration, collision outcomes and the full
 physics matrix remain open. No timing or physics patch changed in this audit.
+
+## Native bank roll-response classification
+
+The follow-up `roll_response.py` audit models the native airborne response at
+`sim:16c4e..16d4e`, inside the flight model entered at `sim:16a50`. This is
+not the simpler control ramp at `sim:18542`. The native control target in the
+retained bank trace is 1,404 (control value 248, aircraft gain 1,450). With a
+current signed roll rate `r`, native code computes a truncated signed quotient
+`(target-r)*256/gain`, takes its magnitude and clamps it to 32..256. It scales
+450 acceleration, or 700 when reversing direction, by that factor before
+applying primary dt and clamping overshoot to the target. Negative products
+retain native arithmetic-shift rounding. This response approaches its target
+progressively, with integer rounding at each update.
+
+The independent model matches **all 143 consecutive recorded roll-rate
+transitions** in the constant-bank reference: 44 at dt=225 and 99 at dt=100,
+using the aircraft parameters from the retained initial memory and signed rate
+at player-relative offset 0xd6. Both histories hold Right throughout. Their
+first six rates are respectively `381, 658, 860, 1007, 1115, 1193` and
+`169, 318, 448, 563, 664, 753`. This snapshot check assumes the traced constant
+control target; it does not independently decode keyboard acquisition.
+
+The existing full-bundle A500 `capacity-0` instruction trace independently
+checks **eight complete response calculations**, including release/reversal:
+24 factor/acceleration/delta results match exactly. The checker reads the
+actual dt at `sim:3d76`, filters interrupts, requires an observed world entry,
+and checks the original executable hash and relevant instruction bytes. The
+other five retained chunks contain no complete qualifying response calls;
+they are rejected as empty evidence. The full host suite passes **207 tests**.
+Neither the slave nor the frozen builds changed: the bank-reference build is
+`83f586cb2b477476dd915d2779561abf834cd6ce3abe95fa3f347cafdf20083a`;
+the retained A500 trace uses
+`eb743015c665a5893fba0cb12158c9cceb33704f06e6631ccf61235fd0f30896`.
+
+Reproduce with the `roll_response.py` capture argument pointing to each retained
+`w6-bank-reference-225` / `w6-bank-reference-100` directory and `--out` naming the
+result. For the trace, use `w6-current-capacity-a500` with `--sim` pointing to
+the original executable, `--chunk capacity-0`, and `--out` naming the result.
+The ignored results are named `roll-response.json` and
+`capacity-0-roll-response.json` in their respective captures.
+
+This classifies the observed roll-rate histories as native discrete control
+response. Together with the angle-table audit, it establishes why changing
+physics step size changes banking, but **does not fully attribute the 1.7192%
+trajectory-distance difference**: coupled pitch/yaw, lift/drag and contact or
+combat outcomes remain separate physics gates. The dt=100 reference measures
+step-size sensitivity, not rendering-rate dependence. W6 retains the approved
+fixed225 step for every render schedule; no tolerance, quantum, player policy,
+or performance claim changes on this evidence.
