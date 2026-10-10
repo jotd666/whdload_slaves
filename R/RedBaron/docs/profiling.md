@@ -1,5 +1,92 @@
 # Red Baron performance measurements
 
+## W4 current measurements
+
+D1 solid fills use developer/VERIFY **CUSTOM2=128**; normal player enablement
+remains off pending W5/release. Both all-one edge masks select D-only DMA;
+masked rectangles retain the original C+D blit. The frozen VERIFY SHA256 is
+`18395ab2cc6fc1271b6b9e56919bf98c2fe8e3ea886f8e7bbd76a2354ef33241`.
+The independent models and three-CPU hardware pixel twins pass; see
+`w4-verification.md` for the contract and proof.
+
+A500-equivalent OFF/ON swaps 140–240 take **3,511 → 3,488 fields**:
+**1.4218 → 1.4312 FPS (+0.66%)**. These are event-containing windows: each has
+20 message calls, nine dirty events, 26 mirror calls, 39 bitmap rejections and
+four full-redraw branches. Both retain dt=450. Step 8's complete h3 snapshots
+are byte-identical; step 140 differs only at `h3:0483a`, and step 241 only at
+that elapsed-time word and the clock at `h3:03f5a`. This build's later event
+history differs from W3: do not compare the raw rates across those experiments.
+
+Separate 250-recorded-field samples (100/100/50, two unrecorded joins) give:
+
+| A500 complete call | OFF mean main cycles | ON mean main cycles | OFF/ON calls |
+|---|---:|---:|---:|
+| Full-width rectangle, `sim:2fc68` | 36,991.00 | 27,067.89 | 18 / 18 |
+| Whole 3D pass, `sim:2c552` | 2,440,723.75 | 2,418,786.00 | 8 / 8 |
+
+Costs include RTS and exclude IRQ cycles and chunk-cut calls. A rectangle's
+last plane remains asynchronous: whole-pass costs include later waits. Other
+rectangle shapes have different call mixes (88/97); no paired per-shape claim
+is made from their pooled averages. These are W4-only results. Evidence:
+`tmp/dev/tmp/prof/w4-a500-{0,128}/`. The cached-CPU comparison is paused at the user’s request; its OFF run is complete.
+
+
+On the 14 MHz 68020, swaps 80–400 take **2,594 → 2,507 fields**:
+**6.1583 → 6.3720 FPS (+3.47%)**. Both windows contain 320 swap intervals
+and no dashboard events. Variable dt permits world-state divergence; these
+rates describe the observed windows, not bit-identical world histories.
+Separate 250-field samples give full-width rectangle means of
+**73,202.06 → 53,828.28 main cycles** (51/54 calls). This is a CPU-cycle
+comparison within the 68020 configuration, not a direct time comparison with
+68000 cycles. Evidence: `tmp/dev/tmp/prof/w4-020-{0,128}/`.
+
+Cached 68030 **OFF only**: swaps 120–660 span 2,118 fields, **12.7276 FPS**,
+with no dashboard events. At steps 8–59, phase-checked beam clocks give
+48.4996 ms per 3D pass (49 calls) and 1.5577 ms per rectangle (644 calls),
+including interrupt time and stopping before RTS. The ON run has not started;
+**no cached-CPU improvement is claimed**. Evidence: `tmp/dev/tmp/prof/w4-030-0/`.
+See `w4-verification.md` for startup recovery, cache configuration and resume steps.
+
+A500/68020 OFF and ON byte audits pass, including exact selected bytes and the
+absence of pixel-twin hooks during timing. Their first 100-field chunks show
+observable framebuffer writes and zero active-display conflicts. This does not
+replace W5's tear-free swap work or establish a guarantee for other scenes.
+
+
+The cached OFF 20-field DMA audit observes 147,479 framebuffer writes and
+4,820 writes into the buffer fetched in that field, all after that address's
+last fetch (zero later fetches). This is not evidence of visible tearing;
+W5's publication safety remains open. Its ten sim and three sound ranges
+retain original bytes.
+
+### Running W4 manually
+
+From `tmp/dev`, source `amiga/env.sh`. The local helpers use the recorded
+machine settings and require the exact frozen binary above:
+
+```sh
+python3 tools/w4_measure.py a500 0 --suffix=-manual
+python3 tools/w4_measure.py a500 128 --suffix=-manual
+```
+
+Use `020` for the 68020. For cached 68030, use
+`python3 tools/w4_measure_030.py 0 --suffix=-manual` followed by mask `128`.
+Each run needs a fresh suffix. They run sequentially, retain the slave/listing,
+record 250 slow-CPU trace fields or cached beam clocks plus a separate DMA
+sample, and count actual swaps over at least 2,000 fields. They leave the game
+paused. Stop it with `python3 tools/redbaron.py quit` after checking it belongs
+to this worktree.
+
+For another binary, use the generic flight-entry workflow with CUSTOM2=128
+and CUSTOM5=512, advance to step 8, then record **100 + 100 + 50 fields** with
+`tools/capture_current.py` into three new directories. Analyze them using
+`R/RedBaron/tools/fill_costs.py` with the live sim base from entry metadata.
+Do not join cut calls across the two missing fields, or use cached-CPU
+instruction cycles as timings. Record the long swap census separately.
+For pixel verification, use CUSTOM2=128 and CUSTOM5=66048 (steady), 66050
+(bank), or 66068 (dense); those runs are correctness checks, never timings.
+Time Scale stays at 40 and details remain maximal. Avoid input during the tape.
+
 ## W3 current measurements
 
 The sound queue fast path (S1), no-op call removal (S9), and bounded volume

@@ -47,6 +47,7 @@ fill_setup:
 ; No VERIFY register/CCR survives: the replaced BLTSIZE MOVE supplies NZVC;
 ; following original ADD overwrites X before it can be consumed.
 fill_twin_expected: dc.w $2141,$0054,$3143,$0058
+; VERIFY_RANGE sim:2fd8a 8: destination pointer and BLTSIZE writes.
 fill_twin_patch:
 	PL_START
 	PL_PSS $2fd8a,fill_twin,2

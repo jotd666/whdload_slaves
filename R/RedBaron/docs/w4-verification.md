@@ -77,3 +77,58 @@ Evidence: `tmp/dev/tmp/prof/w4-twin-{a500,020,030}-r2/`. Each stores the
 matched slave/listing, entry metadata, bounded debugger log and counter header.
 Normal/developer/VERIFY text sizes are 9,752 / 9,900 / 87,286 bytes.
 Performance measurements use separate fresh boots with the pixel twin disabled.
+Banking is covered by the 68020 route, dense geometry by the cached-68030 route.
+
+## Measurements and paused handoff
+
+Paused at the user's request on 2026-10-10, after the cached-68030 OFF run
+completed. D1 implementation/models/twins are committed as `b6087b8`.
+A500 and 68020 OFF/ON measurements and byte/display audits are complete;
+`profiling.md` holds the current numbers. W4 is **not yet complete**.
+
+- A500 swaps 140–240: 3,511 → 3,488 fields, +0.66% FPS, identical event
+  counts and h3 state outside the two known clocks. End screenshots match exactly.
+- 68020 swaps 80–400: 2,594 → 2,507 fields, +3.47% observed FPS, no dashboard
+  events. Variable dt means these are not identical world histories.
+- Cached 68030 OFF swaps 120–660: 2,118 fields, 12.7276 FPS, no dashboard
+  events. Beam-clock sample at steps 8–59: 49 accepted 3D calls, mean 48.4996 ms;
+  644 accepted rectangle calls, mean 1.5577 ms. This is a baseline, not a gain.
+  Cache configuration is retained in `debug.uae`: 68030/50, data cache enabled,
+  cycle-exact CPU/memory/blitter, WHDLoad MMU. No new raw CACR read is claimed.
+
+The cached OFF boot reached the correct first-flight anchor just after the host
+startup deadline. Recovery checked PC, step 1 and the saved binary before any
+timing began; `recovery.txt` and entry metadata identify this explicitly. The
+harness startup deadline is now configurable; W4 requests 240 seconds. Its
+runtime measurement boundaries and recorded emulated fields are unchanged.
+
+
+The cached OFF 20-field DMA audit observes 147,479 framebuffer writes and
+4,820 writes into the buffer fetched in that field, all after that address's
+last fetch (zero later fetches). This is not evidence of visible tearing;
+W5's publication safety remains open. Its ten sim and three sound ranges
+retain original bytes.
+
+### Resume
+
+The emulator, debugger and controller were stopped after the completed OFF
+capture. No capture should be resumed in place. All saved evidence uses the
+frozen VERIFY hash above. Local helpers live under `tmp/dev/tools`:
+
+1. Remove `tmp/dev/tmp/w4.pause`, the explicit stop marker preventing new runs.
+2. From `tmp/dev`, source `amiga/env.sh`; run
+   `python3 tools/w4_measure_030.py 128`. The existing ON log contains only the
+   pause message; no ON evidence directory was created. The helper rejects a
+   changed binary before using its calibrated startup breakpoint.
+3. Run `python3 tools/w4_saved_audit.py tmp/prof/w4-030-128`. Compare cached
+   OFF/ON beam clocks (`clock.json`, with rectangle dimensions), rate censuses,
+   byte audits and display audits. `routine_wall_time.py` retains VBlank/beam
+   exclusions; do not replace it with cached instruction-cycle totals.
+4. Decide cached enablement from that evidence, update this document,
+   `profiling.md`, `performance-plan.md` and `open-work.md`, and commit the
+   completion. If code changes, regenerate the frozen measurements as needed.
+
+Normal release mask remains zero pending W5/player-switch decisions. Overlay
+queueing remains the plan's explicit later-only work (original estimate ≤1.2%,
+complex); doubled waits and BLTPRI remain unchanged. W1 follow-up, game-time
+changes and broader sound changes are outside W4.
