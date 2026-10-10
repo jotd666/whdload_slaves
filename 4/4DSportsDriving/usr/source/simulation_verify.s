@@ -335,6 +335,23 @@ sim_results_display_fixture:
  move.w #4915050&$ffff,-$2e8(a4)
  move.w #4990050&$ffff,-$2f0(a4)
  move.w #196608000&$ffff,-$2ee(a4)
+ IFGE SIM_RESULTS_DISPLAY_TEST-5
+ lea sim_results_display_fixture(pc),a0
+ adda.l #sim_results_summary-sim_results_display_fixture,a0
+ move.l #65536,(a0)
+ move.l #75000,4(a0)
+ move.l #65536,8(a0)
+ IFEQ SIM_RESULTS_DISPLAY_TEST-5
+ clr.l (a0)
+ move.l #65536,4(a0)
+ ENDC
+ IFEQ SIM_RESULTS_DISPLAY_TEST-8
+ move.l #65535,4(a0)
+ ENDC
+ move.w 2(a0),-$2e8(a4)
+ move.w 6(a0),-$2f0(a4)
+ move.w 10(a0),-$2ee(a4)
+ ENDC
  lea sim_results_display_buffer+$5b(pc),a5
  move.l tape_game(pc),a0
  IFEQ SIM_RESULTS_DISPLAY_TEST-1
@@ -349,12 +366,29 @@ sim_results_display_fixture:
  IFEQ SIM_RESULTS_DISPLAY_TEST-4
  adda.l #$58aa,a0
  ENDC
+ IFEQ SIM_RESULTS_DISPLAY_TEST-5
+ adda.l #$5698,a0
+ ENDC
+ IFEQ SIM_RESULTS_DISPLAY_TEST-6
+ adda.l #$5720,a0
+ ENDC
+ IFEQ SIM_RESULTS_DISPLAY_TEST-7
+ adda.l #$57e8,a0
+ ENDC
+ IFEQ SIM_RESULTS_DISPLAY_TEST-8
+ adda.l #$5848,a0
+ ENDC
+ lea sim_results_display_sp(pc),a1
+ move.l sp,(a1)
+ moveq #0,d0
+ subq.w #1,d0             ; known incoming X=1
  jmp (a0)
 .done:
  rts
  even
  dc.b "4DRFMTFX"
 sim_results_display_buffer: dcb.b 16,$5a
+sim_results_display_sp: dc.l 0
  ENDC
 sim_fixture_before:
  IFD SIM_RESULTS_DISPLAY_TEST
