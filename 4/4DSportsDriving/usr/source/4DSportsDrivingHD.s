@@ -454,6 +454,10 @@ pl_main
  PL_NOP $80F4,2
  PL_PS $E50E,sim_replay_init_tail_stub
  PL_PS $9E50,sim_replay_load_result_stub
+ PL_PS $8174,sim_replay_save_direct_stub
+ PL_NOP $817A,2
+ PL_PS $1B1B2,sim_replay_save_dialog_stub
+ PL_NOP $1B1B8,2
  ENDC
     ELSE
     PL_PS $1AAD6,tape_dialog_enter_stub
@@ -1032,6 +1036,22 @@ sim_probe_entry_stub:
 	ENDC
  IFD SIM_MODE_MENU
  IFD SIM_REPLAY_MENU
+sim_replay_save_direct_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_replay_save_direct_stub(pc),a0
+ adda.l #sim_replay_save_direct-sim_replay_save_direct_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_replay_save_dialog_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_replay_save_dialog_stub(pc),a0
+ adda.l #sim_replay_save_dialog-sim_replay_save_dialog_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
 sim_replay_load_entry_stub:
  subq.l #4,sp
  movem.l a0,-(sp)
@@ -1177,6 +1197,10 @@ tape_restart_result_stub:
  include "simulation_replay_install.s"
  IFD SIM_REPLAY_MENU
  include "simulation_replay_menu.s"
+ include "simulation_replay_save.s"
+ IFD SIM_REPLAY_SAVE_TEST
+ include "simulation_replay_save_verify.s"
+ ENDC
  IFD SIM_REPLAY_LOAD_ERROR_TEST
  include "simulation_replay_error_verify.s"
  ENDC
@@ -1214,6 +1238,8 @@ sim_results_test_arena: dcb.b $1660,0
  dc.l $4d4e5531
 sim_replay_pending_file: dcb.b SIM_REPLAY_BYTES+2,0
  dc.l $4d4e5532
+sim_replay_save_readback: dcb.b SIM_REPLAY_BYTES+2,0
+ dc.l $53415645
  ENDC
  IFD SIM_REPLAY_RELOAD_TEST
  even

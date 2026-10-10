@@ -11,6 +11,13 @@ sim_probe_entry:
  move.w d2,-(sp)
  IFD SIM_FIXTURE
  bsr sim_fixture_before
+ IFD SIM_REPLAY_SAVE_TEST
+ movem.l a0,-(sp)
+ lea sim_fixture_before(pc),a0
+ adda.l #sim_replay_save_fixture-sim_fixture_before,a0
+ jsr (a0)
+ movem.l (sp)+,a0
+ ENDC
  IFD SIM_REPLAY_FILE_TEST
  movem.l a0,-(sp)
  lea sim_fixture_before(pc),a0

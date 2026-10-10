@@ -1,4 +1,4 @@
-; Development replay codec. Not connected to DOS/menu paths yet.
+; Development replay codec; native DOS/menu integration is opt-in.
 ; All words/longs are big-endian; buffers must be even-aligned and nonaliasing.
 ; Native files: 26-byte race header, two 901-byte tracks, then input bytes.
 ; Tagged v1: 36-byte header, native prefix, 30000 input bytes, twenty native
