@@ -552,6 +552,12 @@ sim_terrain_coefficients: dc.w 26245,26255,26276,26338
 
 ; $FD64..$FD6A: original doubled absolute slip angle becomes local -2.
 ; Both subsequent unsigned speed clamps must see the converted loss.
+; Car+$42 is a transient skid-demand angle, not persistent angular velocity:
+; $FA26 computes it only when demand exceeds grip, then $FD5C consumes it.
+; The no-skid $FA46 path clears +$C7, so its apparent +$42 decay at $FA58
+; cannot reach that consumer ($FD54 branches to $FE26). All grounded paths
+; clear +$42 at $FE2A before returning; airborne entry skips both decay and
+; consumption. Keep that decay native: only this actual speed loss needs dt.
 sim_a4000_skid_loss:
  add.w d0,d0
  cmp.w #50,-$15fa(a4)
