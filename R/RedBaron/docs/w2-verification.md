@@ -430,3 +430,44 @@ same-build check. Existing short steady samples must not stand in for those
 windows. This does not invalidate the scoped results above, but W2 is not yet
 marked complete. Normal player enablement remains separate, with release mask
 zero and switch/default/icon decisions unchanged.
+
+## Final-bundle A500 scene costs
+
+The frozen VERIFY binary is compared with CUSTOM2=0 and 60 in three additional
+100-field windows. The bank route uses CUSTOM5=514: the initial event starts at
+the first flight checkpoint, then the bank capture starts at step 24. The dense
+route uses CUSTOM5=532 and starts at step 8. No arithmetic twins run during timing.
+All means below exclude interrupts and incomplete calls.
+
+| Window | Complete 3D calls OFF / ON | Main cycles/pass OFF → ON | Change |
+| --- | ---: | ---: | ---: |
+| Initial cockpit event | 2 / 2 | 2,977,060 → 2,722,202 | −8.56% |
+| Banking | 3 / 4 | 2,308,462 → 2,107,929 | −8.69% |
+| Dense | 2 / 2 | 2,526,126 → 2,410,896 | −4.56% |
+
+The banking capture completes an extra pass with W2 ON; these are bounded sample
+means with differing call mixes, not matched-frame speed ratios or FPS claims.
+All four geometry routine means improve in each window. W1 remains disabled;
+the initial event still includes two original dashboard mirrors per setting.
+
+Per-face costs can be recovered from the same instruction traces. Here a face
+is one complete `sim:3b43a`–`sim:3b5da` loop iteration that takes a point, line
+or polygon emission branch at `sim:3b594`, `sim:3b5c8` or `sim:3b5d4`. Costs include
+that iteration's callees, exclude interrupts, and discard iterations cut by a
+chunk boundary. This is the face hub's scope, not every renderer in the game;
+back-face and empty iterations are excluded from the emitted-face denominator.
+
+| Window | Emitted faces OFF / ON | Mean main cycles/emitted face OFF → ON |
+| --- | ---: | ---: |
+| Event | 52 / 52 | 24,927.5 → 23,792.7 |
+| Banking | 70 / 73 | 34,272.8 → 33,075.6 |
+| Dense | 126 / 139 | 26,469.5 → 23,680.6 |
+
+The different face mixes matter when interpreting these means. At the matching
+bank step 24 and dense step 8, captured h3 memory differs only in the known
+`h3:03f5a` timestamp and `h3:0483a` elapsed fields. Every short capture has
+observable display ownership and no detected conflicts. The OFF/ON unselected
+hook-byte checks pass (seven/three ranges). Evidence:
+`w2-scene-a500-{bank,dense}-{0,60}`, including per-window `*-costs.json` and
+`*-faces.json`; the slave hash remains the frozen value recorded above.
+The remaining 68020/68030 scene pairs are still being collected.

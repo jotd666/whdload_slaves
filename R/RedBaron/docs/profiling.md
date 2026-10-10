@@ -66,6 +66,14 @@ accepted steps (−1.74%). Its long window averages 12.9043 FPS with no dashboar
 events, but the different OFF history still precludes a clean FPS gain claim.
 A500/68020 use 60. The final event/bank/dense cost matrix remains open. The release mask remains zero.
 
+The final-bundle A500 scene checks also improve sampled 3D-pass main costs:
+**8.56% in the initial cockpit event, 8.69% while banking and 4.56% in the dense
+scene**. Each is a 100-field routine-cost sample, not an FPS run; banking's ON
+window completes an extra pass, so call mixes differ. Per-emitted-face means
+also decrease. Same-step state and sampled display/disabled-byte checks pass;
+see `w2-verification.md` for counts and scope. The other CPUs' scene pairs are
+still being collected.
+
 ## Running the W2 profile manually
 
 From `tmp/dev`, source `amiga/env.sh` and ensure no other controller is using this
