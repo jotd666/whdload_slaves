@@ -3,7 +3,8 @@
 ; Not yet a selectable A4000 release: remaining rate sites, full replay UI
 ; and lifecycle acceptance are pending. Native 10/20 paths survive.
 ; Append player/opponent geometric yaw fractions after the two64-byte blocks.
-SIM_PRIVATE_BYTES = 132
+; Unsigned Q16 XYZ body-position carries: player+132, opponent+138.
+SIM_PRIVATE_BYTES = 144
 SIM_AUX_BYTES = 24*8
 SIM_CAMERA_BYTES = 8
 sim_a4000_arm:
@@ -343,7 +344,7 @@ sim_native_wheel: dcb.w 148/2,0
  rts
  even
  dc.b "4DA4PHYS"
- dc.w 6,SIM_PRIVATE_BYTES
+ dc.w 7,SIM_PRIVATE_BYTES
 sim_a4000_private: dcb.b SIM_PRIVATE_BYTES,0
 
  even
@@ -655,6 +656,7 @@ sim_a4000_spin_slip:
 sim_a4000_spin_test:
  cmp.w #50,-$15fa(a4)
  bne .native
+ bsr sim_centroid_begin
  bsr sim_a4000_spin_step
  bra .mask
 .native:
@@ -1120,3 +1122,5 @@ sim_a4000_yaw:
  movem.l (sp)+,d1-d7/a0-a3
  and.w #$3ff,d0
  rts
+
+ include "simulation_centroid_hooks.s"

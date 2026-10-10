@@ -1,4 +1,4 @@
-; Fractional position kernels; not yet connected to live geometry.
+; Fractional position kernels used by the A4000 geometry hooks.
 ; Collect the exact discarded Q14 remainder of each native matrix dot product.
 ; A0 three signed vector words; A1 nine column-major signed matrix words;
 ; A2 three long accumulators. Preserve all registers; CCR unspecified.

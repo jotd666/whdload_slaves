@@ -426,6 +426,9 @@ sim_physics_selftest:
  bsr sim_contact_distance_selftest
  tst.w d0
  bne .failed
+ bsr sim_centroid_clamp_selftest
+ tst.w d0
+ bne .failed
  ENDC
  movem.l (sp)+,d0-a6
  rts
@@ -441,15 +444,17 @@ SIM_SPIN_HOOK_TESTS = 183
 SIM_SLIP_HOOK_TESTS = 84
 SIM_HEADING_HOOK_TESTS = (sim_heading_cases_end-sim_heading_cases)/10
 SIM_CONTACT_HOOK_TESTS = 48
+SIM_CENTROID_CLAMP_TESTS = 84
  ELSE
 SIM_DELAY_HOOK_TESTS = 0
 SIM_SPIN_HOOK_TESTS = 0
 SIM_SLIP_HOOK_TESTS = 0
 SIM_HEADING_HOOK_TESTS = 0
 SIM_CONTACT_HOOK_TESTS = 0
+SIM_CENTROID_CLAMP_TESTS = 0
  ENDC
  dc.b "4DPHYTST"
- dc.w 19,(sim_centroid_matrix_cases_end-sim_centroid_matrix_cases)/48+(sim_centroid_average_cases_end-sim_centroid_average_cases)/16+(sim_yaw_cases_end-sim_yaw_cases)/8+(sim_rate_cases_end-sim_rate_cases)/8+(sim_steering_cases_end-sim_steering_cases)/14+(sim_distance_cases_end-sim_distance_cases)/8+(sim_approach_cases_end-sim_approach_cases)/12+(sim_airborne_cases_end-sim_airborne_cases)/12+(sim_extension_cases_end-sim_extension_cases)/10+(sim_engine_cases_end-sim_engine_cases)/4+(sim_duration_cases_end-sim_duration_cases)/8+(sim_terrain_cases_end-sim_terrain_cases)/10+(sim_skid_cases_end-sim_skid_cases)/12+(sim_spin_filter_cases_end-sim_spin_filter_cases)/24+(sim_spin_held_cases_end-sim_spin_held_cases)/12+(sim_spin_alternate_cases_end-sim_spin_alternate_cases)/24+(sim_opponent_brake_cases_end-sim_opponent_brake_cases)/10+(sim_slip_relax_cases_end-sim_slip_relax_cases)/8+SIM_DELAY_HOOK_TESTS+SIM_SPIN_HOOK_TESTS+SIM_SLIP_HOOK_TESTS+SIM_HEADING_HOOK_TESTS+SIM_CONTACT_HOOK_TESTS+(sim_heading_cases_end-sim_heading_cases)/10
+ dc.w 20,SIM_CENTROID_CLAMP_TESTS+(sim_centroid_matrix_cases_end-sim_centroid_matrix_cases)/48+(sim_centroid_average_cases_end-sim_centroid_average_cases)/16+(sim_yaw_cases_end-sim_yaw_cases)/8+(sim_rate_cases_end-sim_rate_cases)/8+(sim_steering_cases_end-sim_steering_cases)/14+(sim_distance_cases_end-sim_distance_cases)/8+(sim_approach_cases_end-sim_approach_cases)/12+(sim_airborne_cases_end-sim_airborne_cases)/12+(sim_extension_cases_end-sim_extension_cases)/10+(sim_engine_cases_end-sim_engine_cases)/4+(sim_duration_cases_end-sim_duration_cases)/8+(sim_terrain_cases_end-sim_terrain_cases)/10+(sim_skid_cases_end-sim_skid_cases)/12+(sim_spin_filter_cases_end-sim_spin_filter_cases)/24+(sim_spin_held_cases_end-sim_spin_held_cases)/12+(sim_spin_alternate_cases_end-sim_spin_alternate_cases)/24+(sim_opponent_brake_cases_end-sim_opponent_brake_cases)/10+(sim_slip_relax_cases_end-sim_slip_relax_cases)/8+SIM_DELAY_HOOK_TESTS+SIM_SPIN_HOOK_TESTS+SIM_SLIP_HOOK_TESTS+SIM_HEADING_HOOK_TESTS+SIM_CONTACT_HOOK_TESTS+(sim_heading_cases_end-sim_heading_cases)/10
 sim_physics_passed: dc.l 0
 sim_physics_test_fraction: dc.w 0,0,0,0
 sim_physics_test_position: dc.l 0
@@ -1253,3 +1258,7 @@ sim_contact_distance_cases:
 
 sim_centroid_test_accumulator: dcb.l 3,0
  include "simulation_centroid_cases.i"
+
+ IFD SIM_A4000
+ include "simulation_centroid_verify.s"
+ ENDC

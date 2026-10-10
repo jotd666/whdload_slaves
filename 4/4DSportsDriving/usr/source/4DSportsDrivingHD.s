@@ -494,6 +494,14 @@ pl_main
     PL_PSS $11B80,sim_aux_move_stub,94
     PL_PSS $11C38,sim_aux_retire_stub,10
     PL_PSS $11C50,sim_aux_rotate_stub,26
+    PL_PSS $C520,sim_centroid_build,2
+    PL_PSS $D2F0,sim_centroid_suspension,2
+    PL_PSS $D346,sim_centroid_body,60
+    PL_PSS $D414,sim_centroid_floor,4
+    PL_PSS $D428,sim_centroid_xmax,2
+    PL_PSS $D43C,sim_centroid_xmin,2
+    PL_PSS $D44E,sim_centroid_zmax,2
+    PL_PSS $D462,sim_centroid_zmin,2
     PL_PSS $D49E,sim_a4000_yaw,2
     PL_PSS $C326,sim_a4000_distance,26
     PL_PSS $F60C,sim_a4000_acceleration,10
