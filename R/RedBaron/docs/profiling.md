@@ -167,6 +167,61 @@ PAL fields; final CIA debt is 2/0 and exact funding passes. Raw global and sound
 state differences remain visible. This shorter boundary-controlled check is
 correctness evidence, not a 250-field performance sample or full gameplay result.
 
+## W6 current full-bundle capacity checkpoint
+
+Frozen VERIFY build `eb743015c665a5893fba0cb12158c9cceb33704f06e6631ccf61235fd0f30896`
+was measured with CUSTOM2=16319, maximum detail, original Time Scale 40 (F=33),
+deferred installation and the scheduled bank/fire replay fixture. There is no
+slow-draw or no-render fixture. Both recordings start after the first completed
+draw at completed-world tick 1. These are short observed workloads, not matched
+cross-CPU state comparisons or coverage of all steady/event/bank/dense scenes.
+
+| Machine / window | Actual fields / CIA ticks | Completed world updates | Newly nominal updates | Published frames | CIA debt before → after |
+| --- | --- | ---: | ---: | ---: | --- |
+| A500-equivalent, first | 252 / 299 | 47 | 41.2358 | 1 | 62 → 25 |
+| A500-equivalent, next | 253 / 299 | 42 | 41.2358 | 2 | 25 → 13 |
+| Cached 50 MHz 68030, first | 250 / 296 | 41 | 40.8221 | 43 | 0 → 2 |
+| Cached 50 MHz 68030, next | 250 / 296 | 41 | 40.8221 | 53 | 2 → 3 |
+
+The A500-equivalent configuration uses 512 KiB chip and 1.5 MiB slow RAM with
+cycle-exact 68000 timing. Each window retains 250 traced fields; measured elapsed
+fields include profile alignment. Boundaries are consecutive and coherent, with
+no transaction settlement needed. The final boundary has one update in progress.
+All three actual publications match complete chip-write sequences, starting at
+PAL lines 245, 245 and 259. This gives 0.1984 and 0.3953 published FPS over actual
+elapsed fields. The 89 completed updates across both windows pay down some
+existing debt; they are not evidence that the world runs faster than nominal.
+The main-task trace records zero message-start/shortening calls and 14/28 bitmap
+mirror entries. Chunk gaps mean traced entry counts are not complete elapsed-time
+work counts. Forty-five complete original world calls average 401,231 main-task
+cycles (range 327,984–474,190), or 476,775 inclusive cycles. The one fully traced
+outer drawing call costs 5,067,702 main-task / 5,989,438 inclusive cycles. Nested
+routine costs are not additive. These are observed call costs, not a whole-window
+cycle budget or a before/after speedup claim.
+
+The cached-68030 configuration uses 2 MiB chip / 8 MiB fast RAM. A read-only native
+field census avoids cached-CPU instruction-trace timing claims. Each window is
+exactly 250 fields; clock transaction markers are zero at all four boundaries.
+Actual publication rates are 8.6 and 10.6 FPS, with intervals of 5–6 and 4–6 fields.
+All publications satisfy the safe blanking-line check. Message-start/shortening
+counts are 11/11 then 1/1, so this is not labelled an event-free steady window.
+Every consecutive interval on both machines conserves funded time exactly.
+
+These measurements show backlog recovery on the observed A500 workload and near
+nominal real-time update throughput in the two 68030 windows. They do not close
+sustained capacity, the wider scene/CPU matrix, gameplay equivalence, input-latency
+acceptance or smooth 50 FPS. The slower rendering is a visible cost of doing the
+additional simulation work; it must not be hidden behind the world-update count.
+Both native endpoints pass core/input/presentation/phase self-tests
+426/512/638/133, terrain stores/cache/list 2/1/2, and all 54 selected timing/pacing
+targets. Both owned emulators were quit. No slave code changed for this checkpoint.
+
+Retained evidence is in `tmp/dev/tmp/prof/w6-current-capacity-a500/` and
+`tmp/dev/tmp/prof/w6-current-capacity-030/`: capacity manifests/checks, frame DMA
+checks, routine costs and event census for A500; exact-field manifest/check and
+publication logs for 68030. Reproduce the accounting with `time_capacity.py` on
+each A500 manifest and `field_capacity.py` on the 68030 field census.
+
 ## W6 coherent clock-boundary capacity checkpoint
 
 VERIFY build `9f72992c…` adds transaction markers for debugger observations of

@@ -2285,3 +2285,17 @@ stores/cache/list 2/1/2, 54 selected targets and ten disabled ranges. Its owned
 emulator was quit. All 196 host tests pass. The slave has not changed since the
 attached-camera checkpoint. Full gameplay/global-state/event convergence,
 physics/combat acceptance, sustained capacity and smooth 50 FPS remain open.
+
+
+## Current full-bundle capacity evidence
+
+The `eb743015…` A500-equivalent and cached-68030 runs are recorded together in
+`profiling.md`, “W6 current full-bundle capacity checkpoint.” Two consecutive
+250-recorded-field A500 windows complete 47/42 world updates with 1/2 publications
+and reduce CIA debt 62→25→13. Two exact-250-field 68030 windows complete 41/41
+updates with 43/53 publications and debt 0→2→3. All funding checks, native
+self-tests and 54 selected timing/pacing targets pass. These are limited observed
+workloads; they do not certify the wider capacity matrix or smooth 50 FPS.
+The field collector now records the clock transaction marker explicitly; all
+four 68030 endpoints are coherent. No uncommitted snapshot is silently treated
+as a completed timing transaction. Both owned emulators were quit.
