@@ -307,6 +307,10 @@ pl_main
     PL_PSS $FC2A,sim_a4000_spin_filter,26
     PL_PSS $FC10,sim_a4000_spin_inactive,2
     PL_PSS $FCBA,sim_a4000_spin_alternate,16
+    PL_PSS $FCD0,sim_a4000_slip_gate,2
+    PL_PSS $FCEE,sim_a4000_slip_relax,16
+    PL_PS $C620,sim_a4000_slip_impulse_fixed
+    PL_PS $C9CE,sim_a4000_slip_impulse_dynamic
     PL_PSS $FD2E,sim_a4000_spin_slip_test,2
     PL_PSS $C06E,sim_a4000_opponent_steering,36
     PL_PSS $C098,sim_a4000_opponent_brake_gate,2

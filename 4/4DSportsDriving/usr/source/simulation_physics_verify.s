@@ -274,6 +274,25 @@ sim_physics_selftest:
  addq.l #1,(a0)
  lea 24(a2),a2
  dbra d6,.spin_alternate
+ lea sim_slip_relax_cases(pc),a2
+ move.w #(sim_slip_relax_cases_end-sim_slip_relax_cases)/8-1,d6
+.slip_relax:
+ lea sim_physics_test_fraction(pc),a0
+ move.w 2(a2),(a0)
+ move.w (a2),d0
+ moveq #4,d7
+.slip_relax_five:
+ bsr sim_slip_relax_50
+ dbra d7,.slip_relax_five
+ cmp.w 4(a2),d0
+ bne .failed
+ move.w (a0),d0
+ cmp.w 6(a2),d0
+ bne .failed
+ lea sim_physics_passed(pc),a0
+ addq.l #1,(a0)
+ addq.l #8,a2
+ dbra d6,.slip_relax
  lea sim_spin_held_cases(pc),a2
  move.w #(sim_spin_held_cases_end-sim_spin_held_cases)/12-1,d6
 .spin_held:
@@ -304,6 +323,12 @@ sim_physics_selftest:
  bsr sim_spin_resets_selftest
  tst.w d0
  bne .failed
+ bsr sim_slip_gate_selftest
+ tst.w d0
+ bne .failed
+ bsr sim_slip_replace_selftest
+ tst.w d0
+ bne .failed
  ENDC
  movem.l (sp)+,d0-a6
  rts
@@ -316,12 +341,14 @@ sim_physics_selftest:
  IFD SIM_A4000
 SIM_DELAY_HOOK_TESTS = 18
 SIM_SPIN_HOOK_TESTS = 183
+SIM_SLIP_HOOK_TESTS = 84
  ELSE
 SIM_DELAY_HOOK_TESTS = 0
 SIM_SPIN_HOOK_TESTS = 0
+SIM_SLIP_HOOK_TESTS = 0
  ENDC
  dc.b "4DPHYTST"
- dc.w 12,(sim_rate_cases_end-sim_rate_cases)/8+(sim_steering_cases_end-sim_steering_cases)/14+(sim_distance_cases_end-sim_distance_cases)/8+(sim_approach_cases_end-sim_approach_cases)/12+(sim_airborne_cases_end-sim_airborne_cases)/12+(sim_extension_cases_end-sim_extension_cases)/10+(sim_engine_cases_end-sim_engine_cases)/4+(sim_duration_cases_end-sim_duration_cases)/8+(sim_terrain_cases_end-sim_terrain_cases)/10+(sim_skid_cases_end-sim_skid_cases)/12+(sim_spin_filter_cases_end-sim_spin_filter_cases)/24+(sim_spin_held_cases_end-sim_spin_held_cases)/12+(sim_spin_alternate_cases_end-sim_spin_alternate_cases)/24+(sim_opponent_brake_cases_end-sim_opponent_brake_cases)/10+SIM_DELAY_HOOK_TESTS+SIM_SPIN_HOOK_TESTS
+ dc.w 15,(sim_rate_cases_end-sim_rate_cases)/8+(sim_steering_cases_end-sim_steering_cases)/14+(sim_distance_cases_end-sim_distance_cases)/8+(sim_approach_cases_end-sim_approach_cases)/12+(sim_airborne_cases_end-sim_airborne_cases)/12+(sim_extension_cases_end-sim_extension_cases)/10+(sim_engine_cases_end-sim_engine_cases)/4+(sim_duration_cases_end-sim_duration_cases)/8+(sim_terrain_cases_end-sim_terrain_cases)/10+(sim_skid_cases_end-sim_skid_cases)/12+(sim_spin_filter_cases_end-sim_spin_filter_cases)/24+(sim_spin_held_cases_end-sim_spin_held_cases)/12+(sim_spin_alternate_cases_end-sim_spin_alternate_cases)/24+(sim_opponent_brake_cases_end-sim_opponent_brake_cases)/10+(sim_slip_relax_cases_end-sim_slip_relax_cases)/8+SIM_DELAY_HOOK_TESTS+SIM_SPIN_HOOK_TESTS+SIM_SLIP_HOOK_TESTS
 sim_physics_passed: dc.l 0
 sim_physics_test_fraction: dc.w 0,0,0,0
 sim_physics_test_position: dc.l 0
@@ -535,6 +562,7 @@ sim_spin_hooks_selftest:
  movem.l (sp)+,d1-a6
  rts
  even
+ dcb.b 128,0 ; local storage for direct contact-assignment hook checks
 sim_spin_test_frame: dc.l 0,0,0
 ; Nominal, five expected displacements, five expected /1280 remainders.
 sim_spin_hook_cases:
@@ -679,4 +707,213 @@ sim_spin_gate_cases:
  dc.w 50,1,0,1
  dc.w 50,1,1,0
  dc.w 50,1,1,1
+ ENDC
+
+ IFD SIM_A4000
+; Exercise the actual slip reset hook: native TST flags, X, D0, A0 and
+; canonical/noncanonical/inactive carry ownership across all three modes.
+sim_slip_gate_selftest:
+ movem.l d1-a6,-(sp)
+ lea sim_delay_test_mode(pc),a4
+ adda.l #$15fa,a4
+ lea sim_spin_test_frame(pc),a5
+ lea sim_delay_test_car(pc),a0
+ move.l a0,8(a5)
+ lea sim_a4000_private(pc),a6
+ lea sim_slip_gate_cases(pc),a2
+ moveq #71,d6
+.case:
+ move.w (a2),-$15fa(a4)
+ move.l 8(a5),a0
+ move.w 2(a2),$36(a0)
+ move.w 4(a2),$3e(a0)
+ move.w #$1234,62(a6)
+ move.w 6(a2),d2
+ lsr.w #1,d2
+ move.l #$76543210,d0
+ bsr sim_a4000_slip_gate
+ smi d3
+ seq d4
+ scs d5
+ svs d1
+ moveq #0,d2
+ addx.w d2,d2
+ cmp.w 6(a2),d2
+ bne .failed
+ cmp.l #$76543210,d0
+ bne .failed
+ cmpa.l 8(a5),a0
+ bne .failed
+ tst.b d5
+ bne .failed
+ tst.b d1
+ bne .failed
+ tst.w 2(a2)
+ smi d1
+ seq d2
+ cmp.b d1,d3
+ bne .failed
+ cmp.b d2,d4
+ bne .failed
+ move.w 62(a6),d0
+ cmp.w 8(a2),d0
+ bne .failed
+ lea sim_physics_passed(pc),a0
+ addq.l #1,(a0)
+ lea 10(a2),a2
+ dbra d6,.case
+ clr.w 62(a6)
+ moveq #0,d0
+ bra.s .done
+.failed:
+ moveq #1,d0
+.done:
+ movem.l (sp)+,d1-a6
+ rts
+ even
+; Mode,slip,spin,incomingX,expected fraction.
+sim_slip_gate_cases:
+ dc.w 10,-1,0,0,4660
+ dc.w 10,-1,0,1,4660
+ dc.w 10,-1,1,0,4660
+ dc.w 10,-1,1,1,4660
+ dc.w 10,0,0,0,4660
+ dc.w 10,0,0,1,4660
+ dc.w 10,0,1,0,4660
+ dc.w 10,0,1,1,4660
+ dc.w 10,1,0,0,4660
+ dc.w 10,1,0,1,4660
+ dc.w 10,1,1,0,4660
+ dc.w 10,1,1,1,4660
+ dc.w 10,1023,0,0,4660
+ dc.w 10,1023,0,1,4660
+ dc.w 10,1023,1,0,4660
+ dc.w 10,1023,1,1,4660
+ dc.w 10,1024,0,0,4660
+ dc.w 10,1024,0,1,4660
+ dc.w 10,1024,1,0,4660
+ dc.w 10,1024,1,1,4660
+ dc.w 10,32767,0,0,4660
+ dc.w 10,32767,0,1,4660
+ dc.w 10,32767,1,0,4660
+ dc.w 10,32767,1,1,4660
+ dc.w 20,-1,0,0,4660
+ dc.w 20,-1,0,1,4660
+ dc.w 20,-1,1,0,4660
+ dc.w 20,-1,1,1,4660
+ dc.w 20,0,0,0,4660
+ dc.w 20,0,0,1,4660
+ dc.w 20,0,1,0,4660
+ dc.w 20,0,1,1,4660
+ dc.w 20,1,0,0,4660
+ dc.w 20,1,0,1,4660
+ dc.w 20,1,1,0,4660
+ dc.w 20,1,1,1,4660
+ dc.w 20,1023,0,0,4660
+ dc.w 20,1023,0,1,4660
+ dc.w 20,1023,1,0,4660
+ dc.w 20,1023,1,1,4660
+ dc.w 20,1024,0,0,4660
+ dc.w 20,1024,0,1,4660
+ dc.w 20,1024,1,0,4660
+ dc.w 20,1024,1,1,4660
+ dc.w 20,32767,0,0,4660
+ dc.w 20,32767,0,1,4660
+ dc.w 20,32767,1,0,4660
+ dc.w 20,32767,1,1,4660
+ dc.w 50,-1,0,0,0
+ dc.w 50,-1,0,1,0
+ dc.w 50,-1,1,0,0
+ dc.w 50,-1,1,1,0
+ dc.w 50,0,0,0,0
+ dc.w 50,0,0,1,0
+ dc.w 50,0,1,0,0
+ dc.w 50,0,1,1,0
+ dc.w 50,1,0,0,4660
+ dc.w 50,1,0,1,4660
+ dc.w 50,1,1,0,0
+ dc.w 50,1,1,1,0
+ dc.w 50,1023,0,0,4660
+ dc.w 50,1023,0,1,4660
+ dc.w 50,1023,1,0,0
+ dc.w 50,1023,1,1,0
+ dc.w 50,1024,0,0,0
+ dc.w 50,1024,0,1,0
+ dc.w 50,1024,1,0,0
+ dc.w 50,1024,1,1,0
+ dc.w 50,32767,0,0,0
+ dc.w 50,32767,0,1,0
+ dc.w 50,32767,1,0,0
+ dc.w 50,32767,1,1,0
+ ENDC
+
+ IFD SIM_A4000
+sim_slip_replace_selftest:
+ movem.l d1-a6,-(sp)
+ lea sim_delay_test_mode(pc),a4
+ adda.l #$15fa,a4
+ lea sim_spin_test_frame(pc),a5
+ move.w #1023,-$80(a5)
+ lea sim_a4000_private(pc),a6
+ moveq #0,d7
+.mode:
+ lea sim_delay_test_modes(pc),a2
+ move.w (a2,d7.w),-$15fa(a4)
+ moveq #0,d6
+.x:
+ moveq #0,d5
+.variant:
+ move.w #$1234,62(a6)
+ lea sim_delay_test_car(pc),a0
+ move.l #$76543210,d0
+ tst.w d5
+ bne.s .dynamic
+ move.w d6,d2
+ lsr.w #1,d2
+ bsr sim_a4000_slip_impulse_fixed
+ move.w #512,d3
+ bra.s .check
+.dynamic:
+ move.w d6,d2
+ lsr.w #1,d2
+ bsr sim_a4000_slip_impulse_dynamic
+ move.w #1023,d3
+.check:
+ moveq #0,d2
+ addx.w d2,d2
+ cmp.w d6,d2
+ bne .failed
+ cmp.l #$76543210,d0
+ bne .failed
+ lea sim_delay_test_car(pc),a1
+ cmpa.l a1,a0
+ bne .failed
+ cmp.w $36(a0),d3
+ bne .failed
+ move.w #$1234,d4
+ cmp.w #4,d7
+ bne.s .carry
+ moveq #0,d4
+.carry:
+ cmp.w 62(a6),d4
+ bne .failed
+ lea sim_physics_passed(pc),a0
+ addq.l #1,(a0)
+ addq.w #1,d5
+ cmp.w #2,d5
+ blt .variant
+ addq.w #1,d6
+ cmp.w #2,d6
+ blt .x
+ addq.w #2,d7
+ cmp.w #6,d7
+ blt .mode
+ clr.w 62(a6)
+ moveq #0,d0
+ bra.s .done
+.failed:
+ moveq #1,d0
+.done:
+ movem.l (sp)+,d1-a6
+ rts
  ENDC

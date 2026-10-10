@@ -27,7 +27,7 @@ sim_a4000_arm:
 ; Terrain loss uses an unsigned Q16 carry at +48; skid loss uses fifths at +50.
 ; Spin displacement: /1280 carry at +52, cached step at +54 ($8000=unset).
 ; Nominal spin-filter change uses signed Q16 carry +56..59.
-; Opponent recovery braking uses fifths at +60; +62 remains unused.
+; Opponent recovery braking uses fifths at +60; slip loss uses Q16 at +62.
 sim_a4000_car:
  lea -$85e(a4),a0
  cmpa.l a0,a1
@@ -292,12 +292,12 @@ sim_native_wheel: dcb.w 148/2,0
  rts
  even
  dc.b "4DA4PHYS"
- dc.w 3,SIM_PRIVATE_BYTES
+ dc.w 4,SIM_PRIVATE_BYTES
 sim_a4000_private: dcb.b SIM_PRIVATE_BYTES,0
 
  even
  dc.b "4DA4STAT"
- dc.w 9,20
+ dc.w 10,21
 sim_a4000_gear_calls: dc.l 0
 sim_a4000_wheel_calls: dc.l 0
 sim_a4000_contact_calls: dc.l 0
@@ -315,6 +315,7 @@ sim_a4000_spin_filter_calls: dc.l 0
 sim_a4000_opponent_steering_calls: dc.l 0
 sim_a4000_opponent_brake_calls: dc.l 0
 sim_a4000_spin_alternate_calls: dc.l 0
+sim_a4000_slip_relax_calls: dc.l 0
 
 ; $10234..$10248 and $1024A..$10260, within native suspension $10012.
 ; Preserve its geometry/penetration branches and cap at extension 384. Both
@@ -752,4 +753,74 @@ sim_a4000_spin_alternate:
  asr.w #4,d0
  move.l 8(a5),a0
  move.w d0,$3e(a0)
+ rts
+
+; $FCD0..$FCD8: stop retaining relaxation loss if a spin, zero slip or a
+; one-time signed/noncanonical transition supersedes repeated positive decay.
+; All operations preserve X; replay the original MOVEA/TST and its flags.
+sim_a4000_slip_gate:
+ move.l 8(a5),a0
+ cmp.w #50,-$15fa(a4)
+ bne.s .native
+ tst.w $3e(a0)
+ bne.s .clear
+ tst.w $36(a0)
+ ble.s .clear
+ cmp.w #1023,$36(a0)
+ bls.s .native
+.clear:
+ movem.l a0-a1,-(sp)
+ move.l a0,a1
+ bsr sim_a4000_car
+ clr.w 62(a0)
+ movem.l (sp)+,a0-a1
+.native:
+ tst.w $36(a0)
+ rts
+
+; $FCEE..$FD04: only the repeatedly positive branch is rate-converted.
+; Negative branch $FD06 and final native modulo1024 remain unchanged.
+sim_a4000_slip_relax:
+ cmp.w #50,-$15fa(a4)
+ bne.s .native
+ move.l a1,-(sp)
+ move.l 8(a5),a1
+ bsr sim_a4000_car
+ lea 62(a0),a0
+ move.w $36(a1),d0
+ bsr sim_slip_relax_50
+ lea sim_a4000_slip_relax_calls(pc),a0
+ addq.l #1,(a0)
+ move.l (sp)+,a1
+ move.l 8(a5),a0
+ move.w d0,$36(a0)
+ rts
+.native:
+ move.l 8(a5),a0
+ move.w $36(a0),d0
+ muls #15,d0
+ asr.w #4,d0
+ move.l 8(a5),a0
+ move.w d0,$36(a0)
+ rts
+
+; Contact code replaces slip rather than accumulating it. A replacement must
+; not inherit the previous angle's fractional relaxation. Preserve X/A0/D0.
+sim_a4000_slip_replaced:
+ cmp.w #50,-$15fa(a4)
+ bne.s .done
+ movem.l a0-a1,-(sp)
+ move.l a0,a1
+ bsr sim_a4000_car
+ clr.w 62(a0)
+ movem.l (sp)+,a0-a1
+.done:
+ rts
+sim_a4000_slip_impulse_fixed:
+ bsr sim_a4000_slip_replaced
+ move.w #$200,$36(a0)
+ rts
+sim_a4000_slip_impulse_dynamic:
+ bsr sim_a4000_slip_replaced
+ move.w -$80(a5),$36(a0)
  rts

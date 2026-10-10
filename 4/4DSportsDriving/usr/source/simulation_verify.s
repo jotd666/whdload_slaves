@@ -118,6 +118,17 @@ sim_fixture_before:
  move.w #64,-$828(a4)
  move.w #10000,-$832(a4)
  ENDC
+ IFD SIM_FIXTURE_OPPONENT_SLIP
+ IFND TAPE_OPPONENT
+ FAIL "SIM_FIXTURE_OPPONENT_SLIP requires TAPE_OPPONENT"
+ ENDC
+ ; Synthetic disabled opponent: +$C9 suppresses AI steering/throttle and
+ ; its zero-speed recovery reset, isolating slip decay from body movement.
+ move.w #SIM_FIXTURE_OPPONENT_SLIP,-$828(a4)
+ move.b #1,-$795(a4)
+ clr.w -$832(a4)
+ clr.w -$820(a4)
+ ENDC
  IFD SIM_FIXTURE_DROP
  ; Synthetic initial pose for airborne/contact coverage. Native physics handles
  ; the fall; 1024 position units is small enough to test an ordinary landing.

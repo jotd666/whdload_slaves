@@ -459,3 +459,55 @@ sim_opponent_brake_50:
  move.l d2,d0
  move.l (sp)+,d2
  rts
+
+; Repeated canonical slip decay: unsigned angle1..1023, a0 -> Q16 pending
+; loss. Native decrement is ceil(angle/16); rho=(15/16)^(2/5).
+; Pending loss is retained through intermediate endpoints and cleared at0.
+; Out-of-range signed words undergo the original one-time canonicalization
+; (including MULS/ASR.W wrap), not an invented repeated signed decay.
+; d0.w angle -> d0.l canonical angle; preserve d1-d3.
+sim_slip_relax_50:
+ movem.l d1-d3,-(sp)
+ tst.w d0
+ beq .zero
+ bmi .negative_event
+ cmp.w #1023,d0
+ bhi .positive_event
+ move.w d0,d3
+ add.w #15,d0
+ lsr.w #4,d0
+ mulu #26723,d0
+ moveq #0,d1
+ move.w (a0),d1
+ add.l d1,d0
+ mulu #1670,d1
+ swap d1
+ and.l #$ffff,d1
+ sub.l d1,d0
+ move.w d0,(a0)
+ swap d0
+ and.l #$ffff,d0
+ sub.w d0,d3
+ ble .zero
+ moveq #0,d0
+ move.w d3,d0
+ bra .done
+.negative_event:
+ neg.w d0
+ muls #15,d0
+ asr.w #4,d0
+ neg.w d0
+ bra .canonical
+.positive_event:
+ muls #15,d0
+ asr.w #4,d0
+.canonical:
+ and.l #$3ff,d0
+ clr.w (a0)
+ bra .done
+.zero:
+ moveq #0,d0
+ clr.w (a0)
+.done:
+ movem.l (sp)+,d1-d3
+ rts
