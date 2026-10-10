@@ -178,7 +178,15 @@ time_loop_gate:
 .wait
 	bsr time_loop_poll
 	tst.w TIME_LOOP_DUE(a0)
-	beq .wait
+	bne .world
+	move.l a6,-(sp)
+	lea .render_base(pc),a6
+.render_base
+	adda.l #time_render_frame-.render_base,a6
+	jsr (a6)
+	move.l (sp)+,a6
+	bra .wait
+.world
 	subq.w #1,TIME_LOOP_DUE(a0)
 	addq.l #1,TIME_LOOP_STEPS(a0)
 	move.l time_loop_h3(pc),a1
@@ -200,15 +208,18 @@ time_loop_draw:
 	beq .original
 	bsr time_loop_poll
 	tst.w TIME_LOOP_DUE(a0)
-	beq .draw
+	beq .defer
 	addq.l #1,TIME_LOOP_SKIPS(a0)
+.defer
+	lea .started_base(pc),a0
+.started_base
+	adda.l #time_render_started-.started_base,a0
+	move.w #1,(a0)
 	move.l time_loop_sim(pc),d0
 	addi.l #$21ea8,d0
 	move.l d0,36(sp)
 	movem.l (sp)+,d0-a0
 	rts
-.draw
-	addq.l #1,TIME_LOOP_DRAWS(a0)
 .original
 	movem.l (sp)+,d0-a0
 	tst.w -48(a5)

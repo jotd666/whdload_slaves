@@ -1276,3 +1276,100 @@ developer binaries retain the W5 hashes.
 This validates the candidate buffer, not interpolated frames, render-phase
 integration, all camera/view transitions, visual cadence, latency, sustained
 simulation speed or gameplay convergence. Those gates remain open.
+
+
+## Cockpit render-phase integration
+
+`time-render.s` now runs native drawing from the scheduler's no-world-work-due
+path after completed-tick snapshots. The old draw site at `sim:21e7a` always
+defers its draw and dirty-countdown work in timing mode; the rest of the native
+iteration still runs before loop re-entry. After observing elapsed time, the
+scheduler consumes due world work first, otherwise draws and polls again.
+`TIME_LOOP_DRAWS` counts actual calls in this new phase. `TIME_LOOP_SKIPS` still
+counts cases where debt is already due at the former draw site. A mission starts
+rendering only after its first world iteration has reached that site.
+
+For view mode zero, the render phase preflights the registered poses/model IDs
+against the immutable current snapshot and requires the camera pointer to be
+among them. It rebuilds candidate poses from the current exact phase, leases
+only object bytes 8–25, calls the complete native outer draw at `sim:0056c`,
+then restores those bytes. The existing projection-cache and shared-model undo
+hooks remain inside the outer draw. A lifecycle mutation while poses are leased
+aborts the VERIFY candidate. Only after restoration does the phase consume the
+native outer dirty countdown once, using its original signed clamp. The native
+stack arguments remain the dirty count followed by one. Other camera modes or
+failed preflight use current native poses; this fallback is an unfinished camera
+integration path, not acceptance of smooth presentation in those views.
+
+This verification uses CUSTOM2=8960: timing bit 13 plus W5 safe publication and
+its existing two-field cap. The required W6 one-field policy is not implemented
+by this checkpoint, and timing bit 13 alone does not implicitly install W5.
+The player build remains unchanged. Candidate construction now runs only at
+draw time; the redundant calculation after every completed world snapshot has
+been removed.
+
+`render_phase.py` independently checks the full render-time candidate buffer,
+the actual borrowed poses just before native drawing, and exact pose restoration
+afterward. It checks that clock credit/cursor, due counts, world steps and skip
+counts are unchanged within drawing, that no native world-update entry was
+observed, that the stack layout is restored, and that the draw and dirty counters
+advance exactly once. Pose, projection and model ownership must all be released.
+Its dirty-countdown test includes the signed-word negative-overflow boundary.
+This is scoped pose/state ownership evidence, not a full simulation-heap audit.
+
+Frozen VERIFY text is 245,192 bytes, SHA256
+`a3a62e69d3ac5db0128dbc2bcd1dc79d3b59055617a61ed6c6cf3769aca4d128`.
+`tmp/dev/tmp/prof/w6-render-phase-030/` passes four actual cockpit draws at world
+ticks 41–44: 132 leased poses, including 108 whose visual pose differs from the
+simulation pose. No world update executes within these draws, all pose bytes
+restore, and the clock, dirty-countdown, stack and ownership checks pass.
+The retained `cockpit.png` shows the cockpit rendering after these checks; a
+single image does not establish visual cadence or absence of every artifact.
+An exploratory comparison of registered model IDs and pose payloads against
+the prior candidate-only 68030 capture at those four tick IDs finds all 132 equal.
+That comparison excludes pointers and does not cover complete object state,
+global state, RNG, events or acquired inputs, so it does not close gameplay
+convergence. The independent interpolation/restoration checks remain primary.
+
+The live audit passes fifty selected hooks (47 timing and three W5) with ten
+remaining disabled ranges. Existing 426/512/638/133 native self-tests pass.
+All 142 host tests pass and the sixty-range static hook audit has zero errors;
+normal/developer binaries retain W5 hashes. Render-only repeated ticks, all
+camera modes, native colour-changing journal branches, one-field publication,
+full equal-tick state/events, visual latency/cadence and capacity remain open.
+
+### Removing redundant per-tick candidate construction
+
+The first A500 capture retained three valid render leases at ticks 49, 362 and
+583 (108 poses, 95 changed visually). The fourth-draw observation timed out.
+The recovered live sim layout no longer passed the disabled-byte audit, so that
+late audit is not usable evidence for this run. Native self-test counters still
+read 426/512/638/133. No reason for the timeout is inferred from that alone.
+
+That candidate unnecessarily calculated interpolation after every world tick
+as well as before every draw. Interpolation is now calculated only for drawing.
+The revised VERIFY text is 245,188 bytes, SHA256
+`0ca5e5919512837a1d50f96738b9d8a07c84d2f1318d4be2944da00cc7cd340f`.
+The retained `tmp/dev/tmp/prof/w6-render-phase-a500-r2/` capture passes three
+actual draws at completed ticks 45, 108 and 153: 101 poses, 89 changed visually,
+with exact pose restoration, no world calls during drawing, and passing clock,
+stack, dirty-counter and ownership checks. Fifty selected hooks and ten disabled
+ranges pass the live byte audit; all native self-test counters pass.
+
+These sparse A500 draws expose an open capacity concern. They are correctness
+observations with debugger interruptions, not a 250-field capacity measurement,
+and must not be reported as FPS or proof of real-time gameplay speed. Measure
+completed world ticks, debt and actual publications together before making that
+claim. The elapsed-time accounting and full equal-tick gameplay-state gates
+remain separate from the successful render-pose checks.
+
+The same revised build passes four cached-68030 draws in
+`tmp/dev/tmp/prof/w6-render-phase-030-r2/`: ticks 41, 42, 43 and 43, checking
+132 poses (108 changed visually). Fractions are 6416, 49339, 28994 and 65147.
+The last pair retains byte-identical previous/current pose buffers for all 33
+objects and executes no world update between draws. It therefore covers a real
+render-only iteration with a changing interpolation fraction. All render-state
+checks, fifty selected hooks, ten disabled ranges and native self-tests pass.
+This closes that scoped repeated-tick observation, not general gameplay-state
+independence or a 50 FPS cadence claim. The 142 host tests and sixty-range static
+audit pass. Rebuilt normal/developer binaries retain the W5 hashes.

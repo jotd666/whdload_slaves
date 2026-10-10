@@ -73,6 +73,9 @@ time_pose_invalidate:
 	movem.l d0-d2/a0-a2,-(sp)
 	bsr time_pose_ccr
 	move.w d0,-(sp)
+	lea time_render_active(pc),a0
+	tst.w (a0)
+	bne time_pose_bad
 	lea time_pose_header(pc),a2
 	addq.l #1,28(a2)
 	moveq #1,d2
@@ -111,6 +114,11 @@ time_pose_capture:
 	clr.w 12(a4)
 	clr.l 28(a4)
 	clr.l 32(a4)
+	lea time_render_started(pc),a1
+	clr.l (a1)
+	lea time_render_counts(pc),a1
+	clr.l (a1)+
+	clr.l (a1)
 .continuing
 	move.l time_pose_h3(pc),a3
 	move.l a3,a0
@@ -179,7 +187,7 @@ time_pose_capture:
 	dbf d7,.object
 .done
 	addq.l #1,32(a4)
-	bsr time_pose_blend
+	; Build presentation candidates only when a draw is actually due.
 time_pose_captured:
 	nop
 	movem.l (sp)+,d0-a6

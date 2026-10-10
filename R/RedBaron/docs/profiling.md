@@ -78,6 +78,10 @@ they do not yet add interpolated frames or establish gameplay-speed convergence.
 The candidate interpolation buffer then passes 504 pose outputs per CPU on
 A500 and cached 68030 against the rational model: 478 interpolate and 26 snap; 414 differ from current pose.
 This table is not yet used by drawing and supplies no FPS or speed result.
+The first cockpit render-phase integration then passes four native 68030 draws:
+132 object poses are checked during and after drawing, with 108 changed visual
+poses and no world update inside a draw. These runs explicitly enable W5's safe
+two-field cap; the W6 one-field policy and capacity/cadence results remain open.
 See `w6-verification.md` for frozen builds and limitations.
 
 ## W5 current measurements
@@ -1511,3 +1515,14 @@ allocation failure. These are separate from timing runs. `mirror_checks.py`
 reads the completed counters; the cache status must also show completed build,
 pixel and lifecycle checks. Model/test checks and the three-range static audit
 are in the versioned tools directory.
+
+The revised cockpit render phase removes redundant interpolation after every
+world tick. Its A500 correctness capture checks 101 poses over three draws at
+completed ticks 45, 108 and 153, with exact restoration and 89 visual changes.
+The long gaps between draws remain a capacity concern, not a measured FPS result;
+250-field completed-tick/debt/publication measurements remain required.
+
+On cached 68030 the same revised build passes 132 pose checks over four draws,
+including two changing interpolated frames at completed tick 43 with identical
+world-pose snapshots and no intervening world update. This verifies a render-only
+iteration; it does not measure 50 FPS or establish full gameplay convergence.

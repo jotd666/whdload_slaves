@@ -587,6 +587,7 @@ new_DeleteFile:
 	include "tape.s"
 	include "time-poses.s"
 	include "time-pose-blend.s"
+	include "time-render.s"
 	include "time-mouse-ownership-cases.i"
 time_message_log: dcb.b 24*128,0
 fill_twin_before: dcb.b 20*256*2,0
