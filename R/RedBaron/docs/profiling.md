@@ -22,7 +22,10 @@ verification, not an FPS result. Input, secondary services and presentation rema
 incomplete. The subsequent keyboard candidate passes native bank/fire and
 exactly-once command checks on A500 and cached 68030, including up to 93 observed
 CIA intervals of A500 debt. This is input-history evidence, not a gameplay-speed
-or FPS claim. See `w6-verification.md` for frozen builds and limitations.
+or FPS claim. The device candidate also passes 48 native input observations
+on each machine for joystick direction/fire and both mouse buttons, with up to
+93/10 CIA intervals of A500/68030 debt. Analog mode and mouse movement remain
+unverified. See `w6-verification.md` for frozen builds and limitations.
 
 ## W5 current measurements
 

@@ -25,7 +25,7 @@ paint_install:
 	move.l d0,28(a0)
 ; Read the actual control register through Exec's supported supervisor trampoline.
 ; MOVEC is never executed on 68000/010; the policy above alone is not raw CACR.
-	btst #1,perf_attnflags+3(pc)
+	btst #1,observe_attnflags+3(pc)
 	beq.s .no_cacr
 	move.l $4.w,a6
 	lea paint_read_cacr(pc),a5
@@ -38,14 +38,14 @@ paint_install:
 	move.l #$3154a,d0
 	moveq #8,d1
 	lea .swap_bytes(pc),a0
-	bsr perf_check_bytes
+	bsr observe_check_bytes
 	move.l #$2fd8a,d0
 	moveq #8,d1
 	lea .fill_bytes(pc),a0
-	bsr perf_check_bytes
+	bsr observe_check_bytes
 ; MOVE from SR is user-accessible only on 68000. On 68010+ save CCR instead;
 ; MOVE to CCR is unprivileged on all supported CPUs. Patch before FlushCache.
-	btst #0,perf_attnflags+3(pc)
+	btst #0,observe_attnflags+3(pc)
 	beq.s .ccr_ready
 	lea paint_swap_ccr(pc),a0
 	move.w #$42e7,(a0)

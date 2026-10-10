@@ -79,6 +79,7 @@ time_keys_seed_irq:
 	lea time_keys_consumed(pc),a0
 	clr.l (a0)
 	clr.l 4(a0)
+	bsr time_devices_seed
 	lea time_keys_ready(pc),a0
 	move.w #1,(a0)
 	movem.l (sp)+,d0/a0-a2
@@ -103,6 +104,8 @@ time_keys_advance:
 	bsr time_input_pop
 	tst.w d0
 	beq .done
+	cmpi.w #TIME_DEVICE_CODE,4(a1)
+	beq .device
 	lea time_keys_consumed(pc),a2
 	addq.l #1,(a2)
 	move.w 4(a1),d0
@@ -141,6 +144,9 @@ time_keys_advance:
 	move.w d0,4(a2,d2.w)
 	addq.w #1,d1
 	move.w d1,(a2)
+	bra .next
+.device
+	bsr time_devices_apply
 	bra .next
 .done
 	movem.l (sp)+,d0-d4/a0-a3

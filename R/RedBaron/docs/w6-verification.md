@@ -381,3 +381,49 @@ Time Scale changes with old debt, mouse/joystick replay and full world-state
 comparisons remain required. Native mouse position is also written/reset by
 world control routines (for example `sim:1e8ec`), so analog replay must account
 for those resets rather than copying VBlank's accumulated position blindly.
+
+
+## Timestamped joystick and mouse-button replay
+
+VERIFY bit 13 now captures a device packet at the end of native VBlank, after
+its calibrated-axis callback. The packet contains masked JOY1DAT, calibrated
+X/Y bytes, native mouse-button state and joystick fire inputs. Changed packets
+share the keyboard's timestamped FIFO and active-flight deadline convention.
+Flight readers consume a private snapshot advanced by the CIA cursor; menu
+readers retain physical input. Initial ownership seeds both input snapshots
+atomically. Device packets do not produce keyboard commands. Mouse movement is
+not included: native world/camera resets of its accumulator require separate
+replay handling.
+
+CUSTOM5 bit 23 supplies eight producer-packet transitions: digital Right,
+joystick fire, left mouse and right mouse, each followed by release. It does
+not write hardware, world state or consumer results. The native joystick decoder,
+button handling and flight poll consume the packet. This fixture verifies the
+producer-to-flight path, not host-device delivery or calibrated analog mode.
+
+Frozen VERIFY text is 124,296 bytes, SHA256
+`6d423cb1595d44ee1cfa99409b0e25b8ed607692da9f38c48fafc840a0453cfa`.
+A500 and cached 68030 each pass 48 native post-input observations: every private
+snapshot, bank axis and fire flag matches the independent acquisition history;
+all eight events are consumed, with no keyboard commands or overflow. Observed
+CIA debt reaches 93 on A500 and 10 on cached 68030. These are input-history
+checks under different backlogs, not complete world-state or performance results.
+Evidence: `tmp/dev/tmp/prof/w6-devices-{a500,030}/`, including
+`devices.log`, `device-result.json`, `byte-audit.json` and `selftest-result.json`.
+Both owned emulators are quit.
+
+Both captures pass twenty selected-hook checks, thirteen disabled ranges and
+native clock/FIFO/pause counters 426 / 512 / 1. Static instruction/branch/relocation
+audit passes all 33 sim ranges. The independent digital-direction model checks
+all 65,536 hardware words against the original decode table at `sim:30f20`.
+Evidence-validator tests reject corrupted deadlines, packets, native outputs,
+overflow and keyboard leakage. The host suite has 92 passing tests.
+Normal/developer hashes remain byte-identical to W5. VERIFY observer references
+use local aliases and a position-independent long-range bridge where the added
+instrumentation exceeds 68000 PC-relative reach. Build dependencies include the
+new module and previously omitted timing/pacing includes.
+
+Required input gates still include calibrated analog mode, mouse movement,
+mixed devices with modal/restart transitions and native modifier twins. The
+remaining service clocks, rate/compression transitions, full state comparisons,
+interpolation and sustained-speed/capacity matrix remain required for W6.

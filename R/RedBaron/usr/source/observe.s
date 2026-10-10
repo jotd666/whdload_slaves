@@ -10,6 +10,9 @@ observe_start:
 	move.l _resload(pc),a0
 	lea observe_resload(pc),a1
 	move.l a0,(a1)
+	move.l perf_attnflags(pc),a0
+	lea observe_attnflags(pc),a1
+	move.l a0,(a1)
 	lea observe_buffer(pc),a0
 	lea observe_header(pc),a1
 	move.l a0,24(a1)
@@ -80,6 +83,7 @@ observe_header:
 	dc.l 1,OBS_STRIDE,OBS_CAPACITY,0,0,0,0
 observe_vbl_count: dc.l 0
 observe_resload: dc.l 0
+observe_attnflags: dc.l 0
 observe_buffer:
 	dcb.b OBS_STRIDE*OBS_CAPACITY,0
 
@@ -104,7 +108,7 @@ observe_install_slow:
 	lea observe_draw_target(pc),a0
 	move.l d0,(a0)
 	lea observe_slow_patch(pc),a0
-	move.l _resload(pc),a2
+	move.l observe_resload(pc),a2
 	jsr resload_Patch(a2)
 	jsr resload_FlushCache(a2)
 .done
@@ -113,7 +117,7 @@ observe_install_slow:
 .bad
 	pea perf_mismatch(pc)
 	pea TDREASON_FAILMSG
-	move.l _resload(pc),a2
+	move.l observe_resload(pc),a2
 	jmp resload_Abort(a2)
 
 observe_slow_patch:
@@ -154,3 +158,13 @@ observe_draw_target: dc.l 0
 	INCLUDE "time-input-observe.s"
 	INCLUDE "time-probe.s"
 	INCLUDE "paint-observe.s"
+
+; Long-range VERIFY bridge as instrumentation grows beyond a 16-bit BSR span.
+observe_check_bytes:
+	move.l a3,-(sp)
+	lea .base(pc),a3
+.base
+	adda.l #perf_check_bytes-.base,a3
+	jsr (a3)
+	move.l (sp)+,a3
+	rts

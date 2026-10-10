@@ -58,6 +58,7 @@ time_loop_install:
 	move.l d0,(a0)
 	bsr time_pause_selftest
 	bsr time_pause_install
+	bsr time_devices_install
 	bsr time_keys_install
 	lea time_loop_patch(pc),a0
 	jsr resload_Patch(a2)
