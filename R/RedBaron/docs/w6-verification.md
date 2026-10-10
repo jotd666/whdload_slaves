@@ -833,3 +833,75 @@ held controls during actual accepted compression, same-boundary command handling
 modal transitions, sound delivery, game-state equality and compression capacity
 remain acceptance gates. No player W6 promotion or performance claim follows
 from this synthetic funding fixture.
+
+
+## Presentation mutation inventory: first native drawing window
+
+The first read-only inventory uses the frozen 140,630-byte VERIFY build above,
+CUSTOM2=8192, with no synthetic compression/input/camera fixture. Complete
+configured RAM banks are retained before and after the outer draw at
+`sim:0056c`, and separately around its `sim:2c552` 3D pass, for three consecutive
+native drawing opportunities. The capture stops at actual caller return
+addresses; it does not call drawing artificially or write game state. Evidence:
+`tmp/dev/tmp/prof/w6-render-mutations-030/`, `render-mutations.json` and
+`render-mutation-report.json`.
+
+| Native draw | Listed objects | Changed h3 bytes, outer draw | Changed h3 bytes, 3D pass | Changed player bytes |
+| --- | ---: | ---: | ---: | ---: |
+| 0 | 50 | 407 | 353 | 0 |
+| 1 | 58 | 433 | 359 | 0 |
+| 2 | 58 | 354 | 348 | 0 |
+
+The complete 280-byte player object is unchanged across each interval. All
+listed normal object pose prefixes (bytes 0–25), compact prefixes (bytes 0–9)
+and normal callback pointers are also unchanged at those boundaries. This does
+**not** establish render purity. The report keeps all other RAM changes,
+including graphics buffers, stacks, IRQ activity and unidentified heap data;
+no arbitrary address ranges are discarded as noise.
+
+One particularly relevant net mutation is the normal object at `h3:0129c`.
+Its projection-cache extension changes by four, three and five bytes respectively.
+A hardware watchpoint during a further 3D pass identifies `sim:2c700` as a writer
+(`watch-12c4.log`). Static inspection establishes the full behavior for objects
+whose flag byte has bit 3 set:
+
+- `sim:2c6f6–2c704` copies three transformed-coordinate longs to object bytes
+  40–51; this explains the observed changes at `h3:012c4–012cf`.
+- `sim:2c70a` clears object flag bit 2. If projection passes the clipping checks,
+  `sim:2c780–2c798` stores the projection scale and screen coordinates at bytes
+  34–39, and `sim:2c79c` sets bit 2 again.
+- These are writes through the actual object pointer, not only global rendering
+  scratch space. Pose restoration alone would miss them. Whether any later
+  world consumer relies on these results is still an audit item; do not infer
+  gameplay independence from the unchanged pose prefixes.
+
+There are also confirmed transient writes invisible to a boundary-only diff.
+The first list contains sixteen callback pointers to `sim:0db70`, two to
+`sim:0e0ec`, and one to `sim:0f984`. The renderer dispatches object callbacks at
+`sim:2c7b8/2c7de` according to flag bit 1. `sim:0db70/0db9e` temporarily changes
+that bit and the callback pointer, and sets/clears `h3:04c7c` around drawing.
+Thus an unchanged final callback pointer does not mean it was never modified.
+The `sim:0e0ec` path can change model data through object byte-30's pointer and
+calls the native model-color helper; its untouched branches and model consumers
+need further audit. `sim:0f984` reads the camera object's position through
+`h3:08d72`, so swapping only the visible-object list would leave this callback
+using an inconsistent camera for interpolation.
+
+The outer draw also changes the native object-list order at `h3:07dc8`, buffer
+selection/dirty state around `h3:0711c`, and cockpit/redraw counters. These are
+not a reason to roll back the whole h3 allocation: that would undo valid buffer
+publication and concurrent IRQ progress. The implementation needs explicit
+ownership: interpolated object/camera poses and their projection caches must
+not leak into the next world tick, while native rendering buffers and drawing
+bookkeeping must retain their legitimate changes. Identifying all cache readers,
+callback writes and temporary-pose readers comes before enabling render-only
+iterations. The world-step path still needs an equal-tick state comparison
+under omitted as well as extra renders.
+
+`render_mutations.py` reproduces the inventory from saved full-bank snapshots.
+It reports every changed RAM range and separately checks h3, the player, listed
+poses, callback pointers and the bit-3 projection extension. It rejects missing
+or overlapping RAM snapshots and out-of-bank object reads. Its tests inject
+changes in each compared object class and in otherwise unclassified memory.
+This is an initial three-draw cockpit window, not a complete mutation audit,
+heap-equivalence proof, interpolated-render implementation or FPS measurement.

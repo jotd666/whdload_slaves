@@ -55,6 +55,10 @@ CPU: 132 normal and 28 at the 8× request, two transitions, 49 world ticks and
 64 independent service ticks. Fifty clock-pair checks per CPU preserve dt
 across the legacy compression overwrite site. This is a synthetic flag fixture;
 native command/cancellation, gameplay state and capacity remain unverified.
+An initial presentation audit then records three complete native draws, with
+50/58/58 listed objects. The 3D pass changes 353/359/348 h3 bytes, including an
+object projection cache; the player and listed pose prefixes remain unchanged.
+These are mutation-inventory counts, not frame costs or proof of render purity.
 See `w6-verification.md` for frozen builds and limitations.
 
 ## W5 current measurements
