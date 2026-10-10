@@ -1132,8 +1132,12 @@ tape_restart_result_stub:
 	include "simulation_physics_verify.s"
  IFD SIM_A4000
 	include "simulation_replay_file.s"
+ include "simulation_replay_io.s"
  IFD SIM_REPLAY_FILE_TEST
  include "simulation_replay_file_verify.s"
+ IFD SIM_REPLAY_IO_TEST
+ include "simulation_replay_io_verify.s"
+ ENDC
  ENDC
  ENDC
 	ENDC
@@ -1166,6 +1170,17 @@ sim_replay_test_file: dcb.b SIM_REPLAY_BYTES,0
  dc.l $52504c32
 sim_replay_test_out: dcb.b SIM_REPLAY_CRC_OFFSET-SIM_REPLAY_HEADER+4,0
  dc.l $52504c33
+ IFD SIM_REPLAY_IO_TEST
+sim_replay_io_marker:
+ dc.b "4DRPLIO!"
+ dc.w 1,12
+ dc.l 0
+ dc.l $494f3031
+sim_replay_io_buffer: dcb.b SIM_REPLAY_BYTES+2,0
+ dc.l $494f3032
+sim_replay_io_readback: dcb.b SIM_REPLAY_BYTES+2,0
+ dc.l $494f3033
+ ENDC
  ENDC
  ENDC
  ENDC

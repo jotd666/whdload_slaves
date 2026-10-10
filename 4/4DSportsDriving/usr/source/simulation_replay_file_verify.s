@@ -130,6 +130,9 @@ sim_replay_file_fixture:
  cmp.w #50,d0
  bne .failed
  addq.l #1,12(a6)
+ IFD SIM_REPLAY_IO_TEST
+ bsr sim_replay_io_fixture
+ ENDC
  bra .out
 .failed:
  lea sim_replay_file_fixture(pc),a0
