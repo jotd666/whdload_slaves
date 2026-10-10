@@ -1,5 +1,41 @@
 # Red Baron performance measurements
 
+## W6 current-bundle rendering breakdown
+
+A follow-up on the same synthetic cached-68030 200 MHz configuration separates
+the native frame from W6 interpolation. At native flight checkpoints 84–93,
+15 accepted full render calls average **78.559 ms**, and 15 native-draw calls
+average **77.796 ms**, including publication waiting and W6 hooks inside the
+native path. Pose blending averages **0.104 ms**. The exterior W6 wrapper is
+therefore not the large rendering cost in this window; these are per-routine
+means, not an independently isolated subtraction measurement.
+
+Subsequent native stages at checkpoints 104–113 show:
+
+| Stage | Boundaries | Accepted calls | Mean wall time |
+|---|---|---:|---:|
+| Scene construction and 3D drawing | sim:006bc → sim:007c4 | 13 | 42.786 ms |
+| Cockpit drawing | sim:007c4 → sim:00830 | 13 | 30.520 ms |
+| Publication/end-of-frame | sim:00afe → sim:00b10 | 15 | 4.124 ms |
+
+The background and message stages do negligible work in this later window.
+The publication stage includes native end-of-frame calls and beam waiting; it
+is not a measurement of pure idle time. A further cockpit breakdown at
+checkpoints 114–123 measures `sim:19ba6..19e12` at **8.651 ms** (15 calls),
+`sim:15e96..163a0` at **14.455 ms** (15), and the overlay at
+`sim:2c144` at **7.250 ms** (14). These native calls are concrete next targets
+for a redraw/data-ownership audit. This recurring cockpit work must not be
+confused with W1's event-triggered mirrored dashboard bitmap.
+
+At checkpoints 94–103, 146 accepted polygon calls average 1.100 ms and 162
+rectangle calls average 1.214 ms; 14 complete 3D passes average 33.395 ms.
+Different call counts and phase exclusions prevent summing those means into a
+frame breakdown or claiming percentages. Adjacent windows contain different
+states. No speedup or real-accelerator claim follows from this diagnostic.
+The 50 FPS gate remains open: lowering interpolation cost alone will not remove
+the measured native drawing budget. Full capture details and exclusions are in
+`w6-verification.md`, “Current-bundle rendering cost localization.”
+
 ## W6 high-frequency rendering diagnostic
 
 A current VERIFY full-bundle diagnostic with cached emulated 68030 at **200 MHz**,

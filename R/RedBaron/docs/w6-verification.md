@@ -2476,3 +2476,61 @@ accesses, blitter waits or W6 render-state isolation. The earlier 50 MHz run use
 a different input fixture, so no frequency-scaling speedup is claimed. Continue
 with a current-bundle rendering-cost breakdown while retaining the complete
 physics/state and capacity gates. Smooth 50 FPS remains required and unproven.
+
+## Current-bundle rendering cost localization
+
+The follow-up local capture `tmp/dev/tmp/prof/w6-render-cost-200mhz/` retains the
+same slave hash and configuration as the preceding high-frequency diagnostic:
+VERIFY `83f586cb2b477476dd915d2779561abf834cd6ce3abe95fa3f347cafdf20083a`,
+CUSTOM2=16319, CUSTOM4=0, CUSTOM5=512, maximum detail, Time Scale 40, cached
+200 MHz emulated 68030 with cycle-exact memory/blitter. No rendering is skipped.
+A fresh boot advances to native flight checkpoint 84 before measuring.
+
+Four consecutive ten-checkpoint windows use the same native beam/VBlank clock
+and `routine_wall_time.py` phase rules. All entry/exit pairs restore their SP;
+only complete pairs enter the analysis. `capture-clock.py` freezes the exact
+read-only collector alongside the evidence. For the native draw call its return
+probe is immediately before argument cleanup, preserving equal SP. W4 changes
+rectangle setup internally, leaving the measured native entry/returns valid.
+
+| Capture | Checkpoints | Paired calls | Phase-excluded pairs |
+|---|---:|---:|---:|
+| budget-clock.json | 84–93 | 80 | 4 |
+| draw-clock.json | 94–103 | 387 | 65 |
+| stage-clock.json | 104–113 | 75 | 6 |
+| cockpit-clock.json | 114–123 | 360 | 4 |
+
+The corresponding `*-summary.json` files retain accepted and excluded samples.
+The full outer render averages 3.921673 fields (15 accepted calls), native draw
+3.883593 fields (15), pose blending 0.005177 fields (15), and 3D pass 1.666185
+fields (15) in the first window. Native draw includes publication waits and W6
+hooks inside the original path. Thus its name does not imply W6 is disabled.
+
+The disjoint native frame-stage window measures scene work at
+`sim:006bc..007c4` at 2.135874 fields (13 calls), cockpit work at
+`sim:007c4..00830` at 1.523577 fields (13), and publication/end-of-frame at
+`sim:00afe..00b10` at 0.205876 fields (15). The background stage
+`sim:005fe..006bc` and message stage `sim:00830..00afe` average less than
+0.00004 fields each (14 accepted calls each). Shared stage boundaries have a
+single breakpoint that emits both records, rather than competing command lists.
+
+The last window localizes recurring cockpit work: `sim:19ba6..19e12` averages
+0.431846 fields (15), `sim:15e96..163a0` 0.721613 fields (15), and overlay
+`sim:2c144` 0.361944 fields (14). The whole cockpit stage averages 1.515575
+fields (14). Meanwhile the earlier drawing window accepts 146 polygon and
+162 rectangle calls with means 0.054906 and 0.060590 fields; its 14 accepted
+3D passes average 1.667103 fields. No percentage decomposition is inferred
+from sums across different accepted sample sets or adjacent world states.
+
+Two initial oversized breakpoint sets were rejected by the debugger before
+execution; their `*-rejected.json` and `.txt` files remain separate, incomplete,
+and excluded. Smaller sets completed without changing the slave. At the end,
+all 54 selected timing/pacing hook destinations and native 426/512/638/133 plus
+terrain/cache/list 2/1/2 checks pass. The owned emulator was quit.
+
+This is cost localization, not optimization or acceptance. The measurements
+make the native scene/cockpit drawing path the next presentation target; they
+do not justify removing state restoration, lowering detail, changing physics
+speed, or relaxing the 50 FPS requirement. Audit redraw dependencies and compare
+pixels before changing the expensive native cockpit calls. The full gameplay,
+capacity and hardware acceptance gates remain open.
