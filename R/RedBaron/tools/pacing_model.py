@@ -3,6 +3,7 @@
 A frame may publish once at least two field boundaries have passed. This is
 an average 25-field-pairs/s ceiling, not a promise of 40 ms between every pair
 when publication phase changes. The game's beam wait supplies the safe phase.
+W6 uses minimum=1 for a 50-publications/s ceiling; world funding is independent.
 """
 MASK = (1 << 32) - 1
 

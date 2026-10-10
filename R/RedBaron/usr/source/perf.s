@@ -12,6 +12,12 @@ perf_read_options:
 	move.l perf_custom2(pc),d0
 	IFD VERIFY
 	and.l #PERF_VERIFY_MASK,d0
+	; W6 owns presentation timing and requires the W5 beam-safe publication.
+	; Expand dependencies in the effective mask so each hook keeps one owner.
+	btst #13,d0
+	beq.b .timing_dependencies_done
+	or.l #$0300,d0
+.timing_dependencies_done
 	ELSE
 	IFD DEVELOPER
 	and.l #PERF_DEVELOPER_MASK,d0

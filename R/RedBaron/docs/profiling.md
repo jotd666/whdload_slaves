@@ -81,7 +81,8 @@ This table is not yet used by drawing and supplies no FPS or speed result.
 The first cockpit render-phase integration then passes four native 68030 draws:
 132 object poses are checked during and after drawing, with 108 changed visual
 poses and no world update inside a draw. These runs explicitly enable W5's safe
-two-field cap; the W6 one-field policy and capacity/cadence results remain open.
+two-field cap. The subsequent W6 one-field policy is verified below; full
+capacity and smooth-50-FPS acceptance remain open.
 See `w6-verification.md` for frozen builds and limitations.
 
 ## W5 current measurements
@@ -1526,3 +1527,13 @@ On cached 68030 the same revised build passes 132 pose checks over four draws,
 including two changing interpolated frames at completed tick 43 with identical
 world-pose snapshots and no intervening world update. This verifies a render-only
 iteration; it does not measure 50 FPS or establish full gameplay convergence.
+
+W6 now selects safe publication automatically and uses a one-field minimum;
+W5 alone retains two fields. On the frozen `1a0677e1…` VERIFY build, the fast-draw
+fixture crosses field-counter wrap and preserves exact world-clock funding.
+The W5-only control retains 39/39 two-field intervals and original W6 hook bytes.
+With real 68030 cockpit drawing, 99 poses restore exactly, and nineteen observed
+publication intervals satisfy exact clock funding. Those intervals are 3–7 fields,
+with 4–9 CIA ticks of debt observed at publication. This is timing plus W5 only,
+not the complete performance bundle or a 250-field capacity measurement. The
+one-field cap is available, but real smooth 50 FPS has not yet been demonstrated.

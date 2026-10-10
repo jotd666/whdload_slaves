@@ -1373,3 +1373,63 @@ checks, fifty selected hooks, ten disabled ranges and native self-tests pass.
 This closes that scoped repeated-tick observation, not general gameplay-state
 independence or a 50 FPS cadence claim. The 142 host tests and sixty-range static
 audit pass. Rebuilt normal/developer binaries retain the W5 hashes.
+
+## W6 one-field publication policy
+
+The VERIFY option resolver now adds bits 8 and 9 to the effective mask whenever
+W6 bit 13 is requested. Thus CUSTOM2=8192 installs effective mask 8960: W6 plus
+W5's safe beam publication and field counter. Each original hook keeps its
+existing single PERF_RANGE owner. Disabled-byte tools must use the effective
+mask (8960), not the raw request (8192). Other bits remain independently selected.
+Outside W6, the W5 cap stays at two fields. With W6 selected, `pace_flight` uses
+one field from the previous actual publication. Neither policy drops elapsed
+CIA time; the scheduler observes publication waits when it next polls.
+The normal/developer source paths do not acquire the VERIFY timing policy.
+
+`publication_clock.py` verifies safe beam position, modular field spacing and
+native world funding across constant-Time-Scale publication intervals. It checks
+that completed ticks plus the change in exact fractional phase equal funded CIA
+cursor time, requires zero due world work at publication, and reports outstanding
+CIA debt separately. This is a scoped clock-accounting check; it does not compare
+complete gameplay state or prove sustained CPU capacity.
+
+Frozen VERIFY text is 245,208 bytes, SHA256
+`1a0677e18c874809ae0270549b4efbeaae6d778d4d3e210a6f936fafbca7e1b8`.
+`tmp/dev/tmp/prof/w6-one-field-030-stress/` requests CUSTOM2=8192 and the compiled
+CUSTOM5 fast-draw/wrap fixture. Forty publication observations cross the 32-bit
+field-counter wrap; the intervals are 9, 1, then thirty-seven 2-field intervals.
+All publications fall within the native safe beam window. The single 1-field
+interval demonstrates that the prior two-field minimum is removed. This fixture
+still spends enough time outside the skipped 3D pass to produce mostly 2-field
+intervals; it is not evidence of real 50 FPS or of the final limiting routine.
+Thirty-eight active W6 intervals satisfy exact clock accounting, with 26 repeated
+world-tick pairs and observed debt of 2–3 CIA intervals at publication. Fifty
+selected hooks, ten disabled ranges and the native self-test counters pass.
+The first publication is before W6 loop ownership begins and is excluded from
+the world-clock check.
+
+The W5-only control from the same frozen build,
+`tmp/dev/tmp/prof/w6-one-field-w5-control/`, requests CUSTOM2=768 with the same
+compiled fixture. All 39 intervals across forty publications are exactly two
+fields, including field-counter wrap, and all beam positions are safe. Its three
+W5 hooks match; all 57 remaining ranges, including every W6 hook, retain their
+original relocated bytes. This validates option isolation and the unchanged W5
+publication policy without relying on an A/B performance inference.
+
+The real-drawing capture `tmp/dev/tmp/prof/w6-one-field-030-native/` uses
+CUSTOM2=8192 without the fast-draw fixture. Three cockpit leases check 99 poses,
+including 79 changed visually, with exact restoration and all ownership/clock
+checks passing. Twenty subsequent publications have 3–7-field intervals and safe
+beam positions; all nineteen intervals satisfy exact native world funding.
+Three adjacent publications share a world tick; observed CIA debt is 4–9 ticks.
+The effective mask is 8960, with fifty selected hooks and ten disabled ranges
+passing. Native self-tests remain 426/512/638/133. This timing-plus-W5 workload
+leaves the other performance bits off and does not establish final-bundle FPS,
+steady capacity, full-state convergence or the 50 FPS acceptance target.
+
+All 145 host tests pass; the sixty-range static hook audit has zero errors.
+Normal/developer builds retain their W5 hashes. Remaining work includes the
+full performance-bundle capacity matrix, frame-cost investigation, all-camera
+presentation, full equal-tick gameplay state/events, and the other gameplay and
+modal acceptance gates. One-field policy support is implemented; smooth real
+50 FPS is still unproven.

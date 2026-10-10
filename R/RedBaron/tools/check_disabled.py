@@ -28,7 +28,7 @@ def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('original',type=Path)
     p.add_argument('--sim', '--base', dest='sim', required=True,type=lambda x:int(x,0));p.add_argument('--memory',action='append',required=True)
     p.add_argument('--domain', choices=['sim', 'sound'], default='sim', help='Code entry: sim:00000 or sound:00028')
-    p.add_argument('--custom2',type=lambda x:int(x,0),default=0,help='Actual developer/VERIFY mask; check only bits that are off')
+    p.add_argument('--custom2',type=lambda x:int(x,0),default=0,help='Effective installed mask; W6 VERIFY bit 13 implies bits 8/9 (8192 becomes 8960)')
     a=p.parse_args();banks=[]
     for spec in a.memory:
         base,path=spec.split(':',1);banks.append((int(base,0),Path(path).read_bytes()))
