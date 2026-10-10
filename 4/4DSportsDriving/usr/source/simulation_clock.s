@@ -1,5 +1,5 @@
-; Independent display-field clock. Initially enabled only by SIM_PROBE;
-; production simulation scheduling is connected after its input/state gates.
+; Independent display-field clock in the SIM_PROBE build family. SIM_TRACE
+; controls the optional per-step recorder separately; scheduling needs no trace.
 ; Exec owns the interrupt chain. SIM_SCHEDULE optionally samples held controls
 ; into a private queue; no physics or OS calls run here. Return Z set to
 ; continue the chain.

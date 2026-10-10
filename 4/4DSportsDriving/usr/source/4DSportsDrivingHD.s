@@ -62,6 +62,20 @@
  ENDC
  ENDC
 
+; Entry tracing is diagnostic, not a requirement of the field clock.
+; Fixtures run from that entry hook; ordinary controls need no per-step copy.
+ IFND SIM_TRACE
+ IFD SIM_PROBE
+ IFD SIM_FIXTURE
+SIM_TRACE SET 1
+ ELSE
+ IFND SIM_SCHEDULE
+SIM_TRACE SET 1            ; retain standalone native-probe builds
+ ENDC
+ ENDC
+ ENDC
+ ENDC
+
 ;USE_PROFILING
 
 	IFD	USE_PROFILING
@@ -374,7 +388,9 @@ pl_main
     PL_PS $9CE8,tape_restart_result_stub
     ENDC
     IFD SIM_PROBE
+    IFD SIM_TRACE
     PL_P $E5F2,sim_probe_entry_stub
+    ENDC
     IFD SIM_FIXTURE_INVERTED
     PL_PS $C614,sim_inverted_wheels_stub
     ENDC
@@ -1156,7 +1172,7 @@ sim_history_rotate_stub:
  movem.l (sp)+,a0
  rts
 	ENDC
-	IFD SIM_PROBE
+	IFD SIM_TRACE
  IFD SIM_FIXTURE_INVERTED
 sim_inverted_wheels_stub:
  subq.l #4,sp
@@ -1362,7 +1378,7 @@ tape_restart_result_stub:
  ENDC
 	ENDC
 	include "driving_tape.s"
-	IFD SIM_PROBE
+	IFD SIM_TRACE
 	include "simulation_verify.s"
 	ENDC
 	ENDC
