@@ -2,6 +2,7 @@
 ; No feature is release-enabled until its model, twin and measurements pass.
 PERF_VERIFIED_MASK = $1fbf ; W1-W5, excluding deferred face setup bit 6
 PERF_DEVELOPER_MASK = $1fff
+PERF_VERIFY_MASK = $3fff ; W6 loop checkpoint is not a developer/player feature yet
 
 perf_read_options:
 	movem.l d0-a6,-(sp)
@@ -10,7 +11,7 @@ perf_read_options:
 	jsr resload_Control(a2)
 	move.l perf_custom2(pc),d0
 	IFD VERIFY
-	and.l #PERF_DEVELOPER_MASK,d0
+	and.l #PERF_VERIFY_MASK,d0
 	ELSE
 	IFD DEVELOPER
 	and.l #PERF_DEVELOPER_MASK,d0
@@ -96,6 +97,12 @@ perf_apply_v1:
 	bsr pace_install
 	bsr sound_sequence_install
 	bsr sound_driver_install
+	IFD VERIFY
+	btst #5,perf_mask+2(pc)
+	beq.b .no_time
+	bsr time_loop_install
+.no_time
+	ENDC
 	rts
 
 ; Check a non-relocated hook range before installing it.

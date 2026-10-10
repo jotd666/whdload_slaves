@@ -141,3 +141,66 @@ deadlines, overflow and extra/contaminating events rather than filtering them ou
 All 82 host checks pass. This proves the observed keyboard producer contract;
 it does not yet connect keyboard events to world ticks, capture mouse/joystick,
 or implement the gameplay loop. The owned test emulator is shut down.
+
+
+## First native flight-loop integration checkpoint
+
+VERIFY-only CUSTOM2 bit 13 (`8192`) now installs four checked sim-v1 hooks:
+`sim:21d28` (input/world iteration gate), `sim:21e7a` (draw decision),
+`sim:03d5e` (primary clock override) and `sim:21f60` (mission exit).
+The normal and developer masks remain unchanged. This is an incomplete timing
+experiment, not a selectable player feature or W6 acceptance result.
+
+The gate retains the original input call's stack and `sim:21d30` return address.
+It advances the exact clock kernel through unprocessed CIA intervals until a
+world tick is due, then lets the original command/world/camera/sound loop run in
+its original order with primary dt 225. The draw decision advances that same
+cursor: if another world tick is due, it skips drawing and the buffer-dirtiness
+decrement. Otherwise it retains the original draw branch. The existing clock
+routine still runs, but cannot overwrite the fixed primary dt while this loop
+owns flight. Mission exit clears that ownership without changing the native
+return value or flags. Input and other elapsed-time consumers are not yet split.
+
+Frozen VERIFY text is 119,686 bytes, SHA256
+`49afe22569d9e46d9bd97176bed04488be5010b1c1d12ed3d5bb9d47456dca5f`.
+All 17 declared sim hook ranges pass the instruction/direct-branch/relocation
+audit; indirect callers still need the usual semantic review. All 82 host tests
+pass. Normal/developer binary hashes remain identical to W5.
+
+The cached 68030 run reaches flight and follows exact integer deadlines
+`ceil(tick * 225 * 33 / 1024)` from its retained CIA epoch. Its later 201-row
+capture spans scheduled ticks 120–320 without a missed or repeated tick ID.
+Within it, ticks 240–320 span 580 observed and 580 scheduled CIA intervals;
+all those observed boundaries have zero CIA debt. This establishes that the
+native gate can wait for deadlines after catching up. It is not a performance
+measurement, a completed-world timestamp, or a full-state correctness proof.
+Evidence: `tmp/dev/tmp/prof/w6-loop-030/loop-result.json` and `loop.log`.
+
+The immediate-install boot exposes a real integration failure: the setup route's
+in-flight panel time accrues as debt. At scheduled tick 120, the cursor trails
+observed CIA time by 295 intervals; the loop then skips draws to drain it. The
+scheduler must bracket actual pause/menu operations and exclude their duration
+without deleting pre-existing debt. Do not treat draining this artificial setup
+debt as successful pause behavior. The attempted post-capture byte audit failed
+in its host collector before reading RAM; it supplies no 68030 byte-audit claim.
+
+Still missing from this checkpoint: acquisition-timestamped input consumption,
+secondary camera/repeat execution, pause/menu rebasing, message/death timing,
+compression semantics, render-only iterations/interpolation, full world-state
+comparison and the complete gameplay/capacity matrix. Native input remains
+render-schedule-dependent during catch-up, and secondary service counts are
+currently telemetry only. These limitations explicitly prevent enabling the bit
+for players or claiming consistent gameplay from the deadline log.
+
+
+The same frozen build on A500 follows exact deadlines for scheduled ticks
+40–240 (201 rows), with dt 225 and F 33 throughout. Those 200 updates advance
+the cursor by 1,450 CIA intervals while observed time advances by 843; setup
+debt falls from 7,617 to 7,010 intervals. All 200 draw opportunities are skipped
+while draining that debt. This is a catch-up-path check, not normal-flight FPS
+or a supported-capacity claim. The byte audit verifies all four selected hook
+opcodes/targets, the gate's padding NOP and the original relocated bytes for all
+13 disabled sim ranges. Evidence: `tmp/dev/tmp/prof/w6-loop-a500/`.
+Both owned emulators have been quit. Pause/menu rebasing is the next integration
+fix; the larger A500 setup debt makes this especially important before further
+CPU comparison.

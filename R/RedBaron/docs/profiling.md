@@ -11,6 +11,14 @@ cycles (59.24 ms). With proposed 225-unit ticks, the default Time Scale projects
 unchanged; the highest setting projects 159% world utilization before drawing.
 These are capacity estimates, not measurements of an implemented scheduler.
 
+The first VERIFY-only W6 loop checkpoint now executes fixed-step world updates
+and skips drawing while catching up. On cached 68030, scheduled ticks 240–320
+span 580 observed CIA intervals, matching 580 scheduled intervals with no debt
+at those boundaries. This is a scheduling check, **not an FPS, capacity or
+consistent-gameplay result**. Setup panel time currently creates unwanted debt;
+input, secondary services and presentation remain incomplete. See
+`w6-verification.md` for the frozen build and limitations.
+
 ## W5 current measurements
 
 The frozen VERIFY candidate is SHA256

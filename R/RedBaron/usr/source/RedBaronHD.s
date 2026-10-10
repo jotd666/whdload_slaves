@@ -565,6 +565,7 @@ new_DeleteFile:
 	IFD VERIFY
 	include "time-core.s"
 	include "time-input.s"
+	include "time-loop.s"
 	include "originals.s"
 	include "mirror-verify.s"
 	include "cache-verify.s"
