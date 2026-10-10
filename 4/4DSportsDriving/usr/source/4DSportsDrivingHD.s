@@ -188,6 +188,7 @@ patch_main
 	ENDC
 	IFD SIM_SCHEDULE
 	bsr sim_schedule_reset_selftest
+	bsr sim_schedule_modal_selftest
 	ENDC
 	bsr tape_start
 	IFD SIM_PROBE
@@ -323,6 +324,7 @@ pl_main
     PL_PSS $CF9E,sim_a4000_contact_distance,2
     ENDC
     IFD SIM_SCHEDULE
+    PL_PS $1A788,sim_schedule_modal_enter
     PL_PS $7908,sim_schedule_reset_history
     PL_PSS $70E0,sim_schedule_poll,2
     PL_PS $7A04,sim_schedule_timer

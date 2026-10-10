@@ -146,6 +146,9 @@ tape_task_code:
  lea tape_io(pc),a1
  jsr _LVODoIO(a6)
  ENDC
+ IFD SIM_MODAL_FIXTURE
+ bsr tape_live_modal_fixture
+ ENDC
  IFD SIM_RESTART_FIXTURE
  bsr tape_live_restart_fixture
  ENDC
@@ -821,4 +824,34 @@ tape_live_restart_fixture:
  bra.s .next
 .done:
  rts
+ ENDC
+
+ IFD SIM_MODAL_FIXTURE
+ IFND SIM_SCHEDULE
+ FAIL "SIM_MODAL_FIXTURE requires SIM_SCHEDULE"
+ ENDC
+; Open Ctrl-G during a real race, hold it for 100 fields, then leave by Escape.
+; Reuse the established input.device Ctrl-G route and its key qualifiers.
+tape_live_modal_fixture:
+.wait:
+ exg a5,a6
+ jsr _LVOWaitTOF(a6)
+ exg a5,a6
+ move.l tape_a4(pc),a0
+ cmp.w #80,-$940(a0)
+ blo.s .wait
+ lea tape_dialog_ready(pc),a0
+ clr.l (a0)
+ moveq #0,d3
+ lea tape_modal_keys(pc),a3
+ bsr tape_menu_keys
+ rts
+ even
+tape_modal_keys:
+ dc.w 5,$63,IEQUALIFIER_CONTROL
+ dc.w 5000,$24,IEQUALIFIER_CONTROL ; hold until native dialog acknowledgement
+ dc.w 5,$a4,IEQUALIFIER_CONTROL
+ dc.w 100,$e3,0            ; release Control, leave the dialog open
+ dc.w 20,$45,0,30,$c5,0    ; Escape and release
+ dc.w 0
  ENDC

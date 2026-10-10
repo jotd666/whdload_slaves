@@ -9,6 +9,9 @@ sim_schedule_field:
  lea sim_schedule_active(pc),a0
  tst.w (a0)
  beq .done
+ lea sim_schedule_modal(pc),a0
+ tst.w (a0)
+ bne .modal_paused
  move.l sim_schedule_a4(pc),a4
  tst.b $45(a4)
  bne .paused
@@ -111,6 +114,9 @@ sim_schedule_field:
  addq.l #1,(a0)
 .done:
  rts
+.modal_paused:
+ lea sim_schedule_modal_fields(pc),a0
+ addq.l #1,(a0)
 .paused:
  lea sim_schedule_phase(pc),a0
  clr.w (a0)
@@ -130,6 +136,9 @@ sim_schedule_poll:
  beq .return
  tst.b $45(a4)
  bne .deactivate
+ tst.b -$3ff4(a4)
+ bne .return              ; an outer native dialog still owns input
+ bsr sim_schedule_resume_modal
  lea sim_schedule_active(pc),a0
  tst.w (a0)
  bne .drain
@@ -197,6 +206,8 @@ sim_schedule_poll:
  bra .return
 .deactivate:
  lea sim_schedule_active(pc),a0
+ clr.w (a0)
+ lea sim_schedule_modal(pc),a0
  clr.w (a0)
 .return:
  move.w (sp)+,d0
@@ -268,6 +279,8 @@ sim_schedule_reset_history:
  clr.w sim_schedule_overflow-sim_schedule_active(a0)
  clr.w sim_schedule_enqueuing-sim_schedule_active(a0)
  clr.l sim_schedule_a4-sim_schedule_active(a0)
+ lea sim_schedule_modal(pc),a0
+ clr.w (a0)
  IFD SIM_A4000
  lea sim_a4000_private(pc),a0
  moveq #SIM_PRIVATE_BYTES/4-1,d0
@@ -297,7 +310,7 @@ sim_schedule_resets: dc.l 0
  dc.b "4DSCHTST"
  dc.w 1,2
 sim_schedule_reset_passed: dc.l 0
-sim_schedule_test_native: dcb.b $44,0
+sim_schedule_test_native: dcb.b $46,0
 
 ; Dirty running and wrapped queue states, both incoming X values. Exercise
 ; the actual hook, then a field interrupt after closure with the pointer zero.
@@ -375,5 +388,168 @@ sim_schedule_reset_selftest:
 .failed:
  lea perf_failure(pc),a0
  move.l #14,(a0)
+ illegal
+ bra.s .failed
+
+; Common native nested-dialog entry, after its LINK. Closing this gate keeps
+; CIA production suppressed (active remains set) while VBL capture is paused.
+; Native modal depth is incremented later by the original routine.
+sim_schedule_modal_enter:
+ movem.l d0-d1/a0,-(sp)
+ moveq #0,d0
+ addx.w d0,d0
+ move.w d0,-(sp)
+ bsr sim_schedule_pause_modal
+ move.w (sp)+,d0
+ lsr.w #1,d0
+ movem.l (sp)+,d0-d1/a0
+ move.b -$3ff4(a4),d0
+ ext.w d0
+ rts
+
+sim_schedule_pause_modal:
+ lea sim_schedule_active(pc),a0
+ tst.w (a0)
+ beq.s .done
+ tst.b $45(a4)
+ bne.s .done
+ lea sim_schedule_modal(pc),a0
+ move.w #1,(a0)            ; closes producer before any diagnostic reads
+ lea sim_schedule_modal_enters(pc),a0
+ addq.l #1,(a0)
+.done:
+ rts
+
+; Only the main poll, after native modal depth reaches zero, may reopen this
+; gate. Finish an already imported native input normally; discard just the
+; private queue. A modal called inside the importer leaves its cursor alone
+; until that importer returns and consumes its own record exactly once.
+sim_schedule_resume_modal:
+ lea sim_schedule_modal(pc),a0
+ tst.w (a0)
+ beq.s .done
+ moveq #0,d0
+ move.w sim_schedule_write(pc),d0
+ sub.w sim_schedule_read(pc),d0
+ lea sim_schedule_modal_dropped(pc),a0
+ add.l d0,(a0)
+ lea sim_schedule_read(pc),a0
+ move.w sim_schedule_write(pc),(a0)
+ lea sim_schedule_phase(pc),a0
+ clr.w (a0)
+ lea sim_schedule_modal_resumes(pc),a0
+ addq.l #1,(a0)
+ lea sim_schedule_modal(pc),a0
+ clr.w (a0)               ; publication last: later fields begin fresh phase
+.done:
+ rts
+
+ even
+ dc.b "4DSCHMOD"
+ dc.w 1
+sim_schedule_modal: dc.w 0
+sim_schedule_modal_enters: dc.l 0
+sim_schedule_modal_resumes: dc.l 0
+sim_schedule_modal_dropped: dc.l 0
+sim_schedule_modal_fields: dc.l 0
+
+ even
+ dc.b "4DSCHMT!"
+ dc.w 1,4
+sim_schedule_modal_passed: dc.l 0
+; Exercise nested entry, no capture while paused, wrapped queued input, and
+; preservation of an input already accepted by the native importer. Inactive
+; and replay-mode entries must not claim live clock ownership.
+sim_schedule_modal_selftest:
+ movem.l d0-a6,-(sp)
+ lea sim_schedule_test_native(pc),a4
+ moveq #0,d7
+.case:
+ lea sim_schedule_active(pc),a0
+ move.w d7,d0
+ and.w #1,d0
+ move.w d0,(a0)
+ move.w #49,sim_schedule_phase-sim_schedule_active(a0)
+ move.w #$fffe,sim_schedule_read-sim_schedule_active(a0)
+ move.w #3,sim_schedule_write-sim_schedule_active(a0)
+ move.w #1,sim_schedule_enqueuing-sim_schedule_active(a0)
+ move.l #$12345678,sim_schedule_a4-sim_schedule_active(a0)
+ move.w d7,d0
+ and.w #2,d0
+ move.b d0,$45(a4)
+ lea sim_schedule_modal(pc),a0
+ clr.w (a0)
+ clr.l sim_schedule_modal_enters-sim_schedule_modal(a0)
+ clr.l sim_schedule_modal_resumes-sim_schedule_modal(a0)
+ clr.l sim_schedule_modal_dropped-sim_schedule_modal(a0)
+ clr.l sim_schedule_modal_fields-sim_schedule_modal(a0)
+ bsr sim_schedule_pause_modal
+ bsr sim_schedule_pause_modal
+ lea sim_schedule_read(pc),a0
+ cmp.w #$fffe,(a0)
+ bne .failed
+ cmp.w #3,sim_schedule_write-sim_schedule_read(a0)
+ bne .failed
+ cmp.w #1,sim_schedule_enqueuing-sim_schedule_read(a0)
+ bne .failed
+ cmp.w #1,d7              ; only active=1, live mode=0 pauses
+ bne .unclaimed
+ cmp.w #1,sim_schedule_modal-sim_schedule_read(a0)
+ bne .failed
+ cmp.l #2,sim_schedule_modal_enters-sim_schedule_read(a0)
+ bne .failed
+ bsr sim_schedule_field
+ bsr sim_schedule_field
+ bsr sim_schedule_field
+ lea sim_schedule_modal_fields(pc),a0
+ cmp.l #3,(a0)
+ bne .failed
+ lea sim_schedule_ticks(pc),a0
+ tst.l (a0)
+ bne .failed
+ ; Complete one in-flight import before the next main poll resumes capture.
+ lea sim_schedule_read(pc),a0
+ addq.w #1,(a0)
+ clr.w sim_schedule_enqueuing-sim_schedule_read(a0)
+ bsr sim_schedule_resume_modal
+ bsr sim_schedule_resume_modal ; reopening is idempotent
+ lea sim_schedule_read(pc),a0
+ cmp.w #3,(a0)
+ bne .failed
+ tst.w sim_schedule_phase-sim_schedule_read(a0)
+ bne .failed
+ tst.w sim_schedule_modal-sim_schedule_read(a0)
+ bne .failed
+ cmp.l #1,sim_schedule_modal_resumes-sim_schedule_read(a0)
+ bne .failed
+ cmp.l #4,sim_schedule_modal_dropped-sim_schedule_read(a0)
+ bne .failed
+ bra.s .passed
+.unclaimed:
+ tst.w sim_schedule_modal-sim_schedule_read(a0)
+ bne .failed
+ tst.l sim_schedule_modal_enters-sim_schedule_read(a0)
+ bne .failed
+ cmp.w #49,sim_schedule_phase-sim_schedule_read(a0)
+ bne .failed
+.passed:
+ lea sim_schedule_modal_passed(pc),a0
+ addq.l #1,(a0)
+ addq.w #1,d7
+ cmp.w #4,d7
+ blt .case
+ bsr sim_schedule_reset_history
+ lea sim_schedule_resets(pc),a0
+ clr.l (a0)
+ lea sim_schedule_modal_enters(pc),a0
+ clr.l (a0)+
+ clr.l (a0)+
+ clr.l (a0)+
+ clr.l (a0)
+ movem.l (sp)+,d0-a6
+ rts
+.failed:
+ lea perf_failure(pc),a0
+ move.l #15,(a0)
  illegal
  bra.s .failed
