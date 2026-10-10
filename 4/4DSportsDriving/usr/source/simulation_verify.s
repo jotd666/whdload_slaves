@@ -230,7 +230,83 @@ sim_history_end_seek_fixture:
  rts
  ENDC
 
+ IFD SIM_HISTORY_ROTATION_TEST
+ IFND SIM_HISTORY_ROTATION_BASE
+SIM_HISTORY_ROTATION_BASE = 0
+ ENDC
+; Populate all history slots with distinct byte patterns, then execute the
+; actual native full-buffer path. External checks compare every moved byte.
+; This synthetic boundary fixture deliberately stops instead of driving on.
+sim_history_rotation_fixture:
+ tst.b $45(a4)
+ bne sim_history_rotation_return
+ cmp.w #50,-$15fa(a4)
+ bne sim_history_rotation_return
+ cmp.w #160,-$940(a4)
+ bne sim_history_rotation_return
+ lea sim_history_rotation_fixture(pc),a0
+ adda.l #sim_schedule_modal-sim_history_rotation_fixture,a0
+ move.w #1,(a0)              ; retain live clock ownership, close capture
+ move.l -$16bc(a4),a0
+ move.w #20*$460-1,d0
+ moveq #0,d1
+.native_bytes:
+ move.b d1,(a0)+
+ addq.b #1,d1
+ dbra d0,.native_bytes
+ move.l -$16bc(a4),a0
+ moveq #19,d0
+ moveq #0,d1
+.native_ticks:
+ move.w d1,$140(a0)
+ move.b #1,$3f4(a0)
+ add.w #1500,d1
+ lea $460(a0),a0
+ dbra d0,.native_ticks
+ lea sim_history_rotation_fixture(pc),a0
+ adda.l #sim_history_records-sim_history_rotation_fixture,a0
+ move.l a0,a1
+ move.w #20*SIM_HISTORY_BYTES-1,d0
+ moveq #$55,d1
+.private_bytes:
+ move.b d1,(a0)+
+ addq.b #7,d1
+ dbra d0,.private_bytes
+ moveq #19,d0
+.valid:
+ move.w #50,(a1)
+ lea SIM_HISTORY_BYTES(a1),a1
+ dbra d0,.valid
+ move.l -$1770(a4),a0
+ move.w #30000-1,d0
+ moveq #0,d1
+.inputs:
+ move.b d1,(a0)+
+ addq.b #1,d1
+ dbra d0,.inputs
+ move.w #30000,$a0(a4)
+ move.w #30000,-$1738(a4)
+ move.w #30000,-$940(a4)
+ move.w #SIM_HISTORY_ROTATION_BASE,-$2e0(a4)
+ move.b #1,$a9b(a4)          ; full-history warning was already acknowledged
+ clr.b $a9a(a4)
+ clr.b $42(a4)
+sim_history_rotation_ready:
+ move.w #1,-(sp)
+ move.l tape_game(pc),a0
+ adda.l #$7a66,a0
+ jsr (a0)
+ addq.l #2,sp
+sim_history_rotation_done:
+ bra.s sim_history_rotation_done
+sim_history_rotation_return:
+ rts
+ ENDC
+
 sim_fixture_before:
+ IFD SIM_HISTORY_ROTATION_TEST
+ bsr sim_history_rotation_fixture
+ ENDC
  IFD SIM_HISTORY_END_SEEK_TEST
  bsr sim_history_end_seek_fixture
  ENDC
