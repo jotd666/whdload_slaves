@@ -27,6 +27,8 @@ def interval(a,b):
         raise ValueError('Requires constant Time Scale')
     increment=DENOMINATOR//a['divisor']*1024
     for row in (a,b):
+        if row.get('transaction',0):
+            raise ValueError('Snapshot is inside an uncommitted clock transaction')
         if not 0<=phase(row)<THRESHOLD or not 0<=(row['started']-row['completed'])&MASK<=1:
             raise ValueError('Invalid phase or more than one world update in progress')
         if (row['cia']-row['cursor'])&MASK>=1<<31:

@@ -102,49 +102,54 @@ time_loop_patch:
 time_loop_poll:
 	movem.l d0-d3/a1-a2,-(sp)
 	tst.w TIME_LOOP_DUE(a0)
-	bne .done
+	bne time_loop_poll_done
 	move.l time_loop_cia(pc),a1
 	move.l (a1),d3
 	move.l d3,d0
 	sub.l TIME_LOOP_CURSOR(a0),d0
 	tst.l d0
-	bmi .bad
-.loop
+	bmi time_loop_poll_bad
+time_loop_poll_loop
 	cmp.l TIME_LOOP_CURSOR(a0),d3
-	beq .done
+	beq time_loop_poll_done
+	lea time_loop_transaction(pc),a1
+	move.w #1,(a1) ; observer: cursor/credit update not yet committed
 	addq.l #1,TIME_LOOP_CURSOR(a0)
 	bsr time_keys_advance
 	bsr time_rate_advance
 	move.w time_rate_queue+8(pc),d0
 	cmpi.w #10,d0
-	blo .bad
+	blo time_loop_poll_bad
 	cmpi.w #80,d0
-	bhi .bad
+	bhi time_loop_poll_bad
 	moveq #1,d1
 	move.l time_loop_h3(pc),a1
 	tst.w $45a6(a1)
-	beq .rate_ready
+	beq time_loop_poll_rate_ready
 	moveq #8,d1
-.rate_ready
+time_loop_poll_rate_ready
 	bsr time_core_advance
 	add.w d1,TIME_LOOP_SERVICES(a0)
 	move.w d0,TIME_LOOP_DUE(a0)
+	lea time_loop_transaction(pc),a1
+	clr.w (a1)
+time_loop_credit_committed:
 	bsr time_camera_advance
 	bsr time_message_advance
 	move.l TIME_LOOP_PAUSED(a0),d2
 	bsr time_auto_advance
 	; Modal return rebases the cursor. Do not keep the pre-menu CIA endpoint.
 	cmp.l TIME_LOOP_PAUSED(a0),d2
-	bne .done
+	bne time_loop_poll_done
 	lea time_auto_exit(pc),a1
 	tst.w (a1)
-	bne .done
+	bne time_loop_poll_done
 	tst.w TIME_LOOP_DUE(a0)
-	beq .loop
-.done
+	beq time_loop_poll_loop
+time_loop_poll_done
 	movem.l (sp)+,d0-d3/a1-a2
 	rts
-.bad
+time_loop_poll_bad
 	pea time_loop_error(pc)
 	pea TDREASON_FAILMSG
 	move.l _resload(pc),a2
@@ -213,8 +218,12 @@ time_loop_gate:
 	movem.l (sp)+,d0-a6
 	rts
 .world
+	lea time_loop_transaction(pc),a1
+	move.w #2,(a1) ; observer: due -> started handoff not yet committed
 	subq.w #1,TIME_LOOP_DUE(a0)
 	addq.l #1,TIME_LOOP_STEPS(a0)
+	clr.w (a1)
+time_loop_world_committed:
 	move.l time_loop_h3(pc),a1
 	move.w #225,$4834(a1)
 	movem.l (sp)+,d0-a6
@@ -291,3 +300,8 @@ time_loop_cia: dc.l 0
 time_loop_input: dc.l 0
 time_loop_return: dc.l 0
 time_loop_state: dcb.b 60,0
+
+; VERIFY-only observation state. A stopped profiler may land between the
+; individual instructions that update exact clock accounting. Zero means the
+; primary ledger is coherent; 1/2 identify the commit breakpoint to settle at.
+time_loop_transaction: dc.w 0

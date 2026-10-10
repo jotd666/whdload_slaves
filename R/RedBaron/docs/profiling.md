@@ -126,6 +126,36 @@ This extends render-schedule coverage; it is neither a performance workload nor
 proof that the final debt is sustainable. The requested 250-field capacity
 measurements and complete gameplay/global-state acceptance remain open.
 
+## W6 coherent clock-boundary capacity checkpoint
+
+VERIFY build `9f72992c…` adds transaction markers for debugger observations of
+cursor/credit updates and the due-to-started handoff. It passes two consecutive
+250-recorded-field A500 windows, CUSTOM2=16319, maximum detail, default Time Scale
+(F=33), without a draw-delay fixture. Actual elapsed fields include chunk alignment:
+
+| Window | Elapsed fields / CIA ticks | Completed world updates | Completed draws | CIA debt before → after |
+| --- | --- | --- | --- | --- |
+| First | 252 / 299 | 49 | 0 | 70 → 12 |
+| Next | 253 / 300 | 39 | 2 | 12 → 28 |
+
+Every chunk conserves exact funded time. The windows are continuous, with 88
+completed updates against 82.6096 newly funded nominal updates; the surplus pays
+down pre-existing debt. The final boundary has one update in progress. Two
+completed draws over 505 elapsed fields do not establish a usable steady frame
+rate, sustained capacity, or consistent-gameplay acceptance. The zero-draw first
+window is catch-up, not a speed gain. Evidence is
+`tmp/dev/tmp/prof/w6-transaction-capacity-a500/`.
+
+The preceding `f92e9eed…` raw capture stopped during a credit transaction. Its
+second chunk appeared short by exactly one CIA credit and the third gained that
+credit back; the overall window balanced. Those raw snapshots remain unchanged.
+The collector now refreshes debugger registers, recognizes pending transactions,
+and can continue to the corresponding commit boundary while retaining both raw
+and settled snapshots. Both transaction types pass forced native breakpoint
+checks; neither occurred naturally at the endpoints of these two new windows.
+The checker rejects explicitly pending snapshots. See `w6-verification.md` for
+validation and remaining limits.
+
 ## W6 combined A500 capacity checkpoint
 
 The VERIFY build `1a0677e18c874809ae0270549b4efbeaae6d778d4d3e210a6f936fafbca7e1b8`

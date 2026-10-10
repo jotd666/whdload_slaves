@@ -22,3 +22,18 @@ class TimeCapacityTests(unittest.TestCase):
     def test_reject_dropped_credit(self):
         a=self.state(0,0,0);b=self.state(30,30,4);b['phase3']^=1
         with self.assertRaises(ValueError):interval(a,b)
+
+    def test_reject_uncommitted_transaction_at_either_endpoint(self):
+        for endpoint in (0,1):
+            for transaction in (1,2,3):
+                with self.subTest(endpoint=endpoint,transaction=transaction):
+                    rows=[self.state(0,0,0),self.state(30,30,4)]
+                    rows[endpoint]['transaction']=transaction
+                    with self.assertRaisesRegex(ValueError,'uncommitted clock transaction'):
+                        interval(*rows)
+
+    def test_committed_marker_preserves_legacy_result(self):
+        rows=[self.state(0,0,0),self.state(30,30,4)]
+        expected=interval(*rows)
+        for row in rows:row['transaction']=0
+        self.assertEqual(interval(*rows),expected)

@@ -1909,3 +1909,50 @@ the result does not certify complete RNG/combat/gameplay equivalence. Both live
 endpoints pass the native counters and byte audits. Static checks report 64 ranges
 and 121 patch destinations with zero errors, subject to their existing limitations.
 Normal/developer slaves retain their W5 hashes. Both owned emulators were quit.
+
+
+## Coherent clock snapshots
+
+VERIFY build
+`9f72992cb50d3a16ac09923d4b1420dbb092ec0b90335dda9980be036735b8e8`
+adds a separate observation word: zero for a coherent primary ledger, one while
+advancing cursor/credit, and two while handing a due update to the started count.
+The markers are confined to the existing VERIFY scheduler. They do not change
+world quantum, funding policy, rendering eligibility or player builds.
+
+The profiler can stop between individual accounting instructions. In the retained
+`w6-list-capacity-a500` capture, chunk residuals were zero, minus one CIA credit,
+and plus one CIA credit. Whole-window accounting balanced. This was an invalid
+intermediate observation, not evidence of discarded simulation time. The original
+capture remains intact and is not counted as per-chunk acceptance.
+
+The local collector refreshes the GDB register cache before reading its endpoint.
+For a pending transaction it retains the raw snapshot, continues to the matching
+commit breakpoint, verifies the cleared marker and program counter, and retains
+the settled snapshot. Elapsed field/CIA accounting includes that execution.
+`time_capacity.py` rejects a nonzero marker at either endpoint; legacy manifests
+without the field retain their previous interpretation and still must pass exact
+funding checks.
+
+In `tmp/dev/tmp/prof/w6-transaction-capacity-a500/transaction-probes.json`, forced
+read-only breakpoints stop immediately after cursor increment and between due
+removal and started increment. Both report the expected pending marker and settle
+at their named commit boundary. No game-state writes are used. The first settles
+credit without changing the cursor again; the second increases started by one
+without changing phase. These are diagnostic probes before the capacity windows.
+
+Two subsequent, continuous 250-field captures pass every funding interval. Their
+505 elapsed fields / 599 CIA ticks complete 88 world updates and two draws, with
+CIA debt 70 → 12 → 28 and one update still in progress at the final endpoint.
+Neither capture needs a natural endpoint settlement; forced probes cover that
+branch. The two windows remain a short capacity diagnostic, not full gameplay,
+long-term convergence or 50 FPS acceptance. `profiling.md` records the individual
+windows and comparison limits.
+
+All 172 host tests pass, including pending-marker rejection at either endpoint
+and unchanged results for a cleared marker. Native core/input/pose/phase counts
+are 426/512/638/133; terrain stores/cache/list cases are 2/1/2. All 54 timing/pacing
+hook targets match. This full mask has no disabled declared ranges; static audits
+report 64 ranges and 121 patch destinations with zero errors, subject to their
+existing limits. Normal/developer binaries retain their W5 hashes. The owned
+emulator was quit after capture. W6 remains VERIFY-only and incomplete.
