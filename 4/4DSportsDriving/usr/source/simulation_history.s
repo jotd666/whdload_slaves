@@ -176,13 +176,13 @@ sim_history_failed:
 
  even
  dc.b "4DHISTRY"
- dc.w 2,SIM_HISTORY_SLOTS,SIM_HISTORY_BYTES,0
+ dc.w 3,SIM_HISTORY_SLOTS,SIM_HISTORY_BYTES,0
 sim_history_saves: dc.l 0
 sim_history_restores: dc.l 0
 sim_history_rotations: dc.l 0
 sim_history_records: dcb.b SIM_HISTORY_SLOTS*SIM_HISTORY_BYTES,0
  dc.b "4DHISTST"
- dc.w 2,40
+ dc.w 3,40
 sim_history_passed: dc.l 0
 sim_history_test_private: dcb.b SIM_PRIVATE_BYTES,0
 sim_history_test_rng: dcb.b 6,0
@@ -200,8 +200,8 @@ sim_history_selftest:
  dbra d0,.fill
  lea sim_results_state(pc),a0
  move.l d7,d0
- lsl.l #2,d0
- moveq #3,d1
+ lsl.l #3,d0
+ moveq #SIM_TIME_STATE_BYTES/4-1,d1
 .times:
  move.l d0,(a0)+
  addq.l #1,d0
@@ -224,7 +224,7 @@ sim_history_selftest:
  move.l #-1,(a1)+
  dbra d0,.dirty
  lea sim_results_state(pc),a0
- moveq #3,d0
+ moveq #SIM_TIME_STATE_BYTES/4-1,d0
 .dirty_times:
  move.l #-1,(a0)+
  dbra d0,.dirty_times
@@ -249,8 +249,8 @@ sim_history_selftest:
  dbra d0,.verify
  lea sim_results_state(pc),a0
  move.l d2,d3
- lsl.l #2,d3
- moveq #3,d0
+ lsl.l #3,d3
+ moveq #SIM_TIME_STATE_BYTES/4-1,d0
 .verify_times:
  cmp.l (a0)+,d3
  bne sim_history_failed
@@ -270,10 +270,10 @@ sim_history_selftest:
  bra .check
 .reset:
  lea sim_results_state(pc),a0
+ moveq #SIM_TIME_STATE_BYTES/4-1,d0
+.clear_times:
  clr.l (a0)+
- clr.l (a0)+
- clr.l (a0)+
- clr.l (a0)
+ dbra d0,.clear_times
  bsr sim_history_reset
  lea sim_history_records(pc),a0
  moveq #SIM_HISTORY_SLOTS-1,d0

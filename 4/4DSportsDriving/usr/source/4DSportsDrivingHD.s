@@ -194,6 +194,7 @@ patch_main
 	bsr sim_results_selftest
 	bsr sim_results_summary_selftest
 	bsr sim_results_ui_selftest
+	bsr sim_events_selftest
 	bsr sim_history_selftest
 	bsr sim_capacity_selftest
 	bsr sim_time_selftest
@@ -345,6 +346,13 @@ pl_main
     PL_PS $5C00,sim_results_ui_player_beq20_stub
     PL_PSS $5C8C,sim_results_ui_player_pop14_stub,2
     PL_PS $5F6C,sim_results_ui_player_beq42_stub
+    PL_PS $11680,sim_events_record_player_stub
+    PL_PS $11678,sim_events_record_opponent_stub
+    PL_PS $20DEA,sim_events_local_player_stub
+    PL_PS $20DDA,sim_events_local_opponent_stub
+    PL_PSS $593A,sim_events_summary_compare_stub,2
+    PL_PSS $5960,sim_events_average_test_stub,2
+    PL_PSS $5970,sim_events_average_divisor_stub,8
     PL_PSS $116AA,sim_results_summary_copy_stub,2
     PL_PS $E27C,sim_results_reset_stub
     PL_PSS $E976,sim_results_award_stub,14
@@ -612,6 +620,62 @@ sim_results_ui_player_beq42_stub:
  movem.l a0,4(sp)
  movem.l (sp)+,a0
  rts
+sim_events_record_player_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_events_record_player_stub(pc),a0
+ adda.l #sim_events_record_player-sim_events_record_player_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_events_record_opponent_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_events_record_opponent_stub(pc),a0
+ adda.l #sim_events_record_opponent-sim_events_record_opponent_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_events_local_player_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_events_local_player_stub(pc),a0
+ adda.l #sim_events_local_player-sim_events_local_player_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_events_local_opponent_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_events_local_opponent_stub(pc),a0
+ adda.l #sim_events_local_opponent-sim_events_local_opponent_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_events_summary_compare_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_events_summary_compare_stub(pc),a0
+ adda.l #sim_events_summary_compare-sim_events_summary_compare_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_events_average_test_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_events_average_test_stub(pc),a0
+ adda.l #sim_events_average_test-sim_events_average_test_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_events_average_divisor_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_events_average_divisor_stub(pc),a0
+ adda.l #sim_events_average_divisor-sim_events_average_divisor_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
 sim_results_summary_copy_stub:
  subq.l #4,sp
  movem.l a0,-(sp)
@@ -868,6 +932,7 @@ tape_restart_result_stub:
 	include "simulation_a4000.s"
 	include "simulation_results.s"
 	include "simulation_results_ui.s"
+	include "simulation_events.s"
 	include "simulation_history.s"
 	include "simulation_capacity.s"
 	include "simulation_time.s"

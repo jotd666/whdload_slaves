@@ -224,10 +224,10 @@ sim_results_ui_caught:
  lea 32(a5),a5
  dbra d7,sim_results_ui_test_case
  lea sim_results_summary(pc),a0
+ moveq #SIM_TIME_STATE_BYTES/4-1,d0
+.clear_summary:
  clr.l (a0)+
- clr.l (a0)+
- clr.l (a0)+
- clr.l (a0)
+ dbra d0,.clear_summary
  movem.l (sp)+,d0-a6
  rts
 .failed:

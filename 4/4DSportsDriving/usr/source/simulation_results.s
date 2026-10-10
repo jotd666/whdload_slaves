@@ -1,8 +1,9 @@
 ; Full A4000 result-time state. Native words remain low-word mirrors until
 ; their result/UI consumers and disk representation are converted separately.
-SIM_TIME_STATE_BYTES = 16
+SIM_TIME_STATE_BYTES = 24
 ; +0 accumulated penalties, +4 player finish (including penalties),
-; +8 opponent finish, +12 last awarded penalty; all unsigned 50 Hz ticks.
+; +8 opponent finish, +12 last awarded penalty, +16 player event,
+; +20 opponent event; all unsigned absolute 50 Hz ticks (penalties are durations).
 sim_results_reset:
  movem.l d0/a0,-(sp)
  lea sim_results_state(pc),a0
@@ -102,7 +103,7 @@ sim_results_opponent:
  rts
  even
  dc.b "4DTSTATE"
- dc.w 1,SIM_TIME_STATE_BYTES
+ dc.w 2,SIM_TIME_STATE_BYTES
 sim_results_state: dcb.b SIM_TIME_STATE_BYTES,0
 
  dc.b "4DRESTST"
@@ -234,10 +235,10 @@ sim_results_summary_copy:
  rts
  even
  dc.b "4DRSUMRY"
- dc.w 1,SIM_TIME_STATE_BYTES
+ dc.w 2,SIM_TIME_STATE_BYTES
 sim_results_summary: dcb.b SIM_TIME_STATE_BYTES,0
  dc.b "4DRSUMST"
- dc.w 1,3
+ dc.w 2,3
 sim_results_summary_passed: dc.l 0
 sim_results_summary_test_modes: dc.w 10,20,50
 sim_results_summary_test_source:
@@ -256,9 +257,11 @@ sim_results_summary_selftest:
  move.l #65538,(a0)+
  move.l #75000,(a0)+
  move.l #74999,(a0)+
- move.l #135000,(a0)
+ move.l #135000,(a0)+
+ move.l #73499,(a0)+
+ move.l #75000,(a0)
  lea sim_results_summary(pc),a0
- moveq #3,d0
+ moveq #SIM_TIME_STATE_BYTES/4-1,d0
 .dirty:
  move.l #-1,(a0)+
  dbra d0,.dirty
@@ -284,7 +287,7 @@ sim_results_summary_selftest:
  dbra d0,.native
  lea sim_results_summary(pc),a0
  lea sim_results_state(pc),a1
- moveq #3,d0
+ moveq #SIM_TIME_STATE_BYTES/4-1,d0
 .check:
  moveq #0,d1
  cmp.w #50,-$15fa(a4)
@@ -299,7 +302,7 @@ sim_results_summary_selftest:
  dbra d7,.case
  lea sim_results_state(pc),a0
  lea sim_results_summary(pc),a1
- moveq #3,d0
+ moveq #SIM_TIME_STATE_BYTES/4-1,d0
 .reset:
  clr.l (a0)+
  clr.l (a1)+
