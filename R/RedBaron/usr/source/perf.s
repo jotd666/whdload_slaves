@@ -2,7 +2,7 @@
 ; No feature is release-enabled until its model, twin and measurements pass.
 PERF_VERIFIED_MASK = $1fbf ; W1-W5, excluding deferred face setup bit 6
 PERF_DEVELOPER_MASK = $1fff
-PERF_VERIFY_MASK = $3fff ; W6 loop checkpoint is not a developer/player feature yet
+PERF_VERIFY_MASK = $7fff ; W6 bit 13 and quiescent overlay probe bit 14 are VERIFY-only
 
 perf_read_options:
 	movem.l d0-a6,-(sp)
@@ -108,6 +108,13 @@ perf_apply_v1:
 	beq.b .no_time
 	bsr time_loop_install
 .no_time
+	btst #6,perf_mask+2(pc)
+	beq.b .no_overlay_probe
+	lea .overlay_probe_base(pc),a0
+.overlay_probe_base
+	adda.l #overlay_probe_install-.overlay_probe_base,a0
+	jsr (a0)
+.no_overlay_probe
 	ENDC
 	rts
 

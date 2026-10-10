@@ -141,7 +141,10 @@ _bootdos
 	;load exe
 	IFD VERIFY
 		movem.l d0-a6,-(sp)
-		bsr tape_start
+		lea .tape_start_base(pc),a0
+.tape_start_base
+		adda.l #tape_start-.tape_start_base,a0
+		jsr (a0)
 		movem.l (sp)+,d0-a6
 	ENDC
 		lea	_program(pc),a0
@@ -601,6 +604,7 @@ new_DeleteFile:
 	include "time-poses.s"
 	include "time-pose-blend.s"
 	include "time-render.s"
+	include "overlay-probe.s"
 	include "time-terrain-verify.s"
 	include "time-mouse-ownership-cases.i"
 time_message_log: dcb.b 24*128,0

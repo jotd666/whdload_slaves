@@ -2588,3 +2588,59 @@ rejection of incomplete or unsupported programs. Reproduce with
 `cockpit_program.py` on the retained `w6-bank-reference-225` capture and an
 `--out` result path. The supported command inventory advances the rendering
 investigation; pixel equivalence and the 50 FPS gate remain unproven.
+
+## Quiescent native overlay pixel probe
+
+A new **VERIFY-only CUSTOM2 bit 14** provides complete native drawing-program
+boundaries for the overlay investigation. It is instrumentation, not a cache or
+speed feature. `overlay-probe.s` patches complete entry/exit sequences at
+`sim:28962` and `sim:28d52`, executes the original interpreter between them,
+and drains pending blitter work before each debugger marker. The entry records
+the program argument and a diagnostic count. The exit preserves the native
+result flags and register/frame restoration. The wait routine saves SR on
+68000 and is changed to user-accessible CCR saving on 68010+; restoration uses
+MOVE to CCR. Adding this VERIFY code also required long-distance calls for the
+VERIFY startup helper and vertex-error handler. Neither is a player change.
+
+Frozen VERIFY text is 250,048 bytes, SHA256
+`99d2a366c3e15865bfe03754908caf730f0bfdad09ea9e8002b117beec404bbf`.
+Normal and developer builds retain their existing W5 hashes. Static audits
+cover 66 hook ranges and 123 patch destinations with zero errors. Host tests
+pass 213 cases. The cached-68030 live run verifies both probe JMP/NOP pairs and
+the CCR-save opcode, alongside the existing 54 timing/pacing destinations and
+native 426/512/638/133, terrain/cache/list 2/1/2 checks.
+
+The local `w6-overlay-probe-030` capture selects CUSTOM2=32703 (full bundle plus
+probe), CUSTOM4=0, CUSTOM5=512 and MMU on the established cached 50 MHz 68030,
+maximum detail / Time Scale 40. `overlay-capture.json` and its full raw RAM
+snapshots record programs 3 and 4 on each of the two physical draw buffers.
+All eight entry/exit DMACONR reads report the blitter idle. Each program's
+entry count and identity match at exit. `overlay_snapshot.py` verifies fixed
+320×200, five-plane framebuffer geometry and produces the retained
+`overlay-inventory.json`:
+
+| Program | Changed pixels per execution | Changed bytes | Inclusive changed-pixel bounds |
+|---|---:|---:|---|
+| 3 | 1,022 on both buffers | 792 | (67,71)–(248,99) |
+| 4 | 735 on both buffers | 511 | (204,74)–(272,102) |
+
+These are observed differences, **not a transparency/coverage mask**. In
+particular, program 4 repeats lines already drawn by program 3; drawing the same
+colour again cannot be discovered by subtracting these snapshots. The tool
+retains every h3 difference rather than hiding renderer/interrupt fields:
+1/10/7/10 bytes differ across the four calls. Their ownership must be resolved
+before replaying or caching interpreter state.
+
+The extra blitter waits can alter timing and interrupt placement. No performance,
+full gameplay equivalence or pixel-cache correctness claim uses this run.
+This establishes a trustworthy native pixel reference for the next cache twin;
+it does not implement the cache. The probe remains excluded from normal and
+developer builds, and the 50 FPS gate is unchanged. Native 68000 probe execution
+has not yet been tested.
+
+A same-build cached-68030 control, `w6-overlay-probe-off-030`, requests
+CUSTOM2=16319. After deferred installation and the second flight checkpoint,
+the live disabled-byte checker verifies both eight-byte probe ranges against
+the original executable; the entry counter remains zero. Existing 54 selected
+timing/pacing destinations still pass. Both owned runs were quit. This confirms
+probe-option isolation for the tested v1 configuration, not untested hardware.
