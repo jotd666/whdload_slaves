@@ -75,7 +75,7 @@ sim_replay_validate:
  cmp.l d4,d1
  bne .bad
  move.l 32(a0),d1
- cmp.l #75000,d1
+ cmp.l #45000,d1          ; 25-minute session, retained ten-minute window
  bhi .bad
  add.l d4,d1
  cmp.l #75000,d1

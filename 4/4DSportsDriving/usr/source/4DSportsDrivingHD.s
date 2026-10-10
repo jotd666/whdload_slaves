@@ -1133,6 +1133,10 @@ tape_restart_result_stub:
  IFD SIM_A4000
 	include "simulation_replay_file.s"
  include "simulation_replay_io.s"
+ include "simulation_replay_install.s"
+ IFD SIM_REPLAY_RELOAD_TEST
+ include "simulation_replay_reload_verify.s"
+ ENDC
  IFD SIM_REPLAY_FILE_TEST
  include "simulation_replay_file_verify.s"
  IFD SIM_REPLAY_IO_TEST
@@ -1158,6 +1162,16 @@ sim_history_inputs: dcb.b 30000,0
  dc.b "4DGUARD!"
 sim_results_test_arena: dcb.b $1660,0
  include "simulation_results_ui_cases.s"
+ IFD SIM_REPLAY_RELOAD_TEST
+ even
+sim_replay_reload_marker:
+ dc.b "4DRPLLOD"
+ dc.w 2,0
+ dc.l 0,-1,-1,-1,-1
+ dc.l $4c4f4431
+sim_replay_reload_buffer: dcb.b SIM_REPLAY_BYTES+2,0
+ dc.l $4c4f4432
+ ENDC
  IFD SIM_REPLAY_FILE_TEST
  even
 sim_replay_test_marker:

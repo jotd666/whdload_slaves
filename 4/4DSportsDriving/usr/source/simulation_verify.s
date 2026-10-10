@@ -534,6 +534,13 @@ sim_score_load_test_result: dc.l -1
  ENDC
 
 sim_fixture_before:
+ IFD SIM_REPLAY_RELOAD_TEST
+ movem.l a0,-(sp)
+ lea sim_fixture_before(pc),a0
+ adda.l #sim_replay_reload_fixture-sim_fixture_before,a0
+ jsr (a0)
+ movem.l (sp)+,a0
+ ENDC
  IFD SIM_SCORE_LOAD_TEST
  bsr sim_score_load_fixture
  ENDC
