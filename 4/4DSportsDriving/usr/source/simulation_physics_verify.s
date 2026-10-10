@@ -87,7 +87,11 @@ sim_physics_selftest:
  moveq #4,d7
 .five:
  move.w 2(a2),d1
+ move.l (a1),d5
  bsr sim_airborne_pair_50
+ sub.l (a1),d5
+ cmp.l d5,d1
+ bne .failed
  dbra d7,.five
  cmp.w 4(a2),d0
  bne .failed
@@ -354,6 +358,9 @@ sim_physics_selftest:
  bsr sim_heading_hooks_selftest
  tst.w d0
  bne .failed
+ bsr sim_contact_distance_selftest
+ tst.w d0
+ bne .failed
  ENDC
  movem.l (sp)+,d0-a6
  rts
@@ -368,14 +375,16 @@ SIM_DELAY_HOOK_TESTS = 18
 SIM_SPIN_HOOK_TESTS = 183
 SIM_SLIP_HOOK_TESTS = 84
 SIM_HEADING_HOOK_TESTS = (sim_heading_cases_end-sim_heading_cases)/10
+SIM_CONTACT_HOOK_TESTS = 48
  ELSE
 SIM_DELAY_HOOK_TESTS = 0
 SIM_SPIN_HOOK_TESTS = 0
 SIM_SLIP_HOOK_TESTS = 0
 SIM_HEADING_HOOK_TESTS = 0
+SIM_CONTACT_HOOK_TESTS = 0
  ENDC
  dc.b "4DPHYTST"
- dc.w 16,(sim_rate_cases_end-sim_rate_cases)/8+(sim_steering_cases_end-sim_steering_cases)/14+(sim_distance_cases_end-sim_distance_cases)/8+(sim_approach_cases_end-sim_approach_cases)/12+(sim_airborne_cases_end-sim_airborne_cases)/12+(sim_extension_cases_end-sim_extension_cases)/10+(sim_engine_cases_end-sim_engine_cases)/4+(sim_duration_cases_end-sim_duration_cases)/8+(sim_terrain_cases_end-sim_terrain_cases)/10+(sim_skid_cases_end-sim_skid_cases)/12+(sim_spin_filter_cases_end-sim_spin_filter_cases)/24+(sim_spin_held_cases_end-sim_spin_held_cases)/12+(sim_spin_alternate_cases_end-sim_spin_alternate_cases)/24+(sim_opponent_brake_cases_end-sim_opponent_brake_cases)/10+(sim_slip_relax_cases_end-sim_slip_relax_cases)/8+SIM_DELAY_HOOK_TESTS+SIM_SPIN_HOOK_TESTS+SIM_SLIP_HOOK_TESTS+SIM_HEADING_HOOK_TESTS+(sim_heading_cases_end-sim_heading_cases)/10
+ dc.w 17,(sim_rate_cases_end-sim_rate_cases)/8+(sim_steering_cases_end-sim_steering_cases)/14+(sim_distance_cases_end-sim_distance_cases)/8+(sim_approach_cases_end-sim_approach_cases)/12+(sim_airborne_cases_end-sim_airborne_cases)/12+(sim_extension_cases_end-sim_extension_cases)/10+(sim_engine_cases_end-sim_engine_cases)/4+(sim_duration_cases_end-sim_duration_cases)/8+(sim_terrain_cases_end-sim_terrain_cases)/10+(sim_skid_cases_end-sim_skid_cases)/12+(sim_spin_filter_cases_end-sim_spin_filter_cases)/24+(sim_spin_held_cases_end-sim_spin_held_cases)/12+(sim_spin_alternate_cases_end-sim_spin_alternate_cases)/24+(sim_opponent_brake_cases_end-sim_opponent_brake_cases)/10+(sim_slip_relax_cases_end-sim_slip_relax_cases)/8+SIM_DELAY_HOOK_TESTS+SIM_SPIN_HOOK_TESTS+SIM_SLIP_HOOK_TESTS+SIM_HEADING_HOOK_TESTS+SIM_CONTACT_HOOK_TESTS+(sim_heading_cases_end-sim_heading_cases)/10
 sim_physics_passed: dc.l 0
 sim_physics_test_fraction: dc.w 0,0,0,0
 sim_physics_test_position: dc.l 0
@@ -589,7 +598,7 @@ sim_spin_hooks_selftest:
  movem.l (sp)+,d1-a6
  rts
  even
- dcb.b 128,0 ; local storage for direct contact-assignment hook checks
+ dcb.b 256,0 ; locals for direct contact-assignment and wheel-pass checks
 sim_spin_test_frame: dc.l 0,0,0
 ; Nominal, five expected displacements, five expected /1280 remainders.
 sim_spin_hook_cases:
@@ -1006,4 +1015,171 @@ sim_heading_hooks_selftest:
 .done:
  movem.l (sp)+,d1-a6
  rts
+ ENDC
+
+ IFD SIM_A4000
+; Actual contact hook: all modes/wheels, integrated and skipped pair paths,
+; negative rates, word carry/overflow/zero, and non-consuming fraction reads.
+sim_contact_distance_selftest:
+ movem.l d1-a6,-(sp)
+ lea sim_delay_test_mode(pc),a4
+ adda.l #$15fa,a4
+ lea sim_spin_test_frame(pc),a5
+ lea sim_delay_test_car(pc),a0
+ move.l a0,8(a5)
+ lea sim_a4000_private(pc),a6
+ lea sim_physics_test_position(pc),a0
+ move.l a0,-$ea(a5)
+ move.l a0,-$e6(a5)
+ lea sim_contact_distance_cases(pc),a2
+ moveq #47,d6
+.case:
+ move.w (a2),-$15fa(a4)
+ moveq #0,d0
+ move.w 2(a2),d0
+ move.l 8(a5),a0
+ move.w 4(a2),$4c(a0,d0.w)
+ move.w d0,d2
+ add.w d2,d2
+ move.w 6(a2),8(a6,d2.w)
+ lea sim_a4000_wheel_steps(pc),a1
+ move.w 8(a2),(a1,d0.w)
+ move.w 10(a2),8(a1,d0.w)
+ move.w 12(a2),-6(a5)
+ bsr sim_a4000_contact_distance
+ ; Capture the flags before comparisons or shifting them into position.
+ scs d3
+ svs d4
+ seq d5
+ smi d7
+ moveq #0,d1
+ addx.w d1,d1
+ cmp.w 14(a2),d0
+ bne .failed
+ swap d0
+ tst.w d0
+ bne .failed
+ and.w #1,d3
+ and.w #1,d4
+ and.w #1,d5
+ and.w #1,d7
+ lsl.w #4,d1
+ or.w d3,d1
+ add.w d4,d4
+ or.w d4,d1
+ lsl.w #2,d5
+ or.w d5,d1
+ lsl.w #3,d7
+ or.w d7,d1
+ cmp.w 16(a2),d1
+ bne .failed
+ cmpa.l 8(a5),a0
+ bne .failed
+ move.w 8(a6,d2.w),d0
+ cmp.w 6(a2),d0
+ bne .failed
+ ; Beginning the next pass invalidates only its selected wheel in50 Hz.
+ lea sim_physics_test_position(pc),a0
+ move.l a0,-$e6(a5)
+ move.w 2(a2),d0
+ lsr.w #1,d0
+ move.b d0,-3(a5)
+ moveq #1,d7
+ lsr.w #1,d7
+ move.l #$12345678,d0
+ bsr sim_a4000_wheel_reset
+ moveq #0,d7
+ addx.w d7,d7
+ cmp.w #1,d7
+ bne .failed
+ cmp.l #$12345678,d0
+ bne .failed
+ move.w 10(a2),d1
+ cmp.w #50,(a2)
+ bne.s .valid
+ moveq #0,d1
+.valid:
+ lea sim_a4000_wheel_steps(pc),a0
+ move.w 2(a2),d0
+ cmp.w 8(a0,d0.w),d1
+ bne .failed
+ lea sim_physics_passed(pc),a0
+ addq.l #1,(a0)
+ lea 18(a2),a2
+ dbra d6,.case
+ lea sim_a4000_private(pc),a0
+ moveq #SIM_PRIVATE_BYTES/4-1,d0
+.clear:
+ clr.l (a0)+
+ dbra d0,.clear
+ lea sim_a4000_wheel_steps(pc),a0
+ clr.l (a0)+
+ clr.l (a0)+
+ clr.l (a0)+
+ clr.l (a0)+
+ lea sim_a4000_contact_step_calls(pc),a0
+ clr.l (a0)+
+ clr.l (a0)
+ IFD SIM_CONTACT_PROBE
+ lea sim_contact_probe_count(pc),a0
+ clr.l (a0)
+ ENDC
+ moveq #0,d0
+ bra.s .done
+.failed:
+ moveq #1,d0
+.done:
+ movem.l (sp)+,d1-a6
+ rts
+ even
+; mode,wheel*2,nominal velocity,fifths,cached step,valid,forward,result,CCR.
+sim_contact_distance_cases:
+ dc.w 10,0,537,2,216,1,183,720,0
+ dc.w 10,0,-537,-2,-216,0,183,65182,8
+ dc.w 10,0,32767,4,13106,0,32767,65534,10
+ dc.w 10,0,-1,0,-1,1,1,0,21
+ dc.w 10,2,537,2,216,1,183,720,0
+ dc.w 10,2,-537,-2,-216,0,183,65182,8
+ dc.w 10,2,32767,4,13106,0,32767,65534,10
+ dc.w 10,2,-1,0,-1,1,1,0,21
+ dc.w 10,4,537,2,216,1,183,720,0
+ dc.w 10,4,-537,-2,-216,0,183,65182,8
+ dc.w 10,4,32767,4,13106,0,32767,65534,10
+ dc.w 10,4,-1,0,-1,1,1,0,21
+ dc.w 10,6,537,2,216,1,183,720,0
+ dc.w 10,6,-537,-2,-216,0,183,65182,8
+ dc.w 10,6,32767,4,13106,0,32767,65534,10
+ dc.w 10,6,-1,0,-1,1,1,0,21
+ dc.w 20,0,537,2,216,1,183,720,0
+ dc.w 20,0,-537,-2,-216,0,183,65182,8
+ dc.w 20,0,32767,4,13106,0,32767,65534,10
+ dc.w 20,0,-1,0,-1,1,1,0,21
+ dc.w 20,2,537,2,216,1,183,720,0
+ dc.w 20,2,-537,-2,-216,0,183,65182,8
+ dc.w 20,2,32767,4,13106,0,32767,65534,10
+ dc.w 20,2,-1,0,-1,1,1,0,21
+ dc.w 20,4,537,2,216,1,183,720,0
+ dc.w 20,4,-537,-2,-216,0,183,65182,8
+ dc.w 20,4,32767,4,13106,0,32767,65534,10
+ dc.w 20,4,-1,0,-1,1,1,0,21
+ dc.w 20,6,537,2,216,1,183,720,0
+ dc.w 20,6,-537,-2,-216,0,183,65182,8
+ dc.w 20,6,32767,4,13106,0,32767,65534,10
+ dc.w 20,6,-1,0,-1,1,1,0,21
+ dc.w 50,0,537,2,216,1,183,399,0
+ dc.w 50,0,-537,-2,-216,0,183,65505,8
+ dc.w 50,0,32767,4,13106,0,32767,45874,10
+ dc.w 50,0,-1,0,-1,1,1,0,21
+ dc.w 50,2,537,2,216,1,183,399,0
+ dc.w 50,2,-537,-2,-216,0,183,65505,8
+ dc.w 50,2,32767,4,13106,0,32767,45874,10
+ dc.w 50,2,-1,0,-1,1,1,0,21
+ dc.w 50,4,537,2,216,1,183,399,0
+ dc.w 50,4,-537,-2,-216,0,183,65505,8
+ dc.w 50,4,32767,4,13106,0,32767,45874,10
+ dc.w 50,4,-1,0,-1,1,1,0,21
+ dc.w 50,6,537,2,216,1,183,399,0
+ dc.w 50,6,-537,-2,-216,0,183,65505,8
+ dc.w 50,6,32767,4,13106,0,32767,45874,10
+ dc.w 50,6,-1,0,-1,1,1,0,21
  ENDC

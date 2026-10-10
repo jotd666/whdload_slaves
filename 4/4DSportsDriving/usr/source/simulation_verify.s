@@ -129,6 +129,26 @@ sim_fixture_before:
  clr.w -$832(a4)
  clr.w -$820(a4)
  ENDC
+ IFD SIM_FIXTURE_CONTACT_RAMP
+ IFD TAPE_OPPONENT
+ FAIL "SIM_FIXTURE_CONTACT_RAMP requires the stock solo start"
+ ENDC
+ ; Synthetic pose over the stock Default track ramp at column 22, row 4.
+ ; Ground meshes and all later contact decisions remain native.
+ ; Translate cached world wheel coordinates along with the body. Native
+ ; contact compares these previous coordinates against new projected wheels.
+ lea -$8ba(a4),a0           ; player+$74, four world XYZ word triplets
+ moveq #3,d1
+.ramp_wheels:
+ add.w #15324,(a0)+         ; (1474560-493824)/64
+ add.w #312,(a0)+           ; (20480-512)/64
+ sub.w #917,(a0)+           ; floor(288358/64)-floor(347008/64)
+ dbra d1,.ramp_wheels
+ move.l #1474560,-$92e(a4)
+ move.l #20480,-$92a(a4)
+ move.l #288358,-$926(a4)
+ move.w #10000,-$902(a4)
+ ENDC
  IFD SIM_FIXTURE_HEADING
  ; Synthetic near-cardinal initial heading for rate/word-wrap coverage.
  move.w #SIM_FIXTURE_HEADING,-$916(a4)
@@ -256,7 +276,8 @@ SIM_FIXTURE_TURN_SECONDS = 3
  move.l $228(a4),(a1)+
  move.w $22c(a4),(a1)+
  IFD SIM_A4000
- lea sim_a4000_private(pc),a0
+ lea sim_fixture_before(pc),a0
+ adda.l #sim_a4000_private-sim_fixture_before,a0
  moveq #SIM_PRIVATE_BYTES/4-1,d0
 .private:
  move.l (a0)+,(a1)+

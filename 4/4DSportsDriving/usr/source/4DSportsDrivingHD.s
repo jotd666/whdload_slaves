@@ -316,6 +316,8 @@ pl_main
     PL_PSS $C06E,sim_a4000_opponent_steering,36
     PL_PSS $C098,sim_a4000_opponent_brake_gate,2
     PL_PSS $C0BA,sim_a4000_opponent_brake,30
+    PL_PSS $CB06,sim_a4000_wheel_pass,2
+    PL_PSS $CF9E,sim_a4000_contact_distance,2
     ENDC
     IFD SIM_SCHEDULE
     PL_PSS $70E0,sim_schedule_poll,2

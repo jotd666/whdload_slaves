@@ -250,6 +250,9 @@ sim_a4000_wheel:
  move.w (a2),d0
  bsr sim_airborne_pair_50
  move.w d0,(a2)
+ lea sim_a4000_wheel_steps(pc),a0
+ move.w d1,(a0,d3.w)
+ move.w #1,8(a0,d3.w)
  movem.l (sp)+,d0-d4/a0-a2
  rts
 
@@ -305,7 +308,7 @@ sim_a4000_private: dcb.b SIM_PRIVATE_BYTES,0
 
  even
  dc.b "4DA4STAT"
- dc.w 11,22
+ dc.w 12,24
 sim_a4000_gear_calls: dc.l 0
 sim_a4000_wheel_calls: dc.l 0
 sim_a4000_contact_calls: dc.l 0
@@ -325,6 +328,8 @@ sim_a4000_opponent_brake_calls: dc.l 0
 sim_a4000_spin_alternate_calls: dc.l 0
 sim_a4000_slip_relax_calls: dc.l 0
 sim_a4000_heading_calls: dc.l 0
+sim_a4000_contact_step_calls: dc.l 0
+sim_a4000_contact_velocity_calls: dc.l 0
 
 ; $10234..$10248 and $1024A..$10260, within native suspension $10012.
 ; Preserve its geometry/penetration branches and cap at extension 384. Both
@@ -863,4 +868,121 @@ sim_a4000_heading:
  addq.l #1,(a0)
  movem.l (sp)+,d1/a1
  move.l 8(a5),a0
+ rts
+
+ IFD SIM_CONTACT_PROBE
+; Observe the native crossing-plane correction without changing its operands.
+; Record tick/wheel/velocity/forward distance/plane distance/reordered oldZ/newZ/mode,
+; then the old and candidate world XYZ vectors. Replay the original ADD flags.
+sim_contact_probe:
+ movem.l d0-d2/a0-a2,-(sp)
+ lea sim_contact_probe_count(pc),a1
+ move.l (a1),d1
+ addq.l #1,(a1)
+ cmp.l #32,d1
+ bhs.s .done
+ mulu #40,d1
+ lea sim_contact_probe_records(pc),a1
+ adda.l d1,a1
+ move.w -$940(a4),(a1)+
+ move.w d0,(a1)+
+ move.w $4c(a0,d0.l),(a1)+
+ move.w -6(a5),(a1)+
+ move.w -$72(a5),(a1)+
+ move.w -$5c(a5),(a1)+
+ move.w -$62(a5),(a1)+
+ move.w -$15fa(a4),(a1)+
+ move.l -$ea(a5),a2
+ move.l (a2)+,(a1)+
+ move.l (a2)+,(a1)+
+ move.l (a2)+,(a1)+
+ move.l -$e6(a5),a2
+ move.l (a2)+,(a1)+
+ move.l (a2)+,(a1)+
+ move.l (a2)+,(a1)+
+.done:
+ movem.l (sp)+,d0-d2/a0-a2
+ rts
+ even
+ dc.b "4DCONTACT"
+ even
+ dc.w 1,40
+sim_contact_probe_count: dc.l 0
+sim_contact_probe_records: dcb.b 32*40,0
+ ENDC
+
+; Transient per-wheel steps, scoped by $CB06 to each integration decision.
+; This also covers the $CE3A retry, which bypasses the wheel-loop entry. Cars run
+; sequentially; snapshots are between complete ticks. No replay state is held
+; here: every consumer follows a begin, including contact retries.
+sim_a4000_wheel_steps: dcb.w 8,0
+sim_a4000_wheel_reset:
+ cmp.w #50,-$15fa(a4)
+ bne.s .done
+ movem.l d0/a0,-(sp)
+ moveq #0,d0
+ move.b -3(a5),d0
+ mulu #2,d0
+ lea sim_a4000_wheel_steps(pc),a0
+ clr.w 8(a0,d0.w)
+ movem.l (sp)+,d0/a0
+.done:
+ rts
+
+; Whole original TST/BLE. The untaken path returns through the patch NOP.
+; Redirect the taken return to $CC2E and preserve the original flags/X/A0.
+sim_a4000_wheel_pass:
+ bsr sim_a4000_wheel_reset
+ tst.w $bc0(a4)
+ bgt.s .done
+ move.l a0,-(sp)
+ move.l tape_game(pc),a0
+ adda.l #$cc2e,a0
+ move.l a0,4(sp)
+ move.l (sp)+,a0
+ tst.w $bc0(a4)
+.done:
+ rts
+
+; $CF9E: the contact ratio needs two distances measured over the SAME tick.
+; The ordered airborne pair supplies its exact applied vertical displacement.
+; The near-ground alternative does not run that pair; convert its nominal
+; velocity plus fraction without spending/changing either integration carry.
+; Preserve native word addition, including X and all ADD condition flags.
+sim_a4000_contact_distance:
+ IFD SIM_CONTACT_PROBE
+ bsr sim_contact_probe
+ ENDC
+ cmp.w #50,-$15fa(a4)
+ beq.s .new
+ move.w $4c(a0,d0.l),d0
+ add.w -6(a5),d0
+ rts
+.new:
+ movem.l d1-d3/a0-a1,-(sp)
+ move.w d0,d2
+ lea sim_a4000_wheel_steps(pc),a1
+ tst.w 8(a1,d2.w)
+ beq.s .velocity
+ move.w (a1,d2.w),d0
+ lea sim_a4000_contact_step_calls(pc),a1
+ addq.l #1,(a1)
+ bra.s .combine
+.velocity:
+ move.l a0,a1
+ bsr sim_a4000_car
+ move.w $4c(a1,d2.w),d0
+ muls #10,d0
+ add.w d2,d2
+ move.w 8(a0,d2.w),d1
+ ext.l d1
+ add.l d1,d1
+ add.l d1,d0
+ divs #25,d0
+ lea sim_a4000_contact_velocity_calls(pc),a1
+ addq.l #1,(a1)
+.combine:
+ and.l #$ffff,d0
+ movem.l (sp)+,d1-d3/a0-a1
+ add.w -6(a5),d0
  rts

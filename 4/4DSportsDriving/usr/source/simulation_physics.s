@@ -155,7 +155,8 @@ sim_approach_50:
 ; d0.w old velocity, d1.w acceleration; a0 -> signed velocity/position
 ; remainders in fifths/twenty-fifths; a1 -> long position. Return d0.w new v.
 ; Position remainder measures downward displacement; subtract its quotient.
-; Scratch d1. Contact/impulse resets and replay storage belong to integration.
+; Return d1.l = actual downward step for the later collision correction.
+; Contact/impulse resets and replay storage belong to integration.
 sim_airborne_pair_50:
  movem.l d2-d5,-(sp)
  move.w d0,d2
@@ -175,11 +176,13 @@ sim_airborne_pair_50:
  move.w d0,2(a0)
  swap d0
  ext.l d0
+ move.l d0,d5
  sub.l d0,(a1)
  move.w d4,d0
  bsr sim_rate_20_to_50
  add.w d2,d0
  ext.l d0
+ move.l d5,d1
  movem.l (sp)+,d2-d5
  rts
 
