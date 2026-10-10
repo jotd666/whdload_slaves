@@ -80,7 +80,7 @@ SIM_FIXTURE_SAMPLE_HZ = 10
  ENDC
 SIM_FIXTURE_STATE_SIZE = $460
  IFD SIM_A4000
-SIM_FIXTURE_RECORD_SIZE = SIM_FIXTURE_STATE_SIZE+10+SIM_PRIVATE_BYTES
+SIM_FIXTURE_RECORD_SIZE = SIM_FIXTURE_STATE_SIZE+10+SIM_PRIVATE_BYTES+SIM_TIME_STATE_BYTES
  ELSE
 SIM_FIXTURE_RECORD_SIZE = SIM_FIXTURE_STATE_SIZE+10
  ENDC
@@ -212,6 +212,16 @@ sim_history_end_seek_fixture:
  dbra d0,.copy
  move.w #28500,$140-$460(a1)
  move.b #1,$3f4-$460(a1)
+ ; Distinct high-word values prove the extended result state is restored.
+ move.w #2,$14a-$460(a1)
+ move.w #9464,$142-$460(a1)
+ move.w #9463,$144-$460(a1)
+ lea sim_history_end_seek_fixture(pc),a0
+ adda.l #sim_results_state-sim_history_end_seek_fixture,a0
+ move.l #65538,(a0)+
+ move.l #75000,(a0)+
+ move.l #74999,(a0)+
+ move.l #135000,(a0)
  lea sim_history_end_seek_fixture(pc),a1
  adda.l #sim_a4000_private-sim_history_end_seek_fixture,a1
  lea $228(a4),a2
@@ -219,6 +229,12 @@ sim_history_end_seek_fixture:
  lea sim_history_end_seek_fixture(pc),a0
  adda.l #sim_history_store-sim_history_end_seek_fixture,a0
  jsr (a0)
+ lea sim_history_end_seek_fixture(pc),a0
+ adda.l #sim_results_state-sim_history_end_seek_fixture,a0
+ move.l #-1,(a0)+
+ move.l #-1,(a0)+
+ move.l #-1,(a0)+
+ move.l #-1,(a0)
  move.b #2,$45(a4)
  move.w #30000,-(sp)
  move.l tape_game(pc),a0
@@ -513,6 +529,12 @@ SIM_FIXTURE_TURN_SECONDS = 3
 .private:
  move.l (a0)+,(a1)+
  dbra d0,.private
+ lea sim_fixture_before(pc),a0
+ adda.l #sim_results_state-sim_fixture_before,a0
+ moveq #SIM_TIME_STATE_BYTES/4-1,d0
+.times:
+ move.l (a0)+,(a1)+
+ dbra d0,.times
  ENDC
  lea sim_fixture_count(pc),a0
  addq.w #1,(a0)
@@ -521,7 +543,7 @@ SIM_FIXTURE_TURN_SECONDS = 3
  even
  dc.b "4DSIMFIX"
  IFD SIM_A4000
- dc.w 3,SIM_FIXTURE_RECORD_SIZE
+ dc.w 4,SIM_FIXTURE_RECORD_SIZE
  ELSE
  dc.w 2,SIM_FIXTURE_RECORD_SIZE
  ENDC

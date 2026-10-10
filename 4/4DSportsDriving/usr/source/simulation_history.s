@@ -1,7 +1,7 @@
 ; A4000 in-memory companion snapshots. Native snapshot layout stays intact.
-; Disk serialization and absolute session-time widening are separate work.
+; Disk serialization and remaining result-time consumers are separate work.
 SIM_HISTORY_SLOTS = 20
-SIM_HISTORY_BYTES = 8+SIM_PRIVATE_BYTES ; valid word, six RNG bytes, fractions
+SIM_HISTORY_BYTES = 8+SIM_PRIVATE_BYTES+SIM_TIME_STATE_BYTES ; valid word, RNG, fractions, result times
 
 ; E07A is reached only for the native new-race (-1) initialization, which
 ; invalidates all twenty native snapshots. Seek-zero initialization also calls
@@ -79,6 +79,8 @@ sim_history_restore:
  lea sim_a4000_private(pc),a1
  lea $228(a4),a2
  bsr sim_history_load
+ lea sim_results_state(pc),a0
+ move.w 14(a0),$50(a4)     ; native message word mirrors the restored award
  lea sim_history_restores(pc),a0
  addq.l #1,(a0)
 .done:
@@ -125,6 +127,11 @@ sim_history_store:
 .copy:
  move.l (a1)+,(a2)+
  dbra d1,.copy
+ lea sim_results_state(pc),a1
+ moveq #SIM_TIME_STATE_BYTES/4-1,d1
+.time:
+ move.l (a1)+,(a2)+
+ dbra d1,.time
  move.w #50,(a0)           ; publish a complete companion
  rts
 sim_history_load:
@@ -138,6 +145,11 @@ sim_history_load:
 .copy:
  move.l (a0)+,(a1)+
  dbra d1,.copy
+ lea sim_results_state(pc),a1
+ moveq #SIM_TIME_STATE_BYTES/4-1,d1
+.time:
+ move.l (a0)+,(a1)+
+ dbra d1,.time
  rts
 sim_history_shift:
  lea sim_history_records(pc),a0
@@ -164,13 +176,13 @@ sim_history_failed:
 
  even
  dc.b "4DHISTRY"
- dc.w 1,SIM_HISTORY_SLOTS,SIM_HISTORY_BYTES,0
+ dc.w 2,SIM_HISTORY_SLOTS,SIM_HISTORY_BYTES,0
 sim_history_saves: dc.l 0
 sim_history_restores: dc.l 0
 sim_history_rotations: dc.l 0
 sim_history_records: dcb.b SIM_HISTORY_SLOTS*SIM_HISTORY_BYTES,0
  dc.b "4DHISTST"
- dc.w 1,40
+ dc.w 2,40
 sim_history_passed: dc.l 0
 sim_history_test_private: dcb.b SIM_PRIVATE_BYTES,0
 sim_history_test_rng: dcb.b 6,0
@@ -186,6 +198,14 @@ sim_history_selftest:
 .fill:
  move.l d7,(a1)+
  dbra d0,.fill
+ lea sim_results_state(pc),a0
+ move.l d7,d0
+ lsl.l #2,d0
+ moveq #3,d1
+.times:
+ move.l d0,(a0)+
+ addq.l #1,d0
+ dbra d1,.times
  lea sim_history_test_rng(pc),a2
  move.l d7,(a2)
  move.w d7,4(a2)
@@ -203,6 +223,11 @@ sim_history_selftest:
 .dirty:
  move.l #-1,(a1)+
  dbra d0,.dirty
+ lea sim_results_state(pc),a0
+ moveq #3,d0
+.dirty_times:
+ move.l #-1,(a0)+
+ dbra d0,.dirty_times
  lea sim_history_test_rng(pc),a2
  move.l #-1,(a2)
  move.w #-1,4(a2)
@@ -222,6 +247,15 @@ sim_history_selftest:
  cmp.l (a1)+,d2
  bne sim_history_failed
  dbra d0,.verify
+ lea sim_results_state(pc),a0
+ move.l d2,d3
+ lsl.l #2,d3
+ moveq #3,d0
+.verify_times:
+ cmp.l (a0)+,d3
+ bne sim_history_failed
+ addq.l #1,d3
+ dbra d0,.verify_times
  lea sim_history_passed(pc),a0
  addq.l #1,(a0)
  dbra d7,.check
@@ -235,6 +269,11 @@ sim_history_selftest:
  moveq #SIM_HISTORY_SLOTS-2,d7
  bra .check
 .reset:
+ lea sim_results_state(pc),a0
+ clr.l (a0)+
+ clr.l (a0)+
+ clr.l (a0)+
+ clr.l (a0)
  bsr sim_history_reset
  lea sim_history_records(pc),a0
  moveq #SIM_HISTORY_SLOTS-1,d0

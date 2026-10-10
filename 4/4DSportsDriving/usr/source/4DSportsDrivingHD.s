@@ -191,6 +191,7 @@ patch_main
 	bsr sim_schedule_reset_selftest
 	bsr sim_schedule_modal_selftest
 	IFD SIM_A4000
+	bsr sim_results_selftest
 	bsr sim_history_selftest
 	bsr sim_capacity_selftest
 	bsr sim_time_selftest
@@ -332,6 +333,11 @@ pl_main
     PL_PSS $CF9E,sim_a4000_contact_distance,2
     PL_PSS $E07A,sim_history_new_race_stub,4
     PL_PSS $E548,sim_history_seek_zero_stub,2
+    PL_PS $E27C,sim_results_reset_stub
+    PL_PSS $E976,sim_results_award_stub,14
+    PL_PSS $E994,sim_results_accumulate_stub,2
+    PL_PSS $1161A,sim_results_player_stub,10
+    PL_PSS $11632,sim_results_opponent_stub,6
     PL_PSS $770E,sim_time_sum_consumer_stub,2
     PL_PSS $92F6,sim_time_sum_recorded_stub,2
     PL_PSS $936C,sim_time_sum_seek_stub,2
@@ -513,6 +519,46 @@ perf_attnflags	dc.l	0
 ; independent of verification-table size. MOVEM preserves all flags including
 ; X; the reserved stack slot transfers to the target with the original SP.
 	IFD SIM_A4000
+sim_results_reset_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_results_reset_stub(pc),a0
+ adda.l #sim_results_reset-sim_results_reset_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_results_award_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_results_award_stub(pc),a0
+ adda.l #sim_results_award-sim_results_award_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_results_accumulate_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_results_accumulate_stub(pc),a0
+ adda.l #sim_results_accumulate-sim_results_accumulate_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_results_player_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_results_player_stub(pc),a0
+ adda.l #sim_results_player-sim_results_player_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_results_opponent_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_results_opponent_stub(pc),a0
+ adda.l #sim_results_opponent-sim_results_opponent_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
 sim_time_cache_key_stub:
  subq.l #4,sp
  movem.l a0,-(sp)
@@ -719,6 +765,7 @@ tape_restart_result_stub:
 	include "simulation_physics.s"
 	IFD SIM_A4000
 	include "simulation_a4000.s"
+	include "simulation_results.s"
 	include "simulation_history.s"
 	include "simulation_capacity.s"
 	include "simulation_time.s"
@@ -740,6 +787,7 @@ tape_restart_result_stub:
  dc.l 30000
 sim_history_inputs: dcb.b 30000,0
  dc.b "4DGUARD!"
+sim_results_test_arena: dcb.b $1660,0
  ENDC
  ENDC
 	END
