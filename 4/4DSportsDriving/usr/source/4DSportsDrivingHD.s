@@ -193,6 +193,7 @@ patch_main
 	IFD SIM_A4000
 	bsr sim_history_selftest
 	bsr sim_capacity_selftest
+	bsr sim_time_selftest
 	ENDC
 	ENDC
 	lea patch_main(pc),a0
@@ -331,6 +332,14 @@ pl_main
     PL_PSS $CF9E,sim_a4000_contact_distance,2
     PL_PSS $E07A,sim_history_new_race_stub,4
     PL_PSS $E548,sim_history_seek_zero_stub,2
+    PL_PSS $770E,sim_time_sum_consumer_stub,2
+    PL_PSS $92F6,sim_time_sum_recorded_stub,2
+    PL_PSS $936C,sim_time_sum_seek_stub,2
+    PL_PSS $9332,sim_time_cache_key_stub,2
+    PL_PSS $934E,sim_time_cache_key_stub,2
+    PL_PSS $20EF6,sim_time_sum_producer_stub,2
+    PL_P $1A46E,sim_time_format_entry_stub
+    PL_NOP $1A474,2
     PL_PS $2412,sim_history_input_buffer_stub
     PL_PSS $7C0A,sim_history_producer_limit_stub,12
     PL_PSS $775A,sim_history_consumer_limit_stub,12
@@ -504,6 +513,54 @@ perf_attnflags	dc.l	0
 ; independent of verification-table size. MOVEM preserves all flags including
 ; X; the reserved stack slot transfers to the target with the original SP.
 	IFD SIM_A4000
+sim_time_cache_key_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_time_cache_key_stub(pc),a0
+ adda.l #sim_time_cache_key-sim_time_cache_key_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_time_sum_consumer_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_time_sum_consumer_stub(pc),a0
+ adda.l #sim_time_sum_consumer-sim_time_sum_consumer_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_time_sum_recorded_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_time_sum_recorded_stub(pc),a0
+ adda.l #sim_time_sum_recorded-sim_time_sum_recorded_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_time_sum_seek_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_time_sum_seek_stub(pc),a0
+ adda.l #sim_time_sum_seek-sim_time_sum_seek_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_time_sum_producer_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_time_sum_producer_stub(pc),a0
+ adda.l #sim_time_sum_producer-sim_time_sum_producer_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_time_format_entry_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_time_format_entry_stub(pc),a0
+ adda.l #sim_time_format_entry-sim_time_format_entry_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
 sim_history_input_buffer_stub:
  subq.l #4,sp
  movem.l a0,-(sp)
@@ -664,6 +721,7 @@ tape_restart_result_stub:
 	include "simulation_a4000.s"
 	include "simulation_history.s"
 	include "simulation_capacity.s"
+	include "simulation_time.s"
 	ENDC
 	include "simulation_physics_verify.s"
 	ENDC

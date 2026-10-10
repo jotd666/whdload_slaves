@@ -132,7 +132,9 @@ sim_schedule_poll:
  moveq #0,d0
  addx.b d0,d0
  move.w d0,-(sp)
- move.l tape_configured(pc),d0
+ lea sim_schedule_poll(pc),a0
+ adda.l #tape_configured-sim_schedule_poll,a0
+ move.l (a0),d0
  beq .return
  tst.b $45(a4)
  bne .deactivate
@@ -182,7 +184,9 @@ sim_schedule_poll:
  lea sim_schedule_enqueuing(pc),a0
  move.w #1,(a0)
  move.w #1,-(sp)          ; native synthetic-input route bypasses live sampling
- move.l tape_game(pc),a0
+ lea sim_schedule_poll(pc),a0
+ adda.l #tape_game-sim_schedule_poll,a0
+ move.l (a0),a0
  adda.l #$7a66,a0
  jsr (a0)
  addq.l #2,sp

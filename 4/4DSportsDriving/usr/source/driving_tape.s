@@ -793,7 +793,8 @@ tape_restart_acknowledged:
  exg a5,a6
  rts
 .failed:
- lea perf_failure(pc),a0
+ lea tape_restart_ui(pc),a0
+ adda.l #perf_failure-tape_restart_ui,a0
  move.l #8,(a0)
  illegal
  bra.s .failed
