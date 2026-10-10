@@ -64,7 +64,7 @@ improve. The player policy retains original G1 on 030 and conservatively on
 early-flight check gives 48.8394 ms/pass versus 49.7041 OFF at matching
 accepted steps (−1.74%). Its long window averages 12.9043 FPS with no dashboard
 events, but the different OFF history still precludes a clean FPS gain claim.
-A500/68020 use 60. The final event/bank/dense cost matrix remains open. The release mask remains zero.
+A500/68020 use 60. The final event/bank/dense cost matrix is complete. The release mask remains zero.
 
 The final-bundle A500 scene checks also improve sampled 3D-pass main costs:
 **8.56% in the initial cockpit event, 8.69% while banking and 4.56% in the dense
@@ -76,7 +76,14 @@ reduce mean 3D-pass main costs by **7.00% event, 7.67% bank and 3.42% dense**.
 Its banking ON sample includes an extra dashboard redraw and its call mixes
 differ, so these are routine-cost observations, not scene FPS gains. Per-face
 means decrease and sampled display/disabled-byte checks pass. Cached-68030
-scene pairs are still being collected.
+common-step pass samples show smaller differences: 0.34% event, 2.71% bank and
+0.71% dense, with only two common accepted passes in bank/dense. These are
+inclusive wall times, not FPS gains. All three enabled routine means improve.
+The dense OFF DMA sample has 730 writes to the buffer fetched earlier in the
+field, with no later fetch of those written addresses; this does not prove visible
+tearing, and ON’s zero count does not make W2 a swap fix. W5 remains open.
+The complete W2 development audit and explicit low-value deferrals are in
+`w2-verification.md`; normal player enablement remains separate.
 
 ## Running the W2 profile manually
 
@@ -417,7 +424,8 @@ to the former display buffer begins 0.999–1.135 fields after publication finis
 Early publications use the previous field's fetched buffer to identify the old
 display; this field already fetches the new one. This establishes the margin for
 this unoptimized window only. The optional first-fill/cache observer is documented in `verification.md`;
-post-optimization tearing checks and the complete machine matrix remain open.
+the current W2 matrix and bounded display checks are recorded above and in
+`w2-verification.md`. Tear-free publication itself remains W5 work.
 
 ## Dashboard census through flight exit
 

@@ -1,10 +1,16 @@
 # W2 geometry implementation
 
-G1 core, G2, G3 32-bit misses and G4 are implemented in developer/VERIFY builds.
-Combined CPU results and explicit low-value deferrals appear after the individual
-implementation records below. The cached-CPU per-routine check rejects G1 there; verification of the
-remaining G2/G3/G4 bundle now passes its combined check. Sound, game-time rules and deferred W1 work are unchanged; player
-enablement remains a separate gate.
+W2's implementation and measurement work is complete with the explicit low-value
+deferrals below. Implemented: G1 projection core, G2 trivial clipping, G3 32-bit
+vertex misses and G4 low-long dot. Developer/VERIFY selections are CUSTOM2=60
+on A500/68020 and 56 on cached 68030, retaining original G1 there. Remaining
+G1/G3 refinements and G5–G9 are deferred under plan §3.8, not claimed implemented.
+
+All three CPU scene matrices and combined twins are complete. Individual sections
+retain their historical checkpoint numbers; the later combined sections and final
+audit describe the current state. Sound, game-time rules and deferred W1 work are
+unchanged. Normal player enablement remains separate: release mask zero, existing
+defaults/icons unchanged, with W5 still required before release.
 
 ## G1 projection core
 
@@ -79,9 +85,9 @@ ranges retain their original relocated bytes. All three build modes compile.
 
 Evidence: `w2-g1-a500-{0,4}-r2`; VERIFY SHA-256:
 `ebc937fe62b542a370ee12520a7099fe7d4cdc2a57da12b8d076db4b734e4d26`.
-Wider CPU checks and projection-wrapper integration remain open. The normal
-player mask remains zero. This is a verified development checkpoint, not release
-promotion; further W2 work targets the larger geometry costs.
+The later combined sections complete the wider CPU checks; wrapper integration
+is explicitly deferred by the cost assessment. The normal player mask remains
+zero: this is development verification, not release promotion.
 
 ## G4 back-face dot product
 
@@ -122,7 +128,8 @@ at `h3:03f5a` and `h3:03f60`, and elapsed time at `h3:0483a`. Both remain dt-cla
 all other bytes match. The timestamps/elapsed input are expected to change when
 rendering takes less wall time; this comparison is not used as the arithmetic proof.
 All five disabled hook ranges retain original bytes. All three build modes compile;
-37 host tests pass. Wider CPU checks remain open; the normal release mask stays zero.
+37 host tests passed at this checkpoint; the later sections complete wider CPU
+checks. The normal release mask stays zero.
 
 Evidence: `w2-g4-twins-a500`, `w2-g4-a500-{0,32}`. VERIFY SHA-256:
 `aa34be83f91045a8fbf3394459eff1a74cced3a1a1e1a69f8df9cf4644bdf73d`.
@@ -169,7 +176,8 @@ RTS; it does not omit the slower mixed cases. All costs exclude interrupts and
 cut calls. Step-8 h3 differs only in `h3:0483a` elapsed time; every other byte
 matches. Six disabled ranges retain original bytes, all three builds compile,
 and 41 host checks pass. G7's earlier all-behind rejection is not implemented yet.
-Wider CPU checks and player promotion remain open; the release mask stays zero.
+The later sections complete wider CPU checks; player promotion remains separate
+and the release mask stays zero.
 
 Evidence: `w2-g2-twins-a500`, `w2-g2-a500-{0,8}`. VERIFY SHA-256:
 `c096035c12917791a2444ce3b63b40597337b67d2e2f1af952479cf58e0e67fc`.
@@ -213,7 +221,8 @@ Whole-pass savings are 2.63%/2.78%. Costs include the untouched cache hits and
 recognize both hit/miss return paths. Step-8 h3 differs only in elapsed time at
 `h3:0483a`. Seven disabled hook ranges retain original bytes, all three build
 modes compile and 44 host checks pass. The main implementation adds no allocation;
-its miss path saves 32 bytes of registers. Wider CPU/combined checks remain open.
+its miss path saves 32 bytes of registers. The later sections complete the wider
+CPU and combined checks.
 
 Evidence: `w2-g3-twins-a500`, `w2-g3-a500-{0,16}`. VERIFY SHA-256:
 `1456f8d5b84cf787f3429b7ae6580fcc88ce94903d604bbb3d339610f85853b3`.
@@ -416,20 +425,16 @@ retained VERIFY binary hash remains unchanged. The CPU selection is therefore
 60 for A500/68020 and 56 for cached 68030 in developer comparisons; unmeasured
 040/060 player policy conservatively keeps original projection.
 
-### Completion audit still open
+### Completion audit scope
 
 The implemented paths have original-checked models, exhaustive/random host
 checks as appropriate, synthetic/live twins, sim-v1-only byte-checked hooks and
 CUSTOM-off evidence. Combined banking/dense twins pass on all three CPUs.
-Steady timing and CPU-specific selection have now been measured on all three.
-Per-feature A500 bank costs also exist in the earlier records.
-
-The plan's full fixed-window **cost** matrix is not yet complete for the final
-bundle: event/banking/dense costs across all CPUs still need a consolidated
-same-build check. Existing short steady samples must not stand in for those
-windows. This does not invalidate the scoped results above, but W2 is not yet
-marked complete. Normal player enablement remains separate, with release mask
-zero and switch/default/icon decisions unchanged.
+Steady timing and CPU-specific selection have been measured on all three.
+The final-bundle event/bank/dense cost matrix is now complete in the sections
+below. Cached-CPU results use supported whole-call wall clocks, not unsupported
+instruction-cycle or emitted-face claims. Player release enablement is outside
+this completed W2 development checkpoint; the normal mask remains zero.
 
 ## Final-bundle A500 scene costs
 
@@ -470,7 +475,7 @@ observable display ownership and no detected conflicts. The OFF/ON unselected
 hook-byte checks pass (seven/three ranges). Evidence:
 `w2-scene-a500-{bank,dense}-{0,60}`, including per-window `*-costs.json` and
 `*-faces.json`; the slave hash remains the frozen value recorded above.
-The remaining 68020/68030 scene pairs are still being collected.
+The subsequent sections complete the other CPUs’ scene pairs.
 
 ## Final-bundle 68020 scene costs
 
@@ -505,5 +510,67 @@ Using the same emitted-face definition as the A500 analysis:
 All six short captures have observable display ownership and no detected
 conflicts. Unselected hook-byte checks pass (seven ranges OFF, three ON).
 Evidence: `w2-scene-020-{bank,dense}-{0,60}`, with retained whole-call and
-emitted-face records. Hashes match the frozen VERIFY binary. Only the cached
-68030 scene pairs remain in the consolidated timing matrix.
+emitted-face records. Hashes match the frozen VERIFY binary. The cached-68030 section below completes the consolidated timing matrix.
+
+## Final-bundle cached-68030 scene costs
+
+The frozen binary uses CUSTOM2=0 versus 56, retaining original G1. Event clocks
+cover steps 1–7; bank clocks cover 24–29 and dense clocks 8–13. Counter-phase
+and horizontal-boundary exclusions differ between settings, so the pass means
+below use **only simulation steps accepted in both logs**.
+
+| Window | Common phase-safe steps | Whole-pass wall ms OFF → ON | Sample difference |
+| --- | --- | ---: | ---: |
+| Initial cockpit event | 1, 2, 3, 4, 6, 7 | 48.5382 → 48.3738 | −0.34% |
+| Banking | 27, 29 | 74.5095 → 72.4920 | −2.71% |
+| Dense | 9, 10 | 69.8071 → 69.3139 | −0.71% |
+
+These are small inclusive wall-time samples with interrupts and chip-bus waits,
+not CPU-cycle measurements or FPS claims. Only two common passes survive in
+bank/dense; do not generalize their precise percentages. Non-clamped dt also
+allows world state to diverge. This completes the fixed-window cost check; it
+does not establish a large accelerated-CPU speedup.
+
+The enabled routine means improve in both bank and dense windows. Their
+phase-safe complete-call means (µs; all accepted calls, with differing mixes) are:
+
+| Routine | Bank OFF → ON | Dense OFF → ON |
+| --- | ---: | ---: |
+| Dot | 10.3352 → 2.7980 | 10.1651 → 2.8340 |
+| Clip, fallback included | 9.4868 → 7.6465 | 11.1151 → 9.9907 |
+| Vertex wrapper, cache hits included | 7.8706 → 6.6417 | 7.8286 → 6.6827 |
+
+Separate subsequent 20-field DMA captures have observable display ownership.
+Bank OFF/ON and dense ON report zero conflicts. **Dense OFF reports 730 blitter
+writes to the buffer fetched in that field**, but zero written addresses are
+subsequently fetched again in that field. This is publication-timing evidence,
+not proof of visible tearing in the sample. ON's zero count does not mean W2
+fixes swapping: it changes timing, and P1/W5 remains required. Event timing uses
+routine clocks without a simultaneous DMA capture; do not describe it as a
+separately passed event-ownership check on the cached CPU.
+
+The disabled-byte checks pass for seven OFF ranges and four ON ranges, including
+original projection. Evidence: `w2-scene-030-{bank,dense}-{0,56}`; common-step
+summaries are in `w2-scene-report.json`. The entire matrix retains the same VERIFY
+hash as the steady and combined-twin evidence.
+
+## Final W2 audit
+
+| Requirement | Evidence / disposition |
+| --- | --- |
+| G1–G9 inventory | G1 core/G2/G3 32-bit misses/G4 implemented; remaining G1/G3 work and G5–G9 explicitly deferred by the measured/estimated §3.8 assessment |
+| Original-checked models | Projection 486 calls, clipping 1,888 classifications, transform 2,014 calls, dot 421 calls; independent candidate models and CPU twins described above |
+| Exhaustive/edge coverage | All 2³² normalization magnitudes at each width; 10⁷ dot cases; random projection/clip/transform models; synthetic CPU cases include signs, overflow and all matrix types |
+| Live correctness | Six combined twin boots: three CPUs × bank/dense; every comparison passes, with steady calls included before scripted banking |
+| Scope and OFF behavior | Only sim-v1 installer invokes patches; seven byte-checked ranges; original relocated bytes confirmed for every unselected range, including G1 on cached CPU |
+| Branch/relocation safety | Final static hook audit: seven ranges, zero errors; caller/indirect-target contracts are documented per implementation |
+| Performance | Same frozen binary for each option pair; completed calls only; main/IRQ split on 68000/020; phase-checked cached wall clocks; steady plus event/bank/dense matrix complete |
+| Frame rates and state | A500/020 steady intervals exceed 2,000 fields; A500 matched-step state agrees outside known clocks; cached mixed-history FPS is explicitly not a speedup claim |
+| Display behavior | Short ownership samples retained with their scope; cached dense baseline write-after-fetch finding preserved for W5 |
+| Build/instrument separation | Normal/developer/VERIFY builds compile; W2 twin headers/symbols absent from normal/developer binaries; normal text 9,094 bytes, developer 9,246, VERIFY 65,114 |
+| Final checks | 44 host tests pass; all 12 scene captures and six combined twin artifacts match the frozen VERIFY hash |
+| User constraints | Time Scale, sound and game-time implementation unchanged; W1 follow-up remains deferred; no normal player promotion or icon/default changes |
+| Commits | Cohesive feature commits, personal author/committer, unsigned, hooks disabled, no assistant attribution |
+
+No unverified path has been promoted to the normal player switch. The next
+implementation work is W5, followed by the remaining approved plan order.

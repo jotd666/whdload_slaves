@@ -33,7 +33,7 @@ CPUs in banking/dense scenes. The measured bundle gains 5.97% FPS on A500 and
 long-window histories differ, so no steady-flight FPS gain is claimed there.
 Cached-CPU per-routine checks reject G1 there; original projection is retained
 in the player policy. The reduced CUSTOM2=56 bundle passes its combined check. The final
-event/bank/dense cost matrix remains open. The player release
+event/bank/dense cost matrix is complete; see the W2 completion audit. The player release
 mask stays zero.
 
 The remaining G1/G3 refinements and G5–G9 are explicitly deferred under §3.8,

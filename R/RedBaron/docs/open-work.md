@@ -36,29 +36,28 @@ and icons are unchanged. Developer/VERIFY builds retain individual options.
 - Further clipping/lifecycle or timing refinements only if a concrete issue calls
   for them; the large existing evidence set is retained.
 
+## W2 complete with low-value refinements deferred
+
+G1 projection core, G2 trivial clipping, G3 32-bit vertex misses and G4 dot are
+implemented, modeled and verified. Combined twins and the final steady/event/
+bank/dense cost matrix are complete on A500, 68020 and cached 68030. The steady
+bundle gains 5.97% FPS on A500 and 5.54% on 68020. Cached gains are small; retain
+original G1 there because it regresses. Use developer/VERIFY CUSTOM2=60 on
+A500/68020 and 56 on cached 68030. Normal release mask remains zero.
+
+Remaining G1/G3 refinements and G5–G9 are explicitly deferred under the plan's
+3%-of-frame gate. `w2-verification.md` records their cost assessment, all current
+measurements and the completion audit. They are not claimed implemented.
+Drawing is the larger measured bottleneck on the cached machine.
+
 ## Next work
 
-1. **W2 geometry**, continuing in the `sim:2c552` subtree. The G1 projection core,
-   G2 clipping, G3 32-bit vertex misses and G4 dot product have verified developer
-   checkpoints (CUSTOM2 bits 2–5);
-   see `w2-verification.md`.
-   Combined twins now pass on all three CPUs in banking and dense scenes. The
-   measured steady bundle gains 5.97% FPS on A500 and 5.54% on 68020. Cached
-   68030 early-flight pass wall time falls 1.19%; its mixed long windows do not
-   establish a steady-flight FPS gain. The per-routine check rejects G1 on 030; the reduced CUSTOM2=56 bundle
-   passes its combined check. A500 and 68020 final event/bank/dense costs are measured. Finish the
-   cached-68030 scene pairs before declaring W2 complete.
-   Remaining G1/G3 refinements and G5–G9 are deferred
-   under the plan’s 3%-of-frame gate; see the cost assessment in
-   `w2-verification.md`.
-   Each change needs its original-checked Python model and VERIFY twin.
-   Geometry is a substantial 68000 cost; cached-68030 measurements instead
-   put drawing ahead of these maths routines. W1 mainly removes dashboard stalls.
-2. **W5:** tear-free publication and a frame cap under the player switch.
-   Measure P1's 68000 cost and choose P2's rate from evidence.
-3. **W6 investigation:** continue the game-time investigation and obtain approval
+1. **W5:** tear-free publication and a frame cap under the player switch.
+   Measure P1's 68000 cost and choose P2's rate from evidence. Retain the cached
+   dense baseline's write-after-fetch observations; W2 does not fix swapping.
+2. **W6 investigation:** continue the game-time investigation and obtain approval
    before implementing a timing design.
-4. **W4 and W7:** later measured drawing, world-step and instrument improvements.
+3. **W4 and W7:** later measured drawing, world-step and instrument improvements.
 
 ## Decisions still required before release
 
