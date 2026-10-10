@@ -461,6 +461,10 @@ tape_seek_play:
 ; Selecting a simulation mode during a race changes the next race only.
 ; Acknowledge the notice, open replay/Menu, and choose Re-start Driving.
 tape_restart_simulation:
+ IFD TAPE_OPPONENT
+ bsr tape_restart_acknowledged
+ bra .verify
+ ENDC
  lea tape_restart_keys(pc),a3
 .next:
  move.w (a3)+,d2
@@ -679,4 +683,114 @@ tape_opponent_route:
 tape_opponent_ui: dc.b 0,0,0,0 ; menu,selection,identity,route complete
  dc.l 0 ; retry count
  even
+ ENDC
+
+ IFD TAPE_OPPONENT
+; Observe only the native Replay Menu invocation of the generic popup. The
+; saved return address belongs to its original caller, independent of our hook.
+tape_restart_observe:
+ move.l a0,-(sp)
+ move.l tape_game(pc),a0
+ adda.l #$9ce4,a0
+ cmpa.l 4(a5),a0
+ bne.s .original
+ lea tape_restart_ui(pc),a0
+ move.b -$c1(a5),1(a0)
+ move.b #1,(a0)
+.original:
+ move.l (sp)+,a0
+ move.b -$c1(a5),d0
+ cmp.b -$c2(a5),d0
+ rts
+tape_restart_result:
+ move.l a0,-(sp)
+ lea tape_restart_ui(pc),a0
+ move.b -12(a5),2(a0)
+ move.b #1,3(a0)
+ move.l (sp)+,a0
+ move.b -12(a5),d0
+ ext.w d0
+ rts
+
+; Opponent redraw can outlast the old fixed key windows. Wait for real menu
+; acknowledgement; never write a selector, restart state or replay cursor.
+tape_restart_acknowledged:
+ lea tape_restart_ui(pc),a2
+ clr.l (a2)
+ move.w #$44,d0
+ moveq #20,d2
+ bsr tape_setup_key
+ move.w #$c4,d0
+ moveq #100,d2
+ bsr tape_setup_key
+ move.w #$45,d0
+ moveq #20,d2
+ bsr tape_setup_key
+ move.w #$c5,d0
+ move.w #200,d2
+ bsr tape_setup_key
+ moveq #9,d6
+.open:
+ move.w #$44,d0
+ moveq #20,d2
+ bsr tape_setup_key
+ move.w #$c4,d0
+ move.w #200,d2
+ bsr tape_setup_key
+ tst.b (a2)
+ bne.s .navigate
+ dbra d6,.open
+ bra .failed
+.navigate:
+ cmp.b #2,1(a2)
+ beq.s .accept
+ move.w #$4d,d0
+ moveq #1,d2
+ bsr tape_setup_key
+ move.w #999,d7
+.wait_selection:
+ cmp.b #2,1(a2)
+ beq.s .release
+ bsr .field
+ dbra d7,.wait_selection
+ bra .failed
+.release:
+ move.w #$cd,d0
+ moveq #30,d2
+ bsr tape_setup_key
+.accept:
+ moveq #9,d6
+.retry_accept:
+ ; Native $194C6 waits for key release before the popup returns its choice.
+ move.w #$44,d0
+ moveq #20,d2
+ bsr tape_setup_key
+ move.w #$c4,d0
+ moveq #100,d2
+ bsr tape_setup_key
+ tst.b 3(a2)
+ bne.s .accepted
+ dbra d6,.retry_accept
+ bra .failed
+.accepted:
+ move.w #$c4,d0
+ move.w #500,d2
+ bsr tape_setup_key
+ cmp.b #2,2(a2)
+ bne.s .failed
+ rts
+.field:
+ exg a5,a6
+ jsr _LVOWaitTOF(a6)
+ exg a5,a6
+ rts
+.failed:
+ lea perf_failure(pc),a0
+ move.l #8,(a0)
+ illegal
+ bra.s .failed
+ even
+ dc.b "4DRSTUI!"
+ dc.w 1,4
+tape_restart_ui: dc.b 0,0,0,0 ; ready,selection,result,returned
  ENDC

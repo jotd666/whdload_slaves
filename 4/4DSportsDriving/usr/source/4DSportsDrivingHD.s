@@ -273,6 +273,8 @@ pl_main
     IFD TAPE_OPPONENT
     PL_PSS $32B0,tape_opponent_main_observe,2
     PL_PSS $4DC6,tape_opponent_menu_observe,2
+    PL_PSS $179B4,tape_restart_observe,2
+    PL_PS $9CE8,tape_restart_result
     ENDC
     IFD SIM_PROBE
     PL_P $E5F2,sim_probe_entry
