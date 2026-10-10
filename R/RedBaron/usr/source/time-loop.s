@@ -11,6 +11,9 @@ TIME_LOOP_STEPS = 28
 TIME_LOOP_SKIPS = 32
 TIME_LOOP_DRAWS = 36
 TIME_LOOP_ACTIVE = 40
+TIME_LOOP_PAUSED = 44
+TIME_LOOP_PAUSE_START = 48
+TIME_LOOP_PAUSE_DEPTH = 52
 
 time_loop_install:
 	movem.l d0-a6,-(sp)
@@ -52,6 +55,8 @@ time_loop_install:
 	move.l a1,d0
 	addi.l #$21d30,d0
 	move.l d0,(a0)
+	bsr time_pause_selftest
+	bsr time_pause_install
 	lea time_loop_patch(pc),a0
 	jsr resload_Patch(a2)
 	jsr resload_FlushCache(a2)
@@ -118,7 +123,7 @@ time_loop_gate:
 	tst.l TIME_LOOP_ACTIVE(a0)
 	bne .wait
 	move.l a0,a1
-	moveq #9,d0
+	moveq #13,d0
 .clear
 	clr.l (a1)+
 	dbf d0,.clear
@@ -202,4 +207,4 @@ time_loop_h3: dc.l 0
 time_loop_cia: dc.l 0
 time_loop_input: dc.l 0
 time_loop_return: dc.l 0
-time_loop_state: dcb.b 44,0
+time_loop_state: dcb.b 56,0

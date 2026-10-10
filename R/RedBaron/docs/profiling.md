@@ -15,8 +15,11 @@ The first VERIFY-only W6 loop checkpoint now executes fixed-step world updates
 and skips drawing while catching up. On cached 68030, scheduled ticks 240–320
 span 580 observed CIA intervals, matching 580 scheduled intervals with no debt
 at those boundaries. This is a scheduling check, **not an FPS, capacity or
-consistent-gameplay result**. Setup panel time currently creates unwanted debt;
-input, secondary services and presentation remain incomplete. See
+consistent-gameplay result**. The subsequent modal-boundary candidate excludes
+7,614 CIA intervals spent in the A500 setup Preferences route; its first recorded
+flight boundary has one interval of debt instead of thousands. This is transition
+verification, not an FPS result. Input, secondary services and presentation remain
+incomplete. See
 `w6-verification.md` for the frozen build and limitations.
 
 ## W5 current measurements

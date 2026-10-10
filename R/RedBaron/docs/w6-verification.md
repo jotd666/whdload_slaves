@@ -204,3 +204,52 @@ opcodes/targets, the gate's padding NOP and the original relocated bytes for all
 Both owned emulators have been quit. Pause/menu rebasing is the next integration
 fix; the larger A500 setup debt makes this especially important before further
 CPU comparison.
+
+
+## Modal-flight clock rebasing
+
+The next VERIFY candidate adds bit-13 wrappers around the native menu calls at
+`sim:21ba2` and `sim:21c02`, Preferences at `sim:21c20`, controls at `sim:21c82`
+and the pause-key path at `sim:21bf6`. Each calls the original no-argument
+routine and then replays its displaced result operation or branch. During the
+outermost modal interval the timing owner is suspended, so the original menu
+clock can run. Returning adds the excluded unsigned CIA duration to the existing
+cursor, retaining fractional phases, pending updates and prior debt. Nested
+modal intervals are counted only once. The wrappers retain native integer
+register results and replay NZVC; these call sites do not consume returned X.
+
+Frozen VERIFY text is 120,594 bytes, SHA256
+`b241fa69f4f9fa24d9a791d1dfea51a9239feb60944e6238fbe467c2964d443b`.
+A native startup test uses private clock/dt storage, restores installer state
+and never writes game RAM. Across an unsigned counter wrap, two nested pauses
+exclude 48 CIA intervals while retaining five intervals of old debt, world and
+service phase, two pending world updates, seven unserviced secondary updates
+and the world tick counter. A subsequent zero-duration pause adds no time.
+The independently read A500 completion counters are 426 clock cases, 512 FIFO
+events and one complete pause scenario.
+
+The repeated A500 Preferences route excludes **7,614 CIA intervals**. At its
+first recorded boundary, scheduled tick 40, cursor and current time differ by
+one interval. The previous candidate's route accumulated thousands of intervals
+of panel debt. This comparison diagnoses the transition fix, not a same-state
+performance gain. All 81 boundaries through tick 120 still satisfy the exact
+fixed-step deadline after subtracting the recorded excluded duration. Its later
+41-interval debt is active-flight work, retained rather than discarded. All nine
+selected timing hooks and all 13 disabled ranges pass the live byte audit.
+Evidence: `tmp/dev/tmp/prof/w6-pause-a500/`.
+
+All 22 sim ranges pass the static instruction/direct-branch/relocation audit;
+82 host tests pass and normal/developer hashes remain byte-identical to W5.
+The live route covers Preferences; native pause-key/menu/controls wrappers need
+separate transition fixtures. The inline Ctrl-Q confirmation in
+`sim:1ef08`–`sim:1ef74` remains outside these wrappers. Rate changes with old debt
+and queued input across modal intervals still require the timestamped consumer
+integration. Do not interpret this checkpoint as completing all W6 transitions.
+
+
+On cached 68030 the same candidate excludes 863 panel intervals. All 81 logged
+boundaries from scheduled tick 40 through 120 satisfy the paused-time-adjusted
+fixed-step deadline. The first boundary is five CIA intervals behind; the final
+boundary has zero debt. All nine selected timing hooks, 13 disabled ranges and
+native completion counters (426 / 512 / 1) pass. Evidence:
+`tmp/dev/tmp/prof/w6-pause-030/`. Both owned emulators are shut down.
