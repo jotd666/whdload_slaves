@@ -1340,6 +1340,9 @@ tape_restart_result_stub:
  IFD SIM_REPLAY_MENU
  include "simulation_replay_menu.s"
  include "simulation_replay_save.s"
+ IFD SIM_REPLAY_LEGACY_TEST
+ include "simulation_replay_legacy_verify.s"
+ ENDC
  IFD SIM_REPLAY_SAVE_TEST
  include "simulation_replay_save_verify.s"
  ENDC
