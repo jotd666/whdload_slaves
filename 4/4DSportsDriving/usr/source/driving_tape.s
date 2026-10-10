@@ -141,6 +141,11 @@ tape_task_code:
  ; Graphics-navigation arrow keys can start the current race. Always use
  ; the native restart route before arming a tick-indexed fixture.
  bsr tape_restart_simulation
+ ELSE
+ IFD SIM_LIVE_DRIVE
+ ; Apply the selected rate before timing real input.device controls.
+ bsr tape_restart_simulation
+ ENDC
  ENDC
  lea tape_frames(pc),a0
  clr.l (a0)
