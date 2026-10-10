@@ -43,7 +43,8 @@ sim_a4000_arm:
 
 ; a1 vehicle -> a0 private block; no stored pointer is part of replay state.
 ; steering +0, acceleration +2, distance fifths +4, gear +6, wheel pairs +8..23.
-; Suspension fractions: extension +24..31, return +32..39, bias +40..47.
+; Suspension fractions: extension +24..31, bias +40..47.
+; +32..39 remains reserved in snapshots (former return-rate fractions).
 ; Terrain loss uses an unsigned Q16 carry at +48; skid loss uses fifths at +50.
 ; Spin displacement: /1280 carry at +52, cached step at +54 ($8000=unset).
 ; Nominal spin-filter change uses signed Q16 carry +56..59.
@@ -454,46 +455,18 @@ sim_a4000_suspension_bias:
  movem.l (sp)+,d0-d2/a0-a2
  rts
 
-; $1011C..$10222: zero-clearance extension approaches bias by 128 per call.
-; Preserve the native asymmetric return value: only approach FROM ABOVE adds
-; old_extension-new_extension to local -2. The caller's geometry uses that
-; residual, so scaling its result a second time would be incorrect.
+; $1011C..$10222: keep the native zero-clearance contact correction.
+; This is not a continuous return rate. From above the bias, retracting by D
+; returns old_extension+D to the wheel reconstruction. For level equal-wheel
+; contact this raises the body by D and next-step wheel clearance by 2*D.
+; Scaling D with dt changes each contact's rebound geometry, and therefore
+; the free-flight/contact sequence; it does not preserve a return speed.
+; Retain the native 128-unit correction/cap and asymmetric return at all rates.
+; Positive-clearance accumulation and bias decay remain time-scaled separately.
+; Former return fractions at private car+32..39 are reserved, initialized and
+; replayed for layout stability; replay physics ABI8 rejects the old dynamics.
 sim_a4000_suspension_return:
- cmp.w #50,-$15fa(a4)
- bne sim_native_suspension_return
- movem.l d0-d3/a0-a2,-(sp)
- move.l 8(a5),a1
- bsr sim_a4000_car
- move.w 14(a5),d0
- add.w d0,d0
- lea $54(a1,d0.w),a2
- move.w $6c(a1,d0.w),d1
- lea 32(a0,d0.w),a0
- move.w (a2),d0
- move.w d0,d3
- cmp.w d1,d3
- beq .apply
- blt .below
- lea sim_a4000_return_above_calls(pc),a1
- addq.l #1,(a1)
- bra .apply
-.below:
- lea sim_a4000_return_below_calls(pc),a1
- addq.l #1,(a1)
-.apply:
- move.w #128,d2
- ; sim_approach_50 uses d1 as scratch: retain original target comparison.
- move.w d1,-(sp)
- bsr sim_approach_50
- move.w (sp)+,d1
- move.w d0,(a2)
- cmp.w d1,d3
- ble .done
- sub.w d0,d3
- move.w d3,-2(a5)
-.done:
- movem.l (sp)+,d0-d3/a0-a2
- rts
+ bra sim_native_suspension_return
 
 ; $F4BC..$F4CA: Normal has already taken its separate 80-unit branch.
 ; Preserve A2500's 40; at 50 Hz change only this engine-state decrement to 16.
