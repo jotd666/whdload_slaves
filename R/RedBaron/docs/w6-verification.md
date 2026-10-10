@@ -1556,3 +1556,57 @@ with zero errors.
 Full gameplay-state/events/RNG comparison across render schedules, natural menu
 and modal transitions, all-camera presentation, sustained capacity and real
 smooth 50 FPS remain open. No player timing enablement is claimed.
+
+
+## Equal-tick normal/no-render diagnostic
+
+A VERIFY-only CUSTOM5 bit-30 fixture returns from `time_render_frame` before
+interpolation and native drawing. It does not change the clock, discard due
+updates, or advance dirty-buffer counters. Use it with deferred installation
+(CUSTOM5 bit 9) so the route and initial native flight state precede selection.
+It is an experiment for schedule independence, not a player setting or a
+performance workload. The ordinary route uses the same binary without bit 30.
+
+Frozen VERIFY text is 245,910 bytes, SHA256
+`8081382dfd28084bbce17f46106c4686acf2cf7c07abc2a5dee2bd7a9fca68e5`.
+The two cached-68030 captures are
+`tmp/dev/tmp/prof/w6-state-normal-030/` and
+`tmp/dev/tmp/prof/w6-state-none-030/`, both requesting CUSTOM2=8192. Complete RAM
+banks are retained at the pre-install flight anchor and at completed ticks 0–11.
+No controls are injected in this short initial-flight window.
+
+`world_comparison.py` inventories every differing byte in captured RAM, plus
+complete h3, the 280-byte player object and the 26-byte registered-object prefixes.
+It requires the same binary, allocation layout, matched tick IDs and consecutive
+sequences. No differing bytes are normalized away. Its output is diagnostic and
+supplies no automatic whole-gameplay pass verdict. Regression tests ensure that
+an unknown heap difference is still reported when all named regions match, and
+that mismatched ticks are rejected.
+
+The initial complete h3 and player bytes match, as do registry and object
+prefixes. Chip RAM is identical; fast RAM has 75 differing bytes in twenty ranges.
+These remaining initial differences are retained and unclassified, so identical
+complete heap state is **not yet established**. At ticks 0 and 1 the compared h3
+also matches. From tick 2, rendering introduces 624–709 h3 byte differences
+(677 at tick 11). The comparator reports each range with both byte values.
+
+Across all twelve checkpoints the complete player object, registry ordering,
+372 registered-object prefixes and observed add/remove event order match. The
+ordinary run completes fifteen draws; the no-render run completes zero. This is
+useful scoped convergence evidence, but does not cover complete object extents,
+other reachable heap objects, RNG, all gameplay events or timestamped controls.
+The final raw RAM comparison still has 1,634 differing chip bytes and 1,944
+fast bytes; these include drawing, observer and other unclassified state.
+
+Initial source inspection identifies `h3:04e1a` as the comparison-table pointer
+written by sorting setup at `sim:0e498` and read by its comparator at `sim:0e448`.
+`h3:0a27c` is an indexed table populated at `sim:3a7be–3a7f2` and sorted at
+`sim:3a82e–3a87c`. These references guide the remaining ownership audit; they do
+not establish that every changed region is harmless or justify excluding it.
+
+The no-render capture passes 51 selected timing/pacing targets, ten disabled
+ranges and native self-test counts 426/512/638/133. All 118 emitted VERIFY patch
+destinations fit their signed words. Four new inventory tests pass. Both owned
+emulators were quit. Next: classify initial differences and complete simulation
+allocation extents, then extend equal-tick comparisons with delayed drawing,
+real input/events and the other acceptance scenarios. W6 remains VERIFY-only.

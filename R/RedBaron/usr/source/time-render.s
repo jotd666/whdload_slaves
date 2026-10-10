@@ -5,6 +5,13 @@ time_render_frame:
 	lea time_render_started(pc),a0
 	tst.w (a0)
 	beq time_render_done
+	; CUSTOM5 bit 30: omit complete renders (pair with deferred installation).
+	; This changes presentation only; the gate still funds/drains real CIA time.
+	lea .fixture_base(pc),a0
+.fixture_base
+	adda.l #perf_custom5-.fixture_base,a0
+	btst #6,(a0)
+	bne time_render_done
 	move.l time_pose_loop(pc),a0
 	tst.w TIME_LOOP_DUE(a0)
 	bne time_pose_bad
