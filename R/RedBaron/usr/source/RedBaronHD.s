@@ -556,6 +556,7 @@ new_DeleteFile:
 	include "dot.s"
 	include "clip.s"
 	include "vertex.s"
+	include "fill.s"
 	include "sound-sequence.s"
 	include "sound-driver.s"
 	IFD VERIFY
@@ -567,6 +568,8 @@ new_DeleteFile:
 	include "clip-verify.s"
 	include "vertex-verify.s"
 	include "tape.s"
+fill_twin_before: dcb.b 20*256*2,0
+fill_twin_after: dcb.b 20*256*2,0
 	include "vertex-cases.i"
 	include "clip-cases.i"
 	include "projection-cases.i"

@@ -87,6 +87,10 @@ perf_apply_v1:
 	beq.b .no_vertex
 	bsr vertex_install
 .no_vertex
+	btst #7,perf_mask+3(pc)
+	beq.b .no_fill
+	bsr fill_install
+.no_fill
 	bsr sound_sequence_install
 	bsr sound_driver_install
 	rts
