@@ -411,7 +411,11 @@ pl_main
     ENDC
     ENDC
     ; Complete original instruction: bchg #0,$3b(a4), six bytes.
+    IFD SIM_MODE_MENU
+    PL_P $1AAD6,sim_mode_dialog_stub
+    ELSE
     PL_PS $1AAD6,tape_dialog_enter_stub
+    ENDC
     PL_PS $74FA,tape_frame_stub
     IFD TAPE_PIXELS
     PL_PSS $20C3A,tape_draw_complete_stub,2
@@ -978,6 +982,16 @@ sim_probe_entry_stub:
  movem.l (sp)+,a0
  rts
 	ENDC
+ IFD SIM_MODE_MENU
+sim_mode_dialog_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_mode_dialog_stub(pc),a0
+ adda.l #sim_mode_dialog-sim_mode_dialog_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+ ENDC
 tape_dialog_enter_stub:
  subq.l #4,sp
  movem.l a0,-(sp)
@@ -1052,6 +1066,9 @@ tape_restart_result_stub:
 	IFD SIM_PHYSICS
 	include "simulation_physics.s"
 	IFD SIM_A4000
+	IFD SIM_MODE_MENU
+	include "simulation_mode.s"
+	ENDC
 	include "simulation_score_file.s"
 	include "simulation_score_file_verify.s"
 	include "simulation_score_records.s"

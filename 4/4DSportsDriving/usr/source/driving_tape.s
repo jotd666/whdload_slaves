@@ -15,7 +15,13 @@ TAPE_SIMULATION = 10
  ENDC
  IFNE TAPE_SIMULATION-10
  IFNE TAPE_SIMULATION-20
+ IFD SIM_MODE_MENU
+ IFNE TAPE_SIMULATION-50
+ FAIL "TAPE_SIMULATION must be 10, 20 or 50"
+ ENDC
+ ELSE
  FAIL "TAPE_SIMULATION must be 10 or 20"
+ ENDC
  ENDC
  ENDC
 
@@ -199,6 +205,9 @@ tape_menu_keys:
 .simulation_before:
  cmp.w #TAPE_SIMULATION,-$bc(a1)
  beq.w .next
+ IFD SIM_MODE_MENU
+ bsr tape_mode_select
+ ENDC
 .send:
  lea tape_io(pc),a1
  jsr _LVODoIO(a6)
@@ -291,10 +300,12 @@ tape_simulation_keys:
  dc.w 5000,$24,IEQUALIFIER_CONTROL
  dc.w 5,$a4,IEQUALIFIER_CONTROL
  dc.w 200,$e3,0
+ IFND SIM_MODE_MENU
  REPT 4
  dc.w 10,$4d,0
  dc.w 30,$cd,0
  ENDR
+ ENDC
  dc.w 5000,$44,0
  dc.w 100,$c4,0
  dc.w 20,$45,0
@@ -857,4 +868,45 @@ tape_modal_keys:
  dc.w 100,$e3,0            ; release Control, leave the dialog open
  dc.w 20,$45,0,30,$c5,0    ; Escape and release
  dc.w 0
+ ENDC
+
+ IFD SIM_MODE_MENU
+; Each menu skips its checked graphics/mode rows. Start at the first unchecked
+; entry and count only selectable rows preceding the compile-time target.
+tape_mode_select:
+ move.w d2,-(sp)
+ moveq #5,d4
+ IFEQ TAPE_SIMULATION-20
+ moveq #6,d4
+ ENDC
+ IFEQ TAPE_SIMULATION-50
+ moveq #7,d4
+ ENDC
+ moveq #5,d5
+ cmp.w #10,-$bc(a1)
+ beq .current
+ moveq #6,d5
+ cmp.w #20,-$bc(a1)
+ beq .current
+ moveq #7,d5
+.current:
+ cmp.w d4,d5
+ bhs .graphics
+ subq.w #1,d4
+.graphics:
+ subq.w #1,d4
+.down:
+ move.w #$4d,d0
+ moveq #10,d2
+ bsr tape_setup_key
+ move.w #$cd,d0
+ moveq #30,d2
+ bsr tape_setup_key
+ subq.w #1,d4
+ bne .down
+ lea tape_event(pc),a0
+ move.w #RAW_RETURN,ie_Code(a0)
+ clr.w ie_Qualifier(a0)
+ move.w (sp)+,d2
+ rts
  ENDC
