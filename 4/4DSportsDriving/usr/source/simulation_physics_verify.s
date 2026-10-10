@@ -313,6 +313,28 @@ sim_physics_selftest:
  addq.l #1,(a0)
  lea 12(a2),a2
  dbra d6,.spin_held
+ lea sim_heading_cases(pc),a2
+ move.w #(sim_heading_cases_end-sim_heading_cases)/10-1,d6
+.heading:
+ lea sim_physics_test_fraction(pc),a0
+ move.w 4(a2),(a0)
+ move.w (a2),d0
+ move.w 2(a2),d1
+ moveq #4,d7
+.heading_five:
+ bsr sim_heading_50
+ dbra d7,.heading_five
+ cmp.w 6(a2),d0
+ bne .failed
+ cmp.w 2(a2),d1
+ bne .failed
+ move.w (a0),d0
+ cmp.w 8(a2),d0
+ bne .failed
+ lea sim_physics_passed(pc),a0
+ addq.l #1,(a0)
+ lea 10(a2),a2
+ dbra d6,.heading
  IFD SIM_A4000
  bsr sim_delay_hooks_selftest
  tst.w d0
@@ -329,6 +351,9 @@ sim_physics_selftest:
  bsr sim_slip_replace_selftest
  tst.w d0
  bne .failed
+ bsr sim_heading_hooks_selftest
+ tst.w d0
+ bne .failed
  ENDC
  movem.l (sp)+,d0-a6
  rts
@@ -342,13 +367,15 @@ sim_physics_selftest:
 SIM_DELAY_HOOK_TESTS = 18
 SIM_SPIN_HOOK_TESTS = 183
 SIM_SLIP_HOOK_TESTS = 84
+SIM_HEADING_HOOK_TESTS = (sim_heading_cases_end-sim_heading_cases)/10
  ELSE
 SIM_DELAY_HOOK_TESTS = 0
 SIM_SPIN_HOOK_TESTS = 0
 SIM_SLIP_HOOK_TESTS = 0
+SIM_HEADING_HOOK_TESTS = 0
  ENDC
  dc.b "4DPHYTST"
- dc.w 15,(sim_rate_cases_end-sim_rate_cases)/8+(sim_steering_cases_end-sim_steering_cases)/14+(sim_distance_cases_end-sim_distance_cases)/8+(sim_approach_cases_end-sim_approach_cases)/12+(sim_airborne_cases_end-sim_airborne_cases)/12+(sim_extension_cases_end-sim_extension_cases)/10+(sim_engine_cases_end-sim_engine_cases)/4+(sim_duration_cases_end-sim_duration_cases)/8+(sim_terrain_cases_end-sim_terrain_cases)/10+(sim_skid_cases_end-sim_skid_cases)/12+(sim_spin_filter_cases_end-sim_spin_filter_cases)/24+(sim_spin_held_cases_end-sim_spin_held_cases)/12+(sim_spin_alternate_cases_end-sim_spin_alternate_cases)/24+(sim_opponent_brake_cases_end-sim_opponent_brake_cases)/10+(sim_slip_relax_cases_end-sim_slip_relax_cases)/8+SIM_DELAY_HOOK_TESTS+SIM_SPIN_HOOK_TESTS+SIM_SLIP_HOOK_TESTS
+ dc.w 16,(sim_rate_cases_end-sim_rate_cases)/8+(sim_steering_cases_end-sim_steering_cases)/14+(sim_distance_cases_end-sim_distance_cases)/8+(sim_approach_cases_end-sim_approach_cases)/12+(sim_airborne_cases_end-sim_airborne_cases)/12+(sim_extension_cases_end-sim_extension_cases)/10+(sim_engine_cases_end-sim_engine_cases)/4+(sim_duration_cases_end-sim_duration_cases)/8+(sim_terrain_cases_end-sim_terrain_cases)/10+(sim_skid_cases_end-sim_skid_cases)/12+(sim_spin_filter_cases_end-sim_spin_filter_cases)/24+(sim_spin_held_cases_end-sim_spin_held_cases)/12+(sim_spin_alternate_cases_end-sim_spin_alternate_cases)/24+(sim_opponent_brake_cases_end-sim_opponent_brake_cases)/10+(sim_slip_relax_cases_end-sim_slip_relax_cases)/8+SIM_DELAY_HOOK_TESTS+SIM_SPIN_HOOK_TESTS+SIM_SLIP_HOOK_TESTS+SIM_HEADING_HOOK_TESTS+(sim_heading_cases_end-sim_heading_cases)/10
 sim_physics_passed: dc.l 0
 sim_physics_test_fraction: dc.w 0,0,0,0
 sim_physics_test_position: dc.l 0
@@ -596,6 +623,7 @@ sim_spin_resets_selftest:
  move.w 2(a2),$3e(a0)
  move.b 5(a2),$c1(a0)
  move.l #12345,56(a6)
+ move.w #3,60(a6)
  tst.w 6(a2)
  bne .inactive
  bsr sim_a4000_spin_begin
@@ -603,6 +631,17 @@ sim_spin_resets_selftest:
 .inactive:
  bsr sim_a4000_spin_inactive
 .reset_check:
+ moveq #3,d0
+ cmp.w #50,(a2)
+ bne.s .heading_carry
+ tst.w 6(a2)
+ bne.s .heading_carry
+ tst.w 4(a2)
+ bne.s .heading_carry
+ moveq #0,d0
+.heading_carry:
+ cmp.w 60(a6),d0
+ bne .failed
  moveq #0,d0
  move.w 8(a2),d0
  cmp.l 56(a6),d0
@@ -611,6 +650,7 @@ sim_spin_resets_selftest:
  addq.l #1,(a0)
  lea 10(a2),a2
  dbra d6,.reset
+ clr.w 60(a6)
  lea sim_spin_gate_cases(pc),a2
  moveq #23,d6
 .gate:
@@ -909,6 +949,56 @@ sim_slip_replace_selftest:
  cmp.w #6,d7
  blt .mode
  clr.w 62(a6)
+ moveq #0,d0
+ bra.s .done
+.failed:
+ moveq #1,d0
+.done:
+ movem.l (sp)+,d1-a6
+ rts
+ ENDC
+
+ IFD SIM_A4000
+; Same trajectories through the actual 50 Hz hook, verifying A0 and D1 as
+; well as the state and carry. Native copied fallback is checked live.
+sim_heading_hooks_selftest:
+ movem.l d1-a6,-(sp)
+ lea sim_delay_test_mode(pc),a4
+ adda.l #$15fa,a4
+ move.w #50,-$15fa(a4)
+ lea sim_spin_test_frame(pc),a5
+ lea sim_delay_test_car(pc),a0
+ move.l a0,8(a5)
+ lea sim_a4000_private(pc),a6
+ lea sim_heading_cases(pc),a2
+ move.w #(sim_heading_cases_end-sim_heading_cases)/10-1,d6
+.case:
+ move.l 8(a5),a0
+ move.w (a2),$18(a0)
+ move.w 2(a2),$20(a0)
+ move.w 4(a2),60(a6)
+ move.l #$76543210,d1
+ moveq #4,d7
+.five:
+ bsr sim_a4000_heading
+ dbra d7,.five
+ cmp.l #$76543210,d1
+ bne .failed
+ cmpa.l 8(a5),a0
+ bne .failed
+ move.w $18(a0),d0
+ cmp.w 6(a2),d0
+ bne .failed
+ move.w 60(a6),d0
+ cmp.w 8(a2),d0
+ bne .failed
+ lea sim_physics_passed(pc),a0
+ addq.l #1,(a0)
+ lea 10(a2),a2
+ dbra d6,.case
+ clr.w 60(a6)
+ lea sim_a4000_heading_calls(pc),a0
+ clr.l (a0)
  moveq #0,d0
  bra.s .done
 .failed:

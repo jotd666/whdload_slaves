@@ -27,7 +27,8 @@ sim_a4000_arm:
 ; Terrain loss uses an unsigned Q16 carry at +48; skid loss uses fifths at +50.
 ; Spin displacement: /1280 carry at +52, cached step at +54 ($8000=unset).
 ; Nominal spin-filter change uses signed Q16 carry +56..59.
-; Opponent recovery braking uses fifths at +60; slip loss uses Q16 at +62.
+; Player heading / opponent recovery braking use fifths at +60.
+; Slip loss uses Q16 at +62.
 sim_a4000_car:
  lea -$85e(a4),a0
  cmpa.l a0,a1
@@ -171,6 +172,11 @@ sim_a4000_prepare:
  lea sim_native_opponent_brake(pc),a1
  moveq #36/2-1,d0
  bsr .copy
+ move.l tape_game(pc),a0
+ adda.l #$f974,a0
+ lea sim_native_heading(pc),a1
+ moveq #86/2-1,d0
+ bsr .copy
  move.l _resload(pc),a2
  jsr resload_FlushCache(a2)
  rts
@@ -272,6 +278,8 @@ sim_a4000_wheel_contact:
  clr.w $4c(a0,d0.l)
  rts
 
+sim_native_heading: dcb.w 86/2,0
+ rts
 sim_native_opponent_steering: dcb.w 42/2,0
  rts
 sim_native_opponent_brake: dcb.w 36/2,0
@@ -292,12 +300,12 @@ sim_native_wheel: dcb.w 148/2,0
  rts
  even
  dc.b "4DA4PHYS"
- dc.w 4,SIM_PRIVATE_BYTES
+ dc.w 5,SIM_PRIVATE_BYTES
 sim_a4000_private: dcb.b SIM_PRIVATE_BYTES,0
 
  even
  dc.b "4DA4STAT"
- dc.w 10,21
+ dc.w 11,22
 sim_a4000_gear_calls: dc.l 0
 sim_a4000_wheel_calls: dc.l 0
 sim_a4000_contact_calls: dc.l 0
@@ -316,6 +324,7 @@ sim_a4000_opponent_steering_calls: dc.l 0
 sim_a4000_opponent_brake_calls: dc.l 0
 sim_a4000_spin_alternate_calls: dc.l 0
 sim_a4000_slip_relax_calls: dc.l 0
+sim_a4000_heading_calls: dc.l 0
 
 ; $10234..$10248 and $1024A..$10260, within native suspension $10012.
 ; Preserve its geometry/penetration branches and cap at extension 384. Both
@@ -531,6 +540,14 @@ sim_a4000_spin_begin:
  ; A sub-unit spin request cannot survive losing contact before spin starts.
  tst.b $c1(a1)
  bne .keep_filter
+ ; Only the player owns a heading fraction here; opponent+60 is braking.
+ move.l a0,d0
+ lea sim_a4000_private(pc),a0
+ cmpa.l d0,a0
+ move.l d0,a0
+ bne.s .not_player
+ clr.w 60(a0)
+.not_player:
  tst.w $3e(a1)
  bne .keep_filter
  clr.l 56(a0)
@@ -823,4 +840,27 @@ sim_a4000_slip_impulse_fixed:
 sim_a4000_slip_impulse_dynamic:
  bsr sim_a4000_slip_replaced
  move.w -$80(a5),$36(a0)
+ rts
+
+; Whole $F974..$F9CA block. Only the player reaches this branch. D0 is
+; overwritten at $F9CA; retain the native local signed low-byte when neutral.
+sim_a4000_heading:
+ cmp.w #50,-$15fa(a4)
+ bne sim_native_heading
+ movem.l d1/a1,-(sp)
+ move.l 8(a5),a1
+ move.w $18(a1),d0
+ move.w $20(a1),d1
+ bne.s .kernel
+ ext.w d0
+ move.w d0,-2(a5)
+ move.w $18(a1),d0
+.kernel:
+ lea sim_a4000_private+60(pc),a0
+ bsr sim_heading_50
+ move.w d0,$18(a1)
+ lea sim_a4000_heading_calls(pc),a0
+ addq.l #1,(a0)
+ movem.l (sp)+,d1/a1
+ move.l 8(a5),a0
  rts

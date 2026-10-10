@@ -511,3 +511,36 @@ sim_slip_relax_50:
 .done:
  movem.l (sp)+,d1-d3
  rts
+
+; Native $F974 cardinal-heading correction: within seven angle units and with
+; neutral steering, approach the nearest multiple of 256 at 20 units/second.
+; d0.w heading, d1.w steering, a0 signed fifths. Preserve d1-d3.
+; Keep native word wrapping; a completed/inactive correction discards carry.
+sim_heading_50:
+ movem.l d1-d3,-(sp)
+ move.w d0,d2
+ tst.w d1
+ bne.s .clear
+ ext.w d0
+ move.w d0,d3
+ beq.s .clear
+ cmp.w #7,d0
+ bgt.s .clear
+ cmp.w #-7,d0
+ blt.s .clear
+ moveq #-1,d0
+ tst.w d3
+ bpl.s .rate
+ moveq #1,d0
+.rate:
+ bsr sim_rate_20_to_50
+ add.w d0,d2
+ move.w d2,d0
+ tst.b d0
+ bne.s .done
+.clear:
+ clr.w (a0)
+.done:
+ move.w d2,d0
+ movem.l (sp)+,d1-d3
+ rts

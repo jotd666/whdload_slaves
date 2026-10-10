@@ -298,6 +298,7 @@ pl_main
     PL_PS $F784,sim_a4000_delay30
     PL_PS $F7A6,sim_a4000_delay10
     PL_PSS $F842,sim_a4000_terrain,42
+    PL_PSS $F974,sim_a4000_heading,80
     PL_PS $FD64,sim_a4000_skid_loss
     PL_PSS $F7DA,sim_a4000_spin_begin,2
     PL_PS $FD46,sim_a4000_spin_slip

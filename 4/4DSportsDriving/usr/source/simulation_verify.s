@@ -129,6 +129,10 @@ sim_fixture_before:
  clr.w -$832(a4)
  clr.w -$820(a4)
  ENDC
+ IFD SIM_FIXTURE_HEADING
+ ; Synthetic near-cardinal initial heading for rate/word-wrap coverage.
+ move.w #SIM_FIXTURE_HEADING,-$916(a4)
+ ENDC
  IFD SIM_FIXTURE_DROP
  ; Synthetic initial pose for airborne/contact coverage. Native physics handles
  ; the fall; 1024 position units is small enough to test an ordinary landing.
@@ -144,7 +148,10 @@ sim_fixture_before:
  ENDC
  IFD SIM_A4000
  IFND SIM_A4000_NATIVE
- bsr sim_a4000_arm
+ ; Verification tables can exceed a 68000 relative-call displacement.
+ lea sim_fixture_before(pc),a0
+ adda.l #sim_a4000_arm-sim_fixture_before,a0
+ jsr (a0)
  ENDC
  ENDC
 .active:
