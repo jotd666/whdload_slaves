@@ -172,6 +172,9 @@ tape_task_code:
  IFD SIM_LIVE_INPUT_TEST
  bsr tape_live_input_test
  ENDC
+ IFD SIM_INPUT_EDGE_TEST
+ bsr tape_input_edge_test
+ ENDC
 .done:	moveq	#0,d0
 	jsr	_LVOWait(a6)
 	bra.s	.done
@@ -998,4 +1001,8 @@ tape_replay_error_ack:
  moveq #10,d2
  bsr tape_setup_key
  rts
+ ENDC
+
+ IFD SIM_INPUT_EDGE_TEST
+ include "simulation_input_edge_verify.s"
  ENDC
