@@ -192,6 +192,7 @@ patch_main
 	bsr sim_schedule_modal_selftest
 	IFD SIM_A4000
 	bsr sim_history_selftest
+	bsr sim_capacity_selftest
 	ENDC
 	ENDC
 	lea patch_main(pc),a0
@@ -330,6 +331,10 @@ pl_main
     PL_PSS $CF9E,sim_a4000_contact_distance,2
     PL_PSS $E07A,sim_history_new_race_stub,4
     PL_PSS $E548,sim_history_seek_zero_stub,2
+    PL_PS $2412,sim_history_input_buffer_stub
+    PL_PSS $7C0A,sim_history_producer_limit_stub,12
+    PL_PSS $775A,sim_history_consumer_limit_stub,12
+    PL_PSS $E56E,sim_history_seek_bound_stub,8
     PL_PS $E65A,sim_history_save_stub
     PL_PS $E5DA,sim_history_restore_stub
     PL_PSS $7D08,sim_history_rotate_stub,2
@@ -499,6 +504,38 @@ perf_attnflags	dc.l	0
 ; independent of verification-table size. MOVEM preserves all flags including
 ; X; the reserved stack slot transfers to the target with the original SP.
 	IFD SIM_A4000
+sim_history_input_buffer_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_history_input_buffer_stub(pc),a0
+ adda.l #sim_history_input_buffer-sim_history_input_buffer_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_history_producer_limit_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_history_producer_limit_stub(pc),a0
+ adda.l #sim_history_producer_limit-sim_history_producer_limit_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_history_consumer_limit_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_history_consumer_limit_stub(pc),a0
+ adda.l #sim_history_consumer_limit-sim_history_consumer_limit_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_history_seek_bound_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_history_seek_bound_stub(pc),a0
+ adda.l #sim_history_seek_bound-sim_history_seek_bound_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
 sim_history_new_race_stub:
  subq.l #4,sp
  movem.l a0,-(sp)
@@ -626,6 +663,7 @@ tape_restart_result_stub:
 	IFD SIM_A4000
 	include "simulation_a4000.s"
 	include "simulation_history.s"
+	include "simulation_capacity.s"
 	ENDC
 	include "simulation_physics_verify.s"
 	ENDC
@@ -635,4 +673,15 @@ tape_restart_result_stub:
 	ENDC
 	ENDC
 
+ IFD VERIFY
+ IFD SIM_A4000
+ ; Separate input storage: native bulk layout reserves only 12,000 bytes.
+ ; Keep at the end so it cannot push code/table PC-relative references apart.
+ even
+ dc.b "4DHINPUT"
+ dc.l 30000
+sim_history_inputs: dcb.b 30000,0
+ dc.b "4DGUARD!"
+ ENDC
+ ENDC
 	END

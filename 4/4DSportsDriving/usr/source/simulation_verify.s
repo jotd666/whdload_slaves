@@ -111,7 +111,132 @@ sim_history_seek_fixture:
  rts
  ENDC
 
+ IFD SIM_CAPACITY_FIXTURE
+; Call the real native input writer at the old wrapped limit, beyond the old
+; allocation, and at the final byte of the new buffer. Restore all test state.
+sim_capacity_fixture:
+ tst.b $45(a4)
+ bne .done
+ cmp.w #50,-$15fa(a4)
+ bne .done
+ cmp.w #160,-$940(a4)
+ bne .done
+ movem.l d0-a6,-(sp)
+ link a5,#-20
+ move.w $a0(a4),-2(a5)
+ move.w -$1738(a4),-4(a5)
+ move.w -$2e0(a4),-6(a5)
+ move.l tape_game(pc),a0
+ lea sim_capacity_fixture(pc),a1
+ adda.l #sim_schedule_modal-sim_capacity_fixture,a1
+ move.w (a1),-8(a5)
+ move.w #1,(a1)
+ move.l -$1770(a4),a0
+ move.b 9464(a0),-9(a5)
+ move.b 12000(a0),-10(a5)
+ move.b 29999(a0),-11(a5)
+ lea sim_capacity_fixture_cases(pc),a3
+ moveq #2,d7
+.case:
+ move.w (a3)+,d6
+ move.w d6,$a0(a4)
+ move.w d6,-$1738(a4)
+ move.w (a3)+,-$2e0(a4)
+ move.l -$1770(a4),a0
+ move.b #$7f,(a0,d6.w)
+ move.w #1,-(sp)
+ move.l tape_game(pc),a0
+ adda.l #$7a66,a0
+ jsr (a0)
+ addq.l #2,sp
+ move.l -$1770(a4),a0
+ tst.b (a0,d6.w)
+ bne .failed
+ addq.w #1,d6
+ cmp.w $a0(a4),d6
+ bne .failed
+ cmp.w -$1738(a4),d6
+ bne .failed
+ tst.b $42(a4)
+ bne .failed
+ lea sim_capacity_fixture_passed(pc),a0
+ addq.l #1,(a0)
+ dbra d7,.case
+ move.l -$1770(a4),a0
+ cmp.l #$34444755,30000(a0) ; 4DGU
+ bne .failed
+ cmp.l #$41524421,30004(a0) ; ARD!
+ bne .failed
+ move.b -9(a5),9464(a0)
+ move.b -10(a5),12000(a0)
+ move.b -11(a5),29999(a0)
+ move.w -2(a5),$a0(a4)
+ move.w -4(a5),-$1738(a4)
+ move.w -6(a5),-$2e0(a4)
+ lea sim_capacity_fixture(pc),a0
+ adda.l #sim_schedule_modal-sim_capacity_fixture,a0
+ move.w -8(a5),(a0)
+ unlk a5
+ movem.l (sp)+,d0-a6
+.done:
+ rts
+.failed:
+ lea sim_capacity_fixture(pc),a0
+ adda.l #perf_failure-sim_capacity_fixture,a0
+ move.l #18,(a0)
+ illegal
+ bra.s .failed
+ even
+sim_capacity_fixture_cases:
+ dc.w 9464,0,12000,0,29999,45000
+ dc.b "4DCAPFIX"
+ dc.w 1,3
+sim_capacity_fixture_passed: dc.l 0
+ ENDC
+
+ IFD SIM_HISTORY_END_SEEK_TEST
+; Synthetic final checkpoint for the real native seek(capacity) boundary.
+; This tests index selection/storage bounds, not 25-minute handling outcomes.
+sim_history_end_seek_fixture:
+ tst.b $45(a4)
+ bne .done
+ cmp.w #160,-$940(a4)
+ bne .done
+ movem.l d0-a6,-(sp)
+ move.l -$16bc(a4),a1
+ adda.l #19*$460,a1
+ lea -$a80(a4),a0
+ move.w #$460/4-1,d0
+.copy:
+ move.l (a0)+,(a1)+
+ dbra d0,.copy
+ move.w #28500,$140-$460(a1)
+ move.b #1,$3f4-$460(a1)
+ lea sim_history_end_seek_fixture(pc),a1
+ adda.l #sim_a4000_private-sim_history_end_seek_fixture,a1
+ lea $228(a4),a2
+ moveq #19,d0
+ lea sim_history_end_seek_fixture(pc),a0
+ adda.l #sim_history_store-sim_history_end_seek_fixture,a0
+ jsr (a0)
+ move.b #2,$45(a4)
+ move.w #30000,-(sp)
+ move.l tape_game(pc),a0
+ adda.l #$e518,a0
+ jsr (a0)
+ addq.l #2,sp
+ movem.l (sp)+,d0-a6
+.done:
+ rts
+ ENDC
+
 sim_fixture_before:
+ IFD SIM_HISTORY_END_SEEK_TEST
+ bsr sim_history_end_seek_fixture
+ ENDC
+ IFD SIM_CAPACITY_FIXTURE
+ bsr sim_capacity_fixture
+ ENDC
  IFD SIM_HISTORY_SEEK_TEST
  bsr sim_history_seek_fixture
  ENDC
