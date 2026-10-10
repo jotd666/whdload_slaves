@@ -197,6 +197,10 @@ patch_main
 	bsr sim_events_selftest
 	bsr sim_average_selftest
 	bsr sim_score_selftest
+	bsr sim_score_file_selftest
+	IFD SIM_SCORE_IO_TEST
+	bsr sim_score_io_selftest
+	ENDC
 	bsr sim_history_selftest
 	bsr sim_capacity_selftest
 	bsr sim_time_selftest
@@ -949,6 +953,8 @@ tape_restart_result_stub:
 	IFD SIM_PHYSICS
 	include "simulation_physics.s"
 	IFD SIM_A4000
+	include "simulation_score_file.s"
+	include "simulation_score_file_verify.s"
 	include "simulation_a4000.s"
 	include "simulation_results.s"
 	include "simulation_results_ui.s"
