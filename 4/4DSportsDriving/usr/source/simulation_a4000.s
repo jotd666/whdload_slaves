@@ -974,6 +974,11 @@ sim_a4000_wheel_reset:
 .done:
  rts
 
+; The later inverted-contact correction at $CB1C stays in native world units.
+; Its transformed192-unit vector is a collision correction, not a velocity:
+; scaling it to2/5 at50Hz changes the roof-contact result in the same update.
+; Keep it, the negative192 geometry adjustment and24-unit clearance gate intact.
+; SIM_FIXTURE_INVERTED_SCALE_TEST is the explicit failing negative control.
 ; Whole original TST/BLE. The untaken path returns through the patch NOP.
 ; Redirect the taken return to $CC2E and preserve the original flags/X/A0.
 sim_a4000_wheel_pass:

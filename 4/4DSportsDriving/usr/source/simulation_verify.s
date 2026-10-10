@@ -655,6 +655,9 @@ sim_fixture_before:
  ; Explicit diagnostic pose, never a natural-driving handling reference.
  ; C614 rebuilds previous wheel samples from the native inverted geometry
  ; before the first contact query, avoiding inconsistent upright caches.
+ IFD SIM_FIXTURE_INVERTED_Y
+ move.l #SIM_FIXTURE_INVERTED_Y,-$92a(a4) ; raw body height, wheel cache follows
+ ENDC
  move.w #512,-$912(a4)      ; player+$1C roll, half a revolution
  move.w #10000,-$904(a4)    ; player+$2A current speed
  move.w #10000,-$902(a4)    ; player+$2C target speed
@@ -880,6 +883,21 @@ sim_inverted_wheels:
  asr.l #6,d0
  move.w d0,(a1)+
  dbra d1,.copy
+ IFD SIM_FIXTURE_INVERTED_SCALE_TEST
+ ; Negative control: pretend the collision correction is an A2500 velocity.
+ ; Only the first step is changed; zero-carry2/5 conversion is enough to test
+ ; whether this would change the roof-contact outcome. Never a runtime mode.
+ cmp.w #50,-$15fa(a4)
+ bne .native
+ lea -$6a(a5),a0
+ moveq #2,d1
+.scale:
+ move.w (a0),d0
+ muls #2,d0
+ divs #5,d0
+ move.w d0,(a0)+
+ dbra d1,.scale
+ ENDC
 .native:
  move.w (sp)+,d0
  lsr.w #1,d0             ; restore incoming X; displaced CMP does not change it
