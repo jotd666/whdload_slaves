@@ -291,6 +291,12 @@ sim_schedule_reset_history:
 .private:
  clr.l (a0)+
  dbra d0,.private
+ lea sim_schedule_reset_history(pc),a0
+ adda.l #sim_aux_state-sim_schedule_reset_history,a0
+ moveq #SIM_AUX_BYTES/4-1,d0
+.auxiliary:
+ clr.l (a0)+
+ dbra d0,.auxiliary
  ENDC
  IFD SIM_FIXTURE
  ; A restarted test race must arm/capture from its new tick zero as well.
@@ -337,6 +343,12 @@ sim_schedule_reset_selftest:
 .dirty:
  move.l #-1,(a0)+
  dbra d0,.dirty
+ lea sim_schedule_reset_history(pc),a0
+ adda.l #sim_aux_state-sim_schedule_reset_history,a0
+ moveq #SIM_AUX_BYTES/4-1,d0
+.dirty_auxiliary:
+ move.l #-1,(a0)+
+ dbra d0,.dirty_auxiliary
  ENDC
  lea sim_schedule_test_native(pc),a4
  move.w d7,d0
@@ -379,6 +391,13 @@ sim_schedule_reset_selftest:
  tst.l (a0)+
  bne .failed
  dbra d0,.private_zero
+ lea sim_schedule_reset_history(pc),a0
+ adda.l #sim_aux_state-sim_schedule_reset_history,a0
+ moveq #SIM_AUX_BYTES/4-1,d0
+.auxiliary_zero:
+ tst.l (a0)+
+ bne .failed
+ dbra d0,.auxiliary_zero
  ENDC
  lea sim_schedule_reset_passed(pc),a0
  addq.l #1,(a0)

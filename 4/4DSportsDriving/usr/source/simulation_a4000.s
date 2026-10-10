@@ -3,12 +3,19 @@
 ; Not yet a selectable A4000 release: disk replay format, remaining rate sites
 ; and lifecycle acceptance are pending. Native 10/20 paths survive.
 SIM_PRIVATE_BYTES = 128
+SIM_AUX_BYTES = 24*8
 sim_a4000_arm:
  lea sim_a4000_private(pc),a0
  moveq #SIM_PRIVATE_BYTES/4-1,d0
 .clear:
  clr.l (a0)+
  dbra d0,.clear
+ lea sim_a4000_arm(pc),a0
+ adda.l #sim_aux_state-sim_a4000_arm,a0
+ moveq #SIM_AUX_BYTES/4-1,d0
+.aux_clear:
+ clr.l (a0)+
+ dbra d0,.aux_clear
  ; Enter only at the fixture's untouched tick zero after native A2500 setup.
  move.w #50,-$15fa(a4)
  move.w #50,-$bc(a4)

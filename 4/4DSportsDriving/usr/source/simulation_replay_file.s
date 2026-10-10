@@ -4,11 +4,11 @@
 ; Tagged v1: 36-byte header, native prefix, 30000 input bytes, twenty native
 ; checkpoints, twenty companions, CRC32 of all preceding bytes. Invalid slots
 ; and unused inputs are zeroed. The epoch is separate from native snapshots.
- IFNE SIM_HISTORY_BYTES-168
- FAIL "Replay ABI1 requires168-byte companions; revise the format explicitly"
+ IFNE SIM_HISTORY_BYTES-360
+ FAIL "Replay ABI2 requires360-byte companions; revise the format explicitly"
  ENDC
  IFNE SIM_HISTORY_SLOTS-20
- FAIL "Replay ABI1 requires20 checkpoint slots"
+ FAIL "Replay ABI2 requires20 checkpoint slots"
  ENDC
 SIM_REPLAY_PREFIX = $724
 SIM_REPLAY_INPUTS = 30000
@@ -20,6 +20,9 @@ SIM_REPLAY_NATIVE_OFFSET = SIM_REPLAY_INPUT_OFFSET+SIM_REPLAY_INPUTS
 SIM_REPLAY_COMPANION_OFFSET = SIM_REPLAY_NATIVE_OFFSET+SIM_REPLAY_NATIVE
 SIM_REPLAY_CRC_OFFSET = SIM_REPLAY_COMPANION_OFFSET+SIM_REPLAY_COMPANIONS
 SIM_REPLAY_BYTES = SIM_REPLAY_CRC_OFFSET+4
+ IFGT SIM_REPLAY_BYTES-65535
+ FAIL "Replay copy loops require unsigned16-bit byte counts"
+ ENDC
 
 ; A0 file, D0 actual byte count -> D0 10/20/50, or zero rejected.
 ; No state/output writes on any path. All other registers preserved.
@@ -53,7 +56,7 @@ sim_replay_validate:
  bne .bad
  cmp.l #$4c303530,4(a0)   ; L050
  bne .bad
- cmp.l #$00010001,8(a0)  ; format1, physics ABI1
+ cmp.l #$00010002,8(a0)  ; format1, physics ABI2
  bne .bad
  cmp.l #$00320014,12(a0) ; 50Hz,20 slots
  bne .bad
@@ -145,7 +148,7 @@ sim_replay_pack:
  movea.l a6,a0
  move.l #$34445250,(a0)+
  move.l #$4c303530,(a0)+
- move.l #$00010001,(a0)+
+ move.l #$00010002,(a0)+
  move.l #$00320014,(a0)+
  move.l #SIM_REPLAY_PREFIX,(a0)+
  move.l d4,(a0)+
@@ -214,7 +217,7 @@ sim_replay_pack:
  rts
 
 ; A0 tagged file,D0 length,A1 descriptor of five output pointers:
-; prefix(1828),inputs(30000),native(22400),companions(3360),epoch(4).
+; prefix(1828),inputs(30000),native(22400),companions(7200),epoch(4).
 ; D0=0 success,1 invalid. Validate everything before changing any output.
 ; Outputs must not overlap file, descriptor or each other. Preserve registers.
 sim_replay_unpack:

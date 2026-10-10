@@ -69,3 +69,9 @@ sim_aux_vertical_50:
  move.l d3,d0
  movem.l (sp)+,d2-d4
  rts
+
+ even
+ dc.b "4DAUXPHY"
+ dc.w 1,SIM_AUX_BYTES
+sim_aux_state: dcb.b SIM_AUX_BYTES,0
+ dc.l $41555847

@@ -1,7 +1,8 @@
 ; A4000 in-memory companion snapshots. Native snapshot layout stays intact.
-; Disk serialization and remaining result-time consumers are separate work.
+; Tagged replays store these companions; native10/20 layouts stay unchanged.
 SIM_HISTORY_SLOTS = 20
-SIM_HISTORY_BYTES = 8+SIM_PRIVATE_BYTES+SIM_TIME_STATE_BYTES ; valid word, RNG, fractions, result times
+SIM_HISTORY_AUX_OFFSET = 8+SIM_PRIVATE_BYTES+SIM_TIME_STATE_BYTES
+SIM_HISTORY_BYTES = SIM_HISTORY_AUX_OFFSET+SIM_AUX_BYTES ; valid, RNG, car, time, fragments
 
 ; E07A is reached only for the native new-race (-1) initialization, which
 ; invalidates all twenty native snapshots. Seek-zero initialization also calls
@@ -32,7 +33,8 @@ sim_history_seek_zero:
  tst.w 8(a5)
  bne .done
  movem.l a0,-(sp)
- lea sim_history_records(pc),a0
+ lea sim_history_slot(pc),a0
+ adda.l #sim_history_records-sim_history_slot,a0
  tst.w (a0)
  beq sim_history_failed
  movem.l (sp)+,a0           ; nonzero flags bypass native initialization
@@ -58,7 +60,8 @@ sim_history_save:
  lea sim_a4000_private(pc),a1
  lea $228(a4),a2
  bsr sim_history_store
- lea sim_history_saves(pc),a0
+ lea sim_history_slot(pc),a0
+ adda.l #sim_history_saves-sim_history_slot,a0
  addq.l #1,(a0)
 .done:
  move.w (sp)+,d2
@@ -81,7 +84,8 @@ sim_history_restore:
  bsr sim_history_load
  lea sim_results_state(pc),a0
  move.w 14(a0),$50(a4)     ; native message word mirrors the restored award
- lea sim_history_restores(pc),a0
+ lea sim_history_slot(pc),a0
+ adda.l #sim_history_restores-sim_history_slot,a0
  addq.l #1,(a0)
 .done:
  move.w (sp)+,d2
@@ -99,7 +103,8 @@ sim_history_rotate:
  cmp.w #50,-$15fa(a4)
  bne .done
  bsr sim_history_shift
- lea sim_history_rotations(pc),a0
+ lea sim_history_slot(pc),a0
+ adda.l #sim_history_rotations-sim_history_slot,a0
  addq.l #1,(a0)
 .done:
  move.w (sp)+,d2
@@ -114,7 +119,8 @@ sim_history_slot:
  cmp.w #SIM_HISTORY_SLOTS,d0
  bhs sim_history_failed
  mulu #SIM_HISTORY_BYTES,d0
- lea sim_history_records(pc),a0
+ lea sim_history_slot(pc),a0
+ adda.l #sim_history_records-sim_history_slot,a0
  adda.l d0,a0
  rts
 sim_history_store:
@@ -132,6 +138,12 @@ sim_history_store:
 .time:
  move.l (a1)+,(a2)+
  dbra d1,.time
+ lea sim_history_store(pc),a1
+ adda.l #sim_aux_state-sim_history_store,a1
+ moveq #SIM_AUX_BYTES/4-1,d1
+.auxiliary:
+ move.l (a1)+,(a2)+
+ dbra d1,.auxiliary
  move.w #50,(a0)           ; publish a complete companion
  rts
 sim_history_load:
@@ -150,9 +162,16 @@ sim_history_load:
 .time:
  move.l (a0)+,(a1)+
  dbra d1,.time
+ lea sim_history_load(pc),a1
+ adda.l #sim_aux_state-sim_history_load,a1
+ moveq #SIM_AUX_BYTES/4-1,d1
+.auxiliary:
+ move.l (a0)+,(a1)+
+ dbra d1,.auxiliary
  rts
 sim_history_shift:
- lea sim_history_records(pc),a0
+ lea sim_history_slot(pc),a0
+ adda.l #sim_history_records-sim_history_slot,a0
  lea SIM_HISTORY_BYTES(a0),a1
  move.w #(SIM_HISTORY_SLOTS-1)*SIM_HISTORY_BYTES/4-1,d0
 .copy:
@@ -161,7 +180,8 @@ sim_history_shift:
  clr.w (a0)               ; old final slot cannot be restored after rotation
  rts
 sim_history_reset:
- lea sim_history_records(pc),a0
+ lea sim_history_slot(pc),a0
+ adda.l #sim_history_records-sim_history_slot,a0
  moveq #SIM_HISTORY_SLOTS-1,d0
 .clear:
  clr.w (a0)
@@ -174,26 +194,14 @@ sim_history_failed:
  illegal
  bra.s sim_history_failed
 
- even
- dc.b "4DHISTRY"
- dc.w 4,SIM_HISTORY_SLOTS,SIM_HISTORY_BYTES,0
-sim_history_saves: dc.l 0
-sim_history_restores: dc.l 0
-sim_history_rotations: dc.l 0
-sim_history_records: dcb.b SIM_HISTORY_SLOTS*SIM_HISTORY_BYTES,0
- dc.b "4DHISTST"
- dc.w 4,40
-sim_history_passed: dc.l 0
-sim_history_test_private: dcb.b SIM_PRIVATE_BYTES,0
-sim_history_test_rng: dcb.b 6,0
-
 ; Save every slot with distinct private/RNG payload, restore in reverse order,
 ; rotate and check every retained payload, then invalidate all on race reset.
 sim_history_selftest:
  movem.l d0-a6,-(sp)
  moveq #0,d7
 .seed:
- lea sim_history_test_private(pc),a1
+ lea sim_history_slot(pc),a1
+ adda.l #sim_history_test_private-sim_history_slot,a1
  moveq #SIM_PRIVATE_BYTES/4-1,d0
 .fill:
  move.l d7,(a1)+
@@ -206,10 +214,21 @@ sim_history_selftest:
  move.l d0,(a0)+
  addq.l #1,d0
  dbra d1,.times
- lea sim_history_test_rng(pc),a2
+ lea sim_history_selftest(pc),a0
+ adda.l #sim_aux_state-sim_history_selftest,a0
+ move.l d7,d0
+ lsl.l #8,d0
+ moveq #SIM_AUX_BYTES/4-1,d1
+.aux_seed:
+ move.l d0,(a0)+
+ addq.l #1,d0
+ dbra d1,.aux_seed
+ lea sim_history_slot(pc),a2
+ adda.l #sim_history_test_rng-sim_history_slot,a2
  move.l d7,(a2)
  move.w d7,4(a2)
- lea sim_history_test_private(pc),a1
+ lea sim_history_slot(pc),a1
+ adda.l #sim_history_test_private-sim_history_slot,a1
  move.w d7,d0
  bsr sim_history_store
  addq.w #1,d7
@@ -218,7 +237,8 @@ sim_history_selftest:
  moveq #SIM_HISTORY_SLOTS-1,d7
  moveq #0,d6
 .check:
- lea sim_history_test_private(pc),a1
+ lea sim_history_slot(pc),a1
+ adda.l #sim_history_test_private-sim_history_slot,a1
  moveq #SIM_PRIVATE_BYTES/4-1,d0
 .dirty:
  move.l #-1,(a1)+
@@ -228,20 +248,30 @@ sim_history_selftest:
 .dirty_times:
  move.l #-1,(a0)+
  dbra d0,.dirty_times
- lea sim_history_test_rng(pc),a2
+ lea sim_history_selftest(pc),a0
+ adda.l #sim_aux_state-sim_history_selftest,a0
+ moveq #SIM_AUX_BYTES/4-1,d0
+.aux_dirty:
+ move.l #-1,(a0)+
+ dbra d0,.aux_dirty
+ lea sim_history_slot(pc),a2
+ adda.l #sim_history_test_rng-sim_history_slot,a2
  move.l #-1,(a2)
  move.w #-1,4(a2)
- lea sim_history_test_private(pc),a1
+ lea sim_history_slot(pc),a1
+ adda.l #sim_history_test_private-sim_history_slot,a1
  move.w d7,d0
  bsr sim_history_load
  move.l d7,d2
  add.l d6,d2
- lea sim_history_test_rng(pc),a2
+ lea sim_history_slot(pc),a2
+ adda.l #sim_history_test_rng-sim_history_slot,a2
  cmp.l (a2),d2
  bne sim_history_failed
  cmp.w 4(a2),d2
  bne sim_history_failed
- lea sim_history_test_private(pc),a1
+ lea sim_history_slot(pc),a1
+ adda.l #sim_history_test_private-sim_history_slot,a1
  moveq #SIM_PRIVATE_BYTES/4-1,d0
 .verify:
  cmp.l (a1)+,d2
@@ -256,13 +286,25 @@ sim_history_selftest:
  bne sim_history_failed
  addq.l #1,d3
  dbra d0,.verify_times
- lea sim_history_passed(pc),a0
+ lea sim_history_selftest(pc),a0
+ adda.l #sim_aux_state-sim_history_selftest,a0
+ move.l d2,d3
+ lsl.l #8,d3
+ moveq #SIM_AUX_BYTES/4-1,d0
+.aux_verify:
+ cmp.l (a0)+,d3
+ bne sim_history_failed
+ addq.l #1,d3
+ dbra d0,.aux_verify
+ lea sim_history_slot(pc),a0
+ adda.l #sim_history_passed-sim_history_slot,a0
  addq.l #1,(a0)
  dbra d7,.check
  tst.w d6
  bne .reset
  bsr sim_history_shift
- lea sim_history_records+19*SIM_HISTORY_BYTES(pc),a0
+ lea sim_history_slot(pc),a0
+ adda.l #sim_history_records+19*SIM_HISTORY_BYTES-sim_history_slot,a0
  tst.w (a0)
  bne sim_history_failed
  moveq #1,d6
@@ -274,15 +316,23 @@ sim_history_selftest:
 .clear_times:
  clr.l (a0)+
  dbra d0,.clear_times
+ lea sim_history_selftest(pc),a0
+ adda.l #sim_aux_state-sim_history_selftest,a0
+ moveq #SIM_AUX_BYTES/4-1,d0
+.aux_clear:
+ clr.l (a0)+
+ dbra d0,.aux_clear
  bsr sim_history_reset
- lea sim_history_records(pc),a0
+ lea sim_history_slot(pc),a0
+ adda.l #sim_history_records-sim_history_slot,a0
  moveq #SIM_HISTORY_SLOTS-1,d0
 .empty:
  tst.w (a0)
  bne sim_history_failed
  lea SIM_HISTORY_BYTES(a0),a0
  dbra d0,.empty
- lea sim_history_passed(pc),a0
+ lea sim_history_slot(pc),a0
+ adda.l #sim_history_passed-sim_history_slot,a0
  addq.l #1,(a0)
  movem.l (sp)+,d0-a6
  rts

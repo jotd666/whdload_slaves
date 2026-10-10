@@ -1250,6 +1250,7 @@ tape_restart_result_stub:
 
  IFD VERIFY
  IFD SIM_A4000
+ include "simulation_history_data.s"
  include "simulation_auxiliary.s"
  include "simulation_auxiliary_verify.s"
  ; Separate input storage: native bulk layout reserves only 12,000 bytes.
@@ -1287,7 +1288,7 @@ sim_replay_reload_buffer: dcb.b SIM_REPLAY_BYTES+2,0
  even
 sim_replay_test_marker:
  dc.b "4DRPLTST"
- dc.w 1,28
+ dc.w 2,31
  dc.l 0
  dcb.l 5,0
  dc.l $52504c31
