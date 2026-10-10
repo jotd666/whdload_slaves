@@ -228,6 +228,7 @@ SIM_VERSION_TEST:MACRO
 ; < D0: BSTR filename
 ; < D1: seglist
 _cb_dosLoadSeg
+	bsr sound_driver_loadseg
 	IFD VERIFY
 		movem.l d0-a6,-(sp)
 		bsr tape_loadseg
@@ -556,6 +557,7 @@ new_DeleteFile:
 	include "clip.s"
 	include "vertex.s"
 	include "sound-sequence.s"
+	include "sound-driver.s"
 	IFD VERIFY
 	include "originals.s"
 	include "mirror-verify.s"

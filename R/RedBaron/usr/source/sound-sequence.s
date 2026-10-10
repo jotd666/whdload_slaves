@@ -28,7 +28,7 @@ sound_sequence_install:
 	dbf d0,.copy
 	ENDC
 	lea sound_queue_patch(pc),a0
-	jsr resload_Patch(a2)
+	bsr sound_install_patch
 .no_queue
 	move.l 36(sp),a1 ; resload_Patch may clobber a0/a1
 	btst #3,perf_mask+2(pc)
@@ -47,7 +47,7 @@ sound_sequence_install:
 	lea sound_noop_rts(pc),a0
 	bsr perf_check_bytes
 	lea sound_noop_patch(pc),a0
-	jsr resload_Patch(a2)
+	bsr sound_install_patch
 .done
 	jsr resload_FlushCache(a2)
 	movem.l (sp)+,d0-a6

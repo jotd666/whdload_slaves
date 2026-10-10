@@ -72,7 +72,7 @@ The normal release mask remains zero.
 - The W6 timing design, after investigation and a concrete recommendation.
 - The measured frame-cap rate and any material 68000 cost of tear-free swapping.
 
-Chip RAM for W1b is approved. Sound work (W3, all S/B candidates) remains deferred.
+Chip RAM for W1b is approved. Exact-output W3 work is active; B1–B6 remain separate behavior/OS decisions.
 Until an approved W6 implementation lands, faster frames accelerating the world on
 slow machines is an accepted intermediate behavior. Keep Time Scale unchanged in
 ordinary development fixtures; 0/60 copies are investigation inputs only.

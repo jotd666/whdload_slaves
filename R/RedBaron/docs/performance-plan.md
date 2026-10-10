@@ -763,6 +763,9 @@ Every frame pays for it; these candidates total ~600k per steady frame *(est.)*.
 
 **Reopened by the user after W2:** implement and verify the exact-output work. Keep sample data, buffer sizes, interrupt ownership, playback and envelope timing unchanged. B1–B6 are not release defaults; they need separate decisions. Progress and evidence are in `w3-verification.md`.
 
+Implemented developer/VERIFY allocations: S1 bit 10, S9 bit 11, S3 bit 12.
+Together these are CUSTOM2=7168; the normal release mask remains zero.
+
 Fixed cost per second, so the saving applies to every scene. Main-loop wall time scales by
 1/(1 − tax): from 15.1% to ~11% is ~1.05× everywhere *(est.)*.
 
@@ -896,7 +899,7 @@ implementing.
   unchanged gauges are redrawn. Skipping them would be an algorithmic change; analyse it first.
 - **The other mirror users** (`sim:28e38` UI corners) and `sim:3045e` vertical flips, if the
   census shows them.
-- **Sound (W3)**, when the user reopens it.
+- **Sound (W3)** was reopened after W2; see `w3-verification.md`.
 - **A500-equivalent memory:** with the code in slow RAM, recheck every saving, the blitter
   interplay and the interrupt tax (it is likely higher; the driver's code and samples contend
   for the chip bus).

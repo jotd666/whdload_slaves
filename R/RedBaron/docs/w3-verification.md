@@ -60,3 +60,41 @@ preserves that behavior and the zero/final-minimum cases. 100,000 seeded volume
 input tuples agree between division and reciprocal models. Original-call replay
 and live assembly twins are still required; these host results alone do not
 verify an installed S3 optimization.
+
+## S3 initial implementation
+
+Developer/VERIFY CUSTOM2 bit 12 selects three in-place ten-byte replacements.
+The loader matches the full driver filename and clears authorization on any
+other executable load. Only supported sim v1 activation reauthorizes patches;
+its driver reloads receive fresh byte checks. Before installation, each site’s
+two operand masks, multiplication and original division sequence are checked.
+Sound offsets in `PERF_RANGE` are file offsets; the audit tools translate them
+to hunk-0 offsets. The three sound ranges pass the static hook audit.
+
+All sound-code writes now use patch lists inside a nested Exec Disable/Enable
+section, including cache flush before re-enabling interrupts. WHDLoad’s resload
+API normally permits interrupts, so relying on the patch call alone would not
+be sufficient for the deferred flight installer. The long VERIFY self-test runs
+before this short installation section.
+
+CUSTOM5 bit 15 runs all 65,026 valid numerators through original DIVU versus the
+replacement in 68000 code, then performs the same quotient comparison at every
+live division. It guards the numerator bound. Only the quotient word is live;
+the following byte masks discard the division remainder, and the final VOL
+writer uses the low word. Its channel shift overwrites X before return. No
+memory or hardware operation is reordered or duplicated by this local twin.
+A full driver-state shadow is unnecessary for these local arithmetic changes;
+that stronger machinery remains a prerequisite for buffer/service rewrites.
+
+The first A500 S3 twin run completed 65,026 synthetic and 1,812 live comparisons
+by step 8. The final atomic-installer build repeated that result and completed 592 queue
+twins at step 8. Evidence: `tmp/dev/tmp/prof/w3-div-twin-a500-r2/`; VERIFY SHA256
+`bad57261d0593f51eb42c79dde6e53a9d15c0154d52d0831ec8edfc8f825469a`.
+`tools/sound_calls.py` also replayed 118 complete original volume calls from the
+last 50-field baseline chunk: 236 model comparisons, no mismatch. It discards
+chunk-edge calls and reads operands after their original loads. These checks
+preserve intermediate byte truncation and the original zero paths.
+
+W3 S1/S9/S3 together use CUSTOM2=7168. Verification uses CUSTOM5=49664
+(deferred activation plus queue/division twins). Cost runs use CUSTOM5=512,
+without either per-call twin. Measurements and CPU selection remain pending.

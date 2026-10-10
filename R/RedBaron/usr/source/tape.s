@@ -102,43 +102,6 @@ tape_return:
 	rts
 
 tape_loadseg:
-	; Record the driver LoadSeg entry without changing its code or registers.
-	movem.l d0-d2/a0-a1,-(sp)
-	lsl.l #2,d0
-	move.l d0,a0
-	cmp.b #12,(a0)
-	bne.w .not_sound
-	cmp.b #'a',1(a0)
-	bne.w .not_sound
-	cmp.b #'m',2(a0)
-	bne.w .not_sound
-	cmp.b #'i',3(a0)
-	bne.w .not_sound
-	cmp.b #'g',4(a0)
-	bne.w .not_sound
-	cmp.b #'a',5(a0)
-	bne.w .not_sound
-	cmp.b #'s',6(a0)
-	bne.w .not_sound
-	cmp.b #'n',7(a0)
-	bne.w .not_sound
-	cmp.b #'d',8(a0)
-	bne.w .not_sound
-	cmp.b #'.',9(a0)
-	bne.w .not_sound
-	cmp.b #'d',10(a0)
-	bne.w .not_sound
-	cmp.b #'r',11(a0)
-	bne.w .not_sound
-	cmp.b #'v',12(a0)
-	bne.w .not_sound
-	lea sound_load_header(pc),a1
-	addq.l #1,12(a1)
-	lsl.l #2,d1
-	addq.l #4,d1
-	move.l d1,16(a1)
-.not_sound
-	movem.l (sp)+,d0-d2/a0-a1
 	lsl.l #2,d0
 	move.l d0,a0
 	lsl.l #2,d1
@@ -289,8 +252,3 @@ tape_rear_sent: dc.w 0
 tape_flight_target: dc.l 0
 
 	INCLUDE "observe.s"
-
-	CNOP 0,4
-sound_load_header:
-	dc.b "RBSLOAD1"
-	dc.l 1,0,0 ; version, LoadSeg count, driver code entry (sound:0028)
