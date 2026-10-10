@@ -1127,8 +1127,15 @@ tape_restart_result_stub:
 	include "simulation_history.s"
 	include "simulation_capacity.s"
 	include "simulation_time.s"
+
 	ENDC
 	include "simulation_physics_verify.s"
+ IFD SIM_A4000
+	include "simulation_replay_file.s"
+ IFD SIM_REPLAY_FILE_TEST
+ include "simulation_replay_file_verify.s"
+ ENDC
+ ENDC
 	ENDC
 	include "driving_tape.s"
 	IFD SIM_PROBE
@@ -1147,6 +1154,19 @@ sim_history_inputs: dcb.b 30000,0
  dc.b "4DGUARD!"
 sim_results_test_arena: dcb.b $1660,0
  include "simulation_results_ui_cases.s"
+ IFD SIM_REPLAY_FILE_TEST
+ even
+sim_replay_test_marker:
+ dc.b "4DRPLTST"
+ dc.w 1,28
+ dc.l 0
+ dcb.l 5,0
+ dc.l $52504c31
+sim_replay_test_file: dcb.b SIM_REPLAY_BYTES,0
+ dc.l $52504c32
+sim_replay_test_out: dcb.b SIM_REPLAY_CRC_OFFSET-SIM_REPLAY_HEADER+4,0
+ dc.l $52504c33
+ ENDC
  ENDC
  ENDC
 	END
