@@ -19,7 +19,7 @@ paint_install:
 ; only in this diagnostic mode, and must be recorded with the capture conditions.
 	moveq #0,d0
 	moveq #0,d1
-	move.l _resload(pc),a2
+	move.l observe_resload(pc),a2
 	jsr resload_SetCPU(a2)
 	lea paint_header(pc),a0
 	move.l d0,28(a0)

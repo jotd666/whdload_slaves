@@ -33,7 +33,7 @@ time_probe_step:
 	beq.b .force
 	pea perf_mismatch(pc)
 	pea TDREASON_FAILMSG
-	move.l _resload(pc),a2
+	move.l observe_resload(pc),a2
 	jmp resload_Abort(a2)
 .force
 	move.w d0,$4834(a1)

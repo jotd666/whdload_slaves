@@ -50,5 +50,35 @@ class ReplayEvidenceTests(unittest.TestCase):
                 with self.assertRaises(ValueError):check_capture(*args)
 
 
+class ModalReplayEvidenceTests(unittest.TestCase):
+    def evidence(self):
+        args=ReplayEvidenceTests().evidence()
+        queue,fixture,rows=args[:3]
+        struct.pack_into('>4H',queue,0,8,8,0,8)
+        clocks=bytearray(struct.pack('>IIII',1,100,0,0)*4)
+        cases=((109,89,1,1,100,0,0,10), (111,89,0,0,100,110,100,11),
+               (199,69,1,0,100,110,100,11), (205,69,0,1,190,110,100,16))
+        for i,(acq,key,down,active,paused,start,base,deadline) in enumerate(cases,4):
+            fixture+=struct.pack('>IHH',acq,key,down)
+            clocks+=struct.pack('>IIII',active,paused,start,base)
+            struct.pack_into('>IHHII',queue,16+i*16,deadline,key|(0 if active else 256),down,0,0)
+        rows += [[6,10,10,0,0,89,0,0,3], [7,12,12,0,0,0,0,0,3], [8,16,16,0,0,0,0,0,3]]
+        args[6]=struct.pack('>HH',3,3);args[7]=struct.pack('>II',8,3)
+        return args,clocks
+
+    def test_menu_escape_is_held_only_and_does_not_replay(self):
+        args,clocks=self.evidence()
+        self.assertEqual(check_capture(*args,clocks=clocks)['commands'],3)
+
+    def test_modal_command_and_retroactive_timestamp_are_rejected(self):
+        for mutation in ('menu_command','deadline','escape_not_modal'):
+            with self.subTest(mutation=mutation):
+                args,clocks=self.evidence()
+                if mutation=='menu_command':struct.pack_into('>H',args[0],16+6*16+4,69)
+                elif mutation=='deadline':struct.pack_into('>I',args[0],16+6*16,200)
+                else:struct.pack_into('>I',clocks,6*16,1)
+                with self.assertRaises(ValueError):check_capture(*args,clocks=clocks)
+
+
 if __name__ == '__main__':
     unittest.main()

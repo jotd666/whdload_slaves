@@ -7,6 +7,9 @@
 OBS_STRIDE = 44
 OBS_CAPACITY = 256
 observe_start:
+	move.l _resload(pc),a0
+	lea observe_resload(pc),a1
+	move.l a0,(a1)
 	lea observe_buffer(pc),a0
 	lea observe_header(pc),a1
 	move.l a0,24(a1)
@@ -76,6 +79,7 @@ observe_header:
 	dc.b "RBSTEPS1"
 	dc.l 1,OBS_STRIDE,OBS_CAPACITY,0,0,0,0
 observe_vbl_count: dc.l 0
+observe_resload: dc.l 0
 observe_buffer:
 	dcb.b OBS_STRIDE*OBS_CAPACITY,0
 

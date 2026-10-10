@@ -37,7 +37,7 @@ time_input_observe_install:
 	lea time_input_fixture_epoch(pc),a3
 	move.l (a0),(a3)
 	lea time_input_observe_patch(pc),a0
-	move.l _resload(pc),a2
+	move.l observe_resload(pc),a2
 	jsr resload_Patch(a2)
 	jsr resload_FlushCache(a2)
 	bsr time_keys_start
@@ -47,7 +47,7 @@ time_input_observe_install:
 .bad
 	pea perf_mismatch(pc)
 	pea TDREASON_FAILMSG
-	move.l _resload(pc),a2
+	move.l observe_resload(pc),a2
 	jmp resload_Abort(a2)
 time_input_observe_patch:
 	PL_START
@@ -106,6 +106,7 @@ time_input_observe_state:
 
 
 ; CUSTOM5 bit 21: four decoded keyboard transitions from supervisor VBlank.
+; Bit 22 additionally opens Preferences with F10 and closes it with Escape.
 ; Exercise the installed native LEA hook and the unchanged bitmap/FIFO tail.
 ; This does not test the host keyboard mapping or CIA serial handshake.
 time_input_fixture:
@@ -120,11 +121,18 @@ time_input_fixture:
 	lea time_input_fixture_index(pc),a3
 	moveq #0,d3
 	move.w (a3),d3
-	cmpi.w #4,d3
+	moveq #4,d4
+	btst #6,perf_custom5+1(pc)
+	beq .limit
+	moveq #8,d4
+.limit
+	cmp.w d4,d3
 	bhs .restore
 	adda.l #$30006,a0
 	move.l (a0),d2
 	sub.l time_input_fixture_epoch(pc),d2
+	btst #6,perf_custom5+1(pc)
+	bne .modal_time
 	move.w d3,d4
 	mulu.w #3,d4
 	btst #5,perf_mask+2(pc)
@@ -133,12 +141,25 @@ time_input_fixture:
 	mulu.w #18,d4
 .short
 	addq.l #2,d4
+	bra .deadline
+.modal_time
+	move.w d3,d4
+	add.w d4,d4
+	lea time_input_modal_deadlines(pc),a4
+	move.w (a4,d4.w),d4
+.deadline
 	cmp.l d4,d2
 	blo .restore
 	moveq #$4e,d0
 	cmpi.w #2,d3
 	blo.b .key
 	moveq #$40,d0
+	cmpi.w #4,d3
+	blo .key
+	moveq #$59,d0
+	cmpi.w #6,d3
+	blo .key
+	moveq #$45,d0
 .key
 	moveq #1,d1
 	move.w d3,d4
@@ -152,6 +173,16 @@ time_input_fixture:
 	move.l (a0),(a4)+
 	move.w d0,(a4)+
 	move.w d1,(a4)
+	; Retain the independently observed clock tuple at each acquisition.
+	move.l d3,d4
+	lsl.w #4,d4
+	lea time_input_fixture_clocks(pc),a4
+	adda.w d4,a4
+	lea time_loop_state(pc),a2
+	move.l TIME_LOOP_ACTIVE(a2),(a4)+
+	move.l TIME_LOOP_PAUSED(a2),(a4)+
+	move.l TIME_LOOP_PAUSE_START(a2),(a4)+
+	move.l TIME_LOOP_PAUSE_BASE(a2),(a4)
 	addq.w #1,(a3)
 	move.l time_input_observe_state(pc),a1
 	adda.l #$30f4c,a1 ; native key FIFO argument of decoded keyboard callback
@@ -166,4 +197,6 @@ time_input_fixture:
 time_input_fixture_epoch: dc.l 0
 time_input_fixture_index: dc.w 0
 	even
-time_input_fixture_log: dcb.b 32,0
+time_input_fixture_log: dcb.b 64,0
+time_input_fixture_clocks: dcb.b 128,0
+time_input_modal_deadlines: dc.w 2,20,38,56,74,76,300,302

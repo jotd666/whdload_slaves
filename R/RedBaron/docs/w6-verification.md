@@ -344,3 +344,40 @@ catching up after slow drawing. These are input-history checks, not FPS or world
 state comparisons. Evidence: `tmp/dev/tmp/prof/w6-keys-a500/`; each capture's
 `keyboard-context.json` records its debt and draw counters. Both owned emulators
 are shut down. The full host suite now contains 86 tests.
+
+
+## Live Preferences input-boundary fixture
+
+VERIFY CUSTOM5 bit 22 extends the bit-21 IRQ fixture with F10 down/up and Escape
+down/up. It records the independent acquisition clock tuple alongside all eight
+transitions. The game itself opens Preferences through the timestamped F10
+command and closes it through native physical menu input. The fixture does not
+write menu state, simulation state or input-consumer results.
+
+Frozen VERIFY text is 122,470 bytes, SHA256
+`cbdbc5557ea44efafc6ef124e6e78256d095db6f3fef770d5d3ade60d768fd77`.
+On both A500 and cached 68030, the recorded window has one native Preferences
+entry, eighty post-input observations at exact fixed-step deadlines and 79 world
+calls, all with active flight ownership. All eight transitions are consumed;
+only Right, Fire and F10 become flight commands. Escape is acquired while modal
+and does not leak into flight. Native bank/fire outputs match the timestamped
+held history throughout the window. The panel excludes 182 CIA intervals on
+A500 and 218 on cached 68030; different elapsed panel durations do not alter the
+active-time deadline sequence. These fixtures do not compare complete world state.
+
+Both captures pass all twelve selected-hook and thirteen disabled-range byte
+audits and native clock/FIFO/pause completion checks. Evidence:
+`tmp/dev/tmp/prof/w6-modal-keys-{a500,030}/`, including `keyboard.log`,
+`keyboard-result.json` and `modal-result.json`. Both owned emulators are quit.
+The host suite has 88 passing tests, including deliberate modal-command leakage
+and timestamp corruption. Normal/developer hashes remain byte-identical to W5.
+The larger VERIFY fixture crossed the 68000 PC-relative reach of two observer
+loader-pointer reads; they now use an observer-local pointer initialized at
+startup, with no normal/developer code changes.
+
+This completes the tested F10/Preferences/Escape keyboard transition, not every
+modal path. Pause-key, controls, restart and inline quit-confirmation fixtures,
+Time Scale changes with old debt, mouse/joystick replay and full world-state
+comparisons remain required. Native mouse position is also written/reset by
+world control routines (for example `sim:1e8ec`), so analog replay must account
+for those resets rather than copying VBlank's accumulated position blindly.
