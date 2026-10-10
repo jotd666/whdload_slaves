@@ -27,6 +27,7 @@ sim_a4000_arm:
 ; Terrain loss uses an unsigned Q16 carry at +48; skid loss uses fifths at +50.
 ; Spin displacement: /1280 carry at +52, cached step at +54 ($8000=unset).
 ; Nominal half-filter change uses signed Q16 carry +56..59.
+; Opponent recovery braking uses fifths at +60; +62 remains unused.
 sim_a4000_car:
  lea -$85e(a4),a0
  cmpa.l a0,a1
@@ -160,6 +161,16 @@ sim_a4000_prepare:
  lea sim_native_terrain(pc),a1
  moveq #48/2-1,d0
  bsr .copy
+ move.l tape_game(pc),a0
+ adda.l #$c06e,a0
+ lea sim_native_opponent_steering(pc),a1
+ moveq #42/2-1,d0
+ bsr .copy
+ move.l tape_game(pc),a0
+ adda.l #$c0ba,a0
+ lea sim_native_opponent_brake(pc),a1
+ moveq #36/2-1,d0
+ bsr .copy
  move.l _resload(pc),a2
  jsr resload_FlushCache(a2)
  rts
@@ -261,6 +272,10 @@ sim_a4000_wheel_contact:
  clr.w $4c(a0,d0.l)
  rts
 
+sim_native_opponent_steering: dcb.w 42/2,0
+ rts
+sim_native_opponent_brake: dcb.w 36/2,0
+ rts
 sim_native_terrain: dcb.w 48/2,0
  rts
 sim_native_suspension_bias: dcb.w 164/2,0
@@ -277,12 +292,12 @@ sim_native_wheel: dcb.w 148/2,0
  rts
  even
  dc.b "4DA4PHYS"
- dc.w 2,SIM_PRIVATE_BYTES
+ dc.w 3,SIM_PRIVATE_BYTES
 sim_a4000_private: dcb.b SIM_PRIVATE_BYTES,0
 
  even
  dc.b "4DA4STAT"
- dc.w 7,17
+ dc.w 8,19
 sim_a4000_gear_calls: dc.l 0
 sim_a4000_wheel_calls: dc.l 0
 sim_a4000_contact_calls: dc.l 0
@@ -297,6 +312,8 @@ sim_a4000_terrain_calls: dc.l 0,0,0,0
 sim_a4000_skid_calls: dc.l 0
 sim_a4000_spin_step_calls: dc.l 0
 sim_a4000_spin_filter_calls: dc.l 0
+sim_a4000_opponent_steering_calls: dc.l 0
+sim_a4000_opponent_brake_calls: dc.l 0
 
 ; $10234..$10248 and $1024A..$10260, within native suspension $10012.
 ; Preserve its geometry/penetration branches and cap at extension 384. Both
@@ -650,4 +667,61 @@ sim_a4000_spin_slip_test:
  rts
 .native:
  tst.w $3e(a0)
+ rts
+
+; Native opponent slew is 8 units at20 Hz,16 at10 Hz. Approach at3.2 units
+; per50 Hz step, keeping the original target and exact arrival clamp.
+sim_a4000_opponent_steering:
+ cmp.w #50,-$15fa(a4)
+ bne sim_native_opponent_steering
+ movem.l d1-d2/a0,-(sp)
+ lea sim_a4000_opponent_steering_calls(pc),a0
+ addq.l #1,(a0)
+ lea sim_a4000_private+64(pc),a0
+ move.w -$83e(a4),d0
+ move.w -8(a5),d1
+ moveq #8,d2
+ bsr sim_approach_50
+ move.w d0,-$83e(a4)
+ movem.l (sp)+,d1-d2/a0
+ rts
+
+; Discard a recovery-braking remainder whenever the native brake branch is
+; inactive. Preserve X and replay the original CLR/TST flags and registers.
+sim_a4000_opponent_brake_gate:
+ cmp.w #50,-$15fa(a4)
+ bne.s .native
+ tst.b -$79e(a4)
+ beq.s .clear
+ tst.b -$795(a4)
+ bne.s .clear
+ tst.w -$828(a4)
+ bne.s .native
+.clear:
+ move.l a0,-(sp)
+ lea sim_a4000_private+64+60(pc),a0
+ clr.w (a0)
+ move.l (sp)+,a0
+.native:
+ clr.b -$3f(a5)
+ tst.b -$79e(a4)
+ rts
+
+; Native recovery brake is512 units at20 Hz,1024 at10 Hz. Preserve its
+; strict loss>speed slip-clear condition, including the equality case.
+sim_a4000_opponent_brake:
+ cmp.w #50,-$15fa(a4)
+ bne sim_native_opponent_brake
+ movem.l d1/a0,-(sp)
+ lea sim_a4000_opponent_brake_calls(pc),a0
+ addq.l #1,(a0)
+ lea sim_a4000_private+64+60(pc),a0
+ move.w -$832(a4),d0
+ bsr sim_opponent_brake_50
+ move.w d0,-$832(a4)
+ tst.w d1
+ beq.s .done
+ clr.w -$828(a4)
+.done:
+ movem.l (sp)+,d1/a0
  rts

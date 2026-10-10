@@ -307,6 +307,9 @@ pl_main
     PL_PSS $FC2A,sim_a4000_spin_filter,26
     PL_PSS $FC10,sim_a4000_spin_inactive,2
     PL_PSS $FD2E,sim_a4000_spin_slip_test,2
+    PL_PSS $C06E,sim_a4000_opponent_steering,36
+    PL_PSS $C098,sim_a4000_opponent_brake_gate,2
+    PL_PSS $C0BA,sim_a4000_opponent_brake,30
     ENDC
     IFD SIM_SCHEDULE
     PL_PSS $70E0,sim_schedule_poll,2

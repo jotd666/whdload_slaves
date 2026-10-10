@@ -97,6 +97,17 @@ sim_fixture_before:
  tst.b -$68b(a4)
  bne .done
  move.w #1,(a0)
+ IFD SIM_FIXTURE_OPPONENT_BRAKE
+ IFND TAPE_OPPONENT
+ FAIL "SIM_FIXTURE_OPPONENT_BRAKE requires TAPE_OPPONENT"
+ ENDC
+ ; Explicit synthetic recovery state for brake-branch coverage. Menu loading,
+ ; original opponent initialization and all subsequent decisions stay native.
+ move.w #1000,-$832(a4)
+ move.w #64,-$828(a4)
+ move.b #1,-$79e(a4)
+ clr.b -$795(a4)
+ ENDC
  IFD SIM_FIXTURE_DROP
  ; Synthetic initial pose for airborne/contact coverage. Native physics handles
  ; the fall; 1024 position units is small enough to test an ordinary landing.

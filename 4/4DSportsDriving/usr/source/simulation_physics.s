@@ -404,3 +404,29 @@ sim_spin_step_50:
  swap d0
  ext.l d0
  rts
+
+; Unsigned opponent recovery speed; nominal loss512 converted with fifths.
+; d0.w speed,a0 -> remainder0..4. Return d0.l speed,d1.l strict overshoot.
+; Equality stops speed but leaves native slip clearing until the next step.
+; A stopped car retains no braking remainder. Preserve d2.
+sim_opponent_brake_50:
+ move.l d2,-(sp)
+ moveq #0,d2
+ move.w d0,d2
+ move.w #512,d0
+ bsr sim_rate_20_to_50
+ moveq #0,d1
+ cmp.w d2,d0
+ bls.s .subtract
+ moveq #1,d1
+ moveq #0,d2
+ bra.s .stopped
+.subtract:
+ sub.w d0,d2
+ bne.s .done
+.stopped:
+ clr.w (a0)
+.done:
+ move.l d2,d0
+ move.l (sp)+,d2
+ rts
