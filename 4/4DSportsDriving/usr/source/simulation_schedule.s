@@ -248,3 +248,132 @@ sim_schedule_a4: dc.l 0
 sim_schedule_ticks: dc.l 0
 sim_schedule_current: dcb.b SIM_QUEUE_SIZE,0
 sim_schedule_queue: dcb.b SIM_QUEUE_COUNT*SIM_QUEUE_SIZE,0
+
+; Native $7904 initializes input history from startup and full $E06A race
+; initialization. Hook its first assignment at $7908. Close the producer FIRST:
+; an interrupt before this store completes before reset; one after it returns
+; without touching A4 or the queue. No interrupt masking spans buffer clearing.
+; The next live main-task poll republishes a fresh pointer/rate/capture epoch.
+sim_schedule_reset_history:
+ movem.l d0-d1/a0,-(sp)
+ moveq #0,d0
+ addx.w d0,d0
+ move.w d0,-(sp)
+ lea sim_schedule_active(pc),a0
+ clr.w (a0)
+ clr.w sim_schedule_phase-sim_schedule_active(a0)
+ clr.w sim_schedule_rate-sim_schedule_active(a0)
+ clr.w sim_schedule_read-sim_schedule_active(a0)
+ clr.w sim_schedule_write-sim_schedule_active(a0)
+ clr.w sim_schedule_overflow-sim_schedule_active(a0)
+ clr.w sim_schedule_enqueuing-sim_schedule_active(a0)
+ clr.l sim_schedule_a4-sim_schedule_active(a0)
+ IFD SIM_A4000
+ lea sim_a4000_private(pc),a0
+ moveq #SIM_PRIVATE_BYTES/4-1,d0
+.private:
+ clr.l (a0)+
+ dbra d0,.private
+ ENDC
+ IFD SIM_FIXTURE
+ ; A restarted test race must arm/capture from its new tick zero as well.
+ lea sim_schedule_reset_history(pc),a0
+ adda.l #sim_fixture_active-sim_schedule_reset_history,a0
+ clr.w (a0)
+ clr.w 2(a0)
+ ENDC
+ lea sim_schedule_resets(pc),a0
+ addq.l #1,(a0)
+ move.w (sp)+,d0
+ lsr.w #1,d0
+ movem.l (sp)+,d0-d1/a0
+ move.b #1,$43(a4)          ; exact native assignment and flags, X preserved
+ rts
+
+ even
+ dc.b "4DSCHEDL"
+ dc.w 1,0
+sim_schedule_resets: dc.l 0
+ dc.b "4DSCHTST"
+ dc.w 1,2
+sim_schedule_reset_passed: dc.l 0
+sim_schedule_test_native: dcb.b $44,0
+
+; Dirty running and wrapped queue states, both incoming X values. Exercise
+; the actual hook, then a field interrupt after closure with the pointer zero.
+sim_schedule_reset_selftest:
+ movem.l d0-a6,-(sp)
+ moveq #0,d7
+.case:
+ lea sim_schedule_active(pc),a0
+ move.w #1,(a0)
+ move.w #49,sim_schedule_phase-sim_schedule_active(a0)
+ move.w #50,sim_schedule_rate-sim_schedule_active(a0)
+ move.w #$fffe,sim_schedule_read-sim_schedule_active(a0)
+ move.w #3,sim_schedule_write-sim_schedule_active(a0)
+ move.w #1,sim_schedule_overflow-sim_schedule_active(a0)
+ move.w #1,sim_schedule_enqueuing-sim_schedule_active(a0)
+ move.l #$12345678,sim_schedule_a4-sim_schedule_active(a0)
+ IFD SIM_A4000
+ lea sim_a4000_private(pc),a0
+ moveq #SIM_PRIVATE_BYTES/4-1,d0
+.dirty:
+ move.l #-1,(a0)+
+ dbra d0,.dirty
+ ENDC
+ lea sim_schedule_test_native(pc),a4
+ move.w d7,d0
+ lsr.w #1,d0
+ move.l #$12345678,d0
+ move.l #$76543210,d1
+ move.l a4,a0
+ bsr sim_schedule_reset_history
+ smi d2
+ seq d3
+ svs d4
+ scs d5
+ moveq #0,d6
+ addx.w d6,d6
+ cmp.w d7,d6
+ bne .failed
+ cmp.l #$12345678,d0
+ bne .failed
+ cmp.l #$76543210,d1
+ bne .failed
+ cmpa.l a4,a0
+ bne .failed
+ or.b d3,d2
+ or.b d4,d2
+ or.b d5,d2
+ bne .failed
+ cmp.b #1,$43(a4)
+ bne .failed
+ bsr sim_schedule_field
+ lea sim_schedule_active(pc),a0
+ moveq #8,d0             ; seven words and one long pointer
+.zero:
+ tst.w (a0)+
+ bne .failed
+ dbra d0,.zero
+ IFD SIM_A4000
+ lea sim_a4000_private(pc),a0
+ moveq #SIM_PRIVATE_BYTES/4-1,d0
+.private_zero:
+ tst.l (a0)+
+ bne .failed
+ dbra d0,.private_zero
+ ENDC
+ lea sim_schedule_reset_passed(pc),a0
+ addq.l #1,(a0)
+ addq.w #1,d7
+ cmp.w #2,d7
+ blt .case
+ lea sim_schedule_resets(pc),a0
+ clr.l (a0)
+ movem.l (sp)+,d0-a6
+ rts
+.failed:
+ lea perf_failure(pc),a0
+ move.l #14,(a0)
+ illegal
+ bra.s .failed

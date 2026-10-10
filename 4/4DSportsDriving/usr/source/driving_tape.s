@@ -146,6 +146,9 @@ tape_task_code:
  lea tape_io(pc),a1
  jsr _LVODoIO(a6)
  ENDC
+ IFD SIM_RESTART_FIXTURE
+ bsr tape_live_restart_fixture
+ ENDC
  IFD TAPE_SCENARIO
  bsr tape_scenario
  ENDC
@@ -793,4 +796,29 @@ tape_restart_acknowledged:
  dc.b "4DRSTUI!"
  dc.w 1,4
 tape_restart_ui: dc.b 0,0,0,0 ; ready,selection,result,returned
+ ENDC
+
+ IFD SIM_RESTART_FIXTURE
+ IFND SIM_SCHEDULE
+ FAIL "SIM_RESTART_FIXTURE requires SIM_SCHEDULE"
+ ENDC
+; Let a real live scheduler accumulate/consume inputs, then restart entirely
+; through the existing keyboard route. No mode, selector or history writes.
+tape_live_restart_fixture:
+.wait:
+ exg a5,a6
+ jsr _LVOWaitTOF(a6)
+ exg a5,a6
+ move.l tape_a4(pc),a0
+ cmp.w #80,-$940(a0)
+ blo.s .wait
+ lea tape_restart_keys(pc),a3
+.next:
+ move.w (a3)+,d2
+ beq.s .done
+ move.w (a3)+,d0
+ bsr tape_setup_key
+ bra.s .next
+.done:
+ rts
  ENDC
