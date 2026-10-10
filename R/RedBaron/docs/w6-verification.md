@@ -1797,3 +1797,47 @@ tick 32. Other globals remain unclassified; final h3 differences total 892 bytes
 Both endpoints pass the native counters and hook audits. Static audits report
 64 ranges and 121 patch destinations with zero errors; normal/developer binaries
 remain byte-identical to W5. Both owned emulators were quit.
+
+
+### Delayed rendering preserves the observed world sequence
+
+The unchanged `b6bc9c01…` binary is also captured with CUSTOM5 bit 0 in
+`tmp/dev/tmp/prof/w6-terrain-cache-slow-030/`, compared against the preceding
+no-render capture. The fixture is installed only at first flight and replaces
+the 3D jump stub at `sim:015b2`; its beam-wrap loop adds two complete PAL fields
+plus the initial partial field before each 3D call. It retains the native draw
+arguments. This is a correctness stress fixture, not a performance workload.
+
+Initial tracked allocations and all data segments match. The only initial sim
+segment differences are the three changed address bytes in the fixture's jump
+operand at `sim:015b5–015b7`. They remain visible in the report. Across ticks
+0–39, all 1,279 registered prefixes, complete player records, registry ordering
+and lifecycle event order match the no-render case. Shared allocation differences
+are confined to the previously identified sound-context word at payload offset
+344 in contexts 0–2. The message-background block appears only with drawing from
+tick 32 onward. The final h3 comparison retains 930 differing bytes; this remains
+an inventory with unresolved global ownership, not complete gameplay equivalence.
+
+| Render schedule, same VERIFY binary | Completed updates | Draws | PAL fields | CIA ticks | Final unprocessed CIA ticks |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Ordinary | 39 | 44 | 240 | 284 | 1 |
+| Delayed | 39 | 29 | 249 | 294 | 11 |
+| Omitted | 39 | 0 | 239 | 283 | 0 |
+
+Every consecutive boundary in the delayed comparison passes exact clock funding.
+There are nine same-field catch-up pairs after the initial update: ticks 5→6,
+9→10, 13→14, 18→19, 22→23, 26→27, 30→31, 33→34 and 36→37. No draw occurs between
+either member of these pairs, and CIA debt falls from 7–9 ticks to 0–2 ticks.
+Observed debt ranges from zero to eleven ticks; the window ends just before
+another catch-up. Do not call 39 completed versus 40.5463 newly nominal ticks a
+sustained-speed pass: the difference remains explicitly funded debt/fractional
+credit. These equal-tick windows also are not the requested 250-field performance
+measurements. A long-run capacity check and equal-active-time comparison remain
+separate gates.
+
+Native counters and all 54 selected timing/pacing targets plus ten disabled
+ranges pass. A five-field trace subsequently captured at a world-update boundary
+contains DMA but zero instruction records in this cached-68030 mode. It supplies
+no evidence about world memory accesses and must not be used to classify the
+remaining globals. Use an instruction-recording CPU configuration for that audit.
+The owned emulator was quit. No game/slave code changed for this comparison.

@@ -116,6 +116,14 @@ fields; global-state classification and broader gameplay/capacity acceptance rem
 open. See `w6-verification.md` for the evidence and the inter-frame cache issue
 that equal-tick snapshots alone did not cover.
 
+The same build's delayed-drawing correctness fixture completes those 39 updates
+with 29 draws in 249 fields, ending with eleven CIA ticks of debt. Exact funding
+and the same scoped state/lifecycle comparisons pass. Nine same-field update pairs
+show catch-up with no intervening draw, reducing debt from 7–9 ticks to 0–2.
+This extends render-schedule coverage; it is neither a performance workload nor
+proof that the final debt is sustainable. The requested 250-field capacity
+measurements and complete gameplay/global-state acceptance remain open.
+
 ## W6 combined A500 capacity checkpoint
 
 The VERIFY build `1a0677e18c874809ae0270549b4efbeaae6d778d4d3e210a6f936fafbca7e1b8`
