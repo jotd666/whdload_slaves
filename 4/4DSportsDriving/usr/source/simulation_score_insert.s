@@ -111,14 +111,14 @@ sim_score_insert_entry:
  move.l #6,(a0)             ; new exact row is pending a successful save
  movem.l (sp)+,d2/a2
  lea sim_score_insert_entry(pc),a0
- adda.l #tape_game-sim_score_insert_entry,a0
+ adda.l #sim_game-sim_score_insert_entry,a0
  move.l (a0),a0
  adda.l #$3e6a,a0
  jmp (a0)
 .reject:
  movem.l (sp)+,d2/a2
  lea sim_score_insert_entry(pc),a0
- adda.l #tape_game-sim_score_insert_entry,a0
+ adda.l #sim_game-sim_score_insert_entry,a0
  move.l (a0),a0
  adda.l #$3fb0,a0
  jmp (a0)

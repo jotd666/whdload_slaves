@@ -32,6 +32,49 @@
 
 ;============================================================================
 
+; Opt-in runtime build; default production remains unchanged until acceptance.
+ IFD VERIFY
+SIM_BUILD = 1
+ ENDC
+ IFD SIM_RUNTIME
+ IFD VERIFY
+ FAIL "SIM_RUNTIME excludes VERIFY and keyboard automation"
+ ENDC
+ IFD SIM_TRACE
+ FAIL "SIM_RUNTIME excludes simulation entry tracing"
+ ENDC
+ IFD SIM_FIXTURE
+ FAIL "SIM_RUNTIME excludes synthetic fixtures"
+ ENDC
+ IFND SIM_BUILD
+SIM_BUILD = 1
+ ENDC
+ IFND SIM_A4000
+SIM_A4000 = 1
+ ENDC
+ IFND SIM_PHYSICS
+SIM_PHYSICS = 1
+ ENDC
+ IFND SIM_PROBE
+SIM_PROBE = 1
+ ENDC
+ IFND SIM_SCHEDULE
+SIM_SCHEDULE = 1
+ ENDC
+ IFND SIM_MODE_MENU
+SIM_MODE_MENU = 1
+ ENDC
+ IFND SIM_REPLAY_MENU
+SIM_REPLAY_MENU = 1
+ ENDC
+ IFND SIM_STARTUP_TESTS
+SIM_STARTUP_TESTS = 0
+ ENDC
+ IFNE SIM_STARTUP_TESTS
+ FAIL "SIM_RUNTIME excludes startup self-tests"
+ ENDC
+ ENDC
+
 ; Startup checks are independent of ordinary input and per-step fixtures.
  IFND SIM_STARTUP_TESTS
 SIM_STARTUP_TESTS = 1
@@ -43,10 +86,12 @@ SIM_STARTUP_TESTS = 1
  FAIL "SIM_STARTUP_TESTS must be 0 or 1"
  ENDC
  IFEQ SIM_STARTUP_TESTS
+ IFND SIM_RUNTIME
  IFND SIM_MANUAL
  IFND SIM_LIVE_DRIVE
  IFND SIM_FIXTURE
  FAIL "Disabling startup tests requires manual, live or fixture development mode"
+ ENDC
  ENDC
  ENDC
  ENDC
@@ -244,10 +289,10 @@ _bootdos
 
 patch_main
 	bsr perf_init
-	IFD VERIFY
+	IFD SIM_BUILD
 	movem.l d0-a6,-(sp)
 	lea patch_main(pc),a0
-	adda.l #tape_game-patch_main,a0
+	adda.l #sim_game-patch_main,a0
 	move.l d7,(a0)
 	addq.l #4,(a0)
 	IFD SIM_A4000
@@ -300,6 +345,7 @@ patch_main
 	ENDC
 	ENDC
 	ENDC
+	IFND SIM_RUNTIME
 	IFD SIM_MANUAL
 	; Enable the live clock without creating the keyboard automation task.
 	lea patch_main(pc),a0
@@ -314,6 +360,7 @@ patch_main
 	lea patch_main(pc),a0
 	adda.l #tape_start-patch_main,a0
 	jsr (a0)
+	ENDC
 	ENDC
 	IFD SIM_PROBE
 	bsr sim_clock_install
@@ -402,7 +449,7 @@ dma_write_8
 
 pl_main
     PL_START
-    IFD VERIFY
+    IFD SIM_BUILD
     IFD TAPE_OPPONENT
     PL_PSS $32B0,tape_opponent_main_observe_stub,2
     PL_PSS $4DC6,tape_opponent_menu_observe_stub,2
@@ -548,7 +595,9 @@ pl_main
     ELSE
     PL_PS $1AAD6,tape_dialog_enter_stub
     ENDC
+    IFD VERIFY
     PL_PS $74FA,tape_frame_stub
+    ENDC
     IFD TAPE_PIXELS
     PL_PSS $20C3A,tape_draw_complete_stub,2
     ENDC
@@ -659,7 +708,7 @@ load_exe:
 	movem.l	(a7)+,d7/a6
 
 	; Stop the field server before UnLoadSeg releases the game data it reads.
-	IFD VERIFY
+	IFD SIM_BUILD
 	IFD SIM_PROBE
 	bsr sim_clock_remove
 	ENDC
@@ -708,7 +757,7 @@ sim_monitor_id: dc.l 0
 
 ;============================================================================
 
-	IFD VERIFY
+	IFD SIM_BUILD
 ; WHDLoad patch offsets are signed words. Keep entry stubs close to pl_main,
 ; independent of verification-table size. MOVEM preserves all flags including
 ; X; the reserved stack slot transfers to the target with the original SP.
@@ -1274,6 +1323,7 @@ sim_mode_dialog_stub:
  movem.l (sp)+,a0
  rts
  ENDC
+ IFD VERIFY
 tape_dialog_enter_stub:
  subq.l #4,sp
  movem.l a0,-(sp)
@@ -1335,10 +1385,11 @@ tape_restart_result_stub:
  rts
 	ENDC
 	ENDC
+	ENDC
 
 	include "performance.s"
 
-	IFD VERIFY
+	IFD SIM_BUILD
 	IFD SIM_PROBE
 	include "simulation_clock.s"
 	IFD SIM_SCHEDULE
@@ -1407,13 +1458,17 @@ tape_restart_result_stub:
  ENDC
  ENDC
 	ENDC
+ IFD VERIFY
 	include "driving_tape.s"
+ ELSE
+ include "simulation_runtime_context.s"
+ ENDC
 	IFD SIM_TRACE
 	include "simulation_verify.s"
 	ENDC
 	ENDC
 
- IFD VERIFY
+ IFD SIM_BUILD
  IFD SIM_A4000
  include "simulation_history_data.s"
  include "simulation_camera.s"

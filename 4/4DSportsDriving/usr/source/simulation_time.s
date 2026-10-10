@@ -131,7 +131,7 @@ sim_time_format_entry:
  move.w d2,-(sp)
  move.l 22(sp),d1
  lea sim_time_format_entry(pc),a0
- adda.l #tape_game-sim_time_format_entry,a0
+ adda.l #sim_game-sim_time_format_entry,a0
  sub.l (a0),d1
  ; The record row formatter temporarily forces 20 Hz, in every physics mode.
  cmp.l #$3dbe,d1
@@ -200,7 +200,7 @@ sim_time_format_entry:
  subq.l #4,sp
  movem.l a0,-(sp)
  lea sim_time_format_entry(pc),a0
- adda.l #tape_game-sim_time_format_entry,a0
+ adda.l #sim_game-sim_time_format_entry,a0
  move.l (a0),a0
  adda.l #$1a476,a0
  movem.l a0,4(sp)

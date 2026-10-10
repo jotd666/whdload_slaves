@@ -329,12 +329,14 @@ tape_simulation_keys:
  CNOP 0,4
  dc.b "4DTAPE!!"
 tape_game: dc.l 0
+sim_game = tape_game
 tape_fields: dc.l 0
 tape_frames: dc.l 0
 tape_a4: dc.l 0
 tape_first_field: dc.l 0
 tape_keys_sent: dc.l 0
 tape_configured: dc.l 0
+sim_ready = tape_configured
 tape_dialog_ready: dc.l 0
 
 ; Called at game:$74fa, after drawing and before the buffer-index flip.

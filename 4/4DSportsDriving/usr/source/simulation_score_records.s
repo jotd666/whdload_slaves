@@ -161,7 +161,7 @@ sim_score_load_hook:
  addq.l #1,(a0)
  move.w #1,-(sp)
  lea sim_score_load_hook(pc),a0
- adda.l #tape_game-sim_score_load_hook,a0
+ adda.l #sim_game-sim_score_load_hook,a0
  move.l (a0),a0
  adda.l #$38f8,a0
  jsr (a0)                  ; actual native clear-records entry, nested A5 frame
@@ -194,7 +194,7 @@ sim_score_autocreate:
  bne .reject
  move.w #1,-(sp)
  lea sim_score_autocreate(pc),a0
- adda.l #tape_game-sim_score_autocreate,a0
+ adda.l #sim_game-sim_score_autocreate,a0
  move.l (a0),a0
  adda.l #$38f8,a0
  jsr (a0)
@@ -274,7 +274,7 @@ sim_score_autocreate_fixture:
  link a5,#-64
  clr.b -$13(a5)
  lea sim_score_autocreate_fixture(pc),a0
- adda.l #tape_game-sim_score_autocreate_fixture,a0
+ adda.l #sim_game-sim_score_autocreate_fixture,a0
  move.l (a0),a0
  adda.l #$5f46,a0
  jsr (a0)

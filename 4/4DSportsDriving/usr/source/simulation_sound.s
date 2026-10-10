@@ -10,7 +10,7 @@
 ; still executes all sample starts/stops before reaching this hook.
 sim_sound_prepare:
  lea sim_sound_prepare(pc),a0
- adda.l #tape_game-sim_sound_prepare,a0
+ adda.l #sim_game-sim_sound_prepare,a0
  movea.l (a0),a0
  adda.l #$7984,a0
  lea sim_sound_native_consume(pc),a1

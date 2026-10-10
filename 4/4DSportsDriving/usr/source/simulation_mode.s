@@ -4,9 +4,11 @@
 ; Selected mode changes here; active/race mode changes only at native setup.
 sim_mode_dialog:
  movem.l d2-d7/a2-a3,-(sp)
+ IFD VERIFY
  lea sim_mode_dialog(pc),a0
  adda.l #tape_dialog_ready-sim_mode_dialog,a0
  move.l #1,(a0)
+ ENDC
  lea sim_mode_opens(pc),a0
  addq.l #1,(a0)
  move.w -$bc(a4),d6
@@ -62,7 +64,7 @@ sim_mode_dialog:
  move.w #1,-(sp)
  move.w #2,-(sp)
  lea sim_mode_dialog(pc),a0
- adda.l #tape_game-sim_mode_dialog,a0
+ adda.l #sim_game-sim_mode_dialog,a0
  move.l (a0),a0
  adda.l #$17034,a0
  jsr (a0)
@@ -110,13 +112,13 @@ sim_mode_dialog:
  move.w #-1,-(sp)
  move.w #-1,-(sp)
  lea sim_mode_dialog(pc),a0
- adda.l #tape_game-sim_mode_dialog,a0
+ adda.l #sim_game-sim_mode_dialog,a0
  move.l (a0),a0
  adda.l #$1ad52,a0
  pea (a0)
  move.l -$77fc(a4),-(sp)
  lea sim_mode_dialog(pc),a0
- adda.l #tape_game-sim_mode_dialog,a0
+ adda.l #sim_game-sim_mode_dialog,a0
  move.l (a0),a0
  adda.l #$18f94,a0
  jsr (a0)
@@ -125,14 +127,14 @@ sim_mode_dialog:
  move.w #1,-(sp)
  move.w #1,-(sp)
  lea sim_mode_dialog(pc),a0
- adda.l #tape_game-sim_mode_dialog,a0
+ adda.l #sim_game-sim_mode_dialog,a0
  move.l (a0),a0
  adda.l #$17034,a0
  jsr (a0)
  lea 20(sp),sp
 .close:
  lea sim_mode_dialog(pc),a0
- adda.l #tape_game-sim_mode_dialog,a0
+ adda.l #sim_game-sim_mode_dialog,a0
  move.l (a0),a0
  adda.l #$1a7b0,a0
  jsr (a0)

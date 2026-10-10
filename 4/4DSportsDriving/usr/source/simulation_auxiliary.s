@@ -73,7 +73,7 @@ sim_aux_vertical_50:
 ; Copy the branch-free native movement/angle blocks before patch installation.
 sim_aux_prepare:
  lea sim_aux_prepare(pc),a0
- adda.l #tape_game-sim_aux_prepare,a0
+ adda.l #sim_game-sim_aux_prepare,a0
  movea.l (a0),a0
  adda.l #$11b80,a0
  lea sim_aux_native_move(pc),a1
@@ -82,7 +82,7 @@ sim_aux_prepare:
  move.w (a0)+,(a1)+
  dbra d0,.move
  lea sim_aux_prepare(pc),a0
- adda.l #tape_game-sim_aux_prepare,a0
+ adda.l #sim_game-sim_aux_prepare,a0
  movea.l (a0),a0
  adda.l #$11c50,a0
  lea sim_aux_native_rotate(pc),a1

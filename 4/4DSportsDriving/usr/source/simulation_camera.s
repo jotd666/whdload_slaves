@@ -3,7 +3,7 @@
 ; Two records: X fraction,Z fraction,reserved[2], each fraction0..4.
 sim_camera_prepare:
  lea sim_camera_prepare(pc),a0
- adda.l #tape_game-sim_camera_prepare,a0
+ adda.l #sim_game-sim_camera_prepare,a0
  movea.l (a0),a2
  lea $7e9c(a2),a0
  lea sim_camera_native_vertical(pc),a1

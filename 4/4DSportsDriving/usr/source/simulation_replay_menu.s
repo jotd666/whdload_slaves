@@ -11,7 +11,7 @@ sim_replay_load_entry:
  move.l 12(a5),-(sp)
  move.l 8(a5),-(sp)
  lea sim_replay_load_entry(pc),a0
- adda.l #tape_game-sim_replay_load_entry,a0
+ adda.l #sim_game-sim_replay_load_entry,a0
  move.l (a0),a0
  adda.l #$189a6,a0
  jsr (a0)
@@ -152,7 +152,7 @@ sim_replay_load_notice:
  move.w #1,-(sp)
  move.w #1,-(sp)
  lea sim_replay_load_notice(pc),a0
- adda.l #tape_game-sim_replay_load_notice,a0
+ adda.l #sim_game-sim_replay_load_notice,a0
  move.l (a0),a0
  adda.l #$17034,a0
  jsr (a0)
