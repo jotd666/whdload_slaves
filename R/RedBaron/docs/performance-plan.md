@@ -810,16 +810,16 @@ Fixed cost per second for a given voice workload: main-loop wall time scales by
 
 ### W4. Drawing primitives (small)
 
-**Paused on user request, 2026-10-10.** D1 is implemented as CUSTOM2 bit 7,
-with exhaustive horizontal-mask models and three-CPU hardware pixel twins.
-Measured W4-only FPS gains are 0.66% on A500 and 3.47% on 68020. Cached-68030
-OFF is complete; ON and the final completion decision remain outstanding.
-See `w4-verification.md` for the resume handoff and `profiling.md` for scoped
-numbers. Normal player enablement is still off.
+**Complete, 2026-10-10.** D1 is implemented as CUSTOM2 bit 7, with exhaustive
+horizontal-mask models and three-CPU hardware pixel twins. Measured W4-only
+FPS gains are 0.66% on A500, 3.47% on 68020 and 7.47% on cached 68030.
+Retain D1 on all three measured CPUs. See `w4-verification.md` for the completion
+audit and `profiling.md` for scoped numbers. Normal player enablement is still off.
 
-- **D1:** D-only blits for full-width sky and ground fills (`sim:2cddc`, `2cf90` via
-  `sim:2fc68`): ~0.6–0.8% of steady time *(est.)*. Verify with a pixel twin of the framebuffer
-  after the fill.
+- **D1:** D-only blits for full-width sky and ground fills (`sim:2cddc`, `sim:2cf90`
+  via `sim:2fc68`) and other rectangles with both edge masks full. Same-input
+  hardware pixel twins pass; masked edges retain C+D. The small A500 gain uses
+  the documented simple-change exception to the size threshold.
 - **Keep:** the doubled `btst` and BLTPRI.
 - **Later only:** queueing `sim:2c144`'s overlay blits so the next frame's world step overlaps
   them (≤1.2%, complex).

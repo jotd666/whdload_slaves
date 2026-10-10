@@ -79,54 +79,53 @@ Normal/developer/VERIFY text sizes are 9,752 / 9,900 / 87,286 bytes.
 Performance measurements use separate fresh boots with the pixel twin disabled.
 Banking is covered by the 68020 route, dense geometry by the cached-68030 route.
 
-## Measurements and paused handoff
+## Measurements and completion audit
 
-Paused at the user's request on 2026-10-10, after the cached-68030 OFF run
-completed. D1 implementation/models/twins are committed as `b6087b8`.
-A500 and 68020 OFF/ON measurements and byte/display audits are complete;
-`profiling.md` holds the current numbers. W4 is **not yet complete**.
+W4 is complete as of 2026-10-10. D1 implementation/models/twins are committed
+as `b6087b8`; `profiling.md` contains the current measurements and manual workflow.
+Retain D1 on all three measured CPUs:
 
-- A500 swaps 140–240: 3,511 → 3,488 fields, +0.66% FPS, identical event
-  counts and h3 state outside the two known clocks. End screenshots match exactly.
-- 68020 swaps 80–400: 2,594 → 2,507 fields, +3.47% observed FPS, no dashboard
-  events. Variable dt means these are not identical world histories.
-- Cached 68030 OFF swaps 120–660: 2,118 fields, 12.7276 FPS, no dashboard
-  events. Beam-clock sample at steps 8–59: 49 accepted 3D calls, mean 48.4996 ms;
-  644 accepted rectangle calls, mean 1.5577 ms. This is a baseline, not a gain.
-  Cache configuration is retained in `debug.uae`: 68030/50, data cache enabled,
-  cycle-exact CPU/memory/blitter, WHDLoad MMU. No new raw CACR read is claimed.
+| CPU | Swap window | OFF → ON fields | Observed FPS gain |
+|---|---|---:|---:|
+| A500 | 140–240 | 3,511 → 3,488 | 0.66% |
+| 68020 | 80–400 | 2,594 → 2,507 | 3.47% |
+| Cached 68030 | 120–780 | 2,591 → 2,411 | 7.47% |
 
-The cached OFF boot reached the correct first-flight anchor just after the host
-startup deadline. Recovery checked PC, step 1 and the saved binary before any
-timing began; `recovery.txt` and entry metadata identify this explicitly. The
-harness startup deadline is now configurable; W4 requests 240 seconds. Its
-runtime measurement boundaries and recorded emulated fields are unchanged.
+Each window exceeds 2,000 fields. A500 event counts match and h3 differs only
+at known clocks; end screenshots match. Faster CPUs have no dashboard events
+in these windows, but variable dt permits different world histories. Correctness
+comes from models and same-input twins, not those rates. These gains are W4-only.
+The small A500 benefit is accepted under the previously documented simple-change
+exception; cached drawing benefits materially from removing C DMA reads.
 
+The cached ON 120–660 window fell below 2,000 fields, so its uninterrupted census
+was extended to swap 780 and OFF was repeated to the same boundary. The fresh
+OFF rate-only boot differs from the earlier OFF overlap by one field and one tick
+(2,117/2,508 versus 2,118/2,509), about 0.05%. Preserve both observations rather
+than claim exact cross-boot timing identity. Extended evidence lives in
+`tmp/dev/tmp/prof/w4-030-0-rate/` and `w4-030-128/`; original OFF routine/DMA
+observations remain in `w4-030-0/`.
 
-The cached OFF 20-field DMA audit observes 147,479 framebuffer writes and
-4,820 writes into the buffer fetched in that field, all after that address's
-last fetch (zero later fetches). This is not evidence of visible tearing;
-W5's publication safety remains open. Its ten sim and three sound ranges
-retain original bytes.
+The original cached OFF boot reached first flight just after the host startup
+deadline. Recovery checked PC, step 1 and the saved binary before timing began;
+`recovery.txt` and entry metadata record this. Subsequent boots use a 240-second
+startup deadline, without changing emulated measurement boundaries.
 
-### Resume
+After the AmigaXDev tooling-path migration, VERIFY rebuilds to the exact frozen
+hash above. Guest inputs and cached-CPU configuration match; OFF/ON first-flight
+h3 snapshots are byte-identical. All 56 host tests pass under the migrated
+environment. Normal/developer builds succeed and exclude verification markers;
+static audits cover ten sim ranges and three existing sound ranges. Saved live
+byte audits confirm every disabled range, selected D1 bytes and absence of the
+pixel twin during timing. Cached routine timings retain beam-phase exclusions
+and use wall time, not instruction-cycle totals. Cache settings are recorded;
+no fresh raw CACR read is claimed.
 
-The emulator, debugger and controller were stopped after the completed OFF
-capture. No capture should be resumed in place. All saved evidence uses the
-frozen VERIFY hash above. Local helpers live under `tmp/dev/tools`:
-
-1. Remove `tmp/dev/tmp/w4.pause`, the explicit stop marker preventing new runs.
-2. From `tmp/dev`, source `amiga/env.sh`; run
-   `python3 tools/w4_measure_030.py 128`. The existing ON log contains only the
-   pause message; no ON evidence directory was created. The helper rejects a
-   changed binary before using its calibrated startup breakpoint.
-3. Run `python3 tools/w4_saved_audit.py tmp/prof/w4-030-128`. Compare cached
-   OFF/ON beam clocks (`clock.json`, with rectangle dimensions), rate censuses,
-   byte audits and display audits. `routine_wall_time.py` retains VBlank/beam
-   exclusions; do not replace it with cached instruction-cycle totals.
-4. Decide cached enablement from that evidence, update this document,
-   `profiling.md`, `performance-plan.md` and `open-work.md`, and commit the
-   completion. If code changes, regenerate the frozen measurements as needed.
+All three display audits are complete. The cached OFF observation has writes
+after the same address's final display fetch, with zero later fetches; ON has no
+active-display conflicts. These bounded observations are not a publication-safety
+proof. W5 remains responsible for tear-free swapping. The owned emulator and
+controller were stopped after the final census; no capture remains active.
 
 Normal release mask remains zero pending W5/player-switch decisions. Overlay
 queueing remains the plan's explicit later-only work (original estimate ≤1.2%,

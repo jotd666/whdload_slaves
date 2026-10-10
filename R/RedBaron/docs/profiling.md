@@ -28,7 +28,7 @@ Costs include RTS and exclude IRQ cycles and chunk-cut calls. A rectangle's
 last plane remains asynchronous: whole-pass costs include later waits. Other
 rectangle shapes have different call mixes (88/97); no paired per-shape claim
 is made from their pooled averages. These are W4-only results. Evidence:
-`tmp/dev/tmp/prof/w4-a500-{0,128}/`. The cached-CPU comparison is paused at the user’s request; its OFF run is complete.
+`tmp/dev/tmp/prof/w4-a500-{0,128}/`.
 
 
 On the 14 MHz 68020, swaps 80–400 take **2,594 → 2,507 fields**:
@@ -40,24 +40,40 @@ Separate 250-field samples give full-width rectangle means of
 comparison within the 68020 configuration, not a direct time comparison with
 68000 cycles. Evidence: `tmp/dev/tmp/prof/w4-020-{0,128}/`.
 
-Cached 68030 **OFF only**: swaps 120–660 span 2,118 fields, **12.7276 FPS**,
-with no dashboard events. At steps 8–59, phase-checked beam clocks give
-48.4996 ms per 3D pass (49 calls) and 1.5577 ms per rectangle (644 calls),
-including interrupt time and stopping before RTS. The ON run has not started;
-**no cached-CPU improvement is claimed**. Evidence: `tmp/dev/tmp/prof/w4-030-0/`.
-See `w4-verification.md` for startup recovery, cache configuration and resume steps.
+On the cached 50 MHz 68030, swaps **120–780** take **2,591 → 2,411 fields**:
+**12.7161 → 13.6655 FPS (+7.47%)**, over 660 intervals with no dashboard events.
+The original ON window 120–660 was only 1,968 fields, so both settings were
+extended to satisfy the 2,000-field minimum. The fresh OFF rate-only boot's
+120–660 overlap takes 2,117 fields versus the earlier capture's 2,118 (2,508
+versus 2,509 ticks): about 0.05% baseline variation. Variable dt again means
+these are observed rates, not identical world histories or cumulative W1–W4 gains.
+Evidence: `tmp/dev/tmp/prof/w4-030-0-rate/` and `w4-030-128/`.
 
-A500/68020 OFF and ON byte audits pass, including exact selected bytes and the
-absence of pixel-twin hooks during timing. Their first 100-field chunks show
-observable framebuffer writes and zero active-display conflicts. This does not
-replace W5's tear-free swap work or establish a guarantee for other scenes.
+Separate steps 8–59 give these phase-checked beam-clock measurements:
 
+| Cached 68030 complete call | OFF mean ms | ON mean ms | OFF/ON calls |
+|---|---:|---:|---:|
+| Whole 3D pass, `sim:2c552` | 48.4996 | 42.8794 | 49 / 40 |
+| Full-width rectangle, height 56 | 6.0163 | 5.0591 | 43 / 40 |
+| Full-width rectangle, height 64 | 7.8910 | 4.2690 | 47 / 41 |
 
-The cached OFF 20-field DMA audit observes 147,479 framebuffer writes and
-4,820 writes into the buffer fetched in that field, all after that address's
-last fetch (zero later fetches). This is not evidence of visible tearing;
-W5's publication safety remains open. Its ten sim and three sound ranges
-retain original bytes.
+These are inclusive wall times, including interrupts, from entry to before RTS;
+last-plane completion can occur later. They are not cached instruction-cycle
+counts. Phase/horizontal-boundary checks exclude 55 OFF and 129 ON observations
+across all sampled routines. Different acceptance and world-state histories limit
+paired interpretation. Rejected height-22 rectangles are excluded from the fill
+comparison. Evidence: `tmp/dev/tmp/prof/w4-030-{0,128}/`. Cache configuration:
+68030/50, data cache enabled, cycle-exact CPU/memory/blitter, WHDLoad MMU;
+no new raw CACR read is claimed.
+
+All three machines' OFF/ON byte audits pass, including exact selected bytes and
+absence of pixel-twin hooks during timing. A500/68020 first 100-field chunks show
+observable framebuffer writes and zero active-display conflicts. Cached OFF's
+20-field DMA audit observes 147,479 framebuffer writes, including 4,820 into the
+buffer fetched in that field, all after that address's last fetch (zero later
+fetches). ON observes 143,234 writes with zero active-display conflicts.
+This does not establish visible tearing in OFF or replace W5's publication safety.
+D1 is retained on all three measured CPUs; normal release enablement remains off.
 
 ### Running W4 manually
 
@@ -71,7 +87,7 @@ python3 tools/w4_measure.py a500 128 --suffix=-manual
 
 Use `020` for the 68020. For cached 68030, use
 `python3 tools/w4_measure_030.py 0 --suffix=-manual` followed by mask `128`.
-Each run needs a fresh suffix. They run sequentially, retain the slave/listing,
+The cached rate census uses swaps 120–780. Each run needs a fresh suffix. They run sequentially, retain the slave/listing,
 record 250 slow-CPU trace fields or cached beam clocks plus a separate DMA
 sample, and count actual swaps over at least 2,000 fields. They leave the game
 paused. Stop it with `python3 tools/redbaron.py quit` after checking it belongs

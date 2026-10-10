@@ -62,24 +62,23 @@ S2/S3′/S4–S8 are explicitly deferred under the plan’s size threshold, not 
 implemented. B1–B6 remain separate behavior/OS decisions. `w3-verification.md`
 records the scope, proof and evidence. Normal player release mask remains zero.
 
-## W4 paused after D1 implementation and initial measurements
+## W4 complete; overlay queueing deferred
 
 D1 aligned D-only fills are implemented behind developer/VERIFY CUSTOM2=128.
-Models and three-CPU pixel twins pass. Measured W4-only FPS gains are 0.66% on
-A500 and 3.47% on 68020; their byte/display audits pass. Cached-68030 OFF is
-complete, ON has not started. The user requested a pause at this boundary.
-`w4-verification.md` contains the exact resume procedure and remaining checks.
-Normal player enablement remains off; W4 is not yet complete.
+Models, three-CPU pixel twins and byte/display audits pass. Measured W4-only
+FPS gains are 0.66% on A500, 3.47% on 68020 and 7.47% on cached 68030.
+Retain D1 on all three measured CPUs. `w4-verification.md` records completion
+and measurement limits. Normal player enablement remains off. Overlay queueing
+is explicitly later-only; doubled waits and BLTPRI remain unchanged.
 
 ## Next work
 
-1. **W4:** finish the cached-68030 ON comparison and completion audit.
-2. **W5:** tear-free publication and a frame cap under the player switch.
+1. **W5:** tear-free publication and a frame cap under the player switch.
    Measure P1's 68000 cost and choose P2's rate from evidence. Retain the cached
-   dense baseline's write-after-fetch observations; W2 does not fix swapping.
-3. **W6 investigation:** continue the game-time investigation and obtain approval
+   dense baseline's write-after-fetch observations; W4 does not fix swapping.
+2. **W6 investigation:** continue the game-time investigation and obtain approval
    before implementing a timing design.
-4. **W7:** later world-step and instrument improvements. W4 overlay queueing
+3. **W7:** later world-step and instrument improvements. W4 overlay queueing
    remains explicitly deferred.
 
 ## Decisions still required before release
@@ -99,7 +98,7 @@ ordinary development fixtures; 0/60 copies are investigation inputs only.
 Use one binary with option changes for comparisons; all patches remain sim v1 only.
 Each feature needs original-byte checks, whole-instruction/branch/relocation audits,
 CUSTOM-off verification, its model/twin checks and the plan's measurement protocol.
-The nine sim and three sound performance ranges pass the static hook audit.
+The ten sim and three sound performance ranges pass the static hook audit.
 Only verified bits may enter the release mask. Keep instruments VERIFY-only and
 normal/developer builds free of their code and data. Recheck frame timing, ownership,
 chip/slow memory pressure and cache conditions after code/layout changes.
