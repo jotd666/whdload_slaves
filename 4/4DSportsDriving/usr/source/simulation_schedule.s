@@ -286,6 +286,9 @@ sim_schedule_reset_history:
  lea sim_schedule_modal(pc),a0
  clr.w (a0)
  IFD SIM_A4000
+ lea sim_schedule_reset_history(pc),a0
+ adda.l #sim_sound_reset-sim_schedule_reset_history,a0
+ jsr (a0)
  lea sim_a4000_private(pc),a0
  moveq #SIM_PRIVATE_BYTES/4-1,d0
 .private:

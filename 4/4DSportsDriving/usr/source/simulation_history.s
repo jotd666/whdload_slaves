@@ -82,6 +82,9 @@ sim_history_restore:
  lea sim_a4000_private(pc),a1
  lea $228(a4),a2
  bsr sim_history_load
+ lea sim_history_restore(pc),a0
+ adda.l #sim_sound_reset-sim_history_restore,a0
+ jsr (a0)
  lea sim_results_state(pc),a0
  move.w 14(a0),$50(a4)     ; native message word mirrors the restored award
  lea sim_history_slot(pc),a0

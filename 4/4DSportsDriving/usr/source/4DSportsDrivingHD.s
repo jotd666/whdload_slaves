@@ -221,6 +221,9 @@ patch_main
 	lea patch_main(pc),a0
 	adda.l #sim_aux_prepare-patch_main,a0
 	jsr (a0)
+	lea patch_main(pc),a0
+	adda.l #sim_sound_prepare-patch_main,a0
+	jsr (a0)
 	ENDC
 	IFD SIM_PHYSICS
 	lea patch_main(pc),a0
@@ -237,6 +240,9 @@ patch_main
 	bsr sim_events_selftest
 	lea patch_main(pc),a0
 	adda.l #sim_aux_selftest-patch_main,a0
+	jsr (a0)
+	lea patch_main(pc),a0
+	adda.l #sim_sound_selftest-patch_main,a0
 	jsr (a0)
 	bsr sim_average_selftest
 	bsr sim_score_selftest
@@ -367,6 +373,8 @@ pl_main
     PL_P $E5F2,sim_probe_entry_stub
     IFD SIM_A4000
     PL_P $1033A,sim_a4000_steering
+    PL_PSS $7984,sim_sound_consume_stub,64
+    PL_PS $10904,sim_sound_publish_stub
     PL_PSS $11A20,sim_aux_birth_stub,2
     PL_PSS $11B80,sim_aux_move_stub,94
     PL_PSS $11C38,sim_aux_retire_stub,10
@@ -701,6 +709,22 @@ sim_results_ui_compare_stub:
  movem.l a0,-(sp)
  lea sim_results_ui_compare_stub(pc),a0
  adda.l #sim_results_ui_compare-sim_results_ui_compare_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_sound_consume_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_sound_consume_stub(pc),a0
+ adda.l #sim_sound_consume-sim_sound_consume_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_sound_publish_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_sound_publish_stub(pc),a0
+ adda.l #sim_sound_publish-sim_sound_publish_stub,a0
  movem.l a0,4(sp)
  movem.l (sp)+,a0
  rts
@@ -1290,6 +1314,7 @@ tape_restart_result_stub:
  IFD VERIFY
  IFD SIM_A4000
  include "simulation_history_data.s"
+ include "simulation_sound.s"
  include "simulation_auxiliary.s"
  include "simulation_auxiliary_native_verify.s"
  include "simulation_auxiliary_verify.s"
