@@ -1956,3 +1956,50 @@ hook targets match. This full mask has no disabled declared ranges; static audit
 report 64 ranges and 121 patch destinations with zero errors, subject to their
 existing limits. Normal/developer binaries retain their W5 hashes. The owned
 emulator was quit after capture. W6 remains VERIFY-only and incomplete.
+
+
+## Rectangle scratch dependency classification
+
+The remaining raw h3 differences include the eight-byte rectangle scratch area
+at `h3:07914–0791b`. The native helper `sim:25244` copies its first input into
+all eight bytes at `sim:2525c`/`2525e`, copies its second input to stack storage,
+then reads and updates the scratch rectangle. It returns the scratch address at
+`sim:252f6–25304`. A returned pointer alone is not proof of transient ownership:
+its consumers must be followed.
+
+The direct caller at `sim:19804` copies the result at `sim:19814`/`19816` into
+`h3:07124–0712b`. The other caller at `sim:1a026` forwards the pointer through
+`sim:1a032`. Its enclosing function `sim:19f62` appears in the callback table at
+`h3:01b78`; the dispatcher calls it at `sim:19dd2` and copies the returned eight
+bytes at `sim:19ddc`/`19dde` before advancing to another callback. Thus this
+observed indirect path also consumes the result immediately.
+
+`rectangle_scratch.py` validates complete observed lifetimes from instruction
+records, excluding the capture's measured IRQ stack. It checks initialization
+order/destinations, rejects either input overlapping the scratch buffer, checks
+reads occur after both initialization writes, verifies the returned address and
+requires the exact direct or forwarded return path followed by two contiguous
+copy stores from the scratch result. Unknown return paths, nested unconsumed
+calls and malformed copies fail. Incomplete calls are reported rather than
+counted; a trace with no complete calls cannot produce a passing result.
+
+The current `9f72992c…` capture has 17 complete lifetimes across
+`capacity-0`, `capacity-1`, `capacity-next-0` and `capacity-next-1`: fifteen direct
+and two forwarded callback results. All pass. Neither final 50-field chunk
+contains a complete helper call, so those invocations correctly reject a
+vacuous pass. The preceding `f92e9eed…` capture independently has thirteen
+passing direct lifetimes in its first two chunks. This classifies the observed
+scratch uses; it does not prove every possible caller or every world-global
+byte harmless. No bytes are removed or normalized in the equal-tick reports,
+and no speculative save/restore is added to the game.
+
+Reproduce against the retained current capture (the cost report supplies its
+measured interrupt-stack bounds):
+
+```sh
+python3 R/RedBaron/tools/rectangle_scratch.py tmp/dev/tmp/prof/w6-transaction-capacity-a500 capacity-next-0 --out tmp/dev/tmp/prof/w6-transaction-capacity-a500/capacity-next-0/rectangle-scratch.json
+```
+
+All 177 host tests pass. Five new cases cover both caller paths, prior-scratch
+input aliasing, premature reads, unknown returns and incomplete lifetimes.
+There is no slave change or new FPS measurement in this classification.
