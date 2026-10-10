@@ -1006,3 +1006,52 @@ objects, callbacks, model mutations, object lifecycles or indirect cache readers
 It adds no interpolated poses or render-only iterations and supplies no FPS,
 capacity or complete gameplay-convergence result. Those acceptance gates remain
 open; the player timing option remains disabled.
+
+
+## Shared aircraft-model drawing writes
+
+The callback at `sim:0e0ec` has a second ownership domain beyond object
+projection caches. After its aircraft-type lookup and early exit, it writes
+byte 2 of the shared model referenced by object byte 30. The default write is
+`sim:0e12a`; player/custom variant branches replace it at `sim:0e156/0e1ac`.
+It selects six color indices from the player configuration, a matching variant
+record or the aircraft default and passes them to `sim:0dee2` at `sim:0e1d8`.
+These choices depend on aircraft configuration, not interpolated coordinates.
+
+The color helper searches 50-byte records at `h3:04c80`, with count at
+`h3:01014`, for the object's model ID. Its six cached color words at record
+bytes 14–25 are written at `sim:0df42`. For a changed group it traverses that
+record's polygon-offset list and writes polygon bytes 4 and 3 at
+`sim:0df92/0df96`. The model resolver is `sim:398aa` through the `sim:0f626`
+thunk: it scans 12-byte banks referenced by `h3:04262`, counted at `h3:0426a`,
+and subtracts each bank's unsigned 16-bit model count until it finds the ID.
+This identifies concrete shared heap/model writes that object-only restoration
+cannot cover. It does not establish whether simulation consumers read them.
+
+`render_model_state.py` follows those tables in the full retained RAM snapshots
+and enumerates a conservative potential write set for listed aircraft callbacks,
+including locations whose values do not change. It deduplicates shared model
+locations and rejects inaccessible snapshot reads or a missing model in a
+matching color record. It deliberately does not infer callback execution,
+visibility, branch coverage or transient values from the final snapshots.
+The native color helper reuses its loop counter inside a matching record;
+the inventory scans all matching records conservatively rather than claiming
+to model that instruction ordering.
+
+On the frozen `88ddd7cb9a7d…` projection-ownership candidate above, all three
+draws per CPU contain 147 distinct potential fields: two model variant bytes,
+twelve cached color words and 133 pairs of polygon color bytes. None differs
+at 3D or outer return in either retained window. The evidence is `model-state.json`
+in both projection-ownership capture directories. This is not proof that no
+writes occurred; for example the variant callback first stores its default and
+can replace it before returning. Three host tests cover bank lookup/subtraction,
+missing models, shared-location deduplication, exact field offsets and early
+exits. All 129 host tests pass.
+
+The next implementation should journal original values at the actual model
+write sites while the outer draw owns presentation state, then restore them
+at outer return. Recording actual writes avoids scanning every model polygon
+on every frame and handles shared models whose callback runs more than once.
+Repeated writes must restore in reverse order or save each original only once.
+The journal needs an explicit capacity failure, native validation of each branch,
+and consumer review; it is not implemented by this inventory checkpoint.
