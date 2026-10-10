@@ -361,6 +361,8 @@ pl_main
     PL_PSS $5970,sim_events_average_divisor_stub,8
     PL_PSS $E852,sim_average_accumulate_stub,4
     PL_PS $597E,sim_average_finish_stub
+    PL_PSS $3956,sim_score_load_stub,2
+    PL_PSS $39DC,sim_score_reset_stub,2
     PL_PSS $116AA,sim_results_summary_copy_stub,2
     PL_PS $E27C,sim_results_reset_stub
     PL_PSS $E976,sim_results_award_stub,14
@@ -692,6 +694,22 @@ sim_average_accumulate_stub:
  movem.l a0,4(sp)
  movem.l (sp)+,a0
  rts
+sim_score_load_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_score_load_stub(pc),a0
+ adda.l #sim_score_load_hook-sim_score_load_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_score_reset_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_score_reset_stub(pc),a0
+ adda.l #sim_score_reset_hook-sim_score_reset_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
 sim_average_finish_stub:
  subq.l #4,sp
  movem.l a0,-(sp)
@@ -955,6 +973,7 @@ tape_restart_result_stub:
 	IFD SIM_A4000
 	include "simulation_score_file.s"
 	include "simulation_score_file_verify.s"
+	include "simulation_score_records.s"
 	include "simulation_a4000.s"
 	include "simulation_results.s"
 	include "simulation_results_ui.s"

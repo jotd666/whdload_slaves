@@ -463,7 +463,52 @@ sim_events_native_fixture:
  dc.b "4DEVNTFX"
 sim_events_native_buffer: dcb.b 16,$5a
  ENDC
+ IFD SIM_SCORE_LOAD_TEST
+ IFND SIM_SCORE_LOAD_TICK
+SIM_SCORE_LOAD_TICK = 160
+ ENDC
+; Invoke the actual records-loading routine at a completed live tick. The
+; private queue is closed during disk I/O, as it is for a modal operation.
+; The external harness stops before this tick executes any physics.
+sim_score_load_fixture:
+ cmp.w #SIM_SCORE_LOAD_TICK,-$940(a4)
+ bne .done
+ movem.l d0-a6,-(sp)
+ lea sim_score_load_fixture(pc),a0
+ adda.l #sim_score_load_test_count-sim_score_load_fixture,a0
+ tst.l (a0)
+ bne .restore
+ addq.l #1,(a0)
+ lea sim_score_load_fixture(pc),a0
+ adda.l #sim_schedule_modal-sim_score_load_fixture,a0
+ move.w (a0),-(sp)
+ move.w #1,(a0)
+ clr.w -(sp)
+ move.l tape_game(pc),a0
+ adda.l #$38f8,a0
+ jsr (a0)
+ addq.l #2,sp
+ lea sim_score_load_fixture(pc),a0
+ adda.l #sim_score_load_test_result-sim_score_load_fixture,a0
+ move.l d0,(a0)
+ lea sim_score_load_fixture(pc),a0
+ adda.l #sim_schedule_modal-sim_score_load_fixture,a0
+ move.w (sp)+,(a0)
+.restore:
+ movem.l (sp)+,d0-a6
+.done:
+ rts
+ even
+ dc.b "4DSCRLDT"
+ dc.w 1,1
+sim_score_load_test_count: dc.l 0
+sim_score_load_test_result: dc.l -1
+ ENDC
+
 sim_fixture_before:
+ IFD SIM_SCORE_LOAD_TEST
+ bsr sim_score_load_fixture
+ ENDC
  IFD SIM_EVENTS_NATIVE_TEST
  bsr sim_events_native_fixture
  ENDC
