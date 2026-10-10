@@ -2644,3 +2644,53 @@ the live disabled-byte checker verifies both eight-byte probe ranges against
 the original executable; the entry counter remains zero. Existing 54 selected
 timing/pacing destinations still pass. Both owned runs were quit. This confirms
 probe-option isolation for the tested v1 configuration, not untested hardware.
+
+## Independent front-overlay raster and mask model
+
+`cockpit_raster.py` independently interprets the observed programs' lines,
+solid rectangles, colour remapping and masked planar bitmaps. It models the
+colour-map lookup at `sim:28a96..28b12`, reads the selected bitmap descriptors
+and mask/data planes, and rejects unsupported orientation, clipped primitives,
+mixed rectangle edge colours, screen geometry or program selection. It requires
+the preceding quiescent-snapshot checks and the captured original executable
+identity. This is an offline model, not an installed rendering replacement.
+
+Against the four `w6-overlay-probe-030` native before/after pairs, the model
+matches **all 160,000 framebuffer bytes**. A second comparison renders the
+model onto zero, then composites that image through its independently accumulated
+coverage mask over the actual original framebuffer. All 160,000 bytes again
+match native output. Coverage includes opaque pixels whose colour already
+matches the destination, including opaque zero-colour pixels:
+
+| Program | Covered pixels | Word-aligned bounds (x,y,width,height) | Five-plane image | Mask | Packed chip bytes |
+|---|---:|---|---:|---:|---:|
+| 3 | 1,070 | (64,71,192,30) | 3,600 | 720 | 4,320 |
+| 4 | 1,003 | (64,72,224,31) | 4,340 | 868 | 5,208 |
+
+The combined packed payload is **9,528 bytes**, excluding descriptors, allocator
+headers or any implementation-specific row padding. No chip allocation is made
+by this model. Program 3's coverage reaches y=100 even though the earlier
+changed-pixel inventory stopped at y=99; program 4's coverage also includes
+lines already drawn by program 3. This is why the previous pixel differences
+could not serve as the coverage mask.
+
+The raster model records 75 read ranges for program 3 and 60 for program 4.
+Each program's read-dependency digest agrees across its two captured physical
+buffers. These include program/bitmap content, palette-remapping inputs,
+clipping and drawing geometry. They describe the model's reads, not a proof
+that every native interpreter dependency has been identified. The actual
+before-framebuffers differ by six bytes between the paired buffers per program;
+this is limited native background variation, not a randomized native test.
+
+The retained result is `w6-overlay-probe-030/raster-check.json`. Reproduce with
+`cockpit_raster.py` on that capture's `overlay-capture.json` and an `--out` path.
+All **218 host tests** pass, including mask preservation across planes, opaque
+zero-colour pixels, aligned bounds and the line cases. The native slave remains
+`99d2a366c3e15865bfe03754908caf730f0bfdad09ea9e8002b117beec404bbf`.
+
+The next runtime candidate must preserve post-call resource/colour state, validate
+its complete cache key, composite onto each freshly drawn buffer, and run a
+native pixel twin on materially different backgrounds and view/gun transitions.
+This model does not authorize omitting the interpreter's state writes or reusing
+stale destination pixels. No runtime cache, measured speedup or 50 FPS result is
+claimed; all wider W6 gameplay gates remain open.
