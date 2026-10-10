@@ -41,6 +41,7 @@ perf_read_options:
 perf_install_v1:
 	IFD VERIFY
 	bsr time_core_selftest
+	bsr time_input_selftest
 	bsr verify_copy_originals
 	; CUSTOM5 bit 9: identical native setup for timing comparisons. Install only
 	; after the first recorded flight checkpoint, before its original input call.

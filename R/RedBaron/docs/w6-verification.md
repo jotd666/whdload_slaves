@@ -76,3 +76,32 @@ remove old events. No input implementation is claimed merely from this model.
 At this checkpoint 79 host tests pass. The clock self-test is not a substitute for
 the eventual scheduler twin, full active-object comparisons or live interpolation
 checks. W6 remains unfinished until those requirements are handled.
+
+
+## Native input queue foundation
+
+`time-input.s` implements a 256-entry FIFO with 16-byte timestamped records.
+The producer publishes its wrapping sequence number only after the complete
+record is stored; the consumer publishes tail only after copying a due event.
+Full queues latch overflow and retain every old entry. Producers must be
+serialized by the eventual IRQ wrapper; this module does not yet install input
+hooks or replace native polling.
+
+The native self-test covers two complete fills/drains, exact four-long payloads,
+full-queue rejection without eviction, future/deadline eligibility, 16-bit sequence
+wrap and both signed and unsigned 32-bit CIA boundaries. Modular timestamp
+comparison explicitly clears subtraction overflow flags before interpreting the
+signed distance. The caller requires distances below half the CIA counter range.
+
+A500 VERIFY text size is 114,426 bytes, SHA256
+`f79a037322e0c81b1874d81f51189e06a73324044838495713a698b4ed9caea8`.
+It reaches native flight with completion counters **426 clock cases and 512 input
+events**. The counters were read from the saved RAM snapshot after checking an
+exact match of its live marker against all twelve flight-entry metadata fields.
+The first live collector failed on a non-UTF-8 copyright byte in the assembler
+listing; that collector was corrected, and the retained snapshot avoids requiring
+another boot. Evidence: `tmp/dev/tmp/prof/w6-input-a500/selftest-result.json`.
+
+The test buffer and kernel remain VERIFY-only. This is sequential native FIFO
+verification, not a claim of live interrupt interleaving, device capture or an
+implemented game scheduler. The owned emulator is shut down.

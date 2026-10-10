@@ -564,6 +564,7 @@ new_DeleteFile:
 	include "sound-driver.s"
 	IFD VERIFY
 	include "time-core.s"
+	include "time-input.s"
 	include "originals.s"
 	include "mirror-verify.s"
 	include "cache-verify.s"
@@ -579,4 +580,5 @@ fill_twin_after: dcb.b 20*256*2,0
 	include "projection-cases.i"
 	include "dot-cases.i"
 	include "time-core-cases.i"
+time_input_test_queue: dcb.b TIME_INPUT_BYTES,0
 	ENDC
