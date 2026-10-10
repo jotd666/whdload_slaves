@@ -34,6 +34,12 @@ per CPU across three divisor changes, including 97 CIA intervals of A500 debt.
 World credit, tick counts and secondary credit match the independent rational
 model exactly; execution of secondary services remains open. This is timing
 accounting evidence, not an FPS or complete-gameplay result.
+The message-service checkpoint passes exact active-time expiry on A500 and
+cached 68030, with 200/100 observed world boundaries. A500 retains expired text
+through 31 observed hidden-update boundaries; native erasure or replacement
+cleans it on actual paints. Both captures finish with timer and buffer dirtiness
+zero. This validates service timing and cleanup, not three-second visible
+removal, FPS or sustained simulation capacity.
 See `w6-verification.md` for frozen builds and limitations.
 
 ## W5 current measurements

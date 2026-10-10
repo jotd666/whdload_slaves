@@ -540,3 +540,84 @@ Normal/developer hashes remain byte-identical to W5.
 Time Compress is not integrated by this checkpoint: the native scheduler still
 uses multiplier one. Modal rate changes, independent timed services, interpolation
 and the full state/capacity matrix remain required before W6 can be enabled.
+
+
+## Active-flight message lifetime checkpoint
+
+The VERIFY timing mode now hooks accepted message construction at `sim:03c06`,
+native shortening at `sim:03c7c`, render ageing at `sim:0084e` and the hidden-text
+clear at `sim:00ab4`. Every hook validates its original instruction and relocated
+timer address. Timing off leaves those bytes untouched. Message acceptance,
+priority selection, text and combat event generation still use native code.
+
+A full message receives 178 active CIA intervals, approximately three PAL
+seconds rounded up to the clock's resolution. The cursor excludes modal time
+and advances even when drawing is skipped. Time Scale does not enter the
+message calculation. The native timer at `h3:04820` becomes a compatibility
+value: ceil(remaining intervals * 15000 / 178), with one retained while native
+erasure is pending. The halfway priority threshold at `sim:0114e` still reads
+7500. Shortening uses ceil(requested native timer * 178 / 15000); it can round
+up by less than one CIA interval. A zero/negative request expires immediately.
+
+On expiry the service marks the last painted rectangle through the native pure
+rectangle publisher at `sim:197ee`. This sets the two-buffer dirty count without
+performing a blit or drawing. The next actual paint takes the original erase
+path at `sim:00a2c`, clears the timer and republishes dirty work. Hidden world
+updates cannot spend either buffer's redraw. Keeping a positive pending timer
+also preserves the native old-rectangle cleanup when a new message replaces
+expired text before erasure. A hidden-text render branch cannot cancel the
+clock-owned message early.
+
+CUSTOM5 bit 26 invokes the original main-task message APIs: initial text,
+replacement, shortening, a later full lifetime, then a later shortened lifetime.
+Combat remains active. It legitimately interrupts the early shortened fixture:
+lowering the timer passes the native priority threshold sooner, allowing
+“you're being shot at” and hit messages. Those events are validated too; the
+fixture does not suppress them. The later full and shortened lifetimes must
+both reach their own deadline; cleanup must use native erasure or the native
+old-rectangle path if a new message replaces already-expired text.
+
+`message_time.py` independently checks the native ledger and world-boundary
+observations. It rejects wrong full/shortened deadlines, late or premature
+expiry, wrong pending timers, missing two-buffer dirtiness, malformed combat
+events and incomplete cleanup. The native arithmetic self-test executes all
+179 remaining-time scale values plus deadline-wrap checks. Host tests cover all
+shortening inputs 0..15000 and different draw schedules. These are service
+correctness checks; they do not establish gameplay-state equality or FPS.
+
+Frozen VERIFY text is 135,744 bytes, SHA256
+`361ab11d3f0e2dc3a35dff7348ca7e925fb84854c61048633dc188cad6d3b9e6`.
+The cached-68030 capture passes 23 ledger events (ten fixture events), 100
+world-boundary observations and two native erasures. The later full message
+expires at active CIA cursor 831, exactly its deadline; the later shortened
+message expires at cursor 988, also exactly its deadline. Native erase follows
+at cursors 833 and 993. Both timers and buffer dirtiness finish at zero. These
+cursor counts are capture-local, not portable flight landmarks.
+
+The selected-hook audit passes all 29 timing hooks and thirteen disabled sim
+ranges. The message self-test counter is 179; clock/FIFO/pause remain 426/512/1.
+All 108 host tests pass, and static audit reports 42 sim ranges with zero errors.
+Normal/developer hashes remain byte-identical to W5. Local evidence is
+`tmp/dev/tmp/prof/w6-messages-030-r3/`, including the message ledger, observations,
+result, byte audit and self-test results.
+
+The same-build A500 capture passes 24 ledger events (nine fixture events) and
+200 world-boundary observations. Its full lifetime expires at active cursor
+1988, exactly its deadline, but another message replaces it before the next
+paint. The positive pending timer preserves native old-rectangle cleanup;
+the replacement retains dirty count two. The later shortened lifetime expires
+at cursor 2146, exactly its deadline, and native erasure follows at cursor 2307.
+Thirty-one observed world boundaries retain expired text pending an actual paint.
+This is deliberately **not** a claim of three-second visible removal on a slow
+renderer: the message clock expires on time, while pixels change only on a paint.
+Final phase, timer and dirty count are all zero. Evidence:
+`tmp/dev/tmp/prof/w6-messages-a500/`. The A500 selected/disabled byte audit and
+179 / 426 / 512 / 1 native counters also pass. Both owned emulators are quit.
+
+The A500 observation window was extended from 100 to 200 world boundaries to
+observe final drawing and cleanup; it is not a 250-field performance capture.
+No FPS, sustained-capacity or complete-gameplay claim is made.
+Modal message restoration, combined Time Scale/compression transitions, hidden
+view changes and pixel-level overlay comparisons remain additional integration
+coverage. The camera/repeat split, interpolation, full-state comparison and
+capacity acceptance are still required before W6 can be enabled for players.

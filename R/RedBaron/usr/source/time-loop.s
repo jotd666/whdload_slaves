@@ -56,6 +56,7 @@ time_loop_install:
 	move.l a1,d0
 	addi.l #$21d30,d0
 	move.l d0,(a0)
+	bsr time_message_install
 	bsr time_rate_install
 	bsr time_pause_selftest
 	bsr time_pause_install
@@ -111,6 +112,7 @@ time_loop_poll:
 	bsr time_core_advance
 	add.w d1,TIME_LOOP_SERVICES(a0)
 	move.w d0,TIME_LOOP_DUE(a0)
+	bsr time_message_advance
 	tst.w TIME_LOOP_DUE(a0)
 	beq .loop
 .done
@@ -138,9 +140,11 @@ time_loop_gate:
 	move.l time_loop_cia(pc),a1
 	move.l (a1),TIME_LOOP_CURSOR(a0)
 	bsr time_rate_reset
+	bsr time_message_reset
 .ready
 	bsr time_keys_start
 	bsr time_rate_fixture
+	bsr time_message_fixture
 .wait
 	bsr time_loop_poll
 	tst.w TIME_LOOP_DUE(a0)
