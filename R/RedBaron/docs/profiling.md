@@ -85,6 +85,55 @@ two-field cap. The subsequent W6 one-field policy is verified below; full
 capacity and smooth-50-FPS acceptance remain open.
 See `w6-verification.md` for frozen builds and limitations.
 
+## W6 combined A500 capacity checkpoint
+
+The VERIFY build `1a0677e18c874809ae0270549b4efbeaae6d778d4d3e210a6f936fafbca7e1b8`
+uses CUSTOM2=16319: all currently verified W1–W5 bits plus W6, at maximum detail
+and default Time Scale (F=33). The A500-equivalent configuration retains 512 KB
+chip RAM, 1.5 MB slow RAM and cycle-exact 68000 timing. No fast-draw fixture is
+active. Evidence is `tmp/dev/tmp/prof/w6-capacity-a500-full/`.
+
+Two adjacent windows each retain 250 PAL fields in 100/100/50 chunks. Boundary
+counters include profiler alignment fields; the measured intervals are 252 and
+253 fields respectively. They are not treated as an uninterrupted 500-field trace.
+
+| Window | Elapsed PAL fields / CIA ticks | Completed / newly nominal world ticks | Unprocessed CIA ticks, start → end | Completed draws |
+| --- | --- | --- | --- | --- |
+| Initial post-draw catch-up | 252 / 299 | 45 / 41.2358 | 67 → 38 | 0 |
+| Immediately adjacent | 253 / 300 | 40 / 41.3737 | 38 → 49 | 2 |
+
+The first trace contains no `sim:3154a` publication; the adjacent trace contains
+two, both with complete matching copper DMA writes. Completed-draw counters and
+actual publication census therefore agree. The initial recorded window has
+fifteen message-start calls at `sim:03c06` and ten shorten calls at `sim:03c7c`;
+these count call attempts, not necessarily distinct displayed messages. The
+retained final image shows “You've been hit!”. Treat these as combat/message-activity
+windows, not an R-steady acceptance sample. Both windows conserve exact
+funded time, including fractional phase, queued due updates and the bounded
+world update in progress at each chunk boundary. Across 505 elapsed fields,
+85 updates complete versus 82.6096 newly nominal updates; initial backlog falls
+by 18 CIA ticks. This supports short-window catch-up, not sustained nominal-speed
+acceptance or full gameplay-state independence. Rendering is sparse in this
+candidate; the adjacent window's completed-draw rate is 0.3953 per PAL second.
+The full scene/CPU/Time Scale matrix and longer bounded-debt check remain open.
+
+The initial window's complete-call analysis separates the observed interrupt
+stack and excludes calls cut by chunk boundaries:
+
+| Routine | Complete calls | Mean main cycles | Mean inclusive cycles |
+| --- | ---: | ---: | ---: |
+| Native world body, `sim:01098` | 42 | 405,096.9 | 504,957.0 |
+| Completed-world pose snapshot | 43 | 25,603.8 | 31,347.5 |
+| Render-time pose interpolation | 1 | 199,798.0 | 234,530.0 |
+| Scheduler poll, including its services | 87 | 26,669.5 | 32,651.7 |
+| Exact one-CIA-tick kernel | 322 | 748.8 | 809.0 |
+
+These costs overlap where calls nest and must not be added as disjoint shares.
+The native world body excludes other per-world-iteration work. The render and
+3D calls present at the final boundary are incomplete, so this sample supplies
+no complete render-call mean or steady frame-rate claim. W6's cost/capacity and
+smooth-50-FPS requirements remain open.
+
 ## W5 current measurements
 
 The frozen VERIFY candidate is SHA256

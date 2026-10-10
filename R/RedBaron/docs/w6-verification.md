@@ -1433,3 +1433,29 @@ full performance-bundle capacity matrix, frame-cost investigation, all-camera
 presentation, full equal-tick gameplay state/events, and the other gameplay and
 modal acceptance gates. One-field policy support is implemented; smooth real
 50 FPS is still unproven.
+
+## Combined A500 capacity accounting
+
+`time_capacity.py` checks exact native funding at arbitrary profile boundaries,
+including already-produced but unstarted due ticks. Completed world work comes
+from the last completed pose-snapshot tick; the scheduler's started-tick counter
+is reported separately. A boundary may have zero or one world iteration in
+progress. The checker rejects modal/rate changes, missing inter-chunk execution,
+invalid phase and lost credit. It reports CIA debt rather than equating retained
+time with real-time execution capacity. Tests include a deliberately overloaded
+sample that conserves funding but completes less than half the newly due work.
+
+The combined A500 capture uses the same frozen `1a0677e1…` build and requests
+CUSTOM2=16319. The two adjacent 250-recorded-field windows and complete-call
+costs are documented in `profiling.md`. Their boundary intervals cover 505 PAL
+fields and 599 CIA ticks: 85 complete world iterations versus 82.6096 newly due,
+with unprocessed CIA time changing from 67 to 49 ticks. No time is discarded.
+The first window publishes no frame and the second completes two draws. This is
+short-window scheduling/capacity evidence, not whole-state convergence, final
+frame-rate acceptance, or proof that debt remains bounded indefinitely.
+
+Fifty timing/pacing patch targets and the effective installed mask pass the live
+audit. All declared performance ranges are selected in this configuration, so
+there is no disabled-range result to claim here; option-off isolation remains
+covered by the earlier W5-only control. Native counters remain 426/512/638/133.
+The 147 host tests pass. The player/developer source paths are unchanged.
