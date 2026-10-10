@@ -32,6 +32,18 @@
 
 ;============================================================================
 
+ IFD SIM_MANUAL
+ IFND VERIFY
+ FAIL "SIM_MANUAL requires the development VERIFY build"
+ ENDC
+ IFND SIM_MODE_MENU
+ FAIL "SIM_MANUAL requires SIM_MODE_MENU"
+ ENDC
+ IFD SIM_FIXTURE
+ FAIL "SIM_MANUAL excludes synthetic input/state fixtures"
+ ENDC
+ ENDC
+
 ;USE_PROFILING
 
 	IFD	USE_PROFILING
@@ -162,11 +174,6 @@ _bootdos
 		moveq	#args_end-args,d0
 		lea	patch_main(pc),a5
 		bsr	load_exe
-	IFD VERIFY
-	IFD SIM_PROBE
-	bsr sim_clock_remove
-	ENDC
-	ENDC
 	
 	;quit
 .quit		pea	TDREASON_OK
@@ -208,14 +215,33 @@ patch_main
 	ENDC
 	bsr sim_history_selftest
 	bsr sim_capacity_selftest
-	bsr sim_time_selftest
+	lea patch_main(pc),a0
+	adda.l #sim_time_selftest-patch_main,a0
+	jsr (a0)
 	ENDC
 	ENDC
+	IFD SIM_MANUAL
+	; Enable the live clock without creating the keyboard automation task.
+	lea patch_main(pc),a0
+	adda.l #tape_configured-patch_main,a0
+	move.l #1,(a0)
+	IFD SIM_LIVE_INPUT_TEST
 	lea patch_main(pc),a0
 	adda.l #tape_start-patch_main,a0
 	jsr (a0)
+	ENDC
+	ELSE
+	lea patch_main(pc),a0
+	adda.l #tape_start-patch_main,a0
+	jsr (a0)
+	ENDC
 	IFD SIM_PROBE
 	bsr sim_clock_install
+	IFD SIM_LIVE_INPUT_TEST
+	; Exercise the real Exec removal and fresh registration before live input.
+	bsr sim_clock_remove
+	bsr sim_clock_install
+	ENDC
 	ENDC
 	movem.l (sp)+,d0-a6
 	ENDC
@@ -526,6 +552,12 @@ load_exe:
 
 	movem.l	(a7)+,d7/a6
 
+	; Stop the field server before UnLoadSeg releases the game data it reads.
+	IFD VERIFY
+	IFD SIM_PROBE
+	bsr sim_clock_remove
+	ENDC
+	ENDC
 	;remove exe
 
 	move.l	d7,d1

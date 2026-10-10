@@ -23,12 +23,21 @@ sim_clock_install:
  jsr _LVOAddIntServer(a6)
  lea sim_clock_installed(pc),a0
  move.w #1,(a0)
+ lea sim_clock_installs(pc),a0
+ addq.l #1,(a0)
 .done:
  movem.l (sp)+,d0-d1/a0-a1/a6
  rts
 
 sim_clock_remove:
  movem.l d0-d1/a0-a1/a6,-(sp)
+ IFD SIM_SCHEDULE
+ ; Close pointer ownership before removing the interrupt server. An interrupt
+ ; before this word store completes first; one after it cannot read game A4.
+ lea sim_schedule_active(pc),a0
+ clr.w (a0)
+ clr.l sim_schedule_a4-sim_schedule_active(a0)
+ ENDC
  lea sim_clock_installed(pc),a0
  tst.w (a0)
  beq .done
@@ -37,6 +46,8 @@ sim_clock_remove:
  moveq #5,d0
  move.l (4).w,a6
  jsr _LVORemIntServer(a6)
+ lea sim_clock_removes(pc),a0
+ addq.l #1,(a0)
 .done:
  movem.l (sp)+,d0-d1/a0-a1/a6
  rts
@@ -59,3 +70,8 @@ sim_clock_installed: dc.w 0
 sim_clock_node: dcb.b 22,0  ; struct Interrupt (node/data/code)
 sim_clock_name: dc.b "4D simulation clock",0
  even
+
+ dc.b "4DCLKLIF"
+ dc.w 1,0
+sim_clock_installs: dc.l 0
+sim_clock_removes: dc.l 0

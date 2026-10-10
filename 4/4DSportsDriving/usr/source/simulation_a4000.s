@@ -1,4 +1,5 @@
-; Development integration. Requires SIM_FIXTURE/SIM_SCHEDULE.
+; Development integration. Requires SIM_SCHEDULE.
+; sim_a4000_arm is retained only for older synthetic input fixtures.
 ; Not yet a selectable A4000 release: disk replay format, remaining rate sites
 ; and lifecycle acceptance are pending. Native 10/20 paths survive.
 SIM_PRIVATE_BYTES = 128

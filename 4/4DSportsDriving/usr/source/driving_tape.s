@@ -161,6 +161,9 @@ tape_task_code:
  IFD TAPE_SCENARIO
  bsr tape_scenario
  ENDC
+ IFD SIM_LIVE_INPUT_TEST
+ bsr tape_live_input_test
+ ENDC
 .done:	moveq	#0,d0
 	jsr	_LVOWait(a6)
 	bra.s	.done
@@ -909,4 +912,54 @@ tape_mode_select:
  clr.w ie_Qualifier(a0)
  move.w (sp)+,d2
  rts
+ ENDC
+
+ IFD SIM_LIVE_INPUT_TEST
+ IFND SIM_MANUAL
+ FAIL "SIM_LIVE_INPUT_TEST requires the manual input path"
+ ENDC
+; One-shot acceptance driver. These are ordinary input.device key events;
+; no native input-history bytes or physical state are written by this test.
+tape_live_input_test:
+ moveq #0,d0
+ bsr tape_live_input_sample
+ move.w #$4c,d0
+ move.w #100,d2
+ bsr tape_setup_key
+ moveq #1,d0
+ bsr tape_live_input_sample
+ move.w #$cc,d0
+ move.w #100,d2
+ bsr tape_setup_key
+ moveq #2,d0
+ bsr tape_live_input_sample
+ lea tape_live_input_phase(pc),a0
+ move.w #3,(a0)
+ rts
+; Each record: fields.L, produced.W, consumed.W, speed.W, rate.W, X.L, Z.L.
+tape_live_input_sample:
+ movem.l d0-d2/a0-a2,-(sp)
+ lea tape_live_input_phase(pc),a0
+ move.w d0,(a0)
+ mulu #20,d0
+ lea tape_live_input_records(pc),a2
+ adda.l d0,a2
+ lea tape_live_input_sample(pc),a0
+ adda.l #sim_clock_fields-tape_live_input_sample,a0
+ move.l (a0),(a2)+
+ movea.l tape_a4(pc),a1
+ move.w $a0(a1),(a2)+
+ move.w -$940(a1),(a2)+
+ move.w -$902(a1),(a2)+
+ move.w -$15fa(a1),(a2)+
+ move.l -$92e(a1),(a2)+
+ move.l -$926(a1),(a2)+
+ movem.l (sp)+,d0-d2/a0-a2
+ rts
+ even
+ dc.b "4DLIVET!"
+ dc.w 1,20
+tape_live_input_phase: dc.w 0
+ dc.w 0
+tape_live_input_records: dcb.b 60,0
  ENDC
