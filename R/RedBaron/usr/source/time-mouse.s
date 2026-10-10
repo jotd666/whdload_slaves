@@ -340,7 +340,9 @@ time_mouse_center_pair:
 ; No hardware, game state, native input queue or clock is modified.
 time_mouse_ownership_selftest:
 	movem.l d0-a6,-(sp)
-	lea time_mouse_ownership_cases(pc),a3
+	lea .ownership_base(pc),a3
+.ownership_base
+	adda.l #time_mouse_ownership_cases-.ownership_base,a3
 	move.w (a3)+,d7
 	lea time_mouse_ownership_result(pc),a5
 	clr.l (a5)

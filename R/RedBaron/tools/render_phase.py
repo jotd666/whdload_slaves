@@ -16,6 +16,15 @@ def dirty_after(value):
     return max(value-1,0)
 
 
+def terrain_cache(before,after,h3,frame):
+    for offset,size in ((0x5270,2),(0x54de,14)):
+        if before(h3+offset,size)!=after(h3+offset,size):
+            raise ValueError('Terrain cache key/flag/countdown not restored')
+    if frame['terrain_rebuilds']!=1 or frame['terrain_reuses'] or any(
+            key!=0xffffffff for key in frame['terrain_keys']):
+        raise ValueError('Draw reused terrain state restored after earlier drawing')
+
+
 def check(path):
     metadata=json.loads(path.read_text())
     entry=json.loads((path.parent/'entry.json').read_text())
@@ -23,6 +32,7 @@ def check(path):
     base=entry['entry']['game_anchor']-symbol(lines,'tape_game_anchor')
     at=lambda name:base+symbol(lines,name)
     result=[];changed=poses=0
+    terrain=any('time_terrain_cache_result:' in line for line in lines)
     for frame in metadata['frames']:
         before,during,after=[Snapshot(path.parent,frame[k]) for k in ('before','during','after')]
         if frame['world_during'] or not frame['stack_checked']:
@@ -30,6 +40,8 @@ def check(path):
         state=before.read(at('time_loop_state'),40)
         if state[:36]!=during.read(at('time_loop_state'),36) or state[:36]!=after.read(at('time_loop_state'),36):
             raise ValueError('Rendering changed funded time, debt or world tick counters')
+        if terrain:
+            terrain_cache(before.read,after.read,metadata['h3'],frame)
         count,np=struct.unpack('>HH',before.read(at('time_pose_header'),4))
         current=before.read(at('time_pose_current'),count*STRIDE)
         previous=before.read(at('time_pose_previous'),np*STRIDE)

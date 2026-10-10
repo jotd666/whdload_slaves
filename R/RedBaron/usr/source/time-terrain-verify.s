@@ -1,7 +1,92 @@
+; The native terrain early-out at sim:0f038 reuses both cached visibility and
+; selected model IDs. Those are restored after our draw, so a later draw must
+; rebuild, even for an unchanged camera. Keep its key/flag/countdown coherent
+; with the restored data. No IRQ-owned data is included.
+time_terrain_cache_begin:
+	bsr time_terrain_cache_addresses
+	bra time_terrain_cache_save
+
+time_terrain_cache_end:
+	bsr time_terrain_cache_addresses
+	bra time_terrain_cache_restore
+
+time_terrain_cache_addresses:
+	lea .h3_base(pc),a0
+.h3_base
+	adda.l #time_loop_h3-.h3_base,a0
+	move.l (a0),a0
+	lea $5270(a0),a1
+	adda.l #$54de,a0
+	rts
+
+; a0 = 12-byte cached camera position + two-byte recomputation flag;
+; a1 = two-byte view-change countdown. The sentinel bypasses sim:0f038's
+; positive-height test without changing native arguments or branch semantics.
+time_terrain_cache_save:
+	lea time_terrain_cache_saved(pc),a2
+	move.w (a1),(a2)+
+	move.l (a0)+,(a2)+
+	move.l (a0)+,(a2)+
+	move.l (a0)+,(a2)+
+	move.w (a0),(a2)
+	move.l #-1,-4(a0)
+	rts
+
+time_terrain_cache_restore:
+	lea time_terrain_cache_saved(pc),a2
+	move.w (a2)+,(a1)
+	move.l (a2)+,(a0)+
+	move.l (a2)+,(a0)+
+	move.l (a2)+,(a0)+
+	move.w (a2),(a0)
+	rts
+
+time_terrain_cache_selftest:
+	movem.l d0-a6,-(sp)
+	lea time_model_terrain_data(pc),a0
+	move.l #$12345678,(a0)+
+	move.l #$87654321,(a0)+
+	move.l #$00003000,(a0)+
+	move.w #1,(a0)+
+	move.w #2,(a0)
+	lea time_model_terrain_data(pc),a0
+	lea 14(a0),a1
+	bsr time_terrain_cache_save
+	cmpi.l #-1,-4(a0)
+	bne time_model_bad
+	; Simulate a complete rebuild overwriting all owned cache fields.
+	lea time_model_terrain_data(pc),a0
+	move.l #$aaaaaaaa,(a0)+
+	move.l #$bbbbbbbb,(a0)+
+	move.l #$cccccccc,(a0)+
+	clr.l (a0)
+	lea time_model_terrain_data(pc),a0
+	lea 14(a0),a1
+	bsr time_terrain_cache_restore
+	lea time_model_terrain_data(pc),a0
+	cmpi.l #$12345678,(a0)+
+	bne time_model_bad
+	cmpi.l #$87654321,(a0)+
+	bne time_model_bad
+	cmpi.l #$00003000,(a0)+
+	bne time_model_bad
+	cmpi.w #1,(a0)+
+	bne time_model_bad
+	cmpi.w #2,(a0)
+	bne time_model_bad
+	lea time_terrain_cache_result(pc),a0
+	move.l #1,(a0)
+	movem.l (sp)+,d0-a6
+	rts
+
+time_terrain_cache_saved: dcb.b 16,0
+time_terrain_cache_result: dc.l 0
+
 ; Exercise the installed wrapper bodies with overlapping byte writes, signed
 ; indexing, both X states and zero/nonzero model IDs, then undo the whole lease.
 time_model_terrain_selftest:
 	movem.l d0-a6,-(sp)
+	bsr time_terrain_cache_selftest
 	lea time_model_terrain_frame+120(pc),a5
 	moveq #1,d7
 .case

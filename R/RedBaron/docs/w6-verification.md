@@ -1736,3 +1736,64 @@ pass; static checks report 64 ranges and 121 patch destinations with zero errors
 retain their W5 hashes. Both owned emulators were quit. Next is classification of
 remaining executable/global differences and the broader acceptance matrix, not
 promotion of this VERIFY candidate to players.
+
+
+### Terrain-cache controls must share the drawing lease
+
+The following audit finds a limitation in the preceding restoration-only build.
+The terrain builder at `sim:0f01c`, called through `sim:01522` by the outer draw
+at `sim:006dc`, can skip rebuilding at `sim:0f038–0f068`. With no forced refresh,
+a positive cached camera height and a sufficiently small camera displacement
+let it reuse the prior list and visibility/model selections. Restoring those
+selections while retaining a newly populated cache key makes that reuse unsafe.
+Equal-world-tick snapshots alone did not test this inter-frame dependency.
+
+The cache-coherent VERIFY candidate is
+`b6bc9c0193084fa386f939dde113f6492095006bcb3131d424ce27585ae3a359`.
+The existing outer drawing owner now saves `h3:054de–054eb` (three camera-position
+longwords and the recomputation flag) and `h3:05270–05271` (view-change countdown).
+It sets the cached height to the native invalid value −1 before drawing, forcing
+the native builder past its reuse test. On return it restores the controls along
+with the visibility/model journal. Native refresh arguments and branch code stay
+unchanged; the additional work remains VERIFY bit 13 only. This deliberately
+rebuilds terrain on every draw. Its cost must be included in future capacity and
+50 FPS measurements; the earlier throughput figures do not establish that budget.
+A future reusable presentation cache must own the key and all dependent data
+together, without exposing its intermediate state to simulation.
+
+A native self-test overwrites every saved control field after invalidation and
+checks exact restoration (`time_terrain_cache_result=1`). Four real consecutive
+draws in `tmp/dev/tmp/prof/w6-terrain-cache-030/` each observe the invalid key at
+`sim:0f03e`, enter rebuild at `sim:0f06c` once, and never take the reuse return at
+`sim:0f066`. The independent `render_phase.py` checker verifies restored controls,
+133 original poses, exact funded clock state and no world update during a draw;
+107 visual poses change under interpolation. The captured completed ticks are
+39, 40, 41 and 43. These observations establish neither visual cadence nor 50 FPS.
+The checker also rejects missing rebuilds, reuse and any unrestored control field;
+its two new negative tests bring the passing host suite to 168 tests.
+
+The extra VERIFY code moves one mouse-test table beyond signed PC-relative reach;
+that test reference now uses a full-range address. Native core/input/pose/phase
+counts remain 426/512/638/133, and both terrain-store cases pass. The live audit
+still checks 54 selected timing/pacing targets and ten disabled ranges.
+
+
+The matching no-render capture is
+`tmp/dev/tmp/prof/w6-terrain-cache-none-030/`. Initial executable segments and all
+105 tracked allocations again match exactly. At ticks 0–39, all 1,279 registered
+prefixes, complete player records, registry/lifecycle order and the restored
+terrain cache controls match. The drawing run completes 39 updates and 44 draws
+in 240 fields / 284 CIA ticks with one tick of final CIA debt; no drawing completes
+39 updates in 239 fields / 283 CIA ticks with zero debt. Every consecutive funding
+interval passes. These remain diagnostic equal-tick windows, not FPS benchmarks.
+
+Shared allocations differ only in sound contexts: the previously identified word
+at payload offset 344, plus context 2's byte at offset 361 at tick 31 (82 versus
+02). The latter high bit is set by the sequencer at `sim:34ed0`, masked for its
+selection at `sim:34eaa`, and cleared by `sim:33bf6`/`sim:33c2c`. It is retained
+in the report, not normalized away or treated as proof of equivalent sound-event
+delivery. The message-background allocation still appears only with drawing from
+tick 32. Other globals remain unclassified; final h3 differences total 892 bytes.
+Both endpoints pass the native counters and hook audits. Static audits report
+64 ranges and 121 patch destinations with zero errors; normal/developer binaries
+remain byte-identical to W5. Both owned emulators were quit.
