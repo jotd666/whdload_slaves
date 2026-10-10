@@ -25,6 +25,37 @@ sim_replay_reload_fixture:
  lea sim_replay_reload_fixture(pc),a0
  adda.l #sim_schedule_modal-sim_replay_reload_fixture,a0
  move.w #1,(a0)
+ IFD SIM_REPLAY_MENU
+ ; Exercise the patched native loader and the original full race initializer.
+ pea sim_replay_reload_basename(pc)
+ pea sim_replay_reload_directory(pc)
+ lea sim_replay_reload_fixture(pc),a0
+ adda.l #tape_game-sim_replay_reload_fixture,a0
+ move.l (a0),a0
+ adda.l #$80ee,a0
+ jsr (a0)
+ addq.l #8,sp
+ move.l d0,16(a5)
+ tst.l d0
+ bne .failed
+ moveq #0,d0
+ move.b -$173a(a4),d0
+ move.w d0,-$15fa(a4)
+ move.w #-1,-(sp)
+ lea sim_replay_reload_fixture(pc),a0
+ adda.l #tape_game-sim_replay_reload_fixture,a0
+ move.l (a0),a0
+ adda.l #$e06a,a0
+ jsr (a0)
+ addq.l #2,sp
+ lea sim_replay_reload_fixture(pc),a0
+ adda.l #sim_replay_menu_install_status-sim_replay_reload_fixture,a0
+ move.l (a0),20(a5)
+ tst.l (a0)
+ bne .failed
+ tst.w -$940(a4)
+ bne .failed
+ ELSE
  movea.l $bda(a4),a6
  lea sim_replay_reload_name(pc),a0
  lea sim_replay_reload_fixture(pc),a1
@@ -64,6 +95,7 @@ sim_replay_reload_fixture:
  move.l d0,20(a5)
  tst.l d0
  bne .failed
+ ENDC
  move.l #1,12(a5)
  move.b #2,$45(a4)
  move.w #SIM_REPLAY_RELOAD_TARGET,-(sp)
@@ -87,5 +119,7 @@ sim_replay_reload_fixture:
  move.l #32,(a0)
  illegal
  bra .failed
+sim_replay_reload_directory: dc.b 0
+sim_replay_reload_basename: dc.b "A4000-io-test",0
 sim_replay_reload_name: dc.b "A4000-io-test.rpl",0
  even

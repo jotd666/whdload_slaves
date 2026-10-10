@@ -152,6 +152,9 @@ tape_task_code:
  lea tape_io(pc),a1
  jsr _LVODoIO(a6)
  ENDC
+ IFD SIM_REPLAY_LOAD_ERROR_TEST
+ bsr tape_replay_error_ack
+ ENDC
  IFD SIM_MODAL_FIXTURE
  bsr tape_live_modal_fixture
  ENDC
@@ -962,4 +965,32 @@ tape_live_input_sample:
 tape_live_input_phase: dc.w 0
  dc.w 0
 tape_live_input_records: dcb.b 60,0
+ ENDC
+
+ IFD SIM_REPLAY_LOAD_ERROR_TEST
+; Wait for the native loader error, leave it visible, then acknowledge through
+; the ordinary input.device path. Main-task file code never manufactures keys.
+tape_replay_error_ack:
+.wait:
+ exg a5,a6
+ jsr _LVOWaitTOF(a6)
+ exg a5,a6
+ lea tape_replay_error_ack(pc),a0
+ adda.l #sim_replay_menu_status-tape_replay_error_ack,a0
+ tst.l (a0)
+ beq .wait
+ move.w #100,d2
+.hold:
+ exg a5,a6
+ jsr _LVOWaitTOF(a6)
+ exg a5,a6
+ subq.w #1,d2
+ bne .hold
+ move.w #$44,d0
+ moveq #10,d2
+ bsr tape_setup_key
+ move.w #$c4,d0
+ moveq #10,d2
+ bsr tape_setup_key
+ rts
  ENDC

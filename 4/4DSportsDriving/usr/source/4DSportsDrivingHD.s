@@ -44,6 +44,15 @@
  ENDC
  ENDC
 
+ IFD SIM_REPLAY_MENU
+ IFND SIM_MODE_MENU
+ FAIL "SIM_REPLAY_MENU requires SIM_MODE_MENU"
+ ENDC
+ IFND SIM_A4000
+ FAIL "SIM_REPLAY_MENU requires SIM_A4000"
+ ENDC
+ ENDC
+
 ;USE_PROFILING
 
 	IFD	USE_PROFILING
@@ -440,6 +449,12 @@ pl_main
     IFD SIM_MODE_MENU
     PL_P $1AAD6,sim_mode_dialog_stub
     PL_PS $16C9E,sim_preferences_load_stub
+ IFD SIM_REPLAY_MENU
+ PL_P $80EE,sim_replay_load_entry_stub
+ PL_NOP $80F4,2
+ PL_PS $E50E,sim_replay_init_tail_stub
+ PL_PS $9E50,sim_replay_load_result_stub
+ ENDC
     ELSE
     PL_PS $1AAD6,tape_dialog_enter_stub
     ENDC
@@ -1016,6 +1031,32 @@ sim_probe_entry_stub:
  rts
 	ENDC
  IFD SIM_MODE_MENU
+ IFD SIM_REPLAY_MENU
+sim_replay_load_entry_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_replay_load_entry_stub(pc),a0
+ adda.l #sim_replay_load_entry-sim_replay_load_entry_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_replay_init_tail_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_replay_init_tail_stub(pc),a0
+ adda.l #sim_replay_init_tail-sim_replay_init_tail_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_replay_load_result_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_replay_load_result_stub(pc),a0
+ adda.l #sim_replay_load_result-sim_replay_load_result_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+ ENDC
 sim_preferences_load_stub:
  subq.l #4,sp
  movem.l a0,-(sp)
@@ -1134,6 +1175,12 @@ tape_restart_result_stub:
 	include "simulation_replay_file.s"
  include "simulation_replay_io.s"
  include "simulation_replay_install.s"
+ IFD SIM_REPLAY_MENU
+ include "simulation_replay_menu.s"
+ IFD SIM_REPLAY_LOAD_ERROR_TEST
+ include "simulation_replay_error_verify.s"
+ ENDC
+ ENDC
  IFD SIM_REPLAY_RELOAD_TEST
  include "simulation_replay_reload_verify.s"
  ENDC
@@ -1162,11 +1209,21 @@ sim_history_inputs: dcb.b 30000,0
  dc.b "4DGUARD!"
 sim_results_test_arena: dcb.b $1660,0
  include "simulation_results_ui_cases.s"
+ IFD SIM_REPLAY_MENU
+ even
+ dc.l $4d4e5531
+sim_replay_pending_file: dcb.b SIM_REPLAY_BYTES+2,0
+ dc.l $4d4e5532
+ ENDC
  IFD SIM_REPLAY_RELOAD_TEST
  even
 sim_replay_reload_marker:
  dc.b "4DRPLLOD"
+ IFD SIM_REPLAY_MENU
+ dc.w 3,0
+ ELSE
  dc.w 2,0
+ ENDC
  dc.l 0,-1,-1,-1,-1
  dc.l $4c4f4431
 sim_replay_reload_buffer: dcb.b SIM_REPLAY_BYTES+2,0
