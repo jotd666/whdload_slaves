@@ -738,6 +738,10 @@ sim_a4000_spin_slip_test:
  tst.w $3e(a0)
  rts
 
+; Keep BC48 target selection/avoidance/throttle at the full simulation rate.
+; Its +$CE counter indexes spatial waypoints: BD76/BFC0 pass it to109C2,
+; a deterministic geometry-only leaf, on distance/heading gates. It is not
+; a decision timer and consumes no RNG. Only the slew/braking rates need dt.
 ; Native opponent slew is 8 units at20 Hz,16 at10 Hz. Approach at3.2 units
 ; per50 Hz step, keeping the original target and exact arrival clamp.
 sim_a4000_opponent_steering:
