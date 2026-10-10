@@ -185,6 +185,15 @@ sim_schedule_poll:
  cmp.w #2,d7
  bne .deactivate
 .supported:
+ ; Native COP1LC publication clears this flag; the VBL handler sets it.
+ ; Keep A4000 from reusing the old display buffer before the list switch.
+ ; Wait before importing pending physics so the next render uses fresh input.
+ cmp.w #50,-$15fa(a4)
+ bne .display_ready
+.wait_display:
+ tst.w $d28(a4)
+ beq .wait_display
+.display_ready:
  addq.w #1,d7             ; requested owner: live=1, replay=3
  tst.b -$3ff4(a4)
  bne .return              ; an outer native dialog still owns input

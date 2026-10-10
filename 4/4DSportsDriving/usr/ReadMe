@@ -63,6 +63,8 @@
    validation is unfinished; this is not a final release
 
  version 1.3b (testing):
+ - prevent A4000 rendering from overwriting the buffer still on screen;
+   apply queued input after waiting for the display buffer switch
  - prevent A4000 pitch/roll stabilization from snapping a non-level actual
    angle to zero when only its extrapolated A2500 reference crosses level
  - optional rendering optimizations (CUSTOM2=1), off by default; select the
