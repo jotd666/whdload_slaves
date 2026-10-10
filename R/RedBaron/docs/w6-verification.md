@@ -763,3 +763,73 @@ packet format/call does not establish replay equivalence when camera updates
 occur between world ticks. Automatic mission-menu and other timed effects,
 Time Compress, interpolated rendering, full world-state equality and measured
 capacity remain open W6 work. The player verified mask remains unchanged.
+
+
+## Time Compress funding integration
+
+The VERIFY timing path now samples the native compression flag at `h3:045a6`
+when funding each new CIA boundary. Clear requests 1× and set requests 8×.
+The exact world-phase kernel applies that multiplier to primary credit only;
+secondary service credit and message deadlines retain their existing active-time
+policies. An already-funded boundary is drained before another is funded, so a
+world-step transition cannot rewrite credit or input for its remaining due ticks.
+There is no new wall-time publication queue for this flag: its identified native runtime
+writers are the world command/situation pass, rather than a physical-input IRQ.
+
+The native initializer clears the flag at `sim:00402`. Command 13 toggles it at
+`sim:00f48–00f54`; the native world input builder maps unmodified raw key 51
+through `sim:1e9c0/1e9ea` to that command. The situation checks at
+`sim:00f60–00f7a` may clear the request. These command and cancellation rules
+remain native. Their player-input and automatic-cancellation behavior still
+needs live acceptance coverage.
+
+Two byte-checked hooks remove the old timing policy under W6 ownership:
+
+- `sim:00eca`: bypass the elapsed=500 overwrite of both native clocks, then
+  continue at `sim:00ee0` through the original compression notification API.
+- `sim:21dae`: clear the old seven-of-eight suppression selector while retaining
+  the cycle-budget local. That selector previously zeroed continuous controls at
+  `sim:21de6` as well as suppressing drawing. W6's debt-aware draw gate now owns
+  render skipping; hidden ticks still receive their assigned controls.
+
+Outside timing ownership the displaced instructions retain their native behavior.
+The new ranges are VERIFY-only, under CUSTOM2 bit 13, and apply only to sim v1.
+
+CUSTOM5 bit 28 is an isolated correctness fixture. After input handoff it uses
+CPU writes to force the compression flag for fixture-relative world steps 5–34
+at the draw gate, after native command/situation processing. It changes no clock,
+phase or input state. This deliberately overrides native eligibility; it is not
+an input, mission, capacity or performance test. Its native writes avoid relying
+on debugger writes to cached memory. Earlier debugger-written fixture attempts
+never observed an active compression flag and provide no compression coverage.
+
+`compression_clock.py` checks observed per-CIA funding against exact rational
+arithmetic, retained phase, cursor continuity, 1×/8× selection and the independent
+secondary accumulator. Its corruption tests include changed phase limbs,
+multiplier, due counts and missing drain. Host tests also exercise CIA wrap,
+Time Scale transitions and multiple world ticks funded by one CIA boundary.
+Frozen VERIFY text is 140,630 bytes, SHA256
+`dbd7e8ed4bb01e8bdcae7bd8585a98ec312aeacceee8e80245311bf4d9b54d0f`.
+The cached-68030 fixture passes 160 consecutive CIA boundaries: 132 normal and
+28 compressed, with two transitions, 49 funded world ticks and 64 independent
+service ticks. Fifty clock-entry/exit pairs preserve primary dt 225 and the prior
+secondary dt across the overwritten-clock bypass; fifty observed suppression
+locals are zero, including while the compression flag is set. Evidence:
+`tmp/dev/tmp/prof/w6-compress-030-r3/`, including `compression.log` and
+`compression-result.json`. The live byte audit passes all 37 selected timing
+hooks and thirteen disabled ranges; clock/input self-tests remain 426/512.
+
+The same frozen build on A500 passes the same 160-boundary totals (132 normal,
+28 compressed, two transitions, 49 world ticks and 64 service ticks), fifty
+clock pairs and fifty selector observations. Evidence:
+`tmp/dev/tmp/prof/w6-compress-a500/`. Its live audit also passes 37 selected
+hooks, thirteen disabled ranges and 426/512 native clock/input checks. These
+matching counts prove funding for the observed fixture; they are not a full
+cross-CPU simulation-state comparison.
+
+Static hook audit passes 50 ranges with zero errors; all 118 host tests pass.
+Normal/developer builds remain byte-identical to W5. The native entry/exit rules,
+held controls during actual accepted compression, same-boundary command handling,
+modal transitions, sound delivery, game-state equality and compression capacity
+remain acceptance gates. No player W6 promotion or performance claim follows
+from this synthetic funding fixture.

@@ -64,6 +64,7 @@ time_loop_install:
 	bsr time_mouse_install
 	bsr time_keys_install
 	bsr time_camera_install
+	bsr time_compress_install
 	lea time_loop_patch(pc),a0
 	jsr resload_Patch(a2)
 	jsr resload_FlushCache(a2)
@@ -109,7 +110,12 @@ time_loop_poll:
 	blo .bad
 	cmpi.w #80,d0
 	bhi .bad
-	moveq #1,d1 ; compression integration is deliberately not claimed here
+	moveq #1,d1
+	move.l time_loop_h3(pc),a1
+	tst.w $45a6(a1)
+	beq .rate_ready
+	moveq #8,d1
+.rate_ready
 	bsr time_core_advance
 	add.w d1,TIME_LOOP_SERVICES(a0)
 	move.w d0,TIME_LOOP_DUE(a0)
@@ -144,6 +150,7 @@ time_loop_gate:
 	bsr time_rate_reset
 	bsr time_message_reset
 	bsr time_camera_reset
+	bsr time_compress_reset
 .ready
 	bsr time_keys_start
 	bsr time_camera_fixture
@@ -168,6 +175,7 @@ time_loop_gate:
 ; original loop still performs world bookkeeping and sound in native order.
 time_loop_draw:
 	movem.l d0-a0,-(sp)
+	bsr time_compress_fixture
 	lea time_loop_state(pc),a0
 	tst.l TIME_LOOP_ACTIVE(a0)
 	beq .original

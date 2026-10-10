@@ -32,7 +32,7 @@ These are input correctness checks, not FPS or sustained gameplay-speed results.
 The rate-history candidate subsequently passes eighty native world boundaries
 per CPU across three divisor changes, including 97 CIA intervals of A500 debt.
 World credit, tick counts and secondary credit match the independent rational
-model exactly; execution of secondary services remains open. This is timing
+model exactly; secondary service execution was not implemented at that checkpoint. This is timing
 accounting evidence, not an FPS or complete-gameplay result.
 The message-service checkpoint passes exact active-time expiry on A500 and
 cached 68030, with 200/100 observed world boundaries. A500 retains expired text
@@ -50,6 +50,11 @@ world commands still queued without consuming them. Native orientation changes
 match the independent 128-unit arithmetic model, and the service restores the
 secondary clock and leaves flight mouse input unchanged. These are scoped camera
 correctness checks, not overall FPS, gameplay convergence or capacity results.
+The compression timing candidate then passes 160 CIA funding boundaries on each
+CPU: 132 normal and 28 at the 8× request, two transitions, 49 world ticks and
+64 independent service ticks. Fifty clock-pair checks per CPU preserve dt
+across the legacy compression overwrite site. This is a synthetic flag fixture;
+native command/cancellation, gameplay state and capacity remain unverified.
 See `w6-verification.md` for frozen builds and limitations.
 
 ## W5 current measurements

@@ -573,6 +573,7 @@ new_DeleteFile:
 	include "time-rate.s"
 	include "time-message.s"
 	include "time-camera.s"
+	include "time-compress.s"
 	include "originals.s"
 	include "mirror-verify.s"
 	include "cache-verify.s"
