@@ -232,6 +232,9 @@ patch_main
 	bsr sim_results_summary_selftest
 	bsr sim_results_ui_selftest
 	bsr sim_events_selftest
+	lea patch_main(pc),a0
+	adda.l #sim_aux_selftest-patch_main,a0
+	jsr (a0)
 	bsr sim_average_selftest
 	bsr sim_score_selftest
 	bsr sim_score_rank_selftest
@@ -1247,6 +1250,8 @@ tape_restart_result_stub:
 
  IFD VERIFY
  IFD SIM_A4000
+ include "simulation_auxiliary.s"
+ include "simulation_auxiliary_verify.s"
  ; Separate input storage: native bulk layout reserves only 12,000 bytes.
  ; Keep at the end so it cannot push code/table PC-relative references apart.
  even
