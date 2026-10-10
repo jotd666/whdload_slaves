@@ -192,6 +192,7 @@ patch_main
 	bsr sim_schedule_modal_selftest
 	IFD SIM_A4000
 	bsr sim_results_selftest
+	bsr sim_results_summary_selftest
 	bsr sim_history_selftest
 	bsr sim_capacity_selftest
 	bsr sim_time_selftest
@@ -333,6 +334,7 @@ pl_main
     PL_PSS $CF9E,sim_a4000_contact_distance,2
     PL_PSS $E07A,sim_history_new_race_stub,4
     PL_PSS $E548,sim_history_seek_zero_stub,2
+    PL_PSS $116AA,sim_results_summary_copy_stub,2
     PL_PS $E27C,sim_results_reset_stub
     PL_PSS $E976,sim_results_award_stub,14
     PL_PSS $E994,sim_results_accumulate_stub,2
@@ -519,6 +521,14 @@ perf_attnflags	dc.l	0
 ; independent of verification-table size. MOVEM preserves all flags including
 ; X; the reserved stack slot transfers to the target with the original SP.
 	IFD SIM_A4000
+sim_results_summary_copy_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_results_summary_copy_stub(pc),a0
+ adda.l #sim_results_summary_copy-sim_results_summary_copy_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
 sim_results_reset_stub:
  subq.l #4,sp
  movem.l a0,-(sp)

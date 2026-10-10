@@ -204,3 +204,110 @@ sim_results_selftest:
  move.l #20,(a0)
  illegal
  bra.s .failed
+
+; $116AA copies the result summary only when the original bit-2 replay gate
+; permits it. Preserve the same ownership for wide values: seeking a replay
+; restores sim_results_state, but must not overwrite the completed result.
+; Input D0=4, A0=summary, A1=live stats. Native copy covers exactly 22 bytes.
+sim_results_summary_copy:
+.copy:
+ move.l (a1)+,(a0)+
+ dbra d0,.copy
+ movem.l d0/a0-a1,-(sp)
+ lea sim_results_summary(pc),a0
+ cmp.w #50,-$15fa(a4)
+ bne .clear
+ lea sim_results_state(pc),a1
+ moveq #SIM_TIME_STATE_BYTES/4-1,d0
+.wide:
+ move.l (a1)+,(a0)+
+ dbra d0,.wide
+ bra .done
+.clear:
+ moveq #SIM_TIME_STATE_BYTES/4-1,d0
+.zero:
+ clr.l (a0)+
+ dbra d0,.zero
+.done:
+ movem.l (sp)+,d0/a0-a1
+ move.w (a1)+,(a0)+       ; original final MOVE flags; all above preserves X
+ rts
+ even
+ dc.b "4DRSUMRY"
+ dc.w 1,SIM_TIME_STATE_BYTES
+sim_results_summary: dcb.b SIM_TIME_STATE_BYTES,0
+ dc.b "4DRSUMST"
+ dc.w 1,3
+sim_results_summary_passed: dc.l 0
+sim_results_summary_test_modes: dc.w 10,20,50
+sim_results_summary_test_source:
+ dc.l $12345678,$90abcdef,$fedcba98,$76543210,$f00dcafe
+ dc.w $8000
+sim_results_summary_test_dest: dcb.b 22,0
+sim_results_summary_selftest:
+ movem.l d0-a6,-(sp)
+ lea sim_results_summary_selftest(pc),a4
+ adda.l #sim_results_test_arena+$1600-sim_results_summary_selftest,a4
+ lea sim_results_summary_test_modes(pc),a3
+ moveq #2,d7
+.case:
+ move.w (a3)+,-$15fa(a4)
+ lea sim_results_state(pc),a0
+ move.l #65538,(a0)+
+ move.l #75000,(a0)+
+ move.l #74999,(a0)+
+ move.l #135000,(a0)
+ lea sim_results_summary(pc),a0
+ moveq #3,d0
+.dirty:
+ move.l #-1,(a0)+
+ dbra d0,.dirty
+ lea sim_results_summary_test_source(pc),a1
+ lea sim_results_summary_test_dest(pc),a0
+ moveq #4,d0
+ bsr sim_results_summary_copy
+ cmp.w #$ffff,d0
+ bne .failed
+ lea sim_results_summary_test_source+22(pc),a2
+ cmpa.l a2,a1
+ bne .failed
+ lea sim_results_summary_test_dest+22(pc),a2
+ cmpa.l a2,a0
+ bne .failed
+ lea sim_results_summary_test_source(pc),a1
+ lea sim_results_summary_test_dest(pc),a0
+ moveq #10,d0
+.native:
+ move.w (a1)+,d1
+ cmp.w (a0)+,d1
+ bne .failed
+ dbra d0,.native
+ lea sim_results_summary(pc),a0
+ lea sim_results_state(pc),a1
+ moveq #3,d0
+.check:
+ moveq #0,d1
+ cmp.w #50,-$15fa(a4)
+ bne .compare
+ move.l (a1)+,d1
+.compare:
+ cmp.l (a0)+,d1
+ bne .failed
+ dbra d0,.check
+ lea sim_results_summary_passed(pc),a0
+ addq.l #1,(a0)
+ dbra d7,.case
+ lea sim_results_state(pc),a0
+ lea sim_results_summary(pc),a1
+ moveq #3,d0
+.reset:
+ clr.l (a0)+
+ clr.l (a1)+
+ dbra d0,.reset
+ movem.l (sp)+,d0-a6
+ rts
+.failed:
+ lea perf_failure(pc),a0
+ move.l #21,(a0)
+ illegal
+ bra .failed
