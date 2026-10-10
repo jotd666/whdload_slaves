@@ -26,7 +26,7 @@ sim_a4000_arm:
 ; Suspension fractions: extension +24..31, return +32..39, bias +40..47.
 ; Terrain loss uses an unsigned Q16 carry at +48; skid loss uses fifths at +50.
 ; Spin displacement: /1280 carry at +52, cached step at +54 ($8000=unset).
-; Nominal half-filter change uses signed Q16 carry +56..59.
+; Nominal spin-filter change uses signed Q16 carry +56..59.
 ; Opponent recovery braking uses fifths at +60; +62 remains unused.
 sim_a4000_car:
  lea -$85e(a4),a0
@@ -297,7 +297,7 @@ sim_a4000_private: dcb.b SIM_PRIVATE_BYTES,0
 
  even
  dc.b "4DA4STAT"
- dc.w 8,19
+ dc.w 9,20
 sim_a4000_gear_calls: dc.l 0
 sim_a4000_wheel_calls: dc.l 0
 sim_a4000_contact_calls: dc.l 0
@@ -314,6 +314,7 @@ sim_a4000_spin_step_calls: dc.l 0
 sim_a4000_spin_filter_calls: dc.l 0
 sim_a4000_opponent_steering_calls: dc.l 0
 sim_a4000_opponent_brake_calls: dc.l 0
+sim_a4000_spin_alternate_calls: dc.l 0
 
 ; $10234..$10248 and $1024A..$10260, within native suspension $10012.
 ; Preserve its geometry/penetration branches and cap at extension 384. Both
@@ -724,4 +725,31 @@ sim_a4000_opponent_brake:
  clr.w -$828(a4)
 .done:
  movem.l (sp)+,d1/a0
+ rts
+
+; $FCBA..$FCD0 alternate nominal damping; cache the coupled actual rotation
+; exactly once for the later slip and body consumers, as with the half filter.
+sim_a4000_spin_alternate:
+ cmp.w #50,-$15fa(a4)
+ bne.s .native
+ movem.l d1/a1,-(sp)
+ move.l 8(a5),a1
+ bsr sim_a4000_car
+ lea 52(a0),a0
+ move.w $3e(a1),d0
+ bsr sim_spin_alternate_50
+ move.w d1,2(a0)
+ lea sim_a4000_spin_alternate_calls(pc),a0
+ addq.l #1,(a0)
+ movem.l (sp)+,d1/a1
+ move.l 8(a5),a0
+ move.w d0,$3e(a0)
+ rts
+.native:
+ move.l 8(a5),a0
+ move.w $3e(a0),d0
+ muls #15,d0
+ asr.w #4,d0
+ move.l 8(a5),a0
+ move.w d0,$3e(a0)
  rts

@@ -246,6 +246,34 @@ sim_physics_selftest:
  addq.l #1,(a0)
  lea 24(a2),a2
  dbra d6,.spin_filter
+ lea sim_spin_alternate_cases(pc),a2
+ move.w #(sim_spin_alternate_cases_end-sim_spin_alternate_cases)/24-1,d6
+.spin_alternate:
+ lea sim_physics_test_fraction(pc),a0
+ move.w 8(a2),(a0)
+ move.l 4(a2),4(a0)
+ move.w (a2),d0
+ moveq #0,d5
+ moveq #4,d7
+.spin_alternate_five:
+ move.w 2(a2),d1
+ bsr sim_spin_alternate_50
+ add.l d1,d5
+ dbra d7,.spin_alternate_five
+ cmp.w 12(a2),d0
+ bne .failed
+ move.w (a0),d0
+ cmp.w 14(a2),d0
+ bne .failed
+ move.l 4(a0),d0
+ cmp.l 16(a2),d0
+ bne .failed
+ cmp.l 20(a2),d5
+ bne .failed
+ lea sim_physics_passed(pc),a0
+ addq.l #1,(a0)
+ lea 24(a2),a2
+ dbra d6,.spin_alternate
  lea sim_spin_held_cases(pc),a2
  move.w #(sim_spin_held_cases_end-sim_spin_held_cases)/12-1,d6
 .spin_held:
@@ -293,7 +321,7 @@ SIM_DELAY_HOOK_TESTS = 0
 SIM_SPIN_HOOK_TESTS = 0
  ENDC
  dc.b "4DPHYTST"
- dc.w 11,(sim_rate_cases_end-sim_rate_cases)/8+(sim_steering_cases_end-sim_steering_cases)/14+(sim_distance_cases_end-sim_distance_cases)/8+(sim_approach_cases_end-sim_approach_cases)/12+(sim_airborne_cases_end-sim_airborne_cases)/12+(sim_extension_cases_end-sim_extension_cases)/10+(sim_engine_cases_end-sim_engine_cases)/4+(sim_duration_cases_end-sim_duration_cases)/8+(sim_terrain_cases_end-sim_terrain_cases)/10+(sim_skid_cases_end-sim_skid_cases)/12+(sim_spin_filter_cases_end-sim_spin_filter_cases)/24+(sim_spin_held_cases_end-sim_spin_held_cases)/12+(sim_opponent_brake_cases_end-sim_opponent_brake_cases)/10+SIM_DELAY_HOOK_TESTS+SIM_SPIN_HOOK_TESTS
+ dc.w 12,(sim_rate_cases_end-sim_rate_cases)/8+(sim_steering_cases_end-sim_steering_cases)/14+(sim_distance_cases_end-sim_distance_cases)/8+(sim_approach_cases_end-sim_approach_cases)/12+(sim_airborne_cases_end-sim_airborne_cases)/12+(sim_extension_cases_end-sim_extension_cases)/10+(sim_engine_cases_end-sim_engine_cases)/4+(sim_duration_cases_end-sim_duration_cases)/8+(sim_terrain_cases_end-sim_terrain_cases)/10+(sim_skid_cases_end-sim_skid_cases)/12+(sim_spin_filter_cases_end-sim_spin_filter_cases)/24+(sim_spin_held_cases_end-sim_spin_held_cases)/12+(sim_spin_alternate_cases_end-sim_spin_alternate_cases)/24+(sim_opponent_brake_cases_end-sim_opponent_brake_cases)/10+SIM_DELAY_HOOK_TESTS+SIM_SPIN_HOOK_TESTS
 sim_physics_passed: dc.l 0
 sim_physics_test_fraction: dc.w 0,0,0,0
 sim_physics_test_position: dc.l 0

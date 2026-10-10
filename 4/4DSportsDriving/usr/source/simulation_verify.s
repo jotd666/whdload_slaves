@@ -108,6 +108,16 @@ sim_fixture_before:
  move.b #1,-$79e(a4)
  clr.b -$795(a4)
  ENDC
+ IFD SIM_FIXTURE_OPPONENT_SPIN
+ IFND TAPE_OPPONENT
+ FAIL "SIM_FIXTURE_OPPONENT_SPIN requires TAPE_OPPONENT"
+ ENDC
+ ; Explicit synthetic angular pose. Subsequent damping and motion are native
+ ; in reference captures; only the selected50 Hz hooks change prototype runs.
+ move.w #SIM_FIXTURE_OPPONENT_SPIN,-$820(a4)
+ move.w #64,-$828(a4)
+ move.w #10000,-$832(a4)
+ ENDC
  IFD SIM_FIXTURE_DROP
  ; Synthetic initial pose for airborne/contact coverage. Native physics handles
  ; the fall; 1024 position units is small enough to test an ordinary landing.

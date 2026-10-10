@@ -287,26 +287,41 @@ sim_skid_loss_50:
 ;
 ; d0.w old nominal rate, d1.w command; a0 -> angle fraction.w, cache.w,
 ; nominal Q16 fraction.l. Return d0.l nominal rate, d1.l actual angle step.
-; Preserve d2-d7. Carry clears at native integer fixed points/stopped spin.
+; Preserve d2-d7/a1. Carry clears at native integer fixed points/stopped spin.
 ; Separate word products retain full differences across native ADD.W wraps.
 sim_spin_filter_50:
- movem.l d2-d7,-(sp)
+ movem.l d2-d7/a1,-(sp)
+ lea sim_spin_half_coefficients(pc),a1
  move.w d0,d3
  add.w d0,d1
  ext.l d1
  divs #2,d1
  ext.l d1
+ bra.s sim_spin_filter_common
+
+; Native alternate filter is ASR.W(15*a,4), including low-word wrap.
+; rho=(15/16)^(2/5), alpha=(1-rho)/(1-15/16), beta=1-rho.
+; Coupled endpoint integration k=(2/5)*rho/(1-rho)-15.
+sim_spin_alternate_50:
+ movem.l d2-d7/a1,-(sp)
+ lea sim_spin_alternate_coefficients(pc),a1
+ move.w d0,d3
+ move.w d0,d1
+ muls #15,d1
+ asr.w #4,d1
+ ext.l d1
+sim_spin_filter_common:
  move.l d1,d7             ; native quantized endpoint
  move.w d1,d2
- muls #31738,d2
- muls #31738,d0
+ muls (a1),d2
+ muls (a1),d0
  sub.l d0,d2
  move.l 4(a0),d5          ; old signed Q16 fraction
  move.l d5,d6
  bpl .beta_positive
  neg.l d6
 .beta_positive:
- mulu #15869,d6
+ mulu 2(a1),d6
  tst.l d5
  bpl .beta_signed
  neg.l d6
@@ -319,7 +334,17 @@ sim_spin_filter_50:
  move.w d6,d0
  add.w d3,d0
  cmp.w d7,d0
+ bne .remainder
+ tst.w 8(a1)
  beq .target
+ ; Alternate decay keeps progress through intermediate integer endpoints.
+ ; Only an actual native fixed point may discard the nominal fraction.
+ move.w d7,d4
+ muls #15,d4
+ asr.w #4,d4
+ cmp.w d7,d4
+ beq .target
+.remainder:
  swap d6
  clr.w d6
  sub.l d6,d2
@@ -328,17 +353,17 @@ sim_spin_filter_50:
  moveq #0,d2
 .rate_ready:
  move.l d2,4(a0)
- ; Angle numerator: (512+322)*new -322*old, including both rate fractions.
+ ; Angle numerator: (512+K)*new -K*old, including both rate fractions.
  move.w d0,d1
- muls #834,d1
+ muls 4(a1),d1
  move.w d3,d4
- muls #322,d4
+ muls 6(a1),d4
  sub.l d4,d1
  move.l d2,d4
  bpl .new_fraction_positive
  neg.l d4
 .new_fraction_positive:
- mulu #834,d4
+ mulu 4(a1),d4
  tst.l d2
  bpl .new_fraction_signed
  neg.l d4
@@ -347,7 +372,7 @@ sim_spin_filter_50:
  bpl .old_fraction_positive
  neg.l d6
 .old_fraction_positive:
- mulu #322,d6
+ mulu 6(a1),d6
  tst.l d5
  bpl .old_fraction_signed
  neg.l d6
@@ -372,8 +397,12 @@ sim_spin_filter_50:
  moveq #0,d1
 .done:
  ext.l d0
- movem.l (sp)+,d2-d7
+ movem.l (sp)+,d2-d7/a1
  rts
+
+; alpha Q16,beta Q16,512+K,K,alternate fixed-point rule; angle /1280.
+sim_spin_half_coefficients: dc.w 31738,15869,834,322,0
+sim_spin_alternate_coefficients: dc.w 26723,1670,890,378,1
 
 ; Signed long Q16 -> signed integer in D6, truncating toward zero.
 sim_spin_trunc_q16:
