@@ -125,9 +125,14 @@ time_pause_irq:
 	lea time_pause_pending(pc),a0
 	move.w (a0),d0
 	beq .done
+	cmpi.w #3,d0
+	beq .seed
 	cmpi.w #1,d0
 	beq .begin
 	bsr time_pause_apply_end
+	bra .ack
+.seed
+	bsr time_keys_seed_irq
 	bra .ack
 .begin
 	bsr time_pause_apply_begin
@@ -152,6 +157,10 @@ time_pause_apply_begin:
 	move.l (a1),TIME_LOOP_PAUSE_START(a0)
 	move.l TIME_LOOP_PAUSED(a0),TIME_LOOP_PAUSE_BASE(a0)
 	clr.l TIME_LOOP_ACTIVE(a0)
+	move.w time_keys_ready(pc),d0
+	beq .nested
+	move.l time_keys_native_count(pc),a1
+	clr.w (a1) ; native UI must not replay already captured flight commands
 .nested
 	addq.l #1,TIME_LOOP_PAUSE_DEPTH(a0)
 .done

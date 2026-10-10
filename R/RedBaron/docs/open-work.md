@@ -89,7 +89,10 @@ as they were while the release preferences below remain open.
    capable hardware and gameplay speed independent of achieved FPS. It uses 225-unit
    world ticks with independent rendering, timestamped input and retained time
    debt. Controlled combat/AI convergence and actual catch-up capacity are gates
-   of implementation, not completed tests. Player timing remains unchanged.
+   of implementation, not completed tests. VERIFY now has a fixed-step loop,
+   atomic modal-clock handoff and timestamped keyboard replay; mouse/joystick,
+   timed services, interpolation and full gameplay validation remain. Player
+   timing remains unchanged.
 2. **W7:** later world-step and instrument improvements. W4 overlay queueing
    remains explicitly deferred.
 

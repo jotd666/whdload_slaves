@@ -567,6 +567,7 @@ new_DeleteFile:
 	include "time-input.s"
 	include "time-loop.s"
 	include "time-pause.s"
+	include "time-keys.s"
 	include "originals.s"
 	include "mirror-verify.s"
 	include "cache-verify.s"

@@ -19,8 +19,10 @@ consistent-gameplay result**. The subsequent modal-boundary candidate excludes
 7,614 CIA intervals spent in the A500 setup Preferences route; its first recorded
 flight boundary has one interval of debt instead of thousands. This is transition
 verification, not an FPS result. Input, secondary services and presentation remain
-incomplete. See
-`w6-verification.md` for the frozen build and limitations.
+incomplete. The subsequent keyboard candidate passes native bank/fire and
+exactly-once command checks on A500 and cached 68030, including up to 93 observed
+CIA intervals of A500 debt. This is input-history evidence, not a gameplay-speed
+or FPS claim. See `w6-verification.md` for frozen builds and limitations.
 
 ## W5 current measurements
 

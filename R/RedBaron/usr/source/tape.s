@@ -32,6 +32,11 @@ tape_start:
 	rts
 
 tape_sim_key:
+	move.w time_keys_ready(pc),d0
+	beq .route
+	move.l time_keys_native_pop(pc),-(sp)
+	rts
+.route
 	bsr tape_menu_key
 	lsr.w #8,d0
 	rts
@@ -173,6 +178,8 @@ tape_flight:
 	bne.s tape_anchor
 	lea tape_game_steps(pc),a0
 	addq.l #1,(a0)
+	move.w time_keys_ready(pc),d0
+	bne.s tape_game_record
 	move.l (a0),d0
 	move.l tape_keybase(pc),a1
 	clr.b $4e(a1)

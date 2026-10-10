@@ -5,7 +5,10 @@
 time_input_observe_install:
 	movem.l d0-a6,-(sp)
 	btst #4,perf_custom5+1(pc)
+	bne .selected
+	btst #5,perf_mask+2(pc)
 	beq .done
+.selected
 	move.l tape_game_steps(pc),d0
 	cmpi.l #1,d0
 	bne .done
@@ -37,6 +40,7 @@ time_input_observe_install:
 	move.l _resload(pc),a2
 	jsr resload_Patch(a2)
 	jsr resload_FlushCache(a2)
+	bsr time_keys_start
 .done
 	movem.l (sp)+,d0-a6
 	rts
@@ -58,12 +62,29 @@ time_input_observe_irq:
 	ori.w #$0700,sr
 	movem.l d0-d3/a1-a2,-(sp)
 	lea -16(sp),sp
+	btst #5,perf_mask+2(pc)
+	beq .capture
+	move.w time_keys_ready(pc),d2
+	beq .restore
+.capture
 	move.l time_input_observe_state(pc),a2
 	adda.l #$30006,a2
 	move.l (a2),d2
+	move.w d0,4(sp)
+	move.w time_keys_ready(pc),d3
+	beq .stamp
+	lea time_loop_state(pc),a2
+	tst.l TIME_LOOP_ACTIVE(a2)
+	beq .modal
+	sub.l TIME_LOOP_PAUSED(a2),d2
+	bra .stamp
+.modal
+	move.l TIME_LOOP_PAUSE_START(a2),d2
+	sub.l TIME_LOOP_PAUSE_BASE(a2),d2
+	ori.w #$100,4(sp) ; held-only: menu commands must not replay into flight
+.stamp
 	addq.l #1,d2
 	move.l d2,(sp)
-	move.w d0,4(sp)
 	moveq #0,d2
 	move.b d1,d2
 	move.w d2,6(sp)
@@ -72,6 +93,7 @@ time_input_observe_irq:
 	move.l time_input_observe_state+8(pc),a0
 	move.l sp,a1
 	bsr time_input_push
+.restore
 	lea 16(sp),sp
 	movem.l (sp)+,d0-d3/a1-a2
 	move.l time_input_observe_state+4(pc),a0
@@ -105,6 +127,11 @@ time_input_fixture:
 	sub.l time_input_fixture_epoch(pc),d2
 	move.w d3,d4
 	mulu.w #3,d4
+	btst #5,perf_mask+2(pc)
+	beq .short
+	move.w d3,d4
+	mulu.w #18,d4
+.short
 	addq.l #2,d4
 	cmp.l d4,d2
 	blo .restore

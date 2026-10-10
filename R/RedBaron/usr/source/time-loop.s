@@ -58,6 +58,7 @@ time_loop_install:
 	move.l d0,(a0)
 	bsr time_pause_selftest
 	bsr time_pause_install
+	bsr time_keys_install
 	lea time_loop_patch(pc),a0
 	jsr resload_Patch(a2)
 	jsr resload_FlushCache(a2)
@@ -106,6 +107,8 @@ time_loop_poll:
 	addq.l #1,TIME_LOOP_CURSOR(a0)
 	add.w d1,TIME_LOOP_SERVICES(a0)
 	move.w d0,TIME_LOOP_DUE(a0)
+	bsr time_keys_advance
+	tst.w TIME_LOOP_DUE(a0)
 	beq .loop
 .done
 	movem.l (sp)+,d0-d3/a1-a2
@@ -122,7 +125,7 @@ time_loop_gate:
 	movem.l d0-a6,-(sp)
 	lea time_loop_state(pc),a0
 	tst.l TIME_LOOP_ACTIVE(a0)
-	bne .wait
+	bne .ready
 	move.l a0,a1
 	moveq #14,d0
 .clear
@@ -131,6 +134,8 @@ time_loop_gate:
 	move.l #1,TIME_LOOP_ACTIVE(a0)
 	move.l time_loop_cia(pc),a1
 	move.l (a1),TIME_LOOP_CURSOR(a0)
+.ready
+	bsr time_keys_start
 .wait
 	bsr time_loop_poll
 	tst.w TIME_LOOP_DUE(a0)
@@ -195,6 +200,8 @@ time_loop_exit:
 	lea time_loop_state(pc),a1
 	suba.l a0,a0
 	movem.l a0,TIME_LOOP_ACTIVE(a1)
+	lea time_keys_ready(pc),a1
+	movem.w a0,(a1)
 	movem.l (sp)+,a0-a1
 	movem.l (sp)+,d5-d7
 	unlk a5

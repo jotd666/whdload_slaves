@@ -288,3 +288,59 @@ The consumer compares against `cursor - paused_total`. Add one CIA boundary to
 input eligibility as before. Those conversions and keyboard consumption are not
 yet installed. Input fixtures must exercise both sides of the atomic transition,
 including queued pre-pause events, rather than flushing old debt or input history.
+
+
+## Keyboard replay through the native flight reader
+
+VERIFY timing bit 13 now automatically installs the checked keyboard acquisition
+hook and redirects `sim:309c0` and `sim:309cc` to a private flight bitmap and
+command FIFO. The seed snapshot is taken atomically in VBlank after the automatic
+route. Before that snapshot, and in menus, native physical input remains in use.
+The VERIFY route stops replacing gameplay commands after ownership transfers.
+Its frame-count-based Right fixture is bypassed in this mode; the IRQ fixture
+uses CIA thresholds and longer holds instead.
+
+The producer assigns active-flight eligibility `CIA - paused_total + 1`.
+During a modal interval it uses `pause_start - pause_base + 1` and marks the
+transition held-only, so UI commands are not replayed as flight commands.
+The consumer advances the private held state at each processed CIA boundary,
+using `cursor - paused_total`, before running due world updates. Key-down commands
+are encoded with the original modifier grouping and placed in a separate bounded
+FIFO; each native pop advances its tail once. Both queue overflows fault explicitly.
+Entering a panel clears stale physical commands already captured for flight;
+queued simulation history is retained. Mission exit relinquishes keyboard
+ownership, and the next mission reseeds from physical state.
+
+Frozen VERIFY text is 122,194 bytes, SHA256
+`62ed35649cc5921cee09b81818bbbeae04fdd6ae0b3ac58aa079c5bf1d5da4f8`.
+The cached 68030 fixture acquires Right down/up and Fire down/up through the native
+IRQ hook. Forty native post-input observations match every event's active-clock
+deadline, held state, bank axis (0/127), fire flag and command history. Four events
+are consumed and exactly two commands are popped, with no overflow or extra
+input. This checks the actual `sim:1ecc2` output, not just queue bookkeeping.
+All twelve selected timing/input hooks and thirteen disabled ranges pass the
+live byte audit; native clock/FIFO/pause test counters are 426 / 512 / 1.
+Evidence: `tmp/dev/tmp/prof/w6-keys-030/`.
+
+`keyboard_replay.py` independently reconstructs the event and command history
+from acquisition records and validates native outputs. Host tests exhaust all
+256 modifier combinations against the original word-rotation algorithm and
+reject repeated commands, wrong axes/deadlines and overflow. The live fixture
+covers bank/fire, not all modifier combinations or physical serial decoding.
+Normal/developer builds remain byte-identical to W5.
+
+This does not complete W6 input: mouse and joystick sampling are still native,
+modal/restart input fixtures and native modifier twins remain, and rate changes
+with old debt still need explicit timeline handling. Full world-state equality
+across render schedules, secondary services and interpolated presentation remain
+separate required gates. No frame-rate-independent gameplay claim is made yet.
+
+
+The same frozen keyboard candidate also passes all forty A500 post-input
+observations (scheduled ticks 40–79), four consumed transitions, exactly two
+commands and every byte/counter audit. The observed debt reaches 93 CIA intervals,
+versus nine in the cached-CPU capture: this test does exercise queued input while
+catching up after slow drawing. These are input-history checks, not FPS or world
+state comparisons. Evidence: `tmp/dev/tmp/prof/w6-keys-a500/`; each capture's
+`keyboard-context.json` records its debt and draw counters. Both owned emulators
+are shut down. The full host suite now contains 86 tests.
