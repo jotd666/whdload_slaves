@@ -1,9 +1,91 @@
 # Red Baron performance measurements
 
+## W5 current measurements
+
+The frozen VERIFY candidate is SHA256
+`3e3ddb5ccacfbb072658847716dc8d3b9eba3c941ec2e5587af0086437e2eae3`.
+Developer/VERIFY CUSTOM2=256 selects the original beam wait; 512 selects the
+two-field flight cap; 768 selects both. See `w5-verification.md` for contracts
+and the independently observed cap/wrap stress test. The stress fixture is not
+a game-performance workload.
+
+The same-build A500 OFF baseline (`tmp/dev/tmp/prof/w5-a500-0-r2/`) spans swaps
+140–240: **2,905 fields, 3,441 CIA ticks, 1.7184 FPS**. Its event census has one
+message call and no mirror call, with dt=450 throughout. Separate 250-recorded-
+field samples (100/100/50, two unrecorded joins) contain eight complete swap
+calls at `sim:314be`: **2,073 mean main cycles** (1,746–2,676), excluding IRQs
+and including RTS. Its thirteen sim and three sound disabled ranges match the
+original bytes. The first 100-field DMA sample has 129,365 framebuffer writes
+and zero active-display conflicts. This is an OFF baseline, not a W5 gain or cost.
+
+P1 alone (`tmp/dev/tmp/prof/w5-a500-256/`) takes **2,921 fields**, or
+**1.7090 FPS: a 0.55% frame-rate cost** against that OFF baseline. The 100
+intervals add 16 fields in total (0.16 field/frame). Both censuses contain the
+same single message call and no mirror event, with dt=450. Complete h3 snapshots
+at first flight, step 140 and step 241 are byte-identical. Eight complete swap
+calls average **18,897 main cycles** (1,818–65,786); the extra 16,824-cycle mean
+is from the separate short trace, not inferred from the long FPS window.
+Its twelve disabled sim ranges and three sound ranges pass, and its first
+100-field DMA sample observes 128,350 framebuffer writes with zero conflicts.
+P1 remains selected on A500; the measured cost does not justify removing its
+publication safety there.
+
+With both P1/P2 (`tmp/dev/tmp/prof/w5-a500-768/`), the same A500 window takes
+**2,926 fields, 1.7061 FPS: a 0.72% total cost**. The event census and dt match;
+entry and step-140 h3 snapshots are byte-identical, and step 241 differs only
+in the elapsed-time word at `h3:0483a`. The short trace's eight swap calls average
+33,841.25 main cycles (1,398–77,570); wait-phase sensitivity makes this a different
+sample, not a direct estimate of the counter's overhead. Selected/disabled byte
+audits pass, with zero conflicts among 128,350 observed framebuffer writes.
+
+The 68020 OFF baseline (`tmp/dev/tmp/prof/w5-020-0/`) spans swaps 80–400:
+**2,596 fields, 3,075 ticks, 6.1535 FPS**, with no dashboard events. Twenty
+complete swap calls in its separate 250-field sample average **2,553.5 main
+cycles** (573–5,271). All disabled byte ranges pass, with zero conflicts among
+394,259 framebuffer writes in its first 100-field DMA sample.
+
+With P1/P2 on 68020 (`tmp/dev/tmp/prof/w5-020-768/`), swaps 80–400 take
+**2,661 fields, 3,151 ticks, 6.0032 FPS: a 2.44% rate cost**. Both windows
+have no dashboard events. Variable dt permits world-state divergence; this
+is the observed same-step window, not an identical world trajectory. The
+separate short sample has 21 complete swap calls averaging **54,990.71 main
+cycles** (608–180,418). Byte audits pass and the first 100-field DMA sample
+has zero conflicts among 386,093 framebuffer writes. End screenshots remain
+in flight with intact cockpit/world rendering; they are not correctness twins.
+
+On cached 68030/50, swaps 120–780 take **2,585 → 2,650 fields** and
+**3,062 → 3,138 ticks**, or **12.7456 → 12.4330 FPS: a 2.45% rate cost**.
+Both windows have 660 intervals, no dashboard events and variable dt; do not
+interpret this as a bit-identical trajectory. Evidence:
+`tmp/dev/tmp/prof/w5-030-{0,768}/`. Separate 20-field DMA samples observe
+185,818 / 175,070 framebuffer writes and zero active-display conflicts.
+Disabled/selected byte audits pass. No cached instruction-cycle cost is claimed.
+The recorded configuration is 68030/50 with data cache and cycle-exact
+CPU/memory/blitter enabled, WHDLoad MMU; no new raw CACR read is claimed.
+
+All three same-build comparisons and production-order combined flight checks
+are complete. See `w5-verification.md` for the completion audit and current
+player policy. Do not compare these rates directly with W4: code layout changes
+the later flight event history. Earlier sections below retain their historical
+build-specific results; statements that the release mask was zero describe
+those earlier checkpoints, superseded by the W5 player selection.
+
+To repeat W5 locally, source `amiga/env.sh` from the development workspace, then
+run `python3 tools/w5_measure.py a500 0 --suffix=-manual-off` followed by
+`python3 tools/w5_measure.py a500 768 --suffix=-manual-on`. Use `020` or `030`
+for the other retained configurations; use 256 for A500 P1 alone. These local
+ignored orchestration helpers require the retained CPU fixtures and frozen
+build. Run one capture at a time and choose unused suffixes. They boot to flight,
+record the short profile and long swap census, and save byte/display audits.
+The committed `pacing_costs.py` analyzes complete uncached swap calls;
+`swap_fields.py` and the census tools provide the frame-rate evidence. Never
+use the fast-draw stress fixture as a game-performance workload.
+
 ## W4 current measurements
 
 D1 solid fills use developer/VERIFY **CUSTOM2=128**; normal player enablement
-remains off pending W5/release. Both all-one edge masks select D-only DMA;
+was off at this W4 checkpoint (W5 now supplies player selection). Both all-one
+edge masks select D-only DMA;
 masked rectangles retain the original C+D blit. The frozen VERIFY SHA256 is
 `18395ab2cc6fc1271b6b9e56919bf98c2fe8e3ea886f8e7bbd76a2354ef33241`.
 The independent models and three-CPU hardware pixel twins pass; see

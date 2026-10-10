@@ -33,8 +33,8 @@ CPUs in banking/dense scenes. The measured bundle gains 5.97% FPS on A500 and
 long-window histories differ, so no steady-flight FPS gain is claimed there.
 Cached-CPU per-routine checks reject G1 there; original projection is retained
 in the player policy. The reduced CUSTOM2=56 bundle passes its combined check. The final
-event/bank/dense cost matrix is complete; see the W2 completion audit. The player release
-mask stays zero.
+event/bank/dense cost matrix is complete; see the W2 completion audit. W5 now
+provides the opt-in player bundle; existing defaults and icons are unchanged.
 
 The remaining G1/G3 refinements and G5–G9 are explicitly deferred under §3.8,
 not implemented. `w2-verification.md` records the current instruction-cost
@@ -770,7 +770,7 @@ material benefit. Normal policy also retains original S3 on unmeasured 040/060.
 S2/S3′/S4–S8 are deferred under §3.8, with the assessment in
 `w3-verification.md`; they are not implemented. Measured W3-only FPS gains are
 1.93% A500 and 0.46% 68020, with no established cached-68030 FPS gain.
-The normal release mask remains zero.
+W5 now provides normal player selection; see `w5-verification.md`.
 
 The original broad-pass estimate below is not a claim for the implemented subset.
 Fixed cost per second for a given voice workload: main-loop wall time scales by
@@ -826,14 +826,20 @@ audit and `profiling.md` for scoped numbers. Normal player enablement is still o
 
 ### W5. Display pacing and fast CPUs
 
-Both apply under the faster-rendering switch (decision 5). W0.4's measurements choose the cap
-rate and give P1's cost.
+**Implemented and measured.** Both apply under the faster-rendering switch
+(decision 5). P2 uses two PAL fields, approximately 25 FPS. P1 alone costs
+0.55% FPS on A500; combined P1/P2 costs 0.72%, 2.44% and 2.45% on the measured
+A500, 68020 and cached 68030 respectively. All same-build censuses exceed
+2,000 fields. Models, independent cap/wrap stress, byte/display audits and
+combined flight regressions pass; see `w5-verification.md` and `profiling.md`.
+The design inventory below records the implementation rationale.
 
 - **P1, tear-free swap (bit 8).** Use the game's own wait: `PL_W $b06,$7001` (`moveq #1,d0`
   before the swap).
   - It writes the copper pointers either at or above line 40, or after line 244, so the
     just-hidden buffer is no longer displayed when drawing resumes.
-  - Cost: up to ~0.65 field per frame, ~0.2 on average *(est.)*.
+  - Measured A500 cost: 16 additional fields over 100 frames (0.16 field/frame),
+    0.55% FPS. Complete swap-call means are in `profiling.md`.
   - On the 68000 it only costs time, because the measured margin is 3–4 fields. Measure that
     cost; if it is significant, report it to the user instead of quietly limiting P1 to fast
     CPUs.
@@ -848,8 +854,9 @@ rate and give P1's cost.
   - **What it does not fix:** the floor binds whenever a frame is shorter than F/16 ticks. A
     25 fps cap (2.37 ticks) therefore protects only Time Scale settings of 36 and above
     (F ≤ 37.9); the archive's 40 is covered. Lower Time Scale settings need W6.
-  - **Implementation:** wait on a field counter kept by the slave (a VERTB hook, or the CIA
-    lifetime ticks at `sim:30006` converted to fields) next to P1's wait, in the same routine.
+  - **Implemented:** wait on the slave's 32-bit VBlank counter, updated at
+    `sim:2d34e`, before the original flight swap. Record each actual publication
+    as the next deadline's origin; no catch-up debt, with unsigned wrap handling.
 - **68020+ caches:** the slave defines KickEmu's `CACHE`. Record the cache state of every fast-CPU
   figure (playbook §8). The self-modified words at `sim:39d4c` are read as data, so they are
   safe with an instruction cache.

@@ -38,10 +38,18 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- Development groundwork:
- - Faster rendering splash switch reserved; no optimized features enabled yet.
- - Performance patches will apply only to sim v1; v2/v3 keep their existing fixes.
- - Sound is unchanged. VERIFY instruments are absent from normal builds.
+ Development rendering improvements:
+ - Faster rendering (CUSTOM2=1) selects the verified dashboard cache, geometry,
+   solid-fill and exact-output sound optimizations, with CPU-specific choices.
+ - Flight swaps use the original safe beam wait and a two-field cap (about
+   25 FPS on PAL). This does not make world speed frame-rate independent.
+ - The existing default remains off; supplied icon tooltypes are unchanged.
+ - Applies only to sim v1; v2/v3 retain their existing fixes.
+ - The dashboard cache uses about 13.7 KB extra ChipMem, with allocation fallback.
+ - Faster frames can accelerate the world on slow machines. Time Scale remains
+   unchanged; timing redesign is separate work.
+ - Developer builds expose individual CUSTOM2 bits. Normal/developer builds
+   contain no VERIFY instruments or scripted game input.
 
  version 2.1 (26.11.2005) done by JOTD
  - german version supported

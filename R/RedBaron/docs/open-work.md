@@ -2,7 +2,8 @@
 
 The accepted decisions and detailed requirements are in `performance-plan.md`,
 especially §6. `verification.md` is the W0 evidence ledger; `profiling.md`
-contains measured baselines. No performance optimization is enabled in normal builds yet.
+contains measured baselines. W5 completes the opt-in Faster rendering player
+bundle. Existing default-off behavior and icon tooltypes are unchanged.
 
 ## W0 complete; W1 core implemented, further work deferred
 
@@ -20,9 +21,8 @@ case. Completed evidence is retained; incomplete captures are not results.
 
 For development, CUSTOM2=3 selects W1a+W1b; CUSTOM2=2 selects only the cache.
 The cached 68030 table mirror is slower than the original, so the normal selection
-policy excludes it on 030/040/060. **The normal release mask remains zero:** player
-switch enablement and its final normal-build checks are deferred. Existing defaults
-and icons are unchanged. Developer/VERIFY builds retain individual options.
+policy excludes it on 030/040/060. W5 supplies normal player selection and its
+option checks; developer/VERIFY builds retain individual options.
 
 ### Deferred W1 follow-up
 
@@ -31,8 +31,6 @@ and icons are unchanged. Developer/VERIFY builds retain individual options.
   check. Earlier cache-only checks passed on the continuity configuration; do not
   label the unrun cached-CPU extension as passed.
 - Finish the return-flag contract write-up for the cached draw's caller chain.
-- Promote verified bits into the player switch and check normal-build option
-  selection when returning to W1. The prepared local promotion helper has not run.
 - Further clipping/lifecycle or timing refinements only if a concrete issue calls
   for them; the large existing evidence set is retained.
 
@@ -43,7 +41,7 @@ implemented, modeled and verified. Combined twins and the final steady/event/
 bank/dense cost matrix are complete on A500, 68020 and cached 68030. The steady
 bundle gains 5.97% FPS on A500 and 5.54% on 68020. Cached gains are small; retain
 original G1 there because it regresses. Use developer/VERIFY CUSTOM2=60 on
-A500/68020 and 56 on cached 68030. Normal release mask remains zero.
+A500/68020 and 56 on cached 68030. W5 includes this CPU policy in the player bundle.
 
 Remaining G1/G3 refinements and G5–G9 are explicitly deferred under the plan's
 3%-of-frame gate. `w2-verification.md` records their cost assessment, all current
@@ -60,7 +58,7 @@ on cached 68030, where original S3 is retained. These are W3-only selections.
 
 S2/S3′/S4–S8 are explicitly deferred under the plan’s size threshold, not claimed
 implemented. B1–B6 remain separate behavior/OS decisions. `w3-verification.md`
-records the scope, proof and evidence. Normal player release mask remains zero.
+records the scope, proof and evidence. W5 includes these selections in the player bundle.
 
 ## W4 complete; overlay queueing deferred
 
@@ -68,17 +66,27 @@ D1 aligned D-only fills are implemented behind developer/VERIFY CUSTOM2=128.
 Models, three-CPU pixel twins and byte/display audits pass. Measured W4-only
 FPS gains are 0.66% on A500, 3.47% on 68020 and 7.47% on cached 68030.
 Retain D1 on all three measured CPUs. `w4-verification.md` records completion
-and measurement limits. Normal player enablement remains off. Overlay queueing
+and measurement limits. W5 includes D1 in the player bundle. Overlay queueing
 is explicitly later-only; doubled waits and BLTPRI remain unchanged.
+
+## W5 complete
+
+P1 uses the original safe beam wait and P2 enforces a two-field flight cap
+(approximately 25 FPS PAL). P1 alone costs 0.55% FPS on A500; combined W5 costs
+0.72%, 2.44% and 2.45% on A500, 68020 and cached 68030 respectively.
+Models, independent wrap/cap stress, selected/disabled byte audits, display
+samples and three-CPU combined flight checks pass. All seven normal player
+option checks pass. `w5-verification.md` records the evidence and its limits.
+
+Normal CUSTOM2=1 selects 8127 on A500/68020 and 4026 on 68030/040/060;
+CUSTOM2=0 or absent disables all performance patches. Default and icons stay
+as they were while the release preferences below remain open.
 
 ## Next work
 
-1. **W5:** tear-free publication and a frame cap under the player switch.
-   Measure P1's 68000 cost and choose P2's rate from evidence. Retain the cached
-   dense baseline's write-after-fetch observations; W4 does not fix swapping.
-2. **W6 investigation:** continue the game-time investigation and obtain approval
+1. **W6 investigation:** continue the game-time investigation and obtain approval
    before implementing a timing design.
-3. **W7:** later world-step and instrument improvements. W4 overlay queueing
+2. **W7:** later world-step and instrument improvements. W4 overlay queueing
    remains explicitly deferred.
 
 ## Decisions still required before release
@@ -86,7 +94,6 @@ is explicitly later-only; doubled waits and BLTPRI remain unchanged.
 - Default state of the single Faster rendering splash switch.
 - Whether supplied icons explicitly enable that switch.
 - The W6 timing design, after investigation and a concrete recommendation.
-- The measured frame-cap rate and any material 68000 cost of tear-free swapping.
 
 Chip RAM for W1b is approved. W3’s selected exact-output changes are complete; B1–B6 remain separate decisions.
 Until an approved W6 implementation lands, faster frames accelerating the world on
@@ -98,7 +105,7 @@ ordinary development fixtures; 0/60 copies are investigation inputs only.
 Use one binary with option changes for comparisons; all patches remain sim v1 only.
 Each feature needs original-byte checks, whole-instruction/branch/relocation audits,
 CUSTOM-off verification, its model/twin checks and the plan's measurement protocol.
-The ten sim and three sound performance ranges pass the static hook audit.
+The thirteen sim and three sound performance ranges pass the static hook audit.
 Only verified bits may enter the release mask. Keep instruments VERIFY-only and
 normal/developer builds free of their code and data. Recheck frame timing, ownership,
 chip/slow memory pressure and cache conditions after code/layout changes.

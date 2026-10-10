@@ -76,7 +76,7 @@ DECL_VERSION:MACRO
 	ENDC
 	ENDM
 
-; Release default/icon policy remains a user decision. No verified bits yet.
+; Default is off; launch icons remain unchanged. CPU-specific selection: perf.s.
 slv_config
 	IFD VERIFY
 	dc.b "C5:X:Slow drawing verification:0;C5:X:Right-bank fixture:1;C5:X:Squadron fixture:2;"
@@ -84,12 +84,14 @@ slv_config
 	dc.b "C2:X:Projection:2;C2:X:Clipping:3;C2:X:Vertex transform:4;"
 	dc.b "C2:X:Back-face test:5;C2:X:Face setup:6;C2:X:Clear fills:7;"
 	dc.b "C2:X:Tear-free swap:8;C2:X:Frame cap:9;"
+	dc.b "C2:X:Sound queue:10;C2:X:Sound no-op removal:11;C2:X:Sound volume:12;"
 	ELSE
 	IFD DEVELOPER
 	dc.b "C2:X:Table mirror:0;C2:X:Cached mirror:1;"
 	dc.b "C2:X:Projection:2;C2:X:Clipping:3;C2:X:Vertex transform:4;"
 	dc.b "C2:X:Back-face test:5;C2:X:Face setup:6;C2:X:Clear fills:7;"
 	dc.b "C2:X:Tear-free swap:8;C2:X:Frame cap:9;"
+	dc.b "C2:X:Sound queue:10;C2:X:Sound no-op removal:11;C2:X:Sound volume:12;"
 	ELSE
 	dc.b "C2:B:Faster rendering;"
 	ENDC
@@ -557,6 +559,7 @@ new_DeleteFile:
 	include "clip.s"
 	include "vertex.s"
 	include "fill.s"
+	include "pacing.s"
 	include "sound-sequence.s"
 	include "sound-driver.s"
 	IFD VERIFY

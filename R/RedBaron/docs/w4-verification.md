@@ -1,5 +1,10 @@
 # W4 solid rectangle fills
 
+> Current player policy: W5 now enables the verified CPU-specific bundle with
+> CUSTOM2=1; the existing default remains off and icons are unchanged. See
+> `w5-verification.md`. Zero-mask/release-gate statements below describe the
+> historical checkpoint recorded here. Deferred feature work is still deferred.
+
 ## Contract and scope
 
 D1 is developer/VERIFY CUSTOM2 bit 7 (128), installed only by the sim v1

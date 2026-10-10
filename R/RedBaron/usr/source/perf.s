@@ -1,6 +1,6 @@
 ; Performance patch framework. Only sim v1 calls this module's installer.
 ; No feature is release-enabled until its model, twin and measurements pass.
-PERF_VERIFIED_MASK = 0
+PERF_VERIFIED_MASK = $1fbf ; W1-W5, excluding deferred face setup bit 6
 PERF_DEVELOPER_MASK = $1fff
 
 perf_read_options:
@@ -91,6 +91,7 @@ perf_apply_v1:
 	beq.b .no_fill
 	bsr fill_install
 .no_fill
+	bsr pace_install
 	bsr sound_sequence_install
 	bsr sound_driver_install
 	rts

@@ -1,5 +1,10 @@
 # W2 geometry implementation
 
+> Current player policy: W5 now enables the verified CPU-specific bundle with
+> CUSTOM2=1; the existing default remains off and icons are unchanged. See
+> `w5-verification.md`. Zero-mask/release-gate statements below describe the
+> historical checkpoint recorded here. Deferred feature work is still deferred.
+
 W2's implementation and measurement work is complete with the explicit low-value
 deferrals below. Implemented: G1 projection core, G2 trivial clipping, G3 32-bit
 vertex misses and G4 low-long dot. Developer/VERIFY selections are CUSTOM2=60

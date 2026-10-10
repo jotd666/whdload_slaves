@@ -1,5 +1,10 @@
 # W3 exact-output sound work
 
+> Current player policy: W5 now enables the verified CPU-specific bundle with
+> CUSTOM2=1; the existing default remains off and icons are unchanged. See
+> `w5-verification.md`. Zero-mask/release-gate statements below describe the
+> historical checkpoint recorded here. Deferred feature work is still deferred.
+
 Status: complete with the explicit low-value deferrals below. S1, S3 and S9
 are implemented and verified; S2/S3′/S4–S8 are not implemented. Sound data,
 224-byte buffers, service ownership, repeated register writes and tick/envelope

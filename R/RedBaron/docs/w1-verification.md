@@ -1,5 +1,10 @@
 # W1 dashboard mirror implementation and evidence
 
+> Current player policy: W5 now enables the verified CPU-specific bundle with
+> CUSTOM2=1; the existing default remains off and icons are unchanged. See
+> `w5-verification.md`. Zero-mask/release-gate statements below describe the
+> historical checkpoint recorded here. Deferred feature work is still deferred.
+
 W1 core is implemented; further validation and player enablement are deferred at
 the user's request to prioritize geometry. W1a uses developer/VERIFY CUSTOM2 bit 0;
 W1b is implemented behind bit 1. The release verified mask remains zero. The uncompleted follow-up is listed at the end; it is not claimed as passed.
