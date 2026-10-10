@@ -71,8 +71,12 @@ The final-bundle A500 scene checks also improve sampled 3D-pass main costs:
 scene**. Each is a 100-field routine-cost sample, not an FPS run; banking's ON
 window completes an extra pass, so call mixes differ. Per-emitted-face means
 also decrease. Same-step state and sampled display/disabled-byte checks pass;
-see `w2-verification.md` for counts and scope. The other CPUs' scene pairs are
-still being collected.
+see `w2-verification.md` for counts and scope. The 68020 scene samples likewise
+reduce mean 3D-pass main costs by **7.00% event, 7.67% bank and 3.42% dense**.
+Its banking ON sample includes an extra dashboard redraw and its call mixes
+differ, so these are routine-cost observations, not scene FPS gains. Per-face
+means decrease and sampled display/disabled-byte checks pass. Cached-68030
+scene pairs are still being collected.
 
 ## Running the W2 profile manually
 

@@ -46,8 +46,8 @@ and icons are unchanged. Developer/VERIFY builds retain individual options.
    measured steady bundle gains 5.97% FPS on A500 and 5.54% on 68020. Cached
    68030 early-flight pass wall time falls 1.19%; its mixed long windows do not
    establish a steady-flight FPS gain. The per-routine check rejects G1 on 030; the reduced CUSTOM2=56 bundle
-   passes its combined check. Finish the final same-build event/bank/dense
-   cost matrix before declaring W2 complete.
+   passes its combined check. A500 and 68020 final event/bank/dense costs are measured. Finish the
+   cached-68030 scene pairs before declaring W2 complete.
    Remaining G1/G3 refinements and G5–G9 are deferred
    under the plan’s 3%-of-frame gate; see the cost assessment in
    `w2-verification.md`.

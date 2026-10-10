@@ -471,3 +471,39 @@ hook-byte checks pass (seven/three ranges). Evidence:
 `w2-scene-a500-{bank,dense}-{0,60}`, including per-window `*-costs.json` and
 `*-faces.json`; the slave hash remains the frozen value recorded above.
 The remaining 68020/68030 scene pairs are still being collected.
+
+## Final-bundle 68020 scene costs
+
+The same bank/dense fixtures and frozen binary are compared with CUSTOM2=0 and
+60 on the documented 14 MHz 68EC020 configuration. Each instruction capture is
+40 fields, starting at the initial event, bank step 24 or dense step 8. Means
+exclude interrupts and incomplete calls; source/temporary state correctness
+comes from the earlier combined twins, not these timing comparisons.
+
+| Window | Complete 3D calls OFF / ON | Main cycles/pass OFF → ON | Change |
+| --- | ---: | ---: | ---: |
+| Initial cockpit event | 3 / 4 | 1,571,052.3 → 1,461,018.8 | −7.00% |
+| Banking | 4 / 3 | 2,012,532.3 → 1,858,149.7 | −7.67% |
+| Dense | 3 / 3 | 1,822,213.3 → 1,759,938.7 | −3.42% |
+
+All four measured geometry routine averages improve in every window. The
+banking ON capture also contains **two complete original mirror calls**, while
+OFF contains none. With non-clamped dt, event timing and world state can diverge.
+The table is therefore a scoped complete-pass cost comparison with different
+call mixes, not an event-normalized frame-speed or FPS claim. The initial event
+contains two complete original mirrors in both settings; dense contains none.
+W1 remains disabled.
+
+Using the same emitted-face definition as the A500 analysis:
+
+| Window | Emitted faces OFF / ON | Mean main cycles/emitted face OFF → ON |
+| --- | ---: | ---: |
+| Event | 123 / 132 | 17,044.7 → 16,318.4 |
+| Banking | 96 / 80 | 23,692.8 → 21,779.9 |
+| Dense | 154 / 162 | 20,822.2 → 19,869.9 |
+
+All six short captures have observable display ownership and no detected
+conflicts. Unselected hook-byte checks pass (seven ranges OFF, three ON).
+Evidence: `w2-scene-020-{bank,dense}-{0,60}`, with retained whole-call and
+emitted-face records. Hashes match the frozen VERIFY binary. Only the cached
+68030 scene pairs remain in the consolidated timing matrix.
