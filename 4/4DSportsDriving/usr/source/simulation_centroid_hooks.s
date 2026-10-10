@@ -27,6 +27,7 @@ sim_centroid_project:
 
 sim_centroid_build:
  bsr sim_centroid_project
+ bsr sim_tilt_collect
  movea.w -$46(a5),a0      ; displaced C524
  rts
 sim_centroid_suspension:

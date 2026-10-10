@@ -1,8 +1,8 @@
 ; Fractional atan2(x,y), with 1024 angles/revolution and eight fraction bits.
 ; Inputs D0.W=x, D1.W=y (full signed-word range). D0.L returns 0..$3ffff.
 ; Zero vector returns zero. Preserve D1-D5/A0; CCR unspecified.
-; This arithmetic kernel is not yet a live geometry hook. Its caller must
-; remove wheel-reconstruction bias before carrying a geometric angle delta.
+; Callers remove wheel-reconstruction bias before carrying a geometric
+; angle delta; shared by the live yaw and experimental tilt hooks.
 sim_yaw_atan_q8:
  movem.l d1-d5/a0,-(sp)
  ext.l d0

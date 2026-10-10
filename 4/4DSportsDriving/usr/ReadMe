@@ -44,7 +44,7 @@
    saved A4000 preferences are ignored and A4000 replays are rejected safely
  - CUSTOM3=0 enables the new timing (the runtime build's default)
  - CUSTOM2 controls rendering optimizations independently of CUSTOM3
- - A4000 replay physics ABI6 retains fractional steering and body position; older
+ - A4000 replay physics ABI7 retains fractional steering, body position and tilt; older
    development A4000 replays are rejected, while native10/20 replays stay valid
  - this runtime is an opt-in preview, still undergoing handling and lifecycle
    validation; the ordinary slave build retains the original simulation

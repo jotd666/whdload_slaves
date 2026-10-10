@@ -99,16 +99,20 @@ sim_steering_50:
  movem.l (sp)+,d2-d5
  rts
 
-; Unsigned forward displacement from $C326: speed*1408 / (20*768).
-; At 50 Hz use denominator 38400, with an unsigned remainder at (a0).
-; d0.w unsigned speed -> d0.l whole displacement. Scratch d1.
-; Max numerator 65535*1408+38399=92311679: DIVU quotient always fits.
+; Preserve A2500's calibrated integer displacement: floor(speed*1408/15360).
+; Apply2/5 per50Hz update with unsigned fifths at A0. Five updates at a
+; constant speed equal two native20 updates exactly, including its truncation.
+; D0.W unsigned speed -> D0.L whole distance; D1 scratch. The first DIVU
+; quotient is at most6007; the second numerator at most12018, so both fit.
 sim_distance_50:
  mulu #1408,d0
+ divu #15360,d0
+ and.l #$ffff,d0
+ add.l d0,d0
  moveq #0,d1
  move.w (a0),d1
  add.l d1,d0
- divu #38400,d0
+ divu #5,d0
  swap d0
  move.w d0,(a0)
  swap d0

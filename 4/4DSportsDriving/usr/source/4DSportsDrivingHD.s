@@ -503,6 +503,8 @@ pl_main
     PL_PSS $D44E,sim_centroid_zmax,2
     PL_PSS $D462,sim_centroid_zmin,2
     PL_PSS $D49E,sim_a4000_yaw,2
+    PL_PSS $D514,sim_tilt_pitch,106
+    PL_PSS $D5F2,sim_tilt_roll,102
     PL_PSS $C326,sim_a4000_distance,26
     PL_PSS $F60C,sim_a4000_acceleration,10
     PL_PSS $F29E,sim_a4000_gear38,66

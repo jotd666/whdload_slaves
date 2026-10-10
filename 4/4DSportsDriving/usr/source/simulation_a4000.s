@@ -4,7 +4,8 @@
 ; and lifecycle acceptance are pending. Native 10/20 paths survive.
 ; Append player/opponent geometric yaw fractions after the two64-byte blocks.
 ; Unsigned Q16 XYZ body-position carries: player+132, opponent+138.
-SIM_PRIVATE_BYTES = 144
+; Signed Q8 pitch/roll carries: player+144/146, opponent+148/150.
+SIM_PRIVATE_BYTES = 152
 SIM_AUX_BYTES = 24*8
 SIM_CAMERA_BYTES = 8
 sim_a4000_arm:
@@ -41,7 +42,7 @@ sim_a4000_arm:
  rts
 
 ; a1 vehicle -> a0 private block; no stored pointer is part of replay state.
-; steering +0, acceleration +2, distance +4, gear +6, wheel pairs +8..23.
+; steering +0, acceleration +2, distance fifths +4, gear +6, wheel pairs +8..23.
 ; Suspension fractions: extension +24..31, return +32..39, bias +40..47.
 ; Terrain loss uses an unsigned Q16 carry at +48; skid loss uses fifths at +50.
 ; Spin displacement: /1280 carry at +52, cached step at +54 ($8000=unset).
@@ -218,6 +219,20 @@ sim_a4000_prepare:
  lea sim_native_heading(pc),a1
  moveq #86/2-1,d0
  bsr .copy
+ lea sim_a4000_prepare(pc),a0
+ adda.l #sim_game-sim_a4000_prepare,a0
+ move.l (a0),a0
+ adda.l #$d514,a0
+ lea sim_native_pitch(pc),a1
+ moveq #56-1,d0
+ bsr .copy
+ lea sim_a4000_prepare(pc),a0
+ adda.l #sim_game-sim_a4000_prepare,a0
+ move.l (a0),a0
+ adda.l #$d5f2,a0
+ lea sim_native_roll(pc),a1
+ moveq #54-1,d0
+ bsr .copy
  move.l _resload(pc),a2
  jsr resload_FlushCache(a2)
  rts
@@ -322,6 +337,10 @@ sim_a4000_wheel_contact:
  clr.w $4c(a0,d0.l)
  rts
 
+sim_native_pitch: dcb.w 112/2,0
+ rts
+sim_native_roll: dcb.w 108/2,0
+ rts
 sim_native_heading: dcb.w 86/2,0
  rts
 sim_native_opponent_steering: dcb.w 42/2,0
@@ -344,7 +363,7 @@ sim_native_wheel: dcb.w 148/2,0
  rts
  even
  dc.b "4DA4PHYS"
- dc.w 7,SIM_PRIVATE_BYTES
+ dc.w 8,SIM_PRIVATE_BYTES
 sim_a4000_private: dcb.b SIM_PRIVATE_BYTES,0
 
  even
@@ -1075,16 +1094,18 @@ sim_a4000_yaw:
  beq .degenerate
  bsr sim_yaw_atan_q8
  move.l d0,d4
- ; Old world-space wheel buffer, before translation/contact/suspension.
- ; Use the same rear-pair minus front-pair sums as the final native vector.
- move.l -$ca(a5),d0
- add.l -$be(a5),d0
- sub.l -$e2(a5),d0
- sub.l -$d6(a5),d0
- move.l -$c2(a5),d1
- add.l -$b6(a5),d1
- sub.l -$da(a5),d1
- sub.l -$ce(a5),d1
+ ; Body basis before translation/contact, with INITIAL suspension offsets
+ ; restored at C520. Raw old wheels bias heading on tilted/suspended cars.
+ ; This scratch still includes spin and has not been centered/de-rotated yet.
+ lea sim_tilt_wheels(pc),a0
+ move.w 12(a0),d0
+ add.w 18(a0),d0
+ sub.w (a0),d0
+ sub.w 6(a0),d0
+ move.w 16(a0),d1
+ add.w 22(a0),d1
+ sub.w 4(a0),d1
+ sub.w 10(a0),d1
  neg.w d1
  move.w d0,d6
  or.w d1,d6
@@ -1124,3 +1145,5 @@ sim_a4000_yaw:
  rts
 
  include "simulation_centroid_hooks.s"
+
+ include "simulation_tilt.s"
