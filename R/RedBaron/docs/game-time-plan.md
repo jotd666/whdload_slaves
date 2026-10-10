@@ -192,6 +192,17 @@ original collision/AI updates just to improve the frame-rate number.
    swap census. Update `profiling.md`. Promote the new bit only after passing;
    make one coherent commit per completed feature.
 
+## Banked-physics reference update
+
+The constant-Right test now compares dt=225 and dt=100 from identical initial
+world state over 9,900 primary-time units. The 225 trajectory is 1.7192% shorter
+and ends 657.494 raw units away. Exact position/velocity conversion checks pass,
+but orientation and native velocity histories differ. This does not inherit
+the earlier straight-flight 0.4% result as a tolerance. The physics gate remains
+open pending classification of control/force integration and per-step rounding;
+no scheduler quantum change has been made. See `w6-verification.md`, “Constant-bank
+small-step reference,” for the frozen build and reproduction details.
+
 ## Acceptance matrix and decision gates
 
 - **Arithmetic:** exact scheduler model/twin, both clock remainders, counter

@@ -1,6 +1,8 @@
 ; VERIFY-only W6 experiment. CUSTOM4 forces the primary dt at each flight
 ; input checkpoint. Zero is observation-only. Secondary dt, menus and original
 ; clock arithmetic remain unchanged. Never use forced runs for FPS claims.
+; CUSTOM4 bit 16 holds Right throughout a forced-dt physics run.
+; This fixture requires the timestamped W6 input owner to remain disabled.
 ; a1 is h3; preserve every input register. No additional sim-code hook.
 time_probe_step:
 	movem.l d0/a0,-(sp)
@@ -27,6 +29,9 @@ time_probe_step:
 	adda.l #perf_custom4-.custom4_base,a0
 	move.l (a0),d0
 	beq.b .done
+	cmp.l #$1ffff,d0
+	bhi.b .bad
+	andi.l #$ffff,d0
 	cmp.l #100,d0
 	beq.b .force
 	cmp.l #225,d0
@@ -37,6 +42,7 @@ time_probe_step:
 	beq.b .force
 	cmp.l #2200,d0
 	beq.b .force
+.bad
 	lea .mismatch_base(pc),a0
 .mismatch_base
 	adda.l #perf_mismatch-.mismatch_base,a0
@@ -46,6 +52,12 @@ time_probe_step:
 	jmp resload_Abort(a2)
 .force
 	move.w d0,$4834(a1)
+	btst #0,1(a0) ; CUSTOM4 bit 16, big-endian ULONG
+	beq.b .done
+	move.w time_keys_ready(pc),d0
+	bne.b .bad
+	move.l tape_keybase(pc),a0
+	move.b #1,$4e(a0)
 .done
 	; CUSTOM5 bit 19: hold the native fire key for projectile tests.
 	lea .custom5_3(pc),a0

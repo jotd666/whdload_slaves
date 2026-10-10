@@ -2299,3 +2299,58 @@ workloads; they do not certify the wider capacity matrix or smooth 50 FPS.
 The field collector now records the clock transaction marker explicitly; all
 four 68030 endpoints are coherent. No uncommitted snapshot is silently treated
 as a completed timing transaction. Both owned emulators were quit.
+
+
+## Constant-bank small-step reference
+
+VERIFY fixture build `83f586cb2b477476dd915d2779561abf834cd6ce3abe95fa3f347cafdf20083a`
+adds CUSTOM4 bit 16 to hold Right at every native flight-input checkpoint when
+forcing primary dt. The low word still selects an existing allowed dt. It
+rejects use with the active timestamped W6 input owner. This deliberately tests
+the native physics path with CUSTOM2=0; it does not change the scheduler quantum
+or any player option. The old tape's step-20–34 hold cannot be used for this
+comparison because its input duration changes with the chosen dt.
+
+Both cached-68030 runs begin with identical complete player state, 105 tracked
+allocations / 243,855 bytes and four sim segments, except the deliberately
+forced primary dt at `h3:04834`. Actual held Right is recorded as 1 at every
+sample. Both remain at Time Scale 40, F=33. `physics_reference.py` requires those
+initial-state and control conditions and compares equal accumulated primary time.
+It retains the raw initial segment difference instead of concealing it.
+
+| Primary dt | Completed updates | Primary-time budget | Travelled distance, raw |
+| ---: | ---: | ---: | ---: |
+| 225 | 44 | 9,900 | 10,926.783 |
+| 100 reference | 99 | 9,900 | 11,117.925 |
+
+The 225-unit path is **1.7192% shorter**, with endpoint separation 657.494 raw
+units and final orientation differences `(0, 800, 22)` in native signed-word
+units. This is a larger difference than the earlier 0.4% straight-flight result.
+It is not accepted under an invented tolerance. The native-history checks and
+exact airborne velocity/position model pass 870 velocity conversions and 429
+coordinate/remainder updates across both runs. Thus the difference is upstream
+of that checked position arithmetic, including differing native velocity and
+orientation histories; aerodynamic/control integration and per-step rounding
+still need investigation. A passing position model does not certify those
+forces or a contact/hit outcome.
+
+This does not contradict equal-225-tick state agreement across rendering
+schedules: step-size fidelity and rendering independence are separate checks.
+The bank physics acceptance gate remains open, along with other Time Scale
+settings, stall/recovery, climb/descent, landing/crash and combat cases. No
+forced-dt run is a wall-time performance sample. Secondary clocks are still
+native in this isolated probe; it is not a full W6 scheduler comparison.
+
+Retained captures: `tmp/dev/tmp/prof/w6-bank-reference-225/` and
+`tmp/dev/tmp/prof/w6-bank-reference-100/`, including raw initial RAM, player
+records, held-key observations and step logs. With the local development
+environment loaded, reproduce the probes using the current boot helper with
+`030 0`, `--dt 65761` for 225 or `--dt 65636` for 100. Collect through steps 45
+and 100 respectively with `w6_players.py --key-code 0x4e`, then run the versioned
+`physics_reference.py CANDIDATE REFERENCE --out RESULT` checker. Use fresh evidence
+directories and one owned emulator at a time. Both owned captures were quit.
+
+All 200 host tests pass. Static audits retain 64 ranges / 121 patch destinations
+with zero errors and their existing indirect-target limitation. Normal and
+developer binaries retain their W5 hashes. Only the VERIFY physics fixture and
+its analysis tooling changed; the 225-unit W6 scheduler is unchanged.

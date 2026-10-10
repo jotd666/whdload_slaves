@@ -167,6 +167,16 @@ PAL fields; final CIA debt is 2/0 and exact funding passes. Raw global and sound
 state differences remain visible. This shorter boundary-controlled check is
 correctness evidence, not a 250-field performance sample or full gameplay result.
 
+## W6 bank physics reference
+
+The separate VERIFY fixture `83f586cb…` compares 225- and 100-unit native steps
+under constant Right input at equal primary-time budget 9,900. The 225 run
+travels 1.7192% less distance, with 657.494 raw-unit endpoint separation. Initial
+world/heap state matches except the intentional dt; exact airborne integration
+passes. This is an unresolved step-size fidelity result, not an FPS measurement
+or a failure of equal-tick rendering independence. The W6 physics acceptance
+gate remains open; see `w6-verification.md` for scope and reproduction.
+
 ## W6 current full-bundle capacity checkpoint
 
 Frozen VERIFY build `eb743015c665a5893fba0cb12158c9cceb33704f06e6631ccf61235fd0f30896`
