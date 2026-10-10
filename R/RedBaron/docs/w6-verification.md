@@ -2534,3 +2534,57 @@ do not justify removing state restoration, lowering detail, changing physics
 speed, or relaxing the 50 FPS requirement. Audit redraw dependencies and compare
 pixels before changing the expensive native cockpit calls. The full gameplay,
 capacity and hardware acceptance gates remain open.
+
+## Front-cockpit cache dependency audit
+
+The expensive call at `sim:15e96` dispatches numbered drawing programs through
+`sim:168c8` to the interpreter at `sim:28962`. The ordinary front-view path
+selects programs 3 and 4 when the gun-status word returned by `sim:1216a` is zero;
+other statuses select different programs. This is conditional behavior, not a
+claim that those two programs cover all flight or combat states.
+
+`cockpit_program.py` now decodes those two programs from the retained initial
+bank-reference memory, using the pointer table at `h3:7b52`. It accepts only
+the observed colour, line, rectangle, resource-selection and bitmap commands;
+unknown commands, incoming bitmap-resource dependencies, truncated data and
+missing terminators fail closed. The expected original sim hash is checked.
+The retained `cockpit-programs.json` reports:
+
+| Program | Bytes including terminator | Lines | Rectangles | Bitmaps | Colour commands |
+|---|---:|---:|---:|---:|---:|
+| 3 | 138 | 6 | 2 | 3 | 3 |
+| 4 | 108 | 5 | 2 | 2 | 2 |
+
+For example, both programs draw lines between (89,72) and (231,72), plus struts
+near x=73/247 and y=76..90. Program 3 places bitmaps at (67,74), (85,93) and
+(149,71); program 4 places them at (204,74) and (255,93). These are view-overlay
+coordinates. Unchanged cockpit inputs do not imply unchanged destination pixels:
+the preceding scene render can replace the pixels beneath this drawing. A
+whole-call skip keyed only on simulation tick or cockpit inputs is therefore
+not an acceptable optimization.
+
+The other costly call, `sim:19ba6`, already tracks seven pairs of per-buffer
+rectangles at `h3:7134`, indexed with the selector at `h3:711d`. It clips/redraws
+using those previous bounds, dispatches instrument callbacks, replaces their
+bounds, decrements the dirty byte at `h3:711c`, and updates the selector. Thus
+neither expensive caller is a pure bitmap copy that can simply be omitted.
+The interpreter also changes drawing state and resource selectors. Its colour
+command can call native helpers; the command inventory does not establish
+constant colours or a complete cache key.
+
+The concrete candidate is a cached **composited overlay**, still applied to each
+fresh scene, not reuse of the prior destination or removal of instrument updates.
+Before implementation, verify immutable program/resource bytes, effective
+colour/clip/mode dependencies and native post-call state. Derive a transparency
+mask with native reference rendering, and check the resulting pixels against
+native execution on changing backgrounds, both buffers, gun states and view
+changes. Unsupported commands or dependencies must take the original path.
+Do not claim the whole measured `sim:15e96` cost as potential savings: it also
+contains other drawing and state work.
+
+This audit adds no runtime patch and no FPS improvement. All **210 host tests**
+pass, including operand/terminator distinction, bitmap-resource tracking and
+rejection of incomplete or unsupported programs. Reproduce with
+`cockpit_program.py` on the retained `w6-bank-reference-225` capture and an
+`--out` result path. The supported command inventory advances the rendering
+investigation; pixel equivalence and the 50 FPS gate remain unproven.
