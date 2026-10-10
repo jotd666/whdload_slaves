@@ -94,6 +94,9 @@ tape_task_code:
 	moveq	#0,d0
 	moveq	#0,d1
 	jsr	_LVOOpenDevice(a6)
+ IFD TAPE_OPPONENT
+ bsr tape_opponent_route
+ ENDC
 	lea	tape(pc),a3
 .next:	move.w	(a3)+,d2
 	beq.w	.done
@@ -523,4 +526,157 @@ tape_pixels_ready:
  rts
 tape_gfx_base:
  dc.l 0
+ ENDC
+
+ IFD TAPE_OPPONENT
+ IFLE TAPE_OPPONENT
+ FAIL "TAPE_OPPONENT must be 1..6"
+ ENDC
+ IFGT TAPE_OPPONENT-6
+ FAIL "TAPE_OPPONENT must be 1..6"
+ ENDC
+; Read-only menu observations. Selection, opponent identity, car loading and
+; race initialization still run through the original game and input.device.
+tape_opponent_main_observe:
+ move.l a0,-(sp)
+ lea tape_opponent_ui(pc),a0
+ move.b -2(a5),1(a0)
+ move.b -$174a(a4),2(a0)
+ move.b #1,(a0)
+ move.l (sp)+,a0
+ move.b -2(a5),d0
+ cmp.b -3(a5),d0
+ rts
+tape_opponent_menu_observe:
+ move.l a0,-(sp)
+ lea tape_opponent_ui(pc),a0
+ move.b -10(a5),1(a0)
+ move.b -$174a(a4),2(a0)
+ move.b #2,(a0)
+ move.l (sp)+,a0
+ move.b -$174a(a4),d0
+ cmp.b -12(a5),d0
+ rts
+
+; Main menu selection2 opens opponents. Opponent selection1 is Next,
+; selection4 is Done. Observe acknowledgement after each ordinary key press.
+tape_opponent_route:
+ lea tape_opponent_ui(pc),a2
+.intro:
+ cmp.b #1,(a2)
+ beq .main
+ bsr .enter
+ bra .intro
+.main:
+ moveq #2,d4
+ bsr .select
+ bsr .enter
+ move.w #299,d7
+.wait_opponent:
+ cmp.b #2,(a2)
+ beq .opponent
+ bsr .field
+ dbra d7,.wait_opponent
+ addq.l #1,4(a2)
+ bsr .enter
+ move.w #299,d7
+ bra .wait_opponent
+.opponent:
+ cmp.b #TAPE_OPPONENT,2(a2)
+ beq .finish
+ moveq #1,d4
+ bsr .select
+ move.b 2(a2),d5
+ bsr .enter
+ move.w #299,d7
+.wait_identity:
+ cmp.b 2(a2),d5
+ bne .opponent
+ bsr .field
+ dbra d7,.wait_identity
+ addq.l #1,4(a2)
+ bsr .enter
+ move.w #299,d7
+ bra .wait_identity
+.finish:
+ moveq #4,d4
+ bsr .select
+ bsr .enter
+ move.w #299,d7
+.wait_main:
+ cmp.b #1,(a2)
+ beq .done
+ bsr .field
+ dbra d7,.wait_main
+ addq.l #1,4(a2)
+ bsr .enter
+ move.w #299,d7
+ bra .wait_main
+.done:
+ move.b #1,3(a2)
+ rts
+.select:
+ cmp.b 1(a2),d4
+ beq .selected
+ move.b 1(a2),d5
+ move.w #$4f,d6 ; Left: native menu navigation, unlike Ctrl-G Down
+ move.w d6,d0
+ moveq #1,d2
+ bsr .key
+ move.w #299,d7
+.wait_selection:
+ cmp.b 1(a2),d5
+ bne .release_selection
+ bsr .field
+ dbra d7,.wait_selection
+ addq.l #1,4(a2)
+.release_selection:
+ move.w d6,d0
+ or.w #RAW_UP,d0
+ moveq #30,d2
+ bsr .key
+ bra .select
+.selected:
+ rts
+.enter:
+ move.w #RAW_RETURN,d0
+.press:
+ move.w d0,d3
+ moveq #5,d2
+ bsr .key
+ move.w d3,d0
+ or.w #RAW_UP,d0
+ moveq #25,d2
+.key:
+ lea tape_event(pc),a0
+ move.b #IECLASS_RAWKEY,ie_Class(a0)
+ move.w d0,ie_Code(a0)
+ clr.w ie_Qualifier(a0)
+ lea tape_keys_sent(pc),a1
+ addq.l #1,(a1)
+ lea tape_io(pc),a1
+ move.w #IND_WRITEEVENT,IO_COMMAND(a1)
+ move.l a0,IO_DATA(a1)
+ move.l #ie_SIZEOF,IO_LENGTH(a1)
+ jsr _LVODoIO(a6)
+.wait:
+ bsr .field
+ subq.w #1,d2
+ bne .wait
+ rts
+.field:
+ exg a5,a6
+ jsr _LVOWaitTOF(a6)
+ exg a5,a6
+ move.l a0,-(sp)
+ lea tape_fields(pc),a0
+ addq.l #1,(a0)
+ move.l (sp)+,a0
+ rts
+ even
+ dc.b "4DOPPUI!"
+ dc.w 2,TAPE_OPPONENT
+tape_opponent_ui: dc.b 0,0,0,0 ; menu,selection,identity,route complete
+ dc.l 0 ; retry count
+ even
  ENDC
