@@ -135,7 +135,10 @@ SIM_FIXTURE_RECORD_SIZE = SIM_FIXTURE_STATE_SIZE+10
  FAIL "SIM_HISTORY_SEEK_TEST requires checkpoint spacing 50"
  ENDC
 ; Explicit test transition at a completed live tick, then invoke the actual
-; native seek routine with target 55. No fixture inputs are written in replay.
+; native seek routine with a configurable target. No fixture inputs in replay.
+ IFND SIM_HISTORY_SEEK_TARGET
+SIM_HISTORY_SEEK_TARGET = 55
+ ENDC
 sim_history_seek_fixture:
  tst.b $45(a4)
  bne .done
@@ -143,7 +146,7 @@ sim_history_seek_fixture:
  bne .done
  movem.l d0-a6,-(sp)
  move.b #2,$45(a4)
- move.w #55,-(sp)
+ move.w #SIM_HISTORY_SEEK_TARGET,-(sp)
  move.l tape_game(pc),a0
  adda.l #$e518,a0
  jsr (a0)
@@ -880,7 +883,7 @@ SIM_FIXTURE_THROTTLE_SECONDS = 2
  even
  dc.b "4DSIMFIX"
  IFD SIM_A4000
- dc.w 8,SIM_FIXTURE_RECORD_SIZE
+ dc.w 9,SIM_FIXTURE_RECORD_SIZE
  ELSE
  dc.w 2,SIM_FIXTURE_RECORD_SIZE
  ENDC

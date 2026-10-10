@@ -494,6 +494,7 @@ pl_main
     PL_PSS $11B80,sim_aux_move_stub,94
     PL_PSS $11C38,sim_aux_retire_stub,10
     PL_PSS $11C50,sim_aux_rotate_stub,26
+    PL_PSS $D49E,sim_a4000_yaw,2
     PL_PSS $C326,sim_a4000_distance,26
     PL_PSS $F60C,sim_a4000_acceleration,10
     PL_PSS $F29E,sim_a4000_gear38,66

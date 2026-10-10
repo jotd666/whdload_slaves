@@ -2,7 +2,8 @@
 ; sim_a4000_arm is retained only for older synthetic input fixtures.
 ; Not yet a selectable A4000 release: remaining rate sites, full replay UI
 ; and lifecycle acceptance are pending. Native 10/20 paths survive.
-SIM_PRIVATE_BYTES = 128
+; Append player/opponent geometric yaw fractions after the two64-byte blocks.
+SIM_PRIVATE_BYTES = 132
 SIM_AUX_BYTES = 24*8
 SIM_CAMERA_BYTES = 8
 sim_a4000_arm:
@@ -342,7 +343,7 @@ sim_native_wheel: dcb.w 148/2,0
  rts
  even
  dc.b "4DA4PHYS"
- dc.w 5,SIM_PRIVATE_BYTES
+ dc.w 6,SIM_PRIVATE_BYTES
 sim_a4000_private: dcb.b SIM_PRIVATE_BYTES,0
 
  even
@@ -1041,4 +1042,81 @@ sim_a4000_contact_distance:
  and.l #$ffff,d0
  movem.l (sp)+,d1-d3/a0-a1
  add.w -6(a5),d0
+ rts
+
+; $D49E..$D4A6: heading reconstruction from final wheel geometry.
+; Keep native Normal/A2500 lookup. At50Hz retain the fractional CHANGE from
+; rebuilt pre-translation wheels. Anchoring to their native integer angle
+; removes matrix/lookup bias while retaining their already-applied spin.
+; The two appended signed Q8 remainders participate in reset and replay copies.
+sim_a4000_yaw:
+ cmp.w #50,-$15fa(a4)
+ beq .new
+ move.l 4(sp),-(sp)        ; original x,y arguments below our hook return
+ jsr -$7bae(a4)
+ addq.l #4,sp
+ and.w #$3ff,d0
+ rts
+.new:
+ movem.l d1-d7/a0-a3,-(sp)
+ lea sim_a4000_private+128(pc),a3
+ lea -$85e(a4),a0
+ cmpa.l 8(a5),a0
+ bne .player
+ addq.l #2,a3
+.player:
+ move.w -$72(a5),d0
+ move.w -$74(a5),d1
+ neg.w d1
+ move.w d0,d6
+ or.w d1,d6
+ beq .degenerate
+ bsr sim_yaw_atan_q8
+ move.l d0,d4
+ ; Old world-space wheel buffer, before translation/contact/suspension.
+ ; Use the same rear-pair minus front-pair sums as the final native vector.
+ move.l -$ca(a5),d0
+ add.l -$be(a5),d0
+ sub.l -$e2(a5),d0
+ sub.l -$d6(a5),d0
+ move.l -$c2(a5),d1
+ add.l -$b6(a5),d1
+ sub.l -$da(a5),d1
+ sub.l -$ce(a5),d1
+ neg.w d1
+ move.w d0,d6
+ or.w d1,d6
+ beq .degenerate
+ move.w d1,-(sp)
+ move.w d0,-(sp)
+ bsr sim_yaw_atan_q8
+ move.l d0,d5
+ jsr -$7bae(a4)           ; baseline native angle, including spin
+ addq.l #4,sp
+ ext.l d0
+ lsl.l #8,d0
+ sub.l d5,d4
+ add.l d4,d0
+ move.w (a3),d1
+ ext.l d1
+ add.l d1,d0
+ add.l #128,d0            ; nearest integer, signed centered residual
+ move.w d0,d1
+ and.w #255,d1
+ sub.w #128,d1
+ move.w d1,(a3)
+ lsr.l #8,d0
+ bra .done
+.degenerate:
+ ; Undefined horizontal axis: retain native behavior and discard stale debt.
+ clr.w (a3)
+ move.w -$74(a5),d0
+ neg.w d0
+ move.w d0,-(sp)
+ move.w -$72(a5),-(sp)
+ jsr -$7bae(a4)
+ addq.l #4,sp
+.done:
+ movem.l (sp)+,d1-d7/a0-a3
+ and.w #$3ff,d0
  rts

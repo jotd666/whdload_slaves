@@ -17,6 +17,12 @@ sim_replay_file_fixture:
  adda.l #sim_replay_test_marker-sim_replay_file_fixture,a6
  tst.l 12(a6)
  bne .out
+ ; Lengthy destructive codec checks are not simulated play time. Freeze the
+ ; producer explicitly, preserving its prior modal state; this is VERIFY only.
+ lea sim_replay_file_fixture(pc),a0
+ adda.l #sim_schedule_modal-sim_replay_file_fixture,a0
+ move.w (a0),-(sp)
+ move.w #1,(a0)
  lea sim_replay_file_fixture(pc),a5
  adda.l #sim_replay_test_file-sim_replay_file_fixture,a5
  movea.l a5,a0
@@ -58,10 +64,10 @@ sim_replay_file_fixture:
  cmp.l (a1),d1
  bne .failed
  addq.l #1,12(a6)
- ; Exercise every fragment/camera byte independently of a quiet race's zeros.
+ ; Exercise every private/time/fragment/camera byte, including both yaw fractions independently of a quiet race's zeros.
  movea.l a5,a0
- adda.l #SIM_REPLAY_COMPANION_OFFSET+SIM_HISTORY_AUX_OFFSET,a0
- moveq #(SIM_AUX_BYTES+SIM_CAMERA_BYTES)/4-1,d0
+ adda.l #SIM_REPLAY_COMPANION_OFFSET+8,a0
+ moveq #(SIM_PRIVATE_BYTES+SIM_TIME_STATE_BYTES+SIM_AUX_BYTES+SIM_CAMERA_BYTES)/4-1,d0
  move.l #$12345678,d1
 .aux_seed:
  move.l d1,(a0)+
@@ -75,8 +81,8 @@ sim_replay_file_fixture:
  tst.l d0
  bne .failed
  movea.l a3,a0
- adda.l #SIM_REPLAY_COMPANION_OFFSET-SIM_REPLAY_HEADER+SIM_HISTORY_AUX_OFFSET,a0
- moveq #(SIM_AUX_BYTES+SIM_CAMERA_BYTES)/4-1,d0
+ adda.l #SIM_REPLAY_COMPANION_OFFSET-SIM_REPLAY_HEADER+8,a0
+ moveq #(SIM_PRIVATE_BYTES+SIM_TIME_STATE_BYTES+SIM_AUX_BYTES+SIM_CAMERA_BYTES)/4-1,d0
  move.l #$12345678,d1
 .aux_check:
  cmp.l (a0)+,d1
@@ -90,15 +96,15 @@ sim_replay_file_fixture:
  tst.l d0
  bne .failed
  addq.l #1,12(a6)
- ; An ABI3 header with a correct checksum must not load as new physics.
- move.w #3,10(a5)
+ ; An ABI4 header with a correct checksum must not load as new physics.
+ move.w #4,10(a5)
  bsr sim_replay_test_checksum
  movea.l a5,a0
  move.l #SIM_REPLAY_BYTES,d0
  bsr sim_replay_validate
  tst.l d0
  bne .failed
- move.w #4,10(a5)
+ move.w #5,10(a5)
  bsr sim_replay_test_checksum
  addq.l #1,12(a6)
  ; Rejection must leave every output byte unchanged.
@@ -176,6 +182,9 @@ sim_replay_file_fixture:
  IFD SIM_REPLAY_IO_TEST
  bsr sim_replay_io_fixture
  ENDC
+ lea sim_replay_file_fixture(pc),a0
+ adda.l #sim_schedule_modal-sim_replay_file_fixture,a0
+ move.w (sp)+,(a0)
  bra .out
 .failed:
  lea sim_replay_file_fixture(pc),a0
