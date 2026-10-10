@@ -56,9 +56,15 @@
     PL_PS  $08c30,sim_verge_low
     PL_PS  $08c3c,sim_verge_high
     PL_PS  $091b8,sim_effect_phase
+    ; Release builds keep the original crash/lives screens, acknowledgement
+    ; and restart path. Automatic recovery is an opt-in test instrument only.
+    IFD VERIFY
+    PL_IFC1X 1
     PL_PS  $05c74,sim_overheat_check
     PL_PS  $05c80,sim_crash_check
     PL_PS  $06510,sim_dashboard_draw
+    PL_ENDIF
+    ENDC
     PL_PSS $05b8c,sim_player_time,2
     PL_PS  $05bc0,sim_opponent_sum
     PL_NOP $05bc6,4            ; advance opponent time at shared entry below
