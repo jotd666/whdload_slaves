@@ -61,9 +61,8 @@ History:
      are smooth as well
    - measured in the first race: A500 7.1 fps (6.1 without the option),
      A1200 16.7 fps, 68030/25 MHz 25 fps until the car is at speed
-   - after a crash or engine damage, the player's car recovers in about 5
-     seconds with a 20 second time penalty, while the opponent and the clock
-     keep running
+   - the original crash/engine-damage screens, lives, acknowledgement and
+     20 second time penalty are preserved
    The icon enables it with the tooltype CUSTOM2=1. Remove it, or set
    CUSTOM2=0, to run the original game
  - fixed the cars jumping 16 pixels to the left for one frame in the

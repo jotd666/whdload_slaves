@@ -90,6 +90,7 @@ _tdboot
 slv_config
 	dc.b "C2:B:Enhanced framerate;"
 	IFD VERIFY
+	dc.b "C1:X:automatic recovery verification:1;"
 	dc.b "C3:B:reproducible verification;"
 	dc.b "C4:B:slow renderer verification;"
 	dc.b "C5:X:scripted driving verification:0;C5:X:force engine damage verification:1;C5:X:force fatal crash verification:2;C5:X:sub-unit with zero fraction:3;C5:X:straight driving tape:4;"
