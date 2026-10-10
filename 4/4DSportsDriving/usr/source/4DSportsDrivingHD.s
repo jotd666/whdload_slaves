@@ -195,6 +195,7 @@ patch_main
 	bsr sim_results_summary_selftest
 	bsr sim_results_ui_selftest
 	bsr sim_events_selftest
+	bsr sim_average_selftest
 	bsr sim_history_selftest
 	bsr sim_capacity_selftest
 	bsr sim_time_selftest
@@ -353,6 +354,8 @@ pl_main
     PL_PSS $593A,sim_events_summary_compare_stub,2
     PL_PSS $5960,sim_events_average_test_stub,2
     PL_PSS $5970,sim_events_average_divisor_stub,8
+    PL_PSS $E852,sim_average_accumulate_stub,4
+    PL_PS $597E,sim_average_finish_stub
     PL_PSS $116AA,sim_results_summary_copy_stub,2
     PL_PS $E27C,sim_results_reset_stub
     PL_PSS $E976,sim_results_award_stub,14
@@ -676,6 +679,22 @@ sim_events_average_divisor_stub:
  movem.l a0,4(sp)
  movem.l (sp)+,a0
  rts
+sim_average_accumulate_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_average_accumulate_stub(pc),a0
+ adda.l #sim_average_accumulate-sim_average_accumulate_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_average_finish_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_average_finish_stub(pc),a0
+ adda.l #sim_average_finish-sim_average_finish_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
 sim_results_summary_copy_stub:
  subq.l #4,sp
  movem.l a0,-(sp)
@@ -933,6 +952,7 @@ tape_restart_result_stub:
 	include "simulation_results.s"
 	include "simulation_results_ui.s"
 	include "simulation_events.s"
+	include "simulation_average.s"
 	include "simulation_history.s"
 	include "simulation_capacity.s"
 	include "simulation_time.s"

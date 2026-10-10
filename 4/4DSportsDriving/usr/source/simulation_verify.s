@@ -213,6 +213,7 @@ sim_history_end_seek_fixture:
  move.w #28500,$140-$460(a1)
  move.b #1,$3f4-$460(a1)
  ; Distinct high-word values prove the extended result state is restored.
+ move.l #620157704,$13c-$460(a1)
  move.w #2,$14a-$460(a1)
  move.w #9464,$142-$460(a1)
  move.w #9463,$144-$460(a1)
@@ -223,7 +224,9 @@ sim_history_end_seek_fixture:
  move.l #74999,(a0)+
  move.l #135000,(a0)+
  move.l #73499,(a0)+
- move.l #75000,(a0)
+ move.l #75000,(a0)+
+ move.l #1,(a0)+
+ move.l #620157704,(a0)
  lea sim_history_end_seek_fixture(pc),a1
  adda.l #sim_a4000_private-sim_history_end_seek_fixture,a1
  lea $228(a4),a2
@@ -233,6 +236,8 @@ sim_history_end_seek_fixture:
  jsr (a0)
  lea sim_history_end_seek_fixture(pc),a0
  adda.l #sim_results_state-sim_history_end_seek_fixture,a0
+ move.l #-1,(a0)+
+ move.l #-1,(a0)+
  move.l #-1,(a0)+
  move.l #-1,(a0)+
  move.l #-1,(a0)+
@@ -396,7 +401,8 @@ sim_results_display_sp: dc.l 0
  ENDC
  IFD SIM_EVENTS_NATIVE_TEST
 ; Terminal native-site checks: 1=record event, 2=animation local time,
-; 3=average calculation with a65536-tick denominator whose low word is zero.
+; 3=average with a65536-tick denominator;4=accumulator carry;
+; 5=maximum session sum;6=signed32-bit average boundary.
 sim_events_native_fixture:
  cmp.w #160,-$940(a4)
  bne .done
@@ -421,7 +427,33 @@ sim_events_native_fixture:
  move.l #65536,16(a1)
  clr.w -$2e0(a4)
  clr.w -$2ec(a4)
+ clr.l 24(a1)
+ move.l #2097152000,28(a1)
  move.l #2097152000,-$2f6(a4)
+ adda.l #$5960,a0
+ ENDC
+ IFEQ SIM_EVENTS_NATIVE_TEST-4
+ lea sim_events_native_fixture(pc),a1
+ adda.l #sim_results_state-sim_events_native_fixture,a1
+ clr.l 24(a1)
+ move.l #$ffffffff,28(a1)
+ move.l #$ffffffff,-$944(a4)
+ move.w #1,-$902(a4)
+ adda.l #$e852,a0
+ ENDC
+ IFGE SIM_EVENTS_NATIVE_TEST-5
+ lea sim_events_native_fixture(pc),a1
+ adda.l #sim_results_summary-sim_events_native_fixture,a1
+ move.l #75000,16(a1)
+ move.l #1,24(a1)
+ move.l #620157704,28(a1)
+ IFEQ SIM_EVENTS_NATIVE_TEST-6
+ clr.l 24(a1)
+ move.l #$80000000,28(a1)
+ ENDC
+ clr.w -$2e0(a4)
+ move.w #75000&$ffff,-$2ec(a4)
+ move.l 28(a1),-$2f6(a4)
  adda.l #$5960,a0
  ENDC
  jmp (a0)
@@ -661,7 +693,7 @@ SIM_FIXTURE_TURN_SECONDS = 3
  even
  dc.b "4DSIMFIX"
  IFD SIM_A4000
- dc.w 5,SIM_FIXTURE_RECORD_SIZE
+ dc.w 6,SIM_FIXTURE_RECORD_SIZE
  ELSE
  dc.w 2,SIM_FIXTURE_RECORD_SIZE
  ENDC

@@ -96,7 +96,9 @@ sim_a4000_steering:
  cmp.w #50,-$15fa(a4)
  beq .new
  move.l a0,-(sp)
- move.l tape_game(pc),a0
+ lea sim_a4000_prepare(pc),a0
+ adda.l #tape_game-sim_a4000_prepare,a0
+ move.l (a0),a0
  adda.l #$10344,a0
  move.l a0,d0
  move.l (sp)+,a0
@@ -131,52 +133,72 @@ sim_a4000_steering:
 ; These displaced blocks have only internal relative branches and A4-relative
 ; calls. Copy before patching; the original fallthrough becomes the buffer RTS.
 sim_a4000_prepare:
- move.l tape_game(pc),a0
+ lea sim_a4000_prepare(pc),a0
+ adda.l #tape_game-sim_a4000_prepare,a0
+ move.l (a0),a0
  adda.l #$f29e,a0
  lea sim_native_gear38(pc),a1
  moveq #72/2-1,d0
  bsr .copy
- move.l tape_game(pc),a0
+ lea sim_a4000_prepare(pc),a0
+ adda.l #tape_game-sim_a4000_prepare,a0
+ move.l (a0),a0
  adda.l #$f310,a0
  lea sim_native_gear34(pc),a1
  moveq #72/2-1,d0
  bsr .copy
- move.l tape_game(pc),a0
+ lea sim_a4000_prepare(pc),a0
+ adda.l #tape_game-sim_a4000_prepare,a0
+ move.l (a0),a0
  adda.l #$f36e,a0
  lea sim_native_gear_middle(pc),a1
  moveq #72/2-1,d0
  bsr .copy
- move.l tape_game(pc),a0
+ lea sim_a4000_prepare(pc),a0
+ adda.l #tape_game-sim_a4000_prepare,a0
+ move.l (a0),a0
  adda.l #$cb48,a0
  lea sim_native_wheel(pc),a1
  moveq #148/2-1,d0
  bsr .copy
- move.l tape_game(pc),a0
+ lea sim_a4000_prepare(pc),a0
+ adda.l #tape_game-sim_a4000_prepare,a0
+ move.l (a0),a0
  adda.l #$10030,a0
  lea sim_native_suspension_bias(pc),a1
  move.w #164/2-1,d0
  bsr .copy
- move.l tape_game(pc),a0
+ lea sim_a4000_prepare(pc),a0
+ adda.l #tape_game-sim_a4000_prepare,a0
+ move.l (a0),a0
  adda.l #$1011c,a0
  lea sim_native_suspension_return(pc),a1
  move.w #262/2-1,d0
  bsr .copy
- move.l tape_game(pc),a0
+ lea sim_a4000_prepare(pc),a0
+ adda.l #tape_game-sim_a4000_prepare,a0
+ move.l (a0),a0
  adda.l #$f842,a0
  lea sim_native_terrain(pc),a1
  moveq #48/2-1,d0
  bsr .copy
- move.l tape_game(pc),a0
+ lea sim_a4000_prepare(pc),a0
+ adda.l #tape_game-sim_a4000_prepare,a0
+ move.l (a0),a0
  adda.l #$c06e,a0
  lea sim_native_opponent_steering(pc),a1
  moveq #42/2-1,d0
  bsr .copy
- move.l tape_game(pc),a0
+ lea sim_a4000_prepare(pc),a0
+ adda.l #tape_game-sim_a4000_prepare,a0
+ move.l (a0),a0
  adda.l #$c0ba,a0
  lea sim_native_opponent_brake(pc),a1
  moveq #36/2-1,d0
  bsr .copy
- move.l tape_game(pc),a0
+ lea sim_a4000_prepare(pc),a0
+ adda.l #tape_game-sim_a4000_prepare,a0
+ move.l (a0),a0
  adda.l #$f974,a0
  lea sim_native_heading(pc),a1
  moveq #86/2-1,d0
@@ -940,7 +962,9 @@ sim_a4000_wheel_pass:
  tst.w $bc0(a4)
  bgt.s .done
  move.l a0,-(sp)
- move.l tape_game(pc),a0
+ lea sim_a4000_prepare(pc),a0
+ adda.l #tape_game-sim_a4000_prepare,a0
+ move.l (a0),a0
  adda.l #$cc2e,a0
  move.l a0,4(sp)
  move.l (sp)+,a0
