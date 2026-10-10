@@ -75,6 +75,9 @@ The native pose-snapshot checkpoint passes sixteen consecutive completed-world
 boundaries on each of A500 and cached 68030: 504 poses match live state per
 CPU, with fifty lifecycle events and 24 correctly invalidated previous records. These are snapshot checks;
 they do not yet add interpolated frames or establish gameplay-speed convergence.
+The candidate interpolation buffer then passes 504 pose outputs per CPU on
+A500 and cached 68030 against the rational model: 478 interpolate and 26 snap; 414 differ from current pose.
+This table is not yet used by drawing and supplies no FPS or speed result.
 See `w6-verification.md` for frozen builds and limitations.
 
 ## W5 current measurements

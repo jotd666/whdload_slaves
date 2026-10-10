@@ -179,6 +179,7 @@ time_pose_capture:
 	dbf d7,.object
 .done
 	addq.l #1,32(a4)
+	bsr time_pose_blend
 time_pose_captured:
 	nop
 	movem.l (sp)+,d0-a6

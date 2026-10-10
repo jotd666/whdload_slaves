@@ -586,6 +586,7 @@ new_DeleteFile:
 	include "vertex-verify.s"
 	include "tape.s"
 	include "time-poses.s"
+	include "time-pose-blend.s"
 	include "time-mouse-ownership-cases.i"
 time_message_log: dcb.b 24*128,0
 fill_twin_before: dcb.b 20*256*2,0
@@ -600,6 +601,7 @@ time_present_cache_buffer: dcb.b TIME_PRESENT_CACHE_CAPACITY*TIME_PRESENT_CACHE_
 time_model_buffer: dcb.b TIME_MODEL_CAPACITY*TIME_MODEL_STRIDE,0
 time_pose_current: dcb.b TIME_POSE_CAPACITY*TIME_POSE_STRIDE,0
 time_pose_previous: dcb.b TIME_POSE_CAPACITY*TIME_POSE_STRIDE,0
+time_blend_output: dcb.b TIME_POSE_CAPACITY*TIME_POSE_STRIDE,0
 ; Large VERIFY buffers follow code so observer branches retain 68000 reach.
 observe_buffer: dcb.b OBS_STRIDE*OBS_CAPACITY,0
 time_input_test_queue: dcb.b TIME_INPUT_BYTES,0

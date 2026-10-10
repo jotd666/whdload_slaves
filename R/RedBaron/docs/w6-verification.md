@@ -1225,3 +1225,54 @@ and observed lifecycle evidence, not complete moving-object coverage, teleport
 acceptance, coherent free-camera interpolation, smooth 50 FPS or equal-world-tick
 gameplay convergence. Journal colour branches and remaining render-state
 consumers remain separate open checks.
+
+
+## Native candidate interpolation buffer
+
+`time-pose-blend.s` now builds a separate 26-byte-per-object output table from
+the native current/previous pose snapshots. It resolves previous records by
+address, requires both validity words and matching model IDs, and otherwise
+copies the current pose unchanged. Valid pairs use the verified signed-position
+floor interpolation and shortest wrapped-angle arithmetic. The Q16 fraction
+comes from the exact four-long world phase through the verified phase helper;
+neither the phase nor native game-object poses are written by this routine.
+The output includes count, fraction, blended/snapped counts and a ready flag.
+
+For this integration check the builder runs after each completed-tick snapshot.
+That is not yet the render-time invocation: the scheduler must first observe
+elapsed time, drain due world work and then rebuild the output for the actual
+render fraction. Native drawing currently happens before the completed-tick
+snapshot, so it cannot safely consume this table at its existing call site.
+The next render-phase change must defer drawing until the completed world state
+is available, preserve native post-world bookkeeping and move dirty-countdown
+consumption with actual publications. Independently updated camera poses still
+need coherent ownership and interpolation before the general render path can
+consume the table. The new buffer is not published or leased into game memory.
+
+`native_pose_blend.py` independently derives the fraction from the captured exact
+phase and computes every output record with the rational host helpers. It checks
+all header fields and output bytes, and requires both interpolated and snapped
+objects and at least one pose whose output differs from current state. Tests
+cover signed negative rounding, angle wrap, reordered previous records,
+lifecycle invalidation, model changes, absent previous records and malformed
+or duplicate-address tables.
+
+Frozen VERIFY text is 244,784 bytes, SHA256
+`d3df931594c9d1519d3a00e7c10b3455ba39adc741a346f8764bd3fac153f8ab`.
+The A500 capture `tmp/dev/tmp/prof/w6-pose-blend-a500/` passes sixteen completed
+boundaries with 504 candidate poses: 478 interpolate and 26 snap; 414 output
+poses differ from the current pose. Every output byte and Q16 fraction matches
+the independent oracle. The underlying consecutive snapshots, fifty lifecycle
+events and 24 invalidations still pass, together with 47 timing-hook checks,
+thirteen disabled ranges and the 426/512/638/133 native self-tests.
+The cached-68030 capture `tmp/dev/tmp/prof/w6-pose-blend-030/` passes the
+same checks and object counts: 478 blended, 26 snapped and 414 changed poses
+out of 504. Its observed fractions differ from A500 because capture-time clock
+credit differs; each output is checked against its own exact phase, not against
+the other machine's visual pose.
+All 141 host tests pass; the sixty-range static audit has no errors. Normal and
+developer binaries retain the W5 hashes.
+
+This validates the candidate buffer, not interpolated frames, render-phase
+integration, all camera/view transitions, visual cadence, latency, sustained
+simulation speed or gameplay convergence. Those gates remain open.
