@@ -1,13 +1,19 @@
+ IFND SIM_REPLAY_SAVE_RATE
+SIM_REPLAY_SAVE_RATE = 50
+ ENDC
+ IFND SIM_REPLAY_SAVE_TICK
+SIM_REPLAY_SAVE_TICK = 160
+ ENDC
 ; Real native direct save plus the chooser's confirmed-write branch. File-name
 ; navigation/overwrite prompts remain a separate UI acceptance requirement.
 sim_replay_save_fixture:
- cmp.w #50,-$15fa(a4)
+ cmp.w #SIM_REPLAY_SAVE_RATE,-$15fa(a4)
  bne .return
  tst.b $45(a4)
  bne .return
  tst.b -$16d8(a4)
  bne .return
- cmp.w #160,-$940(a4)
+ cmp.w #SIM_REPLAY_SAVE_TICK,-$940(a4)
  bne .return
  movem.l d0-a6,-(sp)
  lea sim_replay_save_fixture(pc),a0
@@ -77,5 +83,6 @@ sim_replay_save_test_payload: dc.b "TEST"
  even
 sim_replay_save_test_marker:
  dc.b "4DRPLSVT"
- dc.w 1,3
+ dc.w 2,3
  dc.l 0
+ dc.w SIM_REPLAY_SAVE_RATE,SIM_REPLAY_SAVE_TICK
