@@ -547,3 +547,5 @@ sim_heading_50:
  move.w d2,d0
  movem.l (sp)+,d1-d3
  rts
+
+ include "simulation_yaw.s"

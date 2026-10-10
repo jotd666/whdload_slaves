@@ -3,6 +3,28 @@ sim_physics_selftest:
  movem.l d0-a6,-(sp)
  lea sim_physics_passed(pc),a0
  clr.l (a0)
+ ; High-resolution angle lookup: compare to an independent atan2 oracle.
+ lea sim_yaw_cases(pc),a2
+ move.w #(sim_yaw_cases_end-sim_yaw_cases)/8-1,d6
+.yaw:
+ move.w (a2),d0
+ move.w 2(a2),d1
+ bsr sim_yaw_atan_q8
+ cmp.w 2(a2),d1
+ bne .failed
+ sub.l 4(a2),d0
+ add.l #$20000,d0
+ and.l #$3ffff,d0
+ sub.l #$20000,d0
+ bpl .yaw_absolute
+ neg.l d0
+.yaw_absolute:
+ cmp.l #2,d0              ; at most 2/256 angle units circular error
+ bhi .failed
+ lea sim_physics_passed(pc),a0
+ addq.l #1,(a0)
+ addq.l #8,a2
+ dbra d6,.yaw
  lea sim_rate_cases(pc),a2
  move.w #(sim_rate_cases_end-sim_rate_cases)/8-1,d6
 .rate:
@@ -384,7 +406,7 @@ SIM_HEADING_HOOK_TESTS = 0
 SIM_CONTACT_HOOK_TESTS = 0
  ENDC
  dc.b "4DPHYTST"
- dc.w 17,(sim_rate_cases_end-sim_rate_cases)/8+(sim_steering_cases_end-sim_steering_cases)/14+(sim_distance_cases_end-sim_distance_cases)/8+(sim_approach_cases_end-sim_approach_cases)/12+(sim_airborne_cases_end-sim_airborne_cases)/12+(sim_extension_cases_end-sim_extension_cases)/10+(sim_engine_cases_end-sim_engine_cases)/4+(sim_duration_cases_end-sim_duration_cases)/8+(sim_terrain_cases_end-sim_terrain_cases)/10+(sim_skid_cases_end-sim_skid_cases)/12+(sim_spin_filter_cases_end-sim_spin_filter_cases)/24+(sim_spin_held_cases_end-sim_spin_held_cases)/12+(sim_spin_alternate_cases_end-sim_spin_alternate_cases)/24+(sim_opponent_brake_cases_end-sim_opponent_brake_cases)/10+(sim_slip_relax_cases_end-sim_slip_relax_cases)/8+SIM_DELAY_HOOK_TESTS+SIM_SPIN_HOOK_TESTS+SIM_SLIP_HOOK_TESTS+SIM_HEADING_HOOK_TESTS+SIM_CONTACT_HOOK_TESTS+(sim_heading_cases_end-sim_heading_cases)/10
+ dc.w 18,(sim_yaw_cases_end-sim_yaw_cases)/8+(sim_rate_cases_end-sim_rate_cases)/8+(sim_steering_cases_end-sim_steering_cases)/14+(sim_distance_cases_end-sim_distance_cases)/8+(sim_approach_cases_end-sim_approach_cases)/12+(sim_airborne_cases_end-sim_airborne_cases)/12+(sim_extension_cases_end-sim_extension_cases)/10+(sim_engine_cases_end-sim_engine_cases)/4+(sim_duration_cases_end-sim_duration_cases)/8+(sim_terrain_cases_end-sim_terrain_cases)/10+(sim_skid_cases_end-sim_skid_cases)/12+(sim_spin_filter_cases_end-sim_spin_filter_cases)/24+(sim_spin_held_cases_end-sim_spin_held_cases)/12+(sim_spin_alternate_cases_end-sim_spin_alternate_cases)/24+(sim_opponent_brake_cases_end-sim_opponent_brake_cases)/10+(sim_slip_relax_cases_end-sim_slip_relax_cases)/8+SIM_DELAY_HOOK_TESTS+SIM_SPIN_HOOK_TESTS+SIM_SLIP_HOOK_TESTS+SIM_HEADING_HOOK_TESTS+SIM_CONTACT_HOOK_TESTS+(sim_heading_cases_end-sim_heading_cases)/10
 sim_physics_passed: dc.l 0
 sim_physics_test_fraction: dc.w 0,0,0,0
 sim_physics_test_position: dc.l 0
@@ -1183,3 +1205,5 @@ sim_contact_distance_cases:
  dc.w 50,6,32767,4,13106,0,32767,45874,10
  dc.w 50,6,-1,0,-1,1,1,0,21
  ENDC
+
+ include "simulation_yaw_cases.i"
