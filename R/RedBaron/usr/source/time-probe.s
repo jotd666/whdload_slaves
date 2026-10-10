@@ -9,7 +9,10 @@ time_probe_step:
 	move.l tape_game_steps(pc),d0
 	cmp.l #1,d0
 	bne.b .clock
-	btst #2,perf_custom5+1(pc)
+	lea .custom5_2(pc),a0
+.custom5_2
+	adda.l #perf_custom5+1-.custom5_2,a0
+	btst #2,(a0)
 	beq.b .clock
 	move.l $4578(a1),a0
 	move.l #512,16(a0)
@@ -19,7 +22,10 @@ time_probe_step:
 	move.w #-220,$d4(a0)
 	clr.w $104(a0)
 .clock
-	move.l perf_custom4(pc),d0
+	lea .custom4_base(pc),a0
+.custom4_base
+	adda.l #perf_custom4-.custom4_base,a0
+	move.l (a0),d0
 	beq.b .done
 	cmp.l #100,d0
 	beq.b .force
@@ -31,7 +37,10 @@ time_probe_step:
 	beq.b .force
 	cmp.l #2200,d0
 	beq.b .force
-	pea perf_mismatch(pc)
+	lea .mismatch_base(pc),a0
+.mismatch_base
+	adda.l #perf_mismatch-.mismatch_base,a0
+	pea (a0)
 	pea TDREASON_FAILMSG
 	move.l observe_resload(pc),a2
 	jmp resload_Abort(a2)
@@ -39,7 +48,10 @@ time_probe_step:
 	move.w d0,$4834(a1)
 .done
 	; CUSTOM5 bit 19: hold the native fire key for projectile tests.
-	btst #3,perf_custom5+1(pc)
+	lea .custom5_3(pc),a0
+.custom5_3
+	adda.l #perf_custom5+1-.custom5_3,a0
+	btst #3,(a0)
 	beq.b .return
 	move.l tape_keybase(pc),a0
 	move.b #1,$40(a0)

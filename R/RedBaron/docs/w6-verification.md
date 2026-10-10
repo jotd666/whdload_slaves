@@ -1055,3 +1055,54 @@ on every frame and handles shared models whose callback runs more than once.
 Repeated writes must restore in reverse order or save each original only once.
 The journal needs an explicit capacity failure, native validation of each branch,
 and consumer review; it is not implemented by this inventory checkpoint.
+
+
+## Shared-model undo journal
+
+`time-present-model.s` adds five byte-checked hooks under VERIFY timing bit 13
+for sim v1 only. They cover the default/player/custom variant stores at
+`sim:0e128/0e150/0e1a6`, the cached color store at `sim:0df3e`, and both polygon
+color bytes at `sim:0df92`. Each wrapper records the destination's original
+value while the outer draw owns presentation state, then replays the displaced
+native instructions. The relocated operand at `sim:0e152` is checked against
+`h3:04e16` during installation.
+
+The 4,096-entry journal uses eight bytes per record: destination pointer, two
+old-value bytes and a one/two-byte length. Reads and undo stores are bytewise,
+so odd-address polygon fields are supported on 68000. Outer return applies
+records in reverse order and clears the count. This handles duplicate writes,
+shared models and overlapping byte/word stores without losing the first value.
+Capacity overflow aborts explicitly. No full-memory rollback is used. The
+journal preserves registers and the X flag; displaced instructions establish
+their native result flags. Address construction in older VERIFY observers now
+uses nearby bases plus long offsets where the larger build exceeds PC-relative
+68000 displacement reach.
+
+A native installation self-test applies three repeated/overlapping writes,
+including a two-byte write at an odd address, verifies exact restoration and
+checks that inactive ownership records nothing. `model_journal.py` independently
+decodes captured records, checks their first values against outer-entry RAM,
+checks reverse-undo ordering and verifies restored memory and an empty journal
+at outer return. Host tests reject malformed/oversized records and test the
+same overlap semantics. All 131 host tests pass; static audit covers 58 ranges
+with zero errors. Normal and developer hashes remain identical to W5.
+
+Frozen VERIFY text is 204,802 bytes, SHA256
+`e9dbbc25c6d25207b63194e56efc36db3f6c6192bc2796f9c2c412f086b22ac7`.
+The cached-68030 capture `tmp/dev/tmp/prof/w6-model-journal-030/` contains three
+native draws with 50/58/58 listed objects. Each records two writes to one
+shared-model byte; its first value matches outer-entry RAM and is restored
+at outer return. All three projection-cache records also restore correctly.
+The native overlap self-test passes, as do 45 selected timing-hook checks,
+thirteen disabled ranges and the 426/512/638/133 arithmetic/input self-tests.
+Both captured return stack pointers pass the collector's checks.
+The matching A500 capture `tmp/dev/tmp/prof/w6-model-journal-a500/` also passes
+all of these checks: its three draws list 58/63/55 objects, and each journals
+two writes to one byte, restores that byte, clears the journal and restores
+its projection cache. Both native return stack pointers are checked there too.
+
+This exercised window does not prove the player/custom variant and changed-color
+branches individually. Live polygon/color-cache restoration, journal capacity
+stress, callback flag/pointer pairs, indirect simulation consumers, full renderer
+mutation coverage and equal-world-tick comparisons remain open. No interpolated
+frames or performance result are claimed at this checkpoint.

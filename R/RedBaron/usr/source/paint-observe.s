@@ -9,7 +9,10 @@ paint_install:
 	move.l tape_game_steps(pc),d0
 	cmpi.l #1,d0
 	bne.w .done
-	btst #3,perf_custom5+3(pc)
+	lea .custom_base(pc),a0
+.custom_base
+	adda.l #perf_custom5+3-.custom_base,a0
+	btst #3,(a0)
 	beq.w .done
 	lea paint_header(pc),a0
 	lea paint_buffer(pc),a1

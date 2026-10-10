@@ -7,7 +7,10 @@
 OBS_STRIDE = 44
 OBS_CAPACITY = 256
 observe_start:
-	move.l _resload(pc),a0
+	lea .resload_base(pc),a0
+.resload_base
+	adda.l #_resload-.resload_base,a0
+	move.l (a0),a0
 	lea observe_resload(pc),a1
 	move.l a0,(a1)
 	move.l perf_attnflags(pc),a0

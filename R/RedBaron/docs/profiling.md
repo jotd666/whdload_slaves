@@ -67,6 +67,10 @@ three native draws on each of A500 and cached 68030. All six changed cache
 records match the independent byte model and are restored at outer return.
 This is scoped rendering-state isolation, not a complete mutation audit,
 interpolated-frame implementation or gameplay-speed result.
+The shared-model journal candidate additionally passes three draws per CPU on A500 and cached 68030:
+each records two writes to a shared model byte and restores its outer-entry
+value. The native overlapping-write self-test passes. Colour-changing branches
+remain unexercised in that window; this adds no FPS or gameplay-speed result.
 See `w6-verification.md` for frozen builds and limitations.
 
 ## W5 current measurements

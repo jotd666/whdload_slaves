@@ -42,6 +42,8 @@ time_present_begin:
 	tst.w (a1)
 	bne time_present_state_bad ; no silently overwritten nested owner
 	clr.w 2(a1)
+	lea time_model_count(pc),a0
+	clr.w (a0)
 	bsr time_devices_owned
 	beq .ready
 	move.w #1,(a1)
@@ -124,6 +126,7 @@ time_present_end:
 	dbf d5,.copy
 	dbf d6,.next
 .clear
+	bsr time_model_restore
 	clr.l (a4)
 time_present_restored:
 	nop
