@@ -772,12 +772,21 @@ SIM_FIXTURE_TURN_SECONDS = 3
  ENDC
  ENDC
  IFD SIM_FIXTURE_LONGITUDINAL
- ; Common-time handling schedule: throttle [0,2s), coast [2,3s), then
- ; brake. Bit1 is the native cursor-down input ($371C2), not synthetic drag.
+ IFND SIM_FIXTURE_THROTTLE_SECONDS
+SIM_FIXTURE_THROTTLE_SECONDS = 2
+ ENDC
+ IFLE SIM_FIXTURE_THROTTLE_SECONDS
+ FAIL "SIM_FIXTURE_THROTTLE_SECONDS must be 1..4"
+ ENDC
+ IFGT SIM_FIXTURE_THROTTLE_SECONDS-4
+ FAIL "SIM_FIXTURE_THROTTLE_SECONDS must be 1..4"
+ ENDC
+ ; Common-time handling schedule: throttle for the configured whole seconds,
+ ; coast for one second, then brake. Bit1 is native cursor-down ($371C2).
  ; No steering, gear input or live car-state writes in this scenario.
  moveq #1,d1
  move.w -$15fa(a4),d0
- add.w d0,d0
+ mulu #SIM_FIXTURE_THROTTLE_SECONDS,d0
  cmp.w -$940(a4),d0
  bhi .longitudinal_input
  moveq #0,d1
