@@ -58,10 +58,10 @@ sim_replay_file_fixture:
  cmp.l (a1),d1
  bne .failed
  addq.l #1,12(a6)
- ; Exercise every auxiliary byte independently of a quiet race's zero state.
+ ; Exercise every fragment/camera byte independently of a quiet race's zeros.
  movea.l a5,a0
  adda.l #SIM_REPLAY_COMPANION_OFFSET+SIM_HISTORY_AUX_OFFSET,a0
- moveq #SIM_AUX_BYTES/4-1,d0
+ moveq #(SIM_AUX_BYTES+SIM_CAMERA_BYTES)/4-1,d0
  move.l #$12345678,d1
 .aux_seed:
  move.l d1,(a0)+
@@ -76,7 +76,7 @@ sim_replay_file_fixture:
  bne .failed
  movea.l a3,a0
  adda.l #SIM_REPLAY_COMPANION_OFFSET-SIM_REPLAY_HEADER+SIM_HISTORY_AUX_OFFSET,a0
- moveq #SIM_AUX_BYTES/4-1,d0
+ moveq #(SIM_AUX_BYTES+SIM_CAMERA_BYTES)/4-1,d0
  move.l #$12345678,d1
 .aux_check:
  cmp.l (a0)+,d1
@@ -90,15 +90,15 @@ sim_replay_file_fixture:
  tst.l d0
  bne .failed
  addq.l #1,12(a6)
- ; An ABI1 header with a correct checksum must not load as new physics.
- move.w #1,10(a5)
+ ; An ABI3 header with a correct checksum must not load as new physics.
+ move.w #3,10(a5)
  bsr sim_replay_test_checksum
  movea.l a5,a0
  move.l #SIM_REPLAY_BYTES,d0
  bsr sim_replay_validate
  tst.l d0
  bne .failed
- move.w #3,10(a5)
+ move.w #4,10(a5)
  bsr sim_replay_test_checksum
  addq.l #1,12(a6)
  ; Rejection must leave every output byte unchanged.

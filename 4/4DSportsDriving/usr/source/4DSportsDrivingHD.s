@@ -224,6 +224,9 @@ patch_main
 	lea patch_main(pc),a0
 	adda.l #sim_sound_prepare-patch_main,a0
 	jsr (a0)
+	lea patch_main(pc),a0
+	adda.l #sim_camera_prepare-patch_main,a0
+	jsr (a0)
 	ENDC
 	IFD SIM_PHYSICS
 	lea patch_main(pc),a0
@@ -375,6 +378,10 @@ pl_main
     PL_P $1033A,sim_a4000_steering
     PL_PSS $7984,sim_sound_consume_stub,64
     PL_PS $10904,sim_sound_publish_stub
+    PL_PSS $7E9C,sim_camera_vertical_stub,24
+    PL_PSS $7F6E,sim_camera_horizontal_stub,32
+    PL_PSS $7FA0,sim_camera_x_stub,2
+    PL_PSS $7FD0,sim_camera_z_stub,2
     PL_PSS $11A20,sim_aux_birth_stub,2
     PL_PSS $11B80,sim_aux_move_stub,94
     PL_PSS $11C38,sim_aux_retire_stub,10
@@ -709,6 +716,38 @@ sim_results_ui_compare_stub:
  movem.l a0,-(sp)
  lea sim_results_ui_compare_stub(pc),a0
  adda.l #sim_results_ui_compare-sim_results_ui_compare_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_camera_vertical_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_camera_vertical_stub(pc),a0
+ adda.l #sim_camera_vertical-sim_camera_vertical_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_camera_horizontal_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_camera_horizontal_stub(pc),a0
+ adda.l #sim_camera_horizontal-sim_camera_horizontal_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_camera_x_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_camera_x_stub(pc),a0
+ adda.l #sim_camera_x-sim_camera_x_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_camera_z_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_camera_z_stub(pc),a0
+ adda.l #sim_camera_z-sim_camera_z_stub,a0
  movem.l a0,4(sp)
  movem.l (sp)+,a0
  rts
@@ -1314,6 +1353,8 @@ tape_restart_result_stub:
  IFD VERIFY
  IFD SIM_A4000
  include "simulation_history_data.s"
+ include "simulation_camera.s"
+ include "simulation_camera_native_verify.s"
  include "simulation_sound.s"
  include "simulation_auxiliary.s"
  include "simulation_auxiliary_native_verify.s"

@@ -11,6 +11,20 @@ sim_probe_entry:
  move.w d2,-(sp)
  IFD SIM_FIXTURE
  bsr sim_fixture_before
+ IFD SIM_CAMERA_SEED_TEST
+ movem.l a0,-(sp)
+ lea sim_probe_entry(pc),a0
+ adda.l #sim_camera_seed_fixture-sim_probe_entry,a0
+ jsr (a0)
+ movem.l (sp)+,a0
+ ENDC
+ IFD SIM_CAMERA_NATIVE_TEST
+ movem.l a0,-(sp)
+ lea sim_probe_entry(pc),a0
+ adda.l #sim_camera_native_fixture-sim_probe_entry,a0
+ jsr (a0)
+ movem.l (sp)+,a0
+ ENDC
  IFD SIM_AUX_NATIVE_TEST
  movem.l a0,-(sp)
  lea sim_probe_entry(pc),a0
@@ -108,7 +122,7 @@ SIM_FIXTURE_SAMPLE_HZ = 10
  ENDC
 SIM_FIXTURE_STATE_SIZE = $460
  IFD SIM_A4000
-SIM_FIXTURE_RECORD_SIZE = SIM_FIXTURE_STATE_SIZE+10+SIM_PRIVATE_BYTES+SIM_TIME_STATE_BYTES+SIM_AUX_BYTES
+SIM_FIXTURE_RECORD_SIZE = SIM_FIXTURE_STATE_SIZE+10+SIM_PRIVATE_BYTES+SIM_TIME_STATE_BYTES+SIM_AUX_BYTES+SIM_CAMERA_BYTES
  ELSE
 SIM_FIXTURE_RECORD_SIZE = SIM_FIXTURE_STATE_SIZE+10
  ENDC
@@ -799,6 +813,10 @@ SIM_FIXTURE_TURN_SECONDS = 3
 .auxiliary:
  move.l (a0)+,(a1)+
  dbra d0,.auxiliary
+ lea sim_fixture_before(pc),a0
+ adda.l #sim_camera_state-sim_fixture_before,a0
+ move.l (a0)+,(a1)+
+ move.l (a0),(a1)+
  ENDC
  lea sim_fixture_count(pc),a0
  addq.w #1,(a0)
@@ -807,7 +825,7 @@ SIM_FIXTURE_TURN_SECONDS = 3
  even
  dc.b "4DSIMFIX"
  IFD SIM_A4000
- dc.w 7,SIM_FIXTURE_RECORD_SIZE
+ dc.w 8,SIM_FIXTURE_RECORD_SIZE
  ELSE
  dc.w 2,SIM_FIXTURE_RECORD_SIZE
  ENDC

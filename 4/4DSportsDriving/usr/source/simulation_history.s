@@ -2,7 +2,8 @@
 ; Tagged replays store these companions; native10/20 layouts stay unchanged.
 SIM_HISTORY_SLOTS = 20
 SIM_HISTORY_AUX_OFFSET = 8+SIM_PRIVATE_BYTES+SIM_TIME_STATE_BYTES
-SIM_HISTORY_BYTES = SIM_HISTORY_AUX_OFFSET+SIM_AUX_BYTES ; valid, RNG, car, time, fragments
+SIM_HISTORY_CAMERA_OFFSET = SIM_HISTORY_AUX_OFFSET+SIM_AUX_BYTES
+SIM_HISTORY_BYTES = SIM_HISTORY_CAMERA_OFFSET+SIM_CAMERA_BYTES ; append camera fractions
 
 ; E07A is reached only for the native new-race (-1) initialization, which
 ; invalidates all twenty native snapshots. Seek-zero initialization also calls
@@ -147,6 +148,10 @@ sim_history_store:
 .auxiliary:
  move.l (a1)+,(a2)+
  dbra d1,.auxiliary
+ lea sim_history_store(pc),a1
+ adda.l #sim_camera_state-sim_history_store,a1
+ move.l (a1)+,(a2)+
+ move.l (a1),(a2)+
  move.w #50,(a0)           ; publish a complete companion
  rts
 sim_history_load:
@@ -171,6 +176,10 @@ sim_history_load:
 .auxiliary:
  move.l (a0)+,(a1)+
  dbra d1,.auxiliary
+ lea sim_history_load(pc),a1
+ adda.l #sim_camera_state-sim_history_load,a1
+ move.l (a0)+,(a1)+
+ move.l (a0)+,(a1)
  rts
 sim_history_shift:
  lea sim_history_slot(pc),a0
@@ -226,6 +235,10 @@ sim_history_selftest:
  move.l d0,(a0)+
  addq.l #1,d0
  dbra d1,.aux_seed
+ lea sim_history_selftest(pc),a0
+ adda.l #sim_camera_state-sim_history_selftest,a0
+ move.l d7,(a0)+
+ move.l d7,(a0)
  lea sim_history_slot(pc),a2
  adda.l #sim_history_test_rng-sim_history_slot,a2
  move.l d7,(a2)
@@ -257,6 +270,10 @@ sim_history_selftest:
 .aux_dirty:
  move.l #-1,(a0)+
  dbra d0,.aux_dirty
+ lea sim_history_selftest(pc),a0
+ adda.l #sim_camera_state-sim_history_selftest,a0
+ move.l #-1,(a0)+
+ move.l #-1,(a0)
  lea sim_history_slot(pc),a2
  adda.l #sim_history_test_rng-sim_history_slot,a2
  move.l #-1,(a2)
@@ -299,6 +316,12 @@ sim_history_selftest:
  bne sim_history_failed
  addq.l #1,d3
  dbra d0,.aux_verify
+ lea sim_history_selftest(pc),a0
+ adda.l #sim_camera_state-sim_history_selftest,a0
+ cmp.l (a0)+,d2
+ bne sim_history_failed
+ cmp.l (a0),d2
+ bne sim_history_failed
  lea sim_history_slot(pc),a0
  adda.l #sim_history_passed-sim_history_slot,a0
  addq.l #1,(a0)
@@ -325,6 +348,10 @@ sim_history_selftest:
 .aux_clear:
  clr.l (a0)+
  dbra d0,.aux_clear
+ lea sim_history_selftest(pc),a0
+ adda.l #sim_camera_state-sim_history_selftest,a0
+ clr.l (a0)+
+ clr.l (a0)
  bsr sim_history_reset
  lea sim_history_slot(pc),a0
  adda.l #sim_history_records-sim_history_slot,a0

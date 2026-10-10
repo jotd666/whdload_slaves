@@ -1,9 +1,10 @@
 ; Development integration. Requires SIM_SCHEDULE.
 ; sim_a4000_arm is retained only for older synthetic input fixtures.
-; Not yet a selectable A4000 release: disk replay format, remaining rate sites
+; Not yet a selectable A4000 release: remaining rate sites, full replay UI
 ; and lifecycle acceptance are pending. Native 10/20 paths survive.
 SIM_PRIVATE_BYTES = 128
 SIM_AUX_BYTES = 24*8
+SIM_CAMERA_BYTES = 8
 sim_a4000_arm:
  lea sim_a4000_private(pc),a0
  moveq #SIM_PRIVATE_BYTES/4-1,d0
@@ -16,6 +17,10 @@ sim_a4000_arm:
 .aux_clear:
  clr.l (a0)+
  dbra d0,.aux_clear
+ lea sim_a4000_arm(pc),a0
+ adda.l #sim_camera_state-sim_a4000_arm,a0
+ clr.l (a0)+
+ clr.l (a0)
  ; Enter only at the fixture's untouched tick zero after native A2500 setup.
  move.w #50,-$15fa(a4)
  move.w #50,-$bc(a4)
