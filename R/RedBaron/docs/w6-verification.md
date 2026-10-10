@@ -2247,3 +2247,41 @@ they do not establish full global-state independence, RNG/combat correctness,
 or an exclusion rule. Raw world comparisons continue reporting every differing
 byte. The slave is unchanged. All 195 host tests pass, including rejection of
 changed source contracts and extra references.
+
+
+## Rear-view world state across render schedules
+
+The same frozen `eb743015…` candidate now has a paired no-render capture,
+`tmp/dev/tmp/prof/w6-attached-camera-none-030/`, using `--replay --scene dense
+--no-render` on cached 68030 with CUSTOM2=8192. Both captures start with identical
+four sim segments, player and 116 tracked allocations / 238,364 bytes. The
+independent four-event replay agrees at all 24 boundaries, including F2 at the
+view transition and Fire. No pointer or byte normalization is applied.
+
+All 24 equal ticks match the complete player record, 649 registered pose
+prefixes, primary registry, shared display-list order/count and lifecycle
+events. The full camera position/orientation, view, camera pointer and followed
+target also match at every tick. `world_comparison.py` now records this camera
+state explicitly, including differing target identity even if the private
+camera pointer does not change. This is reproducible evidence for the observed
+rear-view lease and input sequence, not coverage of every camera or combat path.
+
+| Render schedule | Completed updates | Draws | Actual PAL fields / CIA ticks | Final CIA debt |
+| --- | ---: | ---: | --- | ---: |
+| Ordinary | 23 | 20 | 143 / 169 | 2 |
+| None | 23 | 0 | 141 / 167 | 0 |
+
+Every consecutive funding interval passes exactly. These boundary-controlled
+captures are shorter than 250 fields and are not performance samples. The
+ordinary path retains a separate 1,800-byte drawing/message-background payload.
+At the final tick, the differing shared allocations are single bytes at payload
+offset 345 (the low byte of word 344) in sound contexts 0, 1, 2 and 4, identified
+through the pointer table at `h3:0a184`. Raw differences remain in 1,464 h3 bytes
+and 110 hunk-0 bytes, including clock/drawing state; none is excluded from the
+inventory or treated as proof of whole-gameplay equality.
+
+The no-render endpoint passes native self-tests 426/512/638/133, terrain
+stores/cache/list 2/1/2, 54 selected targets and ten disabled ranges. Its owned
+emulator was quit. All 196 host tests pass. The slave has not changed since the
+attached-camera checkpoint. Full gameplay/global-state/event convergence,
+physics/combat acceptance, sustained capacity and smooth 50 FPS remain open.

@@ -160,6 +160,13 @@ FPS measurements. Other camera modes, full gameplay convergence, sustained
 simulation capacity and smooth 50 FPS remain open. See `w6-verification.md` for
 the frozen build, fixture and limits.
 
+Its subsequent ordinary/no-render rear-view pair matches all 24 equal-tick input
+histories, full player and camera poses, 649 registered prefixes and registry/list
+ordering. The runs complete 23 world updates with 20/0 draws over 143/141 actual
+PAL fields; final CIA debt is 2/0 and exact funding passes. Raw global and sound
+state differences remain visible. This shorter boundary-controlled check is
+correctness evidence, not a 250-field performance sample or full gameplay result.
+
 ## W6 coherent clock-boundary capacity checkpoint
 
 VERIFY build `9f72992c…` adds transaction markers for debugger observations of

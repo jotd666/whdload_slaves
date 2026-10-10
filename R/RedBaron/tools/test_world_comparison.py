@@ -77,3 +77,15 @@ class WorldComparisonTests(unittest.TestCase):
         left, right = Memory(), Memory()
         right.data[0x85a0:0x85a4] = (0xc300).to_bytes(4, 'big')
         self.assertFalse(compare_states(left, right, 0)['registry_equal'])
+
+    def test_camera_pose_and_followed_identity_are_compared(self):
+        left,right=Memory(),Memory()
+        for ram in (left,right):
+            ram.data[0x8d72:0x8d76]=(0xc600).to_bytes(4,'big')
+            ram.data[0x6712:0x6714]=(1).to_bytes(2,'big')
+            ram.data[0x67ae:0x67b2]=(0xc200).to_bytes(4,'big')
+        self.assertTrue(compare_states(left,right,0)['camera_equal'])
+        right.data[0xc608]=1
+        self.assertFalse(compare_states(left,right,0)['camera_equal'])
+        right.data[0xc608]=0;right.data[0x67ae:0x67b2]=(0xc300).to_bytes(4,'big')
+        self.assertFalse(compare_states(left,right,0)['camera_equal'])

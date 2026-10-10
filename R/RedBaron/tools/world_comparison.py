@@ -12,6 +12,7 @@ from presentation_state import symbol
 from pose_history import registry
 from game_heap import allocations, segments
 from time_capacity import interval
+from camera_pose import identity
 
 def display_list(read,h3):
  raw_count=read(h3+0x3fa8,2)
@@ -23,10 +24,20 @@ def display_list(read,h3):
  return [int.from_bytes(raw[i:i+4],'big') for i in range(0,len(raw),4)]
 
 
+def camera_state(read,h3):
+ camera,view,target=identity(read,h3)
+ pose=read(camera+8,18) if camera else None
+ if pose is not None and len(pose)!=18:raise ValueError('Truncated camera pose')
+ return dict(pointer=camera,view=view,target=target,pose=pose.hex() if pose is not None else None)
+
+
 def compare_states(l,r,h3,sim=None):
  lp=int.from_bytes(l.read(h3+0x4578,4),'big');rp=int.from_bytes(r.read(h3+0x4578,4),'big')
  out=dict(h3=region(l.read(h3,0xbd0c),r.read(h3,0xbd0c)),player_pointer_equal=lp==rp,
           player=region(l.read(lp,0x118),r.read(rp,0x118)))
+ lc=camera_state(l.read,h3);rc=camera_state(r.read,h3)
+ out['camera_equal']=lc==rc
+ out['camera_states']=dict(left=lc,right=rc)
  lreg=registry(l.read,h3);rreg=registry(r.read,h3)
  out['registry_equal']=lreg==rreg
  ld=display_list(l.read,h3);rd=display_list(r.read,h3)
