@@ -49,7 +49,7 @@ Thanks go to:
 
 History:
 
- version 1.6b (07.10.2026) done by Vesuri:
+ version 2.0 (07.10.2026) done by Vesuri:
  - added the "Enhanced framerate" option (CUSTOM2), for the version of the game
    whose "duel" file is 108868 bytes long (the other version is unchanged):
    - the game logic runs at a fixed rate, independently of drawing: every 6
