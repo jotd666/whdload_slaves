@@ -128,6 +128,9 @@ perf_custom2:
 perf_attnflags:
 	dc.l 0
 	IFD VERIFY
+	dc.l WHDLTAG_CUSTOM4_GET
+perf_custom4:
+	dc.l 0
 	dc.l WHDLTAG_CUSTOM5_GET
 perf_custom5:
 	dc.l 0

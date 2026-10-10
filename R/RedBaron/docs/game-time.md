@@ -1,9 +1,13 @@
 # Red Baron game-time investigation
 
-Status: W6 investigation in progress. No game-time change is implemented or approved.
-A final design recommendation requires the trajectory, collision and coupling experiments
-specified in `performance-plan.md`. The notes below distinguish inspected code from tests
-that still need to be run.
+Status: W6 analysis complete; [implementation proposal](game-time-plan.md) awaits user approval. No player game-time change
+is implemented or approved. The original investigation ledger below is retained;
+new results and the proposed implementation contract follow it. VERIFY-only
+experiments deliberately change clocks/initial conditions and are not player fixes.
+
+The sections preceding “W6 decision evidence” retain the chronological W0–W5
+ledger. Their then-open questions are superseded by the W6 results and explicit
+remaining acceptance gates below; they are not claims that those gates passed.
 
 ## Clocks and observers
 
@@ -69,7 +73,7 @@ render cost from elapsed world time without relying on arbitrarily large integra
 However, the dt>400 shortcuts, integer truncation, input cadence, message timing and
 secondary clock require explicit policies. A cap by itself does not solve these couplings.
 
-Before a final recommendation:
+Initial investigation checklist (historical; disposition below):
 
 1. Use the verified position/velocity/heading observations and elapsed-time reference below; extend them to the force and contact tests.
 2. Inventory indirect clock reads and per-world-step/per-render-step counters.
@@ -311,3 +315,279 @@ a W6 design. Rendering twins remain the correctness evidence. Time Scale stays
 40 and the game-time implementation remains unchanged pending the requested design
 investigation and approval. The primary W1 evidence and build hash are recorded
 in `profiling.md`.
+
+## W6 decision evidence: clock ownership
+
+The original-executable relocation inventory contains **16 references** to
+`h3:04834..0483b`: initialization, the two clock stores, the elapsed store,
+F setup/read, and the eight helper readers listed above. All **13 relocated
+code pointers** to those helpers are absolute JMP stubs. The direct/stub call
+inventory is:
+
+| Helper | Candidate call sites |
+| --- | ---: |
+| `sim:03d68` primary signed scaling | 69 |
+| `sim:03dba` secondary signed scaling | 10 |
+| `sim:03e0a` inverse scaling | 4 |
+| `sim:03e2e` word countdown | 25 |
+| `sim:03e4a` word accumulator | 6 |
+| `sim:03e5e` long countdown | 7 |
+| `sim:03e7e` long accumulator | 1 |
+| `sim:03e94` scaling with auxiliary output | 3 |
+
+`game_time_inventory.py` retains every site and its stub destination. It scans
+instruction encodings and relocation metadata; arbitrary computed aliases are
+not formally excluded. Inspection finds no clock-address escape through the
+listed operands or non-stub pointer to a clock helper. This is a supported
+sim-v1 inventory, not a proof about unknown versions or arbitrary memory aliases.
+
+**Correction to the initial plan:** the statement “only the world step reads dt;
+rendering never reads dt” was too strong. `sim:00ae2`, inside the render routine,
+uses the primary word-countdown helper for `h3:045ba`. Secondary scaling is used
+by the main-loop command/repeat path at `sim:21b6e`, by camera controls at
+`sim:1577e/157c6/157d4/15860/15872/1588a/1589a`, and by the effect transitions
+at `sim:05a82/05b0c`. The secondary clock is therefore a separate real-time
+service domain, not a second physics dt that can simply be set equal to the
+primary quantum. Repeating only `sim:01098` would miss these couplings.
+
+The audited frame/step distinctions relevant to the loop split are:
+
+| Site / state | Current update | Required ownership |
+| --- | --- | --- |
+| `sim:21d2c/21d34` | One input poll and command pass per outer frame | Timestamped events and held state, independent of renders |
+| `sim:012c8/012d6 → 011ca` | Throttle ±20 per command | Preserve one-shot command semantics |
+| `sim:0124c`, `h3:045ae` | Unjam-retry countdown reduced by primary dt; reload 1000 | World tick, with original expiry quantization |
+| `sim:0131e/01324` | Native world counters increment | World tick |
+| `sim:21e10`, `h3:03254` | Outer world-frame count increments | World tick, including catch-up |
+| `sim:15128` | Player history index/position/orientation | World tick |
+| `sim:0060c`, `h3:04588` | Decrement buffer refresh count | Actual render/buffer publication |
+| `sim:0069a`, `h3:06716` | Decrement dashboard redraw count | Actual render/buffer publication |
+| `sim:007cc`, `h3:045b8` | Top-text erase count | Actual renders after expiry |
+| `sim:0084e`, `h3:04820` | Message life minus 500 per render | Explicit time policy; proposed three active-flight seconds |
+| `sim:21e98`, `h3:07856` | Render-request countdown | Render domain; do not consume it in every hidden substep |
+| `sim:21f40` | End-of-flight delay reduced by primary dt | Simulation/death-transition service, independent of skipped draws |
+| `sim:11d22`, `11e14`, `11f4e` | Per-world-call object age/cyclic emitter counters | Keep per world tick; not per render |
+
+The final row is also a naming correction: the `sim:11c2c` loops include
+particle/effect emitters. Calling all eight observed objects “AI” does not
+establish their type. Aircraft AI, weapons and effects must retain the original
+world-update ordering; pointer reachability matters when comparing their heap
+state. The implementation plan makes full active-object comparisons a gate.
+
+## W6 forced-step flight experiment
+
+A single VERIFY build, SHA256
+`c96a8c5d6f56b2ac1fd1552cef4eea18c49d4c6ca51afd7ea142521e2d051859`
+(text 87,818 bytes), runs the native entry route with no performance bits,
+Time Scale 40 and maximum detail on the retained cached 68030/50 configuration.
+CUSTOM4 writes **only the primary dt** at each genuine flight input checkpoint,
+before its original world update. It accepts 100, 225, 450, 900 or 2200; zero
+observes the unmodified clocks. No original clock routine is patched, secondary
+time is left original, and Time Compress is off. Every recorded primary dt
+matches its requested value; the world counter advances once per interval.
+
+All five initial player objects match. Complete entry h3 differs only in the
+explicitly forced word `h3:04834`; no other difference is hidden. This is a
+step-size experiment, not a comparison of normal mission speed or CPU FPS.
+Evidence: `tmp/dev/tmp/prof/w6-force-{100,225,450,900,2200}/`.
+
+| Equal primary-time budget | dt | World updates | Travelled distance, raw | Difference from small-step reference |
+| ---: | ---: | ---: | ---: | ---: |
+| 9,900 | 100 | 99 | 10,752.652 | reference |
+| 9,900 | 225 | 44 | 10,709.508 | −0.40% |
+| 9,900 | 450 | 22 | 12,174.442 | +13.22% |
+| 9,900 | 900 | 11 | 6,096.522 | −43.30% |
+| 8,800 | 100 | 88 | 9,558.701 | reference |
+| 8,800 | 2200 | 4 | 2,220.228 | −76.77% |
+
+Orientation remains the same in these unbanked windows. At budget 9,900 the
+native forward-velocity words are 1280, 1279, 1281 and 1283 respectively. The
+100/225 endpoint separation is 63.914 raw units; the path percentage is not a
+claim of exact trajectory equality. At the common 19,800 budget, dt 225/450/
+900/2200 travel 21,406.119 / 24,320.318 / 12,174.442 / 4,990.105 raw units.
+The >400 motion shortcut is directly visible: doubling nominal dt from 450 to
+900 nearly halves travelled distance for the same accumulated nominal time.
+
+The original airborne integration model verifies **786 coordinate/remainder
+updates** and **1,602 velocity conversions** in the retained reference windows.
+These checks use observed velocities; they do not claim to model aerodynamic
+forces or establish collision convergence. A longer dt=100 capture reaches a
+non-integrating player state at step 165: position and velocity stop advancing
+while object flags/view fields change. The airborne model correctly rejects
+that interval. The full raw capture is retained, but it is not used as the
+small-step trajectory reference. No failing coordinate was silently masked.
+
+This is enough to reject “raise the scalar clamp” and “use a large final catch-up
+step.” It supports testing 225 as a fixed quantum; it does not approve a new
+physics implementation or claim that every quantum below 400 is equivalent.
+
+## W6 equal-wall-time rendering-delay experiment
+
+The same 87,818-byte build was booted with normal and deliberately slower
+rendering. CUSTOM4 is zero; the original clocks run throughout. Complete entry
+h3 and the first player object are byte-identical. Each run retains 100 player
+checkpoints and the independent CIA/VBlank step log.
+
+- Normal: 457 PAL fields / 541 CIA ticks; primary dt 124–372.
+- Slow draw: 724 fields / 858 ticks; primary dt 248–434.
+- Neither hits the scalar floor 64 or clamp 450. The slow run has one early
+  dt=434 at step 2, so it does exercise the separate >400 motion shortcut.
+
+There are **12 exact common elapsed-CIA boundaries**, including entry; no
+trajectory interpolation is used. All eleven later common boundaries differ
+in player position, by 31.718–83.048 raw units. For example, after 497 CIA ticks,
+normal has reached frame 91 and slow frame 57; their position separation is
+83.048. This is a scoped failure of render-rate independence in the scalar
+tracking regime, including the early shortcut and per-step integer rounding.
+It is not a claim that every difference is caused by the one-frame lag alone.
+
+Evidence: `tmp/dev/tmp/prof/w6-tracking-{normal,slow}/`. The committed
+`game_time_report.py` validates shared starting state, forced-clock boundaries,
+reference models and common-clock comparisons. The earlier W0 clamped-regime
+experiment remains valid: equal steps can match while equal wall times do not.
+
+## Ground contact, weapons and collision probes
+
+A second VERIFY fixture adds a one-time low-altitude descent (CUSTOM5 bit 18)
+which sets the player's initial vertical position to 512 and downward velocity
+to −1024, with matching converted velocity/fraction fields. Bit 19 instead
+holds the native fire key. These are synthetic investigation inputs, never
+normal mission or performance samples. All cases in this section use SHA256
+`15b5d3a76f9319e244f421f04bfe147f65a5d1e99f42e542d93df3d892254000`
+(text 87,894 bytes), cached 68030/50, Time Scale 40 and maximum details.
+
+Each ground run reaches one native impact-handler return at `sim:193a2`
+through step 11. The logged vertical position is before subsequent ground
+correction. All five report native damage-class byte 2 at that event, and all
+reach vertical position 50 with that byte cleared by step 11.
+
+| Forced dt | Impact step | Accumulated primary units | Pre-correction vertical position | World vertical velocity |
+| ---: | ---: | ---: | ---: | ---: |
+| 100 | 6 | 600 | 30 | −900 |
+| 225 | 3 | 675 | −22 | −881 |
+| 450 | 2 | 900 | −270 | −822 |
+| 900 | 2 | 1800 | −270 | −822 |
+| 2200 | 2 | 4400 | −270 | −822 |
+
+Evidence: `tmp/dev/tmp/prof/w6-ground-{100,225,450,900,2200}/`.
+The extra attempted ground-entry breakpoint logged no events and is not used
+as evidence. This is one synthetic impact, not a landing-quality tolerance or
+proof of aircraft-to-aircraft collision convergence. It shows that a larger
+scalar can consume much more nominal time without changing the contact step.
+
+**Weapon correction:** `h3:045ae` is an unjam-attempt retry timer, not a firing
+cooldown. The command-12 path at `sim:01228..01292` decrements it, makes a
+probabilistic retry and emits native unjam messages. Actual weapon readiness
+is updated at `sim:12194`: scaled increments are capped at 85, then added to
+each weapon accumulator. Firing at `sim:1246c` requires readiness above 255;
+`sim:12520..12530` resets it to 171 for the player and zero for NPCs. With an
+85 increment a player weapon is ready on the next update. Preserve those
+rules on world ticks; changing render cadence must not invent a new cooldown.
+
+Two held-fire probes log 40 world updates, including original projectile
+movement and collision query results. The first projectile's allocation is
+tracked only until its lifetime rises again, which identifies slot reuse.
+
+| Forced dt | Player-owned queries | NPC-owned queries | First projectile observed moves | Scaled distance per move | First projectile path, raw |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 225 | 627 | 10 | 22 | 1307 | 28,753.663 |
+| 900 | 185 | 4 | 5 | 2976 | 14,879.830 |
+
+The first projectile's lifetime falls from 4775 to 50 in the 225 case and
+4100 to 500 in the 900 case. Its native speed word is 1488 in both. Scaling
+at `sim:12866` uses the >400 shortcut, whereas lifetime at `sim:128ee` consumes
+the full scalar. The larger step therefore yields about **48.25% less observed
+travel before expiry**. Player projectiles begin on successive updates, also
+refuting the earlier claim of one shot every three frames.
+
+There are no player-owned hit returns in these windows. The 900 run contains
+one NPC-owned hit return at step 19; the 225 run has none. This exercises a
+native positive collision result, but different world histories do not prove
+collision or AI correctness. The original query is not point-only: it receives
+the old position and travel distance, and `sim:11020..1102c` tests an along-ray
+component against that distance. Preserve this segment-query behavior. A
+controlled hit/near-miss, moving-target, aircraft-collision and AI/RNG matrix
+remains required before accepting an implemented scheduler.
+
+Evidence: `tmp/dev/tmp/prof/w6-fire-{225,900}/`. No performance or gameplay
+balance claim is made from these synthetic probes.
+
+## Capacity and final recommendation
+
+The retained W5-only A500 trace has seven complete world calls: mean **420,212
+inclusive cycles**, range 372,298–458,310, or approximately **59.24 ms** at
+7,093,790 CPU cycles/second. Its 100-interval census spans 2,926 PAL fields,
+about 586.13 ms per frame, leaving an estimated 526.90 ms of other frame work.
+This combines a short routine-cost sample with that census; scene variation,
+catch-up ordering and the full W1–W5 bundle require fresh measurements later.
+
+| Time Scale / F | Proposed 225-unit world ticks/s | World-only utilization | Projected render FPS with retained other costs |
+| --- | ---: | ---: | ---: |
+| 0 / 80 | 3.363 | 19.9% | 1.52 |
+| 40 / 33 | 8.153 | 48.3% | 0.98 |
+| 60 / 10 | 26.904 | 159.4% | Unsustainable even without rendering |
+
+These are **budget projections, not new scheduler benchmarks**. At the default
+setting, a 100-unit quantum alone projects about 108.7% world utilization.
+A500 capacity rules out claiming that arbitrary catch-up can always maintain
+nominal speed. Retain debt, skip rendering when behind, service input/audio
+between bounded batches, and report the supported CPU/Time Scale envelope.
+W7 becomes a prerequisite if the default-setting capacity gate fails.
+
+The recommendation is the [fixed-step implementation proposal](game-time-plan.md):
+225-unit original world updates, exact CIA credit/remainder, explicit input and
+service clocks, and no large residual step. It provides a reproducible simulation
+sequence independent of how renders partition elapsed time. At low Time Scale,
+its coarse tick cadence is an explicit responsiveness/visual tradeoff that must
+be evaluated. Variable bounded steps were not selected: they still vary rounding,
+weapon/AI opportunities and event order with frame partition. Fixing those would
+require per-state fractional accounting and a much broader semantic rewrite.
+Raising the clamp is rejected by both static helper semantics and live probes.
+
+The analysis is complete at the level needed to approve or revise this prototype
+plan. It does **not** establish full combat convergence, bank/stall accuracy,
+heap-state equivalence or sustained catch-up performance of code that does not
+yet exist. Those are explicit implementation gates; a failure may require changing
+the quantum or doing W7 first. No player timing change has been made or approved.
+
+## Reproduction and validation
+
+Committed analysis tools operate on the retained local evidence:
+
+```sh
+python3 R/RedBaron/tools/game_time_report.py tmp/dev/tmp/prof --out tmp/dev/tmp/game-time/w6-results.json
+python3 R/RedBaron/tools/game_time_inventory.py tmp/dev/tmp/game/RedBaron_v2.1/RedBaron/data/sim --out tmp/dev/tmp/game-time/w6-inventory.json
+python3 -m unittest discover -s R/RedBaron/tools -p 'test_*.py'
+```
+
+For a new live experiment, use the existing local harness from `tmp/dev` after
+loading `amiga/env.sh`. Its ignored helpers and retained game installation are
+local prerequisites; they are not a distributable game fixture. Use one capture
+at a time, verify the running emulator belongs to this harness before quitting
+it, and keep hands off mouse/keyboard during the route and capture.
+
+```sh
+source amiga/env.sh
+python3 tools/w6_boot_current.py 030 0 tmp/prof/w6-manual-225 --dt 225
+python3 tools/w6_players.py --end 89 --out tmp/prof/w6-manual-225/players
+python3 tools/redbaron.py quit
+```
+
+Use a fresh output directory per case. CUSTOM4 zero observes native clocks;
+100/225/450/900/2200 force only primary dt. `--slow` selects the existing VERIFY
+draw delay. `--probe ground` or `--probe fire` selects the explicit synthetic
+fixture, collected by local `w6_ground.py` or `w6_projectiles.py`. Read those
+collectors' help before use. The current-build helper records its hash and
+calibrates its own anchor; compare cases from the same binary. Its added probe
+branches mean it is not the earlier frozen straight-flight binary. Neither
+forced clocks nor synthetic initial states are valid FPS workloads.
+
+
+Final validation: all **65 host tests pass**; the static audits report **13 sim
+and three sound ranges, zero errors** (with their documented indirect-target
+limits). All three build modes compile. Normal SHA256
+`5256542f87ec1c6d3eca174416560597a60e76e1cc785cd0fbf5e3efff3f0ba8`
+and developer SHA256
+`01a00068d799b01c9b17a06bc7b2ce87acf88f22c23f870afd476d4e46a6adc3`
+are byte-identical to W5. Only VERIFY contains the experimental clock/fixture
+code. The owned emulator was shut down after the final capture.

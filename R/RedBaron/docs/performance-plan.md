@@ -236,7 +236,10 @@ gives F = 33. Each tick is worth 1024/F dt units: 31.0 at F = 33.
 - `sim:3e2e`/`3e5e` (countdowns), `sim:3e4a`/`3e7e` (accumulators);
 - `sim:3e0a` and `sim:3e94`.
 
-All ~110 calls per frame come from the `sim:01098` subtree; rendering never reads dt.
+The initial capture attributed roughly 110 calls per frame to the world subtree.
+W6 corrects the static scope: rendering also reads primary dt at `sim:00ae2`;
+secondary-clock camera, command and transition work lives outside that subtree.
+See `game-time.md` for the complete encoded-call inventory.
 
 **dt was clamped at 450 in every frame of the capture.** The unclamped value was 993–1055 in
 steady frames and ~2,180 in redraw frames. At F = 33:
@@ -244,7 +247,7 @@ steady frames and ~2,180 in redraw frames. At F = 33:
 | Frame period | Effect of rendering faster |
 |---|---|
 | > 14.5 ticks (> ~12.3 fields, below ~4.1 fps): **today** | The world runs at 14.5/ticks of nominal speed: ~44% steady, ~21% in redraw frames. Faster frames make the world proportionally faster in wall time, as well as smoother |
-| 3–14.5 ticks (~4.1–29 fps) | dt tracks real time; faster frames are only smoother |
+| 3–14.5 ticks (~4.1–29 fps) | scalar dt tracks elapsed time; W6 still finds trajectory differences from step size, rounding and the >400 shortcut |
 | ≤ 2 ticks (≥ ~29 fps) | The floor of 64 makes the world faster than real time, without limit as fps rises (locked at 64/frame from ~59 fps) |
 
 The thresholds scale with F; at the extremes F = 10 and F = 80 the upper threshold is 4.4 and
@@ -253,8 +256,10 @@ The thresholds scale with F; at the extremes F = 10 and F = 80 the upper thresho
 **Things counted per frame instead of per unit of time:**
 - **Input:** sampled once per frame; one key event is consumed per poll.
 - **Throttle:** ±20 per key command.
-- **Gun cooldown** (`h3:045ae`, 1000): time-scaled, but it can only expire on a frame, so at dt
-  450 the guns fire once every 3 frames.
+- **Unjam retry** (`h3:045ae`, 1000): time-scaled, with expiry quantized to command/world updates.
+  The earlier gun-cooldown interpretation was wrong. Actual firing readiness adds an
+  increment capped at 85 per update; a player weapon resets to 171 after firing.
+  Held-fire probes create projectiles on successive updates; see `game-time.md`.
 - **Message timer** `h3:04820`: starts at 15,000 and drops by 500 per frame at `sim:84e`, so a
   cockpit message lasts **30 frames**.
 - **Render-buffer counters.**
@@ -861,7 +866,14 @@ The design inventory below records the implementation rationale.
   figure (playbook §8). The self-modified words at `sim:39d4c` are read as data, so they are
   safe with an instruction cache.
 
-### W6. Frame-rate-independent game speed (the goal; investigate first)
+### W6. Frame-rate-independent game speed (analysis complete; approval pending)
+
+**Current status:** the investigation and scoped experiments are recorded in
+`game-time.md`; `game-time-plan.md` is the concrete proposal for approval.
+It recommends fixed 225-unit world ticks, explicit input/service ownership and
+retained time debt. Player timing is unchanged. Ground/projectile probes reject
+large-step catch-up; controlled combat/AI convergence remains an implementation
+acceptance gate. A500 capacity estimates are projections, not scheduler benchmarks.
 
 **Goal (decision 2):** for a given Time Scale, the world runs at the same wall-clock speed at
 any frame rate and on any machine.
@@ -875,7 +887,7 @@ intermediate state.
 - **Fast machines and low Time Scale:** the dt floor of 64.
 - **Counted per frame:**
   - the message timer (30 frames);
-  - gun-cooldown expiry, which can only happen on a frame;
+  - weapon readiness and unjam-retry expiry, quantized to world updates;
   - the throttle step of ±20 per key command;
   - the render-buffer counters.
 - **Input:** sampled once per frame.

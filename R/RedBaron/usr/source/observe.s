@@ -25,6 +25,7 @@ observe_step:
 	move.l d1,a1
 	dbf d0,.hunk
 	move.l a1,28(a2)
+	bsr time_probe_step
 	move.l 20(a2),d0
 	andi.l #OBS_CAPACITY-1,d0
 	mulu.w #OBS_STRIDE,d0
@@ -143,4 +144,5 @@ observe_slow_draw:
 	rts
 observe_draw_target: dc.l 0
 
+	INCLUDE "time-probe.s"
 	INCLUDE "paint-observe.s"
