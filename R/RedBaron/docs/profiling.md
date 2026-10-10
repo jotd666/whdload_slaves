@@ -134,6 +134,52 @@ The native world body excludes other per-world-iteration work. The render and
 no complete render-call mean or steady frame-rate claim. W6's cost/capacity and
 smooth-50-FPS requirements remain open.
 
+## W6 exact-field 68020/68030 capacity checkpoints
+
+The same frozen `1a0677e1…` VERIFY build is measured with the native field
+counter and `sim:3154a` publication census, avoiding cached-CPU instruction-cycle
+estimates. Each window runs from one `pace_vbl` entry to the entry exactly 250
+fields later. Full RAM snapshots retain both endpoints. `field_capacity.py`
+checks exact clock funding, the completed/started-world distinction, adjacent
+window continuity, safe beam positions and publication/completed-draw agreement.
+These are native-counter windows, not Barto trace chunks, so no profile-join
+fields are omitted or inferred.
+
+Cached 68030/50 uses CUSTOM2=12218: W6 plus the current CPU-adapted verified
+performance selection (table mirror, G1 and S3 remain disabled on this CPU).
+Evidence is `tmp/dev/tmp/prof/w6-capacity-030-full/`.
+
+| Window | CIA ticks | Completed / newly nominal world ticks | CIA debt, start → end | Publications / FPS | Message start / shorten calls |
+| --- | ---: | --- | --- | --- | --- |
+| First 250 fields | 296 | 40 / 40.8221 | 0 → 3 | 56 / 11.2 | 15 / 10 |
+| Adjacent 250 fields | 296 | 42 / 40.8221 | 3 → 0 | 62 / 12.4 | 0 / 0 |
+
+Across ten PAL seconds, 82 world iterations complete against 81.6442 newly due;
+boundary debt returns to zero. All intervals conserve exact funded time. Actual
+publications and completed outer draws agree. The first window has message
+activity; absence of new message calls in the second does not by itself certify
+all R-steady conditions. The sample supports short-window nominal simulation
+progress while rendering at 11.2–12.4 FPS, not full-state gameplay consistency,
+sustained capacity across the acceptance matrix, or smooth 50 FPS.
+
+The A1200-class 68EC020 configuration uses 2 MB chip RAM, 8 MB fast RAM and
+CUSTOM2=16319. Its capture `tmp/dev/tmp/prof/w6-capacity-020-full/` uses the same
+binary and exact-field procedure:
+
+| Window | CIA ticks | Completed / newly nominal world ticks | CIA debt, start → end | Publications / FPS | Message start / shorten calls |
+| --- | ---: | --- | --- | --- | --- |
+| First 250 fields | 296 | 40 / 40.8221 | 0 → 6 | 23 / 4.6 | 15 / 10 |
+| Adjacent 250 fields | 296 | 42 / 40.8221 | 6 → 3 | 25 / 5.0 | 0 / 0 |
+
+One world iteration is in progress at both first-window boundaries; none is in
+progress at the final boundary. Completed versus started counts account for it
+explicitly. Exact funding, native-body completion counts, publication/completed-
+draw agreement and safe beam checks pass. The two CPU captures start at different
+completed ticks: 44 on 68020 and 42 on 68030. Their equal totals of 82 completed
+updates across 500 fields are a clock/capacity observation, **not** an equal-tick
+world-state comparison or proof of identical gameplay. Neither configuration
+reaches the 50 FPS presentation requirement in these samples.
+
 ## W5 current measurements
 
 The frozen VERIFY candidate is SHA256

@@ -1459,3 +1459,30 @@ audit. All declared performance ranges are selected in this configuration, so
 there is no disabled-range result to claim here; option-off isolation remains
 covered by the earlier W5-only control. Native counters remain 426/512/638/133.
 The 147 host tests pass. The player/developer source paths are unchanged.
+
+## Exact-field capacity censuses
+
+`field_capacity.py` validates live-counter windows of exactly 250 fields,
+retaining independent `sim:3154a` publication observations and message-call
+counts. It reuses the completed-work and exact-funding checks in
+`time_capacity.py`. A native publication may precede outer-draw completion at
+a boundary, so that pair of counts may differ by one; larger discrepancies are
+rejected. Beam positions and modular publication spacing are checked directly.
+The raw endpoint RAM snapshots allow inspection without rerunning the game.
+
+The cached-68030 combined build and two adjacent windows are documented in
+`profiling.md`: 82 completed world iterations, 118 publications, and exact funding
+across 500 fields; boundary CIA debt changes 0 → 3 → 0. Fifty timing/pacing targets,
+two disabled sim ranges, the effective mask and native self-test counters pass.
+This establishes the measured clock/capacity facts only. Full equal-tick gameplay
+state/events and the 50 FPS presentation gate remain open.
+
+The 68EC020 combined build also completes 82 world iterations across two exact
+250-field windows, publishing 23 and 25 frames (4.6/5.0 FPS). CIA debt changes
+0 → 6 → 3 ticks. Each interval conserves exact funding; the bounded world iteration
+in progress is reported rather than counted as completed. Fifty timing/pacing
+targets, the effective mask and native self-test counters pass. This mask selects
+all declared sim ranges, so it provides no disabled-range result. Both CPU
+captures retain full RAM endpoints and publication/event logs. Their different
+starting tick IDs prohibit using these windows as a full-state convergence test.
+All 149 host tests pass. No player or developer code changed in this checkpoint.
