@@ -115,6 +115,10 @@ sim_replay_reload_fixture:
  ; equality-based70E0 catch-up loop cannot chase a producer behind consumer.
  ; Ordinary UI callers own this target outside the simulation call instead.
  move.w #SIM_REPLAY_RELOAD_TARGET,$a0(a4)
+ IFD SIM_REPLAY_CLOCK_SPEED
+ move.b #SIM_REPLAY_CLOCK_SPEED,$3d(a4)
+ clr.b $44(a4)
+ ENDC
 .out:
  movem.l (sp)+,d0-a6
 .return:

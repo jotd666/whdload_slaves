@@ -236,6 +236,7 @@ patch_main
 	IFD SIM_SCHEDULE
 	bsr sim_schedule_reset_selftest
 	bsr sim_schedule_modal_selftest
+	bsr sim_schedule_replay_selftest
 	IFD SIM_A4000
 	bsr sim_results_selftest
 	bsr sim_results_summary_selftest
@@ -1428,5 +1429,10 @@ sim_replay_io_readback: dcb.b SIM_REPLAY_BYTES+2,0
  ENDC
  ENDC
  ENDC
+ ENDC
+ IFD SIM_SCHEDULE
+ even
+ dcb.b $1738,0
+sim_schedule_replay_native: dcb.b $a9e,0
  ENDC
 	END

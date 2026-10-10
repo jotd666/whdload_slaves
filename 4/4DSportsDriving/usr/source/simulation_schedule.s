@@ -1,6 +1,8 @@
-; VERIFY-only integration prototype: field-sampled live inputs, imported in
-; the main task through the native history writer. Replay/start routes retain
-; native scheduling until their separate lifecycle integration is validated.
+; Field-owned live input capture and replay pacing. Live records are imported
+; through the native history writer in the main task. Replay already owns its
+; recorded input, so the interrupt only publishes a bounded target cursor.
+; active=1 owns live mode 0; active=3 owns replay mode 2. Startup mode 1 keeps
+; native scheduling. A mode change cannot reuse the previous clock epoch.
 SIM_QUEUE_COUNT = 256
 SIM_QUEUE_SIZE = 8
 
@@ -13,7 +15,12 @@ sim_schedule_field:
  tst.w (a0)
  bne .modal_paused
  move.l sim_schedule_a4(pc),a4
+ cmp.b #2,$45(a4)
+ beq .replay
  tst.b $45(a4)
+ bne .paused
+ move.w sim_schedule_active(pc),d0
+ cmp.w #1,d0
  bne .paused
  tst.b $42(a4)
  bne .paused
@@ -114,6 +121,42 @@ sim_schedule_field:
  addq.l #1,(a0)
 .done:
  rts
+.replay:
+ move.w sim_schedule_active(pc),d0
+ cmp.w #3,d0
+ bne .paused              ; wait for the main task to publish the new owner
+ tst.b $42(a4)
+ bne .paused
+ tst.b $a9a(a4)
+ bne .paused
+ tst.w $a9c(a4)
+ bne .paused
+ tst.b $44(a4)
+ bne .paused              ; native replay pause / seek gate
+ ; Half speed adds rate/100 per field, normal 2*rate/100, double 4*rate/100.
+ ; Keeping a common denominator also preserves phase across speed changes.
+ move.w sim_schedule_rate(pc),d0
+ cmp.b #2,$3d(a4)
+ beq .replay_phase
+ add.w d0,d0
+ cmp.b #3,$3d(a4)
+ bne .replay_phase
+ add.w d0,d0
+.replay_phase:
+ lea sim_schedule_phase(pc),a0
+ add.w d0,(a0)
+.replay_due:
+ cmp.w #100,(a0)
+ blo .done
+ sub.w #100,(a0)
+ move.w $a0(a4),d0
+ cmp.w -$1738(a4),d0
+ bhs .paused              ; bounded even at double speed with one input left
+ addq.w #1,$a0(a4)        ; recorded bytes are immutable; publish target last
+ addq.w #1,$9c(a4)
+ lea sim_schedule_ticks(pc),a1
+ addq.l #1,(a1)
+ bra .replay_due          ; at most two complete steps per PAL field
 .modal_paused:
  lea sim_schedule_modal_fields(pc),a0
  addq.l #1,(a0)
@@ -136,14 +179,20 @@ sim_schedule_poll:
  adda.l #tape_configured-sim_schedule_poll,a0
  move.l (a0),d0
  beq .return
- tst.b $45(a4)
+ moveq #0,d7
+ move.b $45(a4),d7
+ beq .supported
+ cmp.w #2,d7
  bne .deactivate
+.supported:
+ addq.w #1,d7             ; requested owner: live=1, replay=3
  tst.b -$3ff4(a4)
  bne .return              ; an outer native dialog still owns input
  bsr sim_schedule_resume_modal
  lea sim_schedule_active(pc),a0
- tst.w (a0)
- bne .drain
+ cmp.w (a0),d7
+ beq .drain
+ clr.w (a0)              ; close old owner before clearing its epoch
  lea sim_schedule_a4(pc),a0
  move.l a4,(a0)
  lea sim_schedule_rate(pc),a0
@@ -155,8 +204,10 @@ sim_schedule_poll:
  lea sim_schedule_write(pc),a0
  clr.w (a0)
  lea sim_schedule_active(pc),a0
- move.w #1,(a0)           ; publish initialized state last
+ move.w d7,(a0)           ; publish initialized state last
 .drain:
+ cmp.w #3,d7
+ beq .replay_end
  tst.b $42(a4)
  bne .return
  tst.b $a9a(a4)
@@ -208,6 +259,30 @@ sim_schedule_poll:
  lea sim_schedule_read(pc),a0
  addq.w #1,(a0)
  bra .return
+.replay_end:
+ ; Native $7A66 handles the audio/paused/end flags. Invoke it only after all
+ ; published replay steps have completed; no OS or sound calls from the IRQ.
+ tst.b $42(a4)
+ bne .return
+ tst.b $44(a4)
+ bne .return
+ tst.b $a9a(a4)
+ bne .return
+ tst.w $a9c(a4)
+ bne .return
+ move.w $a0(a4),d0
+ cmp.w -$940(a4),d0
+ bne .return
+ cmp.w -$1738(a4),d0
+ blo .return
+ clr.w -(sp)
+ lea sim_schedule_poll(pc),a0
+ adda.l #tape_game-sim_schedule_poll,a0
+ move.l (a0),a0
+ adda.l #$7a66,a0
+ jsr (a0)
+ addq.l #2,sp
+ bra .return
 .deactivate:
  lea sim_schedule_active(pc),a0
  clr.w (a0)
@@ -251,7 +326,7 @@ sim_schedule_input:
 
  even
  dc.b "4DSCHED!"
- dc.w 1,SIM_QUEUE_COUNT
+ dc.w 2,SIM_QUEUE_COUNT
 sim_schedule_active: dc.w 0
 sim_schedule_phase: dc.w 0
 sim_schedule_rate: dc.w 0
@@ -268,7 +343,7 @@ sim_schedule_queue: dcb.b SIM_QUEUE_COUNT*SIM_QUEUE_SIZE,0
 ; initialization. Hook its first assignment at $7908. Close the producer FIRST:
 ; an interrupt before this store completes before reset; one after it returns
 ; without touching A4 or the queue. No interrupt masking spans buffer clearing.
-; The next live main-task poll republishes a fresh pointer/rate/capture epoch.
+; The next live/replay main-task poll republishes a fresh pointer/rate epoch.
 sim_schedule_reset_history:
  movem.l d0-d1/a0,-(sp)
  moveq #0,d0
@@ -451,8 +526,8 @@ sim_schedule_pause_modal:
  lea sim_schedule_active(pc),a0
  tst.w (a0)
  beq.s .done
- tst.b $45(a4)
- bne.s .done
+ cmp.b #1,$45(a4)
+ beq.s .done
  lea sim_schedule_modal(pc),a0
  move.w #1,(a0)            ; closes producer before any diagnostic reads
  lea sim_schedule_modal_enters(pc),a0
@@ -499,7 +574,7 @@ sim_schedule_modal_fields: dc.l 0
 sim_schedule_modal_passed: dc.l 0
 ; Exercise nested entry, no capture while paused, wrapped queued input, and
 ; preservation of an input already accepted by the native importer. Inactive
-; and replay-mode entries must not claim live clock ownership.
+; entries must not claim clock ownership; active replay pauses as well.
 sim_schedule_modal_selftest:
  movem.l d0-a6,-(sp)
  lea sim_schedule_test_native(pc),a4
@@ -532,8 +607,8 @@ sim_schedule_modal_selftest:
  bne .failed
  cmp.w #1,sim_schedule_enqueuing-sim_schedule_read(a0)
  bne .failed
- cmp.w #1,d7              ; only active=1, live mode=0 pauses
- bne .unclaimed
+ btst #0,d7              ; both active live and replay owners pause
+ beq .unclaimed
  cmp.w #1,sim_schedule_modal-sim_schedule_read(a0)
  bne .failed
  cmp.l #2,sim_schedule_modal_enters-sim_schedule_read(a0)
@@ -593,3 +668,143 @@ sim_schedule_modal_selftest:
  move.l #15,(a0)
  illegal
  bra.s .failed
+
+
+; Exercise the actual interrupt producer, not a host-side copy of its maths.
+; Scratch A4 includes every native field read by the replay branch.
+sim_schedule_replay_selftest:
+ movem.l d0-a6,-(sp)
+ lea sim_schedule_replay_selftest(pc),a4
+ adda.l #sim_schedule_replay_native-sim_schedule_replay_selftest,a4
+ lea sim_schedule_active(pc),a0
+ move.w #3,(a0)
+ move.l a4,sim_schedule_a4-sim_schedule_active(a0)
+ move.b #2,$45(a4)
+ move.w #30000,-$1738(a4)
+ moveq #0,d6
+.rate:
+ lea sim_schedule_replay_rates(pc),a0
+ move.w (a0,d6.w),d5
+ lea sim_schedule_rate(pc),a0
+ move.w d5,(a0)
+ moveq #0,d4
+.speed:
+ move.b d4,$3d(a4)
+ lea sim_schedule_phase(pc),a0
+ clr.w (a0)
+ clr.w $a0(a4)
+ clr.w $9c(a4)
+ lea sim_schedule_ticks(pc),a0
+ clr.l (a0)
+ move.w #249,d7
+.fields:
+ bsr sim_schedule_field
+ dbra d7,.fields
+ move.w d5,d3
+ mulu #5,d3
+ cmp.w #2,d4
+ bne .not_half
+ lsr.w #1,d3
+.not_half:
+ cmp.w #3,d4
+ bne .expected
+ add.w d3,d3
+.expected:
+ cmp.w $a0(a4),d3
+ bne .failed
+ cmp.w $9c(a4),d3
+ bne .failed
+ cmp.l sim_schedule_ticks(pc),d3
+ bne .failed
+ move.w sim_schedule_phase(pc),d0
+ tst.w d0
+ bne .failed
+ bsr .passed
+ addq.w #1,d4
+ cmp.w #4,d4
+ blo .speed
+ addq.w #2,d6
+ cmp.w #6,d6
+ blo .rate
+ ; Double-speed tail with one remaining input never publishes count+1.
+ move.w #29999,$a0(a4)
+ bsr sim_schedule_field
+ cmp.w #30000,$a0(a4)
+ bne .failed
+ bsr sim_schedule_field
+ cmp.w #30000,$a0(a4)
+ bne .failed
+ bsr .passed
+ ; A speed change keeps the fractional field already accumulated.
+ clr.w $a0(a4)
+ move.b #2,$3d(a4)
+ bsr sim_schedule_field   ; half: 0 steps, phase50
+ move.b #3,$3d(a4)
+ bsr sim_schedule_field   ; double: 2 steps, phase50
+ clr.b $3d(a4)
+ bsr sim_schedule_field   ; normal: 1 step, phase50
+ cmp.w #3,$a0(a4)
+ bne .failed
+ move.w sim_schedule_phase(pc),d0
+ cmp.w #50,d0
+ bne .failed
+ bsr .passed
+ ; Each native pause gate drops elapsed phase, with no target publication.
+ moveq #0,d6
+.pause_case:
+ move.b #2,$3d(a4)
+ clr.w $a0(a4)
+ lea sim_schedule_phase(pc),a0
+ move.w #99,(a0)
+ lea sim_schedule_replay_gates(pc),a0
+ move.w (a0,d6.w),d0
+ st (a4,d0.w)
+ bsr sim_schedule_field
+ tst.w $a0(a4)
+ bne .failed
+ move.w sim_schedule_phase(pc),d0
+ tst.w d0
+ bne .failed
+ lea sim_schedule_replay_gates(pc),a0
+ move.w (a0,d6.w),d0
+ clr.b (a4,d0.w)
+ bsr sim_schedule_field
+ tst.w $a0(a4)           ; fresh half-speed phase; no resume burst
+ bne .failed
+ bsr sim_schedule_field
+ cmp.w #1,$a0(a4)
+ bne .failed
+ bsr .passed
+ addq.w #2,d6
+ cmp.w #8,d6
+ blo .pause_case
+ ; A mode transition must wait for main-task ownership publication.
+ clr.w $a0(a4)
+ lea sim_schedule_active(pc),a0
+ move.w #1,(a0)
+ bsr sim_schedule_field
+ tst.w $a0(a4)
+ bne .failed
+ bsr .passed
+ bsr sim_schedule_reset_history
+ lea sim_schedule_resets(pc),a0
+ clr.l (a0)
+ lea sim_schedule_ticks(pc),a0
+ clr.l (a0)
+ movem.l (sp)+,d0-a6
+ rts
+.passed:
+ lea sim_schedule_replay_passed(pc),a0
+ addq.l #1,(a0)
+ rts
+.failed:
+ lea perf_failure(pc),a0
+ move.l #60,(a0)
+ illegal
+ bra .failed
+sim_schedule_replay_rates: dc.w 10,20,50
+sim_schedule_replay_gates: dc.w $42,$44,$a9a,$a9c
+ even
+ dc.b "4DRPLCLK"
+ dc.w 2,19
+sim_schedule_replay_passed: dc.l 0
