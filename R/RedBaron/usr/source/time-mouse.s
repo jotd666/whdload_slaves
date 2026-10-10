@@ -315,6 +315,9 @@ time_mouse_camera_y:
 ; Replay the original MOVE/MOVEM epilogue with the patch return above saved regs.
 time_mouse_camera_done:
 	movem.l a0-a1,-(sp)
+	lea time_camera_world_sampling(pc),a0
+	tst.w (a0)
+	bne .restore
 	bsr time_devices_owned
 	beq .restore
 	lea time_mouse_camera(pc),a1

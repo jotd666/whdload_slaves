@@ -694,3 +694,72 @@ reload 10000 at `sim:21b96`. Its two gating words are `h3:07838/0783a`.
 This path must get a real-time service policy without replaying the whole
 one-shot command dispatcher. The separate keyboard-repeat inventory remains
 open; this correction does not remove the clock-independent input requirement.
+
+
+## Continuous camera service dispatch
+
+`time-camera.s` now samples held input and dispatches continuous camera motion
+once per funded 128-unit secondary service tick, after that CIA boundary's input
+and rate history are applied and before its world update. Service deadlines
+alternate two and three CIA intervals (the exact 1024/2560 accumulator); drawing
+cannot create, omit or duplicate one. Catch-up processes the same boundaries.
+Before the route's input handoff, native camera behavior remains in use.
+
+The service calls the original input builder with command popping disabled.
+It neither consumes a world command nor recenters the world mouse position.
+Native F7/F8 held overrides are reflected in its input packet. Native camera
+input construction consumes only the camera sample. On a world update, the
+original builder still decodes the one-shot view command, while its continuous
+fields come from the latest service packet; it does not consume another camera
+mouse sample. The original native camera-selection/change-detection pass and
+eight-byte mission-tape packet call remain on the world path.
+
+The original continuous orbit/free-camera routines (`sim:15764/15830`) execute
+with secondary dt temporarily set to 128; the previous word is restored before
+returning to the world loop. The native follow/orbit callback refreshes the pose.
+Their old calls within the world camera pass (`sim:16774/16788`) are skipped
+while the service owns flight, preventing double motion. The original routines
+and UI behavior remain in use outside ownership. All three new hooks validate
+whole original instructions, and timing off leaves their bytes unchanged.
+
+CUSTOM5 bit 27 selects free camera through the original `sim:158f4` API once,
+as a correctness fixture. Combined with timestamped mouse movement and keyboard
+press/release fixtures, this permits direct observation of actual camera motion
+and a nonempty command queue. It is not a player-input or performance workload.
+The fixture runs on the main-task gate, so initial cockpit services can precede
+its mode switch; those must leave angles unchanged. Once selected, the mode
+must remain free camera throughout the checked window.
+
+`camera_service.py` independently models the native word shift, signed multiply,
+arithmetic shift and wrapped orientation updates. Every service record checks
+its exact funding interval/remainder, native camera controls and resulting
+angles. It also checks unchanged world mouse state, FIFO head/tail/pop count and
+restored secondary dt. Corruption tests reject wrong cadence, input, queued
+commands, mode, arithmetic, clocks and missing/extra dispatches.
+
+Frozen VERIFY text is 140,322 bytes, SHA256
+`022b82f7bf7161b43ec10452b0117d86faf8977e3b3bdbf66c29ec0790a1c984`.
+The cached-68030 capture passes 160 service boundaries, including 158 free-camera
+updates, eight moving services and four with unconsumed world commands queued.
+Evidence: `tmp/dev/tmp/prof/w6-camera-free-030/`, including `camera.log`,
+`camera-result.json` and the initial clock state. An earlier cockpit-only
+capture established cadence/isolation but exercised no camera motion; it is not
+used as proof of free-camera arithmetic.
+
+The same-build A500 capture passes 160 services, including 157 free-camera
+updates, eight moving services and five with world commands still queued.
+Evidence: `tmp/dev/tmp/prof/w6-camera-free-a500/`. Each CPU is checked against its
+own observed camera inputs and exact CIA funding; this is not a whole-world
+cross-CPU state comparison. Both live audits pass all 35 selected timing hooks,
+thirteen disabled sim ranges and clock/FIFO/pause counters 426/512/1. Static
+audit reports 48 sim ranges and zero errors. All 116 host tests pass, including
+word/angle wrap and deliberately corrupted native records. Normal/developer
+hashes remain byte-identical to W5. Both owned emulators are quit.
+
+This checkpoint does not establish all camera behavior. Orbit/zoom/translation,
+F-key view changes, mode transitions, native mission-tape playback, modal/restart
+combinations and service cost remain integration gates. Preserving the tape
+packet format/call does not establish replay equivalence when camera updates
+occur between world ticks. Automatic mission-menu and other timed effects,
+Time Compress, interpolated rendering, full world-state equality and measured
+capacity remain open W6 work. The player verified mask remains unchanged.

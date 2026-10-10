@@ -63,6 +63,7 @@ time_loop_install:
 	bsr time_devices_install
 	bsr time_mouse_install
 	bsr time_keys_install
+	bsr time_camera_install
 	lea time_loop_patch(pc),a0
 	jsr resload_Patch(a2)
 	jsr resload_FlushCache(a2)
@@ -112,6 +113,7 @@ time_loop_poll:
 	bsr time_core_advance
 	add.w d1,TIME_LOOP_SERVICES(a0)
 	move.w d0,TIME_LOOP_DUE(a0)
+	bsr time_camera_advance
 	bsr time_message_advance
 	tst.w TIME_LOOP_DUE(a0)
 	beq .loop
@@ -141,8 +143,10 @@ time_loop_gate:
 	move.l (a1),TIME_LOOP_CURSOR(a0)
 	bsr time_rate_reset
 	bsr time_message_reset
+	bsr time_camera_reset
 .ready
 	bsr time_keys_start
+	bsr time_camera_fixture
 	bsr time_rate_fixture
 	bsr time_message_fixture
 .wait

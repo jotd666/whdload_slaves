@@ -43,8 +43,13 @@ removal, FPS or sustained simulation capacity.
 The camera-input ownership checkpoint then passes twelve mouse acquisitions,
 48 world-input and 47 camera-input observations on each CPU, plus 192 native
 mixed-owner reset cases. Camera resets no longer alter the world mouse position.
-Independent camera service dispatch remains unimplemented; no camera cadence or
-FPS claim follows from these checks.
+The subsequent continuous-camera service candidate passes 160 exact funded
+service boundaries on each CPU, including 157 A500 / 158 cached-68030 free-camera
+updates. Eight services on each machine move the camera; five/four execute with
+world commands still queued without consuming them. Native orientation changes
+match the independent 128-unit arithmetic model, and the service restores the
+secondary clock and leaves flight mouse input unchanged. These are scoped camera
+correctness checks, not overall FPS, gameplay convergence or capacity results.
 See `w6-verification.md` for frozen builds and limitations.
 
 ## W5 current measurements

@@ -175,6 +175,9 @@ time_keys_query:
 
 time_keys_pop:
 	move.l a0,-(sp)
+	lea time_camera_sampling(pc),a0
+	tst.w (a0)
+	bne time_camera_no_command
 	lea time_keys_ready(pc),a0
 	tst.w (a0)
 	beq .native
