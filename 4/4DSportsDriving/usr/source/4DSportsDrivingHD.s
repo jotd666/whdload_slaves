@@ -196,6 +196,7 @@ patch_main
 	bsr sim_results_ui_selftest
 	bsr sim_events_selftest
 	bsr sim_average_selftest
+	bsr sim_score_selftest
 	bsr sim_history_selftest
 	bsr sim_capacity_selftest
 	bsr sim_time_selftest
@@ -953,6 +954,7 @@ tape_restart_result_stub:
 	include "simulation_results_ui.s"
 	include "simulation_events.s"
 	include "simulation_average.s"
+	include "simulation_scores.s"
 	include "simulation_history.s"
 	include "simulation_capacity.s"
 	include "simulation_time.s"
