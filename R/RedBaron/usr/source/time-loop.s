@@ -64,6 +64,7 @@ time_loop_install:
 	bsr time_mouse_install
 	bsr time_keys_install
 	bsr time_camera_install
+	bsr time_auto_install
 	bsr time_compress_install
 	bsr time_present_selftest
 	bsr time_present_state_install
@@ -130,6 +131,14 @@ time_loop_poll:
 	move.w d0,TIME_LOOP_DUE(a0)
 	bsr time_camera_advance
 	bsr time_message_advance
+	move.l TIME_LOOP_PAUSED(a0),d2
+	bsr time_auto_advance
+	; Modal return rebases the cursor. Do not keep the pre-menu CIA endpoint.
+	cmp.l TIME_LOOP_PAUSED(a0),d2
+	bne .done
+	lea time_auto_exit(pc),a1
+	tst.w (a1)
+	bne .done
 	tst.w TIME_LOOP_DUE(a0)
 	beq .loop
 .done
@@ -159,6 +168,7 @@ time_loop_gate:
 	bsr time_rate_reset
 	bsr time_message_reset
 	bsr time_camera_reset
+	bsr time_auto_reset
 	bsr time_compress_reset
 	lea .pose_reset_base(pc),a1
 .pose_reset_base
@@ -177,6 +187,9 @@ time_loop_gate:
 	bsr time_message_fixture
 .wait
 	bsr time_loop_poll
+	lea time_auto_exit(pc),a1
+	tst.w (a1)
+	bne .auto_exit
 	tst.w TIME_LOOP_DUE(a0)
 	bne .world
 	move.l a6,-(sp)
@@ -186,6 +199,19 @@ time_loop_gate:
 	jsr (a6)
 	move.l (sp)+,a6
 	bra .wait
+; Route native menu results 2/3 through the original flight exit decision.
+; No input arguments were pushed, so the frame stack already matches sim:21d3a.
+.auto_exit
+	moveq #0,d0
+	move.w time_auto_exit(pc),d0
+	move.l d0,(sp)
+	lea time_auto_exit(pc),a1
+	clr.w (a1)
+	move.l time_loop_sim(pc),a1
+	adda.l #$21d3a,a1
+	move.l a1,60(sp)
+	movem.l (sp)+,d0-a6
+	rts
 .world
 	subq.w #1,TIME_LOOP_DUE(a0)
 	addq.l #1,TIME_LOOP_STEPS(a0)
@@ -206,11 +232,9 @@ time_loop_draw:
 	lea time_loop_state(pc),a0
 	tst.l TIME_LOOP_ACTIVE(a0)
 	beq .original
-	bsr time_loop_poll
-	tst.w TIME_LOOP_DUE(a0)
-	beq .defer
+	; Always defer. Services run only at completed-world gate re-entry.
+	; This counter now counts deferred legacy draw sites, not sampled debt.
 	addq.l #1,TIME_LOOP_SKIPS(a0)
-.defer
 	lea .started_base(pc),a0
 .started_base
 	adda.l #time_render_started-.started_base,a0

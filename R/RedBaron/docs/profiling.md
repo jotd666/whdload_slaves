@@ -85,6 +85,21 @@ two-field cap. The subsequent W6 one-field policy is verified below; full
 capacity and smooth-50-FPS acceptance remain open.
 See `w6-verification.md` for frozen builds and limitations.
 
+## W6 automatic-menu timing checkpoint
+
+The current automatic-menu VERIFY candidate is SHA256
+`c59f4909f124e96a747974c3272750fce06883a1f691ce7d6d372fcb27f39cb2`.
+Its cached-68030 timing-plus-W5 capture (`CUSTOM2=8192`, effective 8960) completes
+40 world ticks against 40.8221 newly nominal over exactly 250 PAL fields, while
+publishing 57 frames (11.4 FPS). CIA debt changes 1 → 4 ticks and exact funding
+passes. There are no message start/shorten calls in this window. This follows
+120 ordinary automatic-service observations and three verified cockpit draws;
+it is not a full-bundle steady-flight benchmark or a comparison against earlier
+builds. Services now run only at completed-world boundaries. See
+`w6-verification.md` for the controlled A500/68030 menu-expiry evidence and limits.
+Consistent gameplay still requires full state/event convergence across rendering
+schedules and sustained nominal execution; retained time debt alone is insufficient.
+
 ## W6 combined A500 capacity checkpoint
 
 The VERIFY build `1a0677e18c874809ae0270549b4efbeaae6d778d4d3e210a6f936fafbca7e1b8`

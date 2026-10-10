@@ -1285,8 +1285,10 @@ path after completed-tick snapshots. The old draw site at `sim:21e7a` always
 defers its draw and dirty-countdown work in timing mode; the rest of the native
 iteration still runs before loop re-entry. After observing elapsed time, the
 scheduler consumes due world work first, otherwise draws and polls again.
-`TIME_LOOP_DRAWS` counts actual calls in this new phase. `TIME_LOOP_SKIPS` still
-counts cases where debt is already due at the former draw site. A mission starts
+`TIME_LOOP_DRAWS` counts actual calls in this new phase. At this checkpoint,
+`TIME_LOOP_SKIPS` counted cases where debt was already due at the former draw
+site; the automatic-menu checkpoint below changes it to count every deferred
+legacy draw site. A mission starts
 rendering only after its first world iteration has reached that site.
 
 For view mode zero, the render phase preflights the registered poses/model IDs
@@ -1486,3 +1488,71 @@ all declared sim ranges, so it provides no disabled-range result. Both CPU
 captures retain full RAM endpoints and publication/event logs. Their different
 starting tick IDs prohibit using these windows as a full-state convergence test.
 All 149 host tests pass. No player or developer code changed in this checkpoint.
+
+
+## Automatic mission-menu service
+
+The automatic prefix of `sim:21b14` now runs once per funded 128-unit secondary
+service tick, with a zero command packet. The original player/threat predicates,
+signed-word countdown at `h3:0783e`, menu preparation and result mapping remain
+native. Ordinary world-command calls start at `sim:21bbc` after this prefix,
+so catch-up iterations cannot advance the automatic countdown again. Before
+input ownership, the original entry path remains intact. The new eight-byte
+entry hook is VERIFY-only, sim v1, CUSTOM2 bit 13.
+
+Services now execute only on completed-world gate re-entry. The former draw site
+always defers; `TIME_LOOP_SKIPS` consequently counts all such deferrals, not debt
+observations. A modal return abandons the pre-menu sampled CIA endpoint because
+the pause wrapper has rebased the cursor. Native results 2/3 route through
+`sim:21d3a` without starting another world iteration; ordinary result 4 continues.
+The secondary clock is restored after each service. `automatic_menu.py` models
+the predicate, signed subtraction, zero boundary, reload and result mapping.
+
+Frozen VERIFY text is 245,892 bytes, SHA256
+`c59f4909f124e96a747974c3272750fce06883a1f691ce7d6d372fcb27f39cb2`.
+The compiled CUSTOM5 bit-29 fixture forces eligibility, primes a 128-unit timer,
+and substitutes menu choices 0 then 5 inside the real pause wrapper. Both
+`tmp/dev/tmp/prof/w6-auto-fixture-a500/` and
+`tmp/dev/tmp/prof/w6-auto-fixture-030/` observe the same sequence:
+
+- Four native subtractions of 128, with pre-subtraction values 128, 0, 128, 0.
+- Return/timer pairs (4, 0), (4, 10000), (4, 0), (3, 10000).
+- Every service observes a completed world boundary. The exit occurs at tick 41
+  without another world update; native frame stack position and exit result
+  match, and timing/input ownership clears through the original exit hook.
+
+This validates controlled countdown, cancellation-like continuation, modal
+rebasing and one native mission-exit route. It does not exercise the actual menu
+UI, naturally changing eligibility, or native result 2. An earlier register-only
+debugger probe produced no valid countdown observations and is not evidence.
+
+The ordinary cached-68030 capture `tmp/dev/tmp/prof/w6-auto-normal-030/`, without
+that fixture, observes 120 service calls at alternating 2/3 active CIA intervals.
+All run at completed-world boundaries; none is eligible to decrement the timer.
+Three real cockpit draws check 113 poses, including 92 changed visual poses,
+against the interpolation/restoration model. A subsequent exact 250-field window
+conserves funding and completes 40 world ticks against 40.8221 newly nominal,
+with CIA debt changing 1 to 4. It publishes 57 frames (11.4 FPS), with no message
+start/shorten calls. This is timing plus W5 only, not the combined performance
+mask; it supplies no cross-build gain or full gameplay-state convergence claim.
+Earlier capacity tables retain their explicitly named historical build.
+
+All three selected captures pass 51 live timing/pacing targets and ten disabled
+ranges. Native self-tests pass 426 clock, 512 input, 638 position/angle and 133
+phase vectors. The player/developer hashes remain unchanged from W5.
+
+Code growth exposed a signed patch-list displacement overflow that vasm accepted:
+an early candidate failed in `resload_Patch` before entering flight. A nearby
+register/flag-preserving bridge now reaches the VBlank observer. Distant VERIFY
+option reads also use full-range address construction. `audit_patch_reach.py`
+checks emitted signed-word destinations against listing symbols: 118 VERIFY and
+58 per player/developer build, zero errors. Its regression cases include the
+out-of-range word that assembles successfully. All 156 host tests pass.
+The same-build W5-only control (`tmp/dev/tmp/prof/w6-auto-off-020/`,
+CUSTOM2=768) passes the three selected W5 hooks and all 58 disabled ranges,
+including the new automatic-menu entry. The static sim audit checks 61 ranges
+with zero errors.
+
+Full gameplay-state/events/RNG comparison across render schedules, natural menu
+and modal transitions, all-camera presentation, sustained capacity and real
+smooth 50 FPS remain open. No player timing enablement is claimed.

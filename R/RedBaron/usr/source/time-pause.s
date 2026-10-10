@@ -54,9 +54,7 @@ time_pause_menu:
 	move.l d0,d7
 	rts
 .native
-	move.l time_loop_sim(pc),-(sp)
-	addi.l #$1f0d2,(sp)
-	rts
+	bra time_auto_menu_call
 time_pause_preferences:
 	bsr time_pause_begin
 	bsr .native

@@ -4,9 +4,9 @@
 ; This observer leaves both the native bitmap and native command FIFO untouched.
 time_input_observe_install:
 	movem.l d0-a6,-(sp)
-	btst #4,perf_custom5+1(pc)
+	bsr time_input_option_observe
 	bne .selected
-	btst #5,perf_mask+2(pc)
+	bsr time_input_option_timing
 	beq .done
 .selected
 	move.l tape_game_steps(pc),d0
@@ -45,7 +45,10 @@ time_input_observe_install:
 	movem.l (sp)+,d0-a6
 	rts
 .bad
-	pea perf_mismatch(pc)
+	lea .error_base(pc),a0
+.error_base
+	adda.l #perf_mismatch-.error_base,a0
+	pea (a0)
 	pea TDREASON_FAILMSG
 	move.l observe_resload(pc),a2
 	jmp resload_Abort(a2)
@@ -62,7 +65,7 @@ time_input_observe_irq:
 	ori.w #$0700,sr
 	movem.l d0-d3/a1-a2,-(sp)
 	lea -16(sp),sp
-	btst #5,perf_mask+2(pc)
+	bsr time_input_option_timing
 	beq .capture
 	move.w time_keys_ready(pc),d2
 	beq .restore
@@ -110,7 +113,7 @@ time_input_observe_state:
 ; Exercise the installed native LEA hook and the unchanged bitmap/FIFO tail.
 ; This does not test the host keyboard mapping or CIA serial handshake.
 time_input_fixture:
-	btst #5,perf_custom5+1(pc)
+	bsr time_input_option_fixture
 	beq .done
 	movem.l d0-a6,-(sp)
 	move.w sr,-(sp)
@@ -122,7 +125,7 @@ time_input_fixture:
 	moveq #0,d3
 	move.w (a3),d3
 	moveq #4,d4
-	btst #6,perf_custom5+1(pc)
+	bsr time_input_option_modal
 	beq .limit
 	moveq #8,d4
 .limit
@@ -131,11 +134,11 @@ time_input_fixture:
 	adda.l #$30006,a0
 	move.l (a0),d2
 	sub.l time_input_fixture_epoch(pc),d2
-	btst #6,perf_custom5+1(pc)
+	bsr time_input_option_modal
 	bne .modal_time
 	move.w d3,d4
 	mulu.w #3,d4
-	btst #5,perf_mask+2(pc)
+	bsr time_input_option_timing
 	beq .short
 	move.w d3,d4
 	mulu.w #18,d4
@@ -200,3 +203,43 @@ time_input_fixture_index: dc.w 0
 time_input_fixture_log: dcb.b 64,0
 time_input_fixture_clocks: dcb.b 128,0
 time_input_modal_deadlines: dc.w 2,20,38,56,74,76,300,302
+
+; Long-range VERIFY option read, preserving registers and all flags except Z.
+time_input_option_observe:
+	movem.l a0,-(sp)
+	lea .base(pc),a0
+.base
+	adda.l #perf_custom5+1-.base,a0
+	btst #4,(a0)
+	move.l (sp)+,a0
+	rts
+
+; Long-range VERIFY option read, preserving registers and all flags except Z.
+time_input_option_fixture:
+	movem.l a0,-(sp)
+	lea .base(pc),a0
+.base
+	adda.l #perf_custom5+1-.base,a0
+	btst #5,(a0)
+	move.l (sp)+,a0
+	rts
+
+; Long-range VERIFY option read, preserving registers and all flags except Z.
+time_input_option_modal:
+	movem.l a0,-(sp)
+	lea .base(pc),a0
+.base
+	adda.l #perf_custom5+1-.base,a0
+	btst #6,(a0)
+	move.l (sp)+,a0
+	rts
+
+; Long-range VERIFY option read, preserving registers and all flags except Z.
+time_input_option_timing:
+	movem.l a0,-(sp)
+	lea .base(pc),a0
+.base
+	adda.l #perf_mask+2-.base,a0
+	btst #5,(a0)
+	move.l (sp)+,a0
+	rts

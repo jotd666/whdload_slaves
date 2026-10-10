@@ -335,12 +335,21 @@ cb_loadseg_done
 	rts
 
 
+	IFD VERIFY
+; Tail bridge preserves flags/register inputs; the VBlank hook overwrites a2.
+observe_vbl_bridge:
+	lea .base(pc),a2
+.base
+	adda.l #observe_vbl-.base,a2
+	jmp (a2)
+	ENDC
+
 pl_sim_v1
 	PL_START
 	IFD VERIFY
 	PL_PS $1ed82,tape_flight
 	PL_P $1ef92,tape_sim_key
-	PL_PS $2d348,observe_vbl
+	PL_PS $2d348,observe_vbl_bridge
 	; VERIFY_RANGE sim:2d354 6: neutral mouse counters for scripted keyboard route.
 	PL_L $2d354,$323c0000	; move.w #0,d1
 	PL_W $2d358,$4e71	; nop
@@ -574,6 +583,7 @@ new_DeleteFile:
 	include "time-message.s"
 	include "time-camera.s"
 	include "time-compress.s"
+	include "time-auto-menu.s"
 	include "time-present-core.s"
 	include "time-present-state.s"
 	include "time-present-model.s"
