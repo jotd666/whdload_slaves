@@ -222,7 +222,11 @@ slv_info		dc.b	"Installed & fixed by JOTD",10,10
 		dc.b	0
 
 slv_config
-	dc.b "C2:X:Experimental rendering optimizations:0;",0
+	dc.b "C2:X:Experimental rendering optimizations:0;"
+ IFD SIM_RUNTIME
+ dc.b "C3:X:Legacy timing (no A4000 physics):0;"
+ ENDC
+ dc.b 0
 	even
 
 program:
@@ -251,6 +255,10 @@ _bootdos
 		lea	(tag,pc),a0
 		jsr	(resload_Control,a2)
 		IFD SIM_SCHEDULE
+ IFD SIM_RUNTIME
+ btst #0,_custom3+3(pc)
+ bne .pal_clock            ; original timing has no new PAL requirement
+ ENDC
 		; The field accumulator is validated for PAL only. Reject unsupported
 		; video timing before loading the game or installing any clock hooks.
 		move.l sim_monitor_id(pc),d0
@@ -295,6 +303,10 @@ patch_main
 	adda.l #sim_game-patch_main,a0
 	move.l d7,(a0)
 	addq.l #4,(a0)
+ IFD SIM_RUNTIME
+ btst #0,_custom3+3(pc)
+ bne .native_timing
+ ENDC
 	IFD SIM_A4000
 	bsr sim_a4000_prepare
 	lea patch_main(pc),a0
@@ -370,6 +382,9 @@ patch_main
 	bsr sim_clock_install
 	ENDC
 	ENDC
+ IFD SIM_RUNTIME
+.native_timing:
+ ENDC
 	movem.l (sp)+,d0-a6
 	ENDC
 	IFD	USE_PROFILING
@@ -450,6 +465,10 @@ dma_write_8
 pl_main
     PL_START
     IFD SIM_BUILD
+ IFD SIM_RUNTIME
+    PL_IFC3X 0
+    PL_ELSE
+ ENDC
     IFD TAPE_OPPONENT
     PL_PSS $32B0,tape_opponent_main_observe_stub,2
     PL_PSS $4DC6,tape_opponent_menu_observe_stub,2
@@ -601,6 +620,16 @@ pl_main
     IFD TAPE_PIXELS
     PL_PSS $20C3A,tape_draw_complete_stub,2
     ENDC
+ IFD SIM_RUNTIME
+    PL_ENDIF
+    ; File validation remains available in legacy mode. Never let the native
+    ; unbounded loader read a tagged A4000 recording into its small buffer.
+    PL_IFC3X 0
+    PL_P $80EE,sim_replay_load_entry_stub
+    PL_NOP $80F4,2
+    PL_PS $9E50,sim_replay_load_result_stub
+    PL_ENDIF
+ ENDC
     ENDC
 	PL_W	$2E77A-$6568,$9E	; fix move to intreqr
 	PL_NOP	$6D36,2		; removes protection
@@ -745,6 +774,10 @@ tag		dc.l	WHDLTAG_CUSTOM1_GET
 _custom1	dc.l	0
 		dc.l	WHDLTAG_CUSTOM2_GET
 _custom2	dc.l	0
+ IFD SIM_RUNTIME
+ dc.l WHDLTAG_CUSTOM3_GET
+_custom3: dc.l 0
+ ENDC
 		dc.l	WHDLTAG_CUSTOM5_GET
 _custom5	dc.l	0
 		dc.l	WHDLTAG_ATTNFLAGS_GET

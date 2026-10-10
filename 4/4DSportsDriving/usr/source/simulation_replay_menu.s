@@ -26,6 +26,15 @@ sim_replay_load_entry:
  tst.l d0
  bne .failed
  move.l d1,d7
+ IFD SIM_RUNTIME
+ cmp.w #50,d7
+ bne .timing_allowed
+ btst #0,_custom3+3(pc)
+ beq .timing_allowed
+ move.l #4,(a2)           ; valid A4000 file, incompatible legacy timing
+ bra .failed             ; no live prefix, input or checkpoint writes yet
+.timing_allowed:
+ ENDC
  movea.l a1,a3
  cmp.w #50,d7
  bne .prefix
@@ -148,7 +157,18 @@ sim_replay_load_notice:
  move.w -$45d4(a4),-(sp)
  move.w #-1,-(sp)
  move.w #-1,-(sp)
+ IFD SIM_RUNTIME
+ lea sim_replay_menu_status(pc),a0
+ cmp.l #4,(a0)
+ bne .ordinary_notice
+ pea sim_replay_legacy_text(pc)
+ bra .notice_text
+.ordinary_notice:
+ ENDC
  pea sim_replay_load_text(pc)
+ IFD SIM_RUNTIME
+.notice_text:
+ ENDC
  move.w #1,-(sp)
  move.w #1,-(sp)
  lea sim_replay_load_notice(pc),a0
@@ -163,6 +183,10 @@ sim_replay_extension: dc.b ".rpl",0
 sim_replay_load_text:
  ; Native message rows require a closing bracket, including a single line.
  dc.b "Replay file missing or invalid.]",0
+ IFD SIM_RUNTIME
+sim_replay_legacy_text:
+ dc.b "A4000 replay requires new timing.]",0
+ ENDC
  even
  dc.b "4DRPLMNU"
  dc.w 1,0
