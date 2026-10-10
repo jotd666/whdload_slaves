@@ -726,6 +726,21 @@ sim_fixture_before:
  jsr (a0)
  ENDC
  ENDC
+ IFD SIM_FIXTURE_YAW_FRACTION
+ IFND SIM_A4000
+ FAIL "Yaw fraction fixture requires SIM_A4000"
+ ENDC
+ IFLT SIM_FIXTURE_YAW_FRACTION+128
+ FAIL "Yaw fraction must be -128..127"
+ ENDC
+ IFGT SIM_FIXTURE_YAW_FRACTION-127
+ FAIL "Yaw fraction must be -128..127"
+ ENDC
+ ; One-time diagnostic seed after private-state initialization.
+ lea sim_fixture_before(pc),a0
+ adda.l #sim_a4000_private+128-sim_fixture_before,a0
+ move.w #SIM_FIXTURE_YAW_FRACTION,(a0)
+ ENDC
 .active:
  ; Throttle throughout, steering right from 1.0 to 1.5 seconds and left
  ; from 1.5 to 2.0 seconds. Boundaries are exact in all three planned modes.
@@ -822,6 +837,10 @@ SIM_FIXTURE_THROTTLE_SECONDS = 2
  bne .not_down
  or.b #$20,d1
 .not_down:
+ ENDC
+ IFD SIM_FIXTURE_IDLE
+ ; Exercise stationary geometry without throttle or steering input.
+ moveq #0,d1
  ENDC
  moveq #0,d0
  move.w -$940(a4),d0
