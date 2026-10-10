@@ -4,6 +4,15 @@ Status: **in progress**, not player-enabled. The user authorized consistent
 simulation speed independent of achieved FPS and smooth 50 FPS on capable PAL
 hardware. `game-time-plan.md` records the design and all acceptance gates.
 
+## Gameplay-speed acceptance
+
+The user reaffirmed that gameplay speed must be independent of achieved FPS.
+The plan now states separate checks for equal-tick complete state, equal-time
+funded ticks and sustainable completed ticks. A smooth display or an exact clock
+kernel alone satisfies none of the full gameplay acceptance claims. Retaining
+debt proves that elapsed time was not discarded; increasing debt still means the
+machine is failing to sustain the requested simulation rate.
+
 ## Exact clock foundation
 
 `time-core.s` advances one unprocessed CIA interval. It retains a 128-bit

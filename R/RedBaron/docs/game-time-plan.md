@@ -20,6 +20,31 @@ changes and teleport/mission transitions. It must retain the original world stat
 byte-for-byte after drawing. Measure visual cadence and input latency separately
 from simulation tick rate. All earlier acceptance gates still apply.
 
+## Primary acceptance invariant: gameplay speed
+
+The user's explicit requirement is consistent gameplay (simulation speed)
+regardless of achieved rendering frame rate. Smooth 50 FPS is an additional
+presentation requirement; achieving it does not establish timing correctness.
+
+With identical initial world state, Time Scale/compression transitions and
+acquisition-timestamped controls, changing only the render schedule must preserve:
+
+- The complete simulation state and ordered gameplay events at equal world tick
+  IDs, including aircraft, AI, weapons, projectiles, collisions and RNG state.
+- The number of due world ticks at equal active-flight elapsed time, including
+  both fractional credit and outstanding debt. Render duration and publication
+  waits must never change how much simulation time is funded.
+- Sustained execution of the funded tick rate within the measured CPU capacity
+  envelope. Correct accounting with growing debt is insufficient to claim that
+  gameplay is running at the correct real-time speed.
+
+Use deliberately delayed, ordinary, uncapped/no-render and one-field render
+schedules for the state comparison. For wall-time measurements, report completed
+world ticks, outstanding debt and rendered FPS separately, and account for the
+bounded update in progress at the observation boundary. Include fast hardware
+with render-only iterations between world updates and slow hardware with several
+world updates between renders. Never infer simulation speed from swap count.
+
 ## Recommendation
 
 Use a **fixed primary simulation step of 225**, funded by the existing CIA
