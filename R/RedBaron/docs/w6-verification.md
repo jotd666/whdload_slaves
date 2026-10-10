@@ -2437,3 +2437,42 @@ combat outcomes remain separate physics gates. The dt=100 reference measures
 step-size sensitivity, not rendering-rate dependence. W6 retains the approved
 fixed225 step for every render schedule; no tolerance, quantum, player policy,
 or performance claim changes on this evidence.
+
+## High-frequency real-drawing capacity diagnostic
+
+The full VERIFY bundle (CUSTOM2=16319, CUSTOM4=0, CUSTOM5=512, MMU) was measured
+at maximum detail / Time Scale 40 on a synthetic cached-68030 configuration:
+2 MB chip, 8 MB fast, no slow memory, CPU multiplier zero, CPU frequency
+200,000,000, real CPU speed, cycle-exact CPU/memory/blitter. The retained
+`debug.uae` confirms the requested frequency and CPU model. No fast-draw,
+no-render or slow-draw fixture is selected. The slave remains
+`83f586cb2b477476dd915d2779561abf834cd6ce3abe95fa3f347cafdf20083a`.
+
+Local evidence is `tmp/dev/tmp/prof/w6-capacity-030-200mhz/`: frozen slave/listing,
+configuration and entry metadata, `field-census.json`, raw before/after RAM,
+publication/event logs, `field-capacity.json`, `clock.json` / `clock.txt`, and
+`clock-summary.json`. Two adjacent 250-field windows publish 60 and 58 frames
+(12.0 and 11.6 FPS); all intervals span 4–5 fields and all publications use the
+safe beam window. Each consumes 296 CIA intervals and completes 41 world ticks,
+versus 40.8220875 newly nominal. CIA debt is 1 → 2 → 2; due work and transaction
+markers are zero at all endpoints. Draw counts equal publication counts. The
+native self-tests remain 426/512/638/133, terrain/cache/list tests 2/1/2; all
+54 selected timing/pacing hook destinations pass.
+
+Following that census, routine-clock entry/return observations span flight
+checkpoints 84–93. The unchanged `routine_wall_time.py` checker accepts fourteen
+3D passes (mean 1.666873 fields; minimum 1.637120, maximum 1.707196) and nine
+world calls (mean 0.100863 fields). It also accepts sixteen overlays (mean
+0.372115 fields), 318 bitmaps and 650 radius calls. The complete capture has
+1,300 paired calls; 293 are excluded for uncertain beam/counter phase. Timing
+uses VBlank plus beam position, not cached-CPU instruction-cycle estimates.
+It includes interrupts and nested work. The isolated emulator was then quit.
+
+The 3D pass exceeds the one-field rendering budget in every accepted sample.
+This contradicts 50 FPS acceptance for this configuration/scene; it does not
+contradict its observed exact world-clock funding. It also does not establish
+a real accelerator's speed or attribute the residual cost specifically to chip
+accesses, blitter waits or W6 render-state isolation. The earlier 50 MHz run uses
+a different input fixture, so no frequency-scaling speedup is claimed. Continue
+with a current-bundle rendering-cost breakdown while retaining the complete
+physics/state and capacity gates. Smooth 50 FPS remains required and unproven.

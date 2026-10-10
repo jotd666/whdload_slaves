@@ -1,5 +1,36 @@
 # Red Baron performance measurements
 
+## W6 high-frequency rendering diagnostic
+
+A current VERIFY full-bundle diagnostic with cached emulated 68030 at **200 MHz**,
+2 MB chip / 8 MB fast, cycle-exact CPU/memory/blitter, maximum detail and Time
+Scale 40 still publishes **12.0 and 11.6 FPS** in two adjacent exact 250-field
+windows. Every publication interval is 4–5 fields and every beam position is
+safe. Each window completes 41 world updates against 40.8221 newly nominal;
+exact funding passes, with unprocessed CIA debt 1 → 2 → 2 and no update in
+progress at any endpoint. Message start/shorten counts are 11/11 and 6/2.
+These are eventful windows, not a steady-flight A/B benchmark.
+
+In the following ten native flight checkpoints, fourteen phase-valid 3D passes
+at `sim:2c552..2c806` average **1.66687 fields (33.391 ms)**, range
+1.63712–1.70720 fields. Nine world updates at `sim:1098..11c8` average
+0.10086 fields (2.020 ms). Sixteen overlay calls average 0.37211 fields
+(7.454 ms). These are inclusive beam-clock wall times with interrupts; nested
+costs must not be summed. There are 293 conservatively excluded call samples
+across all measured routines because their counter/beam phase is ambiguous.
+
+The 3D pass alone exceeds one field, so this measured configuration cannot meet
+50 FPS in this scene. A higher configured CPU frequency has not demonstrated
+that acceptance gate. This is a **synthetic emulator diagnostic**, not a claim
+about a real 200 MHz 68030 accelerator, a speedup over the earlier 50 MHz run,
+or proof of which bus/routine accounts for the remaining limit. The next
+presentation investigation needs a current-bundle rendering-cost breakdown;
+relaxing the cap or changing simulation speed cannot fix this measured budget.
+
+Frozen slave: `83f586cb2b477476dd915d2779561abf834cd6ce3abe95fa3f347cafdf20083a`.
+See `w6-verification.md`, “High-frequency real-drawing capacity diagnostic,” for
+configuration, artifacts and validation. No player build changed.
+
 ## W6 timing analysis
 
 The investigation is complete in `game-time.md`; the proposed fixed-step design
