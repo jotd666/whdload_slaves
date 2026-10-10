@@ -439,6 +439,7 @@ pl_main
     ; Complete original instruction: bchg #0,$3b(a4), six bytes.
     IFD SIM_MODE_MENU
     PL_P $1AAD6,sim_mode_dialog_stub
+    PL_PS $16C9E,sim_preferences_load_stub
     ELSE
     PL_PS $1AAD6,tape_dialog_enter_stub
     ENDC
@@ -1015,6 +1016,14 @@ sim_probe_entry_stub:
  rts
 	ENDC
  IFD SIM_MODE_MENU
+sim_preferences_load_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_preferences_load_stub(pc),a0
+ adda.l #sim_preferences_load-sim_preferences_load_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
 sim_mode_dialog_stub:
  subq.l #4,sp
  movem.l a0,-(sp)
@@ -1100,6 +1109,7 @@ tape_restart_result_stub:
 	IFD SIM_A4000
 	IFD SIM_MODE_MENU
 	include "simulation_mode.s"
+	include "simulation_preferences.s"
 	ENDC
 	include "simulation_score_file.s"
 	include "simulation_score_file_verify.s"

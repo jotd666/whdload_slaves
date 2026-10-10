@@ -102,6 +102,7 @@ sim_mode_dialog:
 .done:
  cmp.w -$bc(a4),d6
  beq .close
+ bsr sim_preferences_save
  ; Preserve the game's localized next-race notice and original dialog ABI.
  clr.w -(sp)
  clr.l -(sp)
