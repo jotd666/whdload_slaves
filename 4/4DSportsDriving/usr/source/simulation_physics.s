@@ -549,3 +549,5 @@ sim_heading_50:
  rts
 
  include "simulation_yaw.s"
+
+ include "simulation_centroid.s"

@@ -3,6 +3,49 @@ sim_physics_selftest:
  movem.l d0-a6,-(sp)
  lea sim_physics_passed(pc),a0
  clr.l (a0)
+ ; Projection fractions and signed centroids use independent integer oracles.
+ lea sim_centroid_matrix_cases(pc),a3
+ move.w #(sim_centroid_matrix_cases_end-sim_centroid_matrix_cases)/48-1,d6
+.centroid_matrix:
+ movea.l a3,a0
+ lea 6(a3),a1
+ lea sim_centroid_test_accumulator(pc),a2
+ move.l 24(a3),(a2)
+ move.l 28(a3),4(a2)
+ move.l 32(a3),8(a2)
+ bsr sim_centroid_collect
+ move.l (a2),d0
+ cmp.l 36(a3),d0
+ bne .failed
+ move.l 4(a2),d0
+ cmp.l 40(a3),d0
+ bne .failed
+ move.l 8(a2),d0
+ cmp.l 44(a3),d0
+ bne .failed
+ lea sim_physics_passed(pc),a0
+ addq.l #1,(a0)
+ lea 48(a3),a3
+ dbra d6,.centroid_matrix
+ lea sim_centroid_average_cases(pc),a2
+ move.w #(sim_centroid_average_cases_end-sim_centroid_average_cases)/16-1,d6
+.centroid_average:
+ lea sim_physics_test_fraction(pc),a0
+ move.w 8(a2),(a0)
+ move.l (a2),d0
+ move.l 4(a2),d1
+ bsr sim_centroid_average
+ cmp.l 10(a2),d0
+ bne .failed
+ cmp.l 4(a2),d1
+ bne .failed
+ move.w (a0),d0
+ cmp.w 14(a2),d0
+ bne .failed
+ lea sim_physics_passed(pc),a0
+ addq.l #1,(a0)
+ lea 16(a2),a2
+ dbra d6,.centroid_average
  ; High-resolution angle lookup: compare to an independent atan2 oracle.
  lea sim_yaw_cases(pc),a2
  move.w #(sim_yaw_cases_end-sim_yaw_cases)/8-1,d6
@@ -406,7 +449,7 @@ SIM_HEADING_HOOK_TESTS = 0
 SIM_CONTACT_HOOK_TESTS = 0
  ENDC
  dc.b "4DPHYTST"
- dc.w 18,(sim_yaw_cases_end-sim_yaw_cases)/8+(sim_rate_cases_end-sim_rate_cases)/8+(sim_steering_cases_end-sim_steering_cases)/14+(sim_distance_cases_end-sim_distance_cases)/8+(sim_approach_cases_end-sim_approach_cases)/12+(sim_airborne_cases_end-sim_airborne_cases)/12+(sim_extension_cases_end-sim_extension_cases)/10+(sim_engine_cases_end-sim_engine_cases)/4+(sim_duration_cases_end-sim_duration_cases)/8+(sim_terrain_cases_end-sim_terrain_cases)/10+(sim_skid_cases_end-sim_skid_cases)/12+(sim_spin_filter_cases_end-sim_spin_filter_cases)/24+(sim_spin_held_cases_end-sim_spin_held_cases)/12+(sim_spin_alternate_cases_end-sim_spin_alternate_cases)/24+(sim_opponent_brake_cases_end-sim_opponent_brake_cases)/10+(sim_slip_relax_cases_end-sim_slip_relax_cases)/8+SIM_DELAY_HOOK_TESTS+SIM_SPIN_HOOK_TESTS+SIM_SLIP_HOOK_TESTS+SIM_HEADING_HOOK_TESTS+SIM_CONTACT_HOOK_TESTS+(sim_heading_cases_end-sim_heading_cases)/10
+ dc.w 19,(sim_centroid_matrix_cases_end-sim_centroid_matrix_cases)/48+(sim_centroid_average_cases_end-sim_centroid_average_cases)/16+(sim_yaw_cases_end-sim_yaw_cases)/8+(sim_rate_cases_end-sim_rate_cases)/8+(sim_steering_cases_end-sim_steering_cases)/14+(sim_distance_cases_end-sim_distance_cases)/8+(sim_approach_cases_end-sim_approach_cases)/12+(sim_airborne_cases_end-sim_airborne_cases)/12+(sim_extension_cases_end-sim_extension_cases)/10+(sim_engine_cases_end-sim_engine_cases)/4+(sim_duration_cases_end-sim_duration_cases)/8+(sim_terrain_cases_end-sim_terrain_cases)/10+(sim_skid_cases_end-sim_skid_cases)/12+(sim_spin_filter_cases_end-sim_spin_filter_cases)/24+(sim_spin_held_cases_end-sim_spin_held_cases)/12+(sim_spin_alternate_cases_end-sim_spin_alternate_cases)/24+(sim_opponent_brake_cases_end-sim_opponent_brake_cases)/10+(sim_slip_relax_cases_end-sim_slip_relax_cases)/8+SIM_DELAY_HOOK_TESTS+SIM_SPIN_HOOK_TESTS+SIM_SLIP_HOOK_TESTS+SIM_HEADING_HOOK_TESTS+SIM_CONTACT_HOOK_TESTS+(sim_heading_cases_end-sim_heading_cases)/10
 sim_physics_passed: dc.l 0
 sim_physics_test_fraction: dc.w 0,0,0,0
 sim_physics_test_position: dc.l 0
@@ -1207,3 +1250,6 @@ sim_contact_distance_cases:
  ENDC
 
  include "simulation_yaw_cases.i"
+
+sim_centroid_test_accumulator: dcb.l 3,0
+ include "simulation_centroid_cases.i"
