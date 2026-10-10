@@ -1,5 +1,7 @@
 ; Ordinary input.device transitions for field-to-display latency acceptance.
 ; No native history, car state or scheduler queue is written by this driver.
+; Optional SIM_INPUT_EDGE_STEERING exercises Left/Right while Up stays held;
+; otherwise retain the original release/press Up sequence.
 ; Starting after step 200 with 40-field gaps avoids the 100-field profile
 ; joins when the acceptance capture starts at step 160.
  IFND SIM_LIVE_DRIVE
@@ -21,11 +23,18 @@ tape_input_edge_test:
  moveq #0,d7
  lea tape_edge_records(pc),a3
 tape_edge_next:
+ IFD SIM_INPUT_EDGE_STEERING
+ move.w d7,d0
+ add.w d0,d0
+ lea tape_edge_steering_keys(pc),a0
+ move.w (a0,d0.w),d3
+ ELSE
  move.w #$cc,d3            ; release cursor Up
  btst #0,d7
  beq .key
  move.w #$4c,d3            ; press cursor Up
 .key:
+ ENDC
  lea tape_event(pc),a0
  move.b #IECLASS_RAWKEY,ie_Class(a0)
  move.w d3,ie_Code(a0)
@@ -76,3 +85,9 @@ tape_edge_field:
 tape_edge_phase: dc.w 0
  dc.w 0
 tape_edge_records: dcb.b 64,0
+
+ IFD SIM_INPUT_EDGE_STEERING
+; Keep ordinary cursor Up held. Original $37190/$371A4 maps Left to bit3,
+; Right to bit2: sampled bytes must be9,1,5,1 for these four transitions.
+tape_edge_steering_keys: dc.w $4f,$cf,$4e,$ce
+ ENDC
