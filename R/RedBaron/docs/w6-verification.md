@@ -1168,3 +1168,60 @@ pose snapshots or interpolated frames. Remaining work includes native lifecycle
 hooks, complete-tick snapshot boundaries, nonregistered camera handling, all
 moving-object/compact-layout coverage, explicit teleport/mission transitions,
 and validation against live lifecycle events before interpolation is enabled.
+
+
+## Native consecutive pose snapshots
+
+`time-poses.s` now captures the registered normal-object poses in VERIFY timing
+mode. The call is at native loop re-entry before funding the next update;
+the previous iteration has completed its world work, post-draw bookkeeping,
+sound/tape service and any remaining loop-local countdown work. Mission entry
+explicitly clears snapshot readiness; tick zero alone does not imply a new
+mission. Subsequent captures require consecutive completed world-step IDs with
+unsigned-long wrap. The wrap branch is implemented but a native wrap fixture
+remains to be exercised. This does not move any simulation work into drawing.
+
+Two 500-entry arrays retain current and previous records. Each 26-byte record
+contains pointer, validity word, model ID and the eighteen pose bytes. Successful
+add at `sim:0fe1e` and removal at `sim:0fed2` are byte-checked hooks that clear
+validity in both arrays for that address, preserving the native displaced
+instructions and flags. This represents lifetime discontinuity for the retained
+pair without a wrapping generation token: remove/add at the same address cannot
+reuse a valid previous pose. Future interpolation must require both validity
+words and model IDs to match. New snapshots mark the currently registered poses
+valid; invalidation cannot erase their saved position/angle bytes.
+
+The 36-byte header records both counts/tick IDs, camera pointers from
+`h3:08d72`, view modes from `h3:06712`, lifecycle-event and capture counts.
+A camera-pointer/view-mode change between captures removes the previous pair.
+This boundary check is not the final immediate view-change handling: native
+teleport hooks, between-tick view transitions and independently updated camera
+poses still need explicit treatment before interpolation is enabled. A null,
+odd, compact-layout pointer or count above 500 aborts the VERIFY candidate.
+The host checker additionally rejects duplicate registry pointers.
+
+`native_poses.py` checks current record bytes against the live registry and
+poses in each full-bank snapshot. Across consecutive captures it independently
+copies the prior expected records, invalidates addresses from the debugger's
+actual lifecycle-event log, and compares the entire native previous array. It
+checks both view metadata sets, completed tick IDs, counters and the number of
+observed lifecycle events. A capture without actual invalidation cannot pass.
+The first captured boundary establishes the baseline and its earlier event
+history is not credited toward the comparison.
+
+Frozen VERIFY text is 231,508 bytes, SHA256
+`2aa929eafd6014881feb55d094c9d78b1020738857e3f3890c02412890244697`.
+`tmp/dev/tmp/prof/w6-poses-a500-r2/` and
+`tmp/dev/tmp/prof/w6-poses-030-r2/` each pass sixteen consecutive completed
+boundaries 40–55, with 504 current poses checked, fifty intervening lifecycle
+events and 24 invalidated previous records per CPU. These counts do not by
+themselves establish cross-CPU whole-game state equivalence. The 47 selected timing hooks and thirteen
+disabled ranges pass the live byte audit; native 426/512/638/133 arithmetic/input
+checks also pass. Static audit covers sixty ranges without errors; all 139 host
+tests pass. Normal and developer builds retain the W5 hashes.
+
+The snapshot arrays do not yet drive drawing. This is native registered-pose
+and observed lifecycle evidence, not complete moving-object coverage, teleport
+acceptance, coherent free-camera interpolation, smooth 50 FPS or equal-world-tick
+gameplay convergence. Journal colour branches and remaining render-state
+consumers remain separate open checks.

@@ -68,6 +68,12 @@ time_loop_install:
 	bsr time_present_selftest
 	bsr time_present_state_install
 	bsr time_model_install
+	move.l a6,-(sp)
+	lea .pose_install_base(pc),a6
+.pose_install_base
+	adda.l #time_pose_install-.pose_install_base,a6
+	jsr (a6)
+	move.l (sp)+,a6
 	lea time_loop_patch(pc),a0
 	jsr resload_Patch(a2)
 	jsr resload_FlushCache(a2)
@@ -154,7 +160,17 @@ time_loop_gate:
 	bsr time_message_reset
 	bsr time_camera_reset
 	bsr time_compress_reset
+	lea .pose_reset_base(pc),a1
+.pose_reset_base
+	adda.l #time_pose_header-.pose_reset_base,a1
+	clr.w 12(a1)
 .ready
+	move.l a6,-(sp)
+	lea .pose_capture_base(pc),a6
+.pose_capture_base
+	adda.l #time_pose_capture-.pose_capture_base,a6
+	jsr (a6)
+	move.l (sp)+,a6
 	bsr time_keys_start
 	bsr time_camera_fixture
 	bsr time_rate_fixture

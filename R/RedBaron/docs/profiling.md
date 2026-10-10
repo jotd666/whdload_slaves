@@ -71,6 +71,10 @@ The shared-model journal candidate additionally passes three draws per CPU on A5
 each records two writes to a shared model byte and restores its outer-entry
 value. The native overlapping-write self-test passes. Colour-changing branches
 remain unexercised in that window; this adds no FPS or gameplay-speed result.
+The native pose-snapshot checkpoint passes sixteen consecutive completed-world
+boundaries on each of A500 and cached 68030: 504 poses match live state per
+CPU, with fifty lifecycle events and 24 correctly invalidated previous records. These are snapshot checks;
+they do not yet add interpolated frames or establish gameplay-speed convergence.
 See `w6-verification.md` for frozen builds and limitations.
 
 ## W5 current measurements
