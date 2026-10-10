@@ -218,6 +218,9 @@ patch_main
 	addq.l #4,(a0)
 	IFD SIM_A4000
 	bsr sim_a4000_prepare
+	lea patch_main(pc),a0
+	adda.l #sim_aux_prepare-patch_main,a0
+	jsr (a0)
 	ENDC
 	IFD SIM_PHYSICS
 	lea patch_main(pc),a0
@@ -364,6 +367,10 @@ pl_main
     PL_P $E5F2,sim_probe_entry_stub
     IFD SIM_A4000
     PL_P $1033A,sim_a4000_steering
+    PL_PSS $11A20,sim_aux_birth_stub,2
+    PL_PSS $11B80,sim_aux_move_stub,94
+    PL_PSS $11C38,sim_aux_retire_stub,10
+    PL_PSS $11C50,sim_aux_rotate_stub,26
     PL_PSS $C326,sim_a4000_distance,26
     PL_PSS $F60C,sim_a4000_acceleration,10
     PL_PSS $F29E,sim_a4000_gear38,66
@@ -694,6 +701,38 @@ sim_results_ui_compare_stub:
  movem.l a0,-(sp)
  lea sim_results_ui_compare_stub(pc),a0
  adda.l #sim_results_ui_compare-sim_results_ui_compare_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_aux_birth_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_aux_birth_stub(pc),a0
+ adda.l #sim_aux_birth-sim_aux_birth_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_aux_move_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_aux_move_stub(pc),a0
+ adda.l #sim_aux_move-sim_aux_move_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_aux_retire_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_aux_retire_stub(pc),a0
+ adda.l #sim_aux_retire-sim_aux_retire_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+sim_aux_rotate_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_aux_rotate_stub(pc),a0
+ adda.l #sim_aux_rotate-sim_aux_rotate_stub,a0
  movem.l a0,4(sp)
  movem.l (sp)+,a0
  rts
@@ -1252,6 +1291,7 @@ tape_restart_result_stub:
  IFD SIM_A4000
  include "simulation_history_data.s"
  include "simulation_auxiliary.s"
+ include "simulation_auxiliary_native_verify.s"
  include "simulation_auxiliary_verify.s"
  ; Separate input storage: native bulk layout reserves only 12,000 bytes.
  ; Keep at the end so it cannot push code/table PC-relative references apart.
@@ -1275,7 +1315,7 @@ sim_replay_save_readback: dcb.b SIM_REPLAY_BYTES+2,0
 sim_replay_reload_marker:
  dc.b "4DRPLLOD"
  IFD SIM_REPLAY_MENU
- dc.w 3,0
+ dc.w 4,0
  ELSE
  dc.w 2,0
  ENDC

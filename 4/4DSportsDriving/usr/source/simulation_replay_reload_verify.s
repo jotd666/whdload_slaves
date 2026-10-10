@@ -109,6 +109,12 @@ sim_replay_reload_fixture:
  moveq #0,d0
  move.w -$940(a4),d0
  move.l d0,24(a5)
+ ; This fixture seeks from inside an already pending simulation call. The
+ ; native restore sets producer=checkpoint; the pending call then advances
+ ; consumer once. Publish the requested target before returning so the native
+ ; equality-based70E0 catch-up loop cannot chase a producer behind consumer.
+ ; Ordinary UI callers own this target outside the simulation call instead.
+ move.w #SIM_REPLAY_RELOAD_TARGET,$a0(a4)
 .out:
  movem.l (sp)+,d0-a6
 .return:

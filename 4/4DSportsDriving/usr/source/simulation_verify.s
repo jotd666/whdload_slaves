@@ -11,6 +11,20 @@ sim_probe_entry:
  move.w d2,-(sp)
  IFD SIM_FIXTURE
  bsr sim_fixture_before
+ IFD SIM_AUX_NATIVE_TEST
+ movem.l a0,-(sp)
+ lea sim_probe_entry(pc),a0
+ adda.l #sim_aux_native_fixture-sim_probe_entry,a0
+ jsr (a0)
+ movem.l (sp)+,a0
+ ENDC
+ IFD SIM_AUX_SPAWN_TEST
+ movem.l a0,-(sp)
+ lea sim_probe_entry(pc),a0
+ adda.l #sim_aux_spawn_fixture-sim_probe_entry,a0
+ jsr (a0)
+ movem.l (sp)+,a0
+ ENDC
  IFD SIM_REPLAY_SAVE_TEST
  movem.l a0,-(sp)
  lea sim_fixture_before(pc),a0
