@@ -40,6 +40,11 @@ through 31 observed hidden-update boundaries; native erasure or replacement
 cleans it on actual paints. Both captures finish with timer and buffer dirtiness
 zero. This validates service timing and cleanup, not three-second visible
 removal, FPS or sustained simulation capacity.
+The camera-input ownership checkpoint then passes twelve mouse acquisitions,
+48 world-input and 47 camera-input observations on each CPU, plus 192 native
+mixed-owner reset cases. Camera resets no longer alter the world mouse position.
+Independent camera service dispatch remains unimplemented; no camera cadence or
+FPS claim follows from these checks.
 See `w6-verification.md` for frozen builds and limitations.
 
 ## W5 current measurements

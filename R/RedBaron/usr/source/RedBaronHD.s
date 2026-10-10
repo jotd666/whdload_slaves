@@ -580,6 +580,7 @@ new_DeleteFile:
 	include "clip-verify.s"
 	include "vertex-verify.s"
 	include "tape.s"
+	include "time-mouse-ownership-cases.i"
 time_message_log: dcb.b 24*128,0
 fill_twin_before: dcb.b 20*256*2,0
 fill_twin_after: dcb.b 20*256*2,0

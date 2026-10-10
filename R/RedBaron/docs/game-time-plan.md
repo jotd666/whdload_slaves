@@ -120,7 +120,7 @@ inside the new timing mode.
 | Weapons and unjamming | Preserve native weapon readiness accumulators (increment capped at 85; player resets to 171 after firing), ammunition and jam rules on world ticks. The separate 1000-unit unjam-retry countdown keeps its original expiry quantization. Do not invent a firing cooldown or compensate timer overshoot |
 | Held stick/rudder/fire | Timestamp changes at input acquisition and apply them to their simulation tick, including every catch-up tick. Never retroactively apply a newly pressed key to old debt |
 | Throttle and other discrete commands | Consume each native key event once; preserve ±20 per command and existing preset values. Key repeat must use clock deadlines, not render count |
-| Secondary F=20 clock | Separate real-time service accumulator. Use 128-unit service ticks (about 23.65 Hz PAL), below the >400 shortcut; preserve its own remainder. Extract timed camera/repeat work rather than calling the whole command dispatcher repeatedly |
+| Secondary F=20 clock | Separate real-time service accumulator. Use 128-unit service ticks (about 23.65 Hz PAL), below the >400 shortcut; preserve its own remainder. Extract timed camera and automatic mission-menu work rather than calling the whole command dispatcher repeatedly; audit keyboard repeat separately |
 | Message lifetime | Propose three seconds of active-flight real time, independent of Time Scale and FPS. This replaces the ambiguous 30-render-frame lifetime and is an explicitly approved behavior choice |
 | Two-buffer dirtiness, overlay erase and view redraw counters | Remain render/publication counters. A timeout marks both buffers dirty; it must not consume both redraws while running hidden world ticks |
 | Native history and world-cycle selectors | Advance on world ticks. They must not count repeated rendered frames |
@@ -178,7 +178,7 @@ original collision/AI updates just to improve the frame-rate number.
    tick-indexed input and complete world updates without drawing. Preserve
    current native arithmetic; model and live-check accumulator wrap, overflow,
    zero-due frames, catch-up batches and mission exit during catch-up.
-3. **Remaining timed services.** Separate the secondary-clock camera/repeat
+3. **Remaining timed services.** Separate the secondary-clock camera/automatic-menu
    service and message/death timers from rendering. Keep dirty counters tied to
    actual buffer publications. Exercise Preferences/pause/restart and compression
    transitions before measuring speed.

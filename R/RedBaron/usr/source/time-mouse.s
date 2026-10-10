@@ -3,6 +3,9 @@
 ; PERF_RANGE sim:1ecd0 16 bit=13
 ; PERF_RANGE sim:1e8ec 16 bit=13
 ; PERF_RANGE sim:1eb8a 16 bit=13
+; PERF_RANGE sim:1eb5c 8 bit=13
+; PERF_RANGE sim:1eb70 6 bit=13
+; PERF_RANGE sim:1ebba 6 bit=13
 TIME_MOUSE_CODE = $201
 
 time_mouse_install:
@@ -45,12 +48,25 @@ time_mouse_install:
 	cmp.l 12(a3),d0
 	bne .bad
 	dbf d7,.center
+	move.l #$1eb5c,d0
+	moveq #8,d1
+	lea .camera_x_bytes(pc),a0
+	bsr perf_check_bytes
+	move.l #$1eb70,d0
+	moveq #6,d1
+	lea .camera_y_bytes(pc),a0
+	bsr perf_check_bytes
+	move.l #$1ebba,d0
+	moveq #6,d1
+	lea .camera_done_bytes(pc),a0
+	bsr perf_check_bytes
 	btst #0,perf_attnflags+3(pc)
 	beq .flags_ready
 	lea time_mouse_flags_ccr(pc),a0
 	move.w #$42c0,(a0) ; MOVE CCR,D0 is unprivileged on 68010+
 .flags_ready
 	bsr time_mouse_selftest
+	bsr time_mouse_ownership_selftest
 	lea .patch(pc),a0
 	jsr resload_Patch(a2)
 	movem.l (sp)+,d0-a6
@@ -61,13 +77,19 @@ time_mouse_install:
 	move.l _resload(pc),a2
 	jmp resload_Abort(a2)
 .delta_bytes: dc.w $9200,$1401,$4882,$e048,$e049,$9200,$4881
+.camera_x_bytes: dc.w $303c,$ff60,$d06a,$0004
+.camera_y_bytes: dc.w $709c,$d06a,$0006
+.camera_done_bytes: dc.w $200b,$4cdf,$0cfc
 .centers: dc.l $1e8ec,$1eb8a
 .patch:
 	PL_START
 	PL_PSS $2d35c,time_mouse_delta,8
 	PL_PSS $1ecd0,time_mouse_read,10
 	PL_PSS $1e8ec,time_mouse_center,10
-	PL_PSS $1eb8a,time_mouse_center,10
+	PL_PSS $1eb8a,time_mouse_camera_center,10
+	PL_PSS $1eb5c,time_mouse_camera_x,2
+	PL_PS $1eb70,time_mouse_camera_y
+	PL_PS $1ebba,time_mouse_camera_done
 	PL_END
 
 ; Original counter subtraction: signed 8-bit deltas, including byte wrap.
@@ -90,6 +112,9 @@ time_mouse_seed:
 	lea time_mouse_live(pc),a1
 	move.w (a0),(a1)+
 	move.w 4(a0),(a1)
+	move.l time_mouse_live(pc),d0
+	lea time_mouse_camera(pc),a1
+	move.l d0,(a1)
 	lea time_mouse_count(pc),a0
 	clr.l (a0)+
 	clr.l (a0)+
@@ -183,6 +208,16 @@ time_mouse_accumulate:
 time_mouse_apply:
 	movem.l d0-d2/a0,-(sp)
 	lea time_mouse_live(pc),a0
+	bsr time_mouse_apply_pair
+	lea time_mouse_camera(pc),a0
+	bsr time_mouse_apply_pair
+	lea time_mouse_consumed(pc),a0
+	addq.l #1,(a0)
+	movem.l (sp)+,d0-d2/a0
+	rts
+
+; Same acquisition, separate accumulation/recentering for each consumer.
+time_mouse_apply_pair:
 	move.w (a0),d0
 	move.w 6(a1),d1
 	move.w 10(a1),d2
@@ -193,9 +228,6 @@ time_mouse_apply:
 	move.w 12(a1),d2
 	bsr time_mouse_accumulate
 	move.w d0,2(a0)
-	lea time_mouse_consumed(pc),a0
-	addq.l #1,(a0)
-	movem.l (sp)+,d0-d2/a0
 	rts
 
 ; Preserve the input helper's a0 output pointer and original final MOVE flags.
@@ -223,11 +255,17 @@ time_mouse_read:
 time_mouse_center:
 	bsr time_mouse_flags
 	movem.l a0-a1,-(sp)
+	lea time_mouse_live(pc),a1
+	bra time_mouse_center_common
+
+time_mouse_camera_center:
+	bsr time_mouse_flags
+	movem.l a0-a1,-(sp)
+	lea time_mouse_camera(pc),a1
+time_mouse_center_common:
 	bsr time_devices_owned
 	beq .physical
-	lea time_mouse_live(pc),a1
-	move.w #160,(a1)
-	move.w #100,2(a1)
+	bsr time_mouse_center_pair
 	lea time_mouse_resets(pc),a1
 	move.l (a1),a0
 	addq.l #1,a0 ; address arithmetic retains the original X flag
@@ -240,6 +278,110 @@ time_mouse_center:
 	movem.l (sp)+,a0-a1
 	bsr time_mouse_flags
 	rts
+
+; Each helper preserves the displaced arithmetic's X/N/Z/V/C result.
+time_mouse_camera_x:
+	movem.l a0-a1,-(sp)
+	bsr time_devices_owned
+	beq .native
+	lea time_mouse_camera(pc),a1
+	move.w #-160,d0
+	add.w (a1),d0
+	bra .done
+.native
+	move.w #-160,d0
+	add.w 4(a2),d0
+.done
+	movem.l (sp)+,a0-a1
+	rts
+
+time_mouse_camera_y:
+	movem.l a0-a1,-(sp)
+	bsr time_devices_owned
+	beq .native
+	lea time_mouse_camera(pc),a1
+	moveq #-100,d0
+	add.w 2(a1),d0
+	bra .done
+.native
+	moveq #-100,d0
+	add.w 6(a2),d0
+.done
+	movem.l (sp)+,a0-a1
+	rts
+
+; Sampling consumes this camera interval even if joystick/button priority chose
+; another input. Ignored mouse movement must not leak into a later camera sample.
+; Replay the original MOVE/MOVEM epilogue with the patch return above saved regs.
+time_mouse_camera_done:
+	movem.l a0-a1,-(sp)
+	bsr time_devices_owned
+	beq .restore
+	lea time_mouse_camera(pc),a1
+	bsr time_mouse_center_pair
+.restore
+	movem.l (sp)+,a0-a1
+	move.l a3,d0
+	movem.l 4(sp),d2-d7/a2-a3
+	move.l (sp),32(sp)
+	lea 32(sp),sp
+	tst.l d0 ; original MOVE.L a3,d0 flags, after relocating the patch return
+	rts
+
+time_mouse_center_pair:
+	move.w #160,(a1)
+	move.w #100,2(a1)
+	rts
+
+; A private interleaving test uses the actual acquisition and reset primitives.
+; No hardware, game state, native input queue or clock is modified.
+time_mouse_ownership_selftest:
+	movem.l d0-a6,-(sp)
+	lea time_mouse_ownership_cases(pc),a3
+	move.w (a3)+,d7
+	lea time_mouse_ownership_result(pc),a5
+	clr.l (a5)
+	lea time_mouse_live(pc),a1
+	bsr time_mouse_center_pair
+	lea time_mouse_camera(pc),a1
+	bsr time_mouse_center_pair
+.next
+	move.w (a3),d0
+	beq .acquire
+	lea time_mouse_live(pc),a1
+	cmpi.w #1,d0
+	beq .reset
+	lea time_mouse_camera(pc),a1
+.reset
+	bsr time_mouse_center_pair
+	bra .check
+.acquire
+	lea -4(a3),a1 ; movement/limits at event offsets 6/8/10/12
+	bsr time_mouse_apply
+.check
+	lea time_mouse_live(pc),a0
+	lea 10(a3),a4
+	move.l (a0)+,d0
+	cmp.l (a4)+,d0
+	bne .bad
+	move.l (a0),d0
+	cmp.l (a4),d0
+	bne .bad
+	addq.l #1,(a5)
+	lea 18(a3),a3
+	subq.w #1,d7
+	bne .next
+	lea time_mouse_live(pc),a1
+	bsr time_mouse_center_pair
+	lea time_mouse_camera(pc),a1
+	bsr time_mouse_center_pair
+	movem.l (sp)+,d0-a6
+	rts
+.bad
+	pea time_mouse_error(pc)
+	pea TDREASON_FAILMSG
+	move.l _resload(pc),a2
+	jmp resload_Abort(a2)
 
 ; VERIFY flags observed by the CPU, not the debugger's cached SR representation.
 ; Paired entry/exit records; preserve every register and condition code.
@@ -327,6 +469,8 @@ time_mouse_selftest:
 time_mouse_error: dc.b "Red Baron: W6 mouse bytes or self-test mismatch",0
 	even
 time_mouse_live: dc.w 160,100
+time_mouse_camera: dc.w 160,100
+time_mouse_ownership_result: dc.l 0
 time_mouse_count: dc.l 0
 time_mouse_consumed: dc.l 0
 time_mouse_resets: dc.l 0

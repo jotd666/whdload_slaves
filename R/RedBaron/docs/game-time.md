@@ -345,7 +345,7 @@ sim-v1 inventory, not a proof about unknown versions or arbitrary memory aliases
 **Correction to the initial plan:** the statement “only the world step reads dt;
 rendering never reads dt” was too strong. `sim:00ae2`, inside the render routine,
 uses the primary word-countdown helper for `h3:045ba`. Secondary scaling is used
-by the main-loop command/repeat path at `sim:21b6e`, by camera controls at
+by the main-loop automatic mission-menu countdown at `sim:21b6e`, by camera controls at
 `sim:1577e/157c6/157d4/15860/15872/1588a/1589a`, and by the effect transitions
 at `sim:05a82/05b0c`. The secondary clock is therefore a separate real-time
 service domain, not a second physics dt that can simply be set equal to the

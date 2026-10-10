@@ -621,3 +621,76 @@ Modal message restoration, combined Time Scale/compression transitions, hidden
 view changes and pixel-level overlay comparisons remain additional integration
 coverage. The camera/repeat split, interpolation, full-state comparison and
 capacity acceptance are still required before W6 can be enabled for players.
+
+
+## Mouse ownership for the independent camera service
+
+World and camera movement now accumulate the same timestamped raw deltas into
+separate private positions. Native world recentering at `sim:1e8ec` changes only
+the world position; camera recentering at `sim:1eb8a` changes only the camera
+position. Both retain native physical cursor writes for UI compatibility. The
+camera's displacement reads at `sim:1eb5c/1eb70` use its own position while W6
+owns active flight; other contexts use the native input packet. At completion of camera input construction (`sim:1ebba`), its private sample is
+consumed even when joystick/button priority ignored the mouse. Ignored movement
+must not appear in a later camera sample. Mission seeding initializes both from
+the physical cursor. Modal acquisition rules are unchanged.
+
+This removes the shared-state dependency that would otherwise let a camera
+service tick consume mouse motion before the next world update. It does not yet
+dispatch camera services at their independent frequency: that remains the next
+integration step. Native camera commands and mission-tape recording also remain
+on the existing world path at this checkpoint.
+
+`mouse_ownership.py` provides 192 native interleaving vectors and independent
+host checks. The actual acquisition/reset primitives run with separate world
+and camera resets, accumulated deltas, clamping and distinct owner positions.
+Tests verify that adding camera resets cannot change flight input, and adding
+world resets cannot change camera input. Live observations additionally compare
+the native camera's gain-four response with its independently predicted input,
+its own recentering and the unchanged world position after the camera call.
+
+Frozen VERIFY text is 139,622 bytes, SHA256
+`6181df0c000a36550c1466cd87a9f19528be7ccc526012c4300295f35c328246`.
+The final A500 capture passes twelve acquired movements, 48 native input/world
+observations and 47 native camera observations. Ten world ticks contain motion,
+two consume multiple acquisitions, and twenty native resets preserve both
+incoming X states and the original NZVC results. Maximum observed debt is 99 CIA
+intervals and queue high-water is ten. The ownership self-test completes 192
+cases; the existing mouse arithmetic counter remains 264. Evidence:
+`tmp/dev/tmp/prof/w6-mouse-owners-a500-r2/`.
+
+The A500 byte audit passes 32 selected timing hooks and thirteen disabled sim
+ranges; clock/FIFO/pause counters remain 426/512/1. All 113 host tests pass.
+Static audit reports 45 sim ranges and zero errors. Normal and developer builds
+remain byte-identical to W5.
+
+The final cached-68030 capture passes the same twelve acquisitions, 48 input/world
+observations and 47 camera observations. It has nine moving ticks, three ticks
+with multiple acquisitions and eighteen reset flag pairs, including both X
+states. Maximum observed debt is ten CIA intervals and queue high-water is three.
+The 192/264 native counters, 32 selected hooks, thirteen disabled ranges and
+426/512/1 foundation counters all pass. Evidence:
+`tmp/dev/tmp/prof/w6-mouse-owners-030-r2/`. Both owned emulators are quit.
+The two CPUs are checked against their own acquisition timestamps; this is not
+an equal-tick whole-world state comparison. Mixed joystick/analog/modal/restart
+coverage remains part of the full W6 integration gate.
+These are input ownership checks, not camera-service cadence, full gameplay
+convergence, performance or capacity results.
+
+The next service integration must avoid consuming mouse samples once in a
+service tick and again in the world camera builder. It must also obtain held
+input without letting `sim:1ecc2` pop the world command FIFO. Preserve one-shot
+camera commands and the eight-byte camera-control packet recorded by
+`sim:21f06`; simply repeating the entire native command/camera pass is insufficient.
+The continuous camera routines at `sim:15764/15830` still use their original
+secondary-clock calls at this checkpoint.
+
+The secondary-clock inventory also corrects an earlier label: `sim:21b6e` is
+an **automatic mission-menu countdown**, not evidence of keyboard repeat.
+`sim:21b14..21b64` checks player/mission state and threat conditions;
+`sim:21b74` reduces `h3:0783e`, and expiry goes through `sim:21b9e/21ba2` to the
+native flight menu. The timer is initialized to 30000 at `sim:24406` and may
+reload 10000 at `sim:21b96`. Its two gating words are `h3:07838/0783a`.
+This path must get a real-time service policy without replaying the whole
+one-shot command dispatcher. The separate keyboard-repeat inventory remains
+open; this correction does not remove the clock-independent input requirement.
