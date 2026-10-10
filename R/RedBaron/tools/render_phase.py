@@ -1,4 +1,4 @@
-"""Verify actual W6 cockpit pose leases and separate rendering from world ticks."""
+"""Verify actual W6 pose leases and separate rendering from world ticks."""
 import argparse
 import json
 import struct
@@ -8,6 +8,7 @@ from presentation_state import symbol
 from native_pose_blend import blend, split
 from native_poses import STRIDE
 from presentation_math import phase_fraction
+from camera_pose import owner, identity
 
 
 def dirty_after(value):
@@ -76,17 +77,35 @@ def check(path):
             if during.read(pointer+8,18)!=visual[8:]:
                 raise ValueError('Game object does not contain expected visual pose during drawing')
             changed+=current_row[8:]!=visual[8:];poses+=1
+        camera,view,target=identity(before.read,metadata['h3'])
+        camera_changed=False
+        if any('time_pose_camera_target:' in line for line in lines):
+            captured_target=int.from_bytes(before.read(at('time_pose_camera_target'),4),'big')
+            captured_camera=int.from_bytes(before.read(at('time_pose_header')+16,4),'big')
+            captured_view=int.from_bytes(before.read(at('time_pose_header')+24,2),'big')
+            target,attached=owner(before.read,metadata['h3'],entry['entry']['sim'],captured_camera,captured_view,captured_target)
+            if during.read(at('time_render_camera_active'),2)!=int(attached).to_bytes(2,'big') or after.read(at('time_render_camera_active'),2)!=bytes(2):
+                raise ValueError('Private camera lease ownership mismatch')
+            if attached:
+                matching=[row for row in split(expected) if int.from_bytes(row[:4],'big')==target]
+                if len(matching)!=1 or during.read(camera+8,18)!=matching[0][8:]:
+                    raise ValueError('Attached camera did not follow the interpolated target')
+                camera_changed=during.read(camera+8,18)!=before.read(camera+8,18)
+                if after.read(camera+8,18)!=before.read(camera+8,18):
+                    raise ValueError('Private camera simulation pose was not restored')
+        else:
+            attached=False
         dirty=struct.unpack('>h',before.read(metadata['h3']+0x7856,2))[0]
         if struct.unpack('>h',after.read(metadata['h3']+0x7856,2))[0]!=dirty_after(dirty):
             raise ValueError('Dirty countdown not consumed exactly once per draw')
         draws=int.from_bytes(state[36:40],'big')
         if int.from_bytes(after.read(at('time_loop_state')+36,4),'big')!=(draws+1)&0xffffffff:
             raise ValueError('Draw counter did not advance once')
-        result.append(dict(tick=int.from_bytes(state[28:32],'big'),poses=count,fraction=fraction,blended=nb,snapped=ns,list_entries=list_entries,list_changed_during_draw=list_changed))
+        result.append(dict(view=view,attached_camera=attached,camera_changed=camera_changed,tick=int.from_bytes(state[28:32],'big'),poses=count,fraction=fraction,blended=nb,snapped=ns,list_entries=list_entries,list_changed_during_draw=list_changed))
     if not result or not poses or not changed:
         raise ValueError('No real changed pose lease observed')
     return dict(sha256=metadata['sha256'],frames=result,poses_checked=poses,changed_visual_poses=changed,
-                limitation='Observed cockpit render leases only; no full gameplay-state, camera-mode, cadence or capacity acceptance.')
+                limitation='Observed render leases only; no full gameplay-state, camera-mode, cadence or capacity acceptance.')
 
 
 if __name__=='__main__':

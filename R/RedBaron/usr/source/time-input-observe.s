@@ -304,6 +304,13 @@ time_input_replay_irq:
 	addi.l #32,d5
 	move.l d5,(a1)
 	move.w #$4e,4(a1)
+	lea .view_options_base(pc),a3
+.view_options_base
+	adda.l #perf_custom5+3-.view_options_base,a3
+	btst #4,(a3) ; combine the existing rear-view fixture with replay
+	beq .first_key
+	move.w #$51,4(a1)
+.first_key
 	cmpi.w #2,d4
 	blo .key
 	move.w #$40,4(a1)

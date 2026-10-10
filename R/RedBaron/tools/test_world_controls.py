@@ -76,3 +76,14 @@ class WorldControlsTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'queue differs'):scheduled_events(q,records,origin)
             records[3]^=1
             with self.assertRaisesRegex(ValueError,'flight-relative'):scheduled_events(q,records,origin)
+
+    def test_scheduled_view_command_requires_explicit_fixture_selection(self):
+        q=bytearray(4112);records=bytearray(64)
+        struct.pack_into('>4H',q,0,4,4,0,4)
+        for i,(key,down) in enumerate(((0x51,1),(0x51,0),(0x40,1),(0x40,0))):
+            struct.pack_into('>IHHII',records,i*16,100+32*(i+1),key,down,0,0)
+        q[16:80]=records
+        self.assertEqual([e['key'] for e in scheduled_events(q,records,100,first_key=0x51)],
+                         [0x51,0x51,0x40,0x40])
+        with self.assertRaises(ValueError):scheduled_events(q,records,100)
+        with self.assertRaises(ValueError):scheduled_events(q,records,100,first_key=0x52)

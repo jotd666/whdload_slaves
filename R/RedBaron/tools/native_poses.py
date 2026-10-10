@@ -4,6 +4,7 @@ import json
 import struct
 from pathlib import Path
 from pose_history import registry, read_pose
+from camera_pose import identity
 from presentation_state import symbol
 from render_mutations import Snapshot
 
@@ -35,6 +36,7 @@ def check(path):
     current = base+symbol(lines, 'time_pose_current')
     previous = base+symbol(lines, 'time_pose_previous')
     loop = base+symbol(lines, 'time_loop_state')
+    target_header = base+symbol(lines,"time_pose_camera_target") if any("time_pose_camera_target:" in line for line in lines) else None
     prior = None
     checked = invalidated = events = 0
     rows = []
@@ -50,22 +52,29 @@ def check(path):
             raise ValueError('Pose capture not at the recorded completed tick')
         if camera != int.from_bytes(ram.read(metadata['h3']+0x8d72, 4), 'big') or view != int.from_bytes(ram.read(metadata['h3']+0x6712, 2), 'big'):
             raise ValueError('Camera/view metadata mismatch')
+        target=ptarget=None
+        if target_header is not None:
+            target,ptarget=struct.unpack('>II',ram.read(target_header,8))
+            if identity(ram.read,metadata['h3'])!=(camera,view,target):
+                raise ValueError('Followed camera target metadata mismatch')
         if prior:
-            old_tick, old_camera, old_view, old_life, old_captures, old_records = prior
+            old_tick, old_camera, old_view, old_target, old_life, old_captures, old_records = prior
+            if ptarget!=old_target:
+                raise ValueError('Incorrect previous camera target')
             if tick != (old_tick+1)&0xffffffff or ptick != old_tick or captures != (old_captures+1)&0xffffffff:
                 raise ValueError('Nonconsecutive snapshot pair')
             if (life-old_life)&0xffffffff != len(frame['lifecycle']):
                 raise ValueError('Lifecycle counter/log disagreement')
             if (pcamera,pview) != (old_camera,old_view):
                 raise ValueError('Incorrect previous view metadata')
-            saved = invalidate(old_records, frame['lifecycle']) if (camera,view)==(old_camera,old_view) else []
+            saved = invalidate(old_records, frame['lifecycle']) if (camera,view,target)==(old_camera,old_view,old_target) else []
             if np != len(saved) or ram.read(previous, np*STRIDE) != b''.join(saved):
                 raise ValueError('Previous poses or lifecycle invalidations differ')
             invalidated += sum(r[4:6] == bytes(2) for r in saved)
             events += len(frame['lifecycle'])
-        prior = (tick,camera,view,life,captures,expected)
+        prior = (tick,camera,view,target,life,captures,expected)
         checked += nc
-        rows.append(dict(tick=tick,objects=nc,previous=np,lifecycle=life))
+        rows.append(dict(tick=tick,objects=nc,previous=np,lifecycle=life,view=view,camera_target=target))
     if len(rows)<2 or not checked or not events or not invalidated:
         raise ValueError('Capture lacks consecutive poses and actual lifecycle invalidation')
     return dict(sha256=metadata['sha256'], boundaries=len(rows), poses_checked=checked,

@@ -6,6 +6,7 @@ Does not establish combat outcomes or substitute for the full state inventory.
 import argparse
 import json
 import struct
+import re
 from pathlib import Path
 from render_mutations import Snapshot
 from presentation_state import symbol
@@ -38,11 +39,13 @@ def events(queue,acquisitions,origin,paused,clocks=None):
     return result
 
 
-def scheduled_events(queue,records,origin):
+def scheduled_events(queue,records,origin,first_key=0x4e):
     if struct.unpack_from('>4H',queue)!=(4,4,0,4):
         raise ValueError('Scheduled fixture was not consumed exactly')
     history=[]
-    for i,(key,down) in enumerate(EXPECTED):
+    if first_key not in (0x4e,0x51):raise ValueError('Unknown scheduled first key')
+    sequence=[(first_key,1),(first_key,0),(0x40,1),(0x40,0)]
+    for i,(key,down) in enumerate(sequence):
         expected=((origin+32*(i+1))&MASK,key,down,0,0)
         if struct.unpack_from('>IHHII',records,i*16)!=expected:
             raise ValueError('Incorrect flight-relative scheduled record')
@@ -94,9 +97,12 @@ def extract(root):
     replay_state=int.from_bytes(final.read(replay_done,2),'big') if replay_done else 0
     if replay_state not in (0,2):raise ValueError('Scheduled fixture publication incomplete')
     replay=replay_state==2
+    first_key=0x4e
     if replay:
+        options=int(re.search(r'CUSTOM5=(-?\d+)',entry['whd_args'])[1])
+        first_key=0x51 if options&16 else 0x4e
         acquired=scheduled_events(final.read(at('time_input_observe_queue'),4112),
-                                  final.read(at('time_input_replay_records'),64),origin)
+                                  final.read(at('time_input_replay_records'),64),origin,first_key)
         kind='scheduled-replay'
     else:
         acquired=events(final.read(at('time_input_observe_queue'),4112),
@@ -107,8 +113,8 @@ def extract(root):
     commands=sum(e['down'] and not e['modal'] for e in acquired)
     if (rows[-1]['consumed'],rows[-1]['popped'])!=(4,commands):
         raise ValueError('Missing or repeated controls')
-    if not any(bytes.fromhex(row['held'])[0x4e] for row in rows):
-        raise ValueError('No completed update held Right')
+    if not any(bytes.fromhex(row['held'])[first_key] for row in rows):
+        raise ValueError("No completed update held the fixture's first key")
     if not any(bytes.fromhex(row['held'])[0x40] for row in rows):
         raise ValueError('No completed update held Fire')
     validate_consumption(rows,acquired)

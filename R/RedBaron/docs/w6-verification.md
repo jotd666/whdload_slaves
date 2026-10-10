@@ -2154,3 +2154,65 @@ capture at a time and use a new evidence directory. Reproduce retained checks:
 python3 R/RedBaron/tools/world_controls.py tmp/dev/tmp/prof/w6-replay-slow-030-v2 tmp/dev/tmp/prof/w6-replay-none-030 --out tmp/dev/tmp/prof/w6-replay-slow-030-v2/controls-comparison.json
 python3 R/RedBaron/tools/world_comparison.py tmp/dev/tmp/prof/w6-replay-slow-030-v2 tmp/dev/tmp/prof/w6-replay-none-030 --out tmp/dev/tmp/prof/w6-replay-slow-030-v2/heap-inventory.json
 ```
+
+
+## Attached-camera presentation checkpoint
+
+VERIFY candidate `eb743015c665a5893fba0cb12158c9cceb33704f06e6631ccf61235fd0f30896`
+extends the render-only pose lease to the native attached camera family. The
+world remains fixed-step; this changes only the pose used during a draw. W6's
+acceptance requirement remains consistent gameplay/simulation speed independently
+of achieved rendering FPS, plus smooth 50 FPS on capable PAL hardware.
+
+The native callback at `sim:15666` copies the followed object's 18-byte position
+and orientation into the private camera pose at `h3:06782`. View setup at
+`sim:158f4` selects this callback for modes 1–5. The candidate requires that exact
+callback at `h3:01a70`, the private camera at `h3:0677a`, a registered target at
+`h3:067ae`, and unchanged current object poses. It additionally requires the
+private camera pose to equal the current target pose before leasing. Otherwise
+it keeps the native drawing path. Orbit/free cameras remain outside this lease.
+
+During drawing, the private camera receives the same independently modelled
+visual pose as its target. The exact original private pose is saved and restored
+on return, alongside registered object poses. Camera history now includes the
+followed target identity: a different target invalidates the previous pair even
+when the private camera pointer and view mode stay the same. Host checks cover
+this identity change; an in-game target-switch capture remains open.
+
+The scheduled replay fixture uses F2 instead of Right when CUSTOM5 bit 4 is set
+alongside bit 31. This sends the command through W6's input queue at the same
+32/64/96/128 flight-relative deadlines; Fire remains the second key. The earlier
+tape shortcut did not deliver this view command through the private W6 input
+owner. A retained attempted debugger-memory injection also failed its immediate
+write readback and is not input evidence. The successful capture uses the
+in-game queue fixture, not debugger writes.
+
+Cached-68030 capture `tmp/dev/tmp/prof/w6-attached-camera-030/`, CUSTOM2=8192,
+uses the local boot helper's `--replay --scene dense`. All 24 world boundaries
+pass the input replay and pose-history checks: 649 poses, 45 lifecycle events,
+20 invalidated records. F2 changes view 0→1 at tick 5, where previous history
+correctly becomes empty; subsequent captures have consecutive histories.
+Four actual view-1 draws at ticks 23–26 check 125 object poses, with 102 changed
+visual poses. All four private camera poses also change during drawing and are
+restored exactly afterward. No world update occurs inside a draw. Shared-list
+and terrain-cache restoration and exact rendering-phase clock checks pass.
+
+Native self-tests retain counts 426/512/638/133, terrain stores/cache/list 2/1/2;
+the live audit passes 54 selected targets and ten disabled ranges. Static audits
+report 64 ranges and 121 patch destinations with zero errors and the existing
+indirect-target caveat. All 189 host tests pass. Normal and developer binaries
+retain their W5 hashes. This is scoped view-1/camera-ownership evidence, not full
+camera-mode acceptance, gameplay convergence, capacity, or a 50 FPS result.
+Modes 2–5 are guarded by the same native callback contract but still need native
+coverage. Target changes, other camera callbacks and modal/restart cases remain
+open. This candidate remains VERIFY-only under CUSTOM2 bit 13.
+
+
+Same-build cockpit regression `tmp/dev/tmp/prof/w6-camera-cockpit-030/` uses
+`--replay` without the rear-view selection. Its 24 boundaries pass independent
+bank/fire consumption and pose-history checks: 802 poses, 68 lifecycle events,
+32 invalidations. Four cockpit draws check 140 poses, with 116 visual changes,
+zero private-camera leases and no world update during drawing. Clock, list and
+terrain-cache restoration pass. Both native endpoints pass the self-test and
+live patch audits above; both owned emulators were quit. The two scenes are
+separate correctness captures, not an A/B speed comparison.

@@ -148,6 +148,18 @@ its Right hold ended before flight activation; it is not an identical-input
 comparison. See `w6-verification.md` for the distinction, fixture isolation,
 remaining global differences and reproducible evidence.
 
+## W6 attached-camera presentation checkpoint
+
+VERIFY build `eb743015…` extends render-only interpolation to the native attached
+camera pose-copy family. A cached-68030 rear-view capture passes 24 world
+boundaries (649 poses), including history reset on the view change at tick 5.
+Four view-1 draws check 125 object poses, of which 102 change visually; all four
+private camera poses change and are restored exactly after drawing. No world
+update occurs inside a draw. These are correctness counts, not frame costs or
+FPS measurements. Other camera modes, full gameplay convergence, sustained
+simulation capacity and smooth 50 FPS remain open. See `w6-verification.md` for
+the frozen build, fixture and limits.
+
 ## W6 coherent clock-boundary capacity checkpoint
 
 VERIFY build `9f72992c…` adds transaction markers for debugger observations of

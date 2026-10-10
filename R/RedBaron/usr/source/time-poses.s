@@ -114,6 +114,9 @@ time_pose_capture:
 	clr.w 12(a4)
 	clr.l 28(a4)
 	clr.l 32(a4)
+	lea time_pose_camera_target(pc),a1
+	clr.l (a1)+
+	clr.l (a1)
 	lea time_render_started(pc),a1
 	clr.l (a1)
 	lea time_render_counts(pc),a1
@@ -125,6 +128,11 @@ time_pose_capture:
 	adda.l #$8d72,a0
 	move.l (a0),d5
 	move.w $6712(a3),d6
+	move.l d5,d4
+	tst.w d6
+	beq .target_ready
+	move.l $67ae(a3),d4
+.target_ready
 	tst.w 12(a4)
 	beq .first
 	move.l 4(a4),d0
@@ -134,6 +142,8 @@ time_pose_capture:
 	move.l 4(a4),8(a4)
 	move.l 16(a4),20(a4)
 	move.w 24(a4),26(a4)
+	lea time_pose_camera_target(pc),a1
+	move.l (a1),4(a1)
 	move.w (a4),2(a4)
 	move.l time_pose_buffers(pc),a0
 	move.l time_pose_buffers+4(pc),a1
@@ -149,6 +159,8 @@ time_pose_capture:
 	cmp.l 16(a4),d5
 	bne .view_change
 	cmp.w 24(a4),d6
+	bne .view_change
+	cmp.l time_pose_camera_target(pc),d4
 	beq .first
 .view_change
 	clr.w 2(a4) ; discontinuous camera/view: no previous pair
@@ -156,6 +168,8 @@ time_pose_capture:
 	move.l d7,4(a4)
 	move.l d5,16(a4)
 	move.w d6,24(a4)
+	lea time_pose_camera_target(pc),a1
+	move.l d4,(a1)
 	move.w #1,12(a4)
 	move.l a3,a2
 	adda.l #$859e,a2
@@ -207,3 +221,6 @@ time_pose_buffers: dc.l 0,0
 ; current/previous counts, tick IDs, ready, reserved, camera pointers, view
 ; modes, lifecycle event count, capture count.
 time_pose_header: dcb.b 36,0
+
+; Current/previous followed object: private camera address alone is not identity.
+time_pose_camera_target: dc.l 0,0
