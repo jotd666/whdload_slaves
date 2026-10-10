@@ -1,9 +1,10 @@
 # W3 exact-output sound work
 
-Status: active, not yet complete or release-enabled. The user reopened W3 after
-W2 with “Goal: finish W3”. Preserve sound data, timing, buffer sizes, service
-ownership and register writes. B1–B6 remain separate decisions. Normal release
-mask remains zero.
+Status: complete with the explicit low-value deferrals below. S1, S3 and S9
+are implemented and verified; S2/S3′/S4–S8 are not implemented. Sound data,
+224-byte buffers, service ownership, repeated register writes and tick/envelope
+timing remain unchanged. B1–B6 remain separate decisions. Normal player
+release enablement is still gated on W5/release work; its mask remains zero.
 
 ## Loader and observations
 
@@ -11,9 +12,8 @@ A VERIFY-only filename observer confirms that `amigasnd.drv` arrives through
 `LoadSeg` twice during the automated startup route. The second code entry is
 `sound:0028`; patch offsets within hunk 0 are file offsets minus `$28`.
 Driver hooks must handle reloads and be gated by supported sim v1 activation.
-Evidence: `tmp/dev/tmp/prof/w3-sequence-twin-a500/sound-headers.json`.
-That boot reached flight, but its subsequent sequencer installer byte check
-aborted: it is loader evidence only, not a passed optimization/twin run.
+Evidence: the final `sound-headers.json` in
+`tmp/dev/tmp/prof/w3-div-twin-a500-r2/`, also confirmed on 68020 and 68030.
 
 `tools/sound_events.py` extracts per-register ordered CPU writes, including
 32-bit pointer writes, and per-channel AUDxDAT DMA fetches. It keeps repeated
@@ -23,12 +23,12 @@ local proofs but do not replace them. The original final 50-field baseline
 chunk decodes to 6,728 AUD0 and 6,232 AUD1 sample fetches, with 59 volume writes
 per active channel.
 
-## S1 and S9 initial implementation
+## S1 and S9
 
 Developer/VERIFY CUSTOM2 bit 10 selects S1: four longword comparisons skip an
 empty sixteen-byte volume queue. The nonempty branch replays the overwritten
 prologue and enters the unchanged original body at `sim:34d2c`. The empty branch
-preserves all registers; the caller does not consume its flags. CUSTOM5 bit 14
+preserves all registers; the caller at `sim:34e30` does not consume its flags. CUSTOM5 bit 14
 runs the original empty-queue body and verifies registers, queue bytes and the
 unchanged index. It does not double-write audio hardware: this original path
 makes no driver calls. The original copy is VERIFY-only.
@@ -39,12 +39,8 @@ have identical observable registers and flags at this caller. The patch does
 not remove an arbitrary callback. Static hook audit: nine sim ranges, zero
 split-instruction, direct-target or relocation errors. Indirect entry review:
 S1 retains the public routine entry; S9 is an internal direct call site.
-The corrected A500 build reaches step 8 with 296 successful live queue twins
-(index 0 observed), no mismatch. Evidence:
-`tmp/dev/tmp/prof/w3-sequence-twin-a500-r2/`. The installer preserves the sim base
-across `resload_Patch` before validating S9; the earlier guarded abort is fixed.
-Normal/developer/VERIFY builds compile (9,342 / 9,494 / 65,886 text bytes).
-Other-CPU twins and performance measurements are pending. No FPS gain is claimed.
+The installer preserves the sim base across patch installation, with interrupts
+disabled for each patch/flush operation. Final CPU twins and measurements follow.
 
 ## Models
 
@@ -57,11 +53,10 @@ to bytes before multiplication. Thus every numerator is at most 65,025.
 `((n+1)*$1041)>>18` equals `n//63` for every numerator in that domain, exhaustively
 checked. The original truncates intermediate quotients to bytes; the model
 preserves that behavior and the zero/final-minimum cases. 100,000 seeded volume
-input tuples agree between division and reciprocal models. Original-call replay
-and live assembly twins are still required; these host results alone do not
-verify an installed S3 optimization.
+input tuples agree between division and reciprocal models. The original-call replay
+and live assembly twins below separately check the actual machine-code behavior.
 
-## S3 initial implementation
+## S3
 
 Developer/VERIFY CUSTOM2 bit 12 selects three in-place ten-byte replacements.
 The loader matches the full driver filename and clears authorization on any
@@ -97,4 +92,84 @@ preserve intermediate byte truncation and the original zero paths.
 
 W3 S1/S9/S3 together use CUSTOM2=7168. Verification uses CUSTOM5=49664
 (deferred activation plus queue/division twins). Cost runs use CUSTOM5=512,
-without either per-call twin. Measurements and CPU selection remain pending.
+without either per-call twin. On cached 68030 use CUSTOM2=3072 (S1/S9);
+normal selection retains original S3 on 030 and conservatively on unmeasured
+040/060. Developer/VERIFY builds continue to accept explicit bit 12.
+
+## Frozen-build CPU twins and measurements
+
+The final atomic-installer build passes on all three machines:
+
+| CPU | Queue twins | Exhaustive divide twins | Live divide twins |
+|---|---:|---:|---:|
+| A500-equivalent | 592 | 65,026 | 1,812 |
+| 14 MHz 68020 | 137 | 65,026 | 498 |
+| Cached 50 MHz 68030 | 42 | 65,026 | 240 |
+
+All counts are at flight step 8. Evidence:
+`tmp/dev/tmp/prof/w3-div-twin-a500-r2/`, `w3-div-twin-020/`, and
+`w3-div-twin-030/` under the same profile directory. The executable hash matches
+across these runs. There are 53 passing host checks.
+
+The completed A500 same-build pair gains 1.93% FPS in swaps 140–240, with the
+same message event and final game state outside clocks. Its 250-field routine
+samples reduce mean sequencer cost by 21.4%. `profiling.md` contains current
+numbers, state-comparison qualifications, chunk gaps and hook-byte checks.
+The 68020 pair gains 0.46% in its observed event-free window. Cached 68030
+has no established FPS gain: the full bundle ties OFF at 2,118 fields; the
+reduced selection takes 2,117. The one-field difference is not a robust FPS gain.
+
+Cached whole-call beam clocks at steps 8–59 show the queue mean falling from
+3.466 to 1.738 microseconds and sequencer mean from 53.373 to 51.420 microseconds
+with S1/S9. These are inclusive wall times before RTS, not CPU-cycle counts.
+S3’s full-bundle volume mean changes only from 4.694 to 4.621 microseconds;
+input/world histories and beam quantization do not establish a material benefit.
+Keep the original division on cached CPUs. The unchanged reduced-bundle volume
+mean is 4.686 microseconds. See `profiling.md` for counts and qualifications.
+
+All three cached settings have identical **per-register ordered Paula/control
+writes and per-channel AUDxDAT fetch values** in their separate 20-field DMA
+observations, including all four channels. These observations support the local
+proofs; they are not a claim that arbitrary wall-time-aligned game recordings
+must match after a frame-rate change. Slow-CPU captures have differing start
+phases and world-update timing and are not used for audio-list equality.
+
+Final builds: normal 9,656, developer 9,804, VERIFY 66,270 text bytes. Normal and
+developer binaries omit VERIFY markers. Nine sim and three sound ranges pass
+static audits. OFF ranges retain original relocated bytes on all three CPUs;
+selected ranges match assembled S1/S9/S3 bytes. The reduced cached setting also
+retains all three original sound ranges. `tmp/dev/tmp/prof/w3-cached-audits.json`
+records the cached checks. No extra runtime allocation is introduced.
+
+Performance claims are scoped to the recorded windows and voice mixes. These
+changes do not alter rendering, swapping, buffering, sample data, or game-time
+logic. Full scene integration and normal player enablement remain release gates.
+
+## Remaining-candidate assessment
+
+Apply plan §3.8 to the individual remaining candidates. The numbers below are
+the original plan’s estimates from its observed workload, **not measured gains**.
+They are too small to justify the required stateful rewrites in this pass.
+They do not bound every possible four-voice workload.
+
+| Candidate | Estimated frame share saved | Disposition |
+|---|---:|---|
+| S2 interrupt-specific register saves | 0.59% | Deferred: split note-on/L4 contracts and nested-interrupt verification |
+| S3′ per-voice result memoization | 0.9% before S3 | Alternative deferred: extra state/keys, less incremental benefit after S3 |
+| S4 cached per-channel pointers | 0.45% | Deferred: table readers, reload/lifetime and buffer-state proof |
+| S5 direct function-16 call | 0.3% | Deferred: dispatcher register/flag and driver-lifetime contracts |
+| S6 MOVEM sample copies | 0.27% | Deferred: copy ordering, buffer boundaries and DMA-state verification |
+| S7 delayed pointer arithmetic | 0.25% | Deferred: another sequencer control-flow replacement |
+| S8 reduced stub/envelope saves | 0.39% | Deferred: per-entry register liveness and interrupt nesting |
+
+S2/S4/S5/S6/S7/S8 sum to 2.25% in that original estimate, before interactions.
+S1 and S9 instead keep the pending-work and driver paths original; S3 replaces
+three equal-size arithmetic sequences without new runtime state. Those small,
+local changes have a much narrower proof and implementation burden. No S2–S8
+buffer/service speedup is claimed beyond the implemented S3. Revisit the deferred
+items if a new workload demonstrates a materially larger cost, especially sustained
+four-voice playback. W3’s full shadow-driver/buffer framework belongs to that work.
+
+B1–B6 are not selected: retain OS interrupt dispatch, 224-byte buffers, software
+sample streaming, repeated volume writes and the original tick/envelope timing.
+Changing those behaviors is a separate decision under the plan.

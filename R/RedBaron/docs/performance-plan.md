@@ -515,7 +515,7 @@ Order:
    the W0.6 observers exist.
 5. W4 and W7 later.
 
-W3 was reopened by the user’s “Goal: finish W3” request after W2. Exact-output sound work is now active; behavioral/OS alternatives B1–B6 remain separate decisions.
+W3 was reopened after W2 and is complete with explicit low-value deferrals; see `w3-verification.md`. Behavioral/OS alternatives B1–B6 remain separate decisions.
 
 ### W0. Groundwork (required before any patch)
 
@@ -759,14 +759,21 @@ Every frame pays for it; these candidates total ~600k per steady frame *(est.)*.
   - `sim:3b2d8`: `mulu.l` to 64 bits, guarded by |n| ≤ 2¹⁴.
   - G2, G5 and G7 are CPU-neutral.
 
-### W3. Interrupt and sound tax (exact output): active
+### W3. Interrupt and sound tax (exact output): complete with deferrals
 
 **Reopened by the user after W2:** implement and verify the exact-output work. Keep sample data, buffer sizes, interrupt ownership, playback and envelope timing unchanged. B1–B6 are not release defaults; they need separate decisions. Progress and evidence are in `w3-verification.md`.
 
 Implemented developer/VERIFY allocations: S1 bit 10, S9 bit 11, S3 bit 12.
-Together these are CUSTOM2=7168; the normal release mask remains zero.
+Together these are CUSTOM2=7168 on A500/68020; use 3072 on cached 68030,
+retaining original S3 because its small measured difference does not establish
+material benefit. Normal policy also retains original S3 on unmeasured 040/060.
+S2/S3′/S4–S8 are deferred under §3.8, with the assessment in
+`w3-verification.md`; they are not implemented. Measured W3-only FPS gains are
+1.93% A500 and 0.46% 68020, with no established cached-68030 FPS gain.
+The normal release mask remains zero.
 
-Fixed cost per second, so the saving applies to every scene. Main-loop wall time scales by
+The original broad-pass estimate below is not a claim for the implemented subset.
+Fixed cost per second for a given voice workload: main-loop wall time scales by
 1/(1 − tax): from 15.1% to ~11% is ~1.05× everywhere *(est.)*.
 
 | # | Change | Where | Saving *(est.)* |
@@ -786,7 +793,11 @@ Fixed cost per second, so the saving applies to every scene. Main-loop wall time
   - **Paula log:** compare the per-register ordered value sequences, the CPU writes in the
     trace's DMA records (type 2, reg `$1100`). The interleaving of L4 and L6 may shift.
   - **Audio fetches:** compare the per-channel `AUDxDAT` fetches (type 4).
-  - **Strict proof:** a VERIFY twin per tick/service: snapshot the driver state (a4 + 0…`$1500`),
+  - **Local implemented proof:** S1 twins the empty queue’s registers/state and
+    uses the unchanged original for pending work; S9 checks the bare RTS; S3
+    proves the byte-product bound and twins each actual quotient before any
+    unchanged state/hardware write. See `w3-verification.md`.
+  - **Strict proof for deferred stateful rewrites:** a VERIFY twin per tick/service: snapshot the driver state (a4 + 0…`$1500`),
     run the original copy against a shadow custom-register block, run the candidate live, and
     compare buffers, state and the written register values.
 - **Behaviour or OS changes, for the user to decide (not recommended by default):**

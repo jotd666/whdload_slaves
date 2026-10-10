@@ -26,6 +26,8 @@ perf_read_options:
 	beq.b .selected
 	bclr #0,d0
 	bclr #2,d0
+	; S3 has no established material benefit on the cached 030.
+	bclr #12,d0
 .selected
 	ENDC
 	ENDC

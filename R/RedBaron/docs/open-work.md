@@ -50,11 +50,17 @@ Remaining G1/G3 refinements and G5–G9 are explicitly deferred under the plan's
 measurements and the completion audit. They are not claimed implemented.
 Drawing is the larger measured bottleneck on the cached machine.
 
-## W3 active
+## W3 complete with low-value candidates deferred
 
-The user reopened W3 after W2. Preserve exact sound output; B1–B6 remain separate
-behavior/OS decisions. `w3-verification.md` records the implementation and evidence.
-The normal release mask remains zero.
+S1 queue, S3 bounded volume division and S9 no-op call removal are implemented.
+Models, three-CPU twins, hook audits, sound logs and same-build measurements pass.
+Observed FPS gains are 1.93% on A500 and 0.46% on 68020; cached 68030 has no
+established FPS gain. Use developer/VERIFY CUSTOM2=7168 on A500/68020 and 3072
+on cached 68030, where original S3 is retained. These are W3-only selections.
+
+S2/S3′/S4–S8 are explicitly deferred under the plan’s size threshold, not claimed
+implemented. B1–B6 remain separate behavior/OS decisions. `w3-verification.md`
+records the scope, proof and evidence. Normal player release mask remains zero.
 
 ## Next work
 
@@ -72,7 +78,7 @@ The normal release mask remains zero.
 - The W6 timing design, after investigation and a concrete recommendation.
 - The measured frame-cap rate and any material 68000 cost of tear-free swapping.
 
-Chip RAM for W1b is approved. Exact-output W3 work is active; B1–B6 remain separate behavior/OS decisions.
+Chip RAM for W1b is approved. W3’s selected exact-output changes are complete; B1–B6 remain separate decisions.
 Until an approved W6 implementation lands, faster frames accelerating the world on
 slow machines is an accepted intermediate behavior. Keep Time Scale unchanged in
 ordinary development fixtures; 0/60 copies are investigation inputs only.
@@ -82,7 +88,7 @@ ordinary development fixtures; 0/60 copies are investigation inputs only.
 Use one binary with option changes for comparisons; all patches remain sim v1 only.
 Each feature needs original-byte checks, whole-instruction/branch/relocation audits,
 CUSTOM-off verification, its model/twin checks and the plan's measurement protocol.
-The seven current performance ranges pass the static hook audit.
+The nine sim and three sound performance ranges pass the static hook audit.
 Only verified bits may enter the release mask. Keep instruments VERIFY-only and
 normal/developer builds free of their code and data. Recheck frame timing, ownership,
 chip/slow memory pressure and cache conditions after code/layout changes.

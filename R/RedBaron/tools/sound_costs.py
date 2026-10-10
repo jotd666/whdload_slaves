@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Completed L6 sound calls, excluding chunks and any higher-interrupt preemption.
+"""Completed interrupt-stack sound calls, excluding chunks and IRQ preemption.
 
 Report routine CPU cycles, not FPS. Queue pending-count and volume inputs allow
 like-for-like comparisons. This is intended for 68000/020 instruction traces;
@@ -19,11 +19,13 @@ def measure(paths, sim, driver, queue_return=None):
                 'sequencer': (sim+0x34d96, {sim+0x34da2, sim+0x34e52})}
     if queue_return is not None: routines['queue'][1].add(queue_return)
     rows, incomplete = [], 0
+    irq_pages = set()
     for path in paths:
         trace = barto.load(path)
         active = {}
         for field in trace.fields:
             for pc, cycles, regs in trace.instructions(field):
+                if pc == sim+0x2ffcc: irq_pages.add(regs[15] & ~0x3fff)
                 for name, (entry, returns) in routines.items():
                     if pc == entry:
                         if name in active: raise ValueError('Unexpected reentrant sound call')
@@ -45,6 +47,8 @@ def measure(paths, sim, driver, queue_return=None):
                         if regs[15] != row['sp']: raise ValueError('Sound return stack mismatch')
                         rows.append(row);del active[name]
         incomplete += len(active)
+    if not irq_pages or any((row["sp"] & ~0x3fff) not in irq_pages for row in rows):
+        raise ValueError("Sound call outside the observed timer-dispatch interrupt stack")
     groups = defaultdict(list)
     for row in rows:
         if row['preemptions']: continue
@@ -54,7 +58,7 @@ def measure(paths, sim, driver, queue_return=None):
         groups[row['routine']+' '+detail].append(row['cycles'])
     summary = {key:dict(calls=len(v), mean=sum(v)/len(v), minimum=min(v), maximum=max(v))
                for key,v in sorted(groups.items())}
-    return dict(summary=summary, calls=rows, cut_calls=incomplete,
+    return dict(summary=summary, calls=rows, cut_calls=incomplete, irq_stack_pages=sorted(irq_pages),
                 preempted_calls=sum(bool(r['preemptions']) for r in rows))
 
 

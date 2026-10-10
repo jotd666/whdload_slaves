@@ -1,5 +1,102 @@
 # Red Baron performance measurements
 
+## W3 current measurements
+
+The sound queue fast path (S1), no-op call removal (S9), and bounded volume
+reciprocal (S3) are developer/VERIFY bits 10, 11 and 12: CUSTOM2=7168.
+Normal player enablement remains off. The frozen VERIFY binary is SHA256
+`bad57261d0593f51eb42c79dde6e53a9d15c0154d52d0831ec8edfc8f825469a`.
+Queue and exhaustive/live division twins pass on A500, 68020 and cached 68030.
+See `w3-verification.md` for contracts, loader lifetime and original-model replay.
+
+On the A500-equivalent configuration, same-build OFF/ON swaps 140–240 take
+**2,905 → 2,850 fields**, or **1.7184 → 1.7516 FPS (+1.93%)**. Both windows
+exceed 2,000 fields, retain dt=450, and have the same single message event at
+step 221 with no mirror event. Step 8 and the final step 241 match outside the
+known clocks at `h3:03f5a` and `h3:0483a`. The OFF start snapshot was taken after
+an extra screenshot field and is not phase-matched; it is not used as a state
+comparison. FPS uses actual swap boundaries, unaffected by that snapshot phase.
+This later flight window is not the earlier W2 window and its raw FPS must not
+be compared against W2’s earlier baseline.
+
+Separate **250-recorded-field** samples, in 100/100/50 chunks, give:
+
+| A500 complete routine | OFF mean cycles | ON mean cycles | OFF/ON calls |
+|---|---:|---:|---:|
+| Empty queue, `sim:34d26` | 1,687.04 | 249.57 | 295 / 297 |
+| Sequencer with two volume calls, `sim:34d96` | 9,132.89 | 7,181.66 | 295 / 296 |
+| Volume for inputs 63/63/63, master 15, enabled | 1,197.95 | 966.04 | 295 / 297 |
+
+Costs include each complete RTS and exclude cut calls at chunk joins. No measured
+L6 call was preempted by a higher interrupt. Variation includes chip/slow-memory
+bus contention; group volume inputs before comparing. The two inter-chunk gaps
+remain unrecorded. OFF retains all nine sim and three sound hook ranges; ON’s
+seven disabled sim ranges remain original, and the five selected ranges match
+the intended assembled bytes. Evidence: `tmp/dev/tmp/prof/w3-a500-{0,7168}/`.
+On the 14 MHz 68020, swaps 80–400 take **2,594 → 2,582 fields**:
+**6.1583 → 6.1869 FPS (+0.46%)**. Both censuses are free of dashboard events.
+The world is not continuously dt-clamped on this CPU, so its state can diverge;
+this is the observed window’s rate, not a bit-identical world-state comparison.
+
+Its separate 250-field samples improve empty-queue means **947.80 → 111.93
+cycles** (292/294 calls) and volume means for 63/63/63, master 15, enabled
+**527.53 → 486.82 cycles** (293/294 calls). Sequencer means grouped by two,
+three and four volume calls are respectively **4,676.35 → 3,676.46**,
+**6,125.92 → 5,150.95**, and **7,824.74 → 6,686.76 cycles**. The groups contain
+104/145, 153/105 and 19/34 calls; do not pool the different activity mixes.
+27 OFF and 13 ON routine observations containing IRQ-entry markers are excluded.
+Every timed call lies in the observed timer-dispatch interrupt stack. OFF/ON
+byte audits pass, including exact selected bytes. Evidence:
+`tmp/dev/tmp/prof/w3-020-{0,7168}/`.
+
+Cached 50 MHz 68030 beam clocks at steps 8–59, after VBlank-phase and horizontal
+boundary exclusions, give the following **inclusive wall times before RTS**:
+
+| Routine | OFF mean µs | S1/S9 mean µs | OFF/ON calls |
+|---|---:|---:|---:|
+| Queue | 3.466 | 1.738 | 256 / 257 |
+| Sequencer | 53.373 | 51.420 | 259 / 258 |
+| Volume, unchanged code | 4.694 | 4.686 | 632 / 636 |
+
+The full S1/S9/S3 bundle’s volume mean is 4.621 µs (635 accepted calls): too small
+and sensitive to phase/input mix to establish a material S3 benefit. Normal policy
+therefore retains original S3 on 030/040/060; developer/VERIFY testing uses
+**CUSTOM2=3072** on cached 030. OFF and full-bundle swaps 120–660 each take
+2,118 fields (12.7276 FPS). The reduced bundle takes 2,117 (12.7336 FPS): a
+one-field difference, **not an established FPS gain**. All three windows have
+no dashboard events; their variable dt means their world states need not match.
+
+Separate 20-field DMA observations have exactly matching per-register ordered
+Paula/control writes and all four channels’ sample-fetch value sequences across
+OFF, full and reduced settings. Original-byte and selected-byte audits pass.
+Evidence: `tmp/dev/tmp/prof/w3-030-{0,7168,3072}/`. The routine samples have 103,
+100 and 99 phase/boundary exclusions respectively; no instruction-cycle claim is
+made for the cached CPU. These W3 results are not cumulative W2+W3 gains.
+
+### Running W3 manually
+
+Use the manual 250-field procedure below with **CUSTOM2=7168** on A500/68020
+(or **3072** on cached 68030), CUSTOM5=512, and fresh `my-w3-on` output names.
+Use CUSTOM2=0 for OFF. For queue/division twins use CUSTOM2=7168 and CUSTOM5=49664;
+do not use those instrumented costs as timings. Time Scale remains 40.
+
+For the exact recorded build, the local helpers automate the same comparisons
+from `tmp/dev` after sourcing `amiga/env.sh`:
+
+```sh
+python3 tools/w3_measure.py a500 0 --suffix=-manual
+python3 tools/w3_measure.py a500 7168 --suffix=-manual
+```
+
+Use `020` for the 68020. For cached 68030 use
+`python3 tools/w3_measure_030.py 0 --suffix=-manual` and then mask `3072`.
+Each suffix must be new. These helpers intentionally require the frozen hash;
+use the generic procedure when developing a different binary. Never overlap
+controllers/captures. The helpers retain models’ input groups, byte audits,
+250 slow-CPU trace fields, actual swap clocks and dashboard-event censuses.
+Cached timings use beam clocks and a separate 20-field DMA observation.
+
+
 ## W2 individual measurements
 
 The inline normalization candidate at `sim:38c82` is available as developer/VERIFY
@@ -113,7 +210,8 @@ until flight; it enables neither arithmetic twins nor scripted banking.
 
 The local combined-run helper records the longer swap-rate comparison and its
 census: `python3 tools/w2_combined_measure.py --machine a500 --mask 60` (or mask 0).
-Its output directories must not already exist; use `--suffix=-manual` for another
+That historical helper requires the recorded W2 revision/hash, not the newer W3
+binary. Its output directories must not already exist; use `--suffix=-manual` for another
 pair. Use `--machine 020` or `030` for the retained faster-CPU configurations; use mask 56 on 030.
 The cached-68030 helper uses inclusive routine wall clocks and DMA traces, not
 instruction-cycle claims. Never run two helpers concurrently. Require at least
@@ -547,7 +645,7 @@ Calls mean entries reconstructed in this capture, not lifetime counts.
 | `sim:$3afbe` | 3.90% | 3.90% | 1,446 | Coordinate transformation, including multiply/shift paths |
 | `sim:$3b41a` | 3.61% | 28.13% | 606 | Geometry-processing caller; substantial work is in its callees |
 | `sim:$38dcc` | 2.51% | 6.41% | 2,153 | Geometry helper calling the transformation routine |
-| `sound:$1b1e` | 2.43% | — | 325 | Sound-driver routine; exact role not yet named |
+| `sound:$1b1e` | 2.43% | — | 325 | Alternating 224-byte sample-buffer refill |
 | `sim:$2ea28` | 2.17% | — | 388 | Drawing code; semantic label still provisional |
 | `sim:$2fc68` | 2.15% | — | 71 | Clipped blitter rectangle setup and polling |
 | `sim:$30572` | 2.12% | 2.11% | 94 | Bitmap blitter setup, clipping and waits |

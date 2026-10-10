@@ -118,6 +118,9 @@ sound_div_expected:
 sound_div_fast:
 	SOUND_DIV_QUOTIENT
 sound_div_fast_end:
+	IFNE sound_div_fast_end-sound_div_fast-10
+	FAIL "S3 must fit the original ten-byte range"
+	ENDC
 	rts
 
 	IFD VERIFY
