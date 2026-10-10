@@ -126,6 +126,16 @@ This extends render-schedule coverage; it is neither a performance workload nor
 proof that the final debt is sustainable. The requested 250-field capacity
 measurements and complete gameplay/global-state acceptance remain open.
 
+The subsequent unchanged `9f72992c…` bank/fire correctness pair passes identical
+acquisition-deadline replay and all 40 equal-tick input snapshots. Complete player
+records, 1,332 registered prefixes, primary/shared-list order and lifecycle events
+match with 43 draws versus none. The 39 updates span 243 fields / 287 CIA ticks
+with drawing (four ticks of final debt), and 239 fields / 283 CIA ticks without
+(zero debt). These are controlled fixtures, not a full-bundle FPS measurement.
+Shared allocation differences remain in the identified sound word and the
+rendering-only message background; 924 global bytes remain explicit in the final
+raw inventory. Combat outcomes and broader gameplay acceptance are still open.
+
 ## W6 coherent clock-boundary capacity checkpoint
 
 VERIFY build `9f72992c…` adds transaction markers for debugger observations of

@@ -2003,3 +2003,60 @@ python3 R/RedBaron/tools/rectangle_scratch.py tmp/dev/tmp/prof/w6-transaction-ca
 All 177 host tests pass. Five new cases cover both caller paths, prior-scratch
 input aliasing, premature reads, unknown returns and incomplete lifetimes.
 There is no slave change or new FPS measurement in this classification.
+
+
+## Equal-tick bank/fire input checkpoint
+
+The unchanged VERIFY build `9f72992c…` now has a paired cached-68030 capture with
+the four-transition keyboard fixture, ordinary rendering versus no rendering:
+`tmp/dev/tmp/prof/w6-controls-owner-030/` and
+`tmp/dev/tmp/prof/w6-controls-owner-none-030/`. CUSTOM2 is 8192 (the scheduler
+also enables its W5 pacing prerequisites). CUSTOM5 selects deferred activation
+and the keyboard observer/fixture, plus no-render only in the second run.
+These are controlled correctness fixtures, not full-bundle performance workloads.
+
+Initial contents of all four executable segments, h3, the complete player record,
+registries and all 105 allocations / 243,855 bytes match. The first Right press
+is acquired before flight ownership activates. Its independent acquisition-clock
+tuple marks it held-only; its queued key includes the modal flag. Treating all
+four fixture acquisitions as active-flight commands would be incorrect. The
+Right release and Fire press/release have identical deadlines in both runs,
+respectively 10, 27 and 45 CIA ticks after the initial world-clock boundary.
+
+The new `world_controls.py` verifies the queue against acquisition timestamps
+and clock-owner tuples, then independently replays event deadlines, held keys
+and at-most-one command pop per world tick. Both captures pass that replay and
+match all 40 input snapshots. Right is held at completed tick 1, then released;
+Fire is held at ticks 4–6. All four transitions are consumed, with exactly one
+active-flight command pop (Fire). The early held-only Right transition does not
+produce a one-shot command. No acquisition timestamps are adjusted to make the
+runs agree, and the full 128-byte held bitmap is compared.
+
+At every equal tick, complete 280-byte player records, all 1,332 registered
+26-byte prefixes, primary-registry order, active shared-display-list order/count
+and lifecycle events match. All shared allocation differences across the window
+are confined to the low byte of payload word 344 in sound contexts 0–2, verified
+against `h3:0a184`. The 1,800-byte message-background payload appears only with
+drawing from tick 32. Raw differences remain in the report; the final h3 inventory
+contains 924 changed bytes. This is not a blanket full-world-state verdict.
+
+Both runs complete 39 world updates. Ordinary rendering produces 43 draws over
+243 PAL fields / 287 CIA ticks and ends with four unprocessed CIA ticks; no-render
+uses 239 fields / 283 CIA ticks and ends with zero debt. Every consecutive funding
+interval passes. This extends render-schedule correctness to bank/fire input;
+it does not establish hit/near-miss outcomes, projectile collision correctness,
+stall/landing behavior, sustained capacity or smooth 50 FPS.
+
+Reproduce the retained comparison:
+
+```sh
+python3 R/RedBaron/tools/world_controls.py tmp/dev/tmp/prof/w6-controls-owner-030 tmp/dev/tmp/prof/w6-controls-owner-none-030 --out tmp/dev/tmp/prof/w6-controls-owner-none-030/controls-comparison.json
+python3 R/RedBaron/tools/world_comparison.py tmp/dev/tmp/prof/w6-controls-owner-030 tmp/dev/tmp/prof/w6-controls-owner-none-030 --out tmp/dev/tmp/prof/w6-controls-owner-none-030/heap-inventory.json
+```
+
+All 183 host tests pass, including six input-history tests covering wrap,
+acquisition disagreement, overflow/unconsumed events, differing builds or
+consumption, explicit preflight ownership, and independent timestamp replay.
+The final live endpoint passes native counters 426/512/638/133, terrain/cache/list
+cases 2/1/2, all 54 timing/pacing targets and ten disabled ranges. Both owned
+emulators were quit. No slave source or release binary changes in this checkpoint.
