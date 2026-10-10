@@ -43,6 +43,8 @@
    automation, synthetic test fixtures or startup self-tests
  - launch the existing game icon; use Return to advance the opening screens
  - open Ctrl-G and select A4000 for 50 Hz physics; PAL is required
+ - the simulation change takes effect on the NEXT race. Close the dialog,
+   acknowledge the notice, then choose Re-Start Driving in the replay menu
  - set graphics detail to maximum in the same dialog; cursor keys drive
  - CUSTOM3=0 enables independent simulation timing (the default in this pack)
  - CUSTOM3=1 restores legacy timing and the original Normal/A2500 choices;
