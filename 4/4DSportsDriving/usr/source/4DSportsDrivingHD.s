@@ -202,6 +202,7 @@ patch_main
 	bsr sim_score_rank_selftest
 	bsr sim_score_display_selftest
 	bsr sim_score_file_selftest
+	bsr sim_score_open_selftest
 	IFD SIM_SCORE_IO_TEST
 	bsr sim_score_io_selftest
 	ENDC
@@ -371,6 +372,10 @@ pl_main
     PL_PSS $3E02,sim_score_insert_stub,4
     PL_PSS $4028,sim_score_save_stub,2
     PL_PSS $3558,sim_score_top_guard_stub,18
+    PL_PS $5F56,sim_score_autocreate_stub
+    IFD SIM_SCORE_AUTOCREATE_TEST
+    PL_P $5F66,sim_score_autocreate_test_return_stub
+    ENDC
     IFD SIM_SCORE_INSERT_TEST
     PL_PSS $3F16,sim_score_insert_test_finish_stub,2
     PL_PSS $3FB0,sim_score_insert_test_reject_stub,2
@@ -722,6 +727,20 @@ sim_score_insert_test_finish_stub:
  adda.l #sim_score_insert_test_finish-sim_score_insert_test_finish_stub,a0
  movem.l a0,4(sp)
  movem.l (sp)+,a0
+ rts
+ ENDC
+sim_score_autocreate_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_score_autocreate_stub(pc),a0
+ adda.l #sim_score_autocreate-sim_score_autocreate_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
+ IFD SIM_SCORE_AUTOCREATE_TEST
+; Terminal fixture replaces the eligibility continuation with a return to
+; the controlled caller. The complete load/fallback/disable branch ran first.
+sim_score_autocreate_test_return_stub:
  rts
  ENDC
 sim_score_top_guard_stub:

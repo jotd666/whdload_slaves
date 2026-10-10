@@ -497,6 +497,11 @@ sim_score_load_fixture:
  lea sim_score_load_fixture(pc),a0
  adda.l #sim_score_load_test_result-sim_score_load_fixture,a0
  move.l d0,(a0)
+ IFD SIM_SCORE_AUTOCREATE_TEST
+ lea sim_score_load_fixture(pc),a0
+ adda.l #sim_score_autocreate_fixture-sim_score_load_fixture,a0
+ jsr (a0)
+ ENDC
  IFD SIM_SCORE_INSERT_TEST
  lea sim_score_load_fixture(pc),a0
  adda.l #sim_score_insert_fixture-sim_score_load_fixture,a0

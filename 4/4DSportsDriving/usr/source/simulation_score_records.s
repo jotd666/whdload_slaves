@@ -1,7 +1,7 @@
 ; Native high-score load/reset integration. Exact times have the SAME physical
 ; row order as A4-$1784. Native A4-$160A maps displayed/saved row order.
 ; Insertion and sorted saving are in simulation_score_insert.s.
-; Exact UI consumers still need their own conversion.
+; Exact UI consumers are in simulation_score_display.s.
 
 ; A0 native .hig name -> D0=0 and private .hix name, or 1 invalid/too long.
 ; Preserve other registers; never modify the caller's native filename.
@@ -48,7 +48,8 @@ sim_score_companion_name:
  movem.l (sp)+,d1-d2/a0-a2
  rts
 
-; A0 filename, A1 native destination (364 bytes), A6 DOS -> D0=0 success,1 failure.
+; A0 filename, A1 native destination (364 bytes), A6 DOS.
+; D0=0 success, 1 object not found, 2 other open/read/length failure.
 ; A bounded replacement for the native whole-file load into 364 allocated bytes.
 ; All other registers preserved. Reuse sidecar staging outside simulation.
 sim_score_native_load:
@@ -58,7 +59,7 @@ sim_score_native_load:
  move.l #1005,d2
  jsr _LVOOpen(a6)
  move.l d0,d4
- beq .failed
+ beq .open_failed
  move.l d4,d1
  lea sim_score_native_load(pc),a3
  adda.l #sim_score_file_buffer-sim_score_native_load,a3
@@ -76,8 +77,16 @@ sim_score_native_load:
  dbra d1,.copy
  moveq #0,d0
  bra .out
-.failed:
+.open_failed:
+ ; IoErr must be read immediately after Open fails. Only object-not-found
+ ; authorizes automatic creation; permissions, devices and bad data do not.
+ jsr _LVOIoErr(a6)
+ cmp.l #205,d0             ; ERROR_OBJECT_NOT_FOUND, DOS V1.3
+ bne .failed
  moveq #1,d0
+ bra .out
+.failed:
+ moveq #2,d0
 .out:
  movem.l (sp)+,d1-d7/a0-a5
  rts
@@ -114,6 +123,8 @@ sim_score_load_hook:
  lea -$1736(a4),a0
  movea.l -$1784(a4),a1
  bsr sim_score_native_load
+ cmp.l #1,d0
+ beq .missing
  tst.l d0
  bne .failed
  movea.l -$1784(a4),a0
@@ -161,11 +172,39 @@ sim_score_load_hook:
  ENDC
  move.l #SIM_SCORE_NATIVE_BYTES,d0
  bra .out
+.missing:
+ lea sim_score_record_status(pc),a0
+ move.l #7,(a0)             ; only this failure permits automatic creation
 .failed:
  moveq #0,d0
 .out:
  movem.l (sp)+,d1-d7/a0-a6
  move.l d0,-6(a5)          ; displaced original instruction
+ rts
+
+
+; $5F56..$5F5C: results fallback reset(kind1), then native TST.B D0.
+; The preceding failed load is not permission to replace an existing file.
+; Recreate the native kind1 call frame only after confirmed object-not-found.
+; Explicit clear-records callers retain their own behavior.
+sim_score_autocreate:
+ movem.l d1-d7/a0-a6,-(sp)
+ lea sim_score_record_status(pc),a0
+ cmp.l #7,(a0)
+ bne .reject
+ move.w #1,-(sp)
+ lea sim_score_autocreate(pc),a0
+ adda.l #tape_game-sim_score_autocreate,a0
+ move.l (a0),a0
+ adda.l #$38f8,a0
+ jsr (a0)
+ addq.l #2,sp
+ bra .out
+.reject:
+ moveq #1,d0
+.out:
+ movem.l (sp)+,d1-d7/a0-a6
+ tst.b d0
  rts
 
 ; $39DC..$39E4: native clear-records save plus its word return assignment.
@@ -212,7 +251,8 @@ sim_score_reset_hook:
  dc.b "4DSCRECS"
  dc.w 1,SIM_SCORE_EXACT_BYTES
 ; Status:0 native-only,1 exact loaded/saved,2 rejected companion,
-; 3 failed native read,4 invalid filename,5 failed save,6 pending exact save.
+; 3 failed native read,4 invalid filename,5 failed save,6 pending exact save,
+; 7 native object not found (automatic creation permitted).
 sim_score_record_status: dc.l 0
 sim_score_record_loads: dc.l 0
 sim_score_record_resets: dc.l 0
@@ -226,3 +266,81 @@ sim_score_companion_guard: dc.l $50415448
 sim_score_reset_test_count: dc.l 0
 sim_score_reset_test_result: dc.l -1
  ENDC
+
+ IFD SIM_SCORE_AUTOCREATE_TEST
+; Run actual result-load and fallback branches with a valid caller local frame.
+sim_score_autocreate_fixture:
+ movem.l d0-a6,-(sp)
+ link a5,#-64
+ clr.b -$13(a5)
+ lea sim_score_autocreate_fixture(pc),a0
+ adda.l #tape_game-sim_score_autocreate_fixture,a0
+ move.l (a0),a0
+ adda.l #$5f46,a0
+ jsr (a0)
+ lea sim_score_autocreate_test_count(pc),a0
+ addq.l #1,(a0)
+ moveq #0,d0
+ move.b -$13(a5),d0
+ move.l d0,4(a0)
+ unlk a5
+ movem.l (sp)+,d0-a6
+ rts
+ even
+ dc.b "4DSCAUTO"
+ dc.w 1,1
+sim_score_autocreate_test_count: dc.l 0
+sim_score_autocreate_test_disabled: dc.l -1
+ ENDC
+
+; Fake DOS vectors exercise the actual Open/IoErr decision without touching
+; files or relying on host filesystem permission mapping under WHDLoad.
+sim_score_open_selftest:
+ movem.l d0-a6,-(sp)
+ lea sim_score_open_test_cases(pc),a2
+ lea sim_score_open_test_passed(pc),a3
+ clr.l (a3)
+ lea sim_score_open_test_base(pc),a6
+ moveq #5,d7
+.case:
+ lea sim_score_open_test_error(pc),a0
+ move.w (a2)+,(a0)
+ lea sim_score_open_test_guard(pc),a1
+ movea.l a1,a0
+ bsr sim_score_native_load
+ cmp.w (a2)+,d0
+ bne .failed
+ cmp.l #$11223344,(a1)
+ bne .failed
+ addq.l #1,(a3)
+ dbra d7,.case
+ movem.l (sp)+,d0-a6
+ rts
+.failed:
+ lea sim_score_open_selftest(pc),a0
+ adda.l #perf_failure-sim_score_open_selftest,a0
+ move.l #29,(a0)
+ illegal
+ bra .failed
+sim_score_open_test_vectors:
+ bra.w sim_score_open_test_ioerr
+ dc.w 0
+ dcb.b 96,0
+ bra.w sim_score_open_test_open
+ dc.w 0
+ dcb.b 24,0
+sim_score_open_test_base:
+sim_score_open_test_open:
+ moveq #0,d0
+ rts
+sim_score_open_test_ioerr:
+ moveq #0,d0
+ move.w sim_score_open_test_error(pc),d0
+ rts
+ even
+ dc.b "4DSCOPEN"
+ dc.w 1,6
+sim_score_open_test_passed: dc.l 0
+sim_score_open_test_error: dc.w 0
+sim_score_open_test_cases: dc.w 205,1,0,2,202,2,212,2,218,2,221,2
+sim_score_open_test_guard: dc.l $11223344
