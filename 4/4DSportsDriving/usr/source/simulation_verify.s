@@ -771,6 +771,22 @@ SIM_FIXTURE_TURN_SECONDS = 3
 .recovery_input:
  ENDC
  ENDC
+ IFD SIM_FIXTURE_LONGITUDINAL
+ ; Common-time handling schedule: throttle [0,2s), coast [2,3s), then
+ ; brake. Bit1 is the native cursor-down input ($371C2), not synthetic drag.
+ ; No steering, gear input or live car-state writes in this scenario.
+ moveq #1,d1
+ move.w -$15fa(a4),d0
+ add.w d0,d0
+ cmp.w -$940(a4),d0
+ bhi .longitudinal_input
+ moveq #0,d1
+ add.w -$15fa(a4),d0
+ cmp.w -$940(a4),d0
+ bhi .longitudinal_input
+ moveq #2,d1
+.longitudinal_input:
+ ENDC
  IFD SIM_FIXTURE_GEARS
  ; One native upshift input at 0.5s, one downshift at 2.0s.
  move.w -$15fa(a4),d0
