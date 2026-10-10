@@ -1,4 +1,4 @@
-; Wide elapsed-time display ABI for four audited call sites. D0 carries the
+; Wide time display ABI for elapsed and completed-result call sites. D0 carries the
 ; full tick sum across native argument pushes; existing stack args stay intact.
 ; Other callers retain the native word ABI until their storage is widened.
 
@@ -141,9 +141,33 @@ sim_time_format_entry:
  cmp.l #$937e,d1
  beq .wide
  cmp.l #$20f08,d1
+ beq .wide
+ ; These native callers still push low words. Their source is the completed
+ ; summary, whose lifetime is independent of live replay restoration.
+ cmp.l #$56b8,d1
+ beq .player
+ cmp.l #$5752,d1
+ beq .penalty
+ cmp.l #$587a,d1
+ beq .opponent
+ cmp.l #$58ba,d1
  bne .native
+.opponent:
+ lea sim_results_summary(pc),a0
+ move.l 8(a0),d0
+ bra .format
+.player:
+ lea sim_results_summary(pc),a0
+ move.l 4(a0),d0
+ sub.l (a0),d0             ; driving time without penalties, as native caller
+ bra .format
+.penalty:
+ lea sim_results_summary(pc),a0
+ move.l (a0),d0
+ bra .format
 .wide:
  move.l 2(sp),d0
+.format:
  move.l 26(sp),a0
  move.w 32(sp),d1
  bsr sim_time_format50
@@ -168,27 +192,21 @@ sim_time_format_entry:
  movem.l (sp)+,a0
  rts
 
-; d0.l unsigned ticks at50Hz, d1.w fractions flag, a0 output (9 bytes).
-; Scratch d0-d3/a0. Preserve the native two-character minute field and the
-; two-digit seconds/hundredths. All supported elapsed totals are <=75000.
+; D0 unsigned 32-bit ticks at 50 Hz, D1 fractions flag, A0 destination.
+; Up to 14 bytes including NUL for the complete unsigned range. The elapsed
+; callers remain <=75000 ticks (9 bytes); result callers use the large native
+; temporary string at -$5B(a5). Scratch D0-D3/A0.
 sim_time_format50:
  move.w d1,d3
- divu #3000,d0
- move.l d0,d1
- swap d1
- and.l #$ffff,d1             ; ticks within this minute
- and.l #$ffff,d0
- bsr .pair
- cmp.b #'0',-2(a0)
- bne .colon
- move.b #' ',-2(a0)
-.colon:
+ move.w #3000,d2
+ bsr .divide
+ bsr .minutes
  move.b #':',(a0)+
  move.l d1,d0
  divu #50,d0
  move.l d0,d1
  swap d1
- and.l #$ffff,d1             ; ticks within this second
+ and.l #$ffff,d1
  and.l #$ffff,d0
  bsr .pair
  tst.w d3
@@ -199,6 +217,54 @@ sim_time_format50:
  bsr .pair
 .end:
  clr.b (a0)
+ rts
+
+; Unsigned long / unsigned word without the 68000 DIVU quotient overflow.
+; D0 quotient, D1 remainder, D2 scratch. Both partial quotients fit a word.
+.divide:
+ move.l d0,-(sp)
+ clr.w d0
+ swap d0
+ divu d2,d0
+ move.w d0,-(sp)
+ move.w 4(sp),d0
+ divu d2,d0
+ move.l d0,d1
+ swap d1
+ and.l #$ffff,d1
+ and.l #$ffff,d0
+ move.w (sp)+,d2
+ swap d2
+ clr.w d2
+ or.l d2,d0
+ addq.l #4,sp
+ rts
+.minutes:
+ cmp.l #100,d0
+ bhs .many
+ bsr .pair
+ cmp.b #'0',-2(a0)
+ bne .minutes_done
+ move.b #' ',-2(a0)
+.minutes_done:
+ rts
+.many:
+ movem.l d1/d3,-(sp)
+ moveq #0,d3
+.digits:
+ moveq #10,d2
+ bsr .divide
+ add.w #'0',d1
+ move.w d1,-(sp)
+ addq.w #1,d3
+ tst.l d0
+ bne .digits
+.emit:
+ move.w (sp)+,d2
+ move.b d2,(a0)+
+ subq.w #1,d3
+ bne .emit
+ movem.l (sp)+,d1/d3
  rts
 .pair:
  divu #10,d0
@@ -212,9 +278,9 @@ sim_time_format50:
 
  even
  dc.b "4DTIMET!"
- dc.w 2,31
+ dc.w 3,37
 sim_time_passed: dc.l 0
-sim_time_test_buffer: dcb.b 10,0
+sim_time_test_buffer: dcb.b 16,0
 sim_time_cases:
  dc.l 0
  dc.w 0
@@ -320,15 +386,39 @@ sim_time_cases:
  dc.w 1
  dc.b "43:41.40",0
  even
+ dc.l $000493e0
+ dc.w 0
+ dc.b "100:00",0
+ even
+ dc.l $000493e0
+ dc.w 1
+ dc.b "100:00.00",0
+ even
+ dc.l $004aff6a
+ dc.w 1
+ dc.b "1638:21.00",0
+ even
+ dc.l $005c2462
+ dc.w 1
+ dc.b "2012:52.52",0
+ even
+ dc.l $0bb80000
+ dc.w 1
+ dc.b "65536:00.00",0
+ even
+ dc.l $ffffffff
+ dc.w 1
+ dc.b "1431655:45.90",0
+ even
 sim_time_selftest:
  movem.l d0-a6,-(sp)
  lea sim_time_cases(pc),a2
- moveq #25,d7
+ moveq #31,d7
 .case:
  move.l (a2)+,d0
  move.w (a2)+,d1
  lea sim_time_test_buffer(pc),a0
- move.b #$5a,9(a0)
+ move.b #$5a,15(a0)
  bsr sim_time_format50
  lea sim_time_test_buffer(pc),a0
 .compare:
@@ -343,7 +433,7 @@ sim_time_selftest:
  addq.l #1,a2
 .aligned:
  lea sim_time_test_buffer(pc),a0
- cmp.b #$5a,9(a0)
+ cmp.b #$5a,15(a0)
  bne .failed
  lea sim_time_passed(pc),a0
  addq.l #1,(a0)

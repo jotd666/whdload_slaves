@@ -319,7 +319,47 @@ sim_history_rotation_return:
  rts
  ENDC
 
+ IFD SIM_RESULTS_DISPLAY_TEST
+; Synthetic formatter-ABI fixture. Enter an actual native result call site
+; with its original low-word pushes and stop externally at the return address.
+; This is terminal test state, not a live race outcome or full UI test.
+sim_results_display_fixture:
+ cmp.w #160,-$940(a4)
+ bne .done
+ lea sim_results_display_fixture(pc),a0
+ adda.l #sim_results_summary-sim_results_display_fixture,a0
+ move.l #4915050,(a0)+
+ move.l #4990050,(a0)+
+ move.l #196608000,(a0)+
+ clr.l (a0)
+ move.w #4915050&$ffff,-$2e8(a4)
+ move.w #4990050&$ffff,-$2f0(a4)
+ move.w #196608000&$ffff,-$2ee(a4)
+ lea sim_results_display_buffer+$5b(pc),a5
+ move.l tape_game(pc),a0
+ IFEQ SIM_RESULTS_DISPLAY_TEST-1
+ adda.l #$56a2,a0
+ ENDC
+ IFEQ SIM_RESULTS_DISPLAY_TEST-2
+ adda.l #$5742,a0
+ ENDC
+ IFEQ SIM_RESULTS_DISPLAY_TEST-3
+ adda.l #$586a,a0
+ ENDC
+ IFEQ SIM_RESULTS_DISPLAY_TEST-4
+ adda.l #$58aa,a0
+ ENDC
+ jmp (a0)
+.done:
+ rts
+ even
+ dc.b "4DRFMTFX"
+sim_results_display_buffer: dcb.b 16,$5a
+ ENDC
 sim_fixture_before:
+ IFD SIM_RESULTS_DISPLAY_TEST
+ bsr sim_results_display_fixture
+ ENDC
  IFD SIM_HISTORY_ROTATION_TEST
  bsr sim_history_rotation_fixture
  ENDC
