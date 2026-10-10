@@ -2354,3 +2354,37 @@ All 200 host tests pass. Static audits retain 64 ranges / 121 patch destinations
 with zero errors and their existing indirect-target limitation. Normal and
 developer binaries retain their W5 hashes. Only the VERIFY physics fixture and
 its analysis tooling changed; the 225-unit W6 scheduler is unchanged.
+
+
+## Native rotation quantization investigation
+
+The banked physics discrepancy has a confirmed per-update quantization source,
+although its complete trajectory contribution is not yet isolated. Native
+`sim:18ba2` calls `sim:193d0`, a stub for the matrix-to-angle converter at
+`sim:3688e`. The converter takes matrix word 5, discards its low five magnitude
+bits at `sim:368aa`, looks up the pitch table at `sim:37d5a`, then scales the
+angle by 16 at `sim:368c4`. Its other angles use `sim:38a12`: a nine-bit integer
+ratio selects `sim:3855e`'s atan table, with explicit cardinal/diagonal cases,
+quadrant reflections and a final left shift by four at `sim:38aa2`.
+Those converted angles therefore occupy a 16-unit grid. Final aircraft headings
+can receive an additional scalar correction afterward at `sim:18c3e`, so the
+claim is about conversion output, not every stored final angle.
+
+`angle_quantization.py` independently models these integer/table operations and
+checks observed input/output registers inside native world-update boundaries.
+It verifies the original executable hash, quantizing opcodes and source tables;
+traces exclude the capture's established IRQ stack. Across all six chunks of
+`w6-current-capacity-a500` (frozen slave `eb743015…`), 127 pitch conversions and
+602 atan calls match exactly. Inputs before the first observed world entry are
+not counted. This uses retained native execution and adds no emulator or slave
+instrumentation. All 203 host tests pass, including sign/quadrant, ratio-index,
+cardinal/diagonal and discarded-matrix-bit cases.
+
+The AND masks at `sim:18c68`, `18c76` and `18c86` are change-detection tests;
+they do not themselves round and store the aircraft angles. The actual table
+conversion above is the observed quantization mechanism. More small steps mean
+more conversions and feedback, so a smaller-step path is not an exact golden
+trajectory for this native integer engine. This is a reason to classify the
+banking result carefully, not permission to accept its whole discrepancy as
+rounding. Control response, force integration, collision outcomes and the full
+physics matrix remain open. No timing or physics patch changed in this audit.

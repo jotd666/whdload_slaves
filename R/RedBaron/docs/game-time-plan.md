@@ -203,6 +203,12 @@ open pending classification of control/force integration and per-step rounding;
 no scheduler quantum change has been made. See `w6-verification.md`, “Constant-bank
 small-step reference,” for the frozen build and reproduction details.
 
+The follow-up native audit confirms per-update matrix-to-angle quantization:
+127 pitch conversions and 602 atan calls match the integer/table model. This
+establishes one source of step-count sensitivity, not the full 1.7192% trajectory
+error. Keep the physics gate open; see the rotation investigation in
+`w6-verification.md`. No tolerance or quantum change is inferred from this audit.
+
 ## Acceptance matrix and decision gates
 
 - **Arithmetic:** exact scheduler model/twin, both clock remainders, counter
