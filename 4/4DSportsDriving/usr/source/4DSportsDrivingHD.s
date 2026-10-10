@@ -32,6 +32,26 @@
 
 ;============================================================================
 
+; Startup checks are independent of ordinary input and per-step fixtures.
+ IFND SIM_STARTUP_TESTS
+SIM_STARTUP_TESTS = 1
+ ENDC
+ IFLT SIM_STARTUP_TESTS
+ FAIL "SIM_STARTUP_TESTS must be 0 or 1"
+ ENDC
+ IFGT SIM_STARTUP_TESTS-1
+ FAIL "SIM_STARTUP_TESTS must be 0 or 1"
+ ENDC
+ IFEQ SIM_STARTUP_TESTS
+ IFND SIM_MANUAL
+ IFND SIM_LIVE_DRIVE
+ IFND SIM_FIXTURE
+ FAIL "Disabling startup tests requires manual, live or fixture development mode"
+ ENDC
+ ENDC
+ ENDC
+ ENDC
+
  IFD SIM_MANUAL
  IFND VERIFY
  FAIL "SIM_MANUAL requires the development VERIFY build"
@@ -242,6 +262,7 @@ patch_main
 	adda.l #sim_camera_prepare-patch_main,a0
 	jsr (a0)
 	ENDC
+	IFNE SIM_STARTUP_TESTS
 	IFD SIM_PHYSICS
 	lea patch_main(pc),a0
 	adda.l #sim_physics_selftest-patch_main,a0
@@ -276,6 +297,7 @@ patch_main
 	lea patch_main(pc),a0
 	adda.l #sim_time_selftest-patch_main,a0
 	jsr (a0)
+	ENDC
 	ENDC
 	ENDC
 	IFD SIM_MANUAL
@@ -1331,12 +1353,18 @@ tape_restart_result_stub:
 	include "simulation_preferences.s"
 	ENDC
 	include "simulation_score_file.s"
+ IFNE SIM_STARTUP_TESTS
 	include "simulation_score_file_verify.s"
+ ENDC
 	include "simulation_score_records.s"
 	include "simulation_score_insert.s"
+ IFNE SIM_STARTUP_TESTS
 	include "simulation_score_insert_verify.s"
+ ENDC
 	include "simulation_score_display.s"
+ IFNE SIM_STARTUP_TESTS
 	include "simulation_score_display_verify.s"
+ ENDC
 	include "simulation_a4000.s"
 	include "simulation_results.s"
 	include "simulation_results_ui.s"
@@ -1348,7 +1376,9 @@ tape_restart_result_stub:
 	include "simulation_time.s"
 
 	ENDC
+ IFNE SIM_STARTUP_TESTS
 	include "simulation_physics_verify.s"
+ ENDC
  IFD SIM_A4000
 	include "simulation_replay_file.s"
  include "simulation_replay_io.s"
@@ -1391,7 +1421,9 @@ tape_restart_result_stub:
  include "simulation_sound.s"
  include "simulation_auxiliary.s"
  include "simulation_auxiliary_native_verify.s"
+ IFNE SIM_STARTUP_TESTS
  include "simulation_auxiliary_verify.s"
+ ENDC
  ; Separate input storage: native bulk layout reserves only 12,000 bytes.
  ; Keep at the end so it cannot push code/table PC-relative references apart.
  even
@@ -1399,8 +1431,10 @@ tape_restart_result_stub:
  dc.l 30000
 sim_history_inputs: dcb.b 30000,0
  dc.b "4DGUARD!"
+ IFNE SIM_STARTUP_TESTS
 sim_results_test_arena: dcb.b $1660,0
  include "simulation_results_ui_cases.s"
+ ENDC
  IFD SIM_REPLAY_MENU
  even
  dc.l $4d4e5531
@@ -1449,9 +1483,11 @@ sim_replay_io_readback: dcb.b SIM_REPLAY_BYTES+2,0
  ENDC
  ENDC
  ENDC
+ IFNE SIM_STARTUP_TESTS
  IFD SIM_SCHEDULE
  even
  dcb.b $1738,0
 sim_schedule_replay_native: dcb.b $a9e,0
+ ENDC
  ENDC
 	END

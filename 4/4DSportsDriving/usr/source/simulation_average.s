@@ -60,6 +60,7 @@ sim_average_divide:
  moveq #0,d2
  rts
  even
+ IFNE SIM_STARTUP_TESTS
  dc.b "4DAVGST!"
  dc.w 1,30
 sim_average_passed: dc.l 0
@@ -246,3 +247,5 @@ sim_average_selftest:
  move.l #24,(a0)
  illegal
  bra .failed
+
+ ENDC

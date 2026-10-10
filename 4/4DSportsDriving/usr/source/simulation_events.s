@@ -128,6 +128,7 @@ sim_events_average_divisor:
  movem.l (sp)+,a0
  rts
  even
+ IFNE SIM_STARTUP_TESTS
  dc.b "4DEVNTST"
  dc.w 1,8
 sim_events_passed: dc.l 0
@@ -250,3 +251,5 @@ sim_events_selftest:
  move.l #23,(a0)
  illegal
  bra .failed
+
+ ENDC

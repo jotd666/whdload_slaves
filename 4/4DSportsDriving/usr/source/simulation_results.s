@@ -107,6 +107,7 @@ sim_results_opponent:
  dc.w 3,SIM_TIME_STATE_BYTES
 sim_results_state: dcb.b SIM_TIME_STATE_BYTES,0
 
+ IFNE SIM_STARTUP_TESTS
  dc.b "4DRESTST"
  dc.w 1,10
 sim_results_passed: dc.l 0
@@ -207,6 +208,8 @@ sim_results_selftest:
  illegal
  bra.s .failed
 
+ ENDC
+
 ; $116AA copies the result summary only when the original bit-2 replay gate
 ; permits it. Preserve the same ownership for wide values: seeking a replay
 ; restores sim_results_state, but must not overwrite the completed result.
@@ -238,6 +241,7 @@ sim_results_summary_copy:
  dc.b "4DRSUMRY"
  dc.w 3,SIM_TIME_STATE_BYTES
 sim_results_summary: dcb.b SIM_TIME_STATE_BYTES,0
+ IFNE SIM_STARTUP_TESTS
  dc.b "4DRSUMST"
  dc.w 3,3
 sim_results_summary_passed: dc.l 0
@@ -317,3 +321,5 @@ sim_results_summary_selftest:
  move.l #21,(a0)
  illegal
  bra .failed
+
+ ENDC

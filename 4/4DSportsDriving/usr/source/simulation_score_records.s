@@ -293,6 +293,7 @@ sim_score_autocreate_test_count: dc.l 0
 sim_score_autocreate_test_disabled: dc.l -1
  ENDC
 
+ IFNE SIM_STARTUP_TESTS
 ; Fake DOS vectors exercise the actual Open/IoErr decision without touching
 ; files or relying on host filesystem permission mapping under WHDLoad.
 sim_score_open_selftest:
@@ -344,3 +345,5 @@ sim_score_open_test_passed: dc.l 0
 sim_score_open_test_error: dc.w 0
 sim_score_open_test_cases: dc.w 205,1,0,2,202,2,212,2,218,2,221,2
 sim_score_open_test_guard: dc.l $11223344
+
+ ENDC

@@ -117,6 +117,7 @@ sim_sound_pending: dc.w 0
 sim_sound_published: dc.l 0
 sim_sound_played: dc.l 0
  dc.l $41554447            ; AUDG
+ IFNE SIM_STARTUP_TESTS
  dc.b "4DAUDTST"
  dc.w 1,42
 sim_sound_passed: dc.l 0
@@ -180,3 +181,5 @@ sim_sound_selftest:
  move.l #36,(a0)
  illegal
  bra.s .failed
+
+ ENDC

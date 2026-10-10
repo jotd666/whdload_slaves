@@ -70,6 +70,7 @@ sim_history_seek_bound:
  rts
 
  even
+ IFNE SIM_STARTUP_TESTS
  dc.b "4DCAPACT"
  dc.w 1,16
 sim_capacity_passed: dc.l 0
@@ -162,3 +163,5 @@ sim_capacity_selftest:
  move.l #17,(a0)
  illegal
  bra.s .failed
+
+ ENDC

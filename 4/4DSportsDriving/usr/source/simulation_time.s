@@ -292,6 +292,7 @@ sim_time_format50:
  rts
 
  even
+ IFNE SIM_STARTUP_TESTS
  dc.b "4DTIMET!"
  dc.w 3,37
 sim_time_passed: dc.l 0
@@ -473,3 +474,5 @@ sim_time_selftest:
 
 sim_time_cache_cases:
  dc.l 0,0,65534,65534,65535,0,65536,1,75000,9465
+
+ ENDC

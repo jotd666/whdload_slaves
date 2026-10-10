@@ -399,6 +399,7 @@ sim_schedule_reset_history:
  dc.b "4DSCHEDL"
  dc.w 1,0
 sim_schedule_resets: dc.l 0
+ IFNE SIM_STARTUP_TESTS
  dc.b "4DSCHTST"
  dc.w 1,2
 sim_schedule_reset_passed: dc.l 0
@@ -506,6 +507,8 @@ sim_schedule_reset_selftest:
  illegal
  bra.s .failed
 
+ ENDC
+
 ; Common native nested-dialog entry, after its LINK. Closing this gate keeps
 ; CIA production suppressed (active remains set) while VBL capture is paused.
 ; Native modal depth is incremented later by the original routine.
@@ -569,6 +572,7 @@ sim_schedule_modal_dropped: dc.l 0
 sim_schedule_modal_fields: dc.l 0
 
  even
+ IFNE SIM_STARTUP_TESTS
  dc.b "4DSCHMT!"
  dc.w 1,4
 sim_schedule_modal_passed: dc.l 0
@@ -808,3 +812,5 @@ sim_schedule_replay_gates: dc.w $42,$44,$a9a,$a9c
  dc.b "4DRPLCLK"
  dc.w 2,19
 sim_schedule_replay_passed: dc.l 0
+
+ ENDC

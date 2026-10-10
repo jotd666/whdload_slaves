@@ -206,6 +206,7 @@ sim_history_failed:
  illegal
  bra.s sim_history_failed
 
+ IFNE SIM_STARTUP_TESTS
 ; Save every slot with distinct private/RNG payload, restore in reverse order,
 ; rotate and check every retained payload, then invalidate all on race reset.
 sim_history_selftest:
@@ -366,3 +367,5 @@ sim_history_selftest:
  addq.l #1,(a0)
  movem.l (sp)+,d0-a6
  rts
+
+ ENDC

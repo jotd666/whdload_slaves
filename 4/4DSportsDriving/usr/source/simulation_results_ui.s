@@ -129,6 +129,7 @@ sim_results_ui_player_beq42:
 .done:
  rts
  even
+ IFNE SIM_STARTUP_TESTS
  dc.b "4DRUITST"
  dc.w 1,204
 sim_results_ui_passed: dc.l 0
@@ -235,3 +236,5 @@ sim_results_ui_caught:
  move.l #22,(a0)
  illegal
  bra .failed
+
+ ENDC

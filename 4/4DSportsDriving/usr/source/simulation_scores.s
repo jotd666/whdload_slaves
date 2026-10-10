@@ -70,6 +70,7 @@ sim_score_compare:
  rts
 
  even
+ IFNE SIM_STARTUP_TESTS
  dc.b "4DSCORE!"
  dc.w 1,89
 sim_score_passed: dc.l 0
@@ -249,3 +250,5 @@ sim_score_selftest:
  move.l #25,(a0)
  illegal
  bra .failed
+
+ ENDC
