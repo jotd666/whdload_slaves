@@ -10,8 +10,10 @@ from pathlib import Path
 from render_mutations import Snapshot, region, spans
 from presentation_state import symbol
 from pose_history import registry
+from game_heap import allocations, segments
+from time_capacity import interval
 
-def compare_states(l,r,h3):
+def compare_states(l,r,h3,sim=None):
  lp=int.from_bytes(l.read(h3+0x4578,4),'big');rp=int.from_bytes(r.read(h3+0x4578,4),'big')
  out=dict(h3=region(l.read(h3,0xbd0c),r.read(h3,0xbd0c)),player_pointer_equal=lp==rp,
           player=region(l.read(lp,0x118),r.read(rp,0x118)))
@@ -19,6 +21,26 @@ def compare_states(l,r,h3):
  out['registry_equal']=lreg==rreg
  out['object_prefix_differences']=[dict(index=j,pointer=p,changes=region(l.read(p,26),r.read(p,26))) for j,p in enumerate(lreg) if p in rreg and l.read(p,26)!=r.read(p,26)]
  out['registered_objects']=len(lreg)
+ if sim is not None:
+  ls=segments(l.read,sim);rs=segments(r.read,sim)
+  if ls!=rs:raise ValueError('Different sim segment layouts')
+  out['segments']=[dict(index=i,address=p,size=n,changes=region(l.read(p,n),r.read(p,n)))
+                   for i,(p,n) in enumerate(ls)]
+ la=allocations(l.read,h3);ra=allocations(r.read,h3)
+ out['allocation_chain_equal']=la==ra
+ out['allocation_count']=len(la)
+ out['allocation_bytes']=sum(size for _,size in la)
+ out['allocation_differences']=[]
+ right_allocations=dict(ra)
+ for address,size in la:
+  if right_allocations.get(address)!=size:
+   out['allocation_differences'].append(dict(address=address,size=size,layout_changed=True))
+   continue
+  changes=region(l.read(address,size),r.read(address,size))
+  if changes['changed_bytes']:
+   out['allocation_differences'].append(dict(address=address,size=size,changes=changes))
+ out['right_only_allocations']=[dict(address=p,size=n) for p,n in ra if (p,n) not in la]
+
  if [(b,len(d)) for b,d in l.banks] != [(b,len(d)) for b,d in r.banks]:
   raise ValueError('Different captured RAM maps')
  out['ram']=[]
@@ -45,6 +67,22 @@ def same_tick(left,right,header):
     return tick
 
 
+def clock_layout(base, lines, sim):
+    at=lambda name: base+symbol(lines,name)
+    state=at('time_loop_state')
+    fields=[('field',4,at('pace_state')),('cia',4,sim+0x30006),
+            ('active',4,state+40),('cursor',4,state+20),('due',2,state+24),
+            ('started',4,state+28),('completed',4,at('time_pose_header')+4),
+            ('draws',4,state+36),('paused',4,state+44),
+            ('divisor',2,at('time_rate_queue')+8)]
+    fields += [(f'phase{i}',4,state+i*4) for i in range(4)]
+    return fields
+
+
+def clock_snapshot(ram, fields):
+    return {name:int.from_bytes(ram.read(address,size),'big') for name,size,address in fields}
+
+
 def inventory(left,right):
     le,lm,li,lb,ll=load(left)
     re,rm,ri,rb,rl=load(right)
@@ -52,22 +90,32 @@ def inventory(left,right):
         raise ValueError('Different capture builds')
     if not lm['h3']==rm['h3']==li['h3']==ri['h3'] or lb!=rb:
         raise ValueError('Different allocation layout; pointers are not normalized')
+    sim=le['entry']['sim']
+    if sim!=re['entry']['sim']:raise ValueError('Different sim load bases')
     h3=lm['h3'];header=lb+symbol(ll,'time_pose_header');loop=lb+symbol(ll,'time_loop_state')
-    initial=compare_states(Snapshot(left,li['banks']),Snapshot(right,ri['banks']),h3)
+    initial=compare_states(Snapshot(left,li['banks']),Snapshot(right,ri['banks']),h3,sim)
     if len(lm['frames'])!=len(rm['frames']) or not lm['frames']:
         raise ValueError('Missing or unequal boundary sequences')
     rows=[]
+    left_fields=clock_layout(lb,ll,sim);right_fields=clock_layout(rb,rl,sim)
     for lf,rf in zip(lm['frames'],rm['frames']):
         l=Snapshot(left,lf['banks']);r=Snapshot(right,rf['banks'])
         tick=same_tick(l,r,header)
         if rows and tick!=rows[-1]['tick']+1:
             raise ValueError('Nonconsecutive completed world ticks')
-        row=compare_states(l,r,h3)
+        row=compare_states(l,r,h3,sim)
         row.update(tick=tick,left_draws=int.from_bytes(l.read(loop+36,4),'big'),
                    right_draws=int.from_bytes(r.read(loop+36,4),'big'),
                    lifecycle_equal=lf['lifecycle']==rf['lifecycle'])
+        row['left_clock']=clock_snapshot(l,left_fields)
+        row['right_clock']=clock_snapshot(r,right_fields)
         rows.append(row)
-    return dict(sha256=le['slave_sha256'],initial=initial,rows=rows,
+    funding={}
+    for side in ('left','right'):
+        clocks=[row[side+'_clock'] for row in rows]
+        for before,after in zip(clocks,clocks[1:]):interval(before,after)
+        funding[side]=interval(clocks[0],clocks[-1])
+    return dict(sha256=le['slave_sha256'],initial=initial,rows=rows,funding=funding,
                 limitation='Diagnostic inventory only. No differing bytes excluded; object prefixes are not complete heap state. No whole-gameplay equality claim.')
 
 

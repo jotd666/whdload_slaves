@@ -1610,3 +1610,82 @@ destinations fit their signed words. Four new inventory tests pass. Both owned
 emulators were quit. Next: classify initial differences and complete simulation
 allocation extents, then extend equal-tick comparisons with delayed drawing,
 real input/events and the other acceptance scenarios. W6 remains VERIFY-only.
+
+
+## Complete allocation and executable-state inventory
+
+`game_heap.py` follows the supported sim v1 allocation chain at `h3:04138`.
+The allocator at `sim:2d1ee` adds an eight-byte header at `sim:2d214`, records
+size including that header, links the previous head at `sim:2d22c`, and returns
+the payload eight bytes later. The free path `sim:2d27e–2d2fa` unlinks and frees
+the same extent. The reader rejects cycles, overlapping extents, short headers
+and truncated allocations. It does not infer object lengths from pointer spacing.
+It also follows the four executable segment links and verifies each size against
+the original sim v1 HUNK_HEADER before comparing their entire contents.
+
+This expands `world_comparison.py` beyond active object prefixes: inactive pool
+records, pointed-to model/resource allocations, allocation headers and embedded
+mutable executable data are included. Unknown differences remain in the report.
+Every compared boundary also retains its native clocks, and consecutive intervals
+must satisfy the existing independent exact-funding model. This is a constant-rate,
+nonmodal comparison; the checker rejects rate/pause transitions in these windows.
+
+Reanalysis of the twelve-boundary `8081382d…` captures finds all four executable
+segments and all 105 tracked allocations (243,855 bytes including headers)
+identical at the initial checkpoint. The previously reported 75 differing fast
+RAM bytes therefore do not occur in these tracked allocations or executable
+segments. This establishes the named game's initial allocation/segment equality,
+not equality of every OS/library allocation or peripheral state.
+
+Allocation-chain layout remains equal at every recorded tick. Only two payload
+bytes ever differ in these allocations: the low bytes of the word at offset 344
+in sound contexts 0 and 1 from the table at `h3:0a184`. They are 384-byte payloads,
+allocated by the seven-context initialization at `sim:35c00–35c40`. The original
+sequencer increments the word at `sim:34e9a`/`sim:34f96`, resets it at
+`sim:34eca`/`sim:34f44`, and copies it to the neighbouring saved word at
+`sim:3581c`. These are sound-domain differences at different physical observation
+times, retained rather than normalized away. No sound code is changed.
+All other tracked allocation bytes match across these twelve world boundaries.
+The first and third executable segments still contain differences outside h3;
+they remain explicitly inventoried alongside h3 rather than silently excluded.
+
+Full gameplay equivalence still requires global-state ownership classification,
+ordered gameplay/RNG/event evidence and the input/scene/CPU acceptance matrix.
+Complete allocation coverage is not a substitute for those gates.
+
+
+### Five-second extension and uncovered terrain-cache mutation
+
+The unchanged `8081382d…` binary is also captured at ticks 0–39 in
+`tmp/dev/tmp/prof/w6-state-normal-40-030/` and
+`tmp/dev/tmp/prof/w6-state-none-40-030/`. All 1,271 registered prefixes, complete
+player records and observed lifecycle event order match. Exact funding passes
+at every consecutive boundary. Ordinary rendering completes 39 world updates
+and 52 draws in 242 fields / 286 CIA ticks, ending with three unprocessed CIA
+ticks. No rendering completes the same 39 updates in 239 fields / 283 CIA ticks,
+ending without debt. These are equal-tick diagnostic windows, not 250-field
+performance measurements or sustained capacity acceptance.
+
+The broader allocation inventory exposes two additional differences:
+
+- At tick 32 the ordinary route has a new 1,800-byte payload (1,808 with header),
+  referenced by the message-background table at `h3:044e6`. The native drawing
+  path computes its size at `sim:00962`, allocates at `sim:0096e`, stores the
+  pointer at `sim:0097a`, and fills the saved background at `sim:009ce`. The
+  no-render route never executes this allocation. Do not require identical
+  allocation chains after this point or hide the extra block from the report.
+- At tick 39 a byte at offset 143 in the 199-byte payload rooted at `h3:054da`
+  is FF with rendering and 00 without it. This block is allocated at
+  `sim:0ee14` and assigned to static-object records through their offset-30
+  pointers at `sim:0ef26`. The terrain visibility path writes zero at
+  `sim:0f55c` and FF at `sim:0f572`. These stores are outside the current model
+  write journal. Their nearby static-object model selection writes at
+  `sim:0f58e` and `sim:0f5ae` also need an ownership review.
+
+Apart from the sound words, this is the first differing byte in an allocation
+shared by both runs. It is concrete missing restoration evidence; no assertion
+that it is harmless is made. Next work is to cover the terrain cache and related
+model-selection writes with exact native replay and restoration checks, then
+repeat the comparison. Global scratch/ordering state, RNG and other gameplay
+acceptance gates remain open. The no-render endpoint passes the 51 selected
+hooks, ten disabled ranges and native self-test counts 426/512/638/133.

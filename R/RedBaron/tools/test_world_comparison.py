@@ -34,6 +34,22 @@ class WorldComparisonTests(unittest.TestCase):
         self.assertEqual(result['object_prefix_differences'][0]['changes']['changed_bytes'], 1)
         self.assertEqual(result['ram'][0]['changed_bytes'], 2)
 
+    def test_compares_complete_allocations_and_records_layout_changes(self):
+        left, right = Memory(), Memory()
+        for ram in (left, right):
+            ram.data[0x4138:0x413c] = (0xc400).to_bytes(4, 'big')
+            ram.data[0xc400:0xc408] = (32).to_bytes(4, 'big') + bytes(4)
+        right.data[0xc419] = 9
+        result = compare_states(left, right, 0)
+        self.assertTrue(result['allocation_chain_equal'])
+        self.assertEqual(result['allocation_bytes'], 32)
+        self.assertEqual(result['allocation_differences'][0]['changes']['ranges'][0]['start'], 25)
+        right.data[0xc403] = 16
+        result = compare_states(left, right, 0)
+        self.assertFalse(result['allocation_chain_equal'])
+        self.assertTrue(result['allocation_differences'][0]['layout_changed'])
+        self.assertEqual(result['right_only_allocations'], [dict(address=0xc400, size=16)])
+
     def test_rejects_different_tick(self):
         left, right = Memory(), Memory()
         self.assertEqual(same_tick(left, right, 0), 0)

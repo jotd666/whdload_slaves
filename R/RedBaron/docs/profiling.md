@@ -100,6 +100,16 @@ builds. Services now run only at completed-world boundaries. See
 Consistent gameplay still requires full state/event convergence across rendering
 schedules and sustained nominal execution; retained time debt alone is insufficient.
 
+## W6 equal-tick state comparison
+
+The unchanged `8081382d…` VERIFY build completes the same 39 simulation updates
+with 52 draws in 242 fields and with no draws in 239 fields. Exact funding passes;
+endpoint CIA debt is three and zero ticks respectively. These equal-tick windows
+are diagnostic, not a 250-field FPS comparison. Full allocation comparison finds
+an uncovered terrain visibility-cache mutation at tick 39, so gameplay/state
+isolation acceptance remains open. See `w6-verification.md` for the allocation
+contract, observed message-background allocation and required restoration work.
+
 ## W6 combined A500 capacity checkpoint
 
 The VERIFY build `1a0677e18c874809ae0270549b4efbeaae6d778d4d3e210a6f936fafbca7e1b8`
