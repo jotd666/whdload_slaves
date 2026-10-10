@@ -1689,3 +1689,50 @@ model-selection writes with exact native replay and restoration checks, then
 repeat the comparison. Global scratch/ordering state, RNG and other gameplay
 acceptance gates remain open. The no-render endpoint passes the 51 selected
 hooks, ten disabled ranges and native self-test counts 426/512/638/133.
+
+
+### Terrain visibility and model-selection restoration
+
+VERIFY build `2c04ec3a3620092277d101710bf6c8dd267551a2745d75dd3b17c34e8dd377ff`
+extends the existing reverse write journal to the terrain visibility stores at
+`sim:0f55c` and `sim:0f572`, and the static-object model word at `sim:0f58e`.
+The word is saved before its initial selection, covering the later conditional
+increment at `sim:0f5ae`. The patch deliberately leaves the incoming branch target
+at `sim:0f5b2` intact. Each wrapper replays the original stores and resulting
+condition flags; restoration happens at the existing outer drawing return.
+The hooks remain sim-v1, VERIFY-only CUSTOM2 bit 13.
+
+Two native self-test cases exercise the actual wrappers with signed negative
+indexing, both X states, zero/nonzero model IDs, overlapping visibility writes
+and the subsequent model increment. Each checks the native results and flags,
+then verifies exact reverse restoration. Both pass (`time_model_terrain_result=2`).
+The larger VERIFY image also requires a full-range call to the existing load-segment
+observer; its saved-register envelope and inputs remain intact.
+
+The paired cached-68030 captures are retained in
+`tmp/dev/tmp/prof/w6-terrain-normal-40-030/` and
+`tmp/dev/tmp/prof/w6-terrain-none-40-030/`. They use timing plus W5, deferred
+activation and unchanged Time Scale 40. All four executable segments and all 105
+tracked allocations (243,855 bytes) match initially. Across ticks 0–39, complete
+player records, registry ordering, 1,279 object prefixes and lifecycle event order
+match. The terrain allocation now matches at every boundary, including tick 39.
+All other shared allocation bytes also match apart from the sound-sequencer word
+at payload offset 344 in contexts 0, 1 and 2. The separately identified 1,800-byte
+message-background payload still exists only with drawing from tick 32 onward.
+No differences are removed from the report.
+
+Ordinary drawing completes 39 updates and 52 draws in 242 PAL fields / 286 CIA
+ticks; omitted drawing completes 39 updates in 239 fields / 283 CIA ticks. Final
+unprocessed CIA debt is three and zero ticks respectively. Every consecutive
+boundary passes exact funding. These are equal-tick correctness diagnostics,
+not a 250-field performance claim or sustained simulation-capacity acceptance.
+The final h3 comparison still has 901 differing bytes; global ownership,
+RNG/gameplay events and the wider input/scene/CPU matrix remain open.
+
+Both endpoints pass all 54 selected timing/pacing targets, ten disabled ranges,
+and native core/input/presentation/phase counts 426/512/638/133. All 166 host tests
+pass; static checks report 64 ranges and 121 patch destinations with zero errors
+(subject to the documented indirect-target limits). Normal and developer slaves
+retain their W5 hashes. Both owned emulators were quit. Next is classification of
+remaining executable/global differences and the broader acceptance matrix, not
+promotion of this VERIFY candidate to players.

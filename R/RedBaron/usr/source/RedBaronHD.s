@@ -233,7 +233,10 @@ _cb_dosLoadSeg
 	bsr sound_driver_loadseg
 	IFD VERIFY
 		movem.l d0-a6,-(sp)
-		bsr tape_loadseg
+		lea .tape_base(pc),a0
+.tape_base
+		adda.l #tape_loadseg-.tape_base,a0
+		jsr (a0)
 		movem.l (sp)+,d0-a6
 	ENDC
 	move.l	_resload(pc),a2
@@ -598,6 +601,7 @@ new_DeleteFile:
 	include "time-poses.s"
 	include "time-pose-blend.s"
 	include "time-render.s"
+	include "time-terrain-verify.s"
 	include "time-mouse-ownership-cases.i"
 time_message_log: dcb.b 24*128,0
 fill_twin_before: dcb.b 20*256*2,0

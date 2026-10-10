@@ -102,13 +102,15 @@ schedules and sustained nominal execution; retained time debt alone is insuffici
 
 ## W6 equal-tick state comparison
 
-The unchanged `8081382d…` VERIFY build completes the same 39 simulation updates
-with 52 draws in 242 fields and with no draws in 239 fields. Exact funding passes;
-endpoint CIA debt is three and zero ticks respectively. These equal-tick windows
-are diagnostic, not a 250-field FPS comparison. Full allocation comparison finds
-an uncovered terrain visibility-cache mutation at tick 39, so gameplay/state
-isolation acceptance remains open. See `w6-verification.md` for the allocation
-contract, observed message-background allocation and required restoration work.
+The terrain-restoration VERIFY build `2c04ec3a…` completes the same 39 simulation
+updates with 52 draws in 242 fields and with no draws in 239 fields. Exact funding
+passes; endpoint CIA debt is three and zero ticks respectively. These equal-tick
+windows are diagnostic, not a 250-field FPS comparison. The terrain-cache leak
+found in `8081382d…` is now restored: all shared allocation bytes match apart from
+the identified sound-sequencer counters. Complete player records, 1,279 registered
+prefixes and lifecycle order match across 40 checkpoints. Global-state differences
+and wider gameplay/capacity acceptance remain open. See `w6-verification.md` for
+the allocation contract, native restoration tests and message-background allocation.
 
 ## W6 combined A500 capacity checkpoint
 

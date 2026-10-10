@@ -4,13 +4,16 @@
 ; PERF_RANGE sim:0e1a6 8 bit=13
 ; PERF_RANGE sim:0df3e 8 bit=13
 ; PERF_RANGE sim:0df92 8 bit=13
+; PERF_RANGE sim:0f55c 8 bit=13
+; PERF_RANGE sim:0f56e 8 bit=13
+; PERF_RANGE sim:0f584 14 bit=13
 TIME_MODEL_CAPACITY = 4096
 TIME_MODEL_STRIDE = 8
 
 time_model_install:
 	movem.l d0-a6,-(sp)
 	lea .checks(pc),a3
-	moveq #3,d7
+	moveq #6,d7
 .check
 	move.l (a3)+,d0
 	move.w (a3)+,d1
@@ -42,6 +45,12 @@ time_model_install:
 	dc.w 8,$1401,$4882,$3182,$080e
 	dc.l $df92
 	dc.w 8,$1140,$0004,$1140,$0003
+	dc.l $f55c
+	dc.w 8,$4211,$3b7c,$0001,$ff92
+	dc.l $f56e
+	dc.w 8,$d0ed,$ffb2,$10bc,$00ff
+	dc.l $f584
+	dc.w 14,$7000,$206d,$ffc4,$1028,$0001,$3140,$0002
 .patch:
 	PL_START
 	PL_PSS $e128,time_model_default,4
@@ -49,6 +58,9 @@ time_model_install:
 	PL_PSS $e1a6,time_model_variant,2
 	PL_PSS $df3e,time_model_color,2
 	PL_PSS $df92,time_model_polygon,2
+	PL_PSS $f55c,time_model_terrain_visible,2
+	PL_PSS $f56e,time_model_terrain_hidden,2
+	PL_PSS $f584,time_model_terrain_type,8
 	PL_END
 
 time_model_default:
@@ -103,6 +115,42 @@ time_model_polygon:
 	movem.l (sp)+,d0/a0
 	move.b d0,4(a0)
 	move.b d0,3(a0)
+	rts
+
+; Terrain visibility lives in the allocation rooted at h3:054da. Each
+; static object points to its slice at object+30. Preserve it across a draw.
+time_model_terrain_visible:
+	movem.l d0/a0,-(sp)
+	move.l a1,a0
+	moveq #1,d0
+	bsr time_model_record
+	movem.l (sp)+,d0/a0
+	clr.b (a1)
+	move.w #1,-110(a5)
+	rts
+
+time_model_terrain_hidden:
+	adda.w -78(a5),a0
+	move.l d0,-(sp)
+	moveq #1,d0
+	bsr time_model_record
+	move.l (sp)+,d0
+	move.b #$ff,(a0)
+	rts
+
+; Save before initial model selection. The conditional increment at sim:0f5ae
+; stays native and is covered by this same saved word; its incoming branch at
+; sim:0f5b2 must not be overwritten by a longer patch at the increment itself.
+time_model_terrain_type:
+	moveq #0,d0
+	move.l -60(a5),a0
+	movem.l d0/a0,-(sp)
+	lea 2(a0),a0
+	moveq #2,d0
+	bsr time_model_record
+	movem.l (sp)+,d0/a0
+	move.b 1(a0),d0
+	move.w d0,2(a0)
 	rts
 
 ; a0 destination, d0 byte count (1 or 2). Preserve registers and X. Named
@@ -204,6 +252,7 @@ time_model_selftest:
 	lea time_model_test_data(pc),a0
 	cmpi.l #$12345678,(a0)
 	bne time_model_bad
+	bsr time_model_terrain_selftest
 	clr.w (a4)
 	moveq #1,d0
 	bsr time_model_record
