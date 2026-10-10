@@ -84,8 +84,9 @@ as they were while the release preferences below remain open.
 
 ## Next work
 
-1. **W6 implementation, after approval:** analysis is complete in `game-time.md`;
-   the concrete proposal is `game-time-plan.md`. It recommends fixed 225-unit
+1. **W6 implementation in progress:** analysis is complete in `game-time.md`;
+   the approved plan is `game-time-plan.md`, now including smooth 50 FPS on
+   capable hardware and gameplay speed independent of achieved FPS. It uses 225-unit
    world ticks with independent rendering, timestamped input and retained time
    debt. Controlled combat/AI convergence and actual catch-up capacity are gates
    of implementation, not completed tests. Player timing remains unchanged.
@@ -96,8 +97,8 @@ as they were while the release preferences below remain open.
 
 - Default state of the single Faster rendering splash switch.
 - Whether supplied icons explicitly enable that switch.
-- Approve or revise `game-time-plan.md`: quantum, timed services, three-second
-  messages, defined Time Compress and overload policy.
+- W6 must pass its implementation gates, including simulation independence and
+  smooth 50 FPS on capable hardware; see `w6-verification.md`.
 
 Chip RAM for W1b is approved. W3’s selected exact-output changes are complete; B1–B6 remain separate decisions.
 Until an approved W6 implementation lands, faster frames accelerating the world on

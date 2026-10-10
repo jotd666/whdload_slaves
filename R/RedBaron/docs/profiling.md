@@ -3,7 +3,8 @@
 ## W6 timing analysis
 
 The investigation is complete in `game-time.md`; the proposed fixed-step design
-is in `game-time-plan.md` and awaits approval. No player timing change or new
+is in `game-time-plan.md` and is authorized for implementation, with smooth
+50 FPS added as a requirement. No player timing change or new
 FPS gain is claimed. Retained W5-only A500 world calls average 420,212 inclusive
 cycles (59.24 ms). With proposed 225-unit ticks, the default Time Scale projects
 48.3% world utilization and about 0.98 rendered FPS if other frame costs remain

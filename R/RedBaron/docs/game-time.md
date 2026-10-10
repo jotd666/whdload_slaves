@@ -1,7 +1,8 @@
 # Red Baron game-time investigation
 
-Status: W6 analysis complete; [implementation proposal](game-time-plan.md) awaits user approval. No player game-time change
-is implemented or approved. The original investigation ledger below is retained;
+Status: W6 analysis complete; the user authorized the [implementation plan](game-time-plan.md)
+and added smooth 50 FPS on capable hardware. Implementation is in progress; no
+player game-time change is enabled yet. The original investigation ledger below is retained;
 new results and the proposed implementation contract follow it. VERIFY-only
 experiments deliberately change clocks/initial conditions and are not player fixes.
 
@@ -548,7 +549,9 @@ The analysis is complete at the level needed to approve or revise this prototype
 plan. It does **not** establish full combat convergence, bank/stall accuracy,
 heap-state equivalence or sustained catch-up performance of code that does not
 yet exist. Those are explicit implementation gates; a failure may require changing
-the quantum or doing W7 first. No player timing change has been made or approved.
+the quantum or doing W7 first. The later W6 request authorizes implementation, including the added 50 FPS
+requirement. The experiments above remain evidence for the design, not proof
+of its eventual implementation.
 
 ## Reproduction and validation
 

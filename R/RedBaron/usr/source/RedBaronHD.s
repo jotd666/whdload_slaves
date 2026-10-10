@@ -563,6 +563,7 @@ new_DeleteFile:
 	include "sound-sequence.s"
 	include "sound-driver.s"
 	IFD VERIFY
+	include "time-core.s"
 	include "originals.s"
 	include "mirror-verify.s"
 	include "cache-verify.s"
@@ -577,4 +578,5 @@ fill_twin_after: dcb.b 20*256*2,0
 	include "clip-cases.i"
 	include "projection-cases.i"
 	include "dot-cases.i"
+	include "time-core-cases.i"
 	ENDC

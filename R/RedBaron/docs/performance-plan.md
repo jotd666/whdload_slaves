@@ -866,10 +866,13 @@ The design inventory below records the implementation rationale.
   figure (playbook §8). The self-modified words at `sim:39d4c` are read as data, so they are
   safe with an instruction cache.
 
-### W6. Frame-rate-independent game speed (analysis complete; approval pending)
+### W6. Frame-rate-independent game speed (implementation authorized)
 
 **Current status:** the investigation and scoped experiments are recorded in
-`game-time.md`; `game-time-plan.md` is the concrete proposal for approval.
+`game-time.md`; `game-time-plan.md` is the authorized implementation plan.
+The user additionally requires smooth 50 FPS on capable hardware; achieved FPS
+must not determine simulation speed. This adds presentation interpolation and
+a one-PAL-field publication cap under W6.
 It recommends fixed 225-unit world ticks, explicit input/service ownership and
 retained time debt. Player timing is unchanged. Ground/projectile probes reject
 large-step catch-up; controlled combat/AI convergence remains an implementation

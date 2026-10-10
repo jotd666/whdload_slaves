@@ -1,8 +1,24 @@
 # W6 consistent game speed: proposed implementation
 
-**Approval required before implementation.** This is a design proposal, not a
-player patch. `game-time.md` contains the investigation and measured limits.
-The current player build keeps its original clocks and physics.
+**Implementation authorized; in progress.** The user approved W6 and added
+smooth 50 FPS on capable hardware as an acceptance requirement. `game-time.md` contains the investigation and measured limits.
+The current player build keeps its original clocks and physics until the gates pass.
+
+## Additional accepted requirement: independent simulation and 50 FPS
+
+Achieved render FPS must not determine gameplay speed. W6 retains fixed world
+ticks and adds render interpolation between consecutive world states. On capable
+PAL hardware its publication cap becomes one field (50 FPS), preserving the safe
+swap. On slower hardware drawing yields to due simulation work. Repeated states
+alone do not satisfy the smooth-50-FPS requirement. Interpolation must never feed
+positions, angles or intermediate objects back into physics, collision, AI or RNG.
+
+The presentation implementation must audit every state mutation in the native
+render/camera path, interpolate positions and wrap-aware angles for active objects
+and camera consistently, and preserve discontinuities such as spawn/despawn, view
+changes and teleport/mission transitions. It must retain the original world state
+byte-for-byte after drawing. Measure visual cadence and input latency separately
+from simulation tick rate. All earlier acceptance gates still apply.
 
 ## Recommendation
 
@@ -24,12 +40,9 @@ supported by that scoped evidence, not a claim of convergence for all combat.
 A smaller 100-unit quantum requires roughly 18.34 world updates/second at
 Time Scale 40. The retained A500 world cost alone exceeds that time budget.
 225 leaves room for drawing at the normal setting. Rendering faster than the
-world tick rate initially repeats the latest state; interpolation is a separate
-visual improvement, not permission to change simulation results. This is a visible
-tradeoff on fast machines: at Time Scale 0, 225-unit ticks occur only about
-3.36 times/second, so un-interpolated motion and physics responses can feel coarse
-(up to about 297 ms between ticks). At Time Scale 40 the interval is about
-123 ms. Input acquisition and camera service remain more frequent, but cannot
+world tick rate must interpolate for the accepted 50 FPS target. Interpolation
+adds up to one simulation interval of presentation latency: approximately 297 ms
+at Time Scale 0 (3.36 world ticks/second) and 123 ms at Time Scale 40. Input acquisition and camera service remain more frequent, but cannot
 make the physics react before its next tick. Evaluate that responsiveness before
 release; if unacceptable, revise the quantum/visual interpolation design with
 fresh cost and trajectory evidence rather than hiding the tradeoff.
@@ -54,8 +67,12 @@ duration, or create a tiny final substep merely to consume the remainder.
 The host model proves partition independence of this accounting; it does not
 prove an eventual 68000 implementation's overflow/atomicity handling.
 
-Use a wide intermediate or bounded delta decomposition for multiplication and
-carry. Choose the integer deadline convention explicitly: a tick runs when its
+The native kernel now uses a common denominator LCM(10..80) and a four-long
+world phase. Advance one unprocessed CIA tick at a time and execute its due world
+updates before advancing again. Each F has an exact precomputed increment; no
+phase rounding occurs when F changes. Unprocessed CIA ticks remain debt, so a
+large elapsed interval is not multiplied into a bounded phase accumulator.
+The largest single-tick intermediate, including 8× compression, fits 128 bits. A tick runs when its
 rational deadline has been reached, with at most one CIA-tick observation
 latency. Game tick IDs and input assignment must use that same convention.
 A change of Time Scale closes the old interval using its old F and begins the
@@ -79,18 +96,24 @@ inside the new timing mode.
 | Held stick/rudder/fire | Timestamp changes at input acquisition and apply them to their simulation tick, including every catch-up tick. Never retroactively apply a newly pressed key to old debt |
 | Throttle and other discrete commands | Consume each native key event once; preserve ±20 per command and existing preset values. Key repeat must use clock deadlines, not render count |
 | Secondary F=20 clock | Separate real-time service accumulator. Use 128-unit service ticks (about 23.65 Hz PAL), below the >400 shortcut; preserve its own remainder. Extract timed camera/repeat work rather than calling the whole command dispatcher repeatedly |
-| Message lifetime | Propose three seconds of active-flight real time, independent of Time Scale and FPS. This replaces the ambiguous 30-render-frame lifetime and is an explicit behavior choice for approval |
+| Message lifetime | Propose three seconds of active-flight real time, independent of Time Scale and FPS. This replaces the ambiguous 30-render-frame lifetime and is an explicitly approved behavior choice |
 | Two-buffer dirtiness, overlay erase and view redraw counters | Remain render/publication counters. A timeout marks both buffers dirty; it must not consume both redraws while running hidden world ticks |
 | Native history and world-cycle selectors | Advance on world ticks. They must not count repeated rendered frames |
 | Sound | Keep CIA sequencing, sample playback, buffers and envelopes unchanged. Service existing sound control even when rendering is skipped; audit event delivery without adding synthetic elapsed time or reopening W3 behavior changes |
 | Menus, Preferences, pause, mission load/exit | Suspend simulation accrual and rebase its lifetime timestamp on resume. No catch-up for time spent in menus; reset per-mission credit and queued stale input |
-| Time Compress | Propose an explicit 8× virtual-time request using the same bounded ticks, with rendering skipped as necessary. It is a requested rate, not a promise when CPU capacity is insufficient; this replaces the old CPU-dependent fast-forward behavior and needs approval |
+| Time Compress | Propose an explicit 8× virtual-time request using the same bounded ticks, with rendering skipped as necessary. It is a requested rate, not a promise when CPU capacity is insufficient; this replaces the old CPU-dependent fast-forward behavior under the approved design |
 
-W5's safe publication and two-field cap stay in the render phase. Waiting for
+W5's safe publication stays in the render phase. Under W6 its cap becomes one
+PAL field; outside W6 it retains the existing two-field policy. Waiting for
 publication contributes real elapsed time to the next scheduler observation;
 it does not become an extra simulation tick by itself. Sound and the secondary
 service clock are real-time domains, not multiplied by Time Scale/Time Compress.
-An input queue must have a documented overflow policy and VERIFY telemetry;
+Input acquired during CIA interval N is eligible at boundary N+1. Freeze that
+boundary's input before executing any of its world updates; a late IRQ must not
+change a second compressed update at the same boundary. This adds at most one
+CIA interval of acquisition latency and makes the ordering independent of CPU
+speed. The bounded queue faults explicitly on overflow rather than evicting old
+events. An input queue must have VERIFY telemetry;
 silently dropping old events or polling only after a long render is unacceptable.
 
 ## Capacity limit and overload policy
@@ -169,8 +192,9 @@ original collision/AI updates just to improve the frame-rate number.
   off retains original bytes; sim v2/v3 retain existing behavior; W5 still caps
   only rendering; existing release defaults/icons remain a separate decision.
 
-Approval would authorize implementing this staged design, including the proposed
+The user has authorized implementing this staged design, including the proposed
 225-unit quantum, separate secondary service, three-second messages and defined
-Time Compress request. It would not waive the acceptance gates or authorize
+Time Compress request, and additionally requires smooth 50 FPS on capable hardware.
+This does not waive the acceptance gates or authorize
 publishing a release. A failed gate should change the recommendation openly,
 not be normalized away in state comparisons.
