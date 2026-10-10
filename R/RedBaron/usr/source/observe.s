@@ -65,6 +65,7 @@ observe_vbl:
 	move.w sr,-(sp)
 	lea observe_vbl_count(pc),a2
 	addq.l #1,(a2)
+	bsr time_pause_irq
 	bsr time_input_fixture
 	move.l tape_marker+24(pc),a2
 	adda.l #$2d41c,a2

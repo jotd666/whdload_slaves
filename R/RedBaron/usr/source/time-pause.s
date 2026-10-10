@@ -93,9 +93,55 @@ time_pause_wait:
 	addi.l #$21ac4,(sp)
 	rts
 
-; Main-task owner only. Nested modal calls exclude elapsed time just once.
-; Suspending ownership also lets menus use their original variable clock.
+; The flight task is user mode. Publish a request and wait for VBlank to make
+; the clock transition atomically with respect to every input-producing IRQ.
+; The wait on entry is active flight time; the resume wait remains modal time.
 time_pause_begin:
+	movem.l d0/a0,-(sp)
+	moveq #1,d0
+	bsr time_pause_request
+	movem.l (sp)+,d0/a0
+	rts
+time_pause_end:
+	movem.l d0/a0,-(sp)
+	moveq #2,d0
+	bsr time_pause_request
+	movem.l (sp)+,d0/a0
+	rts
+time_pause_request:
+	lea time_pause_pending(pc),a0
+	move.w d0,(a0)
+.wait
+	tst.w (a0)
+	bne .wait
+	rts
+
+; Called only from the supervisor VBlank observer. Higher input IRQs cannot
+; observe a half-published cursor/paused-total/ownership tuple. Acknowledge last.
+time_pause_irq:
+	move.w sr,-(sp)
+	ori.w #$0700,sr
+	movem.l d0/a0-a1,-(sp)
+	lea time_pause_pending(pc),a0
+	move.w (a0),d0
+	beq .done
+	cmpi.w #1,d0
+	beq .begin
+	bsr time_pause_apply_end
+	bra .ack
+.begin
+	bsr time_pause_apply_begin
+.ack
+	clr.w (a0)
+.done
+	movem.l (sp)+,d0/a0-a1
+	move.w (sp)+,sr
+	rts
+time_pause_pending: dc.w 0
+
+; State-transition kernels: IRQ-owned in game, direct private-state self-test.
+; Nested modal calls exclude elapsed time once. Menus retain the native clock.
+time_pause_apply_begin:
 	movem.l d0/a0-a1,-(sp)
 	lea time_loop_state(pc),a0
 	tst.l TIME_LOOP_PAUSE_DEPTH(a0)
@@ -104,6 +150,7 @@ time_pause_begin:
 	beq .done
 	move.l time_loop_cia(pc),a1
 	move.l (a1),TIME_LOOP_PAUSE_START(a0)
+	move.l TIME_LOOP_PAUSED(a0),TIME_LOOP_PAUSE_BASE(a0)
 	clr.l TIME_LOOP_ACTIVE(a0)
 .nested
 	addq.l #1,TIME_LOOP_PAUSE_DEPTH(a0)
@@ -111,7 +158,7 @@ time_pause_begin:
 	movem.l (sp)+,d0/a0-a1
 	rts
 
-time_pause_end:
+time_pause_apply_end:
 	movem.l d0/a0-a1,-(sp)
 	lea time_loop_state(pc),a0
 	tst.l TIME_LOOP_PAUSE_DEPTH(a0)
@@ -144,7 +191,7 @@ time_pause_selftest:
 	move.l time_loop_cia(pc),-(sp)
 	move.l time_loop_h3(pc),-(sp)
 	lea time_loop_state(pc),a0
-	moveq #13,d7
+	moveq #14,d7
 .save
 	move.l (a0)+,-(sp)
 	dbf d7,.save
@@ -157,7 +204,7 @@ time_pause_selftest:
 	move.l a1,(a0)
 	lea time_loop_state(pc),a0
 	move.l a0,a1
-	moveq #13,d7
+	moveq #14,d7
 .clear
 	clr.l (a1)+
 	dbf d7,.clear
@@ -170,22 +217,22 @@ time_pause_selftest:
 	move.l #1,TIME_LOOP_ACTIVE(a0)
 	lea time_pause_test_cia(pc),a1
 	move.l #$fffffff5,(a1)
-	bsr time_pause_begin
+	bsr time_pause_apply_begin
 	tst.l TIME_LOOP_ACTIVE(a0)
 	bne .bad
 	cmpi.l #1,TIME_LOOP_PAUSE_DEPTH(a0)
 	bne .bad
 	move.l #$10,(a1)
-	bsr time_pause_begin
+	bsr time_pause_apply_begin
 	cmpi.l #2,TIME_LOOP_PAUSE_DEPTH(a0)
 	bne .bad
-	bsr time_pause_end
+	bsr time_pause_apply_end
 	tst.l TIME_LOOP_PAUSED(a0)
 	bne .bad
 	cmpi.l #$fffffff0,TIME_LOOP_CURSOR(a0)
 	bne .bad
 	move.l #$25,(a1)
-	bsr time_pause_end
+	bsr time_pause_apply_end
 	cmpi.l #$30,TIME_LOOP_PAUSED(a0)
 	bne .bad
 	cmpi.l #$20,TIME_LOOP_CURSOR(a0)
@@ -208,16 +255,16 @@ time_pause_selftest:
 	cmpi.w #225,(a1)
 	bne .bad
 	; A matched zero-duration pause changes neither credit nor cursor.
-	bsr time_pause_begin
-	bsr time_pause_end
+	bsr time_pause_apply_begin
+	bsr time_pause_apply_end
 	cmpi.l #$30,TIME_LOOP_PAUSED(a0)
 	bne .bad
 	cmpi.l #$20,TIME_LOOP_CURSOR(a0)
 	bne .bad
 	lea time_pause_test_result(pc),a1
 	move.l #1,(a1)
-	lea time_loop_state+56(pc),a0
-	moveq #13,d7
+	lea time_loop_state+60(pc),a0
+	moveq #14,d7
 .restore
 	move.l (sp)+,-(a0)
 	dbf d7,.restore

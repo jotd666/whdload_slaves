@@ -253,3 +253,38 @@ fixed-step deadline. The first boundary is five CIA intervals behind; the final
 boundary has zero debt. All nine selected timing hooks, 13 disabled ranges and
 native completion counters (426 / 512 / 1) pass. Evidence:
 `tmp/dev/tmp/prof/w6-pause-030/`. Both owned emulators are shut down.
+
+
+## Atomic clock publication for timestamped input
+
+The native flight anchor on cached 68030 has SR zero: it is user mode. Evidence
+is `tmp/dev/tmp/prof/w6-input-mode-030/main-mode.log`. Main-task input ownership
+must therefore not assume that privileged interrupt-mask instructions are legal.
+
+Pause/resume wrappers now publish a word request and wait for the existing
+supervisor VBlank observer to apply the transition. The observer masks input
+interrupts, updates cursor, paused total and ownership together, then acknowledges
+last and restores its incoming SR. Entry-handshake time is active-flight time;
+resume-handshake time is still excluded modal time. The private startup test calls
+the same transition kernels directly and does not depend on initialized game IRQs.
+The state also retains the cumulative excluded time at outermost pause entry.
+
+Frozen VERIFY text is 120,706 bytes, SHA256
+`67889b052b833599b80c152ea601baa1e98b46a43c72fe6d94647b803d288e93`.
+The debugger records all six private self-test calls with no pending IRQ request,
+then the actual Preferences entry and exit with SR `0x2700` and requests 1 and 2.
+The collector initially rejected the extra private-test calls; its corrected
+check validates the complete eight-call sequence rather than discarding entries.
+The live route excludes 864 CIA intervals. All 81 subsequent boundaries satisfy
+the exact deadline, ending with zero CIA debt. All nine selected hooks, 13 disabled
+ranges and completion counters (426 / 512 / 1) pass. Evidence:
+`tmp/dev/tmp/prof/w6-pause-atomic-030/`. The owned emulator has been quit.
+All 82 host tests pass and normal/developer hashes remain unchanged.
+
+This establishes an atomic clock tuple for the upcoming IRQ input producer.
+Its active-flight timestamp can be `CIA - paused_total`; during a panel, held
+transitions can share `pause_start - pause_base`, with commands suppressed.
+The consumer compares against `cursor - paused_total`. Add one CIA boundary to
+input eligibility as before. Those conversions and keyboard consumption are not
+yet installed. Input fixtures must exercise both sides of the atomic transition,
+including queued pre-pause events, rather than flushing old debt or input history.

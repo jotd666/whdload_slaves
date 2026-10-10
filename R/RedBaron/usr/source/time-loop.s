@@ -14,6 +14,7 @@ TIME_LOOP_ACTIVE = 40
 TIME_LOOP_PAUSED = 44
 TIME_LOOP_PAUSE_START = 48
 TIME_LOOP_PAUSE_DEPTH = 52
+TIME_LOOP_PAUSE_BASE = 56
 
 time_loop_install:
 	movem.l d0-a6,-(sp)
@@ -123,7 +124,7 @@ time_loop_gate:
 	tst.l TIME_LOOP_ACTIVE(a0)
 	bne .wait
 	move.l a0,a1
-	moveq #13,d0
+	moveq #14,d0
 .clear
 	clr.l (a1)+
 	dbf d0,.clear
@@ -207,4 +208,4 @@ time_loop_h3: dc.l 0
 time_loop_cia: dc.l 0
 time_loop_input: dc.l 0
 time_loop_return: dc.l 0
-time_loop_state: dcb.b 56,0
+time_loop_state: dcb.b 60,0
