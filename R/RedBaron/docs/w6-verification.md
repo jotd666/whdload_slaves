@@ -7168,3 +7168,76 @@ open. A question about whether stock A500 support is mandatory, versus stating
 a measured minimum CPU as contemplated in the approved plan, is pending;
 no hardware requirement has been silently removed. Independent W6 validation
 on faster CPUs can continue while that scope decision is clarified.
+
+
+## 68020 squadron capacity after the A500 failure
+
+Capture `w6-current-sustained-dense-020` uses ordinary VERIFY
+`ac1d47ba01210c496a98db199b79fa2c30b0f3b59c570a0bec8906dfa7a116f7`;
+the rejected matrix experiment is absent. The established configuration is
+A1200 model / 68EC020, 2 MiB chip and 8 MiB fast RAM, no slow RAM, real CPU
+speed with multiplier four and cycle-exact CPU/memory/blitter. World and
+aircraft detail are maximum; ground remains ON IN COMBAT; Time Scale remains
+40. Native menus select the four-versus-four squadron fixture, with
+`CUSTOM2=16319 CUSTOM4=0 CUSTOM5=-2146434540` scheduling F2/Fire.
+
+Four consecutive 250-field windows begin at the coherent field observation
+after the first completed world boundary. Initial fractional outstanding
+credit is **0.275824916** updates; it is included in the ledger rather than
+assumed zero.
+
+| Window | Completed world updates | Newly funded | Publications / FPS | Outstanding credit at end | Message / shortening calls |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 0 | 37 | 40.822087542 | 10 / 2.0 | 4.097912458 | 37 / 29 |
+| 1 | 42 | 40.822087542 | 12 / 2.4 | 2.920000000 | 0 / 0 |
+| 2 | 41 | 40.822087542 | 12 / 2.4 | 2.742087542 | 0 / 0 |
+| 3 | 42 | 40.822087542 | 13 / 2.6 | 1.564175084 | 0 / 0 |
+
+Across 1,000 fields / 1,184 CIA ticks, **162 updates complete** and one remains
+in progress. Exact funding is 163.288350168 new updates. Final total credit
+1.564175084 minus initial 0.275824916 equals the uncompleted newly funded
+1.288350168 exactly. Four CIA ticks remain unpolled and no due updates are
+queued at the final endpoint. The 47 publications give **2.35 FPS**; completed
+world progress is separately 8.1 updates per PAL second.
+
+All 1,000 per-field samples remain in the census. Four type-one clock
+transactions are retained but bridged by 996 coherent accounting intervals.
+Outstanding credit ranges from 0.275824916 to **4.511649832** world updates;
+unpolled CIA debt ranges from zero to 25. After the opening message activity,
+window-end debt decreases throughout the remaining 15 seconds. This is finite
+catch-up capacity evidence, unlike a ledger that steadily accumulates unpaid
+work. The longest sampled no-completion span is **22 fields (440 ms)**, so
+capacity alone does not establish smooth simulation or acceptable physical
+input latency.
+
+Native self-test counters and all 57 selected / nine disabled patch ranges
+pass. The explicit F2/Fire checker passes 163 native input rows, four scheduled
+transitions and two commands. It verifies command/held-input ownership and
+native axis/fire flags, not physical input acquisition or the resulting camera
+image. Publication checks pass safe beam positions and the one-field cap.
+
+The earlier A500 and this 68020 boot share the menu/option fixture, but native
+setup time and initial world states are not locked across those boots. The
+message histories differ. These are independent scenario-capacity
+observations, **not an equal-state CPU speedup ratio or state-equivalence
+proof**. The 8 MiB fast RAM is part of the measured 68020 configuration and
+must not be omitted from a prospective minimum specification.
+
+Reproduce from the harness environment with a new capture directory:
+
+```sh
+python3 tools/w6_boot_current.py 020 16319 tmp/prof/w6-current-sustained-dense-020 --scene dense --replay
+python3 tools/w6_sustained_census.py tmp/prof/w6-current-sustained-dense-020 --windows 4 --from-first-world
+python3 tools/w6_selftest_result.py tmp/prof/w6-current-sustained-dense-020
+python3 tools/w6_loop_audit.py tmp/prof/w6-current-sustained-dense-020
+python3 tools/w6_sustained_replay_check.py tmp/prof/w6-current-sustained-dense-020
+python3 ../../R/RedBaron/tools/sustained_capacity.py \
+  tmp/prof/w6-current-sustained-dense-020/field-census.json \
+  --out tmp/prof/w6-current-sustained-dense-020/sustained-capacity.json
+```
+
+The owned emulator was verified and quit. This does not settle the pending
+minimum-hardware question or remove stock-A500 work. The remaining scene/CPU
+matrix, physical-input latency, full state/physics/combat equivalence and
+actual smooth 50 FPS must still be established. No runtime change follows
+from this measurement alone.

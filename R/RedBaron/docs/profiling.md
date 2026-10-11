@@ -1,5 +1,13 @@
 # Red Baron performance measurements
 
+A fresh ordinary-W6 **68EC020 squadron run** completes **162 updates** from
+163.288 newly funded over 1,000 PAL fields, publishing **47 frames (2.35 FPS)**.
+After the opening message burst, endpoint outstanding work decreases from
+4.098 to 1.564 updates; its sampled maximum is 4.512. The longest completion
+gap is 22 fields (440 ms). See “68020 squadron capacity after the A500 failure”
+in `w6-verification.md`. This supports finite catch-up capacity in this CPU/RAM
+configuration, not a declared minimum machine or complete gameplay acceptance.
+
 **The first matrix-reuse assembly candidate is rejected for A500 use.** In a
 250-recorded-field native twin trace, 2,022 matched original/candidate pairs
 cost **5,939,058 versus 6,029,602 main-task cycles**: the candidate is **1.52%
