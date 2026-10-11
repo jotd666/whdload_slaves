@@ -47,3 +47,49 @@ def release(base,bitmap,raw):
  if not valid_module(p,base,bitmap):
   print('Old keyboard owner unloaded; no release write',flush=True);return
  if p.WriteMemory(_mapping+base+bitmap+raw,b'\0',err)!=1:raise RuntimeError(str(err))
+
+
+def irq_key(raw, released=False):
+ """Queue a hardware key for the emulator's CIA producer, while host is stopped.
+
+ Resolve local keybuf symbols from the running profiling executable. Never call
+ target functions or write guest keyboard/simulation state on this path.
+ """
+ if not 0 <= raw < 128:raise ValueError('Invalid raw key')
+ target=lldb.debugger.GetSelectedTarget();p=target.GetProcess()
+ if p.GetState()!=lldb.eStateStopped:raise RuntimeError('Stop the owned emulator first')
+ found={}
+ for module in target.modules:
+  for symbol in module:
+   name=symbol.GetName() or ''
+   if name in ('kpb_first','kpb_last','keybuf','_ZL9kpb_first','_ZL8kpb_last','_ZL6keybuf'):
+    name=name.split('kpb_')[-1] if 'kpb_' in name else 'buffer'
+    found.setdefault(name,[]).append(symbol.GetStartAddress().GetLoadAddress(target))
+ if len(found.get('first',[]))==1 and len(found.get('last',[]))==1:
+  first,last=found['first'][0],found['last'][0]
+  buffers=[x for x in found.get('buffer',[]) if 0 < x-first < 4096]
+  if last!=first+4 or len(buffers)!=1:raise RuntimeError('Unexpected native keyboard layout')
+ else:
+  # The installed x86 profiling build is stripped. Match its actual producer
+  # instructions before using the RIP-relative addresses they encode.
+  module=target.GetModuleAtIndex(0);header=module.GetObjectFileHeaderAddress()
+  slide=header.GetLoadAddress(target)-header.GetFileAddress()
+  err=lldb.SBError()
+  signature=bytes.fromhex('486305f33d1702') # MOVSXD kpb_first(%rip),%rax
+  if p.ReadMemory(slide+0x2418e6,len(signature),err)!=signature or not err.Success():
+   raise RuntimeError('Unsupported stripped emulator keyboard producer')
+  signature=bytes.fromhex('488d15c93d1702893c82890da03d1702')
+  if p.ReadMemory(slide+0x241930,len(signature),err)!=signature or not err.Success():
+   raise RuntimeError('Unexpected keyboard buffer publication instructions')
+  first,last=slide+0x23b56e0,slide+0x23b56e4
+  buffers=[slide+0x23b5700]
+ err=lldb.SBError();data=p.ReadMemory(first,8,err)
+ if not err.Success():raise RuntimeError(str(err))
+ head,tail=struct.unpack('<II',data)
+ if not 0<=head<256 or not 0<=tail<256:raise RuntimeError('Invalid native keyboard indices')
+ next_head=(head+1)%256
+ if next_head==tail:raise RuntimeError('Native hardware key queue full')
+ for address,data in [(buffers[0]+head*4,struct.pack('<I',(raw<<1)|bool(released))),
+                      (first,struct.pack('<I',next_head))]:
+  if p.WriteMemory(address,data,err)!=len(data) or not err.Success():raise RuntimeError(str(err))
+ print('IRQ_KEY',hex(raw),'up' if released else 'down',flush=True)
