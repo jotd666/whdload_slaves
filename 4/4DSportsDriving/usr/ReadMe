@@ -63,6 +63,8 @@
    validation is unfinished; this is not a final release
 
  version 1.3b (testing):
+ - discard stale opening-sequence input when A4000 live recording starts,
+   so holding Return through startup cannot extend the replay past its end
  - queue exhaustion exits with a clear WHDLoad message instead of a Guru;
    unread controls are never overwritten
  - prevent A4000 rendering from overwriting the buffer still on screen;

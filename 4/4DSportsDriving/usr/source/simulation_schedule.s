@@ -202,6 +202,16 @@ sim_schedule_poll:
  cmp.w (a0),d7
  beq .drain
  clr.w (a0)              ; close old owner before clearing its epoch
+ ; Startup can leave recorded length ahead of its reset producer cursor.
+ ; A held start key skips the native idle-frame clear at $7138. Live input
+ ; overwrites from the producer, so discard that stale tail before recording.
+ ; Loaded replay and native Normal/A2500 retain their existing length.
+ cmp.w #1,d7
+ bne .history_ready
+ cmp.w #50,-$15fa(a4)
+ bne .history_ready
+ move.w $a0(a4),-$1738(a4)
+.history_ready:
  lea sim_schedule_a4(pc),a0
  move.l a4,(a0)
  lea sim_schedule_rate(pc),a0
