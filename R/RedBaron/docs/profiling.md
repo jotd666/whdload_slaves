@@ -1,5 +1,12 @@
 # Red Baron performance measurements
 
+The second private matrix candidate now saves **2.13% of routine main-task
+cycles** in 2,021 matched A500 pairs after removing nested lookup calls.
+All 2,048 native output/register/flag twins pass. It is still unhooked and
+excluded from ordinary builds: this small constructor result does not resolve
+the A500 squadron capacity failure or establish a game FPS improvement.
+See “Inlined private matrix candidate” in `w6-verification.md`.
+
 The sound-phase audit now observes a native main-task request followed by
 CIA-interrupt playback start in the same recorded PAL field. Across the two
 retained A500 traces, playback status reads/tests occur on the IRQ stack.

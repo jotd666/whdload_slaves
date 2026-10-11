@@ -7344,3 +7344,57 @@ latency. The strict `sound_slot_state.py` failure remains intact; no sound
 runtime behavior changes. The full analysis-tool suite passes 409 tests,
 including assignment/IRQ classification, unknown-owner rejection and the
 rule against fabricating live memory values for bit operations.
+
+
+## Inlined private matrix candidate
+
+The second candidate removes the nested `BSR`/`RTS` around each of the three
+first-use half-lookups. `TIME_MATRIX_HALF` expands the same instructions
+inside the existing plus/minus/quarter helpers; expression wrapping, table
+indices and individual arithmetic shifts are unchanged. The copied native
+constructor, its six replacement spans, cache locals and reuse sites stay
+as in the first experiment. No game hook is installed. It remains available
+only under both `VERIFY` and `VERIFY_MATRIX_EXPERIMENT`.
+
+Capture `w6-matrix-inline-cost-a500` uses private build
+`1204a39f69414ed41e4082d0a766c23dbb345499774bb2d19534a90756cb0db3`
+(text 268,960 bytes) on the same cycle-exact A500 configuration. All **2,048
+native twins pass**: 64 angle triples times all 32 incoming XNZVC values,
+comparing D0–D7/A0–A6, XNZVC and the full 20-byte output/canary buffer.
+The inputs include identity/single-axis/general, wrap/boundary and random
+cases. This remains private, disjoint-buffer ABI evidence; it does not
+establish an installed hook's alias or other-CPU behavior.
+
+A 250-recorded-field capture (100/100/50) begins at the private self-test.
+The unchanged `matrix_call_costs.py` finds **2,021 complete matched pairs**:
+
+| Scope | Pairs | Original main cycles | Candidate main cycles | Change |
+| --- | ---: | ---: | ---: | ---: |
+| All retained matched pairs | 2,021 | 5,935,016 | 5,808,386 | −2.134% |
+| General cases 4–63 | 1,907 | 5,862,618 | 5,735,716 | −2.165% |
+
+The overall saving is 126,630 cycles, averaging 62.657 cycles per matched
+call. All 60 general-case aggregates improve (0.832% to 3.921%). The four
+special-case aggregates still regress by 0.166% to 1.019%; they do not use
+the new lookup helpers. The retained evidence is not sufficient to assign
+those small differences uniquely to instruction cost versus memory/DMA
+phase. IRQ execution and interrupt-entry cycles are accounted separately
+from main-task routine cycles, and helper/stack work remains included.
+
+Twenty-seven native pairs are not complete in the retained trace; alignment
+gaps and the cut call in chunk 0 are not reconstructed. All 2,048 correctness
+twins completed regardless. Native W6 self-tests and the 57-selected /
+9-disabled byte audit also pass. The patch-reach audit reports 133 valid
+destinations. The owned emulator was verified and quit.
+
+This replaces the first candidate's across-the-board regression with a
+small measured constructor saving. It does **not** solve the squadron
+world-loop capacity deficit and is not a frame-rate claim. Promotion would
+still require installed-path twins/alias coverage, CPU checks and the
+plan's gameplay-window measurements. Keep it private rather than spending
+that integration effort on an unmeasured whole-game benefit now.
+
+Ordinary VERIFY, developer and player builds were rebuilt and restored to
+`ac1d47ba…`, `01a00068…` and `5256542f…` respectively. Thus current game
+behavior is unchanged. The frozen private capture retains its exact listing,
+binary, completion counter and matched cost report for reproduction.

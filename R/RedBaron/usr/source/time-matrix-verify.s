@@ -1,4 +1,5 @@
-; Rejected first W6 matrix candidate: measured slower on A500.
+; Second private W6 matrix candidate: inline the three half-lookup helpers.
+; The first candidate lost its lookup savings to nested call overhead.
 ; Retained only under VERIFY + VERIFY_MATRIX_EXPERIMENT for further research.
 ; No game hook: original sim:3648c remains installed until timing/ABI gates pass.
 TIME_MATRIX_SIZE = $3688e-$3648c
@@ -90,38 +91,39 @@ time_matrix_branch_patch
  rts
 
 ; Preserve the original word expressions and individual ASR rounding.
+TIME_MATRIX_HALF MACRO
+ lsr.w #4,d0
+ btst #11,d0
+ beq .index\@
+ move.w #4096,d1
+ sub.w d0,d1
+ move.w d1,d0
+.index\@
+ add.w d0,d0
+ move.l time_matrix_table(pc),a0
+ adda.w d0,a0
+ move.w (a0),d0
+ asr.w #1,d0
+ ENDM
+
 time_matrix_plus:
  move.w 2(a2),d0
  add.w 4(a2),d0
- bsr time_matrix_half
+ TIME_MATRIX_HALF
  move.w d0,-2(a5)
  rts
 time_matrix_minus:
  move.w 2(a2),d0
  sub.w 4(a2),d0
- bsr time_matrix_half
+ TIME_MATRIX_HALF
  move.w d0,-4(a5)
  rts
 time_matrix_quarter:
  move.w 4(a2),d0
  add.w 2(a2),d0
  addi.w #$c000,d0
- bsr time_matrix_half
+ TIME_MATRIX_HALF
  move.w d0,-6(a5)
- rts
-time_matrix_half:
- lsr.w #4,d0
- btst #11,d0
- beq .index
- move.w #4096,d1
- sub.w d0,d1
- move.w d1,d0
-.index
- add.w d0,d0
- move.l time_matrix_table(pc),a0
- adda.w d0,a0
- move.w (a0),d0
- asr.w #1,d0
  rts
 
 time_matrix_selftest:
