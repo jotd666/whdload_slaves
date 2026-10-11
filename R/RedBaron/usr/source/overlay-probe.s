@@ -49,6 +49,7 @@ overlay_probe_enter:
 	addq.l #1,4(a0)
 	movem.l (sp)+,d0/a0
 	bsr overlay_probe_wait
+	bsr overlay_mask_verify
 ; Entry flags are overwritten by native MOVE.W argument load at sim:2896a.
 overlay_probe_before:
 	nop

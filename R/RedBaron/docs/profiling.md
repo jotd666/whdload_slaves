@@ -1,5 +1,11 @@
 # Red Baron performance measurements
 
+A native VERIFY-only front-overlay coverage builder now matches all 32,000
+mask bytes per boot on A500 and cached 68030, with guards intact and subsequent
+original drawing/state checks passing. This is a cache-building component;
+no drawing is skipped and no speed gain is claimed. See “Native front-overlay
+coverage component” in `w6-verification.md`.
+
 The front-overlay host model now reproduces the full h3 post-state for 12
 retained native calls (580,752 bytes), while all 480,000 framebuffer bytes still
 match the raster and mask models. The proposed packed cache remains 9,528 bytes;

@@ -606,6 +606,7 @@ new_DeleteFile:
 	include "time-render.s"
 	include "overlay-probe.s"
 	include "overlay-blit.s"
+	include "overlay-mask.s"
 	include "time-terrain-verify.s"
 	include "time-shape-verify.s"
 	include "time-flag-verify.s"

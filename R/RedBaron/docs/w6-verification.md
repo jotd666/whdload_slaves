@@ -4032,3 +4032,72 @@ exercise register/flag preservation, exact stack restoration, incomplete data
 and unexpected frame rejection. All 286 host tests pass. No runtime cache,
 hardware-state equivalence,
 performance gain or full W6 acceptance is claimed.
+
+
+## Native front-overlay coverage component
+
+`overlay-mask.s` adds a 68000 coverage builder under the existing VERIFY-only
+CUSTOM2 bit 14 probe. It interprets the audited colour/resource-selection,
+rectangle, line and unoriented bitmap commands into an 8,000-byte CPU mask.
+Lines use integer Bresenham coverage; bitmap coverage comes from the native
+mask, including its padded row layout. It does not infer transparency from
+before/after pixel differences and therefore retains opaque zero-colour pixels.
+The builder writes private storage, returns supported/fallback status, preserves
+its input registers except D0/CCR, and has bounded command scanning. Unsupported
+commands, geometry, clipping and negative resource indices reject. Resource
+pointers come from the trusted loaded game; this is not an untrusted-file parser.
+The rejection branches have not yet received a private native fault-injection
+matrix, so those paths remain an integration prerequisite.
+
+For the first four front-program calls the probe allocates 8,032 private bytes,
+sets 16-byte guards at each end, builds the mask, exposes an observation marker,
+and frees the allocation. It then runs the original interpreter in full.
+No drawing is skipped, no cache is installed and no game framebuffer is written
+by this component. A larger VERIFY image required changing the message-log
+address calculation to a long PC-relative base calculation; its behavior is
+unchanged.
+
+Fresh `w6-overlay-mask-030` and `w6-overlay-mask-a500` captures use identical
+VERIFY SHA256 `d3b4bb914a775f943dbef303d9c31dbb514af881030bf69e5548fae36005f778`
+(text 254,544 bytes), CUSTOM2=32703, CUSTOM4=0 and CUSTOM5=512, maximum detail
+and Time Scale 40. **Each** captures programs 3/4 on both physical buffers.
+All 32,000 mask bytes per boot match the independent raster model, and all
+128 guard bytes remain intact. Coverage is 1,070/1,003 pixels; the eventual
+packed image/mask payload remains 9,528 bytes. Final allocation pointers are
+observed zero after all four frees (`mask-freed.txt`).
+
+Each boot also passes the complete h3 post-state, full original framebuffer,
+independent compositing and all-register caller-return checks for the four
+native draws that follow. Native timing/input/presentation counters pass
+426/512/638/133, terrain/cache/list checks pass 2/1/2, and three private shape
+cases pass. The live timing/pacing audit passes its 56 enumerated destinations;
+static audits cover 68 ranges and 125 patch destinations with no errors.
+All 288 host tests pass. Normal/developer W5 hashes remain unchanged. Both owned
+emulators were quit after verification.
+
+Reproduce with `overlay_mask_check.py CAPTURE/overlay-capture.json --out REPORT`.
+The collector, raw allocations and result are retained as `capture-mask.py`,
+`mask-N.bin` and `mask-check.json` in each capture. This supplies a native
+coverage component for a possible cache fill from a completed original draw.
+Complete cache guards, packed image capture, final-command/state preservation,
+live cached/native twins and cost measurement still precede any rendering
+replacement. It establishes neither a speedup nor W6 gameplay/50-FPS acceptance.
+
+
+A final guard isolates the mask component from standalone bit-14 diagnostics:
+when W6 bit 13 is off, it returns before reading W6's stored h3 pointer. The
+final VERIFY SHA256 is
+`bb546da124913064fdead4d8260afc2f0ac1ed6be68581a82304009430419fd7`
+(text 254,564 bytes). Its 820-byte builder/point body is byte-identical to the
+A500/030-tested component (SHA256
+`4faee9e8a135fbe98c5614cd04c19fbd92d56edf7a39b6c03911729c29a5cbd1`).
+The active-path captures above belong to the preceding build; they are not
+mislabelled as whole-build validation of this guard revision.
+
+A fresh final-build `w6-overlay-mask-standalone-030` boot requests CUSTOM2=16384.
+All four original overlay calls pass the h3, framebuffer/compositing and complete
+caller-return checks. All four mask-result longs remain zero, proving no private
+mask allocation or build occurred; all 66 disabled patch ranges retain original
+bytes. Static audits again pass 68 ranges/125 destinations. The owned instance
+was quit. The new guard's W6-enabled branch is source-reviewed; the unchanged
+native builder retains the two-CPU evidence above.

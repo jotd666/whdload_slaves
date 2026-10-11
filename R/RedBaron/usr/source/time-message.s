@@ -258,7 +258,9 @@ time_message_log_event:
 	bhs .done
 	addq.l #1,(a0)
 	mulu.w #24,d0
-	lea time_message_log(pc),a0
+	lea .log_base(pc),a0
+.log_base
+	adda.l #time_message_log-.log_base,a0
 	adda.w d0,a0
 	lea time_loop_state(pc),a1
 	move.l TIME_LOOP_CURSOR(a1),d1
