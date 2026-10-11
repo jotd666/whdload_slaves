@@ -27,6 +27,13 @@
 ; Both windows require replaying the SAME tape from a fresh boot; do not
 ; start B with a pose injection or reset the field counter at its boundary.
 ; Sample fixture state, globals/clocks, front buffer and native swap events.
+; Generic state capture anchors the race at $10ed4, then samples at VBL ENTRY
+; ($00044) and at every physics return ($0cdb0, before RTS). Entry sample 0
+; precedes race field 1's input publication; do not equate it with the older
+; AFTER-publication window boundaries above. Retain both domains explicitly.
+; Capture the complete allocated globals hunk and trailing BSS, including the
+; RNG longword at a4-$6fc4 (native recurrence at $00a36). Compare hunk-relative
+; pointers after calibrating each build/profile; absolute addresses can differ.
 ; Local capture/acceptance details and rebuild comparison: tmp/dev/docs/.
 ;
 VERIFY_DRIVE_A_FIRST equ 1

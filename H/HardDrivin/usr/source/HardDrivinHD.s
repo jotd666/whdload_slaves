@@ -318,6 +318,7 @@ _pl0_v1:	PL_START
 
 	IFD VERIFY_ATTRACT
 	; Startup fixture: one key at the title wait, excluded from normal builds.
+	; PERF_RANGE VERIFY_ATTRACT $08520 $0006: title key fixture
 	PL_PS	$8520,_verify_title_key
 	ENDC
 
