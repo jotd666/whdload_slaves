@@ -21,9 +21,12 @@ scene, cockpit and publication are separate stages, not CPU-only costs.
 results will use the frequency-sensitive NOMMU cores. Configuration generation
 passes all six cases and the functional variants; all three builds, 418 host
 tests and the 76-range hook audit pass at A1. A2 has no accepted measurement:
-the normal A500 boot succeeded, but external keyboard control needs
-authorization. The owned emulator is stopped. Failed menu-entry attempts
-are setup diagnostics, not timing evidence.
+the normal A500 reaches maximum-detail flight with debugger keyboard input.
+The first setup window is discarded because it lacked explicit dashboard-event
+markers. The census now includes these and a mission-exit guard. No VERIFY
+measurement is substituted for the normal-build baseline. The input tool and
+its three deliberate rejection cases pass; all builds, 422 host tests and
+the 76-range hook audit pass.
 
 ## Earlier measurements
 

@@ -6,9 +6,12 @@ configurations are implemented in `tools/completion_machines.py`: A500, 020,
 030/50 with and without MMU, 040/25 and 060/50. The latter two use NOMMU
 cores for timing and separate MMU configurations for functional checks.
 A2 full-bundle normal-build measurements are next; no new FPS results yet.
-The normal A500 boots, but entry automation is blocked: the guest debugger
-ignores writes, and OS keyboard automation was denied. Input authorization
-is pending; do not substitute VERIFY timings for the normal-build census.
+The normal A500 now reaches flight at maximum detail through debugger-based
+native keyboard-queue input. macOS accessibility is not used. The reusable
+`completion_host_input.py` / `completion_lldb_input.py` tools provide that
+input method; the guest debugger itself ignores writes. A2 setup capture
+was discarded because it lacked explicit dashboard-event markers. The
+census now records those markers and stops on mission exit.
 
 
 The accepted decisions and detailed requirements are in `performance-plan.md`,
