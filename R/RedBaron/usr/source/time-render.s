@@ -16,9 +16,14 @@ time_render_frame:
 	move.l time_pose_loop(pc),a0
 	tst.w TIME_LOOP_DUE(a0)
 	bne time_pose_bad
-	bsr time_pose_blend
 	lea time_render_active(pc),a0
 	clr.w (a0)
+	lea .quantum_base(pc),a0
+.quantum_base
+	adda.l #time_loop_quantum-.quantum_base,a0
+	cmpi.w #450,(a0)
+	beq .native ; 68000 presents the latest world state
+	bsr time_pose_blend
 	move.l time_pose_h3(pc),a3
 	lea time_pose_header(pc),a4
 	move.w $6712(a3),d0

@@ -25,6 +25,8 @@ C3 is enabled only on the 68000 through bit 6: the register-held face vertex loo
 
 D2 is implemented in VERIFY, pending D4 promotion and D5 rate acceptance: 450 units on 68000, 225 on 020+, exact normalized phase with both precomputed tables, and a retained-debt ceiling of 1800 primary units (about 0.98 nominal seconds at Time Scale 40). Excess funded updates are counted as dropped, while input and real-time services retain chronological consumption. The private native stock-helper twin passes 1,377 dt=450 calls (935 straight, 442 banked), and both clock tables pass all 852 arithmetic cases; 439 host tests and three checker sabotages pass. Evidence `completion-d2-twin-r2`. This heavily instrumented run is not FPS/capacity evidence; scoreboard world-rate/drop columns remain pending D5.
 
+D3 is implemented in VERIFY: the 68000 skips pose capture/blending and their lifecycle hooks, while 020+ keeps interpolation. The native `completion-d3-a500` check spans 19 world-loop intervals with zero pose-capture calls, zero blend calls and five completed native draws; all three modes, 439 host tests and hook/reach audits pass. This is a functional bypass check, not a standalone FPS claim; player measurements remain D5.
+
 040/060 functional checks use separate MMU-core configurations. Their timing
 results will use the frequency-sensitive NOMMU cores. Configuration generation
 passes all six cases and the functional variants. All three builds pass; the

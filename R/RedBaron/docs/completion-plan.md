@@ -272,6 +272,8 @@ Implemented in VERIFY: both exact rate tables and bounded debt pass host/native 
   for straight flight and a banked turn.
 
 **D3. No interpolation where it cannot help.**
+
+Implemented in VERIFY: the 68000 native check records zero capture/blend calls with drawing retained; player measurements remain D5.
 - Capture and blend poses only when the expected render interval is shorter
   than one world tick, i.e. on 020+ at 225.
 - On the 68000, skip pose capture (23k cycles per tick) and blending (170k

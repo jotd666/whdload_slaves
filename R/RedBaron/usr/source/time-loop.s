@@ -205,12 +205,16 @@ time_loop_gate:
 	clr.w 12(a1)
 .ready
 	bsr time_input_replay_seed
+	move.w time_loop_quantum(pc),d0
+	cmpi.w #450,d0
+	beq .no_pose_capture
 	move.l a6,-(sp)
 	lea .pose_capture_base(pc),a6
 .pose_capture_base
 	adda.l #time_pose_capture-.pose_capture_base,a6
 	jsr (a6)
 	move.l (sp)+,a6
+.no_pose_capture
 	bsr time_keys_start
 	bsr time_camera_fixture
 	bsr time_rate_fixture

@@ -37,6 +37,11 @@ time_pose_install:
 .previous_base
 	adda.l #time_pose_previous-.previous_base,a0
 	move.l a0,(a3)
+	lea .quantum_base(pc),a0
+.quantum_base
+	adda.l #time_loop_quantum-.quantum_base,a0
+	cmpi.w #450,(a0)
+	beq .done ; no lifecycle hooks without pose capture
 	lea .attn_base(pc),a0
 .attn_base
 	adda.l #perf_attnflags+3-.attn_base,a0
@@ -47,6 +52,7 @@ time_pose_install:
 .patch_ready
 	lea .patch(pc),a0
 	jsr resload_Patch(a2)
+.done
 	movem.l (sp)+,d0-a6
 	rts
 .patch:
