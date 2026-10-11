@@ -1,5 +1,5 @@
 ; Development arithmetic for partial wheel contact. Included with MOTION.
-; Live contact hooks are not connected yet. Keep quantities in Q16 until after
+; Keep quantities in Q16 until after
 ; computing both the correction and its derivative; quantizing first loses
 ; small-T feedback. The zero-time caller must preserve its prior feedback rate.
 ;
@@ -77,6 +77,173 @@ _contact_project_q16:
 	movem.l (a7)+,d1-d3
 	rts
 
+; Full Q16 roll/pitch feedback, plus last published integer word. Native
+; absolute writers invalidate the full value; same-value resets call reset.
+_contact_rate_signature: dc.b 'HDCRATE1'
+_contact_rates: dcb.b 16,0
+_contact_reset:
+	move.l a0,-(a7)
+	lea _contact_rates(pc),a0
+	clr.l (a0)+
+	clr.l (a0)+
+	clr.l (a0)+
+	clr.l (a0)+
+	movea.l (a7)+,a0
+	rts
+; A0 -> full rate,last word; A1 -> game rate. Return D0 Q16.
+_contact_read_rate:
+	move.w (a1),d0
+	cmp.w 4(a0),d0
+	beq.s .current
+	move.w d0,4(a0)
+	swap d0
+	clr.w d0
+	move.l d0,(a0)
+.current:
+	move.l (a0),d0
+	rts
+; D1 Q16 -> full shadow and truncated native word. Return integer D0.
+_contact_write_rate:
+	move.l d1,(a0)
+	move.l d1,d0
+	bsr _time_split_q16
+	move.w d0,4(a0)
+	move.w d0,(a1)
+	rts
+; D0 full Q16 rate, abs<16383; return floor(rate*fields/8). Preserve D1/D2.
+_contact_scale_rate:
+	movem.l d1-d2,-(a7)
+	move.w _time_scalar_fields(pc),d1
+	move.l d0,d2
+	andi.l #$ffff,d2
+	swap d0
+	muls.w d1,d0
+	lsl.l #8,d0
+	lsl.l #5,d0
+	mulu.w d1,d2
+	lsr.l #3,d2
+	add.l d2,d0
+	movem.l (a7)+,d1-d2
+	rts
+; A0 angle carry/last, A1 game angle, D0 Q16 correction. Preserve D1/D2.
+_contact_add_angle:
+	movem.l d1-d2,-(a7)
+	move.w (a1),d1
+	sub.w 4(a0),d1
+	beq.s .current
+	cmpi.w #1440,d1
+	beq.s .current
+	cmpi.w #-1440,d1
+	beq.s .current
+	clr.l (a0)
+.current:
+	add.l (a0),d0
+	bsr _time_split_q16
+	move.l d2,(a0)
+	add.w d0,(a1)
+	move.w (a1),4(a0)
+	movem.l (a7)+,d1-d2
+	rts
+; Native roll cosine, retaining a Q16 input until after projection. At T=1
+; retain the game's word projection rounding for exact native-step equivalence.
+_contact_pitch_projection:
+	movem.l d1-d3/a0-a1,-(a7)
+	move.l d0,-(a7)
+	move.w -$66b2(a4),-(a7)
+	jsr -$7f2c(a4)
+	addq.w #2,a7
+	move.w d0,d1
+	move.l (a7)+,d0
+	bsr _contact_project_q16
+	move.w _time_scalar_fields(pc),d1
+	cmpi.w #8,d1
+	bne.s .done
+	clr.w d0
+.done:
+	movem.l (a7)+,d1-d3/a0-a1
+	rts
+
+_contact_roll:
+	movem.l d1-d4/a0-a2,-(a7)
+	IFD VERIFY_CONTACT_TRACE
+	lea _contact_rates(pc),a0
+	move.w d0,6(a0)
+	ENDC
+	move.w _time_scalar_fields(pc),d1
+	beq.s .done
+	neg.w d0
+	moveq #1,d2
+	bsr _contact_response
+	move.l d0,d4
+	lea _contact_rates(pc),a0
+	lea -$66ec(a4),a1
+	bsr _contact_write_rate
+	move.l d0,-(a7)
+	move.l d4,d0
+	lea _motion_state+MS_ROLL(pc),a0
+	lea -$66b2(a4),a1
+	bsr _contact_add_angle
+	move.l (a7)+,d0
+.done:
+	movem.l (a7)+,d1-d4/a0-a2
+	rts
+_contact_pitch:
+	movem.l d1-d4/a0-a2,-(a7)
+	IFD VERIFY_CONTACT_TRACE
+	lea _contact_rates(pc),a0
+	move.w d0,14(a0)
+	ENDC
+	move.w _time_scalar_fields(pc),d1
+	beq.s .done
+	neg.w d0
+	moveq #1,d2
+	bsr _contact_response
+	move.l d0,d4
+	lea _contact_rates+8(pc),a0
+	lea -$66ea(a4),a1
+	bsr _contact_write_rate
+	move.l d0,-(a7)
+	move.l d4,d0
+	bsr _contact_pitch_projection
+	lea _motion_state+MS_PITCH(pc),a0
+	lea -$66b4(a4),a1
+	bsr _contact_add_angle
+	move.l (a7)+,d0
+.done:
+	movem.l (a7)+,d1-d4/a0-a2
+	rts
+_contact_pitch_rate_only:
+	movem.l d1-d2/a0-a1,-(a7)
+	IFD VERIFY_CONTACT_TRACE
+	lea _contact_rates(pc),a0
+	move.w d0,14(a0)
+	ENDC
+	move.w _time_scalar_fields(pc),d1
+	beq.s .done
+	neg.w d0
+	moveq #0,d2
+	bsr _contact_response
+	lea _contact_rates+8(pc),a0
+	lea -$66ea(a4),a1
+	bsr _contact_write_rate
+.done:
+	movem.l (a7)+,d1-d2/a0-a1
+	rts
+; Do not snap roll to zero while its integer rate is zero but fraction is not.
+_contact_roll_active:
+	movem.l d0/a0-a1,-(a7)
+	lea _contact_rates(pc),a0
+	lea -$66ec(a4),a1
+	bsr _contact_read_rate
+	tst.l d0
+	beq.s .done
+	movea.l _code_start(pc),a0
+	adda.l #$cda0,a0
+	move.l a0,12(a7)
+.done:
+	movem.l (a7)+,d0/a0-a1
+	rts
+
 	IFD VERIFY_CONTACT_MATH
 _contact_math_test:
 	movem.l d0-d7/a0-a6,-(a7)
@@ -123,8 +290,95 @@ _contact_math_test:
 	dbf d3,.projection_factor
 	dbf d6,.projection_fraction
 	dbf d7,.projection_value
+	lea _contact_roll_fake(pc),a4
+	adda.l #$66ec,a4
+	lea _time_scalar_fields(pc),a5
+	lea _contact_roll_errors(pc),a6
+	lea _contact_roll_results(pc),a2
+	moveq #4,d7
+.live_roll_error:
+	move.w (a6)+,d4
+	moveq #0,d5
+.live_roll_fields:
+	bsr _motion_reset
+	move.w d5,(a5)
+	move.w #100,-$66b2(a4)
+	move.w #100,-$66b8(a4)
+	clr.w -$66ec(a4)
+	move.w d4,d0
+	bsr _contact_roll
+	move.w -$66b2(a4),(a2)+
+	move.w -$66ec(a4),(a2)+
+	move.l _contact_rates(pc),(a2)+
+	move.l _motion_state+MS_ROLL(pc),(a2)+
+	move.w -$66b2(a4),-$66b8(a4)
+	bsr _motion_roll_base
+	move.w -$66b2(a4),(a2)+
+	move.l _motion_state+MS_ROLL(pc),(a2)+
+	; Same-integer reset must clear the full feedback, including tiny fractions.
+	bsr _motion_contact_rates
+	move.l _contact_rates(pc),(a2)+
+	addq.w #1,d5
+	cmpi.w #8,d5
+	ble.s .live_roll_fields
+	dbf d7,.live_roll_error
+	lea _contact_pitch_fake(pc),a4
+	move.w #$4ef9,(a4)
+	lea _contact_cos_stub(pc),a0
+	move.l a0,2(a4)
+	adda.l #$7f2c,a4
+	lea _contact_pitch_errors(pc),a6
+	lea _contact_pitch_results(pc),a2
+	moveq #2,d7
+.live_pitch_error:
+	move.w (a6)+,d4
+	moveq #0,d5
+.live_pitch_fields:
+	lea _contact_pitch_factors(pc),a3
+	moveq #4,d6
+.live_pitch_factor:
+	bsr _motion_reset
+	move.w d5,(a5)
+	lea _contact_cos_value(pc),a0
+	move.w (a3)+,(a0)
+	move.w #100,-$66b4(a4)
+	clr.w -$66ea(a4)
+	move.w d4,d0
+	bsr _contact_pitch
+	move.w -$66b4(a4),(a2)+
+	move.w -$66ea(a4),(a2)+
+	move.l _contact_rates+8(pc),(a2)+
+	move.l _motion_state+MS_PITCH(pc),(a2)+
+	; The patch wrapper consumes the original native word argument itself.
+	move.w -$66ea(a4),-(a7)
+	bsr _motion_pitch_rate
+	move.w -$66b4(a4),(a2)+
+	move.l _motion_state+MS_PITCH(pc),(a2)+
+	bsr _motion_contact_rates
+	move.l _contact_rates+8(pc),(a2)+
+	dbf d6,.live_pitch_factor
+	addq.w #1,d5
+	cmpi.w #8,d5
+	ble.s .live_pitch_fields
+	dbf d7,.live_pitch_error
+	move.w #VERIFY_SCALAR_FIELDS,(a5)
+	bsr _motion_reset
 	movem.l (a7)+,d0-d7/a0-a6
 	rts
+; Private fake jump vector supplies a controlled cosine; no game state writes.
+_contact_cos_stub:
+	move.w _contact_cos_value(pc),d0
+	rts
+_contact_cos_value: dc.w 0
+_contact_pitch_errors: dc.w -5,1,5
+_contact_pitch_factors: dc.w -16384,-8192,0,8192,16384
+_contact_pitch_fake: dcb.b $1880,0
+_contact_pitch_signature: dc.b 'HDCPITC1'
+_contact_pitch_results: dcb.b 3*9*5*22,0
+_contact_roll_errors: dc.w -5,-1,0,1,5
+_contact_roll_fake: dcb.b 64,0
+_contact_roll_signature: dc.b 'HDCLIVE1'
+_contact_roll_results: dcb.b 5*9*22,0
 _contact_errors: dc.w -720,-361,-5,-1,0,1,5,361,720
 _contact_fractions: dc.l -65535,0,65535
 _contact_factors: dc.w -16384,-8192,-1,0,1,8192,16384

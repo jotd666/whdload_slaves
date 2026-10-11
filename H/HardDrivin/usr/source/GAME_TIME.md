@@ -376,8 +376,8 @@ reuse the scalar module's reset paths.
 Spin uses a signed `(9/10)^T` Q16 table for smaller T and the native signed
 multiply/divide sequence at T=1. Its fraction is cleared at the discrete skid
 exit. Fall acceleration uses signed eighth-unit carries; ground constraints
-clear them. Falling displacement is scaled as described below; partial-contact
-quarter-angle relaxation and stored angular-rate feedback remain unconverted.
+clear them. Falling displacement and partial-contact relaxation/feedback are
+scaled as described below.
 
 Motion evidence:
 
@@ -497,25 +497,55 @@ Crash evidence:
   The normal slave is byte-identical to the baseline. The direct-branch audit
   passes all 46 scalar/motion ranges.
 
-`HardDrivinContact.s` supplies the next arithmetic foundation; its live contact
-hooks are **not connected yet**. It computes the Q16 correction using
-`1-(3/4)^T` and independently computes the derivative gain `(1-(3/4)^T)/T`
-before any integer quantization. Both coefficient tables round to nearest Q16,
-with at most half a coefficient LSB error. T=1 explicitly follows native signed
-quarter-angle division and arithmetic half-rate rounding. T=0 returns no update;
-the eventual caller must preserve its existing feedback state in that case.
+`HardDrivinContact.s` now drives the partial-contact roll correction, pitch
+correction and rear-wheel pitch feedback. It computes the Q16 correction with
+`1-(3/4)^T` and the feedback gain `(1-(3/4)^T)/T` before integer quantization.
+Both coefficient tables round to nearest Q16, with at most half a coefficient
+LSB error. T=1 follows native signed quarter-angle division and arithmetic
+half-rate rounding. T=0 preserves the prior feedback state.
 
-A companion Q16-by-Q14 projection helper splits integer and fractional products
-on the 68000, avoiding both a 48-bit multiply and premature input rounding. Its
-result is exactly the floor of the full product divided by 16384 within the
-stated input bounds. This helper will also support fractional velocity projection.
-`s4-contact-math` checks 162 contact-response cases and 189 projection cases in
-private emulator memory, including both signs and fractional boundaries. The
-normal slave remains byte-identical. `VERIFY_CONTACT_MATH` requires MOTION and
-runs only the private fixture; it is separate from the growing motion fixture.
+Full Q16 roll and pitch rates accompany the native words. Roll integration and
+the pitch-rate caller consume these fractions. Pitch uses the native roll cosine
+with a wide Q16-by-Q14 product; at T=1 it retains the original integer projection
+rounding. Smaller T preserves the projected fraction until angle accumulation.
+The projection helper splits signed integer and unsigned fractional products on
+the 68000, avoiding a 48-bit multiply and premature input rounding.
+
+Every native angular-rate reset is covered by the existing race, collision,
+recovery, Phantom and hard-contact reset paths. These clear the full companions,
+including same-value word resets. Other word changes invalidate the companion.
+The roll constraint also checks the full rate, so a nonzero fractional rate does
+not trigger the native integer-zero snap prematurely.
+
+Contact evidence:
+
+- `s4-contact-math-full`: 162 response and 189 projection cases pass against
+  independent high-precision/full-product models. It also executes the actual
+  roll correction/rate consumer/reset in 45 private-state cases and the pitch
+  correction/rate consumer/reset in 135 cases, across every T. A private cosine
+  jump vector controls pitch projection without writing to game memory.
+- `s4-contact-one`: 108 native-step car states match the original constant-input
+  reference. `s4-contact-off` leaves every declared range pristine with CUSTOM1
+  off. The normal slave remains byte-identical, and all 50 ranges pass the direct-
+  branch audit. These are not full driving-tape or small-T handling acceptance.
+- `s4-contact-tape-trace`: five actual native-T contact events (one front pitch,
+  four rear pitch) produce the expected rates; this tape did not exercise the
+  roll-contact hook. VERIFY_CONTACT_TRACE records consumed operands in private
+  companion padding. Three debugger entry D0 readings had the opposite sign
+  from the values actually consumed. The earlier `s4-contact-tape` register-based
+  check is therefore not valid operand evidence; the recorded-input check passes.
+  Recheck debugger-register-based operand evidence before relying on it for final
+  acceptance. Memory snapshots and private arithmetic fixtures remain distinct.
+- `s4-contact-integrated-math` is an invalid harness-start attempt: its instance
+  name exceeded the local Unix socket path limit. The completed fixture uses a
+  shorter owned instance name and a fresh output directory.
+
+VERIFY_CONTACT_MATH and VERIFY_CONTACT_TRACE require MOTION. The private contact
+fixture is separate from the growing motion fixture. Nonlinear partial-contact
+handling at small T still needs live jump/loop/collision acceptance.
 
 Remaining work includes the actual simulation dispatcher, fractional projection,
-connecting and validating partial-contact relaxation/rate feedback,
+live small-T contact validation,
 held-input handling, traffic/contact policies, replay/Phantom and other
 presentation timelines, performance and cross-machine acceptance, and the
 required human laps. The BCD clock defect versus lap-time acceptance conflict

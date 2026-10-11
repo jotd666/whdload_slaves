@@ -1,7 +1,7 @@
 ; Development-only angle, ordinary-position and falling-motion integration.
 ; Requires VERIFY_TIME_SCALARS; shares its per-substep field count.
 ; Rate callers are distinguished from geometry/contact callers of the same
-; rotation helpers. Partial-contact relaxation remains unconverted.
+; rotation helpers. Partial contact retains full Q16 correction and rate state.
 _motion_install:
 	movem.l d0/a0-a2,-(a7)
 	movea.l _code_start(pc),a0
@@ -23,6 +23,14 @@ _motion_install:
 	rts
 _motion_patches:
 	PL_START
+	; PERF_RANGE VERIFY_TIME_MOTION $0ccfa $001e: partial roll contact and feedback
+	PL_PSS $ccfa,_contact_roll,$18
+	; PERF_RANGE VERIFY_TIME_MOTION $0cd2e $0020: partial pitch contact and feedback
+	PL_PSS $cd2e,_contact_pitch,$1a
+	; PERF_RANGE VERIFY_TIME_MOTION $0cd6e $0012: rear contact pitch feedback
+	PL_PSS $cd6e,_contact_pitch_rate_only,$c
+	; PERF_RANGE VERIFY_TIME_MOTION $0cd86 $0006: fractional roll-rate constraint
+	PL_PS $cd86,_contact_roll_active
 	; PERF_RANGE VERIFY_TIME_MOTION $10ef0 $001c: gameplay crash expiry
 	PL_PSS $10ef0,_motion_crash_live,$16
 	; PERF_RANGE VERIFY_TIME_MOTION $11680 $0024: Phantom crash expiry
@@ -85,29 +93,35 @@ _motion_patches:
 _motion_roll_base:
 	movem.l d1-d2/a0-a1,-(a7)
 	move.w -$66b8(a4),-$66b2(a4)
-	move.w -$66ec(a4),d0
+	lea _contact_rates(pc),a0
+	lea -$66ec(a4),a1
+	bsr _contact_read_rate
+	bsr _contact_scale_rate
 	lea _motion_state+MS_ROLL(pc),a0
 	lea -$66b2(a4),a1
-	bsr _motion_angle_rate
-	add.w d0,(a1)
+	bsr _contact_add_angle
 	move.w (a1),d0
 	movem.l (a7)+,d1-d2/a0-a1
 	tst.w d0
 	rts
 
-; The original argument remains beneath the patch-call return address. Pass
-; a copy to the native rotation function, then remove the original argument
-; together with the displaced ADDQ #2,SP without changing preserved registers.
+; The original argument remains beneath the patch-call return address. Pitch
+; consumes its full-rate shadow; yaw passes a copy to the native helper. Both
+; remove the original argument with the displaced ADDQ #2,SP.
 _motion_pitch_rate:
-	move.l a0,-(a7)
-	lea _motion_state(pc),a0
-	st MS_RATE(a0)
-	movea.l (a7)+,a0
-	move.w 4(a7),-(a7)
-	movea.l _motion_pitch_function(pc),a0
-	jsr (a0)
+	movem.l d0-d3/a0-a1,-(a7)
+	lea _contact_rates+8(pc),a0
+	lea -$66ea(a4),a1
+	bsr _contact_read_rate
+	bsr _contact_pitch_projection
+	bsr _contact_scale_rate
+	lea _motion_state+MS_PITCH(pc),a0
+	lea -$66b4(a4),a1
+	bsr _contact_add_angle
+	movem.l (a7)+,d0-d3/a0-a1
+	move.l (a7),2(a7)
 	addq.w #2,a7
-	bra.s _motion_rate_return
+	rts
 _motion_yaw_rate:
 	move.l a0,-(a7)
 	lea _motion_state(pc),a0
@@ -261,6 +275,7 @@ _motion_fall_reset_fraction:
 	rts
 
 _motion_contact_rates:
+	bsr _contact_reset
 	move.l a0,-(a7)
 	lea _motion_state(pc),a0
 	clr.l MS_PITCH(a0)
@@ -627,6 +642,7 @@ _motion_position_delta:
 	rts
 
 _motion_reset:
+	bsr _contact_reset
 	bsr _motion_drift_reset
 	move.l a0,-(a7)
 	lea _motion_crash_state(pc),a0
