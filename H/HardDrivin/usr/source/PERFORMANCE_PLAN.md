@@ -12,10 +12,16 @@ Addresses are offsets into the SPS 0126 decompressed code (`$11a4e` bytes), the
 same numbering as `_pl0_v1`. The second variant (`_pl0_v2`) keeps its original
 behaviour until each change is ported and verified separately.
 
+## Current status
+
+Steps 1–3 are complete. See `GAME_TIME.md` for the matched-input coupling test,
+clock defects, state/scaling inventory, provisional f0=6.25 (engineering range
+4–8), and collision-inclusive 68000 capacity. Step 4 is not implemented.
+
 ## Starting point
 
-These facts come from static analysis of the code. The dynamic checks in step 3
-must confirm them before any design relies on them.
+These starting facts are supplemented and corrected by the step-3 dynamic
+checks in `GAME_TIME.md`; use its timing model for implementation.
 
 - **Measured baseline:** the A500 attract window runs at 6.44 FPS, with 6–11 fields
   per frame. The CPU renders planar polygons directly into chip RAM. The VBL handler
@@ -33,7 +39,7 @@ must confirm them before any design relies on them.
   | `$07c32` | Keyboard, gears and per-pass control ramps |
   | `$108a2` | Crash and replay camera |
   | `$0d960` | Camera setup; also writes the replay record (`$089d8`) |
-  | `$0d40e` | Not yet identified |
+  | `$0d40e` | Traffic route/speed updates |
   | `$0e49a`, `$0b0d6` | Scene preparation and transformation |
   | `$0cda4` | Player physics: `$0b35e`, `$0b662`, `$0b500`, `$0c854`/`$0c94e`/`$0ca14`, `$0baee`, `$0cab6` |
   | `$00740` | Wait for the back buffer |
@@ -41,7 +47,7 @@ must confirm them before any design relies on them.
   | `$0f894` | Crash overlay |
   | `$1046e`, `$1058e`, `$10238` | Text and overlays |
   | `$0eb22` | Cockpit |
-  | `$10020`, `$10b08` | Late per-pass work |
+  | `$10020`, `$10b08` | Score drawing and instant replay |
   | `$00750` | Submit the frame |
 
 - **Things that advance once per rendered pass, with no elapsed-time factor:**
@@ -53,8 +59,10 @@ must confirm them before any design relies on them.
     `$0d960`. Playback at `$10bb6` steps one record per pass.
   - The attract route `$0d54c`.
   - The 35-pass GAME OVER loop at `$10f6a`.
-- **Things that run in real time:**
+- **Things driven by fields:**
   - The lap and countdown BCD clocks (`$02c4c`/`$02c8a`), called from the VBL.
+    These are not accurate real-time clocks: the lap adder consumes incoming X
+    and the shared divider changes countdown behaviour. See `GAME_TIME.md`.
   - Mouse and joystick input, which the VBL accumulates into absolute positions
     (`a4-$6a06` X, 0–639; `a4-$6a04` Y, 0–399).
 - **Consequence:** the existing CUSTOM2 option is a speed limiter. It adds raster-line
@@ -179,12 +187,15 @@ Tools stay in ignored `tmp/dev/tools`.
    are active for each CPU, from the WHDLoad log.
 5. **Update `PERFORMANCE.md`** in place with the table (machine → FPS, top routines).
 
-## Step 3: game-time model (no gameplay changes yet)
+## Step 3: game-time model (complete; no gameplay changes)
 
 1. **Coupling test.** Run gameplay window A with the same tape on the A500, the A500
    with CUSTOM4 delay, the 68020 and the 68040. Compare state per completed physics
-   step and per elapsed field. Expect identical per-step state, with game speed
-   proportional to FPS. Any divergence per step shows a hidden time source; find it.
+   step and per elapsed field. A field-indexed tape delivers different inputs per
+   step at different FPS: compare inputs actually consumed before attributing
+   divergence to hidden time sources. Use VERIFY_STEPINPUT for the separate
+   matched-input control; compare known pointers relative to their hunks.
+   Full findings and equality scope are in `GAME_TIME.md`.
 2. **Inventory everything that runs once per pass.** Cover the subtree of `$0cda4`,
    `$07c32`, `$108a2`, `$0d40e`, `$10020`, `$10b08`, `$0f894`, the crash and replay
    counters, the GAME OVER and other menu loops, the attract route, the sound triggers
@@ -204,7 +215,10 @@ Tools stay in ignored `tmp/dev/tools`.
    - The A500 FPS measured in the gameplay windows.
    - The CUSTOM2 values that existing ReadMe and users recommend for faster machines.
 
-   Report f0 with a confidence range.
+   Report f0 with a confidence range. Step 3 recommends 6.25 native steps/s for
+   A500 compatibility, range 4–8 with low confidence in historical intent. World
+   scale and defective native clocks prevent a unique physical calibration; do
+   not present the recommendation as a recovered author constant.
 4. **Measure the cost of a physics step** (`$0cda4` plus `$07c32`) in 68000 cycles,
    in ordinary driving and in collisions. This bounds the cost of substeps on long
    A500 frames.
@@ -223,10 +237,11 @@ Tools stay in ignored `tmp/dev/tools`.
    point, carrying the rounding remainder from frame to frame. Keep the existing BCD
    clocks untouched. Exclude pause, menus and loading so time does not build up there.
 2. **Bound T.**
-   - Cap T at the largest step the original handles safely: the longest A500 frame
-     measured in step 2, about 11 fields at the measured A500 rate. Above the cap, run
-     several substeps of at most T_max each, without drawing in between, so a slow
-     frame cannot let the car tunnel through walls or skip collision checks.
+   - Start with T_max=1 native step. Native A500 gameplay has gaps up to 15 fields,
+     but always integrates one native step: frame duration does not prove a larger
+     T safe. Above the cap, run bounded substeps without drawing in between. Price
+     their full cost, including the measured 363,640-cycle vehicle collision and
+     scene rebuild, and validate contact before increasing T_max.
    - Report substep counts and any discarded time in VERIFY. Do not discard time
      silently.
 3. **Scale every integrated quantity by T**, following the table in

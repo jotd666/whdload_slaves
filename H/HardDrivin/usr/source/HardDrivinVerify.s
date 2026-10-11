@@ -1,5 +1,7 @@
 ; VERIFY_DRIVE only. SPS 0126 native input tape, indexed by PAL fields.
 ; Build with -DVERIFY_DRIVE=1; mutually exclusive with VERIFY_ATTRACT.
+; Optional VERIFY_STEPINPUT replaces race input with a per-pass constant-input
+; coupling control. It is not the A/B tape; see GAME_TIME.md.
 ; Calibrated on deterministic PAL A500/68000, 512K Chip + 1536K slow,
 ; no Fast RAM, PRELOAD, CUSTOM2=0 and both host input ports disabled.
 ; Other CPU/memory profiles need validation; field-indexed input does not
@@ -19,7 +21,8 @@
 ; No pose, velocity, gear, race flag or collision state is injected.
 ;
 ; Window boundaries are AFTER VBL publication at game $003f2, [first,end).
-; A: initial straight, first checkpoint at field 1198; no crash/replay.
+; A: initial straight, first recovery waypoint at field 1198; no crash/replay.
+;    This pointer change is not a checkpoint time-bonus crossing.
 ; B: recovered checkpoint -> stunt course -> jump -> collision -> full replay.
 ;    Ramp lip at field 4364; airborne beyond it; crash 4553..4748;
 ;    replay 4749..5504 (all 90 iterations); recovered by the end boundary.
@@ -78,6 +81,10 @@ _verify_drive_vbl:
 	tst.w (a0)
 	beq.s .done
 	addq.l #1,4(a0)
+	IFD VERIFY_STEPINPUT
+	cmpi.w #2,(a0)
+	beq.s .constant
+	ENDC
 	movea.l 8(a0),a1
 	move.l 4(a0),d0
 .next:
@@ -101,6 +108,12 @@ _verify_drive_vbl:
 .publish:
 	move.l 12(a0),-$6a06(a4)
 	move.w 16(a0),-$6a0a(a4)
+	IFD VERIFY_STEPINPUT
+	bra.s .done
+.constant:
+	move.l #$014000c8,-$6a06(a4)
+	move.w #4,-$6a0a(a4)
+	ENDC
 .done:
 	movem.l (a7)+,d0-d1/a0-a1
 	movea.l -$7036(a4),a0	; displaced instructions
@@ -121,6 +134,19 @@ _verify_drive_key:
 	tst.l d0
 	unlk a5
 	rts
+
+; Optional controlled coupling experiment, never the field-tape acceptance run.
+; X=320/Y=200 and button 4 are held after race entry; reassert at controls entry
+; because native controls clears its button latch. No dynamics, clocks or RNG
+; are injected. VBL publishes the same values, so mid-step VBL cannot steer it.
+	IFD VERIFY_STEPINPUT
+_verify_step_input:
+	move.l #$014000c8,-$6a06(a4)
+	move.w #4,-$6a0a(a4)
+	jsr -$7f92(a4)		; displaced decoded-key reader
+	and.w #$ff,d0		; displaced mask, including its condition codes
+	rts
+	ENDC
 
 	; phase.w, overflow.b, reserved.b, field.l, next.l, X/Y.w, buttons/key.w
 _verify_drive_state:

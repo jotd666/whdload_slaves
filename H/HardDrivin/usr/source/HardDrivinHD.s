@@ -280,6 +280,12 @@ _p0_OldOpenLibrary:
 
 ;==========================================================================
 
+	IFD VERIFY_STEPINPUT
+	IFND VERIFY_DRIVE
+	FAIL "VERIFY_STEPINPUT requires VERIFY_DRIVE"
+	ENDC
+	ENDC
+
 _pl0_v1:	PL_START
 	PL_P	$48e2,_copylock	; patch copylock
 
@@ -349,6 +355,10 @@ _pl0_v1:	PL_START
 	IFD VERIFY_DRIVE
 	IFD VERIFY_ATTRACT
 	FAIL "VERIFY_DRIVE and VERIFY_ATTRACT are mutually exclusive"
+	ENDC
+	IFD VERIFY_STEPINPUT
+	; PERF_RANGE VERIFY_STEPINPUT $07c36 $0008: constant input per controls pass
+	PL_PSS $7c36,_verify_step_input,2
 	ENDC
 	; PERF_RANGE VERIFY_DRIVE $003d8 $000a: VBL input publication
 	PL_PSS $3d8,_verify_drive_vbl,4

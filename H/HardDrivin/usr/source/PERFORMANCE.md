@@ -2,8 +2,27 @@
 
 These findings apply to SPS 0126 and the rebuilt slave. Addresses are offsets
 into the decompressed game code, not runtime addresses. Steps 1 and 2 establish
-verification fixtures and baselines; no performance optimization is enabled in
+verification fixtures and baselines; step 3 establishes the time model in
+[`GAME_TIME.md`](GAME_TIME.md); no performance optimization is enabled in
 normal builds. Intro optimization remains deferred.
+
+## Game-time findings
+
+With constant native input, the A500, delayed A500, 020 and 040 produce identical
+car state for 108 physics steps, including a crash, despite taking 222–1703 fields.
+The ordinary field-indexed tape diverges because different steps consume its input
+changes. The existing lap-clock BCD addition also consumes the incoming CPU X flag;
+countdown and lap time are field-driven but not accurate real-time clocks.
+
+The step-3 recommendation is f0=6.25 native steps/s for A500 compatibility, with a
+4–8 engineering range and low confidence in historical intent. The full units,
+writer/consumer inventory, scaling contract and calibration limits are in
+[`GAME_TIME.md`](GAME_TIME.md). A complete ordinary controls+physics pair averages
+71,673 cycles; the sampled vehicle collision costs 363,640 cycles including scene
+rebuilding. Long native frames do not establish a safe larger physics timestep.
+
+The "checkpoint" at A's field 1198 in earlier evidence is a recovery waypoint
+change, not a time-bonus crossing. Retain that distinction when calibrating f0.
 
 ## Capture definition and machine matrix
 
