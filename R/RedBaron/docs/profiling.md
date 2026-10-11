@@ -1,5 +1,12 @@
 # Red Baron performance measurements
 
+The sun/star subsystem now matches completely at all 41 controlled 50/25-MHz
+checkpoints: 33 records, phase storage, descriptor fields and selected-context
+ownership. This accounts for two more simulation-consumed global roots,
+including changing record state. See “Complete sun/star state and
+selected-context ownership” in `w6-verification.md`. Broader gameplay-state,
+real-time speed and 50-FPS acceptance remain open; no runtime change.
+
 The complete triangular pairwise simulation table now matches at all 41
 controlled 50/25-MHz checkpoints, including changing values, row ownership
 and object identities. A trace-driven search identifies 78 remaining differing

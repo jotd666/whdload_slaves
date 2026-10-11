@@ -5933,3 +5933,67 @@ cover changed values, incorrect row offsets, duplicate/misidentified objects,
 allocation/count mismatches and the three-object triangular layout. One
 additional operand-selection test covers partial global overlaps. The complete
 host suite passes 361 tests.
+
+
+## Complete sun/star state and selected-context ownership
+
+The world-consumed roots at `h3:49aa` and `h3:49d0` belong to the sun/star
+records. The original resource name `stars.dat` and source-module string
+`rbs:sun.c`, together with the native loader and update paths, establish the
+subsystem identity. `sky_records.py` now compares its complete records and
+phase storage across the controlled 50/25-MHz checkpoints.
+
+The loader stores the count at `h3:49a8`, allocates a longword pointer table
+at `h3:49aa`, `(count-1)` six-byte records at `h3:49ae`, and a word phase
+array at `h3:49bc`. `sim:6508–6530` constructs table entry zero as the fixed
+inline record at `h3:49b2`; subsequent entries identify consecutive records
+in the owned allocation. The selected context at `h3:49d0` must alias that
+same pointer table, with the same count at `h3:08e0`. Its vector pointer at
+`h3:49d4` must name `h3:8d70`, as passed by `sim:63a4` and stored by
+`sim:65e0–65f8`. Native world updates use the table through `sim:60de` and
+`sim:69d4`.
+
+Original and live instruction contracts validate these relationships. Each
+allocation must exactly fit its expected payload; every table entry is
+validated, not just the first/last. The full 50-byte descriptor at
+`h3:49a8–49d9` is compared with only its five explicitly bound pointers
+represented by those proven identities. All remaining descriptor bytes,
+all six-byte record contents and every phase word remain exact comparisons.
+The selected vector's address is bound to its native field; its contents
+and the rest of h3 are not masked or covered by that pointer binding.
+
+For frozen VERIFY
+`9c92ff9979e40ec98adc1f73255f8e57b4f65b2f2d6d5d6e13793aad7f414415`,
+**all 41 checkpoints match**: 33 records (one inline plus 32 allocated),
+132 table bytes, 192 allocated record bytes, 66 phase bytes, and the 50-byte
+global descriptor. This is **390 heap payload bytes plus 50 global bytes**.
+The allocated records take 21 distinct states and the canonical descriptor
+41 distinct states; phase storage is unchanged. Thus the proof includes
+active state changes. Raw descriptor comparisons retain five differing
+pointer bytes and raw table comparisons retain 41 differing bytes at each
+checkpoint. The native constructor relationships account for those address
+differences without inferring identity from a common numeric relocation.
+
+The checker also requires the fixed-prelude tick sequence and matching
+scheduled controls. It explicitly rejects unsupported counts, wrong row
+owners, incomplete/wrong-sized allocations and unexpected selected contexts.
+This does not establish all sun/star loading/free paths, day/night transitions,
+all render schedules, whole-world state equality or nominal real-time speed.
+No slave or performance behavior changes.
+
+Reproduce with:
+
+```sh
+python3 R/RedBaron/tools/sky_records.py \
+  tmp/dev/tmp/game/RedBaron_v2.1/RedBaron/data/sim \
+  tmp/dev/tmp/prof/w6-prelude-50mhz-030 \
+  tmp/dev/tmp/prof/w6-prelude-25mhz-030 \
+  --out tmp/dev/tmp/prof/w6-prelude-50mhz-030/sky-records.json
+```
+
+Four regression tests reject changed record/phase/scalar bytes, malformed
+owners/contexts and allocation/count mismatches, while accepting independently
+moved allocations only when every explicit relationship still holds. The
+complete host suite passes 365 tests. Remaining traced global dependencies
+include message ownership, auxiliary lists and registry state; their proof
+must retain complete contents and native identities as well.
