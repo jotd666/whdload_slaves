@@ -201,6 +201,27 @@ After removal, all three builds, 495 host tests, 81 hook ranges and 136 VERIFY
 patch destinations pass.
 
 
+The retained gauge cache's view check passes on 040 in
+`completion-e2-gauge-views`, VERIFY SHA-256
+`3822b0bbf52c148cb7a121ce7ade4bdd81ffebd5afda5de3914f951cd1e88c22`.
+The front native twin passes all seven gauges (40,000 pixel bytes and 40
+state bytes per case, 968 hits and 198 fills). Native F2/F3/F4/F1 hardware
+keyboard events then select rear/left/right/front. Each view completes five
+publications at `sim:3154a`; gauge entries at `sim:19d22` are respectively
+0/0/0/35, matching the original non-front early exit at `sim:19c12`.
+This proves gauge-patch bypass and return, not full-composition pixel twins.
+The original front window also has 35 gauge entries. The three checker
+sabotages reject a wrong view, unexpected non-front patch activity and missing
+publications. The old guest-memory input attempt did not enqueue a key and is
+not accepted transition evidence; the completed sequence uses native CIA IRQ
+input via the owned emulator's host debugger. `completion_host_input.py
+--serve --irq-only` supports this without a live boot-module RAM mapping.
+Map-toggle acceptance is dropped: the bundled Manual describes five offline
+navigation maps, and Keys has no in-flight map command. The campaign transfer
+map is outside the patched flight renderer. Full cockpit composition and its
+view twins remain open; bit 18 is still outside the normal verified mask.
+
+
 040/060 functional checks use separate MMU-core configurations. Their timing
 results will use the frequency-sensitive NOMMU cores. Configuration generation
 passes all six cases and the functional variants. All three builds pass; the

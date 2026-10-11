@@ -6,8 +6,9 @@ os.chdir(HARNESS)
 sys.path.insert(0,str(HARNESS/'tools'))
 import route_status as r
 from redbaron import Gdb
-p=argparse.ArgumentParser();p.add_argument('--serve',action='store_true');p.add_argument('--ps',type=lambda x:int(x,0));p.add_argument('--mapping',type=lambda x:int(x,0));p.add_argument('key',nargs='?');a=p.parse_args()
-if a.serve and a.ps is None and a.mapping is None:p.error('--serve requires --ps or an observed --mapping for this process')
+p=argparse.ArgumentParser();p.add_argument('--serve',action='store_true');p.add_argument('--irq-only',action='store_true',help='Serve hardware IRQ input without mapping guest RAM');p.add_argument('--ps',type=lambda x:int(x,0));p.add_argument('--mapping',type=lambda x:int(x,0));p.add_argument('key',nargs='?');a=p.parse_args()
+if a.serve and not a.irq_only and a.ps is None and a.mapping is None:p.error('--serve requires --ps, an observed --mapping, or --irq-only')
+if a.irq_only and (not a.serve or a.ps is not None or a.mapping is not None):p.error('--irq-only requires --serve and excludes guest RAM mapping')
 if not a.serve and a.key is None:p.error('Supply base,bitmap,raw or quit')
 SOCK=Path('amiga/.run/completion-input.sock').resolve()
 if not a.serve:
@@ -31,7 +32,9 @@ class Host:
 h=Host();print(h.cmd('process status'),flush=True)
 print(h.cmd('script lldb.debugger.SetAsync(True)'),flush=True)
 print(h.cmd('command script import '+json.dumps(str(Path(__file__).with_name('completion_lldb_input.py').resolve()))),flush=True)
-if a.mapping is None:
+if a.irq_only:
+ pass
+elif a.mapping is None:
  print(h.cmd(f'script completion_lldb_input.map_ram({a.ps})'),flush=True)
 else:
  print(h.cmd(f'script completion_lldb_input._mapping={a.mapping}'),flush=True)
@@ -44,6 +47,7 @@ while True:
  try:
   mode,payload=key.split(':',1) if ':' in key else ('tap',key)
   if mode not in ('tap','queue','release','burst','irq-down','irq-up'):raise ValueError('Unknown input mode')
+  if a.irq_only and key!='quit' and not mode.startswith('irq-'):raise ValueError('This server accepts hardware IRQ input only')
   if key!='quit':
    parts=[int(x,0) for x in payload.split(',')]
    if len(parts)!=(4 if mode=='burst' else 3):raise ValueError('Invalid keyboard command')

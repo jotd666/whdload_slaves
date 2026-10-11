@@ -375,8 +375,14 @@ is not an A/B FPS result or proof of chip-bus saturation.
 4. Gate it on 020+ at first. Enable it on the 68000 only if it measures ≥2%
    there. Rescue on Fractalus found cockpit dirty flags gave about 23× on that
    work.
-5. Check pixels with one twin per view: front, left, right and rear, plus the
-   map toggle.
+5. Check pixels with one twin per view: front, left, right and rear.
+   Map-toggle check dropped: the bundled Manual's Mission Assignment and
+   Navigation sections describe five offline maps; the bundled Keys lists
+   no in-flight map command. The campaign transfer map is outside this renderer.
+
+The retained gauge cache passes its front pixel/state twin and native
+rear/left/right bypass plus front return. Full-composition view twins remain
+part of E2 when that replacement is implemented.
 
 **E3. CPU raster path for 020+.**
 1. Replace the sky/ground rectangle fills, which are 27% of scene time on

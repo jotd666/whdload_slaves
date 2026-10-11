@@ -49,7 +49,8 @@ replay of that gauge's drawing-state writes. Native forced/dirty redraws and
 unsupported geometry use the original path. The seven-gauge native pixel/state twin passes;
 all CPU-class timing pairs are complete. The 020/040 pairs clear 2%; 030/060
 do not, and the shared CPU gate excludes them. The normal verified mask still
-excludes bit 18 pending the remaining E2 view/map acceptance.
+excludes bit 18 pending completion of E2. The gauge-only view check now passes:
+front pixel/state twin, zero gauge entries in rear/left/right, and front return.
 The combined 2/3/4 script cache is also dropped: every measured CPU class
 misses 2%. The runtime bit-19 option and hook are removed. This does not close
 E2: integrating the static overlay and gauges into a full cockpit composition
@@ -57,7 +58,9 @@ remains open. Native order is static overlay (`sim:00816`), gauges (`sim:0081e`)
 then picture scripts (`sim:0082a`); integration must preserve gauge pixels when
 combining stages. Standalone coverage/layer-merge helpers and the full-frame
 pack model are available for that implementation.
-View/map twins also remain open. Results are in the scoreboard. D5 remains postponed and E2–F remain
+Full-composition view twins remain open. The map-toggle check is dropped: the
+bundled game documentation specifies offline navigation maps, not an in-flight
+map command. Results are in the scoreboard. D5 remains postponed and E2–F remain
 open; the earlier lists below are historical context, not the execution order.
 
 
