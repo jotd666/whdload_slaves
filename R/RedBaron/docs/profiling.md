@@ -22,6 +22,12 @@ the last six-byte timer value. Sound behavior is unchanged and this field stays
 in raw comparisons. See “Sound-service timer provenance” in `w6-verification.md`;
 the broader sound/global-state acceptance remains open.
 
+Six more differing global bytes are verified cockpit rectangle history. Native
+reads, partial clips and writes match an independent 112-byte table model at
+all 15 checkpoints. This history must persist for later drawing; it is not a
+field to undo as simulation state. The raw comparison remains unchanged. See
+“Cockpit rectangle-history ownership” in `w6-verification.md` for scope.
+
 The current full W6 VERIFY bundle also passes the cached-68030 Preferences
 clock-boundary check: 222 CIA ticks spent in the native panel are excluded,
 one CIA tick of existing simulation debt is preserved, and no world update or

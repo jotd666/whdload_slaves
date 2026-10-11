@@ -3575,3 +3575,60 @@ The capture retains `capture-timer.py`, raw event logs and full snapshots,
 with `native_timer.py ORIGINAL_SIM CAPTURE --out REPORT`. Remaining raw global
 ranges, including cockpit/geometry scratch candidates, still need their own
 writer/consumer audit; this does not close the whole-state W6 gate.
+
+
+## Cockpit rectangle-history ownership
+
+Six bytes in the ordinary/delayed ground run's final 32-byte h3 difference lie
+inside `h3:07134–071a3`. This is a 112-byte history table: seven cockpit items,
+each with two eight-byte `(x, y, width, height)` records. The native code indexes
+it as `16 × item + 8 × selector`; the observed selector is zero or one.
+It is initialized with size 112 at `sim:19760`, read before drawing at
+`sim:19d02–19d20`, and updated with callback-produced bounds at
+`sim:19da2–19dde`. The native selector is then XORed with `h3:08dcc` at
+`sim:19df6–19e06`. This is stored drawing history, not an aircraft pose.
+
+On the partial redraw path, the previous rectangle determines the clip:
+`xmin = x − px`, `xmax = x + width + 2×px`, and the analogous Y pair.
+All arithmetic wraps as signed native words; padding at `h3:01b1a/01b1b`
+is signed bytes. The full redraw path instead calls the viewport helper.
+After drawing, two native longword copies replace just the selected eight-byte
+record with the callback result. The other thirteen records must persist.
+Restoring this table to its pre-draw contents would discard history that the
+next draw uses; it must not be added blindly to the simulation undo journal.
+
+`cockpit_history.py` binds the original `sim:19cfc–19e0a` bytes and independently
+checks slot selection, the old value consumed, the partial clip arithmetic,
+copy source/result and the complete table at each checkpoint. It rejects
+reordered/incomplete operations, stale reads, wrong destinations and any net
+mutation not accounted for by the observed copies. It does not model the
+callbacks' geometry or the full-viewport helper, and it never masks raw h3.
+
+The fresh read-only `w6-ground-cockpit-rect-030` capture uses the unchanged
+`c54a84f7…` full W6 VERIFY binary, cached 68030 at 50 MHz, maximum detail,
+Time Scale 40, synthetic ground contact and the draw-delay fixture. It observes:
+
+- 14 copies, covering every item/selector pair once; four actually change bytes.
+- Seven partial clips matching the independent model exactly.
+- Seven full-viewport paths retained but not modelled as partial clips.
+- All 112 bytes matching the sequential model at all 15 world checkpoints.
+
+The final table is byte-identical to the earlier delayed-run table, reproducing
+its six-byte difference from ordinary drawing. The changed table offsets are
+`h3:07139`, `07155`, `07159`, `0715b`, `07197` and `0719b`. This establishes
+what owns those observed bytes and how the native draw consumes them. It is
+not a blanket proof of every indirect consumer or of rendered pixels, and
+it does not establish whole-gameplay independence.
+
+Native counters 426/512/638/133 and terrain/cache/list 2/1/2 pass; 56 selected
+and two disabled hooks pass before unload. Native flight exit returns 1 and
+clears W6 ownership. The owned emulator was verified and quit. No slave/source
+bytes or sound behavior changed. Four model tests cover all disjoint slots,
+signed clipping/wrap, exact copies/untouched storage, stale data and missing or
+corrupt event sequences. The full host suite passes 258 tests.
+
+The capture retains `capture-rect.py`, all `RECT_READ/CLIP/STORE/AFTER` logs,
+full snapshots, the exit checker and hook audit. Reproduce with
+`cockpit_history.py ORIGINAL_SIM CAPTURE --out REPORT`; `rect-check.json` records
+the model and coverage counts. Remaining geometry/global ranges and broader
+physics/combat/camera/capacity/50-FPS requirements are still open.
