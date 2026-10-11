@@ -86,12 +86,29 @@ def selected_offsets(address,size,h3,targets):
     return [i for i in range(lo,hi) if i in targets]
 
 
-def check(root,routine="world",residuals=None):
+def range_targets(ranges):
+    targets=set()
+    for lo,hi in ranges:
+        if type(lo) is not int or type(hi) is not int or not 0<=lo<hi<=0xbd0c:
+            raise ValueError('Invalid h3 search extent')
+        selected=set(range(lo,hi))
+        if targets & selected:raise ValueError('Overlapping h3 search extents')
+        targets |= selected
+    if not targets:raise ValueError('Empty h3 search extent')
+    return targets
+
+
+def check(root,routine="world",residuals=None,ranges=None):
     entry=json.loads((root/'entry.json').read_text());manifest=json.loads((root/'capacity.json').read_text())
     digest=hashlib.sha256((root/'slave.slave').read_bytes()).hexdigest()
     if {entry['slave_sha256'],manifest['sha256']}!={digest}:raise ValueError('Different frozen build')
     if entry['sim_sha256']!=SIM_SHA or entry['cpu']!='68000':raise ValueError('Requires supported sim and 68000')
     target_source=None;targets=None
+    if ranges is not None:
+        if residuals is not None:raise ValueError('Choose explicit ranges or residual inventory')
+        targets=range_targets(ranges)
+        target_source=dict(h3_ranges=ranges,offsets=sorted(targets),
+            scope='Explicit complete h3 search extents, not state bindings or an equality mask.')
     if residuals is not None:
         raw=residuals.read_bytes();inventory=json.loads(raw)
         offsets=inventory['residual_union']
@@ -160,6 +177,7 @@ def check(root,routine="world",residuals=None):
 
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('capture',type=Path);p.add_argument('--routine',choices=['world','services'],default='world');p.add_argument('--residuals',type=Path,help='Search the residual_union of a supported global-relocation report instead of the vertex cache');p.add_argument('--out',type=Path,required=True);a=p.parse_args()
-    result=check(a.capture,a.routine,a.residuals);a.out.write_text(json.dumps(result,indent=2)+'\n')
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('capture',type=Path);p.add_argument('--routine',choices=['world','services'],default='world');p.add_argument('--residuals',type=Path,help='Search the residual_union of a supported global-relocation report instead of the vertex cache');p.add_argument('--h3-range',action='append',help='Complete half-open h3 extent LO:HI in hexadecimal; repeat for disjoint extents');p.add_argument('--out',type=Path,required=True);a=p.parse_args()
+    ranges=[tuple(int(v,16) for v in item.split(':')) for item in a.h3_range] if a.h3_range else None
+    result=check(a.capture,a.routine,a.residuals,ranges);a.out.write_text(json.dumps(result,indent=2)+'\n')
     print({k:result[k] for k in ('complete_calls','instructions','candidates','decoded_pcs')})

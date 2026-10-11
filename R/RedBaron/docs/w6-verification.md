@@ -6249,3 +6249,52 @@ retention, order/count mismatches and complete compact/fixed-prefix byte
 differences. The full suite passes 383 tests. This is a diagnostic inventory,
 not a passing whole-state comparator. Runtime code is unchanged; gameplay
 independence, sustained capacity and 50-FPS acceptance remain open.
+
+
+## Compact pool consumer census
+
+The shared-display inventory found a compact count of 19 versus 18 and 112
+record-byte differences at boundary 21. To test whether world updates read
+that state, `cache_reference_trace.py` now accepts explicit complete h3
+extents through `--h3-range LO:HI` (hexadecimal, half-open). This is distinct
+from residual-byte selection: the entire 602-byte `h3:5280–54d9` pool/count
+is searched, including currently matching bytes. Overlapping, empty and
+out-of-bounds extents fail. Reports record all selected offsets and preserve
+the existing conservative memory-operand/stack analysis and limitations.
+Explicit ranges and a residual inventory cannot be combined.
+
+Both retained A500 captures use frozen VERIFY
+`ac1d47ba01210c496a98db199b79fa2c30b0f3b59c570a0bec8906dfa7a116f7`.
+The complete-call results are:
+
+| Window | Routine | Complete calls | Instructions | Reference candidates |
+| --- | --- | ---: | ---: | ---: |
+| Steady (`w6-exponent-v3-a500`) | World | 42 | 1,133,943 | 0 |
+| Steady | Services | 45 | 162,772 | 0 |
+| Right/Fire (`w6-cache-replay-a500`) | World | 45 | 1,329,354 | 0 |
+| Right/Fire | Services | 48 | 175,615 | 0 |
+
+Thus the measured paths do not consume or write the compact records/count,
+including indirect references. Native render code at `sim:f0be` clears the
+count before reconstruction; `sim:f366` advances it while copying ten-byte
+records. This is consistent with render-owned compact state, rather than
+an observed simulation-speed defect. It is not a general proof: unobserved
+branches, other services, IRQ/DMA, transient self-modification and cached-CPU
+paths are outside the census. The prior shared-list differences are neither
+masked nor retroactively accepted, and no new save/restore overhead is added
+on the strength of this limited evidence.
+
+Reproduce for each of the two capture directories and both routine values:
+
+```sh
+python3 R/RedBaron/tools/cache_reference_trace.py \
+  tmp/dev/tmp/prof/w6-cache-replay-a500 \
+  --h3-range 5280:54da --routine world \
+  --out tmp/dev/tmp/prof/w6-cache-replay-a500/compact-world-references.json
+```
+
+Use `--routine services` and a separate output to inspect service polls.
+Two added regression tests cover complete extent/boundary inclusion and
+invalid or overlapping extents. The full suite passes 385 tests. Further
+consumer/state coverage, sustained simulation speed and 50-FPS acceptance
+remain open. This is retained-trace evidence, not a new runtime benchmark.

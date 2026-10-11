@@ -1,6 +1,6 @@
 import unittest
 import capstone
-from cache_reference_trace import operands,overlaps,selected_offsets
+from cache_reference_trace import operands,overlaps,selected_offsets,range_targets
 
 
 class CacheReferenceTraceTests(unittest.TestCase):
@@ -50,3 +50,14 @@ class CacheReferenceTraceTests(unittest.TestCase):
         self.assertEqual(selected_offsets(0x1002,4,0x1000,targets),[3,4])
         self.assertEqual(selected_offsets(0xcd0a,4,0x1000,targets),[0xbd0b])
         self.assertEqual(selected_offsets(0xcd0c,4,0x1000,targets),[])
+
+    def test_complete_range_targets_include_all_boundary_bytes(self):
+        targets=range_targets([(0x5280,0x54da),(0x129c,0x12d0)])
+        self.assertEqual(len(targets),602+52)
+        self.assertIn(0x54d9,targets)
+        self.assertNotIn(0x54da,targets)
+        self.assertEqual(selected_offsets(0x527f,2,0,targets),[0x5280])
+
+    def test_invalid_or_overlapping_range_targets_fail(self):
+        for ranges in ([],[(3,3)],[(-1,2)],[(0,0xbd0d)],[(0,5),(4,7)]):
+            with self.assertRaises(ValueError):range_targets(ranges)

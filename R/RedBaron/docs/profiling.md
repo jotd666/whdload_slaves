@@ -1,5 +1,11 @@
 # Red Baron performance measurements
 
+A full-range trace search finds no compact-pool/count reference candidates in
+87 complete world updates and 93 service polls across retained steady and
+Right/Fire replay windows. This supports isolation in those measured paths;
+the observed compact-state mismatch is retained. See “Compact pool consumer
+census” in `w6-verification.md`. No runtime or performance change.
+
 Explicit native inline-object identities resolve the shared display list’s
 active order: it matches at all 41 controlled checkpoints. Full storage does
 not: seven checkpoints differ in inactive slots, and boundary 21 differs in
