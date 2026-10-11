@@ -497,8 +497,25 @@ Crash evidence:
   The normal slave is byte-identical to the baseline. The direct-branch audit
   passes all 46 scalar/motion ranges.
 
+`HardDrivinContact.s` supplies the next arithmetic foundation; its live contact
+hooks are **not connected yet**. It computes the Q16 correction using
+`1-(3/4)^T` and independently computes the derivative gain `(1-(3/4)^T)/T`
+before any integer quantization. Both coefficient tables round to nearest Q16,
+with at most half a coefficient LSB error. T=1 explicitly follows native signed
+quarter-angle division and arithmetic half-rate rounding. T=0 returns no update;
+the eventual caller must preserve its existing feedback state in that case.
+
+A companion Q16-by-Q14 projection helper splits integer and fractional products
+on the 68000, avoiding both a 48-bit multiply and premature input rounding. Its
+result is exactly the floor of the full product divided by 16384 within the
+stated input bounds. This helper will also support fractional velocity projection.
+`s4-contact-math` checks 162 contact-response cases and 189 projection cases in
+private emulator memory, including both signs and fractional boundaries. The
+normal slave remains byte-identical. `VERIFY_CONTACT_MATH` requires MOTION and
+runs only the private fixture; it is separate from the growing motion fixture.
+
 Remaining work includes the actual simulation dispatcher, fractional projection,
-partial-contact relaxation/rate feedback,
+connecting and validating partial-contact relaxation/rate feedback,
 held-input handling, traffic/contact policies, replay/Phantom and other
 presentation timelines, performance and cross-machine acceptance, and the
 required human laps. The BCD clock defect versus lap-time acceptance conflict
