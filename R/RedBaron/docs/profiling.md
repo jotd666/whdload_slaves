@@ -1,5 +1,11 @@
 # Red Baron performance measurements
 
+The complete message descriptor and referenced static text now match at all
+41 controlled 50/25-MHz checkpoints, including “You’re being shot at!” and
+“You’ve been hit!” transitions. Exact deferred message-hook installation is
+checked. See “Complete message descriptor and static text” in
+`w6-verification.md`. This is state evidence, not gameplay-speed acceptance.
+
 Selected ammunition ownership and all ten projectile-linked records now match
 at all 41 controlled 50/25-MHz checkpoints. The proof includes complete
 aircraft/ammunition and projectile-pool prerequisites; only native pointer

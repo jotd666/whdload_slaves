@@ -6098,3 +6098,53 @@ owner rejection, exact active/inactive body and ammunition bytes, null
 selection changes, and incorrect allocation extents. The full host suite
 passes 373 tests. Remaining global/owner dependencies and real-time capacity
 must still be resolved before accepting W6.
+
+
+## Complete message descriptor and static text
+
+`message_state.py` compares the full 22-byte message descriptor at
+`h3:481c–4831`. Native copy code at `sim:3a7a` establishes the extent;
+`sim:3bf8` stores main text and line count, `sim:3c1e` stores secondary text,
+and `sim:3b5e` advances through NUL-terminated lines. Only the two explicit
+text pointers receive null/static-h3 identities. Every other byte, including
+countdown, rectangle, line count, redraw flag and priority, remains raw.
+Referenced text must match the original executable exactly through the
+specified number of complete NUL-terminated lines. Dynamic text owners are
+unsupported and fail, rather than receiving guessed allocation identities.
+
+Original code contracts pass. The initial snapshot must retain original
+message timer stores at `sim:3c06/3c7c`; later snapshots must contain exact
+calls to the frozen build's `time_message_start`/`time_message_shorten`, with
+the required padding. This explicitly checks deferred W6 installation.
+The comparison also requires matching frozen executables, prelude/world
+boundaries and scheduled inputs.
+
+For frozen VERIFY
+`9c92ff9979e40ec98adc1f73255f8e57b4f65b2f2d6d5d6e13793aad7f414415`,
+all 41 retained 50/25-MHz checkpoints match. The main owner is null at 11,
+`h3:1cbd` (“You're being shot at!”) at nine, and `h3:17d3` (“You've been hit!”)
+at 21. The complete canonical descriptor/text takes 20 distinct states.
+Secondary text remains null throughout; its live nonnull behavior is not
+covered by this window. Raw pointer differences remain in the report.
+This is observed message-state equality, not proof of equal combat outcomes,
+all message lifecycle paths, physical display latency or nominal world speed.
+
+The separate primary-dt residual at `h3:4834` is 341 versus 372 only at world
+boundary zero, before the first W6 scheduled update. Initial prelude values
+and all later completed-world boundary values are 225. `prelude_state.py`
+already retains this startup residue explicitly; `time_loop_world_committed`
+writes 225 before dispatching the world input/update path. No new masking or
+runtime change is introduced here.
+
+```sh
+python3 R/RedBaron/tools/message_state.py \
+  tmp/dev/tmp/game/RedBaron_v2.1/RedBaron/data/sim \
+  tmp/dev/tmp/prof/w6-prelude-50mhz-030 \
+  tmp/dev/tmp/prof/w6-prelude-25mhz-030 \
+  --out tmp/dev/tmp/prof/w6-prelude-50mhz-030/message-state.json
+```
+
+Four regression tests cover multiline text identity under relocation,
+scalar/line-count mutations, changed text and invalid owners, secondary
+selection and null transitions. The host suite passes 377 tests. Shared
+registry/owner state, real-time capacity and 50-FPS acceptance remain open.
