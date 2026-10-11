@@ -70,6 +70,10 @@ _verify_drive_race:
 	clr.w 18(a0)
 	lea _verify_drive_tape(pc),a1
 	move.l a1,8(a0)
+	IFD VERIFY_STEPINPUT_RAMP
+	lea _verify_step_ramp_count(pc),a1
+	clr.w (a1)
+	ENDC
 	move.w #2,(a0)
 .done:
 	movem.l (a7)+,d0/a0-a1
@@ -113,6 +117,9 @@ _verify_drive_vbl:
 .constant:
 	move.l #$014000c8,-$6a06(a4)
 	move.w #4,-$6a0a(a4)
+	IFD VERIFY_STEPINPUT_RAMP
+	bsr _verify_step_ramp_buttons
+	ENDC
 	ENDC
 .done:
 	IFD VERIFY_TIME_REPLAY
@@ -154,8 +161,17 @@ _verify_drive_key:
 ; are injected. VBL publishes the same values, so mid-step VBL cannot steer it.
 	IFD VERIFY_STEPINPUT
 _verify_step_input:
+	IFD VERIFY_STEPINPUT_RAMP
+	move.l a0,-(a7)
+	lea _verify_step_ramp_count(pc),a0
+	addq.w #1,(a0)
+	movea.l (a7)+,a0
+	ENDC
 	move.l #$014000c8,-$6a06(a4)
 	move.w #4,-$6a0a(a4)
+	IFD VERIFY_STEPINPUT_RAMP
+	bsr _verify_step_ramp_buttons
+	ENDC
 	jsr -$7f92(a4)		; displaced decoded-key reader
 	and.w #$ff,d0		; displaced mask, including its condition codes
 	rts
@@ -410,4 +426,21 @@ _verify_time_pause_key:
 .done:
 	rts
 .phase: dc.w 0
+	ENDC
+
+	IFD VERIFY_STEPINPUT_RAMP
+; Input-only arithmetic coverage: increase for 64 passes, decrease for 64,
+; then increase again. The VBL and controls hook publish the same held value.
+_verify_step_ramp_buttons:
+	move.l d0,-(a7)
+	move.w _verify_step_ramp_count(pc),d0
+	cmpi.w #64,d0
+	bls.s .done
+	cmpi.w #128,d0
+	bhi.s .done
+	move.w #1,-$6a0a(a4)
+.done:
+	move.l (a7)+,d0
+	rts
+_verify_step_ramp_count: dc.w 0
 	ENDC

@@ -1,5 +1,6 @@
 ; SPS 0126 elapsed-time foundation. Development build: VERIFY_TIME + CUSTOM1.
-; This stage observes timing only. It does NOT enable scaled simulation.
+; This file observes timing; optional scalar diagnostics use a constant T.
+; The elapsed-time dispatcher and full scaled simulation are not connected yet.
 ; No hook is installed unless both gates are on. Production builds exclude it.
 ;
 ; Nominal reference f0=50/8 native steps per second. Every PAL field therefore
@@ -10,6 +11,9 @@ TIME_FIELDS_PER_STEP equ 8
 TIME_FIELD_Q16 equ $2000
 
 _time_install:
+	IFD VERIFY_TIME_SCALAR_MATH
+	bsr _time_scalar_math_test
+	ENDC
 	IFD VERIFY_TIME_MATH
 	bsr _time_math_test
 	ENDC
@@ -22,6 +26,12 @@ _time_install:
 	lea _time_patches(pc),a0
 	movea.l _resload(pc),a2
 	jsr resload_Patch(a2)
+	IFD VERIFY_TIME_SCALARS
+	movea.l _code_start(pc),a1
+	lea _time_scalar_patches(pc),a0
+	movea.l _resload(pc),a2
+	jsr resload_Patch(a2)
+	ENDC
 .restore:
 	movem.l (a7)+,d0-d1/a0-a2
 .done:
@@ -76,6 +86,9 @@ _time_outer:
 	tst.b TS_ACTIVE(a0)
 	bne.s .measure
 	st TS_ACTIVE(a0)
+	IFD VERIFY_TIME_SCALARS
+	bsr _time_reset_scalars
+	ENDC
 	move.l TS_FIELDS(a0),TS_PREVIOUS(a0)
 .measure:
 	move.l TS_FIELDS(a0),d0
@@ -154,6 +167,9 @@ _time_replay:
 	move.w (a7)+,d0
 	lea _time_state(pc),a0
 	move.b d0,TS_ACTIVE(a0)
+	IFD VERIFY_TIME_SCALARS
+	bsr _time_reset_scalars
+	ENDC
 	movem.l (a7)+,d0/a0
 	bra.s .submit
 .ordinary:
@@ -195,6 +211,28 @@ _time_scale_word:
 	swap d2
 	ext.l d2
 	ext.l d0
+	rts
+
+; Q16 companion for rates needing exponential retention between ramp updates.
+; D0.W: rate with magnitude <=16383; D1.W: fields 0..8; D2.L: signed Q16
+; remainder -65535..65535. Return D0.L integer increment, D2.L remainder.
+; This bound keeps the intermediate signed product plus carry within 32 bits.
+_time_scale_q16:
+	muls.w d1,d0
+	lsl.l #8,d0
+	lsl.l #5,d0
+	add.l d2,d0
+	move.l d0,d2
+	swap d0
+	ext.l d0
+	andi.l #$ffff,d2
+	tst.l d0
+	bpl.s .done
+	tst.l d2
+	beq.s .done
+	addq.l #1,d0
+	subi.l #$10000,d2
+.done:
 	rts
 
 ; Convert unsigned pending fields D0.L into one bounded step D1.L (Q16.16),
@@ -250,6 +288,27 @@ _time_math_test:
 	move.l d1,(a2)+
 	move.l d2,(a2)+
 	dbf d7,.debt
+	lea _time_q16_values(pc),a1
+	lea _time_q16_results(pc),a2
+	moveq #6,d7
+.qvalue:
+	move.w (a1)+,d4
+	moveq #0,d5
+.qfields:
+	lea _time_q16_carries(pc),a0
+	moveq #6,d6
+.qcarry:
+	move.w d4,d0
+	move.w d5,d1
+	move.l (a0)+,d2
+	bsr _time_scale_q16
+	move.l d0,(a2)+
+	move.l d2,(a2)+
+	dbf d6,.qcarry
+	addq.w #1,d5
+	cmpi.w #8,d5
+	ble.s .qfields
+	dbf d7,.qvalue
 	movem.l (a7)+,d0-d7/a0-a2
 	rts
 _time_math_values: dc.w -32768,-100,-3,-1,0,1,3,100,32767
@@ -258,4 +317,12 @@ _time_math_results: dcb.w 9*9*15*2,0
 _time_debt_values: dc.l 0,1,7,8,9,15,16,65535,524287,524288,$ffffffff
 _time_debt_signature: dc.b "HDDEBT01"
 _time_debt_results: dcb.l 11*3,0
+_time_q16_values: dc.w -16383,-2,-1,0,1,2,16383
+_time_q16_carries: dc.l -65535,-8192,-1,0,1,8192,65535
+_time_q16_signature: dc.b 'HDQ16001'
+_time_q16_results: dcb.l 7*9*7*2,0
+	ENDC
+
+	IFD VERIFY_TIME_SCALARS
+	INCLUDE "HardDrivinScalar.s"
 	ENDC

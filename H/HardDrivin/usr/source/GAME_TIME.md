@@ -285,7 +285,7 @@ by this investigation.
 
 Step 4 remains incomplete. `HardDrivinTime.s` currently supplies an elapsed-field
 observer and exact arithmetic helpers, compiled only with `VERIFY_TIME` and
-installed only with CUSTOM1 nonzero on SPS 0126. It does **not** scale gameplay,
+installed only with CUSTOM1 nonzero on SPS 0126. VERIFY_TIME alone does **not** scale gameplay,
 run catch-up substeps or remove CUSTOM2. Normal builds exclude the entire module.
 
 The VBL hook follows the native register saves at `$00050`. It counts while the
@@ -322,8 +322,51 @@ Diagnostic evidence retained under ignored `tmp/dev/tmp/prof/`:
   Normal, VERIFY_DRIVE and VERIFY_ATTRACT builds remain byte-identical to the
   accepted step-2/3 binaries. The normal SHA-256 above remains valid.
 
-Remaining work includes the actual simulation dispatcher, all state scaling and
-reset writers, held-input handling, traffic/contact policies, replay/Phantom and
+The additional `VERIFY_TIME_SCALARS` development module now scales throttle ramps,
+longitudinal acceleration and both RPM slew limits. `VERIFY_SCALAR_FIELDS` selects
+its constant test interval (0..8 fields, default 8); the observer is not yet wired
+to these updates. This deliberately incomplete build is an arithmetic experiment,
+not frame-rate-independent gameplay. CUSTOM1 off installs neither module.
+
+Throttle carries Q16 fractions through ramps and off-road `(7/8)^T` retention.
+The nine-entry retention table is rounded to the nearest Q16 unit; multiplication
+uses exact integer floor rounding. Its coefficient error is at most half a Q16
+unit. T=1 uses the original integer multiply/shift and clears the decay fraction,
+preserving the native truncation sequence. Small-T retention is therefore a finer
+model between these integer steps; full handling equivalence remains to be tested.
+The discrete skid-exit reduction stays unscaled and clears the fraction.
+
+Velocity and RPM increments use exact eighth-unit signed remainders. RPM scales
+the ±450 slew limit, saturating at the target, rather than scaling target error.
+New-race, Phantom initialization, recovery, collision and throttle-reset writers
+clear affected fractions. Shadow values invalidate fractions after other absolute
+writers; RPM also checks gear changes, even if the integer RPM stays unchanged.
+
+Scalar evidence (local capture names):
+
+- `s4-scalars-final-{a500,slow,020,040}`: 108 car states per profile at T=1,
+  compared with the original constant-input reference. Equality covers the same
+  G($98f6)..G($9951) range and gear-pointer normalization as step 3. This is not
+  the full field-indexed driving tape or a variable-T trajectory comparison.
+- `s4-scalars-ramp-q16`: at T=1/8, captured native operands and results match
+  the independent arithmetic model for 179 velocity, 111 upward-throttle,
+  64 downward-throttle, one neutral RPM and 179 engaged RPM updates.
+- `s4-retention-math`: 315 private-memory emulator calls cover all T values,
+  five throttle values and seven positive/negative fractions against an
+  independent integer model and high-precision coefficient calculation.
+- `s4-time-math-q16`: the earlier 1215 eighth-unit and 11 debt cases still pass;
+  an additional 441 cases cover signed Q16 integration across its supported
+  rate range, all T values and boundary fractions.
+- `s4-scalars-off`: with CUSTOM1 off, all scalar and timing PERF_RANGE sites
+  retain their original relocated bytes. Normal, DRIVE and ATTRACT builds remain
+  byte-identical; six invalid flag/range combinations fail assembly as intended.
+- The first ramp fixture did not reset its counter at race entry and failed to
+  exercise downward input. Its arithmetic results are not downward-coverage
+  evidence; the final fixture resets at race entry and requires that coverage.
+
+Remaining work includes the actual simulation dispatcher, position/angular/gravity
+scaling and their reset writers, held-input handling, traffic/contact policies,
+replay/Phantom and
 other presentation timelines, performance and cross-machine acceptance, and the
 required human laps. The BCD clock defect versus lap-time acceptance conflict
 remains unresolved; the implementation currently preserves the native clocks.
