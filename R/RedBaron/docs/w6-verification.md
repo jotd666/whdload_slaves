@@ -3514,3 +3514,64 @@ unfiltered comparison. Reproduce with `w6_boot_current.py 030 16319 CAPTURE
 --probe ground --slow`, the retained collector (`--steps 20`), the native checks
 before unload, then `world_comparison.py` against the ordinary reference. The
 same-build reference and matching initial world state are required.
+
+
+## Sound-service timer provenance in the remaining global differences
+
+The ordinary/delayed ground comparison's changed byte at `h3:03f5d` belongs to
+a six-byte timer rooted at `h3:03f5a`: a CIA start timestamp followed by a
+16-bit duration. It is distinct from the per-context elapsed counter at sound
+payload offset 344 discussed above. Original code passes this timer to the
+start routine from `sim:2abce` and `sim:2ad8a`, in paths that inspect or operate
+on sound contexts. The former follows the context byte-348 inactive test;
+`sim:2b476` passes the same timer to the force-expired routine.
+
+The original shared timer contract is precise:
+
+- `sim:29760` stores `sim:30006` as the start and truncates the supplied duration
+  to a word. It reads the native CIA lifetime counter, not W6 world ticks.
+- `sim:2977e` clears the duration and stores CIA-now minus one, modulo 2^32.
+- `sim:2972c` returns a true low-word Boolean when unsigned
+  `(CIA-now − start) > duration`; equality has not expired. If the timer-service
+  enable word at `sim:3015a` is zero, it returns true directly.
+
+`native_timer.py` independently models these unsigned-width operations and binds
+the complete original `sim:2972c–29794` routine bytes by hash. It rejects missing
+or mismatched entry/result pairs. A CIA change between observed endpoints is
+retained explicitly as an unverified store; the checker never silently treats
+a possible interrupt crossing as an exact match. At least one verified store
+is required. Every full snapshot must also match the last observed six-byte
+store, so a later unobserved net mutation cannot pass the checkpoint check.
+
+A fresh read-only capture, `w6-ground-sound-timer-030`, uses the same
+`c54a84f7…` full W6 VERIFY build, cached 68030 at 50 MHz, Time Scale 40 and the
+ground/delayed-drawing fixtures. Breakpoints bracket the actual timer store at
+`sim:2976c` and its result at `sim:29778`, conditioned on the exact timer address.
+All three observed starts agree with the model:
+
+| Started world tick | CIA before and after | Stored start | Stored duration |
+|---|---:|---:|---:|
+| 0 (native prelude) | 1114 | 1114 | 5 |
+| 1 | 1138 | 1138 | 5 |
+| 10 | 1206 | 1206 | 5 |
+
+There are zero interrupt-straddling/unverified observations. All 15 completed
+pose snapshots retain exactly the most recent observed timestamp/duration;
+the last is 1206/5. No force-expired or predicate call is claimed as dynamically
+covered by this run: their semantics have original-code and host-model evidence
+only. The timer's complete indirect consumer scope and sound request/delivery
+sequence are still open. This explains the clock-derived differing field; it
+does not authorize removing it from raw comparisons or certify sound equivalence.
+
+Native counters 426/512/638/133 and terrain/cache/list 2/1/2 pass; 56 selected
+and two disabled hooks pass before unload. The native flight return remains 1
+and ownership cleanup succeeds. The owned emulator was verified and quit.
+No sound behavior or slave/source bytes changed. Three new host tests cover
+unsigned clock wrap, duration truncation, strict expiry, disabled service,
+corrupt/missing pairs and retained interrupt uncertainty; the suite passes 254.
+
+The capture retains `capture-timer.py`, raw event logs and full snapshots,
+`timer-check.json`, the exit checker and hook audit. Reproduce the model check
+with `native_timer.py ORIGINAL_SIM CAPTURE --out REPORT`. Remaining raw global
+ranges, including cockpit/geometry scratch candidates, still need their own
+writer/consumer audit; this does not close the whole-state W6 gate.

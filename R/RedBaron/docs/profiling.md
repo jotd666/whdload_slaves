@@ -16,6 +16,12 @@ and the same impact/flight exit. This is a short correctness comparison, not
 a performance-rate claim; see “Ground contact under deliberately delayed
 rendering” for the three-schedule counts and remaining raw differences.
 
+One remaining global difference is now traced to a native sound-service timer:
+three observed starts copy the CIA clock exactly, and all 15 snapshots retain
+the last six-byte timer value. Sound behavior is unchanged and this field stays
+in raw comparisons. See “Sound-service timer provenance” in `w6-verification.md`;
+the broader sound/global-state acceptance remains open.
+
 The current full W6 VERIFY bundle also passes the cached-68030 Preferences
 clock-boundary check: 222 CIA ticks spent in the native panel are excluded,
 one CIA tick of existing simulation debt is preserved, and no world update or
