@@ -1,5 +1,12 @@
 # Red Baron performance measurements
 
+The remaining 1,000-byte residual is a native file-stream buffer. Its two
+cross-boot differences already exist before W6 activates and remain unchanged
+through all 41 controlled checkpoints; both stream handles and descriptors are
+inactive at those samples. The companion buffer matches raw. See “Inactive
+stream-buffer residual” in `w6-verification.md`. This does not prove absence
+of accesses between samples or cover mission-transition file behavior.
+
 The seven 384-byte heap residuals are now bound to native sound playback slots.
 All 22 referenced resources (102,352 bytes) match in the controlled 50/25-MHz
 comparison, and remaining slot data matches except for explicitly reported

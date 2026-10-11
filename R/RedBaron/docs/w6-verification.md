@@ -4931,3 +4931,47 @@ the unequal counter observations. It does not establish identical audible
 output, event delivery or all sound state. Other heap/global ownership,
 broader gameplay and CPU tests, sustained capacity and real smooth 50 FPS remain
 open. Sound remains unchanged and W6 remains VERIFY-only.
+
+
+## Inactive stream-buffer residual
+
+`stream_buffers.py` binds the two 1,000-byte allocations at `h3:077b0/077b8`
+to the native stream constructor and open paths. At all **41 controlled
+50/25-MHz checkpoints**, both complete buffers are unchanged from their own
+initial snapshot. The first buffer matches across boots. The second differs
+only at offsets **763 and 823**, with the same two differences already present
+in the initial snapshot before W6 activates. No pointer interpretation or
+normalization is applied to these bytes.
+
+`sim:20ea4..20ed4` allocates both buffers and records their capacities at
+`h3:077b4/077bc`. `sim:20f28..20f42` and `sim:20f9c..20fb6` pass the corresponding
+buffer and size to `sim:24af0` in modes two and one, then store returned handles
+at `h3:07792/077ac`. That routine selects one of two 22-byte stream descriptors
+at `h3:078c8`, checks the active flag, and installs buffer/size at descriptor
++2/+6 before setting the flag (`sim:24b94..24ba2`). These instruction contracts
+are checked against the original executable and every live snapshot.
+
+Both handles are zero and both complete descriptors are zero at every retained
+boundary. The checker requires these conditions, exact tracked 1,000-byte
+payload extents, native capacities and exact per-run buffer invariance. It
+retains cross-boot raw differences and diagnostic full-buffer hashes rather
+than silently discarding the residual. The observed result is consistent with
+inactive buffer contents inherited from setup; it is not a proof of the origin
+of those two bytes, or of no read/write activity between samples.
+
+Three host tests reject active handles/descriptors, changed final buffer bytes,
+wrong extents/capacities and short reads. All **332 host tests pass**. No slave
+code changed and no emulator was launched. Reproduce the retained report with:
+
+```sh
+python3 R/RedBaron/tools/stream_buffers.py \
+  tmp/dev/tmp/game/RedBaron_v2.1/RedBaron/data/sim \
+  tmp/dev/tmp/prof/w6-prelude-50mhz-030 \
+  tmp/dev/tmp/prof/w6-prelude-25mhz-030 \
+  --out tmp/dev/tmp/prof/w6-prelude-50mhz-030/stream-buffers.json
+```
+
+This classifies the observed 1,000-byte residual without certifying file I/O,
+mission transitions or complete gameplay independence. Remaining heap/global
+ownership, broader scenarios and CPU architectures, sustained capacity and
+smooth 50 FPS remain open. W6 stays VERIFY-only.
