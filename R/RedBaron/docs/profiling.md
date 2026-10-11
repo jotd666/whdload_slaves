@@ -1,5 +1,12 @@
 # Red Baron performance measurements
 
+A current 250-field A500 profile identifies two concrete render-cost targets:
+`sim:2c31c` costs 513,040 main-task cycles and `sim:398aa` costs 405,114 inside
+one complete 5,263,418-cycle render (**17.4% combined**). The same render's
+3D pass costs 2,212,788 cycles. See “Current A500 render cost and next targets”
+in `w6-verification.md`. These are single-window cost observations, not an
+optimization result or a general claim that 3D maths dominate drawing.
+
 An A500 census starting at W6's first world boundary now covers the scheduled
 Right/Fire replay. All four transitions and two commands are applied exactly,
 but deadline-to-world-input dispatch takes **58/47/40/32 CIA ticks**; scheduler

@@ -5580,3 +5580,74 @@ Three new host tests cover delay decomposition, unsigned clock wrap, missing
 history, skipped ticks and reversed clocks; all **343 host tests pass**. No
 slave code or player build changes. W6 gameplay independence, sustained capacity
 across scenes and actual smooth 50 FPS remain unaccepted.
+
+
+## Current A500 render cost and next targets
+
+`w6-current-cost-a500` retains 250 traced PAL fields of the current
+`afb84a18…` VERIFY build, using the established A500 configuration and
+CUSTOM2=16319, CUSTOM4=0, CUSTOM5=512. Profiling begins after the first restored
+draw. The 100/100/50-field chunks span 100/101/51 live fields: **250 recorded,
+252 elapsed**. All boundary counters are retained and conserve exact funding:
+47 world updates complete against 41.3737374 newly funded, reducing inherited
+CIA debt from 61 to 19. This short profile is not an FPS/capacity acceptance
+window; the separate uninterrupted censuses provide those observations.
+
+Complete-call measurement uses explicit entry/return pairs, the IRQ-stack page
+observed in this capture, and exact stack restoration checks. Calls crossing
+trace joins are excluded from complete-call statistics. One render finishes
+entirely inside the second chunk:
+
+| Routine | Complete calls | Mean main-task cycles |
+| --- | ---: | ---: |
+| Entire W6 render | 1 | 5,263,418 |
+| Native 3D pass `sim:2c552` | 1 | 2,212,788 |
+| Native world update `sim:01098` | 44 | 365,329.8 |
+| Pose capture | 47 | 23,382.6 |
+| Pose interpolation | 2 | 169,512 |
+| Clock/service poll | 48 | 59,376.8 |
+| Exact credit advance | 340 | 748.2 |
+| Cockpit callback dispatcher `sim:19ba6` | 1 | 108,024 |
+| Overlay interpreter `sim:28962` | 3 | 65,794 |
+
+These inclusive call figures overlap; they must not be added as independent
+cost categories. The complete render additionally contains **942,146 IRQ-stack
+cycles** and **9,970 interrupt-entry cycles**, totaling **6,215,534 wall cycles**.
+Its main-task total is independently reproduced by instruction attribution
+between its exact entry and return, rather than by selecting whole fields.
+The named display-list save/restore calls cost approximately 1,944/1,916 cycles,
+terrain cache save/restore wrappers 237/214, and model restoration 16,676 in
+this window. Those helpers alone do not explain the render's long stall.
+
+Two self-contained original helpers stand out inside that exact render:
+
+| Helper | Calls inside complete render | Main-task cycles | Share of render main-task cycles |
+| --- | ---: | ---: | ---: |
+| Exponent encoding `sim:2c31c–2c33a` | 574 | 513,040 | 9.75% |
+| Model-bank lookup `sim:398aa–398f4` | 1,131 | 405,114 | 7.70% |
+
+The exponent helper counts significant bits and left-shifts to the leading
+carry one bit at a time. It is a candidate for a bounded exact replacement;
+zero input, full register outputs and condition codes need models and native
+twins before substitution. Model lookup repeatedly scans the 12-byte bank
+records and subtracts their unsigned counts. Any indexing/cache replacement
+must preserve empty-bank behavior and resource lifecycle, not merely return
+matching pointers in this one loaded scene. Their **17.4% combined** cost is
+an optimization opportunity, not a promised saving. The rest of rendering and
+the separate smooth-50-FPS requirement remain substantial work.
+
+Across the entire trace, 1,142 complete exponent calls average 893.3 cycles
+(range 762–1,006), and 2,383 complete model lookups average 452.3 (320–1,650).
+These counts include calls outside the single complete render. Their observed
+input registers remain in `capacity-costs.json` for exact-model follow-up.
+No conclusion about whole-game maths-versus-drawing dominance follows from
+this one frame, and no replacement has been installed.
+
+The retained directory contains frozen binaries/listing/configuration, endpoint
+RAM, all three traces, `capture-capacity.py`, `analyze-costs.py`,
+`render-hotspots.py`, `capacity-check.json`, `capacity-costs.json` and
+`render-hotspots.json`. Terrain-cache wrappers share save/restore tail returns;
+the analysis uses those explicit returns after rejecting the initial generic
+first-RTS guess. Native counters 426/512/638/133 and terrain/cache/list 2/1/2,
+plus 56 selected and nine disabled hook ranges, pass. The owned emulator was
+verified and quit. No slave code or sound behavior changes.
