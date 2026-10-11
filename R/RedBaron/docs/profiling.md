@@ -1,5 +1,11 @@
 # Red Baron performance measurements
 
+Native control-flow analysis proves that every local path to the conditional
+stack-scratch read passes its fresh frame-local assignment first. This covers
+95 reachable instructions, with ten subroutine calls explicitly outside the
+proof. See “Stack-scratch local control-flow proof” in `w6-verification.md`.
+This does not close callee/reentrancy or live read-path coverage.
+
 The remaining lookup-context pointer resolves to the exact native 32-byte
 identity table at all 41 controlled checkpoints. A complete-range replay
 trace sees assignments, but no reads, of the remaining stack-scratch pointer

@@ -6356,3 +6356,40 @@ Repeat with `--routine services` and a separate output for the service census.
 Three added regression tests cover exact owner relocation, incorrect owners,
 changed final bytes and truncated data. The full suite passes 388 tests.
 No runtime change or nominal-speed acceptance follows from these results.
+
+
+## Stack-scratch local control-flow proof
+
+`scratch_control_flow.py` decodes the complete original routine
+`sim:1e3a6–1e4cf` and constructs its local branch graph. It rejects undecoded
+bytes, branch targets outside the routine, unsupported control transfers and
+unexpected frame release/return. Original executable SHA and the native
+scratch assignment/read contracts are required. The graph and routine SHA
+are retained in the report for review.
+
+All **95 reachable instructions** are covered. The assignment at `sim:1e3ba`
+dominates the conditional read at `sim:1e4b2`: removing the assignment node
+makes the read unreachable. The original prologue reserves 856 bytes and
+the assignment stores `a5-780` in `h3:7668`. The conditional read occurs
+before `UNLK` at `sim:1e4cc` and the sole local return at `sim:1e4ce`.
+A zero result checked at `sim:1e4aa` bypasses the read, consistent with its
+absence in the retained replay's complete world calls.
+
+This proves local control-flow ordering, not complete global scratch safety.
+There are **ten opaque subroutine calls** in the routine; the graph treats
+them as returning to their next instruction. Their possible global writes,
+reentrancy, interrupt effects and indirect external entries are not proven
+absent. Neither target-buffer contents nor live execution of the nonzero
+query/read branch are established. The raw cross-CPU scratch-pointer
+differences therefore remain recorded, not excluded by this proof.
+
+```sh
+python3 R/RedBaron/tools/scratch_control_flow.py \
+  tmp/dev/tmp/game/RedBaron_v2.1/RedBaron/data/sim \
+  --out tmp/dev/tmp/prof/w6-prelude-50mhz-030/scratch-control-flow.json
+```
+
+Four regression tests cover conditional paths, an assignment-bypassing path,
+unreachable readers, external edges and loops. The full suite passes 392
+tests. No runtime or performance change; whole-gameplay independence,
+sustained nominal speed and smooth 50-FPS acceptance remain open.
