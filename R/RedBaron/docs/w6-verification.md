@@ -2694,3 +2694,58 @@ native pixel twin on materially different backgrounds and view/gun transitions.
 This model does not authorize omitting the interpreter's state writes or reusing
 stale destination pixels. No runtime cache, measured speedup or 50 FPS result is
 claimed; all wider W6 gameplay gates remain open.
+
+
+## Private native overlay compositor check
+
+The VERIFY-only overlay probe now runs a private-buffer blitter self-test before
+installing its interpreter hooks. `overlay-blit.s` implements synchronous,
+word-aligned five-plane cookie-cut composition with one shared mask. It waits
+for the blitter before setup, between planes and before returning. This is a
+component for a possible cache; it does not replace any game drawing.
+
+Two cases use the model's program-3/program-4 bounds: (64,71,192,30) and
+(64,72,224,31). A deterministic byte LFSR initializes source, mask, destination
+and guards. Both cases exercise all eight mask/image/destination bit combinations.
+A native CPU reference uses `old XOR ((old XOR image) AND mask)`; the host oracle
+independently uses the raster model's masked composition. Every byte of the
+45,240-byte chip allocation is checked, including untouched destination, source,
+mask and guards. The separate 40,000-byte CPU reference is also checked. Both
+allocations are observed freed after the two cases.
+
+The frozen VERIFY slave is
+`51b84ed0c5c1070c9875cde576d1e44e3f586d33646ba36a019dd5c582d09046`
+(text 250,714 bytes). Local captures `w6-overlay-blit-a500` and
+`w6-overlay-blit-030` select CUSTOM2=32703, CUSTOM4=0 and CUSTOM5=512, maximum
+detail / Time Scale 40, on the established A500 and cached 50 MHz 68030 setups.
+**Each** passes two cases: 90,480 chip bytes and 80,000 CPU-reference bytes match
+the host oracle, and both observed completion points have an idle blitter.
+
+After the self-test, each boot captures ordinary programs 3 and 4 on both game
+buffers. All 160,000 framebuffer bytes per boot again match `cockpit_raster.py`.
+The existing native timing/input/presentation counters pass 426/512/638/133,
+terrain/cache/list checks pass 2/1/2, and all 54 selected timing/pacing hook
+checks pass. This also exercises the overlay probe on 68000. Both owned test
+instances were quit. Host tests pass 220 cases; static audits cover 66 ranges
+and 123 patch destinations with zero errors. Normal/developer builds retain
+their W5 hashes.
+
+Reproduce the private-buffer comparison with `overlay_blit_check.py` on the
+capture's `blit-capture.json`, supplying an `--out` path. Raw chip and CPU buffers,
+completion/free observations and the capture helper are retained with the local
+evidence. These tests establish neither runtime cache integration nor a speedup.
+Cache-key completeness, interpreter post-state, live pixel twins and measurements
+remain required. W6's primary invariant remains consistent simulation speed
+across rendering schedules; no rendering-component result closes that gate or
+the separate smooth-50-FPS requirement.
+
+The final source removes a redundant pre-68010-CCR-patch self-test invocation
+from the captured build. The guarded test had already completed and freed its
+buffers before the common invocation, which was a no-op on that path. The
+common invocation remains once for all CPUs; the compositor and test bodies
+are unchanged. The capture hash above identifies the measured binary, not this
+subsequent call-site cleanup.
+The cleaned build has 250,710 text bytes and SHA-256
+`b85e2e4224fe32c99503ede9b07711eaa8c619b94cb081670e62b6e70ed35491`;
+its 66-range and 123-destination static audits pass. Native captures above
+precede this cleanup.

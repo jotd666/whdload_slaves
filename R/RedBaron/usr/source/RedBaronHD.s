@@ -605,6 +605,7 @@ new_DeleteFile:
 	include "time-pose-blend.s"
 	include "time-render.s"
 	include "overlay-probe.s"
+	include "overlay-blit.s"
 	include "time-terrain-verify.s"
 	include "time-mouse-ownership-cases.i"
 time_message_log: dcb.b 24*128,0
