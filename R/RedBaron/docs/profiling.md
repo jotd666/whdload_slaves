@@ -1,5 +1,32 @@
 # Red Baron performance measurements
 
+## Completion scoreboard
+
+This is the single results table for `completion-plan.md` A–F. “Pending”
+means not yet measured on the normal build; historical isolated-feature
+results below are not combined-bundle results. Each A/B pair uses one slave
+binary with CUSTOM2=0 and CUSTOM2=1. Stage spans are inclusive wall time;
+scene, cockpit and publication are separate stages, not CPU-only costs.
+
+| Configuration | Checkpoint | Stock steady / event FPS | Bundle steady / event FPS | World update ms | Scene / cockpit / publication ms | World time / wall time | Dropped world time |
+|---|---|---|---|---|---|---|---|
+| A500, 512K chip + 1.5M slow | A1 configs | Pending | Pending | Pending | Pending | Pending | Pending |
+| 020, 2M chip + 8M fast | A1 configs | Pending | Pending | Pending | Pending | Pending | Pending |
+| 030/50, 2M chip + 8M fast, MMU | A1 configs | Pending | Pending | Pending | Pending | Pending | Pending |
+| 030/50, 2M chip + 8M fast, no MMU tooltype | A1 configs | Pending | Pending | Pending | Pending | Pending | Pending |
+| 040/25 NOMMU, AGA, 2M chip + 16M fast | A1 configs | Pending | Pending | Pending | Pending | Pending | Pending |
+| 060/50 NOMMU, AGA, 2M chip + 16M fast | A1 configs | Pending | Pending | Pending | Pending | Pending | Pending |
+
+040/060 functional checks use separate MMU-core configurations. Their timing
+results will use the frequency-sensitive NOMMU cores. Configuration generation
+passes all six cases and the functional variants; all three builds, 418 host
+tests and the 76-range hook audit pass at A1. A2 has no accepted measurement:
+the normal A500 boot succeeded, but external keyboard control needs
+authorization. The owned emulator is stopped. Failed menu-entry attempts
+are setup diagnostics, not timing evidence.
+
+## Earlier measurements
+
 A warmed accelerated-emulation frame-time check places the main cost in
 rendering, not the publication cap: the native draw averages **3.87 fields**,
 with scene spans **2.05–2.14 fields**, cockpit **1.44–1.52**, and publication

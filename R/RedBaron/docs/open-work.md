@@ -6,6 +6,9 @@ configurations are implemented in `tools/completion_machines.py`: A500, 020,
 030/50 with and without MMU, 040/25 and 060/50. The latter two use NOMMU
 cores for timing and separate MMU configurations for functional checks.
 A2 full-bundle normal-build measurements are next; no new FPS results yet.
+The normal A500 boots, but entry automation is blocked: the guest debugger
+ignores writes, and OS keyboard automation was denied. Input authorization
+is pending; do not substitute VERIFY timings for the normal-build census.
 
 
 The accepted decisions and detailed requirements are in `performance-plan.md`,
