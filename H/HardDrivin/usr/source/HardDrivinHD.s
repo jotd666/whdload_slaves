@@ -312,6 +312,11 @@ _pl0_v1:	PL_START
 
 	PL_PS	$1222,_quitkey_v1	; install game quit key (Q)
 
+	IFD VERIFY_ATTRACT
+	; Startup fixture: one key at the title wait, excluded from normal builds.
+	PL_PS	$8520,_verify_title_key
+	ENDC
+
 	PL_PS	$86d6,_hiscore_load_v1	; install hiscore loading & saving
 	PL_PSS	$5f7c,_hiscore_save_v1,4
 	PL_END
@@ -1275,3 +1280,23 @@ slv_info:	dc.b	10,"Installer by Girv & JOTD",10,10
 	dc.b	10,0
 
 ;==========================================================================
+
+	IFD VERIFY_ATTRACT
+; Replaces the title's JSR d16(a4) and TST.L D0 (six whole bytes).
+; Preserve the keyboard read; supply a single space only on its first empty poll.
+_verify_title_key:
+	jsr	-$7f92(a4)
+	move.l	a0,-(a7)
+	lea	_verify_title_done(pc),a0
+	tst.l	d0
+	bne.s	.done
+	tst.b	(a0)
+	bne.s	.done
+	st	(a0)
+	moveq	#$20,d0
+.done:	movea.l	(a7)+,a0
+	tst.l	d0
+	rts
+_verify_title_done:	dc.b	0
+	EVEN
+	ENDC
