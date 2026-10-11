@@ -1,5 +1,12 @@
 # Red Baron performance measurements
 
+The host overlay dependency guard now validates selecting pointers before
+the resources they select. Its previous address-sorted order could read an
+unavailable old resource before recognizing that its pointer had changed.
+Regression tests and eight retained native overlay calls pass; this is a host
+correctness fix, with no slave change or speed claim. See “Overlay dependency
+validation order” in `w6-verification.md`.
+
 The matching current-build 50 MHz cached-68030 capacity census records 163
 completed world updates versus 163.426 newly funded over 1,000 PAL fields,
 with **201 publications / 10.05 FPS**. Sampled backlog is 0.014–1.925 world

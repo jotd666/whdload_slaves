@@ -51,3 +51,29 @@ class CockpitDependencyTests(unittest.TestCase):
         data,read=self.fixture();key=dependencies(read,0,3)
         self.assertFalse(matches(key,lambda a,n:b'',3))
         with self.assertRaises(ValueError):dependencies(lambda a,n:b'',0,3)
+
+    def test_changed_selector_precedes_unavailable_lower_address_resource(self):
+        for selector,unavailable in ((0x3b06,0xc100),(0x7b52+12,0xc000)):
+            original,_=self.fixture();h3=0x20000;data=bytearray(0x40000)
+            data[:len(original)]=original
+            data[h3:h3+0xc000]=original[:0xc000]
+            read=lambda a,n:bytes(data[a:a+n])
+            key=dependencies(read,h3,3)
+            struct.pack_into('>I',data,h3+selector,0xffffff00)
+            reads=[]
+            def guarded(address,size):
+                reads.append((address,size))
+                if address<=unavailable<address+size:
+                    self.fail('Stale resource read before selecting pointer was checked')
+                return read(address,size)
+            with self.subTest(selector=selector):
+                self.assertFalse(matches(key,guarded,3))
+                self.assertTrue(any(a<=h3+selector<a+n for a,n in reads))
+
+    def test_overlapping_reads_retain_first_use_order(self):
+        data,read=self.fixture();key=dependencies(read,0,3)
+        flattened=[address+i for address,value in key[1] for i in range(len(value))]
+        self.assertEqual(len(flattened),len(set(flattened)))
+        self.assertLess(flattened.index(0x7b52+12),flattened.index(0xc000))
+        self.assertLess(flattened.index(0x3b06),flattened.index(0xc100))
+        self.assertLess(flattened.index(0xc180),flattened.index(0xc200))

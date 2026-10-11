@@ -5122,3 +5122,51 @@ rates. This is useful clock/capacity evidence, not a replacement for equal-tick
 complete gameplay-state validation. Remaining gates include event/bank/dense
 coverage, physical input latency, broader physics/combat and CPU correctness,
 and demonstrated real smooth 50 FPS. W6 remains VERIFY-only.
+
+
+## Overlay dependency validation order
+
+Review of the remaining native cache requirements found a flaw in the host
+`cockpit_dependencies.py` guard: it sorted all saved dependency bytes by address.
+If an old resource occupies a lower address than the pointer selecting it, a
+later validation can attempt to read that old resource before noticing the
+changed pointer. Merely avoiding the newly selected address does not prevent
+this stale-resource read. This matters to a future native implementation;
+the current live game still always executes the original overlay renderer.
+
+The snapshot now preserves **first-read dependency order** from the raster
+model. It records each address once, rejects inconsistent repeated reads, and
+coalesces only adjacent bytes without reordering. Validation therefore checks
+program/resource selectors before their dependent reads. Exact bytes still
+form the key; diagnostic hashes are not used for matching. A changed selector
+returns false before the old dependent range is read.
+
+Two new host tests cover a higher-address h3 selecting a lower-address resource:
+changing either the program pointer or image-set pointer must invalidate without
+reading the unavailable old object. A guarded reader fails the test if that read
+is attempted. The tests also verify first-use ordering and deduplication across
+overlapping reads. All **334 host tests pass**.
+
+The eight native overlay calls retained in `w6-overlay-guards-a500` and
+`w6-overlay-guards-030` are revalidated, including the existing full pixel/state
+prerequisites. Both programs still reuse their first captured dependency values.
+Program three now has **33 ordered ranges / 1,608 bytes**; program four has
+**29 ordered ranges / 1,460 bytes**. The larger range counts reflect preserved
+read order rather than added dependency bytes. Earlier 15/11-range results
+used address-sorted coalescing and must not be taken as the current guard format.
+Reports are `dependencies-ordered.json` in those retained capture directories.
+
+Reproduce for either capture with:
+
+```sh
+python3 R/RedBaron/tools/cockpit_dependencies.py \
+  tmp/dev/tmp/prof/w6-overlay-guards-030/overlay-capture.json \
+  --out tmp/dev/tmp/prof/w6-overlay-guards-030/dependencies-ordered.json
+```
+
+This does not solve resource lifetime when a selector remains unchanged, prove
+all native read dependencies, or establish caller-return/hardware-state effects.
+Those need explicit invalidation/lifetime and native integration contracts before
+cached pixels can replace original drawing. No native slave code changed, no
+emulator was launched, and no performance claim follows. Actual smooth 50 FPS
+and complete gameplay independence remain unfinished requirements.

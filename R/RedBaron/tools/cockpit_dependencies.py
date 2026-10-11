@@ -13,17 +13,22 @@ from render_mutations import Snapshot
 
 def dependencies(read,h3,program):
     observed={}
+    order=[]
     def tracked(address,size):
         data=read(address,size)
         if len(data)!=size:raise ValueError('Truncated dependency read')
         for offset,value in enumerate(data,address):
             if offset in observed and observed[offset]!=value:
                 raise ValueError('Dependency changed during snapshot')
+            if offset not in observed:order.append(offset)
             observed[offset]=value
         return data
     render(tracked,h3,program,bytes(40000))
     ranges=[];start=None;values=bytearray()
-    for address,value in sorted(observed.items()):
+    # Preserve the first-read dependency order. Sorting addresses could read
+    # a stale resource before its changed selecting pointer invalidates the key.
+    for address in order:
+        value=observed[address]
         if start is None or address!=start+len(values):
             if start is not None:ranges.append((start,bytes(values)))
             start=address;values=bytearray()
@@ -33,8 +38,9 @@ def dependencies(read,h3,program):
 
 
 def matches(key,read,program):
-    # Compare stored ranges directly. A changed pointer/program byte invalidates
-    # before any newly selected resource needs to be dereferenced.
+    # Compare in original dependency order: selecting pointers/program bytes
+    # precede their dependent reads. Resource lifetime without a changed selector
+    # still requires a separate invalidation contract.
     if key[0]!=program:return False
     try:return all(read(address,len(value))==value for address,value in key[1])
     except (ValueError,IndexError):return False
