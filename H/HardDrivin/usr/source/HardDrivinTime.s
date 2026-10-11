@@ -11,6 +11,9 @@ TIME_FIELDS_PER_STEP equ 8
 TIME_FIELD_Q16 equ $2000
 
 _time_install:
+	IFD VERIFY_TRAFFIC_MATH
+	bsr _traffic_math_test
+	ENDC
 	IFD VERIFY_PROJECTION_MATH
 	bsr _projection_math_test
 	ENDC
@@ -42,6 +45,9 @@ _time_install:
 	jsr resload_Patch(a2)
 	IFD VERIFY_TIME_MOTION
 	bsr _motion_install
+	ENDC
+	IFD VERIFY_TIME_TRAFFIC
+	bsr _traffic_install
 	ENDC
 	ENDC
 .restore:
@@ -344,4 +350,8 @@ _time_q16_results: dcb.l 7*9*7*2,0
 	INCLUDE "HardDrivinContact.s"
 	INCLUDE "HardDrivinProjection.s"
 	INCLUDE "HardDrivinMotion.s"
+	ENDC
+
+	IFD VERIFY_TIME_TRAFFIC
+	INCLUDE "HardDrivinTraffic.s"
 	ENDC

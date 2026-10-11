@@ -571,8 +571,50 @@ Projection evidence:
   byte-identical. Existing motion diagnostic builds still assemble. The separate
   VERIFY_PROJECTION_MATH fixture requires MOTION.
 
+`VERIFY_TIME_TRAFFIC` now scales traffic acceleration and route-phase progress
+through `HardDrivinTraffic.s`. It requires TIME_SCALARS and CUSTOM1. Each native
+46-byte record has a separately allocated 16-byte companion for speed/phase
+remainders and reset state. The table-load hook allocates exactly the native
+record count through Exec, releases the previous allocation on a later load,
+and aborts with the existing allocation error if memory is unavailable. The
+captured table has 12 records; the companion allocation has no fixed count limit.
+
+The SPS0126 table uses acceleration 1..3 and target speeds 9..20. Native byte
+acceleration can overshoot a target: +2 toward 9 settles at 10, and +3 toward 20
+settles at 21. Fractional acceleration preserves that terminal value,
+`ceil(target/acceleration)*acceleration`, derived from the zero-speed reset grid.
+Collision reversal negates the full signed speed including its fraction. Route-
+direction reversals remain native discrete changes and retain the phase fraction.
+
+Phase integrates the new full speed with the same semi-implicit Euler correction
+as the player, retaining a signed 1/128 phase remainder. Native code still handles
+route boundaries and cached geometry. With T<=1 and signed-byte speed, a step
+cannot traverse two 200-unit route segments. Phase remainders survive native
+±200 wrapping. Initialization consumes its original one native step regardless
+of gameplay T, while subsequent zero-time updates consume nothing. The native
+pose interpolation still reads phase before its update; equal-time acceptance
+must distinguish stored progress from the pose sampled for that pass.
+
+Traffic evidence:
+
+- `s4-traffic-native` versus `s4-traffic-reference`: all 1440 traffic records and
+  their six-word poses match. Route pointers are normalized relative to the
+  route base; object pointers are omitted while the corresponding poses are
+  compared separately. The native run includes 92 route crossings.
+- `s4-traffic-small`: all 1440 live T=1/8 updates match a model of captured memory
+  operands, including 1103 fractional updates and five route crossings.
+- `s4-traffic-math`: 50 private-memory reversal cases cover signed speed,
+  signed fractions, stale-shadow invalidation and double reversal. Additional
+  cases verify the unscaled initialization step and subsequent T=0 behavior.
+  The live captures contain no velocity-reversal event, so they do not prove
+  small-T traffic collision behavior or full route-direction transition handling.
+- `s4-traffic-one`: 108 native-step player states still match. `s4-traffic-off`
+  passes the disabled-range check; the normal slave remains byte-identical.
+  All 56 scalar/motion/traffic ranges pass the direct-branch audit. Repeated
+  table-load allocation cleanup has not yet been exercised interactively.
+
 Remaining work includes the actual simulation dispatcher, live small-T contact validation,
-held-input handling, traffic/contact policies, replay/Phantom and other
+held-input handling, traffic collision/transition acceptance, replay/Phantom and other
 presentation timelines, performance and cross-machine acceptance, and the
 required human laps. The BCD clock defect versus lap-time acceptance conflict
 remains unresolved; the implementation currently preserves the native clocks.
