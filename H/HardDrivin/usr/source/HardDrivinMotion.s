@@ -1,7 +1,7 @@
-; Development-only angle, ordinary-position and fall-acceleration integration.
+; Development-only angle, ordinary-position and falling-motion integration.
 ; Requires VERIFY_TIME_SCALARS; shares its per-substep field count.
 ; Rate callers are distinguished from geometry/contact callers of the same
-; rotation helpers. Crash drift, fall displacement and contact relaxation remain.
+; rotation helpers. Crash drift and contact relaxation remain.
 _motion_install:
 	movem.l d0/a0-a2,-(a7)
 	movea.l _code_start(pc),a0
@@ -23,6 +23,8 @@ _motion_install:
 	rts
 _motion_patches:
 	PL_START
+	; PERF_RANGE VERIFY_TIME_MOTION $0b5f2 $000a: falling displacement
+	PL_PSS $b5f2,_motion_fall_position,4
 	; PERF_RANGE VERIFY_TIME_MOTION $0b500 $0008: snapshot previous projected rates
 	PL_P $b500,_motion_position_entry
 	PL_NOP $b506,2
@@ -197,6 +199,7 @@ _motion_fall_delta:
 	beq.s .current
 	clr.w MS_FALL_CARRY(a0)
 .current:
+	move.w d0,MS_FALL_ACCEL(a0)
 	move.w _time_scalar_fields(pc),d1
 	move.w MS_FALL_CARRY(a0),d2
 	ext.l d2
@@ -231,6 +234,7 @@ _motion_fall_reset_fraction:
 	move.l a0,-(a7)
 	lea _motion_state(pc),a0
 	clr.l MS_FALL_CARRY(a0)
+	clr.w MS_FALL_ACCEL(a0)
 	movea.l (a7)+,a0
 	rts
 
@@ -360,6 +364,69 @@ _motion_position_add:
 	movem.l (a7)+,d1-d4/a0-a2
 	rts
 
+; Native gravity integrates position before updating fall velocity. Use the
+; last contact pass's acceleration for the explicit-Euler bias correction.
+; Clear the sample after consumption: partial contact may apply no acceleration.
+_motion_fall_position:
+	movem.l d1-d5/a0-a1,-(a7)
+	lea _motion_state(pc),a0
+	lea _motion_position_state(pc),a1
+	move.w -$66f2(a4),d0
+	cmp.w MS_FALL_LAST(a0),d0
+	beq.s .current
+	clr.w MS_FALL_CARRY(a0)
+	clr.w MS_FALL_ACCEL(a0)
+.current:
+	move.w MS_FALL_CARRY(a0),d1
+	move.w MS_FALL_ACCEL(a0),d2
+	move.l 12(a1),d3
+	move.w _time_scalar_fields(pc),d4
+	bsr _motion_fall_displacement
+	move.l d3,12(a1)
+	clr.w MS_FALL_ACCEL(a0)
+	add.l d0,-$6700(a4)
+	movem.l (a7)+,d1-d5/a0-a1
+	rts
+
+; D0.W fall velocity, D1.W eighth-unit velocity remainder, D2.W acceleration,
+; D3.L signed position remainder /128, D4.W fields0..8. Returns D0.L Y delta,
+; D3.L position remainder; preserves other inputs. Word extrema fit in longs.
+; Y = -v*T + a*T*(1-T)/2; positive fall velocity moves toward negative Y.
+_motion_fall_displacement:
+	movem.l d1-d2/d4-d5,-(a7)
+	tst.w d4
+	beq.s .zero
+	muls.w d4,d0
+	lsl.l #4,d0
+	neg.l d0
+	muls.w d4,d1
+	add.l d1,d1
+	sub.l d1,d0
+	moveq #8,d5
+	sub.w d4,d5
+	mulu.w d4,d5
+	muls.w d5,d2
+	add.l d2,d0
+	add.l d3,d0
+	move.l d0,d3
+	asr.l #7,d0
+	tst.l d3
+	bpl.s .remainder
+	move.l d3,d5
+	andi.l #127,d5
+	beq.s .remainder
+	addq.l #1,d0
+.remainder:
+	move.l d0,d5
+	lsl.l #7,d5
+	sub.l d5,d3
+	bra.s .done
+.zero:
+	moveq #0,d0
+.done:
+	movem.l (a7)+,d1-d2/d4-d5
+	rts
+
 ; Semi-implicit position increment in native long-position units.
 ; D0.W new projected velocity, D1.W old projected velocity, D2.W fields 0..8,
 ; D3.L signed remainder (-127..127). Returns D0.L displacement, D3.L carry.
@@ -429,6 +496,7 @@ MS_FALL_LAST equ 20
 MS_RATE equ 22
 MS_SPIN_CARRY equ 24
 MS_SPIN_LAST equ 28
+MS_FALL_ACCEL equ 30
 _motion_pitch_function: dc.l 0
 _motion_yaw_function: dc.l 0
 _motion_position_continue: dc.l 0
@@ -545,6 +613,32 @@ _motion_math_test:
 	ble.s .position_fields
 	dbf d6,.position_old
 	dbf d7,.position_new
+	lea _motion_fall_position_results(pc),a2
+	lea _motion_fall_position_values(pc),a6
+	moveq #4,d7
+.fall_position_value:
+	move.w (a6)+,d6
+	moveq #-7,d1
+.fall_position_fraction:
+	moveq #-5,d2
+.fall_position_accel:
+	moveq #0,d4
+.fall_position_fields:
+	move.w d6,d0
+	move.l #127,d3
+	bsr _motion_fall_displacement
+	move.l d0,(a2)+
+	move.l d3,(a2)+
+	addq.w #1,d4
+	cmpi.w #8,d4
+	ble.s .fall_position_fields
+	addq.w #5,d2
+	cmpi.w #5,d2
+	ble.s .fall_position_accel
+	addq.w #7,d1
+	cmpi.w #7,d1
+	ble.s .fall_position_fraction
+	dbf d7,.fall_position_value
 	move.w #VERIFY_SCALAR_FIELDS,(a5)
 	bsr _motion_reset
 	movem.l (a7)+,d0-d7/a0-a6
@@ -572,4 +666,7 @@ _motion_position_values: dc.w -32768,-257,-1,0,1,257,32767
 _motion_position_carries: dc.l -127,0,127
 _motion_position_signature: dc.b 'HDPOS001'
 _motion_position_results: dcb.b 7*7*9*3*8,0
+_motion_fall_position_values: dc.w -32768,-1,0,1,32767
+_motion_fall_position_signature: dc.b 'HDFPOS01'
+_motion_fall_position_results: dcb.b 5*3*3*9*8,0
 	ENDC

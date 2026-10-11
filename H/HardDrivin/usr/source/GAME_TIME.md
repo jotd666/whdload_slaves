@@ -376,8 +376,8 @@ reuse the scalar module's reset paths.
 Spin uses a signed `(9/10)^T` Q16 table for smaller T and the native signed
 multiply/divide sequence at T=1. Its fraction is cleared at the discrete skid
 exit. Fall acceleration uses signed eighth-unit carries; ground constraints
-clear them. This does not yet scale falling displacement or convert the
-partial-contact quarter-angle relaxation and stored angular-rate feedback.
+clear them. Falling displacement is scaled as described below; partial-contact
+quarter-angle relaxation and stored angular-rate feedback remain unconverted.
 
 Motion evidence:
 
@@ -414,7 +414,7 @@ positions are still recomputed from the resulting longs.
 This is an implementation of the projected-vector correction, including steering
 changes; nonlinear handling acceptance remains open. It does not yet incorporate
 fractional longitudinal velocity in the native trigonometric projection. Crash
-drift and falling displacement still follow their original per-pass updates.
+drift still follows its original per-pass updates.
 
 Position evidence:
 
@@ -432,8 +432,36 @@ Position evidence:
   slave remains byte-identical to the baseline. The direct-branch audit passes
   all 34 scalar/motion ranges.
 
+The `$0b5f2` hook now scales falling displacement, including the eighth-unit
+fall-velocity fraction, into the same signed 1/128 Y-position remainder. Native
+gravity updates velocity after position. Its correction is therefore
+`-v*T + a*T*(1-T)/2`, using the acceleration sampled by the preceding contact pass.
+The acceleration sample is consumed once; ground constraints, absolute-velocity
+mismatches and mode resets clear it. Partial contact with no acceleration leaves
+the next sample zero. All-T=1 retains the native integer sequence.
+
+This delayed-acceleration choice requires jump and landing acceptance at small T.
+The first airborne update has no prior airborne acceleration sample; the constant-
+acceleration identity does not prove equivalence across that transition. The bias
+can also create a fraction of upward displacement while velocity starts at zero;
+that follows the original explicit-Euler model, rather than a new finer integrator.
+
+Falling-position evidence:
+
+- `s4-fall-position-math`: 405 68000 cases cover signed-word velocity extrema,
+  velocity fractions, both acceleration signs and all field counts. The earlier
+  1323 position, 135 angle, 315 spin and 81 fall-acceleration cases still pass.
+  An independent exact-rational calculation checks 36 constant-acceleration
+  subdivision identities for the explicit-Euler displacement.
+- `s4-fall-live`: 400 actual falling-position calls on the driving tape match
+  their captured operands, including 19 nonzero fall velocities. This run uses
+  T=1; it is not small-T jump or contact acceptance.
+- `s4-fall-position-one`: 108 native-step car states match the original X=400
+  reference. `s4-fall-position-off` passes the disabled-range check, including
+  the new falling-position range. The direct-branch audit passes all 35 ranges.
+
 Remaining work includes the actual simulation dispatcher, fractional projection,
-falling displacement/Euler compensation, crash drift, partial-contact relaxation/rate feedback,
+crash drift, partial-contact relaxation/rate feedback,
 held-input handling, traffic/contact policies, replay/Phantom and other
 presentation timelines, performance and cross-machine acceptance, and the
 required human laps. The BCD clock defect versus lap-time acceptance conflict
