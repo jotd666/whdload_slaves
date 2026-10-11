@@ -8,14 +8,14 @@ results below are not combined-bundle results. Each A/B pair uses one slave
 binary with CUSTOM2=0 and CUSTOM2=1. Stage spans are inclusive wall time;
 scene, cockpit and publication are separate stages, not CPU-only costs.
 
-| Configuration | Checkpoint | Stock steady / event FPS | Bundle steady / event FPS | World update ms | Scene / cockpit / publication ms | DASH markers stock / bundle | Clean fields stock / bundle | World time / wall time | Dropped world time |
-|---|---|---|---|---|---|---|---|---|---|
-| A500, 512K chip + 1.5M slow | A2 | 1.844 / 1.722 | 2.100 / 2.072 | 57.68 → 56.05 | 399.51 / 73.70 / 0.28 → 360.51 / 62.53 / 4.46 | 3 / 3 | 1516 / 1735 | Pending D | Pending D |
-| 020, 2M chip + 8M fast | A2 | 6.008 / 5.666 | 6.259 / 6.215 | 13.79 → 13.98 | 116.77 / 41.40 / 0.08 → 102.22 / 35.54 / 6.74 | 44 / 114 | 1196 / 1077 | Pending D | Pending D |
-| 030/50, 2M chip + 8M fast, MMU | A2 | 12.974 / 11.881 | 12.893 / 12.855 | 3.33 → 3.10 | 44.19 / 34.08 / 0.08 → 38.53 / 27.87 / 7.92 | 191 / 2 | 1154 / 1905 | Pending D | Pending D |
-| 030/50, 2M chip + 8M fast, no MMU tooltype | A2 | 12.377 / 11.931 | 12.430 / 12.206 | 3.94 → 3.57 | 48.31 / 31.23 / 0.04 → 42.36 / 31.58 / 4.16 | 58 / 121 | 1262 / 1651 | Pending D | Pending D |
-| 040/25 NOMMU, AGA, 2M chip + 16M Z3 fast | A2 | 12.476 / 11.507 | 12.430 / 12.280 | 3.34 → 3.21 | 47.56 / 36.26 / 0.06 → 41.26 / 29.89 / 6.48 | 116 / 107 | 1144 / 1699 | Pending D | Pending D |
-| 060/50 NOMMU, AGA, 2M chip + 16M Z3 fast | A2 | 12.786 / 12.206 | 12.602 / 12.405 | 3.16 → 3.10 | 44.63 / 33.43 / 0.03 → 39.59 / 28.95 / 7.90 | 64 / 165 | 1452 / 1537 | Pending D | Pending D |
+| Configuration | Checkpoint | Stock steady / event FPS | Bundle steady / event FPS | World update ms | Scene / cockpit / publication ms | DASH markers stock / bundle | Clean fields stock / bundle | World time / wall time | Dropped world time | B1 isolated pool FPS, off → on |
+|---|---|---|---|---|---|---|---|---|---| --- |
+| A500, 512K chip + 1.5M slow | A2 | 1.844 / 1.722 | 2.100 / 2.072 | 57.68 → 56.05 | 399.51 / 73.70 / 0.28 → 360.51 / 62.53 / 4.46 | 3 / 3 | 1516 / 1735 | Pending D | Pending D | Minimum-memory flight passes |
+| 020, 2M chip + 8M fast | A2 | 6.008 / 5.666 | 6.259 / 6.215 | 13.79 → 13.98 | 116.77 / 41.40 / 0.08 → 102.22 / 35.54 / 6.74 | 44 / 114 | 1196 / 1077 | Pending D | Pending D | 6.398 → 6.695 (+4.6%) |
+| 030/50, 2M chip + 8M fast, MMU | A2 | 12.974 / 11.881 | 12.893 / 12.855 | 3.33 → 3.10 | 44.19 / 34.08 / 0.08 → 38.53 / 27.87 / 7.92 | 191 / 2 | 1154 / 1905 | Pending D | Pending D | 12.878 → 14.546 (+12.9%) |
+| 030/50, 2M chip + 8M fast, no MMU tooltype | A2 | 12.377 / 11.931 | 12.430 / 12.206 | 3.94 → 3.57 | 48.31 / 31.23 / 0.04 → 42.36 / 31.58 / 4.16 | 58 / 121 | 1262 / 1651 | Pending D | Pending D | Pending |
+| 040/25 NOMMU, AGA, 2M chip + 16M Z3 fast | A2 | 12.476 / 11.507 | 12.430 / 12.280 | 3.34 → 3.21 | 47.56 / 36.26 / 0.06 → 41.26 / 29.89 / 6.48 | 116 / 107 | 1144 / 1699 | Pending D | Pending D | 12.392 → 13.277 (+7.1%) |
+| 060/50 NOMMU, AGA, 2M chip + 16M Z3 fast | A2 | 12.786 / 12.206 | 12.602 / 12.405 | 3.16 → 3.10 | 44.63 / 33.43 / 0.03 → 39.59 / 28.95 / 7.90 | 64 / 165 | 1452 / 1537 | Pending D | Pending D | 12.585 → 13.909 (+10.5%) |
 
 040/060 functional checks use separate MMU-core configurations. Their timing
 results will use the frequency-sensitive NOMMU cores. Configuration generation
@@ -64,6 +64,48 @@ Recalculate steady cadence without another capture:
 ```sh
 python3 R/RedBaron/tools/completion_cadence.py <capture>/event.log --fields 2000
 ```
+
+### B1: larger game memory pool
+
+The added B1 column is an isolated **developer-build** comparison: the existing
+CPU-specific bundle stays selected and only bit 16 changes. It uses one
+2,000-field opening window per option, with the same event-free interval filter.
+The normal-build A2 columns remain the baseline until checkpoint B. The 020 pair
+uses SHA-256 `c2877a4a…0496ff4`. Its complete opening logs are retained; an extra
+view-change reader timed out after the emulator reached 2,000 fields, so that
+unrecorded secondary window is not a result. Remaining B1 cases collect only the
+required opening window. The local reader now allows the debugger's full timeout.
+
+The private allocation census recorded 4,755 AllocMem/FreeMem operations through
+flight step eight, without overflow or reused-live-address errors. Peak live
+spill was 181,568 bytes; 127,312 requested bytes remained live in flight. The live
+MEMF_ANY spill comes from the generic allocator returning at `sim:2d222` and
+bitmap descriptors returning at `sim:30296`. A 100-field trace touches none of
+those live blocks through DMA. Reconstructed enabled blitter pointers also have
+no overlap; 40 initial pointer states precede a complete observed register pair,
+so the actual DMA address records supply the coverage there.
+
+The implementation increases the declared game pool from 512 to 704 KB, covering
+that peak plus 15,040 bytes of headroom. An initial compatibility reservation
+keeps the old game budget until bit 16 is selected on sim v1 and a supported CPU.
+The minimum A500 configuration boots and flies with this final gate. Original
+MEMF_CHIP requests remain unchanged. The post-change census records 4,756
+operations and zero live spill in flight. The preflight temporary peak remains
+181,568 bytes because the extra pool is released only after sim v1 is identified.
+All four isolated CPU comparisons are complete on the same developer binary.
+Whole-window FPS rises 6.390 → 6.639 (020), 12.705 → 14.377 (030),
+12.255 → 13.404 (040), and 12.405 → 13.753 (060). The final A500 normal
+bundle also completes its 2,000-field event window at 2.072 FPS.
+The larger diagnostic build exposed a signed patch-offset overflow in the
+VERIFY keyboard hooks; nearby branch bridges fix it, and the corrected build
+reaches flight and completes the census. All three standard builds, 431 host tests and the
+76-range hook audit pass.
+
+Reproduce the allocation reader with `allocation_census.py <header> <records>`.
+The private build adds `VERIFY_ALLOC_LOG=1` alongside `VERIFY`; its bounded
+observer restores the Exec vectors at flight step eight. The reader rejects
+active, overflowing and truncated logs. The initial 1,024-entry attempt overflowed
+and was discarded; the completed census uses 8,192 entries.
 
 ## Earlier measurements
 

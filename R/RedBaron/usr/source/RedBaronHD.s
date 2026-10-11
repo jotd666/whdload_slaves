@@ -32,7 +32,7 @@
 ;============================================================================
 
 CHIPMEMSIZE	= $80000
-FASTMEMSIZE	= $80000
+FASTMEMSIZE	= $B0000 ; B1: 181568-byte peak spill plus 15040 bytes headroom
 NUMDRIVES	= 1
 WPDRIVES	= %0000
 
@@ -85,6 +85,7 @@ slv_config
 	dc.b "C2:X:Back-face test:5;C2:X:Face setup:6;C2:X:Clear fills:7;"
 	dc.b "C2:X:Tear-free swap:8;C2:X:Frame cap:9;"
 	dc.b "C2:X:Sound queue:10;C2:X:Sound no-op removal:11;C2:X:Sound volume:12;"
+	dc.b "C2:X:Larger game fast-memory pool:16;"
 	ELSE
 	IFD DEVELOPER
 	dc.b "C2:X:Table mirror:0;C2:X:Cached mirror:1;"
@@ -92,6 +93,7 @@ slv_config
 	dc.b "C2:X:Back-face test:5;C2:X:Face setup:6;C2:X:Clear fills:7;"
 	dc.b "C2:X:Tear-free swap:8;C2:X:Frame cap:9;"
 	dc.b "C2:X:Sound queue:10;C2:X:Sound no-op removal:11;C2:X:Sound volume:12;"
+	dc.b "C2:X:Larger game fast-memory pool:16;"
 	ELSE
 	dc.b "C2:B:Faster rendering;"
 	ENDC
@@ -127,6 +129,7 @@ _args_end
 
 _bootdos
 	bsr perf_read_options
+	bsr memory_reserve
 	move.l	(_resload,pc),a2		;A2 = resload
 
 	;open doslib
@@ -353,8 +356,8 @@ observe_vbl_bridge:
 pl_sim_v1
 	PL_START
 	IFD VERIFY
-	PL_PS $1ed82,tape_flight
-	PL_P $1ef92,tape_sim_key
+	PL_PS $1ed82,tape_flight_bridge
+	PL_P $1ef92,tape_sim_key_bridge
 	PL_PS $2d348,observe_vbl_bridge
 	; VERIFY_RANGE sim:2d354 6: neutral mouse counters for scripted keyboard route.
 	PL_L $2d354,$323c0000	; move.w #0,d1
@@ -566,6 +569,7 @@ new_DeleteFile:
 	dc.b	0
 
 	even
+	include "memory.s"
 	include "perf.s"
 	include "mirror.s"
 	include "mirror-cache.s"
@@ -578,6 +582,11 @@ new_DeleteFile:
 	include "sound-sequence.s"
 	include "sound-driver.s"
 	IFD VERIFY
+; Keep signed WHDLoad patch destinations within reach as VERIFY code grows.
+tape_flight_bridge:
+	bra.w tape_flight
+tape_sim_key_bridge:
+	bra.w tape_sim_key
 	include "time-core.s"
 	include "time-input.s"
 	include "time-loop.s"
@@ -601,6 +610,9 @@ new_DeleteFile:
 	include "clip-verify.s"
 	include "vertex-verify.s"
 	include "tape.s"
+	IFD VERIFY_ALLOC_LOG
+	include "alloc-observe.s"
+	ENDC
 	include "time-poses.s"
 	include "time-pose-blend.s"
 	include "time-render.s"
@@ -641,4 +653,7 @@ observe_buffer: dcb.b OBS_STRIDE*OBS_CAPACITY,0
 time_input_test_queue: dcb.b TIME_INPUT_BYTES,0
 time_input_observe_queue: dcb.b TIME_INPUT_BYTES,0
 time_model_flag_cases: dcb.b 512*4,0
+	IFD VERIFY_ALLOC_LOG
+alloc_observe_buffer: dcb.b ALLOC_LOG_CAPACITY*ALLOC_LOG_STRIDE,0
+	ENDC
 	ENDC

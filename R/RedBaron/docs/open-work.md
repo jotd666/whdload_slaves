@@ -11,9 +11,11 @@ cadence separately from whole-window event FPS and includes stage costs and
 redraw markers. All captures use the same normal binary. The reusable
 `completion_host_input.py` / `completion_lldb_input.py` tools deliver native
 keyboard input through the host debugger; macOS accessibility is not used.
-427 host tests and the 76-range hook audit pass. Next is B1: measure chip spill,
-check DMA use, then size the approved fast-memory increase. Phases B–F remain
-open; the earlier lists below are historical context, not the execution order.
+B1 is complete: the game pool grows to 704 KB behind bit 16 on supported
+CPUs and sim v1, eliminating live chip spill. The minimum A500 flies; isolated
+020–060 comparisons improve by 4.6–12.9%. All three builds, 431 host tests
+and the 76-range hook audit pass. Next is B2 (cache policy), then checkpoint B.
+Phases B–F remain open; the earlier lists below are historical context, not the execution order.
 
 
 The accepted decisions and detailed requirements are in `performance-plan.md`,

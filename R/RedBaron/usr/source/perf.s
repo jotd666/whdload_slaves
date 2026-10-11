@@ -1,8 +1,8 @@
 ; Performance patch framework. Only sim v1 calls this module's installer.
 ; No feature is release-enabled until its model, twin and measurements pass.
-PERF_VERIFIED_MASK = $1fbf ; W1-W5, excluding deferred face setup bit 6
-PERF_DEVELOPER_MASK = $1fff
-PERF_VERIFY_MASK = $7fff ; W6 bit 13 and quiescent overlay probe bit 14 are VERIFY-only
+PERF_VERIFIED_MASK = $11fbf ; W1-W5, excluding deferred face setup bit 6
+PERF_DEVELOPER_MASK = $11fff
+PERF_VERIFY_MASK = $17fff ; W6 bit 13 and quiescent overlay probe bit 14 are VERIFY-only
 
 perf_read_options:
 	movem.l d0-a6,-(sp)
@@ -46,6 +46,7 @@ perf_read_options:
 ; a1 = relocated sim hunk 0, a2 = resload. Preserve the loader's registers.
 ; Add each validated installer here, gated on its own perf_mask bit.
 perf_install_v1:
+	bsr memory_install_v1
 	IFD VERIFY
 	bsr time_core_selftest
 	bsr time_input_selftest

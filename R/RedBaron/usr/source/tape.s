@@ -20,6 +20,9 @@ RAW_ESC = $451b
 	EVEN
 tape_start:
 	bsr observe_start
+	IFD VERIFY_ALLOC_LOG
+	bsr alloc_observe_start
+	ENDC
 	lea tape_marker(pc),a0
 	lea tape_menu_key(pc),a1
 	move.l a1,8(a0)
@@ -193,6 +196,9 @@ tape_flight:
 	move.b #1,$4e(a1)
 tape_game_record:
 	bsr observe_step
+	IFD VERIFY_ALLOC_LOG
+	bsr alloc_observe_stop
+	ENDC
 tape_game_anchor:
 	nop
 	bsr perf_activate_deferred
