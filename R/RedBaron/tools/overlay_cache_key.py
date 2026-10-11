@@ -8,7 +8,8 @@ import struct
 from cockpit_program import decode, signed_byte
 
 HEADER = 8 + 32 * 12
-KEY_BYTES = HEADER + 8192
+EFFECTS = HEADER + 8192
+KEY_BYTES = EFFECTS + 2
 
 
 def build(read, h3, program, base=0):
@@ -43,8 +44,10 @@ def build(read, h3, program, base=0):
         append(h3 + 0x101d + signed_byte(selector) * 4, 4)
     table = image = None
     colour_seen = False
+    effects = 0
     for command in commands['commands']:
         kind, args = command['kind'], command['args']
+        effects |= {'colours': 1, 'image_set': 2, 'image': 4, 'bitmap': 8, 'rectangle': 16}.get(kind, 0)
         if kind == 'colours':
             colour_seen = True
         elif kind == 'image_set':
@@ -72,6 +75,7 @@ def build(read, h3, program, base=0):
             append(mask, (pitch + 2) * height)
     result = bytearray(KEY_BYTES)
     struct.pack_into('>4H', result, 0, 1, program, len(ranges), used)
+    struct.pack_into('>H', result, EFFECTS, effects)
     cursor = HEADER
     for index, (address, value) in enumerate(ranges):
         struct.pack_into('>IIHH', result, 8 + 12 * index, address, base + cursor, len(value), 0)

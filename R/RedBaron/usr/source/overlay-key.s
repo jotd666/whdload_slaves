@@ -3,7 +3,8 @@
 ; {source.l, expected.l, length.w, reserved.w}, then 8192 snapshot bytes.
 ; Invalidate valid before freeing/reusing any referenced resource.
 OVERLAY_KEY_HEADER = 8+32*12
-OVERLAY_KEY_BYTES = OVERLAY_KEY_HEADER+8192
+OVERLAY_KEY_EFFECTS = OVERLAY_KEY_HEADER+8192
+OVERLAY_KEY_BYTES = OVERLAY_KEY_EFFECTS+2
 ; a0=key, d0.w=program; d0.l=match, other registers preserved, CCR volatile.
 overlay_key_matches:
  movem.l d1-d3/a0-a3,-(sp)
@@ -28,6 +29,26 @@ overlay_key_matches:
  bhi .no
  move.l (a0),a1
  move.l 4(a0),a2
+ IFND VERIFY_OVERLAY_KEY_EXPERIMENT
+ ; Keep the diagnostic first-different-byte read counter unchanged. Runtime
+ ; ranges use longwords where both addresses are even, without crossing a
+ ; descriptor boundary or following a changed selecting pointer.
+ move.l a1,d3
+ move.l a2,-(sp)
+ or.l (sp)+,d3
+ btst #0,d3
+ bne .bytes
+.longs
+ cmpi.w #4,d2
+ blo .bytes
+ cmpm.l (a1)+,(a2)+
+ bne .no
+ subq.w #4,d2
+ bra .longs
+.bytes
+ tst.w d2
+ beq .next_range
+ ENDC
  subq.w #1,d2
 .byte
  IFD VERIFY_OVERLAY_KEY_EXPERIMENT
@@ -36,6 +57,7 @@ overlay_key_matches:
  cmpm.b (a1)+,(a2)+
  bne .no
  dbf d2,.byte
+.next_range
  adda.w #12,a0
  dbf d1,.range
  moveq #1,d0

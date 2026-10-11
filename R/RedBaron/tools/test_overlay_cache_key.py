@@ -1,6 +1,6 @@
 import struct
 import unittest
-from overlay_cache_key import build, KEY_BYTES
+from overlay_cache_key import build, KEY_BYTES, EFFECTS
 from overlay_dependency_guard import matches
 from cockpit_raster import render
 import test_cockpit_dependencies
@@ -66,3 +66,10 @@ class RuntimeOverlayKeyTests(unittest.TestCase):
             return read(address, size)
         with self.assertRaisesRegex(ValueError, 'capacity'):
             build(guarded, 0, 3)
+
+    def test_write_mask_distinguishes_untouched_native_state(self):
+        data, read = self.fixture()
+        self.assertEqual(int.from_bytes(build(read, 0, 3)[EFFECTS:], 'big'), 15)
+        words = (0x2002, 8, 8, 0xa104, 1, 1, 2, 2, 0xff0)
+        struct.pack_into('>9H', data, 0xc000, *words)
+        self.assertEqual(int.from_bytes(build(read, 0, 3)[EFFECTS:], 'big'), 17)

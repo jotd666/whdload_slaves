@@ -87,7 +87,7 @@ slv_config
 	dc.b "C2:X:Sound queue:10;C2:X:Sound no-op removal:11;C2:X:Sound volume:12;"
 	dc.b "C2:X:Consistent game speed:13;"
 	dc.b "C2:X:Larger game fast-memory pool:16;"
-	dc.b "C2:X:Instruction cache policy:17;"
+	dc.b "C2:X:Instruction cache policy:17;C2:X:Front cockpit cache:18;"
 	ELSE
 	IFD DEVELOPER
 	dc.b "C2:X:Table mirror:0;C2:X:Cached mirror:1;"
@@ -97,7 +97,7 @@ slv_config
 	dc.b "C2:X:Sound queue:10;C2:X:Sound no-op removal:11;C2:X:Sound volume:12;"
 	dc.b "C2:X:Consistent game speed:13;"
 	dc.b "C2:X:Larger game fast-memory pool:16;"
-	dc.b "C2:X:Instruction cache policy:17;"
+	dc.b "C2:X:Instruction cache policy:17;C2:X:Front cockpit cache:18;"
 	ELSE
 	dc.b "C2:B:Faster rendering;"
 	ENDC
@@ -638,10 +638,11 @@ tape_sim_key_bridge:
 	include "overlay-pack.s"
 	include "overlay-key.s"
 	include "overlay-cache-key.s"
+	include "overlay-cache.s"
+	include "overlay-lifetime.s"
 	IFD VERIFY
 	include "overlay-shadow.s"
 	include "time-shape-verify.s"
-	include "overlay-lifetime.s"
 	IFD VERIFY_OVERLAY_KEY_EXPERIMENT
 	include "overlay-key-verify.s"
 	ENDC

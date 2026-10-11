@@ -1,4 +1,4 @@
-; VERIFY-only bit 14: invalidate private overlay entries before ownership changes.
+; Shared bit-14 lifetime hooks; runtime bit 18 implies this ownership guard.
 ; This never skips native drawing and never overlaps W1's shared free tail.
 ; PERF_RANGE sim:28516 6 bit=14
 ; PERF_RANGE sim:28556 8 bit=14
@@ -87,16 +87,23 @@ ovlife_install:
 	addi.l #$303ee,d0
 	lea ovlife_zero_tail+2(pc),a0
 	move.l d0,(a0)
-	btst #0,observe_attnflags+3(pc)
+	lea .attn_base(pc),a0
+.attn_base
+	adda.l #perf_attnflags+3-.attn_base,a0
+	btst #0,(a0)
 	beq .cpu_ready
 	lea ovlife_save_ccr(pc),a0
 	move.w #$42e7,(a0)
+	IFD VERIFY
 	lea ovlife_test_ccr(pc),a0
 	move.w #$42c0,(a0)
+	ENDC
 .cpu_ready
+	IFD VERIFY
 	bsr ovlife_selftest
 	IFD VERIFY_OVERLAY_KEY_EXPERIMENT
 	bsr overlay_key_selftest
+	ENDC
 	ENDC
 	lea .patch(pc),a0
 	jsr resload_Patch(a2)
@@ -127,15 +134,19 @@ ovlife_bitmap_all_bytes: dc.w $227c,$0000,$9c2c
 ovlife_invalidate:
 ovlife_save_ccr: dc.w $40e7
 	move.l a0,-(sp)
+	bsr overlay_cache_invalidate
+	IFD VERIFY
 	lea overlay_shadow_valid(pc),a0
 	clr.l (a0)+
 	clr.l (a0)
 	lea ovlife_count(pc),a0
 	addq.l #1,(a0)
+	ENDC
 	move.l (sp)+,a0
 	move.w (sp)+,ccr
 	rts
 
+	IFD VERIFY
 ; Exercise all CCR combinations in private state before installing the hooks.
 ovlife_selftest:
 	movem.l d0-d2/a0,-(sp)
@@ -163,6 +174,7 @@ ovlife_test_ccr: dc.w $40c0 ; move.w SR,D0; CCR on 010+
 	move.l #32,4(a0)
 	movem.l (sp)+,d0-d2/a0
 	rts
+	ENDC
 
 ovlife_reset:
 	bsr ovlife_invalidate
@@ -216,6 +228,7 @@ ovlife_zero_tail:
 	jmp $0.l
 ovlife_registry: dc.l 0
 ovlife_registry_end: dc.l 0
+	IFD VERIFY
 ovlife_count: dc.l 0,0 ; operations, private CCR cases
 
 ; Optional private failure fixture: poison the first image byte of both owned
@@ -255,3 +268,5 @@ ovlife_refill_probe:
 	movem.l (sp)+,d0/a0-a1
 	rts
 ovlife_refill_result: dc.l 0,0,0 ; injections, retained program-three/four pointers
+
+	ENDC

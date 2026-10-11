@@ -12,6 +12,7 @@ overlay_cache_key_build:
  adda.l #$8000,a4
  clr.l (a5)
  clr.l 4(a5)
+ clr.w OVERLAY_KEY_EFFECTS(a5)
  cmpi.w #3,d0
  blo .fail
  cmpi.w #4,d0
@@ -91,14 +92,20 @@ overlay_cache_key_build:
  beq .fail
  cmpi.w #$a502,d0
  beq .bitmap
+ cmpi.w #$a104,d0
+ bne .not_rectangle
+ ori.w #16,OVERLAY_KEY_EFFECTS(a5)
+.not_rectangle
  ; Only lines/filled rectangles survive the bounded first pass.
  addq.l #8,a3
  bra .next
 .colour
+ ori.w #1,OVERLAY_KEY_EFFECTS(a5)
  move.w #1,-18(a6)
  addq.l #4,a3
  bra .next
 .set
+ ori.w #2,OVERLAY_KEY_EFFECTS(a5)
  moveq #0,d0
  move.w (a3)+,d0
  bmi .fail
@@ -114,6 +121,7 @@ overlay_cache_key_build:
  clr.l -16(a6)
  bra .next
 .image
+ ori.w #4,OVERLAY_KEY_EFFECTS(a5)
  move.l -12(a6),d0
  beq .fail
  move.l d0,a1
@@ -135,6 +143,7 @@ overlay_cache_key_build:
  beq .fail
  bra .next
 .bitmap
+ ori.w #8,OVERLAY_KEY_EFFECTS(a5)
  move.l -16(a6),d0
  beq .fail
  move.l d0,a2
