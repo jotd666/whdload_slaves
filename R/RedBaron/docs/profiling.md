@@ -1,5 +1,15 @@
 # Red Baron performance measurements
 
+**W6 fails the A500 squadron capacity gate.** A fresh four-versus-four fixture
+completes only **99 of 163.288 funded updates in 1,000 PAL fields**, while
+publishing **zero frames**. Outstanding work increases in every 250-field
+window, reaching **64.288 updates**. A following 250-field instruction profile
+finds 27 complete native world calls averaging **880,073 main-task cycles**
+(**1,068,517 including interrupts**). Rendering optimization alone cannot fix
+this observed overload. See “A500 squadron overload and world-cost evidence”
+in `w6-verification.md`; world-loop capacity work is now a W6 prerequisite for
+supporting this machine/scene at Time Scale 40.
+
 A fresh current-build cached-68030 event/replay run covers four consecutive
 250-field windows (20 PAL seconds). It completes **162 world updates** from
 **163.288350168 funded**, publishes **204 frames (10.2 FPS)**, and keeps total

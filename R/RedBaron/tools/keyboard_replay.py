@@ -15,10 +15,12 @@ def modifiers(held):
             | bool(any(held.get(k, 0) for k in (0x66, 0x67))) << 11)
 
 
-def check_capture(queue, fixture, rows, excluded, center_x, right_x, command_queue, counters, clocks=None, modal_key=0x59):
+def check_capture(queue, fixture, rows, excluded, center_x, right_x, command_queue, counters, clocks=None, modal_key=0x59, first_key=0x4e):
     if modal_key not in (0x59, 0x19) or clocks is None and modal_key != 0x59:
         raise ValueError('Unsupported modal fixture key')
-    sequence = ((0x4e,1),(0x4e,0),(0x40,1),(0x40,0))
+    if first_key not in (0x4e, 0x51) or first_key == 0x51 and clocks is not None:
+        raise ValueError('Unsupported first-key fixture')
+    sequence = ((first_key,1),(first_key,0),(0x40,1),(0x40,0))
     if clocks is not None:
         sequence += ((modal_key,1),(modal_key,0),(0x45,1),(0x45,0))
         if len(clocks) != 128:
@@ -50,7 +52,7 @@ def check_capture(queue, fixture, rows, excluded, center_x, right_x, command_que
     # Derive command count from the independently recorded ownership tuples.
     commands = sum(bool(down) and not modal for _, _, down, modal in events)
     pending, held, at, pops = deque(), {}, 0, 0
-    saw_right = saw_fire = False
+    saw_right = saw_fire = saw_first_command = False
     for row in rows:
         tick, cursor, now, right, fire, command, axis, flags, popped = row
         while at < len(events) and ((cursor-events[at][0]) & 0xffffffff) < 2**31:
@@ -66,11 +68,15 @@ def check_capture(queue, fixture, rows, excluded, center_x, right_x, command_que
             raise ValueError(f'Wrong held/command history at tick {tick}: {row}')
         if axis != (right_x if expected_right else center_x) or bool(flags & (1 << 29)) != bool(expected_fire):
             raise ValueError(f'Native input did not use the tick snapshot at tick {tick}: {row}')
+        saw_first_command |= command == first_key
         saw_right |= bool(right)
         saw_fire |= bool(fire)
-    if at != count or pending or not saw_right or not saw_fire:
-        raise ValueError('Fixture did not cover both held controls and their releases')
+    if (at != count or pending or not saw_fire
+            or first_key == 0x4e and not saw_right
+            or first_key == 0x51 and not saw_first_command):
+        raise ValueError('Fixture did not cover the first command, fire and all releases')
     if struct.unpack_from('>HH', command_queue) != (commands, commands) or struct.unpack('>II', counters) != (count, commands):
         raise ValueError('Commands were repeated, lost or left pending')
-    return {'rows':len(rows), 'events':count, 'commands':commands, 'held_right_and_fire':True,
+    return {'rows':len(rows), 'events':count, 'commands':commands, 'held_right_and_fire':bool(saw_right and saw_fire),
+            'first_key':first_key, 'first_command_observed':saw_first_command,
             'native_axis_and_fire_flag':True, 'acquisition_deadlines':True}

@@ -39,6 +39,24 @@ class ReplayEvidenceTests(unittest.TestCase):
     def test_valid_native_trace(self):
         self.assertEqual(check_capture(*self.evidence())['commands'],2)
 
+    def test_rear_view_fixture_requires_its_own_command_and_neutral_axis(self):
+        args=self.evidence()
+        for i in (0,1):
+            struct.pack_into('>H',args[0],16+i*16+4,0x51)
+            struct.pack_into('>H',args[1],i*8+4,0x51)
+        args[2][1][3]=0
+        args[2][1][5]=0x51
+        args[2][1][6]=0
+        result=check_capture(*args,first_key=0x51)
+        self.assertFalse(result['held_right_and_fire'])
+        self.assertTrue(result['first_command_observed'])
+        with self.assertRaises(ValueError):check_capture(*args)
+        for index,value in ((3,1),(5,0),(6,127)):
+            bad=deepcopy(args);bad[2][1][index]=value
+            with self.subTest(index=index),self.assertRaises(ValueError):
+                check_capture(*bad,first_key=0x51)
+        with self.assertRaises(ValueError):check_capture(*args,first_key=0x52)
+
     def test_repeated_command_wrong_axis_and_wrong_deadline_rejected(self):
         for mutation in ('command','axis','timestamp','overflow'):
             with self.subTest(mutation=mutation):

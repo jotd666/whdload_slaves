@@ -6748,3 +6748,99 @@ were made. The minimum-machine steady/event/bank/dense matrix, full gameplay
 state/consumer and physics/combat acceptance, physical-input latency and
 actual smooth 50 FPS remain open. The next capacity work should cover the
 minimum machine and missing scenes, rather than repeat this same 68030 window.
+
+
+## A500 squadron overload and world-cost evidence
+
+This is a **failed capacity gate**, not successful consistent-speed gameplay.
+Capture `w6-current-sustained-dense-a500` uses frozen VERIFY
+`ac1d47ba01210c496a98db199b79fa2c30b0f3b59c570a0bec8906dfa7a116f7`, the established
+A500-equivalent 68000 configuration (512 KiB chip, 1,536 KiB slow, no fast RAM,
+real CPU speed, multiplier 2, cycle-exact CPU/memory/blitter). Preferences retain
+world/aircraft maximum, ground ON IN COMBAT and Time Scale 40. Native menu input
+selects the four-versus-four squadron mission. Options are
+`CUSTOM2=16319 CUSTOM4=0 CUSTOM5=-2146434540`; the existing squadron/rear-view
+fixture schedules F2 and Fire rather than Right and Fire.
+
+Four consecutive 250-field windows start at the first completed world boundary:
+
+| Window | Completed updates | Newly funded | Outstanding credit at end | Publications |
+| --- | ---: | ---: | ---: | ---: |
+| 0 | 23 | 40.822087542 | 17.822087542 | 0 |
+| 1 | 24 | 40.822087542 | 34.644175084 | 0 |
+| 2 | 26 | 40.822087542 | 49.466262626 | 0 |
+| 3 | 26 | 40.822087542 | 64.288350168 | 0 |
+
+The 1,000 fields / 1,184 CIA ticks fund 163.288350168 updates. Only 99 complete
+(4.95 updates per PAL second), and one further update is in progress.
+All rendering is skipped yet debt rises at every window endpoint. Final
+unpolled CIA debt is 458 ticks. Total outstanding credit, including the
+in-progress update and fractional remainder, reaches 64.288350168 updates;
+no time is discarded. This is only 60.63% of funded work completed in the
+window and plainly fails real-time simulation capacity. It must not be
+presented as frame-rate-independent gameplay at nominal speed.
+
+The exact-funding checker passes 989 committed intervals across all 1,000
+retained field samples; eleven type-one transaction samples remain recorded.
+The longest sampled no-completion span is 16 fields (320 ms). No native
+message-start or shortening event occurs in this window. This is squadron
+world-work overload, not evidence of a message redraw stall. It is not a
+physical-input latency result or proof of the resulting rear-view camera.
+
+Native self-test counters and all 57 selected / nine disabled ranges pass.
+The existing replay helper initially rejected the F2 records because it assumed
+Right. Inspection of the frozen fixture confirms its explicit bit-4 F2 branch.
+`keyboard_replay.py` now accepts only the declared Right or F2 first-key modes;
+F2 requires the actual command, neutral native steering, Fire and consumed
+press/release records. It does not mask Right as F2 or infer camera state.
+The corrected helper checks the mode from captured CUSTOM5 and passes all
+100 native input rows, four transitions and two commands. Regression coverage
+rejects missing/wrong commands, non-neutral steering and unsupported keys;
+existing held-only preflight/modal semantics remain intact. All 399 host tests
+pass. The emulator binary was unchanged by this host-checker correction.
+
+A following **250 recorded-field** instruction profile, retained as 100/100/50
+chunks, covers 253 native fields including profiler alignment gaps. Exact
+boundary accounting records 29 completed updates against 41.373737 newly
+funded, still with zero draws; CIA debt rises further from 458 to 548.
+Incomplete calls at chunk boundaries are excluded from cost measurements:
+
+| Routine | Complete calls | Main-task cycles, min–max | Mean main-task cycles |
+| --- | ---: | ---: | ---: |
+| Native world, `sim:1098–11c8` | 27 | 834,358–925,276 | 880,073.1 |
+| Pose capture | 28 | 15,998–21,922 | 19,214.9 |
+| Clock/service poll | 29 | 44,794–81,590 | 60,288.0 |
+| Exact clock core | 210 | 614–1,072 | 742.3 |
+
+Mean complete native-world wall cost is 1,068,516.9 cycles including separately
+identified interrupts. Clock-core costs are nested within poll costs and must
+not be added twice. The 27 complete world calls contain 23,761,974 main-task
+cycles. A coarse 256-byte block census puts `sim:fd00` at 4.17%, `sim:3af00`
+at 3.90%, `sim:18300` at 3.46% and `sim:3d00` at 3.04% of those cycles;
+these are address blocks, not routine-exclusive or inclusive call costs.
+No single small block accounts for the missing capacity. Retained
+`world-hotspots.py`/JSON provide a starting point for a call-level world-work
+breakdown; they are not performance-gain claims.
+
+Reproduce from the harness environment using a new output directory:
+
+```sh
+python3 tools/w6_boot_current.py a500 16319 tmp/prof/w6-current-sustained-dense-a500 --scene dense --replay
+python3 tools/w6_sustained_census.py tmp/prof/w6-current-sustained-dense-a500 --windows 4 --from-first-world
+python3 tools/w6_selftest_result.py tmp/prof/w6-current-sustained-dense-a500
+python3 tools/w6_loop_audit.py tmp/prof/w6-current-sustained-dense-a500
+python3 tools/w6_sustained_replay_check.py tmp/prof/w6-current-sustained-dense-a500
+python3 ../../R/RedBaron/tools/sustained_capacity.py \
+  tmp/prof/w6-current-sustained-dense-a500/field-census.json \
+  --out tmp/prof/w6-current-sustained-dense-a500/sustained-capacity.json
+python3 tools/w6_capacity_capture.py tmp/prof/w6-current-sustained-dense-a500 --start-current
+python3 tools/w6_capacity_costs.py tmp/prof/w6-current-sustained-dense-a500
+```
+
+The owned emulator was verified and quit. Under the approved plan's overload
+policy, W7 world-loop work is now a prerequisite for claiming A500 support in
+this scene at Time Scale 40. Do not enlarge the approved physics quantum,
+drop elapsed time, lower the fixture's Time Scale/detail or declare this
+machine unsupported merely to turn this failed gate into a pass. Next work
+is to identify the dominant world-call groups and their exact optimization
+opportunities. Other W6 state/physics/input and 50-FPS gates remain open.

@@ -97,7 +97,11 @@ as they were while the release preferences below remain open.
    are not accepted. A current 20-second cached-68030 event/replay run averages
    10.2 FPS with exact funding and outstanding work below 1.824 updates;
    this is finite scenario capacity evidence, not the minimum-machine or
-   all-scene gate. See `w6-verification.md`. Player timing remains unchanged.
+   all-scene gate. The A500 four-versus-four run **fails capacity**: 99 updates
+   complete against 163.288 funded in 20 seconds, with no rendering and
+   monotonically rising window-end debt. Supporting this machine/scene needs
+   world-loop optimization before W6 can pass; a conserved ledger is insufficient.
+   See `w6-verification.md`. Player timing remains unchanged.
 2. **W7:** later world-step and instrument improvements. W4 overlay queueing
    remains explicitly deferred.
 
