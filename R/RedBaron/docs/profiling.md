@@ -1,5 +1,15 @@
 # Red Baron performance measurements
 
+An A500 census starting at W6's first world boundary now covers the scheduled
+Right/Fire replay. All four transitions and two commands are applied exactly,
+but deadline-to-world-input dispatch takes **58/47/40/32 CIA ticks**; scheduler
+lateness accounts for 53/45/34/29 ticks. Over 1,000 fields it completes 157
+updates against 163.288 funded, publishes eight frames (**0.4 FPS**) and ends
+with 6.426 updates outstanding. The longest completion gap is **1.12 seconds**.
+See “A500 scheduled-input dispatch delay” in `w6-verification.md`. These are
+scheduled-input delays, not physical-key or visible-response latency. No
+message/shorten event occurred, so this does not close cockpit-event coverage.
+
 The current A500 default-Time-Scale census completes **168 world updates**
 against **163.288 newly funded** over 1,000 PAL fields, publishing seven frames
 (**0.35 FPS**). Total backlog falls from 9.343 to 4.632 updates; its sampled

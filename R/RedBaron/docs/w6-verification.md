@@ -5516,3 +5516,67 @@ Reproduce using `w6_boot_current.py a500 16319 OUTPUT`, then
 `w6_sustained_census.py OUTPUT --windows 4` and
 `sustained_capacity.py OUTPUT/field-census.json --out REPORT` in the established
 harness workflow. No slave behavior is changed by this measurement.
+
+
+## A500 scheduled-input dispatch delay
+
+`w6-sustained-input-a500` uses the same VERIFY image and A500 configuration as
+the preceding current-build census, with the scheduled Right/Fire replay added.
+CUSTOM4 remains zero; there is no forced clock or prelude fixture. The census
+starts before the first world update (`--from-first-world`), so it includes
+initial rendering debt rather than starting after the first restored draw.
+The two censuses must not be compared as identical starting windows.
+
+The four 250-field windows complete **34/40/41/42 world updates** and publish
+**1/3/2/2 frames**. In total, 157 updates complete against **163.2883502** funded
+over 1,000 PAL fields and 1,184 CIA ticks. There are 158 starts, with one update
+in progress at the end. Publication rate is **0.4 FPS** and completion rate
+is **7.85 world updates per PAL second**. Total outstanding work changes from
+**0.1379125 to 6.4262626 updates**, ranging from 0.1379125 to 9.8950842. Its
+increase exactly equals funded minus completed work. CIA debt ranges 0–64 and
+ends at 39. The longest sampled completion gap is **56 fields (1.12 seconds)**.
+All eight publications pass the safe-beam and one-field-spacing checks.
+
+All 158 native post-poll world-input rows pass the existing independent keyboard
+oracle: all four scheduled transitions are consumed, both commands pop exactly
+once, and native axis/fire flags match held state. The new
+`scheduled_input_latency.py` additionally finds each event's first eligible
+world-input dispatch and decomposes its delay:
+
+| Event | World tick | Tick quantization (CIA ticks) | Scheduler lateness (CIA ticks) | Total deadline-to-dispatch (CIA ticks) |
+| --- | ---: | ---: | ---: | ---: |
+| Right down | 5 | 5 | 53 | 58 |
+| Right up | 9 | 2 | 45 | 47 |
+| Fire down | 14 | 6 | 34 | 40 |
+| Fire up | 18 | 3 | 29 | 32 |
+
+Quantization is eligible world cursor minus scheduled deadline; lateness is
+current active CIA clock minus that cursor. Their sum must exactly equal total
+delay, with unsigned-wrap checks. The checker requires the frozen slave hash,
+a census beginning before world update one, consecutive native input rows,
+complete scheduled records, exact queue/command consumption and the existing
+capacity ledger. This is neither a physical acquisition measurement nor an
+end-to-end displayed-response measurement. The replay is scheduled in advance,
+so it also does not certify the physical input IRQ path during a long render.
+
+The result exposes a real scheduling-delay concern despite correct input order.
+It does not prove persistent overload: the first window creates debt and later
+windows approach the funded rate. It also does not establish responsiveness
+acceptance. **No message or shorten event occurs in this window**, so the bank
+and fire inputs must not be presented as cockpit-event coverage or a combat
+outcome test. Dense, explicit cockpit-event and physical/visible-latency tests
+remain required.
+
+The ledger validates 984 committed intervals and retains 16 type-one clock
+transaction samples. Native counters 426/512/638/133 and terrain/cache/list
+2/1/2 pass, as do 56 selected and nine disabled live hook ranges. The owned
+emulator was verified and quit. The capture retains its census helper, raw
+field/input logs, endpoint RAM, queue/fixture data, `sustained-check.json` and
+`input-latency.json`. Reproduce with the existing boot helper's `--replay`,
+census `--windows 4 --from-first-world`, then
+`scheduled_input_latency.py CAPTURE --out REPORT`.
+
+Three new host tests cover delay decomposition, unsigned clock wrap, missing
+history, skipped ticks and reversed clocks; all **343 host tests pass**. No
+slave code or player build changes. W6 gameplay independence, sustained capacity
+across scenes and actual smooth 50 FPS remain unaccepted.
