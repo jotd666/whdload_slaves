@@ -78,6 +78,15 @@ Held-input, Time Compress, catch-up mission exit, flight outcomes and user
 handling acceptance remain open. Bit 13 remains outside the normal
 verified mask.
 
+User A500 handling feedback (2026-10-11, `feedback-a500-1`, real speed,
+sound and original damage settings): taps and held controls were predictable,
+with no stuck keys or other reported faults. The user described the frame rate
+as abysmal and steering as very sensitive, producing large left/right turns.
+Reducing World detail improved frame rate and made control easier. This is
+qualitative evidence of functional input, **not** satisfactory maximum-detail
+playability or a measured sensitivity defect. Do not infer a cause or change
+the approved quantum from this report alone. The 060 comparison remains open.
+
 For a live D5 flight, `python3 R/RedBaron/tools/completion_soak.py <capture>`
 counts 90,000 PAL fields in bounded 10,000-field debugger reads, with no guest
 reset or input between them. Each segment requires the native VBL stop and
