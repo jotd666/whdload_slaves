@@ -25,6 +25,8 @@ overlay_probe_install:
 	beq.b .cpu_ready
 	lea overlay_probe_save_ccr(pc),a0
 	move.w #$42e7,(a0)
+	lea overlay_pack_save_ccr(pc),a0
+	move.w #$42e7,(a0)
 .cpu_ready
 	bsr overlay_blit_selftest
 	lea .patch(pc),a0
@@ -60,6 +62,7 @@ overlay_probe_before:
 
 overlay_probe_leave:
 	bsr overlay_probe_wait
+	bsr overlay_pack_verify
 ; D0, all saved registers and the native MOVE.W result flags remain intact.
 overlay_probe_after:
 	nop

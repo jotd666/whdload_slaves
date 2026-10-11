@@ -282,7 +282,7 @@ overlay_mask_point:
 	rts
 
 ; First four front-program calls: allocate private CPU storage, build and expose
-; the mask, then free it. All native inputs are restored before interpretation.
+; the mask, then retain it until packing after the draw. Native inputs are restored.
 overlay_mask_verify:
 	movem.l d0-a6,-(sp)
 	; The pixel probe can be selected without W6: its h3 pointer is then unset.
@@ -333,11 +333,6 @@ overlay_mask_verify:
 	addq.l #1,12(a5)
 overlay_mask_observed:
 	nop
-	move.l 4.w,a6
-	move.l (a5),a1
-	move.l #8032,d0
-	jsr _LVOFreeMem(a6)
-	clr.l (a5)
 overlay_mask_verify_done
 	movem.l (sp)+,d0-a6
 	rts

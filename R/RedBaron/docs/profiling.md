@@ -1,19 +1,14 @@
 # Red Baron performance measurements
 
-A native VERIFY-only front-overlay coverage builder now matches all 32,000
-mask bytes per boot on A500 and cached 68030, with guards intact and subsequent
-original drawing/state checks passing. This is a cache-building component;
-no drawing is skipped and no speed gain is claimed. See “Native front-overlay
-coverage component” in `w6-verification.md`.
-
-The front-overlay host model now reproduces the full h3 post-state for 12
-retained native calls (580,752 bytes), while all 480,000 framebuffer bytes still
-match the raster and mask models. The proposed packed cache remains 9,528 bytes;
-no runtime cache or new speed result is claimed. A fresh four-call 68030
-capture also verifies all caller-return registers and flags; varying upper D0
-and destination-dependent registers rule out replaying a fixed cached return
-image. See “Front-overlay h3 post-state
-model” in `w6-verification.md` for its scope and remaining contracts.
+Native VERIFY-only coverage and packing components now produce identical
+front-overlay payloads on A500 and cached 68030: **4,320 + 5,208 = 9,528 bytes**.
+Each boot checks four masks and complete packed allocations, plus original
+framebuffer, drawing-state and caller-return behavior. Replaying the native
+payloads on three host backgrounds matches the independent renderer over
+480,000 bytes per boot. No game drawing is skipped and no speed gain is claimed.
+See “Native packed overlay capture and host replay” in `w6-verification.md`.
+Cache guards, live cached/native twins and measurement remain open; variable
+native return registers still preclude replaying a fixed register image.
 
 The W6 ground-impact render-scratch leak is fixed in the current VERIFY
 candidate. Fresh rendered/no-render runs match all 280 player bytes at all 15

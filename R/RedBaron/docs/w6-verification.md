@@ -4101,3 +4101,54 @@ mask allocation or build occurred; all 66 disabled patch ranges retain original
 bytes. Static audits again pass 68 ranges/125 destinations. The owned instance
 was quit. The new guard's W6-enabled branch is source-reviewed; the unchanged
 native builder retains the two-CPU evidence above.
+
+
+## Native packed overlay capture and host replay
+
+`overlay-pack.s` packs a completed original draw using the independently built
+coverage mask. It derives word-aligned bounds, copies five tightly packed
+planes with uncovered bits cleared, and appends one packed coverage plane.
+The descriptor records left byte, top row, row bytes, height, plane bytes and
+total bytes. Empty masks and payloads above the 5,208-byte component capacity
+return failure. It reads the original framebuffer without changing it, writes
+only private CPU storage, and performs no blitter operation. The first four
+front calls retain their private mask until packing after the native draw;
+both allocations are then freed. The exit helper preserves registers/CCR,
+using user-accessible SR reads on 68000 and CCR reads on later CPUs.
+
+Fresh `w6-overlay-pack-030` and `w6-overlay-pack-a500` captures use VERIFY
+SHA256 `eee2db0777e138ddcd8635849766260b50a909d5d67c8a331fca4edc44c6f7c1`
+(text 254,988 bytes), CUSTOM2=32703, CUSTOM4=0 and CUSTOM5=512, maximum detail
+and Time Scale 40. Each observes both front programs on both physical buffers.
+All four 5,240-byte packed allocations per boot match the independent host
+packer, including guards and unused trailing bytes. The existing four mask,
+full h3 post-state, native framebuffer, image/mask and complete caller-return
+checks also pass. Both allocation pointers are observed zero after the fourth
+call; the raw free observations are in `freed.json`.
+
+| Program | Descriptor (left byte, top, row bytes, rows, plane bytes, total) | Packed payload SHA256 |
+| --- | --- | --- |
+| 3 | 8, 71, 24, 30, 720, 4320 | `007b303399d22074838c0d4be219013a2e096f5ce623c5d4ca29d248257061fc` |
+| 4 | 8, 72, 28, 31, 868, 5208 | `458f8cea16980077082791c012d7dd97694dd24dde988ddf0a075569d163f3b8` |
+
+Payloads match between physical buffers and between the two CPUs. For every
+native payload, the host replays it onto all-zero, all-one and deterministic
+LFSR backgrounds, comparing all 40,000 output bytes against independently
+rendering the program on that background. All **480,000 replay bytes per boot**
+match. This is host replay of native-produced data; it is not a native cached
+render against a native reference on those new backgrounds. The earlier private
+blitter test remains separate component evidence, not a live cache twin.
+
+Native timing/input/presentation counters pass 426/512/638/133, terrain/cache/
+list checks pass 2/1/2, three private shape cases pass, and the live timing/pacing
+audit passes 56 enumerated destinations on each CPU. Static audits pass 68 ranges
+and 125 patch destinations. All 291 host tests pass. Normal/developer W5 hashes
+are unchanged. Both verified owned instances were quit.
+
+Reproduce with `overlay_pack_check.py CAPTURE/overlay-capture.json --out REPORT`.
+The retained collector is `capture-pack.py`; native buffers/descriptors are
+`pack-N.bin` and `pack-N-header.bin`, with results in `pack-check.json`.
+Native rejection-path tests, complete input guards, persistent cache lifetime,
+live replay with state preservation and native pixel twins remain necessary
+before skipping drawing. No gain, sustainable capacity or 50-FPS result is
+claimed, and broader W6 gameplay acceptance remains open.
