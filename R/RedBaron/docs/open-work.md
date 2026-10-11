@@ -46,8 +46,8 @@ on 020+ only. It reuses a gauge's existing buffer pixels only when its raw
 inputs/context, native rectangle and bounded pixel guard match, with selective
 replay of that gauge's drawing-state writes. Native forced/dirty redraws and
 unsupported geometry use the original path. The seven-gauge native pixel/state twin passes;
-the CPU-class timing batch is running. The completed 060 pair is below the 2%
-threshold; the normal verified mask excludes bit 18.
+the CPU-class timing batch is running. The 040 pair clears 2%; the 060 pair
+does not. The normal verified mask excludes bit 18 until CPU selection is final.
 The combined-copy coverage primitive is implemented as standalone assembly with
 an independent truth-table model (489 host tests pass), including opaque black
 and rejection of inversion or plane-dependent masks. It is not yet included in

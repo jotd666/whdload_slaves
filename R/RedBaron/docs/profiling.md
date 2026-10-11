@@ -16,7 +16,7 @@ scene, cockpit and publication are separate stages, not CPU-only costs.
 | 020, 2M chip + 8M fast | C bundle / A2 stock | 6.008 / 5.666 | 7.222 / 7.313 | 13.79 → 10.22 | 116.77 / 41.40 / 0.08 → 86.64 / 31.28 / 6.96 | 44 / 24 | 1196 / 1258 | 1.001296 (candidate D5) | 0 | 6.398 → 6.695 (+4.6%) | 0x0000 → 0x0001 | 6.754 → 7.280 (+7.8%) | 7.266 → 7.258 (-0.11%) | 7.193 → 7.210 (+0.24%) | CPU-gated off | 4.568 | — | 4.568 → 4.443 (-2.73%, fast compositor) | 4.593 → 4.343 (-5.43%) | Pending |
 | 030/50, 2M chip + 8M fast, MMU | C bundle / A2 stock | 12.974 / 11.881 | 14.827 / 14.452 | 3.33 → 1.70 | 44.19 / 34.08 / 0.08 → 35.14 / 28.54 / 4.28 | 191 / 59 | 1154 / 1017 | 0.998656 (candidate D5) | 0 | 12.878 → 14.546 (+12.9%) | 0x2111; unchanged | Already enabled | 14.562 → 14.595 (+0.22%) | 14.556 → 14.514 (-0.29%) | CPU-gated off | 12.280 | — | 12.305 → 12.305 (+0.00%, fast compositor) | 12.305 → 12.330 (+0.20%) | Pending |
 | 030/50, 2M chip + 8M fast, no MMU tooltype | C bundle / A2 stock | 12.377 / 11.931 | 14.893 / 14.527 | 3.94 → 1.69 | 48.31 / 31.23 / 0.04 → 35.11 / 28.48 / 4.34 | 58 / 55 | 1262 / 962 | 0.998656 (candidate D5) | 0 | 030 class measured with MMU | 0x2000 → 0x2011 | 12.889 → 14.537 (+12.8%) | 030 class measured with MMU | 030 class measured with MMU | CPU-gated off | 12.280 | — | CPU class measured with MMU | CPU class measured with MMU | CPU class measured with MMU (pending) |
-| 040/25 NOMMU, AGA, 2M chip + 16M Z3 fast | C bundle / A2 stock | 12.476 / 11.507 | 13.549 / 13.553 | 3.34 → 2.13 | 47.56 / 36.26 / 0.06 → 37.97 / 28.47 / 5.70 | 116 / 59 | 1144 / 1157 | 0.998656 (candidate D5) | 0 | 12.392 → 13.277 (+7.1%) | 0x80008000; unchanged | Already enabled | 13.384 → 13.428 (+0.32%) | 13.393 → 13.437 (+0.33%) | CPU-gated off | 11.631 | 45.42 / 32.53 / 2.89 | 11.656 → 11.557 (-0.86%, fast compositor) | 11.631 → 11.557 (-0.64%) | Pending |
+| 040/25 NOMMU, AGA, 2M chip + 16M Z3 fast | C bundle / A2 stock | 12.476 / 11.507 | 13.549 / 13.553 | 3.34 → 2.13 | 47.56 / 36.26 / 0.06 → 37.97 / 28.47 / 5.70 | 116 / 59 | 1144 / 1157 | 0.998656 (candidate D5) | 0 | 12.392 → 13.277 (+7.1%) | 0x80008000; unchanged | Already enabled | 13.384 → 13.428 (+0.32%) | 13.393 → 13.437 (+0.33%) | CPU-gated off | 11.631 | 45.42 / 32.53 / 2.89 | 11.656 → 11.557 (-0.86%, fast compositor) | 11.631 → 11.557 (-0.64%) | 11.631 → 11.981 (+3.00%) |
 | 060/50 NOMMU, AGA, 2M chip + 16M Z3 fast | C bundle / A2 stock | 12.786 / 12.206 | 14.296 / 14.003 | 3.16 → 1.95 | 44.63 / 33.43 / 0.03 → 36.13 / 28.11 / 4.68 | 64 / 62 | 1452 / 1568 | 0.998656 (candidate D5) | 0 | 12.585 → 13.909 (+10.5%) | 0xa0808000; unchanged | Already enabled | 13.953 → 13.959 (+0.04%) | 13.982 → 13.998 (+0.11%) | CPU-gated off | 12.006 | 53.03 / 29.37 / 4.41 | 12.056 → 11.981 (-0.62%, fast compositor) | 12.031 → 12.006 (-0.21%) | 12.031 → 12.206 (+1.45%) |
 
 C2 is dropped under §0.3: every 2,000-field same-build CPU-class pair is below 2%; the live-slot cache passed its native mission-load/bank-change/exit twin (54,020 calls, 11 invalidations, zero mismatches), 437 host tests and the hook audit. Candidate developer SHA-256 `eeadc00619d796c3850f4d83f4bf51a87ea80019737935e5a78418ef17b502ea`; evidence `completion-c2-{a500,020,030,040,060}-{off,on}` and `completion-c2-twin-r2`. The normal bundle is unchanged.
@@ -172,9 +172,10 @@ The checker rejects three sabotages and unreleased scratch. Evidence
 `66847823e18558d1c5998de65f9caa376df8535805b9071d10ad6b7b656e5e1b`.
 The earlier attempts lacked a usable fast-RAM snapshot or altitude-hit coverage;
 neither is accepted as the seven-gauge result. The temporary VERIFY snapshot now
-allows any RAM; the runtime cache still requires fast RAM. The completed 060
-2,000-field A/B pair gains 1.45%, below the 2% threshold; other CPU pairs are
-running. Evidence `completion-e2-gauge-060-{off,on}`, same developer SHA-256
+allows any RAM; the runtime cache still requires fast RAM. The completed
+2,000-field A/B pairs gain 3.00% on 040 and 1.45% on 060: only 040 clears the
+2% threshold so far. The 030/020 pairs are running. Evidence
+`completion-e2-gauge-{040,060}-{off,on}`, same developer SHA-256
 `399ff9d384c2de9d5f1f91ba3182bee751726b4478006a7d2af6e3ce3357cdec`.
 This is the dispatcher portion of E2, not combined cockpit composition or the
 remaining view/map acceptance. Bit 18 remains outside the normal verified mask.
