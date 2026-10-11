@@ -4182,8 +4182,11 @@ Final VERIFY SHA256 is
 `w6-overlay-shadow-bank-030` captures use CUSTOM2=32703, CUSTOM4=0, maximum detail
 and Time Scale 40. A500 uses CUSTOM5=512; 68030 uses 514. The latter name/config
 requests the bank fixture, but the retained live fixture counter is **step 2**;
-Right is scheduled only at steps 20–34. It therefore establishes early-flight
-coverage only, **not a bank window or banking convergence**.
+The legacy fixture schedules Right at steps 20–34 only while it owns the
+keyboard; its branch is bypassed once W6's timestamped consumer is ready.
+This capture therefore establishes early-flight coverage only, **not a bank
+window or banking convergence**. Use the W6 replay described below for input
+coverage under W6.
 
 Each final-build run records **two fills and two hits**, with zero native byte
 mismatches or unsupported cases. All four 40,000-byte private frames and guards
@@ -4217,3 +4220,56 @@ Results and cleanup observations are `shadow-check.json` and `shadow-freed.txt`.
 No live rendering replacement, measured speedup, sustainable CPU capacity or
 50-FPS acceptance is claimed. W6's complete simulation-state/event invariants
 remain separate, unfinished requirements.
+
+
+## Delayed cache twins during W6 scheduled input
+
+The four-call overlay diagnostic now waits until world tick 4 when CUSTOM5
+bit 31 selects the existing scheduled-input replay. Other modes retain the early
+window. This is a lower bound: a slow renderer may first reach the diagnostic
+much later. The legacy CUSTOM5 bit-1 bank fixture cannot substitute for this
+replay under W6: `tape_game_record` bypasses its bitmap writes as soon as
+`time_keys_ready` is set. The earlier bank-named capture was not a steering test.
+
+The verifier now binds each delayed sample to the frozen replay records, their
+active-clock origin, current cursor, replay-ready state and private consumed
+Right/Fire bytes. It checks the unchanged four-record schedule: Right down/up
+at relative CIA boundaries 32/64 and Fire down/up at 96/128, including modular
+clock wrap. These are synthetic scheduled records, not physical acquisitions.
+It reports world tick and raw player roll rate separately; the held bitmap at
+a render observation does not assert which earlier world tick first used it.
+
+Both `w6-overlay-shadow-replay-030` and `w6-overlay-shadow-replay-a500` use VERIFY
+SHA256 `728a03ecbd7af31de7e65d60b2eabf977b3507588e21203995eef24f70ce1fcb`
+(text 255,706 bytes), CUSTOM2=32703, CUSTOM4=0, maximum detail and Time Scale 40.
+CUSTOM5 selects deferred activation, input observation and scheduled replay
+(bits 9/20/31); the boot helper emits its signed AmigaDOS representation.
+
+| CPU | Seed tick / relative cursor | Hit tick / relative cursor | Right / Fire at seed and hit | Raw roll rate, seed → hit | Changed background bytes, programs 3 / 4 | Changed covered pixels, programs 3 / 4 |
+| --- | --- | --- | --- | --- | --- | --- |
+| Cached 50 MHz 68030 | 4 / 32 | 7 / 52 | 1 / 0 at both | 0 → 860 | 982 / 888 | 224 / 234 |
+| A500 | 34 / 252 | 87 / 635 | 0 / 0 at both | 0 → 0 | 1,205 / 1,129 | 245 / 180 |
+
+“Covered pixels” counts changed background pixels beneath the cached paint,
+combining the five planes before counting each pixel once. Each run has two
+fills and two genuine reuse hits. All four full 40,000-byte native/private
+outputs, guards, retained cache identity/bytes, h3 post-state, packed data and
+caller-return checks pass. This supplies materially changed native backgrounds
+for the CPU twin, including active steering on 68030. The A500 window is after
+both scheduled controls were released; neither run observes active firing.
+The samples are at different world ticks and are not a cross-CPU gameplay-state
+comparison. Instrumentation overhead also precludes capacity/FPS conclusions.
+
+Native timing/input/presentation counters pass 426/512/638/133; terrain/cache/
+list and shape checks pass 2/1/2 and three cases. Live timing/pacing audits pass
+56 destinations on each CPU, and cache/target cleanup is observed. Static audits
+pass 68 ranges/125 destinations; all 295 host tests pass. Normal/developer W5
+binaries are unchanged. Both verified owned instances were quit.
+
+Use the existing boot helper with `--replay`, then the retained
+`capture-shadow.py`; run `overlay_shadow_check.py CAPTURE/overlay-capture.json
+--out REPORT` for the offline result. The added capture context is reproducible
+from the saved RAM banks without another emulator run. Complete invalidation
+keys, view/resource transitions, native rejection-path tests and live hardware
+replay still precede a rendering replacement. Broader W6 state/event, capacity
+and smooth-50-FPS gates remain open.

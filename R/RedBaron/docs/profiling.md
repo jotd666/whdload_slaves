@@ -1,13 +1,14 @@
 # Red Baron performance measurements
 
-The VERIFY overlay diagnostic now retains one packed image per front program
-and reuses it in a native CPU twin on a later frame's private background copy.
-Both A500 and cached 68030 record two fills and two genuine hits; every full
-40,000-byte result matches the original draw, with allocation identity and bytes
-preserved across hits. Background variation is limited (52 and 2 bytes at the
-final-build hits). No game drawing is skipped and no speed gain is claimed.
-See “Persistent private overlay cache twin” in `w6-verification.md`. Complete
-cache guards, broader scene transitions and live hardware replay remain open.
+The private overlay-cache twin now passes later-frame comparisons during W6's
+scheduled-input replay. Cached/native output matches every framebuffer byte on
+A500 and cached 68030 despite 888–1,205 changed background bytes at hits,
+including 180–245 changed pixels beneath the overlay. The 68030 observations
+include held Right and a changing roll rate; A500's samples occur after release.
+This is correctness evidence with heavy VERIFY instrumentation, not throughput
+or cross-CPU gameplay equivalence. No game drawing is skipped. See “Delayed
+cache twins during W6 scheduled input” in `w6-verification.md`; complete cache
+guards, view/resource transitions and live hardware replay remain open.
 
 The W6 ground-impact render-scratch leak is fixed in the current VERIFY
 candidate. Fresh rendered/no-render runs match all 280 player bytes at all 15

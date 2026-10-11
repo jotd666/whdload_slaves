@@ -291,6 +291,19 @@ overlay_mask_verify:
 	adda.l #perf_mask-.mask_base,a0
 	btst #5,2(a0)
 	beq overlay_mask_verify_done
+	; Scheduled W6 replay: observe later frames while Right/Fire events run.
+	; Legacy tape bank input is bypassed when W6 owns the key consumer.
+	lea .options_base(pc),a0
+.options_base
+	adda.l #perf_custom5-.options_base,a0
+	btst #7,(a0)
+	beq .window_ready
+	lea .clock_base(pc),a0
+.clock_base
+	adda.l #time_loop_state-.clock_base,a0
+	cmpi.l #4,TIME_LOOP_STEPS(a0)
+	blo overlay_mask_verify_done
+.window_ready
 	lea overlay_mask_result(pc),a5
 	cmpi.l #4,12(a5)
 	bhs overlay_mask_verify_done
