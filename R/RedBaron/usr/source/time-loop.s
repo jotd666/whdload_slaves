@@ -215,6 +215,12 @@ time_loop_gate:
 	IFD VERIFY
 	bsr time_compress_reset
 	ENDC
+	; Every new mission starts before its first completed world update. The
+	; 68000 skips pose capture, so its draw eligibility must reset here too.
+	lea .render_reset_base(pc),a1
+.render_reset_base
+	adda.l #time_render_started-.render_reset_base,a1
+	clr.l (a1) ; render_started / render_active
 	lea .pose_reset_base(pc),a1
 .pose_reset_base
 	adda.l #time_pose_header-.pose_reset_base,a1
