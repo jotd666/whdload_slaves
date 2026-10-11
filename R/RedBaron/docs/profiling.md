@@ -1,5 +1,12 @@
 # Red Baron performance measurements
 
+The current full W6 VERIFY bundle also passes the cached-68030 Preferences
+clock-boundary check: 222 CIA ticks spent in the native panel are excluded,
+one CIA tick of existing simulation debt is preserved, and no world update or
+player-record change occurs inside the panel. This is correctness evidence,
+not a rendering-speed measurement. See `w6-verification.md`, “Current full-bundle
+Preferences clock boundaries,” for raw checkpoints and the remaining modal gates.
+
 ## W6 current-bundle rendering breakdown
 
 A follow-up on the same synthetic cached-68030 200 MHz configuration separates

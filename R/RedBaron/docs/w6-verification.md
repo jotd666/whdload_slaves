@@ -2785,3 +2785,55 @@ other consumer and pointer aliases require their own dependency audit before
 excluding this state from a whole-gameplay verdict. Reproduce with
 `shape_selection.py CAPTURE --out REPORT`. Four host checks cover exact metadata,
 stale scale, misaligned/out-of-table pointers and empty selected records.
+
+
+## Current full-bundle Preferences clock boundaries
+
+The current VERIFY build `b85e2e4224fe32c99503ede9b07711eaa8c619b94cb081670e62b6e70ed35491`
+passes a real Preferences visit on the cached 50 MHz 68030 with CUSTOM2=16319,
+CUSTOM4=0 and the existing CUSTOM5 bit-21/22 IRQ input fixture plus observer and
+deferred activation. The fixture enters through F10 and leaves through Escape
+using native keyboard state stores; it does not prove host keyboard mapping or
+the CIA serial handshake. Maximum detail and Time Scale 40 remain selected.
+
+`w6-current-modal-030` retains raw clock/player records at the Preferences wrapper,
+native panel entry, pause-end entry, native caller return, and next completed
+world boundary. Every stop's PC is checked. The completed world tick remains 8
+through all four panel boundaries and advances to 9 after flight resumes.
+
+| Boundary | CIA clock | PAL field counter | Completed world tick |
+|---|---:|---:|---:|
+| Before pause wrapper | 1191 | 66 | 8 |
+| Native Preferences entry | 1191 | 67 | 8 |
+| Native Preferences return, before resume handshake | 1412 | 254 | 8 |
+| Resume complete | 1413 | 255 | 8 |
+| Next completed world update | 1414 | 255 | 9 |
+
+The panel excludes **222 CIA ticks**. The cursor advances by exactly the same
+amount, preserving the existing **one CIA tick of debt**, rather than resetting
+the cursor to the current clock. Primary/secondary fractional phases, due/service
+counts and step/draw/skip counters remain unchanged across the panel. The full
+280-byte player record matches at panel entry, exit and resumed caller return.
+Flight ownership changes 1→0→0→1 and the native primary dt is 225 on resume.
+This is a modal timing result, not an FPS sample or a whole-gameplay verdict.
+
+`preferences_pause.py` independently checks these records, including duration
+bounds from the observed CIA clocks and the first resumed world tick. Six host
+tests cover preserved debt, an incorrect reset-to-now cursor, player/world
+progress during the panel, phase corruption, counter wrap and truncated state.
+Reproduce with `preferences_pause.py CAPTURE/preferences-capture.json --out REPORT`.
+The native 426/512/638/133 checks, terrain/cache/list 2/1/2 checks and all 54 selected
+timing/pacing destinations pass; both disabled overlay-probe ranges stay original.
+
+An earlier decoded-register F10 attempt (`w6-natural-prefs-030`) never reached
+its requested Preferences wrapper and is rejected. Subsequent decoded-register
+Pause attempts (`pause-key` and `pause-key-v2` under the successful capture) also
+failed to reach the pause wrapper; neither establishes a pause-key result. The
+first Pause attempt was not restricted to the world input reader; restricting
+the second did not resolve entry. Do not diagnose this as a game pause failure
+without first proving that the injected command reached the dispatcher. These
+attempts were interrupted at their checked stop assertions and retained separately.
+Both owned emulator instances were quit. Native Pause, other modal paths and
+restart/exit acceptance remain open; the next test should use a decoded IRQ
+fixture with recorded acquisition and command consumption, not an unverified
+register injection.
