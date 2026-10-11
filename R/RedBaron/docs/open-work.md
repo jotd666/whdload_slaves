@@ -1,5 +1,13 @@
 # Red Baron open work
 
+The authoritative remaining work is `completion-plan.md`, phases A–F in order.
+Its approved decisions supersede the older next-work list below. A1 machine
+configurations are implemented in `tools/completion_machines.py`: A500, 020,
+030/50 with and without MMU, 040/25 and 060/50. The latter two use NOMMU
+cores for timing and separate MMU configurations for functional checks.
+A2 full-bundle normal-build measurements are next; no new FPS results yet.
+
+
 The accepted decisions and detailed requirements are in `performance-plan.md`,
 especially §6. `verification.md` is the W0 evidence ledger; `profiling.md`
 contains measured baselines. W5 completes the opt-in Faster rendering player
