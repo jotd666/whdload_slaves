@@ -39,9 +39,10 @@ catch-up input/transition checks and flight-outcome smoke tests remain open. The
 the normal verified mask still excludes bit 13 until acceptance passes.
 E1 is complete as a 040/060 stage-cost diagnostic; both rendering stages exceed
 one field. E2 has a live developer-only front cache with passing pixel/state twins.
-Its first 060 byte-guard variant regresses and is rejected for release; the
-longword-guard revision is unmeasured. Remaining cockpit paths, view/map twins
-and CPU-class measurements are open. Results and validation scope are in the
+Its first 060 byte-guard variant regresses and is rejected for release. The
+fast-RAM compositor and longword guard pass the native front twins; their
+sequential CPU-class timing batch is running. Remaining cockpit paths, combined
+composition, CPU selection and view/map twins are open. Results and validation scope are in the
 scoreboard. D5 remains postponed and E2–F remain
 open; the earlier lists below are historical context, not the execution order.
 

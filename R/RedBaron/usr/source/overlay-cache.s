@@ -5,8 +5,8 @@
 ; PERF_RANGE sim:15f8a 24 bit=18
 OC_DESC = (OVERLAY_KEY_BYTES+3)&-4
 OC_STATE = OC_DESC+12
-OC_CHIP = OC_STATE+24
-OC_ENTRY = OC_CHIP+4
+OC_PIXELS = OC_STATE+24
+OC_ENTRY = OC_PIXELS+4
 OC_FAST = OC_ENTRY*2+8000
 
 overlay_cache_install:
@@ -93,13 +93,13 @@ overlay_cache_allocate:
  tst.l d0
  beq .done
  move.l #10416,d0
- moveq #2,d1 ; two bounded packed entries in chip RAM
+ moveq #4,d1 ; MEMF_FAST: CPU compositor sources must stay off the chip bus
  jsr _LVOAllocMem(a6)
  tst.l d0
  beq .free_fast
- move.l d0,OC_CHIP(a5)
+ move.l d0,OC_PIXELS(a5)
  addi.l #5208,d0
- move.l d0,OC_ENTRY+OC_CHIP(a5)
+ move.l d0,OC_ENTRY+OC_PIXELS(a5)
  lea overlay_cache_fast(pc),a0
  move.l a5,(a0)
  bra .done
@@ -151,7 +151,7 @@ overlay_cache_program:
  move.l $1d72(a4),a0
  move.l overlay_cache_fast(pc),a1
  adda.l #OC_ENTRY*2,a1
- move.l OC_CHIP(a5),a2
+ move.l OC_PIXELS(a5),a2
  lea OC_DESC(a5),a3
  bsr overlay_pack
  tst.l d0
@@ -177,7 +177,7 @@ overlay_cache_program:
  IFD VERIFY
  bsr overlay_cache_twin_before
  ENDC
- move.l OC_CHIP(a5),a0
+ move.l OC_PIXELS(a5),a0
  move.l a0,a1
  moveq #0,d0
  move.w OC_DESC+8(a5),d0
@@ -192,7 +192,7 @@ overlay_cache_program:
  move.w OC_DESC+4(a5),d0
  lsr.w #1,d0
  move.w OC_DESC+6(a5),d1
- bsr overlay_blit
+ bsr overlay_fast
  bsr overlay_cache_restore_state
  IFD VERIFY
  bsr overlay_cache_twin_after

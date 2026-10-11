@@ -634,6 +634,7 @@ tape_sim_key_bridge:
 	include "overlay-probe.s"
 	ENDC
 	include "overlay-blit.s"
+	include "overlay-fast.s"
 	include "overlay-mask.s"
 	include "overlay-pack.s"
 	include "overlay-key.s"

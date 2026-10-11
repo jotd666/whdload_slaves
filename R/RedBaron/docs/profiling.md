@@ -137,7 +137,7 @@ trace was captured. Reproduce with local `completion_e1_case.py <040|060>
 
 E2 has a developer/VERIFY front-cache candidate on bit 18, gated to 020+;
 it implies bit 14's resource-lifetime hooks. Programs 3/4 use bounded packed
-chip entries, exact input keys, selective drawing-state replay and native
+fast-RAM entries, exact input keys, selective drawing-state replay and native
 fallback. Other drawing paths remain native. The front twin passes both
 40,000-byte pixel comparisons and 24-byte drawing-state comparisons, with
 306 hits, two fills and no fallbacks (`completion-e2-front-twin`, VERIFY
@@ -151,13 +151,22 @@ for release: FPS regresses 7.45%; cockpit time rises 30.36 → 33.14 ms.
 Both windows contain 15 messages and 43 dashboard markers. This is a front-cache
 candidate result, not checkpoint E or evidence for the other CPU classes.
 
-The follow-up source uses bounded longword key comparisons for even-addressed
-ranges, retaining byte comparisons for odd addresses/tails and pointer-before-
-pointee ordering. This revision is unmeasured and awaits native validation;
-the prior pair must not be attributed to it. All three current builds, 451 host
-tests, 80 hook ranges and 135 VERIFY patch destinations pass. The normal verified
-mask excludes bit 18. The rest of the instrument/dispatch cache, combined
-composite, other-view/map twins and CPU-class measurements remain open.
+The current follow-up uses bounded longword key comparisons and a fast-RAM
+compositor. Empty mask words skip the chip bus; opaque words avoid destination
+reads; partial words use the original cookie-cut equation. Cache pixels now
+require MEMF_FAST, with allocation failure retaining native drawing. The native
+front twin passes both scripts, including all pixels and drawing-state outputs,
+with 330 hits, two fills and no fallbacks (`completion-e2-fast-twin`, VERIFY
+SHA-256 `0e3d316cc59ee11aa3c64c08f06273b18dff18b0cd73239429326c06fbae25b9`). The independent host compositor model
+covers sparse masks, partial words and screen edges. All three builds, 454 host
+tests, 80 hook ranges and 135 VERIFY patch destinations pass.
+
+The one-pair-per-class timing batch for this compositor is in progress
+(`completion-e2-fast-{060,040,030,020}-{off,on}`, 2,000 PAL fields per case).
+No completed pair is available yet; do not attribute the prior byte-guard pair
+to this source. The normal verified mask excludes bit 18. Remaining work includes
+CPU selection from those results, the rest of the instrument/dispatch cache,
+a combined cockpit composite and the other-view/map twins.
 
 
 040/060 functional checks use separate MMU-core configurations. Their timing
