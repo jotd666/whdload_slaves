@@ -1,5 +1,12 @@
 # Red Baron performance measurements
 
+An integer model of `sim:3648c` now matches **all 19 output bytes in 400
+complete native matrix calls** from the squadron trace. Reusing identical
+word-valued expressions reduces modeled table reads from **6,800 to 4,843**
+without changing those outputs. See “Exact orientation-matrix model” in
+`w6-verification.md`. This is output evidence and an algorithm candidate;
+no assembly replacement, cycle saving or FPS improvement is claimed.
+
 The squadron bottleneck resolves further into the native physics core:
 `sim:1a852` → `sim:17f84` accounts for **90.38%** of 228 complete
 `sim:1a60c` calls. Within 199 complete full-physics calls at `sim:18470`,

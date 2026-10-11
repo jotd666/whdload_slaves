@@ -6975,3 +6975,66 @@ squadron capture. Reproduce with `world_call_costs.py` as above, using
 `--routine 18470:192d6` respectively and separate output files. All reports
 retain interrupt/entry costs and cut-call scope. This analysis does not
 close the failed capacity gate or any gameplay-equivalence gate.
+
+
+## Exact orientation-matrix model
+
+`orientation_matrix.py` implements the original `sim:3648c–3688c` constructor
+using the game's own 2,049-word table at `sim:36d58`. No floating-point trig
+values are generated. It preserves 16-bit wrapping before lookup, the original
+four-bit quantization and reflection, signed half-value shifts before addition,
+signed product shifts and final word truncation. It returns the nine words
+and one mode byte written by the native routine. Byte 19 is padding and is
+outside the routine's stores; it is not invented or cleared by the model.
+
+The candidate mode reuses only exactly equal word-valued lookup expressions
+within one call. It does not quantize the three input angles separately or
+reuse a matrix from a different call. The general original path evaluates 17
+lookups; exact common expressions guarantee at most 14 distinct word keys,
+with further coincidences possible for particular inputs. This host dictionary
+is an algorithm model, not the intended 68000 implementation or a runtime
+cost model.
+
+`orientation_matrix_trace.py` checks frozen original constructor and table
+bytes in every profile chunk, including relocations, against the supported
+SIM. It obtains angles from native load results and records each native output
+store's value. Each complete call must write every one of the 19 output bytes,
+retain its destination and restore its entry stack. Input/output overlap is
+explicitly rejected because that requires a sequential aliasing model.
+Cut calls are not inferred across profile boundaries.
+
+In `w6-current-sustained-dense-a500`, frozen VERIFY
+`ac1d47ba01210c496a98db199b79fa2c30b0f3b59c570a0bec8906dfa7a116f7`:
+
+- All **400 complete native calls** match the original integer model and the
+  common-expression candidate in all 19 output bytes.
+- Every retained call uses native mode byte 3 (general orientation). These
+  observations do not cover the identity or single-axis native paths.
+- Original modeled table reads total **6,800**; exact per-call expression
+  reuse needs **4,843**. These counts do not establish instruction or memory
+  cycle savings and are not a percentage gain for the world or game.
+- The matrix population includes complete calls within world invocations cut
+  by trace boundaries. It is distinct from the earlier 27-complete-world and
+  199-complete-physics populations.
+
+Host tests exhaust all 65,536 word lookup inputs and wrapping equivalents,
+check identity/single-axis output layout and signs, and compare the reuse
+candidate over 10,000 deterministic full-range triples using an arbitrary
+signed-word table. The native trace is the independent general-path output
+check; host candidate/model agreement alone would be insufficient. Tests also
+retain a counterexample to separately quantizing angle operands before adding.
+All 404 host tests pass.
+
+```sh
+python3 -B R/RedBaron/tools/orientation_matrix_trace.py \
+  tmp/dev/tmp/game/RedBaron_v2.1/RedBaron/data/sim \
+  tmp/dev/tmp/prof/w6-current-sustained-dense-a500 \
+  --out tmp/dev/tmp/prof/w6-current-sustained-dense-a500/orientation-model.json
+```
+
+Next implementation work is an assembly candidate behind the W6 experiment,
+with explicit native twins for all output paths, preserved register/CCR
+contracts and alias fallback or proof. The retained debugger SR is not used
+as CCR proof. A timing comparison must include candidate bookkeeping and RAM
+costs before selecting it. No installed game bytes or player behavior changed;
+the A500 capacity failure is still open.
