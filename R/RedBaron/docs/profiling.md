@@ -1,5 +1,12 @@
 # Red Baron performance measurements
 
+Selected ammunition ownership and all ten projectile-linked records now match
+at all 41 controlled 50/25-MHz checkpoints. The proof includes complete
+aircraft/ammunition and projectile-pool prerequisites; only native pointer
+fields receive explicit owner bindings. See “Selected ammunition and
+projectile-linked records” in `w6-verification.md`. No runtime change or
+whole-gameplay-speed acceptance claim.
+
 The complete 16/12-byte auxiliary lists now match raw at all 41 controlled
 50/25-MHz checkpoints, including owner pointers, inactive slots, record tails
 and six control bytes. Both lists change during the window. See “Complete

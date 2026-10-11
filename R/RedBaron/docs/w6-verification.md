@@ -6046,3 +6046,55 @@ python3 R/RedBaron/tools/auxiliary_lists.py \
 Four regression tests cover independent storage relocation, owner and
 inactive-tail mutations, control changes, allocation ambiguity/extent errors,
 and unsupported counts. The complete host suite passes 369 tests.
+
+
+## Selected ammunition and projectile-linked records
+
+`weapon_links.py` accounts for the remaining traced pointer fields at
+`h3:583c` and `h3:5858`. The latter is the first record's +20 owner in the
+ten-record table at `h3:5844`; the checker covers all 240 bytes, including
+inactive records. Original and live contracts verify the 240-byte initializer
+at `sim:129b2`, table selection/count at `sim:132d6`, owner store at
+`sim:132f4`, 24-byte stride at `sim:13312`, and owner cleanup at `sim:13350`.
+Only +20 may be represented by an owner identity. Every observed nonnull
+owner must point exactly to one of the 50 native 44-byte projectile slots
+rooted at `h3:5934`. Other owner types or interior pointers fail explicitly.
+The other 20 bytes of every record remain exact comparisons.
+
+The native selection at `sim:12370` reads aircraft +120, applies the gun
+index offset and stores the result at `h3:583c`. In this captured scenario,
+each aircraft's ammunition payload is exactly four bytes. Selection must
+therefore be null or the exact payload start belonging to one unique aircraft
+slot. Larger/multiple-gun payloads require new evidence and are not silently
+accepted. All ammunition payload bytes are compared, including unselected
+ones. The checker requires the complete aircraft-state and complete
+projectile-pool comparisons, matching input/tick sequences and frozen build.
+
+For frozen VERIFY
+`9c92ff9979e40ec98adc1f73255f8e57b4f65b2f2d6d5d6e13793aad7f414415`,
+all 41 retained 50/25-MHz checkpoints match. Ammunition selection is null at
+11 checkpoints, aircraft slot 1 at 26, and aircraft slot 0 at four. The table
+takes nine distinct complete canonical states, with seven nonnull-owner
+observations. Its raw bytes match at 34 checkpoints; six have one differing
+pointer byte and one has two. Raw table/selection differences are retained
+alongside the explicit identities, rather than erased by a numeric-address
+heuristic.
+
+This verifies the observed links and full table records, not all combat
+outcomes, intervening allocation lifetimes, other owner classes, weapon
+metadata at neighboring globals or real-time simulation speed. No runtime
+or performance behavior changes.
+
+```sh
+python3 R/RedBaron/tools/weapon_links.py \
+  tmp/dev/tmp/game/RedBaron_v2.1/RedBaron/data/sim \
+  tmp/dev/tmp/prof/w6-prelude-50mhz-030 \
+  tmp/dev/tmp/prof/w6-prelude-25mhz-030 \
+  --out tmp/dev/tmp/prof/w6-prelude-50mhz-030/weapon-links.json
+```
+
+Four regression tests cover independent relocation, interior/out-of-range
+owner rejection, exact active/inactive body and ammunition bytes, null
+selection changes, and incorrect allocation extents. The full host suite
+passes 373 tests. Remaining global/owner dependencies and real-time capacity
+must still be resolved before accepting W6.
