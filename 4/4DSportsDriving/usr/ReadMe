@@ -67,7 +67,8 @@
    7.597 -> 7.796, A1200 FULL 9.298 -> 9.598, 040 FULL 17.796 -> 18.395
  - 68020 uses CPU stores for rectangular fills: A1200 FULL rises further
    from 9.598 to 9.998 FPS. Other CPUs retain native rectangle blits
- - whole-plane fill checks preserve all pixels outside the rectangle;
+ - 568 same-input CPU/native-blitter plane comparisons match all 8000 bytes;
+   whole-plane fill checks also preserve pixels outside the rectangle;
    the asynchronous blitter-release experiment was slower and discarded
  - A500/A1200 stationary primitive output matches all 32000 pixel bytes;
    disabled options preserve original bytes. P2 is not yet complete

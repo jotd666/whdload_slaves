@@ -247,7 +247,7 @@ losslessly compressed with a verified SHA-256 in `trace-storage.json`.
 P2.1 complete: CUSTOM2=1 now enables BLTPRI only after OwnBlitter returns
 inside the primitive drawer. The saved priority bit is restored before
 DisownBlitter; existing interrupt guards and waits are unchanged. PERF_MASK
-bit 128 isolates the change; the default mask is now 255. No tested CPU
+bit 128 isolates the change; the priority-only measurement used mask 255. No tested CPU
 regressed, so this path is enabled on all CPUs under CUSTOM2=1.
 
 | Cell, matched 10 s | Before FPS | Priority FPS | Change |
@@ -287,6 +287,15 @@ memory snapshots confirm native rectangle bytes on 040 and the new hook on
 Evidence: `p2-cpu-rect-layout` (final), `p2-cpu-rect` (ungated trial).
 All 12 sampled full 8,000-byte planes match the exact D-only fill model,
 including unchanged pixels outside the rectangle and register preservation.
+The completion audit adds an in-process native-blitter twin: an ignored
+VERIFY source copy saves the full initial plane, runs the CPU fill, restores
+the initial pixels, executes the original D-only blitter register writes,
+waits for DMA completion, and compares all 8,000 bytes. All 568 plane pairs
+match, with zero failures (`p2-rect-native-twin/B/rect-twin.json`). The original
+production source and slave SHA are unchanged. This is a correctness test;
+its slower instrumented FPS is not used in the production matrix. An earlier
+cross-boot native comparison matched the fill model but had different outside
+pixels; it is not counted as a same-input twin.
 All 22 disabled ranges match; hook audit passes 1,250 relocations and 10,102
 branch candidates (branches wholly removed by their own replacement are not
 incoming edges). Production size is 11,490 bytes.
