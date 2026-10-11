@@ -213,7 +213,7 @@ Implemented on 68000 only: the exact vertex-loop replacement gains 3.39% in its 
   steady.
 - G6–G9 and S2/S4–S8 stay deferred. Each is below 2% (rule 3).
 
-✔ **Checkpoint C:** update the scoreboard and commit each feature.
+✔ **Checkpoint C complete:** all six normal-build configurations are recorded in the scoreboard; C1/C2 are dropped and C3 is committed.
 
 ### Phase D — simulation independent of rendering (the core requirement)
 
