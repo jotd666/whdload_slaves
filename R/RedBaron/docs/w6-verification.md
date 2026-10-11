@@ -6911,3 +6911,67 @@ Two regression tests verify nested-work attribution, IRQ separation, exact
 cost partition, cut-call exclusion and wrong-stack/unfinished-call rejection.
 All 401 host tests pass. No emulator was started for this offline analysis;
 the A500 capacity failure and other W6 gates remain unresolved.
+
+
+## Native physics-core cost breakdown
+
+Continuing the same frozen A500 squadron profile, without another emulator
+run, `world_call_costs.py` measures these complete-call populations:
+
+| Caller routine | Complete calls | Total main cycles | Dominant immediate call | Inclusive cycles / caller share |
+| --- | ---: | ---: | --- | ---: |
+| `sim:1a60c–1a8aa` | 228 | 9,627,648 | `sim:1a852` → `sim:17f84` | 8,700,998 / 90.38% |
+| `sim:17f84–181a2` | 228 | 8,696,338 | `sim:17fb6` → `sim:18470` | 7,744,366 / 89.05% |
+| `sim:18470–192d6` | 199 | 7,740,236 | See helper breakdown below | — |
+
+The remaining `sim:18190` → `sim:16a50` branch takes 810,308 main cycles
+(9.32% of the `sim:17f84` population). Native mode four selects `sim:18470`;
+other modes use the alternate path. Thus the 199 full-physics calls are a
+subset of the 228 motion calls; these independent population totals must not
+be added or treated as a controlled performance comparison.
+
+The full-physics core's largest measured groups are:
+
+| Immediate site / target | Main cycles | Share of the 199-call core population |
+| --- | ---: | ---: |
+| Inline instructions outside immediate calls | 1,570,710 | 20.29% |
+| `sim:18b7c` → `sim:1e624` | 628,282 | 8.12% |
+| `sim:18c9c` → `sim:1e624` | 621,668 | 8.03% |
+| `sim:190f6` → `sim:182d2` | 604,176 | 7.81% |
+| `sim:18b90` → `sim:193c4` | 565,198 | 7.30% |
+| `sim:18ba2` → `sim:193d0` | 323,364 | 4.18% |
+| `sim:192ca` → `sim:183fa` | 279,336 | 3.61% |
+
+The trampoline at `sim:1e624` leads to `sim:3648c`, the orientation-matrix
+constructor. The first physics call builds a temporary matrix from three
+scaled angular terms; the second builds the object's updated orientation
+matrix when the native quantized-change condition passes. They cannot simply
+share one result: their inputs and outputs have different roles.
+
+The constructor repeatedly computes a word-wrapped angle expression, shifts
+right by four, reflects indices with bit 11 set around 4096, and loads from
+the original half-cycle table. Several expressions recur within a single
+matrix construction. This is a concrete exact-optimization candidate, with
+important constraints: preserve word wrap before quantization, individual
+arithmetic right shifts before sums/differences, product truncation, special
+zero-angle paths and observable register/condition-code behavior. Replacing
+these operations by real-valued trig identities would not establish bit
+identity. A cache keyed only by separately quantized angles is likewise not
+justified: low bits may carry when angles are added before the shift.
+
+The two matrix calls together are 1,249,950 cycles, 16.15% of the measured
+full-physics population, not 16.15% of the whole world or frame. Removing
+all their cost is only an upper bound, not an achievable saving. The A500
+capacity deficit is larger and still requires broader world-work reductions.
+Next implementation work should model the exact constructor and evaluate
+reuse of repeated expressions, while retaining the other measured core
+costs as targets. No simulation tick, detail level or original physics branch
+has been changed.
+
+Retained reports are `world-motion-call-costs.json`,
+`world-integrator-call-costs.json` and `world-physics-call-costs.json` in the
+squadron capture. Reproduce with `world_call_costs.py` as above, using
+`--routine 1a60c:1a8aa`, `--routine 17f84:181a2` and
+`--routine 18470:192d6` respectively and separate output files. All reports
+retain interrupt/entry costs and cut-call scope. This analysis does not
+close the failed capacity gate or any gameplay-equivalence gate.

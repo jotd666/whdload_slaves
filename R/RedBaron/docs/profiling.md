@@ -1,5 +1,14 @@
 # Red Baron performance measurements
 
+The squadron bottleneck resolves further into the native physics core:
+`sim:1a852` → `sim:17f84` accounts for **90.38%** of 228 complete
+`sim:1a60c` calls. Within 199 complete full-physics calls at `sim:18470`,
+two orientation-matrix builds take **16.15%**, while **20.29%** is inline
+work outside immediate callees. See “Native physics-core cost breakdown”
+in `w6-verification.md`. This rules out treating the outer dispatcher alone
+as the optimization; arithmetic, matrix construction and inline physics work
+need exact treatment. No performance improvement is claimed.
+
 The failed A500 squadron profile now has a call-level breakdown. In 27 complete
 world updates, the `sim:10c8` call into `sim:1314` consumes **84.63%** of
 main-task world cycles. Its object-update driver spends **58.95%** of its own
