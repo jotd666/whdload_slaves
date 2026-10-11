@@ -234,6 +234,8 @@ promotion out of VERIFY.
 
 **D1. Replace the acceptance gate** in `game-time-plan.md` with this one.
 
+Complete: the implementation contract now reflects the approved gate and accepted residuals.
+
 *Must hold:*
 1. **Speed.** At equal wall time, completed world time is within ±1% of
    nominal whenever the measured world cost fits the CPU, for every render

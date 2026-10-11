@@ -21,7 +21,8 @@ contains the current normal-bundle rates and stage costs. C1 is dropped: its fiv
 C2 is also dropped: its lifecycle twin passed, but all five CPU-class differences are below 2%.
 C3 is implemented and enabled only on the 68000: its exact face-loop twin passes and the isolated pair gains 3.39%.
 Checkpoint C is complete on all six normal-build configurations; current rates and stage costs are in the scoreboard.
-Next is phase D, simulation speed independent of rendering. When promoting W6 in D4, omit its
+D1 is complete: `game-time-plan.md` now uses the approved rate, command, transition and isolation gates; cross-CPU/full-state convergence is no longer a gate.
+Next is D2, CPU-specific quantum and bounded world-time debt. When promoting W6 in D4, omit its
 old VERIFY exponent optimization from the player path.
 Phases D–F remain open; the earlier lists below are historical context, not the execution order.
 
