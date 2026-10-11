@@ -1,5 +1,13 @@
 # Red Baron performance measurements
 
+A paired current-build 68030 check now compares **8.4 FPS versus no rendering**
+over equal 250-field / 296-CIA-tick windows. Both complete **40 world updates**
+and retain exactly **0.822087542 updates of credit**, with nine message-start
+and nine shortening calls each. Same configuration/build and exact funding
+checks pass. See “Paired rendering/no-render time accounting” in
+`w6-verification.md`. This supports timing independence in this short scenario,
+not full state equality or sustained/all-scene acceptance.
+
 A fresh current-build 50-MHz cached-68030 replay/event window covers exactly
 250 PAL fields: **40 world updates**, **40.822 newly funded**, **42 publications
 (8.4 FPS)**, and nine message-start plus nine shortening calls. Total

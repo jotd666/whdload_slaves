@@ -6454,3 +6454,68 @@ independence. It is not a performance ratio against earlier scenes or builds.
 At 8.4 FPS this hardware/configuration also does not meet smooth 50 FPS.
 The precise faster-hardware acceptance target remains to be clarified; the
 50-FPS requirement itself is unchanged. No runtime source change was made.
+
+
+## Paired rendering/no-render time accounting
+
+The current 50-MHz cached-68030 event/replay census now has a same-build,
+same-configuration no-render counterpart, `w6-current-speed-none-030`.
+Only CUSTOM5 bit 30 changes: -2146434560 becomes -1072692736. CPU/cache,
+chip/fast RAM, preferences, Time Scale 40, CUSTOM2=16319, CUSTOM4=0, MMU and
+scheduled Right/Fire fixture remain identical. Both frozen binaries hash to
+`ac1d47ba01210c496a98db199b79fa2c30b0f3b59c570a0bec8906dfa7a116f7`.
+
+| Measurement | Rendering | No rendering |
+| --- | ---: | ---: |
+| PAL fields | 250 | 250 |
+| CIA ticks elapsed | 296 | 296 |
+| Newly funded world ticks | 40.822087542 | 40.822087542 |
+| Completed world ticks | 40 | 40 |
+| Total uncompleted credit at start | 0 | 0 |
+| Total uncompleted credit at end | 0.822087542 | 0.822087542 |
+| Publications | 42 (8.4 FPS) | 0 |
+| Message-start / shortening calls | 9 / 9 | 9 / 9 |
+
+Both endpoints have no due update and no update in progress. In the rendering
+run, three CIA ticks remain unpolled at the endpoint; the no-render run has
+already polled them into fractional credit. The total credit is exactly equal,
+so this difference is clock-service timing, not lost simulation time.
+The no-render scheduled-input check passes 40 native input rows, all four
+transitions and two commands. Native self-test counters and all 57 selected /
+nine disabled patch checks also pass. The owned emulator was verified and
+stopped after capture.
+
+`compare_field_capacity.py` checks matching frozen binaries and configuration,
+permits only the no-render flag to differ, requires actual publication on one
+side and none on the other, and independently checks exact funding and the
+identity `ending credit - starting credit = funded - completed`. It retains
+completed-work differences instead of demanding equal counts regardless of
+debt. Three regression tests exercise such a debt-accounted count difference,
+changed CPU/options/other launch arguments, missing rendering and mismatched
+capture identity. The full host suite passes 395 tests.
+
+This directly supports elapsed-time accounting independence from rendering
+in this five-second scenario. Matching aggregate message counts do not prove
+event ordering or complete world-state equivalence. These are not step-locked
+state captures, and matching initial full heap state was not checked here.
+Sustained capacity, complete gameplay-state invariance, broader scenes and
+smooth 50 FPS remain unaccepted.
+
+From the development harness, capture the counterpart using a new directory:
+
+```sh
+python3 tools/w6_boot_current.py 030 16319 tmp/prof/w6-current-speed-none-030 --replay --no-render
+python3 tools/w6_sustained_census.py tmp/prof/w6-current-speed-none-030 --windows 1 --from-first-world
+python3 tools/w6_selftest_result.py tmp/prof/w6-current-speed-none-030
+python3 tools/w6_loop_audit.py tmp/prof/w6-current-speed-none-030
+python3 tools/w6_sustained_replay_check.py tmp/prof/w6-current-speed-none-030
+```
+
+From the repository root, compare both saved censuses:
+
+```sh
+python3 R/RedBaron/tools/compare_field_capacity.py \
+  tmp/dev/tmp/prof/w6-current-speed-030 \
+  tmp/dev/tmp/prof/w6-current-speed-none-030 \
+  --out tmp/dev/tmp/prof/w6-current-speed-none-030/paired-capacity.json
+```
