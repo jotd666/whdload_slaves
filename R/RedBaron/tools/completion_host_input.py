@@ -12,8 +12,8 @@ if not a.serve and a.key is None:p.error('Supply base,bitmap,raw or quit')
 SOCK=Path('amiga/.run/completion-input.sock').resolve()
 if not a.serve:
  with socket.socket(socket.AF_UNIX) as s:
-  s.connect(str(SOCK));s.sendall(a.key.encode());print(s.recv(65536).decode())
- raise SystemExit
+  s.connect(str(SOCK));s.sendall(a.key.encode());answer=s.recv(65536).decode();print(answer)
+ raise SystemExit(0 if answer.startswith(('OK ','bye')) else 1)
 pid=Path('amiga/.run/fsuae.pid').read_text().strip()
 owned=subprocess.check_output(['ps','-p',pid,'-o','command='],text=True)
 assert '--base_dir='+str(Path.cwd()/'amiga/.run/fsuae') in owned

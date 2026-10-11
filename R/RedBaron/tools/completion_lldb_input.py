@@ -5,12 +5,12 @@ _mapping=None
 def map_ram(ps):
  global _mapping
  p=lldb.debugger.GetSelectedTarget().GetProcess()
- regs=p.GetMemoryRegions();err=lldb.SBError();hits=[]
+ regs=p.GetMemoryRegions();err=lldb.SBError()
  pattern=b''.join(b'\x4e\xf9'+struct.pack('>I',ps+off) for off in (0x2b4f4,0x26e8,0x7e24))
  for i in range(regs.GetSize()):
   reg=lldb.SBMemoryRegionInfo();regs.GetMemoryRegionAtIndex(i,reg)
   lo,hi=reg.GetRegionBase(),reg.GetRegionEnd()
-  if not reg.IsReadable() or not reg.IsWritable() or hi-lo>512*1024*1024:continue
+  if not reg.IsReadable() or not reg.IsWritable() or not 512*1024 <= hi-lo <= 512*1024*1024:continue
   for at in range(lo,hi,1024*1024):
    b=p.ReadMemory(at,min(1024*1024+len(pattern),hi-at),err)
    if not err.Success():continue
@@ -18,11 +18,11 @@ def map_ram(ps):
    while pos>=0:
     host=at+pos
     other=p.ReadMemory(host-0x15b3a+0x2b4f4,4,err)
-    if err.Success() and other==b'\x30\x3c\0\0':hits.append(host-(ps+0x15b3a))
+    if err.Success() and other==b'\x30\x3c\0\0':
+     _mapping=host-(ps+0x15b3a)
+     print('RAM_MAP',hex(_mapping),flush=True);return
     pos=b.find(pattern,pos+1)
- hits=sorted(set(hits))
- if len(hits)!=1:raise RuntimeError('Ambiguous RAM map '+repr(hits))
- _mapping=hits[0];print('RAM_MAP',hex(_mapping),flush=True)
+ raise RuntimeError('Live PS RAM mapping not found')
 
 def valid_module(p,base,bitmap):
  if bitmap not in (0x2ba5c,0x30f8c):raise ValueError('Unsupported keyboard bitmap')

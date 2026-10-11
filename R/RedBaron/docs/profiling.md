@@ -20,13 +20,27 @@ scene, cockpit and publication are separate stages, not CPU-only costs.
 040/060 functional checks use separate MMU-core configurations. Their timing
 results will use the frequency-sensitive NOMMU cores. Configuration generation
 passes all six cases and the functional variants; all three builds, 418 host
-tests and the 76-range hook audit pass at A1. A2 has no accepted measurement:
-the normal A500 reaches maximum-detail flight with debugger keyboard input.
-The first setup window is discarded because it lacked explicit dashboard-event
-markers. The census now includes these and a mission-exit guard. No VERIFY
-measurement is substituted for the normal-build baseline. The input tool and
-its three deliberate rejection cases pass; all builds, 422 host tests and
-the 76-range hook audit pass.
+tests and the 76-range hook audit pass at A1. The normal-build matrix uses
+native keyboard queues through the host debugger. The input driver writes only
+keys, never simulation or executable state. Maximum World/Aircraft detail and
+Ground ON IN COMBAT are selected; Time Scale stays at 40. A separate benchmark
+copy has aircraft damage disabled in its native realism preferences, preventing
+an early combat death from truncating a window; original game files are unchanged.
+
+Combat can produce spontaneous dashboard events. Therefore the steady value is
+**event-free complete-frame cadence**, calculated from consecutive publications
+inside the same ≥2,000-field event capture. Any interval touching the field of a
+DASH event is excluded conservatively, as are ambiguous beam-counter samples.
+The event value is the FPS of the entire window, including the queued cockpit
+view change. This is not a claim that the whole capture is event-free. The
+initial 1,000/2,000-field opening window is retained as setup evidence only.
+`completion_cadence.py` reports the clean interval count and covered fields;
+`routine_wall_time.py` reports phase-safe inclusive stage spans. No VERIFY
+measurement substitutes for a normal-build result.
+
+The stock A500 event capture completed: 1.722 FPS over 2,000 fields;
+56 clean intervals cover 1,515.87 fields at 1.844 FPS. Its matching bundle
+capture is pending. Input and cadence safeguards pass eight targeted tests.
 
 ## Earlier measurements
 
