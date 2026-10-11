@@ -3450,3 +3450,67 @@ There are **zero W6 draws** by boundary 14: only the pre-activation flag consume
 appears in the trace. This validates the 68000 private wrappers and flight path,
 not natural changed-scratch render coverage on that CPU. The owned emulator was
 verified and quit. Retained collectors and all raw results remain with the run.
+
+
+## Ground contact under deliberately delayed rendering
+
+The scratch-restoration candidate above also passes the scoped ground comparison
+with the existing CUSTOM5 bit-0 delay fixture. The fresh capture
+`w6-ground-restore-slow-030` uses the same `c54a84f7…` VERIFY binary, cached
+68030 at 50 MHz, CUSTOM2=16319, maximum detail and Time Scale 40. It is compared
+with `w6-ground-restore-030-v2`; the no-render reference remains
+`w6-ground-restore-none-030`.
+
+Initial h3, full player record and game allocations agree. The only initial
+sim-code difference is the JMP destination at `sim:015b2`: ordinary rendering
+jumps directly to `sim:2c552`, while the fixture jumps through its beam-wait
+wrapper. The exact target is checked against each capture's frozen listing;
+all other initial sim segments agree. This explicit test-code difference remains
+in the raw inventory rather than being masked as gameplay state.
+
+Read-only breakpoints bracket each wait. Eleven observed calls each cross
+three VBlank-counter increments and three or four CIA ticks. One call belongs
+to the native prelude; ten have started-world IDs greater than zero. The
+corresponding W6 completed-draw count is ten. Thus the fixture demonstrably
+changed the draw schedule, not merely a selected option.
+
+| Schedule | Completed update intervals | Draws | PAL fields | CIA ticks | Final uncollected CIA debt |
+|---|---:|---:|---:|---:|---:|
+| Ordinary | 14 | 16 | 91 | 106 | 4 |
+| Delayed 3D | 14 | 10 | 89 | 105 | 3 |
+| No rendering | 14 | 0 | 87 | 102 | 0 |
+
+These are tick-bounded correctness observations, not 250-field performance or
+sustained-capacity samples. Delaying each draw reduces the number of draws;
+it need not increase the time to the same simulation endpoint. Exact funding
+passes all three, with remaining debt and fractional credit retained.
+
+Across all 15 boundaries, ordinary versus delayed rendering agrees on all
+280 player bytes, 463 registered prefixes, 463 normal-object scratch bytes,
+registry, camera, display-list order and lifecycle events. Held keys, the command
+queue and consumed-input counters agree. The observed ground-impact call has
+the same arguments and independently modelled grade 2. Flight exit still returns
+1 with started tick 15/last captured pose 14 and clears active/input-ready state.
+This adds a third rendering schedule for this fixture; it does not replace
+independent physics/flag models or cover other gameplay scenes.
+
+The final raw h3 difference is 32 bytes, and the other sim segments differ in
+12/0/0 bytes (including the deliberate JMP target). Shared allocation differences
+throughout this comparison occur only in sound contexts 0/1 at payload byte 345,
+the elapsed-word low byte previously classified. They remain visible. The
+remaining global differences are not all classified, so this is not a complete
+world-state equivalence verdict or an audio-event acceptance result.
+
+The delayed run passes native counters 426/512/638/133, terrain/cache/list 2/1/2,
+three private shape cases, 512 scratch cases, 56 selected/two disabled hook ranges,
+and 463 pose checks with 40 lifecycle events/16 invalidations. The owned emulator
+was verified and quit. No source/slave bytes changed for this comparison.
+
+Retained `capture-ground.py` records `DELAY_ENTER`/`DELAY_LEAVE` alongside the
+world snapshots, impact and flag-consumer observations. `summarize.py` verifies
+the named state, exact initial JMP targets and delay pairing, producing
+`scoped-state.json` and `delay-check.json`; `heap-inventory.json` remains the
+unfiltered comparison. Reproduce with `w6_boot_current.py 030 16319 CAPTURE
+--probe ground --slow`, the retained collector (`--steps 20`), the native checks
+before unload, then `world_comparison.py` against the ordinary reference. The
+same-build reference and matching initial world state are required.

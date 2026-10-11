@@ -9,6 +9,13 @@ This closes one correctness defect, not full frame-rate independence or the
 50 FPS requirement. Raw global and sound-state differences remain visible.
 See “Ground-impact render scratch restoration” in `w6-verification.md`.
 
+A deliberately delayed-render control now also matches those same 15 world
+boundaries. It completes 10 draws versus the ordinary run's 16, with actual
+three-wrap waits verified at the 3D entry. Both preserve exact clock funding
+and the same impact/flight exit. This is a short correctness comparison, not
+a performance-rate claim; see “Ground contact under deliberately delayed
+rendering” for the three-schedule counts and remaining raw differences.
+
 The current full W6 VERIFY bundle also passes the cached-68030 Preferences
 clock-boundary check: 222 CIA ticks spent in the native panel are excluded,
 one CIA tick of existing simulation debt is preserved, and no world update or
