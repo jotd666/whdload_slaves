@@ -37,7 +37,11 @@ predictable but maximum-detail playability was poor (scoreboard). Remaining
 catch-up input/transition checks and flight-outcome smoke tests remain open. The 060
 30-minute emulated soak passes in one flight across two debugger reads;
 the normal verified mask still excludes bit 13 until acceptance passes.
-Phases D–F remain open; the earlier lists below are historical context, not the execution order.
+E1 is complete as a 040/060 stage-cost diagnostic; both rendering stages exceed
+one field. E2 starts by separating the tested overlay primitives from diagnostic
+code; the live cache and its measurements remain open. Current E1 numbers and
+validation scope are in the scoreboard. D5 remains postponed and E2–F remain
+open; the earlier lists below are historical context, not the execution order.
 
 
 The accepted decisions and detailed requirements are in `performance-plan.md`,

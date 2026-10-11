@@ -632,9 +632,11 @@ tape_sim_key_bridge:
 	include "time-flag-verify.s"
 	IFD VERIFY
 	include "overlay-probe.s"
+	ENDC
 	include "overlay-blit.s"
 	include "overlay-mask.s"
 	include "overlay-pack.s"
+	IFD VERIFY
 	include "overlay-shadow.s"
 	include "time-shape-verify.s"
 	include "overlay-lifetime.s"

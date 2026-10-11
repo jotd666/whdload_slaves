@@ -100,6 +100,7 @@ overlay_pack:
 	movem.l (sp)+,d1-d7/a0-a6
 	rts
 
+	IFD VERIFY
 ; Capture-only private pack after the original draw. Never runs the blitter or
 ; writes the game framebuffer; free both private allocations before returning.
 overlay_pack_verify:
@@ -158,3 +159,5 @@ overlay_pack_verify_done:
 	rts
 overlay_pack_result: dc.l 0,0,0,0 ; allocation, supported, program, count
 	dc.w 0,0,0,0,0,0 ; descriptor
+
+	ENDC

@@ -358,6 +358,10 @@ B and D. Fast-RAM code and the 040/060 caches change the picture. If the
 cockpit and scene are both chip-bound, as on the accelerated 030, continue
 with E2 and E3 in that order.
 
+E1 diagnostic complete: the scoreboard records both 250-field W6 stage
+windows. Scene and cockpit each exceed 20 ms; proceed with E2 then E3. This
+is not an A/B FPS result or proof of chip-bus saturation.
+
 **E2. Cockpit cache** for `sim:15e96` instruments, `19ba6` dispatch and
 `2c144` overlay. Today all three are redrawn every frame.
 1. Run the instrument picture scripts into a persistent fast-RAM or chip

@@ -1,4 +1,4 @@
-; VERIFY-only coverage builder for audited front-overlay commands.
+; Coverage builder for audited front-overlay commands.
 ; a0=program, a1=h3, a2=8000-byte CPU mask. d0=1 supported, 0 fallback.
 ; Every other register is preserved. No game state or hardware is written.
 ; Unsupported commands/geometry fail closed; caller must discard partial mask.
@@ -304,6 +304,7 @@ overlay_mask_point:
 	movem.l (sp)+,d1-d3/a0
 	rts
 
+	IFD VERIFY
 ; First four front-program calls: allocate private CPU storage, build and expose
 ; the mask, then retain it until packing after the draw. Native inputs are restored.
 overlay_mask_verify:
@@ -376,3 +377,5 @@ overlay_mask_verify_done
 overlay_mask_result: dc.l 0,0,0,0 ; allocation, supported, program, count
 
 	include "overlay-mask-guards.s"
+
+	ENDC

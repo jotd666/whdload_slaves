@@ -1,4 +1,4 @@
-; VERIFY native compositor for word-aligned five-plane overlays.
+; Native compositor for word-aligned five-plane overlays.
 ; a0=image, a1=shared mask, a2=destination; d0=words/row, d1=rows.
 ; Image planes/mask are packed, destination pitch=40 and plane stride=8000.
 ; All registers preserved; CCR volatile. Caller supplies validated chip buffers.
@@ -50,6 +50,18 @@ overlay_blit_wait:
 	bne.b .wait
 	rts
 
+overlay_blit_bad:
+	pea overlay_blit_error(pc)
+	pea TDREASON_FAILMSG
+	lea .resload_base(pc),a2
+.resload_base
+	adda.l #_resload-.resload_base,a2
+	move.l (a2),a2
+	jmp resload_Abort(a2)
+overlay_blit_error: dc.b "Red Baron: invalid overlay compositor state",0
+	even
+
+	IFD VERIFY
 OVERLAY_TEST_CHIP = 45240 ; guards + destination + largest image + mask
 ; Private-buffer hardware check. Never writes a game framebuffer.
 overlay_blit_selftest:
@@ -191,15 +203,7 @@ overlay_blit_expected:
 	movem.l (sp)+,d0-a6
 	rts
 
-overlay_blit_bad:
-	pea overlay_blit_error(pc)
-	pea TDREASON_FAILMSG
-	lea .resload_base(pc),a2
-.resload_base
-	adda.l #_resload-.resload_base,a2
-	move.l (a2),a2
-	jmp resload_Abort(a2)
-overlay_blit_error: dc.b "Red Baron: overlay blitter self-test failed",0
-	even
 overlay_blit_cases: dc.w 12,30,64,71,14,31,64,72
 overlay_blit_result: dc.l 0,0,0,0 ; chip, expected, cases, checked bytes
+
+	ENDC

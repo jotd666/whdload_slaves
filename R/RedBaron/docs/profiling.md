@@ -10,14 +10,14 @@ baseline and update the normal-bundle columns; their checkpoint labels identify
 which rows have been refreshed. Stage spans are inclusive wall time;
 scene, cockpit and publication are separate stages, not CPU-only costs.
 
-| Configuration | Checkpoint | Stock steady / event FPS | Bundle steady / event FPS | World update ms | Scene / cockpit / publication ms | DASH markers stock / bundle | Clean fields stock / bundle | World time / wall time | Dropped world time | B1 isolated pool FPS, off → on | B2 raw CACR, before → after | B2 isolated cache FPS, off → on | C1 discarded pair FPS, off → on | C2 discarded pair FPS, off → on | C3 isolated face-loop FPS, off → on | D5 candidate whole-window FPS (Time Scale 40) |
-|---|---|---|---|---|---|---|---|---|---| --- |---|---|---|---|---|---|
-| A500, 512K chip + 1.5M slow | C bundle / A2 stock | 1.844 / 1.722 | 2.016 / 1.922 | 57.68 → 57.05 | 399.51 / 73.70 / 0.28 → 380.41 / 63.46 / 3.61 | 3 / 13 | 1516 / 1486 | 0.924744 (candidate D5) | 5,400 units / 12 steps | Minimum-memory flight passes | N/A (68000) | No cache hardware | 1.955 → 1.975 (+1.01%) | 1.970 → 1.936 (-1.72%) | 1.931 → 1.997 (+3.39%) | 0.824 |
-| 020, 2M chip + 8M fast | C bundle / A2 stock | 6.008 / 5.666 | 7.222 / 7.313 | 13.79 → 10.22 | 116.77 / 41.40 / 0.08 → 86.64 / 31.28 / 6.96 | 44 / 24 | 1196 / 1258 | 1.001296 (candidate D5) | 0 | 6.398 → 6.695 (+4.6%) | 0x0000 → 0x0001 | 6.754 → 7.280 (+7.8%) | 7.266 → 7.258 (-0.11%) | 7.193 → 7.210 (+0.24%) | CPU-gated off | 4.568 |
-| 030/50, 2M chip + 8M fast, MMU | C bundle / A2 stock | 12.974 / 11.881 | 14.827 / 14.452 | 3.33 → 1.70 | 44.19 / 34.08 / 0.08 → 35.14 / 28.54 / 4.28 | 191 / 59 | 1154 / 1017 | 0.998656 (candidate D5) | 0 | 12.878 → 14.546 (+12.9%) | 0x2111; unchanged | Already enabled | 14.562 → 14.595 (+0.22%) | 14.556 → 14.514 (-0.29%) | CPU-gated off | 12.280 |
-| 030/50, 2M chip + 8M fast, no MMU tooltype | C bundle / A2 stock | 12.377 / 11.931 | 14.893 / 14.527 | 3.94 → 1.69 | 48.31 / 31.23 / 0.04 → 35.11 / 28.48 / 4.34 | 58 / 55 | 1262 / 962 | 0.998656 (candidate D5) | 0 | 030 class measured with MMU | 0x2000 → 0x2011 | 12.889 → 14.537 (+12.8%) | 030 class measured with MMU | 030 class measured with MMU | CPU-gated off | 12.280 |
-| 040/25 NOMMU, AGA, 2M chip + 16M Z3 fast | C bundle / A2 stock | 12.476 / 11.507 | 13.549 / 13.553 | 3.34 → 2.13 | 47.56 / 36.26 / 0.06 → 37.97 / 28.47 / 5.70 | 116 / 59 | 1144 / 1157 | 0.998656 (candidate D5) | 0 | 12.392 → 13.277 (+7.1%) | 0x80008000; unchanged | Already enabled | 13.384 → 13.428 (+0.32%) | 13.393 → 13.437 (+0.33%) | CPU-gated off | 11.631 |
-| 060/50 NOMMU, AGA, 2M chip + 16M Z3 fast | C bundle / A2 stock | 12.786 / 12.206 | 14.296 / 14.003 | 3.16 → 1.95 | 44.63 / 33.43 / 0.03 → 36.13 / 28.11 / 4.68 | 64 / 62 | 1452 / 1568 | 0.998656 (candidate D5) | 0 | 12.585 → 13.909 (+10.5%) | 0xa0808000; unchanged | Already enabled | 13.953 → 13.959 (+0.04%) | 13.982 → 13.998 (+0.11%) | CPU-gated off | 12.006 |
+| Configuration | Checkpoint | Stock steady / event FPS | Bundle steady / event FPS | World update ms | Scene / cockpit / publication ms | DASH markers stock / bundle | Clean fields stock / bundle | World time / wall time | Dropped world time | B1 isolated pool FPS, off → on | B2 raw CACR, before → after | B2 isolated cache FPS, off → on | C1 discarded pair FPS, off → on | C2 discarded pair FPS, off → on | C3 isolated face-loop FPS, off → on | D5 candidate whole-window FPS (Time Scale 40) | E1 W6 scene / cockpit / publication ms |
+|---|---|---|---|---|---|---|---|---|---| --- |---|---|---|---|---|---|---|
+| A500, 512K chip + 1.5M slow | C bundle / A2 stock | 1.844 / 1.722 | 2.016 / 1.922 | 57.68 → 57.05 | 399.51 / 73.70 / 0.28 → 380.41 / 63.46 / 3.61 | 3 / 13 | 1516 / 1486 | 0.924744 (candidate D5) | 5,400 units / 12 steps | Minimum-memory flight passes | N/A (68000) | No cache hardware | 1.955 → 1.975 (+1.01%) | 1.970 → 1.936 (-1.72%) | 1.931 → 1.997 (+3.39%) | 0.824 | — |
+| 020, 2M chip + 8M fast | C bundle / A2 stock | 6.008 / 5.666 | 7.222 / 7.313 | 13.79 → 10.22 | 116.77 / 41.40 / 0.08 → 86.64 / 31.28 / 6.96 | 44 / 24 | 1196 / 1258 | 1.001296 (candidate D5) | 0 | 6.398 → 6.695 (+4.6%) | 0x0000 → 0x0001 | 6.754 → 7.280 (+7.8%) | 7.266 → 7.258 (-0.11%) | 7.193 → 7.210 (+0.24%) | CPU-gated off | 4.568 | — |
+| 030/50, 2M chip + 8M fast, MMU | C bundle / A2 stock | 12.974 / 11.881 | 14.827 / 14.452 | 3.33 → 1.70 | 44.19 / 34.08 / 0.08 → 35.14 / 28.54 / 4.28 | 191 / 59 | 1154 / 1017 | 0.998656 (candidate D5) | 0 | 12.878 → 14.546 (+12.9%) | 0x2111; unchanged | Already enabled | 14.562 → 14.595 (+0.22%) | 14.556 → 14.514 (-0.29%) | CPU-gated off | 12.280 | — |
+| 030/50, 2M chip + 8M fast, no MMU tooltype | C bundle / A2 stock | 12.377 / 11.931 | 14.893 / 14.527 | 3.94 → 1.69 | 48.31 / 31.23 / 0.04 → 35.11 / 28.48 / 4.34 | 58 / 55 | 1262 / 962 | 0.998656 (candidate D5) | 0 | 030 class measured with MMU | 0x2000 → 0x2011 | 12.889 → 14.537 (+12.8%) | 030 class measured with MMU | 030 class measured with MMU | CPU-gated off | 12.280 | — |
+| 040/25 NOMMU, AGA, 2M chip + 16M Z3 fast | C bundle / A2 stock | 12.476 / 11.507 | 13.549 / 13.553 | 3.34 → 2.13 | 47.56 / 36.26 / 0.06 → 37.97 / 28.47 / 5.70 | 116 / 59 | 1144 / 1157 | 0.998656 (candidate D5) | 0 | 12.392 → 13.277 (+7.1%) | 0x80008000; unchanged | Already enabled | 13.384 → 13.428 (+0.32%) | 13.393 → 13.437 (+0.33%) | CPU-gated off | 11.631 | 45.42 / 32.53 / 2.89 |
+| 060/50 NOMMU, AGA, 2M chip + 16M Z3 fast | C bundle / A2 stock | 12.786 / 12.206 | 14.296 / 14.003 | 3.16 → 1.95 | 44.63 / 33.43 / 0.03 → 36.13 / 28.11 / 4.68 | 64 / 62 | 1452 / 1568 | 0.998656 (candidate D5) | 0 | 12.585 → 13.909 (+10.5%) | 0xa0808000; unchanged | Already enabled | 13.953 → 13.959 (+0.04%) | 13.982 → 13.998 (+0.11%) | CPU-gated off | 12.006 | 53.03 / 29.37 / 4.41 |
 
 C2 is dropped under §0.3: every 2,000-field same-build CPU-class pair is below 2%; the live-slot cache passed its native mission-load/bank-change/exit twin (54,020 calls, 11 invalidations, zero mismatches), 437 host tests and the hook audit. Candidate developer SHA-256 `eeadc00619d796c3850f4d83f4bf51a87ea80019737935e5a78418ef17b502ea`; evidence `completion-c2-{a500,020,030,040,060}-{off,on}` and `completion-c2-twin-r2`. The normal bundle is unchanged.
 
@@ -29,7 +29,7 @@ D3 is compiled in all modes after D4: the 68000 skips pose capture/blending and 
 
 D4 runtime promotion is complete, with no new performance claim: normal/developer/VERIFY code sizes are 116,898 / 117,214 / 302,184 bytes. All 441 host tests, 79 hook ranges, and 134 VERIFY / 113 developer patch destinations pass. Developer bit 13 enables timing on 68000/020+, forces bits 8/9 with a one-field cap, and modal resume restores the selected quantum. Player fixtures/logs are excluded; normal verified-mask activation awaits D5 acceptance. First-flight entry resets draw eligibility on both CPU paths, including the 68000 path that skips pose capture.
 
-### D5 acceptance in progress — not a passed checkpoint
+### D5 acceptance postponed — not a passed checkpoint
 
 The added candidate FPS and world-rate/drop columns use **developer bit 13**,
 not the normal verified mask. Each window covers 2,000 PAL fields at maximum
@@ -105,6 +105,41 @@ reset or input between them. Each segment requires the native VBL stop and
 rejects mission exit or faults. The host suite passes 443 tests, including
 three deliberate malformed-soak cases. This fixes the single-response harness
 limit; it does not alter the slave.
+
+### E1: W6 render-stage diagnostic
+
+The E1 column records one complete 250-PAL-field diagnostic on each of 040/25
+and 060/50, developer mask `0x32ffa`, maximum detail and Time Scale 40. Both
+use SHA-256 `1c582227647e156ff87638b526bb6992ec2d917423e8137bdd8cce22840ea5a7`.
+These are inclusive wall-time spans, with the existing phase-safe filter;
+the stages are not CPU-only or blitter-only costs. They are **not** 2,000-field
+A/B FPS comparisons and do not replace the existing FPS scoreboard columns.
+The 040 window follows tooling recovery and is later in its flight than the
+060 window; different scene costs are not evidence of relative CPU speed.
+
+Cockpit dispatch `sim:19ba6–19e12` averages 10.64 ms on 040 and 9.33 ms on 060;
+instrument scripts `sim:15e96–163a0` average 14.30 and 13.63 ms. The nested 3D
+pass `sim:2c552–2c806` averages 29.20 and 38.48 ms; world updates average 2.53
+and 2.04 ms. Do not add nested spans to their parent costs. Both whole scene
+and cockpit stages exceed a 20 ms frame on both CPUs, supporting E2 followed
+by E3. These timings alone do not prove chip-bus saturation or the line
+primitive's share. Publication is substantially smaller; there is no evidence
+here requiring a third buffer.
+
+Evidence: `completion-e1-040/diagnostic.{log,json}` and
+`completion-e1-060/opening.{log,json}`. Both have 250 consecutive field samples.
+The discarded 040 `opening.log` failed before field recording (too many
+breakpoints); `stages.log` was interrupted by a debugger protocol error at
+field 211. Neither is used as a result. The corrected collector explicitly
+stops before commands and limits E1 to 16 breakpoints. No binary instruction
+trace was captured. Reproduce with local `completion_e1_case.py <040|060>
+0x32ffa <fresh-output>` under `BENCH_DEVELOPER=1 BENCH_BATCH_KEYS=1`.
+
+E2 groundwork separates the existing compositor, coverage builder and packer
+from VERIFY-only allocations, self-tests and snapshots. All three builds,
+443 host tests, 79 hook ranges and 134 VERIFY patch destinations pass. No new
+hook or cache selection is enabled, and this refactor has no claimed speedup.
+The live cache, CPU gate, pixel twins and A/B measurements remain to implement.
 
 040/060 functional checks use separate MMU-core configurations. Their timing
 results will use the frequency-sensitive NOMMU cores. Configuration generation
@@ -2544,8 +2579,8 @@ is drawn through `sim:30408`; request 2 is mirrored and request 0 is ordinary.
 
 | Machine / warm draw | OFF main cycles (calls) | W1a main cycles (calls) | W1a+W1b main cycles (calls) |
 | --- | ---: | ---: | ---: |
-| A500, mirrored | 1,940,090 (1) | 715,830 (2) | 31,845 (3) |
-| A500, ordinary | 1,930,434 (1) | 703,760 (2) | 10,713 (3) |
+| A500, mirrored | 1,940,090 (1) | 715,830 (2) | 31,845 (3) | — |
+| A500, ordinary | 1,930,434 (1) | 703,760 (2) | 10,713 (3) | — |
 | 68020, mirrored | 840,277 (2) | 689,456 (3) | 38,073 (4) |
 | 68020, ordinary | 824,497 (2) | 656,225 (3) | 12,876 (4) |
 
@@ -2594,7 +2629,7 @@ The boundary swap itself is not counted as a completed frame.
 
 | Machine / swaps | OFF fields / fps | W1a fields / fps | W1a+W1b fields / fps |
 | --- | ---: | ---: | ---: |
-| A500, 1–358 | 9,705 / 1.8363 | 9,536 / 1.8689 | 9,457 / 1.8845 |
+| A500, 1–358 | 9,705 / 1.8363 | 9,536 / 1.8689 | 9,457 / 1.8845 | — |
 | 68020, 1–516 | 4,321 / 5.9498 | 4,250 / 6.0492 | 4,102 / 6.2674 |
 | Cached 68030, 1–699 | 2,727 / 12.7776 | 2,813 / 12.3869 | 2,787 / 12.5025 |
 
