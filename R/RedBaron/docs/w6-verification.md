@@ -3988,3 +3988,47 @@ No runtime cache or slave change is introduced; 50 FPS is not achieved by this
 host model.
 
 Reproduce with `cockpit_poststate.py CAPTURE/overlay-capture.json --out REPORT`.
+
+
+## Native overlay caller-return contract
+
+A fresh cached 50 MHz 68030 capture, `w6-overlay-abi-030`, uses the current
+VERIFY slave `c54a84f748481dfb0583651ab79e04a0321086b17d3325172138ad9060122e7b`,
+CUSTOM2=32703, CUSTOM4=0 and CUSTOM5=512, maximum details and Time Scale 40.
+It records every integer register and status register before the interpreter,
+at its quiescent exit, and at the actual caller return for programs 3 and 4
+on both physical buffers. No debugger memory injection or slave edit is used.
+
+`overlay_abi.py` independently executes the native epilogue's stack semantics:
+restore D2-D3/D5-D7/A2-A3/A6, unlink A5 and return. All 18 observed registers,
+including stack/program counters and status, match at all four caller returns.
+The verifier binds the observations to the frozen listing's probe locations,
+entry stack frame, original executable identity and existing full h3 post-state
+check. The nine explicitly saved registers retain their entry values. D4/A4
+also stay unchanged in this capture, but are not assumed callee-saved by the
+model. All calls return success word one with N/Z/V/C clear.
+
+**A cached return-register image would be incorrect.** Program 3 returns full
+D0 values `0x00000001` and `0x00950001` in the two observed calls; program 4
+returns `0x00010001`. The native final `MOVE.W` at `sim:28d4e` preserves the
+upper half. A1 for program 3 and D1 for program 4 also vary with destination.
+The two observed caller return sites are `sim:15f94` and `sim:15f9c`. These
+observations require either an exact dependency-aware return model or a proven
+caller-specific liveness contract before a replacement may omit these effects;
+copying the first call's registers is not acceptable.
+
+The same new four calls pass complete h3 post-state comparison (193,584 bytes)
+and both raster and image/mask composition checks (160,000 framebuffer bytes
+each). Packed image/mask storage remains 9,528 bytes. Native timing/input/
+presentation counters pass 426/512/638/133; terrain/cache/list checks pass 2/1/2,
+and three private shape cases pass. The live timing/pacing audit passes all
+56 enumerated destinations with zero disabled declared ranges under this mask.
+The verified owned emulator was quit after capture.
+
+The collector is retained as `capture-abi.py` beside `overlay-capture.json`,
+`abi-check.json` and `raster-check.json`. Reproduce the offline return check with
+`overlay_abi.py CAPTURE/overlay-capture.json --out REPORT`. Three host tests
+exercise register/flag preservation, exact stack restoration, incomplete data
+and unexpected frame rejection. All 286 host tests pass. No runtime cache,
+hardware-state equivalence,
+performance gain or full W6 acceptance is claimed.

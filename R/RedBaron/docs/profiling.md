@@ -3,7 +3,10 @@
 The front-overlay host model now reproduces the full h3 post-state for 12
 retained native calls (580,752 bytes), while all 480,000 framebuffer bytes still
 match the raster and mask models. The proposed packed cache remains 9,528 bytes;
-no runtime cache or new speed result is claimed. See “Front-overlay h3 post-state
+no runtime cache or new speed result is claimed. A fresh four-call 68030
+capture also verifies all caller-return registers and flags; varying upper D0
+and destination-dependent registers rule out replaying a fixed cached return
+image. See “Front-overlay h3 post-state
 model” in `w6-verification.md` for its scope and remaining contracts.
 
 The W6 ground-impact render-scratch leak is fixed in the current VERIFY
