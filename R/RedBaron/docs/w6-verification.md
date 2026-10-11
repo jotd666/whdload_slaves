@@ -7289,3 +7289,58 @@ local branch equivalence does not prove all message replacement/expiry
 paths equivalent. Those paths, bulk descriptor operations and sound event
 delivery remain open. No state byte was masked, no runtime patch changed,
 and this census does not turn the failing pair into an acceptance pass.
+
+
+## Sound phase access and CIA delivery census
+
+`sound_phase_trace.py` now distinguishes known phase-byte accesses by the
+main task and the native CIA interrupt. It binds twelve access sites to exact
+original and live opcodes, verifies the captured slave/SIM hashes, and binds
+all seven slots to unique, complete 384-byte tracked allocations with the
+native self-pointer. Unknown owners fail. The interrupt-stack page comes
+from observed entries at `sim:2ffcc`, rather than a guessed address.
+
+For both ordinary-VERIFY `ac1d47ba…` captures below, the tool reads the
+retained 100/100/50-field trace chunks. It includes IRQ execution, which the
+world/service memory-reference census intentionally excludes.
+
+| Capture | `sim:34dfc` tests | `sim:34e7e` tests | `sim:34ea6` reads | `sim:34ec0` tests | Main-task accesses | Playback starts |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `w6-exponent-v3-a500` | 590 | 590 | 590 | 590 | 0 | 0 |
+| `w6-cache-replay-a500` | 609 | 609 | 609 | 609 | 4 | 1 |
+
+All four listed read/test sites execute on the observed IRQ stack. The
+replay's four main-task accesses are one each at `sim:33942`, `sim:339c2`,
+`sim:3405a` and `sim:34066`. In recorded field 55 of its first chunk, slot 2
+receives 0 at `sim:33942`, then request 2 at `sim:339c2`; the CIA interrupt
+subsequently executes `sim:34ed0` on that same slot in the same field.
+That instruction sets bit 7. The report does not invent its incoming byte
+from the chunk's earlier RAM snapshot or claim an exact sub-field latency.
+Neither capture observes the two resume sites or the completion clear site.
+
+Static code explains this separation: `sim:2b3b2–2b3ba` registers
+`sim:34d96` through `sim:300e2` with interval 1. The CIA dispatcher at
+`sim:2ffcc` updates its lifetime counter, counts down registered callbacks,
+and calls them at `sim:2fff6`. The sound callback calls the playback updater
+at `sim:34e2a`; `sim:34ed0` marks the selected sequence as started. This is
+an independently clocked playback transition, not a flag set by painting.
+The retained traces confirm IRQ execution at the actual access sites.
+
+The ignored `sound-phase-trace.json` reports retain each access, slot,
+chunk, recorded field and main/IRQ classification. Reproduce with:
+
+```sh
+python3 R/RedBaron/tools/sound_phase_trace.py ORIGINAL_SIM CAPTURE \
+  --out CAPTURE/sound-phase-trace.json
+```
+
+This narrows the explanation for the equal-world-tick 0x02/0x82 difference,
+but does not accept that difference or prove identical sound requests and
+delivery across render schedules. The two captures here are steady/replay
+investigation inputs, not a matched render/no-render pair. Remaining work
+includes matched ordered requests, completion/pause/resume paths, slot
+lifecycle between snapshots, indirect/unknown consumers and real delivery
+latency. The strict `sound_slot_state.py` failure remains intact; no sound
+runtime behavior changes. The full analysis-tool suite passes 409 tests,
+including assignment/IRQ classification, unknown-owner rejection and the
+rule against fabricating live memory values for bit operations.

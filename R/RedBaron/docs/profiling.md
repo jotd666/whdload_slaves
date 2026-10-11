@@ -1,5 +1,11 @@
 # Red Baron performance measurements
 
+The sound-phase audit now observes a native main-task request followed by
+CIA-interrupt playback start in the same recorded PAL field. Across the two
+retained A500 traces, playback status reads/tests occur on the IRQ stack.
+See “Sound phase access and CIA delivery census” in `w6-verification.md`.
+Matched sound request/delivery equivalence remains open; sound is unchanged.
+
 The W6 message-consumer census now covers 87 complete world calls and 93
 service calls in retained A500 steady/replay traces. None touches the differing
 redraw flag; the world does consume the message timer to update priority.
