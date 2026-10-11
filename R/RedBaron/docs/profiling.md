@@ -1,5 +1,13 @@
 # Red Baron performance measurements
 
+A warmed accelerated-emulation frame-time check places the main cost in
+rendering, not the publication cap: the native draw averages **3.87 fields**,
+with scene spans **2.05–2.14 fields**, cockpit **1.44–1.52**, and publication
+**0.21–0.36** across two separate 250-field windows. These are inclusive
+wall-time samples with different phase-filtered populations; nested spans
+must not be added. See “Accelerated frame-time breakdown” in
+`w6-verification.md`. Scene and cockpit work remain targets for the 50-FPS gate.
+
 An accelerated-emulation cached-68030 probe completes **163 world updates**
 in 1,000 PAL fields with exact funding and outstanding work below 1.685
 updates, but publishes only **243 frames (12.15 FPS)**. Its three-to-five-field

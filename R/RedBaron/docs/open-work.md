@@ -109,6 +109,10 @@ as they were while the release preferences below remain open.
    but publishes at 12.15 FPS, still failing every-field cadence. No actual
    smooth-50-FPS configuration has passed. Publication cadence now has an
    explicit per-field checker; changing pixels/interpolation remain separate.
+   Two warmed 250-field stage captures put native drawing near 3.87 fields,
+   with both scene and cockpit spans individually above one field. Publication
+   averages only 0.21–0.36 fields; weakening the cap cannot supply 50 FPS here.
+   Scene/cockpit work or a demonstrated capable configuration is still needed.
    See `w6-verification.md`. Player timing remains unchanged.
 2. **W7:** later world-step and instrument improvements. W4 overlay queueing
    remains explicitly deferred.

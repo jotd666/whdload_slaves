@@ -7471,3 +7471,69 @@ this setting was impractical for the native menu route; it supplies **no
 flight FPS or W6 capacity result**. The replacement probe above reached
 flight normally in 130.8 host seconds with a longer observation timeout.
 Do not interpret the failed boot observation as a failed W6 gameplay test.
+
+
+## Accelerated frame-time breakdown: rendering versus publication
+
+A fresh `w6-fast-200m-budget-030` boot uses the same ordinary VERIFY
+`ac1d47ba…`, accelerated cached-68030 settings, maximum details and unchanged
+Time Scale 40 as the cadence probe. This remains an emulation experiment,
+not a physical CPU benchmark. Native flight warms to input update 80 before
+the first **250-field** observation; a second **250-field** observation
+begins at update 121. The source and capture procedure are retained beside
+the raw logs. No guest RAM or runtime instructions are written.
+
+The existing `routine_wall_time.py` validator checks consecutive VBlank
+observations, balanced stack endpoints, constant update IDs within spans,
+and valid PAL beam coordinates. Both windows have 250 consecutive phase
+observations and a phase-safe threshold of line 20. Samples with ambiguous
+counter phase or horizontal-counter boundaries stay excluded. Reported costs
+are **inclusive emulated wall time**, including interrupts, not CPU-only
+cycles. Stages use native control-flow boundaries; the outer draw starts
+before its JSR and ends on return before argument cleanup.
+
+| Span | First window accepted spans | Mean fields | Minimum fields | Maximum fields |
+| --- | ---: | ---: | ---: | ---: |
+| Native draw | 60 | 3.873170 | 3.814148 | 3.962098 |
+| Scene, `sim:6bc–7c4` | 57 | 2.135793 | 2.106008 | 2.161490 |
+| 3D pass, `sim:2c552–2c806` | 58 | 1.665652 | 1.624073 | 1.711756 |
+| Cockpit, `sim:7c4–830` | 58 | 1.521737 | 1.443808 | 1.568240 |
+| Publication, `sim:afe–b10` | 62 | 0.210025 | 0.099605 | 0.377588 |
+
+Background and message stages average less than 0.00004 fields in this
+window. There are 434 complete raw spans; 16 are phase-excluded. Two spans
+remain open at the end and two initial returns lack captured entries.
+The window covers input updates 80–120.
+
+The second window adds the two principal cockpit routines:
+
+| Span | Accepted spans | Mean fields | Minimum fields | Maximum fields |
+| --- | ---: | ---: | ---: | ---: |
+| Native draw | 60 | 3.873653 | 3.814091 | 3.961872 |
+| Scene | 45 | 2.052536 | 1.995060 | 2.127359 |
+| 3D pass | 44 | 1.586492 | 1.521456 | 1.674487 |
+| Cockpit | 45 | 1.438579 | 1.360417 | 1.552983 |
+| `sim:19ba6–19e12` | 62 | 0.454669 | 0.398334 | 0.477572 |
+| `sim:15e96–163a0` | 61 | 0.686689 | 0.667155 | 0.753543 |
+| Publication | 62 | 0.359348 | 0.144108 | 0.575671 |
+
+There are 556 complete raw spans, 55 phase exclusions, three open spans
+and two unmatched initial returns; input updates span 121–162. The two
+windows are adjacent investigations with a deliberate warm/alignment gap,
+not one continuous 500-field capacity census. Do not sum nested 3D/scene
+or cockpit/subroutine costs, or use differently filtered sample means as
+an exact frame partition. Each table retains its own accepted population.
+
+The measured **scene and cockpit spans individually exceed one field** in
+both accepted sample populations. Publication takes less than one field and
+is substantially smaller than either. This rules out weakening the one-field
+cap as a sufficient 50-FPS fix for this configuration. It does not establish
+a universal hardware ceiling or identify chip-bus versus instruction versus
+blitter cost inside each routine. The next rendering investigation should
+focus on these scene and cockpit paths, with exact-output models/twins for
+any candidate, while the separate gameplay-state/capacity gates remain open.
+
+Native W6 self-tests and the 57-selected / 9-disabled hook audit pass. The
+owned emulator was verified and quit. Ordinary builds and runtime behavior
+remain unchanged. The report was produced with the existing wall-time
+validator; no new acceptance masks or altered tolerances were introduced.
