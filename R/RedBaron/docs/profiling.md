@@ -1,5 +1,13 @@
 # Red Baron performance measurements
 
+Two more complete native pools match in the controlled 50/25-MHz comparison:
+two 134-byte type-five records and all eighty 44-byte auxiliary records at each
+of 41 checkpoints. Both pools change throughout the window. Only the auxiliary
+callback field uses an explicit relocation binding; inactive slots remain
+checked. See “Complete type-five and auxiliary pools across CPU frequencies” in
+`w6-verification.md`. This is additional state-correctness evidence, not a speed
+or complete-gameplay result.
+
 The CPU-frequency comparison now checks both full 318-byte aircraft slots and
 their linked payloads at all 41 checkpoints. All 82 records match under the
 explicit pointer bindings. Earlier 280-byte checks covered only prefixes; their

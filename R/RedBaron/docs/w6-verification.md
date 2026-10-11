@@ -4713,3 +4713,57 @@ Complete-world independence, broader gameplay/CPU coverage, sustained capacity
 and smooth 50 FPS remain open. The scope correction above does not invalidate
 the earlier prefix equality, but those checks must not be cited as full aircraft
 state evidence.
+
+
+## Complete type-five and auxiliary pools across CPU frequencies
+
+`auxiliary_pools.py` extends the controlled-prelude 50/25-MHz comparison to two
+more native pools. All **41 checkpoints** pass:
+
+- Type five: two 134-byte records, all **268 bytes compared raw** at each
+  checkpoint (82 records / 10,988 bytes across the window).
+- Auxiliary pool: eighty 44-byte records, all **3,520 bytes compared** at each
+  checkpoint (3,280 records / 144,320 bytes), with only the explicit callback
+  field represented by its verified identity.
+
+Both pools have 41 distinct states over the 41 checkpoints, so these comparisons
+cover changing record contents. Inactive auxiliary slots and final record bytes
+are included. No active-only filtering or allocation-chain-index pairing is used.
+The type-five stride/count/root are `h3:01366`, `h3:05582` and `h3:05598`, selected
+through the existing native typed-pool constructor. Its allocation must exactly
+contain its two records. The auxiliary root/count are `h3:057d0/057dc`;
+`sim:11932..1193c` multiplies the count by 44, and `sim:11956` stores the allocation
+result. The checker requires the exact tracked payload start and total extent.
+
+Only the auxiliary field at record +26 may relocate. The constructor at
+`sim:11be0/11be4` selects `sim:0db70`; its helper transitions to `sim:0db9e`
+at `sim:0db88/0db8c`, and back at `sim:0dbb6/0dbba`. A null callback is also
+supported. Those original and live instruction sequences are bound explicitly.
+Any other callback fails instead of being treated as a generic sim pointer.
+The retained checkpoints contain null callbacks and 16–27 `sim:0db70` callbacks;
+`sim:0db9e` is not observed at these world boundaries. Its identity handling has
+a host test and static contract, not a new live transition test.
+
+Every other auxiliary byte must match raw, as must all type-five bytes. The
+report preserves the original auxiliary differences before callback resolution.
+It requires the existing controlled-prelude, timestamped-input, player-link and
+complete aircraft-pool checks for the same frozen build. This does not infer
+the meaning of every field or certify all other object types and globals.
+
+Three host tests cover callback relocation/rejection, inactive tail corruption,
+slot order, truncated records, and exact allocation ownership/extent. All **320
+host tests pass**. No slave code changed or emulator was launched. The report
+is `w6-prelude-50mhz-030/auxiliary-pools.json`; reproduce with:
+
+```sh
+python3 R/RedBaron/tools/auxiliary_pools.py \
+  tmp/dev/tmp/game/RedBaron_v2.1/RedBaron/data/sim \
+  tmp/dev/tmp/prof/w6-prelude-50mhz-030 \
+  tmp/dev/tmp/prof/w6-prelude-25mhz-030 \
+  --out tmp/dev/tmp/prof/w6-prelude-50mhz-030/auxiliary-pools.json
+```
+
+These results add two complete changing pools to the scoped state comparison.
+Other global state, omitted pools, broader gameplay scenarios, different CPU
+architectures, sustained capacity and smooth 50 FPS remain open. No performance
+claim follows from these heavily observed correctness snapshots.
