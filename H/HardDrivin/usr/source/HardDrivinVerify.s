@@ -1,0 +1,336 @@
+; VERIFY_DRIVE only. SPS 0126 native input tape, indexed by PAL fields.
+; Build with -DVERIFY_DRIVE=1; mutually exclusive with VERIFY_ATTRACT.
+; Calibrated on deterministic PAL A500/68000, 512K Chip + 1536K slow,
+; no Fast RAM, PRELOAD, CUSTOM2=0 and both host input ports disabled.
+; Other CPU/memory profiles need validation; field-indexed input does not
+; make the original frame-stepped physics independent of rendering speed.
+;
+; The title and first native race entry establish separate field epochs.
+; Race field 1 is the first VBL after native $10ecc initialization. The race
+; epoch continues across crashes/replays; recovery does not restart the tape.
+; Records: field.l, mouse X.w, mouse Y.w, buttons.w, decoded key.w.
+; Values hold until the next record; $ffffffff terminates without resetting.
+; X/Y are absolute native positions (0..639 / 0..399), not mouse deltas.
+; Buttons: 4 raises throttle, 1 lowers it, 5 brakes, 0 releases buttons.
+; Release alone does not reset throttle. Any held button can skip replay.
+; Absolute positions are published AFTER native VBL input accumulation.
+; Keys are delivered once through the native $01212 reader's return path.
+; A nonzero overflow byte invalidates a capture (unconsumed key overwritten).
+; No pose, velocity, gear, race flag or collision state is injected.
+;
+; Window boundaries are AFTER VBL publication at game $003f2, [first,end).
+; A: initial straight, first checkpoint at field 1198; no crash/replay.
+; B: recovered checkpoint -> stunt course -> jump -> collision -> full replay.
+;    Ramp lip at field 4364; airborne beyond it; crash 4553..4748;
+;    replay 4749..5504 (all 90 iterations); recovered by the end boundary.
+; The earlier approach crash/replay (2095..2917) is outside both windows.
+; Both windows require replaying the SAME tape from a fresh boot; do not
+; start B with a pose injection or reset the field counter at its boundary.
+; Sample fixture state, globals/clocks, front buffer and native swap events.
+; Local capture/acceptance details and rebuild comparison: tmp/dev/docs/.
+;
+VERIFY_DRIVE_A_FIRST equ 1
+VERIFY_DRIVE_A_END   equ 1251
+VERIFY_DRIVE_B_FIRST equ 3000
+VERIFY_DRIVE_B_END   equ 5600
+
+_verify_drive_title:
+	movem.l d1/a0-a1,-(a7)
+	lea _verify_drive_state(pc),a0
+	tst.w (a0)
+	bne.s .armed
+	lea _verify_drive_menu(pc),a1
+	move.l a1,8(a0)
+	move.w #1,(a0)
+.armed:
+	movem.l (a7)+,d1/a0-a1
+	jsr -$7f92(a4)
+	tst.l d0
+	rts
+
+_verify_drive_race:
+	jsr -$7ff2(a4)		; displaced native button reset
+	jsr -$7ff8(a4)		; displaced native mouse centring
+	movem.l d0/a0-a1,-(a7)
+	lea _verify_drive_state(pc),a0
+	cmpi.w #2,(a0)
+	beq.s .done
+	clr.w (a0)
+	clr.l 4(a0)
+	clr.w 18(a0)
+	lea _verify_drive_tape(pc),a1
+	move.l a1,8(a0)
+	move.w #2,(a0)
+.done:
+	movem.l (a7)+,d0/a0-a1
+	rts
+
+_verify_drive_vbl:
+	movem.l d0-d1/a0-a1,-(a7)
+	lea _verify_drive_state(pc),a0
+	tst.w (a0)
+	beq.s .done
+	addq.l #1,4(a0)
+	movea.l 8(a0),a1
+	move.l 4(a0),d0
+.next:
+	cmp.l (a1),d0
+	bcs.s .publish
+	cmpi.l #-1,(a1)
+	beq.s .publish
+	move.l 4(a1),12(a0)
+	move.w 8(a1),16(a0)
+	move.w 10(a1),d1
+	beq.s .advance
+	tst.w 18(a0)
+	beq.s .key
+	st 2(a0)		; visible queue overrun: capture must reject
+.key:
+	move.w d1,18(a0)
+.advance:
+	lea 12(a1),a1
+	move.l a1,8(a0)
+	bra.s .next
+.publish:
+	move.l 12(a0),-$6a06(a4)
+	move.w 16(a0),-$6a0a(a4)
+.done:
+	movem.l (a7)+,d0-d1/a0-a1
+	movea.l -$7036(a4),a0	; displaced instructions
+	lea $dff180,a1
+	rts
+
+_verify_drive_key:
+	move.l -4(a5),d0
+	move.l a0,-(a7)
+	lea _verify_drive_state(pc),a0
+	tst.l d0
+	bne.s .done
+	moveq #0,d0
+	move.w 18(a0),d0
+	clr.w 18(a0)
+.done:
+	movea.l (a7)+,a0
+	tst.l d0
+	unlk a5
+	rts
+
+	; phase.w, overflow.b, reserved.b, field.l, next.l, X/Y.w, buttons/key.w
+_verify_drive_state:
+	dc.w 0,0
+	dc.l 0,0
+	dc.w 320,200,0,0
+_verify_drive_menu:
+	; Space exits the title; a held click selects native automatic gears.
+	dc.l 1
+	dc.w 320,200,0,$20
+	dc.l 1000
+	dc.w 100,200,1,0
+	dc.l 1050
+	dc.w 100,200,0,0
+	dc.l 1300
+	dc.w 100,200,1,0
+	dc.l 1350
+	dc.w 320,200,0,0
+	dc.l -1
+_verify_drive_tape:
+	; Initial straight: keep clear of oncoming traffic.
+	dc.l 1
+	dc.w 320,200,4,0
+	dc.l 8
+	dc.w 480,200,4,0
+	dc.l 161
+	dc.w 440,200,4,0
+	dc.l 177
+	dc.w 400,200,4,0
+	dc.l 193
+	dc.w 380,200,4,0
+	dc.l 209
+	dc.w 160,200,4,0
+	dc.l 249
+	dc.w 200,200,4,0
+	dc.l 265
+	dc.w 240,200,4,0
+	dc.l 273
+	dc.w 260,200,4,0
+	dc.l 289
+	dc.w 280,200,4,0
+	dc.l 305
+	dc.w 300,200,4,0
+	dc.l 337
+	dc.w 320,200,4,0
+	dc.l 385
+	dc.w 300,200,4,0
+	dc.l 401
+	dc.w 240,200,4,0
+	dc.l 409
+	dc.w 260,200,4,0
+	dc.l 417
+	dc.w 280,200,4,0
+	dc.l 433
+	dc.w 300,200,4,0
+	dc.l 465
+	dc.w 320,200,4,0
+	dc.l 489
+	dc.w 300,200,4,0
+	dc.l 513
+	dc.w 320,200,4,0
+	dc.l 569
+	dc.w 300,200,4,0
+	dc.l 577
+	dc.w 320,200,4,0
+	dc.l 782
+	dc.w 320,200,5,0
+	dc.l 1014
+	dc.w 300,200,5,0
+	dc.l 1030
+	dc.w 320,200,5,0
+	dc.l 1038
+	dc.w 300,200,5,0
+	dc.l 1054
+	dc.w 320,200,5,0
+	dc.l 1086
+	dc.w 320,200,0,0
+	dc.l 1094
+	dc.w 300,200,5,0
+	dc.l 1126
+	dc.w 400,200,5,0
+	dc.l 1134
+	dc.w 400,200,0,0
+	dc.l 1150
+	dc.w 400,200,5,0
+	dc.l 1174
+	dc.w 400,200,0,0
+	dc.l 1182
+	dc.w 400,200,5,0
+	dc.l 1198
+	dc.w 400,200,0,0
+	dc.l 1302
+	dc.w 400,200,5,0
+	dc.l 1310
+	dc.w 400,200,0,0
+	dc.l 1462
+	dc.w 400,200,4,0
+	dc.l 1510
+	dc.w 400,200,0,0
+	dc.l 1591
+	dc.w 420,200,0,0
+	dc.l 1864
+	dc.w 420,200,4,0
+	dc.l 1888
+	dc.w 420,200,0,0
+	dc.l 1904
+	dc.w 400,200,0,0
+	dc.l 1912
+	dc.w 400,200,5,0
+	dc.l 1928
+	dc.w 400,200,4,0
+	dc.l 1936
+	dc.w 420,200,4,0
+	dc.l 2048
+	dc.w 220,200,4,0
+	; Release for the first full replay and native checkpoint recovery.
+	dc.l 2096
+	dc.w 320,200,0,0
+	; Resume on the stunt course after native recovery.
+	dc.l 2929
+	dc.w 560,200,0,0
+	dc.l 3002
+	dc.w 560,200,4,0
+	dc.l 3122
+	dc.w 520,200,4,0
+	dc.l 3130
+	dc.w 500,200,4,0
+	dc.l 3146
+	dc.w 460,200,4,0
+	dc.l 3162
+	dc.w 440,200,0,0
+	dc.l 3178
+	dc.w 440,200,5,0
+	dc.l 3194
+	dc.w 420,200,5,0
+	dc.l 3202
+	dc.w 440,200,5,0
+	dc.l 3226
+	dc.w 420,200,0,0
+	dc.l 3250
+	dc.w 360,200,0,0
+	dc.l 3267
+	dc.w 320,200,0,0
+	dc.l 3283
+	dc.w 440,200,0,0
+	dc.l 3331
+	dc.w 360,200,0,0
+	dc.l 3347
+	dc.w 340,200,0,0
+	dc.l 3379
+	dc.w 320,200,0,0
+	dc.l 3411
+	dc.w 440,200,0,0
+	dc.l 3427
+	dc.w 440,200,4,0
+	dc.l 3443
+	dc.w 460,200,4,0
+	dc.l 3491
+	dc.w 400,200,0,0
+	dc.l 3507
+	dc.w 340,200,0,0
+	dc.l 3523
+	dc.w 440,200,0,0
+	dc.l 3555
+	dc.w 440,200,5,0
+	dc.l 3571
+	dc.w 440,200,0,0
+	dc.l 3587
+	dc.w 440,200,5,0
+	dc.l 3603
+	dc.w 360,200,0,0
+	dc.l 3619
+	dc.w 420,200,0,0
+	dc.l 3635
+	dc.w 360,200,0,0
+	dc.l 3651
+	dc.w 340,200,0,0
+	dc.l 3667
+	dc.w 320,200,0,0
+	dc.l 3715
+	dc.w 440,200,0,0
+	dc.l 3731
+	dc.w 360,200,0,0
+	dc.l 3747
+	dc.w 320,200,0,0
+	dc.l 3763
+	dc.w 320,200,5,0
+	dc.l 3779
+	dc.w 360,200,4,0
+	dc.l 3811
+	dc.w 320,200,4,0
+	dc.l 3827
+	dc.w 320,200,0,0
+	dc.l 3843
+	dc.w 360,200,4,0
+	dc.l 3859
+	dc.w 300,200,4,0
+	dc.l 3875
+	dc.w 340,200,4,0
+	dc.l 3891
+	dc.w 320,200,4,0
+	dc.l 3939
+	dc.w 380,200,4,0
+	dc.l 3955
+	dc.w 320,200,4,0
+	dc.l 3971
+	dc.w 380,200,4,0
+	dc.l 3987
+	dc.w 300,200,4,0
+	; Align with the narrow ramp, then hold straight through takeoff.
+	dc.l 4001
+	dc.w 380,200,4,0
+	dc.l 4097
+	dc.w 360,200,4,0
+	dc.l 4233
+	dc.w 320,200,4,0
+	; Release before replay begins; hold neutral through its completion.
+	dc.l 4595
+	dc.w 320,200,0,0
+	dc.l -1

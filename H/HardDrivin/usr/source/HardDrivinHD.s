@@ -317,6 +317,20 @@ _pl0_v1:	PL_START
 	PL_PS	$8520,_verify_title_key
 	ENDC
 
+	IFD VERIFY_DRIVE
+	IFD VERIFY_ATTRACT
+	FAIL "VERIFY_DRIVE and VERIFY_ATTRACT are mutually exclusive"
+	ENDC
+	; PERF_RANGE VERIFY_DRIVE $003d8 $000a: VBL input publication
+	PL_PSS $3d8,_verify_drive_vbl,4
+	; PERF_RANGE VERIFY_DRIVE $01382 $0006: decoded keyboard return
+	PL_P $1382,_verify_drive_key
+	; PERF_RANGE VERIFY_DRIVE $08520 $0006: title epoch
+	PL_PS $8520,_verify_drive_title
+	; PERF_RANGE VERIFY_DRIVE $10ecc $0008: native race entry / tape epoch
+	PL_PSS $10ecc,_verify_drive_race,2
+	ENDC
+
 	PL_PS	$86d6,_hiscore_load_v1	; install hiscore loading & saving
 	PL_PSS	$5f7c,_hiscore_save_v1,4
 	PL_END
@@ -1299,4 +1313,8 @@ _verify_title_key:
 	rts
 _verify_title_done:	dc.b	0
 	EVEN
+	ENDC
+
+	IFD VERIFY_DRIVE
+	INCLUDE "HardDrivinVerify.s"
 	ENDC
