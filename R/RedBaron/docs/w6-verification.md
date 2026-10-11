@@ -2932,3 +2932,80 @@ The helper records the real native Pause path and eight acquisition tuples,
 checks all 80 post-input observations, and verifies the epoch-ready marker.
 Then run `preferences_pause.py` on `preferences-capture.json` for the independent
 modal clock/player comparison. This fixture is not a performance run.
+
+
+## A500 consecutive per-field capacity census
+
+The same VERIFY slave as the corrected Pause fixture,
+`15005c2aa3b8e0c826fabbe7be6f38ce1178e2acc251c21c3f16117bfc559eb3`
+(text 250834), was measured with CUSTOM2=16319, CUSTOM4=0, maximum detail,
+Time Scale 40 (F=33), and no time compression. The rendered run uses CUSTOM5=512;
+the control adds the no-render bit (CUSTOM5=1073742336). Each accepted run retains
+four consecutive windows of exactly 250 PAL fields, 1,000 fields / 1,184 CIA ticks
+overall. These are native publication/clock observations, not sampled CPU-cycle
+profiles or a release-build performance claim.
+
+| Observation | Rendered steady flight | No-render control |
+|---|---:|---:|
+| Completed world ticks per window | 41 / 41 / 42 / 44 | 41 / 40 / 41 / 41 |
+| Newly funded world ticks, overall | 163.288350 | 163.288350 |
+| Completed world ticks, overall | 168 | 163 |
+| Started world ticks, overall | 167 | 164 |
+| Update in progress, start → end | 1 → 0 | 0 → 1 |
+| Publications per window | 2 / 1 / 2 / 2 | 0 / 0 / 0 / 0 |
+| Overall rendered FPS | 0.35 | 0 |
+| CIA debt, start → end | 50 → 19 | 0 → 1 |
+| Sampled committed CIA debt range | 0–56 | 0–4 |
+| Total backlog in world ticks, start → end | 7.941684 → 3.230034 | 0.895084 → 1.183434 |
+| Sampled committed backlog range | 0.747609–8.853064 | 0.444579–1.686869 |
+| Longest sampled span without world completion | 48 fields | 7 fields |
+| Committed sample intervals | 975 | 984 |
+| Retained transaction samples | 25 | 16 |
+
+Total backlog includes fractional primary credit, queued due updates, the update
+in progress and CIA time not yet collected by the scheduler. Its change equals
+newly funded minus completed world ticks exactly, using rational arithmetic.
+Both runs have zero MESSAGE/SHORTEN events; WORLD_BODY_DONE equals the completed
+count in every window. Every rendered publication is in the safe beam region and
+respects the one-field minimum. Native counters 426/512/638/133 and terrain/cache/
+list counters 2/1/2 pass, as do 54 selected and two disabled hook ranges. Both
+owned emulators were verified and quit after capture.
+
+`sustained_capacity.py` requires at least four consecutive 250-field windows and
+all 250 samples per window. It rejects missing fields, changed selection/rate,
+compression, modal transitions and unknown transaction markers. Known clock
+transactions remain in the evidence but their partially updated phase is not
+interpreted: exact funding is checked from the preceding committed sample to
+the next one. Rendered samples include 24 type-1 and one type-2 transaction;
+the control includes 16 type-1 transactions. Sampled ranges are not proofs of
+unsampled instantaneous maxima. The completion counter remains observable during
+transactions, so those rows are retained in the completion-stall calculation.
+
+The rendered capture is `tmp/dev/tmp/prof/w6-sustained-steady-a500-v2/`.
+It continues the same boot after `w6-sustained-steady-a500/`, whose opening sample
+was inside a type-1 clock transaction. That opening run is rejected, despite
+apparently plausible aggregate counts. The collector was corrected to wait for
+a committed VBlank before beginning the accepted census. The continuation is
+explicitly recorded; this is not a fresh-state equivalence test. The control,
+`tmp/dev/tmp/prof/w6-sustained-none-a500/`, starts on a fresh same-build boot after
+at least ten completed world updates. Each capture retains `capture-census.py`,
+`field-census.json`, raw endpoint RAM, per-window publication/event logs and
+`sustained-check.json` / `sustained-check.log`.
+
+To reproduce, boot the indicated A500 VERIFY selection with the development
+harness, then run the retained `capture-census.py` with the capture directory and
+`--windows 4`. Run `sustained_capacity.py` on `field-census.json`, supplying
+`--out` for the JSON report. The collector samples the native pacing VBlank and
+publication at sim:3154a, with event observers at sim:3c06, sim:3c7c and sim:11c8.
+Debugger host pauses do not fund emulated CIA time. Use one capture at a time and
+retain the exact slave/listing and native endpoint audits.
+
+The rendered window executes nominal newly funded work and repays old debt over
+20 PAL seconds, but its 0.96-second completion stall is a responsiveness limit.
+The no-render control stays within a small sampled backlog. Different initial
+states prevent treating these counts as a complete gameplay-state comparison.
+Neither finite window closes event/bank/dense or cross-CPU capacity, input latency,
+full-state/physics/combat correctness, or smooth 50 FPS. W6 remains VERIFY-only.
+Four new host tests cover fractional accounting, conserved time with growing
+debt, retained transactions and malformed/changed-rate samples; the full suite
+passes 236 tests. No slave bytes changed for this analysis.

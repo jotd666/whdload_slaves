@@ -14,6 +14,30 @@ observations pass; this is modal correctness evidence, not proof of sustained si
 capacity. See “Recorded native Pause input and clock exclusion” in
 `w6-verification.md` for the fixture startup correction and exact build.
 
+## W6 A500 per-field capacity, 1,000 PAL fields
+
+The current VERIFY build completes nominal simulation work over a finite
+20-second steady-flight window even at **0.35 rendered FPS**. Four consecutive
+250-field windows complete **41/41/42/44** world updates against **163.288**
+newly funded updates in total. The 168 completions also repay existing backlog:
+unprocessed CIA debt falls **50 → 19**, and total outstanding work (including
+fractional credit and an update in progress) falls **7.942 → 3.230** world ticks.
+However, the longest sampled span without a world completion is **48 fields
+(0.96 PAL seconds)**. Average throughput does not establish responsive gameplay.
+
+A same-build no-render control completes **41/40/41/41 = 163** updates against
+the same funding. Its outstanding work changes **0.895 → 1.183** ticks, with
+one update in progress at the end, and its longest sampled completion stall is
+**seven fields**. These runs start at different world states; they are capacity
+observations, not an equal-tick gameplay comparison. Both use maximum detail,
+Time Scale 40, the full W6 VERIFY mask, and an A500 configuration.
+
+Every field is retained, including clock transactions. Exact funding passes
+between committed samples; native self-tests and hook audits pass. See
+`w6-verification.md`, “A500 consecutive per-field capacity census,” for build,
+transaction exclusions, sampled backlog ranges and reproduction. Event/bank/dense
+capacity, full gameplay equivalence and smooth 50 FPS remain open.
+
 ## W6 current-bundle rendering breakdown
 
 A follow-up on the same synthetic cached-68030 200 MHz configuration separates
