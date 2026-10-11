@@ -632,6 +632,7 @@ tape_sim_key_bridge:
 	include "time-flag-verify.s"
 	IFD VERIFY
 	include "instrument-values.s"
+	include "instrument-pixels.s"
 	include "overlay-probe.s"
 	include "overlay-blit.s"
 	include "overlay-fast.s"

@@ -42,10 +42,12 @@ one field. E2's small gun-overlay cache is dropped: every CPU-class pair misses 
 The solid-script cache is also dropped after every CPU-class pair missed 2%.
 Both runtime candidates are removed; reusable helpers remain VERIFY-only.
 The broader instrument cache now has a VERIFY-only raw value-key routine for
-all seven native gauge callbacks and its host model (469 tests pass). It is not
-hooked into drawing: geometry/resource keys, persistent pixels, state replay
-and the single combined composition still need implementation before a native
-twin or FPS run.
+all seven native gauge callbacks, plus a bounded region/pixel guard for the
+native per-buffer gauge rectangles (474 host tests pass). The guard waits for
+the blitter and captures/compares at most 1,920 bytes across all five planes;
+unsupported geometry falls back. These helpers are not hooked into drawing:
+resource/context keys, cache ownership, state replay and combined composition
+still need implementation before a native twin or FPS run.
 Instrument and dispatch caching, combined composition, CPU selection and view/map
 twins remain open. Results are in the scoreboard. D5 remains postponed and E2–F remain
 open; the earlier lists below are historical context, not the execution order.
