@@ -19,7 +19,8 @@ caching adds 7.8% on 020 and 12.8% on 030 without MMU; disabled data caches
 remain disabled. Checkpoint B is complete on all six configurations; the single scoreboard
 contains the current normal-bundle rates and stage costs. C1 is dropped: its five measured CPU-class differences are all below 2%.
 C2 is also dropped: its lifecycle twin passed, but all five CPU-class differences are below 2%.
-Next is C3, the A500 face loop. When promoting W6 in D4, omit its
+C3 is implemented and enabled only on the 68000: its exact face-loop twin passes and the isolated pair gains 3.39%.
+Next is checkpoint C's six-machine normal-bundle scoreboard, then phase D. When promoting W6 in D4, omit its
 old VERIFY exponent optimization from the player path.
 Phases C–F remain open; the earlier lists below are historical context, not the execution order.
 

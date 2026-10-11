@@ -580,6 +580,7 @@ new_DeleteFile:
 	include "dot.s"
 	include "clip.s"
 	include "vertex.s"
+	include "face.s"
 	include "fill.s"
 	include "pacing.s"
 	include "sound-sequence.s"
@@ -654,6 +655,8 @@ time_pose_current: dcb.b TIME_POSE_CAPACITY*TIME_POSE_STRIDE,0
 time_pose_previous: dcb.b TIME_POSE_CAPACITY*TIME_POSE_STRIDE,0
 time_blend_output: dcb.b TIME_POSE_CAPACITY*TIME_POSE_STRIDE,0
 ; Large VERIFY buffers follow code so observer branches retain 68000 reach.
+face_verify_input: dcb.b FACE_CONTEXT_BYTES,0
+face_verify_expected: dcb.b FACE_CONTEXT_BYTES,0
 observe_buffer: dcb.b OBS_STRIDE*OBS_CAPACITY,0
 time_input_test_queue: dcb.b TIME_INPUT_BYTES,0
 time_input_observe_queue: dcb.b TIME_INPUT_BYTES,0

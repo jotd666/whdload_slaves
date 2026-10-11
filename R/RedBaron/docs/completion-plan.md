@@ -207,6 +207,8 @@ Disposition: dropped under §0.3; the live-slot cache passed its lifecycle twin,
 
 **C3. G5 face hub** (`w2-verification.md:319-325`): 223k A500 cycles, with
 70–85k expected to be saved, about 3%.
+
+Implemented on 68000 only: the exact vertex-loop replacement gains 3.39% in its same-build A/B window; native twin and host checks pass (scoreboard).
 - Do it only if the scoreboard after C1/C2 still shows the A500 below 2.3 FPS
   steady.
 - G6–G9 and S2/S4–S8 stay deferred. Each is below 2% (rule 3).

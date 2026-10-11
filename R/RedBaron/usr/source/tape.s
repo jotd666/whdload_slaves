@@ -187,7 +187,10 @@ tape_flight:
 	move.l (a0),d0
 	move.l tape_keybase(pc),a1
 	clr.b $4e(a1)
-	btst #1,perf_custom5+3(pc)
+	lea .custom5_base(pc),a0
+.custom5_base
+	adda.l #perf_custom5+3-.custom5_base,a0
+	btst #1,(a0)
 	beq.s tape_game_record
 	cmp.l #20,d0
 	blo.s tape_game_record
@@ -201,7 +204,10 @@ tape_game_record:
 	ENDC
 tape_game_anchor:
 	nop
-	bsr perf_activate_deferred
+	lea .activate_base(pc),a0
+.activate_base
+	adda.l #perf_activate_deferred-.activate_base,a0
+	jsr (a0)
 tape_anchor:
 	movem.l (sp)+,d0/a0-a1
 	move.l a0,-(sp)

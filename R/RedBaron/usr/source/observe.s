@@ -13,7 +13,10 @@ observe_start:
 	move.l (a0),a0
 	lea observe_resload(pc),a1
 	move.l a0,(a1)
-	move.l perf_attnflags(pc),a0
+	lea .attn_base(pc),a0
+.attn_base
+	adda.l #perf_attnflags-.attn_base,a0
+	move.l (a0),a0
 	lea observe_attnflags(pc),a1
 	move.l a0,(a1)
 	lea .buffer_base(pc),a0

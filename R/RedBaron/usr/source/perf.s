@@ -1,6 +1,6 @@
 ; Performance patch framework. Only sim v1 calls this module's installer.
 ; No feature is release-enabled until its model, twin and measurements pass.
-PERF_VERIFIED_MASK = $31fbf ; W1-W5 and B1/B2; deferred face setup bit 6 excluded
+PERF_VERIFIED_MASK = $31fff ; W1-W5, B1/B2 and C3; face loop gates itself to 68000
 PERF_DEVELOPER_MASK = $31fff
 PERF_VERIFY_MASK = $37fff ; W6 bit 13 and quiescent overlay probe bit 14 are VERIFY-only
 
@@ -72,6 +72,10 @@ perf_install_v1:
 .immediate
 	ENDC
 perf_apply_v1:
+	btst #6,perf_mask+3(pc)
+	beq .no_face
+	bsr face_install
+.no_face
 	lea sound_sim_active(pc),a0
 	move.w #1,(a0)
 	btst #0,perf_mask+3(pc)
