@@ -4827,3 +4827,56 @@ This is a coverage inventory, not a new whole-world correctness verdict. Global
 state and payload ownership, broader gameplay scenarios and CPU architectures,
 sustained capacity and smooth 50 FPS remain open. The acceptance requirement is
 consistent simulation speed regardless of achieved rendering frame rate.
+
+
+## Native planning table across CPU frequencies
+
+`planning_table.py` accounts for the 48-byte residual rooted at `h3:04c66` in
+the controlled 50/25-MHz captures. All **41 checkpoints** agree, including the
+initial state. The allocation contains three 12-byte entries followed by three
+four-byte index pointers. Its one differing raw byte, at payload +39, belongs
+to the first index pointer, which refers to the start of this same allocation.
+The raw difference remains in the report.
+
+The native size calculation at `sim:0da44` takes `h3:005cc + 1`, stores capacity
+at `h3:04c74` and allocates capacity × (12 + 4) bytes. The root is stored at
+`sim:0da7a`; `sim:0daa6..0dab6` sets the index partition at root + capacity × 12.
+`sim:0d028` stores a pointer to a 148-byte record in the table entry;
+`sim:0d11c` stores the table-entry pointer in the index array. The builder
+initializes the cursor and index terminator at `sim:0d15a..0d174`. The consumer
+at `sim:0d208..0d216` advances the cursor by one longword. These instructions
+are bound against the supported original executable and every live snapshot.
+
+The verifier requires exact tracked allocation extents, capacity = record
+count + 1, valid used count, exact partition and a longword-aligned cursor
+within the partition or immediately past it. Every non-null index must point
+to an exact 12-byte slot within this allocation. It compares index slot
+identities and cursor positions, not arbitrary pointer-looking integers.
+All three slots and indices remain included, even when unused.
+
+The linked record pool at `h3:045e2` must exactly fill its allocation with
+count × 148 bytes. Each non-null table record pointer must address an exact
+slot there. The complete **296-byte record pool** and the table's **36-byte
+record area** compare raw; no embedded field is masked or generically relocated.
+The captures have count two, capacity three, used count one and cursor positions
+one or two. The complete state has 41 distinct values; the linked pool also has
+41 distinct values. This covers changing data, but does not exercise every
+possible table occupancy, sort order or allocation lifecycle.
+
+The existing controlled-prelude, input and player-link checks are prerequisites.
+Three new host tests cover self-pointer relocation, invalid slot/cursor/record
+ownership, incomplete extents, unused table data, final linked-record bytes and
+unused index entries. All **326 host tests pass**. No slave code changed or
+emulator was launched. Reproduce the retained report with:
+
+```sh
+python3 R/RedBaron/tools/planning_table.py \
+  tmp/dev/tmp/game/RedBaron_v2.1/RedBaron/data/sim \
+  tmp/dev/tmp/prof/w6-prelude-50mhz-030 \
+  tmp/dev/tmp/prof/w6-prelude-25mhz-030 \
+  --out tmp/dev/tmp/prof/w6-prelude-50mhz-030/planning-table.json
+```
+
+This resolves one explicit allocation and associated cursor/record structure.
+The remaining heap residuals and globals, broader gameplay and CPU coverage,
+sustained capacity and real smooth 50 FPS remain open. W6 remains VERIFY-only.

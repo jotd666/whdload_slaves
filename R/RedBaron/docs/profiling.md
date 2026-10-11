@@ -1,5 +1,13 @@
 # Red Baron performance measurements
 
+The native planning table now matches across all 41 controlled 50/25-MHz
+checkpoints, including its full 48-byte allocation, index cursor and both linked
+148-byte records. Only verified pointers within the table are represented by
+slot identity; all other contents remain raw. The linked record pool changes over
+the window. See “Native planning table across CPU frequencies” in
+`w6-verification.md`. This closes one identified heap residual, not the complete
+world-state or performance gates.
+
 The tracked-heap content inventory now covers all 41 controlled 50/25-MHz
 checkpoints. Each has 105–107 payloads, with 82–84 exact-content matches and
 23 unmatched payload instances per side. Matching content does not establish
