@@ -84,6 +84,9 @@ as they were while the release preferences below remain open.
 
 ## Next work
 
+`completion-plan.md` is the authoritative step-by-step plan for finishing
+this work; it supersedes the items below where they differ.
+
 1. **W6 implementation in progress:** analysis is complete in `game-time.md`;
    the approved plan is `game-time-plan.md`, now including smooth 50 FPS on
    capable hardware and gameplay speed independent of achieved FPS. It uses 225-unit
