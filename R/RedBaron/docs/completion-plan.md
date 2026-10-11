@@ -255,7 +255,7 @@ if a play-test shows a visible problem.
 
 **D2. Quantum chosen per CPU class** (approved U1, U2):
 
-Implemented in VERIFY: both exact rate tables and bounded debt pass host/native checks, including straight/banked dt=450 helper twins; rate acceptance remains D5.
+Implemented in all modes after D4: both exact rate tables and bounded debt pass host/native checks, including straight/banked dt=450 helper twins; rate acceptance remains D5.
 
 | CPU class | Quantum |
 |---|---|
@@ -273,7 +273,7 @@ Implemented in VERIFY: both exact rate tables and bounded debt pass host/native 
 
 **D3. No interpolation where it cannot help.**
 
-Implemented in VERIFY: the 68000 native check records zero capture/blend calls with drawing retained; player measurements remain D5.
+Implemented in all modes after D4: the 68000 native check records zero capture/blend calls with drawing retained; player measurements remain D5.
 - Capture and blend poses only when the expected render interval is shorter
   than one world tick, i.e. on 020+ at 225.
 - On the 68000, skip pose capture (23k cycles per tick) and blending (170k
@@ -292,6 +292,11 @@ Implemented: common runtime with VERIFY-only fixtures/logs, developer bit 13, CP
    passes.
 
 **D5. Acceptance runs**, the only full matrix in this phase.
+
+In progress: all six candidate rate cases are in the scoreboard. A500/060
+throttle taps and pause/rebase pass, as does the 060 soak. A500 Time Scale 40
+misses the rate/capacity targets; remaining controls, transitions, flight
+outcomes and the user handling test are still open. The normal mask is gated.
 
 *Rate:*
 - A500 steady and squadron, at Time Scale 0 and 40.
@@ -316,6 +321,14 @@ Implemented: common runtime with VERIFY-only fixtures/logs, developer bit 13, CP
 the user's call. `bash R/RedBaron/tools/playtest.sh a500` (or `060`) launches
 the current D5 developer candidate at real speed with sound and the original
 realism preferences; close the previous Red Baron window before switching.
+Set maximum World/Aircraft detail and Ground ON IN COMBAT with F10; leave
+Time Scale at 40 for the handling comparison. On each machine, check short
+and held cursor-key inputs (including release), fire, land, crash and shoot
+down an AI aircraft. Check C outside combat for Time Compress entry/exit,
+then end a mission and start another. Report any delayed release, repeated
+command, handling anomaly, visual fault or crash. These user observations
+supplement the debugger checks; they do not establish catch-up timing by
+themselves.
 
 ✔ **Checkpoint D:** update the scoreboard, adding a world-time/wall-time
 column, and commit.

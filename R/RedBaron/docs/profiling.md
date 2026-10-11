@@ -10,24 +10,80 @@ baseline and update the normal-bundle columns; their checkpoint labels identify
 which rows have been refreshed. Stage spans are inclusive wall time;
 scene, cockpit and publication are separate stages, not CPU-only costs.
 
-| Configuration | Checkpoint | Stock steady / event FPS | Bundle steady / event FPS | World update ms | Scene / cockpit / publication ms | DASH markers stock / bundle | Clean fields stock / bundle | World time / wall time | Dropped world time | B1 isolated pool FPS, off → on | B2 raw CACR, before → after | B2 isolated cache FPS, off → on | C1 discarded pair FPS, off → on | C2 discarded pair FPS, off → on | C3 isolated face-loop FPS, off → on |
-|---|---|---|---|---|---|---|---|---|---| --- |---|---|---|---|---|
-| A500, 512K chip + 1.5M slow | C bundle / A2 stock | 1.844 / 1.722 | 2.016 / 1.922 | 57.68 → 57.05 | 399.51 / 73.70 / 0.28 → 380.41 / 63.46 / 3.61 | 3 / 13 | 1516 / 1486 | Pending D | Pending D | Minimum-memory flight passes | N/A (68000) | No cache hardware | 1.955 → 1.975 (+1.01%) | 1.970 → 1.936 (-1.72%) | 1.931 → 1.997 (+3.39%) |
-| 020, 2M chip + 8M fast | C bundle / A2 stock | 6.008 / 5.666 | 7.222 / 7.313 | 13.79 → 10.22 | 116.77 / 41.40 / 0.08 → 86.64 / 31.28 / 6.96 | 44 / 24 | 1196 / 1258 | Pending D | Pending D | 6.398 → 6.695 (+4.6%) | 0x0000 → 0x0001 | 6.754 → 7.280 (+7.8%) | 7.266 → 7.258 (-0.11%) | 7.193 → 7.210 (+0.24%) | CPU-gated off |
-| 030/50, 2M chip + 8M fast, MMU | C bundle / A2 stock | 12.974 / 11.881 | 14.827 / 14.452 | 3.33 → 1.70 | 44.19 / 34.08 / 0.08 → 35.14 / 28.54 / 4.28 | 191 / 59 | 1154 / 1017 | Pending D | Pending D | 12.878 → 14.546 (+12.9%) | 0x2111; unchanged | Already enabled | 14.562 → 14.595 (+0.22%) | 14.556 → 14.514 (-0.29%) | CPU-gated off |
-| 030/50, 2M chip + 8M fast, no MMU tooltype | C bundle / A2 stock | 12.377 / 11.931 | 14.893 / 14.527 | 3.94 → 1.69 | 48.31 / 31.23 / 0.04 → 35.11 / 28.48 / 4.34 | 58 / 55 | 1262 / 962 | Pending D | Pending D | 030 class measured with MMU | 0x2000 → 0x2011 | 12.889 → 14.537 (+12.8%) | 030 class measured with MMU | 030 class measured with MMU | CPU-gated off |
-| 040/25 NOMMU, AGA, 2M chip + 16M Z3 fast | C bundle / A2 stock | 12.476 / 11.507 | 13.549 / 13.553 | 3.34 → 2.13 | 47.56 / 36.26 / 0.06 → 37.97 / 28.47 / 5.70 | 116 / 59 | 1144 / 1157 | Pending D | Pending D | 12.392 → 13.277 (+7.1%) | 0x80008000; unchanged | Already enabled | 13.384 → 13.428 (+0.32%) | 13.393 → 13.437 (+0.33%) | CPU-gated off |
-| 060/50 NOMMU, AGA, 2M chip + 16M Z3 fast | C bundle / A2 stock | 12.786 / 12.206 | 14.296 / 14.003 | 3.16 → 1.95 | 44.63 / 33.43 / 0.03 → 36.13 / 28.11 / 4.68 | 64 / 62 | 1452 / 1568 | Pending D | Pending D | 12.585 → 13.909 (+10.5%) | 0xa0808000; unchanged | Already enabled | 13.953 → 13.959 (+0.04%) | 13.982 → 13.998 (+0.11%) | CPU-gated off |
+| Configuration | Checkpoint | Stock steady / event FPS | Bundle steady / event FPS | World update ms | Scene / cockpit / publication ms | DASH markers stock / bundle | Clean fields stock / bundle | World time / wall time | Dropped world time | B1 isolated pool FPS, off → on | B2 raw CACR, before → after | B2 isolated cache FPS, off → on | C1 discarded pair FPS, off → on | C2 discarded pair FPS, off → on | C3 isolated face-loop FPS, off → on | D5 candidate whole-window FPS (Time Scale 40) |
+|---|---|---|---|---|---|---|---|---|---| --- |---|---|---|---|---|---|
+| A500, 512K chip + 1.5M slow | C bundle / A2 stock | 1.844 / 1.722 | 2.016 / 1.922 | 57.68 → 57.05 | 399.51 / 73.70 / 0.28 → 380.41 / 63.46 / 3.61 | 3 / 13 | 1516 / 1486 | 0.924744 (candidate D5) | 5,400 units / 12 steps | Minimum-memory flight passes | N/A (68000) | No cache hardware | 1.955 → 1.975 (+1.01%) | 1.970 → 1.936 (-1.72%) | 1.931 → 1.997 (+3.39%) | 0.824 |
+| 020, 2M chip + 8M fast | C bundle / A2 stock | 6.008 / 5.666 | 7.222 / 7.313 | 13.79 → 10.22 | 116.77 / 41.40 / 0.08 → 86.64 / 31.28 / 6.96 | 44 / 24 | 1196 / 1258 | 1.001296 (candidate D5) | 0 | 6.398 → 6.695 (+4.6%) | 0x0000 → 0x0001 | 6.754 → 7.280 (+7.8%) | 7.266 → 7.258 (-0.11%) | 7.193 → 7.210 (+0.24%) | CPU-gated off | 4.568 |
+| 030/50, 2M chip + 8M fast, MMU | C bundle / A2 stock | 12.974 / 11.881 | 14.827 / 14.452 | 3.33 → 1.70 | 44.19 / 34.08 / 0.08 → 35.14 / 28.54 / 4.28 | 191 / 59 | 1154 / 1017 | 0.998656 (candidate D5) | 0 | 12.878 → 14.546 (+12.9%) | 0x2111; unchanged | Already enabled | 14.562 → 14.595 (+0.22%) | 14.556 → 14.514 (-0.29%) | CPU-gated off | 12.280 |
+| 030/50, 2M chip + 8M fast, no MMU tooltype | C bundle / A2 stock | 12.377 / 11.931 | 14.893 / 14.527 | 3.94 → 1.69 | 48.31 / 31.23 / 0.04 → 35.11 / 28.48 / 4.34 | 58 / 55 | 1262 / 962 | 0.998656 (candidate D5) | 0 | 030 class measured with MMU | 0x2000 → 0x2011 | 12.889 → 14.537 (+12.8%) | 030 class measured with MMU | 030 class measured with MMU | CPU-gated off | 12.280 |
+| 040/25 NOMMU, AGA, 2M chip + 16M Z3 fast | C bundle / A2 stock | 12.476 / 11.507 | 13.549 / 13.553 | 3.34 → 2.13 | 47.56 / 36.26 / 0.06 → 37.97 / 28.47 / 5.70 | 116 / 59 | 1144 / 1157 | 0.998656 (candidate D5) | 0 | 12.392 → 13.277 (+7.1%) | 0x80008000; unchanged | Already enabled | 13.384 → 13.428 (+0.32%) | 13.393 → 13.437 (+0.33%) | CPU-gated off | 11.631 |
+| 060/50 NOMMU, AGA, 2M chip + 16M Z3 fast | C bundle / A2 stock | 12.786 / 12.206 | 14.296 / 14.003 | 3.16 → 1.95 | 44.63 / 33.43 / 0.03 → 36.13 / 28.11 / 4.68 | 64 / 62 | 1452 / 1568 | 0.998656 (candidate D5) | 0 | 12.585 → 13.909 (+10.5%) | 0xa0808000; unchanged | Already enabled | 13.953 → 13.959 (+0.04%) | 13.982 → 13.998 (+0.11%) | CPU-gated off | 12.006 |
 
 C2 is dropped under §0.3: every 2,000-field same-build CPU-class pair is below 2%; the live-slot cache passed its native mission-load/bank-change/exit twin (54,020 calls, 11 invalidations, zero mismatches), 437 host tests and the hook audit. Candidate developer SHA-256 `eeadc00619d796c3850f4d83f4bf51a87ea80019737935e5a78418ef17b502ea`; evidence `completion-c2-{a500,020,030,040,060}-{off,on}` and `completion-c2-twin-r2`. The normal bundle is unchanged.
 
 C3 is enabled only on the 68000 through bit 6: the register-held face vertex loop at `sim:3b4cc` improves the same-build 2,000-field comparison by 3.39%. The native per-face twin passes 1,455 calls (1,091 fast-path faces, 1,234 inline cache hits, 2,412 misses), checking all registers/CCR and the renderer scratch context; 435 host tests, three checker sabotages, all builds and hook/reach audits pass. Other transform dispatches retain the original loop. Candidate developer SHA-256 `a6393b6f7eea27881352387249649bdb2f3545f0617dbb5a168bf919d42f1b95`; evidence `completion-c3-a500-{off,on}` and `completion-c3-twin`. Checkpoint C is complete on all six normal-build configurations (one 2,000-field event window each), SHA-256 `a2dac77b7a4da658dcf198fc371fdd3274d3ef622f20753693951de99172cbdf`; evidence `completion-c-<machine>-1`. The table retains the A2 stock baseline, so cross-checkpoint deltas are not same-scene causal gains; C3's isolated pair establishes its gain.
 
-D2 is implemented in VERIFY, pending D4 promotion and D5 rate acceptance: 450 units on 68000, 225 on 020+, exact normalized phase with both precomputed tables, and a retained-debt ceiling of 1800 primary units (about 0.98 nominal seconds at Time Scale 40). Excess funded updates are counted as dropped, while input and real-time services retain chronological consumption. The private native stock-helper twin passes 1,377 dt=450 calls (935 straight, 442 banked), and both clock tables pass all 852 arithmetic cases; 439 host tests and three checker sabotages pass. Evidence `completion-d2-twin-r2`. This heavily instrumented run is not FPS/capacity evidence; scoreboard world-rate/drop columns remain pending D5.
+D2 is compiled in all modes after D4; D5 acceptance remains open: 450 units on 68000, 225 on 020+, exact normalized phase with both precomputed tables, and a retained-debt ceiling of 1800 primary units (about 0.98 nominal seconds at Time Scale 40). Excess funded updates are counted as dropped, while input and real-time services retain chronological consumption. The private native stock-helper twin passes 1,377 dt=450 calls (935 straight, 442 banked), and both clock tables pass all 852 arithmetic cases; 439 host tests and three checker sabotages pass. Evidence `completion-d2-twin-r2`. This heavily instrumented run is not FPS/capacity evidence; the candidate D5 rate/drop results above are separate uninstrumented measurements.
 
-D3 is implemented in VERIFY: the 68000 skips pose capture/blending and their lifecycle hooks, while 020+ keeps interpolation. The native `completion-d3-a500` check spans 19 world-loop intervals with zero pose-capture calls, zero blend calls and five completed native draws; all three modes, 439 host tests and hook/reach audits pass. This is a functional bypass check, not a standalone FPS claim; player measurements remain D5.
+D3 is compiled in all modes after D4: the 68000 skips pose capture/blending and their lifecycle hooks, while 020+ keeps interpolation. The native `completion-d3-a500` check spans 19 world-loop intervals with zero pose-capture calls, zero blend calls and five completed native draws; all three modes, 439 host tests and hook/reach audits pass. This is a functional bypass check, not a standalone FPS claim; player measurements remain D5.
 
-D4 runtime promotion is complete, with no new performance claim: normal/developer/VERIFY code sizes are 116,886 / 117,202 / 302,172 bytes. All 439 host tests, 79 hook ranges, and 134 VERIFY / 113 developer patch destinations pass. Developer bit 13 enables timing on 68000/020+, forces bits 8/9 with a one-field cap, and modal resume restores the selected quantum. Player fixtures/logs are excluded; normal verified-mask activation and rate/drop measurements await D5.
+D4 runtime promotion is complete, with no new performance claim: normal/developer/VERIFY code sizes are 116,898 / 117,214 / 302,184 bytes. All 441 host tests, 79 hook ranges, and 134 VERIFY / 113 developer patch destinations pass. Developer bit 13 enables timing on 68000/020+, forces bits 8/9 with a one-field cap, and modal resume restores the selected quantum. Player fixtures/logs are excluded; normal verified-mask activation awaits D5 acceptance. First-flight entry resets draw eligibility on both CPU paths, including the 68000 path that skips pose capture.
+
+### D5 acceptance in progress — not a passed checkpoint
+
+The added candidate FPS and world-rate/drop columns use **developer bit 13**,
+not the normal verified mask. Each window covers 2,000 PAL fields at maximum
+World/Aircraft detail with Ground ON IN COMBAT, using the protected combat
+fixture. These are whole-window publication rates, with no dashboard-event
+filter; they are not directly comparable to checkpoint C's steady column.
+Completed world units are divided by elapsed CIA ticks at the observed native
+rate. Endpoint quantum rounding remains in the reported ratios.
+
+The 020–060 Time Scale 40 cases meet ±1% with no dropped updates, on developer
+SHA-256 `da9d08274619d59a60331023dde90de073c83901b1218ecff2ea56d5c9e09886`.
+Evidence: `completion-d5-{020,030,030-nommu,040,060}-1`.
+The A500 cases use the corrected first-flight reset build,
+SHA-256 `1c582227647e156ff87638b526bb6992ec2d917423e8137bdd8cce22840ea5a7`:
+
+- Ace, Time Scale 0: **0.948 FPS**, world ratio **1.009981**, no drops.
+- Squadron, Time Scale 0: **0.549 FPS**, ratio **1.009128**, no drops.
+- Ace, Time Scale 40: **0.824 FPS**, ratio **0.924744**, 12 dropped steps
+  (5,400 units), as in the scoreboard.
+- Squadron, Time Scale 40: **0.200 FPS**, ratio **0.943117**, 10 dropped
+  steps (4,500 units).
+
+Evidence: `completion-d5-a500-{ace0,squadron0,steady40,squadron40}`.
+Time Scale 0 passes the rate gate in both measured scenes. Time Scale 40
+hits the bounded-debt overload policy and misses the rate and FPS targets;
+this is **not** accepted as successful consistent-speed operation there.
+E2 still offers the planned cockpit-cost reduction, including a measured
+68000 option. Time Scale 60 is unmeasured: the keyboard slider attempt did
+not reach its asserted setting and was discarded before rate capture.
+
+Hardware keyboard IRQ input reaches Preferences on all six configurations.
+On the corrected A500 and 060 builds, one throttle-down/up tap during rendering changes
+210 → 190 → 210, with no extra dispatch over 20 later world-input crossings
+per command. This establishes taps, not held-input coverage. A 200-field
+native Pause retains the world cursor and step count; Return translates the
+cursor by the excluded modal interval and restores the selected quantum (450
+on A500, 225 on 060).
+Evidence: `completion-d5-a500-steady40/{input-commands,pause}.json` and
+`completion-d5-060-input-soak/{input-commands,pause}.json`.
+The same 060 flight completes 90,000 PAL fields (1,802.87 emulated seconds)
+without mission exit or observed fault. The old response limit interrupted the
+host after 60,283 fields; the remaining 29,717 continued from that point, with
+no guest reset or input. This is one flight across two debugger reads, not
+30 minutes of host time. Evidence: `completion-d5-060-input-soak/soak*.{log,json}`.
+Held-input, Time Compress, catch-up mission exit, flight outcomes and user
+handling acceptance remain open. Bit 13 remains outside the normal
+verified mask.
+
+For a live D5 flight, `python3 R/RedBaron/tools/completion_soak.py <capture>`
+counts 90,000 PAL fields in bounded 10,000-field debugger reads, with no guest
+reset or input between them. Each segment requires the native VBL stop and
+rejects mission exit or faults. The host suite passes 443 tests, including
+three deliberate malformed-soak cases. This fixes the single-response harness
+limit; it does not alter the slave.
 
 040/060 functional checks use separate MMU-core configurations. Their timing
 results will use the frequency-sensitive NOMMU cores. Configuration generation
@@ -56,8 +112,8 @@ Stage columns show stock → bundle means from the event window. DASH counts
 are marker hits, not distinct redraw counts: a redraw may reach several markers.
 Combat activity differs between windows, and before W6 frame rate also affects
 world progression. These are observed whole-game rates, not isolated-routine
-speedup estimates. Differences below 2% are unresolved. World-rate/debt columns
-remain pending until D; A2 does not claim consistent simulation speed.
+speedup estimates. Differences below 2% are unresolved. A2 does not claim consistent simulation speed; the separate D5 candidate
+columns record the current rate/debt evidence.
 
 Reproduction from the prepared local harness: use `completion_matrix_case.py`
 with machine (`a500`, `020`, `030`, `030-nommu`, `040`, `060`), option (`0` or
