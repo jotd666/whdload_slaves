@@ -63,6 +63,9 @@
    validation is unfinished; this is not a final release
 
  version 1.3b (testing):
+ - increase the simulation build stack to 10000 bytes; native opponent
+   resource loading could otherwise overwrite DOS memory-management data
+   and crash when loading an opponent replay
  - discard stale opening-sequence input when A4000 live recording starts,
    so holding Return through startup cannot extend the replay past its end
  - queue exhaustion exits with a clear WHDLoad message instead of a Guru;

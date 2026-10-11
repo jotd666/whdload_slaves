@@ -170,7 +170,12 @@ IOCACHE		= 10000
 ;MEMFREE	= $200
 ;NEEDFPU
 SETPATCH
-;STACKSIZE = 10000
+ IFD SIM_BUILD
+; Native opponent-resource loading reaches the DOS BCPL stack below the
+; default 4000-byte CLI stack and overwrites adjacent free-list links.
+; Reserve headroom for the simulation/replay hooks and native DOS frames.
+STACKSIZE = 10000
+ ENDC
 BOOTDOS
 ;CACHE
 ; cache everywhere, to avoid slowdowns on Vampire which
