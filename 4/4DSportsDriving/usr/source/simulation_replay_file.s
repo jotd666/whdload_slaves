@@ -98,7 +98,13 @@ sim_replay_validate:
  moveq #19,d6
 .slots:
  tst.w (a2)
- beq .next
+ bne .present
+ ; Native forward seek trusts its own valid flag. An absent companion must
+ ; not leave a selectable native checkpoint that cannot restore fractions.
+ tst.b $3f4(a1)
+ bne .bad
+ bra .next
+.present:
  cmp.w #50,(a2)
  bne .bad
  cmp.b #1,$3f4(a1)

@@ -140,7 +140,7 @@ sim_replay_file_fixture:
  addq.l #1,12(a6)
  dbra d7,.lengths
  lea sim_replay_test_offsets(pc),a2
- moveq #8,d7
+ moveq #9,d7
 .fields:
  moveq #0,d1
  move.w (a2)+,d1
@@ -212,6 +212,8 @@ sim_replay_test_lengths:
 sim_replay_test_offsets:
  dc.w 9,11,13,15,23,SIM_REPLAY_HEADER+22,35
  dc.w SIM_REPLAY_NATIVE_OFFSET+$141,SIM_REPLAY_COMPANION_OFFSET+1
+ ; A valid native checkpoint without its companion must be rejected.
+ dc.w SIM_REPLAY_NATIVE_OFFSET+$460+$3f4
 sim_replay_test_native_cases:
  dc.b 10,10
  dc.w 0
