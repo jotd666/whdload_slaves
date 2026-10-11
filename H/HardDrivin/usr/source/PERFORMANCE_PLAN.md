@@ -94,7 +94,9 @@ must confirm them before any design relies on them.
     a finer one on 68020+. Its rates were divided with fractional carries and
     corrected for coarse-Euler displacement.
 - **Their Finest Hour's per-frame T** (fields per frame, with remainder carry) gave
-  correct speed from the A500 to a 68030/50, at 50 FPS.
+  correct speed from the A500 to a 68030/50, at 50 FPS. This is the chosen design.
+  Truncation at large T there was a measurable error (4,649 vs 4,715 units/s), so
+  carry 16.16 fractions for positions and turn rates.
 - **Interpolation adds latency; extrapolation overshoots.**
   - Interpolating presented poses gives bit-exact simulation but adds one tick of
     latency.
@@ -201,67 +203,82 @@ Tools stay in ignored `tmp/dev/tools`.
 
    Report f0 with a confidence range.
 4. **Measure the cost of a physics step** (`$0cda4` plus `$07c32`) in 68000 cycles,
-   in ordinary driving and in collisions. This sets the A500 catch-up budget.
-5. **Decision gate: ask the user.** Present the options with measured costs:
-   - **A. Native step at a fixed period** P0 = 50/f0 fields on every CPU. Interpolate
-     or extrapolate the camera pose in `$0d960` for presentation. This keeps handling
-     bit-exact. Input is sampled at f0, with latency of up to one tick.
-   - **B. Per-CPU period, Test Drive II style.**
-     - The 68000 uses P0.
-     - 68020+ uses P0/N substeps, with every integrated rate scaled by 1/N using
-       fractional carries.
-     - Coarse-Euler displacement is corrected, and decays use N-th roots.
-     - Discrete counters keep their original cadence.
-     - Handling is finer on fast machines, but a validated units audit is required.
-   - **C. Per-frame T, Their Finest Hour style.** The native step scales by the
-     fields elapsed. This is the most invasive to physics, and collisions get harder.
+   in ordinary driving and in collisions. This bounds the cost of substeps on long
+   A500 frames.
+5. **Design decision (made by the user): scale each step by the actual frame time**,
+   in the style of Their Finest Hour. The game keeps one simulation step per rendered
+   frame. Each step advances by T = fields elapsed since the previous step × f0 / 50,
+   measured in native steps. T = 1 reproduces the original step. Record the units and
+   writers inventory from 3.2 with the scaling rule chosen for each entry in
+   `open-work.md` before writing code.
 
-   The recommended default is A as the first deliverable, then B for 68020+ once A
-   validates. A gives correct speed everywhere at low risk; B removes most of the
-   latency on fast machines. Record the choice in `open-work.md`.
+## Step 4: frame-time-scaled simulation (gated, CUSTOM1)
 
-## Step 4: fixed-time simulation (gated, CUSTOM1)
-
-Implement the chosen design. The steps below are for A; B extends 4.3 and 4.4.
-
-1. **Field accumulator.** The VBL handler at `$00044` already runs each field; extend
-   it with a slave hook that counts pending fields while the gameplay loop is active.
-   Keep the existing BCD clocks untouched.
-2. **Split the gameplay loop at `$10ed4`.**
-   - Run the simulation block (`$07c32`, `$108a2`, `$0cda4`, the replay record, the
-     crash counter) once per P0 consumed fields.
-   - Then render once (`$0d960` camera, `$0e49a`/`$0b0d6`/`$0e706`/`$10008`/overlays/
-     cockpit, `$00750`).
-   - Run catch-up ticks without drawing. Cap the backlog and expose an overrun counter
-     in VERIFY.
-   - Change only whole instructions. Use `PL_P` where the replacement re-executes the
-     original body, and audit every hook boundary.
-3. **Input per tick.** `$07c32` reads keys through `$01212`. The VBL accumulates mouse
-   positions. Snapshot the mouse/joystick absolute positions and the key events per
-   field, and give each catch-up tick the input from its own field range. Do not
-   re-read live input. Test gear keys, pause, quit and the menu paths.
-4. **Presentation.** Snapshot the car pose at the physics exit. In `$0d960`, write only
-   the camera copies, using α = pending fields / P0:
-   - Interpolate in replay and attract.
-   - Extrapolate while driving.
-   - Wrap angles at 1440 units (720 is the half turn) by the shortest arc.
-   - Snap on crash, reset and replay start.
-
-   Keep authoritative state untouched.
-5. **Other per-pass consumers.**
-   - Convert the crash countdown, the GAME OVER/menu passes, the replay length and its
-     playback rate, and the attract route to ticks or fields. Each must keep its
-     original A500 duration in emulated time.
-   - Record replay per tick and play it back per tick, with interpolated presentation.
+1. **Elapsed-time source.** Extend the VBL handler at `$00044` with a slave hook that
+   counts fields while the gameplay loop is active. At the start of each pass, take
+   the fields consumed since the previous pass and convert them to T in 16.16 fixed
+   point, carrying the rounding remainder from frame to frame. Keep the existing BCD
+   clocks untouched. Exclude pause, menus and loading so time does not build up there.
+2. **Bound T.**
+   - Cap T at the largest step the original handles safely: the longest A500 frame
+     measured in step 2, about 11 fields at the measured A500 rate. Above the cap, run
+     several substeps of at most T_max each, without drawing in between, so a slow
+     frame cannot let the car tunnel through walls or skip collision checks.
+   - Report substep counts and any discarded time in VERIFY. Do not discard time
+     silently.
+3. **Scale every integrated quantity by T**, following the table in
+   `simulation-and-presentation.md`:
+   - Velocity and position increments, and the steering heading change at `$0b3a0`,
+     multiply by T.
+   - Any explicit acceleration × step² term multiplies by T².
+   - Retention or decay factors r per step become r^T. Use a Q16 table or a
+     log/exp approximation validated against exact values; scaling the gain linearly
+     is only an approximation.
+   - Slew limits and control ramps in `$07c32` (such as the ±2 per pass at
+     `a4-$66e4`) scale their rate, keeping saturation.
+   - Derivatives taken from consecutive samples divide by T.
+   - Keep force laws, thresholds and collision magnitudes unscaled. Separate
+     collision impulses (unscaled, once per event) from continuous contact forces
+     (scaled) and from position correction.
+   - Small T at 50 FPS (roughly f0/50 of a native step) can erase word-sized
+     increments. Keep wider shadow state or remainders for each scaled accumulator,
+     and keep them consistent across every writer, including reset, crash recovery
+     and replay.
+   - Check the integrator: with Euler updates, many small steps do not give the same
+     displacement as one large step. Apply the (T−1)/2·Δv correction where the
+     original order requires it, and decide whether the target is the original
+     handling or the finer-integrated model.
+   - Audit the AI and traffic cars, the RNG, sounds and the engine pitch separately.
+     Calling the RNG once per frame changes its sequence per second; decide whether
+     that matters for each consumer.
+4. **Input.** One step per frame means `$07c32` and the VBL-accumulated mouse positions
+   are read once per step, as now. Substeps inside one long frame use the same input.
+   Make key-driven events (gear changes, abort, pause) fire once, not once per
+   substep.
+5. **Convert per-pass counters to elapsed time.** The crash countdown, the GAME OVER
+   and other menu passes, the instant-replay ring and its playback, and the attract
+   route must keep their original A500 durations in emulated time.
+   - Record replay entries with their T (or at a fixed field interval), size the ring
+     by duration rather than by 90 frames, and play back by elapsed time,
+     interpolating between entries.
+   - The attract route's per-pass phase (`$0d54c`, phase /10) advances by T.
 6. **Remove the need for CUSTOM2 when CUSTOM1 is on.** Leave CUSTOM2 working, and
    unchanged, when CUSTOM1 is off.
 7. **Validate.**
-   - The tape gives identical per-tick state at A500 speed, at CUSTOM4-slowed speed and
-     on the 68040 (matched completed ticks).
-   - Report elapsed-field accounting for the same windows.
-   - Lap times on the same tape agree across machines within one tick.
-   - The A500's FPS does not drop by more than 3% against the baseline.
+   - VERIFY forcing T = 1 every pass must give bit-identical per-step state to the
+     original on the driving tape. This proves the scaling code changes nothing at
+     the native step.
+   - Compare equal elapsed fields across the A500, CUSTOM4-slowed drawing, the 68020
+     and the 68040: car position, speed and heading must agree within a tolerance
+     derived from the units audit, and lap and checkpoint times within one frame.
+   - Measure distance per second at constant throttle on the straight, and braking
+     distance from a fixed speed, on every machine.
+   - Exercise collisions, the loop and the jump at both T extremes; check for
+     tunnelling and missed checkpoints.
+   - Measure the A500's FPS: it must not drop by more than 3% against the baseline.
    - `check_disabled.py` passes with CUSTOM1 off.
+   - A person drives a full lap on the A500 and on the 68040 profile and confirms the
+     handling feels the same.
 
 ## Step 5: rendering performance
 
@@ -315,14 +332,16 @@ cycles before writing it. Every replacement needs:
    - Run an A/B with the same build, option off against option on, on every machine
      profile, in the attract and gameplay windows.
    - Judge routine changes by cycles per completed call, and FPS by swap counts.
-   - Where the scene differs, use the scene-stable window, which is valid once step 4
-     is in place.
+   - With step 4 in place, game speed no longer depends on FPS, so the windows cover
+     the same scene on every machine; recheck this before trusting a comparison.
 
 ## Step 6: release integration
 
-1. **Options:** CUSTOM1 for fixed-time simulation and the performance patches, on by
-   default once validated. CUSTOM2 stays as it was. Add `slv_config` only if the user
-   accepts WHDLoad 17+, raising `slv_Version` and the ReadMe requirement together.
+1. **Options (WHDLoad 17+, approved by the user):** raise `WHDL_REQVER` and
+   `slv_Version` to 17 and add an `slv_config` with CUSTOM1 (frame-time-scaled
+   simulation and the performance patches, on by default once validated) and
+   CUSTOM2 (the existing speed delay, unchanged). Keep developer switches unlisted.
+   Update the ReadMe requirement in the same commit, and test on WHDLoad 17 and 20.
 2. **Choose code paths at patch time** from `WHDLTAG_ATTNFLAGS_GET` and the Fast RAM
    placement. The A500 runs only the variants measured as faster there.
 3. **Final matrix:**
