@@ -3089,3 +3089,85 @@ with `--windows 4 --from-first-world`, then `--windows 4 --append` at its paused
 endpoint; run the retained replay checker and `sustained_capacity.py` afterward.
 No source/slave bytes changed. Event/dense/continuous-bank and cross-CPU capacity,
 full gameplay correctness, input latency and smooth 50 FPS remain open.
+
+
+## Shape-selection ownership across rendering
+
+W6 now leases the named shape-selection globals with the existing outer-render
+owner: scale words at h3:4278..427b and selected-record pointer at h3:a278..a27b.
+The native lookup at sim:3994e sets all eight bytes together; the separate part
+lookup at sim:399b0 also consumes the pointer. Restoring the pair prevents the
+last drawn resource from becoming the simulation's next selected resource.
+This changes only VERIFY CUSTOM2 bit 13 through the existing sim-v1 render
+hooks. No whole-h3 snapshot or global-state exclusion is introduced.
+
+The entry/exit helpers copy the eight named bytes; they do not dereference the
+selected resource. `shape_lease.py` independently checks entry, pre-restore and
+return snapshots, the exact saved bytes, pointer/scale coherence and unchanged
+resource descriptor/table contents. Changed-value coverage is mandatory by
+default. Its explicit `--allow-unchanged` mode reports preservation with
+`changed_value_coverage=false` rather than implying a changed value was restored.
+Resource reload, other consumers and full gameplay-state comparisons remain
+separate gates.
+
+The same native copy helpers also run a startup self-test on private guarded
+storage. Three scale/pointer patterns include zero/all-ones and both observed
+scale pairs. Each case verifies saved bytes, complements both private values,
+restores them, compares every byte and checks both guard words. The host checks
+the exact case table, final private state and three-case completion counter.
+No fixture writes live h3 or changes input/gameplay. The self-test is placed
+after the existing patch targets: an intermediate layout exceeded the signed
+patch displacement to the flight observer and was rejected before boot.
+The final 123-destination reachability audit passes.
+
+The final VERIFY build has 251082 text bytes, SHA-256
+`63f553029f241ff1ac2242fd1ec34f363ff70b55023e14a67044651674577484`.
+In `tmp/dev/tmp/prof/w6-shape-selftest-a500/`, both natural complete render calls
+preserve the resource table and restore entry state. At completed tick 34,
+selection changes **record 6 / scales 255,90 → record 1 / scales 256,256 →
+record 6 / scales 255,90**. Thus one naturally changed selection is restored,
+with no debugger mutation. The earlier tick-1 call retains record 6 throughout.
+All three native private cases pass (24 restored bytes), including guards.
+The existing render-phase checker validates 70 poses, 54 changed visual poses,
+shared-list restoration, terrain state, clocks and stack boundaries, with no
+world update inside either render call.
+
+Earlier cached-68030 captures from the intermediate build
+`05685957192b124fbd39b4ddd13bdde3e5067718b9684987ae9d225effd68f9e`
+are retained under `w6-shape-restore-030/`. Their natural calls preserved entry
+selection but did not exercise a different final selection. The first capture
+also crossed a no-draw startup invocation and one world update; that row was
+rejected. The collector now waits for `time_render_started` before taking an
+entry snapshot. Attempts in `seeded/` and `restore-fixture/` to create changed
+values with debugger memory writes were ineffective: the Barto stub ignores
+those writes, as documented in the development playbook. Both directories are
+explicitly marked rejected as mutation evidence. Their fixture labels describe
+attempted actions, not observed state. They do not substitute for the final
+native self-test or natural A500 changed-value capture.
+
+Five host checks cover changed selection, missing restoration, mismatched saved
+bytes, resource-table mutation, truncated state and native private-test evidence
+corruption. All 241 host tests and the 66-range hook audit pass. No rendering
+speedup, safe mid-render simulation yield, complete global-state isolation or
+50 FPS acceptance follows from this ownership change.
+
+The same final build in `w6-shape-selftest-030/` passes all three private cases
+on the cached 50 MHz 68030 configuration. Its two natural render calls both
+retain their entry selection, explicitly reported as no changed-value coverage;
+the A500 call above supplies the natural changed case. These 68030 calls check
+66 poses (42 changed visual poses), with two render iterations at completed
+world tick 1 and no world execution inside either. Both configurations pass
+the existing 426/512/638/133 and terrain/cache/list 2/1/2 self-test counters,
+54 selected hooks and two disabled ranges. Both owned emulators were verified
+and quit.
+
+Normal/developer output hashes remain respectively
+`5256542f87ec1c6d3eca174416560597a60e76e1cc785cd0fbf5e3efff3f0ba8` and
+`01a00068d799b01c9b17a06bc7b2ce87acf88f22c23f870afd476d4e46a6adc3`.
+Each final capture retains its exact slave/listing, before/pre-restore/after RAM,
+private test bytes, capture/check helpers and JSON results. Reproduce with the
+full W6 replay selection, the retained `capture-render.py --frames 2`, then
+`shape_lease.py` and `render_phase.py` on `render-phase.json`. The retained
+`check-native.py` reads private test evidence without writing guest memory.
+Use `--allow-unchanged` only when explicitly reporting the 68030 preservation
+case; the A500 changed-selection check passes without it.

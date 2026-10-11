@@ -7,6 +7,7 @@ TIME_PRESENT_CACHE_STRIDE = 28
 
 time_present_state_install:
 	movem.l d0-a6,-(sp)
+	bsr time_present_shape_selftest
 	lea .checks(pc),a3
 	moveq #2,d7
 .check
@@ -47,6 +48,10 @@ time_present_begin:
 	bsr time_devices_owned
 	beq .ready
 	move.w #1,(a1)
+	; Native shape lookup changes the shared selected-record pointer and scale.
+	; Lease both together; native part lookup also consumes the record.
+	bsr time_present_shape_addresses
+	bsr time_present_shape_save
 	bsr time_present_list_save
 	bsr time_terrain_cache_begin
 .ready
@@ -131,6 +136,8 @@ time_present_end:
 	bsr time_present_list_restore
 	bsr time_terrain_cache_end
 	bsr time_model_restore
+	bsr time_present_shape_addresses
+	bsr time_present_shape_restore
 	clr.l (a4)
 time_present_restored:
 	nop
@@ -150,3 +157,25 @@ time_present_state_error: dc.b "Red Baron: W6 nested draw or invalid object coun
 	even
 time_present_active: dc.w 0,0 ; active, saved cache count
 time_present_resume: dc.l 0
+
+time_present_shape_saved: dc.l 0,0 ; scale pair and selected record, one draw owner
+
+; a0 = scale pair, a1 = selected-record pointer. No pointee is dereferenced.
+time_present_shape_addresses:
+	move.l time_loop_h3(pc),a0
+	move.l a0,a1
+	adda.l #$a278,a1
+	adda.l #$4278,a0
+	rts
+
+time_present_shape_save:
+	lea time_present_shape_saved(pc),a2
+	move.l (a0),(a2)
+	move.l (a1),4(a2)
+	rts
+
+time_present_shape_restore:
+	lea time_present_shape_saved(pc),a2
+	move.l (a2),(a0)
+	move.l 4(a2),(a1)
+	rts

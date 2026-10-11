@@ -60,6 +60,19 @@ bitmap. Selecting that bit alone is **not** evidence of banking under W6.
 Use the recorded timestamped replay and verify its native input effects. See
 `w6-verification.md`, “A500 capacity with scheduled Right/Fire input.”
 
+## W6 shape-selection isolation checkpoint
+
+The current VERIFY candidate restores the selected shape record and scale pair
+after drawing. A native A500 call changes selection from record 6 (255/90) to
+record 1 (256/256), then restores record 6 exactly. Both measured calls preserve
+the resource table, simulation poses, clocks and shared-list ownership. Three
+private native save/restore tests also pass. This closes a named rendering-state
+leak in the tested path; it is not a speedup or permission to run simulation
+inside an unfinished draw. See `w6-verification.md`, “Shape-selection ownership
+across rendering,” for build identities, coverage and rejected debugger fixtures.
+The previous timing measurements belong to their recorded builds; this change
+has not been benchmarked.
+
 ## W6 current-bundle rendering breakdown
 
 A follow-up on the same synthetic cached-68030 200 MHz configuration separates
