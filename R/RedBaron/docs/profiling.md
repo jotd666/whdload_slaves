@@ -135,11 +135,17 @@ stops before commands and limits E1 to 16 breakpoints. No binary instruction
 trace was captured. Reproduce with local `completion_e1_case.py <040|060>
 0x32ffa <fresh-output>` under `BENCH_DEVELOPER=1 BENCH_BATCH_KEYS=1`.
 
-E2 groundwork separates the existing compositor, coverage builder and packer
-from VERIFY-only allocations, self-tests and snapshots. All three builds,
-443 host tests, 79 hook ranges and 134 VERIFY patch destinations pass. No new
-hook or cache selection is enabled, and this refactor has no claimed speedup.
-The live cache, CPU gate, pixel twins and A/B measurements remain to implement.
+E2 groundwork separates the compositor, coverage builder, packer and ordered
+key guard from VERIFY diagnostics. A bounded runtime key builder now snapshots
+front programs 3/4, geometry, palette selectors and bitmap resources in
+pointer-before-pointee order; unsupported commands, incoming pen dependencies
+and storage overflow reject the cache. All three builds, 448 host tests,
+79 hook ranges and 134 VERIFY patch destinations pass. The focused key tests
+cover changed resources, stale-pointer short-circuiting, unsupported scripts,
+bounded reads and destination independence against the independent raster model.
+The new builder has not yet run in the emulator. No hook or cache selection is
+enabled and no speedup is claimed. Live integration, CPU gating, lifecycle and
+post-state replay, pixel twins and A/B measurements remain open.
 
 040/060 functional checks use separate MMU-core configurations. Their timing
 results will use the frequency-sensitive NOMMU cores. Configuration generation

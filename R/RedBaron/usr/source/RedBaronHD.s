@@ -636,6 +636,8 @@ tape_sim_key_bridge:
 	include "overlay-blit.s"
 	include "overlay-mask.s"
 	include "overlay-pack.s"
+	include "overlay-key.s"
+	include "overlay-cache-key.s"
 	IFD VERIFY
 	include "overlay-shadow.s"
 	include "time-shape-verify.s"

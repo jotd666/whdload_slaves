@@ -1,47 +1,4 @@
-; Optional VERIFY_OVERLAY_KEY_EXPERIMENT: ordered exact-byte guard kernel.
-; No native draw is skipped and no live resource/key is constructed here.
-; Trusted private key: valid.w, program.w, count.w, reserved.w;
-; count descriptors {source.l, expected.l, length.w, reserved.w} in read order.
-; Lifetime invalidation MUST clear valid before resources can be freed/reused.
-; Input a0=key, d0.w=program. Output d0.l=0/1; all other registers preserved.
-; CCR unspecified. Read counter is VERIFY-only, not a player implementation.
-overlay_key_matches:
- movem.l d1-d3/a0-a3,-(sp)
- lea overlay_key_reads(pc),a3
- clr.l (a3)
- cmpi.w #1,(a0)
- bne .no
- cmp.w 2(a0),d0
- bne .no
- move.w 4(a0),d1
- beq .no
- cmpi.w #32,d1
- bhi .no
- subq.w #1,d1
- addq.l #8,a0
-.range
- move.w 8(a0),d2
- beq .no
- cmpi.w #4096,d2
- bhi .no
- move.l (a0),a1
- move.l 4(a0),a2
- subq.w #1,d2
-.byte
- addq.l #1,(a3)
- cmpm.b (a1)+,(a2)+
- bne .no
- dbf d2,.byte
- adda.w #12,a0
- dbf d1,.range
- moveq #1,d0
- bra .done
-.no
- moveq #0,d0
-.done
- movem.l (sp)+,d1-d3/a0-a3
- rts
-
+; Optional VERIFY_OVERLAY_KEY_EXPERIMENT tests for the shared guard.
 overlay_key_selftest:
  movem.l d0-a6,-(sp)
  lea overlay_key_result(pc),a5
