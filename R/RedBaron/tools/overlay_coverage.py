@@ -35,3 +35,17 @@ def composite(background, zero, mask):
         raise ValueError('Invalid native image/mask size')
     return bytes((background[i] & (mask[i % PLANE] ^ 255)) |
                  (zero[i] & mask[i % PLANE]) for i in range(PLANE*PLANES))
+
+
+def combine(layers):
+    """Fold native-order (image, mask) layers into one independent cache.
+
+    Images may contain arbitrary bytes outside their coverage. Later opaque
+    pixels replace earlier pixels, including black; masks alone own coverage.
+    """
+    image = bytes(PLANE*PLANES)
+    coverage = bytes(PLANE)
+    for source, mask in layers:
+        image = composite(image, source, mask)
+        coverage = bytes(a | b for a, b in zip(coverage, mask))
+    return image, coverage

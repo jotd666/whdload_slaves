@@ -49,10 +49,12 @@ unsupported geometry use the original path. The seven-gauge native pixel/state t
 all CPU-class timing pairs are complete. The 020/040 pairs clear 2%; 030/060
 do not, and the shared CPU gate excludes them. The normal verified mask still
 excludes bit 18 pending the remaining E2 view/map acceptance.
-The combined-copy coverage primitive is implemented as standalone assembly with
-an independent truth-table model (489 host tests pass), including opaque black
-and rejection of inversion or plane-dependent masks. It is not yet included in
-the slave; native capture/context restoration and combined composition remain open.
+The combined-copy coverage and ordered layer-merge primitives are implemented
+as standalone assembly with independent host models. Coverage retains opaque
+black and rejects inversion or plane-dependent masks. Ordered merging produces
+a single image/mask equivalent to sequential layers on arbitrary backgrounds;
+the nine focused tests pass. These primitives are not yet included in the slave;
+native capture/context restoration and the combined composition caller remain open.
 View/map twins also remain open. Results are in the scoreboard. D5 remains postponed and E2–F remain
 open; the earlier lists below are historical context, not the execution order.
 

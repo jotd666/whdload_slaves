@@ -61,3 +61,50 @@ class OverlayCoverageTests(unittest.TestCase):
             extract(bytes(40000), bytes(39999))
         with self.assertRaises(ValueError):
             composite(bytes(40000), bytes(40000), bytes(7999))
+
+
+class OverlayCombineTests(unittest.TestCase):
+    def test_one_composition_matches_ordered_layers(self):
+        from overlay_coverage import combine
+        rng = random.Random(1942)
+        layers = [(rng.randbytes(PLANE*PLANES), rng.randbytes(PLANE))
+                  for _ in range(4)]
+        image, mask = combine(layers)
+        for _ in range(3):
+            background = rng.randbytes(PLANE*PLANES)
+            expected = background
+            for source, coverage in layers:
+                expected = composite(expected, source, coverage)
+            self.assertEqual(composite(background, image, mask), expected)
+
+    def test_black_overlap_and_transparent_nonzero_pixels(self):
+        from overlay_coverage import combine
+        lower = bytes([255])*(PLANE*PLANES)
+        upper = bytearray([255])*(PLANE*PLANES)
+        lower_mask = bytearray(PLANE)
+        upper_mask = bytearray(PLANE)
+        for at in (0, 39, 40, PLANE-1):
+            lower_mask[at] = 0xf0
+            upper_mask[at] = 0x3c
+            for p in range(PLANES):
+                upper[p*PLANE+at] = 0xc3  # black inside upper coverage
+        image, mask = combine([(lower, lower_mask), (upper, upper_mask)])
+        for at in (0, 39, 40, PLANE-1):
+            self.assertEqual(mask[at], 0xfc)
+            for p in range(PLANES):
+                self.assertEqual(image[p*PLANE+at], 0xc0)
+        self.assertEqual(mask[1], 0)
+        self.assertEqual(image[1], 0)
+        reversed_image, _ = combine([(upper, upper_mask), (lower, lower_mask)])
+        self.assertEqual(reversed_image[0], 0xf0)
+
+    def test_no_layers_is_identity(self):
+        from overlay_coverage import combine
+        image, mask = combine([])
+        background = bytes([0xa5])*(PLANE*PLANES)
+        self.assertEqual(composite(background, image, mask), background)
+
+    def test_bad_layer_is_rejected(self):
+        from overlay_coverage import combine
+        with self.assertRaises(ValueError):
+            combine([(bytes(40000), bytes(7999))])
