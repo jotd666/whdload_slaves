@@ -313,7 +313,9 @@ Implemented: common runtime with VERIFY-only fixtures/logs, developer bit 13, CP
 - A 30-minute soak with no fault.
 
 *Play-test:* ask the user to fly on A500 and 060 settings. The handling feel is
-the user's call.
+the user's call. `bash R/RedBaron/tools/playtest.sh a500` (or `060`) launches
+the current D5 developer candidate at real speed with sound and the original
+realism preferences; close the previous Red Baron window before switching.
 
 ✔ **Checkpoint D:** update the scoreboard, adding a world-time/wall-time
 column, and commit.
