@@ -1,5 +1,11 @@
 # Red Baron performance measurements
 
+The complete 16/12-byte auxiliary lists now match raw at all 41 controlled
+50/25-MHz checkpoints, including owner pointers, inactive slots, record tails
+and six control bytes. Both lists change during the window. See “Complete
+auxiliary list records” in `w6-verification.md`. Recursive owner-state and
+real-time gameplay-speed acceptance remain open; no runtime change.
+
 The sun/star subsystem now matches completely at all 41 controlled 50/25-MHz
 checkpoints: 33 records, phase storage, descriptor fields and selected-context
 ownership. This accounts for two more simulation-consumed global roots,

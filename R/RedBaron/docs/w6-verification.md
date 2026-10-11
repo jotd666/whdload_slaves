@@ -5997,3 +5997,52 @@ moved allocations only when every explicit relationship still holds. The
 complete host suite passes 365 tests. Remaining traced global dependencies
 include message ownership, auxiliary lists and registry state; their proof
 must retain complete contents and native identities as well.
+
+
+## Complete auxiliary list records
+
+`auxiliary_lists.py` checks the two native lists rooted at `h3:57d4` and
+`h3:57d8`, with counts at `h3:57de` and `h3:57e0`. Original and live code
+contracts establish the 16-byte allocation stride at `sim:118a6`, the
+12-byte stride at `sim:118ee`, root stores at `sim:118be/1190a`, and
+matching insertion loops at `sim:119d8/11ae2`. The latter list's world
+consumer at `sim:11d00` increments the record's age word at `sim:11d22`.
+Each payload must exactly fill a unique tracked allocation. The six control
+bytes at `h3:57de–57e3` are also compared raw.
+
+For frozen VERIFY
+`9c92ff9979e40ec98adc1f73255f8e57b4f65b2f2d6d5d6e13793aad7f414415`,
+the retained 50/25-MHz runs match at all 41 equal-tick checkpoints. There
+are eight 16-byte records (128 bytes) and two 12-byte records (24 bytes).
+The former takes 20 distinct complete states, with all eight owner fields
+nonzero throughout; the latter takes 16 distinct complete states, with
+15 nonzero-owner observations in total. The six control bytes take two
+states. No owner-pointer or inactive-record bytes are excluded.
+
+The raw roots differ in one byte at each checkpoint, inside `h3:57d8`.
+The report retains that difference; exact allocation ownership permits
+storage to move independently without inferring owner identities from a
+numeric relocation. Owner pointers inside the records match raw. This does
+not recursively establish their targets' state: in particular, compact
+objects referenced by the 16-byte list are not necessarily members of the
+dynamic registry. No registry-membership assumption or pointer mask is used.
+
+The checker requires the existing aircraft/prelude comparison, including
+matching tick sequence and scheduled controls. Empty/freed lists are outside
+this populated-capture contract and fail explicitly. All lifecycle paths,
+weapon links, recursive owner state, whole-gameplay independence, capacity
+and 50-FPS acceptance remain open. No runtime or performance change.
+
+Reproduce with:
+
+```sh
+python3 R/RedBaron/tools/auxiliary_lists.py \
+  tmp/dev/tmp/game/RedBaron_v2.1/RedBaron/data/sim \
+  tmp/dev/tmp/prof/w6-prelude-50mhz-030 \
+  tmp/dev/tmp/prof/w6-prelude-25mhz-030 \
+  --out tmp/dev/tmp/prof/w6-prelude-50mhz-030/auxiliary-lists.json
+```
+
+Four regression tests cover independent storage relocation, owner and
+inactive-tail mutations, control changes, allocation ambiguity/extent errors,
+and unsupported counts. The complete host suite passes 369 tests.
