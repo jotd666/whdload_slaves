@@ -3297,3 +3297,71 @@ capture. Reproduce with `sound_elapsed.py ORIGINAL_SIM CAPTURE CHUNK --out REPOR
 Four new host tests cover reset/increment sequences, explicitly unverified
 leading data, unsigned-word wrap and corrupted/missing/misaligned writes. The
 full host suite passes 245 tests.
+
+
+## Ground-impact grading and native flight exit
+
+The same full-bundle VERIFY build `63f553029f241ff1ac2242fd1ec34f363ff70b55023e14a67044651674577484`
+was booted twice on cached 68030 at 50 MHz, maximum detail, Time Scale 40,
+CUSTOM2=16319. The native ground fixture supplies a synthetic descent; the
+control additionally disables rendering. These are correctness captures, not
+performance measurements or safe-landing/convergence acceptance.
+
+Retained captures are `w6-ground-normal-030-v2` and `w6-ground-none-030` in the
+ignored profiling directory. Initial h3, all four sim segments, player record
+and 105 game allocations (243,855 bytes) agree. The fixture begins at altitude
+512 and vertical velocity −1024, but deferred activation includes a native
+prelude: completed-pose boundary zero already has altitude 208 and velocity
+−920. Do not attribute that prelude to one W6 update.
+
+Both captures reach one actual player call to `sim:192d8` during world tick 1.
+Its arguments are angles 256/0, horizontal speed 1286, vertical speed −886,
+prior damage zero, and limits 1845/277/6000/8000/−3200. Native grading returns
+2, exactly matching the independent signed-width model in `ground_contact.py`.
+The model binds the original routine bytes and checks entry/result pairing;
+it covers angle and speed thresholds, arithmetic-word overflow, the native
+most-negative-angle special case and prior signed-byte damage. It does not
+model collision detection. Immediately before correction the player altitude
+is 36; completed boundary 1 has altitude 50 and vertical velocity zero,
+which persist through boundary 14.
+
+**The full player-state comparison fails and remains an open W6 gate.**
+Boundaries 0–2 match all 280 bytes. At boundaries 3–14, byte +36 is 0x41 with
+rendering and 0x61 without it (bit 5). The other 279 bytes agree. All 463
+registered-object prefixes, camera state, registry, shared display list and
+lifecycle events agree. Held keys, command queue and consumption counters also
+agree at every boundary. Prefix equality does not cover this player flag.
+Static inspection identifies `sim:15c82`/`sim:15ca0` as setters/clearers of
+object byte +36 bit 5; `sim:15cc6` reads it when restoring object byte zero
+bit 7. Dynamic provenance and complete consumer scope remain to be established;
+this difference must not be normalized away or declared harmless.
+
+Both clocks pass exact funding. Across the 14 completed-update intervals the
+rendered run advances 90 fields/106 CIA ticks with 16 draws and four remaining
+uncollected CIA ticks; the control advances 86 fields/102 CIA ticks with zero
+draws and zero uncollected ticks. Final raw h3 differs in 3,108 bytes; the other
+three sim segments differ in 138/0/0 bytes. The final shared-allocation difference
+is the same single player byte. All raw differences remain in
+`heap-inventory.json`; this is not a whole-state equality verdict.
+
+Both runs return value 1 through the native flight-exit caller after started
+tick 15, with last captured pose boundary 14. The pose header is updated at the
+next loop entry, so these counters alone do not mean tick 15 was abandoned.
+The return value survives W6 cleanup, and active/input-ready flags become zero.
+Native counters 426/512/638/133, terrain/cache/list 2/1/2, all three private
+shape cases and the live 54-selected/two-disabled hook audit pass before unload.
+Both owned emulators were verified and quit.
+
+The first ordinary attempt (`w6-ground-normal-030`) retained the same impact
+but its collector waited for another pose boundary after flight exit. Its late
+hook audit encountered unloaded sim memory and is rejected. The corrected
+collector explicitly catches the exit before unload; only the v2/control pair
+supports the exit and hook claims above.
+
+Each successful capture retains `capture-ground.py`, `check-exit.py`, raw
+entry/result events, full RAM snapshots, `contact-check.json`,
+`flight-exit.json` and `exit-cleanup.json`. Reproduce the grading check with
+`ground_contact.py ORIGINAL_SIM CAPTURE --out REPORT`; compare raw states with
+`world_comparison.py`. Four new host tests bring the passing suite to 249.
+No slave bytes changed. Next: trace the byte +36 bit-5 divergence and preserve
+native temporary-state semantics before claiming ground-contact independence.

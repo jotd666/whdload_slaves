@@ -1,5 +1,14 @@
 # Red Baron performance measurements
 
+The latest W6 ground-impact comparison agrees on impact grade, motion and native
+flight exit, but exposes a player flag difference after rendering: byte +36
+bit 5 differs at completed ticks 3–14. Input histories match. This is an open
+correctness issue, not a passed frame-rate-independence gate. The new independent
+impact-grading model matches both native calls; all 249 host tests pass. See
+“Ground-impact grading and native flight exit” in `w6-verification.md` for
+scope, raw evidence and the next investigation. No slave bytes or performance
+claims changed in this checkpoint.
+
 The current full W6 VERIFY bundle also passes the cached-68030 Preferences
 clock-boundary check: 222 CIA ticks spent in the native panel are excluded,
 one CIA tick of existing simulation debt is preserved, and no world update or
