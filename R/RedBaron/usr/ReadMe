@@ -45,6 +45,8 @@
  Faster rendering enables instruction caching on 020+ where needed.
  It does not enable a disabled data cache. On a 68030 with an MMU, use
  the MMU tooltype to permit fast-memory data caching; ChipMem stays uncached.
+ Current maximum-detail measurements show less than 2% difference with MMU,
+ below the resolution of the FPS window; no speedup is claimed for the tooltype.
 
  Development rendering improvements:
  - Faster rendering (CUSTOM2=1) selects the verified dashboard cache, geometry,

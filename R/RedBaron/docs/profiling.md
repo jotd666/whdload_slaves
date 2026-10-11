@@ -4,18 +4,20 @@
 
 This is the single results table for `completion-plan.md` A–F. “Pending”
 means not yet measured on the normal build; historical isolated-feature
-results below are not combined-bundle results. Each A/B pair uses one slave
-binary with CUSTOM2=0 and CUSTOM2=1. Stage spans are inclusive wall time;
+results below are not combined-bundle results. The A2 A/B pairs each used one slave
+binary with CUSTOM2=0 and CUSTOM2=1. Later checkpoints retain that stock
+baseline and update the normal-bundle columns; their checkpoint labels identify
+which rows have been refreshed. Stage spans are inclusive wall time;
 scene, cockpit and publication are separate stages, not CPU-only costs.
 
 | Configuration | Checkpoint | Stock steady / event FPS | Bundle steady / event FPS | World update ms | Scene / cockpit / publication ms | DASH markers stock / bundle | Clean fields stock / bundle | World time / wall time | Dropped world time | B1 isolated pool FPS, off → on | B2 raw CACR, before → after | B2 isolated cache FPS, off → on |
 |---|---|---|---|---|---|---|---|---|---| --- |---|---|
-| A500, 512K chip + 1.5M slow | A2 | 1.844 / 1.722 | 2.100 / 2.072 | 57.68 → 56.05 | 399.51 / 73.70 / 0.28 → 360.51 / 62.53 / 4.46 | 3 / 3 | 1516 / 1735 | Pending D | Pending D | Minimum-memory flight passes | N/A (68000) | No cache hardware |
-| 020, 2M chip + 8M fast | A2 | 6.008 / 5.666 | 6.259 / 6.215 | 13.79 → 13.98 | 116.77 / 41.40 / 0.08 → 102.22 / 35.54 / 6.74 | 44 / 114 | 1196 / 1077 | Pending D | Pending D | 6.398 → 6.695 (+4.6%) | 0x0000 → 0x0001 | 6.754 → 7.280 (+7.8%) |
-| 030/50, 2M chip + 8M fast, MMU | A2 | 12.974 / 11.881 | 12.893 / 12.855 | 3.33 → 3.10 | 44.19 / 34.08 / 0.08 → 38.53 / 27.87 / 7.92 | 191 / 2 | 1154 / 1905 | Pending D | Pending D | 12.878 → 14.546 (+12.9%) | 0x2111; unchanged | Already enabled |
-| 030/50, 2M chip + 8M fast, no MMU tooltype | A2 | 12.377 / 11.931 | 12.430 / 12.206 | 3.94 → 3.57 | 48.31 / 31.23 / 0.04 → 42.36 / 31.58 / 4.16 | 58 / 121 | 1262 / 1651 | Pending D | Pending D | Pending | 0x2000 → 0x2011 | 12.889 → 14.537 (+12.8%) |
-| 040/25 NOMMU, AGA, 2M chip + 16M Z3 fast | A2 | 12.476 / 11.507 | 12.430 / 12.280 | 3.34 → 3.21 | 47.56 / 36.26 / 0.06 → 41.26 / 29.89 / 6.48 | 116 / 107 | 1144 / 1699 | Pending D | Pending D | 12.392 → 13.277 (+7.1%) | 0x80008000; unchanged | Already enabled |
-| 060/50 NOMMU, AGA, 2M chip + 16M Z3 fast | A2 | 12.786 / 12.206 | 12.602 / 12.405 | 3.16 → 3.10 | 44.63 / 33.43 / 0.03 → 39.59 / 28.95 / 7.90 | 64 / 165 | 1452 / 1537 | Pending D | Pending D | 12.585 → 13.909 (+10.5%) | 0xa0808000; unchanged | Already enabled |
+| A500, 512K chip + 1.5M slow | B bundle / A2 stock | 1.844 / 1.722 | 1.993 / 1.947 | 57.68 → 56.73 | 399.51 / 73.70 / 0.28 → 384.73 / 63.62 / 4.04 | 3 / 15 | 1516 / 1553 | Pending D | Pending D | Minimum-memory flight passes | N/A (68000) | No cache hardware |
+| 020, 2M chip + 8M fast | B bundle / A2 stock | 6.008 / 5.666 | 7.295 / 7.288 | 13.79 → 10.18 | 116.77 / 41.40 / 0.08 → 87.62 / 31.49 / 6.45 | 44 / 30 | 1196 / 1321 | Pending D | Pending D | 6.398 → 6.695 (+4.6%) | 0x0000 → 0x0001 | 6.754 → 7.280 (+7.8%) |
+| 030/50, 2M chip + 8M fast, MMU | B bundle / A2 stock | 12.974 / 11.881 | 14.706 / 14.427 | 3.33 → 1.71 | 44.19 / 34.08 / 0.08 → 35.37 / 28.43 / 4.19 | 191 / 56 | 1154 / 1144 | Pending D | Pending D | 12.878 → 14.546 (+12.9%) | 0x2111; unchanged | Already enabled |
+| 030/50, 2M chip + 8M fast, no MMU tooltype | B bundle / A2 stock | 12.377 / 11.931 | 14.787 / 14.452 | 3.94 → 1.67 | 48.31 / 31.23 / 0.04 → 35.12 / 28.59 / 4.35 | 58 / 59 | 1262 / 982 | Pending D | Pending D | 030 class measured with MMU | 0x2000 → 0x2011 | 12.889 → 14.537 (+12.8%) |
+| 040/25 NOMMU, AGA, 2M chip + 16M Z3 fast | B bundle / A2 stock | 12.476 / 11.507 | 13.473 / 13.503 | 3.34 → 2.10 | 47.56 / 36.26 / 0.06 → 37.97 / 28.46 / 5.97 | 116 / 60 | 1144 / 1230 | Pending D | Pending D | 12.392 → 13.277 (+7.1%) | 0x80008000; unchanged | Already enabled |
+| 060/50 NOMMU, AGA, 2M chip + 16M Z3 fast | B bundle / A2 stock | 12.786 / 12.206 | 14.088 / 13.853 | 3.16 → 1.96 | 44.63 / 33.43 / 0.03 → 36.59 / 27.99 / 5.41 | 64 / 61 | 1452 / 1591 | Pending D | Pending D | 12.585 → 13.909 (+10.5%) | 0xa0808000; unchanged | Already enabled |
 
 040/060 functional checks use separate MMU-core configurations. Their timing
 results will use the frequency-sensitive NOMMU cores. Configuration generation
@@ -132,7 +134,17 @@ Clean-frame gains are recorded in the scoreboard; whole-window FPS rises
 The 030 with MMU and both later CPUs already have IC enabled, so no redundant
 cache-policy change or isolated timing pair is needed there. All three builds,
 431 host tests, the 76-range hook audit and patch-destination reach checks pass.
-The normal bundle now includes bit 17; the six-machine checkpoint B is pending.
+The normal bundle now includes bit 17; the six-machine checkpoint B is complete.
+It captures the 2,000-field cockpit-view-change window directly after the initial
+flight warm-up, omitting A2's preceding 1,000/2,000-field opening capture. Thus
+its event-free cadence describes an earlier flight scene. Cross-checkpoint
+rate differences are not isolated speedup estimates; the matched B1/B2 pairs
+above supply those claims. The checkpoint binary SHA-256 is
+`3b38a60175741b20cc6ae3130d95aa20e9db7e1fb91f1e520f4a1861d8c93e9d`.
+The 030 MMU/no-MMU clean rates differ by −0.55% and whole-window rates by
+−0.17%, both unresolved under the 2% rule. MMU enables fast-memory data caching
+while retaining noncacheable ChipMem; the ReadMe describes that capability
+without claiming a measured FPS gain in this window.
 
 ## Earlier measurements
 

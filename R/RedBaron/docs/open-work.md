@@ -16,8 +16,9 @@ CPUs and sim v1, eliminating live chip spill. The minimum A500 flies; isolated
 020–060 comparisons improve by 4.6–12.9%. All three builds, 431 host tests
 and the 76-range hook audit pass. B2 is implemented and measured: instruction
 caching adds 7.8% on 020 and 12.8% on 030 without MMU; disabled data caches
-remain disabled. Checkpoint B is running on the final normal bundle, followed
-by C1/C2.
+remain disabled. Checkpoint B is complete on all six configurations; the single scoreboard
+contains the current normal-bundle rates and stage costs. Phase C starts with
+the exact exponent helper (C1), then the model-bank lookup cache (C2).
 Phases B–F remain open; the earlier lists below are historical context, not the execution order.
 
 
