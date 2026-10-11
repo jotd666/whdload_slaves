@@ -286,7 +286,9 @@ by this investigation.
 Step 4 remains incomplete. `HardDrivinTime.s` currently supplies an elapsed-field
 observer and exact arithmetic helpers, compiled only with `VERIFY_TIME` and
 installed only with CUSTOM1 nonzero on SPS 0126. VERIFY_TIME alone does **not** scale gameplay,
-run catch-up substeps or remove CUSTOM2. Normal builds exclude the entire module.
+run catch-up substeps or remove CUSTOM2. The additional `VERIFY_TIME_DISPATCH`
+gate now connects the live loop to bounded elapsed-time substeps (details below).
+Normal builds exclude the entire module.
 
 The VBL hook follows the native register saves at `$00050`. It counts while the
 live-loop epoch is active and preserves incoming X before the native clock code.
@@ -300,7 +302,8 @@ Q16.16, so conversion itself has no rounding loss.
 Native pause and replay suspend this observer and resume its previous epoch.
 Options-menu clock boundaries are hooked too, but their interactive transition
 has not yet been exercised. Race exit disables the observer. This provides no
-claim yet about scaled menu/replay durations or input latching for substeps.
+claim yet about scaled menu/replay durations. Input latching is implemented by
+the separate dispatcher gate below.
 
 Diagnostic evidence retained under ignored `tmp/dev/tmp/prof/`:
 
@@ -613,7 +616,7 @@ Traffic evidence:
   All 56 scalar/motion/traffic ranges pass the direct-branch audit. Repeated
   table-load allocation cleanup has not yet been exercised interactively.
 
-Remaining work includes the actual simulation dispatcher, live small-T contact validation,
+Remaining work includes live small-T contact validation,
 held-input handling, traffic collision/transition acceptance, replay/Phantom and other
 presentation timelines, performance and cross-machine acceptance, and the
 required human laps. The BCD clock defect versus lap-time acceptance conflict
@@ -645,8 +648,68 @@ T=1, initialization once, expiry once and the ground-height hold.
 `s4-presentation-off` passes all disabled ranges. The normal build remains
 byte-identical and the direct-branch audit passes 67 declared ranges.
 
-These hooks still consume diagnostic constant intervals. The eventual dispatcher
-must supply the correct elapsed interval to overlays drawn once per outer frame,
-independently of bounded simulation substeps. Live fractional recovery/contact
-transitions, replay duration, other presentation loops and real elapsed-time
-integration remain unvalidated. Step 4 is still in progress.
+Without VERIFY_TIME_DISPATCH these hooks consume diagnostic constant intervals.
+The dispatcher supplies per-substep recovery time and per-frame overlay time,
+shortened on an overlay restart to exclude preceding substeps. Live fractional
+recovery/contact acceptance, replay duration and other presentation loops remain
+unvalidated. Step 4 is still in progress.
+
+
+## Live elapsed-time dispatcher (development gate)
+
+`VERIFY_TIME_DISPATCH` requires the motion, traffic and presentation gates (and
+therefore TIME_SCALARS/TIME). CUSTOM1 and the SPS0126 size check still control
+installation. `HardDrivinDispatch.s` consumes the elapsed active fields captured
+at `$10ed4`, in substeps of at most eight fields. It repeats crash countdown,
+recovery, scene preparation, traffic and physics, then draws once. Work done
+inside a frame becomes elapsed time for the next frame; no moving deadline is
+chased within the current frame. A zero-field first pass uses T=0, without
+inventing a bootstrap interval. Native unscaled discrete events can still run
+in that pass; this is not yet full zero-time world-state invariance.
+
+The first controls call runs native keyboard/gear/menu handling. A hook after
+keyboard processing latches buttons and steering X. Later substeps apply only
+the held continuous throttle ramps against live crash/timeout/start gates;
+steering reads the held X instead of VBL-updated input. They do not clear new
+VBL button events or call the keyboard/gear/menu handlers again. Pause/options
+and replay retain the existing timing-epoch suspension. Their full input and
+modal-transition acceptance still needs coverage beyond the captures below.
+
+`HDDISP01` identifies the following private state: pending fields.l, consumed
+fields.l, total substeps.l, frame substeps.l, frame elapsed fields.l, explicitly
+discarded fields.l, active.b, first-controls.b, held buttons.w, held X.w,
+installed.b, padding.b, overlay interval.l (36 bytes). Race exit cancels remaining
+frame debt into the discarded counter. This cancellation path is not yet exercised
+by the short live captures. While installed, the slave bypasses CUSTOM2's delay;
+CUSTOM1 off or an unsupported executable leaves that behavior unchanged.
+
+`VERIFY_DISPATCH_NATIVE` forces one eight-field step per outer pass solely for
+compatibility testing. `s4-dispatch-native-final` matches all 144 sampled car
+states from `s4-presentation-reference`, including crash replay and recovery.
+This remains the constant-input fixture, not the required full driving tape.
+
+Live captures verify each consumed interval is 0..8 fields, T is interval/8,
+and pending plus consumed equals observed fields, with zero discarded time:
+
+- `s4-dispatch-filtered`: 150 substeps across 37 outer frames, 1045 fields,
+  maximum six substeps/frame, 37 live keyboard calls and 36 completed draws.
+- `s4-dispatch-final`: the field-indexed driving tape, 250 substeps across 81
+  frames, 1732 fields, maximum six substeps/frame, 81 live keyboard calls and
+  80 completed draws. Every substep within a frame retains the same input.
+- `s4-dispatch-ready`: final installed-version CUSTOM2 gate, 250 substeps across
+  82 frames, 1732 fields, maximum six substeps, 82 live keyboard calls and 81
+  completed draws. The tape exercises 13 distinct held button/steering pairs.
+
+Captures stop after physics in the last frame, before its draw, hence one fewer
+completed draw. Replay calls are counted separately by the suspended epoch.
+The initial unfiltered input-count assertion included one replay controls call;
+it was not evidence of repeated live input. The initial installer stack error
+in `s4-dispatch-native`/`s4-dispatch-live` prevented gameplay; those runs are invalid
+and their owned processes were stopped. Fixed runs use fresh capture directories.
+
+`s4-dispatch-ready-off` verifies all disabled ranges, the normal slave is unchanged,
+and the direct-branch audit passes 71 ranges. This establishes dispatcher
+mechanics, not equal-time driving acceptance or a performance result. Start-phase,
+score/checkpoint side effects, timed replay/Phantom history and playback, attract
+and menu timelines, zero-time/contact transitions, full forced-native tape,
+multiple-machine handling/performance and the human laps remain required.

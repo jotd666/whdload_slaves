@@ -1,6 +1,6 @@
 ; SPS 0126 elapsed-time foundation. Development build: VERIFY_TIME + CUSTOM1.
-; This file observes timing; optional scalar/motion diagnostics use a constant T.
-; The elapsed-time dispatcher and full scaled simulation are not connected yet.
+; Optional VERIFY_TIME_DISPATCH feeds bounded elapsed intervals to the solver.
+; Without that flag, scalar/motion diagnostics continue to use a constant T.
 ; No hook is installed unless both gates are on. Production builds exclude it.
 ;
 ; Nominal reference f0=50/8 native steps per second. Every PAL field therefore
@@ -54,6 +54,9 @@ _time_install:
 	ENDC
 	IFD VERIFY_TIME_PRESENTATION
 	bsr _presentation_install
+	ENDC
+	IFD VERIFY_TIME_DISPATCH
+	bsr _dispatch_install
 	ENDC
 	ENDC
 .restore:
@@ -122,6 +125,10 @@ _time_outer:
 	move.l d0,TS_ELAPSED(a0)
 	add.l d0,TS_OBSERVED(a0)
 	addq.l #1,TS_PASSES(a0)
+	IFD VERIFY_TIME_DISPATCH
+	bsr _dispatch_begin
+	ENDC
+	IFND VERIFY_TIME_DISPATCH
 	cmpi.l #TIME_FIELDS_PER_STEP,d0
 	bls.s .bounded
 	moveq #TIME_FIELDS_PER_STEP,d0
@@ -129,6 +136,7 @@ _time_outer:
 	moveq #13,d1
 	lsl.l d1,d0
 	move.l d0,TS_T(a0)
+	ENDC
 	movea.l _code_start(pc),a1
 	adda.l #$10edc,a1
 	bra.s .return
@@ -364,4 +372,8 @@ _time_q16_results: dcb.l 7*9*7*2,0
 
 	IFD VERIFY_TIME_PRESENTATION
 	INCLUDE "HardDrivinPresentation.s"
+	ENDC
+
+	IFD VERIFY_TIME_DISPATCH
+	INCLUDE "HardDrivinDispatch.s"
 	ENDC

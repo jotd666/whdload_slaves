@@ -52,6 +52,17 @@ _presentation_overlay_start:
 	move.w d0,2(a0)
 	mulu.w #8,d0
 	move.w d0,(a0)
+	IFD VERIFY_TIME_DISPATCH
+	; A restart partway through a frame must not consume earlier substeps.
+	lea _dispatch_state(pc),a0
+	moveq #0,d0
+	move.w _time_scalar_fields(pc),d0
+	move.l a1,-(a7)
+	movea.l DS_PENDING(a0),a1
+	adda.l d0,a1
+	move.l a1,DS_OVERLAY_FIELDS(a0)
+	movea.l (a7)+,a1
+	ENDC
 	movem.l (a7)+,d0/a0
 	; Select the native byte from the state, preserving the caller's D0.
 	move.l a0,-(a7)
@@ -64,6 +75,17 @@ _presentation_overlay_tick:
 	moveq #0,d0
 	move.b -$50ce(a4),d0
 	move.w _time_scalar_fields(pc),d1
+	IFD VERIFY_TIME_DISPATCH
+	moveq #8,d1
+	lea _time_state(pc),a0
+	tst.b TS_ACTIVE(a0)
+	beq.s .interval
+	move.l _dispatch_state+DS_OVERLAY_FIELDS(pc),d1
+	cmpi.l #65535,d1
+	bls.s .interval
+	move.l #65535,d1
+.interval:
+	ENDC
 	lea _presentation_overlay(pc),a0
 	bsr _presentation_countdown
 	move.b d0,-$50ce(a4)
