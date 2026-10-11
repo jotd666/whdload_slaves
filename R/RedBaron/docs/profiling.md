@@ -1,5 +1,12 @@
 # Red Baron performance measurements
 
+The complete native shape-bank table and all seven loaded model allocations
+now match raw across 41 controlled 50/25-MHz checkpoints: 216 table bytes and
+85,876 resource bytes containing 174 shapes. Native constructor/list contracts,
+allocation extents and terminators pass. See “Complete shared model banks across
+CPU frequencies” in `w6-verification.md`. This adds shared-resource correctness
+evidence; complete gameplay independence and the capacity/50-FPS gates remain open.
+
 The controlled 50/25-MHz state comparison now binds 539 unchanged h3 loader
 relocations across all 41 checkpoints, explaining 623 raw differing bytes per
 checkpoint. Mutable fields remain unfiltered: 210–1,873 residual bytes at a

@@ -5403,3 +5403,57 @@ sequence, and truncated/overlapping/invalid inputs fail. The host suite passes
 337 tests. No slave, emulator configuration or performance measurement changes.
 Complete state/event equivalence, sustained default-capacity coverage and smooth
 50 FPS remain release gates.
+
+
+## Complete shared model banks across CPU frequencies
+
+The changed loader relocation at `h3:4262` is replaced during initialization by
+a dynamically allocated shape-bank table. Its constructor stores the count at
+`sim:396de`, multiplies by 12 at `sim:396e4`, and stores the allocation result at
+`sim:396f6`. `sim:3970a–3971a` copies the first 12-byte record from `h3:4250`;
+remaining records are initialized with null pointers, zero counts, 256/256 scales
+and a -1 bitmap-bank selector. The model resolver at `sim:398aa` reads this root
+and count. `sim:39784–39796` counts shapes by scanning longword pointers up to a
+null terminator. These are explicit native pointer contracts, not values guessed
+from a memory-address range.
+
+`model_banks.py` verifies original and live constructor/count/lookup contracts,
+the original sim hash, the frozen slave identity and the prelude/equal-tick
+fixture. The table must exactly fill a tracked allocation of count × 12 bytes.
+Every nonempty bank must identify an entire tracked resource allocation; each
+shape pointer must be aligned and inside its resource body beyond the pointer
+array, and the declared count must end at a null pointer. Empty bank records
+remain in the full raw table comparison. Resource contents, embedded pointers,
+scales and selectors are all compared raw; only the table root is bound through
+its explicit native allocation identity.
+
+Both controlled `w6-prelude-50mhz-030` and `w6-prelude-25mhz-030` runs have
+18 bank records (**216 bytes**), seven loaded and eleven empty. At all **41
+checkpoints**, the entire table and the seven complete resources agree:
+
+| Bank | Shapes | Complete resource bytes |
+| --- | ---: | ---: |
+| 0 | 143 | 56,486 |
+| 1 | 22 | 14,836 |
+| 2 | 1 | 358 |
+| 3 | 4 | 916 |
+| 4 | 2 | 250 |
+| 5 | 1 | 7,260 |
+| 6 | 1 | 5,770 |
+| Total | 174 | 85,876 |
+
+All checked table/resource bytes also remain unchanged from the initial
+checkpoint. This is useful because aircraft rendering can write shared model
+variant/color fields; equal player poses alone did not cover that memory.
+It does not establish the absence of transient writes between checkpoints,
+all model variants, resource reload behavior or every indirect consumer.
+The separate six-byte bitmap-bank table at `h3:4266` is outside this check.
+No raw global differences are removed from the existing inventory.
+
+The retained report is `model-banks.json` in the 50-MHz capture directory.
+Reproduce with `model_banks.py ORIGINAL_SIM LEFT_CAPTURE RIGHT_CAPTURE --out REPORT`.
+Three regression tests cover complete resource retention, empty records,
+stale/interior/unaligned pointers, invalid counts, missing terminators, wrong
+allocation extents and truncated data. All **340 host tests pass**. Slave code
+and performance numbers are unchanged. Complete gameplay-state/event comparison,
+sustained default-capacity coverage and smooth 50 FPS remain unfinished.
