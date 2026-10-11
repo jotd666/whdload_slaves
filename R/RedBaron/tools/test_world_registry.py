@@ -1,6 +1,6 @@
 import copy
 import unittest
-from world_registry import identity,equal,POOL,STRIDE,COUNT
+from world_registry import identity,equal,storage,POOL,STRIDE,COUNT,REGISTRY_CAPACITY
 
 
 class WorldRegistryTests(unittest.TestCase):
@@ -12,7 +12,7 @@ class WorldRegistryTests(unittest.TestCase):
         self.assertEqual(identity(1234,100000),identity(1234,200000))
 
     def fixture(self):
-        return dict(registry=[(('absolute',1234),'01'*26),(('h3',POOL),'02'*26)],lifecycle=[('h3',POOL),('absolute',1234)],pool='00'*(COUNT*STRIDE))
+        return dict(storage=[('absolute',0)]*REGISTRY_CAPACITY,registry=[(('absolute',1234),'01'*26),(('h3',POOL),'02'*26)],lifecycle=[('h3',POOL),('absolute',1234)],pool='00'*(COUNT*STRIDE))
 
     def test_order_and_prefix_changes_fail(self):
         a=self.fixture();b=copy.deepcopy(a);b['registry'].reverse()
@@ -25,3 +25,16 @@ class WorldRegistryTests(unittest.TestCase):
         with self.assertRaises(ValueError):equal(a,b)
         b=copy.deepcopy(a);b['pool']=b['pool'][:-2]+'01'
         with self.assertRaises(ValueError):equal(a,b)
+
+    def test_unused_registry_slots_are_compared(self):
+        a=self.fixture();b=copy.deepcopy(a)
+        b['storage'][-1]=('h3',POOL)
+        with self.assertRaises(ValueError):equal(a,b)
+
+    def test_storage_retains_every_slot_and_requires_exact_extent(self):
+        raw=bytearray(2000);raw[-4:]=(100000+POOL).to_bytes(4,'big')
+        result=storage(lambda p,n:bytes(raw[:n]),100000)
+        self.assertEqual(len(result),500)
+        self.assertEqual(result[-1],('h3',POOL))
+        self.assertEqual(result[0],('absolute',0))
+        with self.assertRaises(ValueError):storage(lambda p,n:bytes(raw[:-1]),100000)

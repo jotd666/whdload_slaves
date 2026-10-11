@@ -6148,3 +6148,52 @@ Four regression tests cover multiline text identity under relocation,
 scalar/line-count mutations, changed text and invalid owners, secondary
 selection and null transitions. The host suite passes 377 tests. Shared
 registry/owner state, real-time capacity and 50-FPS acceptance remain open.
+
+
+## Complete dynamic registry storage
+
+`world_registry.py` now compares all 500 pointer entries at `h3:85a0`, not
+only the active prefix selected by `h3:859e`. Original and live contracts
+verify the capacity check at `sim:fdd2`, table access at `sim:fef2`, and
+swap-delete operation at `sim:ff06–ff18`. The latter copies the final active
+entry over a removed entry without clearing the old tail. Inactive entries
+therefore remain part of the exact storage comparison; they are not
+dereferenced as if they were live objects.
+
+The only relocatable identities remain `h3:4860` and the 50 exact 44-byte
+projectile slots rooted at `h3:5934`. All other addresses, including zero,
+must agree numerically. No broad address-range relocation is introduced.
+The report retains raw differences across all 2,000 registry bytes alongside
+the canonical slot sequence. Existing active-prefix, lifecycle-order and
+complete projectile-pool comparisons remain required.
+
+For frozen VERIFY
+`9c92ff9979e40ec98adc1f73255f8e57b4f65b2f2d6d5d6e13793aad7f414415`,
+all 41 retained 50/25-MHz checkpoints match. This covers 20,500 pointer-slot
+observations, 1,463 active 26-byte object-prefix observations and the complete
+projectile pool at each checkpoint. Active counts range from 25 to 42;
+full canonical registry storage takes 27 distinct states. Raw storage has
+one to ten differing bytes per checkpoint, accounted for by the explicit
+fixed-object identities. This does not prove full records for every registry
+owner or their lifetimes between checkpoints.
+
+An exploratory comparison of the separate shared display list at `h3:7dc8`
+finds 19–23 differing entries per checkpoint under these same narrow identity
+rules. Its active counts agree (50–67), but several entries reference other
+inline compact objects and are not covered by the dynamic registry bindings.
+Those differences remain unresolved. The next step is to prove those native
+owners and check the actual entry order; neither a blanket h3 relocation nor
+sorting the comparison is justified by this observation.
+
+```sh
+python3 R/RedBaron/tools/world_registry.py \
+  tmp/dev/tmp/game/RedBaron_v2.1/RedBaron/data/sim \
+  tmp/dev/tmp/prof/w6-prelude-50mhz-030 \
+  tmp/dev/tmp/prof/w6-prelude-25mhz-030 \
+  --out tmp/dev/tmp/prof/w6-prelude-50mhz-030/world-registry-complete.json
+```
+
+Two added regression tests reject unused-tail mutations and truncated storage
+and verify exact slot count/identity handling. The full host suite passes
+379 tests. No runtime or performance behavior changes; complete gameplay
+independence, real-time capacity and smooth 50 FPS remain open.

@@ -1,5 +1,11 @@
 # Red Baron performance measurements
 
+All 500 dynamic registry slots, including the unused tail, now match under
+explicit object identities at all 41 controlled 50/25-MHz checkpoints. The
+registry takes 27 distinct states; raw differences remain recorded. See
+“Complete dynamic registry storage” in `w6-verification.md`. The separate
+shared display list and broader gameplay-speed acceptance remain open.
+
 The complete message descriptor and referenced static text now match at all
 41 controlled 50/25-MHz checkpoints, including “You’re being shot at!” and
 “You’ve been hit!” transitions. Exact deferred message-hook installation is
