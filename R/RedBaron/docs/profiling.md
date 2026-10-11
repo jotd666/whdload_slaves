@@ -1,5 +1,13 @@
 # Red Baron performance measurements
 
+The controlled 50/25-MHz captures now pass an explicit player-pointer comparison
+at 41 checkpoints. The complete player record and its two complete linked heap
+payloads agree after validating the three native pointer fields; raw address
+differences remain reported. The linked bytes also change identically during
+the replay. This is scoped correctness evidence, not whole-gameplay or capacity
+acceptance. See “Explicit player-pointer comparison across CPU frequencies” in
+`w6-verification.md`.
+
 A VERIFY-only fixed-clock setup fixture now removes the initial position and
 velocity mismatch in the 50/25-MHz comparison. Both runs complete 39 world
 updates over 241 fields, with 39 versus 32 draws. At all 40 boundaries, 275

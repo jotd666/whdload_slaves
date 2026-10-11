@@ -4548,3 +4548,63 @@ boot commands, then run `prelude_state.py CAPTURE --out REPORT` alongside the
 existing input comparison. The next step is explicit validation of these three
 player pointer fields and their referenced state, followed by broader world-state
 comparison; do not infer whole-gameplay equality from the matching kinematics.
+
+
+## Explicit player-pointer comparison across CPU frequencies
+
+`player_links.py` now resolves the five address-byte differences in the
+controlled-prelude 50/25-MHz captures. **All 41 checkpoints pass**: the initial
+state plus 40 consecutive completed-world boundaries. The full 280-byte player
+record agrees under three explicit pointer bindings, and both referenced heap
+payloads agree in full at each checkpoint. The raw report still records the five
+differing bytes; the strict whole-world comparator is unchanged.
+
+These bindings come from the supported native layout, not numeric pointer
+heuristics:
+
+- Player +26 must equal the current relocated `sim:0e0ec` callback. The native
+  constructor at `sim:10264/10268` loads that function and stores the pointer.
+- Player +30 must identify the exact start of a tracked three-byte allocation
+  payload. `sim:1037c` stores an allocation result in this field; `sim:07c9a`
+  subsequently loads it for indexed byte access.
+- Player +120 must identify the exact start of a tracked four-byte allocation
+  payload. The allocation-result stores are `sim:101ee` and `sim:103c8`.
+  The cleanup path passes +120 and +30 to its free helper at
+  `sim:02a3c/02a4c` respectively.
+
+The checker binds the supported original executable hash and checks the callback
+constructor, allocation-result stores and cleanup instructions in every live
+snapshot at its own relocated sim base. It walks the existing checked allocation
+chain, requires the exact payload start and complete allocation extent, and
+compares all three/four payload bytes. It separately compares every other player
+record byte. Changed callback targets, payload tails, sizes, owner extents,
+short reads or ordinary numeric fields fail; no arbitrary address-looking words
+are normalized. This deliberately supports the observed player layout only.
+
+The linked payloads are not merely constant in this window. The three-byte
+payload takes values `010000` and `000000`; the four-byte payload takes values
+`01000078` and `00ab0078`. Both runs match those changes at the same checkpoints.
+No claim about their full gameplay semantics is needed to compare their bytes.
+Allocation lifetime transitions between samples, aliases from other objects,
+all other heap objects and global state remain outside this check.
+
+The checker also requires both controlled-prelude handoff verifications, the
+same frozen slave and original executable, and identical timestamped input
+consumption. Four host tests cover explicit relocation, changes to ordinary
+record bytes, the last payload byte, callback identity, payload extent/start,
+duplicate ownership and truncated reads. All **311 host tests pass**.
+The result is `w6-prelude-50mhz-030/player-links.json`; reproduce with:
+
+```sh
+python3 R/RedBaron/tools/player_links.py \
+  tmp/dev/tmp/game/RedBaron_v2.1/RedBaron/data/sim \
+  tmp/dev/tmp/prof/w6-prelude-50mhz-030 \
+  tmp/dev/tmp/prof/w6-prelude-25mhz-030 \
+  --out tmp/dev/tmp/prof/w6-prelude-50mhz-030/player-links.json
+```
+
+This strengthens the CPU-frequency comparison to the complete observed player
+record plus these explicit linked payloads. It does not close whole-gameplay
+independence, different CPU architectures, physics-reference convergence,
+combat/AI, sustained capacity or 50 FPS. No slave code changed and no emulator
+was launched for this retained-evidence check.
