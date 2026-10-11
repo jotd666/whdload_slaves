@@ -42,6 +42,14 @@ differences. Fourteen other reader sites remain unobserved. See “Projected-coo
 producers and sampled readers” in `w6-verification.md`; this is correctness
 evidence only, with no performance or complete-gameplay claim.
 
+The remaining endpoint byte is the original elapsed-time diagnostic; all 42
+post-start checkpoints across the three ground schedules retain primary dt 225.
+However, the full boundary inventory still has up to 264 residual h3 bytes in
+ordinary/delayed and 637 in ordinary/no-render comparisons, outside the scoped
+ranges above. Endpoint convergence does not close the all-tick state gate.
+See “Legacy elapsed residue and the all-boundary residual inventory” in
+`w6-verification.md` for counts and the next ownership checks.
+
 The current full W6 VERIFY bundle also passes the cached-68030 Preferences
 clock-boundary check: 222 CIA ticks spent in the native panel are excluded,
 one CIA tick of existing simulation debt is preserved, and no world update or

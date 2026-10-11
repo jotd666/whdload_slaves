@@ -3771,3 +3771,71 @@ The capture retains `capture-projection.py`, bounded setup responses, all
 exit/hook checkers. Reproduce with
 `projected_cache.py ORIGINAL_SIM CAPTURE --out REPORT`;
 `projection-comparison.json` records the final-array comparison.
+
+
+## Legacy elapsed residue and the all-boundary residual inventory
+
+The final ordinary/delayed difference at `h3:0483b` belongs to the legacy
+elapsed word `h3:0483a`. Re-running `game_time_inventory.py` finds exactly one
+direct relocated reference to that word: the `move.w d7,h3:0483a` store at
+`sim:03d58`. The original six bytes are `33c7 0000 483a` before relocation.
+All 45 retained ground snapshots (15 each for ordinary, delayed and no-render)
+contain the exact relocated store. No direct relocated reader exists in this
+supported executable. This does not formally exclude arbitrary computed aliases.
+
+The store records the original elapsed argument; it is not W6's funded-time
+ledger. The selected hook at `sim:03d5e` supplies primary dt 225 while W6 owns
+flight. The world gate also writes 225 before dispatching each scheduled tick.
+At every retained boundary 1–14 in all three schedules, the primary word is
+225, the secondary word is 64 and the native divisor is 33 (displayed Time
+Scale 40). The legacy elapsed value can be 0 or 4 without changing these words.
+At boundary 0, before the first W6 scheduled update, the old primary values
+are 403/450/403 for ordinary/delayed/no-render and secondary is 450; those
+startup residues must not be mistaken for a differing W6 physics quantum.
+The corresponding initial elapsed values are 52/64/52.
+
+This accounts for the last previously unclassified byte at the particular
+ordinary/delayed endpoint. It **does not close the complete-global gate**.
+An inventory of every retained boundary, retaining all raw differences, finds:
+
+| Comparison | Maximum residual bytes at one boundary | Distinct residual byte offsets across all boundaries | Residual bytes at boundary 14 |
+| --- | ---: | ---: | ---: |
+| Ordinary / delayed | 264 | 392 | 0 |
+| Ordinary / no-render | 637 | 755 | 617 |
+
+“Residual” here means outside the investigated six-byte sound timer, legacy
+elapsed word, 112-byte cockpit history, 3,060-byte vertex arrays and 2,040-byte
+screen arrays. These are reporting labels with the earlier scoped evidence,
+not a normalization mask or a claim that every possible reader has been proven.
+The ordinary/delayed union includes the one-byte startup-primary residue above.
+The table describes h3 only; other executable/heap regions remain in the raw
+comparison. The already verified full player record and object-prefix results
+are unchanged by this broader inventory.
+
+Ordinary/delayed residual counts for boundaries 0–14 are
+`1, 0, 264, 10, 9, 178, 1, 0, 0, 221, 0, 0, 0, 160, 0`.
+Ordinary/no-render counts are
+`0, 0, 324, 630, 628, 637, 592, 613, 602, 601, 637, 599, 631, 627, 617`.
+Thus final-state convergence hides intermediate differences and must never
+substitute for the equal-tick complete-state requirement.
+
+The remaining ranges include terrain-render context around `h3:05272`,
+cockpit selectors `h3:0711c/0711d`, drawing/clipping fields, model/transform
+context beginning around `h3:0a27c`, validity bytes at `h3:0a4e6`, and polygon
+assembly scratch after `h3:0b9d2`. The no-render comparison additionally exposes
+message-layout fields around `h3:04820` and other earlier globals. Static
+references identify candidates; they are not all newly established owners.
+Prioritize cross-domain readers and persistent cache keys before expanding
+arithmetic models for scratch that is unconditionally overwritten. In particular,
+retain the original terrain list at `h3:0526a/0526e`, used by world code at
+`sim:10bd4/10bdc`; do not treat the surrounding page as disposable render memory.
+
+`w6-ground-residual-inventory/analyze.py` and `inventory.json` retain the
+reproducible analysis of `w6-ground-restore-030-v2`,
+`w6-ground-restore-slow-030` and `w6-ground-restore-none-030`, all `c54a84f7…`.
+The analysis checks frozen build hashes, equal allocation bases, consecutive
+matched world-tick IDs, original/live elapsed-store bytes, post-start clock
+words, and that each row's labelled counts plus residuals exactly equals its
+raw changed-byte count. It launches no emulator and changes no slave bytes.
+This is a diagnostic advance, with the wider gameplay/capacity/50-FPS gates
+still open; the 270-test host suite is unchanged.
