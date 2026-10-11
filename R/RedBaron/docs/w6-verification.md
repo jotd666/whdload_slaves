@@ -6519,3 +6519,97 @@ python3 R/RedBaron/tools/compare_field_capacity.py \
   tmp/dev/tmp/prof/w6-current-speed-none-030 \
   --out tmp/dev/tmp/prof/w6-current-speed-none-030/paired-capacity.json
 ```
+
+
+## Current-build equal-tick render/no-render state pair
+
+Two fresh cached-68030 / 50-MHz boots use current VERIFY
+`ac1d47ba01210c496a98db199b79fa2c30b0f3b59c570a0bec8906dfa7a116f7`,
+maximum detail, Time Scale 40, CUSTOM2=16319 and scheduled Right/Fire input.
+CUSTOM4=262144 fixes the native setup clocks only; the prelude validator
+confirms 40 setup writes and no further fixture writes under W6 ownership.
+Only CUSTOM5 bit 30 differs between `w6-current-state-render-030` and
+`w6-current-state-none-030`. These are controlled state experiments, not
+ordinary-startup performance measurements.
+
+Each capture retains initial RAM and 40 complete pose boundaries (ticks 0–39).
+The original sim segments, h3, player prefix and all **105 tracked allocations
+(243,855 bytes including headers)** match raw initially. Load addresses and
+allocation layouts also agree initially. Both boots pass native self-test
+counters and 57 selected/nine disabled patch checks. Both owned emulators
+were individually verified and stopped after their captures.
+
+The equal-tick input check passes all four scheduled transitions and command
+consumption at 40 boundaries. From tick 0 through 39, the rendering side
+completes 39 draws over 241 fields / 285 CIA ticks; the no-render side completes
+zero draws over 239 fields / 283 CIA ticks. Both complete the same 39 world
+updates, with exact funding and remaining credit accounted for. Different
+wall-time stopping points are expected for tick-locked captures; use the
+separate paired 250-field experiment above for equal-duration evidence.
+
+At all 41 checkpoints including initial state, the existing strict checks pass:
+
+- Complete 318-byte aircraft slots and their owned three/four-byte payloads;
+  full type-five and 44-byte auxiliary pools; both complete auxiliary lists.
+- All 500 dynamic registry entries, lifecycle order, 1,463 active object-prefix
+  observations and the complete 50-slot projectile pool.
+- Selected ammunition and the ten projectile-linked records, the complete
+  pairwise and planning tables, native model banks and complete sky records.
+- The native 32-byte lookup context. The separate shared-list inventory also
+  finds identical active entry order at all 41 checkpoints.
+
+The unfiltered inventory still contains differences and the pair is **not**
+a complete state-equality pass:
+
+- `message_state.py` fails. Its only descriptor difference is `h3:482f`,
+  the redraw flag: 0xff with rendering versus 0x01 without at ticks 20 and 21.
+  The strict comparison is unchanged; this byte is not masked.
+- `sound_slot_state.py` fails beyond its previously scoped playback-counter
+  difference. Complete raw sound-slot differences are at +345 (the low byte
+  of the playback counter) and +361. At tick 25, slot 2 byte +361 is 0x82
+  versus 0x02. Native `sim:34ed0` sets bit 7 when beginning playback and
+  `sim:33bf6/33c2c` clear it in native sound control paths. This identifies
+  the bit but does not prove equal sound delivery or all gameplay consumers.
+- Heap differences involve 392-byte sound-slot allocations and extra
+  1,608/1,808-byte allocations on the rendering side. A first 1,808-byte
+  allocation at tick 11 is referenced by `h3:44e6`; complete lifecycle and
+  ownership classification remains open. No right-only allocations occur.
+- Raw h3 differences range from zero to 3,937 bytes; rendering cache, compact
+  storage, inactive list and other global differences remain in the reports.
+
+`message_sound_inventory.py` reproduces the failing-region inventory without
+changing either strict verifier. It requires the supported executable,
+matching frozen builds and equal-tick input histories, checks exact ownership
+of every 384-byte sound slot, and reports the entire message descriptor and
+all seven slots without normalization or an equality verdict. `state-checks.json`
+records each completed checker and the message failure; the sound failure
+and its exact differing bytes are described above. Diagnostic inventories
+completing successfully must not be read as state-equality passes.
+
+From the harness, create separate fresh directories and run the two captures
+sequentially, stopping the verified owned emulator between them:
+
+```sh
+python3 tools/w6_boot_current.py 030 16319 tmp/prof/w6-current-state-render-030 --replay --dt 262144
+python3 tools/w6_pose_capture.py tmp/prof/w6-current-state-render-030 --steps 40
+python3 tools/w6_selftest_result.py tmp/prof/w6-current-state-render-030
+python3 tools/w6_loop_audit.py tmp/prof/w6-current-state-render-030
+```
+
+Repeat with a new directory and `--no-render` on the boot command. From the
+repository root, run `world_comparison.py`, `world_controls.py` and the named
+strict checkers against the pair; original-layout checkers also take the
+original sim executable as their first argument. The unfiltered failing-region
+report can be regenerated with:
+
+```sh
+python3 R/RedBaron/tools/message_sound_inventory.py \
+  tmp/dev/tmp/prof/w6-current-state-render-030 \
+  tmp/dev/tmp/prof/w6-current-state-none-030 \
+  --out tmp/dev/tmp/prof/w6-current-state-render-030/message-sound-differences.json
+```
+
+No runtime code or acceptance criteria were changed. Full consumer/heap-state
+coverage, physics/combat convergence, sustained scene capacity and smooth
+50 FPS remain open. The host suite remains at 395 passing tests; the new
+read-only inventory was validated on this retained pair.

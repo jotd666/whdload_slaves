@@ -1,5 +1,14 @@
 # Red Baron performance measurements
 
+Fresh current-build render/no-render captures start with identical game
+segments and all 105 tracked allocations. At 41 retained checkpoints, complete
+aircraft, projectile, auxiliary, weapon, planning, model-bank and sky checks
+pass despite 39 versus zero draws. Strict message/sound checks still fail on
+the redraw flag and one sound status bit; raw rendering caches and extra
+allocations remain recorded. See “Current-build equal-tick render/no-render
+state pair” in `w6-verification.md`. This is substantial scoped state evidence,
+not a whole-gameplay or release verdict.
+
 A paired current-build 68030 check now compares **8.4 FPS versus no rendering**
 over equal 250-field / 296-CIA-tick windows. Both complete **40 world updates**
 and retain exactly **0.822087542 updates of credit**, with nine message-start
