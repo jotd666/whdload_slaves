@@ -38,7 +38,29 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- Current source status (11.10.2026; work paused):
+ Current production source, P1 timing correction validated (11.10.2026):
+ - the default build now uses an independent display-field clock and input
+   queue for Normal (10 Hz) and A2500 (20 Hz), without A4000 physics or fixtures
+ - CUSTOM3=1 restores original simulation timing and original timing-hook
+   bytes; CUSTOM2 continues to control rendering optimizations separately
+ - PAL/NTSC is detected from the beam; the clock uses a 50/60 phase accumulator
+ - 30-second emulator checks: Normal 10.033 steps/s on A500 FULL/FAST;
+   A2500 20.002 on PAL 020 and 19.997 on NTSC 020. Race clock ratios are
+   1.00329, 1.00009 and 0.99987 respectively; all meet the +/-0.5% timing gate
+ - this does not deliver the predicted A500 FAST frame-rate gain: matched
+   10-second runs measured 7.697 FPS with legacy timing and 7.597 corrected,
+   while simulation speed improved from 8.296 to 9.995 steps/s
+ - native 10/20 Hz replay loading and playback pass. All 1120 captured
+   simulation-state bytes match legacy timing at replay step 200
+ - 120-second moving stock-track drives on A500 FULL/FAST and 020 FULL
+   have no queue overflow. Combined crash/restart/finish checks also pass
+   over 177.60 / 176.72 / 182.52 seconds respectively; those functional
+   runs use a scenery-cleared track and include a long idle prelude
+ - P1 timing and compatibility acceptance passes. The A500 FAST target of
+   9.5-10 FPS belongs to P2; no P2 rendering work has been started
+ - this source build has not replaced the previously distributed archive
+
+ Separate A4000 SIM_RUNTIME source status (11.10.2026):
  - replay format 2, physics ABI9, stores the chosen opponent route so native
    resource reloads cannot silently change it. Older format-1 A4000 files
    are rejected; Normal/A2500 replay formats are unchanged

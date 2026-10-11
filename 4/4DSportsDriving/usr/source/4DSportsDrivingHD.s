@@ -32,7 +32,22 @@
 
 ;============================================================================
 
-; Opt-in runtime build; default production remains unchanged until acceptance.
+; Production owns native-rate timing; A4000 remains an opt-in build.
+ IFND VERIFY
+ IFND SIM_RUNTIME
+SIM_NATIVE = 1
+SIM_BUILD = 1
+SIM_PROBE = 1
+SIM_SCHEDULE = 1
+SIM_STARTUP_TESTS = 0
+ ENDC
+ ENDC
+ IFD SIM_NATIVE
+SIM_TIMING_OPTION = 1
+ ENDC
+ IFD SIM_RUNTIME
+SIM_TIMING_OPTION = 1
+ ENDC
  IFD VERIFY
 SIM_BUILD = 1
  ENDC
@@ -86,11 +101,13 @@ SIM_STARTUP_TESTS = 1
  FAIL "SIM_STARTUP_TESTS must be 0 or 1"
  ENDC
  IFEQ SIM_STARTUP_TESTS
+ IFND SIM_NATIVE
  IFND SIM_RUNTIME
  IFND SIM_MANUAL
  IFND SIM_LIVE_DRIVE
  IFND SIM_FIXTURE
  FAIL "Disabling startup tests requires manual, live or fixture development mode"
+ ENDC
  ENDC
  ENDC
  ENDC
@@ -228,8 +245,8 @@ slv_info		dc.b	"Installed & fixed by JOTD",10,10
 
 slv_config
 	dc.b "C2:X:Experimental rendering optimizations:0;"
- IFD SIM_RUNTIME
- dc.b "C3:X:Legacy timing (no A4000 physics):0;"
+ IFD SIM_TIMING_OPTION
+ dc.b "C3:X:Original simulation timing:0;"
  ENDC
  dc.b 0
 	even
@@ -260,6 +277,9 @@ _bootdos
 		lea	(tag,pc),a0
 		jsr	(resload_Control,a2)
 		IFD SIM_SCHEDULE
+ IFD SIM_NATIVE
+ bsr sim_time_detect_video
+ ELSE
  IFD SIM_RUNTIME
  btst #0,_custom3+3(pc)
  bne .pal_clock            ; original timing has no new PAL requirement
@@ -272,6 +292,7 @@ _bootdos
 		pea TDREASON_MUSTPAL
 		jmp (resload_Abort,a2)
 .pal_clock:
+ ENDC
 		ENDC
 	
 	;open doslib
@@ -308,7 +329,7 @@ patch_main
 	adda.l #sim_game-patch_main,a0
 	move.l d7,(a0)
 	addq.l #4,(a0)
- IFD SIM_RUNTIME
+ IFD SIM_TIMING_OPTION
  btst #0,_custom3+3(pc)
  bne .native_timing
  ENDC
@@ -362,7 +383,7 @@ patch_main
 	ENDC
 	ENDC
 	ENDC
-	IFND SIM_RUNTIME
+	IFD VERIFY
 	IFD SIM_MANUAL
 	; Enable the live clock without creating the keyboard automation task.
 	lea patch_main(pc),a0
@@ -387,7 +408,7 @@ patch_main
 	bsr sim_clock_install
 	ENDC
 	ENDC
- IFD SIM_RUNTIME
+ IFD SIM_TIMING_OPTION
 .native_timing:
  ENDC
 	movem.l (sp)+,d0-a6
@@ -469,6 +490,16 @@ dma_write_8
 
 pl_main
     PL_START
+ IFD SIM_NATIVE
+    PL_IFC3X 0
+    PL_ELSE
+    PL_PS $1A788,sim_schedule_modal_enter ; TIMING_RANGE h0:1a788 6
+    PL_PS $7908,sim_schedule_reset_history ; TIMING_RANGE h0:07908 6
+    PL_PSS $70E0,sim_schedule_poll,2 ; TIMING_RANGE h0:070e0 8
+    PL_PS $7A04,sim_schedule_timer ; TIMING_RANGE h0:07a04 6
+    PL_PSS $7C0A,sim_schedule_input,2 ; TIMING_RANGE h0:07c0a 8
+    PL_ENDIF
+ ELSE
     IFD SIM_BUILD
  IFD SIM_RUNTIME
     PL_IFC3X 0
@@ -647,6 +678,7 @@ pl_main
     PL_ENDIF
  ENDC
     ENDC
+ ENDC
 	PL_W	$2E77A-$6568,$9E	; fix move to intreqr
 	PL_NOP	$6D36,2		; removes protection
 
@@ -790,7 +822,7 @@ tag		dc.l	WHDLTAG_CUSTOM1_GET
 _custom1	dc.l	0
 		dc.l	WHDLTAG_CUSTOM2_GET
 _custom2	dc.l	0
- IFD SIM_RUNTIME
+ IFD SIM_TIMING_OPTION
  dc.l WHDLTAG_CUSTOM3_GET
 _custom3: dc.l 0
  ENDC
@@ -1440,6 +1472,7 @@ tape_restart_result_stub:
 
 	IFD SIM_BUILD
 	IFD SIM_PROBE
+	include "simulation_time.s"
 	include "simulation_clock.s"
 	IFD SIM_SCHEDULE
 	include "simulation_schedule.s"
@@ -1473,7 +1506,6 @@ tape_restart_result_stub:
 	include "simulation_scores.s"
 	include "simulation_history.s"
 	include "simulation_capacity.s"
-	include "simulation_time.s"
 
 	ENDC
  IFNE SIM_STARTUP_TESTS

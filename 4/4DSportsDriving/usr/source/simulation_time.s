@@ -1,3 +1,43 @@
+; Native-rate clock denominator. Detect the actual beam, not the monitor
+; preference: inspect two wraps so a partial first field cannot look NTSC.
+; Called before installing the server. No game state or CIA timer is changed.
+sim_time_detect_video:
+ movem.l d0-d3/a0,-(sp)
+ moveq #0,d2
+ moveq #1,d3
+ move.l $dff004,d1
+ lsr.l #8,d1
+ and.w #$1ff,d1
+.sample:
+ move.l $dff004,d0
+ lsr.l #8,d0
+ and.w #$1ff,d0
+ cmp.w d2,d0
+ bls .not_max
+ move.w d0,d2
+.not_max:
+ cmp.w d1,d0
+ blo .wrap
+ move.w d0,d1
+ bra .sample
+.wrap:
+ move.w d0,d1
+ dbra d3,.sample
+ lea sim_time_field_hz(pc),a0
+ move.w #50,(a0)
+ cmp.w #280,d2
+ bhi .done
+ move.w #60,(a0)
+.done:
+ movem.l (sp)+,d0-d3/a0
+ rts
+ even
+ dc.b "4DVIDEO!"
+sim_time_field_hz: dc.w 50
+
+; The native formatter already divides elapsed steps by the chosen 10/20 Hz
+; rate. Its code and replay layout remain untouched in production.
+ IFD SIM_A4000
 ; Wide time display ABI for elapsed and completed-result call sites. D0 carries the
 ; full tick sum across native argument pushes; existing stack args stay intact.
 ; Other callers retain the native word ABI until their storage is widened.
@@ -474,5 +514,7 @@ sim_time_selftest:
 
 sim_time_cache_cases:
  dc.l 0,0,65534,65534,65535,0,65536,1,75000,9465
+
+ ENDC
 
  ENDC

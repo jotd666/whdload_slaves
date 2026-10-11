@@ -34,9 +34,10 @@ sim_schedule_field:
  lea sim_schedule_phase(pc),a0
  move.w sim_schedule_rate(pc),d0
  add.w d0,(a0)
- cmp.w #50,(a0)
- blo .done
- sub.w #50,(a0)
+ move.w sim_time_field_hz(pc),d0
+ cmp.w (a0),d0
+ bhi .done
+ sub.w d0,(a0)
  lea sim_schedule_write(pc),a2
  move.w (a2),d0
  sub.w sim_schedule_read(pc),d0
@@ -133,7 +134,7 @@ sim_schedule_field:
  bne .paused
  tst.b $44(a4)
  bne .paused              ; native replay pause / seek gate
- ; Half speed adds rate/100 per field, normal 2*rate/100, double 4*rate/100.
+ ; Half speed adds rate/(2*field_hz), normal twice, double four times.
  ; Keeping a common denominator also preserves phase across speed changes.
  move.w sim_schedule_rate(pc),d0
  cmp.b #2,$3d(a4)
@@ -146,9 +147,11 @@ sim_schedule_field:
  lea sim_schedule_phase(pc),a0
  add.w d0,(a0)
 .replay_due:
- cmp.w #100,(a0)
- blo .done
- sub.w #100,(a0)
+ move.w sim_time_field_hz(pc),d0
+ add.w d0,d0
+ cmp.w (a0),d0
+ bhi .done
+ sub.w d0,(a0)
  move.w $a0(a4),d0
  cmp.w -$1738(a4),d0
  bhs .paused              ; bounded even at double speed with one input left

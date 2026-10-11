@@ -1,4 +1,4 @@
-; Independent display-field clock in the SIM_PROBE build family. SIM_TRACE
+; Independent display-field clock, also used by production native timing. SIM_TRACE
 ; controls the optional per-step recorder separately; scheduling needs no trace.
 ; Exec owns the interrupt chain. SIM_SCHEDULE optionally samples held controls
 ; into a private queue; no physics or OS calls run here. Return Z set to
@@ -64,7 +64,7 @@ sim_clock_interrupt:
 
  even
  dc.b "4DCLKVBL"
- dc.w 1,50                 ; format, current PAL validation target
+ dc.w 1,50                 ; format, nominal PAL rate; actual rate in 4DVIDEO!
 sim_clock_fields: dc.l 0
 sim_clock_installed: dc.w 0
 sim_clock_node: dcb.b 22,0  ; struct Interrupt (node/data/code)

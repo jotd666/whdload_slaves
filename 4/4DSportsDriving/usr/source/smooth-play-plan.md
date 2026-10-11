@@ -48,7 +48,8 @@ Conclusions. Each one drives a phase below.
 
 1. **The clock is wrong on the A500.** The sound code programs the shared CIA-B latch to
    12×716, so Normal runs at 8.3 steps/s and game time is 17% slow. A clock independent of the
-   timer fixes this. It also lifts A500 FAST from a cap of 8.3 FPS to 10 FPS for free.
+   timer fixes this. P1 measurements show that correcting the clock alone does not
+   lift A500 FAST to 10 FPS; that rendering target belongs to P2.
 2. **The native loop never renders faster than the simulation.** It waits at `$7118` for a new
    step, so 20 FPS is the ceiling on every fast machine in A2500.
 3. **Rendering stops at about 18 FPS on 040/25 and 060/50**, even with 50 Hz physics and a 2×
@@ -146,8 +147,70 @@ Acceptance: re-running the baseline reproduces the table in §1 within ±3%.
 
 ## P1. Correct game speed on every machine, native rates (highest value, smallest risk)
 
-The independent field clock, the input queue and the legacy option already exist in the
-SIM_RUNTIME build. They are not yet in the production slave.
+Completed and validated (11 October 2026): the production slave contains the
+independent field clock and input queue for Normal/A2500, without VERIFY, SIM_RUNTIME,
+A4000 physics or fixtures. CUSTOM3=1 skips all five timing hooks and clock installation.
+The beam maximum-line detector selects a 50/60-field phase denominator. A4000 remains
+an opt-in SIM_RUNTIME build. **P1 acceptance passes.** At the user's direction, the
+A500 FAST 9.5-10 FPS requirement is assigned to P2; P2 has not been started.
+
+Production slave: 11,286 bytes, SHA-256
+`938f7b22b65fb2c56a15906e78724978da0e1f2d043620a30c593380334009e5`.
+The 30-second windows below use the native race-clock formatter's actual input
+(history base + consumed steps), divided by the selected rate and CIA emulated time.
+
+| Cell | Display FPS | Steps/s | Race clock / emulated time | Queue start -> end |
+|---|---:|---:|---:|---:|
+| A, PAL | 3.96648 | 10.03286 | 1.003286 | 2 -> 1 |
+| A-fast, PAL | 7.96629 | 10.03286 | 1.003286 | 1 -> 0 |
+| B, PAL | 13.16781 | 20.00174 | 1.000087 | 1 -> 0 |
+| B, NTSC | 13.46496 | 19.99746 | 0.999873 | 1 -> 0 |
+
+All timing rows pass the +/-0.5% rate and clock limits, with no overflow or failure.
+Evidence: `tmp/prof/p1-native-sync/{A,A-fast,B}` and `p1-ntsc-uae/B`.
+These 30-second FPS values are not before/after speedups against the 10-second baseline:
+scene content changes during the longer window.
+
+The matched 10-second A-fast comparison establishes the P2 starting point: CUSTOM2=1/CUSTOM3=1
+measures 7.69653 FPS, 8.29626 steps/s; corrected timing measures 7.59657 FPS,
+9.99549 steps/s (race clock 0.999549). The baseline recheck was 7.59657 FPS,
+8.29626 steps/s. Thus the predicted free rise to 9.5-10 FPS is not observed.
+The 250-field profile attributes about 0.705% of samples to clock/queue work;
+rendering and blitter waits dominate. Evidence: `p1-fast-legacy/A-fast`,
+`p1-fast-ten/A-fast`, `p1-fast-profile/A-fast/clock-cost.json`.
+The user approved moving the 9.5-10 FPS requirement to P2; it is not a P1 timing gate.
+
+The disabled check passes all 21 rendering/timing ranges with CUSTOM2=0/CUSTOM3=1
+(`p1-disabled/A-fast`). Hook audit passes all five timing hooks, 1,250 relocations
+and 10,102 candidate branches; the native resource-name table is classified as data
+only after exact byte and reference assertions (`tmp/build/p1-hook-audit.txt`).
+Native 10/20 Hz replays load through the game UI and play all 301 recorded steps.
+At step 200, all 1,120 captured simulation-state bytes match CUSTOM3=1 for both rates
+(`p1-replay-final/state-check.json`). The legacy A2500 oracle pauses at consumer 299
+with producer 301; its state comparison is deliberately at step 200, before that tail.
+
+The 120.02-second stock-track runs on A, A-fast and B have no overflow; their maximum
+sampled private queue depths are 3, 1 and 2 respectively (`p1-long-drive/{A,A-fast,B}`).
+All remain in live mode; none reaches a crash or finish in this straight-line route.
+Combined live crash -> native menu restart -> native finish checks also pass without
+overflow on the same production build:
+
+| Cell | PAL fields | Emulated seconds | Native outcomes |
+|---|---:|---:|---|
+| A | 8,880 | 177.60 | crash 1, restart, finish 3 |
+| A-fast | 8,836 | 176.72 | crash 1, restart, finish 3 |
+| B | 9,126 | 182.52 | crash 1, restart, finish 3 |
+
+These functional runs use the existing scenery-cleared stock-track fixture and ordinary
+keyboard input, with no guest-state writes. They include a long idle/gear-down prelude;
+they do not claim continuous movement for their whole duration. The separate stock-track
+runs above supply the 120-second moving-simulation coverage. A/A-fast use controls from a
+previous successful native finish; B uses position/heading feedback to center its finish
+approach. Evidence: `p1-crash-finish/{A,A-fast}/combined-lifecycle.json` and
+`p1-crash-finish-centered/B/combined-lifecycle.json`.
+
+Aggregate current results: `tmp/prof/p1-current-results.json`. All P1 timing and
+compatibility gates pass. All test emulators are closed. P2 has not been started.
 
 1. Make the field clock drive Normal and A2500 in the production build, independent of the
    A4000 code.
@@ -161,12 +224,16 @@ SIM_RUNTIME build. They are not yet in the production slave.
 3. **Acceptance, all on cell A, A-fast and B:**
    - steps/s is 10.0 (Normal) or 20.0 (A2500) ±0.5%;
    - race clock / emulated time is 1.00 ±0.5%;
-   - A500 FAST rises from 7.6 to about 9.5–10 FPS;
    - native 10/20 replays still load and play;
    - the queue never overflows in a 2-minute drive including a crash and the finish.
 4. Commit: "Run Normal and A2500 at their true rate on every machine".
 
 ## P2. Blitter latency work (helps every machine, required ceiling for 68000)
+
+Status: not started. The A500 FAST requirement moved here from P1 with user approval:
+raise the matched 10-second A-fast result from 7.59657 to about 9.5-10 FPS while
+preserving Normal 10 Hz and a race-clock ratio of 1.00 within +/-0.5%. This is an
+unmet rendering target, not a gain delivered by the timing correction.
 
 Profile cell A first: a fresh 250-field FULL trace with CUSTOM2=1. Then attack these in order
 and keep only what measures ≥2% on some machine. Gate each one per CPU (playbook §10).
