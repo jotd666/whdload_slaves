@@ -230,7 +230,8 @@ compatibility gates pass. P1 test emulators are closed.
 
 ## P2. Blitter latency work (helps every machine, required ceiling for 68000)
 
-Status: in progress. The A500 FAST requirement moved here from P1 with user approval:
+Status: incomplete; validated changes are committed, but the A500 FAST FPS gate
+remains unmet. The A500 FAST requirement moved here from P1 with user approval:
 raise the matched 10-second A-fast result from 7.59657 to about 9.5-10 FPS while
 preserving Normal 10 Hz and a race-clock ratio of 1.00 within +/-0.5%. This is an
 unmet rendering target, not a gain delivered by the timing correction.
@@ -263,7 +264,7 @@ are not identical, so this is scoped output equivalence, not a whole-renderer
 twin (`p2-priority-pixels-path`). CUSTOM2=0/CUSTOM3=1 preserves all 21 original
 ranges (`p2-priority-disabled/A-fast`); hook audit passes 1,250 relocations
 and 10,102 branch candidates. No new game hook is introduced by P2.1.
-The FAST target remains unmet. P2.4-P2.5 remain under investigation.
+The FAST target remains unmet; the remaining evaluations are recorded below.
 
 P2.2 evaluated: removing only the extra wait in `perf_blit_on` regresses
 A-fast 7.79648 -> 7.69653, B 9.59761 -> 9.39766 and D 18.39541 -> 17.89553
@@ -295,6 +296,51 @@ starting at byte 360 in 8,000-byte planes. Flattening them into one tall
 multi-plane blit would overwrite pixels outside the bands. The native clear
 already returns without waiting for its final DMA. Clear/bitmap-copy waits
 elsewhere stay intact; they cannot be removed without auditing their consumers.
+
+P2.4 evaluated: the original mask uses different row strides for the temporary
+mask and 8,000-byte destination planes; a single tall masked blit cannot restart
+the source at each plane without changing pixels. The 250-field census contains
+475 mask applications, 150 at one/two rows. A guarded CPU application of those
+tiny native masks (one/two words, exact OR/AND minterms) gives A/A-fast/B/D
+2.69878/7.69653/9.99751/17.79556 FPS: no qualifying gain, so it is discarded.
+Evidence: `p2-baseline/A/polygon-plane-census.json` and `p2-tiny-mask`.
+
+Further ownership trials are also discarded. Extending priority to all owned
+intervals gives 2.69878/7.69653/9.99751/17.49563 FPS. Holding ownership over the
+primitive list, while retaining every completion wait, gives
+2.69878/7.69653/10.09748/18.09548 FPS. Neither meets the >=2% gain rule against
+the retained build (`p2-all-owned-priority`, `p2-batch-owned`). Direct CPU dot
+writers at $333B2 explain why completion waits between primitives must remain.
+
+P2.5 reviewed: the native CIA dispatcher registers exactly $006F8 (engine
+sound) and $07964 (game timing) in the driving snapshot. The player channel is
+active; only the second engine channel is idle. The A profile attributes 1.58%
+self time to engine sound, 0.87% to the native callback dispatcher, 0.43% to
+the native timer and 0.46% to its division helper; the shared kick interrupt
+dispatch accounts for 2.92%. The player sound accumulator is still approaching
+its target, so skipping its callback changes sound. The private field clock
+was about 0.705% in the P1 A-fast profile. No safe idle callback elimination
+with a measured >=2% gain was identified; no interrupt change is retained.
+
+Current retained production, 11,490 bytes, SHA-256
+`f6a1d01be326b2a59506fefd85d2d07bff18d8b6460a1d0ac5ce9d5d0a459a2c`:
+
+| Matched 10-second cell | P2 baseline FPS | Current FPS | Change |
+|---|---:|---:|---:|
+| A FULL | 2.69878 | 2.69878 | 0.00% |
+| A FAST | 7.59657 | 7.69653 | +1.32% |
+| B FULL | 9.29768 | 9.99751 | +7.53% |
+| D FULL | 17.79556 | 18.19546 | +2.25% |
+
+The final 60-second timing check on this same build passes: Normal on A/A-fast
+is 9.99952 steps/s (clock 0.999952); B is 19.98171 (clock 0.999085), without
+queue overflow. Longer-window FPS is not compared with the table above because
+the moving scene changes. Evidence: `p2-final-timing`; aggregate current report
+`tmp/prof/p2-current-results.json`. Retained changes: `29079b3` and `4d2a4e0`.
+The A500 FAST 9.5-10 FPS requirement is not achieved. P2 is not complete, and
+P3 has not started. A scope decision is pending on broader A500 rendering work
+versus deferring that requirement. Rejected candidates are absent from source;
+large rejected-run snapshots are losslessly compressed with verified hashes.
 
 Profile cell A first: a fresh 250-field FULL trace with CUSTOM2=1. Then attack these in order
 and keep only what measures ≥2% on some machine. Gate each one per CPU (playbook §10).

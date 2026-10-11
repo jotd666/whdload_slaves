@@ -72,6 +72,14 @@
  - A500/A1200 stationary primitive output matches all 32000 pixel bytes;
    disabled options preserve original bytes. P2 is not yet complete
 
+ Current combined P2 result (matched 10-second emulator runs):
+ - A500 FULL 2.699 -> 2.699 FPS; A500 FAST 7.597 -> 7.697;
+   A1200 FULL 9.298 -> 9.998; 040 FULL 17.796 -> 18.195
+ - 60-second timing checks remain correct: Normal 9.99952 steps/s,
+   A2500 19.98171, race-clock ratios 0.999952 / 0.999085; no queue overflow
+ - P2 remains incomplete because A500 FAST does not reach 9.5-10 FPS.
+   Slower or insignificant experiments were discarded; P3 has not started
+
  Separate A4000 SIM_RUNTIME source status (11.10.2026):
  - replay format 2, physics ABI9, stores the chosen opponent route so native
    resource reloads cannot silently change it. Older format-1 A4000 files
