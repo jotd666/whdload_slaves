@@ -91,9 +91,15 @@ handler while `a4-$6a13` is enabled. Their cadence is independent of completed
 rendered frames. Movement and timers therefore do not share a single timebase.
 Separate functions do not imply independently scheduled simulation and rendering.
 
-Player-controlled acceleration, steering, collisions and physics timing remain
-unverified. The attract route uses a distinct movement path and cannot establish
-the full player-physics model.
+Static analysis of the gameplay loop (`$10ed4`–`$10f5a`) shows the player model
+is also stepped once per rendering pass. Each pass calls controls `$07c32`, camera
+setup `$0d960`, physics `$0cda4`, drawing, and finally the submit at `$00750`.
+Steering at `$0b3a0` converts the wheel position into a per-call heading change
+without an elapsed-time factor. Other per-pass state includes control ramps in
+`$07c32`, the 25-pass crash countdown at `a4-$69fa` and the 90-record replay ring
+written via `$0d960`. Mouse positions are accumulated by the VBL handler. The
+existing CUSTOM2 blitter-wait delay limits speed on faster machines, consistent
+with this coupling. A dynamic coupling test has not yet confirmed it.
 
 Consequently, keep the fixed-duration benchmark, but also compare the same
 sequence of demo updates/scenes when assessing rendering changes. Otherwise a
@@ -115,9 +121,10 @@ polling/CIA-wait body. These figures include checking overhead; they are not pur
 stalled time. Blitter transfers occupy 1.61% of recorded DMA slots and display
 bitplanes 22.52%. DMA shares are not CPU-time percentages.
 
-Before performance patches, establish player-physics timing, validate broader
-shipped-versus-rebuilt equivalence, and capture a 68020 baseline. Intro
-optimization is deferred. No claim of an optimization speedup is made.
+Before performance patches, confirm player-physics timing dynamically, validate
+broader shipped-versus-rebuilt equivalence, and capture the other machine
+baselines. `PERFORMANCE_PLAN.md` gives the ordered work. Intro optimization is
+deferred. No claim of an optimization speedup is made.
 
 Raw traces, executable bytes, screenshots, memory dumps, build outputs and local
 capture tools remain under ignored `tmp/`. Local evidence includes the benchmark
