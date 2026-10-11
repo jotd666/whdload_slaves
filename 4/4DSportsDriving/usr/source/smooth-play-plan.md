@@ -389,6 +389,31 @@ Commit each item separately.
 
 ## P3. Fast-RAM CPU rasterizer for 020+ with real fast RAM (the step that breaks 18 FPS)
 
+Status: in progress (11 October 2026). A VERIFY-only solid/two-colour span
+rasterizer preserves the native clipped edge arrays and draws into private fast
+RAM. On B it passes 1,996 same-input native/CPU comparisons of all 32,000 bitmap
+bytes, including untouched pixels (`p3-span-twin-final/B/span-twin.json`).
+The diagnostic runs both paths and copies/compares whole bitmaps per primitive;
+its 1.100 FPS is not a production performance result. Production remains the
+P2 build. Native stipple and non-display bitmaps are deliberately excluded from
+this initial verifier; P3 is not yet enabled or complete.
+
+All 26 disabled hook ranges match original bytes (`p3-span-disabled-final/B`);
+hook audit passes 1,250 relocations and 10,102 candidate branches. The rebuilt
+production slave is still 11,490 bytes with SHA-256
+`f6a1d01be326b2a59506fefd85d2d07bff18d8b6460a1d0ac5ce9d5d0a459a2c`.
+The disabled VERIFY row is only a byte-preservation check: its consumed-step
+counter remains zero across the window, so it is not accepted as a timing test.
+
+The local host models match 88 solid/two-colour draws, 32 natural clipped lines
+and 72 explicitly synthetic line cases covering all octants and degenerate
+lines. Evidence: `p3-spans`, `p3-spans-more`, `p3-lines-screen`,
+`p3-lines-octants`. The renderer contract is in `docs/internals.md` under P3.
+The native solid mask writer has a one-pixel edge quirk when the following
+packed span is empty; the CPU path reproduces it. Remaining work is the rest
+of the existing P3 scope below, including complete primitive/lifecycle twins,
+frame staging, production gating and the B/C/D/E performance matrix.
+
 The model is Powerdrome (its repository's `docs/performance-implementation.md`):
 render into a 32,000-byte fast-RAM staging bitmap with code in fast RAM, then MOVEM-copy the
 changed region to the chip back buffer.

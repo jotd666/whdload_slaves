@@ -21,9 +21,15 @@ perf_init:
  bsr perf_geometry_init
  bsr perf_math_init
  bsr perf_bookkeeping_init
+ IFD P3_RASTER
+ bsr raster_init
+ ENDC
  rts
 
 perf_patch:
+ IFD P3_RASTER
+ bsr raster_patch
+ ENDC
  move.l _custom2(pc),d0
  btst #0,d0
  beq.s .done
@@ -306,4 +312,8 @@ perf_cpu_rect:
  movem.l (sp)+,d0-d4/a0
  tst.w d3
  rts
+ ENDC
+
+ IFD P3_RASTER
+ include "raster.s"
  ENDC
