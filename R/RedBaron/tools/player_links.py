@@ -1,4 +1,4 @@
-"""Compare the retained player record with three explicit relocation bindings.
+"""Compare the retained 280-byte player prefix with explicit relocation bindings.
 
 No numeric-pointer guessing: +26 is the native sim:e0ec callback; +30/+120
 are exact tracked payload starts of the observed three/four-byte allocations.
@@ -22,7 +22,7 @@ FIELDS=((30,3),(120,4))
 
 
 def linked_state(record,read,extents,sim):
-    if len(record)!=280:raise ValueError('Incomplete player record')
+    if len(record)!=280:raise ValueError('Incomplete 280-byte player prefix')
     callback=struct.unpack_from('>I',record,26)[0]
     if callback!=sim+CALLBACK:raise ValueError('Unexpected player callback identity')
     body=bytearray(record);body[26:30]=bytes(4);links=[]
@@ -69,7 +69,7 @@ def check(original,left,right):
         rows.append(dict(boundary='initial' if index==0 else index-1,raw=region(states[0][0],states[1][0]),
                          callback=states[0][1]['callback'],complete_payloads=states[0][1]['links']))
     return dict(sha256=prelude[0]['sha256'],rows=rows,input_boundaries=len(inputs['rows']),
-                scope='Complete 280-byte player record with three explicit pointer bindings and complete three/four-byte linked payloads at retained checkpoints only. Raw differences retained; not other objects, globals, allocation lifetimes between samples, combat or capacity acceptance.')
+                scope='280-byte player prefix with three explicit pointer bindings and complete three/four-byte linked payloads at retained checkpoints only. Raw differences retained; not other objects, globals, allocation lifetimes between samples, combat or capacity acceptance.')
 
 
 if __name__=='__main__':

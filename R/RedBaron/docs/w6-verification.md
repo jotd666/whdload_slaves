@@ -852,7 +852,7 @@ addresses; it does not call drawing artificially or write game state. Evidence:
 | 1 | 58 | 433 | 359 | 0 |
 | 2 | 58 | 354 | 348 | 0 |
 
-The complete 280-byte player object is unchanged across each interval. All
+The 280-byte player prefix is unchanged across each interval. All
 listed normal object pose prefixes (bytes 0–25), compact prefixes (bytes 0–9)
 and normal callback pointers are also unchanged at those boundaries. This does
 **not** establish render purity. The report keeps all other RAM changes,
@@ -1576,7 +1576,7 @@ banks are retained at the pre-install flight anchor and at completed ticks 0–1
 No controls are injected in this short initial-flight window.
 
 `world_comparison.py` inventories every differing byte in captured RAM, plus
-complete h3, the 280-byte player object and the 26-byte registered-object prefixes.
+complete h3, the 280-byte player prefix and the 26-byte registered-object prefixes.
 It requires the same binary, allocation layout, matched tick IDs and consecutive
 sequences. No differing bytes are normalized away. Its output is diagnostic and
 supplies no automatic whole-gameplay pass verdict. Regression tests ensure that
@@ -1781,7 +1781,7 @@ still checks 54 selected timing/pacing targets and ten disabled ranges.
 The matching no-render capture is
 `tmp/dev/tmp/prof/w6-terrain-cache-none-030/`. Initial executable segments and all
 105 tracked allocations again match exactly. At ticks 0–39, all 1,279 registered
-prefixes, complete player records, registry/lifecycle order and the restored
+prefixes, 280-byte player prefixes, registry/lifecycle order and the restored
 terrain cache controls match. The drawing run completes 39 updates and 44 draws
 in 240 fields / 284 CIA ticks with one tick of final CIA debt; no drawing completes
 39 updates in 239 fields / 283 CIA ticks with zero debt. Every consecutive funding
@@ -1811,7 +1811,7 @@ arguments. This is a correctness stress fixture, not a performance workload.
 Initial tracked allocations and all data segments match. The only initial sim
 segment differences are the three changed address bytes in the fixture's jump
 operand at `sim:015b5–015b7`. They remain visible in the report. Across ticks
-0–39, all 1,279 registered prefixes, complete player records, registry ordering
+0–39, all 1,279 registered prefixes, 280-byte player prefixes, registry ordering
 and lifecycle event order match the no-render case. Shared allocation differences
 are confined to the previously identified sound-context word at payload offset
 344 in contexts 0–2. The message-background block appears only with drawing from
@@ -1894,7 +1894,7 @@ retains 54 selected timing/pacing targets and ten disabled ranges.
 The paired no-render capture is `tmp/dev/tmp/prof/w6-list-owner-none-030/`.
 Initial executable segments and all 105 tracked allocations (243,855 bytes) match.
 The active display list now matches at every one of the 40 world boundaries,
-alongside all 1,279 registered prefixes, complete player records, primary registry
+alongside all 1,279 registered prefixes, 280-byte player prefixes, primary registry
 order and lifecycle events. With drawing there are 39 updates and 44 draws over
 240 fields / 284 CIA ticks, ending with one unprocessed CIA tick; without drawing,
 39 updates take 239 fields / 283 CIA ticks and end without debt. Every consecutive
@@ -2015,7 +2015,7 @@ also enables its W5 pacing prerequisites). CUSTOM5 selects deferred activation
 and the keyboard observer/fixture, plus no-render only in the second run.
 These are controlled correctness fixtures, not full-bundle performance workloads.
 
-Initial contents of all four executable segments, h3, the complete player record,
+Initial contents of all four executable segments, h3, the 280-byte player prefix,
 registries and all 105 allocations / 243,855 bytes match. The first Right press
 is acquired before flight ownership activates. Its independent acquisition-clock
 tuple marks it held-only; its queued key includes the modal flag. Treating all
@@ -2032,7 +2032,7 @@ active-flight command pop (Fire). The early held-only Right transition does not
 produce a one-shot command. No acquisition timestamps are adjusted to make the
 runs agree, and the full 128-byte held bitmap is compared.
 
-At every equal tick, complete 280-byte player records, all 1,332 registered
+At every equal tick, 280-byte player prefixes, all 1,332 registered
 26-byte prefixes, primary-registry order, active shared-display-list order/count
 and lifecycle events match. All shared allocation differences across the window
 are confined to the low byte of payload word 344 in sound contexts 0–2, verified
@@ -2130,7 +2130,7 @@ Initial h3, player and all 105 allocations / 243,855 bytes match. Ordinary and
 no-render executable segments match; delayed drawing differs only in the three
 address bytes at `sim:015b5–015b7`, independently checked against the
 `observe_slow_draw` target of the expected JMP at `sim:015b2`. At all 40 equal
-ticks, complete player records, 1,352 registered prefixes, primary registry and
+ticks, 280-byte player prefixes, 1,352 registered prefixes, primary registry and
 shared display-list order/count, and lifecycle events match in both comparisons.
 All differing shared allocations are the low byte of payload word 344 in sound
 contexts 0–2. The separately retained 1,800-byte drawing/message background appears
@@ -2258,7 +2258,7 @@ four sim segments, player and 116 tracked allocations / 238,364 bytes. The
 independent four-event replay agrees at all 24 boundaries, including F2 at the
 view transition and Fire. No pointer or byte normalization is applied.
 
-All 24 equal ticks match the complete player record, 649 registered pose
+All 24 equal ticks match the 280-byte player prefix, 649 registered pose
 prefixes, primary registry, shared display-list order/count and lifecycle
 events. The full camera position/orientation, view, camera pointer and followed
 target also match at every tick. `world_comparison.py` now records this camera
@@ -2813,7 +2813,7 @@ The panel excludes **222 CIA ticks**. The cursor advances by exactly the same
 amount, preserving the existing **one CIA tick of debt**, rather than resetting
 the cursor to the current clock. Primary/secondary fractional phases, due/service
 counts and step/draw/skip counters remain unchanged across the panel. The full
-280-byte player record matches at panel entry, exit and resumed caller return.
+280-byte player prefix matches at panel entry, exit and resumed caller return.
 Flight ownership changes 1→0→0→1 and the native primary dt is 225 on resume.
 This is a modal timing result, not an FPS sample or a whole-gameplay verdict.
 
@@ -3187,7 +3187,7 @@ Evidence is `tmp/dev/tmp/prof/w6-shape-replay-normal-030/` and
 `tmp/dev/tmp/prof/w6-shape-replay-none-030/`. Each retains full RAM at 40 consecutive
 completed-world boundaries (ticks 0–39), an untouched initial checkpoint, lifecycle
 records, exact slave/listing and native endpoint checks. Both initial states have
-identical h3, complete player record, all four sim segments, and all 105 tracked
+identical h3, 280-byte player prefix, all four sim segments, and all 105 tracked
 game allocations (243,855 bytes). Pointer/layout differences are not normalized.
 
 `world_controls.py` confirms the same four-event input history and all 40
@@ -3195,7 +3195,7 @@ per-tick snapshots, including bank/fire held intervals and exactly two command
 pops. `native_poses.py` independently checks 1,352 poses, 129 lifecycle events
 and 59 invalidated history records in each capture. At every equal tick:
 
-- The complete 280-byte player record matches.
+- The 280-byte player prefix matches.
 - All 1,352 registered object prefixes across the window match, as do the
   primary registry, camera state, shared display-list order/count and lifecycle
   events. Prefixes alone are not a complete-object proof.
@@ -3411,7 +3411,7 @@ Fresh same-build cached-68030 50 MHz ground runs, maximum detail and Time Scale
 40, are retained as `w6-ground-restore-030-v2` and
 `w6-ground-restore-none-030`. Initial h3, all four sim segments and game
 allocations agree. All 15 completed-world boundaries now match the full
-280-byte player record, including byte +36, without exclusions. All 463
+280-byte player prefix, including byte +36, without exclusions. All 463
 registered prefixes and 463 separately checked normal-object scratch bytes
 match, as do registry, camera, display-list/lifecycle state and the held-key,
 command-queue and consumption histories. Both actual impact calls still match
@@ -3461,7 +3461,7 @@ with the existing CUSTOM5 bit-0 delay fixture. The fresh capture
 with `w6-ground-restore-030-v2`; the no-render reference remains
 `w6-ground-restore-none-030`.
 
-Initial h3, full player record and game allocations agree. The only initial
+Initial h3, 280-byte player prefix and game allocations agree. The only initial
 sim-code difference is the JMP destination at `sim:015b2`: ordinary rendering
 jumps directly to `sim:2c552`, while the fixture jumps through its beam-wait
 wrapper. The exact target is checked against each capture's frozen listing;
@@ -3809,7 +3809,7 @@ screen arrays. These are reporting labels with the earlier scoped evidence,
 not a normalization mask or a claim that every possible reader has been proven.
 The ordinary/delayed union includes the one-byte startup-primary residue above.
 The table describes h3 only; other executable/heap regions remain in the raw
-comparison. The already verified full player record and object-prefix results
+comparison. The already verified 280-byte player prefix and object-prefix results
 are unchanged by this broader inventory.
 
 Ordinary/delayed residual counts for boundaries 0–14 are
@@ -4554,8 +4554,8 @@ comparison; do not infer whole-gameplay equality from the matching kinematics.
 
 `player_links.py` now resolves the five address-byte differences in the
 controlled-prelude 50/25-MHz captures. **All 41 checkpoints pass**: the initial
-state plus 40 consecutive completed-world boundaries. The full 280-byte player
-record agrees under three explicit pointer bindings, and both referenced heap
+state plus 40 consecutive completed-world boundaries. The 280-byte player
+prefix agrees under three explicit pointer bindings, and both referenced heap
 payloads agree in full at each checkpoint. The raw report still records the five
 differing bytes; the strict whole-world comparator is unchanged.
 
@@ -4660,3 +4660,56 @@ No slave change, emulator run or performance claim accompanies this retained
 comparison. The complete player/link check above and this registry/pool result
 are complementary; neither closes full-world state, other CPU architectures,
 physics-reference accuracy, combat outcomes, sustained capacity or smooth 50 FPS.
+
+
+## Complete aircraft allocation and correction of player-prefix scope
+
+The earlier player comparisons cover **280-byte prefixes**, not complete
+native aircraft records. Their “complete/full player record” wording was too
+broad and has been corrected in place. The controlled captures' native type-zero
+pool descriptor has stride **318** at `h3:0135c`, count **2** at `h3:05578`,
+and its root pointer at `h3:05584`. Its tracked allocation is exactly 644 bytes:
+an eight-byte header plus two 318-byte slots. The extra 38 bytes per slot were
+not checked by `player_links.py`; no earlier result is retroactively expanded.
+
+`aircraft_pool.py` now validates the descriptor and exact containing allocation,
+then compares **both complete 318-byte slots**, in order, at all 41 retained
+checkpoints across the 50/25-MHz controlled-prelude runs. All **82 full records**
+pass, with the existing explicit callback/three-byte/four-byte payload bindings
+applied to each aircraft. The three pointer fields retain their raw differences:
+five bytes for the player and three for the second aircraft. Every other byte,
+including the 38-byte tail, matches exactly. The linked payloads are compared
+in full rather than paired by allocation-chain order; that order alone would
+misidentify them across these boots.
+
+The native constructor selects the pool pointer at `sim:10134`, stride at
+`sim:1014e` and count at `sim:10156`, then passes stride/count to the slot selector
+at `sim:10164..1016c`. Those instruction sequences are checked against the
+supported original and at each capture's relocated sim base. The verifier requires
+318-byte stride and exact `8 + count × stride` allocation size. It checks every
+slot, without filtering inactive records, and retains complete raw record
+differences. The previous prelude, timestamped-input and player-pointer checks
+remain prerequisites.
+
+Each aircraft's newly included tail is constant across this particular window.
+Equality closes the record-length coverage gap; it does not demonstrate dynamic
+changes in those fields, every AI decision, collision outcomes or all aircraft
+types. Other object pools and globals remain outside this comparison.
+
+Three added host tests reject final-tail corruption in the second slot, truncated
+pool allocation, an incorrect 280-byte stride and swapped slot order. All **317
+host tests pass**. No slave code changed and no emulator was launched. The
+retained result is `w6-prelude-50mhz-030/aircraft-pool.json`; reproduce with:
+
+```sh
+python3 R/RedBaron/tools/aircraft_pool.py \
+  tmp/dev/tmp/game/RedBaron_v2.1/RedBaron/data/sim \
+  tmp/dev/tmp/prof/w6-prelude-50mhz-030 \
+  tmp/dev/tmp/prof/w6-prelude-25mhz-030 \
+  --out tmp/dev/tmp/prof/w6-prelude-50mhz-030/aircraft-pool.json
+```
+
+Complete-world independence, broader gameplay/CPU coverage, sustained capacity
+and smooth 50 FPS remain open. The scope correction above does not invalidate
+the earlier prefix equality, but those checks must not be cited as full aircraft
+state evidence.

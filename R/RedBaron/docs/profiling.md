@@ -1,5 +1,12 @@
 # Red Baron performance measurements
 
+The CPU-frequency comparison now checks both full 318-byte aircraft slots and
+their linked payloads at all 41 checkpoints. All 82 records match under the
+explicit pointer bindings. Earlier 280-byte checks covered only prefixes; their
+“full record” wording has been corrected. The added 38-byte tails are constant
+in this window. See “Complete aircraft allocation and correction of player-prefix
+scope” in `w6-verification.md`; no new performance or broad AI claim is made.
+
 The controlled CPU-frequency comparison now also matches registry order, 1,463
 registered object prefixes, 147 observed lifecycle notifications and the entire
 2,200-byte projectile pool at all 41 checkpoints. The pool has 31 distinct
@@ -9,7 +16,7 @@ projectile pool across CPU frequencies” in `w6-verification.md`. This adds
 correctness evidence, with no new speed or combat-outcome claim.
 
 The controlled 50/25-MHz captures now pass an explicit player-pointer comparison
-at 41 checkpoints. The complete player record and its two complete linked heap
+at 41 checkpoints. The 280-byte player prefix and its two complete linked heap
 payloads agree after validating the three native pointer fields; raw address
 differences remain reported. The linked bytes also change identically during
 the replay. This is scoped correctness evidence, not whole-gameplay or capacity
@@ -134,7 +141,7 @@ not a rendering-speed measurement. See `w6-verification.md`, “Current full-bun
 Preferences clock boundaries,” for raw checkpoints and the remaining modal gates.
 
 The recorded Pause test on A500 excludes 173 CIA ticks while preserving a
-48-tick catch-up backlog and the full player record. The same-build 68030 test
+48-tick catch-up backlog and the 280-byte player prefix. The same-build 68030 test
 excludes 218 ticks and preserves three ticks of debt. Both sets of 80 input
 observations pass; this is modal correctness evidence, not proof of sustained simulation
 capacity. See “Recorded native Pause input and clock exclusion” in
@@ -404,7 +411,7 @@ rebuild terrain and change the shared display list, then restore its active orde
 count and terrain controls; 133 simulation poses and their clock state survive
 those draws unchanged. Rebuilding
 every draw has a cost that future capacity and 50 FPS measurements must include.
-Complete player records, 1,279 registered prefixes, lifecycle order and the active
+280-byte player prefixes, 1,279 registered prefixes, lifecycle order and the active
 display list match at all 40 checkpoints. The previous build had list-order
 differences at 33 checkpoints; world registration/removal uses that same list. Shared allocations differ only in identified sound-sequencer
 fields; global-state classification and broader gameplay/capacity acceptance remain
@@ -431,7 +438,7 @@ raw inventory. Combat outcomes and broader gameplay acceptance are still open.
 
 The flight-relative synthetic replay build `4f682c6d…` then completes identical
 bank/fire consumption under ordinary, delayed and no rendering. All three
-40-boundary histories match full player records, 1,352 registered prefixes,
+40-boundary histories match 280-byte player prefixes, 1,352 registered prefixes,
 registry/list ordering and lifecycle events. Their 39 updates take respectively
 244/245/239 PAL fields, with 39/27/0 draws and final CIA debt 5/6/0. Eleven delayed
 same-field catch-up pairs preserve the input/state comparison. These controlled
