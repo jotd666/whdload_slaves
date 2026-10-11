@@ -7537,3 +7537,25 @@ Native W6 self-tests and the 57-selected / 9-disabled hook audit pass. The
 owned emulator was verified and quit. Ordinary builds and runtime behavior
 remain unchanged. The report was produced with the existing wall-time
 validator; no new acceptance masks or altered tolerances were introduced.
+
+### Paused checkpoint: private overlay dependency guard
+
+The optional `VERIFY_OVERLAY_KEY_EXPERIMENT` build now contains an ordered,
+exact-byte dependency comparator and a private fixture. It checks validity,
+program selection, range count and range lengths before comparing source
+bytes; comparison stops at the first mismatch. Resource ownership and valid
+pointers remain prerequisites. This is not a memory-safety validator.
+
+The independent host model and its four targeted tests pass, covering the
+24 private cases, early exit, invalid validity, and maximum descriptor count
+with odd byte addresses. The native fixture schedules those 24 cases under
+32 incoming CCR combinations (768 calls), checking results, source-byte read
+counts and preserved registers. **These native cases have not been run.**
+The optional build succeeds (266220 bytes of text), and the patch-reach audit
+reports 133 destinations with zero errors.
+
+There is no game draw hook, native cache-key construction, or skipped draw
+in this checkpoint. Native execution, resource-lifetime integration and
+complete dependency coverage remain pending; no performance or gameplay
+acceptance claim follows from this work. W6 is paused at the user's request.
+The ordinary VERIFY build is restored before committing the checkpoint.

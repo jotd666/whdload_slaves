@@ -95,6 +95,9 @@ ovlife_install:
 	move.w #$42c0,(a0)
 .cpu_ready
 	bsr ovlife_selftest
+	IFD VERIFY_OVERLAY_KEY_EXPERIMENT
+	bsr overlay_key_selftest
+	ENDC
 	lea .patch(pc),a0
 	jsr resload_Patch(a2)
 	jsr resload_FlushCache(a2)

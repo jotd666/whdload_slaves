@@ -613,6 +613,9 @@ new_DeleteFile:
 	include "time-shape-verify.s"
 	include "time-flag-verify.s"
 	include "overlay-lifetime.s"
+	IFD VERIFY_OVERLAY_KEY_EXPERIMENT
+	include "overlay-key-verify.s"
+	ENDC
 	include "time-exponent.s"
 	IFD VERIFY_MATRIX_EXPERIMENT
 	include "time-matrix-verify.s"
