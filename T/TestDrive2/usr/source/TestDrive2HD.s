@@ -349,6 +349,21 @@ set_copper:
 	MOVE.L	A0,$00DFF080
 	rts
 	
+; The Aztec overlay manager rewrites executable BSR/JMP stubs in the data
+; hunk after DOS LoadSeg has flushed the caches. Flush again after both
+; completed rewrites, before returning to a stub that may still be cached.
+; _flushcache uses resload_FlushCache, which preserves all registers and
+; handles the 68040/060 data and instruction caches as well as older CPUs.
+overlay_unload_end:
+    bsr _flushcache
+    movem.l (a7)+,a2-a3/a6    ; displaced duel:0fe90
+    rts
+
+overlay_load_end:
+    bsr _flushcache
+    movem.l (a7)+,d0-d2/a0-a4 ; displaced duel:0ff1a
+    rts
+
 ; Intro car (original bug). The copper wrote DDFSTOP on the line above a viewport, at hpos
 ; $a4 for 5-plane viewports after their 32-colour palette. When the stop dropped from $a8 to
 ; $a0, neither stop matched on that line, the fetch window stayed open and the viewport's first
@@ -452,6 +467,9 @@ get_version:
 
 pl_main_v1
 	PL_START
+    ; Cache coherency is required independently of the framerate option.
+    PL_P $0fe90,overlay_unload_end
+    PL_P $0ff1a,overlay_load_end
 	include "simulation-patches.i"
 	PL_IFC2
 	PL_PS $006c66,render_subunit_main
