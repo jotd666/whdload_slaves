@@ -41,13 +41,13 @@ E1 is complete as a 040/060 stage-cost diagnostic; both rendering stages exceed
 one field. E2's small gun-overlay cache is dropped: every CPU-class pair misses 2%.
 The solid-script cache is also dropped after every CPU-class pair missed 2%.
 Both runtime candidates are removed; reusable helpers remain VERIFY-only.
-The broader instrument cache now has a VERIFY-only raw value-key routine for
-all seven native gauge callbacks, plus a bounded region/pixel guard for the
-native per-buffer gauge rectangles (474 host tests pass). The guard waits for
-the blitter and captures/compares at most 1,920 bytes across all five planes;
-unsupported geometry falls back. These helpers are not hooked into drawing:
-resource/context keys, cache ownership, state replay and combined composition
-still need implementation before a native twin or FPS run.
+The next candidate is a persistent native gauge cache behind development bit 18,
+on 020+ only. It reuses a gauge's existing buffer pixels only when its raw
+inputs/context, native rectangle and bounded pixel guard match, with selective
+replay of that gauge's drawing-state writes. Native forced/dirty redraws and
+unsupported geometry use the original path. The seven-gauge native pixel/state twin passes;
+the CPU-class timing pairs are next. No FPS gain is established, and the normal
+verified mask excludes bit 18.
 Instrument and dispatch caching, combined composition, CPU selection and view/map
 twins remain open. Results are in the scoreboard. D5 remains postponed and E2–F remain
 open; the earlier lists below are historical context, not the execution order.

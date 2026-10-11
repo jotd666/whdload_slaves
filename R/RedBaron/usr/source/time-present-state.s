@@ -8,7 +8,10 @@ TIME_PRESENT_CACHE_STRIDE = 28
 time_present_state_install:
 	movem.l d0-a6,-(sp)
 	IFD VERIFY
-	bsr time_present_shape_selftest
+	lea .shape_selftest(pc),a0
+.shape_selftest
+	adda.l #time_present_shape_selftest-.shape_selftest,a0
+	jsr (a0)
 	ENDC
 	lea .checks(pc),a3
 	moveq #2,d7

@@ -157,6 +157,26 @@ The instrument/dispatcher cache, combined composition and other-view/map twins
 remain open; these two partial front-script attempts do not complete E2.
 
 
+The next E2 bit-18 candidate reuses persistent native instrument pixels on 020+.
+Its 14 gauge/page records occupy 31,640 bytes of fast RAM. Reuse requires an
+identical raw value/context key, a stable native rectangle and an exact bounded
+pixel guard; selective state replay preserves the other gauges' scratch fields.
+Forced redraws, extended clips and unsupported geometry retain native drawing.
+All three builds, 484 host tests, 81 hook ranges and 136 VERIFY patch destinations
+pass. The seven-gauge native twin passes 40,000 pixels and 40 drawing-state bytes
+per case, with 986 cache reuses and 200 fills, no mismatches and released twin
+scratch. Six gauges use natural hits; altitude uses one VERIFY-only same-input
+repeat after a stable native rectangle, because its raw value changes each frame.
+The checker rejects three sabotages and unreleased scratch. Evidence
+`completion-e2-gauge-twin-r4`, VERIFY SHA-256
+`66847823e18558d1c5998de65f9caa376df8535805b9071d10ad6b7b656e5e1b`.
+The earlier attempts lacked a usable fast-RAM snapshot or altitude-hit coverage;
+neither is accepted as the seven-gauge result. The temporary VERIFY snapshot now
+allows any RAM; the runtime cache still requires fast RAM. Timing is unmeasured.
+This is the dispatcher portion of E2, not combined cockpit composition or the
+remaining view/map acceptance. Bit 18 remains outside the normal verified mask.
+
+
 040/060 functional checks use separate MMU-core configurations. Their timing
 results will use the frequency-sensitive NOMMU cores. Configuration generation
 passes all six cases and the functional variants. All three builds pass; the
