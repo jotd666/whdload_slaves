@@ -260,6 +260,9 @@ _p0_OldOpenLibrary:
 	IFD VERIFY_SLOW
 	bsr	_verify_slow_install
 	ENDC
+	IFD VERIFY_TIME
+	bsr _time_install
+	ENDC
 
 	; set CPU and cache options for program
 
@@ -283,6 +286,30 @@ _p0_OldOpenLibrary:
 	IFD VERIFY_STEPINPUT
 	IFND VERIFY_DRIVE
 	FAIL "VERIFY_STEPINPUT requires VERIFY_DRIVE"
+	ENDC
+	ENDC
+
+	IFD VERIFY_TIME_MATH
+	IFND VERIFY_TIME
+	FAIL "VERIFY_TIME_MATH requires VERIFY_TIME"
+	ENDC
+	ENDC
+
+	IFD VERIFY_TIME_PAUSE
+	IFND VERIFY_TIME
+	FAIL "VERIFY_TIME_PAUSE requires VERIFY_TIME"
+	ENDC
+	IFND VERIFY_DRIVE
+	FAIL "VERIFY_TIME_PAUSE requires VERIFY_DRIVE"
+	ENDC
+	ENDC
+
+	IFD VERIFY_TIME_REPLAY
+	IFND VERIFY_TIME
+	FAIL "VERIFY_TIME_REPLAY requires VERIFY_TIME"
+	ENDC
+	IFND VERIFY_DRIVE
+	FAIL "VERIFY_TIME_REPLAY requires VERIFY_DRIVE"
 	ENDC
 	ENDC
 
@@ -1305,6 +1332,10 @@ _abort:      move.l	_resload(pc),-(a7)
 	CNOP	0,4
 _ctl_tags:	dc.l	WHDLTAG_CUSTOM2_GET
 _ct_ct2:	dc.l	0
+	IFD VERIFY_TIME
+	dc.l WHDLTAG_CUSTOM1_GET
+_ct_ct1:	dc.l 0
+	ENDC
 	IFD VERIFY_SLOW
 	dc.l WHDLTAG_CUSTOM4_GET
 _ct_ct4:	dc.l 0
@@ -1364,6 +1395,10 @@ _verify_title_done:	dc.b	0
 
 	IFD VERIFY_SLOW
 	INCLUDE "HardDrivinSlowVerify.s"
+	ENDC
+
+	IFD VERIFY_TIME
+	INCLUDE "HardDrivinTime.s"
 	ENDC
 
 ; Cache audit is a separate terminating boot, not part of any performance run.

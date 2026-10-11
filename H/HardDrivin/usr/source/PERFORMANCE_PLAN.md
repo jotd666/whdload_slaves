@@ -16,7 +16,10 @@ behaviour until each change is ported and verified separately.
 
 Steps 1–3 are complete. See `GAME_TIME.md` for the matched-input coupling test,
 clock defects, state/scaling inventory, provisional f0=6.25 (engineering range
-4–8), and collision-inclusive 68000 capacity. Step 4 is not implemented.
+4–8), and collision-inclusive 68000 capacity. Step 4 is in progress: a
+VERIFY-only elapsed-time observer and arithmetic helpers are implemented and tested.
+Scaled gameplay, traffic and presentation are not enabled. See GAME_TIME.md's
+implementation status; the step-4 acceptance criteria remain open.
 
 ## Starting point
 

@@ -279,3 +279,51 @@ capacity estimates. Step 4 still has to implement and validate the gated
 variable-step arithmetic, fractional state, modal epochs, replay timeline,
 contact policy and substep budget. No performance or gameplay patch is enabled
 by this investigation.
+
+
+## Step 4 implementation status
+
+Step 4 remains incomplete. `HardDrivinTime.s` currently supplies an elapsed-field
+observer and exact arithmetic helpers, compiled only with `VERIFY_TIME` and
+installed only with CUSTOM1 nonzero on SPS 0126. It does **not** scale gameplay,
+run catch-up substeps or remove CUSTOM2. Normal builds exclude the entire module.
+
+The VBL hook follows the native register saves at `$00050`. It counts while the
+live-loop epoch is active and preserves incoming X before the native clock code.
+The `$10ed4` boundary records elapsed fields and cumulative observed fields; its
+published Q16.16 T is the first bounded step, at most 1. The cumulative counter
+is observation, not consumed simulation time. A separate helper splits unsigned
+field debt into at most eight fields plus the full remainder, including debts
+larger than Q16.16 can represent. At the chosen f0, one field is exactly `$2000`
+Q16.16, so conversion itself has no rounding loss.
+
+Native pause and replay suspend this observer and resume its previous epoch.
+Options-menu clock boundaries are hooked too, but their interactive transition
+has not yet been exercised. Race exit disables the observer. This provides no
+claim yet about scaled menu/replay durations or input latching for substeps.
+
+Diagnostic evidence retained under ignored `tmp/dev/tmp/prof/`:
+
+- `s4-clock-a500-1`: 35 passes, 456 observed fields; delayed `s4-clock-slow`:
+  35 passes, 570 fields; `s4-clock-040`: 35 passes, 62 fields. Every pass's
+  elapsed difference and Q16.16 conversion matches its captured counter.
+- `s4-clock-pause`: decoded keyboard spaces enter and leave the real pause.
+  25 passes span 416 fields, of which 328 are active; the 88 paused fields do
+  not appear as debt in the next pass. This fixture changes input only.
+- `s4-clock-replay-full`: the fixture releases buttons during crash/replay so
+  playback can run. Across 6000 sampled fields, the final pass at field 5997
+  records 5283 active fields, excluding 714. This is clock-suspension evidence,
+  not proof of all 90 replay iterations or a validated replay time conversion.
+- `s4-time-math-final`: 1215 68000 executions of signed increment scaling match
+  an independent integer model, spanning word extrema, T=0..1 in eighths and
+  every signed fractional carry -7..7. Eleven debt-splitting cases, including
+  `$ffffffff` pending fields, preserve all remaining fields without overflow.
+- `s4-clock-off-final`: CUSTOM1 off leaves all declared timing ranges pristine.
+  Normal, VERIFY_DRIVE and VERIFY_ATTRACT builds remain byte-identical to the
+  accepted step-2/3 binaries. The normal SHA-256 above remains valid.
+
+Remaining work includes the actual simulation dispatcher, all state scaling and
+reset writers, held-input handling, traffic/contact policies, replay/Phantom and
+other presentation timelines, performance and cross-machine acceptance, and the
+required human laps. The BCD clock defect versus lap-time acceptance conflict
+remains unresolved; the implementation currently preserves the native clocks.

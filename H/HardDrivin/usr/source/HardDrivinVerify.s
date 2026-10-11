@@ -115,6 +115,16 @@ _verify_drive_vbl:
 	move.w #4,-$6a0a(a4)
 	ENDC
 .done:
+	IFD VERIFY_TIME_REPLAY
+	; Release the input latch during crash/replay so native playback is not skipped.
+	tst.b -$69fa(a4)
+	bne.s .release
+	tst.b -$5229(a4)
+	beq.s .released
+.release:
+	clr.w -$6a0a(a4)
+.released:
+	ENDC
 	movem.l (a7)+,d0-d1/a0-a1
 	movea.l -$7036(a4),a0	; displaced instructions
 	lea $dff180,a1
@@ -130,6 +140,9 @@ _verify_drive_key:
 	move.w 18(a0),d0
 	clr.w 18(a0)
 .done:
+	IFD VERIFY_TIME_PAUSE
+	bsr _verify_time_pause_key
+	ENDC
 	movea.l (a7)+,a0
 	tst.l d0
 	unlk a5
@@ -367,3 +380,34 @@ _verify_drive_tape:
 	dc.l 4595
 	dc.w 320,200,0,0
 	dc.l -1
+
+	IFD VERIFY_TIME_PAUSE
+; Enter and leave the real native pause path using two one-shot decoded spaces.
+; No mode flag, clock or car state is injected. The drive tape keeps advancing.
+_verify_time_pause_key:
+	tst.l d0
+	bne.s .done
+	cmpi.w #2,(a0)
+	bne.s .done
+	move.l a1,-(a7)
+	lea .phase(pc),a1
+	tst.b (a1)
+	bne.s .resume
+	cmpi.l #100,4(a0)
+	bcs.s .restore
+	move.b #1,(a1)
+	moveq #$20,d0
+	bra.s .restore
+.resume:
+	cmpi.b #1,(a1)
+	bne.s .restore
+	cmpi.l #200,4(a0)
+	bcs.s .restore
+	move.b #2,(a1)
+	moveq #$20,d0
+.restore:
+	movea.l (a7)+,a1
+.done:
+	rts
+.phase: dc.w 0
+	ENDC
