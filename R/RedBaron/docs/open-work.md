@@ -57,7 +57,12 @@ E2: integrating the static overlay and gauges into a full cockpit composition
 remains open. Native order is static overlay (`sim:00816`), gauges (`sim:0081e`),
 then picture scripts (`sim:0082a`); integration must preserve gauge pixels when
 combining stages. Standalone coverage/layer-merge helpers and the full-frame
-pack model are available for that implementation.
+pack model are available for that implementation. `cockpit-compose.s` adds an
+ordered dirty-rectangle update core: rebuild the union of old/new layer bounds,
+preserve foreground overlaps and opaque black, then expose one combined
+image/mask. It assembles and its host model passes movement/removal/overlap
+cases; it has no game hook yet and establishes no performance result. Native
+layer capture, key/lifetime integration and publication remain to implement.
 Full-composition view twins remain open. The map-toggle check is dropped: the
 bundled game documentation specifies offline navigation maps, not an in-flight
 map command. Results are in the scoreboard. D5 remains postponed and E2–F remain
