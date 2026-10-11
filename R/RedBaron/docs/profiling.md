@@ -1,5 +1,12 @@
 # Red Baron performance measurements
 
+All tracked heap differences in the current render/no-render state pair now
+have explicit owners: native message-background bitmaps or sound slots. The
+1,800/1,600-byte bitmap payloads match the native size calculation and exact
+cache-slot ownership at all 41 checkpoints. See “Native message-background
+cache ownership” in `w6-verification.md`. Differences are retained; this is
+not a consumer-isolation, sound-equivalence or gameplay-speed verdict.
+
 Fresh current-build render/no-render captures start with identical game
 segments and all 105 tracked allocations. At 41 retained checkpoints, complete
 aircraft, projectile, auxiliary, weapon, planning, model-bank and sky checks

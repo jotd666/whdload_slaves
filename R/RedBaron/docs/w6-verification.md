@@ -6613,3 +6613,69 @@ No runtime code or acceptance criteria were changed. Full consumer/heap-state
 coverage, physics/combat convergence, sustained scene capacity and smooth
 50 FPS remain open. The host suite remains at 395 passing tests; the new
 read-only inventory was validated on this retained pair.
+
+
+## Native message-background cache ownership
+
+`message_bitmap_cache.py` identifies the extra 1,808/1,608-byte tracked
+allocations in the current equal-tick pair as native message-background
+bitmaps, including their eight-byte allocation headers. They are not unknown
+aircraft or simulation objects. The pointer table begins at `h3:44e6`; the
+parallel key table begins at `h3:44a4`. Native index selection at `sim:8c0`
+permits slots 0–32. The allocation path selects an exact slot at `sim:940`,
+passes the current dimensions at `sim:956`, and stores the returned pointer
+through that slot at `sim:976`. The allocator trampoline at `sim:65c6` resolves
+to the tracked-allocation helper `sim:2d1ee`.
+
+The size trampoline at `sim:158e` resolves to `sim:2ea12`. Its exact calculation
+within the supported screen-size domain is:
+
+```text
+row_bytes = ((width + 31) >> 3) & 0xfffe
+payload_bytes = row_bytes * height * planes
+```
+
+The plane count comes from `h3:9d3c`. Original and live instruction contracts
+validate this calculation and the native pointer/size stores. Each observed
+cache slot must have a nonzero key, a unique exact tracked payload owner,
+and the expected allocation size. At first observation of each slot/owner/key,
+its dimensions are taken from native `h3:456e/4570`; later observations retain
+that birth geometry rather than substituting the current message's dimensions.
+Every full payload is read and hashed, without claiming equal pixels to an
+absent no-render cache.
+
+In current VERIFY
+`ac1d47ba01210c496a98db199b79fa2c30b0f3b59c570a0bec8906dfa7a116f7`:
+
+| First boundary | Cache slot | Width × height | Planes | Payload / tracked extent |
+| --- | ---: | --- | ---: | ---: |
+| 11 | 0 | 121 × 20 | 5 | 1,800 / 1,808 bytes |
+| 20 | 1 | 97 × 20 | 5 | 1,600 / 1,608 bytes |
+
+The no-render side has no populated message-cache slots. At all 41 checkpoints,
+every difference in the unfiltered tracked-heap inventory classifies as one
+of these rendering-side cache allocations or an owned 384-byte sound slot
+(392 bytes including header). Any other differing or right-only allocation
+makes this classification fail. This accounts for the previously unknown
+allocation owners, but does not remove their pixels, headers or raw differences
+from the reports.
+
+The native render path also stores 0xff to the message redraw flag at
+`sim:922`, while message creation stores 0x01 at `sim:3c0e`. This is consistent
+with the observed `h3:482f` difference; the strict message-state checker
+remains unchanged. Consumer isolation, cache free/reuse/allocation-failure
+paths, sound-status timing and full gameplay equivalence remain separate
+requirements. No runtime change follows from owner identification alone.
+
+```sh
+python3 R/RedBaron/tools/message_bitmap_cache.py \
+  tmp/dev/tmp/game/RedBaron_v2.1/RedBaron/data/sim \
+  tmp/dev/tmp/prof/w6-current-state-render-030 \
+  tmp/dev/tmp/prof/w6-current-state-none-030 \
+  --out tmp/dev/tmp/prof/w6-current-state-render-030/message-bitmap-cache.json
+```
+
+Three regression tests cover native row padding and observed sizes, preserved
+birth dimensions and full-payload changes, wrong allocation extents, duplicate
+owners and missing keys. The full suite passes 398 tests. Sustained simulation
+speed, full scene coverage and smooth 50 FPS remain open.
