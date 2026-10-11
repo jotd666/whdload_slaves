@@ -35,6 +35,13 @@ reproduce two more ordinary/delayed global-byte differences. Projected arrays
 and complete consumers remain open; this is correctness evidence, not a speed
 measurement. See “Vertex-cache epoch ownership” in `w6-verification.md`.
 
+The next projection trace verifies all four native producer paths (2,568 calls)
+and 6,096 sampled current-part reads. Both screen-coordinate arrays, 2,040 bytes,
+match the model at all 15 checkpoints and reproduce another 22 final global-byte
+differences. Fourteen other reader sites remain unobserved. See “Projected-coordinate
+producers and sampled readers” in `w6-verification.md`; this is correctness
+evidence only, with no performance or complete-gameplay claim.
+
 The current full W6 VERIFY bundle also passes the cached-68030 Preferences
 clock-boundary check: 222 CIA ticks spent in the native panel are excluded,
 one CIA tick of existing simulation debt is preserved, and no world update or

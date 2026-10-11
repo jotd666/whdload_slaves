@@ -3694,3 +3694,80 @@ Run `geometry_cache.py ORIGINAL_SIM CAPTURE --out REPORT` to reproduce the
 model check; `geometry-check.json` records counts and `geometry-comparison.json`
 records the final-array comparison. Projected-array producer/consumer tracing
 is the next unresolved part of this geometry-state investigation.
+
+
+## Projected-coordinate producers and sampled readers
+
+`projected_cache.py` extends the epoch check to both 255-longword screen arrays,
+`h3:0b1da` and `h3:0b5d6` (2,040 bytes). Normal projection at `sim:38e9c`
+uses the existing exact `sim:38c82` model with two independent normalization
+implementations. Near-plane intersection at `sim:38fac` uses that model on
+coordinate differences and adds the first vertex's X/Z coordinates. The word
+paths at `sim:3acca` and `sim:3add6` model native shifts, signed-word multiply,
+signed long-by-word division with truncation toward zero, sign extension and
+wrapped longword addition. Divide-by-zero and DIVS overflow are rejected as
+unsupported evidence; neither occurs in the accepted trace.
+
+Each projection's source coordinates must match calculations observed in the
+current part epoch by `geometry_cache.py`. Each resulting pair must match the
+independent arithmetic before the verifier records the write. The entire
+2,040-byte arrays must equal the accumulated writes at every world checkpoint.
+A sampled screen read must use a pair already produced in its current epoch;
+its exact axis, aligned index and value are checked. Source, projection and
+consumer routine bytes are bound to the original executable. This proves the
+observed dataflow, not pixel correctness or the absence of indirect consumers.
+
+The accepted read-only `w6-ground-projection-030-v2` capture uses unchanged
+`c54a84f7…` VERIFY code, cached 50 MHz 68030, maximum detail, Time Scale 40,
+ground-contact fixture and deliberately delayed draws. At all 15 boundaries,
+both the 3,060-byte vertex arrays and 2,040-byte screen arrays match their models.
+
+| Producer | Verified native calls |
+| --- | ---: |
+| Word normal projection, `sim:3acca` | 1,414 |
+| Word near-plane intersection, `sim:3add6` | 6 |
+| Long normal projection, `sim:38e9c` | 1,016 |
+| Long near-plane intersection, `sim:38fac` | 132 |
+
+The sampled normal polygon assembly reads at `sim:3b37e` and `sim:3b386`
+consume 3,048 values each: **6,096 current-epoch reads**, with no stale or
+unexplained value. The other fourteen identified reader sites, including the
+mirrored branch and clipped-polygon assembly, were not instrumented in this
+accepted capture. They are listed explicitly in `projection-check.json`;
+no coverage is inferred for them. The earlier vertex-cache counts reproduce
+exactly: 218 epochs, 1,482 modelled long misses and 1,567 hits.
+
+The final screen arrays exactly reproduce the prior delayed run. They account
+for 22 of the ordinary/delayed final h3 differences, spanning `h3:0b274–0b2bd`
+and `h3:0b66e–0b6b9`. Combined with the earlier scoped timer, cockpit-history
+and vertex-cache evidence, this leaves `h3:0483b` as the sole final h3 byte
+outside those investigated ranges (ordinary 0, delayed 4). This is an inventory
+of that particular endpoint, not an all-tick or complete-gameplay verdict.
+Raw snapshots remain unfiltered. Other memory regions, indirect consumers and
+the wider physics/combat/camera/capacity/50-FPS matrix remain required.
+
+The first `w6-ground-projection-030` attempt stalled while installing an
+8,444-byte debugger batch; the same batch parsed successfully offline, but the
+precise live transport/pipe cause was not established. It collected no world
+checkpoints and is excluded. Only its identified owned debugger/emulator were
+closed. On the next boot, separate complete breakpoint blocks installed, but
+the 39-breakpoint set was rejected on resume before leaving the flight anchor.
+That rejected log is retained. Reducing to 20 breakpoints allowed the same
+paused boot to produce the accepted capture. Lifecycle/contact observers were
+omitted to fit this set and are explicitly marked unobserved in its metadata;
+empty event arrays are not evidence that those events did not occur.
+
+Native self-tests 426/512/638/133 and terrain/cache/list 2/1/2 pass; 56 selected
+and two disabled hooks pass before unload. Flight returns 1 with 15 started
+updates and last pose 14; cleanup preserves the return value and clears W6
+ownership/input readiness. The identified owned emulator was quit. No slave
+code or player policy changed, and no FPS claim follows from debugger tracing.
+Six new host tests cover signed division, word multiplication, shift counts,
+stale epochs, bad sources/results/reads and unexplained writes. All 270 host
+tests pass.
+
+The capture retains `capture-projection.py`, bounded setup responses, all
+`GEO_*` and `SCREEN_*` observations, full RAM, frozen slave/listing and the
+exit/hook checkers. Reproduce with
+`projected_cache.py ORIGINAL_SIM CAPTURE --out REPORT`;
+`projection-comparison.json` records the final-array comparison.
