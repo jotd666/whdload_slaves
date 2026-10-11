@@ -18,9 +18,10 @@ and the 76-range hook audit pass. B2 is implemented and measured: instruction
 caching adds 7.8% on 020 and 12.8% on 030 without MMU; disabled data caches
 remain disabled. Checkpoint B is complete on all six configurations; the single scoreboard
 contains the current normal-bundle rates and stage costs. C1 is dropped: its five measured CPU-class differences are all below 2%.
-Next is C2, the model-bank lookup cache. When promoting W6 in D4, omit its
+C2 is also dropped: its lifecycle twin passed, but all five CPU-class differences are below 2%.
+Next is C3, the A500 face loop. When promoting W6 in D4, omit its
 old VERIFY exponent optimization from the player path.
-Phases B–F remain open; the earlier lists below are historical context, not the execution order.
+Phases C–F remain open; the earlier lists below are historical context, not the execution order.
 
 
 The accepted decisions and detailed requirements are in `performance-plan.md`,

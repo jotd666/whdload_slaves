@@ -194,6 +194,8 @@ Disposition: dropped under §0.3; all five CPU-class comparisons are below 2% (s
   (574 × ~750 cycles saved ≈ 430k of 5.3M).
 
 **C2. Model-bank lookup cache** at `sim:398aa–398f4`.
+
+Disposition: dropped under §0.3; the live-slot cache passed its lifecycle twin, but all five CPU-class FPS comparisons are below 2% (scoreboard).
 - Cost: 1,131 calls/frame × about 452 cycles, a linear scan of the 12-byte
   bank records.
 - Replace it with a direct index or last-hit cache. Invalidate it at every
