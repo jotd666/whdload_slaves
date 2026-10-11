@@ -2,10 +2,10 @@
 ; The original game remains the reference for every replacement.
 ; PERF_MASK test-build bits: 1=BLIT IRQ, 2=vertices, 4=emit, 8=backface,
 ; 16=parent rotation, 32=state clear, 64=primitive depth/header,
-; 128=owned primitive blitter priority.
+; 128=owned primitive blitter priority, 256=68020 rectangle stores.
 ; All validated paths are selected; state clear is additionally 68000-only.
  IFND PERF_MASK
-PERF_MASK = 255
+PERF_MASK = 511
  ENDC
 
 perf_init:
@@ -30,7 +30,11 @@ perf_patch:
  move.l perf_game(pc),a1
  lea pl_perf(pc),a0
  move.l _resload(pc),a2
+ IFNE PERF_MASK&256
+ bsr.w perf_patch_rect
+ ELSE
  jsr resload_Patch(a2)
+ ENDC
  IFNE PERF_MASK&32
  ; The longword clear only wins on the measured 68000. Faster CPUs keep
  ; the original byte loop, including its flags and registers.
@@ -229,4 +233,77 @@ perf_blit_windows: dc.l 0
  include "bookkeeping.s"
  IFD PERF_TWIN
  include "bookkeeping_verify.s"
+ ENDC
+
+ IFNE PERF_MASK&256
+; Append the 020-only path after existing code: preserve the established hot
+; routine offsets and their instruction-cache placement on other machines.
+perf_patch_rect:
+ jsr resload_Patch(a2)
+ move.l perf_attnflags(pc),d0
+ btst #1,d0 ; AFB_68020: measured win on 020, regression on 040
+ beq.s .no_cpu_rect
+ btst #2,d0 ; AFB_68030: leave 030 and later on the native blitter
+ bne.s .no_cpu_rect
+ move.l perf_game(pc),a1
+ lea pl_perf_cpu_rect(pc),a0
+ move.l _resload(pc),a2
+ jsr resload_Patch(a2)
+.no_cpu_rect:
+ rts
+ ENDC
+ IFNE PERF_MASK&256
+pl_perf_cpu_rect:
+ PL_START
+ PL_PSS $347b0,perf_cpu_rect,34 ; PERF_RANGE h0:347b0 40 bit=0
+ PL_END
+; Replaces only the selected D-only rectangle plane. All preceding clipping,
+; plane selection and following loop control remain native. Wait before CPU
+; access because a preceding plane/primitive can still own the chip bitmap.
+perf_cpu_rect:
+ adda.w d1,a0
+ movem.l d0-d4/a0,-(sp)
+ moveq #0,d4
+ addx.b d4,d4 ; save the incoming X bit without reading privileged SR
+ move.w d4,-(sp)
+ tst.b $dff002
+.wait:
+ btst #6,$dff002
+ bne.s .wait
+ moveq #0,d4
+ tst.b d2
+ beq.s .value_ready
+ moveq #-1,d4
+.value_ready:
+ move.w d3,d1
+ and.w #63,d1
+ bne.s .width_ready
+ moveq #64,d1
+.width_ready:
+ move.w d3,d2
+ lsr.w #6,d2
+ bne.s .height_ready
+ move.w #1024,d2
+.height_ready:
+ subq.w #1,d2
+.row:
+ move.w d1,d3
+ lsr.w #1,d3
+ subq.w #1,d3
+ bmi.s .tail
+.longs:
+ move.l d4,(a0)+
+ dbra d3,.longs
+.tail:
+ btst #0,d1
+ beq.s .next
+ move.w d4,(a0)+
+.next:
+ adda.w d0,a0
+ dbra d2,.row
+ move.w (sp)+,d4
+ lsr.w #1,d4 ; restore X, then the original final MOVE.W condition codes
+ movem.l (sp)+,d0-d4/a0
+ tst.w d3
+ rts
  ENDC

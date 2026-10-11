@@ -65,6 +65,10 @@
    restoring its original priority before releasing ownership
  - matched 10-second emulator FPS: A500 FULL 2.699 -> 2.699, A500 FAST
    7.597 -> 7.796, A1200 FULL 9.298 -> 9.598, 040 FULL 17.796 -> 18.395
+ - 68020 uses CPU stores for rectangular fills: A1200 FULL rises further
+   from 9.598 to 9.998 FPS. Other CPUs retain native rectangle blits
+ - whole-plane fill checks preserve all pixels outside the rectangle;
+   the asynchronous blitter-release experiment was slower and discarded
  - A500/A1200 stationary primitive output matches all 32000 pixel bytes;
    disabled options preserve original bytes. P2 is not yet complete
 

@@ -263,7 +263,38 @@ are not identical, so this is scoped output equivalence, not a whole-renderer
 twin (`p2-priority-pixels-path`). CUSTOM2=0/CUSTOM3=1 preserves all 21 original
 ranges (`p2-priority-disabled/A-fast`); hook audit passes 1,250 relocations
 and 10,102 branch candidates. No new game hook is introduced by P2.1.
-The FAST target remains unmet. P2.2-P2.5 remain under investigation.
+The FAST target remains unmet. P2.4-P2.5 remain under investigation.
+
+P2.2 evaluated: removing only the extra wait in `perf_blit_on` regresses
+A-fast 7.79648 -> 7.69653, B 9.59761 -> 9.39766 and D 18.39541 -> 17.89553
+FPS; A stays 2.69878. The candidate is discarded (`p2-async`). Native waits
+at $2CCD2/$2CD10 protect immediately following blitter-register writes, not
+independent trailing work, so they remain. The added terminal wait remains too.
+
+P2.3 retained on 68020 only: replace selected D-only rectangle planes with
+32-bit CPU stores, preserving native clipping, plane selection and all pixels
+outside the rectangle. Wait for preceding DMA before CPU access; preserve
+registers and the original condition codes. PERF_MASK bit 256 isolates this
+path; default mask 511. 68000/010 and 030+ retain the native rectangle hook.
+
+Matched production 10-second results, P2.1 -> current:
+A FULL 2.69878 -> 2.69878; A FAST 7.79648 -> 7.69653;
+B FULL 9.59761 -> 9.99751 (+4.17%); D FULL 18.39541 -> 18.19546.
+The 040 trial with CPU stores regressed to 17.89553, so it is excluded. Final
+memory snapshots confirm native rectangle bytes on 040 and the new hook on
+020. Small changes on excluded CPUs are reported, not claimed as speedups.
+Evidence: `p2-cpu-rect-layout` (final), `p2-cpu-rect` (ungated trial).
+All 12 sampled full 8,000-byte planes match the exact D-only fill model,
+including unchanged pixels outside the rectangle and register preservation.
+All 22 disabled ranges match; hook audit passes 1,250 relocations and 10,102
+branch candidates (branches wholly removed by their own replacement are not
+incoming edges). Production size is 11,490 bytes.
+
+The A-fast clear census shows 320-pixel-wide bands of 113/118/121 rows,
+starting at byte 360 in 8,000-byte planes. Flattening them into one tall
+multi-plane blit would overwrite pixels outside the bands. The native clear
+already returns without waiting for its final DMA. Clear/bitmap-copy waits
+elsewhere stay intact; they cannot be removed without auditing their consumers.
 
 Profile cell A first: a fresh 250-field FULL trace with CUSTOM2=1. Then attack these in order
 and keep only what measures ≥2% on some machine. Gate each one per CPU (playbook §10).
