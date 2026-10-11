@@ -1,6 +1,6 @@
 ; Development-only live-loop dispatcher. All time in a frame is consumed in
 ; bounded <=8-field steps. Time spent doing this work belongs to the next frame.
-; Replay, start-phase/score and other presentation timelines remain separate work.
+; Replay and other presentation timelines remain separate work.
 _dispatch_install:
 	movem.l d0/a0-a2,-(a7)
 	lea _dispatch_recovery_ptr(pc),a0
@@ -16,6 +16,7 @@ _dispatch_install:
 	jsr resload_Patch(a2)
 	lea _dispatch_state(pc),a0
 	st DS_ENABLED(a0)
+	bsr _events_install
 	movem.l (a7)+,d0/a0-a2
 	rts
 _dispatch_patches:
@@ -67,6 +68,7 @@ _dispatch_begin:
 	rts
 ; A0 dispatcher state. Empty intervals publish T=0; they never invent time.
 _dispatch_take:
+	bsr _events_begin_step
 	move.l DS_PENDING(a0),d0
 	bsr _time_take_fields
 	move.l d0,DS_PENDING(a0)
@@ -176,3 +178,5 @@ _dispatch_after_physics:
 	jsr -$7fec(a4)
 	move.l _dispatch_scene_ptr(pc),-(a7)
 	rts
+
+	INCLUDE "HardDrivinEvents.s"

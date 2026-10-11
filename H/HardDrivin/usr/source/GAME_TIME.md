@@ -709,7 +709,59 @@ and their owned processes were stopped. Fixed runs use fresh capture directories
 
 `s4-dispatch-ready-off` verifies all disabled ranges, the normal slave is unchanged,
 and the direct-branch audit passes 71 ranges. This establishes dispatcher
-mechanics, not equal-time driving acceptance or a performance result. Start-phase,
-score/checkpoint side effects, timed replay/Phantom history and playback, attract
+mechanics, not equal-time driving acceptance or a performance result. Checkpoint
+side effects, timed replay/Phantom history and playback, attract
 and menu timelines, zero-time/contact transitions, full forced-native tape,
 multiple-machine handling/performance and the human laps remain required.
+
+
+## Start and score cadence
+
+The dispatcher now also installs `HardDrivinEvents.s`. Native start-phase
+increments at `$db40` occur once per eight eligible elapsed fields. Phase 1
+is still the discrete start-input event; phase 6 still enables throttle, and
+phase 7 still ends the sequence. Carry survives smaller updates. Every native
+phase reset/restart clears the companion, including same-value writes at new
+race, recovery and Phantom entry.
+
+Score updates at `$db1e` also occur once per eight eligible elapsed fields.
+The actual native instructions and `$2c14` packed-decimal addition are retained.
+In particular, the MPH shift supplies X, and the add routine's CLR does not clear
+it; its input can contain nondecimal nibbles. Treating the operand as an ordinary
+integer and fractionally adding it would silently change those semantics.
+The chosen conversion samples the native score event at an eight-field cadence,
+rather than inventing fractional BCD arithmetic. Native score/lap reset sites
+clear score cadence carry; recovery pauses eligibility but retains that carry.
+This does not alter the VBL-driven lap or remaining-time arithmetic.
+
+Each slot holds a field remainder.w, charged-this-substep.b and padding.b;
+`HDEVENT1` precedes the score slot and start slot (eight bytes total). A second
+scene-preparation visit within one elapsed substep cannot charge either slot
+again. The dispatcher clears charged flags when selecting the next substep.
+Outside live simulation, existing native behavior is retained pending conversion
+of the other timelines. VERIFY_DISPATCH_NATIVE executes every original visit,
+including duplicates, so its comparison measures native behavior faithfully.
+
+Evidence:
+
+- `s4-events-native`: all 144 car states, four score bytes, start phase and
+  throttle-enable flag match `s4-presentation-reference`, including recovery.
+- `s4-events-live`: 121 eligible score visits produce 104 score events, and 14
+  eligible start visits produce 12 phase events. All captured carries/phases
+  match their elapsed intervals; 41 visits use fractional T. Score remains
+  unchanged when no event is due. This does not independently validate each
+  live BCD addition, which still executes the native routine.
+- `s4-events-a1200`: on the 68020, 40 score visits produce 17 events and
+  13 start visits produce six events. All 53 visits use fractional intervals
+  and pass the same memory-based cadence checks.
+- The same build executes 72 private cases spanning every remainder0..7 and
+  interval0..8. Each case verifies its event/remainder, a duplicate visit with
+  no additional time, and another visit after clearing the substep flag.
+  The A500 live window has no duplicate eligible visits; duplicate coverage
+  here is private-state evidence, not a live collision assertion.
+- `s4-events-off` checks all inactive ranges. The normal binary remains identical;
+  the direct-branch audit now covers 79 ranges.
+
+This closes the two identified D960 per-call counters. It does not close the
+checkpoint/tunnelling audit, replay sampling/playback, Phantom, attract/menu
+clocks, performance or full-tape/cross-machine/human acceptance.
