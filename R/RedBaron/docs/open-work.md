@@ -46,10 +46,13 @@ on 020+ only. It reuses a gauge's existing buffer pixels only when its raw
 inputs/context, native rectangle and bounded pixel guard match, with selective
 replay of that gauge's drawing-state writes. Native forced/dirty redraws and
 unsupported geometry use the original path. The seven-gauge native pixel/state twin passes;
-the CPU-class timing pairs are next. No FPS gain is established, and the normal
-verified mask excludes bit 18.
-Instrument and dispatch caching, combined composition, CPU selection and view/map
-twins remain open. Results are in the scoreboard. D5 remains postponed and E2–F remain
+the CPU-class timing batch is running. The completed 060 pair is below the 2%
+threshold; the normal verified mask excludes bit 18.
+The combined-copy coverage primitive is implemented as standalone assembly with
+an independent truth-table model (489 host tests pass), including opaque black
+and rejection of inversion or plane-dependent masks. It is not yet included in
+the slave; native capture/context restoration and combined composition remain open.
+CPU selection and view/map twins also remain open. Results are in the scoreboard. D5 remains postponed and E2–F remain
 open; the earlier lists below are historical context, not the execution order.
 
 
