@@ -69,9 +69,10 @@ replay and reach other scenes at different fields. For example, A500 B has the
 validated jump and complete 90-record replay, whereas A500 + Fast B has no replay.
 These are repeatable fixed-input baselines, not equal-scene renderer speedups.
 
-## Current step 4 diagnostic: performance gate fails
+## Step 4 diagnostics: performance gate still fails
 
-The elapsed-time dispatcher development build has a substantial A500 regression.
+Before intermediate scene filtering, the elapsed-time dispatcher development
+build has a substantial A500 regression.
 A fresh-boot constant-input window captures 500 consecutive PAL fields
 (10.0159435 seconds) after race-loop entry. The exact same compiled slave is run
 with CUSTOM1 off and on; VERIFY_STEPINPUT supplies constant controls. Frame counts
@@ -88,15 +89,45 @@ also verifies inactive patch ranges. `s4-overlay2-window-on-repeat` reproduces
 the complete swap schedule and all 501 captured allocated-game-state snapshots
 byte-for-byte. FPS drops 60.5%, and mean frame time grows
 2.53 times: the required maximum 3% FPS loss is not met. This measures the current
-combined step 4 build, not the incremental cost of the overlay change. Extra
-bounded simulation work is visible in the call counts, but its detailed cost
-still needs attribution before choosing a remedy.
+combined step 4 build, not the incremental cost of the overlay change. The instruction traces below attribute the extra preparation work.
 
 This is a new diagnostic window, not a replacement for the frozen gameplay A/B
 baselines above. Equal inputs and elapsed fields do not imply equal positions or
 scenes: the original advances one physics step per frame, whereas the enabled
 build advances elapsed simulation time. The enabled build is not release-ready;
 no renderer speedup or cross-machine handling acceptance is claimed.
+
+### Scene preparation inside simulation substeps
+
+The matching 500-field `s4-dispatch-cost-off` / `s4-dispatch-cost-on` instruction
+traces reproduce the independently captured swap schedules exactly. Recorded
+cycle coverage is above 99.99998%. Attribution uses each capture's live game
+addresses and the exact slave listing, including the new hooks.
+
+| Inclusive routine cost | Original behavior | Elapsed dispatcher before filtering |
+| --- | ---: | ---: |
+| Scene preparation `$0b0d6` | 31.71% | 52.33% |
+| Physics `$0cda4` | 3.67% | 7.48% |
+| Polygon drawing `$10008` | 40.21% | 14.18% |
+
+Percentages are shares of the whole window; drawing occupies a smaller share
+because fewer frames are drawn. Scene preparation runs for every bounded physics
+step and includes transforming/projecting distant objects for drawing. This is
+separate from the physics wrapper's cost and explains why its earlier capacity
+estimate was insufficient for the complete dispatcher.
+
+`VERIFY_TIME_SCENE_CULL` now experimentally omits the native non-clipping object
+path on intermediate substeps. Near-object/contact preparation, terrain, traffic,
+visibility and the final substep remain complete. See GAME_TIME.md for the
+same-state contact comparison and its limits.
+
+The guarded candidate, `s4-scene-window-guard`, produces 23 swaps in 500 fields:
+2.296 FPS, 435.48 ms mean frame time, 73 physics returns and 24 render calls (the
+last render has not yet published at the window boundary). This is more than the
+unfiltered dispatcher's 15 swaps, but remains below the original 38. The final
+16 fields are in crash mode; the earlier windows do not crash. Therefore these
+are protocol-level diagnostic results with different scene progression, not an
+isolated equal-scene speedup or a passed 3% acceptance gate.
 
 ## Rendering and memory placement
 

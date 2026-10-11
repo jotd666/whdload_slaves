@@ -17,6 +17,9 @@ _dispatch_install:
 	lea _dispatch_state(pc),a0
 	st DS_ENABLED(a0)
 	bsr _events_install
+	IFD VERIFY_TIME_SCENE_CULL
+	bsr _scene_cull_install
+	ENDC
 	movem.l (a7)+,d0/a0-a2
 	rts
 _dispatch_patches:
@@ -180,3 +183,7 @@ _dispatch_after_physics:
 	rts
 
 	INCLUDE "HardDrivinEvents.s"
+
+	IFD VERIFY_TIME_SCENE_CULL
+	INCLUDE "HardDrivinScene.s"
+	ENDC

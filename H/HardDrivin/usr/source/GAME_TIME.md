@@ -874,3 +874,52 @@ to reach gameplay. Those captures were stopped and excluded. The repaired fixtur
 uses a private clock slot, does not alter the live presentation counter, and does
 not mask interrupts. The final CUSTOM1-off window passes inactive-range checks;
 the ordinary build remains byte-identical to the baseline.
+
+
+## Intermediate scene preparation (development gate)
+
+`VERIFY_TIME_SCENE_CULL` requires DISPATCH and the usual CUSTOM1/SPS0126 gate.
+It skips visible objects from the native `$0b09e` and `$0b10c` list loops only
+when the dispatcher is active, more substeps remain, the race is still active,
+and object byte34 is zero. Byte34 selects the non-clipping `$09aec` projection
+path; objects taking `$0a194`, including its `$09b22` contact side effects, remain
+fully processed. Terrain `$0b07a`, traffic and visibility also remain native.
+The final substep, replay and presentation loops perform full preparation.
+Race-exit passes retain full preparation because cancellation can make them the
+last pass even when the dispatcher still holds pending fields.
+
+The skipped pair is `$097dc` object/camera transformation followed by `$09aec`
+projection. Its outputs are rendering vertices and object buffer pointers. The
+near-object branch additionally extracts contact/obstacle flags consumed by
+physics, so it cannot be omitted. Buffers may be compacted differently during
+intermediate steps; consumers use each processed object's updated pointers.
+`HDSCENE1` publishes two unsigned long counts of skipped visible objects, for
+the auxiliary and main lists. Diagnostic increments preserve the native X flag.
+
+`VERIFY_SCENE_TWIN` compares the candidate with full native preparation at the
+same scene state. At `$0b142`, before the preparation tail, it calls the original
+preparation with filtering disabled. The nested call returns before that tail,
+so its audio/off-road events do not run twice. Read-only captures compare the
+before/after states, and full reference buffers remain for physics. This fixture
+is correctness evidence, not a performance build. `HDSCTWN1` publishes the nested
+reference stage; the exact listing locates its two capture markers.
+
+`s4-scene-twin2` passes 100 pairs, including 25 during crashes: all 10,900 object
+metadata records, 211 near-object instances / 9,209 transformed vertices, the
+three contact flags, player state, score/start state and replay write pointer
+agree. It skips 981 visible main-list objects. No auxiliary-list object was
+skipped in this capture, so that branch still lacks live skip coverage. The
+comparison excludes lap clocks, which legitimately advance in VBL while the
+reference preparation runs. An earlier comparison incorrectly included those
+asynchronous clocks and failed; the retained data passed after correcting that
+scope. The conservative race-exit bypass was added after this twin capture;
+live race-exit cancellation coverage remains outstanding.
+
+The 144-state forced-native car comparison passes with the installed scene gate;
+it proves the normal one-step path, not general equal-time handling. Ordinary
+build output remains unchanged, inactive ranges pass with CUSTOM1 off, and the
+branch audit covers 88 ranges including the twin hook. The guarded 500-field
+candidate improves the unfiltered dispatcher window from 15 to 23 swaps, but the
+3% FPS-loss requirement is still not met. Full driving-tape equivalence,
+loop/jump/contact at both T extremes, cross-machine handling and human acceptance
+remain open. This development gate is not a completed renderer optimization.
