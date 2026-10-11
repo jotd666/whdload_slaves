@@ -80,11 +80,26 @@ def overlaps(address,size,lo,hi):
     return (address<hi and end>lo) or (end>0x1000000 and end-0x1000000>lo)
 
 
-def check(root,routine="world"):
+def selected_offsets(address,size,h3,targets):
+    """Return referenced selected h3 bytes; preserve partial/unaligned overlaps."""
+    lo=max(0,address-h3);hi=min(0xbd0c,address+size-h3)
+    return [i for i in range(lo,hi) if i in targets]
+
+
+def check(root,routine="world",residuals=None):
     entry=json.loads((root/'entry.json').read_text());manifest=json.loads((root/'capacity.json').read_text())
     digest=hashlib.sha256((root/'slave.slave').read_bytes()).hexdigest()
     if {entry['slave_sha256'],manifest['sha256']}!={digest}:raise ValueError('Different frozen build')
     if entry['sim_sha256']!=SIM_SHA or entry['cpu']!='68000':raise ValueError('Requires supported sim and 68000')
+    target_source=None;targets=None
+    if residuals is not None:
+        raw=residuals.read_bytes();inventory=json.loads(raw)
+        offsets=inventory['residual_union']
+        if inventory['sim_sha256']!=SIM_SHA or any(type(i) is not int or not 0<=i<0xbd0c for i in offsets) or len(set(offsets))!=len(offsets):
+            raise ValueError('Invalid global residual inventory')
+        targets=set(offsets)
+        target_source=dict(report_sha256=hashlib.sha256(raw).hexdigest(),capture_sha256=inventory['sha256'],offsets=offsets,
+                           scope='Search targets from an earlier equal-tick inventory, not state bindings or an equality mask for this trace.')
     sim=entry['entry']['sim'];cs=capstone.Cs(capstone.CS_ARCH_M68K,capstone.CS_MODE_M68K_000);cs.detail=True
     if routine=='world':start,end=sim+0x1098,sim+0x11c8
     elif routine=='services':
@@ -126,20 +141,25 @@ def check(root,routine="world"):
                     decoded[pc]=code;cache[pc]=insn
                 insn=cache[pc];active['instructions']+=1
                 for address,size in operands(insn,regs):
-                    if overlaps(address,size,lo,hi):
-                        active['candidates'].append(dict(pc=pc,field=field.index,address=address,size=size,instruction=insn.mnemonic+' '+insn.op_str))
+                    selected=selected_offsets(address,size,h3,targets) if targets is not None else None
+                    hit=bool(selected) if targets is not None else overlaps(address,size,lo,hi)
+                    if hit:
+                        candidate=dict(pc=pc,field=field.index,address=address,size=size,instruction=insn.mnemonic+' '+insn.op_str)
+                        if selected is not None:candidate['selected_offsets']=selected
+                        active['candidates'].append(candidate)
                 if pc==end:
                     if regs[15]!=active['sp']:raise ValueError('Census call did not restore stack')
                     active['last_field']=field.index;rows.append(active);active=None
         if active is not None:incomplete.append(active)
     if not rows:raise ValueError('No complete census calls')
-    return dict(sha256=digest,routine=routine,capstone_version=capstone.__version__,rows=rows,incomplete=incomplete,
+    return dict(sha256=digest,routine=routine,target_source=target_source,capstone_version=capstone.__version__,rows=rows,incomplete=incomplete,
                 complete_calls=len(rows),instructions=sum(r['instructions'] for r in rows),
                 candidates=sum(len(r['candidates']) for r in rows),decoded_pcs=len(decoded),
-                scope='Snapshot-decoded 68000 operand/stack reference candidates during complete traced calls to the selected routine, excluding IRQ stack. Same-PC code agrees between snapshots; transient self-modifying code is not proven absent. Not all scenarios, unselected services, DMA, cached CPUs or whole-gameplay purity. No cache bytes excluded.')
+                referenced_offsets=sorted({off for r in rows for c in r['candidates'] for off in c.get('selected_offsets',[])}),
+                scope='Snapshot-decoded 68000 operand/stack reference candidates during complete traced calls to the selected routine, excluding IRQ stack. Same-PC code agrees between snapshots; transient self-modifying code is not proven absent. Not all scenarios, unselected services, DMA, cached CPUs or whole-gameplay purity. No state bytes excluded.')
 
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('capture',type=Path);p.add_argument('--routine',choices=['world','services'],default='world');p.add_argument('--out',type=Path,required=True);a=p.parse_args()
-    result=check(a.capture,a.routine);a.out.write_text(json.dumps(result,indent=2)+'\n')
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('capture',type=Path);p.add_argument('--routine',choices=['world','services'],default='world');p.add_argument('--residuals',type=Path,help='Search the residual_union of a supported global-relocation report instead of the vertex cache');p.add_argument('--out',type=Path,required=True);a=p.parse_args()
+    result=check(a.capture,a.routine,a.residuals);a.out.write_text(json.dumps(result,indent=2)+'\n')
     print({k:result[k] for k in ('complete_calls','instructions','candidates','decoded_pcs')})

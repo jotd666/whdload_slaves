@@ -1,5 +1,13 @@
 # Red Baron performance measurements
 
+The complete triangular pairwise simulation table now matches at all 41
+controlled 50/25-MHz checkpoints, including changing values, row ownership
+and object identities. A trace-driven search identifies 78 remaining differing
+global byte positions referenced by world updates; the service-poll residual
+reference resolves to this validated table root. See “Referenced global
+residuals and complete pairwise table” in `w6-verification.md`. Broader state
+and real-time-speed acceptance remain open; no runtime or performance change.
+
 A native A500 instruction census finds no vertex-cache reference candidates
 in 87 complete world updates and 93 clock/service polls across steady flight
 and a scheduled Right/Fire replay. This supports isolation in the measured

@@ -1,6 +1,6 @@
 import unittest
 import capstone
-from cache_reference_trace import operands,overlaps
+from cache_reference_trace import operands,overlaps,selected_offsets
 
 
 class CacheReferenceTraceTests(unittest.TestCase):
@@ -43,3 +43,10 @@ class CacheReferenceTraceTests(unittest.TestCase):
         from types import SimpleNamespace as S
         i=S(mnemonic='move.l',op_size=S(size=4),operands=[S(type=3,address_mode=9)])
         with self.assertRaises(ValueError):operands(i,[0]*17)
+
+    def test_residual_selection_keeps_partial_overlaps(self):
+        targets={0,3,4,0xbd0b}
+        self.assertEqual(selected_offsets(0xffe,4,0x1000,targets),[0])
+        self.assertEqual(selected_offsets(0x1002,4,0x1000,targets),[3,4])
+        self.assertEqual(selected_offsets(0xcd0a,4,0x1000,targets),[0xbd0b])
+        self.assertEqual(selected_offsets(0xcd0c,4,0x1000,targets),[])

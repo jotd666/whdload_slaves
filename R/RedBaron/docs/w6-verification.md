@@ -5855,3 +5855,81 @@ The capture retains its frozen binary/listing/configuration, all three traces
 and endpoint RAM, native queue/counter dumps, capacity manifest/check, byte and
 self-test audits and both reference-census reports. No slave change is made
 by this investigation.
+
+
+## Referenced global residuals and complete pairwise table
+
+The operand census now accepts `--residuals` to search the earlier global
+inventory's differing byte positions. It validates the original sim identity,
+records the inventory's digest and source-build identity, and preserves every
+matched operand and offset. These offsets are search targets from the earlier
+50/25-MHz comparison, not an equality mask or a claim that the newer A500
+capture shares its state. Partial/unaligned overlaps are retained.
+
+In `w6-cache-replay-a500`, the 45 complete world calls produce **12,868 operand
+candidates covering 78 residual byte positions**. The 48 service polls produce
+136 candidates at just **`h3:4c33`**, within the longword root `h3:4c30`.
+Candidates include address formation and conservative stack extents; they are
+not automatically classified as reads or writes. The world results also point
+to the native model-bank root, primary dt, message owner, object lists,
+planning state and registry arrays. Those references give concrete consumer
+sites for the remaining ownership investigation.
+
+The root at `h3:4c30` is used by `sim:b1d8–b232`, which retrieves an entry
+using the two objects' IDs at offset 106. `pairwise_table.py` now validates
+and compares the complete native triangular pair table:
+
+- `h3:4c30`: row-pointer allocation, `(N-1)` longwords.
+- `h3:4c34`: packed value allocation, `N*(N-1)/2` longwords.
+- `h3:4c38`: object-pointer allocation, `N` longwords.
+- `h3:4c3c/4c3e`: pair count and object count.
+
+The constructor assigns IDs at `sim:b030`, builds the triangular row pointers
+at `sim:b126–b158`, and fills the object table through `sim:b112–b120`.
+`sim:b510–b56a` updates the packed values. Original and live instruction
+contracts are checked for these relationships, count arithmetic and consumers.
+Every allocation must have the exact expected payload extent; each row must
+point to its precise triangular offset in the value allocation. Each object
+pointer must identify a full aircraft-pool slot with the matching native ID,
+and slot identities must be unique. The existing complete aircraft-state
+comparison is a prerequisite. The checker explicitly rejects unsupported
+counts/pools instead of assigning speculative identities.
+
+In the controlled 50/25-MHz captures, **all 41 checkpoints match**: two objects,
+one pair value, complete row ownership and object identities. This covers all
+16 payload bytes of the three allocations and the 16-byte global descriptor.
+The pair value changes at every retained checkpoint (41 distinct values,
+from `0000482c` initially to `0000071d` finally) and agrees between CPUs.
+The raw descriptor differs by five bytes and the row-pointer payload by two
+bytes at every checkpoint; their explicitly validated owners explain those
+address differences. The object-pointer payload matches raw. All raw
+comparisons remain in the report.
+
+This establishes equality of an actively consumed simulation table in this
+controlled window, not just an unused render buffer. It does not certify
+other object populations, allocation/free failures, all collision/hit outcomes,
+consumer order between snapshots, full globals/heap equality or sustained
+simulation speed. The old controlled build remains
+`9c92ff9979e40ec98adc1f73255f8e57b4f65b2f2d6d5d6e13793aad7f414415`;
+the traced consumer search uses the separately identified current build.
+No slave behavior or performance result changes.
+
+Reproduce with:
+
+```sh
+python3 R/RedBaron/tools/cache_reference_trace.py \
+  tmp/dev/tmp/prof/w6-cache-replay-a500 --routine services \
+  --residuals tmp/dev/tmp/prof/w6-prelude-50mhz-030/global-relocations.json \
+  --out tmp/dev/tmp/prof/w6-cache-replay-a500/global-service-references.json
+python3 R/RedBaron/tools/pairwise_table.py \
+  tmp/dev/tmp/game/RedBaron_v2.1/RedBaron/data/sim \
+  tmp/dev/tmp/prof/w6-prelude-50mhz-030 \
+  tmp/dev/tmp/prof/w6-prelude-25mhz-030 \
+  --out tmp/dev/tmp/prof/w6-prelude-50mhz-030/pairwise-table.json
+```
+
+Use `--routine world` for the world consumer report. Four pair-table tests
+cover changed values, incorrect row offsets, duplicate/misidentified objects,
+allocation/count mismatches and the three-object triangular layout. One
+additional operand-selection test covers partial global overlaps. The complete
+host suite passes 361 tests.
