@@ -1,5 +1,12 @@
 # Red Baron performance measurements
 
+Native overlay bitmap guards now pass 14 private boundary cases on both A500
+and cached 68030. Eight live cache comparisons remain exact across all 320,000
+framebuffer bytes; normal/developer builds are unchanged. These VERIFY runs
+include added diagnostic work and establish no speed result. See “Native
+overlay bitmap eligibility guards” in `w6-verification.md` for the current
+build, replay contexts and remaining W6 gates.
+
 The private overlay-cache twin now passes later-frame comparisons during W6's
 scheduled-input replay. Cached/native output matches every framebuffer byte on
 A500 and cached 68030 despite 888–1,205 changed background bytes at hits,

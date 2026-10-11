@@ -4292,8 +4292,8 @@ compares its padded width against `h3:9d40` at `sim:3070c`, and the mask contain
 an extra word per row. The host model now requires a 320 by 200 screen, zero
 mask pad words, and the complete padded native footprint inside both screen
 and active clip bounds. It rejects unsupported cases instead of silently
-omitting possible pixels. The native diagnostic mask builder has not acquired
-these guards; it still runs only alongside the original draw.
+omitting possible pixels. At this host-only checkpoint the native diagnostic mask builder had not acquired
+these guards; the native follow-up below adds them alongside the original draw.
 
 Retained captures `w6-overlay-shadow-replay-030`,
 `w6-overlay-shadow-replay-a500`, `w6-overlay-shadow-a500` and
@@ -4312,3 +4312,55 @@ nonzero mask pads, clipped padded footprints, and missing/short reads. All
 claims or W6 acceptance claims accompany this host guard. Complete native
 read/side-effect coverage, return-state handling, resource transitions and
 runtime cache invalidation remain open before any original draw can be skipped.
+
+
+## Native overlay bitmap eligibility guards
+
+The VERIFY mask builder now matches the host model's screen-extent, padded
+bitmap-footprint and zero-mask-pad requirements. It checks the entire native
+footprint against screen and clip bounds before iterating covered pixels, and
+checks each extra mask word before using that row. Rejection returns unsupported;
+callers must discard any partial mask. Original game drawing remains unconditional.
+
+`overlay-mask-guards.s` runs 14 private native cases once under the existing
+W6/overlay diagnostic selection. A 48,992-byte normal-memory allocation holds
+synthetic h3/resource/program data plus an 8,000-byte mask with 16-byte guards
+on each side. Cases cover the accepted baseline, wrong screen width/height,
+nonzero first/second mask pads, accepted/rejected exact right and bottom screen
+edges, accepted/rejected right clip edges, and rejected left/top/bottom clips.
+Every case checks its explicit expected supported result and both guards. No
+live resource is mutated. The allocation is freed on successful completion;
+as with existing VERIFY fixtures, a mismatch aborts diagnostic execution.
+
+Both `w6-overlay-guards-030` and `w6-overlay-guards-a500` use VERIFY SHA256
+`be253e7f5b5ddd8a7ca73f94dcd7fe913e6a9d49091d46ebdbe210f3716b8cca`
+(text 256,214 bytes). `mask-guards.txt` records **14 passed, allocation zero**
+on each CPU. Four live front calls per boot also pass all mask, packing,
+full-frame CPU-cache, h3 post-state and return-contract checks: **320,000
+framebuffer bytes** across eight calls, two fills and two hits per boot.
+Exact host dependency keys remain stable within each capture.
+
+| Capture | Seed/hit world ticks | Changed background bytes at hits (program 3/4) | Changed covered pixels (3/4) |
+| --- | --- | --- | --- |
+| Cached 68030 | 4 / 9 | 1,827 / 1,691 | 437 / 252 |
+| A500 | 34 / 114 | 1,169 / 1,089 | 246 / 182 |
+
+The additional private fixtures consume emulated time. On 68030 the seed still
+observes held Right at relative cursor 32; hits occur at cursor 67, after its
+release, with roll rate 368. A500 samples are after both scheduled inputs have
+released (cursors 252 and 832, roll rate zero). These are not matched world-state
+comparisons across CPUs and the large gaps are not capacity measurements.
+
+Both boots pass existing native counters (426/512/638/133, terrain/cache/list
+2/1/2 and shape 3), all 56 selected timing/pacing hook checks, and complete
+shadow-cache cleanup. Static audits pass 68 ranges/125 destinations; all 301
+host tests pass. Normal/developer binaries retain their W5 hashes. Both owned
+emulators were quit after collection. Reproduce with the existing shadow
+capture/checker, followed by the retained `capture-mask-guards.py` read-only
+counter collector.
+
+This closes the newly identified bitmap eligibility mismatch, not all native
+rejection paths or cache invalidation. Complete resource lifetime/transition
+handling, native dependencies and side effects, cached return state, hardware
+replay and performance remain open. W6 is still VERIFY-only, with consistent
+full gameplay and smooth 50 FPS unproven.

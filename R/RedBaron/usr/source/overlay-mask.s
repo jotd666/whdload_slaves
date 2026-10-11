@@ -21,6 +21,10 @@ overlay_mask_build:
 	bne .fail
 	cmpi.w #40,$1d42(a4)
 	bne .fail
+	cmpi.w #320,$1d40(a4)
+	bne .fail
+	cmpi.w #200,$1d44(a4)
+	bne .fail
 	move.l a5,a0
 	move.w #1999,d0
 .clear
@@ -208,18 +212,37 @@ overlay_mask_build:
 	move.w d4,-28(a6)
 	addq.w #2,-28(a6) ; native mask row includes a pad word
 	lsl.w #3,d4 ; padded source width in pixels
+	; Native bitmap width includes another 16-bit mask word. Reject its
+	; whole footprint when clipped, even if the visible bits would fit.
 	move.w d2,d0
 	add.w d4,d0
+	addi.w #15,d0 ; inclusive right edge with the native extra word
 	cmpi.w #320,d0
-	bhi .fail
-	move.w d3,d0
-	add.w d5,d0
-	cmpi.w #200,d0
-	bhi .fail
+	bhs .fail
+	move.w d3,d1
+	add.w d5,d1
+	subq.w #1,d1 ; inclusive bottom edge
+	cmpi.w #200,d1
+	bhs .fail
+	tst.w $1d46(a4)
+	beq .bitmap_unclipped
+	cmp.w $1d48(a4),d2
+	blt .fail
+	cmp.w $1d4a(a4),d0
+	bgt .fail
+	cmp.w $1d4c(a4),d3
+	blt .fail
+	cmp.w $1d4e(a4),d1
+	bgt .fail
+.bitmap_unclipped
 	move.l 4(a0),a1
 	move.l a1,d0
 	beq .fail
 .bitmap_row
+	move.w -28(a6),d0
+	subq.w #2,d0
+	tst.w 0(a1,d0.w) ; unsupported pad bits could paint beyond model width
+	bne .fail
 	moveq #0,d6
 .bitmap_pixel
 	move.w d6,d0
@@ -304,6 +327,7 @@ overlay_mask_verify:
 	cmpi.l #4,TIME_LOOP_STEPS(a0)
 	blo overlay_mask_verify_done
 .window_ready
+	bsr overlay_mask_guard_verify
 	lea overlay_mask_result(pc),a5
 	cmpi.l #4,12(a5)
 	bhs overlay_mask_verify_done
@@ -350,3 +374,5 @@ overlay_mask_verify_done
 	movem.l (sp)+,d0-a6
 	rts
 overlay_mask_result: dc.l 0,0,0,0 ; allocation, supported, program, count
+
+	include "overlay-mask-guards.s"
