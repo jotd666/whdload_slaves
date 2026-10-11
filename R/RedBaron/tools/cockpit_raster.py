@@ -28,6 +28,7 @@ def render(read,h3,index,background):
     def uint(at,n):return int.from_bytes(read(at,n),'big')
     if index not in (3,4):raise ValueError('Only audited front programs supported')
     if (uint(h3+0x9d34,4),uint(h3+0x9d3c,2),uint(h3+0x9d42,2))!=(8000,5,40):raise ValueError('Unsupported screen geometry')
+    if (uint(h3+0x9d40,2),uint(h3+0x9d44,2))!=(320,200):raise ValueError('Unsupported screen extent')
     if len(background)!=40000:raise ValueError('Invalid screen payload')
     pointer=uint(h3+0x7b52+4*index,4);program=decode(read,pointer)
     clip=struct.unpack('>4h',read(h3+0x9d48,8));clipped=uint(h3+0x9d46,2)
@@ -56,9 +57,20 @@ def render(read,h3,index,background):
             image=uint(table+command['image']*4,4)
             data,mask,w,h,size,orientation=struct.unpack('>IIHHIH',read(image,18))
             if orientation or command['mode']:raise ValueError('Oriented bitmap unsupported')
+            if not (0<w<=320 and 0<h<=200):raise ValueError('Unsupported bitmap extent')
             pitch=((w+15)//16)*2
             if size!=pitch*h:raise ValueError('Unexpected bitmap plane size')
+            # Native sim:3058c/3070c includes one extra mask word per row.
+            # Only wholly unclipped native footprints with zero pad words are
+            # accepted; otherwise pixels beyond the model's width may be drawn.
+            x,y=args;right=x+pitch*8+15;bottom=y+h-1
+            if x<0 or y<0 or right>=320 or bottom>=200:
+                raise ValueError('Unsupported native padded bitmap footprint')
+            if clipped and not (clip[0]<=x and right<=clip[1] and clip[2]<=y and bottom<=clip[3]):
+                raise ValueError('Native padded bitmap footprint is clipped')
             pixels=read(data,size*5);bits=read(mask,(pitch+2)*h)
+            if any(bits[row*(pitch+2)+pitch:row*(pitch+2)+pitch+2]!=b'\0\0' for row in range(h)):
+                raise ValueError('Nonzero bitmap mask pad word')
             for y in range(h):
                 for x in range(pitch*8):
                     bit=128>>(x%8)

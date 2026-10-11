@@ -10,6 +10,13 @@ or cross-CPU gameplay equivalence. No game drawing is skipped. See “Delayed
 cache twins during W6 scheduled input” in `w6-verification.md`; complete cache
 guards, view/resource transitions and live hardware replay remain open.
 
+The host overlay model now checks exact dependency bytes and rejects nonzero
+bitmap mask padding or unsupported native clipping. All 16 retained calls
+across four captures pass; the first-call keys remain stable on subsequent
+calls (1,608 bytes for program 3, 1,460 for program 4). All 301 host tests pass.
+These are host correctness checks, with no new timing result or runtime cache
+guard. See “Exact overlay pixel-model dependency guard” in `w6-verification.md`.
+
 The W6 ground-impact render-scratch leak is fixed in the current VERIFY
 candidate. Fresh rendered/no-render runs match all 280 player bytes at all 15
 world boundaries, including the formerly divergent flag. The native renderer

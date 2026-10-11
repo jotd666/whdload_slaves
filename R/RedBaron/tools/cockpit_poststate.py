@@ -41,8 +41,8 @@ def expected(read,h3,program):
             if image is None or command['mode']!=0:raise ValueError('Unsupported bitmap mode')
             put(0x7c1c,2,command['mode'])
         elif kind=='rectangle':
-            # The only accepted rectangle opcode is A104: native temporarily
-            # clears its mode word for fill, then restores it to one.
+            # A104 selects filled mode one at sim:28be8 before drawing.
+            # A114 selects outline mode zero; that opcode is not accepted.
             put(0x9d54,2,1)
         elif kind!='line':raise ValueError('Unsupported drawing-state command')
     return bytes(data),writes

@@ -3968,7 +3968,8 @@ the existing overlay audit. Results are retained as `poststate-check.json`.
 The model follows resource selection at `sim:28c66..28c9e`: the selected set
 word at `h3:7c22`, table pointers at `h3:7c24/7c2c`, and selected descriptor at
 `h3:7c28`. Bitmap mode is stored at `h3:7c1c`; the accepted rectangle operation
-restores `h3:9d54` to one. Colour operations retain the unmapped pen at
+sets `h3:9d54` to one at `sim:28be8` (opcode A104). The different A114
+outline path clears then restores it and is not accepted by this model. Colour operations retain the unmapped pen at
 `h3:4164` and mapped foreground/background at `h3:9d52/9d50`. The shared colour
 model now follows native sign extension for palette selectors and table bytes,
 including comparison against the original argument words and last-match wins.
@@ -4273,3 +4274,41 @@ from the saved RAM banks without another emulator run. Complete invalidation
 keys, view/resource transitions, native rejection-path tests and live hardware
 replay still precede a rendering replacement. Broader W6 state/event, capacity
 and smooth-50-FPS gates remain open.
+
+
+## Exact overlay pixel-model dependency guard
+
+`cockpit_dependencies.py` stores the program identity and exact bytes read by
+`cockpit_raster.py`, merging adjacent reads into ranges. Matching compares those
+bytes directly, not a hash, and does not follow a changed resource pointer.
+The diagnostic digest is only an aid to inspecting reports. Destination-buffer
+identity and background pixels are deliberately outside this pixel-model key.
+This is a host analysis tool, not a native cache guard or a proof that the model
+covers every native dependency. In particular, comparing saved resource ranges
+is not a runtime resource-lifetime or memory-safety protocol.
+
+Native inspection identified two missing eligibility checks. The bitmap helper
+compares its padded width against `h3:9d40` at `sim:3070c`, and the mask contains
+an extra word per row. The host model now requires a 320 by 200 screen, zero
+mask pad words, and the complete padded native footprint inside both screen
+and active clip bounds. It rejects unsupported cases instead of silently
+omitting possible pixels. The native diagnostic mask builder has not acquired
+these guards; it still runs only alongside the original draw.
+
+Retained captures `w6-overlay-shadow-replay-030`,
+`w6-overlay-shadow-replay-a500`, `w6-overlay-shadow-a500` and
+`w6-overlay-shadow-bank-030` pass all 16 raster comparisons and dependency
+checks. For each capture, both later calls retain the exact first-call key:
+program 3 has 15 merged ranges totalling 1,608 bytes, and program 4 has 11
+ranges totalling 1,460 bytes. These are within-capture comparisons, not
+cross-boot pointer equality or native invalidation-transition tests. The
+misnamed older bank capture does not establish steering; only the delayed
+68030 replay observes held Right as documented above.
+
+Six host tests cover program/resource/command/palette/geometry changes,
+background independence, changed pointers without following the new address,
+nonzero mask pads, clipped padded footprints, and missing/short reads. All
+301 host tests pass. No slave code changes, new emulator runs, performance
+claims or W6 acceptance claims accompany this host guard. Complete native
+read/side-effect coverage, return-state handling, resource transitions and
+runtime cache invalidation remain open before any original draw can be skipped.
