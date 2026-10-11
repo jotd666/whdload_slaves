@@ -1,5 +1,14 @@
 # Red Baron performance measurements
 
+A fresh current-build 68EC020 capacity capture completes 163 world updates over
+1,000 consecutive PAL fields, against 163.426 newly funded updates, while
+publishing 66 frames (**3.3 FPS**). Sampled total backlog remains 0.258–3.134
+updates; the longest sampled completion gap is 15 fields (0.30 seconds). The
+first 250-field window includes message activity. See “Current-build 68020
+capacity window” in `w6-verification.md` for configuration, exact accounting
+and limits. This is a VERIFY capacity observation, not a release speedup,
+complete capacity-matrix result or 50 FPS demonstration.
+
 The remaining 1,000-byte residual is a native file-stream buffer. Its two
 cross-boot differences already exist before W6 activates and remain unchanged
 through all 41 controlled checkpoints; both stream handles and descriptors are

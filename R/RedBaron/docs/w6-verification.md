@@ -4975,3 +4975,83 @@ This classifies the observed 1,000-byte residual without certifying file I/O,
 mission transitions or complete gameplay independence. Remaining heap/global
 ownership, broader scenarios and CPU architectures, sustained capacity and
 smooth 50 FPS remain open. W6 stays VERIFY-only.
+
+
+## Current-build 68020 capacity window
+
+A fresh boot of the current VERIFY image
+`9c92ff9979e40ec98adc1f73255f8e57b4f65b2f2d6d5d6e13793aad7f414415`
+(text 256386) supplies four consecutive **250-field windows**, 1,000 fields /
+1,185 CIA ticks overall. The configuration is A1200 / 68EC020, 2 MB chip and
+8 MB fast RAM, no slow RAM, UAE CPU multiplier four, real CPU speed, and CPU,
+memory and blitter cycle-exact modes. This identifies the emulated configuration;
+no independently calibrated physical MHz claim is made.
+
+Selection is CUSTOM2=16319, CUSTOM4=0, CUSTOM5=512, Time Scale 40 / F=33, with
+no compression or synthetic replay. The controlled-prelude fixture is disabled.
+This is a fresh capacity boot, not an equal-initial-state comparison with the
+50/25-MHz correctness captures. The inherited development route enters flight
+and activates W6; the census starts at a committed VBlank after a restored render.
+
+| Observation | Window 1 | Window 2 | Window 3 | Window 4 |
+| --- | ---: | ---: | ---: | ---: |
+| PAL fields | 250 | 250 | 250 | 250 |
+| Completed world updates | 42 | 41 | 41 | 39 |
+| Publications | 16 | 16 | 17 | 17 |
+| Publication FPS | 3.2 | 3.2 | 3.4 | 3.4 |
+| Message starts / shorten calls | 14 / 10 | 0 / 0 | 0 / 0 | 0 / 0 |
+
+Overall, **163 completed updates** match **163.4262626 newly funded updates**
+within the exactly accounted change in backlog. The completion rate is **8.15
+updates per PAL second**; the 66 publications give **3.3 FPS**. Started updates
+increase by 162 because an update is already in progress at the opening boundary
+and none is in progress at the end. WORLD_BODY_DONE counts match completed
+updates in every window. The opening message activity means this is a mixed
+observed window, not a certified R-steady/R-event workload pair.
+
+Unprocessed CIA debt changes from **8 to 14 ticks**, with a committed sampled
+range of **0–17**. Total backlog, including fractional credit, queued/in-progress
+world work and unprocessed CIA time, changes from **2.1719865 to 2.5982492 world
+updates**, with sampled range **0.2580471–3.1336027**. Its increase of 0.4262626
+updates equals funded minus completed work exactly. No elapsed credit is dropped.
+This bounded observed range supports capacity in this finite window; it is not
+proof of a bounded long-term backlog under every scene or workload.
+
+The longest sampled span without a completed world update is **15 fields /
+0.30 seconds**. That is a completion-stall observation, not a measured physical
+input latency. All 66 publications occur in the permitted beam region and respect
+the one-field minimum. The measured within-window publication intervals are
+13–19 fields, far from smooth 50 FPS. No rendering-performance gain over W5 or
+another CPU is inferred from these counts.
+
+All 1,000 consecutive field samples are retained. Four samples are inside a
+known type-one clock transaction; exact funding is checked over the surrounding
+committed samples, yielding 996 committed intervals. The native counters pass:
+426 clock, 512 input, 638 presentation, 133 phase, and terrain/cache/list 2/1/2.
+The live hook audit passes 56 selected ranges and two disabled overlay ranges.
+No slave code changed. The owned emulator was verified by its base directory
+and quit after capture; other projects' emulators were left running.
+
+Evidence is `tmp/dev/tmp/prof/w6-sustained-current-020/`, including the frozen
+slave/listing, boot script, `capture-census.py`, entry/endpoint RAM, per-window
+publication/event logs, `field-census.json`, `sustained-check.json`,
+`selftest-result.json` and `byte-audit.json`. Reproduce from the development
+harness directory with a fresh output directory, one emulator at a time:
+
+```sh
+python3 tools/w6_boot_current.py 020 16319 tmp/prof/my-w6-020
+PYTHONPATH=tools python3 tmp/prof/w6-sustained-current-020/capture-census.py \
+  tmp/prof/my-w6-020 --windows 4
+python3 ../../R/RedBaron/tools/sustained_capacity.py \
+  tmp/prof/my-w6-020/field-census.json \
+  --out tmp/prof/my-w6-020/sustained-check.json
+python3 tools/w6_selftest_result.py tmp/prof/my-w6-020
+python3 tools/w6_loop_audit.py tmp/prof/my-w6-020
+python3 tools/redbaron.py quit
+```
+
+Source the documented harness environment first. The capture script is retained
+local evidence, not a redistributed game asset. This adds a measured 68020
+capacity window; it does not close event/bank/dense coverage, input latency,
+full-state and physics/combat correctness or the actual 50 FPS requirement.
+W6 remains VERIFY-only and the goal remains unfinished.
