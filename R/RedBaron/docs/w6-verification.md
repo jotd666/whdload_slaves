@@ -7038,3 +7038,70 @@ contracts and alias fallback or proof. The retained debugger SR is not used
 as CCR proof. A timing comparison must include candidate bookkeeping and RAM
 costs before selecting it. No installed game bytes or player behavior changed;
 the A500 capacity failure is still open.
+
+
+## Private native matrix candidate
+
+`time-matrix-verify.s` adds an assembly candidate and native twins to the W6
+VERIFY experiment. It **does not patch the game's matrix constructor**.
+The installer copies the relocated original `sim:3648c–3688d` into two private
+buffers. One remains untouched; the candidate reserves six frame-local bytes
+and rewrites six whole-instruction blocks. Three first evaluations retain
+their signed half-table values, and three repeated evaluations load those
+locals. Branches skip the unused original bytes in each private slot. Original
+special paths remain in the copied routine. No game executable bytes are
+stored as a tracked binary asset.
+
+The six private blocks are `sim:364ce–364f5`, `sim:364f6–3651b`,
+`sim:3654c–36575`, `sim:365a6–365cf`, `sim:365d4–365fb` and
+`sim:365fc–36621`. An original-instruction scan confirms every boundary aligns
+and no branch from outside a block enters its interior. The copied constructor
+uses the live original trig table. No persistent matrix cache, allocation or
+cross-object state is introduced.
+
+This assembly version reduces the general path's fixed lookup count from 17
+to 14. It does not implement the host dictionary's extra input-dependent
+coincidences; the earlier 4,843-read model result must not be attributed to
+this assembly. New helper-call, branch and stack-local costs must be measured.
+A smaller lookup count alone does not establish a faster routine.
+
+Fresh capture `w6-matrix-private-a500-r2` uses VERIFY SHA-256
+`b5704b810bfe802c25fad84efb9116159936a71224cf336ab4e1ce9407cc7214`
+(text 268,912 bytes). The established A500-equivalent 68000 configuration
+runs 64 deterministic triples under all 32 incoming CCR patterns:
+
+- **2,048 native twins pass.** Each compares D0–D7/A0–A6, XNZVC read explicitly
+  in guest code, and the complete 20-byte output buffer.
+- The twentieth byte is initialized to a canary and remains unchanged.
+  Cases include identity, single-axis, general, word-wrap and quantization
+  boundary inputs plus deterministic arbitrary full-range triples.
+- Both calls use the same input/output addresses, with disjoint buffers.
+  Aliasing and live gameplay calls are not covered by this fixture.
+- Captured bytes prove the game's whole constructor remains original and the
+  private original matches it exactly after relocation.
+
+The first attempted boot is **invalid evidence**: adding an initializer before
+the tape module pushed an existing signed-word VERIFY patch destination two
+bytes beyond its limit. The branch audit caught it; the owned test emulator
+was stopped, and no twin pass is claimed for that run. Initialization now
+occurs alongside the late W6 exponent experiment, leaving the earlier hook
+layout intact. The corrected build passes **133 patch destinations** and the
+unchanged **76-range** hook audit. All 404 host tests pass.
+
+The successful run stops at `time_matrix_ready` with result counter 2,048;
+`matrix-twins.log`, `matrix-twins.json`, frozen binary/listing, and native/
+private constructor snapshots retain the evidence. Reproduce by booting the
+current VERIFY A500 selection, resolving symbols from that build's listing,
+and continuing from the first flight anchor with breakpoints at
+`time_matrix_ready` and `time_matrix_bad`. A stop at the latter is a failure;
+read the native counter only at the completion checkpoint. This is a private
+self-test checkpoint before the remaining W6 installation returns, not a
+completed flight-capacity capture. The owned emulator was verified and quit.
+
+Normal and developer builds compile with their unchanged W5 hashes:
+`5256542f87ec1c6d3eca174416560597a60e76e1cc785cd0fbf5e3efff3f0ba8` and
+`01a00068d799b01c9b17a06bc7b2ce87acf88f22c23f870afd476d4e46a6adc3`.
+Next: measure original/candidate private call costs in the same 250-field
+trace, test the other supported CPU paths, and decide whether a guarded live
+hook is worthwhile. Any hook needs explicit alias handling and native live
+twins. W6's failed A500 capacity gate is unchanged by this private candidate.

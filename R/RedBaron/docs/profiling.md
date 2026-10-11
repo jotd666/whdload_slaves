@@ -1,5 +1,12 @@
 # Red Baron performance measurements
 
+A **private VERIFY assembly matrix candidate** now passes **2,048 native A500
+twins**: all D0–D7/A0–A6 values, XNZVC and the 20-byte output buffer match the
+original. The candidate reuses three fixed expressions and has **no installed
+game hook**. Normal/developer hashes remain unchanged. See “Private native
+matrix candidate” in `w6-verification.md`. Timing, other CPUs, alias handling
+and the W6 capacity deficit remain open.
+
 An integer model of `sim:3648c` now matches **all 19 output bytes in 400
 complete native matrix calls** from the squadron trace. Reusing identical
 word-valued expressions reduces modeled table reads from **6,800 to 4,843**
