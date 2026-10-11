@@ -24,8 +24,13 @@
 	INCLUDE	lvo/exec.i
 ;============================================================================
 
+	IFD VERIFY_CACHEAUDIT
+WHDL_REQVER:	equ 18
+WHDL_REQREV:	equ 0
+	ELSE
 WHDL_REQVER:	equ 16
 WHDL_REQREV:	equ 5
+	ENDC
 
 ;============================================================================
 
@@ -262,6 +267,10 @@ _p0_OldOpenLibrary:
 	move.l	#WCPUF_All,d1
 	move.l	_resload(pc),a2
 	jsr	resload_SetCPU(a2)
+	IFD VERIFY_CACHEAUDIT
+	; A separate audit boot logs this setup and exits; never a timing build.
+	bra _verify_cache_audit
+	ENDC
 
 .ool_do_open:	
 	bsr	_fcache	; call original library vector
@@ -315,6 +324,21 @@ _pl0_v1:	PL_START
 	PL_PS	$7cde,_cgear5_v1
 
 	PL_PS	$1222,_quitkey_v1	; install game quit key (Q)
+
+	IFD VERIFY_NOPOLY
+	IFND VERIFY_CEILING
+	FAIL "VERIFY_NOPOLY requires VERIFY_CEILING"
+	ENDC
+	ENDC
+	IFD VERIFY_CEILING
+	; Equal-size control/bypass builds keep code placement and alignment fixed.
+	; PERF_RANGE VERIFY_NOPOLY $0329a $0002: return before any filler side effects
+	IFD VERIFY_NOPOLY
+	PL_W $329a,$4e75	; omit the entire planar polygon filler
+	ELSE
+	PL_W $329a,$2f0c	; native move.l a4,-(sp), timing control
+	ENDC
+	ENDC
 
 	IFD VERIFY_ATTRACT
 	; Startup fixture: one key at the title wait, excluded from normal builds.
@@ -1330,4 +1354,51 @@ _verify_title_done:	dc.b	0
 
 	IFD VERIFY_SLOW
 	INCLUDE "HardDrivinSlowVerify.s"
+	ENDC
+
+; Cache audit is a separate terminating boot, not part of any performance run.
+; Both queries use a zero change mask. Log through WHDLoad and exit normally so
+; its buffered log reaches disk. Read hardware CACR in Supervisor on 020+;
+; API cache bits and hardware CACR are logged separately.
+	IFD VERIFY_CACHEAUDIT
+slv_config:
+	dc.b 0
+	EVEN
+_verify_cache_audit:
+	lea .tags(pc),a0
+	jsr resload_Control(a2)
+	moveq #0,d0
+	moveq #0,d1
+	jsr resload_SetCPU(a2)
+	move.l d0,d2
+	moveq #0,d0
+	moveq #0,d1
+	jsr resload_SetCACR(a2)
+	move.l d0,d4
+	moveq #0,d3
+	move.l .attn(pc),d0
+	btst #AFB_68020,d0
+	beq.s .no_cacr
+	move.l 4.w,a6
+	lea .read_cacr(pc),a5
+	jsr _LVOSupervisor(a6)
+	move.l d0,d3
+.no_cacr:
+	move.l d3,-(a7)
+	move.l d4,-(a7)
+	move.l d2,-(a7)
+	move.l .attn(pc),-(a7)
+	lea .message(pc),a0
+	jsr resload_Log(a2)
+	lea 16(a7),a7
+	bra _exit
+.read_cacr:
+	dc.w $4e7a,$0002	; movec cacr,d0 (only reached on 020+)
+	rte
+.tags:	dc.l WHDLTAG_ATTNFLAGS_GET
+.attn:	dc.l 0
+	dc.l 0
+.message:
+	dc.b "HD_CACHE attn=%08lx setup=%08lx cache_api=%08lx cacr=%08lx",0
+	EVEN
 	ENDC

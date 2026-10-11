@@ -68,7 +68,8 @@ must confirm them before any design relies on them.
   - Edge setup (`$02da2`, which does a `divu` per edge): 4.2%.
   - `$02b74`: 4.1%.
   - Slave blitter wait: 2.7%.
-  - On the A500, slow RAM shares the chip bus, so this machine is purely CPU-bound.
+  - The measured A500 workload is dominated by CPU rendering. Memory placement
+    and blitter costs must still be measured; this is not a purely CPU-bound claim.
 
 ## Lessons carried over from the other projects
 
@@ -161,7 +162,9 @@ Tools stay in ignored `tmp/dev/tools`.
 
 1. **For every machine profile, capture:**
    - The attract window: 1,000 fields, two fresh boots, identical.
-   - Both gameplay windows.
+   - Both gameplay windows for swap/state measurements. For CPU/DMA profiling,
+     use a 500-field (10.016-second) sample within each: A starts at race field 1;
+     B starts at field 4300, covering the A500 jump/crash and start of replay.
 
    Record FPS from swap counts, self and inclusive routine shares, blitter-wait cost,
    DMA slot shares, the `$00740`/`$00750` spin time, and the time spent in `$0cda4`
@@ -374,4 +377,9 @@ Never commit game bytes, traces, dumps, screenshots, built slaves or tools from
 | 68030/50 | About 25–40 FPS |
 | 68040/68060 with Fast RAM | 40–50 FPS, unless the ceiling run in step 2 shows a chip-bus limit |
 
-Revise these after step 2.
+Step 2 measures native, frame-coupled attract rates of 6.44/6.54 FPS on the
+two A500 profiles, 24.16 on the 020, 38.49 on the 030, and 33.95–34.79 on the
+040/060 profiles. The matched 030 ceiling reaches 49.87 FPS with polygons omitted.
+These are references for the remaining work, not proof that the correct-speed
+targets above are achieved. See PERFORMANCE.md for gameplay rates, changed-route
+limits and unavailable fast-core instruction/blitter-slot measurements.
