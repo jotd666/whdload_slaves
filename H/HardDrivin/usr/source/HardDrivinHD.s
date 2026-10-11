@@ -252,6 +252,10 @@ _p0_OldOpenLibrary:
 	move.l	a0,(a1)+
 	move.l	d0,(a1)+
 
+	IFD VERIFY_SLOW
+	bsr	_verify_slow_install
+	ENDC
+
 	; set CPU and cache options for program
 
 	move.l	#WCPUF_Base_WT|WCPUF_Exp_WT|WCPUF_Slave_CB|WCPUF_IC|WCPUF_DC|WCPUF_SB|WCPUF_BC|WCPUF_SS,d0
@@ -1266,6 +1270,10 @@ _abort:      move.l	_resload(pc),-(a7)
 	CNOP	0,4
 _ctl_tags:	dc.l	WHDLTAG_CUSTOM2_GET
 _ct_ct2:	dc.l	0
+	IFD VERIFY_SLOW
+	dc.l WHDLTAG_CUSTOM4_GET
+_ct_ct4:	dc.l 0
+	ENDC
 	dc.l	0
 
 _exec_OldOpenLibrary:
@@ -1317,4 +1325,8 @@ _verify_title_done:	dc.b	0
 
 	IFD VERIFY_DRIVE
 	INCLUDE "HardDrivinVerify.s"
+	ENDC
+
+	IFD VERIFY_SLOW
+	INCLUDE "HardDrivinSlowVerify.s"
 	ENDC
