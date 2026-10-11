@@ -66,8 +66,14 @@ overlay_shadow_after:
 	lea 40(a5),a2
 	adda.w d0,a2 ; selected saved descriptor
 	lea 16(a3),a3
-	tst.l (a4)
+	move.l 36(a5),d0
+	subq.l #3,d0
+	lsl.w #2,d0
+	lea overlay_shadow_valid(pc),a0
+	tst.l 0(a0,d0.w)
 	bne .hit
+	tst.l (a4)
+	bne .reuse_allocation
 	move.l 4.w,a6
 	move.l #5240,d0
 	moveq #0,d1
@@ -75,6 +81,10 @@ overlay_shadow_after:
 	move.l d0,(a4)
 	beq overlay_blit_bad
 	move.l d0,a1
+	bra .seed_start
+.reuse_allocation
+	move.l (a4),a1
+.seed_start
 	move.l overlay_pack_result(pc),a0
 	move.w #1309,d0
 .seed
@@ -83,6 +93,11 @@ overlay_shadow_after:
 	move.l (a3),(a2)
 	move.l 4(a3),4(a2)
 	move.l 8(a3),8(a2)
+	move.l 36(a5),d0
+	subq.l #3,d0
+	lsl.w #2,d0
+	lea overlay_shadow_valid(pc),a0
+	move.l #1,0(a0,d0.w)
 	addq.l #1,16(a5)
 	bra .replay
 .hit
@@ -160,6 +175,9 @@ overlay_shadow_cleanup:
 	jsr _LVOFreeMem(a6)
 	clr.l 4(a5)
 .cleared
+	lea overlay_shadow_valid(pc),a0
+	clr.l (a0)+
+	clr.l (a0)
 	clr.l 64(a5)
 .done
 	movem.l (sp)+,d0/a0-a1/a5-a6
@@ -211,3 +229,5 @@ overlay_shadow_result:
 	dc.l 0,0 ; original destination, current program
 	dcb.w 12,0 ; two saved descriptors
 	dc.l 0,0 ; selected persistent cache, unsupported cases
+
+overlay_shadow_valid: dc.l 0,0 ; explicitly invalidated before lifetime changes

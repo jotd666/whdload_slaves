@@ -5234,3 +5234,82 @@ No slave code changed, no emulator was launched, and no runtime cache or speed
 claim follows from this audit. It identifies necessary implementation work for
 the still-open smooth-50-FPS requirement; full gameplay independence also remains
 unproven.
+
+
+## Native private-cache lifetime invalidation hooks
+
+`overlay-lifetime.s` installs seven original-checked hooks under VERIFY CUSTOM2
+bit 14, for sim v1 only. The private shadow cache now has separate validity
+flags for programs three and four. The invalidation helper clears both flags
+before the hooked operation and preserves registers and condition codes. Its
+operation counter is diagnostic only: wrapping that counter cannot revalidate
+an old cache entry. A later supported original draw can refill an invalid entry
+using its existing private allocation; cleanup clears both flags and frees the
+private allocations. The live game still executes every original draw.
+
+| Hook | Replayed original prefix and continuation |
+| --- | --- |
+| `sim:28516`, 6 bytes | Owner reset prefix → `sim:2851c` |
+| `sim:28556`, 8 bytes | Loader frame and saved registers → `sim:2855e` |
+| `sim:286fc`, 8 bytes | Rebuilder saved registers and argument → `sim:28704` |
+| `sim:28df4`, 6 bytes | Release saved register and argument → `sim:28dfa` |
+| `sim:301d8`, 8 bytes | Bitmap filename/mode arguments → `sim:301e0` |
+| `sim:303ac`, 6 bytes | Null check/header adjustment → `sim:303b2`, or null → `sim:303ee` |
+| `sim:3038e`, 6 bytes | Bulk-release registry end pointer → `sim:30394` |
+
+The bitmap-load hook is at `sim:301d8`, before file-open/allocation work, rather
+than the earlier candidate entry. The static linear audit rejected the earlier
+boundaries because of incoming targets decoded in the preceding area; the final
+range passes without suppressing the audit. Its prefix is non-relocated. The
+bulk-release relocated operand is independently checked using h3 derived from
+the original loader registry operand. W1's `sim:303c6` hook is untouched.
+
+A native private self-test sets both validity flags, invokes invalidation with
+every one of the **32 CCR combinations**, checks exact flag restoration and
+both cleared validity flags, and records 32 completed cases. The 68000 uses
+MOVE from SR; later CPUs use the existing MOVE from CCR adaptation. Each entry
+wrapper resumes after its complete displaced instructions. Original stack and
+null-return paths are encoded explicitly, not inferred from a generic trampoline.
+
+Final VERIFY image SHA256 is
+`d8c84c69e29bb9f14f720fefdc7b13d1a8a22c894c7101d093bfb5cbabb53f57`
+(text **257162**). Fresh `w6-overlay-lifetime-a500` and
+`w6-overlay-lifetime-030` captures use CUSTOM2=32703, CUSTOM4=0 and the scheduled
+Right/Fire replay. Both pass the 32 private cases and existing full pixel,
+h3 post-state, caller-return, mask, pack and persistent-shadow checks for four
+calls each: **320,000 framebuffer bytes** across the two runs. Each records two
+fills and two hits, zero mismatch, and successful cleanup. Validity changes
+from neither valid, to program three valid, to both valid, then both cleared
+on the fourth attempt's cleanup.
+
+**The live lifecycle-operation counter is zero in both captured windows.**
+These runs verify installed destinations/continuations and the private helper,
+not actual resource release, reload, failed allocation or reuse at the same
+address. Those paths and their displaced-prefix behavior remain explicit native
+test requirements. No complete indirect-call coverage or complete resource key
+is claimed. The refill-after-invalidation path also needs a live private test
+with an existing cache allocation; the successful captures exercise initial
+fills and ordinary reuse only.
+
+`overlay_lifetime_check.py` checks all seven live hook ranges and continuation
+stubs, the null-free continuation, private-case count and validity flags against
+the frozen listing and snapshots. It runs the existing shadow/pixel/state checks
+as prerequisites and reports the observed operation count, including zero.
+Reproduce with:
+
+```sh
+python3 R/RedBaron/tools/overlay_lifetime_check.py \
+  tmp/dev/tmp/prof/w6-overlay-lifetime-030/overlay-capture.json \
+  --out tmp/dev/tmp/prof/w6-overlay-lifetime-030/lifetime-check.json
+```
+
+Static audits pass **75 ranges / 132 patch destinations**. All **334 host tests
+pass**. Native timing/input/presentation counters remain 426/512/638/133 and
+terrain/cache/list 2/1/2; the existing 56 timing/pacing hook checks pass too.
+Both owned emulators were verified and quit. Normal W5 remains
+`5256542f87ec1c6d3eca174416560597a60e76e1cc785cd0fbf5e3efff3f0ba8`
+and developer W5 remains
+`01a00068d799b01c9b17a06bc7b2ce87acf88f22c23f870afd476d4e46a6adc3`.
+No release behavior, sound behavior or performance claim changes. Native cache
+key integration, lifecycle failure/reuse tests, skipped-draw state equivalence,
+full gameplay independence and actual smooth 50 FPS remain unfinished.

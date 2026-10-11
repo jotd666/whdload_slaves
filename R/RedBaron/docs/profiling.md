@@ -1,5 +1,13 @@
 # Red Baron performance measurements
 
+VERIFY bit 14 now installs seven resource-lifetime invalidation hooks for the
+private overlay cache. Both A500 and 68030 pass 32 native condition-code cases
+and four complete overlay twins each; normal/developer binaries remain W5.
+No actual lifecycle operation occurred in these early-flight samples, so live
+free/reload/failure coverage is still required. See “Native private-cache
+lifetime invalidation hooks” in `w6-verification.md`. Native drawing remains
+in use and no speedup is claimed.
+
 The overlay lifetime audit found stale derived program selectors after owner
 release and a stale bitmap registry slot on a loader-failure path. An ordered
 byte guard alone cannot safely certify these resources. The verification ledger
