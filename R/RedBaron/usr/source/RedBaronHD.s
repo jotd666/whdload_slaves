@@ -608,6 +608,7 @@ new_DeleteFile:
 	include "overlay-blit.s"
 	include "time-terrain-verify.s"
 	include "time-shape-verify.s"
+	include "time-flag-verify.s"
 	include "time-mouse-ownership-cases.i"
 time_message_log: dcb.b 24*128,0
 fill_twin_before: dcb.b 20*256*2,0
@@ -628,4 +629,5 @@ time_blend_output: dcb.b TIME_POSE_CAPACITY*TIME_POSE_STRIDE,0
 observe_buffer: dcb.b OBS_STRIDE*OBS_CAPACITY,0
 time_input_test_queue: dcb.b TIME_INPUT_BYTES,0
 time_input_observe_queue: dcb.b TIME_INPUT_BYTES,0
+time_model_flag_cases: dcb.b 512*4,0
 	ENDC

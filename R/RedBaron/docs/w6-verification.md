@@ -3365,3 +3365,88 @@ entry/result events, full RAM snapshots, `contact-check.json`,
 `world_comparison.py`. Four new host tests bring the passing suite to 249.
 No slave bytes changed. Next: trace the byte +36 bit-5 divergence and preserve
 native temporary-state semantics before claiming ground-contact independence.
+
+
+## Ground-impact render scratch restoration
+
+The byte +36 discrepancy above is resolved in VERIFY build
+`c54a84f748481dfb0583651ab79e04a0321086b17d3325172138ad9060122e7b`
+(text 253,532 bytes). It remains behind W6 bit 13 for sim v1. Normal/developer
+binaries retain their W5 hashes; there is no release promotion or performance claim.
+
+The read-only native trace `w6-ground-flags-030` confirms the writer and consumer:
+after completed tick 2, `sim:15ca0` sees player byte +36 = 97 (0x61), then
+`sim:15cc6` consumes 65 (0x41). The next completed-world snapshot retains 65.
+The outer renderer calls `sim:15c62` via `sim:007a0` before the 3D pass, then
+`sim:15cac` via `sim:007bc` afterwards. The former saves object byte-zero bit 7
+in byte +36 bit 5; the latter restores byte-zero bit 7 from that temporary bit.
+W6's projection-cache snapshot begins after this temporary write, so it cannot
+recover the earlier scratch value.
+
+Two original-byte-checked hooks now journal byte +36 before native BSET/BCLR
+at `sim:15c82`/`sim:15ca0`. The original operations and their consumer still
+execute; reverse undo at the outer draw return restores the pre-draw byte.
+The journal remains inactive outside W6 presentation. Wrappers preserve all
+registers and incoming CCR before replaying BSET/BCLR, which modify only Z.
+The existing journal handles duplicate/overlapping writes in reverse order.
+This deliberately restores named temporary state, not the entire object or h3.
+
+`visibility_scratch.py` independently models both byte operations and their
+condition codes. The private native test exhausts all 256 old bytes for each
+operation: 512 retained byte/CCR results match Python, each journaled byte
+restores exactly, and inactive-owner calls create no records. Host tests also
+exhaust all 32 incoming CCR combinations and reject truncated, reordered and
+corrupted result streams. All 251 host tests pass. Static checks cover 68 hook
+ranges and 125 signed patch destinations with no errors. The late VERIFY
+installer and data buffers preserve patch reach; the observer's distant CUSTOM5
+load uses full-displacement position-independent access.
+
+A first candidate passed the private cases but failed activation because its
+nested installer did not preserve registers across `resload_Patch`. The native
+error and rejected capture `w6-ground-restore-030` are retained. The corrected
+installer has its own saved-register envelope; that failed boot supplies no
+gameplay evidence.
+
+Fresh same-build cached-68030 50 MHz ground runs, maximum detail and Time Scale
+40, are retained as `w6-ground-restore-030-v2` and
+`w6-ground-restore-none-030`. Initial h3, all four sim segments and game
+allocations agree. All 15 completed-world boundaries now match the full
+280-byte player record, including byte +36, without exclusions. All 463
+registered prefixes and 463 separately checked normal-object scratch bytes
+match, as do registry, camera, display-list/lifecycle state and the held-key,
+command-queue and consumption histories. Both actual impact calls still match
+the independent grade-2 model. Both return value 1 at native flight exit with
+started tick 15/last pose 14 and clear active/input-ready state correctly.
+
+Across the 14 completed intervals, the ordinary run has 16 draws over 91 fields
+and 106 CIA ticks; the no-render run has zero draws over 87 fields and 102 CIA
+ticks. Their uncollected CIA debt ends at four/zero respectively. Exact funding
+passes both. These short correctness windows are not FPS/capacity measurements.
+Native counters 426/512/638/133, terrain/cache/list 2/1/2, three shape cases,
+512 scratch cases and 56 selected plus two disabled hook ranges pass in each.
+Both owned emulators were verified and quit.
+
+Raw differences remain: final h3 differs in 3,108 bytes and the other segments
+in 138/0/0. Some intermediate boundaries differ in sound context slot 1 at
+payload bytes 345, 348, 349 and 361; only the first is covered by the earlier
+elapsed-word classification. These are retained as open sound-state/consumer
+work, not normalized away. Final shared game allocations agree. No claim of
+all-global, sound-event, combat or cross-CPU equivalence follows from this fix.
+
+Each capture retains the exact collector, exit checker, expanded hook audit,
+full snapshots and reports. `summarize.py`/`ground-summary.json` assert the
+scoped comparison without changing `heap-inventory.json`. Reproduce private
+cases with `visibility_scratch.py CAPTURE --out REPORT`. The broader physics,
+modal/camera/combat, sustained-capacity and smooth-50-FPS gates remain open.
+
+
+The same-build A500 check `w6-ground-restore-a500` also passes all 512 private
+scratch cases, the existing native counters/shape cases and 56-selected/two-off
+hook audit. Fifteen boundaries validate 463 poses; native impact grade 2 matches
+the model with angles 192/0, speeds 1301/−869 and pre-correction altitude −70.
+Its prelude differs from the 68030, so it is not an equal-initial-state CPU
+comparison. It reaches the same return-value-1 flight exit and clears ownership.
+There are **zero W6 draws** by boundary 14: only the pre-activation flag consumer
+appears in the trace. This validates the 68000 private wrappers and flight path,
+not natural changed-scratch render coverage on that CPU. The owned emulator was
+verified and quit. Retained collectors and all raw results remain with the run.

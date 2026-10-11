@@ -98,7 +98,10 @@ observe_install_slow:
 	move.l tape_game_steps(pc),d0
 	cmpi.l #1,d0
 	bne.b .done
-	move.l perf_custom5(pc),d0
+	lea .custom_base(pc),a0
+.custom_base
+	adda.l #perf_custom5-.custom_base,a0
+	move.l (a0),d0
 	btst #0,d0
 	beq.b .done
 	move.l tape_marker+24(pc),a1

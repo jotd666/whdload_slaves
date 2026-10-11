@@ -1,4 +1,4 @@
-; Shared-model write journal, VERIFY bit 13, sim v1 only.
+; Shared-model and native visibility-scratch write journal, VERIFY bit 13, sim v1 only.
 ; PERF_RANGE sim:0e128 10 bit=13
 ; PERF_RANGE sim:0e150 8 bit=13
 ; PERF_RANGE sim:0e1a6 8 bit=13
@@ -7,6 +7,8 @@
 ; PERF_RANGE sim:0f55c 8 bit=13
 ; PERF_RANGE sim:0f56e 8 bit=13
 ; PERF_RANGE sim:0f584 14 bit=13
+; PERF_RANGE sim:15c82 6 bit=13
+; PERF_RANGE sim:15ca0 6 bit=13
 TIME_MODEL_CAPACITY = 4096
 TIME_MODEL_STRIDE = 8
 
@@ -32,6 +34,7 @@ time_model_install:
 	cmpi.w #$1080,6(a0)
 	bne time_model_bad
 	bsr time_model_selftest
+	bsr time_model_flag_install
 	lea .patch(pc),a0
 	jsr resload_Patch(a2)
 	movem.l (sp)+,d0-a6

@@ -1,13 +1,13 @@
 # Red Baron performance measurements
 
-The latest W6 ground-impact comparison agrees on impact grade, motion and native
-flight exit, but exposes a player flag difference after rendering: byte +36
-bit 5 differs at completed ticks 3–14. Input histories match. This is an open
-correctness issue, not a passed frame-rate-independence gate. The new independent
-impact-grading model matches both native calls; all 249 host tests pass. See
-“Ground-impact grading and native flight exit” in `w6-verification.md` for
-scope, raw evidence and the next investigation. No slave bytes or performance
-claims changed in this checkpoint.
+The W6 ground-impact render-scratch leak is fixed in the current VERIFY
+candidate. Fresh rendered/no-render runs match all 280 player bytes at all 15
+world boundaries, including the formerly divergent flag. The native renderer
+still consumes its temporary value before restoration. All 512 private native
+byte/CCR cases and 251 host tests pass; normal/developer binaries are unchanged.
+This closes one correctness defect, not full frame-rate independence or the
+50 FPS requirement. Raw global and sound-state differences remain visible.
+See “Ground-impact render scratch restoration” in `w6-verification.md`.
 
 The current full W6 VERIFY bundle also passes the cached-68030 Preferences
 clock-boundary check: 222 CIA ticks spent in the native panel are excluded,
