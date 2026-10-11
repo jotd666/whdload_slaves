@@ -63,6 +63,8 @@
    validation is unfinished; this is not a final release
 
  version 1.3b (testing):
+ - queue exhaustion exits with a clear WHDLoad message instead of a Guru;
+   unread controls are never overwritten
  - prevent A4000 rendering from overwriting the buffer still on screen;
    apply queued input after waiting for the display buffer switch
  - prevent A4000 pitch/roll stabilization from snapping a non-level actual

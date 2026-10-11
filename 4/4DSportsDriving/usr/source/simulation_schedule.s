@@ -225,7 +225,11 @@ sim_schedule_poll:
  beq .capacity_ok
  lea perf_failure(pc),a0
  move.l #12,(a0)
- illegal                  ; explicit VERIFY failure, never overwrite history
+ IFD VERIFY
+ illegal                  ; diagnostic trap; unread input is retained
+ ELSE
+ bra sim_schedule_overflow_exit
+ ENDC
 .capacity_ok:
  move.w $a0(a4),d0
  cmp.w -$940(a4),d0
@@ -319,6 +323,23 @@ sim_schedule_timer:
  add.l #$54,(sp)          ; return $7A0A -> $7A5E
 .done:
  rts
+
+ IFND VERIFY
+; A full queue cannot preserve further real-time input. End the run explicitly
+; rather than overwrite unread records, silently drop time, or raise a Guru.
+; Main-task path only: detach the field server before leaving KickEmu.
+sim_schedule_overflow_exit:
+ bsr sim_clock_remove
+ pea sim_schedule_overflow_message(pc)
+ pea TDREASON_FAILMSG
+ move.l _resload(pc),a0
+ jmp resload_Abort(a0)
+sim_schedule_overflow_message:
+ dc.b "Simulation input queue full.",10
+ dc.b "The computer could not keep up with this simulation rate.",10
+ dc.b "Try lower graphics detail or select Normal/A2500 for the next race.",0
+ even
+ ENDC
 
 ; $7C0A: original session-limit arithmetic, with captured input substitution.
 sim_schedule_input:
