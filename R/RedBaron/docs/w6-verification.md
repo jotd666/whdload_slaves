@@ -5055,3 +5055,70 @@ local evidence, not a redistributed game asset. This adds a measured 68020
 capacity window; it does not close event/bank/dense coverage, input latency,
 full-state and physics/combat correctness or the actual 50 FPS requirement.
 W6 remains VERIFY-only and the goal remains unfinished.
+
+
+## Current-build cached-68030 capacity window
+
+The current VERIFY slave
+`9c92ff9979e40ec98adc1f73255f8e57b4f65b2f2d6d5d6e13793aad7f414415`
+(text 256386) was freshly booted on the existing cached-68030 configuration:
+A500 model, 2 MB chip, 8 MB fast, no slow RAM, CPU multiplier zero, requested
+50,000,000 Hz, data cache enabled and real/cycle-exact CPU, memory and blitter.
+WHDLoad uses MMU, CUSTOM2=16319, CUSTOM4=0 and CUSTOM5=512. Time Scale remains
+40 / F=33; compression, synthetic replay and controlled-prelude fixtures are off.
+
+The same retained collector as the 68020 run observes four consecutive
+250-field windows, **1,000 fields / 1,185 CIA ticks** overall, starting at a
+committed VBlank after a restored render. It retains every field and the raw
+endpoint memory rather than estimating elapsed time from instruction cycles.
+
+| Observation | Window 1 | Window 2 | Window 3 | Window 4 |
+| --- | ---: | ---: | ---: | ---: |
+| Completed world updates | 40 | 42 | 40 | 41 |
+| Publications | 48 | 48 | 52 | 53 |
+| Publication FPS | 9.6 | 9.6 | 10.4 | 10.6 |
+| Message starts / shorten calls | 11 / 10 | 4 / 0 | 0 / 0 | 0 / 0 |
+
+Overall, **163 world updates complete** and 163 start, versus **163.4262626
+newly funded updates**. No update is in progress at either overall endpoint.
+Completed simulation rate is **8.15 updates per PAL second**, while 201
+publications give **10.05 FPS**. The census includes message activity in its
+first two windows; it is not a certified steady-only or separate event workload.
+WORLD_BODY_DONE matches completed updates in every window.
+
+Unprocessed CIA debt changes from **0 to 2**, with sampled range **0–6**.
+Total backlog changes from **0.7928620 to 1.2191246 world updates**, with
+sampled minimum **0.0136027** and maximum **1.9253872**. Its increase is exactly
+funded minus completed work, 0.4262626 updates. All 1,000 field samples are
+committed, with no transaction samples requiring exclusion. Exact funding
+passes every adjacent sample interval. This is finite-window capacity evidence,
+not proof against long-term backlog growth in all scenes.
+
+The longest sampled span without a world completion is **10 fields / 0.20
+seconds**. This is not a physical input-latency measurement. All publications
+are in the permitted beam region; the complete sequence, including inter-window
+boundaries, has **4–6-field publication intervals**. Therefore this window does
+not satisfy smooth 50 FPS. No speedup ratio against the 68020 or earlier builds
+is claimed: fresh boots have different setup histories and event counts, and
+this capture does not compare complete world state across CPUs.
+
+Native self-tests pass 426/512/638/133 and terrain/cache/list 2/1/2. The live byte
+audit passes all 56 selected timing/pacing hook ranges and two disabled overlay
+ranges. No slave code changed. The owned emulator was confirmed by its exact
+base directory and quit after all evidence was saved; other emulators were not
+touched.
+
+Local evidence is `tmp/dev/tmp/prof/w6-sustained-current-030/`: frozen slave and
+listing, configuration, boot helper, `capture-census.py`, entry and endpoint RAM,
+per-window logs, `field-census.json`, `sustained-check.json`, `selftest-result.json`
+and `byte-audit.json`. Reproduce using the preceding section's commands with
+machine `030` and fresh output directory `tmp/prof/my-w6-030`; its collector is
+retained in this capture directory too. Source the documented harness environment
+first, use one emulator at a time, run the native audits, and quit afterward.
+
+The current-build 68020 and 68030 observations both approximately sustain funded
+simulation work in their individual 20-second windows, at very different render
+rates. This is useful clock/capacity evidence, not a replacement for equal-tick
+complete gameplay-state validation. Remaining gates include event/bank/dense
+coverage, physical input latency, broader physics/combat and CPU correctness,
+and demonstrated real smooth 50 FPS. W6 remains VERIFY-only.

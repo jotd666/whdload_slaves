@@ -1,5 +1,13 @@
 # Red Baron performance measurements
 
+The matching current-build 50 MHz cached-68030 capacity census records 163
+completed world updates versus 163.426 newly funded over 1,000 PAL fields,
+with **201 publications / 10.05 FPS**. Sampled backlog is 0.014–1.925 world
+updates and the longest completion gap is 10 fields (0.20 seconds). Exact
+funding and native audits pass. See “Current-build cached-68030 capacity window”
+in `w6-verification.md`. These fresh-boot windows are not equal-state CPU
+comparisons, and real smooth 50 FPS remains unachieved.
+
 A fresh current-build 68EC020 capacity capture completes 163 world updates over
 1,000 consecutive PAL fields, against 163.426 newly funded updates, while
 publishing 66 frames (**3.3 FPS**). Sampled total backlog remains 0.258–3.134
