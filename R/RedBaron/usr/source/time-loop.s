@@ -69,6 +69,10 @@ time_loop_install:
 	bsr time_present_selftest
 	bsr time_present_state_install
 	bsr time_model_install
+	lea .exp_install_base(pc),a6
+.exp_install_base
+	adda.l #time_exp_install-.exp_install_base,a6
+	jsr (a6)
 	move.l a6,-(sp)
 	lea .pose_install_base(pc),a6
 .pose_install_base

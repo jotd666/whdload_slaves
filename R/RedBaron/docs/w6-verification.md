@@ -5651,3 +5651,79 @@ the analysis uses those explicit returns after rejecting the initial generic
 first-RTS guess. Native counters 426/512/638/133 and terrain/cache/list 2/1/2,
 plus 56 selected and nine disabled hook ranges, pass. The owned emulator was
 verified and quit. No slave code or sound behavior changes.
+
+
+## Bounded exact exponent encoding under W6
+
+VERIFY bit 13 now replaces `sim:2c31c–2c33a` with a bounded exponent
+encoder. The installed range is the first six bytes only; the remaining
+original bytes stay intact. Five decisions replace the original bit-by-bit
+loops. The complete original 32-byte helper is checked before installation
+and retained as a private native twin. The replacement preserves the full
+D0 result, including its upper word, zeroes D1, restores D2 and preserves
+all other integer registers. Final N/Z come from the restored caller D2;
+zero input preserves X, while nonzero input clears it. V/C are cleared.
+This is an exact helper substitution, not a change to simulation funding.
+
+The host model covers all 65,536 word inputs, 10,000 seeded longword cases,
+and 640 generated input/D2 pairs under all 32 incoming condition codes.
+Native installation executes 20,480 original/replacement twins and checks
+independent expected D0 and condition-code results before applying the hook.
+The full host suite has 346 passing tests; static audits cover 76 declared
+ranges and 133 destinations with zero errors.
+
+The first native attempts were rejected safely before installation: first
+an unused immediate-byte encoding differed from the original, then a wrong
+word reduction failed after 6,144 cases. The retained original now uses the
+exact instruction words, and the reduction discards the original low word
+correctly. Both failed captures are retained separately from valid evidence.
+
+The corrected VERIFY build is
+`ac1d47ba01210c496a98db199b79fa2c30b0f3b59c570a0bec8906dfa7a116f7`
+(265,500-byte text). `w6-exponent-v3-a500` uses the A500-equivalent 68000,
+512 KB chip + 1,536 KB slow RAM, real CPU speed, multiplier 2 and cycle-exact
+CPU/memory/blitter; CUSTOM2=16319, CUSTOM4=0, CUSTOM5=512 and maximum details.
+It begins after the first restored draw and retains 250 traced PAL fields
+as 100/100/50 chunks. Native twins report **20,480**, all other existing
+self-test counters pass, and 57 selected / nine disabled ranges pass.
+
+`exponent_trace_check.py` checks all 16 integer registers of **1,148 complete
+replacement calls**, the installed jump, untouched original tail and private
+original bytes. The retained original baseline independently passes 1,142
+calls. The profiler's raw SR snapshots remain unchanged even across original
+flag-changing instructions: they are retained as observations, not treated
+as CCR proof. Condition-code correctness comes from explicit native SR/CCR
+reads in the twins.
+
+Complete replacement calls cost **292–382 main-task cycles, mean 337.3**,
+including the installed jump and return. The earlier original window measured
+762–1,006, mean 893.3. These are separately observed call populations, not
+an equal-state whole-game speed comparison. IRQ stack and entry costs are
+separated, and incomplete calls at trace joins are excluded. One complete
+render costs 4,988,474 main-task cycles in the new window; its different
+world/drawing work prevents attributing the frame-total difference solely
+to this helper.
+
+The 250 recorded fields span 252 native fields / 299 CIA ticks. They complete
+45 world updates versus 41.235825 newly funded, with one completed draw and
+CIA debt falling from 59 to 31 ticks. Exact funding passes; initial debt
+repayment and this short sample do not establish sustained gameplay speed.
+The complete gameplay-state, CPU-capacity/latency and smooth-50-FPS gates
+remain open. Normal and developer binaries retain their W5 hashes.
+
+Frozen binaries, listing, configuration, endpoint RAM, traces, capture helper,
+`exponent-check.json`, `capacity-check.json`, `analyze-costs.py` and
+`capacity-costs.json` are retained with the capture.
+
+The sequential `w6-exponent-v3-030` run uses the same frozen build on a
+cached 50 MHz 68030 with 2 MB chip + 8 MB fast RAM and MMU. All 20,480 native
+twins and the same 57 selected / nine disabled range checks pass. Its cached
+profile contains no instruction samples, so it cannot supply a per-call
+trace count or instruction-cycle comparison. A subsequent native entry/return
+breakpoint check verifies all 16 integer registers for an actual game call;
+`debugger-call-check.json` retains it. Debugger SR is also retained only as
+an observation; explicit guest SR/CCR reads remain the condition-code proof.
+The 252 elapsed fields / 300 CIA ticks complete 41 updates against 41.373737
+funded and 49 draws (9.72 completed draws/second). This remains a short-window
+observation, not sustained capacity or 50-FPS acceptance. Both owned test
+emulators were verified before quitting.

@@ -1,5 +1,14 @@
 # Red Baron performance measurements
 
+The VERIFY W6 exponent replacement now passes 20,480 native condition-code
+cases on both A500 and 68030, and 1,148 complete A500 calls against its exact
+register model. Including
+the installed jump, calls measure **292–382 main-task cycles (mean 337.3)**;
+the earlier original window measured 762–1,006 (mean 893.3). These are helper
+cost observations, not a whole-game FPS gain. See “Bounded exact exponent
+encoding under W6” in `w6-verification.md`. Gameplay-speed independence,
+sustained capacity/latency and smooth 50 FPS remain open acceptance gates.
+
 A current 250-field A500 profile identifies two concrete render-cost targets:
 `sim:2c31c` costs 513,040 main-task cycles and `sim:398aa` costs 405,114 inside
 one complete 5,263,418-cycle render (**17.4% combined**). The same render's
