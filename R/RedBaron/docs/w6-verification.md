@@ -4412,3 +4412,74 @@ python3 R/RedBaron/tools/message_layout.py \
 No slave changes or new emulator run accompany this analysis. Both-buffer pixel
 cleanup, message replacement, other residual globals, broader simulation-state
 independence, supported capacity and smooth 50 FPS remain open.
+
+
+## CPU-frequency replay: clock/input match, initial-state gate fails
+
+`w6-speed-50mhz-030` and `w6-speed-25mhz-030` use the same current VERIFY
+build (`be253e7f5b5ddd8a7ca73f94dcd7fe913e6a9d49091d46ebdbe210f3716b8cca`),
+CUSTOM2=16319 and scheduled Right/Fire replay. Memory, cache/MMU, cycle-exact
+settings and WHDLoad arguments match; the configured 68030 frequency is the
+only difference in the retained emulator argument list. Overlay bit 14 is off.
+The read-only pose collector retains 40 consecutive world boundaries per boot,
+full RAM snapshots, lifecycle observations and the pre-W6 initial state.
+
+The four input deadlines are relative active CIA intervals 32/64/96/128:
+Right down/up, Fire down/up. `world_controls.py` verifies identical held-key
+bitmaps and consumption at all 40 completed-world boundaries, with exactly
+four transitions and two key-down commands. Every adjacent interval also passes
+the existing exact clock-funding check.
+
+| Configured frequency | Fields in captured interval | CIA intervals | Completed world updates | Draws | Unprocessed CIA at end |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 50 MHz | 242 | 286 | 39 | 41 | 3 |
+| 25 MHz | 240 | 284 | 39 | 33 | 1 |
+
+The interval spans boundary 0 through 39, hence 39 updates. Initial unprocessed
+CIA time is zero in each. Fractional credit is retained; neither endpoint has
+a due or in-progress world update. These heavily observed, short, differing-state
+runs are not a performance comparison, sustained-capacity gate, or 50-FPS test.
+
+**The gameplay-equivalence precondition fails before W6 starts.** The 280-byte
+player records already differ in 35 bytes, including position and velocity.
+The h3 allocation also differs by 40 bytes. No pointer normalization or initial
+state masking is applied. The existing whole-state comparator correctly refuses
+the differing allocation layout; subsequent player differences cannot establish
+a W6 regression or equivalence from these captures.
+
+The test route includes native flight polls before opening Preferences, while
+CUSTOM5 bit 9 defers performance/W6 installation until the route's flight anchor.
+That prelude is not controlled across CPU frequencies. The next comparison must
+establish equal gameplay initial state first: investigate the existing forced-dt
+prelude fixture, verify its resulting state, and handle relocated pointers only
+through explicit field/ownership evidence if needed. Do not simply compare
+later trajectories or copy selected player bytes into an otherwise different
+world. A different CPU architecture remains a separate untested dimension.
+
+Both boots pass the existing native W6 counters (426/512/638/133,
+terrain/cache/list 2/1/2, shape 3) and 56 selected hook checks; the two disabled
+overlay ranges retain original bytes. Both owned emulators were quit. No slave
+change accompanies these runs. The retained `summarize.py` and `summary.json`
+in the 50-MHz capture bind both frozen slaves, verify matching configuration
+apart from frequency, check every funding interval and preserve the initial
+player differences. `controls-comparison.json` retains the input comparison.
+
+The ignored local boot helper now accepts `--cpu-frequency` for the cached
+68030 configuration; it changes only the existing frequency argument and records
+it in capture metadata. The exact boot/collector scripts are copied into both
+captures. Use unique output directories and one emulator at a time:
+
+```sh
+# From the development harness, with its environment loaded:
+python3 tools/w6_boot_current.py 030 16319 tmp/prof/my-speed-50 --replay
+python3 tools/w6_pose_capture.py tmp/prof/my-speed-50 --steps 40
+python3 tools/redbaron.py quit
+python3 tools/w6_boot_current.py 030 16319 tmp/prof/my-speed-25 --replay --cpu-frequency 25000000
+python3 tools/w6_pose_capture.py tmp/prof/my-speed-25 --steps 40
+python3 tools/redbaron.py quit
+python3 ../../R/RedBaron/tools/world_controls.py \
+  tmp/prof/my-speed-50 tmp/prof/my-speed-25 --out tmp/prof/my-speed-50/controls.json
+```
+
+This reproduces the limited clock/input experiment, including its uncontrolled
+initial-state issue; it is not the future equal-state gameplay acceptance run.

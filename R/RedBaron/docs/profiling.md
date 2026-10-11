@@ -1,5 +1,13 @@
 # Red Baron performance measurements
 
+A current-build 50/25-MHz 68030 replay comparison passes exact clock funding
+and identical input consumption at 40 world boundaries. However, the native
+setup prelude produces different player state before W6 activates, so the runs
+cannot prove gameplay equivalence. They are short correctness captures, not
+new FPS or capacity measurements. See “CPU-frequency replay: clock/input match,
+initial-state gate fails” in `w6-verification.md` for the counts and required
+fixture correction.
+
 A further retained-state check accounts for the message rectangle's four differing
 bytes after erasure: all 45 ordinary/delayed/no-render boundaries match native
 border expansion and the erasure-copy model. The indirect text-layout pointer
