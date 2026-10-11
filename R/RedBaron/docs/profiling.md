@@ -85,7 +85,15 @@ as abysmal and steering as very sensitive, producing large left/right turns.
 Reducing World detail improved frame rate and made control easier. This is
 qualitative evidence of functional input, **not** satisfactory maximum-detail
 playability or a measured sensitivity defect. Do not infer a cause or change
-the approved quantum from this report alone. The 060 comparison remains open.
+the approved quantum from this report alone.
+
+User 060 handling feedback (2026-10-11, `feedback-060-1`, maximum detail,
+Time Scale 40, real speed, sound and original damage settings): steering was
+great, controls released cleanly, and no problems were reported. This passes
+the short 060 tap/hold/release handling check. Together with the A500 report,
+it supports functional held controls on both machines, but does not establish
+per-catch-up-tick delivery, flight-outcome smoke tests or full D5 acceptance.
+The A500 maximum-detail playability problem remains open.
 
 For a live D5 flight, `python3 R/RedBaron/tools/completion_soak.py <capture>`
 counts 90,000 PAL fields in bounded 10,000-field debugger reads, with no guest

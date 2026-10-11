@@ -31,8 +31,10 @@ the CPU-selected quantum. The discarded exponent helper remains VERIFY-only.
 All three builds, 439 host tests, 79 hook ranges and both patch-reach audits pass.
 D5 acceptance is in progress. The scoreboard records all six candidate rate
 windows: 020–060 pass at Time Scale 40; A500 passes at 0 but drops time at 40.
-A500 and 060 throttle taps and native pause/rebase pass. Held controls, remaining
-transitions, flight outcomes and user handling test remain open. The 060
+A500 and 060 throttle taps and native pause/rebase pass. The user completed
+short tap/hold/release tests on both: 060 handling was good; A500 input was
+predictable but maximum-detail playability was poor (scoreboard). Remaining
+catch-up input/transition checks and flight-outcome smoke tests remain open. The 060
 30-minute emulated soak passes in one flight across two debugger reads;
 the normal verified mask still excludes bit 13 until acceptance passes.
 Phases D–F remain open; the earlier lists below are historical context, not the execution order.
