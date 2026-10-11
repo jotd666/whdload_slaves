@@ -1565,7 +1565,7 @@ sim_replay_reload_buffer: dcb.b SIM_REPLAY_BYTES+2,0
  even
 sim_replay_test_marker:
  dc.b "4DRPLTST"
- dc.w 2,32
+ dc.w 3,38
  dc.l 0
  dcb.l 5,0
  dc.l $52504c31

@@ -54,7 +54,7 @@ sim_replay_file_fixture:
  bne .failed
  lea SIM_REPLAY_HEADER(a5),a0
  movea.l a3,a1
- move.w #(SIM_REPLAY_CRC_OFFSET-SIM_REPLAY_HEADER)/4-1,d0
+ move.w #(SIM_REPLAY_ROUTE_OFFSET-SIM_REPLAY_HEADER)/4-1,d0
 .compare:
  move.l (a0)+,d1
  cmp.l (a1)+,d1
@@ -96,6 +96,65 @@ sim_replay_file_fixture:
  tst.l d0
  bne .failed
  addq.l #1,12(a6)
+ ; Format1 lacks the recorded opponent route, even with a valid checksum.
+ move.w #1,8(a5)
+ bsr sim_replay_test_checksum
+ movea.l a5,a0
+ move.l #SIM_REPLAY_BYTES,d0
+ bsr sim_replay_validate
+ tst.l d0
+ bne .failed
+ move.w #2,8(a5)
+ bsr sim_replay_test_checksum
+ addq.l #1,12(a6)
+ ; Route corruption with a valid CRC must be rejected structurally.
+ moveq #4,d7
+.route_cases:
+ movea.l a5,a0
+ bsr sim_replay_pack
+ tst.l d0
+ bne .failed
+ movea.l a5,a1
+ adda.l #SIM_REPLAY_ROUTE_OFFSET,a1
+ cmp.w #4,d7
+ bne .route_case3
+ move.w #901,(a1)
+ bra .route_reject
+.route_case3:
+ cmp.w #3,d7
+ bne .route_case2
+ move.w #901,SIM_REPLAY_ROUTE_BYTES-2(a1)
+ bra .route_reject
+.route_case2:
+ cmp.w #2,d7
+ bne .route_case1
+ move.w #1,SIM_REPLAY_ROUTE_BYTES(a1)
+ bra .route_reject
+.route_case1:
+ cmp.w #1,d7
+ bne .route_case0
+ addq.l #2,a1
+ move.w #899,d0
+.route_no_end:
+ move.w #1,(a1)+
+ dbra d0,.route_no_end
+ bra .route_reject
+.route_case0:
+ clr.w 2(a1)
+ move.w #1,4(a1)
+.route_reject:
+ bsr sim_replay_test_checksum
+ movea.l a5,a0
+ move.l #SIM_REPLAY_BYTES,d0
+ bsr sim_replay_validate
+ tst.l d0
+ bne .failed
+ addq.l #1,12(a6)
+ dbra d7,.route_cases
+ movea.l a5,a0
+ bsr sim_replay_pack
+ tst.l d0
+ bne .failed
  ; An ABI8 header with a correct checksum must not load as new physics.
  move.w #8,10(a5)
  bsr sim_replay_test_checksum
@@ -109,7 +168,7 @@ sim_replay_file_fixture:
  addq.l #1,12(a6)
  ; Rejection must leave every output byte unchanged.
  movea.l a3,a1
- move.w #(SIM_REPLAY_CRC_OFFSET-SIM_REPLAY_HEADER+4)/4-1,d0
+ move.w #(SIM_REPLAY_ROUTE_OFFSET-SIM_REPLAY_HEADER+4)/4-1,d0
 .poison:
  move.l #$a55a6996,(a1)+
  dbra d0,.poison
@@ -122,7 +181,7 @@ sim_replay_file_fixture:
  bne .failed
  eor.b #1,100(a5)
  movea.l a3,a1
- move.w #(SIM_REPLAY_CRC_OFFSET-SIM_REPLAY_HEADER+4)/4-1,d0
+ move.w #(SIM_REPLAY_ROUTE_OFFSET-SIM_REPLAY_HEADER+4)/4-1,d0
 .unchanged:
  cmp.l #$a55a6996,(a1)+
  bne .failed

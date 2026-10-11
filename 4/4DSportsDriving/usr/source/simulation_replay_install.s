@@ -32,6 +32,14 @@ sim_replay_install:
  lea -$1750(a4),a1
  moveq #25,d0
  bsr sim_replay_copy
+ ; Restore the recorded path after native resource setup has rebuilt its
+ ; own path. The original builder reads beyond its speed-cost resource, so
+ ; a fresh rebuild is not a substitute for the route used during recording.
+ movea.l a5,a0
+ adda.l #SIM_REPLAY_ROUTE_OFFSET,a0
+ movea.l -$17a4(a4),a1
+ move.w #SIM_REPLAY_ROUTE_BYTES-1,d0
+ bsr sim_replay_copy
  ; Force the next native seek to restore even when requesting tick zero.
  move.w #-1,-$940(a4)
  moveq #0,d0

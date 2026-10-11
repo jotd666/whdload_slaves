@@ -1,8 +1,9 @@
 ; Development replay codec; native DOS/menu integration is opt-in.
 ; All words/longs are big-endian; buffers must be even-aligned and nonaliasing.
 ; Native files: 26-byte race header, two 901-byte tracks, then input bytes.
-; Tagged v1: 36-byte header, native prefix, 30000 input bytes, twenty native
-; checkpoints, twenty companions, CRC32 of all preceding bytes. Invalid slots
+; Tagged v2: 36-byte header, native prefix, 30000 input bytes, twenty native
+; checkpoints, twenty companions, 1802-byte opponent route + two zero pad bytes,
+; CRC32 of all preceding bytes. Invalid slots
 ; and unused inputs are zeroed. The epoch is separate from native snapshots.
  IFNE SIM_HISTORY_BYTES-392
  FAIL "Replay ABI9 requires392-byte companions; revise the format explicitly"
@@ -18,7 +19,9 @@ SIM_REPLAY_HEADER = 36
 SIM_REPLAY_INPUT_OFFSET = SIM_REPLAY_HEADER+SIM_REPLAY_PREFIX
 SIM_REPLAY_NATIVE_OFFSET = SIM_REPLAY_INPUT_OFFSET+SIM_REPLAY_INPUTS
 SIM_REPLAY_COMPANION_OFFSET = SIM_REPLAY_NATIVE_OFFSET+SIM_REPLAY_NATIVE
-SIM_REPLAY_CRC_OFFSET = SIM_REPLAY_COMPANION_OFFSET+SIM_REPLAY_COMPANIONS
+SIM_REPLAY_ROUTE_OFFSET = SIM_REPLAY_COMPANION_OFFSET+SIM_REPLAY_COMPANIONS
+SIM_REPLAY_ROUTE_BYTES = 1802
+SIM_REPLAY_CRC_OFFSET = SIM_REPLAY_ROUTE_OFFSET+SIM_REPLAY_ROUTE_BYTES+2
 SIM_REPLAY_BYTES = SIM_REPLAY_CRC_OFFSET+4
  IFGT SIM_REPLAY_BYTES-65535
  FAIL "Replay copy loops require unsigned16-bit byte counts"
@@ -56,7 +59,7 @@ sim_replay_validate:
  bne .bad
  cmp.l #$4c303530,4(a0)   ; L050
  bne .bad
- cmp.l #$00010009,8(a0)  ; format1, physics ABI9
+ cmp.l #$00020009,8(a0)  ; format2, physics ABI9 (format1 omitted the opponent route)
  bne .bad
  cmp.l #$00320014,12(a0) ; 50Hz,20 slots
  bne .bad
@@ -118,6 +121,34 @@ sim_replay_validate:
  lea $460(a1),a1
  lea SIM_HISTORY_BYTES(a2),a2
  dbra d6,.slots
+ ; The table is static race state, outside the native checkpoint range.
+ ; Require a bounded route and canonical zero tail/padding before any install.
+ movea.l a0,a1
+ adda.l #SIM_REPLAY_ROUTE_OFFSET,a1
+ moveq #0,d2
+ move.w #900,d3
+ cmp.w #900,(a1)+         ; entry zero may itself be track index zero
+ bhi .bad
+.route:
+ move.w (a1)+,d1
+ cmp.w #900,d1
+ bhi .bad
+ tst.w d2
+ beq .route_live
+ tst.w d1
+ bne .bad                ; no data after the first terminator
+ bra .route_next
+.route_live:
+ tst.w d1
+ bne .route_next
+ moveq #1,d2
+.route_next:
+ subq.w #1,d3
+ bne .route
+ tst.w d2
+ beq .bad                ; no terminator within the 901-word allocation
+ tst.w (a1)              ; alignment padding is not part of the native table
+ bne .bad
  move.l #SIM_REPLAY_CRC_OFFSET,d0
  bsr sim_replay_crc
  movea.l a0,a1
@@ -154,7 +185,7 @@ sim_replay_pack:
  movea.l a6,a0
  move.l #$34445250,(a0)+
  move.l #$4c303530,(a0)+
- move.l #$00010009,(a0)+
+ move.l #$00020009,(a0)+
  move.l #$00320014,(a0)+
  move.l #SIM_REPLAY_PREFIX,(a0)+
  move.l d4,(a0)+
@@ -204,6 +235,22 @@ sim_replay_pack:
  lea $460(a3),a3
  lea SIM_HISTORY_BYTES(a2),a2
  dbra d7,.slots
+ ; Copy only the live route. Native setup leaves stale allocation bytes
+ ; after its terminator; the cleared output gives these a canonical zero tail.
+ tst.b -$174a(a4)
+ beq .route_packed
+ movea.l -$17a4(a4),a0
+ movea.l a6,a1
+ adda.l #SIM_REPLAY_ROUTE_OFFSET,a1
+ move.w (a0)+,(a1)+
+ move.w #899,d0
+.pack_route:
+ move.w (a0)+,d1
+ move.w d1,(a1)+
+ beq .route_packed
+ dbra d0,.pack_route
+ bra .bad
+.route_packed:
  movea.l a6,a0
  move.l #SIM_REPLAY_CRC_OFFSET,d0
  bsr sim_replay_crc
@@ -223,7 +270,8 @@ sim_replay_pack:
  rts
 
 ; A0 tagged file,D0 length,A1 descriptor of five output pointers:
-; prefix(1828),inputs(30000),native(22400),companions(7200),epoch(4).
+; prefix(1828),inputs(30000),native(22400),companions(7840),epoch(4).
+; The validated static route is installed separately by sim_replay_install.
 ; D0=0 success,1 invalid. Validate everything before changing any output.
 ; Outputs must not overlap file, descriptor or each other. Preserve registers.
 sim_replay_unpack:

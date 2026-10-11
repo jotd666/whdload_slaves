@@ -38,6 +38,22 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ Current source status (11.10.2026; work paused):
+ - replay format 2, physics ABI9, stores the chosen opponent route so native
+   resource reloads cannot silently change it. Older format-1 A4000 files
+   are rejected; Normal/A2500 replay formats are unchanged
+ - 38 codec checks pass. First/repeated FULL, FAST and rewind playback each
+   match all 1510 state bytes at 250 checkpoints in the regression replay
+ - that regression file was reconstructed from an existing recording and its
+   saved route. Native format-2 disk save/load is NOT yet verified: the last
+   UI attempt left an empty file and did not reach the replay writer
+ - the original opponent route builder's out-of-resource lookup remains;
+   deterministic fresh A4000 route setup is still open
+ - jump/landing handling and broader lifecycle, latency/capacity and release
+   acceptance remain incomplete. This is an experimental preview
+ - the previously distributed testing archive has not been rebuilt with
+   this source change; it still contains the earlier format-1 runtime
+
  A4000 testing archive v1.3b:
  - this pack includes the playable SIM_RUNTIME preview, without keyboard
    automation, synthetic test fixtures or startup self-tests
