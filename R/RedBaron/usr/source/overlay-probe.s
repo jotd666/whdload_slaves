@@ -28,6 +28,7 @@ overlay_probe_install:
 	lea overlay_pack_save_ccr(pc),a0
 	move.w #$42e7,(a0)
 .cpu_ready
+	bsr ovlife_install
 	bsr overlay_blit_selftest
 	lea .patch(pc),a0
 	jsr resload_Patch(a2)
