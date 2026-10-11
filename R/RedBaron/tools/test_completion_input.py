@@ -50,3 +50,13 @@ class InputTest(unittest.TestCase):
         self.p.memory[self.m._mapping+self.base+self.bitmap+0x80] = b'\0\2'
         with self.assertRaises(ValueError): self.m.key(self.base,self.bitmap,0x44)
         self.assertEqual(self.p.writes,[])
+
+    def test_repeated_key_fits_native_64_byte_queue(self):
+        with redirect_stdout(io.StringIO()): self.m.key(self.base,self.bitmap,0x4e,32)
+        at=self.m._mapping+self.base+self.bitmap
+        self.assertEqual(self.p.writes,[(at-0x40,b'\0N'*32),(at+0x80,b'\0@'),(at+0x4e,b'\1')])
+
+    def test_zero_negative_and_overflow_counts_do_not_write(self):
+        for count in (0,-1,33):
+            with self.assertRaises(ValueError): self.m.key(self.base,self.bitmap,0x4e,count)
+        self.assertEqual(self.p.writes,[])

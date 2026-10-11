@@ -43,9 +43,11 @@ while True:
  c,_=srv.accept();key=c.recv(100).decode()
  try:
   mode,payload=key.split(':',1) if ':' in key else ('tap',key)
-  if mode not in ('tap','queue','release'):raise ValueError('Unknown input mode')
+  if mode not in ('tap','queue','release','burst'):raise ValueError('Unknown input mode')
   if key!='quit':
-   base,bitmap,raw=(int(x,0) for x in payload.split(','))
+   parts=[int(x,0) for x in payload.split(',')]
+   if len(parts)!=(4 if mode=='burst' else 3):raise ValueError('Invalid keyboard command')
+   base,bitmap,raw=parts[:3];repeat=parts[3] if mode=='burst' else 1
   r.command('stop');h.cmd('process interrupt')
   while 'stopped' not in h.cmd('process status'):time.sleep(.1)
   if key=='quit':
@@ -53,8 +55,8 @@ while True:
   if mode=='release':
    result=h.cmd(f'script completion_lldb_input.release({base},{bitmap},{raw})')
   else:
-   result=h.cmd(f'script completion_lldb_input.key({base},{bitmap},{raw})')
-  if mode!='tap':
+   result=h.cmd(f'script completion_lldb_input.key({base},{bitmap},{raw},{repeat})')
+  if mode in ('queue','release'):
    h.cmd('process continue');c.sendall(('OK '+key+' '+result).encode());c.close();continue
   h.cmd('process continue');r.command('cont');time.sleep(.15)
   r.command('stop');h.cmd('process interrupt')

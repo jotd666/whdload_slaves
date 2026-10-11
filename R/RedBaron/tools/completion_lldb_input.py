@@ -31,16 +31,16 @@ def valid_module(p,base,bitmap):
  value=p.ReadMemory(_mapping+base+off,6,err)
  return err.Success() and value==b'\x4e\xf9'+struct.pack('>I',base+target)
 
-def key(base,bitmap,raw):
+def key(base,bitmap,raw,repeat=1):
  if _mapping is None:raise RuntimeError('Map RAM first')
  p=lldb.debugger.GetSelectedTarget().GetProcess();err=lldb.SBError()
- if not 0 <= raw < 128 or not valid_module(p,base,bitmap):raise ValueError('Invalid keyboard owner/key')
+ if not 0 <= raw < 128 or not 1 <= repeat <= 32 or not valid_module(p,base,bitmap):raise ValueError('Invalid keyboard owner/key')
  count=p.ReadMemory(_mapping+base+bitmap+0x80,2,err)
  if not err.Success() or count!=b'\0\0':raise ValueError('Native queue is not empty')
- for address,data in [(base+bitmap-0x40,struct.pack('>H',raw)),(base+bitmap+0x80,b'\0\2'),(base+bitmap+raw,b'\1')]:
+ for address,data in [(base+bitmap-0x40,struct.pack('>H',raw)*repeat),(base+bitmap+0x80,struct.pack('>H',repeat*2)),(base+bitmap+raw,b'\1')]:
   n=p.WriteMemory(_mapping+address,data,err)
   if not err.Success() or n!=len(data):raise RuntimeError(str(err))
- print('KEY_QUEUED',hex(raw),flush=True)
+ print('KEY_QUEUED',hex(raw),'count',repeat,flush=True)
 
 def release(base,bitmap,raw):
  err=lldb.SBError();p=lldb.debugger.GetSelectedTarget().GetProcess()
