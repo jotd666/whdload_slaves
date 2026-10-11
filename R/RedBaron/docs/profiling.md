@@ -50,6 +50,13 @@ ranges above. Endpoint convergence does not close the all-tick state gate.
 See “Legacy elapsed residue and the all-boundary residual inventory” in
 `w6-verification.md` for counts and the next ownership checks.
 
+Message-ledger checks now pass at all 15 boundaries across those three schedules:
+shortening and expiry occur at the same relative active-clock times, and native
+priority inputs match. No-render retains an expired message pending erasure;
+ordinary/delayed drawing clears it at different publication times, without
+changing the tested priority decision. See “Ground-run message logic versus
+pending erasure” in `w6-verification.md`. Other residual ownership checks remain.
+
 The current full W6 VERIFY bundle also passes the cached-68030 Preferences
 clock-boundary check: 222 CIA ticks spent in the native panel are excluded,
 one CIA tick of existing simulation debt is preserved, and no world update or

@@ -3839,3 +3839,58 @@ words, and that each row's labelled counts plus residuals exactly equals its
 raw changed-byte count. It launches no emulator and changes no slave bytes.
 This is a diagnostic advance, with the wider gameplay/capacity/50-FPS gates
 still open; the 270-test host suite is unchanged.
+
+
+## Ground-run message logic versus pending erasure
+
+`message_boundaries.py` checks the retained full message ledger and snapshots
+from the ordinary, delayed and no-render ground runs (`c54a84f7…`). It reuses
+the independent deadline/legacy-timer policy from `message_time.py`, binds the
+original and all 45 live copies of the native priority consumer at `sim:0114e`,
+and requires the same original game, frozen VERIFY build and h3 allocation.
+All three runs pass at every one of their 15 matched world boundaries.
+
+The startup reset inherits the existing timer 14500 and arms a new 178-CIA
+interval deadline. This differs deliberately from a new native message arm,
+which stores 15000. The first snapshot is therefore checked as startup state;
+subsequent live snapshots must match exact `ceil(remaining × 15000 / 178)`
+scaling. Native arithmetic counter 179 is present in every snapshot. Ledger
+prefixes must remain unchanged as new events are appended; saturated, truncated,
+reordered or inconsistent state is rejected.
+
+The three boot-local active cursors start at 1127, 1130 and 1127 respectively.
+Keeping these raw values in the report, their event times relative to the first
+boundary are identical for all logical events:
+
+| Event | Active CIA intervals after the first boundary | Deadline relative to the first boundary |
+| --- | ---: | ---: |
+| Inherited-message reset | 0 | 178 |
+| Native shortening to 1500 | 8 | 26 |
+| Expiry | 26 | 26 |
+
+Shortening to 1500 requests `ceil(1500 × 178 / 15000) = 18` intervals.
+The first post-start snapshot accordingly has the recomputed legacy word 1517.
+The message pointer, format/state/priority bytes at `h3:0482e–04830`, relative
+clock/deadline/start and live-versus-expired state match at every boundary.
+The signed native `timer < 7500` priority decision also matches throughout.
+
+Publication differs as expected: ordinary rendering erases at relative cursor
+26; delayed rendering erases at 28; no-render retains expired-pending state
+through the final snapshot. At boundaries 4–14 the rendered timer is zero while
+no-render retains one. Both values satisfy the same native priority predicate.
+The corresponding erasure ledger events, phases, raw timers and draw counts
+remain in the output; only logical-event comparison separates publication events
+by their documented kind. The checker does not discard differing raw snapshots.
+
+This establishes the intended reason for the differing `h3:04820` timer in
+these runs. It does not validate message rectangle pixels, every native
+shortening/replacement edge case, arbitrary indirect readers, terrain ownership
+or all gameplay events. Message-layout differences and other residual globals
+remain in the broader inventory. The player timing option remains VERIFY-only.
+
+Five new host tests cover deadline/expiry and erasure order, pending erasure
+versus the signed priority threshold, inherited startup state, exact live
+scaling, and CIA wrap. All 275 host tests pass. No new emulator was launched,
+no slave bytes changed and no performance result is inferred. Reproduce with
+`message_boundaries.py ORIGINAL_SIM ORDINARY DELAYED NO_RENDER --out REPORT`;
+`w6-ground-residual-inventory/message-boundaries.json` retains the full result.
