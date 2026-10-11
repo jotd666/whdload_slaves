@@ -7241,3 +7241,51 @@ minimum-hardware question or remove stock-A500 work. The remaining scene/CPU
 matrix, physical-input latency, full state/physics/combat equivalence and
 actual smooth 50 FPS must still be established. No runtime change follows
 from this measurement alone.
+
+
+## Message descriptor consumer census
+
+The current render/no-render comparison still fails strictly at `h3:482f`.
+To investigate whether this difference can reach gameplay, the existing
+`cache_reference_trace.py` census was rerun with `--h3-range 481c:4832`,
+covering the **entire 22-byte descriptor**, not just the differing byte.
+Both retained captures use ordinary VERIFY `ac1d47ba…` and the supported
+68000 decoder; the native captures were not restarted or modified.
+
+| Capture | Complete world calls | World instructions | Descriptor candidates | Complete service calls | Service instructions | Descriptor candidates |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `w6-exponent-v3-a500` | 42 | 1,133,943 | 168 | 45 | 162,772 | 0 |
+| `w6-cache-replay-a500` | 45 | 1,329,354 | 180 | 48 | 175,615 | 0 |
+
+Every complete world call has the same four descriptor references:
+
+- Twice, `sim:3c68` reads the main text pointer at `h3:481c` while checking
+  which message may be shortened.
+- `sim:114e` compares the timer at `h3:4820` with 7,500.
+- `sim:1158` writes priority 100 to `h3:4830`. The preceding branch skips
+  this store when the timer is at least 7,500; both retained traces take it.
+
+There are **no candidates touching `h3:482f`** in these 87 complete world
+calls or 93 complete service calls. One steady and two replay world-call
+fragments are retained separately and excluded from complete-call totals.
+The ignored reports are `message-world-references.json` and
+`message-services-references.json` beside each capture. The census includes
+address-forming operands and conservative stack extents; it excludes IRQ
+stack activity and does not classify every candidate as a read or write.
+
+The original executable's relocation inventory has exactly two relocation
+operands targeting `h3:482f`: the byte stores at `sim:922` (0xff while
+building a message bitmap) and `sim:3c0e` (1 after accepting a message).
+This inventory alone cannot establish that the byte has no readers:
+`sim:3a7a–3a8c` copies the complete descriptor onto the stack, and
+`sim:3ab2–3ac4` restores it; `sim:3a94` also passes the descriptor base to
+`sim:6b6c`. Indirect references need their own coverage.
+
+The timer is a real gameplay-facing consumer because it controls message
+priority. It must remain in the strict state comparison. At expiry,
+`time_message_advance` leaves the compatibility timer at 1 until actual
+painting erases it to 0; both values take the below-7,500 branch, but that
+local branch equivalence does not prove all message replacement/expiry
+paths equivalent. Those paths, bulk descriptor operations and sound event
+delivery remain open. No state byte was masked, no runtime patch changed,
+and this census does not turn the failing pair into an acceptance pass.

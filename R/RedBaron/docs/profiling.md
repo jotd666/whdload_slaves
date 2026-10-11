@@ -1,5 +1,12 @@
 # Red Baron performance measurements
 
+The W6 message-consumer census now covers 87 complete world calls and 93
+service calls in retained A500 steady/replay traces. None touches the differing
+redraw flag; the world does consume the message timer to update priority.
+See “Message descriptor consumer census” in `w6-verification.md`. The strict
+render/no-render comparison remains failing pending indirect/bulk-copy and
+message lifecycle coverage; this is correctness evidence, not a speed result.
+
 A fresh ordinary-W6 **68EC020 squadron run** completes **162 updates** from
 163.288 newly funded over 1,000 PAL fields, publishing **47 frames (2.35 FPS)**.
 After the opening message burst, endpoint outstanding work decreases from
