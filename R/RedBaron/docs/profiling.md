@@ -1,5 +1,12 @@
 # Red Baron performance measurements
 
+The tracked-heap content inventory now covers all 41 controlled 50/25-MHz
+checkpoints. Each has 105–107 payloads, with 82–84 exact-content matches and
+23 unmatched payload instances per side. Matching content does not establish
+object identity; duplicate groups remain explicit. See “Tracked-heap content
+inventory” in `w6-verification.md` for the residual sizes and limits. No slave
+code or performance result changes.
+
 Two more complete native pools match in the controlled 50/25-MHz comparison:
 two 134-byte type-five records and all eighty 44-byte auxiliary records at each
 of 41 checkpoints. Both pools change throughout the window. Only the auxiliary

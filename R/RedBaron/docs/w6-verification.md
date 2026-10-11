@@ -4767,3 +4767,63 @@ These results add two complete changing pools to the scoped state comparison.
 Other global state, omitted pools, broader gameplay scenarios, different CPU
 architectures, sustained capacity and smooth 50 FPS remain open. No performance
 claim follows from these heavily observed correctness snapshots.
+
+
+## Tracked-heap content inventory
+
+`heap_content.py` inventories every tracked allocation payload in the controlled
+50/25-MHz captures, including the initial state and forty world boundaries.
+Each checkpoint contains 105–107 payloads (243,015–246,415 bytes) on either side.
+The exact-content multiset intersection contains 82–84 instances
+(234,478–237,878 bytes); **23 instances / 8,537 bytes per side remain unmatched**
+at every checkpoint. The unmatched size multiset is invariant:
+
+| Payload bytes | Instances per side |
+| --- | --- |
+| 4 | 1 |
+| 21 | 3 |
+| 22 | 2 |
+| 28 | 1 |
+| 36 | 1 |
+| 46 | 1 |
+| 48 | 1 |
+| 92 | 1 |
+| 132 | 1 |
+| 200 | 1 |
+| 384 | 7 |
+| 636 | 1 |
+| 1,000 | 1 |
+| 3,520 | 1 |
+
+Grouping compares actual bytes, not hashes. Diagnostic SHA-256 values and all
+addresses remain in the report. Three or four shared groups per checkpoint
+have duplicate contents on at least one side; no arbitrary object pairing is
+assigned. Even unique equal contents do not establish persistent identity,
+ownership, cross-links or equal allocation lifetimes. The eight-byte allocator
+headers are outside this content inventory. No raw pointer is normalized.
+
+The 636-byte aircraft and 3,520-byte auxiliary residuals have separate explicit
+native bindings in the preceding checks; they remain visible here. Other
+residuals require ownership and field analysis before any gameplay conclusion.
+In particular, the allocation rooted at `h3:04c66` is stored by `sim:0da7a`,
+used by `sim:0cf08..0cf16` and freed via `sim:0db2c`; its differing contents
+remain unclassified. Numerical pointer candidates in sound/UI data are not
+sufficient grounds for excluding any of these residuals.
+
+Both captures must pass the controlled-prelude validator and have the same
+frozen slave and original executable hashes. Three host tests cover relocated
+equal contents, duplicate multiplicity, tail/length differences and empty
+inventories. All **323 host tests pass** with temporary-file access. No slave
+code changed or emulator was launched. Reproduce the retained inventory with:
+
+```sh
+python3 R/RedBaron/tools/heap_content.py \
+  tmp/dev/tmp/prof/w6-prelude-50mhz-030 \
+  tmp/dev/tmp/prof/w6-prelude-25mhz-030 \
+  --out tmp/dev/tmp/prof/w6-prelude-50mhz-030/heap-content.json
+```
+
+This is a coverage inventory, not a new whole-world correctness verdict. Global
+state and payload ownership, broader gameplay scenarios and CPU architectures,
+sustained capacity and smooth 50 FPS remain open. The acceptance requirement is
+consistent simulation speed regardless of achieved rendering frame rate.
