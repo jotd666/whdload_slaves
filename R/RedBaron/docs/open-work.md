@@ -94,9 +94,10 @@ as they were while the release preferences below remain open.
    timed services and render interpolation. These implementations remain
    experimental: complete state/consumer coverage, physics/combat convergence,
    sustained scene capacity, physical-input latency and actual smooth 50 FPS
-   are not accepted. The current short cached-68030 event/replay window is
-   8.4 FPS with exact funding; see `w6-verification.md`. Player timing remains
-   unchanged.
+   are not accepted. A current 20-second cached-68030 event/replay run averages
+   10.2 FPS with exact funding and outstanding work below 1.824 updates;
+   this is finite scenario capacity evidence, not the minimum-machine or
+   all-scene gate. See `w6-verification.md`. Player timing remains unchanged.
 2. **W7:** later world-step and instrument improvements. W4 overlay queueing
    remains explicitly deferred.
 

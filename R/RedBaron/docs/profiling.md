@@ -1,5 +1,15 @@
 # Red Baron performance measurements
 
+A fresh current-build cached-68030 event/replay run covers four consecutive
+250-field windows (20 PAL seconds). It completes **162 world updates** from
+**163.288350168 funded**, publishes **204 frames (10.2 FPS)**, and keeps total
+outstanding credit below **1.823704 updates**. Endpoint credit oscillates rather
+than growing throughout the run; the final 1.288350 includes one update in
+progress. Native self-tests, patch isolation, scheduled inputs and exact funding
+pass. See “Current-build sustained 68030 event capacity” in `w6-verification.md`.
+This establishes finite capacity evidence for this scenario, not the minimum
+CPU envelope, complete gameplay equivalence or 50 FPS.
+
 All tracked heap differences in the current render/no-render state pair now
 have explicit owners: native message-background bitmaps or sound slots. The
 1,800/1,600-byte bitmap payloads match the native size calculation and exact

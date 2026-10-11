@@ -6679,3 +6679,72 @@ Three regression tests cover native row padding and observed sizes, preserved
 birth dimensions and full-payload changes, wrong allocation extents, duplicate
 owners and missing keys. The full suite passes 398 tests. Sustained simulation
 speed, full scene coverage and smooth 50 FPS remain open.
+
+
+## Current-build sustained 68030 event capacity
+
+The short current-build event test is extended by a fresh boot and four
+**contiguous 250-field windows**, starting at the first completed W6 world
+boundary. Capture: `w6-current-sustained-event-030`. Frozen VERIFY SHA-256:
+`ac1d47ba01210c496a98db199b79fa2c30b0f3b59c570a0bec8906dfa7a116f7`.
+The configuration is cached 50 MHz 68030, 2 MiB chip / 8 MiB fast, CPU/memory/
+blitter cycle exact, MMU, maximum detail and Time Scale 40. Selection is
+`CUSTOM2=16319 CUSTOM4=0 CUSTOM5=-2146434560 MMU`: native setup clocks and
+scheduled Right/Fire controls, without a no-render override.
+
+| Consecutive window | Fields | CIA ticks | Completed world updates | Newly funded updates | Publications / FPS | Endpoint outstanding credit | Message / shorten calls |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 0 | 250 | 296 | 40 | 40.822087542 | 42 / 8.4 | 0.822087542 | 9 / 9 |
+| 1 | 250 | 296 | 40 | 40.822087542 | 53 / 10.6 | 1.644175084 | 5 / 5 |
+| 2 | 250 | 296 | 42 | 40.822087542 | 55 / 11.0 | 0.466262626 | 10 / 7 |
+| 3 | 250 | 296 | 40 | 40.822087542 | 54 / 10.8 | 1.288350168 | 11 / 3 |
+
+Across 1,000 fields (20 PAL seconds), 1,184 CIA ticks fund exactly
+163.288350168 updates; 162 complete and one further update is in progress.
+The remaining total credit is 1.288350168 updates, including fractional phase,
+unpolled CIA time and that in-progress update. It is not lost time. There are
+no queued due updates at the final endpoint and two CIA ticks remain unpolled.
+204 publications give 10.2 FPS overall; completed world progress is 8.1 updates
+per PAL second. A completed/funded ratio alone would obscure the endpoint's
+in-progress update and is not used as a speed verdict.
+
+All 1,000 per-field samples are retained. Four interrupt observations land
+inside the explicit cursor/credit transaction (fields 61, 458, 642, 717); the
+checker retains them but checks exact funding between the 996 committed
+intervals instead of interpreting partially written clock state. Outstanding
+credit at committed samples ranges from zero to 1.823703704 world updates.
+The longest sampled span without a completed world update is nine fields
+(180 ms). Endpoint credit rises and then falls; there is no accumulating
+backlog within this finite event run. This is evidence of capacity for this
+scenario, not a proof of bounded delay for every scene or an input-latency
+measurement.
+
+All native arithmetic/input/presentation/cache/list self-test counters pass.
+The live byte audit passes 57 selected and nine disabled ranges. All 163
+scheduled native input rows pass, covering four transitions and two commands;
+this does not measure physical input acquisition. Publication checks confirm
+safe beam positions and the one-field cap within the observed windows.
+There are 163 native world-body returns but 162 completed pose boundaries at
+the final observation because one update is still in progress; these counts
+are recorded separately rather than forced equal.
+
+Reproduction from the development harness directory, with its environment
+loaded and no other owned capture running:
+
+```sh
+python3 tools/w6_boot_current.py 030 16319 tmp/prof/w6-current-sustained-event-030 --replay
+python3 tools/w6_sustained_census.py tmp/prof/w6-current-sustained-event-030 --windows 4 --from-first-world
+python3 tools/w6_selftest_result.py tmp/prof/w6-current-sustained-event-030
+python3 tools/w6_loop_audit.py tmp/prof/w6-current-sustained-event-030
+python3 tools/w6_sustained_replay_check.py tmp/prof/w6-current-sustained-event-030
+python3 ../../R/RedBaron/tools/sustained_capacity.py \
+  tmp/prof/w6-current-sustained-event-030/field-census.json \
+  --out tmp/prof/w6-current-sustained-event-030/sustained-capacity.json
+```
+
+Use a new capture directory when repeating. The owned emulator was verified
+and quit after the checks. No runtime changes or gameplay-state exclusions
+were made. The minimum-machine steady/event/bank/dense matrix, full gameplay
+state/consumer and physics/combat acceptance, physical-input latency and
+actual smooth 50 FPS remain open. The next capacity work should cover the
+minimum machine and missing scenes, rather than repeat this same 68030 window.
