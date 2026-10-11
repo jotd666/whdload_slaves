@@ -86,7 +86,10 @@ tape_emit:
 tape_menu_key_none:
 ; Optional dense-scene search: emit one native F2 event after flight begins.
 ; Keep it separate from the squadron route so earlier forward-view fixtures remain available.
-	btst #4,perf_custom5+3(pc)
+	lea .custom5_base(pc),a1
+.custom5_base
+	adda.l #perf_custom5+3-.custom5_base,a1
+	btst #4,(a1)
 	beq.s .none
 	move.l tape_game_steps(pc),d1
 	cmp.l #2,d1
@@ -127,7 +130,10 @@ tape_loadseg:
 	lea tape_keybase(pc),a2
 	move.l d2,(a2)
 	lea tape(pc),a2
-	btst #2,perf_custom5+3(pc)
+	lea .custom5_base(pc),a1
+.custom5_base
+	adda.l #perf_custom5+3-.custom5_base,a1
+	btst #2,(a1)
 	beq.s tape_newroute
 	lea tape_dense(pc),a2
 	bra.s tape_newroute

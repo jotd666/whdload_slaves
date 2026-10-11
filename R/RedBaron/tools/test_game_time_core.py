@@ -6,13 +6,14 @@ from game_time_core import DENOMINATOR, THRESHOLD, advance, vectors
 
 class NativeClockCoreTests(unittest.TestCase):
     def test_every_native_case_against_rational_oracle(self):
-        for credit, secondary, divisor, multiplier, result in vectors():
-            phase, sec, world, service = result
-            expected = Fraction(credit, DENOMINATOR)+Fraction(1024*multiplier, divisor)
-            self.assertEqual(world*225+Fraction(phase, DENOMINATOR), expected)
-            self.assertEqual(secondary+1024, service*2560+sec)
-            self.assertLess(phase, THRESHOLD)
-            self.assertLessEqual(world, 4)
+        for quantum in (225, 450):
+            for credit, secondary, divisor, multiplier, result in vectors(quantum):
+                phase, sec, world, service = result
+                expected = Fraction(credit*quantum, DENOMINATOR*225)+Fraction(1024*multiplier, divisor)
+                self.assertEqual(world*quantum+Fraction(phase*quantum, DENOMINATOR*225), expected)
+                self.assertEqual(secondary+1024, service*2560+sec)
+                self.assertLess(phase, THRESHOLD)
+                self.assertLessEqual(world, 4)
 
     def test_long_mixed_rate_sequence_preserves_fraction(self):
         rng = random.Random(604)
@@ -35,3 +36,17 @@ class NativeClockCoreTests(unittest.TestCase):
         for args in ((THRESHOLD,0,33,1),(0,2560,33,1),(0,0,9,1),(0,0,33,2)):
             with self.assertRaises(ValueError):
                 advance(*args)
+
+
+class CPUQuantumTests(unittest.TestCase):
+    def test_both_quanta_keep_exact_funding(self):
+        from fractions import Fraction
+        from game_time_core import advance
+        for quantum in (225, 450):
+            phase = service = steps = 0
+            expected = Fraction(0)
+            for f, multiplier in [(33, 1)]*100 + [(80, 1)]*100 + [(10, 8)]*100:
+                phase, service, due, _ = advance(phase, service, f, multiplier, quantum)
+                steps += due
+                expected += Fraction(1024*multiplier, f)
+                self.assertEqual(steps*quantum + Fraction(phase*quantum, DENOMINATOR*225), expected)

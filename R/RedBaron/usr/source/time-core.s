@@ -1,4 +1,6 @@
-; W6 exact clock kernel. No sim hook yet; native self-test is VERIFY-only.
+; W6 exact clock kernel. CPU selection chooses the 225- or 450-unit rate table.
+; Both use normalized phase < 225*LCM(10..80); 450-unit increments are half.
+; Native self-tests are VERIFY-only.
 ; The owner advances once per unprocessed CIA tick and retains the CIA cursor
 ; as debt. It must execute every returned world tick before advancing again.
 ; a0: phase[4].l (big endian), secondary_phase.w. d0.w: F=10..80,
@@ -10,6 +12,7 @@ time_core_advance:
 	subi.w #10,d0
 	lsl.w #4,d0
 	lea time_core_rates(pc),a1
+	adda.w time_core_rate_offset(pc),a1
 	adda.w d0,a1
 	movem.l (a1),d2-d5
 	cmpi.w #8,d1
@@ -68,6 +71,7 @@ time_core_advance:
 .done
 	movem.l (sp)+,d2-d7/a0-a2
 	rts
+time_core_rate_offset: dc.w 0 ; 225 table by default; 450 selected at install
 	INCLUDE "time-core-rates.i"
 
 	IFD VERIFY
@@ -75,6 +79,7 @@ time_core_advance:
 ; No game state is read or written. Abort exposes the first failing case index.
 time_core_selftest:
 	movem.l d0-a6,-(sp)
+	move.w time_core_rate_offset(pc),-(sp)
 	lea .case_base(pc),a3
 .case_base
 	adda.l #time_core_cases-.case_base,a3
@@ -82,6 +87,8 @@ time_core_selftest:
 	lea time_core_result(pc),a4
 	clr.l (a4)
 .case
+	lea time_core_rate_offset(pc),a0
+	move.w (a3)+,(a0)
 	lea time_core_test_state(pc),a0
 	move.l a0,a1
 	move.l (a3)+,(a1)+
@@ -110,6 +117,8 @@ time_core_selftest:
 	addq.l #2,a3
 	addq.l #1,(a4)
 	dbf d7,.case
+	lea time_core_rate_offset(pc),a0
+	move.w (sp)+,(a0)
 	movem.l (sp)+,d0-a6
 	rts
 .bad

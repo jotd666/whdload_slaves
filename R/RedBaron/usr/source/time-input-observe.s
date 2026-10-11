@@ -334,7 +334,11 @@ time_input_replay_irq:
 	lea time_input_replay_records(pc),a1
 	moveq #0,d4
 .next
+	IFD VERIFY_WORLD_QUANTUM_TWIN
+	addi.l #512,d5 ; sustain input across the deliberately expensive twins
+	ELSE
 	addi.l #32,d5
+	ENDC
 	move.l d5,(a1)
 	move.w #$4e,4(a1)
 	lea .view_options_base(pc),a3

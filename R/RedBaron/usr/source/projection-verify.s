@@ -32,7 +32,10 @@ projection_twin:
 projection_verify_fail:
 	pea projection_verify_message(pc)
 	pea TDREASON_FAILMSG
-	move.l _resload(pc),a2
+	lea .resload_base(pc),a2
+.resload_base
+	adda.l #_resload-.resload_base,a2
+	move.l (a2),a2
 	jmp resload_Abort(a2)
 projection_verify_message:
 	dc.b "Red Baron: G1 projection verification mismatch",0

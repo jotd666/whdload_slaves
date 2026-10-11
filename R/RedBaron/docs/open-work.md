@@ -22,7 +22,8 @@ C2 is also dropped: its lifecycle twin passed, but all five CPU-class difference
 C3 is implemented and enabled only on the 68000: its exact face-loop twin passes and the isolated pair gains 3.39%.
 Checkpoint C is complete on all six normal-build configurations; current rates and stage costs are in the scoreboard.
 D1 is complete: `game-time-plan.md` now uses the approved rate, command, transition and isolation gates; cross-CPU/full-state convergence is no longer a gate.
-Next is D2, CPU-specific quantum and bounded world-time debt. When promoting W6 in D4, omit its
+D2 is implemented in VERIFY and passes the two-quantum clock tests and dt=450 straight/banked helper twin. The scoreboard records scope; rate/capacity acceptance remains D5.
+Next is D3, skipping pose capture/interpolation on the 68000. When promoting W6 in D4, omit its
 old VERIFY exponent optimization from the player path.
 Phases D–F remain open; the earlier lists below are historical context, not the execution order.
 

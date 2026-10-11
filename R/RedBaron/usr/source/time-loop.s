@@ -18,6 +18,22 @@ TIME_LOOP_PAUSE_BASE = 56
 
 time_loop_install:
 	movem.l d0-a6,-(sp)
+	lea time_loop_quantum(pc),a0
+	move.w #225,(a0)
+	lea time_core_rate_offset(pc),a4
+	clr.w (a4)
+	move.l perf_attnflags(pc),d0
+	andi.l #$8f,d0
+	bne .quantum_ready
+	move.w #450,(a0)
+	move.w #71*16,(a4)
+.quantum_ready
+	IFD VERIFY
+	moveq #0,d0
+	move.w (a0),d0
+	lea time_debt_header(pc),a0
+	move.l d0,12(a0)
+	ENDC
 	move.l #$21d28,d0
 	moveq #8,d1
 	lea time_loop_gate_bytes(pc),a0
@@ -79,6 +95,9 @@ time_loop_install:
 	adda.l #time_pose_install-.pose_install_base,a6
 	jsr (a6)
 	move.l (sp)+,a6
+	IFD VERIFY_WORLD_QUANTUM_TWIN
+	bsr time_quantum_twin_install
+	ENDC
 	lea time_loop_patch(pc),a0
 	jsr resload_Patch(a2)
 	jsr resload_FlushCache(a2)
@@ -135,6 +154,7 @@ time_loop_poll_rate_ready
 	bsr time_core_advance
 	add.w d1,TIME_LOOP_SERVICES(a0)
 	move.w d0,TIME_LOOP_DUE(a0)
+	bsr time_debt_bound
 	lea time_loop_transaction(pc),a1
 	clr.w (a1)
 time_loop_credit_committed:
@@ -230,7 +250,7 @@ time_loop_gate:
 	clr.w (a1)
 time_loop_world_committed:
 	move.l time_loop_h3(pc),a1
-	move.w #225,$4834(a1)
+	move.w time_loop_quantum(pc),$4834(a1)
 	movem.l (sp)+,d0-a6
 	addq.l #4,sp ; discard patch return, reconstruct original PEA/JSR
 	pea -14(a5)
@@ -275,7 +295,7 @@ time_loop_clock:
 	tst.l TIME_LOOP_ACTIVE(a0)
 	beq .original
 	move.l time_loop_h3(pc),a0
-	move.w #225,$4834(a0)
+	move.w time_loop_quantum(pc),$4834(a0)
 .original
 	move.l time_loop_h3(pc),a0
 	move.w d0,$4836(a0)
@@ -296,6 +316,11 @@ time_loop_exit:
 	unlk a5
 	rts
 
+time_loop_quantum: dc.w 225
+	include "time-debt.s"
+	IFD VERIFY_WORLD_QUANTUM_TWIN
+	include "time-quantum-verify.s"
+	ENDC
 time_loop_error: dc.b "Red Baron: W6 invalid clock interval or divisor",0
 	even
 	dc.b "RBTLOOP0"

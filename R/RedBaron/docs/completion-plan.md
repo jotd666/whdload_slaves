@@ -255,6 +255,8 @@ if a play-test shows a visible problem.
 
 **D2. Quantum chosen per CPU class** (approved U1, U2):
 
+Implemented in VERIFY: both exact rate tables and bounded debt pass host/native checks, including straight/banked dt=450 helper twins; rate acceptance remains D5.
+
 | CPU class | Quantum |
 |---|---|
 | 68000 | 450 |

@@ -14,7 +14,10 @@ player mask until D5 passes. `profiling.md` is the single results scoreboard;
   collision, weapons or RNG.
 - Debt is capped at one second of world time. Excess time is dropped and
   counted in VERIFY. Overload slows gameplay gracefully; it must not enlarge
-  the physics quantum or be reported as nominal speed.
+  the physics quantum or be reported as nominal speed. D2 retains at most 1800
+  primary units (four 450-unit/eight 225-unit updates), about 0.98 nominal
+  seconds at Time Scale 40. Its conservative fractional-phase bound reserves
+  less than two additional units; the exact phase itself is never rounded.
 - Faster rendering will be on by default at release, with icons unchanged.
   The larger game memory pool is approved. These decisions need no further vote.
 
