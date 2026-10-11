@@ -1,5 +1,12 @@
 # Red Baron performance measurements
 
+Explicit native inline-object identities resolve the shared display list’s
+active order: it matches at all 41 controlled checkpoints. Full storage does
+not: seven checkpoints differ in inactive slots, and boundary 21 differs in
+112 compact-record bytes plus the compact count (19 versus 18). See “Shared
+display list owners and remaining compact state” in `w6-verification.md`.
+These differences remain unresolved; no gameplay-speed acceptance claim.
+
 All 500 dynamic registry slots, including the unused tail, now match under
 explicit object identities at all 41 controlled 50/25-MHz checkpoints. The
 registry takes 27 distinct states; raw differences remain recorded. See

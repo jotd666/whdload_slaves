@@ -6197,3 +6197,55 @@ Two added regression tests reject unused-tail mutations and truncated storage
 and verify exact slot count/identity handling. The full host suite passes
 379 tests. No runtime or performance behavior changes; complete gameplay
 independence, real-time capacity and smooth 50 FPS remain open.
+
+
+## Shared display list owners and remaining compact state
+
+`shared_display_state.py` inventories all 500 entries at `h3:7dc8`, the
+600-byte inline compact pool at `h3:5280`, its count at `h3:54d8`, and a
+52-byte prefix of the fixed draw object at `h3:129c`. Native code at
+`sim:f326/f366` establishes 60 compact slots of ten bytes, including exact
+record copies and the count update. `sim:e82e` inserts the fixed object's
+address; the original h3 relocation at its +26 field identifies callback
+`sim:f984`. Original and live instruction contracts are checked. Only these
+exact inline slots supplement the existing fixed/projectile identities;
+interior or out-of-range pointers do not receive h3-relative bindings.
+
+For frozen VERIFY
+`9c92ff9979e40ec98adc1f73255f8e57b4f65b2f2d6d5d6e13793aad7f414415`,
+all 41 retained 50/25-MHz checkpoints have identical **active list order**.
+No sorting is applied to obtain that result. The 52-byte fixed-object prefix
+also matches after binding its single explicit callback. Complete shared
+state does **not** match:
+
+- Boundaries 7, 17, 30, 31, 37, 38 and 39 have respectively 3, 2, 2, 2, 4, 1
+  and 1 differing inactive pointer slots. The inventory retains each slot,
+  both identities and its active/inactive status on each side.
+- Boundary 21 has 112 differing compact-record bytes and compact counts
+  19 versus 18. Differences run through slots 3–18, including active records.
+  All other checkpoints match the entire 600-byte compact storage and count.
+  Thus this is not explained solely by the inactive pointer tail.
+
+The current render lease restores the active shared-list prefix and count
+in `time_present_list_restore`, but does not save the inline compact pool.
+`time_present_capture` explicitly skips compact objects because their layout
+is shorter. This identifies a concrete source of potentially inconsistent
+list targets after rendering; it does not yet prove a gameplay consumer
+observes those targets before native reconstruction. The next correctness
+step is to trace compact storage/count consumers and either restore their
+complete owned state with native verification or establish isolation for all
+required paths. The inventory makes no exclusion or acceptance decision.
+
+```sh
+python3 R/RedBaron/tools/shared_display_state.py \
+  tmp/dev/tmp/game/RedBaron_v2.1/RedBaron/data/sim \
+  tmp/dev/tmp/prof/w6-prelude-50mhz-030 \
+  tmp/dev/tmp/prof/w6-prelude-25mhz-030 \
+  --out tmp/dev/tmp/prof/w6-prelude-50mhz-030/shared-display-state.json
+```
+
+Four regression tests cover exact native identity bounds, inactive-slot
+retention, order/count mismatches and complete compact/fixed-prefix byte
+differences. The full suite passes 383 tests. This is a diagnostic inventory,
+not a passing whole-state comparator. Runtime code is unchanged; gameplay
+independence, sustained capacity and 50-FPS acceptance remain open.
