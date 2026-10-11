@@ -1,5 +1,12 @@
 # Red Baron performance measurements
 
+A native A500 instruction census finds no vertex-cache reference candidates
+in 87 complete world updates and 93 clock/service polls across steady flight
+and a scheduled Right/Fire replay. This supports isolation in the measured
+paths; snapshot-code and scenario limits remain explicit. See “World and
+service reference census for the vertex caches” in `w6-verification.md`.
+No cache differences are excluded and no gameplay-speed acceptance is claimed.
+
 The equal-tick global audit now identifies 2,176 of 2,938 residual differing
 byte positions as the native per-shape vertex caches. Active rows also differ;
 these bytes remain in the comparison until gameplay-consumer ownership is

@@ -5784,3 +5784,74 @@ python3 R/RedBaron/tools/geometry_cache_state.py \
 Three regression tests require unknown active tags and truncated reads to fail,
 and retain differences in both invalid and out-of-count rows. The complete
 host suite passes 349 tests. No live emulator or game-memory writes are needed.
+
+
+## World and service reference census for the vertex caches
+
+`cache_reference_trace.py` follows complete `sim:1098–11c8` world calls and,
+separately, the VERIFY W6 clock/service poll in retained A500 instruction
+traces. For every main-task instruction it decodes memory operand addresses
+from the snapshot code and traced pre-instruction registers, looking for
+intersection with the complete `h3:a4e6–b9d1` vertex-cache range.
+
+The check deliberately includes address-forming operands, a conservative
+implicit-stack neighborhood, UNLK frame reads, maximum MOVEM extents and
+spaced MOVEP accesses. It handles signed displacement/index values, physical
+24-bit aliases and sequential predecrement/postincrement operands. Unsupported
+addressing modes, missing/undecoded code, unexpected stacks or changed
+same-PC instruction bytes between snapshots cause failure. The IRQ stack is
+identified independently from `sim:2ffcc`; IRQ instructions are excluded.
+Partial calls at chunk boundaries remain explicit and are not joined.
+
+Both captures use frozen VERIFY
+`ac1d47ba01210c496a98db199b79fa2c30b0f3b59c570a0bec8906dfa7a116f7`,
+the A500-equivalent 68000 with 512 KB chip + 1,536 KB slow RAM, maximum
+details and CUSTOM2=16319. Capstone 5.0.7 supplies decoding; seven regression
+tests cover the address calculations and rejection paths. The host suite
+passes 356 tests.
+
+| Capture / selected routine | Complete calls | Main-task instructions | Cache-reference candidates |
+| --- | ---: | ---: | ---: |
+| `w6-exponent-v3-a500`, world | 42 | 1,133,943 | 0 |
+| Same capture, clock/service poll | 45 | 162,772 | 0 |
+| `w6-cache-replay-a500`, world | 45 | 1,329,354 | 0 |
+| Same replay, clock/service poll | 48 | 175,615 | 0 |
+
+The fresh replay includes scheduled Right down/up and Fire down/up. All four
+queue transitions are consumed, two commands are popped, and 366 native
+held-key query returns include both 0 and 1 for each control. The input query
+check is retained as `check-input-queries.py` / `input-query-check.json`;
+it establishes exercised controls, not hit/contact outcomes or input latency.
+All native self-test counters, including 20,480 exponent cases, and the 57
+selected / nine disabled hook checks pass. The owned emulator was verified
+before quitting.
+
+That replay's 250 recorded fields span 252 native fields / 299 CIA ticks.
+It completes 47 world updates versus 41.235825 newly funded, starts 48 updates,
+and completes one draw. CIA debt falls from 59 to 15 ticks; one update is in
+progress at the end. Exact funding passes. This is repayment of inherited
+debt in a short window, not a sustained-capacity or frame-rate result.
+
+These observations support cache isolation for the executed world and service
+paths. They do **not** prove all possible consumers are isolated: the decoder
+uses snapshot code, transient self-modification between snapshots is not ruled
+out, and IRQ/DMA, cached CPUs, unselected services, contact/hit outcomes,
+mission/menu transitions and other render schedules remain outside this
+census. No differing cache byte is removed from the state comparison and no
+whole-gameplay independence claim is made.
+
+Reproduce with the shared Amiga Python environment:
+
+```sh
+python3 R/RedBaron/tools/cache_reference_trace.py \
+  tmp/dev/tmp/prof/w6-cache-replay-a500 \
+  --out tmp/dev/tmp/prof/w6-cache-replay-a500/cache-world-references.json
+python3 R/RedBaron/tools/cache_reference_trace.py \
+  tmp/dev/tmp/prof/w6-cache-replay-a500 --routine services \
+  --out tmp/dev/tmp/prof/w6-cache-replay-a500/cache-service-references.json
+```
+
+The capture retains its frozen binary/listing/configuration, all three traces
+and endpoint RAM, native queue/counter dumps, capacity manifest/check, byte and
+self-test audits and both reference-census reports. No slave change is made
+by this investigation.
