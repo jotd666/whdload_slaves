@@ -1,5 +1,13 @@
 # Red Baron performance measurements
 
+The seven 384-byte heap residuals are now bound to native sound playback slots.
+All 22 referenced resources (102,352 bytes) match in the controlled 50/25-MHz
+comparison, and remaining slot data matches except for explicitly reported
+playback counters: 91 unequal slot observations across 38 of 41 checkpoints,
+including the initial state. See “Sound-slot residuals across CPU frequencies”
+in `w6-verification.md`. Sound is unchanged; audio timing/delivery equivalence
+is not established by this inventory.
+
 The native planning table now matches across all 41 controlled 50/25-MHz
 checkpoints, including its full 48-byte allocation, index cursor and both linked
 148-byte records. Only verified pointers within the table are represented by

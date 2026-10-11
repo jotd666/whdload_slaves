@@ -4880,3 +4880,54 @@ python3 R/RedBaron/tools/planning_table.py \
 This resolves one explicit allocation and associated cursor/record structure.
 The remaining heap residuals and globals, broader gameplay and CPU coverage,
 sustained capacity and real smooth 50 FPS remain open. W6 remains VERIFY-only.
+
+
+## Sound-slot residuals across CPU frequencies
+
+The seven 384-byte tracked payloads rooted at `h3:0a184..0a19c` belong to the
+native sound player. `sound_slot_state.py` binds their allocation and pointer
+layout to the original executable and every retained snapshot of the controlled
+50/25-MHz captures. Across **41 checkpoints / 287 slot observations**, every
+byte outside the three explicit pointer fields and the playback counter agrees.
+The complete 22 resources selected through `h3:09712` also agree: **102,352
+bytes per checkpoint**, with each pointer required to be an exact tracked
+payload start. The 23-longword resource list must end in null.
+
+The native constructor at `sim:35c00..35c5a` allocates seven 384-byte slots and
+sets slot +12 to slot +366. `sim:2b124..2b138` obtains the source pointer from
+the indexed resource list, stores it at +362 and stores the data pointer at
++366. `sim:33064..3307c` derives that data pointer as source + unsigned source
+byte 1 + 2. The verifier validates these exact bindings using the slot's +374
+resource index, including resource bounds. Source/data pointers must both be
+null in an unbound slot. The source-index identities observed are 0, 1, 3, 10
+and 21; no generic address-range normalization is used.
+
+Slot +344 is a **word counter**, not a pointer. The native player increments it
+at `sim:34e9a`. It differs in **91 slot observations over 38 checkpoints**,
+affecting slots zero through four, with maximum absolute difference seven.
+Differences already exist in the initial snapshot. Slots five and six remain
+unchanged throughout this window. These are separate playback-state observations,
+not evidence that W6 introduced the differences, nor proof they are harmless
+to every gameplay consumer. Every raw slot difference and both counter values
+remain in the report. The checker rejects any difference outside these bound
+pointer fields and this explicitly reported counter.
+
+The controlled-prelude, input and player-link checks remain prerequisites.
+Three host tests cover pointer relocation and rejection, malformed resource
+indices/headers, counter visibility, inactive slots, final bytes and truncated
+records. All **329 host tests pass**. No sound/slave code changed and no emulator
+was launched. Reproduce the retained report with:
+
+```sh
+python3 R/RedBaron/tools/sound_slot_state.py \
+  tmp/dev/tmp/game/RedBaron_v2.1/RedBaron/data/sim \
+  tmp/dev/tmp/prof/w6-prelude-50mhz-030 \
+  tmp/dev/tmp/prof/w6-prelude-25mhz-030 \
+  --out tmp/dev/tmp/prof/w6-prelude-50mhz-030/sound-slot-state.json
+```
+
+This classifies seven heap residuals and their resource list without dropping
+the unequal counter observations. It does not establish identical audible
+output, event delivery or all sound state. Other heap/global ownership,
+broader gameplay and CPU tests, sustained capacity and real smooth 50 FPS remain
+open. Sound remains unchanged and W6 remains VERIFY-only.
