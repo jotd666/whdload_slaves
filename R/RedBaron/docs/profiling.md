@@ -1,5 +1,14 @@
 # Red Baron performance measurements
 
+A fresh current-build 50-MHz cached-68030 replay/event window covers exactly
+250 PAL fields: **40 world updates**, **40.822 newly funded**, **42 publications
+(8.4 FPS)**, and nine message-start plus nine shortening calls. Total
+uncompleted credit ends at 0.822 updates (including fractional credit), with
+a sampled maximum of 1.824; no completion gap exceeds nine fields. Exact
+funding, scheduled inputs and selected/disabled byte audits pass. See
+“Current 68030 replay/event speed window” in `w6-verification.md`. This is a
+five-second capacity observation, not sustained acceptance or smooth 50 FPS.
+
 Native control-flow analysis proves that every local path to the conditional
 stack-scratch read passes its fresh frame-local assignment first. This covers
 95 reachable instructions, with ten subroutine calls explicitly outside the

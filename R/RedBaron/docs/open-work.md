@@ -90,9 +90,13 @@ as they were while the release preferences below remain open.
    world ticks with independent rendering, timestamped input and retained time
    debt. Controlled combat/AI convergence and actual catch-up capacity are gates
    of implementation, not completed tests. VERIFY now has a fixed-step loop,
-   atomic modal-clock handoff and timestamped keyboard replay; mouse/joystick,
-   timed services, interpolation and full gameplay validation remain. Player
-   timing remains unchanged.
+   atomic modal-clock handoff, timestamped keyboard/mouse/joystick ownership,
+   timed services and render interpolation. These implementations remain
+   experimental: complete state/consumer coverage, physics/combat convergence,
+   sustained scene capacity, physical-input latency and actual smooth 50 FPS
+   are not accepted. The current short cached-68030 event/replay window is
+   8.4 FPS with exact funding; see `w6-verification.md`. Player timing remains
+   unchanged.
 2. **W7:** later world-step and instrument improvements. W4 overlay queueing
    remains explicitly deferred.
 

@@ -6393,3 +6393,64 @@ Four regression tests cover conditional paths, an assignment-bypassing path,
 unreachable readers, external edges and loops. The full suite passes 392
 tests. No runtime or performance change; whole-gameplay independence,
 sustained nominal speed and smooth 50-FPS acceptance remain open.
+
+
+## Current 68030 replay/event speed window
+
+A fresh owned boot of current VERIFY
+`ac1d47ba01210c496a98db199b79fa2c30b0f3b59c570a0bec8906dfa7a116f7`
+(text 265,500 bytes) uses cached 68030 at 50 MHz, 2 MiB chip / 8 MiB fast,
+cycle-exact CPU/memory/blitter settings, MMU and the normal maximum-detail
+route. Time Scale remains 40 (F=33). CUSTOM2=16319 selects W6 with the current
+bundle; CUSTOM4=0 and CUSTOM5=-2146434560 select deferred installation and the
+scheduled Right/Fire replay. These scheduled controls are not physical-key
+latency evidence. The capture is `w6-current-speed-030`.
+
+The census starts at the first W6 completed-world boundary and captures
+**exactly 250 PAL fields**, without profiler chunk-alignment gaps. In
+296 CIA ticks, it completes 40 world updates against 40.822087542 newly funded
+updates and publishes 42 frames (**8.4 FPS**). Adjacent publications are
+five or six fields apart. Every sampled publication is inside the safe beam
+interval and respects the one-field cap. The native counters record nine
+message-start and nine message-shortening calls, plus 40 completed world-body
+calls; these are calls, not necessarily nine distinct visible messages or hits.
+
+Exact funding passes at the endpoints and across 249 committed per-field
+intervals. Field 61 is retained as an in-progress clock transaction and is
+not interpreted as a committed snapshot. Total uncompleted credit—unpolled
+CIA time, fractional phase, due work and any update in progress—starts at zero,
+ends at 0.822087542 updates and ranges from zero to 1.823703704. Endpoints have
+no due updates or update in progress; the ending cursor is three CIA ticks
+behind the lifetime clock. Thus 40/40.822 is not evidence of a permanent 2%
+slowdown: the remaining credit is explicitly accounted for. Conversely, a
+five-second window cannot establish sustained real-time capacity. The longest
+sampled interval without a completed update is nine fields (180 ms).
+
+The scheduled-input check passes all 40 native input rows, four timestamped
+transitions and two consumed commands, with Right/Fire held state and native
+axis/fire results correct. Native self-tests pass 20,480 exponent cases,
+426 clock, 512 input, 638 presentation and 133 phase cases, plus terrain/cache/
+list 2/1/2. All 57 selected hooks and nine disabled ranges pass the live byte
+audit. The verified owned emulator was stopped after capture and checks.
+
+Reproduce from the development harness:
+
+```sh
+python3 tools/w6_boot_current.py 030 16319 tmp/prof/w6-current-speed-030 --replay
+python3 tools/w6_sustained_census.py tmp/prof/w6-current-speed-030 --windows 1 --from-first-world
+python3 tools/w6_selftest_result.py tmp/prof/w6-current-speed-030
+python3 tools/w6_loop_audit.py tmp/prof/w6-current-speed-030
+python3 tools/w6_sustained_replay_check.py tmp/prof/w6-current-speed-030
+```
+
+Use a new output directory for another boot. From the repository root,
+`field_capacity.py` checks the saved `field-census.json`; its report is
+`field-capacity.json`. `short-backlog.json` retains the per-field credit/gap
+summary. The raw census includes all 250 field samples, publication/event
+logs, endpoint RAM and frozen build/configuration evidence.
+
+This closes neither sustained event capacity nor complete gameplay-state
+independence. It is not a performance ratio against earlier scenes or builds.
+At 8.4 FPS this hardware/configuration also does not meet smooth 50 FPS.
+The precise faster-hardware acceptance target remains to be clarified; the
+50-FPS requirement itself is unchanged. No runtime source change was made.
