@@ -608,6 +608,7 @@ new_DeleteFile:
 	include "overlay-blit.s"
 	include "overlay-mask.s"
 	include "overlay-pack.s"
+	include "overlay-shadow.s"
 	include "time-terrain-verify.s"
 	include "time-shape-verify.s"
 	include "time-flag-verify.s"

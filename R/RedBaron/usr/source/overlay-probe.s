@@ -52,6 +52,7 @@ overlay_probe_enter:
 	movem.l (sp)+,d0/a0
 	bsr overlay_probe_wait
 	bsr overlay_mask_verify
+	bsr overlay_shadow_before
 ; Entry flags are overwritten by native MOVE.W argument load at sim:2896a.
 overlay_probe_before:
 	nop

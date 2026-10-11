@@ -4152,3 +4152,68 @@ Native rejection-path tests, complete input guards, persistent cache lifetime,
 live replay with state preservation and native pixel twins remain necessary
 before skipping drawing. No gain, sustainable capacity or 50-FPS result is
 claimed, and broader W6 gameplay acceptance remains open.
+
+
+## Persistent private overlay cache twin
+
+`overlay-shadow.s` retains the first packed allocation for each front program
+through the four-call diagnostic window. Before each original draw it copies
+the complete framebuffer into guarded private memory. After the draw it replays
+the retained image/mask onto that private copy with a native CPU compositor,
+using `old XOR ((old XOR image) AND mask)`, and compares every byte against the
+original renderer's completed framebuffer. The game always receives its original
+draw; the twin does not write game pixels or blitter registers. Geometry must
+match the retained descriptor before reuse. Other dependency changes are not yet
+guarded: a discrepancy is diagnostic evidence, not permission to display a stale
+cache. Complete cache-key/invalidation work remains open.
+
+`overlay_shadow_check.py` independently verifies the pre-draw copy and guards,
+persistent allocation identity and frozen bytes at each hit, saved geometry,
+native counters, and the entire replayed/native framebuffer. Its host compositor
+uses the separate AND/OR expression. Current-frame packing remains reference
+information; a hit must reuse the earlier allocation and bytes already present
+in the pre-draw RAM snapshot. This prevents a rebuilt current-frame image from
+being counted as cache reuse. The existing full h3, original pixels, coverage,
+packed-data and caller-return checks also run on the same capture.
+
+Final VERIFY SHA256 is
+`e9da528982d41aafbec0580d681c46e65d0f398d6b4b0af68631f99c3c00ce96`
+(text 255,666 bytes). Fresh `w6-overlay-shadow-a500` and
+`w6-overlay-shadow-bank-030` captures use CUSTOM2=32703, CUSTOM4=0, maximum detail
+and Time Scale 40. A500 uses CUSTOM5=512; 68030 uses 514. The latter name/config
+requests the bank fixture, but the retained live fixture counter is **step 2**;
+Right is scheduled only at steps 20–34. It therefore establishes early-flight
+coverage only, **not a bank window or banking convergence**.
+
+Each final-build run records **two fills and two hits**, with zero native byte
+mismatches or unsupported cases. All four 40,000-byte private frames and guards
+match the original native output. At each hit, A500's background differs from
+its seed by 52 bytes and 68030's by two bytes. This is limited natural background
+variation; view/gun/resource changes and materially different native backgrounds
+still need coverage. The earlier three-background host replay remains separate
+evidence. The initial `w6-overlay-shadow-030` run also passed with six changed
+background bytes per hit on the preceding build
+`0acdfc01c7a2f475fa21f3c9b13a0b568ccff33c1b234986eeb02789e62cfd88`.
+
+Cleanup follows the fourth **mask attempt**, including a rejected mask/pack,
+rather than requiring four successful twins. This prevents a rejected final
+attempt from retaining earlier successful cache allocations. The successful
+captures observe both cache pointers, the private target and selected-cache
+pointer cleared after the fourth call, with counters 2/2/4 and no unsupported
+case. The final 68030 capture also observes mask and current-pack pointers zero.
+Native rejection-path injection is still required; the successful-path cleanup
+observations do not claim to exercise those failure branches.
+
+Native timing/input/presentation counters pass 426/512/638/133, terrain/cache/
+list checks pass 2/1/2, three private shape cases pass, and the live timing/pacing
+audit passes 56 enumerated destinations on each final-build CPU run. Static
+audits pass 68 ranges/125 destinations. All 293 host tests pass; normal/developer
+W5 hashes are unchanged. Every owned test instance was quit.
+
+Reproduce with `overlay_shadow_check.py CAPTURE/overlay-capture.json --out REPORT`.
+The retained collector is `capture-shadow.py`; private headers, framebuffers and
+cache bytes are `shadow-N-header.bin`, `shadow-N-target.bin`, `shadow-N-cache.bin`.
+Results and cleanup observations are `shadow-check.json` and `shadow-freed.txt`.
+No live rendering replacement, measured speedup, sustainable CPU capacity or
+50-FPS acceptance is claimed. W6's complete simulation-state/event invariants
+remain separate, unfinished requirements.

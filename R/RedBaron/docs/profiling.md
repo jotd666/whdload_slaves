@@ -1,14 +1,13 @@
 # Red Baron performance measurements
 
-Native VERIFY-only coverage and packing components now produce identical
-front-overlay payloads on A500 and cached 68030: **4,320 + 5,208 = 9,528 bytes**.
-Each boot checks four masks and complete packed allocations, plus original
-framebuffer, drawing-state and caller-return behavior. Replaying the native
-payloads on three host backgrounds matches the independent renderer over
-480,000 bytes per boot. No game drawing is skipped and no speed gain is claimed.
-See “Native packed overlay capture and host replay” in `w6-verification.md`.
-Cache guards, live cached/native twins and measurement remain open; variable
-native return registers still preclude replaying a fixed register image.
+The VERIFY overlay diagnostic now retains one packed image per front program
+and reuses it in a native CPU twin on a later frame's private background copy.
+Both A500 and cached 68030 record two fills and two genuine hits; every full
+40,000-byte result matches the original draw, with allocation identity and bytes
+preserved across hits. Background variation is limited (52 and 2 bytes at the
+final-build hits). No game drawing is skipped and no speed gain is claimed.
+See “Persistent private overlay cache twin” in `w6-verification.md`. Complete
+cache guards, broader scene transitions and live hardware replay remain open.
 
 The W6 ground-impact render-scratch leak is fixed in the current VERIFY
 candidate. Fresh rendered/no-render runs match all 280 player bytes at all 15

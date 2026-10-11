@@ -139,6 +139,7 @@ overlay_pack_save_ccr: dc.w $40e7 ; installer changes to MOVE CCR on 010+
 	move.l d0,4(a5)
 overlay_pack_observed:
 	nop
+	bsr overlay_shadow_after
 	move.l 4.w,a6
 	move.l (a5),a1
 	move.l #5240,d0
@@ -150,6 +151,7 @@ overlay_pack_free_mask:
 	move.l #8032,d0
 	jsr _LVOFreeMem(a6)
 	clr.l (a4)
+	bsr overlay_shadow_cleanup
 overlay_pack_verify_done:
 	movem.l (sp)+,d0-a6
 	move.w (sp)+,ccr
