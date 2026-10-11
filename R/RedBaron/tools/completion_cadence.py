@@ -32,3 +32,14 @@ def summarize(text, fields):
                 dashboard_events=len(events), clean_intervals=len(clean),
                 clean_fields=sum(clean),
                 event_free_frame_fps=PAL_HZ/statistics.mean(clean) if clean else None)
+
+
+if __name__ == '__main__':
+    import argparse
+    import json
+    from pathlib import Path
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('log', type=Path)
+    parser.add_argument('--fields', type=int, default=2000)
+    args = parser.parse_args()
+    print(json.dumps(summarize(args.log.read_text(), args.fields), indent=2))

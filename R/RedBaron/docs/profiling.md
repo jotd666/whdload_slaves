@@ -8,19 +8,19 @@ results below are not combined-bundle results. Each A/B pair uses one slave
 binary with CUSTOM2=0 and CUSTOM2=1. Stage spans are inclusive wall time;
 scene, cockpit and publication are separate stages, not CPU-only costs.
 
-| Configuration | Checkpoint | Stock steady / event FPS | Bundle steady / event FPS | World update ms | Scene / cockpit / publication ms | World time / wall time | Dropped world time |
-|---|---|---|---|---|---|---|---|
-| A500, 512K chip + 1.5M slow | A1 configs | Pending | Pending | Pending | Pending | Pending | Pending |
-| 020, 2M chip + 8M fast | A1 configs | Pending | Pending | Pending | Pending | Pending | Pending |
-| 030/50, 2M chip + 8M fast, MMU | A1 configs | Pending | Pending | Pending | Pending | Pending | Pending |
-| 030/50, 2M chip + 8M fast, no MMU tooltype | A1 configs | Pending | Pending | Pending | Pending | Pending | Pending |
-| 040/25 NOMMU, AGA, 2M chip + 16M fast | A1 configs | Pending | Pending | Pending | Pending | Pending | Pending |
-| 060/50 NOMMU, AGA, 2M chip + 16M fast | A1 configs | Pending | Pending | Pending | Pending | Pending | Pending |
+| Configuration | Checkpoint | Stock steady / event FPS | Bundle steady / event FPS | World update ms | Scene / cockpit / publication ms | DASH markers stock / bundle | Clean fields stock / bundle | World time / wall time | Dropped world time |
+|---|---|---|---|---|---|---|---|---|---|
+| A500, 512K chip + 1.5M slow | A2 | 1.844 / 1.722 | 2.100 / 2.072 | 57.68 → 56.05 | 399.51 / 73.70 / 0.28 → 360.51 / 62.53 / 4.46 | 3 / 3 | 1516 / 1735 | Pending D | Pending D |
+| 020, 2M chip + 8M fast | A2 | 6.008 / 5.666 | 6.259 / 6.215 | 13.79 → 13.98 | 116.77 / 41.40 / 0.08 → 102.22 / 35.54 / 6.74 | 44 / 114 | 1196 / 1077 | Pending D | Pending D |
+| 030/50, 2M chip + 8M fast, MMU | A2 | 12.974 / 11.881 | 12.893 / 12.855 | 3.33 → 3.10 | 44.19 / 34.08 / 0.08 → 38.53 / 27.87 / 7.92 | 191 / 2 | 1154 / 1905 | Pending D | Pending D |
+| 030/50, 2M chip + 8M fast, no MMU tooltype | A2 | 12.377 / 11.931 | 12.430 / 12.206 | 3.94 → 3.57 | 48.31 / 31.23 / 0.04 → 42.36 / 31.58 / 4.16 | 58 / 121 | 1262 / 1651 | Pending D | Pending D |
+| 040/25 NOMMU, AGA, 2M chip + 16M Z3 fast | A2 | 12.476 / 11.507 | 12.430 / 12.280 | 3.34 → 3.21 | 47.56 / 36.26 / 0.06 → 41.26 / 29.89 / 6.48 | 116 / 107 | 1144 / 1699 | Pending D | Pending D |
+| 060/50 NOMMU, AGA, 2M chip + 16M Z3 fast | A2 | 12.786 / 12.206 | 12.602 / 12.405 | 3.16 → 3.10 | 44.63 / 33.43 / 0.03 → 39.59 / 28.95 / 7.90 | 64 / 165 | 1452 / 1537 | Pending D | Pending D |
 
 040/060 functional checks use separate MMU-core configurations. Their timing
 results will use the frequency-sensitive NOMMU cores. Configuration generation
-passes all six cases and the functional variants; all three builds, 418 host
-tests and the 76-range hook audit pass at A1. The normal-build matrix uses
+passes all six cases and the functional variants. All three builds pass; the
+A2 checkpoint passes 427 host tests and the 76-range hook audit. The normal-build matrix uses
 native keyboard queues through the host debugger. The input driver writes only
 keys, never simulation or executable state. Maximum World/Aircraft detail and
 Ground ON IN COMBAT are selected; Time Scale stays at 40. A separate benchmark
@@ -38,9 +38,32 @@ initial 1,000/2,000-field opening window is retained as setup evidence only.
 `routine_wall_time.py` reports phase-safe inclusive stage spans. No VERIFY
 measurement substitutes for a normal-build result.
 
-The stock A500 event capture completed: 1.722 FPS over 2,000 fields;
-56 clean intervals cover 1,515.87 fields at 1.844 FPS. Its matching bundle
-capture is pending. Input and cadence safeguards pass eight targeted tests.
+All twelve A2 cases are complete, on the same normal slave SHA-256
+`5256542f87ec1c6d3eca174416560597a60e76e1cc785cd0fbf5e3efff3f0ba8`.
+Stage columns show stock → bundle means from the event window. DASH counts
+are marker hits, not distinct redraw counts: a redraw may reach several markers.
+Combat activity differs between windows, and before W6 frame rate also affects
+world progression. These are observed whole-game rates, not isolated-routine
+speedup estimates. Differences below 2% are unresolved. World-rate/debt columns
+remain pending until D; A2 does not claim consistent simulation speed.
+
+Reproduction from the prepared local harness: use `completion_matrix_case.py`
+with machine (`a500`, `020`, `030`, `030-nommu`, `040`, `060`), option (`0` or
+`1`), and a fresh output directory. It builds normal mode, applies the maximum
+detail keyboard route, records an opening window and a 2,000-field cockpit
+view-change window, then detaches its debugger and quits its owned emulator.
+Run one case at a time. The 040/060 use Zorro-III RAM because Zorro-II is limited
+to 8 MB; scan the emulator's actual mapped bank, not just its requested address.
+The retained case includes `entry.json`, `event.log`, `event.json`, frozen slave
+and listing; later cases also retain the final screen and emulator configuration.
+The benchmark realism file has SHA-256
+`659d36ca563ba4622daabb36a71dafaf6060cdcbf89bb12e75426198496d272c`.
+
+Recalculate steady cadence without another capture:
+
+```sh
+python3 R/RedBaron/tools/completion_cadence.py <capture>/event.log --fields 2000
+```
 
 ## Earlier measurements
 

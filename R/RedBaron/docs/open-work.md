@@ -5,13 +5,15 @@ Its approved decisions supersede the older next-work list below. A1 machine
 configurations are implemented in `tools/completion_machines.py`: A500, 020,
 030/50 with and without MMU, 040/25 and 060/50. The latter two use NOMMU
 cores for timing and separate MMU configurations for functional checks.
-A2 full-bundle normal-build measurements are next; no new FPS results yet.
-The normal A500 now reaches flight at maximum detail through debugger-based
-native keyboard-queue input. macOS accessibility is not used. The reusable
-`completion_host_input.py` / `completion_lldb_input.py` tools provide that
-input method; the guest debugger itself ignores writes. A2 setup capture
-was discarded because it lacked explicit dashboard-event markers. The
-census now records those markers and stops on mission exit.
+A2 is complete on all six configurations, with stock and bundle results in the
+single scoreboard at the top of `profiling.md`. It records event-free frame
+cadence separately from whole-window event FPS and includes stage costs and
+redraw markers. All captures use the same normal binary. The reusable
+`completion_host_input.py` / `completion_lldb_input.py` tools deliver native
+keyboard input through the host debugger; macOS accessibility is not used.
+427 host tests and the 76-range hook audit pass. Next is B1: measure chip spill,
+check DMA use, then size the approved fast-memory increase. Phases B–F remain
+open; the earlier lists below are historical context, not the execution order.
 
 
 The accepted decisions and detailed requirements are in `performance-plan.md`,
