@@ -374,7 +374,7 @@ pl_sim_v1
 pl_ps_v1
 	PL_START
 	IFD VERIFY
-	PL_P $15b3a,tape_menu_key
+	PL_P $15b3a,tape_menu_key_bridge
 	ENDC
 	PL_PS	$2B36A,kb_delay
 	PL_END
@@ -586,6 +586,8 @@ new_DeleteFile:
 	include "sound-driver.s"
 	IFD VERIFY
 ; Keep signed WHDLoad patch destinations within reach as VERIFY code grows.
+tape_menu_key_bridge:
+	bra.w tape_menu_key
 tape_flight_bridge:
 	bra.w tape_flight
 tape_sim_key_bridge:

@@ -179,6 +179,8 @@ scoreboard on five CPU classes."
 ### Phase C — exact render helpers (mainly A500/020)
 
 **C1. Promote the exponent replacement.**
+
+Disposition: dropped under §0.3; all five CPU-class comparisons are below 2% (see the profiling scoreboard).
 - `time-exponent.s` already holds an exact D0/D1/D2/CCR replacement for
   `sim:2c31c`, with a self-test and case table, but only under W6 bit 13
   (VERIFY).
