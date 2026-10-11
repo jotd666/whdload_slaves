@@ -1,5 +1,12 @@
 # Red Baron performance measurements
 
+A further retained-state check accounts for the message rectangle's four differing
+bytes after erasure: all 45 ordinary/delayed/no-render boundaries match native
+border expansion and the erasure-copy model. The indirect text-layout pointer
+also matches. No bytes are excluded from raw comparisons, and this adds no
+performance result. See “Message rectangle after render-dependent erasure” in
+`w6-verification.md`; complete simulation independence remains unproven.
+
 Native overlay bitmap guards now pass 14 private boundary cases on both A500
 and cached 68030. Eight live cache comparisons remain exact across all 320,000
 framebuffer bytes; normal/developer builds are unchanged. These VERIFY runs

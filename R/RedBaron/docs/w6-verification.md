@@ -4364,3 +4364,51 @@ rejection paths or cache invalidation. Complete resource lifetime/transition
 handling, native dependencies and side effects, cached return state, hardware
 replay and performance remain open. W6 is still VERIFY-only, with consistent
 full gameplay and smooth 50 FPS unproven.
+
+
+## Message rectangle after render-dependent erasure
+
+`message_layout.py` accounts for another raw difference in the retained
+ordinary/delayed/no-render ground window. All 45 boundaries match a native
+border-expansion/erasure model. The original rectangle at `h3:04822..04829`
+is `(93,178,128,14)`; the four-word draw scratch at `h3:0456a..04571` is
+`(90,175,134,20)`. Native `sim:008d2..008f0` subtracts three from x/y and adds
+six to width/height, with word arithmetic. On erasure, `sim:00a7e..00aa4`
+copies the expanded draw scratch back to the saved rectangle.
+
+The model binds both instruction sequences to the supported original executable
+and uses the independently checked message ledger to distinguish pending expiry
+from completed erasure. Ordinary and delayed runs retain the original rectangle
+through boundary 3 and the expanded rectangle at boundaries 4–14. No-render
+retains the original throughout. The four changed low bytes are retained in
+raw state reports, not masked or restored. Re-expanding an already expanded
+rectangle on every tick would be incorrect; this check supports exactly one
+inherited message and rejects replacements or repeated erasures.
+
+The relocation inventory also exposes an indirect consumer: `h3:00706` points
+to this rectangle. All 45 snapshots preserve that exact pointer. The text
+renderer at `sim:03868` reads its y coordinate through the alias at `sim:03884`,
+reads x/width/height at `sim:03894`, and reads x again at `sim:039be` when
+positioning text. Thus a direct-reference-only audit would miss real readers.
+This evidence supports a presentation role for this window; it does not prove
+that all computed aliases or future message replacements are harmless.
+
+The checker reuses the existing message clock/priority verification, binds all
+three frozen builds, retains the full direct-reference inventory, and checks
+all eight saved rectangle bytes plus all eight scratch bytes at every boundary.
+Three host tests cover one-time erasure, 16-bit arithmetic wrap, invalid scratch,
+changed pointers and unsupported lifecycles. All **304 host tests pass**.
+The report is `w6-ground-residual-inventory/message-layout.json`; reproduce with:
+
+```sh
+python3 R/RedBaron/tools/message_layout.py \
+  tmp/dev/tmp/game/RedBaron_v2.1/RedBaron/data/sim \
+  tmp/dev/tmp/prof/w6-ground-restore-030-v2 \
+  tmp/dev/tmp/prof/w6-ground-restore-slow-030 \
+  tmp/dev/tmp/prof/w6-ground-restore-none-030 \
+  --out tmp/dev/tmp/prof/w6-ground-residual-inventory/message-layout.json
+```
+
+No slave changes or new emulator run accompany this analysis. Both-buffer pixel
+cleanup, message replacement, other residual globals, broader simulation-state
+independence, supported capacity and smooth 50 FPS remain open.
