@@ -136,6 +136,9 @@ _time_throttle_delta:
 	rts
 
 _time_collision_velocity:
+	IFD VERIFY_TIME_MOTION
+	bsr _motion_reset
+	ENDC
 	move.l a0,-(a7)
 	lea _time_scalar_state(pc),a0
 	clr.l SS_VELOCITY_CARRY(a0)
@@ -144,6 +147,9 @@ _time_collision_velocity:
 	cmpi.w #45,-$66d4(a4)
 	rts
 _time_recovery_scalars:
+	IFD VERIFY_TIME_MOTION
+	bsr _motion_reset
+	ENDC
 	move.l a0,-(a7)
 	lea _time_scalar_state(pc),a0
 	clr.l SS_VELOCITY_CARRY(a0)
@@ -235,6 +241,9 @@ _time_crash_throttle_one:
 	move.b #1,-$66e4(a4)
 	rts
 _time_skid_exit_throttle:
+	IFD VERIFY_TIME_MOTION
+	bsr _motion_spin_reset
+	ENDC
 	muls.w #7,d0
 	asr.w #3,d0
 	move.l a0,-(a7)
@@ -312,6 +321,9 @@ _time_rpm_delta:
 	rts
 
 _time_reset_scalars:
+	IFD VERIFY_TIME_MOTION
+	bsr _motion_reset
+	ENDC
 	move.l a0,-(a7)
 	lea _time_scalar_state(pc),a0
 	clr.l (a0)+

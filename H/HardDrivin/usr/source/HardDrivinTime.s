@@ -1,5 +1,5 @@
 ; SPS 0126 elapsed-time foundation. Development build: VERIFY_TIME + CUSTOM1.
-; This file observes timing; optional scalar diagnostics use a constant T.
+; This file observes timing; optional scalar/motion diagnostics use a constant T.
 ; The elapsed-time dispatcher and full scaled simulation are not connected yet.
 ; No hook is installed unless both gates are on. Production builds exclude it.
 ;
@@ -11,6 +11,9 @@ TIME_FIELDS_PER_STEP equ 8
 TIME_FIELD_Q16 equ $2000
 
 _time_install:
+	IFD VERIFY_MOTION_MATH
+	bsr _motion_math_test
+	ENDC
 	IFD VERIFY_TIME_SCALAR_MATH
 	bsr _time_scalar_math_test
 	ENDC
@@ -31,6 +34,9 @@ _time_install:
 	lea _time_scalar_patches(pc),a0
 	movea.l _resload(pc),a2
 	jsr resload_Patch(a2)
+	IFD VERIFY_TIME_MOTION
+	bsr _motion_install
+	ENDC
 	ENDC
 .restore:
 	movem.l (a7)+,d0-d1/a0-a2
@@ -222,6 +228,7 @@ _time_scale_q16:
 	lsl.l #8,d0
 	lsl.l #5,d0
 	add.l d2,d0
+_time_split_q16:
 	move.l d0,d2
 	swap d0
 	ext.l d0
@@ -325,4 +332,8 @@ _time_q16_results: dcb.l 7*9*7*2,0
 
 	IFD VERIFY_TIME_SCALARS
 	INCLUDE "HardDrivinScalar.s"
+	ENDC
+
+	IFD VERIFY_TIME_MOTION
+	INCLUDE "HardDrivinMotion.s"
 	ENDC

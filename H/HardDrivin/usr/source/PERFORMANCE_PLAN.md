@@ -17,8 +17,8 @@ behaviour until each change is ported and verified separately.
 Steps 1–3 are complete. See `GAME_TIME.md` for the matched-input coupling test,
 clock defects, state/scaling inventory, provisional f0=6.25 (engineering range
 4–8), and collision-inclusive 68000 capacity. Step 4 is in progress: a
-VERIFY-only elapsed-time observer, arithmetic helpers and throttle/velocity/RPM
-integration hooks are implemented and tested. The hooks use a constant diagnostic
+VERIFY-only elapsed-time observer, arithmetic helpers and throttle/velocity/RPM,
+angular-rate, spin-decay and fall-acceleration hooks are implemented and tested. The hooks use a constant diagnostic
 T; frame-time-driven gameplay, traffic and presentation are not enabled. See GAME_TIME.md's
 implementation status; the step-4 acceptance criteria remain open.
 

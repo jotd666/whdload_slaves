@@ -39,6 +39,16 @@
 ; pointers after calibrating each build/profile; absolute addresses can differ.
 ; Local capture/acceptance details and rebuild comparison: tmp/dev/docs/.
 ;
+	IFND VERIFY_STEPINPUT_X
+VERIFY_STEPINPUT_X equ 320
+	ENDC
+	IFLT VERIFY_STEPINPUT_X
+	FAIL "VERIFY_STEPINPUT_X must be 0..639"
+	ENDC
+	IFGT VERIFY_STEPINPUT_X-639
+	FAIL "VERIFY_STEPINPUT_X must be 0..639"
+	ENDC
+
 VERIFY_DRIVE_A_FIRST equ 1
 VERIFY_DRIVE_A_END   equ 1251
 VERIFY_DRIVE_B_FIRST equ 3000
@@ -115,7 +125,7 @@ _verify_drive_vbl:
 	IFD VERIFY_STEPINPUT
 	bra.s .done
 .constant:
-	move.l #$014000c8,-$6a06(a4)
+	move.l #(VERIFY_STEPINPUT_X<<16)|200,-$6a06(a4)
 	move.w #4,-$6a0a(a4)
 	IFD VERIFY_STEPINPUT_RAMP
 	bsr _verify_step_ramp_buttons
@@ -167,7 +177,7 @@ _verify_step_input:
 	addq.w #1,(a0)
 	movea.l (a7)+,a0
 	ENDC
-	move.l #$014000c8,-$6a06(a4)
+	move.l #(VERIFY_STEPINPUT_X<<16)|200,-$6a06(a4)
 	move.w #4,-$6a0a(a4)
 	IFD VERIFY_STEPINPUT_RAMP
 	bsr _verify_step_ramp_buttons

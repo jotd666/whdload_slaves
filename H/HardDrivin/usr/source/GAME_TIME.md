@@ -364,9 +364,46 @@ Scalar evidence (local capture names):
   exercise downward input. Its arithmetic results are not downward-coverage
   evidence; the final fixture resets at race entry and requires that coverage.
 
-Remaining work includes the actual simulation dispatcher, position/angular/gravity
-scaling and their reset writers, held-input handling, traffic/contact policies,
-replay/Phantom and
-other presentation timelines, performance and cross-machine acceptance, and the
+`VERIFY_TIME_MOTION` adds angular-rate, spin-retention and fall-acceleration
+hooks, sharing the scalar module's constant diagnostic field count. The native
+pitch/yaw rotation helpers also serve terrain corrections; their three rate-driven
+call sites explicitly mark rate integration, while geometric callers remain
+unscaled. Q16 angle carries survive the native ±1440 wrap. Hard contact, barrier
+rate resets and the native roll-to-zero constraint explicitly clear the affected
+fractions, including when the integer angle did not change. Mode transitions
+reuse the scalar module's reset paths.
+
+Spin uses a signed `(9/10)^T` Q16 table for smaller T and the native signed
+multiply/divide sequence at T=1. Its fraction is cleared at the discrete skid
+exit. Fall acceleration uses signed eighth-unit carries; ground constraints
+clear them. This does not yet scale falling displacement or convert the
+partial-contact quarter-angle relaxation and stored angular-rate feedback.
+
+Motion evidence:
+
+- `s4-motion-final-{a500,slow,020,040}`: all 108 native-step car states per
+  machine match the original constant-input reference. `s4-motion-turn-final`
+  also matches 108 states from the unpatched X=400 steering reference. These
+  captures have no airborne or nonzero-spin returns; they do not establish
+  live jump, airborne or spinning-car equivalence.
+- `s4-motion-math-final`: private-memory 68000 fixtures pass 135 angle cases
+  (including wrap and absolute-write invalidation), 315 signed spin-retention
+  cases and 81 fall-acceleration/carry/reset cases.
+- `s4-motion-small/steering-check.json`: with X=400 and T=1/8, native steering
+  is four quarter-degrees per native step. Steps 20..49 advance at the expected
+  half-quarter-degree per update, within 0.5 quarter-degree integer quantization.
+  Position is still unscaled, so this is steering arithmetic evidence only.
+- `s4-motion-off` verifies every new range remains pristine with CUSTOM1 off.
+  Normal, DRIVE and ATTRACT builds remain unchanged.
+- A direct-branch audit covers all scalar/motion ranges. An early hook placement
+  overlapped shared contact targets `$0cd86` and `$0ccd0`; it was removed. The
+  final hooks dispatch at `$0ccd4`, `$0cc8a` and `$0cca0`, preserving both targets.
+  The stalled early `s4-motion-one-a500` capture is invalid and was stopped
+  through its owned capture process. Early captures do not prove the final code.
+
+Remaining work includes the actual simulation dispatcher, position integration
+and Euler compensation, crash drift, partial-contact relaxation/rate feedback,
+held-input handling, traffic/contact policies, replay/Phantom and other
+presentation timelines, performance and cross-machine acceptance, and the
 required human laps. The BCD clock defect versus lap-time acceptance conflict
 remains unresolved; the implementation currently preserves the native clocks.
