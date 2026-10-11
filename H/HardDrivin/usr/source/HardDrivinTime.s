@@ -11,6 +11,9 @@ TIME_FIELDS_PER_STEP equ 8
 TIME_FIELD_Q16 equ $2000
 
 _time_install:
+	IFD VERIFY_PROJECTION_MATH
+	bsr _projection_math_test
+	ENDC
 	IFD VERIFY_CONTACT_MATH
 	bsr _contact_math_test
 	ENDC
@@ -339,5 +342,6 @@ _time_q16_results: dcb.l 7*9*7*2,0
 
 	IFD VERIFY_TIME_MOTION
 	INCLUDE "HardDrivinContact.s"
+	INCLUDE "HardDrivinProjection.s"
 	INCLUDE "HardDrivinMotion.s"
 	ENDC

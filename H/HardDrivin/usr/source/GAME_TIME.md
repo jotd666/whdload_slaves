@@ -392,7 +392,7 @@ Motion evidence:
 - `s4-motion-small/steering-check.json`: with X=400 and T=1/8, native steering
   is four quarter-degrees per native step. Steps 20..49 advance at the expected
   half-quarter-degree per update, within 0.5 quarter-degree integer quantization.
-  Position is still unscaled, so this is steering arithmetic evidence only.
+  That capture predates position scaling and is steering arithmetic evidence only.
 - `s4-motion-off` verifies every new range remains pristine with CUSTOM1 off.
   Normal, DRIVE and ATTRACT builds remain unchanged.
 - A direct-branch audit covers all scalar/motion ranges. An early hook placement
@@ -412,8 +412,7 @@ fractions; existing collision/recovery/mode resets clear them. The native word
 positions are still recomputed from the resulting longs.
 
 This is an implementation of the projected-vector correction, including steering
-changes; nonlinear handling acceptance remains open. It does not yet incorporate
-fractional longitudinal velocity in the native trigonometric projection. Crash
+changes; nonlinear handling acceptance remains open. Fractional longitudinal velocity now has the projection extension described below. Crash
 drift uses the separate timed envelope described below.
 
 Position evidence:
@@ -544,8 +543,35 @@ VERIFY_CONTACT_MATH and VERIFY_CONTACT_TRACE require MOTION. The private contact
 fixture is separate from the growing motion fixture. Nonlinear partial-contact
 handling at small T still needs live jump/loop/collision acceptance.
 
-Remaining work includes the actual simulation dispatcher, fractional projection,
-live small-T contact validation,
+`HardDrivinProjection.s` now projects the signed eighth-unit longitudinal
+velocity remainder through the native pitch and heading Q14 factors. The native
+integer projection and its truncation stay intact; the extension adds only the
+fractional velocity contribution. Thus an all-T=1 sequence with zero velocity
+carry retains the original integer path exactly. This does not replace the
+native odd-speed `v + (v >> 1)` rounding with a finer 1.5× integer-speed model.
+
+The extension keeps current and previous Q16 projected fractions and applies the
+same Euler correction as ordinary position. Separate Q16 position carries retain
+its sub-unit contribution; the original 1/128 position/fall carries stay intact.
+The final division rounds down at Q16 precision, losing less than 1/65536 of a
+long-position unit per call. During skidding it holds the preceding projected
+fraction, matching the native held vector. Native velocity-word changes invalidate
+an unmatched speed fraction, and existing motion resets clear all companions.
+
+Projection evidence:
+
+- `s4-projection-math`: 60 projection cases cover all velocity remainders and
+  signed/axis-aligned trig factors. 1323 Euler/carry cases match an independent
+  integer model across all T and signed boundaries; reset clears all nine longs.
+- `s4-projection-small`: at T=1/8, all 360 live axis updates match a model using
+  captured memory operands. 200 updates have a nonzero projected fraction; the
+  fractional path emits 11 absolute long-position units over the capture.
+- `s4-projection-one`: all 108 native-step states match the original reference.
+  `s4-projection-off` passes the disabled-range check, and the normal slave remains
+  byte-identical. Existing motion diagnostic builds still assemble. The separate
+  VERIFY_PROJECTION_MATH fixture requires MOTION.
+
+Remaining work includes the actual simulation dispatcher, live small-T contact validation,
 held-input handling, traffic/contact policies, replay/Phantom and other
 presentation timelines, performance and cross-machine acceptance, and the
 required human laps. The BCD clock defect versus lap-time acceptance conflict

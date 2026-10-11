@@ -497,6 +497,7 @@ _motion_drift_state: dcb.b 12,0
 ; Pushing the continuation and using RTS preserves registers and native TST CCR.
 _motion_position_entry:
 	link a5,#-2
+	bsr _projection_snapshot
 	move.l a0,-(a7)
 	lea _motion_position_state(pc),a0
 	move.w -$66e2(a4),(a0)+
@@ -511,6 +512,7 @@ _motion_position_entry:
 ; Crash drift bypasses this block just as it bypassed native projected motion.
 _motion_position_add:
 	movem.l d1-d4/a0-a2,-(a7)
+	bsr _projection_update
 	lea _motion_position_state(pc),a0
 	lea -$6704(a4),a1
 	lea -$66e2(a4),a2
@@ -533,6 +535,7 @@ _motion_position_add:
 	bsr _motion_position_delta
 	move.l d3,16(a0)
 	add.l d0,(a1)
+	bsr _projection_integrate
 	movem.l (a7)+,d1-d4/a0-a2
 	rts
 
@@ -642,6 +645,7 @@ _motion_position_delta:
 	rts
 
 _motion_reset:
+	bsr _projection_reset
 	bsr _contact_reset
 	bsr _motion_drift_reset
 	move.l a0,-(a7)
