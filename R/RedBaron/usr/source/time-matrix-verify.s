@@ -1,4 +1,5 @@
-; W6 private orientation candidate and native twins, VERIFY only.
+; Rejected first W6 matrix candidate: measured slower on A500.
+; Retained only under VERIFY + VERIFY_MATRIX_EXPERIMENT for further research.
 ; No game hook: original sim:3648c remains installed until timing/ABI gates pass.
 TIME_MATRIX_SIZE = $3688e-$3648c
 

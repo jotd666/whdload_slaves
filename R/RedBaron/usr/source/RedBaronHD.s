@@ -614,7 +614,9 @@ new_DeleteFile:
 	include "time-flag-verify.s"
 	include "overlay-lifetime.s"
 	include "time-exponent.s"
+	IFD VERIFY_MATRIX_EXPERIMENT
 	include "time-matrix-verify.s"
+	ENDC
 	include "time-mouse-ownership-cases.i"
 time_message_log: dcb.b 24*128,0
 fill_twin_before: dcb.b 20*256*2,0

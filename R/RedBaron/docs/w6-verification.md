@@ -7105,3 +7105,66 @@ Next: measure original/candidate private call costs in the same 250-field
 trace, test the other supported CPU paths, and decide whether a guarded live
 hook is worthwhile. Any hook needs explicit alias handling and native live
 twins. W6's failed A500 capacity gate is unchanged by this private candidate.
+
+
+## Matrix candidate timing rejection
+
+The first private assembly reuse candidate is **not selected for gameplay**.
+Capture `w6-matrix-cost-a500` uses the exact previously twinned binary
+`b5704b810bfe802c25fad84efb9116159936a71224cf336ab4e1ce9407cc7214`
+on the established A500-equivalent 68000/512-KiB-chip/1,536-KiB-slow setup.
+After reaching `time_matrix_selftest`, the capture retains 100/100/50 profile
+fields for **250 recorded PAL fields**. All 2,048 native twins finish without
+mismatch; existing W6 native self-tests and 57 selected / nine disabled patch
+ranges also pass after the capture. The game matrix routine remains original.
+
+`matrix_call_costs.py` pairs original and candidate calls only within the same
+complete `time_matrix_twin` invocation. The caller's native case and CCR loop
+registers identify the pair. Partial twins at chunk boundaries are excluded,
+and repeated identities, missing original calls, wrong stacks or incomplete
+profile lengths are rejected. It checks the frozen binary hash, recorded twin
+completion, unchanged private original/game constructor bytes and candidate
+entry. IRQ work and entry cycles remain separate from main-task cost. Pair
+cost includes helper calls, local reads/writes and all other instructions
+inside each routine; it does not infer a saving from lookup count.
+
+| Retained matched population | Original main cycles | Candidate main cycles | Candidate change |
+| --- | ---: | ---: | ---: |
+| 2,022 complete pairs | 5,939,058 | 6,029,602 | **+1.52455%** |
+| Mean per pair | 2,937.22 | 2,982.00 | +44.78 cycles |
+| 1,908 general-path pairs | 5,866,660 | 5,956,932 | Regression |
+
+All 64 case aggregates regress, from +0.10145% to +2.97232%. The 26 native
+pairs not retained as complete comparisons are not fabricated or filled from
+adjacent chunks; profiler alignment gaps and cut calls are outside this
+matched population. Small special-path differences can reflect instruction/
+memory timing despite otherwise equivalent code; no generic ISA-cycle claim
+is made. This is a private routine measurement, not an installed-hook or
+whole-game FPS comparison.
+
+```sh
+python3 -B R/RedBaron/tools/matrix_call_costs.py \
+  tmp/dev/tmp/prof/w6-matrix-cost-a500 \
+  --out tmp/dev/tmp/prof/w6-matrix-cost-a500/matrix-paired-costs.json
+```
+
+Two new checker tests verify matching case/CCR identities, IRQ separation,
+nested helper inclusion and rejection/exclusion of incomplete pairs. All
+406 host tests pass. The owned emulator was verified and quit.
+
+To avoid carrying the rejected experiment's code size and startup twins in
+ordinary development, its include and initializer now require the assembler
+define **`VERIFY_MATRIX_EXPERIMENT` in addition to `VERIFY`**. The source and
+models remain available for a materially different future candidate. Defining
+both reproduces the measured binary hash exactly. Ordinary VERIFY returns to
+`ac1d47ba01210c496a98db199b79fa2c30b0f3b59c570a0bec8906dfa7a116f7`
+(text 265,500), with all 133 patch destinations in range. Normal/developer
+build selection is unchanged. No live matrix hook or alias-policy expansion
+is justified by this result.
+
+Do not pursue other-CPU promotion of this candidate as a substitute for the
+failed A500 target. The broader capacity and gameplay-equivalence gates remain
+open. A question about whether stock A500 support is mandatory, versus stating
+a measured minimum CPU as contemplated in the approved plan, is pending;
+no hardware requirement has been silently removed. Independent W6 validation
+on faster CPUs can continue while that scope decision is clarified.

@@ -1,5 +1,13 @@
 # Red Baron performance measurements
 
+**The first matrix-reuse assembly candidate is rejected for A500 use.** In a
+250-recorded-field native twin trace, 2,022 matched original/candidate pairs
+cost **5,939,058 versus 6,029,602 main-task cycles**: the candidate is **1.52%
+slower**. Every input case's aggregate regresses. It remains available only
+under `VERIFY_MATRIX_EXPERIMENT`; ordinary VERIFY again has the pre-experiment
+`ac1d47ba…` hash. See “Matrix candidate timing rejection” in
+`w6-verification.md`. Correct output and fewer table reads were insufficient.
+
 A **private VERIFY assembly matrix candidate** now passes **2,048 native A500
 twins**: all D0–D7/A0–A6 values, XNZVC and the 20-byte output buffer match the
 original. The candidate reuses three fixed expressions and has **no installed

@@ -19,7 +19,9 @@ time_exp_install:
 	move.w #$42c3,(a0)
 .cpu_ready
 	bsr time_exp_selftest
+	IFD VERIFY_MATRIX_EXPERIMENT
 	bsr time_matrix_install
+	ENDC
 	lea .patch(pc),a0
 	jsr resload_Patch(a2)
 	jsr resload_FlushCache(a2)
