@@ -69,6 +69,35 @@ replay and reach other scenes at different fields. For example, A500 B has the
 validated jump and complete 90-record replay, whereas A500 + Fast B has no replay.
 These are repeatable fixed-input baselines, not equal-scene renderer speedups.
 
+## Current step 4 diagnostic: performance gate fails
+
+The elapsed-time dispatcher development build has a substantial A500 regression.
+A fresh-boot constant-input window captures 500 consecutive PAL fields
+(10.0159435 seconds) after race-loop entry. The exact same compiled slave is run
+with CUSTOM1 off and on; VERIFY_STEPINPUT supplies constant controls. Frame counts
+come from front-buffer changes at VBL, with physics and render calls independently
+counted. Neither run enters crash or replay.
+
+| Current diagnostic window | Buffer swaps | FPS | Mean frame time | Physics calls | Render calls |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| CUSTOM1 off, original behavior | 38 | 3.794 | 263.58 ms | 38 | 38 |
+| CUSTOM1 on, elapsed simulation | 15 | 1.498 | 667.73 ms | 65 | 15 |
+
+Captures: `s4-overlay2-window-off` and `s4-overlay2-window-on`. The off capture
+also verifies inactive patch ranges. `s4-overlay2-window-on-repeat` reproduces
+the complete swap schedule and all 501 captured allocated-game-state snapshots
+byte-for-byte. FPS drops 60.5%, and mean frame time grows
+2.53 times: the required maximum 3% FPS loss is not met. This measures the current
+combined step 4 build, not the incremental cost of the overlay change. Extra
+bounded simulation work is visible in the call counts, but its detailed cost
+still needs attribution before choosing a remedy.
+
+This is a new diagnostic window, not a replacement for the frozen gameplay A/B
+baselines above. Equal inputs and elapsed fields do not imply equal positions or
+scenes: the original advances one physics step per frame, whereas the enabled
+build advances elapsed simulation time. The enabled build is not release-ready;
+no renderer speedup or cross-machine handling acceptance is claimed.
+
 ## Rendering and memory placement
 
 The display is 320 × 200 with four separate bitplanes, 16 colours, 40 bytes per

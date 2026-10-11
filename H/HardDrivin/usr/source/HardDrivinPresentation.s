@@ -52,6 +52,12 @@ _presentation_overlay_start:
 	move.w d0,2(a0)
 	mulu.w #8,d0
 	move.w d0,(a0)
+	IFD VERIFY_TIME_REPLAY_TIMING
+	tst.b -$5229(a4)
+	beq.s .no_replay_restart
+	bsr _replay_overlay_reset
+.no_replay_restart:
+	ENDC
 	IFD VERIFY_TIME_DISPATCH
 	; A restart partway through a frame must not consume earlier substeps.
 	lea _dispatch_state(pc),a0
@@ -79,7 +85,14 @@ _presentation_overlay_tick:
 	moveq #8,d1
 	lea _time_state(pc),a0
 	tst.b TS_ACTIVE(a0)
+	bne.s .gameplay
+	IFD VERIFY_TIME_REPLAY_TIMING
+	tst.b -$5229(a4)
 	beq.s .interval
+	bsr _replay_overlay_fields
+	ENDC
+	bra.s .interval
+.gameplay:
 	move.l _dispatch_state+DS_OVERLAY_FIELDS(pc),d1
 	cmpi.l #65535,d1
 	bls.s .interval

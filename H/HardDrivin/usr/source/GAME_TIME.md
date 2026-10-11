@@ -770,8 +770,8 @@ clocks, performance or full-tape/cross-machine/human acceptance.
 ## Replay playback clock and interpolation (development gate)
 
 `VERIFY_TIME_REPLAY_TIMING` requires the dispatcher and CUSTOM1. It currently
-converts playback and its effect animation/RNG: record generation still runs per
-eligible simulation call, and replay overlay timing remains unconverted.
+converts playback, its effect animation/RNG and replay overlay lifetime. Record
+generation still runs per eligible simulation call.
 Do not treat this as a duration-correct history or a completed replay timeline.
 
 A second VBL counter advances while gameplay timing is suspended for replay, but
@@ -817,12 +817,12 @@ Evidence:
   sprite pointers pass; the native RNG is called exactly52 times.
 - `s4-replay-effects-native`: the constant-input crash fixture yields77 valid
   entries. Forced-native playback draws all77 verbatim, exits at age616, executes
-  26 effect frames and52 RNG calls. This validates endpoint playback against
+  26 effect frames and 52 RNG calls. This validates endpoint playback against
   its retained history, not a full unmodified-render pixel comparison.
 - `s4-replay-pause-constant`: final A500 build, 85 entries,61 draws (51 fractional),
   target680 fields and exit681. An input-only SPACE pair holds native pause for
   40 VBL fields; the presentation clock is identical in all40 samples. All poses,
-  19 effect sprite pointers and52 RNG calls pass. End-of-replay images from the
+  19 effect sprite pointers and 52 RNG calls pass. End-of-replay images from the
   native and68020 runs were inspected for visible rendering corruption.
 - `s4-replay-final-off` passes inactive-range verification. The normal build
   remains identical. The direct-branch audit includes85 ranges.
@@ -837,7 +837,7 @@ skipped phases and an invisible final tail are consumed too. Thus a naturally
 completed full effect uses52 native calls at every tested rendering rate. Abort
 still avoids future events. Captured RNG seeds are zero, so this proves cadence
 and native-call reuse, not a distribution test on nonzero seeds. The one-shot
-sound remains native. Overlay timing inside replay still needs conversion.
+sound remains native.
 
 The initial68020 playback capture stalled after516 draws while the per-draw
 animation could run outside its sprite table; it is invalid. The corrected
@@ -849,3 +849,28 @@ controls calls as well as VBL, allowing a reproducible real crash/full replay.
 
 Full native driving-tape and modal,
 performance, machine-to-machine handling and human acceptance remain outstanding.
+
+Replay overlays now consume the presentation-clock difference since playback
+entry or their most recent restart/update. The clock is sampled once before
+updating the previous timestamp, so a VBL between instructions is not lost.
+Unsigned subtraction handles wraparound; intervals saturate at 65535 fields before
+entering the word-sized countdown. A repeated update in the same field consumes
+zero time. Forced-native verification retains eight fields per draw. Other
+non-gameplay loops still use the old fallback and remain open work.
+
+`s4-replay-overlay2-a500` passes nine private elapsed/countdown cases (including
+wraparound, duplicate updates, zero and long intervals) and all 711 pose words.
+Its full 85-entry replay draws 61 frames, exits at exactly 680 active fields, and
+holds the presentation clock for 40 paused fields. All 52 RNG calls and 18 effect
+sprite draws pass. `s4-replay-overlay2-native` preserves 77 endpoint frames,
+616 virtual fields, 26 effect draws and 52 RNG calls; its private overlay cases
+retain the native eight-field consumption. These captures do not establish a
+live nonzero overlay's full lifetime during replay; the countdown evidence uses
+private state and the same arithmetic helper. Native replay usually begins after
+the crash overlay has expired.
+
+The first overlay test fixture attempted privileged interrupt masking and failed
+to reach gameplay. Those captures were stopped and excluded. The repaired fixture
+uses a private clock slot, does not alter the live presentation counter, and does
+not mask interrupts. The final CUSTOM1-off window passes inactive-range checks;
+the ordinary build remains byte-identical to the baseline.

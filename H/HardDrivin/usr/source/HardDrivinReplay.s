@@ -3,6 +3,7 @@
 _replay_install:
 	IFD VERIFY_REPLAY_MATH
 	bsr _replay_math_test
+	bsr _replay_overlay_math_test
 	ENDC
 	movem.l a0-a2,-(a7)
 	lea _replay_patches(pc),a0
@@ -41,6 +42,33 @@ RP_RNG1 equ 24
 RP_RNG2 equ 28
 _replay_state: dcb.b 32,0
 _replay_frame: dcb.b 158,0
+; Separate publication keeps the playback state/scratch layout stable.
+_replay_overlay_last: dc.l 0
+_replay_overlay_reset:
+	move.l a0,-(a7)
+	lea _replay_overlay_last(pc),a0
+	move.l _replay_state+RP_WALL(pc),(a0)
+	movea.l (a7)+,a0
+	rts
+; D1 elapsed presentation fields, A0 scratch. Consume each interval once.
+_replay_overlay_fields:
+	lea _replay_overlay_last(pc),a0
+	move.l _replay_state+RP_WALL(pc),d1
+_replay_overlay_interval:
+	move.l d2,-(a7)
+	move.l d1,d2
+	sub.l (a0),d1
+	move.l d2,(a0)
+	move.l (a7)+,d2
+	IFD VERIFY_DISPATCH_NATIVE
+	moveq #8,d1
+	ELSE
+	cmpi.l #65535,d1
+	bls.s .bounded
+	move.l #65535,d1
+.bounded:
+	ENDC
+	rts
 _replay_pause:
 	move.l a0,-(a7)
 	lea _replay_state(pc),a0
@@ -54,6 +82,7 @@ _replay_resume:
 	movea.l (a7)+,a0
 	rts
 _replay_begin:
+	bsr _replay_overlay_reset
 	movem.l d0/a0,-(a7)
 	lea _replay_state(pc),a0
 	move.l RP_WALL(a0),RP_START(a0)
@@ -289,6 +318,41 @@ _replay_lerp_signed:
 	rts
 
 	IFD VERIFY_REPLAY_MATH
+; Private clock/countdown cases: no native overlay or game state is written.
+_replay_overlay_math_test:
+	movem.l d0-d7/a0-a2,-(a7)
+	lea _replay_overlay_cases(pc),a1
+	lea _replay_overlay_results(pc),a2
+	moveq #8,d7
+.case:
+	lea _replay_overlay_test_clock(pc),a0
+	move.l (a1)+,(a0)
+	move.l (a1)+,d1
+	bsr _replay_overlay_interval
+	move.l d1,(a2)+
+	move.l (a0),(a2)+
+	lea _replay_overlay_test_count(pc),a0
+	move.w #320,(a0)
+	move.w #40,2(a0)
+	moveq #40,d0
+	bsr _presentation_countdown
+	move.w d0,(a2)+
+	move.w (a0),(a2)+
+	; A second call at the same wall time must not consume time twice.
+	lea _replay_overlay_test_clock(pc),a0
+	move.l -4(a1),d1
+	bsr _replay_overlay_interval
+	move.l d1,(a2)+
+	dbf d7,.case
+	movem.l (a7)+,d0-d7/a0-a2
+	rts
+_replay_overlay_cases:
+	dc.l 100,100,100,101,100,107,100,108,100,111
+	dc.l 100,420,100,421,$fffffffc,3,100,70100
+_replay_overlay_test_clock: dc.l 0
+_replay_overlay_test_count: dc.l 0
+_replay_overlay_math_signature: dc.b 'HDRPOM01'
+_replay_overlay_results: dcb.b 9*16,0
 _replay_math_test:
 	movem.l d0-d7/a0-a2,-(a7)
 	moveq #0,d6
