@@ -1,5 +1,13 @@
 # Red Baron performance measurements
 
+A VERIFY-only fixed-clock setup fixture now removes the initial position and
+velocity mismatch in the 50/25-MHz comparison. Both runs complete 39 world
+updates over 241 fields, with 39 versus 32 draws. At all 40 boundaries, 275
+player bytes match raw; five address-field bytes still differ and remain in the
+report. Exact funding and scheduled-input consumption pass. These instrumented
+windows establish no FPS/capacity claim. See “Fixed-clock native prelude for
+CPU-frequency comparisons” in `w6-verification.md` for the remaining state gates.
+
 A current-build 50/25-MHz 68030 replay comparison passes exact clock funding
 and identical input consumption at 40 world boundaries. However, the native
 setup prelude produces different player state before W6 activates, so the runs

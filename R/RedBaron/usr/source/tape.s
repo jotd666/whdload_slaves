@@ -170,6 +170,7 @@ tape_flight:
 	cmp.l #$21d30,d0
 	bne.s tape_anchor
 	move.l #1,(a0)
+	bsr time_prelude_step
 	move.l tape_routeptr(pc),a0
 	move.w tape_index(pc),d0
 	tst.w (a0,d0.w)

@@ -4483,3 +4483,68 @@ python3 ../../R/RedBaron/tools/world_controls.py \
 
 This reproduces the limited clock/input experiment, including its uncontrolled
 initial-state issue; it is not the future equal-state gameplay acceptance run.
+
+
+## Fixed-clock native prelude for CPU-frequency comparisons
+
+The old CUSTOM4 forced-primary fixture runs through `observe_step` only after
+the scripted menu route. It therefore cannot control the earlier native flight
+polls. VERIFY now reserves **CUSTOM4=262144** for a separate setup fixture:
+after `tape_flight` confirms the flight caller, `time_prelude_step` fixes both
+native time-step words to 225 while W6 is inactive. It requires W6 bit 13 and
+deferred-installation CUSTOM5 bit 9. It performs no input or physics-state
+copy. Once W6 owns flight, it stops writing and leaves both clocks to their
+normal scheduler paths. Other CUSTOM4 values retain their existing behavior.
+This deliberately synthetic setup is unsuitable for FPS measurements.
+
+Both `w6-prelude-50mhz-030` and `w6-prelude-25mhz-030` use VERIFY SHA256
+`9c92ff9979e40ec98adc1f73255f8e57b4f65b2f2d6d5d6e13793aad7f414415`
+(text 256,386 bytes), CUSTOM2=16319, CUSTOM4=262144 and scheduled Right/Fire
+replay. Both record **40 prelude writes**. `prelude_state.py` checks the frozen
+build and required options, both initial clocks at 225, then an unchanged
+fixture count through all 40 W6 boundaries with W6 active. Completed updates
+1–39 retain primary dt 225. Boundary zero precedes the first scheduled update
+and retains a native clock residue (341/450 in the 50-MHz run); that value is
+reported rather than mistaken for a completed W6 update's quantum.
+
+The controlled prelude removes the earlier position and velocity differences.
+Initial player records now differ in five bytes rather than 35. At every one
+of the 40 matched world boundaries, exactly those same five bytes differ:
+player offsets +29, +32, +33, +122 and +123. **All other 275 bytes match raw**,
+including position, orientation and velocity. No bytes are normalized or
+excluded from the report. The five bytes fall within longword address fields
+at player offsets +26, +30 and +120. Initial inspection finds the +26 values
+point to the same `sim:0e0ec` function; +30/+120 identify tracked allocation
+payloads of three/four bytes respectively. Complete pointer ownership and
+lifetime comparison remains required before claiming full player equivalence.
+The h3 load bases still differ; the strict whole-state comparator is not relaxed.
+
+`world_controls.py` verifies the same four timestamped Right/Fire transitions,
+held-key bitmaps and exactly two consumed key-down commands at all 40 world
+boundaries. All 39 adjacent intervals satisfy exact clock funding.
+
+| Configured frequency | Captured fields / CIA intervals | Completed world updates | Draws | Unprocessed CIA before → after |
+| --- | --- | ---: | ---: | --- |
+| 50 MHz | 241 / 285 | 39 | 39 | 0 → 2 |
+| 25 MHz | 241 / 285 | 39 | 32 | 1 → 3 |
+
+Both endpoints have zero due/in-progress world updates; fractional credit and
+unprocessed time remain accounted for. These are short instrumented correctness
+windows, not sustained capacity or an FPS comparison. Equal player kinematics
+does not certify the complete heap, AI/combat outcomes, sound delivery or 50 FPS.
+
+Both boots pass native counters 426/512/638/133 and terrain/cache/list 2/1/2,
+as well as 56 selected timing/pacing hooks and two original disabled overlay
+ranges. Static audits pass 68 ranges/125 destinations. All **307 host tests
+pass**, including three fixture-ownership tests that reject missing setup,
+continued fixture writes and invalid completed-world clocks. Normal/developer
+W5 hashes remain unchanged. Both owned emulators were quit after collection.
+
+`prelude-check.json` in each capture verifies the handoff; the 50-MHz capture's
+`summary.json`/`summarize.py` retain raw player differences, exact funding and
+input agreement. Boot and pose collector copies are retained in both captures.
+Reproduce the preceding frequency experiment with `--dt 262144` added to both
+boot commands, then run `prelude_state.py CAPTURE --out REPORT` alongside the
+existing input comparison. The next step is explicit validation of these three
+player pointer fields and their referenced state, followed by broader world-state
+comparison; do not infer whole-gameplay equality from the matching kinematics.

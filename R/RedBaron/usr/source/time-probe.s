@@ -3,6 +3,8 @@
 ; clock arithmetic remain unchanged. Never use forced runs for FPS claims.
 ; CUSTOM4 bit 16 holds Right throughout a forced-dt physics run.
 ; Forced-dt fixtures require the timestamped W6 input owner to remain disabled.
+; CUSTOM4=$40000 fixes both native dt words to 225 during the setup prelude
+; only, then stops when W6 owns flight. Requires W6 plus deferred installation.
 ; CUSTOM4=$20000 instead selects Pause in the W6 modal IRQ fixture; no dt force.
 ; a1 is h3; preserve every input register. No additional sim-code hook.
 time_probe_step:
@@ -29,6 +31,8 @@ time_probe_step:
 .custom4_base
 	adda.l #perf_custom4-.custom4_base,a0
 	move.l (a0),d0
+	beq .done
+	cmp.l #$40000,d0
 	beq .done
 	cmp.l #$20000,d0
 	beq.b .modal_fixture
@@ -82,3 +86,53 @@ time_probe_step:
 .return
 	movem.l (sp)+,d0/a0
 	rts
+
+; Called only after tape_flight verifies the native flight caller. The prelude
+; deliberately fixes both clocks, including the flight polls around Preferences.
+; Once W6 is active its clocks/input remain exclusively scheduler-owned.
+time_prelude_step:
+	movem.l d0-d1/a0-a1,-(sp)
+	lea .options(pc),a0
+.options
+	adda.l #perf_custom4-.options,a0
+	cmpi.l #$40000,(a0)
+	bne .done
+	lea .mask(pc),a0
+.mask
+	adda.l #perf_mask-.mask,a0
+	btst #5,2(a0) ; CUSTOM2 bit 13
+	beq .bad
+	lea .deferred(pc),a0
+.deferred
+	adda.l #perf_custom5-.deferred,a0
+	btst #1,2(a0) ; CUSTOM5 bit 9
+	beq .bad
+	lea .state(pc),a0
+.state
+	adda.l #time_loop_state-.state,a0
+	tst.l TIME_LOOP_ACTIVE(a0)
+	bne .done
+	move.l tape_marker+24(pc),a1
+	moveq #2,d0
+.hunk
+	move.l -4(a1),d1
+	lsl.l #2,d1
+	addq.l #4,d1
+	move.l d1,a1
+	dbf d0,.hunk
+	move.w #225,$4834(a1)
+	move.w #225,$4836(a1)
+	lea time_prelude_count(pc),a0
+	addq.l #1,(a0)
+.done
+	movem.l (sp)+,d0-d1/a0-a1
+	rts
+.bad
+	lea .error(pc),a0
+.error
+	adda.l #perf_mismatch-.error,a0
+	pea (a0)
+	pea TDREASON_FAILMSG
+	move.l observe_resload(pc),a2
+	jmp resload_Abort(a2)
+time_prelude_count: dc.l 0
