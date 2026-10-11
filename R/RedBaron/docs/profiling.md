@@ -10,14 +10,14 @@ baseline and update the normal-bundle columns; their checkpoint labels identify
 which rows have been refreshed. Stage spans are inclusive wall time;
 scene, cockpit and publication are separate stages, not CPU-only costs.
 
-| Configuration | Checkpoint | Stock steady / event FPS | Bundle steady / event FPS | World update ms | Scene / cockpit / publication ms | DASH markers stock / bundle | Clean fields stock / bundle | World time / wall time | Dropped world time | B1 isolated pool FPS, off → on | B2 raw CACR, before → after | B2 isolated cache FPS, off → on | C1 discarded pair FPS, off → on | C2 discarded pair FPS, off → on | C3 isolated face-loop FPS, off → on | D5 candidate whole-window FPS (Time Scale 40) | E1 W6 scene / cockpit / publication ms | E2 front-cache candidate FPS off → on |
-|---|---|---|---|---|---|---|---|---|---| --- |---|---|---|---|---|---|---|---|
-| A500, 512K chip + 1.5M slow | C bundle / A2 stock | 1.844 / 1.722 | 2.016 / 1.922 | 57.68 → 57.05 | 399.51 / 73.70 / 0.28 → 380.41 / 63.46 / 3.61 | 3 / 13 | 1516 / 1486 | 0.924744 (candidate D5) | 5,400 units / 12 steps | Minimum-memory flight passes | N/A (68000) | No cache hardware | 1.955 → 1.975 (+1.01%) | 1.970 → 1.936 (-1.72%) | 1.931 → 1.997 (+3.39%) | 0.824 | — | CPU-gated off |
-| 020, 2M chip + 8M fast | C bundle / A2 stock | 6.008 / 5.666 | 7.222 / 7.313 | 13.79 → 10.22 | 116.77 / 41.40 / 0.08 → 86.64 / 31.28 / 6.96 | 44 / 24 | 1196 / 1258 | 1.001296 (candidate D5) | 0 | 6.398 → 6.695 (+4.6%) | 0x0000 → 0x0001 | 6.754 → 7.280 (+7.8%) | 7.266 → 7.258 (-0.11%) | 7.193 → 7.210 (+0.24%) | CPU-gated off | 4.568 | — | Pending |
-| 030/50, 2M chip + 8M fast, MMU | C bundle / A2 stock | 12.974 / 11.881 | 14.827 / 14.452 | 3.33 → 1.70 | 44.19 / 34.08 / 0.08 → 35.14 / 28.54 / 4.28 | 191 / 59 | 1154 / 1017 | 0.998656 (candidate D5) | 0 | 12.878 → 14.546 (+12.9%) | 0x2111; unchanged | Already enabled | 14.562 → 14.595 (+0.22%) | 14.556 → 14.514 (-0.29%) | CPU-gated off | 12.280 | — | 12.305 → 12.305 (+0.00%, fast compositor) |
-| 030/50, 2M chip + 8M fast, no MMU tooltype | C bundle / A2 stock | 12.377 / 11.931 | 14.893 / 14.527 | 3.94 → 1.69 | 48.31 / 31.23 / 0.04 → 35.11 / 28.48 / 4.34 | 58 / 55 | 1262 / 962 | 0.998656 (candidate D5) | 0 | 030 class measured with MMU | 0x2000 → 0x2011 | 12.889 → 14.537 (+12.8%) | 030 class measured with MMU | 030 class measured with MMU | CPU-gated off | 12.280 | — | CPU class measured with MMU |
-| 040/25 NOMMU, AGA, 2M chip + 16M Z3 fast | C bundle / A2 stock | 12.476 / 11.507 | 13.549 / 13.553 | 3.34 → 2.13 | 47.56 / 36.26 / 0.06 → 37.97 / 28.47 / 5.70 | 116 / 59 | 1144 / 1157 | 0.998656 (candidate D5) | 0 | 12.392 → 13.277 (+7.1%) | 0x80008000; unchanged | Already enabled | 13.384 → 13.428 (+0.32%) | 13.393 → 13.437 (+0.33%) | CPU-gated off | 11.631 | 45.42 / 32.53 / 2.89 | 11.656 → 11.557 (-0.86%, fast compositor) |
-| 060/50 NOMMU, AGA, 2M chip + 16M Z3 fast | C bundle / A2 stock | 12.786 / 12.206 | 14.296 / 14.003 | 3.16 → 1.95 | 44.63 / 33.43 / 0.03 → 36.13 / 28.11 / 4.68 | 64 / 62 | 1452 / 1568 | 0.998656 (candidate D5) | 0 | 12.585 → 13.909 (+10.5%) | 0xa0808000; unchanged | Already enabled | 13.953 → 13.959 (+0.04%) | 13.982 → 13.998 (+0.11%) | CPU-gated off | 12.006 | 53.03 / 29.37 / 4.41 | 12.056 → 11.981 (-0.62%, fast compositor) |
+| Configuration | Checkpoint | Stock steady / event FPS | Bundle steady / event FPS | World update ms | Scene / cockpit / publication ms | DASH markers stock / bundle | Clean fields stock / bundle | World time / wall time | Dropped world time | B1 isolated pool FPS, off → on | B2 raw CACR, before → after | B2 isolated cache FPS, off → on | C1 discarded pair FPS, off → on | C2 discarded pair FPS, off → on | C3 isolated face-loop FPS, off → on | D5 candidate whole-window FPS (Time Scale 40) | E1 W6 scene / cockpit / publication ms | E2 gun-cache FPS off → on (dropped) | E2 solid-cache candidate FPS off → on |
+|---|---|---|---|---|---|---|---|---|---| --- |---|---|---|---|---|---|---|---|---|
+| A500, 512K chip + 1.5M slow | C bundle / A2 stock | 1.844 / 1.722 | 2.016 / 1.922 | 57.68 → 57.05 | 399.51 / 73.70 / 0.28 → 380.41 / 63.46 / 3.61 | 3 / 13 | 1516 / 1486 | 0.924744 (candidate D5) | 5,400 units / 12 steps | Minimum-memory flight passes | N/A (68000) | No cache hardware | 1.955 → 1.975 (+1.01%) | 1.970 → 1.936 (-1.72%) | 1.931 → 1.997 (+3.39%) | 0.824 | — | CPU-gated off | CPU-gated off |
+| 020, 2M chip + 8M fast | C bundle / A2 stock | 6.008 / 5.666 | 7.222 / 7.313 | 13.79 → 10.22 | 116.77 / 41.40 / 0.08 → 86.64 / 31.28 / 6.96 | 44 / 24 | 1196 / 1258 | 1.001296 (candidate D5) | 0 | 6.398 → 6.695 (+4.6%) | 0x0000 → 0x0001 | 6.754 → 7.280 (+7.8%) | 7.266 → 7.258 (-0.11%) | 7.193 → 7.210 (+0.24%) | CPU-gated off | 4.568 | — | 4.568 → 4.443 (-2.73%, fast compositor) | Pending |
+| 030/50, 2M chip + 8M fast, MMU | C bundle / A2 stock | 12.974 / 11.881 | 14.827 / 14.452 | 3.33 → 1.70 | 44.19 / 34.08 / 0.08 → 35.14 / 28.54 / 4.28 | 191 / 59 | 1154 / 1017 | 0.998656 (candidate D5) | 0 | 12.878 → 14.546 (+12.9%) | 0x2111; unchanged | Already enabled | 14.562 → 14.595 (+0.22%) | 14.556 → 14.514 (-0.29%) | CPU-gated off | 12.280 | — | 12.305 → 12.305 (+0.00%, fast compositor) | Pending |
+| 030/50, 2M chip + 8M fast, no MMU tooltype | C bundle / A2 stock | 12.377 / 11.931 | 14.893 / 14.527 | 3.94 → 1.69 | 48.31 / 31.23 / 0.04 → 35.11 / 28.48 / 4.34 | 58 / 55 | 1262 / 962 | 0.998656 (candidate D5) | 0 | 030 class measured with MMU | 0x2000 → 0x2011 | 12.889 → 14.537 (+12.8%) | 030 class measured with MMU | 030 class measured with MMU | CPU-gated off | 12.280 | — | CPU class measured with MMU | Pending |
+| 040/25 NOMMU, AGA, 2M chip + 16M Z3 fast | C bundle / A2 stock | 12.476 / 11.507 | 13.549 / 13.553 | 3.34 → 2.13 | 47.56 / 36.26 / 0.06 → 37.97 / 28.47 / 5.70 | 116 / 59 | 1144 / 1157 | 0.998656 (candidate D5) | 0 | 12.392 → 13.277 (+7.1%) | 0x80008000; unchanged | Already enabled | 13.384 → 13.428 (+0.32%) | 13.393 → 13.437 (+0.33%) | CPU-gated off | 11.631 | 45.42 / 32.53 / 2.89 | 11.656 → 11.557 (-0.86%, fast compositor) | Pending |
+| 060/50 NOMMU, AGA, 2M chip + 16M Z3 fast | C bundle / A2 stock | 12.786 / 12.206 | 14.296 / 14.003 | 3.16 → 1.95 | 44.63 / 33.43 / 0.03 → 36.13 / 28.11 / 4.68 | 64 / 62 | 1452 / 1568 | 0.998656 (candidate D5) | 0 | 12.585 → 13.909 (+10.5%) | 0xa0808000; unchanged | Already enabled | 13.953 → 13.959 (+0.04%) | 13.982 → 13.998 (+0.11%) | CPU-gated off | 12.006 | 53.03 / 29.37 / 4.41 | 12.056 → 11.981 (-0.62%, fast compositor) | Pending |
 
 C2 is dropped under §0.3: every 2,000-field same-build CPU-class pair is below 2%; the live-slot cache passed its native mission-load/bank-change/exit twin (54,020 calls, 11 invalidations, zero mismatches), 437 host tests and the hook audit. Candidate developer SHA-256 `eeadc00619d796c3850f4d83f4bf51a87ea80019737935e5a78418ef17b502ea`; evidence `completion-c2-{a500,020,030,040,060}-{off,on}` and `completion-c2-twin-r2`. The normal bundle is unchanged.
 
@@ -135,48 +135,34 @@ stops before commands and limits E1 to 16 breakpoints. No binary instruction
 trace was captured. Reproduce with local `completion_e1_case.py <040|060>
 0x32ffa <fresh-output>` under `BENCH_DEVELOPER=1 BENCH_BATCH_KEYS=1`.
 
-E2 has a developer/VERIFY front-cache candidate on bit 18, gated to 020+;
-it implies bit 14's resource-lifetime hooks. Programs 3/4 use bounded packed
-fast-RAM entries, exact input keys, selective drawing-state replay and native
-fallback. Other drawing paths remain native. The front twin passes both
-40,000-byte pixel comparisons and 24-byte drawing-state comparisons, with
-306 hits, two fills and no fallbacks (`completion-e2-front-twin`, VERIFY
-SHA-256 `1952d228b415468f0dfbe13764f770566d45a5d348497487068b8bc1fdfac832`).
-The result checker rejects three deliberate corruptions.
+E2's gun-overlay cache (programs 3/4) is **dropped**: all four CPU-class
+2,000-field same-build pairs miss 2% (020 −2.73%, 030 0.00%, 040 −0.86%,
+060 −0.62%). Evidence `completion-e2-fast-{020,030,040,060}-{off,on}`,
+developer SHA-256 `4f8434e6cec01ce0294365276b98ca3f5b6bbdcb313d19ccbe17103aca01720b`. The earlier byte-guard/chip-blit
+variant also regressed on 060 (−7.45%). Neither variant entered the normal
+verified mask. Disposable completed-case bank scans were removed; frozen slaves,
+listings, timing logs, results and screenshots remain.
 
-The first 060 pair uses 2,000 PAL fields per case and one developer binary,
-SHA-256 `97c3eaf55ed8a59be9d7778f3d0e75470045395b1988df14ae7ce2ff7b78d91e`
-(`completion-e2-front-060-{off,on}`). Its byte-at-a-time key variant is rejected
-for release: FPS regresses 7.45%; cockpit time rises 30.36 → 33.14 ms.
-Both windows contain 15 messages and 43 dashboard markers. This is a front-cache
-candidate result, not checkpoint E or evidence for the other CPU classes.
+The current bit-18 candidate targets solid front script 2 instead. It uses a
+seven-range key (script, geometry and palette state), and derives exact coverage
+on a miss by running a private white script through the native polygon/line
+renderer into a one-plane chip mask. Drawing context is restored before the
+original full-colour draw. Cached pixels use fast RAM; unsupported scripts,
+geometry or allocation failure retain native drawing. The small gun scripts now
+always run natively. The normal verified mask still excludes bit 18.
 
-The current follow-up uses bounded longword key comparisons and a fast-RAM
-compositor. Empty mask words skip the chip bus; opaque words avoid destination
-reads; partial words use the original cookie-cut equation. Cache pixels now
-require MEMF_FAST, with allocation failure retaining native drawing. The native
-front twin passes both scripts, including all pixels and drawing-state outputs,
-with 330 hits, two fills and no fallbacks (`completion-e2-fast-twin`, VERIFY
-SHA-256 `0e3d316cc59ee11aa3c64c08f06273b18dff18b0cd73239429326c06fbae25b9`). The independent host compositor model
-covers sparse masks, partial words and screen edges. All three builds, 454 host
-tests, 80 hook ranges and 135 VERIFY patch destinations pass.
+The solid front twin passes 40,000 pixel bytes and 24 drawing-state bytes:
+166 hits, one fill, no fallbacks, and private twin scratch released
+(`completion-e2-solid-twin`, VERIFY SHA-256 `b610d83c52e8591d3472cfaf4ef894f09727b2973bc1273476d8a057f4daa6cd`). The
+checker rejects three deliberate corruptions and empty acceptance sets.
+All three builds, 463 host tests, 80 hook ranges and 135 VERIFY patch destinations
+pass. This is front-view correctness evidence, not a performance claim or full
+E2 acceptance.
 
-The one-pair-per-class timing batch for this compositor is in progress
-(`completion-e2-fast-{060,040,030,020}-{off,on}`, 2,000 PAL fields per case).
-The completed 060/040/030 pairs are all below 2%; the 020 pair remains in
-progress. Do not attribute the prior byte-guard pair to this source. The normal verified mask excludes bit 18. Remaining work includes
-CPU selection from those results, the rest of the instrument/dispatch cache,
-a combined cockpit composite and the other-view/map twins.
-
-The larger front script (program 2) contains a counted polygon (`$af2f`),
-which the small gun-overlay cache does not accept. Its decoder and a bounded
-solid-script preparation model are now present. The separate native coverage
-helper prepares white solid primitives in a private script and renders into a
-one-plane chip mask with temporary drawing context restored. It is assembled
-but not included or called in the current slave; native validation and program-2
-integration remain open. Unsupported polygons still fail closed in the current
-raster/key models. All 459 host tests pass; no extra emulator survey was run.
-
+The solid-cache timing batch is running one 2,000-field A/B pair per affected
+CPU class, `completion-e2-solid-{060,040,030,020}-{off,on}`. No completed pair
+is available yet. CPU selection, the instrument/dispatcher cache, combined
+composition and the other-view/map twins remain open.
 
 
 040/060 functional checks use separate MMU-core configurations. Their timing
@@ -1883,7 +1869,7 @@ These are unoptimized **mixed-flight** windows including cockpit events and the 
 right bank, not the final R-steady/R-event measurement matrix. They establish that the
 long-window instruments work on both memory/CPU configurations.
 
-| Configuration | Flight intervals | PAL fields | Observed swaps | Mean display rate |
+| Configuration | Flight intervals | PAL fields | Observed swaps | Mean display rate | E2 solid-cache candidate FPS off → on |
 | --- | ---: | ---: | ---: | ---: |
 | 68000, 512 KB chip + 1.5 MB slow, no fast | steps 1–120: 119 | 3,649 | 119 | 1.63 fps |
 | 14 MHz 68020, 2 MB chip + 8 MB fast, no slow | steps 1–250: 249 | 2,226 | 249 | 5.58 fps |
@@ -2617,8 +2603,8 @@ is drawn through `sim:30408`; request 2 is mirrored and request 0 is ordinary.
 
 | Machine / warm draw | OFF main cycles (calls) | W1a main cycles (calls) | W1a+W1b main cycles (calls) |
 | --- | ---: | ---: | ---: |
-| A500, mirrored | 1,940,090 (1) | 715,830 (2) | 31,845 (3) | — | CPU-gated off |
-| A500, ordinary | 1,930,434 (1) | 703,760 (2) | 10,713 (3) | — | CPU-gated off |
+| A500, mirrored | 1,940,090 (1) | 715,830 (2) | 31,845 (3) | — | CPU-gated off | CPU-gated off |
+| A500, ordinary | 1,930,434 (1) | 703,760 (2) | 10,713 (3) | — | CPU-gated off | CPU-gated off |
 | 68020, mirrored | 840,277 (2) | 689,456 (3) | 38,073 (4) |
 | 68020, ordinary | 824,497 (2) | 656,225 (3) | 12,876 (4) |
 
@@ -2667,7 +2653,7 @@ The boundary swap itself is not counted as a completed frame.
 
 | Machine / swaps | OFF fields / fps | W1a fields / fps | W1a+W1b fields / fps |
 | --- | ---: | ---: | ---: |
-| A500, 1–358 | 9,705 / 1.8363 | 9,536 / 1.8689 | 9,457 / 1.8845 | — | CPU-gated off |
+| A500, 1–358 | 9,705 / 1.8363 | 9,536 / 1.8689 | 9,457 / 1.8845 | — | CPU-gated off | CPU-gated off |
 | 68020, 1–516 | 4,321 / 5.9498 | 4,250 / 6.0492 | 4,102 / 6.2674 |
 | Cached 68030, 1–699 | 2,727 / 12.7776 | 2,813 / 12.3869 | 2,787 / 12.5025 |
 

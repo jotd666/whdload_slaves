@@ -26,3 +26,34 @@ def prepare(data):
         elif not colour_seen:
             raise ValueError('Incoming pen dependency')
     return bytes(result)
+
+
+def dependencies(read, h3):
+    """Exact ordered inputs for the solid program-2 candidate; no bitmap scan."""
+    ranges = []
+    def take(address, size):
+        value = read(address, size)
+        if len(value) != size:
+            raise ValueError('Truncated solid-program input')
+        ranges.append((address, value))
+        return value
+    pointer = int.from_bytes(take(h3 + 0x7b5a, 4), 'big')
+    if not pointer:
+        raise ValueError('Missing solid program')
+    decoded = decode(lambda at,n: read(pointer + at,n), 0, max_bytes=512)
+    prepare(take(pointer, decoded['bytes']))
+    geometry = take(h3 + 0x9d34, 28)
+    uint = lambda offset, size: int.from_bytes(geometry[offset:offset + size], 'big')
+    if (uint(0,4), uint(8,2), uint(12,2), uint(14,2), uint(16,2)) != (8000,5,320,40,200):
+        raise ValueError('Unsupported solid-program geometry')
+    xmin, xmax, ymin, ymax = struct.unpack_from('>4h', geometry, 20)
+    if not uint(18,2) or not (0 <= xmin <= xmax < 320 and 0 <= ymin <= ymax < 200):
+        raise ValueError('Private mask requires bounded native clipping')
+    if take(h3 + 0x7b50, 1) != b'\0':
+        raise ValueError('Alternate polygon mode is unsupported')
+    colours = take(h3 + 0x3ab7, 10)
+    for selector in reversed(colours[8:]):
+        if selector >= 128:
+            selector -= 256
+        take(h3 + 0x101d + 4 * selector, 4)
+    return 2, tuple(ranges)

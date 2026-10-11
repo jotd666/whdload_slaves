@@ -130,7 +130,7 @@ perf_apply_v1:
 	beq .no_overlay_cache
 	lea .overlay_cache_base(pc),a0
 .overlay_cache_base
-	adda.l #overlay_cache_install-.overlay_cache_base,a0
+	adda.l #overlay_solid_install-.overlay_cache_base,a0
 	jsr (a0)
 	bra .overlays_done
 .no_overlay_cache

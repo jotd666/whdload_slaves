@@ -38,12 +38,11 @@ catch-up input/transition checks and flight-outcome smoke tests remain open. The
 30-minute emulated soak passes in one flight across two debugger reads;
 the normal verified mask still excludes bit 13 until acceptance passes.
 E1 is complete as a 040/060 stage-cost diagnostic; both rendering stages exceed
-one field. E2 has a live developer-only front cache with passing pixel/state twins.
-Its first 060 byte-guard variant regresses and is rejected for release. The
-fast-RAM compositor and longword guard pass the native front twins; their
-sequential CPU-class timing batch is running. Remaining cockpit paths, combined
-composition, CPU selection and view/map twins are open. Results and validation scope are in the
-scoreboard. D5 remains postponed and E2–F remain
+one field. E2's small gun-overlay cache is dropped: every CPU-class pair misses 2%.
+The larger solid-script candidate now passes its native pixel/state twin; its
+sequential timing batch is running. The normal mask excludes it. Instrument and
+dispatch caching, combined composition, CPU selection and view/map twins remain
+open. Results and validation scope are in the scoreboard. D5 remains postponed and E2–F remain
 open; the earlier lists below are historical context, not the execution order.
 
 

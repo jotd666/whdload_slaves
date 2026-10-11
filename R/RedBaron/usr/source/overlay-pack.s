@@ -4,7 +4,14 @@
 ; d0=1 success, 0 empty/too large. Other registers preserved; CCR volatile.
 ; Pixels outside coverage are zeroed, so cached data never retains background.
 overlay_pack:
+	move.l #5208,d0
+	bra overlay_pack_limit
+; Solid cockpit variant: caller owns a 28800-byte output allocation.
+overlay_pack_large:
+	move.l #28800,d0
+overlay_pack_limit:
 	movem.l d1-d7/a0-a6,-(sp)
+	move.l d0,-(sp)
 	move.l a1,a4
 	moveq #40,d2
 	moveq #0,d3
@@ -48,7 +55,7 @@ overlay_pack:
 	mulu.w d5,d6
 	move.l d6,d7
 	mulu.w #6,d7
-	cmpi.l #5208,d7
+	cmp.l (sp),d7
 	bhi .fail
 	move.w d2,(a3)
 	move.w d4,2(a3)
@@ -97,6 +104,7 @@ overlay_pack:
 .fail
 	moveq #0,d0
 .done
+	addq.l #4,sp
 	movem.l (sp)+,d1-d7/a0-a6
 	rts
 

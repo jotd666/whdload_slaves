@@ -2,16 +2,18 @@
 import struct
 
 
-def check(header, counters):
+def check(header, counters, programs=(3, 4)):
+    if tuple(programs) not in ((2,), (3, 4)):
+        raise ValueError('Unsupported or empty front-cache acceptance set')
     if len(header) != 16 or len(counters) != 12:
         raise ValueError('Truncated front-cache result')
     checked, active, scratch, passes = struct.unpack('>4I', header)
     hits, fills, fallbacks = struct.unpack('>3I', counters)
-    if checked != 3 or passes != 2:
-        raise ValueError('Both front-program pixel/state twins must finish')
+    if checked != (1 << len(programs)) - 1 or passes != len(programs):
+        raise ValueError('All selected front-program pixel/state twins must finish')
     if active or scratch:
         raise ValueError('Front twin must be idle with private scratch released')
-    if hits < 2 or fills < 2 or fallbacks:
-        raise ValueError('Front fixture did not exercise two cached programs cleanly')
-    return dict(programs=[3, 4], pixel_bytes_per_case=40000,
+    if hits < len(programs) or fills < len(programs) or fallbacks:
+        raise ValueError('Front fixture did not exercise every cached program cleanly')
+    return dict(programs=list(programs), pixel_bytes_per_case=40000,
                 drawing_state_bytes=24, hits=hits, fills=fills, fallbacks=fallbacks)
