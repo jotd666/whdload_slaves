@@ -1,7 +1,7 @@
 ; Development-only angle, ordinary-position and falling-motion integration.
 ; Requires VERIFY_TIME_SCALARS; shares its per-substep field count.
 ; Rate callers are distinguished from geometry/contact callers of the same
-; rotation helpers. Crash drift and contact relaxation remain.
+; rotation helpers. Partial-contact relaxation remains unconverted.
 _motion_install:
 	movem.l d0/a0-a2,-(a7)
 	movea.l _code_start(pc),a0
@@ -23,6 +23,28 @@ _motion_install:
 	rts
 _motion_patches:
 	PL_START
+	; PERF_RANGE VERIFY_TIME_MOTION $10ef0 $001c: gameplay crash expiry
+	PL_PSS $10ef0,_motion_crash_live,$16
+	; PERF_RANGE VERIFY_TIME_MOTION $11680 $0024: Phantom crash expiry
+	PL_PSS $11680,_motion_crash_phantom,$1e
+	; PERF_RANGE VERIFY_TIME_MOTION $0bce0 $0006: object crash timer reset
+	PL_PS $bce0,_motion_crash_start
+	; PERF_RANGE VERIFY_TIME_MOTION $0bdbe $0006: obstacle crash timer reset
+	PL_PS $bdbe,_motion_crash_start
+	; PERF_RANGE VERIFY_TIME_MOTION $0bfee $0006: barrier crash timer reset
+	PL_PS $bfee,_motion_crash_start
+	; PERF_RANGE VERIFY_TIME_MOTION $0cc54 $0006: landing crash timer reset
+	PL_PS $cc54,_motion_crash_start
+	; PERF_RANGE VERIFY_TIME_MOTION $0b596 $005c: timed crash-drift envelope
+	PL_PSS $b596,_motion_drift,$56
+	; PERF_RANGE VERIFY_TIME_MOTION $0bc80 $0006: object crash drift initialization
+	PL_PS $bc80,_motion_drift_start
+	; PERF_RANGE VERIFY_TIME_MOTION $0bd5e $0006: obstacle crash drift initialization
+	PL_PS $bd5e,_motion_drift_start
+	; PERF_RANGE VERIFY_TIME_MOTION $0bfa6 $0006: barrier crash drift initialization
+	PL_PS $bfa6,_motion_drift_start
+	; PERF_RANGE VERIFY_TIME_MOTION $0cc66 $0006: landing crash drift initialization
+	PL_PS $cc66,_motion_drift_start
 	; PERF_RANGE VERIFY_TIME_MOTION $0b5f2 $000a: falling displacement
 	PL_PSS $b5f2,_motion_fall_position,4
 	; PERF_RANGE VERIFY_TIME_MOTION $0b500 $0008: snapshot previous projected rates
@@ -321,6 +343,141 @@ _motion_spin_reset:
 _motion_spin_loss:
 	dc.w 0,857,1704,2539,3363,4177,4979,5772,6554
 
+; Crash lifetime is 25 native steps, or 200 active fields. Expiry effects are
+; emitted exactly once on crossing zero, independently of display/substep count.
+_motion_crash_start:
+	move.l a0,-(a7)
+	lea _motion_crash_state(pc),a0
+	clr.l (a0)
+	movea.l (a7)+,a0
+	move.b #25,-$69fa(a4)
+	rts
+_motion_crash_live:
+	move.l d0,-(a7)
+	bsr _motion_crash_tick
+	tst.b d0
+	beq.s .done
+	clr.b -$50ce(a4)
+	st -$5229(a4)
+.done:
+	move.l (a7)+,d0
+	rts
+_motion_crash_phantom:
+	move.l d0,-(a7)
+	bsr _motion_crash_tick
+	tst.b d0
+	beq.s .done
+	st -$5229(a4)
+	move.b #60,-$50ce(a4)
+	move.b #5,-$16d2(a4)
+.done:
+	move.l (a7)+,d0
+	rts
+_motion_crash_tick:
+	movem.l d1-d2/a0,-(a7)
+	lea _motion_crash_state(pc),a0
+	moveq #0,d1
+	move.b -$69fa(a4),d1
+	cmp.w 2(a0),d1
+	beq.s .current
+	lsl.w #3,d1
+	move.w d1,(a0)
+.current:
+	moveq #0,d0
+	move.w (a0),d1
+	beq.s .publish
+	move.w _time_scalar_fields(pc),d2
+	sub.w d2,d1
+	bhi.s .publish
+	moveq #0,d1
+	moveq #1,d0
+.publish:
+	move.w d1,(a0)
+	addq.w #7,d1
+	lsr.w #3,d1
+	move.w d1,2(a0)
+	move.b d1,-$69fa(a4)
+	movem.l (a7)+,d1-d2/a0
+	rts
+_motion_crash_signature: dc.b 'HDCRASH1'
+_motion_crash_state: dc.l 0
+
+; Preserve the native 30-sample linear crash envelope, including each signed
+; MUL/DIV truncation. Each envelope sample lasts eight fields; a variable step
+; may cross one boundary, so at most two segments are integrated. This avoids
+; a continuous Euler approximation reversing drift at the end of the envelope.
+; The car still advances on every substep, with signed eighth-position carries.
+_motion_drift_start:
+	bsr _motion_drift_reset
+	move.b #30,-$66ee(a4)
+	rts
+_motion_drift_reset:
+	move.l a0,-(a7)
+	lea _motion_drift_state(pc),a0
+	clr.l (a0)+
+	clr.l (a0)+
+	clr.l (a0)+
+	movea.l (a7)+,a0
+	rts
+_motion_drift:
+	movem.l d0-d7/a0-a3,-(a7)
+	lea _motion_drift_state(pc),a3
+	moveq #0,d0
+	move.b -$66ee(a4),d0
+	cmp.w 2(a3),d0
+	beq.s .current
+	move.w d0,2(a3)
+	lsl.w #3,d0
+	move.w d0,(a3)
+	clr.l 4(a3)
+	clr.w 8(a3)
+.current:
+	move.w _time_scalar_fields(pc),d7
+.segment:
+	tst.w d7
+	beq .done
+	move.w (a3),d4
+	beq .done
+	subq.w #1,d4
+	move.w d4,d6
+	andi.w #7,d6
+	addq.w #1,d6
+	cmp.w d7,d6
+	bls.s .bounded
+	move.w d7,d6
+.bounded:
+	lsr.w #3,d4
+	lea -$66f8(a4),a0
+	lea -$6704(a4),a1
+	lea 4(a3),a2
+	moveq #2,d5
+.axis:
+	move.w (a0)+,d0
+	muls.w d4,d0
+	divs.w #30,d0
+	; Low quotient is the original signed native drift rate.
+	move.w d6,d1
+	move.w (a2),d2
+	ext.l d2
+	bsr _time_scale_word
+	move.w d2,(a2)+
+	add.l d0,(a1)+
+	dbf d5,.axis
+	sub.w d6,(a3)
+	sub.w d6,d7
+	bra.s .segment
+.done:
+	move.w (a3),d0
+	addq.w #7,d0
+	lsr.w #3,d0
+	move.w d0,2(a3)
+	move.b d0,-$66ee(a4)
+	movem.l (a7)+,d0-d7/a0-a3
+	rts
+_motion_drift_signature: dc.b 'HDDRIFT1'
+; remaining fields.w, last visible counter.w, XYZ signed carries.w, pad.w
+_motion_drift_state: dcb.b 12,0
+
 ; Entry uses a jump patch, so LINK sees the original caller's stack frame.
 ; Pushing the continuation and using RTS preserves registers and native TST CCR.
 _motion_position_entry:
@@ -470,7 +627,10 @@ _motion_position_delta:
 	rts
 
 _motion_reset:
+	bsr _motion_drift_reset
 	move.l a0,-(a7)
+	lea _motion_crash_state(pc),a0
+	clr.l (a0)
 	lea _motion_state(pc),a0
 	clr.l (a0)+
 	clr.l (a0)+
@@ -639,6 +799,81 @@ _motion_math_test:
 	cmpi.w #7,d1
 	ble.s .fall_position_fraction
 	dbf d7,.fall_position_value
+	lea _motion_drift_fake(pc),a4
+	adda.l #$6704,a4
+	lea _motion_drift_values(pc),a6
+	lea _motion_drift_results(pc),a2
+	moveq #6,d7
+.drift_value:
+	move.w (a6)+,d4
+	moveq #1,d5
+.drift_fields:
+	move.w d5,(a5)
+	clr.l -$6704(a4)
+	clr.l -$6700(a4)
+	clr.l -$66fc(a4)
+	move.w d4,-$66f8(a4)
+	move.w d4,-$66f6(a4)
+	move.w d4,-$66f4(a4)
+	bsr _motion_drift_start
+	moveq #0,d6
+	moveq #0,d3
+.drift_step:
+	bsr _motion_drift
+	rol.l #5,d3
+	move.l -$6704(a4),d0
+	eor.l d0,d3
+	moveq #0,d0
+	move.w _motion_drift_state(pc),d0
+	eor.l d0,d3
+	addq.w #1,d6
+	tst.b -$66ee(a4)
+	bne.s .drift_step
+	move.l -$6704(a4),(a2)+
+	move.l -$6700(a4),(a2)+
+	move.l -$66fc(a4),(a2)+
+	move.w d6,(a2)+
+	move.w _motion_drift_state+4(pc),(a2)+
+	move.l d3,(a2)+
+	addq.w #1,d5
+	cmpi.w #8,d5
+	ble.s .drift_fields
+	dbf d7,.drift_value
+	lea _motion_crash_fake(pc),a4
+	adda.l #$69fa,a4
+	lea _motion_crash_results(pc),a2
+	moveq #1,d5
+.crash_fields:
+	move.w d5,(a5)
+	bsr _motion_crash_start
+	moveq #0,d6
+	moveq #0,d7
+.crash_step:
+	bsr _motion_crash_tick
+	add.w d0,d7
+	addq.w #1,d6
+	tst.b -$69fa(a4)
+	bne.s .crash_step
+	; An additional empty call must not emit expiry twice.
+	bsr _motion_crash_tick
+	add.w d0,d7
+	move.w d6,(a2)+
+	move.w d7,(a2)+
+	move.l _motion_crash_state(pc),(a2)+
+	addq.w #1,d5
+	cmpi.w #8,d5
+	ble.s .crash_fields
+	clr.w (a5)
+	bsr _motion_crash_start
+	bsr _motion_crash_tick
+	move.w d0,(a2)+
+	move.l _motion_crash_state(pc),(a2)+
+	move.w #1,(a5)
+	bsr _motion_crash_tick
+	; Reinitialize while visible byte is still25: mismatch checks alone fail.
+	bsr _motion_crash_start
+	bsr _motion_crash_tick
+	move.l _motion_crash_state(pc),(a2)+
 	move.w #VERIFY_SCALAR_FIELDS,(a5)
 	bsr _motion_reset
 	movem.l (a7)+,d0-d7/a0-a6
@@ -669,4 +904,11 @@ _motion_position_results: dcb.b 7*7*9*3*8,0
 _motion_fall_position_values: dc.w -32768,-1,0,1,32767
 _motion_fall_position_signature: dc.b 'HDFPOS01'
 _motion_fall_position_results: dcb.b 5*3*3*9*8,0
+_motion_drift_values: dc.w -32768,-301,-1,0,1,301,32767
+_motion_drift_fake: dcb.b 32,0
+_motion_drift_math_signature: dc.b 'HDDRIFTM'
+_motion_drift_results: dcb.b 7*8*20,0
+_motion_crash_fake: dc.w 0
+_motion_crash_math_signature: dc.b 'HDCRASHT'
+_motion_crash_results: dcb.b 74,0
 	ENDC

@@ -414,7 +414,7 @@ positions are still recomputed from the resulting longs.
 This is an implementation of the projected-vector correction, including steering
 changes; nonlinear handling acceptance remains open. It does not yet incorporate
 fractional longitudinal velocity in the native trigonometric projection. Crash
-drift still follows its original per-pass updates.
+drift uses the separate timed envelope described below.
 
 Position evidence:
 
@@ -460,8 +460,45 @@ Falling-position evidence:
   reference. `s4-fall-position-off` passes the disabled-range check, including
   the new falling-position range. The direct-branch audit passes all 35 ranges.
 
+Crash drift now preserves the native 30-sample slowdown envelope in elapsed
+fields. Each native sample lasts eight fields; its signed multiply/divide result
+is retained exactly, and fractional updates integrate that rate with an eighth-
+position carry. A bounded step crosses at most one sample boundary. This preserves
+both the original total displacement and its rounding under subdivision, without
+the backwards tail that a continuous Euler correction would introduce. This is
+sampling of the crash envelope, not a fixed-tick replacement of the simulation.
+
+The drift hook replaces `$0b596..$0b5f1`, leaving the shared `$0b5f2` target intact.
+All four writers that start drift explicitly reset its companions, even when the
+visible counter remains 30. Recovery, race and replay resets also clear them.
+The visible counter is the ceiling of the remaining fields divided by eight.
+
+The live and Phantom crash timers at `$10ef0` and `$11680` now consume elapsed
+fields too: 25 native steps become 200 fields. Their four initialization writers
+reset the timer even if its visible byte is unchanged. Crossing zero emits the
+native replay request once; live mode clears the overlay, while Phantom mode
+sets its original overlay lifetime and phase. The remainder of Phantom playback
+is not yet converted, so this does not establish timed Phantom-mode equivalence.
+
+Crash evidence:
+
+- `s4-crash-math`: 56 complete drift sequences cover signed-word vector extrema
+  and every nonzero field count. Final XYZ displacement, final carry, call count
+  and rolling checksums of intermediate X positions/remaining fields match an
+  independent field-by-field model. Eight crash timer sequences expire once;
+  additional cases verify T=0 and a reset while the visible timer is still 25.
+  Earlier position, angle, spin and falling arithmetic checks still pass.
+- `s4-crash-one`: all 108 native-step car states match the original constant-input
+  reference. The crash/drift counters, replay-request byte, overlay lifetime and
+  Phantom phase also match at every return, including 25 nonzero crash states
+  and one observed replay request. This is live-mode evidence; the Phantom
+  expiry wrapper has not yet been exercised in its full native mode.
+- `s4-crash-off`: all declared patch ranges remain pristine with CUSTOM1 off.
+  The normal slave is byte-identical to the baseline. The direct-branch audit
+  passes all 46 scalar/motion ranges.
+
 Remaining work includes the actual simulation dispatcher, fractional projection,
-crash drift, partial-contact relaxation/rate feedback,
+partial-contact relaxation/rate feedback,
 held-input handling, traffic/contact policies, replay/Phantom and other
 presentation timelines, performance and cross-machine acceptance, and the
 required human laps. The BCD clock defect versus lap-time acceptance conflict
