@@ -21,7 +21,8 @@ r.command('stop');r.command('gdb delete')
 class Host:
  read_until=Gdb.read_until
  def __init__(self):
-  self.p=subprocess.Popen(['lldb','-O','settings set target.preload-symbols false','-p',pid],stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,bufsize=0);self.buf=b''
+  self.p=subprocess.Popen(['lldb','-O','settings set target.preload-symbols false','-O',
+                            'settings set target.memory-module-load-level minimal','-p',pid],stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,bufsize=0);self.buf=b''
  def cmd(self,s):
   self.p.stdin.write((s+'\nscript print("@@REDBARON-DONE@@")\n').encode())
   out=self.read_until('@@REDBARON-DONE@@\n',900)

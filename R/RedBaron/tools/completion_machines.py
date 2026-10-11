@@ -29,11 +29,13 @@ def environment(machine, mask=0, *, functional=False, environ=None):
         aga = machine in ('040', '060')
         env.update(AMIGA_MODEL='A1200' if aga else 'A500',
                    CPU=cpu + ('-NOMMU' if aga and not functional else ''),
-                   FAST_KB='16384' if aga else '8192',
+                   FAST_KB='0' if aga else '8192',
                    EXTRA_ARGS=f'--slow_memory=0 --uae_cpu_multiplier=0'
                    f' --uae_cpu_frequency={frequency} --uae_cpu_data_cache=true' + flags)
         if aga:
             env['KICKSTART'] = env['KICKSTART_A1200']
+            # Zorro-II is limited to 8 MB; use a 32-bit bank for the 16 MB case.
+            env['EXTRA_ARGS'] += ' --uae_z3mem_size=16 --uae_z3mem_start=0x10000000'
         if machine == '030' or (aga and functional):
             env['WHD_ARGS'] += ' MMU'
     return env
