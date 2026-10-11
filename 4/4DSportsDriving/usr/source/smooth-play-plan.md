@@ -204,7 +204,7 @@ Commit each item separately.
 
 ## P3. Fast-RAM CPU rasterizer for 020+ with real fast RAM (the step that breaks 18 FPS)
 
-The model is Powerdrome (`~/Projects/Powerdrome/docs/performance-implementation.md`):
+The model is Powerdrome (its repository's `docs/performance-implementation.md`):
 render into a 32,000-byte fast-RAM staging bitmap with code in fast RAM, then MOVEM-copy the
 changed region to the chip back buffer.
 
