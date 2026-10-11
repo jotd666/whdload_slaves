@@ -3171,3 +3171,70 @@ full W6 replay selection, the retained `capture-render.py --frames 2`, then
 `check-native.py` reads private test evidence without writing guest memory.
 Use `--allow-unchanged` only when explicitly reporting the 68030 preservation
 case; the A500 changed-selection check passes without it.
+
+
+## Full-bundle equal-tick replay after shape restoration
+
+The shape-restoration build
+`63f553029f241ff1ac2242fd1ec34f363ff70b55023e14a67044651674577484`
+was booted independently on cached 50 MHz 68030 with CUSTOM2=16319, maximum
+detail and Time Scale 40. Both boots use the existing scheduled Right/Fire
+replay, observer and deferred activation. One additionally selects CUSTOM5 bit
+30 to omit rendering; no other option differs. This tests the full VERIFY
+performance bundle, unlike the earlier timing-only CUSTOM2=8192 comparison.
+
+Evidence is `tmp/dev/tmp/prof/w6-shape-replay-normal-030/` and
+`tmp/dev/tmp/prof/w6-shape-replay-none-030/`. Each retains full RAM at 40 consecutive
+completed-world boundaries (ticks 0–39), an untouched initial checkpoint, lifecycle
+records, exact slave/listing and native endpoint checks. Both initial states have
+identical h3, complete player record, all four sim segments, and all 105 tracked
+game allocations (243,855 bytes). Pointer/layout differences are not normalized.
+
+`world_controls.py` confirms the same four-event input history and all 40
+per-tick snapshots, including bank/fire held intervals and exactly two command
+pops. `native_poses.py` independently checks 1,352 poses, 129 lifecycle events
+and 59 invalidated history records in each capture. At every equal tick:
+
+- The complete 280-byte player record matches.
+- All 1,352 registered object prefixes across the window match, as do the
+  primary registry, camera state, shared display-list order/count and lifecycle
+  events. Prefixes alone are not a complete-object proof.
+- The selected shape pointer and both scale words match (320 bytes compared):
+  both retain record 6 with scales 255/90. The earlier observed scale divergence
+  is absent without excluding these fields from comparison.
+- Every differing shared allocation is a 392-byte sound context, with only
+  payload byte 345 (the low byte of word 344) changed. Each address is checked
+  against the sound pointer table at h3:a184; contexts 0, 1 and 2 appear across
+  the window. This identifies the differing bytes, not sound-event equivalence.
+- One extra 1,808-byte allocation (1,800 payload bytes plus header) appears only
+  with drawing at ticks 33–39. All other shared game-allocation bytes agree.
+
+| Schedule | World updates between endpoints | Completed draws | PAL fields / CIA ticks | Final uncollected CIA debt |
+|---|---:|---:|---:|---:|
+| Ordinary | 39 | 41 | 242 / 286 | 3 |
+| No rendering | 39 | 0 | 239 / 283 | 0 |
+
+Exact funding passes for every interval. These are equal-tick correctness
+captures, not fixed 250-field performance samples or sustained-capacity evidence.
+In particular, 41 draws for 39 world updates exercises render-only iterations
+without adding simulation updates. The differing elapsed time/debt is retained.
+
+The raw final h3 inventory still differs in 1,229 bytes. The other sim segments
+retain respectively 87, zero and 15 differing bytes. The 15-byte auxiliary
+segment difference lies in copper bitplane-pointer data; the primary segment
+also contains embedded mutable drawing data and the CIA lifetime counter.
+These observations do not classify every byte or computed consumer. All raw
+ranges remain in `heap-inventory.json`; no whole-gameplay equality verdict or
+new exclusion mask is introduced. Broader physics/combat, camera/modal, sound,
+CPU/scene capacity and smooth-50-FPS gates remain open.
+
+Both endpoints pass native counters 426/512/638/133, terrain/cache/list 2/1/2,
+all three private shape-restoration cases, and 54 selected plus two disabled
+hook ranges. Both owned emulators were verified and quit. No slave/source bytes
+changed for this comparison. Retained `summarize.py` checks the scoped facts
+above against raw snapshots; it does not substitute for the unfiltered inventory.
+Reproduce using each retained `capture-poses.py --steps 40`, followed by
+`world_controls.py` and `world_comparison.py` with the ordinary and no-render
+capture directories. Run `native_poses.py` on each `poses.json` and
+`shape_selection.py` on each capture. The summary and all raw differences remain
+available beside those reports.

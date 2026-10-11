@@ -73,6 +73,22 @@ across rendering,” for build identities, coverage and rejected debugger fixtur
 The previous timing measurements belong to their recorded builds; this change
 has not been benchmarked.
 
+## W6 full-bundle replay regression
+
+After shape restoration, the full VERIFY bundle passes a same-build cached-68030
+ordinary/no-render replay comparison at 40 equal world ticks. Complete player
+records, 1,352 registered prefixes, camera, registry/display-list state and
+lifecycle events match. All eight shape-selection bytes now match at every tick.
+Shared game allocations differ only at payload byte 345 in the identified sound
+contexts; one drawing-only allocation appears from tick 33.
+
+The ordinary run completes 41 draws over 39 world updates; the control completes
+none. Exact time funding passes in both, including the ordinary run's three CIA
+ticks of final debt. These are correctness captures, not performance samples.
+The final raw inventory still contains 1,229 differing h3 bytes and other segment
+differences, so full gameplay equivalence remains open. See `w6-verification.md`,
+“Full-bundle equal-tick replay after shape restoration,” for all retained evidence.
+
 ## W6 current-bundle rendering breakdown
 
 A follow-up on the same synthetic cached-68030 200 MHz configuration separates
