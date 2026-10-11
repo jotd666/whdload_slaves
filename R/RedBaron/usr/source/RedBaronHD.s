@@ -632,21 +632,25 @@ tape_sim_key_bridge:
 	include "time-render.s"
 	include "time-terrain-verify.s"
 	include "time-flag-verify.s"
+	IFD VERIFY
+	include "time-shape-verify.s"
+	ENDC
 	include "instrument-values.s"
 	include "instrument-pixels.s"
 	include "instrument-cache.s"
 	include "overlay-lifetime.s"
-	IFD VERIFY
-	include "instrument-cache-verify.s"
-	include "overlay-probe.s"
+
 	include "overlay-blit.s"
 	include "overlay-fast.s"
 	include "overlay-mask.s"
 	include "overlay-pack.s"
 	include "overlay-key.s"
+	include "overlay-cache-key.s"
 	include "overlay-native-mask.s"
+	IFD VERIFY
+	include "instrument-cache-verify.s"
+	include "overlay-probe.s"
 	include "overlay-shadow.s"
-	include "time-shape-verify.s"
 	IFD VERIFY_OVERLAY_KEY_EXPERIMENT
 	include "overlay-key-verify.s"
 	ENDC
@@ -687,3 +691,6 @@ time_input_observe_queue: dcb.b TIME_INPUT_BYTES,0
 	include "cockpit-stage.s"
 	include "cockpit-static.s"
 	include "cockpit-gauges.s"
+
+	include "cockpit-foreground-state.s"
+	include "cockpit-foreground.s"

@@ -190,6 +190,10 @@ perf_apply_v1:
 .cockpit_stage_base
 	adda.l #cockpit_stage_install-.cockpit_stage_base,a0
 	jsr (a0)
+	lea .foreground_base(pc),a0
+.foreground_base
+	adda.l #overlay_solid_install-.foreground_base,a0
+	jsr (a0)
 .no_cockpit_stage
 	rts
 

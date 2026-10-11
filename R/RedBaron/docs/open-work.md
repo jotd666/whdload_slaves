@@ -72,8 +72,13 @@ resource masks define opacity, resource pixels seed the background, and only
 the exact native result rectangle is copied from the drawing target. Unsupported
 coverage retains native drawing. The model covers shifted resources, opaque
 black, rectangle edges and rejected mask holes; native capture acceptance is
-still pending. Foreground layer capture, dirty-update integration, the final
-single masked copy and native pixel twins remain open.
+still pending. The foreground provider now hooks the front 2/3/4 script group,
+retaining its exact resource/context keys and selective drawing-state replay.
+It exposes a full-size image/mask only for the current accepted invocation;
+firing, damage overlays and unsupported states retain native dispatch. The
+former standalone script cache remains dropped; this provider is part of the
+full composition, with no new performance result. Dirty-update integration,
+the final single masked copy and full-composition native pixel twins remain open.
 The transport still performs temporary full-frame seed/copy operations and
 must not be used as a performance candidate yet.
 Full-composition view twins remain open. The map-toggle check is dropped: the
