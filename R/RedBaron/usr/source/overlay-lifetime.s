@@ -214,3 +214,41 @@ ovlife_zero_tail:
 ovlife_registry: dc.l 0
 ovlife_registry_end: dc.l 0
 ovlife_count: dc.l 0,0 ; operations, private CCR cases
+
+; Optional private failure fixture: poison the first image byte of both owned
+; caches, then invalidate before the third diagnostic call. No game data writes.
+ovlife_refill_probe:
+	movem.l d0/a0-a1,-(sp)
+	lea .options(pc),a0
+.options
+	adda.l #perf_custom4-.options,a0
+	cmpi.l #$80000,(a0)
+	bne .done
+	lea ovlife_refill_result(pc),a0
+	tst.l (a0)
+	bne .done
+	lea overlay_mask_result(pc),a1
+	cmpi.l #3,12(a1)
+	bne .done
+	lea overlay_shadow_valid(pc),a1
+	cmpi.l #1,(a1)
+	bne overlay_blit_bad
+	cmpi.l #1,4(a1)
+	bne overlay_blit_bad
+	lea overlay_shadow_result(pc),a1
+	move.l (a1),d0
+	beq overlay_blit_bad
+	move.l d0,4(a0)
+	move.l 4(a1),d0
+	beq overlay_blit_bad
+	move.l d0,8(a0)
+	move.l #1,(a0)
+	move.l 4(a0),a1
+	eori.b #$ff,16(a1)
+	move.l 8(a0),a1
+	eori.b #$ff,16(a1)
+	bsr ovlife_invalidate
+.done
+	movem.l (sp)+,d0/a0-a1
+	rts
+ovlife_refill_result: dc.l 0,0,0 ; injections, retained program-three/four pointers

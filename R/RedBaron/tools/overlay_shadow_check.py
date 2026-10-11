@@ -47,6 +47,7 @@ def check(path):
     header_at=base+symbol(lines,'overlay_shadow_result')
     custom5=int(re.search(r'CUSTOM5=(-?\d+)',entry['whd_args'])[1])&0xffffffff
     scheduled=bool(custom5&(1<<31))
+    refill_fixture=int(re.search(r'CUSTOM4=(\d+)',entry['whd_args'])[1])==0x80000
     at=lambda name:base+symbol(lines,name)
     previous={};backgrounds={};descriptors={};rows=[];hits=misses=0
     for i,frame in enumerate(meta['frames']):
@@ -67,14 +68,29 @@ def check(path):
         original=before.read(destination,40000);native=after.read(destination,40000)
         checked_frame(before.read(target,40032),original)
         cached=(root/frame['shadow']['cache']).read_bytes()
-        hit=retain(previous,program,selected,cached)
+        refilled=refill_fixture and program in previous
+        if refilled:
+            old_pointer,old_bytes=previous[program]
+            if old_pointer!=selected or old_header[slot]!=selected:
+                raise ValueError('Refill replaced its owned allocation')
+            poisoned=bytearray(old_bytes);poisoned[16]^=255
+            if before.read(selected,5240)!=poisoned:
+                raise ValueError('Missing pre-refill poisoned cache evidence')
+            if before.read(at('overlay_shadow_valid')+slot*4,4)!=bytes(4):
+                raise ValueError('Refill entry was still valid')
+            fixture=struct.unpack('>3I',before.read(at('ovlife_refill_result'),12))
+            if fixture[0]!=1 or fixture[1+slot]!=selected:
+                raise ValueError('Private invalidation fixture identity differs')
+            previous[program]=(selected,bytes(cached));hit=False
+        else:
+            hit=retain(previous,program,selected,cached)
         current_descriptor=tuple(packing['cases'][i]['descriptor'])
         if hit:
             if old_header[slot]!=selected or before.read(selected,5240)!=cached:
                 raise ValueError('Hit does not reuse the pre-draw cache')
             hits+=1
         else:
-            if old_header[slot]!=0:raise ValueError('Miss already had a cache')
+            if not refilled and old_header[slot]!=0:raise ValueError('Miss already had a cache')
             if cached!=(root/frame['pack']['file']).read_bytes():raise ValueError('Seed differs from native pack')
             descriptors[program]=current_descriptor;backgrounds[program]=original;misses+=1
         if (native_hits,native_misses)!=(hits,misses):raise ValueError('Native cache counters differ')
@@ -109,10 +125,11 @@ def check(path):
                     offset=p*8000+(top+y)*40+left+x
                     difference|=backgrounds[program][offset]^original[offset]
                 changed_covered+=(difference&coverage[y*width+x]).bit_count()
-        rows.append(dict(program=program,hit=hit,checked_frame_bytes=40000,context=context,
+        rows.append(dict(program=program,hit=hit,refilled=refilled,checked_frame_bytes=40000,context=context,
                          changed_background_covered_pixels=changed_covered,
                          changed_background_bytes=sum(a!=b for a,b in zip(backgrounds[program],original))))
-    if (hits,misses)!=(2,2):raise ValueError('Need a seed and later hit for both programs')
+    expected=(0,4) if refill_fixture else (2,2)
+    if (hits,misses)!=expected:raise ValueError('Need both seeds and expected hits/refills')
     return dict(sha256=packing['sha256'],hits=hits,misses=misses,cases=rows,
                 scope='Four-call native CPU shadow cache on actual backgrounds. Original renderer always runs. No hardware cache hits, complete invalidation key, speed gain or W6 acceptance claim.')
 

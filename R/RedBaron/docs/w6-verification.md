@@ -5313,3 +5313,42 @@ and developer W5 remains
 No release behavior, sound behavior or performance claim changes. Native cache
 key integration, lifecycle failure/reuse tests, skipped-draw state equivalence,
 full gameplay independence and actual smooth 50 FPS remain unfinished.
+
+
+## Private cache refill after invalidation
+
+VERIFY bit 14 with CUSTOM4=524288 runs a private fixture before the third
+overlay diagnostic call. After programs three and four have seeded their
+caches, it poisons the first packed image byte in each private allocation and
+invalidates both entries. It does not alter game resources or force a clock.
+The following calls must refill the same allocations rather than reuse the
+poisoned images. Original drawing still runs on every call.
+
+Fresh `w6-overlay-refill-a500` and `w6-overlay-refill-030` captures use
+CUSTOM2=32703 and scheduled Right/Fire input. Both record four fills and zero
+hits. The checker verifies the complete poisoned pre-refill allocation,
+cleared validity, retained allocation identity and complete rebuilt native
+pack. All four calls per machine pass full framebuffer, h3 post-state,
+caller-return, mask, pack and private shadow prerequisites. Cleanup clears
+all pointers and validity flags. The lifetime report separates the one
+injected invalidation from **zero actual resource operations** on each CPU.
+Older ordinary captures also pass the expanded checker with two fills and
+two hits each.
+
+VERIFY SHA256 is
+`afb84a18a23193f70ea2667c2d28caddbcef75ca1ac0bf73115c8dd5a6a2dc62`
+(text 257324). Both machines pass 32 native invalidation CCR cases, existing
+426/512/638/133 timing/input/presentation cases, terrain/cache/list 2/1/2 and
+56 timing/pacing hook checks. Static audits pass 75 ranges / 132 destinations;
+all 334 host tests pass. Both owned emulators were quit. Rebuilt normal and
+developer binaries retain the W5 hashes recorded above.
+
+Reproduce the fixture with the existing boot/capture workflow, selecting
+CUSTOM4=524288, then run `overlay_lifetime_check.py` on its
+`overlay-capture.json`. The retained capture directories include frozen
+binaries, listings, snapshots and reports.
+
+This closes the existing-allocation refill check only. Actual resource
+free/reload, same-address reuse, failure paths, full native cache keys and
+skipped-draw equivalence remain open. It supplies no performance result and
+does not establish frame-rate-independent gameplay or smooth 50 FPS.

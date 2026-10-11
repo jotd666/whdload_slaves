@@ -1,5 +1,12 @@
 # Red Baron performance measurements
 
+The private overlay invalidation/refill fixture now passes on A500 and 68030:
+both poisoned cache entries are rebuilt in their existing allocations, with
+complete pixel/state checks and cleanup. These are synthetic private
+invalidations, not actual resource free/reload coverage. Normal/developer builds
+remain byte-identical to W5. See “Private cache refill after invalidation” in
+`w6-verification.md`; no speed or W6 acceptance claim follows from this test.
+
 VERIFY bit 14 now installs seven resource-lifetime invalidation hooks for the
 private overlay cache. Both A500 and 68030 pass 32 native condition-code cases
 and four complete overlay twins each; normal/developer binaries remain W5.

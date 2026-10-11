@@ -16,6 +16,8 @@ def check(path):
     entry=json.loads((root/'entry.json').read_text());lines=(root/'slave.lst').read_text(encoding='latin-1').splitlines()
     base=entry['entry']['game_anchor']-symbol(lines,'tape_game_anchor');sim=entry['entry']['sim']
     at=lambda n:base+symbol(lines,n);rows=[]
+    try:fixture_at=at('ovlife_refill_result')
+    except ValueError:fixture_at=None
     for frame in m['frames']:
         for phase in ('before','after'):
             ram=Snapshot(root,frame[phase]['banks']);read=ram.read
@@ -31,7 +33,10 @@ def check(path):
             if cases!=32:raise ValueError('Missing lifetime native CCR cases')
             flags=[int.from_bytes(read(at('overlay_shadow_valid')+i*4,4),'big') for i in range(2)]
             if any(v not in (0,1) for v in flags):raise ValueError('Invalid cache validity flag')
-            rows.append(dict(frame=frame['index'],phase=phase,operations=count,ccr_cases=cases,valid=flags))
+            injected=int.from_bytes(read(fixture_at,4),'big') if fixture_at is not None else 0
+            if injected not in (0,1) or count<injected:raise ValueError('Invalid lifetime fixture accounting')
+            rows.append(dict(frame=frame['index'],phase=phase,operations=count-injected,
+                             private_invalidations=injected,invalidations=count,ccr_cases=cases,valid=flags))
     return dict(sha256=entry['slave_sha256'],rows=rows,
                 scope='Seven installed lifetime hooks/continuations, native 32-CCR invalidation cases and existing private pixel/state twins. Not all lifecycle paths exercised, complete cache keys, skipped native drawing or a performance result.')
 

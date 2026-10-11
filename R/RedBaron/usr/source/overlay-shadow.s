@@ -3,6 +3,7 @@
 ; calls, replay onto private pre-draw pixels, and compare the full native output.
 overlay_shadow_before:
 	movem.l d0-a6,-(sp)
+	bsr ovlife_refill_probe
 	lea overlay_mask_result(pc),a0
 	tst.l (a0)
 	beq .done

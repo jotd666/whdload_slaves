@@ -5,6 +5,7 @@
 ; Forced-dt fixtures require the timestamped W6 input owner to remain disabled.
 ; CUSTOM4=$40000 fixes both native dt words to 225 during the setup prelude
 ; only, then stops when W6 owns flight. Requires W6 plus deferred installation.
+; CUSTOM4=$80000 selects private overlay invalidation/refill; no dt force.
 ; CUSTOM4=$20000 instead selects Pause in the W6 modal IRQ fixture; no dt force.
 ; a1 is h3; preserve every input register. No additional sim-code hook.
 time_probe_step:
@@ -31,6 +32,8 @@ time_probe_step:
 .custom4_base
 	adda.l #perf_custom4-.custom4_base,a0
 	move.l (a0),d0
+	beq .done
+	cmp.l #$80000,d0
 	beq .done
 	cmp.l #$40000,d0
 	beq .done
