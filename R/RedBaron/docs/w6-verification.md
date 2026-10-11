@@ -2749,3 +2749,39 @@ The cleaned build has 250,710 text bytes and SHA-256
 `b85e2e4224fe32c99503ede9b07711eaa8c619b94cb081670e62b6e70ed35491`;
 its 66-range and 123-destination static audits pass. Native captures above
 precede this cleanup.
+
+
+## Shape-list scale globals in equal-tick replay
+
+The four differing bytes at `h3:04278..0427b` are the selected shape-list's
+scale parameters. Native `sim:3994e` searches 12-byte records using the table
+at `h3:04262` and count at `h3:0426a`. On a successful lookup it saves the
+selected record pointer to `h3:0a278` at `sim:3997c`, then copies record words
+6 and 8 to the two scale globals at `sim:39982` and `sim:3998a`.
+
+The caller `sim:3a902` invokes lookup at `sim:3a91c`, saves the returned shape
+pointer and tests it. Only successful lookup proceeds to `sim:3a34c` at
+`sim:3a92e`. That helper reads the scale globals at `sim:3a350`, `sim:3a362`,
+`sim:3a38a` and `sim:3a396`: 256 preserves the current value, -1 assigns the
+second parameter, and the other branch multiplies, shifts and clamps. The
+original executable's h3 relocation records identify exactly these six direct
+scale operands (two writes, four reads). The selected-record pointer also has
+two direct reads in `sim:399b0`, so its separate consumers cannot be assumed
+irrelevant merely because this draw path initializes it.
+
+`shape_selection.py` validates the selected pointer's alignment and membership
+in the live table, requires a nonempty shape list, and checks both cached words
+against that exact record. All **120 boundaries** of `w6-replay-normal-030`,
+`w6-replay-slow-030-v2` and `w6-replay-none-030` pass. The rendered runs select
+record indices 1 and 6, with scale words 256/256 and 255/90 respectively; the
+no-render run retains record 6 throughout. Thus these observed four-byte
+differences follow the last selected drawing resource rather than a differing
+simulation integration result.
+
+This identifies the source of the observed values, not a proof that every
+indirect consumer is harmless. Raw differences remain in `world_comparison.py`;
+no mask or normalization was added. In particular, the selected-record pointer's
+other consumer and pointer aliases require their own dependency audit before
+excluding this state from a whole-gameplay verdict. Reproduce with
+`shape_selection.py CAPTURE --out REPORT`. Four host checks cover exact metadata,
+stale scale, misaligned/out-of-table pointers and empty selected records.
