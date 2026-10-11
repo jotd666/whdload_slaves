@@ -49,7 +49,7 @@ Conclusions. Each one drives a phase below.
 1. **The clock is wrong on the A500.** The sound code programs the shared CIA-B latch to
    12×716, so Normal runs at 8.3 steps/s and game time is 17% slow. A clock independent of the
    timer fixes this. P1 measurements show that correcting the clock alone does not
-   lift A500 FAST to 10 FPS; that rendering target belongs to P2.
+   lift A500 FAST to 10 FPS; that rendering target is deferred by user decision.
 2. **The native loop never renders faster than the simulation.** It waits at `$7118` for a new
    step, so 20 FPS is the ceiling on every fast machine in A2500.
 3. **Rendering stops at about 18 FPS on 040/25 and 060/50**, even with 50 Hz physics and a 2×
@@ -152,7 +152,8 @@ independent field clock and input queue for Normal/A2500, without VERIFY, SIM_RU
 A4000 physics or fixtures. CUSTOM3=1 skips all five timing hooks and clock installation.
 The beam maximum-line detector selects a 50/60-field phase denominator. A4000 remains
 an opt-in SIM_RUNTIME build. **P1 acceptance passes.** At the user's direction, the
-A500 FAST 9.5-10 FPS requirement is assigned to P2.
+A500 FAST 9.5-10 FPS requirement was moved to P2 and subsequently deferred
+to close P2; it is not an outstanding acceptance gate.
 
 Production slave: 11,286 bytes, SHA-256
 `938f7b22b65fb2c56a15906e78724978da0e1f2d043620a30c593380334009e5`.
@@ -230,11 +231,11 @@ compatibility gates pass. P1 test emulators are closed.
 
 ## P2. Blitter latency work (helps every machine, required ceiling for 68000)
 
-Status: incomplete; validated changes are committed, but the A500 FAST FPS gate
-remains unmet. The A500 FAST requirement moved here from P1 with user approval:
-raise the matched 10-second A-fast result from 7.59657 to about 9.5-10 FPS while
-preserving Normal 10 Hz and a race-clock ratio of 1.00 within +/-0.5%. This is an
-unmet rendering target, not a gain delivered by the timing correction.
+Status: complete (11 October 2026). The user approved deferring the unachieved
+A500 FAST 9.5-10 FPS target and closing P2 with the validated changes below.
+The matched A-fast result is 7.69653 FPS; Normal/A2500 timing remains correct.
+The deferred target is not a P2 acceptance gate and is not assigned to a later
+phase by this decision. P3 has not started.
 
 Current measurements (11 October 2026): the fresh A/250-field FULL profile
 attributes 7.142% to explicit blitter polls and 11.9% to the main interrupt
@@ -264,7 +265,7 @@ are not identical, so this is scoped output equivalence, not a whole-renderer
 twin (`p2-priority-pixels-path`). CUSTOM2=0/CUSTOM3=1 preserves all 21 original
 ranges (`p2-priority-disabled/A-fast`); hook audit passes 1,250 relocations
 and 10,102 branch candidates. No new game hook is introduced by P2.1.
-The FAST target remains unmet; the remaining evaluations are recorded below.
+The FAST target is deferred; the remaining evaluations are recorded below.
 
 P2.2 evaluated: removing only the extra wait in `perf_blit_on` regresses
 A-fast 7.79648 -> 7.69653, B 9.59761 -> 9.39766 and D 18.39541 -> 17.89553
@@ -346,9 +347,9 @@ is 9.99952 steps/s (clock 0.999952); B is 19.98171 (clock 0.999085), without
 queue overflow. Longer-window FPS is not compared with the table above because
 the moving scene changes. Evidence: `p2-final-timing`; aggregate current report
 `tmp/prof/p2-current-results.json`. Retained changes: `29079b3` and `4d2a4e0`.
-The A500 FAST 9.5-10 FPS requirement is not achieved. P2 is not complete, and
-P3 has not started. A scope decision is pending on broader A500 rendering work
-versus deferring that requirement. Rejected candidates are absent from source;
+P2 acceptance passes with the user-approved deferral of the unachieved A500
+FAST 9.5-10 FPS target. P2 is complete; P3 has not started.
+Rejected candidates are absent from source;
 large rejected-run snapshots are losslessly compressed with verified hashes.
 
 Profile cell A first: a fresh 250-field FULL trace with CUSTOM2=1. Then attack these in order
@@ -382,7 +383,8 @@ and keep only what measures ≥2% on some machine. Gate each one per CPU (playbo
      cannot affect game speed.
 
 Acceptance: an A and B matrix row per change, the pixel twin for every drawing change
-(existing `PIXELS=1` route), and `check_disabled.py`. Expected total is +5–15% on A and B.
+(existing `PIXELS=1` route), and `check_disabled.py`. The original +5–15% estimate was not an acceptance gate;
+actual gains are recorded above. The user deferred the A500 FAST 9.5-10 FPS target.
 Commit each item separately.
 
 ## P3. Fast-RAM CPU rasterizer for 020+ with real fast RAM (the step that breaks 18 FPS)
