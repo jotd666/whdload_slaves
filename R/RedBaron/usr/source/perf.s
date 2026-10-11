@@ -1,8 +1,8 @@
 ; Performance patch framework. Only sim v1 calls this module's installer.
 ; No feature is release-enabled until its model, twin and measurements pass.
 PERF_VERIFIED_MASK = $31fff ; W1-W5, B1/B2 and C3; face loop gates itself to 68000
-PERF_DEVELOPER_MASK = $73fff
-PERF_VERIFY_MASK = $77fff ; developer W6 plus VERIFY-only quiescent overlay probe bit 14
+PERF_DEVELOPER_MASK = $33fff
+PERF_VERIFY_MASK = $37fff ; developer W6 plus VERIFY-only quiescent overlay probe bit 14
 
 perf_read_options:
 	movem.l d0-a6,-(sp)
@@ -43,14 +43,6 @@ perf_read_options:
 	beq .timing_dependencies_done
 	ori.l #$0300,d0
 .timing_dependencies_done
-	btst #1,perf_attnflags+3(pc)
-	bne .overlay_cpu_ready
-	bclr #18,d0
-.overlay_cpu_ready
-	btst #18,d0
-	beq .overlay_dependencies_done
-	bset #14,d0 ; shared lifetime hooks
-.overlay_dependencies_done
 	lea perf_mask(pc),a0
 	move.l d0,(a0)
 	movem.l (sp)+,d0-a6
@@ -126,14 +118,6 @@ perf_apply_v1:
 	beq.b .no_time
 	bsr time_loop_install
 .no_time
-	btst #2,perf_mask+1(pc)
-	beq .no_overlay_cache
-	lea .overlay_cache_base(pc),a0
-.overlay_cache_base
-	adda.l #overlay_solid_install-.overlay_cache_base,a0
-	jsr (a0)
-	bra .overlays_done
-.no_overlay_cache
 	IFD VERIFY
 	btst #6,perf_mask+2(pc)
 	beq.b .no_overlay_probe
@@ -143,7 +127,6 @@ perf_apply_v1:
 	jsr (a0)
 .no_overlay_probe
 	ENDC
-.overlays_done
 	rts
 
 ; Check a non-relocated hook range before installing it.

@@ -134,7 +134,6 @@ ovlife_bitmap_all_bytes: dc.w $227c,$0000,$9c2c
 ovlife_invalidate:
 ovlife_save_ccr: dc.w $40e7
 	move.l a0,-(sp)
-	bsr overlay_cache_invalidate
 	IFD VERIFY
 	lea overlay_shadow_valid(pc),a0
 	clr.l (a0)+
