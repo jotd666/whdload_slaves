@@ -5352,3 +5352,54 @@ This closes the existing-allocation refill check only. Actual resource
 free/reload, same-address reuse, failure paths, full native cache keys and
 skipped-draw equivalence remain open. It supplies no performance result and
 does not establish frame-rate-independent gameplay or smooth 50 FPS.
+
+
+## Global loader relocation inventory
+
+`global_relocations.py` inventories the entire 48,396-byte h3 allocation in
+the retained controlled 50/25-MHz runs, including its initial snapshot and
+40 equal-world-tick boundaries. It checks the original sim SHA, frozen slave
+SHA, fixed-clock prelude ownership, matched tick sequence, complete live
+segment chain and stable per-run segment layout. Its original HUNK_DATA
+payload is 17,488 bytes; the allocation tail remains in the raw comparison.
+No assumption that the tail is zero is used to classify any difference.
+
+Of **541** original h3 RELOC32 entries, **539** retain exactly their original
+addend plus their declared target segment base at every checkpoint on both
+CPUs. Only these explicitly declared entries receive relocation-identity
+labels. This explains **623 raw differing bytes at every checkpoint**.
+The entries at `h3:4262` and `h3:4266` fail that unchanged-value condition and
+remain residuals throughout the report, including any checkpoint where they
+happen to match. Unregistered dynamic pointers receive no numeric-address
+heuristic or inferred binding.
+
+| Observation | Raw differing bytes | Labelled relocation bytes | Residual bytes |
+| --- | ---: | ---: | ---: |
+| Initial state | 834 | 623 | 211 |
+| Final retained boundary | 939 | 623 | 316 |
+| Range across all 41 checkpoints | 833–2,496 | 623 | 210–1,873 |
+
+The residual union contains **2,938 byte offsets**. This includes previously
+investigated presentation/timer state and remaining unknowns; it is not a count
+of proven gameplay defects. The report retains every raw changed range as well
+as separate residual ranges. Original relocation identity at checkpoints does
+not prove that an entry was never written between checkpoints or identify all
+indirect consumers. No global-state exclusion mask or complete-gameplay verdict
+is introduced.
+
+Reproduce with:
+
+```sh
+python3 R/RedBaron/tools/global_relocations.py \
+  tmp/dev/tmp/game/RedBaron_v2.1/RedBaron/data/sim \
+  tmp/dev/tmp/prof/w6-prelude-50mhz-030 \
+  tmp/dev/tmp/prof/w6-prelude-25mhz-030 \
+  --out tmp/dev/tmp/prof/w6-prelude-50mhz-030/global-relocations.json
+```
+
+Three regression tests ensure that numerically similar undeclared fields stay
+raw, an intervening changed relocation disqualifies the binding for the whole
+sequence, and truncated/overlapping/invalid inputs fail. The host suite passes
+337 tests. No slave, emulator configuration or performance measurement changes.
+Complete state/event equivalence, sustained default-capacity coverage and smooth
+50 FPS remain release gates.

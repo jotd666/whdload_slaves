@@ -1,5 +1,12 @@
 # Red Baron performance measurements
 
+The controlled 50/25-MHz state comparison now binds 539 unchanged h3 loader
+relocations across all 41 checkpoints, explaining 623 raw differing bytes per
+checkpoint. Mutable fields remain unfiltered: 210–1,873 residual bytes at a
+checkpoint, with 2,938 distinct residual offsets over the window. See “Global
+loader relocation inventory” in `w6-verification.md`. This is state-audit
+progress, not gameplay-independence acceptance or a performance result.
+
 The private overlay invalidation/refill fixture now passes on A500 and 68030:
 both poisoned cache entries are rebuilt in their existing allocations, with
 complete pixel/state checks and cleanup. These are synthetic private
