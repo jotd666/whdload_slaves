@@ -292,7 +292,14 @@ Implemented: common runtime with VERIFY-only fixtures/logs, developer bit 13, CP
 5. Add bit 13 to the developer mask, and to the verified mask only after D5
    passes.
 
-**D5. Acceptance runs**, the only full matrix in this phase.
+**D5. Acceptance runs — postponed by the user (2026-10-11).**
+
+Proceed to phase E without repeating or completing the remaining D5 checks.
+Preserve the results and open checks below. This changes the execution order,
+not acceptance: W6 remains outside the normal verified mask until D5 resumes
+and passes. E measurements use the developer candidate with W6 selected.
+
+D5 is the only full matrix in this phase.
 
 In progress: all six candidate rate cases are in the scoreboard. A500/060
 throttle taps and pause/rebase pass, as does the 060 soak. A500 Time Scale 40

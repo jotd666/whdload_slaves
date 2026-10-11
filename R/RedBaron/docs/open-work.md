@@ -29,7 +29,7 @@ self-tests and logs remain VERIFY-only. Developer bit 13 selects it on 68000 and
 020+ and forces tear-free publication plus a one-field cap. Modal return retains
 the CPU-selected quantum. The discarded exponent helper remains VERIFY-only.
 All three builds, 439 host tests, 79 hook ranges and both patch-reach audits pass.
-D5 acceptance is in progress. The scoreboard records all six candidate rate
+D5 acceptance is postponed by the user (2026-10-11); phase E is next. The scoreboard records all six candidate rate
 windows: 020–060 pass at Time Scale 40; A500 passes at 0 but drops time at 40.
 A500 and 060 throttle taps and native pause/rebase pass. The user completed
 short tap/hold/release tests on both: 060 handling was good; A500 input was
