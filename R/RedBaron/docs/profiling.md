@@ -1,5 +1,11 @@
 # Red Baron performance measurements
 
+The remaining lookup-context pointer resolves to the exact native 32-byte
+identity table at all 41 controlled checkpoints. A complete-range replay
+trace sees assignments, but no reads, of the remaining stack-scratch pointer
+in its 45 world calls. A native read path exists and remains uncovered. See
+“Lookup context and stack-scratch references” in `w6-verification.md`.
+
 A full-range trace search finds no compact-pool/count reference candidates in
 87 complete world updates and 93 service polls across retained steady and
 Right/Fire replay windows. This supports isolation in those measured paths;

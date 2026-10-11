@@ -6298,3 +6298,61 @@ Two added regression tests cover complete extent/boundary inclusion and
 invalid or overlapping extents. The full suite passes 385 tests. Further
 consumer/state coverage, sustained simulation speed and 50-FPS acceptance
 remain open. This is retained-trace evidence, not a new runtime benchmark.
+
+
+## Lookup context and stack-scratch references
+
+`lookup_context.py` resolves `h3:8d86` through the native initializer at
+`sim:57e8–580b`: exactly 32 identity bytes are written to `h3:48fc`, then
+that address is assigned to the context pointer. Original and live code
+contracts are checked. At all 41 retained 50/25-MHz checkpoints, the pointer
+has this exact owner and the complete 32-byte table equals the native
+initializer. Interior/other owners and changed or truncated table data fail.
+The frozen controlled build is
+`9c92ff9979e40ec98adc1f73255f8e57b4f65b2f2d6d5d6e13793aad7f414415`.
+
+The other residual pointer, `h3:7668`, receives `a5-780` at `sim:1e3ba`,
+after the routine at `sim:1e3a6` reserves an 856-byte frame. It therefore
+names local stack scratch, not a heap-owned persistent object. The native
+read at `sim:1e4b2` is also checked as an original/live contract. Both capture
+sequences retain different, individually constant scratch addresses. The
+report keeps these raw differences and does not normalize stack addresses,
+dereference expired frames or assert scratch contents are equivalent.
+
+A complete-range census of `h3:7668–766b`, `h3:8d86–8d89` and
+`h3:48fc–491b` in the retained Right/Fire A500 trace (VERIFY
+`ac1d47ba01210c496a98db199b79fa2c30b0f3b59c570a0bec8906dfa7a116f7`)
+covers 45 complete world calls / 1,329,354 instructions. Its 3,015 candidates
+are exactly:
+
+| Native instruction | Operation | Observations |
+| --- | --- | ---: |
+| `sim:57f2` | Form lookup-table address | 1,440 |
+| `sim:57fc` | Store one identity-table byte | 1,440 |
+| `sim:5802` | Assign lookup-context pointer | 45 |
+| `sim:1e3ba` | Assign local scratch pointer | 90 |
+
+The same extents have zero candidates in 48 complete service polls /
+175,615 instructions. No scratch-pointer read occurs in those measured
+calls; specifically, the known `sim:1e4b2` read branch is not covered.
+This distinguishes observed context assignments from persistent-state
+consumption but is not a complete lifetime/consumer proof. The standard
+snapshot-code, IRQ/DMA, branch and CPU limitations of the census still apply.
+
+```sh
+python3 R/RedBaron/tools/lookup_context.py \
+  tmp/dev/tmp/game/RedBaron_v2.1/RedBaron/data/sim \
+  tmp/dev/tmp/prof/w6-prelude-50mhz-030 \
+  tmp/dev/tmp/prof/w6-prelude-25mhz-030 \
+  --out tmp/dev/tmp/prof/w6-prelude-50mhz-030/lookup-context.json
+python3 R/RedBaron/tools/cache_reference_trace.py \
+  tmp/dev/tmp/prof/w6-cache-replay-a500 \
+  --h3-range 7668:766c --h3-range 8d86:8d8a --h3-range 48fc:491c \
+  --routine world \
+  --out tmp/dev/tmp/prof/w6-cache-replay-a500/context-world-references.json
+```
+
+Repeat with `--routine services` and a separate output for the service census.
+Three added regression tests cover exact owner relocation, incorrect owners,
+changed final bytes and truncated data. The full suite passes 388 tests.
+No runtime change or nominal-speed acceptance follows from these results.
