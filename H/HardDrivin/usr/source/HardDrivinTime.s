@@ -11,6 +11,9 @@ TIME_FIELDS_PER_STEP equ 8
 TIME_FIELD_Q16 equ $2000
 
 _time_install:
+	IFD VERIFY_PRESENTATION_MATH
+	bsr _presentation_math_test
+	ENDC
 	IFD VERIFY_TRAFFIC_MATH
 	bsr _traffic_math_test
 	ENDC
@@ -48,6 +51,9 @@ _time_install:
 	ENDC
 	IFD VERIFY_TIME_TRAFFIC
 	bsr _traffic_install
+	ENDC
+	IFD VERIFY_TIME_PRESENTATION
+	bsr _presentation_install
 	ENDC
 	ENDC
 .restore:
@@ -354,4 +360,8 @@ _time_q16_results: dcb.l 7*9*7*2,0
 
 	IFD VERIFY_TIME_TRAFFIC
 	INCLUDE "HardDrivinTraffic.s"
+	ENDC
+
+	IFD VERIFY_TIME_PRESENTATION
+	INCLUDE "HardDrivinPresentation.s"
 	ENDC

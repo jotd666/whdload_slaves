@@ -618,3 +618,35 @@ held-input handling, traffic collision/transition acceptance, replay/Phantom and
 presentation timelines, performance and cross-machine acceptance, and the
 required human laps. The BCD clock defect versus lap-time acceptance conflict
 remains unresolved; the implementation currently preserves the native clocks.
+
+## Overlay and recovery timing (development gate)
+
+`VERIFY_TIME_PRESENTATION` requires TIME_SCALARS and CUSTOM1. Overlay starts of
+40/60 native steps initialize an elapsed-field countdown, including same-value
+restarts. Rendering publishes the ceiling of remaining fields/8 and saturates at
+zero. Recovery initializes only once even when fractional updates leave its
+native phase byte at zero. Height falls from 256 by four units per field, then
+holds ground during fields 64..71; expiry occurs once at 72 fields. Recovery's
+per-pass motion resets deliberately do not reset this separate timing state.
+
+`HDPRES01` identifies two overlay words (remaining fields, last published count)
+and two recovery words (age fields, active). Phantom crash expiry uses the same
+overlay-start helper when the motion gate is compiled, avoiding overlapping
+patches. Start helpers preserve X; the overlay update reproduces native SUBQ's
+cleared X before loading the mode byte.
+
+Evidence: `s4-presentation-long` and `s4-presentation-reference` match all 144
+sampled player states through crash replay and recovery. Recovery flag/phase,
+overlay count/mode and replay-request bytes also match at every sample; phases
+0..8 are represented. This is the constant-input fixture, not the full driving
+tape. `s4-presentation-math` executes the actual helpers on private state:
+271 recovery transitions and 1125 overlay updates pass, covering T=0 through
+T=1, initialization once, expiry once and the ground-height hold.
+`s4-presentation-off` passes all disabled ranges. The normal build remains
+byte-identical and the direct-branch audit passes 67 declared ranges.
+
+These hooks still consume diagnostic constant intervals. The eventual dispatcher
+must supply the correct elapsed interval to overlays drawn once per outer frame,
+independently of bounded simulation substeps. Live fractional recovery/contact
+transitions, replay duration, other presentation loops and real elapsed-time
+integration remain unvalidated. Step 4 is still in progress.

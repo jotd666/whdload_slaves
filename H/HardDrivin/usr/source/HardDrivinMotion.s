@@ -383,7 +383,11 @@ _motion_crash_phantom:
 	tst.b d0
 	beq.s .done
 	st -$5229(a4)
+	IFD VERIFY_TIME_PRESENTATION
+	bsr _presentation_overlay60
+	ELSE
 	move.b #60,-$50ce(a4)
+	ENDC
 	move.b #5,-$16d2(a4)
 .done:
 	move.l (a7)+,d0
