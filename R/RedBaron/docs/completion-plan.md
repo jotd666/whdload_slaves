@@ -124,7 +124,8 @@ fills, `15e96` instrument scripts at 14.5 ms, `19ba6` at 8.7 ms, overlay
 (`tmp/dev/tools/w1_primary.py` and siblings).
 - Machine: A1200 or A4000 AGA, 2 MB chip, 16 MB fast, KS 3.1.
 - Timing runs: the cycle-exact `68040-NOMMU` / `68060-NOMMU` CPU types. The
-  MMU cores ignore frequency (Hard Drivin `PERFORMANCE_PLAN.md`).
+  MMU cores ignore frequency (AmigaXDev `docs/playbooks/new-game-playbook-jotd.md`
+  §8, found in Hard Drivin').
 - Functional runs: a separate configuration with the MMU on.
 - Add a 030/50 configuration *without* the `MMU` tooltype, so the out-of-box
   case is measured too.
