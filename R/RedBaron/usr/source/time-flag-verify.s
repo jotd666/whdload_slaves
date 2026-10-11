@@ -1,7 +1,9 @@
 ; VERIFY bit 13, sim v1; called inside time_model_install register envelope.
 time_model_flag_install:
 	movem.l d0-a6,-(sp)
+	IFD VERIFY
 	bsr time_model_flag_selftest
+	ENDC
 	lea .checks(pc),a3
 	moveq #1,d7
 .check
@@ -58,6 +60,7 @@ time_model_flag_record:
 ; VERIFY-only private native visibility-scratch tests.
 ; Exhaust every old byte for both operations, preserving X/N/V/C while
 ; deriving Z from the original bit. Private storage only, no game fixture.
+	IFD VERIFY
 time_model_flag_selftest:
 	movem.l d0-a6,-(sp)
 	lea time_present_active(pc),a4
@@ -125,3 +128,4 @@ time_model_flag_selftest:
 	rts
 time_model_flag_data: dcb.b 40,0
 time_model_flag_result: dc.l 0
+	ENDC

@@ -1,4 +1,4 @@
-; VERIFY W6 render phase at completed-world loop re-entry. No new sim hooks.
+; W6 render phase at completed-world loop re-entry. No new sim hooks.
 ; Cockpit and native pose-copy attached views lease camera/world poses together.
 ; Orbit/free-camera modes retain native poses until their separate clocks are covered.
 time_render_frame:
@@ -6,6 +6,7 @@ time_render_frame:
 	lea time_render_started(pc),a0
 	tst.w (a0)
 	beq time_render_done
+	IFD VERIFY
 	; CUSTOM5 bit 30: omit complete renders (pair with deferred installation).
 	; This changes presentation only; the gate still funds/drains real CIA time.
 	lea .fixture_base(pc),a0
@@ -13,6 +14,7 @@ time_render_frame:
 	adda.l #perf_custom5-.fixture_base,a0
 	btst #6,(a0)
 	bne time_render_done
+	ENDC
 	move.l time_pose_loop(pc),a0
 	tst.w TIME_LOOP_DUE(a0)
 	bne time_pose_bad
@@ -135,12 +137,16 @@ time_render_frame:
 	dbf d0,.apply_pose
 	adda.w #TIME_POSE_STRIDE,a2
 	dbf d7,.apply
+	IFD VERIFY
 	lea time_render_counts(pc),a0
 	addq.l #1,(a0)
+	ENDC
 	bra .draw
 .native
+	IFD VERIFY
 	lea time_render_counts(pc),a0
 	addq.l #1,4(a0)
+	ENDC
 .draw
 	move.l time_pose_h3(pc),a3
 	move.w #1,-(sp)
@@ -192,8 +198,10 @@ time_render_after_draw:
 	bge .count
 	clr.w $7856(a3)
 .count
+	IFD VERIFY
 	move.l time_pose_loop(pc),a0
 	addq.l #1,TIME_LOOP_DRAWS(a0)
+	ENDC
 time_render_restored:
 	nop
 time_render_done:
@@ -202,7 +210,9 @@ time_render_done:
 
 time_render_started: dc.w 0
 time_render_active: dc.w 0
+	IFD VERIFY
 time_render_counts: dc.l 0,0 ; leased/native-pose draws
+	ENDC
 
 time_render_camera_active: dc.w 0
 time_render_camera_saved: dcb.b 18,0

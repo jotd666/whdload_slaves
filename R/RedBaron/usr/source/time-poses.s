@@ -1,4 +1,4 @@
-; Consecutive completed-world pose snapshots. VERIFY bit 13 / sim v1 only.
+; Consecutive completed-world pose snapshots, bit 13 / sim v1 only.
 ; PERF_RANGE sim:0fe1e 6 bit=13
 ; PERF_RANGE sim:0fed2 6 bit=13
 TIME_POSE_CAPACITY = 500
@@ -83,7 +83,9 @@ time_pose_invalidate:
 	tst.w (a0)
 	bne time_pose_bad
 	lea time_pose_header(pc),a2
+	IFD VERIFY
 	addq.l #1,28(a2)
+	ENDC
 	moveq #1,d2
 	lea time_pose_buffers(pc),a1
 .buffer
@@ -125,9 +127,11 @@ time_pose_capture:
 	clr.l (a1)
 	lea time_render_started(pc),a1
 	clr.l (a1)
+	IFD VERIFY
 	lea time_render_counts(pc),a1
 	clr.l (a1)+
 	clr.l (a1)
+	ENDC
 .continuing
 	move.l time_pose_h3(pc),a3
 	move.l a3,a0
@@ -206,7 +210,9 @@ time_pose_capture:
 	dbf d0,.pose
 	dbf d7,.object
 .done
+	IFD VERIFY
 	addq.l #1,32(a4)
+	ENDC
 	; Build presentation candidates only when a draw is actually due.
 time_pose_captured:
 	nop

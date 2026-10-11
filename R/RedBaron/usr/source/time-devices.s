@@ -11,9 +11,11 @@ TIME_DEVICE_CODE = $200
 
 time_devices_install:
 	movem.l d0-a6,-(sp)
+	IFD VERIFY
 	move.l perf_custom5(pc),d0
 	lea time_devices_options(pc),a0
 	move.l d0,(a0)
+	ENDC
 	lea .checks(pc),a3
 	moveq #7,d7
 .check
@@ -112,22 +114,28 @@ time_devices_sample:
 	andi.b #$c0,d0
 	move.b d0,6(a0)
 	clr.b 7(a0)
+	IFD VERIFY
 	bsr time_devices_fixture
+	ENDC
 	rts
 
 time_devices_seed:
 	movem.l d0-a2,-(sp)
+	IFD VERIFY
 	move.l time_loop_cia(pc),a1
 	lea time_devices_epoch(pc),a0
 	move.l (a1),(a0)
+	ENDC
 	lea time_devices_last(pc),a0
 	bsr time_devices_sample
 	lea time_devices_live(pc),a1
 	move.l (a0)+,(a1)+
 	move.l (a0),(a1)
+	IFD VERIFY
 	lea time_devices_count(pc),a0
 	clr.l (a0)
 	clr.l 4(a0)
+	ENDC
 	movem.l (sp)+,d0-a2
 	rts
 
@@ -168,6 +176,7 @@ time_devices_capture:
 	move.l 2(a0),8(a2)
 	clr.l 12(a2)
 	move.b 6(a0),12(a2)
+	IFD VERIFY
 	; Independent acquisition log: wall CIA, paused total, ownership, raw packet.
 	lea time_devices_count(pc),a4
 	move.l (a4),d0
@@ -183,6 +192,7 @@ time_devices_capture:
 	move.l 4(a0),(a5)
 .publish
 	addq.l #1,(a4)
+	ENDC
 	move.l time_input_observe_state+8(pc),a0
 	move.l a2,a1
 	bsr time_input_push
@@ -198,8 +208,10 @@ time_devices_apply:
 	move.w 6(a1),(a0)
 	move.l 8(a1),2(a0)
 	move.b 12(a1),6(a0)
+	IFD VERIFY
 	lea time_devices_consumed(pc),a0
 	addq.l #1,(a0)
+	ENDC
 	movem.l (sp)+,a0
 	rts
 
@@ -302,6 +314,7 @@ time_devices_right:
 	move.l (sp)+,a0
 	rts
 
+	IFD VERIFY
 ; CUSTOM5 bit 23: producer-packet fixture, no hardware/game-state writes.
 ; Real digital decode/button/flight-reader paths consume this sampled packet.
 time_devices_fixture:
@@ -341,14 +354,19 @@ time_devices_fixture:
 .done
 	rts
 
+	ENDC
 time_devices_mismatch: dc.b "Red Baron: unexpected W6 device hook bytes",0
 	even
+	IFD VERIFY
 time_devices_options: dc.l 0
 time_devices_epoch: dc.l 0
 time_devices_count: dc.l 0
 time_devices_consumed: dc.l 0
+	ENDC
 time_devices_last: dcb.b 8,0
 time_devices_raw: dcb.b 8,0
 time_devices_live: dcb.b 8,0
 time_devices_event: dcb.b 16,0
+	IFD VERIFY
 time_devices_log: dcb.b 20*32,0
+	ENDC

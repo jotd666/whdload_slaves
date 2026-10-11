@@ -1,4 +1,4 @@
-; VERIFY W6 continuous camera service. One original 128-unit camera update per
+; W6 continuous camera service. One original 128-unit camera update per
 ; funded secondary tick. View commands remain exactly once on the world path.
 ; PERF_RANGE sim:21dce 8 bit=13
 ; PERF_RANGE sim:16774 6 bit=13
@@ -41,8 +41,10 @@ time_camera_reset:
 	clr.l (a0)+
 	dbf d0,.clear
 	clr.w (a0)
+	IFD VERIFY
 	lea time_camera_fixture_done(pc),a0
 	clr.w (a0)
+	ENDC
 	movem.l (sp)+,d0/a0
 	rts
 
@@ -88,8 +90,10 @@ time_camera_advance:
 	lea 10(sp),sp
 	lea time_camera_sampling(pc),a0
 	clr.w (a0)
+	IFD VERIFY
 	lea time_camera_calls(pc),a0
 	addq.l #1,(a0)
+	ENDC
 	move.l time_loop_h3(pc),a2
 	move.w $4836(a2),-(sp)
 	move.w #128,$4836(a2)
@@ -107,8 +111,10 @@ time_camera_advance:
 	pea time_camera_controls(pc)
 	jsr (a0)
 	addq.l #4,sp
+	IFD VERIFY
 	lea time_camera_updates(pc),a0
 	addq.l #1,(a0)
+	ENDC
 	; Native follow/orbit callback refreshes the camera pose after its controls.
 	move.l $1a70(a2),d0
 	beq .restore_clock
@@ -181,6 +187,7 @@ time_camera_world_timed:
 	addq.l #4,sp
 	rts
 
+	IFD VERIFY
 ; CUSTOM5 bit 27: select native free camera once, through its original API.
 ; This is a correctness fixture, not a performance or player-input workload.
 time_camera_fixture:
@@ -206,6 +213,7 @@ time_camera_fixture:
 	movem.l (sp)+,d0-a6
 	rts
 
+	ENDC
 ; Sampling returns no command and never changes the world's command FIFO.
 ; time_keys_pop branches here after saving a0 when sampling is active.
 time_camera_no_command:
@@ -220,8 +228,14 @@ time_camera_no_command:
 time_camera_state:
 time_camera_sampling: dc.w 0
 time_camera_world_sampling: dc.w 0
+	IFD VERIFY
 time_camera_calls: dc.l 0
 time_camera_updates: dc.l 0
+	ELSE
+	dcb.l 2,0 ; reserved in the camera packet layout
+	ENDC
 time_camera_controls: dcb.b 8,0
 time_camera_input: dcb.b 14,0
+	IFD VERIFY
 time_camera_fixture_done: dc.w 0
+	ENDC

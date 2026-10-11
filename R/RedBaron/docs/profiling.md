@@ -27,6 +27,8 @@ D2 is implemented in VERIFY, pending D4 promotion and D5 rate acceptance: 450 un
 
 D3 is implemented in VERIFY: the 68000 skips pose capture/blending and their lifecycle hooks, while 020+ keeps interpolation. The native `completion-d3-a500` check spans 19 world-loop intervals with zero pose-capture calls, zero blend calls and five completed native draws; all three modes, 439 host tests and hook/reach audits pass. This is a functional bypass check, not a standalone FPS claim; player measurements remain D5.
 
+D4 runtime promotion is complete, with no new performance claim: normal/developer/VERIFY code sizes are 116,886 / 117,202 / 302,172 bytes. All 439 host tests, 79 hook ranges, and 134 VERIFY / 113 developer patch destinations pass. Developer bit 13 enables timing on 68000/020+, forces bits 8/9 with a one-field cap, and modal resume restores the selected quantum. Player fixtures/logs are excluded; normal verified-mask activation and rate/drop measurements await D5.
+
 040/060 functional checks use separate MMU-core configurations. Their timing
 results will use the frequency-sensitive NOMMU cores. Configuration generation
 passes all six cases and the functional variants. All three builds pass; the

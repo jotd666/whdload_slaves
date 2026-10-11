@@ -1,4 +1,4 @@
-; VERIFY candidate-pose buffer. Does not write game objects or publish frames.
+; Interpolated candidate-pose buffer. Does not write game objects or publish frames.
 ; Same 26-byte record layout as time-poses.s. Valid lifecycle/model pairs blend;
 ; unmatched objects snap to current. Capture phase is observed, never modified.
 time_pose_blend:
@@ -9,11 +9,13 @@ time_pose_blend:
 	adda.l #time_present_fraction-.fraction_base,a6
 	jsr (a6)
 	move.l d0,d5
+	IFD VERIFY
 	lea time_blend_header(pc),a0
 	move.l d0,(a0)
 	move.w time_pose_header(pc),4(a0)
 	clr.l 6(a0)
 	clr.w 10(a0)
+	ENDC
 	lea .output_base(pc),a2
 .output_base
 	adda.l #time_blend_output-.output_base,a2
@@ -75,22 +77,30 @@ time_pose_blend:
 	jsr (a5)
 	move.w d0,(a2)+
 	dbf d4,.angle
+	IFD VERIFY
 	lea time_blend_header(pc),a0
 	addq.w #1,6(a0)
+	ENDC
 	bra .next
 .snap
 	adda.w #TIME_POSE_STRIDE,a2
+	IFD VERIFY
 	lea time_blend_header(pc),a0
 	addq.w #1,8(a0)
+	ENDC
 .next
 	adda.w #TIME_POSE_STRIDE,a3
 	dbf d7,.object
 .done
+	IFD VERIFY
 	lea time_blend_header(pc),a0
 	move.w #1,10(a0)
+	ENDC
 time_pose_blended:
 	nop
 	movem.l (sp)+,d0-a6
 	rts
+	IFD VERIFY
 time_blend_header: dc.l 0
 	dc.w 0,0,0,0 ; count, blended, snapped, ready
+	ENDC

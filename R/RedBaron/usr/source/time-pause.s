@@ -1,4 +1,4 @@
-; W6 native modal-flight boundaries. Included only by VERIFY, installed bit 13.
+; W6 native modal-flight boundaries, CUSTOM2 bit 13.
 ; Preserve pre-existing debt and fractional phases by translating the CIA cursor
 ; by exactly the excluded modal duration. Never reset cursor to current time.
 ; PERF_RANGE sim:21ba2 6 bit=13
@@ -187,7 +187,7 @@ time_pause_apply_end:
 	move.l #1,TIME_LOOP_ACTIVE(a0)
 	bsr time_mouse_resume
 	move.l time_loop_h3(pc),a1
-	move.w #225,$4834(a1)
+	move.w time_loop_quantum(pc),$4834(a1)
 .done
 	movem.l (sp)+,d0/a0-a1
 	rts
@@ -199,6 +199,7 @@ time_pause_apply_end:
 
 ; VERIFY startup check against a private CIA word and private primary-dt word.
 ; Existing game RAM is never modified. Preserve installer state and pointers.
+	IFD VERIFY
 time_pause_selftest:
 	movem.l d0-a6,-(sp)
 	move.l time_loop_cia(pc),-(sp)
@@ -265,7 +266,8 @@ time_pause_selftest:
 	cmpi.l #9,TIME_LOOP_STEPS(a0)
 	bne .bad
 	lea time_pause_test_dt(pc),a1
-	cmpi.w #225,(a1)
+	move.w time_loop_quantum(pc),d0
+	cmp.w (a1),d0
 	bne .bad
 	; A matched zero-duration pause changes neither credit nor cursor.
 	bsr time_pause_apply_begin
@@ -297,3 +299,4 @@ time_pause_test_error: dc.b "Red Baron: W6 pause self-test mismatch",0
 time_pause_test_cia: dc.l 0
 time_pause_test_dt: dc.w 0
 time_pause_test_result: dc.l 0
+	ENDC

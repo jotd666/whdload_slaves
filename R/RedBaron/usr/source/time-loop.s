@@ -1,5 +1,4 @@
-; W6 flight-loop integration checkpoint, VERIFY only / CUSTOM2 bit 13.
-; Not player enabled: service clocks, interpolation and remaining input gates remain.
+; W6 flight-loop runtime, CUSTOM2 bit 13; CPU-selected quantum and bounded debt.
 ; PERF_RANGE sim:21d28 8 bit=13
 ; PERF_RANGE sim:21e7a 6 bit=13
 ; PERF_RANGE sim:03d5e 6 bit=13
@@ -74,21 +73,30 @@ time_loop_install:
 	move.l d0,(a0)
 	bsr time_message_install
 	bsr time_rate_install
+	IFD VERIFY
 	bsr time_pause_selftest
+	ENDC
 	bsr time_pause_install
 	bsr time_devices_install
 	bsr time_mouse_install
+	IFND VERIFY
+	bsr time_input_observe_install
+	ENDC
 	bsr time_keys_install
 	bsr time_camera_install
 	bsr time_auto_install
 	bsr time_compress_install
+	IFD VERIFY
 	bsr time_present_selftest
+	ENDC
 	bsr time_present_state_install
 	bsr time_model_install
+	IFD VERIFY
 	lea .exp_install_base(pc),a6
 .exp_install_base
 	adda.l #time_exp_install-.exp_install_base,a6
 	jsr (a6)
+	ENDC
 	move.l a6,-(sp)
 	lea .pose_install_base(pc),a6
 .pose_install_base
@@ -135,8 +143,10 @@ time_loop_poll:
 time_loop_poll_loop
 	cmp.l TIME_LOOP_CURSOR(a0),d3
 	beq time_loop_poll_done
+	IFD VERIFY
 	lea time_loop_transaction(pc),a1
 	move.w #1,(a1) ; observer: cursor/credit update not yet committed
+	ENDC
 	addq.l #1,TIME_LOOP_CURSOR(a0)
 	bsr time_keys_advance
 	bsr time_rate_advance
@@ -152,11 +162,15 @@ time_loop_poll_loop
 	moveq #8,d1
 time_loop_poll_rate_ready
 	bsr time_core_advance
+	IFD VERIFY
 	add.w d1,TIME_LOOP_SERVICES(a0)
+	ENDC
 	move.w d0,TIME_LOOP_DUE(a0)
 	bsr time_debt_bound
+	IFD VERIFY
 	lea time_loop_transaction(pc),a1
 	clr.w (a1)
+	ENDC
 time_loop_credit_committed:
 	bsr time_camera_advance
 	bsr time_message_advance
@@ -198,13 +212,17 @@ time_loop_gate:
 	bsr time_message_reset
 	bsr time_camera_reset
 	bsr time_auto_reset
+	IFD VERIFY
 	bsr time_compress_reset
+	ENDC
 	lea .pose_reset_base(pc),a1
 .pose_reset_base
 	adda.l #time_pose_header-.pose_reset_base,a1
 	clr.w 12(a1)
 .ready
+	IFD VERIFY
 	bsr time_input_replay_seed
+	ENDC
 	move.w time_loop_quantum(pc),d0
 	cmpi.w #450,d0
 	beq .no_pose_capture
@@ -216,9 +234,15 @@ time_loop_gate:
 	move.l (sp)+,a6
 .no_pose_capture
 	bsr time_keys_start
+	IFD VERIFY
 	bsr time_camera_fixture
+	ENDC
+	IFD VERIFY
 	bsr time_rate_fixture
+	ENDC
+	IFD VERIFY
 	bsr time_message_fixture
+	ENDC
 .wait
 	bsr time_loop_poll
 	lea time_auto_exit(pc),a1
@@ -247,11 +271,15 @@ time_loop_gate:
 	movem.l (sp)+,d0-a6
 	rts
 .world
+	IFD VERIFY
 	lea time_loop_transaction(pc),a1
 	move.w #2,(a1) ; observer: due -> started handoff not yet committed
+	ENDC
 	subq.w #1,TIME_LOOP_DUE(a0)
 	addq.l #1,TIME_LOOP_STEPS(a0)
+	IFD VERIFY
 	clr.w (a1)
+	ENDC
 time_loop_world_committed:
 	move.l time_loop_h3(pc),a1
 	move.w time_loop_quantum(pc),$4834(a1)
@@ -266,13 +294,17 @@ time_loop_world_committed:
 ; original loop still performs world bookkeeping and sound in native order.
 time_loop_draw:
 	movem.l d0-a0,-(sp)
+	IFD VERIFY
 	bsr time_compress_fixture
+	ENDC
 	lea time_loop_state(pc),a0
 	tst.l TIME_LOOP_ACTIVE(a0)
 	beq .original
 	; Always defer. Services run only at completed-world gate re-entry.
 	; This counter now counts deferred legacy draw sites, not sampled debt.
+	IFD VERIFY
 	addq.l #1,TIME_LOOP_SKIPS(a0)
+	ENDC
 	lea .started_base(pc),a0
 .started_base
 	adda.l #time_render_started-.started_base,a0
@@ -327,7 +359,9 @@ time_loop_quantum: dc.w 225
 	ENDC
 time_loop_error: dc.b "Red Baron: W6 invalid clock interval or divisor",0
 	even
+	IFD VERIFY
 	dc.b "RBTLOOP0"
+	ENDC
 time_loop_sim: dc.l 0
 time_loop_h3: dc.l 0
 time_loop_cia: dc.l 0
@@ -338,4 +372,6 @@ time_loop_state: dcb.b 60,0
 ; VERIFY-only observation state. A stopped profiler may land between the
 ; individual instructions that update exact clock accounting. Zero means the
 ; primary ledger is coherent; 1/2 identify the commit breakpoint to settle at.
+	IFD VERIFY
 time_loop_transaction: dc.w 0
+	ENDC

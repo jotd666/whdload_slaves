@@ -1,4 +1,4 @@
-; W6 Time Scale history. VERIFY bit 13, original divisor setter only on sim v1.
+; W6 Time Scale history, bit 13; original divisor setter only on sim v1.
 ; PERF_RANGE sim:03ce4 6 bit=13
 ; Queue header: head.w tail.w overflow.w high-water.w current_F.w last_F.w.
 ; 32 records: active deadline.l F.w reserved.w. Publish on serialized VBlank.
@@ -14,7 +14,9 @@ time_rate_install:
 	addi.l #$4838,d0
 	cmp.l 2(a0),d0
 	bne .bad
+	IFD VERIFY
 	bsr time_rate_selftest
+	ENDC
 	lea .patch(pc),a0
 	jsr resload_Patch(a2)
 	movem.l (sp)+,d0-a6
@@ -58,10 +60,12 @@ time_rate_reset:
 	move.l time_loop_h3(pc),a1
 	move.w $4838(a1),8(a0)
 	move.w $4838(a1),10(a0)
+	IFD VERIFY
 	lea time_rate_count(pc),a0
 	clr.l (a0)
 	lea time_rate_fixture_index(pc),a0
 	clr.w (a0)
+	ENDC
 	movem.l (sp)+,d0/a0-a1
 	rts
 
@@ -88,6 +92,7 @@ time_rate_publish:
 	sub.l TIME_LOOP_PAUSE_BASE(a3),d0
 .stamp
 	addq.l #1,d0
+	IFD VERIFY
 	lea time_rate_count(pc),a4
 	move.l (a4),d2
 	cmpi.l #32,d2
@@ -104,6 +109,7 @@ time_rate_publish:
 	move.l TIME_LOOP_ACTIVE(a3),(a5)
 .enqueue
 	addq.l #1,(a4)
+	ENDC
 	bsr time_rate_push
 	bra .done
 .bad
@@ -190,6 +196,7 @@ time_rate_advance:
 	move.l _resload(pc),a2
 	jmp resload_Abort(a2)
 
+	IFD VERIFY
 ; CUSTOM5 bit 25: call the original main-task divisor API at three wall times.
 ; No physics/clock phase/consumer writes. This is not a Preferences UI fixture.
 time_rate_fixture:
@@ -280,12 +287,17 @@ time_rate_selftest:
 	move.l _resload(pc),a2
 	jmp resload_Abort(a2)
 
+	ENDC
 time_rate_error: dc.b "Red Baron: W6 rate history bytes, value or queue fault",0
 	even
 time_rate_pending: dc.w 0
+	IFD VERIFY
 time_rate_fixture_index: dc.w 0
 time_rate_count: dc.l 0
 time_rate_test_result: dc.l 0
+	ENDC
 time_rate_queue: dcb.b TIME_RATE_BYTES,0
+	IFD VERIFY
 time_rate_test_queue: dcb.b TIME_RATE_BYTES,0
 time_rate_log: dcb.b 24*32,0
+	ENDC

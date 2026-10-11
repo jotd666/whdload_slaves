@@ -78,6 +78,7 @@ time_input_pop:
 	IFD VERIFY
 ; Native FIFO test: full queue, no eviction, eligibility before/at deadline,
 ; 32-bit CIA wrap, 16-bit sequence wrap, exact four-long payload preservation.
+	IFD VERIFY
 time_input_selftest:
 	movem.l d0-a6,-(sp)
 	lea .base(pc),a3
@@ -164,4 +165,5 @@ time_input_test_error: dc.b "Red Baron: W6 input FIFO self-test mismatch",0
 	even
 time_input_test_result: dc.l 0
 time_input_test_event: dcb.l 4,0
+	ENDC
 	ENDC

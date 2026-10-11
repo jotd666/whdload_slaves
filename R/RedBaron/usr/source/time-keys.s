@@ -1,5 +1,4 @@
-; W6 timestamped keyboard consumption. VERIFY integration, CUSTOM2 bit 13.
-; PERF_RANGE sim:308b6 6 bit=13
+; W6 timestamped keyboard consumption, CUSTOM2 bit 13.
 ; PERF_RANGE sim:309c0 6 bit=13
 ; PERF_RANGE sim:309cc 10 bit=13
 ; Physical bitmap/FIFO remain native for UI; flight uses a private tick snapshot.
@@ -53,7 +52,11 @@ time_keys_start:
 	bne .done
 	move.w time_keys_installed(pc),d0
 	beq .done
+	IFD VERIFY
 	move.l tape_game_steps(pc),d0
+	ELSE
+	move.l time_loop_state+TIME_LOOP_ACTIVE(pc),d0
+	ENDC
 	beq .done
 	move.l time_input_observe_state+8(pc),d0
 	beq .done
@@ -76,9 +79,11 @@ time_keys_seed_irq:
 	clr.l 4(a0)
 	lea time_keys_commands(pc),a0
 	clr.l (a0)
+	IFD VERIFY
 	lea time_keys_consumed(pc),a0
 	clr.l (a0)
 	clr.l 4(a0)
+	ENDC
 	bsr time_devices_seed
 	bsr time_mouse_seed
 	lea time_keys_ready(pc),a0
@@ -109,8 +114,10 @@ time_keys_advance:
 	beq .mouse
 	cmpi.w #TIME_DEVICE_CODE,4(a1)
 	beq .device
+	IFD VERIFY
 	lea time_keys_consumed(pc),a2
 	addq.l #1,(a2)
+	ENDC
 	move.w 4(a1),d0
 	move.w d0,d3
 	andi.w #$7f,d0
@@ -196,8 +203,10 @@ time_keys_pop:
 	move.w 4(a0,d2.w),d0
 	addq.w #1,d1
 	move.w d1,2(a0)
+	IFD VERIFY
 	lea time_keys_popped(pc),a0
 	addq.l #1,(a0)
+	ENDC
 .empty
 	movem.l (sp)+,d1-d2
 	move.l time_loop_sim(pc),a0
@@ -224,8 +233,10 @@ time_keys_native_count: dc.l 0
 time_keys_native_pop: dc.l 0
 time_keys_installed: dc.w 0
 time_keys_ready: dc.w 0
+	IFD VERIFY
 time_keys_consumed: dc.l 0
 time_keys_popped: dc.l 0
+	ENDC
 time_keys_event: dcb.b 16,0
 time_keys_bitmap: dcb.b 128,0
 time_keys_commands: dcb.b 4+512,0

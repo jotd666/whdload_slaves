@@ -96,6 +96,7 @@ time_present_fraction:
 	rts
 
 ; Actual CPU results checked against the generated independent rational oracle.
+	IFD VERIFY
 time_present_selftest:
 	movem.l d0-a6,-(sp)
 	lea time_present_result(pc),a4
@@ -149,3 +150,4 @@ time_present_selftest:
 time_present_error: dc.b "Red Baron: W6 interpolation arithmetic mismatch",0
 	even
 time_present_result: dc.l 0,0
+	ENDC

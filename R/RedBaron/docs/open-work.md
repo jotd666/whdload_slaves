@@ -24,8 +24,13 @@ Checkpoint C is complete on all six normal-build configurations; current rates a
 D1 is complete: `game-time-plan.md` now uses the approved rate, command, transition and isolation gates; cross-CPU/full-state convergence is no longer a gate.
 D2 is implemented in VERIFY and passes the two-quantum clock tests and dt=450 straight/banked helper twin. The scoreboard records scope; rate/capacity acceptance remains D5.
 D3 is implemented in VERIFY: the 68000 bypass check passes with drawing retained.
-Next is D4, separating and promoting player timing code; preserve the selected quantum on modal return (the old resume path still writes 225). When promoting W6 in D4, omit its
-old VERIFY exponent optimization from the player path.
+D4 is complete: timing/input/render runtime compiles in all modes, while fixtures,
+self-tests and logs remain VERIFY-only. Developer bit 13 selects it on 68000 and
+020+ and forces tear-free publication plus a one-field cap. Modal return retains
+the CPU-selected quantum. The discarded exponent helper remains VERIFY-only.
+All three builds, 439 host tests, 79 hook ranges and both patch-reach audits pass.
+Next is D5 acceptance, including rate/input/transitions and the user play-test;
+the normal verified mask still excludes bit 13 until acceptance passes.
 Phases D–F remain open; the earlier lists below are historical context, not the execution order.
 
 

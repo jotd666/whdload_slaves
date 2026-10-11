@@ -1,4 +1,4 @@
-; VERIFY W6 automatic mission-menu service. Original eligibility/countdown/menu
+; W6 automatic mission-menu service. Original eligibility/countdown/menu
 ; code stays in sim; a zero command packet prevents replay of manual commands.
 ; PERF_RANGE sim:21b14 8 bit=13
 
@@ -22,9 +22,11 @@ time_auto_reset:
 	move.l a0,-(sp)
 	lea time_auto_sampling(pc),a0
 	clr.l (a0)+ ; sampling / pending native exit result
+	IFD VERIFY
 	clr.l (a0)+ ; service calls
 	clr.l (a0)+ ; native modal returns
 	clr.l (a0) ; fixture stage / returned menus
+	ENDC
 	move.l (sp)+,a0
 	rts
 
@@ -45,6 +47,7 @@ time_auto_dispatch:
 	addi.l #$21bbc,(sp)
 	rts
 .service
+	IFD VERIFY
 	btst #5,perf_custom5(pc) ; CUSTOM5 bit 29: controlled eligibility fixture
 	beq .original
 	movem.l (sp)+,d0/a0
@@ -56,6 +59,8 @@ time_auto_dispatch:
 	move.l time_loop_sim(pc),-(sp)
 	addi.l #$21b46,(sp)
 	rts
+	ENDC
+
 .original
 	movem.l (sp)+,d0/a0
 	movem.l d5-d7/a3,-(sp)
@@ -77,8 +82,12 @@ time_auto_advance:
 	tst.w 2(a0)
 	bne time_auto_done ; pending mission exit: never open another menu
 	move.w #1,(a0)
+	IFD VERIFY
 	addq.l #1,4(a0)
+	ENDC
+	IFD VERIFY
 	bsr time_auto_fixture_prepare
+	ENDC
 	move.l time_loop_h3(pc),a3
 	move.w $4836(a3),-(sp)
 	move.w #128,$4836(a3)
@@ -91,9 +100,11 @@ time_auto_advance:
 	move.w (sp)+,$4836(a3)
 	lea time_auto_sampling(pc),a0
 	clr.w (a0)
+	IFD VERIFY
 	cmp.l time_loop_state+TIME_LOOP_PAUSED(pc),d7
 	beq .result
 	addq.l #1,8(a0)
+	ENDC
 .result
 	cmpi.w #4,d0
 	beq time_auto_observe
@@ -118,15 +129,20 @@ time_auto_error: dc.b "Red Baron: W6 unexpected automatic menu result",0
 	even
 time_auto_sampling: dc.w 0
 time_auto_exit: dc.w 0
+	IFD VERIFY
 time_auto_calls: dc.l 0
 time_auto_modal: dc.l 0
+	ENDC
+	IFD VERIFY
 time_auto_fixture_stage: dc.w 0
 time_auto_fixture_menus: dc.w 0
+	ENDC
 time_auto_input: dcb.b 14,0
 
 ; Fixture uses CPU stores, never debugger writes to cacheable game RAM.
 ; Two real 128-unit decrements must pass through zero before expiry. Repeat
 ; once after cancellation to exercise the native mission-exit result mapping.
+	IFD VERIFY
 time_auto_fixture_prepare:
 	movem.l d0/a0-a1,-(sp)
 	btst #5,perf_custom5(pc)
@@ -144,10 +160,12 @@ time_auto_fixture_prepare:
 	movem.l (sp)+,d0/a0-a1
 	rts
 
+	ENDC
 ; Called by the existing pause wrapper. Ordinary runs call the real menu.
 ; Fixture returns cancel-like 0, then native choice 5 (mission exit), while
 ; still exercising real pause begin/end and original menu-result conversion.
 time_auto_menu_call:
+	IFD VERIFY
 	btst #5,perf_custom5(pc)
 	beq .native
 	movem.l a0,-(sp)
@@ -166,6 +184,7 @@ time_auto_menu_call:
 	rts
 .restore_native
 	move.l (sp)+,a0
+	ENDC
 .native
 	move.l time_loop_sim(pc),-(sp)
 	addi.l #$1f0d2,(sp)

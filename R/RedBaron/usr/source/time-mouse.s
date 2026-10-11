@@ -1,4 +1,4 @@
-; W6 relative mouse acquisition and simulation-owned accumulation, VERIFY only.
+; W6 relative mouse acquisition and simulation-owned accumulation, bit 13.
 ; PERF_RANGE sim:2d35c 14 bit=13
 ; PERF_RANGE sim:1ecd0 16 bit=13
 ; PERF_RANGE sim:1e8ec 16 bit=13
@@ -60,13 +60,19 @@ time_mouse_install:
 	moveq #6,d1
 	lea .camera_done_bytes(pc),a0
 	bsr perf_check_bytes
+	IFD VERIFY
 	btst #0,perf_attnflags+3(pc)
 	beq .flags_ready
 	lea time_mouse_flags_ccr(pc),a0
 	move.w #$42c0,(a0) ; MOVE CCR,D0 is unprivileged on 68010+
 .flags_ready
+	ENDC
+	IFD VERIFY
 	bsr time_mouse_selftest
+	ENDC
+	IFD VERIFY
 	bsr time_mouse_ownership_selftest
+	ENDC
 	lea .patch(pc),a0
 	jsr resload_Patch(a2)
 	movem.l (sp)+,d0-a6
@@ -115,14 +121,18 @@ time_mouse_seed:
 	move.l time_mouse_live(pc),d0
 	lea time_mouse_camera(pc),a1
 	move.l d0,(a1)
+	IFD VERIFY
 	lea time_mouse_count(pc),a0
 	clr.l (a0)+
 	clr.l (a0)+
 	clr.l (a0)
+	ENDC
+	IFD VERIFY
 	lea time_mouse_flags_count(pc),a0
 	clr.w (a0)
 	lea time_mouse_fixture_index(pc),a0
 	clr.w (a0)
+	ENDC
 	bsr time_mouse_resume
 	movem.l (sp)+,d0/a0-a1
 	rts
@@ -153,7 +163,9 @@ time_mouse_capture:
 	clr.w (a0)
 	bra .done
 .sample
+	IFD VERIFY
 	bsr time_mouse_fixture
+	ENDC
 	move.w d1,d0
 	or.w d2,d0
 	beq .done
@@ -170,6 +182,7 @@ time_mouse_capture:
 	adda.l #$2d6d2,a0
 	move.l (a0),10(a2)
 	clr.w 14(a2)
+	IFD VERIFY
 	lea time_mouse_count(pc),a4
 	move.l (a4),d0
 	cmpi.l #64,d0
@@ -183,6 +196,7 @@ time_mouse_capture:
 	move.l 10(a2),(a5)
 .publish
 	addq.l #1,(a4)
+	ENDC
 	move.l time_input_observe_state+8(pc),a0
 	move.l a2,a1
 	bsr time_input_push
@@ -211,8 +225,10 @@ time_mouse_apply:
 	bsr time_mouse_apply_pair
 	lea time_mouse_camera(pc),a0
 	bsr time_mouse_apply_pair
+	IFD VERIFY
 	lea time_mouse_consumed(pc),a0
 	addq.l #1,(a0)
+	ENDC
 	movem.l (sp)+,d0-d2/a0
 	rts
 
@@ -253,30 +269,38 @@ time_mouse_read:
 ; World and camera control resets belong to their simulation/service boundary.
 ; Keep native physical writes for UI compatibility; IRQ producers use raw deltas.
 time_mouse_center:
+	IFD VERIFY
 	bsr time_mouse_flags
+	ENDC
 	movem.l a0-a1,-(sp)
 	lea time_mouse_live(pc),a1
 	bra time_mouse_center_common
 
 time_mouse_camera_center:
+	IFD VERIFY
 	bsr time_mouse_flags
+	ENDC
 	movem.l a0-a1,-(sp)
 	lea time_mouse_camera(pc),a1
 time_mouse_center_common:
 	bsr time_devices_owned
 	beq .physical
 	bsr time_mouse_center_pair
+	IFD VERIFY
 	lea time_mouse_resets(pc),a1
 	move.l (a1),a0
 	addq.l #1,a0 ; address arithmetic retains the original X flag
 	move.l a0,(a1)
+	ENDC
 .physical
 	move.l time_loop_sim(pc),a1
 	adda.l #$2d6be,a1
 	move.w #160,(a1)
 	move.w #100,4(a1)
 	movem.l (sp)+,a0-a1
+	IFD VERIFY
 	bsr time_mouse_flags
+	ENDC
 	rts
 
 ; Each helper preserves the displaced arithmetic's X/N/Z/V/C result.
@@ -338,6 +362,7 @@ time_mouse_center_pair:
 
 ; A private interleaving test uses the actual acquisition and reset primitives.
 ; No hardware, game state, native input queue or clock is modified.
+	IFD VERIFY
 time_mouse_ownership_selftest:
 	movem.l d0-a6,-(sp)
 	lea .ownership_base(pc),a3
@@ -471,19 +496,28 @@ time_mouse_selftest:
 	move.l _resload(pc),a2
 	jmp resload_Abort(a2)
 
+	ENDC
 time_mouse_error: dc.b "Red Baron: W6 mouse bytes or self-test mismatch",0
 	even
 time_mouse_live: dc.w 160,100
 time_mouse_camera: dc.w 160,100
+	IFD VERIFY
 time_mouse_ownership_result: dc.l 0
 time_mouse_count: dc.l 0
 time_mouse_consumed: dc.l 0
 time_mouse_resets: dc.l 0
+	ENDC
+	IFD VERIFY
 time_mouse_fixture_index: dc.w 0
+	ENDC
 time_mouse_skip: dc.w 0
+	IFD VERIFY
 time_mouse_test_result: dc.l 0
 time_mouse_flags_count: dc.w 0
 time_mouse_flags_log: dcb.w 128,0
+	ENDC
 time_mouse_event: dcb.b 16,0
+	IFD VERIFY
 time_mouse_log: dcb.b 16*64,0
 	include "time-mouse-cases.i"
+	ENDC

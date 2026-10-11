@@ -32,7 +32,9 @@ time_message_install:
 	lea time_message_ccr(pc),a0
 	move.w #$42c0,(a0)
 .flags_ready
+	IFD VERIFY
 	bsr time_message_selftest
+	ENDC
 	lea .patch(pc),a0
 	jsr resload_Patch(a2)
 	movem.l (sp)+,d0-a6
@@ -125,7 +127,9 @@ time_message_arm:
 	add.l d0,d1
 	move.l d1,(a2)
 	move.w #1,8(a2)
+	IFD VERIFY
 	bsr time_message_log_event
+	ENDC
 	movem.l (sp)+,d0-d2/a0-a2
 	rts
 
@@ -135,10 +139,12 @@ time_message_reset:
 	clr.l (a0)
 	clr.l 4(a0)
 	clr.w 8(a0)
+	IFD VERIFY
 	lea time_message_count(pc),a0
 	clr.l (a0)
 	lea time_message_fixture_index(pc),a0
 	clr.w (a0)
+	ENDC
 	move.l time_loop_h3(pc),a0
 	move.w $4820(a0),d0
 	ble .done
@@ -198,7 +204,9 @@ time_message_advance:
 	jsr (a0)
 	addq.l #4,sp
 	moveq #3,d2
+	IFD VERIFY
 	bsr time_message_log_event
+	ENDC
 .done
 	movem.l (sp)+,d0-a2
 	rts
@@ -217,7 +225,9 @@ time_message_render:
 	clr.w 8(a2)
 	clr.w $4820(a0)
 	moveq #4,d2
+	IFD VERIFY
 	bsr time_message_log_event
+	ENDC
 	move.l time_loop_h3(pc),a0
 .live
 	tst.w $4820(a0)
@@ -250,6 +260,7 @@ time_message_clear:
 
 ; VERIFY ledger: active cursor.l, deadline.l, kind.w, phase.w, timer.w,
 ; dirty byte widened.w, draw opportunities.l, native message pointer.l.
+	IFD VERIFY
 time_message_log_event:
 	movem.l d0-d1/a0-a2,-(sp)
 	lea time_message_count(pc),a0
@@ -387,13 +398,16 @@ time_message_selftest:
 	pea TDREASON_FAILMSG
 	move.l _resload(pc),a2
 	jmp resload_Abort(a2)
+	ENDC
 time_message_error: dc.b "Red Baron: W6 message bytes or arithmetic mismatch",0
 	even
 time_message_positive: dc.w 15000
 time_message_state: dc.l 0,0
 	dc.w 0
+	IFD VERIFY
 time_message_fixture_index: dc.w 0
 time_message_fixture_epoch: dc.l 0
 time_message_count: dc.l 0
 time_message_test_result: dc.l 0
 	include "time-message-cases.i"
+	ENDC

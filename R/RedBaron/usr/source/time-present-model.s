@@ -33,7 +33,9 @@ time_model_install:
 	bne time_model_bad
 	cmpi.w #$1080,6(a0)
 	bne time_model_bad
+	IFD VERIFY
 	bsr time_model_selftest
+	ENDC
 	bsr time_model_flag_install
 	lea .patch(pc),a0
 	jsr resload_Patch(a2)
@@ -231,6 +233,7 @@ time_model_error: dc.b "Red Baron: W6 model journal check or capacity failure",0
 time_model_count: dc.w 0
 
 ; Exercise repeated and odd-address overlapping stores before game activation.
+	IFD VERIFY
 time_model_selftest:
 	movem.l d0-a6,-(sp)
 	lea time_present_active(pc),a4
@@ -267,3 +270,4 @@ time_model_selftest:
 	rts
 time_model_test_data: dc.l 0
 time_model_test_result: dc.l 0
+	ENDC

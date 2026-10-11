@@ -1,8 +1,8 @@
 ; Performance patch framework. Only sim v1 calls this module's installer.
 ; No feature is release-enabled until its model, twin and measurements pass.
 PERF_VERIFIED_MASK = $31fff ; W1-W5, B1/B2 and C3; face loop gates itself to 68000
-PERF_DEVELOPER_MASK = $31fff
-PERF_VERIFY_MASK = $37fff ; W6 bit 13 and quiescent overlay probe bit 14 are VERIFY-only
+PERF_DEVELOPER_MASK = $33fff
+PERF_VERIFY_MASK = $37fff ; developer W6 plus VERIFY-only quiescent overlay probe bit 14
 
 perf_read_options:
 	movem.l d0-a6,-(sp)
@@ -12,12 +12,6 @@ perf_read_options:
 	move.l perf_custom2(pc),d0
 	IFD VERIFY
 	and.l #PERF_VERIFY_MASK,d0
-	; W6 owns presentation timing and requires the W5 beam-safe publication.
-	; Expand dependencies in the effective mask so each hook keeps one owner.
-	btst #13,d0
-	beq.b .timing_dependencies_done
-	or.l #$0300,d0
-.timing_dependencies_done
 	ELSE
 	IFD DEVELOPER
 	and.l #PERF_DEVELOPER_MASK,d0
@@ -38,6 +32,17 @@ perf_read_options:
 .selected
 	ENDC
 	ENDC
+	; W6 supports the measured 68000 and 020+ classes. Keep 010 unchanged.
+	move.l perf_attnflags(pc),d1
+	andi.l #3,d1
+	cmpi.l #1,d1
+	bne .time_cpu_ready
+	bclr #13,d0
+.time_cpu_ready
+	btst #13,d0
+	beq .timing_dependencies_done
+	ori.l #$0300,d0
+.timing_dependencies_done
 	lea perf_mask(pc),a0
 	move.l d0,(a0)
 	movem.l (sp)+,d0-a6
@@ -109,11 +114,11 @@ perf_apply_v1:
 	bsr pace_install
 	bsr sound_sequence_install
 	bsr sound_driver_install
-	IFD VERIFY
 	btst #5,perf_mask+2(pc)
 	beq.b .no_time
 	bsr time_loop_install
 .no_time
+	IFD VERIFY
 	btst #6,perf_mask+2(pc)
 	beq.b .no_overlay_probe
 	lea .overlay_probe_base(pc),a0

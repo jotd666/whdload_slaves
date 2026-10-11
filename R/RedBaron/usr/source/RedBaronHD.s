@@ -85,6 +85,7 @@ slv_config
 	dc.b "C2:X:Back-face test:5;C2:X:Face setup:6;C2:X:Clear fills:7;"
 	dc.b "C2:X:Tear-free swap:8;C2:X:Frame cap:9;"
 	dc.b "C2:X:Sound queue:10;C2:X:Sound no-op removal:11;C2:X:Sound volume:12;"
+	dc.b "C2:X:Consistent game speed:13;"
 	dc.b "C2:X:Larger game fast-memory pool:16;"
 	dc.b "C2:X:Instruction cache policy:17;"
 	ELSE
@@ -94,6 +95,7 @@ slv_config
 	dc.b "C2:X:Back-face test:5;C2:X:Face setup:6;C2:X:Clear fills:7;"
 	dc.b "C2:X:Tear-free swap:8;C2:X:Frame cap:9;"
 	dc.b "C2:X:Sound queue:10;C2:X:Sound no-op removal:11;C2:X:Sound volume:12;"
+	dc.b "C2:X:Consistent game speed:13;"
 	dc.b "C2:X:Larger game fast-memory pool:16;"
 	dc.b "C2:X:Instruction cache policy:17;"
 	ELSE
@@ -593,8 +595,10 @@ tape_flight_bridge:
 	bra.w tape_flight
 tape_sim_key_bridge:
 	bra.w tape_sim_key
+	ENDC
 	include "time-core.s"
 	include "time-input.s"
+	include "time-input-owner.s"
 	include "time-loop.s"
 	include "time-pause.s"
 	include "time-keys.s"
@@ -608,6 +612,7 @@ tape_sim_key_bridge:
 	include "time-present-core.s"
 	include "time-present-state.s"
 	include "time-present-model.s"
+	IFD VERIFY
 	include "originals.s"
 	include "mirror-verify.s"
 	include "cache-verify.s"
@@ -619,17 +624,19 @@ tape_sim_key_bridge:
 	IFD VERIFY_ALLOC_LOG
 	include "alloc-observe.s"
 	ENDC
+	ENDC
 	include "time-poses.s"
 	include "time-pose-blend.s"
 	include "time-render.s"
+	include "time-terrain-verify.s"
+	include "time-flag-verify.s"
+	IFD VERIFY
 	include "overlay-probe.s"
 	include "overlay-blit.s"
 	include "overlay-mask.s"
 	include "overlay-pack.s"
 	include "overlay-shadow.s"
-	include "time-terrain-verify.s"
 	include "time-shape-verify.s"
-	include "time-flag-verify.s"
 	include "overlay-lifetime.s"
 	IFD VERIFY_OVERLAY_KEY_EXPERIMENT
 	include "overlay-key-verify.s"
@@ -648,20 +655,21 @@ fill_twin_after: dcb.b 20*256*2,0
 	include "dot-cases.i"
 	include "time-core-cases.i"
 	include "time-present-cases.i"
+; Large VERIFY buffers follow code so observer branches retain 68000 reach.
+face_verify_input: dcb.b FACE_CONTEXT_BYTES,0
+face_verify_expected: dcb.b FACE_CONTEXT_BYTES,0
+observe_buffer: dcb.b OBS_STRIDE*OBS_CAPACITY,0
+time_input_test_queue: dcb.b TIME_INPUT_BYTES,0
+time_model_flag_cases: dcb.b 512*4,0
+	IFD VERIFY_ALLOC_LOG
+alloc_observe_buffer: dcb.b ALLOC_LOG_CAPACITY*ALLOC_LOG_STRIDE,0
+	ENDC
+	ENDC
+
 time_present_cache_buffer: dcb.b TIME_PRESENT_CACHE_CAPACITY*TIME_PRESENT_CACHE_STRIDE,0
 time_model_buffer: dcb.b TIME_MODEL_CAPACITY*TIME_MODEL_STRIDE,0
 time_present_list_buffer: dcb.l 501,0 ; 500 entries plus native test guard
 time_pose_current: dcb.b TIME_POSE_CAPACITY*TIME_POSE_STRIDE,0
 time_pose_previous: dcb.b TIME_POSE_CAPACITY*TIME_POSE_STRIDE,0
 time_blend_output: dcb.b TIME_POSE_CAPACITY*TIME_POSE_STRIDE,0
-; Large VERIFY buffers follow code so observer branches retain 68000 reach.
-face_verify_input: dcb.b FACE_CONTEXT_BYTES,0
-face_verify_expected: dcb.b FACE_CONTEXT_BYTES,0
-observe_buffer: dcb.b OBS_STRIDE*OBS_CAPACITY,0
-time_input_test_queue: dcb.b TIME_INPUT_BYTES,0
 time_input_observe_queue: dcb.b TIME_INPUT_BYTES,0
-time_model_flag_cases: dcb.b 512*4,0
-	IFD VERIFY_ALLOC_LOG
-alloc_observe_buffer: dcb.b ALLOC_LOG_CAPACITY*ALLOC_LOG_STRIDE,0
-	ENDC
-	ENDC

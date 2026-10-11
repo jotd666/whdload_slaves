@@ -280,6 +280,8 @@ Implemented in VERIFY: the 68000 native check records zero capture/blend calls w
   per frame), and present the latest world state.
 
 **D4. Promote to the player build.**
+
+Implemented: common runtime with VERIFY-only fixtures/logs, developer bit 13, CPU gate and one-field cap. All three builds, 439 host tests, 79 hook ranges and patch-reach audits pass; verified-mask selection awaits D5.
 1. Split each `time-*.s` into its player code and its VERIFY instrumentation,
    keeping the instrumentation inside `IFD VERIFY`.
 2. Move the includes outside the VERIFY block in `RedBaronHD.s`.

@@ -1,4 +1,4 @@
-; W6 compression timing ownership, VERIFY / CUSTOM2 bit 13, sim v1 only.
+; W6 compression timing ownership, CUSTOM2 bit 13, sim v1 only.
 ; PERF_RANGE sim:00eca 6 bit=13
 ; PERF_RANGE sim:21dae 8 bit=13
 ;
@@ -67,6 +67,7 @@ time_compress_selector:
 	move.w d1,-46(a5)
 	rts
 
+	IFD VERIFY
 ; CUSTOM5 bit 28: isolated funding fixture, not a native eligibility test.
 ; CPU writes are intentional: debugger memory writes may disagree with dirty
 ; 68030 cache lines. No clock/phase/input state is modified by this fixture.
@@ -103,3 +104,4 @@ time_compress_fixture:
 	rts
 time_compress_fixture_live: dc.w 0
 time_compress_fixture_origin: dc.l 0
+	ENDC

@@ -87,24 +87,18 @@ pace_vbl:
 ; No catch-up debt: anchor each deadline to the preceding actual publication.
 pace_flight:
 	movem.l d0-d1/a0,-(sp)
-	IFD VERIFY
 	moveq #PACE_MIN_FIELDS,d0
 	btst #5,perf_mask+2(pc) ; timing bit 13: one PAL field, independent world clock
 	beq.b .minimum_ready
 	moveq #1,d0
 .minimum_ready
-	ENDC
 	lea pace_state(pc),a0
 	tst.w 8(a0)
 	beq.b .first
 .wait
 	move.l (a0),d1
 	sub.l 4(a0),d1
-	IFD VERIFY
 	cmp.l d0,d1
-	ELSE
-	cmp.l #PACE_MIN_FIELDS,d1
-	ENDC
 	blo.b .wait
 .first
 	movem.l (sp)+,d0-d1/a0

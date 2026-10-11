@@ -37,6 +37,7 @@ time_present_list_copy:
 .done
 	rts
 
+	IFD VERIFY
 time_present_list_selftest:
 	movem.l d0-a6,-(sp)
 	lea .source_base(pc),a3
@@ -79,6 +80,7 @@ time_present_list_selftest:
 	rts
 
 time_present_list_result: dc.l 0
+	ENDC
 time_present_list_count: dc.w 0
 
 ; The native terrain early-out at sim:0f038 reuses both cached visibility and
@@ -124,6 +126,7 @@ time_terrain_cache_restore:
 	move.w (a2),(a0)
 	rts
 
+	IFD VERIFY
 time_terrain_cache_selftest:
 	movem.l d0-a6,-(sp)
 	lea time_model_terrain_data(pc),a0
@@ -162,7 +165,9 @@ time_terrain_cache_selftest:
 	movem.l (sp)+,d0-a6
 	rts
 
+	ENDC
 time_terrain_cache_saved: dcb.b 16,0
+	IFD VERIFY
 time_terrain_cache_result: dc.l 0
 
 ; Exercise the installed wrapper bodies with overlapping byte writes, signed
@@ -252,3 +257,4 @@ time_model_terrain_selftest:
 time_model_terrain_result: dc.l 0
 time_model_terrain_data: dcb.b 16,0
 time_model_terrain_frame: dcb.b 128,0
+	ENDC
