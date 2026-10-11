@@ -89,6 +89,17 @@ The final raw inventory still contains 1,229 differing h3 bytes and other segmen
 differences, so full gameplay equivalence remains open. See `w6-verification.md`,
 “Full-bundle equal-tick replay after shape restoration,” for all retained evidence.
 
+## W6 sound-state difference classification
+
+The remaining sound-context word is an interrupt-driven playback elapsed/position
+counter. A new independent instruction-to-bus check validates **1,045 writes**
+after observed resets in the retained A500 capture; **42 leading writes** remain
+explicitly unverified. The three chunks are checked independently across their
+missing boundary fields. W6 leaves this counter on the native sound clock.
+This classifies the observed byte difference without normalizing it away or
+claiming sound-event equivalence. See `w6-verification.md`, “Sound-context
+elapsed-word classification.” No slave or sound behavior changed.
+
 ## W6 current-bundle rendering breakdown
 
 A follow-up on the same synthetic cached-68030 200 MHz configuration separates

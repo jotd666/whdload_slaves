@@ -3238,3 +3238,62 @@ Reproduce using each retained `capture-poses.py --steps 40`, followed by
 capture directories. Run `native_poses.py` on each `poses.json` and
 `shape_selection.py` on each capture. The summary and all raw differences remain
 available beside those reports.
+
+
+## Sound-context elapsed-word classification
+
+The differing shared-allocation byte in the equal-tick replays is the low byte
+of the context word at payload offset 344. Original sim code treats this as an
+elapsed/position counter for sound playback. `sim:33b64` clears it when starting
+a context; `sim:34e9a` increments it only after testing playback state byte 361
+and the pause byte 360. `sim:34eca` clears it on the start path, and `sim:34f44`
+clears it after a nonzero driver result. A second sequencer path increments it
+at `sim:34f96`. The native query at `sim:33dd2` reads it, divides by 3600 then
+60 and halves the final remainder to produce position components. This describes
+its arithmetic; it does not establish a measured interrupt frequency.
+
+`sound_elapsed.py` checks the exact original instruction bytes for these named
+operations, the query, and the separate counter snapshot/restore instructions
+at `sim:35260` and `sim:3581c`. Those latter paths require another dynamic model
+and are rejected if encountered in the audited capture. This is not a complete
+computed-alias or gameplay-consumer proof, so the word remains visible in all
+raw state comparisons.
+
+The independent dynamic check uses already-retained A500 instruction and CPU
+bus-write records from `tmp/dev/tmp/prof/w6-capacity-a500-full/`, build
+`1a0677e18c874809ae0270549b4efbeaae6d778d4d3e210a6f936fafbca7e1b8`.
+It groups operations by the actual context pointer, checks the recorded IRQ
+stack for the audio-service operations, then matches every counter write against
+the separate bus stream. An observed reset establishes zero; later increments
+must equal the preceding word plus one modulo 65536. An operation/write count
+mismatch or a bus write outside the same/next field fails. Unseeded leading
+increments remain retained but unverified. Each chunk starts a fresh model;
+no state is carried over the known missing profile-boundary fields.
+
+| Chunk | Recorded fields | Counter writes | Verified after observed reset | Leading unverified |
+|---|---:|---:|---:|---:|
+| capacity-0 | 100 | 436 | 430 | 6 |
+| capacity-1 | 100 | 501 | 468 | 33 |
+| capacity-2 | 50 | 150 | 147 | 3 |
+| Total observations | 250 | 1087 | 1045 | 42 |
+
+Across these separate chunks, `sim:34e9a` executes 853 increments on the IRQ
+stack, `sim:34f44` executes 220 IRQ resets and `sim:34eca` executes seven IRQ
+start-path resets. Seven main-task resets occur at `sim:33b64`. All 1,045 seeded
+bus values agree with the model. Five distinct contexts occur in the first two
+chunks and two in the final chunk. These counts are observations, not a
+continuous 250-field timing window or an audio-event equivalence result.
+
+This explains why equal simulation ticks may retain different sound-counter
+values when their actual elapsed time and audio-interrupt progress differ. W6
+must not force this counter onto the world clock or restore it after rendering:
+that would alter the explicitly preserved native sound domain. It does not yet
+prove identical event requests, Paula delivery or every consumer, so those sound
+checks remain open. No sound behavior or slave bytes changed in this work.
+
+Retained results are `capacity-0-sound-counter.json`,
+`capacity-1-sound-counter.json` and `capacity-2-sound-counter.json` beside the
+capture. Reproduce with `sound_elapsed.py ORIGINAL_SIM CAPTURE CHUNK --out REPORT`.
+Four new host tests cover reset/increment sequences, explicitly unverified
+leading data, unsigned-word wrap and corrupted/missing/misaligned writes. The
+full host suite passes 245 tests.
