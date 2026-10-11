@@ -5457,3 +5457,62 @@ stale/interior/unaligned pointers, invalid counts, missing terminators, wrong
 allocation extents and truncated data. All **340 host tests pass**. Slave code
 and performance numbers are unchanged. Complete gameplay-state/event comparison,
 sustained default-capacity coverage and smooth 50 FPS remain unfinished.
+
+
+## Current-build A500 capacity window
+
+A fresh `w6-sustained-current-a500` capture uses VERIFY SHA256
+`afb84a18a23193f70ea2667c2d28caddbcef75ca1ac0bf73115c8dd5a6a2dc62`,
+CUSTOM2=16319, CUSTOM4=0 and CUSTOM5=512. There is no forced dt or private overlay
+fixture. The established A500 configuration is 68000, 512 KiB chip RAM, 1.5 MiB
+slow RAM, no fast RAM, real CPU speed with multiplier 2 and cycle-exact CPU,
+memory and blitter. World/aircraft detail is maximum; ground detail remains
+ON IN COMBAT and Time Scale is the archive's 40 (divisor 33). The frozen
+entry metadata retains all configuration and preference hashes.
+
+The census starts at a coherent field boundary after the first restored W6
+draw. Four consecutive windows retain every one of **1,000 PAL fields** and
+**1,184 CIA ticks**, with no unaccounted execution between windows:
+
+| Window | Fields | Completed world updates | Publications | Message / shorten events |
+| --- | ---: | ---: | ---: | ---: |
+| 0 | 250 | 47 | 1 | 0 / 0 |
+| 1 | 250 | 41 | 2 | 0 / 0 |
+| 2 | 250 | 40 | 2 | 0 / 0 |
+| 3 | 250 | 40 | 2 | 0 / 0 |
+
+**168 updates complete against 163.2883502 newly funded**, with 167 started
+and the bounded update-in-progress count changing from one to zero. The
+higher completion count repays pre-existing work; it does not mean the world
+runs faster than the selected Time Scale. Seven frames publish in 20 PAL
+seconds (**0.35 FPS**), separately from **8.4 completed updates per second**.
+All publications occur in the safe beam interval. Across window boundaries as
+well as within them, successive publication spacings are
+130, 129, 119, 122, 122 and 123 fields.
+
+Uncollected CIA debt is 60 → 27, with sampled range 0–64. Total outstanding
+world work, including fractional phase, queued steps and an update in progress,
+falls from **9.3434343 to 4.6317845 updates**, with sampled range
+**0.7490909–9.8950842**. Its change of **-4.7116498** exactly equals funded minus
+completed work. The checker validates 982 committed intervals and explicitly
+retains 18 samples inside type-one cursor/credit transactions. No snapshot is
+silently treated as a coherent ledger during those transactions.
+
+The longest sampled gap without a completed world update is **48 fields
+(0.96 seconds)**. Therefore this result supports finite-window catch-up capacity
+in this scene, but not smooth simulation delivery, acceptable control latency,
+or the entire minimum-CPU gate. There are no cockpit message/shorten events
+inside the measured window; event, banking and dense-scene coverage remains
+required. The initial backlog also prevents interpreting the first window as
+an isolated steady-state throughput comparison. Cross-CPU fresh boots are not
+identical-state performance comparisons.
+
+Native counters 426/512/638/133 and terrain/cache/list 2/1/2 pass. All 56 selected
+and nine disabled timing/performance hook ranges pass the live audit. The
+owned emulator was verified and quit. The retained directory includes the
+frozen slave/listing/configuration, census helper, field logs, endpoint RAM,
+`field-census.json`, `sustained-check.json`, native counters and hook audit.
+Reproduce using `w6_boot_current.py a500 16319 OUTPUT`, then
+`w6_sustained_census.py OUTPUT --windows 4` and
+`sustained_capacity.py OUTPUT/field-census.json --out REPORT` in the established
+harness workflow. No slave behavior is changed by this measurement.

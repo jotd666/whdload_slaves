@@ -1,5 +1,14 @@
 # Red Baron performance measurements
 
+The current A500 default-Time-Scale census completes **168 world updates**
+against **163.288 newly funded** over 1,000 PAL fields, publishing seven frames
+(**0.35 FPS**). Total backlog falls from 9.343 to 4.632 updates; its sampled
+range is 0.749–9.895. The longest gap without a completed update is 48 fields
+(**0.96 seconds**). No message/shorten event occurs inside this window. See
+“Current-build A500 capacity window” in `w6-verification.md`. This demonstrates
+repayment of initial debt in this scene, not universal capacity or smooth
+simulation delivery; event/bank/dense and latency gates remain open.
+
 The complete native shape-bank table and all seven loaded model allocations
 now match raw across 41 controlled 50/25-MHz checkpoints: 216 table bytes and
 85,876 resource bytes containing 174 shapes. Native constructor/list contracts,
