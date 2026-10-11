@@ -86,6 +86,7 @@ slv_config
 	dc.b "C2:X:Tear-free swap:8;C2:X:Frame cap:9;"
 	dc.b "C2:X:Sound queue:10;C2:X:Sound no-op removal:11;C2:X:Sound volume:12;"
 	dc.b "C2:X:Larger game fast-memory pool:16;"
+	dc.b "C2:X:Instruction cache policy:17;"
 	ELSE
 	IFD DEVELOPER
 	dc.b "C2:X:Table mirror:0;C2:X:Cached mirror:1;"
@@ -94,6 +95,7 @@ slv_config
 	dc.b "C2:X:Tear-free swap:8;C2:X:Frame cap:9;"
 	dc.b "C2:X:Sound queue:10;C2:X:Sound no-op removal:11;C2:X:Sound volume:12;"
 	dc.b "C2:X:Larger game fast-memory pool:16;"
+	dc.b "C2:X:Instruction cache policy:17;"
 	ELSE
 	dc.b "C2:B:Faster rendering;"
 	ENDC
@@ -569,6 +571,7 @@ new_DeleteFile:
 	dc.b	0
 
 	even
+	include "cpu-cache.s"
 	include "memory.s"
 	include "perf.s"
 	include "mirror.s"

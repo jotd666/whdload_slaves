@@ -42,6 +42,9 @@
  Faster rendering releases the extra pool for sim v1 on supported CPUs.
  With the option off, the game retains its original allocation budget.
  DMA allocations retain their original ChipMem requests.
+ Faster rendering enables instruction caching on 020+ where needed.
+ It does not enable a disabled data cache. On a 68030 with an MMU, use
+ the MMU tooltype to permit fast-memory data caching; ChipMem stays uncached.
 
  Development rendering improvements:
  - Faster rendering (CUSTOM2=1) selects the verified dashboard cache, geometry,

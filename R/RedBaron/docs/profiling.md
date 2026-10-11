@@ -8,14 +8,14 @@ results below are not combined-bundle results. Each A/B pair uses one slave
 binary with CUSTOM2=0 and CUSTOM2=1. Stage spans are inclusive wall time;
 scene, cockpit and publication are separate stages, not CPU-only costs.
 
-| Configuration | Checkpoint | Stock steady / event FPS | Bundle steady / event FPS | World update ms | Scene / cockpit / publication ms | DASH markers stock / bundle | Clean fields stock / bundle | World time / wall time | Dropped world time | B1 isolated pool FPS, off → on |
-|---|---|---|---|---|---|---|---|---|---| --- |
-| A500, 512K chip + 1.5M slow | A2 | 1.844 / 1.722 | 2.100 / 2.072 | 57.68 → 56.05 | 399.51 / 73.70 / 0.28 → 360.51 / 62.53 / 4.46 | 3 / 3 | 1516 / 1735 | Pending D | Pending D | Minimum-memory flight passes |
-| 020, 2M chip + 8M fast | A2 | 6.008 / 5.666 | 6.259 / 6.215 | 13.79 → 13.98 | 116.77 / 41.40 / 0.08 → 102.22 / 35.54 / 6.74 | 44 / 114 | 1196 / 1077 | Pending D | Pending D | 6.398 → 6.695 (+4.6%) |
-| 030/50, 2M chip + 8M fast, MMU | A2 | 12.974 / 11.881 | 12.893 / 12.855 | 3.33 → 3.10 | 44.19 / 34.08 / 0.08 → 38.53 / 27.87 / 7.92 | 191 / 2 | 1154 / 1905 | Pending D | Pending D | 12.878 → 14.546 (+12.9%) |
-| 030/50, 2M chip + 8M fast, no MMU tooltype | A2 | 12.377 / 11.931 | 12.430 / 12.206 | 3.94 → 3.57 | 48.31 / 31.23 / 0.04 → 42.36 / 31.58 / 4.16 | 58 / 121 | 1262 / 1651 | Pending D | Pending D | Pending |
-| 040/25 NOMMU, AGA, 2M chip + 16M Z3 fast | A2 | 12.476 / 11.507 | 12.430 / 12.280 | 3.34 → 3.21 | 47.56 / 36.26 / 0.06 → 41.26 / 29.89 / 6.48 | 116 / 107 | 1144 / 1699 | Pending D | Pending D | 12.392 → 13.277 (+7.1%) |
-| 060/50 NOMMU, AGA, 2M chip + 16M Z3 fast | A2 | 12.786 / 12.206 | 12.602 / 12.405 | 3.16 → 3.10 | 44.63 / 33.43 / 0.03 → 39.59 / 28.95 / 7.90 | 64 / 165 | 1452 / 1537 | Pending D | Pending D | 12.585 → 13.909 (+10.5%) |
+| Configuration | Checkpoint | Stock steady / event FPS | Bundle steady / event FPS | World update ms | Scene / cockpit / publication ms | DASH markers stock / bundle | Clean fields stock / bundle | World time / wall time | Dropped world time | B1 isolated pool FPS, off → on | B2 raw CACR, before → after | B2 isolated cache FPS, off → on |
+|---|---|---|---|---|---|---|---|---|---| --- |---|---|
+| A500, 512K chip + 1.5M slow | A2 | 1.844 / 1.722 | 2.100 / 2.072 | 57.68 → 56.05 | 399.51 / 73.70 / 0.28 → 360.51 / 62.53 / 4.46 | 3 / 3 | 1516 / 1735 | Pending D | Pending D | Minimum-memory flight passes | N/A (68000) | No cache hardware |
+| 020, 2M chip + 8M fast | A2 | 6.008 / 5.666 | 6.259 / 6.215 | 13.79 → 13.98 | 116.77 / 41.40 / 0.08 → 102.22 / 35.54 / 6.74 | 44 / 114 | 1196 / 1077 | Pending D | Pending D | 6.398 → 6.695 (+4.6%) | 0x0000 → 0x0001 | 6.754 → 7.280 (+7.8%) |
+| 030/50, 2M chip + 8M fast, MMU | A2 | 12.974 / 11.881 | 12.893 / 12.855 | 3.33 → 3.10 | 44.19 / 34.08 / 0.08 → 38.53 / 27.87 / 7.92 | 191 / 2 | 1154 / 1905 | Pending D | Pending D | 12.878 → 14.546 (+12.9%) | 0x2111; unchanged | Already enabled |
+| 030/50, 2M chip + 8M fast, no MMU tooltype | A2 | 12.377 / 11.931 | 12.430 / 12.206 | 3.94 → 3.57 | 48.31 / 31.23 / 0.04 → 42.36 / 31.58 / 4.16 | 58 / 121 | 1262 / 1651 | Pending D | Pending D | Pending | 0x2000 → 0x2011 | 12.889 → 14.537 (+12.8%) |
+| 040/25 NOMMU, AGA, 2M chip + 16M Z3 fast | A2 | 12.476 / 11.507 | 12.430 / 12.280 | 3.34 → 3.21 | 47.56 / 36.26 / 0.06 → 41.26 / 29.89 / 6.48 | 116 / 107 | 1144 / 1699 | Pending D | Pending D | 12.392 → 13.277 (+7.1%) | 0x80008000; unchanged | Already enabled |
+| 060/50 NOMMU, AGA, 2M chip + 16M Z3 fast | A2 | 12.786 / 12.206 | 12.602 / 12.405 | 3.16 → 3.10 | 44.63 / 33.43 / 0.03 → 39.59 / 28.95 / 7.90 | 64 / 165 | 1452 / 1537 | Pending D | Pending D | 12.585 → 13.909 (+10.5%) | 0xa0808000; unchanged | Already enabled |
 
 040/060 functional checks use separate MMU-core configurations. Their timing
 results will use the frequency-sensitive NOMMU cores. Configuration generation
@@ -106,6 +106,33 @@ The private build adds `VERIFY_ALLOC_LOG=1` alongside `VERIFY`; its bounded
 observer restores the Exec vectors at flight step eight. The reader rejects
 active, overflowing and truncated logs. The initial 1,024-entry attempt overflowed
 and was discarded; the completed census uses 8,192 entries.
+
+### B2: instruction-cache policy
+
+The instruction cache was disabled on the 020 and the 030 without the MMU
+option. KickEmu requested noncacheable BaseMem, which disables caches globally
+when WHDLoad cannot apply separate region policies. Bit 17 now reads CACR on
+020+ and, only when IC is off, uses `resload_SetCPU` to enable it. When DC was
+off, it explicitly stays off; when DC was on, the memory policy is retained.
+Already-enabled IC and 68000 configurations require no change. WHDLoad's
+NoCache override is respected.
+
+The scoreboard includes flight-entry CACR on all applicable configurations.
+The 68000 has no CACR. Its full VERIFY build exceeds minimum-memory capacity;
+the normal-build minimum-memory flight remains the applicable player check.
+The existing VERIFY paint observer supplies these readings; its one-time
+cache flush is not part of the uninstrumented FPS comparisons.
+
+Both affected configurations pass a same-developer-build, 2,000-field opening
+pair, changing only bit 17 with the B1 pool and other CPU-specific bits fixed.
+The common binary SHA-256 is
+`f6db162e8b41fff3a752854224c37526b066ef8024b07c53995cd46268825b1e`.
+Clean-frame gains are recorded in the scoreboard; whole-window FPS rises
+6.664 → 7.338 on 020 and 13.404 → 14.377 on 030 without MMU.
+The 030 with MMU and both later CPUs already have IC enabled, so no redundant
+cache-policy change or isolated timing pair is needed there. All three builds,
+431 host tests, the 76-range hook audit and patch-destination reach checks pass.
+The normal bundle now includes bit 17; the six-machine checkpoint B is pending.
 
 ## Earlier measurements
 
