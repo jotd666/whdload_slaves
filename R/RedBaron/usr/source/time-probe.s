@@ -2,7 +2,8 @@
 ; input checkpoint. Zero is observation-only. Secondary dt, menus and original
 ; clock arithmetic remain unchanged. Never use forced runs for FPS claims.
 ; CUSTOM4 bit 16 holds Right throughout a forced-dt physics run.
-; This fixture requires the timestamped W6 input owner to remain disabled.
+; Forced-dt fixtures require the timestamped W6 input owner to remain disabled.
+; CUSTOM4=$20000 instead selects Pause in the W6 modal IRQ fixture; no dt force.
 ; a1 is h3; preserve every input register. No additional sim-code hook.
 time_probe_step:
 	movem.l d0/a0,-(sp)
@@ -28,7 +29,9 @@ time_probe_step:
 .custom4_base
 	adda.l #perf_custom4-.custom4_base,a0
 	move.l (a0),d0
-	beq.b .done
+	beq .done
+	cmp.l #$20000,d0
+	beq.b .modal_fixture
 	cmp.l #$1ffff,d0
 	bhi.b .bad
 	andi.l #$ffff,d0
@@ -42,6 +45,15 @@ time_probe_step:
 	beq.b .force
 	cmp.l #2200,d0
 	beq.b .force
+.modal_fixture
+	cmp.l #$20000,d0
+	bne.b .bad
+	bsr time_input_option_timing
+	beq.b .bad
+	bsr time_input_option_fixture
+	beq.b .bad
+	bsr time_input_option_modal
+	bne.b .done
 .bad
 	lea .mismatch_base(pc),a0
 .mismatch_base
@@ -53,7 +65,7 @@ time_probe_step:
 .force
 	move.w d0,$4834(a1)
 	btst #0,1(a0) ; CUSTOM4 bit 16, big-endian ULONG
-	beq.b .done
+	beq .done
 	move.w time_keys_ready(pc),d0
 	bne.b .bad
 	move.l tape_keybase(pc),a0

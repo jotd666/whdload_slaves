@@ -7,6 +7,13 @@ player-record change occurs inside the panel. This is correctness evidence,
 not a rendering-speed measurement. See `w6-verification.md`, “Current full-bundle
 Preferences clock boundaries,” for raw checkpoints and the remaining modal gates.
 
+The recorded Pause test on A500 excludes 173 CIA ticks while preserving a
+48-tick catch-up backlog and the full player record. The same-build 68030 test
+excludes 218 ticks and preserves three ticks of debt. Both sets of 80 input
+observations pass; this is modal correctness evidence, not proof of sustained simulation
+capacity. See “Recorded native Pause input and clock exclusion” in
+`w6-verification.md` for the fixture startup correction and exact build.
+
 ## W6 current-bundle rendering breakdown
 
 A follow-up on the same synthetic cached-68030 200 MHz configuration separates

@@ -70,6 +70,27 @@ class ModalReplayEvidenceTests(unittest.TestCase):
         args,clocks=self.evidence()
         self.assertEqual(check_capture(*args,clocks=clocks)['commands'],3)
 
+    def test_preflight_press_is_held_only(self):
+        args,clocks=self.evidence()
+        struct.pack_into('>IIII',clocks,0,0,0,0,0)
+        struct.pack_into('>IHHII',args[0],16,1,0x100|0x4e,1,0,0)
+        args[2][1][5]=0
+        for row in args[2][1:]:row[8]-=1
+        args[6]=struct.pack('>HH',2,2);args[7]=struct.pack('>II',8,2)
+        self.assertEqual(check_capture(*args,clocks=clocks)['commands'],2)
+        args[2][1][5]=0x4e
+        with self.assertRaises(ValueError):check_capture(*args,clocks=clocks)
+
+    def test_pause_key_uses_the_same_timestamp_and_ownership_contract(self):
+        args,clocks=self.evidence()
+        for i in (4,5):
+            struct.pack_into('>H',args[1],i*8+4,0x19)
+            encoded=struct.unpack_from('>H',args[0],16+i*16+4)[0]
+            struct.pack_into('>H',args[0],16+i*16+4,(encoded&256)|0x19)
+        args[2][5][5]=0x19
+        self.assertEqual(check_capture(*args,clocks=clocks,modal_key=0x19)['commands'],3)
+        with self.assertRaises(ValueError):check_capture(*args,clocks=clocks)
+
     def test_modal_command_and_retroactive_timestamp_are_rejected(self):
         for mutation in ('menu_command','deadline','escape_not_modal'):
             with self.subTest(mutation=mutation):

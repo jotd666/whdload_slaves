@@ -15,14 +15,15 @@ def modifiers(held):
             | bool(any(held.get(k, 0) for k in (0x66, 0x67))) << 11)
 
 
-def check_capture(queue, fixture, rows, excluded, center_x, right_x, command_queue, counters, clocks=None):
+def check_capture(queue, fixture, rows, excluded, center_x, right_x, command_queue, counters, clocks=None, modal_key=0x59):
+    if modal_key not in (0x59, 0x19) or clocks is None and modal_key != 0x59:
+        raise ValueError('Unsupported modal fixture key')
     sequence = ((0x4e,1),(0x4e,0),(0x40,1),(0x40,0))
     if clocks is not None:
-        sequence += ((0x59,1),(0x59,0),(0x45,1),(0x45,0))
+        sequence += ((modal_key,1),(modal_key,0),(0x45,1),(0x45,0))
         if len(clocks) != 128:
             raise ValueError('Missing modal acquisition clock tuples')
     count = len(sequence)
-    commands = 3 if clocks is not None else 2
     head, tail, overflow, high = struct.unpack_from('>4H', queue)
     if (head, tail, overflow) != (count, count, 0) or not 1 <= high <= count:
         raise ValueError('Missing, extra, unconsumed or overflowed keyboard events')
@@ -40,11 +41,14 @@ def check_capture(queue, fixture, rows, excluded, center_x, right_x, command_que
             deadline = ((start-base if modal else acquired-paused)+1) & 0xffffffff
             encoded |= 0x100 if modal else 0
             if i == 6 and not modal:
-                raise ValueError('Escape was not acquired inside Preferences')
+                raise ValueError('Escape was not acquired inside the modal loop')
         record = struct.unpack_from('>IHHII', queue, 16+i*16)
         if (key, down) != expected or record != (deadline, encoded, down, 0, 0):
             raise ValueError('Acquisition and active-clock event disagree')
         events.append((deadline, key, down, modal))
+    # Preflight acquisitions are held-only, just like modal acquisitions.
+    # Derive command count from the independently recorded ownership tuples.
+    commands = sum(bool(down) and not modal for _, _, down, modal in events)
     pending, held, at, pops = deque(), {}, 0, 0
     saw_right = saw_fire = False
     for row in rows:

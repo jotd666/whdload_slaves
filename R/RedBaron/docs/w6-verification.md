@@ -2837,3 +2837,98 @@ Both owned emulator instances were quit. Native Pause, other modal paths and
 restart/exit acceptance remain open; the next test should use a decoded IRQ
 fixture with recorded acquisition and command consumption, not an unverified
 register injection.
+
+
+## Recorded native Pause input and clock exclusion
+
+The VERIFY-only modal IRQ fixture now accepts **CUSTOM4=131072 ($20000)** to
+select the native P/Pause command instead of F10. It requires W6 and CUSTOM5
+fixture bits 21 and 22, retains the original eight recorded Right/Fire/modal/ESC
+transitions, and never forces primary dt in this mode. Other unsupported CUSTOM4
+combinations still fail. No player/developer feature or additional sim hook is
+introduced. Native pause remains `sim:21ac4..21af2`, wrapped at `sim:21bf6`.
+
+The frozen VERIFY build has 250,766 text bytes and SHA-256
+`514ff999e0874a14f49ba34904a5d0fb396b63697de6bb8af2861b0858c1c528`.
+`w6-pause-irq-030` uses CUSTOM2=16319, CUSTOM4=131072, the recorded modal IRQ
+fixture, maximum detail / Time Scale 40 and the established cached 50 MHz 68030.
+Unlike the preceding rejected register injections, this capture records native
+command 25 at the post-input world boundary and then reaches the actual pause
+wrapper and wait loop. Escape arrives through the native keyboard stores.
+
+The five pause boundaries repeat the Preferences timing result: completed world
+tick 8 before/inside/after the modal loop, then tick 9 on return to flight;
+**222 CIA ticks excluded**, **one tick of old debt preserved**, unchanged clock
+phases and due/service/step/draw/skip counters, and all **280 player bytes** equal
+at entry/exit/resumed caller. `preferences_pause.py` checks this same modal
+contract from the retained raw records and the PC-checked stop log.
+
+All **80** post-input observations pass independent keyboard replay: eight
+transitions are consumed and two commands (Fire and Pause) are popped exactly
+once. The first Right-down occurs before flight owns input, with independently
+recorded ownership tuple active=0, paused=0, start=0, base=0. It establishes held
+Right but cannot become a flight command. Escape-down is modal and also remains
+held-only. The old checker incorrectly assumed exactly three commands whenever
+a modal fixture was selected. It now derives the command count from each
+validated acquisition's ownership; an explicit corruption test rejects replaying
+the preflight press as a command. Both earlier A500/68030 Preferences captures
+still pass with their recorded three-command histories.
+
+The native timing/presentation counters retain 426/512/638/133 and
+terrain/cache/list 2/1/2; all 54 selected timing/pacing destinations pass, and
+the two disabled overlay-probe ranges remain original. Normal/developer binaries
+retain their W5 hashes. This establishes the recorded Pause path and its clock
+boundaries, not host-keyboard acquisition, every modal/restart path, sustained
+simulation capacity or complete frame-rate-independent gameplay.
+
+
+The first A500 run of that same build did not validate Pause. Its retained
+`w6-pause-irq-a500/interrupted-state.log` and acquisition clocks show all three
+key-downs (Right, Fire and Pause) occurred before flight input ownership became
+active. The native game correctly treated them as held-only; Escape later
+arrived in flight and opened a different modal path. The capture was interrupted
+for inspection and then quit. It is not a game pause failure or passing evidence.
+
+The Pause fixture now establishes its acquisition epoch only after timestamped
+input is ready and flight is active. This applies only to CUSTOM4=$20000;
+the existing Preferences fixture keeps its original behavior. The revised build
+has 250,834 text bytes. This corrects a CPU-dependent startup race in the test
+fixture without changing the scheduler or discarding preflight input in the
+checker. The revised collector also requires all first six fixture acquisitions
+to have active-flight ownership and retains the epoch-ready marker.
+
+
+The corrected build is
+`15005c2aa3b8e0c826fabbe7be6f38ce1178e2acc251c21c3f16117bfc559eb3`.
+Its A500 capture `w6-pause-irq-a500-v2` passes all 80 input observations, eight
+recorded acquisitions and three commands. All first six acquisitions occur
+under active flight ownership; Escape-down occurs in the native pause loop.
+At the pause boundaries, completed world tick 10 remains fixed; the next
+completed update is tick 11. Entry/resumed CIA clocks are 10319/10492 and the
+excluded duration is **173 CIA ticks**. The pre-existing **48 CIA ticks of debt**
+remain 48, demonstrating that the pause path preserves a substantial catch-up
+backlog. Fractional phases, due/service and step/draw/skip counts stay unchanged,
+and all 280 player bytes match. Native counters and the 54 selected/two disabled
+hook checks pass. The owned A500 run was quit.
+
+
+The same corrected build also passes `w6-pause-irq-030-v2`: 80 input observations,
+eight acquisitions, three commands, and all first six acquisitions under active
+flight ownership. Its native pause excludes **218 CIA ticks**, preserving **three
+ticks of debt** and the same 280-byte player/clock invariants. Completed world
+tick 10 is unchanged across the panel, then advances to 11. Both CPU runs pass
+the native counters and selected/disabled hook audits; both owned emulators
+were quit. The final static audits cover 66 ranges and 123 patch destinations
+with no errors, and all **232 host tests** pass. Player/developer hashes remain
+unchanged. This closes the tested native Pause input/accounting path, including
+substantial old debt on A500, without claiming the remaining modal/restart,
+full-state, combat, capacity or smooth-50-FPS gates.
+
+To reproduce, boot the full W6 VERIFY mask with CUSTOM4=131072 and CUSTOM5=7340544
+(observer, decoded-input fixture, modal extension and deferred activation).
+Retain the capture's `capture-pause.py` alongside its exact slave/listing; run
+it from the development harness after reaching the first flight checkpoint.
+The helper records the real native Pause path and eight acquisition tuples,
+checks all 80 post-input observations, and verifies the epoch-ready marker.
+Then run `preferences_pause.py` on `preferences-capture.json` for the independent
+modal clock/player comparison. This fixture is not a performance run.

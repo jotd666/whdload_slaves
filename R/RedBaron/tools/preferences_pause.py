@@ -1,4 +1,4 @@
-"""Verify retained native Preferences pause boundaries without normalizing time debt."""
+"""Verify retained native modal pause boundaries without normalizing time debt."""
 import argparse
 import json
 import struct
@@ -59,7 +59,7 @@ def check(rows):
                 player_bytes_preserved=len(entered['player_bytes']),
                 entry_debt=delta(entered['cia'], e['cursor']),
                 resume_debt=delta(resumed['cia'], r['cursor']),
-                limitation='Real Preferences boundary check with fixture inputs; not all modal paths or complete gameplay equivalence.')
+                limitation='Native modal boundary check with fixture inputs; not all modal paths or complete gameplay equivalence.')
 
 
 def audit(path):

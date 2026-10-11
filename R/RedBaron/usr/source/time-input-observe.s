@@ -109,7 +109,8 @@ time_input_observe_state:
 
 
 ; CUSTOM5 bit 21: four decoded keyboard transitions from supervisor VBlank.
-; Bit 22 additionally opens Preferences with F10 and closes it with Escape.
+; Bit 22 opens Preferences with F10 and closes it with Escape.
+; CUSTOM4=$20000 selects Pause (P) instead, retaining the same recorded IRQ path.
 ; Exercise the installed native LEA hook and the unchanged bitmap/FIFO tail.
 ; This does not test the host keyboard mapping or CIA serial handshake.
 time_input_fixture:
@@ -118,6 +119,24 @@ time_input_fixture:
 	movem.l d0-a6,-(sp)
 	move.w sr,-(sp)
 	ori.w #$0700,sr
+	; The Pause fixture begins only after flight owns timestamped input.
+	; A500 VERIFY installation can outlast the old fixed startup deadlines.
+	bsr time_input_option_pause
+	beq .epoch_ready
+	lea time_input_pause_epoch_ready(pc),a3
+	tst.w (a3)
+	bne .epoch_ready
+	move.w time_keys_ready(pc),d0
+	beq .restore
+	lea time_loop_state(pc),a2
+	tst.l TIME_LOOP_ACTIVE(a2)
+	beq .restore
+	move.l time_loop_cia(pc),a0
+	move.l (a0),d0
+	lea time_input_fixture_epoch(pc),a1
+	move.l d0,(a1)
+	move.w #1,(a3)
+.epoch_ready
 	move.l time_input_observe_state(pc),a0
 	move.l a0,d0
 	beq .restore
@@ -160,6 +179,10 @@ time_input_fixture:
 	cmpi.w #4,d3
 	blo .key
 	moveq #$59,d0
+	bsr time_input_option_pause
+	beq .modal_key
+	moveq #$19,d0
+.modal_key
 	cmpi.w #6,d3
 	blo .key
 	moveq #$45,d0
@@ -199,10 +222,20 @@ time_input_fixture:
 	rts
 time_input_fixture_epoch: dc.l 0
 time_input_fixture_index: dc.w 0
+time_input_pause_epoch_ready: dc.w 0
 	even
 time_input_fixture_log: dcb.b 64,0
 time_input_fixture_clocks: dcb.b 128,0
 time_input_modal_deadlines: dc.w 2,20,38,56,74,76,300,302
+
+time_input_option_pause:
+	movem.l a0,-(sp)
+	lea .base(pc),a0
+.base
+	adda.l #perf_custom4+1-.base,a0
+	btst #1,(a0)
+	move.l (sp)+,a0
+	rts
 
 ; Long-range VERIFY option read, preserving registers and all flags except Z.
 time_input_option_observe:
