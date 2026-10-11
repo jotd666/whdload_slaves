@@ -4608,3 +4608,55 @@ record plus these explicit linked payloads. It does not close whole-gameplay
 independence, different CPU architectures, physics-reference convergence,
 combat/AI, sustained capacity or 50 FPS. No slave code changed and no emulator
 was launched for this retained-evidence check.
+
+
+## Registry and complete projectile pool across CPU frequencies
+
+The controlled-prelude 50/25-MHz captures now also pass `world_registry.py` at
+all **41 checkpoints** (initial state plus 40 world boundaries). Registry order
+and **1,463 registered 26-byte prefixes** match. The registered count ranges
+from 25 to 42. All **147 observed lifecycle notifications** match in order after
+applying only the fixed-storage bindings below. These are the notifications
+retained by the pose collector, not proof that every possible lifetime transition
+is instrumented.
+
+The complete projectile pool at `h3:05934` is **50 records of 44 bytes**, including
+inactive slots: 2,200 bytes per checkpoint, **90,200 bytes compared per run**.
+Every byte matches raw across the two runs. There are 31 distinct complete-pool
+states in this window, so the comparison includes changes rather than only an
+empty or constant allocation. It does not certify a hit, near-miss or collision
+outcome; those still require the dedicated combat gates.
+
+The registry's differing addresses are confined to fixed native storage:
+`h3:04860` and exact 44-byte slot starts in that projectile pool. Only those
+addresses are represented by their explicit h3 offsets. All other registry and
+lifecycle addresses must match numerically; no arbitrary h3-looking pointers,
+interior pool pointers or out-of-range slots are normalized. Raw registry
+addresses from both captures remain in the report.
+
+The verifier binds the supported original executable and checks each live
+relocated setup sequence: the fixed object's setup call at `sim:04146`, the
+50-slot/44-byte pool selector at `sim:1291a..1292c`, and the 2,200-byte reset
+argument at `sim:129a0..129aa`. Registry reading still rejects null, odd,
+duplicate or excessive entries. The existing prelude and input verifiers must
+also pass for both frozen builds. The 26-byte record comparison remains exactly
+that scope; aircraft record tails and other linked heap payloads are not silently
+covered by this result.
+
+Three host tests reject unsupported address relocation, changed registry order,
+changed last prefix bytes, reversed lifecycle order and corruption of the final
+byte in the complete pool. All **314 host tests pass**. The retained report is
+`w6-prelude-50mhz-030/world-registry.json`; reproduce with:
+
+```sh
+python3 R/RedBaron/tools/world_registry.py \
+  tmp/dev/tmp/game/RedBaron_v2.1/RedBaron/data/sim \
+  tmp/dev/tmp/prof/w6-prelude-50mhz-030 \
+  tmp/dev/tmp/prof/w6-prelude-25mhz-030 \
+  --out tmp/dev/tmp/prof/w6-prelude-50mhz-030/world-registry.json
+```
+
+No slave change, emulator run or performance claim accompanies this retained
+comparison. The complete player/link check above and this registry/pool result
+are complementary; neither closes full-world state, other CPU architectures,
+physics-reference accuracy, combat outcomes, sustained capacity or smooth 50 FPS.

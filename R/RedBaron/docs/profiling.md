@@ -1,5 +1,13 @@
 # Red Baron performance measurements
 
+The controlled CPU-frequency comparison now also matches registry order, 1,463
+registered object prefixes, 147 observed lifecycle notifications and the entire
+2,200-byte projectile pool at all 41 checkpoints. The pool has 31 distinct
+states during this window. Only explicitly verified fixed-storage addresses
+are relocated; raw addresses remain reported. See “Registry and complete
+projectile pool across CPU frequencies” in `w6-verification.md`. This adds
+correctness evidence, with no new speed or combat-outcome claim.
+
 The controlled 50/25-MHz captures now pass an explicit player-pointer comparison
 at 41 checkpoints. The complete player record and its two complete linked heap
 payloads agree after validating the three native pointer fields; raw address
