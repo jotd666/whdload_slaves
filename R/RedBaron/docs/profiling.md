@@ -93,7 +93,11 @@ great, controls released cleanly, and no problems were reported. This passes
 the short 060 tap/hold/release handling check. Together with the A500 report,
 it supports functional held controls on both machines, but does not establish
 per-catch-up-tick delivery, flight-outcome smoke tests or full D5 acceptance.
-The A500 maximum-detail playability problem remains open.
+The A500 maximum-detail playability problem remains open. The user then
+completed a deliberate 060 crash and confirmed that the crash sequence and
+return to debrief worked correctly, with no reported fault. This passes the
+060 crash smoke test; landing and AI shoot-down checks remain open on both
+machines, as does the A500 crash check.
 
 For a live D5 flight, `python3 R/RedBaron/tools/completion_soak.py <capture>`
 counts 90,000 PAL fields in bounded 10,000-field debugger reads, with no guest

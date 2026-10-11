@@ -296,8 +296,13 @@ Implemented: common runtime with VERIFY-only fixtures/logs, developer bit 13, CP
 
 In progress: all six candidate rate cases are in the scoreboard. A500/060
 throttle taps and pause/rebase pass, as does the 060 soak. A500 Time Scale 40
-misses the rate/capacity targets; remaining controls, transitions, flight
-outcomes and the user handling test are still open. The normal mask is gated.
+misses the rate/capacity targets. The user completed steering/release checks
+on both machines and the 060 crash test; the scoreboard records the positive
+060 result and poor A500 maximum-detail playability. Remaining catch-up input,
+Time Compress/mission-exit transitions, A500 Time Scale 60 and five flight
+outcomes remain open. These are agent-run checks where feasible; further user
+flying is requested only when judgment or controls genuinely require it.
+The normal mask is gated.
 
 *Rate:*
 - A500 steady and squadron, at Time Scale 0 and 40.
