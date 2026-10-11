@@ -5727,3 +5727,60 @@ The 252 elapsed fields / 300 CIA ticks complete 41 updates against 41.373737
 funded and 49 draws (9.72 completed draws/second). This remains a short-window
 observation, not sustained capacity or 50-FPS acceptance. Both owned test
 emulators were verified before quitting.
+
+
+## Native vertex-cache extent and state inventory
+
+`geometry_cache_state.py` identifies the contiguous **5,356-byte** per-shape
+cache at `h3:a4e6–b9d1` in the controlled 50/25-MHz captures. It validates
+original and live instruction contracts for selecting the vertex count,
+clearing tags, cache hits, projection output and near-plane classification.
+Original sim identity, the common frozen slave and equal tick sequence are
+checked through the existing fixed-prelude verifier. This uses the retained
+`9c92ff9979e40ec98adc1f73255f8e57b4f65b2f2d6d5d6e13793aad7f414415`
+build, not the later exponent build.
+
+| Storage | Extent | Native contract |
+| --- | --- | --- |
+| Validity/classification tags | `h3:a4e6`, 256 bytes | `sim:3a8ce` loads the selected count from a byte; `sim:3a8ea–3a900` clears exactly that many tags |
+| Camera-space X/Y/Z | `h3:a5e6`, `h3:a9e2`, `h3:adde`, each 255 longwords | `sim:38dcc–38e00` checks the tag before its cached coordinate loads |
+| Projected X/Y | `h3:b1da`, `h3:b5d6`, each 255 longwords | `sim:38ed2–38ee2` stores projection outputs |
+
+The tag states observed within the current selected count are limited to 0–3.
+Native polygon traversal sets tag 3 for the near-plane rejection path and tag
+2 before projection (`sim:3b512–3b528`). The 256th tag and rows outside the
+selected count are preserved as raw observations; the audit does not assume
+they were cleared or discard their differences. The five array spacings are
+exactly 1,020 bytes. Their contents survive a tag reset.
+
+Across the initial snapshot plus 40 equal-tick boundaries, this cache accounts
+for **2,176 of the 2,938 residual-union byte positions** after the separately
+validated loader relocations. Cache differences range from 0 to 1,437 bytes
+per checkpoint, starting at zero and ending at 85. Current selected counts
+can differ between the CPUs, including 2 versus 4 and 91 versus 0, consistent
+with different last render work. There are **792 differing coordinate rows
+inside at least one side's selected count** across the retained sequence.
+Consequently, these differences cannot all be described as unused storage.
+No exclusion mask or gameplay-equality verdict is introduced.
+
+This narrows the next ownership proof: determine whether every gameplay
+consumer establishes the appropriate shape, resets/validates tags and writes
+each consumed coordinate before using it. Static cache layout, sampled tags
+and different render histories alone do not prove that invariant, especially
+for indirect callers and the alternate transform path. The rest of the global
+and heap comparison, delayed/no-render coverage and gameplay scenarios remain
+open. There is no runtime change or performance claim from this inventory.
+
+Reproduce with:
+
+```sh
+python3 R/RedBaron/tools/geometry_cache_state.py \
+  tmp/dev/tmp/game/RedBaron_v2.1/RedBaron/data/sim \
+  tmp/dev/tmp/prof/w6-prelude-50mhz-030 \
+  tmp/dev/tmp/prof/w6-prelude-25mhz-030 \
+  --out tmp/dev/tmp/prof/w6-prelude-50mhz-030/geometry-cache-state.json
+```
+
+Three regression tests require unknown active tags and truncated reads to fail,
+and retain differences in both invalid and out-of-count rows. The complete
+host suite passes 349 tests. No live emulator or game-memory writes are needed.

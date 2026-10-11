@@ -1,5 +1,12 @@
 # Red Baron performance measurements
 
+The equal-tick global audit now identifies 2,176 of 2,938 residual differing
+byte positions as the native per-shape vertex caches. Active rows also differ;
+these bytes remain in the comparison until gameplay-consumer ownership is
+proven. See “Native vertex-cache extent and state inventory” in
+`w6-verification.md`. This is correctness-investigation progress, with no
+runtime change or performance result.
+
 The VERIFY W6 exponent replacement now passes 20,480 native condition-code
 cases on both A500 and 68030, and 1,148 complete A500 calls against its exact
 register model. Including
