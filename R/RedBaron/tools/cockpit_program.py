@@ -11,6 +11,25 @@ from pathlib import Path
 from render_mutations import Snapshot
 
 
+def signed_byte(value):
+    return value-256 if value & 128 else value
+
+
+def colour_state(read,h3,foreground,background):
+    # Native stores first sign-extend each argument's low byte. Remapping tests
+    # the original argument words against sign-extended table bytes.
+    pen=signed_byte(foreground & 255) & 65535
+    fg=pen;bg=signed_byte(background & 255) & 65535
+    for group in range(2):
+        selector=signed_byte(read(h3+0x3abf+group,1)[0])
+        for item in range(4):
+            original=signed_byte(read(h3+0x3ab7+group*4+item,1)[0]) & 65535
+            mapped=signed_byte(read(h3+0x101d+selector*4+item,1)[0]) & 65535
+            if original==foreground:fg=mapped
+            if original==background:bg=mapped
+    return pen,fg,bg
+
+
 def decode(read, address, max_bytes=16384):
     start=address;commands=[];image_set=None;image=None
     def words(count):
@@ -37,6 +56,8 @@ def decode(read, address, max_bytes=16384):
             args=words(2);kind='bitmap'
             if image_set is None or image is None:raise ValueError('Bitmap depends on incoming resource selection')
         else:raise ValueError(f'Unsupported cockpit command {opcode:04x} at byte {offset}')
+        if kind in ('image_set','image') and args[0]>=32768:
+            raise ValueError('Negative native resource index is outside audited programs')
         record=dict(offset=offset,opcode=f'{opcode:04x}',kind=kind,args=args)
         if kind=='bitmap':record.update(image_set=image_set,image=image,mode=(opcode>>4)&15)
         commands.append(record)

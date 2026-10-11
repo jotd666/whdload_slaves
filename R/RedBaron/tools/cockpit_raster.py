@@ -8,7 +8,7 @@ import hashlib
 import json
 import struct
 from pathlib import Path
-from cockpit_program import decode
+from cockpit_program import decode, colour_state
 from overlay_snapshot import audit as check_snapshots
 from render_mutations import Snapshot
 
@@ -43,15 +43,7 @@ def render(read,h3,index,background):
     for command in program['commands']:
         args=command['args'];kind=command['kind']
         if kind=='colours':
-            fg,bg=args
-            # sim:28a96..28b12 compares the original colour arguments, in order.
-            for group in range(2):
-                selector=uint(h3+0x3abf+group,1)
-                for item in range(4):
-                    original=uint(h3+0x3ab7+group*4+item,1)
-                    mapped=uint(h3+0x101d+selector*4+item,1)
-                    if original==args[0]:fg=mapped
-                    if original==args[1]:bg=mapped
+            _,fg,bg=colour_state(read,h3,*args)
         elif kind=='rectangle':
             if fg!=bg:raise ValueError('Mixed rectangle edge colours unsupported')
             x,y,w,h=args

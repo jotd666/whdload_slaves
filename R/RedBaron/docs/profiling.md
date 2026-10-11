@@ -1,5 +1,11 @@
 # Red Baron performance measurements
 
+The front-overlay host model now reproduces the full h3 post-state for 12
+retained native calls (580,752 bytes), while all 480,000 framebuffer bytes still
+match the raster and mask models. The proposed packed cache remains 9,528 bytes;
+no runtime cache or new speed result is claimed. See “Front-overlay h3 post-state
+model” in `w6-verification.md` for its scope and remaining contracts.
+
 The W6 ground-impact render-scratch leak is fixed in the current VERIFY
 candidate. Fresh rendered/no-render runs match all 280 player bytes at all 15
 world boundaries, including the formerly divergent flag. The native renderer

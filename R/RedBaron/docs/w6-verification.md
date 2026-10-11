@@ -3953,3 +3953,38 @@ Reproduce with `terrain_state.py ORIGINAL_SIM ORDINARY DELAYED NO_RENDER --out R
 The retained result is `w6-ground-residual-inventory/terrain-state.json`.
 Message-layout, other globals, remaining consumers and the broader gameplay,
 CPU-capacity and 50-FPS requirements remain open.
+
+
+## Front-overlay h3 post-state model
+
+`cockpit_poststate.py` independently models the h3 writes of the audited front
+programs 3 and 4. Across `w6-overlay-probe-030`, `w6-overlay-blit-a500` and
+`w6-overlay-blit-030`, all 12 native calls match the complete 48,396-byte h3
+post-state: **580,752 bytes checked**, including unchanged bytes. These are
+retained before/after captures on both physical buffers, not new runtime runs.
+The checker binds the original executable and each frozen slave hash through
+the existing overlay audit. Results are retained as `poststate-check.json`.
+
+The model follows resource selection at `sim:28c66..28c9e`: the selected set
+word at `h3:7c22`, table pointers at `h3:7c24/7c2c`, and selected descriptor at
+`h3:7c28`. Bitmap mode is stored at `h3:7c1c`; the accepted rectangle operation
+restores `h3:9d54` to one. Colour operations retain the unmapped pen at
+`h3:4164` and mapped foreground/background at `h3:9d52/9d50`. The shared colour
+model now follows native sign extension for palette selectors and table bytes,
+including comparison against the original argument words and last-match wins.
+Negative resource indices are rejected rather than silently treated as unsigned;
+they are outside the audited programs. Incoming resource dependencies and
+unsupported bitmap modes also fail closed.
+
+The corrected raster model still matches all **480,000 framebuffer bytes**
+across those same 12 calls, both by direct rendering and by independent image
+plus coverage-mask composition. The packed payload remains **9,528 bytes**.
+Five added host tests cover post-state writes and untouched bytes, signed palette
+semantics, unmapped pen preservation, mapping precedence, and unsupported inputs.
+All 283 host tests pass. This is correctness groundwork only. Registers/CCR,
+hardware state, other memory,
+a complete cache key, live cache twins and performance measurements remain open.
+No runtime cache or slave change is introduced; 50 FPS is not achieved by this
+host model.
+
+Reproduce with `cockpit_poststate.py CAPTURE/overlay-capture.json --out REPORT`.

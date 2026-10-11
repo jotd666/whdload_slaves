@@ -18,6 +18,11 @@ class CockpitProgramTests(unittest.TestCase):
         images=[c for c in r['commands'] if c['kind']=='bitmap']
         self.assertEqual([(c['image_set'],c['image'],c['mode']) for c in images],[(1,2,0),(3,2,3)])
 
+    def test_reject_negative_native_resource_indices(self):
+        for opcode in (0x1051,0x1031):
+            with self.subTest(opcode=opcode),self.assertRaises(ValueError):
+                self.parse(opcode,65535,0x0ff0)
+
     def test_reject_unproven_or_incomplete_programs(self):
         for values in [(0xa502,1,2,0x0ff0),(0xffff,0x0ff0),(0xa104,1,2)]:
             with self.subTest(values=values),self.assertRaises(ValueError):self.parse(*values)
