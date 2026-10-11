@@ -28,6 +28,13 @@ all 15 checkpoints. This history must persist for later drawing; it is not a
 field to undo as simulation state. The raw comparison remains unchanged. See
 “Cockpit rectangle-history ownership” in `w6-verification.md` for scope.
 
+The vertex-cache investigation now accounts for all 3,060 coordinate bytes at
+15 world checkpoints: 218 part resets, 1,482 exact modelled 32-bit misses and
+1,567 hits that all follow a calculation in the same part. The final arrays
+reproduce two more ordinary/delayed global-byte differences. Projected arrays
+and complete consumers remain open; this is correctness evidence, not a speed
+measurement. See “Vertex-cache epoch ownership” in `w6-verification.md`.
+
 The current full W6 VERIFY bundle also passes the cached-68030 Preferences
 clock-boundary check: 222 CIA ticks spent in the native panel are excluded,
 one CIA tick of existing simulation debt is preserved, and no world update or

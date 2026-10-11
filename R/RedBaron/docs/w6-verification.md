@@ -3632,3 +3632,65 @@ full snapshots, the exit checker and hook audit. Reproduce with
 `cockpit_history.py ORIGINAL_SIM CAPTURE --out REPORT`; `rect-check.json` records
 the model and coverage counts. Remaining geometry/global ranges and broader
 physics/combat/camera/capacity/50-FPS requirements are still open.
+
+
+## Vertex-cache epoch ownership
+
+The three coordinate arrays at `h3:0a5e6`, `h3:0a9e2` and `h3:0adde`
+contain 255 longwords each (3,060 bytes total). `sim:3a8b4–3a900`
+selects a model part's source vertex table and clears exactly its vertex-count
+bytes at `h3:0a4e6`. The coordinate arrays themselves are not cleared.
+A nonzero validity byte permits reuse within that part. Therefore a final
+array difference alone does not establish a simulation leak: the next part
+must invalidate its entries before reuse.
+
+`geometry_cache.py` checks the observed sequence of resets, fetches and results,
+binding the original reset and three fetch routines by their code hashes.
+Every hit must match a preceding calculation in the same epoch; indices must
+be below the current part's count. Every observed reset has an all-zero sum of
+its unsigned validity bytes. The 32-bit miss path at `sim:38dcc` uses the
+existing independent original/candidate transform models, plus wrapped longword
+translation. The verifier also checks the scratch copy for all three paths
+and compares all 3,060 coordinate bytes with the accumulated writes at every
+world checkpoint, rejecting any unobserved net mutation. It never filters the
+raw state comparison.
+
+The unchanged `c54a84f7…` full W6 VERIFY build was captured read-only in
+`w6-ground-geometry-030`: cached 50 MHz 68030, maximum detail, Time Scale 40,
+the synthetic ground-contact fixture and deliberately delayed rendering.
+Across all 15 world boundaries, the checks pass:
+
+| Native path | Misses | Hits |
+| --- | ---: | ---: |
+| 32-bit transformed/translated, `sim:38dcc` | 1,482 | 689 |
+| Word result, `sim:3ab1c` | 366 | 165 |
+| Word result with translation, `sim:3abe2` | 1,539 | 713 |
+
+There are 218 reset epochs. All 1,482 32-bit misses match the exact transform
+models and translation. All 1,567 hits match a calculation from their own epoch.
+All 3,060 array bytes match the observed writes at all 15 boundaries. The final
+arrays reproduce the previous delayed run exactly, including its two changed
+bytes versus ordinary rendering, `h3:0aa85` and `h3:0ae81`.
+
+The word-result misses are recorded as provenance for later hits; their
+arithmetic is not independently modelled by this checker. The projected screen
+arrays at `h3:0b1da` and `h3:0b5d6`, clipping and all indirect consumers remain
+outside this result. This is evidence for the observed cache lifetime and
+writes, not a blanket proof that no simulation consumer can read these arrays.
+It does not close the whole-state, physics/combat, camera, capacity or 50-FPS
+gates, and does not justify a performance claim.
+
+Native counters 426/512/638/133 and terrain/cache/list 2/1/2 pass. All 56 selected
+and two disabled hook checks pass before unload. Flight returns 1 after 15
+started updates (last pose 14), preserving the return value and clearing W6
+ownership/input readiness. The owned emulator was identified and quit.
+No slave bytes changed. Six host tests cover stale epochs, corrupt results and
+scratch, missing calls/inputs, index bounds, word copies and unobserved writes;
+the full host suite passes 264 tests.
+
+The capture retains `capture-geometry.py`, `GEO_RESET/FETCH/INPUT/RESULT` logs,
+all RAM checkpoints, the frozen slave/listing, exit checker and hook audit.
+Run `geometry_cache.py ORIGINAL_SIM CAPTURE --out REPORT` to reproduce the
+model check; `geometry-check.json` records counts and `geometry-comparison.json`
+records the final-array comparison. Projected-array producer/consumer tracing
+is the next unresolved part of this geometry-state investigation.
