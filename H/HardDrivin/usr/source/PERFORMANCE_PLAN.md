@@ -241,11 +241,21 @@ Tools stay in ignored `tmp/dev/tools`.
    point, carrying the rounding remainder from frame to frame. Keep the existing BCD
    clocks untouched. Exclude pause, menus and loading so time does not build up there.
 2. **Bound T.**
-   - Start with T_max=1 native step. Native A500 gameplay has gaps up to 15 fields,
-     but always integrates one native step: frame duration does not prove a larger
-     T safe. Above the cap, run bounded substeps without drawing in between. Price
-     their full cost, including the measured 363,640-cycle vehicle collision and
-     scene rebuild, and validate contact before increasing T_max.
+   - Use separate CPU policies. On the 68000, run one elapsed-time-scaled physics
+     update per rendered gameplay frame. Consume the full elapsed interval rather
+     than dropping time or adding intermediate full scene/physics passes. This
+     requires validating T greater than one, widening arithmetic and extending
+     decay/event/replay handling beyond the current eight-field limit. Native A500
+     frame duration alone does not prove those larger integration steps safe.
+   - On 68020 and above, run physics on every gameplay frame and render as fast
+     as possible, allowing 50 FPS gameplay. At one PAL field per frame, T=1/8;
+     the 6.25 Hz native reference is a scaling unit, not an update-rate cap.
+     Start with T_max=1 native step: only when a frame exceeds eight elapsed
+     fields, run bounded substeps without drawing between them. Price their full
+     cost, including vehicle collision and scene rebuild, and validate contact
+     before increasing T_max. Do not wait for a full native step before updating.
+   - The current experimental dispatcher still applies the eight-field cap to
+     every CPU; the separate 68000 path is not implemented or validated yet.
    - Report substep counts and any discarded time in VERIFY. Do not discard time
      silently.
 3. **Scale every integrated quantity by T**, following the table in

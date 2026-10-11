@@ -6,7 +6,7 @@
 ; Nominal reference f0=50/8 native steps per second. Every PAL field therefore
 ; contributes exactly $2000 in Q16.16; conversion has no rounding remainder.
 ; Keep field debt in 32-bit field units, not a saturating Q16.16 total. The
-; eventual integrator drains at most eight fields (T<=1) per substep.
+; current dispatcher drains at most eight fields (T<=1) per substep.
 TIME_FIELDS_PER_STEP equ 8
 TIME_FIELD_Q16 equ $2000
 
@@ -249,12 +249,14 @@ _time_signature: dc.b 'HDTIME01'
 _time_state: dcb.b 32,0
 
 ; Exact signed integration in eighths of a native step. D0.W is a native
-; integer increment, D1.W is elapsed fields 0..8, D2.L is signed carry -7..7.
+; integer increment, D1.W is unsigned fields 0..65535, D2.L carry -7..7.
 ; Return integer increment in D0.L and signed carry in D2.L; preserve D1.
-; DIVS truncates toward zero, matching native signed divisions. The largest
-; numerator is +/-262151, so the signed-word quotient cannot overflow.
+; Truncate toward zero, matching native signed divisions. The short-interval
+; path keeps DIVS; longer intervals return a full signed-long quotient.
 ; Eighths are an exact compact representation of the public Q16.16 fraction.
 _time_scale_word:
+	cmpi.w #8,d1
+	bhi.s .wide
 	muls.w d1,d0
 	add.l d2,d0
 	divs.w #TIME_FIELDS_PER_STEP,d0
@@ -263,12 +265,41 @@ _time_scale_word:
 	ext.l d2
 	ext.l d0
 	rts
+.wide:
+	bsr _time_multiply_fields
+	add.l d2,d0
+	move.l d0,d2
+	asr.l #3,d0
+	andi.l #7,d2
+	tst.l d0
+	bpl.s .wide_done
+	tst.l d2
+	beq.s .wide_done
+	addq.l #1,d0
+	subq.l #8,d2
+.wide_done:
+	rts
+; Signed word rate times unsigned word fields, exact signed-long product.
+; The largest magnitude is 32768*65535, within the signed-long range.
+_time_multiply_fields:
+	tst.w d0
+	bmi.s .negative
+	mulu.w d1,d0
+	rts
+.negative:
+	neg.w d0
+	mulu.w d1,d0
+	neg.l d0
+	rts
 
 ; Q16 companion for rates needing exponential retention between ramp updates.
-; D0.W: rate with magnitude <=16383; D1.W: fields 0..8; D2.L: signed Q16
+; D0.W: rate with magnitude <=16383; D1.W: fields 0..65535; D2.L: signed Q16
 ; remainder -65535..65535. Return D0.L integer increment, D2.L remainder.
-; This bound keeps the intermediate signed product plus carry within 32 bits.
+; Long intervals split integer and fractional parts before Q16 conversion,
+; avoiding overflow of a full scaled Q16 intermediate.
 _time_scale_q16:
+	cmpi.w #8,d1
+	bhi.s _time_scale_q16_wide
 	muls.w d1,d0
 	lsl.l #8,d0
 	lsl.l #5,d0
@@ -285,6 +316,32 @@ _time_split_q16:
 	addq.l #1,d0
 	subi.l #$10000,d2
 .done:
+	rts
+
+; Floor-split the product in eighths, add its fractional part to the old
+; remainder, then normalize. Final negative results truncate toward zero.
+_time_scale_q16_wide:
+	move.l d3,-(a7)
+	bsr _time_multiply_fields
+	move.l d0,d3
+	asr.l #3,d0
+	andi.l #7,d3
+	lsl.l #8,d3
+	lsl.l #5,d3
+	add.l d3,d2
+	move.l d2,d3
+	swap d3
+	ext.l d3
+	add.l d3,d0
+	andi.l #$ffff,d2
+	tst.l d0
+	bpl.s .done
+	tst.l d2
+	beq.s .done
+	addq.l #1,d0
+	subi.l #$10000,d2
+.done:
+	move.l (a7)+,d3
 	rts
 
 ; Convert unsigned pending fields D0.L into one bounded step D1.L (Q16.16),
@@ -361,8 +418,58 @@ _time_math_test:
 	cmpi.w #8,d5
 	ble.s .qfields
 	dbf d7,.qvalue
+	bsr _time_wide_math_test
 	movem.l (a7)+,d0-d7/a0-a2
 	rts
+; Boundary cases for unsigned field counts and long quotients. This fixture
+; writes private memory only; it does not enable large intervals in gameplay.
+_time_wide_math_test:
+	lea _time_wide_results(pc),a2
+	moveq #0,d7
+.kind:
+	lea _time_wide_word_values(pc),a1
+	tst.w d7
+	beq.s .values
+	lea _time_wide_q16_values(pc),a1
+.values:
+	moveq #4,d6
+.value:
+	move.w (a1)+,d4
+	lea _time_wide_fields(pc),a0
+	moveq #9,d5
+.field:
+	move.w (a0)+,d1
+	moveq #-1,d3
+.carry:
+	move.w d4,d0
+	move.l d3,d2
+	tst.w d7
+	bne.s .q16
+	muls.w #7,d2
+	bsr _time_scale_word
+	bra.s .save
+.q16:
+	muls.w #32767,d2
+	add.l d2,d2
+	add.l d3,d2
+	bsr _time_scale_q16
+.save:
+	move.l d0,(a2)+
+	move.l d2,(a2)+
+	addq.l #1,d3
+	cmpi.w #1,d3
+	ble.s .carry
+	dbf d5,.field
+	dbf d6,.value
+	addq.w #1,d7
+	cmpi.w #2,d7
+	blo.s .kind
+	rts
+_time_wide_word_values: dc.w -32768,-1,0,1,32767
+_time_wide_q16_values: dc.w -16383,-1,0,1,16383
+_time_wide_fields: dc.w 0,1,7,8,9,15,31,255,32768,65535
+_time_wide_signature: dc.b 'HDWIDE01'
+_time_wide_results: dcb.l 2*5*10*3*2,0
 _time_math_values: dc.w -32768,-100,-3,-1,0,1,3,100,32767
 _time_math_signature: dc.b 'HDMATH01'
 _time_math_results: dcb.w 9*9*15*2,0

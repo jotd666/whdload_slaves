@@ -923,3 +923,38 @@ candidate improves the unfiltered dispatcher window from 15 to 23 swaps, but the
 3% FPS-loss requirement is still not met. Full driving-tape equivalence,
 loop/jump/contact at both T extremes, cross-machine handling and human acceptance
 remain open. This development gate is not a completed renderer optimization.
+
+
+## CPU policy and long-interval arithmetic (in progress)
+
+The target policy is one full elapsed-time physics update per rendered gameplay
+frame on the 68000. On 68020 and above, physics also runs on every frame while
+rendering runs as fast as possible: a one-field frame uses T=1/8, allowing 50 FPS.
+Only frames exceeding eight fields require additional bounded substeps on those
+CPUs. The native 6.25 Hz reference defines the scaling unit, not an update-rate
+limit. The current dispatcher still bounds every CPU to eight fields; the 68000
+policy has not yet been connected or validated.
+
+The shared `_time_scale_word` and `_time_scale_q16` helpers now accept unsigned
+field counts through 65535 and return signed-long increments. Their existing
+0..8-field arithmetic is retained. The long-interval word path avoids DIVS's
+signed-word quotient limit. The Q16 path separates whole and fractional parts
+before scaling, avoiding overflow of a full Q16 intermediate. Signed remainders
+still use truncation toward zero. Q16 rate inputs retain their documented
+magnitude limit of 16383; these helpers alone do not make their callers safe at
+large T.
+
+`VERIFY_TIME_MATH` includes a private `HDWIDE01` fixture: 300 cases across signed
+rate extrema, field counts 0, 1, 7, 8, 9, 15, 31, 255, 32768 and 65535, and both
+signs of the maximum permitted carry. The independent integer model passes these
+cases, the existing 1215 eighth-step cases, 441 Q16 cases and 11 debt cases in
+`s4-time-wide-fixed`. The 144 sampled car states in `s4-wide-native` match
+`s4-presentation-reference` at forced T=1. This remains the constant-input car
+fixture, not full driving-tape or world-state equivalence. The ordinary build is
+byte-identical to the baseline.
+
+Before enabling the 68000 policy, extend decay/contact tables, motion/projection
+products, traffic integration, multiple discrete events and replay samples per
+update. Audit narrowing stores in callers as well as helper arithmetic. Large-T
+contact, checkpoint and handling validation, and the A500 performance gate remain
+required. No updated FPS claim follows from this arithmetic change.
