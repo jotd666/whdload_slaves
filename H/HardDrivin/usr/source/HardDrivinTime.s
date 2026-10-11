@@ -58,6 +58,9 @@ _time_install:
 	IFD VERIFY_TIME_DISPATCH
 	bsr _dispatch_install
 	ENDC
+	IFD VERIFY_TIME_REPLAY_TIMING
+	bsr _replay_install
+	ENDC
 	ENDC
 .restore:
 	movem.l (a7)+,d0-d1/a0-a2
@@ -89,6 +92,13 @@ _time_vbl:
 	movea.l (a1),a4
 	move.w sr,-(a7)
 	move.l a0,-(a7)
+	IFD VERIFY_TIME_REPLAY_TIMING
+	lea _replay_state(pc),a0
+	tst.b RP_PAUSED(a0)
+	bne.s .replay_paused
+	addq.l #1,RP_WALL(a0)
+.replay_paused:
+	ENDC
 	lea _time_state(pc),a0
 	tst.b TS_ACTIVE(a0)
 	beq.s .idle
@@ -155,6 +165,9 @@ _time_outer:
 	rts
 
 _time_pause:
+	IFD VERIFY_TIME_REPLAY_TIMING
+	bsr _replay_pause
+	ENDC
 	move.l a0,-(a7)
 	lea _time_state(pc),a0
 	move.b TS_ACTIVE(a0),TS_SUSPENDED(a0)
@@ -165,6 +178,9 @@ _time_pause:
 	rts
 
 _time_options_suspend:
+	IFD VERIFY_TIME_REPLAY_TIMING
+	bsr _replay_pause
+	ENDC
 	move.l a0,-(a7)
 	lea _time_state(pc),a0
 	move.b TS_ACTIVE(a0),TS_SUSPENDED(a0)
@@ -175,6 +191,9 @@ _time_options_suspend:
 	rts
 
 _time_resume:
+	IFD VERIFY_TIME_REPLAY_TIMING
+	bsr _replay_resume
+	ENDC
 	move.l a0,-(a7)
 	lea _time_state(pc),a0
 	move.b TS_SUSPENDED(a0),TS_ACTIVE(a0)
@@ -376,4 +395,8 @@ _time_q16_results: dcb.l 7*9*7*2,0
 
 	IFD VERIFY_TIME_DISPATCH
 	INCLUDE "HardDrivinDispatch.s"
+	ENDC
+
+	IFD VERIFY_TIME_REPLAY_TIMING
+	INCLUDE "HardDrivinReplay.s"
 	ENDC

@@ -160,6 +160,9 @@ _verify_drive_key:
 	IFD VERIFY_TIME_PAUSE
 	bsr _verify_time_pause_key
 	ENDC
+	IFD VERIFY_REPLAY_PAUSE
+	bsr _verify_replay_pause_key
+	ENDC
 	movea.l (a7)+,a0
 	tst.l d0
 	unlk a5
@@ -181,6 +184,16 @@ _verify_step_input:
 	move.w #4,-$6a0a(a4)
 	IFD VERIFY_STEPINPUT_RAMP
 	bsr _verify_step_ramp_buttons
+	ENDC
+	IFD VERIFY_TIME_REPLAY
+	; The per-controls constant fixture must not undo the VBL replay release.
+	tst.b -$69fa(a4)
+	bne.s .replay_release
+	tst.b -$5229(a4)
+	beq.s .replay_ready
+.replay_release:
+	clr.w -$6a0a(a4)
+.replay_ready:
 	ENDC
 	jsr -$7f92(a4)		; displaced decoded-key reader
 	and.w #$ff,d0		; displaced mask, including its condition codes
@@ -453,4 +466,40 @@ _verify_step_ramp_buttons:
 	move.l (a7)+,d0
 	rts
 _verify_step_ramp_count: dc.w 0
+	ENDC
+
+	IFD VERIFY_REPLAY_PAUSE
+; Input-only replay pause: one SPACE at age>=24, another40 input fields later.
+_verify_replay_pause_key:
+	tst.l d0
+	bne.s .done
+	tst.b -$5229(a4)
+	beq.s .done
+	movem.l d1/a1,-(a7)
+	lea .state(pc),a1
+	tst.w (a1)
+	bne.s .resume
+	move.l _replay_state+RP_AGE(pc),d1
+	cmpi.l #24,d1
+	blo.s .restore
+	move.w #1,(a1)
+	move.l 4(a0),d1
+	addi.l #40,d1
+	move.l d1,2(a1)
+	moveq #$20,d0
+	bra.s .restore
+.resume:
+	cmpi.w #1,(a1)
+	bne.s .restore
+	move.l 4(a0),d1
+	cmp.l 2(a1),d1
+	blo.s .restore
+	move.w #2,(a1)
+	moveq #$20,d0
+.restore:
+	movem.l (a7)+,d1/a1
+.done:
+	rts
+.state: dc.w 0
+	dc.l 0
 	ENDC

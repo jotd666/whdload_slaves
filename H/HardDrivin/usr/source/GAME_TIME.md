@@ -765,3 +765,87 @@ Evidence:
 This closes the two identified D960 per-call counters. It does not close the
 checkpoint/tunnelling audit, replay sampling/playback, Phantom, attract/menu
 clocks, performance or full-tape/cross-machine/human acceptance.
+
+
+## Replay playback clock and interpolation (development gate)
+
+`VERIFY_TIME_REPLAY_TIMING` requires the dispatcher and CUSTOM1. It currently
+converts playback and its effect animation/RNG: record generation still runs per
+eligible simulation call, and replay overlay timing remains unconverted.
+Do not treat this as a duration-correct history or a completed replay timeline.
+
+A second VBL counter advances while gameplay timing is suspended for replay, but
+freezes during native pause/options-menu handling. At native
+playback entry `$10bb0`, the hook stores that counter, the oldest valid native
+record pointer and the native valid-entry count. Playback age is the unsigned
+field difference. Each frame selects age/8 and age%8, interpolates that record
+and its successor, and lets the original camera, audio and rendering code consume
+a scratch record. The final entry holds until the end of its eight-field interval.
+The native button-abort check remains in the loop. Exit occurs after the first
+completed draw that reaches count*8 fields, so overshoot is at most that draw's
+elapsed interval. No gameplay debt accrues during this suspended epoch.
+
+The 158-byte format is unchanged: player X,Z,Y, three angles, packed engine/flags,
+then 12 traffic X,Y,Z/angle tuples. X/Z interpolate as unsigned words; height is
+signed. Angles take the shortest arc modulo 1440. Engine pitch interpolates its
+low 12 bits, retaining the older record's high flag bits until the next endpoint.
+Weighted endpoint arithmetic avoids signed-difference overflow at word extrema.
+Exact endpoints copy all 79 words verbatim, preserving native angle encodings.
+`HDRPLAY1` precedes wall fields.l,start fields.l,age fields.l,oldest pointer.l,
+valid count.w,paused.b,padding.b, last effect phase.w,target effect phase.w,
+two cached RNG return longs, and the 158-byte scratch record (32-byte state).
+
+VERIFY_DISPATCH_NATIVE advances the cursor by eight fields per completed draw,
+retaining one original record per draw for compatibility checking. Normal elapsed
+mode does not impose a replay FPS or a host-time wait. VBL timing preserves the
+native interrupt CCR/X handling established by the earlier observer.
+
+Evidence:
+
+- `s4-replay-playback`: a complete A500 replay, 90 history entries and a 720-field
+  target. It draws 87 frames (71 fractional) and exits at age725, five fields
+  beyond the target within its final eight-field draw. Every rendered scratch
+  word matches an independent interpolation model of the retained native ring.
+- The build executes nine private full-record cases (711 words) covering both
+  exact endpoints, seven fractional positions, unsigned coordinate and signed
+  height extrema, angle wraparound/ties and packed engine flags.
+- `s4-replay-native`: all 144 car states remain equal to the native reference
+  through the constant-input crash/recovery window. This is not a full-playback
+  comparison because that input can skip replay.
+- `s4-replay-effects-020`: full 68020 playback draws 313 frames (273 fractional)
+  for 90 entries and exits at exactly720 fields. All pose words and 100 effect
+  sprite pointers pass; the native RNG is called exactly52 times.
+- `s4-replay-effects-native`: the constant-input crash fixture yields77 valid
+  entries. Forced-native playback draws all77 verbatim, exits at age616, executes
+  26 effect frames and52 RNG calls. This validates endpoint playback against
+  its retained history, not a full unmodified-render pixel comparison.
+- `s4-replay-pause-constant`: final A500 build, 85 entries,61 draws (51 fractional),
+  target680 fields and exit681. An input-only SPACE pair holds native pause for
+  40 VBL fields; the presentation clock is identical in all40 samples. All poses,
+  19 effect sprite pointers and52 RNG calls pass. End-of-replay images from the
+  native and68020 runs were inspected for visible rendering corruption.
+- `s4-replay-final-off` passes inactive-range verification. The normal build
+  remains identical. The direct-branch audit includes85 ranges.
+
+The recording converter must still retain a fixed duration of eligible driving,
+handle the collision rewind/replacement at `$cde2`/`$89b4`, and populate history
+at fixed field intervals or with explicit timestamps. Until then, fast-machine
+history may cover less real time even though this playback cursor spans 720 fields.
+The last-26-entry effect now selects its sprite from the elapsed record index.
+Two native RNG calls are made per effect phase, cached across repeated draws;
+skipped phases and an invisible final tail are consumed too. Thus a naturally
+completed full effect uses52 native calls at every tested rendering rate. Abort
+still avoids future events. Captured RNG seeds are zero, so this proves cadence
+and native-call reuse, not a distribution test on nonzero seeds. The one-shot
+sound remains native. Overlay timing inside replay still needs conversion.
+
+The initial68020 playback capture stalled after516 draws while the per-draw
+animation could run outside its sprite table; it is invalid. The corrected
+elapsed effect removes that counter walk and completes the faster-machine run.
+Two field-indexed A500 input runs never reached the replay anchor after code
+changes; they were stopped by their owned PIDs and are not validation evidence.
+The constant-input fixture now honors VERIFY_TIME_REPLAY's button release at
+controls calls as well as VBL, allowing a reproducible real crash/full replay.
+
+Full native driving-tape and modal,
+performance, machine-to-machine handling and human acceptance remain outstanding.
