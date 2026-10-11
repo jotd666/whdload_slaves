@@ -105,6 +105,10 @@ as they were while the release preferences below remain open.
    burst and averages 2.35 FPS while completing 162 of 163.288 newly funded
    updates over 20 seconds. Its 440 ms maximum completion gap and remaining
    matrix prevent declaring a release minimum from this sample alone.
+   An accelerated-emulation probe also sustains its finite world-update load
+   but publishes at 12.15 FPS, still failing every-field cadence. No actual
+   smooth-50-FPS configuration has passed. Publication cadence now has an
+   explicit per-field checker; changing pixels/interpolation remain separate.
    See `w6-verification.md`. Player timing remains unchanged.
 2. **W7:** later world-step and instrument improvements. W4 overlay queueing
    remains explicitly deferred.

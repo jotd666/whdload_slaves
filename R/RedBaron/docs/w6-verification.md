@@ -7398,3 +7398,76 @@ Ordinary VERIFY, developer and player builds were rebuilt and restored to
 `ac1d47ba…`, `01a00068…` and `5256542f…` respectively. Thus current game
 behavior is unchanged. The frozen private capture retains its exact listing,
 binary, completion counter and matched cost report for reproduction.
+
+
+## Accelerated-emulation cadence and capacity probe
+
+Capture `w6-fast-200m-030` tests ordinary VERIFY `ac1d47ba…` with the cached
+68030 configuration, 2 MiB chip / 8 MiB fast RAM, MMU and CPU/memory/blitter
+cycle exact. It requests `cpu_frequency=200000000`, multiplier zero; the
+retained emulator runtime log reports **CPU cycleunit 8 (0.016)**. This is
+an accelerated-emulation configuration, **not a physical 200 MHz benchmark**.
+World/aircraft detail remains maximum, ground ON IN COMBAT, Time Scale 40;
+CUSTOM2=16319, CUSTOM4=0, CUSTOM5=512. No replay controls are enabled.
+
+Four contiguous 250-field windows begin at the coherent VBlank boundary
+after the first completed world update:
+
+| Window | Completed world updates | Newly funded | Publications / FPS | Message / shorten events |
+| --- | ---: | ---: | ---: | ---: |
+| 0 | 40 | 40.822087542 | 59 / 11.8 | 9 / 9 |
+| 1 | 41 | 40.822087542 | 59 / 11.8 | 5 / 1 |
+| 2 | 41 | 40.822087542 | 63 / 12.6 | 0 / 0 |
+| 3 | 41 | 40.822087542 | 62 / 12.4 | 0 / 0 |
+
+Over 1,000 PAL fields / 1,184 CIA ticks, **163 updates complete**, 163.288350168
+are newly funded, and **243 frames publish (12.15 FPS)**. Outstanding work
+starts at 0.275824916 updates and ends at 0.564175084; its increase of
+0.288350168 exactly matches funded minus completed work. Its sampled range
+is 0.015757576–1.684175084. There is no update in progress or due at either
+endpoint; three CIA intervals remain unpolled at the end. All 1,000 sampled
+intervals have coherent transaction markers and pass exact accounting.
+The longest sampled span without a completion is nine fields (180 ms).
+This supports finite capacity in this scene/configuration, not the full
+physics/input/combat or minimum-machine acceptance gates.
+
+The new `publication_cadence.py` checks **each field deadline**, including
+leading/trailing gaps and adjacent-window boundaries. It rejects duplicate
+or out-of-order publications across windows. An event at the initial boundary
+is retained but cannot substitute for a later missing deadline. For this run,
+only 243 of 1,000 deadlines have publications; the 242 observed inter-frame
+intervals comprise one three-field, 219 four-field and 22 five-field gaps.
+Thus **one-field publication fails**, including the two later windows with
+no message events. Correct simulation funding does not turn this into a
+smooth-50-FPS result. The native safe-beam and one-field minimum-spacing
+checks still pass; those are tearing/cap checks, not evidence of 50 FPS.
+
+A passing cadence report alone would still not establish fresh pixels,
+correct interpolation, input responsiveness or gameplay independence.
+The checker therefore keeps those claims out of its result. As a negative
+control, the earlier cached-68030 event capture has 204 covered deadlines
+out of 1,000, with 67 four-field, 95 five-field and 41 six-field intervals.
+Both reports explicitly return `every_field_published=false`.
+
+Reproduce the new check after an exact-field census:
+
+```sh
+python3 R/RedBaron/tools/publication_cadence.py CAPTURE/field-census.json \
+  --out CAPTURE/publication-cadence.json
+```
+
+All 414 analysis-tool tests pass, including counter wrap, an apparently
+50-FPS count with a missing final deadline, internal/leading gaps, duplicate
+cross-window publications and empty observations. Native W6 self-tests and
+the 57-selected / 9-disabled hook audit pass. The owned emulator was verified
+and quit; no runtime code or ordinary build changes were made.
+
+An earlier `w6-fast-clock-030` probe requested 1,000,000,000 and the emulator
+reported its minimum cycleunit 1. Its boot observer timed out while the
+owned emulator/debugger were still live. Interrupting only that debugger
+confirmed the existing marker address and an opening-logo screen with no
+SIM loaded and zero route events. The probe was explicitly stopped because
+this setting was impractical for the native menu route; it supplies **no
+flight FPS or W6 capacity result**. The replacement probe above reached
+flight normally in 130.8 host seconds with a longer observation timeout.
+Do not interpret the failed boot observation as a failed W6 gameplay test.

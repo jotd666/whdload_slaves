@@ -1,5 +1,12 @@
 # Red Baron performance measurements
 
+An accelerated-emulation cached-68030 probe completes **163 world updates**
+in 1,000 PAL fields with exact funding and outstanding work below 1.685
+updates, but publishes only **243 frames (12.15 FPS)**. Its three-to-five-field
+cadence fails the one-field requirement, including later event-free windows.
+This is not a physical CPU benchmark or a 50-FPS success. See “Accelerated-
+emulation cadence and capacity probe” in `w6-verification.md`.
+
 The second private matrix candidate now saves **2.13% of routine main-task
 cycles** in 2,021 matched A500 pairs after removing nested lookup calls.
 All 2,048 native output/register/flag twins pass. It is still unhooked and
