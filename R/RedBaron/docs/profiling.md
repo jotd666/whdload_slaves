@@ -1,5 +1,14 @@
 # Red Baron performance measurements
 
+The failed A500 squadron profile now has a call-level breakdown. In 27 complete
+world updates, the `sim:10c8` call into `sim:1314` consumes **84.63%** of
+main-task world cycles. Its object-update driver spends **58.95%** of its own
+cycles calling `sim:8fce`. A separate population of 228 complete aircraft
+calls traces the largest path through `sim:193ee` to **`sim:1a60c`**. See
+“Squadron world-call partition” in `w6-verification.md`. These nested costs
+identify the next investigation target; they are not additive savings or a
+measured optimization gain.
+
 **W6 fails the A500 squadron capacity gate.** A fresh four-versus-four fixture
 completes only **99 of 163.288 funded updates in 1,000 PAL fields**, while
 publishing **zero frames**. Outstanding work increases in every 250-field

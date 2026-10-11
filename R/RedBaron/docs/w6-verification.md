@@ -6844,3 +6844,70 @@ drop elapsed time, lower the fixture's Time Scale/detail or declare this
 machine unsupported merely to turn this failed gate into a pass. Next work
 is to identify the dominant world-call groups and their exact optimization
 opportunities. Other W6 state/physics/input and 50-FPS gates remain open.
+
+
+## Squadron world-call partition
+
+`world_call_costs.py` partitions the retained squadron instruction profile by
+immediate native call site. It checks the supported original SIM hash, frozen
+slave/manifest hashes and each live immediate call instruction. A call owns
+all nested main-task instructions until its exact next instruction is reached
+with the original call-site stack pointer. IRQ work and IRQ entry are separate;
+unclassified stacks, nested selected-routine entries and bad return stacks
+are rejected. Incomplete selected-routine calls at a chunk end are reported
+and excluded; a partial call at a chunk start is not invented. This is dynamic
+cost evidence for complete observed calls, not static all-path correctness.
+
+The top-level partition independently reproduces **23,761,974 main-task
+cycles** across 27 complete `sim:1098–11c8` calls, exactly matching the previous
+world-call measurement. Interrupt work is 5,040,308 cycles and interrupt entry
+47,674, totaling 28,849,956 wall cycles. Immediate groups partition the full
+main-task total without double counting:
+
+| Caller scope | Call site → target | Inclusive main cycles | Share of that caller population |
+| --- | --- | ---: | ---: |
+| 27 world calls | `sim:10c8` → `sim:1314` | 20,108,914 | 84.63% |
+| 27 world calls | `sim:111a` → `sim:14aa` | 1,273,914 | 5.36% |
+| 27 world calls | `sim:114a` → `sim:69b0` | 445,456 | 1.87% |
+| 27 calls of `sim:1314` | `sim:13fa` → `sim:15ca` | 20,060,448 | 99.76% |
+| 27 calls of `sim:c630` | `sim:c766` → `sim:8fce` | 11,824,752 | 58.95% |
+| 27 calls of `sim:c630` | `sim:c65a` → `sim:db3c` | 2,274,812 | 11.34% |
+| 27 calls of `sim:c630` | `sim:c736` → `sim:d89e` | 2,228,210 | 11.11% |
+| 27 calls of `sim:c630` | `sim:c7bc` → `sim:db42` | 2,164,816 | 10.79% |
+
+The native `sim:15ca` trampoline leads to the object driver `sim:c630`.
+Its loops dispatch aircraft/object work, so the small scattered address-block
+percentages from the previous section were not evidence against a dominant
+higher-level group. Exact changes must still preserve all those updates.
+
+Deeper complete-call populations include calls inside world invocations cut
+by profile boundaries. Therefore their totals must **not** be divided by the
+27-world total or summed with their parents:
+
+- 228 complete `sim:8fce–93a0` calls contain 12,470,214 main-task cycles.
+  The `sim:91ce` call to trampoline `sim:95be` uses 9,805,878 (78.63%).
+- That trampoline leads to `sim:193ee`. Its 228 complete calls contain
+  9,798,128 main-task cycles. The `sim:1964a` call to **`sim:1a60c`** uses
+  9,632,620 (98.31%), averaging 42,248.3 cycles per caller invocation.
+
+This identifies `sim:1a60c` as the next routine to inspect for exact reductions
+in world work. No algorithm, tick rate or gameplay behavior changes here.
+No savings estimate follows merely from a routine's inclusive share.
+
+Reproduce from the repository root after loading the harness environment:
+
+```sh
+python3 -B R/RedBaron/tools/world_call_costs.py \
+  tmp/dev/tmp/game/RedBaron_v2.1/RedBaron/data/sim \
+  tmp/dev/tmp/prof/w6-current-sustained-dense-a500 \
+  --out tmp/dev/tmp/prof/w6-current-sustained-dense-a500/world-call-costs.json
+```
+
+Repeat with `--routine 1314:1418`, `--routine c630:c7ca`,
+`--routine 8fce:93a0`, or `--routine 193ee:1967a` and separate output names
+for the respective partitions. The bounds name entry and final RTS; arbitrary
+multi-exit routines require extending the checker before measurement.
+Two regression tests verify nested-work attribution, IRQ separation, exact
+cost partition, cut-call exclusion and wrong-stack/unfinished-call rejection.
+All 401 host tests pass. No emulator was started for this offline analysis;
+the A500 capacity failure and other W6 gates remain unresolved.
