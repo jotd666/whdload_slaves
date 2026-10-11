@@ -40,8 +40,9 @@ the normal verified mask still excludes bit 13 until acceptance passes.
 E1 is complete as a 040/060 stage-cost diagnostic; both rendering stages exceed
 one field. E2's small gun-overlay cache is dropped: every CPU-class pair misses 2%.
 The solid-script cache is also dropped after every CPU-class pair missed 2%.
-Both runtime candidates are removed; reusable helpers remain VERIFY-only.
-The next candidate is a persistent native gauge cache behind development bit 18,
+Both earlier runtime candidates are removed. Their helpers now support the
+combined front-script candidate below.
+The persistent native gauge cache is implemented behind development bit 18,
 on the measured 020/040 classes only. It reuses a gauge's existing buffer pixels only when its raw
 inputs/context, native rectangle and bounded pixel guard match, with selective
 replay of that gauge's drawing-state writes. Native forced/dirty redraws and
@@ -49,12 +50,14 @@ unsupported geometry use the original path. The seven-gauge native pixel/state t
 all CPU-class timing pairs are complete. The 020/040 pairs clear 2%; 030/060
 do not, and the shared CPU gate excludes them. The normal verified mask still
 excludes bit 18 pending the remaining E2 view/map acceptance.
-The combined-copy coverage and ordered layer-merge primitives are implemented
-as standalone assembly with independent host models. Coverage retains opaque
-black and rejects inversion or plane-dependent masks. Ordered merging produces
-a single image/mask equivalent to sequential layers on arbitrary backgrounds;
-the nine focused tests pass. These primitives are not yet included in the slave;
-native capture/context restoration and the combined composition caller remain open.
+The combined front-script candidate is active behind developer/VERIFY bit 19
+on 020+. It caches the eligible native 2/3/4 sequence as one image/mask and
+composites it once. Its front pixel/state twin passes, and the CPU-class timing
+pairs are in progress. Firing, damage overlays, low-cockpit and other views retain
+native dispatch. The separate static-overlay copy still needs integration;
+this partial sequence does not close E2. The standalone endpoint-coverage and
+ordered layer-merge helpers remain available for that integration, but the
+current sequence uses the union of native/audited coverage with final pixels.
 View/map twins also remain open. Results are in the scoreboard. D5 remains postponed and E2–F remain
 open; the earlier lists below are historical context, not the execution order.
 

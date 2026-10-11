@@ -9,21 +9,23 @@ from overlay_mask_check import check as check_masks
 from render_mutations import Snapshot
 
 
-def pack(image,mask):
+def pack(image,mask,capacity=5208):
+    if not 0 < capacity <= 48000:raise ValueError("Invalid cache capacity")
     if len(image)!=40000 or len(mask)!=8000:raise ValueError('Invalid full planar input')
     g=cache_geometry(mask)
     left,top,width,height=g['x']//8,g['y'],g['width']//8,g['height']
-    if g['total_chip_bytes']>5208:raise ValueError('Packed overlay exceeds capacity')
+    if g['total_chip_bytes']>capacity:raise ValueError('Packed overlay exceeds capacity')
     offsets=[y*40+x for y in range(top,top+height) for x in range(left,left+width)]
     payload=bytes(image[p*8000+i]&mask[i] for p in range(5) for i in offsets)+bytes(mask[i] for i in offsets)
     return (left,top,width,height,g['plane_bytes'],len(payload)),payload
 
 
-def replay(background,descriptor,payload):
+def replay(background,descriptor,payload,capacity=5208):
+    if not 0 < capacity <= 48000:raise ValueError("Invalid cache capacity")
     left,top,width,height,plane,total=descriptor
     if (len(background)!=40000 or left<0 or top<0 or width<=0 or height<=0 or
         left%2 or width%2 or left+width>40 or top+height>200 or
-        plane!=width*height or total!=6*plane or total>5208 or len(payload)!=total):
+        plane!=width*height or total!=6*plane or total>capacity or len(payload)!=total):
         raise ValueError('Invalid packed geometry')
     out=bytearray(background);mask=payload[5*plane:]
     for p in range(5):

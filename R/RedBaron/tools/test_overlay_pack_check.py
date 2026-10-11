@@ -26,3 +26,29 @@ class OverlayPackTests(unittest.TestCase):
         with self.assertRaises(ValueError):pack(bytes(40000),bytes([255])*8000)
         for desc in ((1,0,2,1,2,12),(0,0,2,1,3,18),(40,0,2,1,2,12),(0,200,2,1,2,12)):
             with self.subTest(desc=desc),self.assertRaises(ValueError):replay(bytes(40000),desc,bytes(desc[-1]))
+
+
+class CombinedCockpitPackTests(unittest.TestCase):
+    def test_union_capture_is_independent_of_fill_background(self):
+        import random
+        from overlay_coverage import composite
+        rng = random.Random(234)
+        layers = [(rng.randbytes(40000), rng.randbytes(8000)) for _ in range(3)]
+        union = bytes(a | b | c for a,b,c in zip(*(m for _,m in layers)))
+        captured = rng.randbytes(40000)
+        for image,mask in layers:
+            captured = composite(captured,image,mask)
+        descriptor,payload = pack(captured,union,48000)
+        self.assertEqual(descriptor,(0,0,40,200,8000,48000))
+        for new_background in (bytes(40000), bytes([255])*40000, rng.randbytes(40000)):
+            native = new_background
+            for image,mask in layers:
+                native = composite(native,image,mask)
+            self.assertEqual(replay(new_background,descriptor,payload,48000),native)
+
+    def test_combined_capacity_still_rejects_bad_geometry_and_truncation(self):
+        for descriptor,payload in (((0,0,40,201,8040,48240),bytes(48240)),
+                                   ((0,0,40,200,8000,48000),bytes(47999)),
+                                   ((2,0,40,200,8000,48000),bytes(48000))):
+            with self.subTest(descriptor=descriptor), self.assertRaises(ValueError):
+                replay(bytes(40000),descriptor,payload,48000)

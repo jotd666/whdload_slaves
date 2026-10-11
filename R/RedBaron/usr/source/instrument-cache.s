@@ -56,7 +56,6 @@ instrument_cache_install:
  lea instrument_cache_loop_tail+2(pc),a0
  move.l d0,(a0)
  bsr instrument_cache_invalidate
- bsr ovlife_install
  move.l a3,a1
  lea .patch(pc),a0
  jsr resload_Patch(a2)

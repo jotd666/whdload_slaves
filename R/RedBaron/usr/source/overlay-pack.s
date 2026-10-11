@@ -9,6 +9,10 @@ overlay_pack:
 ; Solid cockpit variant: caller owns a 28800-byte output allocation.
 overlay_pack_large:
 	move.l #28800,d0
+	bra overlay_pack_limit
+; Combined full-frame candidate, caller owns 48000 bytes.
+overlay_pack_full:
+	move.l #48000,d0
 overlay_pack_limit:
 	movem.l d1-d7/a0-a6,-(sp)
 	move.l d0,-(sp)

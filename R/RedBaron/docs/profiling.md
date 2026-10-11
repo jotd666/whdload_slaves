@@ -184,6 +184,24 @@ until that E2 acceptance is complete. The A500 stays gated off; the no-MMU 030
 uses the measured 030-class decision.
 
 
+The E2 bit-19 combined front-script candidate replaces the eligible sequence at
+`sim:15f12`: programs 2/3/4 are captured together and replayed with one masked
+composition. Firing, damage overlays, low-cockpit and other-view dispatch retain
+the native path. Exact per-program keys and shared resource invalidation guard
+the cache. Native program-2 coverage plus audited gun masks form the union;
+packing final native pixels under that union removes the fill background.
+The separate `sim:2c144` static-overlay copy is still native, so this is not yet
+full E2 completion. Selection is developer/VERIFY only, on 020+.
+All three builds, 495 host tests, 82 hook ranges and 137 VERIFY / 123 developer
+patch destinations pass. The bounded front twin passes 40,000 pixel bytes and
+24 drawing-state bytes, with 171 hits, one fill and zero fallback calls. Its
+scratch is released. Evidence `completion-e2-combined-twin-r2`, VERIFY SHA-256
+`85fbd328d45e79ff6f6240a0abba9f624ffa135cffbaf2d90ef3fa1179928158`. The first attempt never allocated the cache;
+it is not accepted evidence. Reserving mandatory fast pixels before flexible
+metadata fixed that allocation failure. One 2,000-field timing pair per affected
+CPU class is in progress; no FPS gain or release-mask promotion is claimed yet.
+
+
 040/060 functional checks use separate MMU-core configurations. Their timing
 results will use the frequency-sensitive NOMMU cores. Configuration generation
 passes all six cases and the functional variants. All three builds pass; the
