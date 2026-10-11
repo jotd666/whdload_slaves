@@ -152,7 +152,7 @@ independent field clock and input queue for Normal/A2500, without VERIFY, SIM_RU
 A4000 physics or fixtures. CUSTOM3=1 skips all five timing hooks and clock installation.
 The beam maximum-line detector selects a 50/60-field phase denominator. A4000 remains
 an opt-in SIM_RUNTIME build. **P1 acceptance passes.** At the user's direction, the
-A500 FAST 9.5-10 FPS requirement is assigned to P2; P2 has not been started.
+A500 FAST 9.5-10 FPS requirement is assigned to P2.
 
 Production slave: 11,286 bytes, SHA-256
 `938f7b22b65fb2c56a15906e78724978da0e1f2d043620a30c593380334009e5`.
@@ -210,7 +210,7 @@ approach. Evidence: `p1-crash-finish/{A,A-fast}/combined-lifecycle.json` and
 `p1-crash-finish-centered/B/combined-lifecycle.json`.
 
 Aggregate current results: `tmp/prof/p1-current-results.json`. All P1 timing and
-compatibility gates pass. All test emulators are closed. P2 has not been started.
+compatibility gates pass. P1 test emulators are closed.
 
 1. Make the field clock drive Normal and A2500 in the production build, independent of the
    A4000 code.
@@ -230,10 +230,40 @@ compatibility gates pass. All test emulators are closed. P2 has not been started
 
 ## P2. Blitter latency work (helps every machine, required ceiling for 68000)
 
-Status: not started. The A500 FAST requirement moved here from P1 with user approval:
+Status: in progress. The A500 FAST requirement moved here from P1 with user approval:
 raise the matched 10-second A-fast result from 7.59657 to about 9.5-10 FPS while
 preserving Normal 10 Hz and a race-clock ratio of 1.00 within +/-0.5%. This is an
 unmet rendering target, not a gain delivered by the timing correction.
+
+Current measurements (11 October 2026): the fresh A/250-field FULL profile
+attributes 7.142% to explicit blitter polls and 11.9% to the main interrupt
+context. The four-plane primitive tree is 25.81% inclusive; object geometry
+is 36.72%. Clear/horizon and dashboard are 2.41% and 2.63% respectively in
+this moving A500 window. These are workload shares, not additive speedups.
+Evidence: `tmp/prof/p2-baseline/A/{summary.json,report.txt}`; the raw trace is
+losslessly compressed with a verified SHA-256 in `trace-storage.json`.
+
+P2.1 complete: CUSTOM2=1 now enables BLTPRI only after OwnBlitter returns
+inside the primitive drawer. The saved priority bit is restored before
+DisownBlitter; existing interrupt guards and waits are unchanged. PERF_MASK
+bit 128 isolates the change; the default mask is now 255. No tested CPU
+regressed, so this path is enabled on all CPUs under CUSTOM2=1.
+
+| Cell, matched 10 s | Before FPS | Priority FPS | Change |
+|---|---:|---:|---:|
+| A FULL | 2.69878 | 2.69878 | 0.00% |
+| A FAST | 7.59657 | 7.79648 | +2.63% |
+| B FULL | 9.29768 | 9.59761 | +3.23% |
+| D FULL | 17.79556 | 18.39541 | +3.37% |
+
+Evidence: `p2-baseline` and `p2-priority-built`. Production output is 11,342
+bytes. The existing VERIFY/PIXELS stationary comparison matches all 32,000
+output bytes for 16 primitive-input pairs on each of A/B; starting bitmaps
+are not identical, so this is scoped output equivalence, not a whole-renderer
+twin (`p2-priority-pixels-path`). CUSTOM2=0/CUSTOM3=1 preserves all 21 original
+ranges (`p2-priority-disabled/A-fast`); hook audit passes 1,250 relocations
+and 10,102 branch candidates. No new game hook is introduced by P2.1.
+The FAST target remains unmet. P2.2-P2.5 remain under investigation.
 
 Profile cell A first: a fresh 250-field FULL trace with CUSTOM2=1. Then attack these in order
 and keep only what measures ≥2% on some machine. Gate each one per CPU (playbook §10).

@@ -57,8 +57,16 @@
    over 177.60 / 176.72 / 182.52 seconds respectively; those functional
    runs use a scenery-cleared track and include a long idle prelude
  - P1 timing and compatibility acceptance passes. The A500 FAST target of
-   9.5-10 FPS belongs to P2; no P2 rendering work has been started
+   9.5-10 FPS belongs to P2 and remains unmet
  - this source build has not replaced the previously distributed archive
+
+ P2 rendering progress (11.10.2026):
+ - CUSTOM2=1 gives the blitter priority during owned primitive drawing,
+   restoring its original priority before releasing ownership
+ - matched 10-second emulator FPS: A500 FULL 2.699 -> 2.699, A500 FAST
+   7.597 -> 7.796, A1200 FULL 9.298 -> 9.598, 040 FULL 17.796 -> 18.395
+ - A500/A1200 stationary primitive output matches all 32000 pixel bytes;
+   disabled options preserve original bytes. P2 is not yet complete
 
  Separate A4000 SIM_RUNTIME source status (11.10.2026):
  - replay format 2, physics ABI9, stores the chosen opponent route so native

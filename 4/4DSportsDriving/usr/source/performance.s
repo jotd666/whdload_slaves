@@ -1,10 +1,11 @@
 ; Optional rendering changes. All game hooks are absent with CUSTOM2 bit 0 off.
 ; The original game remains the reference for every replacement.
 ; PERF_MASK test-build bits: 1=BLIT IRQ, 2=vertices, 4=emit, 8=backface,
-; 16=parent rotation, 32=state clear, 64=primitive depth/header.
+; 16=parent rotation, 32=state clear, 64=primitive depth/header,
+; 128=owned primitive blitter priority.
 ; All validated paths are selected; state clear is additionally 68000-only.
  IFND PERF_MASK
-PERF_MASK = 127
+PERF_MASK = 255
  ENDC
 
 perf_init:
@@ -127,6 +128,16 @@ perf_blit_off:
  clr.w (a0)
  move.w perf_draw_active(pc),d0
  beq.s .done
+ IFNE PERF_MASK&128
+ ; OwnBlitter has returned and this is an owned primitive-drawing interval.
+ ; Save the original priority so DisownBlitter restores the exact state.
+ move.w $dff002,d0
+ and.w #$400,d0
+ lea perf_priority_saved(pc),a1
+ move.w d0,(a1)+
+ move.w #1,(a1)
+ move.w #$8400,$dff096
+ ENDC
  move.w $dff01c,d0
  and.w #$40,d0
  beq.s .done
@@ -169,6 +180,16 @@ perf_blit_on:
  move.w #$8040,$dff09a
  clr.w (a0)
 .done:
+ IFNE PERF_MASK&128
+ lea perf_priority_active(pc),a0
+ tst.w (a0)
+ beq.s .priority_done
+ clr.w (a0)
+ tst.w -2(a0)
+ bne.s .priority_done
+ move.w #$0400,$dff096
+.priority_done:
+ ENDC
  move.l (sp)+,a0
  rts
  IFD VERIFY
@@ -177,6 +198,10 @@ perf_blit_on:
  move.l #1,(a0)
  illegal
  bra.s .queue_failure
+ ENDC
+ IFNE PERF_MASK&128
+perf_priority_saved: dc.w 0
+perf_priority_active: dc.w 0
  ENDC
 perf_reset:
  jmp $0.l ; relocated to the unchanged game:$a9e6 at patch time
