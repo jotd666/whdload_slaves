@@ -5170,3 +5170,67 @@ Those need explicit invalidation/lifetime and native integration contracts befor
 cached pixels can replace original drawing. No native slave code changed, no
 emulator was launched, and no performance claim follows. Actual smooth 50 FPS
 and complete gameplay independence remain unfinished requirements.
+
+
+## Overlay resource lifetime: stale selectors and failure cleanup
+
+A static sim-v1 lifecycle audit identifies two cases that an ordered byte guard
+alone cannot handle. Ten original instruction ranges were checked against
+executable SHA256 `e9b3889bc6f177e0bcfc74987665cdafbccd984b3a031bdd1f98f6c445dd8839`;
+the retained exact-byte report is `tmp/dev/tmp/plan/overlay-lifetime/original-contracts.json`.
+This is original-code evidence, not new native execution or a complete indirect
+call-graph proof.
+
+**Program ownership differs from program selection.** Five owning pointers at
+`h3:03ac2` and their end pointers at `h3:03ad6` are initialized by `sim:28516`
+and populated by the loader at `sim:286ac..286c8`. The selector/rebuilder at
+`sim:286fc` clears and fills fifty derived program pointers at `h3:07b52`
+(`sim:2872e..28736` and `sim:2874c..28754`). The complete release routine at
+`sim:28df4..28e22` frees the selected owning block and clears that owning pointer;
+it does **not** clear those fifty derived program pointers. Thus a saved program
+selector can remain unchanged while its program storage is no longer owned.
+Checking the selector before reading the program is necessary but insufficient.
+
+**Bitmap registration is insufficient on loader failure.** `sim:301b0` finds
+one of 128 free registry slots at `h3:09a2c`; `sim:30296..3029c` records the new
+allocation. The normal `sim:303c6` free path clears the registry slot before
+releasing memory. However, `sim:3032e..3033e` loads the recorded allocation and
+calls FreeMem on the failure path without clearing the registry slot there.
+Therefore registry membership alone must not certify resource lifetime after
+a failed load. No such failure is claimed to have occurred in the retained
+successful overlay captures.
+
+The future native cache must invalidate **before** these operations, and remain
+invalid on every return, including failure:
+
+| Operation | Candidate entry | Why invalidate before entry |
+| --- | --- | --- |
+| Program-owner reset | `sim:28516` | Removes owning roots |
+| Program load attempt | `sim:28556` | Allocation/failure paths and ownership changes |
+| Derived program rebuild | `sim:286fc` | Replaces the fifty program selections |
+| Program release | `sim:28df4` | Frees storage while derived selectors may remain |
+| Bitmap load attempt | `sim:301b0` | Covers success and failure cleanup before stale registry reads |
+| Single bitmap-set release | `sim:303ac` | Releases descriptor and chip-storage allocations |
+| Bulk bitmap-set release | `sim:3038e` | Enters the shared free tail directly |
+
+This is a candidate integration boundary set, not an assertion that every
+indirect entry has been audited. The existing W1 mirror cache already patches
+`sim:303c6`; a separate overlapping replacement there would conflict with it.
+Prefer independent entry guards above, verify all direct/indirect callers, and
+retain W1's free hook unchanged. Invalidation should clear valid cache entries
+before any saved dependency is read; a generation counter alone must not make
+an old entry valid again after counter wrap. Only a completed, supported draw
+with a new dependency snapshot can publish a new valid entry.
+
+Native private cases must cover free/reload at the same address, unchanged stale
+derived selectors, a failed bitmap load with a stale registry slot, program
+rebuild, and normal successful reuse. The tests must confirm no read from the
+old resource after invalidation and exact fallback pixels/state. The existing
+ordered host dependency guard remains useful for in-place byte changes, but
+cannot replace these lifetime events. Caller-return/hardware effects and all
+native dependencies remain separate gates before any original draw is skipped.
+
+No slave code changed, no emulator was launched, and no runtime cache or speed
+claim follows from this audit. It identifies necessary implementation work for
+the still-open smooth-50-FPS requirement; full gameplay independence also remains
+unproven.

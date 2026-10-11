@@ -1,5 +1,13 @@
 # Red Baron performance measurements
 
+The overlay lifetime audit found stale derived program selectors after owner
+release and a stale bitmap registry slot on a loader-failure path. An ordered
+byte guard alone cannot safely certify these resources. The verification ledger
+now records the checked native paths, candidate pre-operation invalidation
+entries and required failure/reuse tests. No runtime cache or new performance
+claim is introduced; see “Overlay resource lifetime: stale selectors and failure
+cleanup” in `w6-verification.md`.
+
 The host overlay dependency guard now validates selecting pointers before
 the resources they select. Its previous address-sorted order could read an
 unavailable old resource before recognizing that its pointer had changed.
