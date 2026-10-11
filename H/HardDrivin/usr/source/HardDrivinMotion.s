@@ -1,7 +1,7 @@
-; Development-only angular-rate and fall-acceleration integration.
+; Development-only angle, ordinary-position and fall-acceleration integration.
 ; Requires VERIFY_TIME_SCALARS; shares its per-substep field count.
 ; Rate callers are distinguished from geometry/contact callers of the same
-; rotation helpers. Contact relaxation and position integration are separate.
+; rotation helpers. Crash drift, fall displacement and contact relaxation remain.
 _motion_install:
 	movem.l d0/a0-a2,-(a7)
 	movea.l _code_start(pc),a0
@@ -11,6 +11,9 @@ _motion_install:
 	move.l a2,(a1)+
 	movea.l a0,a2
 	adda.l #$b1d0,a2
+	move.l a2,(a1)+
+	movea.l a0,a2
+	adda.l #$b508,a2
 	move.l a2,(a1)
 	movea.l a0,a1
 	lea _motion_patches(pc),a0
@@ -20,6 +23,11 @@ _motion_install:
 	rts
 _motion_patches:
 	PL_START
+	; PERF_RANGE VERIFY_TIME_MOTION $0b500 $0008: snapshot previous projected rates
+	PL_P $b500,_motion_position_entry
+	PL_NOP $b506,2
+	; PERF_RANGE VERIFY_TIME_MOTION $0b578 $001e: ordinary position integration
+	PL_PSS $b578,_motion_position_add,$18
 	; PERF_RANGE VERIFY_TIME_MOTION $0b36a $000c: roll-rate integration
 	PL_PSS $b36a,_motion_roll_base,6
 	; PERF_RANGE VERIFY_TIME_MOTION $0b380 $0006: pitch-rate caller
@@ -309,12 +317,103 @@ _motion_spin_reset:
 _motion_spin_loss:
 	dc.w 0,857,1704,2539,3363,4177,4979,5772,6554
 
+; Entry uses a jump patch, so LINK sees the original caller's stack frame.
+; Pushing the continuation and using RTS preserves registers and native TST CCR.
+_motion_position_entry:
+	link a5,#-2
+	move.l a0,-(a7)
+	lea _motion_position_state(pc),a0
+	move.w -$66e2(a4),(a0)+
+	move.w -$66e0(a4),(a0)+
+	move.w -$66de(a4),(a0)
+	movea.l (a7)+,a0
+	move.l _motion_position_continue(pc),-(a7)
+	tst.b -$69fa(a4)
+	rts
+
+; Terrain translations preserve fractions. Explicit motion resets discard them.
+; Crash drift bypasses this block just as it bypassed native projected motion.
+_motion_position_add:
+	movem.l d1-d4/a0-a2,-(a7)
+	lea _motion_position_state(pc),a0
+	lea -$6704(a4),a1
+	lea -$66e2(a4),a2
+	move.w _time_scalar_fields(pc),d2
+	move.w (a2)+,d0
+	move.w (a0),d1
+	move.l 8(a0),d3
+	bsr _motion_position_delta
+	move.l d3,8(a0)
+	add.l d0,(a1)+
+	move.w (a2)+,d0
+	move.w 2(a0),d1
+	move.l 12(a0),d3
+	bsr _motion_position_delta
+	move.l d3,12(a0)
+	add.l d0,(a1)+
+	move.w (a2),d0
+	move.w 4(a0),d1
+	move.l 16(a0),d3
+	bsr _motion_position_delta
+	move.l d3,16(a0)
+	add.l d0,(a1)
+	movem.l (a7)+,d1-d4/a0-a2
+	rts
+
+; Semi-implicit position increment in native long-position units.
+; D0.W new projected velocity, D1.W old projected velocity, D2.W fields 0..8,
+; D3.L signed remainder (-127..127). Returns D0.L displacement, D3.L carry.
+; D1/D2 preserved. Live caller snapshots the previous projected velocity;
+; collision/recovery reset paths discard position fractions.
+; At T=1 this gives exactly the native new velocity (plus retained fraction).
+; At T=0 no motion is consumed, even if a discrete writer changed the velocity.
+; For 0<T<=1: v*T + (1-T)*(v-u)/2. The second term preserves the native
+; semi-implicit Euler displacement under subdivision of constant acceleration.
+_motion_position_delta:
+	movem.l d1-d2/d4,-(a7)
+	tst.w d2
+	beq.s .zero
+	moveq #8,d4
+	add.w d2,d4
+	muls.w d4,d0
+	moveq #8,d4
+	sub.w d2,d4
+	muls.w d4,d1
+	sub.l d1,d0
+	lsl.l #3,d0
+	add.l d3,d0
+	move.l d0,d3
+	asr.l #7,d0
+	; ASR rounds negative values down; companions use truncation toward zero.
+	tst.l d3
+	bpl.s .remainder
+	move.l d3,d4
+	andi.l #127,d4
+	beq.s .remainder
+	addq.l #1,d0
+.remainder:
+	move.l d0,d4
+	lsl.l #7,d4
+	sub.l d4,d3
+	bra.s .done
+.zero:
+	moveq #0,d0
+.done:
+	movem.l (a7)+,d1-d2/d4
+	rts
+
 _motion_reset:
 	move.l a0,-(a7)
 	lea _motion_state(pc),a0
 	clr.l (a0)+
 	clr.l (a0)+
 	clr.l (a0)+
+	clr.l (a0)+
+	clr.l (a0)+
+	clr.l (a0)+
+	clr.l (a0)+
+	clr.l (a0)+
+	lea _motion_position_state(pc),a0
 	clr.l (a0)+
 	clr.l (a0)+
 	clr.l (a0)+
@@ -332,6 +431,9 @@ MS_SPIN_CARRY equ 24
 MS_SPIN_LAST equ 28
 _motion_pitch_function: dc.l 0
 _motion_yaw_function: dc.l 0
+_motion_position_continue: dc.l 0
+_motion_position_live_signature: dc.b 'HDPOSST1'
+_motion_position_state: dcb.b 20,0
 _motion_signature: dc.b 'HDMOTN01'
 _motion_state: dcb.b 32,0
 
@@ -418,6 +520,31 @@ _motion_math_test:
 	cmpi.w #8,d5
 	ble.s .fall_fields
 	dbf d7,.fall_value
+	lea _motion_position_results(pc),a2
+	lea _motion_position_values(pc),a6
+	moveq #6,d7
+.position_new:
+	move.w (a6)+,d4
+	lea _motion_position_values(pc),a3
+	moveq #6,d6
+.position_old:
+	move.w (a3)+,d1
+	moveq #0,d2
+.position_fields:
+	lea _motion_position_carries(pc),a1
+	moveq #2,d5
+.position_carry:
+	move.w d4,d0
+	move.l (a1)+,d3
+	bsr _motion_position_delta
+	move.l d0,(a2)+
+	move.l d3,(a2)+
+	dbf d5,.position_carry
+	addq.w #1,d2
+	cmpi.w #8,d2
+	ble.s .position_fields
+	dbf d6,.position_old
+	dbf d7,.position_new
 	move.w #VERIFY_SCALAR_FIELDS,(a5)
 	bsr _motion_reset
 	movem.l (a7)+,d0-d7/a0-a6
@@ -441,4 +568,8 @@ _motion_fall_values: dc.w -5,0,5
 _motion_fall_configs: dc.w 49,49,-7,49,49,7,49,0,7
 _motion_fall_signature: dc.b 'HDFALL01'
 _motion_fall_results: dcb.b 3*9*3*8,0
+_motion_position_values: dc.w -32768,-257,-1,0,1,257,32767
+_motion_position_carries: dc.l -127,0,127
+_motion_position_signature: dc.b 'HDPOS001'
+_motion_position_results: dcb.b 7*7*9*3*8,0
 	ENDC

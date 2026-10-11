@@ -401,8 +401,39 @@ Motion evidence:
   The stalled early `s4-motion-one-a500` capture is invalid and was stopped
   through its owned capture process. Early captures do not prove the final code.
 
-Remaining work includes the actual simulation dispatcher, position integration
-and Euler compensation, crash drift, partial-contact relaxation/rate feedback,
+Ordinary projected XYZ movement now uses signed 1/128-position remainders.
+The jump hook at `$0b500` preserves the native LINK frame and snapshots the
+previous projected velocity before recomputation. The `$0b578` hook integrates
+`v*T + (1-T)*(v-u)/2`, where u and v are the old and new projected rates. This
+preserves the native semi-implicit Euler displacement when constant acceleration
+is subdivided. T=0 consumes no displacement. Long arithmetic avoids signed-word
+division overflow at boundary velocities. Integer terrain translations retain
+fractions; existing collision/recovery/mode resets clear them. The native word
+positions are still recomputed from the resulting longs.
+
+This is an implementation of the projected-vector correction, including steering
+changes; nonlinear handling acceptance remains open. It does not yet incorporate
+fractional longitudinal velocity in the native trigonometric projection. Crash
+drift and falling displacement still follow their original per-pass updates.
+
+Position evidence:
+
+- `s4-position-math`: 1323 private-memory 68000 cases cover both signed-word
+  velocity extrema, all field counts and signed carry boundaries. Sixty exact
+  rational subdivision cases independently check the constant-acceleration
+  displacement identity. Earlier angle, spin and fall arithmetic checks pass.
+- `s4-position-one`: 108 native-step car states match the original X=400 steering
+  reference, including the existing crash sequence. This is still the limited
+  constant-input comparison, not the full driving-tape acceptance gate.
+- `s4-position-small-hooks`: 360 actual axis updates at T=1/8 match a model of
+  the captured input operands; 210 results retain nonzero fractions. This proves
+  the live hook arithmetic, not equal-time trajectories or contact stability.
+- `s4-position-off`: CUSTOM1 off leaves every declared range pristine. The normal
+  slave remains byte-identical to the baseline. The direct-branch audit passes
+  all 34 scalar/motion ranges.
+
+Remaining work includes the actual simulation dispatcher, fractional projection,
+falling displacement/Euler compensation, crash drift, partial-contact relaxation/rate feedback,
 held-input handling, traffic/contact policies, replay/Phantom and other
 presentation timelines, performance and cross-machine acceptance, and the
 required human laps. The BCD clock defect versus lap-time acceptance conflict
