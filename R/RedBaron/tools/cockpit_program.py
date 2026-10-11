@@ -1,7 +1,7 @@
 """Decode the observed front-cockpit drawing programs for cache dependency audit.
 
-This intentionally accepts only the commands present in programs 3 and 4;
-unknown commands fail closed. It does not approve skipping native drawing.
+This decodes the observed front commands, including program 2's counted
+polygon. Raster/cache eligibility remains separate; unknown commands fail closed.
 """
 import argparse
 import hashlib
@@ -44,7 +44,11 @@ def decode(read, address, max_bytes=16384):
         if opcode==0x0ff0:
             return dict(bytes=address-start,commands=commands,
                         final_image_set=image_set,final_image=image)
-        if opcode==0x2002:
+        if opcode==0xaf2f:
+            count=words(1)[0]
+            if not 3<=count<=64:raise ValueError('Unsupported cockpit polygon count')
+            args=[count,*words(count*2)];kind='polygon'
+        elif opcode==0x2002:
             args=words(2);kind='colours'
         elif opcode in (0xa104,0xa0a4):
             args=words(4);kind='rectangle' if opcode==0xa104 else 'line'

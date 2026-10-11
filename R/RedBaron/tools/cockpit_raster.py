@@ -43,6 +43,7 @@ def render(read,h3,index,background):
             result[at]=(result[at]|bit) if colour&(1<<plane) else (result[at]&(~bit&255))
     for command in program['commands']:
         args=command['args'];kind=command['kind']
+        if kind=='polygon':raise ValueError('Cockpit polygon coverage has no accepted native model')
         if kind=='colours':
             _,fg,bg=colour_state(read,h3,*args)
         elif kind=='rectangle':

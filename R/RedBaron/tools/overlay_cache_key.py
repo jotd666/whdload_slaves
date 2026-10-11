@@ -47,6 +47,8 @@ def build(read, h3, program, base=0):
     effects = 0
     for command in commands['commands']:
         kind, args = command['kind'], command['args']
+        if kind == 'polygon':
+            raise ValueError('Cockpit polygon is not a runtime cache candidate')
         effects |= {'colours': 1, 'image_set': 2, 'image': 4, 'bitmap': 8, 'rectangle': 16}.get(kind, 0)
         if kind == 'colours':
             colour_seen = True

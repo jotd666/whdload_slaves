@@ -14,10 +14,10 @@ scene, cockpit and publication are separate stages, not CPU-only costs.
 |---|---|---|---|---|---|---|---|---|---| --- |---|---|---|---|---|---|---|---|
 | A500, 512K chip + 1.5M slow | C bundle / A2 stock | 1.844 / 1.722 | 2.016 / 1.922 | 57.68 → 57.05 | 399.51 / 73.70 / 0.28 → 380.41 / 63.46 / 3.61 | 3 / 13 | 1516 / 1486 | 0.924744 (candidate D5) | 5,400 units / 12 steps | Minimum-memory flight passes | N/A (68000) | No cache hardware | 1.955 → 1.975 (+1.01%) | 1.970 → 1.936 (-1.72%) | 1.931 → 1.997 (+3.39%) | 0.824 | — | CPU-gated off |
 | 020, 2M chip + 8M fast | C bundle / A2 stock | 6.008 / 5.666 | 7.222 / 7.313 | 13.79 → 10.22 | 116.77 / 41.40 / 0.08 → 86.64 / 31.28 / 6.96 | 44 / 24 | 1196 / 1258 | 1.001296 (candidate D5) | 0 | 6.398 → 6.695 (+4.6%) | 0x0000 → 0x0001 | 6.754 → 7.280 (+7.8%) | 7.266 → 7.258 (-0.11%) | 7.193 → 7.210 (+0.24%) | CPU-gated off | 4.568 | — | Pending |
-| 030/50, 2M chip + 8M fast, MMU | C bundle / A2 stock | 12.974 / 11.881 | 14.827 / 14.452 | 3.33 → 1.70 | 44.19 / 34.08 / 0.08 → 35.14 / 28.54 / 4.28 | 191 / 59 | 1154 / 1017 | 0.998656 (candidate D5) | 0 | 12.878 → 14.546 (+12.9%) | 0x2111; unchanged | Already enabled | 14.562 → 14.595 (+0.22%) | 14.556 → 14.514 (-0.29%) | CPU-gated off | 12.280 | — | Pending |
-| 030/50, 2M chip + 8M fast, no MMU tooltype | C bundle / A2 stock | 12.377 / 11.931 | 14.893 / 14.527 | 3.94 → 1.69 | 48.31 / 31.23 / 0.04 → 35.11 / 28.48 / 4.34 | 58 / 55 | 1262 / 962 | 0.998656 (candidate D5) | 0 | 030 class measured with MMU | 0x2000 → 0x2011 | 12.889 → 14.537 (+12.8%) | 030 class measured with MMU | 030 class measured with MMU | CPU-gated off | 12.280 | — | Pending |
-| 040/25 NOMMU, AGA, 2M chip + 16M Z3 fast | C bundle / A2 stock | 12.476 / 11.507 | 13.549 / 13.553 | 3.34 → 2.13 | 47.56 / 36.26 / 0.06 → 37.97 / 28.47 / 5.70 | 116 / 59 | 1144 / 1157 | 0.998656 (candidate D5) | 0 | 12.392 → 13.277 (+7.1%) | 0x80008000; unchanged | Already enabled | 13.384 → 13.428 (+0.32%) | 13.393 → 13.437 (+0.33%) | CPU-gated off | 11.631 | 45.42 / 32.53 / 2.89 | Pending |
-| 060/50 NOMMU, AGA, 2M chip + 16M Z3 fast | C bundle / A2 stock | 12.786 / 12.206 | 14.296 / 14.003 | 3.16 → 1.95 | 44.63 / 33.43 / 0.03 → 36.13 / 28.11 / 4.68 | 64 / 62 | 1452 / 1568 | 0.998656 (candidate D5) | 0 | 12.585 → 13.909 (+10.5%) | 0xa0808000; unchanged | Already enabled | 13.953 → 13.959 (+0.04%) | 13.982 → 13.998 (+0.11%) | CPU-gated off | 12.006 | 53.03 / 29.37 / 4.41 | 12.056 → 11.157 (-7.45%, byte guard; rejected) |
+| 030/50, 2M chip + 8M fast, MMU | C bundle / A2 stock | 12.974 / 11.881 | 14.827 / 14.452 | 3.33 → 1.70 | 44.19 / 34.08 / 0.08 → 35.14 / 28.54 / 4.28 | 191 / 59 | 1154 / 1017 | 0.998656 (candidate D5) | 0 | 12.878 → 14.546 (+12.9%) | 0x2111; unchanged | Already enabled | 14.562 → 14.595 (+0.22%) | 14.556 → 14.514 (-0.29%) | CPU-gated off | 12.280 | — | 12.305 → 12.305 (+0.00%, fast compositor) |
+| 030/50, 2M chip + 8M fast, no MMU tooltype | C bundle / A2 stock | 12.377 / 11.931 | 14.893 / 14.527 | 3.94 → 1.69 | 48.31 / 31.23 / 0.04 → 35.11 / 28.48 / 4.34 | 58 / 55 | 1262 / 962 | 0.998656 (candidate D5) | 0 | 030 class measured with MMU | 0x2000 → 0x2011 | 12.889 → 14.537 (+12.8%) | 030 class measured with MMU | 030 class measured with MMU | CPU-gated off | 12.280 | — | CPU class measured with MMU |
+| 040/25 NOMMU, AGA, 2M chip + 16M Z3 fast | C bundle / A2 stock | 12.476 / 11.507 | 13.549 / 13.553 | 3.34 → 2.13 | 47.56 / 36.26 / 0.06 → 37.97 / 28.47 / 5.70 | 116 / 59 | 1144 / 1157 | 0.998656 (candidate D5) | 0 | 12.392 → 13.277 (+7.1%) | 0x80008000; unchanged | Already enabled | 13.384 → 13.428 (+0.32%) | 13.393 → 13.437 (+0.33%) | CPU-gated off | 11.631 | 45.42 / 32.53 / 2.89 | 11.656 → 11.557 (-0.86%, fast compositor) |
+| 060/50 NOMMU, AGA, 2M chip + 16M Z3 fast | C bundle / A2 stock | 12.786 / 12.206 | 14.296 / 14.003 | 3.16 → 1.95 | 44.63 / 33.43 / 0.03 → 36.13 / 28.11 / 4.68 | 64 / 62 | 1452 / 1568 | 0.998656 (candidate D5) | 0 | 12.585 → 13.909 (+10.5%) | 0xa0808000; unchanged | Already enabled | 13.953 → 13.959 (+0.04%) | 13.982 → 13.998 (+0.11%) | CPU-gated off | 12.006 | 53.03 / 29.37 / 4.41 | 12.056 → 11.981 (-0.62%, fast compositor) |
 
 C2 is dropped under §0.3: every 2,000-field same-build CPU-class pair is below 2%; the live-slot cache passed its native mission-load/bank-change/exit twin (54,020 calls, 11 invalidations, zero mismatches), 437 host tests and the hook audit. Candidate developer SHA-256 `eeadc00619d796c3850f4d83f4bf51a87ea80019737935e5a78418ef17b502ea`; evidence `completion-c2-{a500,020,030,040,060}-{off,on}` and `completion-c2-twin-r2`. The normal bundle is unchanged.
 
@@ -163,10 +163,20 @@ tests, 80 hook ranges and 135 VERIFY patch destinations pass.
 
 The one-pair-per-class timing batch for this compositor is in progress
 (`completion-e2-fast-{060,040,030,020}-{off,on}`, 2,000 PAL fields per case).
-No completed pair is available yet; do not attribute the prior byte-guard pair
-to this source. The normal verified mask excludes bit 18. Remaining work includes
+The completed 060/040/030 pairs are all below 2%; the 020 pair remains in
+progress. Do not attribute the prior byte-guard pair to this source. The normal verified mask excludes bit 18. Remaining work includes
 CPU selection from those results, the rest of the instrument/dispatch cache,
 a combined cockpit composite and the other-view/map twins.
+
+The larger front script (program 2) contains a counted polygon (`$af2f`),
+which the small gun-overlay cache does not accept. Its decoder and a bounded
+solid-script preparation model are now present. The separate native coverage
+helper prepares white solid primitives in a private script and renders into a
+one-plane chip mask with temporary drawing context restored. It is assembled
+but not included or called in the current slave; native validation and program-2
+integration remain open. Unsupported polygons still fail closed in the current
+raster/key models. All 459 host tests pass; no extra emulator survey was run.
+
 
 
 040/060 functional checks use separate MMU-core configurations. Their timing
