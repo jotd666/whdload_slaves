@@ -3827,8 +3827,10 @@ message-layout fields around `h3:04820` and other earlier globals. Static
 references identify candidates; they are not all newly established owners.
 Prioritize cross-domain readers and persistent cache keys before expanding
 arithmetic models for scratch that is unconditionally overwritten. In particular,
-retain the original terrain list at `h3:0526a/0526e`, used by world code at
-`sim:10bd4/10bdc`; do not treat the surrounding page as disposable render memory.
+retain the original terrain list at `h3:0526a/0526e`, used by the native sorter
+at `sim:10bd4/10bdc`; do not treat the surrounding page as disposable render memory.
+The later terrain-list audit below identifies its loader call context; this
+reference alone does not establish a per-tick physics reader.
 
 `w6-ground-residual-inventory/analyze.py` and `inventory.json` retain the
 reproducible analysis of `w6-ground-restore-030-v2`,
@@ -3894,3 +3896,60 @@ scaling, and CIA wrap. All 275 host tests pass. No new emulator was launched,
 no slave bytes changed and no performance result is inferred. Reproduce with
 `message_boundaries.py ORIGINAL_SIM ORDINARY DELAYED NO_RENDER --out REPORT`;
 `w6-ground-residual-inventory/message-boundaries.json` retains the full result.
+
+
+## Complete terrain-list boundary check and builder-position ownership
+
+`terrain_state.py` checks the three retained current-build ground schedules:
+ordinary, deliberately delayed and no-render. The list pointer/count at
+`h3:0526a/0526e` identifies **19 records of 34 bytes**, a complete 646-byte
+payload in a tracked 654-byte allocation including its eight-byte header.
+The count-to-size relationship is explicit in the native allocation at
+`sim:0ed96–0eda0`. The checker requires the complete active list to fit in one
+tracked payload, reads every record byte in order, and rejects changed pointers,
+counts, record tails/order or truncated memory.
+
+All 15 matched boundaries in all three runs have identical complete records,
+order and list pointer/count. The view-change countdown at `h3:05270` and
+14-byte camera-key/recomputation state at `h3:054de–054eb` also match exactly:
+16 control bytes per boundary. The payload and controls remain constant over
+this particular ground window. This confirms preservation in these captures;
+it does not exercise terrain destruction or every transition. The earlier
+native phase test remains the evidence for forced rebuild versus unsafe reuse;
+equal boundary bytes alone do not replace that test.
+
+The adjacent 12 bytes at `h3:05272–0527d` are a distinct builder-position copy.
+At `sim:0f0a0–0f0b8`, the builder loads its camera object, takes the position at
+object offset 8 and copies three longwords into this range. The original
+relocation inventory has ten direct references to the range, all inside
+`sim:0f01c–0f5f4`. The later reads subtract those coordinates when evaluating
+terrain positions or use the copied height. The list pointer/count immediately
+before it is not part of that scratch copy.
+
+The builder-position copy differs between ordinary and delayed runs at
+boundaries 2, 5, 9 and 13. It differs between ordinary and no-render at every
+boundary 2–14. The checker retains all three raw copies in the report and
+compares the persistent records/controls separately; it does not erase these
+raw differences. The static assignment and confined direct uses support the
+position's drawing role. Arbitrary computed aliases and all consumers are not
+formally excluded by a relocation inventory.
+
+**Ownership wording correction:** the previous residual-inventory paragraph
+called the `sim:10bd4/10bdc` list access “world code.” Its enclosing sorter starts
+at `sim:10b52`, and the inspected direct call at `sim:0efa6` is in the terrain
+loader. The sorter compares model-ID-derived keys and swaps whole 34-byte
+records. That reference alone does not prove per-tick physics access. The
+complete list remains preserved; no restoration code is removed on this basis.
+
+The verifier binds the supported original executable, allocation bounds,
+frozen capture hashes, matching global bases and consecutive world IDs. It
+also checks the loader-to-sorter call bytes and the builder-position reference
+inventory. Three host tests cover full-record tail/order corruption, persistent
+controls versus separately reported scratch, invalid extents/counts and short
+reads. All 278 host tests pass. No emulator was launched, slave bytes changed,
+or new performance/capacity claim made.
+
+Reproduce with `terrain_state.py ORIGINAL_SIM ORDINARY DELAYED NO_RENDER --out REPORT`.
+The retained result is `w6-ground-residual-inventory/terrain-state.json`.
+Message-layout, other globals, remaining consumers and the broader gameplay,
+CPU-capacity and 50-FPS requirements remain open.

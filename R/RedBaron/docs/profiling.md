@@ -57,6 +57,12 @@ ordinary/delayed drawing clears it at different publication times, without
 changing the tested priority decision. See “Ground-run message logic versus
 pending erasure” in `w6-verification.md`. Other residual ownership checks remain.
 
+The same three ground schedules also match all 19 complete terrain records
+(646 bytes), list order/pointer/count and 16 cache-control bytes at every retained
+boundary. The adjacent builder-position copy varies with drawing and is reported
+separately. See “Complete terrain-list boundary check and builder-position
+ownership” in `w6-verification.md`, including the corrected loader/sorter context.
+
 The current full W6 VERIFY bundle also passes the cached-68030 Preferences
 clock-boundary check: 222 CIA ticks spent in the native panel are excluded,
 one CIA tick of existing simulation debt is preserved, and no world update or
