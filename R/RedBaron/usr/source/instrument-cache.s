@@ -21,7 +21,13 @@ instrument_cache_install:
  adda.l #perf_instrument_cpu-.cpu,a0
  jsr (a0)
  tst.l d1
+ bne .cpu_ready
+ lea .options(pc),a0
+.options
+ adda.l #perf_mask-.options,a0
+ btst #3,1(a0) ; bit 19 requests gauge-layer capture on every supported 020+
  beq .done
+.cpu_ready
  move.l a1,a3
  move.l a3,a0
  adda.l #$301b2,a0
@@ -111,6 +117,18 @@ instrument_cache_before:
  clr.l (a0)
  move.l instrument_cache_h3(pc),a4
  adda.l #$8000,a4
+ lea .layers_before(pc),a0
+.layers_before
+ adda.l #cockpit_gauges_before-.layers_before,a0
+ jsr (a0)
+ ; Standalone gauge reuse keeps its measured 020/040 policy. Other CPUs
+ ; install these shared hooks only to feed the complete cockpit compositor.
+ lea .reuse_cpu(pc),a0
+.reuse_cpu
+ adda.l #perf_instrument_cpu-.reuse_cpu,a0
+ jsr (a0)
+ tst.l d1
+ beq ic_before_native
  IFD VERIFY
  lea instrument_cache_twin_result(pc),a0
  tst.l 16(a0)
@@ -212,6 +230,12 @@ instrument_cache_native_tail:
 
 instrument_cache_after:
  movem.l d0-a6,-(sp)
+ move.l instrument_cache_h3(pc),a4
+ adda.l #$8000,a4
+ lea .layers_after(pc),a0
+.layers_after
+ adda.l #cockpit_gauges_after-.layers_after,a0
+ jsr (a0)
  IFD VERIFY
  bsr instrument_cache_twin_end
  ENDC

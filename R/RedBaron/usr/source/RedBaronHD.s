@@ -686,3 +686,4 @@ time_input_observe_queue: dcb.b TIME_INPUT_BYTES,0
 	include "cockpit-compose.s"
 	include "cockpit-stage.s"
 	include "cockpit-static.s"
+	include "cockpit-gauges.s"

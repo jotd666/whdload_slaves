@@ -148,6 +148,7 @@ cs_static_done:
  rts
 
 cockpit_static_invalidate:
+ bsr cockpit_gauges_invalidate
  move.l a0,-(sp)
  lea cockpit_static_valid(pc),a0
  clr.w (a0)

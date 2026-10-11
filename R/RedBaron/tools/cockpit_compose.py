@@ -73,3 +73,42 @@ def native_static_layer(image, mask, offset, bltsize, stride, bottom):
         pixels[begin:begin+count] = image[plane*stride:plane*stride+count]
     coverage[offset:offset+count] = mask[:count]
     return Layer(bytes(pixels), bytes(coverage))
+
+
+def native_gauge_layer(image, mask, width, height, x, y, frame, rect):
+    """Seed an unmirrored gauge from its resource, then capture its needle.
+
+    The result rectangle must be wholly opaque in the native background mask.
+    A rejected case retains native drawing; this is not a colour-derived mask.
+    """
+    pitch = ((width + 15) // 16) * 2
+    if (not 1 <= width <= 64 or not 1 <= height <= 64 or x < 0 or y < 0
+            or x + pitch * 8 > 320 or y + height > 200
+            or len(image) != pitch * height * 5
+            or len(mask) != (pitch + 2) * height or len(frame) != 40000):
+        return None
+    pixels, coverage = bytearray(40000), bytearray(8000)
+    for row in range(height):
+        if any(mask[row*(pitch+2)+pitch:(row+1)*(pitch+2)]):
+            return None
+        for col in range(pitch * 8):
+            source_bit = 128 >> (col % 8)
+            if not mask[row*(pitch+2)+col//8] & source_bit:
+                continue
+            dest, bit = (y+row)*40+(x+col)//8, 128 >> ((x+col) % 8)
+            coverage[dest] |= bit
+            for plane in range(5):
+                if image[plane*pitch*height+row*pitch+col//8] & source_bit:
+                    pixels[plane*8000+dest] |= bit
+    rx, ry, rw, rh = rect
+    if rx < 0 or ry < 0 or rw <= 0 or rh <= 0 or rx+rw > 320 or ry+rh > 200:
+        return None
+    for row in range(ry, ry+rh):
+        for col in range(rx, rx+rw):
+            dest, bit = row*40+col//8, 128 >> (col % 8)
+            if not coverage[dest] & bit:
+                return None
+            for plane in range(5):
+                offset = plane*8000+dest
+                pixels[offset] = (pixels[offset] & ~bit) | (frame[offset] & bit)
+    return Layer(bytes(pixels), bytes(coverage))

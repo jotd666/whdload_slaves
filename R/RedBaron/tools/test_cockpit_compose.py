@@ -110,3 +110,44 @@ class NativeStaticLayerTests(unittest.TestCase):
                                            (3520,4628,2880,75)):
             self.assertIsNone(native_static_layer(bytes(5*2880), bytes(8000),
                                                  offset,size,stride,bottom))
+
+
+class NativeGaugeLayerTests(unittest.TestCase):
+    def test_resource_background_and_exact_needle_edges(self):
+        from cockpit_compose import native_gauge_layer
+        # Deliberately unrelated scene: it must not leak outside the needle.
+        frame = bytes([255])*40000
+        layer = native_gauge_layer(bytes(5*4*3), bytes([255,255,255,255,0,0])*3,
+                                   32, 3, 5, 100, frame, (9,101,3,1))
+        self.assertIsNotNone(layer)
+        for plane in range(5):
+            for y in range(200):
+                for x in range(320):
+                    bit = 128 >> (x % 8)
+                    self.assertEqual(bool(layer.pixels[plane*8000+y*40+x//8] & bit),
+                                     y == 101 and 9 <= x < 12)
+        self.assertEqual(sum(byte.bit_count() for byte in layer.mask), 32*3)
+
+    def test_random_shifted_resource_pixels(self):
+        from cockpit_compose import native_gauge_layer
+        rng = random.Random(0x19de0)
+        for x in (0, 1, 7, 15, 16, 288):
+            source = rng.randbytes(5*4*3)
+            layer = native_gauge_layer(source, bytes([255,255,255,255,0,0])*3,
+                                       32,3,x,100,bytes(40000),(x+3,101,5,1))
+            for plane in range(5):
+                for y in range(3):
+                    for col in range(32):
+                        expected = bool(source[plane*12+y*4+col//8] & (128 >> (col%8)))
+                        if y == 1 and 3 <= col < 8:
+                            expected = False
+                        self.assertEqual(bool(layer.pixels[plane*8000+(100+y)*40+(x+col)//8]
+                                              & (128 >> ((x+col)%8))), expected)
+
+    def test_holes_padding_and_outside_rectangle_reject(self):
+        from cockpit_compose import native_gauge_layer
+        source, frame = bytes(5*4), bytes(40000)
+        for mask, rect in ((bytes([255,254,255,255,0,0]),(0,0,32,1)),
+                           (bytes([255,255,255,255,0,1]),(0,0,1,1)),
+                           (bytes([255,255,255,255,0,0]),(31,0,2,1))):
+            self.assertIsNone(native_gauge_layer(source,mask,32,1,0,0,frame,rect))

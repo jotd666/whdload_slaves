@@ -66,8 +66,14 @@ private chip targets matched to the native gauge-history pages. The original
 target is restored before sector text; the normal mask excludes this transport.
 The static base layer is captured into fast RAM from the native packed image
 and mask, keyed by its descriptor/effective clip and invalidated by resource
-lifetime or forced redraw. Gauges and foreground layer capture, dirty-update
-integration, the final single masked copy and native pixel twins remain open.
+lifetime or forced redraw. Gauge-layer capture is wired to the shared native
+dispatch boundaries on 020+: raw-input keys select two records per gauge,
+resource masks define opacity, resource pixels seed the background, and only
+the exact native result rectangle is copied from the drawing target. Unsupported
+coverage retains native drawing. The model covers shifted resources, opaque
+black, rectangle edges and rejected mask holes; native capture acceptance is
+still pending. Foreground layer capture, dirty-update integration, the final
+single masked copy and native pixel twins remain open.
 The transport still performs temporary full-frame seed/copy operations and
 must not be used as a performance candidate yet.
 Full-composition view twins remain open. The map-toggle check is dropped: the

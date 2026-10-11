@@ -60,6 +60,7 @@ perf_read_options:
 	btst #19,d0
 	beq .cockpit_dependencies_ready
 	bset #14,d0
+	bset #18,d0 ; shared gauge boundaries; reuse itself retains CPU policy
 .cockpit_dependencies_ready
 	lea perf_mask(pc),a0
 	move.l d0,(a0)
