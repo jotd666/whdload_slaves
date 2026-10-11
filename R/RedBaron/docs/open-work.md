@@ -42,17 +42,18 @@ one field. E2's small gun-overlay cache is dropped: every CPU-class pair misses 
 The solid-script cache is also dropped after every CPU-class pair missed 2%.
 Both runtime candidates are removed; reusable helpers remain VERIFY-only.
 The next candidate is a persistent native gauge cache behind development bit 18,
-on 020+ only. It reuses a gauge's existing buffer pixels only when its raw
+on the measured 020/040 classes only. It reuses a gauge's existing buffer pixels only when its raw
 inputs/context, native rectangle and bounded pixel guard match, with selective
 replay of that gauge's drawing-state writes. Native forced/dirty redraws and
 unsupported geometry use the original path. The seven-gauge native pixel/state twin passes;
-the CPU-class timing batch is running. The 040 pair clears 2%; the 060 pair
-does not. The normal verified mask excludes bit 18 until CPU selection is final.
+all CPU-class timing pairs are complete. The 020/040 pairs clear 2%; 030/060
+do not, and the shared CPU gate excludes them. The normal verified mask still
+excludes bit 18 pending the remaining E2 view/map acceptance.
 The combined-copy coverage primitive is implemented as standalone assembly with
 an independent truth-table model (489 host tests pass), including opaque black
 and rejection of inversion or plane-dependent masks. It is not yet included in
 the slave; native capture/context restoration and combined composition remain open.
-CPU selection and view/map twins also remain open. Results are in the scoreboard. D5 remains postponed and E2–F remain
+View/map twins also remain open. Results are in the scoreboard. D5 remains postponed and E2–F remain
 open; the earlier lists below are historical context, not the execution order.
 
 

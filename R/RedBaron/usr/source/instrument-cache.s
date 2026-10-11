@@ -1,4 +1,4 @@
-; E2 persistent native gauge cache, sim v1 and 020+ only, CUSTOM2 bit 18.
+; E2 persistent native gauge cache, sim v1, measured 020/040 classes only, CUSTOM2 bit 18.
 ; Reuse pixels only with identical raw inputs/context AND a matching packed
 ; pixel guard. Native forced redraws, changing bounds and unsupported geometry
 ; fall back. The normal verified mask must not select this until measured.
@@ -16,10 +16,11 @@ IC_DEST_KEY = 60
 
 instrument_cache_install:
  movem.l d0-a6,-(sp)
- lea .attn(pc),a0
-.attn
- adda.l #perf_attnflags+3-.attn,a0
- btst #1,(a0)
+ lea .cpu(pc),a0
+.cpu
+ adda.l #perf_instrument_cpu-.cpu,a0
+ jsr (a0)
+ tst.l d1
  beq .done
  move.l a1,a3
  move.l a3,a0

@@ -43,7 +43,8 @@ perf_read_options:
 	beq .timing_dependencies_done
 	ori.l #$0300,d0
 .timing_dependencies_done
-	btst #1,perf_attnflags+3(pc)
+	bsr perf_instrument_cpu
+	tst.l d1
 	bne .instrument_cpu_ready
 	bclr #18,d0
 .instrument_cpu_ready
@@ -54,6 +55,27 @@ perf_read_options:
 	lea perf_mask(pc),a0
 	move.l d0,(a0)
 	movem.l (sp)+,d0-a6
+	rts
+
+; E2 persistent gauges: measured +2.19% on 020, +3.00% on 040.
+; 030/060 miss 2%. Test higher CPU flags first: faster processors also set
+; compatibility flags for earlier CPUs. Preserve d0 (the option mask).
+; Return d1=1 only for 020/040, otherwise 0. All modes share this policy.
+perf_instrument_cpu:
+	move.l perf_attnflags(pc),d1
+	btst #7,d1
+	bne .no
+	btst #3,d1
+	bne .yes
+	btst #2,d1
+	bne .no
+	btst #1,d1
+	beq .no
+.yes
+	moveq #1,d1
+	rts
+.no
+	moveq #0,d1
 	rts
 
 ; a1 = relocated sim hunk 0, a2 = resload. Preserve the loader's registers.
