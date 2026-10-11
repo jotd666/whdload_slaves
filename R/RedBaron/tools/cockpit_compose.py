@@ -46,3 +46,30 @@ def update(composite, layers, rect, *, pitch=40, rows=200, planes=5):
             for plane, colour in enumerate(colours + [coverage]):
                 start = plane * size + offset
                 composite[start:start+2] = colour.to_bytes(2, 'big')
+
+
+def native_static_layer(image, mask, offset, bltsize, stride, bottom):
+    """Expand the supported sim:2c144 packed source into one full-size layer.
+
+    Mirror the native full-width/partial-bottom-copy branches. Unsupported
+    layouts return None so their caller retains the native draw. The caller
+    invalidates this snapshot on resource changes or native forced redraws.
+    """
+    width, source_rows = bltsize & 63, bltsize >> 6
+    if width != 20 or not source_rows or stride != source_rows * 40:
+        return None
+    if offset < 0 or offset % 40:
+        return None
+    rows = source_rows - (159 - bottom if 75 <= bottom < 159 else 0)
+    count = rows * 40
+    if rows <= 0 or offset + count > 8000:
+        return None
+    if len(image) < 5 * stride or len(mask) < count:
+        return None
+    pixels = bytearray(40000)
+    coverage = bytearray(8000)
+    for plane in range(5):
+        begin = plane * 8000 + offset
+        pixels[begin:begin+count] = image[plane*stride:plane*stride+count]
+    coverage[offset:offset+count] = mask[:count]
+    return Layer(bytes(pixels), bytes(coverage))

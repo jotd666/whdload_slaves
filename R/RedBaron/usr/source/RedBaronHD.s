@@ -88,6 +88,7 @@ slv_config
 	dc.b "C2:X:Consistent game speed:13;"
 	dc.b "C2:X:Larger game fast-memory pool:16;"
 	dc.b "C2:X:Instruction cache policy:17;C2:X:Persistent gauges:18;"
+	dc.b "C2:X:Cockpit transport (development):19;"
 	ELSE
 	IFD DEVELOPER
 	dc.b "C2:X:Table mirror:0;C2:X:Cached mirror:1;"
@@ -98,6 +99,7 @@ slv_config
 	dc.b "C2:X:Consistent game speed:13;"
 	dc.b "C2:X:Larger game fast-memory pool:16;"
 	dc.b "C2:X:Instruction cache policy:17;C2:X:Persistent gauges:18;"
+	dc.b "C2:X:Cockpit transport (development):19;"
 	ELSE
 	dc.b "C2:B:Faster rendering;"
 	ENDC
@@ -680,3 +682,7 @@ time_pose_current: dcb.b TIME_POSE_CAPACITY*TIME_POSE_STRIDE,0
 time_pose_previous: dcb.b TIME_POSE_CAPACITY*TIME_POSE_STRIDE,0
 time_blend_output: dcb.b TIME_POSE_CAPACITY*TIME_POSE_STRIDE,0
 time_input_observe_queue: dcb.b TIME_INPUT_BYTES,0
+
+	include "cockpit-compose.s"
+	include "cockpit-stage.s"
+	include "cockpit-static.s"

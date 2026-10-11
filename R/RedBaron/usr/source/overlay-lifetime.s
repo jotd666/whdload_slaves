@@ -135,6 +135,10 @@ ovlife_invalidate:
 ovlife_save_ccr: dc.w $40e7
 	move.l a0,-(sp)
 	bsr instrument_cache_invalidate
+	lea .cockpit_static_base(pc),a0
+.cockpit_static_base
+	adda.l #cockpit_static_invalidate-.cockpit_static_base,a0
+	jsr (a0)
 	IFD VERIFY
 	lea overlay_shadow_valid(pc),a0
 	clr.l (a0)+

@@ -66,3 +66,47 @@ class CockpitCompositionTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 self.compose(out, layers, rect)
             self.assertEqual(out, bytes([0xa5] * (6*self.size)))
+
+
+class NativeStaticLayerTests(unittest.TestCase):
+    def test_full_and_clipped_native_cookie_cut(self):
+        from cockpit_compose import native_static_layer
+        rng = random.Random(0x2c144)
+        source = rng.randbytes(5*2880)
+        mask = rng.randbytes(8000)
+        for bottom in (65, 88, 139, 159, 199):
+            layer = native_static_layer(source, mask, 3520, 4628, 2880, bottom)
+            self.assertIsNotNone(layer)
+            background = rng.randbytes(40000)
+            expected = bytearray(background)
+            rows = 72 - (159-bottom if 75 <= bottom < 159 else 0)
+            # Independent native blitter-style oracle with packed source pitch.
+            for plane in range(5):
+                for row in range(rows):
+                    for byte in range(40):
+                        src = row*40+byte
+                        dst = plane*8000+3520+src
+                        expected[dst] = ((background[dst] & ~mask[src])
+                                         | (source[plane*2880+src] & mask[src]))
+            actual = bytearray(background)
+            for plane in range(5):
+                for byte, coverage in enumerate(layer.mask):
+                    dst = plane*8000+byte
+                    actual[dst] = ((actual[dst] & ~coverage)
+                                   | (layer.pixels[dst] & coverage))
+            self.assertEqual(actual, expected)
+
+    def test_opaque_black_and_source_rows_beyond_clip(self):
+        from cockpit_compose import native_static_layer
+        layer = native_static_layer(bytes(5*2880), bytes([255])*8000, 3520, 4628, 2880, 139)
+        self.assertEqual(layer.pixels, bytes(40000))
+        self.assertEqual(layer.mask[3520:5600], bytes([255])*2080)
+        self.assertEqual(layer.mask[5600:], bytes(2400))
+
+    def test_unsupported_layouts_fall_back(self):
+        from cockpit_compose import native_static_layer
+        for offset, size, stride, bottom in ((3521,4628,2880,159), (6000,4628,2880,159),
+                                           (3520,4627,2880,159), (3520,4628,2840,159),
+                                           (3520,4628,2880,75)):
+            self.assertIsNone(native_static_layer(bytes(5*2880), bytes(8000),
+                                                 offset,size,stride,bottom))

@@ -222,6 +222,23 @@ map is outside the patched flight renderer. Full cockpit composition and its
 view twins remain open; bit 18 is still outside the normal verified mask.
 
 
+The full-composition transport's first bounded 040 integration run completes
+ten publication crossings. At the final stop its lifetime counters are 114
+entries / 114 exits, active redirection is zero, and the native framebuffer
+aliases are outside its private chip allocation. The screenshot retains the
+cockpit and the native message. Evidence `completion-e2-cockpit-stage`, VERIFY
+SHA-256 `b3cd1e9906722b8686c300bb31c09e1e2c8fafef62c1372663b628ebf56e4fad`. This is not a
+pixel twin or FPS result. Publication has already switched one framebuffer
+alias, so equality of both aliases at that breakpoint is not a valid check;
+neither may retain the private target. After this run, source adds the static
+base-layer capture and lifetime invalidation. That newer capture path has host
+model coverage, not native acceptance yet. All three updated builds, 505 host
+tests, 83 hook ranges and 138 VERIFY patch destinations pass. Development bit
+19 remains excluded from the normal mask. Its temporary full-frame transport
+copies must be replaced by dirty-layer updates and one masked composition
+before any performance measurement; the normal-bundle scoreboard is unchanged.
+
+
 040/060 functional checks use separate MMU-core configurations. Their timing
 results will use the frequency-sensitive NOMMU cores. Configuration generation
 passes all six cases and the functional variants. All three builds pass; the

@@ -61,8 +61,15 @@ pack model are available for that implementation. `cockpit-compose.s` adds an
 ordered dirty-rectangle update core: rebuild the union of old/new layer bounds,
 preserve foreground overlaps and opaque black, then expose one combined
 image/mask. It assembles and its host model passes movement/removal/overlap
-cases; it has no game hook yet and establishes no performance result. Native
-layer capture, key/lifetime integration and publication remain to implement.
+cases; it has no game hook yet and establishes no performance result. Development bit 19 now hooks the full native cockpit interval on 020+ into
+private chip targets matched to the native gauge-history pages. The original
+target is restored before sector text; the normal mask excludes this transport.
+The static base layer is captured into fast RAM from the native packed image
+and mask, keyed by its descriptor/effective clip and invalidated by resource
+lifetime or forced redraw. Gauges and foreground layer capture, dirty-update
+integration, the final single masked copy and native pixel twins remain open.
+The transport still performs temporary full-frame seed/copy operations and
+must not be used as a performance candidate yet.
 Full-composition view twins remain open. The map-toggle check is dropped: the
 bundled game documentation specifies offline navigation maps, not an in-flight
 map command. Results are in the scoreboard. D5 remains postponed and E2–F remain
