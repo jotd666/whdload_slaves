@@ -38,6 +38,28 @@ between committed samples; native self-tests and hook audits pass. See
 transaction exclusions, sampled backlog ranges and reproduction. Event/bank/dense
 capacity, full gameplay equivalence and smooth 50 FPS remain open.
 
+## W6 A500 scheduled banking/fire capacity, 2,000 PAL fields
+
+A fresh same-build A500 run begins sampling at the first world update and
+includes the timestamped Right-down/up and Fire-down/up replay. **322 native
+input observations** verify all four events and exactly two commands, including
+the native X axis and Fire flag. Eight consecutive 250-field windows complete
+**34/41/40/42/41/41/41/41** world updates and publish **1/2/3/2/2/2/2/2** frames.
+
+Across 40 PAL seconds, **321** updates complete against **326.577** funded, with
+one update in progress at the end and **0.40 FPS**. Total backlog changes
+**0.138 → 6.426 → 5.715** updates at the start, midpoint and end: the second
+20 seconds complete 164 updates against 163.288 funded, slightly reducing the
+initial deficit. The longest sampled span without a world completion is
+**55 fields (1.10 seconds)**; in the second half it is still **46 fields**.
+This is finite throughput evidence with a brief control maneuver, not sustained
+banking, combat equivalence or responsive-gameplay acceptance.
+
+The legacy CUSTOM5 bit-1 banking fixture is bypassed when W6 owns the input
+bitmap. Selecting that bit alone is **not** evidence of banking under W6.
+Use the recorded timestamped replay and verify its native input effects. See
+`w6-verification.md`, “A500 capacity with scheduled Right/Fire input.”
+
 ## W6 current-bundle rendering breakdown
 
 A follow-up on the same synthetic cached-68030 200 MHz configuration separates

@@ -3009,3 +3009,83 @@ full-state/physics/combat correctness, or smooth 50 FPS. W6 remains VERIFY-only.
 Four new host tests cover fractional accounting, conserved time with growing
 debt, retained transactions and malformed/changed-rate samples; the full suite
 passes 236 tests. No slave bytes changed for this analysis.
+
+
+## A500 capacity with scheduled Right/Fire input
+
+The previous build (`15005c2aa3b8e0c826fabbe7be6f38ce1178e2acc251c21c3f16117bfc559eb3`,
+text 250834) was booted afresh with the full W6 VERIFY mask, maximum details,
+Time Scale 40 and the existing CUSTOM5 bit-31 replay plus bit-20 observer and
+bit-9 deferred activation. No forced dt or time compression is used. The four
+scheduled events are Right-down/up then Fire-down/up at active-CIA origin 10155
+plus 32/64/96/128 ticks. This is a brief input maneuver, not continuous banking
+or physical keyboard acquisition.
+
+First, inspection rejected the legacy CUSTOM5 bit-1 banking preset for W6:
+`tape.s` skips that bitmap injection once `time_keys_ready` owns flight input.
+The boot-only `w6-sustained-bank-a500` evidence is marked rejected and was quit;
+it supplies no banking/capacity claim. No emulators ran concurrently.
+
+The accepted capture is `tmp/dev/tmp/prof/w6-sustained-replay-a500/`. Its census
+starts at the first completed world update, then the next committed pacing
+VBlank. It samples four 250-field windows, followed by four more from exactly
+the paused endpoint. The collector asserts the complete opening state of each
+appended window equals the preceding closing state; no flight time is discarded.
+The independent `sustained_capacity.py` checker validates all eight windows and
+both four-window halves separately.
+
+| Window | Completed world ticks | Native publications |
+|---|---:|---:|
+| 1 | 34 | 1 |
+| 2 | 41 | 2 |
+| 3 | 40 | 3 |
+| 4 | 42 | 2 |
+| 5 | 41 | 2 |
+| 6 | 41 | 2 |
+| 7 | 41 | 2 |
+| 8 | 41 | 2 |
+
+Each window spans 250 fields / 296 CIA ticks and funds 40.822087542 world
+updates. Across 2,000 fields / 2,368 CIA ticks, 321 world updates complete versus
+326.576700337 newly funded; 322 start, leaving one update in progress. The
+16 publications yield 0.40 FPS. Every window has zero MESSAGE/SHORTEN events,
+and WORLD_BODY_DONE equals its completed-world count. Publication beam/cap and
+exact funding checks pass.
+
+Total backlog (fractional credit, due work, in-progress update and uncollected
+CIA time) is 0.137912458 initially, 6.426262626 at the midpoint and 5.714612795
+finally. Thus the first 20 seconds add 6.288350168 ticks of debt, while the next
+20 seconds repay 0.711649832. Uncollected CIA debt is 1 → 40 → 34. Committed
+samples range from 0 to 64 CIA ticks of debt and 0.137912458 to 9.895084175 world
+ticks of total backlog; the second-half maxima are 53 and 8.439326599. These
+are sampled ranges, not instantaneous bounds.
+
+All 2,000 fields are retained. There are 1,963 committed intervals and 37
+transaction samples bridged by exact funding checks. The longest sampled span
+without a world completion is 55 fields (1.10 PAL seconds); it remains 46 fields
+in the second half. The deficit therefore does not keep increasing in this
+finite continuation, but rendering still stalls simulation for visibly long
+intervals. Neither retained debt nor this aggregate completion rate establishes
+responsive gameplay or full W6 acceptance.
+
+The collector also observes native post-input sim:21d30 on every world update.
+`check-replay.py` validates the four 16-byte scheduled records against their
+origin and spacing, then uses `keyboard_replay.py` to check all 322 observed
+rows against those deadlines. Its acquisition-oracle adapter uses deadline−1
+solely to express the scheduled eligibility boundary; it does not claim physical
+acquisition. All four events are consumed, exactly two commands are popped,
+held Right/Fire and releases reach their expected ticks, and the native X axis
+and Fire flag agree. The final queue and counters have no dropped, repeated,
+overflowed or pending events. This verifies input consumption, not projectile
+outcomes, aircraft trajectory or full simulation-state equivalence.
+
+Native self-test counters 426/512/638/133 and terrain/cache/list 2/1/2 pass;
+54 selected and two disabled hook ranges pass. The owned emulator was verified
+and quit. Retained evidence includes the exact slave/listing, `capture-census.py`,
+`check-replay.py`, native queue/record/counter bytes, per-window logs and RAM,
+`scheduled-replay-check.json`, and the complete and half-run capacity reports.
+Reproduce with the existing replay boot selection, run the retained collector
+with `--windows 4 --from-first-world`, then `--windows 4 --append` at its paused
+endpoint; run the retained replay checker and `sustained_capacity.py` afterward.
+No source/slave bytes changed. Event/dense/continuous-bank and cross-CPU capacity,
+full gameplay correctness, input latency and smooth 50 FPS remain open.
