@@ -1933,3 +1933,8 @@ absolute RPM/pitch conversion and remaining repeated live-driving requests.
 TIME_REPLAY_TIMING now consumes each recorded skid request once, including
 crossed records and the final undrawn tail. Private history and live no-skid
 replay checks pass; sample-start and listening acceptance remain open.
+
+The optional TIME_AUDIO gate now gives live off-road requests an eight-field
+wall-clock cadence with retained remainder. Actual sample starts and native-step
+sound equivalence have focused validation; see AUDIO_TIMING.md. Other repeated
+live sound callers remain open.

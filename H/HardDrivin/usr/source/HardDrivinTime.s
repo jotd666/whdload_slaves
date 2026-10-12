@@ -115,6 +115,9 @@ _time_install:
 	ENDC
 	IFD VERIFY_TIME_REPLAY_TIMING
 	bsr _replay_install
+	IFD VERIFY_TIME_AUDIO
+	bsr _audio_install
+	ENDC
 	ENDC
 	IFD VERIFY_TIME_TIMELINES
 	bsr _timeline_install
@@ -648,4 +651,8 @@ _time_q16_results: dcb.l 7*9*7*2,0
 
 	IFD VERIFY_TIME_PHANTOM
 	INCLUDE "HardDrivinPhantom.s"
+	ENDC
+
+	IFD VERIFY_TIME_AUDIO
+	INCLUDE "HardDrivinAudio.s"
 	ENDC

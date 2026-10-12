@@ -31,7 +31,8 @@ poses, duration and distance-derived pitch, with native-step, pause and slow-fra
 checks. Phantom instruction scrolling and its camera transition now also use
 elapsed time, with native-step, pause and slow-frame checks. The remaining audio
 audit, large-step velocity safety and full acceptance are unfinished. The sound
-caller inventory and replay skid-request correction are in AUDIO_TIMING.md.
+caller inventory, replay skid-request correction and live off-road cadence
+checks are in AUDIO_TIMING.md.
 See GAME_TIME.md;
 the step-4 acceptance criteria remain open.
 

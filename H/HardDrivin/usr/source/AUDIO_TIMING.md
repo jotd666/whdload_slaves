@@ -41,7 +41,7 @@ caller exists, or a listening test.
 | `$07d8e` | 10 | Start transition checks phase zero, then sets phase one; controls run once per outer frame. |
 | `$0851a`, `$11486` | 1, 0 | Title/instruction module selection; native module identity suppresses restart. |
 | `$08e4c`, `$092f6`, `$093b4`, `$093f4` | 3, 3, 2, 2 | Finish/checkpoint transitions and their state flags. Ghost finish has focused one-event evidence; full lap crossing coverage remains open. |
-| `$0b166` | 8 | Off-road/scene condition can request repeatedly. Collision scene rebuilds and simulation cadence need live request/start validation. |
+| `$0b166` | 8 | Off-road/scene condition; TIME_AUDIO now applies the elapsed cadence below. |
 | `$0b624` | 4 | Sustained skid condition; repeated physics visits can change restart frequency. Needs elapsed request cadence. |
 | `$0bc18` | 9 | Special collision-object condition returns without establishing a crash. Repeated contact needs event/cadence validation. |
 | `$0bcf6`, `$0bdd6`, `$0c004`, `$0cc4e` | 6 | Crash creation; native crash state suppresses later physics collision paths. Verify once per event across substeps and recovery. |
@@ -93,5 +93,59 @@ Evidence under ignored `tmp/`:
   replay site. The direct-branch audit passes 122 timing ranges. The ordinary
   build remains byte-identical to the 8392-byte-text baseline.
 
-The next audio work is live-driving request cadence and contact-event identity,
+The next audio work is the remaining skid/contact request cadence and contact-event identity,
 followed by sample-start/listening checks. This document does not close step 4.
+
+
+## Live off-road cadence
+
+`VERIFY_TIME_AUDIO` requires TIME_REPLAY_TIMING and installs HardDrivinAudio.s
+behind CUSTOM1/SPS0126. It currently owns only event 8 at `$0b162..$0b16b`.
+The other live callers above remain separate acceptance work.
+
+The first eligible request in an episode is immediate. Subsequent requests
+consume eight-field boundaries from RP_WALL, retaining the remainder when a
+frame arrives late. A long frame can consume several boundaries but emits at
+most one current request; it does not burst old samples. Multiple scene visits
+in the same physics step are suppressed. A gap of at least one entire physics
+step without this caller starts a new episode. This is a call-eligibility
+boundary, not a claim to identify all physical contact episodes.
+
+Wall fields are intentional: Paula advances in real emulated time even when
+physics runs multiple substeps without drawing. Pauses freeze RP_WALL, as with
+other presentation epochs. `HDLIVEAU` holds the last consumed cadence boundary,
+last step serial, request/emission counts and validity. Native/inactive dispatch
+uses the unchanged sound request. VERIFY_DISPATCH_NATIVE deliberately preserves
+that native call path; it does not exercise elapsed suppression.
+
+The 1,000-field constant-steering captures retain both requests to `$00760` and
+accepted starts at `$007b6`; they do not infer audible starts from event calls.
+The accepted event-8 sample uses channel 2 and period 700 in these runs.
+
+| Profile | Ungated requests / starts | Timed requests / starts | Timed request window |
+| --- | --- | --- | --- |
+| A500 | 111 / 111 | 86 / 86 | fields 239..928 |
+| 68020 | 456 / 279 | 90 / 90 | fields 213..925 |
+
+The runs are `s4-audio-live-a500`, `s4-audio-live-020`, and
+`s4-audio-cadence-final-a500` / `s4-audio-cadence-final-020`. Every timed decision
+matches its captured clock and episode state, allowing up to two fields between
+entry/return stops. All emitted off-road requests become accepted starts. The
+private VERIFY_AUDIO_MATH cases additionally cover duplicate steps, missing-step
+re-entry, cadence boundaries/remainders, frozen clock, long intervals and both
+32-bit clock and step-serial wrap (19 cases). An earlier strict minimum-interval
+policy discarded the remainder and under-requested on the A500; its captures
+without `final` in their names are superseded.
+
+The profiles do not follow precisely identical trajectories or episode windows;
+these counts prove the caller's cadence and actual starts, not cross-machine
+handling or sound quality. `s4-audio-native-off` / `s4-audio-native-on` match all
+247 event/request/start/engine-start observations over 108 physics returns and
+911 fields. Only the event-handler return address is excluded because the
+wrapper changes that address. This is focused native sound equivalence, not
+full game-state equivalence.
+
+CUSTOM1-off retained code passes all 144 declared ranges. The direct-branch
+audit passes 123 timing ranges; the ordinary build is byte-identical to the
+8392-byte-text baseline. Skid, special-object and contact repetition, listening
+checks, large-step physics and full step-4 acceptance remain open.
