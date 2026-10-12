@@ -11,6 +11,13 @@ TIME_FIELDS_PER_STEP equ 8
 TIME_FIELD_Q16 equ $2000
 
 _time_install:
+	IFD VERIFY_POSITION_WIDE_MATH
+	IFND VERIFY_TIME_MOTION
+	FAIL "VERIFY_POSITION_WIDE_MATH requires VERIFY_TIME_MOTION"
+	ENDC
+	bsr _motion_position_wide_test
+	bsr _projection_wide_test
+	ENDC
 	IFD VERIFY_DECAY_MATH
 	IFND VERIFY_TIME_SCALARS
 	FAIL "VERIFY_DECAY_MATH requires VERIFY_TIME_SCALARS"
@@ -348,6 +355,28 @@ _time_scale_q16_wide:
 	subi.l #$10000,d2
 .done:
 	move.l (a7)+,d3
+	rts
+
+; Exact signed-long times unsigned-word multiplication for wide integration.
+; D0.L value,D1.W fields -> D2.L:D0.L signed64 product; preserve other registers.
+_time_product_s32_u16:
+	movem.l d3-d4,-(a7)
+	move.l d0,d3
+	andi.l #$ffff,d0
+	mulu.w d1,d0
+	move.l d0,d4
+	swap d3
+	move.w d3,d0
+	bsr _time_multiply_fields
+	move.l d0,d2
+	swap d2
+	ext.l d2
+	swap d0
+	clr.w d0
+	add.l d4,d0
+	moveq #0,d3
+	addx.l d3,d2
+	movem.l (a7)+,d3-d4
 	rts
 
 ; Convert unsigned pending fields D0.L into one bounded step D1.L (Q16.16),

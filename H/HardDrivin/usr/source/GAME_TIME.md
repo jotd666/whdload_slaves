@@ -953,8 +953,8 @@ cases, the existing 1215 eighth-step cases, 441 Q16 cases and 11 debt cases in
 fixture, not full driving-tape or world-state equivalence. The ordinary build is
 byte-identical to the baseline.
 
-Before enabling the 68000 policy, extend motion/projection products, traffic
-integration, multiple discrete events and replay samples per update. Audit narrowing stores in callers as well as helper arithmetic. Large-T
+Before enabling the 68000 policy, extend falling/contact-rate integration,
+traffic, multiple discrete events and replay samples per update. Audit narrowing stores in callers as well as helper arithmetic. Large-T
 contact, checkpoint and handling validation, and the A500 performance gate remain
 required. No updated FPS claim follows from this arithmetic change.
 
@@ -990,3 +990,35 @@ The 144 forced-native car states in `s4-decay-native` match the reference;
 build remains byte-identical. The current dispatcher still restricts gameplay
 steps to eight fields on every CPU. Performance and the requested 68000 policy
 remain unverified until the remaining integration work is complete.
+
+
+### Ordinary position integration at longer intervals
+
+For intervals above eight fields, ordinary position and its fractional
+projection now use a signed 64-bit intermediate on the 68000. The shared
+`_time_product_s32_u16` multiplies a signed long by an unsigned word without
+68020 instructions. Final position increments remain signed longs. Shorter
+intervals retain the existing arithmetic.
+
+The integer numerator is `64*(v-u) + 8*fields*(v+u) + carry`, divided by128 with
+truncation toward zero and a signed remainder. This is algebraically identical
+to the existing Euler correction, but avoids overflow in the word factors and
+32-bit intermediate at large intervals. The fractional projection computes
+`floor((8*(v-u) + fields*(v+u))/16)` in Q16 before adding its retained fraction.
+For the documented input bounds, both final results fit their existing types.
+The live consumers add the returned integer increments to long positions.
+
+`VERIFY_POSITION_WIDE_MATH` tests the actual helpers in private memory. Evidence
+`s4-position-wide-final` passes 1029 integer position cases, 1029 fractional
+projection cases and 54 signed-long multiplication cases, including unsigned
+field counts32768/65535, velocity extrema, negative results and both signs of
+fractional carry. `s4-projection-wide-regression` passes all60 projection and
+1323 short-interval Euler cases. `s4-position-short-regression` passes the
+existing motion suite, including1323 ordinary and405 falling position cases.
+The ordinary build remains byte-identical.
+
+These changes do not yet enable longer gameplay updates. Falling displacement,
+contact-rate integration, narrowing writes, traffic route traversal and event
+multiplicity still need their own audit and extensions. Algebraic equivalence
+and arithmetic bounds do not establish collision or checkpoint correctness at
+large T; that gameplay validation remains required before acceptance.

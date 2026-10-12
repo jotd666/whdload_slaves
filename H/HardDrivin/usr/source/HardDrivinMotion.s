@@ -609,15 +609,17 @@ _motion_fall_displacement:
 	rts
 
 ; Semi-implicit position increment in native long-position units.
-; D0.W new projected velocity, D1.W old projected velocity, D2.W fields 0..8,
+; D0.W new projected velocity, D1.W old velocity, D2.W unsigned fields0..65535,
 ; D3.L signed remainder (-127..127). Returns D0.L displacement, D3.L carry.
 ; D1/D2 preserved. Live caller snapshots the previous projected velocity;
 ; collision/recovery reset paths discard position fractions.
 ; At T=1 this gives exactly the native new velocity (plus retained fraction).
 ; At T=0 no motion is consumed, even if a discrete writer changed the velocity.
-; For 0<T<=1: v*T + (1-T)*(v-u)/2. The second term preserves the native
+; For T>0: v*T + (1-T)*(v-u)/2. The second term preserves the native
 ; semi-implicit Euler displacement under subdivision of constant acceleration.
 _motion_position_delta:
+	cmpi.w #8,d2
+	bhi _motion_position_wide
 	movem.l d1-d2/d4,-(a7)
 	tst.w d2
 	beq.s .zero
@@ -649,6 +651,115 @@ _motion_position_delta:
 .done:
 	movem.l (a7)+,d1-d2/d4
 	rts
+
+; Numerator /128 = 64*(v-u)+8*fields*(v+u)+carry. Keep it in
+; signed64 bits: the full unsigned field range needs up to36 signed bits,
+; although the final displacement fits a signed long for all word velocities.
+_motion_position_wide:
+	movem.l d1-d2/d4-d7,-(a7)
+	move.w d0,d4
+	ext.l d4
+	move.w d1,d5
+	ext.l d5
+	move.w d2,d6
+	move.l d3,d7
+	move.l d4,d0
+	add.l d5,d0
+	move.w d6,d1
+	bsr _time_product_s32_u16
+	add.l d0,d0
+	addx.l d2,d2
+	add.l d0,d0
+	addx.l d2,d2
+	add.l d0,d0
+	addx.l d2,d2
+	sub.l d5,d4
+	lsl.l #6,d4
+	add.l d7,d4
+	moveq #0,d5
+	tst.l d4
+	bpl.s .correction
+	moveq #-1,d5
+.correction:
+	add.l d4,d0
+	addx.l d5,d2
+	move.l d0,d3
+	lsr.l #7,d0
+	moveq #25,d4
+	lsl.l d4,d2
+	or.l d2,d0
+	andi.l #127,d3
+	tst.l d0
+	bpl.s .done
+	tst.l d3
+	beq.s .done
+	addq.l #1,d0
+	subi.l #128,d3
+.done:
+	movem.l (a7)+,d1-d2/d4-d7
+	rts
+
+	IFD VERIFY_POSITION_WIDE_MATH
+_motion_position_wide_test:
+	movem.l d0-d7/a0-a3,-(a7)
+	lea _motion_wide_results(pc),a2
+	lea _motion_wide_values(pc),a0
+	moveq #6,d7
+.new:
+	move.w (a0)+,d4
+	lea _motion_wide_values(pc),a1
+	moveq #6,d6
+.old:
+	move.w (a1)+,d5
+	lea _motion_wide_fields(pc),a3
+	moveq #6,d2
+.fields:
+	move.w d2,-(a7)
+	move.w (a3)+,d2
+	move.l #-127,d3
+	moveq #2,d1
+.carry:
+	move.l d3,-(a7)
+	move.w d1,-(a7)
+	move.w d4,d0
+	move.w d5,d1
+	bsr _motion_position_delta
+	move.l d0,(a2)+
+	move.l d3,(a2)+
+	move.w (a7)+,d1
+	move.l (a7)+,d3
+	addi.l #127,d3
+	dbf d1,.carry
+	move.w (a7)+,d2
+	dbf d2,.fields
+	dbf d6,.old
+	dbf d7,.new
+	lea _motion_product_values(pc),a0
+	lea _motion_product_results(pc),a2
+	moveq #8,d7
+.product_value:
+	move.l (a0)+,d4
+	lea _motion_product_fields(pc),a1
+	moveq #5,d6
+.product_fields:
+	move.l d4,d0
+	move.w (a1)+,d1
+	bsr _time_product_s32_u16
+	move.l d2,(a2)+
+	move.l d0,(a2)+
+	dbf d6,.product_fields
+	dbf d7,.product_value
+	movem.l (a7)+,d0-d7/a0-a3
+	rts
+_motion_product_values: dc.l $80000000,-65537,-65536,-1,0,1,65535,65536,$7fffffff
+_motion_product_fields: dc.w 0,1,8,32767,32768,65535
+_motion_product_signature: dc.b 'HDMULW01'
+_motion_product_results: dcb.l 9*6*2,0
+_motion_wide_values: dc.w -32768,-257,-1,0,1,257,32767
+_motion_wide_fields: dc.w 9,15,31,255,32767,32768,65535
+_motion_wide_signature: dc.b 'HDPOSW01'
+_motion_wide_results: dcb.l 7*7*7*3*2,0
+	ENDC
 
 _motion_reset:
 	bsr _projection_reset

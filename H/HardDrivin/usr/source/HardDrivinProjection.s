@@ -87,6 +87,8 @@ _projection_integrate:
 ; D3.L signed Q16 position carry. Returns integer D0 and Q16 carry D3.
 ; The /16 rounds down at Q16 precision (<1/65536 long-position unit per call).
 _projection_delta:
+	cmpi.w #8,d2
+	bhi _projection_delta_wide
 	movem.l d1-d2/d4-d5,-(a7)
 	tst.w d2
 	beq.s .zero
@@ -120,6 +122,36 @@ _projection_product:
 	clr.w d5
 	mulu.w d4,d0
 	add.l d5,d0
+	rts
+
+; Wide equivalent: floor((8*(v-u)+fields*(v+u))/16), still in Q16.
+; The intermediate needs signed64 bits at the unsigned field limit; the result
+; plus signed Q16 carry fits a long for the documented abs(v/u)<=86016 bound.
+_projection_delta_wide:
+	movem.l d1-d2/d4-d6,-(a7)
+	move.l d0,d4
+	move.l d1,d5
+	move.w d2,d6
+	add.l d1,d0
+	move.w d6,d1
+	bsr _time_product_s32_u16
+	sub.l d5,d4
+	lsl.l #3,d4
+	moveq #0,d5
+	tst.l d4
+	bpl.s .correction
+	moveq #-1,d5
+.correction:
+	add.l d4,d0
+	addx.l d5,d2
+	lsr.l #4,d0
+	moveq #28,d4
+	lsl.l d4,d2
+	or.l d2,d0
+	add.l d3,d0
+	bsr _time_split_q16
+	move.l d2,d3
+	movem.l (a7)+,d1-d2/d4-d6
 	rts
 
 	IFD VERIFY_PROJECTION_MATH
@@ -187,4 +219,46 @@ _projection_component_signature: dc.b 'HDVPCMP1'
 _projection_component_results: dcb.b 15*4*12,0
 _projection_delta_signature: dc.b 'HDVPDEL1'
 _projection_delta_results: dcb.b 7*7*9*3*8,0
+	ENDC
+
+	IFD VERIFY_POSITION_WIDE_MATH
+_projection_wide_test:
+	movem.l d0-d7/a0-a3,-(a7)
+	lea _projection_wide_results(pc),a2
+	lea _projection_wide_values(pc),a0
+	moveq #6,d7
+.new:
+	move.l (a0)+,d4
+	lea _projection_wide_values(pc),a1
+	moveq #6,d6
+.old:
+	move.l (a1)+,d5
+	lea _motion_wide_fields(pc),a3
+	moveq #6,d2
+.fields:
+	move.w d2,-(a7)
+	move.w (a3)+,d2
+	move.l #-65535,d3
+	moveq #2,d1
+.carry:
+	move.l d3,-(a7)
+	move.w d1,-(a7)
+	move.l d4,d0
+	move.l d5,d1
+	bsr _projection_delta
+	move.l d0,(a2)+
+	move.l d3,(a2)+
+	move.w (a7)+,d1
+	move.l (a7)+,d3
+	addi.l #65535,d3
+	dbf d1,.carry
+	move.w (a7)+,d2
+	dbf d2,.fields
+	dbf d6,.old
+	dbf d7,.new
+	movem.l (a7)+,d0-d7/a0-a3
+	rts
+_projection_wide_values: dc.l -86016,-65535,-1,0,1,65535,86016
+_projection_wide_signature: dc.b 'HDRPWID1'
+_projection_wide_results: dcb.l 7*7*7*3*2,0
 	ENDC
