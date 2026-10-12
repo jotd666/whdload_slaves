@@ -5,13 +5,13 @@ current integrated build, measured on 2026-10-12. It names the bottlenecks, sets
 targets and gives an ordered list of work items. Each item has an exit criterion. Step IDs
 are `P` (performance), `C` (closure) and `D` (decisions for the user).
 
-**Current status: P1, P2, P4, P5 and P6 complete; P3 deferred.** P4 retains its
+**Current status: P1, P2, P4, P5, P6 and P7 complete; P3 deferred.** P4 retains its
 explicit helper-budget exception. P5's acceptance build met its unchanged
 0.300 ms/frame target at 0.247 / 0.292 ms/frame. P6 optimizes the remaining
 physics arithmetic bottleneck: matched-operand long division is about 29% cheaper.
 P6/P5 acceptance does not close G1. Current conservative total overhead is
-**3.084 / 5.740 ms/frame**; B still exceeds **3.78 ms**. P7 and step-4 closure
-remain open; no gate has been relaxed.
+**3.084 / 5.740 ms/frame**; B still exceeds **3.78 ms**. P7 reports A1200 net phase overhead of 0.283 / 0.576 ms/frame (0.47% / 1.23%).
+G1 and step-4 closure remain open; no gate has been relaxed.
 
 ## 1. Measurement
 
@@ -756,7 +756,7 @@ Current raw frame means off/on are A 260.956 / 248.290 ms and B 137.719 / 165.34
 complete frame counts are A 37/38 and B 72/59. Scene and contact work vary with the
 trajectory. B's total measured overhead is slightly higher despite the exact
 arithmetic improvement. P6 completion therefore does not claim G1 or step-4 closure,
-and does not broaden the P4 exception. P7 remains the next reported check; D3's
+and does not broaden the P4 exception. P7 below reports the 68020 result; D3's
 conditional engine-latching option remains available under its stated conditions,
 without treating deferred P3 as passed.
 
@@ -768,12 +768,65 @@ passes 166 ranges, the branch audit passes 144 ranges, and normal/DRIVE/ATTRACT
 builds remain byte-identical to step-2 baselines. Rebuilt profiled binaries match.
 Evidence and SHA/decompression-verified traces remain under ignored `tmp/dev/`.
 
-### P7 68020 check
+### P7 68020 check: complete (reported, not gated)
 
-After P1–P5, profile the same build on `a1200-020` in both windows, using swap counts plus
-an instruction trace where the backend supports it. Report the overhead per frame against
-its own original frame time. The 68020 runs physics every frame, so per-frame overhead
-matters for the 50 FPS goal in step 5. This is reported, not gated.
+Measured 2026-10-13 on the `a1200-020` profile: PAL A1200/68EC020, 2 MiB Chip RAM,
+4 MiB Fast RAM, no Slow RAM. The retained emulator configuration confirms real
+CPU speed, multiplier 4, 24-bit addressing, and CPU/memory/blitter cycle-exact
+execution. The backend supports instruction timing for this CPU.
+
+`p7-a` and `p7-b` rebuild byte-identically to the P6 acceptance fixtures from
+`368853a`; no game source changed for P7. Each uses the same slave with CUSTOM1=0
+and CUSTOM1=1. Captures `p7-{a,b}-{off,on}` retain matching slave/listing, game,
+emulator and configuration hashes within each pair. A uses constant accelerator
+from field 1; B uses the frozen input tape from field 4000 after replaying its
+preceding history. Each trace spans 500 PAL fields, **10.015943522 seconds**.
+
+| A1200 measurement | A off | A on | B off | B on |
+|---|---:|---:|---:|---:|
+| Displayed frames (buffer swaps) | 164 | 150 | 214 | 222 |
+| Whole-window displayed FPS | 16.374 | 14.976 | 21.366 | 22.165 |
+| Complete swap intervals analyzed | 163 | 149 | 213 | 221 |
+| Mean complete-frame time, ms | 60.833 | 66.280 | 46.835 | 45.140 |
+| Polygons per complete frame | 49.472 | 56.013 | 31.207 | 28.045 |
+
+FPS uses all swaps divided by the full window duration. Frame costs use only
+complete swap intervals, so FPS is not exactly the reciprocal of that mean.
+The differing polygon counts demonstrate changed scene workloads; literal FPS
+changes are not isolated timing-code speedups or slowdowns.
+
+| Net enabled-minus-original phase cost, ms/frame | A | B |
+|---|---:|---:|
+| Outer hook + loop + controls | 0.073820 | 0.073561 |
+| Recovery `$108a2` | -0.172868 | -0.133803 |
+| Replay/publication `$10f52` | -0.357289 | 0.001052 |
+| Camera + recording | 0.053217 | 0.039037 |
+| Traffic | 0.292612 | 0.297427 |
+| Physics | 0.376263 | 0.274811 |
+| Other timing-slave work outside those phases | 0.017549 | 0.023690 |
+| **Total, existing accounting** | **0.283304** | **0.575775** |
+| **Share of this profile's own original frame** | **0.4657%** | **1.2294%** |
+
+This uses the existing simulation phase-difference formula and retains every
+outside-phase slave bucket, including the shared native-equivalent divider.
+The negative recovery/replay deltas are observed workload differences, not proof
+that identical simulation work is that much cheaper. As an accounting sensitivity,
+crediting no negative phase deltas gives **0.813461 / 0.709578 ms/frame**, or
+**1.3372% / 1.5151%** of the respective original frame times. Neither figure is
+an independently measured equal-scene FPS penalty or general handling acceptance.
+
+The 68020 physics policy is unchanged: physics runs every rendered frame, with
+bounded substeps for long frames. The measured enabled rates here are about
+15 / 22 FPS, not 50 FPS. These net overhead figures correspond to 1.42% / 2.88%
+of a 20 ms frame budget, but the current whole-frame costs are 66.28 / 45.14 ms;
+P7 does not establish the step-5 50 FPS goal. It is a report, not a new gate, and
+does not close the outstanding A500 G1 requirement or C3 simulation-speed checks.
+
+All four traces pass duration, instruction coverage and swap-count checks;
+coverage is above 99.99998%. Source/build fingerprints and paired configurations
+are audited. Profiles are SHA/decompression-verified compressed archives; no raw
+traces remain. Reports are `p7-summary.json`, each run's `frame-budget.json` and
+`trace-check.json`, and `p7-final-audit.json`, under ignored `tmp/dev/`.
 
 ## 5. Closure of step 4
 
@@ -830,7 +883,7 @@ On 2026-10-12 the user accepted the recommended defaults. These decisions are no
 
 ## 7. Working rules for this plan
 
-- Work in the order P1 → P5, then C1 → C6, with P3 deferred by the user, P4 complete under its approved helper-budget exception, and P5/P6 complete; P7 is next.
+- Work in the order P1 → P5, then C1 → C6, with P3 deferred by the user, P4 complete under its approved helper-budget exception, and P5/P6/P7 complete. Resolve G1 before starting C1–C6.
   Deferral does not pass an item. Each item ends when its exit numbers and
   checks pass. Commit each item on its own.
 - Do not add validation dimensions beyond those listed for the item. Put new questions in
