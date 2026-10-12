@@ -105,20 +105,30 @@ unmodified repository-1.4 rebuild for the separate A/B baseline. No unavailable
 shipped-1.4 byte-equivalence claim is made. Later measurement and gameplay gates remain
 open; phase 1 does not certify a frame marker, race anchor or simulation design.
 
-## Phase 2: identify the game
+## Phase 2: identify the game (complete)
 
-1. Fill in `docs/internals.md` from the slave: `CHIPMEMSIZE $80000`, `FASTMEMSIZE $20000`,
-   kick13, `BOOTDOS`, `CACHE`, the existing patch list (`$1D10`, `$1CBC`, `$434`, `$444`,
-   `$59A`, joystick/fire hooks at `$1872`, `$188A`, `$5402`, `$541A`) and the keyboard hook.
-2. Hunk layout, overlay nodes (`HUNK_OVERLAY` at file `$9F2C`, 49 364 bytes of overlay data),
-   and the data-hunk base through the BPTR chain.
-3. Disassemble the root hunk (`python3 -m amigaxdev.disasm`). Label it by analogy with
-   `duel`: VBL servers, task creation, `WaitTOF`, the RNG, the overlay manager, the copper and
-   buffer swap, the road walker, the span fill and the shape blitter. Record each match with
-   its evidence.
+1. Local `docs/internals.md` inventories the slave configuration, all 11 explicit
+   patch sites, keyboard interrupt and Exec trackdisk hooks. Original instructions,
+   replacement behavior and unresolved observations are recorded.
+2. Parsed all five hunks and both overlay nodes. The suffix from HUNK_OVERLAY at
+   file `$9F2C` is 49,364 bytes including metadata; actual overlay code is 49,220
+   bytes. Node 1 exports three entries from hunk 3; node 2 exports twenty from
+   hunk 4. The data base is obtained through the loaded root's BPTR chain, and
+   a4 is data-base + `$7FFE`.
+3. Root and both overlays are disassembled. Confirmed: VBL servers, Road Drawer
+   creation in hunk 4, WaitTOF, beam-mixed RNG, overlay manager, road traversal,
+   horizontal blitter spans and five-plane shape blitter. Overlay addresses are
+   hunk-qualified; 107 data JMP stubs resolve their calls into the root.
+4. Explicitly not found: a validated per-frame presentation/swap site, TD2's
+   exact 52-byte-row/8.8 road walker and CPU span loop, and several secondary
+   renderer counterparts. Two drawing passes make the single-view assumption
+   unproven. Timing/state ownership, screen roles and markers remain later gates.
 
-**Done when:** every existing slave patch and every analogous TD2 routine is named with its
-`TD:` offset, or listed as not found.
+**Acceptance:** local `tools/identify_game.py` checks pinned inputs, all explicit
+patch signatures/source coverage, hunk sizes, root JMP targets and both overlay
+node/export lists. Evidence is under ignored `tmp/dev/tmp/phase2/`. Every requested
+routine family has an evidenced TD location or an explicit not-found entry in
+the local inventory. No slave changes or new gameplay/performance claims.
 
 ## Phase 3: first boot and traces with PCs
 
@@ -245,8 +255,8 @@ projection, sideways/heading smoothing and smoothing of mountains and hill crest
 
 1. Map TD's road renderer (row records, scale tables, segment walker, scanline table) and
    compare it with TD2's. Test Drive's mountain roads and cliffs make the vertical (slope)
-   path more important than in TD2. TD has a single view, so TD2's mirror view may have no
-   counterpart.
+   path more important than in TD2. TD has two statically identified drawing passes;
+   establish their screen roles before deciding whether TD2's mirror path has a counterpart.
 2. Port each piece behind `CUSTOM2` with its VERIFY fixture. Check the zero oracle (byte-identical
    rows and scanlines with zero fractions) before judging any visual result.
 3. Budget: at most 3% of A500 cycles (`subunit_cost.py`), with no frame-rate regression on
