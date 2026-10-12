@@ -4,14 +4,13 @@ Written 2026-10-11 on HEAD `c70ea93` (branch `4dsportsdriving`). This plan super
 "next steps" sections of optimization-plan.md, simulation-plan.md and open-work.md. Their historical
 versions remain reference material for addresses and evidence, not a to-do list.
 P1-P6 are complete; the A500 FAST target is deferred and A4000 remains experimental.
-The current slave uses runtime buffer allocation (37184 bytes); see the workspace section below.
-Current release label: 2.0b (13.10.2026). The ReadMe now contains a concise user-facing
-changelog; development evidence remains in this plan. Only version strings changed in
-the binary since the validated runtime-workspace build. Current binary SHA256:
-`586bf4d2d7c13ee3d14f6c76dc0616bf351abe9a53a0ef2cd38f430d258fdb0d`.
-Testing archive: `dist/4DSportsDriving_v2.0b_1461.lha` (926462 bytes), SHA256
-`313dd9db1d85b69025dafbda0ede9acfd0aab37242c4975b9152463f8438dfa5`.
-All 124 members checked; only slave and ReadMe differ from the original pack.
+Current release: 2.0b (13.10.2026), 37208-byte slave. Runtime buffers are allocated
+at startup; the DSI intro buffer-reuse flicker is fixed (see sections below).
+Current binary SHA256: `6508c4d303e2edca408c7923c741d419a82c60d71f2b1d92a8b89a2c88e831d4`.
+Testing archive: `dist/4DSportsDriving_v2.0b_1461.lha` (926511 bytes), SHA256
+`381786cc3cff785fdd6ffce166e2eaed0f2e3df1ab2e67971f2c6657607cfff3`. All 124 members checked;
+only slave and ReadMe differ from the original pack. The ReadMe is customer-facing;
+development evidence remains here. Earlier hashes identify historical captures.
 Current defaults supersede the earlier opt-in policy: PAL 040/060 use A4000,
 020/030 use A2500, and 000/010 use Normal. Valid saved choices still win.
 Historical harness research is preserved in `tmp/dev/docs/.git` at `9311a53`;
@@ -896,6 +895,58 @@ Testing archive: `dist/4DSportsDriving_v1.3b_1461.lha`, 928234 bytes,
 SHA256 `d226a011c011a9a4d35605984d49226a7572cef9e3ff85fae090d065f51f1b53`. All 124 members re-extracted and checked; exactly the
 slave and ReadMe differ from the original pack. Earlier build/archive hashes
 in this plan identify historical captures. Nothing was published.
+
+## DSI intro flicker — fixed in 2.0b
+
+Root cause: the intro publishes its completed copper list through `$33F5A` /
+`$35332`, then can select and draw into the former front bitmap before the next
+VBL has latched the new list. Native intro reuse at `$22E86` found `$D28(A4)==0`
+in 47/50 samples. Completed bitmaps contained the blue polygon with C2=0 and
+C2=1, while display DMA showed it disappearing or only partly drawn.
+
+The unconditional `FIX_RANGE h0:2302c 8` replaces the intro's two calls with
+`intro_present`: call the original swap, wait for its existing VBL acknowledgement,
+then tail-call the original cursor restore. No new timer, memory buffer, hook in
+the racing loop, or rendering/physics change. It applies with enhancements off
+and with legacy timing selected. Register arguments, stack and cursor calls are
+preserved. The hook audit includes FIX_RANGE as well as PERF/TIMING ranges.
+
+Verification: `tmp/prof/intro-fix-validation.json` and `intro-regression/`, all
+on the current binary. Full 68040 preset, 250 displayed PAL fields per capture
+in 25 parts of ten, original and enhanced rendering before/after:
+
+| Rendering | Empty-blue fields before / after | Adjacent blue-area changes >50% before / after |
+|---|---:|---:|
+| C2=0 | 1 / 0 | 35 / 0 |
+| C2=1 | 6 / 0 | 74 / 0 |
+
+Part joins are excluded from adjacent-field comparisons. After the fix, the
+largest area changes are 8.36% / 5.62%, consistent with the moving camera;
+screenshots were inspected. The independent reuse probe is now 0/50 before
+VBL. This CPU core emitted display DMA but no CPU/blitter stores, so this is
+not presented as a bus-store trace audit. Completed-bitmap, VBL-flag and
+before/after displayed-pixel evidence establish the handoff fault and fix.
+
+All five CPU cells reach gameplay, have the expected new hook and no queue
+or performance-check failure. Ten-second PAL FULL regression windows:
+
+| Cell | Simulation Hz | FPS |
+|---|---:|---:|
+| A | 10 | 2.69878 |
+| B | 20 | 11.19721 |
+| C | 20 | 19.89504 |
+| D | 50 | 45.28870 |
+| E | 50 | 45.48865 |
+
+These are regression checks, not a new speedup claim. Short consumed-step
+windows retain queue-boundary quantization. A500 funding is exactly 10 Hz;
+its window consumed two additional queued steps. The 030 data-cache path
+passes. Legacy B preserves all 38 disabled optimization/timing ranges while
+retaining the intro fix. Hook audit passes (1250 relocations, 10102 aligned
+PC-relative candidates). A4000 replay matches 1510 semantic bytes at each of
+steps 1500/1550/1600 and restores all 1802 route bytes. Each emulator was
+bounded by a 180-second watchdog and closed afterward. Archive re-extraction
+verifies all 124 members. No real-hardware validation is claimed.
 
 ## Not doing (with reasons)
 

@@ -52,6 +52,7 @@
    CUSTOM3=1 restores original simulation timing and disables A4000 mode.
 
  version 2.0b (13.10.2026) - enhancements by Vesuri:
+ - Fixed the flickering blue background in the DSI intro.
  - Faster rendering with a single "Enhanced framerate" option.
  - Correct game speed and race timing regardless of rendering speed.
  - Experimental A4000 simulation for smoother, more responsive driving on

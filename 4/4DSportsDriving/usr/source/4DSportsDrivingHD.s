@@ -449,6 +449,18 @@ patch_main
 	bsr perf_patch
 	rts
 
+; The DSI intro swaps copper lists but otherwise immediately starts the next
+; frame. The old front bitmap remains visible until the next VBL; reusing it
+; early clears the blue logo plane during display. Finish this intro-only swap
+; before restoring the cursor and allowing another frame to select that bitmap.
+; Keep the racing presentation pipeline and its own synchronization unchanged.
+intro_present:
+ jsr -$7a70(a4)           ; original buffer swap / COP1LC publication
+.wait:
+ tst.w $d28(a4)           ; original VBL acknowledgement, cleared by the swap
+ beq .wait
+ jmp -$7e24(a4)           ; original cursor restore, return to intro caller
+
     
 after_dma_write_d1:
 	btst	#15,d1
@@ -510,6 +522,7 @@ dma_write_8
 
 pl_main
     PL_START
+    PL_PSS $2302C,intro_present,2 ; FIX_RANGE h0:2302c 8 DSI intro VBL handoff
  IFD SIM_NATIVE
     PL_IFC3X 0
     PL_ELSE
