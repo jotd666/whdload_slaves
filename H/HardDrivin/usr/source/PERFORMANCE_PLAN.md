@@ -352,8 +352,14 @@ Tools stay in ignored `tmp/dev/tools`.
      slowed A500 drawing. The zero-throttle speed100 comparison retains sampling
      bounds; it does not yet establish the acceptance tolerance or higher-speed
      agreement. The near-stop backward-displacement defect has a gated correction
-     with final A500/020 operand-level validation; full handling and final-build
-     machine coverage remain open. See GAME_TIME.md.
+     with final A500/020 operand-level validation; full handling and regular-solver
+     acceptance remain open. The current optional reference now has a
+     same-build braking matrix across all seven profiles and slowed A500 drawing:
+     all 1,408 internal updates from the descending speed100 bracket to the stop
+     match an independent fractional-state model exactly. Its small crossing
+     differences match the enumerated force-quantization phases. Published integer
+     positions never reverse, but small fractional corrections near rest remain;
+     this is not general handling or higher-speed acceptance. See GAME_TIME.md.
      Constant-throttle straight motion is measured on all seven profiles and
      slowed A500 drawing. The slowed run overshoots the requested throttle by one;
      it is not an equal-input comparison. The same-throttle A500/fast-CPU speed

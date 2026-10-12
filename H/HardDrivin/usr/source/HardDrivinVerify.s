@@ -361,7 +361,7 @@ _verify_drive_menu:
 	; VERIFY_STEPINPUT_MANUAL chooses the native manual menu item.
 	dc.l 1
 	dc.w 320,200,0,$20
-	IFD VERIFY_STEPINPUT_EXACT_THROTTLE
+	IFD VERIFY_STEPINPUT
 	; The menu samples the cursor before checking buttons. Pre-position it
 	; before clicking so a VBL between those reads cannot select the old item.
 	dc.l 900

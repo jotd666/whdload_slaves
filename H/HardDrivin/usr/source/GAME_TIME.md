@@ -1634,6 +1634,85 @@ The original-control capture passes all146 disabled-range checks with only DRIVE
 and STEPINPUT enabled; the125-range branch audit also passes.
 
 
+#### Fractional braking in the current reference integrator
+
+A later read-only diagnostic observes every internal reference position update,
+including the velocity eighths, projected-vector corrections and both position
+remainders. The build includes the full optional drivetrain reference and the
+replay interpolation optimization. BRAKE_SPEED remains 180 and supplies native
+input only. Each run verifies automatic first gear at race entry, flat road,
+full contact, heading 360, zero fall, fixed Y/Z, zero throttle and held braking
+through the speed-100 comparison. No dynamics or clocks are injected.
+
+The step-input menu now pre-positions the cursor before its click for all
+STEPINPUT diagnostics. Previously only EXACT_THROTTLE did this. The rejected
+`s4-brake-fine-a500-fast` run started in manual neutral (gear 0, automatic 0),
+remained stationary and never consumed brake input. Braking captures now reject
+that initial mode immediately. The original field-indexed DRIVE tape is unchanged,
+and the ordinary slave remains byte-identical to the baseline.
+
+Analysis starts at the two fractional states bracketing the descending speed100
+crossing and retains the established linear crossing estimate, now with one-field
+resolution. From the first bracket state onward, an independent model recomputes
+native zero-power drive, drag and brake forces every field, applies the signed
+velocity remainder and resistance bound, projects between adjacent native rounded
+vectors, and integrates position including both carries. It checks every observed
+velocity word/carry, projected vector and Q16 position through the exact stop.
+The separate endpoint and mode checks exclude slope, steering, skid, airborne
+motion and residual throttle from this comparison.
+
+At this crossing the native net rate is -6 eighth-velocity units per field.
+Possible preceding descending states are therefore 800..805 eighths. Enumerating
+those six states with the independent model gives the following crossing estimates:
+
+| Preceding velocity eighths | Modeled distance from interpolated speed100 (world units) |
+| ---: | ---: |
+| 800 | 199.474609 |
+| 801 | 199.270671 |
+| 802 | 199.317057 |
+| 803 | 198.949707 |
+| 804 | 199.053385 |
+| 805 | 199.731608 |
+
+The corrected-menu matrix uses one identical slave and emulator binary across all
+seven standard profiles plus slowed A500 drawing. All 1,408 observed updates
+(176 per run) match the independent velocity, projection and position recurrence
+exactly from the speed100 bracket through the stop:
+
+| Profile | Crossing bracket (velocity eighths) | Distance estimate (world units) |
+| --- | --- | ---: |
+| A500 | 803 to 797 | 198.949707 |
+| A500 Fast RAM | 803 to 797 | 198.949707 |
+| 68020 | 801 to 795 | 199.270671 |
+| 68030/50 | 803 to 797 | 198.949707 |
+| 68040/25 | 803 to 797 | 198.949707 |
+| 68040/40 | 803 to 797 | 198.949707 |
+| 68060/50 | 804 to 798 | 199.053385 |
+| A500, CUSTOM4=4 | 802 to 796 | 199.317057 |
+
+Evidence is `s4-brake-fine-menu-*/fine-braking.json`, including raw position
+brackets, with aggregate `fine-braking-comparison.json`. Initial-mode checks
+and retained slave/emulator hashes pass for every row.
+
+This 0.781901-unit envelope follows from the quantized force recurrence and the
+within-field crossing definition; it is not a chosen percentage tolerance or a
+new whole-game acceptance gate. The exact state speed100 with zero velocity
+remainder predicts 199.474609 units. Live runs need not land on that exact state.
+Their raw one-field position brackets remain available rather than being replaced
+by the model's narrower explanation.
+
+Fractional position is not strictly monotonic in these reference stops. There
+are six small backward fractional corrections near rest, at most 0.01171875 world
+units each and at most 0.03125 in total, while published integer positions never
+decrease.
+They follow the existing (9*new_projected-7*previous_projected)/16 one-field
+position extension; nonnegative velocity alone does not imply that expression
+is nonnegative during rapid decay. The earlier no-backward-movement checks examined
+integer positions. Both velocity/projection fractions reach zero and the full
+position, including its remaining carry, holds exactly after stopping. This
+observation does not establish general handling accuracy or waive it.
+
+
 
 ### Constant-throttle straight measurement
 
@@ -2229,8 +2308,8 @@ all eighth carries, four orientations, and signed-word boundary cases. The final
 
 Final integrated braking captures `s4-brake-projection-final-a500` and `-020`
 check36 and146 longitudinal position updates respectively. Every update matches
-the independently reconstructed combined displacement, none moves backward, and
-both stopped states have zero velocity companion and projected velocity and hold
+the independently reconstructed combined displacement, no published integer
+position moves backward, and both stopped states have zero velocity companion and projected velocity and hold
 their final position. The final slowed-A500 capture (`-slow4`, four additional
 fields per frame) passes the same checks for27 updates. Earlier merged-carry captures on030 and060 also passed
 236 and235 updates; they precede only the final extreme-velocity guard and native
