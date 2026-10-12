@@ -61,6 +61,11 @@ Known differences that change the design:
   not the standalone Test Drive 2 repository's `whdload/`. Diff the two before copying a
   routine.
 
+Release numbering: all work after JOTD 1.4 belongs to **2.0b (13.10.2026)**.
+References below to 1.5b–1.8b identify retained, unpublished development test
+snapshots only; they are not separate releases. Their evidence and the deferred
+hardware A/B binaries remain unchanged.
+
 ## Phase 1: local harness (complete; in `tmp/dev/`, never committed)
 
 1. Runner/debug server: disposable per-launch game copy, worktree-owned emulator and
@@ -74,7 +79,7 @@ Known differences that change the design:
 3. Build: `tools/build.sh` checks the selected compiler/include trees and builds the
    authoritative source into `tmp/build/`; `VERIFY=1` selects the VERIFY output.
    The phase-1 normal variant is retained byte-identical to the 1.5b hardware handoff.
-   Current 1.8b builds add phase-10 rendering to the phase-8 simulation and phase-9 optimization; historical
+   Current 2.0b builds add phase-10 rendering to the phase-8 simulation and phase-9 optimization; historical
    VERIFY fixtures remain pinned with their captures. Bash wrappers work with macOS Bash 3.2.
 4. Trace tools: `td_report.py` uses TD's root/data sizes, excludes the PRELOAD root copy
    and follows the loaded BPTR chain. `profile_demo.sh`, `ingame.py`, `frames.py`,
@@ -487,12 +492,14 @@ unvalidated. Phase 11 records full release regression and packaging.
 
 ## Phase 11: regression, release and contribution — complete locally
 
-Beta 1.8b is packaged and the local release regression passes. Real A1200/68040
+Release 2.0b (13.10.2026) consolidates all enhancements since JOTD 1.4.
+The local release regression passes. Real A1200/68040
 play-testing remains deferred by the user. No push or PR is authorized; fork and
 upstream publication remain a separate follow-up.
 
 - Normal and VERIFY builds assemble; packaged source rebuilds byte-identically.
-  The release assembly delta is only the Enhanced framerate option label.
+  The phase-11 assembly delta was the Enhanced framerate option label.
+  The 2.0b rebuild differs from that accepted build only in three version strings.
 - All 82 declared patch ranges and direct incoming/bypassed-tail audits pass.
   C2-off retains original optional-patch bytes. Static audits do not prove
   indirect targets.
@@ -531,9 +538,15 @@ their original defaults. ReadMe documents the option, off path and PAL beta scop
 `Makefile_windows.mak` already includes all source dependencies.
 
 Local `package_release.py` writes verified level-1 LH5 installer/preinstalled
-archives to `tmp/dev/dist/phase11/`, with explicit member/checksum manifests.
-Only intended slave, ReadMe, icon and installer source members change. The
-packaged Makefile uses the shared AmigaXDev SDK; both variants rebuild exactly.
+archives to `tmp/dev/dist/2.0b/`, with explicit member/checksum manifests.
+Only intended slave, ReadMe, Install script, icon and installer source members change.
+ReadMe and Install use the WHDLoad 20 Install Template, retaining the Test Drive
+file-copy layout, supplied executable, instructions, icons and original credits.
+ReadMe has one concise, player-facing 2.0b history entry for all enhancements.
+Actual Installer 43.3 script-flow checks pass with deterministic requester answers:
+all three icons, both existing-drawer choices, missing required file and paths
+containing spaces. Interactive requesters and disk-image mounting are not covered.
+The packaged Makefile uses the shared AmigaXDev SDK; both variants rebuild exactly.
 Archives and generated evidence remain ignored and local. The original 1.4/1.5b
 hardware A/B bundle is unchanged. Local `docs/phase11.md` records reproduction,
 exact builds and acceptance evidence. NTSC remains unvalidated.

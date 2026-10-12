@@ -8,119 +8,82 @@
  CAUSED IN ANY USUAL, SPECIAL, OR ACCIDENTAL WAY, ALSO IF THE OWNER OR A THIRD
  PARTY HAS BEEN POINTED AT SUCH POSSIBILITIES OF DAMAGE.
 
- This install applies to "Test Drive" © 1987 Accolade
+ This install applies to "Test Drive" © 1987 Accolade.
 
- This install requires WHDLoad to be in the path. It can be found in the
- WHDLoad package.
+ Requirements:
+ -------------
+ WHDLoad version 17.0 or newer must be installed and accessible in the path.
+ The game requires 512 KB ChipMem and 128 KB OtherMem, plus memory for WHDLoad
+ and any preloaded files. The original Test Drive disk is needed to install.
+ Use a complete disk, including its DEVS/system-configuration file.
 
  The game requires an installed A500 Kickstart 1.3 image.
  The kickstart image must be located in the directory "Devs:Kickstarts" and
  must be named "kick34005.A500". The image can be extracted from a A500 with
  tools like 'GrabKick' or similar which can be found on aminet.
  If the image is of wrong version or altered in any way WHDLoad will quit with
- an appropriate requester.
+ an appropriate message.
  Additionally the file "kick34005.A500.RTB" must be installed in the same
- directory as the kickstart image. It can be found in the archive 
+ directory as the kickstart image. It can be found in the archive
  "util/boot/skick346.lha" on aminet.
 
- Thanks to Bert Jahn for writing kickemu.s kickstart interface system.
+ Features:
+ ---------
+ - Play from hard disk, without disk swapping or copy protection.
+ - Joystick and keyboard controls; game instructions are included.
+ - Quit to Workbench with numeric keypad '*', configurable with QUITKEY.
+ - A choice of three icons, including GlowIcons by Chris Vella.
+ - Optional Enhanced framerate for smoother driving, scenery and traffic.
 
- If you have problems with this installation please try and get a newer
- version of this package from the WHDLoad WWW-Page. If that doesn't help try
- some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
- that also fails, please inform the author via the Bug-Report-Form which
- can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
- at http://mantis.whdload.de
+ Enable Enhanced framerate in the WHDLoad options or with CUSTOM2=1. It is
+ enabled by default with the Normal icon and the preinstalled game icon.
+ The alternative GlowIcons keep their original defaults. Disable the option
+ or use CUSTOM2=0 for the original game speed and appearance.
 
- For the full WHDLoad package, other installs and updates refer to:
-	http://www.whdload.de/
- or	aminet:dev/misc/whdload#?
- and	aminet:game/patch/
+ This is a PAL beta. NTSC and real A1200/68040 testing remain outstanding.
 
-
-
-Options:
-
- Enhanced framerate (CUSTOM2=1) enables fixed-time simulation, fractional
- road/traffic rendering and reduced blitter interrupt overhead. The Normal
- installer icon enables it by default; the alternative GlowIcons retain their
- original defaults. Disable it in the WHDLoad options or use CUSTOM2=0 for
- original gameplay/rendering. The overlay cache fix is always enabled.
- PAL beta for the 90112-byte TD executable; NTSC and real hardware unvalidated.
-
-History:
-
- version 1.8b (12.10.2026) done by Vesuri:
- - release beta: expose Enhanced framerate and enable it in the Normal icon
- - CUSTOM2=1: fractional road, traffic and lateral projection, including
-   the rear-view mirror; smooth course heading for the mountain layers
- - retain slope fractions and move crest limits with the projected road grid
- - remove the main road's sideways jump at whole-segment camera crossings
- - exact sine cache; original near-car and horizon clipping policies retained
- - CUSTOM2=0 retains the original renderer; PAL beta, real hardware deferred
-
- version 1.7b (12.10.2026) done by Vesuri:
- - CUSTOM2=1: disable unused blitter-finished interrupts during the game;
-   save/restore blitter priority and interrupt enable on program return
- - PAL fixed-window gains over the same enhanced simulation: A500 +0.65 to
-   +0.75 fps, A1200 +0.80 to +0.85 fps, 68030/25 MHz +2.35 to +2.50 fps
- - CUSTOM2=0 keeps the original interrupt behavior; real hardware deferred
-
- version 1.6b (12.10.2026) done by Vesuri:
- - experimental CUSTOM2=1 fixed-time simulation for the 90112-byte TD:
-   10 updates/second on 68000/010, 25 on 68020+, at nominal PAL 50 Hz
- - scale vehicle/traffic motion, separate clutch and collision state from
-   drawing, and keep visual random effects independent of gameplay RNG
- - correct PAL race time and average speed; this intentionally changes scores
- - retain original crash acknowledgement, penalty and police-stop behavior
- - CUSTOM2=0 retains original gameplay apart from the overlay cache fix
- - all five cars tested in emulation; no rendering/FPS improvement claimed
- - beta: NTSC unvalidated; real A1200/68040 testing deferred
-
- version 1.5b (12.10.2026) done by Vesuri:
- - flush caches after overlay stub rewrites (90112-byte TD), for
-   cache coherency on 68040/060 and other cached CPUs; always enabled
- - VERIFY builds only: isolated visual RNG, scripted driving and crash/radar
-   fixtures, slow-drawing and automatic-recovery tests, assembly assertions;
-   the normal slave is unchanged
- - real A1200/68040 validation pending
+ History:
+ --------
+ version 2.0b (13.10.2026) done by Vesuri:
+ - Optional smoother driving, scenery and traffic with Enhanced framerate.
+ - More consistent game speed, race timing and average-speed scoring.
+ - Improved compatibility with accelerated Amigas.
+ - Updated installation and documentation.
 
  version 1.4 (13.04.2023) done by JOTD:
- - added check for important system file without which
-   the game fails without any explicit reason
-   (issue #0006003, #0005860)
- 
+ - Clear error message when a required game file is missing.
+
  version 1.3 (14.05.2022) done by JOTD:
- - added keyboard controls (issue #0005456)
- 
+ - Added keyboard controls.
+
  version 1.2 (29.01.2021) done by JOTD:
- - reassembled with latest kickemu/adapted to whdload 17
- - reduced memory requirements to less than 1MB total (issue #0004977)
- - source included
- 
+ - Updated WHDLoad support and reduced memory requirements.
+ - Source included.
+
  version 1.1:
- - no longer needs s/startup-sequence
- 
+ - No longer requires the disk's startup-sequence.
+
  version 1.0-B:
- - removed HRTMON define for better compatibility
+ - Improved compatibility.
 
  version 1.0 (2002?) done by JOTD:
- - initial release
- - Runs fully from HD using WHDLoad/KickEmu
- - Convenient install script
- - Disk accesses removed, disk protection removed
- - Trackdisk device stuff removed
- - Quit key (numerical '*', or configurable with QUITKEY)
- - Nice glowicons by Chris Vella
- - Instructions included
+ - Initial hard disk install, disk protection removed and quit key added.
+ - GlowIcons by Chris Vella and instructions included.
 
-Notes:
+ Credits:
+ --------
+ Original WHDLoad installation by JOTD; enhancements by Vesuri.
+ Thanks to Bert Jahn for KickEmu, Chris Vella for the GlowIcons, and Stingray
+ for identifying the required system-configuration file. The supplied game
+ executable is the version used by JOTD's install, with its original credits
+ restored.
 
-- Game flies with fastmem & caches. Try with NTSC for even smoother game
-- I had to include the cracked executable (I restored the original credits)
-  because I could not remote-crack it (Chris and I were not able to make a working
-  copy with MFMWarp, too bad), although I could decrypt a lot of the
-  startup code, for nothing... Must be Hernon protection, I could crack it now
-  (did that on Final Assault) but why bother?
-- Thanks to Stingray for pointing out that if devs/system-configuration is missing
-  game runs but ends up failing with trashed graphics.
+ Contact:
+ --------
+ If you have problems, first check for a newer install on the WHDLoad website.
+ Try disabling Enhanced framerate. If the problem remains, use the game's
+ Bug-Report-Form on that site and include your Amiga and WHDLoad settings.
+
+ For WHDLoad, other installs and updates:
+ https://www.whdload.de/
+ https://aminet.net/package/dev/misc/WHDLoad
