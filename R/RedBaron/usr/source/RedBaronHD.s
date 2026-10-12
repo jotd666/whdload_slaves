@@ -89,6 +89,7 @@ slv_config
 	dc.b "C2:X:Consistent game speed:13;"
 	dc.b "C2:X:Larger game fast-memory pool:16;"
 	dc.b "C2:X:Instruction cache policy:17;C2:X:Persistent gauges:18;C2:X:Sparse cockpit artwork:19;C2:X:Direct scene raster:20;"
+	dc.b "C2:X:Deferred page fence:21;C2:X:Fast cockpit composition:22;C2:X:Fast gauge updates:23;"
 	ELSE
 	IFD DEVELOPER
 	dc.b "C2:X:Table mirror:0;C2:X:Cached mirror:1;"
@@ -99,6 +100,7 @@ slv_config
 	dc.b "C2:X:Consistent game speed:13;"
 	dc.b "C2:X:Larger game fast-memory pool:16;"
 	dc.b "C2:X:Instruction cache policy:17;C2:X:Persistent gauges:18;C2:X:Sparse cockpit artwork:19;C2:X:Direct scene raster:20;"
+	dc.b "C2:X:Deferred page fence:21;C2:X:Fast cockpit composition:22;C2:X:Fast gauge updates:23;"
 	ELSE
 	dc.b "C2:L:Faster rendering:On,Off;"
 	ENDC
@@ -634,6 +636,7 @@ tape_sim_key_bridge:
 	include "instrument-values.s"
 	include "instrument-pixels.s"
 	include "instrument-cache.s"
+	include "gauge-fast.s"
 	include "overlay-lifetime.s"
 	IFD VERIFY
 	include "instrument-cache-verify.s"

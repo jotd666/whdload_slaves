@@ -71,6 +71,13 @@ def twins(label):
         assert final_checks >= 2, final_checks
         composition = dict(pages=2, passed=True, final_checks=final_checks)
         print(label, "two native composed-viewport twins passed", flush=True)
+    gauges = {}
+    if mask & (1 << 23):
+        from gauge_fast import check
+        gauges = check(dump('gauge_fast_twin_checked', 8, label),
+                       dump('instrument_cache_twin_result', 32, label),
+                       dump('gauge_fast_draws', 4, label))
+        print(label, 'FC3 native gauge twins passed', gauges, flush=True)
     fence = {}
     if mask & (1 << 21):
         values = dump('fence_publications', 12, label)
@@ -78,7 +85,7 @@ def twins(label):
                          (int.from_bytes(values[i:i+4], 'big') for i in range(0, 12, 4))))
         assert fence['publications'] > 0 and fence['releases'] <= fence['publications'], fence
         print(label, 'deferred fence', fence, flush=True)
-    return dict(label=label, checks=6, scene_checks=scene_checks, composition=composition, fence=fence,
+    return dict(label=label, checks=6, scene_checks=scene_checks, composition=composition, fence=fence, gauges=gauges,
                 hits=int.from_bytes(stats[:4], 'big'), fills=int.from_bytes(stats[4:8], 'big'))
 
 
@@ -131,6 +138,30 @@ if a.transitions:
     key(0x40, True)
     advance(4)
     rows.append(twins('after-views-fire'))
+    if mask & (1 << 23):
+        # Hardware-held throttle and opposing banks; collect actual raw inputs.
+        def values():
+            expressions = [f'*(unsigned int*)(*(unsigned int*){h3+0x4578:#x}+16)']
+            expressions += [f'*(unsigned short*){h3+off:#x}' for off in
+                            (0x71ae, 0x71b0, 0x71b2, 0x71d4, 0x71d2, 0x71b8)]
+            expressions[5] = (f'(*(unsigned short*){h3+0x8d9e:#x} ? '
+                              f'*(unsigned short*)(*(unsigned int*){h3+0x4578:#x}+134) : '
+                              f'*(unsigned short*){h3+0x71d2:#x})')
+            raw = r.command('gdb printf "GAUGES %u %u %u %u %u %u %u\\n", '+', '.join(expressions))
+            return list(map(int, re.search(r'GAUGES ([0-9 ]+)', raw)[1].split()))
+        samples = [values()]
+        for label, raw in [('throttle-down', 0x4a), ('bank-right', 0x4e),
+                           ('throttle-up', 0x5e), ('bank-left', 0x4f)]:
+            key(raw)
+            for _ in range(8):
+                advance(1)
+                samples.append(values())
+            key(raw, True)
+            advance(2)
+            rows.append(twins(label))
+        (a.out/'gauge-inputs.json').write_text(json.dumps(dict(samples=samples,
+            changed=[len(set(row[i] for row in samples)) > 1 for i in range(7)]), indent=2)+'\n')
+
     subprocess.run([sys.executable, '-B', str(tracked / 'completion_host_input.py'), 'quit'], check=True)
     host.wait(timeout=20)
 r.command('shot ' + str((a.out / 'final.png').resolve()))

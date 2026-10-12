@@ -50,6 +50,13 @@ if effective&(1<<22):
  if twins['cockpit'] != [3,0,2,0,0]:raise RuntimeError('Cockpit twins incomplete or failed: '+str(twins))
  twins['cockpit_final_checks']=words('cockpit_fast_final_checks',1)[0]
  if twins['cockpit_final_checks'] < 2:raise RuntimeError('Final cockpit checks incomplete')
+if effective&(1<<23):
+ from gauge_fast import check
+ def raw_words(name, count):
+  return struct.pack('>'+count*'I', *words(name,count))
+ twins['gauges']=check(raw_words('gauge_fast_twin_checked',2),
+                       raw_words('instrument_cache_twin_result',8),
+                       raw_words('gauge_fast_draws',1))
 (a.out/'twins.json').write_text(json.dumps(twins,indent=2)+'\n')
 flight_entry=json.loads((a.out/'entry.json').read_text())
 regions=r.memory_regions()

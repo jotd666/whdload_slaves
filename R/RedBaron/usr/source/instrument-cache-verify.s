@@ -1,11 +1,13 @@
-; First cache hit of each gauge (altitude also has a bounded same-input repeat): predict state, restore native inputs,
+; First cache hit of each gauge (each page under FC3; bounded altitude repeats):
+; predict state, restore native inputs,
 ; run the original dispatcher body, compare full pixels and the 40-byte bounded
 ; drawing-state projection. No simulation/full-state study and no FPS inference.
 instrument_cache_twin_begin:
  movem.l d1-a6,-(sp)
  lea instrument_cache_twin_result(pc),a3
  move.l (a3),d0
- btst d4,d0
+ bsr instrument_cache_twin_index
+ btst d1,d0
  bne .already
  move.l 8(a3),d0
  bne .allocated
@@ -82,11 +84,17 @@ instrument_cache_twin_end:
  bne .state_bad
  dbf d0,.state
  move.l (a3),d0
- bset d4,d0
+ bsr instrument_cache_twin_index
+ bset d1,d0
  move.l d0,(a3)
  clr.l 4(a3)
  addq.l #1,12(a3)
- cmpi.l #127,d0
+ move.l #127,d1
+ btst #0,gauge_fast_enabled+1(pc)
+ beq .mask_ready
+ move.l #16383,d1
+.mask_ready
+ cmp.l d1,d0
  bne .done
  move.l 8(a3),a1
  move.l #40080,d0
@@ -138,3 +146,15 @@ instrument_cache_twin_result: dc.l 0,0,0,0,0,0,0,0
 instrument_cache_twin_post: dcb.b 40,0
 
 instrument_cache_twin_repeat: dc.w 0
+
+; FC3 checks each gauge on each physical history page; bit18 keeps seven cases.
+instrument_cache_twin_index:
+ move.w d4,d1
+ btst #0,gauge_fast_enabled+1(pc)
+ beq .done
+ add.w d1,d1
+ tst.b -$ee3(a4)
+ beq .done
+ addq.w #1,d1
+.done
+ rts

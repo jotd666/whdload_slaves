@@ -205,28 +205,38 @@ checks pass; measurements and reproduction commands are in `profiling.md`.
 Map-toggle check dropped: this game has no in-flight map command; the campaign
 map is outside flight rendering and its modal fence invalidates cached pages.
 
-### FC3 — persistent gauges: −6 to −8 ms
+### FC3 — persistent gauges (complete; 060 player default)
 
-**Cause.** `sim:19ba6` restores each gauge's old bounds from a background bitmap
-and redraws the needle on every frame. It uses 4-channel blits that the CPU
-waits on (`sim:30572`, 6.9 ms of polling).
+Bit 23 shares the bit-18 native dispatcher keys and resource lifetime hooks.
+Each gauge/page retains its exact raw input/context key, stable needle bounds
+and selective drawing-state result. Eligible hits replay that state and skip
+the background/needle work without reading the old Chip pixels. Eligibility
+requires FC2 composition and a bound below both the current viewport and the
+last covered word of every static artwork list; unsupported layouts redraw.
+Redraw, view, fullscreen, top text, message, firing, exceptional foreground,
+modal and resource events invalidate retained entries.
 
-**Fix.**
-1. For each page and each gauge, key on the native gauge input values. Bit 18
-   already reads them (`instrument-values.s`).
-2. Skip a gauge whose key equals the one last drawn on that page.
-3. For a changed gauge, restore its bounds with a CPU copy from a Fast-RAM
-   background, then run the native needle callback.
-4. Invalidate everything on the FC2 events.
+Changed gauges use screen-aligned background colour/mask words in Fast RAM.
+The CPU copies only native clipped coverage, preserving opaque black and
+uncovered edge bits, before the unchanged native needle callback. The existing
+blitter is waited before CPU writes; unsupported geometry/orientation and
+allocation failures retain native drawing. No minimum-RAM increase is needed.
+The new hooks are sim:19ba6 and sim:19d98; sim v1 only.
 
-Bit 18 is gated to 020/040 today, because its composition design lost on
-030/060. This step skips unchanged work outright, so measure it on all four
-classes.
+Full and clipped background twins cover all seven gauges on both pages, and
+unchanged pixel/state twins cover every gauge/page. The native keyboard route
+covers views, firing, held throttle and opposing turns. An all-seven-changing
+flight is dropped from this bounded fixture: two inputs remain constant;
+per-input key mutation tests and all native page twins remain. The final exact
+capture passes the tightened current-artwork extent proof.
 
-**Check.**
-- Exact twins per gauge.
-- A held-throttle and turn route in which every gauge changes.
-- Both pages after a page reuse.
+The required four-class timing matrix is complete. Only 060 clears the plan's
+FPS threshold, so only 060 gets bit 23 in the normal default bundle. 020 is
+excluded after regression; 030/040 retain their prior player paths. Explicit
+030/040 developer/VERIFY masks remain available for common-code checks and the
+exact profiler. The final normal check passes. Results and hashes are recorded
+once in `profiling.md`. The expected saving in the original proposal was an
+estimate; use the measured ledger instead.
 
 ### FC4 — span polygon rasteriser: −8 to −10 ms
 

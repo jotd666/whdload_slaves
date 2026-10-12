@@ -421,6 +421,7 @@ cockpit_fast_update:
 cockpit_fast_boundary:
  dc.w $42e7
  bsr cockpit_fast_invalidate
+ bsr instrument_cache_invalidate
  move.w (sp)+,ccr
  bra fence_wait
 

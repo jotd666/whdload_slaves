@@ -5,18 +5,111 @@
 The user accepted measured performance on 2026-10-12. The normal build now
 starts with Faster rendering On when CUSTOM2 is omitted: On=0, Off=1.
 Developer/VERIFY CUSTOM2 remains an explicit mask, with zero disabling patches.
-The verified mask is `0x7f1fff`, filtered by CPU; W6 bit 13 remains excluded
+The verified mask is `0xff1fff`, filtered by CPU; W6 bit 13 remains excluded
 because D5 is postponed. There is no 50 FPS or frame-independent normal-game
 speed claim. Historical captures below retain their original build, option
 mapping and RAM configuration; they do not define the current player default.
+
+## FC3 — persistent gauges, enabled on 060 (2026-10-12)
+
+FC3 uses bit 23 and the shared bit-18 dispatcher/resource hooks.
+Changed gauges restore the clipped background from screen-aligned Fast-RAM
+words before the unchanged native needle callback. Unchanged gauges replay
+only their native drawing state when their page key matches and the scene plus
+all current static artwork end before their retained needle bounds. FC2 must
+have composed the frame for this no-read reuse path; other frames redraw.
+Full/dirty redraws, views, top text, messages, firing, exceptional foreground,
+modal boundaries and resource changes invalidate reuse. The background cache
+uses 27,216 bytes; shared per-page entries use 31,640 bytes. Allocation failure
+retains native drawing. No minimum-RAM increase is needed.
+
+Frozen candidate developer SHA-256
+`61874c03900517abb8cdfb73c09a208afb130c0792183634a9fe293216e1dcfa`;
+2,000 PAL fields per case, maximum detail, unchanged Time Scale, protected
+fixture and native keyboard route. Candidate masks are `0x7f1fff`/`0xff1fff`
+on 020, `0x7f0ffa`/`0xff0ffa` on the faster classes. The later source narrows
+the persistence proof to the actual Fast-RAM artwork extents and excludes 020.
+The normal bundle selects bit 23 only on 060. Developer/VERIFY can still select
+030/040 explicitly for the shared-code twin and exact profiler; 020 is excluded
+in all modes. Final normal-build and exact-profile checks pass.
+
+| Configuration | FC3 off FPS | FC3 on FPS | Disposition / evidence |
+|---|---:|---:|---|
+| 68000 / A500 | — | — | CPU-gated off; prior scoreboard retained |
+| 020 / A1200 | 7.563 | 7.089 (−6.27%) | Dropped; retain existing bit 18; `fc3-ab-020-{off,on}-1` |
+| 030/50 MMU | 23.912 | 24.137 (+0.94%) | Below 2% resolution; `fc3-ab-030-{off,on}-1` |
+| 030/50 NOMMU | — | — | Normal FC3 off; explicit candidate exact profile and native twins pass |
+| 040/25 NOMMU | 22.414 | 22.789 (+1.67%) | Below 2% resolution; `fc3-ab-040-{off,on}-1` |
+| 060/50 NOMMU | 21.840 | 23.363 (+6.97%) | Retain on 060; `fc3-ab-060-{off,on}-1` |
+
+`fc3-final-twin-1` passes 28 native background comparisons: full and clipped
+restores for all seven gauges on both pages. All 14 per-gauge/page unchanged
+pixel/state comparisons pass, alongside six artwork, three scene and two
+combined-cockpit twins. Native keyboard rear/left/right/front, firing, held
+throttle and opposing-bank transitions pass. Five gauge inputs change on the
+bounded route; two remain fixed in the protected fixture, so an all-seven-changing
+flight is not claimed. Raw-key host tests cover changes to every gauge, including
+both fuel branches. Three deliberately damaged result records are rejected.
+The final extent-based reuse proof passes its host boundary tests and all native
+checks in the final exact capture. The all-seven-changing flight is dropped
+from this bounded fixture; per-input key mutation coverage and both-page native
+twins are retained. These checks establish correctness separately from FPS.
+
+The final normal build, CUSTOM2 omitted, passes the new hook/default checks in
+`fc3-final-normal-060-1`. Its 250-field initial-flight window records **22.364 FPS**,
+scene **39.137 ms**, cockpit **3.225 ms**, world **1.842 ms** and publication
+**0.0262 ms** per completed call. This is a separate workload from the long A/B
+pair; its FPS is not substituted into that comparison. The 112 publications
+have 87 two-field and 24 three-field gaps, with none on copper-pickup lines 42/43.
+The final screenshot retains the cockpit, needles and native message correctly.
+
+`fc3-final-aprof-1` uses explicit developer selection on 68EC030/50 NOMMU,
+500 warm-up fields and 50 recorded fields. **This is not the normal 030 policy.**
+All 28 background twins and 14 reuse twins pass, alongside all artwork/scene/
+composition checks and 68 final cockpit-page checks. The sample has 19 render
+and world calls (19 instrumented FPS, not a normal FPS claim). Gauge dispatch
+`sim:19ba6` costs **1.70 ms inclusive**; the CPU background painter costs
+**0.61 ms exclusive**, 45% in Chip-bus accesses. Chip-bus share is **20.7%** and
+recognized blitter polling **0.4%**. The prior FC2 exact window recorded 6.76 ms
+for gauge dispatch, 26.9% Chip-bus share and 8.6% polling. These are separate
+instrumented workloads, not an isolated numerical saving claim. They confirm
+the gauge blitter waits are no longer a leading cost on the candidate path.
+
+Remaining leading exclusive costs in that sample: viewport copy **7.86 ms**
+(96% Chip-bus), polygon compatibility **7.21 ms**, scene rasterization **7.16 ms**,
+static cockpit word painting **3.41 ms**, and exact artwork-key checks **2.76 ms**
+(73% Chip-bus). FC4 and FC5 remain the ordered next steps.
+
+All 557 host tests pass, including three checker sabotages. The 135 hook ranges
+and all three builds' patch destinations (135/135/149) pass. Final hashes:
+
+- Normal: `8cbb1cf9208fa4a51a3c8b66c4a2468a69b2117e0ad2a6118ce46f53c22d84c1`
+- Developer: `855202a064432a5e713a39941e16fcff042948bc45527dcc31f25f6882b1e7e0`
+- VERIFY: `c1d6b7c049dedf25934570ab9d6f94f271aaf8672d56ffa47d3de9ef2312a66e`
+
+To reproduce from the initialized development harness, use a fresh output name
+and one owned emulator at a time. Normal default stage window:
+
+```sh
+BENCH_BATCH_KEYS=1 BENCH_OMIT_CUSTOM2=1 \
+python3 -B ../../R/RedBaron/tools/scene_profile_case.py \
+  060 0 tmp/prof/fc3-manual-normal --fields 250 --groups stages
+```
+
+For an isolated long comparison, freeze one developer slave plus its listing,
+set `BENCH_DEVELOPER=1`, `BENCH_BATCH_KEYS=1` and `BENCH_FROZEN_SLAVE`, then run
+060 with masks `0x7f0ffa` and `0xff0ffa`, `--fields 2000 --groups fps` and distinct
+output names. For exact attribution, use the existing aprof method below with
+explicit mask `0xff0ffa`; the report must use the live slave base from its entry
+metadata. W6, the two-field cap, sound, minimum RAM and non-v1 games are unchanged.
 
 ## FC2 — Fast-RAM cockpit composition (2026-10-12)
 
 **FC2 passed.** The three-class timing matrix, native pixel checks and final
 normal-build checks pass. Bit 22 requires bits 19–21 and is
-CPU-gated to 030/040/060. The normal verified mask is now `0x7f1fff`.
-No extra RAM is allocated: the overlay word list occupies an unused part of the
-existing reserved workspace. Gauges retain their existing implementation.
+CPU-gated to 030/040/060. At the FC2 checkpoint the normal mask was `0x7f1fff`.
+No extra RAM was allocated: the overlay word list occupies an unused part of the
+existing reserved workspace. Gauges retained their prior implementation at FC2.
 
 Same frozen developer build, masks `0x3f0ffa` / `0x7f0ffa`, maximum detail,
 unchanged Time Scale, native keyboard route, 2,000 PAL fields each. SHA-256:

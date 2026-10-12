@@ -1,7 +1,7 @@
-; E2 persistent native gauge cache, sim v1, measured 020/040 classes only, CUSTOM2 bit 18.
+; E2 native gauge cache, sim v1, bit18 on 020/040; shared by FC3 bit23 on 060.
 ; Reuse pixels only with identical raw inputs/context AND a matching packed
 ; pixel guard. Native forced redraws, changing bounds and unsupported geometry
-; fall back. The normal verified mask must not select this until measured.
+; fall back. FC3 replaces the pixel guard with an explicit no-write proof.
 ; PERF_RANGE sim:19d22 8 bit=18
 ; PERF_RANGE sim:19de0 8 bit=18
 IC_KEY = 4
@@ -16,6 +16,10 @@ IC_DEST_KEY = 60
 
 instrument_cache_install:
  movem.l d0-a6,-(sp)
+ lea .mask(pc),a0
+.mask
+ adda.l #perf_mask-.mask,a0
+ move.l (a0),d0
  lea .cpu(pc),a0
 .cpu
  adda.l #perf_instrument_cpu-.cpu,a0
@@ -172,9 +176,18 @@ ic_before_compare_key
  lea IC_PIXELS(a6),a1
  lea IC_AREA(a6),a2
  moveq #0,d0
+ btst #0,gauge_fast_enabled+1(pc)
+ beq .pixel_guard
+ ; FC3 proves the needle bounds are outside the current scene/static writes.
+ bsr gauge_fast_can_reuse
+ tst.l d0
+ beq ic_before_miss
+ bra .pixels_ready
+.pixel_guard
  bsr instrument_pixels
  tst.l d0
  beq ic_before_miss
+.pixels_ready
  IFD VERIFY
  bsr instrument_cache_twin_begin
  tst.l d0
@@ -240,9 +253,12 @@ instrument_cache_after:
  lea IC_PIXELS(a6),a1
  lea IC_AREA(a6),a2
  moveq #1,d0
+ btst #0,gauge_fast_enabled+1(pc)
+ bne .capture_ready
  bsr instrument_pixels
  tst.l d0
  beq .done
+.capture_ready
  bsr instrument_cache_save
  move.l #1,(a6)
  IFD VERIFY
@@ -253,10 +269,20 @@ instrument_cache_after:
  ; state or waiting for coincidentally equal altitude on a later frame.
  tst.w d4
  bne .done
+ btst #0,gauge_fast_enabled+1(pc)
+ beq .repeat_ready
+ bsr gauge_fast_can_reuse
+ tst.l d0
+ beq .done
+.repeat_ready
  lea instrument_cache_twin_repeat(pc),a0
- tst.w (a0)
+ moveq #0,d0
+ btst #0,gauge_fast_enabled+1(pc)
+ beq .repeat_index
+ move.b -$ee3(a4),d0
+.repeat_index
+ bset d0,1(a0)
  bne .done
- move.w #1,(a0)
  movem.l (sp)+,d0-a6
  jmp instrument_cache_before(pc)
  ENDC

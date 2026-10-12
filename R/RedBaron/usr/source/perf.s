@@ -1,8 +1,8 @@
 ; Performance patch framework. Only sim v1 calls this module's installer.
 ; No feature is release-enabled until its model, twin and measurements pass.
-PERF_VERIFIED_MASK = $7f1fff ; verified features, including Fast-RAM cockpit composition; CPU-filtered
-PERF_DEVELOPER_MASK = $7f3fff
-PERF_VERIFY_MASK = $7f7fff ; developer W6 plus VERIFY-only quiescent overlay probe bit 14
+PERF_VERIFIED_MASK = $ff1fff ; verified features, including 060 gauge updates; CPU-filtered
+PERF_DEVELOPER_MASK = $ff3fff
+PERF_VERIFY_MASK = $ff7fff ; developer W6 plus VERIFY-only quiescent overlay probe bit 14
 
 perf_read_options:
 	movem.l d0-a6,-(sp)
@@ -34,6 +34,12 @@ perf_read_options:
 	; S3 has no established material benefit on the cached 030.
 	bclr #12,d0
 .selected
+	; FC3 clears the 2% threshold only on 060. Explicit developer/VERIFY
+	; masks retain 030/040 for the shared-code native twin and exact profiler.
+	btst #7,perf_attnflags+3(pc)
+	bne .gauge_player_ready
+	bclr #23,d0
+.gauge_player_ready
 	ENDC
 	ENDC
 	; W6 supports the measured 68000 and 020+ classes. Keep 010 unchanged.
@@ -47,6 +53,16 @@ perf_read_options:
 	beq .timing_dependencies_done
 	ori.l #$0300,d0
 .timing_dependencies_done
+	btst #23,d0
+	beq .persistent_ready
+	move.l perf_attnflags(pc),d1
+	andi.l #$8c,d1 ; FC3 regresses on 020; retain its bit18 path
+	bne .persistent_cpu
+	bclr #23,d0
+	bra .persistent_ready
+.persistent_cpu
+	bset #18,d0 ; shared dispatcher hooks and resource lifetime
+.persistent_ready
 	bsr perf_instrument_cpu
 	tst.l d1
 	bne .instrument_cpu_ready
@@ -96,8 +112,11 @@ perf_read_options:
 ; E2 persistent gauges: measured +2.19% on 020, +3.00% on 040.
 ; 030/060 miss 2%. Test higher CPU flags first: faster processors also set
 ; compatibility flags for earlier CPUs. Preserve d0 (the option mask).
-; Return d1=1 only for 020/040, otherwise 0. All modes share this policy.
+; FC3 uses the shared dispatcher on its separately gated CPU classes.
+; Without FC3 return d1=1 only for 020/040, otherwise 0.
 perf_instrument_cpu:
+	btst #23,d0
+	bne .yes
 	move.l perf_attnflags(pc),d1
 	btst #7,d1
 	bne .no
@@ -242,6 +261,13 @@ perf_apply_v1:
 	adda.l #cockpit_fast_install-.compose_base,a0
 	jsr (a0)
 .compose_done
+	btst #7,perf_mask+1(pc)
+	beq .gauges_done
+	lea .gauges_base(pc),a0
+.gauges_base
+	adda.l #gauge_fast_install-.gauges_base,a0
+	jsr (a0)
+.gauges_done
 	rts
 
 ; Check a non-relocated hook range before installing it.

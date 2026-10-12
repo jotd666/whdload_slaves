@@ -53,7 +53,11 @@
  Rendering improvements:
  - Faster rendering is On by default (normal build: CUSTOM2=0). It selects the verified dashboard cache, geometry,
    solid-fill, persistent-gauge, static-artwork, scene and sound optimizations, with CPU-specific choices.
- - Persistent gauge reuse is enabled only on the measured 020/040 classes.
+ - On 060, changed gauge backgrounds use clipped CPU restores from FastMem.
+   Unchanged gauges persist per page below the current scene and static artwork.
+   Native needle callbacks and event redraws are retained. Allocation failure
+   retains native drawing; RAM requirements are unchanged.
+   020/040 keep their existing guarded gauge cache; 030 keeps native gauges.
  - On 030/040/060, the forward overlay and static cockpit artwork are composed
    in FastMem before the viewport copy. Artwork outside that viewport persists
    on each page and is repaired after redraws, messages, view/resource changes

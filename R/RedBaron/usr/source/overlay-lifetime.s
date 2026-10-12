@@ -135,6 +135,7 @@ ovlife_invalidate:
 ovlife_save_ccr: dc.w $40e7
 	move.l a0,-(sp)
 	bsr instrument_cache_invalidate
+	bsr gauge_fast_invalidate
 	bsr artwork_cache_invalidate
 	IFD VERIFY
 	lea overlay_shadow_valid(pc),a0
