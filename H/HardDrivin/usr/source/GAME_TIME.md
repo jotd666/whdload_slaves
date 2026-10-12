@@ -3655,4 +3655,29 @@ The candidate is retained only in the ignored harness; `HardDrivinPhase.s`
 continues evaluating the native engine every segment. No input latching or
 physics-cadence change was introduced. `STEP4_COST_PLAN.md` P3 records the full
 side-effect audit, exact-check evidence, matched ten-second profiles and the
-unmet limits. The user has deferred P3; P4 is next. D3 remains unchanged.
+unmet limits. The user has deferred P3. P4 is in progress; D3 remains unchanged.
+
+
+### Physics helper reductions: P4 checkpoint
+
+The current CUSTOM1 development path retains the same engine evaluations and
+phase recurrence, with exact arithmetic and redundant-work reductions in the
+slave helpers. It reuses rounded per-frame coefficients only for matching field
+intervals; skips provably idle motion; narrows projection results at the same
+native word boundaries; reuses B500's integer vector during publication; and
+avoids repeated RPM/gear conversion and unused interpolation work. Saved-register
+sets have been audited against the actual callees. Normal builds are unchanged.
+
+Matched ten-second `p4-check-{a,b}-{off,on}` profiles put slave physics at
+1.995237 / 2.415216 ms per frame, down from P2's 3.812752 / 3.405057.
+**P4 is not complete:** its 1.4 ms limit is still exceeded by 0.595237 / 1.015216.
+The native part also remains more than 1.0 ms above the original; P3 is deferred.
+Constant preparation adds 0.046290 / 0.038951 ms outside the physics bucket,
+which remains part of the combined overhead budget. These results are helper
+costs, not equal-scene FPS claims.
+
+`STEP4_COST_PLAN.md` records the implementation boundaries and exact/live
+verification. In particular, unchanged orientation is insufficient to reuse a
+projection at a changed velocity: the game's intermediate word rounding must
+still be respected. No approximate projection, input latching, reduced simulation
+frequency, or deferred P3 endpoint cache has been introduced.

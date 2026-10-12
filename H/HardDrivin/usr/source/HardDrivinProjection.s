@@ -46,7 +46,7 @@ _projection_update:
 ; Projecting only carry*1.5 can make v=1,carry=-7 point backward because native
 ; 1.5*v was rounded down to1. Native zero-carry states stay exact.
 _projection_quantized_components:
-	movem.l d0-d7/a1,-(a7)
+	movem.l d0-d2/d7/a1,-(a7)
 	move.w d0,d7
 	beq.s .zero
 	move.w -$66d8(a4),d0
@@ -92,25 +92,61 @@ _projection_quantized_components:
 	clr.l 4(a0)
 	clr.l 8(a0)
 .done:
-	movem.l (a7)+,d0-d7/a1
+	movem.l (a7)+,d0-d2/d7/a1
 	rts
-; D0.W velocity; return native word XYZ in D0/D1/D2, D3/D4 scratch.
-; Match B512..B576 word narrowing and arithmetic Q14 shifts exactly.
+; D0.W velocity; return native word XYZ in D0/D1/D2; preserve D3-D7.
+; Only the low word of each native ASR14 product is consumed. Two ADD.L
+; operations and SWAP select those exact bits14..29, including signed-word
+; wrap, without the 68000 variable-shift loop. Callers narrow before use.
 _projection_integer_components:
 	move.w d0,d2
 	asr.w #1,d2
 	add.w d0,d2
+	; Flat pitch has exact sine0/cosine16384. Avoid its two multiply/shift
+	; pairs without approximating orientation or changing native word wrap.
+	tst.w -$6bb4(a4)
+	bne.s .pitch
+	cmpi.w #16384,-$6bb2(a4)
+	bne.s .pitch
+	moveq #0,d1
+	; Flat cardinal yaw needs only signed word extension/negation. The
+	; intermediate p(v) is still narrowed to a word exactly as native MULS.
+	tst.w -$6bb6(a4)
+	bne.s .yaw
+	cmpi.w #16384,-$6bb8(a4)
+	beq.s .east
+	cmpi.w #-16384,-$6bb8(a4)
+	bne.s .yaw
+	move.w d2,d0
+	ext.l d0
+	neg.l d0
+	moveq #0,d2
+	rts
+.east:
+	move.w d2,d0
+	ext.l d0
+	moveq #0,d2
+	rts
+.pitch:
 	move.w d2,d1
 	muls.w -$6bb4(a4),d1
-	moveq #14,d4
-	asr.l d4,d1
+	add.l d1,d1
+	add.l d1,d1
+	swap d1
 	muls.w -$6bb2(a4),d2
-	asr.l d4,d2
+	add.l d2,d2
+	add.l d2,d2
+	swap d2
+.yaw:
 	move.w d2,d0
 	muls.w -$6bb8(a4),d0
-	asr.l d4,d0
+	add.l d0,d0
+	add.l d0,d0
+	swap d0
 	muls.w -$6bb6(a4),d2
-	asr.l d4,d2
+	add.l d2,d2
+	add.l d2,d2
+	swap d2
 	rts
 
 ; D0.W eighth-velocity carry [-7,7], A0 -> XYZ Q16, native Q14 trig globals.

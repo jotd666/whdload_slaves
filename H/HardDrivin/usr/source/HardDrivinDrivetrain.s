@@ -532,8 +532,10 @@ _drivetrain_power:
 	rts
 .miss:
 	addq.l #1,20(a0)
+	moveq #1,d1
 .uncached:
-	movem.l (a7)+,d1/a0
+	; Native $2950 only clobbers D0. Keep D1/A0 saved once across both
+	; calls; D1 distinguishes a cache miss from an uncached native step.
 	; Displaced B696..B6BC, including both native multiply/divide calls.
 	move.w #100,-(a7)
 	move.w #450,-(a7)
@@ -549,11 +551,8 @@ _drivetrain_power:
 	jsr -$7f5c(a4)
 	addq.w #6,a7
 	move.w d0,-14(a5)
-	movem.l d1/a0,-(a7)
-	move.w _drivetrain_state+6(pc),d1
 	cmpi.w #1,d1
 	bne.s .done
-	lea _drivetrain_power_state(pc),a0
 	move.l (a2),(a0)
 	move.b -$66e4(a4),d1
 	ext.w d1

@@ -218,6 +218,15 @@ _time_outer:
 	IFD VERIFY_TIME_DISPATCH
 	bsr _dispatch_begin
 	ENDC
+	IFD VERIFY_TIME_SCALARS
+	IFND VERIFY_TIME_DISPATCH
+	move.l d0,-(a7)
+	ENDC
+	bsr _time_prepare_constants
+	IFND VERIFY_TIME_DISPATCH
+	move.l (a7)+,d0
+	ENDC
+	ENDC
 	IFND VERIFY_TIME_DISPATCH
 	cmpi.l #TIME_FIELDS_PER_STEP,d0
 	bls.s .bounded
@@ -243,6 +252,80 @@ _time_outer:
 	move.l _time_state+TS_RETURN(pc),-(a7)
 	tst.b -$522c(a4)
 	rts
+
+	IFD VERIFY_TIME_SCALARS
+; Cache by actual scalar interval. Native engine endpoints temporarily use n=8,
+; off-road phase decay uses PH_DT, and a later dispatcher substep may differ.
+; Consumers compare their own n before using a coefficient; mismatches keep
+; the original tables. Initialize the sentinel interval65535 with exact values.
+FC_PLUS equ 4
+FC_MINUS equ 8
+FC_T equ 12
+FC_THROTTLE equ 16
+FC_SPIN equ 20
+FC_CONTACT equ 24
+FC_RETAIN equ 28
+FC_RATE equ 32
+_time_frame_constants:
+	dc.w 65535,0
+	dc.l 65543,-65527,$1fffe000,65536,65536,65536,0,8
+_time_prepare_constants:
+	moveq #0,d0
+	move.w _time_scalar_fields(pc),d0
+	cmp.w _time_frame_constants(pc),d0
+	beq .done
+	lea _time_frame_constants(pc),a1
+	move.l d0,d1
+	addq.l #8,d1
+	move.l d1,FC_PLUS(a1)
+	moveq #8,d1
+	sub.l d0,d1
+	move.l d1,FC_MINUS(a1)
+	move.l d0,d1
+	lsl.l #8,d1
+	lsl.l #5,d1
+	move.l d1,FC_T(a1)
+	move.w d0,d1
+	bsr _decay_throttle
+	move.l d1,FC_THROTTLE(a1)
+	move.w d0,d1
+	bsr _decay_spin
+	move.l d1,FC_SPIN(a1)
+	move.w d0,d1
+	bsr _decay_contact
+	move.l d1,FC_CONTACT(a1)
+	neg.l d1
+	addi.l #65536,d1
+	move.l d1,FC_RETAIN(a1)
+	IFD VERIFY_TIME_MOTION
+	cmpi.w #8,d0
+	bls.s .short_rate
+	; Same independently rounded Gain/T as _contact_response's wide path.
+	move.l FC_CONTACT(a1),d1
+	lsl.l #3,d1
+	move.l d0,-(a7)
+	lsr.l #1,d0
+	add.l d0,d1
+	move.l (a7)+,d0
+	divu.w d0,d1
+	andi.l #$ffff,d1
+	bra.s .rate_ready
+.short_rate:
+	move.l a0,-(a7)
+	lea _contact_rate_gain(pc),a0
+	move.w d0,d1
+	add.w d1,d1
+	move.w (a0,d1.w),d1
+	andi.l #$ffff,d1
+	movea.l (a7)+,a0
+.rate_ready:
+	move.l d1,FC_RATE(a1)
+	ENDC
+	; Publish the key last: table routines must not read half-updated data.
+	move.w d0,(a1)
+.done:
+	rts
+	ENDC
 
 _time_pause:
 	IFD VERIFY_TIME_REPLAY_TIMING
@@ -340,6 +423,21 @@ _time_state: dcb.b 32,0
 ; path keeps DIVS; longer intervals return a full signed-long quotient.
 ; Eighths are an exact compact representation of the public Q16.16 fraction.
 _time_scale_word:
+	; A valid signed eighth remainder (-7..7) stays fractional at zero rate.
+	tst.w d0
+	bne.s .nonzero
+	moveq #0,d0
+	rts
+.nonzero:
+	; Native engine endpoints use n=8 with zero carry. This exact identity
+	; avoids both multiplication and division on the common scalar path.
+	cmpi.w #8,d1
+	bne.s .scaled
+	tst.l d2
+	bne.s .scaled
+	ext.l d0
+	rts
+.scaled:
 	cmpi.w #8,d1
 	bhi.s .wide
 	muls.w d1,d0
@@ -383,6 +481,34 @@ _time_multiply_fields:
 ; Long intervals split integer and fractional parts before Q16 conversion,
 ; avoiding overflow of a full scaled Q16 intermediate.
 _time_scale_q16:
+	; A zero rate leaves only the normalized signed Q16 carry.
+	tst.w d0
+	bne.s .nonzero
+	move.l d2,d0
+	bra.s _time_split_q16
+.nonzero:
+	; Throttle ramps are exactly +/-2 units per native step. For every
+	; unsigned field count, fields*16384 plus a valid Q16 carry fits signed
+	; long (maximum magnitude1073790975), avoiding wide split/multiply work.
+	cmpi.w #2,d0
+	beq.s .ramp_up
+	cmpi.w #-2,d0
+	bne.s .general
+	moveq #0,d0
+	move.w d1,d0
+	swap d0
+	lsr.l #2,d0
+	neg.l d0
+	add.l d2,d0
+	bra.s _time_split_q16
+.ramp_up:
+	moveq #0,d0
+	move.w d1,d0
+	swap d0
+	lsr.l #2,d0
+	add.l d2,d0
+	bra.s _time_split_q16
+.general:
 	cmpi.w #8,d1
 	bhi.s _time_scale_q16_wide
 	muls.w d1,d0
@@ -390,11 +516,10 @@ _time_scale_q16:
 	lsl.l #5,d0
 	add.l d2,d0
 _time_split_q16:
-	move.l d0,d2
+	moveq #0,d2
+	move.w d0,d2
 	swap d0
 	ext.l d0
-	andi.l #$ffff,d2
-	tst.l d0
 	bpl.s .done
 	tst.l d2
 	beq.s .done
@@ -432,6 +557,12 @@ _time_scale_q16_wide:
 ; Exact signed-long times unsigned-word multiplication for wide integration.
 ; D0.L value,D1.W fields -> D2.L:D0.L signed64 product; preserve other registers.
 _time_product_s32_u16:
+	; Exact zero product; common for grounded fall and angular rates.
+	tst.l d0
+	bne.s .multiply
+	moveq #0,d2
+	rts
+.multiply:
 	movem.l d3-d4,-(a7)
 	move.l d0,d3
 	andi.l #$ffff,d0
@@ -455,6 +586,23 @@ _time_product_s32_u16:
 ; Reduce unsigned magnitude in two word divisions, so even LONG_MIN is valid.
 ; Preserve other registers. The two equivalent endpoints retain their sign.
 _time_normalize_angle:
+	; One wrap is sufficient for [-2160,2160], including signed +/-720
+	; endpoints. Keep the full-long reducer for large elapsed-time angles.
+	cmpi.l #720,d0
+	bgt.s .positive_bounded
+	cmpi.l #-720,d0
+	bge.s .bounded_done
+	cmpi.l #-2160,d0
+	blt.s .general
+	addi.l #1440,d0
+	rts
+.positive_bounded:
+	cmpi.l #2160,d0
+	bgt.s .general
+	subi.l #1440,d0
+.bounded_done:
+	rts
+.general:
 	movem.l d1-d2,-(a7)
 	move.l d0,d2
 	bpl.s .magnitude

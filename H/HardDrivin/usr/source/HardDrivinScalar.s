@@ -61,6 +61,16 @@ _time_velocity_add:
 	move.w -8(a5),d0
 	movem.l d1-d2/a0,-(a7)
 	lea _time_scalar_state(pc),a0
+	IFD VERIFY_DRIVETRAIN_PHASE
+	; prepare_anchor sets n=8 and zero scalar carries before the one native
+	; engine evaluation. Its velocity delta therefore needs no rescaling or
+	; dissipation correction (the latter preserves every zero-carry n8 step).
+	move.w _phase_state+PH_ACTIVE(pc),d1
+	beq.s .ordinary
+	ext.l d0
+	bra.s .publish
+.ordinary:
+	ENDC
 	; An absolute native writer invalidates the old fractional companion.
 	; Collision/recovery same-value resets are hooked explicitly below.
 	move.w -$66d8(a4),d1
@@ -76,6 +86,7 @@ _time_velocity_add:
 	bsr _time_limit_dissipation
 	ENDC
 	move.w d2,SS_VELOCITY_CARRY(a0)
+.publish:
 	; Record expected integer value without changing the native ADD flags.
 	move.w -$66d8(a4),d1
 	add.w d0,d1
@@ -304,6 +315,23 @@ _time_rpm_engaged:
 _time_rpm_delta:
 	movem.l d1-d3/a0,-(a7)
 	lea _time_scalar_state(pc),a0
+	IFD VERIFY_DRIVETRAIN_PHASE
+	; Active phase endpoints have n8, carry0 and matching LAST/gear from
+	; prepare_anchor. Keep native +/-450 slew and the shared LAST saturation.
+	move.w _phase_state+PH_ACTIVE(pc),d1
+	beq.s .ordinary
+	ext.l d0
+	cmpi.l #450,d0
+	ble.s .phase_lower
+	move.l #450,d0
+	bra .save
+.phase_lower:
+	cmpi.l #-450,d0
+	bge .save
+	move.l #-450,d0
+	bra .save
+.ordinary:
+	ENDC
 	move.w -$66d6(a4),d1
 	cmp.w SS_RPM_LAST(a0),d1
 	bne.s .invalidate

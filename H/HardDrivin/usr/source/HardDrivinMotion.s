@@ -450,6 +450,16 @@ _motion_drift_reset:
 	movea.l (a7)+,a0
 	rts
 _motion_drift:
+	; No countdown and no native reset means the entire drift pass is idle.
+	tst.b -$66ee(a4)
+	bne.s .active
+	move.l a0,-(a7)
+	lea _motion_drift_state(pc),a0
+	tst.l (a0)
+	movea.l (a7)+,a0
+	bne.s .active
+	rts
+.active:
 	movem.l d0-d7/a0-a3,-(a7)
 	lea _motion_drift_state(pc),a3
 	moveq #0,d0
@@ -574,6 +584,18 @@ _motion_position_add:
 ; last contact pass's acceleration for the explicit-Euler bias correction.
 ; Clear the sample after consumption: partial contact may apply no acceleration.
 _motion_fall_position:
+	; Grounded zero state cannot move Y for any field interval. Retain the
+	; native ADD flags and use the full path for stale companions.
+	tst.w -$66f2(a4)
+	bne.s .active
+	move.l _motion_state+MS_FALL_CARRY(pc),d0
+	bne.s .active
+	move.w _motion_state+MS_FALL_ACCEL(pc),d0
+	bne.s .active
+	moveq #0,d0
+	add.l d0,-$6700(a4)
+	rts
+.active:
 	movem.l d1-d5/a0-a1,-(a7)
 	lea _motion_state(pc),a0
 	lea _motion_position_state(pc),a1
@@ -599,6 +621,17 @@ _motion_fall_position:
 ; Y delta,D3.L remainder. Preserve other inputs. Acceleration is a signed word.
 ; Y = -v*T + a*T*(1-T)/2; positive fall velocity moves toward negative Y.
 _motion_fall_displacement:
+	; With zero velocity, fractional velocity and acceleration, a valid
+	; signed position remainder (-127..127) cannot produce a whole unit.
+	tst.w d0
+	bne.s .moving
+	tst.w d1
+	bne.s .moving
+	tst.w d2
+	bne.s .moving
+	moveq #0,d0
+	rts
+.moving:
 	cmpi.w #8,d4
 	bhi _motion_fall_displacement_wide
 	movem.l d1-d2/d4-d5,-(a7)

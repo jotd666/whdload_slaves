@@ -5,12 +5,13 @@ current integrated build, measured on 2026-10-12. It names the bottlenecks, sets
 targets and gives an ordered list of work items. Each item has an exit criterion. Step IDs
 are `P` (performance), `C` (closure) and `D` (decisions for the user).
 
-**Current status: P1 and P2 complete; P3 deferred by the user.** Traffic meets its 0.8 ms/frame budget.
+**Current status: P1 and P2 complete; P3 deferred; P4 in progress.** Traffic meets its 0.8 ms/frame budget.
 Replay-recording overhead is now 0.281 ms/frame in A and 0.249 ms/frame in B,
 both below 0.3 ms. P3 E1 has been evaluated and fails its entry-rate limits; its
-candidate is retained only in the ignored harness. P4 is next. P3's unmet limits,
-the combined G1 gate and step-4 closure remain open. The runtime remains at the
-accepted P2 implementation.
+candidate is retained only in the ignored harness. The P4 helper checkpoint below
+reduces costs to 1.995 / 2.415 ms per frame, still above 1.4 in both windows.
+P3's unmet limits, P4, the combined G1 gate and step-4 closure remain open.
+The runtime contains P2 plus the verified P4 helper reductions.
 
 ## 1. Measurement
 
@@ -463,6 +464,74 @@ source, binaries, checkers and verified compressed traces remain under ignored
    - Slave physics symbols total at most 1.4 ms per frame in both windows.
    - The game-code part of physics is at most 1.0 ms per frame above the original after
      P3.
+
+#### P4 checkpoint: exact helper reductions, budget still failing
+
+The 2026-10-12 checkpoint uses `p4-check-a.slave` / `p4-check-b.slave`
+with matched `p4-check-{a,b}-{off,on}` ten-second captures. Every capture
+retains its actual slave and listing. The exact physics-owner totals include
+small symbols omitted from the analyzer's display table.
+
+| Metric, ms per complete frame | A | B |
+|---|---:|---:|
+| Slave physics, accepted P2 | 3.812752 | 3.405057 |
+| Slave physics, P4 checkpoint | **1.995237** | **2.415216** |
+| P4 limit | 1.400000 | 1.400000 |
+| Remaining excess | **0.595237** | **1.015216** |
+| Native physics, matched original | 9.703325 | 6.380050 |
+| Native physics, P4 checkpoint | 11.547031 | 8.032314 |
+| Native excess (P3-dependent limit: 1.0) | 1.843705 | 1.652265 |
+
+Both P4 numeric conditions remain unmet; deferring P3 does not waive either
+limit. The new per-frame constant preparation costs another 0.046290 / 0.038951
+ms outside the physics bucket and must count toward G1. No original-game FPS
+acceptance is claimed; B still follows a different scene from CUSTOM1-off.
+
+Implemented changes:
+
+- A keyed per-frame block stores n, 8+n, 8-n, Q16 T and the existing rounded
+  retention/contact coefficients. Decay/contact hooks reuse coefficients only
+  for an exactly matching interval; native n8 and partial phase segments retain
+  their own coefficients. Simple small additions remain local where a guarded
+  memory lookup would cost more.
+- Exact zero/native-step shortcuts, bounded angle normalization with the full
+  long fallback, bounded throttle-ramp arithmetic and cheaper signed Q16 splits.
+  Grounded zero fall/drift and zero movement axes skip arithmetic while retaining
+  companion state. Range assumptions are documented alongside each shortcut.
+- Phase interpolation uses bounded addition chains and does not calculate an
+  unused RPM forecast. Position scaling uses exact small-integer shift/add forms.
+  Native RPM/gear conversion results are reused with a complete key, and later
+  segments reuse globals already published by the preceding native tail.
+- Projection retains native word rounding, uses exact flat/cardinal paths and
+  cheaper extraction of the consumed product bits. Publication reuses the integer
+  vector already produced by native B500 and projects only its neighbor when
+  needed. Prologues preserve only the registers used by their helpers; the power
+  wrapper keeps one save across two audited native `$2950` calls.
+
+Unchanged yaw/pitch alone is **not** a valid projection reuse key: the native
+`v + floor(v/2)` step and subsequent word-rounded products also depend on velocity.
+For example, velocities 1 and 2 produce magnitudes 1 and 3 with identical angles.
+The checkpoint therefore removes duplicate work without substituting one segment's
+vector for another velocity. P3 engine evaluation and physics cadence are unchanged.
+
+Verification of this checkpoint:
+
+- 162,003 actual-68000 old/new helper cases, including signed extremes, projection
+  edge paths, companion state, full register preservation where required, native
+  power calls, and valid phase invariants.
+- All 65,536 field intervals plus the initial sentinel: 65,537 constant blocks,
+  196,611 cached coefficients, 196,608 equal/different-key table results and 306
+  contact responses. Native oracle checks cover 128 endpoints / 1,440 partitions.
+- Live pristine-engine oracles: motion 17, braking 46, steering 9, off-road 29;
+  skid prefixes 43 returns on A500 and 189 on 020. Skid checks stop at the first
+  unsupported airborne input (fields 515 / 575); they do not validate full flight.
+- 108 native-step car states match. CUSTOM1-off passes all 163 ranges; branch
+  entry audit passes 141 ranges. Normal, DRIVE and ATTRACT slaves are byte-identical
+  to their step-2 baselines. All builds, captures and private checkers stay ignored.
+
+The remaining work is the P4 cost gap, not a missing acceptance label. Further
+changes must retain the same exact recurrence, input tape and native side effects;
+P3 remains deferred and neither a looser budget nor a lower physics cadence is used.
 
 ### P5 Remaining hooks: target ≤ 0.3 ms per frame (now 0.42 / 0.48)
 

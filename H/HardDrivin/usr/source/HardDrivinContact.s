@@ -48,6 +48,11 @@ _contact_response:
 	swap d0
 	clr.w d0
 .feedback:
+	cmp.w _time_frame_constants(pc),d4
+	bne.s .rate_uncached
+	move.l _time_frame_constants+FC_RATE(pc),d1
+	bra.s .rate_ready
+.rate_uncached:
 	; Round Gain/T to Q16 after the independently rounded Gain. Maximum
 	; coefficient error versus the exact function is <=0.5+4/fields LSB.
 	lsl.l #3,d1
@@ -56,6 +61,7 @@ _contact_response:
 	add.l d4,d1
 	move.l (a7)+,d4
 	divu.w d4,d1
+.rate_ready:
 	muls.w d1,d3
 	tst.w d2
 	beq.s .wide_rate
@@ -93,6 +99,11 @@ _contact_rate_gain:
 ; signed integer and unsigned fractional parts to avoid a 48-bit product on 000.
 ; This supports wide pitch/velocity projection without rounding the input first.
 _contact_project_q16:
+	; Exact zero and Q14 identity cases; callers consume the value, not CCR.
+	tst.l d0
+	beq.s .identity
+	cmpi.w #16384,d1
+	beq.s .identity
 	movem.l d1-d3,-(a7)
 	move.l d0,d2
 	andi.l #$ffff,d2
@@ -112,6 +123,7 @@ _contact_project_q16:
 	asr.l #7,d2
 	add.l d2,d0
 	movem.l (a7)+,d1-d3
+.identity:
 	rts
 
 ; Full Q16 roll/pitch feedback, plus last published integer word. Native
@@ -168,6 +180,29 @@ _contact_scale_rate:
 ; Normalize the complete angle before its word store. D0 is scratch; preserve
 ; D1-D5/A0/A1.
 _contact_integrate_rate:
+	; With zero rate/carry and an already canonical angle the result is
+	; unchanged, even after a stale LAST value. Publish LAST as usual.
+	tst.l d0
+	bne.s .integrate
+	tst.l (a0)
+	bne.s .integrate
+	cmpi.w #720,(a1)
+	bgt.s .integrate
+	cmpi.w #-720,(a1)
+	blt.s .integrate
+	move.w (a1),4(a0)
+	; Preserve even the historical scratch result: wide returns the angle,
+	; short returns a zero integer increment. No caller needs new semantics.
+	move.l d1,-(a7)
+	move.w _time_scalar_fields(pc),d1
+	cmpi.w #8,d1
+	bls.s .zero_done
+	move.w (a1),d0
+	ext.l d0
+.zero_done:
+	move.l (a7)+,d1
+	rts
+.integrate:
 	movem.l d1-d5,-(a7)
 	move.w _time_scalar_fields(pc),d1
 	cmpi.w #8,d1
@@ -246,6 +281,9 @@ _contact_add_angle:
 ; Native roll cosine, retaining a Q16 input until after projection. At T=1
 ; retain the game's word projection rounding for exact native-step equivalence.
 _contact_pitch_projection:
+	; Zero rate stays zero for every roll angle, including native n8 rounding.
+	tst.l d0
+	beq.s .zero
 	movem.l d1-d3/a0-a1,-(a7)
 	move.l d0,-(a7)
 	move.w -$66b2(a4),-(a7)
@@ -260,6 +298,7 @@ _contact_pitch_projection:
 	clr.w d0
 .done:
 	movem.l (a7)+,d1-d3/a0-a1
+.zero:
 	rts
 
 _contact_roll:

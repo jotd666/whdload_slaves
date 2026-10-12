@@ -3,6 +3,11 @@
 ; explicitly (it cannot be represented by a word). No table index wraps.
 ; D1.W fields -> D1.L coefficient0..65536. All other registers preserved.
 _decay_throttle:
+	cmp.w _time_frame_constants(pc),d1
+	bne.s .table
+	move.l _time_frame_constants+FC_THROTTLE(pc),d1
+	rts
+.table:
 	cmpi.w #706,d1
 	bhs.s .zero_retention
 	move.l a0,-(a7)
@@ -76,6 +81,11 @@ _decay_throttle_table:
 	dc.w 65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535
 	dc.w 65535,65535,65535,65535,65535,65535,65535,65535,65535,65535
 _decay_spin:
+	cmp.w _time_frame_constants(pc),d1
+	bne.s .table
+	move.l _time_frame_constants+FC_SPIN(pc),d1
+	rts
+.table:
 	cmpi.w #895,d1
 	bhs.s .zero_retention
 	move.l a0,-(a7)
@@ -165,6 +175,11 @@ _decay_spin_table:
 	dc.w 65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535
 	dc.w 65535,65535,65535,65535,65535,65535,65535
 _decay_contact:
+	cmp.w _time_frame_constants(pc),d1
+	bne.s .table
+	move.l _time_frame_constants+FC_CONTACT(pc),d1
+	rts
+.table:
 	cmpi.w #328,d1
 	bhs.s .zero_retention
 	move.l a0,-(a7)
