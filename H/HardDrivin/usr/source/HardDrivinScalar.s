@@ -109,7 +109,24 @@ _time_throttle_delta:
 	move.l SS_THROTTLE_CARRY(a0),d2
 	bsr _time_scale_q16
 	move.l d2,SS_THROTTLE_CARRY(a0)
+	cmpi.w #8,d1
+	bls.s .short
+	; Clamp the full increment before narrowing to the native throttle byte.
+	moveq #0,d1
+	move.b -$66e4(a4),d1
+	add.l d1,d0
+	bpl.s .wide_upper
+	moveq #0,d0
+.wide_upper:
+	cmpi.l #100,d0
+	ble.s .wide_store
+	moveq #100,d0
+.wide_store:
+	move.b d0,-$66e4(a4)
+	bra.s .check
+.short:
 	add.b d0,-$66e4(a4)
+.check:
 	; Native following instructions still perform integer saturation. Discard
 	; outward fractional debt at either saturation boundary, even if no whole
 	; increment was produced. Store the expected post-saturation integer.
@@ -287,6 +304,7 @@ _time_rpm_delta:
 .current:
 	move.w -$66ca(a4),SS_RPM_GEAR(a0)
 	move.w d0,d3
+	ext.l d3
 	beq.s .target
 	move.w #450,d0
 	tst.w d3
@@ -300,15 +318,15 @@ _time_rpm_delta:
 	move.w d2,SS_RPM_CARRY(a0)
 	tst.w d3
 	bmi.s .negative
-	cmp.w d0,d3
+	cmp.l d0,d3
 	ble.s .target
 	bra.s .save
 .negative:
-	cmp.w d0,d3
+	cmp.l d0,d3
 	bge.s .target
 	bra.s .save
 .target:
-	move.w d3,d0
+	move.l d3,d0
 	clr.w SS_RPM_CARRY(a0)
 .save:
 	move.w -$66d6(a4),d1
@@ -391,4 +409,135 @@ _time_retention_carries: dc.l -65535,-8192,-1,0,1,8192,65535
 _time_retention_fake: dc.w 0
 _time_retention_signature: dc.b 'HDRETN01'
 _time_retention_results: dcb.b 5*17*7*6,0
+	ENDC
+
+	IFD VERIFY_RAMP_WIDE_MATH
+_ramp_wide_test:
+	movem.l d0-d7/a0-a4,-(a7)
+	lea _ramp_fake(pc),a4
+	adda.l #$66e4,a4
+	lea _time_scalar_state(pc),a0
+	lea _ramp_throttle_cases(pc),a1
+	lea _ramp_throttle_results(pc),a2
+	lea _time_scalar_fields(pc),a3
+	moveq #15,d7
+.throttle:
+	move.w (a1)+,d0
+	move.b d0,-$66e4(a4)
+	move.w (a1)+,d6
+	move.w (a1)+,(a3)
+	move.l (a1)+,SS_THROTTLE_CARRY(a0)
+	move.w (a1)+,d0
+	move.b d0,SS_THROTTLE_LAST(a0)
+	tst.w d6
+	bmi.s .down
+	bsr _time_throttle_up
+	ble.s .throttle_store
+	move.b #100,-$66e4(a4)
+	bra.s .throttle_store
+.down:
+	bsr _time_throttle_down
+	bpl.s .throttle_store
+	clr.b -$66e4(a4)
+.throttle_store:
+	moveq #0,d0
+	move.b -$66e4(a4),d0
+	move.w d0,(a2)+
+	move.b SS_THROTTLE_LAST(a0),d0
+	move.w d0,(a2)+
+	move.l SS_THROTTLE_CARRY(a0),(a2)+
+	dbf d7,.throttle
+	lea _ramp_rpm_cases(pc),a1
+	lea _ramp_rpm_results(pc),a2
+	moveq #17,d7
+.rpm:
+	move.w (a1)+,-$66d6(a4)
+	move.w (a1)+,d0
+	move.w (a1)+,(a3)
+	move.w (a1)+,SS_RPM_CARRY(a0)
+	move.w (a1)+,SS_RPM_LAST(a0)
+	move.w (a1)+,-$66ca(a4)
+	move.w (a1)+,SS_RPM_GEAR(a0)
+	bsr _time_rpm_delta
+	move.w d0,(a2)+
+	move.w SS_RPM_LAST(a0),(a2)+
+	move.w SS_RPM_CARRY(a0),(a2)+
+	dbf d7,.rpm
+	move.w #VERIFY_SCALAR_FIELDS,(a3)
+	bsr _time_reset_scalars
+	movem.l (a7)+,d0-d7/a0-a4
+	rts
+_ramp_fake: dcb.b 32,0
+_ramp_throttle_cases:
+	dc.w 0,2,65535
+	dc.l 0
+	dc.w 0
+	dc.w 100,-2,65535
+	dc.l 0
+	dc.w 100
+	dc.w 99,2,8
+	dc.l 65535
+	dc.w 99
+	dc.w 1,-2,8
+	dc.l -65535
+	dc.w 1
+	dc.w 99,2,9
+	dc.l -65535
+	dc.w 99
+	dc.w 1,-2,9
+	dc.l 65535
+	dc.w 1
+	dc.w 50,2,511
+	dc.l -1
+	dc.w 50
+	dc.w 50,-2,511
+	dc.l 1
+	dc.w 50
+	dc.w 100,2,9
+	dc.l -65535
+	dc.w 100
+	dc.w 0,-2,9
+	dc.l 65535
+	dc.w 0
+	dc.w 0,2,1
+	dc.l -65535
+	dc.w 0
+	dc.w 100,-2,1
+	dc.l 65535
+	dc.w 100
+	dc.w 50,2,32768
+	dc.l 65535
+	dc.w 50
+	dc.w 50,-2,32768
+	dc.l -65535
+	dc.w 50
+	dc.w 50,2,9
+	dc.l -65535
+	dc.w 49
+	dc.w 50,-2,9
+	dc.l 65535
+	dc.w 49
+_ramp_throttle_signature: dc.b 'HDRAMPT1'
+_ramp_throttle_results: dcb.b 16*8,0
+_ramp_rpm_cases:
+	dc.w 3200,6500,65535,7,3200,1,1
+	dc.w 3200,-6500,65535,-7,3200,1,1
+	dc.w 3200,450,32768,7,3200,1,1
+	dc.w 3200,-450,32768,-7,3200,1,1
+	dc.w 3200,1,600,-7,3200,1,1
+	dc.w 3200,-1,600,7,3200,1,1
+	dc.w 3200,6500,9,7,3200,1,1
+	dc.w 3200,-6500,9,-7,3200,1,1
+	dc.w 3200,6500,8,7,3200,1,1
+	dc.w 3200,-6500,8,-7,3200,1,1
+	dc.w 3200,6500,1,7,3200,1,1
+	dc.w 3200,-6500,1,-7,3200,1,1
+	dc.w 3200,0,65535,7,3200,1,1
+	dc.w 6499,1,9,7,6499,1,1
+	dc.w 1,-1,9,-7,1,1,1
+	dc.w 6500,6500,65535,7,6500,1,1
+	dc.w 3200,6500,9,7,3199,1,1
+	dc.w 3200,6500,9,7,3200,1,2
+_ramp_rpm_signature: dc.b 'HDRAMPR1'
+_ramp_rpm_results: dcb.b 18*6,0
 	ENDC

@@ -1047,5 +1047,30 @@ position and81 falling-velocity cases. The ordinary build remains unchanged.
 This proves the displacement calculation, not the safety of arbitrarily large
 physical steps. The live fall-velocity word writes and the impact/landing paths
 still require validation with the eventual 68000 dispatcher. Contact-rate
-integration, input/saturation narrowing, traffic, discrete events and replay
+integration, angular/velocity narrowing, traffic, discrete events and replay
 sampling remain unfinished for longer intervals.
+
+
+### Control-ramp saturation at longer intervals
+
+Throttle remains a native byte with limits0..100. For intervals above eight
+fields, its helper now adds the full signed-long increment, clamps to those
+limits, and only then stores the byte. The existing outward-fraction cancellation
+and native caller checks remain. This prevents an increasing throttle from
+wrapping negative before its upper-limit check, or decreasing throttle from
+wrapping positive. The short-interval path is unchanged.
+
+RPM scales its450-unit native slew limit and compares that full signed-long
+increment with the signed target distance. A word comparison was insufficient
+once the scaled limit exceeded32767; it could choose a wrapped increment instead
+of reaching the target. Target-reaching updates still clear the fractional
+remainder, and gear/current-value mismatch still invalidates stale fractions.
+
+`VERIFY_RAMP_WIDE_MATH` calls the actual helpers on private globals. The retained
+`s4-ramp-wide` evidence passes16 throttle cases and18 RPM cases, including both
+directions, saturation, signed carries, intervals32768/65535, target crossing and
+state/gear mismatch. `s4-ramp-native` matches all144 constant-input reference car
+states at forced T=1, and the ordinary build remains byte-identical. This is not
+full driving-tape or equal-elapsed-time acceptance. Contact-rate integration,
+angular/velocity narrowing, traffic, multiple events and replay sampling still
+precede enabling the requested 68000 update policy.
