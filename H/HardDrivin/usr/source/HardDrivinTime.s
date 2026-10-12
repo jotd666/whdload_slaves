@@ -118,6 +118,9 @@ _time_install:
 	ENDC
 	IFD VERIFY_TIME_DISPATCH
 	bsr _dispatch_install
+	IFD VERIFY_DRIVETRAIN_REFERENCE
+	bsr _drivetrain_install
+	ENDC
 	ENDC
 	IFD VERIFY_TIME_REPLAY_TIMING
 	bsr _replay_install
@@ -661,4 +664,8 @@ _time_q16_results: dcb.l 7*9*7*2,0
 
 	IFD VERIFY_TIME_AUDIO
 	INCLUDE "HardDrivinAudio.s"
+	ENDC
+
+	IFD VERIFY_DRIVETRAIN_REFERENCE
+	INCLUDE "HardDrivinDrivetrain.s"
 	ENDC

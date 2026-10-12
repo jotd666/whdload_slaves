@@ -334,8 +334,10 @@ Tools stay in ignored `tmp/dev/tools`.
      difference is traced to gear-transition overshoot and a native zero-net-force
      interval. An isolated drivetrain model now matches128 live updates, including
      RPM slew and gear conversion; a within-interval recurrence identifies both
-     upshifts as significant. The runtime correction, position integration across
-     those transitions, and units-derived handling tolerance remain open.
+     upshifts as significant. An optional runtime drivetrain/position reference
+     now passes focused operand and native-step checks, but costs13.51% in a
+     ten-second A500 diagnostic and is not enabled in the regular integrated build.
+     A cheaper runtime policy and units-derived handling tolerance remain open.
    - Exercise collisions, the loop and the jump at both T extremes; check for
      tunnelling and missed checkpoints.
    - Measure the A500's FPS: it must not drop by more than 3% against the baseline.

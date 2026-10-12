@@ -526,6 +526,16 @@ _motion_position_entry:
 ; Terrain translations preserve fractions. Explicit motion resets discard them.
 ; Crash drift bypasses this block just as it bypassed native projected motion.
 _motion_position_add:
+	IFD VERIFY_DRIVETRAIN_REFERENCE
+	move.w d0,-(a7)
+	move.w _drivetrain_state+6(pc),d0
+	cmpi.w #2,d0
+	bne.s .integrate
+	move.w (a7)+,d0
+	rts
+.integrate:
+	move.w (a7)+,d0
+	ENDC
 	movem.l d1-d4/a0-a2,-(a7)
 	move.l -$66fc(a4),-(a7)
 	move.l -$6700(a4),-(a7)

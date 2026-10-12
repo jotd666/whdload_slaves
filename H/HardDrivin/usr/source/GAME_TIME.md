@@ -1594,6 +1594,71 @@ has not been accepted as the runtime policy or measured against the A500 FPS gat
 The retained `segment-audit.json` files record the exact matched inputs and both
 endpoints. Large-interval solver and handling acceptance remain open.
 
+
+### Runtime drivetrain reference (optional, not performance accepted)
+
+`VERIFY_DRIVETRAIN_REFERENCE` adds an explicitly experimental reference path in
+HardDrivinDrivetrain.s. It requires TIME_MOTION, TIME_DISPATCH and TIME_AUDIO and
+is installed only with CUSTOM1. The regular integrated build does not enable it.
+The hook at `$0cdb6` replaces the paired engine/position calls. Full-contact,
+automatic driving in gears1..4, without crash, skid or falling velocity, consumes
+nonzero intervals other than eight fields through one-field engine updates.
+Each update retains native power, RPM and gear behavior and accumulates projected
+position with the existing fractional/Euler helpers. The native position routine
+then publishes word positions and runs its remaining housekeeping once, with the
+full interval restored; it skips the already-accumulated displacement.
+
+Other driving modes and zero/eight-field intervals retain the existing pair.
+The eight-field case explicitly preserves native-step compatibility; this is not
+a universally one-field integrator. Steering, input sampling, collision/contact
+and scene work still run once per outer physics pass. Brake state is held across
+inner engine updates. Engine pitch publication at `$0baca` is delayed until the
+last inner update, preserving one publication per outer pass. This changes no
+Paula or VBL playback timing. The interval is restored before returning to the
+rest of physics; the outer dispatcher does not gain extra full physics passes.
+
+The final A500 timing capture (`s4-drivetrain-final-timing`) confirms33 completed
+physics passes and33 scene calls, one dispatcher step per frame,491 engine calls,
+zero outstanding inner fields at the final observation, and30 pitch publications.
+Every pitch publication belongs to a distinct outer pass and none occurs during
+an intermediate inner update. Some initial passes have engine sound disabled.
+No crash or replay fields occur in this500-field window.
+
+| A500, held throttle26,500 PAL fields | Swaps | FPS | Mean frame ms |
+|---|---:|---:|---:|
+| Current solver, reference off (`s4-drivetrain-base-timing`) | 37 | 3.694 | 270.701 |
+| Final drivetrain reference (`s4-drivetrain-final-timing`) | 32 | 3.195 | 312.998 |
+
+This diagnostic costs13.51% in swap count relative to the current solver and is
+not an acceptable candidate for the3% A500 budget. The initial version also ran
+native position housekeeping at every inner update; removing that repeated work
+increased completed physics passes from32 to33 but did not increase swaps in the
+measured window. These are ten-second constant-throttle diagnostics, not the full
+A/B acceptance windows; trajectories differ and cannot establish equal handling.
+The required performance gate remains open, not waived.
+
+The final runtime operands (`s4-drivetrain-final-operands`) match341 engaged
+engine updates against the independent velocity/power/RPM/gear model. The final
+braking run (`s4-drivetrain-fast-brake-final`) validates484 longitudinal position
+updates against actual pre/post operands, with zero backward updates, zero stopped
+velocity/projection companions and a held final position. Braking begins at180;
+the zero-throttle100-to-stop distance estimate is196.875 world units with sampling
+bounds178.125..209.375. This does not prove general collision or trajectory safety.
+
+`s4-drivetrain-final-native` matches108 original-reference car states with held
+steering639 and native T=1; the gear pointer is the sole relocation normalization.
+`s4-drivetrain-final-off` passes148 declared inactive ranges. The127-range direct
+branch audit includes both new sites. Normal output remains byte-identical to the
+8392-byte-text baseline. The `HDDRIVE1` diagnostic payload records original and
+remaining fields, held brake, active mode, engine-call count and outer-call count;
+`HDDTICK1` supplies relative offsets for read-only inner position observations.
+
+This reference deliberately exposes the cost of recomputing the drivetrain for
+every field. Work remains to replace those repeated calculations with a cheaper
+integration policy around force/gear changes, validate other driving modes and
+very long intervals, and pass the full handling/performance matrix. It does not
+resolve collision tunnelling or complete step4.
+
 ### Near-stop fractional projection and position correction
 
 The retained operands isolated three interacting problems. At integer velocity1
