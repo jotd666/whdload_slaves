@@ -59,18 +59,18 @@ _time_scalar_patches:
 
 _time_velocity_add:
 	move.w -8(a5),d0
-	movem.l d1-d2/a0,-(a7)
-	lea _time_scalar_state(pc),a0
 	IFD VERIFY_DRIVETRAIN_PHASE
-	; prepare_anchor sets n=8 and zero scalar carries before the one native
-	; engine evaluation. Its velocity delta therefore needs no rescaling or
-	; dissipation correction (the latter preserves every zero-carry n8 step).
-	move.w _phase_state+PH_ACTIVE(pc),d1
+	btst #0,_phase_state+PH_ACTIVE+1(pc)
 	beq.s .ordinary
+	; Active endpoints need the native word addition only. Their V/R
+	; companions have no reader until _phase_published overwrites them.
 	ext.l d0
-	bra.s .publish
+	add.w d0,-$66d8(a4)
+	rts
 .ordinary:
 	ENDC
+	movem.l d1-d2/a0,-(a7)
+	lea _time_scalar_state(pc),a0
 	; An absolute native writer invalidates the old fractional companion.
 	; Collision/recovery same-value resets are hooked explicitly below.
 	move.w -$66d8(a4),d1
@@ -203,7 +203,8 @@ _time_expired_throttle:
 ; >30 threshold remains outside this hook. At T=1 preserve native integer
 ; truncation exactly; at smaller T retain the full fractional throttle state.
 _time_throttle_retention:
-	movem.l d1-d5/a0-a1,-(a7)
+	; Native B79A onward defines D1/A0 before use; A1 is caller scratch.
+	movem.l d2-d5,-(a7)
 	lea _time_scalar_state(pc),a0
 	moveq #0,d0
 	move.b -$66e4(a4),d0
@@ -264,7 +265,7 @@ _time_throttle_retention:
 	clr.l SS_THROTTLE_CARRY(a0)
 .save:
 	move.b d0,SS_THROTTLE_LAST(a0)
-	movem.l (a7)+,d1-d5/a0-a1
+	movem.l (a7)+,d2-d5
 	move.b d0,-$66e4(a4)
 	rts
 
@@ -313,25 +314,26 @@ _time_rpm_engaged:
 	add.w d4,-$66d6(a4)
 	rts
 _time_rpm_delta:
-	movem.l d1-d3/a0,-(a7)
-	lea _time_scalar_state(pc),a0
 	IFD VERIFY_DRIVETRAIN_PHASE
-	; Active phase endpoints have n8, carry0 and matching LAST/gear from
-	; prepare_anchor. Keep native +/-450 slew and the shared LAST saturation.
-	move.w _phase_state+PH_ACTIVE(pc),d1
+	btst #0,_phase_state+PH_ACTIVE+1(pc)
 	beq.s .ordinary
+	; Active endpoints consume the native slew limit; the outer phase
+	; publishes all velocity/RPM companions after native position handling.
 	ext.l d0
 	cmpi.l #450,d0
 	ble.s .phase_lower
 	move.l #450,d0
-	bra .save
+	rts
 .phase_lower:
 	cmpi.l #-450,d0
-	bge .save
+	bge.s .phase_done
 	move.l #-450,d0
-	bra .save
+.phase_done:
+	rts
 .ordinary:
 	ENDC
+	movem.l d1-d3/a0,-(a7)
+	lea _time_scalar_state(pc),a0
 	move.w -$66d6(a4),d1
 	cmp.w SS_RPM_LAST(a0),d1
 	bne.s .invalidate

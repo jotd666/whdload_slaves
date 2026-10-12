@@ -203,11 +203,11 @@ _contact_integrate_rate:
 	move.l (a7)+,d1
 	rts
 .integrate:
-	movem.l d1-d5,-(a7)
+	movem.l d1-d4,-(a7)
 	move.w _time_scalar_fields(pc),d1
 	cmpi.w #8,d1
 	bhi.s .wide
-	movem.l (a7)+,d1-d5
+	movem.l (a7)+,d1-d4
 	bsr _contact_scale_rate
 	bra _contact_add_angle
 .wide:
@@ -223,8 +223,10 @@ _contact_integrate_rate:
 	bsr _time_product_s32_u16
 	lsr.l #3,d0
 	move.l d2,d4
-	moveq #29,d5
-	lsl.l d5,d4
+	; Only the low three high-product bits enter the low long. A rotate
+	; and mask is identical to <<29 without a 29-bit 68000 shift.
+	ror.l #3,d4
+	andi.l #$e0000000,d4
 	or.l d4,d0
 	asr.l #3,d2
 	move.l (a0),d3
@@ -256,7 +258,7 @@ _contact_integrate_rate:
 	bsr _time_normalize_angle
 	move.w d0,(a1)
 	move.w d0,4(a0)
-	movem.l (a7)+,d1-d5
+	movem.l (a7)+,d1-d4
 	rts
 
 ; A0 angle carry/last, A1 game angle, D0 Q16 correction. Preserve D1/D2.

@@ -2,6 +2,8 @@
 ; driving. Other modes retain the existing reference path. Not acceptance-ready.
 _phase_install:
  movem.l d0/a0-a2,-(a7)
+ lea _phase_power_status(pc),a0
+ clr.w (a0)
  lea _phase_tail_ptr(pc),a0
  move.l _code_start(pc),d0
  addi.l #$ba8a,d0
@@ -56,8 +58,10 @@ _phase_reset:
  movea.l (a7)+,a0
  rts
 _phase_frame:
- ; Native engine restores A3/A5 and never changes A4; helpers use A0-A2/A6.
- movem.l d0-d7/a0-a2/a6,-(a7)
+ ; CDB6 replaces two native calls: D0/D1/A0/A1 are caller scratch.
+ ; B500 and the following contact routines define these before use.
+ ; Keep D2-D7/A2/A6, including registers the phase helpers introduce.
+ movem.l d2-d7/a2/a6,-(a7)
  lea _phase_state(pc),a6
  IFD VERIFY_DISPATCH_NATIVE
  bra .fallback
@@ -95,11 +99,9 @@ _phase_frame:
  move.w d0,PH_SKID(a6)
  tst.w PH_VALID(a6)
  beq.s .initialize
- move.w -$66d8(a4),d0
- cmp.w PH_LAST_V(a6),d0
- bne.s .initialize
- move.w -$66d6(a4),d0
- cmp.w PH_LAST_R(a6),d0
+ ; Native velocity/RPM and LAST velocity/RPM are adjacent word pairs.
+ move.l -$66d8(a4),d0
+ cmp.l PH_LAST_V(a6),d0
  bne.s .initialize
  move.w -$66ca(a4),d0
  cmp.w PH_LAST_G(a6),d0
@@ -169,14 +171,14 @@ _phase_frame:
  move.w PH_INTERVAL(a6),(a0)
  lea _drivetrain_state(pc),a0
  move.w #2,6(a0)
- movem.l (a7)+,d0-d7/a0-a2/a6
+ movem.l (a7)+,d2-d7/a2/a6
  pea _phase_published(pc)
  move.l _drivetrain_position(pc),-(a7)
  rts
 .fallback:
  clr.w PH_VALID(a6)
  clr.w PH_ACTIVE(a6)
- movem.l (a7)+,d0-d7/a0-a2/a6
+ movem.l (a7)+,d2-d7/a2/a6
  bra _drivetrain_reference_frame
 _phase_engine_call:
  move.l _drivetrain_engine(pc),-(a7)
@@ -243,35 +245,25 @@ _phase_initialize:
 _phase_prepare_anchor:
  ; A later segment in this frame starts immediately after a completed
  ; phase and the native tail. V/R/gear and derived speed already match the
- ; new anchor; n=8 and scalar carries are still zero. Only LAST companions
- ; need resynchronizing after incremental publication or a gear change.
+ ; new anchor. Scalar V/R companions are not read inside an active phase;
+ ; _phase_published writes their exact outgoing values once per outer frame.
  tst.w PH_PHASE(a6)
  bne.s .first
  move.w PH_LEFT(a6),d1
  cmp.w PH_INTERVAL(a6),d1
  beq.s .first
- lea _time_scalar_state(pc),a0
- move.w -$66d8(a4),SS_VELOCITY_LAST(a0)
- move.w -$66d6(a4),SS_RPM_LAST(a0)
- move.w -$66ca(a4),SS_RPM_GEAR(a0)
  bra .converted
 .first:
  lea _time_scalar_fields(pc),a0
  move.w #8,(a0)
- lea _time_scalar_state(pc),a0
- clr.w SS_VELOCITY_CARRY(a0)
- clr.w SS_RPM_CARRY(a0)
  move.l PH_ANCHOR_V(a6),d0
  swap d0
  move.w d0,-$66d8(a4)
- move.w d0,SS_VELOCITY_LAST(a0)
  move.l PH_ANCHOR_R(a6),d0
  swap d0
  move.w d0,-$66d6(a4)
- move.w d0,SS_RPM_LAST(a0)
  move.w PH_GEAR(a6),d0
  move.w d0,-$66ca(a4)
- move.w d0,SS_RPM_GEAR(a0)
  lea _phase_speed_cache(pc),a1
  tst.w 6(a1)
  beq.s .convert
@@ -304,40 +296,95 @@ _phase_prepare_anchor:
  move.b d0,-$66ef(a4)
  rts
 _phase_gear:
- ; Scalar kernel clobbers only D0-D4/A0/A2; saved X follows seven registers.
- movem.l d0-d4/a0/a2,-(a7)
+ ; Inactive calls reproduce only B904's TST/branch, preserving all registers.
+ btst #0,_phase_state+PH_ACTIVE+1(pc)
+ beq .native
+ ; Active calls are inside the native automatic engine and _phase_frame.
+ ; B90C..BA8A reads globals, overwrites D0/D4/A0/A2 before using them,
+ ; and the native epilogue restores D4/A2. D1 is native caller scratch;
+ ; _phase_frame preserves D2-D3 across the whole engine call. Preserve X.
  moveq #0,d0
  roxl.b #1,d0
  move.w d0,-(a7)
  lea _phase_state(pc),a2
- tst.w PH_ACTIVE(a2)
- beq.s .restore
- move.w PH_DT(a2),d1
- move.w PH_REMAIN(a2),d2
- lea PH_ANCHOR_V(a2),a0
- move.w -$66d8(a4),d0
- bsr _phase_scalar_step
+ ; Integrate velocity and RPM together. Both consume the same DT, but
+ ; only velocity needs the remaining-phase forecast. Pairing the bounded
+ ; additions removes the second call and repeated count setup without
+ ; changing any intermediate signed-long rounding.
+ cmpi.w #8,PH_DT(a2)
+ beq .whole_phase
+ moveq #0,d3
+ move.w -$66d8(a4),d3
+ swap d3
+ sub.l PH_ANCHOR_V(a2),d3
+ asr.l #3,d3
+ moveq #0,d4
+ move.w -$66d6(a4),d4
+ swap d4
+ sub.l PH_ANCHOR_R(a2),d4
+ asr.l #3,d4
+ move.l PH_CURRENT_V(a2),d0
+ move.l PH_CURRENT_R(a2),d1
+ move.w PH_DT(a2),d2
+ neg.w d2
+ lsl.w #2,d2
+ jmp .consumed(pc,d2.w)
+ add.l d3,d0
+ add.l d4,d1
+ add.l d3,d0
+ add.l d4,d1
+ add.l d3,d0
+ add.l d4,d1
+ add.l d3,d0
+ add.l d4,d1
+ add.l d3,d0
+ add.l d4,d1
+ add.l d3,d0
+ add.l d4,d1
+ add.l d3,d0
+ add.l d4,d1
+.consumed:
+ move.l d0,PH_CURRENT_V(a2)
+ move.l d1,PH_CURRENT_R(a2)
+ move.w PH_DT(a2),d2
+ sub.w PH_REMAIN(a2),d2
+ beq.s .forecast
+ add.w d2,d2
+ jmp .forecast(pc,d2.w)
+ add.l d3,d0
+ add.l d3,d0
+ add.l d3,d0
+ add.l d3,d0
+ add.l d3,d0
+ add.l d3,d0
+ add.l d3,d0
+.forecast:
  move.l d0,PH_FORECAST(a2)
- lea PH_ANCHOR_R(a2),a0
- move.w -$66d6(a4),d0
- ; Only velocity needs a future forecast. RPM publishes its consumed part.
- move.w d1,d2
- bsr _phase_scalar_step
  move.l PH_CURRENT_V(a2),d0
  swap d0
  move.w d0,-$66d8(a4)
- move.l PH_CURRENT_R(a2),d0
- swap d0
- move.w d0,-$66d6(a4)
+ swap d1
+ move.w d1,-$66d6(a4)
+ bra.s .advanced
+.whole_phase:
+ ; DT8 implies phase0 and current=anchor in a valid phase. Consuming the
+ ; complete phase publishes the native endpoints exactly, already in game
+ ; globals. No second publication or fractional kernel is needed.
+ move.w -$66d8(a4),PH_CURRENT_V(a2)
+ clr.w PH_CURRENT_V+2(a2)
+ move.l PH_CURRENT_V(a2),PH_FORECAST(a2)
+ move.w -$66d6(a4),PH_CURRENT_R(a2)
+ clr.w PH_CURRENT_R+2(a2)
+.advanced:
  move.w PH_DT(a2),d0
  add.w d0,PH_PHASE(a2)
  cmpi.w #8,PH_PHASE(a2)
  beq.s .restore
- move.l _phase_tail_ptr(pc),30(a7)
+ move.l _phase_tail_ptr(pc),2(a7)
 .restore:
  move.w (a7)+,d0
  lsr.b #1,d0
- movem.l (a7)+,d0-d4/a0/a2
+.native:
  tst.b -$66c2(a4)
  bne.s .done
  move.l _phase_manual_ptr(pc),(a7)
@@ -365,95 +412,169 @@ _phase_movement_vector:
  rts
 
 _phase_add_position:
- lea PH_VECTOR(a6),a0
+ ; Three fixed axes need no cursor updates or loop counter. Inline the
+ ; signed Q16 split at each store, retaining modular additions and the
+ ; truncation-toward-zero carry rule, including negative held vectors.
  lea _projection_state+24(pc),a1
- lea -$6704(a4),a2
- moveq #2,d4
-.axis:
- move.l (a0)+,d0
- ; A normalized signed Q16 carry alone cannot move a zero-vector axis.
- tst.l d0
- beq .zero_axis
- move.w PH_DT(a6),d1
- cmpi.w #8,d1
- bne.s .fractional
- ; Eight adds of ASR(vector,3) equal vector with its bottom three bits
- ; cleared, including negative and held-skid vectors with fine fractions.
- andi.l #$fffffff8,d0
- bra.s .accumulate
-.fractional:
- asr.l #3,d0
- ; PH_DT is1..7 here. A bounded dispatch replaces repeated long additions;
- ; all shift/add forms retain the original modular signed-long result.
- add.w d1,d1
- jmp .scale(pc,d1.w)
-.scale:
- bra.s .accumulate
- bra.s .accumulate
- bra.s .double
- bra.s .triple
- bra.s .quad
- bra.s .five
- bra.s .six
- bra.s .seven
-.double:
- add.l d0,d0
- bra.s .accumulate
-.triple:
- move.l d0,d3
- add.l d0,d0
+ move.w PH_DT(a6),d5
+ cmpi.w #8,d5
+ beq .whole
+ subq.w #1,d5
+ neg.w d5
+ add.w d5,d5
+ move.l PH_VECTOR+0(a6),d3
+ beq.s .next_s0
+ asr.l #3,d3
+ move.l d3,d0
+ jmp .scaled_s0(pc,d5.w)
  add.l d3,d0
- bra.s .accumulate
-.quad:
- lsl.l #2,d0
- bra.s .accumulate
-.five:
- move.l d0,d3
- lsl.l #2,d0
  add.l d3,d0
- bra.s .accumulate
-.six:
- move.l d0,d3
- add.l d0,d0
  add.l d3,d0
- add.l d0,d0
- bra.s .accumulate
-.seven:
- move.l d0,d3
- lsl.l #3,d0
- sub.l d3,d0
-.accumulate:
- add.l (a1),d0
- bsr _time_split_q16
- add.l d0,(a2)+
- move.l d2,(a1)+
- dbf d4,.axis
+ add.l d3,d0
+ add.l d3,d0
+ add.l d3,d0
+.scaled_s0:
+ add.l 0(a1),d0
+ moveq #0,d2
+ move.w d0,d2
+ swap d0
+ ext.l d0
+ bpl.s .store_s0
+ tst.l d2
+ beq.s .store_s0
+ addq.l #1,d0
+ subi.l #$10000,d2
+.store_s0:
+ add.l d0,-$6704(a4)
+ move.l d2,0(a1)
+.next_s0:
+ move.l PH_VECTOR+4(a6),d3
+ beq.s .next_s1
+ asr.l #3,d3
+ move.l d3,d0
+ jmp .scaled_s1(pc,d5.w)
+ add.l d3,d0
+ add.l d3,d0
+ add.l d3,d0
+ add.l d3,d0
+ add.l d3,d0
+ add.l d3,d0
+.scaled_s1:
+ add.l 4(a1),d0
+ moveq #0,d2
+ move.w d0,d2
+ swap d0
+ ext.l d0
+ bpl.s .store_s1
+ tst.l d2
+ beq.s .store_s1
+ addq.l #1,d0
+ subi.l #$10000,d2
+.store_s1:
+ add.l d0,-$6700(a4)
+ move.l d2,4(a1)
+.next_s1:
+ move.l PH_VECTOR+8(a6),d3
+ beq.s .next_s2
+ asr.l #3,d3
+ move.l d3,d0
+ jmp .scaled_s2(pc,d5.w)
+ add.l d3,d0
+ add.l d3,d0
+ add.l d3,d0
+ add.l d3,d0
+ add.l d3,d0
+ add.l d3,d0
+.scaled_s2:
+ add.l 8(a1),d0
+ moveq #0,d2
+ move.w d0,d2
+ swap d0
+ ext.l d0
+ bpl.s .store_s2
+ tst.l d2
+ beq.s .store_s2
+ addq.l #1,d0
+ subi.l #$10000,d2
+.store_s2:
+ add.l d0,-$66fc(a4)
+ move.l d2,8(a1)
+.next_s2:
  rts
-.zero_axis:
- addq.l #4,a1
- addq.l #4,a2
- dbf d4,.axis
+.whole:
+ move.l PH_VECTOR+0(a6),d0
+ beq.s .next_w0
+ andi.l #$fffffff8,d0
+ add.l 0(a1),d0
+ moveq #0,d2
+ move.w d0,d2
+ swap d0
+ ext.l d0
+ bpl.s .store_w0
+ tst.l d2
+ beq.s .store_w0
+ addq.l #1,d0
+ subi.l #$10000,d2
+.store_w0:
+ add.l d0,-$6704(a4)
+ move.l d2,0(a1)
+.next_w0:
+ move.l PH_VECTOR+4(a6),d0
+ beq.s .next_w1
+ andi.l #$fffffff8,d0
+ add.l 4(a1),d0
+ moveq #0,d2
+ move.w d0,d2
+ swap d0
+ ext.l d0
+ bpl.s .store_w1
+ tst.l d2
+ beq.s .store_w1
+ addq.l #1,d0
+ subi.l #$10000,d2
+.store_w1:
+ add.l d0,-$6700(a4)
+ move.l d2,4(a1)
+.next_w1:
+ move.l PH_VECTOR+8(a6),d0
+ beq.s .next_w2
+ andi.l #$fffffff8,d0
+ add.l 8(a1),d0
+ moveq #0,d2
+ move.w d0,d2
+ swap d0
+ ext.l d0
+ bpl.s .store_w2
+ tst.l d2
+ beq.s .store_w2
+ addq.l #1,d0
+ subi.l #$10000,d2
+.store_w2:
+ add.l d0,-$66fc(a4)
+ move.l d2,8(a1)
+.next_w2:
  rts
 _phase_published:
- movem.l d0-d4/d7/a0-a2/a6,-(a7)
+ ; Return to CDBE after native B500: D0/D1/A0/A1 are dead caller scratch.
+ movem.l d2-d4/d7/a2/a6,-(a7)
  moveq #0,d0
  roxl.b #1,d0
  move.w d0,-(a7)
  lea _phase_state(pc),a6
  lea _time_scalar_state(pc),a0
- move.w -$66d8(a4),d0
- move.w d0,PH_LAST_V(a6)
+ ; Native V/R and their LAST words are adjacent pairs.
+ move.l -$66d8(a4),d0
+ move.l d0,PH_LAST_V(a6)
+ move.w d0,SS_RPM_LAST(a0)
+ swap d0
  move.w d0,SS_VELOCITY_LAST(a0)
  move.w PH_CURRENT_V+2(a6),d0
- lsr.w #8,d0
- lsr.w #5,d0
+ rol.w #3,d0
+ andi.w #7,d0
  move.w d0,SS_VELOCITY_CARRY(a0)
- move.w -$66d6(a4),d0
- move.w d0,PH_LAST_R(a6)
- move.w d0,SS_RPM_LAST(a0)
  move.w PH_CURRENT_R+2(a6),d0
- lsr.w #8,d0
- lsr.w #5,d0
+ rol.w #3,d0
+ andi.w #7,d0
  move.w d0,SS_RPM_CARRY(a0)
  move.w -$66ca(a4),d0
  move.w d0,PH_LAST_G(a6)
@@ -472,8 +593,8 @@ _phase_published:
  ; a Q6 fractional part exists. No velocity-dependent rounding is removed.
  move.l PH_CURRENT_V(a6),d0
  move.w d0,d7
- lsr.w #8,d7
- lsr.w #2,d7
+ rol.w #6,d7
+ andi.w #63,d7
  lea PH_VECTOR(a6),a0
  lea -$66e2(a4),a1
  lea _projection_state(pc),a2
@@ -526,7 +647,7 @@ _phase_published:
  clr.w 6(a0)
  move.w (a7)+,d0
  lsr.b #1,d0
- movem.l (a7)+,d0-d4/d7/a0-a2/a6
+ movem.l (a7)+,d2-d4/d7/a2/a6
  rts
 
 ; A0: native-phase anchor Q16, current Q16. D0: unsigned endpoint word.
@@ -593,7 +714,7 @@ _phase_project:
  movem.l (a7)+,d0-d7/a0-a1
  rts
 ; The runtime movement caller already preserves the outer frame's registers. The core
-; clobbers D0-D2/D4-D7/A0-A1; A2-A6 and D3 are untouched.
+; clobbers D0-D7/A0; A1-A6 are untouched.
 _phase_project_core:
  ; Flat cardinal orientations need no multiply. For nonnegative velocity,
  ; native p(v)=v+floor(v/2), and p(v+1)-p(v)=1+(v&1). Interpolate that
@@ -649,49 +770,129 @@ _phase_project_core:
 .positive:
  rts
 .general:
- suba.w #12,a7
- movea.l a7,a1
+ ; Keep the first rounded XYZ in preserved projection scratch registers,
+ ; eliminating the temporary stack array and its second pass.
  move.l d0,d7
- andi.l #$ffff,d7
- lsr.w #8,d7
- lsr.w #2,d7
+ rol.w #6,d7
+ andi.l #63,d7
  swap d0
  move.w d0,d5
  bsr _projection_integer_components
  tst.w d7
  beq.s .integer
- move.w d0,(a1)
- move.w d1,2(a1)
- move.w d2,4(a1)
+ move.w d0,d3
+ move.w d1,d4
+ move.w d2,d6
  move.w d5,d0
  addq.w #1,d0
  bsr _projection_integer_components
- move.w d0,6(a1)
- move.w d1,8(a1)
- move.w d2,10(a1)
- moveq #2,d6
-.axis:
- move.w 6(a1),d0
- sub.w (a1),d0
+ sub.w d3,d0
  muls.w d7,d0
  lsl.l #8,d0
  lsl.l #2,d0
- moveq #0,d1
- move.w (a1)+,d1
- swap d1
- add.l d1,d0
+ swap d3
+ clr.w d3
+ add.l d3,d0
  move.l d0,(a0)+
- dbf d6,.axis
- bra.s .done
+ sub.w d4,d1
+ muls.w d7,d1
+ lsl.l #8,d1
+ lsl.l #2,d1
+ swap d4
+ clr.w d4
+ add.l d4,d1
+ move.l d1,(a0)+
+ sub.w d6,d2
+ muls.w d7,d2
+ lsl.l #8,d2
+ lsl.l #2,d2
+ swap d6
+ clr.w d6
+ add.l d6,d2
+ move.l d2,(a0)+
+ rts
 .integer:
- ; Zero Q6 fraction needs only one native projection. Preserve signed word
- ; narrowing and Q16 storage, including cardinal and negative components.
  move.w d0,(a0)
  clr.w 2(a0)
  move.w d1,4(a0)
  clr.w 6(a0)
  move.w d2,8(a0)
  clr.w 10(a0)
-.done:
- adda.w #12,a7
  rts
+
+; Exact native power conversions for the immutable four-gear ratio table.
+; Validate all ratio words once per installation before using the lookup.
+; Phase entry guarantees gear1..4 and the native engine derives A2 from it.
+; Other paths and unexpected ratio tables retain the general implementation.
+_phase_power:
+ btst #0,_phase_state+PH_ACTIVE+1(pc)
+ beq _drivetrain_power
+ move.w _phase_power_status(pc),d1
+ bgt.s .lookup
+ bmi _drivetrain_power
+ move.w -$66ca(a4),d1
+ lsl.w #2,d1
+ movea.l a2,a0
+ suba.w d1,a0
+ cmpi.l #$00070320,4(a0)
+ bne.s .unsupported
+ cmpi.l #$000902ee,8(a0)
+ bne.s .unsupported
+ cmpi.l #$000a0258,12(a0)
+ bne.s .unsupported
+ cmpi.l #$000a01c2,16(a0)
+ bne.s .unsupported
+ lea _phase_power_status(pc),a0
+ move.w #1,(a0)
+.lookup:
+ move.w -$66ca(a4),d1
+ subq.w #1,d1
+ lsl.w #8,d1
+ move.b -$66e4(a4),d1
+ lsl.w #3,d1
+ lea _phase_power_table(pc),a0
+ move.l (a0,d1.w),d0
+ move.w 4(a0,d1.w),d4
+ move.w d0,-14(a5)
+ rts
+.unsupported:
+ lea _phase_power_status(pc),a0
+ move.w #-1,(a0)
+ bra _drivetrain_power
+_phase_power_status: dc.w 0
+
+; D0 retains DIVS's remainder/quotient pair, or its unchanged full product
+; on signed-word quotient overflow. D4 receives the first conversion word.
+; Entries include every signed throttle byte, not only the normal0..100.
+; Eight-byte stride keeps lookup arithmetic short on a68000.
+_phase_power_table:
+HD_POWER_ROW MACRO
+HD_POWER_T SET 0
+ REPT 256
+HD_POWER_S SET HD_POWER_T
+ IFGE HD_POWER_T-128
+HD_POWER_S SET HD_POWER_T-256
+ ENDC
+HD_POWER_FIRST SET (HD_POWER_S*450)/100
+HD_POWER_PRODUCT SET HD_POWER_FIRST*\2
+HD_POWER_QUOT SET HD_POWER_PRODUCT/\1
+HD_POWER_OVER SET 0
+ IFGT HD_POWER_QUOT-32767
+HD_POWER_OVER SET 1
+ ENDC
+ IFLT HD_POWER_QUOT+32768
+HD_POWER_OVER SET 1
+ ENDC
+ IFNE HD_POWER_OVER
+ dc.l HD_POWER_PRODUCT
+ ELSE
+ dc.w HD_POWER_PRODUCT-HD_POWER_QUOT*\1,HD_POWER_QUOT
+ ENDC
+ dc.w HD_POWER_FIRST,0
+HD_POWER_T SET HD_POWER_T+1
+ ENDR
+ ENDM
+ HD_POWER_ROW 7,800
+ HD_POWER_ROW 9,750
+ HD_POWER_ROW 10,600
+ HD_POWER_ROW 10,450

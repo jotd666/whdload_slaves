@@ -420,7 +420,7 @@ _time_state: dcb.b 32,0
 ; integer increment, D1.W is unsigned fields 0..65535, D2.L carry -7..7.
 ; Return integer increment in D0.L and signed carry in D2.L; preserve D1.
 ; Truncate toward zero, matching native signed divisions. The short-interval
-; path keeps DIVS; longer intervals return a full signed-long quotient.
+; path and longer intervals both return an exact signed-long quotient.
 ; Eighths are an exact compact representation of the public Q16.16 fraction.
 _time_scale_word:
 	; A valid signed eighth remainder (-7..7) stays fractional at zero rate.
@@ -440,16 +440,14 @@ _time_scale_word:
 .scaled:
 	cmpi.w #8,d1
 	bhi.s .wide
+	; For fields0..8 and carry[-7,7], the truncated quotient remains a
+	; signed word even at rate extrema. ASR plus signed remainder repair
+	; therefore matches DIVS exactly, without its variable division cost.
 	muls.w d1,d0
-	add.l d2,d0
-	divs.w #TIME_FIELDS_PER_STEP,d0
-	move.l d0,d2
-	swap d2
-	ext.l d2
-	ext.l d0
-	rts
+	bra.s .product
 .wide:
 	bsr _time_multiply_fields
+.product:
 	add.l d2,d0
 	move.l d0,d2
 	asr.l #3,d0

@@ -39,11 +39,20 @@ _drivetrain_patches:
 	ENDC
 	IFD VERIFY_DRIVETRAIN_POWER
 	; PERF_RANGE VERIFY_DRIVETRAIN_POWER $0b696 $002a: reuse identical throttle/ratio power
+	IFD VERIFY_DRIVETRAIN_PHASE
+	PL_PSS $b696,_phase_power,$24
+	ELSE
 	PL_PSS $b696,_drivetrain_power,$24
 	ENDC
+	ENDC
 	IFD VERIFY_DRIVETRAIN_SQRT
+	IFND VERIFY_DRIVETRAIN_PHASE
+	; The phase solver rarely repeats root operands. Keep the original
+	; JSR/argument cleanup there, avoiding a mostly-miss cache wrapper.
+	; The one-field reference integrator retains its useful root cache.
 	; PERF_RANGE VERIFY_DRIVETRAIN_SQRT $0b856 $0006: reuse identical engine root operands
 	PL_PS $b856,_drivetrain_sqrt
+	ENDC
 	ENDC
 	PL_END
 _drivetrain_engine: dc.l 0
@@ -463,12 +472,13 @@ _drivetrain_sqrt_state:
 	dc.w 0,0                 ; valid, padding
 	dc.l 0,0                 ; hits, misses
 _drivetrain_sqrt:
-	movem.l d1/a0,-(a7)
+	; Native B85C onward consumes D0 only; D1/A0 are dead scratch.
+	; The enclosing native engine preserves its callee-saved registers.
 	move.w _drivetrain_state+6(pc),d1
 	cmpi.w #1,d1
 	bne.s .native
 	lea _drivetrain_sqrt_state(pc),a0
-	move.l 12(a7),d1
+	move.l 4(a7),d1
 	tst.w 8(a0)
 	beq.s .miss
 	cmp.l (a0),d1
@@ -487,11 +497,10 @@ _drivetrain_sqrt:
 	move.w #1,8(a0)
 	bra.s .done
 .native:
-	move.l 12(a7),-(a7)
+	move.l 4(a7),-(a7)
 	jsr -$7e42(a4)
 	addq.l #4,a7
 .done:
-	movem.l (a7)+,d1/a0
 	; Displaced ADDQ removes the original long argument below our return PC.
 	move.l (a7),4(a7)
 	addq.l #4,a7
@@ -510,7 +519,8 @@ _drivetrain_power_state:
 	dc.w 0,0                 ; first conversion (D4 word), padding
 	dc.l 0,0                 ; hits, misses
 _drivetrain_power:
-	movem.l d1/a0,-(a7)
+	; B6C0 onward overwrites D1 before use (B7D4) and derives A0 anew.
+	; Native engine caller scratch D1/A0 need no stack copies here.
 	move.w _drivetrain_state+6(pc),d1
 	cmpi.w #1,d1
 	bne.s .uncached
@@ -527,15 +537,14 @@ _drivetrain_power:
 	addq.l #1,16(a0)
 	move.w 12(a0),d4
 	move.l 8(a0),d0
-	movem.l (a7)+,d1/a0
 	move.w d0,-14(a5)
 	rts
 .miss:
 	addq.l #1,20(a0)
 	moveq #1,d1
 .uncached:
-	; Native $2950 only clobbers D0. Keep D1/A0 saved once across both
-	; calls; D1 distinguishes a cache miss from an uncached native step.
+	; Native $2950 only clobbers D0, so D1/A0 survive both calls.
+	; D1 distinguishes a cache miss from an uncached native step.
 	; Displaced B696..B6BC, including both native multiply/divide calls.
 	move.w #100,-(a7)
 	move.w #450,-(a7)
@@ -561,7 +570,6 @@ _drivetrain_power:
 	move.l d0,8(a0)
 	move.w d4,12(a0)
 .done:
-	movem.l (a7)+,d1/a0
 	rts
 	ENDC
 

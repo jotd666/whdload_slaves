@@ -90,8 +90,9 @@ _motion_patches:
 	PL_PS $cd96,_motion_roll_snap
 	PL_END
 
+; Native B35E callers discard D0/D1/A0/A1. Contact callees preserve
+; D1-D3 internally; no additional outer saves are needed for roll/pitch.
 _motion_roll_base:
-	movem.l d1-d2/a0-a1,-(a7)
 	move.w -$66b8(a4),-$66b2(a4)
 	lea _contact_rates(pc),a0
 	lea -$66ec(a4),a1
@@ -100,7 +101,6 @@ _motion_roll_base:
 	lea -$66b2(a4),a1
 	bsr _contact_integrate_rate
 	move.w (a1),d0
-	movem.l (a7)+,d1-d2/a0-a1
 	tst.w d0
 	rts
 
@@ -108,7 +108,6 @@ _motion_roll_base:
 ; consumes its full-rate shadow; yaw passes a copy to the native helper. Both
 ; remove the original argument with the displaced ADDQ #2,SP.
 _motion_pitch_rate:
-	movem.l d0-d3/a0-a1,-(a7)
 	lea _contact_rates+8(pc),a0
 	lea -$66ea(a4),a1
 	bsr _contact_read_rate
@@ -116,24 +115,19 @@ _motion_pitch_rate:
 	lea _motion_state+MS_PITCH(pc),a0
 	lea -$66b4(a4),a1
 	bsr _contact_integrate_rate
-	movem.l (a7)+,d0-d3/a0-a1
 	move.l (a7),2(a7)
 	addq.w #2,a7
 	rts
 _motion_yaw_rate:
-	move.l a0,-(a7)
 	lea _motion_state(pc),a0
 	st MS_RATE(a0)
-	movea.l (a7)+,a0
 	move.w 4(a7),-(a7)
 	movea.l _motion_yaw_function(pc),a0
 	jsr (a0)
 	addq.w #2,a7
 _motion_rate_return:
-	move.l a0,-(a7)
 	lea _motion_state(pc),a0
 	clr.b MS_RATE(a0)
-	movea.l (a7)+,a0
 	move.l (a7),2(a7)
 	addq.w #2,a7
 	rts
