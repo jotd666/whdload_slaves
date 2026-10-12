@@ -57,7 +57,7 @@ reached flight but used a timing driver whose 1,000-field minimum rejected the
 short check; its host debugger then terminated the emulator during teardown.
 The passing dedicated driver detached cleanly before quitting the emulator.
 
-### E2 complete composition — one failing frame still open
+### E2 complete composition — transition defect corrected, timing pending
 
 The compact gauge records use variable row pitch within a 640-byte plane;
 this admits the native 96×15 attitude bitmap without enlarging the 58,240-byte
@@ -79,6 +79,27 @@ preserves that pixel's plane bytes and coverage masks for the next correction.
 No full-state capture or new W6 study was added. Capture VERIFY SHA-256
 `e460b4d736c74c2d0b9fcb1eb74a0a8c5c5b8c5d13f6e5f31a2ba71c594f0770`. Current builds, 512 host tests, 84 hook ranges and 139
 VERIFY patch destinations pass; no new FPS result is claimed.
+
+The transition defect is corrected by retaining the native dashboard-event
+path. At `sim:19bb2`, a nonzero `h3:711c` triggers the view dashboard script
+through `sim:15dc8` before the seven gauges. Those event pixels are outside the
+steady static/gauge/foreground layers. The stage now bypasses composition for
+those refresh frames, so the native script updates the real page. Source alias
+`h3:9d6e` follows the private target only when it names that same target;
+a distinct source buffer remains distinct. The alias correction alone did not
+fix the defect (`completion-e2-source-alias`: 66 comparisons, one mismatch).
+
+The corrected 040 run `completion-e2-event-bypass` passes 63 initial exact
+full-frame comparisons, the same first rear-view transition, left/right input
+and front return: 71 comparisons, 71 matches, no mismatches or unavailable
+compositions. Counts remain unchanged through the rear/left/right sequence;
+those views retain native drawing. Dashboard-refresh frames intentionally
+bypass the cache and are not counted as composition comparisons. The owned
+input debugger and emulator both quit cleanly. Normal/developer/VERIFY builds
+are 127,380 / 127,764 / 311,708 bytes; 512 host tests, 84 hook ranges and 139
+VERIFY patch destinations pass. This fixes the reproduced transition defect;
+it does not establish a performance gain or complete E2. Native seeding/drawing
+and full composition rebuilding still need removal before the FPS pair.
 
 ### D5 acceptance postponed — not a passed checkpoint
 

@@ -78,9 +78,12 @@ It exposes a full-size image/mask only for the current accepted invocation;
 firing, damage overlays and unsupported states retain native dispatch. The
 former standalone script cache remains dropped; this provider is part of the
 full composition, with no new performance result. Ordered composition and a single masked copy are now wired, using compact
-gauge records and a shared expansion scratch. The initial 65 full-frame native
-comparisons pass, but one frame fails during the first rear-view transition;
-its correction and full view acceptance remain open (profiling scoreboard).
+gauge records and a shared expansion scratch. The reproduced first rear-view
+transition defect is fixed by keeping dashboard-event refresh frames native:
+their extra dashboard script writes outside the steady cached layers. The
+corrected front/side/rear input sequence and front return finishes with 71/71
+full-frame comparisons and no failures (profiling scoreboard). Side/rear and
+dashboard-event frames bypass composition and are not counted as cache twins.
 Dirty-update reuse and removal of redundant native drawing/seeding remain
 necessary before the FPS comparisons.
 The development path still performs a full-frame seed and native fallback copy and

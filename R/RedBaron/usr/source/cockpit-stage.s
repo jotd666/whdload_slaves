@@ -1,6 +1,7 @@
 ; Full-cockpit cache integration boundary, sim v1, developer bit 19, 020+.
 ; The native static overlay, gauges and picture scripts share a private chip
-; target; restore both native target aliases BEFORE the sector-coordinate text.
+; target; restore native aliases BEFORE the sector-coordinate text. A source
+; alias that names the target must follow it, preserving native read-after-write.
 ; Separate targets follow the game's two gauge-history pages. No displayed
 ; bitmap is repointed, and the 3D renderer keeps its original destination.
 ;
@@ -86,6 +87,11 @@ cockpit_stage_begin:
  adda.l #$8000,a4
  tst.w -$18ee(a4) ; h3:6712 view
  bne .done
+ ; sim:19bb2 runs the event-only dashboard script before the seven gauges.
+ ; It changes pixels outside the steady overlay/gauge/foreground coverage.
+ ; Let that refresh finish on the real page; never publish a partial cache.
+ tst.b -$ee4(a4) ; h3:711c native dashboard redraw count
+ bne .done
  cmpi.l #8000,$1d34(a4)
  bne .done
  cmpi.w #5,$1d3c(a4)
@@ -124,6 +130,14 @@ cockpit_stage_begin:
  move.l d1,a0
  move.l d0,a1
  bsr cockpit_stage_copy
+ ; h3:9d6e feeds native source-to-destination primitives (sim:2e4ba).
+ ; Preserve a genuinely separate source, but do not leave a target alias
+ ; pointing at the old public page while native writes go to the private one.
+ move.l 4(a5),d0
+ cmp.l $1d6e(a4),d0
+ bne .source_ready
+ move.l (a5),$1d6e(a4)
+.source_ready
  move.l (a5),$1d6a(a4)
  move.l (a5),$1d72(a4)
  IFD VERIFY
@@ -154,6 +168,13 @@ cockpit_stage_end:
 .published
  move.l cockpit_stage_h3(pc),a4
  adda.l #$8000,a4
+ ; Native helpers may replace the source during the stage. Translate only
+ ; a reference to our private page; retain other intentional source changes.
+ move.l (a5),d0
+ cmp.l $1d6e(a4),d0
+ bne .source_restored
+ move.l 4(a5),$1d6e(a4)
+.source_restored
  move.l 4(a5),$1d6a(a4)
  move.l 4(a5),$1d72(a4)
  clr.l (a5)
