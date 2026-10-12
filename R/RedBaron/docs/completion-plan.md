@@ -69,6 +69,10 @@ measurements retain their original memory configuration until refreshed.
 These are settled; do not re-ask. Stop and ask only if a step's evidence
 contradicts one of them, e.g. if the amended A500 minimum cannot boot.
 
+Historical line references into the condensed verification ledgers and
+`open-work.md` resolve at commit `dd9e8b4`; current evidence summaries are
+linked by filename, and current measurements are in `profiling.md`.
+
 ## 2. Where the time goes now
 
 Baselines with no patches, in FPS (`profiling.md:2155-2162`):
@@ -172,8 +176,9 @@ scoreboard on five CPU classes."
    their addresses. They should be: the original was written to run on
    machines with fast RAM.
 3. Per U3, raise `FASTMEMSIZE` to cover the measured spill plus headroom,
-   rounded to $1000. Check that the A500 config (512K chip + 1.5M slow) still
-   boots and flies; the 1 MB A500 already cannot host 512K + 512K plus
+   rounded to $1000. The original B1 check used 512K chip + 1.5M slow;
+   the approved E2 amendment replaces it with 512K chip + 2M fast for the
+   final boot/flight check. The 1 MB A500 cannot host 512K + 512K plus
    WHDLoad. Record the new minimum memory in `ReadMe`. Keep the hard rule that only DMA data lives in chip
    (Battlehawks memory rule).
 4. Measure on 020, 030, 040 and 060.
@@ -438,20 +443,26 @@ refresh is part of F3.
 
 ### Phase F — release
 
-**F1.** Apply U4: the normal build enables Faster rendering by default.
+**F1.** Implemented in `dd9e8b4`: the normal build enables Faster rendering
+by default. On=0 and Off=1 in its splash selector; developer masks are unchanged.
 Then:
 - Update `ReadMe` with the scoreboard summary, the supported Time Scale
   envelope per CPU, and the 030 `MMU` tooltype note.
 - Keep JOTD's history and credits.
 - Make the normal build's `slv_config` match the final mask.
 
-**F2. Condense the docs.**
+**F2. Condense the docs — complete in `b564406`.**
 - `w6-verification.md` (7,561 lines) and `w1`–`w5` become a short summary of
   the accepted evidence and their reproduction commands. The full text stays
   in git history.
 - `open-work.md` lists only what is still open.
 
-**F3. Final check:**
+**F3. Final check — passed 2026-10-12:**
+
+All six normal configurations and both disabled-byte selections pass; all
+builds, 528 host tests and sim/sound hook plus patch-reach audits pass.
+The scoreboard and ReadMe contain the final measurements. D5 remains the
+explicitly postponed acceptance work, outside this accepted release.
 1. Build all three modes.
 2. Run the host tests and the hook audit.
 3. Run the CUSTOM2=0 byte check.

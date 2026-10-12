@@ -3,16 +3,15 @@
 The user accepted measured performance on 2026-10-12 and requested completion
 of release work. The completion plan remains authoritative with that amendment.
 
-## Required for this release
+## Release status
 
-- F2: finish documentation condensation and commit it.
-- F3: final builds, host tests, hook/reach audits, explicit disabled-byte check,
-  and normal-build scoreboard refresh on all six machine configurations; commit.
-- Replace the ReadMe's pending results with the final measured summary.
-
-F1 is committed: Faster rendering defaults On, normal CUSTOM2=0 is On and 1 is
-Off. Developer/VERIFY values remain bit masks; zero disables their patches.
-The verified mask is `0x71fff` with CPU filtering. No push is authorized.
+No implementation or validation work remains for the accepted release.
+F1 enables the normal verified bundle by default; F2 condenses the ledgers;
+F3 passes on all six machine configurations, with final results in `profiling.md`
+and the ReadMe. The normal verified mask is `0x71fff`, filtered by CPU.
+Normal CUSTOM2=0 is On and 1 is Off; developer/VERIFY values remain bit masks,
+where zero disables patches. The normal build is in the local build directory.
+Nothing has been pushed; publication requires a separate explicit request.
 
 ## Postponed beyond this release
 

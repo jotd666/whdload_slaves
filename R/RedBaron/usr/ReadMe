@@ -69,9 +69,16 @@
    contain no VERIFY instruments or scripted game input.
 
  Performance and Time Scale:
- - The current release accepts measured performance, without a 50 FPS claim.
-   The profiling scoreboard records the six machine configurations; the final
-   normal-build refresh is pending the release checks.
+ - Measured maximum-detail PAL FPS (event-free frames / whole event window):
+   A500: 2.23 / 2.22
+   020: 7.24 / 7.64
+   030 with MMU: 14.86 / 14.50
+   030 without MMU: 14.86 / 14.48
+   040/25: 14.75 / 14.35
+   060/50: 14.20 / 14.00
+   All six use the same normal build, with Faster rendering On by default.
+   These are measured scenarios, not worst-case guarantees or a 50 FPS claim.
+   Full settings, comparisons and validation are in docs/profiling.md.
  - The normal build retains the original frame-dependent game speed on all
    CPUs. No frame-independent Time Scale envelope is claimed for this release.
  - Developer candidate only: A500 Time Scale 0 passed the rate window;
