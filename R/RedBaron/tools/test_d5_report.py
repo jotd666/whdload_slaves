@@ -43,6 +43,8 @@ class D5ReportTests(unittest.TestCase):
             with self.assertRaises(ValueError):ground_outcome(bad,'landing',ret,b,b)
         ground_outcome(dict(g,contacts=[[20,4,-30,-1000,3]],flags=8),'crash',1,b,b)
         with self.assertRaises(ValueError):ground_outcome(dict(g,contacts=[[20,4,-30,-1000,3]],flags=0),'crash',1,b,b)
+        ground_outcome(dict(g,stop='flight_exit',contacts=[[20,4,-30,-1000,3]],flags=8),'crash',None,None,None)
+        with self.assertRaises(ValueError):ground_outcome(dict(g,stop='flight_exit'),'landing',None,None,None)
 
     def test_combat_sabotages(self):
         raw='HIT 7 5 200 0\nKILL 30 8 100 200 8\nCOMBAT_STOP 42 30 1\n'

@@ -17,10 +17,10 @@ Refer to items by ID. FC items are detailed in `fast-cpu-plan.md`.
 | FC5 | Smaller viewport copy | Closed: dropped; less than 2% gain on every measured CPU class |
 | FC6 | Re-profile, W6 trial and geometry processing | Complete; W6 rate passes bounded trial, 50 FPS unmet; geometry extension dropped below 2% |
 | FC7 | AGA 040/060 and real-hardware confirmation | Planned |
-| D5a | W6 catch-up input check | Automated checks resumed |
-| D5b | W6 Time Compress and mission-exit transitions | Automated checks resumed; A500 modal rebase passes |
+| D5a | W6 catch-up input check | Complete: native tap/hold/release during catch-up on A500 and 060 |
+| D5b | W6 Time Compress and mission-exit transitions | Complete: native compression and modal checks; A500 catch-up mission exit |
 | D5c | W6 A500 Time Scale 60 | Complete: measured overload envelope |
-| D5d | W6 remaining landing and combat outcomes | Automated checks resumed |
+| D5d | W6 landing and combat outcome integration | Automated coverage complete; controlled fixtures, including tracked A500 target |
 | G5–G9, S2/S3′/S4–S8 | Low-value geometry and sound candidates | Deferred unless a concrete issue justifies them |
 
 ## Release status
@@ -35,10 +35,14 @@ Nothing has been pushed; publication requires a separate explicit request.
 
 ## Postponed beyond this release
 
-The user resumed automatable D5 checks on 2026-10-12. W6 bit 13 stays outside the normal mask.
-Remaining checks: D5a–D5d in the table above. Existing rate,
-input, user-flight and soak evidence is summarized in `w6-verification.md`
-and measured in `profiling.md`; no further user flight test is requested now.
+Automatable D5 coverage is complete as of 2026-10-12; results and fixture limits
+are in `profiling.md`. No further user flight test is requested for that scope.
+This does not promote W6 bit 13 into the normal mask: the known A500 Time Scale
+40 capacity/playability shortfall remains. Controlled field landings do not
+judge runway approaches; the A500 tracked firing-line test validates native
+damage and kill credit, not free-maneuvering AI combat. Existing user handling,
+060 crash and soak evidence is retained. Full W6 acceptance remains a separate
+decision, not an unrun automated checklist.
 
 Earlier optional W1 cached-CPU extensions, G1/G3 refinements and G5–G9,
 S2/S3-prime/S4–S8, broader sound/OS changes and overlay queueing remain deferred

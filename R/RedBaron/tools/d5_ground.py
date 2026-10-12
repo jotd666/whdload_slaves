@@ -12,7 +12,8 @@ contacts=[list(map(int,m)) for m in re.findall(r'^CONTACT (\d+) (\d+) (-?\d+) (-
 pc,fields=map(int,match.groups());assert pc in (l.sim+0x1f0d2,l.sim+0x21f60,l.sim+0x2d34e),raw[-1000:]
 assert contacts,'No native player ground contact'
 assert all(c[1]>=4 for c in contacts),'Contact preceded W6 fixture activation'
-result=dict(contacts=contacts,fields=fields,stop='menu' if pc==l.sim+0x1f0d2 else 'flight_exit' if pc==l.sim+0x21f60 else 'window',state=l.snapshot(),altitude=l.u(player+16),flags=l.u(player+34),scope='Native collision/impact observations from controlled initial conditions; outcome verdict requires native menu/debrief evidence')
+result=dict(contacts=contacts,fields=fields,stop='menu' if pc==l.sim+0x1f0d2 else 'flight_exit' if pc==l.sim+0x21f60 else 'window',state=l.snapshot(),altitude=l.u(player+16),flags=l.u(player+34),scope='Native collision/impact observations from controlled initial conditions; outcome verdict requires native mission-exit evidence')
 (l.out/'ground.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps({k:v for k,v in result.items() if k!='contacts'},indent=2),flush=True)
-l.fields(30)
+if result['stop']=='flight_exit':r.command('wait 12')
+else:l.fields(30)
 print(r.command('shot '+str((l.out/'ground.png').resolve())))

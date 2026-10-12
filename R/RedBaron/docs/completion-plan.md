@@ -310,24 +310,28 @@ Implemented: common runtime with VERIFY-only fixtures/logs, developer bit 13, CP
 5. Add bit 13 to the developer mask, and to the verified mask only after D5
    passes.
 
-**D5. Acceptance runs — automated checks resumed (2026-10-12).**
+**D5. Acceptance runs — automated coverage complete (2026-10-12).**
 
-The user resumed all automatable checks on 2026-10-12. The earlier direction was to proceed to phase E without completing D5.
-Preserve the results and open checks below. This changes the execution order,
-not acceptance: W6 remains outside the normal verified mask until D5 resumes
-and passes. E measurements use the developer candidate with W6 selected.
+The user resumed all automatable checks on 2026-10-12. That coverage is complete,
+with controlled-fixture limits recorded in the scoreboard. This does not change
+acceptance: W6 remains outside the normal verified mask until D5 passes.
+E measurements use the developer candidate with W6 selected.
 
 D5 is the only full matrix in this phase.
 
-In progress: all six candidate rate cases are in the scoreboard. A500/060
-throttle taps and pause/rebase pass, as does the 060 soak. A500 Time Scale 40
-misses the rate/capacity targets. The user completed steering/release checks
-on both machines and the 060 crash test; the scoreboard records the positive
-060 result and poor A500 maximum-detail playability. Remaining catch-up input,
-Time Compress/mission-exit transitions, A500 Time Scale 60 and five flight
-outcomes remain open. These are agent-run checks where feasible; further user
-flying is requested only when judgment or controls genuinely require it.
-The normal mask is gated.
+All six candidate rate cases are in the scoreboard. Native catch-up input,
+Pause/Preferences, Time Compress entry/exit and catch-up mission exit now have
+automated evidence. A500 Time Scale 60 is recorded as its overload envelope;
+the earlier Time Scale 40 capacity shortfall remains. User steering/release
+feedback on both machines, the 060 crash and the 060 soak remain valid.
+Controlled landing and native damage/kill-credit outcomes now pass on both
+machines, and the A500 automatic crash exit passes. A500 combat uses a bounded
+tracked firing line; it does not accept free-maneuvering AI dogfighting. Field
+touchdowns do not constitute runway-navigation or approach-feel acceptance.
+Results and exact fixture scope live only in `profiling.md`.
+No further user flying is requested for these objective checks. The normal W6
+mask remains gated; completing a test is not the same as passing every capacity
+or playability target.
 
 *Rate:*
 - A500 steady and squadron, at Time Scale 0 and 40.

@@ -52,6 +52,9 @@ class Live:
         if not match or int(match[1])!=at:raise RuntimeError('Bounded target not reached: '+log[-1200:])
         return int(match[2])
     def fields(self,count):
-        return self.bounded_command(f'gdb delete\nbreak *{self.sim+0x2d34e:#x}\nignore $bpnum {count-1}\ncontinue\ndelete')
+        raw=self.bounded_command(f'gdb delete\nbreak *{self.sim+0x2d34e:#x}\nignore $bpnum {count-1}\ncontinue\nprintf "D5FIELDS %u\\n", $pc\ndelete')
+        match=re.search(r'D5FIELDS (\d+)',raw)
+        if not match or int(match[1])!=self.sim+0x2d34e:raise RuntimeError('Field window interrupted away from VBL')
+        return raw
     def snapshot(self):
         return dict(cia=self.u(self.sim+0x30006),cursor=self.u(self.state+20),steps=self.u(self.state+28),active=self.u(self.state+40),paused=self.u(self.state+44),due=self.w(self.state+24),quantum=self.w(self.sym('time_loop_quantum')))

@@ -57,14 +57,15 @@ def compression_window(raw):
 
 def ground_outcome(ground,scenario,native_return,before,after):
     contacts=ground['contacts']
-    if ground['stop']!='menu' or not contacts or any(c[1]<4 for c in contacts):
-        raise ValueError('No W6-owned contact and native mission menu')
+    if ground['stop'] not in ('menu','flight_exit') or not contacts or any(c[1]<4 for c in contacts):
+        raise ValueError('No W6-owned contact and native outcome stop')
     grades=[c[-1] for c in contacts]
     if scenario=='landing':
-        if any(grades) or ground['altitude']!=50:raise ValueError('Unsafe or incomplete touchdown')
+        if ground['stop']!='menu' or any(grades) or ground['altitude']!=50:raise ValueError('Unsafe or incomplete touchdown')
     elif scenario=='crash':
         if not any(g>0 for g in grades) or not ground['flags']&0x48:raise ValueError('No destructive impact')
     else:raise ValueError('Unknown ground scenario')
+    if scenario=='crash' and ground['stop']=='flight_exit':return
     if native_return!=1 or before['steps']!=after['steps']:
         raise ValueError('Mission aborted or simulation continued after menu selection')
 

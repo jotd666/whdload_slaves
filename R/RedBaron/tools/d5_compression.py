@@ -3,7 +3,10 @@ import argparse,json
 from d5_live import Live,r
 from d5_report import compression_window
 p=argparse.ArgumentParser();p.add_argument('out');a=p.parse_args();l=Live(a.out)
-l.until(l.sim+0x21d30)
+for _ in range(8):
+    l.until(l.sim+0x21d30)
+    if l.u(l.state+28)>=4:break
+assert l.u(l.state+28)>=4,'W6 scenario did not activate'
 # Let native flight eligibility refresh after the one-time starting relocation.
 l.fields(100)
 assert l.w(l.h3+0x45a6)==0

@@ -10,10 +10,15 @@ pending D5 acceptance. There is no 50 FPS or frame-independent normal-game
 speed claim. Historical captures below retain their original build, option
 mapping and RAM configuration; they do not define the current player default.
 
-## D5 automated acceptance resumed (2026-10-12)
+## D5 automated coverage complete (2026-10-12)
 
-The user resumed all automatable D5 checks. W6 remains outside the normal mask;
-this is acceptance work, not a new performance optimization or a 50 FPS claim.
+All objective D5 input, transition, envelope and controlled outcome checks now
+have results. The prior six-machine rate matrix, 060 soak and user handling/060
+crash reports remain the evidence for those completed checks. This is not full
+D5 acceptance: A500 Time Scale 40 still misses capacity/playability targets,
+and controlled outcome fixtures do not judge manual approaches or dogfighting.
+W6 remains outside the normal mask; no performance optimization or 50 FPS claim
+is added. No further manual flight is requested for this automated scope.
 
 | Check | Configuration | Result | Evidence |
 |---|---|---|---|
@@ -31,7 +36,6 @@ observer attempt held Return down in the native button menu; the corrected
 press/release completed that same pending Abort. This was a driver failure,
 not a passed first attempt. Native C is rejected with eligibility code 10 in
 this combat encounter, as expected; eligible compression remains separate.
-All 573 host tests pass using the configured development environment.
 
 060/50, current retained renderer with W6 (`0x1ff2ffa`), passes the same
 200-field Pause/Preferences rebase checks at Time Scale 40
@@ -46,14 +50,16 @@ input and soak drivers now trap sim:21f60, the common flight-exit epilogue,
 rather than sim:21f4a, which covers only one exit path.
 
 
-Controlled VERIFY-only outcome fixtures activate once, at W6 world update 4.
-They set initial poses/velocities and isolate other aircraft; subsequent
-physics, eligibility, projectile hits, damage and mission results are native.
-They do not inject clocks, commands, health or completion flags. Ground tests
-retain original damage preferences. Combat alone selects the native player
+Controlled VERIFY-only outcome fixtures activate at W6 world update 4.
+The standard mode sets initial poses/velocities once and isolates other
+aircraft; subsequent physics, eligibility, projectile hits, damage and mission results are native.
+They do not inject clocks, hits, health or completion flags. The gentle
+landing starts with zero throttle; ground tests retain original damage preferences. Combat alone selects the native player
 protection preference in a private game copy; enemy damage remains enabled.
-These are functional integration checks, not ordinary-flight handling or FPS
-measurements. The VERIFY fixture could not allocate expansion memory on the
+The optional bounded firing-line fixture additionally repositions its live
+target for at most 64 world updates; it does not accept AI evasion or ordinary
+dogfighting behavior. These are functional integration checks, not
+ordinary-flight handling or FPS measurements. The VERIFY fixture could not allocate expansion memory on the
 2 MB A500 setup, so its 68000 outcome checks use 8 MB Fast RAM for instrumentation.
 This is not a minimum-memory pass; the developer input/rate checks above retain
 the 2 MB configuration.
@@ -61,13 +67,28 @@ the 2 MB configuration.
 | Controlled check | Configuration | Result | Evidence |
 |---|---|---|---|
 | Eligible native C entry/exit | 060, quantum 225 | 200 fields compressed, 257 native eligibility decisions, then native exit and 100 fields remaining off | `d5-auto-060-transit/compression.json` |
+| Eligible native C entry/exit | A500, quantum 450; VERIFY 8 MB Fast | 200 fields compressed, 67 native eligibility decisions, then native exit and 100 fields remaining off | `d5-auto-a500-transit/compression.json` |
 | Gentle field landing and End Mission | 060, quantum 225 | All contacts safe under W6; ground altitude 50, automatic mission-over menu, native completed-mission return, no world update while exiting | `d5-auto-060-landing-w6-r2/{ground,outcome}.json` |
+| Gentle field landing and End Mission | A500, quantum 450; VERIFY 8 MB Fast | Safe native contacts; ground altitude 50, automatic mission-over menu and completed-mission return, no world update during exit | `d5-auto-a500-landing/{ground,outcome}.json` |
+| Destructive crash and automatic flight exit | A500, quantum 450; VERIFY 8 MB Fast | Grade-2 impact at world update 5, destroyed aircraft flags, automatic common flight exit at update 12, native Captured debrief | `d5-auto-a500-crash/{ground,outcome}.json` |
+| AI-aircraft damage and kill-credit integration | A500, quantum 450; VERIFY 8 MB Fast, bounded firing-line tracking | Six native hits; target destroyed at world update 9; personal kill credit 150 | `d5-auto-a500-combat-tracked/combat.json` |
 | AI shoot-down | 060, quantum 225 | Eight native hits; enemy destroyed at world update 11; personal kill credit 150; native “You just shot down Udet!” message | `d5-auto-060-combat-protected-r2/combat.json` |
+
+The one-time A500 combat starts at both 1,024 and 512 units produced one hit
+without destruction in 2,500 fields and are rejected as shoot-down passes.
+The retained A500 case keeps the target 512 units on the firing axis, for a
+maximum of 64 world updates, while leaving health, native damage and scoring
+untouched. It passes the projectile/damage/destruction/credit integration
+check. It does **not** pass free-maneuvering AI combat or dogfighting acceptance;
+the explicit `--track-target` capture flag prevents conflating those scopes.
+The 060 case uses only the one-time starting lineup.
 
 The landing ends behind enemy lines and reaches the captivity debrief. It is
 a safe field-touchdown smoke test, not runway navigation or a manual approach
-assessment. An earlier landing touched down before W6 activation and is
-explicitly rejected. The first combat setup selected a camera object instead
+assessment. The A500 landing likewise verifies native contact and completed
+mission return; its early post-exit screenshot still shows the loading panel
+and is not evidence of a completed debrief screen. An earlier landing touched
+down before W6 activation and is explicitly rejected. The first combat setup selected a camera object instead
 of an aircraft and was rejected; the fixture now iterates the actual aircraft
 pool. An unprotected attempt recorded hits but ended with the player destroyed,
 so it supplies no shoot-down pass. The successful protected case requires both
@@ -77,12 +98,29 @@ bound both emulated fields and host debugger time.
 
 From the configured harness, `d5_fixture_case.py <a500|060>
 <transit|landing|crash|combat> <capture>` builds a separate VERIFY fixture and
-leaves the game paused with native input attached. Follow with
+leaves the game paused with native input attached. Optional `--track-target`
+is combat-only and must be reported as a firing-line integration fixture.
+Follow with
 `d5_compression.py <capture>`, or `d5_ground.py <capture>` and then
 `d5_end_outcome.py <capture>`, or `d5_combat.py <capture>`. Close the owned
 input server and emulator before the next case. The transit observer requires
 native eligibility rather than forcing the Time Compress flag. Ground and
 combat result validators include deliberately malformed evidence cases.
+The A500 transit setup needed a bounded continuation of its Preferences route
+before the first test window. No interrupted setup is counted as acceptance.
+The crash takes an automatic exit instead of the landing menu. The initial observer incorrectly waited on
+the unloaded flight VBL after recording that exit; its owned wait was stopped,
+and the same native crash completed the Captured debrief. The driver now treats
+automatic destructive exits separately and rejects a field wait interrupted
+away from VBL. No crash/menu return value is fabricated.
+
+Validation: 577 host tests pass, including rejected malformed input, modal,
+compression, ground and kill-credit evidence. Normal/developer/default VERIFY
+builds compile, with 136 hook ranges and 136/136/150 patch destinations checked;
+the separate tracked-target VERIFY fixture also passes its 150 destinations.
+The normal bundle and default W6 selection are unchanged. These fixtures add no
+runtime code to the normal or developer build. No emulator remains running for
+this acceptance session.
 
 
 The unchanged developer binary is SHA-256
@@ -1307,7 +1345,10 @@ All three retained-code builds pass (normal/developer/VERIFY text sizes
 136 VERIFY patch destinations. E2 is closed; E3 CPU rasterization is next.
 The normal switch still defaults off until F1; nothing has been pushed.
 
-### D5 acceptance postponed — not a passed checkpoint
+### Historical D5 candidate checkpoint — superseded open list
+
+The current D5 status and subsequent checks are at the top of this ledger.
+The following retains the original measurements and user feedback.
 
 The added candidate FPS and world-rate/drop columns use **developer bit 13**,
 not the normal verified mask. Each window covers 2,000 PAL fields at maximum

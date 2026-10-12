@@ -144,11 +144,16 @@ time_prelude_step:
 time_prelude_count: dc.l 0
 
 	IFD VERIFY_D5_SCENARIO
-; Controlled one-time starting conditions for native D5 outcome integration.
-; No clock, command, damage, mission-result or collision state is fabricated.
+; Controlled starting conditions for native D5 outcome integration.
+; No clock, health, damage or mission-result flag is fabricated.
 ; 1 = gentle ground approach; 2 = steep descent; 3 = isolated transit;
 ; 4 = live enemy lined up on the player forward axis for native gunfire.
+; Optional VERIFY_D5_TRACK_TARGET keeps that firing geometry for at most 64
+; world updates. It isolates damage/kill-credit integration, not AI evasion.
 ; This file is included only in VERIFY. Ordinary builds contain no fixture.
+	IFND VERIFY_D5_DISTANCE_SHIFT
+VERIFY_D5_DISTANCE_SHIFT = 4
+	ENDC
 d5_scenario_prepare:
 	movem.l d0-d2/a0-a4,-(sp)
 	lea .option(pc),a2
@@ -162,8 +167,15 @@ d5_scenario_prepare:
 	tst.l TIME_LOOP_ACTIVE(a2)
 	beq .done
 	move.l TIME_LOOP_STEPS(a2),d0
+	IFD VERIFY_D5_TRACK_TARGET
+	cmpi.l #4,d0
+	bcs .done
+	cmpi.l #67,d0
+	bhi .done
+	ELSE
 	cmpi.l #4,d0
 	bne .done
+	ENDC
 	move.l $4578(a1),a0
 	IFNE VERIFY_D5_SCENARIO-3
 	IFNE VERIFY_D5_SCENARIO-4
@@ -202,7 +214,18 @@ d5_scenario_prepare:
 	beq .next
 	IFEQ VERIFY_D5_SCENARIO-4
 	move.l d5_scenario_target(pc),d1
-	bne .relocate
+	beq .choose
+	IFD VERIFY_D5_TRACK_TARGET
+	cmpa.l d1,a3
+	bne .next
+	move.l 34(a3),d1
+	andi.l #$48,d1
+	bne .done
+	bra .lineup
+	ELSE
+	bra .relocate
+	ENDC
+.choose
 	tst.b 38(a3)
 	bne .relocate
 	; Registry also contains camera objects with type zero. Require a live
@@ -224,18 +247,19 @@ d5_scenario_prepare:
 	beq .relocate
 	lea d5_scenario_target(pc),a4
 	move.l a3,(a4)
+.lineup
 	move.w $32(a0),d1
-	asr.w #4,d1
+	asr.w #VERIFY_D5_DISTANCE_SHIFT,d1
 	ext.l d1
 	add.l 8(a0),d1
 	move.l d1,8(a3)
 	move.w $34(a0),d1
-	asr.w #4,d1
+	asr.w #VERIFY_D5_DISTANCE_SHIFT,d1
 	ext.l d1
 	add.l 12(a0),d1
 	move.l d1,12(a3)
 	move.w $36(a0),d1
-	asr.w #4,d1
+	asr.w #VERIFY_D5_DISTANCE_SHIFT,d1
 	ext.l d1
 	add.l 16(a0),d1
 	move.l d1,16(a3)
