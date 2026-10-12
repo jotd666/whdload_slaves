@@ -6,11 +6,24 @@
 ; Nominal reference f0=50/8 native steps per second. Every PAL field therefore
 ; contributes exactly $2000 in Q16.16; conversion has no rounding remainder.
 ; Keep field debt in 32-bit field units, not a saturating Q16.16 total. The
-; current dispatcher drains at most eight fields (T<=1) per substep.
+; bounded policy drains eight fields per substep; VERIFY_DISPATCH_CPU selects
+; a full-frame interval on pre-68020 CPUs.
 TIME_FIELDS_PER_STEP equ 8
 TIME_FIELD_Q16 equ $2000
 
 _time_install:
+	IFD VERIFY_TRAFFIC_ROUTE_MATH
+	IFND VERIFY_TIME_TRAFFIC
+	FAIL "VERIFY_TRAFFIC_ROUTE_MATH requires VERIFY_TIME_TRAFFIC"
+	ENDC
+	bsr _traffic_route_math_test
+	ENDC
+	IFD VERIFY_TRAFFIC_PHASE_MATH
+	IFND VERIFY_TIME_TRAFFIC
+	FAIL "VERIFY_TRAFFIC_PHASE_MATH requires VERIFY_TIME_TRAFFIC"
+	ENDC
+	bsr _traffic_phase_math_test
+	ENDC
 	IFD VERIFY_DISPATCH_CPU
 	IFND VERIFY_TIME_DISPATCH
 	FAIL "VERIFY_DISPATCH_CPU requires VERIFY_TIME_DISPATCH"

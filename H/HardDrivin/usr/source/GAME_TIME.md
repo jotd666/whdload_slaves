@@ -590,10 +590,10 @@ Collision reversal negates the full signed speed including its fraction. Route-
 direction reversals remain native discrete changes and retain the phase fraction.
 
 Phase integrates the new full speed with the same semi-implicit Euler correction
-as the player, retaining a signed 1/128 phase remainder. Native code still handles
-route boundaries and cached geometry. With T<=1 and signed-byte speed, a step
-cannot traverse two 200-unit route segments. Phase remainders survive native
-±200 wrapping. Initialization consumes its original one native step regardless
+as the player. Short steps retain the signed 1/128 phase remainder and native
+route-boundary code. Long steps add an exact sixth of that remainder unit and
+walk every crossed segment, as described below. Native code still prepares cached
+geometry. Phase remainders survive native ±200 wrapping. Initialization consumes its original one native step regardless
 of gameplay T, while subsequent zero-time updates consume nothing. The native
 pose interpolation still reads phase before its update; equal-time acceptance
 must distinguish stored progress from the pose sampled for that pass.
@@ -973,8 +973,8 @@ cases, the existing 1215 eighth-step cases, 441 Q16 cases and 11 debt cases in
 fixture, not full driving-tape or world-state equivalence. The ordinary build is
 byte-identical to the baseline.
 
-Before accepting the experimental 68000 policy, extend traffic and complete
-the velocity-write audit. Audit narrowing stores in callers as well as helper arithmetic. Large-T
+Before accepting the experimental 68000 policy, complete the velocity-write
+audit and full gameplay validation. Audit narrowing stores in callers as well as helper arithmetic. Large-T
 contact, checkpoint and handling validation, and the A500 performance gate remain
 required. No updated FPS claim follows from this arithmetic change.
 
@@ -1122,7 +1122,7 @@ input macro produces the same binary as its expanded data. `s4-angle-native`
 matches all144 reference car states at forced T=1; the ordinary build is unchanged.
 These checks establish arithmetic and native-step compatibility, not large-T
 loop/jump/collision handling. The separate experimental CPU dispatcher permits
-long 68000 steps; velocity writes and traffic progression still need attention.
+long 68000 steps; velocity writes and full gameplay validation still need attention.
 
 
 ### Traffic acceleration at longer intervals
@@ -1139,15 +1139,61 @@ invalidation, saturation, overspeed, zero acceleration and initialization.
 `s4-traffic-speed-regression` passes the existing50 reversal cases and the
 initialization/zero-time checks. The ordinary build remains unchanged.
 
-Long-interval traffic progression is not yet ready. The native `$0d380..$0d406`
-post-update code crosses only one200-unit segment. Route selection at
-`$0cf02..$0cfe4` handles main-route wrap, branch preference and transitions to and
-from the secondary route; multiple crossings must preserve those decisions.
-Furthermore, when speed reaches its limit before the end of a long interval,
-phase integration must include the remaining time at that limit. Simply scaling
-the existing endpoint-average expression would undercount distance in that case.
-The current all-CPU eight-field cap remains until these and the other longer-step
-requirements are addressed.
+Long-interval progression now uses a signed-long displacement and traverses all
+200-unit boundaries in the computed displacement. The wide calculation applies when the interval exceeds
+eight fields or a fractional coasting remainder survives from an earlier update.
+For new/old speeds `v/u` in eighths and interval `n` fields, the uncapped numerator
+is `n*(v+u)+8*(v-u)`, divided by128. When a long interval reaches its speed cap
+partway through, it becomes `2*n*v-(v-u)^2/acceleration+8*(v-u)`. This integrates
+acceleration up to the cap and coasting afterward while retaining the Euler bias.
+The native T=1 expression remains unchanged.
+
+SPS traffic acceleration is0..3; a denominator of768 represents the half/third
+terms exactly. The existing companion at+6 retains its signed /128 remainder,
+and+12 holds a signed -5..5 sub-remainder in /768 units. Reset and unexpected
+phase writes clear both. Longword multiplication and two unsigned word divisions
+avoid signed-word overflow in the displacement. Short steps consume any retained
+sub-remainder consistently; no fractional time or movement is discarded.
+
+The walker applies the native `$cf02..$cfe4` next-segment rules between crossings:
+main-route wrap, both branch entrances and both alternate-route exits. It updates
+the native pointers using the direction and invalidates the geometry cache for each crossing.
+It preserves the native negative-progress rules as well. Acceleration and geometry
+preparation are not repeated for intermediate segments. The final phase is0..199,
+so the native single-wrap tail does nothing for these already-normalized updates.
+Short updates without a sub-remainder continue through the original tail.
+
+Evidence:
+
+- `s4-traffic-phase-wide`: 504 cases agree with an independent rational integration
+  model, including126 capped/coasting cases, signed carries, negative velocities
+  and unsigned65535-field intervals. The largest absolute displacement is1,055,728
+  phase units, beyond a signed word.
+- `s4-traffic-route-fixed`: 96 synthetic route cases match the game's actual
+  instruction ranges, copied into private verification storage. Cases cover both
+  directions, main-route wrap, junction preferences and alternate-route exits,
+  with up to nine crossings. The fixture supplies a JMP stub for the native
+  multiply entry; an earlier fixture with a pointer there stalled and is excluded.
+- `s4-traffic-route-live`: all1440 A500 updates agree with the memory-based model,
+  including1428 wide updates,11 cap/coast transitions and136 route crossings.
+- `s4-traffic-route-020`: all1440 updates agree on the short path, including1254
+  fractional updates and34 crossings.
+- `s4-traffic-route-slow`: adding255 rendering fields per frame produces144 checked
+  updates, including114 that cross multiple segments (maximum four). All294
+  crossings, speed/carry values and route pointers match the model.
+- `s4-traffic-route-native`: all1440 before/after traffic records and their poses
+  are byte-identical to `s4-traffic-reference`, including92 crossings. Its native
+  phase arithmetic also passes the existing model.
+
+These checks establish displacement arithmetic and traversal of the computed
+net displacement. A remaining traffic case is an in-frame turnaround after a
+collision: integrating negative then positive velocity can hide an intermediate
+backward junction crossing. The walker must eventually split at the displacement
+extremum and preserve those ordered route decisions. The current tests do not
+prove that path-dependent case, collision safety, rendered-pose equivalence at
+equal elapsed time, or full cross-machine handling/performance acceptance.
+`s4-traffic-route-off` passes inactive ranges; the ordinary slave is unchanged
+and all91 declared branch ranges pass.
 
 
 ### Experimental CPU-specific dispatch
