@@ -206,7 +206,11 @@ _drivetrain_skip_settled:
 .compare:
 	move.l (a0)+,d0
 	cmp.l (a1)+,d0
+	IFD VERIFY_DRIVETRAIN_FRACTION
+	bne .fraction
+	ELSE
 	bne .done
+	ENDC
 	dbf d1,.compare
 	move.l -$66da(a4),d0
 	cmp.l (a1)+,d0
@@ -233,7 +237,108 @@ _drivetrain_skip_settled:
 	bsr _drivetrain_position_tick
 	lea _time_scalar_fields(pc),a1
 	move.w #1,(a1)
+	IFD VERIFY_DRIVETRAIN_FRACTION
+	bra.s .done
+.fraction:
+	bsr _drivetrain_skip_fraction
+	ENDC
 .done:
 	movem.l (a7)+,d0-d1/a0-a1
+	rts
+	ENDC
+
+	IFD VERIFY_DRIVETRAIN_FRACTION
+; A constant native velocity word keeps the force and RPM target fixed. Batch
+; fractional acceleration only if every other engine input/companion is fixed,
+; and stop before changing that word or crossing the projection's carry sign.
+	dc.b 'HDFRAC01'
+_drivetrain_fraction_state:
+	dc.l 0,0                 ; skipped engine fields, bulk position updates
+	dc.w 0,0                 ; last rate, active bulk interval (zero outside helper)
+_drivetrain_skip_fraction:
+	movem.l d0-d4/a0-a1,-(a7)
+	lea _time_scalar_state+2(pc),a0
+	lea _drivetrain_settled_state+10(pc),a1
+	moveq #6,d1
+.compare:
+	move.w (a0)+,d0
+	cmp.w (a1)+,d0
+	bne .done
+	dbf d1,.compare
+	move.l -$66da(a4),d0
+	cmp.l (a1)+,d0
+	bne .done
+	move.l -$66d6(a4),d0
+	cmp.l (a1)+,d0
+	bne .done
+	move.w -$66ca(a4),d0
+	cmp.w (a1)+,d0
+	bne .done
+	move.w -$66e4(a4),d0
+	cmp.w (a1),d0
+	bne .done
+	; Avoid near-zero dissipation limiting and the native projection wrap range.
+	move.w -$66d8(a4),d0
+	bpl.s .magnitude
+	neg.w d0
+.magnitude:
+	cmpi.w #2,d0
+	blt .done
+	cmpi.w #21843,d0
+	bgt .done
+	lea _time_scalar_state(pc),a0
+	move.w (a0),d0
+	move.w d0,d1
+	sub.w _drivetrain_settled_state+8(pc),d1
+	beq .done
+	move.w d1,d2
+	bmi.s .negative
+	moveq #7,d3
+	tst.w d0
+	bpl.s .positive_bound
+	moveq #0,d3
+.positive_bound:
+	sub.w d0,d3
+	bra.s .bound
+.negative:
+	neg.w d2
+	moveq #7,d3
+	tst.w d0
+	ble.s .negative_bound
+	moveq #0,d3
+.negative_bound:
+	add.w d0,d3
+.bound:
+	divu.w d2,d3
+	andi.l #$ffff,d3
+	beq .done
+	lea _drivetrain_state(pc),a1
+	moveq #0,d4
+	move.w 2(a1),d4
+	subq.w #1,d4
+	cmp.w d4,d3
+	bls.s .bounded
+	move.w d4,d3
+.bounded:
+	tst.w d3
+	beq.s .done
+	sub.w d3,2(a1)
+	move.w d1,d2
+	muls.w d3,d2
+	add.w d2,(a0)
+	lea _drivetrain_fraction_state(pc),a1
+	add.l d3,(a1)
+	addq.l #1,4(a1)
+	move.w d1,8(a1)
+	move.w d3,10(a1)
+	lea _time_scalar_fields(pc),a1
+	move.w d3,(a1)
+	bsr _drivetrain_position_tick
+	lea _drivetrain_fraction_state(pc),a1
+	clr.w 10(a1)
+	lea _time_scalar_fields(pc),a1
+	move.w #1,(a1)
+.done:
+	movem.l (a7)+,d0-d4/a0-a1
 	rts
 	ENDC

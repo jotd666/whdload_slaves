@@ -1705,6 +1705,86 @@ branch audit passes, and both normal output and the reference with this new flag
 absent remain byte-identical. The next cost issue is engine evolution while state
 is changing; no speculative skipping across force or gear changes is implemented.
 
+
+### Batching fractional acceleration between integer boundaries
+
+`VERIFY_DRIVETRAIN_FRACTION` optionally extends SETTLED. After a one-field engine
+update, it permits only the velocity companion to differ: the other26 saved bytes
+must match. The difference between the old and new eighth-velocity companions is
+the field's rate. With unchanged native velocity, wheel speed, throttle, RPM and
+gear, the native force inputs and RPM target remain constant. The helper limits
+its batch so the velocity word cannot change and the companion cannot cross zero,
+where interpolation switches to the other adjacent native vector. It preserves a
+final engine call for pitch publication, just as the unchanged-state helper does.
+
+The path excludes velocity magnitudes below2, where dissipation limiting could
+make the fractional rate nonlinear, and magnitudes above21843, where the native
+projection wraps. For the remaining values, one-field resistance cannot consume
+the existing velocity: native drag is magnitude-clamped to velocity, braking is
+no larger than velocity, and their sum is below the available eighth-unit magnitude.
+The companion advances by rate times batched fields; the existing position helper
+then integrates the linearly changing projected fraction. No integer-velocity,
+RPM, gear or force threshold is skipped. `HDFRAC01` reports skipped fields, bulk
+updates, the last rate and the currently active bulk interval (zero outside it).
+
+Live operand validation compares every batch with independent single-field
+position updates, including every intermediate projected fraction:
+
+| Capture | Fractional batches | Batched fields | Observed rates |
+|---|---:|---:|---|
+| `s4-drivetrain-fraction-brake` | 20 | 28 | -3,-2,-1,+3 |
+| `s4-drivetrain-fraction-accelerating` (A500) | 27 | 47 | +1,+2,+3 |
+| `s4-drivetrain-fraction-020` | 49 | 60 | +1,+2 |
+
+All engine inputs other than the velocity companion remain identical in these
+checks, and every final longitudinal position/carry matches repeated field updates.
+The braking capture additionally passes464 general position updates, with no reverse
+motion and a held zero-velocity stop. Its five unchanged-state batches,53 fields,
+also match the unchanged-state reference. These are observed longitudinal cases,
+not full steering/collision equivalence.
+
+The final500-field A500 timing capture (`s4-drivetrain-fraction26-final`) has34
+swaps,3.394588 FPS,35 full physics/scene passes and266 engine calls. It skips147
+unchanged engine fields in14 batches and78 fractional engine fields in34 batches.
+All32 pitch publications are unique to their outer pass; both batching paths are
+inactive at the final observation. Fewer engine calls did not produce another swap
+in this window, so no additional FPS gain is claimed over SETTLED. The diagnostic
+still trails the current solver's37 swaps and does not pass the3% budget.
+
+Native-step comparison passes all108 reference car states; CUSTOM1-off passes148
+ranges, the127-range branch audit passes, and normal output and the settled-only
+build remain byte-identical when the new flag is absent. The optimization remains
+optional within the experimental reference, not enabled in the regular solver.
+
+### Instruction cost of the drivetrain reference
+
+The matching A500 instruction captures `s4-profile-current` and
+`s4-profile-fraction` each cover 500 PAL fields (10.015944 seconds), starting at
+race entry with the same throttle-26 input fixture. Their 37 and 34 swaps match
+independent runtime counts. Complete physics calls exclude interrupt execution;
+child routine costs are inclusive and must not be added to their parent.
+
+| Complete routine | Current solver calls / total ms | Fractional reference calls / total ms |
+|---|---:|---:|
+| Full physics | 37 / 450.896 | 35 / 1115.935 |
+| Engine | 37 / 57.612 | 266 / 424.519 |
+| Native position and housekeeping | 37 / 56.444 | 35 / 17.653 |
+| Intermediate projected position | absent | 313 / 305.287 |
+
+The additional engine calls and intermediate position work explain most of the
+665 ms increase in complete physics time. Average engine cost is similar
+(11,046 versus 11,321 A500 CPU cycles); its repeated invocation is the problem.
+The reference's position helper averages 6,919 CPU cycles. Projection helpers
+alone account for 197.399 ms of self time, versus 18.763 ms in the current solver.
+This points to reducing repeated force evaluation and projected-position work,
+while preserving gear transitions and fractional displacement, as the next target.
+
+Trace instruction coverage is greater than 99.9999% in both samples. CPU-cycle
+conversion uses the A500 CPU clock (header base clock divided by four); the
+header's base clock itself is not the CPU clock. These are diagnostic comparisons
+between two gated solvers, not original-game acceptance: their trajectories and
+rendered scene workloads can differ, and the full A/B performance gate remains open.
+
 ### Near-stop fractional projection and position correction
 
 The retained operands isolated three interacting problems. At integer velocity1

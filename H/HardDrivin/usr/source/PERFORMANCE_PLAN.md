@@ -338,7 +338,10 @@ Tools stay in ignored `tmp/dev/tools`.
      now passes focused operand and native-step checks. Exact skipping of unchanged
      engine updates reduces its measured A500 diagnostic cost from13.51% to8.11%,
      still outside the3% budget; it is not enabled in the regular integrated build.
-     Cheaper integration while state is changing and handling tolerance remain open.
+     Exact batching of fractional acceleration also passes observed operand checks,
+     but adds no swap in that diagnostic. Matching ten-second instruction traces show
+     full physics rising from451 to1116 ms, mostly repeated engine and intermediate
+     position work. The cheaper general policy and handling tolerance stay open.
    - Exercise collisions, the loop and the jump at both T extremes; check for
      tunnelling and missed checkpoints.
    - Measure the A500's FPS: it must not drop by more than 3% against the baseline.
