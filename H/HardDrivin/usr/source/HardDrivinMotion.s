@@ -320,9 +320,9 @@ _motion_spin_decay:
 	neg.l d0
 .magnitude:
 	move.l d0,d4
-	lea _motion_spin_loss(pc),a1
-	add.w d1,d1
-	move.w (a1,d1.w),d1
+	bsr _decay_spin
+	cmpi.l #$10000,d1
+	beq.s .zero_retention
 	swap d0
 	mulu.w d1,d0
 	move.l d4,d2
@@ -338,6 +338,10 @@ _motion_spin_decay:
 	move.l d4,d0
 	bsr _time_split_q16
 	move.l d2,MS_SPIN_CARRY(a0)
+	bra.s .save
+.zero_retention:
+	moveq #0,d0
+	clr.l MS_SPIN_CARRY(a0)
 	bra.s .save
 .native:
 	muls.w #9,d0
@@ -355,8 +359,6 @@ _motion_spin_reset:
 	clr.l MS_SPIN_CARRY(a0)
 	movea.l (a7)+,a0
 	rts
-_motion_spin_loss:
-	dc.w 0,857,1704,2539,3363,4177,4979,5772,6554
 
 ; Crash lifetime is 25 native steps, or 200 active fields. Expiry effects are
 ; emitted exactly once on crossing zero, independently of display/substep count.
@@ -731,7 +733,8 @@ _motion_math_test:
 	move.w (a6)+,d4
 	moveq #0,d5
 .spin_fields:
-	move.w d5,(a5)
+	lea _motion_spin_fields(pc),a3
+	move.w (a3,d5.w),(a5)
 	lea _motion_spin_carries(pc),a3
 	moveq #4,d6
 .spin_case:
@@ -743,9 +746,9 @@ _motion_math_test:
 	move.w -$66e6(a4),(a2)+
 	move.l MS_SPIN_CARRY(a0),(a2)+
 	dbf d6,.spin_case
-	addq.w #1,d5
-	cmpi.w #8,d5
-	ble.s .spin_fields
+	addq.w #2,d5
+	cmpi.w #34,d5
+	blo.s .spin_fields
 	dbf d7,.spin_value
 	lea _motion_fall_values(pc),a6
 	lea _motion_fall_results(pc),a2
@@ -913,10 +916,11 @@ _motion_angle_configs:
 	dc.l -65535
 _motion_angle_signature: dc.b 'HDANGLE1'
 _motion_angle_results: dcb.b 5*9*3*10,0
+_motion_spin_fields: dc.w 0,1,2,3,4,5,6,7,8,9,15,31,127,255,894,895,65535
 _motion_spin_values: dc.w -52,-11,-1,0,1,11,52
 _motion_spin_carries: dc.l -65535,-8192,0,8192,65535
 _motion_spin_signature: dc.b 'HDSPIN01'
-_motion_spin_results: dcb.b 7*9*5*6,0
+_motion_spin_results: dcb.b 7*17*5*6,0
 _motion_fall_values: dc.w -5,0,5
 _motion_fall_configs: dc.w 49,49,-7,49,49,7,49,0,7
 _motion_fall_signature: dc.b 'HDFALL01'

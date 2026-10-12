@@ -11,6 +11,12 @@ TIME_FIELDS_PER_STEP equ 8
 TIME_FIELD_Q16 equ $2000
 
 _time_install:
+	IFD VERIFY_DECAY_MATH
+	IFND VERIFY_TIME_SCALARS
+	FAIL "VERIFY_DECAY_MATH requires VERIFY_TIME_SCALARS"
+	ENDC
+	bsr _decay_math_test
+	ENDC
 	IFD VERIFY_PRESENTATION_MATH
 	bsr _presentation_math_test
 	ENDC
@@ -483,6 +489,7 @@ _time_q16_results: dcb.l 7*9*7*2,0
 	ENDC
 
 	IFD VERIFY_TIME_SCALARS
+	INCLUDE "HardDrivinDecay.s"
 	INCLUDE "HardDrivinScalar.s"
 	ENDC
 

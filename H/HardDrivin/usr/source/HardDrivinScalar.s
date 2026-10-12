@@ -186,9 +186,9 @@ _time_throttle_retention:
 	move.l d0,d4
 	swap d4
 	add.l SS_THROTTLE_CARRY(a0),d4
-	lea _time_throttle_loss(pc),a1
-	add.w d1,d1
-	move.w (a1,d1.w),d1
+	bsr _decay_throttle
+	cmpi.l #$10000,d1
+	beq.s .zero_retention
 	mulu.w d1,d0
 	move.l SS_THROTTLE_CARRY(a0),d2
 	move.l d2,d3
@@ -215,6 +215,10 @@ _time_throttle_retention:
 	swap d4
 	move.w d4,d0
 	bra.s .save
+.zero_retention:
+	moveq #0,d0
+	clr.l SS_THROTTLE_CARRY(a0)
+	bra.s .save
 .native:
 	muls.w #7,d0
 	asr.w #3,d0
@@ -224,8 +228,6 @@ _time_throttle_retention:
 	movem.l (a7)+,d1-d5/a0-a1
 	move.b d0,-$66e4(a4)
 	rts
-_time_throttle_loss:
-	dc.w 0,1085,2152,3201,4233,5247,6245,7227,8192
 
 _time_initial_scalars:
 	bsr _time_reset_scalars
@@ -360,7 +362,8 @@ _time_scalar_math_test:
 	move.b (a1)+,d4
 	moveq #0,d5
 .fields:
-	move.w d5,(a5)
+	lea _time_retention_fields(pc),a0
+	move.w (a0,d5.w),(a5)
 	lea _time_retention_carries(pc),a0
 	moveq #6,d6
 .carry:
@@ -373,18 +376,19 @@ _time_scalar_math_test:
 	move.w d0,(a2)+
 	move.l SS_THROTTLE_CARRY(a3),(a2)+
 	dbf d6,.carry
-	addq.w #1,d5
-	cmpi.w #8,d5
-	ble.s .fields
+	addq.w #2,d5
+	cmpi.w #34,d5
+	blo.s .fields
 	dbf d7,.value
 	move.w #VERIFY_SCALAR_FIELDS,(a5)
 	bsr _time_reset_scalars
 	movem.l (a7)+,d0-d7/a0-a5
 	rts
+_time_retention_fields: dc.w 0,1,2,3,4,5,6,7,8,9,15,31,255,705,706,32768,65535
 _time_retention_values: dc.b 31,32,50,99,100
 	EVEN
 _time_retention_carries: dc.l -65535,-8192,-1,0,1,8192,65535
 _time_retention_fake: dc.w 0
 _time_retention_signature: dc.b 'HDRETN01'
-_time_retention_results: dcb.b 5*9*7*6,0
+_time_retention_results: dcb.b 5*17*7*6,0
 	ENDC

@@ -953,8 +953,40 @@ cases, the existing 1215 eighth-step cases, 441 Q16 cases and 11 debt cases in
 fixture, not full driving-tape or world-state equivalence. The ordinary build is
 byte-identical to the baseline.
 
-Before enabling the 68000 policy, extend decay/contact tables, motion/projection
-products, traffic integration, multiple discrete events and replay samples per
-update. Audit narrowing stores in callers as well as helper arithmetic. Large-T
+Before enabling the 68000 policy, extend motion/projection products, traffic
+integration, multiple discrete events and replay samples per update. Audit narrowing stores in callers as well as helper arithmetic. Large-T
 contact, checkpoint and handling validation, and the A500 performance gate remain
 required. No updated FPS claim follows from this arithmetic change.
+
+
+### Decay and angular contact at longer intervals
+
+`HardDrivinDecay.s`, included by TIME_SCALARS, supplies Q16 coefficients for
+throttle retention (7/8), spin retention (9/10) and angular contact (3/4).
+All 1929 stored word coefficients are independently rounded from the exponential
+function. The lookup accepts unsigned field counts through 65535 and returns
+65536 explicitly after the remaining fraction rounds to zero: field706 for
+throttle, 895 for spin, and 328 for contact. This avoids wrapping table indices
+or interpreting a full coefficient as a zero word. Existing T=1 integer paths
+remain intact. Throttle and spin clear their fractional state at full loss.
+
+For angular contact above eight fields, correction uses the rounded gain and
+feedback uses rounded Gain/T. The feedback coefficient error is bounded by
+0.5+4/fields Q16 units, less than one unit throughout that interval. Signed error
+products and full-gain handling avoid signed-word multiplier overflow. This
+extends the response helper only; subsequent rate integration and position
+products still require a separate large-T audit.
+
+Validation in `s4-decay-wide` compares all 1929 loaded table words with a
+60-digit decimal model and executes 72 boundary lookups, including unsigned
+32768 and 65535. `s4-retention-wide` and `s4-spin-wide` each pass 595 actual helper
+cases covering signed carries and full-loss boundaries. The latter also passes
+all existing motion arithmetic cases. `s4-contact-wide` passes 216 longer-interval
+response cases plus the existing 162 response, 189 projection, 135 pitch and
+45 roll cases. These private-state checks do not prove large-T road handling.
+
+The 144 forced-native car states in `s4-decay-native` match the reference;
+`s4-decay-off` passes disabled ranges, the branch audit passes, and the ordinary
+build remains byte-identical. The current dispatcher still restricts gameplay
+steps to eight fields on every CPU. Performance and the requested 68000 policy
+remain unverified until the remaining integration work is complete.

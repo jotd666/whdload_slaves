@@ -3,17 +3,19 @@
 ; computing both the correction and its derivative; quantizing first loses
 ; small-T feedback. The zero-time caller must preserve its prior feedback rate.
 ;
-; D0.W signed angular error (abs<=720), D1.W fields0..8, D2.W nonzero=half rate.
+; D0.W signed angular error (abs<=720), D1.W unsigned fields0..65535, D2.W nonzero=half rate.
 ; Return D0.L correction Q16, D1.L feedback rate Q16. Preserve other registers.
-; Gain=1-(3/4)^T; rate gain=Gain/T. Tables round independently to nearest Q16,
-; each with <=0.5 coefficient LSB error. T=1 follows native integer truncation
+; Gain=1-(3/4)^T; rate gain=Gain/T. Up to8 fields, tables round both
+; independently (<=0.5 coefficient LSB error). Above8, feedback derives from
+; the rounded gain, with <=0.5+4/fields LSB error. T=1 uses native truncation
 ; and arithmetic half-rate rounding exactly rather than retaining a new fraction.
 _contact_response:
 	movem.l d2-d4/a0,-(a7)
 	tst.w d1
-	beq.s .zero
+	beq .zero
 	cmpi.w #8,d1
 	beq.s .native
+	bhi.s .wide
 	move.w d0,d3
 	add.w d1,d1
 	lea _contact_gain(pc),a0
@@ -24,6 +26,41 @@ _contact_response:
 	beq.s .rate
 	asr.l #1,d3
 .rate:
+	move.l d3,d1
+	bra .done
+.wide:
+	moveq #0,d4
+	move.w d1,d4
+	move.w d0,d3
+	bsr _decay_contact
+	cmpi.l #$10000,d1
+	beq.s .full_correction
+	tst.w d0
+	bpl.s .positive_error
+	neg.w d0
+	mulu.w d1,d0
+	neg.l d0
+	bra.s .feedback
+.positive_error:
+	mulu.w d1,d0
+	bra.s .feedback
+.full_correction:
+	swap d0
+	clr.w d0
+.feedback:
+	; Round Gain/T to Q16 after the independently rounded Gain. Maximum
+	; coefficient error versus the exact function is <=0.5+4/fields LSB.
+	lsl.l #3,d1
+	move.l d4,-(a7)
+	lsr.l #1,d4
+	add.l d4,d1
+	move.l (a7)+,d4
+	divu.w d4,d1
+	muls.w d1,d3
+	tst.w d2
+	beq.s .wide_rate
+	asr.l #1,d3
+.wide_rate:
 	move.l d3,d1
 	bra.s .done
 .native:
@@ -269,6 +306,27 @@ _contact_math_test:
 	ble.s .fields
 	dbf d7,.error
 	lea _contact_errors(pc),a6
+	lea _contact_wide_results(pc),a2
+	moveq #8,d7
+.wide_error:
+	move.w (a6)+,d4
+	lea _contact_wide_fields(pc),a3
+	moveq #11,d6
+.wide_field:
+	move.w (a3)+,d5
+	moveq #0,d2
+.wide_half:
+	move.w d4,d0
+	move.w d5,d1
+	bsr _contact_response
+	move.l d0,(a2)+
+	move.l d1,(a2)+
+	addq.w #1,d2
+	cmpi.w #1,d2
+	ble.s .wide_half
+	dbf d6,.wide_field
+	dbf d7,.wide_error
+	lea _contact_errors(pc),a6
 	lea _contact_projection_results(pc),a2
 	moveq #8,d7
 .projection_value:
@@ -386,4 +444,7 @@ _contact_response_signature: dc.b 'HDCRESP1'
 _contact_response_results: dcb.b 9*9*2*8,0
 _contact_projection_signature: dc.b 'HDCPROJ1'
 _contact_projection_results: dcb.b 9*3*7*4,0
+_contact_wide_fields: dc.w 9,15,31,63,127,255,327,328,655,32767,32768,65535
+_contact_wide_signature: dc.b 'HDCWIDE1'
+_contact_wide_results: dcb.l 9*12*2*2,0
 	ENDC
