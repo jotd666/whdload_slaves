@@ -3834,3 +3834,17 @@ retained captures. Its acceptance status is explicitly false. A correction must
 preserve the native eight-field result, support stopping and restarting rather
 than just this launch fixture, and leave the CPU-specific outer update policy
 intact. C3 remains open; no additional tolerance or exception has been assumed.
+
+
+A controlled input-only experiment confirms that this start timing can select
+the later gear history. In `c3-delay59-steer-040`, the same physics build keeps
+the mouse centered until race field 59, then applies the original X=400 input.
+The observed steering onset moves from consumed field 42 to 58. The 68040 now
+reaches third gear at 217 before its road-surface flag becomes zero at 227;
+it finishes the 550-field capture at speed 164 in third gear, like the slower
+profiles, instead of 194 in second gear. Every heading still matches the exact
+half-unit-per-field curve after its observed onset. This confirms the gear
+outcome's sensitivity to startup steering timing without changing engine code.
+It is a diagnostic input perturbation, not a replacement acceptance fixture or
+a fix. The original failing captures remain intact. The complete report is
+`c3-delay59-steer-040/delay-diagnostic.json` under the local profile directory.
