@@ -2,7 +2,8 @@
 ; Build with -DVERIFY_DRIVE=1; mutually exclusive with VERIFY_ATTRACT.
 ; Optional VERIFY_STEPINPUT replaces race input with a per-pass constant-input
 ; coupling control. VERIFY_STEPINPUT_BRAKE selects its braking field. These
-; are not the A/B tape; see GAME_TIME.md. STEPINPUT_STEER_AT holds X=320
+; STEPINPUT_BRAKE_SPEED instead latches braking at a native speed threshold.
+; These are not the A/B tape; see GAME_TIME.md. STEPINPUT_STEER_AT holds X=320
 ; until the chosen field, then uses STEPINPUT_X for a real skid diagnostic.
 ; Calibrated on deterministic PAL A500/68000, 512K Chip + 1536K slow,
 ; no Fast RAM, PRELOAD, CUSTOM2=0 and both host input ports disabled.
@@ -86,6 +87,10 @@ _verify_drive_race:
 	lea _verify_step_ramp_count(pc),a1
 	clr.w (a1)
 	ENDC
+	IFD VERIFY_STEPINPUT_BRAKE_SPEED
+	lea _verify_speed_brake_state(pc),a1
+	clr.w (a1)
+	ENDC
 	move.w #2,(a0)
 .done:
 	movem.l (a7)+,d0/a0-a1
@@ -134,6 +139,9 @@ _verify_drive_vbl:
 	move.w #4,-$6a0a(a4)
 	IFD VERIFY_STEPINPUT_BRAKE
 	bsr _verify_step_brake_buttons
+	ENDC
+	IFD VERIFY_STEPINPUT_BRAKE_SPEED
+	bsr _verify_speed_brake_buttons
 	ENDC
 	IFD VERIFY_STEPINPUT_RAMP
 	bsr _verify_step_ramp_buttons
@@ -210,6 +218,9 @@ _verify_step_input:
 	move.w #4,-$6a0a(a4)
 	IFD VERIFY_STEPINPUT_BRAKE
 	bsr _verify_step_brake_buttons
+	ENDC
+	IFD VERIFY_STEPINPUT_BRAKE_SPEED
+	bsr _verify_speed_brake_buttons
 	ENDC
 	IFD VERIFY_STEPINPUT_RAMP
 	bsr _verify_step_ramp_buttons
@@ -545,6 +556,27 @@ _verify_replay_pause_key:
 	rts
 .state: dc.w 0
 	dc.l 0
+	ENDC
+
+	IFD VERIFY_STEPINPUT_BRAKE_SPEED
+; Input-only threshold diagnostic. Once native velocity reaches the requested
+; value, hold both buttons through the stop. The threshold can be overshot by
+; one update; the capture must report the actual speed when braking is consumed.
+_verify_speed_brake_buttons:
+	move.l a0,-(a7)
+	lea _verify_speed_brake_state(pc),a0
+	tst.w (a0)
+	bne.s .brake
+	cmpi.w #VERIFY_STEPINPUT_BRAKE_SPEED,-$66d8(a4)
+	blt.s .done
+	move.w #1,(a0)
+.brake:
+	move.w #5,-$6a0a(a4)
+.done:
+	movea.l (a7)+,a0
+	rts
+_verify_speed_brake_signature: dc.b 'HDBRAKE1'
+_verify_speed_brake_state: dc.w 0
 	ENDC
 
 	IFD VERIFY_STEPINPUT_BRAKE

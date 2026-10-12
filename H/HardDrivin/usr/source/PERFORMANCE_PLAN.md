@@ -322,6 +322,11 @@ Tools stay in ignored `tmp/dev/tools`.
      derived from the units audit, and lap and checkpoint times within one frame.
    - Measure distance per second at constant throttle on the straight, and braking
      distance from a fixed speed, on every machine.
+     Speed-triggered flat braking is now measured on all seven profiles plus
+     slowed A500 drawing. The zero-throttle speed100 comparison retains sampling
+     bounds; it does not yet establish the acceptance tolerance or higher-speed
+     agreement. A one-long-unit backward displacement near the stop on three
+     fast profiles also remains to be resolved. See GAME_TIME.md.
    - Exercise collisions, the loop and the jump at both T extremes; check for
      tunnelling and missed checkpoints.
    - Measure the A500's FPS: it must not drop by more than 3% against the baseline.

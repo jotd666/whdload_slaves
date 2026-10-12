@@ -1410,6 +1410,74 @@ The ordinary slave and the existing CPU-policy runtime remain byte-identical
 when the braking fixture is disabled.
 
 
+### Speed-triggered braking measurement
+
+`VERIFY_STEPINPUT_BRAKE_SPEED=N` requires STEPINPUT and excludes the field-based
+BRAKE and RAMP fixtures. It accelerates with the ordinary native controls until
+G($9928) reaches N, then latches both buttons through the stop. VBL and controls
+publish that held input. The latch resets at the fixture's new race epoch; no
+velocity, pose, gear, contact or clock is injected. The test reports threshold
+overshoot instead of setting an exact starting velocity.
+
+The integrated build uses N=180 and all current timing features. The capture
+observes force-entry and physics-return states, native longitudinal position,
+velocity, throttle, contact mask, fall velocity and input latch. Every run stops
+twice, remains at Y=0 with unchanged Z and native heading360, stays on-road with
+all four contact bits set throughout braking, and has nonnegative forward velocity.
+CUSTOM4=4 is restricted to active gameplay using VERIFY_GAMEPLAY_SLOW.
+
+Brake-onset speed alone is not a matched initial state. An initial comparison
+from speed175 still contained different residual throttle values and is excluded
+as a pure braking-force comparison. The retained comparison instead starts at
+the downward crossing of speed100; all measured states from the bracketing
+samples through the stop have zero throttle. Long positions are divided by8 to
+report native world units. Distances are interpolated between the two samples
+bracketing speed100; the raw sample bounds are retained below. They express
+sampling uncertainty, not a derived gameplay acceptance tolerance.
+
+| Profile | Actual brake-onset speed | Distance from speed100, estimate | Measured sample bounds |
+| --- | ---: | ---: | --- |
+| Original A500, CUSTOM1 off | 181 | 193.89 | 191.250..209.750 |
+| A500 | 201 | 183.97 | 173.125..200.250 |
+| A500 + Fast RAM | 202 | 184.08 | 173.125..200.500 |
+| A500, CUSTOM4=4 | 185 | 188.18 | 167.750..203.500 |
+| 68020 | 184 | 196.50 | 189.875..196.500 |
+| 68030/50 | 180 | 198.25 | 193.625..198.250 |
+| 68040/25 | 182 | 197.25 | 195.000..199.500 |
+| 68040/40 | 181 | 199.25 | 194.750..199.250 |
+| 68060/50 | 181 | 199.25 | 194.625..199.250 |
+
+Captures are s4-speed-brake-original, -a500, -fast, -slow4, -020, -030, -040,
+-04040 and -060. Each retains raw entry/return observations, configuration,
+slave hash and braking.json; comparison.json is under the A500 run. The original
+has no elapsed scaling and reaches the same low-speed stop later in wall time.
+No equal-time comparison to its frame-coupled duration is claimed.
+
+The fast-CPU estimates cluster at196.5..199.25 units. The two68000 estimates are
+about184 units; the delayed68000 estimate is188.18. The coarse68000 sample bounds
+still overlap the fast results, so this measurement alone neither proves precise
+braking-distance agreement nor isolates the cause of the estimated difference.
+It establishes repeatable flat, zero-throttle braking coverage on all seven
+profiles and with slowed drawing. Higher-speed braking, fractional-state-aware
+comparison and the units-derived acceptance tolerance remain open.
+
+A stricter monotonic-position check exposes a remaining defect: the020,030 and
+060 each move backward by one long-position unit (1/8 world unit) near the stop
+while the native speed word remains1. The observed fields are472..473,466 and472
+respectively. Wheel mask15, road contact, Y=0, Z and heading360 remain unchanged.
+The velocity word never becomes negative. The exact before/after rows are retained
+in comparison.json. This is not waived by the sampling bounds: it requires a
+projection/integration investigation before handling acceptance.
+
+The initial analyzer incorrectly assumed straight-ahead heading0. Native race
+initialization and every retained sample use heading360 for this straight. The
+captures were rechecked with that verified heading, unchanged Z/Y, full contact
+and road predicates; no game-state data were changed or omitted. Normal and
+existing forced-native slaves remain byte-identical when the fixture is absent.
+The original-control capture passes all146 disabled-range checks with only DRIVE
+and STEPINPUT enabled; the125-range branch audit also passes.
+
+
 ### Long-step drag and braking correction
 
 `VERIFY_TIME_DISSIPATION` requires TIME_SCALARS and uses the existing velocity
