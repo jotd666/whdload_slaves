@@ -142,6 +142,29 @@ as do 514 host tests, 84 hook ranges and 139 VERIFY patch destinations.
 Native gauge/static drawing still remains, so the complete-cache FPS pair
 is pending; this check is not a performance claim. The normal mask is unchanged.
 
+E2 gauge layers now retain the existing selective 40-byte drawing-state
+record and can suppress an unchanged native dispatch. Admission requires the
+exact raw key, stable previous/result rectangle, non-forced bounded clipping,
+and identical pixels under every resource-mask bit on all five planes. This
+includes opaque black and ignores unrelated scene pixels. On a hit, the shared
+state replay runs without another pixel copy. The packed pool grows by 448
+bytes to 58,688 bytes. The standalone bit-18 CPU policy is unchanged; this
+additional path belongs to the 020+ bit-19 composition candidate.
+
+`completion-e2-gauge-reuse-complete` on 040 records **56 suppressed draws** and
+**69/69 exact full-frame matches**, including rear/left/right/front return.
+The existing native pixel/state twin passes gauges 1–6 (mask `0x7e`, six checks,
+zero failures). Altitude never reaches an admitted stable reuse case in the
+bounded window; its new reuse path is explicitly disabled and the ineffective
+repeat fixture removed. Altitude still draws natively and supplies its changed
+layer. The first attempt admitted forced-fill records; inspection tightened
+admission before the recorded complete check (the earlier run skipped 74 draws).
+Final all-mode builds pass (128,124 / 128,508 / 312,682 text bytes), with 515 host
+tests, 84 hook ranges and 139 VERIFY patch destinations. The final source adds
+the altitude exclusion after the capture; it does not claim a seven-gauge twin.
+The complete-cache FPS comparison and static redraw suppression remain open;
+no FPS gain is inferred from the skip count, and the normal mask is unchanged.
+
 ### D5 acceptance postponed — not a passed checkpoint
 
 The added candidate FPS and world-rate/drop columns use **developer bit 13**,

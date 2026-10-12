@@ -250,3 +250,19 @@ class IncrementalCompositionTests(unittest.TestCase):
             expected=bytearray(6*size)
             update(expected,[base,*gauges,foreground],(0,0,pitch,rows),pitch=pitch,rows=rows)
             self.assertEqual(actual,expected)
+
+
+class GaugeFixedPointTests(unittest.TestCase):
+    def test_opaque_black_and_every_plane_must_match(self):
+        from cockpit_compose import gauge_pixels_match
+        mask=bytearray(8000);mask[5010]=0x81
+        layer=Layer(bytes(40000),bytes(mask))
+        frame=bytearray(40000)
+        self.assertTrue(gauge_pixels_match(frame,layer))
+        for plane in range(5):
+            frame[plane*8000+5010]=0x80
+            self.assertFalse(gauge_pixels_match(frame,layer))
+            frame[plane*8000+5010]=0
+        # Unowned scene bits must not reject an otherwise exact gauge.
+        frame[5010]=0x7e;frame[30000]=255
+        self.assertTrue(gauge_pixels_match(frame,layer))

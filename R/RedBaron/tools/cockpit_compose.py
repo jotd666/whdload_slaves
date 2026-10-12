@@ -137,3 +137,11 @@ def intersection(a, b):
     left, top = max(a[0], b[0]), max(a[1], b[1])
     right, bottom = min(a[0]+a[2], b[0]+b[2]), min(a[1]+a[3], b[1]+b[3])
     return None if right <= left or bottom <= top else (left, top, right-left, bottom-top)
+
+
+def gauge_pixels_match(frame, layer):
+    """An unchanged native gauge is reusable only at this exact pixel fixed point."""
+    if len(frame) != 40000 or len(layer.pixels) != 40000 or len(layer.mask) != 8000:
+        raise ValueError('Invalid gauge/frame allocation')
+    return all(not ((frame[plane*8000+i] ^ layer.pixels[plane*8000+i]) & mask)
+               for plane in range(5) for i, mask in enumerate(layer.mask))

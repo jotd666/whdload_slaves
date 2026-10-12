@@ -91,8 +91,13 @@ also cover unchanged reuse and stale scratch outside the affected rectangle.
 The timing path now keeps the native target, removes full-frame seeding and
 fallback copies, and defers foreground cache-hit pixels to the one final
 composition. VERIFY alone saves scene/native reference pages; the updated
-native check passes 71/71 frames, including view transitions. Redundant static
-and gauge drawing still needs removal before the complete-cache FPS comparison.
+native check passes 71/71 frames, including view transitions. Gauge layers now
+reuse six verified native dispatches when raw inputs, rectangle history and
+covered pixels match, replaying the shared selective drawing state without
+another pixel copy. The bounded 040 check skips 56 draws and passes 69/69 full
+frames plus six native pixel/state twins. Altitude reuse is excluded because
+no stable reuse case was exercised; its native draw and layer capture remain.
+Static redraw suppression and the complete-cache FPS comparison remain open.
 Full-composition view twins remain open. The map-toggle check is dropped: the
 bundled game documentation specifies offline navigation maps, not an in-flight
 map command. Results are in the scoreboard. D5 remains postponed and E2–F remain

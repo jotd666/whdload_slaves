@@ -3,10 +3,13 @@
 ; mask owns coverage; colour zero is opaque when its mask bit is set.
 ; Accept a layer only when the native needle/result rectangle is wholly inside
 ; that coverage. Other layouts remain unavailable to the full compositor.
-; Capturing layers does not suppress native drawing or change the normal mask.
+; Stable layers may bypass native drawing only with an exact covered-pixel
+; guard and stable native rectangle; the shared state/pixel twin checks reuse.
 CG_KEY = 4
 CG_AREA = 292
-CG_PIXELS = 320
+CG_POST = IC_POST ; shared selective state layout
+CG_REUSE = 340
+CG_PIXELS = 352
 CG_PLANE = 640 ; bounded packed plane; pitch is CG_AREA+4, not a fixed width
 CG_MASK = CG_PIXELS+CG_PLANE*5
 CG_STRIDE = CG_MASK+CG_PLANE
@@ -14,6 +17,8 @@ CG_POOL_BYTES = CG_STRIDE*14
 
 cockpit_gauges_before:
  movem.l d0-a6,-(sp)
+ lea cockpit_gauge_reuse(pc),a0
+ clr.l (a0)
  lea cockpit_gauge_pending(pc),a0
  clr.l (a0)
  move.l cockpit_stage_active(pc),d0
@@ -59,9 +64,25 @@ cockpit_gauges_before:
  addq.l #1,(a0)
  ENDC
  bsr cockpit_gauge_seen
+ ; Altitude changes continuously in the bounded flight check. Retain its
+ ; native dispatch; only the six natively twinned reuse paths are admitted.
+ tst.w d4
+ beq cg_before_done
+ tst.w CG_REUSE(a6)
+ beq cg_before_done
+ tst.w d7
+ bne cg_before_done
+ tst.b -$6178(a4) ; modal clip mode must retain the bounded native path
+ beq cg_before_done
+ bsr cockpit_gauge_pixels_match
+ tst.l d0
+ beq cg_before_done
+ lea cockpit_gauge_reuse(pc),a0
+ move.l a6,(a0)
  bra cg_before_done
 .changed
  clr.l (a6)
+ clr.w CG_REUSE(a6)
  move.l a0,a1
  lea CG_KEY(a6),a2
  moveq #IC_KEY_BYTES/4-1,d0
@@ -261,6 +282,25 @@ cockpit_gauges_after:
  move.l $1d72(a4),a0
  lea CG_PIXELS(a6),a1
  bsr cockpit_gauge_capture
+ ; Stable previous/result bounds are required for skipping the dispatch.
+ ; The shared replay helper preserves other gauges' unrelated scratch state.
+ clr.w CG_REUSE(a6)
+ tst.w d7
+ bne .post_ready
+ tst.b -$6178(a4)
+ beq .post_ready
+ lea CG_KEY+IC_RECT_KEY(a6),a0
+ move.l a2,a1
+ cmpm.l (a0)+,(a1)+
+ bne .post_ready
+ cmpm.l (a0)+,(a1)+
+ bne .post_ready
+ lea .save_post(pc),a0
+.save_post
+ adda.l #instrument_cache_save-.save_post,a0
+ jsr (a0)
+ move.w #1,CG_REUSE(a6)
+.post_ready
  ; A unique fill generation identifies this record even across native pages.
  lea cockpit_gauge_generation(pc),a0
  addq.l #1,(a0)
@@ -428,6 +468,7 @@ cockpit_gauges_allocate:
 cockpit_gauge_generation: dc.l 0
 cockpit_gauge_pool: dc.l 0
 cockpit_gauge_pending: dc.l 0
+cockpit_gauge_reuse: dc.l 0
 cockpit_gauge_attempted: dc.w 0
  IFD VERIFY
 cockpit_gauge_counts: dc.l 0,0 ; stable-key reuse, newly captured layers
@@ -479,4 +520,50 @@ cockpit_gauge_expand:
  adda.l #8000,a1
  dbf d7,.plane
  movem.l (sp)+,d0-d7/a0-a5
+ rts
+
+; Exact native fixed-point guard. Resource coverage, including opaque black,
+; must already contain this gauge's captured result on the current native page.
+; d0=1 match; all other registers preserved. No bitmap-content key or hash.
+cockpit_gauge_pixels_match:
+ movem.l d1-d7/a0-a3/a5,-(sp)
+ bsr cockpit_stage_wait
+ moveq #0,d0
+ move.w CG_AREA+2(a6),d0
+ mulu.w #40,d0
+ add.w CG_AREA(a6),d0
+ move.l $1d72(a4),a0
+ adda.l d0,a0
+ lea CG_PIXELS(a6),a1
+ moveq #4,d7
+.plane
+ move.l a0,a2
+ move.l a1,a3
+ lea CG_MASK(a6),a5
+ move.w CG_AREA+6(a6),d6
+ subq.w #1,d6
+.row
+ move.w CG_AREA+4(a6),d5
+ lsr.w #1,d5
+ subq.w #1,d5
+.word
+ move.w (a2)+,d0
+ move.w (a3)+,d1
+ eor.w d1,d0
+ and.w (a5)+,d0
+ bne .bad
+ dbf d5,.word
+ moveq #40,d1
+ sub.w CG_AREA+4(a6),d1
+ adda.w d1,a2
+ dbf d6,.row
+ adda.l #8000,a0
+ adda.l #CG_PLANE,a1
+ dbf d7,.plane
+ moveq #1,d0
+ bra .done
+.bad
+ moveq #0,d0
+.done
+ movem.l (sp)+,d1-d7/a0-a3/a5
  rts
