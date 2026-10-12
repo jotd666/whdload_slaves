@@ -26,6 +26,10 @@ _drivetrain_patches:
 	PL_PSS $cdb6,_drivetrain_frame,2
 	; PERF_RANGE VERIFY_DRIVETRAIN_REFERENCE $0baca $0006: publish engine pitch once per outer pass
 	PL_PS $baca,_drivetrain_audio
+	IFD VERIFY_DRIVETRAIN_POWER
+	; PERF_RANGE VERIFY_DRIVETRAIN_POWER $0b696 $002a: reuse identical throttle/ratio power
+	PL_PSS $b696,_drivetrain_power,$24
+	ENDC
 	IFD VERIFY_DRIVETRAIN_SQRT
 	; PERF_RANGE VERIFY_DRIVETRAIN_SQRT $0b856 $0006: reuse identical engine root operands
 	PL_PS $b856,_drivetrain_sqrt
@@ -463,5 +467,73 @@ _drivetrain_sqrt:
 	; Displaced ADDQ removes the original long argument below our return PC.
 	move.l (a7),4(a7)
 	addq.l #4,a7
+	rts
+	ENDC
+
+	IFD VERIFY_DRIVETRAIN_POWER
+; Complete native inputs: signed throttle byte and both ratio words at A2.
+; Cache only inner reference ticks. Slip halving, resistance, braking, slope
+; and all subsequent engine/gear updates remain native and execute each tick.
+	dc.b 'HDPOWER1'
+_drivetrain_power_state:
+	dc.l 0                   ; ratio numerator/denominator words
+	dc.w 0,0                 ; signed throttle, valid
+	dc.l 0                   ; final native D0 result
+	dc.w 0,0                 ; first conversion (D4 word), padding
+	dc.l 0,0                 ; hits, misses
+_drivetrain_power:
+	movem.l d1/a0,-(a7)
+	move.w _drivetrain_state+6(pc),d1
+	cmpi.w #1,d1
+	bne.s .uncached
+	lea _drivetrain_power_state(pc),a0
+	tst.w 6(a0)
+	beq.s .miss
+	move.l (a2),d1
+	cmp.l (a0),d1
+	bne.s .miss
+	move.b -$66e4(a4),d1
+	ext.w d1
+	cmp.w 4(a0),d1
+	bne.s .miss
+	addq.l #1,16(a0)
+	move.w 12(a0),d4
+	move.l 8(a0),d0
+	movem.l (a7)+,d1/a0
+	move.w d0,-14(a5)
+	rts
+.miss:
+	addq.l #1,20(a0)
+.uncached:
+	movem.l (a7)+,d1/a0
+	; Displaced B696..B6BC, including both native multiply/divide calls.
+	move.w #100,-(a7)
+	move.w #450,-(a7)
+	move.b -$66e4(a4),d0
+	ext.w d0
+	move.w d0,-(a7)
+	jsr -$7f5c(a4)
+	addq.w #6,a7
+	move.w d0,d4
+	move.w (a2),-(a7)
+	move.w 2(a2),-(a7)
+	move.w d4,-(a7)
+	jsr -$7f5c(a4)
+	addq.w #6,a7
+	move.w d0,-14(a5)
+	movem.l d1/a0,-(a7)
+	move.w _drivetrain_state+6(pc),d1
+	cmpi.w #1,d1
+	bne.s .done
+	lea _drivetrain_power_state(pc),a0
+	move.l (a2),(a0)
+	move.b -$66e4(a4),d1
+	ext.w d1
+	move.w d1,4(a0)
+	move.w #1,6(a0)
+	move.l d0,8(a0)
+	move.w d4,12(a0)
+.done:
+	movem.l (a7)+,d1/a0
 	rts
 	ENDC

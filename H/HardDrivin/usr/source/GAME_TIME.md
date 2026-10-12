@@ -1867,6 +1867,51 @@ matches all 108 reference car states; CUSTOM1-off passes 149 ranges and the
 remain byte-identical when the cache flag is absent; missing its required
 reference flag rejects assembly.
 
+### Reusing throttle and ratio conversions
+
+`VERIFY_DRIVETRAIN_POWER` requires the reference integrator. It replaces the
+engaged-gear conversion block `$0b696..$0b6bf`, preserving both original
+multiply/divide calls on a miss or outside inner reference ticks. Its complete
+cache key contains the signed throttle byte and both words of the current gear
+ratio, rather than just a gear number. A hit reproduces the intermediate D4 word,
+final D0 result and local power word. Subsequent slip halving, drag, braking,
+slope, RPM and gear decisions still execute normally. `HDPOWER1` stores the ratio
+long, throttle/valid words, result long, intermediate/padding words and hit/miss
+longs. There is no game-state input omitted from these two conversions.
+
+| 500-field capture | Conversion calls | Cache hits | Cache misses | Uncached calls |
+|---|---:|---:|---:|---:|
+| A500 hold26 fixture | 263 | 252 | 10 | 1 |
+| 68020 hold26 fixture | 396 | 366 | 29 | 1 |
+| A500 constant accelerator | 394 | 361 | 32 | 1 |
+
+All captured intermediate/final values match independent signed multiplication,
+division and native word narrowing; entry/exit stack pointers agree. The constant
+accelerator capture reaches throttle 100 and all four engaged ratio pairs. A
+separate drivetrain capture matches 247 complete velocity/RPM/gear updates,
+including two automatic shifts. Native-step comparison matches 108 reference car
+states; CUSTOM1-off passes 150 ranges, the 129-range branch audit passes, and
+normal output and the cache-absent build remain byte-identical. Missing the
+required reference flag rejects assembly.
+
+The hold26 A500 timing window still has 35 swaps. Its actual throttle plateaus
+at 29, while the 68020 reaches 26: stopping the accelerator at a threshold can
+overshoot on a long control update. This is a diagnostic fixture, not an
+identical-throttle cross-machine comparison.
+
+A fresh comparison instead holds constant accelerator input, using the same
+compiled slave with CUSTOM1 off/on. Over 500 fields the original produces 38 swaps
+(3.793951 FPS,263.577461 ms/frame); the enabled build produces 34
+(3.394588 FPS,294.586574 ms/frame), a 10.53% FPS loss. It performs 35 full
+physics/scene passes and 394 engine calls, with 32 pitch publications unique to
+their outer pass. The original has no crash/replay fields; the enabled run reaches
+seven crash fields at the end, with no replay. These trajectories impose different
+workloads, so the count difference is not an isolated arithmetic cost. It still
+does not pass the 3% performance requirement. See PERFORMANCE.md for the current
+comparison and its distinction from the frozen gameplay A/B windows. A repeat
+reproduces the swap schedule, all 501 game-state snapshots and physics records
+byte-for-byte.
+
 ### Near-stop fractional projection and position correction
 
 The retained operands isolated three interacting problems. At integer velocity1

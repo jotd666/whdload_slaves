@@ -344,7 +344,10 @@ Tools stay in ignored `tmp/dev/tools`.
      position work. A combined position calculation passes signed arithmetic and
      live three-axis checks and raises the diagnostic from34 to35 swaps, versus37
      for the control (5.41% deficit). Exact caching of repeated engine root operands
-     avoids90 of266 native root evaluations on A500 but adds no further swap.
+     avoids90 of266 native root evaluations on A500; exact throttle/ratio reuse
+     avoids252 of263 conversions. Neither adds another swap in that fixture.
+     A same-slave constant-accelerator comparison gives38 original versus34 enabled
+     swaps (10.53% loss); the enabled run reaches a crash near the window's end.
      The cheaper general policy, original-game performance acceptance and handling
      tolerance stay open.
    - Exercise collisions, the loop and the jump at both T extremes; check for

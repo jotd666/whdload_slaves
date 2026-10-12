@@ -71,31 +71,40 @@ These are repeatable fixed-input baselines, not equal-scene renderer speedups.
 
 ## Step 4 diagnostics: performance gate still fails
 
-Before intermediate scene filtering, the elapsed-time dispatcher development
-build has a substantial A500 regression.
+The current experimental build uses separate CPU timing policies, one full
+physics/scene pass per A500 frame, and the grounded drivetrain reference with
+exact batching, combined position integration and root/power reuse. These remain
+development gates; normal builds are unchanged.
+
 A fresh-boot constant-input window captures 500 consecutive PAL fields
-(10.0159435 seconds) after race-loop entry. The exact same compiled slave is run
-with CUSTOM1 off and on; VERIFY_STEPINPUT supplies constant controls. Frame counts
-come from front-buffer changes at VBL, with physics and render calls independently
-counted. Neither run enters crash or replay.
+(10.0159435 seconds) after race-loop entry. The exact same compiled slave runs
+with CUSTOM1 off/on; VERIFY_STEPINPUT holds the accelerator continuously.
+Frame counts come from front-buffer changes at VBL, with physics and render calls
+independently counted.
 
 | Current diagnostic window | Buffer swaps | FPS | Mean frame time | Physics calls | Render calls |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | CUSTOM1 off, original behavior | 38 | 3.794 | 263.58 ms | 38 | 38 |
-| CUSTOM1 on, elapsed simulation | 15 | 1.498 | 667.73 ms | 65 | 15 |
+| CUSTOM1 on, current reference | 34 | 3.395 | 294.59 ms | 35 | 35 |
 
-Captures: `s4-overlay2-window-off` and `s4-overlay2-window-on`. The off capture
-also verifies inactive patch ranges. `s4-overlay2-window-on-repeat` reproduces
-the complete swap schedule and all 501 captured allocated-game-state snapshots
-byte-for-byte. FPS drops 60.5%, and mean frame time grows
-2.53 times: the required maximum 3% FPS loss is not met. This measures the current
-combined step 4 build, not the incremental cost of the overlay change. The instruction traces below attribute the extra preparation work.
+Captures: `s4-power-constant-off` and `s4-power-constant-on`, using
+`s4-power-constant.slave`. The off run passes all 150 inactive-range checks.
+`s4-power-constant-repeat` reproduces the complete swap schedule, all 501
+recorded game-state snapshots and physics records byte-for-byte.
+FPS drops 10.53%; the maximum permitted drop is 3%. At this baseline that requires
+at least 3.680 FPS (at least 37 swaps in this fixed window). The enabled run has
+394 engine calls and 32 pitch publications, each unique to its outer pass.
 
-This is a new diagnostic window, not a replacement for the frozen gameplay A/B
-baselines above. Equal inputs and elapsed fields do not imply equal positions or
-scenes: the original advances one physics step per frame, whereas the enabled
-build advances elapsed simulation time. The enabled build is not release-ready;
-no renderer speedup or cross-machine handling acceptance is claimed.
+The original run has no crash or replay fields. The enabled run reaches seven
+crash fields at the end and no replay: elapsed simulation advances farther and
+changes the scene/event workload. Therefore this is not an isolated measurement
+of arithmetic overhead, and does not replace the frozen gameplay A/B baselines.
+Full cross-machine handling and performance acceptance remain open.
+
+The separate hold26 fixture gives 35 swaps for the current reference versus 37
+for an earlier gated solver, not the original game. Its accelerator-release
+threshold overshoots to 29 on A500 while reaching 26 on 68020, so those runs must not
+be described as identical-throttle cross-machine tests.
 
 ### Scene preparation inside simulation substeps
 
