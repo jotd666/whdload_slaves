@@ -314,6 +314,12 @@ Tools stay in ignored `tmp/dev/tools`.
      now checks intermediate position arithmetic and once-per-pass gravity with
      the full interval restored. This is focused coverage, not full contact or
      equal-time acceptance; see GAME_TIME.md.
+   - Gated VERIFY_DRIVETRAIN_PHASE now runs the incremental native-endpoint
+     experiment in gameplay. Exact native-engine comparisons pass16 A500 and65
+     68020 active returns, plus10 returns at each synthetic seven/eight/nine-field
+     interval. This removes the special eight-field rule within the tested flat,
+     automatic path. General modes, transition precision, changing-input runtime,
+     handling and cost remain open; it is not the accepted replacement solver.
    - Check the integrator: with Euler updates, many small steps do not give the same
      displacement as one large step. Apply the (T−1)/2·Δv correction where the
      original order requires it, and decide whether the target is the original

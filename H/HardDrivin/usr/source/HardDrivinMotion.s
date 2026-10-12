@@ -896,6 +896,9 @@ _motion_wide_results: dcb.l 7*7*7*3*2,0
 	ENDC
 
 _motion_reset:
+	IFD VERIFY_DRIVETRAIN_PHASE
+	bsr _phase_reset
+	ENDC
 	bsr _projection_reset
 	bsr _contact_reset
 	bsr _motion_drift_reset

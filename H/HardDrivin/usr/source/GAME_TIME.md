@@ -3500,9 +3500,9 @@ attribution; native patch-site branch instructions are outside sweep self time.
 The CUSTOM1-off capture `s4-sweep-world-disabled` passes all158 declared ranges.
 
 
-## Incremental native-phase prototype
+## Incremental native-phase experiment
 
-The next host prototype preserves the previous experiment's consumed motion
+The incremental experiment preserves the previous experiment's consumed motion
 instead of recomputing it when input changes. For phase anchor A, current value
 C, newly sampled native endpoint E, remaining phase fields R and newly consumed
 fields D, the update is C += (E-A)*D/8. Its forecast for movement is the prior
@@ -3515,9 +3515,9 @@ handling validation, not proof of full per-frame dynamics equivalence.
 Pre-shift RPM is sampled read-only at `$0b904` during actual pristine68000 engine
 execution. RPM is integrated before automatic shift decisions, and native gear
 thresholds/conversions are applied at phase completion. This avoids blending
-RPM values from different gears across a phase. Manual requests, immediate gear
-changes, contact resets and phase invalidation are not implemented. The tests
-do not approve a new gear-event policy for the complete game.
+RPM values from different gears across a phase. The runtime experiment falls back to the existing reference path for manual
+controls, skid, airborne/partial contact, turning and other ineligible states.
+The tests do not approve a new gear-event policy for the complete game.
 
 `check_native_phase_incremental.py` matches128 native eight-field endpoints for
 throttle22, throttle100, full braking from speed100 and full braking from speed1.
@@ -3536,16 +3536,53 @@ boundary in every run. Automatic shifts occur at the same consumed fields
 40/72/344. These comparisons isolate the integrator from input-sampling timing;
 they do not prove equivalence when a long rendered frame misses an input change.
 
-Two private68000 assembly components support a possible implementation. A38-byte
+Two private68000 assembly checks support the runtime implementation. A38-byte
 scalar update/forecast helper matches10000 rational-arithmetic cases with Q3
 phase anchors and Q16 storage. A Q6 forecast projection helper interpolates
 adjacent native rounded XYZ vectors;10000 independent yaw/pitch cases match and
 preserve all registers/stack, for nonnegative velocities0..21842. The scalar
 helper's declared scratch registers are checked separately. Reports are
 `native-phase-incremental.json`, `phase-scalar-check.json` and
-`phase-project-check.json`. Code and fixtures remain in the ignored harness.
+`phase-project-check.json`. Test fixtures remain in the ignored harness.
 
-This is still an isolated flat-road, full-contact, automatic-gear prototype.
-The game does not use it. Runtime companion-state synchronization, steering,
-manual controls, collision/recovery resets, airborne motion, sound and cost must
-be resolved before it can replace either existing solver or satisfy step4.
+`HardDrivinPhase.s` now implements this experiment behind
+`VERIFY_DRIVETRAIN_PHASE`, requiring `VERIFY_DRIVETRAIN_REFERENCE` and CUSTOM1.
+The engine hook at `$0b904` integrates velocity and pre-shift RPM; partial phases
+skip automatic gear decisions but still publish intermediate state every frame.
+Each segment adds only its newly consumed displacement. The native position
+routine runs once after the engine segments. The phase state is invalidated by
+existing motion-reset hooks, including collision and recovery. On entry, stale
+velocity/RPM companions are rejected when their native word or gear differs.
+This is development code; normal builds do not include it.
+
+Read-only emulator captures `s4-phase-runtime-a500` and `s4-phase-runtime-020`
+use the same slave and initialized throttle22. All16 A500 and65 68020 active
+returns match the pristine-native-engine incremental oracle exactly in Q16
+velocity, RPM, gear, phase and full fractional X position. Flat road, full
+contact, fixed heading and unchanged Y/Z are checked. These counts include
+stationary returns before throttle initialization. The throttle starts at a
+different phase on each machine; these are exact per-run trajectory checks,
+not an equal-elapsed-time cross-machine acceptance result.
+
+After adding stale-companion validation, the synthetic seven/eight/nine-field
+captures `s4-phase-boundary-7/8/9` each match all10 active returns against the
+same oracle. All three use the same integration rule, including eight fields.
+The dispatcher's first inactive pass is excluded explicitly, with zero motion
+and zero phase-call count verified. Synthetic intervals are not FPS evidence.
+`analyse_phase_motion.py` retains per-return actual/expected values in each
+capture's `phase-motion.json` and fails on any mismatch.
+
+Forced-native `s4-phase-native` matches all108 reference car states.
+The normal slave is byte-identical to `s2-final-normal`. The direct-branch audit
+passes137 ranges. CUSTOM1-off checks pass159 declared ranges when both actual
+input-fixture gates, VERIFY_DRIVE and VERIFY_STEPINPUT, are declared; the
+initial report omitted STEPINPUT and correctly failed its active input range.
+The corrected report is `s4-phase-disabled/disabled-corrected.json`.
+
+General handling and mode transitions remain open. The fallback solver retains
+only eighth-unit scalar companions, while phase state can contain finer fractions;
+transition precision is not yet accepted. Native force evaluation uses the phase
+anchor and automatic shifts occur at phase completion. Changing-input runtime,
+manual/steering/contact/airborne integration, reset coverage, sound and cost still
+need validation before this can replace either existing solver or satisfy step4.
+No FPS result or acceptance requirement has changed.

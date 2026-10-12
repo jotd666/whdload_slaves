@@ -22,6 +22,9 @@ _drivetrain_install:
 	movea.l _code_start(pc),a1
 	movea.l _resload(pc),a2
 	jsr resload_Patch(a2)
+	IFD VERIFY_DRIVETRAIN_PHASE
+	bsr _phase_install
+	ENDC
 	movem.l (a7)+,d0/a0-a2
 	rts
 _drivetrain_patches:
@@ -57,6 +60,10 @@ _drivetrain_tick_offsets:
 	dc.l _drivetrain_tick_after-_drivetrain_tick_offsets
 
 _drivetrain_frame:
+	IFD VERIFY_DRIVETRAIN_PHASE
+	bra _phase_frame
+	ENDC
+_drivetrain_reference_frame:
 	movem.l d0/a0,-(a7)
 	lea _drivetrain_state(pc),a0
 	clr.w 6(a0)
@@ -584,4 +591,8 @@ _drivetrain_manual:
 .done:
 	movem.l (a7)+,d0/a0
 	rts
+	ENDC
+
+	IFD VERIFY_DRIVETRAIN_PHASE
+	INCLUDE "HardDrivinPhase.s"
 	ENDC
