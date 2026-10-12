@@ -44,7 +44,8 @@ History:
  version 1.5b (12.10.2026) done by Vesuri:
  - flush caches after overlay stub rewrites (90112-byte TD), for
    cache coherency on 68040/060 and other cached CPUs; always enabled
- - VERIFY builds only: CUSTOM3 selects a reproducible profiling RNG;
+ - VERIFY builds only: isolated visual RNG, scripted driving and crash/radar
+   fixtures, slow-drawing and automatic-recovery tests, assembly assertions;
    the normal slave is unchanged
  - real A1200/68040 validation pending
 

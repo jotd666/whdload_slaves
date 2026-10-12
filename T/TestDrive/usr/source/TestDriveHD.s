@@ -119,7 +119,10 @@ args_end
 	dc.b	0
 slv_config
 	IFD VERIFY
-	dc.b "C3:B:reproducible profiling RNG;"
+	dc.b "C1:X:automatic recovery verification:1;"
+	dc.b "C3:B:reproducible verification RNG;"
+	dc.b "C4:B:slow drawing verification;"
+	dc.b "C5:X:scripted player race:0;C5:X:force crash:1;C5:X:force radar:2;C5:X:straight acceleration braking tape:4;"
 	ENDC
 	dc.b	0
 
@@ -187,6 +190,9 @@ _quit		pea	TDREASON_OK
 
 patch_main
 	movem.l	D0-A6,-(A7)
+	IFD VERIFY
+	bsr verify_init
+	ENDC
 	move.l  d7,A1
 	lea	_patchlist_1(pc),A0
 	move.l	_resload(pc),a2
@@ -222,6 +228,10 @@ _patchlist_1:
 	PL_W $05334,$4240          ; clr.w d0, preserving its high word
 	PL_NOP $05336,4            ; replace remaining VHPOSR address words
 	PL_ENDIF
+	PL_IFC4
+	; VERIFY_RANGE root 07aaa 8 C4 verify_slow_view
+	PL_PSS $07aaa,verify_slow_view,2
+	PL_ENDIF
 	ENDC
 	PL_END
 
@@ -244,8 +254,14 @@ overlay_unload_end:
     rts
 
 overlay_load_end:
+	IFD VERIFY
+    movem.l (a7)+,d0-d2/a0-a4 ; displaced TD:06916
+    bsr verify_overlay_loaded
+    bsr _flushcache
+	ELSE
     bsr _flushcache
     movem.l (a7)+,d0-d2/a0-a4 ; displaced TD:06916
+	ENDC
     rts
 
 _patch_trackdisk
@@ -331,6 +347,9 @@ read_fire1:
     bclr    #7,d0
 .no_space    
     move.l  (a7)+,a0
+	IFD VERIFY
+    bsr verify_fire
+	ENDC
     rts
 
 read_fire2:
@@ -382,6 +401,9 @@ read_joydat
     
 .no_right   
     move.l  (a7)+,a0
+	IFD VERIFY
+    bsr verify_joy
+	ENDC
     rts
 	
 get_version:
@@ -520,5 +542,9 @@ _trdname:
 	even
 
 ;============================================================================
+
+	IFD VERIFY
+	include "simulation-verify.s"
+	ENDC
 
 	END

@@ -282,26 +282,46 @@ dependencies. The period-6 and integer-subdivision assumptions are rejected.
    follow-up; no hardware pass or release readiness is claimed.
    No push is requested. Any later evidenced display fix gets a separate commit.
 
-## Phase 7: VERIFY scaffolding
+## Phase 7: VERIFY scaffolding (complete)
 
-Built only with `-DVERIFY`; the normal slave contains none of it. Copy the framework from
-TD2's `simulation-verify.s` and the slave's `IFD VERIFY` config.
+`simulation-verify.s` and its configuration exist only under `-DVERIFY`. Normal 1.5b
+remains byte-identical to the phase-6 handoff. The assertion protocol follows TD2,
+with Test Drive-specific offsets, input decoding, event state and overlay lifetime.
 
-1. `CUSTOM3`: the fixed seed, beam removal and demo-selection reset are implemented
-   for the phase-4 first-race window. For later windows, isolate renderer RNG (private
-   stream or suppressed visual consumption in VERIFY), reset at a player-race anchor,
-   and verify traffic/radar draws stay in the same order across CPUs. Beam removal alone
-   does not make a shared stream deterministic.
-2. `CUSTOM4`: slow drawing only. The original shifter handshake and renderer-owned
-   collision geometry are expected negative controls; enhanced physics must pass the
-   independence check.
-3. `CUSTOM5` fixtures: a field-based joystick tape injected through the existing
-   `read_joydat`/`read_fire1` hooks, a straight acceleration/braking tape, forced crash and
-   radar events, and the zero-fraction rendering oracle (later).
-4. `CUSTOM1` bit: the automatic-recovery instrument only, as in TD2 after PR #24.
-5. An assembly assertion runner before PatchSeg, read back by `check_units.py`.
-6. Tools: `check_units.py`, `check_disabled.py` (all optional ranges keep the original bytes
-   with `CUSTOM2=0`), and `audit_simulation.py` (hook boundaries, overlaps, branches into hooks).
+1. **CUSTOM3:** fixed seed, beam removal and demo-selection reset remain. Four h4
+   visual RNG calls use a private stream; the player-race anchor resets both streams.
+   Later 1,400-field A500/A1200 demo captures record the same ordered two traffic draws
+   and one radar draw despite different visual-stream consumption. This is bounded
+   RNG evidence, not a claim that the original simulation is independent of drawing.
+2. **CUSTOM4:** ten WaitTOF waits delay view publication only in an active player race.
+   Both CPU presets retain the five-field simulation period and 259 counted updates
+   over the 1,300-field test window while rendering fewer frames. The original clutch
+   and saved collision position diverge under slow drawing, as expected negative controls.
+3. **CUSTOM5:** bit 0 selects scripted player driving through `read_joydat`/`read_fire1`;
+   bit 4 chooses straight acceleration/braking instead of a short steering tape.
+   Bits 1/2 force one nonfatal crash/police pursuit at field thresholds 450/900.
+   The original crash penalty, animation and ticket paths execute on both CPUs.
+   Bit 3's zero-fraction oracle remains explicitly deferred until fractional rendering
+   exists; it is not exposed as an implemented fixture.
+4. **CUSTOM1 bit 1:** automatic acknowledgement after 100 fields in the crash wait.
+   Early manual acknowledgement clears the private timer. With this bit clear, the
+   original acknowledgement hook bytes remain and the crash fixture stays blocked.
+5. **Assembly assertions:** 22 checks run before PatchSeg, exercising tape boundaries,
+   the signed visual LCG and early-acknowledgement timer cleanup. `check_units.py`
+   reads their completion/failure/first-failure state from captured RAM.
+6. **Tools:** `audit_simulation.py` audits all 15 declared VERIFY ranges for boundaries,
+   overlaps and direct incoming branch candidates (indirect targets are not proven).
+   `check_disabled.py` verifies original or option-selected bytes and helper targets;
+   all-zero VERIFY options leave all optional ranges original. VERIFY instruments
+   intentionally have independent C1/C3/C4/C5 gates. C2 does not exist yet: its ranges
+   and disabled checks must be added in phase 8. `verify_state.py --expect-equal`
+   supplies the core-state equality gate; the original game's negative controls fail it.
+
+Twelve fresh fixture captures, a confirmed h4 unload/reload, and deliberate checker
+sabotages pass. Local `phase7.md`, `tmp/phase7/acceptance.json` and the evidence manifest
+record commands, exact builds and limits. Historical phase-4/5 captures retain their
+original VERIFY slave; the current build is a different fixture. No enhanced simulation
+or fractional rendering is implemented by this phase.
 
 ## Phase 8: fixed-time simulation (`CUSTOM2`)
 
