@@ -18,3 +18,9 @@ class RateReportTests(unittest.TestCase):
 
     def test_reject_missing_publication(self):
         with self.assertRaises(ValueError):report(LOG.replace('PUB 3 11264\n',''),4,225,40)
+
+    def test_68000_quantum_and_drops(self):
+        r=report(LOG.replace('END 4 0','END 4 2'),4,450,60)
+        self.assertEqual(r['world_rate'],450*32/(10*1024))
+        self.assertEqual(r['dropped_units'],900)
+        with self.assertRaises(ValueError):report(LOG,4,451,60)

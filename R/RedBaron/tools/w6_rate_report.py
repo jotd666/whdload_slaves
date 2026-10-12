@@ -12,7 +12,7 @@ def report(raw, fields, quantum, time_scale):
     observed, drop, pub, cia1, step1, f1 = map(int, ends[0])
     ticks = (cia1-cia0) & 0xffffffff
     steps = (step1-step0) & 0xffffffff
-    if observed != fields or f0 != f1 or not ticks or not f0 or quantum != 225:
+    if observed != fields or f0 != f1 or not ticks or not f0 or quantum not in (225,450):
         raise ValueError('Invalid or changing W6 clock')
     pubs = [dict(field=int(v), beam=int(b)) for v, b in re.findall(r'^PUB (\d+) (\d+)$', raw, re.M)]
     if len(pubs) != pub or not pubs:

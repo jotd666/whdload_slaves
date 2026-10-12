@@ -25,7 +25,7 @@ base=((v[1]<<16)|v[2])-syms['time_loop_gate'];state=base+syms['time_loop_state']
 (a.out/'runtime.json').write_text(json.dumps(dict(sim=sim,slave=base,h3=h3)))
 quantum=int(r.command(f'gdb p/u *(unsigned short*){base+syms["time_loop_quantum"]:#x}').split('=')[1])
 time_scale=int(r.command(f'gdb p/u *(unsigned short*){h3+0x3d56:#x}').split('=')[1])
-assert quantum==225, quantum
+assert quantum in (225,450), quantum
 scenario=a.out/'scenario.json'
 if scenario.exists():assert time_scale==json.loads(scenario.read_text())['requested_time_scale'],time_scale
 # A completed-world boundary excludes a partially running update.

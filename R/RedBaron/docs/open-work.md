@@ -17,10 +17,10 @@ Refer to items by ID. FC items are detailed in `fast-cpu-plan.md`.
 | FC5 | Smaller viewport copy | Closed: dropped; less than 2% gain on every measured CPU class |
 | FC6 | Re-profile, W6 trial and geometry processing | Complete; W6 rate passes bounded trial, 50 FPS unmet; geometry extension dropped below 2% |
 | FC7 | AGA 040/060 and real-hardware confirmation | Planned |
-| D5a | W6 catch-up input check | Postponed by the user |
-| D5b | W6 Time Compress and mission-exit transitions | Postponed by the user |
-| D5c | W6 A500 Time Scale 60 | Postponed by the user |
-| D5d | W6 remaining landing and combat outcomes | Postponed by the user |
+| D5a | W6 catch-up input check | Automated checks resumed |
+| D5b | W6 Time Compress and mission-exit transitions | Automated checks resumed; A500 modal rebase passes |
+| D5c | W6 A500 Time Scale 60 | Complete: measured overload envelope |
+| D5d | W6 remaining landing and combat outcomes | Automated checks resumed |
 | G5–G9, S2/S3′/S4–S8 | Low-value geometry and sound candidates | Deferred unless a concrete issue justifies them |
 
 ## Release status
@@ -35,7 +35,7 @@ Nothing has been pushed; publication requires a separate explicit request.
 
 ## Postponed beyond this release
 
-D5 remains postponed by the user. W6 bit 13 stays outside the normal mask.
+The user resumed automatable D5 checks on 2026-10-12. W6 bit 13 stays outside the normal mask.
 Remaining checks: D5a–D5d in the table above. Existing rate,
 input, user-flight and soak evidence is summarized in `w6-verification.md`
 and measured in `profiling.md`; no further user flight test is requested now.

@@ -6,9 +6,38 @@ The user accepted measured performance on 2026-10-12. The normal build now
 starts with Faster rendering On when CUSTOM2 is omitted: On=0, Off=1.
 Developer/VERIFY CUSTOM2 remains an explicit mask, with zero disabling patches.
 The verified mask is `0x1ff1fff`, filtered by CPU; W6 bit 13 remains excluded
-because D5 is postponed. There is no 50 FPS or frame-independent normal-game
+pending D5 acceptance. There is no 50 FPS or frame-independent normal-game
 speed claim. Historical captures below retain their original build, option
 mapping and RAM configuration; they do not define the current player default.
+
+## D5 automated acceptance resumed (2026-10-12)
+
+The user resumed all automatable D5 checks. W6 remains outside the normal mask;
+this is acceptance work, not a new performance optimization or a 50 FPS claim.
+
+| Check | Configuration | Result | Evidence |
+|---|---|---|---|
+| Time Scale 60, maximum detail, 2,000 fields | A500, 512K Chip + 2M Fast; developer `0x33fff` | 11 publications, 0.274562 FPS; 428 updates / 2,367 CIA ticks, F=10, quantum=450; world/wall 0.794617 ±0.001857; 112 dropped updates / 50,400 units | `d5-auto-a500-s60-native/rate.json` |
+| Pause and Preferences, 200 fields each | Same A500 flight | Steps and cursor frozen in modal; excluded interval exactly translated on resume; quantum and pending debt retained | `d5-auto-a500-s60-native/modals.json` |
+
+The unchanged developer binary is SHA-256
+`7148764be23e82f999b99b2e6f0359df88b987712010d8ab19caafbd7b330e39`.
+Scale 60 exceeds this machine's capacity and exercises the approved debt-drop
+policy; it does not pass consistent-speed operation. Setup uses a private copy
+of native `SIMPREFS.PRF` and checks h3:3d56 after loading. The old slider-key
+attempt overshot to 72 and was rejected before measurement. The overload flight
+subsequently failed to reach a scene-entry breakpoint within 2,000 fields;
+no input/catch-up pass is inferred from that attempt. Preferences' observer
+returns at sim:21c26, after the complete six-byte patched call.
+
+Reproduce from the configured development harness: run `d5_case.py a500 0x33fff
+<capture> --scale 60`, then `w6_rate_profile.py <capture>` and `d5_modals.py
+<capture>` from the tracked tools directory. The case driver leaves the owned
+emulator paused with its native input server attached. Quit that input server
+and the owned game before starting another case. The game fixture is copied;
+the pristine installation is not edited. Reports reject incomplete windows,
+unsafe publications, and malformed input/modal evidence. The rate reporter now
+accepts both approved quanta, 225 and 450.
 
 ## FC6 — retained-renderer profile, W6 and geometry (complete, 2026-10-12)
 

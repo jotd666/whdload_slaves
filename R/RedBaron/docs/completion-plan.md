@@ -310,9 +310,9 @@ Implemented: common runtime with VERIFY-only fixtures/logs, developer bit 13, CP
 5. Add bit 13 to the developer mask, and to the verified mask only after D5
    passes.
 
-**D5. Acceptance runs — postponed by the user (2026-10-11).**
+**D5. Acceptance runs — automated checks resumed (2026-10-12).**
 
-Proceed to phase E without repeating or completing the remaining D5 checks.
+The user resumed all automatable checks on 2026-10-12. The earlier direction was to proceed to phase E without completing D5.
 Preserve the results and open checks below. This changes the execution order,
 not acceptance: W6 remains outside the normal verified mask until D5 resumes
 and passes. E measurements use the developer candidate with W6 selected.
