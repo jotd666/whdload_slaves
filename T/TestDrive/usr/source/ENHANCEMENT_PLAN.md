@@ -499,7 +499,10 @@ upstream publication remain a separate follow-up.
 
 - Normal and VERIFY builds assemble; packaged source rebuilds byte-identically.
   The phase-11 assembly delta was the Enhanced framerate option label.
-  The 2.0b rebuild differs from that accepted build only in three version strings.
+  Current 2.0b also corrects a camera-phase-dependent main-view lane seed.
+  A full-cycle native regression replaces the earlier endpoint-only continuity
+  check: at lane offsets +/-180 the isolated drift is 17.147 pixels before
+  and less than 0.042 pixels after; centred-road scanlines are unchanged.
 - All 82 declared patch ranges and direct incoming/bypassed-tail audits pass.
   C2-off retains original optional-patch bytes. Static audits do not prove
   indirect targets.
@@ -550,6 +553,20 @@ The packaged Makefile uses the shared AmigaXDev SDK; both variants rebuild exact
 Archives and generated evidence remain ignored and local. The original 1.4/1.5b
 hardware A/B bundle is unchanged. Local `docs/phase11.md` records reproduction,
 exact builds and acceptance evidence. NTSC remains unvalidated.
+
+The main-view near-plane transition now seeds the remaining lateral projection
+from its actual scale (12288/5899 times lane * scale), once per view. The old
+unit anchor admitted a different first row as the camera fraction changed,
+causing periodic sideways jumps away from the centre. Native sweeps cover all
+64 sampled camera phases on both sides and the centre; a separate model covers
+all 65,536 fractions for seven signed lane positions. This isolates projection
+drift from the original scanline raster rounding. Simulation and raster shifts
+are unchanged. Final A500 renderer cost including the shared arithmetic helper
+is 2.980% in the 50-field sample, below the existing 3% gate. Local
+`docs/road-shift.md` records the regression and targeted checks. The current
+downhill model matches 40 main / 30 mirror rows and ten traffic projections;
+the original-arithmetic zero oracle also passes. A1200/68040 C2-off/on startup,
+attract driving and native quit pass in emulation.
 
 ## Phase 12: lessons back to AmigaXDev
 

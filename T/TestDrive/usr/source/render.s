@@ -571,14 +571,33 @@ render_sine_width:
 ; Capture the stream once per view. Records are x/y/scale/crest, eight bytes;
 ; they are private projection samples, never simulation or road descriptors.
 render_walk_start:
-    move.l a0,-(sp)
+    movem.l d0/a0,-(sp)
     lea render_slope(pc),a0
     clr.l (a0)
-    move.l (sp)+,a0
     clr.w -29836(a4)
+    lea render_lane_pending(pc),a0
+    move.w #1,(a0)
+    tst.w -28800(a4)
+    beq.b .main
+    clr.w (a0)
+.main
+    IFD VERIFY
+    move.l verify_c5(pc),d0
+    btst #3,d0              ; retain native lane arithmetic in the zero oracle
+    beq.b .ready
+    clr.w (a0)
+.ready
+    ENDC
+    movem.l (sp)+,d0/a0
     move.w #39,d6
     rts
 render_row:
+    move.w render_lane_pending(pc),d0
+    beq.b .metadata
+    cmp.w #125,-29848(a4)
+    bge.b .metadata
+    bsr render_lane_seed
+.metadata
     move.w render_traffic_active(pc),d0
     beq.b .original
     movem.l d2/a0,-(sp)
@@ -597,6 +616,32 @@ render_row:
     move.w -29844(a4),d0
     move.w -29848(a4),d1
     rts
+
+; Native main-view lane accumulation starts after the y=125 near-plane
+; cutoff. The first admitted row changes as the camera fraction advances.
+; Its old fixed unit anchor therefore produced a sawtooth proportional to
+; the player's lane offset, even on a straight road. Seed that first row
+; from its scale instead. Subsequent native increments are 3/16 * lane * S,
+; while S decays by 59637/65536, so the matching remaining lane projection
+; is lane * S * 12288/5899. Keep the suppressed near rows and curve term.
+; Once per forward view; no simulation state or raster shift is changed.
+render_lane_seed:
+    movem.l d0-d2/a0,-(sp)
+    lea render_lane_pending(pc),a0
+    clr.w (a0)
+    bsr render_lateral_main
+    add.l d0,-29844(a4)       ; remove the original unit-scale lane anchor
+    bsr render_lateral_product
+    lea render_lane_carry(pc),a0
+    clr.w (a0)
+    move.w #12288,d1
+    move.w #5899,d2
+    bsr sim_ratio
+    sub.l d0,-29844(a4)
+    movem.l (sp)+,d0-d2/a0
+    rts
+render_lane_pending: dc.w 0
+render_lane_carry: dc.w 0
 
 ; Displaced scale-store plus metadata for traffic only. The original queue
 ; already bounds d3 to 0..396. Type 25..29 is forward slots 1..5; 16..20 is
