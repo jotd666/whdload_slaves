@@ -152,7 +152,14 @@
    A saved choice takes precedence; Ctrl-G changes apply on the next race
  - startup checks pass on A500/020/030/040/060; saved Normal and A4000
    choices, corrupt-file fallback and all 38 legacy byte ranges pass.
-   Final opponent acceptance drives are in progress; release is incomplete
+ - P5 opponent lifecycle acceptance passes on 040/25 and 060/50:
+   197.34/196.72 PAL-field seconds, native crash/restart/finish, no growing
+   backlog or overflow. CIA clock ratios 0.998598/0.998689 over 108-second
+   observations; maximum sampled queue 2, returning to zero
+ - these keyboard-test runs use scenery-cleared/off-course-water fixtures
+   and include idle/menu time, not continuous driving. A4000 stays opt-in
+   with the documented handling differences. P5 is complete on that basis;
+   P6 release validation and packaging have not started
  - the previously distributed testing archive has not been rebuilt with
    this source change; it still contains the earlier format-1 runtime
 

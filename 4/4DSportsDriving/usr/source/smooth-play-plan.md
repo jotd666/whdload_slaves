@@ -591,9 +591,9 @@ the testing archive is unchanged. Stop before P5.
 
 ## P5. Finish the 50 Hz (A4000) mode to release quality, time-boxed
 
-Status (12 October 2026): P5 is in progress; P5.1 and P5.2 pass. P5.3 is closed by user decision: keep A4000 experimental.
-P5.4 defaults pass; P5.5 acceptance drives are in progress.
-The frozen crest gate still passes 27/29; its bounds are unchanged.
+Status (12 October 2026): P5 complete under the user's explicit decision to
+keep A4000 experimental. Normal/A2500 are the CPU defaults; 50 Hz is opt-in.
+The frozen handling gate remains 27/29 with unchanged bounds. P6 has not started.
 
 1. **Native format-2 replay save/load: complete.**
    - Clean native Save Replay produces a physical 63,912-byte format-2/ABI9
@@ -652,7 +652,7 @@ The frozen crest gate still passes 27/29; its bounds are unchanged.
    - User decision (12 October 2026): keep A4000 experimental, retain
      A2500 as the 040/060 default. No interpolation or further physics
      research; criteria stay unchanged. Defaults and final acceptance
-     remain to be validated; P6 has not started.
+     now pass as recorded below; P6 has not started.
 4. **Per-CPU default (D1) at startup: complete.**
    - Missing/invalid `4DPhysics.cfg`: Normal on 68000/010; A2500 on 020+,
      including 040/060 per the experimental-mode decision. A valid saved
@@ -670,8 +670,33 @@ The frozen crest gate still passes 27/29; its bounds are unchanged.
      defaults, not new physics or handling acceptance. Optional runtime SHA:
      `03bf1d2007163a1f376ca7623cfc433c46aaa84c5c9204f1d6a9e6d88b024584`.
      Native production and archive remain unchanged pending P6.
-5. Acceptance: 2-minute drives on D and E with an opponent, a crash and the finish. There
-   must be no backlog growth, no queue overflow, and the race clock ratio must be 1.00 ±0.5%.
+5. **Opponent endurance acceptance: complete.**
+   - Both runs exceed two minutes and include native water crash (reason 2),
+     native menu restart and native finish (reason 3), with opponent 1 selected.
+
+   | Cell | Lifecycle PAL-field seconds | CIA clock ratio | Observed backlog max | Queue max | Overflow |
+   |---|---:|---:|---:|---:|---:|
+   | D, 040/25 | 197.34 | 0.998598 | 0 | 2 | 0 |
+   | E, 060/50 | 196.72 | 0.998689 | 0 | 2 | 0 |
+
+   - Clock ratios cover 108.35/108.36 seconds of uninterrupted observation;
+     both satisfy 1.00 +/-0.5%. Queue returns to zero at the end of the
+     prelude and finish; no growing backlog or overflow was observed.
+   - Scope: ordinary keyboard controls in a matching VERIFY keyboard-route
+     build from committed `c746394`, no synthetic physics fixture/startup
+     tests and no guest-state writes. The established scenery-cleared stock
+     track is combined with nine established off-course water tiles. The
+     sequence includes a long idle/gear-down prelude and menus; it is not
+     two minutes of continuous movement or a stock-track handling proof.
+   - The same unchanged game code is in the optional runtime identified in
+     P5.4. Keyboard-test slave SHA256:
+     `510b1ffdf822a2c756e96f9cd1d13f1da5be48d375810caf8b9c183d9ee1e987`.
+     Evidence: `tmp/prof/p5-acceptance/{D,E}` and `validation.json`.
+     The 0.1-second setup windows are not FPS/timing evidence.
+   - Each cell retained its 180-second watchdog (158.26/170.57 seconds wall
+     time). Owned emulators are closed. Defaults, ReadMe and results are
+     committed; the testing archive and native production binary remain
+     unchanged. Stop here; release work belongs to P6.
 
 ## P6. Release
 
