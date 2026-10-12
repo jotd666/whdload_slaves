@@ -3729,3 +3729,46 @@ normal slave remains byte-identical to `s2-final-normal`. C1 closes solver mode
 coverage, not independent terrain dynamics, equal-time full trajectories, extreme
 loop/jump/collision acceptance, the native clock dependency or final performance
 revalidation. The human laps are explicitly deferred, not passed.
+
+
+### C3 controlled start: remove idle-phase dependence (2026-10-13)
+
+The first four-profile `INITIAL_THROTTLE=22` matrix exposed a stationary-phase
+artifact. Before throttle became eligible, zero-speed/zero-RPM render frames
+advanced the engine phase despite producing no dynamics. Different idle frame
+partitions therefore selected a different phase for the first nonzero response.
+A500, 68020 and 68040 settled at scalar speed 228; slowed A500 settled at 226.
+
+A completely zero velocity/RPM state now starts at a fresh phase boundary.
+Both full Q16 values must be zero, so zero published words cannot discard live
+fractions. A moving engine retains its existing phase. This changes neither
+input sampling frequency nor the CPU-specific outer dispatcher.
+
+All four `c3-idle-throttle-*` captures now settle at speed 228 in third gear.
+The complete flat trajectory through consumed field 420 matches an independent
+one-field pristine-engine recurrence for 29/22/110/182 returns on A500/slowed
+A500/68020/68040 (343 total). Fractional velocity, RPM, gear and absolute
+fractional X are exact. Initial throttle starts at consumed fields 43/54/40/40,
+respectively; comparisons retain that measured input-publication delay. This is
+an exact response-curve result, not a claim that displayed poses at the same
+wall field are identical. Across the full 550-field captures, the per-frame
+native-force/XYZ oracle additionally passes 41/33/160/265 returns, including the
+later slope; terrain-corrected entry poses are inputs to that latter oracle.
+
+Private current-build checks confirm identical output for all eight idle phase
+residues across eleven intervals (88 cases), and explicitly confirm that hidden
+nonzero velocity/RPM fractions keep their phase and exact increments. The 297
+native-step engine/position cases still pass, as do all 108 states in
+`c3-idle-native`, the 144-range branch audit and the byte-identical ordinary build.
+The CUSTOM1-off check passes all timing ranges in its 166-range inventory with
+both compiled input fixtures (`VERIFY_DRIVE`, `VERIFY_STEPINPUT`) declared active.
+The initial checker invocation omitted STEPINPUT and correctly reported its
+input hook as differing; that diagnostic is retained separately.
+
+C3 remains open. Earlier held-steering captures show divergence after different
+terrain/contact and gear histories; they are not covered by the straight-line
+result. The speed-100 brake-trigger fixture also leaves residual throttle at
+the descending 100 crossing on slowed A500, so it cannot isolate braking there.
+The existing descending-speed-100 protocol is being checked with an earlier
+brake trigger at speed 200. These wider handling and elapsed-time bounds,
+checkpoint/lap timing, C4 coverage and new-build performance are not yet accepted.

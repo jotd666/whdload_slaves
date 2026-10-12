@@ -251,6 +251,19 @@ _phase_frame:
  tst.l d0
  beq .fallback
 .ready:
+ ; A fully stopped engine has no evolution to carry across idle frames.
+ ; Start its first nonzero response at a native phase boundary rather than
+ ; letting the number/length of idle render frames choose that phase.
+ ; Check full Q16 state: zero published words alone can hide live fractions.
+ tst.l -$66d8(a4)
+ bne.s .running
+ move.l PH_CURRENT_V(a6),d0
+ or.l PH_CURRENT_R(a6),d0
+ bne.s .running
+ clr.w PH_PHASE(a6)
+ clr.l PH_ANCHOR_V(a6)
+ clr.l PH_ANCHOR_R(a6)
+.running:
  addq.l #1,PH_FRAMES(a6)
  lea _drivetrain_state(pc),a0
  move.w PH_INTERVAL(a6),(a0)

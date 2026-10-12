@@ -876,6 +876,16 @@ step 4.7, made concrete.
   - The tolerance is the bound from one A500 frame of input-sampling latency, computed
     from the recorded rates, plus the documented quantisation phases.
   - Lap and checkpoint times must agree within one frame.
+  - **Progress, not C3 acceptance (2026-10-13):** controlled starts exposed an
+    idle-phase dependency: the slowed A500 settled at speed 226 while the other
+    three profiles settled at 228. A fully zero velocity/RPM state now restarts
+    the response phase at zero; nonzero hidden fractions are preserved. All four
+    profiles now settle at 228 in third gear. Their 343 flat-trajectory returns
+    match the same one-field native-engine reference in fractional velocity,
+    RPM, gear and absolute X after the independently observed throttle start.
+    Start publication still differs by 14 consumed fields across the matrix;
+    this is retained in the evidence, not declared equal wall-time behavior.
+    Held steering, braking bounds and lap/checkpoint acceptance remain open.
 - **C4, extreme T.**
   - Run collisions, the loop and the jump on the slowed A500 (largest T) and on the
     68060 (smallest T).
