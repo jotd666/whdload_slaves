@@ -40,6 +40,22 @@ tape_sim_key:
 	move.l time_keys_native_pop(pc),-(sp)
 	rts
 .route
+	; With no scripted fixture selected, accept real commands after menus.
+	; W6 owns its pop above; nonzero CUSTOM5 preserves the old fixture route.
+	move.l tape_game_steps(pc),d0
+	beq .menu_route
+	move.l a0,-(sp)
+	lea .fixture_base(pc),a0
+.fixture_base
+	adda.l #perf_custom5-.fixture_base,a0
+	move.l (a0),d0
+	move.l (sp)+,a0
+	bne .menu_route
+	move.l tape_marker+24(pc),d0
+	addi.l #$309cc,d0
+	move.l d0,-(sp)
+	rts
+.menu_route
 	bsr tape_menu_key
 	lsr.w #8,d0
 	rts
