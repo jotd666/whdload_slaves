@@ -48,7 +48,9 @@ if os.environ.get('BENCH_OMIT_CUSTOM2')=='1':
  gauge_proof=r.command(f'gdb x/1hx {sim+0x19ba6:#x}\nx/1hx {sim+0x19d98:#x}')
  expected_gauge=('0x4ef9','0x4eb9') if a.machine=='060' else ('0x4e55','0x4eba')
  assert all(op in gauge_proof for op in expected_gauge),gauge_proof
- (a.out/'default-selection.txt').write_text(proof+fence_proof+cockpit_proof+gauge_proof)
+ span_proof=r.command(f'gdb x/1hx {sim+0x2f312:#x}')
+ assert ('0x4ef9' if a.machine in ('040','060') else '0x3806') in span_proof,span_proof
+ (a.out/'default-selection.txt').write_text(proof+fence_proof+cockpit_proof+gauge_proof+span_proof)
 
 
 for path in a.out.glob('locate-*.bin'):path.unlink()

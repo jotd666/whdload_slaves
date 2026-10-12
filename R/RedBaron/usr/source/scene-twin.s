@@ -1,14 +1,31 @@
-; VERIFY only: one native pixel twin for each direct primitive. No world replay.
+; VERIFY only: native pixel twins for each primitive and three FC4 polygon types.
 ; Private snapshots reuse reserved workspace; never enter normal/developer builds.
 scene_twin_before:
  movem.l d0-a6,-(sp)
+ move.w polygon_span_outline(pc),d0
+ bne .done
  lea scene_twin_result(pc),a5
  clr.l 4(a5)
- move.l scene_packet(pc),d0
+ bsr scene_twin_index
  move.l (a5),d1
  btst d0,d1
  bne .done
  move.l #1,4(a5)
+ cmpi.l #3,d0
+ blo .not_span
+ subq.w #3,d0
+ mulu #136,d0
+ lea polygon_span_records(pc),a1
+ adda.l d0,a1
+ move.l scene_packet+12(pc),d0
+ cmpi.l #32,d0
+ bhi .not_span
+ move.l d0,(a1)+
+ move.l scene_packet+8(pc),a0
+.record_vertices
+ move.l (a0)+,(a1)+
+ dbf d0,.record_vertices
+.not_span
  bsr scene_frame_wait
  bsr fence_wait
  move.l scene_frame_storage(pc),a1
@@ -35,6 +52,8 @@ scene_twin_before:
 
 scene_twin_after:
  movem.l d0-a6,-(sp)
+ move.w polygon_span_outline(pc),d0
+ bne .done
  lea scene_twin_result(pc),a5
  tst.l 4(a5)
  beq .done
@@ -45,6 +64,8 @@ scene_twin_after:
  move.l scene_frame_original(pc),$1d72(a6)
  move.l scene_frame_original+4(pc),$1d76(a6)
  lea scene_packet(pc),a4
+ cmpi.l #3,(a4)
+ beq .spans
  cmpi.l #2,(a4)
  beq .polygon
  move.l 12(a4),d0
@@ -60,6 +81,25 @@ scene_twin_after:
  adda.l #$2ea28,a0
 .draw
  jsr (a0)
+ bra .compare
+.spans
+ ; Rebuild the original polygon API arguments in reserved Fast workspace.
+ move.l scene_frame_storage(pc),a0
+ adda.l #PERF_SCENE_SPAN_TWIN_INPUT,a0
+ lea 128(a0),a1
+ move.l a0,a2
+ move.l a1,a3
+ move.l 8(a4),a6
+ move.l 12(a4),d0
+ move.w d0,d7
+ subq.w #1,d7
+.split
+ move.w (a6)+,(a2)+
+ move.w (a6)+,(a3)+
+ dbf d7,.split
+ move.l scene_primitive_sim(pc),a2
+ adda.l #$2f292,a2
+ jsr (a2)
  bra .compare
 .polygon
  lea $dff000,a0
@@ -104,6 +144,34 @@ scene_twin_after:
  cmpm.l (a0)+,(a1)+
  bne .bad
  dbf d7,.words
+ bsr scene_twin_restore
+.record
+ lea scene_twin_result(pc),a5
+ bsr scene_twin_index
+ move.l (a5),d1
+ bset d0,d1
+ move.l d1,(a5)
+ clr.l 4(a5)
+ addq.l #1,8(a5)
+.done
+ movem.l (sp)+,d0-a6
+ rts
+.bad
+ move.l a0,12(a5)
+ move.l a1,16(a5)
+ bra scene_frame_bad
+
+scene_twin_cancel:
+ movem.l d0-a6,-(sp)
+ move.l scene_twin_result+4(pc),d0
+ beq .done
+ bsr scene_twin_restore
+ lea scene_twin_result(pc),a5
+ clr.l 4(a5)
+.done
+ movem.l (sp)+,d0-a6
+ rts
+scene_twin_restore:
  move.l scene_frame_storage(pc),a0
  adda.l #PERF_SCENE_TWIN_SCREEN,a0
  move.l scene_frame_original(pc),a1
@@ -122,18 +190,19 @@ scene_twin_after:
  move.l d0,$1d76(a6)
  lea scene_frame_active(pc),a0
  move.w #1,(a0)
- lea scene_twin_result(pc),a5
- move.l scene_packet(pc),d0
- move.l (a5),d1
- bset d0,d1
- move.l d1,(a5)
- clr.l 4(a5)
- addq.l #1,8(a5)
-.done
- movem.l (sp)+,d0-a6
  rts
-.bad
- move.l a0,12(a5)
- move.l a1,16(a5)
- bra scene_frame_bad
+scene_twin_index:
+ move.l scene_packet(pc),d0
+ cmpi.l #3,d0
+ bne .done
+ move.l scene_packet+12(pc),d1
+ cmpi.l #3,d1
+ beq .done
+ addq.l #1,d0
+ cmpi.l #4,d1
+ beq .done
+ addq.l #1,d0
+.done
+ rts
+polygon_span_records: dcb.b 3*136,0
 scene_twin_result: dc.l 0,0,0,0,0 ; passed bits, armed, count, mismatch pointers

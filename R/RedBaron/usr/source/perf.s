@@ -1,8 +1,8 @@
 ; Performance patch framework. Only sim v1 calls this module's installer.
 ; No feature is release-enabled until its model, twin and measurements pass.
-PERF_VERIFIED_MASK = $ff1fff ; verified features, including 060 gauge updates; CPU-filtered
-PERF_DEVELOPER_MASK = $ff3fff
-PERF_VERIFY_MASK = $ff7fff ; developer W6 plus VERIFY-only quiescent overlay probe bit 14
+PERF_VERIFIED_MASK = $1ff1fff ; verified features, including 040/060 polygon spans; CPU-filtered
+PERF_DEVELOPER_MASK = $1ff3fff
+PERF_VERIFY_MASK = $1ff7fff ; developer W6 plus VERIFY-only quiescent overlay probe bit 14
 
 perf_read_options:
 	movem.l d0-a6,-(sp)
@@ -40,6 +40,12 @@ perf_read_options:
 	bne .gauge_player_ready
 	bclr #23,d0
 .gauge_player_ready
+	; FC4 clears the measured FPS threshold on 040/060; retain the 030 path.
+	move.l perf_attnflags(pc),d1
+	andi.l #$88,d1
+	bne .span_player_ready
+	bclr #24,d0
+.span_player_ready
 	ENDC
 	ENDC
 	; W6 supports the measured 68000 and 020+ classes. Keep 010 unchanged.
@@ -78,12 +84,14 @@ perf_read_options:
 	bclr #20,d0
 	bclr #21,d0
 	bclr #22,d0
+	bclr #24,d0
 .artwork_cpu_ready
 	btst #20,d0
 	beq .no_scene_dependency
 	bset #7,d0 ; private rectangle setup uses the verified D1 entry
 	bra .fence_scene_ready
 .no_scene_dependency
+	bclr #24,d0
 	bclr #21,d0
 .fence_scene_ready
 	btst #21,d0
@@ -268,6 +276,13 @@ perf_apply_v1:
 	adda.l #gauge_fast_install-.gauges_base,a0
 	jsr (a0)
 .gauges_done
+	btst #0,perf_mask(pc)
+	beq .spans_done
+	lea .spans_base(pc),a0
+.spans_base
+	adda.l #polygon_span_install-.spans_base,a0
+	jsr (a0)
+.spans_done
 	rts
 
 ; Check a non-relocated hook range before installing it.

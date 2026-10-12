@@ -64,6 +64,10 @@
    or page reuse. Firing, other views and cache misses retain the previous path.
    000/010/020 retain native artwork. The existing reserved FastMem and 8 KB
    ChipMem mask are reused; RAM requirements are unchanged.
+ - On 040/060, supported convex polygons are drawn directly as planar spans
+   in FastMem, avoiding scratch clear, edge/fill and merge passes. Native
+   clipping, unusual polygons and outlines retain their existing paths.
+   The 030 keeps its previous renderer; RAM requirements are unchanged.
  - On 030/040/060, supported scene viewports are drawn in reserved FastMem
    and copied to ChipMem once. Direct primitives avoid repeated plane setup;
    old page pixels and scratch are not copied in or exported. Native clipping

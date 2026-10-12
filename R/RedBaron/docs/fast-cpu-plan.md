@@ -238,32 +238,27 @@ exact profiler. The final normal check passes. Results and hashes are recorded
 once in `profiling.md`. The expected saving in the original proposal was an
 estimate; use the measured ledger instead.
 
-### FC4 — span polygon rasteriser: −8 to −10 ms
+### FC4 — span polygon rasteriser (complete; 040/060 player default)
 
-**Cause.** A native polygon goes through several passes:
-1. Clear a one-plane scratch.
-2. Draw every edge in blitter line mode, with clip fix-ups.
-3. Fill the scratch in blitter fill mode.
-4. Merge the scratch into five planes.
-5. Optionally draw outlines (`sim:2f292`–`2f552`).
+Bit 24 replaces scratch clear, compatibility edges, fill and five-plane merge
+for convex 3–32-vertex polygons already inside the clip rectangle. The native
+line-mode tie rule produces row extents; final planar spans preserve all
+coverage and existing differently-coloured outlines through sim:2ea28.
+Repeated vertices, non-convex or degenerate shapes, clipping, larger lists and
+alternating-colour fills retain the existing exact path. The 800-byte row table
+uses an existing Fast-RAM workspace gap; RAM requirements do not increase.
 
-Bit 20 runs passes 1, 3 and 4 directly, but edges still go through the
-compatibility kernel (7.3 ms) and the scratch still exists.
+The normal bundle selects 040/060. The 030 FPS result is below 2%, so its normal
+path is unchanged; explicit developer/VERIFY selection remains for the native
+checks and profiler. The hook at sim:2f312 is installed only for sim v1 with
+bit 24 and private-scene support. Original bytes remain when it is disabled.
 
-**Fix.**
-1. Walk the clipped vertex list once.
-2. Build left and right edge x per row, using the native line-mode rasterisation
-   rule so coverage stays bit-exact.
-3. Write final colours as planar spans: left mask, solid interior words (five
-   stores per 16 pixels), right mask.
-
-That removes the scratch clear, the edge kernel, the fill and the merge. Keep
-outlines (`sim:2ea28`) through the existing direct line.
-
-**Check.**
-- A host model against `tools/fast_blitter_model.c` over randomized and recorded
-  polygons, including clipped, degenerate and one-pixel cases.
-- A native twin per polygon type.
+Randomized, thin, degenerate, clipped-boundary and recorded host cases run
+against the native blitter model. Bounded native full-polygon twins cover
+triangles, quadrilaterals and larger convex polygons, including their outlines.
+All measurements, final artifacts and validation are recorded in `profiling.md`.
+Fallback expansion is dropped from this step: compatibility is no longer a
+leading cost, and the fallback preserves native coverage.
 
 ### FC5 — smaller viewport copy: −2 to −5 ms (scene dependent)
 

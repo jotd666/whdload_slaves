@@ -13,7 +13,7 @@ Refer to items by ID. FC items are detailed in `fast-cpu-plan.md`.
 | FC1 | Deferred page fence instead of the swap spin | Complete; enabled on 030/040/060 |
 | FC2 | Overlay and cockpit foreground composited in Fast RAM | Complete; enabled on 030/040/060 |
 | FC3 | Persistent gauges | Complete; enabled on 060; other classes retain prior paths |
-| FC4 | Span polygon rasteriser | Planned |
+| FC4 | Span polygon rasteriser | Complete; enabled on 040/060; 030 retains its prior path |
 | FC5 | Smaller viewport copy | Planned |
 | FC6 | Re-profile; then geometry work or 50 FPS (user decision) | Planned |
 | FC7 | AGA 040/060 and real-hardware confirmation | Planned |
@@ -28,7 +28,7 @@ Refer to items by ID. FC items are detailed in `fast-cpu-plan.md`.
 No implementation or validation work remains for the accepted release.
 F1 enables the normal verified bundle by default; F2 condenses the ledgers;
 The original F3 passed on all six machine configurations; its results and the
-subsequent artwork and scene follow-ups are recorded separately in `profiling.md`. The normal verified mask is `0xff1fff`, filtered by CPU.
+subsequent artwork and scene follow-ups are recorded separately in `profiling.md`. The normal verified mask is `0x1ff1fff`, filtered by CPU.
 Normal CUSTOM2=0 is On and 1 is Off; developer/VERIFY values remain bit masks,
 where zero disables patches. The normal build is in the local build directory.
 Nothing has been pushed; publication requires a separate explicit request.
@@ -52,7 +52,7 @@ Git; do not revive their superseded next-work lists.
 ## Fast-CPU frame profile and plan
 
 `fast-cpu-plan.md` has the exact 030 frame attribution (aprof) and the ordered
-fix plan for the former 16.67 FPS plateau. FC0–FC3 are complete; FC4–FC7 remain.
+fix plan for the former 16.67 FPS plateau. FC0–FC4 are complete; FC5–FC7 remain.
 
 **FC0 is complete:** native scratch-clear synchronization fixes the top-edge
 artwork mismatch. Full artwork/scene twins pass on 030 NOMMU/MMU, 040 and 060;
@@ -67,7 +67,7 @@ pointer publication. Redraws, native fallbacks and modal boundaries fence before
 writing; the two-field cap and RAM requirements are unchanged. The normal
 bundle enables it. Same-build comparisons, final normal timings, native twins,
 view/firing transitions, beam checks and exact profiling are in `profiling.md`.
-FC4 is the next renderer step; D5 remains postponed.
+FC5 is the next renderer step; D5 remains postponed.
 
 ## Completed: Fast-RAM cockpit composition
 
@@ -92,6 +92,18 @@ remain unchanged. Developer/VERIFY selection on 030/040 is retained for native
 checks and exact profiling. All measurements, final hashes and the limited
 changing-input route coverage are in `profiling.md`.
 
+## Completed: direct convex polygon spans
+
+Bit 24 removes scratch clear, edge compatibility, fill and merge for supported
+convex polygons. It paints exact native-rounded planar spans in the private
+Fast-RAM viewport and retains the existing outline path. Clipping, non-convex,
+repeated-vertex, degenerate, oversized and alternating-fill cases keep the
+existing renderer. The row table reuses reserved space; RAM requirements are
+unchanged. Native triangle/quad/larger-polygon twins and host models pass.
+The normal bundle enables 040/060; the 030 FPS difference is below 2%, so its
+player path is retained. Final normal checks, all timing pairs and the exact
+profile are recorded only in `profiling.md`. FC5 is next.
+
 ## Post-release rendering investigation
 
 The requested 030/040/060 reprofile is complete; see `rendering-analysis.md` and
@@ -99,7 +111,7 @@ the new section of `profiling.md`. It identifies repeated cockpit scripts,
 per-plane drawing and explicit waits, and documents why the discarded software
 blitter was not a test of a purpose-built Fast RAM renderer. The sparse static
 artwork and direct scene follow-ups below are implemented. FC2 now composes the overlay/static foreground with the scene viewport;
-persistent gauges and the remaining polygon coverage work are FC3/FC4. D5 remains postponed.
+persistent gauges and direct convex spans are complete as FC3/FC4. FC5 is next; D5 remains postponed.
 
 ## Completed: selective static cockpit artwork repairs
 
@@ -127,6 +139,6 @@ RAM requirements are unchanged. 000/010/020 retain the native renderer.
 The first candidate's polygon overhead cancelled its rectangle saving; direct
 scratch loops fixed that regression. CPU comparisons, native primitive twins,
 banked flight, view/firing checks and final normal-build checks are recorded in
-`profiling.md`. The remaining polygon edge/coverage pipeline and per-frame
-cockpit composition are possible future optimizations, not unimplemented parts
-of this change. D5 remains postponed.
+`profiling.md`. FC2 now handles cockpit composition, and FC4 replaces the
+common convex polygon pipeline on 040/060. FC5 is the next renderer step.
+D5 remains postponed.

@@ -36,7 +36,68 @@ INLINE void span(u32 row,s32 x,s32 width,u32 colour) {
     for(u32 word=first+1;word<end;word++)paint(row+word*2,65535,colour);
     paint(row+end*2,right,colour);
 }
+/* FC4: convex, already-clipped polygons. Native clipping and degenerate/
+ * non-convex polygons retain their existing path. The packet contains a
+ * closed native word-coordinate list, count and workspace (200 row pairs).
+ * No coverage bitmap, fill pass or per-plane edge traversal is required. */
+INLINE s32 coord(u32 list,u32 n) {return (short)get(list+n*2);}
+INLINE u32 polygon(u32 *p) {
+    u32 dst=p[1],v=p[2],n=p[3],rows=p[4],colour=p[7];
+    s32 minx=p[8],maxx=p[9],miny=p[10],maxy=p[11];
+    if(n<3||n>32||minx<0||maxx>319||miny<0||maxy>199)return 1;
+    s32 direction=0,top=200,bottom=-1;
+    /* Bound every coordinate before cross-products; no signed overflow on
+     * rejected native offscreen input. */
+    for(u32 i=0;i<n;i++) {
+        s32 x=coord(v,i*2),y=coord(v,i*2+1);
+        if(x<minx||x>maxx||y<miny||y>maxy)return 1;
+        if(y<top)top=y;if(y>bottom)bottom=y;
+    }
+    if(coord(v,0)!=coord(v,n*2)||coord(v,1)!=coord(v,n*2+1))return 1;
+    /* Prove convexity including self-intersections before any output write. */
+    for(u32 i=0;i<n;i++) {
+        s32 x=coord(v,i*2),y=coord(v,i*2+1);
+        s32 x2=coord(v,(i+1)*2),y2=coord(v,(i+1)*2+1);
+        for(u32 j=0;j<n;j++) {
+            s32 cross=(x2-x)*(coord(v,j*2+1)-y)-(y2-y)*(coord(v,j*2)-x);
+            if(cross) {s32 sign=cross<0?-1:1;
+                if(direction && direction!=sign)return 1;direction=sign;}
+            else if(j<i && x==coord(v,j*2) && y==coord(v,j*2+1))return 1;
+        }
+    }
+    if(!direction)return 1;
+    for(s32 y=top;y<=bottom;y++){put(rows+y*4,320);put(rows+y*4+2,0);}
+    /* The native fill excludes the first dot of each downward edge, then
+     * ORs complete edges back in. For convex coverage the result is exactly
+     * the interval between its extreme native line pixels on each row. */
+    for(u32 i=0;i<n;i++) {
+        s32 x=coord(v,i*2),y=coord(v,i*2+1);
+        s32 x2=coord(v,(i+1)*2),y2=coord(v,(i+1)*2+1);
+        if(y2<y){s32 t=x;x=x2;x2=t;t=y;y=y2;y2=t;}
+        s32 dx=x2-x,dy=y2-y,sx=dx<0?-1:1;if(dx<0)dx=-dx;
+        s32 major=dx>dy?dx:dy,minor=dx>dy?dy:dx;
+        s32 error=4*minor-2*major,positive=4*(minor-major),negative=4*minor;
+        s32 first=x;
+        for(s32 k=0;k<=major;k++) {
+            s32 last=x,oldy=y,step=error>=0;
+            error+=step?positive:negative;
+            if(dx>dy){x+=sx;if(step)y++;}else{y++;if(step)x+=sx;}
+            if(y!=oldy || k==major) {
+                s32 lo=first<last?first:last,hi=first>last?first:last;
+                u32 at=rows+oldy*4;
+                if(lo<get(at))put(at,lo);if(hi>get(at+2))put(at+2,hi);
+                first=x;
+            }
+        }
+    }
+    for(s32 y=top;y<=bottom;y++) {
+        s32 left=get(rows+y*4),right=get(rows+y*4+2);
+        if(left<=right)span(dst+y*40,left,right-left+1,colour);
+    }
+    return 0;
+}
 API u32 rb_scene(u32 *p) {
+    if(p[0]==3)return polygon(p);
     u32 op=p[0],dst=p[1],colour=p[7];
     s32 x=p[3],y=p[4],w=p[5],h=p[6];
     if(op==0) {

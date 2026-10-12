@@ -7,7 +7,19 @@ PERF_WORKSPACE_FAST = $50000
 ; artwork: [0,$20000); scene target/scratch and VERIFY snapshots below $3c000;
 ; VERIFY artwork twin: [$3c000,$4f880). No guest-heap snapshot allocation.
 PERF_SCENE_OFFSET = $20000
+; FC4 row extents occupy the gap after the aligned scene + scratch.
+PERF_SCENE_SPAN_ROWS = 48032
+PERF_SCENE_SPAN_TWIN_INPUT = 49000
 PERF_SCENE_TWIN_SCREEN = $10000
+ IFGT 48000+15-PERF_SCENE_SPAN_ROWS
+ FAIL "Scene buffers overlap polygon row extents"
+ ENDC
+ IFGT PERF_SCENE_SPAN_ROWS+800-PERF_SCENE_SPAN_TWIN_INPUT
+ FAIL "Polygon rows overlap native twin inputs"
+ ENDC
+ IFGT PERF_SCENE_SPAN_TWIN_INPUT+256-PERF_SCENE_TWIN_SCREEN
+ FAIL "Polygon inputs overlap native screen snapshot"
+ ENDC
 PERF_SCENE_TWIN_SCRATCH = $1a000
 PERF_ARTWORK_TWIN_OFFSET = $3c000
 PERF_ARTWORK_TWIN_BYTES = 80000

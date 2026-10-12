@@ -44,7 +44,11 @@ if effective&(1<<19):
  if twins['artwork'] != [63,0,0,6]:raise RuntimeError('Artwork twins incomplete or failed: '+str(twins))
 if effective&(1<<20):
  twins['scene']=words('scene_twin_result',5)
- if twins['scene'] != [7,0,3,0,0]:raise RuntimeError('Scene twins incomplete or failed: '+str(twins))
+ if effective&(1<<24):
+  from polygon_span import check
+  twins['spans']=check(struct.pack('>5I',*twins['scene']))
+  words('polygon_span_records',102)
+ elif twins['scene'] != [7,0,3,0,0]:raise RuntimeError('Scene twins incomplete or failed: '+str(twins))
 if effective&(1<<22):
  twins['cockpit']=words('cockpit_fast_twin_result',5)
  if twins['cockpit'] != [3,0,2,0,0]:raise RuntimeError('Cockpit twins incomplete or failed: '+str(twins))

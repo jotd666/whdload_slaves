@@ -5,10 +5,118 @@
 The user accepted measured performance on 2026-10-12. The normal build now
 starts with Faster rendering On when CUSTOM2 is omitted: On=0, Off=1.
 Developer/VERIFY CUSTOM2 remains an explicit mask, with zero disabling patches.
-The verified mask is `0xff1fff`, filtered by CPU; W6 bit 13 remains excluded
+The verified mask is `0x1ff1fff`, filtered by CPU; W6 bit 13 remains excluded
 because D5 is postponed. There is no 50 FPS or frame-independent normal-game
 speed claim. Historical captures below retain their original build, option
 mapping and RAM configuration; they do not define the current player default.
+
+## FC4 — direct convex polygon spans (2026-10-12)
+
+Bit 24 requires the private scene renderer (bit 20). The normal bundle selects
+it on **040/060**; the 030 comparison is below the 2% threshold, so its player
+path is retained. Explicit 030 developer/VERIFY selection remains available
+for the common-code native twin and exact profiler. 000/010/020 are excluded.
+
+The sim:2f312 hook accepts convex polygons with 3–32 distinct vertices wholly
+inside the current clip rectangle. Native line-mode rounding supplies each
+row's left/right extent; masked ends and solid interior words directly paint
+all five Fast-RAM planes. There is no scratch clear, edge compatibility pass,
+area fill or scratch merge on this path. Different-colour outlines still use
+sim:2ea28. Clipping, non-convex/repeated vertices, degenerates, larger lists and
+alternating-colour fills retain the existing renderer. Extending those fallback
+cases is dropped from FC4: their native path remains exact and compatibility
+work is no longer a leading measured cost. The row table occupies 800 bytes of
+an existing workspace gap; compile-time bounds protect the adjacent buffers.
+Minimum RAM, outbound viewport copying, pacing and W6 selection are unchanged.
+
+One frozen developer binary per pair, SHA-256
+`736c57b2181575898362079520686f7071b9911f1a878f2c5722e8abc4c11902`;
+2,000 PAL fields per case, maximum detail, protected fixture, native keyboard
+route and unchanged Time Scale. Masks are `0x7f0ffa` / `0x17f0ffa` for
+030/040 and `0xff0ffa` / `0x1ff0ffa` for 060. After freezing, the final source
+adds rejection of repeated vertices (a host test demonstrated the native
+parity-fill distinction), explicitly flushes installation caches, and applies
+the measured player CPU gate. Final native checks use that corrected source.
+These paired gains refer to the frozen candidate; final normal timings are
+recorded separately, not substituted into the comparison.
+
+| Configuration | FC4 off FPS | FC4 on FPS | Disposition / evidence |
+|---|---:|---:|---|
+| 68000 / A500 | — | — | CPU-gated off; prior scoreboard retained |
+| 020 / A1200 | — | — | CPU-gated off; prior scoreboard retained |
+| 030/50 MMU | 23.962 | 24.161 (+0.83%) | Below 2%; normal off; `fc4-ab-030-{off,on}-1` |
+| 030/50 NOMMU | — | — | Normal off; explicit common-code native/exact checks pass |
+| 040/25 NOMMU | 22.389 | 24.037 (+7.36%) | Retain; `fc4-ab-040-{off,on}-1` |
+| 060/50 NOMMU | 23.238 | 24.012 (+3.33%) | Retain; `fc4-ab-060-{off,on}-1` |
+
+All 566 host tests pass. The actual C span routine is compared against
+`fast_blitter_model.c`'s native XOR-edge, inclusive-fill and edge-restoration
+pipeline over randomized convex hulls, small-grid and thin triangles, both
+windings, clip boundaries and three recorded native polygons in every colour.
+Unsupported input is checked for rejection without destination writes. Three
+deliberately damaged checker results (missing type, mismatch, unfinished twin)
+are rejected. All 136 hook ranges and the three builds' patch destinations
+(136/136/150) pass; the disabled hook retains its original six bytes.
+
+`fc4-final-aprof-1` passes the three new native full-polygon pixel twins
+(triangle, quadrilateral, larger convex), all three prior scene primitive twins,
+six artwork twins, both composed-cockpit twins and 72 final cockpit-page checks.
+The candidate and native calls receive the same pre-operation pixels; the
+native call includes its own edges, fill, merge and outlines. No world replay
+or new full-state study is used. The tiny recorded vertex fixtures are retained
+in `tools/polygon_span_cases.json` for the host model.
+
+The final exact capture uses explicit bit 24 on 68EC030/50 NOMMU, 500 warm-up
+fields and 50 recorded fields, CACR `0x2011`. **This is not the normal 030 CPU
+policy.** Its 19 render/world calls are instrumented workload counts, not player
+FPS. Remaining exclusive costs: scene rasterization **9.48 ms/frame**, viewport
+copy **8.17 ms** (96% Chip-bus), and polygon compatibility only **0.22 ms**.
+Overall Chip-bus share is **30.3%** and recognized blitter polling **8.8%**; native
+gauges remain on this 030 selection. These are separate-workload attributions,
+not an isolated cycle-saving claim. FC5 remains the next ordered step.
+
+The final normal build, CUSTOM2 omitted, passes hook/default selection on both
+enabled classes: `fc4-final-normal-{040,060}-1`. Each maximum-detail window
+covers 250 PAL fields and records 125 publications, all 124 gaps exactly two
+fields, with none on copper-pickup lines 42/43. Final screenshots retain the
+scene, cockpit, needles and message. No new DMA-ownership study was needed:
+the viewport copy and its fence are unchanged.
+
+| Final normal CPU | FPS | Scene ms | Cockpit ms | World ms | Publication ms |
+|---|---:|---:|---:|---:|---:|
+| 040 | 24.960 | 33.002 | 3.864 | 1.963 | 0.0214 |
+| 060 | 24.960 | 31.596 | 3.031 | 1.818 | 1.3528 |
+
+Stage costs are means of completed brackets, not an additive whole-frame
+budget; publication/world return-path coverage differs between cases. These
+short initial-flight windows are separate workloads from the long A/B pairs.
+They reach the unchanged two-field PAL cap, not 50 FPS.
+
+Final normal/developer/VERIFY text sizes: 143,250 / 143,718 / 330,880 bytes.
+SHA-256:
+
+- Normal: `dbea82782bc73e9d75febf437cb9b2ec3c1018535da822493a7868e9705ba66d`
+- Developer: `7148764be23e82f999b99b2e6f0359df88b987712010d8ab19caafbd7b330e39`
+- VERIFY: `bc44d2fd6134a2ecf9b499d0c9602d3cc96fd2cc0ed67543828dd13e5e451f82`
+
+The final VERIFY artifact is identical to the one used by the final exact
+capture. Superseded preliminary captures were removed; the timing pairs,
+final normal checkpoints and final exact capture remain.
+
+
+To reproduce a normal default stage window from the initialized harness:
+
+```sh
+BENCH_BATCH_KEYS=1 BENCH_OMIT_CUSTOM2=1 \
+python3 -B ../../R/RedBaron/tools/scene_profile_case.py \
+  040 0 tmp/prof/fc4-manual-normal --fields 250 --groups stages
+```
+
+For an isolated comparison, freeze one developer slave/listing, select
+`BENCH_DEVELOPER=1`, `BENCH_BATCH_KEYS=1` and `BENCH_FROZEN_SLAVE`, and use the
+mask pair above with distinct output names and `--fields 2000 --groups fps`.
+The exact profiler uses explicit `0x17f0ffa` on 030 NOMMU; it requires all six
+native scene checks before recording. One owned emulator at a time.
 
 ## FC3 — persistent gauges, enabled on 060 (2026-10-12)
 
@@ -78,7 +186,7 @@ the gauge blitter waits are no longer a leading cost on the candidate path.
 Remaining leading exclusive costs in that sample: viewport copy **7.86 ms**
 (96% Chip-bus), polygon compatibility **7.21 ms**, scene rasterization **7.16 ms**,
 static cockpit word painting **3.41 ms**, and exact artwork-key checks **2.76 ms**
-(73% Chip-bus). FC4 and FC5 remain the ordered next steps.
+(73% Chip-bus). FC4 is now complete; FC5 remains the next ordered step.
 
 All 557 host tests pass, including three checker sabotages. The 135 hook ranges
 and all three builds' patch destinations (135/135/149) pass. Final hashes:

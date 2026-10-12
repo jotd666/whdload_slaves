@@ -186,4 +186,4 @@ scene_poly_original:
  dc.w 0,0,0 ; relocated native move.l into d0
  jmp $0.l
 scene_primitive_sim: dc.l 0
-scene_packet: dcb.l 8,0
+scene_packet: dcb.l 12,0

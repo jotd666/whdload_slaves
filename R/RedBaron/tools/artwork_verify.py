@@ -60,9 +60,14 @@ def twins(label):
     scene_checks = 0
     if mask & (1 << 20):
         scene = dump('scene_twin_result', 20, label)
-        assert scene == bytes.fromhex('0000000700000000000000030000000000000000'), scene.hex()
-        scene_checks = 3
-        print(label, 'three native scene twins passed', flush=True)
+        if mask & (1 << 24):
+            from polygon_span import check
+            check(scene)
+            dump('polygon_span_records', 408, label)
+        else:
+            assert scene == bytes.fromhex('0000000700000000000000030000000000000000'), scene.hex()
+        scene_checks = 6 if mask & (1 << 24) else 3
+        print(label, scene_checks, 'native scene twins passed', flush=True)
     composition = {}
     if mask & (1 << 22):
         cf = dump("cockpit_fast_twin_result", 20, label)
