@@ -1912,6 +1912,52 @@ comparison and its distinction from the frozen gameplay A/B windows. A repeat
 reproduces the swap schedule, all 501 game-state snapshots and physics records
 byte-for-byte.
 
+### Manual and neutral reference integration
+
+`VERIFY_DRIVETRAIN_MANUAL` extends the optional reference integrator to grounded
+manual driving and neutral (gears 0..4). Crash, skid, falling and partial-contact
+eligibility restrictions remain. Zero/eight-field intervals retain the native
+single-pair path. Each inner tick runs the native engaged or neutral RPM behavior;
+neutral does not acquire a new drag/force law.
+
+The native manual branch reads a keyboard gear request at G($991d) and a joystick
+request at G($95ff). Those are events, not continuous force inputs. A hook at
+`$0b9ba` allows their native handling on the first engine tick of an outer pass,
+then bypasses manual selection on subsequent ticks while leaving both request
+bytes untouched. Thus input arriving during the recurrence stays queued for the
+next frame. Native/full-step calls retain their original branch behavior. Ratio
+conversion, native downshift damping, neutral RPM preservation and request clearing
+remain in the game's existing code. The batching helpers can still skip fixed
+engine states because later inner ticks no longer consume manual events.
+
+`VERIFY_STEPINPUT_MANUAL` is an input-only fixture requiring STEPINPUT. It selects
+manual through the native menu and returns decoded keyboard keys through the
+normal controls reader, without setting gear or automatic-mode state. Ten keys at
+controls passes 1,11,...,91 select 1,2,3,4,2,neutral,1,4,neutral,1. These pass-indexed
+inputs support native-step equivalence; they are not an equal-time input tape.
+Requests queued during crash can take effect later, as in the native game.
+
+| Live manual capture (108 outer returns) | Engine updates checked | Neutral RPM updates | Later manual visits deferred | Consumed shifts |
+|---|---:|---:|---:|---:|
+| A500 | 850 | 97 | 761 | 10 |
+| 68020 | 359 | 66 | 251 | 10 |
+
+All RPM updates, shift ratio conversions and damping match an independent model;
+no outer pass consumes more than one request. All 108 native-step car snapshots
+match the original manual fixture, including the ten shifts. A separate 1400-field
+A500 capture validates 901 complete intermediate position updates on each axis
+against the combined-displacement model (847 nonzero X and 186 nonzero Y moves).
+It checks the reference ticks, not native crash drift or other fallback modes.
+
+An isolated test of the assembled 68000 dispatch helper passes 1500 branch cases,
+including 380 cases with nonzero queued requests deferred unchanged, with register
+and stack preservation. CUSTOM1-off passes 151 ranges, the 130-range branch audit
+passes, normal and flag-absent binaries remain unchanged, and both new flags
+reject missing dependencies. These establish focused manual/neutral support;
+full contact handling, equal-time comparisons and performance acceptance remain
+open. The current original-versus-enabled performance table predates this optional
+manual gate and makes no claim about its cost.
+
 ### Near-stop fractional projection and position correction
 
 The retained operands isolated three interacting problems. At integer velocity1

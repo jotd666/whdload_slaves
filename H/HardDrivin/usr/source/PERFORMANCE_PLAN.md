@@ -293,6 +293,11 @@ Tools stay in ignored `tmp/dev/tools`.
      increments. Keep wider shadow state or remainders for each scaled accumulator,
      and keep them consistent across every writer, including reset, crash recovery
      and replay.
+   - Optional manual/neutral reference integration now passes native-step car
+     equivalence, live RPM/shift models and intermediate-position checks. It
+     consumes manual requests once per outer pass and preserves requests arriving
+     during later ticks. This is focused coverage, not full contact or equal-time
+     acceptance; see GAME_TIME.md.
    - Check the integrator: with Euler updates, many small steps do not give the same
      displacement as one large step. Apply the (T−1)/2·Δv correction where the
      original order requires it, and decide whether the target is the original

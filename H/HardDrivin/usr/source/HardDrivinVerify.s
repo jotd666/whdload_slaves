@@ -83,6 +83,11 @@ _verify_drive_race:
 	clr.w 18(a0)
 	lea _verify_drive_tape(pc),a1
 	move.l a1,8(a0)
+	IFD VERIFY_STEPINPUT_MANUAL
+	lea _verify_manual_state(pc),a1
+	clr.w (a1)
+	clr.w 2(a1)
+	ENDC
 	IFD VERIFY_STEPINPUT_RAMP
 	lea _verify_step_ramp_count(pc),a1
 	clr.w (a1)
@@ -246,6 +251,9 @@ _verify_step_input:
 .replay_ready:
 	ENDC
 	jsr -$7f92(a4)		; displaced decoded-key reader
+	IFD VERIFY_STEPINPUT_MANUAL
+	bsr _verify_manual_key
+	ENDC
 	and.w #$ff,d0		; displaced mask, including its condition codes
 	rts
 	ENDC
@@ -270,15 +278,28 @@ _verify_drive_state:
 	dc.l 0,0
 	dc.w 320,200,0,0
 _verify_drive_menu:
-	; Space exits the title; a held click selects native automatic gears.
+	; Space exits the title; held clicks select automatic gears by default.
+	; VERIFY_STEPINPUT_MANUAL chooses the native manual menu item.
 	dc.l 1
 	dc.w 320,200,0,$20
 	dc.l 1000
+	IFD VERIFY_STEPINPUT_MANUAL
+	dc.w 540,200,1,0
+	ELSE
 	dc.w 100,200,1,0
+	ENDC
 	dc.l 1050
+	IFD VERIFY_STEPINPUT_MANUAL
+	dc.w 540,200,0,0
+	ELSE
 	dc.w 100,200,0,0
+	ENDC
 	dc.l 1300
+	IFD VERIFY_STEPINPUT_MANUAL
+	dc.w 540,200,1,0
+	ELSE
 	dc.w 100,200,1,0
+	ENDC
 	dc.l 1350
 	dc.w 320,200,0,0
 	dc.l -1
@@ -825,4 +846,39 @@ _verify_throttle_hold_buttons:
 	rts
 	dc.b 'HDTHOLD1'
 _verify_throttle_hold_state: dc.w 0
+	ENDC
+
+	IFD VERIFY_STEPINPUT_MANUAL
+; Input-only: select manual in the menu and emit one decoded gear key at the
+; listed controls-pass boundaries. Per-pass keys permit native-step comparison.
+	dc.b 'HDMANIN1'
+_verify_manual_state: dc.w 0,0 ; controls passes, next record index
+_verify_manual_key:
+	movem.l d1/a0-a1,-(a7)
+	lea _verify_drive_state(pc),a0
+	cmpi.w #2,(a0)
+	bne.s .done
+	lea _verify_manual_state(pc),a0
+	move.w (a0),d1
+	addq.w #1,(a0)
+	tst.l d0
+	bne.s .done
+	move.w 2(a0),d1
+	lsl.w #2,d1
+	lea _verify_manual_keys(pc),a1
+	adda.w d1,a1
+	move.w (a0),d1
+	cmp.w (a1),d1
+	blo.s .done
+	cmpi.w #-1,(a1)
+	beq.s .done
+	moveq #0,d0
+	move.w 2(a1),d0
+	addq.w #1,2(a0)
+.done:
+	movem.l (a7)+,d1/a0-a1
+	rts
+_verify_manual_keys:
+	dc.w 1,'1',11,'2',21,'3',31,'4',41,'2'
+	dc.w 51,'n',61,'1',71,'4',81,'n',91,'1',-1,0
 	ENDC

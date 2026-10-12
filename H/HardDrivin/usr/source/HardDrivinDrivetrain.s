@@ -1,5 +1,6 @@
 ; Experimental reference integrator, not a performance-accepted policy.
-; Grounded automatic driving advances engine and projected position in fields.
+; Grounded driving advances engine and projected position in fields.
+; Manual/neutral support is separately gated by VERIFY_DRIVETRAIN_MANUAL.
 ; Steering, contact/scene work and input sampling remain once per outer pass.
 ; Zero/eight-field intervals and other driving modes keep the native pair.
 _drivetrain_install:
@@ -26,6 +27,10 @@ _drivetrain_patches:
 	PL_PSS $cdb6,_drivetrain_frame,2
 	; PERF_RANGE VERIFY_DRIVETRAIN_REFERENCE $0baca $0006: publish engine pitch once per outer pass
 	PL_PS $baca,_drivetrain_audio
+	IFD VERIFY_DRIVETRAIN_MANUAL
+	; PERF_RANGE VERIFY_DRIVETRAIN_MANUAL $0b9ba $0006: consume manual gear input once per outer pass
+	PL_PS $b9ba,_drivetrain_manual
+	ENDC
 	IFD VERIFY_DRIVETRAIN_POWER
 	; PERF_RANGE VERIFY_DRIVETRAIN_POWER $0b696 $002a: reuse identical throttle/ratio power
 	PL_PSS $b696,_drivetrain_power,$24
@@ -67,9 +72,13 @@ _drivetrain_frame:
 	bne .single
 	tst.w -$66f2(a4)
 	bne .single
+	IFND VERIFY_DRIVETRAIN_MANUAL
 	tst.b -$66c2(a4)
 	beq .single
 	cmpi.w #1,-$66ca(a4)
+	ELSE
+	tst.w -$66ca(a4)
+	ENDC
 	blt .single
 	cmpi.w #4,-$66ca(a4)
 	bgt .single
@@ -535,5 +544,32 @@ _drivetrain_power:
 	move.w d4,12(a0)
 .done:
 	movem.l (a7)+,d1/a0
+	rts
+	ENDC
+
+	IFD VERIFY_DRIVETRAIN_MANUAL
+; VBL input may arrive while this frame's engine recurrence is running. Leave
+; later requests queued for the next outer pass instead of consuming them in
+; an intermediate tick. Native/full-step behavior is unchanged.
+_drivetrain_manual:
+	movem.l d0/a0,-(a7)
+	lea _drivetrain_state(pc),a0
+	cmpi.w #1,6(a0)
+	bne.s .native
+	move.w (a0),d0
+	cmp.w 2(a0),d0
+	beq.s .native
+	move.l _code_start(pc),d0
+	addi.l #$ba8a,d0
+	move.l d0,8(a7)
+	bra.s .done
+.native:
+	tst.b -$66e3(a4)
+	beq.s .done
+	move.l _code_start(pc),d0
+	addi.l #$b9c8,d0
+	move.l d0,8(a7)
+.done:
+	movem.l (a7)+,d0/a0
 	rts
 	ENDC
