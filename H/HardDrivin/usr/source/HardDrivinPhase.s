@@ -19,6 +19,8 @@ _phase_install:
  rts
 _phase_patches:
  PL_START
+ ; PERF_RANGE VERIFY_DRIVETRAIN_PHASE $122be $0006: exact shortened unsigned long division
+ PL_P $122be,_phase_divide
  ; PERF_RANGE VERIFY_DRIVETRAIN_PHASE $0b904 $0008: incremental RPM before automatic gear decision
  PL_PSS $b904,_phase_gear,2
  ; PERF_RANGE VERIFY_DRIVETRAIN_PHASE $09564 $0068: exact native Newton root with guarded hardware division
@@ -75,6 +77,96 @@ _phase_root_patch:
  dcb.w 4,$4e71
 _phase_root_patch_end:
  PL_END
+; Preserve the compiler divider ABI, including remainder and materialized CCR.
+; For a wide divisor the native restoring loop always executes sixteen bits.
+; Align to the dividend instead; the loop then visits only quotient bits.
+; No engine inputs, phase endpoints or update cadence are changed.
+_phase_divide:
+ ; A word quotient needs one DIVU. Otherwise retain native two-word division.
+ movem.l d2-d3,-(a7)
+ swap d1
+ tst.w d1
+ bne.s .wide
+ swap d1
+ move.l d0,d2
+ swap d2
+ cmp.w d1,d2
+ bcc.s .twoword
+ divu.w d1,d0
+ move.l d0,d1
+ andi.l #$ffff,d0
+ clr.w d1
+ swap d1
+ movem.l (a7)+,d2-d3
+ rts
+.twoword:
+ move.w d1,d3
+ move.w d0,d2
+ clr.w d0
+ swap d0
+ divu.w d3,d0
+ move.l d0,d1
+ swap d0
+ move.w d2,d1
+ divu.w d3,d1
+ move.w d1,d0
+ clr.w d1
+ swap d1
+ movem.l (a7)+,d2-d3
+ rts
+.wide:
+ swap d1
+ movem.l d4,-(a7)
+ move.l d1,d4
+ move.l d1,d3
+ moveq #0,d2
+ cmp.l d3,d0
+ bcs.s .zero
+.align:
+ tst.l d3
+ bmi.s .ready
+ add.l d3,d3
+ cmp.l d3,d0
+ bcs.s .overshot
+ addq.w #1,d2
+ bra.s .align
+.overshot:
+ lsr.l #1,d3
+.ready:
+ move.l d0,d1
+ moveq #0,d0
+.loop:
+ add.w d0,d0
+ cmp.l d3,d1
+ bcs.s .keep
+ sub.l d3,d1
+ addq.w #1,d0
+.keep:
+ lsr.l #1,d3
+ dbra d2,.loop
+ bra.s .flags
+.zero:
+ move.l d0,d1
+ moveq #0,d0
+; Native final wide iteration leaves X=0. An odd quotient finishes on
+; ADDQ.W; an even quotient finishes on CMP.L remainder,divisor. Recreate
+; these flags after alignment/loop bookkeeping, including quotient $8000.
+.flags:
+ btst #0,d0
+ bne.s .odd
+ moveq #0,d2
+ add.l d2,d2
+ cmp.l d1,d4
+ bra.s .done
+.odd:
+ move.w d0,d2
+ subq.w #1,d2
+ addq.w #1,d2
+.done:
+ movem.l (a7)+,d4
+ movem.l (a7)+,d2-d3
+ rts
+
 _phase_tail_ptr: dc.l 0
 _phase_manual_ptr: dc.l 0
 PH_VALID equ 0

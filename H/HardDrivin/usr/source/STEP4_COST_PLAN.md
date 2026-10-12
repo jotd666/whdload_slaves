@@ -5,11 +5,13 @@ current integrated build, measured on 2026-10-12. It names the bottlenecks, sets
 targets and gives an ordered list of work items. Each item has an exit criterion. Step IDs
 are `P` (performance), `C` (closure) and `D` (decisions for the user).
 
-**Current status: P1, P2, P4 and P5 complete; P3 deferred.** P4 retains its
-explicit helper-budget exception and its recorded acceptance evidence below.
-P5 meets its unchanged 0.300 ms/frame target at **0.247 / 0.292 ms/frame**.
-No P5 exception is needed. P6/P7, G1 and step-4 closure remain open: the current
-matched B window still measures 5.691 ms total simulation overhead against 3.78 ms.
+**Current status: P1, P2, P4, P5 and P6 complete; P3 deferred.** P4 retains its
+explicit helper-budget exception. P5's acceptance build met its unchanged
+0.300 ms/frame target at 0.247 / 0.292 ms/frame. P6 optimizes the remaining
+physics arithmetic bottleneck: matched-operand long division is about 29% cheaper.
+P6/P5 acceptance does not close G1. Current conservative total overhead is
+**3.084 / 5.740 ms/frame**; B still exceeds **3.78 ms**. P7 and step-4 closure
+remain open; no gate has been relaxed.
 
 ## 1. Measurement
 
@@ -692,6 +694,80 @@ source fingerprints. P5 is complete without a budget exception.
 If the total in B is still over 3.78 ms after P1–P5, profile again and treat the largest
 remaining symbol as P6. Do not relax G1.
 
+### P6 Remaining physics arithmetic: complete; G1 still open
+
+Fresh `p6-base-{a,b}-{on,off}` profiles reproduce P5's final build and identify
+physics as the largest remaining overhead: B 4.754241 ms/frame of the total
+5.690624 ms/frame. Within physics, the unsigned long divider at `$122be` is the
+largest individual arithmetic routine by self cost: 0.800366 ms/frame, ahead of
+the root (0.617422), signed-word multiply (0.597434), and ratio helper (0.308128).
+This is the P6 target; traffic's larger replacement symbol mostly represents
+original traffic work and contributes only 0.376724 ms/frame net overhead.
+
+The CUSTOM1-gated phase patch now replaces that divider with an exact equivalent:
+
+- A short divisor and word-sized quotient use one `DIVU`; a larger quotient
+  retains the native two-word division.
+- A wide divisor is aligned to the dividend, then the restoring loop visits only
+  the required quotient bits. The baseline B wide calls average 4.16 quotient bits
+  rather than the native fixed 16 iterations.
+- Quotient, remainder, preserved registers, stack and final condition flags stay
+  exact. The native final wide-loop flags are reconstructed after loop bookkeeping.
+  Engine inputs, phase sampling, update cadence and P3 deferral are unchanged.
+
+Final paired captures are `p6-fast-{a,b}-{on,off}`, using 500 PAL fields and the
+unchanged A/B anchors, fixtures and CUSTOM1 comparison. All frame accounting uses
+complete swap intervals. The same build/listing/game/emulator/configuration is
+verified within each pair. `p6-fast-pair-summary.json` retains exact values.
+
+| Measured ms per complete frame | Baseline A | P6 A | Baseline B | P6 B |
+|---|---:|---:|---:|---:|
+| Physics phase | 11.943857 | 11.703468 | 8.500373 | 8.460343 |
+| Total simulation overhead, existing accounting | 3.230272 | 3.083583 | 5.690624 | 5.739547 |
+| G1 fixed budget | 8.070000 | 8.070000 | 3.780000 | 3.780000 |
+| G1 result | PASS | PASS | OPEN | OPEN |
+
+Complete divider-call comparisons separate the arithmetic saving from changed
+trajectories. For common operand pairs, weighted by candidate call frequency:
+
+| Physics divider calls | A | B |
+|---|---:|---:|
+| Identical operand pairs | 15 | 10 |
+| Matched candidate calls / all candidate calls | 604 / 640 | 82 / 512 |
+| Original cost for matched calls, ms | 34.157199 | 4.634006 |
+| Optimized cost for matched calls, ms | 24.255581 | 3.294713 |
+| Saving on matched calls | **28.99%** | **28.90%** |
+
+These totals cover complete divider calls throughout the trace, exclude interrupt
+execution, and include the new entry jump. B's matched subset is limited; it is not
+an equal-scene whole-game speedup. Whole-trace physics divider costs are
+36.176994 → 25.686974 ms in A and 47.221584 → 33.506771 ms in B, with different
+operand distributions. `p6-divider-matched-cost.json` records the comparison.
+
+The shared native divider also serves scene preparation/background work. The
+existing conservative formula charges its new slave code there in full, without
+subtracting the former native rendering work. No costs were excluded to make G1
+pass. Current other-hook totals are 0.306802 / 0.342149 ms; these are not fresh
+P5 passes. Likewise, moving native arithmetic into the slave changes the native/
+slave split; it does not demonstrate new physics steps. The P4/P5 acceptance
+records above refer to their respective committed builds.
+
+Current raw frame means off/on are A 260.956 / 248.290 ms and B 137.719 / 165.348 ms;
+complete frame counts are A 37/38 and B 72/59. Scene and contact work vary with the
+trajectory. B's total measured overhead is slightly higher despite the exact
+arithmetic improvement. P6 completion therefore does not claim G1 or step-4 closure,
+and does not broaden the P4 exception. P7 remains the next reported check; D3's
+conditional engine-latching option remains available under its stated conditions,
+without treating deferred P3 as passed.
+
+Validation: 172,440 actual-68000 original/replacement comparisons with nonzero
+divisors, including quotient boundaries, wide divisors, both division paths, every
+register, remainder, stack and materialized CCR. Both installed profile routines
+match the tested 158-byte body. All 108 forced-native states match; CUSTOM1-off
+passes 166 ranges, the branch audit passes 144 ranges, and normal/DRIVE/ATTRACT
+builds remain byte-identical to step-2 baselines. Rebuilt profiled binaries match.
+Evidence and SHA/decompression-verified traces remain under ignored `tmp/dev/`.
+
 ### P7 68020 check
 
 After P1–P5, profile the same build on `a1200-020` in both windows, using swap counts plus
@@ -754,7 +830,7 @@ On 2026-10-12 the user accepted the recommended defaults. These decisions are no
 
 ## 7. Working rules for this plan
 
-- Work in the order P1 → P5, then C1 → C6, with P3 deferred by the user, P4 complete under its approved helper-budget exception, and P5 complete; P6 is next.
+- Work in the order P1 → P5, then C1 → C6, with P3 deferred by the user, P4 complete under its approved helper-budget exception, and P5/P6 complete; P7 is next.
   Deferral does not pass an item. Each item ends when its exit numbers and
   checks pass. Commit each item on its own.
 - Do not add validation dimensions beyond those listed for the item. Put new questions in
