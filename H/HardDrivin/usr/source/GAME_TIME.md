@@ -64,6 +64,51 @@ Evidence: `tmp/prof/s3-coupling-*`, `s3-stepinput-*`, `step3-comparison.json`,
 experiment is explicitly invalid: the debugger accepted memory writes without
 applying them. None of its supposed constant-input results is used.
 
+## Expanded native-step state comparison
+
+The current all-timing native-step build (including the manual, skid and airborne
+reference extensions and landing audio) has a broader same-slave comparison:
+`s4-world-native-off/on`, CUSTOM1 off/on, A500, 108 physics returns. It uses the
+constant X639 STEPINPUT diagnostic, not the field-indexed VERIFY_DRIVE tape.
+All 109 controls-entry snapshots agree on buttons, mouse coordinates and gear
+request bytes; button reassertion occurs after that observation point.
+
+The captures retain all 31,952 bytes of native data/BSS plus 7,184 bytes of
+external state per return. Boot-time table pointers and counts are checked
+against every snapshot, including the traffic records' actor pointers. Both
+runs have identical addresses, so this comparison uses no pointer normalization
+and no byte masks.
+
+| State compared at all 108 returns | Result |
+|---|---|
+| Car globals, 92 bytes | Exact |
+| RNG longword | Exact; remains zero |
+| Entire 90-record replay ring, 14,220 bytes, and write pointer | Exact |
+| All 12 traffic records, 46 bytes each | Exact |
+| First 44 bytes of each of the 12 traffic actors | Exact |
+| All 98 main and 11 auxiliary scene-object records, 56 bytes each | Exact |
+| Complete data/BSS snapshot | Different at every return |
+
+The complete data/BSS comparison differs at only 20 byte locations across the
+capture. None is hidden by the checker. Their native-code owners are:
+
+- Countdown/off-road display digits at G($8cda/$8cdb/$8ce9), countdown cache
+  G($9582), elapsed/remaining BCD clocks G($9790/$9798), the shared VBL clock
+  phase G($9040), and BCD arithmetic scratch G($9042).
+- The off-road BCD deadline G($add8) and its contribution to G($94ba), a combined
+  scene/replay flag. The latter's nonzero/zero interpretation agrees throughout,
+  although its byte values differ.
+- Channel2's field-driven startup counter G($902c), music-player state within
+  G($9090)..G($9099), and the VBL-swapped buffer pointers G($95ee/$95f2).
+
+The captures take 893 versus 925 fields. Native clock and sound progression
+therefore cannot be assumed identical at matching physics-step numbers. The
+retained `native-world-comparison.json` explicitly reports strict full-snapshot
+equivalence as false, alongside the exact domains above. This strengthens the
+native simulation evidence without closing the full driving-tape requirement,
+equal-time acceptance, rendered-pixel equality or pointed-to vertex-buffer
+comparison. Later clock-triggered mode changes remain a separate risk.
+
 ## Time sources and clock defects
 
 - VBL `$00044` runs `$02c4c` and `$02c8a` while G($95ed) is enabled. These update

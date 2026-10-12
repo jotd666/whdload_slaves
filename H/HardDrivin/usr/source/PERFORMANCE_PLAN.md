@@ -325,7 +325,10 @@ Tools stay in ignored `tmp/dev/tools`.
 7. **Validate.**
    - VERIFY forcing T = 1 every pass must give bit-identical per-step state to the
      original on the driving tape. This proves the scaling code changes nothing at
-     the native step.
+     the native step. The current constant-input diagnostic now matches car, RNG,
+     replay ring, all traffic records and all scene-object records over 108 returns.
+     Complete data/BSS snapshots still differ in native clocks/presentation state;
+     full driving-tape equivalence is not established. See GAME_TIME.md.
    - Compare equal elapsed fields across the A500, CUSTOM4-slowed drawing, the 68020
      and the 68040: car position, speed and heading must agree within a tolerance
      derived from the units audit, and lap and checkpoint times within one frame.
