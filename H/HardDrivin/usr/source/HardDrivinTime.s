@@ -119,6 +119,9 @@ _time_install:
 	IFD VERIFY_TIME_TIMELINES
 	bsr _timeline_install
 	ENDC
+	IFD VERIFY_TIME_ATTRACT
+	bsr _attract_install
+	ENDC
 	ENDC
 .restore:
 	movem.l (a7)+,d0-d1/a0-a2
@@ -150,6 +153,10 @@ _time_vbl:
 	movea.l (a1),a4
 	move.w sr,-(a7)
 	move.l a0,-(a7)
+	IFD VERIFY_ATTRACT_PAUSE
+	lea _attract_input_state(pc),a0
+	addq.l #1,(a0)
+	ENDC
 	IFD VERIFY_TIME_REPLAY_TIMING
 	lea _replay_state(pc),a0
 	tst.b RP_PAUSED(a0)
@@ -625,4 +632,8 @@ _time_q16_results: dcb.l 7*9*7*2,0
 
 	IFD VERIFY_TIME_TIMELINES
 	INCLUDE "HardDrivinTimeline.s"
+	ENDC
+
+	IFD VERIFY_TIME_ATTRACT
+	INCLUDE "HardDrivinAttract.s"
 	ENDC

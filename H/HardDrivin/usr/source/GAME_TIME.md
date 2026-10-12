@@ -1433,3 +1433,95 @@ with no external branch into a replacement's interior. Runtime, captures and
 local checker stay under ignored `tmp/`. Step4 remains incomplete: Phantom and
 attract/menu timing, audio/derivatives, long-step safety, full tape and machine
 comparisons, matched-workload performance, and human laps are still required.
+
+
+## Attract route, scroll and timeout
+
+`VERIFY_TIME_ATTRACT` requires TIME_TIMELINES and uses the same CUSTOM1/SPS0126
+installation guard. `HardDrivinAttract.s` establishes a pause-aware wall epoch
+at the first cockpit (`$10844`). The two preceding native route/scene setup
+calls remain unchanged. It advances the visible route by one native phase per
+8 eligible fields, so each ten-phase segment lasts80 fields. The1000-pass
+sequence becomes8000 fields, followed by the remainder of the last drawn frame.
+Gameplay physics is not called by this presentation path.
+
+The route wrapper at `$0d574` consumes each interval once and walks every crossed
+segment in order, applying the original main/alternate route bounds and fork
+selection before each crossing. Cached route geometry is invalidated on a
+crossing. The original geometry construction stays in place; the interpolation
+block at `$0d832` uses the complete field fraction and signed long products.
+Both text pages use `200-floor(age/8)` instead of decrementing their scroll
+once per draw. Timeout and input-driven exit share cleanup and the native page
+toggle. Before clearing the epoch, exit consumes the last outstanding route
+interval, capped at8000 on timeout, so its fractional tail is not lost when the
+next cycle performs its native setup calls.
+
+Heading needs the cache writer at `$0d772`: it resets G($9946) to the current
+segment's heading. Thus phases0..4 hold that segment angle, then phases5..9
+interpolate toward the next segment. The elapsed path evaluates this directly
+from route geometry, including fractional fields, with the native wrap rule.
+It never depends on which intermediate frames happened to be drawn. An early
+candidate incorrectly held the preceding segment's phase9 heading. Comparison
+with original native-time poses exposed that error; those candidate captures
+are superseded by the corrected runs below.
+
+Outside an active epoch, the original interpolation block is executed from a
+runtime copy with its internal relative branches intact, and the original
+per-call route increment remains. No game bytes are committed: the copied
+block is filled from the loaded game before the loader's final cache flush.
+VERIFY_DISPATCH_NATIVE leaves the native interpolation, route increment and
+scroll instructions unpatched and retains1000 rendered passes. Its additional
+epoch hook preserves registers and X.
+
+`VERIFY_ATTRACT_PAUSE` is a separate input-only fixture: SPACE after age24, then
+SPACE40 raw VBLs later. It requires VERIFY_ATTRACT and TIME_ATTRACT and runs
+through the actual native keyboard/pause path. Its independent VBL counter
+continues while the presentation clock is paused.
+
+Corrected camera evidence before the final exit-tail addition:
+
+| Capture | Profile | Draws | Active fields | Paused fields | Fractional poses |
+| --- | --- | ---: | ---: | ---: | ---: |
+| s4-attract-correct-a500 | A500 | 1212 | 8005 | 40 | 1060 |
+| s4-attract-correct-020 | 68020 | 4036 | 8000 | 40 | 3471 |
+
+The checker independently models route crossings and interpolation from retained
+route-table records and the native cached geometry. Both runs traverse100
+segments and enter the alternate route. At624 shared elapsed-field timestamps,
+their route, camera and scroll states agree exactly. At exact eight-field
+boundaries,152 A500 poses and565 68020 poses match the original native run.
+The forced-native final camera build `s4-attract-native-correct` matches all1000
+original frames in route pointers (relative to their verified main/alternate
+allocations), phase/fork flags, cached geometry, camera pose and scrolling.
+Pointers must not be normalized to the globals hunk: these route tables are
+separate allocations. The initial comparator made that mistake; re-reading the
+retained table limits fixed the comparison without changing or masking values.
+
+The final exit-tail implementation is additionally checked through the natural
+second cycle in `s4-attract-endpoint-second`: page255,1667 draws,8003 active
+fields,100 route crossings and the alternate-route exit. The fixture's40 paused
+fields occurred in the first cycle, before this capture; they are excluded from
+the shared clock. At exit the route has consumed exactly8000 fields, its phase
+returns to the initial within-segment phase, the epoch is inactive and the page
+flag toggles. This covers the second text page and the reset boundary.
+
+The final 68020 run `s4-attract-endpoint-020` completes4043 draws in8000 active
+fields and excludes40 paused fields. It verifies3557 fractional poses and486
+exact native-grid poses, plus the same exit-tail and page-toggle invariants.
+
+The long-frame run `s4-attract-slow80` adds80 fields to each frame submission.
+It completes93 draws in8032 fields, with99 crossings before the final draw ends
+and the remaining route interval consumed at exit. Seven frames cross two
+segments; the independent route/pose model passes throughout, including the
+alternate-route entry. The final route age is exactly8000, despite32 fields of
+timeout overshoot. An earlier255-field-delay run timed out before reaching the
+cockpit anchor; its owned processes were cleaned up and it supplies no evidence.
+
+`s4-attract-endpoint-off` passes all disabled ranges, the ordinary build remains
+byte-identical, and the direct-branch audit passes104 ranges. Captures, copied
+runtime game bytes and checker tools remain under ignored `tmp/`.
+
+These are attract camera/route/timer checks, not full gameplay acceptance or a
+rendering performance claim. Attract audio and other side effects still belong
+to the remaining sound audit. Phantom playback, other menu transitions, large-T
+solver safety and the full step4 machine/handling/performance criteria remain.
