@@ -2951,3 +2951,76 @@ speed alone does not meet step 4's full handling tolerance.
 The default normal build and threshold-only diagnostic remain byte-identical
 with EXACT_THROTTLE absent. A missing HOLD_THROTTLE prerequisite is rejected.
 No production physics or acceptance threshold was changed by these fixture fixes.
+
+
+## Steady position accounting against consumed physics time
+
+The fourteen `s4-clockmotion-current/reference-PROFILE` captures each retain 500
+PAL fields using the corrected-menu exact-throttle fixture. Each policy uses one
+identical slave across all seven profiles; retained slave hashes were checked.
+This removes the prior matrix's mixed menu-build limitation. The read-only
+capture additionally records DS_CONSUMED, physics serial, scalar interval and
+velocity carry, native projected X, its Q16 correction, and both position carries.
+
+The preselected fields 360..420 contain moving, flat, automatic driving at actual
+throttle 22 and neutral buttons in every capture. Analysis uses completed physics
+returns inside that interval, without interpolating endpoints. For each adjacent
+pair, the consumed-field difference equals the next recorded scalar interval,
+the physics serial increments once, and the projected vector stays constant.
+The velocity companion's last value matches the native velocity word.
+
+With F consumed fields, P the projected X in Q16 long-position units and L the
+native long X position, the independently checked steady-motion identity is:
+
+```
+X_q16 = L * 65536 + position_remainder_128 * 512 + projection_position_carry_q16
+X_q16_after - X_q16_before = P * F / 8
+```
+
+All 286 adjacent-return intervals pass with exactly zero Q16 error: 143 for the
+regular solver and 143 for the reference. Both fractional position accumulators
+are included, so this does not merely compare rounded published positions.
+A world unit is eight long-position units; PAL field duration remains
+142102/7093790 seconds. Dividing exact displacement by consumed time gives:
+
+| Profile | Current velocity including eighths | Current world units / consumed second | Reference velocity including eighths | Reference world units / consumed second |
+| --- | ---: | ---: | ---: | ---: |
+| A500 | 231.250 | 270.272216 | 224.250 | 262.277150 |
+| A500 Fast RAM | 231.125 | 270.077214 | 224.250 | 262.277150 |
+| 68020 | 226.250 | 264.617170 | 225.000 | 262.862155 |
+| 68030/50 | 225.250 | 263.252158 | 225.000 | 262.862155 |
+| 68040/25 | 225.250 | 263.252158 | 225.000 | 262.862155 |
+| 68040/40 | 225.625 | 263.837163 | 225.000 | 262.862155 |
+| 68060/50 | 225.625 | 263.837163 | 225.000 | 262.862155 |
+
+These are measured states of the corrected-menu builds, not values inferred from
+the previous matrix's integer speed words. Relative maximum/minimum rate spread
+is 2.666667% for the regular solver and 0.223048% for the reference. Neither figure
+is an acceptance tolerance or a rendering-performance result.
+
+The same endpoint displacement divided by observation fields can differ even
+though consumed-time accounting is exact. The A500 regular pair spans 55 consumed
+fields but 57 observed fields, yielding 270.272216 versus 260.788980 world units/s.
+The 040/25 reference spans 59 consumed fields but 58 observed fields, yielding
+262.862155 versus 267.394261. The captured observation-field minus consumed-field
+offset varies across the endpoints. These are different time domains; their
+rate difference is not lost or invented position in the tested integration.
+Equal-wall-time trajectory/presentation accuracy remains a separate requirement.
+
+The reference's residual A500/fast-CPU velocity difference also cannot be treated
+as a clean integrator comparison. Input histories differ before the plateau:
+A500 ends its second upshift at field 215 with velocity 225.625 and throttle 24;
+feedback subsequently alternates throttle 23 and 20. At field 253, a 13-field pass
+with throttle 20 changes 226.000 to 224.375; at field 278 another 13-field pass changes
+225.875 to 224.250. It then holds throttle 22 from field 290 onward. The 020 reference
+instead shifts to gear 3 at field 209 with velocity 225.000 and throttle 22. These
+observed feedback episodes confound attribution of the remaining plateau spread.
+A test with matched prior inputs or controlled initial conditions is needed to
+isolate that residual. No whole-trajectory equivalence is claimed here.
+
+Evidence is retained as per-capture `consumed-motion.json` and aggregate
+`consumed-motion-comparison.json`. This completes a focused exact check of steady
+position integration across all seven standard profiles. Changing-force motion,
+slow drawing, contact, equal-wall-time handling, native-clock recovery dependence,
+the original FPS gate and human laps remain open. No game code changed for this
+measurement.

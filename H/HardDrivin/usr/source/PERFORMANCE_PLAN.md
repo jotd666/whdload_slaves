@@ -392,7 +392,13 @@ Tools stay in ignored `tmp/dev/tools`.
      solver. The Fast RAM menu fixture needed a separate correction and its
      reference settles too late for the original constant-throttle window. A later
      common interval confirms the integer-speed result, not full equal-time
-     position or performance acceptance; see GAME_TIME.md.
+     position or performance acceptance; see GAME_TIME.md. A subsequent same-build
+     seven-profile audit includes fractional velocity and both position carries:
+     all 286 steady-motion intervals integrate projected velocity over consumed
+     physics time exactly. Earlier frame-boundary rate differences mix observation
+     and consumed time. Reference rates still span 0.223% with different throttle
+     feedback histories; this does not prove equal-wall-time trajectory accuracy
+     or resolve the performance gate.
    - Exercise collisions, the loop and the jump at both T extremes; check for
      tunnelling and missed checkpoints.
    - Measure the A500's FPS: it must not drop by more than 3% against the baseline.
