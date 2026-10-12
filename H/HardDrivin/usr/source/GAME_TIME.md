@@ -3385,7 +3385,7 @@ cases, including parallel axes and full signed-word coordinates. Reports are
 `sweep-native-check.json` and `sweep-box-check.json` in the ignored harness.
 
 These private executions use audio stubs and do not establish live gameplay
-acceptance. The current sweep only visits the existing scene candidate list:
+acceptance. The initial sweep only visited the existing scene candidate list:
 culling, moving objects, turning during the interval, other contact paths and
 large travel remain open. It preserves the native post-contact separation,
 which can move the car behind its starting position in the synthetic crossing.
@@ -3447,3 +3447,54 @@ tape with595 physics returns and251 candidate sweep tests. Intervals span6..16
 and19 fields after initialization. No added hit or coordinate overflow occurs.
 This extends live integration coverage, but still supplies no natural swept
 collision or FPS acceptance evidence. The owned capture is closed.
+
+
+## Main-world sweep coverage beyond scene culling
+
+The experimental sweep now additionally scans the active main-object pool
+(`$9962/$9966`,56-byte records) after native scene-list contacts have had priority.
+It uses the same active byte at offset30 as the native scene loop. Camera-relative
+coordinates are reconstructed from world XYZ at offsets8/10/12 and the existing
+camera origin, rather than trusting raw coordinates left by an earlier render.
+Object records are not modified. Auxiliary and moving-object coverage remains
+limited to the existing scene candidates.
+
+A conservative world-axis filter rejects segments wholly outside a cube whose
+half extent is the sum of the native collision-box extents plus four units for
+Q14 rounding. Its endpoint subtraction uses signed longs, so distant objects
+near the word boundary can be rejected without spuriously disabling the entire
+sweep. Remaining candidates use the existing exact segment-box test and share
+the same earliest added contact. There is still one native response and no
+additional full scene rebuild or physics pass.
+
+`check_sweep_world.py` passes96 executions of the pristine collision routine with
+the tracked hooks. Private main-world objects are absent from the scene list
+and have deliberately stale raw coordinates. Cases cover translated cameras,
+5000/6000-unit depths beyond the renderer's4000-unit cutoff, inactive/non-solid/
+sound-only objects, missed axes, native-contact priority, nearest-object order,
+ties and distant word-edge rejection. The long-interval cases use640 fields
+and6000 world units of travel; eight-field cases verify the inactive gate.
+All object records remain unchanged. Existing32 native-loop cases and10000
+interpolation cases still pass. These are synthetic geometry tests, not proof
+that the complete physics solver safely handles640-field frames.
+
+Live `s4-sweep-world-live-a500` completes1251 fields and113 physics returns, with
+10094 pool-record visits,1407 combined candidate tests and1226 broad-phase
+rejections. There are no added hits or overflows. Native compatibility run
+`s4-sweep-world-native` matches all108 reference car states, all136 patch branches
+pass, and the normal8392-byte text remains byte-identical to the baseline.
+
+The actual broad-phase helper also retains all1395 exact contacts in10000
+randomized, independently evaluated rotated-box cases. This covers nonwrapping
+signed-word geometry, two independent Q14 angles and MPH0..1500, not arbitrary
+overflowing transforms (`sweep-world-filter-check.json`).
+
+The500-field A500 trace `s4-sweep-world-profile` lasts10.015943522 seconds and
+contains43 swaps and43 complete physics calls. Sweep routine self time totals
+200.153ms (1.9983% of elapsed time). The complete world scan, including its called
+helpers, totals137.004ms over43 calls, or3.186ms per call. Complete physics totals
+546.708ms. Instruction-cycle coverage is99.9999916%. These are measured costs of
+the current experimental build, not an isolated FPS delta or a pass of the3%
+original-game gate. The source-matched listing and `solver-costs.json` retain
+attribution; native patch-site branch instructions are outside sweep self time.
+The CUSTOM1-off capture `s4-sweep-world-disabled` passes all158 declared ranges.

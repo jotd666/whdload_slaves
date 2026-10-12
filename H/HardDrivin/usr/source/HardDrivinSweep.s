@@ -1,5 +1,6 @@
-; Experimental long-frame object sweep. Native contacts retain priority.
-; Scene-list coverage, rotating contacts and extreme travel remain acceptance work.
+; Experimental long-frame object sweep. Native solid-object contacts win first.
+; Active main-world objects are also checked independently of scene culling.
+; Auxiliary/moving objects, rotating contacts and extreme travel remain open.
 _sweep_install:
  movem.l d0/a0-a2,-(a7)
  lea _sweep_loop_ptr(pc),a0
@@ -39,8 +40,12 @@ SW_READY equ 52
 SW_TESTS equ 54
 SW_HITS equ 58
 SW_OVERFLOW equ 62
+SW_WORLD equ 66
+SW_RAW equ 68
+SW_SCANNED equ 74
+SW_REJECTED equ 78
  dc.b 'HDSWEEP1'
-_sweep_state: dcb.b 66,0
+_sweep_state: dcb.b 82,0
 ; Called after recovery and before camera/scene setup for each physics pass.
 ; MOVE/CLR/CMP do not change X; all caller registers are preserved.
 _sweep_begin:
@@ -48,6 +53,7 @@ _sweep_begin:
  lea _sweep_state(pc),a0
  clr.w SW_ACTIVE(a0)
  clr.w SW_READY(a0)
+ clr.w SW_WORLD(a0)
  clr.l SW_BEST(a0)
  IFND VERIFY_DISPATCH_NATIVE
  move.b _dispatch_state+DS_ACTIVE(pc),d0
@@ -112,9 +118,33 @@ _sweep_consider:
  move.w #1,SW_READY(a6)
 .ready:
  addq.l #1,SW_TESTS(a6)
+ tst.w SW_WORLD(a6)
+ bne.s .world_coords
  move.w (a3),d0
  move.w 2(a3),d1
  move.w 4(a3),d2
+ bra.s .coords
+.world_coords:
+ ; Recreate E562..E57A without changing the renderer's object records.
+ move.w 8(a3),d0
+ sub.w -$6716(a4),d0
+ move.w 10(a3),d1
+ sub.w -$6714(a4),d1
+ move.w 12(a3),d2
+ sub.w -$6712(a4),d2
+.coords:
+ move.w d0,SW_RAW(a6)
+ move.w d1,SW_RAW+2(a6)
+ move.w d2,SW_RAW+4(a6)
+ tst.w SW_WORLD(a6)
+ beq.s .rotate
+ bsr _sweep_world_near
+ tst.w d0
+ beq .done
+ move.w SW_RAW(a6),d0
+ move.w SW_RAW+2(a6),d1
+ move.w SW_RAW+4(a6),d2
+.rotate:
  bsr _sweep_rotate
  lea SW_BOX(a6),a0
  move.w d0,(a0)
@@ -122,7 +152,7 @@ _sweep_consider:
  move.w d2,16(a0)
  ; Transform the endpoint itself, retaining native nested Q14 rounding.
  lea SW_DELTA(a6),a1
- movea.l a3,a2
+ lea SW_RAW(a6),a2
  moveq #2,d7
 .endpoints:
  move.w (a2)+,d0
@@ -215,6 +245,7 @@ _sweep_rotate:
 _sweep_finish:
  movem.l d0-d7/a0-a2/a5-a6,-(a7)
  lea _sweep_state(pc),a6
+ bsr _sweep_world
  tst.l SW_BEST(a6)
  beq.s .native
  bsr _sweep_rewind
@@ -233,6 +264,78 @@ _sweep_finish:
  movem.l (a7)+,d0-d7/a0-a2/a5-a6
  lea -$50c8(a4),a0
  move.l a0,d5
+ rts
+; Scan only the active main-object pool, with the same active-byte gate
+; as native E522. Existing scene candidates still cover other object sources.
+_sweep_world:
+ movem.l d0-d7/a0-a3/a6,-(a7)
+ tst.w SW_ACTIVE(a6)
+ beq.s .done
+ tst.b -$16cf(a4)
+ bne.s .done
+ move.w -$669a(a4),d5
+ beq.s .done
+ movea.l -$669e(a4),a3
+ move.w #1,SW_WORLD(a6)
+.loop:
+ addq.l #1,SW_SCANNED(a6)
+ tst.b 30(a3)
+ beq.s .next
+ bsr _sweep_consider
+ tst.w SW_ACTIVE(a6)
+ beq.s .finished
+.next:
+ adda.w #56,a3
+ subq.w #1,d5
+ bne.s .loop
+.finished:
+ clr.w SW_WORLD(a6)
+.done:
+ movem.l (a7)+,d0-d7/a0-a3/a6
+ rts
+; Conservative world-axis broad phase. The sum of camera-space half extents
+; bounds every rotated axis; four units cover nested Q14 word rounding.
+; Signed LONG endpoints avoid rejecting a distant object via word overflow.
+; D5/D6 and A3 remain intact for the pool iterator.
+_sweep_world_near:
+ moveq #4,d4
+ move.w -22(a5),d0
+ ext.l d0
+ add.l d0,d4
+ move.w -24(a5),d0
+ ext.l d0
+ add.l d0,d4
+ move.w -26(a5),d0
+ ext.l d0
+ add.l d0,d4
+ move.l d4,d2
+ neg.l d2
+ lea SW_RAW(a6),a0
+ lea SW_DELTA(a6),a1
+ moveq #2,d7
+.axis:
+ move.w (a0)+,d0
+ ext.l d0
+ move.w (a1)+,d1
+ ext.l d1
+ neg.l d1
+ add.l d0,d1
+ cmp.l d4,d0
+ ble.s .low
+ cmp.l d4,d1
+ bgt.s .miss
+.low:
+ cmp.l d2,d0
+ bge.s .next
+ cmp.l d2,d1
+ blt.s .miss
+.next:
+ dbf d7,.axis
+ moveq #1,d0
+ rts
+.miss:
+ addq.l #1,SW_REJECTED(a6)
+ moveq #0,d0
  rts
 _sweep_rewind:
  lea SW_START(a6),a0
