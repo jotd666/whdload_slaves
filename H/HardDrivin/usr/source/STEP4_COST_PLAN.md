@@ -897,6 +897,14 @@ step 4.7, made concrete.
     uncertainty to each profile still fits those bounds. The conservative
     stopping-time range is 157–163 fields (spread 6, below 15). These are
     braking-only results; they do not pass steering or overall C3.
+  - **Steering startup corrected (2026-10-13):** native steering now uses the
+    velocity/RPM anchor of each existing engine chunk. Roll, pitch, spin,
+    contact and gravity retain their outer-frame work. The unchanged 550-field
+    fixture has an eight-field steering delay on all four profiles; all 779
+    recorded headings match its exact half-unit-per-field curve. Each profile
+    now settles at speed 164 in third gear. Native-step and stop/restart checks
+    pass. Equal-time XYZ bounds and wider handling coverage remain open; this
+    does not pass C3 or replace the required final cost measurements.
 - **C4, extreme T.**
   - Run collisions, the loop and the jump on the slowed A500 (largest T) and on the
     68060 (smallest T).

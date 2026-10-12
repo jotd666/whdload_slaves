@@ -4,7 +4,9 @@
 ; VERIFY_DRIVETRAIN_SKID retains native held-vector motion during skids.
 ; VERIFY_DRIVETRAIN_AIR extends this to falling and partial wheel contact.
 ; Gravity/contact remain once per outer pass, after restoring its interval.
-; Steering, contact/scene work and input sampling remain once per outer pass.
+; Contact/scene work and input sampling remain once per outer pass.
+; The phase solver evaluates steering with each existing engine chunk;
+; roll, pitch and spin rates retain the outer orientation pass.
 ; Zero/eight-field intervals and other driving modes keep the native pair.
 _drivetrain_install:
 	movem.l d0/a0-a2,-(a7)

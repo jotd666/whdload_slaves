@@ -3848,3 +3848,45 @@ outcome's sensitivity to startup steering timing without changing engine code.
 It is a diagnostic input perturbation, not a replacement acceptance fixture or
 a fix. The original failing captures remain intact. The complete report is
 `c3-delay59-steer-040/delay-diagnostic.json` under the local profile directory.
+
+
+### C3 phase-aligned steering eligibility (2026-10-13)
+
+The phase solver now defers the native steering/trigonometry tail at `$b390`
+to its existing engine chunks. The original orientation prefix still applies
+roll, pitch and spin rates once per outer frame. Steering reads the chunk's
+native velocity/RPM anchor, including the reconstructed MPH companion, and
+integrates its rate for that chunk's elapsed fields. It therefore cannot turn
+early merely because a fast render frame publishes fractional velocity during
+the initial native phase. Long frames can begin steering after that phase ends.
+Stopping and restarting use the same anchor rule. The original contact and
+gravity pass still runs once per outer frame, with the full interval restored.
+New skid state is retained before choosing held-vector motion. The fallback
+finishes any deferred steering tail before its existing engine/position path;
+the forced-native diagnostic retains the original orientation order.
+
+In the unchanged 550-field `c3-steering-phase-v2-*` fixture, A500/slowed A500/
+68020/68040 have 63/43/256/417 integrated returns (779 total). Every heading is
+`360 + floor(max(0, consumed - throttle_response_start - 8) / 2)`. All four
+settle at scalar speed 164 in third gear; the earlier fast-machine gear split
+is removed. Throttle-publication differences remain 43/54/40/40 consumed fields.
+This verifies the startup delay and gear outcome, not complete C3 XYZ bounds.
+
+A private pristine-code comparison passes 297 complete native eight-field
+orientation/engine/position cases, including 135 negative-velocity cases,
+manual/automatic gears, neutral, zero/partial/full contact, varied yaw/pitch/roll
+and angular rates. A separate acceleration/braking/idle/restart sequence matches
+all 136 pristine eight-field scalar/gear/heading endpoints. Its validated
+one-field curve matches 2476 candidate endpoints across frame partitions
+1/2/3/7/8/14/18/31 fields; position is outside this latter check's scope.
+The private fixtures flush translated-code caches when swapping code images and
+initialize the dispatcher's held mouse sample as well as native input memory.
+Initial failures before those fixture corrections are not accepted evidence.
+
+`c3-steering-native` matches all 108 runtime reference states. The ordinary
+build is byte-identical to the baseline, all 145 branch ranges pass, and
+`c3-steering-disabled` passes the 167-range inventory with its two compiled
+input fixtures declared active. Local reports are `c3-steering-phase-summary`,
+`c3-steering-native-frame`, `c3-steering-restart` and `c3-steering-disabled`
+(JSON files), plus the native capture's equivalence report. The new steering
+work still needs final cost accounting and broader C3/C4 validation.

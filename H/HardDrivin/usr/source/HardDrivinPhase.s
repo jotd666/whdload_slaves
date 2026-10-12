@@ -11,6 +11,10 @@ _phase_install:
  move.l _code_start(pc),d0
  addi.l #$b9ba,d0
  move.l d0,(a0)
+ lea _phase_steering_body(pc),a0
+ move.l _code_start(pc),d0
+ addi.l #$b398,d0
+ move.l d0,(a0)
  lea _phase_patches(pc),a0
  movea.l _code_start(pc),a1
  movea.l _resload(pc),a2
@@ -19,6 +23,9 @@ _phase_install:
  rts
 _phase_patches:
  PL_START
+ ; PERF_RANGE VERIFY_DRIVETRAIN_PHASE $0b390 $0008: steering follows scalar phase eligibility
+ PL_P $b390,_phase_steering_defer
+ PL_NOP $b396,2
  ; PERF_RANGE VERIFY_DRIVETRAIN_PHASE $122be $0006: exact shortened unsigned long division
  PL_P $122be,_phase_divide
  ; PERF_RANGE VERIFY_DRIVETRAIN_PHASE $0b904 $0008: incremental RPM before automatic gear decision
@@ -167,6 +174,27 @@ _phase_divide:
  movem.l (a7)+,d2-d3
  rts
 
+; The native outer orientation call still integrates roll, pitch and spin once.
+; Defer its steering/trig tail to the existing engine chunks, whose anchor
+; velocity makes the zero-speed eligibility test independent of render cadence.
+_phase_steering_defer:
+ IFD VERIFY_DISPATCH_NATIVE
+ bra.s _phase_steering_continue
+ ELSE
+ lea _phase_steering_pending(pc),a0
+ st (a0)
+ unlk a5
+ rts
+ ENDC
+_phase_steering_call:
+ link a5,#-6
+_phase_steering_continue:
+ clr.b -$870(a4)
+ move.b -$66f0(a4),d0
+ move.l _phase_steering_body(pc),-(a7)
+ rts
+_phase_steering_body: dc.l 0
+_phase_steering_pending: dc.w 0
 _phase_tail_ptr: dc.l 0
 _phase_manual_ptr: dc.l 0
 PH_VALID equ 0
@@ -287,6 +315,27 @@ _phase_frame:
  addq.l #1,8(a0)
  addq.l #1,PH_CALLS(a6)
  bsr _phase_prepare_anchor
+ move.b _phase_steering_pending(pc),d0
+ beq.s .orientation_ready
+ ; Recreate the native MPH companion for this phase anchor before its
+ ; speed-sensitive steering decisions. Preserve native word narrowing.
+ move.w PH_GEAR(a6),d0
+ lsl.w #2,d0
+ lea -$733c(a4),a0
+ adda.w d0,a0
+ move.w -$66d6(a4),d0
+ muls.w (a0),d0
+ divs.w 2(a0),d0
+ move.w d0,-$66d4(a4)
+ lea _time_scalar_fields(pc),a0
+ move.w PH_DT(a6),(a0)
+ bsr _phase_steering_call
+ moveq #0,d0
+ move.b -$50cf(a4),d0
+ move.w d0,PH_SKID(a6)
+ lea _time_scalar_fields(pc),a0
+ move.w #8,(a0)
+.orientation_ready:
  move.w #1,PH_ACTIVE(a6)
  bsr _phase_engine_call
  clr.w PH_ACTIVE(a6)
@@ -320,6 +369,8 @@ _phase_frame:
  move.w PH_DT(a6),d0
  sub.w d0,PH_LEFT(a6)
  bne .loop
+ lea _phase_steering_pending(pc),a0
+ clr.b (a0)
  lea _time_scalar_fields(pc),a0
  move.w PH_INTERVAL(a6),(a0)
  lea _drivetrain_state(pc),a0
@@ -329,6 +380,12 @@ _phase_frame:
  move.l _drivetrain_position(pc),-(a7)
  rts
 .fallback:
+ move.b _phase_steering_pending(pc),d0
+ beq.s .orientation_done
+ lea _phase_steering_pending(pc),a0
+ clr.b (a0)
+ bsr _phase_steering_call
+.orientation_done:
  clr.w PH_VALID(a6)
  clr.w PH_ACTIVE(a6)
  movem.l (a7)+,d2-d7/a2/a6
