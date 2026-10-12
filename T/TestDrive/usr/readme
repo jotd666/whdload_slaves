@@ -41,6 +41,11 @@
 
 History:
 
+ version 1.5b (12.10.2026) done by Vesuri:
+ - flush caches after overlay stub rewrites (90112-byte TD), for
+   cache coherency on 68040/060 and other cached CPUs; always enabled
+ - real A1200/68040 validation pending
+
  version 1.4 (13.04.2023) done by JOTD:
  - added check for important system file without which
    the game fails without any explicit reason

@@ -76,7 +76,7 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.4"
+	dc.b	"1.5b"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -196,6 +196,8 @@ patch_main
 
 _patchlist_1:
 	PL_START
+    PL_P $06390,overlay_unload_end
+    PL_P $06916,overlay_load_end
 	PL_R	$1D10	; dma stuff
 	PL_R	$1CBC	; dma/drive stuff
 	PL_L	$434,$DFF002
@@ -207,6 +209,21 @@ _patchlist_1:
     PL_PS   $001872,read_fire1
 	
 	PL_END
+
+; The Aztec overlay manager rewrites executable BSR/JMP stubs in the data
+; hunk after DOS LoadSeg has flushed the caches. Flush again after both
+; completed rewrites, before returning to a stub that may still be cached.
+; _flushcache uses resload_FlushCache, which preserves all registers and
+; handles the 68040/060 data and instruction caches as well as older CPUs.
+overlay_unload_end:
+    bsr _flushcache
+    movem.l (a7)+,a2-a3/a6    ; displaced TD:06390
+    rts
+
+overlay_load_end:
+    bsr _flushcache
+    movem.l (a7)+,d0-d2/a0-a4 ; displaced TD:06916
+    rts
 
 _patch_trackdisk
 	movem.l	D0-A6,-(A7)
