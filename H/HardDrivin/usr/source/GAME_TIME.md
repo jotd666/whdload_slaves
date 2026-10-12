@@ -2882,3 +2882,72 @@ The diagnostic's flag guards reject missing VERIFY_DRIVE and simultaneous
 constant-input mode. CUSTOM1-off validation passes all 154 declared ranges with
 only DRIVE and STEPINPUT_TAPE enabled. Both the normal build and the regular
 integrated field-tape build remain byte-identical to their pre-fixture versions.
+
+
+## Exact-throttle feedback and refreshed drivetrain comparison
+
+`VERIFY_STEPINPUT_EXACT_THROTTLE` is an optional input-only extension requiring
+VERIFY_STEPINPUT_HOLD_THROTTLE. Below the requested target it raises throttle;
+above it, it supplies native decrease button 1; only equality latches neutral
+buttons. It never writes throttle, velocity or other dynamics. This feedback may
+oscillate before settling, so every measurement must verify a constant positive
+actual throttle, neutral buttons, automatic first-gear initialization and moving,
+flat straight driving. Missing the requested window is a coverage failure.
+The old threshold-only fixture remains unchanged when this flag is absent.
+
+The initial refreshed threshold 22 reference run on A500 settled at throttle 24,
+so its speed 236..238 is excluded from an equal-throttle comparison. With exact
+feedback, both policies reach a throttle 22 plateau. The current once-per-frame
+solver retains integer speed 231 on A500; the reference reaches 225, matching the
+020/030/040/060 observations. This supports within-interval drivetrain integration
+as a correction for the observed long-frame shift overshoot. The reference remains
+optional and has not passed the A500 performance requirement.
+
+The expanded matrix also exposed a startup fixture race on A500 with Fast RAM.
+Both initial exact-throttle builds entered manual neutral and stayed stationary.
+The former straight-motion verifier accepted zero distance; it now explicitly
+rejects wrong-mode and stationary runs. Both `s4-throttle 22-exact-*-a500-fast`
+captures are retained with failed qualification reports and excluded from results.
+
+`s4-throttle-menu-fast` records the cause: native `$06d46` samples mouse X320 at
+field 999. At field 1000, `$06f78` returns centered selection 0 after VBL has published
+mouse X100 and button 1. `$06faa` consequently stores manual flag 0. The exact-throttle
+fixture now prepositions the mouse at field 900, before the existing field 1000
+click. `s4-throttle-menu-fast-fixed` samples X100 at field 999, returns signed
+selection -80 and stores automatic flag 1 at field 1000. This changes only diagnostic
+menu inputs; the original field-indexed benchmark preamble remains unchanged.
+
+The retained 500-field exact-feedback captures provide these observations:
+
+| Profile | Current solver: integer speed at throttle 22 | Reference: integer speed at throttle 22 |
+| --- | ---: | ---: |
+| A500 | 231 | 225 |
+| A500 with Fast RAM, corrected menu | 231 | 225 |
+| 68020 | 225 | 225 |
+| 68030/50 | 225 | 225 |
+| 68040/25 | 225 | 225 |
+| 68040/40 | 225 | 225 |
+| 68060/50 | 225 | 225 |
+
+For the six profiles other than A500 Fast RAM, fields 280..420 pass the original
+constant-throttle predicates (`s4-throttle 22-exact-current/reference-PROFILE`).
+After the menu correction, `s4-throttle 22-menu-current-fast` passes that interval,
+but `s4-throttle 22-menu-reference-fast` is still adjusting throttle during its
+beginning: observed values 20/22/23 make the original interval fail. That failure
+is retained rather than relabeled as a passing measurement.
+
+A separate, explicitly post-hoc common interval 360..420 is flat, moving, neutral
+and throttle 22 on all seven profiles and both policies. The table reports integer
+velocity in that interval. The Fast RAM pair uses the corrected-menu build; the
+other six pairs predate the diagnostic menu-only change. This is not a final-build
+seven-machine acceptance matrix or proof of identical input histories before the
+plateau. Reports `constant-throttle-360-420.json` preserve distance endpoints and
+sampling bounds separately from the original interval. The reference's estimated
+wall-time distance rate ranges 252.882..267.230 world units/s despite the identical
+integer speed word; publication latency, endpoint sampling and fractional velocity
+must be resolved before claiming equal-time position accuracy. Matching integer
+speed alone does not meet step 4's full handling tolerance.
+
+The default normal build and threshold-only diagnostic remain byte-identical
+with EXACT_THROTTLE absent. A missing HOLD_THROTTLE prerequisite is rejected.
+No production physics or acceptance threshold was changed by these fixture fixes.

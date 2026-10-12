@@ -333,6 +333,16 @@ _verify_drive_menu:
 	; VERIFY_STEPINPUT_MANUAL chooses the native manual menu item.
 	dc.l 1
 	dc.w 320,200,0,$20
+	IFD VERIFY_STEPINPUT_EXACT_THROTTLE
+	; The menu samples the cursor before checking buttons. Pre-position it
+	; before clicking so a VBL between those reads cannot select the old item.
+	dc.l 900
+	IFD VERIFY_STEPINPUT_MANUAL
+	dc.w 540,200,0,0
+	ELSE
+	dc.w 100,200,0,0
+	ENDC
+	ENDC
 	dc.l 1000
 	IFD VERIFY_STEPINPUT_MANUAL
 	dc.w 540,200,1,0
@@ -882,6 +892,7 @@ _verify_instructions_pause_key:
 ; Release acceleration once the native throttle reaches the requested threshold.
 ; Both input publishers call this; never write throttle or other dynamics.
 ; A coarse update may overshoot: measurements must report the actual plateau.
+; EXACT_THROTTLE uses decrease input above target and latches only on equality.
 _verify_throttle_hold_buttons:
 	move.l a0,-(a7)
 	lea _verify_throttle_hold_state(pc),a0
@@ -889,12 +900,23 @@ _verify_throttle_hold_buttons:
 	bne.s .hold
 	cmpi.b #VERIFY_STEPINPUT_HOLD_THROTTLE,-$66e4(a4)
 	bcs.s .done
+	IFD VERIFY_STEPINPUT_EXACT_THROTTLE
+	bhi.s .lower
+	ENDC
 	move.w #1,(a0)
 .hold:
 	clr.w -$6a0a(a4)
 .done:
 	movea.l (a7)+,a0
 	rts
+	IFD VERIFY_STEPINPUT_EXACT_THROTTLE
+.lower:
+	; Correct an overshoot using the game's normal decrease-throttle button.
+	; Never clamp the throttle state. A fixture that does not settle must fail
+	; the measurement's constant-throttle predicate, not fabricate a plateau.
+	move.w #1,-$6a0a(a4)
+	bra.s .done
+	ENDC
 	dc.b 'HDTHOLD1'
 _verify_throttle_hold_state: dc.w 0
 	ENDC

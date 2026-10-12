@@ -386,7 +386,13 @@ Tools stay in ignored `tmp/dev/tools`.
      28.004 versus44.458ms. The large FPS loss therefore cannot be assigned
      solely to extra player-physics computation; see the cost breakdown.
      The cheaper general policy's handling tolerance and final original-game
-     performance acceptance stay open.
+     performance acceptance stay open. A refreshed exact-throttle diagnostic now
+     holds 22 with input feedback: the reference reaches integer speed 225 across
+     all seven profiles, versus 231 on the two 68000 configurations with the general
+     solver. The Fast RAM menu fixture needed a separate correction and its
+     reference settles too late for the original constant-throttle window. A later
+     common interval confirms the integer-speed result, not full equal-time
+     position or performance acceptance; see GAME_TIME.md.
    - Exercise collisions, the loop and the jump at both T extremes; check for
      tunnelling and missed checkpoints.
    - Measure the A500's FPS: it must not drop by more than 3% against the baseline.
