@@ -76,7 +76,7 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.6b"
+	dc.b	"1.7b"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -119,7 +119,7 @@ args_end
 	dc.b	0
 slv_config
 	IFD VERIFY
-	dc.b "C1:X:automatic recovery verification:1;C1:X:five field simulation verification:2;"
+	dc.b "C1:X:automatic recovery verification:1;C1:X:five field simulation verification:2;C1:X:original blitter interrupts verification:3;"
 	dc.b "C3:B:reproducible verification RNG;"
 	dc.b "C4:B:slow drawing verification;"
 	dc.b "C5:X:scripted player race:0;C5:X:force crash:1;C5:X:force radar:2;C5:X:straight acceleration braking tape:4;"
@@ -494,7 +494,9 @@ load_exe:
 	move.l	d2,d0			; argument string length
 	move.l	_stacksize(pc),-(a7)	; original stack format
 	movem.l	(_saveregs,pc),d1-d7/a1-a2/a4-a6	; original registers (BCPL stuff)
+	bsr render_interrupt_option
 	jsr	(4,a3)		; call program
+	bsr render_interrupt_restore
 	addq.l	#4,a7
 
 	movem.l	(a7)+,d7/a6
@@ -566,6 +568,7 @@ _trdname:
 ;============================================================================
 
 	include "simulation.s"
+	include "render.s"
 	IFD VERIFY
 	include "simulation-verify.s"
 	ENDC

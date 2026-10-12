@@ -73,7 +73,7 @@ Known differences that change the design:
 3. Build: `tools/build.sh` checks the selected compiler/include trees and builds the
    authoritative source into `tmp/build/`; `VERIFY=1` selects the VERIFY output.
    The phase-1 normal variant is retained byte-identical to the 1.5b hardware handoff.
-   Current 1.6b builds contain the accepted phase-8 simulation; historical
+   Current 1.7b builds contain the accepted phase-8 simulation and phase-9 optimization; historical
    VERIFY fixtures remain pinned with their captures. Bash wrappers work with macOS Bash 3.2.
 4. Trace tools: `td_report.py` uses TD's root/data sizes, excludes the PRELOAD root copy
    and follows the loaded BPTR chain. `profile_demo.sh`, `ingame.py`, `frames.py`,
@@ -390,11 +390,43 @@ period is five fields; **do not copy integer `sim_n=6/sim_p` or six-field consta
    original blocking event intervals. Test event entry, one penalty, acknowledgement and
    recovery separately. NTSC remains open; no 50 Hz conversion may silently claim NTSC.
 
-## Phase 9: blitter priority and interrupts
+## Phase 9: blitter priority and interrupts (complete; PAL emulator beta)
 
-Copy TD2's blitter-priority and unused-blitter-interrupt patches, behind `CUSTOM2`. Find TD's
-equivalents of the shape blitter's BBUSY polls and the blitter-finished interrupts in the
-phase 4 profile. Keep the patch only if fixed windows show a gain (±0.15 fps is noise).
+`render.s` ports TD2's enable/restore helpers around the slave's program call,
+behind CUSTOM2. TD's existing root:$434/$444 operand fixes already enable
+BLTPRI during gameplay. The additional gain comes from disabling the unused
+blitter-finished interrupt; the shape blitter polls BBUSY at root:$D44.
+No additional game instructions are overwritten. The saved priority/interrupt
+enables are restored on program return; WHDLoad handles its own quit/abort path.
+
+The phase-4 profile identifies the five-plane shape-blitter waits at root:$10EC,
+$115A/$117C/$119E/$11C0/$11D8 and blitter IRQ service at Kick-relative $D14/$D38,
+handler $6DFA. No TD2 game offset was reused. VERIFY C1 bit 3 disables only
+this optimization, leaving CUSTOM2 simulation enabled for a same-build A/B.
+
+| PAL preset | Control FPS, two windows | Enabled FPS, two windows | Gain |
+|---|---:|---:|---:|
+| A500 | 4.05 / 4.05 | 4.70 / 4.80 | +0.65 / +0.75 |
+| A1200/68EC020 | 7.45 / 7.55 | 8.30 / 8.35 | +0.85 / +0.80 |
+| A1200/68030 25 MHz | 10.15 / 10.00 | 12.50 / 12.50 | +2.35 / +2.50 |
+
+Each arm uses two 1,000-field windows from the same scripted player-race anchor;
+FPS is breakpoint-counted LoadView publication at nominal PAL 50 Hz. These are
+finite-window measurements, not whole-race averages. All gains exceed the
++0.15 FPS noise threshold. Selected gameplay state matches at the initial and
+both end checkpoints. Hardware reads confirm priority enabled in both arms and
+only BLIT removed from the interrupt-enable mask. All 668 assertions and the
+existing hook/disabled-byte checks pass. The 68030 result is a frame count,
+not an instruction-cycle claim.
+
+Native helper-entry/return probes verify preserved registers and stack. Restore
+is tested with an isolated immediate-program-return fixture whose helper bytes
+are identical to the measured build; Control-C did not trigger the original
+return path in a bounded probe, so no natural-return claim is made. Normal
+1.7b C2-off/on smoke tests cover the final player build. Both builds assemble;
+final version metadata is byte-proven against the measured candidate. Local
+`docs/phase9.md` records commands, exact inputs/builds, evidence and limitations.
+Real A1200/68040 testing remains deferred and NTSC unvalidated.
 
 ## Phase 10: sub-unit rendering
 
@@ -417,7 +449,7 @@ projection, sideways/heading smoothing and smoothing of mountains and hill crest
 1. The full TD2 regression checklist adapted to TD (both builds assemble, the audit, units,
    disabled bytes, timing, all cars, zero oracle, cost, two fixed windows per arm, the oldest
    and newest WHDLoad).
-2. Player-facing: `ReadMe` release history entry (current beta 1.6b), `slv_config`
+2. Player-facing: `ReadMe` release history entry (current beta 1.7b), `slv_config`
    `"C2:B:Enhanced framerate;"`, and an icon tooltype `CUSTOM2=1`.
    `Makefile_windows.mak` gets the new source dependencies.
 3. Release archives through `package_release.py` / `amigaxdev.release` into `tmp/dev/dist/`.

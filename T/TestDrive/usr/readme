@@ -41,6 +41,13 @@
 
 History:
 
+ version 1.7b (12.10.2026) done by Vesuri:
+ - CUSTOM2=1: disable unused blitter-finished interrupts during the game;
+   save/restore blitter priority and interrupt enable on program return
+ - PAL fixed-window gains over the same enhanced simulation: A500 +0.65 to
+   +0.75 fps, A1200 +0.80 to +0.85 fps, 68030/25 MHz +2.35 to +2.50 fps
+ - CUSTOM2=0 keeps the original interrupt behavior; real hardware deferred
+
  version 1.6b (12.10.2026) done by Vesuri:
  - experimental CUSTOM2=1 fixed-time simulation for the 90112-byte TD:
    10 updates/second on 68000/010, 25 on 68020+, at nominal PAL 50 Hz
