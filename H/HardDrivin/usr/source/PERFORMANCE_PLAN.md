@@ -366,12 +366,13 @@ Tools stay in ignored `tmp/dev/tools`.
      Two further exact projection experiments (a cache and cardinal shortcut)
      still give34 swaps and were removed. The cheaper once-per-frame drivetrain
      policy gives37 swaps in the short diagnostic, but its full frozen-window
-     comparison gives115 versus108 original swaps in A and258 versus349 in B.
+     comparison after the traffic bounds fix gives115 versus108 original swaps
+     in A and258 versus376 in B.
      B fails the3% gate and has a different replay/scene workload; see PERFORMANCE.md.
-     Those full-window captures predate the traffic companion bounds fix. The
-     corrected reference build still gives34 swaps in the short diagnostic;
-     a full-force cache also gave34 and was removed. Final window measurements
-     must use the corrected build.
+     B requires365 swaps and achieves258 (31.38% loss). The first return toward
+     the start is traced to native off-road recovery, not an unexplained teleport.
+     The corrected reference build still gives34 swaps in the short diagnostic;
+     a full-force cache also gave34 and was removed.
      The cheaper general policy's handling tolerance and final original-game
      performance acceptance stay open.
    - Exercise collisions, the loop and the jump at both T extremes; check for

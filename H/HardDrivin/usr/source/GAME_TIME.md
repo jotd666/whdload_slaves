@@ -1215,9 +1215,12 @@ Focused evidence:
 
 The full-force cache experiment was removed: after the traffic fix it recorded
 96 hits and 302 misses but still only 34 swaps. Its ignored patch and failed-boot
-captures remain available for diagnosis. The previous full frozen-window A/B
-captures predate this traffic fix and must not serve as final-build acceptance.
-This correction does not establish cross-machine handling or collision safety.
+captures remain available for diagnosis. Corrected full-window captures
+`s4-traffic-fixed-tape-off/on` now replace the pre-fix measurements: the cheaper
+policy still fails the B performance gate (258 versus376 original swaps). Its
+first return toward the start is traced to native off-road timeout at field904;
+see PERFORMANCE.md for the event and workload evidence. This correction does
+not establish cross-machine handling or collision safety.
 
 
 ### Traffic acceleration at longer intervals

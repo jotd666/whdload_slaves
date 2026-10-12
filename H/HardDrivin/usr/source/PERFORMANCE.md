@@ -139,35 +139,48 @@ projection shortcut closed the reference solver's performance gap.
 
 ### Current simpler policy in both frozen gameplay windows
 
-The current all-timing build without the optional drivetrain reference was also
-run on the original field-indexed VERIFY_DRIVE tape, with the same compiled
-slave and CUSTOM1 off/on. Both captures retain all 5600 fields, complete native
-data/BSS, front-buffer images and independent swap/physics/replay observations.
+The all-timing build with the traffic companion bounds fix, without the optional
+drivetrain reference, was run on the original field-indexed VERIFY_DRIVE tape.
+The off/on pair uses the same compiled slave. Each capture retains all 5600
+fields, complete native data/BSS, front-buffer images and independent
+swap/physics/replay observations. Fresh repeats of both modes match all5600
+complete state snapshots and front-buffer images, all events and both window
+totals exactly (`s4-traffic-fixed-tape-off/on-repeat`).
 
 | Window | Original swaps / FPS | Enabled swaps / FPS | FPS change | Original / enabled physics calls | Original / enabled replay iterations |
 |---|---:|---:|---:|---:|---:|
 | A, fields 1..1250 | 108 /4.313123 | 115 /4.592678 | +6.48% | 108 /116 | 0 /0 |
-| B, fields 3000..5599 | 349 /6.700855 | 258 /4.953641 | -26.07% | 259 /251 | 90 /7 |
+| B, fields 3000..5599 | 376 /7.219259 | 258 /4.953641 | -31.38% | 376 /250 | 0 /7 |
 
-Window B therefore fails the literal 3% FPS gate: it requires at least 339 swaps
-(6.499829 FPS threshold before integer rounding), versus 258 measured. Window A
-passes the count threshold, but does not preserve the original trajectory.
-These are current measurements, not a claim that the earlier reference-solver
-10.53% diagnostic describes the regular integrated policy.
+Window B fails the literal 3% FPS gate: it requires at least 365 swaps
+(7.002681 FPS before integer rounding), versus 258 measured. Window A passes
+the count threshold but does not preserve the original trajectory. These are
+measurements of the regular integrated policy; the optional reference solver's
+34-versus38 short diagnostic is a separate experiment.
 
-The workload changes are substantial. Original B has 198 crash fields and 675
-replay fields; enabled B has 195 and 74 respectively. Original A ends near
+The workload differs substantially. Original B has no crash or replay fields;
+enabled B has196 crash fields and73 replay fields. Original A ends near
 (31719,200,24912), while enabled A ends near the starting area at
-(26542,0,25057). Thus neither a raw B deficit nor A's gain isolates solver
-instruction cost. This input tape was calibrated for the native frame-coupled
-route; altered simulation timing changes where its field-indexed steering acts.
-The shorter replay and route differences require separate handling/event checks;
-reclassifying the window as a performance pass would hide those differences.
+(26542,2,25057). During B the cars remain around different recovery locations.
+Thus neither B's deficit nor A's gain isolates solver instruction cost. This
+input tape was calibrated for the native frame-coupled route; changing simulation
+timing changes where its field-indexed steering acts.
 
-Evidence: `s4-single-tape-off/on`, `s4-single-tape-current.slave`, and the retained
-`window-comparison.json`. The source contains neither rejected projection
-experiment. Full handling, equal-time comparison and final performance
-acceptance remain open.
+The first enabled recovery is now traced directly. The native off-road-timeout
+site `$105f4` is reached at field904 with the road flag clear, velocity71,
+lap-clock BCD `$1444` and deadline `$1434`. Recovery begins at field905, resets
+the car toward (26542,0,25057), and its flag clears at field970. No abort or
+replay-exit trigger is reached in this1250-field observation. The return toward
+the start is therefore an explicit native recovery, not evidence by itself of
+an arithmetic teleport. This does not establish why the changed trajectory went
+off-road, or validate equal-time handling. Native BCD clock defects remain.
+
+Evidence: `s4-traffic-fixed-tape-off/on`, `s4-traffic-fixed-tape.slave`, their
+`window-comparison.json` and `recovery-analysis.json`, and
+`s4-traffic-fixed-recovery/recovery-triggers.json`. These supersede the pre-fix
+`s4-single-tape-off/on` performance figures for this policy. Reclassifying the
+window as a performance pass would hide the workload and handling differences.
+Full handling, equal-time comparison and final performance acceptance remain open.
 
 ### Scene preparation inside simulation substeps
 
