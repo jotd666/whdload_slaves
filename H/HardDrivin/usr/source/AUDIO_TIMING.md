@@ -304,3 +304,46 @@ car snapshots also match the reference. CUSTOM1-off passes152 patch ranges,
 the direct-branch audit passes131 ranges, and the normal8392-byte build remains
 byte-identical. Object/obstacle and special-object semantics, fast live landing
 coverage, listening and full step-4 acceptance remain open.
+
+## Object collision operands before sound requests
+
+The corrected integrated build has a new 6200-field 68020 capture,
+`s4-object-impact-020`, with operands recorded before collision response at
+`$0bc62/$0bd40`, as well as before the corresponding sound calls. The earlier
+contact logs sampled velocity only after `$0bcc8/$0bda6` had cleared it; those
+zero values alone could not distinguish a fresh impact from continued overlap.
+
+The new capture observes three object collision responses:
+
+| Field / physics step | Incoming velocity / MPH | Projected movement XYZ | Event / accepted sample |
+| --- | --- | --- | --- |
+| 3155 / 1290 | 186 / 51 | 242, 0, -139 | 6 / channel 3, period 1700 |
+| 5982 / 2335 | 0 / 0 | 0, 0, 0 | 7 / channel 3, period 500 |
+| 5987 / 2336 | 0 / 0 | 0, 0, 0 | 7 / channel 3, period 500 |
+
+The last two responses identify the same object and the same long position
+(212336, 0, 200456), before and after each response. Both restart the sample,
+five fields apart. This establishes a repeated zero-motion overlap case, rather
+than inferring it from a post-collision zero velocity. The high-speed response
+sets drift to (-242, 0, 139) and changes position by (-484, 0, 278), then requests
+the crash sample. The retained `impact-check.json` verifies every observed
+response against the native signed-word negation/doubling and long-position
+addition, the 45-MPH event threshold, and the paired event call.
+
+The same-build `s4-object-impact-a500` capture covers 6200 fields and 607 physics
+returns. It observes one high-speed impact (field 3164, step 316, velocity 196,
+54 MPH, projection 258/0/-140) and one zero-motion event7 (field 5994, step 590).
+Both pass the same impulse/event verifier. The latter identifies the same object
+as the 020 overlap, at long position 212336/1/200456, and requests channel 3/period 500
+once. The 020 capture covers 2405 returns. These observations establish different
+request multiplicity in this encounter; they do not prove whole-route equality
+or audible quality. Neither capture visits the obstacle or special-object path.
+
+A future cadence correction must distinguish this repeated same-object,
+zero-projection case from fresh nonzero collision impulses, changed objects and
+re-entry. A shared timer for every event7 caller would conflate unrelated effects.
+No object sound is gated by this audit. The capture reaches neither obstacle
+`$0bd40` nor special-object `$0bc14`, so it proves neither path's live behavior.
+Native event9 selects channel 1/period 700 at `$009d8`; the type 95 collision branch
+requests it and returns without setting a crash or applying collision separation.
+Its repeated-contact behavior remains unvalidated.
