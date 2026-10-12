@@ -77,16 +77,16 @@
    page reuse waits until the prior display has finished; copper pickup is guarded.
    Native frames and slower CPUs retain the original safe beam wait.
    The two-field cap remains (about 25 FPS on PAL). This does not make world
-   speed frame-rate independent.
+   speed frame-rate independent by itself.
  - Select Off in the splash window, or CUSTOM2=1, to disable it.
    This reverses the former development normal-build 0/1 meaning.
    Supplied icon tooltypes are unchanged.
  - Applies only to sim v1; v2/v3 retain their existing fixes.
  - The dashboard cache uses about 13.7 KB extra ChipMem, with allocation fallback.
- - Faster frames can accelerate the world on slow machines. Time Scale remains
-   unchanged; consistent-speed acceptance is postponed.
+ - With Consistent game speed Off, faster frames can accelerate the world
+   on slow machines. Neither option changes the Time Scale setting.
  - Developer builds retain individual CUSTOM2 bits (CUSTOM2=0 disables all).
-   Their bit-13 consistent-speed candidate is not enabled in this release.
+   They select consistent game speed with bit 13; CUSTOM3 is player-build only.
    Normal/developer builds
    contain no VERIFY instruments or scripted game input.
 
@@ -101,12 +101,16 @@
    All six used the same prior normal build, with Faster rendering On by default.
    These are measured scenarios, not worst-case guarantees or a 50 FPS claim.
    Full settings, comparisons and validation are in docs/profiling.md.
- - The normal build retains the original frame-dependent game speed on all
-   CPUs. No frame-independent Time Scale envelope is claimed for this release.
- - Developer candidate only: A500 Time Scale 0 passed the rate window;
+ - Consistent game speed is an independent opt-in splash option (CUSTOM3=1).
+   It is Off by default (CUSTOM3=0), even with Faster rendering On. It works
+   with Faster rendering Off too. Supported on 68000 and 020+; 68010 retains
+   native timing. It enables safe presentation and a one-field cap, without
+   promising 50 FPS. Time Scale is unchanged; overload drops excess world time.
+   W6 release acceptance was completed by the user on 2026-10-13.
+ - Measured W6 envelope: A500 Time Scale 0 passed the rate window;
    maximum-detail Time Scale 40 dropped simulation time. 020/030/040/060
    passed their Time Scale 40 rate windows. These are not full gameplay
-   acceptance or normal-build guarantees. Reduce detail on slower machines.
+   guarantees for every mission. Reduce detail on slower machines.
 
  version 2.1 (26.11.2005) done by JOTD
  - german version supported

@@ -5,20 +5,31 @@
 The user accepted measured performance on 2026-10-12. The normal build now
 starts with Faster rendering On when CUSTOM2 is omitted: On=0, Off=1.
 Developer/VERIFY CUSTOM2 remains an explicit mask, with zero disabling patches.
-The verified mask is `0x1ff1fff`, filtered by CPU; W6 bit 13 remains excluded
-pending D5 acceptance. There is no 50 FPS or frame-independent normal-game
-speed claim. Historical captures below retain their original build, option
-mapping and RAM configuration; they do not define the current player default.
+The default verified rendering mask is `0x1ff1fff`, filtered by CPU. On
+2026-10-13 the user completed W6 release acceptance and authorized normal-build
+availability. Consistent game speed is a separate, default-Off checkbox:
+`CUSTOM3=1` adds W6 bit 13, independently of Faster rendering. Its existing CPU
+gate (68000/020+, not 68010) and safe-swap/one-field-cap dependencies remain.
+Developer/VERIFY still use CUSTOM2 bit 13 and ignore CUSTOM3. The user decision
+accepts the documented operating limits; it does not change earlier results or
+claim 50 FPS. Historical captures retain their original build and option mapping.
+
+The opt-in changes option selection only; W6 runtime and default rendering
+selection are unchanged. All 577 host tests, all three builds and their
+136/136/150 patch destinations pass. Native 060 normal-build startup with `CUSTOM2=0 CUSTOM3=1` reads the
+opt-in and selects effective mask `0x1ff6ffa`, including W6 and its pacing
+dependencies (`w6-player-optin/options.json`). This is an option-path check;
+existing D5 evidence supplies runtime acceptance. No new FPS claim is made.
 
 ## D5 automated coverage complete (2026-10-12)
 
 All objective D5 input, transition, envelope and controlled outcome checks now
 have results. The prior six-machine rate matrix, 060 soak and user handling/060
-crash reports remain the evidence for those completed checks. This is not full
-D5 acceptance: A500 Time Scale 40 still misses capacity/playability targets,
+crash reports remain the evidence for those completed checks. The user subsequently completed release acceptance on 2026-10-13. A500 Time
+Scale 40 still misses the original capacity/playability targets,
 and controlled outcome fixtures do not judge manual approaches or dogfighting.
-W6 remains outside the normal mask; no performance optimization or 50 FPS claim
-is added. No further manual flight is requested for this automated scope.
+W6 is now a separate normal-build opt-in; no performance optimization or 50 FPS
+claim is added. No further manual flight is requested for this automated scope.
 
 | Check | Configuration | Result | Evidence |
 |---|---|---|---|

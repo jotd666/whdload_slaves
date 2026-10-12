@@ -300,7 +300,7 @@ Implemented in all modes after D4: the 68000 native check records zero capture/b
 
 **D4. Promote to the player build.**
 
-Implemented: common runtime with VERIFY-only fixtures/logs, developer bit 13, CPU gate and one-field cap. All three builds, 439 host tests, 79 hook ranges and patch-reach audits pass; verified-mask selection awaits D5.
+Implemented: common runtime with VERIFY-only fixtures/logs, developer bit 13, CPU gate and one-field cap. All three builds, 439 host tests, 79 hook ranges and patch-reach audits pass; W6 is available through the independent player opt-in after the 2026-10-13 acceptance decision.
 1. Split each `time-*.s` into its player code and its VERIFY instrumentation,
    keeping the instrumentation inside `IFD VERIFY`.
 2. Move the includes outside the VERIFY block in `RedBaronHD.s`.
@@ -310,28 +310,16 @@ Implemented: common runtime with VERIFY-only fixtures/logs, developer bit 13, CP
 5. Add bit 13 to the developer mask, and to the verified mask only after D5
    passes.
 
-**D5. Acceptance runs — automated coverage complete (2026-10-12).**
+**D5. Release acceptance complete (user decision, 2026-10-13).**
 
-The user resumed all automatable checks on 2026-10-12. That coverage is complete,
-with controlled-fixture limits recorded in the scoreboard. This does not change
-acceptance: W6 remains outside the normal verified mask until D5 passes.
-E measurements use the developer candidate with W6 selected.
-
-D5 is the only full matrix in this phase.
-
-All six candidate rate cases are in the scoreboard. Native catch-up input,
-Pause/Preferences, Time Compress entry/exit and catch-up mission exit now have
-automated evidence. A500 Time Scale 60 is recorded as its overload envelope;
-the earlier Time Scale 40 capacity shortfall remains. User steering/release
-feedback on both machines, the 060 crash and the 060 soak remain valid.
-Controlled landing and native damage/kill-credit outcomes now pass on both
-machines, and the A500 automatic crash exit passes. A500 combat uses a bounded
-tracked firing line; it does not accept free-maneuvering AI dogfighting. Field
-touchdowns do not constitute runway-navigation or approach-feel acceptance.
-Results and exact fixture scope live only in `profiling.md`.
-No further user flying is requested for these objective checks. The normal W6
-mask remains gated; completing a test is not the same as passing every capacity
-or playability target.
+Automatable coverage is complete; results and fixture limits remain in
+`profiling.md`. The user has accepted W6 for release despite the documented
+A500 capacity/playability limits. W6 is a separate normal-build opt-in,
+Consistent game speed (`CUSTOM3=1`, default Off), independent of Faster rendering.
+This supersedes the earlier requirement to gate all normal-build availability
+on the original capacity and gameplay targets. It does not add W6 to the default
+rendering mask or claim 50 FPS. No additional acceptance flight is required.
+Developer/VERIFY retain CUSTOM2 bit 13. The original checklist follows for context.
 
 *Rate:*
 - A500 steady and squadron, at Time Scale 0 and 40.

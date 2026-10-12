@@ -46,6 +46,12 @@ perf_read_options:
 	bne .span_player_ready
 	bclr #24,d0
 .span_player_ready
+	; Independent player opt-in. Rendering Off still permits W6 and its
+	; required safe-swap/one-field pacing; the shared CPU gate remains below.
+	btst #0,perf_custom3+3(pc)
+	beq .player_time_ready
+	bset #13,d0
+.player_time_ready
 	ENDC
 	ENDC
 	; W6 supports the measured 68000 and 020+ classes. Keep 010 unchanged.
@@ -312,6 +318,9 @@ perf_mismatch:
 perf_tags:
 	dc.l WHDLTAG_CUSTOM2_GET
 perf_custom2:
+	dc.l 0
+	dc.l WHDLTAG_CUSTOM3_GET
+perf_custom3:
 	dc.l 0
 	dc.l WHDLTAG_ATTNFLAGS_GET
 perf_attnflags:

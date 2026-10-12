@@ -1,7 +1,8 @@
 # Red Baron open work
 
 The user accepted measured performance on 2026-10-12 and requested completion
-of release work. The completion plan remains authoritative with that amendment.
+of release work. On 2026-10-13 the user completed W6 release acceptance and
+authorized its normal-build opt-in. The completion plan includes those amendments.
 
 ## Open items
 
@@ -29,27 +30,26 @@ No implementation or validation work remains for the accepted release.
 F1 enables the normal verified bundle by default; F2 condenses the ledgers;
 The original F3 passed on all six machine configurations; its results and the
 subsequent artwork and scene follow-ups are recorded separately in `profiling.md`. The normal verified mask is `0x1ff1fff`, filtered by CPU.
+Normal CUSTOM3 bit 0 independently enables Consistent game speed (Off by default).
 Normal CUSTOM2=0 is On and 1 is Off; developer/VERIFY values remain bit masks,
 where zero disables patches. The normal build is in the local build directory.
 Nothing has been pushed; publication requires a separate explicit request.
 
 ## Postponed beyond this release
 
-Automatable D5 coverage is complete as of 2026-10-12; results and fixture limits
-are in `profiling.md`. No further user flight test is requested for that scope.
-This does not promote W6 bit 13 into the normal mask: the known A500 Time Scale
-40 capacity/playability shortfall remains. Controlled field landings do not
-judge runway approaches; the A500 tracked firing-line test validates native
-damage and kill credit, not free-maneuvering AI combat. Existing user handling,
-060 crash and soak evidence is retained. Full W6 acceptance remains a separate
-decision, not an unrun automated checklist.
+W6/D5 release acceptance is complete by user decision (2026-10-13). The normal
+build exposes Consistent game speed as an independent opt-in (`CUSTOM3=1`);
+it is not part of the default Faster rendering mask. No further acceptance
+flight is required. The measured A500 overload and the controlled-fixture
+limits in `profiling.md` remain documented operating limits, not release gates.
 
 Earlier optional W1 cached-CPU extensions, G1/G3 refinements and G5–G9,
 S2/S3-prime/S4–S8, broader sound/OS changes and overlay queueing remain deferred
 unless a concrete issue justifies them. The completion plan's low-value or
 regressing C/E candidates were dropped, not left as release blockers.
 
-50 FPS and frame-independent normal-build gameplay are not release claims.
+50 FPS is not a release claim. Normal-build consistent timing is opt-in and
+subject to the documented CPU-capacity envelope.
 Further renderer redesign requires a new scope. Historical ledgers remain in
 Git; do not revive their superseded next-work lists.
 
@@ -72,7 +72,7 @@ pointer publication. Redraws, native fallbacks and modal boundaries fence before
 writing; the two-field cap and RAM requirements are unchanged. The normal
 bundle enables it. Same-build comparisons, final normal timings, native twins,
 view/firing transitions, beam checks and exact profiling are in `profiling.md`.
-FC7 is the next renderer step; D5 remains postponed.
+FC7 is the next renderer step; W6/D5 is now accepted as an opt-in; see Release status above.
 
 ## Completed: Fast-RAM cockpit composition
 
@@ -116,7 +116,7 @@ the new section of `profiling.md`. It identifies repeated cockpit scripts,
 per-plane drawing and explicit waits, and documents why the discarded software
 blitter was not a test of a purpose-built Fast RAM renderer. The sparse static
 artwork and direct scene follow-ups below are implemented. FC2 now composes the overlay/static foreground with the scene viewport;
-persistent gauges and direct convex spans are complete as FC3/FC4. FC7 is next; D5 remains postponed.
+persistent gauges and direct convex spans are complete as FC3/FC4. FC7 is next; W6/D5 is now accepted as an opt-in; see Release status above.
 
 ## Completed: selective static cockpit artwork repairs
 
@@ -130,7 +130,7 @@ workspace is reused, plus an 8 KB Chip mask; minimum RAM is unchanged.
 All six CPU timings and bounded native/view/firing validation are in
 `profiling.md`. Native firing scripts, instruments and other views keep their
 existing draw order. FC2 now handles the combined viewport and outside-viewport static persistence;
-narrower gauge updates remain FC3. D5 remains postponed.
+narrower gauge updates remain FC3. W6/D5 is now accepted as an opt-in; see Release status above.
 
 ## Completed: scene drawing structure
 
@@ -146,7 +146,7 @@ scratch loops fixed that regression. CPU comparisons, native primitive twins,
 banked flight, view/firing checks and final normal-build checks are recorded in
 `profiling.md`. FC2 now handles cockpit composition, and FC4 replaces the
 common convex polygon pipeline on 040/060. FC7 is the next renderer step.
-D5 remains postponed.
+W6/D5 is now accepted as an opt-in; see Release status above.
 
 ## Completed: FC6 profile, W6 trial and geometry evaluation
 
@@ -155,4 +155,4 @@ simulation time on target within endpoint uncertainty, with no dropped debt,
 but does not reach 50 FPS. The register-held face-loop extension passes native
 correctness checks and is dropped because neither CPU clears the 2% threshold.
 The normal release is unchanged. `profiling.md` holds all results and manual
-W6 trial instructions. D5 remains postponed; FC7 hardware confirmation remains.
+W6 trial instructions. W6/D5 is now accepted as an opt-in; FC7 hardware confirmation remains.

@@ -103,6 +103,7 @@ slv_config
 	dc.b "C2:X:Deferred page fence:21;C2:X:Fast cockpit composition:22;C2:X:Fast gauge updates:23;C2:X:Polygon spans:24;"
 	ELSE
 	dc.b "C2:L:Faster rendering:On,Off;"
+	dc.b "C3:X:Consistent game speed:0;"
 	ENDC
 	ENDC
 	dc.b 0
