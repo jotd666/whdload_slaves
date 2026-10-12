@@ -1,13 +1,9 @@
 ; Full-cockpit cache integration boundary, sim v1, developer bit 19, 020+.
-; The native static overlay, gauges and picture scripts share a private chip
-; target; restore native aliases BEFORE the sector-coordinate text. A source
-; alias that names the target must follow it, preserving native read-after-write.
-; Separate targets follow the game's two gauge-history pages. No displayed
-; bitmap is repointed, and the 3D renderer keeps its original destination.
-;
-; Development path: seeds a native reference target, then publishes accepted
-; layers with one masked copy; unavailable/VERIFY-mismatching layers copy the
-; complete native reference. Redundant drawing/seeding must go before FPS acceptance. The normal verified mask deliberately excludes this bit.
+; Native rendering keeps its original target and aliases. Only VERIFY stores
+; before/after reference pages, so the timing candidate has no full-frame seed
+; or fallback copy and allocates no private chip target. The original scene is
+; restored before VERIFY composition to detect missing coverage, then the native
+; result is restored on rejection/mismatch. The normal mask excludes bit 19.
 ; PERF_RANGE sim:0080e 6 bit=19
 ; PERF_RANGE sim:16226 6 bit=19
 CS_PAGE_BYTES = 40000
@@ -102,7 +98,7 @@ cockpit_stage_begin:
  bne .done
  cmpi.w #200,$1d44(a4)
  bne .done
- ; Do not redirect a stage whose two native aliases disagree.
+ ; Require the same native target at both renderer entry points.
  move.l $1d6a(a4),d0
  beq .done
  cmp.l $1d72(a4),d0
@@ -113,34 +109,21 @@ cockpit_stage_begin:
  move.b -$ee3(a4),d1 ; h3:711d, page BEFORE native dispatcher toggles it
  cmpi.w #1,d1
  bhi .done
- move.w d1,-(sp)
+ lea cockpit_stage_page(pc),a0
+ move.w d1,(a0) ; save before the native gauge dispatcher toggles it
+ IFD VERIFY
  bsr cockpit_stage_allocate
- move.w (sp)+,d1
- move.l cockpit_stage_pool(pc),d0
+ move.l cockpit_stage_pool(pc),d1
  beq .done
- tst.w d1
- beq .page
- addi.l #CS_PAGE_BYTES,d0
-.page
- move.l d0,(a5) ; active scratch page; independent of later page toggle
- move.l $1d6a(a4),d1
- move.l d1,4(a5) ; equal native aliases, restored together at stage end
+ ENDC
+ move.l d0,(a5) ; native target throughout the stage
+ move.l d0,4(a5)
  bsr cockpit_stage_wait
  bsr cockpit_static_prepare
- move.l d1,a0
- move.l d0,a1
- bsr cockpit_stage_copy
- ; h3:9d6e feeds native source-to-destination primitives (sim:2e4ba).
- ; Preserve a genuinely separate source, but do not leave a target alias
- ; pointing at the old public page while native writes go to the private one.
- move.l 4(a5),d0
- cmp.l $1d6e(a4),d0
- bne .source_ready
- move.l (a5),$1d6e(a4)
-.source_ready
- move.l (a5),$1d6a(a4)
- move.l (a5),$1d72(a4)
  IFD VERIFY
+ move.l (a5),a0
+ move.l cockpit_stage_pool(pc),a1
+ bsr cockpit_stage_copy ; save scene only for the exact-output checker
  lea cockpit_stage_counts(pc),a0
  addq.l #1,(a0)
  ENDC
@@ -159,24 +142,29 @@ cockpit_stage_end:
  tst.l (a5)
  beq .done
  bsr cockpit_stage_wait
+ IFD VERIFY
+ move.l (a5),a0
+ move.l cockpit_stage_pool(pc),a1
+ adda.l #CS_PAGE_BYTES,a1
+ bsr cockpit_stage_copy ; independent native reference, before publication
+ move.l cockpit_stage_pool(pc),a0
+ move.l (a5),a1
+ bsr cockpit_stage_copy ; checker publishes onto the original scene
+ ENDC
  bsr cockpit_final_publish
  tst.l d0
  bne .published
- move.l (a5),a0
- move.l 4(a5),a1
+ IFD VERIFY
+ move.l cockpit_stage_pool(pc),a0
+ adda.l #CS_PAGE_BYTES,a0
+ move.l (a5),a1
  bsr cockpit_stage_copy
+ ELSE
+ ; All other native draws already reached the real target. If composition
+ ; rejected, publish the one deferred foreground hit in its original order.
+ bsr cockpit_foreground_fallback
+ ENDC
 .published
- move.l cockpit_stage_h3(pc),a4
- adda.l #$8000,a4
- ; Native helpers may replace the source during the stage. Translate only
- ; a reference to our private page; retain other intentional source changes.
- move.l (a5),d0
- cmp.l $1d6e(a4),d0
- bne .source_restored
- move.l 4(a5),$1d6e(a4)
-.source_restored
- move.l 4(a5),$1d6a(a4)
- move.l 4(a5),$1d72(a4)
  clr.l (a5)
  IFD VERIFY
  lea cockpit_stage_counts(pc),a0
@@ -190,6 +178,7 @@ cockpit_stage_end_original:
 cockpit_stage_end_tail:
  jmp $0.l
 
+ IFD VERIFY
 cockpit_stage_allocate:
  movem.l d0-d1/a0-a1/a6,-(sp)
  lea cockpit_stage_attempted(pc),a0
@@ -198,7 +187,7 @@ cockpit_stage_allocate:
  move.w #1,(a0)
  move.l 4.w,a6
  move.l #CS_POOL_BYTES,d0
- move.l #$10002,d1 ; cleared MEMF_CHIP: native renderer uses blitter DMA
+ move.l #$10002,d1 ; cleared CHIP reference storage: preserves the existing VERIFY RAM budget
  jsr _LVOAllocMem(a6)
  lea cockpit_stage_pool(pc),a0
  move.l d0,(a0)
@@ -213,6 +202,8 @@ cockpit_stage_copy:
  dbf d2,.copy
  rts
 
+ ENDC
+
 cockpit_stage_wait:
  tst.w $dff002
 .wait
@@ -222,9 +213,10 @@ cockpit_stage_wait:
 
 cockpit_stage_sim: dc.l 0
 cockpit_stage_h3: dc.l 0
-cockpit_stage_pool: dc.l 0
-cockpit_stage_active: dc.l 0,0 ; private page, original native target
-cockpit_stage_attempted: dc.w 0
+cockpit_stage_active: dc.l 0,0 ; active native target, publication target
+cockpit_stage_page: dc.w 0
  IFD VERIFY
-cockpit_stage_counts: dc.l 0,0 ; redirected entries, restored exits
+cockpit_stage_pool: dc.l 0 ; scene and native result, checker-only
+cockpit_stage_attempted: dc.w 0
+cockpit_stage_counts: dc.l 0,0 ; accepted entries, completed exits
  ENDC

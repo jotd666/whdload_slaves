@@ -124,6 +124,24 @@ scratch outside the selected rectangle. This is correctness evidence only:
 E2 still retains native drawing and the full-frame seed, and has no accepted
 complete-cache FPS result yet.
 
+E2's timing path now draws into the native target directly: it allocates no
+private cockpit chip pages, seeds no full frame and makes no full-frame fallback
+copy. The native target aliases are untouched. A cached foreground hit replays
+its drawing state but defers pixels to the final composition; if composition
+is unavailable, only that deferred foreground is copied in native order.
+VERIFY alone retains before/after pages: it saves the original scene, captures
+the native result, restores the scene before composition and compares all
+40,000 bytes. This retains detection of missing coverage rather than allowing
+already-drawn native pixels to conceal omissions.
+
+`completion-e2-native-target` on 040 passes **71/71 exact comparisons**, zero
+mismatches/unavailable compositions, through the rear/left/right/front-return
+sequence. It exercises 49 full and 22 partial composition rebuilds. All three
+builds pass (normal/developer/VERIFY text sizes 127,864 / 128,248 / 312,390),
+as do 514 host tests, 84 hook ranges and 139 VERIFY patch destinations.
+Native gauge/static drawing still remains, so the complete-cache FPS pair
+is pending; this check is not a performance claim. The normal mask is unchanged.
+
 ### D5 acceptance postponed — not a passed checkpoint
 
 The added candidate FPS and world-rate/drop columns use **developer bit 13**,

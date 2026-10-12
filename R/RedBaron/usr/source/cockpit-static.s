@@ -1,5 +1,5 @@
 ; E2 base-layer capture from the native sim:2c144 cookie-cut descriptor.
-; Called only within the bit-19/020+ private cockpit stage, after WaitBlit.
+; Called only within the bit-19/020+ native-target cockpit stage, after WaitBlit.
 ; a4=h3+$8000, d7.w=native forced-redraw flag. Preserve all registers.
 ; Output: cockpit_static_layer={40000-byte FAST image,8000-byte FAST mask}.
 ; Capture follows the original packed source stride and its bottom-clip rule;

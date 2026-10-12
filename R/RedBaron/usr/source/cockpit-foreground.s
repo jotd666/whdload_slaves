@@ -201,6 +201,7 @@ overlay_solid_front:
  ENDC
  bra .done
 .hit
+ IFD VERIFY
  move.l OC_PIXELS(a5),a0
  move.l a0,a1
  adda.l #40000,a1
@@ -208,6 +209,10 @@ overlay_solid_front:
  moveq #20,d0
  move.w #200,d1
  bsr cf_overlay_fast
+ ELSE
+ lea cockpit_foreground_deferred(pc),a0
+ move.w #1,(a0) ; final composition supplies these pixels once
+ ENDC
  bsr overlay_cache_restore_state
  IFD VERIFY
  lea overlay_cache_stats(pc),a0
@@ -435,3 +440,20 @@ cf_overlay_cache_key_build:
  jsr (a6)
  move.l (sp)+,a6
  rts
+
+; Non-VERIFY fallback after an unavailable full composition. Other stage draws
+; already reached the native target; only a foreground cache hit was deferred.
+cockpit_foreground_fallback:
+ movem.l d0-d1/a0-a2,-(sp)
+ move.w cockpit_foreground_deferred(pc),d0
+ beq .done
+ move.l cockpit_foreground_layer(pc),a0
+ move.l cockpit_foreground_layer+4(pc),a1
+ move.l cockpit_stage_active(pc),a2
+ moveq #20,d0
+ move.w #200,d1
+ bsr cf_overlay_fast
+.done
+ movem.l (sp)+,d0-d1/a0-a2
+ rts
+cockpit_foreground_deferred: dc.w 0

@@ -1,10 +1,12 @@
 ; Complete ordered layer publication, reached only from bit-19/020+ stage.
 ; Required layers: native static artwork, seven current-page gauges, foreground.
 ; Until acceptance this remains a development candidate. Native drawing into
-; the private page is retained as fallback and VERIFY's exact-output reference.
+; its normal target is retained as fallback; VERIFY saves an exact reference.
 ; One CPU masked copy publishes the combined cockpit to the original target.
 cockpit_final_reset:
  move.l a0,-(sp)
+ lea cockpit_foreground_deferred(pc),a0
+ clr.w (a0)
  lea cockpit_gauge_seen_bits(pc),a0
  clr.w (a0)
  lea cockpit_foreground_layer(pc),a0
@@ -55,8 +57,7 @@ cockpit_final_publish:
  move.l cockpit_gauge_pool(pc),a3
  cmpa.l #0,a3
  beq cf_final_unavailable
- move.l cockpit_stage_active(pc),d0
- cmp.l cockpit_stage_pool(pc),d0
+ move.w cockpit_stage_page(pc),d0
  beq .page_ready
  adda.l #CG_STRIDE,a3
 .page_ready
@@ -115,7 +116,8 @@ cf_final_publish_pixels:
  ; comparison also detects missing coverage and scene pixels captured as art.
  lea cockpit_final_counts(pc),a6
  addq.l #1,(a6)
- move.l cockpit_stage_active(pc),a0
+ move.l cockpit_stage_pool(pc),a0
+ adda.l #CS_PAGE_BYTES,a0
  move.l cockpit_stage_active+4(pc),a1
  move.w #39999,d0
 .compare
@@ -152,7 +154,8 @@ cf_final_publish_pixels:
  move.b 0(a3,d2.w),9(a2)
  move.l cockpit_foreground_layer+4(pc),a3
  move.b 0(a3,d2.w),10(a2)
- move.l cockpit_stage_active(pc),a3
+ move.l cockpit_stage_pool(pc),a3
+ adda.l #CS_PAGE_BYTES,a3
  adda.l d2,a3
  move.l cockpit_stage_active+4(pc),a4
  adda.l d2,a4
@@ -224,8 +227,7 @@ cockpit_final_dirty:
  move.l cockpit_gauge_pool(pc),a3
  cmpa.l #0,a3
  beq .bad
- move.l cockpit_stage_active(pc),d0
- cmp.l cockpit_stage_pool(pc),d0
+ move.w cockpit_stage_page(pc),d0
  beq .page
  adda.l #CG_STRIDE,a3
 .page

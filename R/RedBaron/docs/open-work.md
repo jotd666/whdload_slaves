@@ -88,10 +88,11 @@ Dirty-update composition is implemented: changed capture generations rebuild
 old/new gauge bounds in order; source refills force a complete rebuild. The
 native check passes 72/72 frames with 22 partial and 50 full rebuilds; host tests
 also cover unchanged reuse and stale scratch outside the affected rectangle.
-Removal of redundant native drawing/seeding remains necessary before the FPS
-comparisons.
-The development path still performs a full-frame seed and native fallback copy and
-must not be used as a performance candidate yet.
+The timing path now keeps the native target, removes full-frame seeding and
+fallback copies, and defers foreground cache-hit pixels to the one final
+composition. VERIFY alone saves scene/native reference pages; the updated
+native check passes 71/71 frames, including view transitions. Redundant static
+and gauge drawing still needs removal before the complete-cache FPS comparison.
 Full-composition view twins remain open. The map-toggle check is dropped: the
 bundled game documentation specifies offline navigation maps, not an in-flight
 map command. Results are in the scoreboard. D5 remains postponed and E2–F remain
