@@ -678,10 +678,11 @@ pl_main
     IFD SIM_MODE_MENU
     PL_P $1AAD6,sim_mode_dialog_stub
     PL_PS $16C9E,sim_preferences_load_stub
+    PL_PSS $16346,sim_opponent_route_prepare_stub,2 ; TIMING_RANGE h0:16346 8
  IFD SIM_REPLAY_MENU
  PL_P $80EE,sim_replay_load_entry_stub
  PL_NOP $80F4,2
- PL_PS $E50E,sim_replay_init_tail_stub
+ PL_PS $E50E,sim_replay_init_tail_stub ; TIMING_RANGE h0:0e50e 6
  PL_PS $9E50,sim_replay_load_result_stub
  PL_PS $8174,sim_replay_save_direct_stub
  PL_NOP $817A,2
@@ -1417,6 +1418,14 @@ sim_replay_load_result_stub:
  movem.l (sp)+,a0
  rts
  ENDC
+sim_opponent_route_prepare_stub:
+ subq.l #4,sp
+ movem.l a0,-(sp)
+ lea sim_opponent_route_prepare_stub(pc),a0
+ adda.l #sim_opponent_route_prepare-sim_opponent_route_prepare_stub,a0
+ movem.l a0,4(sp)
+ movem.l (sp)+,a0
+ rts
 sim_preferences_load_stub:
  subq.l #4,sp
  movem.l a0,-(sp)
@@ -1514,6 +1523,7 @@ tape_restart_result_stub:
 	IFD SIM_MODE_MENU
 	include "simulation_mode.s"
 	include "simulation_preferences.s"
+ include "simulation_opponent_route.s"
 	ENDC
 	include "simulation_score_file.s"
  IFNE SIM_STARTUP_TESTS

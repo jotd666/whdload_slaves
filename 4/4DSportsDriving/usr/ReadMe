@@ -137,8 +137,13 @@
    file reloads in a fresh process and matches all 1510 state bytes at ticks
    200/400/600 (NoWriteCache). A return-point probe confirms successful write
    and readback; the old fixed-delay counter check could sample mid-write
- - the original opponent route builder's out-of-resource lookup remains;
-   deterministic fresh A4000 route setup is still open
+ - P5.2 bounds fresh A4000 route costs with a private 256-byte table:
+   16 native costs, zero for undefined costs. Fresh 040/060 routes agree
+   with independent reconstruction; Normal/A2500 retain native routing
+ - older format-2 replay routes remain exact, with all 1510 state bytes
+   matching at ticks 1500/1550/1600. Legacy bypass restores 37 code ranges
+ - FULL with an opponent: 040 35.19 FPS, 060 36.89 FPS; both 50.09 steps/s
+   and 1.00175 race-clock ratio over 10 seconds, without queue overflow
  - jump/landing handling and broader lifecycle/capacity and release
    acceptance remain incomplete. This is an experimental preview
  - the previously distributed testing archive has not been rebuilt with

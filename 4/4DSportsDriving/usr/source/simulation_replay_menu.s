@@ -89,7 +89,38 @@ sim_replay_init_tail:
  move.w d0,-(sp)
  lea sim_replay_pending(pc),a0
  tst.w (a0)
+ bne .install
+ ; The native UI can build an opponent while still in A2500, then reuse
+ ; that route on Re-start Driving after selecting A4000. Rebuild only a
+ ; fresh live 50 Hz race, never a replay seek or a pending file install.
+ cmp.w #-1,8(a5)
+ bne .out
+ cmp.w #50,-$15fa(a4)
+ bne .out
+ ; Re-start Driving invokes initialization while mode is still replay.
+ ; Identify the three native fresh-race callers, excluding attract/load/seek.
+ lea sim_replay_init_tail(pc),a0
+ adda.l #sim_game-sim_replay_init_tail,a0
+ move.l 4(a5),d0
+ sub.l (a0),d0
+ cmp.l #$7022,d0
+ beq .fresh_race
+ cmp.l #$7530,d0
+ beq .fresh_race
+ cmp.l #$9d0e,d0
+ bne .out
+.fresh_race:
+ tst.b -$16d8(a4)
+ bne .out
+ tst.b -$174a(a4)
  beq .out
+ lea sim_replay_init_tail(pc),a0
+ adda.l #sim_game-sim_replay_init_tail,a0
+ move.l (a0),a0
+ adda.l #$162f6,a0
+ jsr (a0)
+ bra .out
+.install:
  cmp.w #-1,8(a5)
  bne .out
  lea sim_replay_init_tail(pc),a0

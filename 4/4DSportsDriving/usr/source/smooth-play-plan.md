@@ -590,7 +590,7 @@ the testing archive is unchanged. Stop before P5.
 
 ## P5. Finish the 50 Hz (A4000) mode to release quality, time-boxed
 
-Status (12 October 2026): P5 is in progress; P5.1 passes. P5.2–P5.5 remain.
+Status (12 October 2026): P5 is in progress; P5.1 and P5.2 pass. P5.3–P5.5 remain.
 The frozen crest gate still passes 27/29; its bounds are unchanged.
 
 1. **Native format-2 replay save/load: complete.**
@@ -605,10 +605,33 @@ The frozen crest gate still passes 27/29; its bounds are unchanged.
      and `p5-save-return/B`. Native runtime, FULL solo, CUSTOM2=1,
      **NoWriteCache**; default-cache exit persistence is not claimed here.
      All owned emulators closed; short setup windows are not FPS measurements.
-2. **The opponent route builder's out-of-resource read (`$1642A`).**
-   - For 50 Hz races only, build the route from a deterministic, replay-recorded choice. That
-     is already serialised; make fresh starts deterministic by initialising the read region.
-   - Leave Normal and A2500 untouched.
+2. **Opponent route builder: complete.**
+   - Only A4000 substitutes a private 256-byte cost table at `$16346`:
+     the original 16 defined costs followed by 240 zero costs (the native
+     accumulator adds one). Native traversal and tie-breaking are retained.
+     The original resource allocation is neither extended nor overwritten.
+   - Fresh race/restart initialization rebuilds the route after selecting
+     A4000; replay loading instead restores its recorded route. Normal and
+     A2500 retain the original pointer and reads; both bypass checks pass.
+   - Independent route reconstruction matches fresh D and E runs exactly:
+     129 lookups, including 48 formerly beyond the 16-byte resource, select
+     the same 59-entry route. The older format-2 fixture retains all 1,802
+     recorded route bytes (80 entries) and matches all 1,510 semantic bytes
+     at ticks 1500/1550/1600 in fresh-process native playback.
+   - Ten-second FULL/opponent samples: D 35.1912 FPS, E 36.8908 FPS;
+     both 50.0875 steps/s and clock ratio 1.001750, zero backlog at both
+     boundaries and no overflow. Previous P3 values: D 35.1912, E 36.7908
+     FPS; the one-frame E difference is not a performance-gain claim.
+   - Hook audit passes (1,250 relocations and 10,102 branch candidates).
+     CUSTOM3=1 restores all 37 declared original-byte ranges. Short native
+     bypass windows are functional checks, not timing measurements.
+   - Evidence under `tmp/prof/p5-route-final/{D,E}`, `p5-route-replay/B`,
+     `p5-route-native10/B`, `p5-route-native20/B`, `p5-route-disabled/B`.
+     Optional runtime SHA256:
+     `fe8293924a3b16d7a499ab73f5a831dd96e39dd70ae2d4a9ee109697ad65bdb7`.
+     Opponent fixture SHA256:
+     `7d926c8e29cc8d361641d953be43f528b47a611c8d8e2f64f15f477b4d4c455e`.
+     Native production and the testing archive are unchanged; P6 remains open.
 3. **Jump and landing: time box of 2 working sessions.** Try at most two principled
    candidates from natural-jump-handling.md, using the existing frozen 29-check gate.
    - If it still fails, stop. Report the two failing metrics (common Y and pitch) with the
