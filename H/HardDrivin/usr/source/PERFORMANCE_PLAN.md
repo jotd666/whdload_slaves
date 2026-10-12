@@ -417,6 +417,11 @@ Tools stay in ignored `tmp/dev/tools`.
      from the feedback controller: all 762 moving returns across seven profiles
      plus slowed A500 drawing match an independent one-field model in fractional
      velocity, gear and position, including both upshifts. See GAME_TIME.md.
+     The independent engine oracle now also matches1600 actual native 68000
+     executions after correcting DIVS.W quotient-overflow behavior. Full-throttle
+     controlled-start captures add69 exact reference returns across A500 and68020,
+     including all three upshifts and the overflow conversion range. These remain
+     flat-road consumed-time checks; see GAME_TIME.md for their limits.
      A subsequent forced-interval boundary check finds a limitation of that
      comparison: seven/nine-field frames follow the fine reference exactly, but
      eight-field frames deliberately follow the original coarse update. From the

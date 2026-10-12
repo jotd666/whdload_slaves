@@ -3297,3 +3297,58 @@ step boundaries is needed before the reference can become the accepted integrato
 No gameplay branch or acceptance criterion was changed by this diagnostic.
 The normal slave remains byte-identical to the baseline; missing dispatcher,
 native-mode conflict, zero and65536 diagnostic intervals all fail assembly.
+
+
+## Native engine oracle and full-throttle reference checks
+
+Before using the independent drivetrain model to redesign the interval boundary,
+its native eight-field result was compared with the actual pristine engine at
+`$0b662`. The isolated harness relocates the original code/data and executes the
+original math helpers and gear table on a68000 CPU. It supplies flat road, full
+contact, automatic gears and no brake/skid; audio is ineligible. It compares
+velocity, RPM and gear, not whole-car or renderer behavior.
+
+The first1600 cases found184 model mismatches. The model had treated `$02950`
+(MULS.W followed by DIVS.W) as an unbounded division followed by word truncation.
+On quotient overflow, native DIVS.W leaves the dividend register unchanged, and
+these callers still consume its low word. At throttle100 in first gear, for
+example,450*800/7 overflows; the native low-word result is32320, not the mathematical
+quotient51428. This affects force inputs even though the final acceleration cap
+can hide it at low speed. No native force law was changed to fix the model.
+
+After correcting this behavior, all1600 native executions match velocity, RPM
+and gear exactly. The cases comprise576 structured combinations of four gears,
+six throttle values (0,22,63,64,75,100), six velocities (0,40,100,225,500,1000) and
+four RPM values (0,1950,5100,6500), plus1024 deterministically generated cases in
+the same gear/throttle/RPM range and velocity0..1000. The retained report
+`native-engine-model.json` includes actual results, corrected predictions and
+recomputed examples of the old model's184 mismatches. This does not validate
+negative velocity, arbitrary word overflow elsewhere, braking, manual gears or
+non-flat contact.
+
+All762 previously retained controlled-throttle22 returns and the ten seven/nine
+field boundary returns still match the corrected model. Two new240-field captures
+use one identical full optional reference slave with INITIAL_THROTTLE100:
+`s4-reference-throttle100-a500` and `s4-reference-throttle100-a1200-020`.
+Read-only initialization checks establish the same stationary first-gear state.
+All12 A500 and57 68020 moving returns match independent fractional velocity, gear
+and full Q16 position. A500 intervals are13..18 fields;68020 intervals are2..5.
+The one-field oracle reaches upshifts at consumed ages93,119 and147 in both runs;
+it executes119 overflow conversions before the end of each capture. Thus the
+new live check exercises the corrected arithmetic, rather than merely repeating
+a safe low-throttle case. Evidence is in each run's `initialized-motion.json` and
+`throttle100-model-comparison.json`, which also verifies identical slave hashes.
+These are consumed-time straight-line checks, not wall-time, contact, native-step
+or FPS acceptance of the reference integrator.
+
+A simple proposal to hold native engine endpoints over fixed eight-field phases
+has not been implemented. Anchoring endpoints alone does not resolve the position
+problem. For previous projection1 and next projection0, the current Euler
+extension gives displacement n*(8-n)/128 at phase n in0..8: it moves forward to
+1/8 unit at n=4, then returns to the native zero-displacement endpoint at n=8.
+`native-endpoint-extension.json` records these exact rational values. This is an
+algebraic limitation of that extension, not a measured new gameplay failure or
+proof that all possible interpolators fail. A redesign must address stopping,
+input changes, gear transitions and contact while still updating physics every
+frame on68020+; simply capping physics at the native6.25Hz would violate the
+requested policy. The handling-target question and step4 acceptance remain open.
