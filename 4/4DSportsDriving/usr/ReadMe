@@ -38,7 +38,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 1.3 (12.10.2026):
+ version 1.3b (13.10.2026):
+ - splash simplified to one Enhanced framerate checkbox; credits now include
+   Enhancements by Vesuri
  - one production slave includes corrected timing, optional rendering
    optimizations and experimental A4000 physics; no test fixtures
  - Normal runs at 10 simulation steps/s and A2500 at 20 steps/s, independent
@@ -60,7 +62,12 @@
  - eligible 020+ machines with real Fast RAM can use a planar CPU renderer
    with Fast-RAM staging. Other configurations retain native drawing.
    The slave does not force extra CPU cache settings.
- - CUSTOM2=0 (default): original rendering.
+ - the splash checkbox "Enhanced framerate (68020+Fast for CPU renderer)"
+   enables all rendering enhancements. Compatible optimizations also benefit
+   68000 machines; the CPU renderer requires 68020+ and real Fast RAM.
+   Corrected timing stays enabled; A4000 remains an in-game opt-in.
+ - Advanced tooltypes (renderer-only and legacy timing are not splash options):
+   CUSTOM2=0 (default): original rendering.
    CUSTOM2=1: all validated rendering optimizations, including the eligible
               Fast-RAM renderer and CPU-specific drawing paths.
    CUSTOM2=2: eligible Fast-RAM renderer only.
@@ -71,7 +78,8 @@
    and the optional renderer require additional host memory.
 
  Emulator measurements; real-hardware reports welcome.
- Ten-second PAL moving windows on this production slave. Values are FPS,
+ Ten-second PAL moving windows on the P6 production build. Version 1.3b
+ changes only splash text/options and version metadata; game code is unchanged. Values are FPS,
  counted at display-buffer switches; FULL/FAST are graphics detail levels.
  CUSTOM2=0 and CUSTOM2=1 both use corrected timing (CUSTOM3=0).
 

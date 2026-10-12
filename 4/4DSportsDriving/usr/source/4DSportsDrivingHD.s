@@ -243,15 +243,7 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.3"
-	IFD BARFLY
-		dc.b	" "
-		INCBIN	"T:date"
-	ENDC
-	IFD	DATETIME
-		dc.b	" "
-		incbin	datetime
-	ENDC
+	dc.b	"1.3b (13.10.2026)"
 	ENDM
 
 	dc.b	"$","VER: slave "
@@ -265,16 +257,14 @@ slv_name		dc.b	"4D Sports Driving"
 			ENDC
 			dc.b	0
 slv_copy		dc.b	"1992 Distinctive/Mindscape",0
-slv_info		dc.b	"Installed & fixed by JOTD",10,10
+slv_info		dc.b	"Installed & fixed by JOTD",10
+		dc.b	"Enhancements by Vesuri",10,10
 		dc.b	"Version "
 		DECL_VERSION
 		dc.b	0
 
 slv_config
-	dc.b "C2:X:All validated rendering optimizations:0;C2:X:Fast RAM CPU renderer:1;"
- IFD SIM_TIMING_OPTION
- dc.b "C3:X:Original simulation timing:0;"
- ENDC
+ dc.b "C2:X:Enhanced framerate (68020+Fast for CPU renderer):0;"
  dc.b 0
 	even
 

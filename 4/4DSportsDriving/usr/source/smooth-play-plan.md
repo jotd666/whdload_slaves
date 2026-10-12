@@ -3,7 +3,7 @@
 Written 2026-10-11 on HEAD `c70ea93` (branch `4dsportsdriving`). This plan supersedes the
 "next steps" sections of optimization-plan.md, simulation-plan.md and open-work.md. Their historical
 versions remain reference material for addresses and evidence, not a to-do list.
-P1-P5 are complete; the A500 FAST target is deferred and A4000 remains experimental.
+P1-P6 are complete; the A500 FAST target is deferred and A4000 remains experimental.
 Historical harness research is preserved in `tmp/dev/docs/.git` at `9311a53`;
 `docs/open-work.md` is the single current-state guide.
 This tracked file is authoritative. Relative paths such as `tools/`, `docs/` and `tmp/prof/`
@@ -793,6 +793,29 @@ local testing archive; nothing has been uploaded or published.
 The earlier outcome estimates are superseded by these measured results.
 P6 makes no further physics/handling changes: the frozen gate remains 27/29,
 and the two failed bounded trials remain documented in P5.
+
+## Splash simplification — v1.3b (13.10.2026)
+
+The splash now offers only `Enhanced framerate (68020+Fast for CPU renderer)`
+(CUSTOM2 bit 0). It selects all compatible rendering optimizations; the CPU
+renderer still checks 68020+ and real Fast RAM, while other improvements can
+benefit 68000 machines. Renderer-only CUSTOM2=2 and legacy CUSTOM3=1 remain
+advanced tooltypes and are no longer shown as splash checkboxes. Corrected
+simulation timing remains the default; A4000 stays an in-game experimental
+opt-in. Credits include `Enhancements by Vesuri`.
+
+The rebuilt slave is 204608 bytes, SHA256
+`e5b5d52a1fdfc9890029a47dbc805b54c15f117c449c9816beefe70d3544b7ec`.
+The executable/data payload from file offset 5174 is byte-identical to the
+P6 build measured above (199434 bytes); only header/text metadata differs.
+No gameplay or gating code changed, so the P6 measurements remain applicable.
+The actual splash is captured in `tmp/prof/splash-v13b/splash.png`; its binary
+metadata/payload verification is in `check.json` alongside it.
+
+Current local testing archive: `dist/4DSportsDriving_v1.3b_1461.lha`, 928822 bytes,
+SHA256 `0cacd1d4eaa3a54bfb5013e2107f5fd6ae631740a37738c0d587238524d6cb90`.
+All 124 members were re-extracted and checked; only the slave and ReadMe differ
+from the original v1.2 pack. Nothing was published.
 
 ## Not doing (with reasons)
 
