@@ -1,4 +1,4 @@
-; P3 fast-stage overlap, A4000 diagnostic only. Stable live frames can prepare
+; P3 fast-stage overlap, opt-in A4000 build. Stable live frames can prepare
 ; geometry/pixels while the preceding copper-list switch is still pending.
 ; The original VBL guard remains mandatory before any Chip-RAM write.
 raster_present_prepare:

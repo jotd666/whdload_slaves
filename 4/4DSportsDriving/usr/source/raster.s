@@ -1,4 +1,4 @@
-; P3 development rasterizer: explicit Fast-RAM experiments or VERIFY twins.
+; Exact CPU rasterizer: production Fast-RAM path and optional VERIFY twins.
  IFND VERIFY
  IFND P3_DIRECT
  FAIL "P3_RASTER requires VERIFY or explicit P3_DIRECT experiment"
@@ -45,6 +45,9 @@ raster_init:
  ENDC
  lea raster_buffer(pc),a0
  clr.l (a0)
+ move.l _custom2(pc),d0
+ and.l #3,d0
+ beq .done
  move.l perf_attnflags(pc),d0
  btst #1,d0
  beq .done

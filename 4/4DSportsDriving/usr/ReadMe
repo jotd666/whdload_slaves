@@ -80,19 +80,36 @@
    A2500 19.98171, race-clock ratios 0.999952 / 0.999085; no queue overflow
  - P2 is complete with user approval to defer the unachieved A500 FAST
    9.5-10 FPS target. Slower or insignificant experiments were discarded;
-   P3 is being validated separately below
+   P3 is complete, with its results below
 
- P3 CPU renderer in validation (12.10.2026):
- - opt-in source builds render the viewport, clears and aligned sky rows into
-   Fast RAM on eligible 020+ machines, then copy the viewport to Chip RAM
- - all graphics levels, native replay, crash/finish, camera/opponent views,
-   circle cases and partial-background fallback pass exact pixel comparisons
- - display-DMA checks find no writes to a still-displayed bitmap
- - experimental FULL results: A1200 A2500 11.397 FPS (P2: 9.998);
-   50 Hz solo 040/25 44.589 FPS, 060/50 45.489 FPS; opponents 35.191/36.891
- - these accelerator figures use corrected private-emulator frequency settings;
-   older accelerator measurements above are not matched before/after baselines
- - production still contains P2; final integration and acceptance are pending
+ P3 Fast-RAM CPU renderer completed (12.10.2026):
+ - the production slave now includes exact CPU viewport/background drawing on
+   020+ with the game and a 32000-byte staging bitmap in real Fast RAM
+ - CUSTOM2=1 enables all validated rendering optimizations; CUSTOM2=2 selects
+   the Fast-RAM renderer alone. CUSTOM2=0 keeps native rendering and allocates
+   no staging bitmap. 68000/010 and machines without real Fast RAM keep native
+   drawing (and any separately selected P2 optimizations)
+ - original clipping and circle/wheel construction are retained. The CPU draws
+   planar pixels directly; there is no chunky conversion or interpolation
+ - exact pixel checks pass all graphics levels, native replay, crash/finish,
+   camera/opponent views, circles and partial-background fallback
+ - matched 10-second FULL emulator FPS, P2 -> P3:
+     A1200 020/14, A2500: 9.998 -> 11.397 (100.02 -> 87.74 ms/frame)
+     030/50, A2500, data cache on: 18.795 -> 19.895
+     040/25, A2500: 19.595 -> 19.895; 060/50: 19.895 -> 19.895
+     040/25, opt-in 50 Hz: 19.295 -> 44.589 (51.83 -> 22.43 ms/frame)
+     060/50, opt-in 50 Hz: 20.395 -> 45.489 (49.03 -> 21.98 ms/frame)
+   With an opponent at 50 Hz: 040/25 35.191 FPS, 060/50 36.791 FPS
+   A500 FAST stays at 7.697 FPS; its deferred target is unchanged
+ - native-rate production still draws at most 10/20 FPS. The 50 Hz figures use
+   the existing optional A4000 physics build; its handling/release work remains
+ - these accelerator comparisons use corrected private-emulator CPU-frequency
+   settings. The 030 uses native IDE images with data-cache emulation enabled;
+   030/040/060 comparisons disable MMU emulation. They are not real-hardware
+   predictions, or matched comparisons with older accelerator tables above
+ - display-DMA checks find no writes to a still-displayed bitmap. Disabled
+   options preserve all 35 original rendering/timing ranges; hook audit passes
+ - source build only: the previously distributed testing archive is unchanged
 
  Separate A4000 SIM_RUNTIME source status (11.10.2026):
  - replay format 2, physics ABI9, stores the chosen opponent route so native

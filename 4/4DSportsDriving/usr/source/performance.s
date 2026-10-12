@@ -1,4 +1,5 @@
-; Optional rendering changes. All game hooks are absent with CUSTOM2 bit 0 off.
+; Optional rendering changes. CUSTOM2=0 leaves all rendering hooks absent.
+; Bit 0 selects all validated paths; bit 1 selects the Fast-RAM renderer alone.
 ; The original game remains the reference for every replacement.
 ; PERF_MASK test-build bits: 1=BLIT IRQ, 2=vertices, 4=emit, 8=backface,
 ; 16=parent rotation, 32=state clear, 64=primitive depth/header,

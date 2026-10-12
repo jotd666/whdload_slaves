@@ -158,6 +158,36 @@ SIM_TRACE SET 1            ; retain standalone native-probe builds
  ENDC
  ENDC
 
+; Validated CPU rasterizer; runtime CPU/memory and CUSTOM2 gates stay mandatory.
+ IFND VERIFY
+ IFND P3_RASTER
+P3_RASTER = 1
+ ENDC
+ IFND P3_DIRECT
+P3_DIRECT = 1
+ ENDC
+ IFND P3_FRAME
+P3_FRAME = 1
+ ENDC
+ IFND P3_BAND
+P3_BAND = 1
+ ENDC
+ IFND P3_QUAD
+P3_QUAD = 1
+ ENDC
+ IFND P3_SOLID
+P3_SOLID = 1
+ ENDC
+ IFND P3_BACKGROUND
+P3_BACKGROUND = 1
+ ENDC
+ IFD SIM_RUNTIME
+ IFND P3_PIPELINE
+P3_PIPELINE = 1
+ ENDC
+ ENDC
+ ENDC
+
 ;USE_PROFILING
 
 	IFD	USE_PROFILING
@@ -244,7 +274,7 @@ slv_info		dc.b	"Installed & fixed by JOTD",10,10
 		dc.b	0
 
 slv_config
-	dc.b "C2:X:Experimental rendering optimizations:0;"
+	dc.b "C2:X:All validated rendering optimizations:0;C2:X:Fast RAM CPU renderer:1;"
  IFD SIM_TIMING_OPTION
  dc.b "C3:X:Original simulation timing:0;"
  ENDC
