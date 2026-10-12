@@ -3,7 +3,7 @@
 Written 2026-10-11 on HEAD `c70ea93` (branch `4dsportsdriving`). This plan supersedes the
 "next steps" sections of optimization-plan.md, simulation-plan.md and open-work.md. Their historical
 versions remain reference material for addresses and evidence, not a to-do list.
-P1-P6 are complete; the A500 FAST target is deferred and A4000 remains experimental.
+P1-P6 are complete; the A500 FAST target is deferred and A4000 remains experimental. P7 (A4000 crest handling gate) is planned.
 Current release: 2.0b (13.10.2026), 37208-byte slave. Runtime buffers are allocated
 at startup; the DSI intro buffer-reuse flicker is fixed (see sections below).
 Current binary SHA256: `6508c4d303e2edca408c7923c741d419a82c60d71f2b1d92a8b89a2c88e831d4`.
@@ -947,6 +947,114 @@ PC-relative candidates). A4000 replay matches 1510 semantic bytes at each of
 steps 1500/1550/1600 and restores all 1802 route bytes. Each emulator was
 bounded by a 180-second watchdog and closed afterward. Archive re-extraction
 verifies all 124 members. No real-hardware validation is claimed.
+
+## P7. Pass the A4000 crest handling gate (planned 2026-10-12)
+
+Goal: the frozen crest gate (`tmp/prof/natural-crest-criteria.json`, SHA256
+`90570d37e39d7fbdf804bbc497959ffe30e60f51bbb60c3e938f041c1d3401db`) passes 29/29
+for A4000 without changing the criteria, Normal or A2500. Today it is 27/29: common Y
+2263 against 1247, common pitch 18 against 11 (`tmp/prof/crest-d9e7903/bridge-handling.json`).
+
+### Analysis
+
+- All event metrics pass: takeoff and landing times, peak height, pitch extremes, airborne
+  time and final state. Only common-time samples fail. Y fails at 13.0 s, just before the
+  first landing. Pitch fails at 12.6 s in flight and at 13.2 s and 15.6 s just after landings.
+- The error is systematic, not phase noise. Across native10/20 at start Z -64/0/+64
+  (`native-contact-phase-criteria.json`), Y at 13.0 s spans 6457..11956; A4000 is 14167.
+  Pitch at 12.8 s spans -124..-103; A4000 is -93. A4000 rotates nose-down too slowly in
+  flight. The trend Normal -> A2500 -> A4000 is monotonic in Y during flight and in
+  pitch recovery after landing.
+- **Cause 1, release gravity age.** Native gravity (`v += a; y -= v`) charges a full step
+  on the update that first detects a wheel airborne: 50 ms at A2500, 20 ms at A4000.
+  Free flight itself is exact. At 11.6 s the wheel velocities are:
+
+  | Wheel | A2500 | A4000 |
+  |---|---|---|
+  | Front | 189 (9×21) | 176.4 (21×8.4) |
+  | Rear | 105 (7×15) | 102 (17×6) |
+
+  Copying only these velocities into A4000 at 11.6 s moves the 13.0 s error from Y/pitch
+  2263/10 to 282/3 (`flight580-velocity-split.json`).
+- **Cause 2, approach lag.**
+  - At 9.0 s A4000 is 652 Z behind A2500, while Normal is 220 ahead. Speeds agree within
+    5 units throughout.
+  - The gap grows from the first updates on flat ground at pitch 0, about 2 raw units per
+    update in every mode. A4000 makes 2.5 times as many updates, so it loses 2.5 times as
+    much. The distance kernel itself is exact.
+  - A4000 therefore reaches the crest about 16 ms late. That matches the 17 ms later crest
+    intersection already measured.
+  - The lag also decides which native step a release falls in. At the second takeoff the
+    A4000 front wheel separates at 14.16 s, just after the native boundary at 14.15 s. Fix
+    both causes together.
+- About 70 earlier offline and live contact, suspension, push, pitch and ordering
+  candidates were rejected (history: `git -C docs show 9311a53:natural-jump-handling.md`).
+  Do not reopen those families.
+
+### Rules
+
+- Screen offline first with the exact coupled model (`tools/coupled_course_check.py`,
+  `coupled_vehicle_core.py`, `coupled_course_audit.py`). Its controls must still
+  reproduce all 795 updates in each phase.
+- Go live only with a candidate that passes offline.
+- Never edit the criteria files. Normal and A2500 stay byte-identical.
+- No interpolation and no constants fitted to reference trajectories.
+- Time box: 3 sessions in total.
+
+### Steps
+
+1. **Per-update position truncation (about 1 session).**
+   - In the offline model, log intended against applied Z per update for 0.2-1.6 s.
+     Conditions are flat ground, pitch 0, equal speed.
+   - Locate the truncating operation. Candidates are the movement vector rotation, the
+     >>6 wheel cache and the centroid.
+   - At 50 Hz, carry the remainder so that five updates lose exactly what two A2500 updates
+     lose. This is the rule `sim_distance_50` already follows.
+   - Acceptance:
+     - Z50-Z20 at 9.0 s within +/-60 (now -652).
+     - Speeds unchanged.
+     - Native20 control exact.
+2. **Native-grid release age (about 0.5 session).**
+   - On a wheel's first airborne pair after a velocity reset (velocity word and fifths
+     zero), use age h = tau/50 ms instead of 2/5.
+   - tau is the time since the start of the A2500 step that contains this A4000 update.
+     With race tick n aligned to A2500 tick 0 and r = 2n mod 5, tau/10 ms = r, or 5 when
+     r = 0. Use the tick counter that replay seeks restore.
+   - Apply dv = h*a and dy = h(h+1)/2*a. These are exact in the existing fifths and
+     twenty-fifths carries: dy in 25ths is h5(h5+5)/2*a for h5 = 1..5.
+   - Later updates stay at 2/5.
+   - One branch in `sim_airborne_pair_50` (`simulation_physics.s`). It reproduces 189/105
+     from the A4000 detections at ticks 560/564.
+3. **Offline decision point.**
+   - Screen steps 1 and 2 together in all three phases, against the original gate and the
+     phase family.
+   - Pass when the original gate reaches 29/29 and the phase-family failure counts are no
+     worse than 70/95/90. Then go to step 5.
+   - If only the post-landing pitch samples fail, go to step 4.
+   - If Y still fails, stop and go to step 6.
+4. **Landing, only if needed (one candidate, at most 1 session).**
+   - Re-screen the existing impact-return variant combined with steps 1 and 2. It keeps the
+     native 128-unit return on first contact and returns consecutive supported contacts at
+     2/5 with a carry.
+   - On its own it took pitch from 18 to 15 (`impact-return-audit.json`).
+   - No other landing variants.
+5. **Integrate and validate.**
+   - Implement in `simulation_physics.s` and at the truncation site.
+   - Bump the A4000 physics/replay ABI from 9 to 10. ABI9 A4000 replays are rejected with
+     the existing message. Native replays are unaffected.
+   - Verify:
+     - Live crest gate 29/29 (`bridge_handling.py --candidate`), plus the phase family.
+     - A4000 format-2 save/load matches the recorded semantic checkpoints.
+     - Native replay state check.
+     - `check_disabled.py` with CUSTOM3=1, and `hook_audit.py`.
+     - One FPS row each for D and E.
+   - Update this section and the ReadMe, then commit. Removing "experimental" is the
+     user's decision.
+6. **If it still fails, the user decides.** Options:
+   - Keep the current A4000 default as experimental.
+   - Revert PAL 040/060 to A2500.
+   - Approve an explicit re-baseline on native phase-family bands. Current A4000 also
+     fails those, so this is no loophole.
 
 ## Not doing (with reasons)
 
