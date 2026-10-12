@@ -5,7 +5,7 @@
 The user accepted measured performance on 2026-10-12. The normal build now
 starts with Faster rendering On when CUSTOM2 is omitted: On=0, Off=1.
 Developer/VERIFY CUSTOM2 remains an explicit mask, with zero disabling patches.
-The verified mask is `0xf1fff`, filtered by CPU; W6 bit 13 remains excluded
+The verified mask is `0x1f1fff`, filtered by CPU; W6 bit 13 remains excluded
 because D5 is postponed. There is no 50 FPS or frame-independent normal-game
 speed claim. Historical captures below retain their original build, option
 mapping and RAM configuration; they do not define the current player default.
@@ -281,8 +281,8 @@ VERIFY timings are not performance evidence. Run one owned emulator at a time.
 
 ## Direct scene viewport development (2026-10-12)
 
-User-authorized scene follow-up, developer/VERIFY bit 20 only; normal mask is
-unchanged pending measurement. Native scene setup/clip remain. Direct rectangles
+User-authorized scene follow-up, bit 20; now selected by Faster rendering on
+030/040/060 after the comparisons below. 000/010/020 retain native drawing. Native scene setup/clip remain. Direct rectangles
 and lines write all five colours, polygon coverage is traversed once for all
 planes, and uncommon primitives retain the compatibility kernel. The guarded
 full-width viewport has a native background clear, so no inbound screen copy is
@@ -326,9 +326,9 @@ Evidence: `scene-direct-<machine>-{on,off}-2`.
 
 | CPU | Native FPS | Direct FPS | FPS change | Native scene ms | Direct scene ms |
 |---|---:|---:|---:|---:|---:|
-| 030/50 MMU | pending | pending | pending | pending | pending |
-| 030/50 NOMMU | pending | pending | pending | pending | pending |
-| 040/25 | pending | pending | pending | pending | pending |
+| 030/50 MMU | 14.377 | 16.574 | +15.28% | 39.286 | 29.917 |
+| 030/50 NOMMU | 14.577 | 16.574 | +13.70% | 39.312 | 28.624 |
+| 040/25 | 13.578 | 15.975 | +17.65% | 42.550 | 35.053 |
 | 060/50 | 13.778 | 16.574 | +20.29% | 40.800 | 33.456 |
 
 The 060 follow-on draw window also improves, 12.979 → 13.978 FPS (+7.69%):
@@ -337,7 +337,31 @@ polygon mean 0.809 → 0.804 ms. This supports the intended reduction in rectang
 work without the first revision's polygon regression. These are different windows,
 not a steady 16.6 FPS claim; changed frame timing also changes the subsequent
 frame-dependent native flight. Primitive models/twins establish correctness.
-Normal release selection awaits the remaining CPU and transition checks.
+All four comparisons exceed 2%; bit 20 is retained on 030/040/060. The normal
+bundle starts at `0x1f1fff`, with the existing per-CPU exclusions; W6 stays out.
+
+Functional revision-2 evidence:
+- `scene-direct-verify-040-transitions-2`: native twins for all three direct
+  primitives pass (bits 7, count 3); rear/left/right/front views select correctly,
+  ownership is inactive again at each flight anchor, and five native firing
+  calls execute. All five screenshots inspected, without stale cockpit/view pixels.
+- `scene-direct-verify-030-bank-2`: banked fixture to step 40, then ten further
+  anchors; all three twins pass. Banked screenshot inspected. This exercises the
+  MOVEM publication path, while 040 exercises MOVE16.
+- No world-state replay or new byte-equivalence study. VERIFY timing is excluded.
+
+✔ Final normal-build checks pass: `scene-final-normal-{a500,060}-1` reaches
+flight with CUSTOM2 omitted and confirms Faster rendering selected. The A500
+at 512 KiB Chip + 2 MiB Fast retains the native line/rectangle hooks; the 060
+selects both direct hooks. These are entry/selection smoke checks, not additional
+FPS captures. Both use normal slave SHA-256
+`6788b1248a974b378566fa9d96dce8c0648fb65f6db757bf42d008594bb42960`.
+
+Final normal/developer/VERIFY text sizes: 136,376 / 136,764 / 322,024 bytes.
+Normal/developer contain neither RBVERIFY nor RBSTEPS1; the rebuilt developer
+hash is identical to the measured frozen binary. All 540 host tests, 122 sim
+hook ranges and 129 / 129 / 143 patch destinations pass. The CPU policy and
+primitive code are final; D5 and W6 acceptance remain postponed.
 
 ## Completion scoreboard
 

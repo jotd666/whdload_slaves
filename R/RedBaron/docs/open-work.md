@@ -8,7 +8,7 @@ of release work. The completion plan remains authoritative with that amendment.
 No implementation or validation work remains for the accepted release.
 F1 enables the normal verified bundle by default; F2 condenses the ledgers;
 The original F3 passed on all six machine configurations; its results and the
-subsequent artwork follow-up are recorded separately in `profiling.md`. The normal verified mask is `0xf1fff`, filtered by CPU.
+subsequent artwork and scene follow-ups are recorded separately in `profiling.md`. The normal verified mask is `0x1f1fff`, filtered by CPU.
 Normal CUSTOM2=0 is On and 1 is Off; developer/VERIFY values remain bit masks,
 where zero disables patches. The normal build is in the local build directory.
 Nothing has been pushed; publication requires a separate explicit request.
@@ -36,8 +36,8 @@ The requested 030/040/060 reprofile is complete; see `rendering-analysis.md` and
 the new section of `profiling.md`. It identifies repeated cockpit scripts,
 per-plane drawing and explicit waits, and documents why the discarded software
 blitter was not a test of a purpose-built Fast RAM renderer. The sparse static
-artwork follow-up below is implemented. Full cockpit persistence and a span-renderer redesign
-remain separate future work. D5 remains postponed.
+artwork and direct scene follow-ups below are implemented. Full cockpit persistence
+and replacing the remaining polygon coverage generation remain separate future work. D5 remains postponed.
 
 ## Completed: selective static cockpit artwork repairs
 
@@ -54,12 +54,18 @@ existing draw order. Full cockpit persistence would additionally need scene
 exclusion and narrower dashboard/instrument updates; those are not implemented
 by this static-artwork fix. D5 remains postponed.
 
-## Active: scene drawing structure
+## Completed: scene drawing structure
 
-User-authorized follow-up. Developer/VERIFY bit 20 now contains a private Fast
-RAM viewport candidate: direct five-plane rectangles and lines, one coverage
-traversal for polygon colour, no inbound page/scratch copy, and one outbound
-viewport publication. Native clipping and polygon coverage generation remain;
-uncommon operations use a compatibility kernel. Three bounded native primitive
-pixel twins pass on 060. Performance and transition validation are pending;
-bit 20 is not in the normal verified mask. D5 remains postponed.
+Faster rendering selects bit 20 on measured 030/040/060 classes. Supported scene
+viewports are owned by Fast RAM: direct five-plane rectangles/lines, one polygon
+coverage traversal for colour, specialized scratch clear/fill, no inbound page
+or scratch copy, and one outbound viewport copy. Native clipping remains, and
+unsupported camera/layouts retain native drawing. The reserved workspace is reused;
+RAM requirements are unchanged. 000/010/020 retain the native renderer.
+
+The first candidate's polygon overhead cancelled its rectangle saving; direct
+scratch loops fixed that regression. CPU comparisons, native primitive twins,
+banked flight, view/firing checks and final normal-build checks are recorded in
+`profiling.md`. The remaining polygon edge/coverage pipeline and per-frame
+cockpit composition are possible future optimizations, not unimplemented parts
+of this change. D5 remains postponed.

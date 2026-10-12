@@ -1,6 +1,6 @@
 ; Performance patch framework. Only sim v1 calls this module's installer.
 ; No feature is release-enabled until its model, twin and measurements pass.
-PERF_VERIFIED_MASK = $f1fff ; W1-W5, B1/B2, C3, gauges and artwork; each has its CPU gate
+PERF_VERIFIED_MASK = $1f1fff ; verified features, including direct scene; each has its CPU gate
 PERF_DEVELOPER_MASK = $1f3fff
 PERF_VERIFY_MASK = $1f7fff ; developer W6 plus VERIFY-only quiescent overlay probe bit 14
 
@@ -53,7 +53,8 @@ perf_read_options:
 	bclr #18,d0
 .instrument_cpu_ready
 	; Sparse artwork loses on 000 and gives no gain on 020.
-	; Only measured 030/040/060 classes may select it, in every build mode.
+	; Artwork and direct scenes select the measured 030/040/060 classes only,
+	; in every build mode. 000/010/020 retain their native scene renderer.
 	move.l perf_attnflags(pc),d1
 	andi.l #$8c,d1
 	bne .artwork_cpu_ready

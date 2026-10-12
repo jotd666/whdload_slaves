@@ -52,12 +52,17 @@
 
  Rendering improvements:
  - Faster rendering is On by default (normal build: CUSTOM2=0). It selects the verified dashboard cache, geometry,
-   solid-fill, persistent-gauge, static-artwork and sound optimizations, with CPU-specific choices.
+   solid-fill, persistent-gauge, static-artwork, scene and sound optimizations, with CPU-specific choices.
  - Persistent gauge reuse is enabled only on the measured 020/040 classes.
  - Static forward cockpit artwork uses selective pixel repairs on 030/040/060.
    Unchanged covered pixels are not written. Firing and other views stay native.
    000/010/020 retain native artwork; pixel checking did not help the slower CPUs.
    This uses reserved FastMem and an 8 KB ChipMem mask, with native fallback.
+ - On 030/040/060, supported scene viewports are drawn in reserved FastMem
+   and copied to ChipMem once. Direct primitives avoid repeated plane setup;
+   old page pixels and scratch are not copied in or exported. Native clipping
+   is retained, with native fallback for unsupported layouts.
+   000/010/020 retain the native scene renderer. RAM requirements are unchanged.
  - Flight swaps use the original safe beam wait and a two-field cap (about
    25 FPS on PAL). This does not make world speed frame-rate independent.
  - Select Off in the splash window, or CUSTOM2=1, to disable it.

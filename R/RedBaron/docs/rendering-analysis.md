@@ -174,7 +174,7 @@ sparse-artwork section of `profiling.md`; no new 50 FPS claim is made.
 
 ## Direct scene follow-up
 
-The developer candidate replaces several parts of the rejected E3 structure.
+The retained renderer replaces several parts of the rejected E3 structure.
 A guarded 320-pixel-wide viewport whose native background initializes every
 pixel is owned by Fast RAM for the duration of the scene. It imports neither
 the old Chip page nor scratch, and exports only the completed viewport rows.
@@ -188,7 +188,9 @@ colours without constructing a blitter operation per plane. Polygon colour
 merging traverses coverage once for all planes. Its scratch clear and inclusive
 fill have direct loops, removing per-word channel, shift and minterm dispatch.
 Uncommon primitives use the compatibility backend. Every change is gated by
-sim v1, the CPU policy and bit 20; the normal mask is unchanged pending validation.
+sim v1, the CPU policy and bit 20. Faster rendering selects it on 030/040/060;
+000/010/020 retain native scene drawing. The reserved workspace is reused and
+RAM requirements do not increase.
 
 This is deliberately bounded: polygons still construct and correct coverage,
 and the cockpit remains outside the private viewport. It is not a complete
@@ -217,7 +219,7 @@ implementation, not to the changed transfer/primitive design.
    Fast-RAM copy calibration before using 040/060 emulator timings as CPU-speed
    evidence; confirm the promising design on a representative real accelerator.
 
-The direct-scene candidate above addresses parts of recommendations 2 and 3.
+The direct-scene implementation above addresses parts of recommendations 2 and 3.
 The remaining recommendations are not shipped changes or a promise of 50 FPS. D5 remains postponed. Correct simulation timing and
 rendering throughput remain separate acceptance requirements.
 

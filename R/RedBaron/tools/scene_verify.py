@@ -50,7 +50,12 @@ if a.transitions:
   assert view==expected and active==0,check
   r.command('shot '+str((out/(label+'.png')).resolve()))
   rows.append(dict(view=label,passed=True));print(label,'passed',flush=True)
- key(0x40);advance(6);r.command('shot '+str((out/'firing.png').resolve()));key(0x40,True);advance(4)
+ key(0x40)
+ fire=r.command(f'gdb delete\nset $firing=0\nbreak *{bad:#x}\nbreak *{sim+0x15f62:#x}\ncommands\nsilent\nset $firing=$firing+1\ncontinue\nend\nbreak *{e["game_anchor"]:#x}\nignore $bpnum 5\ncontinue\nprintf "FIRING %u\\n", $firing\ndelete')
+ (out/'firing.log').write_text(fire)
+ count=int(re.search(r'FIRING (\d+)',fire)[1]);assert count>0,fire
+ rows.append(dict(firing_calls=count,passed=True))
+ r.command('shot '+str((out/'firing.png').resolve()));key(0x40,True);advance(4)
  (out/'transitions.json').write_text(json.dumps(rows,indent=2)+'\n')
  subprocess.run([sys.executable,'-B',str(tracked/'completion_host_input.py'),'quit'],check=True);host.wait(timeout=20)
 r.command('shot '+str((out/'final.png').resolve()));r.command('quit')
