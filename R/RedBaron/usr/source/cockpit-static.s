@@ -5,7 +5,8 @@
 ; Capture follows the original packed source stride and its bottom-clip rule;
 ; no screen/background pixels enter the cache. A null layer means fallback.
 ; The bit-14 lifetime hooks invalidate before source resources can be reused.
-; The layer is captured here; suppressing the original draw awaits all layers.
+; Player/developer stage entry materializes this cached layer and skips the
+; native blitter call. VERIFY retains that call as the exact-output reference.
 CS_STATIC_BYTES = 48000
 cockpit_static_prepare:
  movem.l d0-a6,-(sp)
