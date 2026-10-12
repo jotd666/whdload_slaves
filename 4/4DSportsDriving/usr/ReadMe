@@ -111,6 +111,22 @@
    options preserve all 35 original rendering/timing ranges; hook audit passes
  - source build only: the previously distributed testing archive is unchanged
 
+ P4 presentation validated (12.10.2026), no further game-code change:
+ - matched FULL solo 50 Hz emulator runs reproduce 44.589 FPS on 040/25 and
+   45.489 on 060/50, with correct game time and no backlog growth/overflow
+ - a separate 060 capture displays 49.385 FPS: 238 one-field intervals and
+   3 two-field intervals. Every measured input sample reaches a containing
+   displayed state within 1-3 PAL fields, meeting P4's limit at >=45 FPS
+ - later captures: 040 43.033 FPS, sample latency 2-4 fields (one 4-field case);
+   060 44.835 FPS, 2-3 fields. These are field-index measurements from queued
+   input through physics to display DMA, not host keyboard or monitor latency
+ - all complete buffer switches reach the display; pending-buffer waits span
+   at most one field. A split COP1LC write can become visible in the same
+   field; the trace checker now verifies that case from the actual bus writes
+ - two buffers, no interpolation, no extra frame cap. Native-rate production
+   remains 10/20 FPS; A4000 physics/release acceptance is still P5/P6 work
+ - game binaries and testing archive unchanged; stop before P5
+
  Separate A4000 SIM_RUNTIME source status (11.10.2026):
  - replay format 2, physics ABI9, stores the chosen opponent route so native
    resource reloads cannot silently change it. Older format-1 A4000 files
@@ -122,7 +138,7 @@
    UI attempt left an empty file and did not reach the replay writer
  - the original opponent route builder's out-of-resource lookup remains;
    deterministic fresh A4000 route setup is still open
- - jump/landing handling and broader lifecycle, latency/capacity and release
+ - jump/landing handling and broader lifecycle/capacity and release
    acceptance remain incomplete. This is an experimental preview
  - the previously distributed testing archive has not been rebuilt with
    this source change; it still contains the earlier format-1 runtime
