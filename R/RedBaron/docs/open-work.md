@@ -3,6 +3,26 @@
 The user accepted measured performance on 2026-10-12 and requested completion
 of release work. The completion plan remains authoritative with that amendment.
 
+## Open items
+
+Refer to items by ID. FC items are detailed in `fast-cpu-plan.md`.
+
+| ID | Item | State |
+|---|---|---|
+| FC0 | VERIFY artwork-twin abort on the 030 NOMMU tape route | Open, not investigated |
+| FC1 | Deferred page fence instead of the swap spin | Planned |
+| FC2 | Overlay and cockpit foreground composited in Fast RAM | Planned |
+| FC3 | Persistent gauges | Planned |
+| FC4 | Span polygon rasteriser | Planned |
+| FC5 | Smaller viewport copy | Planned |
+| FC6 | Re-profile; then geometry work or 50 FPS (user decision) | Planned |
+| FC7 | AGA 040/060 and real-hardware confirmation | Planned |
+| D5a | W6 catch-up input check | Postponed by the user |
+| D5b | W6 Time Compress and mission-exit transitions | Postponed by the user |
+| D5c | W6 A500 Time Scale 60 | Postponed by the user |
+| D5d | W6 remaining landing and combat outcomes | Postponed by the user |
+| G5–G9, S2/S3′/S4–S8 | Low-value geometry and sound candidates | Deferred unless a concrete issue justifies them |
+
 ## Release status
 
 No implementation or validation work remains for the accepted release.
@@ -16,8 +36,7 @@ Nothing has been pushed; publication requires a separate explicit request.
 ## Postponed beyond this release
 
 D5 remains postponed by the user. W6 bit 13 stays outside the normal mask.
-Remaining checks: catch-up input, Time Compress/mission-exit transitions,
-A500 Time Scale 60 and remaining landing/combat outcomes. Existing rate,
+Remaining checks: D5a–D5d in the table above. Existing rate,
 input, user-flight and soak evidence is summarized in `w6-verification.md`
 and measured in `profiling.md`; no further user flight test is requested now.
 
@@ -33,15 +52,13 @@ Git; do not revive their superseded next-work lists.
 ## Fast-CPU frame profile and plan
 
 `fast-cpu-plan.md` has the exact 030 frame attribution (aprof) and the ordered
-fix plan for the 16.67 FPS plateau: triple-buffered publication, Fast-RAM
-overlay/foreground composition, persistent gauges, span polygons, smaller
-viewport copy.
+fix plan for the 16.67 FPS plateau, FC1–FC7.
 
-**Open: VERIFY artwork-twin abort.** On the 030 NOMMU VERIFY tape route
+**FC0: VERIFY artwork-twin abort.** On the 030 NOMMU VERIFY tape route
 (CUSTOM2 `0x1f0ffa`), flight entry aborts with "sparse artwork pixel/state
 mismatch". `artwork-cache.s` uses that message both for a real twin mismatch
 and for a failed 80,000-byte snapshot AllocMem, so the cause is unconfirmed.
-Bit 19 ships on 030. See `fast-cpu-plan.md` step 0. Not yet investigated.
+Bit 19 ships on 030. Not yet investigated.
 
 ## Post-release rendering investigation
 

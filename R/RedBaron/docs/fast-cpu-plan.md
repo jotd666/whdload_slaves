@@ -20,7 +20,7 @@ lower bounds there with exact per-instruction attribution.
   this way.
 - The VERIFY artwork twin aborts on this route with "sparse artwork pixel/state
   mismatch". The profile build is a private source copy without those two calls;
-  see step 0.
+  see FC0.
 
 **Bus cross-check.**
 - Barto DMA-slot traces of the **normal** build on 030/50 MMU (40 fields) and
@@ -76,6 +76,8 @@ Chip-bus units are **50.7% of all CPU time**. Recognised blitter polls are
 
 ## 3. Fix plan, largest bottleneck first
 
+Items are numbered FC0–FC7 (fast CPU); `open-work.md` refers to them by these IDs.
+
 Each step follows the completion plan's §0 rules:
 - one bit and one coherent commit per step;
 - gated to 030/040/060 unless measured otherwise;
@@ -86,7 +88,7 @@ Each step follows the completion plan's §0 rules:
 Re-run the aprof capture after each step to confirm the stall moved, not just the
 FPS.
 
-### Step 0 — resolve the artwork-twin abort (a correctness check, not speed)
+### FC0 — resolve the artwork-twin abort (a correctness check, not speed)
 
 The VERIFY artwork twin aborts on the 030 NOMMU tape route. The same message
 covers an AllocMem failure of its 80,000-byte snapshot (`artwork-cache.s`, the
@@ -98,34 +100,52 @@ covers an AllocMem failure of its 80,000-byte snapshot (`artwork-cache.s`, the
 3. If it is a real pixel or state mismatch, fix bit 19 before anything below.
    It ships on 030.
 
-### Step 1 — triple-buffered publication: −10 ms
+### FC1 — deferred page fence instead of the swap spin: up to −10 ms
 
-**Cause.** `sim:314be` swaps the copper bitplane pointers, then busy-waits until
-the beam passes line 244. The old front page stays visible until the next
-vertical blank, so the next frame cannot draw into it.
+Two buffers stay; no third Chip page.
+
+**Cause.**
+- `sim:314be` swaps the copper bitplane pointers, then busy-waits until the beam
+  passes line 244.
+- The old front page stays visible until the next vertical blank. The wait
+  exists so the next frame cannot draw into a page that is still on screen.
+- With bit 20, the next frame's scene is drawn in Fast RAM and does not touch
+  that Chip page for many milliseconds. The spin protects nothing during that
+  time.
 
 **Fix.**
-1. Allocate a third Chip page, 40,000 bytes, on 030+ only. There is enough Chip
-   at the approved 2 MB minimum.
-2. Rotate draw → pending → shown. A copper or VBL hook makes "pending" visible at
-   the next blank.
-3. The swap returns immediately unless both other pages are still pending. Keep
-   the P2 minimum interval, but implement it as "do not queue more than one
-   pending page" instead of a beam spin.
-4. The native swap exchanges two page pointers (`sim:314c0`–`314d0`) and keeps per-page
-   dashboard and gauge state. Map the third page onto the native "other page"
-   slot, and invalidate per-page caches when a page is reused out of order.
+1. Make the swap return at once after writing the copper pointers.
+2. Record the VBL count at which the swap becomes visible: the next blank, using
+   the existing `pace_vbl` field counter.
+3. Put a **fence** before the first write of the next frame to the new back Chip
+   page. The fence waits only if that blank has not happened yet.
+4. Audit every Chip-page writer between the swap and the end of the next frame's
+   scene. Place the fence at the earliest of them:
+   - native background and top-area restoration;
+   - the bit-20 viewport copy;
+   - cockpit composition;
+   - messages;
+   - any native fallback path for an unsupported layout.
+
+   An unaudited path takes the fence at render entry, which reproduces today's
+   behaviour.
+5. Keep the P2 two-field minimum interval in `pace_flight` unchanged.
+6. 000/010/020, and frames where bit 20 is not active, keep the original wait.
 
 **Check.**
 - A beam-sampled tear check of every published field.
 - `publication_cadence.py`.
-- Both existing view and firing transitions.
+- View and firing transitions.
+- A VERIFY counter of fence waits, which should be near zero on 030+ in forward
+  flight.
 
-**Expected.** The swap wait disappears from the profile. 16.67 FPS becomes about
-20 FPS on its own, with 2- and 3-field frames alternating; steps 2–5 bring it to
-a steady 25.
+**Expected.**
+- The 10.2 ms spin moves to the fence, where it is mostly absorbed by Fast-RAM
+  scene work.
+- Alone, this lets frames that finish their work within 40 ms publish every two
+  fields. FC2–FC5 bring the remaining work under that.
 
-### Step 2 — overlay and cockpit foreground composited in Fast RAM: −12 to −14 ms
+### FC2 — overlay and cockpit foreground composited in Fast RAM: −12 to −14 ms
 
 **Cause.**
 - The forward overlay is five 4-channel blits per frame, and the CPU waits on
@@ -142,7 +162,7 @@ a steady 25.
 Then neither the overlay blit nor the Chip reads happen. Rows below the viewport,
 the dashboard, need a per-page "artwork valid" flag:
 - Repair them only after a view change, message, resource reload or page reuse
-  (the step 1 invalidation hooks).
+  (explicit invalidation hooks for each of those events).
 - Never compare them against Chip.
 
 **Check.**
@@ -152,7 +172,7 @@ the dashboard, need a per-page "artwork valid" flag:
 
 Firing artwork and non-forward views stay native.
 
-### Step 3 — persistent gauges: −6 to −8 ms
+### FC3 — persistent gauges: −6 to −8 ms
 
 **Cause.** `sim:19ba6` restores each gauge's old bounds from a background bitmap
 and redraws the needle on every frame. It uses 4-channel blits that the CPU
@@ -164,7 +184,7 @@ waits on (`sim:30572`, 6.9 ms of polling).
 2. Skip a gauge whose key equals the one last drawn on that page.
 3. For a changed gauge, restore its bounds with a CPU copy from a Fast-RAM
    background, then run the native needle callback.
-4. Invalidate everything on the step 1/2 events.
+4. Invalidate everything on the FC2 events.
 
 Bit 18 is gated to 020/040 today, because its composition design lost on
 030/060. This step skips unchanged work outright, so measure it on all four
@@ -175,7 +195,7 @@ classes.
 - A held-throttle and turn route in which every gauge changes.
 - Both pages after a page reuse.
 
-### Step 4 — span polygon rasteriser: −8 to −10 ms
+### FC4 — span polygon rasteriser: −8 to −10 ms
 
 **Cause.** A native polygon goes through several passes:
 1. Clear a one-plane scratch.
@@ -202,7 +222,7 @@ outlines (`sim:2ea28`) through the existing direct line.
   polygons, including clipped, degenerate and one-pixel cases.
 - A native twin per polygon type.
 
-### Step 5 — smaller viewport copy: −2 to −5 ms (scene dependent)
+### FC5 — smaller viewport copy: −2 to −5 ms (scene dependent)
 
 **Cause.** The whole 320×120 five-plane viewport (24,000 bytes) is written to
 Chip every frame: 7.0 ms on OCS, 96% Chip.
@@ -216,12 +236,12 @@ In level flight the sky and ground rows rarely change between frames on the same
 page.
 
 **Check.** Measure in level flight and in a hard turn (the worst case). Drop the
-step if the turn regresses by 2% or more. Per-page shadows depend on step 1's
-page identity.
+step if the turn regresses by 2% or more. Per-page shadows follow the native
+two-page identity.
 
-### Step 6 — re-profile, then decide on geometry or 50 FPS
+### FC6 — re-profile, then decide on geometry or 50 FPS
 
-After steps 1–5, the projected 030 frame is about 30–35 ms of mostly Fast-RAM
+After FC1–FC5, the projected 030 frame is about 30–35 ms of mostly Fast-RAM
 computation. That is 25 FPS, capped by P2.
 
 **Next decision.** Either:
@@ -232,18 +252,18 @@ computation. That is 25 FPS, capped by P2.
 
 D5 is still postponed, so a W6 change is a user decision.
 
-### Step 7 — AGA and 040/060 confirmation
+### FC7 — AGA and 040/060 confirmation
 
 Capture a Barto DMA trace of the 060 and 040 configurations (AGA, 32-bit Chip)
-before and after steps 1–5. The emulator's 040/060 timing is not a hardware model
+before and after FC1–FC5. The emulator's 040/060 timing is not a hardware model
 (`rendering-analysis.md`). If a real accelerator is available, confirm the result
 there before any 50 FPS claim.
 
 ## 4. Projected budget (030/50, VERIFY-relative ms per frame)
 
-| | Now | After steps 1–5 |
+| | Now | After FC1–FC5 |
 |---|---:|---:|
-| Swap wait | 10.2 | 0 |
+| Swap wait | 10.2 | ≈0 (fence) |
 | Overlay + foreground artwork | 13–14 | ≈1 |
 | Gauges | 8.6 | ≈1–2 typical |
 | Polygon coverage + raster | 13.8 | ≈4 |
