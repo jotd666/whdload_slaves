@@ -45,7 +45,8 @@ caller exists, or a listening test.
 | `$0b624` | 4 | Sustained skid condition; TIME_AUDIO now applies its own elapsed request cadence. |
 | `$0bc18` | 9 | Special collision-object condition returns without establishing a crash. Repeated contact needs event/cadence validation. |
 | `$0bcf6`, `$0bdd6`, `$0c004`, `$0cc4e` | 6 | Crash creation; native crash state suppresses later physics collision paths. Verify once per event across substeps and recovery. |
-| `$0bd02`, `$0bde2`, `$0cc84`, `$0cd52` | 7 | Non-crash collision/contact paths. Repeated contact can request again; contact-episode semantics remain to be validated. |
+| `$0cd52` | 7 | Sustained mask-3 pitch correction; TIME_AUDIO now applies its own elapsed cadence. |
+| `$0bd02`, `$0bde2`, `$0cc84` | 7 | Object/obstacle and landing/penetration paths. Their distinct event identities and repetition remain open. |
 | `$10c24` | 4 | Recorded skid flag; now consumed once per historical record by TIME_REPLAY_TIMING. |
 | `$10e10` | 6 | Replay crash effect clears a local one-shot flag after the request. Live focused checks observe one request; completely skipped effect tails still need explicit coverage. |
 
@@ -101,7 +102,8 @@ followed by sample-start/listening checks. This document does not close step 4.
 
 `VERIFY_TIME_AUDIO` requires TIME_REPLAY_TIMING and installs HardDrivinAudio.s
 behind CUSTOM1/SPS0126. It owns event8 at `$0b162..$0b16b` and event4 at `$0b620..$0b629`, with
-independent cadence states. The other live callers remain separate acceptance work.
+independent cadence states. Mask-3 contact event7 at `$0cd4e..$0cd57` also has
+an independent state. The other live callers remain separate acceptance work.
 
 The first eligible request in an episode is immediate. Subsequent requests
 consume eight-field boundaries from RP_WALL, retaining the remainder when a
@@ -197,3 +199,56 @@ audit; the normal build remains byte-identical to the8392-byte-text baseline.
 pointer. Both use constant X=639; a field-delayed input transition would not be a
 matched per-step input reference when the build changes wall timing. This is
 car-state compatibility evidence, not full-world equality or sound-timestamp equality.
+
+
+## Partial-contact sound cadence
+
+The `$0cd52` caller is reached only with wheel-contact mask3. It follows the
+pitch relaxation in `$0cd20..$0cd4d`, rather than a new object-collision or
+hard-landing event. The mask is calculated from the four wheel gaps, with bits
+set where a gap is less than4. In s4-contact-audit-020, eight successive mask3
+visits at fields524..540 request the same sample with fall velocity0 throughout.
+The corresponding A500 episode has two visits, at fields556 and566.
+
+TIME_AUDIO now wraps only `$0cd4e..$0cd57` in the established eight-field cadence,
+using a separate20-byte HDCONTAU state. First eligibility and re-entry after a
+missing eligible step request immediately; continuous correction visits retain
+the cadence remainder and do not burst historical sounds. The pitch correction,
+contact flags, fall update and every other event7 caller remain unchanged.
+Forced-native/inactive dispatch retains the original call and its returned X.
+
+The6000-field input-tape captures record every newly computed wheel mask and the
+contact caller, including wheel gaps, fall velocity and object pointer where
+applicable. The gated runs additionally check each gate entry/return against its
+wall clock and step serial, plus the19 private cadence cases.
+
+| Profile | Before: pitch requests | Gated visits / requests / accepted starts | New mask3 episodes |
+| --- | ---: | ---: | ---: |
+| A500 | 4 | 5 / 4 / 4 | 3 |
+| 68020 | 23 | 24 / 16 / 16 | 14 |
+
+Before runs are s4-contact-audit-a500/020; gated runs are
+s4-contact-cadence-a500/020. Every observed new mask3 episode requests immediately;
+all actual callers have mask3. Every emitted request is accepted on channel3,
+period500. The A500 also retains one native object-contact request, and the020
+retains two. Different episode counts/trajectories after instruction-timing
+changes prevent an equal-path handling claim. These are sample-start checks,
+not an audible-quality assessment.
+
+The initial verifier rejected returns at `$0cd58` without a preceding hook entry.
+That address is also the native branch target for masks other than3. Retained
+captures were rechecked without rerunning: every such bypass has a non3 mask and
+unchanged cadence state (one A500 bypass, eight020 bypasses). Every actual hook
+entry has its paired return and passes the gate model.
+
+`s4-contact-native` matches all108 car-state snapshots from the original
+s4-skid-native-reference with constant X639, relocating only the gear pointer.
+This is the established G($98f6)..G($9951) comparison, not whole-world equality.
+`s4-pitch-audio-off` passes all146 declared ranges; the125-range direct-branch
+audit passes and the normal8392-byte-text slave is byte-identical to baseline.
+
+Object event7 at `$0bd02` repeats against the same object in two020 visits five
+fields apart in the ungated audit. That requires object-contact semantics beyond
+the mask3 correction policy. Event9 remains unobserved; obstacle and landing
+repetition, full collision-event validation, listening, large-step physics and
+step-4 handling/performance acceptance remain open.
