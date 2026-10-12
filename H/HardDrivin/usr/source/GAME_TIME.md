@@ -3772,3 +3772,65 @@ the descending 100 crossing on slowed A500, so it cannot isolate braking there.
 The existing descending-speed-100 protocol is being checked with an earlier
 brake trigger at speed 200. These wider handling and elapsed-time bounds,
 checkpoint/lap timing, C4 coverage and new-build performance are not yet accepted.
+
+
+### C3 zero-throttle braking bound (2026-10-13)
+
+The current `e249093` build was captured for 750 fields on ordinary A500, slowed
+A500, 68020 and 68040, in `c3-current-brake-*`. The brake trigger is speed 200;
+this establishes zero throttle before descending through speed 100. The earlier
+speed-100 trigger remains recorded as unsuitable for this isolated comparison.
+Each run is seeded from its observed pre-crossing fractional phase state. An
+independent one-field pristine-engine recurrence then matches all complete
+braking returns (20/16/73/107, 216 total) in Q16 velocity, RPM, gear and fractional
+absolute X. Flat ground, heading, contact and road state are checked throughout.
+
+The comparison uses elapsed fields after the descending speed-100 crossing,
+with a one-field bracket retained around the interpolated crossing. Across
+0–164 elapsed fields, maximum velocity spread is 15 and travelled-distance
+spread is 5.875 world units. The largest recorded ordinary A500 interval is 15
+fields. Maximum recorded rates are 3 velocity units and 2.203125 world units per
+field, giving one-frame bounds of 45 and 33.046875 respectively. Even charging
+one full field of crossing uncertainty to each run, both spreads fit. Stopping
+times interpolate to 157.333–162.667 fields; conservative crossing brackets give
+157–163 fields, a six-field spread within the 15-field bound. Interpolated
+stopping distances are 190.125/192.916667/196/194.75 world units respectively;
+the conservative overall distance interval is 189.375–196.765625.
+
+This passes the straight zero-throttle braking component only. Held-steering
+captures from the same source still differ in gear history and trajectory;
+C3 remains open. Local evidence is `c3-brake-comparison.json`, the four retained
+`brake-curve.json` reports and their source captures. The ignored tools
+`analyse_c3_brake_curve.py` and `report_c3_brake.py` retain exact rational curve
+samples, the crossing brackets, measured rates and explicit scope limits.
+
+
+### C3 held-steering startup diagnosis (2026-10-13)
+
+The current-source `c3-current-steer-*` captures retain the complete 550-field
+fixture, including its later off-road divergence. All 63/43/259/421 integrated
+returns on A500/slowed A500/68020/68040 match the same exact heading formula:
+`360 + floor(max(0, consumed - first_moving_frame_end) / 2)`. There are no heading
+mismatches in these 786 returns. The mouse input supplies native rate 4 per eight
+fields; the fractional angle integration itself is consistent.
+
+The first moving interval ends at consumed fields 57/72/44/42, after throttle
+response starts at 43/54/40/40. Steering therefore skips 14/18/4/2 fields of
+motion, respectively. The native call at `$cdb2` runs orientation before engine
+and position at `$cdb6`; the orientation test at `$b3b2` skips steering when the
+previous velocity word is zero. Scaling the angle rate does not scale this
+one-render-frame eligibility delay. This establishes a remaining cadence
+dependency at startup, separate from the corrected idle engine phase.
+
+A500 and slowed A500 reach third gear before the road-surface flag becomes zero: their first off-road integrated samples are consumed 242/251.
+68020 and 68040 become off-road at 217/215 while still in second gear, at RPM
+5174/5197, below the automatic 5200 upshift threshold. Both remain in second
+gear in this capture. This sequence identifies a concrete investigation target;
+it does not yet prove that correcting startup alone removes all later trajectory
+differences. Wheel contact remains present here; an off-road flag is not flight.
+
+Local `report_c3_steering_start.py` reproduces `c3-steering-start.json` from the
+retained captures. Its acceptance status is explicitly false. A correction must
+preserve the native eight-field result, support stopping and restarting rather
+than just this launch fixture, and leave the CPU-specific outer update policy
+intact. C3 remains open; no additional tolerance or exception has been assumed.

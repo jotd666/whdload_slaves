@@ -885,7 +885,18 @@ step 4.7, made concrete.
     RPM, gear and absolute X after the independently observed throttle start.
     Start publication still differs by 14 consumed fields across the matrix;
     this is retained in the evidence, not declared equal wall-time behavior.
-    Held steering, braking bounds and lap/checkpoint acceptance remain open.
+    Held steering and lap/checkpoint acceptance remain open.
+  - **Braking component passed (2026-10-13):** the controlled fixture uses a speed-200
+    brake trigger so throttle is zero before the descending speed-100 crossing.
+    All 216 complete braking returns across the four profiles match the
+    independent one-field native recurrence in fractional velocity, RPM, gear
+    and absolute X. Comparing 0–164 fields after speed 100, the maximum velocity
+    spread is 15 and distance spread is 5.875 world units. The measured ordinary
+    A500 frame is at most 15 fields; recorded maximum rates give bounds of 45
+    velocity units and 33.046875 world units. Charging a full field of crossing
+    uncertainty to each profile still fits those bounds. The conservative
+    stopping-time range is 157–163 fields (spread 6, below 15). These are
+    braking-only results; they do not pass steering or overall C3.
 - **C4, extreme T.**
   - Run collisions, the loop and the jump on the slowed A500 (largest T) and on the
     68060 (smallest T).
