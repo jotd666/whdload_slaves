@@ -3655,4 +3655,4 @@ The candidate is retained only in the ignored harness; `HardDrivinPhase.s`
 continues evaluating the native engine every segment. No input latching or
 physics-cadence change was introduced. `STEP4_COST_PLAN.md` P3 records the full
 side-effect audit, exact-check evidence, matched ten-second profiles and the
-unmet limits. P3 remains open under the existing D3 decision.
+unmet limits. The user has deferred P3; P4 is next. D3 remains unchanged.

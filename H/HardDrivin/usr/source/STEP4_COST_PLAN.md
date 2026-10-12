@@ -5,11 +5,12 @@ current integrated build, measured on 2026-10-12. It names the bottlenecks, sets
 targets and gives an ordered list of work items. Each item has an exit criterion. Step IDs
 are `P` (performance), `C` (closure) and `D` (decisions for the user).
 
-**Current status: P1 and P2 complete.** Traffic meets its 0.8 ms/frame budget.
+**Current status: P1 and P2 complete; P3 deferred by the user.** Traffic meets its 0.8 ms/frame budget.
 Replay-recording overhead is now 0.281 ms/frame in A and 0.249 ms/frame in B,
 both below 0.3 ms. P3 E1 has been evaluated and fails its entry-rate limits; its
-candidate is retained only in the ignored harness. P3, the combined G1 gate and
-step-4 closure remain open. The runtime remains at the accepted P2 implementation.
+candidate is retained only in the ignored harness. P4 is next. P3's unmet limits,
+the combined G1 gate and step-4 closure remain open. The runtime remains at the
+accepted P2 implementation.
 
 ## 1. Measurement
 
@@ -333,7 +334,7 @@ G2 remains a report:
 **B is a scene mismatch.** Passing P2 closes the recorder component budget only;
 it does not close the combined G1 gate, change physics policy, or complete step 4.
 
-### P3 Native engine runs: target ≤ phases started + 0.1 per frame (open)
+### P3 Native engine runs: target ≤ phases started + 0.1 per frame (deferred)
 
 1. **E1, exact memoisation (do first).**
    - Within one phase, if the anchor and every native engine input match the previous
@@ -432,12 +433,11 @@ Verification of the final candidate:
   the branch audit passes 141 ranges. Normal, DRIVE and ATTRACT builds remain
   byte-identical to their established baselines.
 
-**Next decision:** P3 remains open. D3 permits E1 only at this point; E2 is
-conditional on results after P1–P6, so it has not been enabled. Reconsider the
-ordering/conditional fallback or propose another exact optimisation before
-claiming P3 complete. Its numeric limits and the accepted physics policy have
-not been relaxed. The candidate source, binaries, checkers and verified compressed
-traces remain under ignored `tmp/` for follow-up.
+**Deferred by the user.** Proceed to P4 without treating P3's limits as passed.
+D3's conditional E2 authorization remains unchanged; input latching has not been
+enabled. Revisit engine cost after the remaining performance phases. The candidate
+source, binaries, checkers and verified compressed traces remain under ignored
+`tmp/` for follow-up. Neither numeric limits nor physics policy have been relaxed.
 
 ### P4 Slave physics helpers: target ≤ 1.4 ms per frame (now ≈3.9 / ≈3.7)
 
@@ -545,7 +545,8 @@ On 2026-10-12 the user accepted the recommended defaults. These decisions are no
 
 ## 7. Working rules for this plan
 
-- Work in the order P1 → P5, then C1 → C6. Each item ends when its exit numbers and
+- Work in the order P1 → P5, then C1 → C6, with P3 deferred by the user and P4 next.
+  Deferral does not pass an item. Each item ends when its exit numbers and
   checks pass. Commit each item on its own.
 - Do not add validation dimensions beyond those listed for the item. Put new questions in
   section 6 instead of blocking on them.
