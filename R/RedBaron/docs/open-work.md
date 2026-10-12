@@ -15,7 +15,7 @@ Refer to items by ID. FC items are detailed in `fast-cpu-plan.md`.
 | FC3 | Persistent gauges | Complete; enabled on 060; other classes retain prior paths |
 | FC4 | Span polygon rasteriser | Complete; enabled on 040/060; 030 retains its prior path |
 | FC5 | Smaller viewport copy | Closed: dropped; less than 2% gain on every measured CPU class |
-| FC6 | Re-profile; then geometry work or 50 FPS (user decision) | Profile complete; W6 developer trial recommended, awaiting decision |
+| FC6 | Re-profile, W6 trial and geometry processing | Profile complete; both follow-ups authorized and in progress |
 | FC7 | AGA 040/060 and real-hardware confirmation | Planned |
 | D5a | W6 catch-up input check | Postponed by the user |
 | D5b | W6 Time Compress and mission-exit transitions | Postponed by the user |

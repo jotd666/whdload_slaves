@@ -57,7 +57,7 @@ def capture(out,group,fields,reparse=False):
    # The long A/B window needs counts, not thousands of register/beam reads.
    # Keep detailed brackets in the short normal-build checks.
    cmd=['delete','set $rfield=0','set $rpub=0',
-        f'break *{sim+0x3154a:#x}','commands','silent','set $rpub=$rpub+1','continue','end',
+        f'break *{sim+0x3154a:#x}','commands','silent','set $rpub=$rpub+1','printf "PUB %u %u\\n", $rfield, *(unsigned int*)0xdff004','continue','end',
         f'break *{sim+0x21f4a:#x}','commands','silent','printf "FLIGHT_EXIT\\n"','end',
         f'break *{sim+0x2d34e:#x}','commands','silent','set $rfield=$rfield+1',
         f'if $rfield < {fields}','continue','end','end','continue',

@@ -50,16 +50,15 @@ policy. The existing normal 040/060 short windows reach the two-field cap;
 FC5's long pairs remain near 24 FPS. This profile supplies no new normal-build
 FPS or 040/060 cycle claim.
 
-**Recommended FC6 branch:** a bounded developer-only W6 trial on 040/060,
+**Authorized FC6 trial (2026-10-12):** a bounded developer-only W6 trial on 040/060,
 using one frozen binary per pair and 2,000 fields plus a 250-field held-bank
 window. Compare masks `0x17f0ffa`/`0x17f2ffa` on 040 and
 `0x1ff0ffa`/`0x1ff2ffa` on 060; inspect both publication cadence and world-time
 rate. Bit 13 already supplies fixed ticks, interpolation and the one-field
-cap. This trial would not put W6 in the normal mask or complete postponed D5.
-The alternative is geometry optimization under the existing cap. The FC6
-plan requires the user's decision before taking the W6 branch; that decision
-is pending. No further emulator round is authorized by this recommendation
-alone.
+cap. This trial does not put W6 in the normal mask or complete postponed D5.
+The user approved both this trial and subsequent exact geometry processing
+optimization, in either order. Geometry comparisons will use W6 to expose
+savings hidden by the normal two-field cap. Results follow below when complete.
 
 ## FC5 — changed viewport copying: dropped (2026-10-12)
 

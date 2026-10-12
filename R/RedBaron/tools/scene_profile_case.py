@@ -8,7 +8,7 @@ import argparse,hashlib,json,os,subprocess,sys,time
 from pathlib import Path
 sys.path.insert(0,str(Path.cwd()/'tools'))
 import route_status as r
-p=argparse.ArgumentParser();p.add_argument('machine',choices=('a500','020','030','030-nommu','040','060'));p.add_argument('mask',type=lambda s:int(s,0));p.add_argument('out',type=Path);p.add_argument('--bank-after',type=int,default=0,help='Additional held-bank FPS window after level flight');p.add_argument('--resume-entry',action='store_true');p.add_argument('--check-only',action='store_true',help='Normal-build default and CPU-gate smoke check, without profiling');p.add_argument('--fields',type=int,default=250);p.add_argument('--dma-fields',type=int,default=0,help='Optional bounded page-safety trace after profiling');p.add_argument('--groups',nargs='+',choices=('stages','draw','fps'),default=['stages','draw']);a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('machine',choices=('a500','020','030','030-nommu','040','060'));p.add_argument('mask',type=lambda s:int(s,0));p.add_argument('out',type=Path);p.add_argument('--bank-after',type=int,default=0,help='Additional held-bank FPS window after level flight');p.add_argument('--resume-entry',action='store_true');p.add_argument('--check-only',action='store_true',help='Normal-build default and CPU-gate smoke check, without profiling');p.add_argument('--fields',type=int,default=250);p.add_argument('--dma-fields',type=int,default=0,help='Optional bounded page-safety trace after profiling');p.add_argument('--groups',nargs='+',choices=('stages','draw','fps','rate'),default=['stages','draw']);a=p.parse_args()
 if a.bank_after and (not 250 <= a.bank_after <= 2000 or a.check_only or a.dma_fields):p.error('Bank-after requires 250–2000 fields and excludes check-only/DMA')
 if not 10 <= a.fields <= 2000:p.error('Use a bounded 10–2000-field window')
 if a.dma_fields and (not 10 <= a.dma_fields <= 40 or a.check_only or 'stages' not in a.groups):p.error('DMA checking requires stages and 10–40 fields')
@@ -65,7 +65,10 @@ if a.check_only:
 # capture; only one debugger needs to drive execution during measurement.
 run(TRACKED/'completion_host_input.py','quit');host.wait(timeout=20)
 for group in (() if a.check_only else a.groups):
- run(TRACKED/'render_profile.py',a.out,'--group',group,'--fields',a.fields)
+ if group=='rate':
+  assert a.mask & (1<<13) and meta['build_mode']=='developer'
+  run(TRACKED/'w6_rate_profile.py',a.out,'--fields',a.fields)
+ else:run(TRACKED/'render_profile.py',a.out,'--group',group,'--fields',a.fields)
 if a.bank_after:
  r.command('shot '+str((a.out/'final.png').resolve()))
  bank=a.out/'bank';bank.mkdir()
@@ -80,7 +83,8 @@ if a.bank_after:
  run(TRACKED/'completion_host_input.py','quit');host.wait(timeout=20)
  bankmeta=dict(meta,route=meta['route']+'; native right-bank IRQ held throughout the following window')
  (bank/'entry.json').write_text(json.dumps(bankmeta,indent=2)+'\n')
- run(TRACKED/'render_profile.py',bank,'--group','fps','--fields',a.bank_after)
+ if 'rate' in a.groups:run(TRACKED/'w6_rate_profile.py',bank,'--fields',a.bank_after)
+ else:run(TRACKED/'render_profile.py',bank,'--group','fps','--fields',a.bank_after)
  r.command('shot '+str((bank/'final.png').resolve()))
 (a.out/'debug.uae').write_bytes(Path('amiga/.run/fsuae/Cache/Logs/debug.uae').read_bytes())
 if not a.bank_after:r.command('shot '+str((a.out/'final.png').resolve()))

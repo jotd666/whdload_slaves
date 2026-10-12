@@ -268,19 +268,24 @@ completion-plan §0. Hard-turn windows passed the regression limit. The original
 full viewport copy and RAM requirement remain; `profiling.md` records the
 frozen-build comparisons and the corrected 060 allocation trial.
 
-### FC6 — re-profile, then decide on geometry or 50 FPS
+### FC6 — retained-renderer profile, W6 trial and geometry
 
-The original FC1–FC5 estimate projected about 30–35 ms per 030 frame of mostly
-Fast-RAM computation. FC6 must measure the retained renderer before relying on
-that estimate; P2 still caps publication at 25 FPS.
+The retained-renderer profile is complete in `profiling.md`. On 2026-10-12 the
+user approved doing both follow-ups, in either order:
 
-**Next decision.** Either:
-- reduce geometry (about 15 ms on 030: object setup `39b42`, `3a902`, the face
-  loop `3b41a`, transforms; aprof names the hot loops); or
-- with the user, turn on W6 (bit 13, one-field cap, fixed world tick) on
-  040/060 and measure toward 50 FPS.
+1. Test existing W6 (bit 13, one-field cap, fixed world ticks) on 040/060 in
+   developer builds. One frozen-build pair per CPU, 2,000 level-flight fields
+   followed by 250 held-bank fields. Record publication cadence, world-time
+   rate and dropped debt. Keep W6 out of the normal mask; D5 stays postponed.
+2. Optimize geometry processing without changing geometry or detail. Start
+   with the existing exact face-loop register/cache-hit path at sim:3b4cc,
+   previously measured only on 68000. Evaluate the 040/060 extension under W6
+   so the normal two-field cap cannot hide its cost. Use the existing model
+   and native per-face twin; retain only CPU classes clearing the 2% threshold.
 
-D5 is still postponed, so a W6 change is a user decision.
+Use exclusive costs from the fresh profile: inclusive object/face totals also
+contain rasterization. Do not repeat discarded C1/C2 trials or chase the
+statically small G6/G8/G9 candidates without a concrete new reason.
 
 ### FC7 — AGA and 040/060 confirmation
 
