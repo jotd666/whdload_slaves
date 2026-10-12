@@ -3640,3 +3640,19 @@ completion. Manual, complete terrain/contact and airborne integration, reset
 coverage, sound, equal-time full trajectories, the unchanged-clock dependency,
 original-game performance acceptance and human full laps remain unfinished.
 Neither the acceptance requirements nor the normal release behavior has changed.
+
+
+### Engine endpoint reuse: P3 evaluation
+
+P3's exact endpoint-cache candidate passed native/phase equivalence checks but
+failed the performance gate: 2.324 engine entries/frame in A (limit 1.75),
+1.983 in B (limit 1.25). Only 3 of 90 eligible segments in A and none of 98 in B
+reused an endpoint. Changed throttle accounts for 25 / 41 misses, changed pitch
+for another 2 in A; other misses start a new phase. These traces do not support
+the plan's expected roughly one saved engine call per frame.
+
+The candidate is retained only in the ignored harness; `HardDrivinPhase.s`
+continues evaluating the native engine every segment. No input latching or
+physics-cadence change was introduced. `STEP4_COST_PLAN.md` P3 records the full
+side-effect audit, exact-check evidence, matched ten-second profiles and the
+unmet limits. P3 remains open under the existing D3 decision.
