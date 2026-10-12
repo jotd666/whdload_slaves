@@ -46,3 +46,39 @@ def mission_exit(before,held,exiting,backlog,F):
         raise ValueError('No full world quantum of catch-up backlog')
     if held['cursor']!=before['cursor'] or any(s['steps']!=before['steps'] for s in (held,exiting)):
         raise ValueError('World advanced in the menu or after the exit command')
+
+
+def compression_window(raw):
+    ends=re.findall(r'^COMPRESS (\d+) (\d+)$',raw,re.M)
+    if len(ends)!=1 or int(ends[0][0])!=200 or not int(ends[0][1]) or 'CANCELLED' in raw or 'FLIGHT_EXIT' in raw:
+        raise ValueError('Incomplete or cancelled native compression window')
+    return int(ends[0][1])
+
+
+def ground_outcome(ground,scenario,native_return,before,after):
+    contacts=ground['contacts']
+    if ground['stop']!='menu' or not contacts or any(c[1]<4 for c in contacts):
+        raise ValueError('No W6-owned contact and native mission menu')
+    grades=[c[-1] for c in contacts]
+    if scenario=='landing':
+        if any(grades) or ground['altitude']!=50:raise ValueError('Unsafe or incomplete touchdown')
+    elif scenario=='crash':
+        if not any(g>0 for g in grades) or not ground['flags']&0x48:raise ValueError('No destructive impact')
+    else:raise ValueError('Unknown ground scenario')
+    if native_return!=1 or before['steps']!=after['steps']:
+        raise ValueError('Mission aborted or simulation continued after menu selection')
+
+
+def combat_outcome(raw,player,target,kill_pc):
+    kills=re.findall(r'^KILL (\d+) (\d+) (\d+) (\d+) (\d+)$',raw,re.M)
+    stops=re.findall(r'^COMBAT_STOP (\d+) (\d+) (\d+)$',raw,re.M)
+    hits=re.findall(r'^HIT (\d+) (\d+) (\d+) (\d+)$',raw,re.M)
+    if len(kills)!=1 or len(stops)!=1 or not hits or 'FLIGHT_EXIT' in raw:
+        raise ValueError('No completed native shoot-down')
+    field,step,owner,victim,flags=map(int,kills[0])
+    pc,stopfield,count=map(int,stops[0])
+    if pc!=kill_pc or stopfield!=field or count!=len(hits) or owner!=player or victim!=target or not flags&0x48 or step<4:
+        raise ValueError('Wrong native destruction or player credit')
+    if any(int(h[2])!=target or int(h[1])<4 or int(h[0])>field for h in hits):
+        raise ValueError('Invalid native hit sequence')
+    return dict(field=field,step=step,hits=count,destruction_flags=flags&0x48)

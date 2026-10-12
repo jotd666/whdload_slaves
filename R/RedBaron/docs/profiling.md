@@ -46,6 +46,45 @@ input and soak drivers now trap sim:21f60, the common flight-exit epilogue,
 rather than sim:21f4a, which covers only one exit path.
 
 
+Controlled VERIFY-only outcome fixtures activate once, at W6 world update 4.
+They set initial poses/velocities and isolate other aircraft; subsequent
+physics, eligibility, projectile hits, damage and mission results are native.
+They do not inject clocks, commands, health or completion flags. Ground tests
+retain original damage preferences. Combat alone selects the native player
+protection preference in a private game copy; enemy damage remains enabled.
+These are functional integration checks, not ordinary-flight handling or FPS
+measurements. The VERIFY fixture could not allocate expansion memory on the
+2 MB A500 setup, so its 68000 outcome checks use 8 MB Fast RAM for instrumentation.
+This is not a minimum-memory pass; the developer input/rate checks above retain
+the 2 MB configuration.
+
+| Controlled check | Configuration | Result | Evidence |
+|---|---|---|---|
+| Eligible native C entry/exit | 060, quantum 225 | 200 fields compressed, 257 native eligibility decisions, then native exit and 100 fields remaining off | `d5-auto-060-transit/compression.json` |
+| Gentle field landing and End Mission | 060, quantum 225 | All contacts safe under W6; ground altitude 50, automatic mission-over menu, native completed-mission return, no world update while exiting | `d5-auto-060-landing-w6-r2/{ground,outcome}.json` |
+| AI shoot-down | 060, quantum 225 | Eight native hits; enemy destroyed at world update 11; personal kill credit 150; native “You just shot down Udet!” message | `d5-auto-060-combat-protected-r2/combat.json` |
+
+The landing ends behind enemy lines and reaches the captivity debrief. It is
+a safe field-touchdown smoke test, not runway navigation or a manual approach
+assessment. An earlier landing touched down before W6 activation and is
+explicitly rejected. The first combat setup selected a camera object instead
+of an aircraft and was rejected; the fixture now iterates the actual aircraft
+pool. An unprotected attempt recorded hits but ended with the player destroyed,
+so it supplies no shoot-down pass. The successful protected case requires both
+native target destruction and the personal-score credit path at sim:a042;
+hits alone cannot pass. The observers trap common flight exit at sim:21f60 and
+bound both emulated fields and host debugger time.
+
+From the configured harness, `d5_fixture_case.py <a500|060>
+<transit|landing|crash|combat> <capture>` builds a separate VERIFY fixture and
+leaves the game paused with native input attached. Follow with
+`d5_compression.py <capture>`, or `d5_ground.py <capture>` and then
+`d5_end_outcome.py <capture>`, or `d5_combat.py <capture>`. Close the owned
+input server and emulator before the next case. The transit observer requires
+native eligibility rather than forcing the Time Compress flag. Ground and
+combat result validators include deliberately malformed evidence cases.
+
+
 The unchanged developer binary is SHA-256
 `7148764be23e82f999b99b2e6f0359df88b987712010d8ab19caafbd7b330e39`.
 Scale 60 exceeds this machine's capacity and exercises the approved debt-drop

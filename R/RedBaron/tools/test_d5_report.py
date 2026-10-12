@@ -1,5 +1,5 @@
 import copy,unittest
-from d5_report import input_window,catchup,modal,mission_exit
+from d5_report import input_window,catchup,modal,mission_exit,compression_window,ground_outcome,combat_outcome
 
 class D5ReportTests(unittest.TestCase):
     def test_catchup_and_three_sabotages(self):
@@ -29,3 +29,23 @@ class D5ReportTests(unittest.TestCase):
         mission_exit(b,h,e,38,33)
         for e1,lag in [(dict(e,steps=13),38),(e,10)]:
             with self.assertRaises(ValueError):mission_exit(b,h,e1,lag,33)
+
+    def test_compression_sabotages(self):
+        self.assertEqual(compression_window('COMPRESS 200 257\n'),257)
+        for raw in ('COMPRESS 199 257\n','COMPRESS 200 0\n','CANCELLED\nCOMPRESS 200 257\n','FLIGHT_EXIT\nCOMPRESS 200 257\n'):
+            with self.assertRaises(ValueError):compression_window(raw)
+
+    def test_ground_outcome_sabotages(self):
+        g=dict(stop='menu',contacts=[[20,4,49,-10,0]],altitude=50)
+        b=dict(steps=30)
+        ground_outcome(g,'landing',1,b,b)
+        for bad,ret in [(dict(g,contacts=[[20,0,49,-10,0]]),1),(dict(g,contacts=[[20,4,49,-10,2]]),1),(g,0)]:
+            with self.assertRaises(ValueError):ground_outcome(bad,'landing',ret,b,b)
+        ground_outcome(dict(g,contacts=[[20,4,-30,-1000,3]],flags=8),'crash',1,b,b)
+        with self.assertRaises(ValueError):ground_outcome(dict(g,contacts=[[20,4,-30,-1000,3]],flags=0),'crash',1,b,b)
+
+    def test_combat_sabotages(self):
+        raw='HIT 7 5 200 0\nKILL 30 8 100 200 8\nCOMBAT_STOP 42 30 1\n'
+        self.assertEqual(combat_outcome(raw,100,200,42)['hits'],1)
+        for bad in (raw.replace('100 200 8','101 200 8'),raw.replace('100 200 8','100 200 0'),raw.replace('HIT 7 5','HIT 7 0'),raw+'FLIGHT_EXIT\n'):
+            with self.assertRaises(ValueError):combat_outcome(bad,100,200,42)

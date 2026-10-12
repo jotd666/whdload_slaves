@@ -9,6 +9,9 @@
 ; CUSTOM4=$20000 instead selects Pause in the W6 modal IRQ fixture; no dt force.
 ; a1 is h3; preserve every input register. No additional sim-code hook.
 time_probe_step:
+	IFD VERIFY_D5_SCENARIO
+	bsr d5_scenario_prepare
+	ENDC
 	movem.l d0/a0,-(sp)
 	; CUSTOM5 bit 18: one synthetic low-altitude descent at first flight.
 	; Deliberately changes initial conditions; never a normal mission sample.
@@ -139,3 +142,121 @@ time_prelude_step:
 	move.l observe_resload(pc),a2
 	jmp resload_Abort(a2)
 time_prelude_count: dc.l 0
+
+	IFD VERIFY_D5_SCENARIO
+; Controlled one-time starting conditions for native D5 outcome integration.
+; No clock, command, damage, mission-result or collision state is fabricated.
+; 1 = gentle ground approach; 2 = steep descent; 3 = isolated transit;
+; 4 = live enemy lined up on the player forward axis for native gunfire.
+; This file is included only in VERIFY. Ordinary builds contain no fixture.
+d5_scenario_prepare:
+	movem.l d0-d2/a0-a4,-(sp)
+	lea .option(pc),a2
+.option
+	adda.l #perf_custom2+2-.option,a2
+	btst #5,(a2) ; W6 requested, including deferred installation
+	beq .done
+	lea .loop(pc),a2
+.loop
+	adda.l #time_loop_state-.loop,a2
+	tst.l TIME_LOOP_ACTIVE(a2)
+	beq .done
+	move.l TIME_LOOP_STEPS(a2),d0
+	cmpi.l #4,d0
+	bne .done
+	move.l $4578(a1),a0
+	IFNE VERIFY_D5_SCENARIO-3
+	IFNE VERIFY_D5_SCENARIO-4
+	IFNE VERIFY_D5_SCENARIO-1
+	move.l #512,16(a0)
+	move.w #-1024,$f8(a0)
+	move.w #-1024,$fe(a0)
+	move.w #-220,$ce(a0)
+	move.w #-220,$d4(a0)
+	ELSE
+	move.l #60,16(a0)
+	clr.w 20(a0)
+	clr.w 22(a0)
+	clr.w $ce(a0)
+	clr.w $d0(a0)
+	clr.w $d4(a0)
+	clr.w $d6(a0)
+	clr.l $f4(a0)
+	clr.l $f8(a0)
+	clr.l $fc(a0)
+	move.l $457c(a1),a2
+	clr.w 6(a2)
+	ENDC
+	clr.w $104(a0)
+	ENDC
+	ENDC
+	; Move other aircraft far away once. Native eligibility
+	; still decides whether C is allowed; no compression/eligibility flag write.
+	move.w $5578(a1),d0
+	move.l $5584(a1),a2
+	subq.w #1,d0
+	bmi .done
+.objects
+	move.l a2,a3
+	cmpa.l a0,a3
+	beq .next
+	IFEQ VERIFY_D5_SCENARIO-4
+	move.l d5_scenario_target(pc),d1
+	bne .relocate
+	tst.b 38(a3)
+	bne .relocate
+	; Registry also contains camera objects with type zero. Require a live
+	; enemy in the actual 318-byte aircraft pool, not a camera lookalike.
+	move.l a3,d2
+	sub.l $5584(a1),d2
+	bcs .relocate
+	move.w $5578(a1),d1
+	mulu #318,d1
+	cmp.l d1,d2
+	bhs .relocate
+	move.l 34(a3),d1
+	andi.l #$48,d1
+	bne .relocate
+	move.l 34(a3),d1
+	move.l 34(a0),d2
+	eor.l d2,d1
+	btst #10,d1
+	beq .relocate
+	lea d5_scenario_target(pc),a4
+	move.l a3,(a4)
+	move.w $32(a0),d1
+	asr.w #4,d1
+	ext.l d1
+	add.l 8(a0),d1
+	move.l d1,8(a3)
+	move.w $34(a0),d1
+	asr.w #4,d1
+	ext.l d1
+	add.l 12(a0),d1
+	move.l d1,12(a3)
+	move.w $36(a0),d1
+	asr.w #4,d1
+	ext.l d1
+	add.l 16(a0),d1
+	move.l d1,16(a3)
+	move.l 20(a0),20(a3)
+	move.w 24(a0),24(a3)
+	move.l $ce(a0),$ce(a3)
+	move.l $d2(a0),$d2(a3)
+	move.l $d6(a0),$d6(a3)
+	move.l $f4(a0),$f4(a3)
+	move.l $f8(a0),$f8(a3)
+	move.l $fc(a0),$fc(a3)
+	bra .next
+.relocate
+	ENDC
+	addi.l #2000000,8(a3)
+	addi.l #2000000,12(a3)
+.next
+	adda.w #318,a2
+	dbf d0,.objects
+.done
+	movem.l (sp)+,d0-d2/a0-a4
+	rts
+d5_scenario_target: dc.l 0
+	ENDC
