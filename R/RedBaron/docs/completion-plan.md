@@ -396,6 +396,8 @@ rear/left/right bypass plus front return. Full-composition view twins remain
 part of E2 when that replacement is implemented.
 
 **E3. CPU raster path for 020+.**
+
+Rectangle disposition: direct-to-chip CPU fills are dropped under §0.3; all three AGA CPU-class pairs regress by 5–8% (scoreboard). Continue with polygon merging, then the fast-memory back buffer.
 1. Replace the sky/ground rectangle fills, which are 27% of scene time on
    the 030, and the polygon span fills (21%) with CPU code using 32-bit stores
    on AGA.

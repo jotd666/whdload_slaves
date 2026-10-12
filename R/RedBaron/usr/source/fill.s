@@ -13,6 +13,13 @@ fill_install:
 	btst #0,perf_custom5+1(pc) ; CUSTOM5 bit 16: hardware pixel twin
 	beq.b .done
 	move.l 36(sp),a1
+	; This twin can run in menus, before the flight observer knows h3.
+	move.l a1,a0
+	adda.l #$301b2,a0
+	move.l (a0),d0
+	subi.l #$9a2c,d0
+	lea fill_twin_h3(pc),a0
+	move.l d0,(a0)
 	move.l #$2fd8a,d0
 	moveq #8,d1
 	lea fill_twin_expected(pc),a0
@@ -67,7 +74,7 @@ fill_twin:
 	bhi fill_twin_fail
 	; The game's pitch at sim:2fd0c is checked by the pixel traversal below:
 	; BLTDMOD is write-only; derive saved original modulo from h3 instead.
-	move.l observe_header+28(pc),a1
+	move.l fill_twin_h3(pc),a1
 	adda.l #$9d42,a1
 	move.w (a1),d2
 	move.w d6,d0
@@ -162,6 +169,7 @@ fill_twin_fail:
 	jmp resload_Abort(a2)
 fill_twin_message: dc.b "Red Baron: solid-fill pixel twin mismatch or bounds",0
 	even
+fill_twin_h3: dc.l 0
 fill_twin_header: dc.b "RBFILL01"
 	dc.l 1,0,0,0,0 ; version, twins, D-only, masked, compared words
 	ENDC
