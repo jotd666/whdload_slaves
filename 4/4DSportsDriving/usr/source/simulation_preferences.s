@@ -71,7 +71,8 @@ sim_preferences_read:
  rts
 
 ; $16C9E: after the native benchmark, before copying selected to active mode.
-; Missing/invalid files preserve the benchmark result; loading never writes.
+; Missing/invalid files use Normal on 000/010, A2500 on 020+.
+; A4000 remains explicit opt-in. A valid saved choice wins; loading never writes.
 sim_preferences_load:
  movem.l d0-d7/a0-a6,-(sp)
  movea.l $bda(a4),a6
@@ -81,7 +82,16 @@ sim_preferences_load:
  lea sim_preferences_loads(pc),a0
  addq.l #1,(a0)
  tst.l d0
- beq .out
+ bne .saved
+ lea sim_preferences_load(pc),a0
+ adda.l #perf_attnflags-sim_preferences_load,a0
+ move.l (a0),d1
+ moveq #10,d0
+ btst #1,d1               ; AFB_68020 includes 030/040/060
+ beq .apply
+ moveq #20,d0
+ bra .apply
+.saved:
  cmp.w #20,d0
  bne .apply
  tst.w -$4628(a4)

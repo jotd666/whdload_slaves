@@ -677,7 +677,7 @@ pl_main
     ; Complete original instruction: bchg #0,$3b(a4), six bytes.
     IFD SIM_MODE_MENU
     PL_P $1AAD6,sim_mode_dialog_stub
-    PL_PS $16C9E,sim_preferences_load_stub
+    PL_PS $16C9E,sim_preferences_load_stub ; TIMING_RANGE h0:16c9e 6
     PL_PSS $16346,sim_opponent_route_prepare_stub,2 ; TIMING_RANGE h0:16346 8
  IFD SIM_REPLAY_MENU
  PL_P $80EE,sim_replay_load_entry_stub

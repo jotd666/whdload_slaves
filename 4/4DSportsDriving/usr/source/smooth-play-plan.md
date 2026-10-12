@@ -71,7 +71,8 @@ Conclusions. Each one drives a phase below.
   - 68000/010: Normal 10 Hz on the corrected clock. The native A2500 benchmark gate stays as it is.
   - 020/030 without fast RAM: A2500 20 Hz.
   - 020+ with fast RAM: A2500 by default; A4000 50 Hz selectable.
-  - 040/060: A4000 50 Hz by default.
+  - 040/060: A2500 20 Hz by default; A4000 remains experimental and selectable
+    (user decision, 12 October 2026).
   - The user can still choose any allowed rate in Ctrl-G. Never switch rate during a race.
 - **D2. No render interpolation in this plan.** The 50 Hz mode already exists and holds
   50.2 steps/s on 040/060. Interpolating 20 Hz would add 50 ms of latency, which users
@@ -590,8 +591,8 @@ the testing archive is unchanged. Stop before P5.
 
 ## P5. Finish the 50 Hz (A4000) mode to release quality, time-boxed
 
-Status (12 October 2026): P5 is in progress; P5.1 and P5.2 pass. P5.3 reached its user
-decision gate; P5.4 defaults and P5.5 acceptance drives remain.
+Status (12 October 2026): P5 is in progress; P5.1 and P5.2 pass. P5.3 is closed by user decision: keep A4000 experimental.
+P5.4 defaults pass; P5.5 acceptance drives are in progress.
 The frozen crest gate still passes 27/29; its bounds are unchanged.
 
 1. **Native format-2 replay save/load: complete.**
@@ -633,7 +634,7 @@ The frozen crest gate still passes 27/29; its bounds are unchanged.
      Opponent fixture SHA256:
      `7d926c8e29cc8d361641d953be43f528b47a611c8d8e2f64f15f477b4d4c455e`.
      Native production and the testing archive are unchanged; P6 remains open.
-3. **Jump and landing: bounded trials exhausted; user decision pending.**
+3. **Jump and landing: complete within the time box; A4000 experimental.**
    - Current emulator result remains 27/29. Common Y error is 2,263 against
      a 1,247 limit; common pitch error is 18 against 11 (internal units).
    - Exactly two documented hypotheses were re-run as recurrent offline
@@ -648,13 +649,27 @@ The frozen crest gate still passes 27/29; its bounds are unchanged.
      `90570d37e39d7fbdf804bbc497959ffe30e60f51bbb60c3e938f041c1d3401db`.
      The existing emulator gate in `crest-d9e7903/bridge-handling.json`
      remains authoritative; physics code is unchanged.
-   - Physics experiments stop here. Await the user's choice: accept and
-     document the differences, use interpolation (D2 fallback), or retain
-     experimental 50 Hz with A2500 as the 040/060 default. Do not widen
-     criteria or start new physics research. Defaults and final acceptance
-     follow that decision; P5 is not complete and P6 has not started.
-4. **Per-CPU default (D1) at startup.** The default applies when no saved `4DPhysics.cfg`
-   exists. The Ctrl-G choice persists and still takes effect at the next race.
+   - User decision (12 October 2026): keep A4000 experimental, retain
+     A2500 as the 040/060 default. No interpolation or further physics
+     research; criteria stay unchanged. Defaults and final acceptance
+     remain to be validated; P6 has not started.
+4. **Per-CPU default (D1) at startup: complete.**
+   - Missing/invalid `4DPhysics.cfg`: Normal on 68000/010; A2500 on 020+,
+     including 040/060 per the experimental-mode decision. A valid saved
+     choice wins, retaining the native A2500 benchmark eligibility gate.
+     Loading does not write preferences. Ctrl-G remains next-race-only:
+     the current keyboard-route check observes selected 50 with active and
+     recorded rate still 20, then confirms all three at 50 after restart.
+   - Runtime startup checks pass on A500, 020, 030, 040 and 060, including
+     matching selected/active/recorded rate and intact preference guards.
+     Fresh-process saved 10/50 and corrupt-file fallback checks pass on 020.
+     Hook audit passes (1,250 relocations, 10,102 branch candidates); all
+     38 declared original ranges match with CUSTOM2=0/CUSTOM3=1.
+   - Evidence: `tmp/prof/p5-defaults`. Ten-second default-mode FPS:
+     A 2.6988, B 11.2972, C/D/E 19.8950. These startup captures establish
+     defaults, not new physics or handling acceptance. Optional runtime SHA:
+     `03bf1d2007163a1f376ca7623cfc433c46aaa84c5c9204f1d6a9e6d88b024584`.
+     Native production and archive remain unchanged pending P6.
 5. Acceptance: 2-minute drives on D and E with an opponent, a crash and the finish. There
    must be no backlog growth, no queue overflow, and the race clock ratio must be 1.00 ±0.5%.
 
