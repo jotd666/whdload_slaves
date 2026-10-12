@@ -60,42 +60,50 @@ Known differences that change the design:
   not the standalone Test Drive 2 repository's `whdload/`. Diff the two before copying a
   routine.
 
-## Phase 1: local harness (in `tmp/dev/`, never committed)
+## Phase 1: local harness (complete; in `tmp/dev/`, never committed)
 
-Copy from the Test Drive 2 project and adapt, following the playbook's §3 table. Work from
-the harness root; paths are relative to it.
+1. Runner/debug server: disposable per-launch game copy, worktree-owned emulator and
+   debugger, shared environment defaults, pinned runtime inputs checked before use.
+   `TD_SETUP=a500|a1200|a1200-030` reproduces TD2's reference settings (512 KiB chip +
+   1536 KiB slow; expanded A1200 with 4 MiB fast; 68030/25 MHz). Shared `AMIGA_SETUP`
+   presets remain available. Effective launch options are recorded before boot; buffered
+   emulator logs are not used to guess RAM sizes at an early breakpoint.
+2. Profiler: the installed FS-UAE hash and both setup writes/capture-command reads for
+   its PC window are pinned and checked. A short A500 trace contains real instruction PCs.
+3. Build: `tools/build.sh` checks the selected compiler/include trees and builds the
+   authoritative source into `tmp/build/`; `VERIFY=1` selects the VERIFY output. Both
+   variants are currently identical. The Bash wrappers work with macOS Bash 3.2.
+4. Trace tools: `td_report.py` uses TD's root/data sizes, excludes the PRELOAD root copy
+   and follows the loaded BPTR chain. `profile_demo.sh`, `ingame.py`, `frames.py`,
+   `swap_fields.py` and `fixed_window.sh` are adapted. Captures retain the exact slave,
+   launch settings, RAM and evidence. Fixed captures require an explicit TD anchor and
+   reject a moved anchor. **The race anchor and buffer-swap marker are still phase 4
+   work:** until validated, the tools provide diagnostic windows and CPU/DMA reports,
+   not FPS. No TD2 game addresses are silently reused.
+5. State tools: `state_fields.py`, `state_writers.py`, `state_report.py`, `state_watch.py`
+   and `task_state.py` work on TD captures. The field sampler uses Ticks VBLInt at
+   TD:$018BA and checks consecutive counters and a4/a1 against the data hunk. Task
+   parsing finds Initial CLI and Road Drawer in a real dump. Writer attribution and
+   a live watchpoint corroborate the VBL store.
+6. Comparison: `compare_state.py` has a TD-only seven-variable seed map plus full data
+   comparison. Two fresh A500 boots at the same VBL window match byte-for-byte across
+   all $32A4 data bytes; a different scene differs. Negative controls detect a changed
+   non-clock selector and a missing sample. **The full physics/score state map remains
+   phase 5 work**, so this is harness validation, not proof of gameplay determinism.
+7. Later-phase `check_*`, simulation audits, sub-unit/sideways tools and the full release
+   packager remain deliberately deferred until their features exist. The phase-1
+   acceptance checker is `tools/check_harness.py`; the phase-6.1 A/B bundle is preserved.
+8. Current local references: `docs/development.md`, `docs/testing.md`,
+   `docs/internals.md` and `docs/open-work.md`. Commands and evidence are documented
+   there; acceptance artifacts are under ignored `tmp/dev/tmp/phase1/`.
 
-1. Done: `amiga/run.sh` (TD2's runner with `GAME`/`SLAVE_NAME` from `amiga/env.sh`, a
-   disposable `dh1`, shared `AMIGA_SETUP` machines), `tools/_amigaxdev.py` and `tools/td.py`
-   (`Server('td', ...)`). Still to add: the TD2 reference machines (A500 with slow RAM,
-   expanded A1200, 68030/25 MHz) as presets with TD2's `testing.md` settings.
-2. Confirm the lldb profiler-window addresses still match the installed FS-UAE binary before
-   the first trace.
-3. Done: `tmp/dev/tools/build.sh` checks pinned build dependencies and assembles `$GAME_SOURCE/TestDriveHD.s`
-   with the shared `$WHDLOAD` includes into `tmp/build/TestDrive.slave`, and with
-   `-DVERIFY` into `tmp/build/TestDrive-verify.slave`. Never keep a second copy of the source.
-4. Adapt the tracing and reporting tools: `td2_report.py` → `td_report.py` (region voting
-   with TD's hunk sizes and the BPTR chain to the data hunk), `frames.py`, `swap_fields.py`,
-   `profile_demo.sh`, `ingame.py` (TD's own "driving" pixel test), `fixed_window.sh` (anchor
-   chosen in §4).
-5. Adapt the state tools: `state_fields.py`, `state_writers.py` (Aztec `d16(a4)` stores work
-   unchanged), `state_report.py`, `state_watch.py`. Despite the playbook's general advice,
-   `task_state.py` applies here, because TD has the same Road Drawer/CLI-process layout.
-   Verify it on a dump first.
-6. `compare_state.py`: rebuild the variable table for TD. Before trusting it, check that two
-   runs of the same build compare equal and two different scenes do not (the playbook's
-   Their Finest Hour trap).
-7. Leave `check_*`, `audit_simulation.py`, `subunit_*`, `sideways_*` and `package_release.py`
-   until the phases that need them. Then copy each one, adapt it and test it.
-8. Local docs: `docs/development.md` (build, run, variables, commands), `docs/internals.md`
-   (the TD equivalent of TD2's `game.md`), and `docs/open-work.md` pointing at this plan.
-
-**Done when:** the shipped baseline and a rebuilt slave both boot to the title screen on
-the A500 preset from copies of the same drawer. The available installer and installed
-archive contain 1.3, not 1.4; shipped-1.4 equivalence is therefore not applicable. For
-phase 6.1 the user accepted an unmodified repository-1.4 rebuild as the A/B baseline.
-Both A/B builds use the same pinned dependencies and omit the date string. The 68040
-startup check is complete; the A500 check and remaining harness work are still open.
+**Acceptance:** the shipped 1.3 and rebuilt 1.5b slaves boot through startup into the
+A500 attract/driving sequence from copies of the same pristine drawer. Normal/VERIFY
+builds pass, input hashes remain unchanged, and the delivered phase-6.1 fixed slave is
+unchanged. The available public archives contain 1.3, not 1.4; the user accepted an
+unmodified repository-1.4 rebuild for the separate A/B baseline. No unavailable
+shipped-1.4 byte-equivalence claim is made. Later measurement and gameplay gates remain
+open; phase 1 does not certify a frame marker, race anchor or simulation design.
 
 ## Phase 2: identify the game
 
