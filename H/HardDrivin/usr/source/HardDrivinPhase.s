@@ -71,8 +71,7 @@ _phase_frame:
  bne .fallback
  tst.w -$66f2(a4)
  bne .fallback
- tst.b -$16b6(a4)
- beq .fallback
+ ; Road/grass drag is native; throttle decay consumes PH_DT fields.
  tst.w -$66b8(a4)
  bne .fallback
  tst.w -$66ba(a4)

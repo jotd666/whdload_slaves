@@ -201,6 +201,14 @@ _time_throttle_retention:
 	clr.l SS_THROTTLE_CARRY(a0)
 .current:
 	move.w _time_scalar_fields(pc),d1
+	IFD VERIFY_DRIVETRAIN_PHASE
+	; Engine endpoints use eight fields; real throttle decay only consumes
+	; the newly integrated segment. Other callers retain their own interval.
+	move.w _phase_state+PH_ACTIVE(pc),d5
+	beq.s .interval_ready
+	move.w _phase_state+PH_DT(pc),d1
+.interval_ready:
+	ENDC
 	cmpi.w #8,d1
 	beq.s .native
 	move.l d0,d4

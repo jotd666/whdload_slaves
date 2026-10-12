@@ -3624,11 +3624,46 @@ integration changes the trajectory/workload, so it is not an isolated equivalent
 workload speedup or a pass of the original-game3% FPS gate. Both traces retain
 fingerprints and verified compressed archives.
 
+Grounded road-to-grass transitions now remain in the phase path. Native road
+or grass drag is evaluated for every engine segment. The off-road throttle hook
+uses `PH_DT` while the phase engine is active, rather than the eight-field
+forecast interval; other callers retain their existing interval. This prevents a
+short phase segment from consuming a complete native throttle-decay step. The
+existing r^T coefficient table, >30 threshold and native eight-field truncation
+remain unchanged.
+
+`analyse_phase_offroad.py` checks actual controls-driven transitions using the
+pristine engine, independent XYZ projection and independently rounded retention
+coefficients. It also checks native output words, full fractional state, restored
+outer intervals, exact engine-segment counts and phase-frame counts:
+
+| Capture | Active returns | Off-road returns | Decay segments | Consumed fields | Frame interval |
+|---|---:|---:|---:|---:|---:|
+| `s4-phase-offroad-a500` |27|13|13|321|6–16|
+| `s4-phase-offroad-020` |114|55|37|327|1–4|
+| `s4-phase-offroad-slow` |21|10|12|325|10–19|
+
+All162 complete returns match exactly. Together they exercise every decay segment
+length1–8; the slowed A500 adds four drawing fields. The engine-segment totals
+are61,139 and60 respectively, with no additional complete physics pass introduced
+by the phase solver. Native-step `s4-phase-offroad-native` still matches108
+reference car states. CUSTOM1-off checks pass159 ranges, the branch audit passes
+137 ranges, and the normal build remains byte-identical to `s2-final-normal`.
+These are per-run arithmetic/cadence checks, not cross-machine handling acceptance.
+
+Retention still has native quantization sensitivity. Starting at throttle100,
+the independent model gives87 exactly after one eight-field decay, versus
+87+32636/65536 after eight one-field decays. This0.49798583984375-unit difference
+comes from the retained native truncation rule; it is recorded in
+`phase-throttle-partition.json`. Its effect on longer force/controls trajectories
+and the acceptance tolerance remains unresolved. No FPS rerun or original-game
+performance acceptance is claimed for the off-road extension.
+
 General handling and mode transitions remain open. The fallback solver retains
 only eighth-unit scalar companions, while phase state can contain finer fractions;
 transitions other than the supported turning-force case still need resolution.
 Native force evaluation uses the phase anchor and automatic shifts occur at phase
-completion. Manual, skid, off-road, contact and airborne integration, reset
+completion. Manual, skid, uneven-terrain/contact and airborne integration, reset
 coverage, sound, equal-time full trajectories, the unchanged-clock dependency,
 original-game performance acceptance and human full laps remain unfinished.
 Neither the acceptance requirements nor the normal release behavior has changed.

@@ -322,8 +322,12 @@ Tools stay in ignored `tmp/dev/tools`.
      fractional-state loss;10 A500 and41 68020 steering returns match scalar and
      XYZ projection oracles. The ten-second phase diagnostic renders37 versus34
      frames for the previous reference solver, but does not pass the original FPS
-     gate. General modes, remaining transition precision, complete handling and
-     acceptance remain open; it is not the accepted replacement solver.
+     gate. Grounded road-to-grass integration now adds162 exact live returns
+     across A500,68020 and slowed A500, with throttle decay consuming only each
+     segment's elapsed fields. Native eight-field throttle rounding still differs
+     from fractional small-step retention. General modes, remaining transition
+     precision, complete handling and acceptance remain open; it is not the
+     accepted replacement solver.
    - Check the integrator: with Euler updates, many small steps do not give the same
      displacement as one large step. Apply the (T−1)/2·Δv correction where the
      original order requires it, and decide whether the target is the original
