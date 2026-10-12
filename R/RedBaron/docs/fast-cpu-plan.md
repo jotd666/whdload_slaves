@@ -260,27 +260,19 @@ All measurements, final artifacts and validation are recorded in `profiling.md`.
 Fallback expansion is dropped from this step: compatibility is no longer a
 leading cost, and the fallback preserves native coverage.
 
-### FC5 — smaller viewport copy: −2 to −5 ms (scene dependent)
+### FC5 — smaller viewport copy: dropped
 
-**Cause.** The whole 320×120 five-plane viewport (24,000 bytes) is written to
-Chip every frame: 7.0 ms on OCS, 96% Chip.
-
-**Fix.**
-1. Keep one Fast shadow of each Chip page's viewport (24 KB each).
-2. Compare the new Fast frame with the shadow of the page being drawn, and write
-   only differing longword runs.
-
-In level flight the sky and ground rows rarely change between frames on the same
-page.
-
-**Check.** Measure in level flight and in a hard turn (the worst case). Drop the
-step if the turn regresses by 2% or more. Per-page shadows follow the native
-two-page identity.
+The per-page Fast-shadow candidate passed exact pixel checks but gained less
+than 2% level-flight FPS on every measured CPU class, so it is dropped under
+completion-plan §0. Hard-turn windows passed the regression limit. The original
+full viewport copy and RAM requirement remain; `profiling.md` records the
+frozen-build comparisons and the corrected 060 allocation trial.
 
 ### FC6 — re-profile, then decide on geometry or 50 FPS
 
-After FC1–FC5, the projected 030 frame is about 30–35 ms of mostly Fast-RAM
-computation. That is 25 FPS, capped by P2.
+The original FC1–FC5 estimate projected about 30–35 ms per 030 frame of mostly
+Fast-RAM computation. FC6 must measure the retained renderer before relying on
+that estimate; P2 still caps publication at 25 FPS.
 
 **Next decision.** Either:
 - reduce geometry (about 15 ms on 030: object setup `39b42`, `3a902`, the face

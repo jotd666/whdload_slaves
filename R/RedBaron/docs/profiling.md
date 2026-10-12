@@ -10,6 +10,66 @@ because D5 is postponed. There is no 50 FPS or frame-independent normal-game
 speed claim. Historical captures below retain their original build, option
 mapping and RAM configuration; they do not define the current player default.
 
+## FC5 — changed viewport copying: dropped (2026-10-12)
+
+**Disposition:** drop FC5 under completion-plan §0: the level-flight FPS gain
+is below 2% on every measured CPU class. The shipped renderer, verified mask
+`0x1ff1fff`, RAM requirements and two-field cap remain unchanged.
+
+The candidate kept two 24 KB Fast shadows keyed by native page identity and
+viewport geometry. In supported forward flight it compared longwords above
+row 88; cockpit rows were always copied because later native instruments can
+modify them. View, message, redraw, modal and resource changes invalidated the
+shadows. The measured viewport was rows 21–139, not an assumed zero-origin
+120-row rectangle. Four host-model tests covered page reuse, invalidation,
+geometry changes and three deliberately corrupted pixel-check cases. The
+native check passed 64 exact viewport comparisons plus rear/left/right/front
+and firing transitions (`fc5-twin-2`); existing scene/artwork twins also passed.
+
+One frozen developer binary per pair, maximum detail, unchanged Time Scale,
+protected fixture and native keyboard input: **2,000 PAL fields of level
+flight, followed by 250 fields with right bank held**. Screenshots confirm the
+bank. These are FPS measurements under the existing cap, not copy-time or
+real-hardware speedup claims. Values below 2% do not establish a reliable gain.
+
+| Configuration | Level FPS off → on | Held-bank FPS off → on | FC5 disposition |
+|---|---:|---:|---|
+| 68000 / A500 | — | — | CPU excluded; prior scoreboard retained |
+| 020 / A1200 | — | — | CPU excluded; prior scoreboard retained |
+| 030/50 MMU | 23.887 → 24.037 (+0.63%) | 24.561 → 24.960 (+1.63%) | Drop; `fc5-030-{off,on}` |
+| 030/50 NOMMU | — | — | No retained FC5 change; prior scoreboard retained |
+| 040/25 NOMMU | 24.037 → 23.562 (−1.97%) | 24.960 → 24.761 (−0.80%) | Drop; `fc5-040-{off,on}` |
+| 060/50 NOMMU | 24.012 → 23.987 (−0.10%) | 24.960 → 24.960 (0.00%) | Drop; `fc5-060-fixed-{off,on}` |
+
+The 030/040 pair used SHA-256
+`8867628a4e74449f238cd73f76e8f12a93bb4bdfcffe733202f7c19b5bfd6f38`;
+the corrected 060 pair used
+`8fa8b75cfe2befe0c80b5db6d07261cc753a87c9897a2a1b73063e492d211bfa`.
+Masks were `0x7f0ffa`/`0x27f0ffa`, `0x17f0ffa`/`0x37f0ffa`, and
+`0x1ff0ffa`/`0x3ff0ffa`, respectively, with the existing CPU filters.
+The first 060 on-run was rejected: its allocation failed and it exercised the
+full-copy fallback. Only that pair was repeated, after moving production
+shadows into the existing unused VERIFY-artwork reservation. The corrected
+run confirmed shadow storage was selected. No RAM increase was required.
+
+The below-threshold candidate was removed rather than added to developer or
+player defaults. All three release build modes rebuild; 566 host tests, 136
+hook ranges and 136/136/150 normal/developer/VERIFY patch destinations pass.
+The preceding FC4 normal-build stage timings and exact profile remain the
+current release results; no copy-time saving is claimed from this discarded
+candidate.
+
+The retained benchmark option `--bank-after 250` adds a held-right-bank FPS
+window after the requested level-flight groups, using the same owned emulator
+and the established debugger keyboard input. Its results and screenshot are
+in the capture's `bank` subdirectory. For example, from the initialized harness:
+
+```sh
+BENCH_BATCH_KEYS=1 BENCH_OMIT_CUSTOM2=1 \
+python3 -B ../../R/RedBaron/tools/scene_profile_case.py \
+  060 0 tmp/prof/manual-level-bank --fields 2000 --groups fps --bank-after 250
+```
+
 ## FC4 — direct convex polygon spans (2026-10-12)
 
 Bit 24 requires the private scene renderer (bit 20). The normal bundle selects

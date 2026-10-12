@@ -14,7 +14,7 @@ Refer to items by ID. FC items are detailed in `fast-cpu-plan.md`.
 | FC2 | Overlay and cockpit foreground composited in Fast RAM | Complete; enabled on 030/040/060 |
 | FC3 | Persistent gauges | Complete; enabled on 060; other classes retain prior paths |
 | FC4 | Span polygon rasteriser | Complete; enabled on 040/060; 030 retains its prior path |
-| FC5 | Smaller viewport copy | Planned |
+| FC5 | Smaller viewport copy | Closed: dropped; less than 2% gain on every measured CPU class |
 | FC6 | Re-profile; then geometry work or 50 FPS (user decision) | Planned |
 | FC7 | AGA 040/060 and real-hardware confirmation | Planned |
 | D5a | W6 catch-up input check | Postponed by the user |
@@ -52,7 +52,8 @@ Git; do not revive their superseded next-work lists.
 ## Fast-CPU frame profile and plan
 
 `fast-cpu-plan.md` has the exact 030 frame attribution (aprof) and the ordered
-fix plan for the former 16.67 FPS plateau. FC0–FC4 are complete; FC5–FC7 remain.
+fix plan for the former 16.67 FPS plateau. FC0–FC4 are complete; FC5 was evaluated and dropped below the measurement
+threshold. FC6–FC7 remain.
 
 **FC0 is complete:** native scratch-clear synchronization fixes the top-edge
 artwork mismatch. Full artwork/scene twins pass on 030 NOMMU/MMU, 040 and 060;
