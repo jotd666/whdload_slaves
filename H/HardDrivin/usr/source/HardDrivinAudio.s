@@ -24,6 +24,10 @@ _audio_patches:
 	PL_PSS $cc80,_audio_landing,4
 	; PERF_RANGE VERIFY_TIME_AUDIO $0bcfe $000a: zero-motion same-object contact cadence
 	PL_PSS $bcfe,_audio_object_contact,4
+	; PERF_RANGE VERIFY_TIME_AUDIO $0bdde $000a: zero-motion same-obstacle contact cadence
+	PL_PSS $bdde,_audio_obstacle_contact,4
+	; PERF_RANGE VERIFY_TIME_AUDIO $0bc14 $000a: same-special-object sound cadence
+	PL_PSS $bc14,_audio_special_contact,4
 	PL_END
 AU_WALL equ 0
 AU_STEP equ 4
@@ -42,6 +46,10 @@ _audio_landing_signature: dc.b 'HDLANDAU'
 _audio_landing_state: dcb.b AU_SIZE,0
 _audio_object_signature: dc.b 'HDOBJAU1'
 _audio_object_state: dcb.b AU_SIZE+4,0
+_audio_obstacle_signature: dc.b 'HDOBSAU1'
+_audio_obstacle_state: dcb.b AU_SIZE+4,0
+_audio_special_signature: dc.b 'HDSPEAU1'
+_audio_special_state: dcb.b AU_SIZE+4,0
 _audio_offroad:
 	IFND VERIFY_DISPATCH_NATIVE
 	movem.l d0-d3/a0-a1,-(a7)
@@ -190,6 +198,69 @@ _audio_object_contact:
 	ENDC
 	; Exact native call/cleanup, including the handler's returned X.
 	move.w #7,-(a7)
+	jsr -$7fce(a4)
+	addq.w #2,a7
+	rts
+_audio_obstacle_contact:
+	IFND VERIFY_DISPATCH_NATIVE
+	movem.l d0-d3/a0-a1,-(a7)
+	moveq #0,d0
+	roxl.b #1,d0
+	move.w d0,-(a7)
+	lea _dispatch_state(pc),a1
+	tst.b DS_ACTIVE(a1)
+	beq.s .native_restore
+	move.l DS_STEPS(a1),d1
+	move.l _replay_state+RP_WALL(pc),d0
+	lea _audio_obstacle_state(pc),a0
+	move.w -$66e2(a4),d2
+	or.w -$66e0(a4),d2
+	or.w -$66de(a4),d2
+	bsr _audio_object_contact_due
+	tst.w d0
+	bne.s .native_restore
+	move.w (a7)+,d0
+	lsr.b #1,d0
+	movem.l (a7)+,d0-d3/a0-a1
+	rts
+.native_restore:
+	move.w (a7)+,d0
+	lsr.b #1,d0
+	movem.l (a7)+,d0-d3/a0-a1
+	ENDC
+	; Exact native call/cleanup, including the handler's returned X.
+	move.w #7,-(a7)
+	jsr -$7fce(a4)
+	addq.w #2,a7
+	rts
+_audio_special_contact:
+	IFND VERIFY_DISPATCH_NATIVE
+	movem.l d0-d3/a0-a1,-(a7)
+	moveq #0,d0
+	roxl.b #1,d0
+	move.w d0,-(a7)
+	lea _dispatch_state(pc),a1
+	tst.b DS_ACTIVE(a1)
+	beq.s .native_restore
+	move.l DS_STEPS(a1),d1
+	move.l _replay_state+RP_WALL(pc),d0
+	lea _audio_special_state(pc),a0
+	; This native path has no collision impulse, separation or crash state.
+	moveq #0,d2
+	bsr _audio_object_contact_due
+	tst.w d0
+	bne.s .native_restore
+	move.w (a7)+,d0
+	lsr.b #1,d0
+	movem.l (a7)+,d0-d3/a0-a1
+	rts
+.native_restore:
+	move.w (a7)+,d0
+	lsr.b #1,d0
+	movem.l (a7)+,d0-d3/a0-a1
+	ENDC
+	; Exact native call/cleanup, including the handler's returned X.
+	move.w #9,-(a7)
 	jsr -$7fce(a4)
 	addq.w #2,a7
 	rts

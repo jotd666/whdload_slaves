@@ -43,10 +43,10 @@ caller exists, or a listening test.
 | `$08e4c`, `$092f6`, `$093b4`, `$093f4` | 3, 3, 2, 2 | Finish/checkpoint transitions and their state flags. Ghost finish has focused one-event evidence; full lap crossing coverage remains open. |
 | `$0b166` | 8 | Off-road/scene condition; TIME_AUDIO now applies the elapsed cadence below. |
 | `$0b624` | 4 | Sustained skid condition; TIME_AUDIO now applies its own elapsed request cadence. |
-| `$0bc18` | 9 | Special collision-object condition returns without establishing a crash. Repeated contact needs event/cadence validation. |
+| `$0bc18` | 9 | Special collision-object condition returns without establishing a crash. Independent identity-aware cadence now has isolated native-routine validation; natural live contact remains open. |
 | `$0bcf6`, `$0bdd6`, `$0c004`, `$0cc4e` | 6 | Crash creation; native crash state suppresses later physics collision paths. Verify once per event across substeps and recovery. |
 | `$0cd52` | 7 | Sustained mask-3 pitch correction; TIME_AUDIO now applies its own elapsed cadence. |
-| `$0bd02`, `$0bde2` | 7 | Object zero-motion overlap now has an independent identity-aware cadence; obstacle behavior remains open. See below. |
+| `$0bd02`, `$0bde2` | 7 | Object and obstacle zero-motion overlap have separate identity-aware cadences; fresh nonzero impulses remain immediate. Obstacle natural live coverage remains open. See below. |
 | `$0cc84` | 7 | Sustained zero-fall penetration uses an independent cadence; nonzero-fall landings remain immediate. See below. |
 | `$10c24` | 4 | Recorded skid flag; now consumed once per historical record by TIME_REPLAY_TIMING. |
 | `$10e10` | 6 | Replay crash effect clears a local one-shot flag after the request. Live focused checks observe one request; completely skipped effect tails still need explicit coverage. |
@@ -388,3 +388,59 @@ car-state diagnostic, not whole-world or full driving-tape equivalence.
 `s4-object-disabled` passes all 153 declared ranges with CUSTOM1 off; the direct
 branch audit passes 132 ranges. The normal build remains byte-identical to the
 8392-byte-text baseline.
+
+
+## Obstacle and special-object sound gates
+
+TIME_AUDIO now also wraps `$0bdde..$0bde7` (obstacle event7) and
+`$0bc14..$0bc1d` (special-object event9). Each has a separate 24-byte state,
+HDOBSAU1 and HDSPEAU1. They do not share timers with ordinary objects or each other.
+
+The native obstacle loop consumes byte32 of its object before applying collision
+response. `$0a386` can set that byte again; clearing it alone does not establish
+an elapsed-time sound cadence. The new obstacle wrapper uses the same rule as
+ordinary object contact: nonzero projected XYZ is an immediate impact, while
+consecutive zero-projection visits with the same identity use eight-field cadence.
+The high-speed event6 branch bypasses the wrapper. All collision separation, drift,
+velocity clearing, crash thresholds and object-flag consumption remain native.
+
+The native type95 branch has no separation, velocity clearing or crash creation;
+it requests event9 and returns zero. Its wrapper therefore uses object identity
+and eligible-step continuity regardless of projected movement. The first eligible
+request, a changed object or a gap of a whole eligible physics step sounds
+immediately. Continued eligibility advances the existing pause-aware wall cadence,
+with at most one request per visit. Inactive dispatch and DISPATCH_NATIVE use the
+original calls. Both wrappers preserve registers and the appropriate incoming or
+sound-handler-returned X flag, matching the existing audio-hook contract.
+
+Evidence under ignored `tmp/`:
+
+- `contact-wrappers-micro.json`: 3,072 executions of the actual assembled 68000
+  wrappers for ordinary objects, obstacles and special objects, in elapsed and
+  forced-native modes. Tests cover active/inactive dispatch, changed identity,
+  independent projected axes, missing steps, duplicate steps, zero/short/long
+  intervals and 32-bit wall/serial wrap, with exact companion-state, register,
+  stack, event-argument and X checks. The initial harness reused translated code
+  at the same addresses; that rejected run was fixed by creating a fresh CPU for
+  each compiled variant. Final checks use the new CPU instances.
+- `collision-native-audio.json`: 816 executions of the pristine relocated native
+  collision routine, comparing off/on hooks at their real native sites using
+  private object/global fixtures and private sound handlers. Twenty-four paired
+  configurations cover both callers, 1/2/8/16-field cadence, zero/nonzero movement,
+  and the45/46 MPH crash threshold. All compared car-state bytes and crash state
+  remain identical. Native flag consumption and signed separation/drift agree.
+  With one-field visits, repeated special contact requests fall from17 to3;
+  repeated zero-motion obstacle requests fall from15 to3, including a two-visit
+  eligibility gap. Every nonzero obstacle impulse and high-speed crash request
+  remains immediate. At8/16-field visits every eligible request is retained.
+- `s4-obstacle-native`: all108 native-step car snapshots match
+  `s4-skid-native-reference`, relocating only the gear pointer. This remains the
+  constant-input compatibility diagnostic, not full driving-tape equivalence.
+- `s4-obstacle-disabled`: all156 declared ranges pass with CUSTOM1 off. The direct
+  branch audit passes134 timing ranges; the ordinary build is byte-identical to
+  the baseline with8392 bytes of text.
+
+The private collision fixtures establish actual native branch/hook behavior, not
+natural-route encounters, renderer flag-generation frequency, Paula sample starts
+or audible quality. Those live checks remain open, along with full step4 handling
+and performance acceptance. No FPS improvement is claimed for these rare callers.

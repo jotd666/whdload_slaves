@@ -311,6 +311,10 @@ Tools stay in ignored `tmp/dev/tools`.
      displacement as one large step. Apply the (T−1)/2·Δv correction where the
      original order requires it, and decide whether the target is the original
      handling or the finer-integrated model.
+   - Object, obstacle and special-object sound requests now have separate elapsed
+     cadences, retaining immediate fresh obstacle impulses. Actual-wrapper and
+     isolated native-collision tests pass; natural obstacle/special encounters
+     and listening checks remain open. See AUDIO_TIMING.md.
    - Audit the AI and traffic cars, the RNG, sounds and the engine pitch separately.
      Calling the RNG once per frame changes its sequence per second; decide whether
      that matters for each consumer.
