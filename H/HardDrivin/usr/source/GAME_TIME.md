@@ -1597,10 +1597,75 @@ corrected fixture provides these checks:
 fixtures enabled. The ordinary slave remains byte-identical to the baseline,
 and the direct-branch audit passes108 replacement ranges.
 
-This gate is still experimental. Ghost recording at `$08a9c` and the two
-playback paths still advance their six-step phases per call. They require a
-48-field sample/phase model, including multiple samples on long frames,
-capacity/reset handling and native interpolation semantics. Post-race playback
-and instruction/camera animation are also unfinished. Qualification, challenge
-exit/debt, instant replay and full handling comparisons remain acceptance work;
-this dispatcher result does not complete step4.
+This gate is still experimental. The optional ghost recorder below consumes
+elapsed fields, but both ghost playback paths still advance their six-step
+phases per call. Post-race playback and instruction/camera animation are also
+unfinished. Qualification, challenge exit/debt, instant replay and full handling
+comparisons remain acceptance work; this dispatcher result does not complete
+step4.
+
+## Phantom ghost recording (partial implementation)
+
+`VERIFY_TIME_GHOST_RECORD` requires TIME_PHANTOM and TIME_RECORD and installs
+`HardDrivinGhostRecord.s` behind CUSTOM1/SPS0126. It replaces the recorder entry
+at `$08a9c` and extends the native challenge-history reset at `$11858`. The
+12-byte record is unsigned X/Z, signed Y, then negated pitch/heading/roll.
+The buffer has 300 records. As in the original, reaching capacity holds the
+cursor at slot 299 and subsequent samples overwrite that last slot; it does not
+wrap or write beyond the buffer.
+
+Native recording increments its phase before checking for six calls, but reads
+the pose before that call's physics update. With eight-field steps, its first
+sample therefore represents field 40, followed by 88,136,... . The elapsed
+recorder preserves that alignment and the 48-field period. It charges the
+previous physics interval, interpolating every crossed sample between the
+previous and current pre-physics poses. Unsigned positions and signed height
+use wide weighted arithmetic; angles use the short path with a 1440-unit wrap.
+An exact right endpoint is copied verbatim, preserving native word values.
+
+The companion tracks the physics-step stamp, expected cursor, eligible age,
+sample count, field phase and previous interval. Duplicate visits cannot charge
+an interval twice. A nonconsecutive stamp refreshes the pose without advancing
+recording time. A changed native cursor reseeds from the native phase, and a new
+challenge clears the companion. These transition policies still require wider
+live replay/re-entry coverage. The native entry remains available when the
+elapsed dispatcher is inactive and under VERIFY_DISPATCH_NATIVE.
+
+The native recorder leaves the CPU extend flag from its phase increment when
+no sample is written, or from negating the roll when a sample is written. The
+wrapper preserves that distinction: the native BCD clock's dependence on X
+makes it relevant even though recording itself does not use the flag.
+
+Focused checks retained under ignored `tmp/`:
+
+- `s4-ghost-record-math-flags`: a private VERIFY_GHOST_RECORD_MATH boot fixture
+  runs 1860 eight-field visits against the actual, still-unpatched native
+  recorder using separate synthetic globals. Both full 3600-byte histories
+  match, as do cursor, phase and X after every visit. It emits 310 samples,
+  exercising saturation and repeated overwrites of the final slot. Synthetic
+  poses are private fixture data, not injected gameplay state.
+- The same fixture independently checks a 65535-field interval: 1365 samples,
+  unsigned coordinate extremes, signed height extremes, wrapped angles and
+  the final-slot overwrite rule. Every output word matches a rational model;
+  all 2223 checked guard bytes remain intact. This proves recorder arithmetic,
+  not that a physics integration step of that size is safe.
+- `s4-ghost-record-final-020`: 160 live visits, 398 eligible fields, 8 samples,
+  including 4 fractional samples. Every before/after 3600-byte history matches
+  the independent model. `s4-ghost-record-final-a500` covers 160 visits and
+  25 samples over 1231 eligible fields, including 23 fractional samples; every
+  full history matches the model.
+- `s4-ghost-record-long-final`: with the slow-drawing fixture enabled and
+  CUSTOM4=64, the challenge exits naturally after 15 recorder visits. The
+  captured 967 eligible fields emit 20 samples; 7 visits emit more than one.
+  All sample words and untouched buffer bytes match. The earlier capture
+  named `s4-ghost-record-slow` lacked VERIFY_SLOW and is not long-frame evidence.
+- `s4-ghost-record-off` passes the inactive-range check with only declared
+  input, synthetic-entry and slow-drawing fixtures enabled. The ordinary build
+  remains byte-identical to the 8392-byte-text baseline, SHA256
+  `5811a0305be8836685b6303aae226845836c6c41e90e746c9a6bfebae226582e`.
+  The direct-branch audit passes 110 replacement ranges.
+
+Ghost playback at `$08b0e` and `$08c84` is not converted by this change. In
+particular, the opponent's finish trigger and post-race history rewind still
+need an elapsed-time implementation and validation. No full challenge-speed,
+whole-world native equivalence, handling or FPS acceptance is claimed here.

@@ -1,7 +1,10 @@
 ; Experimental elapsed dispatcher for the separate Phantom challenge loop.
-; This covers challenge physics only. The six-pass ghost record/playback and
-; post-race presentation are separate unfinished work, not acceptance evidence.
+; Optional ghost recording uses elapsed fields. Ghost playback and post-race
+; presentation remain unfinished; these gates are not full acceptance evidence.
 _phantom_install:
+	IFD VERIFY_TIME_GHOST_RECORD
+	bsr _ghost_record_install
+	ENDC
 	movem.l a0-a2,-(a7)
 	lea _phantom_patches(pc),a0
 	movea.l _code_start(pc),a1
@@ -101,3 +104,7 @@ _phantom_replay_exit:
 	; Native11664 frame. Its caller1189e submits exactly once.
 	unlk a5
 	rts
+
+	IFD VERIFY_TIME_GHOST_RECORD
+	INCLUDE "HardDrivinGhostRecord.s"
+	ENDC

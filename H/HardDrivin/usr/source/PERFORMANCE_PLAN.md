@@ -24,7 +24,8 @@ validation. GAME OVER now uses elapsed time, with A500/68020 pause and duration
 checks. Attract route interpolation, scrolling and timeout also have gated
 implementations with native-pose comparisons. The separate Phantom challenge
 physics loop now has an experimental dispatcher and focused validation. Phantom
-ghost recording/playback, other menu timelines, audio, large-step velocity safety
+ghost recording now has fixed-field sampling and focused native/buffer checks.
+Ghost playback, other menu timelines, audio, large-step velocity safety
 and full acceptance are unfinished. See GAME_TIME.md;
 the step-4 acceptance criteria remain open.
 
