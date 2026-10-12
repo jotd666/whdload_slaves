@@ -89,8 +89,9 @@ Known differences that change the design:
 6. Comparison: `compare_state.py` has a TD-only seven-variable seed map plus full data
    comparison. Two fresh A500 boots at the same VBL window match byte-for-byte across
    all $32A4 data bytes; a different scene differs. Negative controls detect a changed
-   non-clock selector and a missing sample. **The full physics/score state map remains
-   phase 5 work**, so this is harness validation, not proof of gameplay determinism.
+   non-clock selector and a missing sample. **The full physics/score state map is
+   documented in phase 5**, so this seed sampler is harness validation,
+   not proof of gameplay determinism.
 7. Later-phase `check_*`, simulation audits, sub-unit/sideways tools and the full release
    packager remain deliberately deferred until their features exist. The phase-1
    acceptance checker is `tools/check_harness.py`; the phase-6.1 A/B bundle is preserved.
@@ -104,7 +105,7 @@ builds pass, input hashes remain unchanged, and the delivered phase-6.1 fixed sl
 unchanged. The available public archives contain 1.3, not 1.4; the user accepted an
 unmodified repository-1.4 rebuild for the separate A/B baseline. No unavailable
 shipped-1.4 byte-equivalence claim is made. Phases 3 and 4 supply gameplay and
-measurement validation; the simulation design still depends on phase 5.
+measurement validation; the phase-5 time model below now defines the simulation design.
 
 ## Phase 2: identify the game (complete)
 
@@ -123,7 +124,8 @@ measurement validation; the simulation design still depends on phase 5.
 4. The presentation marker is validated in phase 4. TD2's exact 52-byte-row/8.8
    road walker and CPU span loop, and several secondary renderer counterparts,
    remain not found. Two drawing passes are present; phase 3 visually confirms
-   a rear-view mirror. Timing/state ownership and pass attribution remain phase 5 work.
+   a rear-view mirror. Timing/state ownership is mapped in phase 5; view-pass geometry
+   attribution remains phase 10 work.
 
 **Acceptance:** local `tools/identify_game.py` checks pinned inputs, all explicit
 patch signatures/source coverage, hunk sizes, root JMP targets and both overlay
@@ -155,7 +157,7 @@ input logs, exact slave/configuration and pinned diagnostic emulator. Pristine
 inputs and the phase-6.1 slave remain unchanged. The cockpit includes a working
 rear-view mirror; attribution of the two renderer passes remains analysis work.
 These are gameplay/trace checks, not a deterministic FPS benchmark. The frame
-marker and fixed race window are validated in phase 4; the timing model remains phase 5.
+marker and fixed race window are validated in phase 4; the timing model is established in phase 5.
 
 ## Phase 4: frame counter, fixed window, baseline — complete
 
@@ -195,35 +197,54 @@ CUSTOM3=0 leaves the original demo call and RNG instructions intact in VERIFY bu
 
 **Acceptance:** the measurement portion of playbook §12 is satisfied, with evidence
 under ignored `tmp/dev/tmp/phase4/base-*` and reproducible commands in the local docs.
-The overall “ready to improve” gate still requires the phase-5 time model below.
-The traced physics calls are five fields apart on both CPUs in this window, but
-cross-CPU endpoint state differs; its cause and the full clock/score/event model
-must be established before implementing enhanced simulation.
+The phase-5 time model below completes the “ready to improve” analysis gate.
+The traced vehicle and road calls are five fields apart on both CPUs in this window.
+Phase 5 identifies why cross-CPU endpoint state differs and establishes the
+clock/score/event model required before implementing enhanced simulation.
 
-## Phase 5: the time model (decides the design)
+## Phase 5: the time model — complete
 
-Answer each of these with traces and state captures, never screenshots:
+The local `docs/internals.md` now contains the time-source and state-writer tables;
+`docs/phase5.md` contains field-indexed captures, instruction attribution, score formulas
+and event evidence. The design below is revised for TD, not copied from TD2's constants.
 
-1. Which context runs physics? Is it the CLI process stepping on a field-counted deadline,
-   as TD2 does every 6 fields, or the drawing loop?
-2. What is the step period, and where are the field clock, the deadline and the period
-   constant?
-3. What is the race clock's unit and rate against real PAL time (TD2's ran at 5/6)? How do
-   average speed and score derive from it?
-4. Does game speed depend on the CPU? Compare state on the A500 and the A1200 at identical
-   VBL indices. Do crash and radar sequences block the simulation for a CPU-dependent time?
-5. RNG: the beam terms are identified and phase 4 has a CUSTOM3 fixture. Map every
-   calling context and determine whether later cross-CPU windows need further control
-   of drawing-dependent RNG call ordering.
-6. NTSC (left open, as in TD2): record whether the timing assumes 60 Hz, so the open item
-   is precise. Validate on PAL only.
-7. Build the state map: position, speed, RPM, gear, heading, lateral position, traffic
-   origins, police/radar counters, crash code, fuel or stage, clock and score sums. Record
-   each with its writer.
+- The priority-4 CLI runs vehicle integration at h4+$43B0/$3F26, road crossings at
+  h4+$1C3A and traffic/police at h4+$14EA. Road Drawer is a separate priority -1 task.
+  The period is **5 fields**, stored at race-frame -16(a5) by h4+$42. Deadline -12(a5)
+  is initialized at $F6, waited at $16A..$190 and reset to current VBL at $192. There
+  is no catch-up after an overrun. Root+$18BA increments the field clock -31782(a4).
+- Race count -36(a5) starts at 1, then increments once per counted simulation tick;
+  speed sum -44(a5) adds integer mph. Counting starts after first gear. The results
+  divide count by **12**, yielding **5/6 nominal PAL time**. Average is speed sum/count;
+  crash adds 240 count units, without speed, a 20-second penalty. Stage score is
+  `M*1000000/max(N-B,100) + 100*max(100-(N-B),0)` with integer division, N=count,
+  M=stage+4 and B the stage table value. It is not based on elapsed VBL time.
+- Equal-field A500/A1200 captures confirm five-field ticks but disprove drawing
+  independence. First gear is selected at sample 65 on both; clutch clears at 100 vs
+  85, waiting for both rendered shifter buffers. Speed/position/RPM diverge at 85.
+  Wall collision also consumes renderer-saved x (-22372(a4), h4+$B10/$1240/$127A).
+  Renderer-written road widths and traffic collision origins/lane offsets also feed
+  CLI decisions. Enhanced mode needs simulation-owned geometry and lane motion;
+  original mode must preserve these behaviors.
+- Crash animation/acknowledgement blocks the main loop. Natural Porsche crashes took
+  37 vs 31 fields inside h4+$32D8 on A500/A1200; both applied exactly one +240 penalty.
+  The count and speed sum froze through a 100-field acknowledgement wait. Drawing work
+  adds CPU-dependent blocking time, independently of the explicit penalty. Radar uses
+  five-field script counters; stopped ticks suppress vehicle integration while traffic,
+  scripts and counted race time continue. The tested patrol stop held the vehicle for
+  490 fields on both CPUs and released without acknowledgement input or a crash penalty.
+  The original event paths remain part of the design.
+- All 14 original direct RNG callers are mapped: root demo selection and stage commentary;
+  h3 intro/car-selection waits; h4 road-crossing traffic/radar choices; and Road Drawer's
+  high-speed windscreen effects. Later 100-field traces show 9 visual calls on A500 vs
+  17 on A1200 plus one traffic call. CUSTOM3's current shared stream is insufficient
+  for later cross-CPU windows; phase 7 must isolate visual consumption.
+- PAL only is validated. The 12 ticks/second result conversion corresponds to 60 Hz / 5;
+  NTSC timing and enhanced-mode clock conversion remain explicit unvalidated work.
 
-**Done when:** `docs/internals.md` has TD's time-source and state-map tables, and the
-simulation design below has been confirmed or revised. If TD has no separate fixed-period
-simulation process, stop and revise phases 7 and 9 before writing code.
+The separate simulation process supports the overall design, but phase 8 needs rational
+2/5 integration, original five-field script cadence and removal of the identified drawing
+dependencies. The period-6 and integer-subdivision assumptions are rejected.
 
 ## Phase 6: always-on fixes (the first deliverable)
 
@@ -258,9 +279,13 @@ Built only with `-DVERIFY`; the normal slave contains none of it. Copy the frame
 TD2's `simulation-verify.s` and the slave's `IFD VERIFY` config.
 
 1. `CUSTOM3`: the fixed seed, beam removal and demo-selection reset are implemented
-   for the phase-4 first-race window. Extend validation to later scripted windows;
-   drawing-dependent RNG call ordering remains to be assessed in phase 5.
-2. `CUSTOM4`: slow drawing only, to prove game time is independent of drawing.
+   for the phase-4 first-race window. For later windows, isolate renderer RNG (private
+   stream or suppressed visual consumption in VERIFY), reset at a player-race anchor,
+   and verify traffic/radar draws stay in the same order across CPUs. Beam removal alone
+   does not make a shared stream deterministic.
+2. `CUSTOM4`: slow drawing only. The original shifter handshake and renderer-owned
+   collision geometry are expected negative controls; enhanced physics must pass the
+   independence check.
 3. `CUSTOM5` fixtures: a field-based joystick tape injected through the existing
    `read_joydat`/`read_fire1` hooks, a straight acceleration/braking tape, forced crash and
    radar events, and the zero-fraction rendering oracle (later).
@@ -271,29 +296,45 @@ TD2's `simulation-verify.s` and the slave's `IFD VERIFY` config.
 
 ## Phase 8: fixed-time simulation (`CUSTOM2`)
 
-Reuse TD2's design (`simulation.s` and the "Fixed-time simulation" section of the Test Drive 2
-project's `docs/simulation-design.md`). Copy the generic routines verbatim into
-`T/TestDrive/usr/source/simulation.s`, because each game directory builds alone. Write the
-hooks again for TD's offsets.
+Reuse TD2's architecture and tested arithmetic where its assumptions apply. Keep game-local
+sources (`simulation.s`, `simulation-patches.i`) so each slave builds alone. TD's original
+period is five fields; **do not copy integer `sim_n=6/sim_p` or six-field constants**.
 
-1. Generic, copied: period selection from AttnFlags (`sim_p` 6 or 2 if TD's original period
-   is also 6, otherwise derived from it), deadline patching, signed division with a private
-   fractional carry, Q16 n-th-root relaxation with carries, coarse-Euler displacement
-   correction, and the clock quanta that make race time follow PAL time.
-2. TD-specific: the list of continuous rates to scale (acceleration, braking, drag, steering,
-   lane centring, traffic, police motion) and the quantities that stay unscaled
-   (road-unit loops, impulses, thresholds). Decide which counters keep their original
-   cadence (police/radar scripts, gear decisions, crash scripts). Make dashboard and
-   background phases advance with simulation time.
-3. Keep the original crash/radar/acknowledgement path. Check that nothing in it depends on
-   the step count in a way that the shorter period breaks.
-4. Patch list in `simulation-patches.i` behind `PL_IFC2`. Assertions for every new arithmetic
-   routine.
-5. Validation, as in TD2's handling table, run **for every car**. Period 6 must reproduce the
-   original speed and travel exactly up to the first divergence. Period 2 is measured on the
-   straight tape and the route tape, and the differences are documented. `check_timing.py`:
-   the clock matches PAL time. `compare_state.py --assert-core`: same-period machines match.
-   Score and average speed for a fixed tape follow real time.
+1. Choose `sim_p=5` on 68000/010 and 2 on 68020+, subject to the measured CPU budget.
+   Scale continuous changes by the rational `sim_p/5`, with a signed private remainder
+   per accumulator. Five period-2 updates must compose to two original updates for a
+   constant rate. Audit intermediate overflow and negative/near-zero cases. Relaxation
+   requires retention `r^(sim_p/5)` with carries; TD2's integer n-th-root selection is
+   insufficient. Derive and test the matching coarse-Euler displacement correction for
+   this rational ratio, rather than applying a second scale to speed>>6 displacement.
+2. Scale acceleration, braking, drag, steering, lane centring, traffic displacement and
+   physical police motion. Leave road-segment loops, collision impulses, limits and
+   thresholds unscaled. Keep gear decisions, shifter movement, police/radar counters and
+   scripted decisions at the original five-field cadence, using an elapsed-field
+   accumulator (period 2 does not divide 5). Separate gear/clutch progress from the
+   renderer's two-buffer acknowledgements. Compute road-edge widths, current lateral
+   position and traffic collision origins in the simulation; move lane-offset returns
+   out of draw cadence. Changing only the wall-collision saved-x read is insufficient.
+   Keep snapshots for drawing, and advance background/dashboard phases from simulation.
+3. Use PAL elapsed-field quanta for the counted race clock and speed-weighted sum:
+   12 legacy clock units per 50 fields, i.e. `6*sim_p/25` units per enhanced step with
+   retained fractions. Preserve neutral-start exclusion, original blocking pauses and
+   the explicit 240-unit crash penalty. Keep the stage score/reference tables in their
+   documented clock units; test displayed time, average and score together.
+4. Keep the original crash animation, acknowledgement and recovery path, including its
+   CPU-dependent blocking duration. Radar stops suppress vehicle integration but keep
+   script/traffic/counting active. Preserve these distinctions. Automatic recovery is
+   VERIFY-only. Isolate visual RNG at a simulation-owned cadence and keep the gameplay
+   stream free of beam/draw-rate input in enhanced mode.
+5. Gate every gameplay change behind `PL_IFC2`; assertions for every arithmetic routine,
+   hook-boundary/incoming-branch audits and disabled-byte checks are required.
+6. Validate all five cars. Period-5 arithmetic must reproduce original rates/travel before
+   intentional clock, RNG, clutch or collision changes intervene; label those divergences
+   separately. Period 2 needs straight and route tapes and quantified handling differences.
+   `check_timing.py` must prove PAL clock correctness, and the phase-7 state oracle must
+   prove same-period core-state equality across CPUs/slow drawing outside the deliberately
+   original blocking event intervals. Test event entry, one penalty, acknowledgement and
+   recovery separately. NTSC remains open; no 50 Hz conversion may silently claim NTSC.
 
 ## Phase 9: blitter priority and interrupts
 
