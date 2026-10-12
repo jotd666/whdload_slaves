@@ -1,5 +1,6 @@
-; Live off-road, skid and partial-contact sample cadence. Requests use pause-aware presentation fields,
-; because Paula runs in wall time even when physics takes multiple substeps.
+; Live off-road, skid, partial-contact and ground-penetration sample cadence.
+; Requests use pause-aware presentation fields because Paula runs in wall time
+; even when physics takes multiple substeps.
 _audio_install:
 	IFD VERIFY_AUDIO_MATH
 	bsr _audio_math_test
@@ -19,6 +20,8 @@ _audio_patches:
 	PL_PSS $b620,_audio_skid,4
 	; PERF_RANGE VERIFY_TIME_AUDIO $0cd4e $000a: sustained mask-3 pitch contact
 	PL_PSS $cd4e,_audio_pitch_contact,4
+	; PERF_RANGE VERIFY_TIME_AUDIO $0cc80 $000a: sustained ground penetration, immediate landings
+	PL_PSS $cc80,_audio_landing,4
 	PL_END
 AU_WALL equ 0
 AU_STEP equ 4
@@ -32,6 +35,8 @@ _audio_skid_signature: dc.b 'HDSKIDAU'
 _audio_skid_state: dcb.b AU_SIZE,0
 _audio_pitch_signature: dc.b 'HDCONTAU'
 _audio_pitch_state: dcb.b AU_SIZE,0
+_audio_landing_signature: dc.b 'HDLANDAU'
+_audio_landing_state: dcb.b AU_SIZE,0
 _audio_offroad:
 	IFND VERIFY_DISPATCH_NATIVE
 	movem.l d0-d3/a0-a1,-(a7)
@@ -90,8 +95,8 @@ _audio_skid:
 	jsr -$7fce(a4)
 	addq.w #2,a7
 	rts
-; Only the mask-3 correction loop uses this cadence. Landing/penetration and
-; object-impact event7 callers keep separate native requests.
+; Only the mask-3 correction loop uses this state. Ground penetration uses
+; a separate state; object-impact event7 callers keep native requests.
 _audio_pitch_contact:
 	IFND VERIFY_DISPATCH_NATIVE
 	movem.l d0-d3/a0-a1,-(a7)
@@ -121,6 +126,46 @@ _audio_pitch_contact:
 	jsr -$7fce(a4)
 	addq.w #2,a7
 	rts
+_audio_landing:
+	IFND VERIFY_DISPATCH_NATIVE
+	movem.l d0-d3/a0-a1,-(a7)
+	moveq #0,d0
+	roxl.b #1,d0
+	move.w d0,-(a7)
+	lea _dispatch_state(pc),a1
+	tst.b DS_ACTIVE(a1)
+	beq.s .native_restore
+	move.l DS_STEPS(a1),d1
+	move.l _replay_state+RP_WALL(pc),d0
+	lea _audio_landing_state(pc),a0
+	move.w -$66f2(a4),d2
+	bsr _audio_landing_due
+	tst.w d0
+	bne.s .native_restore
+	move.w (a7)+,d0
+	lsr.b #1,d0
+	movem.l (a7)+,d0-d3/a0-a1
+	rts
+.native_restore:
+	move.w (a7)+,d0
+	lsr.b #1,d0
+	movem.l (a7)+,d0-d3/a0-a1
+	ENDC
+	; Exact native call/cleanup, including the handler's returned X.
+	move.w #7,-(a7)
+	jsr -$7fce(a4)
+	addq.w #2,a7
+	rts
+; A nonzero fall velocity marks a discrete landing: request immediately even
+; inside the prior correction cadence. Subsequent zero-velocity penetration
+; consumes that request's cadence rather than restarting on the next frame.
+; Inputs as _audio_due, plus D2.W fall velocity.
+_audio_landing_due:
+	tst.w d2
+	beq _audio_due
+	clr.b AU_VALID(a0)
+	bra _audio_due
+
 ; D0 wall fields, D1 completed/active step serial, A0 state. Return D0=0/1.
 ; First encounter after a missing eligible step is a new episode and immediate.
 ; Same-step rebuilds do not restart audio. A continuous episode can request at

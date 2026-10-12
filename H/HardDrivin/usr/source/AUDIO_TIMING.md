@@ -46,7 +46,8 @@ caller exists, or a listening test.
 | `$0bc18` | 9 | Special collision-object condition returns without establishing a crash. Repeated contact needs event/cadence validation. |
 | `$0bcf6`, `$0bdd6`, `$0c004`, `$0cc4e` | 6 | Crash creation; native crash state suppresses later physics collision paths. Verify once per event across substeps and recovery. |
 | `$0cd52` | 7 | Sustained mask-3 pitch correction; TIME_AUDIO now applies its own elapsed cadence. |
-| `$0bd02`, `$0bde2`, `$0cc84` | 7 | Object/obstacle and landing/penetration paths. Their distinct event identities and repetition remain open. |
+| `$0bd02`, `$0bde2` | 7 | Object/obstacle paths. Distinct contact identities and repetition remain open. |
+| `$0cc84` | 7 | Sustained zero-fall penetration uses an independent cadence; nonzero-fall landings remain immediate. See below. |
 | `$10c24` | 4 | Recorded skid flag; now consumed once per historical record by TIME_REPLAY_TIMING. |
 | `$10e10` | 6 | Replay crash effect clears a local one-shot flag after the request. Live focused checks observe one request; completely skipped effect tails still need explicit coverage. |
 
@@ -103,7 +104,9 @@ followed by sample-start/listening checks. This document does not close step 4.
 `VERIFY_TIME_AUDIO` requires TIME_REPLAY_TIMING and installs HardDrivinAudio.s
 behind CUSTOM1/SPS0126. It owns event8 at `$0b162..$0b16b` and event4 at `$0b620..$0b629`, with
 independent cadence states. Mask-3 contact event7 at `$0cd4e..$0cd57` also has
-an independent state. The other live callers remain separate acceptance work.
+an independent state. Landing/penetration at `$0cc80..$0cc89` has a separate
+state and preserves immediate nonzero-fall landings. Other live callers remain
+separate acceptance work.
 
 The first eligible request in an episode is immediate. Subsequent requests
 consume eight-field boundaries from RP_WALL, retaining the remainder when a
@@ -249,6 +252,55 @@ audit passes and the normal8392-byte-text slave is byte-identical to baseline.
 
 Object event7 at `$0bd02` repeats against the same object in two020 visits five
 fields apart in the ungated audit. That requires object-contact semantics beyond
-the mask3 correction policy. Event9 remains unobserved; obstacle and landing
-repetition, full collision-event validation, listening, large-step physics and
-step-4 handling/performance acceptance remain open.
+the mask3 correction policy. Event9 remains unobserved. The landing/penetration extension below adds focused
+coverage; object/obstacle repetition, full collision-event validation, listening,
+large-step physics and step-4 handling/performance acceptance remain open.
+
+
+## Landing and sustained ground penetration
+
+The native `$0cc80` event7 path serves both landings and ground penetration.
+It follows the position correction when average wheel penetration is below -5
+or the car's orientation requires the effect, provided falling speed does not
+exceed the hard-landing threshold of 50. The hard-landing event6 path is separate.
+In a 2000-field A500 capture of the airborne-reference steering fixture,
+`s4-air-contact-audit-a500`, ten visits have falling velocity 0: the ground
+correction repeats across frames without a new fall. The corresponding 68020
+capture has no visits to this site; it is not cross-machine landing equivalence.
+
+TIME_AUDIO now wraps `$0cc80..$0cc89` using a separate HDLANDAU cadence state.
+Zero-fall visits use the existing eight-field wall-clock rule, including first
+eligibility, missing-step re-entry and remainder retention. A nonzero falling
+velocity makes the request immediate and anchors the following penetration
+cadence to that landing. It therefore cannot be suppressed by a recent
+zero-fall correction. Collision impulses, position correction, gravity reset,
+hard-landing crashes and Paula arbitration remain unchanged. Forced-native or
+inactive dispatch executes the original event call.
+
+The assembled 68000 helper passes 480 cases, including 400 immediate nonzero-fall
+landings, 16 suppressed sustained requests, duplicate/adjacent/missing steps,
+clock wrap and register/stack checks. The live `s4-landing-a500` capture has 11
+visits and 11 emitted requests, one with falling velocity 29. All decisions match
+the observed wall clock and step serial. It also verifies 161 direct bypasses to
+`$0cc8a` leave cadence state unchanged; that native address is shared by paths
+which do not call event7. An initial verifier rejected these bypasses; the
+retained capture passes after checking the branch semantics explicitly.
+
+All 11 landing requests reach the native sample scheduler on channel 3/period 500,
+but none become accepted starts in this fixture: another same-channel request
+has already armed its startup counter. Each follows an accepted channel 3 skid
+start by zero or one field, within that two-field busy window. This preserves native arbitration and
+is not evidence of audible landing quality. A delayed 68020 run,
+`s4-landing-020-slow4`, reaches no landing calls and fails the verifier's coverage
+requirement; it is excluded from passing landing evidence. Actual short-interval
+live suppression remains unproven, although the assembled helper covers it.
+
+
+Native-step captures `s4-landing-native-off/on` match all 208 observations when
+compared by physics-step serial and event/sample parameters, excluding wrapper
+return addresses. Their elapsed capture lengths differ (893 versus925 fields),
+so this is event-order compatibility, not wall-time equivalence. All 108 native
+car snapshots also match the reference. CUSTOM1-off passes152 patch ranges,
+the direct-branch audit passes131 ranges, and the normal8392-byte build remains
+byte-identical. Object/obstacle and special-object semantics, fast live landing
+coverage, listening and full step-4 acceptance remain open.

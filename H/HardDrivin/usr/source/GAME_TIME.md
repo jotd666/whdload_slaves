@@ -2725,5 +2725,7 @@ replay checks pass; sample-start and listening acceptance remain open.
 
 The optional TIME_AUDIO gate now gives live off-road requests an eight-field
 wall-clock cadence with retained remainder. Actual sample starts and native-step
-sound equivalence have focused validation; see AUDIO_TIMING.md. Other repeated
-live sound callers remain open.
+sound equivalence have focused validation; see AUDIO_TIMING.md. Skid and mask-3
+contact have independent cadence states. Ground penetration now has a separate
+cadence while preserving immediate nonzero-fall landings. Other object/obstacle
+sound callers and broader listening/handling acceptance remain open.
