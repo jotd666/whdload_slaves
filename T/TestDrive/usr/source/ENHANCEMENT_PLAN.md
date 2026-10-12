@@ -246,7 +246,7 @@ The separate simulation process supports the overall design, but phase 8 needs r
 2/5 integration, original five-field script cadence and removal of the identified drawing
 dependencies. The period-6 and integer-subdivision assumptions are rejected.
 
-## Phase 6: always-on fixes (local acceptance complete; hardware A/B pending)
+## Phase 6: always-on fixes (complete; hardware A/B deferred)
 
 1. **Overlay cache flush: implementation and requested emulator smoke test complete.**
    Ported `overlay_unload_end` / `overlay_load_end` from TD2 commit `c4d0af5`,
@@ -266,7 +266,7 @@ dependencies. The period-6 and integer-subdivision assumptions are rejected.
    A/B slaves are under ignored `tmp/dev/dist/overlay-cache-ab/`: fixed 1.5b and the
    unmodified repository-1.4 rebuild, both built with the same pinned dependencies.
    No equivalence to an unavailable shipped 1.4 is claimed. Real A1200/68040 A/B testing
-   remains open. Normal user quit passed on the same 68040 preset using the pinned native
+   is deferred at the user’s request and does not block phase-6 completion. Normal user quit passed on the same 68040 preset using the pinned native
    debugger-input emulator: keypad `*` returned WHDLoad to the AmigaDOS prompt before
    separate emulator shutdown. CACR was `$80008000`; this diagnostic build reports no
    data-cache emulation. FS-UAE success does not prove hardware cache coherency.
@@ -278,8 +278,8 @@ dependencies. The period-6 and integer-subdivision assumptions are rejected.
    about every scene. Phase-5 drawing-dependent game state belongs to opt-in phase 8.
 3. The source and ReadMe overlay history entry are committed; normal 1.5b and the 1.4
    A/B baseline remain byte-identical to the initial handoff. Local `phase6.md` records
-   the acceptance evidence and normal-quit procedure. Hardware A/B remains a separate
-   outstanding acceptance check; no hardware pass or release readiness is claimed.
+   the acceptance evidence and normal-quit procedure. Hardware A/B remains a deferred
+   follow-up; no hardware pass or release readiness is claimed.
    No push is requested. Any later evidenced display fix gets a separate commit.
 
 ## Phase 7: VERIFY scaffolding
