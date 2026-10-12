@@ -953,8 +953,8 @@ cases, the existing 1215 eighth-step cases, 441 Q16 cases and 11 debt cases in
 fixture, not full driving-tape or world-state equivalence. The ordinary build is
 byte-identical to the baseline.
 
-Before enabling the 68000 policy, extend falling/contact-rate integration,
-traffic, multiple discrete events and replay samples per update. Audit narrowing stores in callers as well as helper arithmetic. Large-T
+Before enabling the 68000 policy, extend contact-rate integration, traffic,
+multiple discrete events and replay samples per update. Audit narrowing stores in callers as well as helper arithmetic. Large-T
 contact, checkpoint and handling validation, and the A500 performance gate remain
 required. No updated FPS claim follows from this arithmetic change.
 
@@ -1017,8 +1017,35 @@ fractional carry. `s4-projection-wide-regression` passes all60 projection and
 existing motion suite, including1323 ordinary and405 falling position cases.
 The ordinary build remains byte-identical.
 
-These changes do not yet enable longer gameplay updates. Falling displacement,
-contact-rate integration, narrowing writes, traffic route traversal and event
+These changes do not yet enable longer gameplay updates. Contact-rate
+integration, narrowing writes, traffic route traversal and event
 multiplicity still need their own audit and extensions. Algebraic equivalence
 and arithmetic bounds do not establish collision or checkpoint correctness at
 large T; that gameplay validation remains required before acceptance.
+
+
+### Falling displacement at longer intervals
+
+The falling-position helper now uses a signed 64-bit numerator above eight
+fields. It evaluates `-n*(16*v+2*fraction)-a*n*(n-8)+carry` before dividing by128.
+The numerator supports signed-word velocity and acceleration and unsigned-word
+elapsed fields without intermediate overflow. The returned increment is the
+low32 bits of the truncated quotient, matching the coordinate's native ADD.L
+representation; the fractional remainder retains the sign of the full numerator,
+even if the quotient wraps that coordinate range. Short intervals keep the
+existing path.
+
+Acceleration cannot be treated as a constant five: inverted contact computes
+its sample at `$0cca6..$0ccc6` from the native speed-dependent function. The test
+therefore includes the full signed-word acceleration extrema, both signs of
+2340 and ordinary gravity cases. `VERIFY_FALL_WIDE_MATH` publishes private
+`HDFPWID1` results; `s4-fall-wide-full` passes all2205 combinations of velocity,
+velocity fraction, acceleration, elapsed fields and signed position carry.
+`s4-fall-short-regression` passes the existing motion suite, including405 falling
+position and81 falling-velocity cases. The ordinary build remains unchanged.
+
+This proves the displacement calculation, not the safety of arbitrarily large
+physical steps. The live fall-velocity word writes and the impact/landing paths
+still require validation with the eventual 68000 dispatcher. Contact-rate
+integration, input/saturation narrowing, traffic, discrete events and replay
+sampling remain unfinished for longer intervals.

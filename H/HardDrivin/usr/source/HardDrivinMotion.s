@@ -570,10 +570,12 @@ _motion_fall_position:
 	rts
 
 ; D0.W fall velocity, D1.W eighth-unit velocity remainder, D2.W acceleration,
-; D3.L signed position remainder /128, D4.W fields0..8. Returns D0.L Y delta,
-; D3.L position remainder; preserves other inputs. Word extrema fit in longs.
+; D3.L position remainder /128, D4.W unsigned fields0..65535. Returns D0.L
+; Y delta,D3.L remainder. Preserve other inputs. Acceleration is a signed word.
 ; Y = -v*T + a*T*(1-T)/2; positive fall velocity moves toward negative Y.
 _motion_fall_displacement:
+	cmpi.w #8,d4
+	bhi _motion_fall_displacement_wide
 	movem.l d1-d2/d4-d5,-(a7)
 	tst.w d4
 	beq.s .zero
@@ -607,6 +609,113 @@ _motion_fall_displacement:
 .done:
 	movem.l (a7)+,d1-d2/d4-d5
 	rts
+
+; Wide numerator: -fields*(16*v+2*velocity_carry)
+;                 -acceleration*fields*(fields-8)+position_carry.
+; Signed64 holds every word velocity/acceleration and unsigned-word interval.
+; Return the low32 quotient bits for the native ADD.L coordinate representation;
+; remainder sign comes from the wide numerator, even if that quotient wraps.
+_motion_fall_displacement_wide:
+	movem.l d1-d2/d4-d7,-(a7)
+	move.w d2,d5
+	ext.l d0
+	lsl.l #4,d0
+	ext.l d1
+	add.l d1,d1
+	add.l d1,d0
+	move.w d4,d1
+	bsr _time_product_s32_u16
+	neg.l d0
+	negx.l d2
+	move.l d0,d7
+	move.l d2,d6
+	move.w d5,d0
+	bsr _time_multiply_fields
+	move.w d4,d1
+	subq.w #8,d1
+	bsr _time_product_s32_u16
+	sub.l d0,d7
+	subx.l d2,d6
+	moveq #0,d0
+	tst.l d3
+	bpl.s .carry
+	moveq #-1,d0
+.carry:
+	add.l d3,d7
+	addx.l d0,d6
+	move.l d6,d5
+	move.l d7,d3
+	move.l d7,d0
+	lsr.l #7,d0
+	moveq #25,d4
+	lsl.l d4,d6
+	or.l d6,d0
+	andi.l #127,d3
+	tst.l d5
+	bpl.s .done
+	tst.l d3
+	beq.s .done
+	addq.l #1,d0
+	subi.l #128,d3
+.done:
+	movem.l (a7)+,d1-d2/d4-d7
+	rts
+
+	IFD VERIFY_FALL_WIDE_MATH
+_motion_fall_wide_test:
+	movem.l d0-d7/a0-a6,-(a7)
+	lea _fall_wide_results(pc),a6
+	lea _fall_wide_velocities(pc),a0
+.velocity:
+	move.w (a0)+,d5
+	lea _fall_wide_fractions(pc),a1
+.fraction:
+	move.w (a1)+,d6
+	lea _fall_wide_accelerations(pc),a2
+.acceleration:
+	move.w (a2)+,d7
+	lea _fall_wide_fields(pc),a3
+.fields:
+	move.w (a3)+,d4
+	lea _fall_wide_carries(pc),a4
+.carry:
+	move.l (a4)+,d3
+	move.w d5,d0
+	move.w d6,d1
+	move.w d7,d2
+	bsr _motion_fall_displacement
+	move.l d0,(a6)+
+	move.l d3,(a6)+
+	lea _fall_wide_carries_end(pc),a5
+	cmpa.l a5,a4
+	blo.s .carry
+	lea _fall_wide_fields_end(pc),a5
+	cmpa.l a5,a3
+	blo.s .fields
+	lea _fall_wide_accelerations_end(pc),a5
+	cmpa.l a5,a2
+	blo.s .acceleration
+	lea _fall_wide_fractions_end(pc),a5
+	cmpa.l a5,a1
+	blo.s .fraction
+	lea _fall_wide_velocities_end(pc),a5
+	cmpa.l a5,a0
+	blo.s .velocity
+	movem.l (a7)+,d0-d7/a0-a6
+	rts
+_fall_wide_velocities: dc.w -32768,-1,0,1,32767
+_fall_wide_velocities_end:
+_fall_wide_fractions: dc.w -7,0,7
+_fall_wide_fractions_end:
+_fall_wide_accelerations: dc.w -32768,-2340,-5,0,5,2340,32767
+_fall_wide_accelerations_end:
+_fall_wide_fields: dc.w 9,15,31,255,32767,32768,65535
+_fall_wide_fields_end:
+_fall_wide_carries: dc.l -127,0,127
+_fall_wide_carries_end:
+_fall_wide_signature: dc.b 'HDFPWID1'
+_fall_wide_results: dcb.l 5*3*7*7*3*2,0
+	ENDC
 
 ; Semi-implicit position increment in native long-position units.
 ; D0.W new projected velocity, D1.W old velocity, D2.W unsigned fields0..65535,
