@@ -43,6 +43,9 @@ traffic-state checks pass. Full acceptance still needs the corrected final build
 See GAME_TIME.md;
 the step-4 acceptance criteria remain open.
 
+The 2026-10-12 cost profile and the ordered closure plan for step 4 (P1–P7,
+C1–C6, decisions D1–D4) are in `STEP4_COST_PLAN.md`. Follow it from here.
+
 ## Starting point
 
 These starting facts are supplemented and corrected by the step-3 dynamic

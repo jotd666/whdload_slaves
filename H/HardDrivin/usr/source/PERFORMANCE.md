@@ -71,6 +71,13 @@ These are repeatable fixed-input baselines, not equal-scene renderer speedups.
 
 ## Step 4 diagnostics: performance gate still fails
 
+A 2026-10-12 per-frame profile of the integrated phase build separates the cost of the
+CUSTOM1 code from scene workload. The overhead is 16.64 ms per frame in window A and
+14.98 ms in window B, which would lose 5.99% and 10.92% FPS at an equal scene. Most of
+window B's 31% loss comes from the enabled car rendering twice as many polygons per
+frame (28.8 against 14.0). The breakdown, the 3.78 ms budget and the reduction plan are
+in [`STEP4_COST_PLAN.md`](STEP4_COST_PLAN.md).
+
 The current experimental build uses separate CPU timing policies, one full
 physics/scene pass per A500 frame, and the grounded drivetrain reference with
 exact batching, combined position integration and root/power reuse. These remain
