@@ -2,12 +2,14 @@
 ; Runtime integration supplies cached static artwork, seven gauge layers and
 ; foreground scripts. This primitive updates only the union of old/new dirty
 ; rectangles; the completed image/mask is suitable for one masked publication.
-; No game hooks yet: this is the update core, not an enabled feature.
+; Called by the bit-19 development composition; not in the normal mask.
 ;
 ; a0=array of {image.l,mask.l}, d0.w=1..10 layers, back to front.
 ; Each nonempty image has five 8000-byte planes, mask has 8000 bytes.
 ; A null image AND null mask denotes an empty layer. Sources are private FAST
-; caches and disjoint from the output. Caller owns their allocation bounds.
+; caches. A source may be exactly the output image/mask (ordered accumulation):
+; each word is read from every contributing plane before that word is written.
+; Other partial overlaps are forbidden. Caller owns their allocation bounds.
 ; a1=48000-byte composite (40000 pixel bytes, then shared 8000-byte mask).
 ; a2=dirty rectangle: left byte, top row, byte width, row count (four words).
 ; Left/width are even; the rectangle must lie within 40 bytes x 200 rows.

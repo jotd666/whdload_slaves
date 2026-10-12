@@ -151,3 +151,49 @@ class NativeGaugeLayerTests(unittest.TestCase):
                            (bytes([255,255,255,255,0,1]),(0,0,1,1)),
                            (bytes([255,255,255,255,0,0]),(31,0,2,1))):
             self.assertIsNone(native_gauge_layer(source,mask,32,1,0,0,frame,rect))
+
+
+class PackedGaugeStorageTests(unittest.TestCase):
+    def test_bounded_pitch_round_trip_for_shifted_gauges(self):
+        from cockpit_compose import native_gauge_layer
+        for x, width, height in ((1,64,64),(7,48,64),(15,64,64),(255,64,64),
+                                 (288,32,64),(112,96,15),(113,96,15)):
+            pitch = ((width+15)//16)*2
+            layer = native_gauge_layer(bytes([0xa5])*(pitch*height*5),
+                (bytes([255])*pitch+b'\0\0')*height, width,height,x,100,
+                bytes([0x5a])*40000,(x+2,101,5,3))
+            self.assertIsNotNone(layer)
+            left = (x//16)*2
+            rowbytes = ((x+pitch*8+15)//16)*2-left
+            self.assertLessEqual(rowbytes*height,640)
+            packed = bytearray(640*6)
+            full = layer.pixels+layer.mask
+            for plane in range(6):
+                for row in range(height):
+                    start=plane*8000+(100+row)*40+left
+                    dest=plane*640+row*rowbytes
+                    packed[dest:dest+rowbytes]=full[start:start+rowbytes]
+            expanded=bytearray(48000)
+            for plane in range(6):
+                for row in range(height):
+                    src=plane*640+row*rowbytes
+                    dest=plane*8000+(100+row)*40+left
+                    expanded[dest:dest+rowbytes]=packed[src:src+rowbytes]
+            self.assertEqual(expanded,full)
+
+    def test_exact_output_alias_for_ordered_accumulation(self):
+        rng=random.Random(19000)
+        layers=[Layer(rng.randbytes(40000),rng.randbytes(8000)) for _ in range(3)]
+        expected=bytearray(48000)
+        update(expected,layers,(0,0,40,200))
+        actual=bytearray(48000)
+        update(actual,layers[:1],(0,0,40,200))
+        for layer in layers[1:]:
+            alias=Layer(memoryview(actual)[:40000],memoryview(actual)[40000:])
+            update(actual,[alias,layer],(0,0,40,200))
+        self.assertEqual(actual,expected)
+
+    def test_oversized_packed_gauge_rejects(self):
+        from cockpit_compose import native_gauge_layer
+        self.assertIsNone(native_gauge_layer(bytes(12*64*5),
+            (bytes([255])*12+b'\0\0')*64,96,64,1,100,bytes(40000),(2,101,2,2)))

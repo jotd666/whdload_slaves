@@ -77,9 +77,13 @@ retaining its exact resource/context keys and selective drawing-state replay.
 It exposes a full-size image/mask only for the current accepted invocation;
 firing, damage overlays and unsupported states retain native dispatch. The
 former standalone script cache remains dropped; this provider is part of the
-full composition, with no new performance result. Dirty-update integration,
-the final single masked copy and full-composition native pixel twins remain open.
-The transport still performs temporary full-frame seed/copy operations and
+full composition, with no new performance result. Ordered composition and a single masked copy are now wired, using compact
+gauge records and a shared expansion scratch. The initial 65 full-frame native
+comparisons pass, but one frame fails during the first rear-view transition;
+its correction and full view acceptance remain open (profiling scoreboard).
+Dirty-update reuse and removal of redundant native drawing/seeding remain
+necessary before the FPS comparisons.
+The development path still performs a full-frame seed and native fallback copy and
 must not be used as a performance candidate yet.
 Full-composition view twins remain open. The map-toggle check is dropped: the
 bundled game documentation specifies offline navigation maps, not an in-flight

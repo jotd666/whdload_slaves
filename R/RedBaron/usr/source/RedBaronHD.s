@@ -694,3 +694,5 @@ time_input_observe_queue: dcb.b TIME_INPUT_BYTES,0
 
 	include "cockpit-foreground-state.s"
 	include "cockpit-foreground.s"
+
+	include "cockpit-final.s"

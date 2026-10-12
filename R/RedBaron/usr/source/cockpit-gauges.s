@@ -7,8 +7,9 @@
 CG_KEY = 4
 CG_AREA = 292
 CG_PIXELS = 320
-CG_MASK = CG_PIXELS+40000
-CG_STRIDE = CG_MASK+8000
+CG_PLANE = 640 ; bounded packed plane; pitch is CG_AREA+4, not a fixed width
+CG_MASK = CG_PIXELS+CG_PLANE*5
+CG_STRIDE = CG_MASK+CG_PLANE
 CG_POOL_BYTES = CG_STRIDE*14
 
 cockpit_gauges_before:
@@ -57,6 +58,7 @@ cockpit_gauges_before:
  lea cockpit_gauge_counts(pc),a0
  addq.l #1,(a0)
  ENDC
+ bsr cockpit_gauge_seen
  bra cg_before_done
 .changed
  clr.l (a6)
@@ -67,7 +69,7 @@ cockpit_gauges_before:
  move.l (a1)+,(a2)+
  dbf d0,.key_copy
  lea CG_PIXELS(a6),a0
- move.w #48000/4-1,d0
+ move.w #CG_PLANE*6/4-1,d0
 .clear
  clr.l (a0)+
  dbf d0,.clear
@@ -86,7 +88,7 @@ cg_before_done:
 
 ; a0=background descriptor, a6=record, d6.w=x, d5.w=y.
 ; Require an unmirrored native bitmap with zero pad words; reject before reads
-; beyond its declared pitch/height. d0=1 accepted, 0 fallback. Preserve others.
+; beyond its declared pitch/height or the 640-byte packed plane. d0=1 accepted, 0 fallback. Preserve others.
 cockpit_gauge_mask:
  link a5,#-16
  movem.l d1-d7/a0-a4,-(sp)
@@ -103,7 +105,7 @@ cockpit_gauge_mask:
  moveq #0,d4
  move.w 8(a0),d4
  beq cg_mask_bad
- cmpi.w #64,d4
+ cmpi.w #96,d4
  bhi cg_mask_bad
  addi.w #15,d4
  lsr.w #4,d4
@@ -147,6 +149,10 @@ cockpit_gauge_mask:
  sub.w d0,d1
  move.w d1,CG_AREA+4(a6)
  move.w d5,CG_AREA+6(a6)
+ move.w d1,d0
+ mulu.w d5,d0
+ cmpi.l #CG_PLANE,d0
+ bhi cg_mask_bad
  move.l a6,a4
  adda.l #CG_MASK,a4
 cg_mask_row:
@@ -171,8 +177,10 @@ cg_mask_pixel:
  moveq #7,d7
  sub.w d1,d7
  lsr.w #3,d0
+ sub.w CG_AREA(a6),d0
  move.w d3,d1
- mulu.w #40,d1
+ sub.w CG_AREA+2(a6),d1
+ mulu.w CG_AREA+4(a6),d1
  add.w d0,d1
  bset d7,0(a4,d1.w)
  ; Seed colour from the resource, never from the old rendered frame. Native
@@ -205,7 +213,7 @@ cg_mask_pixel:
  bset d7,(a3)
 .colour_next
  adda.l 12(a0),a2
- adda.l #8000,a3
+ adda.l #CG_PLANE,a3
  dbf d4,.colour
  movem.l (sp)+,d2/d4/a2-a3
 cg_mask_next:
@@ -254,6 +262,7 @@ cockpit_gauges_after:
  lea CG_PIXELS(a6),a1
  bsr cockpit_gauge_capture
  move.l #1,(a6)
+ bsr cockpit_gauge_seen
  IFD VERIFY
  lea cockpit_gauge_counts(pc),a0
  addq.l #1,4(a0)
@@ -281,6 +290,11 @@ cockpit_gauge_capture:
  add.w d1,d0
  move.l a0,a3
  adda.l d0,a3
+ move.w d3,d0
+ sub.w CG_AREA+2(a6),d0
+ mulu.w CG_AREA+4(a6),d0
+ sub.w CG_AREA(a6),d1
+ add.w d1,d0
  move.l a1,a4
  adda.l d0,a4
  move.w d2,d1
@@ -297,7 +311,7 @@ cockpit_gauge_capture:
  bclr d6,(a4)
 .next_plane
  adda.l #8000,a3
- adda.l #8000,a4
+ adda.l #CG_PLANE,a4
  dbf d7,.plane
  addq.w #1,d2
  dbf d4,.pixel
@@ -306,7 +320,7 @@ cockpit_gauge_capture:
  movem.l (sp)+,d0-d7/a0-a4
  rts
 
-; a0=native x/y/width/height, a1=8000-byte coverage. d0=fully covered.
+; a0=native x/y/width/height, a1=packed coverage, a6=gauge record. d0=fully covered.
 ; Conservative for line/bitmap bounds: holes reject, never invent opacity.
 cockpit_gauge_contains:
  movem.l d1-d7/a0-a2,-(sp)
@@ -326,14 +340,31 @@ cockpit_gauge_contains:
  bcs .bad
  cmpi.w #200,d5
  bhi .bad
+ move.w CG_AREA(a6),d0
+ lsl.w #3,d0
+ cmp.w d0,d2
+ blo .bad
+ move.w CG_AREA+4(a6),d1
+ lsl.w #3,d1
+ add.w d1,d0
+ cmp.w d0,d4
+ bhi .bad
+ cmp.w CG_AREA+2(a6),d3
+ blo .bad
+ move.w CG_AREA+2(a6),d0
+ add.w CG_AREA+6(a6),d0
+ cmp.w d0,d5
+ bhi .bad
  move.w d2,d6
 .row
  move.w d6,d2
 .pixel
  move.w d2,d0
  lsr.w #3,d0
+ sub.w CG_AREA(a6),d0
  move.w d3,d1
- mulu.w #40,d1
+ sub.w CG_AREA+2(a6),d1
+ mulu.w CG_AREA+4(a6),d1
  add.w d0,d1
  move.w d2,d0
  andi.w #7,d0
@@ -392,3 +423,54 @@ cockpit_gauge_attempted: dc.w 0
  IFD VERIFY
 cockpit_gauge_counts: dc.l 0,0 ; stable-key reuse, newly captured layers
  ENDC
+
+; Only gauges accepted during this invocation may enter the composition.
+cockpit_gauge_seen:
+ movem.l d0/a0,-(sp)
+ lea cockpit_gauge_seen_bits(pc),a0
+ move.w (a0),d0
+ bset d4,d0
+ move.w d0,(a0)
+ movem.l (sp)+,d0/a0
+ rts
+cockpit_gauge_seen_bits: dc.w 0
+
+; Expand one bounded gauge into a shared full-size composition scratch layer.
+; a0=record, a1=48000-byte scratch, all registers preserved.
+cockpit_gauge_expand:
+ movem.l d0-d7/a0-a5,-(sp)
+ move.l a1,a2
+ move.w #11999,d0
+.clear
+ clr.l (a2)+
+ dbf d0,.clear
+ moveq #0,d0
+ move.w CG_AREA+2(a0),d0
+ mulu.w #40,d0
+ add.w CG_AREA(a0),d0
+ adda.l d0,a1
+ lea CG_PIXELS(a0),a2
+ moveq #5,d7
+.plane
+ move.l a1,a3
+ move.l a2,a4
+ move.w CG_AREA+6(a0),d6
+ subq.w #1,d6
+.row
+ move.l a3,a5
+ move.l a4,d1
+ move.w CG_AREA+4(a0),d5
+ lsr.w #1,d5
+ subq.w #1,d5
+.word
+ move.w (a4)+,(a5)+
+ dbf d5,.word
+ move.l d1,a4
+ adda.w CG_AREA+4(a0),a4
+ adda.w #40,a3
+ dbf d6,.row
+ adda.l #CG_PLANE,a2
+ adda.l #8000,a1
+ dbf d7,.plane
+ movem.l (sp)+,d0-d7/a0-a5
+ rts

@@ -82,10 +82,13 @@ def native_gauge_layer(image, mask, width, height, x, y, frame, rect):
     A rejected case retains native drawing; this is not a colour-derived mask.
     """
     pitch = ((width + 15) // 16) * 2
-    if (not 1 <= width <= 64 or not 1 <= height <= 64 or x < 0 or y < 0
+    if (not 1 <= width <= 96 or not 1 <= height <= 64 or x < 0 or y < 0
             or x + pitch * 8 > 320 or y + height > 200
             or len(image) != pitch * height * 5
             or len(mask) != (pitch + 2) * height or len(frame) != 40000):
+        return None
+    packed_pitch = ((x + pitch*8 + 15)//16)*2 - (x//16)*2
+    if packed_pitch * height > 640:
         return None
     pixels, coverage = bytearray(40000), bytearray(8000)
     for row in range(height):

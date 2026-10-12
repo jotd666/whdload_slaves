@@ -4,9 +4,9 @@
 ; Separate targets follow the game's two gauge-history pages. No displayed
 ; bitmap is repointed, and the 3D renderer keeps its original destination.
 ;
-; Development transport only: currently seeds and copies the entire target.
-; Persistent layer fills/dirty updates must replace these copies before FPS
-; acceptance. The normal verified mask deliberately excludes this bit.
+; Development path: seeds a native reference target, then publishes accepted
+; layers with one masked copy; unavailable/VERIFY-mismatching layers copy the
+; complete native reference. Redundant drawing/seeding must go before FPS acceptance. The normal verified mask deliberately excludes this bit.
 ; PERF_RANGE sim:0080e 6 bit=19
 ; PERF_RANGE sim:16226 6 bit=19
 CS_PAGE_BYTES = 40000
@@ -81,6 +81,7 @@ cockpit_stage_begin:
  movem.l d0-a6,-(sp)
  lea cockpit_stage_active(pc),a5
  clr.l (a5)
+ bsr cockpit_final_reset
  move.l cockpit_stage_h3(pc),a4
  adda.l #$8000,a4
  tst.w -$18ee(a4) ; h3:6712 view
@@ -144,9 +145,13 @@ cockpit_stage_end:
  tst.l (a5)
  beq .done
  bsr cockpit_stage_wait
+ bsr cockpit_final_publish
+ tst.l d0
+ bne .published
  move.l (a5),a0
  move.l 4(a5),a1
  bsr cockpit_stage_copy
+.published
  move.l cockpit_stage_h3(pc),a4
  adda.l #$8000,a4
  move.l 4(a5),$1d6a(a4)

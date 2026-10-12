@@ -57,6 +57,29 @@ reached flight but used a timing driver whose 1,000-field minimum rejected the
 short check; its host debugger then terminated the emulator during teardown.
 The passing dedicated driver detached cleanly before quitting the emulator.
 
+### E2 complete composition — one failing frame still open
+
+The compact gauge records use variable row pitch within a 640-byte plane;
+this admits the native 96×15 attitude bitmap without enlarging the 58,240-byte
+pool. The preceding packed attempt allocated its caches but rejected that
+bitmap's width (`completion-e2-full-compose-packed`); the source was corrected.
+The compositor accumulates static artwork, expanded gauge layers and foreground
+in native order, then makes one masked copy. Native reference drawing and the
+full-frame seed remain, so this is not a performance candidate yet.
+
+On 040, `completion-e2-full-compose-attitude` first passed 65/65 full-frame
+comparisons. The first rear-view transition then exposed one failing front
+frame: the first differing byte was frame byte 7012 (plane 0, row 175, byte 12).
+At front return the counters were 73 attempts, 72 matches and one failure.
+Rear/left/right each passed five publications without cache activity. A bounded
+500-field continuation and one repeated rear/front transition did not reproduce
+the failure. The compositor is **not accepted** and remains outside the normal
+mask. Its VERIFY fallback retained native output; the first-failure record now
+preserves that pixel's plane bytes and coverage masks for the next correction.
+No full-state capture or new W6 study was added. Capture VERIFY SHA-256
+`e460b4d736c74c2d0b9fcb1eb74a0a8c5c5b8c5d13f6e5f31a2ba71c594f0770`. Current builds, 512 host tests, 84 hook ranges and 139
+VERIFY patch destinations pass; no new FPS result is claimed.
+
 ### D5 acceptance postponed — not a passed checkpoint
 
 The added candidate FPS and world-rate/drop columns use **developer bit 13**,
