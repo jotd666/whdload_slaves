@@ -96,10 +96,9 @@ _motion_roll_base:
 	lea _contact_rates(pc),a0
 	lea -$66ec(a4),a1
 	bsr _contact_read_rate
-	bsr _contact_scale_rate
 	lea _motion_state+MS_ROLL(pc),a0
 	lea -$66b2(a4),a1
-	bsr _contact_add_angle
+	bsr _contact_integrate_rate
 	move.w (a1),d0
 	movem.l (a7)+,d1-d2/a0-a1
 	tst.w d0
@@ -114,10 +113,9 @@ _motion_pitch_rate:
 	lea -$66ea(a4),a1
 	bsr _contact_read_rate
 	bsr _contact_pitch_projection
-	bsr _contact_scale_rate
 	lea _motion_state+MS_PITCH(pc),a0
 	lea -$66b4(a4),a1
-	bsr _contact_add_angle
+	bsr _contact_integrate_rate
 	movem.l (a7)+,d0-d3/a0-a1
 	move.l (a7),2(a7)
 	addq.w #2,a7
@@ -202,6 +200,17 @@ _motion_angle_rate:
 	move.l (a0),d2
 	bsr _time_scale_q16
 	move.l d2,(a0)
+	cmpi.w #8,d1
+	bls.s .short
+	move.w (a1),d1
+	ext.l d1
+	add.l d1,d0
+	move.l d1,-(a7)
+	bsr _time_normalize_angle
+	move.w d0,4(a0)
+	sub.l (a7)+,d0
+	rts
+.short:
 	move.w (a1),d1
 	add.w d0,d1
 	move.w d1,4(a0)

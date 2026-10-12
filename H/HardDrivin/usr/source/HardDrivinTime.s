@@ -11,6 +11,12 @@ TIME_FIELDS_PER_STEP equ 8
 TIME_FIELD_Q16 equ $2000
 
 _time_install:
+	IFD VERIFY_ANGLE_WIDE_MATH
+	IFND VERIFY_TIME_MOTION
+	FAIL "VERIFY_ANGLE_WIDE_MATH requires VERIFY_TIME_MOTION"
+	ENDC
+	bsr _angle_wide_test
+	ENDC
 	IFD VERIFY_RAMP_WIDE_MATH
 	IFND VERIFY_TIME_SCALARS
 	FAIL "VERIFY_RAMP_WIDE_MATH requires VERIFY_TIME_SCALARS"
@@ -389,6 +395,40 @@ _time_product_s32_u16:
 	moveq #0,d3
 	addx.l d3,d2
 	movem.l (a7)+,d3-d4
+	rts
+
+; D0 signed-long angular value -> native canonical range[-720,720].
+; Reduce unsigned magnitude in two word divisions, so even LONG_MIN is valid.
+; Preserve other registers. The two equivalent endpoints retain their sign.
+_time_normalize_angle:
+	movem.l d1-d2,-(a7)
+	move.l d0,d2
+	bpl.s .magnitude
+	neg.l d0
+.magnitude:
+	move.l d0,d1
+	swap d1
+	andi.l #$ffff,d1
+	divu.w #1440,d1
+	clr.w d1
+	andi.l #$ffff,d0
+	or.l d1,d0
+	divu.w #1440,d0
+	swap d0
+	andi.l #$ffff,d0
+	tst.l d2
+	bpl.s .normalize
+	neg.l d0
+.normalize:
+	cmpi.l #720,d0
+	ble.s .negative
+	subi.l #1440,d0
+.negative:
+	cmpi.l #-720,d0
+	bge.s .done
+	addi.l #1440,d0
+.done:
+	movem.l (a7)+,d1-d2
 	rts
 
 ; Convert unsigned pending fields D0.L into one bounded step D1.L (Q16.16),

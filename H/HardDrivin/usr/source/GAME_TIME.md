@@ -953,8 +953,8 @@ cases, the existing 1215 eighth-step cases, 441 Q16 cases and 11 debt cases in
 fixture, not full driving-tape or world-state equivalence. The ordinary build is
 byte-identical to the baseline.
 
-Before enabling the 68000 policy, extend contact-rate integration, traffic,
-multiple discrete events and replay samples per update. Audit narrowing stores in callers as well as helper arithmetic. Large-T
+Before enabling the 68000 policy, extend traffic, multiple discrete events and
+replay samples per update, and complete the velocity-write audit. Audit narrowing stores in callers as well as helper arithmetic. Large-T
 contact, checkpoint and handling validation, and the A500 performance gate remain
 required. No updated FPS claim follows from this arithmetic change.
 
@@ -1074,3 +1074,32 @@ states at forced T=1, and the ordinary build remains byte-identical. This is not
 full driving-tape or equal-elapsed-time acceptance. Contact-rate integration,
 angular/velocity narrowing, traffic, multiple events and replay sampling still
 precede enabling the requested 68000 update policy.
+
+
+### Angular integration at longer intervals
+
+Native yaw/pitch/roll normalization at `$0b44e..$0b4a2` adds or subtracts only one
+1440-unit revolution. For intervals above eight fields, the ordinary angular-rate
+helper now normalizes the full signed-long sum of current angle and increment
+before publishing its word result. Returning the difference from the current
+angle preserves the caller's native ADD.W interface. The signed Q16 fractional
+remainder is retained independently. Short-interval behavior is unchanged.
+
+Roll/pitch contact-rate integration similarly uses the full signed64 product of
+the Q16 rate and elapsed fields. It divides by8, adds the previous fractional
+carry, then extracts the whole increment and signed remainder. Only the complete
+angle is reduced to[-720,720] before the word store; the integrated Q16 value is
+never forced through a 32-bit intermediate. This avoids both Q16 overflow and
+incorrect wrapping at65536 rather than at1440. The previous scale/add helpers
+remain the short-interval path. Existing mismatch and native +/-1440 wrap rules
+still determine when an old fraction is valid.
+
+`VERIFY_ANGLE_WIDE_MATH` exercises the actual combined helpers on private state.
+`s4-angle-wide` passes96 contact-rate cases,92 ordinary rate cases and19 full-long
+normalization cases, including multiple revolutions, signed fractional carry,
+unsigned65535 fields, stale-state invalidation and LONG_MIN/LONG_MAX. The fixture
+input macro produces the same binary as its expanded data. `s4-angle-native`
+matches all144 reference car states at forced T=1; the ordinary build is unchanged.
+These checks establish arithmetic and native-step compatibility, not large-T
+loop/jump/collision handling. The dispatcher still caps every CPU at eight fields;
+velocity writes, traffic, event multiplicity and replay recording remain open.
