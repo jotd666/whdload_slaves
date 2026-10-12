@@ -130,6 +130,7 @@ GPC_CALL: MACRO
 sim_configure:
     IFD VERIFY
     bsr verify_simulation_units
+    bsr verify_render_units
     ENDC
     lea sim_p(pc),a0
     move.w #6,(a0)
@@ -813,8 +814,10 @@ sim_latch_enter:
     move.w #10,d1
     jmp (a0)
 sim_latch_leave:
+    bsr render_pose_latch
     move.l $4.w,a6
     jsr _LVOEnable(a6)
+    bsr render_subunit
     movem.l (sp)+,d0-a6
     rts
 

@@ -259,11 +259,11 @@ patch_main
 	cmp.l #94708,d0
 	bne.b .legacy
 
-	bsr sim_configure
 	lea sim_code(pc),a0
 	move.l d7,d0
 	addq.l #4,d0
 	move.l d0,(a0)
+	bsr sim_configure
 	lea render_race_return(pc),a0
 	move.l d7,d0
 	add.l #4+$a8f2,d0
@@ -326,6 +326,9 @@ pl_main_v1
 	PL_W $c12c,$7200
 	PL_NOP $c12e,4
 	PL_ENDIF
+	PL_IFC4X 3
+	PL_PSS $72a2,verify_render_pose,2 ; PERF_RANGE h0:72A2 8 bit=VERIFY_RENDER
+	PL_ENDIF
 	PL_IFC4X 0
 	PL_PSS $729a,verify_slow_draw,2
 	PL_ENDIF
@@ -348,8 +351,20 @@ pl_main_v1
 	PL_ENDIF
 	ENDC
 	PL_IFC2
+	PL_PSS $9ee,render_reset_tables,2 ; PERF_RANGE h0:09EE 8 bit=C2
 	PL_P $a6ea,sim_latch_enter ; PERF_RANGE h0:A6EA 8 bit=C2
 	PL_P $a776,sim_latch_leave ; PERF_RANGE h0:A776 6 bit=C2
+	PL_PSS $9a82,render_main_pose,10 ; PERF_RANGE h0:9A82 16 bit=C2
+	PL_PSS $91a2,render_mirror_pose,10 ; PERF_RANGE h0:91A2 16 bit=C2
+	PL_PSS $8212,render_horizon_pose,2 ; PERF_RANGE h0:8212 8 bit=C2
+	PL_PSS $8252,render_scenery_pose,2 ; PERF_RANGE h0:8252 8 bit=C2
+	PL_PSS $8d8e,render_car_y,2 ; PERF_RANGE h0:8D8E 8 bit=C2
+	PL_PS $8f70,render_car_depth ; PERF_RANGE h0:8F70 6 bit=C2
+	PL_PSS $8d9e,render_car_near_y,2 ; PERF_RANGE h0:8D9E 8 bit=C2
+	PL_PSS $94f2,render_mirror_car_y,2 ; PERF_RANGE h0:94F2 8 bit=C2
+	PL_PS $9aaa,render_angle ; PERF_RANGE h0:9AAA 6 bit=C2
+	PL_PS $91c2,render_angle ; PERF_RANGE h0:91C2 6 bit=C2
+	PL_PS $91c8,render_mirror_step ; PERF_RANGE h0:91C8 6 bit=C2
 	PL_ENDIF
 	PL_NEXT pl_section0
 pl_main_v1_sr
@@ -366,9 +381,11 @@ pl_main_v1_sr
 
 	IFD VERIFY
 	include "verification.s"
+	include "render-verify.s"
 	ENDC
 
 	include "render.s"
+	include "render-subunit.s"
 	include "simulation.s"
 
 pl_song1

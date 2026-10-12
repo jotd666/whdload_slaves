@@ -704,16 +704,106 @@ These costs support the chosen period 6/2 policy; period 1 remains disabled.
 `final-cost-display.json` retains the complete measurements.
 
 Phase 6 validation is complete. The beta version and icon default are unchanged;
-hardware/release work remains Phase 8. Phase 7 has not started.
+hardware/release work remains Phase 8.
 
 ### Phase 7 — Sub-unit rendering
-1. Camera fraction: latch -30006 low byte (and the step phase -29932 vs -29930 for
-   interpolation between steps, if the step rate stays below the frame rate).
-2. Road: feed the fraction into the row projection and the stripe phase at h0:84b2.
-3. Cars: interpolate each AI car's 16-bit position (with its byte carry) toward the next.
-4. Heading/curve/scenery offsets: as TD2's walker and mountains, if GPC's road has them.
-5. Budget: at most ~3% of A500 cycles (TD2 measured 2–2.9%); zero-fraction oracle must be
-   byte-identical to CUSTOM2=0 drawing.
+**Status: complete.** All new production hooks are C2-gated and apply only to the size-checked v1 game. `render-subunit.s`
+uses the existing protected render latch for camera fraction, lateral position,
+yaw and horizon/scenery heading. Table preparation runs after `Enable`, outside
+the interrupt exclusion, and never writes live physics state.
+
+The low byte of latched camera position `-30006(a4)` drives main/mirror road
+projection, partial integration intervals and row-transition maps used by stripe
+phase at `$84b2`. Canonical tables are copied from the loaded game once; every
+fraction is calculated from those originals, never cumulatively. Only main Y
+indices 2–8 and mirror indices 2–3 can change at sub-segment resolution. Updating
+those nine boundaries and their affected row maps keeps the A500 cost down.
+The native far projection-selection list stays intact, including its intentional
+choice of an earlier duplicate row. An exact fraction cache avoids repeated work.
+Native `$2b5e` rebuilds mirror/row tables for each new race. The C2 hook at `$9ee`
+restores canonical main/mirror/length inputs before that initializer and invalidates
+the projected fraction, preventing shifted tables from becoming the next race's
+baseline.
+
+Front cars already form full relative Q8 depth at `$8f50`; retain it before the
+native eighth-segment reduction, then interpolate the canonical near/far Y tables.
+Using the camera-shifted road tables here would subtract camera fraction twice.
+Mirror cars use camera-minus-car Q8 directly, without the roadside walker's
+one-segment adjustment. Native sprite-family/size selection remains discrete.
+Signed Q8 road angles interpolate the original odd lookup table; exact integer
+angles retain the native lookup. A signed word table derived from the original
+odd byte table gives bounded-cost interpolation without cache misses.
+Horizon and scenery use the same latched heading as the road, without prediction.
+The panorama already shifts heading by 6 bits at `$821a`, finer than the road's
+old 8-bit lookup. The segment curve is added to both accumulated curve (`$79a0`)
+and yaw (`$7a76`), cancelling in their difference; no extra camera-fraction curve
+offset is added to that native panorama calculation.
+
+Temporal interpolation is conditional on rendering faster than physics. The
+measured profiles draw no faster than the selected simulation rate; each checked
+draw has at least one intervening physics update. No temporal prediction or extra
+simulation delay is introduced. Spatial sub-unit rendering is independent of that
+cadence decision. Real hardware and other profiles remain Phase 8 coverage.
+
+Accepted evidence is retained under ignored `tmp/dev/tmp/phase7/`, with final
+capture prefix `accepted-` and the three `normal-*` production captures.
+`completion-capture-audit.json` binds all 20 VERIFY captures to their exact slave,
+source hashes and acceptance gates; older candidates are diagnostic only.
+
+- Four same-build C2=0/1 zero-fraction pairs cover straight, left, right and shallow
+  curves with traffic and mirrors. Every one of eight fields per capture has the
+  same 40,000 fetched bitmap bytes across all five planes: no crop, tolerance,
+  masking or nearest-frame selection. A changed-byte negative control fails the
+  same comparator. The frozen fixture sets added camera/AI fractions and angular
+  interpolation to zero and holds wheel history; it is VERIFY-only.
+- Nonzero fractions 1, 128 and 255 on the right curve, plus 128 on the left curve,
+  pass the retained guest-table checks. An independent model exhausts all 256
+  projection fractions and all 45,057 clamped signed angles, including negative
+  rounding, endpoint bounds and unchanged native projection-selection bytes.
+  All 20 captures pass 63 guest assertions with zero failures.
+- All named player/AI, input, clock and event fields match Phase 6 exactly at each
+  of 720 native-field observations on all four regression runs. Read-only latch
+  observations show at least one physics update per draw on these profiles:
+
+| Profile | Render latches | Fields between draws | Physics updates between draws |
+|---|---:|---|---|
+| A500 / period 6 | 83 | 8, 9, 10 | 1, 2 |
+| 68EC020 / period 2 | 196 | 3, 4 | 1, 2 |
+| 68030 25 MHz / period 2 | 330 | 2, 3 | 1, 2 |
+| 68EC020 traffic / period 2 | 178 | 4, 5 | 2, 3 |
+
+The A500 budget uses four 100-field windows from the original human joystick
+recording, including moving traffic. These count the entire new per-frame helper
+range, including replacement native work and VERIFY overhead; no native cost is
+subtracted, and this is not an FPS improvement claim. All pass a 3.0% gate:
+
+| A500 window | Helper cycles | Share of all CPU cycles |
+|---|---:|---:|
+| Solo, skip 2,000 | 394,530 | 2.776% |
+| Solo, skip 4,000 | 392,544 | 2.762% |
+| Solo, skip 6,000 | 394,420 | 2.776% |
+| Traffic, skip 2,000 | 370,780 | 2.609% |
+
+- All 16 final bitmap traces have zero writes to the displayed buffer. The four
+  moving traces contain 55 complete native snapshot copies with no foreign PC
+  during the protected copy, regardless of interrupt-vector location.
+- Normal A500 C2=0/1 and A1200 C2=1 builds boot through the intro and race and drain
+  the pending display handoff at native race exit. Both C2-on second-race checks
+  start with 48 shifted table words (camera fractions 160 and 182), verify all
+  102 canonical words restored and the fraction invalidated, then render 40 more
+  swaps. Their second-race tables match the model; intro/race images were inspected.
+- Exact runtime code/gating audits preserve inherited JOTD patches and all 139
+  jump stubs, with corrupted-code negative controls. All 64 hook boundaries and
+  direct branch entries pass. All 55 pristine input hashes remain unchanged.
+- Normal and tape VERIFY builds reproduce byte-for-byte in separate output
+  directories; ordinary VERIFY also builds without the private tape input. The
+  normal build excludes test fixtures and assertion routines. Normal SHA-256:
+  `e0765e5035febd4a9a928b440a966d2742c987528b0d7221ec256390f7aeec81`;
+  tape VERIFY: `470af2952c6d336c39a95c8dd30db68c3101be031bf8cc9395bdb7f7db08f2e0`.
+
+This establishes the stated emulator coverage, not all-circuit or hardware
+handling equivalence. The 030 backend supplies state/cadence observations but no
+CPU instruction trace; no 030 cycle-cost claim is made. Phase 8 has not started.
 
 ### Phase 8 — Hardware, release, upstream
 1. Real/MMU runs (68040 with MMU, JIT off), oldest and newest WHDLoad.
