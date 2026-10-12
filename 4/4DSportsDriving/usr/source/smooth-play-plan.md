@@ -590,14 +590,21 @@ the testing archive is unchanged. Stop before P5.
 
 ## P5. Finish the 50 Hz (A4000) mode to release quality, time-boxed
 
-The state is in open-work.md "Current status". It is close: 27/29 crest checks pass, replay
-format 2 exists, and 040/060 capacity holds.
+Status (12 October 2026): P5 is in progress; P5.1 passes. P5.2–P5.5 remain.
+The frozen crest gate still passes 27/29; its bounds are unchanged.
 
-1. **Native format-2 replay save/load through the game UI.**
-   - The last attempt left a zero-byte file and the writer was never reached. Find out why
-     (likely the save path hook or the file-name dialog), fix it, then do a fresh-process load
-     and play.
-   - Acceptance: state matches at 3 checkpoints.
+1. **Native format-2 replay save/load: complete.**
+   - Clean native Save Replay produces a physical 63,912-byte format-2/ABI9
+     file; a fresh-process native Load Replay and Play matches all 1,510
+     semantic bytes at ticks 200, 400 and 600. CRC and format checks pass.
+   - The old fixed-field diagnostic misinterpreted its completion counter:
+     zero means the writer has not **returned**, not that it was never reached.
+     A separate return-point probe sees zero during readback/CRC and one
+     successful completion afterward. No game-code fix was needed.
+   - Evidence: `tmp/prof/p5-save-clean/B`, `p5-reload-clean/B/validation.json`
+     and `p5-save-return/B`. Native runtime, FULL solo, CUSTOM2=1,
+     **NoWriteCache**; default-cache exit persistence is not claimed here.
+     All owned emulators closed; short setup windows are not FPS measurements.
 2. **The opponent route builder's out-of-resource read (`$1642A`).**
    - For 50 Hz races only, build the route from a deterministic, replay-recorded choice. That
      is already serialised; make fresh starts deterministic by initialising the read region.

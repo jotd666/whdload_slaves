@@ -125,17 +125,18 @@
    field; the trace checker now verifies that case from the actual bus writes
  - two buffers, no interpolation, no extra frame cap. Native-rate production
    remains 10/20 FPS; A4000 physics/release acceptance is still P5/P6 work
- - game binaries and testing archive unchanged; stop before P5
+ - game binaries and testing archive unchanged by P4; P5 status follows
 
- Separate A4000 SIM_RUNTIME source status (11.10.2026):
+ Separate A4000 SIM_RUNTIME source status (12.10.2026):
  - replay format 2, physics ABI9, stores the chosen opponent route so native
    resource reloads cannot silently change it. Older format-1 A4000 files
    are rejected; Normal/A2500 replay formats are unchanged
  - 38 codec checks pass. First/repeated FULL, FAST and rewind playback each
    match all 1510 state bytes at 250 checkpoints in the regression replay
- - that regression file was reconstructed from an existing recording and its
-   saved route. Native format-2 disk save/load is NOT yet verified: the last
-   UI attempt left an empty file and did not reach the replay writer
+ - P5.1 now verifies native format-2 Save/Load/Play: a physical 63912-byte
+   file reloads in a fresh process and matches all 1510 state bytes at ticks
+   200/400/600 (NoWriteCache). A return-point probe confirms successful write
+   and readback; the old fixed-delay counter check could sample mid-write
  - the original opponent route builder's out-of-resource lookup remains;
    deterministic fresh A4000 route setup is still open
  - jump/landing handling and broader lifecycle/capacity and release
