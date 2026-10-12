@@ -14,7 +14,7 @@ II slave in this repository (`T/TestDrive2/usr/source`):
 - `CUSTOM2=0` preserves original gameplay, apart from documented always-on fixes.
 
 The method is AmigaXDev `docs/playbooks/new-game-playbook-jotd.md`. Its §12 "ready to improve"
-gate comes before any patch. Generic lessons go back to AmigaXDev `docs/`.
+gate comes before gameplay enhancements; VERIFY-only measurement fixtures establish that gate. Generic lessons go back to AmigaXDev `docs/`.
 
 ## What carries over from Test Drive II, and what does not
 
@@ -71,15 +71,16 @@ Known differences that change the design:
 2. Profiler: the installed FS-UAE hash and both setup writes/capture-command reads for
    its PC window are pinned and checked. A short A500 trace contains real instruction PCs.
 3. Build: `tools/build.sh` checks the selected compiler/include trees and builds the
-   authoritative source into `tmp/build/`; `VERIFY=1` selects the VERIFY output. Both
-   variants are currently identical. The Bash wrappers work with macOS Bash 3.2.
+   authoritative source into `tmp/build/`; `VERIFY=1` selects the VERIFY output.
+   The normal variant remains byte-identical to the 1.5b hardware handoff. The VERIFY
+   variant has the phase-4 CUSTOM3 fixture. Bash wrappers work with macOS Bash 3.2.
 4. Trace tools: `td_report.py` uses TD's root/data sizes, excludes the PRELOAD root copy
    and follows the loaded BPTR chain. `profile_demo.sh`, `ingame.py`, `frames.py`,
    `swap_fields.py` and `fixed_window.sh` are adapted. Captures retain the exact slave,
-   launch settings, RAM and evidence. Fixed captures require an explicit TD anchor and
-   reject a moved anchor. **The race anchor and buffer-swap marker are still phase 4
-   work:** until validated, the tools provide diagnostic windows and CPU/DMA reports,
-   not FPS. No TD2 game addresses are silently reused.
+   launch settings, RAM and evidence. Fixed captures reject a moved anchor. Phase 4
+   supplies the validated first-attract-race anchor, LoadView frame marker and
+   overlay-aware reports. Explicit root anchors remain available for diagnostics.
+   No TD2 game addresses are silently reused.
 5. State tools: `state_fields.py`, `state_writers.py`, `state_report.py`, `state_watch.py`
    and `task_state.py` work on TD captures. The field sampler uses Ticks VBLInt at
    TD:$018BA and checks consecutive counters and a4/a1 against the data hunk. Task
@@ -102,13 +103,13 @@ A500 attract/driving sequence from copies of the same pristine drawer. Normal/VE
 builds pass, input hashes remain unchanged, and the delivered phase-6.1 fixed slave is
 unchanged. The available public archives contain 1.3, not 1.4; the user accepted an
 unmodified repository-1.4 rebuild for the separate A/B baseline. No unavailable
-shipped-1.4 byte-equivalence claim is made. Later measurement and gameplay gates remain
-open; phase 1 does not certify a frame marker, race anchor or simulation design.
+shipped-1.4 byte-equivalence claim is made. Phases 3 and 4 supply gameplay and
+measurement validation; the simulation design still depends on phase 5.
 
 ## Phase 2: identify the game (complete)
 
-1. Local `docs/internals.md` inventories the slave configuration, all 11 explicit
-   patch sites, keyboard interrupt and Exec trackdisk hooks. Original instructions,
+1. Local `docs/internals.md` inventories the slave configuration, all 11 normal patch sites
+   plus five VERIFY-only sites, keyboard interrupt and Exec trackdisk hooks. Original instructions,
    replacement behavior and unresolved observations are recorded.
 2. Parsed all five hunks and both overlay nodes. The suffix from HUNK_OVERLAY at
    file `$9F2C` is 49,364 bytes including metadata; actual overlay code is 49,220
@@ -119,16 +120,16 @@ open; phase 1 does not certify a frame marker, race anchor or simulation design.
    creation in hunk 4, WaitTOF, beam-mixed RNG, overlay manager, road traversal,
    horizontal blitter spans and five-plane shape blitter. Overlay addresses are
    hunk-qualified; 107 data JMP stubs resolve their calls into the root.
-4. Explicitly not found: a validated per-frame presentation/swap site, TD2's
-   exact 52-byte-row/8.8 road walker and CPU span loop, and several secondary
-   renderer counterparts. Two drawing passes are present; phase 3 visually confirms
-   a rear-view mirror. Timing/state ownership, pass attribution and markers remain later gates.
+4. The presentation marker is validated in phase 4. TD2's exact 52-byte-row/8.8
+   road walker and CPU span loop, and several secondary renderer counterparts,
+   remain not found. Two drawing passes are present; phase 3 visually confirms
+   a rear-view mirror. Timing/state ownership and pass attribution remain phase 5 work.
 
 **Acceptance:** local `tools/identify_game.py` checks pinned inputs, all explicit
 patch signatures/source coverage, hunk sizes, root JMP targets and both overlay
 node/export lists. Evidence is under ignored `tmp/dev/tmp/phase2/`. Every requested
 routine family has an evidenced TD location or an explicit not-found entry in
-the local inventory. No slave changes or new gameplay/performance claims.
+the local inventory. Performance measurements are recorded separately in phase 4.
 
 ## Phase 3: first boot and traces with PCs (complete)
 
@@ -154,19 +155,50 @@ input logs, exact slave/configuration and pinned diagnostic emulator. Pristine
 inputs and the phase-6.1 slave remain unchanged. The cockpit includes a working
 rear-view mirror; attribution of the two renderer passes remains analysis work.
 These are gameplay/trace checks, not a deterministic FPS benchmark. The frame
-marker, fixed race anchor and timing model remain phases 4 and 5.
+marker and fixed race window are validated in phase 4; the timing model remains phase 5.
 
-## Phase 4: frame counter, fixed window, baseline
+## Phase 4: frame counter, fixed window, baseline — complete
 
-1. Find the buffer swap (COP1LC or bitplane-pointer writes per drawn frame), make it the
-   frame marker in `frames.py` and `swap_fields.py`, and check it against screenshots.
-2. Fixed-window anchor: a deterministic point at the start of the first race, such as the
-   race clock initialisation, as in TD2. Then trace `FIELDS` fields.
-3. Baseline on the three presets, two fresh boots per arm: frame rate, the share of blitter
-   waits, blitter interrupts, span fill, projection and clears (TD2's frame-cost table).
+1. **Publication marker:** TD:$7AAA, the LoadView wrapper called by h3:$175E from
+   Road Drawer h4:$C0E. The two Views alternate; every measured A500/A1200 publication
+   is followed by the next field's bitplane DMA from the selected buffer. Screenshots
+   confirm the displayed race. `frames.py` and `swap_fields.py` use this marker, and
+   their 100-field patterns agree exactly. Menu LoadView calls are not gameplay FPS.
+2. **Fixed window:** first h4:$F6 since reset, before the physics deadline copies the
+   VBL counter, then 100 fields. This is the first attract race (stage 3), using the
+   game's demo controls. Captures verify the anchor, mode, stage, car parameter and
+   seed. `fixed_window.sh` defaults to the pinned fixture and rejects uncalibrated inputs.
+3. **Necessary VERIFY fixture:** CUSTOM3 removes the RNG's beam operand, fixes its
+   initial seed, and resets the seed at the demo-car selection call. Intro RNG call
+   counts differ across CPUs, so removing the beam alone is insufficient. All three
+   presets now start with Porsche index 0 and seed $1DC9. This small part of phase 7
+   is implemented for measurement; no simulation or rendering enhancement is enabled.
+4. **Two fresh boots per preset:** all $32A4 game-data bytes at both endpoints and every
+   displayed game pixel match. A500/A1200 instruction PCs and cycle costs match in
+   every field; trace and breakpoint frame counts agree. The 68030's breakpoint
+   pattern repeats on two fresh boots. Local `docs/phase4.md` documents raw-record
+   exceptions: a discarded INTREQR bit, screenshot edge padding, and unavailable
+   68030 CPU/blitter timing. Whole raw-trace byte equality is not claimed.
 
-**Done when:** the playbook's §12 gate is met: a reproducible cycle-exact gameplay trace, a
-report of where the frame goes, a fixed-window frame rate and the time model below.
+| Preset | Presentations / 100 fields | FPS at nominal PAL 50 Hz | Blitter-wait routine | Blitter IRQ service |
+|---|---:|---:|---:|---:|
+| A500, 512 KiB chip + 1536 KiB slow | 8 | 4.0 | 21.16% | 11.36% |
+| A1200/68EC020, 2 MiB chip + 4 MiB fast | 17 | 8.5 | 34.63% | 6.64% |
+| A1200/68030 25 MHz, same RAM | 20 | 10.0 | unavailable | unavailable |
+
+These are fixed-window baselines, not improvement claims or whole-race averages.
+The 68030 backend emits no instruction records and has no validated CPU/blitter
+cost model; its frame count is measured with read-only breakpoints. The local
+frame-cost table includes span fill, projection, clears, interrupts, idle time
+and DMA shares. The normal 1.5b build remains byte-identical to the hardware A/B slave;
+CUSTOM3=0 leaves the original demo call and RNG instructions intact in VERIFY builds.
+
+**Acceptance:** the measurement portion of playbook §12 is satisfied, with evidence
+under ignored `tmp/dev/tmp/phase4/base-*` and reproducible commands in the local docs.
+The overall “ready to improve” gate still requires the phase-5 time model below.
+The traced physics calls are five fields apart on both CPUs in this window, but
+cross-CPU endpoint state differs; its cause and the full clock/score/event model
+must be established before implementing enhanced simulation.
 
 ## Phase 5: the time model (decides the design)
 
@@ -180,7 +212,9 @@ Answer each of these with traces and state captures, never screenshots:
    average speed and score derive from it?
 4. Does game speed depend on the CPU? Compare state on the A500 and the A1200 at identical
    VBL indices. Do crash and radar sequences block the simulation for a CPU-dependent time?
-5. RNG: does it mix the beam position, and which tasks call it? This decides `CUSTOM3`.
+5. RNG: the beam terms are identified and phase 4 has a CUSTOM3 fixture. Map every
+   calling context and determine whether later cross-CPU windows need further control
+   of drawing-dependent RNG call ordering.
 6. NTSC (left open, as in TD2): record whether the timing assumes 60 Hz, so the open item
    is precise. Validate on PAL only.
 7. Build the state map: position, speed, RPM, gear, heading, lateral position, traffic
@@ -201,7 +235,7 @@ simulation process, stop and revise phases 7 and 9 before writing code.
    `$0689E`, `$068DE`. All target the hook start; no word-aligned direct-branch candidate
    enters either interior. Indirect targets are not statically proven.
 
-   The 1.5b normal and VERIFY builds are identical (no VERIFY instruments yet).
+   The normal 1.5b build is unchanged by the VERIFY-only phase-4 instrumentation.
    `AMIGA_SETUP=a1200-040`: startup, driving demo and attract cycle passed, both helpers
    hit, and debugger checks confirmed return from `_flushcache`, restored registers,
    stack and return PC. MMU trace shows `TC=8000`; PAL, 25 MHz preset, 2 MB chip / 8 MB
@@ -223,7 +257,9 @@ simulation process, stop and revise phases 7 and 9 before writing code.
 Built only with `-DVERIFY`; the normal slave contains none of it. Copy the framework from
 TD2's `simulation-verify.s` and the slave's `IFD VERIFY` config.
 
-1. `CUSTOM3`: reproducible RNG (removes the beam term if phase 5 finds one).
+1. `CUSTOM3`: the fixed seed, beam removal and demo-selection reset are implemented
+   for the phase-4 first-race window. Extend validation to later scripted windows;
+   drawing-dependent RNG call ordering remains to be assessed in phase 5.
 2. `CUSTOM4`: slow drawing only, to prove game time is independent of drawing.
 3. `CUSTOM5` fixtures: a field-based joystick tape injected through the existing
    `read_joydat`/`read_fire1` hooks, a straight acceleration/braking tape, forced crash and

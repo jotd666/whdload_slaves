@@ -118,6 +118,9 @@ args		dc.b	"p",10
 args_end
 	dc.b	0
 slv_config
+	IFD VERIFY
+	dc.b "C3:B:reproducible profiling RNG;"
+	ENDC
 	dc.b	0
 
 ; version xx.slave works
@@ -207,8 +210,28 @@ _patchlist_1:
 	PL_PS	$00541a,read_joydat
     PL_PS   $005402,read_fire1
     PL_PS   $001872,read_fire1
-	
+
+	IFD VERIFY
+	PL_IFC3
+	; Intro RNG call counts vary with CPU speed. Reset at demo selection too,
+	; so all profiling CPUs start with the same car and subsequent RNG state.
+	PL_PS $00230,verify_demo_rng
+	; Keep the game's LCG and register semantics; remove the beam operand.
+	PL_L $05314,$397C1234      ; move.w #$1234,-25640(a4)
+	PL_L $05318,$9BD84E71      ; displaced extension + nop
+	PL_W $05334,$4240          ; clr.w d0, preserving its high word
+	PL_NOP $05336,4            ; replace remaining VHPOSR address words
+	PL_ENDIF
+	ENDC
 	PL_END
+
+	IFD VERIFY
+verify_demo_rng:
+	move.w #$1234,-25640(a4)
+	jsr -32442(a4)            ; displaced TD:$230, original RNG entry
+	swap d0                  ; displaced TD:$234
+	rts
+	ENDC
 
 ; The Aztec overlay manager rewrites executable BSR/JMP stubs in the data
 ; hunk after DOS LoadSeg has flushed the caches. Flush again after both
