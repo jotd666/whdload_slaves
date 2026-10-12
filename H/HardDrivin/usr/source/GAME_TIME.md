@@ -1316,3 +1316,61 @@ constant-input control has 38 swaps (3.794 FPS, 263.577 ms). This is not final
 performance acceptance or an isolated recording-cost measurement: the new run
 includes 19 crash fields and also contains the long-event changes absent from
 the earlier CPU-policy diagnostic. No oversized-interval fallback occurs.
+
+
+### Velocity storage audit and controlled braking
+
+The wide scaling helpers do not widen native velocity storage. Forward velocity
+G($9928) is still written by ADD.W at `$b8a6`; falling velocity G($990e) is written
+by ADD.W at `$ccc6` and ADDQ.W at `$cd82` (replaced by scaled hooks). All static
+references in the decompressed disassembly were reviewed:
+
+| State | Other direct writers | Relevant consumers |
+| --- | --- | --- |
+| G($9928), signed word | Zero at `$59c6`, `$bcc8`, `$bda6`, `$108d8`, `$10a88`, `$11804` | Steering `$b3b2`; velocity projection `$b512`; force/drag `$b6c0..$b840`; speed/RPM `$b8b2`; collision `$bc24`; race/Phantom checks |
+| G($990e), signed word | Zero at `$cc90`, `$cccc`, `$108c0` | Height integration `$b5f2`; hard-landing threshold `$cc42` |
+
+Existing initialization, collision, contact and recovery hooks clear the
+fractional companions around those reset paths. This static list is not proof
+against every possible indirect writer. Several consumers construct 1.5 times
+the forward velocity in a word; widening only the integration store would not
+make the rest of the native solver support arbitrary larger velocities.
+
+`VERIFY_STEPINPUT_BRAKE=N` adds an input-only diagnostic to VERIFY_STEPINPUT.
+It holds throttle until race field N, then holds both buttons (native braking).
+VBL publication and controls entry use the same field-indexed input. It cannot
+be combined with STEPINPUT_RAMP. No pose, velocity, gear or force is injected.
+The existing builds are byte-identical when the new flag is absent.
+
+The 800-field braking captures use N=250. Every observed velocity write matches
+its captured rate, field interval and signed carry:
+
+| Capture | Forward updates | Forward range | Maximum interval | Word overflows |
+| --- | ---: | ---: | ---: | ---: |
+| s4-brake-original, CUSTOM1 off | 66 | 0..191 | Native step | 0 |
+| s4-brake-a500 | 61 | -8..282 | 16 fields | 0 |
+| s4-brake-020 | 245 | -5..281 | 4 fields | 0 |
+
+The A500 first consumes the brake at captured field262, versus250 on the 68020:
+inputs are sampled per frame, so the slower renderer responds later. At field583
+the A500 goes from27 to-8 with a12-field interval and rate-23. The recorded force
+components are drag1, brake18, slope4 and drive0. It settles at-5. The 68020 reaches
+zero at field578 and then also rolls back to-5 under the slope force. The original
+stops on flat ground farther back, with slope0. Thus a blanket zero clamp would
+remove real slope motion, and these different-scene captures do not isolate a
+braking-force error or establish the braking-distance acceptance.
+
+The full field-indexed tape capture `s4-velocity-tape` covers6000 fields with no
+STEPINPUT override. It verifies588 forward updates (range0..327, intervals up to
+19 fields) and20 falling updates (range4..28, intervals up to12 fields), with no
+word overflow. All captured values and fractional companions match the model.
+This is writer evidence, not proof that the complete world state follows the
+original route or matches other machines at equal elapsed time.
+
+No velocity clamp or storage change follows from these measurements. Safety for
+arbitrary unsigned-word intervals is still unproven: for example, scaling rate40
+from velocity0 over65535 fields produces327675 before a native word store, which
+would wrap to-5. Falling rate5 produces40959 and would also wrap. Safe handling of
+such intervals needs a solver/consumer policy, not merely a wider intermediate.
+The ordinary slave and the existing CPU-policy runtime remain byte-identical
+when the braking fixture is disabled.

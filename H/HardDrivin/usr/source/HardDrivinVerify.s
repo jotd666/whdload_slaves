@@ -1,7 +1,8 @@
 ; VERIFY_DRIVE only. SPS 0126 native input tape, indexed by PAL fields.
 ; Build with -DVERIFY_DRIVE=1; mutually exclusive with VERIFY_ATTRACT.
 ; Optional VERIFY_STEPINPUT replaces race input with a per-pass constant-input
-; coupling control. It is not the A/B tape; see GAME_TIME.md.
+; coupling control. VERIFY_STEPINPUT_BRAKE selects its braking field. These
+; are not the A/B tape; see GAME_TIME.md.
 ; Calibrated on deterministic PAL A500/68000, 512K Chip + 1536K slow,
 ; no Fast RAM, PRELOAD, CUSTOM2=0 and both host input ports disabled.
 ; Other CPU/memory profiles need validation; field-indexed input does not
@@ -127,6 +128,9 @@ _verify_drive_vbl:
 .constant:
 	move.l #(VERIFY_STEPINPUT_X<<16)|200,-$6a06(a4)
 	move.w #4,-$6a0a(a4)
+	IFD VERIFY_STEPINPUT_BRAKE
+	bsr _verify_step_brake_buttons
+	ENDC
 	IFD VERIFY_STEPINPUT_RAMP
 	bsr _verify_step_ramp_buttons
 	ENDC
@@ -182,6 +186,9 @@ _verify_step_input:
 	ENDC
 	move.l #(VERIFY_STEPINPUT_X<<16)|200,-$6a06(a4)
 	move.w #4,-$6a0a(a4)
+	IFD VERIFY_STEPINPUT_BRAKE
+	bsr _verify_step_brake_buttons
+	ENDC
 	IFD VERIFY_STEPINPUT_RAMP
 	bsr _verify_step_ramp_buttons
 	ENDC
@@ -502,4 +509,19 @@ _verify_replay_pause_key:
 	rts
 .state: dc.w 0
 	dc.l 0
+	ENDC
+
+	IFD VERIFY_STEPINPUT_BRAKE
+; Input-only braking diagnostic: hold throttle, then both buttons from the
+; requested race field onward. VBL and controls publish the same held input.
+; This is separate from the frozen VERIFY_DRIVE acceptance tape.
+_verify_step_brake_buttons:
+	move.l a0,-(a7)
+	lea _verify_drive_state(pc),a0
+	cmpi.l #VERIFY_STEPINPUT_BRAKE,4(a0)
+	blo.s .done
+	move.w #5,-$6a0a(a4)
+.done:
+	movea.l (a7)+,a0
+	rts
 	ENDC
