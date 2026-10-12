@@ -279,6 +279,25 @@ comparison and keyboard transitions use
 `python3 -B ../../R/RedBaron/tools/artwork_verify.py 040 <new-output> --transitions`.
 VERIFY timings are not performance evidence. Run one owned emulator at a time.
 
+## Direct scene viewport development (2026-10-12)
+
+User-authorized scene follow-up, developer/VERIFY bit 20 only; normal mask is
+unchanged pending measurement. Native scene setup/clip remain. Direct rectangles
+and lines write all five colours, polygon coverage is traversed once for all
+planes, and uncommon primitives retain the compatibility kernel. The guarded
+full-width viewport has a native background clear, so no inbound screen copy is
+performed. Only its rows are published to Chip RAM; scratch is not exported.
+
+`scene-direct-twin-060-1` passes one native pixel comparison per direct primitive
+(rectangle, line, polygon merge; result bits 7, count 3), over the same input
+pixels. Final flight screenshot inspected. The capture driver's first attempt
+to save the passing result used an unquoted absolute path; it was saved from the
+same paused session with a relative path, without rerunning the guest. These are
+bounded primitive twins, not performance evidence or a world-state replay.
+Three host tests cover randomized fills, line octants/ties and five-plane merges.
+All 539 host tests and 122 hook ranges pass. The first frozen 060 performance
+pair is pending.
+
 ## Completion scoreboard
 
 This is the single results table for `completion-plan.md` A–F. “Pending”

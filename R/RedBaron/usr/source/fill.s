@@ -43,6 +43,7 @@ fill_setup:
 	bne.b .masked
 	move.w #$01fa,d4
 .masked
+fill_setup_custom:
 	lea $dff000,a0
 	rts
 

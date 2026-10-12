@@ -53,3 +53,13 @@ All six CPU timings and bounded native/view/firing validation are in
 existing draw order. Full cockpit persistence would additionally need scene
 exclusion and narrower dashboard/instrument updates; those are not implemented
 by this static-artwork fix. D5 remains postponed.
+
+## Active: scene drawing structure
+
+User-authorized follow-up. Developer/VERIFY bit 20 now contains a private Fast
+RAM viewport candidate: direct five-plane rectangles and lines, one coverage
+traversal for polygon colour, no inbound page/scratch copy, and one outbound
+viewport publication. Native clipping and polygon coverage generation remain;
+uncommon operations use a compatibility kernel. Three bounded native primitive
+pixel twins pass on 060. Performance and transition validation are pending;
+bit 20 is not in the normal verified mask. D5 remains postponed.

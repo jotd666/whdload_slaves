@@ -88,7 +88,7 @@ slv_config
 	dc.b "C2:X:Sound queue:10;C2:X:Sound no-op removal:11;C2:X:Sound volume:12;"
 	dc.b "C2:X:Consistent game speed:13;"
 	dc.b "C2:X:Larger game fast-memory pool:16;"
-	dc.b "C2:X:Instruction cache policy:17;C2:X:Persistent gauges:18;C2:X:Sparse cockpit artwork:19;"
+	dc.b "C2:X:Instruction cache policy:17;C2:X:Persistent gauges:18;C2:X:Sparse cockpit artwork:19;C2:X:Direct scene raster:20;"
 	ELSE
 	IFD DEVELOPER
 	dc.b "C2:X:Table mirror:0;C2:X:Cached mirror:1;"
@@ -98,7 +98,7 @@ slv_config
 	dc.b "C2:X:Sound queue:10;C2:X:Sound no-op removal:11;C2:X:Sound volume:12;"
 	dc.b "C2:X:Consistent game speed:13;"
 	dc.b "C2:X:Larger game fast-memory pool:16;"
-	dc.b "C2:X:Instruction cache policy:17;C2:X:Persistent gauges:18;C2:X:Sparse cockpit artwork:19;"
+	dc.b "C2:X:Instruction cache policy:17;C2:X:Persistent gauges:18;C2:X:Sparse cockpit artwork:19;C2:X:Direct scene raster:20;"
 	ELSE
 	dc.b "C2:L:Faster rendering:On,Off;"
 	ENDC
@@ -660,6 +660,13 @@ tape_sim_key_bridge:
 	include "artwork-cache.s"
 	include "artwork-solid.s"
 	include "artwork-front.s"
+	include "scene-frame.s"
+	include "scene-primitives.s"
+	include "scene-raster.i"
+	include "scene-compat.i"
+	IFD VERIFY
+	include "scene-twin.s"
+	ENDC
 	IFD VERIFY
 time_message_log: dcb.b 24*128,0
 fill_twin_before: dcb.b 20*256*2,0

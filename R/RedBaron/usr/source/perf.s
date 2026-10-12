@@ -1,8 +1,8 @@
 ; Performance patch framework. Only sim v1 calls this module's installer.
 ; No feature is release-enabled until its model, twin and measurements pass.
 PERF_VERIFIED_MASK = $f1fff ; W1-W5, B1/B2, C3, gauges and artwork; each has its CPU gate
-PERF_DEVELOPER_MASK = $f3fff
-PERF_VERIFY_MASK = $f7fff ; developer W6 plus VERIFY-only quiescent overlay probe bit 14
+PERF_DEVELOPER_MASK = $1f3fff
+PERF_VERIFY_MASK = $1f7fff ; developer W6 plus VERIFY-only quiescent overlay probe bit 14
 
 perf_read_options:
 	movem.l d0-a6,-(sp)
@@ -58,7 +58,12 @@ perf_read_options:
 	andi.l #$8c,d1
 	bne .artwork_cpu_ready
 	bclr #19,d0
+	bclr #20,d0
 .artwork_cpu_ready
+	btst #20,d0
+	beq .scene_dependencies_ready
+	bset #7,d0 ; private rectangle setup uses the verified D1 entry
+.scene_dependencies_ready
 	btst #19,d0
 	beq .artwork_ready
 	bset #14,d0
@@ -200,6 +205,13 @@ perf_apply_v1:
 	adda.l #ovlife_install-.life_base,a0
 	jsr (a0)
 .artwork_done
+	btst #4,perf_mask+1(pc)
+	beq .scene_done
+	lea .scene_base(pc),a0
+.scene_base
+	adda.l #scene_frame_install-.scene_base,a0
+	jsr (a0)
+.scene_done
 	rts
 
 ; Check a non-relocated hook range before installing it.
