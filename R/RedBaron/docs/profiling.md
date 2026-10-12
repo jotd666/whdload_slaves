@@ -58,7 +58,66 @@ rate. Bit 13 already supplies fixed ticks, interpolation and the one-field
 cap. This trial does not put W6 in the normal mask or complete postponed D5.
 The user approved both this trial and subsequent exact geometry processing
 optimization, in either order. Geometry comparisons will use W6 to expose
-savings hidden by the normal two-field cap. Results follow below when complete.
+savings hidden by the normal two-field cap. The completed W6 results follow; geometry evaluation is in progress.
+
+### FC6 W6 trial: complete; 50 FPS not reached
+
+One frozen developer binary for all four cases, SHA-256
+`7148764be23e82f999b99b2e6f0359df88b987712010d8ab19caafbd7b330e39`.
+Maximum detail, Time Scale 40, 2,000 PAL fields followed by 250 held-right-bank
+fields. The enabled path uses the existing 225-unit world quantum, interpolation
+and one-field cap. No guest instrumentation is installed for these timings.
+
+| Configuration | Level FPS W6 off → on | Bank FPS off → on | W6 world / wall rate, level | Dropped steps | FC6 status |
+|---|---:|---:|---:|---:|---|
+| 68000 / A500 | — | — | — | — | Outside this fast-CPU trial; prior scoreboard retained |
+| 020 / A1200 | — | — | — | — | Outside this trial; prior scoreboard retained |
+| 030/50 MMU | — | — | — | — | Prior scoreboard retained |
+| 030/50 NOMMU | — | — | — | — | Prior scoreboard retained |
+| 040/25 NOMMU | 24.012 → 18.321 | 24.960 → 18.171 | 0.998656 | 0 | Correct bounded rate; misses every-field cadence |
+| 060/50 NOMMU | 24.012 → 19.594 | 24.960 → 19.369 | 0.998656 | 0 | Correct bounded rate; misses every-field cadence |
+
+Both level windows completed 326 world updates over 2,367 CIA ticks, F=33.
+The one-update endpoint uncertainty is ±0.003063 in the rate ratio. Both short
+bank windows completed 40 updates over 295 ticks: ratio 0.983183 with one-tick
+uncertainty ±0.024580, and no drops. These are counter/rate checks, not renewed
+D5 gameplay acceptance or proof across all Time Scale settings.
+
+040 level publication gaps: 252 × two fields, 434 × three, 46 × four, one ×
+five. 060: 402 × two, 337 × three, 45 × four. Neither records a one-field gap;
+neither passes the 50 FPS cadence requirement. Every recorded publication
+avoids lines 41–43. This is the copper-pointer guard check, not a new DMA or
+full display-ownership proof. The lower FPS is the measured W6 workload result;
+this comparison does not isolate interpolation cost from changed simulation
+steps, poses or rendering workload.
+
+Evidence: `fc6-w6-040-off`, `fc6-w6-040-on-r2`, and
+`fc6-w6-060-{off,on}`. The first 040 on-attempt stopped before measurement:
+F10 was left in the native menu queue. The driver now enters flight and uses
+the established hardware IRQ F10 transition before setting preferences.
+The corrected run and the 060 route pass. The reporter rejects incomplete
+windows, flight exits, missing publications and unsafe pickup positions;
+three deliberate corruptions are covered by its host tests.
+
+**Disposition:** retain W6 as the existing developer option; do not enable it
+in the normal mask or claim 50 FPS. D5 remains postponed. Geometry evaluation
+follows under W6. These FS-UAE 040/060 results do not establish physical
+accelerator throughput; the emulator limitation in `rendering-analysis.md`
+still applies.
+
+Manual trial from the initialized harness (choose a fresh output name):
+
+```sh
+BENCH_DEVELOPER=1 BENCH_BATCH_KEYS=1 \
+python3 -B ../../R/RedBaron/tools/scene_profile_case.py \
+  060 0x1ff2ffa tmp/prof/manual-w6-060 --fields 2000 --groups rate --bank-after 250
+```
+
+Use 040 with `0x17f2ffa` for that CPU. For an A/B, freeze both the developer
+slave and its listing and set `BENCH_FROZEN_SLAVE` to that copy for both runs;
+clear bit 13 for the off mask and use `--groups fps`. `rate.json` and the bank
+subdirectory record simulation rate and publication cadence. Runtime addresses
+are confined to ignored capture metadata.
 
 ## FC5 — changed viewport copying: dropped (2026-10-12)
 

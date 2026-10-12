@@ -31,7 +31,15 @@ run('tools/completion_keys.py',hex(ps),'ps',*(['return']*4+['tab']*4+['return','
 import ast,struct
 s=ast.parse(Path('tools/completion_boot.py').read_text());fn=next(n for n in s.body if isinstance(n,ast.FunctionDef) and n.name=='locate');exec(compile(ast.Module(body=[fn],type_ignores=[]),'locate','exec'))
 sim=locate('sim',0x1ef92,[0x309cc,0x30a4e,0x30aec])
-run('tools/completion_keys.py',hex(sim),'sim','tab','return','f10','--polls','1')
+run('tools/completion_keys.py',hex(sim),'sim','tab','return','--polls','1')
+if a.mask & (1<<13) and ready['environment']['DEVELOPER']=='1':
+ # W6 consumes hardware keyboard transitions in flight, not the menu queue.
+ # Enter flight first, then use the established D5 native IRQ F10 route.
+ r.command(f'until {sim+0x21d30:#x}')
+ run(TRACKED/'completion_host_input.py',f'irq-down:{sim},200588,89')
+ r.command(f'until {sim+0x1fb3a:#x}')
+ run(TRACKED/'completion_host_input.py',f'irq-up:{sim},200588,89')
+else:run('tools/completion_keys.py',hex(sim),'sim','f10','--polls','1')
 keys=['tab']*5+['return']+['right']*20+['return','tab','return']+['right']*20+['return','tab','return']+['tab']*5+['return']
 run('tools/completion_keys.py',hex(sim),'sim',*keys)
 r.command(f'until {sim+0x21d30:#x}')
