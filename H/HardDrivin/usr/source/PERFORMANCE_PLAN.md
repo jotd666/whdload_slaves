@@ -325,6 +325,10 @@ Tools stay in ignored `tmp/dev/tools`.
      by duration rather than by 90 frames, and play back by elapsed time,
      interpolating between entries.
    - The attract route's per-pass phase (`$0d54c`, phase /10) advances by T.
+   - Equal-endpoint replay interpolation now preserves complete record output
+     while reducing measured recording time from 252.625 to 157.397 ms in a
+     ten-second A500 reference window. Both builds still produce 34 swaps;
+     this is a recording-cost reduction, not a pass of the FPS gate.
 6. **Remove the need for CUSTOM2 when CUSTOM1 is on.** Leave CUSTOM2 working, and
    unchanged, when CUSTOM1 is off.
 7. **Validate.**

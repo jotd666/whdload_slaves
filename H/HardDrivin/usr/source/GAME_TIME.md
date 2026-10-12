@@ -1441,12 +1441,70 @@ replacement, ring wrap and natural playback exit with pause. They do not yet
 validate an eligibility gap, replay abort, every recovery/reset path or the full
 cross-machine driving tape. The rendering/handling acceptance remains open.
 
-The final recording runtime's `s4-record-cost` 500-field A500 diagnostic has
+The earlier pre-reference `s4-record-cost` 500-field A500 diagnostic has
 37 swaps and 37 physics calls: 3.694 FPS, 270.701 ms per frame. The original
 constant-input control has 38 swaps (3.794 FPS, 263.577 ms). This is not final
 performance acceptance or an isolated recording-cost measurement: the new run
 includes 19 crash fields and also contains the long-event changes absent from
 the earlier CPU-policy diagnostic. No oversized-interval fallback occurs.
+
+
+#### Equal-endpoint interpolation cost
+
+The gated recorder now returns an unchanged word directly when both interpolation
+endpoints agree. Equal angle endpoints skip the weighted interpolation but still
+run the existing angle normalization. Unequal endpoints, right-endpoint copies,
+packed pitch flags, sample times and ring transactions retain their previous
+behavior. The unsigned helper's callers consume only D0.W; D1/D3 and CCR are
+scratch, and the outer recording hook still restores its native X behavior.
+The two shortcuts add eight bytes to the reference slave.
+
+An isolated comparison executes both the previous and optimized assembled 68000
+routines on 1,280 complete records, checking 101,120 result words against an
+independent rational model. It covers equal and unequal signed/unsigned values,
+angle seams, equal out-of-range angles, packed flags and denominators through
+65535, with preserved caller
+registers, stack and output guards. All records match exactly.
+
+Fresh ten-second A500 traces use the same constant-accelerator fixture and full
+optional drivetrain reference (`s4-recordcost-before/after`, 500 PAL fields each).
+Complete recording costs exclude interrupt-stack execution; nested routine
+costs must not be added to their parent:
+
+| Routine | Before calls / total ms | After calls / total ms |
+| --- | ---: | ---: |
+| Recording transaction | 32 / 252.625 | 32 / 157.397 |
+| Record interpolation | 54 / 226.041 | 55 / 130.728 |
+| Angle interpolation | 1950 / 123.157 | 2067 / 42.718 |
+| Unsigned interpolation | 3950 / 135.505 | 2417 / 62.099 |
+
+Complete recording time falls by 95.228 ms (37.70%) in these windows. Different
+frame timings alter interpolation counts and trajectories, so the table is a
+measured window comparison, not a claim of identical operands at every call.
+Both traces still produce 34 swaps: 3.394588 FPS, 294.587 ms/frame. No rendering
+FPS gain or pass of the original 3% performance gate is claimed. The independent
+windows have 34 versus 35 completed physics calls and 4 versus 10 crash fields,
+so they are not equal-scene workloads. Instruction coverage exceeds 99.99998% in both traces.
+
+The optimized A500 recording capture (`s4-record-equal-live`) checks all 46
+transactions, every ring byte, captured player/traffic endpoints and the write
+pointer. Thirty-two transactions emit multiple samples (up to three); a collision
+replaces two samples in one repeated transaction. It emits 78 samples over 622
+eligible fields, including 75 fractional samples. These checks use the actual
+profiled build without embedded math buffers; the independent assembled test
+supplies the arithmetic edge coverage above.
+
+The 68020 companion (`s4-record-equal-live-020`) likewise matches all 188
+transactions: 80 emitted samples over 633 eligible fields, 59 fractional samples
+and one collision replacement. Independent front-pointer captures reproduce all
+34 swap fields in each instruction trace after converting their documented
+field-index origins. The optimized A500 runs one full physics pass per frame,
+with no oversized fallback or repeated engine-pitch publication.
+
+The normal build remains byte-identical to the baseline, CUSTOM1-off passes all
+154 declared range checks with only the input fixture enabled, and the existing
+132-range branch audit passes. This exact recording optimization does not change
+physics policy or resolve the remaining step-4 handling and performance gates.
 
 
 ### Velocity storage audit and controlled braking

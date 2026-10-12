@@ -258,6 +258,9 @@ _record_signed_word:
 _record_angle_word:
 	move.w (a0)+,d0
 	move.w (a1)+,d1
+	; Equal endpoints still need the native angle normalization below.
+	cmp.w d0,d1
+	beq.s .normalize
 	move.w d1,d3
 	sub.w d0,d3
 	cmpi.w #720,d3
@@ -270,6 +273,7 @@ _record_angle_word:
 	addi.w #1440,d1
 .lerp:
 	bsr _record_lerp_signed
+.normalize:
 	cmpi.w #720,d0
 	ble.s .low
 	subi.w #1440,d0
@@ -281,12 +285,17 @@ _record_angle_word:
 	move.w d0,(a2)+
 	rts
 _record_lerp_unsigned:
+	; A weighted mean of identical words is that word for every valid weight.
+	; Callers consume D0.W only; D1/D3 and CCR are scratch.
+	cmp.w d0,d1
+	beq.s .equal
 	move.w d6,d3
 	sub.w d2,d3
 	mulu.w d3,d0
 	mulu.w d2,d1
 	add.l d1,d0
 	divu.w d6,d0
+.equal:
 	rts
 _record_lerp_signed:
 	; Bias both endpoints into 0..65535. Their weighted mean has the same
