@@ -503,7 +503,7 @@ upstream publication remain a separate follow-up.
   A full-cycle native regression replaces the earlier endpoint-only continuity
   check: at lane offsets +/-180 the isolated drift is 17.147 pixels before
   and less than 0.042 pixels after; centred-road scanlines are unchanged.
-- All 82 declared patch ranges and direct incoming/bypassed-tail audits pass.
+- All 84 display/optional patch ranges and direct incoming/bypassed-tail audits pass.
   C2-off retains original optional-patch bytes. Static audits do not prove
   indirect targets.
 - 668 simulation and 1,421 renderer assertions pass. All 20 combinations of
@@ -567,6 +567,16 @@ is 2.980% in the 50-field sample, below the existing 3% gate. Local
 downhill model matches 40 main / 30 mirror rows and ten traffic projections;
 the original-arithmetic zero oracle also passes. A1200/68040 C2-off/on startup,
 attract driving and native quit pass in emulation.
+
+The analogue rev counters now stop at their last numbered marks (Porsche/Lotus
+7000, Ferrari 10000, Countach 9000 RPM), including with C2 disabled. This limits
+display lookup only: engine RPM, damage threshold and over-rev event timing are
+unchanged. The Corvette digital display keeps its original path. The per-car
+selection and display hooks are h4:$82A2/$42A0; the common overlay exit installs
+them before the cache flush and optional enhancement hooks. Local
+`docs/rpm-needle.md` records neutral/in-gear reproduction, all five dashboards,
+327680 native clamp cases and release C2-off/on startup, attract and quit checks.
+The original dial artwork and drawing routine are unchanged.
 
 ## Phase 12: lessons back to AmigaXDev
 

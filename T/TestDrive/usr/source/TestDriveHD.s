@@ -283,6 +283,7 @@ overlay_load_end:
 	IFD VERIFY
     bsr verify_overlay_loaded
 	ENDC
+    bsr instrument_overlay_loaded
     bsr sim_overlay_loaded
     bsr _flushcache
     rts
@@ -565,6 +566,59 @@ old_kbint:
 _trdname:
 	dc.b	"trackdisk.device",0
 	even
+
+; The analogue dial tables continue around a full circle, beyond the printed
+; scale. Stop at the last numbered mark; limit only displayed RPM; engine speed and over-rev damage stay
+; original. Install for both C2 modes and reapply after every h4 reload.
+instrument_overlay_loaded:
+    movem.l d0-a6,-(sp)
+    move.l sim_data(pc),a0
+    cmp.w #$4ef9,668(a0)
+    bne.b .done
+    move.l 670(a0),a1
+    cmp.l #$4e55ffcc,(a1)
+    bne.b .done
+    cmp.l #$302c991c,$42a0(a1)
+    bne.b .done
+    lea instrument_patches(pc),a0
+    move.l _resload(pc),a2
+    jsr resload_Patch(a2)
+.done
+    movem.l (sp)+,d0-a6
+    rts
+instrument_patches:
+    PL_START
+    ; SIM_RANGE h4 082a2 6 ALL instrument_car
+    PL_PS $082a2,instrument_car
+    ; SIM_RANGE h4 042a0 8 ALL instrument_rpm
+    PL_PSS $042a0,instrument_rpm,2
+    PL_END
+instrument_car:
+    move.w 8(a5),d0           ; displaced car selection, also used by caller
+    move.l a0,-(sp)
+    lea instrument_limits(pc),a0
+    cmp.w #4,d0
+    bhi.b .done
+    add.w d0,d0
+    move.w (a0,d0.w),d0
+    lea instrument_limit(pc),a0
+    move.w d0,(a0)
+.done
+    move.l (sp)+,a0
+    move.w 8(a5),d0
+    ext.l d0                 ; displaced sign extension and flags
+    rts
+instrument_rpm:
+    move.w -26340(a4),d0
+    cmp.w instrument_limit(pc),d0
+    ble.b .done
+    move.w instrument_limit(pc),d0
+.done
+    cmp.w -26328(a4),d0       ; displaced comparison; original low clamp follows
+    rts
+instrument_limits:
+    dc.w 7000,10000,7000,9000,0 ; Porsche, Ferrari, Lotus, Countach, digital Vette
+instrument_limit: dc.w 7000
 
 ;============================================================================
 
