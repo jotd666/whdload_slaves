@@ -3253,3 +3253,47 @@ update. The successful retry uses the same slave and emulator hashes.
 The reference remains optional and its performance gate remains open. This exact
 flat-road comparison does not validate the regular solver, braking, steering,
 contacts, loop/jump behavior, native BCD recovery compatibility or human laps.
+
+
+## Exact eight-field reference boundary
+
+The previous controlled-initial-state matrix did not exercise an eight-field
+interval. The optional reference explicitly uses the native engine/position pair
+at exactly eight fields, while seven and nine fields use its one-field recurrence.
+This is a measured handling discontinuity, not a universal fine-model equivalence.
+
+`VERIFY_DISPATCH_TEST_FIELDS=1..65535` now overrides each outer gameplay interval
+before dispatch. It requires TIME_DISPATCH and conflicts with DISPATCH_NATIVE.
+Unlike DISPATCH_NATIVE it selects no compatibility bypass elsewhere in the solver.
+The dispatcher still applies its CPU-specific subdivision policy. This instrument
+uses synthetic consumed time; native clocks and VBL observations are unchanged.
+Its output must not be used as an elapsed-wall-time or FPS benchmark.
+
+Three A500 captures, `s4-boundary-7`, `s4-boundary-8` and `s4-boundary-9`, each
+observe 160 actual fields with the full optional reference and INITIAL_THROTTLE22
+fixture. Read-only entry checks verify identical stationary pose, zero velocity,
+zero RPM, first gear and automatic transmission. The subsequent flat-road returns
+retain throttle22, neutral controls, heading360 and full road contact.
+
+| Synthetic interval | Moving returns | First velocity | First displacement, native long units | Model |
+| --- | ---: | ---: | ---: | --- |
+| 7 fields | 5 | 35 | 48.75 | Exact one-field recurrence |
+| 8 fields | 6 | 40 | 60 | Exact native eight-field recurrence |
+| 9 fields | 5 | 43.875 | 70.390625 | Exact one-field recurrence |
+
+All ten seven/nine-field returns match the independent fine model in fractional
+velocity, gear and full Q16 position. All six eight-field returns match the
+independent coarse model, and differ from the fine model. From the same initial
+state, the first eight-field update gives velocity40 rather than39.625 and
+position increment60 rather than59.328125. After16 consumed fields, velocity is74
+rather than67.625. Thus this is not merely discarded fractional position.
+Reports are the adjacent runs' `initialized-motion.json` and the eight-field run's
+`boundary-comparison.json`, with raw observations and initial-state reports retained.
+
+Removing the eight-field special case would invalidate the plan's native-step
+compatibility requirement. Keeping it does not give a consistent one-field model
+across frame lengths. A handling-target decision or a redesign preserving native
+step boundaries is needed before the reference can become the accepted integrator.
+No gameplay branch or acceptance criterion was changed by this diagnostic.
+The normal slave remains byte-identical to the baseline; missing dispatcher,
+native-mode conflict, zero and65536 diagnostic intervals all fail assembly.

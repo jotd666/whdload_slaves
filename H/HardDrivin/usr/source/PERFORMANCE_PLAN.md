@@ -413,6 +413,15 @@ Tools stay in ignored `tmp/dev/tools`.
      from the feedback controller: all 762 moving returns across seven profiles
      plus slowed A500 drawing match an independent one-field model in fractional
      velocity, gear and position, including both upshifts. See GAME_TIME.md.
+     A subsequent forced-interval boundary check finds a limitation of that
+     comparison: seven/nine-field frames follow the fine reference exactly, but
+     eight-field frames deliberately follow the original coarse update. From the
+     same controlled start, two eight-field frames give velocity74 versus67.625
+     for sixteen fine ticks. The earlier matrix did not cover this boundary.
+     Resolving the handling target while preserving the native-step requirement
+     remains open; see GAME_TIME.md. The new VERIFY_DISPATCH_TEST_FIELDS fixture
+     overrides elapsed intervals without selecting native compatibility bypasses;
+     its synthetic time is not performance or wall-time acceptance evidence.
      This is not the unchanged driving tape and does not resolve equal-wall-time
      handling, native-clock compatibility or the performance gate.
    - Exercise collisions, the loop and the jump at both T extremes; check for

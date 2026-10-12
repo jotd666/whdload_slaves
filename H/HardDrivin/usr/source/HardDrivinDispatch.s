@@ -77,6 +77,12 @@ _dispatch_cpu_oversized: dc.l 0
 ; Called with D0 elapsed fields, preserving all registers and X at outer wrapper.
 _dispatch_begin:
 	movem.l d0-d2/a0-a1,-(a7)
+	IFD VERIFY_DISPATCH_TEST_FIELDS
+	; Diagnostic interval override exercises the actual elapsed-time paths.
+	; Unlike VERIFY_DISPATCH_NATIVE, it does not select compatibility bypasses.
+	; This synthetic time is not a wall-time or performance measurement.
+	move.l #VERIFY_DISPATCH_TEST_FIELDS,d0
+	ENDC
 	lea _dispatch_state(pc),a0
 	move.l d0,DS_FRAME_FIELDS(a0)
 	move.l d0,DS_PENDING(a0)
