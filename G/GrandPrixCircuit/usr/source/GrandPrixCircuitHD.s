@@ -84,9 +84,12 @@ DECL_VERSION:MACRO
 assign
 	dc.b	"GrandPrixCircuit",0
 
-; No player-facing option until an optional patch is implemented.
+; No player-facing performance option until an optional patch is implemented.
 ; CUSTOM2=0 (or omitted) retains the original game.
 slv_config
+	IFD VERIFY
+	dc.b "C3:B:Reproducible RNG;C5:B:Scripted joystick verification;"
+	ENDC
 	dc.b	0
 
 slv_name		dc.b	"Grand Prix Circuit"
@@ -271,6 +274,9 @@ patch_main
 	move.l #1,(a3)
 	ENDC
 	jsr resload_PatchSeg(a2)
+	IFD VERIFY
+	bsr verify_cache_state
+	ENDC
 	bra.b .done
 
 .legacy
@@ -294,23 +300,38 @@ patch_main
 	movem.l (a7)+,d0-a6
 	rts
 
-; Same patches as JOTD; no simulation, rendering or timing changes.
+; Normal build: JOTD patches only. VERIFY adds opt-in measurement fixtures.
 pl_main_v1
 	PL_START
+	IFD VERIFY
+	PL_IFC3
+	PL_W $c12c,$7200
+	PL_NOP $c12e,4
+	PL_ENDIF
+	PL_PS $707a,verify_race_start
+	PL_IFC5
+	PL_PS $c1de,verify_read_joydat
+	PL_ENDIF
+	ENDC
 	PL_NEXT pl_section0
 pl_main_v1_sr
 	PL_START
+	IFD VERIFY
+; Route 68010+ through the fixtures; retain the normal chain byte-for-byte.
+	PL_W $0ac2c,$42e7
+	PL_W $0ac96,$42e7
+	PL_W $0ace6,$42e7
+	PL_W $0ad36,$42e7
+	PL_W $0ad82,$42e7
+	PL_W $0af12,$42e7
+	PL_W $0af5e,$42e7
+	PL_NEXT pl_main_v1
+	ELSE
 	PL_NEXT pl_sr
+	ENDC
 
 	IFD VERIFY
-; Read-only debugger discovery record. No game hooks or CUSTOM instruments.
-verify_record
-	dc.b "GPCVERIFY",0
-	even
-verify_hunk0
-	dc.l 0
-verify_v1
-	dc.l 0
+	include "verification.s"
 	ENDC
 
 pl_song1

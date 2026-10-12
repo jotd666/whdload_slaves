@@ -19,9 +19,9 @@ tools, docs). The local harness lives in the worktree's ignored `tmp/dev/`.
 - Only v1.0 (the 94 708-byte executable) is supported; other versions keep JOTD's patches.
 
 Addresses below are hunk-0 offsets of `data/GrandPrixCircuit` (file offset = hunk + $28),
-the slave's patch numbering. Static analysis is supplemented by the Phase 0/1 runtime checks below.
+the slave's patch numbering. Static analysis is supplemented by the runtime checks below.
 
-## What we know (static analysis and Phase 0/1 validation)
+## What we know (static analysis and runtime validation)
 
 - Executable: 94 708 bytes, Aztec C small-data (a4 = hunk1 + $7FFE), hunks CODE $E544,
   DATA $8918, BSS $4. `HUNK_OVERLAY` with an empty table. The linked overlay manager starts at h0:d42c
@@ -54,11 +54,12 @@ the slave's patch numbering. Static analysis is supplemented by the Phase 0/1 ru
   keep the original busy loop `PL_PS $174`, protection skips, 68010 `move sr`, and song
   INTREQ/DMACON patches. Empty `slv_config` reserves the structure without advertising an
   unimplemented option. `CUSTOM2` currently has no effect. The vasm Makefile builds normal
-  and VERIFY outputs separately; VERIFY adds only a discovery record, no game hooks.
+  and VERIFY outputs separately; Phase 2 adds VERIFY-only RNG/input instruments. The normal
+  build remains byte-identical to Phase 1.
 
 ## Plan
 
-Each phase ends with a check. Do not start patches before Phase 4 is done (playbook §12).
+Each phase ends with a check. Do not start performance patches before Phase 4 is done (playbook §12).
 
 ### Phase 0 — Harness (complete)
 1. Copy TD2's `amiga/run.sh`, `run-a1200.sh`, `run-68030.sh` into `tmp/dev/amiga/`, adapted
@@ -131,11 +132,10 @@ Each phase ends with a check. Do not start patches before Phase 4 is done (playb
   `tmp/dev/tmp/validation/checks.txt`. Commands and coverage limits are in local
   `tmp/dev/docs/development.md` and `internals.md`.
 - Prepared GPC report/state tools and candidate capture wrappers. The candidate swap
-  marker is h0:039e, VBL entry 772a and first race-loop anchor 7094. These have **not**
-  been validated as performance instruments. No FPS baseline, RNG patch, input tape,
-  simulation patch, renderer patch or Phase 2 measurement has been started.
+  marker was h0:039e, VBL entry 772a and first race-loop anchor 7094. They were not
+  performance-validated in Phase 1; Phase 2 results below supersede that limitation.
 
-### Phase 2 — Measurement setup (not started; playbook §5–§8)
+### Phase 2 — Measurement setup (complete; playbook §5–§8)
 1. Trace the confirmed attract demo or a scripted race start; name every hot region
    with `gpc_report.py`.
 2. Fixed reproducible window: VERIFY `CUSTOM3` removes VHPOSR from the RNG (`c12c`, same patch
@@ -143,6 +143,101 @@ Each phase ends with a check. Do not start patches before Phase 4 is done (playb
    idea, at GPC's joystick read).
 3. Validate the frame counter (full trace vs `SWAP_ONLY` at the LoadView swap).
 4. Baseline fps on A500 (512 chip + 1.5 MB slow), A1200 (68EC020), 68030/25.
+
+#### Phase 2 results and evidence
+
+- Measurement code lives entirely inside `IFD VERIFY` / `verification.s`. `CUSTOM3=1`
+  replaces the six-byte VHPOSR read at h0:c12c with `moveq #0,d1; nop; nop`, keeping the
+  native RNG otherwise intact. `CUSTOM5=1` replaces the six-byte joystick read at c1de.
+  The native field counter drives the tape: accelerate before field 100, up-left 100–105,
+  up-right 106–111, accelerate 112–199, brake 200–299, coast 300–399, then accelerate.
+  Menus before the first race receive neutral input. Fire/keyboard input is not synthesized.
+  The native attract driver remains in control: this establishes capture reproducibility, not handling
+  equivalence or coverage of all player controls. Conditional patch commands require
+  WHDLoad 17.2+ in VERIFY; these measurements use 20.0.
+- The six-byte store at 707a records the native race epoch and replays the original store,
+  preserving registers and X. The first loop at 7094 is armed from CPU reset after a
+  calibration boot; skip 300 native VBL entries at 772a, then discard the partial current
+  field. The 100-field trace covers the start-light transition and initial acceleration;
+  the 1,000-field counter continues through the opening driving section. These are fixed
+  windows, not whole-race averages. All runs use PAL, `DETERMINISTIC=1`, `CUSTOM2=0`,
+  `CUSTOM3=1`, `CUSTOM5=1`, and both joystick devices AND port modes disabled.
+- Calibration now requires a live, initialized VERIFY record. A low-quorum byte search
+  found a false code address before the 68030 game had loaded; those failed boots are
+  excluded. Code/data discovery follows LoadSeg and checks the resident slave's initialized
+  resload pointer, excluding PRELOAD/file copies. Each capture retains its exact slave,
+  options, RAM, epoch, CACR and emulator logs.
+- Two fresh A500 boots match exactly in all 100 instruction/register/cycle records, DMA
+  records and active-pixel images, and the entire data hunk at both boundaries. The expanded
+  A1200 pair passes the same check. No arbitrary game-state bytes are masked;
+  only pointer relocation normalization and the external emulator image border are excluded.
+  The 68030 pair matches all 1,000 swap counts AND the complete before/after 4 MB fast RAM.
+- Full traces and read-only `SWAP_ONLY` counts agree in every one of the first 100 fields
+  on both 68000 and 68EC020. The LoadView site 039e produces exactly one displayed-buffer
+  transition on the following field for all 9 A500 and 22 A1200 publications. DMA fetch
+  addresses identify exactly two bitplane sets. The counter skips the partial field just
+  as the profiler does; starting it at zero instead of -1 would introduce a one-field
+  error. This validates publication counting, not correct ownership of the drawing buffer.
+
+| PAL configuration | 1,000-field baseline | Completed intervals / fields | Actual CACR |
+| --- | ---: | ---: | --- |
+| A500, 68000, 512 KB chip + 1536 KB slow | 5.6402 fps | 111 / 984 | Not present |
+| Expanded A1200, 68EC020, 2 MB chip + 4 MB fast | 14.5226 fps | 289 / 995 | $00000000, caches off |
+| A1200, 68030/25, 2 MB chip + 4 MB fast | 24.6747 fps | 493 / 999 | $00002000, I/D enable bits clear |
+
+FPS is `50 * completed swap intervals / elapsed fields` between the first and last
+publication. The short 100-field trace rates are 4.6512 and 11.4130 fps respectively;
+they must not be mixed with the longer baseline. The 68030 uses real CPU speed,
+multiplier 0, frequency 25,000,000 and cycle-exact mode, without WHDLoad's MMU option.
+Its backend supplies no usable instruction trace, so no CPU-cost figures are claimed.
+These are emulator baselines, not hardware measurements; a stock no-fast-RAM A1200 was
+not part of this requested matrix. Cache policy is unchanged.
+
+| Cost in the 100-field trace | A500 | Expanded A1200 |
+| --- | ---: | ---: |
+| Four-plane span-fill region 8864, self | 21.08% | 17.79% |
+| Span wrapper 883e, self | 12.90% | 8.67% |
+| Shape-blitter region c7f4, self | 8.77% | 16.15% |
+| Line drawer cfd2, self | 4.89% | 5.33% |
+| Rectangle fill cce2, self | 3.07% | 5.23% |
+| Movem clear ce1e, self | 2.47% | 6.56% |
+| Draw scene 729a, inclusive | 76.76% | 81.69% |
+| Road renderer 818c, inclusive | 44.52% | 51.39% |
+| Blitter polling, game + KickEmu | 13.37% | 30.49% |
+| Level-3 IRQ entries (VBL / blitter) | 2133 (100 / 2033) | 5156 (100 / 5056) |
+| Level-3 inclusive IRQ cost | 12.93% | 7.54% |
+| Level-1 entries / cost | 22 / 0.0737% | 21 / 0.0220% |
+| Level-4 entries / cost | 13 / 0.0932% | 14 / 0.0226% |
+| DMA free / CPU / blitter | 26.19 / 37.53 / 5.95% | 45.19 / 9.88 / 14.59% |
+| DMA bitplane / copper / refresh / audio | 28.15 / 0.22 / 1.76 / 0.20% | 28.15 / 0.22 / 1.76 / 0.20% |
+
+No recorded CPU-idle cycles occur. CPU overhead markers account for 0.75% / 0.49% and
+are not mislabelled as handler execution. IRQ cost is tracked from vector entry to RTE,
+not inferred from stack context. Self ownership uses the nearest known entry; inclusive
+ownership follows observed calls. Shared tails and partial calls make these attribution
+estimates, not exact function budgets, and inclusive rows overlap. All game regions above
+1% self are named, including road rows, object attributes/projection and shape-cache work;
+KickEmu waits/clear, Kickstart interrupt/graphics work and WHDLoad interrupt forwarding are
+identified separately. Reports retain the call edges and hottest instructions.
+
+- The joystick audit observed all five raw values over 76 reads through field 451,
+  each matching the field-indexed schedule. With CUSTOM3=0/CUSTOM5=0 the original
+  RNG and joystick bytes are intact; only the VERIFY epoch hook remains.
+- The normal slave is byte-identical to the Phase 1 normal build. The final VERIFY slave
+  SHA-256 is `00d10fd6d6b01f2499e702bf309fcdfb36181916cdc94b77acfd9aa03ce303ba`.
+  The hook audit checks six complete instruction spans, with no direct branch into a
+  replaced instruction. Exact live code checks allow only the three named VERIFY sites,
+  then check all Phase 1 code/JOTD patches and 139 stubs; a corrupted swap instruction is
+  rejected. All 55 pristine game files retain their manifest hashes.
+- Local evidence: `tmp/dev/tmp/prof/phase2-{a500-full1,a500-full2,a500-aligned,
+  a1200-full1,a1200-full2,a1200-swaps,68030-swaps1,68030-swaps2,tape,fixtures-off}`.
+  `metadata.json`, `metrics.json`, `profile.txt`, `frames.txt`, `repeatability.txt`,
+  `tape.json`, debugger transcripts and retained slaves make the checks reviewable.
+  Consolidated checks are in `tmp/dev/tmp/prof/phase2-checks.txt`.
+  Reproduction commands are in `tmp/dev/docs/development.md`; the harness remains ignored.
+- The user observed blinking horizon/building graphics during this work, consistent with
+  the suspected on-screen drawing/buffer-ownership bug. No renderer or swap fix was applied.
+  Confirming causality and fixing it remains Phase 5. Phase 3 has not been started.
 
 ### Phase 3 — Game-time model (playbook §9, `fixed-time-simulation.md`)
 1. Map every time source: -31790, -29930/-29928/-29926, 3730(a4) render deltas, race/lap
@@ -201,7 +296,8 @@ is out of scope unless decided otherwise.
 4. Generic lessons (interrupt-driven simulation, LoadView swap marker) → AmigaXDev docs.
 
 ## Open questions
-- Attract demo confirmed; Phase 2 must establish its repeatable capture window.
+- Attract capture window and publication counter validated in Phase 2; cross-machine
+  simulation/handling equivalence is not yet established.
 - Race/lap clock location and whether it already runs in real time.
 - Does anything (crash, spin, pit) block the VBL step or depend on CPU speed?
 - Overlay question resolved for the supplied v1: dormant manager, no stub rewrites (Phase 1 evidence above).

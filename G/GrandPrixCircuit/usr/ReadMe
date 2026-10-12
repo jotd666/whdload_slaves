@@ -44,7 +44,8 @@
  - version 17 slave header and configuration structure
  - size-checked PatchSeg path for the 94708-byte executable
  - original protection, CPU and music patches retained; no gameplay changes
- - separate VERIFY build with debugger discovery metadata
+ - separate VERIFY build with discovery metadata, RNG pin and joystick fixture
+ - VERIFY-only CUSTOM3/CUSTOM5 require WHDLoad 17.2+ (tested with 20.0)
  - vasm Makefile; no performance option implemented yet
 
  version 1.0 (24.03.08) done by JOTD:
