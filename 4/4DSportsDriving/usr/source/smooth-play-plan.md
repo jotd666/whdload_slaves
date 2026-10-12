@@ -5,6 +5,13 @@ Written 2026-10-11 on HEAD `c70ea93` (branch `4dsportsdriving`). This plan super
 versions remain reference material for addresses and evidence, not a to-do list.
 P1-P6 are complete; the A500 FAST target is deferred and A4000 remains experimental.
 The current slave uses runtime buffer allocation (37184 bytes); see the workspace section below.
+Current release label: 2.0b (13.10.2026). The ReadMe now contains a concise user-facing
+changelog; development evidence remains in this plan. Only version strings changed in
+the binary since the validated runtime-workspace build. Current binary SHA256:
+`586bf4d2d7c13ee3d14f6c76dc0616bf351abe9a53a0ef2cd38f430d258fdb0d`.
+Testing archive: `dist/4DSportsDriving_v2.0b_1461.lha` (926462 bytes), SHA256
+`313dd9db1d85b69025dafbda0ede9acfd0aab37242c4975b9152463f8438dfa5`.
+All 124 members checked; only slave and ReadMe differ from the original pack.
 Current defaults supersede the earlier opt-in policy: PAL 040/060 use A4000,
 020/030 use A2500, and 000/010 use Normal. Valid saved choices still win.
 Historical harness research is preserved in `tmp/dev/docs/.git` at `9311a53`;

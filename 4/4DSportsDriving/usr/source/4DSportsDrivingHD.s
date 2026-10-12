@@ -253,7 +253,7 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.3b (13.10.2026)"
+	dc.b	"2.0b (13.10.2026)"
 	ENDM
 
 	dc.b	"$","VER: slave "

@@ -39,89 +39,25 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 1.3b (13.10.2026):
- - simulation, history and replay buffers are allocated and cleared at startup
-   instead of stored in the slave. Slave size drops from 204640 to 37184 bytes.
-   The original game memory pool is preserved; replay formats are unchanged.
- - splash simplified to one Enhanced framerate checkbox; credits now include
-   Enhancements by Vesuri
- - one production slave includes corrected timing, optional rendering
-   optimizations and experimental A4000 physics; no test fixtures
- - Normal runs at 10 simulation steps/s and A2500 at 20 steps/s, independent
-   of rendering speed. The field clock detects PAL/NTSC and uses a 50/60
-   phase accumulator. Slow rendering catches up the queued input in order.
- - without a saved choice, 68000/68010 select Normal; 68020/68030 select
-   A2500; PAL 68040/68060 select A4000. NTSC 68040/68060 select A2500.
-   CTRL-G changes detail and simulation settings. A changed simulation setting
-   takes effect on the next race, and is saved in data/4DPhysics.cfg.
- - A4000 is an experimental 50 Hz mode for PAL machines, selected by default
-   on 68040/68060 unless a valid saved preference overrides it. It updates
-   physics and controls at 50 Hz without interpolation. On NTSC a saved
-   A4000 choice falls back to the CPU default; A4000 selection and replay
-   loading are blocked.
- - A4000 handling is not fully validated: 27/29 frozen handling checks pass.
-   Common-Y travel is 2263 versus 1247, and landing pitch is 18 versus 11
-   internal units in the two failing checks. Keep A4000 experimental.
- - A4000 replays use format 2, physics ABI9, with recorded opponent routes
-   and state needed for deterministic playback. Older format-1 A4000 files
-   are rejected. Native Normal/A2500 replay formats remain unchanged.
- - eligible 020+ machines with real Fast RAM can use a planar CPU renderer
-   with Fast-RAM staging. Other configurations retain native drawing.
-   The slave does not force extra CPU cache settings.
- - the splash checkbox "Enhanced framerate (68020+Fast for CPU renderer)"
-   enables all rendering enhancements. Compatible optimizations also benefit
-   68000 machines; the CPU renderer requires 68020+ and real Fast RAM.
-   Corrected timing stays enabled. Simulation selection is independent of
-   this checkbox; use CTRL-G to override the CPU default.
- - Advanced tooltypes (renderer-only and legacy timing are not splash options):
-   CUSTOM2=0 (default): original rendering.
-   CUSTOM2=1: all validated rendering optimizations, including the eligible
-              Fast-RAM renderer and CPU-specific drawing paths.
-   CUSTOM2=2: eligible Fast-RAM renderer only.
- - CUSTOM3=1: original simulation timing and original timing-hook bytes;
-   Normal/A2500 remain available, A4000 replay loading is rejected.
-   Rendering options remain independent of this timing switch.
- - memory above is the base requirement; WHDLoad, PRELOAD, replay storage
-   and the optional renderer require additional host memory.
+ Options:
+ - Enable "Enhanced framerate" on the WHDLoad splash screen for faster drawing.
+   The CPU renderer requires a 68020 or faster processor and Fast RAM.
+ - Press CTRL-G in the game to choose graphics detail and simulation mode.
+   Simulation changes are saved and take effect on the next race.
+ - Experimental A4000 mode is PAL-only. It is selected automatically on
+   68040/68060 systems unless you have saved a different choice.
+   Other systems default to Normal (68000/68010) or A2500 (68020/68030).
+ - Advanced tooltypes: CUSTOM2=0 uses original drawing (default), CUSTOM2=1
+   enables all rendering enhancements, CUSTOM2=2 enables only the CPU renderer.
+   CUSTOM3=1 restores original simulation timing and disables A4000 mode.
 
- Emulator measurements; real-hardware reports welcome.
- Ten-second PAL moving windows on the P6 production build. Current
- CPU defaults are described above; the table uses the explicit rates shown.
- Values are FPS, counted at display-buffer switches; FULL/FAST are graphics detail levels.
- CUSTOM2=0 and CUSTOM2=1 both use corrected timing (CUSTOM3=0).
-
- Machine / simulation           C2=0 FULL FAST    C2=1 FULL FAST
- A: 68000 / Normal 10 Hz              2.40 7.40         2.60 7.60
- B: 68EC020 / A2500 20 Hz             8.20 17.10       11.30 19.90
- C: 68030/50 / A2500 20 Hz           18.20 19.90       19.90 19.90
- D: 68040/25 / A2500 20 Hz           19.70 20.00       19.90 19.90
- E: 68060/50 / A2500 20 Hz           19.70 20.00       19.90 19.90
-
- A uses 512 KB Chip + 1.5 MB slow RAM; B/C use 2 MB Chip + 4 MB Fast;
- D/E use 2 MB Chip + 8 MB Z2 Fast + 8 MB motherboard RAM. C uses native
- IDE boot and active emulated data cache. D/E use calibrated CPU clocks;
- their data cache is not emulated in these directory-drive timing runs.
- These are scene/configuration-specific emulator results, not hardware
- predictions. The A500 FAST target of 9.5-10 FPS remains deferred.
- Queued steps crossing a window boundary can perturb short consumed-step
- rates; the clock funds 10/20 steps per second. No queue overflow occurred.
-
- Experimental A4000 50 Hz, same ten-second PAL method:
- Machine                       C2=0 FULL FAST    C2=1 FULL FAST
- D: 68040/25                         20.39 23.59       45.89 49.89
- E: 68060/50                         17.80 29.49       45.49 49.89
-
- Consumed simulation rate is 49.89-50.09 steps/s in these windows, with
- no queue overflow. The lower 060 result with original drawing illustrates
- why these emulator numbers must not be treated as hardware predictions.
- NTSC native 20 Hz also passes a 30-second check: 19.964 steps/s and
- race clock 0.9982 times emulated time. A4000 replay state on PAL matches
- all 1510 captured semantic bytes at steps 1500, 1550 and 1600.
-
- A separate full-68040 MMU functional test passes startup, 50 Hz gameplay,
- preference load/save with physical-file CRC verification, normal quit and
- return to the shell. WHDLoad's matching register dump confirms TC=8000,
- CACR=80008000 and Return OK. This is a compatibility test, not an FPS row.
+ version 2.0b (13.10.2026) - enhancements by Vesuri:
+ - Faster rendering with a single "Enhanced framerate" option.
+ - Correct game speed and race timing regardless of rendering speed.
+ - Experimental A4000 simulation for smoother, more responsive driving on
+   faster PAL Amigas, selected by default on 68040/68060 systems.
+ - Automatic simulation defaults and saved simulation preferences.
+ - Replay saving and playback for A4000 mode; original replays remain supported.
 
  version 1.2 (21.03.2021) done by JOTD:
  - long delay when ending a race removed (side effect
