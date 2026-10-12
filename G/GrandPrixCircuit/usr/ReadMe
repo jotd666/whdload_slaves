@@ -49,7 +49,9 @@
  - vasm Makefile
  - v1 screen-buffer handoff fix, including with CUSTOM2=0
  - CUSTOM2=1: Enhanced framerate (blitter priority and unused blitter IRQ off)
- - native simulation cadence and original PAL clock units retained
+ - CUSTOM2=1: 2-field simulation on 68020+, native 6 fields on 68000/010
+ - original clock/statistics units and 6-field decisions retained
+ - scaled physics rates and protected rendering snapshot
  - new fixes/options apply only to the 94708-byte v1 executable
 
  version 1.0 (24.03.08) done by JOTD:

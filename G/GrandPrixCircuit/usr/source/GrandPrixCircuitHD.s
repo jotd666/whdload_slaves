@@ -84,11 +84,11 @@ DECL_VERSION:MACRO
 assign
 	dc.b	"GrandPrixCircuit",0
 
-; Optional blitter changes; the v1 display handoff fix is always applied.
+; Optional simulation/blitter changes; the v1 display handoff fix is always applied.
 slv_config
 	dc.b "C2:B:Enhanced framerate;"
 	IFD VERIFY
-	dc.b "C1:B:Traffic in attract verification;C3:B:Reproducible RNG;C4:X:Slow drawing verification:0;C4:X:Original swap verification:1;C5:B:Scripted joystick verification;"
+	dc.b "C1:B:Traffic in attract verification;C3:B:Reproducible RNG;C4:X:Slow drawing verification:0;C4:X:Original swap verification:1;C4:X:Force period six verification:2;C5:X:Scripted joystick verification:0;C5:X:Human driver verification:1;C5:X:Immediate start verification:2;"
 	ENDC
 	dc.b	0
 
@@ -259,6 +259,11 @@ patch_main
 	cmp.l #94708,d0
 	bne.b .legacy
 
+	bsr sim_configure
+	lea sim_code(pc),a0
+	move.l d7,d0
+	addq.l #4,d0
+	move.l d0,(a0)
 	lea render_race_return(pc),a0
 	move.l d7,d0
 	add.l #4+$a8f2,d0
@@ -283,6 +288,7 @@ patch_main
 	move.l #1,(a3)
 	ENDC
 	jsr resload_PatchSeg(a2)
+	bsr sim_patch
 	IFD VERIFY
 	bsr verify_cache_state
 	ENDC
@@ -326,6 +332,8 @@ pl_main_v1
 	PL_PS $707a,verify_race_start
 	PL_IFC5
 	PL_PS $c1de,verify_read_joydat
+	PL_PSS $7734,verify_event_field,2 ; PERF_RANGE h0:7734 8 bit=VERIFY_C5
+	PL_PSS $61f4,verify_pit_key,2 ; PERF_RANGE h0:61F4 8 bit=VERIFY_C5
 	PL_ENDIF
 	ENDC
 	IFD VERIFY
@@ -339,6 +347,10 @@ pl_main_v1
 	IFD VERIFY
 	PL_ENDIF
 	ENDC
+	PL_IFC2
+	PL_P $a6ea,sim_latch_enter ; PERF_RANGE h0:A6EA 8 bit=C2
+	PL_P $a776,sim_latch_leave ; PERF_RANGE h0:A776 6 bit=C2
+	PL_ENDIF
 	PL_NEXT pl_section0
 pl_main_v1_sr
 	PL_START
@@ -357,6 +369,7 @@ pl_main_v1_sr
 	ENDC
 
 	include "render.s"
+	include "simulation.s"
 
 pl_song1
 	PL_START
@@ -652,10 +665,25 @@ tag		dc.l	WHDLTAG_CUSTOM1_GET
 custom1	dc.l	0
 		dc.l	WHDLTAG_CUSTOM2_GET
 custom2	dc.l	0
+	IFD VERIFY
+		dc.l WHDLTAG_CUSTOM4_GET
+sim_verify_options dc.l 0
+		dc.l WHDLTAG_CUSTOM5_GET
+verify_drive_options dc.l 0
+	ENDC
 		dc.l	WHDLTAG_ATTNFLAGS_GET
 attnflags
 	dc.l	0
 	dc.l	0
 ;============================================================================
 
+    IFD VERIFY
+; The optional recording is ignored local input, never distributed or committed.
+verify_pilot_tape:
+    IFD VERIFY_TAPE
+    INCBIN "phase6-tape.bin"
+    ELSE
+    dcb.w 12288,0
+    ENDC
+    ENDC
 	END

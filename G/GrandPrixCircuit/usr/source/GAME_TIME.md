@@ -3,9 +3,9 @@
 Phase 3 investigation, 2026-10-12. Applies only to the 94,708-byte executable.
 Code addresses are hunk-0 offsets, not file offsets (add `$28` for the file).
 Data addresses below are signed decimal offsets from a4 unless prefixed `$`.
-This is a map of the original game and measurement instruments, not an implemented
-higher-rate simulation. The step cadence is fixed, but starts and car collisions couple
-gameplay to drawing; the original PAL lap clock runs slow. The Phase 4 review in
+The tables map the original game. The optional Phase 6 implementation is described
+below; its acceptance evidence is in `PERFORMANCE_PLAN.md`. Starts and car collisions
+couple gameplay to drawing; the original PAL lap clock runs slow. The Phase 4 review in
 `PERFORMANCE_PLAN.md` preserves these native behaviours under the performance-only scope.
 
 ## Clocks and ownership
@@ -205,7 +205,7 @@ ruled out by the sampled 020 simulation cost, but **50 rendered fps is not estab
 the same populated-traffic traces publish at 5.0 / 13.02 fps between first/last swaps,
 and Phase 2's 68030/25 baseline is 24.67 fps. The Phase 4 review adds 030/50 and
 030/100 publication measurements (30.66 / 34.23 fps); neither demonstrates 50 fps.
-No period or cache change has been made. Solo Phase 2 step means were only
+Those baseline measurements used the original period and cache state. Solo Phase 2 step means were only
 4,426 / 2,756 cycles; treating those as a full-race simulation price would have badly understated AI work.
 
 Phase 4 retains the slow PAL clock and native drawing-dependent start/collision logic;
@@ -248,11 +248,78 @@ Phase 1. The Phase 3 VERIFY instrument binary was
 `7af8f2f025632252c316c1ef6aa0991b254165edc2fac2d6a14784d41b01d0ed`.
 Those Phase 3 additions are within `IFD VERIFY`; CUSTOM2 had no effect through Phase 4.
 Phase 5 adds the unconditional display handoff and gated blitter changes; current evidence
-and binary hashes belong to the Phase 5 section of `PERFORMANCE_PLAN.md`.
+and binary hashes are recorded in `PERFORMANCE_PLAN.md`.
 
 Both vasm targets build successfully. `check_phase3.py` verifies all original immutable
 code, the existing JOTD patches and 139 jump stubs after restoring only the exact enabled
 VERIFY spans; a corrupted swap instruction fails its negative control. Normal/slow/traffic
 combinations and both CPUs pass. The eight-span boundary/branch audit passes. All 55
 pristine files retained their manifest hashes in the Phase 3 checks. Phase 5 changes display
-handoff and blitter policy only; no higher-rate simulation is implemented.
+handoff and blitter policy; Phase 6 adds the optional simulation changes below.
+
+
+## Optional Phase 6 implementation
+
+For the size-checked v1 and `CUSTOM2=1`, `sim_configure` selects period 6 on
+68000/010 and period 2 on 68020+. The latter installs `pl_simulation`; the former
+retains native simulation instructions. Both initial data words and new-race
+resets use the selected period. There is no period-1 mode or cache change.
+
+`sim_phase` follows active fields and wraps every six. Native input/gear decisions,
+wheelspin duration, animation counters and clock/statistics sampling execute at
+that boundary. Internal AI target/lane decisions and their cooldown sample once
+per six fields at the first fine step, using the previous completed interval's
+position. Sampling them on the last fine step reads partly advanced geometry and
+changes avoidance decisions. Close-gap logic remains on the ending native boundary.
+Continuous player and AI rates use private fractional carries. Cooling already subtracts the period and is not divided twice.
+Spatial work remains in the native segment walker, including lap crossings,
+cornering speed loss, off-road speed/damage penalties and barrier collisions.
+
+The unchanged TD2 arithmetic kernels have game-specific callers. Player distance
+uses old speed and retains its negative Euler correction; AI uses its positive
+new-speed correction. Changing the player's sign to align the position samples
+with the decision boundary passed a short straight but failed the full-lap
+steering/geometry coupling, so that experiment was rejected. Thermal deceleration
+occurs before player motion and needs its own ordering correction. Actual clamped speed loss is recorded for the next
+reference; zero speed cannot acquire phantom travel from the previous force.
+Player torque and drag tables hold the interval-start speed reference until the
+next native decision boundary. Their coarse lookup bins make a continuously
+extrapolated reference drift even on a straight. AI uses its corrected speed
+reference. Steering input without feedback is a linear time rate. When the native
+quarter-feedback branch is active, the complete affine delta instead uses
+`4*(1-cuberoot(3/4))`, with fractional carry; dividing by three changes its response.
+Saturated steering force remains a linear rate and angle limits remain native.
+No-input centering and straight-line yaw/steering relaxation are conditioned on
+crossing a segment. Their native full impulses run at the actual fine-step crossing.
+Spin separately accumulates crossings and applies its full impulse only at the
+native six-field boundary. Dividing spatial impulses by three under-centres the
+car; delaying ordinary centering to the coarse boundary also introduces drift.
+The unchanged root-relaxation helper remains covered by private VERIFY vectors;
+it is not applied to GPC's spatially conditioned relaxation.
+Neutral RPM samples the complete native fall/clamp/rise map, then distributes that
+change; dividing its nonlinear rise independently would change the idle behaviour.
+
+Two shared native branches need special treatment. `$7f66` is normally a braking
+rate, but the branch from `$7f04` is a gear-completion impulse: that impulse remains
+full strength and occurs once. Completion replaces that interval's continuous
+engine-force update, so its remaining two fine steps must not add coast forces.
+Clutch torque lookup uses the complete native fall/clamp RPM reference while the
+live RPM advances fractionally. `$a12a` can deliberately wait without lane motion;
+only its actual `$a182/$a194` movement branches supply the held fine-step lane rate.
+Do not infer a movement rate merely because the target lane differs.
+
+`$7482` is also used on pit return. The simulation hook preserves its running
+phase and carries when the race is already active; full race initialisation clears
+`4020` first. New-race setup holds the native simulation pause gate until `$707a`
+releases it after initialization. Otherwise a fine callback can overwrite the
+partly built grid's player slot with the old player proxy. Native field counting
+and audio continue while simulation is held. Pit entry, service, repair/animation
+and elapsed-fields/6 formatting stay native. Pause freezes countdown/phase without creating catch-up steps.
+The `$a6ea..a776` rendering snapshot is enclosed by balanced Exec Disable/Enable,
+with the original register frame retained. Rendering and interpolation are otherwise
+unchanged; Phase 7 is separate.
+
+VERIFY uses private allocated memory for arithmetic assertions. Its optional human
+fixture supplies joystick input, an identical initial start gate, and explicitly
+chosen native event states. A separate joystick-only pilot records a lap for replay;
+the recording stays in ignored harness storage. No fixture is in the normal slave.

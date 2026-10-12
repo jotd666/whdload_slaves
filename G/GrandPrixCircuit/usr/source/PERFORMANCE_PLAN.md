@@ -558,9 +558,9 @@ of cross-CPU handling equivalence. Hardware validation remains Phase 8.
 - These are whole-game fixed-window measurements, not isolated renderer benchmarks:
   native drawing-dependent start/contact sampling can change the scene reached in the
   window. No full human-handling/pit matrix or hardware result is claimed at this phase.
-  **Stop after Phase 5. Phase 6 has not started.**
+  Phase 5 is complete; the authorised Phase 6 work is described below.
 
-### Phase 6 — Higher simulation rate
+### Phase 6 — Higher simulation rate (complete)
 1. Period word -29926 (and the initial -29928) → `sim_p` per CPU (6 on 68000/010, 2 on
    68020+; 1 only after Phase 4 shows 50 fps is reachable), set in a `sim_configure` like
    TD2's (AttnFlags before PatchSeg).
@@ -579,6 +579,133 @@ of cross-CPU handling equivalence. Hardware validation remains Phase 8.
    byte checks prove `CUSTOM2=0` leaves original simulation/optional-render bytes, allowing
    only the named always-on Phase 5 display hooks and inherited JOTD patches.
 
+**Status: complete.** The implementation and final acceptance checks pass.
+
+The size-checked v1 uses period 6 on 68000/010 and period 2 on 68020+ when
+`CUSTOM2=1`. A500 keeps its native physics instructions. The initial countdown and
+period, and subsequent new-race resets, agree. There is no period-1 or cache change.
+The five TD2 arithmetic kernels are unchanged; GPC-specific wrappers retain native
+clock/statistics units and six-field discrete decisions. Player input and gears
+stay on the native boundary. Internal AI target/lane/cooldown decisions sample at
+the first fine step, before positions advance, while close-gap decisions stay on
+the ending native boundary. The protected render snapshot uses balanced Exec
+Disable/Enable. `GAME_TIME.md` describes the rates, impulses and calling contracts.
+
+Player torque/drag hold the native interval-start reference; active steering uses
+the third root of the original feedback map. Spatial centering remains at actual
+segment crossings, and spin accumulates crossings for the native boundary. Player
+motion retains its old-speed Euler correction. Gear completion remains a once-only
+impulse and suppresses the remaining fine-step engine forces in that interval.
+New-race setup holds simulation until the existing initialization release; pit
+return preserves phase, carries and countdown.
+
+Acceptance bounds were recorded before full replay: both laps undamaged, lap time
+within 1%, matched-field distance within 11.84 segments (1% of the 1,184-segment
+track), and lateral difference within 280 units (one quarter of the road half-width).
+The short tape requires final distance within one segment, exact gear fields and
+clock cadence. Traffic requires each car within 11.84 segments, with lane differences
+reported. Coast-down must stop within six fields and one segment; pause fields and
+native pit service-time units must match. Same-period cross-CPU solo core must match exactly.
+These are emulator regression bounds, not hardware or all-circuits coverage.
+
+Final acceptance evidence in ignored `tmp/dev/tmp/phase6/`:
+
+- `matrix-v5-native` versus `matrix-v5-p6`: all named core values match over 720
+  fields, including clock, counters, input, player and all ten AI slots.
+- `matrix-v5-p6/p2`: short-tape distance error 0.95703125 segment; gear changes at
+  fields 618 and 684 and the clock cadence match exactly; both conditions remain 320.
+- `matrix-v5-traffic-p6/p2`: identical initial grid, speeds, lanes and RNG. Maximum
+  position differences for slots 0–9 are 1, 1.44140625, 0.83984375, 0.8125,
+  1.90234375, 2.37890625, 2.125, 0.8125, 2.5859375 and 0.65234375 segments.
+  Slot 2 finishes one 80-unit lane step apart (-240/-320); the other nine final
+  lanes match. Intermediate lane differences are retained in `final-handling.json`.
+- `events-v5-*`: overheat, damaged-engine coast, spin and neutral coast stop within
+  2/4/4/2 fields and 0.03515625/0.05859375/0.21875/0.01171875 segment respectively.
+  Spin lasts 48 fields in both runs; Ctrl-P pauses exactly fields 180–239. Both
+  off-road runs take three native damage events and finish at condition 317.
+- Pit entry, service and service-exit markers match; elapsed-fields/6 is 52 in both,
+  and repair reaches condition 240. Native race-screen redraw resumes period 2 one
+  video field earlier (marker 978 versus 979). This presentation latency is reported,
+  not treated as identical wall-field timing: `$7240` draws before `$7250` unpauses.
+  At equal post-return active times, 220 observations match exactly for active-field
+  count, lap/race clocks, condition, speed, gear, lateral position and pit/go flags.
+  Both clocks reach 120 ticks at the capture end. See `final-events.json`.
+- `core-a500-p6` and `core-030-p6` match `matrix-v5-p6` exactly at all 720
+  sampled fields; `core-030-p2` likewise matches `matrix-v5-p2`. Comparisons retain
+  all named player/AI, clock, input and event fields, including inactive AI literals.
+- Normal and tape VERIFY rebuild byte-identically in a separate output directory;
+  ordinary VERIFY also builds without the private tape include. Normal SHA-256:
+  `dd66178176e92f7c16215d24cbb7c0637df0081f4651d731f7cd80e255095829`;
+  tape VERIFY: `b6b6193749d4ba81428fce4244a1bbac4718f67a6329d0ea38d0abbe7aba54f8`.
+- Normal-build A500 `CUSTOM2=0` and expanded A1200 `CUSTOM2=1` both boot through
+  the intro and attract race and reach the native race exit. Intro/race screenshots
+  were visually inspected. Both clear the pending handoff from 1 to 0 at exit;
+  their runtime code passes the exact byte/JOTD/stub checks and negative control.
+  These are boot/exit smoke checks, not performance or human-input measurements.
+- All 29 final VERIFY captures pass 51 private guest assertions. The
+  code audit checks 58,628 immutable bytes, 13 inherited 020 patches and 139 stubs,
+  with a corrupted-instruction negative control. All 51 hook boundaries and direct
+  branch entries pass the static audit. All 55 pristine file hashes still match.
+- `lap-final-p6/p2` replay the same unretimed joystick recording through a full
+  human-code lap. Both finish undamaged. Against the original pilot recording,
+  the period-6 replay matches every named core value at all 1,450 shared native
+  fields (1 through 8,695). The pilot stops at field 8,700; the sparse replay's
+  next observation is 8,701. Those unmatched endpoints are explicitly reported,
+  not paired or masked. Both have the same 1,449-tick completed lap.
+
+| Final raw-tape handling check | Period 6 | Period 2 | Acceptance |
+|---|---:|---:|---|
+| Completed lap ticks | 1,449 | 1,450 | Difference 0.069%, limit 1% |
+| Condition at finish | 320 | 320 | Both undamaged |
+| Maximum matched-field distance difference | — | 0.5859375 segment | Limit 11.84 |
+| Maximum matched-field lateral difference | — | 222 units | Limit 280 |
+| Shared observations | 1,451 | 1,451 | Same native fields |
+
+`lap-final-p2/lap-comparison.json` and `lap-final-native-oracle.json` retain the
+results and sampling coverage. `completion-capture-audit.json` checks all 29
+VERIFY captures against the final binary and 51/0 assertion result, both normal
+build hashes/exits, and every acceptance report.
+
+Rejected diagnostics remain separate in ignored harness storage; no acceptance
+bound was widened. Final captures retain their exact slaves, listings, options,
+RAM, input/state records and debugger/emulator logs. Reproduction commands and
+transport-failure exclusions are documented in `tmp/dev/docs/development.md`.
+
+Timing evidence (`cost-020-p6/p2`, 100 fields each, populated
+traffic and human-input fixture; unchanged cache policy):
+
+| Expanded A1200 callback | Forced period 6 | Selected period 2 |
+|---|---:|---:|
+| Stepped callback mean / sampled maximum, CPU cycles | 26,952 / 30,043 | 25,606 / 27,477 |
+| Light callback mean / sampled maximum, CPU cycles | 419 / 443 | 384 / 443 |
+| Callback share at selected period, mean / sampled maximum projection | 1.70% / 1.89% | 4.57% / 4.91% |
+| Maximum complete protected copy, CPU cycles | 1,107 | 1,107 |
+| Maximum inclusive Disable/copy/Enable latch, CPU cycles | 1,522 | 1,524 |
+
+Both traces contain 100 native callbacks, 25 complete protected copies with no
+foreign instruction inside, and zero CPU/blitter writes to any word fetched for
+display. Both short windows publish at 12.5 fps. Callback figures include callees,
+exclude outer interrupt dispatch/audio, and are sampled costs rather than worst-case
+bounds. The higher simulation rate is not a claim of higher rendered frame rate.
+The A500 period-6 trace also has 100 native callbacks, ten complete protected copies
+and zero display writes. Its stepped callback mean/maximum is 31,914/33,154 cycles,
+light callback 667/680, giving a 4.13%/4.29% selected-period share projection.
+The protected copy peaks at 2,688 cycles. Inclusive latch maximum is 67,204 cycles:
+that includes pending interrupt work after Enable, not 67,204 cycles with interrupts
+disabled. Native simulation instruction bytes remain intact on A500.
+
+The period-2 overheat/spin traffic traces each retain all 100 native callbacks and
+zero displayed-bitmap writes. Their callback mean/maximum is 26,475/28,217 and
+26,390/28,977 cycles, giving selected-period mean/maximum share projections of
+4.73%/5.04% and 4.71%/5.18%. Their 23/25 complete copies contain no foreign PC;
+copy maximum is 1,107 cycles and inclusive latch maxima are 1,509/1,520. Across all
+five traces, 108 complete copies pass and no display write occurs in 500 fields.
+These costs support the chosen period 6/2 policy; period 1 remains disabled.
+`final-cost-display.json` retains the complete measurements.
+
+Phase 6 validation is complete. The beta version and icon default are unchanged;
+hardware/release work remains Phase 8. Phase 7 has not started.
+
 ### Phase 7 — Sub-unit rendering
 1. Camera fraction: latch -30006 low byte (and the step phase -29932 vs -29930 for
    interpolation between steps, if the step rate stays below the frame rate).
@@ -595,12 +722,15 @@ of cross-CPU handling equivalence. Hardware validation remains Phase 8.
 4. Generic lessons (interrupt-driven simulation, LoadView swap marker) → AmigaXDev docs.
 
 ## Open questions
-- Attract capture window and publication counter validated in Phase 2; cross-machine
-  simulation/handling equivalence is not yet established.
+- Attract capture window/publication counter are validated in Phase 2. Phase 6
+  establishes exact same-period solo core on the tested 68000/020/030 profiles and
+  bounds higher-rate handling on the recorded circuit; it does not establish
+  all-circuit or hardware equivalence.
 - Clock policy resolved in Phase 4: preserve lap/race ticks at -31424/-31416 and the
   original PAL rate; no wall-time correction.
 - Phase 3 maps pause/pit/terminal gates and drawing-dependent starts/collisions in
   `GAME_TIME.md`. Phase 4 retains their native logic; any correction requires a separate
-  gameplay decision. Native event coverage and human-handling equivalence remain Phase 6
-  requirements; cross-CPU equality cannot be assumed from the fixed VBL cadence.
+  gameplay decision. Phase 6's native-event and recorded human-handling checks pass
+  the stated bounds. Drawing-dependent starts/contact remain original limitations;
+  the exact cross-CPU solo results must not be generalized to every traffic scene.
 - Overlay question resolved for the supplied v1: dormant manager, no stub rewrites (Phase 1 evidence above).
