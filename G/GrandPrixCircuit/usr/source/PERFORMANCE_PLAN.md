@@ -9,7 +9,8 @@ tools, docs). The local harness lives in the worktree's ignored `tmp/dev/`.
 
 ## Decisions
 
-- `CUSTOM2` "Enhanced framerate" bundles every performance change; `CUSTOM2=0` is the original.
+- `CUSTOM2` "Enhanced framerate" bundles every performance change; `CUSTOM2=0` retains
+  original simulation/rendering apart from the always-on display handoff fix.
 - Pure bug fixes (the swap tearing fix) are always on, like TD2's DDFSTOP fix.
 - **Performance only.** What the player experiences stays original: handling, AI, lap and
   race times, crashes, spins, pit stops, penalties and messages. No TD2-style recovery change.
@@ -50,7 +51,8 @@ the slave's patch numbering. Static analysis is supplemented by the runtime chec
 - Main loop h0:7094–7264 → `729a`: `a58c`, latch `a6ea` (copies car tables, -30016→-30010,
   -30012→-30006, -29930→-29932; not interrupt-safe), `a77c`, `9a48`, road `818c`, `906a`,
   `6dc4`, `6ae0`, `6a28`, swap `a8ee` (→ h0:372, LoadView at h0:39e; no WaitTOF, then `cf04`
-  retargets drawing to the buffer just shown → probable tearing on fast CPUs).
+  retargets drawing to the old display buffer before the new View takes over). Phase 5
+  confirms visible horizon writes in this interval and fences reuse before raster work.
 - Player track position: segment pointer -30016, 8-bit in-segment fraction low byte of
   -30012 (h0:7e2c–7e46). The analogue of TD2's camera fraction F.
 - Road renderer: per-scanline span lists, 110 rows (loop end h0:8508), stripe phase from the
@@ -58,10 +60,11 @@ the slave's patch numbering. Static analysis is supplemented by the runtime chec
 - Rebuilt slave (1.1-beta): interface 17, kick13, own LoadSeg; the 94,708-byte executable
   selects `resload_PatchSeg`, other sizes retain JOTD's `resload_Patch` path. The lists
   keep the original busy loop `PL_PS $174`, protection skips, 68010 `move sr`, and song
-  INTREQ/DMACON patches. Empty `slv_config` reserves the structure without advertising an
-  unimplemented option. `CUSTOM2` currently has no effect. The vasm Makefile builds normal
-  and VERIFY outputs separately; Phase 2 adds VERIFY-only RNG/input instruments. The normal
-  build remains byte-identical to Phase 1.
+  INTREQ/DMACON patches. `slv_config` now exposes `CUSTOM2`: Phase 5 enables blitter priority
+  and suppresses unused blitter-finished IRQs when selected. The display handoff fix is
+  unconditional for v1. The vasm Makefile builds normal and VERIFY outputs separately;
+  only VERIFY exposes RNG/input/traffic/slow-draw and original-swap measurement fixtures.
+  The normal build kept Phase 1 bytes through Phase 4; Phase 5 adds the render hooks.
 
 ## Plan
 
@@ -328,7 +331,7 @@ was made to the normal slave.
   `accepted-cost-{a500,a1200}/step-cost.json`; completed ticks in
   `accepted-ticks-{a500-0,a500-1,a1200}`. `REJECTED.txt` identifies superseded runs.
   Reproduction commands are in `tmp/dev/docs/development.md`; tools and original data stay
-  ignored. The blinking horizon remains a Phase 5 issue.
+  ignored. The reported blinking horizon is resolved in Phase 5 below.
 
 ### Phase 4 — Review point (complete)
 
@@ -437,16 +440,125 @@ remain implementation acceptance tests, not completed Phase 4 evidence.
   `review.json`/`review.txt`. Captures retain the slave, metadata, debugger counts, boundary
   RAM and emulator logs. `tmp/dev/tools/review_phase4.py` checks the repeat and computes
   exact rates; reproduction commands are in `tmp/dev/docs/development.md`.
-- Phase 4 is complete under the existing performance-only scope. No Phase 5 patch has
-  started. The reported horizon blinking remains to be confirmed and repaired there.
+- Phase 4 is complete under the existing performance-only scope. This review introduced
+  no performance patches; Phase 5 below covers the horizon repair and blitter option.
 
-### Phase 5 — Cheap wins (blitter under CUSTOM2, tearing fix always on)
-1. Blitter priority + blitter-IRQ suppression (`render.s` `render_interrupt_option`, as-is).
-2. Swap tearing: wait for the new view to be live before drawing into the old one
-   (WaitTOF/beam wait after LoadView at h0:39e) — the GPC analogue of JOTD's `set_copper`.
-   Always on (outside CUSTOM2); first confirm the tearing in a 68020/030 capture, then show
-   it gone and the A500 rate unchanged.
-   **Check:** fixed-window A/B, two boots per arm, ±0.15 fps noise floor.
+### Phase 5 — Cheap wins (complete)
+
+#### Implementation and causal check
+
+The horizon fault is confirmed on the expanded A1200. The matched original-swap trace
+contains 1,216 writes to displayed words before their bitplane fetch, 482 of which change
+the word's previous value. Three screenshot pairs change the horizon while the displayed
+bitplane set remains the same. This is visible drawing into the front buffer, not merely
+a delayed publication counter. Earlier Phase 2 evidence independently shows the same fault.
+
+The native swap changes the View/RastPort pairs at `$372`, calls LoadView at `$39e`, and
+selects the old display RastPort through `$cf04`. LoadView schedules the next copper list;
+it does not make that old bitmap immediately safe to overwrite. The fix records the native
+VBL count after LoadView and waits for a field boundary before reuse. For the race caller
+at `$a8ee`, geometry preparation may run first; the fence is just before the sky clear and
+horizon blits at `$818c`. If a complete VBL has already passed, there is no wait. Other
+swap callers wait immediately. Pause and race-exit paths drain a pending handoff before
+their modal drawing or cleanup. The native counter advances even while paused.
+
+| v1 patch | Replacement contract |
+|---|---|
+| `$39e..$3a4` | Jump to swap tail; execute the original C LoadView call with its stacked argument, remove that argument, fence/defer, then unwind the original LINK frame and return. |
+| `$818c..$8192` | Resolve pending handoff, then replay `move.w #72,-30606(a4)` before any race bitmap writes. |
+| `$7094..$709a` | Resolve handoff if entering pause; replay the original comparison and its condition codes. |
+| `$75c8..$75ce` | Resolve handoff before leaving the race; replay the original sound-stop argument/call. |
+
+The initial unconditional WaitTOF prototype measured 5.36 fps on A500, outside the 0.15 fps
+allowance. Deferring only the race fence overlaps the remaining display field with pure
+geometry work and preserves the A500 rate. The prototype remains a local diagnostic;
+accepted comparisons use the final deferred implementation only.
+
+`render_interrupt_option` / `render_interrupt_restore` are copied unchanged from TD2's
+`render.s`, using its bit-1 option representation. Only the size-identified v1 path enables
+that bit when CUSTOM2 is selected. The slave calls the helpers around the program entry:
+BLTPRI is enabled, the unused BLIT interrupt is disabled, and saved enable bits are restored
+on normal return. Existing song, protection and CPU patches remain; unknown executable
+sizes follow the inherited path without these display/performance patches. The normal
+slave exposes only `C2:B:Enhanced framerate`; no icon default is changed.
+
+VERIFY-only `CUSTOM4` is now a bit field: bit 0 retains slow drawing, bit 1 bypasses all
+four display hooks for a matched original-swap control. Thus `CUSTOM4=2` does not also
+activate slow drawing. All comparison arms use one identical final VERIFY binary.
+
+#### Measurements and validation
+
+The original/fixed/enhanced arms use CUSTOM2/CUSTOM4 = 0/2, 0/0 and 1/0. All have
+CUSTOM1=0, CUSTOM3=1 and CUSTOM5=1, the first-race anchor, 300 warm-up fields and 1,000
+counted PAL fields. There are two fresh boots per arm per CPU. The separate 100-field
+instruction/DMA traces prove buffer ownership and interrupt behavior; their short-window
+fps must not be substituted for the longer measurements.
+
+| Machine (unchanged cache policy) | Original swap | Fixed, CUSTOM2=0 | Fixed, CUSTOM2=1 |
+|---|---:|---:|---:|
+| A500, 68000, 512 KB chip + 1536 KB slow | 5.6402 fps | 5.6281 fps | 6.1809 fps |
+| Expanded A1200, 68EC020, 2 MB chip + 4 MB fast | 14.5015 fps | 12.7767 fps | 14.7295 fps |
+| A1200, 68030/25, 2 MB chip + 4 MB fast | 24.6994 fps | 21.4715 fps | 23.8477 fps |
+
+Each figure repeats exactly: all nine boot pairs match all 1,000 per-field counts,
+metadata, complete game code and allocated game data at both boundaries. Differences in
+RAM outside those hunks are reported in the local review, not masked as whole-machine
+identity. The same-build original controls are the reference here, rather than older
+VERIFY layouts. Rates use 50 times completed publication intervals divided by the
+first-to-last-publication field span; this is nominal PAL, not host wall time.
+
+The A500 fix costs 0.0121 fps, within the ±0.15 fps allowance. Relative to the corrected
+CUSTOM2=0 baseline, the blitter option gains 0.5528 / 1.9528 / 2.3762 fps on 000 / 020 /
+030: all exceed that allowance. Relative to the unsafe original, the complete enhanced
+path gains 0.5407 / 0.2279 fps on 000 / 020 but **loses 0.8517 fps on 030/25**. The safe
+handoff cost on faster CPUs is real; this is not an across-the-board speedup claim. No
+cache policy, CPU frequency or simulation cadence is changed to hide it.
+
+On both A500 and expanded A1200, all four fixed/enhanced 100-field traces contain **zero
+writes to any bitmap word fetched for display in that field**, and zero horizon changes
+between screenshots with the same displayed buffer. Each publication maps to the other
+bitplane set on the following field. All 100 native VBL callbacks remain present. Actual
+DMACONR/INTENAR reads confirm BLTPRI off / BLIT IRQ enabled with CUSTOM2=0, and BLTPRI on /
+BLIT IRQ disabled with CUSTOM2=1. On 020 the blitter-finished IRQ count changes from 4,664
+to zero, while vertical blank stays at 100; audio DMA and level-4 audio interrupts remain.
+
+No simulation period, rate, clock or collision/start policy changes are implemented.
+Faster drawing and corrected handoff timing can still move the native drawing-dependent
+start/contact events described in Phase 4; the frame-rate comparison is not a new claim
+of cross-CPU handling equivalence. Hardware validation remains Phase 8.
+
+#### Checks, artifacts and stop point
+
+- All 18 performance captures pass exact original-code checks after restoring only the
+  four named display hooks and enabled VERIFY spans. The 6/13 inherited JOTD patches and
+  all 139 jump stubs remain intact; corrupting the swap instruction is rejected. The
+  12-span instruction-boundary/direct-branch audit passes. The normal 000 and 020 runtime
+  images also pass the byte checks without any VERIFY exemptions.
+- Normal-build intro/attract smoke runs pass on A500 with CUSTOM2=0 and expanded A1200
+  with CUSTOM2=1. Both reach the native attract-race exit; the pending handoff changes
+  from 1 to 0 there after the recorded swap field has elapsed. Pause-branch and normal
+  program-return restoration are statically reviewed, not claimed as played-through
+  tests. An attempted debugger-write stimulus was rejected: Barto ignores memory and
+  register writes, and the pause flag read back unchanged. Those probe records are
+  explicitly excluded; no synthetic pause or restoration pass is claimed.
+- Both vasm targets rebuild byte-identically to the binaries used for these checks.
+  Normal SHA-256: `b1f05dba337f2fca1984d0566488ef5eb82b15ce0ac38b69d149c37856a5b1ca`.
+  VERIFY SHA-256: `5101619760a61d0340130d8e31c50790ae37b594c7d42cdce0b9d2e8c42f9058`.
+  All 55 pristine files retain their manifest hashes. No game bytes, generated binaries,
+  captures or harness files are tracked. ReadMe and both Makefile dependencies are updated;
+  the beta version remains 1.1-beta and the icon default remains unchanged.
+- Evidence root: `tmp/dev/tmp/phase5/`. The `{a500,a1200,68030}-{original,fixed,enhanced}-{1,2}`
+  directories contain full boundary RAM, metadata, retained slaves, exact field counts and
+  emulator/debugger logs. `trace-*` contains the 100-field traces, DMA/pixel-word audit,
+  screenshot stability audit and register/IRQ evidence. `normal-*` contains normal-build
+  screenshots, read-only debugger transcripts and native-exit results. `review.json`,
+  `review.txt`, `byte-checks.txt`, build logs and `REJECTED.txt` delimit accepted evidence.
+  Reproduction is in `tmp/dev/docs/development.md` (`phase5_matrix.py`,
+  `review_phase5.py`, `phase5_lifecycle.py` and the audit tools).
+- These are whole-game fixed-window measurements, not isolated renderer benchmarks:
+  native drawing-dependent start/contact sampling can change the scene reached in the
+  window. No full human-handling/pit matrix or hardware result is claimed at this phase.
+  **Stop after Phase 5. Phase 6 has not started.**
 
 ### Phase 6 — Higher simulation rate
 1. Period word -29926 (and the initial -29928) → `sim_p` per CPU (6 on 68000/010, 2 on
@@ -464,7 +576,8 @@ remain implementation acceptance tests, not completed Phase 4 evidence.
 6. VERIFY: assertions on the helpers (reuse `simulation-verify.s` structure), scripted tape,
    forced events; handling table (same tape, period 6 vs 2: lap times and positions within
    a stated tolerance); `compare_state --assert-core` between same-period machines;
-   `check_disabled.py` proves `CUSTOM2=0` leaves the original bytes.
+   byte checks prove `CUSTOM2=0` leaves original simulation/optional-render bytes, allowing
+   only the named always-on Phase 5 display hooks and inherited JOTD patches.
 
 ### Phase 7 — Sub-unit rendering
 1. Camera fraction: latch -30006 low byte (and the step phase -29932 vs -29930 for

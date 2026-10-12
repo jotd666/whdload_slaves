@@ -8,6 +8,6 @@ SOURCE = $(PROGNAME)HD.s
 
 all :  $(WHDLOADER)
 
-$(WHDLOADER) : $(SOURCE) verification.s
+$(WHDLOADER) : $(SOURCE) verification.s render.s
 	$(WDATE)
 	$(VASM) -o $(WHDLOADER) $(SOURCE)

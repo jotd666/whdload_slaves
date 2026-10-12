@@ -84,11 +84,11 @@ DECL_VERSION:MACRO
 assign
 	dc.b	"GrandPrixCircuit",0
 
-; No player-facing performance option until an optional patch is implemented.
-; CUSTOM2=0 (or omitted) retains the original game.
+; Optional blitter changes; the v1 display handoff fix is always applied.
 slv_config
+	dc.b "C2:B:Enhanced framerate;"
 	IFD VERIFY
-	dc.b "C1:B:Traffic in attract verification;C3:B:Reproducible RNG;C4:B:Slow drawing verification;C5:B:Scripted joystick verification;"
+	dc.b "C1:B:Traffic in attract verification;C3:B:Reproducible RNG;C4:X:Slow drawing verification:0;C4:X:Original swap verification:1;C5:B:Scripted joystick verification;"
 	ENDC
 	dc.b	0
 
@@ -259,6 +259,15 @@ patch_main
 	cmp.l #94708,d0
 	bne.b .legacy
 
+	lea render_race_return(pc),a0
+	move.l d7,d0
+	add.l #4+$a8f2,d0
+	move.l d0,(a0)
+	lea render_options(pc),a0
+	move.l custom2(pc),d0
+	beq.b .render_ready
+	move.l #2,(a0)
+.render_ready
 	; v1: PatchSeg takes the LoadSeg BPTR, not the code address.
 	lea pl_main_v1(pc),a0
 	move.l attnflags(pc),d0
@@ -300,7 +309,7 @@ patch_main
 	movem.l (a7)+,d0-a6
 	rts
 
-; Normal build: JOTD patches only. VERIFY adds opt-in measurement fixtures.
+; v1 display handoff fix plus inherited JOTD patches. VERIFY can bypass the fix.
 pl_main_v1
 	PL_START
 	IFD VERIFY
@@ -311,7 +320,7 @@ pl_main_v1
 	PL_W $c12c,$7200
 	PL_NOP $c12e,4
 	PL_ENDIF
-	PL_IFC4
+	PL_IFC4X 0
 	PL_PSS $729a,verify_slow_draw,2
 	PL_ENDIF
 	PL_PS $707a,verify_race_start
@@ -319,11 +328,21 @@ pl_main_v1
 	PL_PS $c1de,verify_read_joydat
 	PL_ENDIF
 	ENDC
+	IFD VERIFY
+	PL_IFC4X 1
+	PL_ELSE
+	ENDC
+	PL_P $39e,render_swap
+	PL_PS $818c,render_before_road
+	PL_PS $7094,render_before_pause
+	PL_PS $75c8,render_before_exit
+	IFD VERIFY
+	PL_ENDIF
+	ENDC
 	PL_NEXT pl_section0
 pl_main_v1_sr
 	PL_START
-	IFD VERIFY
-; Route 68010+ through the fixtures; retain the normal chain byte-for-byte.
+; Route every v1 CPU through the display fix and optional fixtures.
 	PL_W $0ac2c,$42e7
 	PL_W $0ac96,$42e7
 	PL_W $0ace6,$42e7
@@ -332,13 +351,12 @@ pl_main_v1_sr
 	PL_W $0af12,$42e7
 	PL_W $0af5e,$42e7
 	PL_NEXT pl_main_v1
-	ELSE
-	PL_NEXT pl_sr
-	ENDC
 
 	IFD VERIFY
 	include "verification.s"
 	ENDC
+
+	include "render.s"
 
 pl_song1
 	PL_START
@@ -505,7 +523,9 @@ load_exe:
 	move.l	d2,d0			; argument string length
 	move.l	_stacksize(pc),-(a7)	; original stack format
 	movem.l	(_saveregs,pc),d1-d7/a1-a2/a4-a6	; original registers (BCPL stuff)
+	bsr render_interrupt_option
 	jsr	(4,a3)		; call program
+	bsr render_interrupt_restore
 	addq.l	#4,a7
 
 	movem.l	(a7)+,d7/a6
@@ -630,6 +650,8 @@ _stacksize
 
 tag		dc.l	WHDLTAG_CUSTOM1_GET
 custom1	dc.l	0
+		dc.l	WHDLTAG_CUSTOM2_GET
+custom2	dc.l	0
 		dc.l	WHDLTAG_ATTNFLAGS_GET
 attnflags
 	dc.l	0

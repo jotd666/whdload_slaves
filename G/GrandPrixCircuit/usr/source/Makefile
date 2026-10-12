@@ -13,7 +13,7 @@ all: OUTPUT = GrandPrixCircuit.slave
 verify: OUTPUT = GrandPrixCircuit-verify.slave
 verify: VASMFLAGS += -DVERIFY=1
 # Phony targets always rebuild when flags change and allow spaces in OUTDIR.
-all verify: $(SOURCE) verification.s
+all verify: $(SOURCE) verification.s render.s
 	mkdir -p "$(OUTDIR)" "$(INCDIR)/lvo"
 	@for lib in dos exec graphics expansion; do \
 	  printf ' IFND GPC_LVO_%s\nGPC_LVO_%s SET 1\n INCLUDE "lvo/%s_lib.i"\n ENDC\n' $$lib $$lib $$lib > "$(INCDIR)/lvo/$$lib.i"; \

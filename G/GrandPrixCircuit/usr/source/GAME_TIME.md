@@ -213,7 +213,8 @@ see `PERFORMANCE_PLAN.md` for the decision and acceptance boundary. Do not move 
 render-path events to the VBL merely to obtain cross-machine equality. Preserve native
 modal boundaries and rate/event distinctions above. A higher-rate human-handling,
 crash/spin, full-lap and pit acceptance matrix is still needed when there is an actual
-implementation to compare. The blinking horizon/buffer issue remains Phase 5.
+implementation to compare. The Phase 5 display handoff fix is documented in `PERFORMANCE_PLAN.md`; this time model
+still describes the unchanged native simulation.
 
 ## Reproducibility and scope
 
@@ -241,15 +242,17 @@ SDK material is committed. Evidence root: `tmp/dev/tmp/phase3/`.
   rerun over the corrected extent: A500 and A1200 still match at both boundaries and in
   every instruction/register/cycle record, DMA record and active pixel.
 
-The normal slave remains SHA-256
+At the end of Phase 3, the normal slave was SHA-256
 `e7d4b1361817ede24db993d8d19969ac11887352d6e8b45e2c628391a15d908d`, byte-identical to
-Phase 1. The final VERIFY instrument binary is
+Phase 1. The Phase 3 VERIFY instrument binary was
 `7af8f2f025632252c316c1ef6aa0991b254165edc2fac2d6a14784d41b01d0ed`.
-All new source hooks are within `IFD VERIFY`; `CUSTOM2` still has no effect.
+Those Phase 3 additions are within `IFD VERIFY`; CUSTOM2 had no effect through Phase 4.
+Phase 5 adds the unconditional display handoff and gated blitter changes; current evidence
+and binary hashes belong to the Phase 5 section of `PERFORMANCE_PLAN.md`.
 
 Both vasm targets build successfully. `check_phase3.py` verifies all original immutable
 code, the existing JOTD patches and 139 jump stubs after restoring only the exact enabled
 VERIFY spans; a corrupted swap instruction fails its negative control. Normal/slow/traffic
 combinations and both CPUs pass. The eight-span boundary/branch audit passes. All 55
-pristine files retain their manifest hashes. The Phase 4 policy changes documentation only;
-no Phase 5/6 patch is implemented.
+pristine files retained their manifest hashes in the Phase 3 checks. Phase 5 changes display
+handoff and blitter policy only; no higher-rate simulation is implemented.
