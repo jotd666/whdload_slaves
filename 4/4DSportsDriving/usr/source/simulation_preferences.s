@@ -71,8 +71,8 @@ sim_preferences_read:
  rts
 
 ; $16C9E: after the native benchmark, before copying selected to active mode.
-; Missing/invalid files use Normal on 000/010, A2500 on 020+.
-; A4000 remains explicit opt-in. A valid saved choice wins; loading never writes.
+; Missing/invalid files use Normal on 000/010, A2500 on 020/030,
+; and A4000 on PAL 040/060. A valid saved choice wins; loading never writes.
 sim_preferences_load:
  movem.l d0-d7/a0-a6,-(sp)
  movea.l $bda(a4),a6
@@ -100,6 +100,13 @@ sim_preferences_load:
  btst #1,d1               ; AFB_68020 includes 030/040/060
  beq .apply
  moveq #20,d0
+ and.l #$88,d1            ; AFB_68040 (bit 3) or AFB_68060 (bit 7)
+ beq .apply
+ lea sim_preferences_load(pc),a0
+ adda.l #sim_time_field_hz-sim_preferences_load,a0
+ cmp.w #50,(a0)
+ bne .apply              ; NTSC retains A2500; A4000 is PAL-only
+ moveq #50,d0
  bra .apply
 .saved:
  cmp.w #20,d0

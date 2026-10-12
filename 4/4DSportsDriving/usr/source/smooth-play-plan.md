@@ -4,6 +4,8 @@ Written 2026-10-11 on HEAD `c70ea93` (branch `4dsportsdriving`). This plan super
 "next steps" sections of optimization-plan.md, simulation-plan.md and open-work.md. Their historical
 versions remain reference material for addresses and evidence, not a to-do list.
 P1-P6 are complete; the A500 FAST target is deferred and A4000 remains experimental.
+Current defaults supersede the earlier opt-in policy: PAL 040/060 use A4000,
+020/030 use A2500, and 000/010 use Normal. Valid saved choices still win.
 Historical harness research is preserved in `tmp/dev/docs/.git` at `9311a53`;
 `docs/open-work.md` is the single current-state guide.
 This tracked file is authoritative. Relative paths such as `tools/`, `docs/` and `tmp/prof/`
@@ -816,6 +818,34 @@ Current local testing archive: `dist/4DSportsDriving_v1.3b_1461.lha`, 928822 byt
 SHA256 `0cacd1d4eaa3a54bfb5013e2107f5fd6ae631740a37738c0d587238524d6cb90`.
 All 124 members were re-extracted and checked; only the slave and ReadMe differ
 from the original v1.2 pack. Nothing was published.
+
+## Automatic A4000 default on PAL 68040/68060 — v1.3b
+
+At the user's request, missing/invalid preferences now choose A4000 (50 Hz)
+on PAL 68040/68060. The CPU mask checks the 040 and 060 attention bits;
+68000/010 retain Normal (10 Hz), 020/030 retain A2500 (20 Hz), and NTSC
+040/060 retain A2500. Valid saved choices retain precedence. CUSTOM3=1
+still bypasses corrected timing/default selection entirely. The splash
+rendering checkbox remains independent. A4000 is still experimental (27/29
+handling checks); the previous manual-opt-in-only policy is superseded.
+
+No physics integrator, replay format or rendering algorithm changed. The
+production slave is 204640 bytes, SHA256
+`4d6772b1256620dc5722eb9522b6af8702cca263693f3053bcc43be17c18517f`.
+The local archive is `dist/4DSportsDriving_v1.3b_1461.lha`, 928885 bytes,
+SHA256 `9efc20751c347531bd4997e799b4c4bf7b2d3c8c2e85e81c3a393ff456cd6a24`.
+All 124 members were verified; only the slave and ReadMe differ from v1.2.
+The earlier P6/splash hashes above identify their historical captures.
+
+Validation on this build: `tmp/prof/default-040060`. D and E start with
+selected/active/recorded rates all 50 and no saved file; ten-second FULL
+benchmarks are 45.88855/45.98853 FPS at 49.98753 steps/s, no queue overflow.
+Saved 20 Hz on D and saved 10 Hz on E override the CPU defaults. NTSC D
+with a saved 50 Hz choice falls back to 20 Hz (status 5). Guard checks pass.
+The legacy B check preserves all 38 disabled hook ranges; the hook audit
+passes with no new hook or interior branch/relocation target. Short setup
+windows for preference/legacy checks are functional evidence, not FPS rows.
+Each emulator had its own 180-second watchdog and was closed afterward.
 
 ## Not doing (with reasons)
 

@@ -46,13 +46,15 @@
  - Normal runs at 10 simulation steps/s and A2500 at 20 steps/s, independent
    of rendering speed. The field clock detects PAL/NTSC and uses a 50/60
    phase accumulator. Slow rendering catches up the queued input in order.
- - without a saved choice, 68000/68010 select Normal; 68020 and later select
-   A2500. CTRL-G changes detail and simulation settings. A changed simulation
-   setting takes effect on the next race, and is saved in data/4DPhysics.cfg.
- - A4000 is an explicit opt-in, experimental 50 Hz mode for PAL machines.
-   It updates physics and controls at 50 Hz without interpolation. It is
-   never selected automatically by CPU type. On NTSC a saved A4000 choice
-   falls back to the CPU default; A4000 selection/replay loading is blocked.
+ - without a saved choice, 68000/68010 select Normal; 68020/68030 select
+   A2500; PAL 68040/68060 select A4000. NTSC 68040/68060 select A2500.
+   CTRL-G changes detail and simulation settings. A changed simulation setting
+   takes effect on the next race, and is saved in data/4DPhysics.cfg.
+ - A4000 is an experimental 50 Hz mode for PAL machines, selected by default
+   on 68040/68060 unless a valid saved preference overrides it. It updates
+   physics and controls at 50 Hz without interpolation. On NTSC a saved
+   A4000 choice falls back to the CPU default; A4000 selection and replay
+   loading are blocked.
  - A4000 handling is not fully validated: 27/29 frozen handling checks pass.
    Common-Y travel is 2263 versus 1247, and landing pitch is 18 versus 11
    internal units in the two failing checks. Keep A4000 experimental.
@@ -65,7 +67,8 @@
  - the splash checkbox "Enhanced framerate (68020+Fast for CPU renderer)"
    enables all rendering enhancements. Compatible optimizations also benefit
    68000 machines; the CPU renderer requires 68020+ and real Fast RAM.
-   Corrected timing stays enabled; A4000 remains an in-game opt-in.
+   Corrected timing stays enabled. Simulation selection is independent of
+   this checkbox; use CTRL-G to override the CPU default.
  - Advanced tooltypes (renderer-only and legacy timing are not splash options):
    CUSTOM2=0 (default): original rendering.
    CUSTOM2=1: all validated rendering optimizations, including the eligible
@@ -78,9 +81,9 @@
    and the optional renderer require additional host memory.
 
  Emulator measurements; real-hardware reports welcome.
- Ten-second PAL moving windows on the P6 production build. Version 1.3b
- changes only splash text/options and version metadata; game code is unchanged. Values are FPS,
- counted at display-buffer switches; FULL/FAST are graphics detail levels.
+ Ten-second PAL moving windows on the P6 production build. Current
+ CPU defaults are described above; the table uses the explicit rates shown.
+ Values are FPS, counted at display-buffer switches; FULL/FAST are graphics detail levels.
  CUSTOM2=0 and CUSTOM2=1 both use corrected timing (CUSTOM3=0).
 
  Machine / simulation           C2=0 FULL FAST    C2=1 FULL FAST
