@@ -433,7 +433,10 @@ Tools stay in ignored `tmp/dev/tools`.
      same controlled start, two eight-field frames give velocity74 versus67.625
      for sixteen fine ticks. The earlier matrix did not cover this boundary.
      Resolving the handling target while preserving the native-step requirement
-     remains open; see GAME_TIME.md. The new VERIFY_DISPATCH_TEST_FIELDS fixture
+     remains open; see GAME_TIME.md. A subsequent native-endpoint interpolation
+     prototype matches held-input endpoints but fails an abrupt braking change
+     by applying it retroactively across the phase; it is not installed in game
+     code. The new VERIFY_DISPATCH_TEST_FIELDS fixture
      overrides elapsed intervals without selecting native compatibility bypasses;
      its synthetic time is not performance or wall-time acceptance evidence.
      This is not the unchanged driving tape and does not resolve equal-wall-time

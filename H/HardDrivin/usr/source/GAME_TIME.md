@@ -3406,3 +3406,44 @@ input tape still follows a different route under scaled physics.
 
 The fresh `s4-sweep-disabled` boot passes all158 declared patch ranges with
 CUSTOM1 off (only the input fixture enabled). All owned captures are closed.
+
+
+## Native-endpoint interpolation experiment
+
+A host-side prototype (`check_native_phase.py`) evaluates the actual pristine
+68000 engine from a saved eight-field phase anchor on every frame segment.
+It interpolates velocity and RPM toward that native endpoint and distributes
+the endpoint's cardinal-axis displacement linearly. This is distinct from the
+earlier Euler extension: a zero-displacement native stopping interval remains
+stationary rather than moving forward and then backward. No game patch uses it.
+
+For held throttle22, held throttle100, full braking from speed100 and full
+braking from speed1, all128 eight-field endpoint comparisons match the native
+engine. Across frame lengths1,2,3,7,8,9,16 and31, all32 configurations match the
+one-field prototype at equal consumed time. Position never decreases in these
+positive-axis cases. Projection is the audited cardinal floor(3*v/2) model; the
+experiment does not execute native position, contact or rendering routines.
+
+Changing input invalidates the straightforward anchored interpolation. Starting
+at speed100/RPM3000 in first gear, seven fields at throttle100 give interpolated
+speed135. Switching to full braking for the final field recalculates the full
+phase endpoint and publishes speed94: a41-unit drop in one field. The actual
+native eight-field brake update from the phase anchor loses only6 units. The
+prototype has retroactively applied the new input to the earlier part of the
+phase. This is a rejected input-handling result, not an accepted tolerance.
+Reusing native endpoints alone therefore does not solve the requested per-frame
+physics behavior. Any successor must preserve already-consumed motion and test
+input changes, gear events and collision resets before runtime integration.
+Evidence is retained in `native-phase-check.json`. Step4 remains open.
+
+Additional sweep verification (`sweep-rotation-check.json`) compares the tracked
+rotation helper with the pristine `$0bb6e..$0bbd2` transformation and its original
+math helpers. All5000 signed-word XYZ cases with two independently varied Q14
+rotation angles match exactly. This checks the transform, not a rotating swept
+trajectory or broad-phase scene coverage.
+
+The longer active run `s4-sweep-live-full-a500` completes the6000-field input
+tape with595 physics returns and251 candidate sweep tests. Intervals span6..16
+and19 fields after initialization. No added hit or coordinate overflow occurs.
+This extends live integration coverage, but still supplies no natural swept
+collision or FPS acceptance evidence. The owned capture is closed.
