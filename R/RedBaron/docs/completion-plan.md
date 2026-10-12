@@ -53,8 +53,14 @@ measurement. The rules below prevent a repeat.
 | U3 | More fast RAM | **Raise `FASTMEMSIZE`** in the single slave to cover the measured chip spill; no second slave |
 | U4 | Player default | **Faster rendering on by default**; icons unchanged |
 
+Memory amendment approved 2026-10-12: raise the minimum RAM requirement after
+E2's 1 MiB reservation failed the former 512 KiB chip + 1.5 MiB slow boot.
+Keep one slave. The new minimum test configuration is 512 KiB chip + 2 MiB fast
+on the 68000; validate its normal-build flight. Historical A500 scoreboard
+measurements retain their original memory configuration until refreshed.
+
 These are settled; do not re-ask. Stop and ask only if a step's evidence
-contradicts one of them, e.g. if a ≥1.5 MB A500 no longer boots after U3.
+contradicts one of them, e.g. if the amended A500 minimum cannot boot.
 
 ## 2. Where the time goes now
 
@@ -132,7 +138,7 @@ fills, `15e96` instrument scripts at 14.5 ms, `19ba6` at 8.7 ms, overlay
 
 **A2. Full-bundle census.** Measure CUSTOM2=0 against CUSTOM2=1 on the same
 normal build on:
-- A500 (512K chip + 1.5M slow)
+- A500 (512K chip + 2M fast after the approved E2 memory amendment; A2 used 1.5M slow)
 - 020 + 8M fast
 - 030/50 with and without MMU
 - 040/25

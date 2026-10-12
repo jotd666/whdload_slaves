@@ -17,8 +17,8 @@ def environment(machine, mask=0, *, functional=False, environ=None):
     env.update(MallocScribble='1', WHD_ARGS=f'CUSTOM2={mask} CUSTOM5=0',
                CHIP_KB='2048', FAST_KB='8192')
     if machine == 'a500':
-        env.update(AMIGA_MODEL='A500', CPU='68000', CHIP_KB='512', FAST_KB='0',
-                   EXTRA_ARGS='--slow_memory=1536 --uae_cpu_multiplier=2' + flags)
+        env.update(AMIGA_MODEL='A500', CPU='68000', CHIP_KB='512', FAST_KB='2048',
+                   EXTRA_ARGS='--slow_memory=0 --uae_cpu_multiplier=2' + flags)
     elif machine == '020':
         env.update(AMIGA_MODEL='A1200', CPU='68EC020',
                    KICKSTART=env['KICKSTART_A1200'],

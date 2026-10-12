@@ -32,7 +32,7 @@
 ;============================================================================
 
 CHIPMEMSIZE	= $80000
-FASTMEMSIZE	= $B0000 ; B1: 181568-byte peak spill plus 15040 bytes headroom
+FASTMEMSIZE	= $100000 ; B1 pool plus 320 KiB reserved for bit-19 cockpit caches
 NUMDRIVES	= 1
 WPDRIVES	= %0000
 

@@ -84,7 +84,12 @@ must not be used as a performance candidate yet.
 Full-composition view twins remain open. The map-toggle check is dropped: the
 bundled game documentation specifies offline navigation maps, not an in-flight
 map command. Results are in the scoreboard. D5 remains postponed and E2–F remain
-open; the earlier lists below are historical context, not the execution order.
+open. The user approved raising the minimum RAM on 2026-10-12 after the
+1 MiB slave reservation failed on the former A500 memory configuration.
+The normal build now passes boot and flight with 512 KiB chip + 2 MiB fast.
+The extra 320 KiB quota is released only for the 020+ bit-19 cache; historical
+A500 timing results still describe the earlier RAM configuration.
+The earlier lists below are historical context, not the execution order.
 
 
 The accepted decisions and detailed requirements are in `performance-plan.md`,

@@ -29,6 +29,34 @@ D3 is compiled in all modes after D4: the 68000 skips pose capture/blending and 
 
 D4 runtime promotion is complete, with no new performance claim: normal/developer/VERIFY code sizes are 116,898 / 117,214 / 302,184 bytes. All 441 host tests, 79 hook ranges, and 134 VERIFY / 113 developer patch destinations pass. Developer bit 13 enables timing on 68000/020+, forces bits 8/9 with a one-field cap, and modal resume restores the selected quantum. Player fixtures/logs are excluded; normal verified-mask activation awaits D5 acceptance. First-flight entry resets draw eligibility on both CPU paths, including the 68000 path that skips pose capture.
 
+### E2 memory gate — higher minimum approved
+
+The first complete-composition attempt (`completion-e2-full-compose`) made no
+pixel comparisons: all 109 completed native stage intervals fell back because
+the gauge and foreground allocations failed. The gauge pool was then compacted
+from 676,480 to 58,240 bytes, with a shared 48,000-byte expansion scratch.
+A trial increased the declared fast pool from 704 KiB to 1 MiB, reserving the
+additional 320 KiB unless bit 19 was selected on 020+. The normal A500 build
+could not boot on 512 KiB chip + 1.5 MiB slow: the AmigaDOS screen repeatedly
+reported “Can't allocate ExpMem.” This contradicts the approved minimum-memory
+requirement, so the trial was stopped under completion-plan §1. On 2026-10-12
+the user approved raising the minimum RAM requirement. The 1 MiB reservation
+is reinstated; 512 KiB chip + 2 MiB fast is the new A500 validation configuration.
+The existing A500 scoreboard row remains historical until refreshed. This is a memory failure,
+not a new FPS result or a passed pixel twin. Evidence:
+`completion-e2-memory-a500/{boot.png,slave.slave,memory-trial.patch}`;
+trial normal SHA-256 `5a7ad2dfc6afe2271778dabadd6b81ec6f376490cd5e7862166caae07751424d`.
+
+The amended minimum passes on that same normal binary: 68000, 512 KiB chip
+and 2 MiB fast, CUSTOM2=1, maximum detail. Five native publication crossings
+complete without the mission-exit breakpoint firing; the cockpit screenshot
+shows normal flight. Evidence: `completion-e2-memory-a500-raised-flight`.
+This is a boot/flight check, not an FPS window. All three builds, 511 host tests,
+84 hook ranges and 139 VERIFY patch destinations pass. An earlier attempt
+reached flight but used a timing driver whose 1,000-field minimum rejected the
+short check; its host debugger then terminated the emulator during teardown.
+The passing dedicated driver detached cleanly before quitting the emulator.
+
 ### D5 acceptance postponed — not a passed checkpoint
 
 The added candidate FPS and world-rate/drop columns use **developer bit 13**,

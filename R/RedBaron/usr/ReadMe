@@ -38,7 +38,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- The slave reserves 704 KB for game fast-memory allocations, plus Kickstart.
+ The slave reserves 1 MB for game and cockpit-cache memory, plus Kickstart.
+ The former 512 KB ChipMem + 1.5 MB slow-RAM configuration is insufficient.
+ Tested minimum: 512 KB ChipMem + 2 MB FastMem (normal-build flight).
  Faster rendering releases the extra pool for sim v1 on supported CPUs.
  With the option off, the game retains its original allocation budget.
  DMA allocations retain their original ChipMem requests.
