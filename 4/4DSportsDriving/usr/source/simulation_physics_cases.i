@@ -1650,3 +1650,37 @@ sim_heading_cases:
  dc.w 32767,1,1,32767,0
  dc.w 32767,1,4,32767,0
 sim_heading_cases_end:
+
+; h5,a,initial position fraction,expected v,vf,down,pf
+sim_release_cases:
+ dc.w 1,21,0,4,1,2,13
+ dc.w 1,21,24,4,1,3,12
+ dc.w 2,21,0,8,2,5,22
+ dc.w 2,21,24,8,2,6,21
+ dc.w 3,21,0,12,3,10,2
+ dc.w 3,21,24,12,3,11,1
+ dc.w 4,21,0,16,4,15,3
+ dc.w 4,21,24,16,4,16,2
+ dc.w 5,21,0,21,0,21,0
+ dc.w 5,21,24,21,0,21,24
+ dc.w 1,15,0,3,0,1,20
+ dc.w 1,15,24,3,0,2,19
+ dc.w 2,15,0,6,0,4,5
+ dc.w 2,15,24,6,0,5,4
+ dc.w 3,15,0,9,0,7,5
+ dc.w 3,15,24,9,0,8,4
+ dc.w 4,15,0,12,0,10,20
+ dc.w 4,15,24,12,0,11,19
+ dc.w 5,15,0,15,0,15,0
+ dc.w 5,15,24,15,0,15,24
+sim_release_cases_end:
+; old,new,carry,distance,expected distance,expected carry
+sim_endpoint_cases:
+ dc.w 0,156,0,5,9,2
+ dc.w 156,0,0,5,0,8
+ dc.w 156,155,0,5,5,0
+ dc.w 65535,0,0,3000,1197,9
+ dc.w 0,65535,9,0,1803,0
+ dc.w 624,624,3,22,22,3
+ dc.w 156,0,9,5,1,7
+sim_endpoint_cases_end:

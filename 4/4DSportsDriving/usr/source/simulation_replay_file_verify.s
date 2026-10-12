@@ -155,15 +155,15 @@ sim_replay_file_fixture:
  bsr sim_replay_pack
  tst.l d0
  bne .failed
- ; An ABI8 header with a correct checksum must not load as new physics.
- move.w #8,10(a5)
+ ; An ABI9 header with a correct checksum must not load as new physics.
+ move.w #9,10(a5)
  bsr sim_replay_test_checksum
  movea.l a5,a0
  move.l #SIM_REPLAY_BYTES,d0
  bsr sim_replay_validate
  tst.l d0
  bne .failed
- move.w #9,10(a5)
+ move.w #10,10(a5)
  bsr sim_replay_test_checksum
  addq.l #1,12(a6)
  ; Rejection must leave every output byte unchanged.

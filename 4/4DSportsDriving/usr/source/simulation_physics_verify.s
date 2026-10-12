@@ -169,6 +169,54 @@ sim_physics_selftest:
  addq.l #1,(a0)
  lea 12(a2),a2
  dbra d6,.airborne
+ lea sim_release_cases(pc),a2
+ move.w #(sim_release_cases_end-sim_release_cases)/14-1,d6
+.release:
+ lea sim_physics_test_fraction(pc),a0
+ clr.w (a0)
+ move.w 4(a2),2(a0)
+ lea sim_physics_test_position(pc),a1
+ clr.l (a1)
+ moveq #0,d0
+ move.w (a2),d2
+ move.w 2(a2),d1
+ bsr sim_release_pair_50
+ cmp.w 6(a2),d0
+ bne .failed
+ cmp.w 10(a2),d1
+ bne .failed
+ move.w (a0),d0
+ cmp.w 8(a2),d0
+ bne .failed
+ move.w 2(a0),d0
+ cmp.w 12(a2),d0
+ bne .failed
+ neg.l d1
+ cmp.l (a1),d1
+ bne .failed
+ lea sim_physics_passed(pc),a0
+ addq.l #1,(a0)
+ lea 14(a2),a2
+ dbra d6,.release
+ lea sim_endpoint_cases(pc),a2
+ move.w #(sim_endpoint_cases_end-sim_endpoint_cases)/12-1,d6
+.endpoint:
+ lea sim_physics_test_fraction(pc),a0
+ move.w 4(a2),(a0)
+ moveq #0,d0
+ move.w 6(a2),d0
+ move.w (a2),d1
+ move.w 2(a2),d2
+ bsr sim_endpoint_50
+ cmp.w 8(a2),d0
+ bne .failed
+ move.w (a0),d0
+ cmp.w 10(a2),d0
+ bne .failed
+ lea sim_physics_passed(pc),a0
+ addq.l #1,(a0)
+ lea 12(a2),a2
+ dbra d6,.endpoint
  lea sim_extension_cases(pc),a2
  move.w #(sim_extension_cases_end-sim_extension_cases)/10-1,d6
 .extension:

@@ -119,6 +119,41 @@ sim_distance_50:
  and.l #$ffff,d0
  rts
 
+; Endpoint correction to the calibrated native distance Q(speed).
+; d0.l distance, d1.w old speed, d2.w new speed; a0 -> unsigned tenths.
+; extra=floor((3*(Qnew-Qold)+carry)/10), remainder0..9, including deceleration.
+; Preserve all inputs except d0 and the remainder.
+sim_endpoint_50:
+ movem.l d1-d4,-(sp)
+ move.l d0,d4
+ mulu #1408,d1
+ divu #15360,d1
+ and.l #$ffff,d1
+ mulu #1408,d2
+ divu #15360,d2
+ and.l #$ffff,d2
+ sub.l d1,d2
+ move.l d2,d0
+ add.l d2,d0
+ add.l d2,d0
+ moveq #0,d3
+ move.w (a0),d3
+ add.l d3,d0
+ divs #10,d0
+ move.w d0,d2
+ swap d0
+ tst.w d0
+ bpl .remainder
+ add.w #10,d0
+ subq.w #1,d2
+.remainder:
+ move.w d0,(a0)
+ ext.l d2
+ move.l d4,d0
+ add.l d2,d0
+ movem.l (sp)+,d1-d4
+ rts
+
 ; Approach target at a nominal A2500 rate (gear actuator uses 6 units/step).
 ; d0.w current, d1.w target, d2.w positive rate, a0 -> signed fraction.
 ; Return d0.l signed new current, stop exactly at target and clear carry there.
@@ -189,6 +224,43 @@ sim_airborne_pair_50:
  move.l d5,d1
  movem.l (sp)+,d2-d5
  rts
+
+; First airborne pair after a velocity reset. d2.w=h5 (1..5),
+; d1.w acceleration, d0.w=0; a0 fractions, a1 position, same return as above.
+; h=h5/5; dy=h(h+1)*a/2 using T=3,7,12,18,25 in twenty-fifths.
+sim_release_pair_50:
+ movem.l d2-d5/a2,-(sp)
+ move.w d1,d4
+ move.w d2,d3
+ add.w d3,d3
+ lea .triangular(pc),a2
+ move.w -2(a2,d3.w),d0
+ muls d4,d0
+ move.w 2(a0),d3
+ ext.l d3
+ add.l d3,d0
+ divs #25,d0
+ swap d0
+ move.w d0,2(a0)
+ swap d0
+ ext.l d0
+ move.l d0,d5
+ sub.l d0,(a1)
+ move.w d2,d0
+ muls d4,d0
+ move.w (a0),d3
+ ext.l d3
+ add.l d3,d0
+ divs #5,d0
+ swap d0
+ move.w d0,(a0)
+ swap d0
+ ext.l d0
+ move.l d5,d1
+ movem.l (sp)+,d2-d5/a2
+ rts
+.triangular:
+ dc.w 3,7,12,18,25
 
 ; Positive-clearance suspension extension from $10226..$10286. The input is
 ; geometric wheel clearance, but native code accumulates it into extension on

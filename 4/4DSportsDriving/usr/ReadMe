@@ -59,6 +59,7 @@
    faster PAL Amigas, selected by default on 68040/68060 systems.
  - Automatic simulation defaults and saved simulation preferences.
  - Replay saving and playback for A4000 mode; original replays remain supported.
+ - A4000 jumps are closer to A2500; older A4000 replays are incompatible.
 
  version 1.2 (21.03.2021) done by JOTD:
  - long delay when ending a race removed (side effect

@@ -3,12 +3,13 @@
 Written 2026-10-11 on HEAD `c70ea93` (branch `4dsportsdriving`). This plan supersedes the
 "next steps" sections of optimization-plan.md, simulation-plan.md and open-work.md. Their historical
 versions remain reference material for addresses and evidence, not a to-do list.
-P1-P6 are complete; the A500 FAST target is deferred and A4000 remains experimental. P7: integrate the screened partial fix (see P7 integration plan).
-Current release: 2.0b (13.10.2026), 37208-byte slave. Runtime buffers are allocated
+P1-P7 are complete; the A500 FAST target is deferred. A4000 remains experimental,
+with the P7 partial handling correction accepted at the unchanged 27/29 gate.
+Current release: 2.0b (13.10.2026), 37440-byte slave. Runtime buffers are allocated
 at startup; the DSI intro buffer-reuse flicker is fixed (see sections below).
-Current binary SHA256: `6508c4d303e2edca408c7923c741d419a82c60d71f2b1d92a8b89a2c88e831d4`.
-Testing archive: `dist/4DSportsDriving_v2.0b_1461.lha` (926511 bytes), SHA256
-`381786cc3cff785fdd6ffce166e2eaed0f2e3df1ab2e67971f2c6657607cfff3`. All 124 members checked;
+Current binary SHA256: `f9ec3a551ade96b648c83ad5266aaae0e431a09321be9f243f8a07a3e6ea0d2a`.
+Testing archive: `dist/4DSportsDriving_v2.0b_1461.lha` (926691 bytes), SHA256
+`9dd3ba4058c88fb7945852eedf6c20e39c1630765f6ce85b1e12be415167fb06`. All 124 members checked;
 only slave and ReadMe differ from the original pack. The ReadMe is customer-facing;
 development evidence remains here. Earlier hashes identify historical captures.
 Current defaults supersede the earlier opt-in policy: PAL 040/060 use A4000,
@@ -948,243 +949,88 @@ steps 1500/1550/1600 and restores all 1802 route bytes. Each emulator was
 bounded by a 180-second watchdog and closed afterward. Archive re-extraction
 verifies all 124 members. No real-hardware validation is claimed.
 
-## P7. Pass the A4000 crest handling gate (stopped 2026-10-12)
+## P7. Integrate the screened A4000 correction (complete 2026-10-12)
 
-Goal: the frozen crest gate (`tmp/prof/natural-crest-criteria.json`, SHA256
-`90570d37e39d7fbdf804bbc497959ffe30e60f51bbb60c3e938f041c1d3401db`) passes 29/29
-for A4000 without changing the criteria, Normal or A2500. Today it is 27/29: common Y
-2263 against 1247, common pitch 18 against 11 (`tmp/prof/crest-d9e7903/bridge-handling.json`).
+The user-approved integration is complete. A4000 remains **experimental** and the
+unchanged frozen crest gate remains **27/29**, accepted by the 2026-10-12 decision.
+Normal and A2500 behavior is unchanged. No landing variant or further tuning was used.
 
-### Current result: stopped at step 3
+### Production implementation
 
-One offline session completed; no runtime candidate was integrated. The production
-slave, ABI9, native modes, ReadMe and testing archive are unchanged. Production still
-passes 27/29. Both frozen criteria hashes are unchanged. No emulator was launched.
+- Both cars receive the screened endpoint correction after `sim_distance_50`:
+  `divmod(3*(Qnew-Qold)+carry,10)`, where `Q=floor(speed*1408/15360)`.
+  The remainder at private+32 has floor semantics (0..9), including deceleration.
+  Original disassembly confirms `$F11C` saves old speed in car+$2E and no subsequent
+  write changes it before `$C326`; new speed is car+$2C. The snapshot layout is unchanged.
+- A wheel with zero velocity word and zero velocity fifths uses `sim_release_pair_50`.
+  The replay-restored race tick supplies `h5=(2*tick)%5`, with zero meaning5.
+  Downward displacement uses the triangular numerators3/7/12/18/25; subsequent
+  airborne updates retain the existing2/5 recurrence. Both accelerations and all
+  five release ages are covered by executed VERIFY cases.
+- A4000 replay physics ABI is 10 (file format 2). Valid-CRC ABI9 files are rejected
+  with the existing invalid-replay message. Native10/20 files remain supported.
 
-The exact controls reproduce all 795 A4000 updates and all 319 native20 updates in
-**each** starting position. Reconstructing the initial tick-0 state also reproduces
-all 795 retained A4000 rows, including drivetrain fields and carries.
+Production slave: 37440 bytes, SHA256
+`f9ec3a551ade96b648c83ad5266aaae0e431a09321be9f243f8a07a3e6ea0d2a`.
+Version remains **2.0b (13.10.2026)**. The local testing archive is rebuilt from
+this slave and the updated ReadMe; it is not published.
 
-Step 1 disproved the proposed position-truncation diagnosis below. In the requested
-0.2–1.6 s ledger, all 29 native20 and 71 A4000 updates apply exactly the movement
-kernel's intended Z: rotation loss and centroid loss are both zero. The difference
-comes from sampling accelerating speed at different step endpoints. The existing
-constant-speed fifths already preserve native integer distance truncation.
+### Live equivalence and handling
 
-The offline correction preserves that kernel and adds a carried
-`(1-h)/2 * (Qnew-Qold)`, where `h=2/5` and `Q=floor(speed*1408/15360)`.
-Thus its coefficient is 3/10, derived from the native semi-implicit update, not fitted
-to the reference trajectory. For constant acceleration, five fractional updates
-sum to the same displacement as two native updates; at constant speed it is zero.
-This is an endpoint-integration correction, **not** a newly found truncating opcode.
-At 9.0 s it changes Z50-Z20 from -652 to -39 in every phase (limit +/-60), with
-all approach speed samples through 9.0 s unchanged. Later speeds may change through
-contact feedback and remain subject to the frozen gate.
+At each start Z (-64/0/+64), all 795 body records for ticks 6..800 match the frozen
+`p7-session1/combined-*.json` rows exactly: XYZ, pitch, speed and four wheel flags.
+Nominal live gate results:
 
-Step 2 uses the specified release age, with fifths and twenty-fifths carries.
-Controlled free-flight detections at ticks 560/564 reproduce front189/rear105 at580.
-Combined recurrent screening from tick0 gives:
-
-| Start Z | Common Y error (limit1247) | Common pitch error (limit11) | Phase-family failures, before -> after |
+| Measurement | Before | Integrated | Frozen limit |
 |---|---:|---:|---:|
-| -64 | 3044 | 47 | 95 -> 70 |
-| 0 | 1442 | 11 | 70 -> 53 |
-| +64 | 2191 | 11 | 90 -> 69 |
+| Common Y error | 2263 | 1442 | 1247 (fails) |
+| Common pitch error | 18 | 11 | 11 (passes) |
+| Common speed error | 756 | 7719 | 3400 (fails) |
+| Checks passed | 27/29 | 27/29 | 29/29 not claimed |
 
-Nominal common-speed error also fails:7719 against3400. The partial offline physical
-screen covers19 checks and fails commonY/commonSpeed; it is not a live29-check pass.
-The phase-family failure counts reproduce the baseline70/95/90 and improve, but do
-not waive the original gate. Height still fails, so the step3 stop rule applies.
-The impact-return variant, ABI10 integration and live validation were not attempted.
-The user must choose the next direction under step6; remaining session allowance
-is not permission to try more candidate families.
+Phase-family failures (nominal/minus64/plus64) are **53/70/69**, versus 70/95/90.
+The offline 9s Z gap is -39 versus the previous -652, with approach speeds unchanged;
+controlled first detections at 560/564 reproduce front 189/rear 105 at 580.
+These are the accepted partial improvements, not a re-baselined handling gate.
+Criteria SHA256 remains
+`90570d37e39d7fbdf804bbc497959ffe30e60f51bbb60c3e938f041c1d3401db`;
+the phase-family criteria also remain unchanged.
 
-Evidence (ignored harness): `tmp/prof/p7-session1/{z-ledger,audit,
-release-and-distance-derivation}.json`, exact controls and all three recurrent
-candidate trajectories. Reproduction: `tools/p7_offline.py`, `p7_screen.py`,
-`p7_audit.py`, `p7_release_check.py`. Compressed historical captures are read in
-memory without duplicating large files. See the audit scope for unmodeled live checks.
+### Regression results
 
-### Integration plan (user decision, 2026-10-12)
+- All 4,369 physics self-checks pass, including 27 new release-age/endpoint cases.
+- Native Save Replay followed by fresh-process Load and Play matches all 1,510
+  semantic bytes at1500/1550/1600, including nonzero endpoint remainders, and all 1,802
+  route bytes. Saved file is 63,912 bytes with valid CRC and ABI10.
+- A valid-CRC ABI9 A4000 file is rejected without installation.
+- Native10/20 playback each matches the original1120-byte state at tick200.
+- `CUSTOM2=0 CUSTOM3=1`: all 38 declared disabled ranges match original bytes.
+  Hook audit passes 1,250 relocations and 10,102 aligned branch candidates.
+- Production D/E races select opponent 1 through native menus and pass crash,
+  restart and finish with zero queue overflow; maximum sampled queue is 2.
+  D covers 196.60 emulated seconds. E covers 86.54 seconds with the historical idle
+  prelude shortened to remain inside the 180-second emulator watchdog. This E run
+  is lifecycle coverage, not a two-minute endurance claim.
 
-Decision: build the two screened changes into the production slave exactly as screened.
-Accept the result even though the frozen gate stays 27/29: common Y 1442 against 1247 and
-common speed 7719 against 3400. A4000 stays experimental. Do not tune further, do not try
-the step 4 landing variant, and do not edit any criteria. Normal and A2500 must remain
-byte-identical. The changes apply to both cars.
+Ten-second frame-anchored FULL/CUSTOM2=1 measurements, calibrated 25/50 MHz:
 
-Facts established for integration (original code-hunk offsets):
+| Cell | Plan FPS reference | Integrated FPS | Simulation steps/s |
+|---|---:|---:|---:|
+| D / 040/25 | 45.29 | 41.19 | 49.98753 |
+| E / 060/50 | 45.49 | 45.39 | 49.88755 |
 
-- **Tick phase.** `$E5F2` increments the native tick word `a4-$940` at `$E660`, before
-  player physics (`jsr $E7B8` at `$E6B2`) and opponent physics (`jsr $BC48` at `$E6BE`).
-  During physics `a4-$940` therefore equals the offline model's step number (`r['tick']`),
-  and replay seeks restore it.
-- **Old speed.** In the car update, `jsr $F0D0` (engine, `$C148`) runs before
-  `jsr $C270` (`$C16E`), which contains the A4000 distance hook at `$C326`. At its
-  start, the engine copies +$2C into +$2E (`drivetrain_model.py` line 29). At `$C326`,
-  +$2E is therefore the offline `old` speed and +$2C the `new` one.
-  - Verify that nothing else writes +$2E between the two points (grep the disassembly).
-  - The live/offline row equality in step 4 below is the final proof.
-- **Carry slot.** The reserved private word at car +32 (former return fractions, cleared
-  by reset and copied by snapshots and replays) becomes the endpoint remainder.
+The 040 result is lower; no performance tuning was included in this decision.
+The retained P6 D row is 45.89, rather than the integration plan's 45.29 reference.
+Its window starts at tick 188, versus 197 now; these are frame-anchored gameplay
+measurements, not an isolated same-position instruction-cost comparison.
+E starts at tick 65 in both retained and current measurements. Both runs have zero
+queue overflow. These are emulator results, not real-hardware predictions.
 
-Steps:
-
-1. **Endpoint correction** (`simulation_physics.s`, called from `sim_a4000_distance`).
-   - After `sim_distance_50`, add `extra`, where
-     `(extra, carry) = divmod(3*(Q(new) - Q(old)) + carry, 10)`.
-   - Here `Q(s) = floor(s*1408/15360)`, with s = +$2C (new) and +$2E (old).
-   - Use floor semantics with a remainder of 0..9, like Python `divmod`. DIVS truncates
-     toward zero, so correct negative numerators.
-   - Store the remainder at private +32. The distance word becomes `distance + extra`.
-2. **Release age** (new kernel `sim_release_pair_50` in `simulation_physics.s`, selected
-   in `sim_a4000_wheel`).
-   - Use the new kernel when the wheel velocity word $4C and its private velocity fifths
-     are both zero. Otherwise keep `sim_airborne_pair_50`.
-   - `h5 = (2*tick) mod 5`, with 0 meaning 5, where tick is `a4-$940`.
-   - Down: numerator `T[h5]*a + position_25ths`, with `T = 3,7,12,18,25`; DIVS #25 gives
-     the downward step, and the remainder goes to 2(a0). Subtract the step from the long
-     position.
-   - Velocity: numerator `h5*a + velocity_fifths` (zero here); DIVS #5 gives the new
-     velocity, and the remainder goes to (a0).
-   - Return the downward step in d1.l, as the existing kernel does, for the contact
-     distance.
-   - This matches `tools/p7_screen.py`. Add kernel cases to the existing VERIFY case
-     files for h5 = 1..5 and both accelerations (21 and 15).
-3. **Physics ABI 9 -> 10.**
-   - Update the format/ABI tag (`$00020009` in `simulation_replay_file.s`) and the
-     related messages and companion checks.
-   - Only A4000 recordings change. Tagged ABI9 A4000 replays must be rejected with the
-     existing message. Native 10/20 replays must load as before.
-   - Check every other ABI reference in the source and harness tools.
-4. **Live equivalence before any gate.**
-   - Run the crest fixture at 50 Hz through `bridge_probe.py` for nominal, minus64 and
-     plus64.
-   - The x/y/z/pitch/speed and wheel flags of every body record must equal the offline
-     `tmp/prof/p7-session1/combined-*.json` rows for ticks 6..800.
-   - Any mismatch is an integration bug. Fix it; do not re-tune.
-5. **Gates, reported as they are.**
-   - `bridge_handling.py --candidate` against the unchanged criteria. Expected: 27/29,
-     common Y 1442, pitch 11 (pass), speed 7719.
-   - Phase-family failures. Expected: 53/70/69.
-6. **Regression set (one run each).**
-   - A4000 format-2 save, fresh-process load and play: semantic match at 1500/1550/1600
-     plus the route bytes.
-   - An ABI9 A4000 replay is rejected.
-   - `p6-native-replay-final` state check at 10/20 Hz.
-   - `check_disabled.py` with CUSTOM2=0/CUSTOM3=1: all original ranges.
-   - `hook_audit.py`.
-   - A D/E opponent race with crash, restart and finish, with no queue overflow.
-   - Ten-second FPS rows for D and E (FULL, CUSTOM2=1), compared with the current
-     45.29/45.49.
-7. **Release notes and commit.**
-   - Update this P7 section with the measured results (current state only).
-   - Add one ReadMe changelog line: A4000 jumps are closer to A2500, and older A4000
-     replays are not compatible.
-   - Rebuild the local testing archive with `tools/package_testing.py`; do not publish.
-   - Commit with before/after gate numbers and hashes, following the AGENTS.md identity
-     rules. Then stop and report.
-
-### Original analysis (superseded where contradicted above)
-
-- All event metrics pass: takeoff and landing times, peak height, pitch extremes, airborne
-  time and final state. Only common-time samples fail. Y fails at 13.0 s, just before the
-  first landing. Pitch fails at 12.6 s in flight and at 13.2 s and 15.6 s just after landings.
-- The error is systematic, not phase noise. Across native10/20 at start Z -64/0/+64
-  (`native-contact-phase-criteria.json`), Y at 13.0 s spans 6457..11956; A4000 is 14167.
-  Pitch at 12.8 s spans -124..-103; A4000 is -93. A4000 rotates nose-down too slowly in
-  flight. The trend Normal -> A2500 -> A4000 is monotonic in Y during flight and in
-  pitch recovery after landing.
-- **Cause 1, release gravity age.** Native gravity (`v += a; y -= v`) charges a full step
-  on the update that first detects a wheel airborne: 50 ms at A2500, 20 ms at A4000.
-  Free flight itself is exact. At 11.6 s the wheel velocities are:
-
-  | Wheel | A2500 | A4000 |
-  |---|---|---|
-  | Front | 189 (9×21) | 176.4 (21×8.4) |
-  | Rear | 105 (7×15) | 102 (17×6) |
-
-  Copying only these velocities into A4000 at 11.6 s moves the 13.0 s error from Y/pitch
-  2263/10 to 282/3 (`flight580-velocity-split.json`).
-- **Cause 2, approach lag.**
-  - At 9.0 s A4000 is 652 Z behind A2500, while Normal is 220 ahead. Speeds agree within
-    5 units throughout.
-  - The gap grows from the first updates on flat ground at pitch 0, about 2 raw units per
-    update in every mode. A4000 makes 2.5 times as many updates, so it loses 2.5 times as
-    much. The distance kernel itself is exact.
-  - A4000 therefore reaches the crest about 16 ms late. That matches the 17 ms later crest
-    intersection already measured.
-  - The lag also decides which native step a release falls in. At the second takeoff the
-    A4000 front wheel separates at 14.16 s, just after the native boundary at 14.15 s. Fix
-    both causes together.
-- About 70 earlier offline and live contact, suspension, push, pitch and ordering
-  candidates were rejected (history: `git -C docs show 9311a53:natural-jump-handling.md`).
-  Do not reopen those families.
-
-### Rules
-
-- Screen offline first with the exact coupled model (`tools/coupled_course_check.py`,
-  `coupled_vehicle_core.py`, `coupled_course_audit.py`). Its controls must still
-  reproduce all 795 updates in each phase.
-- Go live only with a candidate that passes offline.
-- Never edit the criteria files. Normal and A2500 stay byte-identical.
-- No interpolation and no constants fitted to reference trajectories.
-- Time box: 3 sessions in total.
-
-### Steps
-
-1. **Per-update position truncation (about 1 session).**
-   - In the offline model, log intended against applied Z per update for 0.2-1.6 s.
-     Conditions are flat ground, pitch 0, equal speed.
-   - Locate the truncating operation. Candidates are the movement vector rotation, the
-     >>6 wheel cache and the centroid.
-   - At 50 Hz, carry the remainder so that five updates lose exactly what two A2500 updates
-     lose. This is the rule `sim_distance_50` already follows.
-   - Acceptance:
-     - Z50-Z20 at 9.0 s within +/-60 (now -652).
-     - Speeds unchanged.
-     - Native20 control exact.
-2. **Native-grid release age (about 0.5 session).**
-   - On a wheel's first airborne pair after a velocity reset (velocity word and fifths
-     zero), use age h = tau/50 ms instead of 2/5.
-   - tau is the time since the start of the A2500 step that contains this A4000 update.
-     With race tick n aligned to A2500 tick 0 and r = 2n mod 5, tau/10 ms = r, or 5 when
-     r = 0. Use the tick counter that replay seeks restore.
-   - Apply dv = h*a and dy = h(h+1)/2*a. These are exact in the existing fifths and
-     twenty-fifths carries: dy in 25ths is h5(h5+5)/2*a for h5 = 1..5.
-   - Later updates stay at 2/5.
-   - One branch in `sim_airborne_pair_50` (`simulation_physics.s`). It reproduces 189/105
-     from the A4000 detections at ticks 560/564.
-3. **Offline decision point.**
-   - Screen steps 1 and 2 together in all three phases, against the original gate and the
-     phase family.
-   - Pass when the original gate reaches 29/29 and the phase-family failure counts are no
-     worse than 70/95/90. Then go to step 5.
-   - If only the post-landing pitch samples fail, go to step 4.
-   - If Y still fails, stop and go to step 6.
-4. **Landing, only if needed (one candidate, at most 1 session).**
-   - Re-screen the existing impact-return variant combined with steps 1 and 2. It keeps the
-     native 128-unit return on first contact and returns consecutive supported contacts at
-     2/5 with a carry.
-   - On its own it took pitch from 18 to 15 (`impact-return-audit.json`).
-   - No other landing variants.
-5. **Integrate and validate.**
-   - Implement in `simulation_physics.s` and at the truncation site.
-   - Bump the A4000 physics/replay ABI from 9 to 10. ABI9 A4000 replays are rejected with
-     the existing message. Native replays are unaffected.
-   - Verify:
-     - Live crest gate 29/29 (`bridge_handling.py --candidate`), plus the phase family.
-     - A4000 format-2 save/load matches the recorded semantic checkpoints.
-     - Native replay state check.
-     - `check_disabled.py` with CUSTOM3=1, and `hook_audit.py`.
-     - One FPS row each for D and E.
-   - Update this section and the ReadMe, then commit. Removing "experimental" is the
-     user's decision.
-6. **If it still fails, the user decides.** Options:
-   - Keep the current A4000 default as experimental.
-   - Revert PAL 040/060 to A2500.
-   - Approve an explicit re-baseline on native phase-family bands. Current A4000 also
-     fails those, so this is no loophole.
+Evidence: `tmp/prof/p7-integration/validation.json`, `tmp/prof/p7-live/`, and their
+per-run reports. The harness retains excluded setup/watchdog attempts separately.
+All started emulators were closed; each run used a 180-second watchdog and port 2471.
+Completed large snapshots are losslessly compressed. The ReadMe adds one user-facing
+jump/replay-compatibility line. No additional handling candidate is pending under P7.
 
 ## Not doing (with reasons)
 

@@ -1,7 +1,6 @@
-; Development integration. Requires SIM_SCHEDULE.
-; sim_a4000_arm is retained only for older synthetic input fixtures.
-; Not yet a selectable A4000 release: remaining rate sites, full replay UI
-; and lifecycle acceptance are pending. Native 10/20 paths survive.
+; Experimental A4000 integration. Requires SIM_SCHEDULE.
+; sim_a4000_arm is retained only for synthetic input fixtures.
+; Native 10/20 paths retain their original behavior.
 ; Append player/opponent geometric yaw fractions after the two64-byte blocks.
 ; Unsigned Q16 XYZ body-position carries: player+132, opponent+138.
 ; Signed Q8 pitch/roll carries: player+144/146, opponent+148/150.
@@ -44,7 +43,7 @@ sim_a4000_arm:
 ; a1 vehicle -> a0 private block; no stored pointer is part of replay state.
 ; steering +0, acceleration +2, distance fifths +4, gear +6, wheel pairs +8..23.
 ; Suspension fractions: extension +24..31, bias +40..47.
-; +32..39 remains reserved in snapshots (former return-rate fractions).
+; Endpoint distance tenths +32; +34..39 reserved (former return fractions).
 ; Terrain loss uses an unsigned Q16 carry at +48; skid loss uses fifths at +50.
 ; Spin displacement: /1280 carry at +52, cached step at +54 ($8000=unset).
 ; Nominal spin-filter change uses signed Q16 carry +56..59.
@@ -81,6 +80,12 @@ sim_a4000_distance:
  addq.l #4,a0
  move.w $2c(a1),d0
  bsr sim_distance_50
+ movem.l d1-d2,-(sp)
+ move.w $2e(a1),d1
+ move.w $2c(a1),d2
+ lea 28(a0),a0 ; car-private +32, after distance fifths at +4
+ bsr sim_endpoint_50
+ movem.l (sp)+,d1-d2
  move.l (sp)+,a1
  move.w d0,-6(a5)
  rts
@@ -305,7 +310,23 @@ sim_a4000_wheel:
  move.l -$e6(a5),a1
  addq.l #4,a1
  move.w (a2),d0
+ bne .continuing
+ tst.w (a0)
+ bne .continuing
+ moveq #0,d2
+ move.w -$940(a4),d2
+ add.l d2,d2
+ divu #5,d2
+ swap d2
+ tst.w d2
+ bne .release
+ moveq #5,d2
+.release:
+ bsr sim_release_pair_50
+ bra .stored
+.continuing:
  bsr sim_airborne_pair_50
+.stored:
  move.w d0,(a2)
  lea sim_a4000_wheel_steps(pc),a0
  move.w d1,(a0,d3.w)
@@ -463,8 +484,8 @@ sim_a4000_suspension_bias:
 ; the free-flight/contact sequence; it does not preserve a return speed.
 ; Retain the native 128-unit correction/cap and asymmetric return at all rates.
 ; Positive-clearance accumulation and bias decay remain time-scaled separately.
-; Former return fractions at private car+32..39 are reserved, initialized and
-; replayed for layout stability; replay physics ABI8 rejects the old dynamics.
+; Endpoint tenths at private car+32 and reserved +34..39 are initialized and
+; replayed with the other per-car state; ABI10 includes the endpoint correction.
 sim_a4000_suspension_return:
  bra sim_native_suspension_return
 
