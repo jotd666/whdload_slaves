@@ -195,6 +195,35 @@ six-bracket accounting, wrong-return-stack rejection, and discontinuous-field
 rejection. The report reprocesses all completed captures. Runtime source, player
 settings, release mask and D5 disposition are unchanged.
 
+## Sparse cockpit artwork development (2026-10-12)
+
+New user-authorized scope after release: remove repeated static artwork work.
+Developer bit 19; not yet normal-enabled. D5 remains postponed. The initial
+program-2 candidate stores only covered words and repairs differing masked
+pixels on the actual draw page. It does not yet prevent scene overwrites.
+
+First bounded native pixel/drawing-state twin passes (one hit, 40,000 screen
+bytes and 24 drawing-state bytes); four sparse-repair host tests cover independent
+pages, opaque black, intervening damage, idempotence and bounded overflow.
+The expanded three-program/two-page candidate passes six native twins
+(`artwork-sparse-twin-060-4`): 306 hits, three fills, no fallbacks. The current
+all-CPU timing matrix is pending. All 536 host tests and 83 hook ranges pass.
+
+| Candidate / CPU | Fields per window | Opening FPS off → on | Cockpit mean ms off → on | Status |
+|---|---:|---:|---:|---|
+| Sparse program 2 / 060 NOMMU | 250 | 12.380 → 13.179 (+6.45%) | 28.029 → 26.494 | Initial candidate; not release policy |
+
+Evidence: `artwork-sparse-060-{off,on}-1`, identical developer SHA-256
+`71db1669ccd2634d9261fafa0d0c155cd43d9a258aa4fcd4d72f707835d68046`. Masks differ only by bit 19
+(`0x30ffa` / `0xb0ffa`). Established native maximum-detail route; Time Scale
+unchanged, W6 off. Costs include interrupts and waits. Opening windows are
+matched by route, not step-locked; scene means were 40.584 / 40.746 ms.
+The subsequent program census is a separate evolving window, not an additive
+frame budget. Native comparison: `artwork-sparse-twin-060-3`. Earlier attempt
+2 safely fell back after allocation failure and supplies no passing cache test;
+attempt 1 failed assembly before boot. The current candidate uses the already
+reserved renderer workspace to avoid competition with the game's allocation pool.
+
 ## Completion scoreboard
 
 This is the single results table for `completion-plan.md` A–F. “Pending”

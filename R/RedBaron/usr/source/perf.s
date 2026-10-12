@@ -1,8 +1,8 @@
 ; Performance patch framework. Only sim v1 calls this module's installer.
 ; No feature is release-enabled until its model, twin and measurements pass.
 PERF_VERIFIED_MASK = $71fff ; W1-W5, B1/B2, C3 and E2 gauges; each has its CPU gate
-PERF_DEVELOPER_MASK = $73fff
-PERF_VERIFY_MASK = $77fff ; developer W6 plus VERIFY-only quiescent overlay probe bit 14
+PERF_DEVELOPER_MASK = $f3fff
+PERF_VERIFY_MASK = $f7fff ; developer W6 plus VERIFY-only quiescent overlay probe bit 14
 
 perf_read_options:
 	movem.l d0-a6,-(sp)
@@ -42,6 +42,7 @@ perf_read_options:
 	cmpi.l #1,d1
 	bne .time_cpu_ready
 	bclr #13,d0
+	bclr #19,d0 ; unmeasured 68010 retains native artwork
 .time_cpu_ready
 	btst #13,d0
 	beq .timing_dependencies_done
@@ -52,6 +53,10 @@ perf_read_options:
 	bne .instrument_cpu_ready
 	bclr #18,d0
 .instrument_cpu_ready
+	btst #19,d0
+	beq .artwork_ready
+	bset #14,d0
+.artwork_ready
 	btst #18,d0
 	beq .instrument_ready
 	bset #14,d0
@@ -161,6 +166,8 @@ perf_apply_v1:
 	bra .overlays_done
 .no_instrument_cache
 	IFD VERIFY
+	btst #3,perf_mask+1(pc)
+	bne .no_overlay_probe
 	btst #6,perf_mask+2(pc)
 	beq.b .no_overlay_probe
 	lea .overlay_probe_base(pc),a0
@@ -170,6 +177,23 @@ perf_apply_v1:
 .no_overlay_probe
 	ENDC
 .overlays_done
+	btst #3,perf_mask+1(pc)
+	beq .artwork_done
+	lea .artwork_base(pc),a0
+.artwork_base
+	adda.l #artwork_solid_install-.artwork_base,a0
+	jsr (a0)
+	lea .front_base(pc),a0
+.front_base
+	adda.l #artwork_front_install-.front_base,a0
+	jsr (a0)
+	btst #2,perf_mask+1(pc)
+	bne .artwork_done
+	lea .life_base(pc),a0
+.life_base
+	adda.l #ovlife_install-.life_base,a0
+	jsr (a0)
+.artwork_done
 	rts
 
 ; Check a non-relocated hook range before installing it.

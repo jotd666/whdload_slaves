@@ -1,7 +1,7 @@
-; E2 front-program key construction. Private storage only; no live hook yet.
+; Exact input keys for the sparse static gun-artwork cache.
 ; a0=OVERLAY_KEY_BYTES buffer, a1=h3, d0.w=program (3 or 4).
 ; d0.l=1 supported / 0 native fallback; all other registers preserved.
-; Gate the eventual caller on 020+. Resource lifetime invalidation is required.
+; CPU-neutral. Shared resource lifetime invalidation is required.
 ; Pixel coverage/geometry is separately accepted by overlay_mask_build.
 ; Dependencies precede every followed pointer. Snapshot bytes are exact, not hashes.
 overlay_cache_key_build:

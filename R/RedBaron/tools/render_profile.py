@@ -11,6 +11,7 @@ import route_status as r
 from routine_wall_time import summarize
 
 GROUPS={
+ 'artwork':[('static_artwork',0x15f1e,[0x15f2a])],
  'stages': [('background',0x5fe,[0x6bc]),('scene',0x6bc,[0x7c4]),
             ('cockpit',0x7c4,[0x830]),('messages',0x830,[0xafe]),
             ('publication',0xafe,[0xb10]),('world',0x1098,[0x11c8])],

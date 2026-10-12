@@ -88,7 +88,7 @@ slv_config
 	dc.b "C2:X:Sound queue:10;C2:X:Sound no-op removal:11;C2:X:Sound volume:12;"
 	dc.b "C2:X:Consistent game speed:13;"
 	dc.b "C2:X:Larger game fast-memory pool:16;"
-	dc.b "C2:X:Instruction cache policy:17;C2:X:Persistent gauges:18;"
+	dc.b "C2:X:Instruction cache policy:17;C2:X:Persistent gauges:18;C2:X:Sparse cockpit artwork:19;"
 	ELSE
 	IFD DEVELOPER
 	dc.b "C2:X:Table mirror:0;C2:X:Cached mirror:1;"
@@ -98,7 +98,7 @@ slv_config
 	dc.b "C2:X:Sound queue:10;C2:X:Sound no-op removal:11;C2:X:Sound volume:12;"
 	dc.b "C2:X:Consistent game speed:13;"
 	dc.b "C2:X:Larger game fast-memory pool:16;"
-	dc.b "C2:X:Instruction cache policy:17;C2:X:Persistent gauges:18;"
+	dc.b "C2:X:Instruction cache policy:17;C2:X:Persistent gauges:18;C2:X:Sparse cockpit artwork:19;"
 	ELSE
 	dc.b "C2:L:Faster rendering:On,Off;"
 	ENDC
@@ -640,10 +640,7 @@ tape_sim_key_bridge:
 	include "overlay-probe.s"
 	include "overlay-blit.s"
 	include "overlay-fast.s"
-	include "overlay-mask.s"
 	include "overlay-pack.s"
-	include "overlay-key.s"
-	include "overlay-native-mask.s"
 	include "overlay-shadow.s"
 	include "time-shape-verify.s"
 	IFD VERIFY_OVERLAY_KEY_EXPERIMENT
@@ -654,6 +651,16 @@ tape_sim_key_bridge:
 	include "time-matrix-verify.s"
 	ENDC
 	include "time-mouse-ownership-cases.i"
+	ENDC
+	include "overlay-mask.s"
+	include "overlay-key.s"
+	include "overlay-cache-key.s"
+	include "overlay-native-mask.s"
+	include "artwork-sparse.s"
+	include "artwork-cache.s"
+	include "artwork-solid.s"
+	include "artwork-front.s"
+	IFD VERIFY
 time_message_log: dcb.b 24*128,0
 fill_twin_before: dcb.b 20*256*2,0
 fill_twin_after: dcb.b 20*256*2,0

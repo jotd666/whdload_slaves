@@ -1,4 +1,4 @@
-; E2 solid-program coverage helper, not installed by the live cache yet.
+; Native coverage helper for the sparse static framework cache.
 ; a0=private script prepared with every colour pair replaced by (1,1)
 ; a1=private 8000-byte MEMF_CHIP mask; a2=native program interpreter
 ; a4=h3+$8000; d7.w=program index. Caller has validated 320x200/40/5 geometry,

@@ -38,3 +38,12 @@ per-plane drawing and explicit waits, and documents why the discarded software
 blitter was not a test of a purpose-built Fast RAM renderer. The recommended
 persistent-cockpit/span-renderer redesign is not implemented or part of the
 accepted release. D5 remains postponed.
+
+## Active: persistent cockpit artwork
+
+User-authorized after the rendering investigation. Developer bit 19 now tests
+sparse, pixel-guarded repairs for forward static programs 2–4; unchanged covered
+pixels are not written, and transparent pixels are never touched. The renderer
+workspace is reused. The normal mask remains unchanged pending the CPU matrix
+and transition checks. Native firing scripts, instruments and other views remain
+in their existing draw order. Current measurements are in `profiling.md`.
