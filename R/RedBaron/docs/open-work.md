@@ -10,7 +10,7 @@ Refer to items by ID. FC items are detailed in `fast-cpu-plan.md`.
 | ID | Item | State |
 |---|---|---|
 | FC0 | VERIFY artwork mismatch on the Barto 030 NOMMU route | Complete; native scratch-clear synchronization fixed |
-| FC1 | Deferred page fence instead of the swap spin | Planned |
+| FC1 | Deferred page fence instead of the swap spin | Complete; enabled on 030/040/060 |
 | FC2 | Overlay and cockpit foreground composited in Fast RAM | Planned |
 | FC3 | Persistent gauges | Planned |
 | FC4 | Span polygon rasteriser | Planned |
@@ -28,7 +28,7 @@ Refer to items by ID. FC items are detailed in `fast-cpu-plan.md`.
 No implementation or validation work remains for the accepted release.
 F1 enables the normal verified bundle by default; F2 condenses the ledgers;
 The original F3 passed on all six machine configurations; its results and the
-subsequent artwork and scene follow-ups are recorded separately in `profiling.md`. The normal verified mask is `0x1f1fff`, filtered by CPU.
+subsequent artwork and scene follow-ups are recorded separately in `profiling.md`. The normal verified mask is `0x3f1fff`, filtered by CPU.
 Normal CUSTOM2=0 is On and 1 is Off; developer/VERIFY values remain bit masks,
 where zero disables patches. The normal build is in the local build directory.
 Nothing has been pushed; publication requires a separate explicit request.
@@ -52,12 +52,22 @@ Git; do not revive their superseded next-work lists.
 ## Fast-CPU frame profile and plan
 
 `fast-cpu-plan.md` has the exact 030 frame attribution (aprof) and the ordered
-fix plan for the 16.67 FPS plateau, FC1–FC7.
+fix plan for the former 16.67 FPS plateau. FC0/FC1 are complete; FC2–FC7 remain.
 
 **FC0 is complete:** native scratch-clear synchronization fixes the top-edge
 artwork mismatch. Full artwork/scene twins pass on 030 NOMMU/MMU, 040 and 060;
 the final aprof capture passes with all checks restored. VERIFY snapshots fit
 the existing reservation, so RAM requirements are unchanged. See `profiling.md`.
+
+## Completed: deferred display-page reuse
+
+Bit 21 replaces the full flight beam spin with a next-VBlank page-reuse fence
+on 030/040/060 private-scene frames. A short copper-pickup guard prevents partial
+pointer publication. Redraws, native fallbacks and modal boundaries fence before
+writing; the two-field cap and RAM requirements are unchanged. The normal
+bundle enables it. Same-build comparisons, final normal timings, native twins,
+view/firing transitions, beam checks and exact profiling are in `profiling.md`.
+FC2 is the next renderer step; D5 remains postponed.
 
 ## Post-release rendering investigation
 

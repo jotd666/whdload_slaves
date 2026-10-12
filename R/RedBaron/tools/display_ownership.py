@@ -27,6 +27,7 @@ def analyse(path, sim, buffers):
     trace = barto.load(path)
     counts = Counter()
     writes, shown, conflicts = [], [], []
+    unmapped_fetches = 0
     for field in trace.fields:
         if field.dma_size != 58 or len(field.dma)//58 != 313*227:
             raise ValueError('Expected Barto 58-byte DMA records and 313-line PAL fields')
@@ -39,6 +40,8 @@ def analyse(path, sim, buffers):
             reg = struct.unpack_from('<H', field.dma, i)[0]
             addr = struct.unpack_from('<I', field.dma, i+12)[0]
             counts[kind] += 1
+            if kind == 6 and not any(base <= addr < base+40000 for base in buffers):
+                unmapped_fetches += 1
             for role, base in enumerate(buffers):
                 if not base <= addr < base+40000:
                     continue
@@ -80,6 +83,7 @@ def analyse(path, sim, buffers):
                                  first_write=first, gap_fields=gap))
     return dict(buffers=buffers, fields=len(trace.fields), dma_types=dict(counts),
                 observable=observable, framebuffer_writes=len(writes), shown=shown,
+                unmapped_bitplane_fetches=unmapped_fetches,
                 active_display_conflicts=conflicts,
                 conflicts_fetched_later=sum(w["fetched_later_in_field"] for w in conflicts),
                 swap_first_writes=first_writes,

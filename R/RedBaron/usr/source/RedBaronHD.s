@@ -660,6 +660,7 @@ tape_sim_key_bridge:
 	include "artwork-cache.s"
 	include "artwork-solid.s"
 	include "artwork-front.s"
+	include "page-fence.s"
 	include "scene-frame.s"
 	include "scene-primitives.s"
 	include "scene-raster.i"

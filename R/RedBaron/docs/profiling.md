@@ -5,10 +5,92 @@
 The user accepted measured performance on 2026-10-12. The normal build now
 starts with Faster rendering On when CUSTOM2 is omitted: On=0, Off=1.
 Developer/VERIFY CUSTOM2 remains an explicit mask, with zero disabling patches.
-The verified mask is `0x1f1fff`, filtered by CPU; W6 bit 13 remains excluded
+The verified mask is `0x3f1fff`, filtered by CPU; W6 bit 13 remains excluded
 because D5 is postponed. There is no 50 FPS or frame-independent normal-game
 speed claim. Historical captures below retain their original build, option
 mapping and RAM configuration; they do not define the current player default.
+
+## FC1 — deferred display-page reuse (2026-10-12)
+
+**FC1 passed.** Bit 21 is enabled by Faster rendering on 030/040/060, with
+the private scene and pacing as mandatory dependencies. The normal mask is
+`0x3f1fff`, still CPU-filtered. Native fallback frames and 000/010/020 retain
+the original beam wait. The two-field cap is unchanged. No third Chip page is
+allocated and RAM requirements are unchanged.
+
+The same-build comparison uses one frozen developer binary, maximum detail,
+unchanged Time Scale, the damage-protected native-input route, and 2,000 PAL
+fields per case. CUSTOM2 differs only by bit 21 (`0x1f0ffa` / `0x3f0ffa`), with
+the existing CPU filters. These are whole-window results, not pixel-correctness
+proof or a simulation-speed claim. Frozen developer SHA-256:
+`f84165a9996c400354e088cd1042ab959d166b0e7ad11b342790de6323310982`.
+This comparison predates the exceptional-error fence and the line-42 pickup
+guard found by static audit. The final normal-build timings and safety checks below cover both corrections;
+the candidate comparison alone does not establish their safety.
+
+| Configuration | FC1 off FPS | FC1 on FPS | Publication off / on ms | State |
+|---|---:|---:|---:|---|
+| 68000 / A500 | — | — | — | CPU-gated off; prior scoreboard unchanged |
+| 020 / A1200 | — | — | — | CPU-gated off; prior scoreboard unchanged |
+| 030/50 MMU | 16.374 | 18.595 (+13.57%) | 6.859 / 0.058 | `fc1-ab-030-{off,on}-1`; beam check passes |
+| 030/50 NOMMU | — | — | — | Same CPU-class gate; VERIFY and final aprof passed; no separate FPS pair |
+| 040/25 NOMMU | 16.274 | 18.096 (+11.20%) | 5.926 / 0.046 | `fc1-ab-040-{off,on}-1`; beam check passes |
+| 060/50 NOMMU | 16.299 | 17.697 (+8.58%) | 4.728 / 0.047 | `fc1-ab-060-{off,on}-1`; beam check passes |
+
+The corrected VERIFY build (`fc1-final-verify-030-1`) passes all six artwork
+and three scene twins before and after rear/left/right/front view changes and
+native firing. Over the steady 20-publication sample, the fence releases 20
+pages and actually waits once; startup and transition waits are counted
+separately. The expected copper WAIT layout passes its runtime check.
+
+The corrected exact capture `fc1-final-aprof-1` uses 68EC030/50, the full
+VERIFY checks, 500 warm-up fields and 50 recorded fields. All nine twins pass.
+It contains 15 render/world calls (15.0 **instrumented** FPS), 41.5% Chip-bus
+units and 18.3% recognized blitter polls. The native sim:31536 spin executes
+zero recorded instructions; the complete fence-wait routine costs 0.0168 ms
+per render, the pickup-guard entry 0.0034 ms, and pacing/publication about
+0.03 ms. The preceding FC0 exact capture recorded 48.7% Chip-bus units;
+these shares describe their respective windows, not an isolated workload twin.
+The remaining large costs are the scene (39.54 ms inclusive), instrument
+scripts (8.82 ms), gauge dispatch (7.30 ms) and forward overlay (6.41 ms).
+Those instrumented costs are not substituted for normal-build FPS.
+
+All three final normal-default captures (`fc1-final-normal-{030,040,060}-1`)
+use the same binary, CUSTOM2 omitted, maximum detail and a 250-field stage
+window, followed by one 20-field DMA sample. These shorter initial-flight
+windows are not the same workload as the 2,000-field developer comparisons;
+their FPS must not be used to recompute the isolated candidate gain.
+
+| CPU | Final normal FPS | Scene ms | Cockpit ms | Publication ms | Beam-sampled page writes |
+|---|---:|---:|---:|---:|---:|
+| 030 | 18.171 | 29.379 | 23.512 | 0.034 | 150,644 |
+| 040 | 16.773 | 34.736 | 21.961 | 0.036 | 154,505 |
+| 060 | 16.773 | 33.067 | 24.187 | 0.036 | 167,945 |
+
+Every sampled field has exactly one displayed page. All three captures have
+zero active-display writes, zero out-of-page bitplane fetches, and repeated
+page turnover. Every publication in each 250-field bracket avoids copper pickup
+and respects the two-field minimum, checked through `publication_cadence.py`.
+The checker rejects page-write, copper-pointer and cadence sabotages. Raw DMA
+streams were deleted after preserving compact reports. These are bounded
+emulator checks; physical-machine confirmation remains FC7.
+
+All 547 host tests, all three builds, 131 sim hook ranges and 131/131/145
+normal/developer/VERIFY patch destinations pass. Text sizes are
+137,610 / 137,998 / 323,328 bytes. Final SHA-256 values:
+
+- Normal: `5d2ecba728eb7b64e22d9bc76adf2310aebf4a05fdb377637c2bb852401130ff`
+- Developer: `fca217d8aea85fd630ec198a4ce42eef619dcfec8e561a2e508d774fc6760083`
+- VERIFY: `7c1ee4147f319735fe3488c7e35a411ffc89c75b3e6194494db12c9d9b4cd219`
+
+For a manual normal-build check, run `scene_profile_case.py` from the configured
+development harness with `BENCH_BATCH_KEYS=1`, `BENCH_OMIT_CUSTOM2=1`, machine
+`030`, `040` or `060`, mask `0`, a fresh output name, and
+`--groups stages --fields 250 --dma-fields 20`. The harness supplies keyboard
+input, selects maximum detail, captures and analyzes one owned emulator, deletes
+the bulky DMA stream after success, and quits it. Developer A/B uses one frozen
+binary, `BENCH_DEVELOPER=1`, masks differing only by `0x200000`, and
+`--fields 2000`. FC2 is next; W6/D5 remains postponed.
 
 ## FC0 — native scratch completion and VERIFY snapshots (2026-10-12)
 

@@ -1,5 +1,6 @@
 """Synthetic checker tests: no copyrighted game data or emulator needed."""
 import struct,unittest
+from types import SimpleNamespace
 from hunks import read_hunks
 from check_disabled import check
 from audit_hooks import audit
@@ -36,6 +37,15 @@ class CheckerTests(unittest.TestCase):
         self.assertTrue(any('ends inside' in e for e in errs))
         errs=audit([],[(4,10,0,'fixture.s',1)],listing)
         self.assertTrue(any('branch' in e for e in errs))
+    def test_checked_library_literals_are_not_branches(self):
+        data=bytearray(0x31560)
+        data[0x314ac:0x314be]=b'intuition.library\0'
+        h=[SimpleNamespace(data=data,relocations=[])]
+        listing=' 314b0: 6974 bvs.s 0x31526\n 31522: 2039 00df f004 move.l 0xdff004,d0\n'
+        spans=[(0x31522,0x31528,21,'page-fence.s',1)]
+        self.assertEqual(audit(h,spans,listing),[])
+        data[0x314ac]^=1
+        self.assertTrue(any('branch' in e for e in audit(h,spans,listing)))
     def test_relocation_into_hook_rejected(self):
         h=read_hunks(ORIGINAL);h[0].relocations=[(0,0)]
         errs=audit(h,[(2,8,0,'fixture.s',1)],' 2: 4e71 nop\n 4: 4e71 nop\n 6: 4e75 rts\n')

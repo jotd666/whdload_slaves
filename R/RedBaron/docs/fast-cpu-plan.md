@@ -98,13 +98,15 @@ reserved workspace; RAM requirements are unchanged. The profiler no longer
 removes twins and rejects incomplete checks. Evidence and results are recorded
 once, in `profiling.md`. Physical-hardware confirmation remains FC7.
 
-### FC1 — deferred page fence instead of the swap spin: up to −10 ms
+### FC1 — deferred page fence instead of the swap spin: complete
 
 Two buffers stay; no third Chip page.
 
 **Cause.**
-- `sim:314be` swaps the copper bitplane pointers, then busy-waits until the beam
-  passes line 244.
+- `sim:314be` exchanges the page variables, then waits for a safe beam position
+  **before** the copper-pointer stores at `sim:3154a`. The native early-blank
+  path also accepts lines through 40. The original profile heading described
+  that instruction ordering incorrectly.
 - The old front page stays visible until the next vertical blank. The wait
   exists so the next frame cannot draw into a page that is still on screen.
 - With bit 20, the next frame's scene is drawn in Fast RAM and does not touch
@@ -137,11 +139,41 @@ Two buffers stay; no third Chip page.
 - A VERIFY counter of fence waits, which should be near zero on 030+ in forward
   flight.
 
-**Expected.**
+**Disposition.** Implemented, measured and enabled in the normal CPU-gated
+bundle. The final normal/VERIFY checks and exact profile pass; results are
+recorded once in `profiling.md`. No third page or extra RAM is needed.
+
+**Original expectation.**
 - The 10.2 ms spin moves to the fence, where it is mostly absorbed by Fast-RAM
   scene work.
 - Alone, this lets frames that finish their work within 40 ms publish every two
   fields. FC2–FC5 bring the remaining work under that.
+
+**FC1 writer coverage.** The implementation uses bit 21 with bit 20 and pacing as
+mandatory dependencies, gated to 030/040/060. The native copper MOVEM remains
+at sim:3154a. Its wrapper samples the field counter after all stores and records
+a next-field deadline; an interrupt during publication can postpone reuse,
+never release it prematurely. Only the flight swap may bypass the beam spin.
+The native copper WAITs at lines 42/44 are checked at installation. Publications
+inside lines 41–43 wait until line 44, preventing a pointer update from crossing
+the copper pickup; all other beam positions may publish immediately.
+
+The sim:00574 entry permits overlap only for unchanged forward flight with no
+full-screen replacement, forced redraw or background-restore request. All other
+entries fence immediately. The forward prelude prepares objects/camera state;
+its hardware drawing primitives are additionally fenced at their custom-base
+selection. Private-scene rejection fences before native drawing; accepted
+scenes fence at their outbound viewport copy. The subsequent overlay, dashboard,
+instruments and messages therefore inherit a writable page. The VERIFY native
+scene snapshot also fences before touching the Chip destination.
+
+Menu, controls, preferences, pause, map, object-list overflow error and flight-exit
+boundaries fence before
+their first display operation, including the map called after publication.
+Their veneers validate whole displaced instructions and relocated operands;
+the map's short BSR is re-emitted as an absolute call. Frames without a private
+scene and non-flight swaps keep the native beam wait. No new Chip page or RAM
+reservation is required. Timing and acceptance results belong in `profiling.md`.
 
 ### FC2 — overlay and cockpit foreground composited in Fast RAM: −12 to −14 ms
 

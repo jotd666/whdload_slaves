@@ -1,8 +1,8 @@
 ; Performance patch framework. Only sim v1 calls this module's installer.
 ; No feature is release-enabled until its model, twin and measurements pass.
-PERF_VERIFIED_MASK = $1f1fff ; verified features, including direct scene; each has its CPU gate
-PERF_DEVELOPER_MASK = $1f3fff
-PERF_VERIFY_MASK = $1f7fff ; developer W6 plus VERIFY-only quiescent overlay probe bit 14
+PERF_VERIFIED_MASK = $3f1fff ; verified features, including deferred page reuse; each has its CPU gate
+PERF_DEVELOPER_MASK = $3f3fff
+PERF_VERIFY_MASK = $3f7fff ; developer W6 plus VERIFY-only quiescent overlay probe bit 14
 
 perf_read_options:
 	movem.l d0-a6,-(sp)
@@ -60,10 +60,18 @@ perf_read_options:
 	bne .artwork_cpu_ready
 	bclr #19,d0
 	bclr #20,d0
+	bclr #21,d0
 .artwork_cpu_ready
 	btst #20,d0
-	beq .scene_dependencies_ready
+	beq .no_scene_dependency
 	bset #7,d0 ; private rectangle setup uses the verified D1 entry
+	bra .fence_scene_ready
+.no_scene_dependency
+	bclr #21,d0
+.fence_scene_ready
+	btst #21,d0
+	beq .scene_dependencies_ready
+	ori.l #$0300,d0
 .scene_dependencies_ready
 	btst #19,d0
 	beq .artwork_ready
@@ -213,6 +221,13 @@ perf_apply_v1:
 	adda.l #scene_frame_install-.scene_base,a0
 	jsr (a0)
 .scene_done
+	btst #5,perf_mask+1(pc)
+	beq .fence_done
+	lea .fence_base(pc),a0
+.fence_base
+	adda.l #fence_install-.fence_base,a0
+	jsr (a0)
+.fence_done
 	rts
 
 ; Check a non-relocated hook range before installing it.

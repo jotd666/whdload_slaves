@@ -63,12 +63,27 @@ def twins(label):
         assert scene == bytes.fromhex('0000000700000000000000030000000000000000'), scene.hex()
         scene_checks = 3
         print(label, 'three native scene twins passed', flush=True)
-    return dict(label=label, checks=6, scene_checks=scene_checks,
+    fence = {}
+    if mask & (1 << 21):
+        values = dump('fence_publications', 12, label)
+        fence = dict(zip(('publications', 'waits', 'releases'),
+                         (int.from_bytes(values[i:i+4], 'big') for i in range(0, 12, 4))))
+        assert fence['publications'] > 0 and fence['releases'] <= fence['publications'], fence
+        print(label, 'deferred fence', fence, flush=True)
+    return dict(label=label, checks=6, scene_checks=scene_checks, fence=fence,
                 hits=int.from_bytes(stats[:4], 'big'), fills=int.from_bytes(stats[4:8], 'big'))
 
 
+before_fence = dump('fence_publications', 12, 'before-steady') if mask & (1 << 21) else None
 advance(20)
 rows = [twins('initial')]
+if before_fence is not None:
+    before = dict(zip(('publications', 'waits', 'releases'),
+                      (int.from_bytes(before_fence[i:i+4], 'big') for i in range(0, 12, 4))))
+    delta = {key: (value-before[key]) & 0xffffffff for key, value in rows[0]['fence'].items()}
+    assert delta['publications'] >= 10 and delta['waits'] <= 1, delta
+    rows[0]['steady_fence_delta'] = delta
+    print('steady fence delta', delta, flush=True)
 if a.transitions:
     tracked = Path(__file__).resolve().parent
     with (a.out / 'input.log').open('w') as log:

@@ -192,6 +192,8 @@ scene_frame_base_a\1:
  beq .done\@
  lea scene_frame_custom(pc),a\1
 .done\@
+ ; Hardware fallbacks cannot write a page still waiting for publication.
+ bsr fence_wait_native
  move.w (sp)+,ccr
  rts
  ENDM
@@ -251,6 +253,8 @@ scene_frame_enter:
  tst.w (a0)
  bne scene_frame_bad
  bsr scene_frame_wait
+ lea fence_scene_owned(pc),a0
+ clr.w (a0)
  move.l 64(sp),a0 ; camera argument before the saved register frame
  btst #3,(a0) ; no background clear: keep native ownership
  bne .native
@@ -302,7 +306,12 @@ scene_frame_enter:
  move.l d0,$1d76(a6)
  lea scene_frame_active(pc),a0
  move.w #1,(a0)
+ lea fence_scene_owned(pc),a0
+ move.w #1,(a0)
+ bra .ready
 .native
+ bsr fence_wait
+.ready
  movem.l (sp)+,d0-a6
  link a5,#-12
  movem.l d2/d6-d7/a2-a3/a6,-(sp)
@@ -315,6 +324,7 @@ scene_frame_exit:
  movem.l d0-a6,-(sp)
  move.w scene_frame_active(pc),d0
  beq .inactive
+ bsr fence_wait
  lea scene_frame_original(pc),a3
  move.l scene_frame_buffer(pc),a0
  move.l (a3),a1

@@ -63,8 +63,11 @@
    old page pixels and scratch are not copied in or exported. Native clipping
    is retained, with native fallback for unsupported layouts.
    000/010/020 retain the native scene renderer. RAM requirements are unchanged.
- - Flight swaps use the original safe beam wait and a two-field cap (about
-   25 FPS on PAL). This does not make world speed frame-rate independent.
+ - On 030/040/060, FastMem scene work can overlap display scanning. ChipMem
+   page reuse waits until the prior display has finished; copper pickup is guarded.
+   Native frames and slower CPUs retain the original safe beam wait.
+   The two-field cap remains (about 25 FPS on PAL). This does not make world
+   speed frame-rate independent.
  - Select Off in the splash window, or CUSTOM2=1, to disable it.
    This reverses the former development normal-build 0/1 meaning.
    Supplied icon tooltypes are unchanged.

@@ -11,9 +11,10 @@ import struct
 def audit(hunks,spans,listing,domain="sim"):
     def label(offset):return f"{domain}:{offset+(40 if domain == 'sound' else 0):05x}"
     ins={};errors=[]
-    # These executable-hunk bytes are device-name literals, not branch code.
+    # These executable-hunk bytes are device/library-name literals, not branch code.
     # Require exact bytes before excluding their misleading linear disassembly.
-    literals = ((0x2e7a6,b'input.device\0'),(0x2e7b4,b'trackdisk.device\0')) if domain == 'sim' else ()
+    literals = ((0x2e7a6,b'input.device\0'),(0x2e7b4,b'trackdisk.device\0'),
+                (0x3149a,b'graphics.library\0'),(0x314ac,b'intuition.library\0')) if domain == 'sim' else ()
     data_spans = [(at,at+len(value)) for at,value in literals
                   if hunks and hunks[0].data[at:at+len(value)] == value]
     for line in listing.splitlines():

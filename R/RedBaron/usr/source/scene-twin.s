@@ -10,6 +10,7 @@ scene_twin_before:
  bne .done
  move.l #1,4(a5)
  bsr scene_frame_wait
+ bsr fence_wait
  move.l scene_frame_storage(pc),a1
  adda.l #PERF_SCENE_TWIN_SCREEN,a1
  move.l scene_frame_original(pc),a0

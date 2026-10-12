@@ -3,10 +3,10 @@
 Run from the local harness (tmp/dev, env.sh sourced). The VERIFY tape replaces the lldb
 keyboard driver, which cannot attach to arm64 FS-UAE. aprof needs a cycle-exact 020/030
 without an MMU model, so use APROF_CPU=68EC030 for the 030 class. CUSTOM2 should be the
-normal build's CPU-filtered selection (030: 0x1f0ffa). The capture uses the unmodified
+normal build's CPU-filtered selection (030: 0x3f0ffa). The capture uses the unmodified
 VERIFY source, including artwork twins.
   APROF_CPU=68EC030 UNTIL_TIMEOUT=1500 python3 -B ../../R/RedBaron/tools/aprof_flight.py \
-    030-nommu 0x1f0ffa tmp/prof/aprof-030n-1 --warm 500 --fields 50
+    030-nommu 0x3f0ffa tmp/prof/aprof-030n-1 --warm 500 --fields 50
 Summarize with aprof_flight_report.py CAPTURE --slave-base <live slave copy>.
 """
 import argparse,hashlib,json,os,re,struct,subprocess,sys
