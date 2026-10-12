@@ -3,7 +3,7 @@
 Written 2026-10-11 on HEAD `c70ea93` (branch `4dsportsdriving`). This plan supersedes the
 "next steps" sections of optimization-plan.md, simulation-plan.md and open-work.md. Their historical
 versions remain reference material for addresses and evidence, not a to-do list.
-P1-P6 are complete; the A500 FAST target is deferred and A4000 remains experimental. P7 stopped at its offline decision gate; A4000 handling remains unaccepted.
+P1-P6 are complete; the A500 FAST target is deferred and A4000 remains experimental. P7: integrate the screened partial fix (see P7 integration plan).
 Current release: 2.0b (13.10.2026), 37208-byte slave. Runtime buffers are allocated
 at startup; the DSI intro buffer-reuse flicker is fixed (see sections below).
 Current binary SHA256: `6508c4d303e2edca408c7923c741d419a82c60d71f2b1d92a8b89a2c88e831d4`.
@@ -1004,6 +1004,86 @@ release-and-distance-derivation}.json`, exact controls and all three recurrent
 candidate trajectories. Reproduction: `tools/p7_offline.py`, `p7_screen.py`,
 `p7_audit.py`, `p7_release_check.py`. Compressed historical captures are read in
 memory without duplicating large files. See the audit scope for unmodeled live checks.
+
+### Integration plan (user decision, 2026-10-12)
+
+Decision: build the two screened changes into the production slave exactly as screened.
+Accept the result even though the frozen gate stays 27/29: common Y 1442 against 1247 and
+common speed 7719 against 3400. A4000 stays experimental. Do not tune further, do not try
+the step 4 landing variant, and do not edit any criteria. Normal and A2500 must remain
+byte-identical. The changes apply to both cars.
+
+Facts established for integration (original code-hunk offsets):
+
+- **Tick phase.** `$E5F2` increments the native tick word `a4-$940` at `$E660`, before
+  player physics (`jsr $E7B8` at `$E6B2`) and opponent physics (`jsr $BC48` at `$E6BE`).
+  During physics `a4-$940` therefore equals the offline model's step number (`r['tick']`),
+  and replay seeks restore it.
+- **Old speed.** In the car update, `jsr $F0D0` (engine, `$C148`) runs before
+  `jsr $C270` (`$C16E`), which contains the A4000 distance hook at `$C326`. At its
+  start, the engine copies +$2C into +$2E (`drivetrain_model.py` line 29). At `$C326`,
+  +$2E is therefore the offline `old` speed and +$2C the `new` one.
+  - Verify that nothing else writes +$2E between the two points (grep the disassembly).
+  - The live/offline row equality in step 4 below is the final proof.
+- **Carry slot.** The reserved private word at car +32 (former return fractions, cleared
+  by reset and copied by snapshots and replays) becomes the endpoint remainder.
+
+Steps:
+
+1. **Endpoint correction** (`simulation_physics.s`, called from `sim_a4000_distance`).
+   - After `sim_distance_50`, add `extra`, where
+     `(extra, carry) = divmod(3*(Q(new) - Q(old)) + carry, 10)`.
+   - Here `Q(s) = floor(s*1408/15360)`, with s = +$2C (new) and +$2E (old).
+   - Use floor semantics with a remainder of 0..9, like Python `divmod`. DIVS truncates
+     toward zero, so correct negative numerators.
+   - Store the remainder at private +32. The distance word becomes `distance + extra`.
+2. **Release age** (new kernel `sim_release_pair_50` in `simulation_physics.s`, selected
+   in `sim_a4000_wheel`).
+   - Use the new kernel when the wheel velocity word $4C and its private velocity fifths
+     are both zero. Otherwise keep `sim_airborne_pair_50`.
+   - `h5 = (2*tick) mod 5`, with 0 meaning 5, where tick is `a4-$940`.
+   - Down: numerator `T[h5]*a + position_25ths`, with `T = 3,7,12,18,25`; DIVS #25 gives
+     the downward step, and the remainder goes to 2(a0). Subtract the step from the long
+     position.
+   - Velocity: numerator `h5*a + velocity_fifths` (zero here); DIVS #5 gives the new
+     velocity, and the remainder goes to (a0).
+   - Return the downward step in d1.l, as the existing kernel does, for the contact
+     distance.
+   - This matches `tools/p7_screen.py`. Add kernel cases to the existing VERIFY case
+     files for h5 = 1..5 and both accelerations (21 and 15).
+3. **Physics ABI 9 -> 10.**
+   - Update the format/ABI tag (`$00020009` in `simulation_replay_file.s`) and the
+     related messages and companion checks.
+   - Only A4000 recordings change. Tagged ABI9 A4000 replays must be rejected with the
+     existing message. Native 10/20 replays must load as before.
+   - Check every other ABI reference in the source and harness tools.
+4. **Live equivalence before any gate.**
+   - Run the crest fixture at 50 Hz through `bridge_probe.py` for nominal, minus64 and
+     plus64.
+   - The x/y/z/pitch/speed and wheel flags of every body record must equal the offline
+     `tmp/prof/p7-session1/combined-*.json` rows for ticks 6..800.
+   - Any mismatch is an integration bug. Fix it; do not re-tune.
+5. **Gates, reported as they are.**
+   - `bridge_handling.py --candidate` against the unchanged criteria. Expected: 27/29,
+     common Y 1442, pitch 11 (pass), speed 7719.
+   - Phase-family failures. Expected: 53/70/69.
+6. **Regression set (one run each).**
+   - A4000 format-2 save, fresh-process load and play: semantic match at 1500/1550/1600
+     plus the route bytes.
+   - An ABI9 A4000 replay is rejected.
+   - `p6-native-replay-final` state check at 10/20 Hz.
+   - `check_disabled.py` with CUSTOM2=0/CUSTOM3=1: all original ranges.
+   - `hook_audit.py`.
+   - A D/E opponent race with crash, restart and finish, with no queue overflow.
+   - Ten-second FPS rows for D and E (FULL, CUSTOM2=1), compared with the current
+     45.29/45.49.
+7. **Release notes and commit.**
+   - Update this P7 section with the measured results (current state only).
+   - Add one ReadMe changelog line: A4000 jumps are closer to A2500, and older A4000
+     replays are not compatible.
+   - Rebuild the local testing archive with `tools/package_testing.py`; do not publish.
+   - Commit with before/after gate numbers and hashes, following the AGENTS.md identity
+     rules. Then stop and report.
 
 ### Original analysis (superseded where contradicted above)
 
