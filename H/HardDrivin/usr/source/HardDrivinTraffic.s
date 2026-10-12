@@ -217,16 +217,16 @@ _traffic_phase_step:
 	move.w 12(a1),d5
 	ext.l d5
 	add.l d5,d4
+	bsr _traffic_turn_min
+	move.l d5,-(a7)
 	bsr _traffic_phase_delta_wide
+	move.l (a7)+,d5
 	; Retain the existing /128 companion plus its exact sixth-unit residue.
 	divs.w #6,d4
 	move.w d4,6(a1)
 	swap d4
 	move.w d4,12(a1)
-	move.w 16(a0),d1
-	ext.l d1
-	add.l d1,d0
-	bsr _traffic_route_walk
+	bsr _traffic_route_motion
 .done:
 	move.w 16(a0),8(a1)
 	clr.b 11(a1)
@@ -259,11 +259,78 @@ _traffic_reverse_step:
 	move.w d0,2(a1)
 	rts
 
+; D1 old speed in eighths, D2 unsigned fields, D3 acceleration0..3,
+; D4 initial carry/768. Return D5 the integer minimum displacement, or zero
+; when no internal turnaround occurs. Other registers are preserved.
+; The biased trajectory has its minimum at -u/a-4, not at velocity zero.
+_traffic_turn_min:
+	moveq #0,d5
+	cmpi.w #8,d2
+	bls.s .return
+	tst.w d3
+	beq.s .return
+	tst.w d1
+	bpl.s .return
+	move.l d6,-(a7)
+	move.w d1,d5
+	ext.l d5
+	moveq #0,d6
+	move.w d3,d6
+	lsl.l #2,d6
+	add.l d6,d5
+	bpl.s .zero
+	move.w d3,d6
+	mulu.w d2,d6
+	add.l d5,d6
+	ble.s .zero
+	; Magnitude of minimum numerator = (u+4a)^2*(6/a)-initial carry.
+	muls.w d5,d5
+	cmpi.w #3,d3
+	beq.s .twice
+	move.l d5,d6
+	add.l d5,d5
+	add.l d6,d5
+	cmpi.w #2,d3
+	beq.s .carry
+.twice:
+	add.l d5,d5
+.carry:
+	sub.l d4,d5
+	ble.s .zero
+	; Native signed-byte speeds plus fraction bound this quotient below8250.
+	divu.w #768,d5
+	andi.l #$ffff,d5
+	neg.l d5
+	bra.s .restore
+.zero:
+	moveq #0,d5
+.restore:
+	move.l (a7)+,d6
+.return:
+	rts
+; A0 record, D0 final displacement, D5 minimum displacement (zero if absent).
+; Apply backward travel to the extremum, then the remaining forward travel.
+; Only the final integration remainder is retained by the caller.
+_traffic_route_motion:
+	move.l d0,-(a7)
+	move.w 16(a0),d1
+	ext.l d1
+	tst.l d5
+	beq.s .direct
+	move.l d5,d0
+	add.l d1,d0
+	bsr _traffic_route_walk
+	sub.l d5,(a7)
+	bra.s .finish
+.direct:
+	move.l d1,d0
+.finish:
+	add.l (a7)+,d0
+	bra _traffic_route_walk
+
 ; A0 record, D0 signed-long phase. Advance route pointers once per crossing,
 ; applying the native next-segment normalization between crossings. The final
 ; pending next pointer remains in the same state as the native single-wrap tail.
-; TODO: split an in-frame turnaround at its displacement extremum before calling
-; this walker, to retain intermediate junction choices hidden by net movement.
 _traffic_route_walk:
 	movem.l d1/a1-a2,-(a7)
 	move.b 20(a0),d1
@@ -569,7 +636,8 @@ _traffic_phase_math_test:
 	movem.l d0-d7/a0-a3,-(a7)
 	lea _traffic_phase_cases(pc),a3
 	lea _traffic_phase_results(pc),a2
-	move.w #503,d7
+	lea _traffic_min_results(pc),a1
+	move.w #767,d7
 .case:
 	move.w (a3)+,d0
 	move.w (a3)+,d1
@@ -577,6 +645,8 @@ _traffic_phase_math_test:
 	move.w (a3)+,d3
 	move.w (a3)+,d4
 	ext.l d4
+	bsr _traffic_turn_min
+	move.l d5,(a1)+
 	bsr _traffic_phase_delta_wide
 	move.l d0,(a2)+
 	move.l d4,(a2)+
@@ -644,8 +714,32 @@ _traffic_phase_cases:
 	HD_TRAFFIC_PHASE_CASE 1023,255
 	HD_TRAFFIC_PHASE_CASE 1023,32768
 	HD_TRAFFIC_PHASE_CASE 1023,65535
+	HD_TRAFFIC_PHASE_CASE -175,8
+	HD_TRAFFIC_PHASE_CASE -175,9
+	HD_TRAFFIC_PHASE_CASE -175,15
+	HD_TRAFFIC_PHASE_CASE -32,8
+	HD_TRAFFIC_PHASE_CASE -32,9
+	HD_TRAFFIC_PHASE_CASE -32,15
+	HD_TRAFFIC_PHASE_CASE -12,8
+	HD_TRAFFIC_PHASE_CASE -12,9
+	HD_TRAFFIC_PHASE_CASE -12,15
+	HD_TRAFFIC_PHASE_CASE -9,8
+	HD_TRAFFIC_PHASE_CASE -9,9
+	HD_TRAFFIC_PHASE_CASE -9,15
+	HD_TRAFFIC_PHASE_CASE -8,8
+	HD_TRAFFIC_PHASE_CASE -8,9
+	HD_TRAFFIC_PHASE_CASE -8,15
+	HD_TRAFFIC_PHASE_CASE -5,8
+	HD_TRAFFIC_PHASE_CASE -5,9
+	HD_TRAFFIC_PHASE_CASE -5,15
+	HD_TRAFFIC_PHASE_CASE -4,8
+	HD_TRAFFIC_PHASE_CASE -4,9
+	HD_TRAFFIC_PHASE_CASE -4,15
+	HD_TRAFFIC_PHASE_CASE -175,410
 _traffic_phase_signature: dc.b 'HDTRPHW1'
-_traffic_phase_results: dcb.l 1008,0
+_traffic_phase_results: dcb.l 1536,0
+_traffic_min_signature: dc.b 'HDTRMIN1'
+_traffic_min_results: dcb.l 768,0
 	ENDC
 
 	IFD VERIFY_TRAFFIC_ROUTE_MATH
@@ -684,7 +778,7 @@ _traffic_route_math_test:
 	lea _traffic_route_frame+4(pc),a5
 	lea _traffic_route_cases(pc),a6
 	lea _traffic_route_results(pc),a2
-	move.w #95,d7
+	move.w #125,d7
 .case:
 	lea _traffic_route_record(pc),a0
 	move.l (a6)+,(a0)
@@ -695,19 +789,30 @@ _traffic_route_math_test:
 	move.b d0,15(a0)
 	move.w (a6)+,d0
 	move.b d0,20(a0)
-	clr.w 16(a0)
 	clr.b 19(a0)
 	move.l (a6)+,d6
+	move.l (a6)+,d5
+	move.w (a6)+,d3
+	ext.l d3
+	move.w d3,16(a0)
 	lea _traffic_route_reference(pc),a1
 	bsr _traffic_route_copy
 	lea _traffic_route_record(pc),a0
 	move.l d6,d0
-	bsr _traffic_route_walk
+	bsr _traffic_route_motion
 	movea.l a2,a1
 	bsr _traffic_route_copy
 	movea.l a1,a2
 	lea _traffic_route_reference(pc),a0
 	move.l a0,8(a5)
+	moveq #0,d4
+	tst.l d5
+	beq.s .start
+	move.l d6,d4
+	sub.l d5,d4
+	move.l d5,d6
+.start:
+	add.l d3,d6
 .positive:
 	cmpi.l #200,d6
 	blt.s .negative
@@ -727,6 +832,12 @@ _traffic_route_math_test:
 	addi.l #200,d6
 	bra.s .negative
 .save:
+	tst.l d4
+	beq.s .record
+	add.l d4,d6
+	moveq #0,d4
+	bra.s .positive
+.record:
 	movea.l 8(a5),a0
 	move.w d6,16(a0)
 	movea.l a2,a1
@@ -761,105 +872,136 @@ _traffic_route_reference: dcb.b 46,0
 HD_TRAFFIC_ROUTE_CASE MACRO
 	dc.l \1,\2
 	dc.w \3,\4,\5
-	dc.l \6
+	dc.l \6,\7
+	dc.w \8
 	ENDM
 _traffic_route_cases:
-	HD_TRAFFIC_ROUTE_CASE $1030c,$10320,0,0,1,-601
-	HD_TRAFFIC_ROUTE_CASE $1030c,$10320,0,0,1,-201
-	HD_TRAFFIC_ROUTE_CASE $1030c,$10320,0,0,1,-1
-	HD_TRAFFIC_ROUTE_CASE $1030c,$10320,0,0,1,0
-	HD_TRAFFIC_ROUTE_CASE $1030c,$10320,0,0,1,199
-	HD_TRAFFIC_ROUTE_CASE $1030c,$10320,0,0,1,200
-	HD_TRAFFIC_ROUTE_CASE $1030c,$10320,0,0,1,401
-	HD_TRAFFIC_ROUTE_CASE $1030c,$10320,0,0,1,1801
-	HD_TRAFFIC_ROUTE_CASE $10000,$ffec,0,0,-1,-601
-	HD_TRAFFIC_ROUTE_CASE $10000,$ffec,0,0,-1,-201
-	HD_TRAFFIC_ROUTE_CASE $10000,$ffec,0,0,-1,-1
-	HD_TRAFFIC_ROUTE_CASE $10000,$ffec,0,0,-1,0
-	HD_TRAFFIC_ROUTE_CASE $10000,$ffec,0,0,-1,199
-	HD_TRAFFIC_ROUTE_CASE $10000,$ffec,0,0,-1,200
-	HD_TRAFFIC_ROUTE_CASE $10000,$ffec,0,0,-1,401
-	HD_TRAFFIC_ROUTE_CASE $10000,$ffec,0,0,-1,1801
-	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,1,1,-601
-	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,1,1,-201
-	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,1,1,-1
-	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,1,1,0
-	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,1,1,199
-	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,1,1,200
-	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,1,1,401
-	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,1,1,1801
-	HD_TRAFFIC_ROUTE_CASE $101f4,$101e0,0,1,-1,-601
-	HD_TRAFFIC_ROUTE_CASE $101f4,$101e0,0,1,-1,-201
-	HD_TRAFFIC_ROUTE_CASE $101f4,$101e0,0,1,-1,-1
-	HD_TRAFFIC_ROUTE_CASE $101f4,$101e0,0,1,-1,0
-	HD_TRAFFIC_ROUTE_CASE $101f4,$101e0,0,1,-1,199
-	HD_TRAFFIC_ROUTE_CASE $101f4,$101e0,0,1,-1,200
-	HD_TRAFFIC_ROUTE_CASE $101f4,$101e0,0,1,-1,401
-	HD_TRAFFIC_ROUTE_CASE $101f4,$101e0,0,1,-1,1801
-	HD_TRAFFIC_ROUTE_CASE $2008c,$200a0,1,1,1,-601
-	HD_TRAFFIC_ROUTE_CASE $2008c,$200a0,1,1,1,-201
-	HD_TRAFFIC_ROUTE_CASE $2008c,$200a0,1,1,1,-1
-	HD_TRAFFIC_ROUTE_CASE $2008c,$200a0,1,1,1,0
-	HD_TRAFFIC_ROUTE_CASE $2008c,$200a0,1,1,1,199
-	HD_TRAFFIC_ROUTE_CASE $2008c,$200a0,1,1,1,200
-	HD_TRAFFIC_ROUTE_CASE $2008c,$200a0,1,1,1,401
-	HD_TRAFFIC_ROUTE_CASE $2008c,$200a0,1,1,1,1801
-	HD_TRAFFIC_ROUTE_CASE $20000,$1ffec,1,1,-1,-601
-	HD_TRAFFIC_ROUTE_CASE $20000,$1ffec,1,1,-1,-201
-	HD_TRAFFIC_ROUTE_CASE $20000,$1ffec,1,1,-1,-1
-	HD_TRAFFIC_ROUTE_CASE $20000,$1ffec,1,1,-1,0
-	HD_TRAFFIC_ROUTE_CASE $20000,$1ffec,1,1,-1,199
-	HD_TRAFFIC_ROUTE_CASE $20000,$1ffec,1,1,-1,200
-	HD_TRAFFIC_ROUTE_CASE $20000,$1ffec,1,1,-1,401
-	HD_TRAFFIC_ROUTE_CASE $20000,$1ffec,1,1,-1,1801
-	HD_TRAFFIC_ROUTE_CASE $100c8,$100b4,0,1,-1,-601
-	HD_TRAFFIC_ROUTE_CASE $100c8,$100b4,0,1,-1,-201
-	HD_TRAFFIC_ROUTE_CASE $100c8,$100b4,0,1,-1,-1
-	HD_TRAFFIC_ROUTE_CASE $100c8,$100b4,0,1,-1,0
-	HD_TRAFFIC_ROUTE_CASE $100c8,$100b4,0,1,-1,199
-	HD_TRAFFIC_ROUTE_CASE $100c8,$100b4,0,1,-1,200
-	HD_TRAFFIC_ROUTE_CASE $100c8,$100b4,0,1,-1,401
-	HD_TRAFFIC_ROUTE_CASE $100c8,$100b4,0,1,-1,1801
-	HD_TRAFFIC_ROUTE_CASE $101f4,$10208,0,1,1,-601
-	HD_TRAFFIC_ROUTE_CASE $101f4,$10208,0,1,1,-201
-	HD_TRAFFIC_ROUTE_CASE $101f4,$10208,0,1,1,-1
-	HD_TRAFFIC_ROUTE_CASE $101f4,$10208,0,1,1,0
-	HD_TRAFFIC_ROUTE_CASE $101f4,$10208,0,1,1,199
-	HD_TRAFFIC_ROUTE_CASE $101f4,$10208,0,1,1,200
-	HD_TRAFFIC_ROUTE_CASE $101f4,$10208,0,1,1,401
-	HD_TRAFFIC_ROUTE_CASE $101f4,$10208,0,1,1,1801
-	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,0,1,-601
-	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,0,1,-201
-	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,0,1,-1
-	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,0,1,0
-	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,0,1,199
-	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,0,1,200
-	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,0,1,401
-	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,0,1,1801
-	HD_TRAFFIC_ROUTE_CASE $20050,$20064,1,1,1,-601
-	HD_TRAFFIC_ROUTE_CASE $20050,$20064,1,1,1,-201
-	HD_TRAFFIC_ROUTE_CASE $20050,$20064,1,1,1,-1
-	HD_TRAFFIC_ROUTE_CASE $20050,$20064,1,1,1,0
-	HD_TRAFFIC_ROUTE_CASE $20050,$20064,1,1,1,199
-	HD_TRAFFIC_ROUTE_CASE $20050,$20064,1,1,1,200
-	HD_TRAFFIC_ROUTE_CASE $20050,$20064,1,1,1,401
-	HD_TRAFFIC_ROUTE_CASE $20050,$20064,1,1,1,1801
-	HD_TRAFFIC_ROUTE_CASE $20050,$2003c,1,1,-1,-601
-	HD_TRAFFIC_ROUTE_CASE $20050,$2003c,1,1,-1,-201
-	HD_TRAFFIC_ROUTE_CASE $20050,$2003c,1,1,-1,-1
-	HD_TRAFFIC_ROUTE_CASE $20050,$2003c,1,1,-1,0
-	HD_TRAFFIC_ROUTE_CASE $20050,$2003c,1,1,-1,199
-	HD_TRAFFIC_ROUTE_CASE $20050,$2003c,1,1,-1,200
-	HD_TRAFFIC_ROUTE_CASE $20050,$2003c,1,1,-1,401
-	HD_TRAFFIC_ROUTE_CASE $20050,$2003c,1,1,-1,1801
-	HD_TRAFFIC_ROUTE_CASE $10064,$10078,0,0,1,-601
-	HD_TRAFFIC_ROUTE_CASE $10064,$10078,0,0,1,-201
-	HD_TRAFFIC_ROUTE_CASE $10064,$10078,0,0,1,-1
-	HD_TRAFFIC_ROUTE_CASE $10064,$10078,0,0,1,0
-	HD_TRAFFIC_ROUTE_CASE $10064,$10078,0,0,1,199
-	HD_TRAFFIC_ROUTE_CASE $10064,$10078,0,0,1,200
-	HD_TRAFFIC_ROUTE_CASE $10064,$10078,0,0,1,401
-	HD_TRAFFIC_ROUTE_CASE $10064,$10078,0,0,1,1801
+	HD_TRAFFIC_ROUTE_CASE $1030c,$10320,0,0,1,-601,0,0
+	HD_TRAFFIC_ROUTE_CASE $1030c,$10320,0,0,1,-201,0,0
+	HD_TRAFFIC_ROUTE_CASE $1030c,$10320,0,0,1,-1,0,0
+	HD_TRAFFIC_ROUTE_CASE $1030c,$10320,0,0,1,0,0,0
+	HD_TRAFFIC_ROUTE_CASE $1030c,$10320,0,0,1,199,0,0
+	HD_TRAFFIC_ROUTE_CASE $1030c,$10320,0,0,1,200,0,0
+	HD_TRAFFIC_ROUTE_CASE $1030c,$10320,0,0,1,401,0,0
+	HD_TRAFFIC_ROUTE_CASE $1030c,$10320,0,0,1,1801,0,0
+	HD_TRAFFIC_ROUTE_CASE $10000,$ffec,0,0,-1,-601,0,0
+	HD_TRAFFIC_ROUTE_CASE $10000,$ffec,0,0,-1,-201,0,0
+	HD_TRAFFIC_ROUTE_CASE $10000,$ffec,0,0,-1,-1,0,0
+	HD_TRAFFIC_ROUTE_CASE $10000,$ffec,0,0,-1,0,0,0
+	HD_TRAFFIC_ROUTE_CASE $10000,$ffec,0,0,-1,199,0,0
+	HD_TRAFFIC_ROUTE_CASE $10000,$ffec,0,0,-1,200,0,0
+	HD_TRAFFIC_ROUTE_CASE $10000,$ffec,0,0,-1,401,0,0
+	HD_TRAFFIC_ROUTE_CASE $10000,$ffec,0,0,-1,1801,0,0
+	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,1,1,-601,0,0
+	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,1,1,-201,0,0
+	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,1,1,-1,0,0
+	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,1,1,0,0,0
+	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,1,1,199,0,0
+	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,1,1,200,0,0
+	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,1,1,401,0,0
+	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,1,1,1801,0,0
+	HD_TRAFFIC_ROUTE_CASE $101f4,$101e0,0,1,-1,-601,0,0
+	HD_TRAFFIC_ROUTE_CASE $101f4,$101e0,0,1,-1,-201,0,0
+	HD_TRAFFIC_ROUTE_CASE $101f4,$101e0,0,1,-1,-1,0,0
+	HD_TRAFFIC_ROUTE_CASE $101f4,$101e0,0,1,-1,0,0,0
+	HD_TRAFFIC_ROUTE_CASE $101f4,$101e0,0,1,-1,199,0,0
+	HD_TRAFFIC_ROUTE_CASE $101f4,$101e0,0,1,-1,200,0,0
+	HD_TRAFFIC_ROUTE_CASE $101f4,$101e0,0,1,-1,401,0,0
+	HD_TRAFFIC_ROUTE_CASE $101f4,$101e0,0,1,-1,1801,0,0
+	HD_TRAFFIC_ROUTE_CASE $2008c,$200a0,1,1,1,-601,0,0
+	HD_TRAFFIC_ROUTE_CASE $2008c,$200a0,1,1,1,-201,0,0
+	HD_TRAFFIC_ROUTE_CASE $2008c,$200a0,1,1,1,-1,0,0
+	HD_TRAFFIC_ROUTE_CASE $2008c,$200a0,1,1,1,0,0,0
+	HD_TRAFFIC_ROUTE_CASE $2008c,$200a0,1,1,1,199,0,0
+	HD_TRAFFIC_ROUTE_CASE $2008c,$200a0,1,1,1,200,0,0
+	HD_TRAFFIC_ROUTE_CASE $2008c,$200a0,1,1,1,401,0,0
+	HD_TRAFFIC_ROUTE_CASE $2008c,$200a0,1,1,1,1801,0,0
+	HD_TRAFFIC_ROUTE_CASE $20000,$1ffec,1,1,-1,-601,0,0
+	HD_TRAFFIC_ROUTE_CASE $20000,$1ffec,1,1,-1,-201,0,0
+	HD_TRAFFIC_ROUTE_CASE $20000,$1ffec,1,1,-1,-1,0,0
+	HD_TRAFFIC_ROUTE_CASE $20000,$1ffec,1,1,-1,0,0,0
+	HD_TRAFFIC_ROUTE_CASE $20000,$1ffec,1,1,-1,199,0,0
+	HD_TRAFFIC_ROUTE_CASE $20000,$1ffec,1,1,-1,200,0,0
+	HD_TRAFFIC_ROUTE_CASE $20000,$1ffec,1,1,-1,401,0,0
+	HD_TRAFFIC_ROUTE_CASE $20000,$1ffec,1,1,-1,1801,0,0
+	HD_TRAFFIC_ROUTE_CASE $100c8,$100b4,0,1,-1,-601,0,0
+	HD_TRAFFIC_ROUTE_CASE $100c8,$100b4,0,1,-1,-201,0,0
+	HD_TRAFFIC_ROUTE_CASE $100c8,$100b4,0,1,-1,-1,0,0
+	HD_TRAFFIC_ROUTE_CASE $100c8,$100b4,0,1,-1,0,0,0
+	HD_TRAFFIC_ROUTE_CASE $100c8,$100b4,0,1,-1,199,0,0
+	HD_TRAFFIC_ROUTE_CASE $100c8,$100b4,0,1,-1,200,0,0
+	HD_TRAFFIC_ROUTE_CASE $100c8,$100b4,0,1,-1,401,0,0
+	HD_TRAFFIC_ROUTE_CASE $100c8,$100b4,0,1,-1,1801,0,0
+	HD_TRAFFIC_ROUTE_CASE $101f4,$10208,0,1,1,-601,0,0
+	HD_TRAFFIC_ROUTE_CASE $101f4,$10208,0,1,1,-201,0,0
+	HD_TRAFFIC_ROUTE_CASE $101f4,$10208,0,1,1,-1,0,0
+	HD_TRAFFIC_ROUTE_CASE $101f4,$10208,0,1,1,0,0,0
+	HD_TRAFFIC_ROUTE_CASE $101f4,$10208,0,1,1,199,0,0
+	HD_TRAFFIC_ROUTE_CASE $101f4,$10208,0,1,1,200,0,0
+	HD_TRAFFIC_ROUTE_CASE $101f4,$10208,0,1,1,401,0,0
+	HD_TRAFFIC_ROUTE_CASE $101f4,$10208,0,1,1,1801,0,0
+	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,0,1,-601,0,0
+	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,0,1,-201,0,0
+	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,0,1,-1,0,0
+	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,0,1,0,0,0
+	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,0,1,199,0,0
+	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,0,1,200,0,0
+	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,0,1,401,0,0
+	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,0,1,1801,0,0
+	HD_TRAFFIC_ROUTE_CASE $20050,$20064,1,1,1,-601,0,0
+	HD_TRAFFIC_ROUTE_CASE $20050,$20064,1,1,1,-201,0,0
+	HD_TRAFFIC_ROUTE_CASE $20050,$20064,1,1,1,-1,0,0
+	HD_TRAFFIC_ROUTE_CASE $20050,$20064,1,1,1,0,0,0
+	HD_TRAFFIC_ROUTE_CASE $20050,$20064,1,1,1,199,0,0
+	HD_TRAFFIC_ROUTE_CASE $20050,$20064,1,1,1,200,0,0
+	HD_TRAFFIC_ROUTE_CASE $20050,$20064,1,1,1,401,0,0
+	HD_TRAFFIC_ROUTE_CASE $20050,$20064,1,1,1,1801,0,0
+	HD_TRAFFIC_ROUTE_CASE $20050,$2003c,1,1,-1,-601,0,0
+	HD_TRAFFIC_ROUTE_CASE $20050,$2003c,1,1,-1,-201,0,0
+	HD_TRAFFIC_ROUTE_CASE $20050,$2003c,1,1,-1,-1,0,0
+	HD_TRAFFIC_ROUTE_CASE $20050,$2003c,1,1,-1,0,0,0
+	HD_TRAFFIC_ROUTE_CASE $20050,$2003c,1,1,-1,199,0,0
+	HD_TRAFFIC_ROUTE_CASE $20050,$2003c,1,1,-1,200,0,0
+	HD_TRAFFIC_ROUTE_CASE $20050,$2003c,1,1,-1,401,0,0
+	HD_TRAFFIC_ROUTE_CASE $20050,$2003c,1,1,-1,1801,0,0
+	HD_TRAFFIC_ROUTE_CASE $10064,$10078,0,0,1,-601,0,0
+	HD_TRAFFIC_ROUTE_CASE $10064,$10078,0,0,1,-201,0,0
+	HD_TRAFFIC_ROUTE_CASE $10064,$10078,0,0,1,-1,0,0
+	HD_TRAFFIC_ROUTE_CASE $10064,$10078,0,0,1,0,0,0
+	HD_TRAFFIC_ROUTE_CASE $10064,$10078,0,0,1,199,0,0
+	HD_TRAFFIC_ROUTE_CASE $10064,$10078,0,0,1,200,0,0
+	HD_TRAFFIC_ROUTE_CASE $10064,$10078,0,0,1,401,0,0
+	HD_TRAFFIC_ROUTE_CASE $10064,$10078,0,0,1,1801,0,0
+	HD_TRAFFIC_ROUTE_CASE $1030c,$10320,0,0,1,0,-601,100
+	HD_TRAFFIC_ROUTE_CASE $1030c,$10320,0,0,1,200,-601,100
+	HD_TRAFFIC_ROUTE_CASE $10000,$ffec,0,0,-1,0,-601,100
+	HD_TRAFFIC_ROUTE_CASE $10000,$ffec,0,0,-1,200,-601,100
+	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,1,1,0,-601,100
+	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,1,1,200,-601,100
+	HD_TRAFFIC_ROUTE_CASE $101f4,$101e0,0,1,-1,0,-601,100
+	HD_TRAFFIC_ROUTE_CASE $101f4,$101e0,0,1,-1,200,-601,100
+	HD_TRAFFIC_ROUTE_CASE $2008c,$200a0,1,1,1,0,-601,100
+	HD_TRAFFIC_ROUTE_CASE $2008c,$200a0,1,1,1,200,-601,100
+	HD_TRAFFIC_ROUTE_CASE $20000,$1ffec,1,1,-1,0,-601,100
+	HD_TRAFFIC_ROUTE_CASE $20000,$1ffec,1,1,-1,200,-601,100
+	HD_TRAFFIC_ROUTE_CASE $100c8,$100b4,0,1,-1,0,-601,100
+	HD_TRAFFIC_ROUTE_CASE $100c8,$100b4,0,1,-1,200,-601,100
+	HD_TRAFFIC_ROUTE_CASE $101f4,$10208,0,1,1,0,-601,100
+	HD_TRAFFIC_ROUTE_CASE $101f4,$10208,0,1,1,200,-601,100
+	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,0,1,0,-601,100
+	HD_TRAFFIC_ROUTE_CASE $100c8,$100dc,0,0,1,200,-601,100
+	HD_TRAFFIC_ROUTE_CASE $20050,$20064,1,1,1,0,-601,100
+	HD_TRAFFIC_ROUTE_CASE $20050,$20064,1,1,1,200,-601,100
+	HD_TRAFFIC_ROUTE_CASE $20050,$2003c,1,1,-1,0,-601,100
+	HD_TRAFFIC_ROUTE_CASE $20050,$2003c,1,1,-1,200,-601,100
+	HD_TRAFFIC_ROUTE_CASE $10064,$10078,0,0,1,0,-601,100
+	HD_TRAFFIC_ROUTE_CASE $10064,$10078,0,0,1,200,-601,100
+	HD_TRAFFIC_ROUTE_CASE $1030c,$10000,0,0,1,0,-228,100
+	HD_TRAFFIC_ROUTE_CASE $10000,$1030c,0,0,-1,0,-228,100
+	HD_TRAFFIC_ROUTE_CASE $100c8,$20014,1,1,1,0,-228,100
+	HD_TRAFFIC_ROUTE_CASE $101f4,$2008c,1,1,-1,0,-228,100
+	HD_TRAFFIC_ROUTE_CASE $2008c,$101f4,0,1,1,0,-228,100
+	HD_TRAFFIC_ROUTE_CASE $20000,$100c8,0,1,-1,0,-228,100
 _traffic_route_signature: dc.b 'HDTRROU1'
-_traffic_route_results: dcb.b 8832,0
+_traffic_route_results: dcb.b 11592,0
 	ENDC

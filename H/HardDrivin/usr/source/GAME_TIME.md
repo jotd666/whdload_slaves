@@ -1185,15 +1185,37 @@ Evidence:
   are byte-identical to `s4-traffic-reference`, including92 crossings. Its native
   phase arithmetic also passes the existing model.
 
-These checks establish displacement arithmetic and traversal of the computed
-net displacement. A remaining traffic case is an in-frame turnaround after a
-collision: integrating negative then positive velocity can hide an intermediate
-backward junction crossing. The walker must eventually split at the displacement
-extremum and preserve those ordered route decisions. The current tests do not
-prove that path-dependent case, collision safety, rendered-pose equivalence at
-equal elapsed time, or full cross-machine handling/performance acceptance.
-`s4-traffic-route-off` passes inactive ranges; the ordinary slave is unchanged
-and all91 declared branch ranges pass.
+An in-frame turnaround now splits route traversal at the minimum displacement.
+For acceleration `a` and initial full speed `u`, the biased displacement before
+capping is `(2*u*t+a*t*t+8*a*t)/128`. Its minimum is at `t=-u/a-4`, when that
+point is inside a long interval. `_traffic_turn_min` computes the corresponding
+integer displacement, including the original fractional carry; `_traffic_route_motion`
+walks backward to that minimum, then forward to the final displacement. Only
+the final integration remainder is retained. The native short-step path remains
+unchanged. This preserves intermediate junction choices hidden by net movement.
+
+For example, full speed -175, acceleration1 and410 fields reaching cap72 produce
+zero final integer displacement but a -228-unit minimum. Starting at phase100
+therefore crosses a boundary backward and then forward. The final route state
+can differ from simply leaving the car in place, particularly at branch endpoints.
+The walker retains the native route rules, including their reverse-travel behavior.
+
+`s4-traffic-turn-final-math` passes768 displacement and minimum cases, including
+135 cap/coast cases and46 nonzero minima. Cases include short-step compatibility,
+near-zero reversals, signed carries and65535-field intervals. The prepared zero-net
+trajectory above is among them. `s4-traffic-turn-final-route` matches native
+instruction sequences for126 route cases, including30 backward/forward cases.
+Six start with already-normalized edge pointers and zero net movement; all six
+change route state under the ordered native crossings (three change the current
+segment, while the others change the pending next pointer or route mode).
+
+`s4-traffic-turn-live` passes all1440 live A500 updates, including1416 wide updates,
+10 cap/coast transitions and136 crossings. This live run contains no in-frame
+turnaround: turnaround evidence is the private arithmetic and native-instruction
+comparison, not an observed player/traffic collision. `s4-traffic-turn-off` passes
+inactive ranges; the ordinary slave is unchanged and all91 branch ranges pass.
+Collision safety, rendered-pose equivalence at equal elapsed time and full
+cross-machine handling/performance acceptance remain unproven.
 
 
 ### Experimental CPU-specific dispatch
