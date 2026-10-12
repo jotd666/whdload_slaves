@@ -29,3 +29,12 @@ regressing C/E candidates were dropped, not left as release blockers.
 50 FPS and frame-independent normal-build gameplay are not release claims.
 Further renderer redesign requires a new scope. Historical ledgers remain in
 Git; do not revive their superseded next-work lists.
+
+## Post-release rendering investigation
+
+The requested 030/040/060 reprofile is complete; see `rendering-analysis.md` and
+the new section of `profiling.md`. It identifies repeated cockpit scripts,
+per-plane drawing and explicit waits, and documents why the discarded software
+blitter was not a test of a purpose-built Fast RAM renderer. The recommended
+persistent-cockpit/span-renderer redesign is not implemented or part of the
+accepted release. D5 remains postponed.

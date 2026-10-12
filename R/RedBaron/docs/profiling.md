@@ -52,6 +52,149 @@ owned emulator at a time and deletes consumed memory-location scans after saving
 compact evidence. The final binary is `tmp/dev/tmp/build/RedBaron.slave` from the
 repository root; replace the installed slave with that normal binary to use it.
 
+## Fast-CPU rendering reprofile (2026-10-12)
+
+Post-release investigation; normal runtime unchanged. Interpretation and the next
+renderer design are in [rendering-analysis.md](rendering-analysis.md). This section
+supersedes any inference that the release's 14–15 FPS is a hardware ceiling.
+Only 030/50 MMU, 040/25 NOMMU and 060/50 NOMMU were profiled; no stock A500/A1200.
+
+**Build/workload.** F3 normal SHA-256
+`d165a358a33712f4daade2a88bf556aa476ee2644c71b98e52cef5aba6202a37`,
+source `a2450f5`, Faster rendering On, no CUSTOM2 argument, no W6 or guest VERIFY
+instruments. Same completion-matrix memory/cache/CPU settings, PAL, maximum detail,
+Ground IN COMBAT, Time Scale unchanged, protected native flight. External debugger
+breakpoints only; input uses the existing host-debugger keyboard driver.
+
+Evidence: `render-fast-{030,040,060}-1` and `render-fast-060-lines`. Four broad
+probe groups each cover 250 consecutive PAL fields. The additional 040/060 wait
+and launch groups cover 100 each; the fresh 060 line/program groups cover 250
+each. These are consecutive evolving scenes, **not** interchangeable A/B windows.
+Every accepted window reaches its field bound without flight exit. Costs include
+interrupts and bus waits. The unchanged phase filter rejects endpoints below the
+observed safe beam line and at horizontal-counter ambiguity; zero-length
+sub-slot calls are listed separately, not silently made positive. A transient
+parser rejection of such a zero in the first cockpit log was repaired by explicit
+sub-resolution accounting, without rerunning or modifying its raw measurements.
+
+### Whole-frame accounting
+
+These rows use the same accepted frames for every column: world entry to the next
+world entry, six disjoint brackets, plus the measured residual. They account for
+100% of those frame intervals. Unlike a sum of separately filtered routine means,
+this is an additive budget. Publication includes synchronization. Opening scenes
+are heavier than later windows and the longer release average.
+
+| Config | Matched frames | World ms | Scene ms | Cockpit ms | Messages ms | Publication ms | Background + other ms | Total ms | Whole 250-field opening FPS |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 030/50 MMU | 58 | 1.638 | 39.468 | 28.051 | 0.001 | 4.539 | 0.188 | 73.886 | 13.578 |
+| 040/25 NOMMU | 33 | 2.071 | 41.417 | 26.757 | 0.175 | 6.651 | 0.223 | 77.294 | 12.580 |
+| 060/50 NOMMU | 53 | 1.897 | 40.483 | 27.648 | 0.098 | 9.260 | 0.222 | 79.609 | 12.380 |
+
+The later 250-field bitmap windows publish at **14.577 / 14.776 / 14.377 FPS**
+respectively. This reproduces the plateau region with the final binary, while
+showing why opening-frame costs must not be divided into the release's average
+FPS. These short observations do not replace the F3 release scoreboard above.
+
+### Cockpit subcalls
+
+Separate accepted-call means in the cockpit window; n in parentheses. Different
+endpoint exclusions mean these columns must not be added as an exact frame budget.
+Gauge dispatch and its nested body are counted only once.
+
+| Config | Forward overlay ms | Gauge dispatch ms | Instrument/foreground scripts ms |
+|---|---:|---:|---:|
+| 030/50 | 7.024 (49) | 11.182 (49) | 14.162 (44) |
+| 040/25 | 7.138 (50) | 9.326 (51) | 13.325 (47) |
+| 060/50 | 6.808 (47) | 12.404 (51) | 13.437 (54) |
+
+The settled 040 program census records programs 2/3/4 **30 times each**. Their
+accepted call means are **9.965 / 2.367 / 1.986 ms** (25/21/19 calls). The separate
+060 program window records 2/3/4 59 times each, at **8.948 / 2.432 / 2.095 ms**
+(48/37/38 accepted). It also records program 1 on 20 occasions, 19 accepted at
+5.900 ms, explaining additional cockpit event work in that window.
+
+On 060, within 46 accepted cockpit parents (30.620 ms mean), accepted gauge bitmap
+calls contribute at least **6.427 ms/frame** and callbacks **2.062 ms/frame**;
+restore/clip setup at `sim:19d8c` contributes 0.003 ms. These are lower bounds after
+endpoint exclusions. On 040, the retained gauge cache reduces calls reaching these
+native sites; absence at those sites is not absence of cache/composition cost.
+
+### Primitive and wait attribution
+
+Only calls contained in an accepted parent are included. Sums below are **lower
+bounds**: phase-ambiguous child endpoints are excluded. The report unions nested
+intervals. Distinct probe groups remain distinct windows, so do not add their
+rows into a synthetic exact budget.
+
+| Config / group | Parent frames | Parent mean ms | Attributed child ms/frame |
+|---|---:|---:|---|
+| 040 scene / rectangle+polygon | 68 | 40.458 | rectangle ≥9.402; polygon ≥8.606; union ≥18.009 |
+| 060 scene / lines | 53 | 40.649 | line ≥8.407; 22.04 accepted calls/frame |
+| 060 cockpit / lines | 54 | 27.462 | line ≥2.958; 17.19 accepted calls/frame |
+| 030 cockpit / bitmap | 69 | 27.608 | bitmap ≥7.098; overlay body ≥5.353 |
+| 040 cockpit / bitmap | 67 | 24.647 | bitmap ≥3.916; overlay body ≥5.803 |
+| 040 scene / rectangle waits | 24 | 35.639 | plane waits ≥7.208 |
+| 060 scene / rectangle waits | 19 | 34.467 | plane waits ≥6.406 |
+| 040 scene / polygon waits | 23 | 36.011 | fill/edge/merge waits ≥3.173 |
+| 060 scene / polygon waits | 18 | 33.786 | fill/edge/merge waits ≥3.258 |
+| 040 cockpit / rectangle waits | 24 | 24.716 | plane waits ≥5.782 |
+| 060 cockpit / rectangle waits | 23 | 27.610 | plane waits ≥5.394 |
+| 040 cockpit / overlay waits | 13 | 25.020 | waits ≥5.425 |
+| 060 cockpit / overlay waits | 23 | 27.326 | waits ≥4.627 |
+
+Line time can overlap polygon/rectangle parents; it must not be added blindly to
+their inclusive costs. Polling intervals include loop instructions and interrupts;
+these are not exclusive blitter DMA times or a Chip-bus saturation measurement.
+
+### Work and traffic census
+
+Each launch census has **29 complete frames**. Both 040 and 060 agree on these
+counts; sizes are decoded from the native BLTSIZE operand before the write.
+
+| Work per complete frame | Launches | Destination plane-bytes |
+|---|---:|---:|
+| Scene sky/ground rectangles, all five planes | 10 | 24,000 |
+| Cockpit rectangles | 55 | 10,410 |
+| Cockpit polygon area fill | 1 | 190 |
+| Cockpit polygon five-plane merge | 5 | 950 |
+| Forward overlay, 320×52, five planes | 5 | 10,400 |
+
+The scene rectangle heights are 63+57 (040) and 64+56 (060); each pair covers
+320×120. Scene polygon counts vary with the evolving view: 040 records 282 fills
+and 1,410 merges, 060 290 and 1,450, over those 29 frames. Most cockpit rectangles
+are one or two words wide and 94–117 lines tall, plus shorter strips.
+
+The observed rectangle minterms enable D only for the full scene interiors, C+D
+for the masked cockpit strips. Native overlay/fill/merge setups enable four/two/
+three channels. **Derived:** the sampled cockpit operations therefore request
+65,650 bytes of DMA data transfers per frame before bitmap and line work
+(20,820 + 380 + 2,850 + 41,600). This is a workload byte count, not measured bus
+bandwidth. At 50 FPS that subset alone would request 3.2825 MB/s.
+
+### Discarded CPU backend: scope of the finding
+
+The frozen E3 binary/listing `completion-e3-fast-frame-060-on` has SHA-256
+`0d0abc903b8bfd91671da408adfac0c331fe601ddfe86c8058b309982dc303f5`.
+Source inspection proves 48,000 bytes copied Chip→Fast at scene entry and 48,000
+Fast→Chip on exit: **96,000 Chip-facing bytes/frame**, 2.4 times a single 40,000-
+byte final screen copy. It emulates individual planar blitter operations and
+leaves native cockpit rendering outside the Fast RAM pass. Its retained C kernel
+is in `tools/fast_blitter_model.c`. This is not evidence against a persistent,
+span-based CPU renderer with one final transfer.
+
+New timing probes `render-cpu-backend-060-{1,2,3}` are **excluded**: the first hit
+a native input-queue conflict before profiling; the hardware-input retry reached
+flight but the debugger returned a malformed packet after 20 fields; its follow-up
+stalled. Only the verified owned processes were stopped. No new CPU-backend FPS,
+copy-time or kernel-time claim is made. The earlier successful whole-window E3
+regression remains historical evidence for that particular implementation.
+
+Four focused host accounting controls pass: nested-interval union, same-frame
+six-bracket accounting, wrong-return-stack rejection, and discontinuous-field
+rejection. The report reprocesses all completed captures. Runtime source, player
+settings, release mask and D5 disposition are unchanged.
+
 ## Completion scoreboard
 
 This is the single results table for `completion-plan.md` A–F. “Pending”
