@@ -1170,6 +1170,56 @@ loop/jump/collision handling. The separate experimental CPU dispatcher permits
 long 68000 steps; velocity writes and full gameplay validation still need attention.
 
 
+### Traffic companion lookup and temporary route records
+
+The native route generator at `$05a14` constructs a temporary 46-byte record on
+its stack and calls the traffic routine `$0ce70` from `$05a96`. It samples the
+resulting geometry into the 3588-byte buffer at G($9640). These calls generate a
+route in native steps; they are not elapsed-time updates of live traffic actors.
+
+The old companion lookup assumed every record belonged to G($af06). Subtracting
+that table pointer from the temporary stack pointer overflowed its DIVU index,
+and subsequent helpers wrote outside the allocated companion array. A larger
+experimental slave exposed a repeatable startup fault before race entry, before
+its new force-cache hook was used. A successful boot or matching later traffic
+records therefore did not establish safe startup behavior in earlier builds.
+
+`_traffic_slot` now rejects records below or beyond the native table, records
+not aligned to its 46-byte stride, missing companion storage and indices beyond
+that allocation. It returns NULL without a companion access. Speed, phase and
+collision wrappers then execute the original displaced operations; initialization
+and restart skip companion writes. The lookup preserves X so a rejected record
+also preserves native flag behavior. Valid live records retain elapsed-time
+integration and their individual fractional state.
+
+Focused evidence:
+
+- `traffic-slot-micro.json`: 216 actual-68000 lookup boundary cases and 3840
+  comparisons of temporary-record speed, phase and collision fallbacks against
+  the original instructions. Registers, stack, record/actor writes and CCR agree.
+- `s4-traffic-slot-native-off/on`: the complete nonzero 3588-byte generated route
+  agrees at race entry. At 108 native-step physics returns, car, RNG, replay ring,
+  all 12 traffic records and actors, and all 109 scene-object records agree.
+  All 109 input snapshots agree. Complete data/BSS still differs at the 20 known
+  clock/audio/presentation bytes; this is not strict full-state equivalence.
+- `s4-traffic-slot-model`: 1440 live traffic updates match the eight-field model,
+  including 92 route crossings. The ordinary build remains byte-identical.
+- `s4-traffic-slot-reference`: the final fix without the experimental cache
+  completes the 500-field A500 window with 34 swaps, 34 physics/render calls and
+  four crash fields. Each rendered frame consumes one full physics interval.
+  This remains outside the original 38-swap diagnostic's 3% performance budget.
+- `s4-traffic-slot-020`: 146 swaps and146 physics/render calls over500 fields,
+  with two-to-five-field active intervals and no oversized fallback. This checks
+  the 68020 policy and startup, not equal-time handling. CUSTOM1-off passes all
+  152 inactive ranges; the direct-branch audit passes131 ranges.
+
+The full-force cache experiment was removed: after the traffic fix it recorded
+96 hits and 302 misses but still only 34 swaps. Its ignored patch and failed-boot
+captures remain available for diagnosis. The previous full frozen-window A/B
+captures predate this traffic fix and must not serve as final-build acceptance.
+This correction does not establish cross-machine handling or collision safety.
+
+
 ### Traffic acceleration at longer intervals
 
 Traffic acceleration now adds and clamps the full signed-long increment before

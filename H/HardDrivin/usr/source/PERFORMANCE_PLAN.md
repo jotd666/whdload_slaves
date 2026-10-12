@@ -35,6 +35,9 @@ long-step resistance limiter removes observed braking-induced reversals while
 preserving slope rollback; maximum-delay handling remains unproven. The sound
 caller inventory, replay skid-request correction and live off-road/skid/partial-contact
 cadence checks are in AUDIO_TIMING.md.
+Traffic companion lookup now excludes the native route generator's temporary
+stack record, fixing an out-of-bounds startup write; focused native-route and
+traffic-state checks pass. Full acceptance still needs the corrected final build.
 See GAME_TIME.md;
 the step-4 acceptance criteria remain open.
 
@@ -365,6 +368,10 @@ Tools stay in ignored `tmp/dev/tools`.
      policy gives37 swaps in the short diagnostic, but its full frozen-window
      comparison gives115 versus108 original swaps in A and258 versus349 in B.
      B fails the3% gate and has a different replay/scene workload; see PERFORMANCE.md.
+     Those full-window captures predate the traffic companion bounds fix. The
+     corrected reference build still gives34 swaps in the short diagnostic;
+     a full-force cache also gave34 and was removed. Final window measurements
+     must use the corrected build.
      The cheaper general policy's handling tolerance and final original-game
      performance acceptance stay open.
    - Exercise collisions, the loop and the jump at both T extremes; check for

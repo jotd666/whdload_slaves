@@ -55,16 +55,42 @@ _traffic_loaded:
 	movem.l (a7)+,d0-d2/a0-a2/a6
 	movea.l -6(a5),a0
 	rts
-; A0 native record -> A1 companion; valid native iterator/collision index.
+; A0 record -> A1 companion, or NULL for a non-table record. The native
+; route generator at $5a14 passes a stack-local record to $ce70; its calls
+; advance a synthetic route by native steps, not by elapsed gameplay time.
+; Validate the range and record alignment before DIVU or companion writes.
 _traffic_slot:
 	movem.l d0-d1,-(a7)
+	moveq #0,d1
+	roxl.b #1,d1
+	move.w d1,-(a7)
 	move.l a0,d0
 	sub.l -$50fa(a4),d0
+	bcs.s .invalid
+	moveq #0,d1
+	move.w -$50fc(a4),d1
+	mulu.w #46,d1
+	cmp.l d1,d0
+	bcc.s .invalid
 	divu.w #46,d0
+	move.l d0,d1
+	swap d1
+	tst.w d1
+	bne.s .invalid
 	andi.l #$ffff,d0
 	lsl.l #4,d0
+	cmp.l _traffic_memory+4(pc),d0
+	bcc.s .invalid
 	movea.l _traffic_memory(pc),a1
+	move.l a1,d1
+	beq.s .invalid
 	adda.l d0,a1
+	bra.s .done
+.invalid:
+	suba.l a1,a1
+.done:
+	move.w (a7)+,d1
+	lsr.b #1,d1             ; preserve incoming X for native fallback
 	movem.l (a7)+,d0-d1
 	rts
 _traffic_clear:
@@ -77,7 +103,10 @@ _traffic_initial:
 	movem.l a0-a1,-(a7)
 	movea.l a2,a0
 	bsr _traffic_slot
+	cmpa.w #0,a1
+	beq.s .native
 	bsr _traffic_clear
+.native:
 	movem.l (a7)+,a0-a1
 	clr.l 4(a2)
 	clr.b 19(a2)
@@ -88,16 +117,34 @@ _traffic_restart:
 	movem.l a0-a1,-(a7)
 	movea.l a2,a0
 	bsr _traffic_slot
+	cmpa.w #0,a1
+	beq.s .native
 	bsr _traffic_clear
 	st 11(a1)
+.native:
 	movem.l (a7)+,a0-a1
 	rts
 _traffic_speed:
 	movem.l d0-d5/a0-a1,-(a7)
 	movea.l 8(a5),a0
 	bsr _traffic_slot
+	cmpa.w #0,a1
+	beq.s .native
 	bsr _traffic_speed_step
 	movem.l (a7)+,d0-d5/a0-a1
+	rts
+.native:
+	movem.l (a7)+,d0-d5/a0-a1
+	movea.l 8(a5),a0
+	movea.l 8(a5),a1
+	move.b 23(a0),d0
+	cmp.b 22(a1),d0
+	bge.s .done
+	move.b 21(a1),d0
+	add.b d0,23(a0)
+	movea.l -8(a5),a0
+	clr.b 31(a0)
+.done:
 	rts
 ; A0 record, A1 state; scratch D0-D5. Native acceleration grid starts at zero.
 ; Preserve its reachable terminal speed ceil(target/accel)*accel. In the SPS0126
@@ -152,8 +199,18 @@ _traffic_phase:
 	movem.l d0-d5/a0-a1,-(a7)
 	movea.l 8(a5),a0
 	bsr _traffic_slot
+	cmpa.w #0,a1
+	beq.s .native
 	bsr _traffic_phase_step
 	movem.l (a7)+,d0-d5/a0-a1
+	rts
+.native:
+	movem.l (a7)+,d0-d5/a0-a1
+	movea.l 8(a5),a0
+	movea.l 8(a5),a1
+	move.b 23(a1),d0
+	ext.w d0
+	add.w d0,16(a0)
 	rts
 ; Integrate new speed and its fraction with the same semi-implicit Euler bias
 ; as the car. Phase remains in native units; native geometry consumes it before
@@ -234,8 +291,15 @@ _traffic_phase_step:
 _traffic_collision:
 	movem.l d0-d2/a0-a1,-(a7)
 	bsr _traffic_slot
+	cmpa.w #0,a1
+	beq.s .native
 	bsr _traffic_reverse_step
 	movem.l (a7)+,d0-d2/a0-a1
+	movea.l d6,a0
+	rts
+.native:
+	movem.l (a7)+,d0-d2/a0-a1
+	neg.b 23(a0)
 	movea.l d6,a0
 	rts
 ; A0 record, A1 companion. Reverse the full velocity impulse, not just its byte.
