@@ -1924,3 +1924,12 @@ This closes the identified Phantom instruction/camera timing conversion. It
 is not full step-4 acceptance: the remaining audio audit, large-step physics
 safety, full native/equal-time handling and performance matrix, and human laps
 are still required.
+
+
+## Sound audit and replay request cadence
+
+See AUDIO_TIMING.md for the native caller inventory, field-driven audio setup,
+absolute RPM/pitch conversion and remaining repeated live-driving requests.
+TIME_REPLAY_TIMING now consumes each recorded skid request once, including
+crossed records and the final undrawn tail. Private history and live no-skid
+replay checks pass; sample-start and listening acceptance remain open.

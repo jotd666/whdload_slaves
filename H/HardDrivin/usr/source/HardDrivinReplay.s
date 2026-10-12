@@ -1,6 +1,9 @@
 ; Development replay playback clock and pose interpolation. Add TIME_RECORD
 ; for fixed-field history generation; full gameplay acceptance remains open.
 _replay_install:
+	IFD VERIFY_REPLAY_AUDIO_MATH
+	bsr _replay_audio_math_test
+	ENDC
 	IFD VERIFY_TIME_RECORD
 	bsr _record_install
 	ENDC
@@ -21,6 +24,8 @@ _replay_patches:
 	PL_PS $10bb0,_replay_begin
 	; PERF_RANGE VERIFY_TIME_REPLAY_TIMING $10bb6 $0008: interpolated playback pose
 	PL_PSS $10bb6,_replay_pose,2
+	; PERF_RANGE VERIFY_TIME_REPLAY_TIMING $10c18 $0012: skid requests by history record
+	PL_PSS $10c18,_replay_sound_records,$c
 	; PERF_RANGE VERIFY_TIME_REPLAY_TIMING $10e46 $0016: elapsed playback cursor
 	PL_PSS $10e46,_replay_advance,$10
 	; PERF_RANGE VERIFY_TIME_REPLAY_TIMING $10db4 $000a: timed effect pose and RNG1
@@ -47,6 +52,10 @@ _replay_state: dcb.b 32,0
 _replay_frame: dcb.b 158,0
 ; Separate publication keeps the playback state/scratch layout stable.
 _replay_overlay_last: dc.l 0
+_replay_audio_signature: dc.b 'HDRAUD01'
+; Last consumed record.w, padding.w, number of historical skid requests.l.
+_replay_audio_state: dc.w -1,0
+	dc.l 0
 _replay_overlay_reset:
 	move.l a0,-(a7)
 	lea _replay_overlay_last(pc),a0
@@ -85,6 +94,11 @@ _replay_resume:
 	movea.l (a7)+,a0
 	rts
 _replay_begin:
+	move.l a0,-(a7)
+	lea _replay_audio_state(pc),a0
+	move.w #-1,(a0)
+	clr.l 4(a0)
+	movea.l (a7)+,a0
 	bsr _replay_overlay_reset
 	movem.l d0/a0,-(a7)
 	lea _replay_state(pc),a0
@@ -129,6 +143,7 @@ _replay_advance:
 .target:
 	move.w d0,RP_EFFECT_TARGET(a0)
 	bsr _replay_rng_advance
+	bsr _replay_sound_records
 .return:
 	movem.l (a7)+,d0-d1/a0
 	rts
@@ -165,6 +180,53 @@ _replay_pose:
 	; Native first two instructions; A3 deliberately points at the scratch pose.
 	movea.l -$6686(a4),a0
 	move.w 6(a3),d0
+	rts
+
+; Consume each recorded skid request once, including records crossed without
+; drawing. Paula's existing per-channel busy gate still arbitrates actual starts.
+; D4 may equal COUNT on final advance; clamp before reading the native ring.
+_replay_sound_records:
+	movem.l d0-d7/a0-a3,-(a7)
+	moveq #0,d0
+	roxl.b #1,d0
+	move.w d0,-(a7)
+	lea _replay_audio_state(pc),a2
+	move.w d4,d7
+	move.w _replay_state+RP_COUNT(pc),d0
+	subq.w #1,d0
+	cmp.w d0,d7
+	ble.s .next
+	move.w d0,d7
+.next:
+	move.w (a2),d0
+	cmp.w d7,d0
+	bge.s .done
+	addq.w #1,d0
+	move.w d0,(a2)
+	mulu.w #158,d0
+	movea.l _replay_state+RP_OLDEST(pc),a0
+	adda.l d0,a0
+	lea -$16e2(a4),a1
+	cmpa.l a1,a0
+	blo.s .record
+	suba.l #14220,a0
+.record:
+	btst #7,12(a0)
+	beq.s .next
+	addq.l #1,4(a2)
+	move.w #4,-(a7)
+	jsr -$7fce(a4)
+	addq.w #2,a7
+	; Preserve the native event handler's X when a request is made. The
+	; bookkeeping loop must not replace it with its own arithmetic carry.
+	moveq #0,d0
+	roxl.b #1,d0
+	move.w d0,(a7)
+	bra.s .next
+.done:
+	move.w (a7)+,d0
+	lsr.b #1,d0
+	movem.l (a7)+,d0-d7/a0-a3
 	rts
 
 ; Replay effect phase k0..25, independent of how often it is drawn.
@@ -398,4 +460,8 @@ _replay_math_results: dcb.b 9*158,0
 
 	IFD VERIFY_TIME_RECORD
 	INCLUDE "HardDrivinRecord.s"
+	ENDC
+
+	IFD VERIFY_REPLAY_AUDIO_MATH
+	INCLUDE "HardDrivinReplayAudioVerify.s"
 	ENDC
