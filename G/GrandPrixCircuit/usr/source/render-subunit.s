@@ -2,7 +2,8 @@
 ; never reconstructed from constants or cumulatively interpolated. No live
 ; physics value is overwritten. All callers are gated by CUSTOM2.
 
-; Native $2b5e rebuilds mirror/row tables on every new race. Restore the
+; Native $2b5e rebuilds mirror/row tables at outer-session setup ($9ee),
+; not between qualifying and its race. Restore the
 ; canonical inputs first, then invalidate the last projected fraction. Keeping
 ; the saved originals avoids deriving a new mirror from shifted main Y values.
 render_reset_tables:

@@ -855,6 +855,20 @@ negative control rejected; all 55 pristine input hashes still match. The next
 visibility check must include the actual qualifying-to-race transition at Monza,
 rather than treating this synthetic first-race result as acceptance.
 
+Static follow-up narrows the transition test: the outer session calls `$2b5e`
+at `$9ee`, but single-race qualifying (`$b04` -> `$e02` -> `$12a8`) and
+its following race (`$b74` -> `$12a8`) do not return through that call.
+Championship uses the same common run entry. Thus the retained “second race”
+checks exercise two attract sessions and canonical restoration at `$9ee`, not
+qualifying followed by a race. The common entry copies car parameters at
+`$69ee`; gameplay initialization resets track/player state at `$7314`/`$7400`,
+then calls grid initialization `$9f24` through the `$7058` stub. The simulation
+reset at `$7488` therefore precedes grid initialization as intended. The live
+stub mapping in the retained stationary capture confirms `$7058` targets `$9f24`
+and `$7316` targets `$809e`. This review does not establish stale projection
+tables or justify moving the restore hook; native transition reproduction
+remains required before an opponent-visibility fix or acceptance claim.
+
 Audio and opponent visibility remain release blockers. This is not unconditional
 hardware acceptance. Wider circuit, car and traffic coverage remains unestablished.
 
