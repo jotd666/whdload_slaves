@@ -411,6 +411,16 @@ _p0_OldOpenLibrary:
 	FAIL "VERIFY_TIMELINE_PAUSE requires VERIFY_DRIVE"
 	ENDC
 	ENDC
+	IFD VERIFY_TIME_PHANTOM
+	IFND VERIFY_TIME_DISPATCH
+	FAIL "VERIFY_TIME_PHANTOM requires VERIFY_TIME_DISPATCH"
+	ENDC
+	ENDC
+	IFD VERIFY_PHANTOM_ENTRY
+	IFND VERIFY_DRIVE
+	FAIL "VERIFY_PHANTOM_ENTRY requires VERIFY_DRIVE"
+	ENDC
+	ENDC
 	IFD VERIFY_ATTRACT_PAUSE
 	IFND VERIFY_TIME_ATTRACT
 	FAIL "VERIFY_ATTRACT_PAUSE requires VERIFY_TIME_ATTRACT"
@@ -585,6 +595,15 @@ _pl0_v1:	PL_START
 	PL_PS $8520,_verify_drive_title
 	; PERF_RANGE VERIFY_DRIVE $10ecc $0008: native race entry / tape epoch
 	PL_PSS $10ecc,_verify_drive_race,2
+	IFD VERIFY_PHANTOM_ENTRY
+	; Synthetic integration fixture: native challenge initialization, no qualification.
+	; PERF_RANGE VERIFY_PHANTOM_ENTRY $11958 $0008: enter native Phantom directly
+	PL_PSS $11958,_verify_phantom_entry,2
+	; PERF_RANGE VERIFY_PHANTOM_ENTRY $1151a $0006: dismiss challenge instructions
+	PL_PS $1151a,_verify_phantom_continue
+	; PERF_RANGE VERIFY_PHANTOM_ENTRY $1188c $0008: challenge input-tape epoch
+	PL_PSS $1188c,_verify_drive_race,2
+	ENDC
 	ENDC
 
 	PL_PS	$86d6,_hiscore_load_v1	; install hiscore loading & saving

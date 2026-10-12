@@ -1525,3 +1525,82 @@ These are attract camera/route/timer checks, not full gameplay acceptance or a
 rendering performance claim. Attract audio and other side effects still belong
 to the remaining sound audit. Phantom playback, other menu transitions, large-T
 solver safety and the full step4 machine/handling/performance criteria remain.
+
+
+## Phantom challenge dispatcher (partial implementation)
+
+Phantom challenge gameplay uses a separate outer loop at `$11894` and physics
+function at `$11664`, not the ordinary race's `$10ed4` loop. Its active flag is
+G($e931), not G($add4). `VERIFY_TIME_PHANTOM` requires TIME_DISPATCH and installs
+`HardDrivinPhantom.s` behind CUSTOM1/SPS0126. It starts and ends the elapsed epoch
+at this loop's real boundaries, resetting scalar companions on entry. It calls
+the same CPU-selected dispatcher: one full elapsed interval per68000 frame,
+physics every frame on68020+, with bounded extra substeps for long frames.
+
+The `$11668` controls hook handles keyboard/edge events once per outer frame;
+subsequent substeps use the existing held-input ramps. The `$116bc` hook repeats
+from inside the existing LINK frame, so it never recursively creates another
+physics stack frame. If G($e931) clears, pending time is charged to the explicit
+discard counter. The final pass draws once. The native caller at `$1189e`
+submits once. Phantom's scene setup remains complete on intermediate steps:
+the existing scene-cull gate requires the ordinary race flag, so no Phantom
+culling or associated performance benefit is claimed.
+
+Replay exclusion is shared through `_time_replay_call`: it suspends gameplay
+field accumulation only when instant replay is requested and restores/reset
+state afterward. The ordinary wrapper submits after calling it. The Phantom
+wrapper preserves the native UNLK/RTS, leaving submission to its caller. Pause
+and options already use the shared suspend/resume hooks.
+
+The ordinary driving tape does not qualify for Phantom. `VERIFY_PHANTOM_ENTRY`
+is therefore a separate synthetic integration fixture, requiring VERIFY_DRIVE.
+It substitutes the native challenge initializer at `$11958`, supplies a SPACE
+at the real instruction-page wait `$1151a`, and establishes the normal input-tape
+epoch at the challenge's input reset `$1188c`. On completion it returns through
+the native attract transition. The game itself initializes car, track, clocks
+and challenge flags; debugger writes are not used. This fixture deliberately
+bypasses qualification and is **not** the unmodified full driving-tape or
+human-lap acceptance test.
+
+Without the instruction-page key, the old menu tape could dismiss that page in
+one build but miss it in another. The initial lightweight reference timed out
+before its physics anchor; the same-layout off-reference was interrupted by its
+verified owned PID and cleaned up. Neither supplies comparison evidence. The
+corrected fixture provides these checks:
+
+- `s4-phantom-reference-fixed` versus `s4-phantom-native-fixed`: all144 car
+  states match, with only the known gear-table pointer normalized. Phantom
+  phases, both cursors relative to their buffers, engine-start phase and
+  challenge active/result flags also match at every step. This does not compare
+  the full allocated ghost histories or every world-state byte.
+- `s4-phantom-ordinary-native`: all144 ordinary-driving car states still match
+  the existing native reference after the replay helper was shared. The short
+  capture does not establish live replay or challenge-exit coverage.
+- The earlier successful synthetic runtime windows `s4-phantom-live-a500` and
+  `s4-phantom-live-020` cover500 fields each. A500 has52 physics calls/52 draws,
+  consuming0 initially and8..12 fields thereafter, one update per frame. The
+  68020 has196 physics calls/196 draws (195 swaps inside the sampled boundaries),
+  consuming0 initially and2..4 fields thereafter. No oversized fallback occurs.
+  These captures preceded only the instruction-page fixture correction; the
+  dispatcher itself is unchanged. They are policy diagnostics, not matched-scene
+  performance acceptance or proof of correctly timed ghost opponents.
+- `s4-phantom-paused-slow`, with the corrected fixture on68020 and CUSTOM4=12,
+  has53 physics calls/27 draws in500 fields. Its maximum is two substeps per
+  frame, each at most8 fields. All500 adjacent VBL clock increments are checked.
+  The input fixture requests pause after field100 and resume at200; the next
+  controls pass consumes the first key at104, producing96 actual paused fields.
+  Both elapsed clocks remain frozen throughout. The original checker wrongly
+  expected100 paused fields; the retained capture was rechecked against the
+  actual contiguous96-field interval and the unchanged clock increment rules.
+
+`s4-phantom-off` passes disabled-range checks with only the declared input/entry
+fixtures enabled. The ordinary slave remains byte-identical to the baseline,
+and the direct-branch audit passes108 replacement ranges.
+
+This gate is still experimental. Ghost recording at `$08a9c` and the two
+playback paths still advance their six-step phases per call. They require a
+48-field sample/phase model, including multiple samples on long frames,
+capacity/reset handling and native interpolation semantics. Post-race playback
+and instruction/camera animation are also unfinished. Qualification, challenge
+exit/debt, instant replay and full handling comparisons remain acceptance work;
+this dispatcher result does not complete step4.

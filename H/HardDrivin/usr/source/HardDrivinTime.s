@@ -122,6 +122,9 @@ _time_install:
 	IFD VERIFY_TIME_ATTRACT
 	bsr _attract_install
 	ENDC
+	IFD VERIFY_TIME_PHANTOM
+	bsr _phantom_install
+	ENDC
 	ENDC
 .restore:
 	movem.l (a7)+,d0-d1/a0-a2
@@ -267,6 +270,12 @@ _time_resume:
 	rts
 
 _time_replay:
+	bsr _time_replay_call
+	jsr -$7fe6(a4)
+	rts
+
+; Shared by both gameplay loops; the caller owns frame submission.
+_time_replay_call:
 	; Suspend only if the native replay is actually requested. Ordinary frames
 	; must still account for their rendering and ready-buffer wait.
 	tst.b -$5229(a4)
@@ -287,7 +296,7 @@ _time_replay:
 	bsr _time_reset_scalars
 	ENDC
 	movem.l (a7)+,d0/a0
-	bra.s .submit
+	bra.s .done
 .ordinary:
 	; Native no-replay entry only tests ADD7 and returns, preserving D0/A0.
 	move.l a0,-(a7)
@@ -295,8 +304,7 @@ _time_replay:
 	adda.l #$10b08,a0
 	jsr (a0)
 	movea.l (a7)+,a0
-.submit:
-	jsr -$7fe6(a4)
+.done:
 	rts
 
 ; Published diagnostic block, retained in slave memory, never game globals.
@@ -636,4 +644,8 @@ _time_q16_results: dcb.l 7*9*7*2,0
 
 	IFD VERIFY_TIME_ATTRACT
 	INCLUDE "HardDrivinAttract.s"
+	ENDC
+
+	IFD VERIFY_TIME_PHANTOM
+	INCLUDE "HardDrivinPhantom.s"
 	ENDC

@@ -22,8 +22,10 @@ dispatcher now consumes one full interval per 68000 frame and retains bounded
 substeps on 68020+. Fixed-field replay recording and long-frame traffic progression now have focused
 validation. GAME OVER now uses elapsed time, with A500/68020 pause and duration
 checks. Attract route interpolation, scrolling and timeout also have gated
-implementations with native-pose comparisons. Phantom/other menu timelines,
-audio, large-step velocity safety and full acceptance are unfinished. See GAME_TIME.md;
+implementations with native-pose comparisons. The separate Phantom challenge
+physics loop now has an experimental dispatcher and focused validation. Phantom
+ghost recording/playback, other menu timelines, audio, large-step velocity safety
+and full acceptance are unfinished. See GAME_TIME.md;
 the step-4 acceptance criteria remain open.
 
 ## Starting point

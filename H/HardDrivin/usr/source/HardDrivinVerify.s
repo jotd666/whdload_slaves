@@ -565,3 +565,28 @@ _verify_timeline_pause_key:
 .state: dc.w 0
 	dc.l 0
 	ENDC
+
+	IFD VERIFY_PHANTOM_ENTRY
+; Deliberately bypass ordinary-race qualification for isolated loop validation.
+; The native challenge initializer sets all car, track, clock and mode state.
+; This is NOT the unchanged VERIFY_DRIVE qualification/handling acceptance tape.
+; On completion skip the original qualification branch and return to attract.
+_verify_phantom_continue:
+	jsr -$7f92(a4)
+	tst.l d0
+	bne.s .done
+	moveq #$20,d0
+.done:
+	tst.l d0
+	rts
+_verify_phantom_entry:
+	move.l a0,-(a7)
+	movea.l _code_start(pc),a0
+	adda.l #$116ee,a0
+	jsr (a0)
+	movea.l _code_start(pc),a0
+	adda.l #$11994,a0
+	move.l a0,4(a7)
+	movea.l (a7)+,a0
+	rts
+	ENDC
