@@ -1600,14 +1600,15 @@ endpoints. Large-interval solver and handling acceptance remain open.
 `VERIFY_DRIVETRAIN_REFERENCE` adds an explicitly experimental reference path in
 HardDrivinDrivetrain.s. It requires TIME_MOTION, TIME_DISPATCH and TIME_AUDIO and
 is installed only with CUSTOM1. The regular integrated build does not enable it.
-The hook at `$0cdb6` replaces the paired engine/position calls. Full-contact,
-automatic driving in gears1..4, without crash, skid or falling velocity, consumes
+The hook at `$0cdb6` replaces the paired engine/position calls. In the base
+configuration, full-contact automatic driving in gears1..4, without crash, skid or falling velocity, consumes
 nonzero intervals other than eight fields through one-field engine updates.
 Each update retains native power, RPM and gear behavior and accumulates projected
 position with the existing fractional/Euler helpers. The native position routine
 then publishes word positions and runs its remaining housekeeping once, with the
 full interval restored; it skips the already-accumulated displacement.
 
+Optional MANUAL and SKID gates extend this eligibility as described below.
 Other driving modes and zero/eight-field intervals retain the existing pair.
 The eight-field case explicitly preserves native-step compatibility; this is not
 a universally one-field integrator. Steering, input sampling, collision/contact
@@ -1617,7 +1618,7 @@ last inner update, preserving one publication per outer pass. This changes no
 Paula or VBL playback timing. The interval is restored before returning to the
 rest of physics; the outer dispatcher does not gain extra full physics passes.
 
-The final A500 timing capture (`s4-drivetrain-final-timing`) confirms33 completed
+The unbatched A500 reference capture (`s4-drivetrain-final-timing`) confirms33 completed
 physics passes and33 scene calls, one dispatcher step per frame,491 engine calls,
 zero outstanding inner fields at the final observation, and30 pitch publications.
 Every pitch publication belongs to a distinct outer pass and none occurs during
@@ -1957,6 +1958,49 @@ reject missing dependencies. These establish focused manual/neutral support;
 full contact handling, equal-time comparisons and performance acceptance remain
 open. The current original-versus-enabled performance table predates this optional
 manual gate and makes no claim about its cost.
+
+### Skid reference integration with a held movement vector
+
+`VERIFY_DRIVETRAIN_SKID` requires the reference integrator and permits its
+engine recurrence during grounded, full-contact skids. The native position code
+at `$0b50c` bypasses vector recomputation while G($af31) is set. The reference now
+preserves that rule: it snapshots and integrates the existing projected words
+and fractional corrections instead of projecting each new scalar speed through
+the current heading. Scalar force, velocity, RPM and gear updates still run.
+Without this distinction, inner updates would turn the skid's movement vector
+with the car or replace it as engine speed changes.
+
+Spin decay, skid-exit decisions, position publication, contact and audio remain
+in the outer physics pass. No additional full physics or scene passes are added.
+The fixed-state and fractional-acceleration batches also integrate the held
+vector; their scalar-rate eligibility tests remain unchanged. This does not yet
+prove equal-time skid trajectories or precise exit timing across frame rates.
+
+| 800-field position capture | All complete updates per axis | Skid updates | Integrated skid fields | Scalar-speed changes during skid |
+|---|---:|---:|---:|---:|
+| A500 | 543 | 253 | 308 | 117 |
+| 68020 | 678 | 359 | 359 | 152 |
+
+Every axis matches the independent displacement model. During each skid update,
+all three projected words and fractional corrections remain unchanged. The batch
+checker additionally matches repeated one-field movement for 32 fractional
+batches on A500 (30 during skid) and 22 on 68020 (21 during skid), plus all observed
+unchanged-state batches. Force auditing matches 518 native force/scalar updates,
+including 232 skid updates, with no observed overflow or zero crossing.
+
+The A500 800-field policy capture has 73 full physics/scene passes, one per frame,
+529 engine calls and 70 engine-pitch publications, each unique to its outer pass.
+Its 72 swaps describe this steering fixture, not a performance gain or an accepted
+A/B comparison. Separate audio capture validates 39 skid-cadence visits/emissions,
+one visit per outer pass. Manual integration also composes with the skid path:
+723 engine updates, including 122 with skid active and 67 neutral RPM updates,
+match the manual model; all ten requested shifts occur once.
+
+Native-step comparison matches 108 reference car states. CUSTOM1-off passes 151
+ranges; the 130-range branch audit passes; normal and flag-absent builds remain
+byte-identical; the new flag rejects a missing reference dependency. Falling,
+partial-contact integration, full equal-time handling and original-game
+performance acceptance remain open.
 
 ### Near-stop fractional projection and position correction
 

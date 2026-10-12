@@ -1,6 +1,7 @@
 ; Experimental reference integrator, not a performance-accepted policy.
 ; Grounded driving advances engine and projected position in fields.
 ; Manual/neutral support is separately gated by VERIFY_DRIVETRAIN_MANUAL.
+; VERIFY_DRIVETRAIN_SKID retains native held-vector motion during skids.
 ; Steering, contact/scene work and input sampling remain once per outer pass.
 ; Zero/eight-field intervals and other driving modes keep the native pair.
 _drivetrain_install:
@@ -66,8 +67,10 @@ _drivetrain_frame:
 	beq .single
 	tst.b -$69fa(a4)
 	bne .single
+	IFND VERIFY_DRIVETRAIN_SKID
 	tst.b -$50cf(a4)
 	bne .single
+	ENDC
 	cmpi.b #15,-$66f0(a4)
 	bne .single
 	tst.w -$66f2(a4)
@@ -161,6 +164,11 @@ _drivetrain_position_tick:
 	move.w -$66e2(a4),(a0)+
 	move.w -$66e0(a4),(a0)+
 	move.w -$66de(a4),(a0)
+	IFD VERIFY_DRIVETRAIN_SKID
+	; Native B500 retains the projected movement vector throughout a skid.
+	tst.b -$50cf(a4)
+	bne.s _drivetrain_tick_before
+	ENDC
 	move.w -$66d8(a4),d0
 	bsr _projection_integer_components
 	move.w d0,-$66e2(a4)

@@ -296,7 +296,9 @@ Tools stay in ignored `tmp/dev/tools`.
    - Optional manual/neutral reference integration now passes native-step car
      equivalence, live RPM/shift models and intermediate-position checks. It
      consumes manual requests once per outer pass and preserves requests arriving
-     during later ticks. This is focused coverage, not full contact or equal-time
+     during later ticks. Optional skid integration now retains the native held
+     movement vector, with force, three-axis position, batching, audio and manual
+     combination checks. This is focused coverage, not full contact or equal-time
      acceptance; see GAME_TIME.md.
    - Check the integrator: with Euler updates, many small steps do not give the same
      displacement as one large step. Apply the (T−1)/2·Δv correction where the
