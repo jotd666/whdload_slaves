@@ -75,7 +75,7 @@ slv_keyexit	= $5D	; num '*'
 
 
 DECL_VERSION:MACRO
-	dc.b	"1.1-beta2"
+	dc.b	"1.1-beta3"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -416,6 +416,9 @@ pl_song1
 	; The original BEQ cleared it without servicing that channel.
 	PL_W $8c8,$6762          ; BEQ $92c (RTS), instead of $926 (ack)
 	PL_PS $926,music_ack
+	; Publish a complete note before its startup interrupt can consume it.
+	PL_PS $776,music_note_begin
+	PL_PS $86a,music_irq_snapshot
 
 	; wait after write to dmacon (music) to avoid sound problems
 
@@ -432,6 +435,26 @@ pl_song1
 	PL_PS	$502,move_f_dmacon
 	PL_PS	$A78,move_f_dmacon
 	PL_END
+
+music_note_begin
+	; The timer installs state/loop fields before enabling DMA at $7e0.
+	; A still-enabled old audio request could consume the half-written note.
+	; Native $7ea enables this channel again after the existing DMA wait.
+	movem.l d0/a1,-(sp)
+	move.l h0_end_address(pc),a1
+	move.w 4(a1),d0          ; channel INTENA set mask
+	andi.w #$7fff,d0
+	move.w d0,_custom+intena
+	tst.w _custom+intenar
+	movem.l (sp)+,d0/a1
+	move.l 48(a3),a6         ; original $776..$77b
+	move.l a0,(a6)
+	rts
+
+music_irq_snapshot
+	move.w _custom+intreqr,d0
+	and.w _custom+intenar,d0 ; another channel's IRQ must not service a masked one
+	rts
 
 music_ack
 	move.w d3,_custom+intreq

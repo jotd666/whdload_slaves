@@ -811,7 +811,7 @@ CPU instruction trace; no 030 cycle-cost claim is made.
 3. Adapt `package_release.py`; focused commits on `grandprixcircuit`; PR via Vesuri.
 4. Generic lessons (interrupt-driven simulation, LoadView swap marker) → AmigaXDev docs.
 
-Release candidate: **1.1-beta2**. Physical testing is assigned to the owner on an
+Release candidate: **1.1-beta3** (audio follow-up validation below). Physical testing is assigned to the owner on an
 A1200 / 68040 at 40 MHz / MMU / 32 MB / WHDLoad 19.x. The owner reports good
 framerate and correct-feeling gameplay. The same hardware test found intermittent
 missing intro-music notes, stepped horizon motion, and jumpy roadside placement.
@@ -866,7 +866,7 @@ audits and positive TC=8000 translation evidence with JIT off. There is no timin
 claim from the MMU run.
 
 Release preparation:
-- `DECL_VERSION` is `1.1-beta2`; `slv_config` exposes only the normal C2 option.
+- `DECL_VERSION` is `1.1-beta3`; `slv_config` exposes only the normal C2 option.
   The ReadMe now includes fractional presentation and the between-race table reset,
   documents the off path, and preserves JOTD's original history.
 - Corrected the normal runtime minimum to **WHDLoad 17.2**: `PL_IFC2` uses the
@@ -969,6 +969,76 @@ slave and ordinary VERIFY without the private tape. All 55 input hashes match.
 No further version matrix is required. The contribution remains a beta/draft
 pending the owner's focused recheck of intro notes, horizon motion and roadside
 placement on the same A1200/WHDLoad 19 setup.
+
+
+#### Beta3 audio follow-up
+
+The owner's 68030 report led to a second, independently observed music bug. The
+CIA-driven note builder sets channel state to 1 at song `$786`, writes the new
+loop length at `$7aa`, then starts DMA at `$7e0`. The audio interrupt can consume
+that state before setup is complete, installing loop registers too early or
+stopping the newly started note. The existing DMA waits do not protect these
+shared fields.
+
+Two six-byte hooks correct the race. At `$776`, `music_note_begin` masks only the
+channel being prepared, reads INTENAR back, and replays the original pointer
+write. Native `$7ea` re-enables the channel after the existing DMA startup wait.
+At `$86a`, the interrupt snapshot intersects INTREQR with INTENAR, so an interrupt
+from a different channel cannot service the masked request. Song data, note
+commands, existing DMA delays, and the beta2 acknowledgement fixes are unchanged.
+Both hook spans are complete instructions with no direct interior branch target;
+all three supplied songs have byte-identical driver code.
+
+Retained debugger observations on 68030/50 MHz/MMU cover 300 note preparations
+per arm. Beta2 reached `$7aa` with its state already consumed at 12 notes, and
+reached `$7e0` that way at 27 notes. The candidate retains state 1 at both sites
+for all 300. Separate DMA captures comprise six checked 100-field chunks per arm:
+
+| Profile | Observed restarts per arm | Beta2 finding | Candidate |
+|---|---:|---|---|
+| 68030/50 MHz/MMU | 260 | 19 initial lengths replaced by 550-word loops instead of 2,250-word attacks; one other start muted and disabled 151 colour clocks after enabling | All 260 start with the programmed first two sample words; no aborted start |
+| A500 | 266 | No aborted start or early loop-length substitution in this window | All 266 start with the programmed first two sample words; no aborted start |
+
+Channel, period and volume sequences are identical between the two builds on
+each profile. The first Agnus fetch is a pipeline discard; the audit checks the
+following two sample words, as described by the Hardware Reference Manual's audio
+state machine. Register state is discarded at capture boundaries, not inferred
+across unobserved gaps. These observations establish the race and its correction
+in the recorded windows, not audible or physical acceptance. The first attempt
+to request 600 fields returned only 100; it is diagnostic only. The six-part
+captures explicitly check every returned field count. The 030 backend provides
+DMA evidence but no CPU instruction trace.
+
+Evidence remains ignored under `tmp/dev/tmp/phase8/`: `audio-comparison.json`,
+`audio-hook-audit.json`, `audio-version-audit.json`, `normal-030-audio-irq` and
+`normal-030-audio-irq-candidate`, and the four `normal-*-audio-*-long` / baseline
+`normal-*-audio-long` captures. The tested candidate hash is
+`32dda6a4851a4e5fbc09281142f68c6e3873ea64017186e44138b1c2fd59ea30`.
+The final beta3 normal hash is
+`15107921c8e5ebba5085b7554feed797398e68d6c566ec3e1bbbed65e67d13a0`;
+a byte comparison proves that only the two version-string digits differ from
+the audio-tested candidate. Live music-hook checks pass on the candidate.
+Shared lessons are recorded in AmigaXDev `docs/reference/amiga-hardware.md`,
+commit `a196f04`.
+
+The final beta3 normal build passes intro, race, native race exit and a second
+race on A500 and 68040/MMU. Both restore the 102 canonical table words and render
+40 further swaps; exact code/table/music-hook audits pass and all 139 stubs remain
+intact. The 040 log confirms enabled MMU translation (`TC=8000`) with JIT off.
+`beta3-normal-audit.json` binds the checks to the final binary. Both runs use the
+existing WHDLoad 20.0 harness; the owner-waived version matrix was not resumed.
+Pause/Workbench return remain earlier static review, not newly executed checks.
+
+Beta3 packaging evidence is retained separately in `package-1.1-beta3/report.json`:
+21-member installer/source and 55-member private preinstalled archives, exact
+extraction round trips, identical normal rebuilding from extracted source, ordinary
+VERIFY building without the private tape, and all 55 pristine input hashes intact.
+The standalone replacement slave is the same final normal binary. No game bytes or
+built artifacts are included in commits.
+
+Audible confirmation remains pending. The Monza qualifying-to-race visibility
+report is still unresolved; this audio change does not address opponent rendering.
+The contribution remains a draft beta, not a completed Phase 8 acceptance.
 
 ## Open questions
 - Attract capture window/publication counter are validated in Phase 2. Phase 6

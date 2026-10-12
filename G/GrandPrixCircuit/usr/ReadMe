@@ -39,6 +39,12 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 1.1-beta3 (13.10.26):
+ - music: protect new-note setup from pending audio interrupts
+ - music: service only enabled audio-channel requests
+ - existing DMA delays and song data are unchanged
+ - beta: audible confirmation and Monza opponent visibility still pending
+
  version 1.1-beta2 (12.10.26):
  - music: preserve audio requests arriving during another channel's IRQ service
  - music: read back INTREQR after acknowledgement for fast CPUs
