@@ -63,6 +63,14 @@ def twins(label):
         assert scene == bytes.fromhex('0000000700000000000000030000000000000000'), scene.hex()
         scene_checks = 3
         print(label, 'three native scene twins passed', flush=True)
+    composition = {}
+    if mask & (1 << 22):
+        cf = dump("cockpit_fast_twin_result", 20, label)
+        assert cf == bytes.fromhex("0000000300000000000000020000000000000000"), cf.hex()
+        final_checks = int.from_bytes(dump("cockpit_fast_final_checks", 4, label), "big")
+        assert final_checks >= 2, final_checks
+        composition = dict(pages=2, passed=True, final_checks=final_checks)
+        print(label, "two native composed-viewport twins passed", flush=True)
     fence = {}
     if mask & (1 << 21):
         values = dump('fence_publications', 12, label)
@@ -70,7 +78,7 @@ def twins(label):
                          (int.from_bytes(values[i:i+4], 'big') for i in range(0, 12, 4))))
         assert fence['publications'] > 0 and fence['releases'] <= fence['publications'], fence
         print(label, 'deferred fence', fence, flush=True)
-    return dict(label=label, checks=6, scene_checks=scene_checks, fence=fence,
+    return dict(label=label, checks=6, scene_checks=scene_checks, composition=composition, fence=fence,
                 hits=int.from_bytes(stats[:4], 'big'), fills=int.from_bytes(stats[4:8], 'big'))
 
 

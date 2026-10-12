@@ -7,10 +7,10 @@ The existing PAL counter-phase filter rejects ambiguous beam endpoints.
 import argparse,json,re,sys
 from pathlib import Path
 sys.path.insert(0,str(Path.cwd()/'tools'))
-import route_status as r
 from routine_wall_time import summarize
 
 GROUPS={
+ 'fps':[],
  'artwork':[('static_artwork',0x15f1e,[0x15f2a])],
  'stages': [('background',0x5fe,[0x6bc]),('scene',0x6bc,[0x7c4]),
             ('cockpit',0x7c4,[0x830]),('messages',0x830,[0xafe]),
@@ -30,14 +30,44 @@ GROUPS={
            ('overlay_body',0x2c144,[0x2c1fc,0x2c2b0])],
 }
 
+def fps_counts(raw, fields):
+ matches=re.findall(r'^COUNTS (\d+) (\d+)$',raw,re.M)
+ if (len(matches)!=1 or int(matches[0][0])!=fields or 'FLIGHT_EXIT' in raw
+     or 'Invalid hex digit' in raw or not 0 < int(matches[0][1]) <= fields):
+  raise RuntimeError('Incomplete FPS capture; retain diagnostics, do not report a result')
+ return int(matches[0][1])
+
+
 def capture(out,group,fields,reparse=False):
+ import route_status as r
  m=json.loads((out/'entry.json').read_text());sim=m['sim'];stem=out/group
  if stem.with_suffix('.json').exists():raise ValueError('Refuse overwrite')
  if reparse:
   raw=stem.with_suffix('.log').read_text()
+  if group=='fps':
+   publications=fps_counts(raw,fields)
+   result=dict(**m,group=group,fields=fields,publications=publications,fps=publications*49.92041/fields)
+   stem.with_suffix('.json').write_text(json.dumps(result,indent=2)+'\n')
+   print(group,result['fps'],flush=True)
+   return
  else:
   r.command('stop')
   r.command(f'gdb delete\nbreak *{sim+0x2d34e:#x}\ncontinue\ndelete')
+  if group=='fps':
+   # The long A/B window needs counts, not thousands of register/beam reads.
+   # Keep detailed brackets in the short normal-build checks.
+   cmd=['delete','set $rfield=0','set $rpub=0',
+        f'break *{sim+0x3154a:#x}','commands','silent','set $rpub=$rpub+1','continue','end',
+        f'break *{sim+0x21f4a:#x}','commands','silent','printf "FLIGHT_EXIT\\n"','end',
+        f'break *{sim+0x2d34e:#x}','commands','silent','set $rfield=$rfield+1',
+        f'if $rfield < {fields}','continue','end','end','continue',
+        'printf "COUNTS %u %u\\n", $rfield, $rpub','delete']
+   raw=r.command('gdb '+'\n'.join(cmd));stem.with_suffix('.log').write_text(raw)
+   publications=fps_counts(raw,fields)
+   result=dict(**m,group=group,fields=fields,publications=publications,fps=publications*49.92041/fields)
+   stem.with_suffix('.json').write_text(json.dumps(result,indent=2)+'\n')
+   print(group,result['fps'],flush=True)
+   return
   points={}
   for name,lo,rets in GROUPS[group]:
    for kind,off in [('enter',lo)]+[('return',x) for x in rets]:points.setdefault(off,[]).append((name,kind))

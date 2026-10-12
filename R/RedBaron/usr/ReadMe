@@ -54,10 +54,12 @@
  - Faster rendering is On by default (normal build: CUSTOM2=0). It selects the verified dashboard cache, geometry,
    solid-fill, persistent-gauge, static-artwork, scene and sound optimizations, with CPU-specific choices.
  - Persistent gauge reuse is enabled only on the measured 020/040 classes.
- - Static forward cockpit artwork uses selective pixel repairs on 030/040/060.
-   Unchanged covered pixels are not written. Firing and other views stay native.
-   000/010/020 retain native artwork; pixel checking did not help the slower CPUs.
-   This uses reserved FastMem and an 8 KB ChipMem mask, with native fallback.
+ - On 030/040/060, the forward overlay and static cockpit artwork are composed
+   in FastMem before the viewport copy. Artwork outside that viewport persists
+   on each page and is repaired after redraws, messages, view/resource changes
+   or page reuse. Firing, other views and cache misses retain the previous path.
+   000/010/020 retain native artwork. The existing reserved FastMem and 8 KB
+   ChipMem mask are reused; RAM requirements are unchanged.
  - On 030/040/060, supported scene viewports are drawn in reserved FastMem
    and copied to ChipMem once. Direct primitives avoid repeated plane setup;
    old page pixels and scratch are not copied in or exported. Native clipping

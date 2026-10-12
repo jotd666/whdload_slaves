@@ -140,6 +140,7 @@ fence_native_beam_tail:
 fence_render:
  move.w 36(sp),d7
  move.w 38(sp),d6
+ bsr cockpit_fast_begin
  dc.w $42e7
  movem.l d0/a0,-(sp)
  lea fence_scene_owned(pc),a0
@@ -253,7 +254,7 @@ fence_install_boundaries:
  adda.w d6,a3
  move.l a6,a1
  move.w #$4eb9,(a1)+
- lea fence_wait(pc),a0
+ lea cockpit_fast_boundary(pc),a0
  move.l a0,(a1)+
  tst.w d7
  bne .map

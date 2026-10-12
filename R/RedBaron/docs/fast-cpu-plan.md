@@ -1,7 +1,7 @@
 # Fast-CPU frame profile and fix plan (2026-10-12)
 
-This covers the 030/040/060 classes, which today sit at 16.67 FPS (three fields per
-frame). It complements `rendering-analysis.md`. Its profile replaces the bracket
+This covers the 030/040/060 classes, whose original profile sat at 16.67 FPS
+(three fields per frame). Current results are in `profiling.md`. It complements `rendering-analysis.md`. Its profile replaces the bracket
 lower bounds there with exact per-instruction attribution.
 
 ## 1. How the profile was taken
@@ -175,32 +175,35 @@ the map's short BSR is re-emitted as an absolute call. Frames without a private
 scene and non-flight swaps keep the native beam wait. No new Chip page or RAM
 reservation is required. Timing and acceptance results belong in `profiling.md`.
 
-### FC2 — overlay and cockpit foreground composited in Fast RAM: −12 to −14 ms
+### FC2 — overlay and cockpit foreground in Fast RAM (complete)
 
-**Cause.**
-- The forward overlay is five 4-channel blits per frame, and the CPU waits on
-  them for 6.8 ms. They are the bulk of field 1's blitter load.
-- The static foreground programs 2–4 then read and compare up to 1,024 covered
-  words × 5 planes on the Chip page, about 6.8 ms.
+Bit 22 requires bits 19–21 and selects the measured 030/040/060 classes. The
+normal Faster rendering bundle enables it. `cockpit-fast.s` composes the forward
+overlay and static programs 2–4 before the existing single viewport copy. The
+overlay list caches the exact native cookie-cut operands; the foreground reuses
+bit 19's native-output word lists. Empty/opaque/partial masks retain their exact
+meaning, including opaque black. The lists occupy existing reserved Fast RAM;
+no extra allocation or minimum-RAM change is needed.
 
-**Fix.** While bit 20 owns the viewport in Fast RAM:
-1. Before the single viewport copy, apply the overlay and the viewport-row part
-   of programs 2–4 to the Fast buffer.
-2. Use precomputed opaque-word lists (mask, five colours) built from the native
-   output once per resource, as bit 19 already does.
+All three exact artwork keys are checked under the clip that `sim:15e68` will
+install. Unsupported descriptors, cache misses, firing, exceptional foreground
+scripts and top-background restoration retain the previous native/sparse path.
+The native calls later replay drawing state in their original order. In the
+measured forward layout, static words outside the viewport are above it rather
+than in the lower dashboard; these persist independently on both screen pages.
+Page identity, viewport changes, render-entry redraw/view flags, resource
+lifetime hooks, the message boundary at `sim:00830` and modal fences invalidate
+page validity. Repairs never compare destination pixels; partial words use the
+necessary read-modify-write, and opaque words only write. Gauges are unchanged.
 
-Then neither the overlay blit nor the Chip reads happen. Rows below the viewport,
-the dashboard, need a per-page "artwork valid" flag:
-- Repair them only after a view change, message, resource reload or page reuse
-  (explicit invalidation hooks for each of those events).
-- Never compare them against Chip.
+Native overlay/programs 2–4 pixel twins pass on both pages, alongside the existing
+artwork/state and scene twins. A bounded VERIFY check confirms the final cockpit
+ordering and outside-viewport pixels once per page after invalidation. Four-view
+and hardware-key firing transitions pass. All CPU timing pairs and final normal
+checks pass; measurements and reproduction commands are in `profiling.md`.
 
-**Check.**
-- Exact pixel twins against the native overlay and programs 2–4 on both pages.
-- Firing artwork and all four views.
-- The map toggle.
-
-Firing artwork and non-forward views stay native.
+Map-toggle check dropped: this game has no in-flight map command; the campaign
+map is outside flight rendering and its modal fence invalidates cached pages.
 
 ### FC3 — persistent gauges: −6 to −8 ms
 

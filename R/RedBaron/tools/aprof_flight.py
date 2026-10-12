@@ -3,10 +3,10 @@
 Run from the local harness (tmp/dev, env.sh sourced). The VERIFY tape replaces the lldb
 keyboard driver, which cannot attach to arm64 FS-UAE. aprof needs a cycle-exact 020/030
 without an MMU model, so use APROF_CPU=68EC030 for the 030 class. CUSTOM2 should be the
-normal build's CPU-filtered selection (030: 0x3f0ffa). The capture uses the unmodified
+normal build's CPU-filtered selection (030: 0x7f0ffa). The capture uses the unmodified
 VERIFY source, including artwork twins.
   APROF_CPU=68EC030 UNTIL_TIMEOUT=1500 python3 -B ../../R/RedBaron/tools/aprof_flight.py \
-    030-nommu 0x3f0ffa tmp/prof/aprof-030n-1 --warm 500 --fields 50
+    030-nommu 0x7f0ffa tmp/prof/aprof-030n-1 --warm 500 --fields 50
 Summarize with aprof_flight_report.py CAPTURE --slave-base <live slave copy>.
 """
 import argparse,hashlib,json,os,re,struct,subprocess,sys
@@ -45,6 +45,11 @@ if effective&(1<<19):
 if effective&(1<<20):
  twins['scene']=words('scene_twin_result',5)
  if twins['scene'] != [7,0,3,0,0]:raise RuntimeError('Scene twins incomplete or failed: '+str(twins))
+if effective&(1<<22):
+ twins['cockpit']=words('cockpit_fast_twin_result',5)
+ if twins['cockpit'] != [3,0,2,0,0]:raise RuntimeError('Cockpit twins incomplete or failed: '+str(twins))
+ twins['cockpit_final_checks']=words('cockpit_fast_final_checks',1)[0]
+ if twins['cockpit_final_checks'] < 2:raise RuntimeError('Final cockpit checks incomplete')
 (a.out/'twins.json').write_text(json.dumps(twins,indent=2)+'\n')
 flight_entry=json.loads((a.out/'entry.json').read_text())
 regions=r.memory_regions()

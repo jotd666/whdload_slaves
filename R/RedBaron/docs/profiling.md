@@ -5,15 +5,117 @@
 The user accepted measured performance on 2026-10-12. The normal build now
 starts with Faster rendering On when CUSTOM2 is omitted: On=0, Off=1.
 Developer/VERIFY CUSTOM2 remains an explicit mask, with zero disabling patches.
-The verified mask is `0x3f1fff`, filtered by CPU; W6 bit 13 remains excluded
+The verified mask is `0x7f1fff`, filtered by CPU; W6 bit 13 remains excluded
 because D5 is postponed. There is no 50 FPS or frame-independent normal-game
 speed claim. Historical captures below retain their original build, option
 mapping and RAM configuration; they do not define the current player default.
 
+## FC2 — Fast-RAM cockpit composition (2026-10-12)
+
+**FC2 passed.** The three-class timing matrix, native pixel checks and final
+normal-build checks pass. Bit 22 requires bits 19–21 and is
+CPU-gated to 030/040/060. The normal verified mask is now `0x7f1fff`.
+No extra RAM is allocated: the overlay word list occupies an unused part of the
+existing reserved workspace. Gauges retain their existing implementation.
+
+Same frozen developer build, masks `0x3f0ffa` / `0x7f0ffa`, maximum detail,
+unchanged Time Scale, native keyboard route, 2,000 PAL fields each. SHA-256:
+`e79814df4e7f15ec46d88ce5bcd5562610c90ec9bee8c4904427e8e10f79b1c8`.
+
+| Configuration | FC2 off FPS | FC2 on FPS | State |
+|---|---:|---:|---|
+| 68000 / A500 | — | — | CPU-gated off; prior scoreboard unchanged |
+| 020 / A1200 | — | — | CPU-gated off; prior scoreboard unchanged |
+| 030/50 MMU | 18.645 | 23.962 (+28.51%) | `fc2-ab-030-{off,on}-2` |
+| 030/50 NOMMU | — | — | Same CPU-class gate; final aprof and all native twins pass |
+| 040/25 NOMMU | 18.046 | 22.389 (+24.07%) | `fc2-ab-040-{off,on}-1` |
+| 060/50 NOMMU | 17.697 | 21.790 (+23.13%) | `fc2-ab-060-{off,on}-1` |
+
+The completed 030 baseline counts publications in the stage trace; the candidate
+uses the same publication point and VBlank count with verbose brackets omitted.
+Two incomplete traces ended on malformed remote-debugger replies and are excluded.
+The long-window driver now records only field/publication counters; stage costs
+remain in separate short normal-build brackets. No emulated-time correction is
+applied, and no FPS is reported from an incomplete capture.
+
+`fc2-verify-030-3` passes six native artwork twins, three scene primitive twins,
+and combined native overlay/programs 2–4 pixel twins on both pages. A VERIFY-only
+final cockpit check also checks ordering and persistent outside-viewport pixels;
+rear/left/right/front changes and hardware-key firing pass. The later source
+change conservatively invalidates the overlay snapshot on redraw/modal events.
+The host model covers clipped native overlay equations, ordered masked artwork,
+opaque black and outside-viewport repairs; three corrupted-pixel cases fail its
+comparison. All 552 host tests and 133 hook ranges pass. Patch reach is valid in
+all three builds (133/133/147 destinations).
+
+The final exact profile `fc2-final-aprof-1` uses 68EC030/50, all native VERIFY
+checks, 500 warm-up fields and 50 recorded fields. All eleven native twins pass,
+plus 68 final cockpit-page checks. Those final checks re-arm after invalidation
+and run once per page, so they do not repeatedly scan Chip during steady profiling.
+The source's normal/developer drawing code is byte-identical to the frozen A/B
+candidate; the last changes enable the normal default and bound VERIFY checks.
+
+The exact sample records 17 render/world calls (**17 instrumented FPS**, not a
+normal-build result). Native `sim:2c144` overlay work and `artwork_sparse_update`
+are absent from the steady hot path. FC2 composition costs 4.95 ms inclusive;
+its four Fast-RAM word-list paints take 3.41 ms exclusive with no Chip-bus units.
+Chip-bus share is 26.9% and recognized blitter polling 8.6%, versus 41.5% and
+18.3% in the prior FC1 exact window. These are separate instrumented workloads,
+not an isolated cycle-saving claim. The remaining major exclusive costs are
+polygon compatibility work (7.96 ms), the viewport copy (7.62 ms, 96% Chip-bus),
+and rasterization (7.18 ms). Gauge dispatch is 6.76 ms inclusive; its bitmap
+routine accounts for 4.46 ms of blitter polling. Exact cache-key checks also cost
+2.79 ms exclusive. FC3–FC5 remain the next ordered work.
+
+Final normal-default checks use one binary, CUSTOM2 omitted, maximum detail and
+250-field stage windows: `fc2-final-normal-030-1`, `fc2-final-normal-040-1` and
+`fc2-final-normal-060-3`. The new hooks and pacing are installed by default.
+Final screenshots show the cockpit and native messages intact. The 060 setup
+was restarted after a host-controller false error, before any flight measurement;
+LLDB diagnostic matching and already-stopped detach handling are now corrected.
+
+| CPU | Normal FPS | Scene ms (includes FC2 composition) | Cockpit ms | Publication ms | Publication gaps, fields:count |
+|---|---:|---:|---:|---:|---|
+| 030 | 24.361 | 32.601 | 6.512 | 0.034 | 2:116, 3:5 |
+| 040 | 20.767 | 40.640 | 4.775 | 0.031 | 2:66, 3:35, 4:2 |
+| 060 | 20.767 | 38.702 | 7.046 | 0.024 | 2:63, 3:40 |
+
+These short initial-flight windows differ from the long A/B windows; do not
+combine them into an isolated gain. The existing publication logs pass the
+two-field cap and avoid the copper-pickup lines on all three CPUs. No new DMA
+ownership study was needed: the outbound copy and its fence remain unchanged.
+
+Final text sizes: normal 138,960; developer 139,348; VERIFY 325,354 bytes.
+Final SHA-256 values:
+
+- Normal: `22dafcbaf336c0c4b4075c572ff140f961f0d1f7e60e061d9027579a38658181`
+- Developer: `e79814df4e7f15ec46d88ce5bcd5562610c90ec9bee8c4904427e8e10f79b1c8`
+- VERIFY: `2f2ca276ea924f29582fe3b38a90fda703cc1a5c23754732342f0067b78f58f7`
+
+For a manual normal-build profile, use the configured development harness and a
+fresh output name:
+
+```sh
+BENCH_BATCH_KEYS=1 BENCH_OMIT_CUSTOM2=1 python3 -B ../../R/RedBaron/tools/scene_profile_case.py 030 0 tmp/prof/manual-fc2 --groups stages --fields 250
+```
+
+Choose `040` or `060` for those classes. The driver selects maximum detail using
+native keyboard input, detaches the host keyboard debugger, captures the guest
+profile and quits its emulator. For a developer comparison, freeze the developer
+slave and listing once, set `BENCH_DEVELOPER=1` and `BENCH_FROZEN_SLAVE`, use masks
+`0x3f0ffa` / `0x7f0ffa`, and select `--groups fps --fields 2000` in separate fresh
+output directories. The two cases must use the same frozen binary. These are
+rendering measurements, not acceptance of frame-independent gameplay; W6/D5 is
+unchanged.
+
+Map-toggle check dropped: the documented game has no in-flight map command;
+the campaign map is outside flight rendering. Its modal fence invalidates cached
+page validity, as do the menu/preferences/flight-exit boundaries.
+
 ## FC1 — deferred display-page reuse (2026-10-12)
 
 **FC1 passed.** Bit 21 is enabled by Faster rendering on 030/040/060, with
-the private scene and pacing as mandatory dependencies. The normal mask is
+the private scene and pacing as mandatory dependencies. The normal mask at that checkpoint was
 `0x3f1fff`, still CPU-filtered. Native fallback frames and 000/010/020 retain
 the original beam wait. The two-field cap is unchanged. No third Chip page is
 allocated and RAM requirements are unchanged.
@@ -90,7 +192,8 @@ development harness with `BENCH_BATCH_KEYS=1`, `BENCH_OMIT_CUSTOM2=1`, machine
 input, selects maximum detail, captures and analyzes one owned emulator, deletes
 the bulky DMA stream after success, and quits it. Developer A/B uses one frozen
 binary, `BENCH_DEVELOPER=1`, masks differing only by `0x200000`, and
-`--fields 2000`. FC2 is next; W6/D5 remains postponed.
+`--fields 2000`. This describes the FC1 comparison; FC2 results are above.
+W6/D5 remains postponed.
 
 ## FC0 — native scratch completion and VERIFY snapshots (2026-10-12)
 

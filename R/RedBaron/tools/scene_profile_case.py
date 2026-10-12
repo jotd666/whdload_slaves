@@ -8,7 +8,7 @@ import argparse,hashlib,json,os,subprocess,sys,time
 from pathlib import Path
 sys.path.insert(0,str(Path.cwd()/'tools'))
 import route_status as r
-p=argparse.ArgumentParser();p.add_argument('machine',choices=('a500','020','030','030-nommu','040','060'));p.add_argument('mask',type=lambda s:int(s,0));p.add_argument('out',type=Path);p.add_argument('--resume-entry',action='store_true');p.add_argument('--check-only',action='store_true',help='Normal-build default and CPU-gate smoke check, without profiling');p.add_argument('--fields',type=int,default=250);p.add_argument('--dma-fields',type=int,default=0,help='Optional bounded page-safety trace after profiling');p.add_argument('--groups',nargs='+',choices=('stages','draw'),default=['stages','draw']);a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('machine',choices=('a500','020','030','030-nommu','040','060'));p.add_argument('mask',type=lambda s:int(s,0));p.add_argument('out',type=Path);p.add_argument('--resume-entry',action='store_true');p.add_argument('--check-only',action='store_true',help='Normal-build default and CPU-gate smoke check, without profiling');p.add_argument('--fields',type=int,default=250);p.add_argument('--dma-fields',type=int,default=0,help='Optional bounded page-safety trace after profiling');p.add_argument('--groups',nargs='+',choices=('stages','draw','fps'),default=['stages','draw']);a=p.parse_args()
 if not 10 <= a.fields <= 2000:p.error('Use a bounded 10–2000-field window')
 if a.dma_fields and (not 10 <= a.dma_fields <= 40 or a.check_only or 'stages' not in a.groups):p.error('DMA checking requires stages and 10–40 fields')
 ROOT=Path.cwd();os.environ['GAME']=str(ROOT/'tmp/game/completion-benchmark/RedBaron');TRACKED=ROOT.parents[1]/'R/RedBaron/tools'
@@ -42,7 +42,10 @@ if os.environ.get('BENCH_OMIT_CUSTOM2')=='1':
  assert '0x7001' in proof,proof
  fence_proof=r.command(f'gdb x/1hx {sim+0x31522:#x}')
  assert ('0x4ef9' if a.machine in ('030','030-nommu','040','060') else '0x2039') in fence_proof,fence_proof
- (a.out/'default-selection.txt').write_text(proof+fence_proof)
+ cockpit_proof=r.command(f'gdb x/1hx {sim+0x2c144:#x}\nx/1hx {sim+0x830:#x}')
+ expected_cockpit=('0x4ef9','0x4eb9') if a.machine in ('030','030-nommu','040','060') else ('0x3239','0x3039')
+ assert all(op in cockpit_proof for op in expected_cockpit),cockpit_proof
+ (a.out/'default-selection.txt').write_text(proof+fence_proof+cockpit_proof)
 
 
 for path in a.out.glob('locate-*.bin'):path.unlink()
@@ -52,11 +55,13 @@ if a.check_only:
  expected=('0x2c3c','0x48a7') if a.machine in ('a500','020') else ('0x4ef9','0x4ef9')
  assert all(proof.count(x)>=expected.count(x) for x in expected),proof
  (a.out/'scene-selection.txt').write_text(proof)
+# Input is finished. Release the host debugger before a long guest-debugger
+# capture; only one debugger needs to drive execution during measurement.
+run(TRACKED/'completion_host_input.py','quit');host.wait(timeout=20)
 for group in (() if a.check_only else a.groups):
  run(TRACKED/'render_profile.py',a.out,'--group',group,'--fields',a.fields)
 (a.out/'debug.uae').write_bytes(Path('amiga/.run/fsuae/Cache/Logs/debug.uae').read_bytes())
 r.command('shot '+str((a.out/'final.png').resolve()))
-run(TRACKED/'completion_host_input.py','quit');host.wait(timeout=20)
 if a.dma_fields:
  assert 10 <= a.dma_fields <= 40
  pointer_log=r.command(f'gdb printf "PAGES %u %u COPPER %u\\n", *(unsigned int*)*(unsigned int*){sim+0x314c2:#x}, *(unsigned int*)*(unsigned int*){sim+0x314c8:#x}, *(unsigned int*){sim+0x3151a:#x}')

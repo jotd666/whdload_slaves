@@ -1,5 +1,5 @@
 """Owned-emulator native keyboard queue control through LLDB, explicitly user-authorized."""
-import argparse,subprocess,sys,time,socket,json,os
+import argparse,subprocess,sys,time,socket,json,os,re
 from pathlib import Path
 HARNESS=Path(__file__).resolve().parents[3]/'tmp/dev'
 os.chdir(HARNESS)
@@ -27,8 +27,19 @@ class Host:
  def cmd(self,s):
   self.p.stdin.write((s+'\nscript print("@@REDBARON-DONE@@")\n').encode())
   out=self.read_until('@@REDBARON-DONE@@\n',900)
-  if 'error:' in out or 'Traceback (most recent call last)' in out:raise RuntimeError(out)
+  # A stopped-frame disassembly may contain libc's __error: symbol.
+  # Only a diagnostic at the start of an output line is an LLDB error.
+  if re.search(r'(?m)^\s*(?:\(lldb\)\s*)?error:',out) or 'Traceback (most recent call last)' in out:raise RuntimeError(out)
   return out
+ def stop(self):
+  # An earlier failed command can leave LLDB already stopped; interrupting
+  # again is an error, and must not prevent the quit/detach path.
+  if 'stopped' not in self.cmd('process status'):
+   self.cmd('process interrupt')
+  deadline=time.monotonic()+30
+  while 'stopped' not in self.cmd('process status'):
+   if time.monotonic()>deadline:raise TimeoutError('Owned emulator did not stop')
+   time.sleep(.1)
 h=Host();print(h.cmd('process status'),flush=True)
 print(h.cmd('script lldb.debugger.SetAsync(True)'),flush=True)
 print(h.cmd('command script import '+json.dumps(str(Path(__file__).with_name('completion_lldb_input.py').resolve()))),flush=True)
@@ -52,8 +63,7 @@ while True:
    parts=[int(x,0) for x in payload.split(',')]
    if len(parts)!=(4 if mode=='burst' else 3):raise ValueError('Invalid keyboard command')
    base,bitmap,raw=parts[:3];repeat=parts[3] if mode=='burst' else 1
-  r.command('stop');h.cmd('process interrupt')
-  while 'stopped' not in h.cmd('process status'):time.sleep(.1)
+  r.command('stop');h.stop()
   if key=='quit':
    h.cmd('process detach');h.p.stdin.write(b'quit\n');c.sendall(b'bye');c.close();break
   if mode.startswith('irq-'):
@@ -65,8 +75,7 @@ while True:
   if mode in ('queue','release','irq-down','irq-up'):
    h.cmd('process continue');c.sendall(('OK '+key+' '+result).encode());c.close();continue
   h.cmd('process continue');r.command('cont');time.sleep(.15)
-  r.command('stop');h.cmd('process interrupt')
-  while 'stopped' not in h.cmd('process status'):time.sleep(.1)
+  r.command('stop');h.stop()
   h.cmd(f'script completion_lldb_input.release({base},{bitmap},{raw})')
   h.cmd('process continue');r.command('cont')
   c.sendall(('OK '+key+' '+result).encode())

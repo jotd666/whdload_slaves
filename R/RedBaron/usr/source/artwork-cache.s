@@ -6,6 +6,7 @@ OC_ENTRY = OC_PIXELS+4
 
 ; Called by the shared resource-lifetime hook with CCR saved.
 artwork_cache_invalidate:
+ bsr cockpit_fast_invalidate
  bsr artwork_front_invalidate
  move.l a0,-(sp)
  move.l artwork_solid_entry(pc),a0

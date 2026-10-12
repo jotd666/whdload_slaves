@@ -122,7 +122,7 @@ artwork_solid_front:
  ENDC
  move.l OC_PIXELS(a5),a0
  move.l $1d72(a4),a1
- bsr artwork_sparse_update
+ bsr cockpit_fast_update
  bsr artwork_cache_restore_state
  IFD VERIFY
  bsr artwork_cache_twin_after

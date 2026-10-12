@@ -1,8 +1,8 @@
 ; Performance patch framework. Only sim v1 calls this module's installer.
 ; No feature is release-enabled until its model, twin and measurements pass.
-PERF_VERIFIED_MASK = $3f1fff ; verified features, including deferred page reuse; each has its CPU gate
-PERF_DEVELOPER_MASK = $3f3fff
-PERF_VERIFY_MASK = $3f7fff ; developer W6 plus VERIFY-only quiescent overlay probe bit 14
+PERF_VERIFIED_MASK = $7f1fff ; verified features, including Fast-RAM cockpit composition; CPU-filtered
+PERF_DEVELOPER_MASK = $7f3fff
+PERF_VERIFY_MASK = $7f7fff ; developer W6 plus VERIFY-only quiescent overlay probe bit 14
 
 perf_read_options:
 	movem.l d0-a6,-(sp)
@@ -61,6 +61,7 @@ perf_read_options:
 	bclr #19,d0
 	bclr #20,d0
 	bclr #21,d0
+	bclr #22,d0
 .artwork_cpu_ready
 	btst #20,d0
 	beq .no_scene_dependency
@@ -73,6 +74,12 @@ perf_read_options:
 	beq .scene_dependencies_ready
 	ori.l #$0300,d0
 .scene_dependencies_ready
+	move.l d0,d1
+	andi.l #$380000,d1
+	cmpi.l #$380000,d1
+	beq .compose_dependencies_ready
+	bclr #22,d0
+.compose_dependencies_ready
 	btst #19,d0
 	beq .artwork_ready
 	bset #14,d0
@@ -228,6 +235,13 @@ perf_apply_v1:
 	adda.l #fence_install-.fence_base,a0
 	jsr (a0)
 .fence_done
+	btst #6,perf_mask+1(pc)
+	beq .compose_done
+	lea .compose_base(pc),a0
+.compose_base
+	adda.l #cockpit_fast_install-.compose_base,a0
+	jsr (a0)
+.compose_done
 	rts
 
 ; Check a non-relocated hook range before installing it.

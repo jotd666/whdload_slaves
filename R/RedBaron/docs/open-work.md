@@ -11,7 +11,7 @@ Refer to items by ID. FC items are detailed in `fast-cpu-plan.md`.
 |---|---|---|
 | FC0 | VERIFY artwork mismatch on the Barto 030 NOMMU route | Complete; native scratch-clear synchronization fixed |
 | FC1 | Deferred page fence instead of the swap spin | Complete; enabled on 030/040/060 |
-| FC2 | Overlay and cockpit foreground composited in Fast RAM | Planned |
+| FC2 | Overlay and cockpit foreground composited in Fast RAM | Complete; enabled on 030/040/060 |
 | FC3 | Persistent gauges | Planned |
 | FC4 | Span polygon rasteriser | Planned |
 | FC5 | Smaller viewport copy | Planned |
@@ -28,7 +28,7 @@ Refer to items by ID. FC items are detailed in `fast-cpu-plan.md`.
 No implementation or validation work remains for the accepted release.
 F1 enables the normal verified bundle by default; F2 condenses the ledgers;
 The original F3 passed on all six machine configurations; its results and the
-subsequent artwork and scene follow-ups are recorded separately in `profiling.md`. The normal verified mask is `0x3f1fff`, filtered by CPU.
+subsequent artwork and scene follow-ups are recorded separately in `profiling.md`. The normal verified mask is `0x7f1fff`, filtered by CPU.
 Normal CUSTOM2=0 is On and 1 is Off; developer/VERIFY values remain bit masks,
 where zero disables patches. The normal build is in the local build directory.
 Nothing has been pushed; publication requires a separate explicit request.
@@ -52,7 +52,7 @@ Git; do not revive their superseded next-work lists.
 ## Fast-CPU frame profile and plan
 
 `fast-cpu-plan.md` has the exact 030 frame attribution (aprof) and the ordered
-fix plan for the former 16.67 FPS plateau. FC0/FC1 are complete; FC2–FC7 remain.
+fix plan for the former 16.67 FPS plateau. FC0–FC2 are complete; FC3–FC7 remain.
 
 **FC0 is complete:** native scratch-clear synchronization fixes the top-edge
 artwork mismatch. Full artwork/scene twins pass on 030 NOMMU/MMU, 040 and 060;
@@ -67,7 +67,18 @@ pointer publication. Redraws, native fallbacks and modal boundaries fence before
 writing; the two-field cap and RAM requirements are unchanged. The normal
 bundle enables it. Same-build comparisons, final normal timings, native twins,
 view/firing transitions, beam checks and exact profiling are in `profiling.md`.
-FC2 is the next renderer step; D5 remains postponed.
+FC3 is the next renderer step; D5 remains postponed.
+
+## Completed: Fast-RAM cockpit composition
+
+Bit 22 composes the forward overlay and static artwork into the private viewport
+before its single copy to Chip RAM, on 030/040/060. Outside-viewport artwork
+persists per page with redraw, view, message, resource, modal and page-reuse
+invalidation. Firing and unsupported frames retain the existing path; gauges
+remain for FC3. Native twins, transition checks, all three CPU timing pairs,
+final normal-default checks and the exact profile pass. The normal bundle
+includes FC2; memory requirements and the two-field cap are unchanged. All
+results and manual profiling instructions are in `profiling.md`.
 
 ## Post-release rendering investigation
 
@@ -75,8 +86,8 @@ The requested 030/040/060 reprofile is complete; see `rendering-analysis.md` and
 the new section of `profiling.md`. It identifies repeated cockpit scripts,
 per-plane drawing and explicit waits, and documents why the discarded software
 blitter was not a test of a purpose-built Fast RAM renderer. The sparse static
-artwork and direct scene follow-ups below are implemented. Full cockpit persistence
-and replacing the remaining polygon coverage generation remain separate future work. D5 remains postponed.
+artwork and direct scene follow-ups below are implemented. FC2 now composes the overlay/static foreground with the scene viewport;
+persistent gauges and the remaining polygon coverage work are FC3/FC4. D5 remains postponed.
 
 ## Completed: selective static cockpit artwork repairs
 
@@ -89,9 +100,8 @@ workspace is reused, plus an 8 KB Chip mask; minimum RAM is unchanged.
 
 All six CPU timings and bounded native/view/firing validation are in
 `profiling.md`. Native firing scripts, instruments and other views keep their
-existing draw order. Full cockpit persistence would additionally need scene
-exclusion and narrower dashboard/instrument updates; those are not implemented
-by this static-artwork fix. D5 remains postponed.
+existing draw order. FC2 now handles the combined viewport and outside-viewport static persistence;
+narrower gauge updates remain FC3. D5 remains postponed.
 
 ## Completed: scene drawing structure
 

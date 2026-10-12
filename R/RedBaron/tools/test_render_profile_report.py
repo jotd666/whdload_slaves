@@ -31,4 +31,15 @@ class Accounting(unittest.TestCase):
   d=data([call('scene_total',50,150)]);d['raw']['vblank_phase'][1]['vbl']=3
   with self.assertRaises(ValueError):summarize(d['raw'],0,100)
 
+
+class PublicationCounterTests(unittest.TestCase):
+ def test_complete_counts(self):
+  from render_profile import fps_counts
+  self.assertEqual(fps_counts('COUNTS 2000 960\n',2000),960)
+ def test_three_incomplete_or_corrupted_captures_are_rejected(self):
+  from render_profile import fps_counts
+  for raw in ('COUNTS 1999 960\n', 'Invalid hex digit 79\nCOUNTS 2000 960\n',
+              'FLIGHT_EXIT\nCOUNTS 2000 960\n'):
+   with self.assertRaises(RuntimeError):fps_counts(raw,2000)
+
 if __name__=='__main__':unittest.main()

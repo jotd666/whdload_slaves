@@ -324,6 +324,7 @@ scene_frame_exit:
  movem.l d0-a6,-(sp)
  move.w scene_frame_active(pc),d0
  beq .inactive
+ bsr cockpit_fast_compose
  bsr fence_wait
  lea scene_frame_original(pc),a3
  move.l scene_frame_buffer(pc),a0
