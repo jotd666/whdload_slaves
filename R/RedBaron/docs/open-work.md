@@ -30,6 +30,19 @@ regressing C/E candidates were dropped, not left as release blockers.
 Further renderer redesign requires a new scope. Historical ledgers remain in
 Git; do not revive their superseded next-work lists.
 
+## Fast-CPU frame profile and plan
+
+`fast-cpu-plan.md` has the exact 030 frame attribution (aprof) and the ordered
+fix plan for the 16.67 FPS plateau: triple-buffered publication, Fast-RAM
+overlay/foreground composition, persistent gauges, span polygons, smaller
+viewport copy.
+
+**Open: VERIFY artwork-twin abort.** On the 030 NOMMU VERIFY tape route
+(CUSTOM2 `0x1f0ffa`), flight entry aborts with "sparse artwork pixel/state
+mismatch". `artwork-cache.s` uses that message both for a real twin mismatch
+and for a failed 80,000-byte snapshot AllocMem, so the cause is unconfirmed.
+Bit 19 ships on 030. See `fast-cpu-plan.md` step 0. Not yet investigated.
+
 ## Post-release rendering investigation
 
 The requested 030/040/060 reprofile is complete; see `rendering-analysis.md` and
