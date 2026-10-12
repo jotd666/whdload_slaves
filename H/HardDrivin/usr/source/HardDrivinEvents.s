@@ -43,40 +43,51 @@ _events_begin_step:
 	clr.b 6(a0)
 	movea.l (a7)+,a0
 	rts
-; A0 slot, D0 fields0..8. Return D0=1 if due, otherwise0. Clobbers D1.
+; A0 slot, D0 unsigned fields0..65535. Return the number of due events.
+; D1 scratch. Long addition retains the carry at the unsigned-word boundary.
 _events_tick:
 	tst.b 2(a0)
 	bne.s .not_due
 	st 2(a0)
+	andi.l #$ffff,d0
+	moveq #0,d1
 	move.w (a0),d1
-	add.w d0,d1
-	cmpi.w #8,d1
-	blo.s .save
-	subq.w #8,d1
+	add.l d0,d1
+	move.l d1,d0
+	andi.w #7,d1
 	move.w d1,(a0)
-	moveq #1,d0
+	lsr.l #3,d0
 	rts
-.save:
-	move.w d1,(a0)
 .not_due:
 	moveq #0,d0
 	rts
 _events_score:
 	IFND VERIFY_DISPATCH_NATIVE
+	; Keep the repeat count on the stack: the native BCD routine may clobber
+	; scratch registers. Restore entry registers before its first invocation.
+	subq.w #2,a7
 	movem.l d0-d1/a0,-(a7)
+	move.w #1,12(a7)
 	lea _dispatch_state(pc),a0
 	tst.b DS_ACTIVE(a0)
-	beq.s .native_restore
+	beq.s .restore
 	lea _events_score_state(pc),a0
 	move.w _time_scalar_fields(pc),d0
 	bsr _events_tick
-	tst.w d0
-	bne.s .native_restore
+	move.w d0,12(a7)
+.restore:
 	movem.l (a7)+,d0-d1/a0
+	tst.w (a7)
+	beq.s .done
+.repeat:
+	bsr.s _events_score_native
+	subq.w #1,(a7)
+	bne.s .repeat
+.done:
+	addq.w #2,a7
 	rts
-.native_restore:
-	movem.l (a7)+,d0-d1/a0
 	ENDC
+_events_score_native:
 	pea -$6878(a4)
 	move.w -$66d4(a4),d0
 	asr.w #4,d0
@@ -94,8 +105,10 @@ _events_start:
 	lea _events_start_state(pc),a0
 	move.w _time_scalar_fields(pc),d0
 	bsr _events_tick
-	tst.w d0
-	bne.s .native_restore
+	moveq #0,d1
+	move.b -$5222(a4),d1
+	bsr.s _events_start_phase
+	move.b d0,-$5222(a4)
 	movem.l (a7)+,d0-d1/a0
 	bra.s .compare
 .native_restore:
@@ -103,7 +116,17 @@ _events_start:
 	ENDC
 	addq.b #1,-$5222(a4)
 .compare:
+	; Native DB4A enables throttle when the resulting phase reaches six.
 	cmpi.b #6,-$5222(a4)
+	rts
+; D0 due count, D1 current eligible phase1..6. Stop at terminal phase7;
+; crossing six and seven in one update must still enable throttle at DB4A.
+_events_start_phase:
+	add.l d1,d0
+	cmpi.l #7,d0
+	bls.s .done
+	moveq #7,d0
+.done:
 	rts
 _events_reset_start:
 	move.l a0,-(a7)
@@ -144,8 +167,11 @@ _events_math_test:
 	movem.l d0-d7/a0-a2,-(a7)
 	lea _events_test_slot(pc),a0
 	lea _events_test_results(pc),a2
-	moveq #0,d7
+	lea _events_test_fields(pc),a1
+	moveq #16-1,d5
 .fields:
+	moveq #0,d7
+	move.w (a1)+,d7
 	moveq #0,d6
 .carry:
 	move.w d6,(a0)
@@ -166,12 +192,29 @@ _events_math_test:
 	addq.w #1,d6
 	cmpi.w #8,d6
 	blt.s .carry
-	addq.w #1,d7
-	cmpi.w #9,d7
-	blt.s .fields
+	dbf d5,.fields
+	lea _events_phase_results(pc),a2
+	moveq #1,d6
+.phase:
+	lea _events_test_due(pc),a1
+	moveq #9-1,d7
+.due:
+	moveq #0,d0
+	move.w (a1)+,d0
+	move.l d6,d1
+	bsr _events_start_phase
+	move.w d0,(a2)+
+	dbf d7,.due
+	addq.l #1,d6
+	cmpi.l #7,d6
+	blo.s .phase
 	movem.l (a7)+,d0-d7/a0-a2
 	rts
+_events_test_fields: dc.w 0,1,2,3,4,5,6,7,8,9,15,16,255,32768,65528,65535
+_events_test_due: dc.w 0,1,2,5,6,7,8,8191,8192
 _events_test_slot: dc.l 0
 _events_math_signature: dc.b 'HDEVMAT1'
-_events_test_results: dcb.w 9*8*6,0
+_events_test_results: dcb.w 16*8*6,0
+_events_phase_signature: dc.b 'HDEVPH01'
+_events_phase_results: dcb.w 6*9,0
 	ENDC

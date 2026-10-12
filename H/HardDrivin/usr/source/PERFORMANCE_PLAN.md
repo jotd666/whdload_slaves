@@ -16,11 +16,12 @@ behaviour until each change is ported and verified separately.
 
 Steps 1–3 are complete. See `GAME_TIME.md` for the matched-input coupling test,
 clock defects, state/scaling inventory, provisional f0=6.25 (engineering range
-4–8), and collision-inclusive 68000 capacity. Step 4 is in progress: a
-VERIFY-only elapsed-time observer, arithmetic helpers and throttle/velocity/RPM,
-angular-rate, spin-decay and fall-acceleration hooks are implemented and tested. The hooks use a constant diagnostic
-T; frame-time-driven gameplay, traffic and presentation are not enabled. See GAME_TIME.md's
-implementation status; the step-4 acceptance criteria remain open.
+4–8), and collision-inclusive 68000 capacity. Step 4 is in progress: gated elapsed-time physics, traffic,
+contact and replay playback have partial validation. An experimental CPU-specific
+dispatcher now consumes one full interval per 68000 frame and retains bounded
+substeps on 68020+. Long-frame traffic progression, replay recording, remaining
+presentation timelines and full acceptance are unfinished. See GAME_TIME.md;
+the step-4 acceptance criteria remain open.
 
 ## Starting point
 
@@ -254,8 +255,9 @@ Tools stay in ignored `tmp/dev/tools`.
      fields, run bounded substeps without drawing between them. Price their full
      cost, including vehicle collision and scene rebuild, and validate contact
      before increasing T_max. Do not wait for a full native step before updating.
-   - The current experimental dispatcher still applies the eight-field cap to
-     every CPU; the separate 68000 path is not implemented or validated yet.
+   - VERIFY_DISPATCH_CPU selects the experimental separate policies. Initial
+     A500/68020 runtime checks pass, but large-step gameplay correctness and
+     the full performance acceptance remain unproven.
    - Report substep counts and any discarded time in VERIFY. Do not discard time
      silently.
 3. **Scale every integrated quantity by T**, following the table in

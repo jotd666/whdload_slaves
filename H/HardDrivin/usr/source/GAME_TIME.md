@@ -762,6 +762,27 @@ Evidence:
 - `s4-events-off` checks all inactive ranges. The normal binary remains identical;
   the direct-branch audit now covers 79 ranges.
 
+Long intervals now produce `floor((carry+fields)/8)` events, retaining a
+remainder0..7. The addition uses a longword, including fields65535 plus carry7.
+Repeated scene visits still charge no additional time. Score repeats the native
+packed-decimal routine once per due event, sampling the current speed for those
+events. Start phases advance by the due count and saturate at seven; crossing
+six in the same update still reaches the native throttle-enable branch.
+
+The expanded `VERIFY_EVENTS_MATH` fixture covers 128 cadence cases (including
+intervals9,15,16,255,32768,65528,65535), duplicates and the next update, plus
+54 start-phase cases. In `s4-events-wide-count`, the A500 produces 278 actual
+native score calls across 231 eligible visits, including 54 visits with multiple
+calls. All counts equal the elapsed cadence; 18 start visits and two duplicate
+visits also pass. The 68020 run `s4-events-wide-020` produces 124 native score
+calls across 323 visits, plus 31 start visits and one duplicate. Its 354 combined
+visits all use fractional intervals. These tests verify event count and phase,
+not a new independent model of the native packed-decimal result.
+Forced-native `s4-events-wide-native` matches the reference's 144 car states,
+score values and start/throttle flags. `s4-events-wide-off` passes inactive patch
+checks; the ordinary build remains byte-identical. Other per-pass timelines
+remain open.
+
 This closes the two identified D960 per-call counters. It does not close the
 checkpoint/tunnelling audit, replay sampling/playback, Phantom, attract/menu
 clocks, performance or full-tape/cross-machine/human acceptance.
@@ -953,7 +974,7 @@ cases, the existing 1215 eighth-step cases, 441 Q16 cases and 11 debt cases in
 fixture, not full driving-tape or world-state equivalence. The ordinary build is
 byte-identical to the baseline.
 
-Before enabling the 68000 policy, extend traffic, multiple discrete events and
+Before accepting the experimental 68000 policy, extend traffic and multiple
 replay samples per update, and complete the velocity-write audit. Audit narrowing stores in callers as well as helper arithmetic. Large-T
 contact, checkpoint and handling validation, and the A500 performance gate remain
 required. No updated FPS claim follows from this arithmetic change.
@@ -1128,3 +1149,32 @@ phase integration must include the remaining time at that limit. Simply scaling
 the existing endpoint-average expression would undercount distance in that case.
 The current all-CPU eight-field cap remains until these and the other longer-step
 requirements are addressed.
+
+
+### Experimental CPU-specific dispatch
+
+`VERIFY_DISPATCH_CPU` (requires TIME_DISPATCH, still gated by CUSTOM1) queries
+WHDLoad AttnFlags at installation. Pre-68020 CPUs consume the full frame interval
+in one update; 68020+ retain the eight-field substep bound and update on every
+rendered gameplay frame. Forced-native verification takes precedence. The
+unsigned-word scalar interface accepts at most 65535 fields; larger intervals
+fall back to bounded steps and increment a diagnostic counter, retaining time.
+This guard is not acceptance of oversized frames under the one-update policy.
+`HDCPUP01` exposes the query tag, flags, terminator, selected policy word, padding
+word and oversized-fallback longword. Neither measured run used that fallback.
+
+The initial 500-field (10.01594-second) constant-input diagnostic, before the
+long-event extension above, produced:
+
+| Run | Swaps | Physics calls | FPS | Mean frame ms |
+| --- | ---: | ---: | ---: | ---: |
+| s4-cpu-policy-off, A500 | 38 | 38 | 3.794 | 263.577 |
+| s4-cpu-policy-a500, A500 | 39 | 39 | 3.894 | 256.819 |
+| s4-cpu-policy-020, 68020 | 148 | 148 | 14.776 | 67.675 |
+
+The A500 consumed 11..15 fields per noninitial update in one step. The 68020
+consumed 2..5 fields, also one step per frame. These are diagnostic timings,
+not the full gameplay baselines or proof of the 3% acceptance gate: simulation
+progression differs, the 68020 window includes 22 crash fields, and long-frame
+traffic and replay recording remain incomplete. No 50 FPS claim follows from
+these runs. CPU selection and removal of extra A500 physics passes are verified.

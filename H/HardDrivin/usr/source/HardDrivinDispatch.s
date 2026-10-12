@@ -1,8 +1,22 @@
 ; Development-only live-loop dispatcher. All time in a frame is consumed in
 ; bounded <=8-field steps. Time spent doing this work belongs to the next frame.
+; VERIFY_DISPATCH_CPU experimentally selects one full interval on pre-020 CPUs.
+; Traffic/recording and other timelines remain incomplete: diagnostic use only.
 ; Replay and other presentation timelines remain separate work.
 _dispatch_install:
-	movem.l d0/a0-a2,-(a7)
+	movem.l d0-d1/a0-a2,-(a7)
+	IFD VERIFY_DISPATCH_CPU
+	lea _dispatch_cpu_tags(pc),a0
+	movea.l _resload(pc),a2
+	jsr resload_Control(a2)
+	lea _dispatch_cpu_single(pc),a0
+	clr.w (a0)
+	move.l _dispatch_cpu_attn(pc),d0
+	btst #AFB_68020,d0
+	bne.s .cpu_ready
+	move.w #1,(a0)
+.cpu_ready:
+	ENDC
 	lea _dispatch_recovery_ptr(pc),a0
 	move.l _code_start(pc),d0
 	addi.l #$108a2,d0
@@ -20,7 +34,7 @@ _dispatch_install:
 	IFD VERIFY_TIME_SCENE_CULL
 	bsr _scene_cull_install
 	ENDC
-	movem.l (a7)+,d0/a0-a2
+	movem.l (a7)+,d0-d1/a0-a2
 	rts
 _dispatch_patches:
 	PL_START
@@ -50,6 +64,16 @@ _dispatch_scene_ptr: dc.l 0
 _dispatch_signature: dc.b 'HDDISP01'
 _dispatch_state: dcb.b 36,0
 
+	IFD VERIFY_DISPATCH_CPU
+; Payload: query tag,reported AttnFlags,terminator,single.w,pad.w,oversized.l.
+_dispatch_cpu_signature: dc.b 'HDCPUP01'
+_dispatch_cpu_tags: dc.l WHDLTAG_ATTNFLAGS_GET
+_dispatch_cpu_attn: dc.l 0
+	dc.l 0
+_dispatch_cpu_single: dc.w 0,0
+_dispatch_cpu_oversized: dc.l 0
+	ENDC
+
 ; Called with D0 elapsed fields, preserving all registers and X at outer wrapper.
 _dispatch_begin:
 	movem.l d0-d2/a0-a1,-(a7)
@@ -73,7 +97,29 @@ _dispatch_begin:
 _dispatch_take:
 	bsr _events_begin_step
 	move.l DS_PENDING(a0),d0
+	IFD VERIFY_DISPATCH_CPU
+	IFND VERIFY_DISPATCH_NATIVE
+	lea _dispatch_cpu_single(pc),a1
+	tst.w (a1)
+	beq.s .bounded
+	; Existing scalar interfaces carry unsigned-word intervals. Retain all
+	; time and count any oversized fallback instead of truncating silently.
+	cmpi.l #65535,d0
+	bhi.s .oversized
+	move.l d0,d2
+	moveq #0,d0
+	move.l d2,d1
+	lsl.l #8,d1
+	lsl.l #5,d1
+	bra.s .publish
+.oversized:
+	lea _dispatch_cpu_oversized(pc),a1
+	addq.l #1,(a1)
+.bounded:
+	ENDC
+	ENDC
 	bsr _time_take_fields
+.publish:
 	move.l d0,DS_PENDING(a0)
 	add.l d2,DS_CONSUMED(a0)
 	addq.l #1,DS_STEPS(a0)
