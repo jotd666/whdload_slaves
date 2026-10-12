@@ -3,7 +3,7 @@
 Written 2026-10-11 on HEAD `c70ea93` (branch `4dsportsdriving`). This plan supersedes the
 "next steps" sections of optimization-plan.md, simulation-plan.md and open-work.md. Their historical
 versions remain reference material for addresses and evidence, not a to-do list.
-P1-P6 are complete; the A500 FAST target is deferred and A4000 remains experimental. P7 (A4000 crest handling gate) is planned.
+P1-P6 are complete; the A500 FAST target is deferred and A4000 remains experimental. P7 stopped at its offline decision gate; A4000 handling remains unaccepted.
 Current release: 2.0b (13.10.2026), 37208-byte slave. Runtime buffers are allocated
 at startup; the DSI intro buffer-reuse flicker is fixed (see sections below).
 Current binary SHA256: `6508c4d303e2edca408c7923c741d419a82c60d71f2b1d92a8b89a2c88e831d4`.
@@ -948,14 +948,64 @@ steps 1500/1550/1600 and restores all 1802 route bytes. Each emulator was
 bounded by a 180-second watchdog and closed afterward. Archive re-extraction
 verifies all 124 members. No real-hardware validation is claimed.
 
-## P7. Pass the A4000 crest handling gate (planned 2026-10-12)
+## P7. Pass the A4000 crest handling gate (stopped 2026-10-12)
 
 Goal: the frozen crest gate (`tmp/prof/natural-crest-criteria.json`, SHA256
 `90570d37e39d7fbdf804bbc497959ffe30e60f51bbb60c3e938f041c1d3401db`) passes 29/29
 for A4000 without changing the criteria, Normal or A2500. Today it is 27/29: common Y
 2263 against 1247, common pitch 18 against 11 (`tmp/prof/crest-d9e7903/bridge-handling.json`).
 
-### Analysis
+### Current result: stopped at step 3
+
+One offline session completed; no runtime candidate was integrated. The production
+slave, ABI9, native modes, ReadMe and testing archive are unchanged. Production still
+passes 27/29. Both frozen criteria hashes are unchanged. No emulator was launched.
+
+The exact controls reproduce all 795 A4000 updates and all 319 native20 updates in
+**each** starting position. Reconstructing the initial tick-0 state also reproduces
+all 795 retained A4000 rows, including drivetrain fields and carries.
+
+Step 1 disproved the proposed position-truncation diagnosis below. In the requested
+0.2–1.6 s ledger, all 29 native20 and 71 A4000 updates apply exactly the movement
+kernel's intended Z: rotation loss and centroid loss are both zero. The difference
+comes from sampling accelerating speed at different step endpoints. The existing
+constant-speed fifths already preserve native integer distance truncation.
+
+The offline correction preserves that kernel and adds a carried
+`(1-h)/2 * (Qnew-Qold)`, where `h=2/5` and `Q=floor(speed*1408/15360)`.
+Thus its coefficient is 3/10, derived from the native semi-implicit update, not fitted
+to the reference trajectory. For constant acceleration, five fractional updates
+sum to the same displacement as two native updates; at constant speed it is zero.
+This is an endpoint-integration correction, **not** a newly found truncating opcode.
+At 9.0 s it changes Z50-Z20 from -652 to -39 in every phase (limit +/-60), with
+all approach speed samples through 9.0 s unchanged. Later speeds may change through
+contact feedback and remain subject to the frozen gate.
+
+Step 2 uses the specified release age, with fifths and twenty-fifths carries.
+Controlled free-flight detections at ticks 560/564 reproduce front189/rear105 at580.
+Combined recurrent screening from tick0 gives:
+
+| Start Z | Common Y error (limit1247) | Common pitch error (limit11) | Phase-family failures, before -> after |
+|---|---:|---:|---:|
+| -64 | 3044 | 47 | 95 -> 70 |
+| 0 | 1442 | 11 | 70 -> 53 |
+| +64 | 2191 | 11 | 90 -> 69 |
+
+Nominal common-speed error also fails:7719 against3400. The partial offline physical
+screen covers19 checks and fails commonY/commonSpeed; it is not a live29-check pass.
+The phase-family failure counts reproduce the baseline70/95/90 and improve, but do
+not waive the original gate. Height still fails, so the step3 stop rule applies.
+The impact-return variant, ABI10 integration and live validation were not attempted.
+The user must choose the next direction under step6; remaining session allowance
+is not permission to try more candidate families.
+
+Evidence (ignored harness): `tmp/prof/p7-session1/{z-ledger,audit,
+release-and-distance-derivation}.json`, exact controls and all three recurrent
+candidate trajectories. Reproduction: `tools/p7_offline.py`, `p7_screen.py`,
+`p7_audit.py`, `p7_release_check.py`. Compressed historical captures are read in
+memory without duplicating large files. See the audit scope for unmodeled live checks.
+
+### Original analysis (superseded where contradicted above)
 
 - All event metrics pass: takeoff and landing times, peak height, pitch extremes, airborne
   time and final state. Only common-time samples fail. Y fails at 13.0 s, just before the
