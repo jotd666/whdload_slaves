@@ -15,7 +15,7 @@ Refer to items by ID. FC items are detailed in `fast-cpu-plan.md`.
 | FC3 | Persistent gauges | Complete; enabled on 060; other classes retain prior paths |
 | FC4 | Span polygon rasteriser | Complete; enabled on 040/060; 030 retains its prior path |
 | FC5 | Smaller viewport copy | Closed: dropped; less than 2% gain on every measured CPU class |
-| FC6 | Re-profile, W6 trial and geometry processing | Profile and W6 trial complete; geometry evaluation in progress |
+| FC6 | Re-profile, W6 trial and geometry processing | Complete; W6 rate passes bounded trial, 50 FPS unmet; geometry extension dropped below 2% |
 | FC7 | AGA 040/060 and real-hardware confirmation | Planned |
 | D5a | W6 catch-up input check | Postponed by the user |
 | D5b | W6 Time Compress and mission-exit transitions | Postponed by the user |
@@ -53,7 +53,7 @@ Git; do not revive their superseded next-work lists.
 
 `fast-cpu-plan.md` has the exact 030 frame attribution (aprof) and the ordered
 fix plan for the former 16.67 FPS plateau. FC0–FC4 are complete; FC5 was evaluated and dropped below the measurement
-threshold. FC6–FC7 remain.
+threshold. FC6 is complete; FC7 remains.
 
 **FC0 is complete:** native scratch-clear synchronization fixes the top-edge
 artwork mismatch. Full artwork/scene twins pass on 030 NOMMU/MMU, 040 and 060;
@@ -68,7 +68,7 @@ pointer publication. Redraws, native fallbacks and modal boundaries fence before
 writing; the two-field cap and RAM requirements are unchanged. The normal
 bundle enables it. Same-build comparisons, final normal timings, native twins,
 view/firing transitions, beam checks and exact profiling are in `profiling.md`.
-FC6 is the next renderer step; D5 remains postponed.
+FC7 is the next renderer step; D5 remains postponed.
 
 ## Completed: Fast-RAM cockpit composition
 
@@ -103,7 +103,7 @@ existing renderer. The row table reuses reserved space; RAM requirements are
 unchanged. Native triangle/quad/larger-polygon twins and host models pass.
 The normal bundle enables 040/060; the 030 FPS difference is below 2%, so its
 player path is retained. Final normal checks, all timing pairs and the exact
-profile are recorded only in `profiling.md`. FC5 was dropped; FC6 is next.
+profile are recorded only in `profiling.md`. FC5 and the FC6 geometry extension were dropped; FC7 is next.
 
 ## Post-release rendering investigation
 
@@ -112,7 +112,7 @@ the new section of `profiling.md`. It identifies repeated cockpit scripts,
 per-plane drawing and explicit waits, and documents why the discarded software
 blitter was not a test of a purpose-built Fast RAM renderer. The sparse static
 artwork and direct scene follow-ups below are implemented. FC2 now composes the overlay/static foreground with the scene viewport;
-persistent gauges and direct convex spans are complete as FC3/FC4. FC5 is next; D5 remains postponed.
+persistent gauges and direct convex spans are complete as FC3/FC4. FC7 is next; D5 remains postponed.
 
 ## Completed: selective static cockpit artwork repairs
 
@@ -141,5 +141,14 @@ The first candidate's polygon overhead cancelled its rectangle saving; direct
 scratch loops fixed that regression. CPU comparisons, native primitive twins,
 banked flight, view/firing checks and final normal-build checks are recorded in
 `profiling.md`. FC2 now handles cockpit composition, and FC4 replaces the
-common convex polygon pipeline on 040/060. FC5 is the next renderer step.
+common convex polygon pipeline on 040/060. FC7 is the next renderer step.
 D5 remains postponed.
+
+## Completed: FC6 profile, W6 trial and geometry evaluation
+
+Both user-selected branches are complete. The bounded 040/060 W6 trial keeps
+simulation time on target within endpoint uncertainty, with no dropped debt,
+but does not reach 50 FPS. The register-held face-loop extension passes native
+correctness checks and is dropped because neither CPU clears the 2% threshold.
+The normal release is unchanged. `profiling.md` holds all results and manual
+W6 trial instructions. D5 remains postponed; FC7 hardware confirmation remains.

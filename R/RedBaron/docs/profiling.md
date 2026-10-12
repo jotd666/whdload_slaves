@@ -10,7 +10,7 @@ because D5 is postponed. There is no 50 FPS or frame-independent normal-game
 speed claim. Historical captures below retain their original build, option
 mapping and RAM configuration; they do not define the current player default.
 
-## FC6 — retained-renderer profile and next decision (2026-10-12)
+## FC6 — retained-renderer profile, W6 and geometry (complete, 2026-10-12)
 
 Fresh exact capture `fc6-current-aprof`, source `d75a8fa`, uses the **normal
 030 selection**: requested developer mask `0x7f0ffa`, effective `0x7b4ffa`.
@@ -58,7 +58,7 @@ rate. Bit 13 already supplies fixed ticks, interpolation and the one-field
 cap. This trial does not put W6 in the normal mask or complete postponed D5.
 The user approved both this trial and subsequent exact geometry processing
 optimization, in either order. Geometry comparisons will use W6 to expose
-savings hidden by the normal two-field cap. The completed W6 results follow; geometry evaluation is in progress.
+savings hidden by the normal two-field cap. Both follow-ups are complete below.
 
 ### FC6 W6 trial: complete; 50 FPS not reached
 
@@ -100,8 +100,7 @@ windows, flight exits, missing publications and unsafe pickup positions;
 three deliberate corruptions are covered by its host tests.
 
 **Disposition:** retain W6 as the existing developer option; do not enable it
-in the normal mask or claim 50 FPS. D5 remains postponed. Geometry evaluation
-follows under W6. These FS-UAE 040/060 results do not establish physical
+in the normal mask or claim 50 FPS. D5 remains postponed. The geometry evaluation below also uses W6. These FS-UAE 040/060 results do not establish physical
 accelerator throughput; the emulator limitation in `rendering-analysis.md`
 still applies.
 
@@ -118,6 +117,50 @@ slave and its listing and set `BENCH_FROZEN_SLAVE` to that copy for both runs;
 clear bit 13 for the off mask and use `--groups fps`. `rate.json` and the bank
 subdirectory record simulation rate and publication cadence. Runtime addresses
 are confined to ignored capture metadata.
+
+### FC6 geometry extension: dropped
+
+**Drop:** extending bit 6's register-held face loop to 040/060 gains less than
+2% on both measured CPU classes; the original 68000-only policy is retained.
+
+The candidate reused the exact sim:3b4cc vertex loop: table pointers, near
+bound and output cursor stay in registers, with inline transform-cache hits.
+Geometry, clipping, models and detail levels were unchanged. The existing
+host model and its three checker sabotages pass. The bounded native 040 twin
+passes 2,819 faces (2,419 fast-path faces, 2,198 cache hits, 5,302 misses),
+comparing registers, live flags and renderer scratch results. Existing scene,
+artwork and cockpit twins also pass (`fc6-geometry-twin`).
+
+One frozen developer binary, SHA-256
+`ee02a40aa5864864f354116cc20c104f275e2a206f5a93dd417a1c6429e51280`;
+2,000 level-flight fields plus 250 held-bank fields per case, maximum detail,
+Time Scale 40, W6 enabled. Only bit 6 differs: 040 masks
+`0x17f2fba`/`0x17f2ffa`, 060 `0x1ff2fba`/`0x1ff2ffa`.
+
+| Configuration | Level FPS geometry off → on | Bank FPS off → on | Disposition |
+|---|---:|---:|---|
+| 68000 / A500 | — | — | Existing measured bit-6 path unchanged; prior scoreboard retained |
+| 020 / A1200 | — | — | CPU excluded; prior scoreboard retained |
+| 030/50 MMU | — | — | CPU excluded; prior scoreboard retained |
+| 030/50 NOMMU | — | — | CPU excluded; prior scoreboard retained |
+| 040/25 NOMMU | 18.321 → 18.296 (−0.14%) | 18.171 → 18.171 | Drop |
+| 060/50 NOMMU | 19.619 → 19.544 (−0.38%) | 19.569 → 19.569 | Drop |
+
+Evidence: `fc6-geometry-{040,060}-{off,on}`. All four level windows retain
+world/wall ratios 0.998234–0.998656 (within one endpoint tick); level and bank windows drop no world steps and have
+no publication in the copper-pickup guard. Below-threshold differences do not
+establish a speed gain or regression. The candidate is removed from all build
+modes; no new geometry or W6 player enablement is shipped.
+
+The restored normal/developer/VERIFY builds pass 569 host tests, 136 hook
+ranges and 136/136/150 patch destinations. Runtime hashes remain those of the
+retained FC4 release: normal
+`dbea82782bc73e9d75febf437cb9b2ec3c1018535da822493a7868e9705ba66d`,
+developer `7148764be23e82f999b99b2e6f0359df88b987712010d8ab19caafbd7b330e39`,
+VERIFY `bc44d2fd6134a2ecf9b499d0c9602d3cc96fd2cc0ed67543828dd13e5e451f82`.
+Normal mask `0x1ff1fff`, minimum RAM and two-field cap are unchanged. The
+retained deliverable is the reproducible external W6 rate/cadence tooling and
+this measured keep/drop decision. FC7 and postponed D5 remain separate.
 
 ## FC5 — changed viewport copying: dropped (2026-10-12)
 

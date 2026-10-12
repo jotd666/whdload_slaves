@@ -268,24 +268,22 @@ completion-plan §0. Hard-turn windows passed the regression limit. The original
 full viewport copy and RAM requirement remain; `profiling.md` records the
 frozen-build comparisons and the corrected 060 allocation trial.
 
-### FC6 — retained-renderer profile, W6 trial and geometry
+### FC6 — retained-renderer profile, W6 trial and geometry: complete
 
-The retained-renderer profile is complete in `profiling.md`. On 2026-10-12 the
-user approved doing both follow-ups, in either order:
+The user approved both follow-ups on 2026-10-12. The retained-renderer exact
+profile and the bounded 040/060 W6 trial are complete. World-time rate stays
+within one tick of target with no dropped time; the measured workload does
+not reach one-field presentation. W6 remains developer-only and D5 postponed.
 
-1. Test existing W6 (bit 13, one-field cap, fixed world ticks) on 040/060 in
-   developer builds. One frozen-build pair per CPU, 2,000 level-flight fields
-   followed by 250 held-bank fields. Record publication cadence, world-time
-   rate and dropped debt. Keep W6 out of the normal mask; D5 stays postponed.
-2. Optimize geometry processing without changing geometry or detail. Start
-   with the existing exact face-loop register/cache-hit path at sim:3b4cc,
-   previously measured only on 68000. Evaluate the 040/060 extension under W6
-   so the normal two-field cap cannot hide its cost. Use the existing model
-   and native per-face twin; retain only CPU classes clearing the 2% threshold.
+The existing exact sim:3b4cc register-held face loop was extended experimentally
+to 040/060 and checked with its host model and native twin. Both frozen-build
+W6 timing pairs were below 2%, so the extension is dropped. The 68000 path,
+normal player mask and RAM requirements remain unchanged. Measurements and
+reproduction instructions are recorded once in `profiling.md`.
 
-Use exclusive costs from the fresh profile: inclusive object/face totals also
-contain rasterization. Do not repeat discarded C1/C2 trials or chase the
-statically small G6/G8/G9 candidates without a concrete new reason.
+C1/C2 remain dropped; smaller G6/G8/G9 work remains deferred. This result does
+not rule out a different geometry design, nor does emulator timing establish
+physical 040/060 throughput. Do not claim 50 FPS from these results.
 
 ### FC7 — AGA and 040/060 confirmation
 
