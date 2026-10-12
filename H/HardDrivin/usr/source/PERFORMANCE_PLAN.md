@@ -373,6 +373,11 @@ Tools stay in ignored `tmp/dev/tools`.
      the start is traced to native off-road recovery, not an unexplained teleport.
      The corrected reference build still gives34 swaps in the short diagnostic;
      a full-force cache also gave34 and was removed.
+     Corrected ten-second traces within B show player physics rising from6.526
+     to8.844ms per complete call, with82 original versus56 enabled calls. Scene
+     drawing requests11.62 versus24.89 polygons per complete call and costs
+     28.004 versus44.458ms. The large FPS loss therefore cannot be assigned
+     solely to extra player-physics computation; see the cost breakdown.
      The cheaper general policy's handling tolerance and final original-game
      performance acceptance stay open.
    - Exercise collisions, the loop and the jump at both T extremes; check for

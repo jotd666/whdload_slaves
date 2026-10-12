@@ -161,7 +161,8 @@ measurements of the regular integrated policy; the optional reference solver's
 The workload differs substantially. Original B has no crash or replay fields;
 enabled B has196 crash fields and73 replay fields. Original A ends near
 (31719,200,24912), while enabled A ends near the starting area at
-(26542,2,25057). During B the cars remain around different recovery locations.
+(26542,2,25057). Window B begins and ends near different recovery locations, with driving and
+recovery between those endpoints.
 Thus neither B's deficit nor A's gain isolates solver instruction cost. This
 input tape was calibrated for the native frame-coupled route; changing simulation
 timing changes where its field-indexed steering acts.
@@ -181,6 +182,52 @@ Evidence: `s4-traffic-fixed-tape-off/on`, `s4-traffic-fixed-tape.slave`, their
 `s4-single-tape-off/on` performance figures for this policy. Reclassifying the
 window as a performance pass would hide the workload and handling differences.
 Full handling, equal-time comparison and final performance acceptance remain open.
+
+### Ten-second cost breakdown inside corrected window B
+
+`s4-b-cost-off/on` profile500 complete PAL fields beginning at race field4000,
+using the same byte-identical build as the corrected full-window captures. Both
+cars move through different scenes in this interval; neither has a crash or
+replay flag set. This is cost attribution, not an equal-scene benchmark.
+
+The traces reproduce every independently recorded swap at the corresponding
+500 boundaries (81 original,57 enabled), and their full native data/BSS at the
+pre-trace boundary matches the independent captures exactly. Instruction-time
+coverage exceeds99.99998%. Mean frame times are123.654 and175.718ms respectively.
+This subwindow's29.63% FPS loss is distinct from full window B's31.38% loss.
+
+| Complete routine, excluding interrupts | Original mean ms | Enabled mean ms | Increase ms |
+|---|---:|---:|---:|
+| Player physics `$0cda4` | 6.526 | 8.844 | 2.318 |
+| Camera and replay recording `$0d960` | 0.943 | 6.072 | 5.129 |
+| Traffic `$0d40e` | 6.325 | 11.789 | 5.464 |
+| Scene preparation `$0e49a` | 12.810 | 14.844 | 2.034 |
+| Scene transformation `$0b0d6` | 27.910 | 45.914 | 18.004 |
+| Background `$0e706` | 18.240 | 20.930 | 2.690 |
+| Scene drawing `$10008` | 28.004 | 44.458 | 16.454 |
+
+Player physics completes82 calls in the original trace and56 in the enabled
+trace; the native engine and position routines likewise complete82 versus56.
+The one-pass policy is not repeatedly running the player engine between frames.
+Counts differ from swaps because partial frames straddle trace boundaries.
+Only complete entry-to-return calls contribute to the means above.
+
+Complete scene-drawing calls invoke the polygon filler953 times across82 original
+calls (11.62 per scene), versus1394 across56 enabled calls (24.89 per scene).
+Thus much more polygon work is actually requested per enabled scene. Scene
+transformation and drawing account for substantially larger per-call increases
+than player physics. Camera/history and traffic are also material costs; this
+is not a claim that all overhead belongs to rendering, nor that code arithmetic
+alone explains differences between two trajectories. Routine costs can nest and
+must not be treated as a disjoint accounting of the entire frame.
+
+`complete-phase-costs.json` identifies the main stack context and verifies every
+completed physics return at `$10f28`. This excludes complete interrupt execution,
+including firmware prologues/epilogues that simple interrupt-marker tracking can
+miss. The physics analyzers now use that same context separation. Evidence also
+includes `window-metrics.json`, `solver-costs.json`, independent window checks,
+per-field fingerprints and verified compressed traces. The original3% gate and
+cross-machine handling requirements remain unchanged.
 
 ### Scene preparation inside simulation substeps
 
