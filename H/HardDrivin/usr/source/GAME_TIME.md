@@ -1785,6 +1785,55 @@ header's base clock itself is not the CPU clock. These are diagnostic comparison
 between two gated solvers, not original-game acceptance: their trajectories and
 rendered scene workloads can differ, and the full A/B performance gate remains open.
 
+### Combined position integration for reference field ticks
+
+`VERIFY_DRIVETRAIN_POSITION` requires the drivetrain reference and replaces only
+its intermediate position call. For a one-field tick, it combines integer and
+fractional projected contributions before splitting into position and remainder:
+
+```
+Q16 displacement = 4096 * (9*v - 7*u)
+                 + floor((9*q - 7*previous_q) / 16)
+                 + 512 * integer_carry + fractional_carry
+```
+
+Here `v/u` are the current/previous native projected words, and `q/previous_q`
+are their Q16 fractional corrections. This is the same arithmetic as the general
+helper's two integrations and final carry merge, with one final truncation toward
+zero. It preserves projection updates and clears the integer carry after merging.
+All six projected words must be within [-16383,16383], bounding the largest
+integer term below 2^30; the bounded fractional terms and remainders also fit.
+Other intervals and wider vectors use the general helper. Native eight-field
+steps continue through the original compatibility path.
+
+The isolated assembled 68000 helper passes 2,024 signed arithmetic cases and 976
+fallback cases, including the guard boundaries, opposing integer/fraction signs,
+register preservation and stack balance. This microtest supplies projected Q
+values directly; it does not test projection generation. Live captures additionally
+validate the complete integration, including the actual projection update:
+
+| Capture | Complete updates per axis | Nonzero X / Y / Z displacements |
+|---|---:|---:|
+| A500 throttle26 | 314 | 304 / 25 / 0 |
+| A500 steering X400 | 356 | 346 / 0 / 323 |
+| 68020 throttle26 | 473 | 436 / 53 / 0 |
+| A500 braking | 461 | 427 / 0 / 0 |
+
+Every axis matches the independent combined-displacement calculation. The braking
+run has no backward movement, clears velocity/projection fractions at rest and
+holds its final position. The capture waits for a pending position update to
+finish at the observation boundary; these operand captures are not FPS windows.
+
+The separate 500-field A500 timing run produces 35 swaps, 3.494429 FPS and
+286.169814 ms per frame, compared with 34 swaps without combined integration
+and 37 in the current solver control. It executes 35 full physics/scene passes,
+267 engine calls and 32 pitch publications, each unique to its outer pass. The
+5.41% frame-count deficit against the control still exceeds the diagnostic budget;
+this does not establish the full original-game A/B acceptance requirement.
+Native-step comparison matches all 108 reference car states; CUSTOM1-off passes
+148 ranges, the 127-range branch audit passes, and normal and flag-absent binaries
+remain unchanged. Full handling and performance acceptance remain open.
+
 ### Near-stop fractional projection and position correction
 
 The retained operands isolated three interacting problems. At integer velocity1

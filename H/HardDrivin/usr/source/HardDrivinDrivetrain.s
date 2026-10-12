@@ -150,7 +150,11 @@ _drivetrain_position_tick:
 	move.w d1,-$66e0(a4)
 	move.w d2,-$66de(a4)
 _drivetrain_tick_before:
+	IFD VERIFY_DRIVETRAIN_POSITION
+	bsr _drivetrain_position_add
+	ELSE
 	bsr _motion_position_add
+	ENDC
 _drivetrain_tick_after:
 	movem.l (a7)+,d0-d4/a0
 	rts
@@ -341,4 +345,74 @@ _drivetrain_skip_fraction:
 .done:
 	movem.l (a7)+,d0-d4/a0-a1
 	rts
+	ENDC
+
+	IFD VERIFY_DRIVETRAIN_POSITION
+; Combine integer and fractional Euler contributions before splitting once.
+; Only the reference's one-field ticks use this; bulk/native steps retain the
+; general helper. Guard projected words so the Q16 intermediate fits a long.
+_drivetrain_position_add:
+	movem.l d0-d7/a0-a3/a5,-(a7)
+	move.w _time_scalar_fields(pc),d0
+	cmpi.w #1,d0
+	bne .fallback
+	lea _motion_position_state(pc),a0
+	lea -$66e2(a4),a1
+	moveq #2,d7
+.check:
+	move.w (a0)+,d0
+	addi.w #16383,d0
+	cmpi.w #32766,d0
+	bhi .fallback
+	move.w (a1)+,d0
+	addi.w #16383,d0
+	cmpi.w #32766,d0
+	bhi .fallback
+	dbf d7,.check
+	bsr _projection_update
+	lea _motion_position_state(pc),a0
+	lea _motion_position_state+8(pc),a5
+	lea _projection_state(pc),a1
+	lea -$66e2(a4),a2
+	lea -$6704(a4),a3
+	moveq #2,d7
+.axis:
+	move.w (a2)+,d0
+	ext.l d0
+	move.w (a0),d1
+	ext.l d1
+	move.l d0,d4
+	add.l d1,d4
+	sub.l d1,d0
+	lsl.l #3,d0
+	add.l d4,d0              ; 9*v - 7*u
+	lsl.l #8,d0
+	lsl.l #4,d0              ; integer projection contribution in Q16
+	move.l d0,d6
+	move.l (a1),d0
+	move.l 12(a1),d1
+	move.l d0,d4
+	add.l d1,d4
+	sub.l d1,d0
+	lsl.l #3,d0
+	add.l d4,d0
+	asr.l #4,d0              ; floor((9*q - 7*previous_q)/16)
+	add.l d6,d0
+	move.l (a5),d1
+	lsl.l #8,d1
+	add.l d1,d1
+	add.l d1,d0
+	add.l 24(a1),d0
+	bsr _time_split_q16
+	add.l d0,(a3)+
+	clr.l (a5)+
+	move.l d2,24(a1)
+	addq.l #2,a0
+	addq.l #4,a1
+	dbf d7,.axis
+	movem.l (a7)+,d0-d7/a0-a3/a5
+	rts
+.fallback:
+	movem.l (a7)+,d0-d7/a0-a3/a5
+	bra _motion_position_add
 	ENDC

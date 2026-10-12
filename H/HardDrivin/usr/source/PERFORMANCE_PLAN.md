@@ -341,7 +341,10 @@ Tools stay in ignored `tmp/dev/tools`.
      Exact batching of fractional acceleration also passes observed operand checks,
      but adds no swap in that diagnostic. Matching ten-second instruction traces show
      full physics rising from451 to1116 ms, mostly repeated engine and intermediate
-     position work. The cheaper general policy and handling tolerance stay open.
+     position work. A combined position calculation passes signed arithmetic and
+     live three-axis checks and raises the diagnostic from34 to35 swaps, versus37
+     for the control (5.41% deficit). The cheaper general policy, original-game
+     performance acceptance and handling tolerance stay open.
    - Exercise collisions, the loop and the jump at both T extremes; check for
      tunnelling and missed checkpoints.
    - Measure the A500's FPS: it must not drop by more than 3% against the baseline.
