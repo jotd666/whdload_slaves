@@ -1,138 +1,46 @@
 # W4 solid rectangle fills
 
-> Current player policy: W5 now enables the verified CPU-specific bundle with
-> CUSTOM2=1; the existing default remains off and icons are unchanged. See
-> `w5-verification.md`. Zero-mask/release-gate statements below describe the
-> historical checkpoint recorded here. Deferred feature work is still deferred.
+The normal release enables its verified CPU-specific bundle by default. Its
+player selector is On=0, Off=1; developer/VERIFY values below remain bit masks.
+Only sim v1 receives performance patches. Current measurements and final release
+checks live in [profiling.md](profiling.md), the single results record.
+The full pre-condensation ledger is preserved at commit `dd9e8b4`.
 
-## Contract and scope
+## Retained implementation and evidence
 
-D1 is developer/VERIFY CUSTOM2 bit 7 (128), installed only by the sim v1
-performance installer. Normal player enablement remains zero pending W5/release.
-The ten original bytes at `sim:2fd2c` are checked before replacing the initial
-BLTCON0 value and custom-register base setup. With bit 7 off they remain intact.
-No clipping, plane loop, pointer, pitch, BLTSIZE, wait or BLTPRI policy changes.
+Developer bit 7 selects D1 at sim:2fd2c. When both edge masks are full, the
+blitter can omit the destination read channel; masked edges retain the original
+read/modify/write path. Clipping, plane order, pointers, pitch, BLTSIZE, wait and
+BLTPRI policy are unchanged. This is still a blitter renderer, not C2P.
 
-The original solid rectangle routine `sim:2fc68` computes two A edge masks in d7,
-sets BLTADAT to all ones and uses unshifted A with BLTCON1=0. The per-plane
-minterms FA/0A implement `(A & colour) | (~A & C)`. When **both masks are ffff**,
-A is all ones for every word and C is irrelevant. D1 changes the initial control
-word from 03fa to 01fa, disabling C DMA. The original loop still chooses the
-set/clear minterm from the colour. Any masked edge retains C+D, including a
-single word carrying both masks. This also safely covers aligned narrow spans,
-not just the full-width sky/ground calls at `sim:2cddc` and `sim:2cf90`.
+Independent fill models, three-CPU pixel twins and disabled-byte checks passed.
+The completion E3 work also fixed VERIFY's pre-flight h3 pointer initialization;
+the retained D1 path passed its native pixel comparisons afterward.
+Its CPU rectangle and polygon replacements were separately measured and dropped;
+the Fast RAM full-scene backend was also dropped. Their models remain, while
+none of those rejected runtime implementations ships.
 
-Before implementation, the straight 68000 instruction budget was 20 cycles for
-the displaced MOVE/LEA versus about 94 for the aligned detour and 88 for the
-masked detour, including absolute JSR, two NOPs and RTS: **74/68 added cycles per
-rectangle**, independent of its plane count and area, before contention.
-Each optimized destination word removes one chip read. This is the small/simple
-exception to the plan's 3% threshold, not a promised frame-rate improvement.
-The production module adds 96 text bytes to the previous normal/developer build.
+Overlay queueing was deferred below the original threshold. The later standalone
+gauge cache is retained only on 020/040; complete cockpit composition was dropped.
+See the E2/E3 scoreboard for measurements and scope.
+The live checker is `tools/w4_twin_check.py ENTRY --step 8` from the development
+directory after a matching VERIFY fill-twin boot.
 
-The setup's temporary flags are dead before subsequent original setup writes;
-X is unchanged. d4's high word is retained. The eventual C pointer/data latch
-is allowed to differ: following C-using primitives either fetch C or explicitly
-supply BLTCDAT (`sim:2ed1e`, `sim:2fb8c`, `sim:2fc22`, `sim:2fc46`). No code
-reads these write-only custom registers as game state. Destination pixels,
-remaining registers and the original asynchronous last-plane behavior remain
-unchanged in production. Doubled `btst` waits remain intact.
+## Reproduce
 
-## Independent model and live pixel twin
+From the repository root, using the shared environment:
 
-`tools/fill_model.py` evaluates the actual minterm truth table, separately from
-its per-pixel reference. Tests cover all 51,360 horizontal rectangles of a
-320-pixel row, both colours, varying background words and masked single-word
-edges. Every possible stale 16-bit C value is tested for the D-only minterms.
-The full host suite has 56 passing tests; the static sim audit has ten whole
-instruction ranges and no direct branch/relocation into a hook interior.
+```sh
+source tmp/dev/amiga/env.sh
+python3 -B -m unittest discover -s R/RedBaron/tools -p 'test_fill_model.py'
+python3 -B -m unittest discover -s R/RedBaron/tools -p 'test_cpu_span_model.py'
+python3 -B -m unittest discover -s R/RedBaron/tools -p 'test_fast_blitter.py'
+VERIFY=1 bash tmp/dev/tools/build.sh
+```
 
-VERIFY CUSTOM5 bit 16 enables the pixel twin, only alongside D1. It hooks
-`sim:2fd8a`, after the existing wait and before the plane's BLTSIZE write:
-
-1. Save every affected destination word.
-2. Run the original C+D blit and wait for completion; save its output.
-3. Restore the exact input words, reset the original pointers and launch the
-   selected D-only or masked C+D blit.
-4. Wait and compare every output word with the original hardware output.
-
-Thus this is a same-input hardware pixel twin, not a screenshot A/B comparison.
-Masked edge bits are compared too. Bounds are explicit: 1–20 words, 1–256 lines,
-nonnegative modulo calculated from the original pitch at `h3:09d42`. Invalid
-bounds or unequal pixels abort. Two VERIFY-only 10 KiB buffers hold input/output;
-no production allocation is added. Counters at `RBFILL01` record total, D-only,
-masked and compared words. Do not combine this mode with CUSTOM5 bit 3's paint
-observer: it owns the same hook. Twin timings are never performance evidence.
-
-An initial verifier run stopped on its bounds guard because the pitch observer
-used an unnormalized live-disassembly address. The hunk relocation established
-`h3:09d42`; that instrumentation-only error was corrected before accepted runs.
-
-Accepted VERIFY build SHA256:
-`18395ab2cc6fc1271b6b9e56919bf98c2fe8e3ea886f8e7bbd76a2354ef33241`.
-Through step 40, same-input hardware comparisons pass on all three machines:
-
-| CPU / route | Plane twins | D-only | Masked | Compared words |
-|---|---:|---:|---:|---:|
-| A500 / steady | 2,545 | 395 | 2,150 | 673,375 |
-| 68020 / bank | 2,390 | 230 | 2,160 | 456,925 |
-| Cached 68030 / dense | 610 | 395 | 215 | 794,970 |
-
-Evidence: `tmp/dev/tmp/prof/w4-twin-{a500,020,030}-r2/`. Each stores the
-matched slave/listing, entry metadata, bounded debugger log and counter header.
-Normal/developer/VERIFY text sizes are 9,752 / 9,900 / 87,286 bytes.
-Performance measurements use separate fresh boots with the pixel twin disabled.
-Banking is covered by the 68020 route, dense geometry by the cached-68030 route.
-
-## Measurements and completion audit
-
-W4 is complete as of 2026-10-10. D1 implementation/models/twins are committed
-as `b6087b8`; `profiling.md` contains the current measurements and manual workflow.
-Retain D1 on all three measured CPUs:
-
-| CPU | Swap window | OFF → ON fields | Observed FPS gain |
-|---|---|---:|---:|
-| A500 | 140–240 | 3,511 → 3,488 | 0.66% |
-| 68020 | 80–400 | 2,594 → 2,507 | 3.47% |
-| Cached 68030 | 120–780 | 2,591 → 2,411 | 7.47% |
-
-Each window exceeds 2,000 fields. A500 event counts match and h3 differs only
-at known clocks; end screenshots match. Faster CPUs have no dashboard events
-in these windows, but variable dt permits different world histories. Correctness
-comes from models and same-input twins, not those rates. These gains are W4-only.
-The small A500 benefit is accepted under the previously documented simple-change
-exception; cached drawing benefits materially from removing C DMA reads.
-
-The cached ON 120–660 window fell below 2,000 fields, so its uninterrupted census
-was extended to swap 780 and OFF was repeated to the same boundary. The fresh
-OFF rate-only boot differs from the earlier OFF overlap by one field and one tick
-(2,117/2,508 versus 2,118/2,509), about 0.05%. Preserve both observations rather
-than claim exact cross-boot timing identity. Extended evidence lives in
-`tmp/dev/tmp/prof/w4-030-0-rate/` and `w4-030-128/`; original OFF routine/DMA
-observations remain in `w4-030-0/`.
-
-The original cached OFF boot reached first flight just after the host startup
-deadline. Recovery checked PC, step 1 and the saved binary before timing began;
-`recovery.txt` and entry metadata record this. Subsequent boots use a 240-second
-startup deadline, without changing emulated measurement boundaries.
-
-After the AmigaXDev tooling-path migration, VERIFY rebuilds to the exact frozen
-hash above. Guest inputs and cached-CPU configuration match; OFF/ON first-flight
-h3 snapshots are byte-identical. All 56 host tests pass under the migrated
-environment. Normal/developer builds succeed and exclude verification markers;
-static audits cover ten sim ranges and three existing sound ranges. Saved live
-byte audits confirm every disabled range, selected D1 bytes and absence of the
-pixel twin during timing. Cached routine timings retain beam-phase exclusions
-and use wall time, not instruction-cycle totals. Cache settings are recorded;
-no fresh raw CACR read is claimed.
-
-All three display audits are complete. The cached OFF observation has writes
-after the same address's final display fetch, with zero later fetches; ON has no
-active-display conflicts. These bounded observations are not a publication-safety
-proof. W5 remains responsible for tear-free swapping. The owned emulator and
-controller were stopped after the final census; no capture remains active.
-
-Normal release mask remains zero pending W5/player-switch decisions. Overlay
-queueing remains the plan's explicit later-only work (original estimate ≤1.2%,
-complex); doubled waits and BLTPRI remain unchanged. W1 follow-up, game-time
-changes and broader sound changes are outside W4.
+Native rechecks require the ignored development game installation, one owned
+emulator, a fresh output directory and the corresponding VERIFY options below.
+Use the shared machine definitions in `tools/completion_machines.py`; historical
+A500 drivers that still select slow RAM must be updated to the approved minimum
+before reuse. These commands are for intentional rechecks, not additional
+release validation rounds.
