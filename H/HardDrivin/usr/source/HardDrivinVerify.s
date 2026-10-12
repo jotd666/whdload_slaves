@@ -91,6 +91,10 @@ _verify_drive_race:
 	lea _verify_speed_brake_state(pc),a1
 	clr.w (a1)
 	ENDC
+	IFD VERIFY_STEPINPUT_HOLD_THROTTLE
+	lea _verify_throttle_hold_state(pc),a1
+	clr.w (a1)
+	ENDC
 	move.w #2,(a0)
 .done:
 	movem.l (a7)+,d0/a0-a1
@@ -137,6 +141,9 @@ _verify_drive_vbl:
 	bsr _verify_step_delayed_steering
 	ENDC
 	move.w #4,-$6a0a(a4)
+	IFD VERIFY_STEPINPUT_HOLD_THROTTLE
+	bsr _verify_throttle_hold_buttons
+	ENDC
 	IFD VERIFY_STEPINPUT_BRAKE
 	bsr _verify_step_brake_buttons
 	ENDC
@@ -216,6 +223,9 @@ _verify_step_input:
 	bsr _verify_step_delayed_steering
 	ENDC
 	move.w #4,-$6a0a(a4)
+	IFD VERIFY_STEPINPUT_HOLD_THROTTLE
+	bsr _verify_throttle_hold_buttons
+	ENDC
 	IFD VERIFY_STEPINPUT_BRAKE
 	bsr _verify_step_brake_buttons
 	ENDC
@@ -794,4 +804,25 @@ _verify_instructions_pause_key:
 	rts
 .state: dc.w 0
 	dc.l 0
+	ENDC
+
+	IFD VERIFY_STEPINPUT_HOLD_THROTTLE
+; Release acceleration once the native throttle reaches the requested threshold.
+; Both input publishers call this; never write throttle or other dynamics.
+; A coarse update may overshoot: measurements must report the actual plateau.
+_verify_throttle_hold_buttons:
+	move.l a0,-(a7)
+	lea _verify_throttle_hold_state(pc),a0
+	tst.w (a0)
+	bne.s .hold
+	cmpi.b #VERIFY_STEPINPUT_HOLD_THROTTLE,-$66e4(a4)
+	bcs.s .done
+	move.w #1,(a0)
+.hold:
+	clr.w -$6a0a(a4)
+.done:
+	movea.l (a7)+,a0
+	rts
+	dc.b 'HDTHOLD1'
+_verify_throttle_hold_state: dc.w 0
 	ENDC

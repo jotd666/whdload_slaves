@@ -1478,6 +1478,65 @@ The original-control capture passes all146 disabled-range checks with only DRIVE
 and STEPINPUT enabled; the125-range branch audit also passes.
 
 
+
+### Constant-throttle straight measurement
+
+`VERIFY_STEPINPUT_HOLD_THROTTLE=N` requires STEPINPUT and N in1..100, and
+excludes the ramp and braking fixtures. It holds accelerator input until native
+throttle reaches N, then latches neutral buttons at both VBL and controls entry.
+The latch resets at new-race entry. It never writes throttle or dynamics. A coarse
+update may overshoot N: use the observed plateau, not the requested threshold.
+
+The threshold22 build holds native throttle22 on all seven machine profiles;
+CUSTOM4=4 holds23 and is reported separately. Each fresh-boot capture retains500
+fields. The comparison interval is race fields280..420 (2.804464 emulated seconds),
+where every completed physics state has fixed throttle, neutral buttons, no brake,
+full road contact, heading360, Y=0, fixed Z and zero falling speed. Contact globals
+are temporary scratch during physics: VBL observations can see road0, so the
+contact predicates use completed physics returns. Raw VBL observations are retained.
+The initial always-accelerating trial did not have a constant throttle on the flat
+road and is excluded from this measurement.
+
+Distance endpoints are linearly interpolated between completed physics returns
+bracketing the selected fields. Bounds use the raw surrounding positions and
+express temporal sampling uncertainty, not an acceptance tolerance. Exact endpoint
+samples can collapse those bounds without proving physical or integration accuracy.
+
+| Profile | Held throttle | Native speed word range | Estimated distance (world units) | World units/s | Distance sampling bounds |
+|---|---:|---:|---:|---:|---:|
+| Original A500, CUSTOM1 off | 22 | 202..228 | 486.730 | 173.555 | 460.750..541.375 |
+| A500 | 22 | 231..231 | 750.466 | 267.597 | 701.000..836.750 |
+| A500 Fast RAM | 22 | 232..232 | 753.721 | 268.758 | 696.000..837.375 |
+| A500, CUSTOM4=4 | 23 | 234..234 | 752.216 | 268.221 | 713.500..894.625 |
+| 68020 | 22 | 225..225 | 742.000 | 264.578 | 723.625..755.125 |
+| 68030/50 | 22 | 225..225 | 738.375 | 263.286 | 738.375..738.375 |
+| 68040/25 | 22 | 225..225 | 738.250 | 263.241 | 733.000..743.500 |
+| 68040/40 | 22 | 225..225 | 740.500 | 264.043 | 740.500..740.500 |
+| 68060/50 | 22 | 225..225 | 738.375 | 263.286 | 738.375..738.375 |
+
+Captures are `s4-throttle22-original`, `-a500`, `-fast`, `-slow4`, `-020`,
+`-030`, `-040`, `-04040` and `-060`, with raw `motion.json` and derived
+`constant-throttle.json`. A fresh A500 repeat matches all500 VBL and37 completed
+physics observations exactly (`s4-throttle22-a500-repeat`). This verifies the
+observed fields, not full-memory equivalence. Original frame-coupled motion is still accelerating in
+this interval; its lower distance per second is not the target for elapsed-time
+scaling. Constant throttle does not imply constant speed.
+
+The held-throttle A500 speed231 versus fast-CPU225 is real in completed states.
+Separate force captures (`s4-throttle-force-a500`,26 updates; `-020`,103 updates)
+match every native force operand with the independent force model. A500 advances
+223 to231 with carry7/8 using rate5 before automatic gear2 changes to3. The020
+advances223 to225 with carry4/8. After the shift, both have power5940, drive8,
+drag8 and net rate0, preserving the different incoming velocities. Before the
+shift, power is8250 and gear2. This identifies a gear-transition overshoot followed
+by a native zero-net-force interval; correcting projection alone cannot remove it.
+A policy for changes of gear/force during long updates remains necessary, without
+adding full physics or scene passes on68000. No handling acceptance is claimed.
+
+The fixture-absent integrated slave and normal8392-byte text output remain
+byte-identical. Invalid threshold/prerequisite/conflicting-input builds reject;
+CUSTOM1-off passes146 range checks and the125-range branch audit passes.
+
 ### Near-stop fractional projection and position correction
 
 The retained operands isolated three interacting problems. At integer velocity1
