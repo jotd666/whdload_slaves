@@ -816,7 +816,47 @@ A1200 / 68040 at 40 MHz / MMU / 32 MB / WHDLoad 19.x. The owner reports good
 framerate and correct-feeling gameplay. The same hardware test found intermittent
 missing intro-music notes, stepped horizon motion, and jumpy roadside placement.
 The beta2 follow-ups below address those findings; physical confirmation of the
-new candidate is pending. This is not unconditional hardware acceptance. Wider circuit, car and traffic coverage remains unestablished.
+new candidate is pending. The owner also hears notes cutting out in beta2 on the
+`a1200-030` emulator preset (68030 at 50 MHz), launched with `CUSTOM2=1 MMU`.
+The audible music defect therefore remains unresolved; beta2 is not audio acceptance.
+The owner confirms that background graphics now update more frequently. A new
+opponent-visibility report remains open: after qualifying at Monza and starting
+on pole, the owner held the car stationary without throttle. Opponents disappeared
+from the mirrors without appearing ahead, while continuing to move on the map.
+Another set of cars was visible behind. Driving forward and catching the cars
+ahead made them visible again. The owner confirms this was the supplied beta2
+command line: `AMIGA_SETUP=a1200-030` (68030 at 50 MHz), with `CUSTOM2=1 MMU`.
+This is an emulator report, not physical-hardware confirmation.
+
+The initial code review identifies the per-draw opponent bucket builder at
+h0:$a77c and the front/mirror consumers at $8d62/$94c8 as the selection path to
+observe. The render latch copies opponent positions each draw. This does not yet
+establish whether the failure is in selection, projection, or an inherited game
+limitation. Reproduce the stopped-at-pole case and compare C2 on/off before
+changing behaviour; the existing moving-traffic checks do not cover this case.
+A stationary diagnostic on the confirmed 68030/50 MHz MMU preset does **not**
+yet reproduce the visibility failure. The existing VERIFY traffic fixture creates
+a pole grid before the default attract race, selects human steering, supplies an
+all-neutral input tape, and bypasses the start-light gate (`C1=1 C3=1 C5=23`). It
+does not replay Monza qualifying or the subsequent race transition. In the C2-on
+900-field capture, all 150 sampled player positions are identical and speed is
+zero; opponents advance and enter the forward drawing list. Separate 360-field
+C2-on/off captures record 241/236 front-car draw calls, respectively, for opponent
+IDs 1, 3, 5, 7 and 9; the retained final frames visibly contain cars ahead and in
+the mirrors. These arms use their selected periods 2/6, so this is functional
+coverage, not an exact-pose comparison. It rules out a universal failure to draw
+passing traffic when stopped, not the reported Monza defect.
+
+Evidence: ignored `tmp/dev/tmp/phase8/stationary-030-on` and
+`stationary-draws-on/off`, using the same ordinary VERIFY binary (SHA-256
+`8233ead910d97e251abe15f62e5c2ccc4c2db3aec916465ad11b3041b7f07701`).
+The live C2-on code audit passes with all 139 stubs intact and its corrupted-code
+negative control rejected; all 55 pristine input hashes still match. The next
+visibility check must include the actual qualifying-to-race transition at Monza,
+rather than treating this synthetic first-race result as acceptance.
+
+Audio and opponent visibility remain release blockers. This is not unconditional
+hardware acceptance. Wider circuit, car and traffic coverage remains unestablished.
 
 Further WHDLoad-version testing was stopped at the owner's request. Completed normal
 runs cover A500 17.2 C2=0/1 and 68040/MMU 20.0 C2=1 plus 17.2 C2=0. The in-progress
@@ -885,7 +925,9 @@ Hardware-report follow-ups in beta2:
   maximum two-pixel horizontal shoulder step versus ten pixels with early rounding.
   This is a coefficient example, not a displayed-frame or all-scene smoothness claim.
 
-Beta2 emulator acceptance is complete. Evidence is retained under
+Beta2 structural and gameplay emulator checks are complete, but audio acceptance is
+reopened by the owner's 68030 reproduction. The checks below establish patch execution
+and the stated invariants, not correct audible note duration. Evidence is retained under
 `tmp/dev/tmp/phase8/beta2-*` and `normal-*-beta2`; earlier `followup-*` captures are
 development evidence, not the release acceptance set.
 - All **81 guest arithmetic assertions** pass. The normal 020 projection path has
@@ -911,7 +953,8 @@ development evidence, not the release acceptance set.
   and **471 unsampled-channel returns without acknowledgement**. Observed Paula
   period writes range from 124 to 719, within the existing DMA wait's timing range.
   This observation is limited to that captured music passage; physical missing-note
-  resolution remains unconfirmed.
+  resolution remains unconfirmed, and the owner reports audible cutoffs on the
+  beta2 68030 emulator run. The 100-field A500 trace does not cover that failure.
 - Normal SHA-256:
   `1825971543c888a99a1dec5abd0959b94719bf5ef3bca6c3cdb4c628e9aefb3c`.
   Tape VERIFY SHA-256:
