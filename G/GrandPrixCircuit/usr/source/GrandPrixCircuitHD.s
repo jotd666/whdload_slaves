@@ -60,7 +60,7 @@ BOOTDOS
 CACHE
 CBDOSLOADSEG
 
-slv_Version	= 16
+slv_Version	= 17
 slv_Flags	= WHDLF_NoError|WHDLF_Examine
 slv_keyexit	= $5D	; num '*'
 
@@ -74,7 +74,7 @@ slv_keyexit	= $5D	; num '*'
 
 
 DECL_VERSION:MACRO
-	dc.b	"1.0"
+	dc.b	"1.1-beta"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -83,6 +83,11 @@ DECL_VERSION:MACRO
 
 assign
 	dc.b	"GrandPrixCircuit",0
+
+; No player-facing option until an optional patch is implemented.
+; CUSTOM2=0 (or omitted) retains the original game.
+slv_config
+	dc.b	0
 
 slv_name		dc.b	"Grand Prix Circuit"
 	IFD	DEBUG
@@ -244,18 +249,69 @@ _quit		pea	TDREASON_OK
 
 
 patch_main
-	moveq	#0,d2
-	bsr	get_section
+	movem.l d0-a6,-(a7)
+	move.l _resload(pc),a2
+	lea program(pc),a0
+	jsr resload_GetFileSize(a2)
+	cmp.l #94708,d0
+	bne.b .legacy
 
-	lea	pl_section0(pc),a0
-	move.l	attnflags(pc),d0
-	btst	#AFB_68010,d0
-	beq.b	.68k
-	lea	pl_sr(pc),a0
-.68k
-	jsr	resload_Patch(a2)
+	; v1: PatchSeg takes the LoadSeg BPTR, not the code address.
+	lea pl_main_v1(pc),a0
+	move.l attnflags(pc),d0
+	btst #AFB_68010,d0
+	beq.b .v1
+	lea pl_main_v1_sr(pc),a0
+.v1
+	move.l d7,d0
+	lsr.l #2,d0
+	move.l d0,a1
+	IFD VERIFY
+	lea verify_v1(pc),a3
+	move.l #1,(a3)
+	ENDC
+	jsr resload_PatchSeg(a2)
+	bra.b .done
 
+.legacy
+	; Preserve JOTD's patch path for sizes not identified as v1.
+	moveq #0,d2
+	bsr get_section
+	lea pl_section0(pc),a0
+	move.l attnflags(pc),d0
+	btst #AFB_68010,d0
+	beq.b .patch
+	lea pl_sr(pc),a0
+.patch
+	jsr resload_Patch(a2)
+.done
+	IFD VERIFY
+	lea verify_hunk0(pc),a0
+	move.l d7,d0
+	addq.l #4,d0
+	move.l d0,(a0)
+	ENDC
+	movem.l (a7)+,d0-a6
 	rts
+
+; Same patches as JOTD; no simulation, rendering or timing changes.
+pl_main_v1
+	PL_START
+	PL_NEXT pl_section0
+pl_main_v1_sr
+	PL_START
+	PL_NEXT pl_sr
+
+	IFD VERIFY
+; Read-only debugger discovery record. No game hooks or CUSTOM instruments.
+verify_record
+	dc.b "GPCVERIFY",0
+	even
+verify_hunk0
+	dc.l 0
+verify_v1
+	dc.l 0
+	ENDC
 
 pl_song1
 	PL_START
@@ -541,7 +597,7 @@ lab62_address
 	dc.l	0
 
 _saveregs
-		blk.l	16,0
+		dcb.l	16,0
 _stacksize
 		dc.l	0
 

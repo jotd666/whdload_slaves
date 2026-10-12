@@ -10,7 +10,7 @@
 
  This install applies to "Grand Prix Circuit" © 1989 D.S.I.
 
- This install requires WHDLoad to be in the path. It can be found in the
+ This install requires WHDLoad 17 or newer to be in the path. It can be found in the
  WHDLoad package.
 
  The installed program requires 0.5 MB ChipMem and 1.0 MB OtherMem.
@@ -38,6 +38,14 @@
 	http://www.whdload.de/
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
+
+ version 1.1-beta (12.10.26):
+ - rebuilt with vasm and WHDLoad 20.0 KickEmu
+ - version 17 slave header and configuration structure
+ - size-checked PatchSeg path for the 94708-byte executable
+ - original protection, CPU and music patches retained; no gameplay changes
+ - separate VERIFY build with debugger discovery metadata
+ - vasm Makefile; no performance option implemented yet
 
  version 1.0 (24.03.08) done by JOTD:
  - initial release

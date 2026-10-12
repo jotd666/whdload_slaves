@@ -19,13 +19,16 @@ tools, docs). The local harness lives in the worktree's ignored `tmp/dev/`.
 - Only v1.0 (the 94 708-byte executable) is supported; other versions keep JOTD's patches.
 
 Addresses below are hunk-0 offsets of `data/GrandPrixCircuit` (file offset = hunk + $28),
-the slave's patch numbering. Everything here is from static analysis; nothing has been run yet.
+the slave's patch numbering. Static analysis is supplemented by the Phase 0/1 runtime checks below.
 
-## What we know (static analysis, 2026-10-12)
+## What we know (static analysis and Phase 0/1 validation)
 
 - Executable: 94 708 bytes, Aztec C small-data (a4 = hunk1 + $7FFE), hunks CODE $E544,
-  DATA $8918, BSS $4. `HUNK_OVERLAY` with an empty table: the overlay manager (h0:d414..) is
-  linked but probably never rewrites stubs. Confirm at runtime (Phase 1).
+  DATA $8918, BSS $4. `HUNK_OVERLAY` with an empty table. The linked overlay manager starts at h0:d42c
+  (alternate entry d43e; stub writer d4a2), not d414. It is inactive in the supplied v1:
+  all 139 hunk-1 jump stubs are already direct jumps, no relocated pointer targets the
+  manager, and entry/write breakpoints plus a full-table hardware watchpoint stayed silent
+  through startup, car presentations and two attract races. No stub rewrites were observed.
 - Shared with TD2 (byte-identical or operand-masked identical): RNG `c11e` (VHPOSR at `c12c`,
   seed 2002(a4)), shape blitter `c7f4`, line drawer `cfd2`, 4-plane span fill `8864`, movem
   clear `ce1e`, VBL/audio server `b126`, sound driver (song1..3), protection `b2f4`.
@@ -46,15 +49,18 @@ the slave's patch numbering. Everything here is from static analysis; nothing ha
   -30012 (h0:7e2c–7e46). The analogue of TD2's camera fraction F.
 - Road renderer: per-scanline span lists, 110 rows (loop end h0:8508), stripe phase from the
   latched integer camera at h0:84b2.
-- Existing slave (JOTD 1.0): slv_Version 16, kick13, own LoadSeg + `resload_Patch` (one
-  version, no size check), busy loop `PL_PS $174`, protection skips, 68010 `move sr`, song
-  INTREQ/DMACON patches. No slv_config. `Makefile` is stale (basm/.asm).
+- Rebuilt slave (1.1-beta): interface 17, kick13, own LoadSeg; the 94,708-byte executable
+  selects `resload_PatchSeg`, other sizes retain JOTD's `resload_Patch` path. The lists
+  keep the original busy loop `PL_PS $174`, protection skips, 68010 `move sr`, and song
+  INTREQ/DMACON patches. Empty `slv_config` reserves the structure without advertising an
+  unimplemented option. `CUSTOM2` currently has no effect. The vasm Makefile builds normal
+  and VERIFY outputs separately; VERIFY adds only a discovery record, no game hooks.
 
 ## Plan
 
 Each phase ends with a check. Do not start patches before Phase 4 is done (playbook §12).
 
-### Phase 0 — Harness (reuse, don't rebuild)
+### Phase 0 — Harness (complete)
 1. Copy TD2's `amiga/run.sh`, `run-a1200.sh`, `run-68030.sh` into `tmp/dev/amiga/`, adapted
    like Red Baron/Hard Drivin' (`GAME`, `SLAVE_NAME=GrandPrixCircuit.Slave`, resolve `SLAVE`
    paths absolutely, kick13 images into DH0:devs/Kickstarts, `HARNESS_ROOT`).
@@ -70,7 +76,7 @@ Each phase ends with a check. Do not start patches before Phase 4 is done (playb
    **Check:** shipped slave boots to the title/attract demo on the A500 profile; pristine
    manifest unchanged; `git status` clean.
 
-### Phase 1 — Rebuild and modernise the slave (no behaviour change)
+### Phase 1 — Rebuild and modernise the slave (complete; no game patch changes)
 1. Build the unmodified source; fix only what vasm 1.9 needs. Compare behaviour with the
    shipped slave (byte-compare if the shipped one came from the same source).
 2. Move to the TD2 slave skeleton: slv_Version 17, `slv_config`, `resload_PatchSeg` with a
@@ -80,8 +86,57 @@ Each phase ends with a check. Do not start patches before Phase 4 is done (playb
    h0:d4a2); protection stays bypassed; music fixes intact.
    **Check:** new slave plays identically with `CUSTOM2=0`; `check_disabled.py` sees original bytes.
 
-### Phase 2 — Measurement setup (playbook §5–§8)
-1. Trace the attract demo (is there one?) or a scripted race start; name every hot region
+#### Phase 0/1 results and evidence
+
+- The existing `grandprixcircuit` worktree was clean before the source changes; all harness
+  files remain ignored under `tmp/dev`. The retained preinstalled archive has 55 files,
+  all still matching `tmp/archives/GrandPrixCircuit_v1.0_0008.files.json`. No game bytes,
+  SDK, generated slave or capture is committed.
+- `tmp/dev/tools/build.sh` delegates to the authoritative source Makefile; `VERIFY=1`
+  selects the separate VERIFY output. Direct `make -C G/GrandPrixCircuit/usr/source`
+  works too. Dependencies: vasm 1.9, official WHDLoad 20.0 headers/KickEmu, NDK LVO
+  includes via generated guarded wrappers. The sole original-source assembler fix was
+  `blk.l` to `dcb.l`. The pre-modernisation build is retained as
+  `tmp/dev/tmp/build/GrandPrixCircuit-unmodified.slave`.
+- Shipped 1.0, baseline rebuild, modern normal and modern VERIFY all reach the opening
+  screens and automatic driving demo with `CUSTOM2=0` on the A500 profile (68000,
+  512 KB chip, 1.5 MB slow, no fast RAM; PAL). The normal build was also checked on
+  A1200/68EC020 (2 MB chip, 4 MB fast). WHDLoad 20.0 and 19.2 both passed the A500 run.
+  WHDLoad 17 itself and real hardware were not available for this check.
+- `check_disabled.py` undoes hunk relocations and checks 58,642 original code bytes on
+  68000 (58,628 on 68020), plus the six existing JOTD patches (thirteen on 68020), and
+  all 139 relocated jump stubs. Only named native mutable slots are excluded: startup
+  h0:0008–0017, audio state fields b220–b223/b228–b22b and native runtime storage
+  b6ea–b6ed. Corruptions at 039e, 772a and 818c each caused a failure. The existing
+  delay/protection hook boundary audit found no errors.
+- The three song files have identical driver code. Live checks confirm all three INTREQ
+  fixes and eleven DMACON hooks. Baseline-rebuild and modern helper bytes match; the
+  shipped BASM build uses shorter branches/other equivalent encodings, so whole-slave
+  byte identity is neither expected nor claimed.
+- The active opening-screen pixels match exactly between shipped, baseline rebuild and
+  VERIFY. Demo driving is visibly functional in all arms. This is code/patch equivalence
+  and functional startup/demo coverage, not per-field state equality: RNG pinning and
+  repeatable gameplay windows belong to Phase 2. The whole-data comparator rejects
+  changed/truncated inputs and distinguishes the two recorded demo states (1,154 bytes).
+- Overlay evidence: read-only breakpoints at h0:d42c/d43e/d4a2, armed before h0:0018,
+  and a hardware watch over h1:0000–0341 (834 bytes) had no hits. Entry and race snapshots
+  match the relocated pristine table. A watch of the same size over the native VBL field
+  counter caught its write, validating the debugger mechanism. For this executable the
+  manager is dormant; there are no runtime overlay stub replacements to accommodate.
+  Other executable versions are not available and are not covered by this conclusion.
+- Local reproducible checks: `tools/validate_boot.py`, `check_inputs.py`,
+  `check_disabled.py`, `check_music.py`, `check_units.py`, `audit_simulation.py`.
+  Evidence under `tmp/dev/tmp/validation/{shipped,unmodified,modern,verify,a1200,whd19}`:
+  exact slave/hash, debugger transcripts, entry/title/race RAM and screenshots; summary
+  `tmp/dev/tmp/validation/checks.txt`. Commands and coverage limits are in local
+  `tmp/dev/docs/development.md` and `internals.md`.
+- Prepared GPC report/state tools and candidate capture wrappers. The candidate swap
+  marker is h0:039e, VBL entry 772a and first race-loop anchor 7094. These have **not**
+  been validated as performance instruments. No FPS baseline, RNG patch, input tape,
+  simulation patch, renderer patch or Phase 2 measurement has been started.
+
+### Phase 2 — Measurement setup (not started; playbook §5–§8)
+1. Trace the confirmed attract demo or a scripted race start; name every hot region
    with `gpc_report.py`.
 2. Fixed reproducible window: VERIFY `CUSTOM3` removes VHPOSR from the RNG (`c12c`, same patch
    as TD2 `PL_W`); anchor at race start; `CUSTOM5` joystick tape (TD2's `verify_read_joydat`
@@ -146,7 +201,7 @@ is out of scope unless decided otherwise.
 4. Generic lessons (interrupt-driven simulation, LoadView swap marker) → AmigaXDev docs.
 
 ## Open questions
-- Is there an attract demo to profile, or must every capture be a scripted race?
+- Attract demo confirmed; Phase 2 must establish its repeatable capture window.
 - Race/lap clock location and whether it already runs in real time.
 - Does anything (crash, spin, pit) block the VBL step or depend on CPU speed?
-- Is the overlay manager really idle? (The two surveys disagree; Phase 1 settles it.)
+- Overlay question resolved for the supplied v1: dormant manager, no stub rewrites (Phase 1 evidence above).
