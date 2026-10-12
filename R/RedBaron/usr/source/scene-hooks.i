@@ -51,7 +51,7 @@ scene_frame_launch_table:
  dc.l $2f502
  dc.w 8,$2143,$3142,0
  dc.l $2f66e
- dc.w 8,$3140,$3141,0
+ dc.w 8,$3140,$3141,4 ; native scratch-clear completion
  dc.l $2f99a
  dc.w 12,$217c,$3143,0
  dc.l $2fb8c

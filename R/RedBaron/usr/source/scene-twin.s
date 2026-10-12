@@ -11,12 +11,12 @@ scene_twin_before:
  move.l #1,4(a5)
  bsr scene_frame_wait
  move.l scene_frame_storage(pc),a1
- adda.l #$10000,a1
+ adda.l #PERF_SCENE_TWIN_SCREEN,a1
  move.l scene_frame_original(pc),a0
  move.w #1250-1,d7
  bsr scene_frame_copy32
  move.l scene_frame_storage(pc),a1
- adda.l #$1a000,a1
+ adda.l #PERF_SCENE_TWIN_SCRATCH,a1
  move.l scene_frame_original+4(pc),a0
  move.w #250-1,d7
  bsr scene_frame_copy32
@@ -104,12 +104,12 @@ scene_twin_after:
  bne .bad
  dbf d7,.words
  move.l scene_frame_storage(pc),a0
- adda.l #$10000,a0
+ adda.l #PERF_SCENE_TWIN_SCREEN,a0
  move.l scene_frame_original(pc),a1
  move.w #1250-1,d7
  bsr scene_frame_copy32
  move.l scene_frame_storage(pc),a0
- adda.l #$1a000,a0
+ adda.l #PERF_SCENE_TWIN_SCRATCH,a0
  move.l scene_frame_original+4(pc),a1
  move.w #250-1,d7
  bsr scene_frame_copy32

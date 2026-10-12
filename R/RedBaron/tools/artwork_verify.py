@@ -17,9 +17,10 @@ from completion_machines import environment
 import route_status as r
 
 p = argparse.ArgumentParser(description=__doc__)
-p.add_argument('machine', choices=('030', '040', '060'))
+p.add_argument('machine', choices=('030', '030-nommu', '040', '060'))
 p.add_argument('out', type=Path)
 p.add_argument('--transitions', action='store_true')
+p.add_argument('--mask', type=lambda x: int(x, 0), help='Developer mask override for combined renderer verification')
 a = p.parse_args()
 if a.out.exists():
     raise SystemExit('Refusing overwrite')
@@ -28,7 +29,7 @@ if pid.exists():
     owned = subprocess.run(['ps', '-p', pid.read_text().strip(), '-o', 'stat=,command='], capture_output=True, text=True)
     if owned.returncode == 0 and not owned.stdout.lstrip().startswith('Z'):
         raise SystemExit('Inspect existing emulator first: ' + owned.stdout)
-mask = 0xf0ffa if a.machine == '040' else 0xb0ffa
+mask = a.mask if a.mask is not None else (0xf0ffa if a.machine == '040' else 0xb0ffa)
 env = environment(a.machine, mask)
 env.update(BOOT_TIMEOUT='240', GAME=str(Path('tmp/game/completion-benchmark/RedBaron').resolve()))
 subprocess.run([sys.executable, '-B', 'tools/reach_flight.py', '--no-shot', '--out', str(a.out)], env=env, check=True)
@@ -56,7 +57,14 @@ def twins(label):
     assert (checked, active, scratch, passes) == (63, 0, 0, 6), result.hex()
     stats = dump('artwork_cache_stats', 12, label)
     print(label, 'six native twins passed', stats.hex(), flush=True)
-    return dict(label=label, checks=6, hits=int.from_bytes(stats[:4], 'big'), fills=int.from_bytes(stats[4:8], 'big'))
+    scene_checks = 0
+    if mask & (1 << 20):
+        scene = dump('scene_twin_result', 20, label)
+        assert scene == bytes.fromhex('0000000700000000000000030000000000000000'), scene.hex()
+        scene_checks = 3
+        print(label, 'three native scene twins passed', flush=True)
+    return dict(label=label, checks=6, scene_checks=scene_checks,
+                hits=int.from_bytes(stats[:4], 'big'), fills=int.from_bytes(stats[4:8], 'big'))
 
 
 advance(20)

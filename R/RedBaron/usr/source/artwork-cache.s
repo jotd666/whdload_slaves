@@ -76,7 +76,8 @@ artwork_cache_stats: dc.l 0,0,0 ; hits, fills, fallbacks
  IFD VERIFY
 ; One pixel/post-state twin per native page and static program (2, 3, 4).
 ; Native output is retained. The pixel guard itself is page-independent.
-; Only private snapshots are allocated; no redirected DMA or hidden game state.
+; Snapshots use their dedicated reserved Fast-RAM range, never the game heap.
+; No redirected DMA or hidden game state.
 artwork_cache_twin_before:
  movem.l d0-a6,-(sp)
  lea artwork_cache_twin_result(pc),a6
@@ -93,14 +94,13 @@ artwork_cache_twin_before:
  bne .done
  move.l 8(a6),d0
  bne .allocated
- move.l a6,-(sp)
- move.l 4.w,a6
- move.l #80000,d0
- moveq #0,d1
- jsr _LVOAllocMem(a6)
- move.l (sp)+,a6
+ lea .workspace(pc),a0
+.workspace
+ adda.l #memory_workspace_reserved-.workspace,a0
+ move.l (a0),d0
+ beq artwork_twin_nomem
+ addi.l #PERF_ARTWORK_TWIN_OFFSET,d0
  move.l d0,8(a6)
- beq artwork_bad
 .allocated
  bsr artwork_wait
  move.l d0,a1
@@ -164,16 +164,16 @@ artwork_cache_twin_after:
  addq.l #1,12(a6)
  cmpi.l #63,d1
  bne .done
- move.l a6,-(sp)
- move.l 8(a6),a1
+ ; Release the twin's use, not the parent workspace allocation.
  clr.l 8(a6)
- move.l 4.w,a6
- move.l #80000,d0
- jsr _LVOFreeMem(a6)
- move.l (sp)+,a6
 .done
  movem.l (sp)+,d0-a6
  rts
+artwork_twin_nomem:
+ pea .message(pc)
+ bra artwork_abort
+.message: dc.b "Red Baron: VERIFY artwork snapshot workspace unavailable",0
+ even
 artwork_cache_twin_result: dc.l 0,0,0,0 ; checked bits, active, scratch, passes
  ENDC
 

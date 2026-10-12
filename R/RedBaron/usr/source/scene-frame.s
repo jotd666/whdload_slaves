@@ -50,7 +50,7 @@ scene_frame_install:
 .workspace_base
  adda.l #memory_workspace_reserved-.workspace_base,a0
  move.l (a0),d0
- addi.l #$2000f,d0
+ addi.l #PERF_SCENE_OFFSET+15,d0
  andi.l #$fffffff0,d0
  lea scene_frame_storage(pc),a0
  move.l d0,(a0)
@@ -163,6 +163,9 @@ scene_frame_install:
 .bt_done
  rts
 .launch_target
+ lea scene_frame_clear_a0(pc),a4
+ cmpi.w #4,d0
+ beq .lt_done
  lea scene_frame_blit_a0(pc),a4
  tst.w d0
  beq .lt_done
@@ -227,6 +230,20 @@ scene_frame_blit_a\1:
  SF_BLIT 0
  SF_BLIT 1
  SF_BLIT 3
+
+; The native scratch clear must finish before CPU endpoint corrections begin.
+; Other native launches retain their asynchronous behavior; private scene
+; clears continue through the compatibility kernel. Preserve BLTSIZE's CCR.
+scene_frame_clear_a0:
+ dc.w $42e7
+ cmpa.l #$dff000,a0
+ bne .private
+ bsr scene_frame_wait
+ move.w (sp)+,ccr
+ rts
+.private
+ move.w (sp)+,ccr
+ bra scene_frame_blit_a0
 
 scene_frame_enter:
  movem.l d0-a6,-(sp)

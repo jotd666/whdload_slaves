@@ -10,7 +10,7 @@ lower bounds there with exact per-instruction attribution.
 - Instrument: `aprof` FS-UAE, which counts emulated cycle units for every
   instruction, including Chip-bus wait units.
 - CPU: cycle-exact 68EC030/50 on an OCS A500 chipset, 2 MB Chip + 8 MB Fast,
-  CACR `0x2011` (instruction and data caches on).
+  CACR `0x2011` (instruction cache on; data-cache enable bit 8 clear).
 - Build: VERIFY tape route with CUSTOM2 `0x1f0ffa`, the normal build's 030
   selection (bits 19 and 20 on).
 - Window: 50 PAL fields after 500 warm-up fields, forward view, maximum detail.
@@ -18,9 +18,9 @@ lower bounds there with exact per-instruction attribution.
   Capture `tmp/prof/aprof-030n-1`.
 - aprof refuses any MMU model, so the CPU is 68EC030. 040/060 cannot be profiled
   this way.
-- The VERIFY artwork twin aborts on this route with "sparse artwork pixel/state
-  mismatch". The profile build is a private source copy without those two calls;
-  see FC0.
+- This historical profile used a private source copy without the artwork twins
+  after a reported abort. FC0 below restores all checks; the current profiler
+  refuses a capture unless selected twins pass.
 
 **Bus cross-check.**
 - Barto DMA-slot traces of the **normal** build on 030/50 MMU (40 fields) and
@@ -88,17 +88,15 @@ Each step follows the completion plan's §0 rules:
 Re-run the aprof capture after each step to confirm the stall moved, not just the
 FPS.
 
-### FC0 — resolve the artwork-twin abort (a correctness check, not speed)
+### FC0 — VERIFY artwork-twin abort: complete
 
-The VERIFY artwork twin aborts on the 030 NOMMU tape route. The same message
-covers an AllocMem failure of its 80,000-byte snapshot (`artwork-cache.s`, the
-`beq artwork_bad` after AllocMem).
-
-1. Give the two causes separate messages.
-2. Rerun `aprof_flight.py` without the private copy. (The script's source copy
-   becomes unnecessary once this is fixed.)
-3. If it is a real pixel or state mismatch, fix bit 19 before anything below.
-   It ships on 030.
+The reproduced Barto failure was a real top-edge polygon pixel mismatch, not
+allocation loss. The bit-20 native scratch clear now completes before returning
+to CPU endpoint corrections. All artwork and scene twins pass on 030 NOMMU/MMU,
+040 and 060, and the full-twin aprof capture completes. VERIFY snapshots use
+reserved workspace; RAM requirements are unchanged. The profiler no longer
+removes twins and rejects incomplete checks. Evidence and results are recorded
+once, in `profiling.md`. Physical-hardware confirmation remains FC7.
 
 ### FC1 — deferred page fence instead of the swap spin: up to −10 ms
 

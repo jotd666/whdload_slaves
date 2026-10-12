@@ -3,6 +3,20 @@
 ; The header must reserve the larger block before the loader knows the version.
 PERF_EXTRA_FAST = $30000
 PERF_WORKSPACE_FAST = $50000
+; Workspace ownership (offsets from memory_workspace_reserved):
+; artwork: [0,$20000); scene target/scratch and VERIFY snapshots below $3c000;
+; VERIFY artwork twin: [$3c000,$4f880). No guest-heap snapshot allocation.
+PERF_SCENE_OFFSET = $20000
+PERF_SCENE_TWIN_SCREEN = $10000
+PERF_SCENE_TWIN_SCRATCH = $1a000
+PERF_ARTWORK_TWIN_OFFSET = $3c000
+PERF_ARTWORK_TWIN_BYTES = 80000
+ IFGT PERF_SCENE_OFFSET+15+PERF_SCENE_TWIN_SCRATCH+8000-PERF_ARTWORK_TWIN_OFFSET
+ FAIL "Scene and artwork VERIFY snapshots overlap"
+ ENDC
+ IFGT PERF_ARTWORK_TWIN_OFFSET+PERF_ARTWORK_TWIN_BYTES-PERF_WORKSPACE_FAST
+ FAIL "Artwork VERIFY snapshot exceeds reserved workspace"
+ ENDC
 memory_reserve:
 	movem.l d0-a6,-(sp)
 	move.l $4.w,a6

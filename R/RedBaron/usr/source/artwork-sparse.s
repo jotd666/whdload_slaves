@@ -107,13 +107,14 @@ artwork_wait:
 
  IFD VERIFY
 artwork_bad:
- pea .message(pc)
+ pea artwork_mismatch_message(pc)
+artwork_abort:
  pea TDREASON_FAILMSG
  lea .base(pc),a2
 .base
  adda.l #_resload-.base,a2
  move.l (a2),a2
  jmp resload_Abort(a2)
-.message: dc.b "Red Baron: sparse artwork pixel/state mismatch",0
+artwork_mismatch_message: dc.b "Red Baron: sparse artwork pixel/state mismatch",0
  even
  ENDC

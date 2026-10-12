@@ -9,7 +9,7 @@ Refer to items by ID. FC items are detailed in `fast-cpu-plan.md`.
 
 | ID | Item | State |
 |---|---|---|
-| FC0 | VERIFY artwork-twin abort on the 030 NOMMU tape route | Open, not investigated |
+| FC0 | VERIFY artwork mismatch on the Barto 030 NOMMU route | Complete; native scratch-clear synchronization fixed |
 | FC1 | Deferred page fence instead of the swap spin | Planned |
 | FC2 | Overlay and cockpit foreground composited in Fast RAM | Planned |
 | FC3 | Persistent gauges | Planned |
@@ -54,11 +54,10 @@ Git; do not revive their superseded next-work lists.
 `fast-cpu-plan.md` has the exact 030 frame attribution (aprof) and the ordered
 fix plan for the 16.67 FPS plateau, FC1–FC7.
 
-**FC0: VERIFY artwork-twin abort.** On the 030 NOMMU VERIFY tape route
-(CUSTOM2 `0x1f0ffa`), flight entry aborts with "sparse artwork pixel/state
-mismatch". `artwork-cache.s` uses that message both for a real twin mismatch
-and for a failed 80,000-byte snapshot AllocMem, so the cause is unconfirmed.
-Bit 19 ships on 030. Not yet investigated.
+**FC0 is complete:** native scratch-clear synchronization fixes the top-edge
+artwork mismatch. Full artwork/scene twins pass on 030 NOMMU/MMU, 040 and 060;
+the final aprof capture passes with all checks restored. VERIFY snapshots fit
+the existing reservation, so RAM requirements are unchanged. See `profiling.md`.
 
 ## Post-release rendering investigation
 

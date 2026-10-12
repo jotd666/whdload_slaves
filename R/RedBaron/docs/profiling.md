@@ -10,6 +10,69 @@ because D5 is postponed. There is no 50 FPS or frame-independent normal-game
 speed claim. Historical captures below retain their original build, option
 mapping and RAM configuration; they do not define the current player default.
 
+## FC0 — native scratch completion and VERIFY snapshots (2026-10-12)
+
+**FC0 passed.** The reproduced failure is a real pixel mismatch,
+not a snapshot-allocation failure. On Barto 030 NOMMU with CUSTOM2=0x1f0ffa,
+program 2 differs at the top-clipped polygon's first screen word (x=64–79).
+The first uninstrumented failure changes eight bytes across four planes outside
+the cached coverage mask. Native drawing changes those extra pixels to colour 6.
+
+Bounded native traces locate the divergence before the screen merge: the scratch
+word at the top edge varies between $003e, $ffde and $fffc, while the next row is
+consistently $003e. CACR is $2011 (030 data cache disabled), excluding stale data
+cache reads in this capture. Native mode sim:2fc64 is zero. These observations
+rule out the investigated alternate-fill-mode and data-cache explanations.
+Evidence: `fc0-barto-mismatch-1`, `fc0-polygon-trace-1`, `fc0-cacr-1`.
+
+Waiting for native scratch operations to complete passes all six artwork twins
+(`fc0-edge-trace-1`). Reducing the wait to the scratch clear alone also passes
+(`fc0-clear-wait-1`). The final fix gives the existing bit-20 launch at
+sim:2f66e a dedicated handler: a hardware scratch clear completes before return;
+a private Fast-RAM clear still goes through the software backend. Registers and
+the BLTSIZE store's CCR are preserved. Other native launches remain asynchronous.
+This fixes the observed completion-order sensitivity; it is not a claim that
+these emulator traces establish the behavior of every physical chipset (FC7).
+
+Separately, VERIFY now takes its 80,000-byte artwork snapshot from the existing
+reserved workspace range [$3c000,$4f880), after the scene storage and scene-twin
+snapshots. Assembly assertions check overlap, alignment slack and the $50000
+limit. Completion clears the twin's use pointer, never FreeMems a suballocation.
+Missing workspace and pixel/state mismatch have distinct diagnostics. The
+reservation already has room: 1 MiB slave Fast reservation and the tested
+512 KiB Chip + 2 MiB Fast player minimum are unchanged.
+
+The aprof driver no longer copies source or removes artwork checks. It records
+the effective mask, live slave base, binary hash and full twin results, and
+refuses profiling unless selected artwork and scene twins pass. The prior
+allocation-only candidate passed aprof (`fc0-fixed-030n-1`, 500 warm-up fields,
+50 capture fields), but failed Barto (`fc0-fixed-barto-030n-1`); that earlier pass
+was not resolution of FC0. Exact committed-source aprof diagnostics also passed
+(`fc0-original-1`), so the original ambiguous error never proved allocation loss.
+
+The same final VERIFY binary passes six artwork twins and three scene twins,
+then 20 flight steps, on every accelerated configuration:
+
+| Configuration | Capture | Artwork / scene twins | Cache hits / fills |
+|---|---|---:|---:|
+| 030/50 NOMMU | `fc0-final-030n-1` | 6 / 3 | 309 / 3 |
+| 030/50 MMU | `fc0-final-030-1` | 6 / 3 | 309 / 3 |
+| 040/25 NOMMU | `fc0-final-040-1` | 6 / 3 | 309 / 3 |
+| 060/50 NOMMU | `fc0-final-060-1` | 6 / 3 | 309 / 3 |
+
+All use CUSTOM2=0x1f0ffa, filtered by CPU, maximum detail, and unchanged Time
+Scale. VERIFY SHA-256 is
+`ed7b2fa450b16432b8b21bd5fbeb6a2c9f9807917ceb5986097916f9753c00c9`.
+Eleven existing renderer/cache model tests pass. Normal/developer/VERIFY builds pass (text 136,414 / 136,802 / 322,104
+bytes), with 129 / 129 / 143 valid patch destinations. Final normal SHA-256:
+`4ae6086c91f68345efe7dbf42a66d5bd668a1173a09cc5d4bd74f51da0e55616`.
+`fc0-final-aprof-1` also passes all nine native twins with the same VERIFY hash:
+68EC030/50, 2 MiB Chip + 8 MiB Fast, effective mask 0x1b4ffa, 500 warm-up PAL
+fields followed by 50 capture fields. The exact report records 13 render/world
+calls (13.00 VERIFY FPS), 48.7% Chip-bus units and 17.1% recognized blitter polls.
+This remains an instrumented workload, not a new normal-build FPS claim. The
+capture and report retain the full original correctness checks; FC0 is closed.
+
 ## Final release check (F3)
 
 Passed on 2026-10-12. Normal slave SHA-256:
