@@ -1,5 +1,7 @@
 ; All h4 gameplay changes are conditional. Ranges include displaced tails.
     PL_IFC2
+    ; SIM_RANGE h4 00b68 8 C2 render_latch
+    PL_PSS $00b68,render_latch,2
     ; SIM_RANGE h4 00042 8 C2 sim_period
     PL_PSS $00042,sim_period,2
     ; SIM_RANGE h4 000e6 6 C2 sim_reset

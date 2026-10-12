@@ -41,6 +41,14 @@
 
 History:
 
+ version 1.8b (12.10.2026) done by Vesuri:
+ - CUSTOM2=1: fractional road, traffic and lateral projection, including
+   the rear-view mirror; smooth course heading for the mountain layers
+ - retain slope fractions and move crest limits with the projected road grid
+ - remove the main road's sideways jump at whole-segment camera crossings
+ - exact sine cache; original near-car and horizon clipping policies retained
+ - CUSTOM2=0 retains the original renderer; PAL beta, real hardware deferred
+
  version 1.7b (12.10.2026) done by Vesuri:
  - CUSTOM2=1: disable unused blitter-finished interrupts during the game;
    save/restore blitter priority and interrupt enable on program return

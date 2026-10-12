@@ -73,7 +73,7 @@ Known differences that change the design:
 3. Build: `tools/build.sh` checks the selected compiler/include trees and builds the
    authoritative source into `tmp/build/`; `VERIFY=1` selects the VERIFY output.
    The phase-1 normal variant is retained byte-identical to the 1.5b hardware handoff.
-   Current 1.7b builds contain the accepted phase-8 simulation and phase-9 optimization; historical
+   Current 1.8b builds add phase-10 rendering to the phase-8 simulation and phase-9 optimization; historical
    VERIFY fixtures remain pinned with their captures. Bash wrappers work with macOS Bash 3.2.
 4. Trace tools: `td_report.py` uses TD's root/data sizes, excludes the PRELOAD root copy
    and follows the loaded BPTR chain. `profile_demo.sh`, `ingame.py`, `frames.py`,
@@ -122,11 +122,11 @@ measurement validation; the phase-5 time model below now defines the simulation 
    creation in hunk 4, WaitTOF, beam-mixed RNG, overlay manager, road traversal,
    horizontal blitter spans and five-plane shape blitter. Overlay addresses are
    hunk-qualified; 107 data JMP stubs resolve their calls into the root.
-4. The presentation marker is validated in phase 4. TD2's exact 52-byte-row/8.8
-   road walker and CPU span loop, and several secondary renderer counterparts,
-   remain not found. Two drawing passes are present; phase 3 visually confirms
-   a rear-view mirror. Timing/state ownership is mapped in phase 5; view-pass geometry
-   attribution remains phase 10 work.
+4. The presentation marker is validated in phase 4. Phase 10 maps TD's streamed
+   16.16 road walker; TD2's 52-byte-row/8.8 representation does not apply.
+   Some secondary renderer and CPU-span counterparts remain not found.
+   Phase 3 visually confirms a rear-view mirror; phase 10 maps both views.
+   Timing/state ownership is mapped in phase 5.
 
 **Acceptance:** local `tools/identify_game.py` checks pinned inputs, all explicit
 patch signatures/source coverage, hunk sizes, root JMP targets and both overlay
@@ -302,8 +302,8 @@ with Test Drive-specific offsets, input decoding, event state and overlay lifeti
    bit 4 chooses straight acceleration/braking instead of a short steering tape.
    Bits 1/2 force one nonfatal crash/police pursuit at field thresholds 450/900.
    The original crash penalty, animation and ticket paths execute on both CPUs.
-   Bit 3's zero-fraction oracle remains explicitly deferred until fractional rendering
-   exists; it is not exposed as an implemented fixture.
+   Bit 3's zero-fraction oracle is supplied by phase 10; it is absent from the
+   preserved phase-7 build.
 4. **CUSTOM1 bit 1:** automatic acknowledgement after 100 fields in the crash wait.
    Early manual acknowledgement clears the private timer. With this bit clear, the
    original acknowledgement hook bytes remain and the crash fixture stays blocked.
@@ -314,8 +314,8 @@ with Test Drive-specific offsets, input decoding, event state and overlay lifeti
    overlaps and direct incoming branch candidates (indirect targets are not proven).
    `check_disabled.py` verifies original or option-selected bytes and helper targets;
    all-zero VERIFY options leave all optional ranges original. VERIFY instruments
-   intentionally have independent C1/C3/C4/C5 gates. C2 does not exist yet: its ranges
-   and disabled checks must be added in phase 8. `verify_state.py --expect-equal`
+   intentionally have independent C1/C3/C4/C5 gates. Phase 8 adds C2 ranges
+   and disabled checks. `verify_state.py --expect-equal`
    supplies the core-state equality gate; the original game's negative controls fail it.
 
 Twelve fresh fixture captures, a confirmed h4 unload/reload, and deliberate checker
@@ -347,8 +347,8 @@ verify 170 completed arithmetic calls against original rate/travel operations.
 The observed main-loop work uses at most 10.64% / 8.91% of the A500/A1200 step
 budget in the measured moving window; this is not a universal worst-case bound.
 All 668 native assertions, declared-range audits and option-off byte checks pass.
-Real A1200/68040 results remain deferred; NTSC remains unvalidated. Rendering
-improvements and the player-facing option label remain phases 9–11.
+Real A1200/68040 results remain deferred; NTSC remains unvalidated. Phases 9–10
+supply rendering improvements; the player-facing option label remains phase 11.
 
 Reuse TD2's architecture and tested arithmetic where its assumptions apply. Keep game-local
 sources (`simulation.s`, `simulation-patches.i`) so each slave builds alone. TD's original
@@ -428,30 +428,70 @@ final version metadata is byte-proven against the measured candidate. Local
 `docs/phase9.md` records commands, exact inputs/builds, evidence and limitations.
 Real A1200/68040 testing remains deferred and NTSC unvalidated.
 
-## Phase 10: sub-unit rendering
+## Phase 10: sub-unit rendering (complete; PAL emulator beta)
 
-Reuse TD2's `render.s` design: road rows interpolated with the camera fraction, gradient
-records converted once per view and source pointer, the exact tangent cache, fractional car
-projection, sideways/heading smoothing and smoothing of mountains and hill crests.
+TD's h4:$1114 main view and $11A2 rear-view mirror stream 40 / 30 road rows
+through h4:$1A14. Native clip/plane probes establish their screen roles. Unlike
+TD2, there are no 52-byte records or per-view gradient tables to convert: the
+original camera/curve recurrence already carries fractions. Root:$2108 is an
+interpolated 16.16 sine. Fractional arguments use that native interpolator;
+repeated integer angles use an exact cache, without TD2's 8.8 tangent key.
+No TD2 game offset or duplicate camera correction is used.
 
-1. Map TD's road renderer (row records, scale tables, segment walker, scanline table) and
-   compare it with TD2's. Test Drive's mountain roads and cliffs make the vertical (slope)
-   path more important than in TD2. TD has two statically identified drawing passes;
-   establish their screen roles before deciding whether TD2's mirror path has a counterpart.
-2. Port each piece behind `CUSTOM2` with its VERIFY fixture. Check the zero oracle (byte-identical
-   rows and scanlines with zero fractions) before judging any visual result.
-3. Budget: at most 3% of A500 cycles (`subunit_cost.py`), with no frame-rate regression on
-   any preset.
-4. Geometry and sideways reports (`subunit_geometry.py`, `sideways_report.py`), adapted.
+`render.s` and `render-patches.i`, behind CUSTOM2, supply the missing lateral
+fractions, mirror camera prefix, full slope accumulator, camera-interpolated
+crest limits, fractional traffic projection and atomically latched mountain
+heading. The main lane anchor uses a constant unit scale, removing the sideways
+jump at whole-segment camera crossings. Original near-car and horizon clipping
+policies remain. The sine cache retains the last integer-angle result; rapidly
+changing fractional arguments bypass cache bookkeeping. A flat-slope fast path skips work only with
+a zero descriptor and accumulator.
+
+VERIFY C1 bit 4 disables the new projection hooks for same-build comparisons.
+C5 bit 3 provides the original-arithmetic zero oracle, bit 5 supplies isolated
+camera/lane/traffic draw snapshots, and bit 6 runs 1,421 native renderer checks.
+Normal builds omit these instruments. The local geometry, zero, crossing,
+sideways, cost and frame-rate tools operate on native debugger captures.
+
+The final 1.8b normal and VERIFY builds assemble. All 1,421 renderer assertions
+and the existing 668 simulation assertions pass. The controlled VERIFY zero
+oracle matches 40 main / 30 mirror rows, scanlines and queues byte-for-byte;
+production C2 deliberately retains fractional slopes and fixes the native
+exact-zero camera special case. Independent models cover positive/negative
+slopes, bends and ten traffic projections. The held-lane integer crossing has
+zero horizontal jump and at most one vertical pixel difference in the main
+view; the mirror matches exactly. The mountain report checks 128 layer outputs
+against the atomic interpolation model, without claiming every maximum step
+is reduced at high camera speeds.
+
+| PAL preset | Projection off FPS, two windows | Projection on FPS, two windows |
+|---|---:|---:|
+| A500 | 4.70 / 4.75 | 4.80 / 4.95 |
+| A1200/68EC020 | 8.30 / 8.30 | 8.30 / 8.30 |
+| A1200/68030 25 MHz | 12.50 / 12.50 | 12.50 / 12.50 |
+
+Each same-build pair enables C2 simulation and uses two consecutive 1,000-field
+windows. Selected gameplay state matches at the start and both endpoints.
+A500 self-cycle cost is 2.875% / 2.877% in two 50-field moving-demo samples,
+below the 3% budget; hook costs and displaced instructions are included.
+These are finite PAL samples, not universal worst-case or whole-race bounds.
+All 82 optional range declarations, bypassed-tail audits and disabled-byte
+checks pass. Normal C2-off/on startup and 400-field attract smoke tests pass.
+
+Local `docs/phase10.md` records commands, exact builds and evidence, including
+which unchanged projection checks predate the final cache/flat-slope fast paths.
+ReadMe history and build dependencies are updated. The preserved phase-6 A/B
+pair is unchanged. Real A1200/68040 testing remains deferred; NTSC remains
+unvalidated. Full release regression and packaging remain phase 11.
 
 ## Phase 11: regression, release and contribution
 
 1. The full TD2 regression checklist adapted to TD (both builds assemble, the audit, units,
    disabled bytes, timing, all cars, zero oracle, cost, two fixed windows per arm, the oldest
    and newest WHDLoad).
-2. Player-facing: `ReadMe` release history entry (current beta 1.7b), `slv_config`
+2. Player-facing: finalize `ReadMe` release history (current beta 1.8b), `slv_config`
    `"C2:B:Enhanced framerate;"`, and an icon tooltype `CUSTOM2=1`.
-   `Makefile_windows.mak` gets the new source dependencies.
+   The source dependencies in `Makefile_windows.mak` are already in place.
 3. Release archives through `package_release.py` / `amigaxdev.release` into `tmp/dev/dist/`.
    Release candidate on the user's A1200/68040.
 4. Commits: one per coherent feature, author and committer Vesa Halttunen, unsigned, no hooks,

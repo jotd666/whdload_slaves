@@ -210,6 +210,7 @@ sim_overlay_loaded:
     lea sim_patches(pc),a0
     move.l _resload(pc),a2
     jsr resload_Patch(a2)
+    bsr render_overlay_loaded
 .done
     movem.l (sp)+,d0-a6
     rts
@@ -227,6 +228,7 @@ sim_period:
     rts
 sim_reset:
     movem.l d0/a0,-(sp)
+    bsr render_reset
     lea sim_carries(pc),a0
     moveq #SIM_CARRY_WORDS-1,d0
 .clear
