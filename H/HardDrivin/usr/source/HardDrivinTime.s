@@ -199,7 +199,7 @@ _time_outer:
 	move.w d1,-(a7)
 	lea _time_state(pc),a0
 	tst.b -$522c(a4)
-	beq.s .leave
+	beq .leave
 	tst.b TS_ACTIVE(a0)
 	bne.s .measure
 	st TS_ACTIVE(a0)
@@ -216,7 +216,39 @@ _time_outer:
 	add.l d0,TS_OBSERVED(a0)
 	addq.l #1,TS_PASSES(a0)
 	IFD VERIFY_TIME_DISPATCH
-	bsr _dispatch_begin
+	IFD VERIFY_DISPATCH_CPU
+	IFND VERIFY_DISPATCH_NATIVE
+	IFND VERIFY_DISPATCH_TEST_FIELDS
+	; Full-frame 68000 policy: publish the shared frame block in one pass.
+	move.w _dispatch_cpu_single(pc),d1
+	beq.s .bounded_dispatch
+	cmpi.l #65535,d0
+	bhi.s .bounded_dispatch
+	lea _dispatch_state(pc),a1
+	clr.l DS_PENDING(a1)
+	add.l d0,DS_CONSUMED(a1)
+	addq.l #1,DS_STEPS(a1)
+	move.l #1,DS_FRAME_STEPS(a1)
+	move.l d0,DS_FRAME_FIELDS(a1)
+	move.l d0,DS_OVERLAY_FIELDS(a1)
+	move.w #$ffff,DS_ACTIVE(a1)
+	lea _time_scalar_fields(pc),a1
+	move.w d0,(a1)
+	swap d0
+	lsr.l #3,d0
+	move.l d0,TS_T(a0)
+	lea _events_score_state(pc),a1
+	clr.b 2(a1)
+	clr.b 6(a1)
+	bra.s .dispatch_ready
+.bounded_dispatch:
+	ENDC
+	ENDC
+	ENDC
+	move.l d2,-(a7)
+	bsr _dispatch_begin_frame
+	move.l (a7)+,d2
+.dispatch_ready:
 	ENDC
 	IFD VERIFY_TIME_SCALARS
 	IFND VERIFY_TIME_DISPATCH
@@ -258,33 +290,43 @@ _time_outer:
 ; off-road phase decay uses PH_DT, and a later dispatcher substep may differ.
 ; Consumers compare their own n before using a coefficient; mismatches keep
 ; the original tables. Initialize the sentinel interval65535 with exact values.
-FC_PLUS equ 4
-FC_MINUS equ 8
-FC_T equ 12
-FC_THROTTLE equ 16
-FC_SPIN equ 20
-FC_CONTACT equ 24
-FC_RETAIN equ 28
-FC_RATE equ 32
+FC_THROTTLE equ 4
+FC_SPIN equ 8
+FC_CONTACT equ 12
+FC_RATE equ 16
 _time_frame_constants:
 	dc.w 65535,0
-	dc.l 65543,-65527,$1fffe000,65536,65536,65536,0,8
+	dc.l 65536,65536,65536,8
 _time_prepare_constants:
 	moveq #0,d0
 	move.w _time_scalar_fields(pc),d0
 	cmp.w _time_frame_constants(pc),d0
 	beq .done
+	cmpi.w #32,d0
+	bhi.s .calculate
+	move.l a0,-(a7)
+	move.w d0,d1
+	lsl.w #4,d1
+	lea _time_constant_rows(pc),a0
+	adda.w d1,a0
+	lea _time_frame_constants+FC_THROTTLE(pc),a1
+	REPT 4
+	move.l (a0)+,(a1)+
+	ENDR
 	lea _time_frame_constants(pc),a1
-	move.l d0,d1
-	addq.l #8,d1
-	move.l d1,FC_PLUS(a1)
-	moveq #8,d1
-	sub.l d0,d1
-	move.l d1,FC_MINUS(a1)
-	move.l d0,d1
-	lsl.l #8,d1
-	lsl.l #5,d1
-	move.l d1,FC_T(a1)
+	move.w d0,(a1)
+	IFD VERIFY_TIME_MOTION
+	move.l FC_RATE(a1),d1
+	ELSE
+	move.l #8,FC_RATE(a1)
+	move.l FC_CONTACT(a1),d1
+	neg.l d1
+	addi.l #65536,d1
+	ENDC
+	movea.l (a7)+,a0
+	rts
+.calculate:
+	lea _time_frame_constants(pc),a1
 	move.w d0,d1
 	bsr _decay_throttle
 	move.l d1,FC_THROTTLE(a1)
@@ -296,7 +338,6 @@ _time_prepare_constants:
 	move.l d1,FC_CONTACT(a1)
 	neg.l d1
 	addi.l #65536,d1
-	move.l d1,FC_RETAIN(a1)
 	IFD VERIFY_TIME_MOTION
 	cmpi.w #8,d0
 	bls.s .short_rate
@@ -325,6 +366,42 @@ _time_prepare_constants:
 	move.w d0,(a1)
 .done:
 	rts
+; Exact existing Q16 coefficients for common intervals 0..32; wide intervals
+; keep the original calculation. Four consumed coefficients per row; unused arithmetic cache fields are omitted.
+_time_constant_rows:
+	dc.l 0,0,0,0
+	dc.l 1085,857,2315,18519
+	dc.l 2152,1704,4548,18192
+	dc.l 3201,2539,6702,17872
+	dc.l 4233,3363,8780,17560
+	dc.l 5247,4177,10785,17256
+	dc.l 6245,4979,12719,16958
+	dc.l 7227,5772,14584,16668
+	dc.l 8192,6554,16384,16384
+	dc.l 9141,7325,18120,16107
+	dc.l 10075,8087,19795,15836
+	dc.l 10993,8839,21411,15572
+	dc.l 11896,9580,22969,15313
+	dc.l 12784,10312,24473,15060
+	dc.l 13657,11035,25923,14813
+	dc.l 14515,11748,27322,14572
+	dc.l 15360,12452,28672,14336
+	dc.l 16191,13146,29974,14105
+	dc.l 17007,13832,31230,13880
+	dc.l 17811,14508,32442,13660
+	dc.l 18601,15176,33611,13444
+	dc.l 19378,15835,34738,13234
+	dc.l 20142,16485,35826,13028
+	dc.l 20893,17127,36876,12826
+	dc.l 21632,17760,37888,12629
+	dc.l 22359,18385,38865,12437
+	dc.l 23073,19002,39807,12248
+	dc.l 23776,19611,40715,12064
+	dc.l 24468,20212,41592,11883
+	dc.l 25147,20805,42438,11707
+	dc.l 25816,21390,43254,11534
+	dc.l 26473,21968,44041,11365
+	dc.l 27120,22538,44800,11200
 	ENDC
 
 _time_pause:
@@ -365,7 +442,10 @@ _time_resume:
 	rts
 
 _time_replay:
+	tst.b -$5229(a4)
+	beq.s .submit
 	bsr _time_replay_call
+.submit:
 	jsr -$7fe6(a4)
 	rts
 
@@ -391,14 +471,9 @@ _time_replay_call:
 	bsr _time_reset_scalars
 	ENDC
 	movem.l (a7)+,d0/a0
-	bra.s .done
 .ordinary:
-	; Native no-replay entry only tests ADD7 and returns, preserving D0/A0.
-	move.l a0,-(a7)
-	movea.l _code_start(pc),a0
-	adda.l #$10b08,a0
-	jsr (a0)
-	movea.l (a7)+,a0
+	; Native 10B08 only saves registers, tests this byte and restores them.
+	; The test above already supplies exactly those flags (including X).
 .done:
 	rts
 

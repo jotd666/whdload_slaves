@@ -50,35 +50,54 @@ _audio_obstacle_signature: dc.b 'HDOBSAU1'
 _audio_obstacle_state: dcb.b AU_SIZE+4,0
 _audio_special_signature: dc.b 'HDSPEAU1'
 _audio_special_state: dcb.b AU_SIZE+4,0
+; B162 is a native call site: D0/D1/A0/A1 are scratch both on return
+; and at the sound handler entry. B16C onward defines them before use.
 _audio_offroad:
 	IFND VERIFY_DISPATCH_NATIVE
-	movem.l d0-d3/a0-a1,-(a7)
 	moveq #0,d0
 	roxl.b #1,d0
 	move.w d0,-(a7)
-	lea _dispatch_state(pc),a1
-	tst.b DS_ACTIVE(a1)
+	lea _dispatch_state(pc),a0
+	tst.b DS_ACTIVE(a0)
 	beq.s .native_restore
-	move.l DS_STEPS(a1),d1
+	move.l DS_STEPS(a0),d1
 	move.l _replay_state+RP_WALL(pc),d0
 	lea _audio_offroad_state(pc),a0
-	bsr _audio_due
-	tst.w d0
-	bne.s .native_restore
-	move.w (a7)+,d0
-	lsr.b #1,d0
-	movem.l (a7)+,d0-d3/a0-a1
-	rts
+	; Same cadence as _audio_due using only the native caller's scratch.
+	addq.l #1,AU_REQUESTS(a0)
+	movea.l d1,a1
+	sub.l AU_STEP(a0),d1
+	move.l a1,AU_STEP(a0)
+	tst.b AU_VALID(a0)
+	beq.s .episode
+	cmpi.l #1,d1
+	bhi.s .episode
+	tst.l d1
+	beq.s .skip
+	move.l d0,d1
+	sub.l AU_WALL(a0),d1
+	cmpi.l #8,d1
+	blo.s .skip
+	andi.l #7,d1
+	sub.l d1,d0
+.episode:
+	st AU_VALID(a0)
+	move.l d0,AU_WALL(a0)
+	addq.l #1,AU_EMITTED(a0)
 .native_restore:
 	move.w (a7)+,d0
 	lsr.b #1,d0
-	movem.l (a7)+,d0-d3/a0-a1
 	ENDC
-	; Exact native call/cleanup, including the handler's returned X.
 	move.w #8,-(a7)
 	jsr -$7fce(a4)
 	addq.w #2,a7
 	rts
+	IFND VERIFY_DISPATCH_NATIVE
+.skip:
+	move.w (a7)+,d0
+	lsr.b #1,d0
+	rts
+	ENDC
 _audio_skid:
 	IFND VERIFY_DISPATCH_NATIVE
 	movem.l d0-d3/a0-a1,-(a7)

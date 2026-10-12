@@ -49,6 +49,107 @@ _dispatch_patches:
 	PL_PSS $7d0a,_dispatch_latch,2
 	; PERF_RANGE VERIFY_TIME_DISPATCH $0b3a0 $0008: held steering sample
 	PL_PSS $b3a0,_dispatch_steering,2
+	; Recovery scans both road lists to restore the nearest road. Inline the
+	; word absolute values; retain native wraparound, tie order and outputs.
+	; PERF_RANGE VERIFY_TIME_DISPATCH $04eb2 $010c: exact nearest-road scan
+	PL_DATA $4eb2,_dispatch_road_end-_dispatch_road_patch
+_dispatch_road_patch:
+ link a5,#0
+ movem.l d4-d6/a2,-(a7)
+ movea.l -$6720(a4),a2
+ move.l a2,-$671c(a4)
+ move.w #$7fff,d6
+ move.w -$6718(a4),d4
+ beq.s .second
+ subq.w #1,d4
+.first:
+ move.w 2(a2),d0
+ cmp.w -$670e(a4),d0
+ bls.s .distance1
+ move.w 8(a2),d0
+ cmp.w -$670e(a4),d0
+ bhi.s .next1
+.distance1:
+ move.w (a2),d0
+ sub.w -$6710(a4),d0
+ bpl.s .x1
+ neg.w d0
+.x1:
+ move.w d0,d5
+ move.w 2(a2),d0
+ sub.w -$670e(a4),d0
+ bpl.s .y1
+ neg.w d0
+.y1:
+ move.w d5,d1
+ add.w d0,d1
+ move.w 4(a2),d0
+ sub.w -$670c(a4),d0
+ bpl.s .z1
+ neg.w d0
+.z1:
+ move.w d1,d5
+ add.w d0,d5
+ cmp.w d6,d5
+ bcc.s .next1
+ clr.b -$66b0(a4)
+ move.w d5,d6
+ move.l a2,-$671c(a4)
+.next1:
+ lea 20(a2),a2
+ dbra d4,.first
+.second:
+ movea.l -$66ae(a4),a2
+ move.w -$66aa(a4),d4
+ beq.s .done
+ subq.w #1,d4
+.nextroad:
+ move.w 2(a2),d0
+ cmp.w -$670e(a4),d0
+ bls.s .distance2
+ move.w 8(a2),d0
+ cmp.w -$670e(a4),d0
+ bhi.s .next2
+.distance2:
+ move.w (a2),d0
+ sub.w -$6710(a4),d0
+ bpl.s .x2
+ neg.w d0
+.x2:
+ move.w d0,d5
+ move.w 2(a2),d0
+ sub.w -$670e(a4),d0
+ bpl.s .y2
+ neg.w d0
+.y2:
+ move.w d5,d1
+ add.w d0,d1
+ move.w 4(a2),d0
+ sub.w -$670c(a4),d0
+ bpl.s .z2
+ neg.w d0
+.z2:
+ move.w d1,d5
+ add.w d0,d5
+ cmp.w d6,d5
+ bcc.s .next2
+ move.b #1,-$66b0(a4)
+ move.w d5,d6
+ move.l a2,-$671c(a4)
+.next2:
+ lea 20(a2),a2
+ dbra d4,.nextroad
+.done:
+ ; Original final SUBQ #1,count reaches zero and clears X. The following
+ ; pointer publication supplies N/Z/V/C, independently of loop arithmetic.
+ moveq #0,d4
+ add.w d4,d4
+ move.l -$671c(a4),-$66a8(a4)
+ movem.l (a7)+,d4-d6/a2
+ unlk a5
+ rts
+	dcb.w ($10c-(*-_dispatch_road_patch))/2,$4e71
+_dispatch_road_end:
 	PL_END
 DS_PENDING equ 0
 DS_CONSUMED equ 4
@@ -80,6 +181,11 @@ _dispatch_cpu_oversized: dc.l 0
 ; Called with D0 elapsed fields, preserving all registers and X at outer wrapper.
 _dispatch_begin:
 	movem.l d0-d2/a0-a1,-(a7)
+	bsr _dispatch_begin_frame
+	movem.l (a7)+,d0-d2/a0-a1
+	rts
+; Outer epoch already owns D0-D2/A0-A1. Return its time-state base in A0.
+_dispatch_begin_frame:
 	IFD VERIFY_DISPATCH_TEST_FIELDS
 	; Diagnostic interval override exercises the actual elapsed-time paths.
 	; Unlike VERIFY_DISPATCH_NATIVE, it does not select compatibility bypasses.
@@ -100,11 +206,13 @@ _dispatch_begin:
 	move.l #8,DS_OVERLAY_FIELDS(a0)
 	ENDC
 	bsr _dispatch_take
-	movem.l (a7)+,d0-d2/a0-a1
+	lea _time_state(pc),a0
 	rts
 ; A0 dispatcher state. Empty intervals publish T=0; they never invent time.
 _dispatch_take:
-	bsr _events_begin_step
+	lea _events_score_state(pc),a1
+	clr.b 2(a1)
+	clr.b 6(a1)
 	move.l DS_PENDING(a0),d0
 	IFD VERIFY_DISPATCH_CPU
 	IFND VERIFY_DISPATCH_NATIVE
@@ -118,8 +226,8 @@ _dispatch_take:
 	move.l d0,d2
 	moveq #0,d0
 	move.l d2,d1
-	lsl.l #8,d1
-	lsl.l #5,d1
+	swap d1
+	lsr.l #3,d1
 	bra.s .publish
 .oversized:
 	lea _dispatch_cpu_oversized(pc),a1
@@ -139,8 +247,8 @@ _dispatch_take:
 	move.l d1,TS_T(a1)
 	rts
 
+; Native 7D12..7DEA defines A0 before using it; it is caller scratch.
 _dispatch_latch:
-	movem.l d0/a0,-(a7)
 	lea _dispatch_state(pc),a0
 	tst.b DS_ACTIVE(a0)
 	beq.s .test
@@ -151,9 +259,8 @@ _dispatch_latch:
 	bne.s .done
 	movea.l _code_start(pc),a0
 	adda.l #$7dea,a0
-	move.l a0,8(a7)
+	move.l a0,(a7)
 .done:
-	movem.l (a7)+,d0/a0
 	tst.w -$6a0a(a4)
 	rts
 _dispatch_steering:
@@ -167,22 +274,30 @@ _dispatch_steering:
 	movea.l (a7)+,a0
 	sub.w #320,d0
 	rts
+; Controls/recovery are native C calls: A0 is scratch at these boundaries.
 _dispatch_controls:
-	move.l a0,-(a7)
 	lea _dispatch_state(pc),a0
 	tst.b DS_FIRST(a0)
 	beq.s .held
 	clr.b DS_FIRST(a0)
-	movea.l (a7)+,a0
 	jsr -$7e7e(a4)
 	bra.s .recover
 .held:
-	movea.l (a7)+,a0
 	bsr _dispatch_held_ramps
 .recover:
 	IFD VERIFY_TIME_SWEEP
 	pea .sweep_ready(pc)
 	ENDC
+	; Native 108A2 has no work unless recovery is requested. Keep the
+	; presentation companion reset, without its native save/restore frame.
+	tst.b -$69fb(a4)
+	bne.s .recover_native
+	IFD VERIFY_TIME_PRESENTATION
+	lea _presentation_recovery(pc),a0
+	clr.l (a0)
+	ENDC
+	rts
+.recover_native:
 	move.l _dispatch_recovery_ptr(pc),-(a7)
 	rts
 	IFD VERIFY_TIME_SWEEP
@@ -220,6 +335,15 @@ _dispatch_held_ramps:
 	movem.l (a7)+,d0-d2/a0
 	rts
 _dispatch_after_physics:
+	; Most active frames have no debt left: save only A0.
+	tst.b -$522c(a4)
+	beq.s .slow
+	move.l a0,-(a7)
+	lea _dispatch_state(pc),a0
+	tst.l DS_PENDING(a0)
+	beq.s .finished
+	movea.l (a7)+,a0
+.slow:
 	movem.l d0-d2/a0-a1,-(a7)
 	lea _dispatch_state(pc),a0
 	tst.b -$522c(a4)
@@ -241,6 +365,11 @@ _dispatch_after_physics:
 	clr.b DS_ACTIVE(a0)
 	; Overlays draw once and therefore consume the whole outer interval.
 	movem.l (a7)+,d0-d2/a0-a1
+	bra.s .render
+.finished:
+	clr.b DS_ACTIVE(a0)
+	movea.l (a7)+,a0
+.render:
 	jsr -$7fec(a4)
 	move.l _dispatch_scene_ptr(pc),-(a7)
 	rts

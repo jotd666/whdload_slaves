@@ -5,11 +5,11 @@ current integrated build, measured on 2026-10-12. It names the bottlenecks, sets
 targets and gives an ordered list of work items. Each item has an exit criterion. Step IDs
 are `P` (performance), `C` (closure) and `D` (decisions for the user).
 
-**Current status: P1, P2 and P4 complete; P3 deferred.** Traffic and replay-recording
-meet their budgets. P4 is accepted under the user's explicit helper-budget exception:
-final helpers measure 1.425 / 1.515 ms/frame, below the accepted 1.494 / 1.616 ms.
-The final matched native-physics increases are +0.700 / -0.107 ms, both within
-original plus 1.0 ms. P3's limits, P5 onward, G1 and step-4 closure remain open.
+**Current status: P1, P2, P4 and P5 complete; P3 deferred.** P4 retains its
+explicit helper-budget exception and its recorded acceptance evidence below.
+P5 meets its unchanged 0.300 ms/frame target at **0.247 / 0.292 ms/frame**.
+No P5 exception is needed. P6/P7, G1 and step-4 closure remain open: the current
+matched B window still measures 5.691 ms total simulation overhead against 3.78 ms.
 
 ## 1. Measurement
 
@@ -600,10 +600,83 @@ Verification of the accepted source:
 At that checkpoint, A's native-physics increase was 0.821 ms above its separate
 limit. The final native-root optimization above closes this remaining P4 gate.
 
-### P5 Remaining hooks: target ≤ 0.3 ms per frame (now 0.42 / 0.48)
+### P5 Remaining hooks: complete
 
-Fold the field-count read in `hook10ed4`, the controls latch and the dispatcher's
-begin/take/after work into the per-frame block. No deeper change is expected.
+The unchanged target is at most 0.3 ms per complete frame in both windows.
+Matched `p5-empty-{a,b}-{off,on}` captures use rebuilt slaves and listings, the
+same emulator/game/configuration except CUSTOM1, 500 PAL fields (10.015944 s),
+and the established field-1 constant-input / field-4000 frozen-tape windows.
+`p5-empty-pair-summary.json` records hashes, component costs and frame counts.
+
+| Remaining hooks, ms/frame | A | B |
+|---|---:|---:|
+| Measured overhead | **0.247402** | **0.292055** |
+| Target | 0.300000 | 0.300000 |
+| Headroom | 0.052598 | 0.007945 |
+| Result | PASS | PASS |
+
+This retains section 1's phase-difference metric: outer hook, loop body, controls,
+recovery and replay/publication, plus timing-slave work outside the simulation
+phases. The analyzer retains every owner bucket, including those below its
+0.02 ms display threshold. B includes 0.044020 ms of off-road audio; both windows
+include about 0.0218 ms of dispatcher work after physics. No costs were omitted
+or reassigned to meet the target, and no timing or input windows were changed.
+
+The complete cost gate remains open. Total simulation overhead is
+3.230272 / 5.690624 ms/frame. B exceeds the plan's 3.78 ms and the 4.259357 ms
+budget derived from this pair's original frame time. Physics helpers measure
+1.455936 / 1.755018 ms; native-physics increases are 0.785030 / 2.999223 ms.
+These current B figures do not reproduce P4's accepted figures. Late-window
+recovery and trajectory are sensitive to frame timing, so these pairs do not
+establish a same-state physics regression. Complete frames off/on are A 37/38,
+B 72/59; raw frame means are A 260.956/248.290 ms and B 137.719/169.083 ms.
+These are not equal-scene FPS comparisons. P6 must address the remaining cost;
+P5 completion does not waive the physics or overall closure requirements.
+
+Implemented without changing the time/input/cadence model:
+
+- The common pre-68020 outer frame publishes elapsed interval, counters, scalar
+  interval and event resets together. Bounded, forced-native and oversized paths
+  retain the shared dispatcher; Phantom retains its preserving entry.
+- Begin/take avoids nested saves. Latch and controls use native caller-scratch A0;
+  zero-debt after-physics saves A0 only. Inactive recovery skips its no-op native
+  prologue while retaining the presentation reset and condition flags.
+- Common intervals 0–32 copy four exact precomputed constants into a compact
+  cache. Wider intervals retain the original calculation; none is approximated.
+- Throttle +/-2 ramps use equivalent Q16 arithmetic in native scratch registers.
+  Empty crash countdowns and ordinary non-replay frames skip redundant calls.
+  Off-road audio preserves cadence, counters, arguments and X with scratch registers.
+- The native nearest-road recovery scan inlines its word absolute values and uses
+  counted loops. Both road lists, height filtering, word overflow, first-tie
+  selection, globals, registers and final flags remain exact. This reduces actual
+  recovery work encountered by the timing-sensitive late window.
+
+Validation passes:
+
+- 24,000 assembled boundary cases cover both CPU policies, overflow, race exit,
+  inactive paths, crash countdowns and replay return. Registers (except native
+  caller-scratch A0 at controls/latch), stack, state, destinations and materialized
+  CCR match.
+- 65,537 constant blocks across every unsigned word; 196,611 cached and 196,608
+  fallback coefficients; 306 contact responses.
+- 151,072 throttle cases and 12,000 complete native controls/latch calls;
+  16,000 off-road audio cases including wraparound and emit/skip.
+- 12,003 complete native road-scan comparisons, including empty lists, ties,
+  signed extremes and 65,535-entry lists. Installed profile code matches the
+  tested routine plus padding.
+- Final build: 108 forced-native states match, CUSTOM1-off passes 165 ranges,
+  and the 143-range branch audit passes. Rebuilt A/B binaries match the captured
+  slaves; normal, DRIVE and ATTRACT remain byte-identical to step-2 baselines.
+- Final live 500-field A500/68020 policy checks preserve full/bounded intervals,
+  physics/render counts and single engine-pitch publication.
+- The preceding build's unchanged audio/control routines pass live A500/68020
+  off-road sound checks and 29 steering/off-road state checks (14 off-road frames,
+  15 decay segments). The final additional empty-countdown shortcut is covered
+  by the final boundary, native-state and CPU-policy checks above.
+
+Evidence remains under ignored `tmp/dev/`; completed profiles are SHA/decompression-
+verified compressed archives. `p5-final-audit.json` records the final evidence and
+source fingerprints. P5 is complete without a budget exception.
 
 ### Budget after P1–P5 (ms per frame; baseline before P1)
 
@@ -681,7 +754,7 @@ On 2026-10-12 the user accepted the recommended defaults. These decisions are no
 
 ## 7. Working rules for this plan
 
-- Work in the order P1 → P5, then C1 → C6, with P3 deferred by the user, P4 complete under its approved helper-budget exception, and P5 next.
+- Work in the order P1 → P5, then C1 → C6, with P3 deferred by the user, P4 complete under its approved helper-budget exception, and P5 complete; P6 is next.
   Deferral does not pass an item. Each item ends when its exit numbers and
   checks pass. Commit each item on its own.
 - Do not add validation dimensions beyond those listed for the item. Put new questions in

@@ -374,6 +374,16 @@ _motion_crash_start:
 	rts
 _motion_crash_live:
 	move.l d0,-(a7)
+	; Common empty countdown: retain the tick's X=1 result, without a
+	; second call/return and two tests of its zero return value.
+	tst.b -$69fa(a4)
+	bne.s .tick
+	move.l _motion_crash_state(pc),d0
+	bne.s .tick
+	moveq #7,d0
+	lsr.w #3,d0
+	bra.s .done
+.tick:
 	bsr _motion_crash_tick
 	tst.b d0
 	beq.s .done
@@ -398,6 +408,17 @@ _motion_crash_phantom:
 	move.l (a7)+,d0
 	rts
 _motion_crash_tick:
+	; An empty, synchronized countdown needs no companion/register traffic.
+	move.l _motion_crash_state(pc),d0
+	bne.s .countdown
+	tst.b -$69fa(a4)
+	bne.s .countdown
+	moveq #7,d0
+	lsr.w #3,d0
+	; The original rounding shift sets X; its final MOVE clears C/V.
+	tst.b d0
+	rts
+.countdown:
 	movem.l d1-d2/a0,-(a7)
 	lea _motion_crash_state(pc),a0
 	moveq #0,d1

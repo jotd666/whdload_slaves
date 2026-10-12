@@ -95,18 +95,16 @@ _time_velocity_add:
 	add.w d0,-$66d8(a4)
 	rts
 
+; Native controls redefine D0/A0 before their next use; D1 is scratch.
+; Held-ramp dispatch already owns these registers. D2 remains untouched.
 _time_throttle_up:
-	movem.l d0-d2/a0,-(a7)
 	moveq #2,d0
 	bsr _time_throttle_delta
-	movem.l (a7)+,d0-d2/a0
 	cmpi.b #100,-$66e4(a4)
 	rts
 _time_throttle_down:
-	movem.l d0-d2/a0,-(a7)
 	moveq #-2,d0
 	bsr _time_throttle_delta
-	movem.l (a7)+,d0-d2/a0
 	tst.b -$66e4(a4)
 	rts
 
@@ -119,10 +117,35 @@ _time_throttle_delta:
 	beq.s .current
 	clr.l SS_THROTTLE_CARRY(a0)
 .current:
+	; Both callers supply exactly +2 or -2. Normalize in D0/D1 so D2
+	; remains untouched and the native call sites need no register wrapper.
+	tst.w d0
+	bmi.s .negative
+	moveq #0,d0
+	move.w _time_scalar_fields(pc),d0
+	swap d0
+	lsr.l #2,d0
+	bra.s .scaled
+.negative:
+	moveq #0,d0
+	move.w _time_scalar_fields(pc),d0
+	swap d0
+	lsr.l #2,d0
+	neg.l d0
+.scaled:
+	add.l SS_THROTTLE_CARRY(a0),d0
+	moveq #0,d1
+	move.w d0,d1
+	swap d0
+	ext.l d0
+	bpl.s .split
+	tst.l d1
+	beq.s .split
+	addq.l #1,d0
+	subi.l #$10000,d1
+.split:
+	move.l d1,SS_THROTTLE_CARRY(a0)
 	move.w _time_scalar_fields(pc),d1
-	move.l SS_THROTTLE_CARRY(a0),d2
-	bsr _time_scale_q16
-	move.l d2,SS_THROTTLE_CARRY(a0)
 	cmpi.w #8,d1
 	bls.s .short
 	; Clamp the full increment before narrowing to the native throttle byte.
