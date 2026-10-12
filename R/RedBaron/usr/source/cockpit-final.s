@@ -31,7 +31,11 @@ cockpit_final_publish:
  bsr cockpit_final_allocate
  move.l cockpit_final_pool(pc),d0
  beq cf_final_unavailable
- move.l d0,a1
+ bsr cockpit_final_dirty
+ tst.l d0
+ bmi cf_final_unavailable
+ beq cf_final_publish_pixels
+ move.l cockpit_final_pool(pc),a1
  lea cockpit_final_layers(pc),a0
  lea cockpit_final_rect(pc),a2
  moveq #1,d0
@@ -60,17 +64,21 @@ cockpit_final_publish:
 .gauges
  tst.l (a3)
  beq cf_final_unavailable
+ bsr cockpit_final_intersection
+ tst.l d0
+ beq .next_gauge
  move.l a3,a0
  move.l cockpit_final_pool(pc),a1
  adda.l #48000,a1
  bsr cockpit_gauge_expand
  lea cockpit_final_layers(pc),a0
  move.l cockpit_final_pool(pc),a1
- lea CG_AREA(a3),a2
+ lea cockpit_final_clip(pc),a2
  moveq #2,d0
  bsr cockpit_compose_update
  tst.l d0
  beq cf_final_unavailable
+.next_gauge
  adda.l #CG_STRIDE*2,a3
  dbf d7,.gauges
  lea cockpit_foreground_layer(pc),a0
@@ -84,6 +92,16 @@ cockpit_final_publish:
  bsr cockpit_compose_update
  tst.l d0
  beq cf_final_unavailable
+ ; Commit the exact selected generations and bounds only after all updates.
+ lea cockpit_final_pending(pc),a0
+ lea cockpit_final_keys(pc),a1
+ moveq #20,d0
+.keys
+ move.l (a0)+,(a1)+
+ dbf d0,.keys
+ lea cockpit_final_valid(pc),a0
+ move.w #1,(a0)
+cf_final_publish_pixels:
  move.l cockpit_final_pool(pc),a0
  move.l a0,a1
  adda.l #40000,a1
@@ -110,6 +128,8 @@ cockpit_final_publish:
  bra cf_final_done
  IFD VERIFY
 .mismatch
+ lea cockpit_final_valid(pc),a2
+ clr.w (a2)
  addq.l #1,8(a6)
  move.l #39999,d1
  sub.w d0,d1
@@ -153,6 +173,8 @@ cockpit_final_publish:
  bra cf_final_done
  ENDC
 cf_final_unavailable:
+ lea cockpit_final_valid(pc),a0
+ clr.w (a0)
  IFD VERIFY
  lea cockpit_final_counts(pc),a0
  addq.l #1,12(a0)
@@ -179,9 +201,164 @@ cockpit_final_allocate:
  rts
 cockpit_final_pool: dc.l 0
 cockpit_final_attempted: dc.w 0
+cockpit_final_valid: dc.w 0
+cockpit_final_keys: dcb.b 84,0 ; seven {generation.l, bounds: four words}
+cockpit_final_pending: dcb.b 84,0
 cockpit_final_rect: dc.w 0,0,40,200
+cockpit_final_clip: dcb.w 4,0
 cockpit_final_layers: dcb.l 4,0
  IFD VERIFY
+cockpit_final_dirty_counts: dc.l 0,0,0 ; full rebuilds, dirty rebuilds, unchanged reuse
 cockpit_final_counts: dc.l 0,0,0,0,0 ; attempts, exact matches, mismatches, unavailable, last differing byte
 cockpit_final_fault: dcb.b 24,0 ; valid.l, first offset.l, three mask bytes, pad, native/composed five-plane bytes, view.w
  ENDC
+
+; Build the old/new union of changed gauge bounds. Static/foreground changes
+; invalidate the whole composition. Return -1 unavailable, 0 reused, 1 dirty.
+cockpit_final_dirty:
+ movem.l d1-d7/a0-a4,-(sp)
+ lea cockpit_final_rect(pc),a4
+ move.w #40,(a4)
+ move.w #200,2(a4)
+ clr.l 4(a4) ; temporarily right/bottom, converted to width/height below
+ move.l cockpit_gauge_pool(pc),a3
+ cmpa.l #0,a3
+ beq .bad
+ move.l cockpit_stage_active(pc),d0
+ cmp.l cockpit_stage_pool(pc),d0
+ beq .page
+ adda.l #CG_STRIDE,a3
+.page
+ lea cockpit_final_keys(pc),a1
+ lea cockpit_final_pending(pc),a2
+ moveq #6,d7
+.loop
+ move.l (a3),d0
+ beq .bad
+ move.l d0,(a2)+
+ move.l CG_AREA(a3),(a2)+
+ move.l CG_AREA+4(a3),(a2)+
+ cmp.l (a1),d0
+ beq .next
+ move.w cockpit_final_valid(pc),d1
+ beq .next
+ lea 4(a1),a0
+ bsr cockpit_final_union
+ lea CG_AREA(a3),a0
+ bsr cockpit_final_union
+.next
+ adda.w #12,a1
+ adda.l #CG_STRIDE*2,a3
+ dbf d7,.loop
+ move.w cockpit_final_valid(pc),d1
+ bne .bounded
+ clr.l (a4)
+ move.l #$002800c8,4(a4)
+ IFD VERIFY
+ lea cockpit_final_dirty_counts(pc),a0
+ addq.l #1,(a0)
+ ENDC
+ moveq #1,d0
+ bra .done
+.bounded
+ move.w 4(a4),d0
+ beq .unchanged
+ sub.w (a4),d0
+ move.w d0,4(a4)
+ move.w 6(a4),d0
+ sub.w 2(a4),d0
+ move.w d0,6(a4)
+ IFD VERIFY
+ lea cockpit_final_dirty_counts(pc),a0
+ addq.l #1,4(a0)
+ ENDC
+ moveq #1,d0
+ bra .done
+.unchanged
+ IFD VERIFY
+ lea cockpit_final_dirty_counts(pc),a0
+ addq.l #1,8(a0)
+ ENDC
+ moveq #0,d0
+ bra .done
+.bad
+ moveq #-1,d0
+.done
+ movem.l (sp)+,d1-d7/a0-a4
+ rts
+
+; a0=valid layer rectangle, a4=current left/top/right/bottom union.
+; Preserve the signature pointers and record registers.
+cockpit_final_union:
+ move.w (a0),d0
+ cmp.w (a4),d0
+ bge .left
+ move.w d0,(a4)
+.left
+ add.w 4(a0),d0
+ cmp.w 4(a4),d0
+ ble .right
+ move.w d0,4(a4)
+.right
+ move.w 2(a0),d0
+ cmp.w 2(a4),d0
+ bge .top
+ move.w d0,2(a4)
+.top
+ add.w 6(a0),d0
+ cmp.w 6(a4),d0
+ ble .done
+ move.w d0,6(a4)
+.done
+ rts
+
+; a3=record. Intersect its fully overwritten scratch rectangle with dirty area.
+; Return d0=1 and cockpit_final_clip, or 0 for a disjoint layer.
+cockpit_final_intersection:
+ movem.l d1-d4/a0-a2,-(sp)
+ lea cockpit_final_rect(pc),a0
+ lea CG_AREA(a3),a1
+ lea cockpit_final_clip(pc),a2
+ move.w (a0),d1
+ move.w 4(a0),d3
+ add.w d1,d3
+ move.w (a1),d0
+ move.w 4(a1),d4
+ add.w d0,d4
+ cmp.w d0,d1
+ bge .left
+ move.w d0,d1
+.left
+ cmp.w d4,d3
+ ble .right
+ move.w d4,d3
+.right
+ sub.w d1,d3
+ ble .empty
+ move.w d1,(a2)
+ move.w d3,4(a2)
+ move.w 2(a0),d1
+ move.w 6(a0),d3
+ add.w d1,d3
+ move.w 2(a1),d0
+ move.w 6(a1),d4
+ add.w d0,d4
+ cmp.w d0,d1
+ bge .top
+ move.w d0,d1
+.top
+ cmp.w d4,d3
+ ble .bottom
+ move.w d4,d3
+.bottom
+ sub.w d1,d3
+ ble .empty
+ move.w d1,2(a2)
+ move.w d3,6(a2)
+ moveq #1,d0
+ bra .done
+.empty
+ moveq #0,d0
+.done
+ movem.l (sp)+,d1-d4/a0-a2
+ rts

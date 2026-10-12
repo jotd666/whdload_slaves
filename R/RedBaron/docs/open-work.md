@@ -84,8 +84,12 @@ their extra dashboard script writes outside the steady cached layers. The
 corrected front/side/rear input sequence and front return finishes with 71/71
 full-frame comparisons and no failures (profiling scoreboard). Side/rear and
 dashboard-event frames bypass composition and are not counted as cache twins.
-Dirty-update reuse and removal of redundant native drawing/seeding remain
-necessary before the FPS comparisons.
+Dirty-update composition is implemented: changed capture generations rebuild
+old/new gauge bounds in order; source refills force a complete rebuild. The
+native check passes 72/72 frames with 22 partial and 50 full rebuilds; host tests
+also cover unchanged reuse and stale scratch outside the affected rectangle.
+Removal of redundant native drawing/seeding remains necessary before the FPS
+comparisons.
 The development path still performs a full-frame seed and native fallback copy and
 must not be used as a performance candidate yet.
 Full-composition view twins remain open. The map-toggle check is dropped: the

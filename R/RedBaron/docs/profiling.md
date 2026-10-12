@@ -101,6 +101,29 @@ VERIFY patch destinations pass. This fixes the reproduced transition defect;
 it does not establish a performance gain or complete E2. Native seeding/drawing
 and full composition rebuilding still need removal before the FPS pair.
 
+E2 now retains the completed image/mask and rebuilds only the old/new bounds
+of gauges whose capture generation changed. Generation tags distinguish native
+history pages; static/foreground refills, unavailable layers and a failed
+comparison invalidate the composite. Each dirty region is rebuilt in native
+layer order, preserving overlapping foreground and exposing old gauge bounds.
+Gauge scratch expansion overwrites only its own rectangle: composition is
+restricted to its intersection with the dirty region, so the seven former
+48,000-byte scratch clears per frame are removed.
+
+The 040 native check `completion-e2-dirty-compose` finishes with **72/72 exact
+full-frame matches**, no mismatches and no unavailable compositions through
+the same rear/left/right/front-return sequence. It exercises **50 full and 22
+partial rebuilds**; no unchanged-composite reuse occurred in this moving-flight
+window, so that branch has host-model coverage only. The final dirty bounds
+are byte x=0, y=125, width=40, height=68. Native dashboard event frames still
+bypass the cache. All builds pass (normal/developer/VERIFY text sizes
+128,010 / 128,394 / 312,378 bytes), along with 514 host tests, 84 hook ranges
+and 139 VERIFY patch destinations. Random moving/overlapping-layer cases
+compare incremental output to fresh full composition with deliberately stale
+scratch outside the selected rectangle. This is correctness evidence only:
+E2 still retains native drawing and the full-frame seed, and has no accepted
+complete-cache FPS result yet.
+
 ### D5 acceptance postponed — not a passed checkpoint
 
 The added candidate FPS and world-rate/drop columns use **developer bit 13**,

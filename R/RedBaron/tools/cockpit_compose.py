@@ -115,3 +115,25 @@ def native_gauge_layer(image, mask, width, height, x, y, frame, rect):
                 offset = plane*8000+dest
                 pixels[offset] = (pixels[offset] & ~bit) | (frame[offset] & bit)
     return Layer(bytes(pixels), bytes(coverage))
+
+
+def dirty_bounds(previous, current, *, valid=True, pitch=40, rows=200):
+    """Seven selected generation/rectangle pairs, including native page changes."""
+    if not valid:
+        return (0, 0, pitch, rows)
+    changed = [(old[1], new[1]) for old, new in zip(previous, current)
+               if old[0] != new[0]]
+    if not changed:
+        return None
+    rects = [rect for pair in changed for rect in pair]
+    left = min(r[0] for r in rects)
+    top = min(r[1] for r in rects)
+    right = max(r[0]+r[2] for r in rects)
+    bottom = max(r[1]+r[3] for r in rects)
+    return left, top, right-left, bottom-top
+
+
+def intersection(a, b):
+    left, top = max(a[0], b[0]), max(a[1], b[1])
+    right, bottom = min(a[0]+a[2], b[0]+b[2]), min(a[1]+a[3], b[1]+b[3])
+    return None if right <= left or bottom <= top else (left, top, right-left, bottom-top)

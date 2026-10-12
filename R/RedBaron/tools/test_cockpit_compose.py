@@ -197,3 +197,56 @@ class PackedGaugeStorageTests(unittest.TestCase):
         from cockpit_compose import native_gauge_layer
         self.assertIsNone(native_gauge_layer(bytes(12*64*5),
             (bytes([255])*12+b'\0\0')*64,96,64,1,100,bytes(40000),(2,101,2,2)))
+
+
+class IncrementalCompositionTests(unittest.TestCase):
+    def test_page_generation_and_moving_bounds(self):
+        from cockpit_compose import dirty_bounds
+        old = [(1,(2,10,4,4))]
+        self.assertIsNone(dirty_bounds(old,old))
+        self.assertEqual(dirty_bounds(old,[(2,(8,20,2,2))]),(2,10,8,12))
+        self.assertEqual(dirty_bounds(old,old,valid=False),(0,0,40,200))
+        # Same rectangle on another native page still needs rebuilding.
+        self.assertEqual(dirty_bounds(old,[(3,old[0][1])]),old[0][1])
+
+    def test_dirty_accumulation_matches_full_with_stale_scratch(self):
+        from cockpit_compose import dirty_bounds, intersection
+        rng = random.Random(19021)
+        pitch,rows,size=12,10,120
+        def layer(rect):
+            image=rng.randbytes(size*5);mask=bytearray(size)
+            x,y,w,h=rect
+            for row in range(y,y+h):
+                mask[row*pitch+x:row*pitch+x+w]=rng.randbytes(w)
+            return Layer(image,bytes(mask))
+        base=layer((0,0,pitch,rows));foreground=layer((2,1,8,8))
+        rects=[(0,1,6,5),(4,3,6,5),(8,0,4,4)]
+        gauges=[layer(r) for r in rects]
+        tags=[(i+1,r) for i,r in enumerate(rects)]
+        actual=bytearray(6*size)
+        update(actual,[base,*gauges,foreground],(0,0,pitch,rows),pitch=pitch,rows=rows)
+        for serial in range(4,34):
+            i=serial%3;old=tags[:]
+            rects[i]=(2*(serial%4),serial%5,4,5)
+            gauges[i]=layer(rects[i]);tags[i]=(serial,rects[i])
+            dirty=dirty_bounds(old,tags,pitch=pitch,rows=rows)
+            update(actual,[base],dirty,pitch=pitch,rows=rows)
+            # Scratch deliberately contains unrelated data outside the gauge.
+            scratch=bytearray(rng.randbytes(size*6))
+            for gauge,rect in zip(gauges,rects):
+                clip=intersection(dirty,rect)
+                if clip is None:
+                    continue
+                x,y,w,h=rect;full=gauge.pixels+gauge.mask
+                for plane in range(6):
+                    for row in range(y,y+h):
+                        start=plane*size+row*pitch+x
+                        scratch[start:start+w]=full[start:start+w]
+                alias=Layer(memoryview(actual)[:size*5],memoryview(actual)[size*5:])
+                expanded=Layer(memoryview(scratch)[:size*5],memoryview(scratch)[size*5:])
+                update(actual,[alias,expanded],clip,pitch=pitch,rows=rows)
+            alias=Layer(memoryview(actual)[:size*5],memoryview(actual)[size*5:])
+            update(actual,[alias,foreground],dirty,pitch=pitch,rows=rows)
+            expected=bytearray(6*size)
+            update(expected,[base,*gauges,foreground],(0,0,pitch,rows),pitch=pitch,rows=rows)
+            self.assertEqual(actual,expected)

@@ -151,6 +151,8 @@ cockpit_static_invalidate:
  bsr overlay_cache_invalidate
  bsr cockpit_gauges_invalidate
  move.l a0,-(sp)
+ lea cockpit_final_valid(pc),a0
+ clr.w (a0)
  lea cockpit_static_valid(pc),a0
  clr.w (a0)
  lea cockpit_static_layer(pc),a0

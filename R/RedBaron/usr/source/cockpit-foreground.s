@@ -348,6 +348,8 @@ overlay_solid_attempted: dc.w 0
 
 cockpit_foreground_capture:
  movem.l d0-d3/a0-a3,-(sp)
+ lea cockpit_final_valid(pc),a0
+ clr.w (a0) ; rebuilt foreground can change coverage anywhere
  move.l $1d72(a4),a0
  move.l OC_PIXELS(a5),a1
  move.l overlay_solid_mask(pc),a2

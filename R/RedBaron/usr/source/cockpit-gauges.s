@@ -261,7 +261,15 @@ cockpit_gauges_after:
  move.l $1d72(a4),a0
  lea CG_PIXELS(a6),a1
  bsr cockpit_gauge_capture
- move.l #1,(a6)
+ ; A unique fill generation identifies this record even across native pages.
+ lea cockpit_gauge_generation(pc),a0
+ addq.l #1,(a0)
+ bne .generation_ready
+ addq.l #1,(a0)
+ lea cockpit_final_valid(pc),a1
+ clr.w (a1) ; rollover must never alias an old composition signature
+.generation_ready
+ move.l (a0),(a6)
  bsr cockpit_gauge_seen
  IFD VERIFY
  lea cockpit_gauge_counts(pc),a0
@@ -417,6 +425,7 @@ cockpit_gauges_allocate:
 .done
  movem.l (sp)+,d0-d1/a0-a1/a6
  rts
+cockpit_gauge_generation: dc.l 0
 cockpit_gauge_pool: dc.l 0
 cockpit_gauge_pending: dc.l 0
 cockpit_gauge_attempted: dc.w 0
@@ -439,11 +448,8 @@ cockpit_gauge_seen_bits: dc.w 0
 ; a0=record, a1=48000-byte scratch, all registers preserved.
 cockpit_gauge_expand:
  movem.l d0-d7/a0-a5,-(sp)
- move.l a1,a2
- move.w #11999,d0
-.clear
- clr.l (a2)+
- dbf d0,.clear
+ ; Only CG_AREA is consumed by the compositor. Overwrite its six planes;
+ ; stale scratch bytes outside that rectangle are deliberately never read.
  moveq #0,d0
  move.w CG_AREA+2(a0),d0
  mulu.w #40,d0
