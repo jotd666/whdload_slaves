@@ -51,6 +51,12 @@ This removes the cost gate as a blocker; it does not complete the outstanding
 simulation-correctness checks. Measure the combined simulation and rendering
 changes against the original before claiming a net performance gain.
 
+The user subsequently requested step-4 closure before step 5 and deferred the
+human A500/68040 test laps (C6). C1 solver coverage is now complete: flight,
+landing, manual/neutral gears and signed rollback stay in the phase path, with
+zero driving fallbacks in both final A500 windows. C2–C5 remain open; see the
+current closure results in `STEP4_COST_PLAN.md`.
+
 ## Starting point
 
 These starting facts are supplemented and corrected by the step-3 dynamic

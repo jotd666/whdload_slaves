@@ -579,12 +579,22 @@ _drivetrain_power:
 ; an intermediate tick. Native/full-step behavior is unchanged.
 _drivetrain_manual:
 	movem.l d0/a0,-(a7)
+	IFD VERIFY_DRIVETRAIN_PHASE
+	btst #0,_phase_state+PH_ACTIVE+1(pc)
+	beq.s .reference
+	move.w _phase_state+PH_LEFT(pc),d0
+	cmp.w _phase_state+PH_INTERVAL(pc),d0
+	beq.s .native
+	bra.s .defer
+.reference:
+	ENDC
 	lea _drivetrain_state(pc),a0
 	cmpi.w #1,6(a0)
 	bne.s .native
 	move.w (a0),d0
 	cmp.w 2(a0),d0
 	beq.s .native
+.defer:
 	move.l _code_start(pc),d0
 	addi.l #$ba8a,d0
 	move.l d0,8(a7)

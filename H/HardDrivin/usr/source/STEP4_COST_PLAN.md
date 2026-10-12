@@ -13,7 +13,7 @@ The user accepts the current A500 B-window overhead of **5.740 ms/frame for now*
 (2026-10-13), superseding its 3.78 ms blocking limit for this measured build.
 A measures 3.084 ms/frame, within its 8.07 ms limit. G1 is accepted by temporary
 exception, not a numerical pass of the original target. Proceed to step 5 rendering
-work; C1–C6 correctness/closure requirements remain open. P7 reports A1200 net
+work; C1 is complete, C2–C5 remain open and C6 is deferred. P7 reports A1200 net
 phase overhead of 0.283 / 0.576 ms/frame (0.47% / 1.23%).
 
 ## 1. Measurement
@@ -842,12 +842,29 @@ traces remain. Reports are `p7-summary.json`, each run's `frame-budget.json` and
 G1 is now accepted under the temporary exception above. These remain acceptance items of `PERFORMANCE_PLAN.md`
 step 4.7, made concrete.
 
-- **C1, solver coverage.**
-  - Extend the phase path to airborne flight and landing, then manual gears. This
-    continues the work after `d94d739`.
-  - After this, only crash, recovery and replay may fall back to the reference solver.
-  - Count the fallback frames per window and report them. The target is under 2% of
-    driving frames.
+- **C1, solver coverage — complete (2026-10-13).** Airborne flight, partial
+  contact, landing, manual gears, neutral and signed rollback use the phase path.
+  Native gravity/landing still run once per outer frame. Manual requests are
+  consumed on the first engine segment; a changed gear restarts the phase from
+  the integrated velocity and native converted RPM. Crash/recovery/replay retain
+  their existing paths; invalid gear/RPM states and an inactive/zero-time dispatch
+  remain defensive guards, not supported driving modes.
+  - Final A500 windows A/B contain 39/58 complete driving frames and **0/0
+    fallbacks (0% each)**, below 2%. Neither window contains a crash frame.
+  - Independent native-engine and XYZ oracles pass 110/376/74 flight/landing
+    returns on A500/68020/slowed A500 and 145/117 manual returns on A500/68020.
+    Both manual captures cover gears 0–4 and all nine scheduled gear changes
+    after the initial first-gear selection. A500 uses a controlled low-throttle
+    fixture to complete the sequence before a collision; it is not the input tape.
+  - Signed projection passes 20,000 private 68000 cases. Another 297 complete
+    native-step engine/position comparisons include 135 rollback cases, neutral
+    and zero/partial/full contact; all native car globals match.
+  - Final `c1-final-native` matches all 108 reference states. CUSTOM1-off,
+    branch safety and the ordinary build checks pass. Artifacts and harnesses
+    remain ignored under `tmp/dev/`; summary: `c1-summary.json`.
+  - Projection still quantizes the scalar fraction to Q6; flight/shift scalar
+    state retains Q16. This is recorded quantization, not a full-trajectory or
+    equal-time acceptance claim. C2–C5 remain separate.
 - **C2, native step.** The forced T=1 108-state comparison and the 650-return
   controls-indexed comparison must still match. The second one is still subject to the
   BCD clock dependency (D4).
@@ -866,8 +883,9 @@ step 4.7, made concrete.
     any long-frame crossing.
 - **C5, gates.** G1 passes or meets the explicitly accepted temporary exception; G2 is reported; `check_disabled.py` passes; the
   normal build is byte-identical.
-- **C6, human laps.** A person drives a full lap on the A500 and one on the 68040 profile,
-  and confirms the handling. This step belongs to the user.
+- **C6, human laps — deferred by the user (2026-10-13).** Full A500 and 68040
+  laps remain an unperformed human acceptance check. They do not block the current
+  step-4 automated closure; do not describe handling as human-validated.
 
 ## 6. Decisions for the user
 
@@ -896,8 +914,9 @@ On 2026-10-12 the user accepted the recommended defaults. The later G1 exception
 ## 7. Working rules for this plan
 
 - P3 remains deferred; P1/P2/P4–P7 are complete, with the recorded exceptions.
-  The user has directed work to move on to step 5. G1 no longer blocks that work;
-  retain C1–C6 as outstanding correctness/closure requirements, not completed items.
+  The user has now requested step-4 closure before step 5: complete C1–C5, with
+  C6 test laps explicitly deferred. The accepted G1 overhead is settled; deferred
+  P3 and C6 are not passes and do not block this automated closure.
   Deferral does not pass an item. Each item ends when its exit numbers and
   checks pass. Commit each item on its own.
 - Do not add validation dimensions beyond those listed for the item. Put new questions in

@@ -3681,3 +3681,51 @@ verification. In particular, unchanged orientation is insufficient to reuse a
 projection at a changed velocity: the game's intermediate word rounding must
 still be respected. No approximate projection, input latching, reduced simulation
 frequency, or deferred P3 endpoint cache has been introduced.
+
+
+### Step-4 C1 solver coverage (2026-10-13)
+
+The phase solver now accepts airborne and partial-contact automatic driving,
+manual gears including neutral, and signed slope rollback. With no wheel contact
+or in neutral, the original engine does not update velocity. The phase path now
+retains the full velocity fraction in those cases instead of interpolating it
+toward the rounded anchor word. Native fall displacement and subsequent contact
+correction still execute once with the complete outer-frame interval.
+
+Manual input is consumed only on the first engine segment of an outer frame;
+requests arriving later remain queued. A gear change can end a partial phase:
+velocity already integrated is retained, and the new RPM is the result of the
+original manual-shift routine. The next segment uses fresh anchors. Signed
+cardinal projection uses arithmetic halving, matching the native staircase.
+The existing Q6 projection interpolation is explicit: finer flight/shift scalar
+fractions remain in Q16 state, but projection uses their top six fractional bits.
+
+The independent native-engine oracle checks continuous scalar phase state and
+per-frame XYZ from the captured terrain-corrected entry pose to the position
+return. It includes gravity companions, the no-contact free-rev branch, skid
+vectors, throttle/spin decay and native manual gear conversion. It passes all
+110/376/74 returns in `c1-air-full-a500`, `c1-air-020`, `c1-air-slow`, including
+flight and landing, and all 145/117 returns in `c1-final-manual-a500` and
+`c1-manual-020`, including gears 0–4. The manual A500 fixture initializes throttle
+at 5 to avoid a collision before all input requests; the 68020 fixture uses the
+ordinary scripted acceleration. These are controlled verification fixtures.
+Earlier A500 manual acceleration captures stopped their oracle at the first
+crash and are not whole-capture passes.
+
+The oracle models Q6 projection rounding explicitly; flight exposed a 1/2048
+long-position-unit difference when the earlier host model incorrectly assumed
+unlimited fractional projection precision. It also skips off-road throttle decay
+in the native no-contact free-rev branch. No game rounding was changed to fit the
+oracle. Private current-source tests additionally pass 20,000 signed projections
+and 297 pristine native engine/position comparisons at T=1, including 135 signed
+rollback cases and neutral/zero/partial/full contact. Private audio output is
+stubbed in the latter test; native pitch/pose/scalar calculations are retained.
+
+Final A500 coverage captures `c1-final-a` (fields 1–500) and `c1-final-b` (fields
+4000–4499) contain 39 and 58 complete driving frames, respectively, with no crash
+frames and zero fallbacks. The 108-state `c1-final-native` comparison passes,
+CUSTOM1-off leaves the patch ranges unchanged, the branch audit passes, and the
+normal slave remains byte-identical to `s2-final-normal`. C1 closes solver mode
+coverage, not independent terrain dynamics, equal-time full trajectories, extreme
+loop/jump/collision acceptance, the native clock dependency or final performance
+revalidation. The human laps are explicitly deferred, not passed.

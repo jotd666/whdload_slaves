@@ -1,5 +1,5 @@
-; Experimental incremental native-endpoint integration for grounded automatic
-; driving. Other modes retain the existing reference path. Not acceptance-ready.
+; Experimental incremental native-endpoint integration for driving, including
+; flight and manual gears. Full step-4 acceptance remains separate.
 _phase_install:
  movem.l d0/a0-a2,-(a7)
  lea _phase_power_status(pc),a0
@@ -218,21 +218,13 @@ _phase_frame:
  tst.b -$69fa(a4)
  bne .fallback
  ; Native turning-force input is evaluated by every engine segment.
- cmpi.b #15,-$66f0(a4)
- bne .fallback
- tst.w -$66f2(a4)
- bne .fallback
+ ; Contact and gravity are handled by the native position/contact pass.
+ ; Keep the scalar phase across flight and terrain landing corrections.
  ; Road/grass drag is native; throttle decay consumes PH_DT fields.
  ; Ground slope is consumed by native force and projection arithmetic.
- tst.b -$66c2(a4)
- beq .fallback
- cmpi.w #1,-$66ca(a4)
+ tst.w -$66ca(a4)
  blt .fallback
  cmpi.w #4,-$66ca(a4)
- bgt .fallback
- tst.w -$66d8(a4)
- bmi .fallback
- cmpi.w #2000,-$66d8(a4)
  bgt .fallback
  move.w d0,PH_INTERVAL(a6)
  move.w d0,PH_LEFT(a6)
@@ -287,8 +279,6 @@ _phase_frame:
  clr.w PH_ACTIVE(a6)
  bsr _phase_movement_vector
  bsr _phase_add_position
- cmpi.w #8,PH_PHASE(a6)
- bne.s .continued
  move.w -$66ca(a4),d0
  cmp.w PH_GEAR(a6),d0
  beq.s .same_gear
@@ -297,7 +287,12 @@ _phase_frame:
  move.w -$66d6(a4),d0
  swap d0
  move.l d0,PH_CURRENT_R(a6)
+ ; A manual shift can end a partial phase. Preserve integrated velocity
+ ; and restart both anchors with the native converted RPM.
+ move.w #8,PH_PHASE(a6)
 .same_gear:
+ cmpi.w #8,PH_PHASE(a6)
+ bne.s .continued
  move.l PH_CURRENT_V(a6),PH_ANCHOR_V(a6)
  move.l PH_CURRENT_R(a6),PH_ANCHOR_R(a6)
  ; The native tail just converted this new anchor RPM/gear. Retain its
@@ -342,7 +337,6 @@ _phase_initialize:
  lsl.l #8,d1
  lsl.l #5,d1
  add.l d1,d0
- bmi.s .invalid
  move.l d0,PH_ANCHOR_V(a6)
  move.l d0,PH_CURRENT_V(a6)
  moveq #0,d0
@@ -463,6 +457,16 @@ _phase_gear:
  swap d3
  sub.l PH_ANCHOR_V(a2),d3
  asr.l #3,d3
+ ; With no wheel contact the native engine leaves velocity untouched.
+ ; Preserve its fractional state too instead of drifting toward the word
+ ; anchor while the free-rev RPM path runs.
+ tst.b -$66f0(a4)
+ beq.s .free_velocity
+ tst.w PH_GEAR(a2)
+ bne.s .velocity_slope
+.free_velocity:
+ moveq #0,d3
+.velocity_slope:
  moveq #0,d4
  move.w -$66d6(a4),d4
  swap d4
@@ -515,8 +519,13 @@ _phase_gear:
  ; DT8 implies phase0 and current=anchor in a valid phase. Consuming the
  ; complete phase publishes the native endpoints exactly, already in game
  ; globals. No second publication or fractional kernel is needed.
+ tst.b -$66f0(a4)
+ beq.s .air_velocity
+ tst.w PH_GEAR(a2)
+ beq.s .air_velocity
  move.w -$66d8(a4),PH_CURRENT_V(a2)
  clr.w PH_CURRENT_V+2(a2)
+.air_velocity:
  move.l PH_CURRENT_V(a2),PH_FORECAST(a2)
  move.w -$66d6(a4),PH_CURRENT_R(a2)
  clr.w PH_CURRENT_R+2(a2)
@@ -735,7 +744,8 @@ _phase_published:
  bne.s .vector_done
  ; Native B500 has already projected the current integer velocity.
  ; Reuse that base vector and calculate only its neighboring integer when
- ; a Q6 fractional part exists. No velocity-dependent rounding is removed.
+ ; a Q6 fractional part exists. Finer flight/shift fractions are quantized
+ ; only for projection; the scalar state retains its Q16 precision.
  move.l PH_CURRENT_V(a6),d0
  move.w d0,d7
  rol.w #6,d7
@@ -851,7 +861,7 @@ _phase_scalar_step:
 .done:
  rts
 
-; D0.L nonnegative Q16 forecast, at Q6 precision, velocity <=21842.
+; D0.L signed Q16 forecast. Interpolation quantizes its fraction to Q6.
 ; A0 -> three Q16 projected components. All registers preserved.
 _phase_project:
  movem.l d0-d7/a0-a1,-(a7)
@@ -861,7 +871,7 @@ _phase_project:
 ; The runtime movement caller already preserves the outer frame's registers. The core
 ; clobbers D0-D7/A0; A1-A6 are untouched.
 _phase_project_core:
- ; Flat cardinal orientations need no multiply. For nonnegative velocity,
+ ; Flat cardinal orientations need no multiply. For signed velocity,
  ; native p(v)=v+floor(v/2), and p(v+1)-p(v)=1+(v&1). Interpolate that
  ; exact staircase at the existing Q6 precision, including negative axes.
  tst.w -$6bb4(a4)
@@ -899,7 +909,7 @@ _phase_project_core:
  move.l d0,d1
  swap d1
  move.w d1,d4
- lsr.w #1,d4
+ asr.w #1,d4
  add.w d1,d4
  swap d4
  clr.w d4
@@ -967,7 +977,7 @@ _phase_project_core:
 
 ; Exact native power conversions for the immutable four-gear ratio table.
 ; Validate all ratio words once per installation before using the lookup.
-; Phase entry guarantees gear1..4 and the native engine derives A2 from it.
+; Native B696 is reached only for gear1..4; neutral skips this conversion.
 ; Other paths and unexpected ratio tables retain the general implementation.
 _phase_power:
  btst #0,_phase_state+PH_ACTIVE+1(pc)
