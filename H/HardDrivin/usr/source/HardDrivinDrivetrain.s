@@ -81,6 +81,9 @@ _drivetrain_frame:
 	move.b d0,-$66ef(a4)
 	addq.l #1,8(a0)
 	movem.l (a7)+,d0/a0
+	IFD VERIFY_DRIVETRAIN_SETTLED
+	bsr _drivetrain_save_inputs
+	ENDC
 	bsr _drivetrain_engine_tick
 	; Keep outputs and incoming X from the last native position call.
 	movem.l d0/a0,-(a7)
@@ -90,6 +93,9 @@ _drivetrain_frame:
 	lea _drivetrain_state(pc),a0
 	subq.w #1,2(a0)
 	beq.s .finish
+	IFD VERIFY_DRIVETRAIN_SETTLED
+	bsr _drivetrain_skip_settled
+	ENDC
 	move.w (a7)+,d0
 	lsr.b #1,d0
 	movem.l (a7)+,d0/a0
@@ -128,10 +134,10 @@ _drivetrain_pair:
 ; projected displacement here; run native word-pose/gravity/skid housekeeping
 ; once after the final tick, with the full original interval restored.
 _drivetrain_engine_tick:
-	pea .position(pc)
+	pea _drivetrain_position_tick(pc)
 	move.l _drivetrain_engine(pc),-(a7)
 	rts
-.position:
+_drivetrain_position_tick:
 	movem.l d0-d4/a0,-(a7)
 	bsr _projection_snapshot
 	lea _motion_position_state(pc),a0
@@ -164,3 +170,70 @@ _drivetrain_audio:
 .done:
 	movea.l (a7)+,a0
 	rts
+
+	IFD VERIFY_DRIVETRAIN_SETTLED
+; After an unchanged one-field engine update, all its variable inputs are fixed.
+; Terrain/trig/turn/skid are held by the outer pass. Keep the final engine call
+; for native pitch publication; integrate only the intervening position ticks.
+	dc.b 'HDFIXPT1'
+_drivetrain_settled_state:
+	dc.l 0,0                 ; skipped fields, successful bulk integrations
+	dcb.b 28,0               ; scalar companions and native engine inputs
+_drivetrain_save_inputs:
+	movem.l d0-d3/a0-a1,-(a7)
+	lea _drivetrain_state(pc),a0
+	cmpi.w #3,2(a0)
+	blo.s .done
+	lea _time_scalar_state(pc),a0
+	lea _drivetrain_settled_state+8(pc),a1
+	movem.l (a0),d0-d3
+	movem.l d0-d3,(a1)
+	move.l -$66da(a4),16(a1) ; wheel speed and velocity
+	move.l -$66d6(a4),20(a1) ; RPM and MPH
+	move.w -$66ca(a4),24(a1) ; current gear (companion may describe prior gear)
+	move.w -$66e4(a4),26(a1) ; throttle and gear-request byte
+.done:
+	movem.l (a7)+,d0-d3/a0-a1
+	rts
+_drivetrain_skip_settled:
+	movem.l d0-d1/a0-a1,-(a7)
+	lea _drivetrain_state(pc),a0
+	cmpi.w #2,2(a0)
+	blo .done
+	lea _drivetrain_settled_state+8(pc),a1
+	lea _time_scalar_state(pc),a0
+	moveq #3,d1
+.compare:
+	move.l (a0)+,d0
+	cmp.l (a1)+,d0
+	bne .done
+	dbf d1,.compare
+	move.l -$66da(a4),d0
+	cmp.l (a1)+,d0
+	bne .done
+	move.l -$66d6(a4),d0
+	cmp.l (a1)+,d0
+	bne .done
+	move.w -$66ca(a4),d0
+	cmp.w (a1)+,d0
+	bne .done
+	move.w -$66e4(a4),d0
+	cmp.w (a1),d0
+	bne .done
+	lea _drivetrain_state(pc),a0
+	moveq #0,d0
+	move.w 2(a0),d0
+	subq.w #1,d0
+	move.w #1,2(a0)
+	lea _drivetrain_settled_state(pc),a1
+	add.l d0,(a1)
+	addq.l #1,4(a1)
+	lea _time_scalar_fields(pc),a1
+	move.w d0,(a1)
+	bsr _drivetrain_position_tick
+	lea _time_scalar_fields(pc),a1
+	move.w #1,(a1)
+.done:
+	movem.l (a7)+,d0-d1/a0-a1
+	rts
+	ENDC

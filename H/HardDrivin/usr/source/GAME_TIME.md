@@ -1659,6 +1659,52 @@ integration policy around force/gear changes, validate other driving modes and
 very long intervals, and pass the full handling/performance matrix. It does not
 resolve collision tunnelling or complete step4.
 
+
+### Skipping unchanged drivetrain updates
+
+`VERIFY_DRIVETRAIN_SETTLED` is a separate optional optimization of the runtime
+reference and requires VERIFY_DRIVETRAIN_REFERENCE. Before an eligible one-field
+engine call, it saves all16 bytes of scalar companion state plus native wheel
+speed, velocity, RPM, MPH, gear, throttle and gear-request byte. If all28 bytes are
+unchanged afterward, another call with the same held inputs would have the same
+result. Terrain, steering and contact remain fixed during this outer pass.
+
+The helper integrates position over the remaining unchanged interval in one call,
+then performs the final one-field engine update so native engine pitch is still
+published once. It does not drop elapsed fields, change rate values or assume that
+an unchanged integer velocity implies an unchanged fractional velocity. A change
+to any saved companion, RPM, gear or input prevents the skip. The native eight-field
+compatibility case retains the existing pair. `HDFIXPT1` records skipped fields,
+bulk position updates and the28-byte input snapshot.
+
+In the repeatable500-field A500 throttle26 diagnostic, this optimization produces
+34 swaps,3.394588 FPS and294.586574 ms per frame, versus32 swaps/3.194906 FPS for
+the unoptimized reference and37 swaps/3.694110 FPS for the current solver without
+the reference. It saves156 engine updates in14 bulk intervals and executes331
+engine calls inside34 full physics/scene passes. All31 engine pitch publications
+are unique to their outer pass; none occurs during an intermediate update. Final
+remaining fields are zero. The fresh repeat reproduces the same swap fields and
+counts. Captures are `s4-drivetrain-settled26-timing` and `-counters`.
+
+The measured deficit relative to the current solver falls from13.51% to8.11%; it
+still does not meet the3% performance budget. These remain the constant-throttle
+diagnostic windows, not full A/B handling or performance acceptance.
+
+`s4-drivetrain-settled-brake-checked` records six actual skips totaling54 fields.
+For every skip, the28 saved engine-input bytes equal the live post-update bytes,
+and the resulting longitudinal position and carry exactly match an independent
+repetition of the corresponding one-field integrations. All474 observed position
+updates also pass the displacement model, with zero backward motion, zero stopped
+velocity/projection companions and a held final position. The earlier capture
+without the additional input-snapshot logging gives the same braking result.
+This validates the observed straight-line cases; it is not full-world equivalence.
+
+`s4-drivetrain-settled-native` matches all108 native-reference car states, with
+only gear-pointer relocation. CUSTOM1-off passes all148 range checks, the127-range
+branch audit passes, and both normal output and the reference with this new flag
+absent remain byte-identical. The next cost issue is engine evolution while state
+is changing; no speculative skipping across force or gear changes is implemented.
+
 ### Near-stop fractional projection and position correction
 
 The retained operands isolated three interacting problems. At integer velocity1
