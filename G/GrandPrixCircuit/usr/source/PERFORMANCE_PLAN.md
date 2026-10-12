@@ -851,9 +851,9 @@ Evidence: ignored `tmp/dev/tmp/phase8/stationary-030-on` and
 `stationary-draws-on/off`, using the same ordinary VERIFY binary (SHA-256
 `8233ead910d97e251abe15f62e5c2ccc4c2db3aec916465ad11b3041b7f07701`).
 The live C2-on code audit passes with all 139 stubs intact and its corrupted-code
-negative control rejected; all 55 pristine input hashes still match. The next
-visibility check must include the actual qualifying-to-race transition at Monza,
-rather than treating this synthetic first-race result as acceptance.
+negative control rejected; all 55 pristine input hashes still match. These
+synthetic first-race results do not cover the qualifying-to-race transition. The
+controlled Monza transition checks below extend that coverage.
 
 Static follow-up narrows the transition test: the outer session calls `$2b5e`
 at `$9ee`, but single-race qualifying (`$b04` -> `$e02` -> `$12a8`) and
@@ -866,8 +866,32 @@ then calls grid initialization `$9f24` through the `$7058` stub. The simulation
 reset at `$7488` therefore precedes grid initialization as intended. The live
 stub mapping in the retained stationary capture confirms `$7058` targets `$9f24`
 and `$7316` targets `$809e`. This review does not establish stale projection
-tables or justify moving the restore hook; native transition reproduction
-remains required before an opponent-visibility fix or acceptance claim.
+tables or justify moving the restore hook.
+
+Controlled Monza transition diagnostics on the 68030/50 MHz MMU profile also
+fail to reproduce the reported disappearance. An isolated VERIFY source copy
+selects Italy/Monza (track 6), uses the existing joystick-only pilot to finish
+qualifying, substitutes a qualifying time of 1 to guarantee pole, acknowledges
+keyboard prompts, and leaves race input neutral. Native qualifying return,
+results sorting, asset teardown/load and race-grid initialization execute.
+All runs use car index 1 (`car2.shp`), difficulty 0 and single-race mode; they
+are not recordings of the owner's input. With the diagnostic start-gate bypass,
+C2 on/off produce 802/686 front-car calls over 900 fields, covering all nine
+opponents. A further C2-on run retains the native starting-light countdown:
+471 front-car calls cover eight opponents in that 900-field window, and its
+retained final frame visibly shows traffic ahead and in a mirror. Player
+position/fraction remain unchanged between race start/end, and every recorded
+front-car call observes speed zero. Draw counts are coverage, not FPS or an
+exact-pose comparison. The normal-countdown window includes the starting wait.
+
+Evidence: ignored `tmp/dev/tmp/phase8/normal-monza-transition-on/off` and
+`normal-monza-native-start-on`, with snapshots, draw records, screenshots and
+asserted `result.json` summaries; `transition-build/fixture.json` records all
+test-only changes. Diagnostic slave SHA-256:
+`3e0019ce2cd5bf333c01ab5123ef57744018d3dcb42b7a35def7e07231fe778c`.
+The production slave is unchanged and all 55 pristine file hashes still match.
+The owner's car, difficulty and single-race/championship choice remain unknown;
+these controlled cases do not resolve that report or establish hardware acceptance.
 
 Audio and opponent visibility remain release blockers. This is not unconditional
 hardware acceptance. Wider circuit, car and traffic coverage remains unestablished.
