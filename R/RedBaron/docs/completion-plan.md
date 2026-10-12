@@ -409,7 +409,14 @@ Rectangle disposition: direct-to-chip CPU fills are dropped under §0.3; all thr
    one pixel twin per primitive against the existing D1/G2 twins.
 5. If the line drawer shows up in E1 at ≥5%, do it in the same commit series.
 
-**E4. Publication.**
+**E4. Publication — target missed; user direction required.**
+
+The existing captures fail every-field cadence on 030/040/060 (scoreboard).
+Beam-safe publication and the one-field W6 cap are already implemented;
+rendering, not the cap, misses the budget. Drop the optional third buffer:
+E1's publication share is below its threshold. The prescribed E2/E3 candidates
+are exhausted. Stop under §1 before extending the renderer work or weakening
+the release targets; checkpoint E and F remain open.
 - With W6 on and the frame within one field, the cap is one field and the
   P1 beam-safe swap is kept.
 - Check every field deadline with `publication_cadence.py`. It must pass on
