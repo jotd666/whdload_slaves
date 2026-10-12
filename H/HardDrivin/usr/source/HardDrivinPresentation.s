@@ -58,6 +58,13 @@ _presentation_overlay_start:
 	bsr _replay_overlay_reset
 .no_replay_restart:
 	ENDC
+	IFD VERIFY_TIME_GHOST_POST
+	lea _ghost_post_state(pc),a0
+	tst.b PG_ACTIVE(a0)
+	beq.s .no_post_restart
+	move.l _replay_state+RP_WALL(pc),PG_OVERLAY_LAST(a0)
+.no_post_restart:
+	ENDC
 	IFD VERIFY_TIME_TIMELINES
 	lea _timeline_state(pc),a0
 	tst.b TL_ACTIVE(a0)
@@ -93,6 +100,14 @@ _presentation_overlay_tick:
 	lea _time_state(pc),a0
 	tst.b TS_ACTIVE(a0)
 	bne.s .gameplay
+	IFD VERIFY_TIME_GHOST_POST
+	lea _ghost_post_state(pc),a0
+	tst.b PG_ACTIVE(a0)
+	beq.s .no_ghost_post
+	bsr _ghost_post_overlay_fields
+	bra.s .interval
+.no_ghost_post:
+	ENDC
 	IFD VERIFY_TIME_TIMELINES
 	lea _timeline_state(pc),a0
 	tst.b TL_ACTIVE(a0)

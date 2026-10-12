@@ -8,6 +8,7 @@
 ; input tape continue throughout the wait. All users of $00750 are delayed,
 ; including menus, attract, gameplay and replay. Do not reinterpret the
 ; unchanged VERIFY_DRIVE tape as a guaranteed route at the slower frame rate.
+; VERIFY_GHOST_POST_SLOW restricts this instrument to the post-race epoch.
 ;
 ; At entry A0 is game base, D0 is code length, after normal patch installation.
 ; The caller flushes caches after the final executable writes as usual.
@@ -53,6 +54,10 @@ _verify_slow_vbl:
 
 _verify_slow_submit:
 	movem.l d0-d1,-(a7)
+	IFD VERIFY_GHOST_POST_SLOW
+	move.b _ghost_post_state+PG_ACTIVE(pc),d0
+	beq.s _verify_slow_publish
+	ENDC
 	move.w _verify_slow_count(pc),d0
 _verify_slow_next:
 	move.l _verify_slow_fields(pc),d1

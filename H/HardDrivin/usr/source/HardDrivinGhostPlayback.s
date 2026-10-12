@@ -1,5 +1,5 @@
-; Elapsed-time opponent playback in the Phantom challenge. Post-race playback
-; remains native until its separate presentation epoch is converted.
+; Elapsed-time opponent playback in the Phantom challenge. The optional
+; GHOST_POST gate owns the separate post-race presentation epoch.
 _ghost_playback_install:
 	movem.l d0/a0-a2,-(a7)
 	lea _ghost_opponent_native_ptr(pc),a0

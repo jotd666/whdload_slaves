@@ -170,6 +170,9 @@ _verify_drive_key:
 	IFD VERIFY_TIMELINE_PAUSE
 	bsr _verify_timeline_pause_key
 	ENDC
+	IFD VERIFY_GHOST_POST_PAUSE
+	bsr _verify_ghost_post_pause_key
+	ENDC
 	movea.l (a7)+,a0
 	tst.l d0
 	unlk a5
@@ -566,6 +569,43 @@ _verify_timeline_pause_key:
 	dc.l 0
 	ENDC
 
+	IFD VERIFY_GHOST_POST_PAUSE
+; Input-only post-race ghost pause: one SPACE at age>=24, another40 input fields later.
+_verify_ghost_post_pause_key:
+	tst.l d0
+	bne.s .done
+	movem.l d1/a1,-(a7)
+	lea _ghost_post_state(pc),a1
+	tst.b PG_ACTIVE(a1)
+	beq.s .restore
+	lea .state(pc),a1
+	tst.w (a1)
+	bne.s .resume
+	move.l _ghost_post_state+PG_AGE(pc),d1
+	cmpi.l #24,d1
+	blo.s .restore
+	move.w #1,(a1)
+	move.l 4(a0),d1
+	addi.l #40,d1
+	move.l d1,2(a1)
+	moveq #$20,d0
+	bra.s .restore
+.resume:
+	cmpi.w #1,(a1)
+	bne.s .restore
+	move.l 4(a0),d1
+	cmp.l 2(a1),d1
+	blo.s .restore
+	move.w #2,(a1)
+	moveq #$20,d0
+.restore:
+	movem.l (a7)+,d1/a1
+.done:
+	rts
+.state: dc.w 0
+	dc.l 0
+	ENDC
+
 	IFD VERIFY_PHANTOM_ENTRY
 ; Deliberately bypass ordinary-race qualification for isolated loop validation.
 ; The native challenge initializer sets all car, track, clock and mode state.
@@ -589,4 +629,41 @@ _verify_phantom_entry:
 	move.l a0,4(a7)
 	movea.l (a7)+,a0
 	rts
+	ENDC
+
+	IFD VERIFY_GHOST_POST_ENTRY
+; Isolated post-race comparison: enter the real replay after the native recorder
+; has produced 48 samples. No history, pose, velocity or finish flag is injected.
+; This bypasses the natural finish transition and is NOT qualification coverage.
+_verify_ghost_post_entry:
+	jsr -$7fe6(a4)
+	movem.l d0-d1/a0-a1,-(a7)
+	moveq #0,d1
+	roxl.b #1,d1
+	move.w d1,-(a7)
+	movea.l _code_start(pc),a0
+	lea _verify_ghost_post_targets(pc),a1
+	move.l a0,4(a1)
+	addi.l #$118ae,4(a1)
+	move.l -$16dc(a4),d0
+	sub.l -$69bc(a4),d0
+	cmpi.l #48*12,d0
+	blo.s .continue
+	adda.l #$1100c,a0
+	move.l a0,(a1)
+	move.w (a7)+,d1
+	lsr.b #1,d1
+	movem.l (a7)+,d0-d1/a0-a1
+	move.l _verify_ghost_post_targets+4(pc),-(a7)
+	move.l _verify_ghost_post_targets(pc),-(a7)
+	rts
+.continue:
+	adda.l #$11894,a0
+	move.l a0,(a1)
+	move.w (a7)+,d1
+	lsr.b #1,d1
+	movem.l (a7)+,d0-d1/a0-a1
+	move.l _verify_ghost_post_targets(pc),-(a7)
+	rts
+_verify_ghost_post_targets: dc.l 0,0
 	ENDC

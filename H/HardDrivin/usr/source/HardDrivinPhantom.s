@@ -1,7 +1,11 @@
 ; Experimental elapsed dispatcher for the separate Phantom challenge loop.
 ; Optional ghost recording and challenge-opponent playback use elapsed fields.
-; Post-race presentation remains native; these gates are not full acceptance.
+; Post-race presentation has its own optional elapsed gate. Full acceptance
+; remains separate from these focused checks.
 _phantom_install:
+	IFD VERIFY_TIME_GHOST_POST
+	bsr _ghost_post_install
+	ENDC
 	IFD VERIFY_TIME_GHOST_PLAYBACK
 	bsr _ghost_playback_install
 	ENDC
@@ -114,4 +118,8 @@ _phantom_replay_exit:
 
 	IFD VERIFY_TIME_GHOST_PLAYBACK
 	INCLUDE "HardDrivinGhostPlayback.s"
+	ENDC
+
+	IFD VERIFY_TIME_GHOST_POST
+	INCLUDE "HardDrivinGhostPost.s"
 	ENDC

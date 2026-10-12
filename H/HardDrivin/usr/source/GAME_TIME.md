@@ -1599,8 +1599,8 @@ and the direct-branch audit passes108 replacement ranges.
 
 This gate is still experimental. The optional ghost recorder below consumes
 elapsed fields. The optional challenge-opponent playback below also uses
-elapsed fields; both post-race playback calls still use the native per-pass
-phase. Post-race playback and instruction/camera animation are unfinished. Qualification, challenge exit/debt, instant replay and full handling
+elapsed fields. The optional post-race gate below converts the two-history
+presentation; instruction/camera animation remains unfinished. Qualification, challenge exit/debt, instant replay and full handling
 comparisons remain acceptance work; this dispatcher result does not complete
 step4.
 
@@ -1667,8 +1667,9 @@ Focused checks retained under ignored `tmp/`:
 
 The recorder does not change playback. The optional opponent implementation
 below converts `$08c84` during challenge gameplay. Post-race history rewind and
-both post-race playback paths still need elapsed timing. No full challenge-speed,
-whole-world native equivalence, handling or FPS acceptance is claimed here.
+both post-race playback paths are covered by the separate optional post-race gate
+below. No full challenge-speed, whole-world native equivalence, handling or FPS
+acceptance is claimed here.
 
 
 ## Phantom opponent playback (partial implementation)
@@ -1756,8 +1757,103 @@ Focused evidence retained under ignored `tmp/`:
   build remains byte-identical to the 8392-byte-text baseline. The branch audit
   passes 112 replacement ranges.
 
-This is challenge-opponent playback only. The player-history playback at
-`$08b0e`, the two playback calls in `$1100c` post-race presentation, its rewind
-and stop conditions, and its distance-derived audio pitch are still native.
-No full challenge/re-entry, audio-timing, collision, handling or FPS acceptance
-is claimed. Step 4 remains incomplete.
+This gate alone covers challenge-opponent playback. Without TIME_GHOST_POST,
+the two calls in `$1100c` post-race presentation and its distance-derived audio
+pitch remain native. No full challenge/re-entry, audio-timing, collision,
+handling or FPS acceptance is claimed. Step 4 remains incomplete.
+
+
+## Phantom post-race presentation (partial implementation)
+
+`VERIFY_TIME_GHOST_POST` requires TIME_GHOST_RECORD and TIME_GHOST_PLAYBACK.
+It installs `HardDrivinGhostPost.s` behind CUSTOM1/SPS0126. The native function
+still saves both cursors, rewinds each by 30 records with a lower bound at its
+buffer, and establishes the camera. The hook at `$1111c` starts a separate
+presentation epoch; `$11122` selects both elapsed poses and the exit boundary;
+`$111a0` scales the distance-derived pitch; `$11262` clears the epoch and restores
+the two saved cursors. Gameplay has ended before the natural call, so this uses
+the pause-aware RP_WALL clock rather than accumulating gameplay physics time.
+
+The initial phase comes from the full recorder/opponent companion when its
+cursor and published byte still match; otherwise it comes from the native byte
+phase multiplied by eight. This keeps the fractional field phase on entering
+replay. At each frame, history position is initial phase plus elapsed fields,
+with 48 fields per record. Both actors use the native-compatible interpolation
+already checked for opponent playback. The existing rewind and stop rules are
+preserved: playback ends when either cursor reaches its saved cursor minus one
+record. The duration is the smaller remaining interval, bounded below by zero.
+It is at most 1392 fields and can be shorter depending on the starting phases
+or how much history exists. The terminal interval is clamped to that boundary
+before publishing final phases; no pose reads past the saved valid records.
+The native saved-cursor restoration remains intact.
+
+The camera code computes distance before `$111a0`. Its consecutive signed-word
+distance difference formerly contributed six times that difference to G($9602)
+every rendered pass. The new contribution is trunc(delta_distance*48/fields),
+so it is still six times the native difference at eight fields per step. The
+first frame retains the native startup comparison with distance 1000; a repeated
+zero-field frame holds the preceding pitch. Two unsigned divisions compute the
+signed result's low word without DIVS overflow on small intervals. The original
+word-sized destination and subtraction wrap are retained. This validates the
+pitch input arithmetic, not perceived sound quality or the remaining audio paths.
+
+Post-race controls still run at `$11232`. The existing pause hooks freeze the
+presentation clock during a modal pause. Post-race overlay interval selection
+and restart bookkeeping are wired to this epoch too; the observed replays make
+no overlay countdown calls and keep the visible count unchanged, so there is
+no live post-race overlay-expiry claim.
+
+VERIFY_DISPATCH_NATIVE exercises this implementation at eight fields per frame.
+It also publishes the next phase after drawing, matching the original routine's
+observable cursor/phase ordering. The ordinary elapsed path publishes the pose's
+current phase and computes the next position from the next clock sample.
+
+Focused checks retained under ignored `tmp/`:
+
+- `s4-ghost-post-020`: naturally reached after the real opponent finish, with
+  brake inputs held through the challenge. All 780 frames match both history
+  pose models and all 780 derivative-pitch checks pass. Initial phases are
+  4/25 fields, target duration 1367 fields, observed duration 1368, last pose at
+  age 1366. Both full phases are carried in and both cursors restored.
+- `s4-ghost-post-a500`: natural entry, 218 checked frames and pitch updates,
+  initial phases 10/40, target 1352 fields, observed 1356, last pose at 1349. These
+  durations differ from the 68020 because the histories enter replay at different
+  phases; each is checked against its own native rewind/end boundaries.
+- `s4-ghost-post-pause`: the input-only VERIFY_GHOST_POST_PAUSE fixture presses
+  SPACE after presentation age 24 and resumes 40 input fields later. Exactly 40
+  paused fields have one unchanged RP_WALL value. All 777 poses and pitch values
+  still match; target 1368 fields, observed 1369, last pose at 1367. No pose or clock
+  is injected by the fixture.
+- `s4-ghost-post-slow64`: VERIFY_GHOST_POST_SLOW restricts the existing CUSTOM4
+  drawing delay to this presentation epoch. With 64 extra fields per submission,
+  the replay draws 21 checked frames, crosses multiple history records per frame,
+  and exits after 1375 fields against its 1368-field target. Its final displayed
+  pose is at 1309; cursor restoration and terminal phases still match. The default
+  VERIFY_SLOW behaviour outside this additional fixture is unchanged.
+- `s4-ghost-post-math`: 72 signed derivative cases cover word extremes, zero,
+  positive/negative changes and intervals 1..65535. Another 384 cases cover every
+  initial field phase and cursor crossings through the maximum replay age. All
+  results match independent integer models.
+- Natural native-step comparison attempts did not reach the post-race anchor.
+  Inspections retained their active gameplay state; the reference cursor later
+  moved backward, showing a challenge restart before the target. Those runs
+  were stopped through their owned cleanup and are excluded from equivalence
+  evidence. Their failure is not attributed to the post-race implementation.
+- `VERIFY_GHOST_POST_ENTRY` is therefore a separate synthetic comparison fixture:
+  after at least 48 records have been produced normally, it submits the frame,
+  calls the actual `$1100c` function and returns through native challenge cleanup.
+  It changes control flow, without supplying history, pose, velocity or finish
+  flags. It deliberately bypasses the natural finish transition.
+  `s4-ghost-post-reference-entry` versus `s4-ghost-post-native-entry` matches all
+  170 frames and 341 frame/pitch/exit snapshots: both actor poses, relative cursors,
+  phases, distance locals, pitch and overlay byte are identical. This is focused
+  post-race T=1 evidence, not full driving-tape/world equivalence.
+- `s4-ghost-post-off` passes all inactive ranges, including the four new sites.
+  Its initial checker invocation named two fixture switches with no independent
+  PERF_RANGE; rechecking the same retained capture with the recognized DRIVE,
+  STEPINPUT and PHANTOM_ENTRY ranges passes. The ordinary build is byte-identical
+  to the 8392-byte-text baseline; the branch audit passes 116 timing ranges.
+
+Instruction-page scrolling and its seven-pass camera move, the remaining sound
+and derivative audit, large-step physics safety, and the full machine/handling/
+performance acceptance remain open. These results do not complete step 4.
