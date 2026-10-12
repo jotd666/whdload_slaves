@@ -28,8 +28,9 @@ ghost recording now has fixed-field sampling and focused native/buffer checks.
 Challenge-opponent playback now has elapsed interpolation and crossed finish
 checks, including a live opponent finish. Post-race ghost playback now has elapsed
 poses, duration and distance-derived pitch, with native-step, pause and slow-frame
-checks. Other menu timelines, the remaining audio audit, large-step velocity safety
-and full acceptance are unfinished. See GAME_TIME.md;
+checks. Phantom instruction scrolling and its camera transition now also use
+elapsed time, with native-step, pause and slow-frame checks. The remaining audio
+audit, large-step velocity safety and full acceptance are unfinished. See GAME_TIME.md;
 the step-4 acceptance criteria remain open.
 
 ## Starting point

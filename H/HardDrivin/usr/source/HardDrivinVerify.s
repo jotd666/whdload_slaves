@@ -146,6 +146,12 @@ _verify_drive_vbl:
 	clr.w -$6a0a(a4)
 .released:
 	ENDC
+	IFD VERIFY_INSTRUCTIONS_HOLD
+	move.b _verify_instructions_hold_active(pc),d0
+	beq.s .instruction_ready
+	clr.w -$6a0a(a4)
+.instruction_ready:
+	ENDC
 	movem.l (a7)+,d0-d1/a0-a1
 	movea.l -$7036(a4),a0	; displaced instructions
 	lea $dff180,a1
@@ -172,6 +178,9 @@ _verify_drive_key:
 	ENDC
 	IFD VERIFY_GHOST_POST_PAUSE
 	bsr _verify_ghost_post_pause_key
+	ENDC
+	IFD VERIFY_INSTRUCTIONS_PAUSE
+	bsr _verify_instructions_pause_key
 	ENDC
 	movea.l (a7)+,a0
 	tst.l d0
@@ -612,6 +621,21 @@ _verify_ghost_post_pause_key:
 ; This is NOT the unchanged VERIFY_DRIVE qualification/handling acceptance tape.
 ; On completion skip the original qualification branch and return to attract.
 _verify_phantom_continue:
+	IFD VERIFY_INSTRUCTIONS_HOLD
+	move.l _verify_drive_state+4(pc),d0
+	sub.l _verify_instructions_hold_start(pc),d0
+	cmpi.l #300,d0
+	bhs.s .release
+	moveq #0,d0
+	rts
+.release:
+	move.l a0,-(a7)
+	lea _verify_instructions_hold_active(pc),a0
+	clr.b (a0)
+	movea.l (a7)+,a0
+	moveq #$20,d0
+	rts
+	ENDC
 	jsr -$7f92(a4)
 	tst.l d0
 	bne.s .done
@@ -666,4 +690,55 @@ _verify_ghost_post_entry:
 	move.l _verify_ghost_post_targets(pc),-(a7)
 	rts
 _verify_ghost_post_targets: dc.l 0,0
+	ENDC
+
+	IFD VERIFY_INSTRUCTIONS_HOLD
+; Only input is changed: release buttons and dismiss after 300 VBL input fields.
+_verify_instructions_hold_begin:
+	move.l a0,-(a7)
+	lea _verify_instructions_hold_start(pc),a0
+	move.l _verify_drive_state+4(pc),(a0)
+	st _verify_instructions_hold_active-_verify_instructions_hold_start(a0)
+	clr.w -$6a0a(a4)
+	movea.l (a7)+,a0
+	addi.w #13,-$687c(a4)
+	rts
+_verify_instructions_hold_start: dc.l 0
+_verify_instructions_hold_active: dc.b 0,0
+	ENDC
+	IFD VERIFY_INSTRUCTIONS_PAUSE
+; Input-only instruction scrolling pause: one SPACE at age>=24, another40 input fields later.
+_verify_instructions_pause_key:
+	tst.l d0
+	bne.s .done
+	movem.l d1/a1,-(a7)
+	lea _instructions_state(pc),a1
+	tst.b IN_ACTIVE(a1)
+	beq.s .restore
+	lea .state(pc),a1
+	tst.w (a1)
+	bne.s .resume
+	move.l _instructions_state+IN_AGE(pc),d1
+	cmpi.l #24,d1
+	blo.s .restore
+	move.w #1,(a1)
+	move.l 4(a0),d1
+	addi.l #40,d1
+	move.l d1,2(a1)
+	moveq #$20,d0
+	bra.s .restore
+.resume:
+	cmpi.w #1,(a1)
+	bne.s .restore
+	move.l 4(a0),d1
+	cmp.l 2(a1),d1
+	blo.s .restore
+	move.w #2,(a1)
+	moveq #$20,d0
+.restore:
+	movem.l (a7)+,d1/a1
+.done:
+	rts
+.state: dc.w 0
+	dc.l 0
 	ENDC

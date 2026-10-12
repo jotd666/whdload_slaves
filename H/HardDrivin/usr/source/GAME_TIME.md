@@ -1600,7 +1600,8 @@ and the direct-branch audit passes108 replacement ranges.
 This gate is still experimental. The optional ghost recorder below consumes
 elapsed fields. The optional challenge-opponent playback below also uses
 elapsed fields. The optional post-race gate below converts the two-history
-presentation; instruction/camera animation remains unfinished. Qualification, challenge exit/debt, instant replay and full handling
+presentation. Instruction/camera timing is covered by TIME_INSTRUCTIONS below.
+Qualification, challenge exit/debt, instant replay and full handling
 comparisons remain acceptance work; this dispatcher result does not complete
 step4.
 
@@ -1854,6 +1855,72 @@ Focused checks retained under ignored `tmp/`:
   STEPINPUT and PHANTOM_ENTRY ranges passes. The ordinary build is byte-identical
   to the 8392-byte-text baseline; the branch audit passes 116 timing ranges.
 
-Instruction-page scrolling and its seven-pass camera move, the remaining sound
-and derivative audit, large-step physics safety, and the full machine/handling/
-performance acceptance remain open. These results do not complete step 4.
+Instruction-page scrolling and its seven-pass camera move are covered below.
+The remaining sound and derivative audit, large-step physics safety, and full
+machine/handling/performance acceptance remain open. These results do not
+complete step 4.
+
+
+## Phantom instruction page and camera transition
+
+`VERIFY_TIME_INSTRUCTIONS` requires TIME_TIMELINES and installs
+`HardDrivinInstructions.s` behind CUSTOM1/SPS0126. The instruction-page scroll
+and its subsequent seven-pass camera move now use the pause-aware RP_WALL clock.
+Each epoch starts at its first displayed pose, excluding prior setup work.
+The scroll displays `18 + floor(3*min(age,232)/8)` pixels: this keeps the native
+first position of 18 and the cap at 105, with three pixels per eight fields.
+User input still dismisses the page. The separate camera epoch lasts 56 eligible
+fields, preserving seven native steps at the chosen eight-field reference.
+
+The camera uses the native pre-divided displacement words, rather than repeating
+or undoing the original division. With `n=min(age+8,56)`, each axis is its initial
+word minus `trunc(displacement*n/8)`, with native word wrap. Pitch advances by
+`floor(n/8)` and heading by `-2*n`. Absolute interpolation prevents repeated
+rounding from losing the seven-step endpoint. A final long frame consumes any
+undrawn tail and refreshes the wider XYZ positions before returning to gameplay.
+Forced VERIFY_DISPATCH_NATIVE advances the same implementation by eight fields
+per displayed pose; it does not bypass the replacement code.
+
+The input-only VERIFY_INSTRUCTIONS_HOLD fixture releases mouse buttons and
+supplies the dismissal key after 300 input fields. It uses the existing synthetic
+Phantom entry, so these checks do not establish qualification or a full driving
+lap. VERIFY_INSTRUCTIONS_PAUSE additionally supplies SPACE after scroll age 24,
+and again 40 input fields later. Neither fixture writes poses or simulation clocks.
+
+Retained checks under ignored `tmp/`:
+
+- `s4-instructions-020`: 300 scroll poses and 19 camera poses match the independent
+  integer model; the camera lasts exactly 56 fields and reaches the native endpoint.
+- `s4-instructions-a500`: 85 scroll poses and five camera poses match; the camera
+  lasts 58 fields, including completion of its last drawn frame.
+- `s4-instructions-slow64`: five scroll poses and one camera pose with CUSTOM4=64;
+  the camera returns after 67 fields with the correct final word and wider positions.
+  This explicitly covers a skipped final displayed pose.
+- `s4-instructions-pause`: 261 scroll poses and 19 camera poses match. Exactly 40
+  paused fields share one RP_WALL value. The subsequent camera lasts 58 fields.
+- `s4-instructions-reference` versus `s4-instructions-native`: all 97 scroll,
+  camera-before/after and exit snapshots match for the 15 compared values,
+  excluding elapsed wall time. This includes all seven native camera poses,
+  position words and wider positions, angles, locals and menu mode bytes.
+  The original's observed seven-frame camera duration is 80 fields on this A500
+  fixture; 56 is the chosen reference-duration target, not that measured duration.
+- Independent clock cross-checks show each captured elapsed pose age equals
+  RP_WALL minus the epoch start, allowing one field between sampling and the
+  breakpoint on A500. The observed menu mode is ADDE=0, ADD7=0, attract=0.
+  Native `$d960` only records instant replay when ADDE>5 and ADD7=0, so these
+  accelerated menu frames do not add replay records.
+- `s4-instructions-integrated-final`: with the current attract, replay, Phantom,
+  ghost and CPU-dispatch gates together, 300 scroll poses and 20 camera poses
+  pass the same model and final-state checks; camera duration is 59 fields.
+  The initial combined capture failed before calibration because its local socket
+  path was too long; its owned processes were closed and it is excluded. The
+  successful run uses a shorter local instance name.
+- The retained CUSTOM1-off capture passes all 142 declared ranges, including
+  the five new timing sites and the inactive input fixture. The direct-branch
+  audit passes 121 timing ranges. The ordinary build is byte-identical to the
+  8392-byte-text baseline.
+
+This closes the identified Phantom instruction/camera timing conversion. It
+is not full step-4 acceptance: the remaining audio audit, large-step physics
+safety, full native/equal-time handling and performance matrix, and human laps
+are still required.

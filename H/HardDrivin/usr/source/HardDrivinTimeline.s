@@ -2,6 +2,9 @@
 ; pause-aware wall counter, which continues after gameplay TS_ACTIVE clears.
 ; GAME OVER retains its native 35-step duration: 280 eligible PAL fields.
 _timeline_install:
+	IFD VERIFY_TIME_INSTRUCTIONS
+	bsr _instructions_install
+	ENDC
 	movem.l a0-a2,-(a7)
 	movea.l _code_start(pc),a1
 	lea _timeline_scene_ptr(pc),a0
@@ -98,3 +101,7 @@ _timeline_gameover_end:
 	; Supply the native BLT's flags (CMP leaves X unchanged).
 	cmpi.w #35,-2(a5)
 	rts
+
+	IFD VERIFY_TIME_INSTRUCTIONS
+	INCLUDE "HardDrivinInstructions.s"
+	ENDC
