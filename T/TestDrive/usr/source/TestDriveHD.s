@@ -76,7 +76,7 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.5b"
+	dc.b	"1.6b"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -119,7 +119,7 @@ args_end
 	dc.b	0
 slv_config
 	IFD VERIFY
-	dc.b "C1:X:automatic recovery verification:1;"
+	dc.b "C1:X:automatic recovery verification:1;C1:X:five field simulation verification:2;"
 	dc.b "C3:B:reproducible verification RNG;"
 	dc.b "C4:B:slow drawing verification;"
 	dc.b "C5:X:scripted player race:0;C5:X:force crash:1;C5:X:force radar:2;C5:X:straight acceleration braking tape:4;"
@@ -190,6 +190,7 @@ _quit		pea	TDREASON_OK
 
 patch_main
 	movem.l	D0-A6,-(A7)
+	bsr sim_init
 	IFD VERIFY
 	bsr verify_init
 	ENDC
@@ -222,23 +223,46 @@ _patchlist_1:
 	; Intro RNG call counts vary with CPU speed. Reset at demo selection too,
 	; so all profiling CPUs start with the same car and subsequent RNG state.
 	PL_PS $00230,verify_demo_rng
-	; Keep the game's LCG and register semantics; remove the beam operand.
-	PL_L $05314,$397C1234      ; move.w #$1234,-25640(a4)
-	PL_L $05318,$9BD84E71      ; displaced extension + nop
-	PL_W $05334,$4240          ; clr.w d0, preserving its high word
-	PL_NOP $05336,4            ; replace remaining VHPOSR address words
 	PL_ENDIF
 	PL_IFC4
 	; VERIFY_RANGE root 07aaa 8 C4 verify_slow_view
 	PL_PSS $07aaa,verify_slow_view,2
 	PL_ENDIF
 	ENDC
+    ; C2 removes beam entropy in normal builds too. C3 retains its independent
+    ; original-game fixture when C2 is off. Both branches install identical bytes.
+    PL_IFC2
+    PL_L $05314,$397C1234
+    PL_L $05318,$9BD84E71
+    PL_W $05334,$4240
+    PL_NOP $05336,4
+    IFD VERIFY
+    PL_ELSE
+    PL_IFC3
+    PL_L $05314,$397C1234
+    PL_L $05318,$9BD84E71
+    PL_W $05334,$4240
+    PL_NOP $05336,4
+    PL_ENDIF
+    ENDC
+    PL_ENDIF
 	PL_END
 
 	IFD VERIFY
 verify_demo_rng:
 	move.w #$1234,-25640(a4)
 	jsr -32442(a4)            ; displaced TD:$230, original RNG entry
+    move.l d1,-(sp)
+    move.l verify_c5(pc),d1
+    btst #0,d1
+    beq.b .car_done
+    lsr.l #8,d1              ; VERIFY C5 bits 8..10: car 0..4
+    and.w #7,d1
+    cmp.w #4,d1
+    bhi.b .car_done
+    move.w d1,d0            ; original caller keeps low word and takes modulo 5
+.car_done
+    move.l (sp)+,d1
 	swap d0                  ; displaced TD:$234
 	rts
 	ENDC
@@ -254,14 +278,12 @@ overlay_unload_end:
     rts
 
 overlay_load_end:
+    movem.l (a7)+,d0-d2/a0-a4 ; displaced TD:06916
 	IFD VERIFY
-    movem.l (a7)+,d0-d2/a0-a4 ; displaced TD:06916
     bsr verify_overlay_loaded
-    bsr _flushcache
-	ELSE
-    bsr _flushcache
-    movem.l (a7)+,d0-d2/a0-a4 ; displaced TD:06916
 	ENDC
+    bsr sim_overlay_loaded
+    bsr _flushcache
     rts
 
 _patch_trackdisk
@@ -543,6 +565,7 @@ _trdname:
 
 ;============================================================================
 
+	include "simulation.s"
 	IFD VERIFY
 	include "simulation-verify.s"
 	ENDC

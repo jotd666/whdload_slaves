@@ -72,8 +72,9 @@ Known differences that change the design:
    its PC window are pinned and checked. A short A500 trace contains real instruction PCs.
 3. Build: `tools/build.sh` checks the selected compiler/include trees and builds the
    authoritative source into `tmp/build/`; `VERIFY=1` selects the VERIFY output.
-   The normal variant remains byte-identical to the 1.5b hardware handoff. The VERIFY
-   variant has the phase-4 CUSTOM3 fixture. Bash wrappers work with macOS Bash 3.2.
+   The phase-1 normal variant is retained byte-identical to the 1.5b hardware handoff.
+   Current 1.6b builds contain the accepted phase-8 simulation; historical
+   VERIFY fixtures remain pinned with their captures. Bash wrappers work with macOS Bash 3.2.
 4. Trace tools: `td_report.py` uses TD's root/data sizes, excludes the PRELOAD root copy
    and follows the loaded BPTR chain. `profile_demo.sh`, `ingame.py`, `frames.py`,
    `swap_fields.py` and `fixed_window.sh` are adapted. Captures retain the exact slave,
@@ -323,7 +324,31 @@ record commands, exact builds and limits. Historical phase-4/5 captures retain t
 original VERIFY slave; the current build is a different fixture. No enhanced simulation
 or fractional rendering is implemented by this phase.
 
-## Phase 8: fixed-time simulation (`CUSTOM2`)
+## Phase 8: fixed-time simulation (`CUSTOM2`, complete; PAL emulator beta)
+
+The implementation includes rational rates, PAL clock/speed integral, independent
+shifter/decision cadence, traffic/police motion, simulation-owned geometry and visual
+phases, and isolated RNG. The same-build five-car matrix passes all 20 short straight
+and steering arms. Both real grip-clamp directions, native period-5 arithmetic,
+normal/VERIFY option-off bytes, CPU budgets, cross-CPU/slow-drawing route comparisons,
+natural crash/manual recovery, a natural police stop, and actual displayed stage
+results with the next-stage reset pass. A real h4 unload/reload reapplies every patch.
+The 1,600-field high-speed same-period demo matches all selected core states, five
+gameplay RNG draws and a windscreen effect across A500/A1200 despite 129 versus
+258 presentations. Automatic event recovery and normal-build C2-on smoke also pass.
+Normal 1.6b and VERIFY assemble; the version-only change is byte-proven against the
+functional test builds. Local `docs/phase8.md` records evidence and reproduction.
+
+The 20-arm matrix covers five cars, both periods and straight/steering tapes over
+1,300 fields each. Period-2 travel differs from period 5 by -0.045% to -1.338%;
+peak-speed differences are at most 0.477 mph. This quantifies discretization and
+decision-cadence differences, not whole-game bit identity. Native period-5 traces
+verify 170 completed arithmetic calls against original rate/travel operations.
+The observed main-loop work uses at most 10.64% / 8.91% of the A500/A1200 step
+budget in the measured moving window; this is not a universal worst-case bound.
+All 668 native assertions, declared-range audits and option-off byte checks pass.
+Real A1200/68040 results remain deferred; NTSC remains unvalidated. Rendering
+improvements and the player-facing option label remain phases 9–11.
 
 Reuse TD2's architecture and tested arithmetic where its assumptions apply. Keep game-local
 sources (`simulation.s`, `simulation-patches.i`) so each slave builds alone. TD's original
@@ -392,7 +417,7 @@ projection, sideways/heading smoothing and smoothing of mountains and hill crest
 1. The full TD2 regression checklist adapted to TD (both builds assemble, the audit, units,
    disabled bytes, timing, all cars, zero oracle, cost, two fixed windows per arm, the oldest
    and newest WHDLoad).
-2. Player-facing: `ReadMe` history entry (slave 1.5b), `slv_config`
+2. Player-facing: `ReadMe` release history entry (current beta 1.6b), `slv_config`
    `"C2:B:Enhanced framerate;"`, and an icon tooltype `CUSTOM2=1`.
    `Makefile_windows.mak` gets the new source dependencies.
 3. Release archives through `package_release.py` / `amigaxdev.release` into `tmp/dev/dist/`.
@@ -410,4 +435,6 @@ Aztec overlay executable. Update `docs/projects.md` with this branch.
 
 - Does the unmodified repository-1.4 rebuild fail on real A1200/68040 hardware? Emulation cannot tell
   (phase 6.1).
-- Which original display bugs, if any, are worth fixing (phase 3)?
+- NTSC timing is unvalidated; phase-8 acceptance is PAL only.
+- No persistent original display defect was found in the phase-3/6 review;
+  investigate any subsequently reproduced defect separately.

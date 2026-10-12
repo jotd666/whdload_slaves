@@ -41,6 +41,17 @@
 
 History:
 
+ version 1.6b (12.10.2026) done by Vesuri:
+ - experimental CUSTOM2=1 fixed-time simulation for the 90112-byte TD:
+   10 updates/second on 68000/010, 25 on 68020+, at nominal PAL 50 Hz
+ - scale vehicle/traffic motion, separate clutch and collision state from
+   drawing, and keep visual random effects independent of gameplay RNG
+ - correct PAL race time and average speed; this intentionally changes scores
+ - retain original crash acknowledgement, penalty and police-stop behavior
+ - CUSTOM2=0 retains original gameplay apart from the overlay cache fix
+ - all five cars tested in emulation; no rendering/FPS improvement claimed
+ - beta: NTSC unvalidated; real A1200/68040 testing deferred
+
  version 1.5b (12.10.2026) done by Vesuri:
  - flush caches after overlay stub rewrites (90112-byte TD), for
    cache coherency on 68040/060 and other cached CPUs; always enabled
