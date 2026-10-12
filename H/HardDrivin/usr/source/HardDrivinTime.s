@@ -12,6 +12,9 @@ TIME_FIELDS_PER_STEP equ 8
 TIME_FIELD_Q16 equ $2000
 
 _time_install:
+	IFD VERIFY_PROJECTION_QUANTIZED_MATH
+	bsr _projection_quant_math_test
+	ENDC
 	IFD VERIFY_DISSIPATION_MATH
 	bsr _dissipation_math_test
 	ENDC

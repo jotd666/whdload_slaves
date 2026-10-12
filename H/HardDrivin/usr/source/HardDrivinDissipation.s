@@ -1,12 +1,18 @@
-; Long-step resistance may remove existing velocity, never manufacture reverse
+; Resistance may remove existing velocity, never manufacture reverse
 ; velocity. Drive/slope remain able to move the car through zero. This correction
 ; does not widen native velocity storage or prove arbitrary long-step stability.
 ; Input/output follow _time_scale_word: D0 increment, D1 fields, D2 remainder.
 _time_limit_dissipation:
+	tst.w d1
+	beq.s .native
 	cmpi.w #8,d1
-	bhi.s .long
+	bne.s .integrate
+	tst.w SS_VELOCITY_CARRY(a0)
+	bne.s .integrate
+.native:
+	; Preserve every original zero-carry native step, including force-law quirks.
 	rts
-.long:
+.integrate:
 	movem.l d3-d7,-(a7)
 	move.w -$66d8(a4),d3
 	ext.l d3

@@ -1,6 +1,5 @@
-; Fractional extension of native longitudinal velocity projection. The game
-; retains its original integer projection/rounding. Only the signed eighth-unit
-; velocity companion is projected here, preserving native T=1 with zero carry.
+; Fractional extension interpolates adjacent native rounded velocity vectors.
+; Integer projection stays native; zero carry preserves native T=1 exactly.
 _projection_signature: dc.b 'HDVPROJ1'
 ; Current XYZ Q16 corrections, previous XYZ, then Q16 position carries.
 _projection_state: dcb.l 9,0
@@ -39,10 +38,81 @@ _projection_update:
 	move.w SS_VELOCITY_CARRY(a0),d0
 .project:
 	lea _projection_state(pc),a0
-	bsr _projection_components
+	bsr _projection_quantized_components
 .done:
 	movem.l (a7)+,d0-d1/a0
 	rts
+; Interpolate the native rounded vector between adjacent integer velocities.
+; Projecting only carry*1.5 can make v=1,carry=-7 point backward because native
+; 1.5*v was rounded down to1. Native zero-carry states stay exact.
+_projection_quantized_components:
+	movem.l d0-d7/a1,-(a7)
+	move.w d0,d7
+	beq.s .zero
+	move.w -$66d8(a4),d0
+	cmpi.w #21843,d0
+	bgt.s .edge
+	cmpi.w #-21843,d0
+	blt.s .edge
+	tst.w d7
+	bmi.s .negative
+	addq.w #1,d0
+	bra.s .neighbor
+.negative:
+	subq.w #1,d0
+	neg.w d7
+.neighbor:
+	bsr _projection_integer_components
+	lea -$66e2(a4),a1
+	sub.w (a1)+,d0
+	muls.w d7,d0
+	lsl.l #8,d0
+	lsl.l #5,d0
+	move.l d0,(a0)
+	sub.w (a1)+,d1
+	muls.w d7,d1
+	lsl.l #8,d1
+	lsl.l #5,d1
+	move.l d1,4(a0)
+	sub.w (a1),d2
+	muls.w d7,d2
+	lsl.l #8,d2
+	lsl.l #5,d2
+	move.l d2,8(a0)
+	bra.s .done
+.edge:
+	; Keep the old bounded fractional projection outside the range where
+	; native 1.5*v and both adjacent vectors avoid signed-word wrap.
+	; Their wider solver/consumer validity remains a separate open issue.
+	move.w d7,d0
+	bsr _projection_components
+	bra.s .done
+.zero:
+	clr.l (a0)
+	clr.l 4(a0)
+	clr.l 8(a0)
+.done:
+	movem.l (a7)+,d0-d7/a1
+	rts
+; D0.W velocity; return native word XYZ in D0/D1/D2, D3/D4 scratch.
+; Match B512..B576 word narrowing and arithmetic Q14 shifts exactly.
+_projection_integer_components:
+	move.w d0,d2
+	asr.w #1,d2
+	add.w d0,d2
+	move.w d2,d1
+	muls.w -$6bb4(a4),d1
+	moveq #14,d4
+	asr.l d4,d1
+	muls.w -$6bb2(a4),d2
+	asr.l d4,d2
+	move.w d2,d0
+	muls.w -$6bb8(a4),d0
+	asr.l d4,d0
+	muls.w -$6bb6(a4),d2
+	asr.l d4,d2
+	rts
+
 ; D0.W eighth-velocity carry [-7,7], A0 -> XYZ Q16, native Q14 trig globals.
 ; Factor 3/2 maps velocity to long-position units, hence carry*3*65536/16.
 _projection_components:
@@ -82,8 +152,47 @@ _projection_integrate:
 	dbf d5,.axis
 	movem.l (a7)+,d0-d5/a0-a1
 	rts
+; Normalize the two position accumulators together, including their whole-unit
+; outputs. Independently truncating opposite integer/fraction contributions can
+; move a pixel backward while the combined displacement is still positive.
+; A2 -> three positions saved before this update. Leave one Q16 carry per axis.
+_projection_merge_carries:
+	movem.l d0-d5/a0-a3,-(a7)
+	lea _motion_position_state+8(pc),a0
+	lea _projection_state+24(pc),a1
+	lea -$6704(a4),a3
+	moveq #2,d5
+.axis:
+	move.l (a0),d0
+	lsl.l #8,d0
+	add.l d0,d0
+	add.l (a1),d0
+	bsr _time_split_q16
+	add.l d0,(a3)
+	move.l (a3),d1
+	sub.l (a2)+,d1
+	beq.s .store
+	bmi.s .negative
+	tst.l d2
+	bpl.s .store
+	subq.l #1,(a3)
+	addi.l #65536,d2
+	bra.s .store
+.negative:
+	tst.l d2
+	ble.s .store
+	addq.l #1,(a3)
+	subi.l #65536,d2
+.store:
+	clr.l (a0)+
+	move.l d2,(a1)+
+	addq.l #4,a3
+	dbf d5,.axis
+	movem.l (a7)+,d0-d5/a0-a3
+	rts
+
 ; Same Euler correction as integer position, but for the projected fractional
-; extension. D0.L current Q16, D1.L previous Q16 (each abs<=86016), D2.W fields,
+; extension. D0.L current Q16, D1.L previous Q16 (each abs<=114688), D2.W fields,
 ; D3.L signed Q16 position carry. Returns integer D0 and Q16 carry D3.
 ; The /16 rounds down at Q16 precision (<1/65536 long-position unit per call).
 _projection_delta:
@@ -126,7 +235,7 @@ _projection_product:
 
 ; Wide equivalent: floor((8*(v-u)+fields*(v+u))/16), still in Q16.
 ; The intermediate needs signed64 bits at the unsigned field limit; the result
-; plus signed Q16 carry fits a long for the documented abs(v/u)<=86016 bound.
+; plus signed Q16 carry fits a long for the documented abs(v/u)<=114688 bound.
 _projection_delta_wide:
 	movem.l d1-d2/d4-d6,-(a7)
 	move.l d0,d4
@@ -261,4 +370,8 @@ _projection_wide_test:
 _projection_wide_values: dc.l -86016,-65535,-1,0,1,65535,86016
 _projection_wide_signature: dc.b 'HDRPWID1'
 _projection_wide_results: dcb.l 7*7*7*3*2,0
+	ENDC
+
+	IFD VERIFY_PROJECTION_QUANTIZED_MATH
+	INCLUDE "HardDrivinProjectionVerify.s"
 	ENDC

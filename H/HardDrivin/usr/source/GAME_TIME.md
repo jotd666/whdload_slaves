@@ -1461,13 +1461,13 @@ It establishes repeatable flat, zero-throttle braking coverage on all seven
 profiles and with slowed drawing. Higher-speed braking, fractional-state-aware
 comparison and the units-derived acceptance tolerance remain open.
 
-A stricter monotonic-position check exposes a remaining defect: the020,030 and
+A stricter monotonic-position check exposed a defect in that build: the020,030 and
 060 each move backward by one long-position unit (1/8 world unit) near the stop
 while the native speed word remains1. The observed fields are472..473,466 and472
 respectively. Wheel mask15, road contact, Y=0, Z and heading360 remain unchanged.
 The velocity word never becomes negative. The exact before/after rows are retained
-in comparison.json. This is not waived by the sampling bounds: it requires a
-projection/integration investigation before handling acceptance.
+in comparison.json. The correction and focused validation are described below;
+the sampling bounds were not used to waive this defect.
 
 The initial analyzer incorrectly assumed straight-ahead heading0. Native race
 initialization and every retained sample use heading360 for this straight. The
@@ -1478,11 +1478,58 @@ The original-control capture passes all146 disabled-range checks with only DRIVE
 and STEPINPUT enabled; the125-range branch audit also passes.
 
 
+### Near-stop fractional projection and position correction
+
+The retained operands isolated three interacting problems. At integer velocity1
+with a -7/8 companion, the native rounded projected speed is1; projecting the
+companion independently as -7/8 times1.5 yields a negative total. Resistance
+could also leave a negative fractional velocity after the integer word reached
+zero. Finally, separately truncating the integer and fractional position updates
+could publish a negative one-unit displacement despite a positive combined sum.
+
+The gated projection now interpolates adjacent native rounded velocity vectors,
+using the signed eighth-velocity companion. Zero companion still produces zero
+correction. Outside velocity[-21843,21843], it retains the previous bounded
+fractional extension to avoid interpolation across native signed-word wrap.
+That fallback does not establish the validity of extreme native velocities;
+widened storage and consumer safety remain open. Inside the interpolation range,
+the correction magnitude is at most114688 in Q16 position units.
+
+The position wrapper combines both remainders and their whole-unit outputs before
+publishing movement, retaining a single signed Q16 remainder per axis. Resistance
+limiting now includes short intervals, while preserving zero-carry native steps.
+Drive and slope can still legitimately move velocity through zero.
+
+The final private projection fixture (`s4-projection-quant-math-final`) checks372
+actual helper outputs against an independent integer model: near-zero velocities,
+all eighth carries, four orientations, and signed-word boundary cases. The final
+326-case dissipation fixture also passes. These fixtures use private fake globals.
+
+Final integrated braking captures `s4-brake-projection-final-a500` and `-020`
+check36 and146 longitudinal position updates respectively. Every update matches
+the independently reconstructed combined displacement, none moves backward, and
+both stopped states have zero velocity companion and projected velocity and hold
+their final position. The final slowed-A500 capture (`-slow4`, four additional
+fields per frame) passes the same checks for27 updates. Earlier merged-carry captures on030 and060 also passed
+236 and235 updates; they precede only the final extreme-velocity guard and native
+zero-carry bypass. They are supporting evidence, not final-build matrix coverage.
+
+The final forced-native build matches all108 original-reference car states with
+held steering639 (`s4-projection-native-final`, reference
+`s4-skid-native-reference`; only the relocated gear pointer is normalized).
+The125-range branch audit passes. The fresh CUSTOM1-off capture
+`s4-projection-final-off` passes all146 declared ranges, and the normal8392-byte
+text build remains byte-identical to the baseline. This is focused car-state compatibility, not
+full driving-tape/world equivalence. Complete equal-time handling, collision
+extremes, and comparable-scene performance acceptance remain open.
+
+
 ### Long-step drag and braking correction
 
 `VERIFY_TIME_DISSIPATION` requires TIME_SCALARS and uses the existing velocity
-hook. It changes only intervals greater than eight fields. Native and shorter
-steps retain their original scaled increments. `VERIFY_GAMEPLAY_SLOW` requires
+hook. It now limits resistance on short intervals as well as long ones. A zero
+interval, or an eight-field interval with zero incoming velocity carry, preserves
+the original increment exactly, including native force-law quirks. `VERIFY_GAMEPLAY_SLOW` requires
 SLOW and TIME and delays only active gameplay, allowing large-delay tests to
 reach the driving scene without disrupting the menu input tape.
 
@@ -1504,7 +1551,8 @@ an explicit long-step force policy, not a proof of equivalence to fine integrati
 The private `VERIFY_DISSIPATION_MATH` fixture calls the actual velocity wrapper
 with326 cases covering both signs, slopes, native force caps, stale fractional
 state and intervals0,1,7,8,9,16,79,255,65535. All outputs match the independent
-integer model;130 cases activate the limiter. Synthetic word extrema exercise
+integer model; the final all-interval policy activates the limiter in148 cases
+(`s4-dissipation-all-intervals-final`). The earlier long-only policy activated130. Synthetic word extrema exercise
 arithmetic only and do not establish physical validity of those velocities.
 
 | Runtime capture | Forward writes | Limiter uses | Velocity range | Maximum fields | Zero crossings |

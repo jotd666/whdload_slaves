@@ -527,6 +527,9 @@ _motion_position_entry:
 ; Crash drift bypasses this block just as it bypassed native projected motion.
 _motion_position_add:
 	movem.l d1-d4/a0-a2,-(a7)
+	move.l -$66fc(a4),-(a7)
+	move.l -$6700(a4),-(a7)
+	move.l -$6704(a4),-(a7)
 	bsr _projection_update
 	lea _motion_position_state(pc),a0
 	lea -$6704(a4),a1
@@ -551,6 +554,9 @@ _motion_position_add:
 	move.l d3,16(a0)
 	add.l d0,(a1)
 	bsr _projection_integrate
+	movea.l a7,a2
+	bsr _projection_merge_carries
+	lea 12(a7),a7
 	movem.l (a7)+,d1-d4/a0-a2
 	rts
 
