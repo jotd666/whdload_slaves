@@ -34,6 +34,7 @@ sim_replay_save_dispatch:
  clr.w (a0)             ; output reuses staging; never retain a pending load
  lea sim_replay_save_dispatch(pc),a2
  adda.l #sim_replay_pending_file-sim_replay_save_dispatch,a2
+ movea.l (a2),a2
  moveq #0,d7
  move.b -$173a(a4),d7
  cmp.w #50,d7
@@ -75,6 +76,7 @@ sim_replay_save_dispatch:
  movea.l a2,a1
  lea sim_replay_save_dispatch(pc),a2
  adda.l #sim_replay_save_readback-sim_replay_save_dispatch,a2
+ movea.l (a2),a2
  move.l d6,d0
  movea.l $bda(a4),a6
  bsr sim_replay_file_write

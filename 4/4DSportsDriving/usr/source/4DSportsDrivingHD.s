@@ -185,6 +185,16 @@ P3_PIPELINE = 1
  ENDC
  ENDC
 
+; Runtime workspace replaces inline zero-filled buffers. Reserve it in addition
+; to the original game pool; AllocMem removes it before DOS/game allocation.
+SIM_WORKSPACE_RESERVE SET 0
+ IFD SIM_SCHEDULE
+SIM_WORKSPACE_RESERVE SET SIM_WORKSPACE_RESERVE+$800
+ ENDC
+ IFD SIM_A4000
+SIM_WORKSPACE_RESERVE SET SIM_WORKSPACE_RESERVE+$28800
+ ENDC
+
 ;USE_PROFILING
 
 	IFD	USE_PROFILING
@@ -195,12 +205,12 @@ CHIP_ONLY
 
 	IFD	CHIP_ONLY
 HRTMON
-CHIPMEMSIZE	= $FF000
+CHIPMEMSIZE	= $FF000+SIM_WORKSPACE_RESERVE
 FASTMEMSIZE	= $0000
 	ELSE
 BLACKSCREEN
 CHIPMEMSIZE	= $80000
-FASTMEMSIZE	= $80000
+FASTMEMSIZE	= $80000+SIM_WORKSPACE_RESERVE
 	ENDC
 
 NUMDRIVES	= 1
@@ -297,6 +307,10 @@ _bootdos
  bsr sim_time_detect_video ; preserve corrected native timing on PAL and NTSC
 		ENDC
 	
+ IFNE SIM_WORKSPACE_RESERVE
+ bsr sim_workspace_init
+ ENDC
+
 	;open doslib
 		lea	(_dosname,pc),a1
 		move.l	(4),a6
@@ -322,6 +336,10 @@ _bootdos
 .quit		pea	TDREASON_OK
 		move.l	(_resload,pc),a2
 		jmp	(resload_Abort,a2)
+
+ IFNE SIM_WORKSPACE_RESERVE
+ include "simulation_workspace.s"
+ ENDC
 
 patch_main
 	bsr perf_init
@@ -1573,11 +1591,11 @@ tape_restart_result_stub:
  include "simulation_auxiliary_verify.s"
  ENDC
  ; Separate input storage: native bulk layout reserves only 12,000 bytes.
- ; Keep at the end so it cannot push code/table PC-relative references apart.
+ ; Only a pointer is stored here; the workspace is allocated at startup.
  even
  dc.b "4DHINPUT"
  dc.l 30000
-sim_history_inputs: dcb.b 30000,0
+sim_history_inputs: dc.l 0
  dc.b "4DGUARD!"
  IFNE SIM_STARTUP_TESTS
 sim_results_test_arena: dcb.b $1660,0
@@ -1586,9 +1604,9 @@ sim_results_test_arena: dcb.b $1660,0
  IFD SIM_REPLAY_MENU
  even
  dc.l $4d4e5531
-sim_replay_pending_file: dcb.b SIM_REPLAY_BYTES+2,0
+sim_replay_pending_file: dc.l 0
  dc.l $4d4e5532
-sim_replay_save_readback: dcb.b SIM_REPLAY_BYTES+2,0
+sim_replay_save_readback: dc.l 0
  dc.l $53415645
  ENDC
  IFD SIM_REPLAY_RELOAD_TEST

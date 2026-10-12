@@ -335,6 +335,7 @@ sim_history_rotation_fixture:
  dbra d0,.native_ticks
  lea sim_history_rotation_fixture(pc),a0
  adda.l #sim_history_records-sim_history_rotation_fixture,a0
+ movea.l (a0),a0
  move.l a0,a1
  move.w #20*SIM_HISTORY_BYTES-1,d0
  moveq #$55,d1

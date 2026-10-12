@@ -19,6 +19,7 @@ sim_replay_load_entry:
  lea -$1736(a4),a0
  lea sim_replay_load_entry(pc),a1
  adda.l #sim_replay_pending_file-sim_replay_load_entry,a1
+ movea.l (a1),a1
  movea.l $bda(a4),a6
  bsr sim_replay_file_read
  lea sim_replay_menu_status(pc),a2
@@ -130,6 +131,7 @@ sim_replay_init_tail:
  bne .out
  lea sim_replay_init_tail(pc),a0
  adda.l #sim_replay_pending_file-sim_replay_init_tail,a0
+ movea.l (a0),a0
  move.l #SIM_REPLAY_BYTES,d0
  bsr sim_replay_install
  lea sim_replay_menu_install_status(pc),a0

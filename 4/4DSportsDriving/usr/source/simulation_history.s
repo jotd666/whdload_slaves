@@ -36,6 +36,7 @@ sim_history_seek_zero:
  movem.l a0,-(sp)
  lea sim_history_slot(pc),a0
  adda.l #sim_history_records-sim_history_slot,a0
+ movea.l (a0),a0
  tst.w (a0)
  beq sim_history_failed
  movem.l (sp)+,a0           ; nonzero flags bypass native initialization
@@ -125,6 +126,7 @@ sim_history_slot:
  mulu #SIM_HISTORY_BYTES,d0
  lea sim_history_slot(pc),a0
  adda.l #sim_history_records-sim_history_slot,a0
+ movea.l (a0),a0
  adda.l d0,a0
  rts
 sim_history_store:
@@ -184,6 +186,7 @@ sim_history_load:
 sim_history_shift:
  lea sim_history_slot(pc),a0
  adda.l #sim_history_records-sim_history_slot,a0
+ movea.l (a0),a0
  lea SIM_HISTORY_BYTES(a0),a1
  move.w #(SIM_HISTORY_SLOTS-1)*SIM_HISTORY_BYTES/4-1,d0
 .copy:
@@ -194,6 +197,7 @@ sim_history_shift:
 sim_history_reset:
  lea sim_history_slot(pc),a0
  adda.l #sim_history_records-sim_history_slot,a0
+ movea.l (a0),a0
  moveq #SIM_HISTORY_SLOTS-1,d0
 .clear:
  clr.w (a0)
@@ -331,7 +335,9 @@ sim_history_selftest:
  bne .reset
  bsr sim_history_shift
  lea sim_history_slot(pc),a0
- adda.l #sim_history_records+19*SIM_HISTORY_BYTES-sim_history_slot,a0
+ adda.l #sim_history_records-sim_history_slot,a0
+ movea.l (a0),a0
+ adda.l #19*SIM_HISTORY_BYTES,a0
  tst.w (a0)
  bne sim_history_failed
  moveq #1,d6
@@ -356,6 +362,7 @@ sim_history_selftest:
  bsr sim_history_reset
  lea sim_history_slot(pc),a0
  adda.l #sim_history_records-sim_history_slot,a0
+ movea.l (a0),a0
  moveq #SIM_HISTORY_SLOTS-1,d0
 .empty:
  tst.w (a0)

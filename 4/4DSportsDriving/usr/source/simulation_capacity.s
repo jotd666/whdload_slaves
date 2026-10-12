@@ -2,13 +2,14 @@
 ; reaches 45,000 over a 25-minute session: total time needs 32-bit arithmetic.
 ; Finish/penalty storage and time presentation still need their own widening.
 
-; 2412: give all modes in this development build a sufficiently large buffer.
-; Native bulk allocation/layout/free remains untouched; this static slave
-; storage is valid for the full lifetime of the loaded game.
+; 2412: all modes share the full-capacity runtime input buffer.
+; Native bulk allocation/layout/free remains untouched; the runtime workspace
+; is valid for the full lifetime of the loaded game.
 sim_history_input_buffer:
  movem.l a0,-(sp)
  lea sim_history_input_buffer(pc),a0
  adda.l #sim_history_inputs-sim_history_input_buffer,a0
+ movea.l (a0),a0
  move.l a0,-$1770(a4)
  movem.l (sp)+,a0
  rts

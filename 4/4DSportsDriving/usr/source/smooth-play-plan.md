@@ -4,6 +4,7 @@ Written 2026-10-11 on HEAD `c70ea93` (branch `4dsportsdriving`). This plan super
 "next steps" sections of optimization-plan.md, simulation-plan.md and open-work.md. Their historical
 versions remain reference material for addresses and evidence, not a to-do list.
 P1-P6 are complete; the A500 FAST target is deferred and A4000 remains experimental.
+The current slave uses runtime buffer allocation (37184 bytes); see the workspace section below.
 Current defaults supersede the earlier opt-in policy: PAL 040/060 use A4000,
 020/030 use A2500, and 000/010 use Normal. Valid saved choices still win.
 Historical harness research is preserved in `tmp/dev/docs/.git` at `9311a53`;
@@ -846,6 +847,48 @@ The legacy B check preserves all 38 disabled hook ranges; the hook audit
 passes with no new hook or interior branch/relocation target. Short setup
 windows for preference/legacy checks are functional evidence, not FPS rows.
 Each emulator had its own 180-second watchdog and was closed afterward.
+
+## Runtime simulation/replay workspace — v1.3b
+
+The current production slave is **37184 bytes**, down from 204640 bytes (81.8%).
+SHA256: `ec5a768d376ce4899fc6f618bda53fbc0675ccfd8203f9a52d93f180e3fbccc7`. WHDLoad requires a single position-independent hunk;
+the five large buffers now live in one cleared KickEmu AllocMem allocation made
+before DOS/game startup. The slave retains only pointers. The 167936-byte
+reserve contains 167720 bytes of aligned buffers and 216 unused bytes. Expansion
+memory increases by the reserve so the original 512 KiB game pool remains
+available. WHDLoad owns the enclosing allocation and reclaims it on exit.
+Total RAM use is essentially unchanged; this removes zero-filled file data.
+Allocation failure exits with a message. No physics/replay ABI or hooks changed.
+
+Validation on this exact binary: `tmp/prof/runtime-workspace/validation.json`.
+All five CPU cells pass pointer layout/bounds, clear workspace tail and queue
+checks. Ten-second PAL FULL windows, CUSTOM2=1:
+
+| Cell | Hz | FPS | Consumed steps/s | Queue overflow |
+|---|---:|---:|---:|---:|
+| A | 10 | 2.59883 | 10.09544 | 0 |
+| B | 20 | 11.29718 | 20.09499 | 0 |
+| C | 20 | 19.89504 | 19.99501 | 0 |
+| D | 50 | 45.28870 | 49.98753 | 0 |
+| E | 50 | 44.78882 | 49.98753 | 0 |
+
+Short-window consumed-step quantization remains as documented in P6; these are
+functional regression rows, not new performance claims. Native 10/20 replays
+both play all 301 steps and match the original oracle's 1120 bytes at step 200.
+An existing A4000 replay matches all 1510 semantic bytes at 1500/1550/1600;
+a fresh native-menu disk save/load matches all 1510 bytes at 200/400/600,
+with successful writer/readback status and valid 63912-byte file CRC. The
+68040 MMU test passes allocation, gameplay, preference I/O and normal quit back
+to the shell (TC=8000). CUSTOM3=1/CUSTOM2=0 preserves all 38 original hook ranges;
+hook_audit passes. All emulators were bounded by 180 seconds and closed.
+Production and manual/no-startup-tests builds compile. One code hunk, no
+relocations. Historical snapshot readers must now dereference the five buffer
+symbols instead of treating them as inline arrays. Replay files are unchanged.
+
+Testing archive: `dist/4DSportsDriving_v1.3b_1461.lha`, 928234 bytes,
+SHA256 `d226a011c011a9a4d35605984d49226a7572cef9e3ff85fae090d065f51f1b53`. All 124 members re-extracted and checked; exactly the
+slave and ReadMe differ from the original pack. Earlier build/archive hashes
+in this plan identify historical captures. Nothing was published.
 
 ## Not doing (with reasons)
 

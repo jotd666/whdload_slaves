@@ -209,6 +209,7 @@ sim_replay_pack:
  adda.l #SIM_REPLAY_NATIVE_OFFSET,a3
  lea sim_replay_pack(pc),a2
  adda.l #sim_history_records-sim_replay_pack,a2
+ movea.l (a2),a2
  movea.l -$16bc(a4),a5
  moveq #19,d7
 .slots:

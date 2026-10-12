@@ -109,7 +109,7 @@ sim_schedule_field:
  move.w (a2),d0
  and.w #SIM_QUEUE_COUNT-1,d0
  lsl.w #3,d0
- lea sim_schedule_queue(pc),a0
+ movea.l sim_schedule_queue(pc),a0
  adda.w d0,a0
  move.l sim_clock_fields(pc),(a0)+
  move.b d5,(a0)+
@@ -265,7 +265,7 @@ sim_schedule_poll:
  beq .return
  and.w #SIM_QUEUE_COUNT-1,d0
  lsl.w #3,d0
- lea sim_schedule_queue(pc),a0
+ movea.l sim_schedule_queue(pc),a0
  adda.w d0,a0
  lea sim_schedule_current(pc),a1
  move.l (a0)+,(a1)+
@@ -393,7 +393,7 @@ sim_schedule_enqueuing: dc.w 0
 sim_schedule_a4: dc.l 0
 sim_schedule_ticks: dc.l 0
 sim_schedule_current: dcb.b SIM_QUEUE_SIZE,0
-sim_schedule_queue: dcb.b SIM_QUEUE_COUNT*SIM_QUEUE_SIZE,0
+sim_schedule_queue: dc.l 0 ; runtime workspace pointer
 
 ; Native $7904 initializes input history from startup and full $E06A race
 ; initialization. Hook its first assignment at $7908. Close the producer FIRST:

@@ -17,6 +17,7 @@ sim_replay_install:
  move.l -$16bc(a4),8(sp)
  lea sim_replay_install(pc),a1
  adda.l #sim_history_records-sim_replay_install,a1
+ movea.l (a1),a1
  move.l a1,12(sp)
  lea 20(sp),a1
  move.l a1,16(sp)
