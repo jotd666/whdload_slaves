@@ -39,9 +39,19 @@
 
 
 
+Options:
+
+ Enhanced framerate (CUSTOM2=1) enables fixed-time simulation, fractional
+ road/traffic rendering and reduced blitter interrupt overhead. The Normal
+ installer icon enables it by default; the alternative GlowIcons retain their
+ original defaults. Disable it in the WHDLoad options or use CUSTOM2=0 for
+ original gameplay/rendering. The overlay cache fix is always enabled.
+ PAL beta for the 90112-byte TD executable; NTSC and real hardware unvalidated.
+
 History:
 
  version 1.8b (12.10.2026) done by Vesuri:
+ - release beta: expose Enhanced framerate and enable it in the Normal icon
  - CUSTOM2=1: fractional road, traffic and lateral projection, including
    the rear-view mirror; smooth course heading for the mountain layers
  - retain slope fractions and move crest limits with the projected road grid

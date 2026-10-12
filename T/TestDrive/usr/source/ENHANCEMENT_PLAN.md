@@ -4,9 +4,10 @@ Goal: bring Test Drive (1987, Distinctive Software / Accolade) to parity with th
 II slave in this repository (`T/TestDrive2/usr/source`):
 
 - an always-on fix that flushes the caches after the overlay manager rewrites its stubs;
-- an opt-in "Enhanced framerate" option (`CUSTOM2`). Game time runs on a fixed simulation
-  period, independently of drawing (25 Hz on a 68020 or better). It also gives the blitter
-  bus priority and draws the road and cars at fractional positions;
+- an optional "Enhanced framerate" option (`CUSTOM2`). Game time runs on a fixed simulation
+  period, independently of drawing (25 Hz on a 68020 or better). It retains blitter
+  priority, suppresses unused blitter interrupts and draws the road and cars at
+  fractional positions;
 - the original crash screens, acknowledgement and penalties kept in enhanced mode, as in
   Test Drive II after PR #24. A field-timed recovery exists only as a VERIFY instrument;
 - fixes for any original display bugs found along the way (Test Drive II's intro DDFSTOP
@@ -348,7 +349,7 @@ The observed main-loop work uses at most 10.64% / 8.91% of the A500/A1200 step
 budget in the measured moving window; this is not a universal worst-case bound.
 All 668 native assertions, declared-range audits and option-off byte checks pass.
 Real A1200/68040 results remain deferred; NTSC remains unvalidated. Phases 9–10
-supply rendering improvements; the player-facing option label remains phase 11.
+supply rendering improvements; the player-facing option label is documented in phase 11.
 
 Reuse TD2's architecture and tested arithmetic where its assumptions apply. Keep game-local
 sources (`simulation.s`, `simulation-patches.i`) so each slave builds alone. TD's original
@@ -482,20 +483,60 @@ Local `docs/phase10.md` records commands, exact builds and evidence, including
 which unchanged projection checks predate the final cache/flat-slope fast paths.
 ReadMe history and build dependencies are updated. The preserved phase-6 A/B
 pair is unchanged. Real A1200/68040 testing remains deferred; NTSC remains
-unvalidated. Full release regression and packaging remain phase 11.
+unvalidated. Phase 11 records full release regression and packaging.
 
-## Phase 11: regression, release and contribution
+## Phase 11: regression, release and contribution — complete locally
 
-1. The full TD2 regression checklist adapted to TD (both builds assemble, the audit, units,
-   disabled bytes, timing, all cars, zero oracle, cost, two fixed windows per arm, the oldest
-   and newest WHDLoad).
-2. Player-facing: finalize `ReadMe` release history (current beta 1.8b), `slv_config`
-   `"C2:B:Enhanced framerate;"`, and an icon tooltype `CUSTOM2=1`.
-   The source dependencies in `Makefile_windows.mak` are already in place.
-3. Release archives through `package_release.py` / `amigaxdev.release` into `tmp/dev/dist/`.
-   Release candidate on the user's A1200/68040.
-4. Commits: one per coherent feature, author and committer Vesa Halttunen, unsigned, no hooks,
-   no attribution trailers. PR to the Vesuri fork, then upstream, as TD2 did.
+Beta 1.8b is packaged and the local release regression passes. Real A1200/68040
+play-testing remains deferred by the user. No push or PR is authorized; fork and
+upstream publication remain a separate follow-up.
+
+- Normal and VERIFY builds assemble; packaged source rebuilds byte-identically.
+  The release assembly delta is only the Enhanced framerate option label.
+- All 82 declared patch ranges and direct incoming/bypassed-tail audits pass.
+  C2-off retains original optional-patch bytes. Static audits do not prove
+  indirect targets.
+- 668 simulation and 1,421 renderer assertions pass. All 20 combinations of
+  five cars, periods 2/5 and straight/steering inputs reproduce the accepted
+  handling and PAL timing results. Cross-CPU route/demo and slow-drawing
+  comparisons retain gameplay/RNG state. Forced crash/recovery and police-stop
+  checks pass on A500 and A1200.
+- The controlled VERIFY zero oracle matches 40 main/30 mirror road rows,
+  scanlines and queues; downhill road/traffic and 128 mountain-layer outputs
+  match their independent models. The zero oracle selects original arithmetic;
+  it is not a claim that all production integral positions reproduce old output.
+- Normal-build A500 renderer samples at the anchor and after 1,000/1,600 fields
+  use 2.789%, 2.981% and 2.862% self cycles, below the 3% gate. Simulation work
+  also remains within its period. These are finite samples, not worst-case bounds.
+- Two 1,000-field controlled projection windows per arm pass on all three
+  presets, with equal selected gameplay state and no FPS loss. Normal-build
+  measurements below start with native demo car 0, stage 3, position 30, zero
+  speed/gear and zero presentations, selected by read-only breakpoints.
+  Later RNG and original/fixed-time trajectories can differ; this table does
+  not isolate rendering cost. Initial unmatched-car captures are diagnostic only.
+
+| PAL preset | C2 off FPS | C2 on FPS |
+|---|---:|---:|
+| A500 | 4.30 / 4.45 | 4.75 / 4.45 |
+| A1200/68EC020 | 8.20 / 8.25 | 8.55 / 8.35 |
+| A1200/68030 25 MHz | 11.10 / 11.85 | 12.50 / 12.50 |
+
+WHDLoad 19.2 and 20.0 (the oldest/newest installed runtimes, as in TD2's
+checklist) pass normal C2-off/on startup, 400-field attract driving and native
+quit-key return to AmigaDOS. This does not claim WHDLoad 17.0 validation.
+
+`slv_config` exposes `C2:B:Enhanced framerate;`. The installer Normal icon and
+preinstalled launch icon enable `CUSTOM2=1`; the two optional GlowIcons retain
+their original defaults. ReadMe documents the option, off path and PAL beta scope.
+`Makefile_windows.mak` already includes all source dependencies.
+
+Local `package_release.py` writes verified level-1 LH5 installer/preinstalled
+archives to `tmp/dev/dist/phase11/`, with explicit member/checksum manifests.
+Only intended slave, ReadMe, icon and installer source members change. The
+packaged Makefile uses the shared AmigaXDev SDK; both variants rebuild exactly.
+Archives and generated evidence remain ignored and local. The original 1.4/1.5b
+hardware A/B bundle is unchanged. Local `docs/phase11.md` records reproduction,
+exact builds and acceptance evidence. NTSC remains unvalidated.
 
 ## Phase 12: lessons back to AmigaXDev
 

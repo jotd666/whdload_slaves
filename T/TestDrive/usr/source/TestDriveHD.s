@@ -118,6 +118,7 @@ args		dc.b	"p",10
 args_end
 	dc.b	0
 slv_config
+	dc.b "C2:B:Enhanced framerate;"
 	IFD VERIFY
 	dc.b "C1:X:automatic recovery verification:1;C1:X:five field simulation verification:2;C1:X:original blitter interrupts verification:3;"
 	dc.b "C3:B:reproducible verification RNG;"
