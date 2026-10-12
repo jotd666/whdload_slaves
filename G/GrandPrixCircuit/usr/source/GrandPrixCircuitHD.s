@@ -88,7 +88,7 @@ assign
 ; CUSTOM2=0 (or omitted) retains the original game.
 slv_config
 	IFD VERIFY
-	dc.b "C3:B:Reproducible RNG;C5:B:Scripted joystick verification;"
+	dc.b "C1:B:Traffic in attract verification;C3:B:Reproducible RNG;C4:B:Slow drawing verification;C5:B:Scripted joystick verification;"
 	ENDC
 	dc.b	0
 
@@ -304,9 +304,15 @@ patch_main
 pl_main_v1
 	PL_START
 	IFD VERIFY
+	PL_IFC1
+	PL_PSS $e06,verify_traffic,4
+	PL_ENDIF
 	PL_IFC3
 	PL_W $c12c,$7200
 	PL_NOP $c12e,4
+	PL_ENDIF
+	PL_IFC4
+	PL_PSS $729a,verify_slow_draw,2
 	PL_ENDIF
 	PL_PS $707a,verify_race_start
 	PL_IFC5

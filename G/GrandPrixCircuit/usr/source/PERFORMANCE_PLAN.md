@@ -24,7 +24,8 @@ the slave's patch numbering. Static analysis is supplemented by the runtime chec
 ## What we know (static analysis and runtime validation)
 
 - Executable: 94 708 bytes, Aztec C small-data (a4 = hunk1 + $7FFE), hunks CODE $E544,
-  DATA $8918, BSS $4. `HUNK_OVERLAY` with an empty table. The linked overlay manager starts at h0:d42c
+  DATA $8918 initialised bytes in a $9364 allocation (including its zeroed tail),
+  plus a separate BSS $4 hunk. `HUNK_OVERLAY` with an empty table. The linked overlay manager starts at h0:d42c
   (alternate entry d43e; stub writer d4a2), not d414. It is inactive in the supplied v1:
   all 139 hunk-1 jump stubs are already direct jumps, no relocated pointer targets the
   manager, and entry/write breakpoints plus a full-table hardware watchpoint stayed silent
@@ -39,8 +40,9 @@ the slave's patch numbering. Static analysis is supplemented by the runtime chec
   unless paused (-31736), it bumps -29930, counts down -29928 from the period word -29926
   (= 6, data hunk $B18, never written), then steps: `776a`, `jsr -32514(a4)` → `a288` (AI),
   `782e` (player), `8010`.
-  Consequence: game time is probably *already* independent of drawing speed. The TD2 work that
-  matters here is the higher step rate, smooth drawing and display fixes, not decoupling.
+  The six-field cadence is independent of drawing, but game state is not: start lights
+  and car collisions run in the drawing path. Phase 3 below supersedes the earlier
+  assumption of complete decoupling.
 - Main loop h0:7094–7264 → `729a`: `a58c`, latch `a6ea` (copies car tables, -30016→-30010,
   -30012→-30006, -29930→-29932; not interrupt-safe), `a77c`, `9a48`, road `818c`, `906a`,
   `6dc4`, `6ae0`, `6a28`, swap `a8ee` (→ h0:372, LoadView at h0:39e; no WaitTOF, then `cf04`
@@ -237,17 +239,92 @@ identified separately. Reports retain the call edges and hottest instructions.
   Reproduction commands are in `tmp/dev/docs/development.md`; the harness remains ignored.
 - The user observed blinking horizon/building graphics during this work, consistent with
   the suspected on-screen drawing/buffer-ownership bug. No renderer or swap fix was applied.
-  Confirming causality and fixing it remains Phase 5. Phase 3 has not been started.
+  Confirming causality and fixing it remains Phase 5. No tearing fix is included in Phase 3.
 
-### Phase 3 — Game-time model (playbook §9, `fixed-time-simulation.md`)
+### Phase 3 — Game-time model (complete; playbook §9, `fixed-time-simulation.md`)
 1. Map every time source: -31790, -29930/-29928/-29926, 3730(a4) render deltas, race/lap
-   clock (4024(a4)? qualifying uses -31790×6 at h0:6624–6700), sound, RNG.
+   clock (-31424/-31416; 4024 is auxiliary; pit time divides -31790 deltas by 6), sound, RNG.
 2. Coupling test: CUSTOM4 slow drawing — does race time, lap time and AI progress stay the
-   same? Expected yes (VBL sim); find the exceptions (crash/spin recovery, pit stops,
+   same? Test the VBL cadence separately from state; find the exceptions (crash/spin recovery, pit stops,
    start lights, anything in the main loop instead of the VBL).
 3. State map of the step: player (`782e`→`786c`/`7e2c`/`7e66`/`795c`), AI `a288`, `776a`,
    `8010`. List every rate that must scale with the step period.
 4. Price the step: interrupt time per step on 68000 and 68020 (decides period per CPU).
+
+#### Phase 3 results and evidence
+
+The complete clock, state/writer, rate/event and pause/pit/crash inventory is in
+[GAME_TIME.md](GAME_TIME.md), including source offsets, capture methods and limitations.
+
+- **Fixed step cadence, drawing-dependent state.** All six accepted solo/traffic windows
+  on A500, deliberately slowed A500 and expanded A1200 execute 120 steps in 720 fields,
+  with period 6 and no pauses. For solo attract, publications are 71 / 41 / 180;
+  first observed go fields are 310 / 327 / 305. Lap ticks at field 720 are 68 / 65 / 69.
+  Start-light thresholds execute inside drawing, using the previous render delta.
+- The corrected traffic fixture populates all ten grid IDs before native initialisation;
+  nine opponents move forward. Publications are 66 / 39 / 169; go fields 315 / 321 / 304;
+  lap ticks 67 / 66 / 69. A500 normal/slow share simulation phase and raw joystick history.
+  Completed-step snapshots confirm the first lap/speed difference at step 54, field 319.
+  Matching lap ticks 1..66 gives identical decoded player/AI motion and RNG in that pair.
+  Whole allocated data differs across rendering rates; no full-state equality is claimed.
+  The CPU comparison also includes differing pre-race countdown/input sampling phase.
+- **Actual lap clock:** -31424, with completed-lap sum -31416. 4024 is an auxiliary tick
+  counter. Native six-field ticks are displayed as tenths, so PAL clock time runs at
+  approximately 5/6 real time. The pit display uses elapsed native fields **divided**
+  by six, not qualifying fields multiplied by six. Correcting the PAL clock changes gameplay.
+- **Further coupling:** draw-time `$a58c` changes player position, speed, damage and collision
+  state using latched opponent speeds. `$a6ea` is not interrupt-safe. Pause freezes active
+  fields/countdown without catch-up; the native pit service interval explicitly resumes
+  simulation between paused entry/exit. Crash/spin decay is in the VBL, but terminal
+  handling/messages wait for the main loop. Human controls, full laps, native pit entry
+  and all crash/spin outcomes are mapped statically, not claimed as played-through tests.
+- **Other clocks:** audio has a separate VBL age counter; the song drivers really program
+  CIA-A timer A. Their clock does not feed the race VBL. The clock scan includes every
+  pristine file and all CIA timer/control/TOD registers. No boot benchmark sets the period.
+- **Rate inventory:** distinguishes integrated travel/forces from per-segment damage and
+  lap events, gear/AI decisions, display timers and collision impulses. Cooling is already
+  period-scaled: `$77b0` subtracts d0, loaded with the period at `$774c`. Do not scale it twice.
+
+Populated-traffic native VBL callback cost, 100 fields after 600 warm-up fields, caches
+unchanged (020 CACR=0), including callees; each priced step executes nine opponent updates:
+
+| Machine | Step cycles min / mean / max | Proposed period | Projected callback share, mean / sampled-max |
+|---|---:|---:|---:|
+| A500 68000 | 31,112 / 32,305 / 33,898 | 6 | 4.01% / 4.20% |
+| Expanded A1200 68EC020 | 16,563 / 16,921 / 17,285 | 2 | 3.02% / 3.09% |
+
+The projection includes non-step callbacks, but excludes future scaling helpers and
+unrelated IRQ/dispatch work; it is not a worst-case guarantee. Period 1 projects to 5.95%
+(mean) on the 020, so sampled simulation cost alone does not rule it out. **50 rendered fps
+has not been demonstrated**: populated-traffic traces draw at 5.0 / 13.02 fps, and the
+Phase 2 68030/25 baseline is 24.67 fps. The proposed 6/2 periods fit this measured budget;
+the decision remains Phase 4. No simulation period, cache, handling, timing or renderer fix
+was made to the normal slave.
+
+- New hooks are VERIFY-only: `CUSTOM4` waits eight native VBL transitions before drawing,
+  replaying complete calls at `$729a/$729e`; it does not delay initial pre-race setup. `CUSTOM1`
+  enables an explicitly artificial attract-with-traffic fixture, with a validated 0..9
+  grid permutation. An earlier incomplete traffic fixture pushed the player backwards
+  (as the user noticed); those captures were rejected and excluded from all figures above.
+- The normal slave is byte-identical to Phase 1, SHA-256
+  `e7d4b1361817ede24db993d8d19969ac11887352d6e8b45e2c628391a15d908d`.
+  Final VERIFY SHA-256:
+  `7af8f2f025632252c316c1ef6aa0991b254165edc2fac2d6a14784d41b01d0ed`.
+  Both vasm builds pass; all 55 pristine manifest hashes remain unchanged.
+- The data capture extent is corrected from the `$8918` file payload to the `$9364`
+  allocated hunk, including the zeroed tail that contains race controls. Existing full-RAM
+  Phase 2 recordings allow its A500/A1200 repeat comparisons to be rerun: all boundary data,
+  instruction/register/cycle records, DMA records and active pixels still match.
+  Changed BSS flags and truncated snapshots are rejected by comparator negative controls.
+  A fresh accepted traffic boot matches all 720 allocated-data snapshots and every
+  step/publication count exactly. The eight hook spans pass their boundary/branch audit;
+  original-code/JOTD-patch/stub checks pass on both CPUs, including corruption rejection.
+- Local evidence: `tmp/dev/tmp/phase3/accepted-*`, `summary.json`, `clock-scan.json`,
+  comparison reports, retained per-run slaves and debugger logs. Step cost is in
+  `accepted-cost-{a500,a1200}/step-cost.json`; completed ticks in
+  `accepted-ticks-{a500-0,a500-1,a1200}`. `REJECTED.txt` identifies superseded runs.
+  Reproduction commands are in `tmp/dev/docs/development.md`; tools and original data stay
+  ignored. Stop here for the Phase 4 review; the blinking horizon remains a Phase 5 issue.
 
 ### Phase 4 — Review point
 Present baseline numbers, the time model and the step price. Confirm periods 6/2 fit, and
@@ -271,7 +348,8 @@ is out of scope unless decided otherwise.
    private fractional carry), Euler correction, force reference, `sim_relax` n-th roots.
    Apply them to each rate found in Phase 3 (player, 10 AI cars at `a2c4..`, clock).
 3. Keep discrete counters at the original 6-field cadence (TD2 rule: gears, timers, AI
-   decisions), and race/lap clocks in real PAL time.
+   decisions). Clock/statistics policy must be selected at Phase 4: making the original
+   slow PAL clock track real time changes gameplay.
 4. Interrupt-safe latch: guard `a6ea` (Disable or double-read) so a step never lands mid-copy.
 5. Crashes, spins, pit stops and penalties keep their original logic and timing; only their
    per-step rates are scaled, so they cost the same game time as in the original.
@@ -298,6 +376,9 @@ is out of scope unless decided otherwise.
 ## Open questions
 - Attract capture window and publication counter validated in Phase 2; cross-machine
   simulation/handling equivalence is not yet established.
-- Race/lap clock location and whether it already runs in real time.
-- Does anything (crash, spin, pit) block the VBL step or depend on CPU speed?
+- Phase 3 locates lap/race ticks at -31424/-31416; they are not real-time PAL seconds.
+  Phase 4 must decide whether to preserve or correct that behaviour.
+- Phase 3 maps pause/pit/terminal gates and drawing-dependent starts/collisions in
+  `GAME_TIME.md`. Their correction requires a gameplay decision; native event coverage
+  and human-handling equivalence remain Phase 6 requirements.
 - Overlay question resolved for the supplied v1: dormant manager, no stub rewrites (Phase 1 evidence above).

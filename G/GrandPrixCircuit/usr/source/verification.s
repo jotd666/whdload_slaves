@@ -1,4 +1,4 @@
-; Phase 2 instruments only. Included exclusively by VERIFY builds.
+; Measurement instruments only. Included exclusively by VERIFY builds.
 ; Offsets below are for the size-checked 94,708-byte executable.
 ; Requires WHDLoad 17.2+ for PL_IFC3/PL_IFC5 (tested with 20.0).
 ; CUSTOM3 pins only the beam contribution to the native RNG; CUSTOM5 returns
@@ -54,6 +54,46 @@ verify_read_joydat:
 	move.w d0,(a0)
 	movem.l (sp)+,d1/a0
 	tst.w d0                 ; N/Z/V/C as MOVE.W; native LSR at $c1e6 overwrites X
+	rts
+
+; Diagnostic traffic fixture: preserve the native one-lap qualifying setup,
+; but supply a 0..9 grid permutation and enable opponents BEFORE $9f24.
+; Qualifying leaves the grid-order table zeroed: setting only its flag would
+; initialise player slot 0 ten times, not create nine opponents.
+; This is an artificial attract-with-traffic case, not a recorded UI race.
+; Replaces the complete MOVE.W/CLR.W pair at $e06..$e0f.
+verify_traffic:
+	movem.l d0/a0,-(sp)
+	lea 3752(a4),a0
+	moveq #9,d0
+.grid
+	move.w d0,-(a0)
+	dbf d0,.grid
+	movem.l (sp)+,d0/a0
+	move.w #1,3844(a4)
+	move.w #1,3846(a4)
+	rts
+
+; After the first race anchor, delay presentation by eight native VBL transitions.
+; Skip the initial pre-race draw, which would perturb the starting step phase.
+; Interrupts keep running: no STOP, host sleep, or game-state writes.
+; MOVE/CMP/DBF preserve X.
+; Replays both complete four-byte calls displaced at $729a/$729e.
+verify_slow_draw:
+	movem.l d0-d1,-(sp)
+	move.l verify_races(pc),d0
+	beq.b .restore
+	move.l -31790(a4),d0
+	moveq #7,d1
+.wait
+	cmp.l -31790(a4),d0
+	beq.b .wait
+	move.l -31790(a4),d0
+	dbf d1,.wait
+.restore
+	movem.l (sp)+,d0-d1
+	jsr -32508(a4)
+	jsr -32496(a4)
 	rts
 
 verify_cache_state:
