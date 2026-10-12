@@ -7,8 +7,8 @@ of release work. The completion plan remains authoritative with that amendment.
 
 No implementation or validation work remains for the accepted release.
 F1 enables the normal verified bundle by default; F2 condenses the ledgers;
-F3 passes on all six machine configurations, with final results in `profiling.md`
-and the ReadMe. The normal verified mask is `0x71fff`, filtered by CPU.
+The original F3 passed on all six machine configurations; its results and the
+subsequent artwork follow-up are recorded separately in `profiling.md`. The normal verified mask is `0xf1fff`, filtered by CPU.
 Normal CUSTOM2=0 is On and 1 is Off; developer/VERIFY values remain bit masks,
 where zero disables patches. The normal build is in the local build directory.
 Nothing has been pushed; publication requires a separate explicit request.
@@ -35,15 +35,21 @@ Git; do not revive their superseded next-work lists.
 The requested 030/040/060 reprofile is complete; see `rendering-analysis.md` and
 the new section of `profiling.md`. It identifies repeated cockpit scripts,
 per-plane drawing and explicit waits, and documents why the discarded software
-blitter was not a test of a purpose-built Fast RAM renderer. The recommended
-persistent-cockpit/span-renderer redesign is not implemented or part of the
-accepted release. D5 remains postponed.
+blitter was not a test of a purpose-built Fast RAM renderer. The sparse static
+artwork follow-up below is implemented. Full cockpit persistence and a span-renderer redesign
+remain separate future work. D5 remains postponed.
 
-## Active: persistent cockpit artwork
+## Completed: selective static cockpit artwork repairs
 
-User-authorized after the rendering investigation. Developer bit 19 now tests
-sparse, pixel-guarded repairs for forward static programs 2–4; unchanged covered
-pixels are not written, and transparent pixels are never touched. The renderer
-workspace is reused. The normal mask remains unchanged pending the CPU matrix
-and transition checks. Native firing scripts, instruments and other views remain
-in their existing draw order. Current measurements are in `profiling.md`.
+User-authorized after the rendering investigation. Bit 19 now enables sparse,
+pixel-guarded repairs for forward static programs 2–4 under Faster rendering on
+030/040/060. Unchanged covered pixels are not written; transparent pixels are
+never touched. Native artwork is retained on 000/010/020 because pixel checking
+regressed or provided no gain on the measured slow CPUs. The reserved renderer
+workspace is reused, plus an 8 KB Chip mask; minimum RAM is unchanged.
+
+All six CPU timings and bounded native/view/firing validation are in
+`profiling.md`. Native firing scripts, instruments and other views keep their
+existing draw order. Full cockpit persistence would additionally need scene
+exclusion and narrower dashboard/instrument updates; those are not implemented
+by this static-artwork fix. D5 remains postponed.

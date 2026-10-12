@@ -5,7 +5,7 @@
 The user accepted measured performance on 2026-10-12. The normal build now
 starts with Faster rendering On when CUSTOM2 is omitted: On=0, Off=1.
 Developer/VERIFY CUSTOM2 remains an explicit mask, with zero disabling patches.
-The verified mask is `0x71fff`, filtered by CPU; W6 bit 13 remains excluded
+The verified mask is `0xf1fff`, filtered by CPU; W6 bit 13 remains excluded
 because D5 is postponed. There is no 50 FPS or frame-independent normal-game
 speed claim. Historical captures below retain their original build, option
 mapping and RAM configuration; they do not define the current player default.
@@ -16,7 +16,7 @@ Passed on 2026-10-12. Normal slave SHA-256:
 `d165a358a33712f4daade2a88bf556aa476ee2644c71b98e52cef5aba6202a37`.
 The six 2,000-field captures `completion-f-<machine>-1` all use that same
 normal binary with CUSTOM2 omitted, and each confirms the selected safe-swap
-patch at sim:00b06. The scoreboard's F rows are the current normal release:
+patch at sim:00b06. The scoreboard's F rows precede the artwork follow-up below:
 event-free frame cadence is extracted conservatively from the event window,
 not labelled as a separate steady-flight capture. The A500 uses the approved
 512 KiB chip + 2 MiB fast minimum; its A2 stock baseline used 1.5 MiB slow RAM.
@@ -195,23 +195,30 @@ six-bracket accounting, wrong-return-stack rejection, and discontinuous-field
 rejection. The report reprocesses all completed captures. Runtime source, player
 settings, release mask and D5 disposition are unchanged.
 
-## Sparse cockpit artwork development (2026-10-12)
+## Sparse cockpit artwork follow-up (2026-10-12)
 
 New user-authorized scope after release: remove repeated static artwork work.
-Developer bit 19; not yet normal-enabled. D5 remains postponed. The initial
-program-2 candidate stores only covered words and repairs differing masked
-pixels on the actual draw page. It does not yet prevent scene overwrites.
+Bit 19 joins the normal Faster rendering bundle on 030/040/060 only. D5 remains
+postponed. Programs 2–4 store only covered words and repair differing masked
+pixels on the actual draw page. This does not prevent scene overwrites.
 
 First bounded native pixel/drawing-state twin passes (one hit, 40,000 screen
 bytes and 24 drawing-state bytes); four sparse-repair host tests cover independent
 pages, opaque black, intervening damage, idempotence and bounded overflow.
 The expanded three-program/two-page candidate passes six native twins
-(`artwork-sparse-twin-060-4`): 306 hits, three fills, no fallbacks. The current
-all-CPU timing matrix is pending. All 536 host tests and 83 hook ranges pass.
+(`artwork-sparse-twin-060-4`): 306 hits, three fills, no fallbacks. The six-configuration
+CPU timing matrix is complete. Native keyboard view/firing checks pass on 040.
+All 536 host tests and 83 hook ranges pass.
 
 | Candidate / CPU | Fields per window | Opening FPS off → on | Cockpit mean ms off → on | Status |
 |---|---:|---:|---:|---|
 | Sparse program 2 / 060 NOMMU | 250 | 12.380 → 13.179 (+6.45%) | 28.029 → 26.494 | Initial candidate; not release policy |
+| Sparse programs 2–4 / A500 | 250 | 2.196 → 1.997 (−9.09%) | 53.578 → 85.914 | Rejected on 68000 |
+| Sparse programs 2–4 / 020 | 250 | 6.789 → 6.789 (0.00%) | 30.860 → 31.278 | Dropped on 020: no gain |
+| Sparse programs 2–4 / 030 MMU | 250 | 13.578 → 14.377 (+5.88%) | 27.965 → 23.273 | Enabled on this CPU class |
+| Sparse programs 2–4 / 030 NOMMU | 250 | 13.578 → 14.577 (+7.35%) | 28.025 → 23.100 | Enabled on this CPU class |
+| Sparse programs 2–4 / 040 NOMMU | 250 | 12.780 → 13.778 (+7.81%) | 26.478 → 22.025 | Enabled on this CPU class |
+| Sparse programs 2–4 / 060 NOMMU | 250 | 12.380 → 13.578 (+9.68%) | 27.351 → 24.383 | Enabled on this CPU class |
 
 Evidence: `artwork-sparse-060-{off,on}-1`, identical developer SHA-256
 `71db1669ccd2634d9261fafa0d0c155cd43d9a258aa4fcd4d72f707835d68046`. Masks differ only by bit 19
@@ -223,6 +230,54 @@ frame budget. Native comparison: `artwork-sparse-twin-060-3`. Earlier attempt
 2 safely fell back after allocation failure and supplies no passing cache test;
 attempt 1 failed assembly before boot. The current candidate uses the already
 reserved renderer workspace to avoid competition with the game's allocation pool.
+
+All six expanded-candidate pairs use identical developer SHA-256
+`8f49045d4021ba13b5a1e8d0c749a95d84417ed0e347995e6df8037a74307cc1`, frozen
+from the A500-on capture. Evidence is `artwork-sparse-<machine>-{off,on}-1`,
+except the 060 pair uses suffix `-2`. Every pair differs only by bit 19. Each
+opening and subsequent artwork window is 250 fields.
+On 68000, the static framework alone rises from 15.043 to 38.309 ms: CPU
+pixel checking is a regression, so that class must retain native drawing.
+The initial 060 result is superseded by the three-program row for this candidate.
+
+Final policy drops the candidate on 000 (regression) and 020 (no FPS gain), and
+retains native artwork on unmeasured 010. The normal bundle starts at `0xf1fff`
+and applies that CPU gate; developer/VERIFY bit 19 uses the same gate. The
+normal build's other verified policies and the minimum RAM requirement are
+unchanged. Cache storage uses the reserved Fast workspace and 8,000 extra Chip
+bytes for the framework mask, with native fallback.
+
+`artwork-final-verify-040-4` passes six initial native pixel/state twins (three
+programs × two pages), then hardware F2/F3/F4/F1 transitions and six firing frames
+(five actual native firing-branch visits). The warmed cache returns to forward
+flight: 345 hits, three fills, no fallback; all six initial twin flags remain
+passed. They are not six additional post-transition comparisons. Screenshots of
+firing and the final cockpit were inspected. Attempt 1 exposed the completed
+VERIFY tape swallowing commands, then its host debugger exited; attempt 2
+confirmed debugger writes did not restore the tape hook; attempt 3 failed
+assembly before boot. These supply no passing transition evidence. The VERIFY
+route now hands input back to the native pop after menus with CUSTOM5=0;
+nonzero scripted fixtures and W6's own input path retain their prior behavior.
+
+Normal/developer/VERIFY builds pass (text: 123,596 / 123,960 / 308,702 bytes),
+as do 536 host tests and 83 hook ranges. Normal SHA-256:
+`6ed8664416b9eadf75595a608a4a26ad3a0941155a26dca6654b98ad460cace2`.
+Normal smoke checks `artwork-final-normal-{a500,030}-1` use that same binary,
+CUSTOM2 omitted, and native menu/preferences input. Both reach flight and confirm
+default-on safe swaps. The A500 boots at 512 KB Chip + 2 MB Fast and retains the
+original entries at sim:15f1e/sim:15f8a; the 030 installs both artwork hooks.
+These are selection/boot checks, not new FPS windows. All owned emulators and
+input controllers were closed after validation.
+
+Reproduce an isolated developer comparison from the local harness with
+`BENCH_BATCH_KEYS=1 BENCH_DEVELOPER=1 BENCH_FROZEN_SLAVE=<capture>/slave.slave`
+and `../../R/RedBaron/tools/artwork_profile_case.py <machine> <mask> <new-output>`.
+Use the identical binary for both masks and change only bit 19; each group is
+250 PAL fields. Current source gates that bit off on 000/010/020, so the rejected
+slow-CPU experiments require their frozen pre-policy binary. The bounded native
+comparison and keyboard transitions use
+`python3 -B ../../R/RedBaron/tools/artwork_verify.py 040 <new-output> --transitions`.
+VERIFY timings are not performance evidence. Run one owned emulator at a time.
 
 ## Completion scoreboard
 

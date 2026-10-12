@@ -1,5 +1,5 @@
-; Sparse static artwork candidate: sim v1, all CPU classes for measurement.
-; Developer/VERIFY bit 19; not release-enabled until measured.
+; Sparse static artwork: sim v1, measured 030/040/060 classes only.
+; Normal Faster rendering bundle; developer/VERIFY bit 19.
 ; PERF_RANGE sim:15f1e 12 bit=19
 OS_PIXELS = 14338 ; count + at most 1024 occupied words, 14 bytes each
 OS_FAST = OC_ENTRY+512

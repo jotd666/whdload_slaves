@@ -1,6 +1,6 @@
 ; Performance patch framework. Only sim v1 calls this module's installer.
 ; No feature is release-enabled until its model, twin and measurements pass.
-PERF_VERIFIED_MASK = $71fff ; W1-W5, B1/B2, C3 and E2 gauges; each has its CPU gate
+PERF_VERIFIED_MASK = $f1fff ; W1-W5, B1/B2, C3, gauges and artwork; each has its CPU gate
 PERF_DEVELOPER_MASK = $f3fff
 PERF_VERIFY_MASK = $f7fff ; developer W6 plus VERIFY-only quiescent overlay probe bit 14
 
@@ -42,7 +42,6 @@ perf_read_options:
 	cmpi.l #1,d1
 	bne .time_cpu_ready
 	bclr #13,d0
-	bclr #19,d0 ; unmeasured 68010 retains native artwork
 .time_cpu_ready
 	btst #13,d0
 	beq .timing_dependencies_done
@@ -53,6 +52,13 @@ perf_read_options:
 	bne .instrument_cpu_ready
 	bclr #18,d0
 .instrument_cpu_ready
+	; Sparse artwork loses on 000 and gives no gain on 020.
+	; Only measured 030/040/060 classes may select it, in every build mode.
+	move.l perf_attnflags(pc),d1
+	andi.l #$8c,d1
+	bne .artwork_cpu_ready
+	bclr #19,d0
+.artwork_cpu_ready
 	btst #19,d0
 	beq .artwork_ready
 	bset #14,d0

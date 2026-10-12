@@ -42,9 +42,9 @@ memory_install_v1:
 	move.l #PERF_EXTRA_FAST,d0
 	move.l $4.w,a6
 	jsr _LVOFreeMem(a6)
-	; Keep the approved spare workspace reserved. The complete cockpit cache
-	; was dropped after regressions on every affected CPU class. CUSTOM2=0
-	; therefore still retains the original game's allocation budget.
+	; Keep the approved renderer workspace reserved. Sparse artwork uses
+	; its first two 64 KiB regions on 030+. The player Off selection still
+	; retains the original game allocation budget.
 .done:
 	movem.l (sp)+,d0-a6
 	rts

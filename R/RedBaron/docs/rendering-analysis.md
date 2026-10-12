@@ -148,6 +148,30 @@ The similarity of these configurations must not be used to conclude that a real
 060 cannot outperform a real 030, or that a CPU implementation cannot reach
 50 FPS. Keep hardware capability separate from repeatable emulator comparisons.
 
+## Static artwork repair implementation
+
+The follow-up implements sparse repair for the forward cockpit's static programs
+2–4. On a cache miss the original renderer supplies the artwork and exact coverage;
+the cache stores only covered 16-pixel words, with five planar colours. Subsequent
+calls compare those words on the actual destination page and write only differing
+covered bits. Opaque black is covered correctly; transparent pixels keep the scene.
+This removes repeated script interpretation and primitive construction, preserves
+both pages independently and repairs intervening damage without assuming that a
+page remained untouched. Program/resource, clipping and palette inputs guard reuse;
+shared resource-lifetime hooks invalidate entries before their owners are released.
+
+The measured CPU policy enables this on 030/040/060 and retains native drawing on
+000/010/020. The sparse lists use the already reserved Fast RAM workspace, plus an
+8,000-byte Chip mask for program 2; allocation or unsupported coverage falls back
+to native drawing. Programs 3 and 4 retain their native order so shared framework
+pixels overlap correctly. Firing artwork and non-forward views remain native.
+
+This is not full cockpit persistence: the world can still overwrite foreground
+pixels, the dashboard masked overlay still runs, and instrument updates retain
+their existing CPU policy. Avoiding those overwrites and restoring only changed
+instrument bounds remain distinct work. All timings and validation are in the
+sparse-artwork section of `profiling.md`; no new 50 FPS claim is made.
+
 ## Recommended next implementation
 
 1. **Make cockpit persistence remove work.** Track valid static pixels per draw
@@ -169,8 +193,8 @@ The similarity of these configurations must not be used to conclude that a real
    Fast-RAM copy calibration before using 040/060 emulator timings as CPU-speed
    evidence; confirm the promising design on a representative real accelerator.
 
-These are recommendations for the next implementation, not shipped changes or
-a new promise of 50 FPS. D5 remains postponed. Correct simulation timing and
+Beyond the sparse artwork repair above, these are recommendations rather than
+shipped changes or a new promise of 50 FPS. D5 remains postponed. Correct simulation timing and
 rendering throughput remain separate acceptance requirements.
 
 ## Reproducing the profiles

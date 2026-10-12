@@ -52,8 +52,12 @@
 
  Rendering improvements:
  - Faster rendering is On by default (normal build: CUSTOM2=0). It selects the verified dashboard cache, geometry,
-   solid-fill, persistent-gauge and sound optimizations, with CPU-specific choices.
+   solid-fill, persistent-gauge, static-artwork and sound optimizations, with CPU-specific choices.
  - Persistent gauge reuse is enabled only on the measured 020/040 classes.
+ - Static forward cockpit artwork uses selective pixel repairs on 030/040/060.
+   Unchanged covered pixels are not written. Firing and other views stay native.
+   000/010/020 retain native artwork; pixel checking did not help the slower CPUs.
+   This uses reserved FastMem and an 8 KB ChipMem mask, with native fallback.
  - Flight swaps use the original safe beam wait and a two-field cap (about
    25 FPS on PAL). This does not make world speed frame-rate independent.
  - Select Off in the splash window, or CUSTOM2=1, to disable it.
@@ -69,14 +73,14 @@
    contain no VERIFY instruments or scripted game input.
 
  Performance and Time Scale:
- - Measured maximum-detail PAL FPS (event-free frames / whole event window):
+ - Pre-artwork-fix maximum-detail PAL FPS (event-free frames / whole event window):
    A500: 2.23 / 2.22
    020: 7.24 / 7.64
    030 with MMU: 14.86 / 14.50
    030 without MMU: 14.86 / 14.48
    040/25: 14.75 / 14.35
    060/50: 14.20 / 14.00
-   All six use the same normal build, with Faster rendering On by default.
+   All six used the same prior normal build, with Faster rendering On by default.
    These are measured scenarios, not worst-case guarantees or a 50 FPS claim.
    Full settings, comparisons and validation are in docs/profiling.md.
  - The normal build retains the original frame-dependent game speed on all
