@@ -396,9 +396,15 @@ Tools stay in ignored `tmp/dev/tools`.
      seven-profile audit includes fractional velocity and both position carries:
      all 286 steady-motion intervals integrate projected velocity over consumed
      physics time exactly. Earlier frame-boundary rate differences mix observation
-     and consumed time. Reference rates still span 0.223% with different throttle
-     feedback histories; this does not prove equal-wall-time trajectory accuracy
-     or resolve the performance gate.
+     and consumed time. Those reference rates span 0.223% with different throttle
+     feedback histories. A separate INITIAL_THROTTLE physics fixture now sets
+     throttle once after native acceleration becomes eligible, then holds neutral
+     input. Its controlled initial conditions isolate the reference recurrence
+     from the feedback controller: all 762 moving returns across seven profiles
+     plus slowed A500 drawing match an independent one-field model in fractional
+     velocity, gear and position, including both upshifts. See GAME_TIME.md.
+     This is not the unchanged driving tape and does not resolve equal-wall-time
+     handling, native-clock compatibility or the performance gate.
    - Exercise collisions, the loop and the jump at both T extremes; check for
      tunnelling and missed checkpoints.
    - Measure the A500's FPS: it must not drop by more than 3% against the baseline.

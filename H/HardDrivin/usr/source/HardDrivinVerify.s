@@ -8,6 +8,8 @@
 ; VERIFY_STEPINPUT_TAPE instead consumes the existing tape at virtual fields
 ; 1,9,17,... per controls pass. It is a native-step compatibility diagnostic,
 ; not the unchanged field-indexed A/B benchmark. Real clocks remain untouched.
+; INITIAL_THROTTLE + EXACT_THROTTLE is a separate physics probe: initialize
+; throttle once when native acceleration becomes eligible, then neutral input.
 ; Calibrated on deterministic PAL A500/68000, 512K Chip + 1536K slow,
 ; no Fast RAM, PRELOAD, CUSTOM2=0 and both host input ports disabled.
 ; Other CPU/memory profiles need validation; field-indexed input does not
@@ -225,9 +227,35 @@ _verify_drive_key:
 ; Optional controlled coupling experiment, never the field-tape acceptance run.
 ; X=320/Y=200 and button 4 are held after race entry; reassert at controls entry
 ; because native controls clears its button latch. No dynamics, clocks or RNG
-; are injected. VBL publishes the same values, so mid-step VBL cannot steer it.
+; are injected except in the explicitly initialized throttle physics probe.
+; VBL publishes the same values, so mid-step VBL cannot steer it.
 	IFD VERIFY_STEPINPUT
 _verify_step_input:
+	IFD VERIFY_STEPINPUT_INITIAL_THROTTLE
+; Controlled initial condition, NOT an input-only or native-equivalence fixture.
+; Initialize once at controls entry, then keep buttons neutral through HOLD.
+; VBL never initializes dynamics, including before the first controls pass.
+	move.l a0,-(a7)
+	lea _verify_drive_state(pc),a0
+	cmpi.w #2,(a0)
+	bne.s .initialized
+	; Follow the native controls' acceleration eligibility, including GO.
+	tst.b -$5224(a4)
+	beq.s .initialized
+	tst.b -$69fa(a4)
+	bne.s .initialized
+	tst.b -$69fc(a4)
+	bne.s .initialized
+	tst.b -$6864(a4)
+	bne.s .initialized
+	lea _verify_throttle_hold_state(pc),a0
+	tst.w (a0)
+	bne.s .initialized
+	move.b #VERIFY_STEPINPUT_HOLD_THROTTLE,-$66e4(a4)
+	move.w #1,(a0)
+.initialized:
+	movea.l (a7)+,a0
+	ENDC
 	IFD VERIFY_STEPINPUT_RAMP
 	move.l a0,-(a7)
 	lea _verify_step_ramp_count(pc),a0

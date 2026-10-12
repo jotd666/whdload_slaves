@@ -3021,6 +3021,98 @@ isolate that residual. No whole-trajectory equivalence is claimed here.
 Evidence is retained as per-capture `consumed-motion.json` and aggregate
 `consumed-motion-comparison.json`. This completes a focused exact check of steady
 position integration across all seven standard profiles. Changing-force motion,
-slow drawing, contact, equal-wall-time handling, native-clock recovery dependence,
-the original FPS gate and human laps remain open. No game code changed for this
-measurement.
+contact, equal-wall-time handling, native-clock recovery dependence, the original
+FPS gate and human laps remain open. No game code changed for this measurement.
+
+The subsequent A500 draw-delay comparison uses one identical slave per policy,
+with CUSTOM4=0 or 4 (`s4-clockslow-current/reference-0/4`, 500 fields each).
+The same fields 360..420 qualify for three of the four captures:
+
+| Policy / delay | Consumed fields | Observed fields | Velocity including eighths | World units / consumed second |
+| --- | ---: | ---: | ---: | ---: |
+| Regular / 0 | 55 | 57 | 231.250 | 270.272216 |
+| Regular / 4 | 50 | 52 | 229.625 | 268.517201 |
+| Reference / 0 | 52 | 54 | 224.250 | 262.277150 |
+
+All qualified adjacent-return pairs satisfy the exact position identity above.
+Regular delayed passes consume 16..17 fields within the measured interval. This
+extends the constant-vector accounting check beyond eight fields; it does not
+establish changing-force or contact accuracy. The reference / 4 capture never
+settles at throttle 22: the input controller oscillates between higher and lower
+values. It fails the constant-throttle qualification and supplies no equal-input
+integrator result. Its evidence is retained rather than treated as a passing run.
+
+A debugger-write attempt to initialize throttle was ineffective: the three
+`s4-initialized-reference-a500/slow4/020` captures retain the original feedback
+histories. Their initialization records are explicitly rejected. The remote
+stub's silent guest-write failure was already recorded in the development notes;
+a before-write snapshot cannot establish initialization.
+
+
+## Controlled initial throttle: reference recurrence comparison
+
+`VERIFY_STEPINPUT_INITIAL_THROTTLE` requires EXACT_THROTTLE and its existing
+HOLD_THROTTLE/STEPINPUT prerequisites. This is explicitly a physics fixture, not
+an input-only test or the unchanged driving tape. At controls entry it waits for
+race state 2 and the native acceleration eligibility checks (GO enabled, no crash,
+no first-input reset, no race termination). It then sets throttle to the requested
+value once and latches neutral buttons. It changes no pose, velocity, gear, clock
+or collision state. Initializing before these native checks would move the car
+before GO; the failed early smoke capture is rejected.
+
+Read-only engine-entry observations establish the actual initial throttle 22,
+position (213368, 0, 200224) in native long units, zero velocity and velocity carry,
+zero RPM, gear 1 and automatic transmission. Every subsequent sampled field holds
+throttle 22 with neutral buttons. No debugger memory write is used. Captures retain
+`initialization.json` with an explicit validity result; prior before-write-only
+records cannot be used as evidence of initialization.
+
+Each run starts its comparison at DS_CONSUMED minus the first engine interval.
+This excludes the stationary countdown and aligns the first moving interval even
+when different profiles reach GO at different wall fields. The independent flat
+road drivetrain model advances one field at a time from the observed initial
+state, recalculating force, RPM and automatic gear changes. Fractional projection
+interpolates adjacent native rounded vectors. For each field, position integrates
+(9 * new_projected - 7 * previous_projected) / 16 in Q16 units, starting from the
+observed initial position and zero projected velocity. The comparison includes
+both live position remainders, rather than just published integer coordinates.
+
+The same reference slave is used throughout, with INITIAL_THROTTLE, exact hold22,
+SLOW/GAMEPLAY_SLOW and the full optional reference optimizations. Normal builds
+and the existing delayed-draw reference build remain byte-identical when the new
+flag is absent; a build missing EXACT_THROTTLE rejects the new flag. This is a
+validation fixture, not a change to the regular gameplay integrator.
+
+The eight 360-field captures cover all seven standard profiles and slowed A500
+drawing. All 762 completed moving returns match the independent model exactly
+in velocity eighths, gear and Q16 position, including acceleration and both
+upshifts. Adjacent returns are checked for consecutive serials and agreement
+between consumed-field deltas and the recorded integration intervals.
+
+| Profile | Checked returns | Consumed fields per update | Final velocity |
+| --- | ---: | ---: | ---: |
+| A500 | 21 | 12..18 | 225.375 |
+| A500 Fast RAM | 21 | 12..18 | 225.375 |
+| 68020 | 89 | 3..5 | 225.375 |
+| 68030/50 | 159 | 2..2 | 225.375 |
+| 68040/25 | 149 | 2..3 | 225.375 |
+| 68040/40 | 153 | 2..3 | 225.375 |
+| 68060/50 | 154 | 2..3 | 225.375 |
+| A500, CUSTOM4=4 | 16 | 16..22 | 225.375 |
+
+The final velocity is 225.375 in every run. The same held-input, stationary-state
+recurrence therefore has no measured CPU-dependent speed or position discrepancy
+in this flat-road diagnostic. The earlier 0.223048% reference plateau spread does
+not persist with the controlled initial state and input history.
+Startup epochs still differ (and the test aligns consumed time), so this does not
+prove equal-wall-time race progression, checkpoint times or general handling.
+
+Per-run evidence is `s4-guest-initial-reference-*/initialized-motion.json`; the
+aggregate is `initialized-motion-comparison.json`. Retained slave and emulator
+hashes agree across all eight runs. The 68060 capture uses the `060-retry` suffix:
+its prior attempt failed before emulator startup during a transient shared-helper
+update. The successful retry uses the same slave and emulator hashes.
+
+The reference remains optional and its performance gate remains open. This exact
+flat-road comparison does not validate the regular solver, braking, steering,
+contacts, loop/jump behavior, native BCD recovery compatibility or human laps.
