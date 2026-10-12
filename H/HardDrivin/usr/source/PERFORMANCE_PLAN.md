@@ -30,7 +30,9 @@ checks, including a live opponent finish. Post-race ghost playback now has elaps
 poses, duration and distance-derived pitch, with native-step, pause and slow-frame
 checks. Phantom instruction scrolling and its camera transition now also use
 elapsed time, with native-step, pause and slow-frame checks. The remaining audio
-audit, large-step velocity safety and full acceptance are unfinished. The sound
+audit, large-step velocity safety and full acceptance are unfinished. A gated
+long-step resistance limiter removes observed braking-induced reversals while
+preserving slope rollback; maximum-delay handling remains unproven. The sound
 caller inventory, replay skid-request correction and live off-road cadence
 checks are in AUDIO_TIMING.md.
 See GAME_TIME.md;

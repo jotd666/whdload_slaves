@@ -72,6 +72,9 @@ _time_velocity_add:
 	move.w SS_VELOCITY_CARRY(a0),d2
 	ext.l d2
 	bsr _time_scale_word
+	IFD VERIFY_TIME_DISSIPATION
+	bsr _time_limit_dissipation
+	ENDC
 	move.w d2,SS_VELOCITY_CARRY(a0)
 	; Record expected integer value without changing the native ADD flags.
 	move.w -$66d8(a4),d1
@@ -540,4 +543,8 @@ _ramp_rpm_cases:
 	dc.w 3200,6500,9,7,3200,1,2
 _ramp_rpm_signature: dc.b 'HDRAMPR1'
 _ramp_rpm_results: dcb.b 18*6,0
+	ENDC
+
+	IFD VERIFY_TIME_DISSIPATION
+	INCLUDE "HardDrivinDissipation.s"
 	ENDC

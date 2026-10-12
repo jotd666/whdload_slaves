@@ -1367,13 +1367,73 @@ word overflow. All captured values and fractional companions match the model.
 This is writer evidence, not proof that the complete world state follows the
 original route or matches other machines at equal elapsed time.
 
-No velocity clamp or storage change follows from these measurements. Safety for
-arbitrary unsigned-word intervals is still unproven: for example, scaling rate40
+The gated resistance correction below addresses a separately observed long-step
+instability; native velocity storage remains unchanged. Safety for arbitrary
+unsigned-word intervals is still unproven: for example, scaling rate40
 from velocity0 over65535 fields produces327675 before a native word store, which
 would wrap to-5. Falling rate5 produces40959 and would also wrap. Safe handling of
 such intervals needs a solver/consumer policy, not merely a wider intermediate.
 The ordinary slave and the existing CPU-policy runtime remain byte-identical
 when the braking fixture is disabled.
+
+
+### Long-step drag and braking correction
+
+`VERIFY_TIME_DISSIPATION` requires TIME_SCALARS and uses the existing velocity
+hook. It changes only intervals greater than eight fields. Native and shorter
+steps retain their original scaled increments. `VERIFY_GAMEPLAY_SLOW` requires
+SLOW and TIME and delays only active gameplay, allowing large-delay tests to
+reach the driving scene without disrupting the menu input tape.
+
+The uncapped linear resistance update is unstable even before storage overflows.
+In `s4-velocity-long64`, braking on flat ground changes velocity31 to-173 over78
+fields: drag1 and brake20 remove more velocity than exists. The next updates
+reverse direction repeatedly. Across1800 fields the capture has23 forward writes,
+six zero crossings and velocities-192..390, with no word overflow.
+
+The correction limits the removal attributable to drag and braking to the old
+velocity including its signed fractional carry. Drive and slope remain separate
+and may legitimately move the car through zero. Effective resistance is inferred
+from the force components and capped native net acceleration, bounded by the
+original drag-plus-brake component. When resistance would consume the old velocity,
+the remaining absolute velocity is the scaled external force contribution. Its
+signed multiplication uses a wide intermediate before division by eight. This is
+an explicit long-step force policy, not a proof of equivalence to fine integration.
+
+The private `VERIFY_DISSIPATION_MATH` fixture calls the actual velocity wrapper
+with326 cases covering both signs, slopes, native force caps, stale fractional
+state and intervals0,1,7,8,9,16,79,255,65535. All outputs match the independent
+integer model;130 cases activate the limiter. Synthetic word extrema exercise
+arithmetic only and do not establish physical validity of those velocities.
+
+| Runtime capture | Forward writes | Limiter uses | Velocity range | Maximum fields | Zero crossings |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| s4-dissipation-long64 | 23 | 1 | 0..390 | 79 | 0 |
+| s4-dissipation-brake-a500 | 62 | 2 | -4..278 | 16 | 1 |
+| s4-dissipation-moving255 | 9 | 4 | 0..1507 | 269 | 0 |
+
+All captured forward writes match the model and have no word overflow. The ordinary
+A500 run still rolls backward under slope3: velocity31 becomes-4 over12 fields
+with drag1, brake20 and drive0. The maximum-delay run postpones braking until
+field1200 so it actually moves; it also captures one falling write, rate5 over266
+fields, yielding166 with remainder2. The earlier delay255 test with braking at
+field250 stayed stationary and is not moving-car safety evidence.
+
+`s4-dissipation-native-matched` matches all108 original-reference car-state
+snapshots, G($98f6)..G($9951), with only the gear-table pointer relocated. This
+is not full-world or full-tape equivalence. An initial replay-release fixture
+comparison diverged at step82 because its crash inputs differed from the reference;
+the identical fixture with and without the limiter matches all108 states and
+field timestamps. The accepted original-reference run uses matching constant inputs.
+CUSTOM1-off `s4-dissipation-off` passes all144 declared range checks with only
+DRIVE and STEPINPUT enabled. The123-range direct-branch audit passes, and the
+normal8392-byte-text slave remains byte-identical to the baseline.
+
+The maximum-delay speed1507 is much greater than the ordinary run's278. Preventing
+resistance-induced reversals therefore does not establish long-step handling,
+collision/checkpoint safety, or agreement with shorter updates. External-force
+integration, word consumers and falling motion still require a complete safety
+policy. No full step-4 performance or handling acceptance follows from these tests.
 
 
 ## GAME OVER presentation clock

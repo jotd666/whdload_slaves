@@ -10,6 +10,7 @@
 ; unchanged VERIFY_DRIVE tape as a guaranteed route at the slower frame rate.
 ; VERIFY_GHOST_POST_SLOW restricts this instrument to the post-race epoch.
 ; VERIFY_REPLAY_SLOW restricts it to the instant-replay request/playback epoch.
+; VERIFY_GAMEPLAY_SLOW restricts it to the active gameplay clock.
 ;
 ; At entry A0 is game base, D0 is code length, after normal patch installation.
 ; The caller flushes caches after the final executable writes as usual.
@@ -55,6 +56,10 @@ _verify_slow_vbl:
 
 _verify_slow_submit:
 	movem.l d0-d1,-(a7)
+	IFD VERIFY_GAMEPLAY_SLOW
+	move.b _time_state+TS_ACTIVE(pc),d0
+	beq.s _verify_slow_publish
+	ENDC
 	IFD VERIFY_REPLAY_SLOW
 	tst.b -$5229(a4)
 	beq.s _verify_slow_publish
