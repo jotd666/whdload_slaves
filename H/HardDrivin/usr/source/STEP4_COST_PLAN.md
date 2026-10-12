@@ -5,13 +5,11 @@ current integrated build, measured on 2026-10-12. It names the bottlenecks, sets
 targets and gives an ordered list of work items. Each item has an exit criterion. Step IDs
 are `P` (performance), `C` (closure) and `D` (decisions for the user).
 
-**Current status: P1 and P2 complete; P3 deferred; P4 helper result accepted by the user.**
-Traffic meets its 0.8 ms/frame budget. Replay-recording overhead is 0.281 / 0.249
-ms/frame, below 0.3 ms. The user explicitly accepted P4's remaining helper-budget
-excess of 0.094 / 0.216 ms on 2026-10-12. The validated result is 1.494 / 1.616 ms.
-This exception applies only to the helper budget. A's native-physics limit, P3's
-unmet limits, the combined G1 gate and step-4 closure remain open.
-The runtime contains P2 plus the validated P4 helper reductions.
+**Current status: P1, P2 and P4 complete; P3 deferred.** Traffic and replay-recording
+meet their budgets. P4 is accepted under the user's explicit helper-budget exception:
+final helpers measure 1.425 / 1.515 ms/frame, below the accepted 1.494 / 1.616 ms.
+The final matched native-physics increases are +0.700 / -0.107 ms, both within
+original plus 1.0 ms. P3's limits, P5 onward, G1 and step-4 closure remain open.
 
 ## 1. Measurement
 
@@ -440,7 +438,7 @@ enabled. Revisit engine cost after the remaining performance phases. The candida
 source, binaries, checkers and verified compressed traces remain under ignored
 `tmp/` for follow-up. Neither numeric limits nor physics policy have been relaxed.
 
-### P4 Slave physics helpers: target ≤ 1.4 ms per frame (now ≈3.9 / ≈3.7)
+### P4 Slave physics helpers: complete with the approved helper-budget exception
 
 1. **Per-frame constant block.**
    - In `_time_outer`, compute these once per frame:
@@ -461,17 +459,73 @@ source, binaries, checkers and verified compressed traces remain under ignored
 4. **Lighter hook prologues.** Replace `movem.l d0-d7/a0-a6` with the registers each
    hook actually clobbers. The branch audit must still pass.
 5. **Exit criteria.**
-   - Slave physics symbols total at most 1.4 ms per frame in both windows.
+   - Original target: slave physics symbols total at most 1.4 ms per frame in both
+     windows. The user explicitly accepted 1.494 / 1.616 ms; final 1.425 / 1.515 ms
+     lies within that accepted exception. The original numeric target is not met.
    - The game-code part of physics is at most 1.0 ms per frame above the original after
      P3.
 
-#### Accepted helper result and remaining native gate
+#### Final P4 result
+
+The accepted helper work is unchanged. An additional native root optimization
+closes the remaining native-physics limit without resuming P3 or changing cadence.
+The original Newton iteration, initial guess and two-cycle termination are retained
+exactly. When the divisor and quotient fit unsigned words, one DIVU replaces the
+general long divider; a wider divisor or overflow falls back to the original
+divider. Iterates stay in registers. The 96-byte body and eight NOP bytes replace
+the original 104-byte routine at `$9564`; this reduces actual native work rather
+than moving it into the slave cost bucket. Zero input, D1, saved registers and
+final materialized flags match the original. Positive inputs yield positive
+iteration divisors, so the fast path does not introduce division by zero.
+
+Final matched profiles are `p4-native-root-{a,b}-{off,on}`. The paired audit checks
+identical slave, listing, game and emulator hashes and configuration except CUSTOM1,
+with the established 500-field windows at race fields 1 / 4000. All four traces
+were compressed with decompressed SHA-256 verification before deleting raw copies.
+
+| Metric, ms per complete frame | A | B |
+|---|---:|---:|
+| Slave helpers | **1.425257** | **1.515212** |
+| User-accepted helper checkpoint | 1.494050 | 1.616246 |
+| Native physics, matched disabled | 9.703691 | 6.494453 |
+| Native physics, enabled | 10.403488 | 6.387204 |
+| Native increase (limit +1.0 ms) | **+0.699797 — PASS** | **-0.107250 — PASS** |
+
+A uses 37 / 38 complete disabled/enabled frames; B uses 83 / 54. The trajectories
+still differ, so these measurements do not establish equal-scene FPS or pass G1.
+Constant preparation outside physics remains part of the later G1 accounting.
+The paired report and source fingerprints are in ignored
+`p4-native-root-pair-summary.json`.
+
+Additional final-build validation:
+
+- 687,686 root comparisons against the actual original routine: every input from
+  0 through 350,000, every unsigned-long square boundary with nearby values, and
+  random unsigned longs. All data/address registers, stack and materialized flags
+  match; the live replacement bytes match the verified candidate.
+- 6,000 whole-engine, 1,200 full-frame and 300 native-physics comparisons pass
+  with the root replacement, retaining the accepted helper checks below.
+- Live motion 17, steering 9, off-road 29 and braking 46 checks pass
+  (`p4-root-motion`, `p4-root-steer`, `p4-root-offroad`, `p4-root-brake`).
+  Grounded skid prefixes pass 43 A500 / 190 68020 checks, stopping at the first
+  unsupported airborne inputs at fields 515 / 573 (`p4-root-skid-a500` /
+  `p4-root-skid-020`). Full-flight and independent terrain/contact validation
+  remain outside these fixtures' scope.
+- 108 native car states match (`p4-root-native`), all 164 disabled patch ranges
+  pass (`p4-root-disabled`), and all 142 branch ranges pass. Normal, DRIVE and
+  ATTRACT binaries remain identical to their step-2 baselines.
+
+P4 is complete under the explicit helper-budget exception. P3 remains deferred;
+this does not close G1 or the remaining step-4 work.
+
+#### Accepted helper checkpoint before the native-root optimization
 
 On 2026-10-12 the user explicitly accepted the remaining **0.094 / 0.216 ms**
 helper-budget excess. This is a documented exception to the original 1.4 ms
 helper target, not a claim that the target was met. It does not waive the native
 physics limit, P3's limits or G1. A later direct-RPM-clamp experiment was discarded;
-the accepted source is the fully validated `p4-motion-a` / `p4-motion-b` build.
+the accepted helper checkpoint is the validated `p4-motion-a` / `p4-motion-b`
+build. The final native-root result above supersedes its remaining native gate.
 
 The matched `p4-motion-{a,b}-{off,on}` profiles each cover 500 PAL fields, starting
 at race fields 1 / 4000 with constant input / the frozen VERIFY_DRIVE tape.
@@ -543,8 +597,8 @@ Verification of the accepted source:
   141 ranges. Normal, DRIVE and ATTRACT builds remain byte-identical to their
   step-2 baselines. All executable bytes, fixtures and captures remain ignored.
 
-The helper-cost work is accepted. A's native-physics increase remains 0.821 ms
-above its separate limit, and full P4/step-4 acceptance is not claimed.
+At that checkpoint, A's native-physics increase was 0.821 ms above its separate
+limit. The final native-root optimization above closes this remaining P4 gate.
 
 ### P5 Remaining hooks: target ≤ 0.3 ms per frame (now 0.42 / 0.48)
 
@@ -627,7 +681,7 @@ On 2026-10-12 the user accepted the recommended defaults. These decisions are no
 
 ## 7. Working rules for this plan
 
-- Work in the order P1 → P5, then C1 → C6, with P3 deferred by the user and P4 next.
+- Work in the order P1 → P5, then C1 → C6, with P3 deferred by the user, P4 complete under its approved helper-budget exception, and P5 next.
   Deferral does not pass an item. Each item ends when its exit numbers and
   checks pass. Commit each item on its own.
 - Do not add validation dimensions beyond those listed for the item. Put new questions in

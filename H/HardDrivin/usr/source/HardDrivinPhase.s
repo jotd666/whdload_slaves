@@ -21,6 +21,59 @@ _phase_patches:
  PL_START
  ; PERF_RANGE VERIFY_DRIVETRAIN_PHASE $0b904 $0008: incremental RPM before automatic gear decision
  PL_PSS $b904,_phase_gear,2
+ ; PERF_RANGE VERIFY_DRIVETRAIN_PHASE $09564 $0068: exact native Newton root with guarded hardware division
+ ; Keep the native recurrence, initial guess and two-cycle termination.
+ ; DIVU is exact when its unsigned quotient fits a word; overflow or a
+ ; wider divisor retains the original full-long divider. D1 is preserved
+ ; by both division paths, and D2/D3 plus final NZVC/X match native code.
+ ; The 96-byte body plus eight NOP bytes replaces the full 104-byte routine.
+ PL_DATA $9564,_phase_root_patch_end-_phase_root_patch
+_phase_root_patch:
+ link a5,#0
+ movem.l d2-d3,-(a7)
+ move.l 8(a5),d2
+ bne.s .positive
+ moveq #0,d0
+ bra.s .return
+.positive:
+ move.l d2,d0
+ move.l #5000,d1
+ bsr.s .divide
+ addq.l #8,d0
+ move.l d0,d1
+ move.l d0,d3
+.loop:
+ move.l d2,d0
+ bsr.s .divide
+ add.l d1,d0
+ lsr.l #1,d0
+ cmp.l d1,d0
+ beq.s .return
+ cmp.l d3,d0
+ beq.s .return
+ move.l d1,d3
+ move.l d0,d1
+ bra.s .loop
+.return:
+ movem.l (a7)+,d2-d3
+ tst.l d0
+ unlk a5
+ rts
+.divide:
+ cmpi.l #65535,d1
+ bhi.s .native
+ move.l d0,-(a7)
+ divu.w d1,d0
+ bvs.s .overflow
+ andi.l #$ffff,d0
+ addq.w #4,a7
+ rts
+.overflow:
+ move.l (a7)+,d0
+.native:
+ jmp -$7de8(a4)
+ dcb.w 4,$4e71
+_phase_root_patch_end:
  PL_END
 _phase_tail_ptr: dc.l 0
 _phase_manual_ptr: dc.l 0
