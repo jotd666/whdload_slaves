@@ -130,10 +130,13 @@ _traffic_speed_step:
 	moveq #8,d3
 .fields:
 	mulu.w d3,d1
-	add.w d1,d0
-	cmp.w d2,d0
+	; Keep the complete acceleration increment until terminal-speed clamping.
+	; A long frame can exceed a signed word even with native accel1..3.
+	ext.l d0
+	add.l d1,d0
+	cmp.l d2,d0
 	ble.s .publish
-	move.w d2,d0
+	move.l d2,d0
 .publish:
 	ext.l d0
 	divs.w #8,d0
@@ -295,4 +298,66 @@ _traffic_test_speeds: dc.w -21,-1,0,1,21
 _traffic_test_fractions: dc.w -7,-1,0,1,7
 _traffic_math_signature: dc.b 'HDTRMAT1'
 _traffic_reverse_results: dcb.b 50*10+24,0
+	ENDC
+
+	IFD VERIFY_TRAFFIC_SPEED_MATH
+_traffic_speed_math_test:
+	movem.l d0-d7/a0-a3,-(a7)
+	lea _traffic_speed_fake_record(pc),a0
+	lea _traffic_speed_fake_state(pc),a1
+	lea _traffic_speed_test_cases(pc),a3
+	lea _traffic_speed_test_results(pc),a2
+	moveq #17,d7
+.case:
+	bsr _traffic_clear
+	move.w (a3)+,d0
+	move.b d0,23(a0)
+	move.w (a3)+,(a1)
+	move.w (a3)+,2(a1)
+	move.w (a3)+,d0
+	move.b d0,21(a0)
+	move.w (a3)+,d0
+	move.b d0,22(a0)
+	move.l a0,-(a7)
+	lea _time_scalar_fields(pc),a0
+	move.w (a3)+,(a0)
+	movea.l (a7)+,a0
+	move.w (a3)+,d0
+	move.b d0,11(a1)
+	bsr _traffic_speed_step
+	move.b 23(a0),d0
+	ext.w d0
+	move.w d0,(a2)+
+	move.w (a1),(a2)+
+	move.w 2(a1),(a2)+
+	move.w 4(a1),(a2)+
+	dbf d7,.case
+	lea _time_scalar_fields(pc),a0
+	move.w #VERIFY_SCALAR_FIELDS,(a0)
+	movem.l (a7)+,d0-d7/a0-a3
+	rts
+_traffic_speed_fake_record: dcb.b 46,0
+_traffic_speed_fake_state: dcb.b 16,0
+; speed,fraction,last speed,acceleration,target,fields,initialization
+_traffic_speed_test_cases:
+	dc.w 0,0,0,3,20,65535,0
+	dc.w -21,-7,-21,3,20,65535,0
+	dc.w 0,0,0,1,9,32768,0
+	dc.w 9,7,9,2,9,65535,0
+	dc.w 21,0,21,2,9,65535,0
+	dc.w 0,0,0,0,20,65535,0
+	dc.w 0,0,0,3,20,65535,1
+	dc.w 0,0,0,2,9,0,1
+	dc.w 0,0,0,2,9,0,0
+	dc.w 0,0,0,2,9,1,0
+	dc.w -1,-7,-1,3,20,9,0
+	dc.w -1,7,-1,3,20,9,0
+	dc.w 9,7,9,2,9,1,0
+	dc.w 0,-7,1,3,20,9,0
+	dc.w 0,7,0,3,20,8,0
+	dc.w 0,-7,0,3,20,8,0
+	dc.w 9,0,9,3,20,255,0
+	dc.w 0,0,0,3,20,21846,0
+_traffic_speed_test_signature: dc.b 'HDTRSPD1'
+_traffic_speed_test_results: dcb.w 18*4,0
 	ENDC

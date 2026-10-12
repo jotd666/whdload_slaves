@@ -1103,3 +1103,28 @@ matches all144 reference car states at forced T=1; the ordinary build is unchang
 These checks establish arithmetic and native-step compatibility, not large-T
 loop/jump/collision handling. The dispatcher still caps every CPU at eight fields;
 velocity writes, traffic, event multiplicity and replay recording remain open.
+
+
+### Traffic acceleration at longer intervals
+
+Traffic acceleration now adds and clamps the full signed-long increment before
+publishing the native speed byte. Its original terminal-speed grid remains
+`ceil(target/acceleration)*acceleration`; an actor already above that limit is
+not slowed by this helper. Initialization still consumes exactly one native
+step, even when the current diagnostic interval is zero or very large.
+
+`VERIFY_TRAFFIC_SPEED_MATH` executes18 private cases in `s4-traffic-speed-wide`,
+covering unsigned32768/65535 fields, negative speeds/fractions, stale-state
+invalidation, saturation, overspeed, zero acceleration and initialization.
+`s4-traffic-speed-regression` passes the existing50 reversal cases and the
+initialization/zero-time checks. The ordinary build remains unchanged.
+
+Long-interval traffic progression is not yet ready. The native `$0d380..$0d406`
+post-update code crosses only one200-unit segment. Route selection at
+`$0cf02..$0cfe4` handles main-route wrap, branch preference and transitions to and
+from the secondary route; multiple crossings must preserve those decisions.
+Furthermore, when speed reaches its limit before the end of a long interval,
+phase integration must include the remaining time at that limit. Simply scaling
+the existing endpoint-average expression would undercount distance in that case.
+The current all-CPU eight-field cap remains until these and the other longer-step
+requirements are addressed.
