@@ -50,8 +50,10 @@ the slave still reserves 1 MiB. The former cockpit quota remains reserved, so
 the original off-path allocation budget is retained. Historical A500 timing
 rows still use the earlier RAM configuration until the next checkpoint.
 E3 direct-to-chip CPU rectangle fills are dropped: all affected AGA pairs regress
-(020 −7.34%, 040 −5.19%, 060 −7.64%). Polygon merging and the fast-memory
-back buffer remain next, followed by E4 and F. D5 remains postponed and
+(020 −7.34%, 040 −5.19%, 060 −7.64%). CPU polygon merging is also dropped:
+020 −5.38%, 040 −2.70%, 060 −2.90%, with its native pixel twin and both
+checker sabotages passing. The fast-memory back buffer remains next, followed
+by E4 and F. D5 remains postponed and
 W6 remains outside the normal verified mask. Faster rendering still defaults
 off until F1. The completion plan, not the lists below, controls execution.
 The earlier lists below are historical context, not the execution order.
