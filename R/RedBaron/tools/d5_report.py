@@ -37,3 +37,12 @@ def modal(before,held,after):
         raise ValueError('Modal interval not excluded exactly')
     if after['due']!=before['due'] or after['quantum']!=before['quantum']:
         raise ValueError('Lost debt or changed quantum')
+
+
+def mission_exit(before,held,exiting,backlog,F):
+    if before['active'] or held['active']:
+        raise ValueError('Mission menu did not release flight ownership')
+    if backlog<=before['quantum']*F/1024+2:
+        raise ValueError('No full world quantum of catch-up backlog')
+    if held['cursor']!=before['cursor'] or any(s['steps']!=before['steps'] for s in (held,exiting)):
+        raise ValueError('World advanced in the menu or after the exit command')

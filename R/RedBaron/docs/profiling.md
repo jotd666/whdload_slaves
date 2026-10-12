@@ -20,6 +20,19 @@ this is acceptance work, not a new performance optimization or a 50 FPS claim.
 | Time Scale 60, maximum detail, 2,000 fields | A500, 512K Chip + 2M Fast; developer `0x33fff` | 11 publications, 0.274562 FPS; 428 updates / 2,367 CIA ticks, F=10, quantum=450; world/wall 0.794617 ±0.001857; 112 dropped updates / 50,400 units | `d5-auto-a500-s60-native/rate.json` |
 | Pause and Preferences, 200 fields each | Same A500 flight | Steps and cursor frozen in modal; excluded interval exactly translated on resume; quantum and pending debt retained | `d5-auto-a500-s60-native/modals.json` |
 
+A500 Time Scale 40, same binary and mask, now also passes the native IRQ
+catch-up test (`d5-auto-a500-s40/catchup.json`): throttle 210 → 190 with exactly
+one command call, 28 held-bank catch-up pairs with no intervening publication,
+and clean release over the following 500 fields. Each half covers 500 fields.
+The native combat Abort menu passes (`mission-exit.json`): 38 CIA ticks of
+unsampled backlog at modal entry, more than two world quanta at F=33; a
+200-field menu hold and exit cause no additional world update. The first
+observer attempt held Return down in the native button menu; the corrected
+press/release completed that same pending Abort. This was a driver failure,
+not a passed first attempt. Native C is rejected with eligibility code 10 in
+this combat encounter, as expected; eligible compression remains separate.
+All 573 host tests pass using the configured development environment.
+
 The unchanged developer binary is SHA-256
 `7148764be23e82f999b99b2e6f0359df88b987712010d8ab19caafbd7b330e39`.
 Scale 60 exceeds this machine's capacity and exercises the approved debt-drop

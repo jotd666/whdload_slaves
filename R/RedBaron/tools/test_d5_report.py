@@ -1,5 +1,5 @@
 import copy,unittest
-from d5_report import input_window,catchup,modal
+from d5_report import input_window,catchup,modal,mission_exit
 
 class D5ReportTests(unittest.TestCase):
     def test_catchup_and_three_sabotages(self):
@@ -22,3 +22,10 @@ class D5ReportTests(unittest.TestCase):
         for key,value in [('steps',9),('cursor',211),('due',0)]:
             bad=dict(after);bad[key]=value
             with self.assertRaises(ValueError):modal(before,held,bad)
+
+    def test_exit_and_sabotages(self):
+        b=dict(active=0,steps=12,cursor=100,quantum=450)
+        h=dict(b);e=dict(b,active=1)
+        mission_exit(b,h,e,38,33)
+        for e1,lag in [(dict(e,steps=13),38),(e,10)]:
+            with self.assertRaises(ValueError):mission_exit(b,h,e1,lag,33)
