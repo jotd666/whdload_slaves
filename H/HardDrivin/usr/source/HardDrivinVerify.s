@@ -5,6 +5,9 @@
 ; STEPINPUT_BRAKE_SPEED instead latches braking at a native speed threshold.
 ; These are not the A/B tape; see GAME_TIME.md. STEPINPUT_STEER_AT holds X=320
 ; until the chosen field, then uses STEPINPUT_X for a real skid diagnostic.
+; VERIFY_STEPINPUT_TAPE instead consumes the existing tape at virtual fields
+; 1,9,17,... per controls pass. It is a native-step compatibility diagnostic,
+; not the unchanged field-indexed A/B benchmark. Real clocks remain untouched.
 ; Calibrated on deterministic PAL A500/68000, 512K Chip + 1536K slow,
 ; no Fast RAM, PRELOAD, CUSTOM2=0 and both host input ports disabled.
 ; Other CPU/memory profiles need validation; field-indexed input does not
@@ -81,6 +84,10 @@ _verify_drive_race:
 	clr.w (a0)
 	clr.l 4(a0)
 	clr.w 18(a0)
+	IFD VERIFY_STEPINPUT_TAPE
+	lea _verify_step_tape_field(pc),a1
+	move.l #1,(a1)
+	ENDC
 	lea _verify_drive_tape(pc),a1
 	move.l a1,8(a0)
 	IFD VERIFY_STEPINPUT_MANUAL
@@ -111,6 +118,10 @@ _verify_drive_vbl:
 	tst.w (a0)
 	beq.s .done
 	addq.l #1,4(a0)
+	IFD VERIFY_STEPINPUT_TAPE
+	cmpi.w #2,(a0)
+	beq.s .publish
+	ENDC
 	IFD VERIFY_STEPINPUT
 	cmpi.w #2,(a0)
 	beq.s .constant
@@ -270,6 +281,46 @@ _verify_step_delayed_steering:
 .done:
 	movea.l (a7)+,a0
 	rts
+	ENDC
+
+	IFD VERIFY_STEPINPUT_TAPE
+_verify_step_tape:
+	movem.l d0-d1/a0-a1,-(a7)
+	lea _verify_drive_state(pc),a0
+	cmpi.w #2,(a0)
+	bne.s .done
+	lea _verify_step_tape_field(pc),a1
+	move.l (a1),d0
+	addq.l #8,(a1)
+	movea.l 8(a0),a1
+.next:
+	cmp.l (a1),d0
+	bcs.s .publish
+	cmpi.l #-1,(a1)
+	beq.s .publish
+	move.l 4(a1),12(a0)
+	move.w 8(a1),16(a0)
+	move.w 10(a1),d1
+	beq.s .advance
+	tst.w 18(a0)
+	beq.s .key
+	st 2(a0)
+.key:
+	move.w d1,18(a0)
+.advance:
+	lea 12(a1),a1
+	move.l a1,8(a0)
+	bra.s .next
+.publish:
+	move.l 12(a0),-$6a06(a4)
+	move.w 16(a0),-$6a0a(a4)
+.done:
+	movem.l (a7)+,d0-d1/a0-a1
+	jsr -$7f92(a4)
+	and.w #$ff,d0
+	rts
+_verify_step_tape_signature: dc.b 'HDINTAPE'
+_verify_step_tape_field: dc.l 1
 	ENDC
 
 	; phase.w, overflow.b, reserved.b, field.l, next.l, X/Y.w, buttons/key.w

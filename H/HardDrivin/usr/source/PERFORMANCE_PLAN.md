@@ -333,7 +333,12 @@ Tools stay in ignored `tmp/dev/tools`.
      the native step. The current constant-input diagnostic now matches car, RNG,
      replay ring, all traffic records and all scene-object records over 108 returns.
      Complete data/BSS snapshots still differ in native clocks/presentation state;
-     full driving-tape equivalence is not established. See GAME_TIME.md.
+     full driving-tape equivalence is not established. A separate controls-indexed
+     traversal of all 97 existing input records now compares 650 native-step returns.
+     Inputs, RNG and traffic records match, but car/scene/replay equality fails
+     when the unchanged BCD clock triggers off-road recovery at different physics
+     steps. This diagnostic leaves the original field tape and acceptance gate
+     unchanged; see GAME_TIME.md.
    - Compare equal elapsed fields across the A500, CUSTOM4-slowed drawing, the 68020
      and the 68040: car position, speed and heading must agree within a tolerance
      derived from the units audit, and lap and checkpoint times within one frame.

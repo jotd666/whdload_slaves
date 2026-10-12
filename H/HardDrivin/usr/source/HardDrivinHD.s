@@ -283,6 +283,15 @@ _p0_OldOpenLibrary:
 
 ;==========================================================================
 
+	IFD VERIFY_STEPINPUT_TAPE
+	IFND VERIFY_DRIVE
+	FAIL "VERIFY_STEPINPUT_TAPE requires VERIFY_DRIVE"
+	ENDC
+	IFD VERIFY_STEPINPUT
+	FAIL "Choose constant input or controls-indexed tape, not both"
+	ENDC
+	ENDC
+
 	IFD VERIFY_STEPINPUT
 	IFND VERIFY_DRIVE
 	FAIL "VERIFY_STEPINPUT requires VERIFY_DRIVE"
@@ -825,6 +834,10 @@ _pl0_v1:	PL_START
 	IFD VERIFY_STEPINPUT
 	; PERF_RANGE VERIFY_STEPINPUT $07c36 $0008: constant input per controls pass
 	PL_PSS $7c36,_verify_step_input,2
+	ENDC
+	IFD VERIFY_STEPINPUT_TAPE
+	; PERF_RANGE VERIFY_STEPINPUT_TAPE $07c36 $0008: controls-indexed input compatibility tape
+	PL_PSS $7c36,_verify_step_tape,2
 	ENDC
 	; PERF_RANGE VERIFY_DRIVE $003d8 $000a: VBL input publication
 	PL_PSS $3d8,_verify_drive_vbl,4

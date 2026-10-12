@@ -2827,3 +2827,58 @@ sound equivalence have focused validation; see AUDIO_TIMING.md. Skid and mask-3
 contact have independent cadence states. Ground penetration now has a separate
 cadence while preserving immediate nonzero-fall landings. Other object/obstacle
 sound callers and broader listening/handling acceptance remain open.
+
+
+## Changing-input native-step compatibility and recovery clocks
+
+`VERIFY_STEPINPUT_TAPE` requires VERIFY_DRIVE and excludes VERIFY_STEPINPUT.
+It consumes the existing 97-record driving-input table at virtual fields
+1, 9, 17, ... per native controls pass. The selected mouse/buttons are reasserted
+at controls entry and held by VBL publication until the next controls pass.
+The real field counter and all native BCD clocks continue unchanged. The fixture
+advances across recovery without restarting its input sequence and holds the last
+record at the sentinel. It injects inputs only. This is a compatibility diagnostic,
+not the original field-indexed performance tape, nor a replacement acceptance gate.
+
+The same compiled `s4-native-input-tape.slave` with VERIFY_DISPATCH_NATIVE was
+captured with CUSTOM1 off/on as `s4-native-input-tape-off/on`. Both runs retain
+650 physics returns and 660 controls-entry snapshots, complete data/BSS, all 12
+traffic records, their 12 actor records, 98 main and 11 auxiliary scene records.
+The controls-entry mouse snapshots match the previous pass's table selection,
+including all 97 records and 19 distinct positions. The paired native-world checker
+finds no difference in the captured mouse/button/key input ranges. Real elapsed
+fields differ: 6256 off versus 6510 on.
+
+Full native-step equivalence **fails**:
+
+- Car state matches for returns 0..96, then differs on 37 of 650 returns.
+- RNG and every traffic record match on all 650 returns.
+- Replay-ring contents differ on 380 returns and its write pointer on 189.
+- Several actor records and the main scene table first differ at return 97;
+  the auxiliary scene table matches throughout.
+- Complete data/BSS is never byte-identical. Wall-clock/presentation differences
+  are retained in the report, with unclassified differences left visible.
+
+The first car divergence is the native off-road recovery transition. At enabled
+return 96 the elapsed BCD clock is `$1646`, past its `$1644` off-road deadline;
+return 97 has already reset position to 26542/256/25057 and cleared velocity.
+The disabled run is still driving at return 97 and first has the recovery pose at
+return 99. Its deadline is `$1603`. Direct 1100-field trigger captures,
+`s4-native-tape-trigger-off/on`, confirm entry through the native `$105f4`
+off-road timeout: off at field 1003 (clock `$1605`, deadline `$1603`, velocity 168),
+on at field 1020 (clock `$1651`, deadline `$1644`, velocity 175). Recovery begins
+at `$108b8` on the following field in each run. Thus it occurs later in wall
+fields but earlier in the enabled run's physics-step sequence. Input mismatch
+cannot explain this first divergence; native clocks remain an external timing
+dependency even with T forced to one and matched changing inputs.
+
+This evidence does not justify masking recovery differences, changing the clock
+policy, or declaring the full driving-tape criterion passed. Native BCD clocks
+remain untouched as required by step 4. Full equivalence needs this dependency
+resolved explicitly in the validation model. Equal-elapsed-time handling remains
+a separate unfinished requirement.
+
+The diagnostic's flag guards reject missing VERIFY_DRIVE and simultaneous
+constant-input mode. CUSTOM1-off validation passes all 154 declared ranges with
+only DRIVE and STEPINPUT_TAPE enabled. Both the normal build and the regular
+integrated field-tape build remain byte-identical to their pre-fixture versions.
