@@ -3516,7 +3516,8 @@ Pre-shift RPM is sampled read-only at `$0b904` during actual pristine68000 engin
 execution. RPM is integrated before automatic shift decisions, and native gear
 thresholds/conversions are applied at phase completion. This avoids blending
 RPM values from different gears across a phase. The runtime experiment falls back to the existing reference path for manual
-controls, skid, airborne/partial contact, turning and other ineligible states.
+controls, skid, airborne/partial contact and other ineligible states. The native
+turning-force flag is supported within the grounded automatic path.
 The tests do not approve a new gear-event policy for the complete game.
 
 `check_native_phase_incremental.py` matches128 native eight-field endpoints for
@@ -3579,10 +3580,55 @@ input-fixture gates, VERIFY_DRIVE and VERIFY_STEPINPUT, are declared; the
 initial report omitted STEPINPUT and correctly failed its active input range.
 The corrected report is `s4-phase-disabled/disabled-corrected.json`.
 
+Controls-driven acceleration and braking to rest now pass exact comparisons in
+`s4-phase-braking-a500` and `s4-phase-braking-020`:48 and194 complete active
+updates, with8 and29 throttle/brake input transitions respectively. Native word
+outputs, fractional velocity/RPM, gear, phase and full longitudinal position match
+the pristine-engine oracle. Neither captured trajectory moves backward. These
+runs use the actual speed-triggered brake fixture, not injected velocity. Their
+input histories differ, so this does not establish equal-speed braking-distance
+acceptance across machines.
+
+The stronger steering diagnostic `s4-phase-transition-020` demonstrated loss of
+0.09375 velocity units when the native turning-force flag first selected the old
+fallback at field104. Ordinary steering alone does not necessarily set that flag:
+`s4-phase-steer-020` changes heading while remaining in the phase path. The phase
+solver now also handles the flag, evaluating its native doubled-drag force at
+every engine segment, without changing integration method or losing fractions.
+`s4-phase-turn-a500` and `s4-phase-turn-020` match all10 and41 complete active
+returns, including4 and15 turning-force returns. Independent XYZ projection from
+captured native Q14 trig values, pristine engine evaluation, native output words
+and full Q16 scalar/position comparisons all pass. This verifies integration of
+the supplied steering state, not independent accuracy of the steering-angle law,
+contact handling or complete curved trajectories. Normal-build byte equality and
+the137-range direct-branch audit also pass after this fix.
+
+Ten-second A500 diagnostic traces `s4-phase-cost-control` and `s4-phase-cost`
+compare the same source and constant-accelerator fixture with and without the
+phase gate. The phase trace precedes the turning-force fallback removal. Both
+cover500 fields,10.015943522 seconds, with instruction coverage above99.99998%:
+
+| Measurement | Previous optional reference | Phase experiment |
+|---|---:|---:|
+| Buffer swaps |34|37|
+| Average time per swap |294.587 ms|270.701 ms|
+| Complete full-physics calls |35|37|
+| Total full-physics time |1322.124 ms|650.267 ms|
+| Complete native-engine calls |401|132|
+| Total native-engine time |555.721 ms|193.878 ms|
+
+Phase helpers themselves consume54.561 ms. The retained end state counts29 phase
+frames and74 phase engine segments; some frames still use the fallback. This is
+a useful diagnostic improvement over the previous experimental solver. Different
+integration changes the trajectory/workload, so it is not an isolated equivalent-
+workload speedup or a pass of the original-game3% FPS gate. Both traces retain
+fingerprints and verified compressed archives.
+
 General handling and mode transitions remain open. The fallback solver retains
 only eighth-unit scalar companions, while phase state can contain finer fractions;
-transition precision is not yet accepted. Native force evaluation uses the phase
-anchor and automatic shifts occur at phase completion. Changing-input runtime,
-manual/steering/contact/airborne integration, reset coverage, sound and cost still
-need validation before this can replace either existing solver or satisfy step4.
-No FPS result or acceptance requirement has changed.
+transitions other than the supported turning-force case still need resolution.
+Native force evaluation uses the phase anchor and automatic shifts occur at phase
+completion. Manual, skid, off-road, contact and airborne integration, reset
+coverage, sound, equal-time full trajectories, the unchanged-clock dependency,
+original-game performance acceptance and human full laps remain unfinished.
+Neither the acceptance requirements nor the normal release behavior has changed.

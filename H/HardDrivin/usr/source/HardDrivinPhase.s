@@ -66,8 +66,7 @@ _phase_frame:
  bne .fallback
  tst.b -$50cf(a4)
  bne .fallback
- tst.b -$0870(a4)
- bne .fallback
+ ; Native turning-force input is evaluated by every engine segment.
  cmpi.b #15,-$66f0(a4)
  bne .fallback
  tst.w -$66f2(a4)

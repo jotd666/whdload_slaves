@@ -317,9 +317,13 @@ Tools stay in ignored `tmp/dev/tools`.
    - Gated VERIFY_DRIVETRAIN_PHASE now runs the incremental native-endpoint
      experiment in gameplay. Exact native-engine comparisons pass16 A500 and65
      68020 active returns, plus10 returns at each synthetic seven/eight/nine-field
-     interval. This removes the special eight-field rule within the tested flat,
-     automatic path. General modes, transition precision, changing-input runtime,
-     handling and cost remain open; it is not the accepted replacement solver.
+     interval. Controls-driven acceleration/braking now adds48 A500 and194 68020
+     exact returns. Supporting the native turning-force flag fixes a demonstrated
+     fractional-state loss;10 A500 and41 68020 steering returns match scalar and
+     XYZ projection oracles. The ten-second phase diagnostic renders37 versus34
+     frames for the previous reference solver, but does not pass the original FPS
+     gate. General modes, remaining transition precision, complete handling and
+     acceptance remain open; it is not the accepted replacement solver.
    - Check the integrator: with Euler updates, many small steps do not give the same
      displacement as one large step. Apply the (T−1)/2·Δv correction where the
      original order requires it, and decide whether the target is the original
