@@ -144,8 +144,12 @@
    matching at ticks 1500/1550/1600. Legacy bypass restores 37 code ranges
  - FULL with an opponent: 040 35.19 FPS, 060 36.89 FPS; both 50.09 steps/s
    and 1.00175 race-clock ratio over 10 seconds, without queue overflow
- - jump/landing handling and broader lifecycle/capacity and release
-   acceptance remain incomplete. This is an experimental preview
+ - jump/landing still passes 27/29 frozen checks: common height error
+   2263 versus limit 1247, pitch error 18 versus limit 11 (internal units).
+   Both bounded alternatives failed and were rejected; physics is unchanged
+ - P5 awaits a handling decision before startup defaults and final opponent
+   acceptance drives. Release acceptance is incomplete; this remains an
+   experimental preview
  - the previously distributed testing archive has not been rebuilt with
    this source change; it still contains the earlier format-1 runtime
 

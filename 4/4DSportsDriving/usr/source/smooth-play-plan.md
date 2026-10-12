@@ -590,7 +590,8 @@ the testing archive is unchanged. Stop before P5.
 
 ## P5. Finish the 50 Hz (A4000) mode to release quality, time-boxed
 
-Status (12 October 2026): P5 is in progress; P5.1 and P5.2 pass. P5.3–P5.5 remain.
+Status (12 October 2026): P5 is in progress; P5.1 and P5.2 pass. P5.3 reached its user
+decision gate; P5.4 defaults and P5.5 acceptance drives remain.
 The frozen crest gate still passes 27/29; its bounds are unchanged.
 
 1. **Native format-2 replay save/load: complete.**
@@ -632,12 +633,26 @@ The frozen crest gate still passes 27/29; its bounds are unchanged.
      Opponent fixture SHA256:
      `7d926c8e29cc8d361641d953be43f528b47a611c8d8e2f64f15f477b4d4c455e`.
      Native production and the testing archive are unchanged; P6 remains open.
-3. **Jump and landing: time box of 2 working sessions.** Try at most two principled
-   candidates from natural-jump-handling.md, using the existing frozen 29-check gate.
-   - If it still fails, stop. Report the two failing metrics (common Y and pitch) with the
-     numbers to the user, and let them choose: ship with the documented difference, use
-     interpolation (D2 fallback), or keep 50 Hz experimental.
-   - Do not widen criteria, and do not start new physics research.
+3. **Jump and landing: bounded trials exhausted; user decision pending.**
+   - Current emulator result remains 27/29. Common Y error is 2,263 against
+     a 1,247 limit; common pitch error is 18 against 11 (internal units).
+   - Exactly two documented hypotheses were re-run as recurrent offline
+     models: native-derived exponential suspension extension leaves these
+     errors at 2,263/18; native geometric pitch worsens them to 2,333/56.
+     Both fail the unchanged bounds and are rejected; neither was promoted
+     into game code. Baseline controls match all 795 reported rows in each
+     of three phases. These are rejection results, not acceptance of the
+     other 27 checks in the alternative models.
+   - Evidence: `tmp/prof/p5-handling/validation.json`; unchanged frozen
+     criteria SHA256
+     `90570d37e39d7fbdf804bbc497959ffe30e60f51bbb60c3e938f041c1d3401db`.
+     The existing emulator gate in `crest-d9e7903/bridge-handling.json`
+     remains authoritative; physics code is unchanged.
+   - Physics experiments stop here. Await the user's choice: accept and
+     document the differences, use interpolation (D2 fallback), or retain
+     experimental 50 Hz with A2500 as the 040/060 default. Do not widen
+     criteria or start new physics research. Defaults and final acceptance
+     follow that decision; P5 is not complete and P6 has not started.
 4. **Per-CPU default (D1) at startup.** The default applies when no saved `4DPhysics.cfg`
    exists. The Ctrl-G choice persists and still takes effect at the next race.
 5. Acceptance: 2-minute drives on D and E with an opponent, a crash and the finish. There
