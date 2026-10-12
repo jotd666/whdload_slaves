@@ -31,6 +31,9 @@ _dispatch_install:
 	lea _dispatch_state(pc),a0
 	st DS_ENABLED(a0)
 	bsr _events_install
+	IFD VERIFY_TIME_SWEEP
+	bsr _sweep_install
+	ENDC
 	IFD VERIFY_TIME_SCENE_CULL
 	bsr _scene_cull_install
 	ENDC
@@ -177,8 +180,16 @@ _dispatch_controls:
 	movea.l (a7)+,a0
 	bsr _dispatch_held_ramps
 .recover:
+	IFD VERIFY_TIME_SWEEP
+	pea .sweep_ready(pc)
+	ENDC
 	move.l _dispatch_recovery_ptr(pc),-(a7)
 	rts
+	IFD VERIFY_TIME_SWEEP
+.sweep_ready:
+	bsr _sweep_begin
+	rts
+	ENDC
 ; Keyboard, gear selection, start sounds and other edge events run only above.
 ; Continuous throttle ramps repeat against the held button sample and live gates.
 _dispatch_held_ramps:
@@ -238,4 +249,8 @@ _dispatch_after_physics:
 
 	IFD VERIFY_TIME_SCENE_CULL
 	INCLUDE "HardDrivinScene.s"
+	ENDC
+
+	IFD VERIFY_TIME_SWEEP
+	INCLUDE "HardDrivinSweep.s"
 	ENDC

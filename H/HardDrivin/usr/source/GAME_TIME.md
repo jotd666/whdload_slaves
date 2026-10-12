@@ -3352,3 +3352,57 @@ proof that all possible interpolators fail. A redesign must address stopping,
 input changes, gear transitions and contact while still updating physics every
 frame on68020+; simply capping physics at the native6.25Hz would violate the
 requested policy. The handling-target question and step4 acceptance remain open.
+
+
+## Experimental long-frame object sweep
+
+`VERIFY_TIME_SWEEP` requires the dispatch and motion gates. It snapshots the
+player position after recovery, before camera and scene generation. When an
+active pass consumes more than eight fields, misses in the native solid-object
+loop are additionally tested against the movement segment. The old scene
+coordinates and their translated endpoint use the native nested Q14 rotation.
+Exact rational slab intersection selects the earliest added contact, retaining
+list order for ties. Existing native contacts retain priority. Only when the
+native solid-object loop finds no contact does the hook rewind position to the
+selected entry and execute the original collision response once. It adds no
+full scene rebuild or physics pass. Sound-only type95 objects are excluded.
+
+The loop-tail hook explicitly skips the initial native loop-entry visit, when
+A3 has not yet been loaded with an object. This fixed an invalid memory read in
+the first integrated private execution. Signed-word coordinate overflow is
+counted and disables the added sweep for that pass; it is not accepted coverage.
+
+`check_sweep_native.py` executes the pristine relocated collision routine with
+the actual hooks and private object geometry. All32 cases pass: empty lists,
+native contacts before or after a swept candidate, the previously missed
+100-to-minus50 depth crossing, reversed candidate order and equal-depth ties,
+each with the gate on/off and intervals8/16. Native contacts and inactive
+cases preserve the captured car state. Added crossings produce one response
+and choose the earliest object. All10000 signed-long interpolation cases
+match exact truncating arithmetic, including both signed extrema. The tracked
+segment-box helper independently matches exact rational intersections in10002
+cases, including parallel axes and full signed-word coordinates. Reports are
+`sweep-native-check.json` and `sweep-box-check.json` in the ignored harness.
+
+These private executions use audio stubs and do not establish live gameplay
+acceptance. The current sweep only visits the existing scene candidate list:
+culling, moving objects, turning during the interval, other contact paths and
+large travel remain open. It preserves the native post-contact separation,
+which can move the car behind its starting position in the synthetic crossing.
+The gate remains experimental and is not enabled in normal builds.
+
+The full emulator compatibility run `s4-sweep-native` matches all108 captured
+car states against `s4-skid-native-reference`. This exercises the installed
+hooks with forced native timing; it does not exercise active swept contacts.
+The normal build remains byte-identical to `s2-final-normal.slave` (8392-byte
+text), and all136 declared patch-branch ranges pass the branch audit.
+
+An active A500 integration capture, `s4-sweep-live-a500`, completes1251 fields
+and116 physics returns. Recorded intervals are0 (initialization),8..12 and14..16
+fields. The hook performs167 candidate tests with zero added hits and zero
+overflows. This establishes live execution of the active path, but provides no
+live crossing or performance acceptance evidence. The unchanged field-indexed
+input tape still follows a different route under scaled physics.
+
+The fresh `s4-sweep-disabled` boot passes all158 declared patch ranges with
+CUSTOM1 off (only the input fixture enabled). All owned captures are closed.

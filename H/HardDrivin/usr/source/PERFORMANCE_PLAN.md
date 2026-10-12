@@ -278,6 +278,11 @@ Tools stay in ignored `tmp/dev/tools`.
    - VERIFY_DISPATCH_CPU selects the experimental separate policies. Initial
      A500/68020 runtime checks pass, but large-step gameplay correctness and
      the full performance acceptance remain unproven.
+   - Experimental `VERIFY_TIME_SWEEP` now catches the demonstrated long-frame
+     solid-object crossing without adding a full physics/scene pass.32 private
+     native-loop cases,10000 interpolation cases and10002 segment-box cases pass.
+     Native contacts retain priority; scene-list coverage, turning, other contact
+     paths and live acceptance remain open. See GAME_TIME.md.
    - Report substep counts and any discarded time in VERIFY. Do not discard time
      silently.
 3. **Scale every integrated quantity by T**, following the table in
