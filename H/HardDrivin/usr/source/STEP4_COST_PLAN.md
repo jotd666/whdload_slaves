@@ -5,6 +5,10 @@ current integrated build, measured on 2026-10-12. It names the bottlenecks, sets
 targets and gives an ordered list of work items. Each item has an exit criterion. Step IDs
 are `P` (performance), `C` (closure) and `D` (decisions for the user).
 
+**Current status: P1 complete.** Fresh matched profiles measure traffic overhead of
+0.256 ms/frame in A and 0.034 ms/frame in B, both below 0.8 ms. P2 is next; the
+remaining performance and step-4 closure items are unchanged.
+
 ## 1. Measurement
 
 **Build.** The build is `build_reference.sh` plus `VERIFY_DRIVETRAIN_PHASE`. That is all
@@ -154,36 +158,81 @@ Rules for every P item:
   - capture fresh A/B profiles (`capture_solver_profile.py`, then `frame_budget.py`);
   - commit, then record the new per-frame numbers in this file.
 
-### P1 Traffic hooks: target ≤ 0.8 ms per frame (now 6.36 / 5.49)
+### P1 Traffic hooks: complete (target ≤ 0.8 ms per frame)
 
-1. **Slot lookup without multiply or divide.**
-   - Lay out the companion table with the native 46-byte stride, so that
-     slot = companion + (A0 − table). Alternatively, keep 16-byte slots and use an
-     index table built once at allocation.
-   - Keep the bounds and alignment rejection.
-   - Expected: 1.62 → under 0.1 ms.
-2. **Cache the terminal speed.**
-   - Store ceil(target/accel)·accel·8 in the slot when it is initialised.
-   - Also store the source bytes `21(a0)`/`22(a0)`, and recompute only if they change
-     (two `cmp.b`).
-   - This removes the `divu`/`mulu` from every `_traffic_speed_step` call.
-3. **Steady-speed fast path.**
-   - When the speed word is already at the cached terminal (or both speeds are equal) and
-     no reversal residue is pending, the wide phase numerator reduces to a closed form:
-     12·n·v8 + carry over 768.
-   - Compute 12·n once per frame. Replace the `divu #768` with an exact reciprocal
-     multiply or shift form, and check it exhaustively. The domain is
-     v8 ∈ [−168, 168], n ∈ 1..255 and carry ∈ [−767, 767].
-   - Its route-walk result must equal the wide path's.
-   - The wide path stays for acceleration, deceleration and reversal frames only.
-4. **Lighter wrappers.**
-   - Save only the registers each path actually uses.
-   - Read `_time_scalar_fields` once per frame into the per-frame block (see P4.1).
-   - Skip the speed step outright when the speed is at terminal.
-5. **Exit criteria.**
-   - The traffic phase is at most 0.8 ms per frame above the original in both windows.
-   - `check_traffic.py`, `check_traffic_math.py` and the 1440-record native comparison
-     still pass.
+Fresh 500-field captures use `p1-final-a.slave` (constant accelerator) and
+`p1-final-b.slave` (the frozen tape), each with CUSTOM1 off and on. The captures are
+`p1-final-{a,b}-{off,on}`, with distinct `HD_INSTANCE` values and matching rebuilt
+listings. B starts at race field 4000 after the full preceding tape. Each window is
+10.015943522 seconds. `frame_budget.py` still averages only complete swap intervals.
+
+| Traffic phase, ms/frame | A | B |
+|---|---:|---:|
+| Original, CUSTOM1 off | 6.097194 | 6.332588 |
+| Optimized, CUSTOM1 on | 6.352858 | 6.366127 |
+| **Overhead** | **0.255663** | **0.033539** |
+| Limit | 0.8 | 0.8 |
+| Result | **PASS** | **PASS** |
+
+The implementation keeps the existing traffic integration and route semantics:
+
+- Companions use the native 46-byte stride. An immutable byte map rejects unaligned
+  records; an extent comparison rejects out-of-table addresses. Allocation is
+  92 bytes per record including the map (1,104 bytes for the 12-car SPS table).
+  The native world loop already proves its records are in range and aligned, so its
+  calls use a cached address bias. Other callers retain the checked lookup. The
+  companion pointer is retained in a four-byte extension of the native local frame.
+- Terminal speed and its source bytes are cached. A cached direction/acceleration/
+  target/terminal signature detects changes before taking the steady-speed path.
+- For integral nonnegative terminal speed, nonnegative carry and 9–255 fields, the
+  `/768` calculation reduces exactly to a multiply and `/128` shift. With carry
+  `6*p+m`, the quotient is `(16*n*v+p)>>7`, the new `p` is the low seven bits, and
+  `m` is unchanged. `16*n` and the eligible field range are computed once per world
+  update. Acceleration, reversal, fractional speed and other field ranges retain
+  the general arithmetic. Route walking remains at the original publication site;
+  geometry still consumes the old phase.
+- Hook wrappers use the native routine's scratch-register contract. Branches skip
+  replaced instruction padding. These changes alone did not reach the target, so
+  the seven existing traffic pose interpolations also lose their repeated stack
+  arguments and math-helper trampolines. The MULS/DIVS operations, word overflow
+  behavior and rounding remain identical. This shortcut is restricted to the
+  world-loop caller; route generation and reset calls retain native interpolation.
+
+Required correctness evidence passes:
+
+- `check_traffic.py`: 1,440 native-step updates, 92 route crossings; another 1,440
+  one-field updates, including 1,103 fractional updates.
+- Full before/after native traffic records and poses: all 1,440 match the original
+  reference after normalizing route pointers and verified actor identities only.
+- `check_traffic_math.py`: 50 reversal cases plus initialization and zero-time checks.
+- Integrated `check_traffic_wide.py`: 1,440 updates, 1,368 wide updates, 134 crossings
+  and 12 capped/coasting updates; all match the independent model.
+- Private actual-68000 old/new fixture: 44,000 arithmetic/route pairs, including
+  8,495 prepared steady updates with persistent companions and changing intervals.
+  Another 20,000 cases compare the complete pose hook and non-world fallback with
+  pristine instructions, including signed-word extremes and DIVS overflow.
+- Checked lookup/fallback fixture: 2,120 bounds/alignment/X cases and 3,840 native
+  fallback pairs. The steady arithmetic reduction also matches exhaustively across
+  4,173,312 combinations of speed, field count and nonnegative carry.
+- All 108 native car states match. CUSTOM1-off checks pass all 162 declared ranges;
+  the branch audit passes 140 ranges. Normal, DRIVE and ATTRACT builds remain
+  byte-identical to the step-2 reference builds.
+
+The local summary is `tmp/prof/p1-summary.json`; the retained traces include hashes,
+field fingerprints and verified compressed archives. Harness tools and game bytes
+remain under ignored `tmp/`.
+
+G2 remains a report, not the P1 exit gate:
+
+| | A off | A on | B off | B on |
+|---|---:|---:|---:|---:|
+| Swaps in the 500-field window | 38 | 38 | 83 | 58 |
+| Complete intervals measured | 37 | 37 | 82 | 57 |
+| Mean frame time (ms) | 260.96 | 256.62 | 119.95 | 174.66 |
+| Polygons per complete frame | 57.76 | 55.43 | 13.78 | 29.12 |
+
+**B is a scene mismatch**: polygon workload differs by more than 5%. Passing P1
+closes only the traffic cost item; it does not close the combined G1 gate or step 4.
 
 ### P2 Replay recording: target ≤ 0.3 ms per frame (now 3.89 / 2.90)
 
@@ -264,7 +313,7 @@ The recommended option, R1, needs decision D2.
 Fold the field-count read in `hook10ed4`, the controls latch and the dispatcher's
 begin/take/after work into the per-frame block. No deeper change is expected.
 
-### Budget after P1–P5 (ms per frame)
+### Budget after P1–P5 (ms per frame; baseline before P1)
 
 | Component | Now A / B | Target |
 |---|---:|---:|

@@ -3,6 +3,10 @@
 ; traffic table load and released on the next load; no fixed actor-count limit.
 _traffic_install:
 	movem.l a0-a2,-(a7)
+	movea.l _code_start(pc),a0
+	adda.l #$d43e,a0
+	lea _traffic_world_return(pc),a1
+	move.l a0,(a1)
 	lea _traffic_patches(pc),a0
 	movea.l _code_start(pc),a1
 	movea.l _resload(pc),a2
@@ -11,24 +15,67 @@ _traffic_install:
 	rts
 _traffic_patches:
 	PL_START
+	; PERF_RANGE VERIFY_TIME_TRAFFIC $0d424 $0006: traffic frame constants
+	PL_PS $d424,_traffic_frame
 	; PERF_RANGE VERIFY_TIME_TRAFFIC $083c4 $0008: resize traffic companions
 	PL_PSS $83c4,_traffic_loaded,2
 	; PERF_RANGE VERIFY_TIME_TRAFFIC $0ce52 $0008: initial route reset
 	PL_PSS $ce52,_traffic_initial,2
 	; PERF_RANGE VERIFY_TIME_TRAFFIC $0d4d6 $0008: race traffic reset
 	PL_PSS $d4d6,_traffic_restart,2
+	; PERF_RANGE VERIFY_TIME_TRAFFIC $0ce70 $0004: private companion pointer
+	PL_W $ce72,-14
 	; PERF_RANGE VERIFY_TIME_TRAFFIC $0ce8a $002a: traffic acceleration
-	PL_PSS $ce8a,_traffic_speed,$24
+	PL_PS $ce8a,_traffic_speed
+	PL_S $ce90,$24
 	; PERF_RANGE VERIFY_TIME_TRAFFIC $0d36e $0012: traffic route-phase integration
-	PL_PSS $d36e,_traffic_phase,$c
+	PL_PS $d36e,_traffic_phase
+	PL_S $d374,$c
+	; PERF_RANGE VERIFY_TIME_TRAFFIC $0d1c2 $00dc: inline traffic interpolation operands
+	PL_PS $d1c2,_traffic_pose
 	; PERF_RANGE VERIFY_TIME_TRAFFIC $0bc4c $0006: collision velocity reversal
 	PL_PS $bc4c,_traffic_collision
 	PL_END
 _traffic_signature: dc.b 'HDTRAFF1'
 _traffic_memory: dc.l 0,0
+_traffic_extent: dc.l 0
+_traffic_valid: dc.l 0
+_traffic_fields: dc.w VERIFY_SCALAR_FIELDS
+_traffic_factor: dc.w VERIFY_SCALAR_FIELDS*16
+_traffic_hot: dc.w 0
+_traffic_world_return: dc.l 0
+_traffic_bias: dc.l 0
+_traffic_frame:
+	movem.l d0/a0,-(a7)
+	move.w _time_scalar_fields(pc),d0
+	lea _traffic_fields(pc),a2
+	move.w d0,(a2)+
+	lsl.w #4,d0
+	move.w d0,(a2)+
+	clr.w (a2)
+	move.w -4(a2),d0
+	subi.w #9,d0
+	cmpi.w #246,d0
+	bhi.s .cold
+	st (a2)
+.cold:
+	movea.l _traffic_memory(pc),a2
+	suba.l -$50fa(a4),a2
+	lea _traffic_bias(pc),a0
+	move.l a2,(a0)
+	movem.l (a7)+,d0/a0
+	movea.l -$50fa(a4),a2
+	moveq #0,d4
+	rts
 ; Slot: speed remainder/8.w0, last speed.w2, old full speed*8.w4,
 ; phase remainder/128.w6, last phase.w8, reserved.b10, init.b11,
-; phase sub-remainder/768.w12 (signed -5..5), reserved.w14.
+; phase sub-remainder/768.w12 (signed -5..5), terminal speed*8.w14,
+; cached accel.b16/target.b17, cache valid.b18, steady readiness.b19,
+; cached target.b20/terminal.b21, reserved.l22, terminal word.w26 and
+; eighths mirror.w28, direction/accel/target/terminal signature.l30,
+; prepared phase.b34. Slots use native stride46. During steady preparation,
+; last phase.w8 holds the pending phase until the D36E publication hook.
+; A separate immutable byte map rejects every unaligned record address.
 _traffic_loaded:
 	move.l d0,-$50fa(a4)
 	movem.l d0-d2/a0-a2/a6,-(a7)
@@ -43,7 +90,9 @@ _traffic_loaded:
 	clr.l (a2)
 	moveq #0,d0
 	move.w -$50fc(a4),d0
-	lsl.l #4,d0
+	mulu.w #46,d0
+	move.l d0,8(a2)
+	add.l d0,d0
 	move.l d0,4(a2)
 	beq.s .done
 	move.l #MEMF_PUBLIC|MEMF_CLEAR,d1
@@ -51,6 +100,15 @@ _traffic_loaded:
 	tst.l d0
 	beq _failmem
 	move.l d0,(a2)
+	add.l 8(a2),d0
+	move.l d0,12(a2)
+	movea.l d0,a0
+	move.w -$50fc(a4),d1
+	subq.w #1,d1
+.mark:
+	st (a0)
+	adda.w #46,a0
+	dbf d1,.mark
 .done:
 	movem.l (a7)+,d0-d2/a0-a2/a6
 	movea.l -6(a5),a0
@@ -58,46 +116,40 @@ _traffic_loaded:
 ; A0 record -> A1 companion, or NULL for a non-table record. The native
 ; route generator at $5a14 passes a stack-local record to $ce70; its calls
 ; advance a synthetic route by native steps, not by elapsed gameplay time.
-; Validate the range and record alignment before DIVU or companion writes.
+; Allocation publishes extent=count*46 and an immutable alignment map.
+; Reject offsets outside that extent (including below-base unsigned offsets)
+; and every unaligned byte before accessing the companion.
 _traffic_slot:
-	movem.l d0-d1,-(a7)
-	moveq #0,d1
-	roxl.b #1,d1
-	move.w d1,-(a7)
-	move.l a0,d0
-	sub.l -$50fa(a4),d0
-	bcs.s .invalid
-	moveq #0,d1
-	move.w -$50fc(a4),d1
-	mulu.w #46,d1
-	cmp.l d1,d0
+	move.l d0,-(a7)
+	movea.l a0,a1
+	suba.l -$50fa(a4),a1
+	cmpa.l _traffic_extent(pc),a1
 	bcc.s .invalid
-	divu.w #46,d0
-	move.l d0,d1
-	swap d1
-	tst.w d1
-	bne.s .invalid
-	andi.l #$ffff,d0
-	lsl.l #4,d0
-	cmp.l _traffic_memory+4(pc),d0
-	bcc.s .invalid
-	movea.l _traffic_memory(pc),a1
-	move.l a1,d1
+	move.l a1,d0
+	movea.l _traffic_valid(pc),a1
+	adda.l d0,a1
+	tst.b (a1)
 	beq.s .invalid
+	movea.l _traffic_memory(pc),a1
 	adda.l d0,a1
 	bra.s .done
 .invalid:
 	suba.l a1,a1
 .done:
-	move.w (a7)+,d1
-	lsr.b #1,d1             ; preserve incoming X for native fallback
-	movem.l (a7)+,d0-d1
+	; Address arithmetic, compares and moves leave incoming X untouched.
+	move.l (a7)+,d0
 	rts
 _traffic_clear:
 	clr.l (a1)
 	clr.l 4(a1)
 	clr.l 8(a1)
 	clr.l 12(a1)
+	clr.l 16(a1)
+	move.w #$ffff,20(a1)
+	clr.l 22(a1)
+	clr.l 26(a1)
+	clr.l 30(a1)
+	clr.w 34(a1)
 	rts
 _traffic_initial:
 	movem.l a0-a1,-(a7)
@@ -125,16 +177,24 @@ _traffic_restart:
 	movem.l (a7)+,a0-a1
 	rts
 _traffic_speed:
-	movem.l d0-d5/a0-a1,-(a7)
 	movea.l 8(a5),a0
+	; Only D43A can return at D43E. Its loop walks table+i*46 with
+	; 0<=i<count, so range and alignment are already established. Every
+	; other caller (notably the stack-local route generator) uses _slot.
+	movea.l _traffic_world_return(pc),a1
+	cmpa.l 4(a5),a1
+	bne.s .checked
+	movea.l a0,a1
+	adda.l _traffic_bias(pc),a1
+	bra.s .slot
+.checked:
 	bsr _traffic_slot
+.slot:
+	move.l a1,-14(a5)
 	cmpa.w #0,a1
 	beq.s .native
-	bsr _traffic_speed_step
-	movem.l (a7)+,d0-d5/a0-a1
-	rts
+	bra _traffic_speed_step
 .native:
-	movem.l (a7)+,d0-d5/a0-a1
 	movea.l 8(a5),a0
 	movea.l 8(a5),a1
 	move.b 23(a0),d0
@@ -151,6 +211,43 @@ _traffic_speed:
 ; table accel=1..3 and target=9..20, so terminal speeds fit the signed byte.
 ; Reset's CE70 call is initialization, and consumes one native step regardless T.
 _traffic_speed_step:
+	; CE70 treats D0-D3/A0-A1 as scratch; D4-D7/A2-A3 are already saved
+	; by its native prologue. Geometry overwrites the speed-hook scratch.
+	; The phase hook runs immediately before that native saved-register return.
+	move.l 20(a0),d0
+	cmp.l 30(a1),d0
+	bne.s .slow
+	move.b _traffic_hot(pc),d0
+	and.b 19(a1),d0
+	beq.s .slow
+	move.w 16(a0),d0
+	cmp.w 8(a1),d0
+	bne.s .slow
+	move.w 14(a1),4(a1)
+	; For steady integral v>=0 and carry=6*p+m>=0 (p0..127,m0..5),
+	; (12*n*(8*v)+6*p+m)/768 has quotient (16*n*v+p)>>7,
+	; new p=(16*n*v+p)&127 and unchanged m. No reciprocal rounding.
+	; SPS terminal v<=21 and n9..255 bound the numerator at85807;
+	; the pending phase is at most869. Other domains use the old path.
+	; Geometry reads the old phase and route. Prepare only companion values
+	; here; publish and walk the route at the original D36E boundary.
+	moveq #0,d0
+	move.b 23(a0),d0
+	mulu.w _traffic_factor(pc),d0
+	moveq #0,d1
+	move.w 6(a1),d1
+	add.l d1,d0
+	move.w d0,d1
+	andi.w #127,d1
+	move.w d1,6(a1)
+	lsr.l #7,d0
+	add.w 16(a0),d0
+	move.w d0,8(a1)
+	st 34(a1)
+	rts
+.slow:
+	clr.b 34(a1)
+	clr.b 19(a1)
 	move.b 23(a0),d0
 	ext.w d0
 	cmp.w 2(a1),d0
@@ -162,17 +259,43 @@ _traffic_speed_step:
 	move.w d0,4(a1)
 	moveq #0,d1
 	move.b 21(a0),d1
-	beq.s .publish
+	beq .publish
+	tst.b 18(a1)
+	beq.s .cache
+	cmp.b 16(a1),d1
+	bne.s .cache
+	move.b 22(a0),d2
+	cmp.b 17(a1),d2
+	bne.s .cache
+	moveq #0,d2
+	move.w 14(a1),d2
+	bra.s .cached
+.cache:
+	move.b d1,16(a1)
 	moveq #0,d2
 	move.b 22(a0),d2
+	move.b d2,17(a1)
 	add.w d1,d2
 	subq.w #1,d2
 	divu.w d1,d2
 	mulu.w d1,d2
 	lsl.w #3,d2
+	move.w d2,14(a1)
+	st 18(a1)
+	move.w d2,d3
+	lsr.w #3,d3
+	move.w d3,26(a1)
+	move.w d2,28(a1)
+	move.b 22(a0),20(a1)
+	move.b d3,21(a1)
+.cached:
+	move.l 20(a0),d3
+	move.b 21(a1),d3
+	move.l d3,30(a1)
 	cmp.w d2,d0
-	bge.s .publish
-	move.w _time_scalar_fields(pc),d3
+	beq.s .terminal
+	bgt.s .publish
+	move.w _traffic_fields(pc),d3
 	tst.b 11(a1)
 	beq.s .fields
 	moveq #8,d3
@@ -185,6 +308,14 @@ _traffic_speed_step:
 	cmp.l d2,d0
 	ble.s .publish
 	move.l d2,d0
+	bra.s .publish
+.terminal:
+	tst.w (a1)
+	bne.s .publish
+	move.b 23(a0),d1
+	ext.w d1
+	move.w d1,2(a1)
+	rts
 .publish:
 	ext.l d0
 	divs.w #8,d0
@@ -196,16 +327,24 @@ _traffic_speed_step:
 	move.w d0,2(a1)
 	rts
 _traffic_phase:
-	movem.l d0-d5/a0-a1,-(a7)
 	movea.l 8(a5),a0
-	bsr _traffic_slot
+	movea.l -14(a5),a1
 	cmpa.w #0,a1
-	beq.s .native
-	bsr _traffic_phase_step
-	movem.l (a7)+,d0-d5/a0-a1
+	beq _traffic_phase_native
+_traffic_phase_apply:
+	tst.b 34(a1)
+	beq _traffic_phase_step
+	move.w 8(a1),d0
+	cmpi.w #200,d0
+	bcc.s .walk
+	move.w d0,16(a0)
 	rts
-.native:
-	movem.l (a7)+,d0-d5/a0-a1
+.walk:
+	ext.l d0
+	bsr _traffic_route_walk
+	move.w 16(a0),8(a1)
+	rts
+_traffic_phase_native:
 	movea.l 8(a5),a0
 	movea.l 8(a5),a1
 	move.b 23(a1),d0
@@ -227,7 +366,7 @@ _traffic_phase_step:
 	clr.w 6(a1)
 	clr.w 12(a1)
 .current:
-	move.w _time_scalar_fields(pc),d3
+	move.w _traffic_fields(pc),d3
 	tst.b 11(a1)
 	beq.s .fields
 	moveq #8,d3
@@ -287,6 +426,84 @@ _traffic_phase_step:
 .done:
 	move.w 16(a0),8(a1)
 	clr.b 11(a1)
+	; The readiness bit describes only companion state owned by this module.
+	; Native writers are still detected by the source signature and phase.
+	clr.b 19(a1)
+	tst.w (a1)
+	bne.s .return
+	tst.b 18(a1)
+	beq.s .return
+	move.w 6(a1),d0
+	or.w 12(a1),d0
+	bmi.s .return
+	move.b 23(a0),d0
+	ext.w d0
+	cmp.w 2(a1),d0
+	bne.s .return
+	lsl.w #3,d0
+	cmp.w 14(a1),d0
+	bne.s .return
+	st 19(a1)
+.return:
+	rts
+; Same seven signed MULS/DIVS operations as native D1C2..D29E, including
+; DIVS word-overflow behaviour. Remove only stack arguments and the 2950
+; trampoline. Position sums are words; the final roll sum remains ADDA.W.
+; D4 is the pre-integration route phase; A3 and -4(A5) are current/next.
+; D2-D6/A3-A6 are preserved. D7 and A2 publish the native pitch/roll results.
+_traffic_pose:
+	movea.l _traffic_world_return(pc),a0
+	cmpa.l 4(a5),a0
+	bne.s .native
+	bsr _traffic_pose_values
+	; Skip the original block without executing a long NOP sled or
+	; changing X. Other CE70 callers retain the original interpolation.
+	movea.l (a7),a1
+	adda.w #$d6,a1
+	move.l a1,(a7)
+	rts
+.native:
+	movea.l -8(a5),a0
+	movea.l (a7)+,a1
+	move.l a0,-(a7)
+	jmp (a1)
+_traffic_pose_values:
+	movea.l 8(a5),a0
+	movea.l -8(a5),a1
+	move.w 28(a0),d0
+	muls.w d4,d0
+	divs.w #200,d0
+	add.w 34(a0),d0
+	move.w d0,8(a1)
+	move.w 30(a0),d0
+	muls.w d4,d0
+	divs.w #200,d0
+	add.w 36(a0),d0
+	move.w d0,10(a1)
+	move.w 32(a0),d0
+	muls.w d4,d0
+	divs.w #200,d0
+	add.w 38(a0),d0
+	move.w d0,12(a1)
+	movea.l -4(a5),a0
+	move.w 12(a0),d0
+	muls.w d4,d0
+	divs.w #200,d0
+	move.w d0,d7
+	move.w #200,d0
+	sub.w d4,d0
+	muls.w 12(a3),d0
+	divs.w #200,d0
+	add.w d0,d7
+	move.w 16(a0),d0
+	muls.w d4,d0
+	divs.w #200,d0
+	movea.w d0,a2
+	move.w #200,d0
+	sub.w d4,d0
+	muls.w 16(a3),d0
+	divs.w #200,d0
+	adda.w d0,a2
 	rts
 _traffic_collision:
 	movem.l d0-d2/a0-a1,-(a7)
@@ -440,7 +657,7 @@ _traffic_route_next:
 	suba.w #20,a1
 .junction:
 	tst.b 15(a0)
-	beq.s .publish
+	beq .publish
 	cmpa.l -$50f6(a4),a2
 	bne.s .reverse_junction
 	cmpi.b #1,20(a0)
@@ -596,7 +813,7 @@ _traffic_math_test:
 	ble.s .mismatch
 	dbf d6,.fraction
 	dbf d7,.speed
-	lea _time_scalar_fields(pc),a5
+	lea _traffic_fields(pc),a5
 	clr.w (a5)
 	bsr _traffic_clear
 	clr.b 23(a0)
@@ -626,7 +843,7 @@ _traffic_math_test:
 	movem.l (a7)+,d0-d7/a0-a6
 	rts
 _traffic_fake_record: dcb.b 46,0
-_traffic_fake_state: dcb.b 16,0
+_traffic_fake_state: dcb.b 46,0
 _traffic_test_speeds: dc.w -21,-1,0,1,21
 _traffic_test_fractions: dc.w -7,-1,0,1,7
 _traffic_math_signature: dc.b 'HDTRMAT1'
@@ -652,7 +869,7 @@ _traffic_speed_math_test:
 	move.w (a3)+,d0
 	move.b d0,22(a0)
 	move.l a0,-(a7)
-	lea _time_scalar_fields(pc),a0
+	lea _traffic_fields(pc),a0
 	move.w (a3)+,(a0)
 	movea.l (a7)+,a0
 	move.w (a3)+,d0
@@ -665,12 +882,12 @@ _traffic_speed_math_test:
 	move.w 2(a1),(a2)+
 	move.w 4(a1),(a2)+
 	dbf d7,.case
-	lea _time_scalar_fields(pc),a0
+	lea _traffic_fields(pc),a0
 	move.w #VERIFY_SCALAR_FIELDS,(a0)
 	movem.l (a7)+,d0-d7/a0-a3
 	rts
 _traffic_speed_fake_record: dcb.b 46,0
-_traffic_speed_fake_state: dcb.b 16,0
+_traffic_speed_fake_state: dcb.b 46,0
 ; speed,fraction,last speed,acceleration,target,fields,initialization
 _traffic_speed_test_cases:
 	dc.w 0,0,0,3,20,65535,0
