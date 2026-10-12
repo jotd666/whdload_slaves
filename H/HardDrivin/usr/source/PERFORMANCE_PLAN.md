@@ -45,6 +45,11 @@ the step-4 acceptance criteria remain open.
 
 The 2026-10-12 cost profile and the ordered closure plan for step 4 (P1–P7,
 C1–C6, decisions D1–D4) are in `STEP4_COST_PLAN.md`. Follow it from here.
+On 2026-10-13 the user accepted the current 5.740 ms/frame A500 B-window
+simulation overhead temporarily and directed work to move on to step 5.
+This removes the cost gate as a blocker; it does not complete the outstanding
+simulation-correctness checks. Measure the combined simulation and rendering
+changes against the original before claiming a net performance gain.
 
 ## Starting point
 

@@ -9,9 +9,12 @@ are `P` (performance), `C` (closure) and `D` (decisions for the user).
 explicit helper-budget exception. P5's acceptance build met its unchanged
 0.300 ms/frame target at 0.247 / 0.292 ms/frame. P6 optimizes the remaining
 physics arithmetic bottleneck: matched-operand long division is about 29% cheaper.
-P6/P5 acceptance does not close G1. Current conservative total overhead is
-**3.084 / 5.740 ms/frame**; B still exceeds **3.78 ms**. P7 reports A1200 net phase overhead of 0.283 / 0.576 ms/frame (0.47% / 1.23%).
-G1 and step-4 closure remain open; no gate has been relaxed.
+The user accepts the current A500 B-window overhead of **5.740 ms/frame for now**
+(2026-10-13), superseding its 3.78 ms blocking limit for this measured build.
+A measures 3.084 ms/frame, within its 8.07 ms limit. G1 is accepted by temporary
+exception, not a numerical pass of the original target. Proceed to step 5 rendering
+work; C1–C6 correctness/closure requirements remain open. P7 reports A1200 net
+phase overhead of 0.283 / 0.576 ms/frame (0.47% / 1.23%).
 
 ## 1. Measurement
 
@@ -140,6 +143,12 @@ The proposed measurable form of the step-4 rule ("the A500's FPS must not drop b
   - Measure the CUSTOM1 overhead with `frame_budget.py`, as defined in section 1.
   - The overhead must be at most 3.093% of the original mean frame time in each window:
     at most 8.07 ms in A and at most 3.78 ms in B.
+  - **Temporary user exception, 2026-10-13:** accept the current B result of
+    5.739547 ms/frame (rounded 5.740) from the P6 build `368853a`. This removes
+    G1 as a blocker to step 5; retain the original target as a reference and
+    continue reporting costs. It does not authorize further unmeasured regressions.
+    Rendering gains must be measured together with the simulation changes before
+    claiming a net win against the original.
   - Any new hook outside the listed simulation phases must appear as timing slave code. If
     it doesn't, the analyzer must be extended before G1 can pass.
 - **G2, the end-to-end report.** Keep reporting literal swap counts and FPS for both
@@ -830,7 +839,7 @@ traces remain. Reports are `p7-summary.json`, each run's `frame-budget.json` and
 
 ## 5. Closure of step 4
 
-Do these after G1 passes. They are the remaining acceptance items of `PERFORMANCE_PLAN.md`
+G1 is now accepted under the temporary exception above. These remain acceptance items of `PERFORMANCE_PLAN.md`
 step 4.7, made concrete.
 
 - **C1, solver coverage.**
@@ -855,7 +864,7 @@ step 4.7, made concrete.
     68060 (smallest T).
   - There must be no tunnelling and no missed checkpoint. The sweep counters must show
     any long-frame crossing.
-- **C5, gates.** G1 passes in both windows; G2 is reported; `check_disabled.py` passes; the
+- **C5, gates.** G1 passes or meets the explicitly accepted temporary exception; G2 is reported; `check_disabled.py` passes; the
   normal build is byte-identical.
 - **C6, human laps.** A person drives a full lap on the A500 and one on the 68040 profile,
   and confirms the handling. This step belongs to the user.
@@ -871,9 +880,12 @@ step 4.7, made concrete.
 - **D4:** Still open from earlier work: preserve the native BCD lap clock, defects
   included, or fix it to elapsed time?
 
-On 2026-10-12 the user accepted the recommended defaults. These decisions are now fixed:
+On 2026-10-12 the user accepted the recommended defaults. The later G1 exception below supersedes its blocking cost limit:
 
-- **D1, accepted.** G1 is the pass/fail form of the 3% A500 gate. G2 is reported only.
+- **D1, accepted with temporary exception.** G1 remains the cost measure and G2 the
+  end-to-end report. On 2026-10-13 the user accepted 5.740 ms/frame in A500 B for
+  now and directed work to move on to step 5. Do not pursue the accepted gap as
+  a prerequisite or resume deferred P3 merely to close it.
 - **D2, R2 first.** Keep the fixed-field format and make it cheaper. If G1 still fails in
   window B after P1–P6 and the recorder is the largest remaining item, switch to R1. R1 is
   allowed for that case without asking again.
@@ -883,7 +895,9 @@ On 2026-10-12 the user accepted the recommended defaults. These decisions are no
 
 ## 7. Working rules for this plan
 
-- Work in the order P1 → P5, then C1 → C6, with P3 deferred by the user, P4 complete under its approved helper-budget exception, and P5/P6/P7 complete. Resolve G1 before starting C1–C6.
+- P3 remains deferred; P1/P2/P4–P7 are complete, with the recorded exceptions.
+  The user has directed work to move on to step 5. G1 no longer blocks that work;
+  retain C1–C6 as outstanding correctness/closure requirements, not completed items.
   Deferral does not pass an item. Each item ends when its exit numbers and
   checks pass. Commit each item on its own.
 - Do not add validation dimensions beyond those listed for the item. Put new questions in
