@@ -1020,11 +1020,39 @@ sim_steer_grip:
     add.l #$8104,(sp)
     rts
 
+; The native key handler adds an immediate lateral impulse before the wheel
+; contribution. Keep that impulse in motion/grip/collisions, but exclude it
+; from the visual road bend: reversing keys must not jump the view while the
+; wheel is centred. Capture it before the wheel contribution is accumulated.
+sim_visual_edge_capture:
+    move.l a0,-(sp)
+    lea sim_visual_edge(pc),a0
+    move.l -26200(a4),(a0)
+    move.l (sp)+,a0
+    move.l -22356(a4),d0      ; displaced wheel load and scaling
+    asr.l #8,d0
+    rts
+sim_visual_edge: dc.l 0
+
 ; Banking is an instantaneous visual pose, reset by the grip routine each
-; step, not an accumulated angle. Preserve its original coarse-rate units so
-; shortening a step does not make the same turn appear 2/5 as banked.
+; step, not an accumulated angle. Undo only the key impulse's quarter-rate
+; contribution. The wheel, road curvature and original skid pose remain.
+; Preserve coarse-rate units so a shorter step does not weaken the pose.
 sim_bank_pose:
     move.l -26204(a4),d0
+    move.l d1,-(sp)
+    IFD VERIFY
+    move.l verify_c5(pc),d1
+    btst #3,d1               ; original-arithmetic drawing oracle
+    bne.b .original
+    ENDC
+    move.l sim_visual_edge(pc),d1
+    asr.l #2,d1
+    add.l d1,d0
+    IFD VERIFY
+.original
+    ENDC
+    move.l (sp)+,d1
     bsr sim_coarse_rate
     asr.l #4,d0
     rts                         ; original ADDQ #1 remains outside the hook

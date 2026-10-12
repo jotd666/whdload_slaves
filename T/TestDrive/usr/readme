@@ -46,7 +46,7 @@
  --------
  version 2.0b (13.10.2026) done by Vesuri:
  - Optional smoother driving, scenery and traffic with Enhanced framerate.
- - Fixed repeated sideways road jumps when driving near either edge.
+ - Fixed sideways road jumps near the edges and when reversing steering.
  - Fixed the rev counter needle wrapping around when over-revving.
  - More consistent game speed, race timing and average-speed scoring.
  - Improved compatibility with accelerated Amigas.

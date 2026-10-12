@@ -578,6 +578,15 @@ them before the cache flush and optional enhancement hooks. Local
 327680 native clamp cases and release C2-off/on startup, attract and quit checks.
 The original dial artwork and drawing routine are unchanged.
 
+Steering-key reversals no longer add an immediate visual road bend while the
+wheel is centred. The h4:$7F94 hook captures the native direct-key lateral
+impulse before wheel motion is added; `sim_bank_pose` excludes only that
+impulse from the visual pose. Vehicle motion, grip, collisions, road curvature
+and skid effects keep their existing paths. C2=0 retains original behaviour;
+the VERIFY original-arithmetic drawing oracle also retains the native pose.
+Local `docs/steer-reversal.md` records native keyboard reproduction and the
+isolated visual regression. This remains part of 2.0b (13.10.2026).
+
 ## Phase 12: lessons back to AmigaXDev
 
 Record in AmigaXDev `docs/` what generalises: transferring an engine between games of one

@@ -102,6 +102,8 @@
     PL_PSS $01e20,sim_draw_verge,2
     ; SIM_RANGE h4 07fb2 8 C2 sim_steer_grip
     PL_PSS $07fb2,sim_steer_grip,2
+    ; SIM_RANGE h4 07f94 6 C2 sim_visual_edge_capture
+    PL_PS $07f94,sim_visual_edge_capture
     ; SIM_RANGE h4 07fd6 6 C2 sim_bank_pose
     PL_PS $07fd6,sim_bank_pose
     PL_ENDIF
