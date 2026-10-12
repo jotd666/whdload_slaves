@@ -58,6 +58,13 @@ _presentation_overlay_start:
 	bsr _replay_overlay_reset
 .no_replay_restart:
 	ENDC
+	IFD VERIFY_TIME_TIMELINES
+	lea _timeline_state(pc),a0
+	tst.b TL_ACTIVE(a0)
+	beq.s .no_timeline_restart
+	bsr _timeline_overlay_reset
+.no_timeline_restart:
+	ENDC
 	IFD VERIFY_TIME_DISPATCH
 	; A restart partway through a frame must not consume earlier substeps.
 	lea _dispatch_state(pc),a0
@@ -86,6 +93,14 @@ _presentation_overlay_tick:
 	lea _time_state(pc),a0
 	tst.b TS_ACTIVE(a0)
 	bne.s .gameplay
+	IFD VERIFY_TIME_TIMELINES
+	lea _timeline_state(pc),a0
+	tst.b TL_ACTIVE(a0)
+	beq.s .no_timeline
+	bsr _timeline_overlay_fields
+	bra.s .interval
+.no_timeline:
+	ENDC
 	IFD VERIFY_TIME_REPLAY_TIMING
 	tst.b -$5229(a4)
 	beq.s .interval

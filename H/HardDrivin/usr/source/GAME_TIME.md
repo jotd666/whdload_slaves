@@ -1374,3 +1374,62 @@ would wrap to-5. Falling rate5 produces40959 and would also wrap. Safe handling 
 such intervals needs a solver/consumer policy, not merely a wider intermediate.
 The ordinary slave and the existing CPU-policy runtime remain byte-identical
 when the braking fixture is disabled.
+
+
+## GAME OVER presentation clock
+
+`VERIFY_TIME_TIMELINES` requires `VERIFY_TIME_REPLAY_TIMING` and remains behind
+CUSTOM1 and the SPS 0126 guard. `HardDrivinTimeline.s` replaces the GAME OVER
+35-rendered-pass counter with 280 eligible PAL fields (35 native steps). It uses
+the replay wall counter because gameplay's counter stops at race exit. Native
+pause/options hooks suspend this wall counter too.
+
+The entry hook at `$10f62` establishes the epoch and retains both native clears.
+The `$10f6a` hook calls native controls, samples elapsed time after any modal
+pause, and then calls native scene preparation. The split-text phase is
+`min(floor(age/8),35)`; the original renderer still caps its displacement at20.
+The `$10fe6` hook exits after the first completed frame at age >=280 and clears
+the timeline's active flag. Final-frame overshoot is retained explicitly; no
+physics catch-up is performed in this loop. Long arithmetic prevents a delayed
+frame from wrapping the native signed-word animation counter. The helper saves
+X without reading the privileged status register, and the exit hook restores
+the native counter increment's cleared X before supplying the comparison flags.
+
+Overlay countdown selection recognizes this presentation epoch, consumes its
+own elapsed interval once, and resets that interval if an overlay starts within
+the loop. The observed GAME OVER runs did not call the overlay countdown, so
+this selection has static coverage only; it is not claimed as live overlay
+validation. Other presentation timelines remain unfinished.
+
+`VERIFY_TIMELINE_PAUSE` is an input-only diagnostic requiring VERIFY_DRIVE and
+TIME_TIMELINES. It supplies SPACE once after GAME OVER age24 and again40 input
+fields later, exercising the actual pause loop without injecting mode or clock
+state. Fresh boots follow the full native race to GAME OVER:
+
+| Capture | CPU/policy | Rendered passes | Active elapsed fields | Paused fields |
+| --- | --- | ---: | ---: | ---: |
+| s4-gameover-pause-a500 | 68000 elapsed | 26 | 283 | 40 |
+| s4-gameover-final-020 | 68020 elapsed | 98 | 280 | 40 |
+| s4-gameover-native-final | 68000 forced native | 35 | 280 | 0 |
+
+Each drawn phase and completed-frame counter matches the appropriate elapsed
+or native rule. Both pause captures observe40 VBLs with an unchanged wall
+counter. The last A500 frame starts at age272 and completes at283; the last
+68020 frame starts at278 and completes at280. Forced-native mode retains the
+original sequence0..34 and termination at35. These are timer/phase checks,
+not framebuffer equivalence or full world-state acceptance.
+
+The earlier `s4-gameover-a500` capture reached age282, but its first checker
+incorrectly required the wall clock still to equal the sampled phase age after
+scene preparation. That check was corrected to allow intervening fields; final
+captures above use the corrected checker and final source. The additional final
+A500 capture `s4-gameover-final-a500` was actually built with the pause fixture;
+it predates explicit pause counting and is superseded by the dedicated pause
+capture above.
+
+`s4-gameover-off` passes all disabled patch ranges. The ordinary final slave is
+byte-identical to the unmodified build; the direct-branch audit covers94 ranges
+with no external branch into a replacement's interior. Runtime, captures and
+local checker stay under ignored `tmp/`. Step4 remains incomplete: Phantom and
+attract/menu timing, audio/derivatives, long-step safety, full tape and machine
+comparisons, matched-workload performance, and human laps are still required.

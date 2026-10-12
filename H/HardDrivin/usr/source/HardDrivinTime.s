@@ -116,6 +116,9 @@ _time_install:
 	IFD VERIFY_TIME_REPLAY_TIMING
 	bsr _replay_install
 	ENDC
+	IFD VERIFY_TIME_TIMELINES
+	bsr _timeline_install
+	ENDC
 	ENDC
 .restore:
 	movem.l (a7)+,d0-d1/a0-a2
@@ -618,4 +621,8 @@ _time_q16_results: dcb.l 7*9*7*2,0
 
 	IFD VERIFY_TIME_REPLAY_TIMING
 	INCLUDE "HardDrivinReplay.s"
+	ENDC
+
+	IFD VERIFY_TIME_TIMELINES
+	INCLUDE "HardDrivinTimeline.s"
 	ENDC

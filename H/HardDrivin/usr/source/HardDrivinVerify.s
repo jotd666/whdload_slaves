@@ -167,6 +167,9 @@ _verify_drive_key:
 	IFD VERIFY_REPLAY_PAUSE
 	bsr _verify_replay_pause_key
 	ENDC
+	IFD VERIFY_TIMELINE_PAUSE
+	bsr _verify_timeline_pause_key
+	ENDC
 	movea.l (a7)+,a0
 	tst.l d0
 	unlk a5
@@ -524,4 +527,41 @@ _verify_step_brake_buttons:
 .done:
 	movea.l (a7)+,a0
 	rts
+	ENDC
+
+	IFD VERIFY_TIMELINE_PAUSE
+; Input-only GAME OVER pause: one SPACE at age>=24, another40 input fields later.
+_verify_timeline_pause_key:
+	tst.l d0
+	bne.s .done
+	movem.l d1/a1,-(a7)
+	lea _timeline_state(pc),a1
+	tst.b TL_ACTIVE(a1)
+	beq.s .restore
+	lea .state(pc),a1
+	tst.w (a1)
+	bne.s .resume
+	move.l _timeline_state+TL_AGE(pc),d1
+	cmpi.l #24,d1
+	blo.s .restore
+	move.w #1,(a1)
+	move.l 4(a0),d1
+	addi.l #40,d1
+	move.l d1,2(a1)
+	moveq #$20,d0
+	bra.s .restore
+.resume:
+	cmpi.w #1,(a1)
+	bne.s .restore
+	move.l 4(a0),d1
+	cmp.l 2(a1),d1
+	blo.s .restore
+	move.w #2,(a1)
+	moveq #$20,d0
+.restore:
+	movem.l (a7)+,d1/a1
+.done:
+	rts
+.state: dc.w 0
+	dc.l 0
 	ENDC

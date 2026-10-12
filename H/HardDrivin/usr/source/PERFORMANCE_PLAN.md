@@ -20,8 +20,9 @@ clock defects, state/scaling inventory, provisional f0=6.25 (engineering range
 contact and replay playback have partial validation. An experimental CPU-specific
 dispatcher now consumes one full interval per 68000 frame and retains bounded
 substeps on 68020+. Fixed-field replay recording and long-frame traffic progression now have focused
-validation. Remaining presentation timelines, velocity writers and full acceptance
-are unfinished. See GAME_TIME.md;
+validation. GAME OVER now uses elapsed time, with A500/68020 pause and duration
+checks. Phantom/attract timelines, audio, large-step velocity safety and full
+acceptance are unfinished. See GAME_TIME.md;
 the step-4 acceptance criteria remain open.
 
 ## Starting point
