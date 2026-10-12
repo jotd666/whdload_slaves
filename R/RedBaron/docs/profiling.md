@@ -10,6 +10,57 @@ because D5 is postponed. There is no 50 FPS or frame-independent normal-game
 speed claim. Historical captures below retain their original build, option
 mapping and RAM configuration; they do not define the current player default.
 
+## FC6 — retained-renderer profile and next decision (2026-10-12)
+
+Fresh exact capture `fc6-current-aprof`, source `d75a8fa`, uses the **normal
+030 selection**: requested developer mask `0x7f0ffa`, effective `0x7b4ffa`.
+FC3 gauges and FC4 spans are off on this CPU class. The unmodified VERIFY
+slave SHA-256 is
+`bc44d2fd6134a2ecf9b499d0c9602d3cc96fd2cc0ed67543828dd13e5e451f82`.
+Instrument: aprof, cycle-exact 68EC030/50 NOMMU, CACR `0x2011`, 500 warm-up
+PAL fields followed by 50 recorded fields, maximum detail and unchanged Time
+Scale. Six artwork twins, three scene twins, both cockpit twins and 68 final
+cockpit checks pass. The 17 render/world calls are instrumented workload
+counts, **not player FPS**. Chip-bus units are 27.6%; recognized blitter polls
+are 8.5% of all recorded units.
+
+| Exclusive routine / work | ms per rendered frame | Chip-bus share |
+|---|---:|---:|
+| Viewport copy | 8.10 | 96% |
+| Polygon compatibility kernel | 7.66 | 0% |
+| Direct raster kernel | 7.05 | 0% |
+| Native bitmap drawing, sim:30572 | 4.76 | 97% |
+| Fast cockpit word composition | 3.61 | 0% |
+| Projection, sim:38c82 | 2.92 | 0% |
+| Artwork key checks | 2.88 | 73% |
+| Face-loop body, sim:3b41a | 2.36 | 0% |
+| Existing fast vertex transform | 2.29 | 0% |
+| Object setup, sim:3a902 | 0.64 | 0% |
+| Object setup, sim:39b42 | 0.21 | 0% |
+
+The complete scene bracket is 45.87 ms in this instrumented workload. The
+26.96/26.59/25.07 ms inclusive totals at sim:39b42/sim:3a902/sim:3b41a include
+nested rasterization; they must not be described as pure geometry costs.
+The earlier FC4 exact capture explicitly enabled spans on 030 to inspect the
+shared fast-CPU implementation. Its lower compatibility cost is a different
+selection, not evidence that the retained renderer regressed.
+
+All six release configurations retain their current scoreboard values and CPU
+policy. The existing normal 040/060 short windows reach the two-field cap;
+FC5's long pairs remain near 24 FPS. This profile supplies no new normal-build
+FPS or 040/060 cycle claim.
+
+**Recommended FC6 branch:** a bounded developer-only W6 trial on 040/060,
+using one frozen binary per pair and 2,000 fields plus a 250-field held-bank
+window. Compare masks `0x17f0ffa`/`0x17f2ffa` on 040 and
+`0x1ff0ffa`/`0x1ff2ffa` on 060; inspect both publication cadence and world-time
+rate. Bit 13 already supplies fixed ticks, interpolation and the one-field
+cap. This trial would not put W6 in the normal mask or complete postponed D5.
+The alternative is geometry optimization under the existing cap. The FC6
+plan requires the user's decision before taking the W6 branch; that decision
+is pending. No further emulator round is authorized by this recommendation
+alone.
+
 ## FC5 — changed viewport copying: dropped (2026-10-12)
 
 **Disposition:** drop FC5 under completion-plan §0: the level-flight FPS gain

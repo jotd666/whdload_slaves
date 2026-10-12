@@ -15,7 +15,7 @@ Refer to items by ID. FC items are detailed in `fast-cpu-plan.md`.
 | FC3 | Persistent gauges | Complete; enabled on 060; other classes retain prior paths |
 | FC4 | Span polygon rasteriser | Complete; enabled on 040/060; 030 retains its prior path |
 | FC5 | Smaller viewport copy | Closed: dropped; less than 2% gain on every measured CPU class |
-| FC6 | Re-profile; then geometry work or 50 FPS (user decision) | Planned |
+| FC6 | Re-profile; then geometry work or 50 FPS (user decision) | Profile complete; W6 developer trial recommended, awaiting decision |
 | FC7 | AGA 040/060 and real-hardware confirmation | Planned |
 | D5a | W6 catch-up input check | Postponed by the user |
 | D5b | W6 Time Compress and mission-exit transitions | Postponed by the user |
@@ -68,7 +68,7 @@ pointer publication. Redraws, native fallbacks and modal boundaries fence before
 writing; the two-field cap and RAM requirements are unchanged. The normal
 bundle enables it. Same-build comparisons, final normal timings, native twins,
 view/firing transitions, beam checks and exact profiling are in `profiling.md`.
-FC5 is the next renderer step; D5 remains postponed.
+FC6 is the next renderer step; D5 remains postponed.
 
 ## Completed: Fast-RAM cockpit composition
 
@@ -103,7 +103,7 @@ existing renderer. The row table reuses reserved space; RAM requirements are
 unchanged. Native triangle/quad/larger-polygon twins and host models pass.
 The normal bundle enables 040/060; the 030 FPS difference is below 2%, so its
 player path is retained. Final normal checks, all timing pairs and the exact
-profile are recorded only in `profiling.md`. FC5 is next.
+profile are recorded only in `profiling.md`. FC5 was dropped; FC6 is next.
 
 ## Post-release rendering investigation
 
