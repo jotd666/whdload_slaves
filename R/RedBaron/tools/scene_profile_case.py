@@ -8,7 +8,7 @@ import argparse,hashlib,json,os,subprocess,sys,time
 from pathlib import Path
 sys.path.insert(0,str(Path.cwd()/'tools'))
 import route_status as r
-p=argparse.ArgumentParser();p.add_argument('machine',choices=('a500','020','030','030-nommu','040','060'));p.add_argument('mask',type=lambda s:int(s,0));p.add_argument('out',type=Path);p.add_argument('--resume-entry',action='store_true');p.add_argument('--check-only',action='store_true',help='Normal-build default and CPU-gate smoke check, without profiling');a=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('machine',choices=('a500','020','030','030-nommu','040','060'));p.add_argument('mask',type=lambda s:int(s,0));p.add_argument('out',type=Path);p.add_argument('--resume-entry',action='store_true');p.add_argument('--check-only',action='store_true',help='Normal-build default and CPU-gate smoke check, without profiling');p.add_argument('--groups',nargs='+',choices=('stages','draw'),default=['stages','draw']);a=p.parse_args()
 ROOT=Path.cwd();os.environ['GAME']=str(ROOT/'tmp/game/completion-benchmark/RedBaron');TRACKED=ROOT.parents[1]/'R/RedBaron/tools'
 def run(*args):subprocess.run([sys.executable,'-B',*map(str,args)],check=True)
 if not a.resume_entry:run('tools/completion_boot.py',a.machine,a.mask,a.out,'--entry-only')
@@ -48,7 +48,7 @@ if a.check_only:
  expected=('0x2c3c','0x48a7') if a.machine in ('a500','020') else ('0x4ef9','0x4ef9')
  assert all(proof.count(x)>=expected.count(x) for x in expected),proof
  (a.out/'scene-selection.txt').write_text(proof)
-for group in (() if a.check_only else ('stages','draw')):
+for group in (() if a.check_only else a.groups):
  run(TRACKED/'render_profile.py',a.out,'--group',group,'--fields',250)
 (a.out/'debug.uae').write_bytes(Path('amiga/.run/fsuae/Cache/Logs/debug.uae').read_bytes())
 r.command('shot '+str((a.out/'final.png').resolve()))

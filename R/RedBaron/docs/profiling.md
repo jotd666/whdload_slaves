@@ -315,7 +315,29 @@ inputs; they identify the remaining general scratch clear/fill loops for revisio
 The first candidate misses 2% and is **not release-enabled**. Revision 2 replaces
 native polygon scratch clear and inclusive fill with direct loops, retaining
 register postconditions and the existing independent fill model; a bounds/alignment
-clear test was added. Its frozen paired measurement is pending.
+clear test was added. All 540 host tests and 122 hook ranges pass; normal,
+developer and VERIFY builds pass.
+
+Revision 2 frozen slave SHA-256:
+`cfa9cfcfe053bce137a47c4a7d8c9f549b7dd989efd7ce814dcdc1fe403c2d71`.
+Each CPU pair uses this identical developer binary and differs only by bit 20;
+native keyboard entry, maximum detail, 250 PAL fields per stage window, W6 off.
+Evidence: `scene-direct-<machine>-{on,off}-2`.
+
+| CPU | Native FPS | Direct FPS | FPS change | Native scene ms | Direct scene ms |
+|---|---:|---:|---:|---:|---:|
+| 030/50 MMU | pending | pending | pending | pending | pending |
+| 030/50 NOMMU | pending | pending | pending | pending | pending |
+| 040/25 | pending | pending | pending | pending | pending |
+| 060/50 | 13.778 | 16.574 | +20.29% | 40.800 | 33.456 |
+
+The 060 follow-on draw window also improves, 12.979 → 13.978 FPS (+7.69%):
+scene 43.312 → 35.450 ms, accepted rectangle mean 4.026 → 0.621 ms and
+polygon mean 0.809 → 0.804 ms. This supports the intended reduction in rectangle
+work without the first revision's polygon regression. These are different windows,
+not a steady 16.6 FPS claim; changed frame timing also changes the subsequent
+frame-dependent native flight. Primitive models/twins establish correctness.
+Normal release selection awaits the remaining CPU and transition checks.
 
 ## Completion scoreboard
 

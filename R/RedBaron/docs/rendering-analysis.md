@@ -172,6 +172,30 @@ their existing CPU policy. Avoiding those overwrites and restoring only changed
 instrument bounds remain distinct work. All timings and validation are in the
 sparse-artwork section of `profiling.md`; no new 50 FPS claim is made.
 
+## Direct scene follow-up
+
+The developer candidate replaces several parts of the rejected E3 structure.
+A guarded 320-pixel-wide viewport whose native background initializes every
+pixel is owned by Fast RAM for the duration of the scene. It imports neither
+the old Chip page nor scratch, and exports only the completed viewport rows.
+The normal forward viewport therefore transfers 24,000 bytes once instead of
+the previous 96,000 bytes of screen/scratch traffic. Unsupported layouts retain
+native drawing. Scratch stays private; native screen pointers and custom state
+are restored before cockpit composition.
+
+Clipping remains native. Direct rectangles and lines write final five-plane
+colours without constructing a blitter operation per plane. Polygon colour
+merging traverses coverage once for all planes. Its scratch clear and inclusive
+fill have direct loops, removing per-word channel, shift and minterm dispatch.
+Uncommon primitives use the compatibility backend. Every change is gated by
+sim v1, the CPU policy and bit 20; the normal mask is unchanged pending validation.
+
+This is deliberately bounded: polygons still construct and correct coverage,
+and the cockpit remains outside the private viewport. It is not a complete
+span renderer or a claim of 50 FPS. The results and disposition are recorded
+only in `profiling.md`; the earlier E3 rejection still applies to that earlier
+implementation, not to the changed transfer/primitive design.
+
 ## Recommended next implementation
 
 1. **Make cockpit persistence remove work.** Track valid static pixels per draw
@@ -193,8 +217,8 @@ sparse-artwork section of `profiling.md`; no new 50 FPS claim is made.
    Fast-RAM copy calibration before using 040/060 emulator timings as CPU-speed
    evidence; confirm the promising design on a representative real accelerator.
 
-Beyond the sparse artwork repair above, these are recommendations rather than
-shipped changes or a new promise of 50 FPS. D5 remains postponed. Correct simulation timing and
+The direct-scene candidate above addresses parts of recommendations 2 and 3.
+The remaining recommendations are not shipped changes or a promise of 50 FPS. D5 remains postponed. Correct simulation timing and
 rendering throughput remain separate acceptance requirements.
 
 ## Reproducing the profiles
