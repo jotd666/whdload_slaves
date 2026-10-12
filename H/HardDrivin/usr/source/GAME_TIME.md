@@ -1248,6 +1248,39 @@ claim follows from
 these runs. CPU selection and removal of extra A500 physics passes are verified.
 
 
+### Integrated timing diagnostic
+
+The integrated build at `d48ae05` enables scalar/motion/contact, traffic, CPU dispatch,
+replay recording/playback, presentation timelines, attract, Phantom ghost paths,
+instructions, off-road audio and long-step dissipation. Private math and synthetic
+entry fixtures are excluded. The render-only intermediate scene-culling experiment
+is not enabled. All runs use the same constant-input fixture and500 PAL fields
+(10.01594 seconds); the off control is the same slave with CUSTOM1=0.
+
+| Run | Swaps | Physics / render calls | FPS | Mean frame ms | Crash fields |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| s4-all-current-off, A500 | 38 | 38 / 38 | 3.794 | 263.577 | 0 |
+| s4-all-current-a500 | 37 | 38 / 38 | 3.694 | 270.701 | 21 |
+| s4-all-current-020 | 148 | 149 / 149 | 14.776 | 67.675 | 27 |
+| s4-all-current-040, 25 MHz | 240 | 241 / 241 | 23.962 | 41.733 | 22 |
+
+The A500 draw interval is11..22 fields after the initial zero interval; the020
+uses2..4 and the040 uses2..3. Every active frame uses exactly one physics step;
+all oversized-fallback counters stay zero. Calls and swaps differ by one when a
+submitted or in-progress frame crosses the window boundary. CUSTOM1-off passes
+all144 declared patch ranges with only DRIVE and STEPINPUT enabled.
+
+The A500 swap rate is2.63% below its control, but this does not close the3% gate:
+the enabled runs reach a crash absent from the original window. These are neither
+the established A/B gameplay windows nor identical-scene overhead measurements.
+At field300 the enabled A500/020/040 have X27860/27871/27865 and speed317/317/316;
+at field450 they have X29010/29093/29084 and speed373/368/368. VBL samples observe
+the most recently completed updates at different phases, so these values require
+frame-age-aware analysis before they can establish an equal-time tolerance.
+The original still advances by rendered frames and is intentionally not an
+equal-real-time trajectory reference. Full handling/performance acceptance remains open.
+
+
 ### Fixed-field replay recording (development gate)
 
 `VERIFY_TIME_RECORD` requires TIME_REPLAY_TIMING and CUSTOM1. It installs
@@ -1428,6 +1461,20 @@ field timestamps. The accepted original-reference run uses matching constant inp
 CUSTOM1-off `s4-dissipation-off` passes all144 declared range checks with only
 DRIVE and STEPINPUT enabled. The123-range direct-branch audit passes, and the
 normal8392-byte-text slave remains byte-identical to the baseline.
+
+The follow-up force audit reconstructs all9 long-delay and62 ordinary A500
+force evaluations exactly from captured power, road/skid flags, slope and braking.
+Drive is the native integer square root of `(3*max(v,0)/2)^2 + power`, minus
+`3*max(v,0)/2`, including the native word arithmetic and square-root rounding.
+Drag grows with speed; drive falls with speed. Holding the initial net rate over
+an entire long frame therefore misses both changes. With captured power44192,
+road contact and v=0, the269-field live update holds rate40 and reaches1345.
+An offline recurrence that reevaluates the native law every eight fields with
+those same frozen inputs reaches617 instead. A later frozen-input comparison
+from v173 reaches345, against the live1507. This recurrence isolates nonlinear
+force dependence; it is not a proposed extra-physics-pass implementation or a
+whole-car reference, since controls, contact and terrain are held fixed.
+The captures are s4-force-moving255 and s4-force-brake-a500, with force-audit.json.
 
 The maximum-delay speed1507 is much greater than the ordinary run's278. Preventing
 resistance-induced reversals therefore does not establish long-step handling,
