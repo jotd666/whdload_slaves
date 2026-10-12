@@ -60,6 +60,22 @@ class FastBlitterTests(unittest.TestCase):
                     self.w(0x44,65535);self.w(0x46,65535)
                     self.w(0x64,40-width*2);self.w(0x66,40-width*2);self.w(0x58,4*64+width)
                     self.run_kernel();self.assertEqual(bytes(self.memory),expected)
+    def test_descending_scratch_clear_alignment_and_bounds(self):
+        rng=random.Random(0xc1ea)
+        for width in range(1,21):
+            for rows in (1,2,17):
+                for alignment in (0,2):
+                    bottom=rows*40+40+alignment
+                    data=rng.randbytes(1000);expected=bytearray(data)
+                    for row in range(rows):
+                        end=bottom-row*40+2
+                        expected[end-width*2:end]=bytes(width*2)
+                    self.setup_memory(data);self.p(0x54,bottom)
+                    self.w(0x40,0x100);self.w(0x42,2)
+                    self.w(0x66,40-width*2);self.w(0x58,rows*64+width)
+                    self.run_kernel();self.assertEqual(bytes(self.memory),expected)
+                    self.assertEqual(ctypes.c_uint.from_buffer(self.regs,0x54).value,bottom-rows*40)
+
     def test_long_solid_paths_against_pixel_model(self):
         from fill_model import cpu_plane,setup
         rng=random.Random(0x32f1)

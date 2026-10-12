@@ -183,6 +183,34 @@ API u32 rb_blit(u16 *r) {
        && W(0x60)==W(0x66) && !((P(0x50)^P(0x54))&2)) {
         merge(r,width,height);return 0;
     }
+    /* Native polygon scratch: clear and inclusive area fill need neither
+     * channel dispatch nor minterm/shift emulation per word. Keep the register
+     * postconditions because later native operations reuse this description. */
+    if(con0==0x0100 && con1==2) {
+        u32 at=P(0x54);s32 stride=width*2+(s16)W(0x66);
+        for(u16 y=0;y<height;y++) {
+            u32 end=at;u16 n=width;
+            if((end&2)==0 && n){write16(end,0);end-=2;n--;}
+            while(n>=2){write32(end-2,0);end-=4;n-=2;}
+            if(n)write16(end,0);
+            at-=stride;
+        }
+        P(0x54)=at;return 0;
+    }
+    if(con0==0x09f0 && con1==10 && W(0x44)==65535 && W(0x46)==65535
+       && P(0x50)==P(0x54) && W(0x64)==W(0x66)) {
+        u32 at=P(0x54);s32 stride=width*2+(s16)W(0x66);
+        for(u16 y=0;y<height;y++) {
+            u16 carry=0;
+            for(u16 x=0;x<width;x++) {
+                u32 word=at-x*2;u16 value=read16(word);
+                W(0x74)=value;
+                write16(word,filled(value,&carry,10));
+            }
+            at-=stride;
+        }
+        P(0x50)=at;P(0x54)=at;return 0;
+    }
     s32 step=con1&2?-2:2;
     s32 ap=P(0x50),bp=P(0x4c),cp=P(0x48),dp=P(0x54);
     s32 am=(s16)W(0x64),bm=(s16)W(0x62),cm=(s16)W(0x60),dm=(s16)W(0x66);

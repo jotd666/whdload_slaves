@@ -295,8 +295,27 @@ to save the passing result used an unquoted absolute path; it was saved from the
 same paused session with a relative path, without rerunning the guest. These are
 bounded primitive twins, not performance evidence or a world-state replay.
 Three host tests cover randomized fills, line octants/ties and five-plane merges.
-All 539 host tests and 122 hook ranges pass. The first frozen 060 performance
-pair is pending.
+All 539 initial host tests and 122 hook ranges pass.
+
+First frozen 060 pair (`scene-direct-060-{on,off}-1`, same slave SHA-256
+`c459e80cbec398dc89b9bb6b843b5883004ae2d219477ec225b5dbdd447733d4`, only
+bit 20 differs): each group captures 250 PAL fields, native input, maximum detail.
+
+| Stage window | Native | Direct scene | Change |
+|---|---:|---:|---:|
+| FPS | 13.578 | 13.778 | +1.47% |
+| Scene ms | 41.062 | 41.018 | −0.11% |
+| Cockpit ms | 23.873 | 24.052 | +0.75% |
+| Publication ms | 7.231 | 6.284 | −13.10% |
+
+The following draw windows both deliver 12.780 FPS. Accepted rectangle mean falls
+from 3.770 to 0.636 ms, while polygon mean rises from 0.793 to 1.319 ms. These are
+consecutive changing scenes and differing accepted samples, not paired primitive
+inputs; they identify the remaining general scratch clear/fill loops for revision.
+The first candidate misses 2% and is **not release-enabled**. Revision 2 replaces
+native polygon scratch clear and inclusive fill with direct loops, retaining
+register postconditions and the existing independent fill model; a bounds/alignment
+clear test was added. Its frozen paired measurement is pending.
 
 ## Completion scoreboard
 
