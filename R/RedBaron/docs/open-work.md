@@ -37,75 +37,21 @@ predictable but maximum-detail playability was poor (scoreboard). Remaining
 catch-up input/transition checks and flight-outcome smoke tests remain open. The 060
 30-minute emulated soak passes in one flight across two debugger reads;
 the normal verified mask still excludes bit 13 until acceptance passes.
-E1 is complete as a 040/060 stage-cost diagnostic; both rendering stages exceed
-one field. E2's small gun-overlay cache is dropped: every CPU-class pair misses 2%.
-The solid-script cache is also dropped after every CPU-class pair missed 2%.
-All three front-script runtime candidates are removed after their CPU-class
-comparisons missed 2%; shared helpers remain VERIFY-only.
-The persistent native gauge cache is implemented behind development bit 18,
-on the measured 020/040 classes only. It reuses a gauge's existing buffer pixels only when its raw
-inputs/context, native rectangle and bounded pixel guard match, with selective
-replay of that gauge's drawing-state writes. Native forced/dirty redraws and
-unsupported geometry use the original path. The seven-gauge native pixel/state twin passes;
-all CPU-class timing pairs are complete. The 020/040 pairs clear 2%; 030/060
-do not, and the shared CPU gate excludes them. The normal verified mask still
-excludes bit 18 pending completion of E2. The gauge-only view check now passes:
-front pixel/state twin, zero gauge entries in rear/left/right, and front return.
-The combined 2/3/4 script cache is also dropped: every measured CPU class
-misses 2%. The runtime bit-19 option and hook are removed. This does not close
-E2: integrating the static overlay and gauges into a full cockpit composition
-remains open. Native order is static overlay (`sim:00816`), gauges (`sim:0081e`),
-then picture scripts (`sim:0082a`); integration must preserve gauge pixels when
-combining stages. Standalone coverage/layer-merge helpers and the full-frame
-pack model are available for that implementation. `cockpit-compose.s` adds an
-ordered dirty-rectangle update core: rebuild the union of old/new layer bounds,
-preserve foreground overlaps and opaque black, then expose one combined
-image/mask. It assembles and its host model passes movement/removal/overlap
-cases; it has no game hook yet and establishes no performance result. Development bit 19 now hooks the full native cockpit interval on 020+ into
-private chip targets matched to the native gauge-history pages. The original
-target is restored before sector text; the normal mask excludes this transport.
-The static base layer is captured into fast RAM from the native packed image
-and mask, keyed by its descriptor/effective clip and invalidated by resource
-lifetime or forced redraw. Gauge-layer capture is wired to the shared native
-dispatch boundaries on 020+: raw-input keys select two records per gauge,
-resource masks define opacity, resource pixels seed the background, and only
-the exact native result rectangle is copied from the drawing target. Unsupported
-coverage retains native drawing. The model covers shifted resources, opaque
-black, rectangle edges and rejected mask holes; native capture acceptance is
-still pending. The foreground provider now hooks the front 2/3/4 script group,
-retaining its exact resource/context keys and selective drawing-state replay.
-It exposes a full-size image/mask only for the current accepted invocation;
-firing, damage overlays and unsupported states retain native dispatch. The
-former standalone script cache remains dropped; this provider is part of the
-full composition, with no new performance result. Ordered composition and a single masked copy are now wired, using compact
-gauge records and a shared expansion scratch. The reproduced first rear-view
-transition defect is fixed by keeping dashboard-event refresh frames native:
-their extra dashboard script writes outside the steady cached layers. The
-corrected front/side/rear input sequence and front return finishes with 71/71
-full-frame comparisons and no failures (profiling scoreboard). Side/rear and
-dashboard-event frames bypass composition and are not counted as cache twins.
-Dirty-update composition is implemented: changed capture generations rebuild
-old/new gauge bounds in order; source refills force a complete rebuild. The
-native check passes 72/72 frames with 22 partial and 50 full rebuilds; host tests
-also cover unchanged reuse and stale scratch outside the affected rectangle.
-The timing path now keeps the native target, removes full-frame seeding and
-fallback copies, and defers foreground cache-hit pixels to the one final
-composition. VERIFY alone saves scene/native reference pages; the updated
-native check passes 71/71 frames, including view transitions. Gauge layers now
-reuse six verified native dispatches when raw inputs, rectangle history and
-covered pixels match, replaying the shared selective drawing state without
-another pixel copy. The bounded 040 check skips 56 draws and passes 69/69 full
-frames plus six native pixel/state twins. Altitude reuse is excluded because
-no stable reuse case was exercised; its native draw and layer capture remain.
-Static redraw suppression and the complete-cache FPS comparison remain open.
-Full-composition view twins remain open. The map-toggle check is dropped: the
-bundled game documentation specifies offline navigation maps, not an in-flight
-map command. Results are in the scoreboard. D5 remains postponed and E2–F remain
-open. The user approved raising the minimum RAM on 2026-10-12 after the
-1 MiB slave reservation failed on the former A500 memory configuration.
-The normal build now passes boot and flight with 512 KiB chip + 2 MiB fast.
-The extra 320 KiB quota is released only for the 020+ bit-19 cache; historical
-A500 timing results still describe the earlier RAM configuration.
+E1 is complete as a 040/060 stage-cost diagnostic. E2 is closed: retain the
+persistent gauge cache on 020/040 (+2.19% / +3.00%), now included in the normal
+verified mask `0x71fff` with its CPU gate. The native seven-gauge pixel/state
+twin and four-view checks passed. The gun, solid and combined script caches
+were dropped below the 2% threshold. Full composition is also dropped: its
+same-build 2,000-field pairs regress by 46.45% / 20.49% / 42.40% / 41.32% on
+020 / 030 / 040 / 060. Its runtime and bit-19 option are removed; the scoreboard
+records the tested commit and evidence. Host models remain available.
+The approved minimum remains 512 KiB chip + 2 MiB fast, tested in normal flight;
+the slave still reserves 1 MiB. The former cockpit quota remains reserved, so
+the original off-path allocation budget is retained. Historical A500 timing
+rows still use the earlier RAM configuration until the next checkpoint.
+E3 CPU rasterization is next, followed by E4 and F. D5 remains postponed and
+W6 remains outside the normal verified mask. Faster rendering still defaults
+off until F1. The completion plan, not the lists below, controls execution.
 The earlier lists below are historical context, not the execution order.
 
 

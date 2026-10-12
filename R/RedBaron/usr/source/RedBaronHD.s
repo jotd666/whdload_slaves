@@ -32,7 +32,7 @@
 ;============================================================================
 
 CHIPMEMSIZE	= $80000
-FASTMEMSIZE	= $100000 ; B1 pool plus 320 KiB reserved for bit-19 cockpit caches
+FASTMEMSIZE	= $100000 ; approved 1 MiB requirement; spare renderer workspace reserved
 NUMDRIVES	= 1
 WPDRIVES	= %0000
 
@@ -88,7 +88,6 @@ slv_config
 	dc.b "C2:X:Consistent game speed:13;"
 	dc.b "C2:X:Larger game fast-memory pool:16;"
 	dc.b "C2:X:Instruction cache policy:17;C2:X:Persistent gauges:18;"
-	dc.b "C2:X:Cockpit transport (development):19;"
 	ELSE
 	IFD DEVELOPER
 	dc.b "C2:X:Table mirror:0;C2:X:Cached mirror:1;"
@@ -99,7 +98,6 @@ slv_config
 	dc.b "C2:X:Consistent game speed:13;"
 	dc.b "C2:X:Larger game fast-memory pool:16;"
 	dc.b "C2:X:Instruction cache policy:17;C2:X:Persistent gauges:18;"
-	dc.b "C2:X:Cockpit transport (development):19;"
 	ELSE
 	dc.b "C2:B:Faster rendering;"
 	ENDC
@@ -632,25 +630,21 @@ tape_sim_key_bridge:
 	include "time-render.s"
 	include "time-terrain-verify.s"
 	include "time-flag-verify.s"
-	IFD VERIFY
-	include "time-shape-verify.s"
-	ENDC
 	include "instrument-values.s"
 	include "instrument-pixels.s"
 	include "instrument-cache.s"
 	include "overlay-lifetime.s"
-
+	IFD VERIFY
+	include "instrument-cache-verify.s"
+	include "overlay-probe.s"
 	include "overlay-blit.s"
 	include "overlay-fast.s"
 	include "overlay-mask.s"
 	include "overlay-pack.s"
 	include "overlay-key.s"
-	include "overlay-cache-key.s"
 	include "overlay-native-mask.s"
-	IFD VERIFY
-	include "instrument-cache-verify.s"
-	include "overlay-probe.s"
 	include "overlay-shadow.s"
+	include "time-shape-verify.s"
 	IFD VERIFY_OVERLAY_KEY_EXPERIMENT
 	include "overlay-key-verify.s"
 	ENDC
@@ -686,13 +680,3 @@ time_pose_current: dcb.b TIME_POSE_CAPACITY*TIME_POSE_STRIDE,0
 time_pose_previous: dcb.b TIME_POSE_CAPACITY*TIME_POSE_STRIDE,0
 time_blend_output: dcb.b TIME_POSE_CAPACITY*TIME_POSE_STRIDE,0
 time_input_observe_queue: dcb.b TIME_INPUT_BYTES,0
-
-	include "cockpit-compose.s"
-	include "cockpit-stage.s"
-	include "cockpit-static.s"
-	include "cockpit-gauges.s"
-
-	include "cockpit-foreground-state.s"
-	include "cockpit-foreground.s"
-
-	include "cockpit-final.s"

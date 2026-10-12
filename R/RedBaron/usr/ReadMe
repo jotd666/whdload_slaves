@@ -13,7 +13,7 @@
  This install requires WHDLoad 17 or later to be in the path. It can be found in the
  WHDLoad package.
 
- The installed program requires 0.5 MB ChipMem and 1.5 MB OtherMem.
+ The tested minimum is 0.5 MB ChipMem and 2 MB FastMem.
  It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
 
  The game requires an installed A500 Kickstart 1.3 image.
@@ -38,10 +38,10 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- The slave reserves 1 MB for game and cockpit-cache memory, plus Kickstart.
+ The slave reserves 1 MB for game and renderer memory, plus Kickstart.
  The former 512 KB ChipMem + 1.5 MB slow-RAM configuration is insufficient.
  Tested minimum: 512 KB ChipMem + 2 MB FastMem (normal-build flight).
- Faster rendering releases the extra pool for sim v1 on supported CPUs.
+ Faster rendering releases the 192 KB game-pool extension for sim v1.
  With the option off, the game retains its original allocation budget.
  DMA allocations retain their original ChipMem requests.
  Faster rendering enables instruction caching on 020+ where needed.
@@ -52,7 +52,8 @@
 
  Development rendering improvements:
  - Faster rendering (CUSTOM2=1) selects the verified dashboard cache, geometry,
-   solid-fill and exact-output sound optimizations, with CPU-specific choices.
+   solid-fill, persistent-gauge and sound optimizations, with CPU-specific choices.
+ - Persistent gauge reuse is enabled only on the measured 020/040 classes.
  - Flight swaps use the original safe beam wait and a two-field cap (about
    25 FPS on PAL). This does not make world speed frame-rate independent.
  - The existing default remains off; supplied icon tooltypes are unchanged.

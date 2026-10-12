@@ -21,13 +21,7 @@ instrument_cache_install:
  adda.l #perf_instrument_cpu-.cpu,a0
  jsr (a0)
  tst.l d1
- bne .cpu_ready
- lea .options(pc),a0
-.options
- adda.l #perf_mask-.options,a0
- btst #3,1(a0) ; bit 19 requests gauge-layer capture on every supported 020+
  beq .done
-.cpu_ready
  move.l a1,a3
  move.l a3,a0
  adda.l #$301b2,a0
@@ -117,40 +111,6 @@ instrument_cache_before:
  clr.l (a0)
  move.l instrument_cache_h3(pc),a4
  adda.l #$8000,a4
- lea .layers_before(pc),a0
-.layers_before
- adda.l #cockpit_gauges_before-.layers_before,a0
- jsr (a0)
- ; Complete-composition records have the same post-state layout. Their
- ; stricter whole-coverage guard makes an unchanged draw a native fixed point.
- lea .full_reuse(pc),a0
-.full_reuse
- adda.l #cockpit_gauge_reuse-.full_reuse,a0
- move.l (a0),a6
- cmpa.l #0,a6
- beq .standalone
- IFD VERIFY
- lea instrument_cache_twin_result(pc),a0
- tst.l 16(a0)
- bne ic_before_native
- bsr instrument_cache_twin_begin
- tst.l d0
- bne ic_before_native
- lea cockpit_gauge_reuse_count(pc),a0
- addq.l #1,(a0)
- ENDC
- bsr instrument_cache_restore
- movem.l (sp)+,d0-a6
- jmp instrument_cache_skip_tail(pc)
-.standalone
- ; Standalone gauge reuse keeps its measured 020/040 policy. Other CPUs
- ; use the shared hooks for the bit-19 compositor and its own guarded reuse.
- lea .reuse_cpu(pc),a0
-.reuse_cpu
- adda.l #perf_instrument_cpu-.reuse_cpu,a0
- jsr (a0)
- tst.l d1
- beq ic_before_native
  IFD VERIFY
  lea instrument_cache_twin_result(pc),a0
  tst.l 16(a0)
@@ -252,12 +212,6 @@ instrument_cache_native_tail:
 
 instrument_cache_after:
  movem.l d0-a6,-(sp)
- move.l instrument_cache_h3(pc),a4
- adda.l #$8000,a4
- lea .layers_after(pc),a0
-.layers_after
- adda.l #cockpit_gauges_after-.layers_after,a0
- jsr (a0)
  IFD VERIFY
  bsr instrument_cache_twin_end
  ENDC
@@ -472,6 +426,5 @@ instrument_cache_attempted: dc.w 0
 instrument_cache_area: dcb.w 4,0
 instrument_cache_key_temp: dcb.b IC_KEY_BYTES,0
  IFD VERIFY
-cockpit_gauge_reuse_count: dc.l 0
 instrument_cache_stats: dc.l 0,0 ; hits, fixed-point fills
  ENDC

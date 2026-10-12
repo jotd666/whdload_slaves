@@ -370,6 +370,11 @@ is not an A/B FPS result or proof of chip-bus saturation.
 
 **E2. Cockpit cache** for `sim:15e96` instruments, `19ba6` dispatch and
 `2c144` overlay. Today all three are redrawn every frame.
+
+Disposition: complete. Retain the measured persistent gauge cache on 020/040
+and include it in the normal verified mask. Drop the complete composition
+under §0.3: all four affected CPU-class pairs regress by 20–46% (scoreboard).
+The other standalone script candidates also missed 2%. Proceed to E3.
 1. Run the instrument picture scripts into a persistent fast-RAM or chip
    offscreen copy only when their inputs change. Each gauge has a small value
    set, so key the cache on those inputs.

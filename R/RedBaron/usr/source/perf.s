@@ -1,8 +1,8 @@
 ; Performance patch framework. Only sim v1 calls this module's installer.
 ; No feature is release-enabled until its model, twin and measurements pass.
-PERF_VERIFIED_MASK = $31fff ; W1-W5, B1/B2 and C3; face loop gates itself to 68000
-PERF_DEVELOPER_MASK = $f3fff
-PERF_VERIFY_MASK = $f7fff ; developer W6 plus VERIFY-only quiescent overlay probe bit 14
+PERF_VERIFIED_MASK = $71fff ; W1-W5, B1/B2, C3 and E2 gauges; each has its CPU gate
+PERF_DEVELOPER_MASK = $73fff
+PERF_VERIFY_MASK = $77fff ; developer W6 plus VERIFY-only quiescent overlay probe bit 14
 
 perf_read_options:
 	movem.l d0-a6,-(sp)
@@ -52,16 +52,6 @@ perf_read_options:
 	beq .instrument_ready
 	bset #14,d0
 .instrument_ready
-	move.l perf_attnflags(pc),d1
-	btst #1,d1
-	bne .cockpit_cpu_ready
-	bclr #19,d0
-.cockpit_cpu_ready
-	btst #19,d0
-	beq .cockpit_dependencies_ready
-	bset #14,d0
-	bset #18,d0 ; shared gauge boundaries; reuse itself retains CPU policy
-.cockpit_dependencies_ready
 	lea perf_mask(pc),a0
 	move.l d0,(a0)
 	movem.l (sp)+,d0-a6
@@ -166,14 +156,6 @@ perf_apply_v1:
 	jsr (a0)
 	bra .overlays_done
 .no_instrument_cache
-	btst #3,perf_mask+1(pc)
-	beq .no_cockpit_lifetime
-	lea .cockpit_lifetime_base(pc),a0
-.cockpit_lifetime_base
-	adda.l #ovlife_install-.cockpit_lifetime_base,a0
-	jsr (a0)
-	bra .overlays_done
-.no_cockpit_lifetime
 	IFD VERIFY
 	btst #6,perf_mask+2(pc)
 	beq.b .no_overlay_probe
@@ -184,17 +166,6 @@ perf_apply_v1:
 .no_overlay_probe
 	ENDC
 .overlays_done
-	btst #3,perf_mask+1(pc)
-	beq .no_cockpit_stage
-	lea .cockpit_stage_base(pc),a0
-.cockpit_stage_base
-	adda.l #cockpit_stage_install-.cockpit_stage_base,a0
-	jsr (a0)
-	lea .foreground_base(pc),a0
-.foreground_base
-	adda.l #overlay_solid_install-.foreground_base,a0
-	jsr (a0)
-.no_cockpit_stage
 	rts
 
 ; Check a non-relocated hook range before installing it.

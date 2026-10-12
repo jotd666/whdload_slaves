@@ -10,12 +10,12 @@ baseline and update the normal-bundle columns; their checkpoint labels identify
 which rows have been refreshed. Stage spans are inclusive wall time;
 scene, cockpit and publication are separate stages, not CPU-only costs.
 
-| Configuration | Checkpoint | Stock steady / event FPS | Bundle steady / event FPS | World update ms | Scene / cockpit / publication ms | DASH markers stock / bundle | Clean fields stock / bundle | World time / wall time | Dropped world time | B1 isolated pool FPS, off → on | B2 raw CACR, before → after | B2 isolated cache FPS, off → on | C1 discarded pair FPS, off → on | C2 discarded pair FPS, off → on | C3 isolated face-loop FPS, off → on | D5 candidate whole-window FPS (Time Scale 40) | E1 W6 scene / cockpit / publication ms | E2 gun-cache FPS off → on (dropped) | E2 solid-cache FPS off → on (dropped) | E2 persistent-gauge candidate FPS off → on | E2 combined front-script FPS off → on (dropped) | E2 complete cockpit FPS off → on |
+| Configuration | Checkpoint | Stock steady / event FPS | Bundle steady / event FPS | World update ms | Scene / cockpit / publication ms | DASH markers stock / bundle | Clean fields stock / bundle | World time / wall time | Dropped world time | B1 isolated pool FPS, off → on | B2 raw CACR, before → after | B2 isolated cache FPS, off → on | C1 discarded pair FPS, off → on | C2 discarded pair FPS, off → on | C3 isolated face-loop FPS, off → on | D5 candidate whole-window FPS (Time Scale 40) | E1 W6 scene / cockpit / publication ms | E2 gun-cache FPS off → on (dropped) | E2 solid-cache FPS off → on (dropped) | E2 persistent-gauge candidate FPS off → on | E2 combined front-script FPS off → on (dropped) | E2 complete cockpit FPS off → on (dropped) |
 |---|---|---|---|---|---|---|---|---|---| --- |---|---|---|---|---|---|---|---|---|---|---|---|
 | A500, 512K chip + 1.5M slow | C bundle / A2 stock | 1.844 / 1.722 | 2.016 / 1.922 | 57.68 → 57.05 | 399.51 / 73.70 / 0.28 → 380.41 / 63.46 / 3.61 | 3 / 13 | 1516 / 1486 | 0.924744 (candidate D5) | 5,400 units / 12 steps | Minimum-memory flight passes | N/A (68000) | No cache hardware | 1.955 → 1.975 (+1.01%) | 1.970 → 1.936 (-1.72%) | 1.931 → 1.997 (+3.39%) | 0.824 | — | CPU-gated off | CPU-gated off | CPU-gated off | CPU-gated off | CPU-gated off |
-| 020, 2M chip + 8M fast | C bundle / A2 stock | 6.008 / 5.666 | 7.222 / 7.313 | 13.79 → 10.22 | 116.77 / 41.40 / 0.08 → 86.64 / 31.28 / 6.96 | 44 / 24 | 1196 / 1258 | 1.001296 (candidate D5) | 0 | 6.398 → 6.695 (+4.6%) | 0x0000 → 0x0001 | 6.754 → 7.280 (+7.8%) | 7.266 → 7.258 (-0.11%) | 7.193 → 7.210 (+0.24%) | CPU-gated off | 4.568 | — | 4.568 → 4.443 (-2.73%, fast compositor) | 4.593 → 4.343 (-5.43%) | 4.568 → 4.668 (+2.19%) | 4.568 → 4.343 (-4.92%) | Pending CPU-class pair |
-| 030/50, 2M chip + 8M fast, MMU | C bundle / A2 stock | 12.974 / 11.881 | 14.827 / 14.452 | 3.33 → 1.70 | 44.19 / 34.08 / 0.08 → 35.14 / 28.54 / 4.28 | 191 / 59 | 1154 / 1017 | 0.998656 (candidate D5) | 0 | 12.878 → 14.546 (+12.9%) | 0x2111; unchanged | Already enabled | 14.562 → 14.595 (+0.22%) | 14.556 → 14.514 (-0.29%) | CPU-gated off | 12.280 | — | 12.305 → 12.305 (+0.00%, fast compositor) | 12.305 → 12.330 (+0.20%) | 12.305 → 12.305 (+0.00%) | 12.280 → 12.330 (+0.41%) | Pending CPU-class pair |
-| 030/50, 2M chip + 8M fast, no MMU tooltype | C bundle / A2 stock | 12.377 / 11.931 | 14.893 / 14.527 | 3.94 → 1.69 | 48.31 / 31.23 / 0.04 → 35.11 / 28.48 / 4.34 | 58 / 55 | 1262 / 962 | 0.998656 (candidate D5) | 0 | 030 class measured with MMU | 0x2000 → 0x2011 | 12.889 → 14.537 (+12.8%) | 030 class measured with MMU | 030 class measured with MMU | CPU-gated off | 12.280 | — | CPU class measured with MMU | CPU class measured with MMU | CPU class measured with MMU | CPU class measured with MMU | Pending CPU-class pair |
+| 020, 2M chip + 8M fast | C bundle / A2 stock | 6.008 / 5.666 | 7.222 / 7.313 | 13.79 → 10.22 | 116.77 / 41.40 / 0.08 → 86.64 / 31.28 / 6.96 | 44 / 24 | 1196 / 1258 | 1.001296 (candidate D5) | 0 | 6.398 → 6.695 (+4.6%) | 0x0000 → 0x0001 | 6.754 → 7.280 (+7.8%) | 7.266 → 7.258 (-0.11%) | 7.193 → 7.210 (+0.24%) | CPU-gated off | 4.568 | — | 4.568 → 4.443 (-2.73%, fast compositor) | 4.593 → 4.343 (-5.43%) | 4.568 → 4.668 (+2.19%) | 4.568 → 4.343 (-4.92%) | 4.568 → 2.446 (−46.45%) |
+| 030/50, 2M chip + 8M fast, MMU | C bundle / A2 stock | 12.974 / 11.881 | 14.827 / 14.452 | 3.33 → 1.70 | 44.19 / 34.08 / 0.08 → 35.14 / 28.54 / 4.28 | 191 / 59 | 1154 / 1017 | 0.998656 (candidate D5) | 0 | 12.878 → 14.546 (+12.9%) | 0x2111; unchanged | Already enabled | 14.562 → 14.595 (+0.22%) | 14.556 → 14.514 (-0.29%) | CPU-gated off | 12.280 | — | 12.305 → 12.305 (+0.00%, fast compositor) | 12.305 → 12.330 (+0.20%) | 12.305 → 12.305 (+0.00%) | 12.280 → 12.330 (+0.41%) | 12.305 → 9.784 (−20.49%) |
+| 030/50, 2M chip + 8M fast, no MMU tooltype | C bundle / A2 stock | 12.377 / 11.931 | 14.893 / 14.527 | 3.94 → 1.69 | 48.31 / 31.23 / 0.04 → 35.11 / 28.48 / 4.34 | 58 / 55 | 1262 / 962 | 0.998656 (candidate D5) | 0 | 030 class measured with MMU | 0x2000 → 0x2011 | 12.889 → 14.537 (+12.8%) | 030 class measured with MMU | 030 class measured with MMU | CPU-gated off | 12.280 | — | CPU class measured with MMU | CPU class measured with MMU | CPU class measured with MMU | CPU class measured with MMU | CPU class measured with MMU |
 | 040/25 NOMMU, AGA, 2M chip + 16M Z3 fast | C bundle / A2 stock | 12.476 / 11.507 | 13.549 / 13.553 | 3.34 → 2.13 | 47.56 / 36.26 / 0.06 → 37.97 / 28.47 / 5.70 | 116 / 59 | 1144 / 1157 | 0.998656 (candidate D5) | 0 | 12.392 → 13.277 (+7.1%) | 0x80008000; unchanged | Already enabled | 13.384 → 13.428 (+0.32%) | 13.393 → 13.437 (+0.33%) | CPU-gated off | 11.631 | 45.42 / 32.53 / 2.89 | 11.656 → 11.557 (-0.86%, fast compositor) | 11.631 → 11.557 (-0.64%) | 11.631 → 11.981 (+3.00%) | 11.631 → 11.806 (+1.50%) | 11.656 → 6.714 (−42.40%) |
 | 060/50 NOMMU, AGA, 2M chip + 16M Z3 fast | C bundle / A2 stock | 12.786 / 12.206 | 14.296 / 14.003 | 3.16 → 1.95 | 44.63 / 33.43 / 0.03 → 36.13 / 28.11 / 4.68 | 64 / 62 | 1452 / 1568 | 0.998656 (candidate D5) | 0 | 12.585 → 13.909 (+10.5%) | 0xa0808000; unchanged | Already enabled | 13.953 → 13.959 (+0.04%) | 13.982 → 13.998 (+0.11%) | CPU-gated off | 12.006 | 53.03 / 29.37 / 4.41 | 12.056 → 11.981 (-0.62%, fast compositor) | 12.031 → 12.006 (-0.21%) | 12.031 → 12.206 (+1.45%) | 12.031 → 12.081 (+0.41%) | 12.081 → 7.089 (−41.32%) |
 
@@ -57,125 +57,39 @@ reached flight but used a timing driver whose 1,000-field minimum rejected the
 short check; its host debugger then terminated the emulator during teardown.
 The passing dedicated driver detached cleanly before quitting the emulator.
 
-### E2 complete composition — transition defect corrected, timing pending
+### E2 disposition — retain measured gauges; drop full composition
 
-The compact gauge records use variable row pitch within a 640-byte plane;
-this admits the native 96×15 attitude bitmap without enlarging the 58,240-byte
-pool. The preceding packed attempt allocated its caches but rejected that
-bitmap's width (`completion-e2-full-compose-packed`); the source was corrected.
-The compositor accumulates static artwork, expanded gauge layers and foreground
-in native order, then makes one masked copy. Native reference drawing and the
-full-frame seed remain, so this is not a performance candidate yet.
+The persistent gauge cache is retained on **020 and 040 only**, with its
+previously measured +2.19% / +3.00% gains, seven-gauge native pixel/state twin
+and front/rear/left/right checks. It is now in the normal verified mask
+`0x71fff`; CPU policy removes it elsewhere. W6 remains outside that mask.
 
-On 040, `completion-e2-full-compose-attitude` first passed 65/65 full-frame
-comparisons. The first rear-view transition then exposed one failing front
-frame: the first differing byte was frame byte 7012 (plane 0, row 175, byte 12).
-At front return the counters were 73 attempts, 72 matches and one failure.
-Rear/left/right each passed five publications without cache activity. A bounded
-500-field continuation and one repeated rear/front transition did not reproduce
-the failure. The compositor is **not accepted** and remains outside the normal
-mask. Its VERIFY fallback retained native output; the first-failure record now
-preserves that pixel's plane bytes and coverage masks for the next correction.
-No full-state capture or new W6 study was added. Capture VERIFY SHA-256
-`e460b4d736c74c2d0b9fcb1eb74a0a8c5c5b8c5d13f6e5f31a2ba71c594f0770`. Current builds, 512 host tests, 84 hook ranges and 139
-VERIFY patch destinations pass; no new FPS result is claimed.
+The complete cockpit cache is **dropped under completion-plan §0.3**: every
+2,000-field same-build CPU-class pair regresses (table above). The candidate
+is preserved at commit `4451847`, developer SHA-256
+`c98208522e70e12696b7089917adeaa9458bbca85ca229cc163da9f41eb9520f`.
+Evidence: `completion-e2-complete-{020,030,040,060}-{off,on}`. All eight windows
+use maximum detail, Time Scale 40 and W6. The 030 class was tested with MMU;
+the no-MMU row shares that class result, not a separate full-cache measurement.
+A500 was CPU-gated off. These are whole-window FPS, including cockpit events.
 
-The transition defect is corrected by retaining the native dashboard-event
-path. At `sim:19bb2`, a nonzero `h3:711c` triggers the view dashboard script
-through `sim:15dc8` before the seven gauges. Those event pixels are outside the
-steady static/gauge/foreground layers. The stage now bypasses composition for
-those refresh frames, so the native script updates the real page. Source alias
-`h3:9d6e` follows the private target only when it names that same target;
-a distinct source buffer remains distinct. The alias correction alone did not
-fix the defect (`completion-e2-source-alias`: 66 comparisons, one mismatch).
+That candidate captured static/gauge/foreground layers, rebuilt changed bounds,
+used a single final masked composition, reused six stable gauge dispatches and
+materialized the cached static artwork before the remaining native gauge work.
+It had no timing-build full-frame seed or fallback copy. Native ordering required
+the static copy before gauges; the complete composition still cost more than
+it saved. The last bounded native check passed 69/69 frames and six admitted
+gauge reuse twins; altitude reuse was excluded. Those correctness results did
+not establish performance and do not justify keeping the slower runtime.
 
-The corrected 040 run `completion-e2-event-bypass` passes 63 initial exact
-full-frame comparisons, the same first rear-view transition, left/right input
-and front return: 71 comparisons, 71 matches, no mismatches or unavailable
-compositions. Counts remain unchanged through the rear/left/right sequence;
-those views retain native drawing. Dashboard-refresh frames intentionally
-bypass the cache and are not counted as composition comparisons. The owned
-input debugger and emulator both quit cleanly. Normal/developer/VERIFY builds
-are 127,380 / 127,764 / 311,708 bytes; 512 host tests, 84 hook ranges and 139
-VERIFY patch destinations pass. This fixes the reproduced transition defect;
-it does not establish a performance gain or complete E2. Native seeding/drawing
-and full composition rebuilding still need removal before the FPS pair.
-
-E2 now retains the completed image/mask and rebuilds only the old/new bounds
-of gauges whose capture generation changed. Generation tags distinguish native
-history pages; static/foreground refills, unavailable layers and a failed
-comparison invalidate the composite. Each dirty region is rebuilt in native
-layer order, preserving overlapping foreground and exposing old gauge bounds.
-Gauge scratch expansion overwrites only its own rectangle: composition is
-restricted to its intersection with the dirty region, so the seven former
-48,000-byte scratch clears per frame are removed.
-
-The 040 native check `completion-e2-dirty-compose` finishes with **72/72 exact
-full-frame matches**, no mismatches and no unavailable compositions through
-the same rear/left/right/front-return sequence. It exercises **50 full and 22
-partial rebuilds**; no unchanged-composite reuse occurred in this moving-flight
-window, so that branch has host-model coverage only. The final dirty bounds
-are byte x=0, y=125, width=40, height=68. Native dashboard event frames still
-bypass the cache. All builds pass (normal/developer/VERIFY text sizes
-128,010 / 128,394 / 312,378 bytes), along with 514 host tests, 84 hook ranges
-and 139 VERIFY patch destinations. Random moving/overlapping-layer cases
-compare incremental output to fresh full composition with deliberately stale
-scratch outside the selected rectangle. This is correctness evidence only:
-E2 still retains native drawing and the full-frame seed, and has no accepted
-complete-cache FPS result yet.
-
-E2's timing path now draws into the native target directly: it allocates no
-private cockpit chip pages, seeds no full frame and makes no full-frame fallback
-copy. The native target aliases are untouched. A cached foreground hit replays
-its drawing state but defers pixels to the final composition; if composition
-is unavailable, only that deferred foreground is copied in native order.
-VERIFY alone retains before/after pages: it saves the original scene, captures
-the native result, restores the scene before composition and compares all
-40,000 bytes. This retains detection of missing coverage rather than allowing
-already-drawn native pixels to conceal omissions.
-
-`completion-e2-native-target` on 040 passes **71/71 exact comparisons**, zero
-mismatches/unavailable compositions, through the rear/left/right/front-return
-sequence. It exercises 49 full and 22 partial composition rebuilds. All three
-builds pass (normal/developer/VERIFY text sizes 127,864 / 128,248 / 312,390),
-as do 514 host tests, 84 hook ranges and 139 VERIFY patch destinations.
-Native gauge/static drawing still remains, so the complete-cache FPS pair
-is pending; this check is not a performance claim. The normal mask is unchanged.
-
-E2 gauge layers now retain the existing selective 40-byte drawing-state
-record and can suppress an unchanged native dispatch. Admission requires the
-exact raw key, stable previous/result rectangle, non-forced bounded clipping,
-and identical pixels under every resource-mask bit on all five planes. This
-includes opaque black and ignores unrelated scene pixels. On a hit, the shared
-state replay runs without another pixel copy. The packed pool grows by 448
-bytes to 58,688 bytes. The standalone bit-18 CPU policy is unchanged; this
-additional path belongs to the 020+ bit-19 composition candidate.
-
-`completion-e2-gauge-reuse-complete` on 040 records **56 suppressed draws** and
-**69/69 exact full-frame matches**, including rear/left/right/front return.
-The existing native pixel/state twin passes gauges 1–6 (mask `0x7e`, six checks,
-zero failures). Altitude never reaches an admitted stable reuse case in the
-bounded window; its new reuse path is explicitly disabled and the ineffective
-repeat fixture removed. Altitude still draws natively and supplies its changed
-layer. The first attempt admitted forced-fill records; inspection tightened
-admission before the recorded complete check (the earlier run skipped 74 draws).
-Final all-mode builds pass (128,124 / 128,508 / 312,682 text bytes), with 515 host
-tests, 84 hook ranges and 139 VERIFY patch destinations. The final source adds
-the altitude exclusion after the capture; it does not claim a seven-gauge twin.
-The complete-cache FPS comparison and static redraw suppression remain open;
-no FPS gain is inferred from the skip count, and the normal mask is unchanged.
-
-The complete E2 timing candidate replaces the original static blitter call
-with its cached masked copy before gauge drawing, retaining native ordering.
-VERIFY keeps the original static draw as the independent reference; its binary
-is unchanged by this timing-path change. The first completed 2,000-field pair,
-060, regresses from **12.081 to 7.089 FPS (−41.32%)**. The 040 pair also regresses, **11.656 → 6.714 FPS (−42.40%)**, on the same
-binary (`completion-e2-complete-040-{off,on}`). The 030 and 020 pairs remain
-in progress; the final E2 disposition awaits them. Evidence: `completion-e2-complete-060-{off,on}`, same developer
-SHA-256 `c98208522e70e12696b7089917adeaa9458bbca85ca229cc163da9f41eb9520f`. Both include W6 at Time Scale 40 and maximum detail.
-This candidate remains excluded from the normal verified mask. All three builds
-pass (normal/developer/VERIFY text sizes 128,188 / 128,572 / 312,682 bytes), as
-do 515 host tests, 84 hook ranges and 125 developer patch destinations.
+The seven full-composition source modules, bit-19 option and integration hooks
+are removed. Reusable host models remain; implementation history is in git.
+The approved 1 MiB reservation and 512 KiB chip + 2 MiB fast tested minimum
+remain. The former 320 KiB cockpit quota is reserved, not released to the game.
+All three retained-code builds pass (normal/developer/VERIFY text sizes
+119,680 / 120,020 / 305,824 bytes), with 515 host tests, 81 hook ranges and
+136 VERIFY patch destinations. E2 is closed; E3 CPU rasterization is next.
+The normal switch still defaults off until F1; nothing has been pushed.
 
 ### D5 acceptance postponed — not a passed checkpoint
 
