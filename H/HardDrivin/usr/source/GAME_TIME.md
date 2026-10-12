@@ -1598,9 +1598,9 @@ fixtures enabled. The ordinary slave remains byte-identical to the baseline,
 and the direct-branch audit passes108 replacement ranges.
 
 This gate is still experimental. The optional ghost recorder below consumes
-elapsed fields, but both ghost playback paths still advance their six-step
-phases per call. Post-race playback and instruction/camera animation are also
-unfinished. Qualification, challenge exit/debt, instant replay and full handling
+elapsed fields. The optional challenge-opponent playback below also uses
+elapsed fields; both post-race playback calls still use the native per-pass
+phase. Post-race playback and instruction/camera animation are unfinished. Qualification, challenge exit/debt, instant replay and full handling
 comparisons remain acceptance work; this dispatcher result does not complete
 step4.
 
@@ -1665,7 +1665,99 @@ Focused checks retained under ignored `tmp/`:
   `5811a0305be8836685b6303aae226845836c6c41e90e746c9a6bfebae226582e`.
   The direct-branch audit passes 110 replacement ranges.
 
-Ghost playback at `$08b0e` and `$08c84` is not converted by this change. In
-particular, the opponent's finish trigger and post-race history rewind still
-need an elapsed-time implementation and validation. No full challenge-speed,
+The recorder does not change playback. The optional opponent implementation
+below converts `$08c84` during challenge gameplay. Post-race history rewind and
+both post-race playback paths still need elapsed timing. No full challenge-speed,
 whole-world native equivalence, handling or FPS acceptance is claimed here.
+
+
+## Phantom opponent playback (partial implementation)
+
+`VERIFY_TIME_GHOST_PLAYBACK` requires TIME_PHANTOM and installs
+`HardDrivinGhostPlayback.s` behind CUSTOM1/SPS 0126. It replaces `$08c84` only
+while the elapsed gameplay dispatcher is active and the native engine/start
+phase permits the opponent to move. Inactive calls, post-race calls and
+VERIFY_DISPATCH_NATIVE execute the original routine through its displaced
+prologue. The challenge reset at `$11862` also clears the playback companion.
+
+Each history segment represents 48 fields. The companion keeps the full field
+phase while publishing the original byte phase divided by eight for other native
+consumers. It renders the current pose, then advances by the current physics
+interval for the next call, matching the original pre-physics ordering. A
+repeated physics stamp cannot advance twice. An unexpected external cursor or
+phase change reseeds from the native values. Pause/replay time is excluded by
+the gameplay dispatcher, rather than being charged from a presentation clock.
+Wider pause, resume and re-entry acceptance is still required.
+
+Interpolation follows the actual `$08c84` rules, which differ from recording:
+X/Z use an unsigned weighted mean; Y truncates the two signed weighted terms
+separately before adding them; pitch adjusts only its left endpoint when the
+native angular difference exceeds 720; heading and roll use straight signed
+interpolation. Results at the six native phases match the original routine.
+Weights and sums are widened for fractional field phases. The wrapper clears X
+as the original routine's final phase/cursor increment does.
+
+For long frames, every crossed native eight-field position is checked for the
+opponent's finish, followed by the actual displayed pose. These are pose/finish
+checks only, with no additional physics or scene passes. Once the shared native
+finish flag is set, intermediate checks stop. The finish-box comparisons and
+message/sound side effects execute a runtime copy of `$08de0..$08e52`; internal
+branches exit through its appended RTS, and the install flushes caches after
+executable writes. No game instruction bytes are embedded in the source.
+
+The allocation holds 300 records, but the initial ghost generator at `$05a80`
+stops before slot 299. The win-copy path fills slot 299 by repeating slot 298.
+Playback therefore holds the final initialized record, slot 298 at field 14304,
+and clamps its right interpolation endpoint there. The captured initial ghost's
+unused slot contained `$2020` words; it must not be treated as a valid pose.
+The initial ghost reaches the native eight-field finish test at field 10536,
+well before this bound. Fast-frame tests may detect entry into the same finish
+box between those native sample times.
+
+Focused evidence retained under ignored `tmp/`:
+
+- `s4-ghost-play-math-final`: six private endpoint pairs at all 48 field phases
+  produce 288 poses matching an independent rational model. All 36 native-grid
+  poses also match the actual unpatched `$08c84` routine. Cases include unsigned
+  coordinate and signed height extremes, angular wrap and negative rounding.
+- The same fixture crosses a finish box entirely between displayed poses.
+  The copied native finish code sets the expected six globals and calls a
+  private sound counter exactly once. It performs five checks across the two
+  updates. A subsequent 65535-field interval clamps to slot 298; the held pose
+  matches, despite a deliberately conflicting pitch in the unused next slot.
+  Synthetic globals and the sound counter are private fixture data.
+- `s4-ghost-play-a500`: 180 visits, 177 eligible updates, 1304 advanced fields,
+  155 fractional poses and 141 intermediate finish checks all match the model.
+  `s4-ghost-play-final-020`: 180 visits, 171 eligible updates, 462 fields,
+  151 fractional poses and 38 intermediate checks also match.
+- `s4-ghost-play-slow`, CUSTOM4=64 on A500: 15 visits before natural challenge
+  exit, 14 eligible updates, 1047 fields, 12 fractional poses and 120 intermediate
+  checks. All poses, phases, cursors and finish state match. The A500 and slow
+  short captures preceded only the slot 299-to-slot 298 boundary correction;
+  their observed positions are far below either bound.
+- `s4-ghost-play-finish-020` uses the existing input-only brake fixture from
+  field 0, with no gameplay-state injection. It reaches the real opponent finish
+  after 4192 visits (4183 eligible), checking 3647 fractional poses and 781
+  intermediate finish positions. The displayed pose at field 10532 triggers
+  the native finish globals exactly once; the cursor then advances to 10535.
+  Every captured opponent pose and cursor matches the retained-history model.
+- `s4-ghost-play-finish-a500` uses the same brake fixture and reaches the real
+  finish after 1119 visits (1116 eligible), with 984 fractional poses and 1185
+  intermediate checks. Every pose and cursor matches the model. The finish is
+  detected at ghost field 10533, one field later than the 68020 result, and
+  the cursor advances to 10542. This compares opponent history progression,
+  not full player handling or absolute race-clock equivalence.
+- `s4-ghost-play-native`: all 144 car states match the original Phantom reference,
+  with the known gear-table pointer normalized. Both relative ghost cursors,
+  both native phases, engine-start phase and challenge active/result flags also
+  match. This does not compare all heap actors or every world-state byte.
+- `s4-ghost-play-off` passes all inactive ranges, including both new sites, with
+  only declared input, entry and slow-drawing fixtures enabled. The ordinary
+  build remains byte-identical to the 8392-byte-text baseline. The branch audit
+  passes 112 replacement ranges.
+
+This is challenge-opponent playback only. The player-history playback at
+`$08b0e`, the two playback calls in `$1100c` post-race presentation, its rewind
+and stop conditions, and its distance-derived audio pitch are still native.
+No full challenge/re-entry, audio-timing, collision, handling or FPS acceptance
+is claimed. Step 4 remains incomplete.

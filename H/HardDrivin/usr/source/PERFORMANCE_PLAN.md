@@ -25,7 +25,9 @@ checks. Attract route interpolation, scrolling and timeout also have gated
 implementations with native-pose comparisons. The separate Phantom challenge
 physics loop now has an experimental dispatcher and focused validation. Phantom
 ghost recording now has fixed-field sampling and focused native/buffer checks.
-Ghost playback, other menu timelines, audio, large-step velocity safety
+Challenge-opponent playback now has elapsed interpolation and crossed finish
+checks, including a live opponent finish. Post-race ghost playback, other menu
+timelines, audio, large-step velocity safety
 and full acceptance are unfinished. See GAME_TIME.md;
 the step-4 acceptance criteria remain open.
 
