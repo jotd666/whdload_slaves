@@ -438,7 +438,11 @@ Tools stay in ignored `tmp/dev/tools`.
      remains open; see GAME_TIME.md. A subsequent native-endpoint interpolation
      prototype matches held-input endpoints but fails an abrupt braking change
      by applying it retroactively across the phase; it is not installed in game
-     code. The new VERIFY_DISPATCH_TEST_FIELDS fixture
+     code. An incremental successor preserves consumed motion and passes128
+     native endpoints plus1440 changing-input partition comparisons; two private
+     68000 arithmetic/projection helpers also pass10000 cases each. Runtime
+     integration and general handling remain open; see GAME_TIME.md.
+     The new VERIFY_DISPATCH_TEST_FIELDS fixture
      overrides elapsed intervals without selecting native compatibility bypasses;
      its synthetic time is not performance or wall-time acceptance evidence.
      This is not the unchanged driving tape and does not resolve equal-wall-time

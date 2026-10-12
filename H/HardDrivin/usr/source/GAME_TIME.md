@@ -3498,3 +3498,54 @@ the current experimental build, not an isolated FPS delta or a pass of the3%
 original-game gate. The source-matched listing and `solver-costs.json` retain
 attribution; native patch-site branch instructions are outside sweep self time.
 The CUSTOM1-off capture `s4-sweep-world-disabled` passes all158 declared ranges.
+
+
+## Incremental native-phase prototype
+
+The next host prototype preserves the previous experiment's consumed motion
+instead of recomputing it when input changes. For phase anchor A, current value
+C, newly sampled native endpoint E, remaining phase fields R and newly consumed
+fields D, the update is C += (E-A)*D/8. Its forecast for movement is the prior
+C + (E-A)*R/8. Only the future part uses the new input. The native engine is
+evaluated for every frame segment; there is no wait for eight fields before
+publishing intermediate velocity or position. Force-state evaluation still uses
+the phase anchor, which is a deliberate numerical choice requiring broader
+handling validation, not proof of full per-frame dynamics equivalence.
+
+Pre-shift RPM is sampled read-only at `$0b904` during actual pristine68000 engine
+execution. RPM is integrated before automatic shift decisions, and native gear
+thresholds/conversions are applied at phase completion. This avoids blending
+RPM values from different gears across a phase. Manual requests, immediate gear
+changes, contact resets and phase invalidation are not implemented. The tests
+do not approve a new gear-event policy for the complete game.
+
+`check_native_phase_incremental.py` matches128 native eight-field endpoints for
+throttle22, throttle100, full braking from speed100 and full braking from speed1.
+All32 held-input/frame-length combinations agree, including1,2,3,7,8,9,16 and31
+fields. From rest at throttle22, velocities at consumed fields7/8/9/16 are
+35/40/44.25/74; corresponding cardinal long-position displacements are
+52.5/60/73.875/171. The sixteen-field result retains the original coarse value74,
+rather than the fine solver's67.625. There is no special eight-field switch in
+this prototype.
+
+The previously failing seven-field throttle100 followed by one-field braking
+case now changes speed135 to134.25, a loss of0.75, with no rewrite of the earlier
+position. A deterministic40-segment,570-field throttle/brake tape adds1440 exact
+comparisons across frame partitions; every input transition is an observation
+boundary in every run. Automatic shifts occur at the same consumed fields
+40/72/344. These comparisons isolate the integrator from input-sampling timing;
+they do not prove equivalence when a long rendered frame misses an input change.
+
+Two private68000 assembly components support a possible implementation. A38-byte
+scalar update/forecast helper matches10000 rational-arithmetic cases with Q3
+phase anchors and Q16 storage. A Q6 forecast projection helper interpolates
+adjacent native rounded XYZ vectors;10000 independent yaw/pitch cases match and
+preserve all registers/stack, for nonnegative velocities0..21842. The scalar
+helper's declared scratch registers are checked separately. Reports are
+`native-phase-incremental.json`, `phase-scalar-check.json` and
+`phase-project-check.json`. Code and fixtures remain in the ignored harness.
+
+This is still an isolated flat-road, full-contact, automatic-gear prototype.
+The game does not use it. Runtime companion-state synchronization, steering,
+manual controls, collision/recovery resets, airborne motion, sound and cost must
+be resolved before it can replace either existing solver or satisfy step4.
