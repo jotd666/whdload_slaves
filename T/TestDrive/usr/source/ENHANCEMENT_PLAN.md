@@ -121,8 +121,8 @@ open; phase 1 does not certify a frame marker, race anchor or simulation design.
    hunk-qualified; 107 data JMP stubs resolve their calls into the root.
 4. Explicitly not found: a validated per-frame presentation/swap site, TD2's
    exact 52-byte-row/8.8 road walker and CPU span loop, and several secondary
-   renderer counterparts. Two drawing passes make the single-view assumption
-   unproven. Timing/state ownership, screen roles and markers remain later gates.
+   renderer counterparts. Two drawing passes are present; phase 3 visually confirms
+   a rear-view mirror. Timing/state ownership, pass attribution and markers remain later gates.
 
 **Acceptance:** local `tools/identify_game.py` checks pinned inputs, all explicit
 patch signatures/source coverage, hunk sizes, root JMP targets and both overlay
@@ -130,13 +130,31 @@ node/export lists. Evidence is under ignored `tmp/dev/tmp/phase2/`. Every reques
 routine family has an evidenced TD location or an explicit not-found entry in
 the local inventory. No slave changes or new gameplay/performance claims.
 
-## Phase 3: first boot and traces with PCs
+## Phase 3: first boot and traces with PCs (complete)
 
-1. Windowed real-speed boot. Drive a race by keyboard, pick each car once and reach a
-   crash, a radar stop and a gas station. Note any visual glitches (candidate original bugs).
-2. Attach `td.py serve` within 20 s. Trace with `shot` and check that PCs are present.
-3. Find the attract mode, if there is one, or define a scripted route (VERIFY tape, phase 6)
-   for repeatable gameplay.
+1. Windowed real-speed PAL A500 boot, using rebuilt 1.5b and the disposable game
+   drawer. All five cars were selected and driven through native keyboard events.
+   Acceleration, shifting and steering were observed; read-only state corroborates
+   the screenshots. Porsche wall-crash acknowledgement restores the intact cockpit.
+2. A Ferrari first-stage route reached a radar pursuit, braking to zero speed,
+   the speeding-ticket screen and return to driving. It then reached Don's
+   Gas-O-Rama; fire continued to stage 2. No persistent visual defect was observed
+   in the inspected startup, car/cockpit, crash/recovery, ticket or station screens.
+   Partial draws and the station's scrolling text were checked against settled views.
+3. `td.py serve` attached at reset within the stub's 20-second window. Startup and
+   driving traces contain instruction PCs. The native-input diagnostic build's
+   three-field driving trace contains 8,939 / 9,456 / 9,154 instruction PCs.
+4. Leaving the game untouched repeats car introductions, a driving demo and the
+   logo sequence. The local demo-capture wrapper documents that diagnostic route.
+   A bounded native-keyboard helper also logs player routes, reading telemetry
+   without writing game state. No host accessibility or window input is used.
+
+**Acceptance:** local `docs/phase3.md` identifies the screenshots, state captures,
+input logs, exact slave/configuration and pinned diagnostic emulator. Pristine
+inputs and the phase-6.1 slave remain unchanged. The cockpit includes a working
+rear-view mirror; attribution of the two renderer passes remains analysis work.
+These are gameplay/trace checks, not a deterministic FPS benchmark. The frame
+marker, fixed race anchor and timing model remain phases 4 and 5.
 
 ## Phase 4: frame counter, fixed window, baseline
 
