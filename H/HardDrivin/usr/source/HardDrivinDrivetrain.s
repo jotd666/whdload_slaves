@@ -26,6 +26,10 @@ _drivetrain_patches:
 	PL_PSS $cdb6,_drivetrain_frame,2
 	; PERF_RANGE VERIFY_DRIVETRAIN_REFERENCE $0baca $0006: publish engine pitch once per outer pass
 	PL_PS $baca,_drivetrain_audio
+	IFD VERIFY_DRIVETRAIN_SQRT
+	; PERF_RANGE VERIFY_DRIVETRAIN_SQRT $0b856 $0006: reuse identical engine root operands
+	PL_PS $b856,_drivetrain_sqrt
+	ENDC
 	PL_END
 _drivetrain_engine: dc.l 0
 _drivetrain_position: dc.l 0
@@ -415,4 +419,49 @@ _drivetrain_position_add:
 .fallback:
 	movem.l (a7)+,d0-d7/a0-a3/a5
 	bra _motion_position_add
+	ENDC
+
+	IFD VERIFY_DRIVETRAIN_SQRT
+; The engine's native square-root routine is pure. Reuse only identical complete
+; long operands during inner reference ticks. Native/full-step calls still run
+; the original function. Its scratch outputs are dead at B85C except D0.
+	dc.b 'HDSQRT01'
+_drivetrain_sqrt_state:
+	dc.l 0,0                 ; complete operand, native result
+	dc.w 0,0                 ; valid, padding
+	dc.l 0,0                 ; hits, misses
+_drivetrain_sqrt:
+	movem.l d1/a0,-(a7)
+	move.w _drivetrain_state+6(pc),d1
+	cmpi.w #1,d1
+	bne.s .native
+	lea _drivetrain_sqrt_state(pc),a0
+	move.l 12(a7),d1
+	tst.w 8(a0)
+	beq.s .miss
+	cmp.l (a0),d1
+	bne.s .miss
+	addq.l #1,12(a0)
+	move.l 4(a0),d0
+	bra.s .done
+.miss:
+	move.l d1,(a0)
+	addq.l #1,16(a0)
+	move.l d1,-(a7)
+	jsr -$7e42(a4)
+	addq.l #4,a7
+	lea _drivetrain_sqrt_state(pc),a0
+	move.l d0,4(a0)
+	move.w #1,8(a0)
+	bra.s .done
+.native:
+	move.l 12(a7),-(a7)
+	jsr -$7e42(a4)
+	addq.l #4,a7
+.done:
+	movem.l (a7)+,d1/a0
+	; Displaced ADDQ removes the original long argument below our return PC.
+	move.l (a7),4(a7)
+	addq.l #4,a7
+	rts
 	ENDC

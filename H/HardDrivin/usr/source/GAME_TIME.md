@@ -1834,6 +1834,39 @@ Native-step comparison matches all 108 reference car states; CUSTOM1-off passes
 148 ranges, the 127-range branch audit passes, and normal and flag-absent binaries
 remain unchanged. Full handling and performance acceptance remain open.
 
+### Reusing identical engine square-root operands
+
+`VERIFY_DRIVETRAIN_SQRT` requires the reference integrator and hooks the engine's
+square-root call at `$0b856`. During inner reference ticks only, it caches the
+complete 32-bit operand and native result. The native root function at `$09564`
+uses only that operand and integer arithmetic; it has no game-state side effects.
+A different operand always calls the original function and replaces the cache.
+Native/full-step calls bypass the cache. Gear, force and velocity updates still
+execute; no recurrence interval or threshold is skipped. The cache can persist
+across frames and resets because its key contains the function's complete input.
+
+The wrapper duplicates the native long argument for a miss/bypass, then removes
+the displaced caller argument before returning to `$0b85c`. Live entry/return
+checks verify both the root result and balanced stack at every observed call.
+`HDSQRT01` stores operand/result longs, a valid word plus padding, and hit/miss longs.
+
+| 500-field operand capture | Root calls | Cache hits | Cache misses |
+|---|---:|---:|---:|
+| A500 | 266 | 90 | 176 |
+| 68020 | 394 | 205 | 189 |
+
+Every result matches an independent reconstruction of the native iterative
+integer algorithm; the hit totals also equal consecutive identical operands in
+these runs. The separate A500 timing window remains 35 swaps / 3.494429 FPS,
+with 35 full physics/scene passes, 267 engine calls and 32 pitch publications,
+each unique to its outer pass. Reducing native root evaluations has not added a
+swap in this diagnostic, so no further FPS gain is claimed. The general solver
+and original-game performance acceptance remain unfinished. Native-step comparison
+matches all 108 reference car states; CUSTOM1-off passes 149 ranges and the
+128-range branch audit passes. Normal output and the position-optimized build
+remain byte-identical when the cache flag is absent; missing its required
+reference flag rejects assembly.
+
 ### Near-stop fractional projection and position correction
 
 The retained operands isolated three interacting problems. At integer velocity1
