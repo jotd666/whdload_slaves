@@ -1537,6 +1537,63 @@ The fixture-absent integrated slave and normal8392-byte text output remain
 byte-identical. Invalid threshold/prerequisite/conflicting-input builds reject;
 CUSTOM1-off passes146 range checks and the125-range branch audit passes.
 
+
+### Automatic gear transitions within an elapsed interval
+
+The complete engaged drivetrain is now independently modeled against live inputs
+in `s4-drivetrain-a500` and `s4-drivetrain-020`. Captures stop at force integration,
+after RPM slew, and after gear selection; they write no game state. All26 A500
+and102 020 engaged updates match velocity/carry, power, net acceleration,
+RPM/carry, last-RPM/gear companion state, and resulting gear. Both upshifts on each
+machine match the native ratio conversion. Neutral updates are counted separately
+and are not covered by this engaged model.
+
+The native gear table at G($8cc4) contains numerator/denominator pairs:
+neutral0/800, first7/800, second9/750, third10/600, fourth10/450. The drivetrain
+uses sequential signed integer divisions, not a combined rational expression:
+
+- Base power is `trunc(trunc(throttle*450/100)*denominator/numerator)`.
+  Power is halved if skid is active or the difference between velocity and
+  RPM-derived wheel speed exceeds10. The diagnostic runs have no skid.
+- RPM target is `trunc(trunc(velocity*140/500)*denominator/numerator)`.
+  The elapsed RPM slew is limited to450 per native step with retained fractions.
+- After that update, automatic gears downshift below2000 RPM or upshift above5200
+  RPM, at most one gear per native call. Gear bounds are1 and4.
+- A shift converts RPM through the old ratio and then the new ratio, with an
+  integer division at each stage. The following call invalidates the old RPM
+  companion on the gear mismatch. G($9926) is derived from the converted RPM
+  through the reverse ratio and500/140 conversion; it is not simply the previous
+  velocity sample.
+
+The second-gear RPM target first exceeds5200 at integer velocity225. However,
+RPM slew can delay the actual shift, so velocity alone does not define the event.
+At the observed second upshift, A500 starts at velocity223+1/8, RPM5166, with a
+14-field interval and rate5. It ends at231+7/8 and RPM5333, then changes gear.
+The020 starts at223+5/8 with the same RPM/rate and a3-field interval; it ends at
+225+4/8 and RPM5250, then changes gear. Both shifts convert RPM to3780 because
+of the native intermediate rounding.
+
+An offline one-field drivetrain recurrence, holding throttle and flat-road inputs
+fixed throughout each captured interval, gives these contrasting endpoints:
+
+| Capture/update | Whole-interval velocity | One-field recurrence velocity | Recurrence shift field within interval |
+|---|---:|---:|---:|
+| A500 first upshift,15 fields | 194 | 183+6/8 | 2 |
+| A500 second upshift,14 fields | 231+7/8 | 225+3/8 | 4 |
+| 020 first upshift,4 fields | 168+3/8 | 170+6/8 | 4 |
+| 020 second upshift,3 fields | 225+4/8 | 225+2/8 | 3 |
+
+This recurrence is an isolated diagnostic, not a runtime implementation or a
+whole-car reference. It recomputes wheel-speed mismatch, power, force, RPM and
+gear without controls, collision, steering or scene passes. The first upshift also
+changes materially; clipping only the second-gear endpoint is insufficient.
+A production change must carry within-interval changes of acceleration into the
+position integral, preserve zero-carry native-step equivalence, handle manual and
+neutral cases, and bound cost at very long intervals. A per-field drivetrain loop
+has not been accepted as the runtime policy or measured against the A500 FPS gate.
+The retained `segment-audit.json` files record the exact matched inputs and both
+endpoints. Large-interval solver and handling acceptance remain open.
+
 ### Near-stop fractional projection and position correction
 
 The retained operands isolated three interacting problems. At integer velocity1

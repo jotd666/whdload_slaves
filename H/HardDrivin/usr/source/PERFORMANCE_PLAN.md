@@ -332,7 +332,10 @@ Tools stay in ignored `tmp/dev/tools`.
      slowed A500 drawing. The slowed run overshoots the requested throttle by one;
      it is not an equal-input comparison. The same-throttle A500/fast-CPU speed
      difference is traced to gear-transition overshoot and a native zero-net-force
-     interval. Its correction and units-derived handling tolerance remain open.
+     interval. An isolated drivetrain model now matches128 live updates, including
+     RPM slew and gear conversion; a within-interval recurrence identifies both
+     upshifts as significant. The runtime correction, position integration across
+     those transitions, and units-derived handling tolerance remain open.
    - Exercise collisions, the loop and the jump at both T extremes; check for
      tunnelling and missed checkpoints.
    - Measure the A500's FPS: it must not drop by more than 3% against the baseline.
