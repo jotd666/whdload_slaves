@@ -1916,9 +1916,9 @@ byte-for-byte.
 ### Manual and neutral reference integration
 
 `VERIFY_DRIVETRAIN_MANUAL` extends the optional reference integrator to grounded
-manual driving and neutral (gears 0..4). Crash, skid, falling and partial-contact
-eligibility restrictions remain. Zero/eight-field intervals retain the native
-single-pair path. Each inner tick runs the native engaged or neutral RPM behavior;
+manual driving and neutral (gears 0..4). Crash remains excluded; separate SKID
+and AIR gates below extend skid, falling and partial-contact eligibility.
+Zero/eight-field intervals retain the native single-pair path. Each inner tick runs the native engaged or neutral RPM behavior;
 neutral does not acquire a new drag/force law.
 
 The native manual branch reads a keyboard gear request at G($991d) and a joystick
@@ -1998,9 +1998,51 @@ match the manual model; all ten requested shifts occur once.
 
 Native-step comparison matches 108 reference car states. CUSTOM1-off passes 151
 ranges; the 130-range branch audit passes; normal and flag-absent builds remain
-byte-identical; the new flag rejects a missing reference dependency. Falling,
-partial-contact integration, full equal-time handling and original-game
-performance acceptance remain open.
+byte-identical; the new flag rejects a missing reference dependency. The AIR
+extension below adds falling and partial-contact reference coverage; full
+equal-time handling and original-game performance acceptance remain open.
+
+### Airborne and partial-contact reference integration
+
+`VERIFY_DRIVETRAIN_AIR` requires the reference integrator and removes its
+full-contact/zero-fall-velocity eligibility restriction. Crash still uses the
+existing single-pair path; zero/eight-field intervals preserve native behavior.
+Manual and skid extensions remain independently selected.
+
+Native `$0cda4` calls steering, engine and position before surface/contact work
+and the `$0cab6` gravity/contact update. The reference repeats only engine and
+ordinary projected displacement. It restores the full elapsed interval before
+calling native position once, then continues the original outer contact pass.
+The falling position hook therefore consumes the previous contact pass's
+acceleration once, with the full interval; it is not repeated for inner engine
+ticks. The existing gravity correction and shared Y position remainder remain
+in use. This extends reference integration without adding full scene passes.
+
+A read-only capture checks 200 paired gravity entry/exit operands per machine
+against the signed displacement/remainder model. It also verifies the restored
+interval and unique outer serial for every gravity call. A500 covers intervals
+0 and 6..18 fields, with 136 calls longer than eight fields, nine nonzero falling
+updates, seven falling reference publications and four partial-contact reference
+publications. The 68020 covers 0 and 2..4 fields, with 14 falling reference
+publications; that capture has no partial-contact cases.
+
+A separate 1600-field A500 capture validates 1252 intermediate updates per axis,
+including 71 with nonzero falling velocity, 46 without wheel contact and 47 with
+partial contact (masks 1,5,7,10). Every position and remainder matches the arithmetic
+model. All 63 fractional batches and 29 unchanged-state batches also match repeated
+one-field movement. A 1000-field 68020 capture validates 990 updates per axis,
+including 127 falling, 99 without wheel contact and 59 partial-contact updates;
+its 22 fractional and eight unchanged-state batches also pass. A separate A500
+force audit matches 1124 native force/scalar updates and six fall-velocity updates
+(up to 12 elapsed fields), with no observed overflow or zero crossing.
+These are operand-level checks, not proof of collision accuracy, landing handling,
+jump/loop traversal or equal-time trajectories.
+
+Native-step comparison preserves all 108 reference car snapshots. CUSTOM1-off
+checks pass, the 130-range branch audit passes, normal and AIR-absent builds are
+byte-identical to their controls, and AIR without REFERENCE fails assembly.
+This optional path has not passed the original-game FPS gate. Full contact and
+large-step acceptance remain open.
 
 ### Near-stop fractional projection and position correction
 

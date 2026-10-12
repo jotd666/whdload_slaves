@@ -1,7 +1,9 @@
 ; Experimental reference integrator, not a performance-accepted policy.
-; Grounded driving advances engine and projected position in fields.
+; Driving advances engine and projected position in fields.
 ; Manual/neutral support is separately gated by VERIFY_DRIVETRAIN_MANUAL.
 ; VERIFY_DRIVETRAIN_SKID retains native held-vector motion during skids.
+; VERIFY_DRIVETRAIN_AIR extends this to falling and partial wheel contact.
+; Gravity/contact remain once per outer pass, after restoring its interval.
 ; Steering, contact/scene work and input sampling remain once per outer pass.
 ; Zero/eight-field intervals and other driving modes keep the native pair.
 _drivetrain_install:
@@ -71,10 +73,12 @@ _drivetrain_frame:
 	tst.b -$50cf(a4)
 	bne .single
 	ENDC
+	IFND VERIFY_DRIVETRAIN_AIR
 	cmpi.b #15,-$66f0(a4)
 	bne .single
 	tst.w -$66f2(a4)
 	bne .single
+	ENDC
 	IFND VERIFY_DRIVETRAIN_MANUAL
 	tst.b -$66c2(a4)
 	beq .single
