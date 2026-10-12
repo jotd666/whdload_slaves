@@ -1381,130 +1381,65 @@ equal-real-time trajectory reference. Full handling/performance acceptance remai
 
 ### Fixed-field replay recording (development gate)
 
-`VERIFY_TIME_RECORD` requires TIME_REPLAY_TIMING and CUSTOM1. It installs
-`HardDrivinRecord.s`, retaining the native 90-by-158-byte format but recording one
-sample every eight eligible simulation fields. A full ring represents 720 fields
-of playback at every rendering rate. The first eligible pose is sampled at age
-zero. D960 observes the start of the physics step, so each consecutive visit
-charges the previous step's elapsed fields. Missing eligible visits freeze this
-history clock and establish a new pose endpoint rather than interpolate a gap.
-The native ring reset also resets the companion state.
+`VERIFY_TIME_RECORD` requires TIME_REPLAY_TIMING and CUSTOM1. It retains the native
+90-by-158-byte format and records one exact sample every eight eligible simulation
+fields. A full ring represents 720 fields. The first eligible pose is sampled at
+age zero. D960 observes the start of the physics step, so consecutive visits charge
+the previous step's elapsed fields. Missing eligible visits freeze history time.
+A repeated scene visit at the same dispatcher step replaces the entire emission
+transaction, including multiple crossed boundaries, without charging time again.
 
-Each update captures the native player/traffic pose into private storage, then
-interpolates every sample boundary covered by the interval. Position interpolation
-uses unsigned X/Z and signed Y, angles take the shortest 1440-unit path, and the
-engine's low 12 bits interpolate while high flags hold until the endpoint.
-Endpoints copy verbatim. Weighted sums and unsigned division support intervals
-through 65535 fields; biasing signed values by 32768 gives exact floor division
-without signed multiply/divide overflow. This produces linear pose samples between
-physics updates; it cannot reconstruct unsimulated contact within a long update.
+Gameplay captures the native player/traffic pose, keeps an endpoint pair and stores
+its exact sample weights. All samples in a transaction share the pair. Interpolation
+is deferred until `$10b44`, before native replay scans or reads the ring. A native,
+ineligible recording visit also resolves pending history before overwriting a slot.
+This is exact fixed-field resampling, not frame-stamped history: sample times,
+rounding, collision replacement, ring capacity and playback duration are unchanged.
+The native ring is lazy during gameplay and complete before its consumers run.
 
-The transaction remembers its original ring pointer, phase and previous pose.
-A repeated scene visit at the same dispatcher step replaces all samples emitted
-by that transaction. The collision rewind at `$89b4` therefore does not rewind
-older history when no sample was due. Replacement does not accrue elapsed time
-again. Counters distinguish newly emitted and replaced samples. `HDRECRD1` precedes
-32 bytes of state, followed by previous/current 158-byte poses. The state contains
-step stamp, original write pointer, eligible age, emitted and replaced longwords;
-phase, saved phase, charged interval and next interval words; valid/new/first bytes
-and padding. The regular build and forced-native dispatcher use native recording.
+The companion allocation is 29,476 bytes: 90 eight-byte descriptors and 91 endpoint
+pairs of 316 bytes. Each descriptor stores pair pointer, numerator and denominator.
+Before a pair is reused, at least 90 later emitting transactions have overwritten
+every descriptor which could refer to it. Collision rebuilds reuse their pair and
+saved descriptor origin. Reset resolves old samples before invalidating descriptors,
+preserving the native reset's untouched tail bytes and incoming X flag. Allocation
+failure retains eager interpolation; normal builds and the forced-native dispatcher retain
+native recording. The additional allocation is private and follows Exec's public
+memory allocator; no specific fast-memory availability is required.
 
-Evidence:
+Player word classes are U/U/S/angle/angle/angle/packed; each of twelve traffic poses
+is U/S/U/angle/angle/angle. Positions use unsigned X/Z and signed Y. Angles use the
+existing wrapped 1440-unit path and normalization. The engine's low 12 bits
+interpolate while high flags hold left until the endpoint. Right endpoints copy
+verbatim. Signed biasing gives exact floor division for intervals through 65535
+fields. Weights are computed once per output record. A bounded Q16 shortcut is
+exact for denominator and absolute biased-word delta at most 255: its weighted
+error is smaller than 1/denominator, with directed rounding for rising/falling
+values. Other values retain the full multiply/divide path. Equal angles still
+normalize. Shared scalar helpers used by the Phantom recorder are unchanged.
 
-- `s4-record-wrap`: all 47 live A500 transactions match an independent model,
-  including the complete ring and write pointer. Thirty transactions emit multiple
-  samples (maximum three); one collision replaces two samples. There are 76 new
-  samples over 606 eligible fields. Each captured endpoint is checked against the
-  game's player globals and all 12 traffic object poses.
-- Private fixtures check 36 full records for intervals 1..8 and 24 records at
-  selected fractions of intervals 9, 15, 16, 255, 32768 and 65535. A separate
-  transaction emits 91 samples starting at slot 88; all 90 final slots, counters,
-  remainder and wrapped pointer match the model.
-- `s4-record-wide-020`: 189 live transactions, 79 new samples over 631 fields,
-  including one collision replacement; full ring, endpoints and pointer match.
-  This run precedes extraction of the shared emission helper used by the wrap test.
-- `s4-record-wide-native`: all 144 reference car states, full ring contents,
-  relocated write pointers, score and start/throttle state agree at forced T=1.
-  This constant-input fixture does not replace full driving-tape equivalence.
-- `s4-record-playback`: A500 playback of 76 entries uses 54 draws, including 49
-  interpolated draws. All poses match; a 40-field pause freezes the clock. Exit
-  age is 616 fields versus the 608-field target (one final-draw overshoot).
-- `s4-record-playback-020`: the final implementation plays 80 entries in 224 draws,
-  including 200 interpolated draws and a 40-field pause. Exit age is 642 fields
-  versus 640. Both playback runs consume 52 native effect RNG calls; every effect
-  pose and the nine private overlay cases pass.
-- `s4-record-off` passes inactive-range checks; the normal slave remains byte-for-
-  byte identical and all 91 patch branch ranges pass.
+The two private pose buffers swap pointers at each new transaction. The sampler
+copies the same native fields directly, with an unrolled twelve-car path and a
+counted fallback. `HDRECRD1` still precedes the 32-byte state and two 158-byte buffers,
+but `_record_previous_ptr` and `_record_current_ptr` now identify their roles.
+State retains step stamp, original write pointer, eligible age, emitted/replaced
+counts, phase, saved phase, charged/next intervals and valid/new/first flags.
 
-These runs cover first entry, fractional and multiple emissions, collision
-replacement, ring wrap and natural playback exit with pause. They do not yet
-validate an eligibility gap, replay abort, every recovery/reset path or the full
-cross-machine driving tape. The rendering/handling acceptance remains open.
+P2 validation passes: 10,000 old/new assembled records; 4,060,047 words through the
+pending-history oracle, including 500 replacements and 95 full-ring resolutions;
+4,000 pristine-native sampler comparisons; live A500 and 68020 recording and playback
+checks; all 108 native car states; 163 disabled ranges; 141 branch ranges; and
+byte-identical normal/DRIVE/ATTRACT builds. The live recorder checker models every
+pending sample and compares the resolved native ring at replay entry. A500 and
+68020 crash/replay frames were visually inspected. Detailed counts and local
+artifact names are in `STEP4_COST_PLAN.md`, P2.
 
-The earlier pre-reference `s4-record-cost` 500-field A500 diagnostic has
-37 swaps and 37 physics calls: 3.694 FPS, 270.701 ms per frame. The original
-constant-input control has 38 swaps (3.794 FPS, 263.577 ms). This is not final
-performance acceptance or an isolated recording-cost measurement: the new run
-includes 19 crash fields and also contains the long-event changes absent from
-the earlier CPU-policy diagnostic. No oversized-interval fallback occurs.
-
-
-#### Equal-endpoint interpolation cost
-
-The gated recorder now returns an unchanged word directly when both interpolation
-endpoints agree. Equal angle endpoints skip the weighted interpolation but still
-run the existing angle normalization. Unequal endpoints, right-endpoint copies,
-packed pitch flags, sample times and ring transactions retain their previous
-behavior. The unsigned helper's callers consume only D0.W; D1/D3 and CCR are
-scratch, and the outer recording hook still restores its native X behavior.
-The two shortcuts add eight bytes to the reference slave.
-
-An isolated comparison executes both the previous and optimized assembled 68000
-routines on 1,280 complete records, checking 101,120 result words against an
-independent rational model. It covers equal and unequal signed/unsigned values,
-angle seams, equal out-of-range angles, packed flags and denominators through
-65535, with preserved caller
-registers, stack and output guards. All records match exactly.
-
-Fresh ten-second A500 traces use the same constant-accelerator fixture and full
-optional drivetrain reference (`s4-recordcost-before/after`, 500 PAL fields each).
-Complete recording costs exclude interrupt-stack execution; nested routine
-costs must not be added to their parent:
-
-| Routine | Before calls / total ms | After calls / total ms |
-| --- | ---: | ---: |
-| Recording transaction | 32 / 252.625 | 32 / 157.397 |
-| Record interpolation | 54 / 226.041 | 55 / 130.728 |
-| Angle interpolation | 1950 / 123.157 | 2067 / 42.718 |
-| Unsigned interpolation | 3950 / 135.505 | 2417 / 62.099 |
-
-Complete recording time falls by 95.228 ms (37.70%) in these windows. Different
-frame timings alter interpolation counts and trajectories, so the table is a
-measured window comparison, not a claim of identical operands at every call.
-Both traces still produce 34 swaps: 3.394588 FPS, 294.587 ms/frame. No rendering
-FPS gain or pass of the original 3% performance gate is claimed. The independent
-windows have 34 versus 35 completed physics calls and 4 versus 10 crash fields,
-so they are not equal-scene workloads. Instruction coverage exceeds 99.99998% in both traces.
-
-The optimized A500 recording capture (`s4-record-equal-live`) checks all 46
-transactions, every ring byte, captured player/traffic endpoints and the write
-pointer. Thirty-two transactions emit multiple samples (up to three); a collision
-replaces two samples in one repeated transaction. It emits 78 samples over 622
-eligible fields, including 75 fractional samples. These checks use the actual
-profiled build without embedded math buffers; the independent assembled test
-supplies the arithmetic edge coverage above.
-
-The 68020 companion (`s4-record-equal-live-020`) likewise matches all 188
-transactions: 80 emitted samples over 633 eligible fields, 59 fractional samples
-and one collision replacement. Independent front-pointer captures reproduce all
-34 swap fields in each instruction trace after converting their documented
-field-index origins. The optimized A500 runs one full physics pass per frame,
-with no oversized fallback or repeated engine-pitch publication.
-
-The normal build remains byte-identical to the baseline, CUSTOM1-off passes all
-154 declared range checks with only the input fixture enabled, and the existing
-132-range branch audit passes. This exact recording optimization does not change
-physics policy or resolve the remaining step-4 handling and performance gates.
+Fresh matched ten-second windows measure recording overhead of 0.280504 ms/frame
+in A and 0.248648 ms/frame in B, both below P2's 0.3 ms limit. Interpolation work now
+occurs at replay entry, before the playback epoch starts; it has not disappeared.
+These results close P2 only. The combined gameplay cost gate, eligibility-gap and
+recovery/abort coverage, complete driving-tape equivalence and human handling
+acceptance remain separate work.
 
 
 ### Velocity storage audit and controlled braking

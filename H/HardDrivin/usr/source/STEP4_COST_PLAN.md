@@ -5,9 +5,9 @@ current integrated build, measured on 2026-10-12. It names the bottlenecks, sets
 targets and gives an ordered list of work items. Each item has an exit criterion. Step IDs
 are `P` (performance), `C` (closure) and `D` (decisions for the user).
 
-**Current status: P1 complete.** Fresh matched profiles measure traffic overhead of
-0.256 ms/frame in A and 0.034 ms/frame in B, both below 0.8 ms. P2 is next; the
-remaining performance and step-4 closure items are unchanged.
+**Current status: P1 and P2 complete.** Traffic meets its 0.8 ms/frame budget.
+Replay-recording overhead is now 0.281 ms/frame in A and 0.249 ms/frame in B,
+both below 0.3 ms. P3 is next. The combined G1 gate and step-4 closure remain open.
 
 ## 1. Measurement
 
@@ -234,31 +234,102 @@ G2 remains a report, not the P1 exit gate:
 **B is a scene mismatch**: polygon workload differs by more than 5%. Passing P1
 closes only the traffic cost item; it does not close the combined G1 gate or step 4.
 
-### P2 Replay recording: target ≤ 0.3 ms per frame (now 3.89 / 2.90)
+### P2 Replay recording: complete (target ≤ 0.3 ms per frame)
 
-The recommended option, R1, needs decision D2.
+D2's R2 policy is retained: the native ring still contains 90 exact, fixed-field,
+158-byte samples at eight-field intervals. R1's frame-stamped sampling is not used.
+Gameplay retains the exact endpoint pairs and rational weights; resampling runs
+before the first native replay reader at `$10b44`. The resolved ring is byte-for-byte
+identical to eager interpolation. All words remain covered by their existing classes:
+player U/U/S/angle/angle/angle/packed and twelve traffic U/S/U/angle/angle/angle;
+only the packed high nibble is held from the left endpoint.
 
-1. **R1, stamped records.**
-   - When a frame crosses one or more 8-field boundaries, write the native 158-byte
-     record once, as the native `$89d8` copy does.
-   - Store its elapsed-field stamp in a parallel 90-entry word array. Gameplay does no
-     interpolation.
-   - Playback interpolates between stamped neighbours by elapsed time, reusing the
-     existing playback interpolation.
-   - The ring still holds 90 records spaced at least 8 fields apart, so it covers at
-     least the original 720 fields.
-   - Collision replacement rewrites the current stamp.
-2. **R2, fallback if D2 rejects R1.**
-   - Keep the fixed-field format.
-   - Compute the weight pair once per emitted record.
-   - Interpolate only the pose and angle words, which need a table of word classes.
-   - Sample and hold discrete words.
-   - Expected: about 1.2 ms per frame, which does not by itself meet the B budget.
-3. **Exit criteria.**
-   - The record share of `$0d960` is at most 0.3 ms per frame above the original.
-   - Replay playback passes `check_replay_playback.py` and `check_recording.py`, adapted
-     to stamps.
-   - One A500 and one 68020 crash replay are inspected visually.
+The implementation:
+
+- Allocates 29,476 bytes once: 90 eight-byte descriptors and 91 pairs of 158-byte
+  endpoints. All samples emitted by one transaction share its pair. A pair cannot
+  be reused until at least 90 later emitting transactions have overwritten all
+  descriptors that could reference it. Collision replacements reuse their pair
+  and original descriptor position. Reset resolves old samples before clearing
+  descriptors; a native, ineligible visit resolves pending history before writing
+  and synchronizes cursors.
+  Allocation failure retains eager interpolation.
+- Swaps the two pose-buffer pointers instead of copying the previous pose. The
+  native sampler's exact fields are copied directly; its twelve-car path is unrolled.
+  Register-block copies retain endpoint pairs without repeated per-word arithmetic.
+- Computes interpolation weights once per record and inlines the word classes.
+  For denominator and absolute biased-word delta at most 255, directed Q16
+  coefficients produce the exact rational floor; larger operands retain multiply/
+  divide arithmetic. Equal angles still normalize and right endpoints copy verbatim.
+  The Phantom recorder's shared scalar helpers retain their previous behavior.
+
+This moves interpolation work to replay entry and uses additional memory; it does
+not remove that work. The replay epoch starts after resolution, so the retained
+history duration and playback clock are unchanged. Gameplay ring bytes are lazy
+until a native consumer needs them; the live checker validates both the logical
+pending ring at every transaction and the complete native ring at replay entry.
+
+Fresh 500-field captures use matching slaves and listings, CUSTOM1 off/on, and
+separate `HD_INSTANCE` values. A uses `p2-ready-a.slave`, constant accelerator, race
+field 1; B uses `p2-ready-b.slave`, the full frozen tape through field 4000.
+Captures are `p2-ready-{a,b}-{off,on}`. Each window is 10.015943522 seconds,
+with only complete swap intervals averaged.
+
+| Recorder share, ms/frame | A | B |
+|---|---:|---:|
+| Original native recording | 0.404396 | 0.440255 |
+| Optimized recording | 0.684901 | 0.688903 |
+| **Overhead** | **0.280504** | **0.248648** |
+| Limit | 0.3 | 0.3 |
+| Result | **PASS** | **PASS** |
+
+The recorder share is all `_record*` work plus any native `$89d8` work; the native
+share is zero in the enabled windows. The complete camera/record phase is
+0.922886 → 1.290729 ms in A and 0.945090 → 1.204196 ms in B. Its other camera/event
+work is excluded from this P2 component gate, but remains included in G1.
+
+Required correctness evidence passes:
+
+- Actual-68000 full-record comparison: 10,000 records / 790,000 words match both
+  the previous implementation and the independent rational model, with register,
+  stack and guard checks.
+- Actual-68000 pending-history fixture: 10,000 individual records plus 2,000 shared
+  transactions, 41,393 shared emissions, 500 replacement transactions and 95 full
+  ring resolutions. All 4,060,047 words match, including wrap, more-than-a-ring
+  intervals and allocation-failure fallback. Reset also preserves unresolved
+  tail bytes and both possible incoming X flags.
+- Native sampler comparison: 4,000 randomized states match pristine `$89d8`,
+  including the twelve-car path and generic counts 0–12, with output guards.
+- `check_recording.py`: A500 50 transactions, 78 emitted samples, 616 fields,
+  77 fractional samples, 29 multiple-emission transactions (maximum three), and
+  one collision replacing two samples. The 68020 has 191 transactions, 79 samples,
+  628 fields, 55 fractional samples and one duplicate with no sample due. Every
+  endpoint, logical ring, counter, write pointer and resolved native ring matches.
+- `check_replay_playback.py`: A500 56 draws / 46 fractional draws for 78 records,
+  exiting at age 625 against target 624; 68020 223 draws / 193 fractional draws
+  for 79 records, exiting at 634 against target 632 (one final-draw overshoot). Both
+  match every pose and consume 52 effect RNG calls. Audio checks and nine private interpolation records pass.
+  Crash, early replay and later replay frames were visually inspected on both
+  profiles; no visible corruption was found. These are not human handling laps.
+- All 108 native car states match (`p2-ready-native`). CUSTOM1-off passes all
+  163 declared ranges (`p2-ready-disabled`); the branch audit passes 141 ranges.
+  Normal, DRIVE and ATTRACT builds remain byte-identical to the step-2 references.
+
+The local summary is `tmp/prof/p2-summary.json`. Traces retain matching binary and
+listing hashes, field fingerprints and verified compressed archives. Checkers,
+game bytes, screenshots and other harness artifacts remain under ignored `tmp/`.
+
+G2 remains a report:
+
+| | A off | A on | B off | B on |
+|---|---:|---:|---:|---:|
+| Swaps in the window | 38 | 38 | 83 | 59 |
+| Complete intervals | 37 | 37 | 82 | 58 |
+| Mean frame time (ms) | 260.96 | 252.83 | 119.95 | 169.93 |
+| Polygons per complete frame | 57.76 | 55.46 | 13.78 | 27.74 |
+
+**B is a scene mismatch.** Passing P2 closes the recorder component budget only;
+it does not close the combined G1 gate, change physics policy, or complete step 4.
 
 ### P3 Native engine runs: target ≤ phases started + 0.1 per frame (now 2.53 / 2.36)
 
