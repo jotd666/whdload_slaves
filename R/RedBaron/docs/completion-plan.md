@@ -397,7 +397,7 @@ part of E2 when that replacement is implemented.
 
 **E3. CPU raster path for 020+.**
 
-Rectangle disposition: direct-to-chip CPU fills are dropped under §0.3; all three AGA CPU-class pairs regress by 5–8% (scoreboard). Polygon merging is also dropped: all three AGA pairs regress by 3–5%, despite passing its pixel twin and both checker sabotages. Continue with the fast-memory back buffer.
+Rectangle disposition: direct-to-chip CPU fills are dropped under §0.3; all three AGA CPU-class pairs regress by 5–8% (scoreboard). Polygon merging is also dropped: all three AGA pairs regress by 3–5%, despite passing its pixel twin and both checker sabotages. The fast-memory back buffer is also dropped under §0.3: all four CPU-class pairs regress by 27–44%, despite passing its pixel twin and two checker sabotages. E3 is closed; retain the native blitter scene.
 1. Replace the sky/ground rectangle fills, which are 27% of scene time on
    the 030, and the polygon span fills (21%) with CPU code using 32-bit stores
    on AGA.

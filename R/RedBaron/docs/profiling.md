@@ -10,14 +10,14 @@ baseline and update the normal-bundle columns; their checkpoint labels identify
 which rows have been refreshed. Stage spans are inclusive wall time;
 scene, cockpit and publication are separate stages, not CPU-only costs.
 
-| Configuration | Checkpoint | Stock steady / event FPS | Bundle steady / event FPS | World update ms | Scene / cockpit / publication ms | DASH markers stock / bundle | Clean fields stock / bundle | World time / wall time | Dropped world time | B1 isolated pool FPS, off → on | B2 raw CACR, before → after | B2 isolated cache FPS, off → on | C1 discarded pair FPS, off → on | C2 discarded pair FPS, off → on | C3 isolated face-loop FPS, off → on | D5 candidate whole-window FPS (Time Scale 40) | E1 W6 scene / cockpit / publication ms | E2 gun-cache FPS off → on (dropped) | E2 solid-cache FPS off → on (dropped) | E2 persistent-gauge candidate FPS off → on | E2 combined front-script FPS off → on (dropped) | E2 complete cockpit FPS off → on (dropped) | E3 CPU rectangle FPS off → on (dropped) | E3 CPU polygon merge FPS off → on (dropped) |
-|---|---|---|---|---|---|---|---|---|---| --- |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| A500, 512K chip + 1.5M slow | C bundle / A2 stock | 1.844 / 1.722 | 2.016 / 1.922 | 57.68 → 57.05 | 399.51 / 73.70 / 0.28 → 380.41 / 63.46 / 3.61 | 3 / 13 | 1516 / 1486 | 0.924744 (candidate D5) | 5,400 units / 12 steps | Minimum-memory flight passes | N/A (68000) | No cache hardware | 1.955 → 1.975 (+1.01%) | 1.970 → 1.936 (-1.72%) | 1.931 → 1.997 (+3.39%) | 0.824 | — | CPU-gated off | CPU-gated off | CPU-gated off | CPU-gated off | CPU-gated off | CPU/AGA-gated off | CPU/AGA-gated off |
-| 020, 2M chip + 8M fast | C bundle / A2 stock | 6.008 / 5.666 | 7.222 / 7.313 | 13.79 → 10.22 | 116.77 / 41.40 / 0.08 → 86.64 / 31.28 / 6.96 | 44 / 24 | 1196 / 1258 | 1.001296 (candidate D5) | 0 | 6.398 → 6.695 (+4.6%) | 0x0000 → 0x0001 | 6.754 → 7.280 (+7.8%) | 7.266 → 7.258 (-0.11%) | 7.193 → 7.210 (+0.24%) | CPU-gated off | 4.568 | — | 4.568 → 4.443 (-2.73%, fast compositor) | 4.593 → 4.343 (-5.43%) | 4.568 → 4.668 (+2.19%) | 4.568 → 4.343 (-4.92%) | 4.568 → 2.446 (−46.45%) | 4.418 → 4.093 (-7.34%) | 4.643 → 4.393 (-5.38%) |
-| 030/50, 2M chip + 8M fast, MMU | C bundle / A2 stock | 12.974 / 11.881 | 14.827 / 14.452 | 3.33 → 1.70 | 44.19 / 34.08 / 0.08 → 35.14 / 28.54 / 4.28 | 191 / 59 | 1154 / 1017 | 0.998656 (candidate D5) | 0 | 12.878 → 14.546 (+12.9%) | 0x2111; unchanged | Already enabled | 14.562 → 14.595 (+0.22%) | 14.556 → 14.514 (-0.29%) | CPU-gated off | 12.280 | — | 12.305 → 12.305 (+0.00%, fast compositor) | 12.305 → 12.330 (+0.20%) | 12.305 → 12.305 (+0.00%) | 12.280 → 12.330 (+0.41%) | 12.305 → 9.784 (−20.49%) | CPU/AGA-gated off | CPU/AGA-gated off |
-| 030/50, 2M chip + 8M fast, no MMU tooltype | C bundle / A2 stock | 12.377 / 11.931 | 14.893 / 14.527 | 3.94 → 1.69 | 48.31 / 31.23 / 0.04 → 35.11 / 28.48 / 4.34 | 58 / 55 | 1262 / 962 | 0.998656 (candidate D5) | 0 | 030 class measured with MMU | 0x2000 → 0x2011 | 12.889 → 14.537 (+12.8%) | 030 class measured with MMU | 030 class measured with MMU | CPU-gated off | 12.280 | — | CPU class measured with MMU | CPU class measured with MMU | CPU class measured with MMU | CPU class measured with MMU | CPU class measured with MMU | CPU/AGA-gated off | CPU/AGA-gated off |
-| 040/25 NOMMU, AGA, 2M chip + 16M Z3 fast | C bundle / A2 stock | 12.476 / 11.507 | 13.549 / 13.553 | 3.34 → 2.13 | 47.56 / 36.26 / 0.06 → 37.97 / 28.47 / 5.70 | 116 / 59 | 1144 / 1157 | 0.998656 (candidate D5) | 0 | 12.392 → 13.277 (+7.1%) | 0x80008000; unchanged | Already enabled | 13.384 → 13.428 (+0.32%) | 13.393 → 13.437 (+0.33%) | CPU-gated off | 11.631 | 45.42 / 32.53 / 2.89 | 11.656 → 11.557 (-0.86%, fast compositor) | 11.631 → 11.557 (-0.64%) | 11.631 → 11.981 (+3.00%) | 11.631 → 11.806 (+1.50%) | 11.656 → 6.714 (−42.40%) | 12.031 → 11.407 (-5.19%) | 12.031 → 11.706 (-2.70%) |
-| 060/50 NOMMU, AGA, 2M chip + 16M Z3 fast | C bundle / A2 stock | 12.786 / 12.206 | 14.296 / 14.003 | 3.16 → 1.95 | 44.63 / 33.43 / 0.03 → 36.13 / 28.11 / 4.68 | 64 / 62 | 1452 / 1568 | 0.998656 (candidate D5) | 0 | 12.585 → 13.909 (+10.5%) | 0xa0808000; unchanged | Already enabled | 13.953 → 13.959 (+0.04%) | 13.982 → 13.998 (+0.11%) | CPU-gated off | 12.006 | 53.03 / 29.37 / 4.41 | 12.056 → 11.981 (-0.62%, fast compositor) | 12.031 → 12.006 (-0.21%) | 12.031 → 12.206 (+1.45%) | 12.031 → 12.081 (+0.41%) | 12.081 → 7.089 (−41.32%) | 12.081 → 11.157 (-7.64%) | 12.056 → 11.706 (-2.90%) |
+| Configuration | Checkpoint | Stock steady / event FPS | Bundle steady / event FPS | World update ms | Scene / cockpit / publication ms | DASH markers stock / bundle | Clean fields stock / bundle | World time / wall time | Dropped world time | B1 isolated pool FPS, off → on | B2 raw CACR, before → after | B2 isolated cache FPS, off → on | C1 discarded pair FPS, off → on | C2 discarded pair FPS, off → on | C3 isolated face-loop FPS, off → on | D5 candidate whole-window FPS (Time Scale 40) | E1 W6 scene / cockpit / publication ms | E2 gun-cache FPS off → on (dropped) | E2 solid-cache FPS off → on (dropped) | E2 persistent-gauge candidate FPS off → on | E2 combined front-script FPS off → on (dropped) | E2 complete cockpit FPS off → on (dropped) | E3 CPU rectangle FPS off → on (dropped) | E3 CPU polygon merge FPS off → on (dropped) | E3 Fast-RAM scene FPS off → on (dropped) |
+|---|---|---|---|---|---|---|---|---|---| --- |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| A500, 512K chip + 1.5M slow | C bundle / A2 stock | 1.844 / 1.722 | 2.016 / 1.922 | 57.68 → 57.05 | 399.51 / 73.70 / 0.28 → 380.41 / 63.46 / 3.61 | 3 / 13 | 1516 / 1486 | 0.924744 (candidate D5) | 5,400 units / 12 steps | Minimum-memory flight passes | N/A (68000) | No cache hardware | 1.955 → 1.975 (+1.01%) | 1.970 → 1.936 (-1.72%) | 1.931 → 1.997 (+3.39%) | 0.824 | — | CPU-gated off | CPU-gated off | CPU-gated off | CPU-gated off | CPU-gated off | CPU/AGA-gated off | CPU/AGA-gated off | CPU-gated off |
+| 020, 2M chip + 8M fast | C bundle / A2 stock | 6.008 / 5.666 | 7.222 / 7.313 | 13.79 → 10.22 | 116.77 / 41.40 / 0.08 → 86.64 / 31.28 / 6.96 | 44 / 24 | 1196 / 1258 | 1.001296 (candidate D5) | 0 | 6.398 → 6.695 (+4.6%) | 0x0000 → 0x0001 | 6.754 → 7.280 (+7.8%) | 7.266 → 7.258 (-0.11%) | 7.193 → 7.210 (+0.24%) | CPU-gated off | 4.568 | — | 4.568 → 4.443 (-2.73%, fast compositor) | 4.593 → 4.343 (-5.43%) | 4.568 → 4.668 (+2.19%) | 4.568 → 4.343 (-4.92%) | 4.568 → 2.446 (−46.45%) | 4.418 → 4.093 (-7.34%) | 4.643 → 4.393 (-5.38%) | 4.643 → 2.596 (−44.09%) |
+| 030/50, 2M chip + 8M fast, MMU | C bundle / A2 stock | 12.974 / 11.881 | 14.827 / 14.452 | 3.33 → 1.70 | 44.19 / 34.08 / 0.08 → 35.14 / 28.54 / 4.28 | 191 / 59 | 1154 / 1017 | 0.998656 (candidate D5) | 0 | 12.878 → 14.546 (+12.9%) | 0x2111; unchanged | Already enabled | 14.562 → 14.595 (+0.22%) | 14.556 → 14.514 (-0.29%) | CPU-gated off | 12.280 | — | 12.305 → 12.305 (+0.00%, fast compositor) | 12.305 → 12.330 (+0.20%) | 12.305 → 12.305 (+0.00%) | 12.280 → 12.330 (+0.41%) | 12.305 → 9.784 (−20.49%) | CPU/AGA-gated off | CPU/AGA-gated off | 12.305 → 8.736 (−29.01%) |
+| 030/50, 2M chip + 8M fast, no MMU tooltype | C bundle / A2 stock | 12.377 / 11.931 | 14.893 / 14.527 | 3.94 → 1.69 | 48.31 / 31.23 / 0.04 → 35.11 / 28.48 / 4.34 | 58 / 55 | 1262 / 962 | 0.998656 (candidate D5) | 0 | 030 class measured with MMU | 0x2000 → 0x2011 | 12.889 → 14.537 (+12.8%) | 030 class measured with MMU | 030 class measured with MMU | CPU-gated off | 12.280 | — | CPU class measured with MMU | CPU class measured with MMU | CPU class measured with MMU | CPU class measured with MMU | CPU class measured with MMU | CPU/AGA-gated off | CPU/AGA-gated off | CPU class measured with MMU |
+| 040/25 NOMMU, AGA, 2M chip + 16M Z3 fast | C bundle / A2 stock | 12.476 / 11.507 | 13.549 / 13.553 | 3.34 → 2.13 | 47.56 / 36.26 / 0.06 → 37.97 / 28.47 / 5.70 | 116 / 59 | 1144 / 1157 | 0.998656 (candidate D5) | 0 | 12.392 → 13.277 (+7.1%) | 0x80008000; unchanged | Already enabled | 13.384 → 13.428 (+0.32%) | 13.393 → 13.437 (+0.33%) | CPU-gated off | 11.631 | 45.42 / 32.53 / 2.89 | 11.656 → 11.557 (-0.86%, fast compositor) | 11.631 → 11.557 (-0.64%) | 11.631 → 11.981 (+3.00%) | 11.631 → 11.806 (+1.50%) | 11.656 → 6.714 (−42.40%) | 12.031 → 11.407 (-5.19%) | 12.031 → 11.706 (-2.70%) | 11.981 → 8.711 (−27.29%) |
+| 060/50 NOMMU, AGA, 2M chip + 16M Z3 fast | C bundle / A2 stock | 12.786 / 12.206 | 14.296 / 14.003 | 3.16 → 1.95 | 44.63 / 33.43 / 0.03 → 36.13 / 28.11 / 4.68 | 64 / 62 | 1452 / 1568 | 0.998656 (candidate D5) | 0 | 12.585 → 13.909 (+10.5%) | 0xa0808000; unchanged | Already enabled | 13.953 → 13.959 (+0.04%) | 13.982 → 13.998 (+0.11%) | CPU-gated off | 12.006 | 53.03 / 29.37 / 4.41 | 12.056 → 11.981 (-0.62%, fast compositor) | 12.031 → 12.006 (-0.21%) | 12.031 → 12.206 (+1.45%) | 12.031 → 12.081 (+0.41%) | 12.081 → 7.089 (−41.32%) | 12.081 → 11.157 (-7.64%) | 12.056 → 11.706 (-2.90%) | 12.056 → 8.711 (−27.74%) |
 
 C2 is dropped under §0.3: every 2,000-field same-build CPU-class pair is below 2%; the live-slot cache passed its native mission-load/bank-change/exit twin (54,020 calls, 11 invalidations, zero mismatches), 437 host tests and the hook audit. Candidate developer SHA-256 `eeadc00619d796c3850f4d83f4bf51a87ea80019737935e5a78418ef17b502ea`; evidence `completion-c2-{a500,020,030,040,060}-{off,on}` and `completion-c2-twin-r2`. The normal bundle is unchanged.
 
@@ -70,6 +70,38 @@ against `7cfe314`; its host model remains. All retained-code builds, 521 host
 tests, 81 hook ranges and 136 VERIFY patch destinations pass. No direct-to-chip
 CPU raster option is shipped. The fast-memory back-buffer comparison and E4
 remain open; the normal verified mask is still `0x71fff` and D5 is postponed.
+
+### E3 Fast-RAM scene — dropped
+
+Drop under §0.3: all four same-build 2,000-field CPU-class pairs regress
+(020 −44.09%, 030 −29.01%, 040 −27.29%, 060 −27.74%; scoreboard).
+The native blitter scene remains in every build. No new RAM requirement or
+player option remains from this candidate.
+
+The discarded bit-19 backend redirected the planar scene at sim:2c552 through
+unchanged geometry/clipping into Fast RAM, with CPU equivalents of the blitter
+operations. It seeded the frame and scratch from chip and copied them back at
+sim:2c800, using MOVEM on 020/030 and alignment-gated MOVE16 on 040/060.
+It used the existing reserved workspace and left outside-scene blits native.
+
+Its native pixel twin reached flight after 1,557 operations and 37,368,000
+compared words without a mismatch. Per-launch counters cover rectangles,
+lines, area fills and merges; this is primitive pixel evidence, not all-view
+acceptance. Corruptions at bytes 0 and 47,999 were detected at longword offsets
+0 and 47,996. Evidence: `completion-e3-fast-frame-twin-r3` and
+`completion-e3-fast-frame-fault-{first,last}`. The actual C kernel's minterm,
+fill, line, solid, merge and shifted masked-copy host models remain in
+`tools/fast_blitter_model.c` and `tools/test_fast_blitter.py`.
+
+Measurement developer SHA-256:
+`0d0abc903b8bfd91671da408adfac0c331fe601ddfe86c8058b309982dc303f5`.
+Evidence: `completion-e3-fast-frame-{020,030,040,060}-{off,on}`. A small
+`completion-e3-fast-frame-candidate/candidate.patch` against `1926d53`
+preserves the complete source, generator and native checker. The candidate
+passed all three builds, 528 host tests, 117 hook ranges and 138 patch
+locations before timing. After removal, all three retained builds, 528 host
+tests, 81 hook ranges and 136 VERIFY patch destinations pass. The normal
+verified mask remains `0x71fff`; no discarded E3 runtime ships.
 
 ### E2 memory gate — higher minimum approved
 
@@ -2047,7 +2079,7 @@ These are unoptimized **mixed-flight** windows including cockpit events and the 
 right bank, not the final R-steady/R-event measurement matrix. They establish that the
 long-window instruments work on both memory/CPU configurations.
 
-| Configuration | Flight intervals | PAL fields | Observed swaps | Mean display rate | E2 solid-cache FPS off → on (dropped) |
+| Configuration | Flight intervals | PAL fields | Observed swaps | Mean display rate | E2 solid-cache FPS off → on (dropped) | E3 Fast-RAM scene FPS off → on (dropped) |
 | --- | ---: | ---: | ---: | ---: |
 | 68000, 512 KB chip + 1.5 MB slow, no fast | steps 1–120: 119 | 3,649 | 119 | 1.63 fps |
 | 14 MHz 68020, 2 MB chip + 8 MB fast, no slow | steps 1–250: 249 | 2,226 | 249 | 5.58 fps |
@@ -2781,8 +2813,8 @@ is drawn through `sim:30408`; request 2 is mirrored and request 0 is ordinary.
 
 | Machine / warm draw | OFF main cycles (calls) | W1a main cycles (calls) | W1a+W1b main cycles (calls) |
 | --- | ---: | ---: | ---: |
-| A500, mirrored | 1,940,090 (1) | 715,830 (2) | 31,845 (3) | — | CPU-gated off | CPU-gated off |
-| A500, ordinary | 1,930,434 (1) | 703,760 (2) | 10,713 (3) | — | CPU-gated off | CPU-gated off |
+| A500, mirrored | 1,940,090 (1) | 715,830 (2) | 31,845 (3) | — | CPU-gated off | CPU-gated off | CPU-gated off |
+| A500, ordinary | 1,930,434 (1) | 703,760 (2) | 10,713 (3) | — | CPU-gated off | CPU-gated off | CPU-gated off |
 | 68020, mirrored | 840,277 (2) | 689,456 (3) | 38,073 (4) |
 | 68020, ordinary | 824,497 (2) | 656,225 (3) | 12,876 (4) |
 
@@ -2831,7 +2863,7 @@ The boundary swap itself is not counted as a completed frame.
 
 | Machine / swaps | OFF fields / fps | W1a fields / fps | W1a+W1b fields / fps |
 | --- | ---: | ---: | ---: |
-| A500, 1–358 | 9,705 / 1.8363 | 9,536 / 1.8689 | 9,457 / 1.8845 | — | CPU-gated off | CPU-gated off |
+| A500, 1–358 | 9,705 / 1.8363 | 9,536 / 1.8689 | 9,457 / 1.8845 | — | CPU-gated off | CPU-gated off | CPU-gated off |
 | 68020, 1–516 | 4,321 / 5.9498 | 4,250 / 6.0492 | 4,102 / 6.2674 |
 | Cached 68030, 1–699 | 2,727 / 12.7776 | 2,813 / 12.3869 | 2,787 / 12.5025 |
 

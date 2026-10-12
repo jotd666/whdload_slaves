@@ -11,6 +11,11 @@ import struct
 def audit(hunks,spans,listing,domain="sim"):
     def label(offset):return f"{domain}:{offset+(40 if domain == 'sound' else 0):05x}"
     ins={};errors=[]
+    # These executable-hunk bytes are device-name literals, not branch code.
+    # Require exact bytes before excluding their misleading linear disassembly.
+    literals = ((0x2e7a6,b'input.device\0'),(0x2e7b4,b'trackdisk.device\0')) if domain == 'sim' else ()
+    data_spans = [(at,at+len(value)) for at,value in literals
+                  if hunks and hunks[0].data[at:at+len(value)] == value]
     for line in listing.splitlines():
         m=re.match(r'\s*([0-9a-f]+):\s+((?:[0-9a-f]{4}\s+)+)\s*(.*)',line)
         if m:ins[int(m[1],16)]=(len(m[2].split())*2,m[3].strip())
@@ -24,6 +29,7 @@ def audit(hunks,spans,listing,domain="sim"):
         if at!=hi:errors.append(f'{label(lo)}: hook ends inside an instruction')
     for at,(_,op) in ins.items():
         if any(lo<=at<hi for lo,hi,*_ in spans):continue
+        if any(lo<=at<hi for lo,hi in data_spans):continue
         if not re.match(r'(?:b[a-z]+(?:\.[swl])?|db[a-z]+|jsr|jmp)\s',op):continue
         for dest in re.findall(r'0x([0-9a-f]+)',op):
             dest=int(dest,16)
