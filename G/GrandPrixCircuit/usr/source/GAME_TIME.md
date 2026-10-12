@@ -5,8 +5,8 @@ Code addresses are hunk-0 offsets, not file offsets (add `$28` for the file).
 Data addresses below are signed decimal offsets from a4 unless prefixed `$`.
 This is a map of the original game and measurement instruments, not an implemented
 higher-rate simulation. The step cadence is fixed, but starts and car collisions couple
-gameplay to drawing; the original PAL lap clock runs slow. Phase 4 must settle gameplay
-policy before any conversion.
+gameplay to drawing; the original PAL lap clock runs slow. The Phase 4 review in
+`PERFORMANCE_PLAN.md` preserves these native behaviours under the performance-only scope.
 
 ## Clocks and ownership
 
@@ -73,7 +73,7 @@ when testing a smaller timestep.
 | AI speed `$a20e` | Lookup acceleration indexed by speed, difficulty and per-car personality; target `106/126+2*i`, deceleration capped at 16 | Scale acceleration/deceleration with carry, preserve target magnitudes. Do not accelerate personality sampling. |
 | AI lane `$a09a/$a12a` | Lateral `-14+2*i` approaches target `86+2*i` by `66+2*i` (usually 80); cooldown `-154+2*i` | Scale lateral integration; keep 30-step cooldown and lane decisions on native cadence. Avoidance can reduce a speed target by a quarter; repeated decisions change behaviour. |
 | AI sorting/gaps `$a3b8/$a43e/$a464` | Order `226+2*rank`, gaps `146+4*rank`, close-gap position correction | Derived ordering is not a rate. The one-segment correction and lane-choice events are discrete and must not be multiplied by new tick frequency. |
-| Lap/statistics `$1dfc/$1e32` | Tick count, speed sum, last-lap hold, maximum/best records | Retain original time and sampling units unless Phase 4 explicitly chooses real-time clock correction. Do not multiply averages or shorten display holds. |
+| Lap/statistics `$1dfc/$1e32` | Tick count, speed sum, last-lap hold, maximum/best records | Retain original time and sampling units, as decided in Phase 4. Do not multiply averages or shorten display holds. |
 | Renderer `$6a28/$99fa` | Gear-display timer `-29956 -= 3730`; overheat smoke phase `-842 += 3730`, reset to 48 at ≥96 | Already elapsed-field driven, with draw-boundary latency and truncation. Leave out of physics-rate scaling. |
 
 ## Drawing and modal exceptions
@@ -203,13 +203,15 @@ not include future scaling helpers, altered decision cadence or all driving situ
 The proposed periods 6/2 have room in this measured simulation budget. Period 1 is not
 ruled out by the sampled 020 simulation cost, but **50 rendered fps is not established**:
 the same populated-traffic traces publish at 5.0 / 13.02 fps between first/last swaps,
-and even Phase 2's faster 68030/25 baseline is 24.67 fps. No period or cache change has
-been made. Solo Phase 2 step means were only 4,426 / 2,756 cycles; treating those as a
-full-race simulation price would have badly understated AI work.
+and Phase 2's 68030/25 baseline is 24.67 fps. The Phase 4 review adds 030/50 and
+030/100 publication measurements (30.66 / 34.23 fps); neither demonstrates 50 fps.
+No period or cache change has been made. Solo Phase 2 step means were only
+4,426 / 2,756 cycles; treating those as a full-race simulation price would have badly understated AI work.
 
-Phase 4 must choose what “original gameplay” means for the slow PAL clock and
-CPU/drawing-dependent starts/collisions before Phase 6 changes their scheduling. Preserve
-native modal boundaries and rate/event distinctions above. A higher-rate human-handling,
+Phase 4 retains the slow PAL clock and native drawing-dependent start/collision logic;
+see `PERFORMANCE_PLAN.md` for the decision and acceptance boundary. Do not move these
+render-path events to the VBL merely to obtain cross-machine equality. Preserve native
+modal boundaries and rate/event distinctions above. A higher-rate human-handling,
 crash/spin, full-lap and pit acceptance matrix is still needed when there is an actual
 implementation to compare. The blinking horizon/buffer issue remains Phase 5.
 
@@ -249,5 +251,5 @@ Both vasm targets build successfully. `check_phase3.py` verifies all original im
 code, the existing JOTD patches and 139 jump stubs after restoring only the exact enabled
 VERIFY spans; a corrupted swap instruction fails its negative control. Normal/slow/traffic
 combinations and both CPUs pass. The eight-span boundary/branch audit passes. All 55
-pristine files retain their manifest hashes. No Phase 4 decision or Phase 5/6 patch is
-included in this commit.
+pristine files retain their manifest hashes. The Phase 4 policy changes documentation only;
+no Phase 5/6 patch is implemented.

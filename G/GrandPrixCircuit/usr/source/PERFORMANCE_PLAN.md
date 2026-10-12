@@ -16,6 +16,10 @@ tools, docs). The local harness lives in the worktree's ignored `tmp/dev/`.
   Every simulation change must be shown equivalent to the original (Phase 6 checks).
 - Simulation period: 6 fields on 68000/010 (the original), 2 on 68020+. Go to 1 on 68020+
   only if measurements show the game can actually reach 50 fps there and the step cost fits.
+- Preserve the original clock/statistics units: one lap tick per six active fields,
+  formatted as a tenth; do not correct the PAL clock's 5/6 real-time rate. Retain native
+  pause/pit/finish gates and the drawing-path start/collision logic. Their CPU/drawing
+  dependence is an original limitation, not permission to redesign gameplay (Phase 4).
 - Only v1.0 (the 94 708-byte executable) is supported; other versions keep JOTD's patches.
 
 Addresses below are hunk-0 offsets of `data/GrandPrixCircuit` (file offset = hunk + $28),
@@ -324,13 +328,117 @@ was made to the normal slave.
   `accepted-cost-{a500,a1200}/step-cost.json`; completed ticks in
   `accepted-ticks-{a500-0,a500-1,a1200}`. `REJECTED.txt` identifies superseded runs.
   Reproduction commands are in `tmp/dev/docs/development.md`; tools and original data stay
-  ignored. Stop here for the Phase 4 review; the blinking horizon remains a Phase 5 issue.
+  ignored. The blinking horizon remains a Phase 5 issue.
 
-### Phase 4 — Review point
-Present baseline numbers, the time model and the step price. Confirm periods 6/2 fit, and
-whether 50 fps (period 1) is reachable on any 68020+ configuration. If Phase 3 finds
-CPU-dependent player-visible behaviour, report it: fixing it would change gameplay, so it
-is out of scope unless decided otherwise.
+### Phase 4 — Review point (complete)
+
+#### Cadence and rendering budget
+
+Retain the planned period **6 on 68000/010 and 2 on 68020+**. This is a design decision
+supported by the measured native cost, not a claim that the unimplemented conversion has
+passed its runtime tests. The 68010 choice retains the native cadence; it was not separately
+benchmarked. Phase 2 fixed-window baselines are **5.6402 fps on A500, 14.5226 fps on expanded
+A1200/68EC020 and 24.6747 fps on 68030/25**, all with the original cache policy. They count
+publications at `$39e`; the shorter Phase 3 traffic windows are different workloads.
+
+| Native callback with nine opponent updates | A500 | Expanded A1200/68EC020 |
+|---|---:|---:|
+| Mean / sampled maximum stepped callback, CPU cycles | 32,305 / 33,898 | 16,921 / 17,285 |
+| Chosen period, PAL fields | 6 | 2 |
+| Projected callback share, mean / sampled maximum | 4.01% / 4.20% | 3.02% / 3.09% |
+| Projected callback share at period 1, mean / sampled maximum | 22.73% / 23.85% | 5.95% / 6.08% |
+
+The projections include light callbacks on intervening fields. The 020 period-2 projection
+adds about **1.96 percentage points** to its native period-6 callback share. Cost alone
+therefore supports 6/2. It does not predict a frame-rate gain or bound the complete IRQ:
+future helpers, interrupt dispatch, sound, blitter IRQs and untested gameplay events remain
+outside this sampled budget. Phase 6 must remeasure the actual converted code with traffic,
+human input and forced events before accepting it.
+
+Rendering dominates the baseline: the inclusive scene accounts for 76.76% / 81.69% on
+A500 / 020, with blitter polling at 13.37% / 30.49%. These overlapping profile categories
+must not be added. Cheap blitter work and the buffer-ownership fix remain the next phase;
+the simulation budget is not evidence that the renderer can produce 50 complete visible
+frames per second. The current swap marker also precedes the pending tearing fix.
+
+#### 50 fps decision
+
+**Period 1 is not selected.** No tested configuration demonstrates 50 rendered fps. Extra
+Phase 4 measurements keep the final Phase 3 VERIFY slave, period 6, original cache policy,
+2 MB chip / 4 MB fast RAM, 300-field warm-up and 1,000-field solo attract window:
+
+| A1200 / 68030 profile | Completed publication intervals / PAL fields | Publications/s, nominal PAL | CACR |
+|---|---:|---:|---:|
+| 50 MHz | 612 / 998 | 30.6613 | `$2000`, I/D enable bits clear |
+| 100 MHz | 684 / 999 | 34.2342 | `$2000`, I/D enable bits clear |
+
+These are read-only breakpoint counts at `$39e`, not inferred instruction timings. FS-UAE
+uses real CPU speed, frequency override, multiplier 0 and cycle-exact mode; no max-speed,
+instant-blitter, cache or game patch is used. The 50/100 MHz runs use one identical VERIFY
+binary; the older Phase 2 baseline used an earlier VERIFY layout, so it is context rather
+than a strict same-build scaling comparison. Neither the higher-frequency emulator profile
+nor these publication counts establish a real-hardware limit or tear-free visible output.
+The 030 backend has no validated instruction timing, so the step-budget decision uses the
+000/020 traces, not extrapolated 030 cycle counts.
+
+The measured answer is **50 fps not demonstrated**, not proof that no accelerator or future
+renderer could reach it. Keep period 2 for 020+; revisit period 1 only with demonstrated
+50 fps on the intended configuration, a correct buffer handoff, and the implemented
+simulation's measured cost and handling checks. Phase 4 does not introduce that option.
+
+#### Gameplay policy and acceptance boundary
+
+The existing **performance-only** decision settles the policy without expanding scope:
+
+- Keep lap/race tick units and statistics on the original six-active-field cadence. On
+  nominal PAL, 600 active fields give 100 ticks, displayed as 10 seconds over 12 real
+  seconds. Preserve pit elapsed-fields / 6 formatting, sample counts and display holds
+  consistently; do not make the clock run three times faster at period 2 or correct it
+  to wall time. Audio/CIA clocks keep their independent native timing.
+- Keep pause, pit, finish and crash/spin gates and event ordering. Pausing freezes active
+  fields and the step countdown without accumulating catch-up work. The Phase 3 inventory
+  distinguishes rates, per-distance impulses and discrete decisions; it is not a licence
+  to divide every constant by three. In particular, thermal cooling already uses the
+  period word and must not be scaled twice.
+- Retain the drawing-path start lights and car collisions. Phase 3's A500 traffic control
+  and slow-draw run both execute 120 steps in 720 fields, but release the start gate at
+  fields 315 and 321 and end at 67 and 66 lap ticks. Their named motion/condition/AI state
+  agrees over 66 matched race ticks. Thus fixed step cadence does **not** establish
+  drawing-independent gameplay. Collisions also mutate live speed, position, damage and
+  RNG from latched state; their cadence/input age changes with drawing.
+- Do not silently move start/collision logic into the VBL or change its thresholds to
+  obtain cross-machine equality. Faster drawing can change original event sampling even
+  when its code is untouched. Record those differences explicitly during later A/B work;
+  they cannot be hidden by blanket masks or called equivalent from an attract-only test.
+  If meeting the handling/event acceptance criteria requires changing native gameplay,
+  bring the concrete discrepancy back for a scope decision before shipping that change.
+
+Phase 6 therefore needs both same-configuration comparisons of the original and converted
+simulation and explicit start/contact/modal coverage. Match starting state, input schedule,
+native six-field decision boundaries and event phase; report all remaining differences and
+set justified tolerances before accepting handling results. The planned same-period
+cross-machine core comparison is a diagnostic, not an assertion that the native game is
+already identical across CPUs. Full laps, human steering, crashes/spins and pit service
+remain implementation acceptance tests, not completed Phase 4 evidence.
+
+#### Review evidence and stop point
+
+- The 100 MHz result repeats from a fresh boot: all 1,000 per-field publication counts,
+  metadata, complete `$E544` code and allocated `$9364` data agree at both boundaries.
+  The full 4 MB dumps differ in 156 bytes at each boundary, all below the game code;
+  every difference is retained in `review.json`. This is game-hunk/count reproducibility,
+  not whole-machine or screenshot equality. The 50 MHz figure is a single boot.
+- All three new captures pass the original-code, 13 inherited JOTD patches and 139-stub
+  checks after restoring exact VERIFY spans; corrupting the swap instruction is rejected.
+  The retained normal/VERIFY hashes still match the Phase 3 hashes above. All 55 pristine
+  files match their manifest. Only this plan and `GAME_TIME.md` change in the repository;
+  no rebuild was necessary for this documentation-only review.
+- Local evidence is `tmp/dev/tmp/phase4/{68030-50-1,68030-100-1,68030-100-2}` plus
+  `review.json`/`review.txt`. Captures retain the slave, metadata, debugger counts, boundary
+  RAM and emulator logs. `tmp/dev/tools/review_phase4.py` checks the repeat and computes
+  exact rates; reproduction commands are in `tmp/dev/docs/development.md`.
+- Phase 4 is complete under the existing performance-only scope. No Phase 5 patch has
+  started. The reported horizon blinking remains to be confirmed and repaired there.
 
 ### Phase 5 — Cheap wins (blitter under CUSTOM2, tearing fix always on)
 1. Blitter priority + blitter-IRQ suppression (`render.s` `render_interrupt_option`, as-is).
@@ -348,8 +456,8 @@ is out of scope unless decided otherwise.
    private fractional carry), Euler correction, force reference, `sim_relax` n-th roots.
    Apply them to each rate found in Phase 3 (player, 10 AI cars at `a2c4..`, clock).
 3. Keep discrete counters at the original 6-field cadence (TD2 rule: gears, timers, AI
-   decisions). Clock/statistics policy must be selected at Phase 4: making the original
-   slow PAL clock track real time changes gameplay.
+   decisions). Use the Phase 4 clock/statistics policy: retain native six-field units and
+   sampling; do not correct the slow PAL clock to real time.
 4. Interrupt-safe latch: guard `a6ea` (Disable or double-read) so a step never lands mid-copy.
 5. Crashes, spins, pit stops and penalties keep their original logic and timing; only their
    per-step rates are scaled, so they cost the same game time as in the original.
@@ -376,9 +484,10 @@ is out of scope unless decided otherwise.
 ## Open questions
 - Attract capture window and publication counter validated in Phase 2; cross-machine
   simulation/handling equivalence is not yet established.
-- Phase 3 locates lap/race ticks at -31424/-31416; they are not real-time PAL seconds.
-  Phase 4 must decide whether to preserve or correct that behaviour.
+- Clock policy resolved in Phase 4: preserve lap/race ticks at -31424/-31416 and the
+  original PAL rate; no wall-time correction.
 - Phase 3 maps pause/pit/terminal gates and drawing-dependent starts/collisions in
-  `GAME_TIME.md`. Their correction requires a gameplay decision; native event coverage
-  and human-handling equivalence remain Phase 6 requirements.
+  `GAME_TIME.md`. Phase 4 retains their native logic; any correction requires a separate
+  gameplay decision. Native event coverage and human-handling equivalence remain Phase 6
+  requirements; cross-CPU equality cannot be assumed from the fixed VBL cadence.
 - Overlay question resolved for the supplied v1: dormant manager, no stub rewrites (Phase 1 evidence above).
