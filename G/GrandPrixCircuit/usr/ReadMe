@@ -10,7 +10,7 @@
 
  This install applies to "Grand Prix Circuit" © 1989 D.S.I.
 
- This install requires WHDLoad 17 or newer to be in the path. It can be found in the
+ This install requires WHDLoad 17.2 or newer to be in the path. It can be found in the
  WHDLoad package.
 
  The installed program requires 0.5 MB ChipMem and 1.0 MB OtherMem.
@@ -39,19 +39,33 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 1.1-beta2 (12.10.26):
+ - music: preserve audio requests arriving during another channel's IRQ service
+ - music: read back INTREQR after acknowledgement for fast CPUs
+ - CUSTOM2=1: fractional steering contribution to horizon/scenery heading
+ - CUSTOM2=1, 68020+: fractional horizontal road/roadside projection
+ - original sprite sizes remain discrete; A500 retains the cheaper projection
+ - first beta tested on A1200/68040/40 MHz: good framerate and handling
+ - these follow-up corrections still require physical-hardware confirmation
+
  version 1.1-beta (12.10.26):
  - rebuilt with vasm and WHDLoad 20.0 KickEmu
  - version 17 slave header and configuration structure
  - size-checked PatchSeg path for the 94708-byte executable
  - original protection, CPU and music patches retained
  - separate VERIFY build with discovery metadata, RNG pin and joystick fixture
- - VERIFY-only CUSTOM3/CUSTOM5 require WHDLoad 17.2+ (tested with 20.0)
+ - normal and VERIFY builds require WHDLoad 17.2+
  - vasm Makefile
  - v1 screen-buffer handoff fix, including with CUSTOM2=0
  - CUSTOM2=1: Enhanced framerate (blitter priority and unused blitter IRQ off)
  - CUSTOM2=1: 2-field simulation on 68020+, native 6 fields on 68000/010
  - original clock/statistics units and 6-field decisions retained
  - scaled physics rates and protected rendering snapshot
+ - CUSTOM2=1: fractional road, steering and opponent-car rendering
+ - projection tables restored between races
+ - game icon enables CUSTOM2=1; set CUSTOM2=0 for original simulation/rendering
+ - display handoff fix remains active with CUSTOM2=0
+ - beta: wider circuit play-testing still pending
  - new fixes/options apply only to the 94708-byte v1 executable
 
  version 1.0 (24.03.08) done by JOTD:

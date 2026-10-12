@@ -803,13 +803,129 @@ subtracted, and this is not an FPS improvement claim. All pass a 3.0% gate:
 
 This establishes the stated emulator coverage, not all-circuit or hardware
 handling equivalence. The 030 backend supplies state/cadence observations but no
-CPU instruction trace; no 030 cycle-cost claim is made. Phase 8 has not started.
+CPU instruction trace; no 030 cycle-cost claim is made.
 
 ### Phase 8 — Hardware, release, upstream
-1. Real/MMU runs (68040 with MMU, JIT off), oldest and newest WHDLoad.
+1. Real/MMU runs (68040 with MMU, JIT off). The owner waived further WHDLoad-version testing during hardware acceptance.
 2. ReadMe history, `DECL_VERSION`, icon tooltype `CUSTOM2=1`, slv_config entry.
 3. Adapt `package_release.py`; focused commits on `grandprixcircuit`; PR via Vesuri.
 4. Generic lessons (interrupt-driven simulation, LoadView swap marker) → AmigaXDev docs.
+
+Release candidate: **1.1-beta2**. Physical testing is assigned to the owner on an
+A1200 / 68040 at 40 MHz / MMU / 32 MB / WHDLoad 19.x. The owner reports good
+framerate and correct-feeling gameplay. The same hardware test found intermittent
+missing intro-music notes, stepped horizon motion, and jumpy roadside placement.
+The beta2 follow-ups below address those findings; physical confirmation of the
+new candidate is pending. This is not unconditional hardware acceptance. Wider circuit, car and traffic coverage remains unestablished.
+
+Further WHDLoad-version testing was stopped at the owner's request. Completed normal
+runs cover A500 17.2 C2=0/1 and 68040/MMU 20.0 C2=1 plus 17.2 C2=0. The in-progress
+17.2 MMU C2=1 run was cancelled and is not acceptance evidence. The 20.0 MMU run
+passed two races, all 102 canonical table-word restorations, exact code/stub/table
+audits and positive TC=8000 translation evidence with JIT off. There is no timing
+claim from the MMU run.
+
+Release preparation:
+- `DECL_VERSION` is `1.1-beta2`; `slv_config` exposes only the normal C2 option.
+  The ReadMe now includes fractional presentation and the between-race table reset,
+  documents the off path, and preserves JOTD's original history.
+- Corrected the normal runtime minimum to **WHDLoad 17.2**: `PL_IFC2` uses the
+  conditional patch commands introduced in 17.2. The slave interface remains 17.
+  The earlier Phase 1 minimum statement applied before normal C2 patches existed.
+- The installer icon gains `CUSTOM2=1`. It previously had no tooltype table;
+  only that table and its pointer change, with both planar images and the trailing
+  colour-icon chunk byte-identical. The installer already supplies Slave/PreLoad
+  and the WHDLoad default tool. The preinstalled game icon gains the same option;
+  its other tooltypes, imagery and enclosing drawer icon are preserved.
+- Adapted TD2's packager as local `tmp/dev/tools/package_release.py`. Installer and
+  preinstalled inputs remain immutable; outputs are local in `tmp/dev/dist/`.
+  The installer has 21 files (the obsolete `.asm` source becomes authoritative `.s`,
+  with all modules, both build recipes and design notes); the preinstalled archive
+  retains exactly 55 files. Only the declared slave/ReadMe/icon/source members
+  change. LH5 level-1 archives pass extraction, complete member/hash comparisons,
+  and byte-exact normal rebuilding from extracted source; ordinary VERIFY also
+  builds without the private tape. The Makefile uses the documented external
+  WHDLoad SDK and NDK; this is not a self-contained SDK distribution.
+- The first hardware-tested candidate was the Phase 7 normal build
+  (`e0765e5035febd4a9a928b440a966d2742c987528b0d7221ec256390f7aeec81`). Beta2
+  includes the corrections below. No VERIFY configuration or marker appears in
+  the normal build. All 55 pristine input hashes still match.
+- Shared lessons are in AmigaXDev `docs/playbooks/simulation-and-presentation.md`,
+  commit `39978a5`: interrupt-owned simulation, protected short snapshots,
+  LoadView publication versus DMA retirement, and projection-table lifecycle.
+
+Hardware-report follow-ups in beta2:
+- **Music:** all three song files contain the same driver. At song `$8c8`, the
+  original branch acknowledged a channel even when its bit was absent from the
+  entry INTREQR snapshot. Another channel can request service during the existing
+  DMA wait, then lose that request at this branch. The branch now returns without
+  acknowledging an unsampled request. The `$926` acknowledgement hook also reads
+  INTREQR back after writing INTREQ, before returning on a fast CPU. Existing DMA
+  waits remain unchanged. An exhaustive 1,024-case four-channel mask model exposes
+  lost unsampled requests in the original and preserves them with the correction.
+  This establishes the bug, not that it is the sole cause of the reported notes.
+- **Horizon/scenery heading:** Phase 7 retained a segment-stepped steering input.
+  Native yaw gains half the effective steering plus curve at a crossing, while
+  accumulated heading gains the same curve. The curve still cancels; beta2 carries
+  the held steering contribution through the partial segment. It copies one extra
+  word inside the existing protected latch, respects the native outward-yaw clamp,
+  and refreshes the heading even on a projection-table cache hit. It changes only
+  presentation, without moving the simulation or adding a frame of latency.
+- **Roadside placement:** the original horizontal perspective, road-width and
+  shoulder lookups used the already-rounded screen Y. Beta2 interpolates those
+  three canonical coefficients at Q8 depth, sharing the result between road edges
+  and roadside objects. Mirror interpolation retains the native lookups for the
+  unused far entries visited by its shared selection list. Sprite size selection
+  and clipping remain discrete. The new hooks apply with C2 on 68020+; an initial
+  A500 prototype consumed 6.12% of total CPU cycles in all rendering helpers, above
+  the Phase 7 3% gate, so the A500 retains its cheaper horizontal projection.
+  The lightweight fractional heading correction remains enabled there.
+- The independent coefficient model checks 43,176 fractional vectors and endpoints.
+  For a centred nearby roadside object, one-Q8-unit camera increments produce a
+  maximum two-pixel horizontal shoulder step versus ten pixels with early rounding.
+  This is a coefficient example, not a displayed-frame or all-scene smoothness claim.
+
+Beta2 emulator acceptance is complete. Evidence is retained under
+`tmp/dev/tmp/phase8/beta2-*` and `normal-*-beta2`; earlier `followup-*` captures are
+development evidence, not the release acceptance set.
+- All **81 guest arithmetic assertions** pass. The normal 020 projection path has
+  an exact five-plane, 40,000-byte zero-fraction bitmap oracle with a changed-byte
+  negative control, plus half-fraction and moving-scene coefficient/heading audits.
+- Five rendering traces cover **236 fields**, with zero displayed-buffer writes.
+  The moving 000/020 traces contain **48 protected copies**, with no foreign PC.
+  Exact code/gating audits preserve the inherited patches and all 139 overlay stubs;
+  all **72 hook spans** and their direct branch entries pass the static audit.
+- A **720-field / 360-step** same-period 020 comparison against the accepted Phase 7
+  build has no named gameplay-state differences. This is the retained solo window,
+  not an all-circuit or traffic handling claim.
+- A500 rendering helpers cost **2.765%** of total CPU cycles in the 100-field human
+  driving window, within the 3% gate. The analogous 020 window costs **3.679%**.
+  These include replacement native work and VERIFY overhead, and are not FPS gains.
+- Normal A500 and 68040/MMU builds pass intro, race, native race exit, and second
+  race. Both restore all **102 canonical table words**, invalidate the fraction,
+  and render 40 further swaps. The 040 log confirms **TC=8000 enabled=1**, with
+  CPU/MMU 68040 and JIT off. Code/table/music audits pass on both normal builds.
+  These runs use the existing WHDLoad 20.0 harness runtime; no version matrix was
+  resumed. Pause/Workbench return remain static review, not newly executed tests.
+- A 100-field normal A500 intro trace exercises **157 serviced acknowledgements**
+  and **471 unsampled-channel returns without acknowledgement**. Observed Paula
+  period writes range from 124 to 719, within the existing DMA wait's timing range.
+  This observation is limited to that captured music passage; physical missing-note
+  resolution remains unconfirmed.
+- Normal SHA-256:
+  `1825971543c888a99a1dec5abd0959b94719bf5ef3bca6c3cdb4c628e9aefb3c`.
+  Tape VERIFY SHA-256:
+  `3406083eb45cafc49942476d1d94fbcf68efd7ea22081d77e855dd41faa5b17a`.
+
+`beta2-render-audit.json` and `beta2-normal-audit.json` bind these checks to their
+retained binaries; `music-trace.json` is inside the normal A500 capture.
+`runtime-manifest.json` pins the retained WHDLoad inputs; `package/report.json`
+records the full archive manifests. Both installer and private preinstalled beta2
+archives are rebuilt locally; the installer source rebuilds the identical normal
+slave and ordinary VERIFY without the private tape. All 55 input hashes match.
+No further version matrix is required. The contribution remains a beta/draft
+pending the owner's focused recheck of intro notes, horizon motion and roadside
+placement on the same A1200/WHDLoad 19 setup.
 
 ## Open questions
 - Attract capture window/publication counter are validated in Phase 2. Phase 6

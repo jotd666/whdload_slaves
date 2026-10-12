@@ -60,6 +60,7 @@ BOOTDOS
 CACHE
 CBDOSLOADSEG
 
+; Interface 17; the normal PL_IFC2 patch list requires WHDLoad 17.2+.
 slv_Version	= 17
 slv_Flags	= WHDLF_NoError|WHDLF_Examine
 slv_keyexit	= $5D	; num '*'
@@ -74,7 +75,7 @@ slv_keyexit	= $5D	; num '*'
 
 
 DECL_VERSION:MACRO
-	dc.b	"1.1-beta"
+	dc.b	"1.1-beta2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -367,6 +368,21 @@ pl_main_v1
 	PL_PS $91c8,render_mirror_step ; PERF_RANGE h0:91C8 6 bit=C2
 	PL_ENDIF
 	PL_NEXT pl_section0
+
+; Extra horizontal precision is installed with the 020+ simulation hooks.
+; The measured 68000 projection cost would exceed the A500 helper budget.
+pl_render_precision
+	PL_START
+	PL_PSS $9b1c,render_main_projection,2 ; PERF_RANGE h0:9B1C 8 bit=C2_020
+	PL_PSS $9b34,render_projection_width,2 ; PERF_RANGE h0:9B34 8 bit=C2_020
+	PL_PSS $9b48,render_projection_left,2 ; PERF_RANGE h0:9B48 8 bit=C2_020
+	PL_PSS $9b64,render_projection_right,2 ; PERF_RANGE h0:9B64 8 bit=C2_020
+	PL_PSS $922a,render_mirror_projection,2 ; PERF_RANGE h0:922A 8 bit=C2_020
+	PL_PSS $9242,render_projection_width,2 ; PERF_RANGE h0:9242 8 bit=C2_020
+	PL_PSS $9256,render_projection_left,2 ; PERF_RANGE h0:9256 8 bit=C2_020
+	PL_PSS $9272,render_projection_right,2 ; PERF_RANGE h0:9272 8 bit=C2_020
+	PL_END
+
 pl_main_v1_sr
 	PL_START
 ; Route every v1 CPU through the display fix and optional fixtures.
@@ -396,6 +412,11 @@ pl_song1
 	PL_L	$A44,$DFF09C
 	PL_L	$A74,$DFF09C
 
+	; A request arriving after the entry snapshot belongs to the next IRQ.
+	; The original BEQ cleared it without servicing that channel.
+	PL_W $8c8,$6762          ; BEQ $92c (RTS), instead of $926 (ack)
+	PL_PS $926,music_ack
+
 	; wait after write to dmacon (music) to avoid sound problems
 
 	PL_PS	$1E8,move_d2_dmacon
@@ -411,6 +432,11 @@ pl_song1
 	PL_PS	$502,move_f_dmacon
 	PL_PS	$A78,move_f_dmacon
 	PL_END
+
+music_ack
+	move.w d3,_custom+intreq
+	tst.w _custom+intreqr    ; complete the custom write before returning on 040
+	rts
 
 move_f_dmacon
 	move.w	#$F,_custom+dmacon

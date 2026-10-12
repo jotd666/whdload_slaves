@@ -44,6 +44,7 @@ render_pose_latch:
     move.w -29516(a4),(a0)+
     move.w -29926(a4),(a0)+
     move.w -29928(a4),(a0)+
+    move.w -29518(a4),(a0)+ ; held native effective steering for this segment
     rts
 
 ; Called after Enable: all table work is outside the interrupt exclusion.
@@ -51,6 +52,7 @@ render_subunit:
     lea render_fraction(pc),a3
     moveq #0,d7
     move.b -30005(a4),d7
+    bsr render_heading_fraction
     cmp.w (a3),d7
     bne.b .changed
     tst.w render_tables_ready-render_fraction(a3)
@@ -188,10 +190,118 @@ render_mirror_step:
 render_horizon_pose:
     add.w render_pose+4(pc),d0
     sub.w render_pose+2(pc),d0
+    sub.w render_heading(pc),d0
     rts
 render_scenery_pose:
     move.w render_pose+4(pc),d4
     sub.w render_pose+2(pc),d4
+    sub.w render_heading(pc),d4
+    rts
+
+; Native $7a72..$7a7a adds half the effective steering and the curve
+; to yaw; $79a0 adds the same curve to cumulative heading. The curve cancels
+; in panorama heading. Carry only that steering contribution through the
+; partial segment, using the same +/-8192 outward-steering clamp as native.
+; d7=F; run even when the table fraction cache hits (pose may have changed).
+render_heading_fraction:
+    move.w render_pose+12(pc),d0
+    move.w render_pose+2(pc),d1
+    move.w d1,d2
+    bpl.b .positive
+    neg.w d1
+.positive
+    cmp.w #8192,d1
+    blt.b .scale
+    eor.w d0,d2
+    bmi.b .scale
+    moveq #0,d0
+.scale
+    asr.w #1,d0
+    muls.w d7,d0
+    asr.l #8,d0
+    lea render_heading(pc),a0
+    move.w d0,(a0)
+    rts
+
+; Horizontal projection previously discarded the fractional screen Y before
+; selecting perspective, road width and shoulder width. A one-row step can move
+; a nearby shoulder by ten pixels. Interpolate all three canonical lookup
+; values at segment depth instead, shared by road edges and roadside sprites.
+; The existing distinct-row selector, clipping and sprite sizes stay native.
+render_main_projection:
+    movem.l d1-d2/d4/d7/a1-a2,-(sp)
+    lea render_main_y(pc),a1
+    move.w (a1,d3.w),d1
+    move.w d1,d2
+    cmp.w #2,d3
+    beq.b .endpoint
+    cmp.w #80,d3
+    beq.b .endpoint
+    move.w -2(a1,d3.w),d2
+.endpoint
+    lea -612(a4),a0
+    lea -772(a4),a1
+    lea -692(a4),a2
+    bra.b render_projection
+render_mirror_projection:
+    movem.l d1-d2/d4/d7/a1-a2,-(sp)
+    ; The native shared selection list also visits unused indices beyond
+    ; the 21-entry mirror table. Preserve those lookups without reading past
+    ; our canonical copy; only mirror indices 2..19 are interpolated.
+    move.w d5,d1
+    lsr.w #1,d1
+    move.w d1,d2
+    cmp.w #40,d3
+    bcc.b .endpoint
+    lea render_mirror_y(pc),a1
+    move.w (a1,d3.w),d1
+    move.w d1,d2
+    cmp.w #2,d3
+    beq.b .endpoint
+    move.w 2(a1,d3.w),d2
+.endpoint
+    lea -972(a4),a0
+    lea -1198(a4),a1
+    lea -1044(a4),a2
+render_projection:
+    add.w d1,d1
+    add.w d2,d2
+    move.w render_fraction(pc),d7
+    bsr render_project_value
+    move.w d0,-(sp)
+    move.l a0,-(sp)
+    move.l a1,a0
+    bsr render_project_value
+    lea render_project_width(pc),a1
+    move.w d0,(a1)+
+    move.l a2,a0
+    bsr render_project_value
+    move.w d0,(a1)
+    move.l (sp)+,a0
+    move.w (sp)+,d0
+    movem.l (sp)+,d1-d2/d4/d7/a1-a2
+    rts
+
+; a0=canonical row lookup, d1/d2=neighbour row byte indices, d7=F.
+; Signed floor division handles decreasing mirror coefficients as well.
+render_project_value:
+    move.w (a0,d1.w),d0
+    move.w (a0,d2.w),d4
+    sub.w d0,d4
+    beq.b .done
+    muls.w d7,d4
+    asr.l #8,d4
+    add.w d4,d0
+.done
+    rts
+render_projection_width:
+    move.w render_project_width(pc),d6
+    rts
+render_projection_left:
+    sub.w render_project_margin(pc),d4
+    rts
+render_projection_right:
+    add.w render_project_margin(pc),d0
     rts
 
 ; Preserve the full relative Q8 depth before the native sprite/bucket selector
@@ -333,7 +443,10 @@ render_depth: dc.w 0
 
 render_fraction: dc.w 0
 render_tables_ready: dc.w 0
-render_pose: ds.w 6
+render_pose: ds.w 7
+render_heading: dc.w 0
+render_project_width: dc.w 0
+render_project_margin: dc.w 0
 render_main_y: ds.w 41
 render_mirror_y: ds.w 21
 render_lengths: ds.w 40

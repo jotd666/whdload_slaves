@@ -210,7 +210,7 @@ pl_simulation:
     PL_PSS $a194,sim_ai_right,10   ; PERF_RANGE h0:A194 16 bit=C2_020
     PL_PSS $a32e,sim_ai_order,6    ; PERF_RANGE h0:A32E 12 bit=C2_020
     PL_PS $a37c,sim_collision_phase ; PERF_RANGE h0:A37C 6 bit=C2_020
-    PL_END
+    PL_NEXT pl_render_precision
 
 sim_start:
     ; $7482 is also the pit-return screen reset. Its native countdown keeps

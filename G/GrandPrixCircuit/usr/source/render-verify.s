@@ -148,6 +148,44 @@ verify_render_units:
     ext.l d0
     moveq #94,d1
     bsr verify_render_equal
+    ; Fractional heading: both signs, zero fraction, wrap and outward clamp.
+    lea verify_heading_vectors(pc),a2
+    moveq #9,d6
+.heading
+    lea render_pose(pc),a0
+    move.w (a2)+,2(a0)
+    move.w (a2)+,12(a0)
+    move.w (a2)+,d7
+    bsr render_heading_fraction
+    move.w render_heading(pc),d0
+    ext.l d0
+    move.w (a2)+,d1
+    ext.l d1
+    bsr verify_render_equal
+    dbf d6,.heading
+    ; Canonical coefficients, not integer row indices: positive, negative,
+    ; zero and maximum fractions. Each output lies between its neighbours.
+    lea verify_projection_vectors(pc),a2
+    moveq #7,d6
+.projection
+    move.l a2,a0
+    moveq #0,d1
+    moveq #2,d2
+    move.w 4(a2),d7
+    bsr render_project_value
+    ext.l d0
+    move.w 6(a2),d1
+    ext.l d1
+    bsr verify_render_equal
+    addq.l #8,a2
+    dbf d6,.projection
+    ; Restore scratch state before the first real protected snapshot.
+    lea render_pose(pc),a0
+    moveq #6,d0
+.clear_pose
+    clr.w (a0)+
+    dbf d0,.clear_pose
+    clr.w (a0)              ; render_heading follows render_pose
     move.l a4,a1
     suba.l #32766,a1
     move.l #65536,d0
@@ -158,6 +196,17 @@ verify_render_units:
     move.l (sp)+,(a0)
     movem.l (sp)+,d0-a6
     rts
+verify_heading_vectors:
+    ; yaw, effective steering, F, expected correction
+    dc.w 0,1024,0,0, 0,1024,128,256, 0,-1024,128,-256
+    dc.w 0,1023,255,509, 0,-1023,255,-510
+    dc.w 8192,1024,128,0, -8192,-1024,128,0
+    dc.w 8192,-1024,128,-256, -8192,1024,128,256
+    dc.w -32768,-1024,128,-256 ; native signed-word abs/clamp semantics
+verify_projection_vectors:
+    dc.w 100,300,0,100, 100,300,128,200, 100,300,255,299
+    dc.w 300,100,0,300, 300,100,128,200, 300,100,255,100
+    dc.w 17,17,255,17, 100,99,1,99
 verify_render_angles:
     dc.w 0,0,128,1,255,1,256,2,-128,-1,-256,-2,-257,-3,22528,176
 
@@ -171,4 +220,4 @@ verify_render_equal:
     movem.l (sp)+,a0-a1
     bra verify_sim_equal
 verify_render_next: dc.l 0
-verify_render_values: ds.l 24
+verify_render_values: ds.l 60
