@@ -324,8 +324,12 @@ Tools stay in ignored `tmp/dev/tools`.
      frames for the previous reference solver, but does not pass the original FPS
      gate. Grounded road-to-grass integration now adds162 exact live returns
      across A500,68020 and slowed A500, with throttle decay consuming only each
-     segment's elapsed fields. Native eight-field throttle rounding still differs
-     from fractional small-step retention. General modes, remaining transition
+     segment's elapsed fields. Grounded skid/slope integration adds269 exact
+     returns before the first airborne input, including131 skid returns and three
+     exits. Those checks separate movement from subsequent terrain correction;
+     all three captures retain explicitly unverified flight portions. Native
+     eight-field throttle rounding still differs from fractional small-step
+     retention. General modes, remaining transition
      precision, complete handling and acceptance remain open; it is not the
      accepted replacement solver.
    - Check the integrator: with Euler updates, many small steps do not give the same

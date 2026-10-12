@@ -43,8 +43,9 @@ PH_FRAMES equ 56
 PH_VECTOR equ 60
 PH_BRAKE equ 72
 PH_REMAIN equ 74
+PH_SKID equ 76
  dc.b 'HDPHASE1'
-_phase_state: dcb.b 76,0
+_phase_state: dcb.b 78,0
 _phase_reset:
  move.l a0,-(a7)
  lea _phase_state(pc),a0
@@ -64,18 +65,13 @@ _phase_frame:
  beq .fallback
  tst.b -$69fa(a4)
  bne .fallback
- tst.b -$50cf(a4)
- bne .fallback
  ; Native turning-force input is evaluated by every engine segment.
  cmpi.b #15,-$66f0(a4)
  bne .fallback
  tst.w -$66f2(a4)
  bne .fallback
  ; Road/grass drag is native; throttle decay consumes PH_DT fields.
- tst.w -$66b8(a4)
- bne .fallback
- tst.w -$66ba(a4)
- bne .fallback
+ ; Ground slope is consumed by native force and projection arithmetic.
  tst.b -$66c2(a4)
  beq .fallback
  cmpi.w #1,-$66ca(a4)
@@ -91,6 +87,9 @@ _phase_frame:
  moveq #0,d0
  move.b -$66ef(a4),d0
  move.w d0,PH_BRAKE(a6)
+ moveq #0,d0
+ move.b -$50cf(a4),d0
+ move.w d0,PH_SKID(a6)
  tst.w PH_VALID(a6)
  beq.s .initialize
  move.w -$66d8(a4),d0
@@ -102,14 +101,8 @@ _phase_frame:
  move.w -$66ca(a4),d0
  cmp.w PH_LAST_G(a6),d0
  bne.s .initialize
- lea -$6704(a4),a0
- lea PH_LAST_POS(a6),a1
- moveq #2,d1
-.pose:
- move.l (a0)+,d0
- cmp.l (a1)+,d0
- bne.s .initialize
- dbf d1,.pose
+ ; Terrain translations do not reset the scalar phase. Absolute resets
+ ; invalidate it through the existing motion-reset hooks.
  bra.s .ready
 .initialize:
  bsr _phase_initialize
@@ -142,9 +135,7 @@ _phase_frame:
  move.w #1,PH_ACTIVE(a6)
  bsr _phase_engine_call
  clr.w PH_ACTIVE(a6)
- move.l PH_FORECAST(a6),d0
- lea PH_VECTOR(a6),a0
- bsr _phase_project
+ bsr _phase_movement_vector
  bsr _phase_add_position
  cmpi.w #8,PH_PHASE(a6)
  bne.s .continued
@@ -310,6 +301,27 @@ _phase_gear:
  move.l _phase_manual_ptr(pc),(a7)
 .done:
  rts
+ ; Skids retain the native held movement vector even while scalar speed changes.
+_phase_movement_vector:
+ tst.w PH_SKID(a6)
+ bne.s .held
+ move.l PH_FORECAST(a6),d0
+ lea PH_VECTOR(a6),a0
+ bra _phase_project
+.held:
+ lea -$66e2(a4),a0
+ lea _projection_state(pc),a1
+ lea PH_VECTOR(a6),a2
+ moveq #2,d1
+.axis:
+ moveq #0,d0
+ move.w (a0)+,d0
+ swap d0
+ add.l (a1)+,d0
+ move.l d0,(a2)+
+ dbf d1,.axis
+ rts
+
 _phase_add_position:
  lea PH_VECTOR(a6),a0
  lea _projection_state+24(pc),a1
@@ -361,6 +373,9 @@ _phase_published:
 .save:
  move.l (a0)+,(a1)+
  dbf d0,.save
+ ; Preserve the entry skid vector through native spin/exit housekeeping.
+ tst.w PH_SKID(a6)
+ bne.s .vector_done
  move.l PH_CURRENT_V(a6),d0
  lea PH_VECTOR(a6),a0
  bsr _phase_project
@@ -376,6 +391,7 @@ _phase_published:
  sub.l d0,d1
  move.l d1,(a2)+
  dbf d4,.fractions
+.vector_done:
  lea _drivetrain_state(pc),a0
  clr.w 6(a0)
  move.w (a7)+,d0

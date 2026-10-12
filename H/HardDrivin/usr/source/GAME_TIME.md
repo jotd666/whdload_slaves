@@ -3516,7 +3516,7 @@ Pre-shift RPM is sampled read-only at `$0b904` during actual pristine68000 engin
 execution. RPM is integrated before automatic shift decisions, and native gear
 thresholds/conversions are applied at phase completion. This avoids blending
 RPM values from different gears across a phase. The runtime experiment falls back to the existing reference path for manual
-controls, skid, airborne/partial contact and other ineligible states. The native
+controls, airborne/partial contact and other ineligible states. The native
 turning-force flag is supported within the grounded automatic path.
 The tests do not approve a new gear-event policy for the complete game.
 
@@ -3659,11 +3659,49 @@ comes from the retained native truncation rule; it is recorded in
 and the acceptance tolerance remains unresolved. No FPS rerun or original-game
 performance acceptance is claimed for the off-road extension.
 
+Grounded skids and slopes now also remain in the phase path. At frame entry,
+`PH_SKID` records whether native movement must retain the preceding projected
+XYZ vector. Every engine segment still updates scalar speed/RPM with native skid
+and grade forces, but skid displacement uses that held vector plus its existing
+fractional correction. The native position routine runs once with the restored
+outer interval, so spin decay and skid exit are not repeated for engine segments.
+The published projection stays held through the exit frame, matching native order.
+
+Ordinary terrain translations no longer restart the scalar phase merely because
+XYZ changed after the position routine. Explicit motion-reset hooks still clear
+phase validity; changed velocity/RPM/gear words still trigger scalar reinitialization.
+This avoids losing fractional scalar state when a ground-height adjustment or
+slope changes the pose. The native grade-force input and Q14 projection consume
+the current terrain orientation.
+
+The skid captures record an additional boundary at `$0cdbe`, after the engine and
+position routines but before later terrain/contact work. `analyse_phase_skid.py`
+checks continuous velocity/RPM/gear phase state and per-frame fractional XYZ
+movement starting from the actual terrain-corrected entry pose. It independently
+models native forces, held skid vectors, spin retention and discrete skid-exit
+throttle reduction. It does not independently validate the terrain correction,
+steering-angle law or complete world trajectory.
+
+| Capture | Grounded returns | Skid returns | Sloped returns | Skid exits | First unverified airborne input |
+|---|---:|---:|---:|---:|---:|
+| `s4-phase-skid-slope-a500` |45|21|16|1|field561|
+| `s4-phase-skid-slope-020` |187|92|70|1|field574|
+| `s4-phase-skid-slope-slow` |37|18|13|1|field595|
+
+All269 returns in these explicitly bounded prefixes match. Their engine-segment
+counts107/235/104 consume548/571/580 fields respectively; frame intervals span
+8–16,2–4 and12–19 fields. The remaining airborne portions of all three captures
+are unverified, and each report records `complete_capture_validated=false`.
+Native-step `s4-phase-skid-native` matches all108 reference car states;
+CUSTOM1-off passes159 ranges, the branch audit passes137 ranges, and the normal
+slave remains byte-identical to `s2-final-normal`. No original-game FPS or
+full-trajectory acceptance is claimed for this extension.
+
 General handling and mode transitions remain open. The fallback solver retains
 only eighth-unit scalar companions, while phase state can contain finer fractions;
 transitions other than the supported turning-force case still need resolution.
 Native force evaluation uses the phase anchor and automatic shifts occur at phase
-completion. Manual, skid, uneven-terrain/contact and airborne integration, reset
+completion. Manual, complete terrain/contact and airborne integration, reset
 coverage, sound, equal-time full trajectories, the unchanged-clock dependency,
 original-game performance acceptance and human full laps remain unfinished.
 Neither the acceptance requirements nor the normal release behavior has changed.
