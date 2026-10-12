@@ -71,7 +71,7 @@ tests, 81 hook ranges and 136 VERIFY patch destinations pass. No direct-to-chip
 CPU raster option is shipped. The fast-memory back-buffer comparison and E4
 remain open; the normal verified mask is still `0x71fff` and D5 is postponed.
 
-### E4 publication — target missed; direction needed
+### E4 publication — target missed; accepted for release
 
 `publication_cadence.cadence` checked every deadline in the existing 2,000-field
 E3 off captures (same developer binary, W6 selected, native blitter scene).
@@ -88,11 +88,12 @@ In the 060 capture, the scene averages 48.30 ms, cockpit 30.41 ms and publicatio
 therefore the optional third buffer is dropped. No publication code change is
 justified by this evidence.
 
-E4's required 060 every-field result and phase E's performance targets are not
-met. Checkpoint E is not complete, and no new six-machine release result is
-claimed. All prescribed renderer candidates have now been tried; §0/§1 require
-user direction before either extending renderer work or accepting a lower
-release target. D5 remains separately postponed, with W6 outside the normal mask.
+The original every-field and FPS targets were not met. On 2026-10-12 the user
+accepted measured performance and requested completion of release work.
+Checkpoint E is closed on that basis, without a 50 FPS claim. The six-machine
+normal-build refresh remains F3. D5 stays postponed; W6 is outside the normal mask.
+The normal release selector is On=0 (default), Off=1; historical normal-build
+captures before F1 used the opposite mapping. Developer/VERIFY masks are unchanged.
 
 ### E3 Fast-RAM scene — dropped
 

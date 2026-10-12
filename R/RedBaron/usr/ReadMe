@@ -50,19 +50,34 @@
  Current maximum-detail measurements show less than 2% difference with MMU,
  below the resolution of the FPS window; no speedup is claimed for the tooltype.
 
- Development rendering improvements:
- - Faster rendering (CUSTOM2=1) selects the verified dashboard cache, geometry,
+ Rendering improvements:
+ - Faster rendering is On by default (normal build: CUSTOM2=0). It selects the verified dashboard cache, geometry,
    solid-fill, persistent-gauge and sound optimizations, with CPU-specific choices.
  - Persistent gauge reuse is enabled only on the measured 020/040 classes.
  - Flight swaps use the original safe beam wait and a two-field cap (about
    25 FPS on PAL). This does not make world speed frame-rate independent.
- - The existing default remains off; supplied icon tooltypes are unchanged.
+ - Select Off in the splash window, or CUSTOM2=1, to disable it.
+   This reverses the former development normal-build 0/1 meaning.
+   Supplied icon tooltypes are unchanged.
  - Applies only to sim v1; v2/v3 retain their existing fixes.
  - The dashboard cache uses about 13.7 KB extra ChipMem, with allocation fallback.
  - Faster frames can accelerate the world on slow machines. Time Scale remains
-   unchanged; timing redesign is separate work.
- - Developer builds expose individual CUSTOM2 bits. Normal/developer builds
+   unchanged; consistent-speed acceptance is postponed.
+ - Developer builds retain individual CUSTOM2 bits (CUSTOM2=0 disables all).
+   Their bit-13 consistent-speed candidate is not enabled in this release.
+   Normal/developer builds
    contain no VERIFY instruments or scripted game input.
+
+ Performance and Time Scale:
+ - The current release accepts measured performance, without a 50 FPS claim.
+   The profiling scoreboard records the six machine configurations; the final
+   normal-build refresh is pending the release checks.
+ - The normal build retains the original frame-dependent game speed on all
+   CPUs. No frame-independent Time Scale envelope is claimed for this release.
+ - Developer candidate only: A500 Time Scale 0 passed the rate window;
+   maximum-detail Time Scale 40 dropped simulation time. 020/030/040/060
+   passed their Time Scale 40 rate windows. These are not full gameplay
+   acceptance or normal-build guarantees. Reduce detail on slower machines.
 
  version 2.1 (26.11.2005) done by JOTD
  - german version supported

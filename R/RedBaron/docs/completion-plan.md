@@ -9,6 +9,13 @@ work into a shipped result:
 Source facts are cited as `file:line` in this directory. Learnings from the
 sibling projects are cited by project name.
 
+Release amendment approved 2026-10-12: accept the measured performance and
+finish release work. The original FPS targets below remain historical targets,
+not release gates or achieved results. Close E with the measured retained/drop
+decisions and refresh all six normal-build configurations at F3. D5 remains
+postponed; W6 stays outside the normal verified mask. No further renderer
+experiments are required for this release.
+
 ## 0. Rules for the executing agent
 
 The previous run produced 209 commits in three days. The last 132 did not
@@ -409,14 +416,15 @@ Rectangle disposition: direct-to-chip CPU fills are dropped under §0.3; all thr
    one pixel twin per primitive against the existing D1/G2 twins.
 5. If the line drawer shows up in E1 at ≥5%, do it in the same commit series.
 
-**E4. Publication — target missed; user direction required.**
+**E4. Publication — target missed; measured performance accepted.**
 
 The existing captures fail every-field cadence on 030/040/060 (scoreboard).
 Beam-safe publication and the one-field W6 cap are already implemented;
 rendering, not the cap, misses the budget. Drop the optional third buffer:
 E1's publication share is below its threshold. The prescribed E2/E3 candidates
-are exhausted. Stop under §1 before extending the renderer work or weakening
-the release targets; checkpoint E and F remain open.
+are exhausted. The user accepted this measured performance on 2026-10-12;
+checkpoint E is closed with the scoreboard recording the missed targets.
+Proceed to F; do not claim every-field rendering.
 - With W6 on and the frame within one field, the cap is one field and the
   P1 beam-safe swap is kept.
 - Check every field deadline with `publication_cadence.py`. It must pass on
@@ -424,7 +432,9 @@ the release targets; checkpoint E and F remain open.
 - Consider a third buffer only if E1 shows publication waits ≥10% of the
   frame on the 060.
 
-✔ **Checkpoint E:** update the scoreboard and commit each of E2, E3 and E4.
+✔ **Checkpoint E:** closed by the accepted-performance amendment; E2, E3 and
+E4 dispositions and measurements are committed. The six-machine normal-build
+refresh is part of F3.
 
 ### Phase F — release
 

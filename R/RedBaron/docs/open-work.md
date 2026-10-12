@@ -59,11 +59,10 @@ the host model and reproducible local candidate patch remain. E3 is closed;
 E4's existing-capture cadence check fails the required 060 every-field result.
 The one-field W6 cap and safe swap already exist; the optional third buffer is
 dropped because publication is below the plan's threshold. Phase E misses its
-targets with no prescribed next optimization. User direction is required under
-the completion plan before extending the work or accepting lower release targets.
-Checkpoint E and F remain open. D5 remains postponed and
+targets; the user accepted measured performance on 2026-10-12 and directed
+completion of release work. Checkpoint E is closed; F remains open. D5 remains postponed and
 W6 remains outside the normal verified mask. Faster rendering still defaults
-off until F1. The completion plan, not the lists below, controls execution.
+on after F1 (normal On=0, Off=1; developer bits unchanged). The completion plan, not the lists below, controls execution.
 The earlier lists below are historical context, not the execution order.
 
 

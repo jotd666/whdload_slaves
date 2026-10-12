@@ -16,8 +16,12 @@ perf_read_options:
 	IFD DEVELOPER
 	and.l #PERF_DEVELOPER_MASK,d0
 	ELSE
+	; Normal splash list: On=0 (WHDLoad default), Off=1.
 	tst.l d0
-	beq.b .selected
+	beq.b .player_enabled
+	moveq #0,d0
+	bra.b .selected
+.player_enabled
 	move.l #PERF_VERIFIED_MASK,d0
 	; The table mirror and G1 projection lose on the measured cached 68030.
 	; Keep those originals on 030 and conservatively on unmeasured 040/060.

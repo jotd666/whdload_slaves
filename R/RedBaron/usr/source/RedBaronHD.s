@@ -76,7 +76,8 @@ DECL_VERSION:MACRO
 	ENDC
 	ENDM
 
-; Default is off; launch icons remain unchanged. CPU-specific selection: perf.s.
+; Normal: zero selects On, one selects Off. Icons remain unchanged.
+; Developer/VERIFY retain the original explicit bit controls in perf.s.
 slv_config
 	IFD VERIFY
 	dc.b "C5:X:Slow drawing verification:0;C5:X:Right-bank fixture:1;C5:X:Squadron fixture:2;"
@@ -99,7 +100,7 @@ slv_config
 	dc.b "C2:X:Larger game fast-memory pool:16;"
 	dc.b "C2:X:Instruction cache policy:17;C2:X:Persistent gauges:18;"
 	ELSE
-	dc.b "C2:B:Faster rendering;"
+	dc.b "C2:L:Faster rendering:On,Off;"
 	ENDC
 	ENDC
 	dc.b 0
