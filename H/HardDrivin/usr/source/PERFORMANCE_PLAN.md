@@ -19,8 +19,9 @@ clock defects, state/scaling inventory, provisional f0=6.25 (engineering range
 4–8), and collision-inclusive 68000 capacity. Step 4 is in progress: gated elapsed-time physics, traffic,
 contact and replay playback have partial validation. An experimental CPU-specific
 dispatcher now consumes one full interval per 68000 frame and retains bounded
-substeps on 68020+. Long-frame traffic progression, replay recording, remaining
-presentation timelines and full acceptance are unfinished. See GAME_TIME.md;
+substeps on 68020+. Fixed-field replay recording is implemented and tested separately. Long-frame
+traffic progression, remaining presentation timelines and full acceptance are
+unfinished. See GAME_TIME.md;
 the step-4 acceptance criteria remain open.
 
 ## Starting point

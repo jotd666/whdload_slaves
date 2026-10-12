@@ -791,9 +791,10 @@ clocks, performance or full-tape/cross-machine/human acceptance.
 ## Replay playback clock and interpolation (development gate)
 
 `VERIFY_TIME_REPLAY_TIMING` requires the dispatcher and CUSTOM1. It currently
-converts playback, its effect animation/RNG and replay overlay lifetime. Record
-generation still runs per eligible simulation call.
-Do not treat this as a duration-correct history or a completed replay timeline.
+converts playback, its effect animation/RNG and replay overlay lifetime. Add
+`VERIFY_TIME_RECORD` for fixed-field recording, described below. Without that
+additional gate, record generation still runs per eligible simulation call and
+history duration remains frame-dependent.
 
 A second VBL counter advances while gameplay timing is suspended for replay, but
 freezes during native pause/options-menu handling. At native
@@ -848,10 +849,8 @@ Evidence:
 - `s4-replay-final-off` passes inactive-range verification. The normal build
   remains identical. The direct-branch audit includes85 ranges.
 
-The recording converter must still retain a fixed duration of eligible driving,
-handle the collision rewind/replacement at `$cde2`/`$89b4`, and populate history
-at fixed field intervals or with explicit timestamps. Until then, fast-machine
-history may cover less real time even though this playback cursor spans 720 fields.
+The separate recording gate below retains fixed eight-field spacing and handles
+collision rewind/replacement. Both gates are required for a fixed-duration history.
 The last-26-entry effect now selects its sprite from the elapsed record index.
 Two native RNG calls are made per effect phase, cached across repeated draws;
 skipped phases and an invisible final tail are consumed too. Thus a naturally
@@ -974,8 +973,8 @@ cases, the existing 1215 eighth-step cases, 441 Q16 cases and 11 debt cases in
 fixture, not full driving-tape or world-state equivalence. The ordinary build is
 byte-identical to the baseline.
 
-Before accepting the experimental 68000 policy, extend traffic and multiple
-replay samples per update, and complete the velocity-write audit. Audit narrowing stores in callers as well as helper arithmetic. Large-T
+Before accepting the experimental 68000 policy, extend traffic and complete
+the velocity-write audit. Audit narrowing stores in callers as well as helper arithmetic. Large-T
 contact, checkpoint and handling validation, and the A500 performance gate remain
 required. No updated FPS claim follows from this arithmetic change.
 
@@ -1122,8 +1121,8 @@ unsigned65535 fields, stale-state invalidation and LONG_MIN/LONG_MAX. The fixtur
 input macro produces the same binary as its expanded data. `s4-angle-native`
 matches all144 reference car states at forced T=1; the ordinary build is unchanged.
 These checks establish arithmetic and native-step compatibility, not large-T
-loop/jump/collision handling. The dispatcher still caps every CPU at eight fields;
-velocity writes, traffic, event multiplicity and replay recording remain open.
+loop/jump/collision handling. The separate experimental CPU dispatcher permits
+long 68000 steps; velocity writes and traffic progression still need attention.
 
 
 ### Traffic acceleration at longer intervals
@@ -1176,5 +1175,76 @@ The A500 consumed 11..15 fields per noninitial update in one step. The 68020
 consumed 2..5 fields, also one step per frame. These are diagnostic timings,
 not the full gameplay baselines or proof of the 3% acceptance gate: simulation
 progression differs, the 68020 window includes 22 crash fields, and long-frame
-traffic and replay recording remain incomplete. No 50 FPS claim follows from
+that build lacked complete traffic progression and replay recording. No 50 FPS
+claim follows from
 these runs. CPU selection and removal of extra A500 physics passes are verified.
+
+
+### Fixed-field replay recording (development gate)
+
+`VERIFY_TIME_RECORD` requires TIME_REPLAY_TIMING and CUSTOM1. It installs
+`HardDrivinRecord.s`, retaining the native 90-by-158-byte format but recording one
+sample every eight eligible simulation fields. A full ring represents 720 fields
+of playback at every rendering rate. The first eligible pose is sampled at age
+zero. D960 observes the start of the physics step, so each consecutive visit
+charges the previous step's elapsed fields. Missing eligible visits freeze this
+history clock and establish a new pose endpoint rather than interpolate a gap.
+The native ring reset also resets the companion state.
+
+Each update captures the native player/traffic pose into private storage, then
+interpolates every sample boundary covered by the interval. Position interpolation
+uses unsigned X/Z and signed Y, angles take the shortest 1440-unit path, and the
+engine's low 12 bits interpolate while high flags hold until the endpoint.
+Endpoints copy verbatim. Weighted sums and unsigned division support intervals
+through 65535 fields; biasing signed values by 32768 gives exact floor division
+without signed multiply/divide overflow. This produces linear pose samples between
+physics updates; it cannot reconstruct unsimulated contact within a long update.
+
+The transaction remembers its original ring pointer, phase and previous pose.
+A repeated scene visit at the same dispatcher step replaces all samples emitted
+by that transaction. The collision rewind at `$89b4` therefore does not rewind
+older history when no sample was due. Replacement does not accrue elapsed time
+again. Counters distinguish newly emitted and replaced samples. `HDRECRD1` precedes
+32 bytes of state, followed by previous/current 158-byte poses. The state contains
+step stamp, original write pointer, eligible age, emitted and replaced longwords;
+phase, saved phase, charged interval and next interval words; valid/new/first bytes
+and padding. The regular build and forced-native dispatcher use native recording.
+
+Evidence:
+
+- `s4-record-wrap`: all 47 live A500 transactions match an independent model,
+  including the complete ring and write pointer. Thirty transactions emit multiple
+  samples (maximum three); one collision replaces two samples. There are 76 new
+  samples over 606 eligible fields. Each captured endpoint is checked against the
+  game's player globals and all 12 traffic object poses.
+- Private fixtures check 36 full records for intervals 1..8 and 24 records at
+  selected fractions of intervals 9, 15, 16, 255, 32768 and 65535. A separate
+  transaction emits 91 samples starting at slot 88; all 90 final slots, counters,
+  remainder and wrapped pointer match the model.
+- `s4-record-wide-020`: 189 live transactions, 79 new samples over 631 fields,
+  including one collision replacement; full ring, endpoints and pointer match.
+  This run precedes extraction of the shared emission helper used by the wrap test.
+- `s4-record-wide-native`: all 144 reference car states, full ring contents,
+  relocated write pointers, score and start/throttle state agree at forced T=1.
+  This constant-input fixture does not replace full driving-tape equivalence.
+- `s4-record-playback`: A500 playback of 76 entries uses 54 draws, including 49
+  interpolated draws. All poses match; a 40-field pause freezes the clock. Exit
+  age is 616 fields versus the 608-field target (one final-draw overshoot).
+- `s4-record-playback-020`: the final implementation plays 80 entries in 224 draws,
+  including 200 interpolated draws and a 40-field pause. Exit age is 642 fields
+  versus 640. Both playback runs consume 52 native effect RNG calls; every effect
+  pose and the nine private overlay cases pass.
+- `s4-record-off` passes inactive-range checks; the normal slave remains byte-for-
+  byte identical and all 91 patch branch ranges pass.
+
+These runs cover first entry, fractional and multiple emissions, collision
+replacement, ring wrap and natural playback exit with pause. They do not yet
+validate an eligibility gap, replay abort, every recovery/reset path or the full
+cross-machine driving tape. The rendering/handling acceptance remains open.
+
+The final recording runtime's `s4-record-cost` 500-field A500 diagnostic has
+37 swaps and 37 physics calls: 3.694 FPS, 270.701 ms per frame. The original
+constant-input control has 38 swaps (3.794 FPS, 263.577 ms). This is not final
+performance acceptance or an isolated recording-cost measurement: the new run
+includes 19 crash fields and also contains the long-event changes absent from
+the earlier CPU-policy diagnostic. No oversized-interval fallback occurs.

@@ -1,6 +1,9 @@
-; Development replay playback clock and pose interpolation. Recording cadence
-; is not yet converted; this gate is not full replay acceptance.
+; Development replay playback clock and pose interpolation. Add TIME_RECORD
+; for fixed-field history generation; full gameplay acceptance remains open.
 _replay_install:
+	IFD VERIFY_TIME_RECORD
+	bsr _record_install
+	ENDC
 	IFD VERIFY_REPLAY_MATH
 	bsr _replay_math_test
 	bsr _replay_overlay_math_test
@@ -391,4 +394,8 @@ _replay_math_right:
 	dc.w $ff9c,$0000,$7fff,$2927,$0064,$0064,$0064
 _replay_math_signature: dc.b 'HDRPMAT1'
 _replay_math_results: dcb.b 9*158,0
+	ENDC
+
+	IFD VERIFY_TIME_RECORD
+	INCLUDE "HardDrivinRecord.s"
 	ENDC
