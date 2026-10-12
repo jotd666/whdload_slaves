@@ -235,7 +235,7 @@ Status: complete (11 October 2026). The user approved deferring the unachieved
 A500 FAST 9.5-10 FPS target and closing P2 with the validated changes below.
 The matched A-fast result is 7.69653 FPS; Normal/A2500 timing remains correct.
 The deferred target is not a P2 acceptance gate and is not assigned to a later
-phase by this decision. P3 has not started.
+phase by this decision. P3 is in progress below.
 
 Current measurements (11 October 2026): the fresh A/250-field FULL profile
 attributes 7.142% to explicit blitter polls and 11.9% to the main interrupt
@@ -348,7 +348,7 @@ queue overflow. Longer-window FPS is not compared with the table above because
 the moving scene changes. Evidence: `p2-final-timing`; aggregate current report
 `tmp/prof/p2-current-results.json`. Retained changes: `29079b3` and `4d2a4e0`.
 P2 acceptance passes with the user-approved deferral of the unachieved A500
-FAST 9.5-10 FPS target. P2 is complete; P3 has not started.
+FAST 9.5-10 FPS target. P2 is complete; P3 is in progress below.
 Rejected candidates are absent from source;
 large rejected-run snapshots are losslessly compressed with verified hashes.
 
@@ -389,30 +389,90 @@ Commit each item separately.
 
 ## P3. Fast-RAM CPU rasterizer for 020+ with real fast RAM (the step that breaks 18 FPS)
 
-Status: in progress (11 October 2026). A VERIFY-only solid/two-colour span
-rasterizer preserves the native clipped edge arrays and draws into private fast
-RAM. On B it passes 1,996 same-input native/CPU comparisons of all 32,000 bitmap
-bytes, including untouched pixels (`p3-span-twin-final/B/span-twin.json`).
-The diagnostic runs both paths and copies/compares whole bitmaps per primitive;
-its 1.100 FPS is not a production performance result. Production remains the
-P2 build. Native stipple and non-display bitmaps are deliberately excluded from
-this initial verifier; P3 is not yet enabled or complete.
+Status: in progress (12 October 2026). Production remains the P2 slave;
+the expanded renderer and the display-wait overlap are opt-in experiments.
+Static CPU paths now cover solid/two-colour/stipple spans, clipped lines,
+degenerate primitives, background rectangles and aligned sky bitmap rows.
+Native clipping, edge construction, circle/wheel construction and dashboard/text
+remain. A four-plane Fast-RAM bitmap stages the viewport; only its rows are
+copied to Chip RAM. Lazy row initialization preserves partial/unsupported
+writers, which fall back to the native path after flushing the staging bitmap.
+CPU/memory gates require 020+ and real Fast RAM for game and staging bitmap.
 
-All 26 disabled hook ranges match original bytes (`p3-span-disabled-final/B`);
-hook audit passes 1,250 relocations and 10,102 candidate branches. The rebuilt
-production slave is still 11,490 bytes with SHA-256
-`f6a1d01be326b2a59506fefd85d2d07bff18d8b6460a1d0ac5ce9d5d0a459a2c`.
-The disabled VERIFY row is only a byte-preservation check: its consumed-step
-counter remains zero across the window, so it is not accepted as a timing test.
+The background candidate passes 537 background and 537 scene twins across all
+five graphics levels, with zero mismatches (`p3-background-levels`). Each compares
+all 32,000 bytes, including pixels outside the viewport. Native A2500 replay
+loads and plays all 301 steps: 174 background/179 scene twins pass
+(`p3-background-replay-fixed/B`). The ordinary-input crash/restart/finish fixture
+passes 699 background/978 scene twins, zero failures and queue overflow, over
+9,141 PAL fields (`p3-background-lifecycle-position/B`). This includes the
+existing long idle/gear-down prelude; it does not claim continuous driving for
+182.82 seconds. Dedicated circle/wheel coverage also passes below.
 
-The local host models match 88 solid/two-colour draws, 32 natural clipped lines
-and 72 explicitly synthetic line cases covering all octants and degenerate
-lines. Evidence: `p3-spans`, `p3-spans-more`, `p3-lines-screen`,
-`p3-lines-octants`. The renderer contract is in `docs/internals.md` under P3.
-The native solid mask writer has a one-pixel edge quirk when the following
-packed span is empty; the CPU path reproduces it. Remaining work is the rest
-of the existing P3 scope below, including complete primitive/lifecycle twins,
-frame staging, production gating and the B/C/D/E performance matrix.
+Matched FULL-detail B results: original rendering/legacy timing paths 8.19795
+FPS (121.98 ms), P2 9.99751 (100.02 ms), background candidate 11.39716 (87.74 ms).
+The first row uses this slave with CUSTOM2=0/CUSTOM3=1, not the shipped v1.2
+binary. All 34 disabled ranges match (`p3-background-disabled/B`); hook audit
+passes 1,250 relocations and 10,102 branch candidates.
+
+The corrected private emulator's cycle-exact D/E settings produce 26.79332 /
+31.89204 FPS at 50 Hz with background staging (`p3-background-50`). Earlier
+accelerator rows used a different CPU loop and an incorrect explicit-frequency
+conversion; they are not matched before/after evidence. Stock B calibration
+reproduces P2 exactly. See `docs/internals.md` for the frequency/cache evidence.
+
+The latest opt-in P3_PIPELINE candidate defers the existing 50 Hz buffer-reuse
+wait until Chip writes on stable live frames, allowing geometry and Fast-RAM
+rendering to run first. Mode/layout transitions and unsupported writers retain
+an early wait. D/E measure 44.58887 / 45.48865 FPS (22.43 / 21.98 ms), both at
+49.98753 simulation steps/s with no backlog growth (`p3-pipeline`). The E
+250-field capture validates copper publication and following-field four-plane
+DMA (`p3-pipeline-display/E`). A separate cycle-timed-blitter capture passes
+the complete recorded-write audit: 2,139,280 CPU and 145,476 blitter framebuffer
+word stores, 3,957,692 matching fetches, zero mismatches or writes to the selected
+buffer before display end (`p3-pipeline-display-dma/E`). Capture joins account
+for 42,308 initially unknown words. Its separate FPS is 44.28895; do not combine
+that setting with the 45.48865 standard-cell result. Both 250-field raw traces
+are losslessly compressed with verified hashes. Opponent/camera coverage passes below. Production integration and final-build
+checks remain; these results do not establish P3 completion.
+
+The 50 Hz opponent pixel twin passes 531 scene and 532 background comparisons,
+with no mismatches (`p3-pipeline-opponent-twin/E`). Standard D/E opponent rows
+measure 35.19122 / 36.89080 FPS, both at 49.98753 steps/s without backlog growth
+(`p3-pipeline-opponent`). These are separate workloads from the solo targets.
+The ordinary C/D/T camera route exercises 1,096 wheel calls and passes 556 scene
+and 468 background comparisons, with zero mismatches
+(`p3-pipeline-camera-twin-fixed/E`). It covers all four cameras, dashboard and
+opponent-view transitions. A separate 25-case circle fixture compares the host
+span model to native output and CPU output to native output over all 32,000 bytes:
+zero mismatches, including tiny/dot, large, clipped and no-op cases
+(`p3-circle-twin-packets/B`). These are correctness checks, not FPS measurements.
+
+The calibrated native-20 matrix (`p3-native20-matrix`) measures 19.99501 FPS
+on C and 19.89504 on D/E, all at 19.99501 steps/s with no backlog growth or
+fallback. D/E count 199 displayed frames versus 200 simulation steps in the
+10-second window. C's guest CACR enables data cache; the private emulator reports
+DCACHE_EMULATION=0, so this is not evidence of detailed 030 data-cache timing.
+
+The scoped 060 solid-kernel placement pair measures 45.98853 FPS in Fast RAM
+versus 45.78858 in Chip RAM (`p3-kernel-placement`). Runtime breakpoints verify
+execution of the identical copied 1,020-byte kernel in each memory bank. This
+small difference does not establish a substantial code-fetch win, and it is not
+the whole-renderer placement comparison required below.
+
+The strengthened camera twin also compares partial background output immediately
+before native fallback: all 86 prefixes match, along with 556 scenes and 470
+completed backgrounds (`p3-prefix-camera-opponent/E`), zero failures. This closes
+the partial-background verification gap; its 0.1-second setup window is not a
+performance or simulation-rate measurement.
+
+The full opt-in runtime passes all 35 disabled rendering/timing ranges with
+CUSTOM2=0/CUSTOM3=1 (`p3-runtime-disabled-final/B`). Hook audit passes all 1,250
+relocations and 10,102 branch candidates (`p3-prefix-hook-audit.txt`).
+
+Remaining P3 gates: full-renderer 060 code-placement comparison and production
+option integration with measured results on the build being committed.
+The scope below remains authoritative; no P4 work is included.
 
 The model is Powerdrome (its repository's `docs/performance-implementation.md`):
 render into a 32,000-byte fast-RAM staging bitmap with code in fast RAM, then MOVEM-copy the

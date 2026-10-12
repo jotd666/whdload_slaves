@@ -27,9 +27,6 @@ perf_init:
  rts
 
 perf_patch:
- IFD P3_RASTER
- bsr raster_patch
- ENDC
  move.l _custom2(pc),d0
  btst #0,d0
  beq.s .done
@@ -53,6 +50,9 @@ perf_patch:
  jsr resload_Patch(a2)
  ENDC
 .done:
+ IFD P3_RASTER
+ bsr raster_patch
+ ENDC
  rts
 
 pl_perf:

@@ -193,6 +193,19 @@ sim_schedule_poll:
  ; Wait before importing pending physics so the next render uses fresh input.
  cmp.w #50,-$15fa(a4)
  bne .display_ready
+ IFD P3_PIPELINE
+ ; Only live rendering with a private fast bitmap can defer this guard.
+ tst.w d7
+ bne .wait_display
+ move.l raster_buffer(pc),d0
+ beq .wait_display
+ move.l _custom2(pc),d0
+ and.l #3,d0
+ beq .wait_display
+ lea raster_present_pending(pc),a0
+ move.w #1,(a0)
+ bra .display_ready
+ ENDC
 .wait_display:
  tst.w $d28(a4)
  beq .wait_display

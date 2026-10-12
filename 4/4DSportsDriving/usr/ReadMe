@@ -80,7 +80,19 @@
    A2500 19.98171, race-clock ratios 0.999952 / 0.999085; no queue overflow
  - P2 is complete with user approval to defer the unachieved A500 FAST
    9.5-10 FPS target. Slower or insignificant experiments were discarded;
-   P3 has not started
+   P3 is being validated separately below
+
+ P3 CPU renderer in validation (12.10.2026):
+ - opt-in source builds render the viewport, clears and aligned sky rows into
+   Fast RAM on eligible 020+ machines, then copy the viewport to Chip RAM
+ - all graphics levels, native replay, crash/finish, camera/opponent views,
+   circle cases and partial-background fallback pass exact pixel comparisons
+ - display-DMA checks find no writes to a still-displayed bitmap
+ - experimental FULL results: A1200 A2500 11.397 FPS (P2: 9.998);
+   50 Hz solo 040/25 44.589 FPS, 060/50 45.489 FPS; opponents 35.191/36.891
+ - these accelerator figures use corrected private-emulator frequency settings;
+   older accelerator measurements above are not matched before/after baselines
+ - production still contains P2; final integration and acceptance are pending
 
  Separate A4000 SIM_RUNTIME source status (11.10.2026):
  - replay format 2, physics ABI9, stores the chosen opponent route so native
