@@ -37,7 +37,7 @@ def main():
     segments = []
     while done < args.fields:
         count = min(args.chunk, args.fields - done)
-        commands = ['delete', f'break *{sim + 0x21f4a:#x}', 'commands',
+        commands = ['delete', f'break *{sim + 0x21f60:#x}', 'commands',
                     'silent', 'printf "FLIGHT_EXIT\\n"', 'end',
                     f'break *{sim + 0x2d34e:#x}', f'ignore $bpnum {count - 1}',
                     'continue', 'printf "SOAK_SEGMENT_COMPLETE\\n"', 'delete']

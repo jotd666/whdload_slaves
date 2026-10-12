@@ -39,7 +39,7 @@ section=listing[listing.index(': time_debt_bound:'):]
 match=re.search(r'^00:([0-9A-F]+)\s+\w+\s+\d+:\s+clr.w TIME_LOOP_DUE\(a0\)',section,re.M);assert match
 cmd += [f'break *{base+int(match[1],16):#x}','commands','silent','set $drop=$drop+*(unsigned short*)($a0+24)','continue','end']
 cmd += [f'break *{sim+0x3154a:#x}','commands','silent','set $pub=$pub+1','printf "PUB %u %u\\n", $field, *(unsigned int*)0xdff004','continue','end']
-cmd += [f'break *{sim+0x21f4a:#x}','commands','silent','printf "FLIGHT_EXIT %u\\n", $field','end']
+cmd += [f'break *{sim+0x21f60:#x}','commands','silent','printf "FLIGHT_EXIT %u\\n", $field','end']
 cmd += [f'break *{sim+0x2d34e:#x}','commands','silent','set $field=$field+1',f'if $field < {a.fields}','continue','end','end','continue',f'printf "END %u %u %u %u %u %u\\n", $field, $drop, $pub, {ledger}','delete']
 raw=r.command('gdb '+'\n'.join(cmd));(a.out/'rate.log').write_text(raw)
 from w6_rate_report import report

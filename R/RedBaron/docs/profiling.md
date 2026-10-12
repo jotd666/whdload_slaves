@@ -33,6 +33,19 @@ not a passed first attempt. Native C is rejected with eligibility code 10 in
 this combat encounter, as expected; eligible compression remains separate.
 All 573 host tests pass using the configured development environment.
 
+060/50, current retained renderer with W6 (`0x1ff2ffa`), passes the same
+200-field Pause/Preferences rebase checks at Time Scale 40
+(`d5-auto-060-s40/modals.json`). Its first 500+500-field input window had no
+consecutive catch-up pair, so it is not a catch-up pass. At native Time Scale
+60, `d5-auto-060-s60/catchup.json` passes: throttle 210 → 190 exactly once,
+111 held catch-up pairs, then clean release. No artificial render delay or
+clock injection is used. The subsequent 060 mission-menu attempt had only
+two CIA ticks of backlog and was rejected by the catch-up precondition;
+the A500 result above supplies the shared exit-path check. The live rate,
+input and soak drivers now trap sim:21f60, the common flight-exit epilogue,
+rather than sim:21f4a, which covers only one exit path.
+
+
 The unchanged developer binary is SHA-256
 `7148764be23e82f999b99b2e6f0359df88b987712010d8ab19caafbd7b330e39`.
 Scale 60 exceeds this machine's capacity and exercises the approved debt-drop
