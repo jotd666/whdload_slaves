@@ -1,4 +1,4 @@
-; Live off-road, skid, partial-contact and ground-penetration sample cadence.
+; Live off-road, skid, partial-contact, ground and object-contact sample cadence.
 ; Requests use pause-aware presentation fields because Paula runs in wall time
 ; even when physics takes multiple substeps.
 _audio_install:
@@ -22,6 +22,8 @@ _audio_patches:
 	PL_PSS $cd4e,_audio_pitch_contact,4
 	; PERF_RANGE VERIFY_TIME_AUDIO $0cc80 $000a: sustained ground penetration, immediate landings
 	PL_PSS $cc80,_audio_landing,4
+	; PERF_RANGE VERIFY_TIME_AUDIO $0bcfe $000a: zero-motion same-object contact cadence
+	PL_PSS $bcfe,_audio_object_contact,4
 	PL_END
 AU_WALL equ 0
 AU_STEP equ 4
@@ -29,6 +31,7 @@ AU_REQUESTS equ 8
 AU_EMITTED equ 12
 AU_VALID equ 16
 AU_SIZE equ 20
+AU_OBJECT equ AU_SIZE
 _audio_signature: dc.b 'HDLIVEAU'
 _audio_offroad_state: dcb.b AU_SIZE,0
 _audio_skid_signature: dc.b 'HDSKIDAU'
@@ -37,6 +40,8 @@ _audio_pitch_signature: dc.b 'HDCONTAU'
 _audio_pitch_state: dcb.b AU_SIZE,0
 _audio_landing_signature: dc.b 'HDLANDAU'
 _audio_landing_state: dcb.b AU_SIZE,0
+_audio_object_signature: dc.b 'HDOBJAU1'
+_audio_object_state: dcb.b AU_SIZE+4,0
 _audio_offroad:
 	IFND VERIFY_DISPATCH_NATIVE
 	movem.l d0-d3/a0-a1,-(a7)
@@ -96,7 +101,7 @@ _audio_skid:
 	addq.w #2,a7
 	rts
 ; Only the mask-3 correction loop uses this state. Ground penetration uses
-; a separate state; object-impact event7 callers keep native requests.
+; a separate state; object contact has its own identity-aware state.
 _audio_pitch_contact:
 	IFND VERIFY_DISPATCH_NATIVE
 	movem.l d0-d3/a0-a1,-(a7)
@@ -156,6 +161,53 @@ _audio_landing:
 	jsr -$7fce(a4)
 	addq.w #2,a7
 	rts
+_audio_object_contact:
+	IFND VERIFY_DISPATCH_NATIVE
+	movem.l d0-d3/a0-a1,-(a7)
+	moveq #0,d0
+	roxl.b #1,d0
+	move.w d0,-(a7)
+	lea _dispatch_state(pc),a1
+	tst.b DS_ACTIVE(a1)
+	beq.s .native_restore
+	move.l DS_STEPS(a1),d1
+	move.l _replay_state+RP_WALL(pc),d0
+	lea _audio_object_state(pc),a0
+	move.w -$66e2(a4),d2
+	or.w -$66e0(a4),d2
+	or.w -$66de(a4),d2
+	bsr _audio_object_contact_due
+	tst.w d0
+	bne.s .native_restore
+	move.w (a7)+,d0
+	lsr.b #1,d0
+	movem.l (a7)+,d0-d3/a0-a1
+	rts
+.native_restore:
+	move.w (a7)+,d0
+	lsr.b #1,d0
+	movem.l (a7)+,d0-d3/a0-a1
+	ENDC
+	; Exact native call/cleanup, including the handler's returned X.
+	move.w #7,-(a7)
+	jsr -$7fce(a4)
+	addq.w #2,a7
+	rts
+; A3 identifies the collided object. A nonzero projected movement is a fresh
+; impulse; always emit it. Only consecutive zero-motion contacts with the same
+; object share a cadence. Missing eligibility is handled by _audio_due.
+; Inputs as _audio_due, D2.W OR of projected XYZ, A3 object identity.
+_audio_object_contact_due:
+	cmp.l AU_OBJECT(a0),a3
+	beq.s .same_object
+	clr.b AU_VALID(a0)
+.same_object:
+	move.l a3,AU_OBJECT(a0)
+	tst.w d2
+	beq _audio_due
+	clr.b AU_VALID(a0)
+	bra _audio_due
+
 ; A nonzero fall velocity marks a discrete landing: request immediately even
 ; inside the prior correction cadence. Subsequent zero-velocity penetration
 ; consumes that request's cadence rather than restarting on the next frame.

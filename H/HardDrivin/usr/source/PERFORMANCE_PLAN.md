@@ -34,7 +34,9 @@ audit, large-step velocity safety and full acceptance are unfinished. A gated
 long-step resistance limiter removes observed braking-induced reversals while
 preserving slope rollback; maximum-delay handling remains unproven. The sound
 caller inventory, replay skid-request correction and live off-road/skid/partial-contact
-cadence checks are in AUDIO_TIMING.md.
+cadence checks are in AUDIO_TIMING.md. Repeated zero-motion contact with the same
+object now has a separate sound cadence, with A500/68020 live checks; obstacle
+and special-object audio remain unvalidated.
 Traffic companion lookup now excludes the native route generator's temporary
 stack record, fixing an out-of-bounds startup write; focused native-route and
 traffic-state checks pass. Full acceptance still needs the corrected final build.

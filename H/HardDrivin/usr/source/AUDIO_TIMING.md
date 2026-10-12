@@ -46,7 +46,7 @@ caller exists, or a listening test.
 | `$0bc18` | 9 | Special collision-object condition returns without establishing a crash. Repeated contact needs event/cadence validation. |
 | `$0bcf6`, `$0bdd6`, `$0c004`, `$0cc4e` | 6 | Crash creation; native crash state suppresses later physics collision paths. Verify once per event across substeps and recovery. |
 | `$0cd52` | 7 | Sustained mask-3 pitch correction; TIME_AUDIO now applies its own elapsed cadence. |
-| `$0bd02`, `$0bde2` | 7 | Object/obstacle paths. Distinct contact identities and repetition remain open. |
+| `$0bd02`, `$0bde2` | 7 | Object zero-motion overlap now has an independent identity-aware cadence; obstacle behavior remains open. See below. |
 | `$0cc84` | 7 | Sustained zero-fall penetration uses an independent cadence; nonzero-fall landings remain immediate. See below. |
 | `$10c24` | 4 | Recorded skid flag; now consumed once per historical record by TIME_REPLAY_TIMING. |
 | `$10e10` | 6 | Replay crash effect clears a local one-shot flag after the request. Live focused checks observe one request; completely skipped effect tails still need explicit coverage. |
@@ -347,3 +347,44 @@ No object sound is gated by this audit. The capture reaches neither obstacle
 Native event9 selects channel 1/period 700 at `$009d8`; the type 95 collision branch
 requests it and returns without setting a crash or applying collision separation.
 Its repeated-contact behavior remains unvalidated.
+
+
+## Same-object zero-motion cadence
+
+TIME_AUDIO now wraps `$0bcfe..$0bd07`, with a separate 24-byte HDOBJAU1 state.
+Consecutive zero-projection contacts with the same object use the existing
+pause-aware eight-field cadence. Changed object identity, a missing eligible
+physics step, or any nonzero projected XYZ component makes the request immediate.
+The collision response has already executed before this hook: separation, drift,
+velocity clearing and scene rebuilding are unaffected. Obstacle and special-object
+callers use their original paths. Inactive dispatch and forced-native builds retain
+the native event7 call and cleanup.
+
+The assembled helper passes 480 actual 68000 cases, including 440 immediate
+impulse/changed-object cases and 10 suppressed requests. A further 32 tests execute
+the actual wrapper with a private sound handler, checking preserved registers,
+stack balance, saved X on suppression, the handler's returned X on emission,
+inactive state preservation and event7 arguments. Nonzero X, Y and Z projections
+are exercised independently.
+
+In the 6200-field `s4-object-cadence-020` capture, the two zero-motion visits occur
+at fields 5983 and 5988. The first emits; the second is suppressed. Both gate
+entry/return decisions match the live wall clock, physics serial, object identity
+and projection. The corresponding A500 capture, `s4-object-cadence-a500`, retains
+its single request. Both captures retain the high-speed crash request, and their
+observed collision responses pass the native impulse verifier. The high-speed
+path branches directly to `$0bd08`, which is also the hook return address; the
+verifier explicitly checks this bypass leaves cadence state unchanged. The
+capture's completed-return counter and dispatch serial differ by one, so the
+retained analysis pairs them explicitly rather than treating them as equal.
+
+These are focused gate and collision-response checks. Live nonzero low-impact
+contacts, changed-object re-entry, obstacle/event9 behavior, audible quality and
+full step-4 handling/performance acceptance remain open.
+
+The forced-native `s4-object-native` capture matches all 108 car snapshots from
+`s4-skid-native-reference`, relocating only the gear pointer. This is the existing
+car-state diagnostic, not whole-world or full driving-tape equivalence.
+`s4-object-disabled` passes all 153 declared ranges with CUSTOM1 off; the direct
+branch audit passes 132 ranges. The normal build remains byte-identical to the
+8392-byte-text baseline.
