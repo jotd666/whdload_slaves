@@ -2,7 +2,8 @@
 ; Build with -DVERIFY_DRIVE=1; mutually exclusive with VERIFY_ATTRACT.
 ; Optional VERIFY_STEPINPUT replaces race input with a per-pass constant-input
 ; coupling control. VERIFY_STEPINPUT_BRAKE selects its braking field. These
-; are not the A/B tape; see GAME_TIME.md.
+; are not the A/B tape; see GAME_TIME.md. STEPINPUT_STEER_AT holds X=320
+; until the chosen field, then uses STEPINPUT_X for a real skid diagnostic.
 ; Calibrated on deterministic PAL A500/68000, 512K Chip + 1536K slow,
 ; no Fast RAM, PRELOAD, CUSTOM2=0 and both host input ports disabled.
 ; Other CPU/memory profiles need validation; field-indexed input does not
@@ -127,6 +128,9 @@ _verify_drive_vbl:
 	bra.s .done
 .constant:
 	move.l #(VERIFY_STEPINPUT_X<<16)|200,-$6a06(a4)
+	IFD VERIFY_STEPINPUT_STEER_AT
+	bsr _verify_step_delayed_steering
+	ENDC
 	move.w #4,-$6a0a(a4)
 	IFD VERIFY_STEPINPUT_BRAKE
 	bsr _verify_step_brake_buttons
@@ -200,6 +204,9 @@ _verify_step_input:
 	movea.l (a7)+,a0
 	ENDC
 	move.l #(VERIFY_STEPINPUT_X<<16)|200,-$6a06(a4)
+	IFD VERIFY_STEPINPUT_STEER_AT
+	bsr _verify_step_delayed_steering
+	ENDC
 	move.w #4,-$6a0a(a4)
 	IFD VERIFY_STEPINPUT_BRAKE
 	bsr _verify_step_brake_buttons
@@ -219,6 +226,20 @@ _verify_step_input:
 	ENDC
 	jsr -$7f92(a4)		; displaced decoded-key reader
 	and.w #$ff,d0		; displaced mask, including its condition codes
+	rts
+	ENDC
+
+	IFD VERIFY_STEPINPUT_STEER_AT
+; Input-only diagnostic: accelerate straight, then apply the selected mouse X.
+; VBL and controls use the same race-field boundary. Never inject skid state.
+_verify_step_delayed_steering:
+	move.l a0,-(a7)
+	lea _verify_drive_state(pc),a0
+	cmpi.l #VERIFY_STEPINPUT_STEER_AT,4(a0)
+	bhs.s .done
+	move.w #320,-$6a06(a4)
+.done:
+	movea.l (a7)+,a0
 	rts
 	ENDC
 

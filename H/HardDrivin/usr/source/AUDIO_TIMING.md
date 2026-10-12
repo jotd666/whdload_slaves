@@ -42,7 +42,7 @@ caller exists, or a listening test.
 | `$0851a`, `$11486` | 1, 0 | Title/instruction module selection; native module identity suppresses restart. |
 | `$08e4c`, `$092f6`, `$093b4`, `$093f4` | 3, 3, 2, 2 | Finish/checkpoint transitions and their state flags. Ghost finish has focused one-event evidence; full lap crossing coverage remains open. |
 | `$0b166` | 8 | Off-road/scene condition; TIME_AUDIO now applies the elapsed cadence below. |
-| `$0b624` | 4 | Sustained skid condition; repeated physics visits can change restart frequency. Needs elapsed request cadence. |
+| `$0b624` | 4 | Sustained skid condition; TIME_AUDIO now applies its own elapsed request cadence. |
 | `$0bc18` | 9 | Special collision-object condition returns without establishing a crash. Repeated contact needs event/cadence validation. |
 | `$0bcf6`, `$0bdd6`, `$0c004`, `$0cc4e` | 6 | Crash creation; native crash state suppresses later physics collision paths. Verify once per event across substeps and recovery. |
 | `$0bd02`, `$0bde2`, `$0cc84`, `$0cd52` | 7 | Non-crash collision/contact paths. Repeated contact can request again; contact-episode semantics remain to be validated. |
@@ -93,15 +93,15 @@ Evidence under ignored `tmp/`:
   replay site. The direct-branch audit passes 122 timing ranges. The ordinary
   build remains byte-identical to the 8392-byte-text baseline.
 
-The next audio work is the remaining skid/contact request cadence and contact-event identity,
+The next audio work is contact request cadence and contact-event identity,
 followed by sample-start/listening checks. This document does not close step 4.
 
 
 ## Live off-road cadence
 
 `VERIFY_TIME_AUDIO` requires TIME_REPLAY_TIMING and installs HardDrivinAudio.s
-behind CUSTOM1/SPS0126. It currently owns only event 8 at `$0b162..$0b16b`.
-The other live callers above remain separate acceptance work.
+behind CUSTOM1/SPS0126. It owns event8 at `$0b162..$0b16b` and event4 at `$0b620..$0b629`, with
+independent cadence states. The other live callers remain separate acceptance work.
 
 The first eligible request in an episode is immediate. Subsequent requests
 consume eight-field boundaries from RP_WALL, retaining the remainder when a
@@ -147,5 +147,53 @@ full game-state equivalence.
 
 CUSTOM1-off retained code passes all 144 declared ranges. The direct-branch
 audit passes 123 timing ranges; the ordinary build is byte-identical to the
-8392-byte-text baseline. Skid, special-object and contact repetition, listening
+8392-byte-text baseline. Special-object and contact repetition, listening
 checks, large-step physics and full step-4 acceptance remain open.
+
+
+## Live skid cadence and contact coverage
+
+TIME_AUDIO uses the same elapsed decision helper for live skid event4, with its
+own20-byte HDSKIDAU state. Off-road and skid requests cannot consume each other's
+cadence. The patch surrounds only the native sound call; spin decay, skid exit,
+heading, velocity and throttle remain in their existing physics paths. As with
+off-road sound, inactive/forced-native dispatch uses the exact original request.
+
+`VERIFY_STEPINPUT_STEER_AT=N` is an input-only diagnostic requiring STEPINPUT.
+It holds mouse X=320 until race field N, then uses VERIFY_STEPINPUT_X; both VBL
+publication and controls entry use that boundary. It writes no skid/velocity/pose
+state. The final diagnostic uses N=300 and X=639 after accelerating straight.
+This fixture is separate from the established driving tape.
+
+The800-field runs observe event calls, native sample requests and accepted starts:
+
+| Profile | Before skid gating: requests / starts | With skid gating: visits / requests / starts |
+| --- | --- | --- |
+| A500 | 39 / 39 | 38 / 37 / 37 |
+| 68020 | 170 / 170 | 168 / 55 / 55 |
+
+Before captures are s4-skid-input-a500 and s4-skid-input-020. Gated captures are
+s4-skid-cadence-a500 and s4-skid-cadence-020. Every decision matches the captured
+pause-aware wall clock and step serial, including first requests and eligibility
+gaps. Both also pass the19 private cadence cases. The sample uses channel3,
+period1100. Changes in instruction timing slightly change the captured trajectory
+and episode duration, so these counts are not equal-path handling evidence or a
+listening test. The gate changes the request frequency; sample length and period
+remain native. Every emitted skid request becomes an accepted start in these runs.
+
+The integrated6000-field driving-tape captures s4-all-tape-audio-a500 and
+s4-all-tape-audio-020 contain no skid requests. They instead establish live coverage
+of event7 at `$0cd52` (4 versus21 requests) and `$0bd02` (1 versus3); the A500 also
+visits `$0cc84` once. The020 visits the crash-event6 site `$0bcf6` once. Several
+020 contact requests occur two fields apart. This is evidence for further contact
+identity/cadence work, not justification for suppressing distinct impacts with a
+blanket shared timer. Neither capture exercises special-object event9.
+
+The skid build passes all145 CUSTOM1-off range checks and the124-range branch
+audit; the normal build remains byte-identical to the8392-byte-text baseline.
+
+`s4-skid-native-held` matches all108 car-state snapshots from
+`s4-skid-native-reference`, G($98f6)..G($9951), after relocating the gear-table
+pointer. Both use constant X=639; a field-delayed input transition would not be a
+matched per-step input reference when the build changes wall timing. This is
+car-state compatibility evidence, not full-world equality or sound-timestamp equality.
