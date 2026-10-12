@@ -21,6 +21,26 @@ opt-in and selects effective mask `0x1ff6ffa`, including W6 and its pacing
 dependencies (`w6-player-optin/options.json`). This is an option-path check;
 existing D5 evidence supplies runtime acceptance. No new FPS claim is made.
 
+## Reported normal-build renderer abort (2026-10-13)
+
+A user dogfight on the named A1200/68040 preset, with Faster rendering and
+Consistent game speed enabled, ended with the fast-frame renderer bounds/pixel
+message. The normal build has no pixel twins: this message also covers runtime
+bounds guards. The cause remains unresolved. The same preset passed an initial
+level-flight window, 250 banking frames, and a separate 200-frame banking/firing
+sequence across forward, rear, left and right views. These are bounded diagnostic
+observations, not a reproduction or new performance evidence.
+
+The local launcher now enables WHDLoad `CoreDump` and mounts a persistent dump
+volume outside its rebuilt game volumes, selected by `CoreDumpPath` in the global
+preferences. A throwaway startup-abort slave verified the same `TDREASON_FAILMSG`
+path writes the message, register/stack report, memory and complete IFF dump.
+This synthetic check is not evidence that the reported renderer bug is fixed.
+The release slave is unchanged. Preserve the dump and matching build before
+another game exit: memory/IFF files are overwritten, while the register log is
+appended. For this explicit abort, PC may be unavailable; inspect the saved stack
+and renderer state rather than treating PC=FFFFFFFF as an instruction fault.
+
 ## D5 automated coverage complete (2026-10-12)
 
 All objective D5 input, transition, envelope and controlled outcome checks now
