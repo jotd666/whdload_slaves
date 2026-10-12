@@ -86,6 +86,10 @@ sim_mode_dialog:
  bne .loop
  bra .select
 .a4000:
+ lea sim_mode_dialog(pc),a0
+ adda.l #sim_time_field_hz-sim_mode_dialog,a0
+ cmp.w #50,(a0)
+ bne .loop                ; experimental A4000 remains PAL-only
  moveq #50,d0             ; explicit opt-in; no automatic 50 Hz default
 .select:
  lea sim_mode_changes(pc),a0

@@ -81,6 +81,16 @@ sim_preferences_load:
  move.l d1,(a0)
  lea sim_preferences_loads(pc),a0
  addq.l #1,(a0)
+ cmp.w #50,d0
+ bne .rate_checked
+ lea sim_preferences_load(pc),a0
+ adda.l #sim_time_field_hz-sim_preferences_load,a0
+ cmp.w #50,(a0)
+ beq .rate_checked
+ lea sim_preferences_status(pc),a0
+ move.l #5,(a0)            ; saved A4000 choice requires PAL; use CPU default
+ moveq #0,d0
+.rate_checked:
  tst.l d0
  bne .saved
  lea sim_preferences_load(pc),a0
@@ -167,7 +177,7 @@ sim_preferences_save:
  even
  dc.b "4DPREFS!"
  dc.w 1,16
-sim_preferences_status: dc.l 0 ; 0 missing,1 valid,2 read error,3 save error,4 gated
+sim_preferences_status: dc.l 0 ; 0 missing,1 valid,2 read error,3 save error,4 gated,5 PAL required
 sim_preferences_loads: dc.l 0
 sim_preferences_saves: dc.l 0
 sim_preferences_loaded: dc.w 0

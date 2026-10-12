@@ -1,8 +1,11 @@
 # 4D Sports Driving: smooth play on every Amiga — execution plan
 
 Written 2026-10-11 on HEAD `c70ea93` (branch `4dsportsdriving`). This plan supersedes the
-"next steps" sections of optimization-plan.md, simulation-plan.md and open-work.md. Those
-documents remain reference material for addresses and evidence, not a to-do list.
+"next steps" sections of optimization-plan.md, simulation-plan.md and open-work.md. Their historical
+versions remain reference material for addresses and evidence, not a to-do list.
+P1-P5 are complete; the A500 FAST target is deferred and A4000 remains experimental.
+Historical harness research is preserved in `tmp/dev/docs/.git` at `9311a53`;
+`docs/open-work.md` is the single current-state guide.
 This tracked file is authoritative. Relative paths such as `tools/`, `docs/` and `tmp/prof/`
 refer to the ignored development harness at `tmp/dev` in the worktree.
 
@@ -698,37 +701,98 @@ The frozen handling gate remains 27/29 with unchanged bounds. P6 has not started
      committed; the testing archive and native production binary remain
      unchanged. Stop here; release work belongs to P6.
 
-## P6. Release
+## P6. Release — complete (2026-10-12)
 
-1. **Single production build.** It contains the clock, CUSTOM2 bits, CUSTOM3 legacy and the
-   A4000 mode, with no VERIFY, fixtures or startup tests.
-   - Record the size and SHA. Run `check_disabled.py` for CUSTOM2=0 and CUSTOM3=1.
-2. **Final matrix A–E, FULL and FAST, CUSTOM2=0/1.** Put it in the ReadMe as "emulator
-   measurements; real-hardware reports welcome".
-3. Rewrite the ReadMe version notes (1.3) to say:
-   - true game speed on all machines;
-   - per-CPU simulation defaults;
-   - the fast-RAM renderer on 020+;
-   - the options (CUSTOM2/CUSTOM3);
-   - the known limitations.
-4. **Functional test with the MMU enabled on 040 (`CPU=68040`).** This checks that cache
-   flushes are correct: Test Drive II overlay stubs black-screened a real 040.
-5. Rebuild the dist archive with `tools/package_testing.py`. Do not publish without asking
-   the user.
-6. Collapse the harness docs: open-work.md and the 200 KB research notes become one
-   current-state page, and history lives in git.
+A4000 remains explicitly experimental by user decision. This phase creates a
+local testing archive; nothing has been uploaded or published.
 
-## Expected outcome (emulator, FULL detail)
+1. **One production build.** The default build contains corrected Normal/A2500
+   timing, CUSTOM2 rendering options, CUSTOM3 legacy bypass, preferences and
+   experimental A4000 physics/replays. No VERIFY, input fixtures or startup
+   self-tests. `SIM_RUNTIME=1` is a compatibility spelling for the same binary,
+   not a separate distribution. Both builds reproduce 204608 bytes, SHA256
+   `522d97c2ce16e91c2a4edda5078aed1d86688cc9b7774e58f4bcef0edc690cef`.
+   All P6 captures below use this SHA.
+2. **PAL/NTSC integration.** Native modes retain the beam-detected 50/60 field
+   phase accumulator. Experimental A4000 is PAL-only at all three entry points:
+   preferences, CTRL-G selection and tagged replay loading. On NTSC, a saved
+   50 Hz choice falls back to the CPU default; selection is ignored and replay
+   loading reports an error before writing live state. The native menu test
+   selects the A4000 row explicitly (the marked A2500 row is skipped).
+   NTSC 30-second native check: 19.964129 consumed steps/s, race-clock ratio
+   0.99820645, no overflow. Evidence: `tmp/prof/p6-ntsc/B-menu-fixed`.
+3. **Final matrix.** `tools/bench_matrix.sh` produced and collected all 20
+   A–E/FULL–FAST/CUSTOM2=0–1 rows in `tmp/prof/p6-default-matrix.json`.
+   Ten-second PAL moving windows; FPS counts display-buffer switches. Every
+   cell had its own 180-second watchdog and frame anchor, never `--tick`.
+   A uses Normal 10 Hz; B–E use A2500 20 Hz, with no A2500 request on A500.
 
-| Machine | Now | After P1–P2 | After P3–P5 |
-|---|---:|---:|---:|
-| A500 FULL / FAST | 2.9 / 7.6 FPS at 0.83× speed | ~3.1–3.3 / ~10 FPS at 1.00× | same |
-| A1200 020 FULL | 9.3 | ~10 | ~13–16 (20 Hz cap) |
-| 040/25 FULL | 18.5 (20 Hz cap) | ~19 | ~35–42 at 50 Hz |
-| 060/50 FULL | 18.5 | ~19 | ~45–50 at 50 Hz |
+   | Cell / CPU | C2=0 FULL | C2=0 FAST | C2=1 FULL | C2=1 FAST |
+   |---|---:|---:|---:|---:|
+   | A / 68000 | 2.40 | 7.40 | 2.60 | 7.60 |
+   | B / 020 | 8.20 | 17.10 | 11.30 | 19.90 |
+   | C / 030/50 | 18.20 | 19.90 | 19.90 | 19.90 |
+   | D / 040/25 | 19.70 | 20.00 | 19.90 | 19.90 |
+   | E / 060/50 | 19.70 | 20.00 | 19.90 | 19.90 |
 
-These are estimates derived from the sibling-project results. Every claimed number must come
-from `bench_matrix.sh` on the build being committed.
+   A: 512 KB Chip + 1.5 MB slow. B/C: 2 MB Chip + 4 MB Fast. D/E:
+   2 MB Chip + 8 MB Z2 Fast + 8 MB motherboard RAM. C uses native IDE boot
+   and confirmed emulated data cache (`CACR=2111`, DCACHE_EMULATION=1).
+   D/E use calibrated CPU clocks, MMU off and no emulated data cache.
+   All rows retain actual cache state and effective emulator configuration.
+   The ReadMe labels these "Emulator measurements; real-hardware reports welcome."
+   No claim of fresh full-window DMA/pixel equivalence is made by this matrix.
+
+   Separate opt-in 50 Hz matrix: `tmp/prof/p6-a4000-matrix.json`, same method:
+
+   | Cell | C2=0 FULL | C2=0 FAST | C2=1 FULL | C2=1 FAST |
+   |---|---:|---:|---:|---:|
+   | D / 040/25 | 20.39 | 23.59 | 45.89 | 49.89 |
+   | E / 060/50 | 17.80 | 29.49 | 45.49 | 49.89 |
+
+   A4000 consumed rates are 49.88755–50.08750 steps/s, no queue overflow.
+   Short native windows include queue-boundary catch-up: A FULL C2=0 consumes
+   103 steps while funding 100 (queue 3→0), so its 10.29535 consumed steps/s
+   is not a claim that the clock runs fast. Phase and endpoint quantization
+   also affect individual ten-second counts. P1/P2 longer-window timing and
+   P5 long lifecycle evidence retain their documented scope.
+   The A500 FAST 9.5–10 FPS target remains deferred, and no real-hardware FPS
+   prediction follows from these emulator-specific rows.
+4. **Bypass and state checks.** `tmp/prof/p6-legacy/B` passes all 38 disabled
+   ranges with CUSTOM2=0/CUSTOM3=1. Every C2=0 matrix row separately passes
+   the rendering-byte check. `tmp/build/p6-hook-audit.txt` checks all hooks,
+   1250 relocations and 10102 aligned PC-relative branch candidates, with no
+   interior targets. No new game hook was introduced in P6.
+   PAL opponent replay restores all 1802 recorded route bytes and matches all
+   1510 semantic state bytes at steps 1500/1550/1600 against the preserved
+   format-2 regression fixture (`tmp/prof/p6-route-replay/B`). This is existing
+   replay Load/Play evidence; P5 owns the actual disk Save/Load proof.
+   Native Normal/A2500 replays both load and play all 301 steps, matching all
+   1120 legacy state bytes at step 200 (`tmp/prof/p6-native-replay-final`).
+   The short setup windows for replay checks are not FPS/timing evidence.
+5. **68040 MMU functional pass.** `tmp/prof/p6-mmu-fixed/D` uses a full 68040,
+   native IDE with the matching A1200 motherboard/ROM, JIT off, MMU enabled
+   and no NoMMU option. It passes startup, 50 Hz gameplay, preference load,
+   change/save with physical disk CRC verification, normal quit and shell
+   continuation. The matching WHDLoad report says `TC=8000`, `CACR=80008000`
+   and `Return OK`. This is functional compatibility, not an FPS measurement
+   or real-hardware cache proof. The first setup used a mismatched A4000
+   motherboard/A1200 ROM and did not boot IDE; it is not acceptance evidence.
+6. **Documentation and archive.** ReadMe v1.3 describes corrected speed, CPU
+   defaults, options, renderer eligibility, experimental handling limits and
+   the measured matrices. `tools/package_testing.py` builds
+   `dist/4DSportsDriving_v1.3_1461.lha` (928591 bytes), SHA256
+   `bba31739993eec7b668294ec919a919da43a5adfc89d9855a09a22f35b7ece33`.
+   Re-extraction verifies all 124 original member names: exactly the slave
+   and ReadMe changed; the remaining 122 files are byte-identical. LH5,
+   level-1 headers. Archive remains local and unpublished.
+   Harness research is condensed into `docs/open-work.md` with compatibility
+   entry-point links. All 29 prior notes are recoverable from local personal
+   Git history in `docs/.git`, commit `9311a53`, with no remote.
+
+The earlier outcome estimates are superseded by these measured results.
+P6 makes no further physics/handling changes: the frozen gate remains 27/29,
+and the two failed bounded trials remain documented in P5.
 
 ## Not doing (with reasons)
 

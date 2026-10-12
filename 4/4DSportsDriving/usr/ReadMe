@@ -38,182 +38,75 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- Current production source, P1 timing correction validated (11.10.2026):
- - the default build now uses an independent display-field clock and input
-   queue for Normal (10 Hz) and A2500 (20 Hz), without A4000 physics or fixtures
- - CUSTOM3=1 restores original simulation timing and original timing-hook
-   bytes; CUSTOM2 continues to control rendering optimizations separately
- - PAL/NTSC is detected from the beam; the clock uses a 50/60 phase accumulator
- - 30-second emulator checks: Normal 10.033 steps/s on A500 FULL/FAST;
-   A2500 20.002 on PAL 020 and 19.997 on NTSC 020. Race clock ratios are
-   1.00329, 1.00009 and 0.99987 respectively; all meet the +/-0.5% timing gate
- - this does not deliver the predicted A500 FAST frame-rate gain: matched
-   10-second runs measured 7.697 FPS with legacy timing and 7.597 corrected,
-   while simulation speed improved from 8.296 to 9.995 steps/s
- - native 10/20 Hz replay loading and playback pass. All 1120 captured
-   simulation-state bytes match legacy timing at replay step 200
- - 120-second moving stock-track drives on A500 FULL/FAST and 020 FULL
-   have no queue overflow. Combined crash/restart/finish checks also pass
-   over 177.60 / 176.72 / 182.52 seconds respectively; those functional
-   runs use a scenery-cleared track and include a long idle prelude
- - P1 timing and compatibility acceptance passes. The A500 FAST target of
-   9.5-10 FPS was moved to P2 and is now deferred by user decision
- - this source build has not replaced the previously distributed archive
+ version 1.3 (12.10.2026):
+ - one production slave includes corrected timing, optional rendering
+   optimizations and experimental A4000 physics; no test fixtures
+ - Normal runs at 10 simulation steps/s and A2500 at 20 steps/s, independent
+   of rendering speed. The field clock detects PAL/NTSC and uses a 50/60
+   phase accumulator. Slow rendering catches up the queued input in order.
+ - without a saved choice, 68000/68010 select Normal; 68020 and later select
+   A2500. CTRL-G changes detail and simulation settings. A changed simulation
+   setting takes effect on the next race, and is saved in data/4DPhysics.cfg.
+ - A4000 is an explicit opt-in, experimental 50 Hz mode for PAL machines.
+   It updates physics and controls at 50 Hz without interpolation. It is
+   never selected automatically by CPU type. On NTSC a saved A4000 choice
+   falls back to the CPU default; A4000 selection/replay loading is blocked.
+ - A4000 handling is not fully validated: 27/29 frozen handling checks pass.
+   Common-Y travel is 2263 versus 1247, and landing pitch is 18 versus 11
+   internal units in the two failing checks. Keep A4000 experimental.
+ - A4000 replays use format 2, physics ABI9, with recorded opponent routes
+   and state needed for deterministic playback. Older format-1 A4000 files
+   are rejected. Native Normal/A2500 replay formats remain unchanged.
+ - eligible 020+ machines with real Fast RAM can use a planar CPU renderer
+   with Fast-RAM staging. Other configurations retain native drawing.
+   The slave does not force extra CPU cache settings.
+ - CUSTOM2=0 (default): original rendering.
+   CUSTOM2=1: all validated rendering optimizations, including the eligible
+              Fast-RAM renderer and CPU-specific drawing paths.
+   CUSTOM2=2: eligible Fast-RAM renderer only.
+ - CUSTOM3=1: original simulation timing and original timing-hook bytes;
+   Normal/A2500 remain available, A4000 replay loading is rejected.
+   Rendering options remain independent of this timing switch.
+ - memory above is the base requirement; WHDLoad, PRELOAD, replay storage
+   and the optional renderer require additional host memory.
 
- P2 rendering work completed (11.10.2026):
- - CUSTOM2=1 gives the blitter priority during owned primitive drawing,
-   restoring its original priority before releasing ownership
- - matched 10-second emulator FPS: A500 FULL 2.699 -> 2.699, A500 FAST
-   7.597 -> 7.796, A1200 FULL 9.298 -> 9.598, 040 FULL 17.796 -> 18.395
- - 68020 uses CPU stores for rectangular fills: A1200 FULL rises further
-   from 9.598 to 9.998 FPS. Other CPUs retain native rectangle blits
- - 568 same-input CPU/native-blitter plane comparisons match all 8000 bytes;
-   whole-plane fill checks also preserve pixels outside the rectangle;
-   the asynchronous blitter-release experiment was slower and discarded
- - A500/A1200 stationary primitive output matches all 32000 pixel bytes;
-   disabled options preserve original bytes. P2 validation passes
+ Emulator measurements; real-hardware reports welcome.
+ Ten-second PAL moving windows on this production slave. Values are FPS,
+ counted at display-buffer switches; FULL/FAST are graphics detail levels.
+ CUSTOM2=0 and CUSTOM2=1 both use corrected timing (CUSTOM3=0).
 
- Current combined P2 result (matched 10-second emulator runs):
- - A500 FULL 2.699 -> 2.699 FPS; A500 FAST 7.597 -> 7.697;
-   A1200 FULL 9.298 -> 9.998; 040 FULL 17.796 -> 18.195
- - 60-second timing checks remain correct: Normal 9.99952 steps/s,
-   A2500 19.98171, race-clock ratios 0.999952 / 0.999085; no queue overflow
- - P2 is complete with user approval to defer the unachieved A500 FAST
-   9.5-10 FPS target. Slower or insignificant experiments were discarded;
-   P3 is complete, with its results below
+ Machine / simulation           C2=0 FULL FAST    C2=1 FULL FAST
+ A: 68000 / Normal 10 Hz              2.40 7.40         2.60 7.60
+ B: 68EC020 / A2500 20 Hz             8.20 17.10       11.30 19.90
+ C: 68030/50 / A2500 20 Hz           18.20 19.90       19.90 19.90
+ D: 68040/25 / A2500 20 Hz           19.70 20.00       19.90 19.90
+ E: 68060/50 / A2500 20 Hz           19.70 20.00       19.90 19.90
 
- P3 Fast-RAM CPU renderer completed (12.10.2026):
- - the production slave now includes exact CPU viewport/background drawing on
-   020+ with the game and a 32000-byte staging bitmap in real Fast RAM
- - CUSTOM2=1 enables all validated rendering optimizations; CUSTOM2=2 selects
-   the Fast-RAM renderer alone. CUSTOM2=0 keeps native rendering and allocates
-   no staging bitmap. 68000/010 and machines without real Fast RAM keep native
-   drawing (and any separately selected P2 optimizations)
- - original clipping and circle/wheel construction are retained. The CPU draws
-   planar pixels directly; there is no chunky conversion or interpolation
- - exact pixel checks pass all graphics levels, native replay, crash/finish,
-   camera/opponent views, circles and partial-background fallback
- - matched 10-second FULL emulator FPS, P2 -> P3:
-     A1200 020/14, A2500: 9.998 -> 11.397 (100.02 -> 87.74 ms/frame)
-     030/50, A2500, data cache on: 18.795 -> 19.895
-     040/25, A2500: 19.595 -> 19.895; 060/50: 19.895 -> 19.895
-     040/25, opt-in 50 Hz: 19.295 -> 44.589 (51.83 -> 22.43 ms/frame)
-     060/50, opt-in 50 Hz: 20.395 -> 45.489 (49.03 -> 21.98 ms/frame)
-   With an opponent at 50 Hz: 040/25 35.191 FPS, 060/50 36.791 FPS
-   A500 FAST stays at 7.697 FPS; its deferred target is unchanged
- - native-rate production still draws at most 10/20 FPS. The 50 Hz figures use
-   the existing optional A4000 physics build; its handling/release work remains
- - these accelerator comparisons use corrected private-emulator CPU-frequency
-   settings. The 030 uses native IDE images with data-cache emulation enabled;
-   030/040/060 comparisons disable MMU emulation. They are not real-hardware
-   predictions, or matched comparisons with older accelerator tables above
- - display-DMA checks find no writes to a still-displayed bitmap. Disabled
-   options preserve all 35 original rendering/timing ranges; hook audit passes
- - source build only: the previously distributed testing archive is unchanged
+ A uses 512 KB Chip + 1.5 MB slow RAM; B/C use 2 MB Chip + 4 MB Fast;
+ D/E use 2 MB Chip + 8 MB Z2 Fast + 8 MB motherboard RAM. C uses native
+ IDE boot and active emulated data cache. D/E use calibrated CPU clocks;
+ their data cache is not emulated in these directory-drive timing runs.
+ These are scene/configuration-specific emulator results, not hardware
+ predictions. The A500 FAST target of 9.5-10 FPS remains deferred.
+ Queued steps crossing a window boundary can perturb short consumed-step
+ rates; the clock funds 10/20 steps per second. No queue overflow occurred.
 
- P4 presentation validated (12.10.2026), no further game-code change:
- - matched FULL solo 50 Hz emulator runs reproduce 44.589 FPS on 040/25 and
-   45.489 on 060/50, with correct game time and no backlog growth/overflow
- - a separate 060 capture displays 49.385 FPS: 238 one-field intervals and
-   3 two-field intervals. Every measured input sample reaches a containing
-   displayed state within 1-3 PAL fields, meeting P4's limit at >=45 FPS
- - later captures: 040 43.033 FPS, sample latency 2-4 fields (one 4-field case);
-   060 44.835 FPS, 2-3 fields. These are field-index measurements from queued
-   input through physics to display DMA, not host keyboard or monitor latency
- - all complete buffer switches reach the display; pending-buffer waits span
-   at most one field. A split COP1LC write can become visible in the same
-   field; the trace checker now verifies that case from the actual bus writes
- - two buffers, no interpolation, no extra frame cap. Native-rate production
-   remains 10/20 FPS; A4000 physics/release acceptance is still P5/P6 work
- - game binaries and testing archive unchanged by P4; P5 status follows
+ Experimental A4000 50 Hz, same ten-second PAL method:
+ Machine                       C2=0 FULL FAST    C2=1 FULL FAST
+ D: 68040/25                         20.39 23.59       45.89 49.89
+ E: 68060/50                         17.80 29.49       45.49 49.89
 
- Separate A4000 SIM_RUNTIME source status (12.10.2026):
- - replay format 2, physics ABI9, stores the chosen opponent route so native
-   resource reloads cannot silently change it. Older format-1 A4000 files
-   are rejected; Normal/A2500 replay formats are unchanged
- - 38 codec checks pass. First/repeated FULL, FAST and rewind playback each
-   match all 1510 state bytes at 250 checkpoints in the regression replay
- - P5.1 now verifies native format-2 Save/Load/Play: a physical 63912-byte
-   file reloads in a fresh process and matches all 1510 state bytes at ticks
-   200/400/600 (NoWriteCache). A return-point probe confirms successful write
-   and readback; the old fixed-delay counter check could sample mid-write
- - P5.2 bounds fresh A4000 route costs with a private 256-byte table:
-   16 native costs, zero for undefined costs. Fresh 040/060 routes agree
-   with independent reconstruction; Normal/A2500 retain native routing
- - older format-2 replay routes remain exact, with all 1510 state bytes
-   matching at ticks 1500/1550/1600. Legacy bypass restores 37 code ranges
- - FULL with an opponent: 040 35.19 FPS, 060 36.89 FPS; both 50.09 steps/s
-   and 1.00175 race-clock ratio over 10 seconds, without queue overflow
- - jump/landing still passes 27/29 frozen checks: common height error
-   2263 versus limit 1247, pitch error 18 versus limit 11 (internal units).
-   Both bounded alternatives failed and were rejected; physics is unchanged
- - A4000 remains experimental by user choice. Without valid preferences,
-   startup selects Normal on 68000/010 and A2500 on 020/030/040/060.
-   A saved choice takes precedence; Ctrl-G changes apply on the next race
- - startup checks pass on A500/020/030/040/060; saved Normal and A4000
-   choices, corrupt-file fallback and all 38 legacy byte ranges pass.
- - P5 opponent lifecycle acceptance passes on 040/25 and 060/50:
-   197.34/196.72 PAL-field seconds, native crash/restart/finish, no growing
-   backlog or overflow. CIA clock ratios 0.998598/0.998689 over 108-second
-   observations; maximum sampled queue 2, returning to zero
- - these keyboard-test runs use scenery-cleared/off-course-water fixtures
-   and include idle/menu time, not continuous driving. A4000 stays opt-in
-   with the documented handling differences. P5 is complete on that basis;
-   P6 release validation and packaging have not started
- - the previously distributed testing archive has not been rebuilt with
-   this source change; it still contains the earlier format-1 runtime
+ Consumed simulation rate is 49.89-50.09 steps/s in these windows, with
+ no queue overflow. The lower 060 result with original drawing illustrates
+ why these emulator numbers must not be treated as hardware predictions.
+ NTSC native 20 Hz also passes a 30-second check: 19.964 steps/s and
+ race clock 0.9982 times emulated time. A4000 replay state on PAL matches
+ all 1510 captured semantic bytes at steps 1500, 1550 and 1600.
 
- A4000 testing archive v1.3b:
- - this pack includes the playable SIM_RUNTIME preview, without keyboard
-   automation, synthetic test fixtures or startup self-tests
- - launch the existing game icon; use Return to advance the opening screens
- - open Ctrl-G and select A4000 for 50 Hz physics; PAL is required
- - the simulation change takes effect on the NEXT race. Close the dialog,
-   acknowledge the notice, then choose Re-Start Driving in the replay menu
- - set graphics detail to maximum in the same dialog; cursor keys drive
- - CUSTOM3=0 enables independent simulation timing (the default in this pack)
- - CUSTOM3=1 restores legacy timing and the original Normal/A2500 choices;
-   saved A4000 preferences are ignored and A4000 replays are rejected safely
- - CUSTOM2=1 enables rendering optimizations; CUSTOM2=0 is the default
-   and retains the original rendering routines
- - A4000 replay physics ABI9 retains fractional steering, body position and
-   tilt; older development A4000 replays are rejected. Native 10/20 Hz
-   replays remain supported
- - use a separate extracted copy for testing. Game data and icons are
-   unchanged from the v1.2 pack; only the slave and this ReadMe are replaced
- - the preview has been exercised in FS-UAE with 68020, 2 MB ChipMem and
-   4 MB FastMem. Sustained 50 Hz capacity on an A4000 is not yet established
- - known limitation: jump height and landing pitch still differ from A2500
-   beyond the current acceptance limits. Broader handling, lifecycle and latency
-   validation is unfinished; this is not a final release
-
- version 1.3b (testing):
- - increase the simulation build stack to 10000 bytes; native opponent
-   resource loading could otherwise overwrite DOS memory-management data
-   and crash when loading an opponent replay
- - discard stale opening-sequence input when A4000 live recording starts,
-   so holding Return through startup cannot extend the replay past its end
- - queue exhaustion exits with a clear WHDLoad message instead of a Guru;
-   unread controls are never overwritten
- - prevent A4000 rendering from overwriting the buffer still on screen;
-   apply queued input after waiting for the display buffer switch
- - prevent A4000 pitch/roll stabilization from snapping a non-level actual
-   angle to zero when only its extrapolated A2500 reference crosses level
- - optional rendering optimizations (CUSTOM2=1), off by default; select the
-   rendering option in the WHDLoad startup window, or add CUSTOM2=1
- - suppress redundant blitter interrupts only while the game owns the blitter
-   inside primitive drawing; preserve queued work and prior interrupt state
- - faster vertex processing, primitive emission, backface tests, parent-relative
-   rotation and primitive depth/header bookkeeping, validated against native
-   results
- - faster state clear on 68000; 68010 and later retain the original clear loop
- - CUSTOM2=0 preserves the original bytes at every optimization hook
- - verified in FS-UAE on 68000 (512 KB chip + 1536 KB slow RAM) and 68020
-   (2 MB chip + 4 MB fast RAM), including graphics levels, replay, crashes
-   and native race finishes; real-hardware testing remains welcome
- - stationary FULL/Normal starting-scene display rate improved about 11.8%
-   on both tested machines, measured over 250 sampled PAL fields per option;
-   this is a scene-specific result, not a moving-race benchmark
+ A separate full-68040 MMU functional test passes startup, 50 Hz gameplay,
+ preference load/save with physical-file CRC verification, normal quit and
+ return to the shell. WHDLoad's matching register dump confirms TC=8000,
+ CACR=80008000 and Return OK. This is a compatibility test, not an FPS row.
 
  version 1.2 (21.03.2021) done by JOTD:
  - long delay when ending a race removed (side effect

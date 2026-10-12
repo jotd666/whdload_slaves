@@ -30,8 +30,13 @@ sim_replay_load_entry:
  cmp.w #50,d7
  bne .timing_allowed
  btst #0,_custom3+3(pc)
+ bne .unsupported_timing
+ lea sim_replay_load_entry(pc),a0
+ adda.l #sim_time_field_hz-sim_replay_load_entry,a0
+ cmp.w #50,(a0)
  beq .timing_allowed
- move.l #4,(a2)           ; valid A4000 file, incompatible legacy timing
+.unsupported_timing:
+ move.l #4,(a2)           ; valid A4000 file, incompatible timing/video
  bra .failed             ; no live prefix, input or checkpoint writes yet
 .timing_allowed:
  ENDC
@@ -216,7 +221,7 @@ sim_replay_load_text:
  dc.b "Replay file missing or invalid.]",0
  IFD SIM_RUNTIME
 sim_replay_legacy_text:
- dc.b "A4000 replay requires new timing.]",0
+ dc.b "A4000 replay requires PAL and new timing.]",0
  ENDC
  even
  dc.b "4DRPLMNU"

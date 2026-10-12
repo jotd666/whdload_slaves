@@ -32,14 +32,11 @@
 
 ;============================================================================
 
-; Production owns native-rate timing; A4000 remains an opt-in build.
+; One production build includes corrected native timing and experimental A4000.
+; SIM_RUNTIME is the internal no-fixture binding, also accepted by old scripts.
  IFND VERIFY
  IFND SIM_RUNTIME
-SIM_NATIVE = 1
-SIM_BUILD = 1
-SIM_PROBE = 1
-SIM_SCHEDULE = 1
-SIM_STARTUP_TESTS = 0
+SIM_RUNTIME = 1
  ENDC
  ENDC
  IFD SIM_NATIVE
@@ -246,7 +243,7 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.3b"
+	dc.b	"1.3"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -307,22 +304,7 @@ _bootdos
 		lea	(tag,pc),a0
 		jsr	(resload_Control,a2)
 		IFD SIM_SCHEDULE
- IFD SIM_NATIVE
- bsr sim_time_detect_video
- ELSE
- IFD SIM_RUNTIME
- btst #0,_custom3+3(pc)
- bne .pal_clock            ; original timing has no new PAL requirement
- ENDC
-		; The field accumulator is validated for PAL only. Reject unsupported
-		; video timing before loading the game or installing any clock hooks.
-		move.l sim_monitor_id(pc),d0
-		cmp.l #PAL_MONITOR_ID,d0
-		beq .pal_clock
-		pea TDREASON_MUSTPAL
-		jmp (resload_Abort,a2)
-.pal_clock:
- ENDC
+ bsr sim_time_detect_video ; preserve corrected native timing on PAL and NTSC
 		ENDC
 	
 	;open doslib
