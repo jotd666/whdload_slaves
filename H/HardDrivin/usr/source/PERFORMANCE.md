@@ -106,6 +106,69 @@ for an earlier gated solver, not the original game. Its accelerator-release
 threshold overshoots to 29 on A500 while reaching 26 on 68020, so those runs must not
 be described as identical-throttle cross-machine tests.
 
+### Projection experiments and the cheaper solver
+
+A new 500-field constant-accelerator comparison includes the current manual,
+skid, airborne and landing-audio extensions. The uncached reference still
+produces 34 swaps. Two exact projection experiments also produce 34:
+
+- A two-entry cache, cleared on every outer physics pass, avoids 422 native
+  projections and computes 389 misses. It passes 3840 assembled 68000 cases,
+  including long results and condition flags, but adds no completed frame.
+- A level/cardinal-heading shortcut passes 4800 assembled 68000 cases (400 fast
+  cases, 4400 general fallbacks), including signed-word wrap and condition flags.
+  It also adds no completed frame.
+
+Both experiments were removed from the source. Their patches, binaries and
+captures remain local evidence, not accepted optimizations. The cache run has
+two crash fields near the window end; the control and cardinal runs each have
+seven. Equal swap counts do not establish equal trajectories or an isolated
+instruction-cost comparison. Captures are `s4-vector-control`,
+`s4-vector-enabled` and `s4-cardinal-enabled`; the same-slave original control
+`s4-vector-original` has 38 swaps and no crash fields. Its complete retained
+capture was reanalysed after correcting a verifier that had mistaken inactive
+drivetrain counters for active pitch serials.
+
+The cheaper once-per-frame drivetrain policy, without the optional reference
+recurrence, gives 37 swaps (3.694110 FPS, 270.701176 ms/frame), 38 full physics/render
+passes and 21 crash fields in `s4-single-constant-current`. Its 2.63% short-window
+FPS loss is inside 3%, but the changed scene/event workload and unresolved
+cross-machine integration accuracy prevent treating it as step-4 acceptance.
+The next solver work must address that accuracy/cost tradeoff; neither tested
+projection shortcut closed the reference solver's performance gap.
+
+### Current simpler policy in both frozen gameplay windows
+
+The current all-timing build without the optional drivetrain reference was also
+run on the original field-indexed VERIFY_DRIVE tape, with the same compiled
+slave and CUSTOM1 off/on. Both captures retain all 5600 fields, complete native
+data/BSS, front-buffer images and independent swap/physics/replay observations.
+
+| Window | Original swaps / FPS | Enabled swaps / FPS | FPS change | Original / enabled physics calls | Original / enabled replay iterations |
+|---|---:|---:|---:|---:|---:|
+| A, fields 1..1250 | 108 /4.313123 | 115 /4.592678 | +6.48% | 108 /116 | 0 /0 |
+| B, fields 3000..5599 | 349 /6.700855 | 258 /4.953641 | -26.07% | 259 /251 | 90 /7 |
+
+Window B therefore fails the literal 3% FPS gate: it requires at least 339 swaps
+(6.499829 FPS threshold before integer rounding), versus 258 measured. Window A
+passes the count threshold, but does not preserve the original trajectory.
+These are current measurements, not a claim that the earlier reference-solver
+10.53% diagnostic describes the regular integrated policy.
+
+The workload changes are substantial. Original B has 198 crash fields and 675
+replay fields; enabled B has 195 and 74 respectively. Original A ends near
+(31719,200,24912), while enabled A ends near the starting area at
+(26542,0,25057). Thus neither a raw B deficit nor A's gain isolates solver
+instruction cost. This input tape was calibrated for the native frame-coupled
+route; altered simulation timing changes where its field-indexed steering acts.
+The shorter replay and route differences require separate handling/event checks;
+reclassifying the window as a performance pass would hide those differences.
+
+Evidence: `s4-single-tape-off/on`, `s4-single-tape-current.slave`, and the retained
+`window-comparison.json`. The source contains neither rejected projection
+experiment. Full handling, equal-time comparison and final performance
+acceptance remain open.
+
 ### Scene preparation inside simulation substeps
 
 The matching 500-field `s4-dispatch-cost-off` / `s4-dispatch-cost-on` instruction

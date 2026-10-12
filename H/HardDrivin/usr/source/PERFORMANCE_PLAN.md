@@ -360,8 +360,13 @@ Tools stay in ignored `tmp/dev/tools`.
      avoids252 of263 conversions. Neither adds another swap in that fixture.
      A same-slave constant-accelerator comparison gives38 original versus34 enabled
      swaps (10.53% loss); the enabled run reaches a crash near the window's end.
-     The cheaper general policy, original-game performance acceptance and handling
-     tolerance stay open.
+     Two further exact projection experiments (a cache and cardinal shortcut)
+     still give34 swaps and were removed. The cheaper once-per-frame drivetrain
+     policy gives37 swaps in the short diagnostic, but its full frozen-window
+     comparison gives115 versus108 original swaps in A and258 versus349 in B.
+     B fails the3% gate and has a different replay/scene workload; see PERFORMANCE.md.
+     The cheaper general policy's handling tolerance and final original-game
+     performance acceptance stay open.
    - Exercise collisions, the loop and the jump at both T extremes; check for
      tunnelling and missed checkpoints.
    - Measure the A500's FPS: it must not drop by more than 3% against the baseline.
