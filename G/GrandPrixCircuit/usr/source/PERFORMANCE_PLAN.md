@@ -811,7 +811,7 @@ CPU instruction trace; no 030 cycle-cost claim is made.
 3. Adapt `package_release.py`; focused commits on `grandprixcircuit`; PR via Vesuri.
 4. Generic lessons (interrupt-driven simulation, LoadView swap marker) → AmigaXDev docs.
 
-Release candidate: **1.1-beta4** (Monza address-width correction below). Physical testing is assigned to the owner on an
+Release candidate: **1.1-beta5** (horizon blitter correction below). Physical testing is assigned to the owner on an
 A1200 / 68040 at 40 MHz / MMU / 32 MB / WHDLoad 19.x. The owner reports good
 framerate and correct-feeling gameplay. The same hardware test found intermittent
 missing intro-music notes, stepped horizon motion, and jumpy roadside placement.
@@ -896,8 +896,8 @@ The owner's car, difficulty and single-race/championship choice remain unknown;
 these controlled cases alone did not resolve the report or establish hardware acceptance.
 
 The Monza correction has a controlled before/after reproduction below and is
-owner-confirmed fixed in the beta4 A1200-040 emulator run. The reported horizon seam is a separate open release
-blocker. Beta3 music is owner-confirmed fixed on the emulator; this is not
+owner-confirmed fixed in the beta4 A1200-040 emulator run. The reported horizon gap is reproduced and corrected in beta5 below;
+owner retesting remains pending. Beta3 music is owner-confirmed fixed on the emulator; this is not
 unconditional hardware acceptance. Wider circuit, car and traffic coverage
 remains unestablished.
 
@@ -909,7 +909,7 @@ audits and positive TC=8000 translation evidence with JIT off. There is no timin
 claim from the MMU run.
 
 Release preparation:
-- `DECL_VERSION` is `1.1-beta4`; `slv_config` exposes only the normal C2 option.
+- `DECL_VERSION` is `1.1-beta5`; `slv_config` exposes only the normal C2 option.
   The ReadMe now includes fractional presentation and the between-race table reset,
   documents the off path, and preserves JOTD's original history.
 - Corrected the normal runtime minimum to **WHDLoad 17.2**: `PL_IFC2` uses the
@@ -1090,17 +1090,11 @@ defect below can corrupt the displayed rank even with a valid pole grid; the
 screenshot alone does not establish the actual grid assignment or memory layout.
 The audio change does not address opponent rendering, and this listening report
 does not establish a fresh physical-68040 test.
-The owner also reports a horizontal discontinuity in the Monza background strip,
-at the join to the right of the trees. It is outside the visible portion of the
-supplied driving screenshot (`FS-UAE_Full_261013-0136_00.png`), so that frame
-cannot establish the seam's appearance or exact heading. This is a separate open
-presentation defect. Initial static review locates the scenery strip at
-`$8246..$82e8`: the front view draws four pieces with alternating 320/192-pixel
-advances, then repeats the first piece after 1,024 pixels. The beta2 hook at
-`$8252` changes the heading input, leaving this native layout and blitting path
-intact. Investigate the join geometry, source-piece edges and heading wrap before
-attributing it to interpolation or changing behavior. No seam reproduction or
-fix is claimed.
+The owner's three beta4 screenshots (`1034_00`, `1035_00`, `1035_01`) show the
+horizon stopping at the same final 16-pixel screen word. They are preserved with
+a hash manifest in ignored `tmp/dev/tmp/phase8/owner-beta4-horizon`. The source
+artwork is continuous. The beta5 investigation below identifies a blitter row
+overlap, rather than a gap in the four-piece panorama layout or heading input.
 
 ### Beta4 — Monza grid and visibility address correction
 
@@ -1174,7 +1168,68 @@ diagnostic sources and captures stay ignored under the local harness.
 The owner confirms the Monza car-positioning bug fixed after the beta4 release
 launch with the A1200-040 emulator preset, MMU and CUSTOM2=1. This closes the
 reported Monza reproduction; it does not establish a fresh physical-Amiga test.
-The separately reported horizon seam remains open.
+The separately reported horizon gap is addressed by beta5 below.
+
+### Beta5 — Horizon blitter row overlap
+
+The native shape blitter can draw a shifted, left-clipped 320-pixel image using
+21 words per row into a 20-word-wide bitmap. Its destination and C modulos are
+then -2. The first, masked word of the next row aliases the previous row's last
+word. Blitter pipelining reads that C word before the preceding D write completes;
+the masked next-row write then restores the old sky over the newly drawn scenery.
+This explains the fixed screen-word boundary and why the last image row survives.
+
+The decisive 68030/MMU DMA capture records C-read, C-read, D-write, D-write at the
+same address. In one tree row the reads are both `$ffff`, the correct first write
+is `$00ff`, and the following write restores `$ffff`. Four fields contain 14
+changed words erased this way. The trace, per-blit register records and asserted
+ordering evidence are in `normal-horizon-dma/overlap-proof.json`. This is a
+measured destination-read hazard; the source graphics and clipping masks are valid.
+
+`shape_blit_rows` intercepts the three native BLTSIZE writes at `$c8b4`, `$c904`
+and `$c95e`, covering constant-zero, constant-one and source-data planes. Only a
+negative destination modulo takes the correction: it starts one row at a time
+and drains the blitter before the next row. All other shapes retain the native
+single-blit path. Source/destination pointers, modulos, shifts, masks and minterms
+remain native. D0/D1 and X are preserved, MOVE.W condition codes are replayed,
+and the displaced first busy test is retained. The double initial busy read is
+also retained for each row. Height zero is interpreted as BLTSIZE's 1,024 rows.
+The size-gated v1 correction applies independently of C2. The normal slave has
+no scenery fixture or test input. All 77 hook boundaries/direct entries pass.
+
+A frozen Monza pose at an eight-pixel offset reproduces 34 wrong pixels in the
+last screen word before cars are drawn. The corrected bitmap matches all 4,816
+covered scenery pixels exactly. A separate isolated fixture sweeps all sixteen
+fine-scroll positions at each of the four panorama joins: 64 poses, including
+the tree strip and aligned/non-overlapping cases. On both 68030/MMU with C2 enabled and A500 with C2 disabled, all 323,584
+compared pixels per profile match direct decoding of the pristine scenery shapes.
+The checker rejects a changed-pixel negative control. It observes the bitmap
+after native scenery blits, before road/cars can occlude it; no tolerance or
+screen-edge mask hides the reported defect.
+
+Evidence stays ignored under `tmp/dev/tmp/phase8/`: `normal-horizon-stages`,
+`normal-horizon-fixed`, `normal-horizon-sweep-030`,
+`normal-horizon-sweep-a500-off`, and their local source/build fixtures.
+`horizon-fixture-audit.json` binds the same three hooks and helper to the normal
+release. The optional four-field A500 DMA window fell after the horizon blits,
+so it is not used as evidence for the corrected row sequence.
+
+The final normal beta5 passes intro, gameplay, native race exit and a second
+attract race on A500 and 68040/MMU. All 102 canonical table words restore, followed
+by 40 further swaps. Exact code/table/music-hook audits pass with all 139 jump
+stubs intact and corrupted-code negative controls rejected. The 040 log confirms
+enabled MMU translation with JIT off. `beta5-normal-audit.json` binds both runs
+to SHA-256 `0e2d2963170693e41c93be6a22751aaeaf9d1be83f5edb1f97f29c6a4185154c`.
+The same existing WHDLoad 20.0 harness is used; no additional version matrix was
+introduced. This is not an FPS or physical-hardware acceptance claim; owner
+retesting remains pending.
+
+Beta5 packaging passes exact extraction round trips for the 21-member
+installer/source and 55-member private preinstalled archives. Packaged source
+rebuilds the identical normal slave, and ordinary VERIFY builds without private
+inputs. The standalone replacement matches the tested hash. All 55 pristine
+input hashes are unchanged; `package-1.1-beta5/report.json` retains the evidence.
+No game bytes, builds, screenshots or traces are included in the commit.
 
 The contribution remains a draft beta, not a completed Phase 8 acceptance.
 

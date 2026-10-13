@@ -75,7 +75,7 @@ slv_keyexit	= $5D	; num '*'
 
 
 DECL_VERSION:MACRO
-	dc.b	"1.1-beta4"
+	dc.b	"1.1-beta5"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -328,9 +328,49 @@ track_bucket_origin:
     lea -94(a4),a0
     rts
 
+; A left-clipped, shifted full-width shape can have a negative destination
+; modulo: consecutive rows share one word. C fetches for the next row can
+; precede the previous row's final D write, restoring stale destination bits.
+; Drain each row only in this overlapping case. The native path stays one blit.
+; DIVU/DBRA and logical operations leave X unchanged; D0/D1 are restored.
+shape_blit_rows:
+    tst.w 4874(a4)
+    bpl.b .native
+    movem.l d0-d1,-(sp)
+    moveq #0,d0
+    move.w d1,d0
+    divu.w #64,d0
+    tst.w d0
+    bne.b .height
+    move.w #1024,d0         ; BLTSIZE's zero height encoding
+.height
+    and.w #63,d1
+    or.w #64,d1
+    bra.b .next
+.row
+    move.w d1,$58(a6)
+    btst #6,2(a6)
+.wait
+    btst #6,2(a6)
+    bne.b .wait
+.next
+    dbra d0,.row
+    movem.l (sp)+,d0-d1
+    tst.w d1               ; replay MOVE.W's N/Z/V/C; retain X
+    bra.b .tested
+.native
+    move.w d1,$58(a6)
+.tested
+    btst #6,2(a6)           ; displaced first native busy test
+    rts
+
 ; v1 display handoff fix plus inherited JOTD patches. VERIFY can bypass the fix.
 pl_main_v1
 	PL_START
+	; Overlapping destination rows need a completed D write before the next C read.
+	PL_PSS $c8b4,shape_blit_rows,4 ; PERF_RANGE h0:C8B4 10 bit=BASE
+	PL_PSS $c904,shape_blit_rows,4 ; PERF_RANGE h0:C904 10 bit=BASE
+	PL_PSS $c95e,shape_blit_rows,4 ; PERF_RANGE h0:C95E 10 bit=BASE
 	; Track positions are addresses, not 16-bit segment counters. Preserve
 	; carry/borrow when a grid or view window straddles a 64 KB boundary.
 	PL_W $9fc2,$5383         ; SUBQ.L #1,D3 (grid partner)

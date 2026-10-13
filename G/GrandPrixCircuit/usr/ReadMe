@@ -39,6 +39,12 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
+ version 1.1-beta5 (13.10.26):
+ - fix missing horizon pixels caused by overlapping blitter destination rows
+ - wait between rows only for overlapping blits; applies with CUSTOM2 on/off
+ - Monza positioning fix is owner-confirmed on the beta4 A1200/68040 emulator
+ - beta: physical-hardware confirmation of these follow-ups remains pending
+
  version 1.1-beta4 (13.10.26):
  - fix track-address carry/borrow in grid placement and visible-car selection
  - fixes missing opponents at Monza race start after qualifying
