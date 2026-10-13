@@ -23,8 +23,8 @@ complete. The original clocks, including their defects, remain unchanged.
 
 The elapsed-time simulation remains gated by CUSTOM1. See `GAME_TIME.md` for
 the implementation and diagnostic history, and `STEP4_COST_PLAN.md` for the
-final acceptance evidence and its limits. Step 5 is next; its rendering gains
-have not yet been measured.
+final acceptance evidence and its limits. Step 5 is in progress; initial rotation measurements and remaining rendering
+work are recorded in `STEP5_RENDERING.md`. No overall net gain is claimed.
 
 The 2026-10-12 cost profile and the ordered closure plan for step 4 (P1–P7,
 C1–C6, decisions D1–D4) are in `STEP4_COST_PLAN.md`.
@@ -491,6 +491,8 @@ Tools stay in ignored `tmp/dev/tools`.
      handling feels the same.
 
 ## Step 5: rendering performance
+
+Current implementation, measurements and outstanding work: `STEP5_RENDERING.md`.
 
 Order the candidates by measured share on each machine. Skip anything worth under 3%
 of a frame unless it is free. Bound each candidate's cost by summing instruction

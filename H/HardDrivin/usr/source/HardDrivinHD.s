@@ -264,6 +264,13 @@ _p0_OldOpenLibrary:
 	bsr _time_install
 	ENDC
 
+	IFD VERIFY_RENDER
+	lea .render_base(pc),a1
+	adda.l #_render_install-.render_base,a1
+	jsr (a1)
+.render_base:
+	ENDC
+
 	; set CPU and cache options for program
 
 	move.l	#WCPUF_Base_WT|WCPUF_Exp_WT|WCPUF_Slave_CB|WCPUF_IC|WCPUF_DC|WCPUF_SB|WCPUF_BC|WCPUF_SS,d0
@@ -1958,4 +1965,8 @@ _verify_cache_audit:
 .message:
 	dc.b "HD_CACHE attn=%08lx setup=%08lx cache_api=%08lx cacr=%08lx",0
 	EVEN
+	ENDC
+
+	IFD VERIFY_RENDER
+	INCLUDE "HardDrivinRender.s"
 	ENDC
