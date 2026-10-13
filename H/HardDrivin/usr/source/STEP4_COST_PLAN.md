@@ -12,9 +12,9 @@ physics arithmetic bottleneck: matched-operand long division is about 29% cheape
 The user accepted the P6 A500 B-window overhead of **5.740 ms/frame for now**
 (2026-10-13), superseding its 3.78 ms blocking limit for that measured build.
 P6 A measured 3.084 ms/frame. The current closure build, including collision
-sweeps, now measures **9.524 / 3.915 ms/frame** after the sweep eligibility
-optimization described under C5. B is within the accepted allowance; A remains
-**1.454 ms above its 8.07 ms limit**. The earlier exception is not extended.
+sweeps, now measures **8.923 / 7.335 ms/frame** after the scan optimization
+described under C5. A and B exceed their respective 8.070 / 5.740 ms limits by
+**0.853 / 1.595 ms**. The earlier exception is not extended.
 C1 is complete, C2–C5 remain open and C6 is deferred. Historical P7 A1200 net
 phase overhead is 0.283 / 0.576 ms/frame (0.47% / 1.23%); it is not a measurement
 of this latest full closure build.
@@ -966,6 +966,29 @@ items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
     32 native-loop cases, 96 world-pool cases and 10,000 signed interpolations.
     Reports: `c5-current-summary.json`, `c5-filter-summary.json`, and per-capture
     `frame-budget.json`, `trace-check.json`, `disabled.json`. **C5 remains open.**
+  - **Latest scan optimization:** `c5-scan-{a,b}-{off,on}` supersedes the
+    preceding final pair. World scans prepare their radius and count once per
+    pool; an early overflow subtracts the unvisited suffix from the counter.
+    Scene misses reuse the exact native rotated point when object byte 34 says
+    it was calculated. No collision approximation or engine-cadence change is
+    introduced. Native-loop tests also exercise byte-34 misses; 20 iterator
+    cases cover empty pools, early overflow and counter wraparound. The 10,000
+    broad-phase cases retain all 1,395 exact contacts, with 88 safe rejections.
+  - Latest G1 overhead is **8.923069 / 7.334501 ms/frame**: both windows fail,
+    exceeding 8.070 / 5.740 by **0.853069 / 1.594501 ms**. Sweep self cost is
+    3.012669 / 0.956033 ms/frame. B's changed disabled trajectory prevents
+    attributing the total-overhead change solely to the optimized instructions.
+    Do not select a cheaper baseline from another build to claim acceptance.
+  - Latest G2 off/on swaps are A 38/38 and B 73/60; FPS is A 3.794/3.794 and
+    B 7.288/5.990. Complete-frame means are A 260.956/255.542 ms and
+    B 137.719/168.743 ms. Polygon means are A 57.757/54.838 and B 26.708/29.542.
+    Both differ by more than 5% and are **scene mismatches**.
+  - All four latest traces cover 500 fields (10.015944 seconds), with matching
+    paired artifacts/configuration and instruction coverage above 99.99995%.
+    Both disabled checks pass 167 ranges; the ordinary build remains identical
+    and the branch audit passes 145 ranges. Native-loop, world-pool and signed
+    interpolation checks pass. `c5-scan-summary.json` and each capture's reports
+    retain the measurements. C2–C5 remain open; C6 remains deferred.
 - **C6, human laps — deferred by the user (2026-10-13).** Full A500 and 68040
   laps remain an unperformed human acceptance check. They do not block the current
   step-4 automated closure; do not describe handling as human-validated.

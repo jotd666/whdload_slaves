@@ -51,9 +51,10 @@ This removes the cost gate as a blocker; it does not complete the outstanding
 simulation-correctness checks. Measure the combined simulation and rendering
 changes against the original before claiming a net performance gain.
 The later full closure build includes collision sweeps: its fresh A500 overhead
-is 9.524 / 3.915 ms/frame after an eligibility-filter optimization. B fits the
-accepted allowance, but A exceeds its 8.070 ms limit by 1.454 ms. This is an open
-C5 item; the P6 exception does not cover that new A result.
+is 8.923 / 7.335 ms/frame after the scan optimization. A and B exceed their
+8.070 / 5.740 ms limits by 0.853 / 1.595 ms. This is an open C5 item; the P6
+exception does not cover these new results. Both windows are scene mismatches,
+so the reported FPS changes do not establish an equal-scene speedup.
 
 The user subsequently requested step-4 closure before step 5 and deferred the
 human A500/68040 test laps (C6). C1 solver coverage is now complete: flight,

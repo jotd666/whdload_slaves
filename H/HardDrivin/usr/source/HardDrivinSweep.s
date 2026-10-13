@@ -147,7 +147,19 @@ _sweep_candidate:
  move.w SW_RAW+2(a6),d1
  move.w SW_RAW+4(a6),d2
 .rotate:
+ ; A visible solid with byte34 set already passed native BB6E..BBD2 before
+ ; reaching this miss hook. Reuse its exact rounded point, not a new estimate.
+ tst.w SW_WORLD(a6)
+ bne.s .calculate_point
+ tst.b 34(a3)
+ beq.s .calculate_point
+ move.w -16(a5),d0
+ move.w -18(a5),d1
+ move.w -20(a5),d2
+ bra.s .point_ready
+.calculate_point:
  bsr _sweep_rotate
+.point_ready:
  lea SW_BOX(a6),a0
  move.w d0,(a0)
  move.w d1,8(a0)
@@ -275,12 +287,17 @@ _sweep_world:
  beq.s .done
  tst.b -$16cf(a4)
  bne.s .done
- move.w -$669a(a4),d5
+ moveq #0,d0
+ move.w -$669a(a4),d0
  beq.s .done
+ move.w d0,d5
+ ; Count the pool once. An overflow exit subtracts the unvisited suffix.
+ add.l d0,SW_SCANNED(a6)
+ subq.w #1,d5
+ bsr _sweep_world_bounds
  movea.l -$669e(a4),a3
  move.w #1,SW_WORLD(a6)
 .loop:
- addq.l #1,SW_SCANNED(a6)
  cmpi.b #8,28(a3)
  bne.s .next
  tst.b 30(a3)
@@ -289,11 +306,15 @@ _sweep_world:
  beq.s .next
  bsr _sweep_candidate
  tst.w SW_ACTIVE(a6)
- beq.s .finished
+ beq.s .interrupted
 .next:
  adda.w #56,a3
- subq.w #1,d5
- bne.s .loop
+ dbf d5,.loop
+ bra.s .finished
+.interrupted:
+ moveq #0,d0
+ move.w d5,d0
+ sub.l d0,SW_SCANNED(a6)
 .finished:
  clr.w SW_WORLD(a6)
 .done:
@@ -302,18 +323,22 @@ _sweep_world:
 ; Conservative world-axis broad phase. The sum of camera-space half extents
 ; bounds every rotated axis; four units cover nested Q14 word rounding.
 ; Signed LONG endpoints avoid rejecting a distant object via word overflow.
-; D5/D6 and A3 remain intact for the pool iterator.
-_sweep_world_near:
- moveq #4,d4
+; Bounds are prepared once per pool; D6 retains the radius across candidates.
+; D5/D6 and A3 remain intact in the near test.
+_sweep_world_bounds:
+ moveq #4,d6
  move.w -22(a5),d0
  ext.l d0
- add.l d0,d4
+ add.l d0,d6
  move.w -24(a5),d0
  ext.l d0
- add.l d0,d4
+ add.l d0,d6
  move.w -26(a5),d0
  ext.l d0
- add.l d0,d4
+ add.l d0,d6
+ rts
+_sweep_world_near:
+ move.l d6,d4
  move.l d4,d2
  neg.l d2
  lea SW_RAW(a6),a0
