@@ -19,7 +19,14 @@ The span census finds uniform solid patterns in 1,479/2,141 A polygons and
 1,502/1,853 B polygons. Masked boundaries cost 5.93% / 4.72% of the respective
 traces; unrolled solid interiors cost 2.78% / 3.69%. A replacement must price
 its dispatch and preserve patterned fills before claiming the whole filler
-share as available savings. Span work is not yet complete.
+share as available savings. The register-preserving uniform-solid boundary /
+long-interior design was then priced against actual eligible instructions.
+Even removing the first three planes' boundary load/xor/and work, assuming a
+25% reduction in every eligible interior store, and charging zero dispatch,
+mask-inversion, alignment or loop overhead gives only 1.62% / 1.34% of A500
+A/B and 2.39% / 2.40% of A1200 A/B. This specific design is below the plan's
+3% threshold and is not implemented. It is an optimistic price estimate, not
+a measured replacement or a bound on every possible future rasterizer.
 
 ## Exact word rotation shortcuts
 
@@ -92,8 +99,10 @@ variable-input A window gives 203/196 swaps by the independent counter and
 the constant-input matrix above. The trace edge-row cost per store drops from
 11.29 to 8.17 cycles, but its total frame share is only 1.00% before the change;
 the complete window does not improve. The option remains experimental and is
-not selected for the rotation matrix. A500+Fast memory-placement measurement
-and any broader promotion remain undone.
+not selected for the rotation matrix. The separate A500+Fast A experiment gives 39/40 swaps; edge-row cost is
+3.140/3.042 ms per swap and only 1.22% of the original window. This small
+whole-window difference does not establish a meaningful equal-work gain.
+Broader memory-placement promotion is not selected.
 
 ## Gates, cache and evidence
 
@@ -116,7 +125,7 @@ complete the cache/code-write audit, evaluate the worthwhile span/edge/rotation,
 background, blitter-wait and cockpit candidates, and perform required guarded
 rendering comparisons for any pixel-loop replacement. Step 5 is not complete.
 
-## Blitter-wait work in progress
+## Blitter-wait selection in progress
 
 The original helper saves three registers and checks delay options on every
 call. A developer-only CUSTOM3 bit 2 experiment redirects the eleven existing
@@ -145,6 +154,78 @@ test passes. Initial same-build gameplay results (rotation-only / plus lean wait
 The helper's bus-read ordering is preserved. B's different workload explains
 why whole-window swaps and average wait cost need not move together; these
 figures do not prove equal-scene speedup. All thirteen rotation/wait sites are
-audited against their declared baseline. The remaining machine/attract matrix,
-MMU run and final combined selection are still required. Local captures are
+audited against their declared baseline. The remaining machine/attract matrix
+and final combined selection are still required. The combined rotation/lean-wait
+68040 MMU run completes 500 fields, produces populated planar output, leaves
+game code unchanged and passes all thirteen site checks. Its 348 swaps are
+functional evidence only, not a timing comparison. Local captures are
 `s5-wait-v3-*`; `s5-wait-v2-*` retain the earlier tight-poll experiment.
+
+## Remaining candidate screening
+
+The entire native edge-setup range, including its divisions, costs 2.86% / 2.54%
+of A500 A/B and 2.65% in attract; it costs 1.92% / 1.49% on A1200 A/B.
+Even deleting the complete range would miss the 3% threshold in these windows.
+A reciprocal-table or long-divide replacement is therefore not implemented.
+The edge-row stores are a separate cost, not savings attributable to division.
+The projection at $02b74 and face dot product at $02bde already use register-
+resident word products; they are not paired 16-bit implementations of a long
+multiply. The extra unit-cosine/zero-sine special case occurs in only about 1–2%
+of traced vertices, so no additional dispatch is added for it. Clipping already
+has the proposed trivial-accept/reject path.
+
+A private D-only background prototype retains patterned CPU fallback and uses
+four serialized plane blits. Its 1,200 native/model/assembled comparisons pass
+for clipped ranges, patterns, four guarded planes, registers, stack and CCR.
+Those tests model the blitter writes; they are not a hardware pixel-twin claim.
+A same-build A500 attract measurement gives 72/73 swaps. The native direct fill
+costs 7.714% of the off window. The prototype costs 30,437 cycles per call versus
+37,541 native direct cycles; its last-plane wait averages 7,157 cycles per call.
+Normalizing to the off window's 146 calls, even removing **every** last-plane
+wait gives about 2.93% of a frame, before any asynchronous barrier or scheduling
+cost. Earlier planes must finish before the next plane's blitter registers can
+be programmed. The subsequent band and foreground drawing further restrict
+actual overlap. This prices the simple asynchronous per-band design below the
+3% threshold, so neither the private prototype nor an asynchronous variant is
+selected. It is not a bound on a future interrupt-driven blit queue or a
+redesigned renderer. AGA already uses the proposed unrolled 32-bit CPU stores.
+
+The cockpit restoration at $0e9e2 costs 1.46% / 2.23% / 2.53% inclusively in
+A500 A/B/attract. The whole restore is below threshold there. On A1200 it costs
+2.80% / 3.92% in A/B, but the $0eace restore alone costs 0.74% / 1.09% and clears
+the area redrawn by the dynamic large gauges. Even treating every other restore
+and all setup as removable static work leaves only 2.06% / 2.84%. Per-buffer dirty
+tracking, invalidation and comparisons would reduce the saving further. Static
+cockpit caching is not selected; skipping the dynamic gauge restore would leave
+old needles behind. These are candidate prices, not measured dirty-renderer gains.
+Local reports: `remaining-price.json`, `cockpit-price.json`, and
+`s5-bg-proto-a500-attract-{6,14}/background-price.json` (the latter on the on arm).
+
+## Cache/code-write audit
+
+The selected runtime creates the low-memory DBF jump at boot, installs the
+LoadSeg library-vector hook, restores that vector, patches native waits/DBF
+loops, installs simulation/renderer patches and copies the ghost finish helper.
+The library-vector writes have immediate `_fcache` calls. The DBF stub and
+remaining installation writes are covered by the final flush before returning
+to the game; the ghost helper also has an explicit post-patch flush. Renderer
+patches execute before that same final flush. Runtime text/line colour setters
+write **function-pointer data** consumed by an indirect call; they do not rewrite
+instructions. No selected renderer path writes executable code during play.
+
+Two diagnostic-only executable writes needed correction: the traffic route
+math test's fake multiply vector was written after its earlier flush, and the
+contact math test's cosine jump had no following flush. Both now call `_fcache`
+after the final operand write. Separate MMU-enabled 68040 boots pass all 126
+traffic-route comparisons and the contact suite (216 wide, 162 response, 189
+projection, 45 live roll and 135 live pitch cases). These are functional tests.
+A rebuild proves the selected gameplay binary is unchanged by these test-only
+fixes.
+
+The step-2 hardware-cache audit still applies: the original SetCPU requests
+I/D caches; hardware reports I cache on 020, I+D on 030/040/060, and no cache on
+68000. Every current performance matrix runs with that existing cache policy.
+There is no distinct DCACHE-off/on optimization to promote: the allowed D caches
+are already enabled. No cache setting or original-clock behavior is changed.
+The combined 68040 MMU functional run and before/after executable comparisons
+supplement the source audit; they do not prove coverage of unvisited paths.

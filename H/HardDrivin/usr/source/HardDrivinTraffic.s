@@ -1076,6 +1076,8 @@ _traffic_route_math_test:
 	lea _traffic_route_multiply(pc),a0
 	move.w #$4ef9,-$7dfa(a4)
 	move.l a0,-$7df8(a4)
+	; The test vector is executable too; flush after its final operand write.
+	bsr _fcache
 	move.l #$10000,-$6720(a4)
 	move.l #$10320,-$50da(a4)
 	move.l #$100c8,-$50f6(a4)

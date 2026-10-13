@@ -500,6 +500,8 @@ _contact_math_test:
 	move.w #$4ef9,(a4)
 	lea _contact_cos_stub(pc),a0
 	move.l a0,2(a4)
+	; This diagnostic JMP must be coherent before the pitch test calls it.
+	bsr _fcache
 	adda.l #$7f2c,a4
 	lea _contact_pitch_errors(pc),a6
 	lea _contact_pitch_results(pc),a2
