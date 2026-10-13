@@ -811,7 +811,9 @@ CPU instruction trace; no 030 cycle-cost claim is made.
 3. Adapt `package_release.py`; focused commits on `grandprixcircuit`; PR via Vesuri.
 4. Generic lessons (interrupt-driven simulation, LoadView swap marker) → AmigaXDev docs.
 
-Release candidate: **1.1-beta5** (horizon blitter correction below). Physical testing is assigned to the owner on an
+Release candidate: **2.0b** (includes the horizon blitter correction below).
+All work since JOTD's 1.0 release belongs to 2.0b. Earlier beta labels below
+identify historical test builds only, not separate releases. Physical testing is assigned to the owner on an
 A1200 / 68040 at 40 MHz / MMU / 32 MB / WHDLoad 19.x. The owner reports good
 framerate and correct-feeling gameplay. The same hardware test found intermittent
 missing intro-music notes, stepped horizon motion, and jumpy roadside placement.
@@ -911,7 +913,7 @@ audits and positive TC=8000 translation evidence with JIT off. There is no timin
 claim from the MMU run.
 
 Release preparation:
-- `DECL_VERSION` is `1.1-beta5`; `slv_config` exposes only the normal C2 option.
+- `DECL_VERSION` is `2.0b`; `slv_config` exposes only the normal C2 option.
   The ReadMe now includes fractional presentation and the between-race table reset,
   documents the off path, and preserves JOTD's original history.
 - Corrected the normal runtime minimum to **WHDLoad 17.2**: `PL_IFC2` uses the
@@ -1234,6 +1236,12 @@ rebuilds the identical normal slave, and ordinary VERIFY builds without private
 inputs. The standalone replacement matches the tested hash. All 55 pristine
 input hashes are unchanged; `package-1.1-beta5/report.json` retains the evidence.
 No game bytes, builds, screenshots or traces are included in the commit.
+
+Release numbering is consolidated as **2.0b**, with one user-visible ReadMe
+changelog since JOTD's release. The 2.0b installer and private preinstalled
+archives pass exact extraction and packaged-source normal/VERIFY builds; all
+55 pristine input hashes remain unchanged. Evidence: `package-2.0b/report.json`.
+Earlier build labels and hashes above remain historical evidence.
 
 The contribution remains a draft beta, not a completed Phase 8 acceptance.
 

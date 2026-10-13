@@ -39,59 +39,17 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 1.1-beta5 (13.10.26):
- - fix missing horizon pixels caused by overlapping blitter destination rows
- - wait between rows only for overlapping blits; applies with CUSTOM2 on/off
- - Monza positioning fix is owner-confirmed on the beta4 A1200/68040 emulator
- - beta: physical-hardware confirmation of these follow-ups remains pending
+ version 2.0b (13.10.26):
+ - added Enhanced framerate option (CUSTOM2=1), enabled by the game icon
+ - smoother vehicle movement on 68020 and faster CPUs
+ - smoother road, opponent-car and horizon movement
+ - more precise roadside-object positioning on 68020 and faster CPUs
+ - improved drawing performance
+ - fixed screen flicker and missing pixels at the edge of the horizon
+ - fixed incorrect grid positions and disappearing opponents at Monza
+ - fixed missing and cut-off music notes on fast CPUs
+ - requires WHDLoad 17.2 or newer
 
- version 1.1-beta4 (13.10.26):
- - fix track-address carry/borrow in grid placement and visible-car selection
- - fixes missing opponents at Monza race start after qualifying
- - applies with enhanced framerate both enabled and disabled
- - beta3 music confirmed fixed by owner on the A1200/68030 emulator
- - beta: hardware recheck and reported horizon seam remain pending
-
- version 1.1-beta3 (13.10.26):
- - music: protect new-note setup from pending audio interrupts
- - music: service only enabled audio-channel requests
- - existing DMA delays and song data are unchanged
-
- version 1.1-beta2 (12.10.26):
- - music: preserve audio requests arriving during another channel's IRQ service
- - music: read back INTREQR after acknowledgement for fast CPUs
- - CUSTOM2=1: fractional steering contribution to horizon/scenery heading
- - CUSTOM2=1, 68020+: fractional horizontal road/roadside projection
- - original sprite sizes remain discrete; A500 retains the cheaper projection
- - first beta tested on A1200/68040/40 MHz: good framerate and handling
- - these follow-up corrections still require physical-hardware confirmation
-
- version 1.1-beta (12.10.26):
- - rebuilt with vasm and WHDLoad 20.0 KickEmu
- - version 17 slave header and configuration structure
- - size-checked PatchSeg path for the 94708-byte executable
- - original protection, CPU and music patches retained
- - separate VERIFY build with discovery metadata, RNG pin and joystick fixture
- - normal and VERIFY builds require WHDLoad 17.2+
- - vasm Makefile
- - v1 screen-buffer handoff fix, including with CUSTOM2=0
- - CUSTOM2=1: Enhanced framerate (blitter priority and unused blitter IRQ off)
- - CUSTOM2=1: 2-field simulation on 68020+, native 6 fields on 68000/010
- - original clock/statistics units and 6-field decisions retained
- - scaled physics rates and protected rendering snapshot
- - CUSTOM2=1: fractional road, steering and opponent-car rendering
- - projection tables restored between races
- - game icon enables CUSTOM2=1; set CUSTOM2=0 for original simulation/rendering
- - display handoff fix remains active with CUSTOM2=0
- - beta: wider circuit play-testing still pending
- - new fixes/options apply only to the 94708-byte v1 executable
-
- version 1.0 (24.03.08) done by JOTD:
- - initial release
- - fixed to work with fast memory
- - fixed to work with 68020+
- - disk protection removed
- - manual included
- - music fixed
- - icon added
- - source code included
+ Set CUSTOM2=0 to use the original simulation and rendering. The screen,
+ horizon, Monza and music fixes remain active. The new enhancements and
+ game fixes support the original v1 game executable.
