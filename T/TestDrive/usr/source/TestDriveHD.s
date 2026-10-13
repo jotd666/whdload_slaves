@@ -1,15 +1,10 @@
 ;*---------------------------------------------------------------------------
-;  :Program.	BoppinHD.asm
-;  :Contents.	Slave for "Boppin"
-;  :Author.	JOTD, from Wepl sources
-;  :Original	v1 
-;  :Version.	$Id: BoppinHD.asm 1.2 2002/02/08 01:18:39 wepl Exp wepl $
-;  :History.	%DATE% started
-;  :Requires.	-
-;  :Copyright.	Public Domain
-;  :Language.	68000 Assembler
-;  :Translator.	Devpac 3.14, Barfly 2.9
-;  :To Do.
+;  :Program.    TestDriveHD.s
+;  :Contents.   WHDLoad installation for Test Drive
+;  :Author.     JOTD, from Wepl sources; enhancements by Vesuri
+;  :Copyright.  Public Domain
+;  :Language.   68000 Assembler
+;  :Translator. vasm (Motorola syntax)
 ;---------------------------------------------------------------------------*
 
 	INCDIR	Include:
@@ -126,8 +121,6 @@ slv_config
 	dc.b "C5:X:scripted player race:0;C5:X:force crash:1;C5:X:force radar:2;C5:X:straight acceleration braking tape:4;"
 	ENDC
 	dc.b	0
-
-; version xx.slave works
 
 	dc.b	"$","VER: slave "
 	DECL_VERSION

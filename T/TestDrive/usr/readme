@@ -38,22 +38,24 @@
  Enable Enhanced framerate in the WHDLoad options or with CUSTOM2=1. It is
  enabled by default with the Normal icon and the preinstalled game icon.
  The alternative GlowIcons keep their original defaults. Disable the option
- or use CUSTOM2=0 for the original game speed and appearance.
+ or use CUSTOM2=0 to turn off Enhanced framerate.
+ The fixes for accelerated Amigas, sound, nearby vehicles and the rev counter
+ apply with either setting.
 
  This is a PAL beta. NTSC and real A1200/68040 testing remain outstanding.
 
  History:
  --------
  version 2.0b (13.10.2026) done by Vesuri:
- - Optional smoother driving, scenery and traffic with Enhanced framerate.
+ - Optional Enhanced framerate for smoother driving, scenery and traffic,
+   with more consistent race timing and average-speed scoring.
  - Fixed sideways road and scenery jumps, including through bends.
  - Restored steering response through bends.
  - Fixed nearby vehicles disappearing before a collision.
  - Fixed the rev counter needle wrapping around when over-revving.
- - More consistent game speed, race timing and average-speed scoring.
  - Fixed repeated drum hits in the opening music.
  - Improved compatibility with accelerated Amigas.
- - Updated installation and documentation.
+ - Updated installer and clearer setup instructions.
 
  version 1.4 (13.04.2023) done by JOTD:
  - Clear error message when a required game file is missing.

@@ -55,8 +55,8 @@ Known differences that change the design:
 - NTSC stays open, as in TD2: validate PAL only and document the NTSC behaviour.
 - Phase 5 confirms that drawing speed affects clutch release, collision geometry and later
   RNG consumption despite the five-field main loop. Phase 8 must remove these dependencies.
-- Normal builds have no player-facing options yet. VERIFY CUSTOM3 fixes the first profiling
-  window RNG; phase 4 validates the existing root:$7AAA LoadView call as the frame marker.
+- Normal builds expose Enhanced framerate through CUSTOM2. VERIFY CUSTOM3 fixes the
+  profiling window RNG; the root:$7AAA LoadView call is the validated frame marker.
 - Source to copy from: the fork's `T/TestDrive2/usr/source` (it includes PR #24 and #25),
   not the standalone Test Drive 2 repository's `whdload/`. Diff the two before copying a
   routine.
@@ -638,7 +638,9 @@ all 59 one-shots in the corrected 1,000-field opening capture have exactly one
 initial and one completion interrupt, with no negative-count interrupt loop.
 68000/68020 startup, attract and native quit pass, as do both enhancement modes
 on the 68040. Local `docs/audio-repeat.md` records the evidence and limitations.
-This remains part of 2.0b (13.10.2026); real hardware testing stays deferred.
+The user confirms that the sample-repeat bug is fixed in the 2.0b release on
+the a1200-040 emulator with caches and enhancements enabled. This remains part
+of 2.0b (13.10.2026); real hardware testing stays deferred.
 
 ## Phase 12: lessons back to AmigaXDev
 
@@ -651,5 +653,7 @@ Aztec overlay executable. Update `docs/projects.md` with this branch.
 - Does the unmodified repository-1.4 rebuild fail on real A1200/68040 hardware? Emulation cannot tell
   (phase 6.1).
 - NTSC timing is unvalidated; phase-8 acceptance is PAL only.
-- No persistent original display defect was found in the phase-3/6 review;
-  investigate any subsequently reproduced defect separately.
+- The intermittent post-crash steering-dot displacement report remains unconfirmed.
+  The supplied Countach screenshot was reproduced exactly before a crash; four
+  isolated crash/recovery tests restored the dot. No steering-dot fix is claimed.
+  Local `docs/wheel-dot.md` retains the evidence and next checks.
