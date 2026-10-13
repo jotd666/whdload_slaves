@@ -945,6 +945,15 @@ items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
     but fails to exit cleanly; native speed-dependent steering halving must be
     considered when calibrating the fixture. An exact first-loss memory snapshot
     is retained for native terrain replay. These findings do not close C4.
+  - A later centerline failure is now reproduced as rendering-dependent terrain
+    selection: E94A becomes zero, so the native flat-ground query runs despite
+    the road query finding contact. Optimized and pristine road arithmetic agree.
+    An unbounded private selector completes both loop profiles, but is withdrawn
+    because native road planes extend beyond their edges. A bounded prototype
+    passes 5,000 geometry cases and exits the fast loop without a crash, with
+    two zero-contact samples near the exit. It still needs road-record identity
+    and the jump's `$0400` gap flag, plus slow/jump validation. No terrain change
+    is promoted. See `GAME_TIME.md` for the exact branch replay and limitations.
 - **C5, gates.** G1 passes or meets the explicitly accepted temporary exception; G2 is reported; `check_disabled.py` passes; the
   normal build is byte-identical.
   - **Current full-build measurement (2026-10-13):** fresh paired 500-field A500

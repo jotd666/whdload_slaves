@@ -4080,3 +4080,46 @@ Evidence: `c4-loop-centerline-diagnosis.json`, `c4-road-pitch-experiment.json`,
 `c4-loop-input400-060`, `c4-road-pitch-loop-slow-v3` and `c4-road-gain-loop-*`.
 All source variants and snapshot bytes stay in the ignored harness. C4 remains
 open; no authoritative terrain/contact code changed in these experiments.
+
+
+### C4 road selection depends on rendering (2026-10-13)
+
+Further input-only fixtures tested X380, steady throttle 80, a centerline
+controller, and a line using the road width. None alone established acceptance.
+The last exposed a centerline contact loss at field 179 with current physics:
+E94A changed from 255 to zero and wheel distances became 571/570/490/489.
+
+An isolated replay reconstructs that pose and the recorded trigonometry, then
+runs the native terrain branches. Both optimized and pristine `$c854` return
+-42/-42/-4/-5 (road contact). Pristine `$c94e` returns exactly the recorded
+571/570/490/489 (no road); `$ca14` returns 7/7/7/7. Thus this sample is a branch
+selection failure, not a disagreement in the optimized road arithmetic.
+`$cdbe` chooses the road query using E94A, which the rendering path clears at
+`$b0de` and sets at `$a756`. E94B selects object surfaces separately.
+Evidence: `c4-terrain-replay.json` and `check_c4_terrain_replay.py` in the harness.
+
+A private prototype queries the road when both rendering eligibility flags are
+clear, preserving native selection at zero/eight fields and in forced-native
+builds. It completes the calibrated fast and slow loop runs with continuous
+contact and no crash. However, it is **withdrawn, not accepted**: `$c36c` extends
+its selected planes beyond the road edges, so unconditional use can create
+false support off-road. Builds named `c4-road-final-*` contain this withdrawn
+prototype; the name does not designate accepted final source. The same private
+input controller does not complete a clean native-physics route either.
+
+A subsequent private guard tests the actual projected road quads before adding
+road eligibility. Its assembled 68000 implementation passes 5,000 independent
+inverse-affine strip tests (937 inside), including both orientations and edges.
+The bounded fast run reaches the following road segments without a crash; it
+has two zero-contact samples at fields 309/310 near the exit. This remains
+preliminary. In particular, road geometry alone does not identify a drivable
+surface: the jump gap's segment 20 has flag `$0400` (record flags `$0408`), and
+native rendering skips such segments at `$af48`/`$af98`. The new path must honor
+that gap rather than connect its endpoint vertices into a fictitious road.
+Selected-record identity, gap handling and the complete slow/jump checks remain
+unfinished. No terrain-selection or pitch-response change is in the authoritative
+source; its last physics change remains the neutral-steering optimization.
+
+Reports: `c4-road-selection-progress.json`, `c4-road-bounds-check.json`, and
+captures `c4-loop-racing-060`, `c4-loop-road-query-*`, `c4-loop-bounded-road-060`.
+The private selector and bounds helper remain under ignored tools. C4 is open.
