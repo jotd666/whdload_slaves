@@ -4146,3 +4146,35 @@ The private selector and bounds helper remain under ignored tools. All four
 capture processes completed; disposable runtime copies were removed after
 checking their recorded PIDs, and calibration archives were verified by
 SHA-256 after decompression. C4 is open.
+
+### C4 jump selects an object end face (2026-10-13)
+
+An exact pre-contact snapshot at fast jump field 135 identifies a second
+render-dependent terrain failure. Road eligibility is zero and object-surface
+eligibility is 255. Native `$ca14` produces the recorded wheel distances
+525/525/-735/-735. At the identical pose, pristine and optimized road queries
+both give 6/6/1/1; flat ground gives 193/193/182/182. This isolates the selected
+surface as the source of the anomalous contact input. The pitch-rate companion
+changes from -129633 at field 134 to zero at 135; at 137 the car is airborne.
+
+Read-only rendering observations identify the supplying object as type 39,
+class 2, at world coordinates (31927, 0, 17304), near the jump edge. Two polygons
+publish surface planes at field 135; the last one wins. Its clipped vertices
+are (-2,-35,9), (2,-35,9), (0,-21,8): a nearly vertical plane. The renderer sets
+E94B at `$9e16` and copies these points at `$a150`–`$a180`.
+
+Capturing the same polygons before clipping separates face selection from
+clipping distortion. Native surface queries using the original end face still
+give extreme heights (503/508/-741/-736), while the upward-facing top gives
+6/6/9/9 and the downward-facing bottom gives 19/19/25/25. Clipping perturbs the
+numbers but does not explain away the wrong supporting face. Replacing the
+clipped plane with its original end-face plane would therefore not fix this.
+These comparisons use identical saved physics state; the face observations are
+from a separate deterministic capture of the same fixture and field.
+
+The next terrain work must identify finite supporting faces independently of
+which polygon was last clipped for rendering. It must preserve legitimate
+object tops and road gaps; neither a type-39 exception nor globally ignoring
+object surfaces is established as correct. No such change has been promoted.
+Evidence: `c4-jump-plane-replay.json`, `check_c4_jump_plane.py`, captures
+`c4-jump-bad-plane`, `c4-jump-surface-object`, `c4-jump-surface-raw`.

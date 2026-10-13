@@ -957,6 +957,12 @@ items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
     records a crash. Course transitions, vertical support and wheel-edge behavior
     remain unverified. No terrain change is promoted. See `GAME_TIME.md` for
     exact scope and limitations; this is not C4 acceptance.
+  - Exact-state jump replay identifies another render-dependent selection
+    problem: at field 135 a type-39 object's nearly vertical end face becomes
+    the supporting plane, producing wheel heights 525/525/-735/-735 and clearing
+    the pitch rate. Its original end face is also unsuitable; the upward-facing
+    top gives 6/6/9/9. Clipping distortion alone is not the cause. Supporting-face
+    selection still needs a validated fix; no object exception is promoted.
 - **C5, gates.** G1 passes or meets the explicitly accepted temporary exception; G2 is reported; `check_disabled.py` passes; the
   normal build is byte-identical.
   - **Current full-build measurement (2026-10-13):** fresh paired 500-field A500
