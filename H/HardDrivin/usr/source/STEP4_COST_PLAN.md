@@ -992,8 +992,14 @@ items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
     guard is being reconsidered. It retains the previous rate for out-of-domain
     feedback and reproduces the jump crash on both profiles without a new object
     query. A prior-contact-only road continuation guard passes 384 selector cases
-    and both loop fixtures. The combined candidate still needs jump/reset/native
-    checks and cost measurement; neither guard is promoted or counted as C4 done.
+    and both loop fixtures. The combined candidate now reproduces the jump crash
+    on both profiles (fast field 349, slowed A500 field 324). The pitch helper
+    passes 312 cases: valid and zero/eight-field inputs remain unchanged, invalid
+    variable-step inputs retain their prior rate, and an explicit forced-native
+    build of the helper matches all 312 old-source cases. The assembled motion
+    reset passes 256 comparisons with unchanged nested resets stubbed. Full
+    lifecycle/trajectory acceptance and final-build compatibility/cost remain
+    open; neither guard is promoted or counted as C4 done.
 - **C5, gates.** G1 passes or meets the explicitly accepted temporary exception; G2 is reported; `check_disabled.py` passes; the
   normal build is byte-identical.
   - **Current full-build measurement (2026-10-13):** fresh paired 500-field A500

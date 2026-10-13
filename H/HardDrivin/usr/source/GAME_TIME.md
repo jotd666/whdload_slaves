@@ -4342,13 +4342,29 @@ answer stubbed (the geometry and gap helpers have their separate checks).
 Fast/slowed loop captures both exit without a crash and advance the next
 waypoint; fast has two airborne samples at 309/310 and ends on road segment 51,
 slow has continuous contact and ends on segment 50. These runs use the invalid
-pitch-rate guard as well. The paired jump captures above predate the continuity
-option, so the complete combined candidate still needs its jump validation,
-reset/overhead scrutiny, native compatibility and measured cost before promotion.
+pitch-rate guard as well. The combined candidate now also completes both
+450-field jump captures: fast first/last airborne fields 137/345, peak 221.125,
+crash counter 25 at field 349; slowed A500 fields 148/315, peak 224.5, crash 25
+at field 324. These match the preceding candidate's observed jump metrics.
+The sampled update intervals are 1–2 fields on the fast profile and 9–15 on the
+slowed A500; these are observations, not equal-elapsed-time acceptance.
+
+The assembled pitch helper passes 312 input/rate/interval cases using the native
+arcsine routine: 204 valid or zero/eight-field cases match the old helper and
+108 out-of-domain variable-step cases retain their prior rate. An explicit
+forced-native assembly matches the old helper in all 312 cases. A separate
+256-case assembled reset comparison confirms that only the additional road-state
+word changes, with registers, stack and materialized condition codes preserved;
+unchanged nested reset routines are stubbed. This does not establish that every
+lifecycle transition calls reset. Complete trajectory/checkpoint acceptance,
+whole-build native/disabled compatibility and measured cost remain open.
 
 This is now the preferred candidate to investigate before extending the larger
 finite-object-query prototype. Existing native object collision/surface behavior
 is retained; the new road query is limited to contact continuation. No terrain or
 pitch-rate guard has been promoted. Evidence: `c4-continuation-check.json`,
-`c4-continuation-progress.json`; builds `c4-rate-landing-jump` and
-`c4-continued-loop`, all retained privately in the harness.
+`c4-continuation-progress.json`, `c4-combined-jump-summary.json`,
+`c4-pitch-rate-check.json`, and `c4-road-reset-check.json`; builds
+`c4-rate-landing-jump`, `c4-continued-loop`, and `c4-combined-jump`, all retained
+privately in the harness. Finished disposable runtime copies are removed and
+calibration banks have SHA-verified compressed archives (`c4-combined-cleanup.json`).
