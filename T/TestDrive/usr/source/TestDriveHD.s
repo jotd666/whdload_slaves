@@ -1,15 +1,10 @@
 ;*---------------------------------------------------------------------------
-;  :Program.	BoppinHD.asm
-;  :Contents.	Slave for "Boppin"
-;  :Author.	JOTD, from Wepl sources
-;  :Original	v1 
-;  :Version.	$Id: BoppinHD.asm 1.2 2002/02/08 01:18:39 wepl Exp wepl $
-;  :History.	%DATE% started
-;  :Requires.	-
-;  :Copyright.	Public Domain
-;  :Language.	68000 Assembler
-;  :Translator.	Devpac 3.14, Barfly 2.9
-;  :To Do.
+;  :Program.    TestDriveHD.s
+;  :Contents.   WHDLoad installation for Test Drive
+;  :Author.     JOTD, from Wepl sources; enhancements by Vesuri
+;  :Copyright.  Public Domain
+;  :Language.   68000 Assembler
+;  :Translator. vasm (Motorola syntax)
 ;---------------------------------------------------------------------------*
 
 	INCDIR	Include:
@@ -76,7 +71,7 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.4"
+	dc.b	"2.0b"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -118,9 +113,14 @@ args		dc.b	"p",10
 args_end
 	dc.b	0
 slv_config
+	dc.b "C2:B:Enhanced framerate;"
+	IFD VERIFY
+	dc.b "C1:X:automatic recovery verification:1;C1:X:five field simulation verification:2;C1:X:original blitter interrupts verification:3;"
+	dc.b "C3:B:reproducible verification RNG;"
+	dc.b "C4:B:slow drawing verification;"
+	dc.b "C5:X:scripted player race:0;C5:X:force crash:1;C5:X:force radar:2;C5:X:straight acceleration braking tape:4;"
+	ENDC
 	dc.b	0
-
-; version xx.slave works
 
 	dc.b	"$","VER: slave "
 	DECL_VERSION
@@ -184,6 +184,10 @@ _quit		pea	TDREASON_OK
 
 patch_main
 	movem.l	D0-A6,-(A7)
+	bsr sim_init
+	IFD VERIFY
+	bsr verify_init
+	ENDC
 	move.l  d7,A1
 	lea	_patchlist_1(pc),A0
 	move.l	_resload(pc),a2
@@ -196,6 +200,16 @@ patch_main
 
 _patchlist_1:
 	PL_START
+    PL_P $06390,overlay_unload_end
+    PL_P $06916,overlay_load_end
+    ; SIM_RANGE root 02574 12 ALL audio_stop
+    PL_PSS $02574,audio_stop,6
+    ; SIM_RANGE root 02684 10 ALL audio_irq_stop
+    PL_PSS $02684,audio_irq_stop,4
+    ; SIM_RANGE root 026ca 18 ALL audio_irq_snapshot
+    PL_PSS $026ca,audio_irq_snapshot,12
+    ; SIM_RANGE root 0276a 6 ALL audio_start
+    PL_P $0276a,audio_start
 	PL_R	$1D10	; dma stuff
 	PL_R	$1CBC	; dma/drive stuff
 	PL_L	$434,$DFF002
@@ -205,8 +219,133 @@ _patchlist_1:
 	PL_PS	$00541a,read_joydat
     PL_PS   $005402,read_fire1
     PL_PS   $001872,read_fire1
-	
+
+	IFD VERIFY
+	PL_IFC3
+	; Intro RNG call counts vary with CPU speed. Reset at demo selection too,
+	; so all profiling CPUs start with the same car and subsequent RNG state.
+	PL_PS $00230,verify_demo_rng
+	PL_ENDIF
+	PL_IFC4
+	; VERIFY_RANGE root 07aaa 8 C4 verify_slow_view
+	PL_PSS $07aaa,verify_slow_view,2
+	PL_ENDIF
+	ENDC
+    ; C2 removes beam entropy in normal builds too. C3 retains its independent
+    ; original-game fixture when C2 is off. Both branches install identical bytes.
+    PL_IFC2
+    PL_L $05314,$397C1234
+    PL_L $05318,$9BD84E71
+    PL_W $05334,$4240
+    PL_NOP $05336,4
+    IFD VERIFY
+    PL_ELSE
+    PL_IFC3
+    PL_L $05314,$397C1234
+    PL_L $05318,$9BD84E71
+    PL_W $05334,$4240
+    PL_NOP $05336,4
+    PL_ENDIF
+    ENDC
+    PL_ENDIF
 	PL_END
+
+	IFD VERIFY
+verify_demo_rng:
+	move.w #$1234,-25640(a4)
+	jsr -32442(a4)            ; displaced TD:$230, original RNG entry
+    move.l d1,-(sp)
+    move.l verify_c5(pc),d1
+    btst #0,d1
+    beq.b .car_done
+    lsr.l #8,d1              ; VERIFY C5 bits 8..10: car 0..4
+    and.w #7,d1
+    cmp.w #4,d1
+    bhi.b .car_done
+    move.w d1,d0            ; original caller keeps low word and takes modulo 5
+.car_done
+    move.l (sp)+,d1
+	swap d0                  ; displaced TD:$234
+	rts
+	ENDC
+
+; Paula only returns from manual output to idle while its interrupt request
+; remains set. A fast CPU repeatedly acknowledging the final word prevents
+; that transition, so the next DMA start can miss its initial interrupt and
+; a one-shot plays twice. Disable the stopped channel's interrupt; the next
+; request can then remain pending until the existing two-VBL restart delay.
+audio_stop:
+    move.w d0,-(sp)
+    lsl.w #7,d0
+    move.w d0,$9a(a6)
+    move.w (sp)+,d0
+    move.w d0,$96(a6)       ; displaced DMA stop
+    move.l #-1,$16(a0)     ; displaced fade cancellation
+    rts
+
+audio_irq_stop:
+    move.w d2,d4
+    lsl.w #7,d4
+    move.w d4,$9a(a6)
+    move.w d2,$96(a6)       ; displaced DMA stop
+    move.l -31548(a4),4(a0) ; displaced stop timestamp
+    rts
+
+; The level-4 audio handler can disable a channel while this level-3 VBL
+; server is running. Snapshot and mask atomically so restoration cannot
+; resurrect an interrupt that the audio handler has just disabled.
+audio_irq_snapshot:
+    move.w sr,-(sp)
+    ori.w #$0700,sr
+    move.w $1c(a6),d0
+    and.w #$0780,d0
+    move.w d0,-31542(a4)
+    move.w #$0780,$9a(a6)
+    move.w (sp)+,sr
+    rts
+
+; Replace the original Sfx VBL tail. Discard stale requests only for new
+; starts, start DMA, then restore existing interrupts plus the new channels.
+; Register setup and the game's two-VBL stop/start separation stay intact.
+audio_start:
+    move.w -31544(a4),d0
+    and.w #$000f,d0
+    beq.b .restore
+    lsl.w #7,d0
+    move.w d0,$9c(a6)
+    move.w d0,$9c(a6)
+    and.w -24928(a4),d0  ; keep looping music/engine channels masked
+    or.w d0,-31542(a4)
+    move.w -31544(a4),$96(a6)
+.restore
+    move.w -31542(a4),d0
+    beq.b .done
+    or.w #$8000,d0
+    move.w d0,$9a(a6)
+.done
+    movem.l (sp)+,d2/a0-a1/a4
+    moveq #0,d0
+    rts
+
+; The Aztec overlay manager rewrites executable BSR/JMP stubs in the data
+; hunk after DOS LoadSeg has flushed the caches. Flush again after both
+; completed rewrites, before returning to a stub that may still be cached.
+; _flushcache uses resload_FlushCache, which preserves all registers and
+; handles the 68040/060 data and instruction caches as well as older CPUs.
+overlay_unload_end:
+    bsr _flushcache
+    movem.l (a7)+,a2-a3/a6    ; displaced TD:06390
+    rts
+
+overlay_load_end:
+    movem.l (a7)+,d0-d2/a0-a4 ; displaced TD:06916
+	IFD VERIFY
+    bsr verify_overlay_loaded
+	ENDC
+    bsr instrument_overlay_loaded
+    bsr sim_overlay_loaded
+    bsr _flushcache
+    rts
 
 _patch_trackdisk
 	movem.l	D0-A6,-(A7)
@@ -252,11 +391,6 @@ _doio:
 	cmp.l	IO_DEVICE(A1),D0
 	bne.b	.org
 	bra.b	.skipit		; skip accesses to trackdisk device
-	move.w	$1C(A1),D0
-	cmp.w	#$800A,D0	; seek
-	beq.b	.skipit
-;	cmp.w	#$00A,D0	; seek
-;	beq.b	.skipit
 .org
 	move.l	_doio_save(pc),-(A7)
 	rts
@@ -291,15 +425,11 @@ read_fire1:
     bclr    #7,d0
 .no_space    
     move.l  (a7)+,a0
+	IFD VERIFY
+    bsr verify_fire
+	ENDC
     rts
 
-read_fire2:
-     move.w d0,-(a7)
-     bsr    read_fire1
-     btst   #7,d0
-     movem.w    (a7)+,d0
-     rts
-	 
 read_joydat
     move.w  _custom+joy1dat,d0
     move.l  a0,-(a7)
@@ -342,6 +472,9 @@ read_joydat
     
 .no_right   
     move.l  (a7)+,a0
+	IFD VERIFY
+    bsr verify_joy
+	ENDC
     rts
 	
 get_version:
@@ -361,11 +494,6 @@ get_version:
 
 .crack
 	moveq	#1,d0
-	bra.b	.out
-.alt
-	moveq	#2,d0
-	bra	.out
-.out
 	movem.l	(a7)+,d1/a1
 	rts
 	even
@@ -410,7 +538,9 @@ load_exe:
 	move.l	d2,d0			; argument string length
 	move.l	_stacksize(pc),-(a7)	; original stack format
 	movem.l	(_saveregs,pc),d1-d7/a1-a2/a4-a6	; original registers (BCPL stuff)
+	bsr render_interrupt_option
 	jsr	(4,a3)		; call program
+	bsr render_interrupt_restore
 	addq.l	#4,a7
 
 	movem.l	(a7)+,d7/a6
@@ -437,9 +567,6 @@ _saveregs
 _stacksize
 		dc.l	0
 
-tag		dc.l	WHDLTAG_CUSTOM1_GET
-custom1	dc.l	0
-		dc.l	0
 _trackdisk_device:
 	dc.l	0
 _doio_save:
@@ -479,6 +606,77 @@ _trdname:
 	dc.b	"trackdisk.device",0
 	even
 
+; The analogue dial tables continue around a full circle, beyond the printed
+; scale. Stop at the last numbered mark; limit only displayed RPM; engine speed and over-rev damage stay
+; original. These common correctness hooks also fix close-traffic projection.
+; Install for both C2 modes and reapply after every h4 reload.
+instrument_overlay_loaded:
+    movem.l d0-a6,-(sp)
+    move.l sim_data(pc),a0
+    cmp.w #$4ef9,668(a0)
+    bne.b .done
+    move.l 670(a0),a1
+    cmp.l #$4e55ffcc,(a1)
+    bne.b .done
+    cmp.l #$302c991c,$42a0(a1)
+    bne.b .done
+    lea instrument_patches(pc),a0
+    move.l _resload(pc),a2
+    jsr resload_Patch(a2)
+.done
+    movem.l (sp)+,d0-a6
+    rts
+instrument_patches:
+    PL_START
+    ; SIM_RANGE h4 082a2 6 ALL instrument_car
+    PL_PS $082a2,instrument_car
+    ; SIM_RANGE h4 042a0 8 ALL instrument_rpm
+    PL_PSS $042a0,instrument_rpm,2
+    ; SIM_RANGE h4 01ad4 8 ALL traffic_near_edge
+    PL_PSS $01ad4,traffic_near_edge,2
+    PL_END
+instrument_car:
+    move.w 8(a5),d0           ; displaced car selection, also used by caller
+    move.l a0,-(sp)
+    lea instrument_limits(pc),a0
+    cmp.w #4,d0
+    bhi.b .done
+    add.w d0,d0
+    move.w (a0,d0.w),d0
+    lea instrument_limit(pc),a0
+    move.w d0,(a0)
+.done
+    move.l (sp)+,a0
+    move.w 8(a5),d0
+    ext.l d0                 ; displaced sign extension and flags
+    rts
+instrument_rpm:
+    move.w -26340(a4),d0
+    cmp.w instrument_limit(pc),d0
+    ble.b .done
+    move.w instrument_limit(pc),d0
+.done
+    cmp.w -26328(a4),d0       ; displaced comparison; original low clamp follows
+    rts
+; The close-car clamp uses a fixed Q0.16 scale. Native h4:$1AD4 omitted
+; SWAP after MULU and added the fractional low word to the screen centre.
+; At width 448 that sent right-lane cars 26624 pixels away just as the
+; collision window opened. Use the integer product for both views.
+traffic_near_edge:
+    mulu.w -29296(a4),d2
+    swap d2
+    add.w -29306(a4),d2
+    rts
+instrument_limits:
+    dc.w 7000,10000,7000,9000,0 ; Porsche, Ferrari, Lotus, Countach, digital Vette
+instrument_limit: dc.w 7000
+
 ;============================================================================
+
+	include "simulation.s"
+	include "render.s"
+	IFD VERIFY
+	include "simulation-verify.s"
+	ENDC
 
 	END
