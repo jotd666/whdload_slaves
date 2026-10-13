@@ -53,7 +53,9 @@ changes against the original before claiming a net performance gain.
 The current closure build includes collision sweeps, terrain restoration and
 checkpoint/finish evaluation. Exact sweep and traffic zero-input shortcuts reduce overhead to
 7.051 / 5.769 ms/frame. A meets its 8.070 limit; B exceeds the accepted 5.740
-allowance by 0.029 ms. Fresh paired windows retain their own disabled baselines;
+allowance by 0.029 ms. The user explicitly accepted that remaining excess on
+2026-10-13 for the selected build at `62e9913`, completing C5 with a cost
+exception. Fresh paired windows retain their own disabled baselines;
 B's scene difference is 2.55%, so raw FPS is not an equal-scene comparison.
 
 The user subsequently requested step-4 closure before step 5 and deferred the
@@ -69,7 +71,7 @@ finish awards now also use the completed physics pose, with native compatibility
 bypasses and fallback scene checks. Controlled four-profile timing improves, but
 full-lap timing remains unverified. A clock-input replay now reproduces all 650
 captured native gameplay states, isolating the untouched-clock mismatch to clock
-observations; the C2 clock-dependency exception is still unaccepted. C2, C3 and C5 remain
+observations; the C2 clock-dependency exception is still unaccepted. C2 and C3 remain
 open; see the current closure results in `STEP4_COST_PLAN.md`.
 
 ## Starting point

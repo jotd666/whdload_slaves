@@ -16,8 +16,9 @@ collision sweeps, terrain restoration and checkpoint/finish evaluation, measures
 **7.051 / 5.769 ms/frame** after exact sweep and traffic interpolation shortcuts.
 A meets its 8.070 limit; B exceeds the accepted 5.740 allowance by **0.029 ms**.
 B's paired scenes differ by 2.55%, so raw FPS is not an equal-scene comparison.
-The earlier exception is not extended, and no earlier B baseline is substituted.
-C1 and C4 are complete; C2, C3 and C5 remain open, and C6 is deferred. Historical P7 A1200 net
+The user accepted that remaining 0.029365 ms/frame excess on 2026-10-13 for
+the selected build at `62e9913`; no earlier B baseline is substituted.
+C1, C4 and C5 are complete; C2 and C3 remain open, and C6 is deferred. Historical P7 A1200 net
 phase overhead is 0.283 / 0.576 ms/frame (0.47% / 1.23%); it is not a measurement
 of this latest full closure build.
 
@@ -1144,8 +1145,10 @@ items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
     all 106 state bytes, object records, registers, stack and materialized CCR.
     Native/reused collision cases, world cases and the scan-counter suite pass.
     Fresh `c5-fused-{a,b}-{off,on}` pairs give **7.050928 / 5.769365 ms/frame**.
-    A passes; B is **0.029365 ms** above 5.740. Acceptance of that small excess
-    has been requested and is pending; the limit has not been changed. Sweep
+    A passes; B is **0.029365 ms** above 5.740. The user explicitly accepted
+    this remaining excess on 2026-10-13 for the selected build at `62e9913`.
+    The measured failure against the previous limit remains in the raw report;
+    this is a build-specific acceptance exception, not a blanket future allowance. Sweep
     cost is 2.466872 / 0.749450 ms/frame. B enabled has 60 swaps, 5.990449 FPS,
     165.687453 ms mean frame time and 27.389831 polygons/frame versus 26.708333
     disabled (2.55% difference). This remains a paired-window observation, not
@@ -1156,7 +1159,7 @@ items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
     6.681702 ms. It was removed; `c5-finish` evidence is not the selected build.
     Reports: `c5-fused-summary.json`, `c5-fused-world-check.json`,
     `sweep-scan-count.json`; cleanup: `c5-fused-cleanup.json`,
-    `c5-finish-cleanup.json`. **C5 remains open pending the cost decision.**
+    `c5-finish-cleanup.json`. **C5 is complete with the accepted cost exception.**
 - **C6, human laps — deferred by the user (2026-10-13).** Full A500 and 68040
   laps remain an unperformed human acceptance check. They do not block the current
   step-4 automated closure; do not describe handling as human-validated.
@@ -1187,14 +1190,15 @@ On 2026-10-12 the user accepted the recommended defaults. The later G1 exception
 
 ### Outstanding closure decisions (2026-10-13)
 
-These questions have been submitted to the user; none is accepted by silence.
-The goal remains active and step 4 is not complete.
+C5's remaining 0.029365 ms/frame B-window excess was explicitly accepted by
+the user on 2026-10-13. C5 is complete for the selected build at `62e9913`
+(A 7.050928 versus 8.070; B 5.769365 versus the previous 5.740 allowance).
+The following decisions remain outstanding; step 4 is not complete.
 
 | Item | Decision needed | Verified evidence |
 |---|---|---|
 | C2 | Accept the documented native-clock dependency as an exception to untouched-clock equivalence? | All 650 gameplay states match when the 4,062 native clock observations match; the untouched-clock comparison still fails. D4 continues to preserve the native clocks. |
 | C3 | Does the test-lap deferral include automated full-lap timing, or only human laps? | Human laps are deferred. Controlled motion and individual award results are documented; a complete lap has not been verified. |
-| C5 | Accept the remaining 0.029365 ms/frame excess in B? | The source at `62e9913` matches the selected report: A 7.050928 versus 8.070, B 5.769365 versus 5.740. The further inactive-finish experiment was slower overall and was removed. |
 
 The source hash audit, ordinary binary identity, disabled patches, 147 patch
 ranges and four trace audits pass for the selected C5 build. These checks do not
