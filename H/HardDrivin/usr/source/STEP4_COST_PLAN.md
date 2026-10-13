@@ -970,6 +970,11 @@ items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
     queries find only right-rear support; replaying contact with that support
     preserves the prior pitch rate. These are isolated-state checks. Per-wheel
     world-query integration and complete trajectory validation remain open.
+    The private wrapper now runs in gameplay: the fast jump lands without a
+    crash (peak 221.125, last airborne field 345); the slowed A500 still crashes
+    (peak 229.125, last airborne field 332). Its invocation remains gated by the
+    renderer's object flag, and overhead/road merging and cost are unvalidated.
+    This is verified prototype progress, not a promoted fix or C4 completion.
 - **C5, gates.** G1 passes or meets the explicitly accepted temporary exception; G2 is reported; `check_disabled.py` passes; the
   normal build is byte-identical.
   - **Current full-build measurement (2026-10-13):** fresh paired 500-field A500

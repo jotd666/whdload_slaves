@@ -4226,3 +4226,30 @@ object and ground candidates over time, overhead support policy and trajectory
 acceptance remain open. No runtime patch has been promoted.
 Evidence: `c4-object-mesh-check.json`, `c4-object-physics-pose.json`,
 `c4-finite-contact-response.json` and their private replay tools.
+
+The private gameplay prototype now runs this object query when the native
+object-surface flag selects `$ca14`, retaining zero/eight-field and forced-native
+branches. It starts with flat-ground distances, scans active main-pool objects
+whose class has bits `$12`, transforms nearby cloned models into scratch, and
+merges finite supporting faces per wheel. The wrapper restores render scratch
+allocation, trigonometry, actual angles, saved plane and registers. The assembled
+full scan returns 193/193/182/3 at the saved failure and passes those restoration
+checks. Vertex and face-copy bounds are checked before accessing scratch.
+
+In live 450-field captures the fast jump now peaks at 221.125 units, has its last
+airborne sample at 345, and finishes grounded without a crash. The slowed A500
+peaks at 229.125, has its last airborne sample at 332 and still records a crash
+(maximum counter 25). These use the same private geometry/input fixture with a
+new build; they are not a performance comparison. This fixes the demonstrated
+fast end-face failure in the prototype but does not close C4.
+
+The invocation still depends on E94B, so it can miss supporting objects on
+frames when rendering never sets that flag. Road/object merging, overhead
+surfaces, signed-world coordinate wrap, additional object pools, and runtime
+cost remain unresolved. The current world broad phase and highest-face merge
+must not be treated as production-ready policy. No authoritative assembly
+change has been made. The next work is to remove the remaining render gate with
+validated support selection and resolve slow landing behavior.
+Evidence: `c4-object-runtime-check.json`, `c4-finite-object-progress.json`,
+captures `c4-finite-object-jump-060` / `c4-finite-object-jump-slow`; private build
+`c4-finite-object-jump`, enabled with `C4_SUPPORT_OBJECT=1` in the fixture builder.
