@@ -920,6 +920,25 @@ items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
     with conservative stop-time spread 5 fields versus a 15-field allowance.
     Lap/checkpoint timing remains unverified; these are simulation-trajectory
     checks, not equality of displayed poses at every video field.
+  - **Checkpoint timing now measured, still failing:** a controlled approach to
+    stunt-road checkpoint section 61 starts at the same pose, speed and gear.
+    Read-only breakpoints at the actual native award entry ($092e2) record one
+    award per profile, followed by the checkpoint latch being set. The current
+    source awards at fields **36 / 50 / 30 / 28** (A500 / slowed A500 / 68020 /
+    68040), a **22-field spread**, beyond even the largest observed 13-field
+    interval. Scene preparation checks the previous physics pose; this adds
+    another frame of delay after crossing. Waypoint advancement is a separate
+    event and was not used as a substitute.
+  - A private post-physics query reduces those award fields to **30 / 40 / 28 /
+    26** (spread 14), with consumed simulation fields **27 / 37 / 28 / 26**
+    (spread 11). Each profile still awards once. Initial pose publication occurs
+    at field 3 on the two A500 profiles and field 0 on the faster profiles; these
+    offsets are retained, not hidden. The prototype bypasses its added query
+    for zero/eight-field and forced-native paths. It is not promoted: finish-line behavior, reverse
+    travel, airborne/course-transition eligibility, native-state preservation
+    and added cost remain unverified. Whole-lap timing remains open. Evidence:
+    `c3-checkpoint-timing-summary.json`, `c3-checkpoint-event-*` and
+    `c3-checkpoint-post-*`. These do not close C3.
 - **C4, extreme T.**
   - Run collisions, the loop and the jump on the slowed A500 (largest T) and on the
     68060 (smallest T).

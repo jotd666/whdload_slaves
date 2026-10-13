@@ -3892,6 +3892,53 @@ input fixtures declared active. Local reports are `c3-steering-phase-summary`,
 work still needs final cost accounting and broader C3/C4 validation.
 
 
+### C3 checkpoint award timing
+
+Checkpoint and lap awards are separate from waypoint-pointer advancement.
+Native main/stunt road selection ($0de70/$0e1f6) inspects the nearest section's
+$3000 flags: bit 12 calls the checkpoint routine ($092c0), bit 13 the lap routine
+($0936a). The checkpoint routine checks the latch and wrong-way state before
+awarding at $092e2. The ordinary scene pass evaluates the preceding physics pose.
+
+A controlled fixture starts on stunt section 60 at (22689,0,16453), heading -343,
+velocity 400 and gear 4, with centered steering and held throttle. The next
+checkpoint is section 61. No game geometry or checkpoint flag is changed.
+The authoritative source (`f6d9a50`) produces:
+
+| Profile | Award video field | Consumed fields at award | Current interval |
+|---|---:|---:|---:|
+| A500 | 36 | 36 | 10 |
+| Slowed A500 | 50 | 50 | 13 |
+| 68020 | 30 | 30 | 3 |
+| 68040 | 28 | 28 | 2 |
+
+Each 130-field capture observes exactly one native award, no crash at the award,
+and a set checkpoint latch afterward. The 22-field spread exceeds even the
+largest 13-field interval in these runs. The event's pose is the preceding
+physics result: consumed fields minus the current interval are 26/37/27/26.
+This exposes an additional scene-pass delay, not a missing input or a missed
+checkpoint. Earlier approach captures lacked the checkpoint columns and are
+not used as event-timing evidence.
+
+A private query at `_dispatch_after_physics` examines current/next road flags,
+uses native $0c022 with a temporarily advanced road cursor, restores its terrain
+workspace/cursor, and invokes the original award routines. Zero/eight-field and
+forced-native paths bypass it. This is a diagnostic, not accepted implementation:
+whole-course boundaries, reverse/airborne eligibility, finish behavior, complete
+state preservation and cost are unverified. Its four award video fields are
+30/40/28/26 (spread 14), and consumed fields 27/37/28/26 (spread 11), with one award
+each. The initial pose is published at field 3 on A500/slowed A500 and field 0 on
+68020/68040. These offsets and both timing measures remain explicit. The prototype
+supports moving variable-step checkpoint evaluation to the completed physics pose,
+but does not prove the full C3 criterion or whole-lap timing.
+
+Reports and captures: `c3-checkpoint-timing-summary.json`,
+`c3-checkpoint-event-*`, `c3-checkpoint-post-*`. All jobs are complete; disposable
+runtime copies are removed and calibration archives have verified decompressed
+SHA values (`c3-checkpoint-cleanup.json`). The ordinary source and its measured
+C5 costs are unchanged by this diagnostic.
+
+
 ### C3 current-build controlled trajectory bounds (2026-10-13)
 
 Commit `c421171` passes the three controlled-motion bounds, using consumed
