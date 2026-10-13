@@ -4223,7 +4223,7 @@ to 8 and preserves the previous pitch rate (-129633 Q16). The recorded infinite
 end-face input instead clears that rate. A road-only input gives mask 12 and
 rate -218304. These isolate the immediate response; choosing between road,
 object and ground candidates over time, overhead support policy and trajectory
-acceptance remain open. No runtime patch has been promoted.
+acceptance remain open. No object-terrain patch has been promoted.
 Evidence: `c4-object-mesh-check.json`, `c4-object-physics-pose.json`,
 `c4-finite-contact-response.json` and their private replay tools.
 
@@ -4247,8 +4247,8 @@ The invocation still depends on E94B, so it can miss supporting objects on
 frames when rendering never sets that flag. Road/object merging, overhead
 surfaces, signed-world coordinate wrap, additional object pools, and runtime
 cost remain unresolved. The current world broad phase and highest-face merge
-must not be treated as production-ready policy. No authoritative assembly
-change has been made. The next work is to remove the remaining render gate with
+must not be treated as production-ready policy. These terrain changes remain
+private; the separate landing-impact fix below is in the authoritative source. The next work is to remove the remaining render gate with
 validated support selection and resolve slow landing behavior.
 Evidence: `c4-object-runtime-check.json`, `c4-finite-object-progress.json`,
 captures `c4-finite-object-jump-060` / `c4-finite-object-jump-slow`; private build
@@ -4278,3 +4278,39 @@ the native impact response just to remove the slow crash.
 Evidence: `c4-native-landing-reference.json`, capture
 `c4-finite-jump-native-landing`; exact pre-contact slow landing banks are retained
 in `c4-finite-jump-slow-landing` for response replay. C4 remains open.
+
+### Landing impact no longer depends on penetration overshoot
+
+`_motion_fall_ground` now applies the existing hard-impact action when a variable
+update reaches full/diagonal contact with fall velocity above the native threshold
+of 50. It no longer requires that update to overshoot the surface by more than
+five units before fall velocity is reset. An already active crash is not restarted
+by the added check. Zero-field, eight-field and forced-native behavior retain the
+previous ground path. The native impact action, sound, crash duration and existing
+fractional fall-state reset are reused; engine cadence is unchanged.
+
+This is an authoritative timing change, independent of the still-private terrain
+prototype. It covers contact before visible penetration as well as small negative
+penetration. An earlier private depth-only variant covered the latter but was not
+promoted. The final source uses the existing `$cc8a` patch site, avoiding a second
+patch that could overwrite it, and takes the ordinary low-fall-speed path before
+saving any additional registers.
+
+The final assembled source passes 1,568 threshold/state cases, including 1,008
+zero/eight/forced-native comparisons against the pre-change ground helper.
+Registers, stack, branch targets and condition codes are checked; the test reads
+condition codes through an emulated `MOVE SR` because direct emulator register
+reads did not consistently expose lazy flags. The ordinary build is byte-identical,
+all 145 patch-branch ranges pass, and the timing-disabled capture passes its
+pristine patch-site comparison.
+
+The private jump fixture with finite object support now matches the native crash
+outcome on both profiles: fast first crash at field 349, slowed A500 at 341,
+both counter 25. A final-source fast capture confirms field 349. This validates
+the landing gate, not equal trajectories or the private terrain selection.
+Two earlier captures named `c4-impact-complete-*` did not execute the proposed
+impact helper because an existing patch overwrote it; they are excluded from
+impact validation. The corrected `c4-impact-wired-*` and `c4-landing-final-060`
+captures did execute it. Final whole-build cost measurements remain outstanding.
+Evidence: `c4-landing-source-check.json`, `c4-landing-source-summary.json`,
+`c4-landing-source-off/disabled.json`. C2–C5 remain open; C6 and P3 are deferred.

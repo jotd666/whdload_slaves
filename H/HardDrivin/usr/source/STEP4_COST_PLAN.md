@@ -12,7 +12,7 @@ physics arithmetic bottleneck: matched-operand long division is about 29% cheape
 The user accepted the P6 A500 B-window overhead of **5.740 ms/frame for now**
 (2026-10-13), superseding its 3.78 ms blocking limit for that measured build.
 P6 A measured 3.084 ms/frame. The current closure build, including collision
-sweeps, now measures **8.405 / 6.866 ms/frame** after removing redundant neutral
+sweeps, last measured **8.405 / 6.866 ms/frame** after removing redundant neutral
 steering work within a frame. A and B exceed their respective 8.070 / 5.740 ms
 limits by **0.335 / 1.126 ms**. The earlier exception is not extended.
 C1 is complete, C2–C5 remain open and C6 is deferred. Historical P7 A1200 net
@@ -980,6 +980,14 @@ items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
     outcome remains a handling mismatch. Native penetration/impact thresholds
     and landing transition timing now guide the investigation. This is verified
     prototype progress, not a promoted fix or C4 completion.
+  - **Landing gate implemented:** variable updates now apply the native fall-speed
+    threshold (>50) at full/diagonal contact, removing the frame-dependent extra
+    penetration requirement. Zero/eight/forced-native paths are preserved. The
+    final source passes 1,568 cases (1,008 native-path comparisons), ordinary
+    binary equality, 145 branch ranges and disabled patch checks. Both private
+    jump profiles reproduce the native crash outcome. This closes that landing
+    discrepancy only; terrain selection and C4 trajectory acceptance remain open.
+    The last C5 measurements predate this change and need a final-source rerun.
 - **C5, gates.** G1 passes or meets the explicitly accepted temporary exception; G2 is reported; `check_disabled.py` passes; the
   normal build is byte-identical.
   - **Current full-build measurement (2026-10-13):** fresh paired 500-field A500

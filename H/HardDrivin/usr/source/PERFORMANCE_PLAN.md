@@ -59,7 +59,9 @@ windows fit the polygon-count tolerance; B still reports lower end-to-end FPS.
 The user subsequently requested step-4 closure before step 5 and deferred the
 human A500/68040 test laps (C6). C1 solver coverage is now complete: flight,
 landing, manual/neutral gears and signed rollback stay in the phase path, with
-zero driving fallbacks in both final A500 windows. C2–C5 remain open; see the
+zero driving fallbacks in both final A500 windows. The landing-impact gate now retains the native fall-speed threshold across
+variable updates, while zero/eight-field and forced-native paths stay compatible.
+C2–C5 remain open; see the
 current closure results in `STEP4_COST_PLAN.md`.
 
 ## Starting point

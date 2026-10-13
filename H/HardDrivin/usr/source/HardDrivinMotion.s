@@ -250,6 +250,31 @@ _motion_fall_delta:
 	movem.l (a7)+,d1-d2/a0
 	rts
 _motion_fall_ground:
+	IFND VERIFY_DISPATCH_NATIVE
+	; Native landing crashes require fall>50 plus >5 units of penetration.
+	; Small updates can reach full contact and reset fall speed before that
+	; penetration occurs. Test impact at full contact for variable intervals.
+	; Keep native zero/eight-field behavior and the existing crash action.
+	cmpi.w #50,-$66f2(a4)
+	ble.s _motion_fall_ground_native
+	tst.b -$69fa(a4)
+	bne.s _motion_fall_ground_native
+	movem.l d0/a0,-(a7)
+	move.w _time_scalar_fields(pc),d0
+	beq.s .native
+	cmpi.w #8,d0
+	beq.s .native
+	; CC90 is the patched call's return address. Re-enter the native impact
+	; action at CC4A; its next visit here has crash=25 and resets fall state.
+	movea.l 8(a7),a0
+	lea -$46(a0),a0
+	move.l a0,8(a7)
+	movem.l (a7)+,d0/a0
+	rts
+.native:
+	movem.l (a7)+,d0/a0
+	ENDC
+_motion_fall_ground_native:
 	tst.b -$86f(a4)
 	beq.s _motion_fall_reset_fraction
 	move.l a0,-(a7)
