@@ -101,6 +101,12 @@ time_pause_begin:
 	movem.l (sp)+,d0/a0
 	rts
 time_pause_end:
+	movem.l a6,-(sp)
+	lea .scenery_call_1(pc),a6
+.scenery_call_1
+	adda.l #time_scenery_invalidate-.scenery_call_1,a6
+	jsr (a6)
+	movem.l (sp)+,a6
 	movem.l d0/a0,-(sp)
 	moveq #2,d0
 	bsr time_pause_request

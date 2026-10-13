@@ -91,6 +91,12 @@ time_loop_install:
 	ENDC
 	bsr time_present_state_install
 	bsr time_model_install
+	movem.l a6,-(sp)
+	lea .scenery_call_1(pc),a6
+.scenery_call_1
+	adda.l #time_scenery_install-.scenery_call_1,a6
+	jsr (a6)
+	movem.l (sp)+,a6
 	IFD VERIFY
 	lea .exp_install_base(pc),a6
 .exp_install_base
@@ -208,6 +214,12 @@ time_loop_gate:
 	move.l #1,TIME_LOOP_ACTIVE(a0)
 	move.l time_loop_cia(pc),a1
 	move.l (a1),TIME_LOOP_CURSOR(a0)
+	movem.l a6,-(sp)
+	lea .scenery_call_2(pc),a6
+.scenery_call_2
+	adda.l #time_scenery_invalidate-.scenery_call_2,a6
+	jsr (a6)
+	movem.l (sp)+,a6
 	bsr time_rate_reset
 	bsr time_message_reset
 	bsr time_camera_reset

@@ -66,6 +66,9 @@ if effective&(1<<23):
  except ValueError as e:
   if not a.allow_idle_gauge_twins or any(gauge_words[0]) or any(gauge_words[2]):raise
   twins['gauges']=dict(idle=str(e),reuse=gauge_words[1].hex())
+if effective&(1<<25):
+ from scenery_cache import check as scenery_check
+ twins['scenery']=scenery_check(struct.pack('>4I',*words('time_scenery_checks',4)))
 (a.out/'twins.json').write_text(json.dumps(twins,indent=2)+'\n')
 flight_entry=json.loads((a.out/'entry.json').read_text())
 regions=r.memory_regions()

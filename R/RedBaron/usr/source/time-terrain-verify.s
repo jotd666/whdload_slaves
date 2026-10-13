@@ -85,13 +85,35 @@ time_present_list_count: dc.w 0
 
 ; The native terrain early-out at sim:0f038 reuses both cached visibility and
 ; selected model IDs. Those are restored after our draw, so a later draw must
-; rebuild, even for an unchanged camera. Keep its key/flag/countdown coherent
+; rebuild, even for an unchanged camera, on the original W6 path. FC8 instead
+; leases the complete presentation cache on supported CPUs. Keep the fallback
+; key/flag/countdown coherent
 ; with the restored data. No IRQ-owned data is included.
 time_terrain_cache_begin:
+	lea .mask_base(pc),a0
+.mask_base
+	adda.l #perf_mask-.mask_base,a0
+	btst #1,(a0)
+	beq .original
+	lea .target_base(pc),a0
+.target_base
+	adda.l #time_scenery_begin-.target_base,a0
+	jmp (a0)
+.original
 	bsr time_terrain_cache_addresses
 	bra time_terrain_cache_save
 
 time_terrain_cache_end:
+	lea .mask_base(pc),a0
+.mask_base
+	adda.l #perf_mask-.mask_base,a0
+	btst #1,(a0)
+	beq .original
+	lea .target_base(pc),a0
+.target_base
+	adda.l #time_scenery_end-.target_base,a0
+	jmp (a0)
+.original
 	bsr time_terrain_cache_addresses
 	bra time_terrain_cache_restore
 

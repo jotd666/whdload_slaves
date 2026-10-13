@@ -112,12 +112,13 @@ fence_beam:
  beq fence_beam_native
  ; Native copper waits at line 42, executes twelve pointer moves, then waits
  ; at line 44 before enabling bitplanes. Never modify the pointer block while
- ; that pickup can be in progress. <=40 keeps the native early-safe allowance;
+ ; that pickup can be in progress. Reserve line 40 for the wrapper tail: a
+ ; sample at the end of line 40 otherwise reaches the native MOVEM at 41.
  ; >=44 is after the complete pickup. No full-frame beam spin remains.
 .pickup
  move.l $dff004,d0
  andi.l #$1ff00,d0
- cmpi.l #$2800,d0
+ cmpi.l #$2700,d0
  ble .safe
  cmpi.l #$2c00,d0
  blt .pickup

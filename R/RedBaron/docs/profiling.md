@@ -5,7 +5,8 @@
 The user accepted measured performance on 2026-10-12. The normal build now
 starts with Faster rendering On when CUSTOM2 is omitted: On=0, Off=1.
 Developer/VERIFY CUSTOM2 remains an explicit mask, with zero disabling patches.
-The default verified rendering mask is `0x1ff1fff`, filtered by CPU. On
+The default verified rendering mask is `0x3ff1fff`, filtered by CPU;
+FC8 bit 25 additionally requires W6. On
 2026-10-13 the user completed W6 release acceptance and authorized normal-build
 availability. Consistent game speed is a separate, default-Off checkbox:
 `CUSTOM3=1` adds W6 bit 13, independently of Faster rendering. Its existing CPU
@@ -14,12 +15,117 @@ Developer/VERIFY still use CUSTOM2 bit 13 and ignore CUSTOM3. The user decision
 accepts the documented operating limits; it does not change earlier results or
 claim 50 FPS. Historical captures retain their original build and option mapping.
 
-The opt-in changes option selection only; W6 runtime and default rendering
-selection are unchanged. All 577 host tests, all three builds and their
-136/136/150 patch destinations pass. Native 060 normal-build startup with `CUSTOM2=0 CUSTOM3=1` reads the
+The original opt-in exposure changed option selection only. At that checkpoint,
+all 577 host tests, all three builds and their 136/136/150 patch destinations
+passed. FC8 now adds the separately measured cache described below. Native 060 normal-build startup with `CUSTOM2=0 CUSTOM3=1` reads the
 opt-in and selects effective mask `0x1ff6ffa`, including W6 and its pacing
 dependencies (`w6-player-optin/options.json`). This is an option-path check;
 existing D5 evidence supplies runtime acceptance. No new FPS claim is made.
+
+## FC8: W6 presentation scenery cache (2026-10-13)
+
+CUSTOM2 bit 25 keeps a presentation copy of the native sim:0f01c scenery
+selection, gated to 040/060 with W6. A matching world fingerprint permits
+installing that copy; the native 10,000-unit distance test and view/countdown
+rules still decide whether to rebuild. This restores native camera-history
+staleness rather than requiring the prior W6 forced-rebuild pixels.
+
+The debugger write-site census observes 417 non-stack stores in one rebuild.
+Every observed destination is covered by the named snapshots or terrain
+journal. The output inventory, normalized to h3, is:
+
+| State | Location / extent |
+|---|---|
+| Countdown, camera scratch and angle | h3:5270 (2), h3:5272 (12), h3:527e (2) |
+| Compact scenery records and count | h3:5280 (60 × 10), h3:54d8 (2) |
+| Camera key and recomputation flag | h3:54de (12), h3:54ea (2) |
+| Caller list and count, including subsequent draw-list edits | h3:7dc8 (active pointer prefix), h3:3fa8 (2) |
+| Visibility bytes | Native object+30 slice, allocation rooted at h3:54da |
+| Selected static model words | Native object+2, objects rooted at h3:526a |
+
+The fingerprint additionally includes view h3:6712, static pointer/count
+h3:526a/526e, visibility root h3:54da, the world list and the registered
+pointer prefix at h3:859e/85a0. A world-side rebuild, changed fingerprint or
+terrain journal destination, changed view, new mission or modal return prevents
+reuse. Before restoring the world, the draw saves its presentation results;
+repeated terrain stores retain their first world value and final draw value.
+The bounded hash table avoids a quadratic scan when collecting those stores.
+
+Buffers use an 80,128-byte Fast allocation only when FC8 is selected. The
+slave header/minimum RAM requirement is unchanged. Allocation failure clears
+the feature and retains the previous forced-rebuild path. Other CPU classes
+and W6-Off keep their existing paths. The hooks are sim:0f06c and sim:0f5f4;
+sim v1 only.
+
+Validation includes an independent repeated-store/restore model, native
+installed-copy and restored-world checks, and three deliberate fingerprint
+sabotages (key, count, list). The final exact-profile builds pass the existing
+artwork, scene, span and cockpit twins on both CPUs. After 500 warm-up fields,
+040 records 123 installs, 40 misses, 3 sabotages and 163 restorations; 060
+records 130/40/3/169. The previously documented idle 060 gauge-background
+twins remain idle; they are not counted as passes.
+
+The shared aprof now includes the 040/060 loop (AmigaXDev `82aa455`); the
+retired separate profiler path is unnecessary. Reports use the captured live
+slave base so the PRELOAD copy cannot be mistaken for executing code. In the
+100-field instrumented windows, sim:0f01c costs 1.78 ms/frame on 040 and
+1.52 ms/frame on 060, versus the preceding approximately 11.3/10.4 ms forced
+rebuild profile. Cache begin/end add about 1.2 ms/frame in these VERIFY runs;
+verification itself is included. These are workload attribution, not release
+FPS or physical accelerator timings.
+
+One frozen developer binary supplies all four final cases, SHA-256
+`602ad89b1ea6b89e6f147bdaea354fa63cac4dc77a8d4f68274e21a511b55d7e`. Maximum detail, Time Scale 40,
+2,000 PAL fields followed by 250 held-right-bank fields; W6 stays enabled on
+both sides and only bit 25 differs.
+
+| Configuration | Level FPS off → on | FPS gain | Mean frame ms off → on | Bank FPS off → on | World / wall, on |
+|---|---:|---:|---:|---:|---:|
+| 040/25 NOMMU | 18.321 → 21.166 | 15.53% | 54.58 → 47.25 | 18.171 → 21.965 | 0.998234 |
+| 060/50 NOMMU | 19.569 → 21.965 | 12.24% | 51.10 → 45.53 | 19.569 → 22.764 | 0.998656 |
+
+All level and bank windows have zero dropped steps and zero publications in
+the reserved pickup margin. Each level window completes 326 world updates;
+its rate is within one quantum of nominal (about ±0.00306). Bank windows
+complete 40 updates over 295 CIA ticks, world/wall 0.983183 ±0.024580.
+The final normal 040 check selects both new hooks with Faster rendering default
+On and Consistent game speed enabled, returns from Preferences and crosses
+40 native flight-loop checkpoints (`fc8-normal-040`).
+
+**Retain on 040/060.** This is a material improvement, but does not reach
+25 FPS or 50 FPS at maximum detail in these emulator windows. FC9 is the next
+planned step; no clock-rate or physical accelerator throughput claim is made.
+The other four release configurations retain their existing scoreboard entries
+and CPU policy; FC8 is excluded there. All 579 host tests, three build modes,
+138 hook ranges and 138/138/152 normal/developer/VERIFY patch destinations pass.
+
+
+Evidence: `fc8-native` (write census and initial native checks),
+`fc8-aprof-{040,060}-r2` (cache checks and exact profiles), and
+`fc8-rate-r3-{040,060}-{off,on}` (final same-build timing).
+The first timing round exposed two 060 publications at the very start of line
+41: the old guard sampled the end of line 40 before its wrapper tail reached
+the native MOVEM. Its validator rejected that run. The guard now reserves
+line 40 for that tail (sample at or before line 39, or at/after line 44); the
+corrected source is used for both sides of the repeated timing pairs. The
+scenery return wrapper also preserves native CCR across its cache bookkeeping. The first profiler launch
+used the retired binary path and failed before boot; it supplies no result.
+`tools/scenery_write_watch.py` reproduces the write census from a paused
+`reach_flight.py --no-shot` capture. `tools/scenery_cache.py` validates the
+four native counters; missing/corrupt evidence is rejected.
+
+To repeat a timing pair, freeze a developer slave and its listing, set
+`BENCH_FROZEN_SLAVE` to that slave (listing named `slave.lst` beside it), then
+run the established harness with `BENCH_DEVELOPER=1 BENCH_BATCH_KEYS=1`:
+
+```sh
+python3 -B ../../R/RedBaron/tools/scene_profile_case.py 040 0x17f2ffa CAPTURE_OFF --fields 2000 --groups rate --bank-after 250
+python3 -B ../../R/RedBaron/tools/scene_profile_case.py 040 0x37f2ffa CAPTURE_ON --fields 2000 --groups rate --bank-after 250
+```
+
+Use fresh capture names; for 060 use masks `0x1ff2ffa` and `0x3ff2ffa`.
+Each driver closes its emulator before the next run. Real-hardware before/after
+measurement remains FC7; the earlier hardware report predates FC8.
 
 ## FC7: real A1200/68040 functional confirmation (2026-10-13)
 

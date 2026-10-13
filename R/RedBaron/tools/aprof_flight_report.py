@@ -27,8 +27,10 @@ def main():
         chunk=slave[probe:probe+64]
         for lo,b in banks:
             i=b.find(chunk)
-            if i>=0:sbase=lo+i-probe;break  # first (live) copy; a later one is the PRELOAD file
+            if i>=0:sbase=lo+i-probe;break  # fallback byte match; live metadata overrides below
         if sbase:break
+    # PRELOAD retains a second matching copy; prefer the live marker.
+    if meta.get("slave_base"):sbase=meta["slave_base"]
     if a.slave_base:sbase=a.slave_base
     lst=(a.cap/'slave.lst').read_bytes().decode('latin1');syms=[]
     if 'Symbols by value:' in lst:

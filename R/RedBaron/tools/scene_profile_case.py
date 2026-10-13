@@ -32,7 +32,8 @@ import ast,struct
 s=ast.parse(Path('tools/completion_boot.py').read_text());fn=next(n for n in s.body if isinstance(n,ast.FunctionDef) and n.name=='locate');exec(compile(ast.Module(body=[fn],type_ignores=[]),'locate','exec'))
 sim=locate('sim',0x1ef92,[0x309cc,0x30a4e,0x30aec])
 run('tools/completion_keys.py',hex(sim),'sim','tab','return','--polls','1')
-if a.mask & (1<<13) and ready['environment']['DEVELOPER']=='1':
+w6_enabled = bool(a.mask & (1<<13)) if ready['environment']['DEVELOPER']=='1' else bool(int(os.environ.get('BENCH_CUSTOM3','0')) & 1)
+if w6_enabled:
  # W6 consumes hardware keyboard transitions in flight, not the menu queue.
  # Enter flight first, then use the established D5 native IRQ F10 route.
  r.command(f'until {sim+0x21d30:#x}')
@@ -69,6 +70,15 @@ if a.check_only:
  expected=('0x2c3c','0x48a7') if a.machine in ('a500','020') else ('0x4ef9','0x4ef9')
  assert all(proof.count(x)>=expected.count(x) for x in expected),proof
  (a.out/'scene-selection.txt').write_text(proof)
+ if w6_enabled and a.machine in ('040','060'):
+  proof=r.command(f'gdb x/1hx {sim+0xf06c:#x}\nx/1hx {sim+0xf5f4:#x}')
+  assert '0x4eb9' in proof and '0x4ef9' in proof,proof
+  (a.out/'scenery-selection.txt').write_text(proof)
+  # Bounded normal-build draw after Preferences returns, with FC8 selected.
+  flight=r.command(f'gdb break *{sim+0x21d30:#x}\nignore $bpnum 39\ncontinue\ndelete\nprintf "SCENERY_FLIGHT %x\\n", $pc')
+  assert f'SCENERY_FLIGHT {sim+0x21d30:x}' in flight,flight
+  (a.out/'scenery-flight.txt').write_text(flight)
+
 # Input is finished. Release the host debugger before a long guest-debugger
 # capture; only one debugger needs to drive execution during measurement.
 run(TRACKED/'completion_host_input.py','quit');host.wait(timeout=20)

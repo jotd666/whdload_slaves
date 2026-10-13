@@ -138,9 +138,17 @@ time_present_end:
 	dbf d5,.copy
 	dbf d6,.next
 .clear
-	bsr time_present_list_restore
 	bsr time_terrain_cache_end
+	bsr time_present_list_restore
 	bsr time_model_restore
+	IFD VERIFY
+	movem.l a6,-(sp)
+	lea .scenery_call_1(pc),a6
+.scenery_call_1
+	adda.l #time_scenery_check_world-.scenery_call_1,a6
+	jsr (a6)
+	movem.l (sp)+,a6
+	ENDC
 	bsr time_present_shape_addresses
 	bsr time_present_shape_restore
 	clr.l (a4)

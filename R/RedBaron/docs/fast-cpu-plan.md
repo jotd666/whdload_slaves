@@ -416,7 +416,15 @@ difference. The remaining W6 overhead is `0e782` (+0.9 ms) and the pose blend
 
 ### 5.3 Plan (largest first)
 
-#### FC8 — W6 presentation scenery cache
+#### FC8 — W6 presentation scenery cache (complete)
+
+Implemented as bit 25, selected on 040/060 with Faster rendering and W6.
+The complete output snapshot, world fingerprint, native checks and optional
+Fast allocation are documented in `profiling.md`. Both CPU classes clear the
+2% threshold; the final rate pairs and normal-build check pass. Actual frame
+times exceed the projection below, so FC9 remains the next planned step.
+The following numbered list records the design; all six items are resolved by
+the implementation and measured disposition in the scoreboard.
 
 Replace the forced rebuild with a presentation-side copy of the sim:0f01c
 outputs. Expected saving: 10–11 ms on both CPUs.
