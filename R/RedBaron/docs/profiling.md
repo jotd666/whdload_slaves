@@ -21,6 +21,15 @@ opt-in and selects effective mask `0x1ff6ffa`, including W6 and its pacing
 dependencies (`w6-player-optin/options.json`). This is an option-path check;
 existing D5 evidence supplies runtime acceptance. No new FPS claim is made.
 
+## FC7: real A1200/68040 functional confirmation (2026-10-13)
+
+The user reports that the current release works on a real Amiga 1200 with a
+68040 at 40 MHz, with Consistent game speed enabled. This supplies physical
+040/AGA gameplay confirmation. No measured frame rate or frame-time capture
+was supplied; it does not establish 50 FPS or a performance comparison.
+Physical 060 confirmation and the planned AGA DMA/timing measurements remain
+open.
+
 ## R1: renderer installation on subsequent loads fixed (2026-10-13)
 
 The captured A1200/68040 normal-build abort occurred in `scene_frame_install`,

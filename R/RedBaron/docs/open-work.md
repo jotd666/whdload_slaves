@@ -19,7 +19,7 @@ Refer to items by ID. FC items are detailed in `fast-cpu-plan.md`.
 | FC6 | Re-profile, W6 trial and geometry processing | Complete; W6 rate passes bounded trial, 50 FPS unmet; geometry extension dropped below 2% |
 | R1 | Renderer installer rejects its persistent helper on a later load | Fixed; captured guard identified, same-session second mission and rendering pass |
 | R2 | In-game clipped-sprite bounds abort while firing | Fixed; reserved prefix with strict guard, native replay and release flight checks pass |
-| FC7 | AGA 040/060 and real-hardware confirmation | Planned |
+| FC7 | AGA 040/060 and real-hardware confirmation | Real A1200/040 at 40 MHz works with W6 enabled (user report); 060 and DMA/timing confirmation remain |
 | D5a | W6 catch-up input check | Complete: native tap/hold/release during catch-up on A500 and 060 |
 | D5b | W6 Time Compress and mission-exit transitions | Complete: native compression and modal checks; A500 catch-up mission exit |
 | D5c | W6 A500 Time Scale 60 | Complete: measured overload envelope |

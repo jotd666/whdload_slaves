@@ -287,6 +287,10 @@ physical 040/060 throughput. Do not claim 50 FPS from these results.
 
 ### FC7 — AGA and 040/060 confirmation
 
+Real A1200/68040 at 40 MHz functional confirmation with W6 enabled was
+reported by the user on 2026-10-13; see `profiling.md`. Physical 060 and the
+DMA/timing checks below remain open.
+
 Capture a Barto DMA trace of the 060 and 040 configurations (AGA, 32-bit Chip)
 before and after FC1–FC5. The emulator's 040/060 timing is not a hardware model
 (`rendering-analysis.md`). If a real accelerator is available, confirm the result
