@@ -903,8 +903,20 @@ step 4.7, made concrete.
     fixture has an eight-field steering delay on all four profiles; all 779
     recorded headings match its exact half-unit-per-field curve. Each profile
     now settles at speed 164 in third gear. Native-step and stop/restart checks
-    pass. Equal-time XYZ bounds and wider handling coverage remain open; this
-    does not pass C3 or replace the required final cost measurements.
+    pass. The controlled equal-time bounds below now pass; lap/checkpoint timing
+    remains open, and final cost measurements are still required.
+  - **Current-build controlled bounds passed (2026-10-13):** comparison uses
+    consumed simulation fields, retaining measured throttle-publication offsets.
+    Straight acceleration has maximum speed/position spreads 65.5/74.8125 versus
+    bounds 75/80.15625 through the full flat response and settled plateau.
+    Held steering covers all 0–539 common fields: speed/angle/position spreads
+    65.5/7/73.913327 versus bounds 75/7.5/80.130890. An independent pristine-engine
+    and native-trigonometry reconstruction matches every fractional XYZ/scalar
+    return globally, without resetting pose each frame (775 active returns).
+    Current-build braking passes again: spreads 11/3.083333 versus 45/33.046875,
+    with conservative stop-time spread 5 fields versus a 15-field allowance.
+    Lap/checkpoint timing remains unverified; these are simulation-trajectory
+    checks, not equality of displayed poses at every video field.
 - **C4, extreme T.**
   - Run collisions, the loop and the jump on the slowed A500 (largest T) and on the
     68060 (smallest T).

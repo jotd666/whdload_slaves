@@ -3890,3 +3890,49 @@ input fixtures declared active. Local reports are `c3-steering-phase-summary`,
 `c3-steering-native-frame`, `c3-steering-restart` and `c3-steering-disabled`
 (JSON files), plus the native capture's equivalence report. The new steering
 work still needs final cost accounting and broader C3/C4 validation.
+
+
+### C3 current-build controlled trajectory bounds (2026-10-13)
+
+Commit `c421171` passes the three controlled-motion bounds, using consumed
+simulation fields. Measured input-publication offsets are retained. These
+comparisons do not claim identical displayed poses during a render frame or
+pass the separate lap/checkpoint timing requirement.
+
+| Fixture | Compared interval | Maximum speed spread / bound | Position spread / bound (world units) |
+|---|---|---:|---:|
+| Straight acceleration and settled plateau | consumed 0–420 | 65.5 / 75 | 74.8125 / 80.15625 |
+| Held steering, complete common interval | consumed 0–539 | 65.5 / 75 | 73.913327 / 80.130890 |
+| Zero-throttle braking | 0–164 after descending speed 100 | 11 / 45 | 3.083333 / 33.046875 |
+
+The measured ordinary A500 frame bound is 15 fields. Velocity and distance
+allowances use maximum recorded rates times that interval. Steering's angle
+spread is 7 units against 7.5 at the native half-unit-per-field rate. The
+braking comparison still charges a full field of crossing uncertainty per run;
+its conservative stopping-time range is 158–163 fields, a spread of 5.
+
+The steering reconstruction calls pristine native engine and sine/cosine
+routines, then independently integrates the fractional phase and Q6 projection.
+It retains each actual chunk's projection instead of interpolating across whole
+render frames. All 62/42/255/416 active returns match globally in fractional
+velocity, RPM, gear, heading and XYZ. No per-frame pose reset hides drift;
+contact corrections must leave this flat fixture's reconstructed position
+unchanged. The initial zero-time return is excluded from these 775 active
+returns. Captured road-surface flags are inputs, so this is not an independent
+road-classification test. It covers the original complete steering captures,
+including their off-road section, rather than replacing them with the delayed
+input experiment.
+
+Fresh `c3-final-straight-*` captures match the one-field native curve through
+all 343 flat acceleration returns. Their full 550-field captures also pass
+499 per-frame native-force/XYZ checks, including the later slope. That latter
+oracle consumes captured post-orientation trigonometry and terrain-corrected
+entry pose, and is not the global flat-trajectory proof. Fresh 750-field
+`c3-final-brake-*` captures match 217 complete braking returns before stopping.
+
+Local reports are `c3-steering-curve-comparison.json`,
+`c3-final-straight-comparison.json`, `c3-final-straight-curve.json` and
+`c3-final-brake-comparison.json`; per-capture reports retain exact rational
+curves and checked states. C3 lap/checkpoint timing, C4 and final C5 cost remain
+open. The current targeted C4 fixtures are separate one-time geometry seeds;
+they do not alter the original input-tape benchmark.
