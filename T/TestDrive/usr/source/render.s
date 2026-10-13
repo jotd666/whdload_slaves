@@ -325,6 +325,8 @@ render_latch:
     btst #4,d0
     bne.b .bound
     ENDC
+    lea render_curve_pose(pc),a0
+    move.l -26186(a4),(a0)
     bsr render_heading_latch
     lea render_traffic_active(pc),a0
     clr.w (a0)
@@ -575,6 +577,8 @@ render_walk_start:
     lea render_slope(pc),a0
     clr.l (a0)
     clr.w -29836(a4)
+    lea render_curve_previous_y(pc),a0
+    move.l -29848(a4),(a0)
     lea render_lane_pending(pc),a0
     move.w #1,(a0)
     tst.w -28800(a4)
@@ -1001,7 +1005,90 @@ render_backdrop:
     lea -23194(a4),a2
     rts
     ENDC
+; The native y=125 cutoff restarts the bend at a whole road row. When that
+; row changes, a full descriptor step disappears from every distant point.
+; Seed its angle by the fraction of the current span beyond the cutoff, and
+; include the corresponding partial bank displacement. The following native
+; $7DFA update then advances only the visible fraction of this descriptor.
+; Pose is latched with the camera; all writes here are draw-side coordinates.
+; Called at $7EAA after height integration, with a2=current descriptor and
+; -29852(a4)=the span's scale. This tail jump replaces its MOVE/RTS path.
+; d0-d3 and all address registers are preserved; caller does not consume CCR.
+render_curve_seed:
+    IFD VERIFY
+    btst #3,verify_c5+3(pc)   ; retain original arithmetic in the zero oracle
+    beq.b .enhanced
+    move.l -26186(a4),-29840(a4)
+    rts
+.enhanced
+    ENDC
+    move.l render_curve_pose(pc),-29840(a4)
+    cmp.w #125,-29848(a4)
+    blt.b .crossing
+    move.l a0,-(sp)
+    lea render_curve_previous_y(pc),a0
+    move.l -29848(a4),(a0)
+    move.l (sp)+,a0
+    rts
+.crossing
+    movem.l d0-d3,-(sp)
+    move.l render_curve_previous_y(pc),d1
+    sub.l -29848(a4),d1
+    ble .restore
+    lsr.l #8,d1             ; 24.8 span; retain subpixel near-plane precision
+    beq .restore
+    move.l #125*65536,d0
+    sub.l -29848(a4),d0
+    lsr.l #8,d0
+    cmp.l d1,d0
+    bhs.b .full
+.normalize
+    cmp.l #65535,d1         ; also bound unusually steep spans for DIVU
+    bls.b .divide
+    lsr.l #1,d1
+    lsr.l #1,d0
+    bra.b .normalize
+.divide
+    lsl.l #8,d0
+    lsl.l #7,d0
+    divu.w d1,d0
+    bra.b .fraction
+.full
+    move.w #32767,d0        ; rounded numerator may equal denominator
+.fraction
+    move.w d0,d3
+    sub.w #32768,d0         ; subtract the invisible part of the next update
+    move.b 1(a2),d1
+    ext.w d1
+    muls.w d1,d0
+    asr.l #2,d0
+    add.l d0,-29840(a4)
+    move.l render_curve_pose(pc),d2
+    beq .restore
+    move.l d2,d0
+    bpl.b .positive
+    neg.l d0
+.positive
+    bsr render_sine_width
+    lsr.l #8,d0
+    mulu.w -29852(a4),d0
+    lsr.l #8,d0
+    lsr.l #8,d0             ; bounded unsigned 8.8 pixel step * Q15 fraction
+    mulu.w d3,d0
+    lsr.l #7,d0
+    tst.l d2
+    bpl.b .add
+    neg.l d0
+.add
+    add.l d0,-29844(a4)
+.restore
+    movem.l (sp)+,d0-d3
+.done
+    rts
+
 render_subunit_end:
+render_curve_pose: dc.l 0
+render_curve_previous_y: dc.l 0
 render_traffic_active: dc.w 0
 render_slope: dc.l 0
 render_heading_state: dc.w -1

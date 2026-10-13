@@ -30,3 +30,5 @@
     PL_PS $0117e,render_main_fraction
     ; RENDER_RANGE h4 01496 6 C2R render_slope_begin
     PL_P $01496,render_slope_begin
+    ; RENDER_RANGE h4 07eaa 6 C2R render_curve_seed
+    PL_P $07eaa,render_curve_seed

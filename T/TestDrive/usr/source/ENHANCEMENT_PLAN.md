@@ -561,12 +561,31 @@ causing periodic sideways jumps away from the centre. Native sweeps cover all
 64 sampled camera phases on both sides and the centre; a separate model covers
 all 65,536 fractions for seven signed lane positions. This isolates projection
 drift from the original scanline raster rounding. Simulation and raster shifts
-are unchanged. Final A500 renderer cost including the shared arithmetic helper
-is 2.980% in the 50-field sample, below the existing 3% gate. Local
+are unchanged. That flat-road correction used 2.980% A500 renderer cycles
+including its shared arithmetic helper in the retained 50-field sample. Local
 `docs/road-shift.md` records the regression and targeted checks. The current
 downhill model matches 40 main / 30 mirror rows and ten traffic projections;
 the original-arithmetic zero oracle also passes. A1200/68040 C2-off/on startup,
 attract driving and native quit pass in emulation.
+
+The remaining cornering discontinuity is corrected at h4:$7EAA. The near-plane
+curve seed and bank displacement now retain the visible fraction of their
+height span; banking is latched with the camera. Native same-position A/B
+captures reduce a 13.675-pixel endpoint jump to 0.020 pixel, and a seven-pixel
+road-scanline jump to zero. Independent models match all 40 native rows through
+both bend directions, signed lanes/banks and a hill transition, and exhaust
+65,536 fractions in six cases. The original-arithmetic zero oracle, 2,089
+existing native assertions, hook/disabled-byte audits and A1200/68040 CACHE
+startup/attract/quit checks pass. Simulation and collision state are unchanged.
+Local `docs/corner-jump.md` records exact builds and reproduction.
+
+The matched 100-field A500 sample uses 3.195% for renderer self/hook work,
+shared lane arithmetic and the new bank-sine call, versus 3.019% for the prior
+release; both complete nine main views. The former 3% finite-sample gate is
+not passed in this window. The +0.175 percentage-point cost is accepted for
+this correctness fix, rather than retaining the visible jump. These are
+finite samples, not a whole-race bound; historical lower cost figures above
+are not current universal claims. Hardware testing remains deferred.
 
 The analogue rev counters now stop at their last numbered marks (Porsche/Lotus
 7000, Ferrari 10000, Countach 9000 RPM), including with C2 disabled. This limits
