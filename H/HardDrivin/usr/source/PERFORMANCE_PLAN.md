@@ -50,12 +50,13 @@ simulation overhead temporarily and directed work to move on to step 5.
 This removes the cost gate as a blocker; it does not complete the outstanding
 simulation-correctness checks. Measure the combined simulation and rendering
 changes against the original before claiming a net performance gain.
-The current measured closure build includes collision sweeps, terrain restoration
-and checkpoint/finish evaluation. Its A500 overhead is 8.527 / 4.137 ms/frame.
-A exceeds 8.070 by 0.457 ms; B is below the accepted 5.740 allowance. C5 remains
-open. A fits the polygon-count tolerance; B has a large scene mismatch and lower
-raw FPS. Its changed disabled trajectory prevents an isolated speedup claim.
-Measured candidate binaries and authoritative rebuilds are byte-identical.
+The current closure build includes collision sweeps, terrain restoration and
+checkpoint/finish evaluation. Exact sweep shortcuts reduce A's overhead to
+8.023 ms/frame, within its 8.070 limit. B measures 6.881 against the accepted
+5.740 allowance, so C5 remains open. A fits the polygon-count tolerance; B's
+10.32% scene mismatch prevents an equal-scene FPS claim. Raw off/on FPS is
+3.794/3.894 in A and 7.288/5.891 in B. These are fresh source-matched pairs;
+no earlier, cheaper B baseline is substituted.
 
 The user subsequently requested step-4 closure before step 5 and deferred the
 human A500/68040 test laps (C6). C1 solver coverage is now complete: flight,

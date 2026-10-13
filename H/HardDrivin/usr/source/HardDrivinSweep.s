@@ -44,8 +44,9 @@ SW_WORLD equ 66
 SW_RAW equ 68
 SW_SCANNED equ 74
 SW_REJECTED equ 78
+SW_LIMITS equ 82
  dc.b 'HDSWEEP1'
-_sweep_state: dcb.b 82,0
+_sweep_state: dcb.b 106,0
 ; Called after recovery and before camera/scene setup for each physics pass.
 ; MOVE/CLR/CMP do not change X; all caller registers are preserved.
 _sweep_begin:
@@ -169,15 +170,10 @@ _sweep_candidate:
  lea SW_RAW(a6),a2
  moveq #2,d7
 .endpoints:
+ ; SUB.W overflow is exactly the signed-word endpoint range check.
  move.w (a2)+,d0
- ext.l d0
- move.w (a1)+,d1
- ext.l d1
- sub.l d1,d0
- move.l d0,d1
- ext.l d1
- cmp.l d0,d1
- bne .overflow
+ sub.w (a1)+,d0
+ bvs .overflow
  move.w d0,2(a0)
  addq.l #8,a0
  dbf d7,.endpoints
@@ -231,6 +227,14 @@ _sweep_candidate:
 ; Same nested signed-word/Q14 rotation as native BB6E..BBD2.
 ; D0/D1/D2 words XYZ; D3-D6 scratch. A0..A6 unchanged.
 _sweep_rotate:
+ ; Exact Q14 +quarter-turn yaw: X'=-Z, Z'=X. Word negation retains
+ ; the native wrapped result at -32768; pitch consumes only the low word.
+ cmpi.l #$40000000,-$16c6(a4)
+ bne.s .yaw_general
+ exg d0,d2
+ neg.w d0
+ bra.s .pitch
+.yaw_general:
  move.w d0,d3
  muls.w -$16c4(a4),d0
  move.w d2,d4
@@ -243,6 +247,10 @@ _sweep_rotate:
  add.l d3,d2
  lsl.l #2,d2
  swap d2
+.pitch:
+ ; Flat pitch is exactly the identity, including signed-word endpoints.
+ cmpi.l #$00004000,-$16c2(a4)
+ beq.s .done
  move.w d1,d3
  muls.w -$16c0(a4),d1
  move.w d2,d4
@@ -255,6 +263,7 @@ _sweep_rotate:
  add.l d3,d2
  lsl.l #2,d2
  swap d2
+.done:
  rts
 _sweep_finish:
  movem.l d0-d7/a0-a2/a5-a6,-(a7)
@@ -323,8 +332,11 @@ _sweep_world:
 ; Conservative world-axis broad phase. The sum of camera-space half extents
 ; bounds every rotated axis; four units cover nested Q14 word rounding.
 ; Signed LONG endpoints avoid rejecting a distant object via word overflow.
-; Bounds are prepared once per pool; D6 retains the radius across candidates.
-; D5/D6 and A3 remain intact in the near test.
+; Prepare the swept bounds once per pool. For raw coordinate x and movement
+; delta d, rejecting both endpoints x and x-d against [-r,r] is equivalent
+; to testing x against [-r+min(d,0),r+max(d,0)]. Keep LONG limits: the
+; candidate still validates signed-word movement before using these bounds.
+; D5 (pool counter) and D6 (radius) remain intact in the near test.
 _sweep_world_bounds:
  moveq #4,d6
  move.w -22(a5),d0
@@ -336,31 +348,41 @@ _sweep_world_bounds:
  move.w -26(a5),d0
  ext.l d0
  add.l d0,d6
+ lea -$6704(a4),a0
+ lea SW_START(a6),a1
+ lea SW_LIMITS(a6),a2
+ moveq #2,d7
+.axis:
+ move.l (a0)+,d0
+ asr.l #3,d0
+ move.l (a1)+,d1
+ asr.l #3,d1
+ sub.l d1,d0
+ move.l d6,d1
+ move.l d6,d2
+ neg.l d1
+ tst.l d0
+ bpl.s .positive
+ add.l d0,d1
+ bra.s .store
+.positive:
+ add.l d0,d2
+.store:
+ move.l d1,(a2)+
+ move.l d2,(a2)+
+ dbf d7,.axis
  rts
 _sweep_world_near:
- move.l d6,d4
- move.l d4,d2
- neg.l d2
  lea SW_RAW(a6),a0
- lea SW_DELTA(a6),a1
+ lea SW_LIMITS(a6),a1
  moveq #2,d7
 .axis:
  move.w (a0)+,d0
  ext.l d0
- move.w (a1)+,d1
- ext.l d1
- neg.l d1
- add.l d0,d1
- cmp.l d4,d0
- ble.s .low
- cmp.l d4,d1
- bgt.s .miss
-.low:
- cmp.l d2,d0
- bge.s .next
- cmp.l d2,d1
+ cmp.l (a1)+,d0
  blt.s .miss
-.next:
+ cmp.l (a1)+,d0
+ bgt.s .miss
  dbf d7,.axis
  moveq #1,d0
  rts

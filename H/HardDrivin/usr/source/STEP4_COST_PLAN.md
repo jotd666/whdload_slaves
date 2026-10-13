@@ -13,9 +13,10 @@ The user accepted the P6 A500 B-window overhead of **5.740 ms/frame for now**
 (2026-10-13), superseding its 3.78 ms blocking limit for that measured build.
 P6 A measured 3.084 ms/frame. The current measured closure build, including
 collision sweeps, terrain restoration and checkpoint/finish evaluation, measures
-**8.527 / 4.137 ms/frame**. A exceeds its 8.070 limit by **0.457 ms**; B is below
-the accepted 5.740 allowance. B's scenes differ substantially, so this is not an
-isolated performance improvement. The earlier exception is not extended.
+**8.023 / 6.881 ms/frame** after exact sweep shortcuts. A meets its 8.070 limit;
+B exceeds the accepted 5.740 allowance by **1.141 ms**. B's paired scenes differ
+by 10.32%, so raw FPS is not an equal-scene comparison. The earlier exception
+is not extended, and no earlier B baseline is substituted.
 C1 is complete, C2–C5 remain open and C6 is deferred. Historical P7 A1200 net
 phase overhead is 0.283 / 0.576 ms/frame (0.47% / 1.23%); it is not a measurement
 of this latest full closure build.
@@ -844,7 +845,7 @@ traces remain. Reports are `p7-summary.json`, each run's `frame-budget.json` and
 ## 5. Closure of step 4
 
 The P6 B-window result is accepted under the temporary exception above. The current
-full closure build still exceeds the A-window limit. These remain acceptance
+full closure build meets the A-window limit but exceeds the B allowance. These remain acceptance
 items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
 
 - **C1, solver coverage — complete (2026-10-13).** Airborne flight, partial
@@ -1102,29 +1103,43 @@ items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
     input changes, braking, reverse/zero motion, partial contact and angular rates.
     The captured executable also passes 297 pristine native eight-field checks
     (135 reverse cases). These tests do not replace C2–C4 acceptance.
-  - **Current integrated build:** `c3-cross-cost-{a,b}-{off,on}` measures G1
-    **8.526803 / 4.136775 ms/frame**. A exceeds 8.070 by **0.456803 ms**; B
-    is below the accepted 5.740 allowance. The measured candidate binaries and
-    authoritative rebuilds are byte-identical for both windows; the report retains
-    both source manifests and the equality evidence. This includes checkpoint/
-    finish evaluation and the terrain-workspace restoration.
-  - New helper self cost is 0.066400 / 0.056562 ms/frame. The profiler also counts
-    native callees reached outside the original physics phase; they add zero in
-    these two windows. Sweep self cost is 3.021310 / 0.971933 ms/frame. B's changed
-    disabled trajectory prevents attributing its lower net overhead solely to the
-    implementation. No alternate baseline was substituted.
-  - G2 off/on FPS is A 3.794/3.794 and B 8.387/5.891 (swaps 38/38 and 84/59).
-    Complete-frame means are A 260.956/255.542 and B 120.433/167.854 ms.
-    Polygon means are A 57.757/54.892 and B 14.494/28.121. A meets the 5%
-    scene tolerance (4.96%); B differs by 94.02% and is a scene mismatch, not
-    equal-scene FPS evidence. The raw B regression remains reported.
+  - **Current integrated build:** `c5-rotate-{a,b}-{off,on}` measures G1
+    **8.023432 / 6.880910 ms/frame**. A meets 8.070 with 0.046568 ms spare;
+    B exceeds the accepted 5.740 allowance by **1.140910 ms**. All measured
+    binaries come from the authoritative source. Terrain restoration and
+    checkpoint/finish evaluation remain included; P3 remains deferred.
+  - The sweep prepares equivalent world-axis movement bounds once per pool,
+    replaces the signed endpoint range check with SUB.W overflow, and handles
+    exact +quarter-turn yaw and flat pitch without multiplications. General
+    rotations, native contacts, earliest-hit ordering and overflow fallbacks
+    retain their existing behavior. The private sweep state grows by 24 bytes.
+  - Old/new assembled predicates agree in 20,123 boundary/random cases; endpoint
+    storage and early overflow agree in 20,049 cases. Rotation matches the native
+    transform in 15,000 cases, explicitly including fast paths and signed extrema.
+    Native/reused scene contacts (32 each), world contacts (96), scan counting
+    (20), signed interpolation (10,000) and conservative filtering (10,000) pass.
+    These establish local equivalence, not C2–C4 full-trajectory acceptance.
+  - Sweep self cost is **2.605971 / 0.983988 ms/frame**, versus the previous
+    3.021310 / 0.971933. A's reduction is 0.415339 ms/frame; its total gate
+    delta also includes changed frame sampling and other phases, so the full
+    0.503371 ms reduction is not attributed solely to sweep instructions.
+    Checkpoint helper self cost is 0.066485 / 0.057311; extra native callee
+    cost outside the physics phase is zero in these windows.
+  - G2 off/on FPS is A **3.794/3.894** and B **7.288/5.891** (swaps 38/39
+    and 73/59). Complete-frame means are A 260.956/254.089 and B
+    137.719/169.580 ms. Polygon means are A 57.757/54.947 and B 26.708/29.466.
+    A meets the 5% scene tolerance; B differs by 10.32% and fails scene matching.
+    B's disabled trajectory changed from the earlier build; retain both the
+    current overhead failure and raw FPS regression, without baseline mixing.
   - All four traces pass 500-field duration, swap-count and coverage checks
-    (minimum 99.99996%), with matched paired binaries/listings/configuration.
+    (minimum 99.99998% rounded), with matched paired binaries/listings/configuration.
     Both disabled checks pass 169 declared ranges with fixture exclusions;
     147 branch ranges pass and the ordinary build is byte-identical. Report:
-    `c3-cross-cost-summary.json`, plus per-capture reports. SHA-verified compressed
-    traces/calibration banks remain; disposable runtimes are removed
-    (`c3-cross-source-cleanup.json`). **C5 remains open because A exceeds its limit.**
+    `c5-rotate-summary.json`, plus per-capture reports and the named sweep checks.
+    SHA-verified compressed traces/calibration banks remain; disposable runtimes
+    are removed (`c5-rotate-cleanup.json`). **C5 remains open because B exceeds
+    its allowance.** Intermediate bounds-only measurements are retained separately
+    in `c5-bounds-summary.json`; they are not the final source measurements.
 - **C6, human laps — deferred by the user (2026-10-13).** Full A500 and 68040
   laps remain an unperformed human acceptance check. They do not block the current
   step-4 automated closure; do not describe handling as human-validated.
