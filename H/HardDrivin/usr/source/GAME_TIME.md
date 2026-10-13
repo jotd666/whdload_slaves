@@ -4042,3 +4042,41 @@ non-solid/inactive candidates are rejected before register saves or calculation.
 Native collision priority, candidate mathematics and selection order are
 unchanged. The fresh full-build C5 costs and compatibility checks are recorded
 in `STEP4_COST_PLAN.md`; this optimization does not resolve C4 handling.
+
+
+### Further C4 separation of steering and contact failures (2026-10-13)
+
+The current physics build with the original private X360 loop fixture again
+loses contact on the 68060 at field 259. A read-only snapshot immediately before
+`$cab6` retains the complete memory banks and wheel distances. The car center
+is 115.6 units from the selected segment's centerline, versus a half-width of
+115.3; the preceding samples approach that edge monotonically. This particular
+fast failure therefore coincides with leaving the side of the road. It must not
+be used as proof that the current contact response fails near the centerline.
+The earlier private scaled-full-contact experiment does lose contact near the
+centerline (14.2 units at field 152), and remains rejected.
+
+The slowed build's original failure is different: its first contact loss is only
+1.6 units from center. Its out-of-domain wheel-height pitch error remains a real
+large-interval problem. A new private fallback takes the selected road segment's
+pitch difference when that arcsine input is out of range, retaining native
+behavior at eight fields. Alone it postpones slow contact loss to field 218 but
+then crashes; with the previously tested scaled full-contact response, loss is
+at field 275 on the slow profile and still 152 on the fast profile. Neither
+combination has been promoted. Car-center segments intersecting road triangles
+are also observed in the successful native traversal, so those intersections
+alone are **not proof of terrain tunnelling**.
+
+A separate X400 input fixture, using current unchanged physics, advances its
+waypoint pointer at field 200 and delays first zero contact until 312, but does
+not produce a clean exit. Native steering divides mouse displacement by 20 and
+may halve the resulting integer when `(abs(velocity)+1)*abs(steering)>1300`;
+therefore a larger mouse value is not a reliably larger turn. Further input
+calibration must account for this before judging fast loop handling. A waypoint
+advance by itself is not proof of complete loop/checkpoint acceptance.
+
+Evidence: `c4-loop-centerline-diagnosis.json`, `c4-road-pitch-experiment.json`,
+`c4-loop-input-diagnosis.json`; captures `c4-first-loss-060`,
+`c4-loop-input400-060`, `c4-road-pitch-loop-slow-v3` and `c4-road-gain-loop-*`.
+All source variants and snapshot bytes stay in the ignored harness. C4 remains
+open; no authoritative terrain/contact code changed in these experiments.

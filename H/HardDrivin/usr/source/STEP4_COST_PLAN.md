@@ -937,6 +937,14 @@ items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
     launch pitch rate. Privately retaining that rate improves peak height but
     still fails to reproduce the landing trajectory; no fix has been promoted.
     These are open failures, not C4 acceptance; details are in `GAME_TIME.md`.
+  - Further diagnosis separates two causes: the current fast X360 fixture loses
+    contact at field 259 as the car center crosses the road's side edge
+    (115.6 units versus a 115.3-unit half-width). The slow failure is near the
+    centerline and still has the invalid pitch input. Private road-angle and
+    scaled-response combinations do not pass. X400 input reaches a waypoint
+    but fails to exit cleanly; native speed-dependent steering halving must be
+    considered when calibrating the fixture. An exact first-loss memory snapshot
+    is retained for native terrain replay. These findings do not close C4.
 - **C5, gates.** G1 passes or meets the explicitly accepted temporary exception; G2 is reported; `check_disabled.py` passes; the
   normal build is byte-identical.
   - **Current full-build measurement (2026-10-13):** fresh paired 500-field A500
