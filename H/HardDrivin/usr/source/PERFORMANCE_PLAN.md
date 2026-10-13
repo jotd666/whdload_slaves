@@ -502,7 +502,9 @@ cycles before writing it. Every replacement needs:
 - A VERIFY pixel twin of the replaced inner loop, run into a guarded shadow bitmap and
   comparing all planes and the surviving registers and flags.
 - A CPU gate.
-- A `PERF_RANGE`.
+- A `PERF_RANGE`. For sites already patched by the original slave, use
+  `PERF_EXISTING_RANGE` and audit the disabled bytes against the same-build
+  original helper target, including the complete instruction range.
 
 1. **Memory placement (68020+ with Fast RAM).**
    - Confirm the code hunk, globals and vertex arrays land in Fast RAM.

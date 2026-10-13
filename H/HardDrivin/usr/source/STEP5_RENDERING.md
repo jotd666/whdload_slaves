@@ -63,7 +63,7 @@ with rotation off / on in the same build. Simulation remains enabled in both.
 | A500 + Fast | 40 / 42 | 60 / 60 | 69 / 73 |
 | A1200/020 | 150 / 159 | 222 / 222 | 231 / 237 |
 | 030/50 | 251 / 251 | 323 / 325 | 349 / 349 |
-| 040/25 | matrix running | matrix running | matrix running |
+| 040/25 | 240 / 245 | 272 / 274 | 290 / 298 |
 | 040/40 | 244 / 247 | 276 / 278 | 297 / 306 |
 | 060/50 | 246 / 248 | 273 / 274 | 300 / 309 |
 
@@ -71,8 +71,9 @@ These are whole-window observations, not an equal-scene or original-game net
 speedup claim. Native clock observations and simulation/render cadence can
 change the workload. The 68000/020 results use instruction traces; faster
 profiles use the established independent swap counter because their routine
-instruction timing is unavailable. The complete matrix and final selection
-remain outstanding.
+instruction timing is unavailable. The 42-run rotation matrix is complete: no measured window loses swaps.
+This is a selected candidate for the final combined build; combined validation
+with later rendering changes remains outstanding.
 
 ## Fast edge-array experiment
 
@@ -110,7 +111,40 @@ exact slave, listing, inputs and configuration. Completed traces are compressed
 only after decompressed SHA-256 verification; only dead owned runtimes are
 removed. Failed long Unix-socket-name attempts are not performance evidence.
 
-Remaining work: complete/aggregate the machine matrix, select CPU paths,
+Remaining work: select final combined CPU paths,
 complete the cache/code-write audit, evaluate the worthwhile span/edge/rotation,
 background, blitter-wait and cockpit candidates, and perform required guarded
 rendering comparisons for any pixel-loop replacement. Step 5 is not complete.
+
+## Blitter-wait work in progress
+
+The original helper saves three registers and checks delay options on every
+call. A developer-only CUSTOM3 bit 2 experiment redirects the eleven existing
+game wait calls when CUSTOM2 is zero. Nonzero CUSTOM2 keeps their original
+helper target. `PERF_EXISTING_RANGE` records these sites because their disabled
+baseline is the existing slave's JSR/NOP patch, not pristine game bytes; the
+separate retained-listing audit checks both target addresses and all ten bytes.
+
+An initial attempt to patch the slave helper itself failed during installation
+and never reached the benchmark. It is excluded from performance evidence.
+Redirecting the game calls passes the gameplay smoke and nonzero-CUSTOM2 gate
+checks. The tight-loop variant passes 16,384 isolated register/CCR/busy-transition
+cases, but raises A1200 A wait cost from 4.422 to 4.769 ms per swap (159/158 swaps).
+A500 A wait cost falls from 4.199 to 3.420 ms per swap (41/41 swaps). These
+observations do not justify selecting tight polling across CPUs.
+
+The successor retains the original BLITWAIT bus-read and CIA-backoff sequence
+and removes only register spills and zero-delay checks. Its 16,384-case contract
+test passes. Initial same-build gameplay results (rotation-only / plus lean wait):
+
+| Profile | A swaps | B swaps | A wait ms/swap | B wait ms/swap |
+| --- | ---: | ---: | ---: | ---: |
+| A500 | 41 / 41 | 59 / 60 | 4.212 / 3.614 | 3.095 / 2.805 |
+| A1200/020 | 159 / 159 | 219 / 223 | 4.391 / 4.354 | 3.280 / 3.341 |
+
+The helper's bus-read ordering is preserved. B's different workload explains
+why whole-window swaps and average wait cost need not move together; these
+figures do not prove equal-scene speedup. All thirteen rotation/wait sites are
+audited against their declared baseline. The remaining machine/attract matrix,
+MMU run and final combined selection are still required. Local captures are
+`s5-wait-v3-*`; `s5-wait-v2-*` retain the earlier tight-poll experiment.
