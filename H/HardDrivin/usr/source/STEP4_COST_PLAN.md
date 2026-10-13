@@ -963,6 +963,9 @@ items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
     the pitch rate. Its original end face is also unsuitable; the upward-facing
     top gives 6/6/9/9. Clipping distortion alone is not the cause. Supporting-face
     selection still needs a validated fix; no object exception is promoted.
+    A private finite-face predicate passes 10,045 oracle comparisons. The saved
+    top covers only one wheel, so substituting its infinite plane for every wheel
+    is also insufficient. Per-wheel runtime integration remains open.
 - **C5, gates.** G1 passes or meets the explicitly accepted temporary exception; G2 is reported; `check_disabled.py` passes; the
   normal build is byte-identical.
   - **Current full-build measurement (2026-10-13):** fresh paired 500-field A500

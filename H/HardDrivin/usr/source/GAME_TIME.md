@@ -4178,3 +4178,23 @@ object tops and road gaps; neither a type-39 exception nor globally ignoring
 object surfaces is established as correct. No such change has been promoted.
 Evidence: `c4-jump-plane-replay.json`, `check_c4_jump_plane.py`, captures
 `c4-jump-bad-plane`, `c4-jump-surface-object`, `c4-jump-surface-raw`.
+
+A private finite-face predicate now rejects the saved end face without a slope
+threshold or an object-type exception. It requires a convex polygon with upward
+car-space winding and tests the query against every projected edge. The saved
+top contains the car center; the end face does not. The actual native wheel
+coordinates are X ±30 and Z ±45. At this pose only the right rear wheel lies
+inside the top's footprint, so choosing one infinite top plane for all four
+wheels would still be incorrect. Its infinite-plane heights are diagnostic,
+not a proposed replacement for finite per-wheel contact.
+
+The assembled 68000 predicate passes 10,045 comparisons against a rational
+geometry oracle: the five saved object faces at nine query points, plus 10,000
+affine quads with reversed winding and boundary cases. Coordinates are bounded
+to ±8191 before products; the helper rejects uncertain ranges. These tests do
+not validate concave faces, runtime integration, world-up policy, or overhead
+surface selection. The helper remains private and unused by the game. The next
+integration must combine finite per-wheel road/object candidates, preserving
+road gaps and legitimate supporting surfaces before evaluating contact response.
+Evidence: `c4-support-faces-check.json`, `c4-support-68000-check.json`,
+`c4_support_face.s` in the ignored harness.
