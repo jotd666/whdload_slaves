@@ -2,8 +2,8 @@
 
 Run from the local harness (tmp/dev, env.sh sourced). The VERIFY tape replaces the lldb
 keyboard driver, which cannot attach to arm64 FS-UAE. aprof needs a cycle-exact CPU without
-an MMU model: use APROF_CPU=68EC030 for the 030 class. The installed aprof covers 020/030;
-for 040/060 set APROF_FSUAE to a build with the m68k_run_3ce hooks (fast-cpu-plan.md §5).
+an MMU model: use APROF_CPU=68EC030 for the 030 class. 040/060 need AmigaXDev's aprof
+from 82aa455 or later; APROF_FSUAE selects another profiler binary.
 CUSTOM2 should be the normal build's CPU-filtered selection (030: 0x7f0ffa). The capture
 uses the unmodified VERIFY source, including artwork twins.
   APROF_CPU=68EC030 UNTIL_TIMEOUT=1500 python3 -B ../../R/RedBaron/tools/aprof_flight.py \

@@ -328,19 +328,13 @@ Source `54530ee`, VERIFY tape route, maximum detail. Capture configuration:
 | Machines | `completion_machines` 040/25 and 060/50 NOMMU, AGA, cycle-exact |
 | Twins | All artwork, scene, span and cockpit twins pass |
 
-The installed aprof refuses 040/060, so a local copy instruments FS-UAE's
-040/060 cycle-exact loop, `m68k_run_3ce`:
-
-| Item | Detail |
-|---|---|
-| Binary | `~/.local/share/amiga/fs-uae-aprof040/fs-uae` |
-| Patch | `tmp/dev/tools/fsuae-aprof-040.patch`; not yet in AmigaXDev |
-| Changes | Hooks the 040/060 loop, times the instruction fetch, and maps the Zorro III window at `0x40000000` |
-| Driver | `APROF_FSUAE` selects the binary |
+AmigaXDev's aprof (`82aa455`) covers 040/060. It instruments FS-UAE's 040/060
+cycle-exact loop (`m68k_run_3ce`), times the instruction fetch, and keeps
+per-PC records for the Zorro III window at `0x40000000`. Earlier aprof builds
+refuse 040/060; run `make setup` in AmigaXDev to rebuild.
 
 ```sh
-APROF_FSUAE=~/.local/share/amiga/fs-uae-aprof040/fs-uae UNTIL_TIMEOUT=2000 \
-python3 -B ../../R/RedBaron/tools/aprof_flight.py 040 0x17f2ffa tmp/prof/aprof-040-w6b --warm 500 --fields 100
+UNTIL_TIMEOUT=2000 python3 -B ../../R/RedBaron/tools/aprof_flight.py 040 0x17f2ffa tmp/prof/aprof-040-w6b --warm 500 --fields 100
 python3 -B ../../R/RedBaron/tools/aprof_flight_report.py tmp/prof/aprof-040-w6b
 ```
 
