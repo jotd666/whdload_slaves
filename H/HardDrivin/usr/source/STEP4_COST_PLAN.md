@@ -1185,6 +1185,22 @@ On 2026-10-12 the user accepted the recommended defaults. The later G1 exception
   still fails in window B after P1–P6, and engine runs are the largest remaining item.
 - **D4, preserve.** Keep the native BCD lap clock, defects included.
 
+### Outstanding closure decisions (2026-10-13)
+
+These questions have been submitted to the user; none is accepted by silence.
+The goal remains active and step 4 is not complete.
+
+| Item | Decision needed | Verified evidence |
+|---|---|---|
+| C2 | Accept the documented native-clock dependency as an exception to untouched-clock equivalence? | All 650 gameplay states match when the 4,062 native clock observations match; the untouched-clock comparison still fails. D4 continues to preserve the native clocks. |
+| C3 | Does the test-lap deferral include automated full-lap timing, or only human laps? | Human laps are deferred. Controlled motion and individual award results are documented; a complete lap has not been verified. |
+| C5 | Accept the remaining 0.029365 ms/frame excess in B? | The source at `62e9913` matches the selected report: A 7.050928 versus 8.070, B 5.769365 versus 5.740. The further inactive-finish experiment was slower overall and was removed. |
+
+The source hash audit, ordinary binary identity, disabled patches, 147 patch
+ranges and four trace audits pass for the selected C5 build. These checks do not
+waive any of the decisions above. Human laps and P3 remain deferred; the stale
+goal wording requesting human lap confirmation does not override that deferral.
+
 ## 7. Working rules for this plan
 
 - P3 remains deferred; P1/P2/P4–P7 are complete, with the recorded exceptions.
