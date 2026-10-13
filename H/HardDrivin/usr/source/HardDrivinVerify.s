@@ -189,6 +189,27 @@ _verify_drive_vbl:
 	clr.w -$6a0a(a4)
 .instruction_ready:
 	ENDC
+	IFD VERIFY_RELEASE_FLOW
+	; Supply only mouse input after natural high-score qualification. Select
+	; A briefly, then the rightmost Done cell and click. No score is injected.
+	lea _verify_release_name_fields(pc),a1
+	move.w (a1),d0
+	beq.s .name_ready
+	addi.w #1,(a1)
+	move.l #200,-$6a06(a4)
+	clr.w -$6a0a(a4)
+	cmpi.w #30,d0
+	blo.s .name_ready
+	move.w #4,-$6a0a(a4)
+	cmpi.w #45,d0
+	blo.s .name_ready
+	move.w #639,-$6a06(a4)
+	clr.w -$6a0a(a4)
+	cmpi.w #60,d0
+	blo.s .name_ready
+	move.w #4,-$6a0a(a4)
+.name_ready:
+	ENDC
 	movem.l (a7)+,d0-d1/a0-a1
 	movea.l -$7036(a4),a0	; displaced instructions
 	lea $dff180,a1
@@ -982,4 +1003,8 @@ _verify_manual_key:
 _verify_manual_keys:
 	dc.w 1,'1',11,'2',21,'3',31,'4',41,'2'
 	dc.w 51,'n',61,'1',71,'4',81,'n',91,'1',-1,0
+	ENDC
+
+	IFD VERIFY_RELEASE_FLOW
+_verify_release_name_fields: dc.w 0
 	ENDC

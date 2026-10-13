@@ -1085,6 +1085,12 @@
 ;----------------------------
 
 (P_MakeIcons)
+; New installations enable the single release option by default. WHDLoad's
+; splash checkbox can disable it; CUSTOM2 continues to control frame delay.
+(tooltype
+  (dest (tackon #dest #prefix))
+  (settooltype "CUSTOM1" "1")
+)
 (set #copy-file #readme-file)
 (P_CopyFile)
 (set #copy-file #readme2-file)

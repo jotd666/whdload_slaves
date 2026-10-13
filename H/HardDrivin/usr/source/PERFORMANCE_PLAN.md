@@ -17,9 +17,11 @@ behaviour until each change is ported and verified separately.
 A subsequent A1200 play report exposed skid-onset and recovery regressions.
 The corrections and original-instruction comparisons are documented in
 `PHYSICS_ACCURACY.md`; prior short-window passes did not establish this handling
-behaviour. Release integration must include these corrections.
+behaviour. Release integration includes these corrections.
 
-Steps 1–5 are complete within the accepted scope. Step 4 closed on 2026-10-13
+Steps 1–6 are complete within the accepted scope. Release integration and
+its final validation, including the isolated storage-test environment limit,
+are documented in `STEP6_RELEASE.md`. Step 4 closed on 2026-10-13
 with the documented C2 clock and C5 cost exceptions. C3's automated full-lap
 timing check, C6's human A500/68040 laps and P3 remain deferred follow-up work;
 none is claimed to have passed. Controlled acceleration, braking and steering
@@ -33,7 +35,8 @@ CPU selection, matched-build matrix, candidate prices and cache audit are in
 `STEP5_RENDERING.md`. The original renderer remains selected on 030; A500/020 use
 rotation plus lean waits, and 040/060 use rotation only. The 040/40 B window loses
 one swap while its other windows improve. No overall net gain over the original
-simulation is claimed. Step 6 (release integration) is next.
+simulation is claimed. Step 6 release validation is documented in
+`STEP6_RELEASE.md`.
 
 The 2026-10-12 cost profile and the ordered closure plan for step 4 (P1–P7,
 C1–C6, decisions D1–D4) are in `STEP4_COST_PLAN.md`.
@@ -564,7 +567,11 @@ cycles before writing it. Every replacement needs:
    - With step 4 in place, game speed no longer depends on FPS, so the windows cover
      the same scene on every machine; recheck this before trusting a comparison.
 
-## Step 6: release integration
+## Step 6: release integration — complete
+
+Implemented and validated in `STEP6_RELEASE.md`. Newly installed icons enable
+CUSTOM1; command-line users explicitly choose CUSTOM1=1. The previously deferred
+full-lap/human checks remain deferred. The checklist below records the scope.
 
 1. **Options (WHDLoad 17+, approved by the user):** raise `WHDL_REQVER` and
    `slv_Version` to 17 and add an `slv_config` with CUSTOM1 (frame-time-scaled

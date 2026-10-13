@@ -1,7 +1,7 @@
-; SPS 0126 elapsed-time foundation. Development build: VERIFY_TIME + CUSTOM1.
+; SPS 0126 elapsed-time foundation, enabled at runtime by CUSTOM1.
 ; Optional VERIFY_TIME_DISPATCH feeds bounded elapsed intervals to the solver.
 ; Without that flag, scalar/motion diagnostics continue to use a constant T.
-; No hook is installed unless both gates are on. Production builds exclude it.
+; The release feature set compiles these hooks; CUSTOM1 enables them at runtime.
 ;
 ; Nominal reference f0=50/8 native steps per second. Every PAL field therefore
 ; contributes exactly $2000 in Q16.16; conversion has no rounding remainder.

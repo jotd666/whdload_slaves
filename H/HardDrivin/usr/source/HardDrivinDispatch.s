@@ -1,8 +1,7 @@
-; Development-only live-loop dispatcher. All time in a frame is consumed in
-; bounded <=8-field steps. Time spent doing this work belongs to the next frame.
-; VERIFY_DISPATCH_CPU experimentally selects one full interval on pre-020 CPUs.
-; Large-step handling and other timelines remain unproven: diagnostic use only.
-; Replay and other presentation timelines remain separate work.
+; Elapsed-time live-loop dispatcher. Pre-020 CPUs consume a full frame
+; interval; 020+ use bounded intervals and can update once per PAL field.
+; Time spent doing the work belongs to the next frame. Replay/presentation
+; clocks are handled by their separate modules. See GAME_TIME.md for limits.
 _dispatch_install:
 	movem.l d0-d1/a0-a2,-(a7)
 	IFD VERIFY_DISPATCH_CPU

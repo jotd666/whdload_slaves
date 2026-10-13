@@ -4,7 +4,8 @@ For the subsequent enhanced skid-onset/recovery corrections and their native
 reference tests, see `PHYSICS_ACCURACY.md`. Steering now consumes current speed;
 skid spin follows native rounded eight-field steps instead of exponential decay.
 
-Step 3 findings for SPS 0126. Normal gameplay remains unchanged. The proposed
+The release option and final integration checks are in `STEP6_RELEASE.md`.
+The findings below describe the original SPS 0126 timing. The selected
 reference is **f0 = 6.25 native steps/s**, with a **4–8 steps/s engineering range**
 and low confidence in any single historically "correct" rate. This is an A500
 compatibility calibration, not a recovered author constant or a statistical

@@ -10,6 +10,8 @@
 ;============================================================================
 
 
+	INCLUDE "HardDrivinRelease.i"
+
 	INCDIR	INCLUDE:
 	INCLUDE	whdload.i
 	INCLUDE	whdmacros.i
@@ -28,8 +30,8 @@
 WHDL_REQVER:	equ 18
 WHDL_REQREV:	equ 0
 	ELSE
-WHDL_REQVER:	equ 16
-WHDL_REQREV:	equ 5
+WHDL_REQVER:	equ 17
+WHDL_REQREV:	equ 0
 	ENDC
 
 ;============================================================================
@@ -281,6 +283,12 @@ _p0_OldOpenLibrary:
 	rts
 
 ;==========================================================================
+
+	IFD VERIFY_RELEASE_FLOW
+	IFND VERIFY_DRIVE
+	FAIL "VERIFY_RELEASE_FLOW requires VERIFY_DRIVE"
+	ENDC
+	ENDC
 
 	IFD VERIFY_STEPINPUT_TAPE
 	IFND VERIFY_DRIVE
@@ -1445,6 +1453,13 @@ _hsl_main:	move.l	a0,a3
 	; hiscore saver
 
 _hiscore_save_v1:
+	IFD VERIFY_RELEASE_FLOW
+	; Input-only end-of-race fixture; excluded from the release build.
+	move.l a0,-(sp)
+	lea _verify_release_name_fields(pc),a0
+	move.w #1,(a0)
+	movea.l (sp)+,a0
+	ENDC
 	move.l	d6,-(a7)	; call the hiscore name entry function
 	move.w	d4,-(a7)
 	pea.l	.hss_upd(pc)	; fake return address
@@ -1507,6 +1522,10 @@ _hss_main:	; encrypt hiscore table in-place, save it and decrypt it again
 .hss_wait:	waitvb
 	dbf	d0,.hss_wait
 
+	IFD VERIFY_RELEASE_FLOW
+	; Use the ordinary WHDLoad exit to flush the saved score to disk.
+	bra _exit
+	ENDC
 	movem.l	(a7)+,d0-7/a0-6
 	rts
 
@@ -1871,12 +1890,18 @@ slv_name:	dc.b	"Hard Drivin'",0
 
 slv_copy:	dc.b	"1989 Tengen / Atari / Domark",0
 
+slv_config:
+	dc.b "C1:B:Enhanced framerate;"
+	dc.b "C2:L:Frame delay:None,1,2,3,4,5,6,7,8,9;",0
+	EVEN
+
 slv_info:	dc.b	10,"Installer by Girv & JOTD",10,10
 	INCLUDE	Copyright.i
 	dc.b	10
 	dc.b	"Version "
 	DECL_VERSION
 	dc.b	10,0
+	EVEN
 
 ;==========================================================================
 
@@ -1917,9 +1942,6 @@ _verify_title_done:	dc.b	0
 ; its buffered log reaches disk. Read hardware CACR in Supervisor on 020+;
 ; API cache bits and hardware CACR are logged separately.
 	IFD VERIFY_CACHEAUDIT
-slv_config:
-	dc.b 0
-	EVEN
 _verify_cache_audit:
 	lea .tags(pc),a0
 	jsr resload_Control(a2)

@@ -1,4 +1,4 @@
-; Development-only elapsed presentation clocks. Requires REPLAY_TIMING's
+; elapsed presentation clocks. Requires REPLAY_TIMING's
 ; pause-aware wall counter, which continues after gameplay TS_ACTIVE clears.
 ; GAME OVER retains its native 35-step duration: 280 eligible PAL fields.
 _timeline_install:

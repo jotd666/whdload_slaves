@@ -4,8 +4,8 @@ Step 5 is complete as of 2026-10-13. The final selection and matched-build
 matrix below supersede the earlier candidate tables. Step 4's accepted clock/cost
 exceptions and deferred P3/full-lap checks remain unchanged. All measurements
 use the step-4 phase solver and sweep path, with a separate renderer switch so
-its disabled arm retains the same simulation. No release default has changed;
-automatic CPU/memory selection and user-facing options belong to step 6.
+its disabled arm retains the same simulation. `STEP6_RELEASE.md` documents
+automatic CPU/memory selection and the single release option.
 
 ## Candidate order and scope
 

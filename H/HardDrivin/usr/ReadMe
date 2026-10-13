@@ -13,7 +13,7 @@
 
  Requirements:
  -------------
- An original copy of the game and WHDLoad version 16.5 or later are required.
+ An original copy of the game and WHDLoad version 17.0 or later are required.
  WHDLoad must be accessible in the command path.
 
  The installed program requires 0.5 MB ChipMem and 1.0 MB OtherMem.
@@ -60,25 +60,29 @@
  CUSTOM2 controls the existing frame delay: 0 gives maximum rendering speed;
  higher values slow rendering down.
 
- Enhanced beta build:
- The enhanced build provides elapsed-time-based movement, physics, traffic
- and replay timing, allowing smoother rendering on accelerated Amigas.
- On 68020 and faster CPUs, physics can update every PAL field (50 times per
- second); the renderer draws as often as it can. On 68000, physics updates
- follow rendered frames. The original handling, including its abrupt skids,
- is retained. Original race-clock behaviour is also retained.
+ Enhanced framerate:
+ The Enhanced framerate checkbox in WHDLoad enables smoother gameplay on
+ accelerated Amigas. It is enabled by default in newly installed icons.
+ Uncheck it to use the original simulation and renderer. Existing icons can
+ enable it with CUSTOM1=1; CUSTOM1=0 disables it. Command-line launches must
+ specify CUSTOM1=1 to enable it. Use CUSTOM2=0 for maximum rendering speed.
 
- In the enhanced build, use CUSTOM1=1 to enable the new simulation and
- CUSTOM2=0 for maximum rendering speed. CUSTOM1=0 selects original timing.
- Rendering options are selected with CUSTOM3:
-   0  Original renderer (recommended for 68030).
-   2  Optimized rotations (recommended for 68040/68060).
-   6  Optimized rotations and blitter waits (recommended for 68000 and
-      68020 with Fast RAM).
+ Movement, physics, traffic and replay timing use elapsed time. On 68020 and
+ faster CPUs, physics can update every PAL field (50 times per second); the
+ renderer draws as often as it can. On 68000, physics updates follow rendered
+ frames. The original Amiga handling, including its abrupt skids, is retained;
+ no attempt has been made to improve it. Original race-clock behaviour and
+ its defects are also retained.
 
- These options currently require the enhanced build; a plain source build
- retains the original gameplay. Automatic selection of enhancements is not
- yet integrated. Full-lap checks and intro optimization remain deferred.
+ Rendering optimizations are selected automatically: optimized rotations and
+ blitter waits on 68000, and on 68020 with the executable in Fast RAM; optimized
+ rotations on 68040/68060, and the original renderer on 68030. Other untested
+ configurations retain the original renderer. CUSTOM3 is not a release option.
+ The option affects only the original SPS 0126 edition.
+
+ This is a beta with limited human playtesting. Full-lap checks and intro
+ optimization remain deferred. Enhancements can add overhead on an A500;
+ they are not a promise of higher frame rates on every setup.
 
  History:
  --------
@@ -87,7 +91,8 @@
    allowing smoother gameplay on faster Amigas while retaining original handling
  - adapted traffic, replays and related animation and sound timing to the
    enhanced simulation
- - added optional rendering optimizations for supported CPU configurations
+ - added automatic CPU-specific rendering optimizations, controlled together
+   with the simulation by the Enhanced framerate option
  - updated the installer using the WHDLoad Install Template, retaining all
    five game editions and seven icon choices
 

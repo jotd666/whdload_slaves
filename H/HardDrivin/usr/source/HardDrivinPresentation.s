@@ -1,6 +1,5 @@
-; Development-only overlay and recovery timing. Constant diagnostic fields
-; currently come from TIME_SCALARS; the dispatcher must supply the appropriate
-; elapsed interval when it separates simulation substeps from drawing.
+; Overlay and recovery timing. The release dispatcher supplies elapsed fields;
+; isolated development builds may select constant diagnostic intervals.
 _presentation_install:
 	movem.l a0-a2,-(a7)
 	lea _presentation_patches(pc),a0

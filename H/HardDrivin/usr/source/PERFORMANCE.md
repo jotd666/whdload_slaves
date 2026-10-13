@@ -3,8 +3,9 @@
 These findings apply to SPS 0126 and the rebuilt slave. Addresses are offsets
 into the decompressed game code, not runtime addresses. Steps 1 and 2 establish
 verification fixtures and baselines; step 3 establishes the time model in
-[`GAME_TIME.md`](GAME_TIME.md); no performance optimization is enabled in
-normal builds. Intro optimization remains deferred.
+[`GAME_TIME.md`](GAME_TIME.md). The release build now includes the enhanced
+simulation and automatic renderer selection behind CUSTOM1; see
+[`STEP6_RELEASE.md`](STEP6_RELEASE.md). Intro optimization remains deferred.
 
 ## Step-5 rendering result
 
@@ -19,8 +20,9 @@ The selected changes are exact rotation shortcuts plus lean waits on A500/020,
 rotation only on 040/060, and the original renderer on 030 after its final B
 regression. The 040/40 selected B window loses one swap; its other windows improve.
 Native-clock differences remain, so these are whole-window rendering comparisons,
-not equal-scene or net-original-game gains. No release default has changed;
-step 6 handles integration. Intro, P3 and full-lap checks remain deferred.
+not equal-scene or net-original-game gains. Release integration and its final
+validation are documented in `STEP6_RELEASE.md`. Intro, P3 and full-lap checks
+remain deferred.
 
 ## Game-time findings
 

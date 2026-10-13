@@ -2,7 +2,8 @@
 ; VERIFY_RENDER compiles the module. CUSTOM3 bit 0 selects Fast edge arrays;
 ; bit 1 selects exact zero-coefficient rotation on all supported CPUs;
 ; bit 2 selects the lean blitter wait only when CUSTOM2 is zero.
-; Normal builds and other game versions retain the original instructions.
+; Release builds select measured variants automatically under CUSTOM1.
+; HD_DEVELOPMENT retains the CUSTOM3 experiment mask; other editions are unchanged.
 ; CPU-only edge storage: two 200-word arrays. The native pool reservation is
 ; deliberately retained so every later Chip allocation keeps its old address.
 ; Patterns already live in the globals hunk; no DMA buffer is relocated.
@@ -16,6 +17,11 @@ _render_install:
 	adda.l #_resload-_render_install,a2
 	movea.l (a2),a2
 	jsr resload_Control(a2)
+	IFND HD_DEVELOPMENT
+	bsr _render_select
+	lea _render_options(pc),a0
+	move.l d0,(a0)
+	ENDC
 	move.l _render_options(pc),d0
 	btst #0,d0
 	beq .rotation
@@ -81,11 +87,65 @@ _render_set_edges:
 	tst.l d0
 	rts
 
-_render_tags: dc.l WHDLTAG_CUSTOM3_GET
+	IFND HD_DEVELOPMENT
+; Returns only variants selected by the measured matrix. Do not infer newer
+; CPU generations from a single flag: test 060/040 before 030 before 020.
+_render_select:
+	moveq #0,d0
+	lea _render_install(pc),a0
+	adda.l #_ct_ct1-_render_install,a0
+	tst.l (a0)
+	beq.s .done
+	move.l _render_attn(pc),d1
+	and.l #AFF_68040|AFF_68060,d1
+	bne.s .rotation
+	move.l _render_attn(pc),d1
+	btst #AFB_68030,d1
+	bne.s .done
+	btst #AFB_68020,d1
+	beq.s .old_cpu
+	; 020 was measured with the executable in Fast RAM. Retain the original
+	; renderer for unmeasured Chip/Slow-only placements.
+	lea _render_install(pc),a1
+	adda.l #_code_start-_render_install,a1
+	movea.l (a1),a1
+	; KickEmu can label its expansion arena MEMF_FAST even when WHDLoad
+	; placed that arena in physical Chip/Slow RAM. Reject those bus ranges.
+	cmpa.l #$200000,a1
+	blo.s .done
+	cmpa.l #$a00000,a1
+	blo.s .fast_address
+	cmpa.l #$1000000,a1
+	blo.s .done
+.fast_address:
+	movea.l 4.w,a6
+	jsr _LVOTypeOfMem(a6)
+	and.l #MEMF_FAST,d0
+	beq.s .done
+	bra.s .lean
+.old_cpu:
+	btst #AFB_68010,d1
+	bne.s .done
+.lean:
+	moveq #6,d0
+	rts
+.rotation:
+	moveq #2,d0
+.done:
+	rts
+	ENDC
+
+_render_tags:
+	IFD HD_DEVELOPMENT
+	dc.l WHDLTAG_CUSTOM3_GET
 _render_options: dc.l 0
+	ENDC
 	dc.l WHDLTAG_ATTNFLAGS_GET
 _render_attn: dc.l 0
 	dc.l 0
+	IFND HD_DEVELOPMENT
+_render_options: dc.l 0
+	ENDC
 _render_edges: dc.l 0
 
 	INCLUDE "HardDrivinRotation.s"

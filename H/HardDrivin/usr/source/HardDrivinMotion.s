@@ -1,4 +1,4 @@
-; Development-only angle, ordinary-position and falling-motion integration.
+; angle, ordinary-position and falling-motion integration.
 ; Requires VERIFY_TIME_SCALARS; shares its per-substep field count.
 ; Rate callers are distinguished from geometry/contact callers of the same
 ; rotation helpers. Partial contact retains full Q16 correction and rate state.
