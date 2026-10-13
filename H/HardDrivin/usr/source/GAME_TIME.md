@@ -4529,3 +4529,30 @@ arithmetic speedup or an equal-scene FPS comparison. All four trace audits,
 disabled patches, ordinary binary identity, 147 branch ranges and source-rebuild
 identity pass. Evidence: `c5-zero-summary.json`, `c5-pose-zero-check.json`,
 `p1-pose.json`, and `c5-zero-cleanup.json`. C5 remains open; C2 and C3 are unchanged.
+
+
+### Word-only zero paths and rejected eight-field shortcut (2026-10-13)
+
+Five intermediate traffic interpolation results are consumed only as words.
+Their zero paths now bypass redundant long clearing and branching, while the
+last full-width result retains its exact packed quotient/remainder and CCR.
+The final helper again passes 20,000 old/new and 20,000 pristine-block cases;
+`c5-word-pose-check.json` records the source hash. Final paired ten-second traces
+measure 7.147528 / 5.954435 ms/frame overhead. A passes; B remains 0.214435 ms
+above its accepted allowance. B's mean polygon difference is 1.66%, and physics
+work also changes, so this is not an isolated same-work speedup. See
+`c5-word-summary.json` for the complete paired measurements and identity checks.
+
+A private experiment extended steady traffic preparation to eight-field updates,
+retaining the native single-wrap tail at eight fields. All 44,000 arithmetic/
+route cases passed, followed by 1,440 live native-step updates and 92 crossings;
+the shortcut actually handled 1,260 updates and 90 crossings. Despite cheaper
+traffic, the full B gate rose to 6.300888 ms through increased physics work.
+The experiment is not promoted: production retains the 9–255-field shortcut.
+Its `c5-eight` captures remain evidence, not the selected production result.
+
+Eight refreshed checkpoint/finish captures at commit 98f333c retain one award
+per run, expected latch changes and no award-time crashes. Video-field spreads
+remain 14 and 12, respectively. The finish still seeds a checkpoint latch;
+`c3-zero-awards-summary.json` does not establish full-lap timing. Human laps
+remain deferred. C2's clock exception and C3/C5 closure remain outstanding.

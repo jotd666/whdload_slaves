@@ -13,9 +13,9 @@ The user accepted the P6 A500 B-window overhead of **5.740 ms/frame for now**
 (2026-10-13), superseding its 3.78 ms blocking limit for that measured build.
 P6 A measured 3.084 ms/frame. The current measured closure build, including
 collision sweeps, terrain restoration and checkpoint/finish evaluation, measures
-**7.182 / 6.223 ms/frame** after exact sweep and traffic interpolation shortcuts.
-A meets its 8.070 limit; B exceeds the accepted 5.740 allowance by **0.483 ms**.
-B's paired scenes differ by 12.01%, so raw FPS is not an equal-scene comparison.
+**7.148 / 5.954 ms/frame** after exact sweep and traffic interpolation shortcuts.
+A meets its 8.070 limit; B exceeds the accepted 5.740 allowance by **0.214 ms**.
+B's paired scenes differ by 1.66%, so raw FPS is not an equal-scene comparison.
 The earlier exception is not extended, and no earlier B baseline is substituted.
 C1 and C4 are complete; C2, C3 and C5 remain open, and C6 is deferred. Historical P7 A1200 net
 phase overhead is 0.283 / 0.576 ms/frame (0.47% / 1.23%); it is not a measurement
@@ -950,6 +950,12 @@ items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
     awards. Reports: `c3-cross-source-timing-summary.json`,
     `c3-checkpoint-post-check.json`, `c3-cross-source-geometry-summary.json`.
     These controlled transitions do not close C3 or complete C4 acceptance.
+  - Refreshed eight award captures after the first zero-input traffic change
+    (`98f333c`) still give checkpoint video fields 30/40/28/26 and finish
+    40/36/30/28. Each awards once with the expected latch and no award-time crash.
+    Finish consumed fields are now 34/31/28/28. Source-identified report:
+    `c3-zero-awards-summary.json`. These precede the word-only cleanup and remain
+    seeded transition observations, not full-lap or overall C3 acceptance.
 - **C4, extreme T — complete (2026-10-13).** The requested slowed-A500 and
   68060 collision/loop/jump matrix passes on the current production modules.
   Twenty live captures cover stationary and moving traffic, contact while
@@ -1108,6 +1114,27 @@ items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
     C4's live matrix was captured before this arithmetic-only change; its player
     collision/course modules are unchanged. The helper comparisons supply the
     compatibility evidence for the altered traffic arithmetic. **C5 stays open.**
+  - **Current word-only cleanup (2026-10-13):** the first five interpolation
+    terms are consumed as words. Their zero paths now keep the already-zero
+    low word and skip redundant long clears and branches. Final full-width D0
+    and CCR remain exact; 20,000 previous-helper comparisons and 20,000 native
+    block comparisons pass on the final source (`c5-word-pose-check.json`).
+    Fresh `c5-word-{a,b}-{off,on}` pairs give **7.147528 / 5.954435 ms/frame**.
+    A passes; B is **0.214435 ms** over 5.740. B has 60 enabled swaps, 5.990449 FPS,
+    166.027101 ms mean frame time and 27.152542 polygons/frame versus 73 disabled
+    swaps and 26.708333 polygons/frame (1.66% difference). Changes in scene and
+    physics work prevent attributing the total reduction solely to this cleanup.
+    Each candidate uses its own paired disabled capture. Trace coverage,
+    disabled ranges, ordinary-build identity and all 147 patch ranges pass;
+    final source rebuilds are byte-identical to these captures.
+    An eight-field steady-traffic experiment passed 44,000 arithmetic/route
+    comparisons and a live 1,440-update native check (1,260 shortcut updates,
+    including 90 crossings). It reduced traffic work, but the full paired B gate
+    worsened to 6.300888 ms as physics cost rose. It is **not in production**;
+    the existing 9–255-field eligibility is retained. Its evidence is kept as
+    `c5-eight-summary.json` and `c5-eight-native-traffic/results.json`.
+    Current evidence: `c5-word-summary.json`; cleanup reports
+    `c5-word-cleanup.json` and `c5-eight-cleanup.json`. **C5 remains open.**
 - **C6, human laps — deferred by the user (2026-10-13).** Full A500 and 68040
   laps remain an unperformed human acceptance check. They do not block the current
   step-4 automated closure; do not describe handling as human-validated.

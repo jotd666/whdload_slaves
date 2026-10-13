@@ -470,46 +470,36 @@ _traffic_pose:
 	move.l a0,-(a7)
 	jmp (a1)
 _traffic_pose_values:
+	; The first five consumers narrow to words; a zero low word needs no
+	; long clear. Later multiplies overwrite D0 before its full value escapes.
 	movea.l 8(a5),a0
 	movea.l -8(a5),a1
 	move.w 28(a0),d0
-	beq.s .zero0
+	beq.s .sum0
 	muls.w d4,d0
 	divs.w #200,d0
-	bra.s .sum0
-.zero0:
-	moveq #0,d0
 .sum0:
 	add.w 34(a0),d0
 	move.w d0,8(a1)
 	move.w 30(a0),d0
-	beq.s .zero1
+	beq.s .sum1
 	muls.w d4,d0
 	divs.w #200,d0
-	bra.s .sum1
-.zero1:
-	moveq #0,d0
 .sum1:
 	add.w 36(a0),d0
 	move.w d0,10(a1)
 	move.w 32(a0),d0
-	beq.s .zero2
+	beq.s .sum2
 	muls.w d4,d0
 	divs.w #200,d0
-	bra.s .sum2
-.zero2:
-	moveq #0,d0
 .sum2:
 	add.w 38(a0),d0
 	move.w d0,12(a1)
 	movea.l -4(a5),a0
 	move.w 12(a0),d0
-	beq.s .zero3
+	beq.s .sum3
 	muls.w d4,d0
 	divs.w #200,d0
-	bra.s .sum3
-.zero3:
-	moveq #0,d0
 .sum3:
 	move.w d0,d7
 	tst.w 12(a3)
@@ -524,12 +514,9 @@ _traffic_pose_values:
 .sum5:
 	add.w d0,d7
 	move.w 16(a0),d0
-	beq.s .zero4
+	beq.s .sum4
 	muls.w d4,d0
 	divs.w #200,d0
-	bra.s .sum4
-.zero4:
-	moveq #0,d0
 .sum4:
 	movea.w d0,a2
 	move.w #200,d0
