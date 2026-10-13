@@ -209,6 +209,14 @@ _patchlist_1:
 	PL_START
     PL_P $06390,overlay_unload_end
     PL_P $06916,overlay_load_end
+    ; SIM_RANGE root 02574 12 ALL audio_stop
+    PL_PSS $02574,audio_stop,6
+    ; SIM_RANGE root 02684 10 ALL audio_irq_stop
+    PL_PSS $02684,audio_irq_stop,4
+    ; SIM_RANGE root 026ca 18 ALL audio_irq_snapshot
+    PL_PSS $026ca,audio_irq_snapshot,12
+    ; SIM_RANGE root 0276a 6 ALL audio_start
+    PL_P $0276a,audio_start
 	PL_R	$1D10	; dma stuff
 	PL_R	$1CBC	; dma/drive stuff
 	PL_L	$434,$DFF002
@@ -267,6 +275,64 @@ verify_demo_rng:
 	swap d0                  ; displaced TD:$234
 	rts
 	ENDC
+
+; Paula only returns from manual output to idle while its interrupt request
+; remains set. A fast CPU repeatedly acknowledging the final word prevents
+; that transition, so the next DMA start can miss its initial interrupt and
+; a one-shot plays twice. Disable the stopped channel's interrupt; the next
+; request can then remain pending until the existing two-VBL restart delay.
+audio_stop:
+    move.w d0,-(sp)
+    lsl.w #7,d0
+    move.w d0,$9a(a6)
+    move.w (sp)+,d0
+    move.w d0,$96(a6)       ; displaced DMA stop
+    move.l #-1,$16(a0)     ; displaced fade cancellation
+    rts
+
+audio_irq_stop:
+    move.w d2,d4
+    lsl.w #7,d4
+    move.w d4,$9a(a6)
+    move.w d2,$96(a6)       ; displaced DMA stop
+    move.l -31548(a4),4(a0) ; displaced stop timestamp
+    rts
+
+; The level-4 audio handler can disable a channel while this level-3 VBL
+; server is running. Snapshot and mask atomically so restoration cannot
+; resurrect an interrupt that the audio handler has just disabled.
+audio_irq_snapshot:
+    move.w sr,-(sp)
+    ori.w #$0700,sr
+    move.w $1c(a6),d0
+    and.w #$0780,d0
+    move.w d0,-31542(a4)
+    move.w #$0780,$9a(a6)
+    move.w (sp)+,sr
+    rts
+
+; Replace the original Sfx VBL tail. Discard stale requests only for new
+; starts, start DMA, then restore existing interrupts plus the new channels.
+; Register setup and the game's two-VBL stop/start separation stay intact.
+audio_start:
+    move.w -31544(a4),d0
+    and.w #$000f,d0
+    beq.b .restore
+    lsl.w #7,d0
+    move.w d0,$9c(a6)
+    move.w d0,$9c(a6)
+    and.w -24928(a4),d0  ; keep looping music/engine channels masked
+    or.w d0,-31542(a4)
+    move.w -31544(a4),$96(a6)
+.restore
+    move.w -31542(a4),d0
+    beq.b .done
+    or.w #$8000,d0
+    move.w d0,$9a(a6)
+.done
+    movem.l (sp)+,d2/a0-a1/a4
+    moveq #0,d0
+    rts
 
 ; The Aztec overlay manager rewrites executable BSR/JMP stubs in the data
 ; hunk after DOS LoadSeg has flushed the caches. Flush again after both

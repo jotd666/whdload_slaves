@@ -625,6 +625,21 @@ This is a projection arithmetic defect, not the address-carry issue found in
 Grand Prix Circuit. The combined hook audit covers 87 ranges; normal C2-off/on
 A1200/68040 startup, attract and quit pass. Both fixes remain in 2.0b.
 
+The always-on opening-audio correction stops fast CPUs repeatedly acknowledging
+Paula's final manual-output request after DMA is disabled. A stopped channel's
+interrupt remains disabled until the existing two-VBL restart delay has elapsed;
+the VBL tail clears stale requests, starts DMA and restores the appropriate
+interrupts. Looping music/engine channels retain their interrupt masks. Hooks
+are root:$2574/$2684/$26CA/$276A; the VBL mask snapshot is atomic against the
+higher-priority audio handler. No song data, tempo or sample pitch is changed.
+The unmodified 1.4 and pre-fix 2.0b both reproduce missed initial interrupts and
+doubled one-shots on the emulated 68040. With instruction/data caches enabled,
+all 59 one-shots in the corrected 1,000-field opening capture have exactly one
+initial and one completion interrupt, with no negative-count interrupt loop.
+68000/68020 startup, attract and native quit pass, as do both enhancement modes
+on the 68040. Local `docs/audio-repeat.md` records the evidence and limitations.
+This remains part of 2.0b (13.10.2026); real hardware testing stays deferred.
+
 ## Phase 12: lessons back to AmigaXDev
 
 Record in AmigaXDev `docs/` what generalises: transferring an engine between games of one

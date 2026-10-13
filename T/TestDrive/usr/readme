@@ -51,6 +51,7 @@
  - Fixed nearby vehicles disappearing before a collision.
  - Fixed the rev counter needle wrapping around when over-revving.
  - More consistent game speed, race timing and average-speed scoring.
+ - Fixed repeated drum hits in the opening music.
  - Improved compatibility with accelerated Amigas.
  - Updated installation and documentation.
 
