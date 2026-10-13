@@ -9,11 +9,12 @@ import unittest
 from cpu_span_model import merge_plane
 
 class SceneRasterTests(unittest.TestCase):
+ source_name="scene_raster.c"
  @classmethod
  def setUpClass(cls):
   cls.tmp=tempfile.TemporaryDirectory(prefix='redbaron-scene-test-')
   out=Path(cls.tmp.name)/'scene.so'
-  subprocess.run(['cc','-O2','-DRB_HOST_TEST','-fPIC','-dynamiclib' if sys.platform=='darwin' else '-shared','-o',str(out),str(Path(__file__).with_name('scene_raster.c'))],check=True,capture_output=True)
+  subprocess.run(['cc','-O2','-DRB_HOST_TEST','-fPIC','-dynamiclib' if sys.platform=='darwin' else '-shared','-o',str(out),str(Path(__file__).with_name(getattr(cls,'source_name','scene_raster.c')))],check=True,capture_output=True)
   cls.lib=ctypes.CDLL(str(out));cls.lib.rb_scene.argtypes=[ctypes.POINTER(ctypes.c_uint)];cls.lib.rb_scene.restype=ctypes.c_uint
  @classmethod
  def tearDownClass(cls):cls.tmp.cleanup()
@@ -54,3 +55,21 @@ class SceneRasterTests(unittest.TestCase):
     xx=x+sx*(i if dx>dy else minor);yy=y+(minor if dx>dy else i)
     self.pixel(expected,xx,yy,colour)
    self.assertEqual(self.run_scene(data,1,x,y,x2,y2,colour),expected)
+
+ def test_line_extremes_every_colour(self):
+  rng=random.Random(926)
+  endpoints=((0,0,319,0),(319,199,0,199),(0,0,0,199),
+             (319,0,319,199),(319,0,0,199),(0,0,319,199),
+             (7,198,8,199),(8,198,7,199),(319,199,319,199))
+  for colour in range(32):
+   for x,y,x2,y2 in endpoints:
+    data=rng.randbytes(48000);expected=bytearray(data)
+    dx=abs(x2-x);dy=y2-y;n=max(dx,dy);sx=1 if x2>=x else -1
+    for i in range(n+1):
+     minor=(2*i*min(dx,dy)+n)//(2*n) if n else 0
+     self.pixel(expected,x+sx*(i if dx>dy else minor),y+(minor if dx>dy else i),colour)
+    self.assertEqual(self.run_scene(data,1,x,y,x2,y2,colour),expected)
+
+
+class LegacySceneRasterTests(SceneRasterTests):
+ source_name="scene_raster_legacy.c"

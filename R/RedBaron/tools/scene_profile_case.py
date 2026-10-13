@@ -91,6 +91,12 @@ if 'time_present_cache_buffer_ptr:' in (a.out/'slave.lst').read_text(encoding='l
  if w6_enabled or (scene_enabled and a.machine in ('030','030-nommu','040','060')):
   raw=r.command(f'gdb printf "BUFFER_HOOK %u\\n", *(unsigned int*){sim+hook+2:#x}')
   base=int(re.search(r'BUFFER_HOOK (\d+)',raw)[1])-symbol(lines,target)
+  if 'scene_raster_selected:' in '\n'.join(lines) and scene_enabled:
+   raw=r.command(f'gdb printf "RASTER_SELECTED %u %u\\n", *(unsigned int*){base+symbol(lines,"scene_raster_selected"):#x}, *(unsigned int*){base+symbol(lines,"perf_mask"):#x}')
+   selected,effective=map(int,re.search(r'RASTER_SELECTED (\d+) (\d+)',raw).groups())
+   expected=base+symbol(lines,'scene_raster_fast_code' if effective&(1<<26) else 'scene_raster_code')
+   assert selected==expected,raw
+   (a.out/'raster-selection.json').write_text(json.dumps(dict(selected=selected,effective_mask=effective,fc9=bool(effective&(1<<26))),indent=2)+'\n')
   result=check_live(lines,base,r.command,w6_enabled,a.machine!='a500')
   (a.out/'runtime-buffers.json').write_text(json.dumps(result,indent=2)+'\n')
 

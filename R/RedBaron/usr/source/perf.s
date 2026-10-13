@@ -1,8 +1,8 @@
 ; Performance patch framework. Only sim v1 calls this module's installer.
 ; No feature is release-enabled until its model, twin and measurements pass.
-PERF_VERIFIED_MASK = $3ff1fff ; verified features; CPU-filtered, FC8 additionally requires W6
-PERF_DEVELOPER_MASK = $3ff3fff
-PERF_VERIFY_MASK = $3ff7fff ; developer W6 plus VERIFY-only quiescent overlay probe bit 14
+PERF_VERIFIED_MASK = $7ff1fff ; verified features; CPU-filtered, FC8 additionally requires W6
+PERF_DEVELOPER_MASK = $7ff3fff
+PERF_VERIFY_MASK = $7ff7fff ; developer W6 plus VERIFY-only quiescent overlay probe bit 14
 
 perf_read_options:
 	movem.l d0-a6,-(sp)
@@ -61,6 +61,15 @@ perf_read_options:
 	bne .time_cpu_ready
 	bclr #13,d0
 .time_cpu_ready
+	; FC9: private-scene raster only on measured 030/040/060 classes.
+	move.l perf_attnflags(pc),d1
+	andi.l #$8c,d1
+	beq .no_fast_raster
+	btst #20,d0
+	bne .fast_raster_ready
+.no_fast_raster
+	bclr #26,d0
+.fast_raster_ready
 	; FC8 is measured on 040/060 and requires W6.
 	move.l perf_attnflags(pc),d1
 	andi.l #$88,d1

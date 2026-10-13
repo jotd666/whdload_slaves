@@ -422,7 +422,7 @@ Implemented as bit 25, selected on 040/060 with Faster rendering and W6.
 The complete output snapshot, world fingerprint, native checks and optional
 Fast allocation are documented in `profiling.md`. Both CPU classes clear the
 2% threshold; the final rate pairs and normal-build check pass. Actual frame
-times exceed the projection below, so FC9 remains the next planned step.
+times exceed the original projection below; FC9 is now complete and FC10 is next.
 The following numbered list records the design; all six items are resolved by
 the implementation and measured disposition in the scoreboard.
 
@@ -461,7 +461,7 @@ outputs. Expected saving: 10–11 ms on both CPUs.
 6. **Expected result.** About 40 ms on 040 and 37 ms on 060. That is borderline
    for 25 FPS on its own; FC9 gives the margin.
 
-#### FC9 — raster kernel `paint()` rewrite
+#### FC9 — raster kernel `paint()` rewrite (complete)
 
 Rewrite the inner loops of `tools/scene_raster.c` (`paint`/`span` and op 1).
 Expected saving: about 4–5 ms.
@@ -476,6 +476,17 @@ Expected saving: about 4–5 ms.
 - **Validation.** Keep exact output: `test_scene_raster.py`, the native span and
   scene twins, and both CPU classes. The kernel is shared, so the 030 path
   benefits too.
+
+FC9 implementation uses a separate bit-26-selected kernel, retaining the prior
+kernel for same-build comparisons. Colour words are expanded once per primitive;
+span interiors use aligned longword runs, four stores per native loop. Lines
+select one of 32 small colour-specific loops, with five byte bit operations and
+one native-tie error traversal. No additional working buffers or memory
+requirement are introduced. Pixel models cover all colours, alignments, extreme
+endpoints and the existing native polygon pipeline. Measurement and the final
+CPU disposition are recorded in `profiling.md`. All three measured classes clear
+the retention threshold; bit 26 ships on 030/040/060 under Faster rendering.
+The 68000/010/020 paths retain their prior kernel. FC10 is next.
 
 #### FC10 — cockpit composition word lists
 

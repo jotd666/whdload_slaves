@@ -5,6 +5,22 @@
 scene_primitives_install:
  movem.l d0-a6,-(sp)
  move.l a1,a5
+ ; FC9 changes no additional game bytes. Bit 26 selects the private kernel;
+ ; bit 20 alone retains the previous implementation in the same binary.
+ lea .old_kernel(pc),a0
+.old_kernel
+ adda.l #scene_raster_code-.old_kernel,a0
+ lea .mask(pc),a3
+.mask
+ adda.l #perf_mask-.mask,a3
+ btst #2,(a3)
+ beq .kernel_ready
+ lea .fast_kernel(pc),a0
+.fast_kernel
+ adda.l #scene_raster_fast_code-.fast_kernel,a0
+.kernel_ready
+ lea scene_raster_selected(pc),a3
+ move.l a0,(a3)
  move.l a1,a4
  adda.l #$30000,a4
  lea scene_primitive_sim(pc),a0
@@ -88,9 +104,7 @@ scene_packet_call:
  bsr scene_twin_before
  ENDC
  pea scene_packet(pc)
- lea .kernel(pc),a0
-.kernel
- adda.l #scene_raster_code-.kernel,a0
+ move.l scene_raster_selected(pc),a0
  jsr (a0)
  addq.l #4,sp
  tst.l d0
@@ -187,3 +201,5 @@ scene_poly_original:
  jmp $0.l
 scene_primitive_sim: dc.l 0
 scene_packet: dcb.l 12,0
+
+scene_raster_selected: dc.l 0

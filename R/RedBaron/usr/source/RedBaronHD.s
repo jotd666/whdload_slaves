@@ -671,6 +671,7 @@ tape_sim_key_bridge:
 	include "scene-primitives.s"
 	include "polygon-span.s"
 	include "scene-raster.i"
+	include "scene-raster-fast.i"
 	include "scene-compat.i"
 	IFD VERIFY
 	include "scene-twin.s"

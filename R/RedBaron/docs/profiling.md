@@ -5,7 +5,7 @@
 The user accepted measured performance on 2026-10-12. The normal build now
 starts with Faster rendering On when CUSTOM2 is omitted: On=0, Off=1.
 Developer/VERIFY CUSTOM2 remains an explicit mask, with zero disabling patches.
-The default verified rendering mask is `0x3ff1fff`, filtered by CPU;
+The default verified rendering mask is `0x7ff1fff`, filtered by CPU;
 FC8 bit 25 additionally requires W6. On
 2026-10-13 the user completed W6 release acceptance and authorized normal-build
 availability. Consistent game speed is a separate, default-Off checkbox:
@@ -21,6 +21,93 @@ passed. FC8 now adds the separately measured cache described below. Native 060 n
 opt-in and selects effective mask `0x1ff6ffa`, including W6 and its pacing
 dependencies (`w6-player-optin/options.json`). This is an option-path check;
 existing D5 evidence supplies runtime acceptance. No new FPS claim is made.
+
+## FC9: raster paint kernel (2026-10-13)
+
+FC9 is retained on 030/040/060 under Faster rendering. Developer/VERIFY bit 26
+selects the new kernel, requiring the private scene renderer (bit 20); the old
+kernel remains the same-build baseline. The 68000/010/020 paths are unchanged.
+Colour words are expanded once per primitive. Span interiors use aligned
+longword stores without reads; edge words preserve uncovered pixels. Lines
+select one of 32 colour-specific BSET/BCLR loops, keeping the native tie rule
+and a single coordinate traversal. No working buffer or minimum-RAM increase
+is needed. The normal slave is 60,224 bytes, including both selectable kernels.
+
+### Same-build retention measurements
+
+All six captures use the same 60,684-byte developer slave, SHA-256
+`344211f4f4593a8130dfde760dac7f857f9893229e68c2f12db477a9418219ca`.
+Each has 2,000 PAL fields of level flight followed by 250 fields banking right,
+with W6 enabled, maximum world/aircraft detail, ground detail enabled in combat
+and Time Scale 40. Only bit 26 changes within each CPU pair. These new baselines
+supersede earlier captures for assessing FC9; differences from FC8's historical
+scoreboard are not attributed to FC9.
+
+| CPU configuration | FC9 off FPS / ms | FC9 on FPS / ms | FPS gain | Bank off → on FPS | Disposition |
+|---|---:|---:|---:|---:|---|
+| 030 NOMMU | 19.194 / 52.099 | 20.368 / 49.098 | +6.11% | 19.369 → 19.968 | Retain |
+| 040 | 23.438 / 42.666 | 24.311 / 41.133 | +3.73% | 23.562 → 23.762 | Retain |
+| 060 | 25.135 / 39.785 | 26.108 / 38.302 | +3.87% | 25.160 → 25.160 | Retain |
+
+Level-flight world/wall ratios are 0.99781–0.99866, within one endpoint quantum
+(about 0.00306) of nominal speed. Banking ratios are 0.97986–1.00436, within the
+short window's approximately 0.0245 quantum. Every window has zero dropped
+steps/units and zero publication-margin violations. The 030 MMU configuration
+was not remeasured; it uses the same CPU gate. The unaffected stock-machine
+results remain in the earlier six-machine scoreboard. These emulator 040/060
+figures reflect instruction cost and Chip-bus constraints, not physical
+accelerator FPS or a 50 FPS claim.
+
+Evidence: `fc9-rate-{030-nommu,040,060}-{off,on}`. Reproduce from the harness
+with `BENCH_DEVELOPER=1 BENCH_BATCH_KEYS=1`, a frozen developer build selected by
+`BENCH_FROZEN_SLAVE`, and `scene_profile_case.py CPU MASK OUTPUT --fields 2000
+--groups rate --bank-after 250`. Off/on masks are `0x7f2ffa`/`0x47f2ffa` on
+030 NOMMU, `0x37f2ffa`/`0x77f2ffa` on 040 and `0x3ff2ffa`/`0x7ff2ffa` on 060.
+Keep the frozen binary and listing together; do not compare different builds.
+
+### Correctness and current attribution
+
+All 587 host tests pass, including independent pixel models for both kernels,
+all 32 line colours, extreme endpoints and alignment/rectangle/span cases.
+Final 040 and 060 VERIFY captures each pass 63 artwork checks, 63 scene checks,
+six native polygon primitive checks and cockpit checks, with no mismatch.
+The existing FC8 deliberate-invalidation and world-restore checks pass too.
+The gauge twin is idle on the W6 060 route; this is not an additional gauge pass.
+Both captures verify that bit 26 selects the new kernel. Native evidence:
+`fc9-final-native-040` and `fc9-final-native-060` (500 warmup + 100 profiled fields).
+
+The final exact VERIFY profiles attribute 6.93 ms/frame (040) and 6.99 ms/frame
+(060) exclusively to the raster kernel. On 060 the remaining cockpit word loop
+costs 4.73 ms, viewport copy 4.06 ms (97% Chip stalls), and overlay key matching
+1.67 ms (58% Chip stalls). These are current cost attribution, not release FPS
+or a causal comparison with an older profile. FC10 and FC11 address the latter
+remaining avoidable loops; the viewport copy remains bus-bound.
+
+Normal release checks (`fc9-normal-{030-nommu,040,060}`) boot with CUSTOM2
+omitted and CUSTOM3=1, return from Preferences, select the FC9 kernel and
+complete 250-field stage brackets. Each uses the final normal slave below.
+Stage times are milliseconds per completed call; world calls and draw calls
+have different rates, so these columns must not simply be summed.
+
+| CPU | Effective mask | Short-window FPS | Scene ms | Cockpit ms | World ms | Publication ms |
+|---|---|---:|---:|---:|---:|---:|
+| 030-nommu | `0x47b6ffa` | 20.567 | 39.304 | 7.615 | 1.650 | 0.031 |
+| 040 | `0x77f6ffa` | 23.363 | 34.182 | 5.312 | 2.136 | 0.041 |
+| 060 | `0x7ff6ffa` | 23.762 | 31.480 | 7.426 | 1.978 | 0.021 |
+
+These short initial-flight windows check release selection and locate costs;
+they are not the 2,000-field retention pairs above. Reproduce with
+`BENCH_BATCH_KEYS=1 BENCH_OMIT_CUSTOM2=1 BENCH_CUSTOM3=1` and
+`scene_profile_case.py CPU 0 OUTPUT --fields 250 --groups stages`, without
+BENCH_DEVELOPER or BENCH_FROZEN_SLAVE. FC12 retains the planned remeasurement
+of the earlier gauge/span CPU policies under W6.
+
+All three builds pass, with 138/138/152 reachable patch destinations and 138
+hook ranges audited without errors. Release selection includes bit 26 by
+default (`0x7ff1fff` before CPU filtering); W6 remains an independent opt-in.
+The developer binary still matches the frozen A/B hash after setting release
+defaults. Normal slave SHA-256:
+`2417538056ef93e7328ba140b7e18db11c5882d164bfcdf928628fb5d020ac65`.
 
 ## Runtime buffer ownership (2026-10-13)
 
@@ -146,8 +233,9 @@ On and Consistent game speed enabled, returns from Preferences and crosses
 40 native flight-loop checkpoints (`fc8-normal-040`).
 
 **Retain on 040/060.** This is a material improvement, but does not reach
-25 FPS or 50 FPS at maximum detail in these emulator windows. FC9 is the next
-planned step; no clock-rate or physical accelerator throughput claim is made.
+25 FPS or 50 FPS at maximum detail in these emulator windows. FC9 was the next
+planned step at this checkpoint; its completed results appear above. No clock-rate
+or physical accelerator throughput claim is made.
 The other four release configurations retain their existing scoreboard entries
 and CPU policy; FC8 is excluded there. All 579 host tests, three build modes,
 138 hook ranges and 138/138/152 normal/developer/VERIFY patch destinations pass.

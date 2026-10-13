@@ -80,7 +80,8 @@ polygon_span:
  pea scene_packet(pc)
  lea .kernel(pc),a0
 .kernel
- adda.l #scene_raster_code-.kernel,a0
+ adda.l #scene_raster_selected-.kernel,a0
+ move.l (a0),a0
  jsr (a0)
  addq.l #4,sp
  tst.l d0

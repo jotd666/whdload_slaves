@@ -49,6 +49,10 @@ if 'time_present_cache_buffer_ptr:' in listing:
   result['native_zeroing_and_reuse']=True
  (a.out/'runtime-buffers.json').write_text(json.dumps(result,indent=2)+'\n')
 twins={}
+if effective&(1<<20) and 'scene_raster_selected:' in listing:
+ expected=base+symbol('scene_raster_fast_code' if effective&(1<<26) else 'scene_raster_code')
+ if words('scene_raster_selected',1)!=[expected]:raise RuntimeError('Wrong selected raster kernel')
+ twins['raster_kernel']='FC9' if effective&(1<<26) else 'legacy'
 if effective&(1<<19):
  twins['artwork']=words('artwork_cache_twin_result',4)
  if twins['artwork'] != [63,0,0,6]:raise RuntimeError('Artwork twins incomplete or failed: '+str(twins))
