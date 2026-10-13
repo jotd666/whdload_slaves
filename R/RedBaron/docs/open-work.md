@@ -19,6 +19,11 @@ Refer to items by ID. FC items are detailed in `fast-cpu-plan.md`.
 | FC6 | Re-profile, W6 trial and geometry processing | Complete; W6 rate passes bounded trial, 50 FPS unmet; geometry extension dropped below 2% |
 | R1 | Renderer installer rejects its persistent helper on a later load | Fixed; captured guard identified, same-session second mission and rendering pass |
 | R2 | In-game clipped-sprite bounds abort while firing | Fixed; reserved prefix with strict guard, native replay and release flight checks pass |
+| FC8 | W6 presentation scenery cache (sim:0f01c forced rebuild, 10–11 ms per W6 frame) | Planned; largest W6 bottleneck |
+| FC9 | Raster kernel `paint()` rewrite (per-plane constants, longword interiors, line bset/bclr) | Planned |
+| FC10 | Cockpit composition word lists (pre-clipped, opaque split, longwords) | Planned |
+| FC11 | Overlay key comparison replaced by explicit invalidation | Planned |
+| FC12 | Re-measure FC5/FC3/FC4 decisions with W6, not under the two-field cap | Planned |
 | FC7 | AGA 040/060 and real-hardware confirmation | Real A1200/040 at 40 MHz works with W6 enabled (user report); 060 and DMA/timing confirmation remain |
 | D5a | W6 catch-up input check | Complete: native tap/hold/release during catch-up on A500 and 060 |
 | D5b | W6 Time Compress and mission-exit transitions | Complete: native compression and modal checks; A500 catch-up mission exit |
@@ -61,7 +66,8 @@ Git; do not revive their superseded next-work lists.
 ## Fast-CPU frame profile and plan
 
 `fast-cpu-plan.md` has the exact 030 frame attribution (aprof) and the ordered
-fix plan for the former 16.67 FPS plateau. FC0–FC4 are complete; FC5 was evaluated and dropped below the measurement
+fix plan for the former 16.67 FPS plateau. Its §5 profiles 040/060 with W6
+(18.3/19.6 FPS) and plans FC8–FC12 toward 25 FPS with Consistent game speed. FC0–FC4 are complete; FC5 was evaluated and dropped below the measurement
 threshold. FC6 is complete; FC7 remains.
 
 **FC0 is complete:** native scratch-clear synchronization fixes the top-edge

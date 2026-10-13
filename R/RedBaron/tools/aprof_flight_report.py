@@ -42,6 +42,12 @@ def main():
         if f[0]=='P':pcs[int(f[1],16)]=(int(f[2]),int(f[3]),int(f[4]),int(f[5]))
         elif f[0]=='N':nodes[int(f[1])]=(int(f[2]),int(f[3],16),int(f[4]),int(f[5]),int(f[6]))
         elif len(f)==2:hdr[f[0]]=f[1]
+    # FS-UAE's 040/060 cycle-exact loop charges no time to instructions or 32-bit Fast RAM:
+    # only Chip/custom accesses advance, plus one colour clock (CYCLE_UNIT) after every four
+    # zero-time instructions. Those charges land in the profiler gap, which the call tree
+    # already attributes; per-PC records add CYCLE_UNIT/4 per zero-time execution.
+    tax=int(hdr.get('CYCLE_UNIT',512))//4 if int(hdr.get('cpu_model',0))>=68040 else 0
+    if tax:pcs={pc:(u if u else n*tax,n,cu,ca) for pc,(u,n,cu,ca) in pcs.items()}
     units=int(hdr['units']);fields=int(hdr['vsyncs']);uf=units/fields
     ms=lambda u:u/uf*20.0
     starts={x for x in range(sim,sim+simlen,2) if word(x)==0x4e55}
@@ -102,15 +108,19 @@ def main():
             x=nodes[x][0]
         if not dup:agg[lab]+=incl[n];aggcalls[lab]+=c
         aggpar[label(nodes[par][1],nodes[par][2]) if par else '[top]'][lab]+=incl[n]
-    frames=aggcalls.get('sim:0056c',0) or 1
+    # W6 patches sim:0056c with time_present_begin; count either entry as one frame.
+    render='sim:0056c' if aggcalls.get('sim:0056c') else 'slave:time_present_begin'
+    frames=aggcalls.get(render,0) or 1
     print('slave base',hex(sbase) if sbase else None)
-    print(f'# {a.cap}: {fields} fields, {units} units, cacr {hdr["cacr"]}; render calls {aggcalls.get("sim:0056c")}, '
+    print(f'# {a.cap}: {fields} fields, {units} units, cacr {hdr["cacr"]}; render calls {aggcalls.get(render)}, '
           f'world calls {aggcalls.get("sim:01098")}; {50*frames/fields:.2f} FPS')
+    if tax:print(f'040/060 model: {sum(n for _,n,_,_ in pcs.values())/fields:.0f} instructions/field; '
+                 f'instruction charge {100*int(hdr["gap"])/units:.1f}% of all units')
     print(f'Chip-bus units {100*totchip/units:.1f}% of all; chip accesses {int(hdr["chip_accesses"])/fields:.0f}/field; '
           f'recognised blitter polls {100*sum(expoll.values())/units:.1f}%')
     def perframe(u):return ms(u)/frames
     print('\n## Render-function callees (inclusive ms/frame)')
-    for k,v in aggpar['sim:0056c'].most_common(25):
+    for k,v in aggpar[render].most_common(25):
         print(f"{perframe(v):8.2f}  {k}")
     print('\n## Top-level / interrupts (inclusive ms per frame)')
     for k,v in aggpar['[top]'].most_common(12):print(f'{perframe(v):8.2f}  {k}')

@@ -1,10 +1,11 @@
 """Exact per-PC cycle profile (aprof FS-UAE) of steady flight, VERIFY tape route.
 
 Run from the local harness (tmp/dev, env.sh sourced). The VERIFY tape replaces the lldb
-keyboard driver, which cannot attach to arm64 FS-UAE. aprof needs a cycle-exact 020/030
-without an MMU model, so use APROF_CPU=68EC030 for the 030 class. CUSTOM2 should be the
-normal build's CPU-filtered selection (030: 0x7f0ffa). The capture uses the unmodified
-VERIFY source, including artwork twins.
+keyboard driver, which cannot attach to arm64 FS-UAE. aprof needs a cycle-exact CPU without
+an MMU model: use APROF_CPU=68EC030 for the 030 class. The installed aprof covers 020/030;
+for 040/060 set APROF_FSUAE to a build with the m68k_run_3ce hooks (fast-cpu-plan.md §5).
+CUSTOM2 should be the normal build's CPU-filtered selection (030: 0x7f0ffa). The capture
+uses the unmodified VERIFY source, including artwork twins.
   APROF_CPU=68EC030 UNTIL_TIMEOUT=1500 python3 -B ../../R/RedBaron/tools/aprof_flight.py \
     030-nommu 0x7f0ffa tmp/prof/aprof-030n-1 --warm 500 --fields 50
 Summarize with aprof_flight_report.py CAPTURE --slave-base <live slave copy>.
@@ -16,11 +17,13 @@ sys.path.insert(0,str(Path.cwd().parents[1]/'R/RedBaron/tools'))
 import route_status as r
 from completion_machines import environment
 p=argparse.ArgumentParser();p.add_argument('machine');p.add_argument('mask',type=lambda s:int(s,0));p.add_argument('out',type=Path)
-p.add_argument('--warm',type=int,default=500);p.add_argument('--fields',type=int,default=50);a=p.parse_args()
+p.add_argument('--warm',type=int,default=500);p.add_argument('--fields',type=int,default=50)
+# Record, rather than refuse, gauge twins that never ran (FC3 restores are idle under W6).
+p.add_argument('--allow-idle-gauge-twins',action='store_true');a=p.parse_args()
 if a.out.exists():raise SystemExit('Refusing overwrite')
 env=environment(a.machine,a.mask);env.pop('BOOT_BREAK',None)
 if os.environ.get('APROF_CPU'):env['CPU']=os.environ['APROF_CPU']
-env['FSUAE']=os.path.expanduser('~/.local/share/amiga/fs-uae-aprof/fs-uae')
+env['FSUAE']=os.path.expanduser(os.environ.get('APROF_FSUAE','~/.local/share/amiga/fs-uae-aprof/fs-uae'))
 env['GAME']=str(Path.cwd()/'tmp/game/completion-benchmark/RedBaron')
 os.environ.update(env)
 subprocess.run([sys.executable,'-B','tools/reach_flight.py','--no-shot','--out',str(a.out)],env=env,check=True)
@@ -58,9 +61,11 @@ if effective&(1<<23):
  from gauge_fast import check
  def raw_words(name, count):
   return struct.pack('>'+count*'I', *words(name,count))
- twins['gauges']=check(raw_words('gauge_fast_twin_checked',2),
-                       raw_words('instrument_cache_twin_result',8),
-                       raw_words('gauge_fast_draws',1))
+ gauge_words=(raw_words('gauge_fast_twin_checked',2),raw_words('instrument_cache_twin_result',8),raw_words('gauge_fast_draws',1))
+ try:twins['gauges']=check(*gauge_words)
+ except ValueError as e:
+  if not a.allow_idle_gauge_twins or any(gauge_words[0]) or any(gauge_words[2]):raise
+  twins['gauges']=dict(idle=str(e),reuse=gauge_words[1].hex())
 (a.out/'twins.json').write_text(json.dumps(twins,indent=2)+'\n')
 flight_entry=json.loads((a.out/'entry.json').read_text())
 regions=r.memory_regions()
