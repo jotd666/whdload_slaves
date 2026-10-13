@@ -11,9 +11,10 @@ explicit helper-budget exception. P5's acceptance build met its unchanged
 physics arithmetic bottleneck: matched-operand long division is about 29% cheaper.
 The user accepted the P6 A500 B-window overhead of **5.740 ms/frame for now**
 (2026-10-13), superseding its 3.78 ms blocking limit for that measured build.
-P6 A measured 3.084 ms/frame. The current closure build, including collision
+P6 A measured 3.084 ms/frame. The most recently measured closure build, including collision
 sweeps and the terrain/contact guards, measures **8.471 / 7.281 ms/frame**.
 A and B exceed their respective 8.070 / 5.740 ms limits by **0.401 / 1.541 ms**. The earlier exception is not extended.
+A subsequent terrain-workspace restoration still needs a cost rerun.
 C1 is complete, C2–C5 remain open and C6 is deferred. Historical P7 A1200 net
 phase overhead is 0.283 / 0.576 ms/frame (0.47% / 1.23%); it is not a measurement
 of this latest full closure build.
@@ -939,6 +940,18 @@ items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
     and added cost remain unverified. Whole-lap timing remains open. Evidence:
     `c3-checkpoint-timing-summary.json`, `c3-checkpoint-event-*` and
     `c3-checkpoint-post-*`. These do not close C3.
+  - **Controlled finish transition:** the main-road approach explicitly seeds the
+    checkpoint latch, so it tests the award transition, not a completed lap.
+    Baseline award fields are 45/46/31/30 (spread 16); the first private query gives
+    40/36/30/28 (spread 12), consumed fields 34/31/28/28 (spread 6). Every run
+    awards once, clears the checkpoint latch and has no crash at the award.
+    A revised private helper now preserves the selection word and uses current
+    road orientation rather than the previous scene's wrong-way flag. It passes
+    512 assembled cases with actual native geometry and stubbed award bodies;
+    reverse physical directions are rejected even with a stale forward flag.
+    That revision still needs live validation. Finish results are from the
+    earlier prototype, not evidence for complete lap timing or the revised helper.
+    Reports: `c3-finish-timing-summary.json`, `c3-checkpoint-post-check.json`.
 - **C4, extreme T.**
   - Run collisions, the loop and the jump on the slowed A500 (largest T) and on the
     68060 (smallest T).
@@ -1019,7 +1032,16 @@ items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
     continuation is enabled with the phase solver and respects finite footprints,
     gaps, prior contact and course-list boundaries. Complete terrain/collision/
     contact replays match native data and registers in 24 compatibility cases;
-    16 boundary replays reject added support and leave native game data unchanged.
+    The first boundary replays used zeroed initial trigonometry and did not prove
+    workspace preservation. Replays with valid trigonometry and actual boundary
+    poses exposed changed scratch planes after rejected queries. The source now
+    saves/restores the 116-byte geometry workspace around the probe. All 16
+    strengthened boundary cases leave all native data globals unchanged; the
+    24 compatibility cases still match. Both live loop fixtures retain their
+    no-crash exits (segments 51/50). Ordinary binary identity, all 147 branch
+    ranges and a fresh disabled-patch check pass; cost needs a rerun. Reports:
+    `c4-terrain-boundary-before-check.json`, `c4-terrain-boundary-check.json`,
+    `c4-workspace-summary.json` and `c4-workspace-off/disabled.json`.
     Integrated-source fixtures reproduce both clean loop exits and the jump
     metrics above without private terrain/pitch patches. These close the observed
     culled-road/invalid-feedback defects; complete trajectory/checkpoint acceptance
@@ -1089,13 +1111,14 @@ items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
     input changes, braking, reverse/zero motion, partial contact and angular rates.
     The captured executable also passes 297 pristine native eight-field checks
     (135 reverse cases). These tests do not replace C2–C4 acceptance.
-  - **Current integrated build:** `c4-guards-{a,b}-{off,on}` measures G1
+  - **Last measured integrated build:** `c4-guards-{a,b}-{off,on}` measures G1
     **8.470873 / 7.280575 ms/frame**, above 8.070 / 5.740 by
     **0.400873 / 1.540575 ms**. It includes the landing and terrain/contact fixes.
     Terrain helper self cost is only 0.035227 / 0.030610 ms/frame; sweep self cost
     is 3.023330 / 1.056451 ms/frame. Changed trajectories prevent attributing the
     total delta from the preceding 8.405121 / 6.865535 build to these helpers alone.
-    No engine-cadence change or P3 work is included.
+    No engine-cadence change or P3 work is included. These measurements precede
+    the subsequent terrain-workspace restoration; its cost is not yet measured.
   - G2 off/on FPS is A 3.794/3.794 and B 7.288/5.891 (swaps 38/38 and 73/59).
     Complete-frame means are A 260.956/255.542 and B 137.719/168.544 ms.
     Polygon means are A 57.757/54.919 and B 26.708/29.224. A meets the 5%

@@ -3932,6 +3932,27 @@ each. The initial pose is published at field 3 on A500/slowed A500 and field 0 o
 supports moving variable-step checkpoint evaluation to the completed physics pose,
 but does not prove the full C3 criterion or whole-lap timing.
 
+The same first prototype was tested at the main-road finish section. This fixture
+starts at (25000,0,25000), heading 360, velocity 400, gear 4, and explicitly seeds
+the checkpoint latch to 255. It is a controlled finish transition, not a full lap
+or qualification result. Baseline award video fields are 45/46/31/30 (spread 16);
+prototype fields 40/36/30/28 (spread 12), with consumed fields 34/31/28/28 (spread 6).
+All eight captures award once, clear the latch afterward and have no award-time
+crash. Reports: `c3-finish-timing-summary.json` and `c3-finish[-post]-*`.
+
+The revised private helper also restores its selected-road word and evaluates
+wrong-way direction from the current transformed road sections, instead of
+trusting the preceding scene's flag. For the native award call only, it temporarily
+clears that stale flag and then restores it. A 512-case assembled check uses actual
+native $0c022 geometry, both candidate sections, forward/reverse physical
+orientations, either stale wrong-way flag, race/flag gates and native bypasses.
+Award bodies are stubbed. Game data, registers, stack and the selected-road word
+are preserved, with X checked on the non-query bypasses. Reverse directions
+produce no award. The initial replay test needed valid trigonometry: its captured
+initial values were zero; the revised test supplies a valid physical orientation.
+The revised helper has not yet been validated live, and the preceding timing
+numbers must not be attributed to it. Evidence: `c3-checkpoint-post-check.json`.
+
 Reports and captures: `c3-checkpoint-timing-summary.json`,
 `c3-checkpoint-event-*`, `c3-checkpoint-post-*`. All jobs are complete; disposable
 runtime copies are removed and calibration archives have verified decompressed
@@ -4405,9 +4426,19 @@ word changes, with registers, stack and materialized condition codes preserved;
 unchanged nested reset routines are stubbed. This does not establish that every
 lifecycle transition calls reset. An integrated-source selector replay through
 native terrain, collision and contact ($0cdbe..$0cdf6) matches all data globals
-and registers in 24 zero/eight/forced-native flag cases. Sixteen course-boundary
-replays execute the actual road query, reject eligibility, and leave all native
-game data unchanged. The source builds and patch checks pass; C4 still requires
+and registers in 24 zero/eight/forced-native flag cases. The first course-boundary
+replay used zeroed initial trigonometry; its no-difference result was too weak.
+Repeating with valid trigonometry and each road boundary's center revealed changed
+scratch geometry, though car state matched. The source now saves/restores
+G($9446..$94b9), 116 bytes, around the optional native road query. Accepted
+continuations recompute their own geometry; rejected queries leave the native
+fallback's incoming state intact. All 16 strengthened boundary cases now match
+all 32KB data globals, and the 24 compatibility cases still pass. Both live loop
+fixtures still exit without a crash, with the same peaks and segments 51/50.
+The normal build is byte-identical, 147 branch ranges pass, and a fresh disabled
+capture passes all declared ranges with fixture exclusions. Reports:
+`c4-terrain-boundary-before-check.json`, `c4-terrain-boundary-check.json`,
+`c4-workspace-summary.json`, and `c4-workspace-off/disabled.json`. The source builds and patch checks pass; C4 still requires
 complete trajectory/checkpoint acceptance.
 
 Existing native object collision/surface behavior is retained; the larger private
@@ -4419,8 +4450,8 @@ not complete C4 acceptance. Evidence: `c4-continuation-check.json`,
 `c4-terrain-native-check.json`, `c4-terrain-boundary-check.json`, and
 `c4-source-geometry-summary.json`.
 
-Fresh paired A500 traces `c4-guards-{a,b}-{off,on}` include these changes and the
-landing gate. G1 is 8.470873 / 7.280575 ms/frame, above the unchanged accepted
+The last paired A500 traces `c4-guards-{a,b}-{off,on}` include the terrain/contact
+guards and landing gate, but precede the subsequent workspace restoration. G1 is 8.470873 / 7.280575 ms/frame, above the unchanged accepted
 8.070 / 5.740 limits. Terrain helper self cost is 0.035227 / 0.030610 ms/frame.
 The ordinary build remains identical; all 147 branch ranges and both disabled
 patch checks pass. B's polygon count differs by 9.42%, so its raw FPS regression
@@ -4428,3 +4459,7 @@ is not an equal-scene measurement. Full results are in `STEP4_COST_PLAN.md` and
 `c4-guards-summary.json`. Finished runtimes are removed and trace/calibration
 archives have verified decompressed SHA values (`c4-guards-cleanup.json`,
 `c4-source-geometry-cleanup.json`).
+
+The workspace restoration still needs a cost rerun. Finished finish/loop diagnostic
+runtimes are removed and calibration archives are SHA-verified
+(`c3-finish-workspace-cleanup.json`).

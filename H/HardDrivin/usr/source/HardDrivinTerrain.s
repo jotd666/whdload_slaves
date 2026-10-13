@@ -20,6 +20,15 @@ _terrain_select:
  tst.b -$66f0(a4)
  beq .native
  movem.l d1-d7/a1-a3,-(a7)
+ ; C022 writes its plane workspace even when the footprint is rejected.
+ ; Restore it before either native continuation so a failed probe is inert.
+ lea -116(a7),a7
+ lea -$6bba(a4),a0
+ movea.l a7,a1
+ moveq #28,d7
+.save_workspace:
+ move.l (a0)+,(a1)+
+ dbf d7,.save_workspace
  lea _terrain_selected(pc),a0
  clr.w (a0)
  move.b #1,-$6bb9(a4)
@@ -29,6 +38,13 @@ _terrain_select:
  bsr _terrain_mask
  lea -$6bac(a4),a1
  bsr _terrain_bounds
+ movea.l a7,a0
+ lea -$6bba(a4),a1
+ moveq #28,d7
+.restore_workspace:
+ move.l (a0)+,(a1)+
+ dbf d7,.restore_workspace
+ lea 116(a7),a7
  movem.l (a7)+,d1-d7/a1-a3
  tst.w d0
  beq .native

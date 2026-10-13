@@ -50,11 +50,12 @@ simulation overhead temporarily and directed work to move on to step 5.
 This removes the cost gate as a blocker; it does not complete the outstanding
 simulation-correctness checks. Measure the combined simulation and rendering
 changes against the original before claiming a net performance gain.
-The later full closure build includes collision sweeps: its fresh A500 overhead
+The last measured closure build includes collision sweeps: its A500 overhead
 is 8.471 / 7.281 ms/frame including the landing and terrain/contact guards.
 A and B exceed their 8.070 / 5.740 ms limits by 0.401 / 1.541 ms. This remains
 an open C5 item; the P6 exception does not cover these new results. A fits the
 polygon-count tolerance; B is a scene mismatch and reports lower raw FPS.
+The subsequent terrain-workspace restoration still needs fresh cost measurements.
 
 The user subsequently requested step-4 closure before step 5 and deferred the
 human A500/68040 test laps (C6). C1 solver coverage is now complete: flight,
