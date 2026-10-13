@@ -171,46 +171,6 @@ _cb_dosLoadSeg
 	movem.l	(a7)+,a0
 	rts
 
-; < a0: str1
-; < a1: str2
-; > d0: -1: fail, 0: ok
-
-strcmp:
-	movem.l	d1/a0-a2,-(A7)
-.contstrcmpasm
-	move.b	(A0)+,d0
-	beq.s	.termstrcmpasm
-	move.b	(A1)+,d1
-	beq.s	.failstrcmpasm
-	bsr.s	.letterstrcmpasm
-	exg	d0,d1
-	bsr.s	.letterstrcmpasm
-	cmp.b	d0,d1
-	bne.s	.failstrcmpasm
-	bra.s	.contstrcmpasm
-
-.termstrcmpasm
-	tst.b	(A1)+
-	bne.s	.failstrcmpasm
-	moveq.l	#0,d0
-	bra.s	.endstrcmpasm
-
-.letterstrcmpasm
-	cmp.b	#$60,d0
-	bls.s	.letter1strcmpasm
-	cmp.b	#$7a,d0
-	bhi.s	.letter1strcmpasm
-	sub.b	#$20,d0
-.letter1strcmpasm
-	rts
-
-.failstrcmpasm
-	moveq.l	#-1,d0
-.endstrcmpasm
-	movem.l	(A7)+,d1/a0-a2
-	rts
-
-
 _bootdos
 	; saves registers (needed for BCPL stuff, global vector, ...)
 
@@ -786,9 +746,7 @@ _saveregs
 _stacksize
 		dc.l	0
 
-tag		dc.l	WHDLTAG_CUSTOM1_GET
-custom1	dc.l	0
-		dc.l	WHDLTAG_CUSTOM2_GET
+tag		dc.l	WHDLTAG_CUSTOM2_GET
 custom2	dc.l	0
 	IFD VERIFY
 		dc.l WHDLTAG_CUSTOM4_GET

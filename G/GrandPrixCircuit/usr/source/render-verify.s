@@ -154,7 +154,7 @@ verify_render_units:
 .heading
     lea render_pose(pc),a0
     move.w (a2)+,2(a0)
-    move.w (a2)+,12(a0)
+    move.w (a2)+,6(a0)
     move.w (a2)+,d7
     bsr render_heading_fraction
     move.w render_heading(pc),d0
@@ -181,7 +181,7 @@ verify_render_units:
     dbf d6,.projection
     ; Restore scratch state before the first real protected snapshot.
     lea render_pose(pc),a0
-    moveq #6,d0
+    moveq #3,d0
 .clear_pose
     clr.w (a0)+
     dbf d0,.clear_pose

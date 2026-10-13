@@ -42,9 +42,6 @@ render_pose_latch:
     move.w -29976(a4),(a0)+
     move.w -29522(a4),(a0)+
     move.w -20714(a4),(a0)+
-    move.w -29516(a4),(a0)+
-    move.w -29926(a4),(a0)+
-    move.w -29928(a4),(a0)+
     move.w -29518(a4),(a0)+ ; held native effective steering for this segment
     rts
 
@@ -205,7 +202,7 @@ render_scenery_pose:
 ; partial segment, using the same +/-8192 outward-steering clamp as native.
 ; d7=F; run even when the table fraction cache hits (pose may have changed).
 render_heading_fraction:
-    move.w render_pose+12(pc),d0
+    move.w render_pose+6(pc),d0
     move.w render_pose+2(pc),d1
     move.w d1,d2
     bpl.b .positive
@@ -444,7 +441,7 @@ render_depth: dc.w 0
 
 render_fraction: dc.w 0
 render_tables_ready: dc.w 0
-render_pose: ds.w 7
+render_pose: ds.w 4
 render_heading: dc.w 0
 render_project_width: dc.w 0
 render_project_margin: dc.w 0

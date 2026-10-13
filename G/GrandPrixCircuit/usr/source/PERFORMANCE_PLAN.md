@@ -1256,7 +1256,19 @@ source rebuild and pristine-file checks pass. This does not establish an
 interactive native Installer run. Evidence: `install-template-check.json` and
 `package-2.0b/report.json` in the ignored phase8 directory.
 
-The contribution remains a draft beta, not a completed Phase 8 acceptance.
+A subsequent dead-code audit removes the uncalled inherited `strcmp` routine,
+an unused CUSTOM1 query/result, and three write-only render-snapshot words
+(curve, simulation period and countdown). The retained effective-steering word
+moves from offset 12 to 6; its consumer and VERIFY setup/clear are updated together.
+All production helper entry points otherwise have callers, patch-list entries or
+fall-through paths; SDK callbacks and debugger discovery records are retained.
+Selectable VERIFY fixtures remain supported, not abandoned experiments.
+Normal and VERIFY builds and packaged-source rebuilds pass. The normal slave
+shrinks from 10,628 to 10,544 bytes. This source/build audit is not a new gameplay
+or timing measurement; earlier binary hashes identify the earlier tested builds.
+
+The contribution is ready for upstream review as 2.0b; final physical-hardware
+acceptance remains unestablished.
 
 ## Open questions
 - Attract capture window/publication counter are validated in Phase 2. Phase 6
