@@ -929,6 +929,9 @@ step 4.7, made concrete.
     but does not validate contact/exit behavior and is not in the game source.
     The jump blocker is a traffic vehicle; a clear lane gives collision-free
     takeoff on both profiles, but their landing states still differ at field 299.
+    A fast-run out-of-domain rear-contact sample is now confirmed to erase its
+    launch pitch rate. Privately retaining that rate improves peak height but
+    still fails to reproduce the landing trajectory; no fix has been promoted.
     These are open failures, not C4 acceptance; details are in `GAME_TIME.md`.
 - **C5, gates.** G1 passes or meets the explicitly accepted temporary exception; G2 is reported; `check_disabled.py` passes; the
   normal build is byte-identical.

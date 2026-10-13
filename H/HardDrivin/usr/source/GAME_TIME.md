@@ -3968,7 +3968,34 @@ heading -636. No object or traffic is removed. `c4-jump-clear-slow` and
 fields. First zero-contact samples occur at fields 151/137. However, at field
 299 the slowed A500 has landed (Y=3.625, mask 15), while the 68060 remains airborne
 (Y=238.125, mask 0). This is takeoff coverage, not acceptance of flight timing or
-the complete jump/checkpoint. The slowed run reports 286 sweep tests, zero hits
+the complete jump/checkpoint.
+
+The matching native-physics fixture `c4-jump-clear-native` now supplies a flight
+reference: it takes off at field 185, regains full contact at 288, and peaks at
+Y=209.625. These native wall-field times are not directly equivalent simulation
+ages: native physics advances one fixed step per rendered frame. The slowed
+candidate peaks at Y=210.25 and regains full contact at field 264. The fast
+candidate peaks at Y=250.875 and has not landed by its field-299 endpoint.
+
+Read-only rate captures `c4-jump-rate-slow` / `c4-jump-rate-060` distinguish launch
+feedback from gravity integration. The slowed run leaves the ramp with pitch
+rate -408016/65536. On the fast run, field 134 has rear-only contact (mask 12),
+wheel difference 6, and rate -129633/65536. At field 135, wheel distances
+525/525/-735/-735 produce difference 2520. The same native inverse-sine helper
+returns zero outside its domain, and the rear-contact hook overwrites the
+nonzero rate with zero. The car consequently holds pitch 30 during flight.
+
+A private `C4_KEEP_RATE` experiment preserves that prior rate on out-of-domain
+rear-contact samples, while leaving eight-field behavior unchanged. Its fast
+run peaks at Y=221.125 and regains full contact at field 349. This isolates the
+rate-clearing effect but still does not reproduce the native/slow launch or
+landing trajectory. The experiment is not promoted to the game source; simply
+retaining the previous rate is insufficient. A correction must address how
+rear-wheel launch feedback depends on sampling interval, not just this one
+invalid sample. `c4-launch-rate-diagnosis.json` retains the exact launch states,
+flight endpoints, build hashes and explicit non-acceptance status.
+
+The slowed clear-lane run reports 286 sweep tests, zero hits
 and zero overflows; the fast run does not activate the long-frame sweep.
 
 The `c4-loop-follow-native-v3` fixture starts 50 world units to one side of the
