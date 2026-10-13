@@ -2912,48 +2912,60 @@ advances across recovery without restarting its input sequence and holds the las
 record at the sentinel. It injects inputs only. This is a compatibility diagnostic,
 not the original field-indexed performance tape, nor a replacement acceptance gate.
 
-The same compiled `s4-native-input-tape.slave` with VERIFY_DISPATCH_NATIVE was
-captured with CUSTOM1 off/on as `s4-native-input-tape-off/on`. Both runs retain
-650 physics returns and 660 controls-entry snapshots, complete data/BSS, all 12
-traffic records, their 12 actor records, 98 main and 11 auxiliary scene records.
-The controls-entry mouse snapshots match the previous pass's table selection,
-including all 97 records and 19 distinct positions. The paired native-world checker
-finds no difference in the captured mouse/button/key input ranges. Real elapsed
-fields differ: 6256 off versus 6510 on.
+The current source at `14c53b3` was built as `c2-clock-native.slave` with
+VERIFY_DISPATCH_NATIVE. Its CUSTOM1 off/on captures retain 650 physics returns,
+660 controls entries, complete data/BSS, all 12 traffic records and their actor
+records, 98 main and 11 auxiliary objects. The input checker covers all 97 tape
+records and 19 mouse positions; paired button/key inputs also match.
 
-Full native-step equivalence **fails**:
+The untouched-clock runs (`c2-clock-record-v2`, `c2-clock-natural-on`) take
+6251/6341 fields. Full gameplay equivalence still fails: car state differs on
+33 returns, starting at return 99; replay contents on 376 returns; replay write
+pointer on 185. RNG and traffic records match throughout. Main objects differ on
+551 returns, with differences in several actor records as well. Earlier captures
+also located the first car divergence at the native off-road deadline transition.
 
-- Car state matches for returns 0..96, then differs on 37 of 650 returns.
-- RNG and every traffic record match on all 650 returns.
-- Replay-ring contents differ on 380 returns and its write pointer on 189.
-- Several actor records and the main scene table first differ at return 97;
-  the auxiliary scene table matches throughout.
-- Complete data/BSS is never byte-identical. Wall-clock/presentation differences
-  are retained in the report, with unclassified differences left visible.
+A separate **counterfactual clock-input replay** now establishes causality for
+these captured gameplay differences. The disabled run records the elapsed and
+remaining BCD clocks plus expiry byte at native race clock-read sites. The enabled
+run receives those exact observations at the same read-site/physics-index sequence.
+It writes only G($9790), G($9798) and G($979c), never car state, inputs, RNG, traffic,
+replay, deadlines or recovery flags. VBL clock routines continue running between
+observations. All **4,062** observations match, with immediate read-back assertions.
+The observed read sites are `$07dea`, `$0b15c`, `$0b172`, `$10060`, `$10476`,
+`$10516`, `$105d8`, `$105e8` and `$10edc`.
 
-The first car divergence is the native off-road recovery transition. At enabled
-return 96 the elapsed BCD clock is `$1646`, past its `$1644` off-road deadline;
-return 97 has already reset position to 26542/256/25057 and cleared velocity.
-The disabled run is still driving at return 97 and first has the recovery pose at
-return 99. Its deadline is `$1603`. Direct 1100-field trigger captures,
-`s4-native-tape-trigger-off/on`, confirm entry through the native `$105f4`
-off-road timeout: off at field 1003 (clock `$1605`, deadline `$1603`, velocity 168),
-on at field 1020 (clock `$1651`, deadline `$1644`, velocity 175). Recovery begins
-at `$108b8` on the following field in each run. Thus it occurs later in wall
-fields but earlier in the enabled run's physics-step sequence. Input mismatch
-cannot explain this first divergence; native clocks remain an external timing
-dependency even with T forced to one and matched changing inputs.
+The existing GDB stub ignores guest writes, so its attempted replay is invalid.
+The completed diagnostic uses a private emulator copy with a checked RAM-write
+packet. With no writes, that emulator reproduces both original 650-return runs
+byte-for-byte in physics snapshots, controls, external world, event fields and
+clock observations. This is state-equivalence evidence, not an emulator timing
+benchmark. The source patch, executable hashes and checks remain ignored locally.
 
-This evidence does not justify masking recovery differences, changing the clock
-policy, or declaring the full driving-tape criterion passed. Native BCD clocks
-remain untouched as required by step 4. Full equivalence needs this dependency
-resolved explicitly in the validation model. Equal-elapsed-time handling remains
-a separate unfinished requirement.
+`c2-clock-debug-record` / `c2-clock-debug-replay` then match at **all 650 returns**
+in every compared gameplay domain: the 92-byte car state, RNG, complete replay
+ring and pointer, all traffic/actor records, both object pools and the boolean
+scene/replay flag. All 660 control snapshots match in the declared input ranges.
+Elapsed fields are 6251/6323; the clock observations, rather than wall fields,
+are controlled in this diagnostic.
 
-The diagnostic's flag guards reject missing VERIFY_DRIVE and simultaneous
-constant-input mode. CUSTOM1-off validation passes all 154 declared ranges with
-only DRIVE and STEPINPUT_TAPE enabled. Both the normal build and the regular
-integrated field-tape build remain byte-identical to their pre-fixture versions.
+Complete data/BSS is still not identical. The checker retains every difference:
+VBL clock/music/channel state, instruction-text cursor and retained text buffer
+(native `$069a0..$06a9e`), polygon-fill bounds (`$0329c..$032ec`) and clipping
+scratch (`$03746/$0374a`). The renderer scratch differences occur at one return;
+the instruction-text remnants already differ before the driving sequence. No
+remaining differing byte is unclassified, and none is masked from the report.
+
+This proves conditional gameplay equivalence under matched clock observations;
+it does **not** pass the original untouched-clock gate or change D4. C2 remains
+open pending explicit acceptance of the demonstrated native-clock dependency.
+The game still preserves the defective BCD clocks. Equal-time trajectories,
+full-lap timing and C4 collision acceptance are separate requirements.
+
+Evidence: `c2-clock-causal-summary.json`, `c2-clock-emulator-equivalence.json`,
+per-capture `clock-observations.json`, `native-world-comparison.json`, input
+coverage reports and SHA-verified compressed state streams. Failed or incomplete
+attempts are labeled in the summary and are not used as acceptance evidence.
 
 
 ## Exact-throttle feedback and refreshed drivetrain comparison

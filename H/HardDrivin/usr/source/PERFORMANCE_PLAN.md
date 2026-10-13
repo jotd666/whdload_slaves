@@ -68,8 +68,10 @@ retains the pitch rate for invalid rear-contact feedback. Integrated-source loop
 and jump fixtures reproduce the validated prototype outcomes. Checkpoint and
 finish awards now also use the completed physics pose, with native compatibility
 bypasses and fallback scene checks. Controlled four-profile timing improves, but
-full-lap timing remains unverified. C2–C5 remain open;
-see the current closure results in `STEP4_COST_PLAN.md`.
+full-lap timing remains unverified. A clock-input replay now reproduces all 650
+captured native gameplay states, isolating the untouched-clock mismatch to clock
+observations; the C2 clock-dependency exception is still unaccepted. C2–C5 remain
+open; see the current closure results in `STEP4_COST_PLAN.md`.
 
 ## Starting point
 

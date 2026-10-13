@@ -872,8 +872,15 @@ items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
     state retains Q16. This is recorded quantization, not a full-trajectory or
     equal-time acceptance claim. C2–C5 remain separate.
 - **C2, native step.** The forced T=1 108-state comparison and the 650-return
-  controls-indexed comparison must still match. The second one is still subject to the
-  BCD clock dependency (D4).
+  controls-indexed comparison must still match. The untouched-clock 650-return
+  run still fails (33 car-state differences starting at return 99). A causal
+  diagnostic replays 4,062 checked native clock observations and then matches
+  all 650 car/RNG/replay/traffic/actor/object-pool states and all input samples.
+  The private diagnostic emulator reproduces both no-write control runs exactly.
+  This establishes the native-clock dependency, without changing D4 or waiving
+  C2: an explicit clock-dependency exception remains unaccepted. Complete raw
+  data/BSS differences remain reported and classified. See `GAME_TIME.md` and
+  `c2-clock-causal-summary.json`.
 - **C3, equal elapsed time.**
   - Use the controlled-start fixtures (`INITIAL_THROTTLE`, braking from speed 100, and
     held steering).
