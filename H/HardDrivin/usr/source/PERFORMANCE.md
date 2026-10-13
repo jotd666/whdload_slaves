@@ -6,6 +6,22 @@ verification fixtures and baselines; step 3 establishes the time model in
 [`GAME_TIME.md`](GAME_TIME.md); no performance optimization is enabled in
 normal builds. Intro optimization remains deferred.
 
+## Step-5 rendering result
+
+Step 5 is complete; [`STEP5_RENDERING.md`](STEP5_RENDERING.md) contains the final
+matched-build matrix and its CPU selection. Over 500 PAL fields, with accepted
+step-4 simulation enabled in both arms, A500 swaps improve from 39/58/67 to
+41/60/72 in gameplay A/B/attract. A1200/020 improves from 150/222/231 to
+159/223/238. These use the step-4 closure fixtures described there, not the
+longer baseline windows below.
+
+The selected changes are exact rotation shortcuts plus lean waits on A500/020,
+rotation only on 040/060, and the original renderer on 030 after its final B
+regression. The 040/40 selected B window loses one swap; its other windows improve.
+Native-clock differences remain, so these are whole-window rendering comparisons,
+not equal-scene or net-original-game gains. No release default has changed;
+step 6 handles integration. Intro, P3 and full-lap checks remain deferred.
+
 ## Game-time findings
 
 With constant native input, the A500, delayed A500, 020 and 040 produce identical

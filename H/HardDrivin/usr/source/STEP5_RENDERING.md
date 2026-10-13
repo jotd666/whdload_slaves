@@ -1,9 +1,11 @@
 # Step 5 rendering work
 
-Step 5 is in progress. Step 4's accepted clock/cost exceptions and deferred
-P3/full-lap checks remain unchanged. All measurements below use the step-4
-phase solver and sweep path, with a separate renderer switch so its disabled
-arm retains the same simulation. No release default has changed.
+Step 5 is complete as of 2026-10-13. The final selection and matched-build
+matrix below supersede the earlier candidate tables. Step 4's accepted clock/cost
+exceptions and deferred P3/full-lap checks remain unchanged. All measurements
+use the step-4 phase solver and sweep path, with a separate renderer switch so
+its disabled arm retains the same simulation. No release default has changed;
+automatic CPU/memory selection and user-facing options belong to step 6.
 
 ## Candidate order and scope
 
@@ -79,8 +81,8 @@ speedup claim. Native clock observations and simulation/render cadence can
 change the workload. The 68000/020 results use instruction traces; faster
 profiles use the established independent swap counter because their routine
 instruction timing is unavailable. The 42-run rotation matrix is complete: no measured window loses swaps.
-This is a selected candidate for the final combined build; combined validation
-with later rendering changes remains outstanding.
+This earlier binary established the candidate. The final same-build matrix below
+changes the CPU selection, particularly on the 68030.
 
 ## Fast edge-array experiment
 
@@ -120,12 +122,12 @@ exact slave, listing, inputs and configuration. Completed traces are compressed
 only after decompressed SHA-256 verification; only dead owned runtimes are
 removed. Failed long Unix-socket-name attempts are not performance evidence.
 
-Remaining work: select final combined CPU paths,
-complete the cache/code-write audit, evaluate the worthwhile span/edge/rotation,
-background, blitter-wait and cockpit candidates, and perform required guarded
-rendering comparisons for any pixel-loop replacement. Step 5 is not complete.
+Candidate screening and the cache/code-write audit are complete below. No pixel
+writer replacement is selected. The promoted arithmetic uses guarded vertex
+comparisons; the wait uses an independent register/CCR model and real DMA runs.
+The private background model is not presented as a hardware pixel twin.
 
-## Blitter-wait selection in progress
+## Blitter-wait experiment
 
 The original helper saves three registers and checks delay options on every
 call. A developer-only CUSTOM3 bit 2 experiment redirects the eleven existing
@@ -154,8 +156,7 @@ test passes. Initial same-build gameplay results (rotation-only / plus lean wait
 The helper's bus-read ordering is preserved. B's different workload explains
 why whole-window swaps and average wait cost need not move together; these
 figures do not prove equal-scene speedup. All thirteen rotation/wait sites are
-audited against their declared baseline. The remaining machine/attract matrix
-and final combined selection are still required. The combined rotation/lean-wait
+audited against their declared baseline. The completed machine/attract matrix and final selection are recorded below. The combined rotation/lean-wait
 68040 MMU run completes 500 fields, produces populated planar output, leaves
 game code unchanged and passes all thirteen site checks. Its 348 swaps are
 functional evidence only, not a timing comparison. Local captures are
@@ -229,3 +230,105 @@ There is no distinct DCACHE-off/on optimization to promote: the allowed D caches
 are already enabled. No cache setting or original-clock behavior is changed.
 The combined 68040 MMU functional run and before/after executable comparisons
 supplement the source audit; they do not prove coverage of unvisited paths.
+
+## Final selection and matched-build matrix
+
+Developer builds compile `VERIFY_RENDER`; CUSTOM3 independently selects the
+renderer while CUSTOM1 retains the accepted simulation. The measured policy is:
+
+| CPU/profile | CUSTOM3 | Selected renderer changes |
+| --- | ---: | --- |
+| A500, with or without Fast RAM | 6 | Exact rotations and lean zero-delay wait |
+| A1200/020 with Fast RAM | 6 | Exact rotations and lean zero-delay wait |
+| 030/50 with Fast RAM | 0 | Retain the original renderer |
+| 040/25, 040/40 and 060/50 with Fast RAM | 2 | Exact rotations; original wait |
+
+These are the choices for step-6 patch-time CPU/memory selection, not new release
+options. The developer mask can still request an unselected experiment. CUSTOM2
+nonzero always retains the original wait. Other game versions and ordinary builds
+are unchanged. Fast edge-array placement is not selected on any profile.
+
+The final wait experiment has 42 runs: all seven profiles, both gameplay windows
+and attract, with rotation-only (2) versus rotation plus lean wait (6). The 030
+B result is 326/314, and 040/25 B is 274/270, so the lean wait is not selected on
+those faster CPU paths. A further 21 runs use CUSTOM3=0 in the **same binaries**.
+They show that 030 rotation alone gives 252/252 in A, 333/326 in B and 348/348 in
+attract. With no gain in A/attract and a B loss, the 030 keeps its original renderer.
+This later evidence takes precedence over the earlier rotation-only build.
+
+Every interval is 500 PAL fields, or 10.015943522 seconds. A starts at race entry
+with `VERIFY_STEPINPUT` constant controls; B starts after 3,999 VBL publications
+from race entry with the `VERIFY_DRIVE` tape; attract starts at $10844 after the
+initial dissolve. These are the step-4 closure fixtures, not the longer step-2
+windows or its field-4300 B trace. Both arms retain the same fixture binary,
+emulator, machine configuration, input and simulation gates.
+
+Values below are renderer off / selected-path swaps. The 030 selected column is
+its unchanged off run, not an independent duplicate test.
+
+| Profile | Gameplay A | Gameplay B | Attract |
+| --- | ---: | ---: | ---: |
+| A500 | 39 / 41 | 58 / 60 | 67 / 72 |
+| A500 + Fast | 39 / 43 | 58 / 62 | 69 / 73 |
+| A1200/020 | 150 / 159 | 222 / 223 | 231 / 238 |
+| 030/50 (unchanged) | 252 / 252 | 333 / 333 | 348 / 348 |
+| 040/25 | 240 / 245 | 272 / 274 | 290 / 299 |
+| 040/40 | 244 / 247 | 274 / 273 | 297 / 306 |
+| 060/50 | 246 / 248 | 270 / 274 | 300 / 309 |
+
+A500 gains 5.1%, 3.4% and 7.5% in A/B/attract. A1200/020 gains 6.0%, 0.45% and
+3.0%. The selected 040/40 B result loses one swap (0.36%); its A and attract
+windows improve. This small B loss is retained and reported, not called a win.
+The sampled B start pose/angle/speed/gear/crash/replay values match for 030 and
+040/40 off/rotation pairs, but their native clocks differ. That observation
+invalidates an assumption of identical complete game state; it does not isolate
+the cause of every later timing difference. The accepted clocks stay untouched.
+
+These are repeatable whole-window results. They neither prove equal-scene FPS
+nor establish a net gain over the original game's simulation. The larger initial
+10–30% A500 and 40–50 FPS fast-machine targets have not been reached. Inverse
+window rates, including boundary effects, give the following useful frame-cost
+summary; these are **milliseconds per swap**, not matched completed-frame latency:
+
+| Profile/window | Off ms/swap | Selected ms/swap |
+| --- | ---: | ---: |
+| A500 A | 256.819 | 244.291 |
+| A500 B | 172.689 | 166.932 |
+| A1200/020 A | 66.773 | 62.993 |
+| A1200/020 B | 45.117 | 44.915 |
+
+Completed-call analysis also groups rotations by axis, vertex count and
+coefficients. Representative A-window means include the replacement entry JMP
+and exclude interrupt instructions; bus stalls remain in instruction timing:
+
+| CPU / Y-rotation input | Original cycles/call | Selected cycles/call |
+| --- | ---: | ---: |
+| A500: 26 vertices, cos=0, sin=16384 | 7,467.0 | 2,355.2 |
+| A500: 67 vertices, cos=71, sin=-16384 | 19,594.5 | 19,679.5 |
+| A1200: 26 vertices, cos=0, sin=16384 | 3,376.3 | 920.5 |
+| A1200: 67 vertices, cos=71, sin=-16384 | 8,992.6 | 9,021.6 |
+
+The general-case dispatch has a small cost; the common quarter turns remove most
+of their arithmetic. These groups match counts/coefficients, not entire scenes
+or every source vertex. Native and replacement wait traces additionally confirm
+their register/stack contract under actual DMA. The profiler copies raw `regs.sr`
+without materializing lazy flags, so its SR column is not used for CCR proof.
+The independent Python/original/asm suite checks all 16,384 byte/CCR/busy-transition
+combinations with guest-materialized flags.
+
+Final verification: all 63 matrix captures pass the thirteen rotation/wait-site
+checks; all 27 native instruction traces retain unchanged executable bytes;
+161 ranges pass the external-branch audit; and all 172 disabled native ranges
+pass. A fresh ordinary build is byte-identical to `s2-final-normal.slave`, so the
+retained disabled capture still represents it. The selected 040 path also passes
+a fresh 500-field MMU-enabled functional run with intact cockpit output and
+unchanged code; its 242 swaps are excluded from performance comparisons.
+The two diagnostic cache fixes pass their separate MMU tests.
+
+Authoritative local roll-up: `s5-final-report.json`; captures
+`s5-final-off-*`, `s5-wait-v3-*`, `s5-wait-v3r-*`, `s5-wait-v3at-*` and
+`s5-final-mmu`. The source-derived selected gameplay rebuild is byte-identical
+to the measured binary after the diagnostic-only cache fixes. Every completed
+matrix capture is SHA-verified compressed and its dead owned runtime removed.
+Step 6 remains release integration; deferred intro, P3 and full-lap work remain
+deferred, with no new exception inferred from these rendering results.

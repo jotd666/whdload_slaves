@@ -14,7 +14,7 @@ behaviour until each change is ported and verified separately.
 
 ## Current status
 
-Steps 1–4 are complete within the accepted scope. Step 4 closed on 2026-10-13
+Steps 1–5 are complete within the accepted scope. Step 4 closed on 2026-10-13
 with the documented C2 clock and C5 cost exceptions. C3's automated full-lap
 timing check, C6's human A500/68040 laps and P3 remain deferred follow-up work;
 none is claimed to have passed. Controlled acceleration, braking and steering
@@ -23,8 +23,12 @@ complete. The original clocks, including their defects, remain unchanged.
 
 The elapsed-time simulation remains gated by CUSTOM1. See `GAME_TIME.md` for
 the implementation and diagnostic history, and `STEP4_COST_PLAN.md` for the
-final acceptance evidence and its limits. Step 5 is in progress; initial rotation measurements and remaining rendering
-work are recorded in `STEP5_RENDERING.md`. No overall net gain is claimed.
+final acceptance evidence and its limits. Step 5 closed on 2026-10-13; the final
+CPU selection, matched-build matrix, candidate prices and cache audit are in
+`STEP5_RENDERING.md`. The original renderer remains selected on 030; A500/020 use
+rotation plus lean waits, and 040/060 use rotation only. The 040/40 B window loses
+one swap while its other windows improve. No overall net gain over the original
+simulation is claimed. Step 6 (release integration) is next.
 
 The 2026-10-12 cost profile and the ordered closure plan for step 4 (P1–P7,
 C1–C6, decisions D1–D4) are in `STEP4_COST_PLAN.md`.
@@ -492,15 +496,21 @@ Tools stay in ignored `tmp/dev/tools`.
 
 ## Step 5: rendering performance
 
-Current implementation, measurements and outstanding work: `STEP5_RENDERING.md`.
+Complete: selected implementations, rejected candidate prices, validation and
+final measurements are in `STEP5_RENDERING.md`. Normal release defaults remain
+unchanged until step 6; the initial targets are not claimed as achieved.
 
 Order the candidates by measured share on each machine. Skip anything worth under 3%
 of a frame unless it is free. Bound each candidate's cost by summing instruction
 cycles before writing it. Every replacement needs:
 
 - A Python model of the original, checked against the original's own calls.
-- A VERIFY pixel twin of the replaced inner loop, run into a guarded shadow bitmap and
-  comparing all planes and the surviving registers and flags.
+- A VERIFY pixel twin for a replaced pixel writer, run into a guarded shadow bitmap
+  and comparing all planes and the surviving registers and flags. For a vertex
+  transform, compare guarded vertex buffers, overlap cases, registers and flags
+  instead. A hardware wait needs its register/CCR model plus actual DMA validation.
+  Step 5 selects no replacement pixel writer; its background prototype is not
+  promoted on the strength of a software DMA model.
 - A CPU gate.
 - A `PERF_RANGE`. For sites already patched by the original slave, use
   `PERF_EXISTING_RANGE` and audit the disabled bytes against the same-build
