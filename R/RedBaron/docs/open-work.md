@@ -18,6 +18,7 @@ Refer to items by ID. FC items are detailed in `fast-cpu-plan.md`.
 | FC5 | Smaller viewport copy | Closed: dropped; less than 2% gain on every measured CPU class |
 | FC6 | Re-profile, W6 trial and geometry processing | Complete; W6 rate passes bounded trial, 50 FPS unmet; geometry extension dropped below 2% |
 | R1 | Renderer installer rejects its persistent helper on a later load | Fixed; captured guard identified, same-session second mission and rendering pass |
+| R2 | In-game clipped-sprite bounds abort while firing | Fixed; reserved prefix with strict guard, native replay and release flight checks pass |
 | FC7 | AGA 040/060 and real-hardware confirmation | Planned |
 | D5a | W6 catch-up input check | Complete: native tap/hold/release during catch-up on A500 and 060 |
 | D5b | W6 Time Compress and mission-exit transitions | Complete: native compression and modal checks; A500 catch-up mission exit |
@@ -29,6 +30,8 @@ Refer to items by ID. FC items are detailed in `fast-cpu-plan.md`.
 
 The accepted release work is complete. The subsequently captured R1 renderer
 installation abort is fixed and verified across a same-session mission reload.
+R2, the separately captured firing abort, is fixed with native replay and
+bounded normal-build flight validation.
 F1 enables the normal verified bundle by default; F2 condenses the ledgers;
 The original F3 passed on all six machine configurations; its results and the
 subsequent artwork and scene follow-ups are recorded separately in `profiling.md`. The normal verified mask is `0x1ff1fff`, filtered by CPU.

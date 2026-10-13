@@ -56,6 +56,41 @@ its matching build before another game exit: memory/IFF files are overwritten,
 while the register log is appended. PC may be unavailable for an explicit abort;
 use the saved stack and renderer state, not PC=FFFFFFFF as an instruction fault.
 
+## R2: clipped-sprite firing abort fixed (2026-10-13)
+
+The subsequent normal-build firing dump identifies sim:307b2, the masked-sprite
+launch. Its destination is scene-buffer minus two bytes, BLTCON0/1 are DFCA/D000,
+first-word mask 1FFF, and dimensions one word by ten rows with a 40-byte pitch.
+The initial A shift register is empty and 1FFF shifted right by 13 is zero.
+Consequently that first word selects only the existing C pixels and changes
+nothing. The private renderer rejected the address before performing this safe
+native clipping operation. This is separate from R1's installation failure.
+
+The private scene now starts 16 bytes farther into its existing reservation,
+retaining native modulo-16 alignment for MOVE16. The maximum aligned allocation
+still ends before the polygon row workspace; the slave RAM requirement does not
+increase. The exceptional path admits only destination offset -2, all-channel
+ascending A-selects-B-else-C copies, identical C/D addresses, a zero shifted
+first-word mask, dimensions 1–20 words by 1–200 rows, and a 40-byte C/D pitch.
+Every rejected condition still aborts. Other destination checks, CPU gates and
+feature selection are unchanged. No rendering-speed claim is added.
+
+| Validation | Result | Evidence |
+|---|---|---|
+| User A1200/68040 firing dump | sim:307b2 and fully masked prefix word identified | `player-firing-abort-20261013` |
+| Native VERIFY fixture on named A1200/68040 | 18 guard cases; captured register shape replayed through the actual private-blit entry with synthetic source pixels; all ten expected destination words match an independent bitwise reference; prefix unchanged | `r2-fixture-register.txt`; generator `tools/scene_prefix_fixture.py` |
+| Normal release, same preset, Faster rendering + W6 | Five 40-frame windows with held native bank/fire inputs and forward/rear/left/right/forward inputs; no renderer abort | `r2-flight` |
+| Existing host regressions | 577 pass | `r2-host-tests.log` |
+| Normal/developer/VERIFY builds and reach audits | All compile; 136/136/150 destinations, zero errors | Build listings |
+| Hook audit | 136 ranges, zero errors | Source audit |
+
+The fixture tests offset, control/mode, mask, C/D pointer, dimension and stride
+rejections. Generate its isolated source with `tools/scene_prefix_fixture.py`,
+assemble using the normal include paths plus `-DVERIFY=1`, then run with WHDLoad
+`CoreDump`; its explicit success message is `R2 prefix replay PASS`. It does not
+modify the release source or rely on reaching the same random dogfight state.
+The bounded flight is a smoke check, not exhaustive combat coverage.
+
 ## D5 automated coverage complete (2026-10-12)
 
 All objective D5 input, transition, envelope and controlled outcome checks now

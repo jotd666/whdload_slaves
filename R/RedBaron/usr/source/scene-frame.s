@@ -226,7 +226,11 @@ scene_frame_blit_a\1:
  move.l $54(a4),d0
  sub.l scene_frame_buffer(pc),d0
  cmpi.l #48000,d0
- bhs scene_frame_bad
+ blo .bounds_ok\@
+ bsr scene_frame_prefix_check
+ tst.l d0
+ beq scene_frame_bad
+.bounds_ok\@
  move.l a4,-(sp)
  lea .kernel_base\@(pc),a0
 .kernel_base\@
@@ -243,6 +247,53 @@ scene_frame_blit_a\1:
  SF_BLIT 0
  SF_BLIT 1
  SF_BLIT 3
+
+; R2: the native clipped sprite at sim:307b2 may start one word before
+; the first plane. Its shifted first-word A mask is zero, so the first
+; destination word is preserved. Admit only that proven ascending cookie-cut
+; operation, with a bounded 40-byte pitch, into our reserved prefix padding.
+; Input: D0 = destination offset, A4 = private custom registers. D0 = boolean.
+scene_frame_prefix_check:
+ cmpi.l #-2,d0
+ bne .bad
+ move.w $40(a4),d1
+ move.w d1,d2
+ andi.w #$0fff,d2
+ cmpi.w #$0fca,d2 ; A/B/C/D enabled, D = A ? B : C
+ bne .bad
+ move.w $42(a4),d2
+ andi.w #$0fff,d2 ; ascending, no line/fill mode
+ bne .bad
+ lsr.w #8,d1
+ lsr.w #4,d1
+ move.w $44(a4),d2
+ lsr.w d1,d2 ; no incoming A hold on the first word
+ bne .bad
+ move.l $48(a4),d1
+ cmp.l $54(a4),d1
+ bne .bad
+ move.w $58(a4),d1
+ move.w d1,d2
+ andi.w #63,d1
+ beq .bad ; encoded zero means 64 words
+ cmpi.w #20,d1
+ bhi .bad
+ lsr.w #6,d2
+ beq .bad ; encoded zero means 1024 rows
+ cmpi.w #200,d2
+ bhi .bad
+ add.w d1,d1
+ neg.w d1
+ addi.w #40,d1
+ cmp.w $60(a4),d1
+ bne .bad
+ cmp.w $66(a4),d1
+ bne .bad
+ moveq #1,d0
+ rts
+.bad
+ moveq #0,d0
+ rts
 
 ; The native scratch clear must finish before CPU endpoint corrections begin.
 ; Other native launches retain their asynchronous behavior; private scene
@@ -302,6 +353,7 @@ scene_frame_enter:
  move.l (a3),d0
  andi.l #15,d0
  add.l scene_frame_storage(pc),d0
+ addi.l #PERF_SCENE_PREFIX,d0
  lea scene_frame_buffer(pc),a0
  move.l d0,(a0)
  ; No inbound screen or scratch copy. The native background fully paints
