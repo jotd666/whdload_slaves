@@ -13,9 +13,9 @@ The user accepted the P6 A500 B-window overhead of **5.740 ms/frame for now**
 (2026-10-13), superseding its 3.78 ms blocking limit for that measured build.
 P6 A measured 3.084 ms/frame. The current measured closure build, including
 collision sweeps, terrain restoration and checkpoint/finish evaluation, measures
-**7.148 / 5.954 ms/frame** after exact sweep and traffic interpolation shortcuts.
-A meets its 8.070 limit; B exceeds the accepted 5.740 allowance by **0.214 ms**.
-B's paired scenes differ by 1.66%, so raw FPS is not an equal-scene comparison.
+**7.051 / 5.769 ms/frame** after exact sweep and traffic interpolation shortcuts.
+A meets its 8.070 limit; B exceeds the accepted 5.740 allowance by **0.029 ms**.
+B's paired scenes differ by 2.55%, so raw FPS is not an equal-scene comparison.
 The earlier exception is not extended, and no earlier B baseline is substituted.
 C1 and C4 are complete; C2, C3 and C5 remain open, and C6 is deferred. Historical P7 A1200 net
 phase overhead is 0.283 / 0.576 ms/frame (0.47% / 1.23%); it is not a measurement
@@ -1135,6 +1135,28 @@ items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
     `c5-eight-summary.json` and `c5-eight-native-traffic/results.json`.
     Current evidence: `c5-word-summary.json`; cleanup reports
     `c5-word-cleanup.json` and `c5-eight-cleanup.json`. **C5 remains open.**
+  - **Current fused scan (2026-10-13):** the world iterator keeps class 8 in D6
+    after preparing its bounds and uses DBEQ to combine non-solid rejection with
+    iteration. A candidate preserves D6; pool counts and overflow accounting
+    remain exact. Inactive/already-hit world scans return before spilling
+    registers. A 1,536-case old/new assembled comparison covers all class bytes,
+    active/type filters, varied/empty pools, overflow and counter wrap, comparing
+    all 106 state bytes, object records, registers, stack and materialized CCR.
+    Native/reused collision cases, world cases and the scan-counter suite pass.
+    Fresh `c5-fused-{a,b}-{off,on}` pairs give **7.050928 / 5.769365 ms/frame**.
+    A passes; B is **0.029365 ms** above 5.740. Acceptance of that small excess
+    has been requested and is pending; the limit has not been changed. Sweep
+    cost is 2.466872 / 0.749450 ms/frame. B enabled has 60 swaps, 5.990449 FPS,
+    165.687453 ms mean frame time and 27.389831 polygons/frame versus 26.708333
+    disabled (2.55% difference). This remains a paired-window observation, not
+    an isolated same-work speedup. Source rebuilds equal the captured slaves;
+    ordinary identity, disabled patches, 147 branch ranges and trace audits pass.
+    An additional inactive-finish shortcut passed 1,024 complete register/CCR/
+    state comparisons and collision checks, but its full B gate worsened to
+    6.681702 ms. It was removed; `c5-finish` evidence is not the selected build.
+    Reports: `c5-fused-summary.json`, `c5-fused-world-check.json`,
+    `sweep-scan-count.json`; cleanup: `c5-fused-cleanup.json`,
+    `c5-finish-cleanup.json`. **C5 remains open pending the cost decision.**
 - **C6, human laps — deferred by the user (2026-10-13).** Full A500 and 68040
   laps remain an unperformed human acceptance check. They do not block the current
   step-4 automated closure; do not describe handling as human-validated.

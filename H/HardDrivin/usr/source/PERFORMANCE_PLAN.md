@@ -52,9 +52,9 @@ simulation-correctness checks. Measure the combined simulation and rendering
 changes against the original before claiming a net performance gain.
 The current closure build includes collision sweeps, terrain restoration and
 checkpoint/finish evaluation. Exact sweep and traffic zero-input shortcuts reduce overhead to
-7.148 / 5.954 ms/frame. A meets its 8.070 limit; B exceeds the accepted 5.740
-allowance by 0.214 ms. Fresh paired windows retain their own disabled baselines;
-B's scene difference is 1.66%, so raw FPS is not an equal-scene comparison.
+7.051 / 5.769 ms/frame. A meets its 8.070 limit; B exceeds the accepted 5.740
+allowance by 0.029 ms. Fresh paired windows retain their own disabled baselines;
+B's scene difference is 2.55%, so raw FPS is not an equal-scene comparison.
 
 The user subsequently requested step-4 closure before step 5 and deferred the
 human A500/68040 test laps (C6). C4 extreme-profile coverage is complete.

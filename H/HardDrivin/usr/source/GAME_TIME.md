@@ -4556,3 +4556,27 @@ per run, expected latch changes and no award-time crashes. Video-field spreads
 remain 14 and 12, respectively. The finish still seeds a checkpoint latch;
 `c3-zero-awards-summary.json` does not establish full-lap timing. Human laps
 remain deferred. C2's clock exception and C3/C5 closure remain outstanding.
+
+
+### Fused sweep rejection and current closure cost (2026-10-13)
+
+The main-world scan keeps the solid class (8) in D6 after preparing cached
+bounds. Candidate helpers preserve D6. DBEQ combines non-solid rejection and
+counter advancement; solid entries still use the original active/type gates.
+The loop advances the object pointer before testing it. Pool counts, overflow
+exits and no-object-write behavior remain unchanged. Inactive/already-hit scans
+return before saving registers. All 1,536 assembled old/new comparisons match
+all 106 state bytes, object records, native registers, stack and materialized
+condition codes, including every class byte, zero/multiple pools and counter
+wrap. The native/reused collision, world and scan-counter suites also pass.
+
+The selected source builds exactly the `c5-fused` captures. Paired G1 overhead
+is 7.050928 / 5.769365 ms/frame; A passes and B is 0.029365 above 5.740. The user
+has been asked whether to accept that remaining excess; no acceptance is assumed.
+All trace/disabled/ordinary-build/branch checks pass. The B scene difference is
+2.55%, so total changes still include workload changes. An additional guarded
+inactive-finish return was equivalent in 1,024 full register/CCR/state cases,
+but its B gate rose to 6.681702 ms. That experiment was removed. Reports are
+`c5-fused-summary.json`, `c5-fused-world-check.json`, and the retained rejected
+`c5-finish` measurements. Both capture sets were checksum-verified and compacted;
+owned runtimes were removed only after their recorded processes exited.

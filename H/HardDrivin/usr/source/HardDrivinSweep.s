@@ -1,6 +1,6 @@
 ; Experimental long-frame object sweep. Native solid-object contacts win first.
 ; Active main-world objects are also checked independently of scene culling.
-; Auxiliary/moving objects, rotating contacts and extreme travel remain open.
+; Tested coverage and remaining limitations are in STEP4_COST_PLAN.md.
 _sweep_install:
  movem.l d0/a0-a2,-(a7)
  lea _sweep_loop_ptr(pc),a0
@@ -291,11 +291,11 @@ _sweep_finish:
 ; Scan only the active main-object pool, with the same active-byte gate
 ; as native E522. Existing scene candidates still cover other object sources.
 _sweep_world:
- movem.l d0-d7/a0-a3/a6,-(a7)
  tst.w SW_ACTIVE(a6)
- beq.s .done
+ beq.s .inactive
  tst.b -$16cf(a4)
- bne.s .done
+ bne.s .inactive
+ movem.l d0-d7/a0-a3/a6,-(a7)
  moveq #0,d0
  move.w -$669a(a4),d0
  beq.s .done
@@ -305,10 +305,16 @@ _sweep_world:
  subq.w #1,d5
  bsr _sweep_world_bounds
  movea.l -$669e(a4),a3
+ suba.w #56,a3
  move.w #1,SW_WORLD(a6)
+ ; D6 is no longer needed after cached bounds preparation. Candidates
+ ; preserve it, so retain the solid class and fuse rejection with the loop.
+ moveq #8,d6
 .loop:
- cmpi.b #8,28(a3)
- bne.s .next
+ adda.w #56,a3
+ cmp.b 28(a3),d6
+ dbeq d5,.loop
+ bne.s .finished
  tst.b 30(a3)
  beq.s .next
  cmpi.b #95,25(a3)
@@ -317,7 +323,6 @@ _sweep_world:
  tst.w SW_ACTIVE(a6)
  beq.s .interrupted
 .next:
- adda.w #56,a3
  dbf d5,.loop
  bra.s .finished
 .interrupted:
@@ -328,6 +333,7 @@ _sweep_world:
  clr.w SW_WORLD(a6)
 .done:
  movem.l (a7)+,d0-d7/a0-a3/a6
+.inactive:
  rts
 ; Conservative world-axis broad phase. The sum of camera-space half extents
 ; bounds every rotated axis; four units cover nested Q14 word rounding.
@@ -336,7 +342,7 @@ _sweep_world:
 ; delta d, rejecting both endpoints x and x-d against [-r,r] is equivalent
 ; to testing x against [-r+min(d,0),r+max(d,0)]. Keep LONG limits: the
 ; candidate still validates signed-word movement before using these bounds.
-; D5 (pool counter) and D6 (radius) remain intact in the near test.
+; D5 (pool counter) and the caller's D6 remain intact in the near test.
 _sweep_world_bounds:
  moveq #4,d6
  move.w -22(a5),d0
