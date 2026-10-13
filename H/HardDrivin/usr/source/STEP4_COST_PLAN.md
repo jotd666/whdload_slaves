@@ -11,10 +11,11 @@ explicit helper-budget exception. P5's acceptance build met its unchanged
 physics arithmetic bottleneck: matched-operand long division is about 29% cheaper.
 The user accepted the P6 A500 B-window overhead of **5.740 ms/frame for now**
 (2026-10-13), superseding its 3.78 ms blocking limit for that measured build.
-P6 A measured 3.084 ms/frame. The most recently measured closure build, including collision
-sweeps and the terrain/contact guards, measures **8.471 / 7.281 ms/frame**.
-A and B exceed their respective 8.070 / 5.740 ms limits by **0.401 / 1.541 ms**. The earlier exception is not extended.
-A subsequent terrain-workspace restoration still needs a cost rerun.
+P6 A measured 3.084 ms/frame. The current measured closure build, including
+collision sweeps, terrain restoration and checkpoint/finish evaluation, measures
+**8.527 / 4.137 ms/frame**. A exceeds its 8.070 limit by **0.457 ms**; B is below
+the accepted 5.740 allowance. B's scenes differ substantially, so this is not an
+isolated performance improvement. The earlier exception is not extended.
 C1 is complete, C2–C5 remain open and C6 is deferred. Historical P7 A1200 net
 phase overhead is 0.283 / 0.576 ms/frame (0.47% / 1.23%); it is not a measurement
 of this latest full closure build.
@@ -921,37 +922,26 @@ items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
     with conservative stop-time spread 5 fields versus a 15-field allowance.
     Lap/checkpoint timing remains unverified; these are simulation-trajectory
     checks, not equality of displayed poses at every video field.
-  - **Checkpoint timing now measured, still failing:** a controlled approach to
-    stunt-road checkpoint section 61 starts at the same pose, speed and gear.
-    Read-only breakpoints at the actual native award entry ($092e2) record one
-    award per profile, followed by the checkpoint latch being set. The current
-    source awards at fields **36 / 50 / 30 / 28** (A500 / slowed A500 / 68020 /
-    68040), a **22-field spread**, beyond even the largest observed 13-field
-    interval. Scene preparation checks the previous physics pose; this adds
-    another frame of delay after crossing. Waypoint advancement is a separate
-    event and was not used as a substitute.
-  - A private post-physics query reduces those award fields to **30 / 40 / 28 /
-    26** (spread 14), with consumed simulation fields **27 / 37 / 28 / 26**
-    (spread 11). Each profile still awards once. Initial pose publication occurs
-    at field 3 on the two A500 profiles and field 0 on the faster profiles; these
-    offsets are retained, not hidden. The prototype bypasses its added query
-    for zero/eight-field and forced-native paths. It is not promoted: finish-line behavior, reverse
-    travel, airborne/course-transition eligibility, native-state preservation
-    and added cost remain unverified. Whole-lap timing remains open. Evidence:
-    `c3-checkpoint-timing-summary.json`, `c3-checkpoint-event-*` and
-    `c3-checkpoint-post-*`. These do not close C3.
-  - **Controlled finish transition:** the main-road approach explicitly seeds the
-    checkpoint latch, so it tests the award transition, not a completed lap.
-    Baseline award fields are 45/46/31/30 (spread 16); the first private query gives
-    40/36/30/28 (spread 12), consumed fields 34/31/28/28 (spread 6). Every run
-    awards once, clears the checkpoint latch and has no crash at the award.
-    A revised private helper now preserves the selection word and uses current
-    road orientation rather than the previous scene's wrong-way flag. It passes
-    512 assembled cases with actual native geometry and stubbed award bodies;
-    reverse physical directions are rejected even with a stale forward flag.
-    That revision still needs live validation. Finish results are from the
-    earlier prototype, not evidence for complete lap timing or the revised helper.
-    Reports: `c3-finish-timing-summary.json`, `c3-checkpoint-post-check.json`.
+  - **Checkpoint/finish evaluation integrated:** the phase build now checks nearby
+    flagged road sections after completed physics, using native geometry and
+    original award routines. It restores scratch state and evaluates current
+    direction; zero/eight/forced-native paths retain scene-only behavior.
+    Existing scene checks remain enabled as a fallback. No P3 work is included.
+  - Direct award captures across A500/slowed A500/68020/68040 give checkpoint
+    video fields **30/40/28/26** versus previous **36/50/30/28**; spread falls
+    from 22 to 14. New consumed fields are **27/37/28/26**, spread 11.
+    Controlled finish fields are **40/36/30/28** versus **45/46/31/30**, spread
+    12 instead of 16; consumed fields **34/31/29/28**, spread 6. Every run awards
+    once, updates the checkpoint latch, and has no award-time crash. Startup
+    publication offsets remain explicit. The finish fixture seeds the checkpoint
+    latch: it is not a completed lap. Full-lap timing remains unverified.
+  - All 512 assembled selection/direction/state cases pass, and the real award
+    bodies are exercised in the eight revised captures. Authoritative source
+    rebuilds are byte-identical to the captured fixtures and measured A/B builds.
+    Final loop/jump regressions reproduce the previous outcomes without unintended
+    awards. Reports: `c3-cross-source-timing-summary.json`,
+    `c3-checkpoint-post-check.json`, `c3-cross-source-geometry-summary.json`.
+    These controlled transitions do not close C3 or complete C4 acceptance.
 - **C4, extreme T.**
   - Run collisions, the loop and the jump on the slowed A500 (largest T) and on the
     68060 (smallest T).
@@ -1039,7 +1029,8 @@ items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
     strengthened boundary cases leave all native data globals unchanged; the
     24 compatibility cases still match. Both live loop fixtures retain their
     no-crash exits (segments 51/50). Ordinary binary identity, all 147 branch
-    ranges and a fresh disabled-patch check pass; cost needs a rerun. Reports:
+    ranges and a fresh disabled-patch check pass; the current C5 measurements
+    include this restoration. Reports:
     `c4-terrain-boundary-before-check.json`, `c4-terrain-boundary-check.json`,
     `c4-workspace-summary.json` and `c4-workspace-off/disabled.json`.
     Integrated-source fixtures reproduce both clean loop exits and the jump
@@ -1111,26 +1102,29 @@ items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
     input changes, braking, reverse/zero motion, partial contact and angular rates.
     The captured executable also passes 297 pristine native eight-field checks
     (135 reverse cases). These tests do not replace C2–C4 acceptance.
-  - **Last measured integrated build:** `c4-guards-{a,b}-{off,on}` measures G1
-    **8.470873 / 7.280575 ms/frame**, above 8.070 / 5.740 by
-    **0.400873 / 1.540575 ms**. It includes the landing and terrain/contact fixes.
-    Terrain helper self cost is only 0.035227 / 0.030610 ms/frame; sweep self cost
-    is 3.023330 / 1.056451 ms/frame. Changed trajectories prevent attributing the
-    total delta from the preceding 8.405121 / 6.865535 build to these helpers alone.
-    No engine-cadence change or P3 work is included. These measurements precede
-    the subsequent terrain-workspace restoration; its cost is not yet measured.
-  - G2 off/on FPS is A 3.794/3.794 and B 7.288/5.891 (swaps 38/38 and 73/59).
-    Complete-frame means are A 260.956/255.542 and B 137.719/168.544 ms.
-    Polygon means are A 57.757/54.919 and B 26.708/29.224. A meets the 5%
-    scene tolerance; B differs by 9.42% and is a scene mismatch, not equal-scene
-    FPS evidence. The raw B regression remains reported.
-  - All four traces pass 500-field duration, swap-count and instruction-coverage
-    checks (minimum 99.99998%), with matched paired binaries/listings/configuration.
-    Both disabled checks pass 169 declared ranges with input-fixture exclusions;
-    all 147 audited patch ranges pass and the ordinary build remains byte-identical.
-    Reports: `c4-guards-summary.json` and per-capture reports. SHA-verified
-    compressed traces and calibration banks are retained; disposable runtime
-    copies are removed (`c4-guards-cleanup.json`). **C5 remains open.**
+  - **Current integrated build:** `c3-cross-cost-{a,b}-{off,on}` measures G1
+    **8.526803 / 4.136775 ms/frame**. A exceeds 8.070 by **0.456803 ms**; B
+    is below the accepted 5.740 allowance. The measured candidate binaries and
+    authoritative rebuilds are byte-identical for both windows; the report retains
+    both source manifests and the equality evidence. This includes checkpoint/
+    finish evaluation and the terrain-workspace restoration.
+  - New helper self cost is 0.066400 / 0.056562 ms/frame. The profiler also counts
+    native callees reached outside the original physics phase; they add zero in
+    these two windows. Sweep self cost is 3.021310 / 0.971933 ms/frame. B's changed
+    disabled trajectory prevents attributing its lower net overhead solely to the
+    implementation. No alternate baseline was substituted.
+  - G2 off/on FPS is A 3.794/3.794 and B 8.387/5.891 (swaps 38/38 and 84/59).
+    Complete-frame means are A 260.956/255.542 and B 120.433/167.854 ms.
+    Polygon means are A 57.757/54.892 and B 14.494/28.121. A meets the 5%
+    scene tolerance (4.96%); B differs by 94.02% and is a scene mismatch, not
+    equal-scene FPS evidence. The raw B regression remains reported.
+  - All four traces pass 500-field duration, swap-count and coverage checks
+    (minimum 99.99996%), with matched paired binaries/listings/configuration.
+    Both disabled checks pass 169 declared ranges with fixture exclusions;
+    147 branch ranges pass and the ordinary build is byte-identical. Report:
+    `c3-cross-cost-summary.json`, plus per-capture reports. SHA-verified compressed
+    traces/calibration banks remain; disposable runtimes are removed
+    (`c3-cross-source-cleanup.json`). **C5 remains open because A exceeds its limit.**
 - **C6, human laps — deferred by the user (2026-10-13).** Full A500 and 68040
   laps remain an unperformed human acceptance check. They do not block the current
   step-4 automated closure; do not describe handling as human-validated.

@@ -50,12 +50,12 @@ simulation overhead temporarily and directed work to move on to step 5.
 This removes the cost gate as a blocker; it does not complete the outstanding
 simulation-correctness checks. Measure the combined simulation and rendering
 changes against the original before claiming a net performance gain.
-The last measured closure build includes collision sweeps: its A500 overhead
-is 8.471 / 7.281 ms/frame including the landing and terrain/contact guards.
-A and B exceed their 8.070 / 5.740 ms limits by 0.401 / 1.541 ms. This remains
-an open C5 item; the P6 exception does not cover these new results. A fits the
-polygon-count tolerance; B is a scene mismatch and reports lower raw FPS.
-The subsequent terrain-workspace restoration still needs fresh cost measurements.
+The current measured closure build includes collision sweeps, terrain restoration
+and checkpoint/finish evaluation. Its A500 overhead is 8.527 / 4.137 ms/frame.
+A exceeds 8.070 by 0.457 ms; B is below the accepted 5.740 allowance. C5 remains
+open. A fits the polygon-count tolerance; B has a large scene mismatch and lower
+raw FPS. Its changed disabled trajectory prevents an isolated speedup claim.
+Measured candidate binaries and authoritative rebuilds are byte-identical.
 
 The user subsequently requested step-4 closure before step 5 and deferred the
 human A500/68040 test laps (C6). C1 solver coverage is now complete: flight,
@@ -64,7 +64,10 @@ zero driving fallbacks in both final A500 windows. The landing-impact gate now r
 variable updates, while zero/eight-field and forced-native paths stay compatible.
 The phase build also continues finite road contact through render culling and
 retains the pitch rate for invalid rear-contact feedback. Integrated-source loop
-and jump fixtures reproduce the validated prototype outcomes. C2–C5 remain open;
+and jump fixtures reproduce the validated prototype outcomes. Checkpoint and
+finish awards now also use the completed physics pose, with native compatibility
+bypasses and fallback scene checks. Controlled four-profile timing improves, but
+full-lap timing remains unverified. C2–C5 remain open;
 see the current closure results in `STEP4_COST_PLAN.md`.
 
 ## Starting point

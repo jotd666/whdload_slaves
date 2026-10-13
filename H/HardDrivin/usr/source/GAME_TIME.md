@@ -3892,73 +3892,66 @@ input fixtures declared active. Local reports are `c3-steering-phase-summary`,
 work still needs final cost accounting and broader C3/C4 validation.
 
 
-### C3 checkpoint award timing
+### C3 checkpoint and finish evaluation after physics
 
-Checkpoint and lap awards are separate from waypoint-pointer advancement.
-Native main/stunt road selection ($0de70/$0e1f6) inspects the nearest section's
-$3000 flags: bit 12 calls the checkpoint routine ($092c0), bit 13 the lap routine
-($0936a). The checkpoint routine checks the latch and wrong-way state before
-awarding at $092e2. The ordinary scene pass evaluates the preceding physics pose.
+`HardDrivinCheckpoint.s` runs after each completed live physics update in the
+phase build. It examines the current/next road section when either has native
+checkpoint/finish flags, obtains the nearest section using native $0c022, and
+calls the original $092c0/$0936a award routine. It restores the road cursor,
+selected-section word and G($9446..$94b9) workspace before the award call.
+Direction is tested from the current transformed road sections. The stale scene
+wrong-way flag is temporarily cleared for an eligible native call and restored
+when it returns. Native latches, bonus arithmetic, sounds and finish side effects
+remain in their original routines. Zero/eight-field and forced-native updates
+skip the added query; original scene checks remain enabled everywhere, including
+outside the local query's range. No engine cadence is changed.
 
-A controlled fixture starts on stunt section 60 at (22689,0,16453), heading -343,
-velocity 400 and gear 4, with centered steering and held throttle. The next
-checkpoint is section 61. No game geometry or checkpoint flag is changed.
-The authoritative source (`f6d9a50`) produces:
+The prior scene-only check used the previous physics pose and added a frame of
+delay. Controlled approaches measure actual award entry ($092e2 checkpoint,
+$093bc finish), not waypoint-pointer advancement:
 
-| Profile | Award video field | Consumed fields at award | Current interval |
-|---|---:|---:|---:|
-| A500 | 36 | 36 | 10 |
-| Slowed A500 | 50 | 50 | 13 |
-| 68020 | 30 | 30 | 3 |
-| 68040 | 28 | 28 | 2 |
+| Profile | Checkpoint: old/new video fields | New consumed fields | Finish: old/new video fields | New consumed fields |
+|---|---:|---:|---:|---:|
+| A500 | 36 / 30 | 27 | 45 / 40 | 34 |
+| Slowed A500 | 50 / 40 | 37 | 46 / 36 | 31 |
+| 68020 | 30 / 28 | 28 | 31 / 30 | 29 |
+| 68040 | 28 / 26 | 26 | 30 / 28 | 28 |
 
-Each 130-field capture observes exactly one native award, no crash at the award,
-and a set checkpoint latch afterward. The 22-field spread exceeds even the
-largest 13-field interval in these runs. The event's pose is the preceding
-physics result: consumed fields minus the current interval are 26/37/27/26.
-This exposes an additional scene-pass delay, not a missing input or a missed
-checkpoint. Earlier approach captures lacked the checkpoint columns and are
-not used as event-timing evidence.
+Checkpoint video spread falls from 22 to 14 fields; consumed-field spread is 11.
+Finish video spread falls from 16 to 12 fields; consumed-field spread is 6.
+Each run awards once and sets/clears the checkpoint latch as appropriate, with no
+crash at the award. Initial pose publication offsets remain in the reports.
+The checkpoint approach starts at (22689,0,16453), heading -343, velocity 400,
+gear 4, on stunt section 60. The finish approach starts at (25000,0,25000), heading
+360 and the same dynamics; its checkpoint latch is explicitly seeded to 255.
+These are controlled transitions, not completed laps or qualification results.
+Full-lap timing and complete C3/C4 acceptance remain open.
 
-A private query at `_dispatch_after_physics` examines current/next road flags,
-uses native $0c022 with a temporarily advanced road cursor, restores its terrain
-workspace/cursor, and invokes the original award routines. Zero/eight-field and
-forced-native paths bypass it. This is a diagnostic, not accepted implementation:
-whole-course boundaries, reverse/airborne eligibility, finish behavior, complete
-state preservation and cost are unverified. Its four award video fields are
-30/40/28/26 (spread 14), and consumed fields 27/37/28/26 (spread 11), with one award
-each. The initial pose is published at field 3 on A500/slowed A500 and field 0 on
-68020/68040. These offsets and both timing measures remain explicit. The prototype
-supports moving variable-step checkpoint evaluation to the completed physics pose,
-but does not prove the full C3 criterion or whole-lap timing.
+The assembled helper passes 512 cases with real native geometry and stubbed
+award bodies: both candidate sections, physical forward/reverse orientations,
+either stale wrong-way flag, race/flag gates and zero/eight/forced-native bypasses.
+All game data, registers, stack and selection state are preserved; X is checked
+on non-query bypasses. Reverse physical orientations produce no award.
+The eight revised live captures (`c3-cross-v2-*`) validate the real award bodies.
+Rebuilt authoritative fixture binaries are byte-identical to those captures.
+Reports: `c3-checkpoint-post-check.json`, `c3-cross-source-timing-summary.json`.
 
-The same first prototype was tested at the main-road finish section. This fixture
-starts at (25000,0,25000), heading 360, velocity 400, gear 4, and explicitly seeds
-the checkpoint latch to 255. It is a controlled finish transition, not a full lap
-or qualification result. Baseline award video fields are 45/46/31/30 (spread 16);
-prototype fields 40/36/30/28 (spread 12), with consumed fields 34/31/28/28 (spread 6).
-All eight captures award once, clear the latch afterward and have no award-time
-crash. Reports: `c3-finish-timing-summary.json` and `c3-finish[-post]-*`.
+Final-source fast/slowed loop and jump fixtures retain their previous outcomes:
+both loops exit without a crash; jumps crash at fields 349/324 with peaks
+221.125/224.5. Explicit award breakpoints observe no unintended checkpoint or
+finish event in any of these four runs. This does not prove full-route timing.
+The jump's next-waypoint pointers differ: the fast run advances past section 25
+at field 348, just before its crash; the slow run crashes at 324 and does not
+advance. Native $0e4a2..$0e4d0 includes crash in G($94ba), and $0db84 suppresses
+waypoint progress while that flag is set. Do not label this pointer difference
+alone as a swept-crossing failure. Report: `c3-cross-source-geometry-summary.json`.
 
-The revised private helper also restores its selected-road word and evaluates
-wrong-way direction from the current transformed road sections, instead of
-trusting the preceding scene's flag. For the native award call only, it temporarily
-clears that stale flag and then restores it. A 512-case assembled check uses actual
-native $0c022 geometry, both candidate sections, forward/reverse physical
-orientations, either stale wrong-way flag, race/flag gates and native bypasses.
-Award bodies are stubbed. Game data, registers, stack and the selected-road word
-are preserved, with X checked on the non-query bypasses. Reverse directions
-produce no award. The initial replay test needed valid trigonometry: its captured
-initial values were zero; the revised test supplies a valid physical orientation.
-The revised helper has not yet been validated live, and the preceding timing
-numbers must not be attributed to it. Evidence: `c3-checkpoint-post-check.json`.
-
-Reports and captures: `c3-checkpoint-timing-summary.json`,
-`c3-checkpoint-event-*`, `c3-checkpoint-post-*`. All jobs are complete; disposable
-runtime copies are removed and calibration archives have verified decompressed
-SHA values (`c3-checkpoint-cleanup.json`). The ordinary source and its measured
-C5 costs are unchanged by this diagnostic.
-
+Unseeded A/B benchmark binaries also match the authoritative rebuild byte for
+byte. Their costs and remaining failures are reported under C5. The profiler
+counts native callees of the new post-physics helper separately from its slave
+instructions, avoiding an omission outside the original physics phase. All jobs
+are complete; disposable runtimes are removed and compressed traces/calibration
+banks have verified decompressed SHA values (`c3-cross-source-cleanup.json`).
 
 ### C3 current-build controlled trajectory bounds (2026-10-13)
 
@@ -4450,16 +4443,14 @@ not complete C4 acceptance. Evidence: `c4-continuation-check.json`,
 `c4-terrain-native-check.json`, `c4-terrain-boundary-check.json`, and
 `c4-source-geometry-summary.json`.
 
-The last paired A500 traces `c4-guards-{a,b}-{off,on}` include the terrain/contact
-guards and landing gate, but precede the subsequent workspace restoration. G1 is 8.470873 / 7.280575 ms/frame, above the unchanged accepted
-8.070 / 5.740 limits. Terrain helper self cost is 0.035227 / 0.030610 ms/frame.
-The ordinary build remains identical; all 147 branch ranges and both disabled
-patch checks pass. B's polygon count differs by 9.42%, so its raw FPS regression
-is not an equal-scene measurement. Full results are in `STEP4_COST_PLAN.md` and
-`c4-guards-summary.json`. Finished runtimes are removed and trace/calibration
-archives have verified decompressed SHA values (`c4-guards-cleanup.json`,
-`c4-source-geometry-cleanup.json`).
-
-The workspace restoration still needs a cost rerun. Finished finish/loop diagnostic
-runtimes are removed and calibration archives are SHA-verified
-(`c3-finish-workspace-cleanup.json`).
+The current paired A500 traces `c3-cross-cost-{a,b}-{off,on}` include workspace
+restoration and checkpoint/finish evaluation. Their binaries are identical to
+source rebuilds. G1 is 8.526803 / 4.136775 ms/frame: A exceeds 8.070 by 0.456803;
+B is below the accepted 5.740 allowance. The new helper's self cost is
+0.066400 / 0.056562 ms/frame. Its native-callee cost is zero in these particular
+windows; actual award/geometry calls are covered by the separate crossing runs.
+The ordinary build remains identical; 147 branch ranges and both disabled patch
+checks pass. B's polygon count differs by 94.02%, so neither its lower G1 value
+relative to the preceding build nor raw FPS is an isolated equal-scene speedup.
+The paired disabled B trajectory itself changed. Full results and source/binary
+correspondence are in `STEP4_COST_PLAN.md` and `c3-cross-cost-summary.json`.

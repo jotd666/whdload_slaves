@@ -893,4 +893,5 @@ _time_q16_results: dcb.l 7*9*7*2,0
 
 	IFD VERIFY_DRIVETRAIN_PHASE
 	INCLUDE "HardDrivinTerrain.s"
+	INCLUDE "HardDrivinCheckpoint.s"
 	ENDC
