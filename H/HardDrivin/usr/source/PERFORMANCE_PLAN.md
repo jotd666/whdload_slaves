@@ -51,18 +51,20 @@ This removes the cost gate as a blocker; it does not complete the outstanding
 simulation-correctness checks. Measure the combined simulation and rendering
 changes against the original before claiming a net performance gain.
 The later full closure build includes collision sweeps: its fresh A500 overhead
-is 8.405 / 6.866 ms/frame after removing repeated neutral steering work within
-a frame. A and B exceed their 8.070 / 5.740 ms limits by 0.335 / 1.126 ms. This
-is an open C5 item; the P6 exception does not cover these new results. Both
-windows fit the polygon-count tolerance; B still reports lower end-to-end FPS.
+is 8.471 / 7.281 ms/frame including the landing and terrain/contact guards.
+A and B exceed their 8.070 / 5.740 ms limits by 0.401 / 1.541 ms. This remains
+an open C5 item; the P6 exception does not cover these new results. A fits the
+polygon-count tolerance; B is a scene mismatch and reports lower raw FPS.
 
 The user subsequently requested step-4 closure before step 5 and deferred the
 human A500/68040 test laps (C6). C1 solver coverage is now complete: flight,
 landing, manual/neutral gears and signed rollback stay in the phase path, with
 zero driving fallbacks in both final A500 windows. The landing-impact gate now retains the native fall-speed threshold across
 variable updates, while zero/eight-field and forced-native paths stay compatible.
-C2–C5 remain open; see the
-current closure results in `STEP4_COST_PLAN.md`.
+The phase build also continues finite road contact through render culling and
+retains the pitch rate for invalid rear-contact feedback. Integrated-source loop
+and jump fixtures reproduce the validated prototype outcomes. C2–C5 remain open;
+see the current closure results in `STEP4_COST_PLAN.md`.
 
 ## Starting point
 

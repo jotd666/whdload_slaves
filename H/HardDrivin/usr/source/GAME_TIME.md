@@ -4315,10 +4315,10 @@ captures did execute it. Final whole-build cost measurements remain outstanding.
 Evidence: `c4-landing-source-check.json`, `c4-landing-source-summary.json`,
 `c4-landing-source-off/disabled.json`. C2–C5 remain open; C6 and P3 are deferred.
 
-### Reassessment after establishing the native landing outcome
+### Finite road continuation and invalid pitch feedback
 
-The invalid-pitch-input candidate is being reconsidered against the corrected
-native reference. For non-eight-field updates it preserves the prior pitch rate
+The invalid-pitch-input guard is integrated against the corrected native
+reference in `HardDrivinContact.s`. For non-eight-field updates it preserves the prior pitch rate
 when the rear-contact angle helper's raw input lies outside its ±180 domain.
 It does not replace object surfaces or add a world-object scan. With the
 committed landing gate and bounded road prototype, both jump profiles reproduce
@@ -4328,8 +4328,8 @@ finite-object prototype's observed peak and landing/crash fields. The corrected 
 investigation; the earlier trajectory differences still need to be quantified.
 These results do not yet establish all contact/trajectory requirements.
 
-A second private option restricts added road eligibility to continuation of an
-existing road contact. A rendered road sets a continuity word; a non-road path,
+`HardDrivinTerrain.s`, included with the phase solver, restricts added road
+eligibility to continuation of an existing road contact. A rendered road sets a continuity word; a non-road path,
 loss of contact, rejected footprint/gap test, or motion reset clears it. When
 rendering omits the road, the extra query requires both prior road eligibility
 and a nonzero prior wheel-contact mask. Original road/object priority and native
@@ -4356,15 +4356,28 @@ forced-native assembly matches the old helper in all 312 cases. A separate
 256-case assembled reset comparison confirms that only the additional road-state
 word changes, with registers, stack and materialized condition codes preserved;
 unchanged nested reset routines are stubbed. This does not establish that every
-lifecycle transition calls reset. Complete trajectory/checkpoint acceptance,
-whole-build native/disabled compatibility and measured cost remain open.
+lifecycle transition calls reset. An integrated-source selector replay through
+native terrain, collision and contact ($0cdbe..$0cdf6) matches all data globals
+and registers in 24 zero/eight/forced-native flag cases. Sixteen course-boundary
+replays execute the actual road query, reject eligibility, and leave all native
+game data unchanged. The source builds and patch checks pass; C4 still requires
+complete trajectory/checkpoint acceptance.
 
-This is now the preferred candidate to investigate before extending the larger
-finite-object-query prototype. Existing native object collision/surface behavior
-is retained; the new road query is limited to contact continuation. No terrain or
-pitch-rate guard has been promoted. Evidence: `c4-continuation-check.json`,
-`c4-continuation-progress.json`, `c4-combined-jump-summary.json`,
-`c4-pitch-rate-check.json`, and `c4-road-reset-check.json`; builds
-`c4-rate-landing-jump`, `c4-continued-loop`, and `c4-combined-jump`, all retained
-privately in the harness. Finished disposable runtime copies are removed and
-calibration banks have SHA-verified compressed archives (`c4-combined-cleanup.json`).
+Existing native object collision/surface behavior is retained; the larger private
+finite-object query is not integrated. The final-source `c4-source-loop` and
+`c4-source-jump` fixtures enable no private terrain/pitch changes and reproduce
+all four prototype outcomes above. This is evidence for the two observed fixes,
+not complete C4 acceptance. Evidence: `c4-continuation-check.json`,
+`c4-pitch-rate-check.json`, `c4-road-reset-check.json`,
+`c4-terrain-native-check.json`, `c4-terrain-boundary-check.json`, and
+`c4-source-geometry-summary.json`.
+
+Fresh paired A500 traces `c4-guards-{a,b}-{off,on}` include these changes and the
+landing gate. G1 is 8.470873 / 7.280575 ms/frame, above the unchanged accepted
+8.070 / 5.740 limits. Terrain helper self cost is 0.035227 / 0.030610 ms/frame.
+The ordinary build remains identical; all 147 branch ranges and both disabled
+patch checks pass. B's polygon count differs by 9.42%, so its raw FPS regression
+is not an equal-scene measurement. Full results are in `STEP4_COST_PLAN.md` and
+`c4-guards-summary.json`. Finished runtimes are removed and trace/calibration
+archives have verified decompressed SHA values (`c4-guards-cleanup.json`,
+`c4-source-geometry-cleanup.json`).

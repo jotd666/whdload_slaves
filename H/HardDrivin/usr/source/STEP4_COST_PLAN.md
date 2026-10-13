@@ -12,9 +12,8 @@ physics arithmetic bottleneck: matched-operand long division is about 29% cheape
 The user accepted the P6 A500 B-window overhead of **5.740 ms/frame for now**
 (2026-10-13), superseding its 3.78 ms blocking limit for that measured build.
 P6 A measured 3.084 ms/frame. The current closure build, including collision
-sweeps, last measured **8.405 / 6.866 ms/frame** after removing redundant neutral
-steering work within a frame. A and B exceed their respective 8.070 / 5.740 ms
-limits by **0.335 / 1.126 ms**. The earlier exception is not extended.
+sweeps and the terrain/contact guards, measures **8.471 / 7.281 ms/frame**.
+A and B exceed their respective 8.070 / 5.740 ms limits by **0.401 / 1.541 ms**. The earlier exception is not extended.
 C1 is complete, C2–C5 remain open and C6 is deferred. Historical P7 A1200 net
 phase overhead is 0.283 / 0.576 ms/frame (0.47% / 1.23%); it is not a measurement
 of this latest full closure build.
@@ -989,7 +988,7 @@ items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
     discrepancy only; terrain selection and C4 trajectory acceptance remain open.
     The last C5 measurements predate this change and need a final-source rerun.
   - With the corrected native crash reference, the cheaper invalid-pitch-input
-    guard is being reconsidered. It retains the previous rate for out-of-domain
+    guard is now integrated into the development source. It retains the previous rate for out-of-domain
     feedback and reproduces the jump crash on both profiles without a new object
     query. A prior-contact-only road continuation guard passes 384 selector cases
     and both loop fixtures. The combined candidate now reproduces the jump crash
@@ -997,9 +996,16 @@ items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
     passes 312 cases: valid and zero/eight-field inputs remain unchanged, invalid
     variable-step inputs retain their prior rate, and an explicit forced-native
     build of the helper matches all 312 old-source cases. The assembled motion
-    reset passes 256 comparisons with unchanged nested resets stubbed. Full
-    lifecycle/trajectory acceptance and final-build compatibility/cost remain
-    open; neither guard is promoted or counted as C4 done.
+    reset passes 256 comparisons with unchanged nested resets stubbed. Road
+    continuation is enabled with the phase solver and respects finite footprints,
+    gaps, prior contact and course-list boundaries. Complete terrain/collision/
+    contact replays match native data and registers in 24 compatibility cases;
+    16 boundary replays reject added support and leave native game data unchanged.
+    Integrated-source fixtures reproduce both clean loop exits and the jump
+    metrics above without private terrain/pitch patches. These close the observed
+    culled-road/invalid-feedback defects; complete trajectory/checkpoint acceptance
+    remains open. Reports: `c4-terrain-native-check.json`,
+    `c4-terrain-boundary-check.json`, `c4-source-geometry-summary.json`.
 - **C5, gates.** G1 passes or meets the explicitly accepted temporary exception; G2 is reported; `check_disabled.py` passes; the
   normal build is byte-identical.
   - **Current full-build measurement (2026-10-13):** fresh paired 500-field A500
@@ -1064,20 +1070,25 @@ items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
     input changes, braking, reverse/zero motion, partial contact and angular rates.
     The captured executable also passes 297 pristine native eight-field checks
     (135 reverse cases). These tests do not replace C2–C4 acceptance.
-  - The latest `c5-neutral-{a,b}-{off,on}` pairs measure G1 **8.405121 /
-    6.865535 ms/frame**, exceeding the same limits by **0.335121 / 1.125535 ms**.
-    Sweep self cost is 3.018079 / 0.881874 ms/frame. Compared with the preceding
-    build, total overhead falls 0.517948 / 0.468967 ms/frame; trajectories still
-    differ, so this is not an isolated equal-work measurement.
-    G2 off/on FPS is A 3.794/3.794 and B 7.288/5.891 (swaps 38/38 and 73/59).
-    Complete-frame means are A 260.956/255.542 and B 137.719/167.508 ms.
-    Polygon means are A 57.757/54.919 and B 26.708/27.966, within the specified
-    5% mismatch threshold. B's end-to-end regression remains reported.
-  - Latest traces each pass 500-field duration and coverage checks (minimum
-    99.99996%). Paired artifact/configuration checks, both 167-range disabled
-    checks, the 145-range branch audit and ordinary binary identity all pass.
-    Reports: `c5-neutral-summary.json`, `c5-neutral-steering-check.json`,
-    `c5-neutral-native-frame.json`, plus per-capture reports. C5 remains open.
+  - **Current integrated build:** `c4-guards-{a,b}-{off,on}` measures G1
+    **8.470873 / 7.280575 ms/frame**, above 8.070 / 5.740 by
+    **0.400873 / 1.540575 ms**. It includes the landing and terrain/contact fixes.
+    Terrain helper self cost is only 0.035227 / 0.030610 ms/frame; sweep self cost
+    is 3.023330 / 1.056451 ms/frame. Changed trajectories prevent attributing the
+    total delta from the preceding 8.405121 / 6.865535 build to these helpers alone.
+    No engine-cadence change or P3 work is included.
+  - G2 off/on FPS is A 3.794/3.794 and B 7.288/5.891 (swaps 38/38 and 73/59).
+    Complete-frame means are A 260.956/255.542 and B 137.719/168.544 ms.
+    Polygon means are A 57.757/54.919 and B 26.708/29.224. A meets the 5%
+    scene tolerance; B differs by 9.42% and is a scene mismatch, not equal-scene
+    FPS evidence. The raw B regression remains reported.
+  - All four traces pass 500-field duration, swap-count and instruction-coverage
+    checks (minimum 99.99998%), with matched paired binaries/listings/configuration.
+    Both disabled checks pass 169 declared ranges with input-fixture exclusions;
+    all 147 audited patch ranges pass and the ordinary build remains byte-identical.
+    Reports: `c4-guards-summary.json` and per-capture reports. SHA-verified
+    compressed traces and calibration banks are retained; disposable runtime
+    copies are removed (`c4-guards-cleanup.json`). **C5 remains open.**
 - **C6, human laps — deferred by the user (2026-10-13).** Full A500 and 68040
   laps remain an unperformed human acceptance check. They do not block the current
   step-4 automated closure; do not describe handling as human-validated.

@@ -354,6 +354,19 @@ _contact_pitch:
 	rts
 _contact_pitch_rate_only:
 	movem.l d1-d2/a0-a1,-(a7)
+	IFND VERIFY_DISPATCH_NATIVE
+	; Native arcsine returns zero outside its domain. At variable intervals
+	; a rendered end face can supply that invalid input; retain angular motion
+	; instead of treating the sentinel as a real zero-rate constraint.
+	move.w _time_scalar_fields(pc),d1
+	cmpi.w #8,d1
+	beq.s .valid_input
+	cmpi.w #180,-4(a5)
+	bgt.s .done
+	cmpi.w #-180,-4(a5)
+	blt.s .done
+.valid_input:
+	ENDC
 	IFD VERIFY_CONTACT_TRACE
 	lea _contact_rates(pc),a0
 	move.w d0,14(a0)

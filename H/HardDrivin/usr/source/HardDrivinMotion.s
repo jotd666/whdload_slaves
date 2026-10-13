@@ -23,6 +23,12 @@ _motion_install:
 	rts
 _motion_patches:
 	PL_START
+	IFD VERIFY_DRIVETRAIN_PHASE
+	; PERF_RANGE VERIFY_DRIVETRAIN_PHASE $0cdbe $0006: continue finite road contact
+	PL_P $cdbe,_terrain_select
+	; PERF_RANGE VERIFY_DRIVETRAIN_PHASE $0c1b6 $0008: retain selected road section
+	PL_PSS $c1b6,_terrain_selected_hook,2
+	ENDC
 	; PERF_RANGE VERIFY_TIME_MOTION $0ccfa $001e: partial roll contact and feedback
 	PL_PSS $ccfa,_contact_roll,$18
 	; PERF_RANGE VERIFY_TIME_MOTION $0cd2e $0020: partial pitch contact and feedback
@@ -970,6 +976,10 @@ _motion_wide_results: dcb.l 7*7*7*3*2,0
 
 _motion_reset:
 	IFD VERIFY_DRIVETRAIN_PHASE
+	move.l a0,-(a7)
+	lea _terrain_continuing(pc),a0
+	clr.w (a0)
+	movea.l (a7)+,a0
 	bsr _phase_reset
 	ENDC
 	bsr _projection_reset
