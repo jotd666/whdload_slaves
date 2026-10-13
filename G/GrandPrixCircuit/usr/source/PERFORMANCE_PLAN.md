@@ -896,8 +896,10 @@ The owner's car, difficulty and single-race/championship choice remain unknown;
 these controlled cases alone did not resolve the report or establish hardware acceptance.
 
 The Monza correction has a controlled before/after reproduction below and is
-owner-confirmed fixed in the beta4 A1200-040 emulator run. The reported horizon gap is reproduced and corrected in beta5 below;
-owner retesting remains pending. Beta3 music is owner-confirmed fixed on the emulator; this is not
+owner-confirmed fixed in the beta4 A1200-040 emulator run. The reported horizon gap
+is reproduced and corrected in beta5 below, and the owner confirms it fixed in
+the beta5 A1200-040 emulator run with MMU and CUSTOM2=1. Beta3 music is
+owner-confirmed fixed on the emulator; this is not
 unconditional hardware acceptance. Wider circuit, car and traffic coverage
 remains unestablished.
 
@@ -1221,8 +1223,10 @@ stubs intact and corrupted-code negative controls rejected. The 040 log confirms
 enabled MMU translation with JIT off. `beta5-normal-audit.json` binds both runs
 to SHA-256 `0e2d2963170693e41c93be6a22751aaeaf9d1be83f5edb1f97f29c6a4185154c`.
 The same existing WHDLoad 20.0 harness is used; no additional version matrix was
-introduced. This is not an FPS or physical-hardware acceptance claim; owner
-retesting remains pending.
+introduced. The owner confirms the horizon artefacts fixed in the normal beta5
+A1200-040 emulator run with MMU and CUSTOM2=1. This is not an FPS or fresh
+physical-hardware acceptance claim; wider circuit and hardware coverage remain
+unestablished.
 
 Beta5 packaging passes exact extraction round trips for the 21-member
 installer/source and 55-member private preinstalled archives. Packaged source
