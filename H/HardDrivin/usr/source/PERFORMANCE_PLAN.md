@@ -14,6 +14,11 @@ behaviour until each change is ported and verified separately.
 
 ## Current status
 
+A subsequent A1200 play report exposed skid-onset and recovery regressions.
+The corrections and original-instruction comparisons are documented in
+`PHYSICS_ACCURACY.md`; prior short-window passes did not establish this handling
+behaviour. Release integration must include these corrections.
+
 Steps 1–5 are complete within the accepted scope. Step 4 closed on 2026-10-13
 with the documented C2 clock and C5 cost exceptions. C3's automated full-lap
 timing check, C6's human A500/68040 laps and P3 remain deferred follow-up work;

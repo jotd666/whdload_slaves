@@ -175,8 +175,8 @@ _phase_divide:
  rts
 
 ; The native outer orientation call still integrates roll, pitch and spin once.
-; Defer its steering/trig tail to the existing engine chunks, whose anchor
-; velocity makes the zero-speed eligibility test independent of render cadence.
+; Defer its steering/trig tail to the existing engine chunks. Steering uses
+; current speed; the older engine anchor is only a force-integration input.
 _phase_steering_defer:
  IFD VERIFY_DISPATCH_NATIVE
  bra.s _phase_steering_continue
@@ -318,22 +318,24 @@ _phase_frame:
  addq.l #1,PH_CALLS(a6)
  bsr _phase_prepare_anchor
  move.b _phase_steering_pending(pc),d0
- beq.s .orientation_ready
- ; Recreate the native MPH companion for this phase anchor before its
- ; speed-sensitive steering decisions. Preserve native word narrowing.
+ beq .orientation_ready
+ ; Steering decisions consume the current speed, not the older engine
+ ; anchor. During braking the anchor can still exceed the skid threshold
+ ; after the current speed has fallen below it. Preserve native narrowing.
  move.w PH_GEAR(a6),d0
  lsl.w #2,d0
  lea -$733c(a4),a0
  adda.w d0,a0
- move.w -$66d6(a4),d0
+ move.w PH_CURRENT_R(a6),d0
  muls.w (a0),d0
  divs.w 2(a0),d0
  move.w d0,-$66d4(a4)
- ; Keep publishing anchor MPH, but a completed neutral tail is idempotent.
+ ; Keep publishing current MPH; a completed neutral tail is idempotent.
  move.b _phase_steering_pending(pc),d0
  bpl.s .orientation_ready
  lea _time_scalar_fields(pc),a0
  move.w PH_DT(a6),(a0)
+ move.w PH_CURRENT_V(a6),-$66d8(a4)
  bsr _phase_steering_call
  move.w _dispatch_state+28(pc),d0
  subi.w #301,d0
@@ -362,6 +364,8 @@ _phase_frame:
  lea _time_scalar_fields(pc),a0
  move.w #8,(a0)
 .orientation_ready:
+ ; The native engine still evaluates its endpoint from the phase anchor.
+ move.w PH_ANCHOR_V(a6),-$66d8(a4)
  move.w #1,PH_ACTIVE(a6)
  bsr _phase_engine_call
  clr.w PH_ACTIVE(a6)

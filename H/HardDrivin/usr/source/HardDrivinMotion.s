@@ -71,7 +71,7 @@ _motion_patches:
 	; PERF_RANGE VERIFY_TIME_MOTION $0b380 $0006: pitch-rate caller
 	PL_PS $b380,_motion_pitch_rate
 	; PERF_RANGE VERIFY_TIME_MOTION $0b38a $0006: spin-rate caller
-	PL_PS $b38a,_motion_yaw_rate
+	PL_PS $b38a,_motion_spin_rate
 	; PERF_RANGE VERIFY_TIME_MOTION $0b448 $0006: steering-rate caller
 	PL_PS $b448,_motion_yaw_rate
 	; PERF_RANGE VERIFY_TIME_MOTION $0b1c6 $0008: projected pitch increment
@@ -86,7 +86,7 @@ _motion_patches:
 	PL_PS $cc8a,_motion_fall_ground
 	; PERF_RANGE VERIFY_TIME_MOTION $0cca0 $0006: inverted constraint dispatch
 	PL_PS $cca0,_motion_fall_ground_end
-	; PERF_RANGE VERIFY_TIME_MOTION $0b62a $0012: spin exponential retention
+	; PERF_RANGE VERIFY_TIME_MOTION $0b62a $0012: native-rounded spin recovery
 	PL_PSS $b62a,_motion_spin_decay,$c
 	; PERF_RANGE VERIFY_TIME_MOTION $0cb6c $0008: hard-contact angular-rate reset
 	PL_PSS $cb6c,_motion_contact_rates,2
@@ -335,62 +335,94 @@ _motion_roll_snap:
 	movea.l (a7)+,a0
 	rts
 
+; Skid recovery is the native integer recurrence, not continuous r^T.
+; Dropping truncation more than doubles moderate-spin recovery on fast CPUs.
+; Keep each native rate for eight fields, then apply trunc(rate*9/10).
+; The phase is elapsed fields0..7, shared by rotation and decay publication.
 _motion_spin_decay:
-	movem.l d1-d4/a0-a1,-(a7)
+	movem.l d1-d2/a0,-(a7)
 	lea _motion_state(pc),a0
 	move.w -$66e6(a4),d0
+	moveq #0,d1
 	cmp.w MS_SPIN_LAST(a0),d0
-	beq.s .current
-	clr.l MS_SPIN_CARRY(a0)
-.current:
-	move.w _time_scalar_fields(pc),d1
-	cmpi.w #8,d1
-	beq.s .native
-	swap d0
-	clr.w d0
-	add.l MS_SPIN_CARRY(a0),d0
-	move.l d0,d3
-	bpl.s .magnitude
-	neg.l d0
-.magnitude:
-	move.l d0,d4
-	bsr _decay_spin
-	cmpi.l #$10000,d1
-	beq.s .zero_retention
-	swap d0
-	mulu.w d1,d0
-	move.l d4,d2
-	mulu.w d1,d2
-	clr.w d2
-	swap d2
-	add.l d2,d0
-	sub.l d0,d4
-	tst.l d3
-	bpl.s .positive
-	neg.l d4
-.positive:
-	move.l d4,d0
-	bsr _time_split_q16
-	move.l d2,MS_SPIN_CARRY(a0)
-	bra.s .save
-.zero_retention:
-	moveq #0,d0
-	clr.l MS_SPIN_CARRY(a0)
-	bra.s .save
-.native:
+	bne.s .new
+	move.l MS_SPIN_PHASE(a0),d1
+.new:
+	moveq #0,d2
+	move.w _time_scalar_fields(pc),d2
+	add.l d2,d1
+.loop:
+	cmpi.l #8,d1
+	blo.s .save
+	tst.w d0
+	beq.s .zero
+	subq.l #8,d1
 	muls.w #9,d0
 	ext.l d0
 	divs.w #10,d0
-	clr.l MS_SPIN_CARRY(a0)
+	bra.s .loop
+.zero:
+	andi.l #7,d1
 .save:
+	move.l d1,MS_SPIN_PHASE(a0)
 	move.w d0,MS_SPIN_LAST(a0)
-	movem.l (a7)+,d1-d4/a0-a1
+	movem.l (a7)+,d1-d2/a0
 	move.w d0,-$66e6(a4)
 	rts
+
+; Integrate the same held rates even when an outer pass crosses a decay
+; boundary. State publication stays at B62A, after native skid-entry logic.
+; Like _motion_yaw_rate, consume the original stacked word argument.
+_motion_spin_rate:
+	tst.w 4(a7)
+	beq _motion_yaw_rate
+	movem.l d0-d7/a0-a2,-(a7)
+	move.w 48(a7),d4
+	moveq #0,d5
+	lea _motion_state(pc),a0
+	cmp.w MS_SPIN_LAST(a0),d4
+	bne.s .new
+	move.l MS_SPIN_PHASE(a0),d5
+.new:
+	moveq #0,d6
+	move.w _time_scalar_fields(pc),d6
+	move.w d6,-(a7)
+.loop:
+	tst.l d6
+	beq.s .done
+	tst.w d4
+	beq.s .done
+	moveq #8,d7
+	sub.l d5,d7
+	cmp.l d6,d7
+	bls.s .chunk
+	move.l d6,d7
+.chunk:
+	lea _time_scalar_fields(pc),a0
+	move.w d7,(a0)
+	move.w d4,-(a7)
+	bsr _motion_yaw_rate
+	sub.l d7,d6
+	add.l d7,d5
+	cmpi.l #8,d5
+	bne.s .loop
+	moveq #0,d5
+	muls.w #9,d4
+	ext.l d4
+	divs.w #10,d4
+	bra.s .loop
+.done:
+	lea _time_scalar_fields(pc),a0
+	move.w (a7)+,(a0)
+	movem.l (a7)+,d0-d7/a0-a2
+	move.l (a7),2(a7)
+	addq.w #2,a7
+	rts
+
 _motion_spin_reset:
 	move.l a0,-(a7)
 	lea _motion_state(pc),a0
-	clr.l MS_SPIN_CARRY(a0)
+	clr.l MS_SPIN_PHASE(a0)
 	movea.l (a7)+,a0
 	rts
 
@@ -1011,7 +1043,7 @@ MS_ROLL equ 12
 MS_FALL_CARRY equ 18
 MS_FALL_LAST equ 20
 MS_RATE equ 22
-MS_SPIN_CARRY equ 24
+MS_SPIN_PHASE equ 24
 MS_SPIN_LAST equ 28
 MS_FALL_ACCEL equ 30
 _motion_pitch_function: dc.l 0
@@ -1066,16 +1098,16 @@ _motion_math_test:
 .spin_fields:
 	lea _motion_spin_fields(pc),a3
 	move.w (a3,d5.w),(a5)
-	lea _motion_spin_carries(pc),a3
+	lea _motion_spin_phases(pc),a3
 	moveq #4,d6
 .spin_case:
 	lea _motion_state(pc),a0
 	move.w d4,-$66e6(a4)
 	move.w d4,MS_SPIN_LAST(a0)
-	move.l (a3)+,MS_SPIN_CARRY(a0)
+	move.l (a3)+,MS_SPIN_PHASE(a0)
 	bsr _motion_spin_decay
 	move.w -$66e6(a4),(a2)+
-	move.l MS_SPIN_CARRY(a0),(a2)+
+	move.l MS_SPIN_PHASE(a0),(a2)+
 	dbf d6,.spin_case
 	addq.w #2,d5
 	cmpi.w #34,d5
@@ -1249,8 +1281,8 @@ _motion_angle_signature: dc.b 'HDANGLE1'
 _motion_angle_results: dcb.b 5*9*3*10,0
 _motion_spin_fields: dc.w 0,1,2,3,4,5,6,7,8,9,15,31,127,255,894,895,65535
 _motion_spin_values: dc.w -52,-11,-1,0,1,11,52
-_motion_spin_carries: dc.l -65535,-8192,0,8192,65535
-_motion_spin_signature: dc.b 'HDSPIN01'
+_motion_spin_phases: dc.l 0,1,3,6,7
+_motion_spin_signature: dc.b 'HDSPIN02'
 _motion_spin_results: dcb.b 7*17*5*6,0
 _motion_fall_values: dc.w -5,0,5
 _motion_fall_configs: dc.w 49,49,-7,49,49,7,49,0,7
