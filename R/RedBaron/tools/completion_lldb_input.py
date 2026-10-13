@@ -59,7 +59,8 @@ def irq_key(raw, released=False):
  target=lldb.debugger.GetSelectedTarget();p=target.GetProcess()
  if p.GetState()!=lldb.eStateStopped:raise RuntimeError('Stop the owned emulator first')
  found={}
- for module in target.modules:
+ # The keyboard producer belongs to the emulator executable, not its frameworks.
+ for module in (target.GetModuleAtIndex(0),):
   for symbol in module:
    name=symbol.GetName() or ''
    if name in ('kpb_first','kpb_last','keybuf','_ZL9kpb_first','_ZL8kpb_last','_ZL6keybuf'):

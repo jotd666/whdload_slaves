@@ -29,7 +29,10 @@ mirror_word_selftest:
 mirror_verify_fail:
 	pea mirror_verify_message(pc)
 	pea TDREASON_FAILMSG
-	move.l _resload(pc),a2
+	lea .resload_base(pc),a2
+.resload_base
+	adda.l #_resload-.resload_base,a2
+	move.l (a2),a2
 	jmp resload_Abort(a2)
 mirror_verify_message:
 	dc.b "Red Baron: W1 mirror verification mismatch",0

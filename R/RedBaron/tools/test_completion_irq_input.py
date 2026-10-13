@@ -17,7 +17,10 @@ class IRQInputTests(unittest.TestCase):
             ReadMemory=lambda a,n,e:self.memory.get(a,b'')[:n],
             WriteMemory=lambda a,b,e:self.writes.append((a,b)) or len(b))
         header=types.SimpleNamespace(GetLoadAddress=lambda t:0,GetFileAddress=lambda:0)
-        module=types.SimpleNamespace(GetObjectFileHeaderAddress=lambda:header)
+        class Module:
+            def __iter__(self): return iter(())
+            def GetObjectFileHeaderAddress(self): return header
+        module=Module()
         target=types.SimpleNamespace(modules=[],GetProcess=lambda:proc,GetModuleAtIndex=lambda i:module)
         stub=types.SimpleNamespace(eStateStopped=5,SBError=lambda:types.SimpleNamespace(Success=lambda:True),
             debugger=types.SimpleNamespace(GetSelectedTarget=lambda:target))
