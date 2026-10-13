@@ -10,6 +10,8 @@
 
  This install applies to "Grand Prix Circuit" © 1989 D.S.I.
 
+ Requirements:
+ -------------
  This install requires WHDLoad 17.2 or newer to be in the path. It can be found in the
  WHDLoad package.
 
@@ -23,22 +25,30 @@
  If the image is of wrong version or altered in any way WHDLoad will quit with
  an appropriate requester.
  Additionally the file "kick34005.A500.RTB" must be installed in the same
- directory as the kickstart image. It can be found in the archive 
+ directory as the kickstart image. It can be found in the archive
  "util/boot/skick346.lha" on aminet.
 
+ Install from the original GrandPrixCircuit disk. The installer copies the
+ game files into a data subdirectory. You can also select disk images; the
+ installer explains which additional tools are needed.
 
- If you have problems with this installation please try and get a newer
- version of this package from the WHDLoad WWW-Page. If that doesn't help try
- some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
- that also fails, please inform the author via the Bug-Report-Form which
- can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
- at http://mantis.whdload.de
 
- For the full WHDLoad package, other installs and updates refer to:
-	http://www.whdload.de/
- or	aminet:dev/misc/whdload#?
- and	aminet:game/patch/
+ Features:
+ ---------
+ Original installation by JOTD: disk protection removed, support for fast
+ memory and 68020+ CPUs, music fixes, manual, icon and source code included.
 
+ Enhanced framerate (CUSTOM2=1) is enabled by the game icon. It provides
+ smoother movement on 68020+ CPUs, smoother road, opponent and horizon
+ rendering, and more precise roadside positioning on 68020+ CPUs.
+
+ Set CUSTOM2=0 to use the original simulation and rendering. The screen,
+ horizon, Monza and music fixes remain active. The new enhancements and
+ game fixes support the original v1 game executable.
+
+
+ History:
+ --------
  version 2.0b (13.10.26):
  - added Enhanced framerate option (CUSTOM2=1), enabled by the game icon
  - smoother vehicle movement on 68020 and faster CPUs
@@ -50,6 +60,17 @@
  - fixed missing and cut-off music notes on fast CPUs
  - requires WHDLoad 17.2 or newer
 
- Set CUSTOM2=0 to use the original simulation and rendering. The screen,
- horizon, Monza and music fixes remain active. The new enhancements and
- game fixes support the original v1 game executable.
+
+ Contact:
+ --------
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, EXPCHIP, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/

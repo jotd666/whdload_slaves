@@ -1243,6 +1243,19 @@ archives pass exact extraction and packaged-source normal/VERIFY builds; all
 55 pristine input hashes remain unchanged. Evidence: `package-2.0b/report.json`.
 Earlier build labels and hashes above remain historical evidence.
 
+The 2.0b ReadMe and Install now use the WHDLoad 20 Install Template. The
+ReadMe retains JOTD's applicable requirements, features and support text, with
+only the user-visible 2.0b changes in History. The installer retains the original
+GrandPrixCircuit volume, data subdirectory and exact file-copy exclusion pattern;
+the current template provides disk-image requests, icons, documentation copying
+and destination handling. Unused RawDIC/Patcher/DIC prerequisites are removed.
+Static parsing and local procedure references pass; 21 of 23 template procedures
+are unchanged, with only version selection and game-file copying adapted.
+The installer archive includes the updated Install script. Package extraction,
+source rebuild and pristine-file checks pass. This does not establish an
+interactive native Installer run. Evidence: `install-template-check.json` and
+`package-2.0b/report.json` in the ignored phase8 directory.
+
 The contribution remains a draft beta, not a completed Phase 8 acceptance.
 
 ## Open questions
