@@ -51,12 +51,10 @@ This removes the cost gate as a blocker; it does not complete the outstanding
 simulation-correctness checks. Measure the combined simulation and rendering
 changes against the original before claiming a net performance gain.
 The current closure build includes collision sweeps, terrain restoration and
-checkpoint/finish evaluation. Exact sweep shortcuts reduce A's overhead to
-8.023 ms/frame, within its 8.070 limit. B measures 6.881 against the accepted
-5.740 allowance, so C5 remains open. A fits the polygon-count tolerance; B's
-10.32% scene mismatch prevents an equal-scene FPS claim. Raw off/on FPS is
-3.794/3.894 in A and 7.288/5.891 in B. These are fresh source-matched pairs;
-no earlier, cheaper B baseline is substituted.
+checkpoint/finish evaluation. Exact sweep and traffic zero-input shortcuts reduce overhead to
+7.182 / 6.223 ms/frame. A meets its 8.070 limit; B exceeds the accepted 5.740
+allowance by 0.483 ms. Fresh paired windows retain their own disabled baselines;
+B's scene difference is 12.01%, so raw FPS is not an equal-scene comparison.
 
 The user subsequently requested step-4 closure before step 5 and deferred the
 human A500/68040 test laps (C6). C4 extreme-profile coverage is complete.

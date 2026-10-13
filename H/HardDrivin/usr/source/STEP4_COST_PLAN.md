@@ -13,10 +13,10 @@ The user accepted the P6 A500 B-window overhead of **5.740 ms/frame for now**
 (2026-10-13), superseding its 3.78 ms blocking limit for that measured build.
 P6 A measured 3.084 ms/frame. The current measured closure build, including
 collision sweeps, terrain restoration and checkpoint/finish evaluation, measures
-**8.023 / 6.881 ms/frame** after exact sweep shortcuts. A meets its 8.070 limit;
-B exceeds the accepted 5.740 allowance by **1.141 ms**. B's paired scenes differ
-by 10.32%, so raw FPS is not an equal-scene comparison. The earlier exception
-is not extended, and no earlier B baseline is substituted.
+**7.182 / 6.223 ms/frame** after exact sweep and traffic interpolation shortcuts.
+A meets its 8.070 limit; B exceeds the accepted 5.740 allowance by **0.483 ms**.
+B's paired scenes differ by 12.01%, so raw FPS is not an equal-scene comparison.
+The earlier exception is not extended, and no earlier B baseline is substituted.
 C1 and C4 are complete; C2, C3 and C5 remain open, and C6 is deferred. Historical P7 A1200 net
 phase overhead is 0.283 / 0.576 ms/frame (0.47% / 1.23%); it is not a measurement
 of this latest full closure build.
@@ -1086,6 +1086,28 @@ items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
     are removed (`c5-rotate-cleanup.json`). **C5 remains open because B exceeds
     its allowance.** Intermediate bounds-only measurements are retained separately
     in `c5-bounds-summary.json`; they are not the final source measurements.
+  - **Current arithmetic saving (2026-10-13):** traffic pose interpolation now
+    skips a signed multiply/divide pair when its input is exactly zero. Nonzero
+    inputs retain the native arithmetic and DIVS overflow behavior; the final
+    subtraction still supplies native X. No engine or traffic update cadence
+    changes, and P3 remains deferred. A 20,000-case old/new helper comparison
+    covers explicit zero combinations, signed-word extremes, overflow, data,
+    outputs and materialized CCR. Another 20,000 cases match the pristine
+    interpolation block on the existing output contract.
+    Fresh `c5-zero-{a,b}-{off,on}` captures measure **7.182021 / 6.223303 ms/frame**;
+    A passes, B remains **0.483303 ms** above its accepted allowance. Traffic
+    phase deltas are now -0.398787 / -0.215553 ms/frame. The B disabled capture
+    retains 73 swaps; enabled has 60 swaps, 5.990449 FPS, 169.422136 ms mean frame
+    time and 29.915254 polygons/frame versus 26.708333 disabled. Changed workload
+    means the total 0.841411 / 0.657607 gate reduction is not solely an isolated
+    arithmetic speedup. No older baseline is substituted.
+    All four traces cover 500 fields; disabled sites, 147 branch ranges, ordinary
+    binary identity and source rebuild identity pass. Reports:
+    `c5-zero-summary.json`, `c5-pose-zero-check.json`, `p1-pose.json`; trace and
+    calibration compression plus owned-runtime cleanup: `c5-zero-cleanup.json`.
+    C4's live matrix was captured before this arithmetic-only change; its player
+    collision/course modules are unchanged. The helper comparisons supply the
+    compatibility evidence for the altered traffic arithmetic. **C5 stays open.**
 - **C6, human laps — deferred by the user (2026-10-13).** Full A500 and 68040
   laps remain an unperformed human acceptance check. They do not block the current
   step-4 automated closure; do not describe handling as human-validated.

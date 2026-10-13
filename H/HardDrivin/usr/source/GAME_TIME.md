@@ -4506,3 +4506,26 @@ class-8 solid collision. Existing compatibility replays cover native contact
 and boundary preservation; this live matrix does not prove unseen game modes
 or arbitrary step lengths. C2 clock acceptance, C3 equal-time acceptance and
 C5 cost closure remain independent. Human laps and P3 remain deferred.
+
+
+### Exact zero traffic interpolation and current cost gate (2026-10-13)
+
+`_traffic_pose_values` skips MULS/DIVS for zero coordinate or angle inputs.
+All seven terms otherwise retain the same signed arithmetic, remainder and
+word-overflow behavior. The final `200-phase` subtraction executes even for a
+zero roll coefficient, preserving the incoming native final X flag; MOVEQ zero
+supplies the same quotient/remainder and NZVC as dividing a zero product by 200.
+Intermediate coordinate sums and pitch/roll consumers retain word semantics.
+No update count or simulation policy changes. Two 20,000-case comparisons cover
+the preceding production helper (including materialized CCR and explicit zero
+masks) and the pristine native interpolation block's established output contract.
+
+Current-source paired traces `c5-zero-{a,b}-{off,on}` give G1 overhead
+7.182021 / 6.223303 ms/frame. A passes 8.070; B still exceeds 5.740 by 0.483303.
+The traffic phase difference becomes negative: -0.398787 / -0.215553 ms/frame,
+using the existing accounting that credits displaced native work. The raw B
+scene mismatch remains, so the changed total cannot be called an isolated
+arithmetic speedup or an equal-scene FPS comparison. All four trace audits,
+disabled patches, ordinary binary identity, 147 branch ranges and source-rebuild
+identity pass. Evidence: `c5-zero-summary.json`, `c5-pose-zero-check.json`,
+`p1-pose.json`, and `c5-zero-cleanup.json`. C5 remains open; C2 and C3 are unchanged.

@@ -446,9 +446,11 @@ _traffic_phase_step:
 	st 19(a1)
 .return:
 	rts
-; Same seven signed MULS/DIVS operations as native D1C2..D29E, including
-; DIVS word-overflow behaviour. Remove only stack arguments and the 2950
-; trampoline. Position sums are words; the final roll sum remains ADDA.W.
+; Same seven signed interpolation results as native D1C2..D29E, including
+; exact zero-input shortcuts (zero quotient/remainder, unchanged X) and
+; DIVS word-overflow behaviour. Nonzero inputs retain MULS/DIVS; stack
+; arguments and the 2950 trampoline are omitted. Position sums are words;
+; the final roll sum remains ADDA.W.
 ; D4 is the pre-integration route phase; A3 and -4(A5) are current/next.
 ; D2-D6/A3-A6 are preserved. D7 and A2 publish the native pitch/roll results.
 _traffic_pose:
@@ -471,38 +473,75 @@ _traffic_pose_values:
 	movea.l 8(a5),a0
 	movea.l -8(a5),a1
 	move.w 28(a0),d0
+	beq.s .zero0
 	muls.w d4,d0
 	divs.w #200,d0
+	bra.s .sum0
+.zero0:
+	moveq #0,d0
+.sum0:
 	add.w 34(a0),d0
 	move.w d0,8(a1)
 	move.w 30(a0),d0
+	beq.s .zero1
 	muls.w d4,d0
 	divs.w #200,d0
+	bra.s .sum1
+.zero1:
+	moveq #0,d0
+.sum1:
 	add.w 36(a0),d0
 	move.w d0,10(a1)
 	move.w 32(a0),d0
+	beq.s .zero2
 	muls.w d4,d0
 	divs.w #200,d0
+	bra.s .sum2
+.zero2:
+	moveq #0,d0
+.sum2:
 	add.w 38(a0),d0
 	move.w d0,12(a1)
 	movea.l -4(a5),a0
 	move.w 12(a0),d0
+	beq.s .zero3
 	muls.w d4,d0
 	divs.w #200,d0
+	bra.s .sum3
+.zero3:
+	moveq #0,d0
+.sum3:
 	move.w d0,d7
+	tst.w 12(a3)
+	beq.s .zero5
 	move.w #200,d0
 	sub.w d4,d0
 	muls.w 12(a3),d0
 	divs.w #200,d0
+	bra.s .sum5
+.zero5:
+	moveq #0,d0
+.sum5:
 	add.w d0,d7
 	move.w 16(a0),d0
+	beq.s .zero4
 	muls.w d4,d0
 	divs.w #200,d0
+	bra.s .sum4
+.zero4:
+	moveq #0,d0
+.sum4:
 	movea.w d0,a2
 	move.w #200,d0
-	sub.w d4,d0
+	sub.w d4,d0	; preserve native final X even on the zero path
+	tst.w 16(a3)
+	beq.s .zero6
 	muls.w 16(a3),d0
 	divs.w #200,d0
+	bra.s .sum6
+.zero6:
+	moveq #0,d0
+.sum6:
 	adda.w d0,a2
 	rts
 _traffic_collision:
