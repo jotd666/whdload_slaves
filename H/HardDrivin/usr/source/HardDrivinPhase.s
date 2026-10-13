@@ -194,6 +194,8 @@ _phase_steering_continue:
  move.l _phase_steering_body(pc),-(a7)
  rts
 _phase_steering_body: dc.l 0
+; Pending byte: 0 absent, -1 steering required, +1 neutral tail already done.
+; The outer orientation entry resets it every frame.
 _phase_steering_pending: dc.w 0
 _phase_tail_ptr: dc.l 0
 _phase_manual_ptr: dc.l 0
@@ -327,9 +329,33 @@ _phase_frame:
  muls.w (a0),d0
  divs.w 2(a0),d0
  move.w d0,-$66d4(a4)
+ ; Keep publishing anchor MPH, but a completed neutral tail is idempotent.
+ move.b _phase_steering_pending(pc),d0
+ bpl.s .orientation_ready
  lea _time_scalar_fields(pc),a0
  move.w PH_DT(a6),(a0)
  bsr _phase_steering_call
+ move.w _dispatch_state+28(pc),d0
+ subi.w #301,d0
+ cmpi.w #38,d0
+ bhi.s .keep_steering
+ ; Native normalization advances only one turn per call. Keep repeats
+ ; when an exceptional input still leaves any angle outside its range.
+ move.w -$66b6(a4),d0
+ addi.w #720,d0
+ cmpi.w #1440,d0
+ bhi.s .keep_steering
+ move.w -$66b4(a4),d0
+ addi.w #720,d0
+ cmpi.w #1440,d0
+ bhi.s .keep_steering
+ move.w -$66b2(a4),d0
+ addi.w #720,d0
+ cmpi.w #1440,d0
+ bhi.s .keep_steering
+ lea _phase_steering_pending(pc),a0
+ move.b #1,(a0)
+.keep_steering:
  moveq #0,d0
  move.b -$50cf(a4),d0
  move.w d0,PH_SKID(a6)

@@ -12,9 +12,9 @@ physics arithmetic bottleneck: matched-operand long division is about 29% cheape
 The user accepted the P6 A500 B-window overhead of **5.740 ms/frame for now**
 (2026-10-13), superseding its 3.78 ms blocking limit for that measured build.
 P6 A measured 3.084 ms/frame. The current closure build, including collision
-sweeps, now measures **8.923 / 7.335 ms/frame** after the scan optimization
-described under C5. A and B exceed their respective 8.070 / 5.740 ms limits by
-**0.853 / 1.595 ms**. The earlier exception is not extended.
+sweeps, now measures **8.405 / 6.866 ms/frame** after removing redundant neutral
+steering work within a frame. A and B exceed their respective 8.070 / 5.740 ms
+limits by **0.335 / 1.126 ms**. The earlier exception is not extended.
 C1 is complete, C2–C5 remain open and C6 is deferred. Historical P7 A1200 net
 phase overhead is 0.283 / 0.576 ms/frame (0.47% / 1.23%); it is not a measurement
 of this latest full closure build.
@@ -989,6 +989,32 @@ items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
     and the branch audit passes 145 ranges. Native-loop, world-pool and signed
     interpolation checks pass. `c5-scan-summary.json` and each capture's reports
     retain the measurements. C2–C5 remain open; C6 remains deferred.
+  - **Neutral steering follow-up:** after the first steering tail of a frame,
+    centered input (native integer steering zero) needs no further tail calls
+    if all three angles are normalized. Anchor MPH is still published for every
+    engine segment. Non-centered input, out-of-range angles and the next outer
+    frame retain normal processing. Engine cadence is unchanged; P3 stays deferred.
+    A private consecutive-frame test exposed the need for the angle-range guard:
+    native normalization corrects only one turn per call, so an unconditional
+    skip would change exceptional-angle behavior. The guarded implementation
+    matches the previous frame routine in 3,456 frame comparisons, including
+    input changes, braking, reverse/zero motion, partial contact and angular rates.
+    The captured executable also passes 297 pristine native eight-field checks
+    (135 reverse cases). These tests do not replace C2–C4 acceptance.
+  - The latest `c5-neutral-{a,b}-{off,on}` pairs measure G1 **8.405121 /
+    6.865535 ms/frame**, exceeding the same limits by **0.335121 / 1.125535 ms**.
+    Sweep self cost is 3.018079 / 0.881874 ms/frame. Compared with the preceding
+    build, total overhead falls 0.517948 / 0.468967 ms/frame; trajectories still
+    differ, so this is not an isolated equal-work measurement.
+    G2 off/on FPS is A 3.794/3.794 and B 7.288/5.891 (swaps 38/38 and 73/59).
+    Complete-frame means are A 260.956/255.542 and B 137.719/167.508 ms.
+    Polygon means are A 57.757/54.919 and B 26.708/27.966, within the specified
+    5% mismatch threshold. B's end-to-end regression remains reported.
+  - Latest traces each pass 500-field duration and coverage checks (minimum
+    99.99996%). Paired artifact/configuration checks, both 167-range disabled
+    checks, the 145-range branch audit and ordinary binary identity all pass.
+    Reports: `c5-neutral-summary.json`, `c5-neutral-steering-check.json`,
+    `c5-neutral-native-frame.json`, plus per-capture reports. C5 remains open.
 - **C6, human laps — deferred by the user (2026-10-13).** Full A500 and 68040
   laps remain an unperformed human acceptance check. They do not block the current
   step-4 automated closure; do not describe handling as human-validated.
