@@ -50,6 +50,8 @@
  Current maximum-detail measurements show less than 2% difference with MMU,
  below the resolution of the FPS window; no speedup is claimed for the tooltype.
 
+ version 3.0b (13.10.2026)
+
  Rendering improvements:
  - Faster rendering is On by default (normal build: CUSTOM2=0). It selects the verified dashboard cache, geometry,
    solid-fill, persistent-gauge, static-artwork, scene and sound optimizations, with CPU-specific choices.

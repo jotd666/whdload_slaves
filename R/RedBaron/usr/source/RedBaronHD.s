@@ -64,16 +64,8 @@ slv_keyexit	= $5D	; num '*'
 
 ;============================================================================
 
-	IFD BARFLY
-	DOSCMD	"WDate  >T:date"
-	ENDC
-
 DECL_VERSION:MACRO
-	dc.b	"2.1"
-	IFD BARFLY
-		dc.b	" "
-		INCBIN	"T:date"
-	ENDC
+	dc.b	"3.0b (13.10.2026)"
 	ENDM
 
 ; Normal: zero selects On, one selects Off. Icons remain unchanged.
