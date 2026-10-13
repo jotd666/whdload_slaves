@@ -387,6 +387,7 @@ sim_steer_carry: dc.w 0
 sim_return_carry: dc.w 0
 sim_edge_carry: dc.w 0
 sim_centre_carry: dc.w 0
+sim_curve_carry: dc.w 0
 sim_lane_carries: ds.w 6,0
 sim_traffic_carries: ds.w 6,0
 sim_oncoming_carries: ds.w 5,0
@@ -1056,3 +1057,17 @@ sim_bank_pose:
     bsr sim_coarse_rate
     asr.l #4,d0
     rts                         ; original ADDQ #1 remains outside the hook
+
+; h4:$7F5A originally clears the fractional word of travelled curvature.
+; At p=2 that discards gentle positive bends entirely and overstates negative
+; ones. Apply the native whole-unit rounding in five-field units, then scale
+; back with a private carry. p=5 is bit-exact; road descriptors are untouched.
+sim_curve_step:
+    move.l -26196(a4),d0
+    bsr sim_coarse_rate
+    clr.w d0
+    move.l a0,-(sp)
+    lea sim_curve_carry(pc),a0
+    bsr sim_scale_long
+    move.l (sp)+,a0
+    rts

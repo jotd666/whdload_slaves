@@ -100,6 +100,8 @@
     PL_NOP $03d46,4           ; police lamp phase no longer counts draws
     ; SIM_RANGE h4 01e20 8 C2 sim_draw_verge
     PL_PSS $01e20,sim_draw_verge,2
+    ; SIM_RANGE h4 07f5a 6 C2 sim_curve_step
+    PL_PS $07f5a,sim_curve_step
     ; SIM_RANGE h4 07fb2 8 C2 sim_steer_grip
     PL_PSS $07fb2,sim_steer_grip,2
     ; SIM_RANGE h4 07f94 6 C2 sim_visual_edge_capture

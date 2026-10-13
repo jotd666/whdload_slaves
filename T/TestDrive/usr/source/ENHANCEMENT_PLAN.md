@@ -447,8 +447,8 @@ No TD2 game offset or duplicate camera correction is used.
 `render.s` and `render-patches.i`, behind CUSTOM2, supply the missing lateral
 fractions, mirror camera prefix, full slope accumulator, camera-interpolated
 crest limits, fractional traffic projection and atomically latched mountain
-heading. The main lane anchor uses a constant unit scale, removing the sideways
-jump at whole-segment camera crossings. Original near-car and horizon clipping
+heading. The main lane anchor follows the scale of the first visible row, removing
+the sideways jump at whole-segment camera crossings. Original near-car and horizon clipping
 policies remain. The sine cache retains the last integer-angle result; rapidly
 changing fractional arguments bypass cache bookkeeping. A flat-slope fast path skips work only with
 a zero descriptor and accumulator.
@@ -586,6 +586,14 @@ and skid effects keep their existing paths. C2=0 retains original behaviour;
 the VERIFY original-arithmetic drawing oracle also retains the native pose.
 Local `docs/steer-reversal.md` records native keyboard reproduction and the
 isolated visual regression. This remains part of 2.0b (13.10.2026).
+
+Curvature rounding at h4:$7F5A now uses original five-field units before scaling
+back to the current step with a private carry. Previously the two-field step
+rounded gentle positive bends to zero and over-applied negative bends. Period
+5 retains native arithmetic. Hands-off driving on a1200-040 reaches the first
+wall at course position 824.9 after correction, versus 826.3 in the original
+and 449.0 before correction; this is a finite route comparison, not exact
+cross-period state equality. `docs/handling-collision.md` retains the evidence.
 
 ## Phase 12: lessons back to AmigaXDev
 
