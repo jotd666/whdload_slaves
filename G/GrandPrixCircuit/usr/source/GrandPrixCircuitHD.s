@@ -435,8 +435,8 @@ pl_song1
 	; The original BEQ cleared it without servicing that channel.
 	PL_W $8c8,$6762          ; BEQ $92c (RTS), instead of $926 (ack)
 	PL_PS $926,music_ack
-	; Publish a complete note before its startup interrupt can consume it.
-	PL_PS $776,music_note_begin
+	; Mask before pitch setup: an old end-of-sample IRQ can reset AUDxPER.
+	PL_PS $758,music_note_begin
 	PL_PS $86a,music_irq_snapshot
 
 	; wait after write to dmacon (music) to avoid sound problems
@@ -459,6 +459,9 @@ music_note_begin
 	; The timer installs state/loop fields before enabling DMA at $7e0.
 	; A still-enabled old audio request could consume the half-written note.
 	; Native $7ea enables this channel again after the existing DMA wait.
+	; Preserve interrupts for a sound effect which currently owns the channel.
+	tst.w 70(a3)
+	bne.b .pitch
 	movem.l d0/a1,-(sp)
 	move.l h0_end_address(pc),a1
 	move.w 4(a1),d0          ; channel INTENA set mask
@@ -466,8 +469,11 @@ music_note_begin
 	move.w d0,_custom+intena
 	tst.w _custom+intenar
 	movem.l (sp)+,d0/a1
-	move.l 48(a3),a6         ; original $776..$77b
-	move.l a0,(a6)
+.pitch
+	move.l (sp),a6
+	adda.l #$802-$75e,a6
+	jsr (a6)                ; original $758: JSR $802(PC)
+	tst.w d3                ; original $75c, before BEQ $770
 	rts
 
 music_irq_snapshot
@@ -481,38 +487,69 @@ music_ack
 	rts
 
 move_f_dmacon
-	move.w	#$F,_custom+dmacon
-	addq.l	#2,(a7)
-	bra	dmacon_wait
-	
+	addq.l #2,(sp)
+	move.l d0,-(sp)
+	moveq #15,d0
+	bra.b music_dma_write
+
 move_h0_end_dmacon
-	movem.l	a0,-(a7)
-	move.l	h0_end_address(pc),a0
-	move.w	(a0),_custom+dmacon
-	movem.l	(a7)+,a0
-	addq.l	#4,(a7)
-	bra	dmacon_wait
+	addq.l #4,(sp)
+	move.l d0,-(sp)
+	move.l a0,-(sp)
+	move.l h0_end_address(pc),a0
+	move.w (a0),d0
+	move.l (sp)+,a0
+	bra.b music_dma_write
 
 move_lab62_dmacon
-	movem.l	a0,-(a7)
-	move.l	lab62_address(pc),a0
-	move.w	(a0),_custom+dmacon
-	movem.l	(a7)+,a0
-	addq.l	#4,(a7)
-	bra	dmacon_wait
+	addq.l #4,(sp)
+	move.l d0,-(sp)
+	move.l a0,-(sp)
+	move.l lab62_address(pc),a0
+	move.w (a0),d0
+	move.l (sp)+,a0
+	bra.b music_dma_write
 
 move_d2_dmacon
-	move.w	d2,_custom+dmacon
-	bra	dmacon_wait
+	move.l d0,-(sp)
+	move.w d2,d0
+	bra.b music_dma_write
 move_d7_dmacon
-	move.w	d7,_custom+dmacon
-	bra	dmacon_wait
+	move.l d0,-(sp)
+	move.w d7,d0
 
-dmacon_wait
-	movem.l	d0,-(a7)
-	move.l	#8,d0
-	bsr	beamdelay
-	movem.l	(a7)+,d0
+; Adapt Test Drive's stopped-channel fix (29c779d). After DMA is disabled,
+; Paula needs its final request to remain pending to settle into idle.
+; Repeated acknowledgements on a fast CPU can prevent that transition.
+; Mask stopped channels; clear stale requests only before a new DMA start.
+; The native start sites restore INTENA after the existing beam delay.
+; d0 = original DMACON value; original d0 is saved by each wrapper.
+music_dma_write
+	move.l d1,-(sp)
+	move.w d0,d1
+	andi.w #$000f,d1
+	lsl.w #7,d1
+	btst #15,d0
+	bne.b .start
+	move.w d1,_custom+intena
+	tst.w _custom+intenar
+	bra.b .write
+.start
+	; A music update may share an already-running effect: keep its request.
+	move.w _custom+dmaconr,d1
+	not.w d1
+	and.w d0,d1
+	andi.w #$000f,d1
+	lsl.w #7,d1
+	move.w d1,_custom+intreq
+	move.w d1,_custom+intreq
+	tst.w _custom+intreqr
+.write
+	move.w d0,_custom+dmacon
+	move.l (sp)+,d1
+	moveq #8,d0
+	bsr beamdelay
+	move.l (sp)+,d0
 	rts
 
 pl_sr

@@ -1027,9 +1027,9 @@ that state before setup is complete, installing loop registers too early or
 stopping the newly started note. The existing DMA waits do not protect these
 shared fields.
 
-Two six-byte hooks correct the race. At `$776`, `music_note_begin` masks only the
-channel being prepared, reads INTENAR back, and replays the original pointer
-write. Native `$7ea` re-enables the channel after the existing DMA startup wait.
+The beta3 build used two six-byte hooks. At `$776`, `music_note_begin` masked
+only the channel being prepared, read INTENAR back, and replayed the original
+pointer write. The current 2.0b fix below moves this protection before pitch setup. Native `$7ea` re-enables the channel after the existing DMA startup wait.
 At `$86a`, the interrupt snapshot intersects INTREQR with INTENAR, so an interrupt
 from a different channel cannot service the masked request. Song data, note
 commands, existing DMA delays, and the beta2 acknowledgement fixes are unchanged.
@@ -1266,6 +1266,69 @@ Selectable VERIFY fixtures remain supported, not abandoned experiments.
 Normal and VERIFY builds and packaged-source rebuilds pass. The normal slave
 shrinks from 10,628 to 10,544 bytes. This source/build audit is not a new gameplay
 or timing measurement; earlier binary hashes identify the earlier tested builds.
+
+#### Current 2.0b fast-CPU music fix
+
+The owner still hears missing or incorrectly quiet intro notes on an A1200 with
+68040/40 MHz, MMU, 32 MB and WHDLoad 19. Enhancements off makes no difference;
+the earlier emulator listening confirmation did not establish a physical fix.
+
+Test Drive commit `29c779dd5695225ffc0b233c9565a1c11da7f0fc` identifies a second
+Paula failure: repeatedly acknowledging a stopped channel can prevent its
+manual-output state from settling to idle, losing the next DMA startup request.
+All eleven existing song DMA hooks now mask the affected audio interrupts before
+stopping DMA. Before a new start, they clear stale requests twice and read back
+INTREQR; already-running channels retain their requests for shared sound effects.
+Native start sites restore INTENA after the unchanged beam-based wait.
+
+The note-preparation mask moves from song `$776` to `$758`, before the original
+pitch routine at `$802`. Otherwise an old sample-completion interrupt can reset
+AUDxPER after the new pitch was written. The hook replays the complete original
+JSR and TST, preserving the following branch. Effect-owned channels retain their
+interrupts. The enabled-request snapshot at `$86a` remains. These fixes are always
+active, independent of CUSTOM2, with no change to song data or note commands.
+
+A bounded native FS-UAE probe, configured for 68040/40 MHz/MMU with JIT off,
+compares the previous 2.0b build with the final candidate:
+
+| Build | Serviced audio requests | Requests with channel DMA off | Note starts |
+|---|---:|---:|---:|
+| Previous 2.0b | 10,189 | 10,021 | 171 |
+| Fixed, enhancements on | 188 | 0 | 190 |
+| Fixed, enhancements off | 188 | 0 | 190 |
+
+The baseline stops at the first VBL after the 10,000-request safety limit; each
+candidate runs the full 600-field observation window. These are event counts,
+not an equal-duration performance comparison. The first 171 channel/pitch/volume
+commands match exactly; both candidate sequences match for all 190 starts, with
+note state still 1 at DMA publication. A rejected initial counter included stale
+upper register words; these results mask only the four audio interrupt bits.
+
+Assembled-instruction tests cover 21 DMA wrapper/mask cases and preservation of
+active sound-effect requests and interrupt enables. An injected old-note
+completion in the former pitch window changes period 400 to 124 in the old build;
+the candidate preserves 400. This models interrupt ordering, not physical Paula
+timing. Live hook checks pass; all three songs have identical driver bytes, and
+the relocated six-byte hook replaces complete instructions without a direct
+interior branch target. The A500 and 68040/MMU compatibility runs reach the title and a drawn
+attract race. The A500 early observation window contains no note starts and is not
+used as audio evidence.
+
+Normal and VERIFY builds pass. Both release archives pass exact extraction
+round trips; packaged source rebuilds the identical normal slave and builds
+VERIFY successfully. All 55 pristine input hashes remain unchanged. The existing
+2.0b user-visible music changelog covers this fix; no new release version is added.
+
+The tested normal slave SHA-256 is
+`c87c4036b0e569835856335688085f9ad0ffeb80a13c44032f6be211552c6263`.
+Compact evidence is local under `tmp/dev/tmp/audio040/`: `comparison.json`,
+`unit-results.json`, `release-on-events`, `release-off-events`, and
+`release-a500-events` and `release-040-smoke`. Exact assembled helper bytes match
+all four live final-build captures. The earlier `final-*` and `candidate-*` runs identify
+intermediate binaries, not this release. CPU frequency configuration does not
+establish cycle-exact equivalence to the owner's 40 MHz accelerator. Physical
+listening acceptance of this fix remains pending; no extra WHDLoad version matrix
+is required.
 
 The contribution is ready for upstream review as 2.0b; final physical-hardware
 acceptance remains unestablished.
