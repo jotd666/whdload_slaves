@@ -21,25 +21,40 @@ opt-in and selects effective mask `0x1ff6ffa`, including W6 and its pacing
 dependencies (`w6-player-optin/options.json`). This is an option-path check;
 existing D5 evidence supplies runtime acceptance. No new FPS claim is made.
 
-## Reported normal-build renderer abort (2026-10-13)
+## R1: renderer installation on subsequent loads fixed (2026-10-13)
 
-A user dogfight on the named A1200/68040 preset, with Faster rendering and
-Consistent game speed enabled, ended with the fast-frame renderer bounds/pixel
-message. The normal build has no pixel twins: this message also covers runtime
-bounds guards. The cause remains unresolved. The same preset passed an initial
-level-flight window, 250 banking frames, and a separate 200-frame banking/firing
-sequence across forward, rear, left and right views. These are bounded diagnostic
-observations, not a reproduction or new performance evidence.
+The captured A1200/68040 normal-build abort occurred in `scene_frame_install`,
+after its game-code base hooks but before cloning launch trampolines. The
+WHDLoad dump retains the failing `fill_setup_custom` address in A0 and the exact
+existing `JSR scene_frame_base_a0` in the slave image. That helper belongs to
+the persistent slave, unlike the freshly loaded sim code. The installer expected
+its original `LEA` on every load and rejected its own redirect on a later load.
 
-The local launcher now enables WHDLoad `CoreDump` and mounts a persistent dump
-volume outside its rebuilt game volumes, selected by `CoreDumpPath` in the global
-preferences. A throwaway startup-abort slave verified the same `TDREASON_FAILMSG`
-path writes the message, register/stack report, memory and complete IFF dump.
-This synthetic check is not evidence that the reported renderer bug is fixed.
-The release slave is unchanged. Preserve the dump and matching build before
-another game exit: memory/IFF files are overwritten, while the register log is
-appended. For this explicit abort, PC may be unavailable; inspect the saved stack
-and renderer state rather than treating PC=FFFFFFFF as an instruction fault.
+The installer now accepts either the complete original `LEA` or the exact
+previously installed `JSR` target. Other opcodes/operands still abort. This changes
+installation only, remains under the existing sim-v1/CPU/feature gates, and does
+not alter rendering or W6 timing. No new FPS claim is made.
+
+| Validation | Result | Evidence |
+|---|---|---|
+| User normal-build dump, A1200/68040 | Persistent helper already patched; installation guard identified | `player-menu-abort-20261013` |
+| Corrected normal build, named A1200/68040 preset; Faster rendering + W6 | First flight → native Abort → main menu → second mission in the same WHDLoad session → five further flight-loop crossings, rendered cockpit; no guard abort | `r1-reload-native/second-flight.txt`, `second-flight-render.txt`, `second-flight-render.png` |
+| Existing host regressions | 577 pass | `r1-host-tests.log` |
+| Normal/developer/VERIFY builds and patch reach | All compile; 136/136/150 destinations, zero errors | Build listings |
+| Hook audit | 136 ranges, zero errors | Source audit |
+
+The first reload-test attempt failed in debugger control before reload and is
+not counted. The earlier undumped dogfight quit had the same generic message,
+but cannot independently be attributed to this guard. Its preceding bounded
+banking/firing/view-switch checks were not reproductions.
+
+The local launcher enables WHDLoad `CoreDump` and mounts a persistent dump volume
+outside rebuilt game volumes, selected by `CoreDumpPath` in global preferences.
+A throwaway startup-abort slave verified `TDREASON_FAILMSG` saves the message,
+register/stack report, memory and complete IFF dump. Preserve a real failure and
+its matching build before another game exit: memory/IFF files are overwritten,
+while the register log is appended. PC may be unavailable for an explicit abort;
+use the saved stack and renderer state, not PC=FFFFFFFF as an instruction fault.
 
 ## D5 automated coverage complete (2026-10-12)
 

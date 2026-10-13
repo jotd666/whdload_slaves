@@ -17,7 +17,7 @@ Refer to items by ID. FC items are detailed in `fast-cpu-plan.md`.
 | FC4 | Span polygon rasteriser | Complete; enabled on 040/060; 030 retains its prior path |
 | FC5 | Smaller viewport copy | Closed: dropped; less than 2% gain on every measured CPU class |
 | FC6 | Re-profile, W6 trial and geometry processing | Complete; W6 rate passes bounded trial, 50 FPS unmet; geometry extension dropped below 2% |
-| R1 | Normal-build fast-frame bounds abort during 040 dogfight | Investigating; automatic WHDLoad dump capture verified; no reproduction yet |
+| R1 | Renderer installer rejects its persistent helper on a later load | Fixed; captured guard identified, same-session second mission and rendering pass |
 | FC7 | AGA 040/060 and real-hardware confirmation | Planned |
 | D5a | W6 catch-up input check | Complete: native tap/hold/release during catch-up on A500 and 060 |
 | D5b | W6 Time Compress and mission-exit transitions | Complete: native compression and modal checks; A500 catch-up mission exit |
@@ -27,8 +27,8 @@ Refer to items by ID. FC items are detailed in `fast-cpu-plan.md`.
 
 ## Release status
 
-The accepted release work is complete; the subsequently reported R1 renderer
-abort remains open.
+The accepted release work is complete. The subsequently captured R1 renderer
+installation abort is fixed and verified across a same-session mission reload.
 F1 enables the normal verified bundle by default; F2 condenses the ledgers;
 The original F3 passed on all six machine configurations; its results and the
 subsequent artwork and scene follow-ups are recorded separately in `profiling.md`. The normal verified mask is `0x1ff1fff`, filtered by CPU.

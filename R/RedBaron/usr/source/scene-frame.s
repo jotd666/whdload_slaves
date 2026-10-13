@@ -96,11 +96,22 @@ scene_frame_install:
  lea .fill_setup_base(pc),a0
 .fill_setup_base
  adda.l #fill_setup_custom-.fill_setup_base,a0
- cmpi.w #$41f9,(a0)
- bne scene_frame_bad
+ ; This helper lives in the slave, so its redirect survives sim unloads.
+ ; Accept only the original LEA or our exact existing JSR on later loads.
  lea scene_frame_base_a0(pc),a4
+ cmpi.w #$41f9,(a0)
+ beq .fill_original
+ cmpi.w #$4eb9,(a0)
+ bne scene_frame_bad
+ cmp.l 2(a0),a4
+ bne scene_frame_bad
+ bra .fill_ready
+.fill_original
+ cmpi.l #$00dff000,2(a0)
+ bne scene_frame_bad
  move.w #$4eb9,(a0)
  move.l a4,2(a0)
+.fill_ready
  ; Clone each complete store prefix plus BLTSIZE, then call the backend.
  lea scene_frame_launch_table(pc),a3
  lea .tramp_base(pc),a6
