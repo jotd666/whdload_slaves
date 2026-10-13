@@ -205,7 +205,7 @@ checks pass; measurements and reproduction commands are in `profiling.md`.
 Map-toggle check dropped: this game has no in-flight map command; the campaign
 map is outside flight rendering and its modal fence invalidates cached pages.
 
-### FC3 — persistent gauges (complete; 060 player default)
+### FC3 — persistent gauges (complete; CPU/W6 policy updated by FC12)
 
 Bit 23 shares the bit-18 native dispatcher keys and resource lifetime hooks.
 Each gauge/page retains its exact raw input/context key, stable needle bounds
@@ -230,15 +230,15 @@ flight is dropped from this bounded fixture: two inputs remain constant;
 per-input key mutation tests and all native page twins remain. The final exact
 capture passes the tightened current-artwork extent proof.
 
-The required four-class timing matrix is complete. Only 060 clears the plan's
-FPS threshold, so only 060 gets bit 23 in the normal default bundle. 020 is
-excluded after regression; 030/040 retain their prior player paths. Explicit
+The original capped matrix retained bit 23 only on 060. FC12 also enables
+it on 030/040 when W6 is selected. 020 remains excluded after regression;
+030/040 retain their prior player paths when W6 is off. Explicit
 030/040 developer/VERIFY masks remain available for common-code checks and the
 exact profiler. The final normal check passes. Results and hashes are recorded
 once in `profiling.md`. The expected saving in the original proposal was an
 estimate; use the measured ledger instead.
 
-### FC4 — span polygon rasteriser (complete; 040/060 player default)
+### FC4 — span polygon rasteriser (complete; CPU/W6 policy updated by FC12)
 
 Bit 24 replaces scratch clear, compatibility edges, fill and five-plane merge
 for convex 3–32-vertex polygons already inside the clip rectangle. The native
@@ -248,9 +248,9 @@ Repeated vertices, non-convex or degenerate shapes, clipping, larger lists and
 alternating-colour fills retain the existing exact path. The 800-byte row table
 uses an existing Fast-RAM workspace gap; RAM requirements do not increase.
 
-The normal bundle selects 040/060. The 030 FPS result is below 2%, so its normal
-path is unchanged; explicit developer/VERIFY selection remains for the native
-checks and profiler. The hook at sim:2f312 is installed only for sim v1 with
+The normal bundle selects 040/060, plus 030 with W6 after FC12. The capped
+030 result remains the W6-off policy. Explicit developer/VERIFY selection
+remains available for native checks and profiling. The hook at sim:2f312 is installed only for sim v1 with
 bit 24 and private-scene support. Original bytes remain when it is disabled.
 
 Randomized, thin, degenerate, clipped-boundary and recorded host cases run
@@ -260,7 +260,10 @@ All measurements, final artifacts and validation are recorded in `profiling.md`.
 Fallback expansion is dropped from this step: compatibility is no longer a
 leading cost, and the fallback preserves native coverage.
 
-### FC5 — smaller viewport copy: dropped
+### FC5 — smaller viewport copy: re-evaluated in FC12
+
+FC12 supersedes the capped decision: selective copy ships on 030 with W6,
+while 040/060 keep the full copy. The original capped result follows.
 
 The per-page Fast-shadow candidate passed exact pixel checks but gained less
 than 2% level-flight FPS on every measured CPU class, so it is dropped under
@@ -423,7 +426,7 @@ Implemented as bit 25, selected on 040/060 with Faster rendering and W6.
 The complete output snapshot, world fingerprint, native checks and optional
 Fast allocation are documented in `profiling.md`. Both CPU classes clear the
 2% threshold; the final rate pairs and normal-build check pass. Actual frame
-times exceed the original projection below; FC9 is now complete and FC12 is next.
+times exceed the original projection below; FC9 and FC12 are now complete.
 The following numbered list records the design; all six items are resolved by
 the implementation and measured disposition in the scoreboard.
 
@@ -487,7 +490,7 @@ requirement are introduced. Pixel models cover all colours, alignments, extreme
 endpoints and the existing native polygon pipeline. Measurement and the final
 CPU disposition are recorded in `profiling.md`. All three measured classes clear
 the retention threshold; bit 26 ships on 030/040/060 under Faster rendering.
-The 68000/010/020 paths retain their prior kernel. FC12 is next.
+The 68000/010/020 paths retain their prior kernel. FC12 is complete.
 
 #### FC10 — cockpit composition word lists (closed: dropped)
 
@@ -512,14 +515,19 @@ No key layout growth or runtime allocation is needed. VERIFY compares each fast
 decision with the original guard and tests three deliberate faults. Results and
 CPU retention are recorded in `profiling.md`.
 
-#### FC12 — re-measure decisions that the cap hid
+#### FC12 — re-measure decisions that the cap hid (complete)
 
-FC5 (viewport copy, 4.2 ms, 97% Chip) and the FC3 and FC4 CPU exclusions were
-decided by FPS under the two-field cap. In that mode 040/060 already sit at
-24–25 FPS, so a saving cannot show.
+W6 comparisons retain FC3 gauges on 030/040, FC4 convex spans on 030 and
+selective viewport copying on 030. These additions require W6 and Faster
+rendering; the W6-off policy remains unchanged. Copying regresses on 040/060,
+so they retain their full-copy path. Stock CPU paths remain unchanged.
 
-Re-evaluate them with W6 enabled (one-field cap), or with a guest render-time
-counter, after FC8. The FC5 candidate is in Git history (`d75a8fa`).
+The copy uses developer/VERIFY bit 28 and an optional 48,000-byte Fast pool
+allocated before the game heap, reused across missions, with full-copy fallback
+on failure. Page/geometry and event/resource invalidation preserve native
+pixels; rows 88 onward always copy to overwrite later cockpit drawing. Normal
+builds exclude verification data. Results, native checks and release artifacts
+are recorded only in `profiling.md`. No active FC steps remain.
 
 #### FC7 additions — real hardware (skipped at user request)
 

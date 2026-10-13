@@ -65,21 +65,27 @@
  - Large W6 buffers are allocated only when enabled; interpolation buffers
    are allocated only on 020+. Verification snapshots are excluded from the
    normal build. Buffers are reused across missions; minimum RAM is unchanged.
- - On 060, changed gauge backgrounds use clipped CPU restores from FastMem.
+ - On 060, and on 030/040 with Consistent game speed, changed gauge
+   backgrounds use clipped CPU restores from FastMem.
    Unchanged gauges persist per page below the current scene and static artwork.
    Native needle callbacks and event redraws are retained. Allocation failure
    retains native drawing; RAM requirements are unchanged.
-   020/040 keep their existing guarded gauge cache; 030 keeps native gauges.
+   Without Consistent game speed, 040 keeps its guarded cache and 030 uses
+   native gauges. The 020 gauge path is unchanged.
  - On 030/040/060, the forward overlay and static cockpit artwork are composed
    in FastMem before the viewport copy. Artwork outside that viewport persists
    on each page and is repaired after redraws, messages, view/resource changes
    or page reuse. Firing, other views and cache misses retain the previous path.
    000/010/020 retain native artwork. The existing reserved FastMem and 8 KB
    ChipMem mask are reused; RAM requirements are unchanged.
- - On 040/060, supported convex polygons are drawn directly as planar spans
+ - On 040/060, and on 030 with Consistent game speed, supported convex
+   polygons are drawn directly as planar spans
    in FastMem, avoiding scratch clear, edge/fill and merge passes. Native
    clipping, unusual polygons and outlines retain their existing paths.
-   The 030 keeps its previous renderer; RAM requirements are unchanged.
+   RAM requirements are unchanged.
+ - On 030 with Consistent game speed, unchanged upper-viewport words skip
+   the ChipMem copy. An optional 48,000-byte FastMem shadow allocation is
+   reused across missions; allocation failure retains the full copy.
  - On 030/040/060, supported scene viewports are drawn in reserved FastMem
    and copied to ChipMem once. Direct primitives avoid repeated plane setup;
    old page pixels and scratch are not copied in or exported. Native clipping

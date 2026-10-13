@@ -5,8 +5,8 @@
 The user accepted measured performance on 2026-10-12. The normal build now
 starts with Faster rendering On when CUSTOM2 is omitted: On=0, Off=1.
 Developer/VERIFY CUSTOM2 remains an explicit mask, with zero disabling patches.
-The default verified rendering mask is `0xfff1fff`, filtered by CPU;
-FC8 bit 25 additionally requires W6. On
+The default verified rendering mask is `0x1fff1fff`, filtered by CPU;
+FC8 bit 25 and FC12 bit 28 additionally require W6. On
 2026-10-13 the user completed W6 release acceptance and authorized normal-build
 availability. Consistent game speed is a separate, default-Off checkbox:
 `CUSTOM3=1` adds W6 bit 13, independently of Faster rendering. Its existing CPU
@@ -21,6 +21,99 @@ passed. FC8 now adds the separately measured cache described below. Native 060 n
 opt-in and selects effective mask `0x1ff6ffa`, including W6 and its pacing
 dependencies (`w6-player-optin/options.json`). This is an option-path check;
 existing D5 evidence supplies runtime acceptance. No new FPS claim is made.
+
+## FC12: W6 CPU-policy remeasurement (2026-10-13)
+
+FC12 is complete. With Faster rendering and Consistent game speed enabled,
+the normal build now selects FC3 gauges on 030/040 and FC4 direct convex spans
+on 030. The existing 060 gauge and 040/060 span policy remains. W6-off CPU
+choices, stock CPU paths and RAM requirements are unchanged. The verified mask
+is now `0x1fff1fff` before CPU/W6 filtering. The 020 gauge regression was
+already measured far below the old cap; it is not a cap-hidden exclusion and is retained.
+
+### Existing renderer choices
+
+One frozen FC11 developer slave, 60,960 bytes, SHA-256
+`a7f75fb24dad2a57939ab6e4314d5a1aaa4920d0a69e530ebeef2bcf9cc187de`.
+Each case measures 2,000 PAL fields of level flight and 250 fields banking
+right, W6 enabled, maximum detail, ground detail on in combat and Time Scale
+40. The 030 baseline is shared by its two independent one-bit comparisons;
+these gains must not be added together as a combined performance claim.
+
+| CPU / feature | Level off → on FPS | Gain | Bank off → on FPS | Decision |
+|---|---:|---:|---:|---|
+| 030-nommu gauge | 21.416 → 23.263 | +8.62% | 20.967 → 22.165 | Enable with W6 |
+| 030-nommu span | 21.416 → 23.338 | +8.97% | 20.967 → 24.161 | Enable with W6 |
+| 040 gauge | 25.285 → 25.834 | +2.17% | 24.361 → 24.960 | Enable with W6 |
+
+Evidence: `fc12-{030-nommu,040}-{base,gauge}` and `fc12-030-nommu-span`.
+030 masks: base `0xc7f2ffa`, gauges `0xcff2ffa`, spans `0xd7f2ffa`.
+040 masks: base `0xf7f2ffa`, gauges `0xfff2ffa`.
+
+### Viewport-copy re-test
+
+The restored FC5 selective-copy candidate is retained on the CPU classes
+meeting the threshold below, only with W6 and Faster rendering enabled.
+
+The bounded candidate used bit 28, two 24 KB runtime-allocated Fast shadows,
+page/geometry identity and the existing event/resource invalidations. It
+compared only rows above 88; lower cockpit rows were always copied. Allocation
+failure retained the full copy. The old unused VERIFY reservation no longer
+exists in normal builds, so allocation was moved before the game heap. The
+48,000-byte optional allocation is reused across missions and reclaimed by
+WHDLoad at exit. Normal builds contain no copy-verification snapshots.
+
+All six timing cases use the same 61,376-byte developer slave, SHA-256
+`e8d95de23ed979b7ac82d901249b9bb31807b31bda25fae92b33854778e2f317`.
+The workload and window lengths match the comparisons above. Only bit 28
+changes within each pair. Allocation selection is confirmed in capture
+metadata; each case includes FC11 and the CPU's preceding shipping policy.
+
+| CPU | Level off → on FPS | Gain | Bank off → on FPS | Decision |
+|---|---:|---:|---:|---|
+| 030-nommu | 21.391 → 23.388 | +9.33% | 21.166 → 22.963 | Retain with W6 |
+| 040 | 25.310 → 22.439 | -11.34% | 24.361 → 22.564 | Drop |
+| 060 | 27.257 → 23.288 | -14.56% | 26.158 → 23.562 | Drop |
+
+Evidence: `fc12-copy-{030-nommu,040,060}-{off,on}`. Off masks are
+`0xc7f2ffa`, `0xf7f2ffa`, `0xfff2ffa`; set bit 28 for the on mask.
+Every timing window has zero dropped steps/units and publication-margin
+violations, with world/wall rate inside one endpoint quantum of nominal.
+These are emulator throughput figures, not physical accelerator FPS.
+
+The restored candidate passes 595 host tests, all three builds, 138 hook
+ranges and 138/138/152 patch destinations. `fc12-copy-native` passes 64 exact
+viewport comparisons, 63 artwork and scene checks, six polygon primitives,
+both cockpit page twins and 81 final cockpit checks. FC11 and scenery twins
+also pass. Gauge counters remain idle on that W6 tape route; this is not new
+gauge-native evidence. Existing FC3 background/reuse and FC4 polygon twins
+validate the unchanged implementations. No new full-state study was added.
+
+### Final release checks
+
+Normal build: 60,996 bytes, SHA-256
+`29d6f99c970a7021f8defb96445650c3175b38f7c76c9d178e99b62016053c36`. Both affected CPU policies boot, return from
+Preferences, select their expected gauge/span/copy paths, and finish a
+250-field stage window with CUSTOM2 omitted and CUSTOM3=1.
+
+| CPU | Short-window FPS | ms/frame | Effective mask | Copy shadows |
+|---|---:|---:|---|---|
+| 030-nommu | 28.954 | 34.538 | `0x1dff6ffa` | Allocated |
+| 040 | 25.160 | 39.746 | `0xfff6ffa` | Disabled |
+
+These are integrated release checks, not the longer isolated A/B windows above;
+do not derive a combined percentage gain by comparing them. The 060 player
+path remains unchanged, as do stock CPU and W6-off choices. Final normal,
+developer and VERIFY builds pass, along with 595 host tests, 138 hook ranges
+and 138/138/152 patch destinations. Existing no-W6 native gauge twins remain
+the correctness evidence for the unchanged gauge implementation.
+
+Reproduce a timing case from the initialized harness with
+`BENCH_DEVELOPER=1 BENCH_BATCH_KEYS=1 BENCH_FROZEN_SLAVE=FROZEN_SLAVE`
+and `scene_profile_case.py CPU MASK OUTPUT --fields 2000 --groups rate --bank-after 250`.
+Keep the corresponding listing beside the frozen slave; use fresh output names
+and one owned emulator at a time. Use the frozen experiment binary for exact
+reproduction; the final release incorporates the qualifying CPU policies together.
 
 ## FC11: resource generations for overlay keys (2026-10-13)
 

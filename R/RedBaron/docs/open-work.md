@@ -13,9 +13,9 @@ Refer to items by ID. FC items are detailed in `fast-cpu-plan.md`.
 | FC0 | VERIFY artwork mismatch on the Barto 030 NOMMU route | Complete; native scratch-clear synchronization fixed |
 | FC1 | Deferred page fence instead of the swap spin | Complete; enabled on 030/040/060 |
 | FC2 | Overlay and cockpit foreground composited in Fast RAM | Complete; enabled on 030/040/060 |
-| FC3 | Persistent gauges | Complete; enabled on 060; other classes retain prior paths |
-| FC4 | Span polygon rasteriser | Complete; enabled on 040/060; 030 retains its prior path |
-| FC5 | Smaller viewport copy | Closed: dropped; less than 2% gain on every measured CPU class |
+| FC3 | Persistent gauges | Complete; 060, plus 030/040 with W6 after FC12 |
+| FC4 | Span polygon rasteriser | Complete; 040/060, plus 030 with W6 after FC12 |
+| FC5 | Smaller viewport copy | Re-evaluated in FC12; retained on 030 with W6, dropped on 040/060 |
 | FC6 | Re-profile, W6 trial and geometry processing | Complete; W6 rate passes bounded trial, 50 FPS unmet; geometry extension dropped below 2% |
 | R1 | Renderer installer rejects its persistent helper on a later load | Fixed; captured guard identified, same-session second mission and rendering pass |
 | R2 | In-game clipped-sprite bounds abort while firing | Fixed; reserved prefix with strict guard, native replay and release flight checks pass |
@@ -23,7 +23,7 @@ Refer to items by ID. FC items are detailed in `fast-cpu-plan.md`.
 | FC9 | Raster kernel `paint()` rewrite (per-plane constants, longword interiors, line bset/bclr) | Complete; enabled on 030/040/060; measurements in `profiling.md` |
 | FC10 | Cockpit composition word lists (pre-clipped, opaque split, longwords) | Closed: dropped; below 2% on 030; regresses on 040/060 |
 | FC11 | Bitmap/mask key comparisons replaced by resource generations | Complete; enabled on 030/040/060 |
-| FC12 | Re-measure FC5/FC3/FC4 decisions with W6, not under the two-field cap | Planned |
+| FC12 | Re-measure FC5/FC3/FC4 decisions with W6, not under the two-field cap | Complete; qualifying CPU paths enabled, other choices retained |
 | FC7 | AGA 040/060 and real-hardware confirmation | Closed at user request; remaining checks skipped, no real 060 available; prior A1200/040 confirmation retained |
 | D5a | W6 catch-up input check | Complete: native tap/hold/release during catch-up on A500 and 060 |
 | D5b | W6 Time Compress and mission-exit transitions | Complete: native compression and modal checks; A500 catch-up mission exit |
@@ -39,7 +39,7 @@ R2, the separately captured firing abort, is fixed with native replay and
 bounded normal-build flight validation.
 F1 enables the normal verified bundle by default; F2 condenses the ledgers;
 The original F3 passed on all six machine configurations; its results and the
-subsequent artwork and scene follow-ups are recorded separately in `profiling.md`. The normal verified mask is `0xfff1fff`, filtered by CPU; FC8 also requires W6.
+subsequent artwork and scene follow-ups are recorded separately in `profiling.md`. The normal verified mask is `0x1fff1fff`, filtered by CPU; FC8 and selective copying also require W6.
 Normal CUSTOM3 bit 0 independently enables Consistent game speed (Off by default).
 Normal CUSTOM2=0 is On and 1 is Off; developer/VERIFY values remain bit masks,
 where zero disables patches. The normal build is in the local build directory.
@@ -67,8 +67,9 @@ Git; do not revive their superseded next-work lists.
 
 `fast-cpu-plan.md` has the exact 030 frame attribution (aprof) and the ordered
 fix plan for the former 16.67 FPS plateau. Its §5 profiles 040/060 with W6
-(18.3/19.6 FPS) and plans FC8–FC12 toward 25 FPS with Consistent game speed. FC0–FC4 are complete; FC5 was evaluated and dropped below the measurement
-threshold. FC6, FC8 and FC9 are complete; FC12 is next, with FC7 closed at user request.
+(18.3/19.6 FPS) and plans FC8–FC12 toward 25 FPS with Consistent game speed. FC0–FC4, FC6, FC8, FC9, FC11 and FC12 are complete. FC12 revises the original
+FC5 drop on 030 with W6; FC10 remains dropped. FC7 is closed at user request.
+No active FC steps remain.
 
 **FC0 is complete:** native scratch-clear synchronization fixes the top-edge
 artwork mismatch. Full artwork/scene twins pass on 030 NOMMU/MMU, 040 and 060;
@@ -83,7 +84,7 @@ pointer publication. Redraws, native fallbacks and modal boundaries fence before
 writing; the two-field cap and RAM requirements are unchanged. The normal
 bundle enables it. Same-build comparisons, final normal timings, native twins,
 view/firing transitions, beam checks and exact profiling are in `profiling.md`.
-FC12 is the next renderer step; W6/D5 is now accepted as an opt-in; see Release status above.
+FC12 is complete; W6/D5 is now accepted as an opt-in; see Release status above.
 
 ## Completed: Fast-RAM cockpit composition
 
@@ -99,12 +100,11 @@ results and manual profiling instructions are in `profiling.md`.
 ## Completed: selective gauge updates
 
 Bit 23 enables clipped CPU background restores and per-page unchanged-gauge
-reuse on 060. Native needle callbacks remain. Reuse requires exact native keys,
+reuse on 060, and on 030/040 when W6 is enabled (FC12). Native needle callbacks remain. Reuse requires exact native keys,
 stable bounds, no invalidating event and proof that the current scene/static
 artwork cannot overwrite those pixels. The new background cache uses Fast RAM
-with native fallback; memory requirements are unchanged. The 020 regresses;
-030/040 FPS differences are below the plan's threshold, so their player paths
-remain unchanged. Developer/VERIFY selection on 030/040 is retained for native
+with native fallback; memory requirements are unchanged. The 020 regresses. The original capped 030/040 FPS differences were below the
+threshold; FC12 retains their prior paths only when W6 is off. Developer/VERIFY selection on 030/040 is retained for native
 checks and exact profiling. All measurements, final hashes and the limited
 changing-input route coverage are in `profiling.md`.
 
@@ -116,9 +116,9 @@ Fast-RAM viewport and retains the existing outline path. Clipping, non-convex,
 repeated-vertex, degenerate, oversized and alternating-fill cases keep the
 existing renderer. The row table reuses reserved space; RAM requirements are
 unchanged. Native triangle/quad/larger-polygon twins and host models pass.
-The normal bundle enables 040/060; the 030 FPS difference is below 2%, so its
-player path is retained. Final normal checks, all timing pairs and the exact
-profile are recorded only in `profiling.md`. FC5 and the FC6 geometry extension were dropped; FC12 is next.
+The normal bundle enables 040/060 and, after FC12, 030 with W6. The original
+capped 030 comparison remains the W6-off policy. Final normal checks, all timing pairs and the exact
+profile are recorded only in `profiling.md`. FC5 was re-evaluated in FC12; the FC6 geometry extension was dropped; FC12 is complete.
 
 ## Post-release rendering investigation
 
@@ -127,7 +127,7 @@ the new section of `profiling.md`. It identifies repeated cockpit scripts,
 per-plane drawing and explicit waits, and documents why the discarded software
 blitter was not a test of a purpose-built Fast RAM renderer. The sparse static
 artwork and direct scene follow-ups below are implemented. FC2 now composes the overlay/static foreground with the scene viewport;
-persistent gauges and direct convex spans are complete as FC3/FC4. FC12 is next; W6/D5 is now accepted as an opt-in; see Release status above.
+persistent gauges and direct convex spans are complete as FC3/FC4. FC12 is complete; W6/D5 is now accepted as an opt-in; see Release status above.
 
 ## Completed: selective static cockpit artwork repairs
 
@@ -156,7 +156,7 @@ The first candidate's polygon overhead cancelled its rectangle saving; direct
 scratch loops fixed that regression. CPU comparisons, native primitive twins,
 banked flight, view/firing checks and final normal-build checks are recorded in
 `profiling.md`. FC2 now handles cockpit composition, and FC4 replaces the
-common convex polygon pipeline on 040/060. FC12 is the next renderer step.
+common convex polygon pipeline on 040/060. FC12 is complete.
 W6/D5 is now accepted as an opt-in; see Release status above.
 
 ## Completed: FC6 profile, W6 trial and geometry evaluation
@@ -177,4 +177,14 @@ allocation falls back to the previous path if unavailable; minimum RAM is
 unchanged. Native cache/restoration checks, deliberate stale-world tests,
 existing rendering twins, host tests and paired W6 timing pass. The newly
 exposed publication-tail margin is corrected. Results and manual reproduction
-are in `profiling.md`; FC12 remains open.
+are in `profiling.md`; FC12 is complete; no active FC steps remain.
+
+## Completed: FC12 W6 policy remeasurement
+
+With Faster rendering and Consistent game speed enabled, 030 selects persistent
+gauges, direct convex spans and selective viewport copying; 040 additionally
+selects persistent gauges. Selective copying regresses on 040/060, so they keep
+the full copy. The 030 copy uses an optional 48,000-byte Fast allocation before
+the game heap, reused across missions, with full-copy fallback on allocation
+failure. W6-off and stock-CPU policies are unchanged. All results and final
+release checks are in `profiling.md`. No active FC steps remain.

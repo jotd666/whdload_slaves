@@ -373,6 +373,7 @@ scene_frame_enter:
  move.w #1,(a0)
  bra .ready
 .native
+ bsr scene_delta_invalidate
  bsr fence_wait
 .ready
  movem.l (sp)+,d0-a6
@@ -389,6 +390,9 @@ scene_frame_exit:
  beq .inactive
  bsr cockpit_fast_compose
  bsr fence_wait
+ bsr scene_delta_copy
+ tst.l d0
+ bne .copied
  lea scene_frame_original(pc),a3
  move.l scene_frame_buffer(pc),a0
  move.l (a3),a1
@@ -424,6 +428,8 @@ scene_frame_exit:
  adda.l #8000,a0
  adda.l #8000,a1
  dbf d6,.plane
+.copied
+ lea scene_frame_original(pc),a3
  move.l scene_frame_h3(pc),a6
  adda.l #$8000,a6
  move.l (a3),$1d72(a6)

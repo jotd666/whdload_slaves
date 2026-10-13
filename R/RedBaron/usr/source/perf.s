@@ -1,8 +1,8 @@
 ; Performance patch framework. Only sim v1 calls this module's installer.
 ; No feature is release-enabled until its model, twin and measurements pass.
-PERF_VERIFIED_MASK = $fff1fff ; verified features; CPU-filtered, FC8 additionally requires W6
-PERF_DEVELOPER_MASK = $fff3fff
-PERF_VERIFY_MASK = $fff7fff ; developer W6 plus VERIFY-only quiescent overlay probe bit 14
+PERF_VERIFIED_MASK = $1fff1fff ; verified features; CPU-filtered, FC8/FC12 copy additionally require W6
+PERF_DEVELOPER_MASK = $1fff3fff
+PERF_VERIFY_MASK = $1fff7fff ; developer W6 plus VERIFY-only quiescent overlay probe bit 14
 
 perf_read_options:
 	movem.l d0-a6,-(sp)
@@ -34,18 +34,38 @@ perf_read_options:
 	; S3 has no established material benefit on the cached 030.
 	bclr #12,d0
 .selected
-	; FC3 clears the 2% threshold only on 060. Explicit developer/VERIFY
-	; masks retain 030/040 for the shared-code native twin and exact profiler.
+	; FC12: 030/040 gauges qualify with W6; 060 retains its prior policy.
+	; Explicit developer/VERIFY masks still support isolated comparisons.
 	btst #7,perf_attnflags+3(pc)
 	bne .gauge_player_ready
+	btst #0,perf_custom3+3(pc)
+	beq .gauge_player_off
+	move.l perf_attnflags(pc),d1
+	andi.l #$0c,d1
+	bne .gauge_player_ready
+.gauge_player_off
 	bclr #23,d0
 .gauge_player_ready
-	; FC4 clears the measured FPS threshold on 040/060; retain the 030 path.
+	; FC12: 030 spans qualify with W6; 040/060 retain their prior policy.
 	move.l perf_attnflags(pc),d1
 	andi.l #$88,d1
 	bne .span_player_ready
+	btst #0,perf_custom3+3(pc)
+	beq .span_player_off
+	btst #2,perf_attnflags+3(pc)
+	bne .span_player_ready
+.span_player_off
 	bclr #24,d0
 .span_player_ready
+	; FC12 selective copy qualifies on 030; 040/060 retain their MOVE16 copy.
+	move.l perf_attnflags(pc),d1
+	andi.l #$88,d1
+	bne .delta_player_off
+	btst #2,perf_attnflags+3(pc)
+	bne .delta_player_ready
+.delta_player_off
+	bclr #28,d0
+.delta_player_ready
 	; Independent player opt-in. Rendering Off still permits W6 and its
 	; required safe-swap/one-field pacing; the shared CPU gate remains below.
 	btst #0,perf_custom3+3(pc)
@@ -128,6 +148,14 @@ perf_read_options:
 	beq .compose_dependencies_ready
 	bclr #22,d0
 .compose_dependencies_ready
+	; FC12 copy requires composed frames and W6; CPU policy comes from bit22.
+	btst #22,d0
+	beq .no_delta
+	btst #13,d0
+	bne .delta_ready
+.no_delta
+	bclr #28,d0
+.delta_ready
 	btst #19,d0
 	beq .artwork_ready
 	bset #14,d0
@@ -176,6 +204,10 @@ perf_install_v1:
 	bsr cpu_cache_install_v1
 	bsr memory_install_v1
 	bsr time_buffers_prepare
+	lea .delta_prepare(pc),a0
+.delta_prepare
+	adda.l #scene_delta_prepare-.delta_prepare,a0
+	jsr (a0)
 	IFD VERIFY
 	bsr time_core_selftest
 	bsr time_input_selftest

@@ -65,6 +65,7 @@ cockpit_fast_install:
 
 ; Resource lifetime hooks call this before any referenced pixels can be freed.
 cockpit_fast_invalidate:
+ bsr scene_delta_invalidate
  move.l a0,-(sp)
  lea cockpit_fast_cached(pc),a0
  clr.w (a0)
@@ -437,6 +438,7 @@ cockpit_fast_end:
  move.l scene_frame_h3(pc),a0
  move.w $4820(a0),d0
  beq .done
+ bsr scene_delta_invalidate
  CF_CLEAR_PAGES
 .done
  movem.l (sp)+,d0-a6

@@ -56,10 +56,10 @@ if os.environ.get('BENCH_OMIT_CUSTOM2')=='1':
  expected_cockpit=('0x4ef9','0x4eb9') if a.machine in ('030','030-nommu','040','060') else ('0x3239','0x3039')
  assert all(op in cockpit_proof for op in expected_cockpit),cockpit_proof
  gauge_proof=r.command(f'gdb x/1hx {sim+0x19ba6:#x}\nx/1hx {sim+0x19d98:#x}')
- expected_gauge=('0x4ef9','0x4eb9') if a.machine=='060' else ('0x4e55','0x4eba')
+ expected_gauge=('0x4ef9','0x4eb9') if a.machine=='060' or (w6_enabled and a.machine in ('030','030-nommu','040')) else ('0x4e55','0x4eba')
  assert all(op in gauge_proof for op in expected_gauge),gauge_proof
  span_proof=r.command(f'gdb x/1hx {sim+0x2f312:#x}')
- assert ('0x4ef9' if a.machine in ('040','060') else '0x3806') in span_proof,span_proof
+ assert ('0x4ef9' if a.machine in ('040','060') or (w6_enabled and a.machine in ('030','030-nommu')) else '0x3806') in span_proof,span_proof
  (a.out/'default-selection.txt').write_text(proof+fence_proof+cockpit_proof+gauge_proof+span_proof)
 
 
@@ -102,6 +102,13 @@ if 'time_present_cache_buffer_ptr:' in (a.out/'slave.lst').read_text(encoding='l
     active=int(re.search(r'OVERLAY_GENERATION (\d+)',raw)[1])
     assert bool(active)==bool(effective&(1<<27)),raw
     (a.out/'overlay-generation.json').write_text(json.dumps(dict(active=active,effective_mask=effective),indent=2)+'\n')
+  if 'scene_delta_pool:' in '\n'.join(lines) and scene_enabled:
+   raw=r.command(f'gdb printf "DELTA_POOL %u\\n", *(unsigned int*){base+symbol(lines,"scene_delta_pool"):#x}')
+   pool=int(re.search(r'DELTA_POOL (\d+)',raw)[1])
+   if meta['build_mode']=='normal':
+    assert bool(effective&(1<<28)) == (w6_enabled and a.machine in ('030','030-nommu')),raw
+   if effective&(1<<28):assert pool,raw
+   (a.out/'delta-selection.json').write_text(json.dumps(dict(pool=pool,effective_mask=effective),indent=2)+'\n')
   result=check_live(lines,base,r.command,w6_enabled,a.machine!='a500')
   (a.out/'runtime-buffers.json').write_text(json.dumps(result,indent=2)+'\n')
 
