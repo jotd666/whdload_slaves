@@ -75,7 +75,7 @@ slv_keyexit	= $5D	; num '*'
 
 
 DECL_VERSION:MACRO
-	dc.b	"1.1-beta3"
+	dc.b	"1.1-beta4"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -316,9 +316,28 @@ patch_main
 	movem.l (a7)+,d0-a6
 	rts
 
+; Full-width counterparts of the native D4 address arithmetic. Replay the
+; displaced store/LEA, preserving the native register contract. The following
+; TST.W/MOVE.L instructions replace N/Z/V/C before use.
+track_front_end:
+    add.l #40,d4
+    move.l d4,-25024(a4)
+    rts
+track_bucket_origin:
+    sub.l #20,d4
+    lea -94(a4),a0
+    rts
+
 ; v1 display handoff fix plus inherited JOTD patches. VERIFY can bypass the fix.
 pl_main_v1
 	PL_START
+	; Track positions are addresses, not 16-bit segment counters. Preserve
+	; carry/borrow when a grid or view window straddles a 64 KB boundary.
+	PL_W $9fc2,$5383         ; SUBQ.L #1,D3 (grid partner)
+	PL_W $a020,$5d83         ; SUBQ.L #6,D3 (next grid row)
+	PL_W $a054,$5280         ; ADDQ.L #1,D0 (player grid position)
+	PL_PSS $8304,track_front_end,2 ; PERF_RANGE h0:8304 8 bit=BASE
+	PL_PSS $a7a4,track_bucket_origin,2 ; PERF_RANGE h0:A7A4 8 bit=BASE
 	IFD VERIFY
 	PL_IFC1
 	PL_PSS $e06,verify_traffic,4

@@ -811,16 +811,17 @@ CPU instruction trace; no 030 cycle-cost claim is made.
 3. Adapt `package_release.py`; focused commits on `grandprixcircuit`; PR via Vesuri.
 4. Generic lessons (interrupt-driven simulation, LoadView swap marker) → AmigaXDev docs.
 
-Release candidate: **1.1-beta3** (audio follow-up validation below). Physical testing is assigned to the owner on an
+Release candidate: **1.1-beta4** (Monza address-width correction below). Physical testing is assigned to the owner on an
 A1200 / 68040 at 40 MHz / MMU / 32 MB / WHDLoad 19.x. The owner reports good
 framerate and correct-feeling gameplay. The same hardware test found intermittent
 missing intro-music notes, stepped horizon motion, and jumpy roadside placement.
 The beta2 follow-ups below address those findings; physical confirmation of the
 new candidate is pending. The owner also hears notes cutting out in beta2 on the
 `a1200-030` emulator preset (68030 at 50 MHz), launched with `CUSTOM2=1 MMU`.
-The audible music defect therefore remains unresolved; beta2 is not audio acceptance.
+Beta2 was not audio acceptance; the owner subsequently confirms beta3 music fixed
+on the supplied a1200-030 launch. A fresh physical-68040 listening result is not established.
 The owner confirms that background graphics now update more frequently. A new
-opponent-visibility report remains open: after qualifying at Monza and starting
+opponent-visibility report led to the beta4 correction below: after qualifying at Monza and starting
 on pole, the owner held the car stationary without throttle. Opponents disappeared
 from the mirrors without appearing ahead, while continuing to move on the map.
 Another set of cars was visible behind. Driving forward and catching the cars
@@ -830,12 +831,11 @@ This is an emulator report, not physical-hardware confirmation.
 
 The initial code review identifies the per-draw opponent bucket builder at
 h0:$a77c and the front/mirror consumers at $8d62/$94c8 as the selection path to
-observe. The render latch copies opponent positions each draw. This does not yet
-establish whether the failure is in selection, projection, or an inherited game
-limitation. Reproduce the stopped-at-pole case and compare C2 on/off before
-changing behaviour; the existing moving-traffic checks do not cover this case.
-A stationary diagnostic on the confirmed 68030/50 MHz MMU preset does **not**
-yet reproduce the visibility failure. The existing VERIFY traffic fixture creates
+observe. The render latch copies opponent positions each draw. The beta4 boundary
+reproduction below identifies inherited word-sized address arithmetic in grid
+placement and selection; moving-traffic tests alone did not expose it.
+The earlier stationary diagnostic on the confirmed 68030/50 MHz MMU preset did
+not reproduce the visibility failure. The existing VERIFY traffic fixture creates
 a pole grid before the default attract race, selects human steering, supplies an
 all-neutral input tape, and bypasses the start-light gate (`C1=1 C3=1 C5=23`). It
 does not replay Monza qualifying or the subsequent race transition. In the C2-on
@@ -868,8 +868,10 @@ stub mapping in the retained stationary capture confirms `$7058` targets `$9f24`
 and `$7316` targets `$809e`. This review does not establish stale projection
 tables or justify moving the restore hook.
 
-Controlled Monza transition diagnostics on the 68030/50 MHz MMU profile also
-fail to reproduce the reported disappearance. An isolated VERIFY source copy
+The initial controlled Monza transition diagnostics on the 68030/50 MHz MMU
+profile also failed to reproduce the disappearance: their larger VERIFY binary
+placed the track away from the address boundary. The beta4 test below explicitly
+controls that alignment. An isolated VERIFY source copy
 selects Italy/Monza (track 6), uses the existing joystick-only pilot to finish
 qualifying, substitutes a qualifying time of 1 to guarantee pole, acknowledges
 keyboard prompts, and leaves race input neutral. Native qualifying return,
@@ -889,12 +891,15 @@ Evidence: ignored `tmp/dev/tmp/phase8/normal-monza-transition-on/off` and
 asserted `result.json` summaries; `transition-build/fixture.json` records all
 test-only changes. Diagnostic slave SHA-256:
 `3e0019ce2cd5bf333c01ab5123ef57744018d3dcb42b7a35def7e07231fe778c`.
-The production slave is unchanged and all 55 pristine file hashes still match.
+Those earlier diagnostics did not change the production slave or pristine files.
 The owner's car, difficulty and single-race/championship choice remain unknown;
-these controlled cases do not resolve that report or establish hardware acceptance.
+these controlled cases alone did not resolve the report or establish hardware acceptance.
 
-Audio and opponent visibility remain release blockers. This is not unconditional
-hardware acceptance. Wider circuit, car and traffic coverage remains unestablished.
+The Monza correction has a controlled before/after reproduction below; owner
+retesting remains pending. The reported horizon seam is a separate open release
+blocker. Beta3 music is owner-confirmed fixed on the emulator; this is not
+unconditional hardware acceptance. Wider circuit, car and traffic coverage
+remains unestablished.
 
 Further WHDLoad-version testing was stopped at the owner's request. Completed normal
 runs cover A500 17.2 C2=0/1 and 68040/MMU 20.0 C2=1 plus 17.2 C2=0. The in-progress
@@ -904,7 +909,7 @@ audits and positive TC=8000 translation evidence with JIT off. There is no timin
 claim from the MMU run.
 
 Release preparation:
-- `DECL_VERSION` is `1.1-beta3`; `slv_config` exposes only the normal C2 option.
+- `DECL_VERSION` is `1.1-beta4`; `slv_config` exposes only the normal C2 option.
   The ReadMe now includes fractional presentation and the between-race table reset,
   documents the off path, and preserves JOTD's original history.
 - Corrected the normal runtime minimum to **WHDLoad 17.2**: `PL_IFC2` uses the
@@ -1074,8 +1079,100 @@ VERIFY building without the private tape, and all 55 pristine input hashes intac
 The standalone replacement slave is the same final normal binary. No game bytes or
 built artifacts are included in commits.
 
-Audible confirmation remains pending. The Monza qualifying-to-race visibility
-report is still unresolved; this audio change does not address opponent rendering.
+The owner confirms music fixed after the supplied beta3 a1200-030 launch, but
+reports that Monza opponent visibility persists. The 36 retained owner screenshots
+are in ignored `tmp/dev/tmp/phase8/owner-beta3-monza`, with a SHA-256 manifest:
+one driving frame and 35 race-start frames. Inspected race frames show speed zero,
+traffic initially in the mirrors, then empty mirrors and no cars ahead. The first
+race-start frame already displays P:9; the last displays P:10 at 22.6 seconds.
+That differs from the earlier safe-alignment forced-pole diagnostic. The boundary
+defect below can corrupt the displayed rank even with a valid pole grid; the
+screenshot alone does not establish the actual grid assignment or memory layout.
+The audio change does not address opponent rendering, and this listening report
+does not establish a fresh physical-68040 test.
+The owner also reports a horizontal discontinuity in the Monza background strip,
+at the join to the right of the trees. It is outside the visible portion of the
+supplied driving screenshot (`FS-UAE_Full_261013-0136_00.png`), so that frame
+cannot establish the seam's appearance or exact heading. This is a separate open
+presentation defect. Initial static review locates the scenery strip at
+`$8246..$82e8`: the front view draws four pieces with alternating 320/192-pixel
+advances, then repeats the first piece after 1,024 pixels. The beta2 hook at
+`$8252` changes the heading input, leaving this native layout and blitting path
+intact. Investigate the join geometry, source-piece edges and heading wrap before
+attributing it to interpolation or changing behavior. No seam reproduction or
+fix is claimed.
+
+### Beta4 — Monza grid and visibility address correction
+
+Native track positions are full addresses, but five operations used word-sized
+arithmetic. Three are in grid setup: `$9fc2` subtracts one for a paired car,
+`$a020` subtracts six for the next row, and `$a054` adds one to the player's slot.
+The forward drawing endpoint at `$8304` adds 40 and the opponent-bucket origin at
+`$a7a4` subtracts 20. Losing carry/borrow at a 64 KB boundary corrupts grid
+positions by 65,536 segments and can exclude every nearby forward opponent while
+leaving map movement intact. Driving beyond the bad window restores selection.
+
+A retained normal 030 audio-candidate capture places Monza's first byte at low
+address `$fff2`; the earlier large VERIFY transition binary places it at `$aff2`.
+The latter therefore hid the bug. At `$fff2`, the native grid puts four opponents
+65,536 segments too far ahead; at `$ffe8`, eight are misplaced, explaining how
+pole can display P:9. The owner's actual runtime address was not recorded, so the
+P:9 match is supporting evidence, not an exact replay of that launch.
+
+Beta4 replaces the three word operations with their long equivalents. Two small
+helpers replay the displaced store/LEA around full-width forward-end and bucket
+arithmetic. These are unconditional v1 correctness patches, independent of C2,
+inside the existing 94,708-byte size gate. No driving rates, projection formulas,
+track bytes or original assets change. The normal build contains no new fixture.
+All 74 declared hook boundaries/direct branch entries pass the audit. A model
+checks all 65,536 low-address alignments and 655,360 player-grid cases, including
+the 29 grid, 10 player-increment, 40 forward-end and 20 bucket-origin cases where
+native word arithmetic disagrees with full-width arithmetic.
+
+The decisive test uses an ignored isolated VERIFY source copy. It copies the
+unchanged 1,643-byte Monza track, plus 64 native bytes on each side, into allocated
+memory at low address `$fff2` and adjusts the two track descriptors. Both copies
+are byte-compared in every retained snapshot. It drives the complete native
+qualifying lap with the existing pilot, supplies a pole qualifying time, then
+executes native results sorting, race initialization and starting lights with
+neutral player input. No debugger writes or production input automation are used.
+
+With the original arithmetic, the resulting grid offsets are
+`30,28,22,21,15,14,65544,65543,65537,65536` (player includes its native +1).
+It starts at P:5 and records **zero** forward-car calls during 900 step entries,
+while opponents move and player position/camera remain at offset 30, speed zero.
+With the correction at the same alignment, in both C2 modes, offsets are
+`30,28,22,21,15,14,8,7,1,0` and initial rank is P:1. C2 on/off record
+**471/518** forward-car calls, covering eight opponents in each window. The
+C2-on final frame visibly contains cars ahead and in a mirror. All 15 stationary
+samples per arm have speed zero. Counts establish coverage,
+not FPS or exact-pose equivalence; the window includes the native countdown.
+
+Evidence is retained under ignored `tmp/dev/tmp/phase8/` in
+`normal-monza-wrap-baseline`, `normal-monza-wrap-fixed/off`, the corresponding
+`monza-wrap*-source/build` fixture copies, `monza-wrap-report.json` and
+`monza-address-model.json`. `monza-fixture-audit.json` binds the same five-site
+correction to the production build; only that correction differs between the
+two diagnostic sources.
+
+The final normal beta4 passes intro, gameplay, native exit and a second attract
+race on A500, 68030/MMU and 68040/MMU. All three restore the 102 canonical table
+words and render 40 further swaps. Exact code, table and music-hook audits pass;
+all 139 jump stubs remain intact and the corrupted-code negative control fails
+as intended. Both MMU profiles have enabled translation with JIT off. These
+normal lifecycle checks are separate from the qualifying-transition fixture.
+The normal SHA-256 is
+`c6da76c95cb4f94185097a4f6bec323458f3392539fa9846fc5a4a732279e1e3`;
+`beta4-normal-audit.json` binds all three runs to it. All runs use the existing
+WHDLoad 20.0 harness; no additional version matrix was introduced.
+Packaging evidence in `package-1.1-beta4/report.json` records exact extraction
+round trips for the 21-member installer/source and 55-member private preinstalled
+archives. Extracted source rebuilds the identical normal slave; ordinary VERIFY
+also builds without private inputs. The standalone replacement slave matches the
+tested hash. All 55 pristine input hashes remain unchanged. Archives, game bytes,
+diagnostic sources and captures stay ignored under the local harness.
+Owner validation on the reported setup remains pending.
+
 The contribution remains a draft beta, not a completed Phase 8 acceptance.
 
 ## Open questions
