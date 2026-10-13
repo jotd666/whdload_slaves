@@ -3936,3 +3936,32 @@ Local reports are `c3-steering-curve-comparison.json`,
 curves and checked states. C3 lap/checkpoint timing, C4 and final C5 cost remain
 open. The current targeted C4 fixtures are separate one-time geometry seeds;
 they do not alter the original input-tape benchmark.
+
+
+### C4 targeted fixture exploration: not accepted (2026-10-13)
+
+Ignored one-time seed fixtures now address the actual stunt-road geometry:
+loop segments 37–49 and the ramp lip at segment 20, centre (31939,189,17338).
+Their manifests record the tracked source hashes and the separately modified
+fixture hash. After initialization they use native input and physics. They are
+not normal-start runs or substitutes for either benchmark window.
+
+The initial seed omitted native camera/course-cursor initialization and is not
+coverage evidence. Corrected seeds initialize those values and course mode 1.
+The corrected loop probe on slowed A500 reaches only pitch 38 before leaving
+contact; 68060 reaches the inverted part before leaving the road. A same-seed
+CUSTOM1-off native A500 run also fails to complete the loop (pitch reaches 690
+before extended flight), so these probes do not establish a successful baseline
+route or isolate a timing regression. Establish that baseline before changing
+loop handling to fit this fixture.
+
+Both the centre-line jump approach and a lane/heading matching the validated
+original jump route encounter a collision before takeoff. No pre-crash sample
+passes the existing ramp-lip/airborne-position predicates. Airborne frames after
+collision/recovery are explicitly excluded. Thus C4 remains open; seeing pitch
+wrap, elevation, or an eventual crash is not a loop/jump acceptance result.
+`c4-seeded-coverage.json` records a failing coverage status and all observations.
+The next fixture work must identify the blocking collision and establish a
+native-successful loop route. Completed emulator processes were checked before
+removing approximately 703 MB of disposable runtime copies; captures and build
+manifests remain under the ignored harness.
