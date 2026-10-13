@@ -4023,3 +4023,22 @@ terrain correction and flight still need validation; saturation alone is not a
 verified solution. `c4-targeted-diagnostics.json` records the retained captures,
 slave hashes and failure observations. All fixtures remain separate from the
 original input tape and performance windows. C4 remains open.
+
+
+The full-contact pitch path also contains a native half-error correction at
+`$cbb0`, unlike the full roll correction. A private elapsed-time relaxation
+experiment used gain `1-2^(-fields/8)`, retained fractional pitch correction,
+kept the eight-field path exact, and combined it with the private full-contact
+input bound. It changed fast jump feedback without the prior zero-rate sample,
+but **worsened fast loop contact**: first zero contact moved from field 259 to
+152 (pitch 291, Y=363). The slowed loop also loses contact before completing a
+clean exit. This rejects scaling that correction in isolation as a verified
+solution. No ground/contact change was promoted; the interaction between
+geometry projection and angular feedback remains open. Evidence:
+`c4-fullpitch-experiment.json` and the three `c4-fullpitch-*` captures.
+
+The subsequent authoritative change is confined to sweep eligibility checks:
+non-solid/inactive candidates are rejected before register saves or calculation.
+Native collision priority, candidate mathematics and selection order are
+unchanged. The fresh full-build C5 costs and compatibility checks are recorded
+in `STEP4_COST_PLAN.md`; this optimization does not resolve C4 handling.

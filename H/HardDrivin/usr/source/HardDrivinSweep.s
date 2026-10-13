@@ -76,8 +76,17 @@ _sweep_miss:
  ; Native BB48 enters the tail once before loading an object into A3.
  cmp.w -$4e70(a4),d4
  bhi.s .tail
+ ; Reject inactive sweeps and non-solid scene entries before spilling registers.
+ ; These tests preserve X; the native SUBQ below supplies the final loop flags.
+ btst #0,_sweep_state+SW_ACTIVE+1(pc)
+ beq.s .tail
+ cmpi.b #8,28(a3)
+ bne.s .tail
+ cmpi.b #95,25(a3)
+ beq.s .tail
  movem.l d0-d7/a0-a2/a6,-(a7)
- bsr _sweep_consider
+ lea _sweep_state(pc),a6
+ bsr _sweep_candidate
  movem.l (a7)+,d0-d7/a0-a2/a6
 .tail:
  ; Original loop tail: SUBQ determines X, independent of helper arithmetic.
@@ -88,15 +97,8 @@ _sweep_miss:
 .finished:
  move.l _sweep_finish_ptr(pc),-(a7)
  rts
-_sweep_consider:
- lea _sweep_state(pc),a6
- tst.w SW_ACTIVE(a6)
- beq .done
- ; Type95 is sound-only, not a solid collision; retain its native path.
- cmpi.b #8,28(a3)
- bne .done
- cmpi.b #95,25(a3)
- beq .done
+_sweep_candidate:
+ ; Caller has checked active state, solid class and non-sound-only type.
  tst.w SW_READY(a6)
  bne.s .ready
  lea -$6704(a4),a0
@@ -279,9 +281,13 @@ _sweep_world:
  move.w #1,SW_WORLD(a6)
 .loop:
  addq.l #1,SW_SCANNED(a6)
+ cmpi.b #8,28(a3)
+ bne.s .next
  tst.b 30(a3)
  beq.s .next
- bsr _sweep_consider
+ cmpi.b #95,25(a3)
+ beq.s .next
+ bsr _sweep_candidate
  tst.w SW_ACTIVE(a6)
  beq.s .finished
 .next:

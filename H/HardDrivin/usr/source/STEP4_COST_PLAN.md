@@ -9,12 +9,15 @@ are `P` (performance), `C` (closure) and `D` (decisions for the user).
 explicit helper-budget exception. P5's acceptance build met its unchanged
 0.300 ms/frame target at 0.247 / 0.292 ms/frame. P6 optimizes the remaining
 physics arithmetic bottleneck: matched-operand long division is about 29% cheaper.
-The user accepts the current A500 B-window overhead of **5.740 ms/frame for now**
-(2026-10-13), superseding its 3.78 ms blocking limit for this measured build.
-A measures 3.084 ms/frame, within its 8.07 ms limit. G1 is accepted by temporary
-exception, not a numerical pass of the original target. Proceed to step 5 rendering
-work; C1 is complete, C2–C5 remain open and C6 is deferred. P7 reports A1200 net
-phase overhead of 0.283 / 0.576 ms/frame (0.47% / 1.23%).
+The user accepted the P6 A500 B-window overhead of **5.740 ms/frame for now**
+(2026-10-13), superseding its 3.78 ms blocking limit for that measured build.
+P6 A measured 3.084 ms/frame. The current closure build, including collision
+sweeps, now measures **9.524 / 3.915 ms/frame** after the sweep eligibility
+optimization described under C5. B is within the accepted allowance; A remains
+**1.454 ms above its 8.07 ms limit**. The earlier exception is not extended.
+C1 is complete, C2–C5 remain open and C6 is deferred. Historical P7 A1200 net
+phase overhead is 0.283 / 0.576 ms/frame (0.47% / 1.23%); it is not a measurement
+of this latest full closure build.
 
 ## 1. Measurement
 
@@ -839,8 +842,9 @@ traces remain. Reports are `p7-summary.json`, each run's `frame-budget.json` and
 
 ## 5. Closure of step 4
 
-G1 is now accepted under the temporary exception above. These remain acceptance items of `PERFORMANCE_PLAN.md`
-step 4.7, made concrete.
+The P6 B-window result is accepted under the temporary exception above. The current
+full closure build still exceeds the A-window limit. These remain acceptance
+items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
 
 - **C1, solver coverage — complete (2026-10-13).** Airborne flight, partial
   contact, landing, manual gears, neutral and signed rollback use the phase path.
@@ -935,6 +939,33 @@ step 4.7, made concrete.
     These are open failures, not C4 acceptance; details are in `GAME_TIME.md`.
 - **C5, gates.** G1 passes or meets the explicitly accepted temporary exception; G2 is reported; `check_disabled.py` passes; the
   normal build is byte-identical.
+  - **Current full-build measurement (2026-10-13):** fresh paired 500-field A500
+    windows use the current phase solver and `VERIFY_TIME_SWEEP`. Before the
+    eligibility change, net overhead was 10.953151 / 5.066073 ms/frame. The
+    sweep now rejects inactive/non-solid scene entries before saving registers
+    and filters world entries before calling the collision candidate routine.
+    Eligible objects, counters, native priority and earliest-contact selection
+    retain their existing behavior. This does not resume deferred P3.
+  - Final pairs `c5-filter-{a,b}-{off,on}` measure **9.523709 / 3.914688 ms/frame**.
+    A exceeds 8.070 by **1.453709 ms**; B is below the accepted 5.740 allowance.
+    Sweep self cost is 3.486102 / 1.315067 ms/frame, versus 4.970903 / 1.932414
+    before this change. Changed trajectories make these observations, not an
+    isolated same-work speedup. B's disabled baseline itself changes with the
+    build, consistent with the already-open native clock dependency.
+  - G2: off/on swap counts are A 38/38 and B 63/58 in 10.015944 seconds; FPS is
+    A 3.794/3.794 and B 6.290/5.791. Complete-frame means are A 260.956/256.625 ms
+    and B 160.578/172.555 ms. Polygons/frame are A 57.757/55.000 and B
+    36.548/29.333: B is a **scene mismatch**, not equal-scene FPS evidence.
+  - All eight pre/post traces pass duration, swap-count and instruction-coverage
+    checks (minimum coverage 99.99998%). Each pair retains matching slave,
+    listing, game, emulator and configuration apart from CUSTOM1. All traces
+    have SHA/decompression-verified compressed archives; raw copies are removed.
+    Final CUSTOM1-off captures pass all 167 declared ranges with the appropriate
+    input-fixture exclusions. The ordinary build is byte-identical to its
+    baseline; all 145 branch ranges pass. Actual 68000 collision tests pass
+    32 native-loop cases, 96 world-pool cases and 10,000 signed interpolations.
+    Reports: `c5-current-summary.json`, `c5-filter-summary.json`, and per-capture
+    `frame-budget.json`, `trace-check.json`, `disabled.json`. **C5 remains open.**
 - **C6, human laps — deferred by the user (2026-10-13).** Full A500 and 68040
   laps remain an unperformed human acceptance check. They do not block the current
   step-4 automated closure; do not describe handling as human-validated.
