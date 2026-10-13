@@ -2957,8 +2957,11 @@ the instruction-text remnants already differ before the driving sequence. No
 remaining differing byte is unclassified, and none is masked from the report.
 
 This proves conditional gameplay equivalence under matched clock observations;
-it does **not** pass the original untouched-clock gate or change D4. C2 remains
-open pending explicit acceptance of the demonstrated native-clock dependency.
+it does **not** pass the original untouched-clock gate or change D4. On
+2026-10-13 the user explicitly accepted these demonstrated clock-dependent
+differences while preserving the original clocks, including their defects.
+**C2 is complete with this exception.** The untouched-clock measurement remains
+a failure in the diagnostic evidence; no broader equivalence is claimed.
 The game still preserves the defective BCD clocks. Equal-time trajectories,
 full-lap timing and C4 collision acceptance are separate requirements.
 

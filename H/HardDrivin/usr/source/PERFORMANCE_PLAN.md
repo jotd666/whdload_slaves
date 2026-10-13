@@ -71,8 +71,9 @@ finish awards now also use the completed physics pose, with native compatibility
 bypasses and fallback scene checks. Controlled four-profile timing improves, but
 full-lap timing remains unverified. A clock-input replay now reproduces all 650
 captured native gameplay states, isolating the untouched-clock mismatch to clock
-observations; the C2 clock-dependency exception is still unaccepted. C2 and C3 remain
-open; see the current closure results in `STEP4_COST_PLAN.md`.
+observations. On 2026-10-13 the user accepted those demonstrated clock-dependent
+differences while preserving the original clocks, including their defects. C2 is
+complete with that exception; C3 remains open; see the current closure results in `STEP4_COST_PLAN.md`.
 
 ## Starting point
 

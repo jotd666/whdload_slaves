@@ -18,7 +18,7 @@ A meets its 8.070 limit; B exceeds the accepted 5.740 allowance by **0.029 ms**.
 B's paired scenes differ by 2.55%, so raw FPS is not an equal-scene comparison.
 The user accepted that remaining 0.029365 ms/frame excess on 2026-10-13 for
 the selected build at `62e9913`; no earlier B baseline is substituted.
-C1, C4 and C5 are complete; C2 and C3 remain open, and C6 is deferred. Historical P7 A1200 net
+C1, C2, C4 and C5 are complete; C3 remains open, and C6 is deferred. Historical P7 A1200 net
 phase overhead is 0.283 / 0.576 ms/frame (0.47% / 1.23%); it is not a measurement
 of this latest full closure build.
 
@@ -878,9 +878,12 @@ items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
   diagnostic replays 4,062 checked native clock observations and then matches
   all 650 car/RNG/replay/traffic/actor/object-pool states and all input samples.
   The private diagnostic emulator reproduces both no-write control runs exactly.
-  This establishes the native-clock dependency, without changing D4 or waiving
-  C2: an explicit clock-dependency exception remains unaccepted. Complete raw
-  data/BSS differences remain reported and classified. See `GAME_TIME.md` and
+  The user explicitly accepted these demonstrated clock-dependent differences
+  on 2026-10-13 while preserving the original clocks, including their defects
+  (D4). **C2 is complete with this exception.** The untouched-clock comparison
+  remains a measured failure; this acceptance does not establish equal-time
+  trajectories or full-lap timing. Complete raw data/BSS differences remain
+  reported and classified. See `GAME_TIME.md` and
   `c2-clock-causal-summary.json`.
 - **C3, equal elapsed time.**
   - Use the controlled-start fixtures (`INITIAL_THROTTLE`, braking from speed 100, and
@@ -1193,11 +1196,13 @@ On 2026-10-12 the user accepted the recommended defaults. The later G1 exception
 C5's remaining 0.029365 ms/frame B-window excess was explicitly accepted by
 the user on 2026-10-13. C5 is complete for the selected build at `62e9913`
 (A 7.050928 versus 8.070; B 5.769365 versus the previous 5.740 allowance).
-The following decisions remain outstanding; step 4 is not complete.
+The user also explicitly accepted C2's demonstrated clock-dependent differences
+on 2026-10-13, preserving the original clocks and their defects. C2 is complete
+with that exception; untouched-clock equivalence is not claimed.
+The following decision remains outstanding; step 4 is not complete.
 
 | Item | Decision needed | Verified evidence |
 |---|---|---|
-| C2 | Accept the documented native-clock dependency as an exception to untouched-clock equivalence? | All 650 gameplay states match when the 4,062 native clock observations match; the untouched-clock comparison still fails. D4 continues to preserve the native clocks. |
 | C3 | Does the test-lap deferral include automated full-lap timing, or only human laps? | Human laps are deferred. Controlled motion and individual award results are documented; a complete lap has not been verified. |
 
 The source hash audit, ordinary binary identity, disabled patches, 147 patch
