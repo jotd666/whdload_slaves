@@ -3,7 +3,7 @@ import argparse
 import json
 import struct
 from pathlib import Path
-from presentation_state import symbol
+from presentation_state import symbol, buffer_address
 from render_mutations import Snapshot
 
 CAPACITY = 4096
@@ -35,7 +35,6 @@ def check(path):
     lines = (path.parent/'slave.lst').read_text(encoding='latin-1').splitlines()
     base = entry['entry']['game_anchor']-symbol(lines, 'tape_game_anchor')
     header = base+symbol(lines, 'time_model_count')
-    buffer = base+symbol(lines, 'time_model_buffer')
     test = base+symbol(lines, 'time_model_test_result')
     rows = []
     for frame in metadata['frames']:
@@ -44,6 +43,7 @@ def check(path):
         after = Snapshot(path.parent, frame['after'])
         if int.from_bytes(after.read(test, 4), 'big') != 1:
             raise ValueError('Native overlapping-write self-test did not pass')
+        buffer = buffer_address(lines, base, 'time_model_buffer', drawn.read)
         count = int.from_bytes(drawn.read(header, 2), 'big')
         if not 0 < count <= CAPACITY:
             raise ValueError('No actual model writes or capacity exceeded')

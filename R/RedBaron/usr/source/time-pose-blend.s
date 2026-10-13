@@ -18,7 +18,8 @@ time_pose_blend:
 	ENDC
 	lea .output_base(pc),a2
 .output_base
-	adda.l #time_blend_output-.output_base,a2
+	adda.l #time_blend_output_ptr-.output_base,a2
+	move.l (a2),a2
 	move.l time_pose_buffers(pc),a3
 	move.l time_pose_buffers+4(pc),a4
 	move.w time_pose_header(pc),d7

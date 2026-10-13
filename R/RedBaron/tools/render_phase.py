@@ -4,7 +4,7 @@ import json
 import struct
 from pathlib import Path
 from render_mutations import Snapshot
-from presentation_state import symbol
+from presentation_state import symbol, buffer_address
 from native_pose_blend import blend, split
 from native_poses import STRIDE
 from presentation_math import phase_fraction
@@ -60,11 +60,11 @@ def check(path):
             list_changed=(before.read(metadata['h3']+0x3fa8,2)!=rendered.read(metadata['h3']+0x3fa8,2)
                           or before.read(metadata['h3']+0x7dc8,list_entries*4)!=rendered.read(metadata['h3']+0x7dc8,list_entries*4))
         count,np=struct.unpack('>HH',before.read(at('time_pose_header'),4))
-        current=before.read(at('time_pose_current'),count*STRIDE)
-        previous=before.read(at('time_pose_previous'),np*STRIDE)
+        current=before.read(buffer_address(lines,base,'time_pose_current',before.read),count*STRIDE)
+        previous=before.read(buffer_address(lines,base,'time_pose_previous',before.read),np*STRIDE)
         fraction=phase_fraction(int.from_bytes(state[:16],'big'))
         expected,nb,ns=blend(current,previous,fraction)
-        if during.read(at('time_blend_output'),len(expected))!=expected:
+        if during.read(buffer_address(lines,base,'time_blend_output',during.read),len(expected))!=expected:
             raise ValueError('Render-time candidate buffer differs from model')
         if during.read(at('time_render_active'),2)!=b'\0\1' or after.read(at('time_render_active'),2)!=b'\0\0':
             raise ValueError('Pose lease not active then released')

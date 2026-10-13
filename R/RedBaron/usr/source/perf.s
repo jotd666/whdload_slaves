@@ -161,6 +161,7 @@ perf_instrument_cpu:
 perf_install_v1:
 	bsr cpu_cache_install_v1
 	bsr memory_install_v1
+	bsr time_buffers_prepare
 	IFD VERIFY
 	bsr time_core_selftest
 	bsr time_input_selftest

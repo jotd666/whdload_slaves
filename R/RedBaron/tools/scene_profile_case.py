@@ -79,6 +79,21 @@ if a.check_only:
   assert f'SCENERY_FLIGHT {sim+0x21d30:x}' in flight,flight
   (a.out/'scenery-flight.txt').write_text(flight)
 
+
+# Resolve the live slave through an installed hook, never a PRELOAD copy.
+if 'time_present_cache_buffer_ptr:' in (a.out/'slave.lst').read_text(encoding='latin1'):
+ import re
+ from runtime_buffers import check_live
+ from presentation_state import symbol
+ lines=(a.out/'slave.lst').read_text(encoding='latin1').splitlines()
+ hook,target=(0x21d28,'time_loop_gate') if w6_enabled else (0x2c552,'scene_frame_enter')
+ scene_enabled = bool(a.mask & (1<<20)) if meta['build_mode']=='developer' else os.environ.get('BENCH_OMIT_CUSTOM2')=='1'
+ if w6_enabled or (scene_enabled and a.machine in ('030','030-nommu','040','060')):
+  raw=r.command(f'gdb printf "BUFFER_HOOK %u\\n", *(unsigned int*){sim+hook+2:#x}')
+  base=int(re.search(r'BUFFER_HOOK (\d+)',raw)[1])-symbol(lines,target)
+  result=check_live(lines,base,r.command,w6_enabled,a.machine!='a500')
+  (a.out/'runtime-buffers.json').write_text(json.dumps(result,indent=2)+'\n')
+
 # Input is finished. Release the host debugger before a long guest-debugger
 # capture; only one debugger needs to drive execution during measurement.
 run(TRACKED/'completion_host_input.py','quit');host.wait(timeout=20)

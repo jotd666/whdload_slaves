@@ -5,7 +5,7 @@ import struct
 from pathlib import Path
 from pose_history import POSE
 from presentation_math import angle, position, phase_fraction
-from presentation_state import symbol
+from presentation_state import symbol, buffer_address
 from render_mutations import Snapshot
 from native_poses import STRIDE
 
@@ -50,15 +50,15 @@ def check(path):
     for frame in metadata['frames']:
         ram=Snapshot(path.parent,frame['banks'])
         count,previous_count=struct.unpack('>HH',ram.read(address('time_pose_header'),4))
-        current=ram.read(address('time_pose_current'),count*STRIDE)
-        previous=ram.read(address('time_pose_previous'),previous_count*STRIDE)
+        current=ram.read(buffer_address(lines,base,'time_pose_current',ram.read),count*STRIDE)
+        previous=ram.read(buffer_address(lines,base,'time_pose_previous',ram.read),previous_count*STRIDE)
         phase=int.from_bytes(ram.read(address('time_loop_state'),16),'big')
         fraction=phase_fraction(phase)
         expected,blended,snapped=blend(current,previous,fraction)
         header=struct.pack('>IHHHH',fraction,count,blended,snapped,1)
         if ram.read(address('time_blend_header'),12)!=header:
             raise ValueError('Native blend fraction/counts differ from model')
-        if ram.read(address('time_blend_output'),len(expected))!=expected:
+        if ram.read(buffer_address(lines,base,'time_blend_output',ram.read),len(expected))!=expected:
             raise ValueError('Native blended pose bytes differ from rational model')
         total+=count;blended_total+=blended;snapped_total+=snapped
         changed+=sum(a[8:]!=b[8:] for a,b in zip(split(current),split(expected)))

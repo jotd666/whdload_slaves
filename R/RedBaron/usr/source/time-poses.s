@@ -31,11 +31,13 @@ time_pose_install:
 	move.l (a0),(a3)+
 	lea .current_base(pc),a0
 .current_base
-	adda.l #time_pose_current-.current_base,a0
+	adda.l #time_pose_current_ptr-.current_base,a0
+	move.l (a0),a0
 	move.l a0,(a3)+
 	lea .previous_base(pc),a0
 .previous_base
-	adda.l #time_pose_previous-.previous_base,a0
+	adda.l #time_pose_previous_ptr-.previous_base,a0
+	move.l (a0),a0
 	move.l a0,(a3)
 	lea .quantum_base(pc),a0
 .quantum_base

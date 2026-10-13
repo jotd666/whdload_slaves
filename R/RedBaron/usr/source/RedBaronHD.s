@@ -602,6 +602,7 @@ tape_sim_key_bridge:
 	ENDC
 	include "time-core.s"
 	include "time-input.s"
+	include "time-buffers.s"
 	include "time-input-owner.s"
 	include "time-loop.s"
 	include "time-pause.s"
@@ -696,10 +697,11 @@ alloc_observe_buffer: dcb.b ALLOC_LOG_CAPACITY*ALLOC_LOG_STRIDE,0
 	ENDC
 	ENDC
 
-time_present_cache_buffer: dcb.b TIME_PRESENT_CACHE_CAPACITY*TIME_PRESENT_CACHE_STRIDE,0
-time_model_buffer: dcb.b TIME_MODEL_CAPACITY*TIME_MODEL_STRIDE,0
-time_present_list_buffer: dcb.l 501,0 ; 500 entries plus native test guard
-time_pose_current: dcb.b TIME_POSE_CAPACITY*TIME_POSE_STRIDE,0
-time_pose_previous: dcb.b TIME_POSE_CAPACITY*TIME_POSE_STRIDE,0
-time_blend_output: dcb.b TIME_POSE_CAPACITY*TIME_POSE_STRIDE,0
-time_input_observe_queue: dcb.b TIME_INPUT_BYTES,0
+; Contiguous pointer cells used by time_buffers_allocate; keep this order.
+time_present_cache_buffer_ptr: dc.l 0
+time_model_buffer_ptr: dc.l 0
+time_present_list_buffer_ptr: dc.l 0
+time_pose_current_ptr: dc.l 0
+time_pose_previous_ptr: dc.l 0
+time_blend_output_ptr: dc.l 0
+time_input_observe_queue_ptr: dc.l 0

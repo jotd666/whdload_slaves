@@ -172,7 +172,7 @@ W6 trial instructions. W6/D5 is now accepted as an opt-in; FC7 hardware confirma
 
 FC8 bit 25 restores native scenery-cache reuse on 040/060 while preserving a
 separate simulation copy. It is selected automatically when Faster rendering
-and Consistent game speed are both enabled. The optional 80,128-byte Fast
+and Consistent game speed are both enabled. The optional 77,480-byte Fast
 allocation falls back to the previous path if unavailable; minimum RAM is
 unchanged. Native cache/restoration checks, deliberate stale-world tests,
 existing rendering twins, host tests and paired W6 timing pass. The newly

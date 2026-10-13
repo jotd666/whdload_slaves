@@ -87,7 +87,8 @@ time_present_capture:
 	bhi time_present_state_bad
 	lea .buffer_base(pc),a1
 .buffer_base
-	adda.l #time_present_cache_buffer-.buffer_base,a1
+	adda.l #time_present_cache_buffer_ptr-.buffer_base,a1
+	move.l (a1),a1
 	move.w d7,d6
 	beq .done
 	subq.w #1,d6
@@ -122,7 +123,8 @@ time_present_end:
 	beq time_present_end_done
 	lea .buffer_base(pc),a1
 .buffer_base
-	adda.l #time_present_cache_buffer-.buffer_base,a1
+	adda.l #time_present_cache_buffer_ptr-.buffer_base,a1
+	move.l (a1),a1
 	move.w 2(a4),d6
 	beq .clear
 	subq.w #1,d6

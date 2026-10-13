@@ -41,6 +41,13 @@ def words(name,count):
  r.command(f'gdb dump binary memory {path} {address:#x} {address+count*4:#x}')
  return list(struct.unpack('>'+count*'I',path.read_bytes()))
 effective=words('perf_mask',1)[0]
+if 'time_present_cache_buffer_ptr:' in listing:
+ from runtime_buffers import check_live
+ result=check_live(listing.splitlines(),base,r.command,bool(effective&(1<<13)),a.machine!='a500',True, bool(words('perf_custom5',1)[0] & (1<<20)))
+ if effective&(1<<13):
+  if words('time_buffer_test_result',1)!=[1]:raise RuntimeError('Runtime allocator self-test failed')
+  result['native_zeroing_and_reuse']=True
+ (a.out/'runtime-buffers.json').write_text(json.dumps(result,indent=2)+'\n')
 twins={}
 if effective&(1<<19):
  twins['artwork']=words('artwork_cache_twin_result',4)

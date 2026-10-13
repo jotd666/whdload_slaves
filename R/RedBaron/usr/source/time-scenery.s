@@ -23,7 +23,11 @@ time_scenery_present_list = time_scenery_world_list+2000
 time_scenery_hash = time_scenery_present_list+2000
 time_scenery_entries = time_scenery_hash+16384
 time_scenery_verify_snapshot = time_scenery_entries+TIME_MODEL_CAPACITY*12
+	IFD VERIFY
 SCENERY_ALLOC = time_scenery_verify_snapshot+SCENERY_BYTES
+	ELSE
+SCENERY_ALLOC = time_scenery_verify_snapshot
+	ENDC
 SC_BUF MACRO
 	lea time_scenery_storage(pc),\1
 	move.l (\1),\1
@@ -170,7 +174,8 @@ time_scenery_matches:
 	cmpm.w (a0)+,(a1)+
 	bne .no
 	dbf d0,.words
-	SC_ADDR a0,time_present_list_buffer
+	SC_ADDR a0,time_present_list_buffer_ptr
+	move.l (a0),a0
 	SC_BUF a1,time_scenery_world_list
 	SC_BUF a2,time_scenery_world
 	move.w 632(a2),d0
@@ -289,7 +294,8 @@ time_scenery_return:
 	clr.l (a0)+
 	dbf d0,.clear_hash
 	SC_BUF a6,time_scenery_entries
-	SC_ADDR a3,time_model_buffer
+	SC_ADDR a3,time_model_buffer_ptr
+	move.l (a3),a3
 	SC_ADDR a0,time_model_count
 	move.w (a0),d4
 	beq .done
@@ -371,7 +377,8 @@ time_scenery_end:
 .copy
 	move.w (a0)+,(a1)+
 	dbf d0,.copy
-	SC_ADDR a0,time_present_list_buffer
+	SC_ADDR a0,time_present_list_buffer_ptr
+	move.l (a0),a0
 	SC_BUF a1,time_scenery_world_list
 	SC_BUF a2,time_scenery_world
 	move.w 632(a2),d0

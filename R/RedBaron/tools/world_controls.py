@@ -9,7 +9,7 @@ import struct
 import re
 from pathlib import Path
 from render_mutations import Snapshot
-from presentation_state import symbol
+from presentation_state import symbol, buffer_address
 from world_comparison import load, clock_layout, clock_snapshot
 
 MASK=(1<<32)-1
@@ -101,11 +101,11 @@ def extract(root):
     if replay:
         options=int(re.search(r'CUSTOM5=(-?\d+)',entry['whd_args'])[1])
         first_key=0x51 if options&16 else 0x4e
-        acquired=scheduled_events(final.read(at('time_input_observe_queue'),4112),
+        acquired=scheduled_events(final.read(buffer_address(lines,base,'time_input_observe_queue',final.read),4112),
                                   final.read(at('time_input_replay_records'),64),origin,first_key)
         kind='scheduled-replay'
     else:
-        acquired=events(final.read(at('time_input_observe_queue'),4112),
+        acquired=events(final.read(buffer_address(lines,base,'time_input_observe_queue',final.read),4112),
                         final.read(at('time_input_fixture_log'),32),origin,rows[-1]['paused'],
                         final.read(at('time_input_fixture_clocks'),64))
         kind='native-acquisition-fixture'

@@ -56,8 +56,11 @@
  - With Faster rendering and Consistent game speed enabled on 040/060,
    scenery selection retains a separate presentation cache using the native
    camera-distance and view rules. Drawing restores the simulation copy.
-   This uses about 78 KB additional FastMem when available; allocation failure
+   This uses about 76 KB additional FastMem when available; allocation failure
    retains the previous path. The minimum RAM requirement is unchanged.
+ - Large W6 buffers are allocated only when enabled; interpolation buffers
+   are allocated only on 020+. Verification snapshots are excluded from the
+   normal build. Buffers are reused across missions; minimum RAM is unchanged.
  - On 060, changed gauge backgrounds use clipped CPU restores from FastMem.
    Unchanged gauges persist per page below the current scene and static artwork.
    Native needle callbacks and event redraws are retained. Allocation failure

@@ -46,18 +46,30 @@ def symbol(lines, name):
     raise ValueError('Missing capture symbol '+name)
 
 
+def buffer_address(lines, base, name, read):
+    """Resolve runtime buffers, while retaining historical embedded captures."""
+    try:
+        cell = base + symbol(lines, name + '_ptr')
+    except ValueError:
+        return base + symbol(lines, name)
+    address = int.from_bytes(read(cell, 4), 'big')
+    if not address or address & 1:
+        raise ValueError('Unallocated or invalid buffer ' + name)
+    return address
+
+
 def check(path):
     metadata = json.loads(path.read_text())
     entry = json.loads((path.parent/'entry.json').read_text())
     lines = (path.parent/'slave.lst').read_text(encoding='latin-1').splitlines()
     base = entry['entry']['game_anchor']-symbol(lines, 'tape_game_anchor')
     header = base+symbol(lines, 'time_present_active')
-    buffer = base+symbol(lines, 'time_present_cache_buffer')
     checked = changed = 0
     for frame in metadata['frames']:
         before = Snapshot(path.parent, frame['render_before'])
         rendered = Snapshot(path.parent, frame['render_after'])
         after = Snapshot(path.parent, frame['after'])
+        buffer = buffer_address(lines, base, 'time_present_cache_buffer', rendered.read)
         saved = records(before.read, frame['objects'])
         if rendered.read(header, 4) != struct.pack('>HH', 1, len(saved)):
             raise ValueError('Incorrect active owner or record count')

@@ -176,7 +176,8 @@ time_model_record:
 	lsl.l #3,d1
 	lea .buffer_base(pc),a1
 .buffer_base
-	adda.l #time_model_buffer-.buffer_base,a1
+	adda.l #time_model_buffer_ptr-.buffer_base,a1
+	move.l (a1),a1
 	adda.l d1,a1
 	move.l a0,(a1)+
 	move.b (a0),(a1)+
@@ -202,7 +203,8 @@ time_model_restore:
 	beq .done
 	lea .buffer_base(pc),a1
 .buffer_base
-	adda.l #time_model_buffer-.buffer_base,a1
+	adda.l #time_model_buffer_ptr-.buffer_base,a1
+	move.l (a1),a1
 	move.l d1,d0
 	lsl.l #3,d0
 	adda.l d0,a1

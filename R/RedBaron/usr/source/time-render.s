@@ -112,7 +112,8 @@ time_render_frame:
 .camera_saved
 	lea .output_base(pc),a2
 .output_base
-	adda.l #time_blend_output-.output_base,a2
+	adda.l #time_blend_output_ptr-.output_base,a2
+	move.l (a2),a2
 	move.w (a4),d7
 	subq.w #1,d7
 .apply

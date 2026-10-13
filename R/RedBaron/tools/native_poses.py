@@ -5,7 +5,7 @@ import struct
 from pathlib import Path
 from pose_history import registry, read_pose
 from camera_pose import identity
-from presentation_state import symbol
+from presentation_state import symbol, buffer_address
 from render_mutations import Snapshot
 
 STRIDE = 26
@@ -33,8 +33,6 @@ def check(path):
     lines = (path.parent/'slave.lst').read_text(encoding='latin-1').splitlines()
     base = entry['entry']['game_anchor']-symbol(lines, 'tape_game_anchor')
     header = base+symbol(lines, 'time_pose_header')
-    current = base+symbol(lines, 'time_pose_current')
-    previous = base+symbol(lines, 'time_pose_previous')
     loop = base+symbol(lines, 'time_loop_state')
     target_header = base+symbol(lines,"time_pose_camera_target") if any("time_pose_camera_target:" in line for line in lines) else None
     prior = None
@@ -42,6 +40,8 @@ def check(path):
     rows = []
     for frame in metadata['frames']:
         ram = Snapshot(path.parent, frame['banks'])
+        current = buffer_address(lines, base, 'time_pose_current', ram.read)
+        previous = buffer_address(lines, base, 'time_pose_previous', ram.read)
         nc, np, tick, ptick, ready, reserved, camera, pcamera, view, pview, life, captures = struct.unpack('>HHIIHHIIHHII', ram.read(header, 36))
         expected = records(ram.read, registry(ram.read, metadata['h3']))
         if ready != 1 or reserved or nc != len(expected):

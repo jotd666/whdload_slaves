@@ -22,6 +22,59 @@ opt-in and selects effective mask `0x1ff6ffa`, including W6 and its pacing
 dependencies (`w6-player-optin/options.json`). This is an option-path check;
 existing D5 evidence supplies runtime acceptance. No new FPS claim is made.
 
+## Runtime buffer ownership (2026-10-13)
+
+The seven large embedded W6 buffers now use zero-initialized Fast RAM allocated
+before their consumers are installed. Allocations are retained and reused across
+mission loads; WHDLoad exit releases the session. Insufficient required memory
+produces an explicit abort, rather than silently disabling Consistent game speed.
+The independent keyboard allocation also supports observation-only VERIFY runs.
+
+| Workspace | Normal/developer | VERIFY |
+|---|---:|---:|
+| W6 projection cache, model journal and registration list | 49,104 | 49,108 (test guard) |
+| W6 timestamped input queue | 4,112 | 4,112 |
+| Interpolated poses, 020+ only | 39,000 | 39,000 |
+| Optional FC8 scenery cache, 040/060 + W6 | 77,480 | 80,128 (test snapshot) |
+| Renderer reservation | 179,920 | 327,680 (native twin snapshots) |
+
+W6 Off allocates none of the four W6 regions in a normal build. The 68000
+allocates no interpolation or FC8 storage. The renderer's original working
+regions retain their offsets; its verification-only tail is excluded from
+normal/developer builds, saving 147,760 bytes. All large embedded test buffers
+and native test fixtures remain VERIFY-only. Small runtime state, packet scratch
+and executable trampolines remain resident.
+
+The normal slave file shrinks from 144,984 to 53,084 bytes (91,900 bytes saved,
+63.4%). This is a storage/memory improvement, not a new FPS result. The six-machine
+performance scoreboard and minimum RAM requirements are unchanged.
+
+Validation:
+
+- Normal 040 W6 flight and Preferences pass (`runtime-buffers-normal-040`).
+- Normal A500 at 512 KB Chip + 2 MB Fast passes; pointer inspection confirms
+  53,216 W6 bytes and no pose/FC8 allocation (`runtime-buffers-normal-a500`).
+- Final normal 040 W6 Off reaches flight with every W6 pointer zero
+  (`runtime-buffers-off-040`).
+- Final 060 VERIFY passes native allocation zeroing/reuse, artwork, scene,
+  polygon-span and cockpit twins. FC8 reports 47 installs, 24 misses, three
+  deliberate invalidations and 70 restorations. Gauge twins are idle on this
+  W6 route, not an additional gauge pass (`runtime-buffers-verify-060-final`).
+- All 582 host tests, all three builds, 138 hook ranges and 138/138/152 patch
+  destinations pass. Build audit confirms native-test storage absent from both
+  normal and developer builds (`runtime-buffer-builds.json`).
+
+The first VERIFY attempts exposed the late keyboard allocation after the game
+had consumed its heap. Required selected buffers are now reserved at sim load,
+also before deferred VERIFY activation; hooks retain their existing timing.
+Those incomplete runs supply no validation or performance result. The final
+normal file SHA-256 is
+`455ca21512b3a8594cc02424b0a822051bbec3964561d8c2f158ed83c56883e1`.
+Native capture readers resolve pointer cells and still accept historical
+embedded-buffer captures. Layout checks reject missing, unaligned, overlapping
+or wrongly CPU-enabled buffers. The VERIFY allocator self-test checks zero
+initialization and reuse without clearing existing contents.
+
 ## FC8: W6 presentation scenery cache (2026-10-13)
 
 CUSTOM2 bit 25 keeps a presentation copy of the native sim:0f01c scenery

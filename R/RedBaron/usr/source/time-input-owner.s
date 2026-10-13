@@ -17,6 +17,7 @@ time_input_observe_install:
 	bne .done
 	move.l tape_marker+24(pc),a1
 	ENDC
+	bsr time_input_allocate
 	move.l a1,a3
 	adda.l #$308b6,a3
 	cmpi.w #$41f9,(a3)
@@ -30,7 +31,8 @@ time_input_observe_install:
 	move.l d0,(a0)+
 	lea .queue_base(pc),a3
 .queue_base
-	adda.l #time_input_observe_queue-.queue_base,a3
+	adda.l #time_input_observe_queue_ptr-.queue_base,a3
+	move.l (a3),a3
 	move.l a3,(a0)
 	clr.l (a3)+
 	clr.l (a3)+

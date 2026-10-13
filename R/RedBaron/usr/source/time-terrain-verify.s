@@ -11,7 +11,8 @@ time_present_list_save:
 	adda.l #$7dc8,a0
 	lea .buffer_base(pc),a1
 .buffer_base
-	adda.l #time_present_list_buffer-.buffer_base,a1
+	adda.l #time_present_list_buffer_ptr-.buffer_base,a1
+	move.l (a1),a1
 	bra time_present_list_copy
 
 time_present_list_restore:
@@ -22,7 +23,8 @@ time_present_list_restore:
 	adda.l #$7dc8,a1
 	lea .buffer_base(pc),a0
 .buffer_base
-	adda.l #time_present_list_buffer-.buffer_base,a0
+	adda.l #time_present_list_buffer_ptr-.buffer_base,a0
+	move.l (a0),a0
 	bra time_present_list_copy
 
 ; Count is bounded by the native 500-entry registration limit. Copy only the
@@ -42,10 +44,12 @@ time_present_list_selftest:
 	movem.l d0-a6,-(sp)
 	lea .source_base(pc),a3
 .source_base
-	adda.l #time_model_buffer-.source_base,a3
+	adda.l #time_model_buffer_ptr-.source_base,a3
+	move.l (a3),a3
 	lea .dest_base(pc),a4
 .dest_base
-	adda.l #time_present_list_buffer-.dest_base,a4
+	adda.l #time_present_list_buffer_ptr-.dest_base,a4
+	move.l (a4),a4
 	move.l a3,a0
 	move.l a4,a1
 	moveq #0,d0
