@@ -59,7 +59,8 @@ checkpoint/finish evaluation. Exact sweep shortcuts reduce A's overhead to
 no earlier, cheaper B baseline is substituted.
 
 The user subsequently requested step-4 closure before step 5 and deferred the
-human A500/68040 test laps (C6). C1 solver coverage is now complete: flight,
+human A500/68040 test laps (C6). C4 extreme-profile coverage is complete.
+C1 solver coverage is now complete: flight,
 landing, manual/neutral gears and signed rollback stay in the phase path, with
 zero driving fallbacks in both final A500 windows. The landing-impact gate now retains the native fall-speed threshold across
 variable updates, while zero/eight-field and forced-native paths stay compatible.
@@ -70,7 +71,7 @@ finish awards now also use the completed physics pose, with native compatibility
 bypasses and fallback scene checks. Controlled four-profile timing improves, but
 full-lap timing remains unverified. A clock-input replay now reproduces all 650
 captured native gameplay states, isolating the untouched-clock mismatch to clock
-observations; the C2 clock-dependency exception is still unaccepted. C2–C5 remain
+observations; the C2 clock-dependency exception is still unaccepted. C2, C3 and C5 remain
 open; see the current closure results in `STEP4_COST_PLAN.md`.
 
 ## Starting point
@@ -312,9 +313,10 @@ Tools stay in ignored `tmp/dev/tools`.
      solid-object crossing without adding a full physics/scene pass.32 private
      native-loop cases,10000 interpolation cases and10002 segment-box cases pass.
      Native contacts retain priority. A main-world scan now also passes96 private
-     cases beyond renderer culling, with a live scan/filter check. Auxiliary and
-     moving-object coverage, turning, other contact paths and live collision
-     acceptance remain open. See GAME_TIME.md.
+     cases beyond renderer culling, with a live scan/filter check. C4 now passes
+     twenty live extreme-profile cases including stationary/moving traffic,
+     turning contacts, loop, jump and award transitions. The captured auxiliary
+     objects are non-solid class 64. See STEP4_COST_PLAN.md for scope and evidence.
    - Report substep counts and any discarded time in VERIFY. Do not discard time
      silently.
 3. **Scale every integrated quantity by T**, following the table in

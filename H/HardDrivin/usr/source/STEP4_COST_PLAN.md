@@ -17,7 +17,7 @@ collision sweeps, terrain restoration and checkpoint/finish evaluation, measures
 B exceeds the accepted 5.740 allowance by **1.141 ms**. B's paired scenes differ
 by 10.32%, so raw FPS is not an equal-scene comparison. The earlier exception
 is not extended, and no earlier B baseline is substituted.
-C1 is complete, C2–C5 remain open and C6 is deferred. Historical P7 A1200 net
+C1 and C4 are complete; C2, C3 and C5 remain open, and C6 is deferred. Historical P7 A1200 net
 phase overhead is 0.283 / 0.576 ms/frame (0.47% / 1.23%); it is not a measurement
 of this latest full closure build.
 
@@ -950,102 +950,41 @@ items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
     awards. Reports: `c3-cross-source-timing-summary.json`,
     `c3-checkpoint-post-check.json`, `c3-cross-source-geometry-summary.json`.
     These controlled transitions do not close C3 or complete C4 acceptance.
-- **C4, extreme T.**
-  - Run collisions, the loop and the jump on the slowed A500 (largest T) and on the
-    68060 (smallest T).
-  - There must be no tunnelling and no missed checkpoint. The sweep counters must show
-    any long-frame crossing.
-  - **Targeted diagnostics (2026-10-13):** a native-traversable loop fixture now
-    reproduces contact loss with timing enabled on both extreme profiles.
-    Slowed-A500 wheel error exceeds the native pitch helper's 180-unit domain,
-    causing zero correction. A private saturation experiment improves traversal
-    but does not validate contact/exit behavior and is not in the game source.
-    The jump blocker is a traffic vehicle; a clear lane gives collision-free
-    takeoff on both profiles, but their landing states still differ at field 299.
-    A fast-run out-of-domain rear-contact sample is now confirmed to erase its
-    launch pitch rate. Privately retaining that rate improves peak height but
-    still fails to reproduce the landing trajectory; no fix has been promoted.
-    These are open failures, not C4 acceptance; details are in `GAME_TIME.md`.
-  - Further diagnosis separates two causes: the current fast X360 fixture loses
-    contact at field 259 as the car center crosses the road's side edge
-    (115.6 units versus a 115.3-unit half-width). The slow failure is near the
-    centerline and still has the invalid pitch input. Private road-angle and
-    scaled-response combinations do not pass. X400 input reaches a waypoint
-    but fails to exit cleanly; native speed-dependent steering halving must be
-    considered when calibrating the fixture. An exact first-loss memory snapshot
-    is retained for native terrain replay. These findings do not close C4.
-  - A later centerline failure is now reproduced as rendering-dependent terrain
-    selection: E94A becomes zero, so the native flat-ground query runs despite
-    the road query finding contact. Optimized and pristine road arithmetic agree.
-    An unbounded private selector completes both loop profiles, but is withdrawn
-    because native road planes extend beyond their edges. A bounded prototype
-    now honors the jump's `$0400` gap flag within one course list. Its helpers
-    pass 5,000 geometry, 320 record-mask and 256 native-hook comparisons. Fast
-    and slowed-A500 loops exit without a crash (two brief fast contact losses).
-    The jump still fails: fast remains airborne at field 449; slow lands but
-    records a crash. Course transitions, vertical support and wheel-edge behavior
-    remain unverified. No terrain change is promoted. See `GAME_TIME.md` for
-    exact scope and limitations; this is not C4 acceptance.
-  - Exact-state jump replay identifies another render-dependent selection
-    problem: at field 135 a type-39 object's nearly vertical end face becomes
-    the supporting plane, producing wheel heights 525/525/-735/-735 and clearing
-    the pitch rate. Its original end face is also unsuitable; the upward-facing
-    top gives 6/6/9/9. Clipping distortion alone is not the cause. Supporting-face
-    selection still needs a validated fix; no object exception is promoted.
-    A private finite-face predicate passes 10,045 oracle comparisons. The saved
-    top covers only one wheel, so substituting its infinite plane for every wheel
-    is also insufficient. Direct native transformation of a cloned object now
-    reproduces all five captured polygons. At the predicted physics pose, finite
-    queries find only right-rear support; replaying contact with that support
-    preserves the prior pitch rate. These are isolated-state checks. Per-wheel
-    world-query integration and complete trajectory validation remain open.
-    The private wrapper now runs in gameplay: the fast jump lands without a
-    crash (peak 221.125, last airborne field 345); the slowed A500 still crashes
-    (peak 229.125, last airborne field 332). Its invocation remains gated by the
-    renderer's object flag, and overhead/road merging and cost are unvalidated.
-    A subsequent native-physics capture explicitly records crash counter 25 at
-    landing too. The slow crash alone is therefore not a regression; earlier
-    no-crash expectations for this fixture were unsupported. The fast no-crash
-    outcome remains a handling mismatch. Native penetration/impact thresholds
-    and landing transition timing now guide the investigation. This is verified
-    prototype progress, not a promoted fix or C4 completion.
-  - **Landing gate implemented:** variable updates now apply the native fall-speed
-    threshold (>50) at full/diagonal contact, removing the frame-dependent extra
-    penetration requirement. Zero/eight/forced-native paths are preserved. The
-    final source passes 1,568 cases (1,008 native-path comparisons), ordinary
-    binary equality, 145 branch ranges and disabled patch checks. Both private
-    jump profiles reproduce the native crash outcome. This closes that landing
-    discrepancy only; terrain selection and C4 trajectory acceptance remain open.
-    The last C5 measurements predate this change and need a final-source rerun.
-  - With the corrected native crash reference, the cheaper invalid-pitch-input
-    guard is now integrated into the development source. It retains the previous rate for out-of-domain
-    feedback and reproduces the jump crash on both profiles without a new object
-    query. A prior-contact-only road continuation guard passes 384 selector cases
-    and both loop fixtures. The combined candidate now reproduces the jump crash
-    on both profiles (fast field 349, slowed A500 field 324). The pitch helper
-    passes 312 cases: valid and zero/eight-field inputs remain unchanged, invalid
-    variable-step inputs retain their prior rate, and an explicit forced-native
-    build of the helper matches all 312 old-source cases. The assembled motion
-    reset passes 256 comparisons with unchanged nested resets stubbed. Road
-    continuation is enabled with the phase solver and respects finite footprints,
-    gaps, prior contact and course-list boundaries. Complete terrain/collision/
-    contact replays match native data and registers in 24 compatibility cases;
-    The first boundary replays used zeroed initial trigonometry and did not prove
-    workspace preservation. Replays with valid trigonometry and actual boundary
-    poses exposed changed scratch planes after rejected queries. The source now
-    saves/restores the 116-byte geometry workspace around the probe. All 16
-    strengthened boundary cases leave all native data globals unchanged; the
-    24 compatibility cases still match. Both live loop fixtures retain their
-    no-crash exits (segments 51/50). Ordinary binary identity, all 147 branch
-    ranges and a fresh disabled-patch check pass; the current C5 measurements
-    include this restoration. Reports:
-    `c4-terrain-boundary-before-check.json`, `c4-terrain-boundary-check.json`,
-    `c4-workspace-summary.json` and `c4-workspace-off/disabled.json`.
-    Integrated-source fixtures reproduce both clean loop exits and the jump
-    metrics above without private terrain/pitch patches. These close the observed
-    culled-road/invalid-feedback defects; complete trajectory/checkpoint acceptance
-    remains open. Reports: `c4-terrain-native-check.json`,
-    `c4-terrain-boundary-check.json`, `c4-source-geometry-summary.json`.
+- **C4, extreme T — complete (2026-10-13).** The requested slowed-A500 and
+  68060 collision/loop/jump matrix passes on the current production modules.
+  Twenty live captures cover stationary and moving traffic, contact while
+  steering, the loop, the jump, checkpoint and finish transitions. No observed
+  collision tunnels; no tested award is missed; sweep overflow stays zero.
+  - Stationary front/rear approaches and both turning approaches produce one
+    swept hit on the slowed A500 (11/14-field contact updates), followed by the
+    native crash response. The 68060 contacts use the native point test at
+    1–2 fields. Turning is asserted from the actual flag and changed heading.
+  - Moving-target approaches wait for race entry and at least 20 units of actual
+    target movement. Both profiles hit the intended existing traffic actor.
+    The slow following approach produces one sweep hit at an 18-field update;
+    the other three retain native contact priority. No traffic geometry or
+    clocks are injected. Earlier fixtures seeded during attract and were reset
+    on race entry; those attempts are excluded.
+  - Both loop runs exit without a crash and advance the waypoint (slow segment
+    50, fast 51). Completed-physics peaks are 615 / 627.25 units. Both jumps
+    reproduce the native landing crash: fields 324 / 349, peaks 224.5 / 221.125.
+    The slow jump's unadvanced waypoint is explained by the native crash gate,
+    not a missed checkpoint award.
+  - Checkpoint and finish each award exactly once without a crash on both
+    profiles. Finish starts with the checkpoint latch set; this is explicitly
+    not a lap-time test. C3 remains separate.
+  - All 11 auxiliary objects in the 650-return world capture have native class
+    64, so none qualify for the class-8 solid test. This audit does not assert
+    eligibility in unseen modes. Earlier native terrain/contact compatibility
+    and finite-boundary checks remain applicable; no production code changed
+    for this matrix.
+  Evidence: `c4-live-matrix-summary.json`, audited by
+  `check_c4_live_matrix.py`; captures `c4-live-{follow,headon}-{slow,060}`,
+  `c4-moving-v3-{follow,headon}-{slow,060}`, `c4-turn-{follow,headon}-{slow,060}`
+  and `c4-final-{loop,jump,checkpoint,finish}-{slow,060}`. Source and retained
+  slave hashes are checked. These are controlled fixtures, not universal
+  collision proof, a full lap, or performance-window replacements. Detailed
+  implementation history and native-reference checks remain in `GAME_TIME.md`.
 - **C5, gates.** G1 passes or meets the explicitly accepted temporary exception; G2 is reported; `check_disabled.py` passes; the
   normal build is byte-identical.
   - **Current full-build measurement (2026-10-13):** fresh paired 500-field A500

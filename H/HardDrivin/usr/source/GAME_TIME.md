@@ -4466,3 +4466,43 @@ checks pass. B's polygon count differs by 94.02%, so neither its lower G1 value
 relative to the preceding build nor raw FPS is an isolated equal-scene speedup.
 The paired disabled B trajectory itself changed. Full results and source/binary
 correspondence are in `STEP4_COST_PLAN.md` and `c3-cross-cost-summary.json`.
+
+
+### C4 closure: current-source live extreme-profile matrix (2026-10-13)
+
+The final twenty-case matrix closes C4's requested collision/loop/jump checks.
+The current status and numeric outcomes are recorded in `STEP4_COST_PLAN.md`;
+older open-C4 statements above describe intermediate investigations. Production
+assembly is unchanged from the exact sweep optimizations in commit 14c53b3.
+`check_c4_live_matrix.py` verifies source identity, retained slave identity,
+profiles, native collision object identity, crash responses, checkpoint/finish
+award counts, overflow, loop exits and jump outcomes. Its report is
+`c4-live-matrix-summary.json` under the ignored development harness.
+
+The collision target is existing main-pool index 96, traffic actor 10, type 1,
+class 8, initially at (20382, 0, 17345). Stationary approaches cross its Z position
+within an 11/14-field slow update and recoil on native contact, with one sweep
+hit each. Steering input X400 also produces changed headings and the native
+turning flag before contact, with one sweep hit in each slow case. All four fast
+stationary/turning cases use native contact without an extra swept hit.
+
+Moving fixtures seed only player pose/dynamics/course state, once after race
+entry and observed target movement. The initial attempt ran the helper during
+attract, so the following race reset invalidated its seed. The corrected helper
+requires VERIFY_DRIVE state 2 and target displacement of at least 20 units;
+`fixture_seeded` is checked to begin at zero and transition once. The target's
+position and positive native speed are recorded before contact; neither traffic
+state nor clocks are written. The slow following case has an 18-field update,
+a swept hit at field 58 and native crash at 61. The slow head-on case retains
+native contact at field 58, crash 60. Fast contacts/crashes occur at 18 and 14.
+All four hit the same intended actor, and all sweep overflow counters stay zero.
+
+The loop exits and jump crashes reproduce the integrated-source behavior above.
+The checkpoint and finish fixtures each execute their actual native award site
+once, without crashes, on both profiles. Finish seeds the checkpoint latch and
+therefore makes no full-lap claim. The auxiliary audit covers 650 returns times
+11 objects: every captured record is class 64 and thus ineligible for native
+class-8 solid collision. Existing compatibility replays cover native contact
+and boundary preservation; this live matrix does not prove unseen game modes
+or arbitrary step lengths. C2 clock acceptance, C3 equal-time acceptance and
+C5 cost closure remain independent. Human laps and P3 remain deferred.
