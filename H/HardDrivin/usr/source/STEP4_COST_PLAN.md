@@ -950,10 +950,13 @@ items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
     the road query finding contact. Optimized and pristine road arithmetic agree.
     An unbounded private selector completes both loop profiles, but is withdrawn
     because native road planes extend beyond their edges. A bounded prototype
-    passes 5,000 geometry cases and exits the fast loop without a crash, with
-    two zero-contact samples near the exit. It still needs road-record identity
-    and the jump's `$0400` gap flag, plus slow/jump validation. No terrain change
-    is promoted. See `GAME_TIME.md` for the exact branch replay and limitations.
+    now honors the jump's `$0400` gap flag within one course list. Its helpers
+    pass 5,000 geometry, 320 record-mask and 256 native-hook comparisons. Fast
+    and slowed-A500 loops exit without a crash (two brief fast contact losses).
+    The jump still fails: fast remains airborne at field 449; slow lands but
+    records a crash. Course transitions, vertical support and wheel-edge behavior
+    remain unverified. No terrain change is promoted. See `GAME_TIME.md` for
+    exact scope and limitations; this is not C4 acceptance.
 - **C5, gates.** G1 passes or meets the explicitly accepted temporary exception; G2 is reported; `check_disabled.py` passes; the
   normal build is byte-identical.
   - **Current full-build measurement (2026-10-13):** fresh paired 500-field A500

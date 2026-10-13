@@ -4107,19 +4107,42 @@ false support off-road. Builds named `c4-road-final-*` contain this withdrawn
 prototype; the name does not designate accepted final source. The same private
 input controller does not complete a clean native-physics route either.
 
-A subsequent private guard tests the actual projected road quads before adding
-road eligibility. Its assembled 68000 implementation passes 5,000 independent
-inverse-affine strip tests (937 inside), including both orientations and edges.
-The bounded fast run reaches the following road segments without a crash; it
-has two zero-contact samples at fields 309/310 near the exit. This remains
-preliminary. In particular, road geometry alone does not identify a drivable
-surface: the jump gap's segment 20 has flag `$0400` (record flags `$0408`), and
-native rendering skips such segments at `$af48`/`$af98`. The new path must honor
-that gap rather than connect its endpoint vertices into a fictitious road.
-Selected-record identity, gap handling and the complete slow/jump checks remain
-unfinished. No terrain-selection or pitch-response change is in the authoritative
-source; its last physics change remains the neutral-steering optimization.
+The current private guard tests the projected road quads and excludes records
+with the jump-gap flag `$0400`. Native rendering skips these records at
+`$af48`/`$af98`; connecting their endpoints would create false support over the
+gap. A hook at `$c1b6` records the cross-section selected by `$c022`. The native
+loop selects indices 1 or 2 (its test is `<3`, not `<=3`). For a five-section
+window entirely inside one course list, the two quad records are the current
+cursor plus `(index-3)*20` and `(index-2)*20`. Course-list boundary cases retain
+the native fallback until their links are implemented and verified.
 
-Reports: `c4-road-selection-progress.json`, `c4-road-bounds-check.json`, and
-captures `c4-loop-racing-060`, `c4-loop-road-query-*`, `c4-loop-bounded-road-060`.
-The private selector and bounds helper remain under ignored tools. C4 is open.
+The assembled guard passes 5,000 inverse-affine strip tests with all four gap
+masks (582 eligible cases), including both orientations and edges. Record-mask
+selection passes 320 cases spanning both course lists, invalid indices and
+list boundaries. The selection hook preserves all native registers, stack,
+condition codes and displaced local writes in 256 comparisons. These tests
+cover the helpers; they do not independently prove the native geometry-to-record
+correspondence over a complete route or safety under an overhead road.
+
+The gap-aware loop captures finish without a crash: the fast run reaches road
+segment 51 with two zero-contact samples at fields 309/310; the slowed A500
+reaches segment 50 with continuous contact. Both advance the next-waypoint
+pointer. The jump still fails: the fast run first loses contact at field 137,
+peaks at 250.875 units and remains airborne at field 449. The slow run first
+loses contact at field 148, peaks at 224.5 units, has its last airborne sample at
+315 and subsequently records a crash (maximum counter 25). Gap handling alone
+does not solve the launch/landing discrepancy. These are private seeded fixtures,
+not normal-start or full-lap acceptance.
+
+No terrain-selection or pitch-response change has been promoted. Vertical
+support, wheel-edge behavior, course transitions and the jump failure still
+need resolution before C4 can close. The prototype currently repeats `$c022`
+on its added road path; its eventual cost also needs measurement.
+
+Reports: `c4-gap-road-progress.json`, `c4-road-bounds-check.json`,
+`c4-road-mask-check.json`, `c4-road-hook-check.json`; captures
+`c4-gap-loop-060`, `c4-gap-loop-slow`, `c4-gap-jump-060`, `c4-gap-jump-slow`.
+The private selector and bounds helper remain under ignored tools. All four
+capture processes completed; disposable runtime copies were removed after
+checking their recorded PIDs, and calibration archives were verified by
+SHA-256 after decompression. C4 is open.
