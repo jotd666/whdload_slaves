@@ -10,8 +10,18 @@
 
  This install applies to "Red Baron" © 1992 Sierra/Dynamix.
 
+ Requirements:
+ -------------
  This install requires WHDLoad 17 or later to be in the path. It can be found in the
  WHDLoad package.
+ XFDDecrunch must also be in the path for installation. It is available in
+ aminet:util/pack/xfdmaster.lha.
+
+ Install from the three DOS disks named "Red Baron #1", "Red Baron #2"
+ and "Red Baron #3", in any drive. DOS disk images can also be mounted
+ using DiskImage; the installer lists the required tools.
+ The copy-protected MFM release is not supported.
+ Installer 44.10 or later enables icon previews and drawer opening.
 
  The tested minimum is 0.5 MB ChipMem and 2 MB FastMem.
  It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
@@ -26,18 +36,6 @@
  directory as the kickstart image. It can be found in the archive 
  "util/boot/skick346.lha" on aminet.
 
- If you have problems with this installation please try and get a newer
- version of this package from the WHDLoad WWW-Page. If that doesn't help try
- some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
- that also fails, please inform the author via the Bug-Report-Form which
- can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
- at http://mantis.whdload.de
-
- For the full WHDLoad package, other installs and updates refer to:
-	http://www.whdload.de/
- or	aminet:dev/misc/whdload#?
- and	aminet:game/patch/
-
  The slave reserves 1 MB for game and renderer memory, plus Kickstart.
  The former 512 KB ChipMem + 1.5 MB slow-RAM configuration is insufficient.
  Tested minimum: 512 KB ChipMem + 2 MB FastMem (normal-build flight).
@@ -50,7 +48,10 @@
  Current maximum-detail measurements show less than 2% difference with MMU,
  below the resolution of the FPS window; no speedup is claimed for the tooltype.
 
- version 3.0b (13.10.2026)
+ Features:
+ ---------
+ - FastMem and CPU cache support, keyboard fixes and mission-tape saving.
+ - English and German releases supported; Manual and Keys included.
 
  Rendering improvements:
  - Faster rendering is On by default (normal build: CUSTOM2=0). It selects the verified dashboard cache, geometry,
@@ -111,16 +112,6 @@
    contain no VERIFY instruments or scripted game input.
 
  Performance and Time Scale:
- - Pre-artwork-fix maximum-detail PAL FPS (event-free frames / whole event window):
-   A500: 2.23 / 2.22
-   020: 7.24 / 7.64
-   030 with MMU: 14.86 / 14.50
-   030 without MMU: 14.86 / 14.48
-   040/25: 14.75 / 14.35
-   060/50: 14.20 / 14.00
-   All six used the same prior normal build, with Faster rendering On by default.
-   These are measured scenarios, not worst-case guarantees or a 50 FPS claim.
-   Full settings, comparisons and validation are in docs/profiling.md.
  - Consistent game speed is an independent opt-in splash option (CUSTOM3=1).
    It is Off by default (CUSTOM3=0), even with Faster rendering On. It works
    with Faster rendering Off too. Supported on 68000 and 020+; 68010 retains
@@ -131,6 +122,14 @@
    maximum-detail Time Scale 40 dropped simulation time. 020/030/040/060
    passed their Time Scale 40 rate windows. These are not full gameplay
    guarantees for every mission. Reduce detail on slower machines.
+
+ History:
+ --------
+ version 3.0b (13.10.2026)
+ - CPU-specific rendering improvements and optional consistent game speed
+   as described above.
+ - ReadMe and installer adapted to the WHDLoad Install Template, retaining
+   JOTD's three-disk layout, executable decompression and icon choices.
 
  version 2.1 (26.11.2005) done by JOTD
  - german version supported
@@ -163,3 +162,17 @@
 
  To do:
  - support the MFM version
+
+ Contact:
+ --------
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
