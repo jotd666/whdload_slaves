@@ -824,23 +824,6 @@ sim_visual_samples:
     move.w d0,(a0)
     movem.l (sp)+,d0/d1/a0-a1
     rts
-; Drawing reads a published sample, never advances either RNG stream.
-sim_visual_1023:
-    move.l sim_visual_values(pc),d0
-    and.w #1023,d0
-    rts
-sim_visual_255:
-    move.l sim_visual_values+4(pc),d0
-    and.w #255,d0
-    rts
-sim_visual_127:
-    move.l sim_visual_values+8(pc),d0
-    and.w #127,d0
-    rts
-sim_visual_3:
-    move.l sim_visual_values+12(pc),d0
-    and.w #3,d0
-    rts
 sim_visual_seed: dc.w $1234
 sim_visual_values: ds.l 4,0
 

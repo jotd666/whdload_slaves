@@ -391,11 +391,6 @@ _doio:
 	cmp.l	IO_DEVICE(A1),D0
 	bne.b	.org
 	bra.b	.skipit		; skip accesses to trackdisk device
-	move.w	$1C(A1),D0
-	cmp.w	#$800A,D0	; seek
-	beq.b	.skipit
-;	cmp.w	#$00A,D0	; seek
-;	beq.b	.skipit
 .org
 	move.l	_doio_save(pc),-(A7)
 	rts
@@ -435,13 +430,6 @@ read_fire1:
 	ENDC
     rts
 
-read_fire2:
-     move.w d0,-(a7)
-     bsr    read_fire1
-     btst   #7,d0
-     movem.w    (a7)+,d0
-     rts
-	 
 read_joydat
     move.w  _custom+joy1dat,d0
     move.l  a0,-(a7)
@@ -506,11 +494,6 @@ get_version:
 
 .crack
 	moveq	#1,d0
-	bra.b	.out
-.alt
-	moveq	#2,d0
-	bra	.out
-.out
 	movem.l	(a7)+,d1/a1
 	rts
 	even
@@ -584,9 +567,6 @@ _saveregs
 _stacksize
 		dc.l	0
 
-tag		dc.l	WHDLTAG_CUSTOM1_GET
-custom1	dc.l	0
-		dc.l	0
 _trackdisk_device:
 	dc.l	0
 _doio_save:

@@ -82,14 +82,6 @@
     PL_PS $03f9a,sim_torque_curve
     ; SIM_RANGE h4 03fc2 6 C2 sim_drag_curve
     PL_PS $03fc2,sim_drag_curve
-    ; SIM_RANGE h4 01eee 8 C2 sim_visual_1023
-    PL_PSS $01eee,sim_visual_1023,2
-    ; SIM_RANGE h4 01f00 8 C2 sim_visual_255
-    PL_PSS $01f00,sim_visual_255,2
-    ; SIM_RANGE h4 01f10 8 C2 sim_visual_127
-    PL_PSS $01f10,sim_visual_127,2
-    ; SIM_RANGE h4 01f76 8 C2 sim_visual_3
-    PL_PSS $01f76,sim_visual_3,2
     ; SIM_RANGE h4 01e64 24 C2 nop
     PL_NOP $01e64,24          ; background phases advance in simulation
     ; SIM_RANGE h4 01edc 8 C2 sim_windscreen_draw

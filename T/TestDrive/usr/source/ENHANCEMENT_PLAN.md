@@ -642,6 +642,16 @@ The user confirms that the sample-repeat bug is fixed in the 2.0b release on
 the a1200-040 emulator with caches and enhancements enabled. This remains part
 of 2.0b (13.10.2026); real hardware testing stays deferred.
 
+The 2.0b cleanup removes obsolete visual-RNG read hooks at h4:$1EEE/$1F00/
+$1F10/$1F76 and their helpers: enhanced drawing always bypasses those spawning
+and aging ranges, with visual state now advanced by `sim_visual_step`. The
+original-game VERIFY hooks remain usable. Uncalled inherited fire-button code,
+an unreachable disk-command check/version branch and an unused option tag are
+also removed. No rejected experimental runtime switch is retained for these
+paths; the active VERIFY fixtures and profiling boundary labels remain.
+The remaining 88 patch ranges, 2,089 native assertions, cached 68040 startup/
+driving/quit in both enhancement modes, and packaged-source rebuilds pass.
+
 ## Phase 12: lessons back to AmigaXDev
 
 Record in AmigaXDev `docs/` what generalises: transferring an engine between games of one
