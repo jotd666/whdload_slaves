@@ -4314,3 +4314,41 @@ impact validation. The corrected `c4-impact-wired-*` and `c4-landing-final-060`
 captures did execute it. Final whole-build cost measurements remain outstanding.
 Evidence: `c4-landing-source-check.json`, `c4-landing-source-summary.json`,
 `c4-landing-source-off/disabled.json`. C2–C5 remain open; C6 and P3 are deferred.
+
+### Reassessment after establishing the native landing outcome
+
+The invalid-pitch-input candidate is being reconsidered against the corrected
+native reference. For non-eight-field updates it preserves the prior pitch rate
+when the rear-contact angle helper's raw input lies outside its ±180 domain.
+It does not replace object surfaces or add a world-object scan. With the
+committed landing gate and bounded road prototype, both jump profiles reproduce
+the native crash outcome: fast peak 221.125, last airborne field 345, crash 349;
+slow peak 224.5, last airborne field 315, crash 324. The fast result matches the
+finite-object prototype's observed peak and landing/crash fields. The corrected reference removes the clean-landing expectation used in the recent
+investigation; the earlier trajectory differences still need to be quantified.
+These results do not yet establish all contact/trajectory requirements.
+
+A second private option restricts added road eligibility to continuation of an
+existing road contact. A rendered road sets a continuity word; a non-road path,
+loss of contact, rejected footprint/gap test, or motion reset clears it. When
+rendering omits the road, the extra query requires both prior road eligibility
+and a nonzero prior wheel-contact mask. Original road/object priority and native
+zero/eight/forced-native branches are retained. This cannot acquire a new road
+from an airborne or already off-road state; it is not a general replacement
+for all native terrain selection.
+
+The assembled selector passes 384 state-transition cases with the geometric
+answer stubbed (the geometry and gap helpers have their separate checks).
+Fast/slowed loop captures both exit without a crash and advance the next
+waypoint; fast has two airborne samples at 309/310 and ends on road segment 51,
+slow has continuous contact and ends on segment 50. These runs use the invalid
+pitch-rate guard as well. The paired jump captures above predate the continuity
+option, so the complete combined candidate still needs its jump validation,
+reset/overhead scrutiny, native compatibility and measured cost before promotion.
+
+This is now the preferred candidate to investigate before extending the larger
+finite-object-query prototype. Existing native object collision/surface behavior
+is retained; the new road query is limited to contact continuation. No terrain or
+pitch-rate guard has been promoted. Evidence: `c4-continuation-check.json`,
+`c4-continuation-progress.json`; builds `c4-rate-landing-jump` and
+`c4-continued-loop`, all retained privately in the harness.

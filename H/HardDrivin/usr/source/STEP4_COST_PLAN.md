@@ -988,6 +988,12 @@ items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
     jump profiles reproduce the native crash outcome. This closes that landing
     discrepancy only; terrain selection and C4 trajectory acceptance remain open.
     The last C5 measurements predate this change and need a final-source rerun.
+  - With the corrected native crash reference, the cheaper invalid-pitch-input
+    guard is being reconsidered. It retains the previous rate for out-of-domain
+    feedback and reproduces the jump crash on both profiles without a new object
+    query. A prior-contact-only road continuation guard passes 384 selector cases
+    and both loop fixtures. The combined candidate still needs jump/reset/native
+    checks and cost measurement; neither guard is promoted or counted as C4 done.
 - **C5, gates.** G1 passes or meets the explicitly accepted temporary exception; G2 is reported; `check_disabled.py` passes; the
   normal build is byte-identical.
   - **Current full-build measurement (2026-10-13):** fresh paired 500-field A500
