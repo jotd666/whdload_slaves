@@ -2,7 +2,8 @@
 
 The user accepted measured performance on 2026-10-12 and requested completion
 of release work. On 2026-10-13 the user completed W6 release acceptance and
-authorized its normal-build opt-in. The completion plan includes those amendments.
+authorized normal-build availability, then default-On after successful real
+A1200/68040/40 MHz/MMU testing. The completion plan includes those amendments.
 
 ## Open items
 
@@ -40,7 +41,8 @@ bounded normal-build flight validation.
 F1 enables the normal verified bundle by default; F2 condenses the ledgers;
 The original F3 passed on all six machine configurations; its results and the
 subsequent artwork and scene follow-ups are recorded separately in `profiling.md`. The normal verified mask is `0x1fff1fff`, filtered by CPU; FC8 and selective copying also require W6.
-Normal CUSTOM3 bit 0 independently enables Consistent game speed (Off by default).
+Consistent game speed is On by default: normal CUSTOM3=0 (or omitted) enables
+it, CUSTOM3=1 disables it. This reverses the earlier beta option mapping.
 Normal CUSTOM2=0 is On and 1 is Off; developer/VERIFY values remain bit masks,
 where zero disables patches. The normal build is in the local build directory.
 Nothing has been pushed; publication requires a separate explicit request.
@@ -48,7 +50,7 @@ Nothing has been pushed; publication requires a separate explicit request.
 ## Postponed beyond this release
 
 W6/D5 release acceptance is complete by user decision (2026-10-13). The normal
-build exposes Consistent game speed as an independent opt-in (`CUSTOM3=1`);
+build exposes Consistent game speed as an independent default-On option (`CUSTOM3=0`; Off is `CUSTOM3=1`);
 it is not part of the default Faster rendering mask. No further acceptance
 flight is required. The measured A500 overload and the controlled-fixture
 limits in `profiling.md` remain documented operating limits, not release gates.
@@ -58,7 +60,7 @@ S2/S3-prime/S4–S8, broader sound/OS changes and overlay queueing remain deferr
 unless a concrete issue justifies them. The completion plan's low-value or
 regressing C/E candidates were dropped, not left as release blockers.
 
-50 FPS is not a release claim. Normal-build consistent timing is opt-in and
+50 FPS is not a release claim. Normal-build consistent timing is enabled by default and
 subject to the documented CPU-capacity envelope.
 Further renderer redesign requires a new scope. Historical ledgers remain in
 Git; do not revive their superseded next-work lists.

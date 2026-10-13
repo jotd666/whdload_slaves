@@ -8,8 +8,9 @@ Developer/VERIFY CUSTOM2 remains an explicit mask, with zero disabling patches.
 The default verified rendering mask is `0x1fff1fff`, filtered by CPU;
 FC8 bit 25 and FC12 bit 28 additionally require W6. On
 2026-10-13 the user completed W6 release acceptance and authorized normal-build
-availability. Consistent game speed is a separate, default-Off checkbox:
-`CUSTOM3=1` adds W6 bit 13, independently of Faster rendering. Its existing CPU
+availability, then approved default-On after real A1200/68040/40 MHz/MMU
+playtesting. Consistent game speed is a separate On/Off list: omitted or
+`CUSTOM3=0` adds W6 bit 13; `CUSTOM3=1` disables it, independently of Faster rendering. Its existing CPU
 gate (68000/020+, not 68010) and safe-swap/one-field-cap dependencies remain.
 Developer/VERIFY still use CUSTOM2 bit 13 and ignore CUSTOM3. The user decision
 accepts the documented operating limits; it does not change earlier results or
@@ -21,6 +22,24 @@ passed. FC8 now adds the separately measured cache described below. Native 060 n
 opt-in and selects effective mask `0x1ff6ffa`, including W6 and its pacing
 dependencies (`w6-player-optin/options.json`). This is an option-path check;
 existing D5 evidence supplies runtime acceptance. No new FPS claim is made.
+
+## Default-On timing and hardware acceptance (2026-10-13)
+
+The user reports that release 3.0b works well on a real A1200 with a 68040 at
+40 MHz and MMU enabled. The subsequent default-On change only reverses the
+normal CUSTOM3 selector; it does not alter the enabled timing implementation.
+Normal, DEVELOPER and VERIFY builds pass. `player_options_check.py` executes
+the assembled normal selector in 24 cases across 000/010/020/030/040/060
+attention flags, both rendering choices and both timing choices, checking
+W6, its dependencies and the FC12 choices. These are option checks, not new
+performance measurements. Run it with the normal slave path after sourcing
+the shared Amiga environment; its assembler listing must be beside the slave.
+
+The reported cockpit line was reproduced with the unchanged release on the
+cached 040 emulator. Wing Commander's corrected MMU write-attribute paths
+removed it in firing and Preferences captures; the user then confirmed no
+glitches in interactive flight with that emulator. No game-renderer workaround
+was needed. The shared emulator installation remains a separate tooling concern.
 
 ## FC12: W6 CPU-policy remeasurement (2026-10-13)
 

@@ -39,7 +39,7 @@ perf_read_options:
 	btst #7,perf_attnflags+3(pc)
 	bne .gauge_player_ready
 	btst #0,perf_custom3+3(pc)
-	beq .gauge_player_off
+	bne .gauge_player_off
 	move.l perf_attnflags(pc),d1
 	andi.l #$0c,d1
 	bne .gauge_player_ready
@@ -51,7 +51,7 @@ perf_read_options:
 	andi.l #$88,d1
 	bne .span_player_ready
 	btst #0,perf_custom3+3(pc)
-	beq .span_player_off
+	bne .span_player_off
 	btst #2,perf_attnflags+3(pc)
 	bne .span_player_ready
 .span_player_off
@@ -66,10 +66,10 @@ perf_read_options:
 .delta_player_off
 	bclr #28,d0
 .delta_player_ready
-	; Independent player opt-in. Rendering Off still permits W6 and its
+	; Independent player list: On=0 (default), Off=1. Rendering Off still permits W6 and its
 	; required safe-swap/one-field pacing; the shared CPU gate remains below.
 	btst #0,perf_custom3+3(pc)
-	beq .player_time_ready
+	bne .player_time_ready
 	bset #13,d0
 .player_time_ready
 	ENDC

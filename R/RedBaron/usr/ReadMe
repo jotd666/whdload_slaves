@@ -112,8 +112,9 @@
    contain no VERIFY instruments or scripted game input.
 
  Performance and Time Scale:
- - Consistent game speed is an independent opt-in splash option (CUSTOM3=1).
-   It is Off by default (CUSTOM3=0), even with Faster rendering On. It works
+ - Consistent game speed is an independent splash option, On by default (CUSTOM3=0).
+   Select Off or CUSTOM3=1 to disable it. This reverses the earlier beta
+   CUSTOM3 meaning; remove old CUSTOM3=1 tooltypes to keep it enabled. It works
    with Faster rendering Off too. Supported on 68000 and 020+; 68010 retains
    native timing. It enables safe presentation and a one-field cap, without
    promising 50 FPS. Time Scale is unchanged; overload drops excess world time.
@@ -126,8 +127,8 @@
  History:
  --------
  version 3.0b (13.10.2026)
- - CPU-specific rendering improvements and optional consistent game speed
-   as described above.
+ - CPU-specific rendering improvements and consistent game speed, both
+   enabled by default and independently switchable, as described above.
  - ReadMe and installer adapted to the WHDLoad Install Template, retaining
    JOTD's three-disk layout, executable decompression and icon choices.
 
