@@ -895,8 +895,8 @@ Those earlier diagnostics did not change the production slave or pristine files.
 The owner's car, difficulty and single-race/championship choice remain unknown;
 these controlled cases alone did not resolve the report or establish hardware acceptance.
 
-The Monza correction has a controlled before/after reproduction below; owner
-retesting remains pending. The reported horizon seam is a separate open release
+The Monza correction has a controlled before/after reproduction below and is
+owner-confirmed fixed in the beta4 A1200-040 emulator run. The reported horizon seam is a separate open release
 blocker. Beta3 music is owner-confirmed fixed on the emulator; this is not
 unconditional hardware acceptance. Wider circuit, car and traffic coverage
 remains unestablished.
@@ -1171,7 +1171,10 @@ archives. Extracted source rebuilds the identical normal slave; ordinary VERIFY
 also builds without private inputs. The standalone replacement slave matches the
 tested hash. All 55 pristine input hashes remain unchanged. Archives, game bytes,
 diagnostic sources and captures stay ignored under the local harness.
-Owner validation on the reported setup remains pending.
+The owner confirms the Monza car-positioning bug fixed after the beta4 release
+launch with the A1200-040 emulator preset, MMU and CUSTOM2=1. This closes the
+reported Monza reproduction; it does not establish a fresh physical-Amiga test.
+The separately reported horizon seam remains open.
 
 The contribution remains a draft beta, not a completed Phase 8 acceptance.
 
