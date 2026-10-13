@@ -5,7 +5,8 @@ current integrated build, measured on 2026-10-12. It names the bottlenecks, sets
 targets and gives an ordered list of work items. Each item has an exit criterion. Step IDs
 are `P` (performance), `C` (closure) and `D` (decisions for the user).
 
-**Current status: P1, P2, P4, P5, P6 and P7 complete; P3 deferred.** P4 retains its
+**Step 4 closed within the accepted scope (2026-10-13).**
+P1, P2, P4, P5, P6 and P7 are complete; P3 remains deferred. P4 retains its
 explicit helper-budget exception. P5's acceptance build met its unchanged
 0.300 ms/frame target at 0.247 / 0.292 ms/frame. P6 optimizes the remaining
 physics arithmetic bottleneck: matched-operand long division is about 29% cheaper.
@@ -18,7 +19,8 @@ A meets its 8.070 limit; B exceeds the accepted 5.740 allowance by **0.029 ms**.
 B's paired scenes differ by 2.55%, so raw FPS is not an equal-scene comparison.
 The user accepted that remaining 0.029365 ms/frame excess on 2026-10-13 for
 the selected build at `62e9913`; no earlier B baseline is substituted.
-C1, C2, C4 and C5 are complete; C3 remains open, and C6 is deferred. Historical P7 A1200 net
+C1, C2, C4 and C5 are complete. C3 is closed for this scope with its automated
+full-lap timing check explicitly deferred; C6 is deferred. No full-lap pass is claimed. Historical P7 A1200 net
 phase overhead is 0.283 / 0.576 ms/frame (0.47% / 1.23%); it is not a measurement
 of this latest full closure build.
 
@@ -885,7 +887,12 @@ items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
   trajectories or full-lap timing. Complete raw data/BSS differences remain
   reported and classified. See `GAME_TIME.md` and
   `c2-clock-causal-summary.json`.
-- **C3, equal elapsed time.**
+- **C3, equal elapsed time — closed with full-lap timing deferred (2026-10-13).**
+  The user explicitly deferred the remaining automated full-lap timing check.
+  Controlled acceleration, braking and steering bounds pass; individual award
+  evidence is retained below. Full-lap timing remains unverified follow-up work,
+  not a passed criterion. Earlier progress entries below describe their status
+  at the time of measurement.
   - Use the controlled-start fixtures (`INITIAL_THROTTLE`, braking from speed 100, and
     held steering).
   - Compare the A500, the slowed A500 (CUSTOM4=4), the 68020 and the 68040 at equal
@@ -1191,7 +1198,7 @@ On 2026-10-12 the user accepted the recommended defaults. The later G1 exception
   still fails in window B after P1–P6, and engine runs are the largest remaining item.
 - **D4, preserve.** Keep the native BCD lap clock, defects included.
 
-### Outstanding closure decisions (2026-10-13)
+### Final closure decisions and deferred follow-up (2026-10-13)
 
 C5's remaining 0.029365 ms/frame B-window excess was explicitly accepted by
 the user on 2026-10-13. C5 is complete for the selected build at `62e9913`
@@ -1199,25 +1206,29 @@ the user on 2026-10-13. C5 is complete for the selected build at `62e9913`
 The user also explicitly accepted C2's demonstrated clock-dependent differences
 on 2026-10-13, preserving the original clocks and their defects. C2 is complete
 with that exception; untouched-clock equivalence is not claimed.
-The following decision remains outstanding; step 4 is not complete.
+The user explicitly deferred C3's automated full-lap timing check as well.
+There are no outstanding decisions blocking step-4 closure.
 
-| Item | Decision needed | Verified evidence |
-|---|---|---|
-| C3 | Does the test-lap deferral include automated full-lap timing, or only human laps? | Human laps are deferred. Controlled motion and individual award results are documented; a complete lap has not been verified. |
+Deferred follow-up work:
+
+- **C3:** compare complete lap timing across CPU profiles. Controlled motion
+  and seeded checkpoint/finish transitions do not establish this result.
+- **C6:** human A500/68040 test laps; handling is not human-validated.
+- **P3:** engine-call-count/cadence optimization; do not resume without direction.
 
 The source hash audit, ordinary binary identity, disabled patches, 147 patch
-ranges and four trace audits pass for the selected C5 build. These checks do not
-waive any of the decisions above. Human laps and P3 remain deferred; the stale
-goal wording requesting human lap confirmation does not override that deferral.
+ranges and four trace audits pass for the selected C5 build. The raw failing
+untouched-clock and previous cost-limit comparisons remain recorded. Step 4 is
+closed with the explicit exceptions and deferrals above; deferred tests have
+not passed. Step 5 may proceed, with combined performance still to be measured.
 
 ## 7. Working rules for this plan
 
 - P3 remains deferred; P1/P2/P4–P7 are complete, with the recorded exceptions.
-  The user has now requested step-4 closure before step 5: complete C1–C5, with
-  C6 test laps explicitly deferred. The accepted G1 overhead is settled; deferred
-  P3 and C6 are not passes and do not block this automated closure.
-  Deferral does not pass an item. Each item ends when its exit numbers and
-  checks pass. Commit each item on its own.
+  Step 4 is closed before step 5 with C2/C5 exceptions and C3 full-lap/C6
+  test-lap deferrals explicitly accepted. The accepted G1 overhead is settled.
+  Deferred work is not a pass and does not block the agreed closure.
+  Preserve the evidence limits when reporting future gains.
 - Do not add validation dimensions beyond those listed for the item. Put new questions in
   section 6 instead of blocking on them.
 - Run all profiles from one slave with CUSTOM1=0 and CUSTOM1=1, using distinct

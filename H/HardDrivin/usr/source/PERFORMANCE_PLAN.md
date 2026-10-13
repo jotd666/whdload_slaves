@@ -14,41 +14,24 @@ behaviour until each change is ported and verified separately.
 
 ## Current status
 
-Steps 1–3 are complete. See `GAME_TIME.md` for the matched-input coupling test,
-clock defects, state/scaling inventory, provisional f0=6.25 (engineering range
-4–8), and collision-inclusive 68000 capacity. Step 4 is in progress: gated elapsed-time physics, traffic,
-contact and replay playback have partial validation. An experimental CPU-specific
-dispatcher now consumes one full interval per 68000 frame and retains bounded
-substeps on 68020+. Fixed-field replay recording and long-frame traffic progression now have focused
-validation. GAME OVER now uses elapsed time, with A500/68020 pause and duration
-checks. Attract route interpolation, scrolling and timeout also have gated
-implementations with native-pose comparisons. The separate Phantom challenge
-physics loop now has an experimental dispatcher and focused validation. Phantom
-ghost recording now has fixed-field sampling and focused native/buffer checks.
-Challenge-opponent playback now has elapsed interpolation and crossed finish
-checks, including a live opponent finish. Post-race ghost playback now has elapsed
-poses, duration and distance-derived pitch, with native-step, pause and slow-frame
-checks. Phantom instruction scrolling and its camera transition now also use
-elapsed time, with native-step, pause and slow-frame checks. The remaining audio
-audit, large-step velocity safety and full acceptance are unfinished. A gated
-long-step resistance limiter removes observed braking-induced reversals while
-preserving slope rollback; maximum-delay handling remains unproven. The sound
-caller inventory, replay skid-request correction and live off-road/skid/partial-contact
-cadence checks are in AUDIO_TIMING.md. Repeated zero-motion contact with the same
-object now has a separate sound cadence, with A500/68020 live checks; obstacle
-and special-object audio remain unvalidated.
-Traffic companion lookup now excludes the native route generator's temporary
-stack record, fixing an out-of-bounds startup write; focused native-route and
-traffic-state checks pass. Full acceptance still needs the corrected final build.
-See GAME_TIME.md;
-the step-4 acceptance criteria remain open.
+Steps 1–4 are complete within the accepted scope. Step 4 closed on 2026-10-13
+with the documented C2 clock and C5 cost exceptions. C3's automated full-lap
+timing check, C6's human A500/68040 laps and P3 remain deferred follow-up work;
+none is claimed to have passed. Controlled acceleration, braking and steering
+checks pass their documented tolerances, and C4's extreme-profile matrix is
+complete. The original clocks, including their defects, remain unchanged.
+
+The elapsed-time simulation remains gated by CUSTOM1. See `GAME_TIME.md` for
+the implementation and diagnostic history, and `STEP4_COST_PLAN.md` for the
+final acceptance evidence and its limits. Step 5 is next; its rendering gains
+have not yet been measured.
 
 The 2026-10-12 cost profile and the ordered closure plan for step 4 (P1–P7,
-C1–C6, decisions D1–D4) are in `STEP4_COST_PLAN.md`. Follow it from here.
+C1–C6, decisions D1–D4) are in `STEP4_COST_PLAN.md`.
 On 2026-10-13 the user accepted the current 5.740 ms/frame A500 B-window
 simulation overhead temporarily and directed work to move on to step 5.
-This removes the cost gate as a blocker; it does not complete the outstanding
-simulation-correctness checks. Measure the combined simulation and rendering
+That cost acceptance alone did not close the simulation-correctness checks;
+the final closure decisions are recorded below. Measure the combined simulation and rendering
 changes against the original before claiming a net performance gain.
 The current closure build includes collision sweeps, terrain restoration and
 checkpoint/finish evaluation. Exact sweep and traffic zero-input shortcuts reduce overhead to
@@ -73,7 +56,9 @@ full-lap timing remains unverified. A clock-input replay now reproduces all 650
 captured native gameplay states, isolating the untouched-clock mismatch to clock
 observations. On 2026-10-13 the user accepted those demonstrated clock-dependent
 differences while preserving the original clocks, including their defects. C2 is
-complete with that exception; C3 remains open; see the current closure results in `STEP4_COST_PLAN.md`.
+complete with that exception. The user also explicitly deferred C3's automated
+full-lap timing check on 2026-10-13, closing the remaining step-4 decision.
+Full-lap timing remains unverified follow-up work; see `STEP4_COST_PLAN.md`.
 
 ## Starting point
 
