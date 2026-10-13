@@ -12,6 +12,8 @@ verify_render_pose:
     clr.w -29522(a4)
     clr.w -20714(a4)
     clr.w -29516(a4)
+    lea render_crossing(pc),a0
+    clr.l (a0)             ; frozen pose has no completed crossing
     clr.w -31424(a4)
     clr.w -31416(a4)
     move.l sim_verify_options(pc),d0
@@ -148,21 +150,25 @@ verify_render_units:
     ext.l d0
     moveq #94,d1
     bsr verify_render_equal
-    ; Fractional heading: both signs, zero fraction, wrap and outward clamp.
-    lea verify_heading_vectors(pc),a2
-    moveq #9,d6
-.heading
-    lea render_pose(pc),a0
-    move.w (a2)+,2(a0)
-    move.w (a2)+,6(a0)
+    ; Last-crossing interpolation, including zero/full fraction and signs.
+    lea verify_camera_vectors(pc),a2
+    moveq #12,d6
+.camera
+    lea render_pose+6(pc),a0
+    move.l (a2)+,(a0)
     move.w (a2)+,d7
-    bsr render_heading_fraction
+    bsr render_camera_fraction
     move.w render_heading(pc),d0
     ext.l d0
     move.w (a2)+,d1
     ext.l d1
     bsr verify_render_equal
-    dbf d6,.heading
+    move.w render_lateral(pc),d0
+    ext.l d0
+    move.w (a2)+,d1
+    ext.l d1
+    bsr verify_render_equal
+    dbf d6,.camera
     ; Canonical coefficients, not integer row indices: positive, negative,
     ; zero and maximum fractions. Each output lies between its neighbours.
     lea verify_projection_vectors(pc),a2
@@ -181,11 +187,10 @@ verify_render_units:
     dbf d6,.projection
     ; Restore scratch state before the first real protected snapshot.
     lea render_pose(pc),a0
-    moveq #3,d0
+    moveq #8,d0
 .clear_pose
     clr.w (a0)+
     dbf d0,.clear_pose
-    clr.w (a0)              ; render_heading follows render_pose
     move.l a4,a1
     suba.l #32766,a1
     move.l #65536,d0
@@ -196,13 +201,6 @@ verify_render_units:
     move.l (sp)+,(a0)
     movem.l (sp)+,d0-a6
     rts
-verify_heading_vectors:
-    ; yaw, effective steering, F, expected correction
-    dc.w 0,1024,0,0, 0,1024,128,256, 0,-1024,128,-256
-    dc.w 0,1023,255,509, 0,-1023,255,-510
-    dc.w 8192,1024,128,0, -8192,-1024,128,0
-    dc.w 8192,-1024,128,-256, -8192,1024,128,256
-    dc.w -32768,-1024,128,-256 ; native signed-word abs/clamp semantics
 verify_projection_vectors:
     dc.w 100,300,0,100, 100,300,128,200, 100,300,255,299
     dc.w 300,100,0,300, 300,100,128,200, 300,100,255,100
@@ -220,4 +218,20 @@ verify_render_equal:
     movem.l (sp)+,a0-a1
     bra verify_sim_equal
 verify_render_next: dc.l 0
-verify_render_values: ds.l 60
+verify_render_values: ds.l 92
+
+; actual steering step, actual lateral step, F, heading/lateral corrections
+verify_camera_vectors:
+    dc.w 128,9,0,-128,-9
+    dc.w 128,9,128,-64,-5
+    dc.w 128,9,255,-1,-1
+    dc.w 128,9,256,0,0
+    dc.w -128,-9,0,128,9
+    dc.w -128,-9,128,64,4
+    dc.w -128,-9,255,0,0
+    dc.w -128,-9,256,0,0
+    dc.w 0,2,128,0,-1
+    dc.w 0,-2,128,0,1
+    dc.w 128,0,128,-64,0
+    dc.w -128,0,128,64,0
+    dc.w 0,0,128,0,0

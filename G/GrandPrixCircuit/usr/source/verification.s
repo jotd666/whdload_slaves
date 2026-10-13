@@ -16,8 +16,7 @@ verify_race_start:
 	addq.l #1,a1              ; address arithmetic preserves the incoming X flag
 	move.l a1,(a0)
 	movem.l (sp)+,d0/a0-a1
-	move.w #0,-31736(a4)       ; original instruction at h0:$707a
-	rts
+	bra render_camera_start  ; same race-history reset and native gate release
 
 verify_read_joydat:
 	movem.l d1/a0,-(sp)

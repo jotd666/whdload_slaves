@@ -1,6 +1,7 @@
 ; v1 render-only Q8 projection. Canonical tables are copied from the loaded game,
-; never reconstructed from constants or cumulatively interpolated. No live
-; physics value is overwritten. All callers are gated by CUSTOM2.
+; never reconstructed from constants or cumulatively interpolated. Interpolation
+; never writes live physics; the crossing recorder preserves the native update.
+; All callers are gated by CUSTOM2.
 
 ; Native $2b5e rebuilds mirror/row tables at outer-session setup ($9ee),
 ; not between qualifying and its race. Restore the
@@ -42,7 +43,7 @@ render_pose_latch:
     move.w -29976(a4),(a0)+
     move.w -29522(a4),(a0)+
     move.w -20714(a4),(a0)+
-    move.w -29518(a4),(a0)+ ; held native effective steering for this segment
+    move.l render_crossing(pc),(a0) ; actual steering/lateral crossing deltas
     rts
 
 ; Called after Enable: all table work is outside the interrupt exclusion.
@@ -50,7 +51,7 @@ render_subunit:
     lea render_fraction(pc),a3
     moveq #0,d7
     move.b -30005(a4),d7
-    bsr render_heading_fraction
+    bsr render_camera_fraction
     cmp.w (a3),d7
     bne.b .changed
     tst.w render_tables_ready-render_fraction(a3)
@@ -161,8 +162,10 @@ render_row_map:
 
 render_main_pose:
     move.w render_pose(pc),d4
+    add.w render_lateral(pc),d4
     move.w d4,-25018(a4)
     move.w render_pose+2(pc),d4
+    add.w render_heading(pc),d4
     move.w d4,-25020(a4)
     rts
 render_mirror_pose:
@@ -196,29 +199,75 @@ render_scenery_pose:
     sub.w render_heading(pc),d4
     rts
 
-; Native $7a72..$7a7a adds half the effective steering and the curve
-; to yaw; $79a0 adds the same curve to cumulative heading. The curve cancels
-; in panorama heading. Carry only that steering contribution through the
-; partial segment, using the same +/-8192 outward-steering clamp as native.
-; d7=F; run even when the table fraction cache hits (pose may have changed).
-render_heading_fraction:
-    move.w render_pose+6(pc),d0
-    move.w render_pose+2(pc),d1
-    move.w d1,d2
-    bpl.b .positive
-    neg.w d1
-.positive
-    cmp.w #8192,d1
-    blt.b .scale
-    eor.w d0,d2
-    bmi.b .scale
-    moveq #0,d0
-.scale
-    asr.w #1,d0
-    muls.w d7,d0
-    asr.l #8,d0
+; Record the exact native crossing displacement, after its steering clamp.
+; Replays h0:$7a70..$7aaa, including the native signed angle lookup, lateral
+; limit and attract-mode inhibit. The next CMP ($7aac) sets NZVC anew; X is kept.
+; Only private draw history is added; game data and registers remain native.
+render_camera_crossing:
+    movem.l d0/a1,-(sp)
+    lea render_crossing(pc),a1
+    move.w -29976(a4),d0
+    move.w d1,d4
+    asr.w #1,d6
+    move.w d6,(a1)
+    add.w d6,d4
+    add.w -29516(a4),d4
+    move.w d4,-29522(a4)
+    move.b -29522(a4),d4
+    ext.w d4
+    jsr -32460(a4)
+    add.w -29976(a4),d4
+    clr.w 2(a1)
+    cmp.w #0,3598(a4)
+    bne.b .done
+    cmp.w #4480,d4
+    blt.b .lower
+    move.w #4480,d4
+.lower
+    cmp.w #-4480,d4
+    bgt.b .write
+    move.w #-4480,d4
+.write
+    move.w d4,-29976(a4)
+    movea.w d4,a1
+    suba.w d0,a1           ; address arithmetic preserves native X
+    move.l a1,d0
+    lea render_crossing(pc),a1
+    move.w d0,2(a1)
+.done
+    movem.l (sp)+,d0/a1
+    rts
+
+; Race/qualifying setup must not inherit the last crossing of the previous run.
+; Pause and pit return keep the existing crossing, just as they keep position.
+render_camera_start:
+    move.l a0,-(sp)
+    lea render_crossing(pc),a0
+    clr.l (a0)
+    move.l (sp)+,a0
+    move.w #0,-31736(a4)   ; native $707a: release the race-setup gate
+    rts
+
+; Interpolate the last completed crossing, rather than predict the next one.
+; At F=0 subtract that crossing's exact displacement; at F=256 use the raw
+; pose. Therefore changing steering, grip and lateral clamps cannot create a
+; correction at the boundary. Delay only steering yaw: the road walker already
+; accounts for curvature through its shortened first interval, and cumulative
+; course heading cancels that same curve in the panorama. Both views use this
+; one atomically latched pose. Non-crossing moves (e.g. recovery) remain immediate.
+; d7=F, preserved. Run even on a projection-table cache hit.
+render_camera_fraction:
+    move.w d7,d0
+    sub.w #256,d0
+    move.w render_pose+6(pc),d1
+    muls.w d0,d1
+    asr.l #8,d1
     lea render_heading(pc),a0
-    move.w d0,(a0)
+    move.w d1,(a0)
+    move.w render_pose+8(pc),d1
+    muls.w d0,d1
+    asr.l #8,d1
+    move.w d1,render_lateral-render_heading(a0)
     rts
 
 ; Horizontal projection previously discarded the fractional screen Y before
@@ -441,8 +490,10 @@ render_depth: dc.w 0
 
 render_fraction: dc.w 0
 render_tables_ready: dc.w 0
-render_pose: ds.w 4
+render_pose: ds.w 5
 render_heading: dc.w 0
+render_lateral: dc.w 0
+render_crossing: dc.w 0,0
 render_project_width: dc.w 0
 render_project_margin: dc.w 0
 render_main_y: ds.w 41

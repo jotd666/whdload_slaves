@@ -371,6 +371,10 @@ pl_main_v1
 	PL_ENDIF
 	ENDC
 	PL_IFC2
+	IFND VERIFY
+	PL_PS $707a,render_camera_start ; PERF_RANGE h0:707A 6 bit=C2
+	ENDC
+	PL_PSS $7a70,render_camera_crossing,54 ; PERF_RANGE h0:7A70 60 bit=C2
 	PL_PSS $9ee,render_reset_tables,2 ; PERF_RANGE h0:09EE 8 bit=C2
 	PL_P $a6ea,sim_latch_enter ; PERF_RANGE h0:A6EA 8 bit=C2
 	PL_P $a776,sim_latch_leave ; PERF_RANGE h0:A776 6 bit=C2

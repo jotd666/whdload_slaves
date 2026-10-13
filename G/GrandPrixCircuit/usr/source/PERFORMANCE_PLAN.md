@@ -709,7 +709,8 @@ hardware/release work remains Phase 8.
 ### Phase 7 — Sub-unit rendering
 **Status: complete.** All new production hooks are C2-gated and apply only to the size-checked v1 game. `render-subunit.s`
 uses the existing protected render latch for camera fraction, lateral position,
-yaw and horizon/scenery heading. Table preparation runs after `Enable`, outside
+yaw, horizon/scenery heading and the last completed crossing displacement.
+Table preparation runs after `Enable`, outside
 the interrupt exclusion, and never writes live physics state.
 
 The low byte of latched camera position `-30006(a4)` drives main/mirror road
@@ -720,7 +721,8 @@ indices 2–8 and mirror indices 2–3 can change at sub-segment resolution. Upd
 those nine boundaries and their affected row maps keeps the A500 cost down.
 The native far projection-selection list stays intact, including its intentional
 choice of an earlier duplicate row. An exact fraction cache avoids repeated work.
-Native `$2b5e` rebuilds mirror/row tables for each new race. The C2 hook at `$9ee`
+Native `$2b5e` rebuilds mirror/row tables at outer-session setup, not between
+qualifying and its race. The C2 hook at `$9ee`
 restores canonical main/mirror/length inputs before that initializer and invalidates
 the projected fraction, preventing shifted tables from becoming the next race's
 baseline.
@@ -739,10 +741,57 @@ old 8-bit lookup. The segment curve is added to both accumulated curve (`$79a0`)
 and yaw (`$7a76`), cancelling in their difference; no extra camera-fraction curve
 offset is added to that native panorama calculation.
 
+Road-camera lateral and steering yaw now interpolate the **last completed**
+segment crossing. A C2-only hook at `$7a70..$7aab` replays the original update
+and records its actual clamped steering and lateral deltas in four private bytes.
+At fraction F, the renderer adds `delta*(F-256)/256` to the raw pose. The end of
+one interval and start of the next therefore meet, even when steering, grip or
+the lateral clamp changes. This delays these two camera components by at most
+one road segment; it does not delay the simulation or controls. Forward road,
+mirrors, their road-centre tables, horizon and scenery share the latched pose.
+The curve contribution stays in the road walker's shortened first interval;
+adding it to camera yaw again would count it twice. Recovery and other movements
+outside the crossing update still apply immediately. Race/qualifying setup at
+`$707a` clears the private crossing; pause, pit return and ordinary course wrap
+retain it. Multiple crossings retain the last crossing's displacement, without
+requiring a render between updates.
+
+Camera validation is retained under ignored `tmp/dev/tmp/road-pose/`:
+
+- 2,430 assembled-instruction cases compare the new crossing hook with the
+  original block, including all game data, registers and CCR after the following
+  native CMP. Each also verifies exact camera joins at F=256/0, with both steering
+  signs, outward-yaw limits, lateral clamps and attract-mode inhibit. Another
+  2,000 changing-input crossings verify world-heading continuity, common
+  main/mirror/panorama poses, unchanged game data during interpolation and reset.
+- A 030/MMU/cache driving fixture passes 97 guest assertions with zero failures
+  over 900 rendered frames: 231 crossings, including 73 changed steering steps.
+  The sampled near-road centre at row 96 moves by at most two pixels per frame
+  in this run; this is a bounded fixture, not an all-track guarantee. A final
+  040/MMU/cache run with traffic also passes 97 assertions over 900 frames and
+  231 crossings (111 changed steering steps). Row 96 moves by at most three
+  pixels while advancing; the initial zero-to-filled road table is excluded
+  from that motion statistic. Cars and both mirrors remain drawn.
+- Frozen original/candidate road geometry across 45 poses, including steering
+  reversals, reduces the largest near-road crossing step from 13 to 4 pixels
+  (row 96: 10 to 3). Far rows still reach 21 pixels versus 23 before: continuous
+  camera pose does not remove the separate integer far-row selection and car-X
+  projection limits. No claim of fully smooth opponent motion is made.
+- The 79-hook instruction/branch audit passes. A500/68000 reaches gameplay;
+  040/MMU with C2=0 retains original instructions at all 59 enhancement ranges.
+  Live A500, 030 and final 040 camera hook/helper bytes match their exact builds.
+  Normal and VERIFY builds use the same camera code; all new production patches
+  remain conditional on C2.
+- Both 2.0b archives pass exact extraction round trips; packaged source rebuilds
+  the identical normal slave and builds VERIFY. All 55 pristine hashes remain
+  unchanged. The normal slave SHA-256 is
+  `abbff2d886b927a4b298d7a3db4ee2b5c3b9f9b2995becfbad68b6139b81f212`.
+
 Temporal interpolation is conditional on rendering faster than physics. The
 measured profiles draw no faster than the selected simulation rate; each checked
 draw has at least one intervening physics update. No temporal prediction or extra
-simulation delay is introduced. Spatial sub-unit rendering is independent of that
+simulation delay is introduced. The one-crossing camera interpolation described
+above is spatial and independent of that
 cadence decision. Real hardware and other profiles remain Phase 8 coverage.
 
 Accepted evidence is retained under ignored `tmp/dev/tmp/phase7/`, with final

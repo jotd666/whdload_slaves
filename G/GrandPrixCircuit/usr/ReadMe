@@ -52,7 +52,7 @@
  version 2.0b (13.10.26):
  - added Enhanced framerate option (CUSTOM2=1), enabled by the game icon
  - smoother vehicle movement on 68020 and faster CPUs
- - smoother road, opponent-car and horizon movement
+ - smoother road-camera, opponent-car and horizon movement
  - more precise roadside-object positioning on 68020 and faster CPUs
  - improved drawing performance
  - fixed screen flicker and missing pixels at the edge of the horizon
