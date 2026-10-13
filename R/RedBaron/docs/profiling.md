@@ -2306,8 +2306,9 @@ configuration, not a declared minimum machine or complete gameplay acceptance.
 **The first matrix-reuse assembly candidate is rejected for A500 use.** In a
 250-recorded-field native twin trace, 2,022 matched original/candidate pairs
 cost **5,939,058 versus 6,029,602 main-task cycles**: the candidate is **1.52%
-slower**. Every input case's aggregate regresses. It remains available only
-under `VERIFY_MATRIX_EXPERIMENT`; ordinary VERIFY again has the pre-experiment
+slower**. Every input case's aggregate regresses. At that checkpoint it remained available only
+under `VERIFY_MATRIX_EXPERIMENT` (removed in the 3.0b dead-code cleanup);
+ordinary VERIFY again had the pre-experiment
 `ac1d47ba…` hash. See “Matrix candidate timing rejection” in
 `w6-verification.md`. Correct output and fewer table reads were insufficient.
 

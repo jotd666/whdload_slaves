@@ -636,7 +636,6 @@ tape_sim_key_bridge:
 	include "instrument-cache-verify.s"
 	include "overlay-probe.s"
 	include "overlay-blit.s"
-	include "overlay-fast.s"
 	include "overlay-pack.s"
 	include "overlay-shadow.s"
 	include "time-shape-verify.s"
@@ -644,9 +643,6 @@ tape_sim_key_bridge:
 	include "overlay-key-verify.s"
 	ENDC
 	include "time-exponent.s"
-	IFD VERIFY_MATRIX_EXPERIMENT
-	include "time-matrix-verify.s"
-	ENDC
 	include "time-mouse-ownership-cases.i"
 	ENDC
 	include "overlay-mask.s"

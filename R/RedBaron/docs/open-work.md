@@ -188,3 +188,12 @@ the full copy. The 030 copy uses an optional 48,000-byte Fast allocation before
 the game heap, reused across missions, with full-copy fallback on allocation
 failure. W6-off and stock-CPU policies are unchanged. All results and final
 release checks are in `profiling.md`. No active FC steps remain.
+
+## Completed: dead experiment cleanup
+
+Removed the uncalled VERIFY overlay compositor and its exclusive host model/tests,
+the unincluded native coverage extractor, and the rejected private matrix
+candidate with its dormant build/install wiring. Shared coverage and matrix
+reference models remain in active tests and trace analysis. Active VERIFY
+observers, exponent checks and CPU-specific renderer alternatives remain.
+Normal and developer binaries are unchanged; no performance claim is added.
