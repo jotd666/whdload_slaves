@@ -644,6 +644,8 @@
   (tooltype
     (dest (tackon #dest #icon_newname))
     (settooltype "PreLoad" "")
+    (settooltype "CUSTOM2" "1")
+    (settooltype "CUSTOM3")
     (settooltype "Slave" ("%s.Slave" #icon_slave))
   )
   (tooltype

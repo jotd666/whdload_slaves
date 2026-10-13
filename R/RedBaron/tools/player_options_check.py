@@ -17,7 +17,9 @@ blob = read_hunks(slave.read_bytes())[0].data
 symbols = {n: int(v, 16) for n, v in re.findall(
     r'^(\S+)\s+00:([0-9A-Fa-f]+)\s*$',
     slave.with_suffix(slave.suffix + '.lst').read_text(encoding='latin1'), re.M)}
-assert b'C3:L:Consistent game speed:On,Off;' in blob
+assert b'C2:B:Enhanced framerate (68020+Fast RAM);' in blob
+assert b'C3:' not in blob
+assert 'perf_custom3' not in symbols
 u = C.CDLL(str(Path(os.environ['AMIGA_UNICORN']) / 'lib/libunicorn.2.dylib'))
 P, I, Q, Z = C.c_void_p, C.c_int, C.c_uint64, C.c_size_t
 for name, args in {
@@ -36,46 +38,46 @@ def check(result):
 BASE, STACK, STOP, RESLOAD = 0x10000, 0x90000, 0x1000, 0x80000
 for cpu, flags in [('000', 0), ('010', 1), ('020', 3),
                    ('030', 7), ('040', 15), ('060', 143)]:
-    for rendering in (0, 1):
-        masks = []
-        for timing in (0, 1):
-            h = P()
-            check(u.uc_open(7, 1 << 30, C.byref(h)))
-            try:
-                check(u.uc_ctl(h, 7 | (1 << 26) | (1 << 30), I(2)))
-                check(u.uc_mem_map(h, 0, 0x100000, 7))
-                def write(at, data):
-                    check(u.uc_mem_write(h, at, data, len(data)))
-                def long(at, value):
-                    write(at, struct.pack('>I', value))
-                write(BASE, blob)
-                # Control is stubbed after supplying its tag outputs; the actual
-                # assembled selector and all CPU/dependency filters run unchanged.
-                write(RESLOAD + 0x34, bytes.fromhex('4e75'))
-                for name, value in [('_resload', RESLOAD), ('perf_custom2', rendering),
-                                    ('perf_custom3', timing), ('perf_attnflags', flags)]:
-                    long(BASE + symbols[name], value)
-                long(STACK, STOP)
-                for reg, value in [(17, 0x2700), (8, STACK)]:
-                    v = C.c_uint32(value)
-                    check(u.uc_reg_write(h, reg, C.byref(v)))
-                check(u.uc_emu_start(h, BASE + symbols['perf_read_options'], STOP, 1000000, 2000))
-                data = C.create_string_buffer(4)
-                check(u.uc_mem_read(h, BASE + symbols['perf_mask'], data, 4))
-                mask = int.from_bytes(data.raw, 'big')
-                enabled = timing == 0 and cpu != '010'
-                assert bool(mask & (1 << 13)) == enabled, (cpu, rendering, timing, hex(mask))
-                if enabled:
-                    assert mask & 0x300 == 0x300
-                if rendering:
-                    assert mask == (0x2300 if enabled else 0)
-                masks.append(mask)
-            finally:
-                check(u.uc_close(h))
-        if not rendering and cpu in ('030', '040'):
-            assert masks[0] & (1 << 23) and not masks[1] & (1 << 23)
-        if not rendering and cpu == '030':
-            assert masks[0] & (1 << 24) and not masks[1] & (1 << 24)
-            assert masks[0] & (1 << 28) and not masks[1] & (1 << 28)
-        print(cpu, 'rendering', rendering, 'On/Off masks', *(hex(m) for m in masks))
+    masks = []
+    for rendering in (0, 1, 2, 3):
+        h = P()
+        check(u.uc_open(7, 1 << 30, C.byref(h)))
+        try:
+            check(u.uc_ctl(h, 7 | (1 << 26) | (1 << 30), I(2)))
+            check(u.uc_mem_map(h, 0, 0x100000, 7))
+            def write(at, data):
+                check(u.uc_mem_write(h, at, data, len(data)))
+            def long(at, value):
+                write(at, struct.pack('>I', value))
+            write(BASE, blob)
+            # Control is stubbed after supplying its tag outputs; the actual
+            # assembled selector and all CPU/dependency filters run unchanged.
+            write(RESLOAD + 0x34, bytes.fromhex('4e75'))
+            for name, value in [('_resload', RESLOAD), ('perf_custom2', rendering),
+                                ('perf_attnflags', flags)]:
+                long(BASE + symbols[name], value)
+            long(STACK, STOP)
+            for reg, value in [(17, 0x2700), (8, STACK)]:
+                v = C.c_uint32(value)
+                check(u.uc_reg_write(h, reg, C.byref(v)))
+            check(u.uc_emu_start(h, BASE + symbols['perf_read_options'], STOP, 1000000, 2000))
+            data = C.create_string_buffer(4)
+            check(u.uc_mem_read(h, BASE + symbols['perf_mask'], data, 4))
+            mask = int.from_bytes(data.raw, 'big')
+            enabled = bool(rendering & 1) and cpu != '010'
+            assert bool(mask & (1 << 13)) == enabled, (cpu, rendering, hex(mask))
+            if enabled:
+                assert mask & 0x300 == 0x300
+            if not rendering & 1:
+                assert mask == 0
+            masks.append(mask)
+        finally:
+            check(u.uc_close(h))
+    assert masks[0] == masks[2] == 0
+    assert masks[1] == masks[3]
+    if cpu in ('030', '040'):
+        assert masks[1] & (1 << 23)
+    if cpu == '030':
+        assert masks[1] & (1 << 24) and masks[1] & (1 << 28)
+    print(cpu, 'Off/On masks', *(hex(m) for m in masks[:2]))
 print('PASS: 24 native option/CPU cases')

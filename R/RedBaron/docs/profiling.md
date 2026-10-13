@@ -2,19 +2,18 @@
 
 ## Current release policy
 
-The user accepted measured performance on 2026-10-12. The normal build now
-starts with Faster rendering On when CUSTOM2 is omitted: On=0, Off=1.
-Developer/VERIFY CUSTOM2 remains an explicit mask, with zero disabling patches.
-The default verified rendering mask is `0x1fff1fff`, filtered by CPU;
-FC8 bit 25 and FC12 bit 28 additionally require W6. On
-2026-10-13 the user completed W6 release acceptance and authorized normal-build
-availability, then approved default-On after real A1200/68040/40 MHz/MMU
-playtesting. Consistent game speed is a separate On/Off list: omitted or
-`CUSTOM3=0` adds W6 bit 13; `CUSTOM3=1` disables it, independently of Faster rendering. Its existing CPU
-gate (68000/020+, not 68010) and safe-swap/one-field-cap dependencies remain.
-Developer/VERIFY still use CUSTOM2 bit 13 and ignore CUSTOM3. The user decision
-accepts the documented operating limits; it does not change earlier results or
-claim 50 FPS. Historical captures retain their original build and option mapping.
+The normal release exposes one **Enhanced framerate (68020+Fast RAM)** checkbox.
+CUSTOM2 bit 0 enables both the rendering bundle and W6 consistent game speed.
+Omitted/zero CUSTOM2 disables both; all supplied game icons and the installer
+set CUSTOM2=1. CUSTOM3 is unused. This supersedes the earlier beta's inverted
+CUSTOM2 list and separate CUSTOM3 option. Developer/VERIFY retain individual
+CUSTOM2 bits and their existing CPU filters.
+
+The rendering mask is `0x1fff1fff` plus W6 bit 13 before CPU filtering. Optional
+allocations still fall back safely, the 68010 retains native timing, and the
+030/040/060 scene-renderer gates are unchanged. The user accepted performance
+and real A1200/68040/40 MHz/MMU operation; no new FPS claim is made. Historical
+captures retain their original build and option mappings.
 
 The original opt-in exposure changed option selection only. At that checkpoint,
 all 577 host tests, all three builds and their 136/136/150 patch destinations
@@ -23,17 +22,18 @@ opt-in and selects effective mask `0x1ff6ffa`, including W6 and its pacing
 dependencies (`w6-player-optin/options.json`). This is an option-path check;
 existing D5 evidence supplies runtime acceptance. No new FPS claim is made.
 
-## Default-On timing and hardware acceptance (2026-10-13)
+## Unified player option and hardware acceptance (2026-10-13)
 
 The user reports that release 3.0b works well on a real A1200 with a 68040 at
-40 MHz and MMU enabled. The subsequent default-On change only reverses the
-normal CUSTOM3 selector; it does not alter the enabled timing implementation.
+40 MHz and MMU enabled. The final option change combines the already-accepted
+rendering and timing paths without altering their enabled implementations.
 Normal, DEVELOPER and VERIFY builds pass. `player_options_check.py` executes
 the assembled normal selector in 24 cases across 000/010/020/030/040/060
-attention flags, both rendering choices and both timing choices, checking
-W6, its dependencies and the FC12 choices. These are option checks, not new
-performance measurements. Run it with the normal slave path after sourcing
-the shared Amiga environment; its assembler listing must be beside the slave.
+attention flags and CUSTOM2 values 0–3, checking the boolean bit, W6 dependencies
+and FC12 choices. Disabled selects zero patches; enabled preserves the previous
+combined masks. These are option checks, not performance measurements. Run it
+with the normal slave path after sourcing the shared Amiga environment; its
+assembler listing must be beside the slave. All 592 regression tests pass.
 
 The reported cockpit line was reproduced with the unchanged release on the
 cached 040 emulator. Wing Commander's corrected MMU write-attribute paths

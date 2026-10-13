@@ -39,10 +39,10 @@
  The slave reserves 1 MB for game and renderer memory, plus Kickstart.
  The former 512 KB ChipMem + 1.5 MB slow-RAM configuration is insufficient.
  Tested minimum: 512 KB ChipMem + 2 MB FastMem (normal-build flight).
- Faster rendering releases the 192 KB game-pool extension for sim v1.
+ Enhanced framerate releases the 192 KB game-pool extension for sim v1.
  With the option off, the game retains its original allocation budget.
  DMA allocations retain their original ChipMem requests.
- Faster rendering enables instruction caching on 020+ where needed.
+ Enhanced framerate enables instruction caching on 020+ where needed.
  It does not enable a disabled data cache. On a 68030 with an MMU, use
  the MMU tooltype to permit fast-memory data caching; ChipMem stays uncached.
  Current maximum-detail measurements show less than 2% difference with MMU,
@@ -54,13 +54,16 @@
  - English and German releases supported; Manual and Keys included.
 
  Rendering improvements:
- - Faster rendering is On by default (normal build: CUSTOM2=0). It selects the verified dashboard cache, geometry,
+ - Enhanced framerate (68020+Fast RAM) is a single splash checkbox.
+   CUSTOM2=1 enables rendering improvements and consistent game speed together.
+   Omitted/zero CUSTOM2 is Off; supplied icons enable it with CUSTOM2=1.
+   It selects the verified dashboard cache, geometry,
    solid-fill, persistent-gauge, static-artwork, scene and sound optimizations, with CPU-specific choices.
  - On 030/040/060, resource generations avoid rescanning unchanged cockpit
    bitmap and mask bytes. Mutable drawing inputs retain exact checks.
- - On 030/040/060, Faster rendering uses longword span fills and specialized
+ - On 030/040/060, Enhanced framerate uses longword span fills and specialized
    line loops in FastMem. This adds no working buffers or RAM requirement.
- - With Faster rendering and Consistent game speed enabled on 040/060,
+ - With Enhanced framerate and Consistent game speed enabled on 040/060,
    scenery selection retains a separate presentation cache using the native
    camera-distance and view rules. Drawing restores the simulation copy.
    This uses about 76 KB additional FastMem when available; allocation failure
@@ -99,25 +102,22 @@
    Native frames and slower CPUs retain the original safe beam wait.
    The two-field cap remains (about 25 FPS on PAL). This does not make world
    speed frame-rate independent by itself.
- - Select Off in the splash window, or CUSTOM2=1, to disable it.
-   This reverses the former development normal-build 0/1 meaning.
-   Supplied icon tooltypes are unchanged.
+ - Clear the checkbox, or use CUSTOM2=0, to disable the whole bundle.
+   CUSTOM3 is no longer used. Earlier beta CUSTOM2=0/1 meanings were reversed.
  - Applies only to sim v1; v2/v3 retain their existing fixes.
  - The dashboard cache uses about 13.7 KB extra ChipMem, with allocation fallback.
- - With Consistent game speed Off, faster frames can accelerate the world
-   on slow machines. Neither option changes the Time Scale setting.
+ - The option preserves the Time Scale setting.
  - Developer builds retain individual CUSTOM2 bits (CUSTOM2=0 disables all).
-   They select consistent game speed with bit 13; CUSTOM3 is player-build only.
+   They retain separate timing selection through CUSTOM2 bit 13.
    Normal/developer builds
    contain no VERIFY instruments or scripted game input.
 
  Performance and Time Scale:
- - Consistent game speed is an independent splash option, On by default (CUSTOM3=0).
-   Select Off or CUSTOM3=1 to disable it. This reverses the earlier beta
-   CUSTOM3 meaning; remove old CUSTOM3=1 tooltypes to keep it enabled. It works
-   with Faster rendering Off too. Supported on 68000 and 020+; 68010 retains
-   native timing. It enables safe presentation and a one-field cap, without
-   promising 50 FPS. Time Scale is unchanged; overload drops excess world time.
+ - Consistent game speed is included in Enhanced framerate. It is supported
+   on 68000 and 020+; 68010 retains native timing. CPU-specific renderer gates
+   remain in force; the accelerated scene renderer is selected on 030/040/060.
+   It enables safe presentation and a one-field cap, without promising 50 FPS.
+   Time Scale is unchanged; overload drops excess world time.
    W6 release acceptance was completed by the user on 2026-10-13.
  - Measured W6 envelope: A500 Time Scale 0 passed the rate window;
    maximum-detail Time Scale 40 dropped simulation time. 020/030/040/060
@@ -127,8 +127,8 @@
  History:
  --------
  version 3.0b (13.10.2026)
- - CPU-specific rendering improvements and consistent game speed, both
-   enabled by default and independently switchable, as described above.
+ - CPU-specific rendering improvements and consistent game speed under one
+   Enhanced framerate checkbox, enabled in the supplied icons.
  - ReadMe and installer adapted to the WHDLoad Install Template, retaining
    JOTD's three-disk layout, executable decompression and icon choices.
 

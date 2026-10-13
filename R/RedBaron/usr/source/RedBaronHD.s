@@ -94,8 +94,7 @@ slv_config
 	dc.b "C2:X:Instruction cache policy:17;C2:X:Persistent gauges:18;C2:X:Sparse cockpit artwork:19;C2:X:Direct scene raster:20;"
 	dc.b "C2:X:Deferred page fence:21;C2:X:Fast cockpit composition:22;C2:X:Fast gauge updates:23;C2:X:Polygon spans:24;C2:X:Presentation scenery cache:25;C2:X:Selective viewport copy:28;"
 	ELSE
-	dc.b "C2:L:Faster rendering:On,Off;"
-	dc.b "C3:L:Consistent game speed:On,Off;"
+	dc.b "C2:B:Enhanced framerate (68020+Fast RAM);"
 	ENDC
 	ENDC
 	dc.b 0

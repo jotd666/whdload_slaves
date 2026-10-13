@@ -16,13 +16,13 @@ perf_read_options:
 	IFD DEVELOPER
 	and.l #PERF_DEVELOPER_MASK,d0
 	ELSE
-	; Normal splash list: On=0 (WHDLoad default), Off=1.
-	tst.l d0
-	beq.b .player_enabled
+	; Normal checkbox: CUSTOM2 bit 0 enables the complete player bundle.
+	btst #0,d0
+	bne.b .player_enabled
 	moveq #0,d0
 	bra.b .selected
 .player_enabled
-	move.l #PERF_VERIFIED_MASK,d0
+	move.l #PERF_VERIFIED_MASK|$2000,d0
 	; The table mirror and G1 projection lose on the measured cached 68030.
 	; Keep those originals on 030 and conservatively on unmeasured 040/060.
 	; DEVELOPER/VERIFY retain explicit bits for comparisons.
@@ -38,8 +38,6 @@ perf_read_options:
 	; Explicit developer/VERIFY masks still support isolated comparisons.
 	btst #7,perf_attnflags+3(pc)
 	bne .gauge_player_ready
-	btst #0,perf_custom3+3(pc)
-	bne .gauge_player_off
 	move.l perf_attnflags(pc),d1
 	andi.l #$0c,d1
 	bne .gauge_player_ready
@@ -50,8 +48,6 @@ perf_read_options:
 	move.l perf_attnflags(pc),d1
 	andi.l #$88,d1
 	bne .span_player_ready
-	btst #0,perf_custom3+3(pc)
-	bne .span_player_off
 	btst #2,perf_attnflags+3(pc)
 	bne .span_player_ready
 .span_player_off
@@ -66,12 +62,6 @@ perf_read_options:
 .delta_player_off
 	bclr #28,d0
 .delta_player_ready
-	; Independent player list: On=0 (default), Off=1. Rendering Off still permits W6 and its
-	; required safe-swap/one-field pacing; the shared CPU gate remains below.
-	btst #0,perf_custom3+3(pc)
-	bne .player_time_ready
-	bset #13,d0
-.player_time_ready
 	ENDC
 	ENDC
 	; W6 supports the measured 68000 and 020+ classes. Keep 010 unchanged.
@@ -374,9 +364,6 @@ perf_mismatch:
 perf_tags:
 	dc.l WHDLTAG_CUSTOM2_GET
 perf_custom2:
-	dc.l 0
-	dc.l WHDLTAG_CUSTOM3_GET
-perf_custom3:
 	dc.l 0
 	dc.l WHDLTAG_ATTNFLAGS_GET
 perf_attnflags:
