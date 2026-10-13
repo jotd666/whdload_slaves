@@ -922,6 +922,14 @@ step 4.7, made concrete.
     68060 (smallest T).
   - There must be no tunnelling and no missed checkpoint. The sweep counters must show
     any long-frame crossing.
+  - **Targeted diagnostics (2026-10-13):** a native-traversable loop fixture now
+    reproduces contact loss with timing enabled on both extreme profiles.
+    Slowed-A500 wheel error exceeds the native pitch helper's 180-unit domain,
+    causing zero correction. A private saturation experiment improves traversal
+    but does not validate contact/exit behavior and is not in the game source.
+    The jump blocker is a traffic vehicle; a clear lane gives collision-free
+    takeoff on both profiles, but their landing states still differ at field 299.
+    These are open failures, not C4 acceptance; details are in `GAME_TIME.md`.
 - **C5, gates.** G1 passes or meets the explicitly accepted temporary exception; G2 is reported; `check_disabled.py` passes; the
   normal build is byte-identical.
 - **C6, human laps — deferred by the user (2026-10-13).** Full A500 and 68040

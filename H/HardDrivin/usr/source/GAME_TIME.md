@@ -3955,13 +3955,44 @@ before extended flight), so these probes do not establish a successful baseline
 route or isolate a timing regression. Establish that baseline before changing
 loop handling to fit this fixture.
 
-Both the centre-line jump approach and a lane/heading matching the validated
-original jump route encounter a collision before takeoff. No pre-crash sample
-passes the existing ramp-lip/airborne-position predicates. Airborne frames after
-collision/recovery are explicitly excluded. Thus C4 remains open; seeing pitch
-wrap, elevation, or an eventual crash is not a loop/jump acceptance result.
-`c4-seeded-coverage.json` records a failing coverage status and all observations.
-The next fixture work must identify the blocking collision and establish a
-native-successful loop route. Completed emulator processes were checked before
-removing approximately 703 MB of disposable runtime copies; captures and build
-manifests remain under the ignored harness.
+The original-lane jump fixture's blocking object is now identified. Read-only
+collision capture `c4-jump-collision-id` reaches `$bc62` at field 128 against
+main-object record 97 of 98, type 62/class 8, at (31912,189,17348). The separate
+traffic table's twelfth controller references that record. It is a traffic
+vehicle, not the ramp itself; a pose-seeded early arrival does not reproduce the
+traffic timing of the original full input tape.
+
+A second lane within the unchanged ramp geometry starts at (32425,0,18392),
+heading -636. No object or traffic is removed. `c4-jump-clear-slow` and
+`c4-jump-clear-060` both take off without collisions or crash samples in 300
+fields. First zero-contact samples occur at fields 151/137. However, at field
+299 the slowed A500 has landed (Y=3.625, mask 15), while the 68060 remains airborne
+(Y=238.125, mask 0). This is takeoff coverage, not acceptance of flight timing or
+the complete jump/checkpoint. The slowed run reports 286 sweep tests, zero hits
+and zero overflows; the fast run does not activate the long-frame sweep.
+
+The `c4-loop-follow-native-v3` fixture starts 50 world units to one side of the
+loop approach and holds mouse X=360 only while the native road cursor selects
+segments 37–48. Native physics traverses the full pitch rotation and returns to
+ground (field 323, pitch -67, Y=1, mask 15), without a zero-contact sample during
+that first traversal. It later leaves the road; this is a native-traversable
+loop probe, not proof of a complete route or checkpoint. The same fixture with
+timing enabled loses all contact on the slowed A500 at field 184 (pitch 241)
+and on the 68060 at field 259 (pitch -314). No crash had started at either loss.
+
+Read-only wheel-distance diagnostics in `c4-loop-terrain-slow` isolate a concrete
+large-interval failure. At field 162, wheel distances -113/-111/-22/-20 give a
+summed front/rear difference of -182. Native helper `$2b0e`, called for the
+full-contact pitch correction at `$cba2`, returns zero when the numerator's
+magnitude exceeds its denominator, 180. The next difference is -185 and again
+produces no correction. This explains the observed stalled pitch before the
+car leaves the road; it does not explain all small-interval behavior.
+
+An explicitly private experiment bounds that helper's numerator to +/-180 only
+outside the native eight-field interval. `c4-loop-clamp-slow` gets around one
+rotation and returns to ground, but has transient zero contact and an incorrect
+exit/road-cursor path. It is not promoted to the authoritative source. Geometry,
+terrain correction and flight still need validation; saturation alone is not a
+verified solution. `c4-targeted-diagnostics.json` records the retained captures,
+slave hashes and failure observations. All fixtures remain separate from the
+original input tape and performance windows. C4 remains open.
