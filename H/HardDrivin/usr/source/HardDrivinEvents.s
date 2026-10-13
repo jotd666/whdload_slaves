@@ -36,13 +36,6 @@ _events_signature: dc.b 'HDEVENT1'
 ; Each slot is carry.w, charged.b, padding.b.
 _events_score_state: dc.l 0
 _events_start_state: dc.l 0
-_events_begin_step:
-	move.l a0,-(a7)
-	lea _events_score_state(pc),a0
-	clr.b 2(a0)
-	clr.b 6(a0)
-	movea.l (a7)+,a0
-	rts
 ; A0 slot, D0 unsigned fields0..65535. Return the number of due events.
 ; D1 scratch. Long addition retains the carry at the unsigned-word boundary.
 _events_tick:

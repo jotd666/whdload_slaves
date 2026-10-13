@@ -1,4 +1,4 @@
-; Experimental reference integrator, not a performance-accepted policy.
+; Fieldwise reference integrator and fallback for the release phase solver.
 ; Driving advances engine and projected position in fields.
 ; Manual/neutral support is separately gated by VERIFY_DRIVETRAIN_MANUAL.
 ; VERIFY_DRIVETRAIN_SKID retains native held-vector motion during skids.
@@ -465,6 +465,7 @@ _drivetrain_position_add:
 	ENDC
 
 	IFD VERIFY_DRIVETRAIN_SQRT
+	IFND VERIFY_DRIVETRAIN_PHASE
 ; The engine's native square-root routine is pure. Reuse only identical complete
 ; long operands during inner reference ticks. Native/full-step calls still run
 ; the original function. Its scratch outputs are dead at B85C except D0.
@@ -507,6 +508,7 @@ _drivetrain_sqrt:
 	move.l (a7),4(a7)
 	addq.l #4,a7
 	rts
+	ENDC
 	ENDC
 
 	IFD VERIFY_DRIVETRAIN_POWER

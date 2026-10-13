@@ -84,7 +84,7 @@ instruction timing is unavailable. The 42-run rotation matrix is complete: no me
 This earlier binary established the candidate. The final same-build matrix below
 changes the CPU selection, particularly on the 68030.
 
-## Fast edge-array experiment
+## Fast edge-array experiment (removed)
 
 Code, globals, vertex data and patterns already use Fast RAM where available.
 The two 200-word edge arrays share an 800-byte native Chip pool reservation.
@@ -93,7 +93,9 @@ Only the CPU reads/writes these arrays. The experiment allocates an additional
 addresses stay unchanged, and substitutes the two edge pointers. Screens,
 sprites, copper and blitter data stay in Chip RAM. Failure to allocate Fast RAM
 leaves the original instructions installed. The ordinary path excludes 68000;
-`VERIFY_RENDER_000_MEMORY` exists only to test that profile independently.
+`VERIFY_RENDER_000_MEMORY` was used to test that profile independently.
+The unselected experiment and its allocation/hook were removed after release
+integration; these measurements document the rejected approach.
 
 The initialization hook passes 224 register/stack/CCR cases. An initial A1200
 variable-input A window gives 203/196 swaps by the independent counter and
@@ -109,7 +111,8 @@ Broader memory-placement promotion is not selected.
 ## Gates, cache and evidence
 
 `VERIFY_RENDER` compiles the candidate module for SPS 0126 only. Developer-only
-CUSTOM3 bit 0 selects the Fast edge-array experiment; bit 1 selects rotation
+CUSTOM3 bit 0 is now unused (the Fast edge-array experiment was removed);
+bit 1 selects rotation
 shortcuts on the 68000 instruction set and successors. These options are not
 release configuration. The boot patch is followed by the existing final cache
 flush. The existing slave already enables hardware instruction/data caches

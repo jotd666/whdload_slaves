@@ -858,7 +858,7 @@ _phase_published:
  swap d0
  addq.w #1,d0
  bsr _projection_integer_components
- ; Each difference is narrowed to a word exactly as in _phase_project.
+ ; Each difference is narrowed to a word exactly as in _phase_project_core.
  sub.w (a1),d0
  muls.w d7,d0
  lsl.l #8,d0
@@ -905,69 +905,6 @@ _phase_published:
  movem.l (a7)+,d2-d4/d7/a2/a6
  rts
 
-; A0: native-phase anchor Q16, current Q16. D0: unsigned endpoint word.
-; D1: newly consumed fields, D2: fields remaining before this update.
-; 1 <= D1 <= D2 <= 8. Anchor is a nonnegative Q3 value in Q16 storage.
-; Return D0: forecast Q16 at the phase end using only future input.
-; Update current at A0+4. D3-D4 scratch; all other registers preserved.
-_phase_scalar_step:
- ; At a complete new phase current=anchor, so consuming all eight fields
- ; returns the native endpoint exactly. Retain the general kernel when the
- ; caller supplies a different current value (including verification inputs).
- cmpi.w #8,d1
- bne.s .incremental
- move.l (a0),d3
- cmp.l 4(a0),d3
- bne.s .incremental
- swap d0
- clr.w d0
- move.l d0,4(a0)
- rts
-.incremental:
- moveq #0,d3
- move.w d0,d3
- swap d3
- sub.l (a0),d3
- asr.l #3,d3
- move.l 4(a0),d0
- ; Counts are1..8. Enter a fixed chain at -2*count to avoid a DBF per
- ; field while retaining the exact sequence of modular long additions.
- move.w d1,d4
- neg.w d4
- add.w d4,d4
- jmp .consumed(pc,d4.w)
- add.l d3,d0
- add.l d3,d0
- add.l d3,d0
- add.l d3,d0
- add.l d3,d0
- add.l d3,d0
- add.l d3,d0
- add.l d3,d0
-.consumed:
- move.l d0,4(a0)
- move.w d1,d4
- sub.w d2,d4
- beq.s .done
- add.w d4,d4
- jmp .done(pc,d4.w)
- add.l d3,d0
- add.l d3,d0
- add.l d3,d0
- add.l d3,d0
- add.l d3,d0
- add.l d3,d0
- add.l d3,d0
-.done:
- rts
-
-; D0.L signed Q16 forecast. Interpolation quantizes its fraction to Q6.
-; A0 -> three Q16 projected components. All registers preserved.
-_phase_project:
- movem.l d0-d7/a0-a1,-(a7)
- bsr _phase_project_core
- movem.l (a7)+,d0-d7/a0-a1
- rts
 ; The runtime movement caller already preserves the outer frame's registers. The core
 ; clobbers D0-D7/A0; A1-A6 are untouched.
 _phase_project_core:

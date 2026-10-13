@@ -1,12 +1,8 @@
-; SPS 0126 rendering experiments, separately gated from elapsed-time physics.
-; VERIFY_RENDER compiles the module. CUSTOM3 bit 0 selects Fast edge arrays;
-; bit 1 selects exact zero-coefficient rotation on all supported CPUs;
-; bit 2 selects the lean blitter wait only when CUSTOM2 is zero.
+; SPS 0126 rendering optimizations, separately gated from elapsed-time physics.
+; VERIFY_RENDER compiles the module. Developer CUSTOM3 bit 1 selects rotation
+; shortcuts; bit 2 selects lean blitter waits when CUSTOM2 is zero. Bit 0 is unused.
 ; Release builds select measured variants automatically under CUSTOM1.
-; HD_DEVELOPMENT retains the CUSTOM3 experiment mask; other editions are unchanged.
-; CPU-only edge storage: two 200-word arrays. The native pool reservation is
-; deliberately retained so every later Chip allocation keeps its old address.
-; Patterns already live in the globals hunk; no DMA buffer is relocated.
+; Other editions retain their original patches.
 
 _render_install:
 	cmpi.l #$11a4e,d0
@@ -22,30 +18,6 @@ _render_install:
 	lea _render_options(pc),a0
 	move.l d0,(a0)
 	ENDC
-	move.l _render_options(pc),d0
-	btst #0,d0
-	beq .rotation
-	IFND VERIFY_RENDER_000_MEMORY
-	move.l _render_attn(pc),d0
-	btst #AFB_68020,d0
-	beq .rotation
-	ENDC
-	; Fast-only allocation fails harmlessly on machines without Fast RAM.
-	; Lifetime is the game session, like the existing permanent native pool.
-	movea.l 4.w,a6
-	move.l #800,d0
-	move.l #MEMF_FAST|MEMF_CLEAR,d1
-	jsr _LVOAllocMem(a6)
-	tst.l d0
-	beq .rotation
-	lea _render_edges(pc),a0
-	move.l d0,(a0)
-	lea _render_memory_patches(pc),a0
-	lea _render_install(pc),a1
-	adda.l #_code_start-_render_install,a1
-	movea.l (a1),a1
-	jsr resload_Patch(a2)
-.rotation:
 	move.l _render_options(pc),d0
 	btst #1,d0
 	beq .wait
@@ -72,19 +44,6 @@ _render_install:
 .restore:
 	movem.l (sp)+,d0-d2/a0-a2/a6
 .done:
-	rts
-
-_render_memory_patches:
-	PL_START
-	; PERF_RANGE VERIFY_RENDER_MEMORY $01a1c $0008: CPU-only edge pointers
-	PL_PSS $01a1c,_render_set_edges,2
-	PL_END
-
-_render_set_edges:
-	movea.l _render_edges(pc),a0
-	move.l a0,-$69e0(a4)
-	; Displaced MOVE.L D0 sets NZVC, MOVEA changes no flags; preserve X.
-	tst.l d0
 	rts
 
 	IFND HD_DEVELOPMENT
@@ -146,7 +105,6 @@ _render_attn: dc.l 0
 	IFND HD_DEVELOPMENT
 _render_options: dc.l 0
 	ENDC
-_render_edges: dc.l 0
 
 	INCLUDE "HardDrivinRotation.s"
 

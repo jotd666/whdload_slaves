@@ -115,3 +115,23 @@ standalone buffered-write reproducer. Earlier
 `s6-*` matrix captures precede the physical-memory guard and are superseded.
 Raw evidence, build outputs and tooling remain in ignored `tmp/`; memory dumps
 are compressed with verified round trips after inspection.
+
+## Dead-code cleanup after integration
+
+The unselected Fast edge-array experiment (allocation, patch and pointer state)
+was removed, including its development override; CUSTOM3 bit 0 is now unused.
+Three helpers with no runtime callers were also removed: `_events_begin_step`,
+`_phase_scalar_step` and the preserving `_phase_project` wrapper. Their active
+inline replacements / projection core remain. The square-root cache is now
+assembled only when its reference-only hook is selected; phase builds had
+included its unreachable routine and state despite omitting the hook.
+
+The older fieldwise integrator remains a live fallback of `_phase_frame`, and
+other explicitly selectable development checks are retained. The release code
+hunk is now 47,906 bytes, down 344 bytes. No active physics formulas or renderer
+selection rules changed. Release, gameplay-fixture and reference-only builds
+assemble; the dead-symbol and 160-range branch audits pass.
+Short post-cleanup gameplay checks pass on A500 and A1200/020 (200 fields each),
+including all 13 renderer patch sites and unchanged native edge-pointer setup.
+With enhancements disabled, all 171 remaining declared ranges match native
+bytes. These smoke checks do not establish a new performance comparison.
