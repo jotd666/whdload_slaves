@@ -22,6 +22,72 @@ opt-in and selects effective mask `0x1ff6ffa`, including W6 and its pacing
 dependencies (`w6-player-optin/options.json`). This is an option-path check;
 existing D5 evidence supplies runtime acceptance. No new FPS claim is made.
 
+## FC10: cockpit word lists — dropped (2026-10-13)
+
+FC10 is closed under the plan's retention rule: no measured CPU class gains
+2%; 030 gains too little, while 040/060 regress. The existing FC9 player build
+and verified mask `0x7ff1fff` remain unchanged. No additional runtime memory is shipped. FC11 is
+next; the projected FC10 saving is not an achieved frame-rate improvement.
+
+The candidate pre-clipped four source lists, split opaque/masked writes,
+merged adjacent aligned words into longwords and used fixed plane displacements.
+Both display-page roles shared the compiled offsets. It allocated 80,672 Fast
+bytes optionally before the game heap, with an FC2 fallback on failure.
+Developer bit 27 selected it on 030/040/060. The first implementation discarded
+compiled operands on ordinary page invalidations and regressed on 040. The
+final candidate retained identical rebuilt operands and invalidated only the
+changed source, while resource replacement still invalidated all four streams.
+That correction did not produce a qualifying whole-window improvement.
+
+### Final same-build comparison
+
+All six captures use the frozen 62,836-byte developer slave, SHA-256
+`34f469c52048e7f2ae11a46bc002a30bf4078bc9f14152118921e18eda1fce94`.
+Each has 2,000 PAL fields of level flight plus 250 fields banking right, W6 and
+FC9 enabled, maximum world/aircraft detail, ground detail enabled in combat,
+and Time Scale 40. Only bit 27 differs within each pair.
+
+| CPU configuration | Off FPS / ms | Candidate FPS / ms | FPS change | Bank off → on FPS | Decision |
+|---|---:|---:|---:|---:|---|
+| 030-nommu | 20.542 / 48.680 | 20.792 / 48.096 | +1.22% | 20.168 → 20.368 | Drop |
+| 040 | 24.286 / 41.176 | 22.639 / 44.172 | -6.78% | 23.562 → 22.963 | Drop |
+| 060 | 26.108 / 38.302 | 23.762 / 42.084 | -8.99% | 25.360 → 23.762 | Drop |
+
+All level/bank windows have zero dropped simulation steps/units and zero
+publication-margin violations. World/wall ratios remain within one endpoint
+quantum of nominal. These are emulator throughput measurements, not physical
+accelerator FPS. The unaffected release configurations retain the earlier
+scoreboard entries; do not treat the rejected candidate's numbers as shipped
+performance or compare them causally with another build.
+
+### Validation and disposition
+
+The candidate passes all 589 host tests and native 060 checks: 63 artwork
+checks, 63 scene checks, six polygon primitive checks, both cockpit page twins
+and 86 final cockpit comparisons. The final RAM snapshot confirms all four
+compiled sources active. Existing scenery checks also pass; gauge twins are
+idle on this W6 route, not an additional gauge pass. All three candidate builds
+compile; the final VERIFY audit passes 152 patch destinations, and the hook
+audit passes 138 ranges.
+The exact native profile attributes 1.75 ms/frame to the new paint loop, but
+that short attribution window does not establish a full-flight speedup. The
+paired flight measurements govern the rejection; no further redesign was
+pursued after all classes failed the threshold.
+
+Evidence: `fc10-final-rate-{030-nommu,040,060}-{off,on}` and
+`fc10-final-native-060`. The rejected implementation is preserved locally as
+`fc10-final-candidate.patch`, together with its frozen binary and listing;
+it is removed from the release source. Reproduce with `BENCH_FROZEN_SLAVE`
+pointing to that frozen build,
+`BENCH_DEVELOPER=1 BENCH_BATCH_KEYS=1`, and
+`scene_profile_case.py CPU MASK OUTPUT --fields 2000 --groups rate --bank-after 250`.
+Off/on masks: 030 `0x47f2ffa`/`0xc7f2ffa`, 040 `0x77f2ffa`/`0xf7f2ffa`,
+060 `0x7ff2ffa`/`0xfff2ffa`. The unrevised prototype and interrupted 060 baseline
+are excluded from the final comparison.
+
+After dropping the candidate, all three release modes rebuild successfully.
+The restored 60,224-byte normal slave matches the FC9 release SHA-256 below.
+
 ## FC9: raster paint kernel (2026-10-13)
 
 FC9 is retained on 030/040/060 under Faster rendering. Developer/VERIFY bit 26
@@ -80,8 +146,9 @@ The final exact VERIFY profiles attribute 6.93 ms/frame (040) and 6.99 ms/frame
 (060) exclusively to the raster kernel. On 060 the remaining cockpit word loop
 costs 4.73 ms, viewport copy 4.06 ms (97% Chip stalls), and overlay key matching
 1.67 ms (58% Chip stalls). These are current cost attribution, not release FPS
-or a causal comparison with an older profile. FC10 and FC11 address the latter
-remaining avoidable loops; the viewport copy remains bus-bound.
+or a causal comparison with an older profile. FC10 subsequently failed its
+retention threshold; FC11 still targets key matching. The viewport copy remains
+bus-bound.
 
 Normal release checks (`fc9-normal-{030-nommu,040,060}`) boot with CUSTOM2
 omitted and CUSTOM3=1, return from Preferences, select the FC9 kernel and

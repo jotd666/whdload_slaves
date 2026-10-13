@@ -422,7 +422,7 @@ Implemented as bit 25, selected on 040/060 with Faster rendering and W6.
 The complete output snapshot, world fingerprint, native checks and optional
 Fast allocation are documented in `profiling.md`. Both CPU classes clear the
 2% threshold; the final rate pairs and normal-build check pass. Actual frame
-times exceed the original projection below; FC9 is now complete and FC10 is next.
+times exceed the original projection below; FC9 is now complete and FC11 is next.
 The following numbered list records the design; all six items are resolved by
 the implementation and measured disposition in the scoreboard.
 
@@ -486,21 +486,12 @@ requirement are introduced. Pixel models cover all colours, alignments, extreme
 endpoints and the existing native polygon pipeline. Measurement and the final
 CPU disposition are recorded in `profiling.md`. All three measured classes clear
 the retention threshold; bit 26 ships on 030/040/060 under Faster rendering.
-The 68000/010/020 paths retain their prior kernel. FC10 is next.
+The 68000/010/020 paths retain their prior kernel. FC11 is next.
 
-#### FC10 — cockpit composition word lists
+#### FC10 — cockpit composition word lists (closed: dropped)
 
-Change the `cockpit_fast_words` lists, which are built once on a cache miss.
-Expected saving: about 2.5–3 ms.
-
-- **Pre-clip per page and viewport.** This removes two compares and branches
-  per word.
-- **Address planes with displacements.** Use `8000(a2)`… instead of
-  `adda.l #8000`.
-- **Split opaque words.** Move words with mask `$ffff` to their own list of
-  plain moves.
-- **Merge into longwords.** Combine adjacent word pairs into `and.l`/`or.l`.
-- **Validation.** Keep the FC2 twins and the final cockpit checks.
+Dropped: clipped opaque/masked word/longword streams failed the 2% retention
+threshold on every measured CPU class; the existing painter is retained. See `profiling.md`.
 
 #### FC11 — overlay key comparison
 
@@ -526,7 +517,10 @@ Before and after FC8, measure W6 frame rate on the real A1200/040/40, using
 the W6 rate counters or an on-screen frame counter. A real 060 should gain
 far more from instruction cuts than the emulator shows.
 
-### 5.4 Projection (emulated 040 W6, ms per frame)
+### 5.4 Original projection (emulated 040 W6, ms per frame)
+
+Historical estimates only: FC10 was dropped. Current measurements and CPU
+dispositions are in `profiling.md`.
 
 | Step | ms |
 |---|---:|

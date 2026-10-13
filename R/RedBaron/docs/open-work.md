@@ -21,7 +21,7 @@ Refer to items by ID. FC items are detailed in `fast-cpu-plan.md`.
 | R2 | In-game clipped-sprite bounds abort while firing | Fixed; reserved prefix with strict guard, native replay and release flight checks pass |
 | FC8 | W6 presentation scenery cache | Complete; enabled on 040/060 with Faster rendering + W6; +15.53% / +12.24% level-flight FPS |
 | FC9 | Raster kernel `paint()` rewrite (per-plane constants, longword interiors, line bset/bclr) | Complete; enabled on 030/040/060; measurements in `profiling.md` |
-| FC10 | Cockpit composition word lists (pre-clipped, opaque split, longwords) | Planned |
+| FC10 | Cockpit composition word lists (pre-clipped, opaque split, longwords) | Closed: dropped; below 2% on 030; regresses on 040/060 |
 | FC11 | Overlay key comparison replaced by explicit invalidation | Planned |
 | FC12 | Re-measure FC5/FC3/FC4 decisions with W6, not under the two-field cap | Planned |
 | FC7 | AGA 040/060 and real-hardware confirmation | Real A1200/040 at 40 MHz works with W6 enabled (user report); 060 and DMA/timing confirmation remain |
@@ -68,7 +68,7 @@ Git; do not revive their superseded next-work lists.
 `fast-cpu-plan.md` has the exact 030 frame attribution (aprof) and the ordered
 fix plan for the former 16.67 FPS plateau. Its §5 profiles 040/060 with W6
 (18.3/19.6 FPS) and plans FC8–FC12 toward 25 FPS with Consistent game speed. FC0–FC4 are complete; FC5 was evaluated and dropped below the measurement
-threshold. FC6, FC8 and FC9 are complete; FC10 is next, with FC7 hardware measurements still open.
+threshold. FC6, FC8 and FC9 are complete; FC11 is next, with FC7 hardware measurements still open.
 
 **FC0 is complete:** native scratch-clear synchronization fixes the top-edge
 artwork mismatch. Full artwork/scene twins pass on 030 NOMMU/MMU, 040 and 060;
@@ -83,7 +83,7 @@ pointer publication. Redraws, native fallbacks and modal boundaries fence before
 writing; the two-field cap and RAM requirements are unchanged. The normal
 bundle enables it. Same-build comparisons, final normal timings, native twins,
 view/firing transitions, beam checks and exact profiling are in `profiling.md`.
-FC10 is the next renderer step; W6/D5 is now accepted as an opt-in; see Release status above.
+FC11 is the next renderer step; W6/D5 is now accepted as an opt-in; see Release status above.
 
 ## Completed: Fast-RAM cockpit composition
 
@@ -118,7 +118,7 @@ existing renderer. The row table reuses reserved space; RAM requirements are
 unchanged. Native triangle/quad/larger-polygon twins and host models pass.
 The normal bundle enables 040/060; the 030 FPS difference is below 2%, so its
 player path is retained. Final normal checks, all timing pairs and the exact
-profile are recorded only in `profiling.md`. FC5 and the FC6 geometry extension were dropped; FC10 is next.
+profile are recorded only in `profiling.md`. FC5 and the FC6 geometry extension were dropped; FC11 is next.
 
 ## Post-release rendering investigation
 
@@ -127,7 +127,7 @@ the new section of `profiling.md`. It identifies repeated cockpit scripts,
 per-plane drawing and explicit waits, and documents why the discarded software
 blitter was not a test of a purpose-built Fast RAM renderer. The sparse static
 artwork and direct scene follow-ups below are implemented. FC2 now composes the overlay/static foreground with the scene viewport;
-persistent gauges and direct convex spans are complete as FC3/FC4. FC10 is next; W6/D5 is now accepted as an opt-in; see Release status above.
+persistent gauges and direct convex spans are complete as FC3/FC4. FC11 is next; W6/D5 is now accepted as an opt-in; see Release status above.
 
 ## Completed: selective static cockpit artwork repairs
 
@@ -156,7 +156,7 @@ The first candidate's polygon overhead cancelled its rectangle saving; direct
 scratch loops fixed that regression. CPU comparisons, native primitive twins,
 banked flight, view/firing checks and final normal-build checks are recorded in
 `profiling.md`. FC2 now handles cockpit composition, and FC4 replaces the
-common convex polygon pipeline on 040/060. FC10 is the next renderer step.
+common convex polygon pipeline on 040/060. FC11 is the next renderer step.
 W6/D5 is now accepted as an opt-in; see Release status above.
 
 ## Completed: FC6 profile, W6 trial and geometry evaluation
@@ -177,4 +177,4 @@ allocation falls back to the previous path if unavailable; minimum RAM is
 unchanged. Native cache/restoration checks, deliberate stale-world tests,
 existing rendering twins, host tests and paired W6 timing pass. The newly
 exposed publication-tail margin is corrected. Results and manual reproduction
-are in `profiling.md`; FC10–FC12 and hardware timing remain open.
+are in `profiling.md`; FC11–FC12 and hardware timing remain open.
