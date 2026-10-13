@@ -97,6 +97,11 @@ if 'time_present_cache_buffer_ptr:' in (a.out/'slave.lst').read_text(encoding='l
    expected=base+symbol(lines,'scene_raster_fast_code' if effective&(1<<26) else 'scene_raster_code')
    assert selected==expected,raw
    (a.out/'raster-selection.json').write_text(json.dumps(dict(selected=selected,effective_mask=effective,fc9=bool(effective&(1<<26))),indent=2)+'\n')
+   if 'overlay_generation_enabled:' in '\n'.join(lines):
+    raw=r.command(f'gdb printf "OVERLAY_GENERATION %u\\n", *(unsigned short*){base+symbol(lines,"overlay_generation_enabled"):#x}')
+    active=int(re.search(r'OVERLAY_GENERATION (\d+)',raw)[1])
+    assert bool(active)==bool(effective&(1<<27)),raw
+    (a.out/'overlay-generation.json').write_text(json.dumps(dict(active=active,effective_mask=effective),indent=2)+'\n')
   result=check_live(lines,base,r.command,w6_enabled,a.machine!='a500')
   (a.out/'runtime-buffers.json').write_text(json.dumps(result,indent=2)+'\n')
 

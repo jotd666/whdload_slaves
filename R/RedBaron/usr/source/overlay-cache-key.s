@@ -170,7 +170,7 @@ overlay_cache_key_build:
  move.l (a2),a1
  move.l a1,d3
  beq .fail
- bsr .append
+ bsr .append_resource
  tst.l d0
  beq .fail
  addq.w #2,d1 ; native source masks have a pad word per row
@@ -179,7 +179,7 @@ overlay_cache_key_build:
  move.l 4(a2),a1
  move.l a1,d3
  beq .fail
- bsr .append
+ bsr .append_resource
  tst.l d0
  beq .fail
  addq.l #4,a3
@@ -198,6 +198,25 @@ overlay_cache_key_build:
 .append
  move.l a5,a0
  bra overlay_key_append
+; FC11 marks only bitmap/mask bytes. All selecting pointers and the complete
+; mutable descriptor stay ordered exact ranges ahead of their resources.
+.append_resource
+ bsr .append
+ tst.l d0
+ beq .resource_done
+ btst #0,overlay_generation_enabled+1(pc)
+ beq .resource_done
+ movem.l d1/a0,-(sp)
+ moveq #0,d1
+ move.w 4(a5),d1
+ subq.w #1,d1
+ mulu.w #12,d1
+ lea 18(a5),a0
+ adda.l d1,a0
+ move.w overlay_resource_epoch(pc),(a0)
+ movem.l (sp)+,d1/a0
+.resource_done
+ rts
 .operand_size
  cmpi.w #$2002,d0
  beq .four

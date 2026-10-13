@@ -6,7 +6,7 @@ not construct a complete cache key or make stale native pointers safe to read.
 import struct
 
 
-def matches(read, key, program):
+def matches(read, key, program, resource_epoch=None):
     accesses = 0
     def exact(address, size):
         value = read(address, size)
@@ -21,6 +21,11 @@ def matches(read, key, program):
         length = int.from_bytes(exact(at + 8, 2), 'big')
         if not 1 <= length <= 4096:
             return False, accesses
+        tag = int.from_bytes(exact(at + 10, 2), 'big')
+        if resource_epoch is not None and tag:
+            if tag != resource_epoch:
+                return False, accesses
+            continue
         source, expected = struct.unpack('>II', exact(at, 8))
         for j in range(length):
             accesses += 1

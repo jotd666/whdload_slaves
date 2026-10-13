@@ -1,8 +1,8 @@
 ; Performance patch framework. Only sim v1 calls this module's installer.
 ; No feature is release-enabled until its model, twin and measurements pass.
-PERF_VERIFIED_MASK = $7ff1fff ; verified features; CPU-filtered, FC8 additionally requires W6
-PERF_DEVELOPER_MASK = $7ff3fff
-PERF_VERIFY_MASK = $7ff7fff ; developer W6 plus VERIFY-only quiescent overlay probe bit 14
+PERF_VERIFIED_MASK = $fff1fff ; verified features; CPU-filtered, FC8 additionally requires W6
+PERF_DEVELOPER_MASK = $fff3fff
+PERF_VERIFY_MASK = $fff7fff ; developer W6 plus VERIFY-only quiescent overlay probe bit 14
 
 perf_read_options:
 	movem.l d0-a6,-(sp)
@@ -132,6 +132,11 @@ perf_read_options:
 	beq .artwork_ready
 	bset #14,d0
 .artwork_ready
+	; FC11 inherits the explicit 030/040/060 sparse-artwork CPU gate.
+	btst #19,d0
+	bne .generation_ready
+	bclr #27,d0
+.generation_ready
 	btst #18,d0
 	beq .instrument_ready
 	bset #14,d0

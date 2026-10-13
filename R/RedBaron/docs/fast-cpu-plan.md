@@ -422,7 +422,7 @@ Implemented as bit 25, selected on 040/060 with Faster rendering and W6.
 The complete output snapshot, world fingerprint, native checks and optional
 Fast allocation are documented in `profiling.md`. Both CPU classes clear the
 2% threshold; the final rate pairs and normal-build check pass. Actual frame
-times exceed the original projection below; FC9 is now complete and FC11 is next.
+times exceed the original projection below; FC9 is now complete and FC12 is next.
 The following numbered list records the design; all six items are resolved by
 the implementation and measured disposition in the scoreboard.
 
@@ -486,20 +486,30 @@ requirement are introduced. Pixel models cover all colours, alignments, extreme
 endpoints and the existing native polygon pipeline. Measurement and the final
 CPU disposition are recorded in `profiling.md`. All three measured classes clear
 the retention threshold; bit 26 ships on 030/040/060 under Faster rendering.
-The 68000/010/020 paths retain their prior kernel. FC11 is next.
+The 68000/010/020 paths retain their prior kernel. FC12 is next.
 
 #### FC10 — cockpit composition word lists (closed: dropped)
 
 Dropped: clipped opaque/masked word/longword streams failed the 2% retention
 threshold on every measured CPU class; the existing painter is retained. See `profiling.md`.
 
-#### FC11 — overlay key comparison
+#### FC11 — overlay key comparison (complete)
 
 Replace the per-frame content comparison in `overlay_key_matches` (about
 1,600 longwords, 58% of its time in Chip) with explicit invalidation:
 generation counters bumped by the existing overlay-lifetime hooks. Where a
 content check must remain, compare Fast copies only. Expected saving: about
 1.2 ms.
+
+The implementation uses developer/VERIFY bit 27 (the dropped FC10 bit was never
+shipped). Only bitmap and mask ranges receive the resource epoch in the existing
+reserved descriptor word. Scripts, selectors, descriptors, clipping and colours
+retain exact comparisons; the native capture places these inputs in Fast RAM.
+Every existing lifetime hook increments the nonzero epoch and clears cache
+validity. Wrap cannot revive a key because validity is cleared on the same event.
+No key layout growth or runtime allocation is needed. VERIFY compares each fast
+decision with the original guard and tests three deliberate faults. Results and
+CPU retention are recorded in `profiling.md`.
 
 #### FC12 — re-measure decisions that the cap hid
 

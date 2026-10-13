@@ -9,6 +9,15 @@
 ; PERF_RANGE sim:3038e 6 bit=14
 ovlife_install:
 	movem.l d0-a6,-(sp)
+	lea overlay_generation_enabled(pc),a0
+	clr.w (a0)
+	lea .generation_mask(pc),a6
+.generation_mask
+	adda.l #perf_mask-.generation_mask,a6
+	btst #3,(a6)
+	beq .generation_ready
+	move.w #1,(a0)
+.generation_ready
 	move.l a1,a3
 	; Derive h3 independently from the original registry operand.
 	move.l a3,a0
@@ -101,6 +110,7 @@ ovlife_install:
 .cpu_ready
 	IFD VERIFY
 	bsr ovlife_selftest
+	bsr overlay_generation_selftest
 	IFD VERIFY_OVERLAY_KEY_EXPERIMENT
 	bsr overlay_key_selftest
 	ENDC
@@ -137,6 +147,11 @@ ovlife_save_ccr: dc.w $40e7
 	bsr instrument_cache_invalidate
 	bsr gauge_fast_invalidate
 	bsr artwork_cache_invalidate
+	lea overlay_resource_epoch(pc),a0
+	addq.w #1,(a0)
+	bne .epoch_ready
+	addq.w #1,(a0)
+.epoch_ready
 	IFD VERIFY
 	lea overlay_shadow_valid(pc),a0
 	clr.l (a0)+

@@ -12,20 +12,20 @@ EFFECTS = HEADER + 8192
 KEY_BYTES = EFFECTS + 2
 
 
-def build(read, h3, program, base=0):
+def build(read, h3, program, base=0, resource_epoch=0):
     if program not in (3, 4):
         raise ValueError('Unsupported front program')
     ranges = []
     used = 0
 
-    def append(address, size):
+    def append(address, size, resource=False):
         nonlocal used
         if not 1 <= size <= 4096 or len(ranges) == 32 or used + size > 8192:
             raise ValueError('Key capacity exceeded')
         value = read(address, size)
         if len(value) != size:
             raise ValueError('Truncated key input')
-        ranges.append((address, value))
+        ranges.append((address, value, resource_epoch if resource else 0))
         used += size
         return value
 
@@ -73,14 +73,14 @@ def build(read, h3, program, base=0):
                 raise ValueError('Unsupported descriptor')
             if not data or not mask:
                 raise ValueError('Missing bitmap data')
-            append(data, plane_size * 5)
-            append(mask, (pitch + 2) * height)
+            append(data, plane_size * 5, True)
+            append(mask, (pitch + 2) * height, True)
     result = bytearray(KEY_BYTES)
     struct.pack_into('>4H', result, 0, 1, program, len(ranges), used)
     struct.pack_into('>H', result, EFFECTS, effects)
     cursor = HEADER
-    for index, (address, value) in enumerate(ranges):
-        struct.pack_into('>IIHH', result, 8 + 12 * index, address, base + cursor, len(value), 0)
+    for index, (address, value, epoch) in enumerate(ranges):
+        struct.pack_into('>IIHH', result, 8 + 12 * index, address, base + cursor, len(value), epoch)
         result[cursor:cursor + len(value)] = value
         cursor += len(value)
     return bytes(result)

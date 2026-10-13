@@ -5,7 +5,7 @@
 The user accepted measured performance on 2026-10-12. The normal build now
 starts with Faster rendering On when CUSTOM2 is omitted: On=0, Off=1.
 Developer/VERIFY CUSTOM2 remains an explicit mask, with zero disabling patches.
-The default verified rendering mask is `0x7ff1fff`, filtered by CPU;
+The default verified rendering mask is `0xfff1fff`, filtered by CPU;
 FC8 bit 25 additionally requires W6. On
 2026-10-13 the user completed W6 release acceptance and authorized normal-build
 availability. Consistent game speed is a separate, default-Off checkbox:
@@ -22,12 +22,84 @@ opt-in and selects effective mask `0x1ff6ffa`, including W6 and its pacing
 dependencies (`w6-player-optin/options.json`). This is an option-path check;
 existing D5 evidence supplies runtime acceptance. No new FPS claim is made.
 
+## FC11: resource generations for overlay keys (2026-10-13)
+
+FC11 is retained on 030/040/060 under Faster rendering. Developer/VERIFY bit 27
+selects it and requires the CPU-gated sparse-artwork path. FC10 never shipped
+that bit. The normal verified mask is now `0xfff1fff` before CPU filtering;
+W6 remains an independent opt-in.
+
+Only bitmap and mask byte ranges receive a nonzero resource epoch in the
+existing key descriptor's reserved word. Lifetime hooks increment the epoch
+and invalidate every cache before resources can be reset, loaded, rebuilt or
+released. Counter wrap cannot revive a key: validity is cleared at the same
+boundary, and zero is reserved for exact comparison. Scripts, selecting
+pointers, the complete bitmap descriptor, clipping and colours retain ordered
+exact comparisons. The native capture confirms these remaining live inputs
+and snapshots reside in Fast RAM; all tagged ranges are Chip bitmap/mask data.
+No key grows and no runtime allocation is added. Normal builds exclude the
+verification counters and private fixtures.
+
+### Same-build retention measurements
+
+All six captures use one frozen 60,960-byte developer slave, SHA-256
+`a7f75fb24dad2a57939ab6e4314d5a1aaa4920d0a69e530ebeef2bcf9cc187de`.
+Each measures 2,000 PAL fields of level flight followed by 250 fields banking
+right, with W6 and FC9 enabled, maximum world/aircraft detail, ground detail
+on in combat and Time Scale 40. Only bit 27 changes within each CPU pair.
+
+| CPU configuration | FC11 off FPS / ms | FC11 on FPS / ms | FPS gain | Bank off → on FPS | Decision |
+|---|---:|---:|---:|---:|---|
+| 030-nommu | 20.318 / 49.218 | 21.416 / 46.694 | +5.41% | 19.968 → 20.967 | Retain |
+| 040 | 24.286 / 41.176 | 25.285 / 39.550 | +4.11% | 23.363 → 24.361 | Retain |
+| 060 | 26.108 / 38.302 | 27.257 / 36.688 | +4.40% | 25.360 → 26.358 | Retain |
+
+Every level/bank window has zero dropped simulation steps/units and zero
+publication-margin violations. World/wall rate stays within one endpoint
+quantum of nominal. The 030 MMU configuration is not remeasured; it shares the
+030 gate. Unaffected stock machines retain the earlier scoreboard and CPU
+policy. These are emulator throughput figures, not physical accelerator FPS
+or a 50 FPS claim; do not attribute differences from historical builds to FC11.
+
+### Correctness and release checks
+
+All 591 host tests pass. The generation model marks only bitmap/mask bytes,
+keeps selector/descriptor/colour/clip checks, rejects a stale epoch before a
+freed bitmap read, and demonstrates that the legacy twin detects an unannounced
+bulk-pixel mutation. The native 060 VERIFY route records 1,986 fast/legacy
+comparisons and 6,612 skipped ranges, with no disagreement. Three private
+sabotages cover changed pixels, stale generation and changed program identity.
+Existing checks pass: 63 artwork, 63 scene, six polygon primitive checks, both
+cockpit page twins and 86 final cockpit comparisons, plus scenery restoration.
+Gauge twins are idle on this W6 route, not an additional gauge pass.
+The VERIFY build deliberately runs the original guard too; its profile is
+correctness evidence, not the release timing used above. All three builds,
+138/138/152 patch destinations and 138 hook ranges pass their audits.
+
+The normal 60,500-byte release (SHA-256
+`e870573294646d16d35df1cdbe5106d67e3be3a0c414acead84b59a6a6d9ea03`)
+passes the 040 startup/preferences/flight check with CUSTOM2 omitted and
+CUSTOM3=1. Its effective mask is `0xf7f6ffa` and generation selection is active.
+The 250-field stage capture (`fc11-normal-040`) records 24.96 FPS, with mean
+scene/cockpit calls of 32.69/3.78 ms. This short instrumented release check is
+not the retention comparison above. The final developer binary retains the
+same frozen hash used for all six timing captures.
+
+Evidence: `fc11-rate-{030-nommu,040,060}-{off,on}` and `fc11-native-060`.
+The native capture uses 500 warmup and 100 profiled fields. Reproduce timing
+with `BENCH_DEVELOPER=1 BENCH_BATCH_KEYS=1`, `BENCH_FROZEN_SLAVE` pointing to
+the frozen binary beside its listing, and
+`scene_profile_case.py CPU MASK OUTPUT --fields 2000 --groups rate --bank-after 250`.
+Off/on masks: 030 `0x47f2ffa`/`0xc7f2ffa`, 040 `0x77f2ffa`/`0xf7f2ffa`,
+060 `0x7ff2ffa`/`0xfff2ffa`. Capture metadata confirms generation selection.
+
 ## FC10: cockpit word lists — dropped (2026-10-13)
 
 FC10 is closed under the plan's retention rule: no measured CPU class gains
 2%; 030 gains too little, while 040/060 regress. The existing FC9 player build
-and verified mask `0x7ff1fff` remain unchanged. No additional runtime memory is shipped. FC11 is
-next; the projected FC10 saving is not an achieved frame-rate improvement.
+and verified mask `0x7ff1fff` remained unchanged at this checkpoint. No additional
+runtime memory shipped. FC11 is completed above; the projected FC10 saving is
+not an achieved frame-rate improvement.
 
 The candidate pre-clipped four source lists, split opaque/masked writes,
 merged adjacent aligned words into longwords and used fixed plane displacements.
@@ -147,7 +219,7 @@ The final exact VERIFY profiles attribute 6.93 ms/frame (040) and 6.99 ms/frame
 costs 4.73 ms, viewport copy 4.06 ms (97% Chip stalls), and overlay key matching
 1.67 ms (58% Chip stalls). These are current cost attribution, not release FPS
 or a causal comparison with an older profile. FC10 subsequently failed its
-retention threshold; FC11 still targets key matching. The viewport copy remains
+retention threshold; FC11 subsequently improved key matching (recorded above). The viewport copy remains
 bus-bound.
 
 Normal release checks (`fc9-normal-{030-nommu,040,060}`) boot with CUSTOM2

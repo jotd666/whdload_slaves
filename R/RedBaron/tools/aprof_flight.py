@@ -68,6 +68,11 @@ if effective&(1<<22):
  if twins['cockpit'] != [3,0,2,0,0]:raise RuntimeError('Cockpit twins incomplete or failed: '+str(twins))
  twins['cockpit_final_checks']=words('cockpit_fast_final_checks',1)[0]
  if twins['cockpit_final_checks'] < 2:raise RuntimeError('Final cockpit checks incomplete')
+if effective&(1<<27):
+ checks=words('overlay_generation_checks',2)
+ sabotages=words('overlay_generation_sabotages',1)[0]
+ if not all(checks) or sabotages!=3:raise RuntimeError('FC11 generation twins incomplete')
+ twins['overlay_generation']=dict(comparisons=checks[0],skipped_ranges=checks[1],sabotages=sabotages)
 if effective&(1<<23):
  from gauge_fast import check
  def raw_words(name, count):
