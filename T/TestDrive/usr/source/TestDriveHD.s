@@ -569,7 +569,8 @@ _trdname:
 
 ; The analogue dial tables continue around a full circle, beyond the printed
 ; scale. Stop at the last numbered mark; limit only displayed RPM; engine speed and over-rev damage stay
-; original. Install for both C2 modes and reapply after every h4 reload.
+; original. These common correctness hooks also fix close-traffic projection.
+; Install for both C2 modes and reapply after every h4 reload.
 instrument_overlay_loaded:
     movem.l d0-a6,-(sp)
     move.l sim_data(pc),a0
@@ -592,6 +593,8 @@ instrument_patches:
     PL_PS $082a2,instrument_car
     ; SIM_RANGE h4 042a0 8 ALL instrument_rpm
     PL_PSS $042a0,instrument_rpm,2
+    ; SIM_RANGE h4 01ad4 8 ALL traffic_near_edge
+    PL_PSS $01ad4,traffic_near_edge,2
     PL_END
 instrument_car:
     move.w 8(a5),d0           ; displaced car selection, also used by caller
@@ -615,6 +618,15 @@ instrument_rpm:
     move.w instrument_limit(pc),d0
 .done
     cmp.w -26328(a4),d0       ; displaced comparison; original low clamp follows
+    rts
+; The close-car clamp uses a fixed Q0.16 scale. Native h4:$1AD4 omitted
+; SWAP after MULU and added the fractional low word to the screen centre.
+; At width 448 that sent right-lane cars 26624 pixels away just as the
+; collision window opened. Use the integer product for both views.
+traffic_near_edge:
+    mulu.w -29296(a4),d2
+    swap d2
+    add.w -29306(a4),d2
     rts
 instrument_limits:
     dc.w 7000,10000,7000,9000,0 ; Porsche, Ferrari, Lotus, Countach, digital Vette

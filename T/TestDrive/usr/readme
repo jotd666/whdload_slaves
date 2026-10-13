@@ -48,6 +48,7 @@
  - Optional smoother driving, scenery and traffic with Enhanced framerate.
  - Fixed sideways road jumps near the edges and when reversing steering.
  - Restored steering response through bends.
+ - Fixed nearby vehicles disappearing before a collision.
  - Fixed the rev counter needle wrapping around when over-revving.
  - More consistent game speed, race timing and average-speed scoring.
  - Improved compatibility with accelerated Amigas.

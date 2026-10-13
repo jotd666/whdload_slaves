@@ -595,6 +595,17 @@ wall at course position 824.9 after correction, versus 826.3 in the original
 and 449.0 before correction; this is a finite route comparison, not exact
 cross-period state equality. `docs/handling-collision.md` retains the evidence.
 
+The common h4:$1AD4 correction restores the missing integer-word selection
+after the close-traffic scale multiply. The old fractional word placed nearby
+right-lane vehicles thousands of pixels outside the view while collision
+checks remained active. A guest parked-truck fixture reproduces an empty-road
+collision before the fix and a visible truck at the same collision afterward.
+The fix covers both views and both C2 modes; collision limits are unchanged.
+Native assertions cover all 16 road widths and signed screen-coordinate limits.
+This is a projection arithmetic defect, not the address-carry issue found in
+Grand Prix Circuit. The combined hook audit covers 87 ranges; normal C2-off/on
+A1200/68040 startup, attract and quit pass. Both fixes remain in 2.0b.
+
 ## Phase 12: lessons back to AmigaXDev
 
 Record in AmigaXDev `docs/` what generalises: transferring an engine between games of one
