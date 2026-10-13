@@ -4253,3 +4253,28 @@ validated support selection and resolve slow landing behavior.
 Evidence: `c4-object-runtime-check.json`, `c4-finite-object-progress.json`,
 captures `c4-finite-object-jump-060` / `c4-finite-object-jump-slow`; private build
 `c4-finite-object-jump`, enabled with `C4_SUPPORT_OBJECT=1` in the fixture builder.
+
+### Native jump landing reference corrects the crash interpretation
+
+A new `CUSTOM1=0` capture explicitly records the crash counter for the unchanged
+native physics in the same seeded jump fixture. Native physics also crashes:
+front-wheel contact at field 281 has fall velocity 60, followed by full contact
+and crash counter 25 at field 288 (wheel distances -17/-17/-9/-9). Earlier
+native-pose captures did not record this counter. Consequently, descriptions
+above of the slowed-A500 crash as a failure by itself were too strong; a clean
+landing has not been established as the correct native result for this fixture.
+The fast prototype's no-crash outcome is a remaining handling mismatch, not
+proof of complete jump correctness. Field numbers here identify observations;
+they do not compare equal simulation time across native/timed builds.
+
+The native decision at `$cc2e`–`$cc54` explains a sampling sensitivity: with
+upright orientation, average wheel penetration must be below -5 and fall
+velocity above 50 to trigger the landing crash. The slow prototype reaches
+full contact at field 341 with -25/-25/-11/-11, while the fast prototype crosses
+contact in smaller steps. Before changing crash policy, retain the observed
+native outcome and evaluate landing/contact transition timing. Do not weaken
+the native impact response just to remove the slow crash.
+
+Evidence: `c4-native-landing-reference.json`, capture
+`c4-finite-jump-native-landing`; exact pre-contact slow landing banks are retained
+in `c4-finite-jump-slow-landing` for response replay. C4 remains open.

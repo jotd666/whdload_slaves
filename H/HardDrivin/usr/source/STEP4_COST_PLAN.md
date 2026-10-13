@@ -974,7 +974,12 @@ items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
     crash (peak 221.125, last airborne field 345); the slowed A500 still crashes
     (peak 229.125, last airborne field 332). Its invocation remains gated by the
     renderer's object flag, and overhead/road merging and cost are unvalidated.
-    This is verified prototype progress, not a promoted fix or C4 completion.
+    A subsequent native-physics capture explicitly records crash counter 25 at
+    landing too. The slow crash alone is therefore not a regression; earlier
+    no-crash expectations for this fixture were unsupported. The fast no-crash
+    outcome remains a handling mismatch. Native penetration/impact thresholds
+    and landing transition timing now guide the investigation. This is verified
+    prototype progress, not a promoted fix or C4 completion.
 - **C5, gates.** G1 passes or meets the explicitly accepted temporary exception; G2 is reported; `check_disabled.py` passes; the
   normal build is byte-identical.
   - **Current full-build measurement (2026-10-13):** fresh paired 500-field A500
