@@ -1,5 +1,5 @@
 ;============================================================================
-;$VER: HardDrivinWHD slave source 2.03 © 2001-2008 Halibut Software;
+;$VER: HardDrivinWHD slave source 4.0b (13.10.2026) © 2001-2008 Halibut Software;
 ; This file may not be distributed, reproduced or altered, in full or in
 ; part, in any way, without prior written permission from the author.
 ;
@@ -73,15 +73,7 @@ slv_keyexit:	equ	RAWKEY_F10
 
 
 DECL_VERSION:MACRO
-	dc.b	"3.0"
-	IFD BARFLY
-		dc.b	" "
-		INCBIN	"T:date"
-	ENDC
-	IFD	DATETIME
-		dc.b	" "
-		incbin	datetime
-	ENDC
+	dc.b	"4.0b (13.10.2026)"
 	ENDM
 	
 ;============================================================================
