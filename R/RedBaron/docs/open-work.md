@@ -24,7 +24,7 @@ Refer to items by ID. FC items are detailed in `fast-cpu-plan.md`.
 | FC10 | Cockpit composition word lists (pre-clipped, opaque split, longwords) | Closed: dropped; below 2% on 030; regresses on 040/060 |
 | FC11 | Bitmap/mask key comparisons replaced by resource generations | Complete; enabled on 030/040/060 |
 | FC12 | Re-measure FC5/FC3/FC4 decisions with W6, not under the two-field cap | Planned |
-| FC7 | AGA 040/060 and real-hardware confirmation | Real A1200/040 at 40 MHz works with W6 enabled (user report); 060 and DMA/timing confirmation remain |
+| FC7 | AGA 040/060 and real-hardware confirmation | Closed at user request; remaining checks skipped, no real 060 available; prior A1200/040 confirmation retained |
 | D5a | W6 catch-up input check | Complete: native tap/hold/release during catch-up on A500 and 060 |
 | D5b | W6 Time Compress and mission-exit transitions | Complete: native compression and modal checks; A500 catch-up mission exit |
 | D5c | W6 A500 Time Scale 60 | Complete: measured overload envelope |
@@ -68,7 +68,7 @@ Git; do not revive their superseded next-work lists.
 `fast-cpu-plan.md` has the exact 030 frame attribution (aprof) and the ordered
 fix plan for the former 16.67 FPS plateau. Its §5 profiles 040/060 with W6
 (18.3/19.6 FPS) and plans FC8–FC12 toward 25 FPS with Consistent game speed. FC0–FC4 are complete; FC5 was evaluated and dropped below the measurement
-threshold. FC6, FC8 and FC9 are complete; FC12 is next, with FC7 hardware measurements still open.
+threshold. FC6, FC8 and FC9 are complete; FC12 is next, with FC7 closed at user request.
 
 **FC0 is complete:** native scratch-clear synchronization fixes the top-edge
 artwork mismatch. Full artwork/scene twins pass on 030 NOMMU/MMU, 040 and 060;
@@ -166,7 +166,7 @@ simulation time on target within endpoint uncertainty, with no dropped debt,
 but does not reach 50 FPS. The register-held face-loop extension passes native
 correctness checks and is dropped because neither CPU clears the 2% threshold.
 The normal release is unchanged. `profiling.md` holds all results and manual
-W6 trial instructions. W6/D5 is now accepted as an opt-in; FC7 hardware confirmation remains.
+W6 trial instructions. W6/D5 is now accepted as an opt-in; FC7 is closed at user request.
 
 ## Completed: W6 presentation scenery cache
 
@@ -177,4 +177,4 @@ allocation falls back to the previous path if unavailable; minimum RAM is
 unchanged. Native cache/restoration checks, deliberate stale-world tests,
 existing rendering twins, host tests and paired W6 timing pass. The newly
 exposed publication-tail margin is corrected. Results and manual reproduction
-are in `profiling.md`; FC12 and hardware timing remain open.
+are in `profiling.md`; FC12 remains open.

@@ -405,16 +405,18 @@ python3 -B ../../R/RedBaron/tools/scene_profile_case.py 040 0x37f2ffa CAPTURE_ON
 
 Use fresh capture names; for 060 use masks `0x1ff2ffa` and `0x3ff2ffa`.
 Each driver closes its emulator before the next run. Real-hardware before/after
-measurement remains FC7; the earlier hardware report predates FC8.
+measurement was assigned to FC7, now closed at user request; the earlier
+hardware report predates FC8.
 
-## FC7: real A1200/68040 functional confirmation (2026-10-13)
+## FC7: closed at user request (2026-10-13)
 
 The user reports that the current release works on a real Amiga 1200 with a
 68040 at 40 MHz, with Consistent game speed enabled. This supplies physical
 040/AGA gameplay confirmation. No measured frame rate or frame-time capture
 was supplied; it does not establish 50 FPS or a performance comparison.
-Physical 060 confirmation and the planned AGA DMA/timing measurements remain
-open.
+The user subsequently requested that FC7 be marked done because no real 060
+is available. Remaining physical 060 confirmation and AGA DMA/timing checks
+are skipped. This closes the work item without claiming those checks passed.
 
 ## R1: renderer installation on subsequent loads fixed (2026-10-13)
 
@@ -1196,7 +1198,7 @@ page turnover. Every publication in each 250-field bracket avoids copper pickup
 and respects the two-field minimum, checked through `publication_cadence.py`.
 The checker rejects page-write, copper-pointer and cadence sabotages. Raw DMA
 streams were deleted after preserving compact reports. These are bounded
-emulator checks; physical-machine confirmation remains FC7.
+emulator checks; physical-machine confirmation was assigned to FC7, subsequently closed at user request.
 
 All 547 host tests, all three builds, 131 sim hook ranges and 131/131/145
 normal/developer/VERIFY patch destinations pass. Text sizes are

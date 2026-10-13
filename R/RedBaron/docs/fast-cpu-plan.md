@@ -96,7 +96,7 @@ to CPU endpoint corrections. All artwork and scene twins pass on 030 NOMMU/MMU,
 040 and 060, and the full-twin aprof capture completes. VERIFY snapshots use
 reserved workspace; RAM requirements are unchanged. The profiler no longer
 removes twins and rejects incomplete checks. Evidence and results are recorded
-once, in `profiling.md`. Physical-hardware confirmation remains FC7.
+once, in `profiling.md`. FC7 is closed at user request; remaining hardware checks were skipped.
 
 ### FC1 — deferred page fence instead of the swap spin: complete
 
@@ -285,11 +285,12 @@ C1/C2 remain dropped; smaller G6/G8/G9 work remains deferred. This result does
 not rule out a different geometry design, nor does emulator timing establish
 physical 040/060 throughput. Do not claim 50 FPS from these results.
 
-### FC7 — AGA and 040/060 confirmation
+### FC7 — AGA and 040/060 confirmation (closed: remaining checks skipped)
 
 Real A1200/68040 at 40 MHz functional confirmation with W6 enabled was
-reported by the user on 2026-10-13; see `profiling.md`. Physical 060 and the
-DMA/timing checks below remain open.
+reported by the user on 2026-10-13; see `profiling.md`. The user closed FC7
+on the same date: no real 060 is available. Remaining physical 060 and
+DMA/timing checks are skipped, not validated. The original scope follows.
 
 Capture a Barto DMA trace of the 060 and 040 configurations (AGA, 32-bit Chip)
 before and after FC1–FC5. The emulator's 040/060 timing is not a hardware model
@@ -520,7 +521,7 @@ decided by FPS under the two-field cap. In that mode 040/060 already sit at
 Re-evaluate them with W6 enabled (one-field cap), or with a guest render-time
 counter, after FC8. The FC5 candidate is in Git history (`d75a8fa`).
 
-#### FC7 additions — real hardware
+#### FC7 additions — real hardware (skipped at user request)
 
 The emulated 040/060 frame rate is an instruction-count budget (§5.1).
 Before and after FC8, measure W6 frame rate on the real A1200/040/40, using
