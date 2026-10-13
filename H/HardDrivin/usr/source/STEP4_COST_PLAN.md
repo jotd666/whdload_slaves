@@ -965,7 +965,11 @@ items of `PERFORMANCE_PLAN.md` step 4.7, made concrete.
     selection still needs a validated fix; no object exception is promoted.
     A private finite-face predicate passes 10,045 oracle comparisons. The saved
     top covers only one wheel, so substituting its infinite plane for every wheel
-    is also insufficient. Per-wheel runtime integration remains open.
+    is also insufficient. Direct native transformation of a cloned object now
+    reproduces all five captured polygons. At the predicted physics pose, finite
+    queries find only right-rear support; replaying contact with that support
+    preserves the prior pitch rate. These are isolated-state checks. Per-wheel
+    world-query integration and complete trajectory validation remain open.
 - **C5, gates.** G1 passes or meets the explicitly accepted temporary exception; G2 is reported; `check_disabled.py` passes; the
   normal build is byte-identical.
   - **Current full-build measurement (2026-10-13):** fresh paired 500-field A500

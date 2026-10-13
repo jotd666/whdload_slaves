@@ -4198,3 +4198,31 @@ integration must combine finite per-wheel road/object candidates, preserving
 road gaps and legitimate supporting surfaces before evaluating contact response.
 Evidence: `c4-support-faces-check.json`, `c4-support-68000-check.json`,
 `c4_support_face.s` in the ignored harness.
+
+Direct object geometry is now available for the private per-wheel prototype.
+The 56-byte object record supplies model vertices at offset 40, transformed
+scratch at 44, and the face stream at 52. The word at 20 counts vertices; bytes
+22/23 count appended normals and faces. Each face has a vertex count, normal
+index, vertex indices, and a color byte. For the saved jump object, these counts
+are 36 vertices, 15 normals and 23 faces. Calling native `$97dc` on a cloned
+record with private output storage reconstructs all five observed pre-clipping
+polygons exactly. The original object and model are not modified by this replay.
+
+A second replay replaces the clone's camera-relative translation and render
+trigonometry with the current predicted physics position/orientation before
+transforming it. Finite per-wheel testing then finds only face 15 under the
+right rear wheel. Native `$c6ec` gives distance 3 versus the rational plane's
+3.7983 (less than one unit of native truncation); the other wheels have no object
+candidate. This avoids E94A/E94B and the clipped face, but is still an isolated
+object replay, not an integrated world query. Physics-space distances omit the
+render-camera eye-height subtraction used by `$ca14`.
+
+Feeding flat-ground distances for the unsupported wheels and this object
+distance for the right rear into the captured contact routine changes mask 12
+to 8 and preserves the previous pitch rate (-129633 Q16). The recorded infinite
+end-face input instead clears that rate. A road-only input gives mask 12 and
+rate -218304. These isolate the immediate response; choosing between road,
+object and ground candidates over time, overhead support policy and trajectory
+acceptance remain open. No runtime patch has been promoted.
+Evidence: `c4-object-mesh-check.json`, `c4-object-physics-pose.json`,
+`c4-finite-contact-response.json` and their private replay tools.
