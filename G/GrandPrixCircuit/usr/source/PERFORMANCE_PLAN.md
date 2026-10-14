@@ -732,6 +732,47 @@ native eighth-segment reduction, then interpolate the canonical near/far Y table
 Using the camera-shifted road tables here would subtract camera fraction twice.
 Mirror cars use camera-minus-car Q8 directly, without the roadside walker's
 one-segment adjustment. Native sprite-family/size selection remains discrete.
+
+On 68020+ with C2 enabled, car horizontal projection retains the complete Q8
+screen row derived from that relative depth. Both the perspective coefficient
+and current view's road centre interpolate adjacent rows before final pixel
+placement; neither uses the sprite's rounded Y as its input. The near path
+retains all five sub-eighth-segment bits. Its last interval joins the far table
+at depth 8 for X, while keeping the existing vertical placement. Closest cars
+clamp their road-centre sample to the last generated row (main 110, mirror 27),
+avoiding the native fallback's coarse segment-index changes and unwritten rows.
+Sprite size/facing selection, vertical placement and raster clipping retain their
+existing code paths. A500 keeps the cheaper integer X projection. The new state
+is one private word; no physics or car-position data is written by these helpers.
+
+Car-depth evidence is retained under ignored `tmp/dev/tmp/car-depth/`:
+
+- 505 assembled depth cases cover forward near/far and mirror paths, signed
+  lateral offsets and endpoint bounds; vertical output and the entire game
+  data block remain unchanged by projection.
+- An exhaustive Q8-depth model uses the loaded game's canonical tables with
+  signed lane offsets through +/-4480 and road-centre slopes -3, 0 and +3.
+  Its worst one-Q8-unit X step falls from 44 to 2 pixels forward and 26 to 2 in
+  mirrors, including the near/far join. These are frozen projection bounds,
+  not video measurements or a guarantee across changing road geometry.
+- A 900-frame 030/MMU/cache traffic run passes 113 guest assertions with no
+  failures. Both X hooks run: 1,749 forward draws (805 fractional rows) and
+  2,993 mirror draws (2,035 fractional rows). The live hook and helper bytes
+  match the captured build exactly. The normal 040/MMU/cache build completes
+  a 900-frame attract smoke test; that window contains no opponent draws and
+  is not counted as traffic coverage. Its installed hooks and helper bytes
+  also match the normal release.
+- The 83-hook instruction-boundary/direct-branch audit passes. With C2 off,
+  all 63 enhancement code ranges retain pristine instructions. A500 boots with
+  C2 on and retains original instructions at all 47 CPU-gated ranges, including
+  the four new X hooks. Far road-row selection and discrete sprite changes
+  remain independent limitations.
+- Normal slave size increases by 206 bytes, including the two-byte private row.
+  Both 2.0b archives pass exact extraction checks; packaged source rebuilds the
+  identical normal slave and builds VERIFY. All 55 pristine file hashes remain
+  unchanged. Normal slave SHA-256:
+  `52a9f1f4d99986b22fb463c226c258a0f520de3aac4a3209732b569a31f4835f`.
+
 Signed Q8 road angles interpolate the original odd lookup table; exact integer
 angles retain the native lookup. A signed word table derived from the original
 odd byte table gives bounded-cost interpolation without cache misses.
@@ -775,8 +816,8 @@ Camera validation is retained under ignored `tmp/dev/tmp/road-pose/`:
 - Frozen original/candidate road geometry across 45 poses, including steering
   reversals, reduces the largest near-road crossing step from 13 to 4 pixels
   (row 96: 10 to 3). Far rows still reach 21 pixels versus 23 before: continuous
-  camera pose does not remove the separate integer far-row selection and car-X
-  projection limits. No claim of fully smooth opponent motion is made.
+  camera pose does not remove the separate integer far-row selection limits.
+  Car-X precision is addressed above; discrete sprite changes still remain.
 - The 79-hook instruction/branch audit passes. A500/68000 reaches gameplay;
   040/MMU with C2=0 retains original instructions at all 59 enhancement ranges.
   Live A500, 030 and final 040 camera hook/helper bytes match their exact builds.
@@ -784,7 +825,7 @@ Camera validation is retained under ignored `tmp/dev/tmp/road-pose/`:
   remain conditional on C2.
 - Both 2.0b archives pass exact extraction round trips; packaged source rebuilds
   the identical normal slave and builds VERIFY. All 55 pristine hashes remain
-  unchanged. The normal slave SHA-256 is
+  unchanged. The camera-only normal build SHA-256 is
   `abbff2d886b927a4b298d7a3db4ee2b5c3b9f9b2995becfbad68b6139b81f212`.
 
 Temporal interpolation is conditional on rendering faster than physics. The

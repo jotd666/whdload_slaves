@@ -376,9 +376,15 @@ render_car_y:
     move.w render_depth(pc),d5
     and.w #255,d5
     muls.w d5,d1
-    asr.l #8,d1
+    lsl.w #8,d0
     add.w d1,d0
+    bra.b .store
 .done
+    lsl.w #8,d0
+.store
+    lea render_car_row(pc),a0
+    move.w d0,(a0)         ; retain Q8 Y before the sprite's integer row
+    lsr.w #8,d0
     move.w d0,d5
     movem.l (sp)+,d0-d1
     rts
@@ -392,8 +398,22 @@ render_car_near_y:
     move.w render_depth(pc),d1
     and.w #31,d1
     muls.w d1,d0
-    asr.l #5,d0
+    lsl.l #3,d0            ; eighth-segment table: F/32 -> Q8 row
+    lsl.w #8,d5
     add.w d0,d5
+    lea render_car_row(pc),a0
+    move.w d5,(a0)
+    lsr.w #8,d5
+    cmp.w #142,d6
+    bne.b .done
+    ; Last near-table interval joins far index 9 at depth 8. The native
+    ; near endpoint differs by one row. Bridge X only; sprite Y is unchanged.
+    move.w render_main_y+18(pc),d0
+    sub.w -1372(a4),d0     ; near Y index 72 (-1516 + 144)
+    muls.w d1,d0
+    lsl.l #3,d0
+    add.w d0,(a0)
+.done
     movem.l (sp)+,d0-d1
     rts
 
@@ -427,9 +447,69 @@ render_mirror_car_y:
     sub.w d5,d4
     and.w #255,d1
     muls.w d1,d4
-    asr.l #8,d4
+    lsl.w #8,d5
     add.w d4,d5
+    lea render_car_row(pc),a0
+    move.w d5,(a0)
+    lsr.w #8,d5
     movem.l (sp)+,d0-d1/d4
+    rts
+
+; Car X must use the fractional row derived from its own relative Q8 depth,
+; not the sprite's rounded Y or a camera-shifted depth table. Existing sprite
+; selection, vertical placement and clipping are unchanged. X hooks are 020+ only.
+render_car_projection:
+    lea -612(a4),a0
+    bra.b render_car_coefficient
+render_mirror_car_projection:
+    lea -972(a4),a0
+render_car_coefficient:
+    movem.l d1-d2/d4,-(sp)
+    move.w render_car_row(pc),d1
+    move.w d1,d2
+    lsr.w #8,d2
+    add.w d2,d2
+    move.w (a0,d2.w),d0
+    and.w #255,d1
+    beq.b .done           ; exact endpoints need no out-of-range neighbour
+    move.w 2(a0,d2.w),d4
+    sub.w d0,d4
+    muls.w d1,d4
+    asr.l #8,d4
+    add.w d4,d0
+.done
+    movem.l (sp)+,d1-d2/d4
+    rts
+
+render_car_center:
+    movem.l d0-d2,-(sp)
+    move.w #110*256,d2     ; final generated main road row
+    bra.b render_car_center_row
+render_mirror_car_center:
+    movem.l d0-d2,-(sp)
+    move.w #27*256,d2      ; final generated mirror road row
+render_car_center_row:
+    move.w render_car_row(pc),d0
+    cmp.w d2,d0
+    bls.b .bounded
+    move.w d2,d0          ; nearest cars extend below the generated road
+.bounded
+    move.w d0,d1
+    lsr.w #8,d1
+    add.w d1,d1
+    and.w #255,d0
+    lea -25484(a4),a0
+    move.w (a0,d1.w),d2
+    add.w d2,d4
+    tst.w d0
+    beq.b .done
+    move.w 2(a0,d1.w),d1
+    sub.w d2,d1
+    muls.w d0,d1
+    asr.l #8,d1
+    add.w d1,d4
+.done
+    movem.l (sp)+,d0-d2
     rts
 
 ; Expand the native odd byte table once into signed word neighbours. This
@@ -487,6 +567,7 @@ render_angle_integer:
     jmp (a0)               ; unchanged native signed integer lookup
 
 render_depth: dc.w 0
+render_car_row: dc.w 0
 
 render_fraction: dc.w 0
 render_tables_ready: dc.w 0

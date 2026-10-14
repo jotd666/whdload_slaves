@@ -396,6 +396,10 @@ pl_main_v1
 ; The measured 68000 projection cost would exceed the A500 helper budget.
 pl_render_precision
 	PL_START
+	PL_PSS $8da8,render_car_projection,2 ; PERF_RANGE h0:8DA8 8 bit=C2_020
+	PL_PSS $94fc,render_mirror_car_projection,2 ; PERF_RANGE h0:94FC 8 bit=C2_020
+	PL_PSS $8dd8,render_car_center,2 ; PERF_RANGE h0:8DD8 8 bit=C2_020
+	PL_PSS $952c,render_mirror_car_center,2 ; PERF_RANGE h0:952C 8 bit=C2_020
 	PL_PSS $9b1c,render_main_projection,2 ; PERF_RANGE h0:9B1C 8 bit=C2_020
 	PL_PSS $9b34,render_projection_width,2 ; PERF_RANGE h0:9B34 8 bit=C2_020
 	PL_PSS $9b48,render_projection_left,2 ; PERF_RANGE h0:9B48 8 bit=C2_020

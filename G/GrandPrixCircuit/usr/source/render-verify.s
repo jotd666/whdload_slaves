@@ -185,6 +185,60 @@ verify_render_units:
     bsr verify_render_equal
     addq.l #8,a2
     dbf d6,.projection
+    ; Full-depth car X: fractional coefficient and bounded road-centre rows.
+    lea verify_car_coefficients(pc),a2
+    moveq #7,d6
+.car_coefficient
+    move.l a2,a0
+    lea render_car_row(pc),a1
+    move.w 4(a2),(a1)
+    moveq #0,d5
+    bsr render_car_coefficient
+    and.l #$ffff,d0
+    moveq #0,d1
+    move.w 6(a2),d1
+    bsr verify_render_equal
+    addq.l #8,a2
+    dbf d6,.car_coefficient
+    lea -25484(a4),a0
+    move.w #400,d0
+    moveq #111,d1
+.car_road
+    move.w d0,(a0)+
+    subq.w #3,d0
+    dbf d1,.car_road
+    lea verify_car_centres(pc),a2
+    moveq #5,d6
+.car_centre
+    lea render_car_row(pc),a0
+    move.w (a2)+,(a0)
+    move.w (a2)+,d4
+    tst.w (a2)+
+    bne.b .car_mirror
+    bsr render_car_center
+    bra.b .car_result
+.car_mirror
+    bsr render_mirror_car_center
+.car_result
+    move.w d4,d0
+    ext.l d0
+    move.w (a2)+,d1
+    ext.l d1
+    bsr verify_render_equal
+    dbf d6,.car_centre
+    ; Near/far X join with deliberately different synthetic endpoints.
+    move.w #2047,d4
+    bsr render_car_depth
+    add.w #16,d6
+    bsr render_car_near_y
+    moveq #0,d0
+    move.w render_car_row(pc),d0
+    move.l #45600,d1       ; 58*256 + (182-58)*31*8
+    bsr verify_render_equal
+    move.w d5,d0
+    ext.l d0
+    moveq #56,d1           ; original near-table vertical placement
+    bsr verify_render_equal
     ; Restore scratch state before the first real protected snapshot.
     lea render_pose(pc),a0
     moveq #8,d0
@@ -218,7 +272,7 @@ verify_render_equal:
     movem.l (sp)+,a0-a1
     bra verify_sim_equal
 verify_render_next: dc.l 0
-verify_render_values: ds.l 92
+verify_render_values: ds.l 124
 
 ; actual steering step, actual lateral step, F, heading/lateral corrections
 verify_camera_vectors:
@@ -235,3 +289,15 @@ verify_camera_vectors:
     dc.w 128,0,128,-64,0
     dc.w -128,0,128,64,0
     dc.w 0,0,128,0,0
+
+; coefficient endpoints, Q8 row fraction, interpolated coefficient
+verify_car_coefficients:
+    dc.w 1000,2000,0,1000, 1000,2000,1,1003
+    dc.w 1000,2000,128,1500, 1000,2000,255,1996
+    dc.w 2000,1000,0,2000, 2000,1000,1,1996
+    dc.w 2000,1000,128,1500, 2000,1000,255,1003
+; Q8 row, lateral pixel offset, mirror flag, final X on road 400-3*y
+verify_car_centres:
+    dc.w 80*256,0,0,160, 80*256+128,-100,0,58
+    dc.w 110*256+255,100,0,170, 119*256,-100,0,-30
+    dc.w 20*256+128,100,1,438, 28*256,-100,1,219

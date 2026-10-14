@@ -40,7 +40,8 @@
 
  Enhanced framerate (CUSTOM2=1) is enabled by the game icon. It provides
  smoother movement on 68020+ CPUs, smoother road, opponent and horizon
- rendering, and more precise roadside positioning on 68020+ CPUs.
+ rendering, and more precise roadside and opponent-car positioning on
+ 68020+ CPUs.
 
  Set CUSTOM2=0 to use the original simulation and rendering. The screen,
  horizon, Monza and music fixes remain active. The new enhancements and
@@ -53,7 +54,7 @@
  - added Enhanced framerate option (CUSTOM2=1), enabled by the game icon
  - smoother vehicle movement on 68020 and faster CPUs
  - smoother road-camera, opponent-car and horizon movement
- - more precise roadside-object positioning on 68020 and faster CPUs
+ - more precise roadside and opponent-car positioning on 68020 and faster CPUs
  - improved drawing performance
  - fixed screen flicker and missing pixels at the edge of the horizon
  - fixed incorrect grid positions and disappearing opponents at Monza
