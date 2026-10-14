@@ -8,6 +8,6 @@ SOURCE = $(PROGNAME)HD.s
 
 all :  $(WHDLOADER)
 
-$(WHDLOADER) : $(SOURCE)
+$(WHDLOADER) : $(SOURCE) verification.s render.s render-subunit.s render-verify.s simulation.s simulation-verify.s verification-driving.s
 	$(WDATE)
 	$(VASM) -o $(WHDLOADER) $(SOURCE)

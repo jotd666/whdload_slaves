@@ -60,7 +60,8 @@ BOOTDOS
 CACHE
 CBDOSLOADSEG
 
-slv_Version	= 16
+; Interface 17; the normal PL_IFC2 patch list requires WHDLoad 17.2+.
+slv_Version	= 17
 slv_Flags	= WHDLF_NoError|WHDLF_Examine
 slv_keyexit	= $5D	; num '*'
 
@@ -74,7 +75,7 @@ slv_keyexit	= $5D	; num '*'
 
 
 DECL_VERSION:MACRO
-	dc.b	"1.0"
+	dc.b	"2.0b"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -83,6 +84,14 @@ DECL_VERSION:MACRO
 
 assign
 	dc.b	"GrandPrixCircuit",0
+
+; Optional simulation/blitter changes; the v1 display handoff fix is always applied.
+slv_config
+	dc.b "C2:B:Enhanced framerate;"
+	IFD VERIFY
+	dc.b "C1:B:Traffic in attract verification;C3:B:Reproducible RNG;C4:X:Slow drawing verification:0;C4:X:Original swap verification:1;C4:X:Force period six verification:2;C5:X:Scripted joystick verification:0;C5:X:Human driver verification:1;C5:X:Immediate start verification:2;"
+	ENDC
+	dc.b	0
 
 slv_name		dc.b	"Grand Prix Circuit"
 	IFD	DEBUG
@@ -162,46 +171,6 @@ _cb_dosLoadSeg
 	movem.l	(a7)+,a0
 	rts
 
-; < a0: str1
-; < a1: str2
-; > d0: -1: fail, 0: ok
-
-strcmp:
-	movem.l	d1/a0-a2,-(A7)
-.contstrcmpasm
-	move.b	(A0)+,d0
-	beq.s	.termstrcmpasm
-	move.b	(A1)+,d1
-	beq.s	.failstrcmpasm
-	bsr.s	.letterstrcmpasm
-	exg	d0,d1
-	bsr.s	.letterstrcmpasm
-	cmp.b	d0,d1
-	bne.s	.failstrcmpasm
-	bra.s	.contstrcmpasm
-
-.termstrcmpasm
-	tst.b	(A1)+
-	bne.s	.failstrcmpasm
-	moveq.l	#0,d0
-	bra.s	.endstrcmpasm
-
-.letterstrcmpasm
-	cmp.b	#$60,d0
-	bls.s	.letter1strcmpasm
-	cmp.b	#$7a,d0
-	bhi.s	.letter1strcmpasm
-	sub.b	#$20,d0
-.letter1strcmpasm
-	rts
-
-.failstrcmpasm
-	moveq.l	#-1,d0
-.endstrcmpasm
-	movem.l	(A7)+,d1/a0-a2
-	rts
-
-
 _bootdos
 	; saves registers (needed for BCPL stuff, global vector, ...)
 
@@ -244,18 +213,266 @@ _quit		pea	TDREASON_OK
 
 
 patch_main
-	moveq	#0,d2
-	bsr	get_section
+	movem.l d0-a6,-(a7)
+	move.l _resload(pc),a2
+	lea program(pc),a0
+	jsr resload_GetFileSize(a2)
+	cmp.l #94708,d0
+	bne.b .legacy
 
-	lea	pl_section0(pc),a0
-	move.l	attnflags(pc),d0
-	btst	#AFB_68010,d0
-	beq.b	.68k
-	lea	pl_sr(pc),a0
-.68k
-	jsr	resload_Patch(a2)
+	lea sim_code(pc),a0
+	move.l d7,d0
+	addq.l #4,d0
+	move.l d0,(a0)
+	bsr sim_configure
+	lea render_race_return(pc),a0
+	move.l d7,d0
+	add.l #4+$a8f2,d0
+	move.l d0,(a0)
+	lea render_options(pc),a0
+	move.l custom2(pc),d0
+	beq.b .render_ready
+	move.l #2,(a0)
+.render_ready
+	; v1: PatchSeg takes the LoadSeg BPTR, not the code address.
+	lea pl_main_v1(pc),a0
+	move.l attnflags(pc),d0
+	btst #AFB_68010,d0
+	beq.b .v1
+	lea pl_main_v1_sr(pc),a0
+.v1
+	move.l d7,d0
+	lsr.l #2,d0
+	move.l d0,a1
+	IFD VERIFY
+	lea verify_v1(pc),a3
+	move.l #1,(a3)
+	ENDC
+	jsr resload_PatchSeg(a2)
+	bsr sim_patch
+	IFD VERIFY
+	bsr verify_cache_state
+	ENDC
+	bra.b .done
 
+.legacy
+	; Preserve JOTD's patch path for sizes not identified as v1.
+	moveq #0,d2
+	bsr get_section
+	lea pl_section0(pc),a0
+	move.l attnflags(pc),d0
+	btst #AFB_68010,d0
+	beq.b .patch
+	lea pl_sr(pc),a0
+.patch
+	jsr resload_Patch(a2)
+.done
+	IFD VERIFY
+	lea verify_hunk0(pc),a0
+	move.l d7,d0
+	addq.l #4,d0
+	move.l d0,(a0)
+	ENDC
+	movem.l (a7)+,d0-a6
 	rts
+
+; Full-width counterparts of the native D4 address arithmetic. Replay the
+; displaced store/LEA, preserving the native register contract. The following
+; TST.W/MOVE.L instructions replace N/Z/V/C before use.
+track_front_end:
+    add.l #40,d4
+    move.l d4,-25024(a4)
+    rts
+track_bucket_origin:
+    sub.l #20,d4
+    lea -94(a4),a0
+    rts
+
+; Discard input accumulated while a screen is fading, at its final step.
+; The input handler and this word-sized reset cannot interleave: a key event
+; delivered after the reset belongs to the newly available screen. Keep the
+; native fade-loop comparison and all registers, including X, unchanged.
+menu_fade_input:
+    cmp.w #16,-4(a5)
+    blt.b .done
+    clr.w 3454(a4)
+    cmp.w #16,-4(a5)
+.done
+    rts
+
+; A key-up lost during an OS switch can leave input.device repeating forever.
+; Confirmation must require a fresh press. Keep repeats for other keys, and
+; leave key-up/mouse handling and the original event consumption unchanged.
+; Returning the queue capacity takes the native "queue full" branch, which
+; consumes this event without enqueueing it. Replay CMP flags on both paths.
+menu_confirm_repeat:
+    btst #9,d3             ; IEQUALIFIER_REPEAT (input.device)
+    beq.b .enqueue
+    cmp.b #$40,d2          ; Space
+    beq.b .discard
+    cmp.b #$43,d2          ; numeric keypad Enter
+    beq.b .discard
+    cmp.b #$44,d2          ; Return
+    bne.b .enqueue
+.discard
+    move.w 3456(a4),d4
+    bra.b .compare
+.enqueue
+    move.w 3454(a4),d4
+.compare
+    cmp.w 3456(a4),d4
+    rts
+
+; A left-clipped, shifted full-width shape can have a negative destination
+; modulo: consecutive rows share one word. C fetches for the next row can
+; precede the previous row's final D write, restoring stale destination bits.
+; Drain each row only in this overlapping case. The native path stays one blit.
+; DIVU/DBRA and logical operations leave X unchanged; D0/D1 are restored.
+shape_blit_rows:
+    tst.w 4874(a4)
+    bpl.b .native
+    movem.l d0-d1,-(sp)
+    moveq #0,d0
+    move.w d1,d0
+    divu.w #64,d0
+    tst.w d0
+    bne.b .height
+    move.w #1024,d0         ; BLTSIZE's zero height encoding
+.height
+    and.w #63,d1
+    or.w #64,d1
+    bra.b .next
+.row
+    move.w d1,$58(a6)
+    btst #6,2(a6)
+.wait
+    btst #6,2(a6)
+    bne.b .wait
+.next
+    dbra d0,.row
+    movem.l (sp)+,d0-d1
+    tst.w d1               ; replay MOVE.W's N/Z/V/C; retain X
+    bra.b .tested
+.native
+    move.w d1,$58(a6)
+.tested
+    btst #6,2(a6)           ; displaced first native busy test
+    rts
+
+; v1 display handoff fix plus inherited JOTD patches. VERIFY can bypass the fix.
+pl_main_v1
+	PL_START
+	PL_PS $8b6,menu_fade_input ; PERF_RANGE h0:08B6 6 bit=BASE
+	; A queued key skips joystick polling. Consume it directly rather than
+	; selecting forever from stale fire/direction values and leaving it queued.
+	PL_W $188,$6642 ; BNE.S $1cc (keyboard read); PERF_RANGE h0:0188 2 bit=BASE
+	PL_PSS $c49a,menu_confirm_repeat,2 ; PERF_RANGE h0:C49A 8 bit=BASE
+	; Overlapping destination rows need a completed D write before the next C read.
+	PL_PSS $c8b4,shape_blit_rows,4 ; PERF_RANGE h0:C8B4 10 bit=BASE
+	PL_PSS $c904,shape_blit_rows,4 ; PERF_RANGE h0:C904 10 bit=BASE
+	PL_PSS $c95e,shape_blit_rows,4 ; PERF_RANGE h0:C95E 10 bit=BASE
+	; Track positions are addresses, not 16-bit segment counters. Preserve
+	; carry/borrow when a grid or view window straddles a 64 KB boundary.
+	PL_W $9fc2,$5383         ; SUBQ.L #1,D3 (grid partner)
+	PL_W $a020,$5d83         ; SUBQ.L #6,D3 (next grid row)
+	PL_W $a054,$5280         ; ADDQ.L #1,D0 (player grid position)
+	PL_PSS $8304,track_front_end,2 ; PERF_RANGE h0:8304 8 bit=BASE
+	PL_PSS $a7a4,track_bucket_origin,2 ; PERF_RANGE h0:A7A4 8 bit=BASE
+	IFD VERIFY
+	PL_IFC1
+	PL_PSS $e06,verify_traffic,4
+	PL_ENDIF
+	PL_IFC3
+	PL_W $c12c,$7200
+	PL_NOP $c12e,4
+	PL_ENDIF
+	PL_IFC4X 3
+	PL_PSS $72a2,verify_render_pose,2 ; PERF_RANGE h0:72A2 8 bit=VERIFY_RENDER
+	PL_ENDIF
+	PL_IFC4X 0
+	PL_PSS $729a,verify_slow_draw,2
+	PL_ENDIF
+	PL_PS $707a,verify_race_start
+	PL_IFC5
+	PL_PS $c1de,verify_read_joydat
+	PL_PSS $7734,verify_event_field,2 ; PERF_RANGE h0:7734 8 bit=VERIFY_C5
+	PL_PSS $61f4,verify_pit_key,2 ; PERF_RANGE h0:61F4 8 bit=VERIFY_C5
+	PL_ENDIF
+	ENDC
+	IFD VERIFY
+	PL_IFC4X 1
+	PL_ELSE
+	ENDC
+	PL_P $39e,render_swap
+	PL_PS $818c,render_before_road
+	PL_PS $7094,render_before_pause
+	PL_PS $75c8,render_before_exit
+	IFD VERIFY
+	PL_ENDIF
+	ENDC
+	PL_IFC2
+	IFND VERIFY
+	PL_PS $707a,render_camera_start ; PERF_RANGE h0:707A 6 bit=C2
+	ENDC
+	PL_PSS $7a70,render_camera_crossing,54 ; PERF_RANGE h0:7A70 60 bit=C2
+	PL_PSS $9ee,render_reset_tables,2 ; PERF_RANGE h0:09EE 8 bit=C2
+	PL_P $a6ea,sim_latch_enter ; PERF_RANGE h0:A6EA 8 bit=C2
+	PL_P $a776,sim_latch_leave ; PERF_RANGE h0:A776 6 bit=C2
+	PL_PSS $9a82,render_main_pose,10 ; PERF_RANGE h0:9A82 16 bit=C2
+	PL_PSS $91a2,render_mirror_pose,10 ; PERF_RANGE h0:91A2 16 bit=C2
+	PL_PSS $8212,render_horizon_pose,2 ; PERF_RANGE h0:8212 8 bit=C2
+	PL_PSS $8252,render_scenery_pose,2 ; PERF_RANGE h0:8252 8 bit=C2
+	PL_PSS $8d8e,render_car_y,2 ; PERF_RANGE h0:8D8E 8 bit=C2
+	PL_PS $8f70,render_car_depth ; PERF_RANGE h0:8F70 6 bit=C2
+	PL_PSS $8d9e,render_car_near_y,2 ; PERF_RANGE h0:8D9E 8 bit=C2
+	PL_PSS $94f2,render_mirror_car_y,2 ; PERF_RANGE h0:94F2 8 bit=C2
+	PL_PS $9aaa,render_angle ; PERF_RANGE h0:9AAA 6 bit=C2
+	PL_PS $91c2,render_angle ; PERF_RANGE h0:91C2 6 bit=C2
+	PL_PS $91c8,render_mirror_step ; PERF_RANGE h0:91C8 6 bit=C2
+	PL_ENDIF
+	PL_NEXT pl_section0
+
+; Extra horizontal precision is installed with the 020+ simulation hooks.
+; The measured 68000 projection cost would exceed the A500 helper budget.
+pl_render_precision
+	PL_START
+	PL_PSS $8da8,render_car_projection,2 ; PERF_RANGE h0:8DA8 8 bit=C2_020
+	PL_PSS $94fc,render_mirror_car_projection,2 ; PERF_RANGE h0:94FC 8 bit=C2_020
+	PL_PSS $8dd8,render_car_center,2 ; PERF_RANGE h0:8DD8 8 bit=C2_020
+	PL_PSS $952c,render_mirror_car_center,2 ; PERF_RANGE h0:952C 8 bit=C2_020
+	PL_PSS $8e1e,render_car_anchor,2 ; PERF_RANGE h0:8E1E 8 bit=C2_020
+	PL_PSS $8a0e,render_sign_position,2 ; PERF_RANGE h0:8A0E 8 bit=C2_020
+	PL_PSS $9a62,render_main_rows,2 ; PERF_RANGE h0:9A62 8 bit=C2_020
+	PL_PSS $9b1c,render_main_projection,2 ; PERF_RANGE h0:9B1C 8 bit=C2_020
+	PL_PSS $9b34,render_projection_width,2 ; PERF_RANGE h0:9B34 8 bit=C2_020
+	PL_PSS $9b48,render_projection_left,2 ; PERF_RANGE h0:9B48 8 bit=C2_020
+	PL_PSS $9b64,render_projection_right,2 ; PERF_RANGE h0:9B64 8 bit=C2_020
+	PL_PSS $922a,render_mirror_projection,2 ; PERF_RANGE h0:922A 8 bit=C2_020
+	PL_PSS $9242,render_projection_width,2 ; PERF_RANGE h0:9242 8 bit=C2_020
+	PL_PSS $9256,render_projection_left,2 ; PERF_RANGE h0:9256 8 bit=C2_020
+	PL_PSS $9272,render_projection_right,2 ; PERF_RANGE h0:9272 8 bit=C2_020
+	PL_END
+
+pl_main_v1_sr
+	PL_START
+; Route every v1 CPU through the display fix and optional fixtures.
+	PL_W $0ac2c,$42e7
+	PL_W $0ac96,$42e7
+	PL_W $0ace6,$42e7
+	PL_W $0ad36,$42e7
+	PL_W $0ad82,$42e7
+	PL_W $0af12,$42e7
+	PL_W $0af5e,$42e7
+	PL_NEXT pl_main_v1
+
+	IFD VERIFY
+	include "verification.s"
+	include "render-verify.s"
+	ENDC
+
+	include "render.s"
+	include "render-subunit.s"
+	include "simulation.s"
 
 pl_song1
 	PL_START
@@ -264,6 +481,14 @@ pl_song1
 	PL_L	$4FE,$DFF09C
 	PL_L	$A44,$DFF09C
 	PL_L	$A74,$DFF09C
+
+	; A request arriving after the entry snapshot belongs to the next IRQ.
+	; The original BEQ cleared it without servicing that channel.
+	PL_W $8c8,$6762          ; BEQ $92c (RTS), instead of $926 (ack)
+	PL_PS $926,music_ack
+	; Mask before pitch setup: an old end-of-sample IRQ can reset AUDxPER.
+	PL_PS $758,music_note_begin
+	PL_PS $86a,music_irq_snapshot
 
 	; wait after write to dmacon (music) to avoid sound problems
 
@@ -281,39 +506,101 @@ pl_song1
 	PL_PS	$A78,move_f_dmacon
 	PL_END
 
+music_note_begin
+	; The timer installs state/loop fields before enabling DMA at $7e0.
+	; A still-enabled old audio request could consume the half-written note.
+	; Native $7ea enables this channel again after the existing DMA wait.
+	; Preserve interrupts for a sound effect which currently owns the channel.
+	tst.w 70(a3)
+	bne.b .pitch
+	movem.l d0/a1,-(sp)
+	move.l h0_end_address(pc),a1
+	move.w 4(a1),d0          ; channel INTENA set mask
+	andi.w #$7fff,d0
+	move.w d0,_custom+intena
+	tst.w _custom+intenar
+	movem.l (sp)+,d0/a1
+.pitch
+	move.l (sp),a6
+	adda.l #$802-$75e,a6
+	jsr (a6)                ; original $758: JSR $802(PC)
+	tst.w d3                ; original $75c, before BEQ $770
+	rts
+
+music_irq_snapshot
+	move.w _custom+intreqr,d0
+	and.w _custom+intenar,d0 ; another channel's IRQ must not service a masked one
+	rts
+
+music_ack
+	move.w d3,_custom+intreq
+	tst.w _custom+intreqr    ; complete the custom write before returning on 040
+	rts
+
 move_f_dmacon
-	move.w	#$F,_custom+dmacon
-	addq.l	#2,(a7)
-	bra	dmacon_wait
-	
+	addq.l #2,(sp)
+	move.l d0,-(sp)
+	moveq #15,d0
+	bra.b music_dma_write
+
 move_h0_end_dmacon
-	movem.l	a0,-(a7)
-	move.l	h0_end_address(pc),a0
-	move.w	(a0),_custom+dmacon
-	movem.l	(a7)+,a0
-	addq.l	#4,(a7)
-	bra	dmacon_wait
+	addq.l #4,(sp)
+	move.l d0,-(sp)
+	move.l a0,-(sp)
+	move.l h0_end_address(pc),a0
+	move.w (a0),d0
+	move.l (sp)+,a0
+	bra.b music_dma_write
 
 move_lab62_dmacon
-	movem.l	a0,-(a7)
-	move.l	lab62_address(pc),a0
-	move.w	(a0),_custom+dmacon
-	movem.l	(a7)+,a0
-	addq.l	#4,(a7)
-	bra	dmacon_wait
+	addq.l #4,(sp)
+	move.l d0,-(sp)
+	move.l a0,-(sp)
+	move.l lab62_address(pc),a0
+	move.w (a0),d0
+	move.l (sp)+,a0
+	bra.b music_dma_write
 
 move_d2_dmacon
-	move.w	d2,_custom+dmacon
-	bra	dmacon_wait
+	move.l d0,-(sp)
+	move.w d2,d0
+	bra.b music_dma_write
 move_d7_dmacon
-	move.w	d7,_custom+dmacon
-	bra	dmacon_wait
+	move.l d0,-(sp)
+	move.w d7,d0
 
-dmacon_wait
-	movem.l	d0,-(a7)
-	move.l	#8,d0
-	bsr	beamdelay
-	movem.l	(a7)+,d0
+; Adapt Test Drive's stopped-channel fix (29c779d). After DMA is disabled,
+; Paula needs its final request to remain pending to settle into idle.
+; Repeated acknowledgements on a fast CPU can prevent that transition.
+; Mask stopped channels; clear stale requests only before a new DMA start.
+; The native start sites restore INTENA after the existing beam delay.
+; d0 = original DMACON value; original d0 is saved by each wrapper.
+music_dma_write
+	move.l d1,-(sp)
+	move.w d0,d1
+	andi.w #$000f,d1
+	lsl.w #7,d1
+	btst #15,d0
+	bne.b .start
+	move.w d1,_custom+intena
+	tst.w _custom+intenar
+	bra.b .write
+.start
+	; A music update may share an already-running effect: keep its request.
+	move.w _custom+dmaconr,d1
+	not.w d1
+	and.w d0,d1
+	andi.w #$000f,d1
+	lsl.w #7,d1
+	move.w d1,_custom+intreq
+	move.w d1,_custom+intreq
+	tst.w _custom+intreqr
+.write
+	move.w d0,_custom+dmacon
+	move.l (sp)+,d1
+	moveq #8,d0
+	bsr beamdelay
+	move.l (sp)+,d0
 	rts
 
 pl_sr
@@ -422,7 +709,9 @@ load_exe:
 	move.l	d2,d0			; argument string length
 	move.l	_stacksize(pc),-(a7)	; original stack format
 	movem.l	(_saveregs,pc),d1-d7/a1-a2/a4-a6	; original registers (BCPL stuff)
+	bsr render_interrupt_option
 	jsr	(4,a3)		; call program
+	bsr render_interrupt_restore
 	addq.l	#4,a7
 
 	movem.l	(a7)+,d7/a6
@@ -541,16 +830,31 @@ lab62_address
 	dc.l	0
 
 _saveregs
-		blk.l	16,0
+		dcb.l	16,0
 _stacksize
 		dc.l	0
 
-tag		dc.l	WHDLTAG_CUSTOM1_GET
-custom1	dc.l	0
+tag		dc.l	WHDLTAG_CUSTOM2_GET
+custom2	dc.l	0
+	IFD VERIFY
+		dc.l WHDLTAG_CUSTOM4_GET
+sim_verify_options dc.l 0
+		dc.l WHDLTAG_CUSTOM5_GET
+verify_drive_options dc.l 0
+	ENDC
 		dc.l	WHDLTAG_ATTNFLAGS_GET
 attnflags
 	dc.l	0
 	dc.l	0
 ;============================================================================
 
+    IFD VERIFY
+; The optional recording is ignored local input, never distributed or committed.
+verify_pilot_tape:
+    IFD VERIFY_TAPE
+    INCBIN "phase6-tape.bin"
+    ELSE
+    dcb.w 12288,0
+    ENDC
+    ENDC
 	END
