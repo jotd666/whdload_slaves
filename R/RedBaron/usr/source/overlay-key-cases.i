@@ -1,0 +1,25 @@
+; Private byte mutations: offset, value, expected match, source-byte reads.
+ dc.w 60,0,1,12
+ dc.w 48,128,0,1
+ dc.w 49,128,0,2
+ dc.w 50,128,0,3
+ dc.w 51,128,0,4
+ dc.w 52,128,0,5
+ dc.w 53,128,0,6
+ dc.w 54,128,0,7
+ dc.w 55,128,0,8
+ dc.w 56,128,0,9
+ dc.w 57,128,0,10
+ dc.w 58,128,0,11
+ dc.w 59,128,0,12
+ dc.w 1,0,0,0
+ dc.w 0,1,0,0
+ dc.w 3,4,0,0
+ dc.w 2,1,0,0
+ dc.w 5,0,0,0
+ dc.w 5,33,0,0
+ dc.w 4,1,0,0
+ dc.w 17,0,0,0
+ dc.w 16,16,0,0
+ dc.w 29,0,0,4
+ dc.w 28,16,0,4

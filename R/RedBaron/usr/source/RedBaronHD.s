@@ -32,7 +32,7 @@
 ;============================================================================
 
 CHIPMEMSIZE	= $80000
-FASTMEMSIZE	= $80000
+FASTMEMSIZE	= $100000 ; approved 1 MiB requirement; spare renderer workspace reserved
 NUMDRIVES	= 1
 WPDRIVES	= %0000
 
@@ -54,7 +54,7 @@ CACHE
 ;============================================================================
 
 
-slv_Version	= 16
+slv_Version	= 17
 slv_Flags	= WHDLF_NoError|WHDLF_Examine
 slv_keyexit	= $5D	; num '*'
 
@@ -64,17 +64,40 @@ slv_keyexit	= $5D	; num '*'
 
 ;============================================================================
 
-	IFD BARFLY
-	DOSCMD	"WDate  >T:date"
-	ENDC
-
 DECL_VERSION:MACRO
-	dc.b	"2.1"
-	IFD BARFLY
-		dc.b	" "
-		INCBIN	"T:date"
-	ENDC
+	dc.b	"3.0b (13.10.2026)"
 	ENDM
+
+; Normal: zero selects On, one selects Off. Icons remain unchanged.
+; Developer/VERIFY retain the original explicit bit controls in perf.s.
+slv_config
+	IFD VERIFY
+	dc.b "C5:X:Slow drawing verification:0;C5:X:Right-bank fixture:1;C5:X:Squadron fixture:2;"
+	dc.b "C2:X:Table mirror:0;C2:X:Cached mirror:1;"
+	dc.b "C2:X:Projection:2;C2:X:Clipping:3;C2:X:Vertex transform:4;"
+	dc.b "C2:X:Back-face test:5;C2:X:Face setup:6;C2:X:Clear fills:7;"
+	dc.b "C2:X:Tear-free swap:8;C2:X:Frame cap:9;"
+	dc.b "C2:X:Sound queue:10;C2:X:Sound no-op removal:11;C2:X:Sound volume:12;"
+	dc.b "C2:X:Consistent game speed:13;"
+	dc.b "C2:X:Larger game fast-memory pool:16;"
+	dc.b "C2:X:Instruction cache policy:17;C2:X:Persistent gauges:18;C2:X:Sparse cockpit artwork:19;C2:X:Direct scene raster:20;"
+	dc.b "C2:X:Deferred page fence:21;C2:X:Fast cockpit composition:22;C2:X:Fast gauge updates:23;C2:X:Polygon spans:24;C2:X:Presentation scenery cache:25;C2:X:Selective viewport copy:28;"
+	ELSE
+	IFD DEVELOPER
+	dc.b "C2:X:Table mirror:0;C2:X:Cached mirror:1;"
+	dc.b "C2:X:Projection:2;C2:X:Clipping:3;C2:X:Vertex transform:4;"
+	dc.b "C2:X:Back-face test:5;C2:X:Face setup:6;C2:X:Clear fills:7;"
+	dc.b "C2:X:Tear-free swap:8;C2:X:Frame cap:9;"
+	dc.b "C2:X:Sound queue:10;C2:X:Sound no-op removal:11;C2:X:Sound volume:12;"
+	dc.b "C2:X:Consistent game speed:13;"
+	dc.b "C2:X:Larger game fast-memory pool:16;"
+	dc.b "C2:X:Instruction cache policy:17;C2:X:Persistent gauges:18;C2:X:Sparse cockpit artwork:19;C2:X:Direct scene raster:20;"
+	dc.b "C2:X:Deferred page fence:21;C2:X:Fast cockpit composition:22;C2:X:Fast gauge updates:23;C2:X:Polygon spans:24;C2:X:Presentation scenery cache:25;C2:X:Selective viewport copy:28;"
+	ELSE
+	dc.b "C2:B:Enhanced framerate (68020+Fast RAM);"
+	ENDC
+	ENDC
+	dc.b 0
 
 slv_name		dc.b	"Red Baron",0
 slv_copy		dc.b	"1992 Dynamix",0
@@ -104,7 +127,9 @@ _args_end
 	;initialize kickstart and environment
 
 _bootdos
-	move.l	(_resload),a2		;A2 = resload
+	bsr perf_read_options
+	bsr memory_reserve
+	move.l	(_resload,pc),a2		;A2 = resload
 
 	;open doslib
 		lea	(_dosname,pc),a1
@@ -116,6 +141,14 @@ _bootdos
 		bsr	patch_dos
 
 	;load exe
+	IFD VERIFY
+		movem.l d0-a6,-(sp)
+		lea .tape_start_base(pc),a0
+.tape_start_base
+		adda.l #tape_start-.tape_start_base,a0
+		jsr (a0)
+		movem.l (sp)+,d0-a6
+	ENDC
 		lea	_program(pc),a0
 		lea	_args(pc),a1
 		moveq	#_args_end-_args,d0
@@ -189,16 +222,28 @@ SIM_VERSION_TEST:MACRO
 	cmp.l	#$082A0001,(a0)
 	bne.b	.nov\2
 
+	IFEQ \2-1
+	bsr perf_install_v1
+	ENDC
 	lea	pl_sim_v\2(pc),a0
 	jsr	resload_Patch(a2)
 
-	bra.b	.out
+	bra.w	cb_loadseg_done
 .nov\2
 	ENDM
 
 ; < D0: BSTR filename
 ; < D1: seglist
 _cb_dosLoadSeg
+	bsr sound_driver_loadseg
+	IFD VERIFY
+		movem.l d0-a6,-(sp)
+		lea .tape_base(pc),a0
+.tape_base
+		adda.l #tape_loadseg-.tape_base,a0
+		jsr (a0)
+		movem.l (sp)+,d0-a6
+	ENDC
 	move.l	_resload(pc),a2
 
 	add.l	d1,d1
@@ -233,7 +278,7 @@ _cb_dosLoadSeg
 	move.l	#$4E714EB9,(a0)+
 	pea	flushit(pc)
 	move.l	(A7)+,(a0)+
-	bra.b	.out
+	bra.w	cb_loadseg_done
 .noredbaron:
 
 	move.l	d6,a0
@@ -255,7 +300,7 @@ _cb_dosLoadSeg
 	; ps, v1
 	lea	pl_ps_v1(pc),a0
 	jsr	resload_Patch(a2)
-	bra.b	.out	
+	bra.w	cb_loadseg_done
 .nops_v1
 	move.l	a1,a0
 	add.l	#$2AEF6,a0
@@ -265,7 +310,7 @@ _cb_dosLoadSeg
 	; ps, v2
 	lea	pl_ps_v2(pc),a0
 	jsr	resload_Patch(a2)
-	bra.b	.out	
+	bra.w	cb_loadseg_done
 
 .nops_v2
 	move.l	a1,a0
@@ -276,7 +321,7 @@ _cb_dosLoadSeg
 	; ps, v3
 	lea	pl_ps_v3(pc),a0
 	jsr	resload_Patch(a2)
-	bra.b	.out	
+	bra.w	cb_loadseg_done
 
 .nops
 	move.l	d6,a0
@@ -294,12 +339,29 @@ _cb_dosLoadSeg
 	SIM_VERSION_TEST	A5A8,2
 	SIM_VERSION_TEST	A5CC,3
 .nosim
-.out
+cb_loadseg_done
 	rts
 
 
+	IFD VERIFY
+; Tail bridge preserves flags/register inputs; the VBlank hook overwrites a2.
+observe_vbl_bridge:
+	lea .base(pc),a2
+.base
+	adda.l #observe_vbl-.base,a2
+	jmp (a2)
+	ENDC
+
 pl_sim_v1
 	PL_START
+	IFD VERIFY
+	PL_PS $1ed82,tape_flight_bridge
+	PL_P $1ef92,tape_sim_key_bridge
+	PL_PS $2d348,observe_vbl_bridge
+	; VERIFY_RANGE sim:2d354 6: neutral mouse counters for scripted keyboard route.
+	PL_L $2d354,$323c0000	; move.w #0,d1
+	PL_W $2d358,$4e71	; nop
+	ENDC
 	PL_PS	$A66A,patch_bittest
 	PL_PS	$3089A,kb_delay
 	PL_PS	$3CC74,rename_file
@@ -308,6 +370,9 @@ pl_sim_v1
 
 pl_ps_v1
 	PL_START
+	IFD VERIFY
+	PL_P $15b3a,tape_menu_key_bridge
+	ENDC
 	PL_PS	$2B36A,kb_delay
 	PL_END
 
@@ -501,3 +566,131 @@ new_DeleteFile:
 	dc.b	"sim.out",0
 	dc.b	"simprefs.prf",0
 	dc.b	0
+
+	even
+	include "cpu-cache.s"
+	include "memory.s"
+	include "perf.s"
+	include "mirror.s"
+	include "mirror-cache.s"
+	include "projection.s"
+	include "dot.s"
+	include "clip.s"
+	include "vertex.s"
+	include "face.s"
+	include "fill.s"
+	include "pacing.s"
+	include "sound-sequence.s"
+	include "sound-driver.s"
+	IFD VERIFY
+; Keep signed WHDLoad patch destinations within reach as VERIFY code grows.
+tape_menu_key_bridge:
+	bra.w tape_menu_key
+tape_flight_bridge:
+	bra.w tape_flight
+tape_sim_key_bridge:
+	bra.w tape_sim_key
+	ENDC
+	include "time-core.s"
+	include "time-input.s"
+	include "time-buffers.s"
+	include "time-input-owner.s"
+	include "time-loop.s"
+	include "time-pause.s"
+	include "time-keys.s"
+	include "time-devices.s"
+	include "time-mouse.s"
+	include "time-rate.s"
+	include "time-message.s"
+	include "time-camera.s"
+	include "time-compress.s"
+	include "time-auto-menu.s"
+	include "time-present-core.s"
+	include "time-present-state.s"
+	include "time-present-model.s"
+	IFD VERIFY
+	include "originals.s"
+	include "mirror-verify.s"
+	include "cache-verify.s"
+	include "projection-verify.s"
+	include "dot-verify.s"
+	include "clip-verify.s"
+	include "vertex-verify.s"
+	include "tape.s"
+	IFD VERIFY_ALLOC_LOG
+	include "alloc-observe.s"
+	ENDC
+	ENDC
+	include "time-poses.s"
+	include "time-pose-blend.s"
+	include "time-render.s"
+	include "time-terrain-verify.s"
+	include "time-flag-verify.s"
+	include "instrument-values.s"
+	include "instrument-pixels.s"
+	include "instrument-cache.s"
+	include "gauge-fast.s"
+	include "overlay-lifetime.s"
+	IFD VERIFY
+	include "instrument-cache-verify.s"
+	include "overlay-probe.s"
+	include "overlay-blit.s"
+	include "overlay-pack.s"
+	include "overlay-shadow.s"
+	include "time-shape-verify.s"
+	IFD VERIFY_OVERLAY_KEY_EXPERIMENT
+	include "overlay-key-verify.s"
+	ENDC
+	include "time-exponent.s"
+	include "time-mouse-ownership-cases.i"
+	ENDC
+	include "overlay-mask.s"
+	include "overlay-key.s"
+	include "overlay-cache-key.s"
+	include "overlay-native-mask.s"
+	include "artwork-sparse.s"
+	include "artwork-cache.s"
+	include "artwork-solid.s"
+	include "artwork-front.s"
+	include "page-fence.s"
+	include "cockpit-fast.s"
+	include "scene-frame.s"
+	include "scene-delta.s"
+	include "scene-primitives.s"
+	include "polygon-span.s"
+	include "scene-raster.i"
+	include "scene-raster-fast.i"
+	include "scene-compat.i"
+	IFD VERIFY
+	include "scene-twin.s"
+	ENDC
+	include "time-scenery.s"
+	IFD VERIFY
+time_message_log: dcb.b 24*128,0
+fill_twin_before: dcb.b 20*256*2,0
+fill_twin_after: dcb.b 20*256*2,0
+	include "vertex-cases.i"
+	include "clip-cases.i"
+	include "projection-cases.i"
+	include "dot-cases.i"
+	include "time-core-cases.i"
+	include "time-present-cases.i"
+; Large VERIFY buffers follow code so observer branches retain 68000 reach.
+face_verify_input: dcb.b FACE_CONTEXT_BYTES,0
+face_verify_expected: dcb.b FACE_CONTEXT_BYTES,0
+observe_buffer: dcb.b OBS_STRIDE*OBS_CAPACITY,0
+time_input_test_queue: dcb.b TIME_INPUT_BYTES,0
+time_model_flag_cases: dcb.b 512*4,0
+	IFD VERIFY_ALLOC_LOG
+alloc_observe_buffer: dcb.b ALLOC_LOG_CAPACITY*ALLOC_LOG_STRIDE,0
+	ENDC
+	ENDC
+
+; Contiguous pointer cells used by time_buffers_allocate; keep this order.
+time_present_cache_buffer_ptr: dc.l 0
+time_model_buffer_ptr: dc.l 0
+time_present_list_buffer_ptr: dc.l 0
+time_pose_current_ptr: dc.l 0
+time_pose_previous_ptr: dc.l 0
+time_blend_output_ptr: dc.l 0
+time_input_observe_queue_ptr: dc.l 0

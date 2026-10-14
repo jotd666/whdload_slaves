@@ -10,10 +10,20 @@
 
  This install applies to "Red Baron" © 1992 Sierra/Dynamix.
 
- This install requires WHDLoad to be in the path. It can be found in the
+ Requirements:
+ -------------
+ This install requires WHDLoad 17 or later to be in the path. It can be found in the
  WHDLoad package.
+ XFDDecrunch must also be in the path for installation. It is available in
+ aminet:util/pack/xfdmaster.lha.
 
- The installed program requires 0.5 MB ChipMem and 1.0 MB OtherMem.
+ Install from the three DOS disks named "Red Baron #1", "Red Baron #2"
+ and "Red Baron #3", in any drive. DOS disk images can also be mounted
+ using DiskImage; the installer lists the required tools.
+ The copy-protected MFM release is not supported.
+ Installer 44.10 or later enables icon previews and drawer opening.
+
+ The tested minimum is 0.5 MB ChipMem and 2 MB FastMem.
  It can be quit by pressing num '*' (key can be changed with Tooltype "QuitKey=").
 
  The game requires an installed A500 Kickstart 1.3 image.
@@ -26,17 +36,101 @@
  directory as the kickstart image. It can be found in the archive 
  "util/boot/skick346.lha" on aminet.
 
- If you have problems with this installation please try and get a newer
- version of this package from the WHDLoad WWW-Page. If that doesn't help try
- some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
- that also fails, please inform the author via the Bug-Report-Form which
- can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
- at http://mantis.whdload.de
+ The slave reserves 1 MB for game and renderer memory, plus Kickstart.
+ The former 512 KB ChipMem + 1.5 MB slow-RAM configuration is insufficient.
+ Tested minimum: 512 KB ChipMem + 2 MB FastMem (normal-build flight).
+ Enhanced framerate releases the 192 KB game-pool extension for sim v1.
+ With the option off, the game retains its original allocation budget.
+ DMA allocations retain their original ChipMem requests.
+ Enhanced framerate enables instruction caching on 020+ where needed.
+ It does not enable a disabled data cache. On a 68030 with an MMU, use
+ the MMU tooltype to permit fast-memory data caching; ChipMem stays uncached.
+ Current maximum-detail measurements show less than 2% difference with MMU,
+ below the resolution of the FPS window; no speedup is claimed for the tooltype.
 
- For the full WHDLoad package, other installs and updates refer to:
-	http://www.whdload.de/
- or	aminet:dev/misc/whdload#?
- and	aminet:game/patch/
+ Features:
+ ---------
+ - FastMem and CPU cache support, keyboard fixes and mission-tape saving.
+ - English and German releases supported; Manual and Keys included.
+
+ Rendering improvements:
+ - Enhanced framerate (68020+Fast RAM) is a single splash checkbox.
+   CUSTOM2=1 enables rendering improvements and consistent game speed together.
+   Omitted/zero CUSTOM2 is Off; supplied icons enable it with CUSTOM2=1.
+   It selects the verified dashboard cache, geometry,
+   solid-fill, persistent-gauge, static-artwork, scene and sound optimizations, with CPU-specific choices.
+ - On 030/040/060, resource generations avoid rescanning unchanged cockpit
+   bitmap and mask bytes. Mutable drawing inputs retain exact checks.
+ - On 030/040/060, Enhanced framerate uses longword span fills and specialized
+   line loops in FastMem. This adds no working buffers or RAM requirement.
+ - With Enhanced framerate and Consistent game speed enabled on 040/060,
+   scenery selection retains a separate presentation cache using the native
+   camera-distance and view rules. Drawing restores the simulation copy.
+   This uses about 76 KB additional FastMem when available; allocation failure
+   retains the previous path. The minimum RAM requirement is unchanged.
+ - Large W6 buffers are allocated only when enabled; interpolation buffers
+   are allocated only on 020+. Verification snapshots are excluded from the
+   normal build. Buffers are reused across missions; minimum RAM is unchanged.
+ - On 060, and on 030/040 with Consistent game speed, changed gauge
+   backgrounds use clipped CPU restores from FastMem.
+   Unchanged gauges persist per page below the current scene and static artwork.
+   Native needle callbacks and event redraws are retained. Allocation failure
+   retains native drawing; RAM requirements are unchanged.
+   Without Consistent game speed, 040 keeps its guarded cache and 030 uses
+   native gauges. The 020 gauge path is unchanged.
+ - On 030/040/060, the forward overlay and static cockpit artwork are composed
+   in FastMem before the viewport copy. Artwork outside that viewport persists
+   on each page and is repaired after redraws, messages, view/resource changes
+   or page reuse. Firing, other views and cache misses retain the previous path.
+   000/010/020 retain native artwork. The existing reserved FastMem and 8 KB
+   ChipMem mask are reused; RAM requirements are unchanged.
+ - On 040/060, and on 030 with Consistent game speed, supported convex
+   polygons are drawn directly as planar spans
+   in FastMem, avoiding scratch clear, edge/fill and merge passes. Native
+   clipping, unusual polygons and outlines retain their existing paths.
+   RAM requirements are unchanged.
+ - On 030 with Consistent game speed, unchanged upper-viewport words skip
+   the ChipMem copy. An optional 48,000-byte FastMem shadow allocation is
+   reused across missions; allocation failure retains the full copy.
+ - On 030/040/060, supported scene viewports are drawn in reserved FastMem
+   and copied to ChipMem once. Direct primitives avoid repeated plane setup;
+   old page pixels and scratch are not copied in or exported. Native clipping
+   is retained, with native fallback for unsupported layouts.
+   000/010/020 retain the native scene renderer. RAM requirements are unchanged.
+ - On 030/040/060, FastMem scene work can overlap display scanning. ChipMem
+   page reuse waits until the prior display has finished; copper pickup is guarded.
+   Native frames and slower CPUs retain the original safe beam wait.
+   The two-field cap remains (about 25 FPS on PAL). This does not make world
+   speed frame-rate independent by itself.
+ - Clear the checkbox, or use CUSTOM2=0, to disable the whole bundle.
+   CUSTOM3 is no longer used. Earlier beta CUSTOM2=0/1 meanings were reversed.
+ - Applies only to sim v1; v2/v3 retain their existing fixes.
+ - The dashboard cache uses about 13.7 KB extra ChipMem, with allocation fallback.
+ - The option preserves the Time Scale setting.
+ - Developer builds retain individual CUSTOM2 bits (CUSTOM2=0 disables all).
+   They retain separate timing selection through CUSTOM2 bit 13.
+   Normal/developer builds
+   contain no VERIFY instruments or scripted game input.
+
+ Performance and Time Scale:
+ - Consistent game speed is included in Enhanced framerate. It is supported
+   on 68000 and 020+; 68010 retains native timing. CPU-specific renderer gates
+   remain in force; the accelerated scene renderer is selected on 030/040/060.
+   It enables safe presentation and a one-field cap, without promising 50 FPS.
+   Time Scale is unchanged; overload drops excess world time.
+   W6 release acceptance was completed by the user on 2026-10-13.
+ - Measured W6 envelope: A500 Time Scale 0 passed the rate window;
+   maximum-detail Time Scale 40 dropped simulation time. 020/030/040/060
+   passed their Time Scale 40 rate windows. These are not full gameplay
+   guarantees for every mission. Reduce detail on slower machines.
+
+ History:
+ --------
+ version 3.0b (13.10.2026)
+ - CPU-specific rendering improvements and consistent game speed under one
+   Enhanced framerate checkbox, enabled in the supplied icons.
+ - ReadMe and installer adapted to the WHDLoad Install Template, retaining
+   JOTD's three-disk layout, executable decompression and icon choices.
 
  version 2.1 (26.11.2005) done by JOTD
  - german version supported
@@ -69,3 +163,17 @@
 
  To do:
  - support the MFM version
+
+ Contact:
+ --------
+ If you have problems with this installation please try and get a newer
+ version of this package from the WHDLoad WWW-Page. If that doesn't help try
+ some Tooltypes like NOCACHE, NOAUTOVEC, NOVBRMOVE, NOMMU, PAL or NTSC. If
+ that also fails, please inform the author via the Bug-Report-Form which
+ can be accessed on the WHDLoad WWW-Page or create a mantis issue directly
+ at http://mantis.whdload.de
+
+ For the full WHDLoad package, other installs and updates refer to:
+	http://www.whdload.de/
+ or	aminet:dev/misc/whdload#?
+ and	aminet:game/patch/
