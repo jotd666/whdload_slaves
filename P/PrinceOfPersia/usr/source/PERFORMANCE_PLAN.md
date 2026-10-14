@@ -25,6 +25,9 @@ Sizes per frame, steady running / spike death (fields): work 3.72 / 5.41; full-s
 - **A1 Build.** `tools/build.sh` assembles the normal slave and a `VERIFY` variant into
   `tmp/build` with the shared vasm flags. Gate: the normal build is byte-identical to the
   shipped v4.4 slave (already true by hand).
+  *Done.* `CHECK=1 tools/build.sh` builds both and compares the normal one with the shipped
+  slave. `VERIFY` adds `PrinceOfPersiaVerify.s` (instruments, version 1 only, chained after
+  `pl_v1`) and " (VERIFY)" in the name; the harness takes slave offsets from the vasm listing.
 - **A2 Frame-indexed input.** Add `F:N` to `route.py`: stop on the N-th execution of
   `g:$1bd5a` (frame-wait end) with a counted breakpoint. Use it outside traces only; emulated
   time stops while gdb holds the CPU. Rewrite the spikes route in game frames instead of fields.

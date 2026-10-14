@@ -99,6 +99,9 @@ _name		dc.b	"Prince Of Persia"
     IFD CHIP_ONLY
     dc.b    " (DEBUG/CHIP MODE)"
     ENDC
+	IFD	VERIFY
+	dc.b	" (VERIFY)"
+	ENDC
     dc.b 0
 _copy		dc.b	"1990 Jordan Mechner/Broderbund",0
 _info		dc.b	"adapted & fixed by JOTD & Harry",10,10
@@ -512,7 +515,11 @@ pl_v1
 ;	PL_P	$53d6,blitter_2
 ;	PL_ENDIF
 	
+	IFD	VERIFY
+	PL_NEXT	pl_verify_v1
+	ELSE
 	PL_END
+	ENDC
 
 
 pl_v2_ntsc
@@ -1032,6 +1039,9 @@ reloc_fr4:
 
 	even
 	
+	IFD	VERIFY
+	include	PrinceOfPersiaVerify.s
+	ENDC
 	include	savegame.s
 	IFD	RELOC_ENABLED
 	even
