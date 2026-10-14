@@ -1,5 +1,5 @@
 # vasm build with the shared WHDLoad 20.0 SDK and NDK (override as needed).
-WHDLOAD ?= $(HOME)/.local/share/amiga/WHDLoad-20.0
+WHDLOAD ?= $(HOME)/.local/share/amiga/WHDLoad
 NDK ?= $(HOME)/.local/share/amiga/ndk/Include_I
 VASM ?= $(HOME)/.local/vasmm68k_mot
 VASMFLAGS ?=
