@@ -44,7 +44,7 @@
  68020+ CPUs.
 
  Set CUSTOM2=0 to use the original simulation and rendering. The screen,
- horizon, Monza and music fixes remain active. The new enhancements and
+ horizon, Monza, music and menu-key fixes remain active. The new enhancements and
  game fixes support the original v1 game executable.
 
 
@@ -62,6 +62,7 @@
  - fixed screen flicker and missing pixels at the edge of the horizon
  - fixed incorrect grid positions and disappearing opponents at Monza
  - fixed missing and cut-off music notes on fast CPUs
+ - prevented stuck confirmation keys from skipping through menus
  - requires WHDLoad 17.2 or newer
 
 

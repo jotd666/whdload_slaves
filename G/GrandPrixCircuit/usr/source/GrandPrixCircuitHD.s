@@ -288,6 +288,29 @@ track_bucket_origin:
     lea -94(a4),a0
     rts
 
+; A key-up lost during an OS switch can leave input.device repeating forever.
+; Confirmation must require a fresh press. Keep repeats for other keys, and
+; leave key-up/mouse handling and the original event consumption unchanged.
+; Returning the queue capacity takes the native "queue full" branch, which
+; consumes this event without enqueueing it. Replay CMP flags on both paths.
+menu_confirm_repeat:
+    btst #9,d3             ; IEQUALIFIER_REPEAT (input.device)
+    beq.b .enqueue
+    cmp.b #$40,d2          ; Space
+    beq.b .discard
+    cmp.b #$43,d2          ; numeric keypad Enter
+    beq.b .discard
+    cmp.b #$44,d2          ; Return
+    bne.b .enqueue
+.discard
+    move.w 3456(a4),d4
+    bra.b .compare
+.enqueue
+    move.w 3454(a4),d4
+.compare
+    cmp.w 3456(a4),d4
+    rts
+
 ; A left-clipped, shifted full-width shape can have a negative destination
 ; modulo: consecutive rows share one word. C fetches for the next row can
 ; precede the previous row's final D write, restoring stale destination bits.
@@ -327,6 +350,7 @@ shape_blit_rows:
 ; v1 display handoff fix plus inherited JOTD patches. VERIFY can bypass the fix.
 pl_main_v1
 	PL_START
+	PL_PSS $c49a,menu_confirm_repeat,2 ; PERF_RANGE h0:C49A 8 bit=BASE
 	; Overlapping destination rows need a completed D write before the next C read.
 	PL_PSS $c8b4,shape_blit_rows,4 ; PERF_RANGE h0:C8B4 10 bit=BASE
 	PL_PSS $c904,shape_blit_rows,4 ; PERF_RANGE h0:C904 10 bit=BASE
