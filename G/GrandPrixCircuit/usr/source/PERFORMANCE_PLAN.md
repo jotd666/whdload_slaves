@@ -1561,6 +1561,29 @@ acceptance remains unestablished.
 
 ## Menu input recovery
 
+Rapid fresh Enter/Space presses during post-race fades are queued and can carry
+into later menus. Neither the repeat filter nor the stale-joystick correction
+removes these legitimate queued events; both earlier builds still reproduced the
+owner's reported problem. The always-on h0:8b6 hook clears the queue count at the
+final step of each native screen fade, before the newly visible screen accepts
+input. Earlier fade iterations retain the original comparison; the final step
+replays it after the atomic word reset. No persistent state, artificial input
+delay or wait for a possibly missing release is added. New post-fade presses
+continue to work, while presses accumulated during the transition are discarded.
+
+Twenty-two assembled-code comparisons execute both complete native fade directions
+with queue sizes 0 through 10. Only hardware palette publication/WaitTOF is stubbed.
+All fade calculations and loop iterations execute; output registers match the
+original, the candidate clears the pending queue, and a fresh post-fade event is
+accepted. A 030/MMU comparison places ten alternating fresh Enter/Space entries
+(with no repeat qualifiers) in the queue at the final incoming main-menu fade
+step. Over the following 900 fields, the previous build advances to track
+selection; the candidate stays on the main menu with an empty queue. The installed
+hook is verified in the live capture. This exercises the shared main-menu fade
+boundary rather than replaying an entire race. Both archives pass extraction and
+source-rebuild checks; all 55 pristine hashes remain unchanged. Evidence is in
+`tmp/dev/tmp/menu-fade/` and `tmp/dev/tmp/audio040/menu-fade-queue-*`.
+
 The blocking menu reader at h0:158 checks the keyboard queue first. Its original
 BNE at h0:188 skips joystick polling when a key is queued, but branches to h0:19a,
 which tests cached fire/direction words at 3696/3698(a4). If the cached fire word
@@ -1591,7 +1614,7 @@ main menu and consumes the key. Both are observed for 900 fields. This is a
 controlled stale-state reproduction, not a complete qualifying/post-race run.
 The installed branch is verified in the live candidate memory.
 
-The patch-range audit checks 88 hooks with no errors. Evidence is local under
+The patch-range audit checks 89 hooks with no errors. Evidence is local under
 `tmp/dev/tmp/menu-keys/`, `tmp/dev/tmp/menu-transition/` and the corresponding
 `tmp/dev/tmp/audio040/menu-*` captures. The disk-I/O/lost-release theory is not
 established. Owner acceptance of the complete post-race route remains pending.

@@ -288,6 +288,18 @@ track_bucket_origin:
     lea -94(a4),a0
     rts
 
+; Discard input accumulated while a screen is fading, at its final step.
+; The input handler and this word-sized reset cannot interleave: a key event
+; delivered after the reset belongs to the newly available screen. Keep the
+; native fade-loop comparison and all registers, including X, unchanged.
+menu_fade_input:
+    cmp.w #16,-4(a5)
+    blt.b .done
+    clr.w 3454(a4)
+    cmp.w #16,-4(a5)
+.done
+    rts
+
 ; A key-up lost during an OS switch can leave input.device repeating forever.
 ; Confirmation must require a fresh press. Keep repeats for other keys, and
 ; leave key-up/mouse handling and the original event consumption unchanged.
@@ -350,6 +362,7 @@ shape_blit_rows:
 ; v1 display handoff fix plus inherited JOTD patches. VERIFY can bypass the fix.
 pl_main_v1
 	PL_START
+	PL_PS $8b6,menu_fade_input ; PERF_RANGE h0:08B6 6 bit=BASE
 	; A queued key skips joystick polling. Consume it directly rather than
 	; selecting forever from stale fire/direction values and leaving it queued.
 	PL_W $188,$6642 ; BNE.S $1cc (keyboard read); PERF_RANGE h0:0188 2 bit=BASE

@@ -62,7 +62,7 @@
  - fixed screen flicker and missing pixels at the edge of the horizon
  - fixed incorrect grid positions and disappearing opponents at Monza
  - fixed missing and cut-off music notes on fast CPUs
- - prevented stuck confirmation keys from skipping through menus
+ - prevented stuck or queued keys from skipping menus after screen fades
  - requires WHDLoad 17.2 or newer
 
 
