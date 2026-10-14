@@ -812,6 +812,51 @@ Sprite-anchor validation is retained under ignored `tmp/dev/tmp/sprite-anchor/`:
   unchanged. Normal slave SHA-256:
   `101300e3826cbe8a4827cdbf2233ca422c467322779f8d6dd473b15141a18816`.
 
+Roadside braking signs on 68020+ with C2 enabled now project their own segment's
+integrated lateral coordinate at `$8a0e`, using the canonical fractional
+perspective, road-width and shoulder-width coefficients. The native distinct-row
+selector only projects selected segments and copies neighbouring coordinates
+into skipped entries. Reading those copied X values made signs jump at segment
+crossings even though the perspective coefficients were already interpolated.
+The sign helper bypasses those copies without changing the road tables, physics,
+shape selection, painter order or clipping. It reads the original side flag
+before type masking. The non-forward view retains the native placement path.
+
+All 24 braking-sign images have their ground-contact post on the final image row.
+The helper anchors that row to the projected ground Y, replacing the native
+size-dependent top offset which could leave the post floating or clipped.
+Sprite size changes remain discrete. No extra runtime state is allocated.
+
+Sign-placement evidence is retained under ignored `tmp/dev/tmp/sign-placement/`:
+
+- 4,680 assembled cases match an independent projection model across all 39
+  visible segment entries, six fractions, signed lateral offsets, both sides and
+  small/large sprites. Six fallback cases retain native X/Y behaviour. The entire
+  game data block and all registers other than the intended X/Y outputs remain
+  unchanged. All 24 real sign images have their contact pixels on the final row.
+- 570 frozen right-side segment crossings across five curvatures and three camera
+  headings reduce the worst X step from 22 to 3 game pixels. This isolates the
+  crossing discontinuity; it is not a bound on natural motion between rendered
+  frames when approaching a nearby sign at speed.
+- A 2,700-frame 030/MMU/cache run passes 171 guest assertions. An independent
+  live model checks 1,233 forward sign draws, both sides, all eight sprite heights
+  and segment indices 2..39. Of these, 266 receive a different X from the copied
+  native table. Another 617 mirror draws preserve the native X/hotspot operation;
+  the fallback's X/Y arithmetic is also checked in isolated cases. Captured hook
+  and helper bytes match the tested binary exactly.
+- The normal 040/MMU/cache build completes a 900-frame gameplay smoke test and
+  has exact installed hook/helper bytes. Its continuous debugger memory samples
+  are inconsistent and are not accepted as a coordinate oracle. A separate
+  stopped sign draw, using its memory snapshot and register dumps, matches the
+  independent X/Y calculation exactly and preserves all other registers.
+- The 85-hook instruction/branch audit passes. All 65 enhancement code ranges
+  remain pristine with C2 off; A500 reaches gameplay with C2 on and all 49
+  CPU-gated ranges remain native. The normal slave grows by 94 bytes with no new
+  persistent state. Both 2.0b archives pass exact extraction checks; packaged
+  source rebuilds the identical normal slave and builds VERIFY. All 55 pristine
+  file hashes remain unchanged. Normal slave SHA-256:
+  `47654c402678929b07d65aec355fc088aa8477df65bcc420f0b56f8f7412f745`.
+
 Signed Q8 road angles interpolate the original odd lookup table; exact integer
 angles retain the native lookup. A signed word table derived from the original
 odd byte table gives bounded-cost interpolation without cache misses.

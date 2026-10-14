@@ -512,6 +512,45 @@ render_car_center_row:
     movem.l (sp)+,d0-d2
     rts
 
+; Signs must use their own segment's integrated lateral coordinate. The native
+; distinct-screen-row projection skips segments and copies a neighbour's X into
+; them, causing jumps when a sign moves between those entries at a crossing.
+; Project the exact segment here, with the same fractional scale/shoulder as the
+; road. D3 is the sign boundary; the walker coordinate is the preceding entry.
+; A0 is the selected shape. Keep native selection, painter order and clipping.
+render_sign_position:
+    tst.w -30580(a4)
+    bne.b .native           ; only the forward sign path has this contract
+    movem.l d2-d7/a0-a2,-(sp)
+    bsr render_main_projection
+    lea -25020(a4),a1
+    move.w (a1,d3.w),d6
+    jsr -32550(a4)          ; native signed lateral * unsigned perspective
+    move.w d4,d0
+    add.w #160,d0
+    move.w render_project_width(pc),d2
+    add.w render_project_margin(pc),d2
+    lea -24348(a4),a1
+    btst #2,1(a1,d3.w)      ; native sign-side flag, before type masking
+    bne.b .left
+    add.w d2,d0
+    bra.b .positioned
+.left
+    sub.w d2,d0
+.positioned
+    movem.l (sp)+,d2-d7/a0-a2
+    ; All sign variants have their post's contact pixels on the final row.
+    ; Native size-dependent top offsets could float or clip that contact point.
+    move.w d5,d1
+    addq.w #1,d1
+    sub.w 2(a0),d1          ; bottom row stays on the projected ground boundary
+    sub.w 4(a0),d0
+    rts
+.native
+    sub.w 4(a0),d0          ; original $8a0e/$8a12
+    sub.w 6(a0),d1
+    rts
+
 ; The normal car body and its number decal share D4. Re-anchor both after
 ; native size/facing selection, before either draw. D6 is size*4 + facing*32;
 ; D2 is the doubled car ID. The spin path selects different artwork afterwards

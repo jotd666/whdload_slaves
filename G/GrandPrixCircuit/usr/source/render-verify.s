@@ -270,6 +270,51 @@ verify_render_units:
     cmp.w #96,d6
     bne.b .anchor
 .anchors_done
+    ; Independent sign projection: rows 80/82, signed lane 256, both sides.
+    ; The scratch A4 needs the native multiply stub used by the production path.
+    move.w #$4ef9,-32550(a4)
+    move.l sim_code(pc),d0
+    add.l #$9e54,d0
+    move.l d0,-32548(a4)
+    move.l _resload(pc),a2
+    jsr resload_FlushCache(a2) ; the scratch jump stub was just written
+    lea render_main_y(pc),a0
+    move.w #82,2(a0)
+    move.w #80,4(a0)
+    move.w #2048,-612+160(a4)
+    move.w #4096,-612+164(a4)
+    move.w #100,-772+160(a4)
+    move.w #120,-772+164(a4)
+    move.w #20,-692+160(a4)
+    move.w #30,-692+164(a4)
+    move.w #256,-25020+4(a4)
+    move.w #12,-1998(a4)    ; selected sprite height
+    move.w #4,-1996(a4)     ; X hotspot
+    move.w #6,-1994(a4)     ; Y hotspot, used only by native fallback
+    lea verify_sign_vectors(pc),a2
+    moveq #4,d7
+.sign
+    lea render_fraction(pc),a0
+    move.w (a2)+,(a0)
+    move.w (a2)+,-24348+4(a4)
+    move.w (a2)+,-30580(a4)
+    lea -2000(a4),a0
+    moveq #4,d3
+    moveq #95,d5
+    move.w #300,d0
+    moveq #100,d1
+    bsr render_sign_position
+    move.w d1,d6
+    ext.l d0
+    move.w (a2)+,d1
+    ext.l d1
+    bsr verify_render_equal
+    move.w d6,d0
+    ext.l d0
+    move.w (a2)+,d1
+    ext.l d1
+    bsr verify_render_equal
+    dbf d7,.sign
     ; Restore scratch state before the first real protected snapshot.
     lea render_pose(pc),a0
     moveq #8,d0
@@ -303,7 +348,7 @@ verify_render_equal:
     movem.l (sp)+,a0-a1
     bra verify_sim_equal
 verify_render_next: dc.l 0
-verify_render_values: ds.l 220
+verify_render_values: ds.l 240
 
 ; actual steering step, actual lateral step, F, heading/lateral corrections
 verify_camera_vectors:
@@ -338,3 +383,11 @@ verify_car_anchor_x:
     dc.w 160,160,160,160,159,159,157,157
     dc.w 160,160,160,159,159,159,160,160
     dc.w 160,160,160,160,162,162,164,163
+
+; F, sign flags, view, draw X, draw Y
+verify_sign_vectors:
+    dc.w 0,8,0,284,84
+    dc.w 128,8,0,303,84
+    dc.w 255,8,0,319,84
+    dc.w 128,12,0,33,84
+    dc.w 128,8,1,296,94
