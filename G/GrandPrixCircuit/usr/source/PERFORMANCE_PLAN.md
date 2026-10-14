@@ -719,13 +719,61 @@ phase at `$84b2`. Canonical tables are copied from the loaded game once; every
 fraction is calculated from those originals, never cumulatively. Only main Y
 indices 2–8 and mirror indices 2–3 can change at sub-segment resolution. Updating
 those nine boundaries and their affected row maps keeps the A500 cost down.
-The native far projection-selection list stays intact, including its intentional
-choice of an earlier duplicate row. An exact fraction cache avoids repeated work.
+The native far projection-selection list stays intact for the original geometry
+and row-dependent features. On 020+ the final main-road centres are replaced by
+the depth samples described below. An exact fraction cache avoids repeated work.
 Native `$2b5e` rebuilds mirror/row tables at outer-session setup, not between
 qualifying and its race. The C2 hook at `$9ee`
 restores canonical main/mirror/length inputs before that initializer and invalidates
 the projected fraction, preventing shifted tables from becoming the next race's
 baseline.
+
+On 68020+ with C2 enabled, `$9a62` calls `render_main_rows` after the native
+segment projection. Each main screen row 72..110 obtains its actual reciprocal
+distance using the same near-plane calibration as roadside signs. The helper
+finds the corresponding pair of fraction-adjusted walker boundaries and
+interpolates their lateral coordinate, retaining Q4 through the final projection
+and rounding only the screen coordinate. The last interval's slope extends to
+the clipped horizon. This removes the whole-segment choice that made distant
+rows jump when several segments shared an integer Y.
+
+Native widths, stripes, ground Y, clipping and rasterization remain in place.
+The auxiliary boundary moves by the same centre delta to retain its native
+relative width. Only the two main row-coordinate arrays change; mirrored road
+sampling and live physics remain untouched. Car X already samples the current
+view's centre rows, so forward cars inherit the smoother road reference.
+`render_depth_origin` is shared with signs without changing their calculation.
+The helper adds no persistent state and runs outside the protected latch.
+
+Evidence under ignored `tmp/dev/tmp/road-depth/` and the corresponding
+`tmp/dev/tmp/audio040/road-depth-*` captures:
+
+- 5,850 assembled road-row/model cases cover five curvatures, five headings and
+  six fractions. Non-output registers and game data outside the two intended
+  coordinate arrays remain unchanged. The 86-hook instruction/branch audit passes.
+- Across 585 frozen row/crossing comparisons (15 poses, 39 rows), the largest
+  crossing step falls from 20 pixels to 1. This isolates camera segment crossings,
+  not natural movement at speed.
+- Matched 2,700-frame 030/MMU/cache captures have identical camera positions and
+  fractions. All 105,300 new road-row coordinates match an independent model;
+  all 171 guest assertions pass. Over rows 72..85, the maximum per-frame movement
+  falls from 21 to 7 pixels, and maximum absolute second difference from 28 to 6.
+  Row/frame movements exceeding two pixels fall from 7,453 to 2,627. Steering and
+  natural perspective movement remain in those counts; they are scene measurements,
+  not universal bounds or FPS claims. Single-pixel raster steps remain expected.
+- Sign regression passes 6,552 assembled cases and 1,233 live forward draws, with
+  617 native mirror-X checks. Its geometry is unchanged by sharing calibration.
+- The normal 040/MMU/cache release reaches the race grid and matches all 39 row
+  coordinates after 121 geometry calls; exact hook/helper bytes match. C2 off
+  retains all 66 optional code ranges; A500 with C2 on retains all 50 CPU-gated
+  ranges. Both configurations boot successfully.
+- The normal slave is 11,444 bytes, 192 bytes larger with no extra runtime state.
+  The release remains 2.0b. Both archives pass exact extraction checks; packaged
+  source rebuilds the identical normal slave and builds VERIFY. All 55 pristine
+  file hashes remain unchanged.
+
+Current normal slave SHA-256:
+`9e2ac400f103f54b169bf00bd7c14cb015df3e0b153c3cab6be83ec41c224605`.
 
 Front cars already form full relative Q8 depth at `$8f50`; retain it before the
 native eighth-segment reduction, then interpolate the canonical near/far Y tables.
@@ -859,9 +907,6 @@ Current evidence is under ignored `tmp/dev/tmp/sign-depth/` and its
   It remains version 2.0b. The hook's C2/020 gate is unchanged; the existing
   disabled-option and A500 byte-preservation checks cover the same installed
   ranges. This change does not touch physics, car projection or audio.
-
-Normal slave SHA-256:
-`4d28b54bde9dc95ba150b8de25841dc53eaacefbb26f56902dba5103fddf1acd`.
 
 Signed Q8 road angles interpolate the original odd lookup table; exact integer
 angles retain the native lookup. A signed word table derived from the original

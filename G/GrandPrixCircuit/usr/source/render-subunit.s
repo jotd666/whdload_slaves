@@ -512,15 +512,98 @@ render_car_center_row:
     movem.l (sp)+,d0-d2
     rts
 
+; Replace the main road's whole-segment screen-row selection with a sample
+; at each row's reciprocal depth. The walker already includes camera fraction;
+; interpolate its lateral coordinate at that same depth, retaining Q4 until
+; final screen rounding. Native widths, stripes and rasterization are unchanged.
+; The auxiliary boundary follows the centre shift, preserving native branch
+; widths. The final walker interval extends to the clipped horizon row.
+render_main_rows:
+    movem.l d0-a6,-(sp)
+    move.l sim_code(pc),a0
+    adda.l #$9c08,a0
+    jsr (a0)               ; original row/auxiliary-boundary construction
+    MACHINE 68020
+    move.w ccr,-(sp)
+    bsr render_depth_origin
+    move.l d4,d1            ; reciprocal numerator
+    move.l d0,a1            ; virtual near distance, Q4
+    lea -612+220(a4),a0     ; fixed screen-row scales, near to far
+    lea -25018(a4),a2       ; first lateral boundary
+    lea -708(a4),a3         ; first fraction-adjusted interval
+    lea -25484+220(a4),a5
+    lea -25706+220(a4),a6
+    moveq #1,d2            ; interval index, 1..39
+    moveq #0,d3            ; accumulated interval distance, Q4
+    moveq #38,d5            ; rows 110..72 inclusive
+.row
+    moveq #0,d0
+    move.w (a0),d0
+    move.l d1,d7
+    divu.l d0,d7
+    sub.l a1,d7            ; target distance from the near boundary
+.interval
+    moveq #0,d6
+    move.w (a3),d6
+    lsl.l #4,d6
+    move.l d3,d4
+    add.l d6,d4
+    cmp.l d4,d7
+    bcs.b .sample
+    cmp.w #39,d2
+    beq.b .sample          ; continue the last slope to the horizon
+    move.l d4,d3
+    addq.l #2,a2
+    addq.l #2,a3
+    addq.w #1,d2
+    bra.b .interval
+.sample
+    sub.l d3,d7
+    move.w 2(a2),d4
+    sub.w (a2),d4
+    ext.l d4
+    muls.l d7,d4
+    lsl.l #4,d4
+    divs.l d6,d4           ; fractional lateral displacement, Q4
+    move.w (a2),d6
+    ext.l d6
+    lsl.l #4,d6
+    add.l d6,d4
+    ; Split the wide product into signed high/unsigned low 16-bit halves.
+    ; This retains Q4 lateral precision without overflowing a 32-bit multiply.
+    move.l d4,d6
+    swap d6
+    muls.w d0,d6
+    mulu.w d0,d4
+    swap d4
+    and.l #$ffff,d4
+    add.l d6,d4
+    addq.l #8,d4           ; round only the final Q20 screen coordinate
+    asr.l #4,d4
+    add.w #160,d4
+    move.w d4,d7
+    sub.w (a5),d7
+    add.w d7,(a6)
+    move.w d4,(a5)
+    subq.l #2,a0
+    subq.l #2,a5
+    subq.l #2,a6
+    dbf d5,.row
+    move.w (sp)+,ccr
+    MACHINE 68000
+    movem.l (sp)+,d0-a6
+    move.w #220,d5         ; original $9a66, consumed by native edge generation
+    rts
+
 ; Signs use the walker's depth as well as its lateral coordinate. Integer Y
 ; aliases several distant segments; interpolating coefficients through that row
 ; makes perspective stand still while the lateral walker advances. Recover the
 ; reciprocal scale from the actual integration distance instead. Calibrate the
 ; virtual near-plane distance from the first two native scales and their length.
 ; Q4 depth keeps the intermediate products in 32 bits; division is 020+ gated.
-; Returns D0=unsigned perspective, D2=road width plus shoulder. Other scratch
-; registers are protected by the sign caller. No game tables are changed.
-render_sign_projection:
+; Shared calibration: D0=virtual near distance (Q4), D4=reciprocal numerator,
+; A1=native scale table. Callers protect scratch registers. No tables are changed.
+render_depth_origin:
     MACHINE 68020
     lea render_main_y(pc),a0
     lea -612(a4),a1
@@ -539,6 +622,11 @@ render_sign_projection:
     lsl.l #4,d0
     divu.l d7,d0           ; virtual near distance in Q4
     mulu.l d0,d4           ; reciprocal numerator
+    rts
+
+; D0=unsigned perspective, D2=road width plus shoulder.
+render_sign_projection:
+    bsr render_depth_origin
     lea -708(a4),a0
     move.w d3,d1
     subq.w #2,d1
