@@ -60,6 +60,16 @@
  - fixed queued keys skipping menus after screen fades
  - requires WHDLoad 17.2 or newer
 
+ version 1.0 (24.03.08) done by JOTD:
+ - initial release
+ - fixed to work with fast memory
+ - fixed to work with 68020+
+ - disk protection removed
+ - manual included
+ - music fixed
+ - icon added
+ - source code included
+
 
  Contact:
  --------
