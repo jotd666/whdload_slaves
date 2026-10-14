@@ -1559,35 +1559,42 @@ is required.
 The contribution is ready for upstream review as 2.0b; final physical-hardware
 acceptance remains unestablished.
 
-## Menu confirmation key recovery
+## Menu input recovery
 
-The v1 input.device handler at h0:c44e ignores key-up events and queues every
-key-down, including IEQUALIFIER_REPEAT ($0200). An OS switch during disk I/O
-could lose a release and leave input.device repeating: the owner reports menu
-confirmation continuing until another tap. The exact OS-switch timing has not
-been reproduced, so this remains a cause hypothesis rather than a hardware finding.
+The blocking menu reader at h0:158 checks the keyboard queue first. Its original
+BNE at h0:188 skips joystick polling when a key is queued, but branches to h0:19a,
+which tests cached fire/direction words at 3696/3698(a4). If the cached fire word
+is set, every call returns Return without consuming the queued key or refreshing
+the joystick. A single Space can therefore drive successive menus indefinitely,
+even after every physical button has been released. Cached direction similarly
+repeats a menu movement. This mechanism needs no lost key-up or auto-repeat.
 
-The unconditional h0:c49a hook rejects repeat-qualified Space ($40), keypad
-Enter ($43) and Return ($44) before enqueueing. It takes the native full-queue
-consumption path, leaving fresh presses, key-up events, mouse handling and all
-other key repeats unchanged. It adds no held-key state or wait for a release that
-might never arrive. This fix applies with enhancements both on and off and uses
-68000 instructions. Holding a confirmation key now confirms only once.
+The unconditional h0:188 correction directs queued keys to h0:1cc, the native
+keyboard reader. With an empty queue, the original joystick polling remains.
+Complete native-routine CPU tests reproduce the old failure and check the fix
+across 50 cases / 600 polls, including Space, both Enter keys, an arrow and a
+letter, with idle, stale fire, stale direction and combined cached inputs. The
+fixed routine consumes each queued key once, then returns to idle. Only the
+bounded delay and Exec interrupt-enable wrappers are isolated in these CPU tests.
 
-Assembled-code tests execute the complete native input handler: 3,840 combinations
-of raw key code, modifiers/repeat and queue occupancy, 300 successive repeat events
-with the release deliberately omitted, fresh-press recovery, mouse events and
-register preservation. The unpatched handler accepts each of the three repeated
-confirmation keys in the negative control. 4,154 checks pass in total. This models
-lost-release input; it does not emulate a physical WHDLoad OS-switch race.
-The patch-range audit checks 87 hooks with no errors. Normal 030/MMU boots with
-enhancements on and off reach the menus and accept fresh keyboard input; both
-live memory captures contain the unconditional hook. Both release archives pass
-extraction/rebuild checks and all 55 pristine manifest hashes remain unchanged.
-The normal 2.0b slave SHA-256 is
-`a49598275c8078e7eccf95664fc66416c924bb92b5786824219a0bfb7953ecf8`.
-Physical post-race acceptance remains to be confirmed. Local evidence is under
-`tmp/dev/tmp/menu-keys/` and `tmp/dev/tmp/audio040/menu-keys-*`.
+The input.device repeat guard at h0:c49a separately rejects repeat-qualified
+Space ($40), keypad Enter ($43) and Return ($44), preserving fresh presses,
+key-up/mouse events and other key repeats. Its 4,154 input-handler checks pass,
+including 300 omitted-release repeat events. That guard alone did not fix the
+owner's post-race reproduction; it does not address the stale joystick path.
+Both fixes are always enabled, use 68000 instructions and add no persistent state.
+
+A bounded 030/MMU emulator comparison injects one queued Space and stale fire
+at the menu polling boundary, with no hardware button held. The old release
+unexpectedly advances to track selection; the corrected release remains at the
+main menu and consumes the key. Both are observed for 900 fields. This is a
+controlled stale-state reproduction, not a complete qualifying/post-race run.
+The installed branch is verified in the live candidate memory.
+
+The patch-range audit checks 88 hooks with no errors. Evidence is local under
+`tmp/dev/tmp/menu-keys/`, `tmp/dev/tmp/menu-transition/` and the corresponding
+`tmp/dev/tmp/audio040/menu-*` captures. The disk-I/O/lost-release theory is not
+established. Owner acceptance of the complete post-race route remains pending.
 
 ## Open questions
 - Attract capture window/publication counter are validated in Phase 2. Phase 6

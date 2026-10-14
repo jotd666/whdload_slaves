@@ -350,6 +350,9 @@ shape_blit_rows:
 ; v1 display handoff fix plus inherited JOTD patches. VERIFY can bypass the fix.
 pl_main_v1
 	PL_START
+	; A queued key skips joystick polling. Consume it directly rather than
+	; selecting forever from stale fire/direction values and leaving it queued.
+	PL_W $188,$6642 ; BNE.S $1cc (keyboard read); PERF_RANGE h0:0188 2 bit=BASE
 	PL_PSS $c49a,menu_confirm_repeat,2 ; PERF_RANGE h0:C49A 8 bit=BASE
 	; Overlapping destination rows need a completed D write before the next C read.
 	PL_PSS $c8b4,shape_blit_rows,4 ; PERF_RANGE h0:C8B4 10 bit=BASE
