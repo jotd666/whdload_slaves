@@ -742,7 +742,7 @@ at depth 8 for X, while keeping the existing vertical placement. Closest cars
 clamp their road-centre sample to the last generated row (main 110, mirror 27),
 avoiding the native fallback's coarse segment-index changes and unwritten rows.
 Sprite size/facing selection, vertical placement and raster clipping retain their
-existing code paths. A500 keeps the cheaper integer X projection. The new state
+existing code paths; the body/decal drawing anchor is corrected as described below. A500 keeps the cheaper integer X projection. The new state
 is one private word; no physics or car-position data is written by these helpers.
 
 Car-depth evidence is retained under ignored `tmp/dev/tmp/car-depth/`:
@@ -772,6 +772,45 @@ Car-depth evidence is retained under ignored `tmp/dev/tmp/car-depth/`:
   identical normal slave and builds VERIFY. All 55 pristine file hashes remain
   unchanged. Normal slave SHA-256:
   `52a9f1f4d99986b22fb463c226c258a0f520de3aac4a3209732b569a31f4835f`.
+
+Normal opponent bodies now share a stable rear-tyre contact midpoint across the
+three viewing angles and eight native sizes. The original hotspots differ from
+that midpoint by -4 to +3 pixels. A C2/68020+ hook at `$8e1e` applies a signed
+pixel correction to D4 after native size/facing selection, before either the body
+or its car-number decal is drawn. The decal is not a separate wheel image; both
+layers move together. The four body colour banks have identical contact geometry.
+Half-pixel centres use one rounding rule, leaving a common -0.5..0 pixel residual.
+Vertical hotspots already sit on the bottom contact row, and mirror-car anchors
+already agree within half a pixel. Neither needs adjustment. The separate spin
+artwork keeps its original anchor. No game data, sprite headers, physics, size
+hysteresis or facing selection changes. This aligns the artwork's contact point;
+it does not add intermediate sprite sizes or angles.
+
+Sprite-anchor validation is retained under ignored `tmp/dev/tmp/sprite-anchor/`:
+
+- The 96 normal body images (four colours, three angles, eight sizes) independently
+  derive the correction table from their decoded contact pixels. At a fixed
+  projected position, worst contact displacement across angles falls from 7 to
+  0.5 pixels; across adjacent sizes, from 2 to 0.5 pixels.
+- 2,400 assembled cases cover every family, all ten car IDs, signed/off-screen
+  coordinates and spin exclusion. All game data and registers, including native
+  condition codes, match the original except for the intended drawing X change.
+- A 900-frame 030/MMU/cache traffic run passes 161 guest assertions with no
+  failures. Raw-register checks cover 1,749 live forward draws across 17 normal
+  size/angle combinations; all match the correction table, with 707 adjusted
+  draws. Spin exclusion is covered by the assembled and guest unit cases rather
+  than this traffic window. The installed hook and helper match the captured
+  binary. A normal 040/MMU/cache build completes a separate 900-frame gameplay
+  smoke test; that attract window has no opponents and is not traffic coverage.
+- The 84-hook instruction/branch audit passes. With C2 off, all 64 enhancement
+  ranges retain pristine instructions. A500 reaches gameplay with C2 on and all
+  48 CPU-gated ranges remain native, including the new anchor hook.
+- Normal slave growth is 76 bytes, including the 24-byte correction table;
+  there is no extra runtime state or allocation. All new tests remain VERIFY-only.
+  Both 2.0b archives pass exact extraction checks, packaged sources rebuild the
+  identical normal slave and build VERIFY, and all 55 pristine hashes remain
+  unchanged. Normal slave SHA-256:
+  `101300e3826cbe8a4827cdbf2233ca422c467322779f8d6dd473b15141a18816`.
 
 Signed Q8 road angles interpolate the original odd lookup table; exact integer
 angles retain the native lookup. A signed word table derived from the original
@@ -817,7 +856,8 @@ Camera validation is retained under ignored `tmp/dev/tmp/road-pose/`:
   reversals, reduces the largest near-road crossing step from 13 to 4 pixels
   (row 96: 10 to 3). Far rows still reach 21 pixels versus 23 before: continuous
   camera pose does not remove the separate integer far-row selection limits.
-  Car-X precision is addressed above; discrete sprite changes still remain.
+  Car-X precision and sprite anchors are addressed above; discrete sprite artwork
+  changes still remain.
 - The 79-hook instruction/branch audit passes. A500/68000 reaches gameplay;
   040/MMU with C2=0 retains original instructions at all 59 enhancement ranges.
   Live A500, 030 and final 040 camera hook/helper bytes match their exact builds.

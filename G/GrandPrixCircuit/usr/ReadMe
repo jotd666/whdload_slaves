@@ -55,6 +55,7 @@
  - smoother vehicle movement on 68020 and faster CPUs
  - smoother road-camera, opponent-car and horizon movement
  - more precise roadside and opponent-car positioning on 68020 and faster CPUs
+ - steadier opponent-car alignment when sprite size or angle changes
  - improved drawing performance
  - fixed screen flicker and missing pixels at the edge of the horizon
  - fixed incorrect grid positions and disappearing opponents at Monza

@@ -512,6 +512,42 @@ render_car_center_row:
     movem.l (sp)+,d0-d2
     rts
 
+; The normal car body and its number decal share D4. Re-anchor both after
+; native size/facing selection, before either draw. D6 is size*4 + facing*32;
+; D2 is the doubled car ID. The spin path selects different artwork afterwards
+; and must keep its native anchor. No shape header or gameplay state is changed.
+render_car_anchor:
+    lea -27630(a4),a0     ; original $8e1e: car-number pointer bank
+    add.w (a0,d2.w),d1
+    MACHINE 68020
+    move.w ccr,-(sp)      ; retain the native ADD flags, including X
+    MACHINE 68000
+    movem.l d0/a0,-(sp)
+    cmp.w -29974(a4),d2
+    beq.b .done
+    move.w d6,d0
+    lsr.w #2,d0
+    lea render_car_anchors(pc),a0
+    move.b (a0,d0.w),d0
+    ext.w d0
+    sub.w d0,d4
+.done
+    movem.l (sp)+,d0/a0
+    move.w (sp)+,ccr
+    rts
+
+; Pixel corrections derived from the midpoint of the two rear tyre contacts
+; on the bottom row of each normal body, relative to its native X hotspot.
+; Round half pixels toward +infinity, leaving a common -0.5..0 pixel residual.
+; All four colour banks have identical contact geometry. Rows are left, centre,
+; right facing; columns are the eight native size families, smallest first.
+; Mirrored front views already agree within half a pixel and need no correction.
+render_car_anchors:
+    dc.b 0,0,0,0,1,1,3,3
+    dc.b 0,0,0,1,1,1,0,0
+    dc.b 0,0,0,0,-2,-2,-4,-3
+    even
+
 ; Expand the native odd byte table once into signed word neighbours. This
 ; keeps interpolation bounded-cost on long curves, with no cache misses.
 render_angle_setup:

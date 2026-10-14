@@ -35,7 +35,7 @@ verify_render_pose:
     sub.l #16,d0
     moveq #9,d2
 .cars
-    clr.w (a5)+            ; native alternating wheel-shape history
+    clr.w (a5)+            ; native size-family hysteresis
     move.l d0,(a0)+
     move.w d1,(a1)+
     move.w #480,(a2)+
@@ -239,6 +239,37 @@ verify_render_units:
     ext.l d0
     moveq #56,d1           ; original near-table vertical placement
     bsr verify_render_equal
+    ; Every normal size/facing and the excluded spin path. The caller's native
+    ; number-bank addition remains active in both cases.
+    move.l attnflags(pc),d0
+    btst #AFB_68020,d0
+    beq.b .anchors_done
+    move.w #32,-27630(a4)
+    lea verify_car_anchor_x(pc),a2
+    moveq #0,d6
+.anchor
+    moveq #0,d2
+    move.w #-1,-29974(a4)
+    move.w #160,d4
+    moveq #100,d1
+    bsr render_car_anchor
+    move.w d4,d0
+    ext.l d0
+    move.w (a2)+,d1
+    ext.l d1
+    bsr verify_render_equal
+    clr.w -29974(a4)
+    move.w #160,d4
+    moveq #100,d1
+    bsr render_car_anchor
+    move.w d4,d0
+    ext.l d0
+    move.l #160,d1
+    bsr verify_render_equal
+    addq.w #4,d6
+    cmp.w #96,d6
+    bne.b .anchor
+.anchors_done
     ; Restore scratch state before the first real protected snapshot.
     lea render_pose(pc),a0
     moveq #8,d0
@@ -272,7 +303,7 @@ verify_render_equal:
     movem.l (sp)+,a0-a1
     bra verify_sim_equal
 verify_render_next: dc.l 0
-verify_render_values: ds.l 124
+verify_render_values: ds.l 220
 
 ; actual steering step, actual lateral step, F, heading/lateral corrections
 verify_camera_vectors:
@@ -301,3 +332,9 @@ verify_car_centres:
     dc.w 80*256,0,0,160, 80*256+128,-100,0,58
     dc.w 110*256+255,100,0,170, 119*256,-100,0,-30
     dc.w 20*256+128,100,1,438, 28*256,-100,1,219
+
+; Corrected draw X at a fixed projected X=160, independently stated endpoints.
+verify_car_anchor_x:
+    dc.w 160,160,160,160,159,159,157,157
+    dc.w 160,160,160,159,159,159,160,160
+    dc.w 160,160,160,160,162,162,164,163
