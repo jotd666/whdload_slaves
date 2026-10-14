@@ -56,7 +56,7 @@
  - smoother road-camera, opponent-car and horizon movement
  - more precise roadside and opponent-car positioning on 68020 and faster CPUs
  - steadier opponent-car alignment when sprite size or angle changes
- - smoother roadside-sign placement with signposts anchored to the ground
+ - smoother roadside signs, including at long distance, with grounded signposts
  - improved drawing performance
  - fixed screen flicker and missing pixels at the edge of the horizon
  - fixed incorrect grid positions and disappearing opponents at Monza

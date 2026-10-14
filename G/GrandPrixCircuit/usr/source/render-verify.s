@@ -282,10 +282,15 @@ verify_render_units:
     move.w #82,2(a0)
     move.w #80,4(a0)
     move.w #2048,-612+160(a4)
+    move.w #3072,-612+162(a4)
     move.w #4096,-612+164(a4)
+    lea render_lengths(pc),a0
+    move.w #256,2(a0)
     move.w #100,-772+160(a4)
+    move.w #110,-772+162(a4)
     move.w #120,-772+164(a4)
     move.w #20,-692+160(a4)
+    move.w #25,-692+162(a4)
     move.w #30,-692+164(a4)
     move.w #256,-25020+4(a4)
     move.w #12,-1998(a4)    ; selected sprite height
@@ -296,6 +301,9 @@ verify_render_units:
 .sign
     lea render_fraction(pc),a0
     move.w (a2)+,(a0)
+    move.w #256,d0
+    sub.w (a0),d0
+    move.w d0,-708(a4)
     move.w (a2)+,-24348+4(a4)
     move.w (a2)+,-30580(a4)
     lea -2000(a4),a0
@@ -387,7 +395,7 @@ verify_car_anchor_x:
 ; F, sign flags, view, draw X, draw Y
 verify_sign_vectors:
     dc.w 0,8,0,284,84
-    dc.w 128,8,0,303,84
-    dc.w 255,8,0,319,84
-    dc.w 128,12,0,33,84
+    dc.w 128,8,0,295,84
+    dc.w 255,8,0,320,84
+    dc.w 128,12,0,37,84
     dc.w 128,8,1,296,94

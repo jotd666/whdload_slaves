@@ -512,24 +512,94 @@ render_car_center_row:
     movem.l (sp)+,d0-d2
     rts
 
-; Signs must use their own segment's integrated lateral coordinate. The native
-; distinct-screen-row projection skips segments and copies a neighbour's X into
-; them, causing jumps when a sign moves between those entries at a crossing.
-; Project the exact segment here, with the same fractional scale/shoulder as the
-; road. D3 is the sign boundary; the walker coordinate is the preceding entry.
-; A0 is the selected shape. Keep native selection, painter order and clipping.
+; Signs use the walker's depth as well as its lateral coordinate. Integer Y
+; aliases several distant segments; interpolating coefficients through that row
+; makes perspective stand still while the lateral walker advances. Recover the
+; reciprocal scale from the actual integration distance instead. Calibrate the
+; virtual near-plane distance from the first two native scales and their length.
+; Q4 depth keeps the intermediate products in 32 bits; division is 020+ gated.
+; Returns D0=unsigned perspective, D2=road width plus shoulder. Other scratch
+; registers are protected by the sign caller. No game tables are changed.
+render_sign_projection:
+    MACHINE 68020
+    lea render_main_y(pc),a0
+    lea -612(a4),a1
+    move.w 2(a0),d1
+    add.w d1,d1
+    moveq #0,d4
+    move.w (a1,d1.w),d4     ; near scale
+    move.w 4(a0),d1
+    add.w d1,d1
+    moveq #0,d6
+    move.w (a1,d1.w),d6     ; next scale
+    move.l d4,d7
+    sub.l d6,d7
+    move.w render_lengths+2(pc),d0
+    mulu.w d6,d0
+    lsl.l #4,d0
+    divu.l d7,d0           ; virtual near distance in Q4
+    mulu.l d0,d4           ; reciprocal numerator
+    lea -708(a4),a0
+    move.w d3,d1
+    subq.w #2,d1
+    moveq #0,d7
+    moveq #0,d6
+    bra.b .distance_test
+.distance
+    move.w (a0)+,d6
+    add.l d6,d7
+    subq.w #2,d1
+.distance_test
+    tst.w d1
+    bne.b .distance
+    lsl.l #4,d7
+    add.l d7,d0
+    divu.l d0,d4
+    move.l d4,d0           ; scale from the same depth used by the walker
+    MACHINE 68000
+    ; Recover shoulder position from the native scale table, retaining the
+    ; sub-row part until the combined width is rounded. Start at the near row;
+    ; bounds are the v1 projection's clipped near plane and horizon.
+    lea render_main_y(pc),a0
+    move.w 2(a0),d2
+    add.w d2,d2
+.row
+    cmp.w (a1,d2.w),d0
+    bcc.b .row_found
+    subq.w #2,d2
+    bra.b .row
+.row_found
+    lea -772(a4),a0
+    move.w (a0,d2.w),d6
+    move.w 2(a0,d2.w),d7
+    lea -692(a4),a0
+    add.w (a0,d2.w),d6
+    add.w 2(a0,d2.w),d7
+    sub.w d6,d7
+    move.w d0,d4
+    sub.w (a1,d2.w),d4
+    beq.b .width_done      ; includes the clipped near endpoint
+    mulu.w d4,d7
+    move.w 2(a1,d2.w),d4
+    sub.w (a1,d2.w),d4
+    divu.w d4,d7
+    add.w d7,d6
+.width_done
+    move.w d6,d2
+    rts
+
+; D3 is the sign boundary; its lateral coordinate is the preceding walker entry.
+; A0 is the selected shape. Keep selection, painter order, ground Y and clipping.
 render_sign_position:
     tst.w -30580(a4)
     bne.b .native           ; only the forward sign path has this contract
     movem.l d2-d7/a0-a2,-(sp)
-    bsr render_main_projection
+    bsr render_sign_projection
     lea -25020(a4),a1
     move.w (a1,d3.w),d6
     jsr -32550(a4)          ; native signed lateral * unsigned perspective
     move.w d4,d0
     add.w #160,d0
-    move.w render_project_width(pc),d2
-    add.w render_project_margin(pc),d2
     lea -24348(a4),a1
     btst #2,1(a1,d3.w)      ; native sign-side flag, before type masking
     bne.b .left
