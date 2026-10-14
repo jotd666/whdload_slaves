@@ -1,0 +1,1143 @@
+; Experimental A4000 integration. Requires SIM_SCHEDULE.
+; sim_a4000_arm is retained only for synthetic input fixtures.
+; Native 10/20 paths retain their original behavior.
+; Append player/opponent geometric yaw fractions after the two64-byte blocks.
+; Unsigned Q16 XYZ body-position carries: player+132, opponent+138.
+; Signed Q8 pitch/roll carries: player+144/146, opponent+148/150.
+SIM_PRIVATE_BYTES = 152
+SIM_AUX_BYTES = 24*8
+SIM_CAMERA_BYTES = 8
+sim_a4000_arm:
+ lea sim_a4000_private(pc),a0
+ moveq #SIM_PRIVATE_BYTES/4-1,d0
+.clear:
+ clr.l (a0)+
+ dbra d0,.clear
+ lea sim_a4000_arm(pc),a0
+ adda.l #sim_aux_state-sim_a4000_arm,a0
+ moveq #SIM_AUX_BYTES/4-1,d0
+.aux_clear:
+ clr.l (a0)+
+ dbra d0,.aux_clear
+ lea sim_a4000_arm(pc),a0
+ adda.l #sim_camera_state-sim_a4000_arm,a0
+ clr.l (a0)+
+ clr.l (a0)
+ ; Enter only at the fixture's untouched tick zero after native A2500 setup.
+ move.w #50,-$15fa(a4)
+ move.w #50,-$bc(a4)
+ move.b #50,-$173a(a4)
+ move.w #1500,-$ba(a4)
+ IFD SIM_HISTORY_TEST_SPACING
+ ; Short verification interval exercises nonzero private-state seek points.
+ move.w #SIM_HISTORY_TEST_SPACING,-$ba(a4)
+ ENDC
+ move.w #30000,$b30(a4)
+ move.w #2,-$be(a4)
+ lea sim_schedule_rate(pc),a0
+ move.w #50,(a0)
+ lea sim_schedule_phase(pc),a0
+ clr.w (a0)
+ rts
+
+; a1 vehicle -> a0 private block; no stored pointer is part of replay state.
+; steering +0, acceleration +2, distance fifths +4, gear +6, wheel pairs +8..23.
+; Suspension fractions: extension +24..31, bias +40..47.
+; Endpoint distance tenths +32; +34..39 reserved (former return fractions).
+; Terrain loss uses an unsigned Q16 carry at +48; skid loss uses fifths at +50.
+; Spin displacement: /1280 carry at +52, cached step at +54 ($8000=unset).
+; Nominal spin-filter change uses signed Q16 carry +56..59.
+; Player heading / opponent recovery braking use fifths at +60.
+; Slip loss uses Q16 at +62.
+sim_a4000_car:
+ lea -$85e(a4),a0
+ cmpa.l a0,a1
+ lea sim_a4000_private(pc),a0
+ bne .done
+ lea 64(a0),a0
+.done:
+ rts
+
+; Replace the whole A2500 displacement block $C326..$C346 (32 bytes).
+; Local -6(a5) is its original output. Native helper is long unsigned divide.
+sim_a4000_distance:
+ cmp.w #50,-$15fa(a4)
+ beq .new
+ move.l 8(a5),a0
+ move.w $2c(a0),d0
+ swap d0
+ clr.w d0
+ swap d0
+ mulu #1408,d0
+ move.l #15360,d1
+ jsr -$78ea(a4)
+ move.w d0,-6(a5)
+ rts
+.new:
+ move.l a1,-(sp)
+ move.l 8(a5),a1
+ bsr sim_a4000_car
+ addq.l #4,a0
+ move.w $2c(a1),d0
+ bsr sim_distance_50
+ movem.l d1-d2,-(sp)
+ move.w $2e(a1),d1
+ move.w $2c(a1),d2
+ lea 28(a0),a0 ; car-private +32, after distance fifths at +4
+ bsr sim_endpoint_50
+ movem.l (sp)+,d1-d2
+ move.l (sp)+,a1
+ move.w d0,-6(a5)
+ rts
+
+; $F60C..$F61C: rate conversion before the native velocity clamp/application.
+sim_a4000_acceleration:
+ cmp.w #50,-$15fa(a4)
+ beq .new
+ cmp.w #10,-$15fa(a4)
+ bne .done
+ move.w -4(a5),d0
+ add.w d0,-4(a5)
+.done:
+ rts
+.new:
+ movem.l d1/a0-a1,-(sp)
+ move.l 12(a5),a1
+ bsr sim_a4000_car
+ addq.l #2,a0
+ move.w -4(a5),d0
+ bsr sim_rate_20_to_50
+ move.w d0,-4(a5)
+ movem.l (sp)+,d1/a0-a1
+ rts
+
+; JMP hook at $1033A. Native path replays ten displaced bytes, then continues.
+sim_a4000_steering:
+ link a5,#-6
+ move.w -$90e(a4),-4(a5)
+ cmp.w #50,-$15fa(a4)
+ beq .new
+ move.l a0,-(sp)
+ lea sim_a4000_prepare(pc),a0
+ adda.l #sim_game-sim_a4000_prepare,a0
+ move.l (a0),a0
+ adda.l #$10344,a0
+ move.l a0,d0
+ move.l (sp)+,a0
+ move.l d0,-(sp)
+ rts
+.new:
+ movem.l d2-d3,-(sp)
+ move.w -$902(a4),d0
+ moveq #10,d1
+ lsr.w d1,d0
+ and.w #$fffc,d0
+ ; Native index is truncated to a signed byte before indexing the 64-byte table.
+ ext.w d0
+ move.l -$b8(a4),a0
+ move.b 1(a0,d0.w),d2
+ ext.w d2
+ add.w d2,d2
+ move.b 8(a5),d1
+ ext.w d1
+ add.w d1,d0
+ move.b (a0,d0.w),d1
+ ext.w d1
+ move.w -$902(a4),d3
+ move.w -$90e(a4),d0
+ lea sim_a4000_private(pc),a0
+ bsr sim_steering_50
+ move.w d0,-$90e(a4)
+ movem.l (sp)+,d2-d3
+ unlk a5
+ rts
+
+; These displaced blocks have only internal relative branches and A4-relative
+; calls. Copy before patching; the original fallthrough becomes the buffer RTS.
+sim_a4000_prepare:
+ lea sim_a4000_prepare(pc),a0
+ adda.l #sim_game-sim_a4000_prepare,a0
+ move.l (a0),a0
+ adda.l #$f29e,a0
+ lea sim_native_gear38(pc),a1
+ moveq #72/2-1,d0
+ bsr .copy
+ lea sim_a4000_prepare(pc),a0
+ adda.l #sim_game-sim_a4000_prepare,a0
+ move.l (a0),a0
+ adda.l #$f310,a0
+ lea sim_native_gear34(pc),a1
+ moveq #72/2-1,d0
+ bsr .copy
+ lea sim_a4000_prepare(pc),a0
+ adda.l #sim_game-sim_a4000_prepare,a0
+ move.l (a0),a0
+ adda.l #$f36e,a0
+ lea sim_native_gear_middle(pc),a1
+ moveq #72/2-1,d0
+ bsr .copy
+ lea sim_a4000_prepare(pc),a0
+ adda.l #sim_game-sim_a4000_prepare,a0
+ move.l (a0),a0
+ adda.l #$cb48,a0
+ lea sim_native_wheel(pc),a1
+ moveq #148/2-1,d0
+ bsr .copy
+ lea sim_a4000_prepare(pc),a0
+ adda.l #sim_game-sim_a4000_prepare,a0
+ move.l (a0),a0
+ adda.l #$10030,a0
+ lea sim_native_suspension_bias(pc),a1
+ move.w #164/2-1,d0
+ bsr .copy
+ lea sim_a4000_prepare(pc),a0
+ adda.l #sim_game-sim_a4000_prepare,a0
+ move.l (a0),a0
+ adda.l #$1011c,a0
+ lea sim_native_suspension_return(pc),a1
+ move.w #262/2-1,d0
+ bsr .copy
+ lea sim_a4000_prepare(pc),a0
+ adda.l #sim_game-sim_a4000_prepare,a0
+ move.l (a0),a0
+ adda.l #$f842,a0
+ lea sim_native_terrain(pc),a1
+ moveq #48/2-1,d0
+ bsr .copy
+ lea sim_a4000_prepare(pc),a0
+ adda.l #sim_game-sim_a4000_prepare,a0
+ move.l (a0),a0
+ adda.l #$c06e,a0
+ lea sim_native_opponent_steering(pc),a1
+ moveq #42/2-1,d0
+ bsr .copy
+ lea sim_a4000_prepare(pc),a0
+ adda.l #sim_game-sim_a4000_prepare,a0
+ move.l (a0),a0
+ adda.l #$c0ba,a0
+ lea sim_native_opponent_brake(pc),a1
+ moveq #36/2-1,d0
+ bsr .copy
+ lea sim_a4000_prepare(pc),a0
+ adda.l #sim_game-sim_a4000_prepare,a0
+ move.l (a0),a0
+ adda.l #$f974,a0
+ lea sim_native_heading(pc),a1
+ moveq #86/2-1,d0
+ bsr .copy
+ lea sim_a4000_prepare(pc),a0
+ adda.l #sim_game-sim_a4000_prepare,a0
+ move.l (a0),a0
+ adda.l #$d514,a0
+ lea sim_native_pitch(pc),a1
+ moveq #56-1,d0
+ bsr .copy
+ lea sim_a4000_prepare(pc),a0
+ adda.l #sim_game-sim_a4000_prepare,a0
+ move.l (a0),a0
+ adda.l #$d5f2,a0
+ lea sim_native_roll(pc),a1
+ moveq #54-1,d0
+ bsr .copy
+ move.l _resload(pc),a2
+ jsr resload_FlushCache(a2)
+ rts
+.copy:
+ move.w (a0)+,(a1)+
+ dbra d0,.copy
+ rts
+
+sim_a4000_gear38:
+ cmp.w #50,-$15fa(a4)
+ bne sim_native_gear38
+ movem.l d1-d2/a0-a2,-(sp)
+ move.l 12(a5),a1
+ bsr sim_a4000_car
+ addq.l #6,a0
+ lea $38(a1),a2
+ move.w $3c(a1),d1
+ bra sim_a4000_gear_apply
+sim_a4000_gear34:
+ cmp.w #50,-$15fa(a4)
+ bne sim_native_gear34
+ movem.l d1-d2/a0-a2,-(sp)
+ move.l 12(a5),a1
+ bsr sim_a4000_car
+ addq.l #6,a0
+ lea $34(a1),a2
+ move.w $3a(a1),d1
+ bra sim_a4000_gear_apply
+sim_a4000_gear_middle:
+ cmp.w #50,-$15fa(a4)
+ bne sim_native_gear_middle
+ movem.l d1-d2/a0-a2,-(sp)
+ move.l 12(a5),a1
+ bsr sim_a4000_car
+ addq.l #6,a0
+ lea $38(a1),a2
+ move.l 16(a5),a1
+ move.w $1e(a1),d1
+sim_a4000_gear_apply:
+ lea sim_a4000_gear_calls(pc),a1
+ addq.l #1,(a1)
+ move.w (a2),d0
+ moveq #6,d2
+ bsr sim_approach_50
+ move.w d0,(a2)
+ movem.l (sp)+,d1-d2/a0-a2
+ rts
+
+; Four wheel pairs per car at private +8 (velocity/position words each).
+sim_a4000_wheel:
+ cmp.w #50,-$15fa(a4)
+ bne sim_native_wheel
+ movem.l d0-d4/a0-a2,-(sp)
+ lea sim_a4000_wheel_calls(pc),a0
+ addq.l #1,(a0)
+ moveq #0,d3
+ move.b -3(a5),d3
+ move.l 8(a5),a1
+ bsr sim_a4000_car
+ addq.l #8,a0
+ move.w d3,d0
+ lsl.w #2,d0
+ adda.w d0,a0
+ add.w d3,d3
+ lea $4c(a1),a2
+ adda.w d3,a2
+ lea -$73fc(a4),a1
+ move.w (a1,d3.w),d1
+ move.l -$e6(a5),a1
+ addq.l #4,a1
+ move.w (a2),d0
+ bne .continuing
+ tst.w (a0)
+ bne .continuing
+ moveq #0,d2
+ move.w -$940(a4),d2
+ add.l d2,d2
+ divu #5,d2
+ swap d2
+ tst.w d2
+ bne .release
+ moveq #5,d2
+.release:
+ bsr sim_release_pair_50
+ bra .stored
+.continuing:
+ bsr sim_airborne_pair_50
+.stored:
+ move.w d0,(a2)
+ lea sim_a4000_wheel_steps(pc),a0
+ move.w d1,(a0,d3.w)
+ move.w #1,8(a0,d3.w)
+ movem.l (sp)+,d0-d4/a0-a2
+ rts
+
+; Both native wheel-velocity zeroing sites: $CC9E and $D1B0, eight bytes.
+; d0.l is twice the wheel index. Preserve incoming X, then replay MOVEA/CLR.
+sim_a4000_wheel_contact:
+ cmp.w #50,-$15fa(a4)
+ bne .native
+ movem.l d0-d2/a0-a1,-(sp)
+ moveq #0,d2
+ addx.b d2,d2
+ move.w d2,-(sp)
+ lea sim_a4000_contact_calls(pc),a0
+ addq.l #1,(a0)
+ move.l 8(a5),a1
+ bsr sim_a4000_car
+ clr.w 24(a0,d0.w)
+ add.w d0,d0
+ lea 8(a0),a0
+ clr.l (a0,d0.w)
+ move.w (sp)+,d2
+ lsr.b #1,d2
+ movem.l (sp)+,d0-d2/a0-a1
+.native:
+ move.l 8(a5),a0
+ clr.w $4c(a0,d0.l)
+ rts
+
+sim_native_pitch: dcb.w 112/2,0
+ rts
+sim_native_roll: dcb.w 108/2,0
+ rts
+sim_native_heading: dcb.w 86/2,0
+ rts
+sim_native_opponent_steering: dcb.w 42/2,0
+ rts
+sim_native_opponent_brake: dcb.w 36/2,0
+ rts
+sim_native_terrain: dcb.w 48/2,0
+ rts
+sim_native_suspension_bias: dcb.w 164/2,0
+ rts
+sim_native_suspension_return: dcb.w 262/2,0
+ rts
+sim_native_gear38: dcb.w 72/2,0
+ rts
+sim_native_gear34: dcb.w 72/2,0
+ rts
+sim_native_gear_middle: dcb.w 72/2,0
+ rts
+sim_native_wheel: dcb.w 148/2,0
+ rts
+ even
+ dc.b "4DA4PHYS"
+ dc.w 8,SIM_PRIVATE_BYTES
+sim_a4000_private: dcb.b SIM_PRIVATE_BYTES,0
+
+ even
+ dc.b "4DA4STAT"
+ dc.w 12,24
+sim_a4000_gear_calls: dc.l 0
+sim_a4000_wheel_calls: dc.l 0
+sim_a4000_contact_calls: dc.l 0
+sim_a4000_return_above_calls: dc.l 0
+sim_a4000_return_below_calls: dc.l 0
+sim_a4000_bias_calls: dc.l 0
+sim_a4000_engine_calls: dc.l 0
+sim_a4000_delay5_calls: dc.l 0
+sim_a4000_delay10_calls: dc.l 0
+sim_a4000_delay30_calls: dc.l 0
+sim_a4000_terrain_calls: dc.l 0,0,0,0
+sim_a4000_skid_calls: dc.l 0
+sim_a4000_spin_step_calls: dc.l 0
+sim_a4000_spin_filter_calls: dc.l 0
+sim_a4000_opponent_steering_calls: dc.l 0
+sim_a4000_opponent_brake_calls: dc.l 0
+sim_a4000_spin_alternate_calls: dc.l 0
+sim_a4000_slip_relax_calls: dc.l 0
+sim_a4000_heading_calls: dc.l 0
+sim_a4000_contact_step_calls: dc.l 0
+sim_a4000_contact_velocity_calls: dc.l 0
+
+; $10234..$10248 and $1024A..$10260, within native suspension $10012.
+; Preserve its geometry/penetration branches and cap at extension 384. Both
+; native paths form a0 = car + 2*wheel + $54; the variable path also sets d0.
+sim_a4000_extension_capped:
+ move.w d0,-(sp)
+ move.w #192,d0
+ bsr sim_a4000_extension_apply
+ move.w (sp)+,d0
+ rts
+sim_a4000_extension_variable:
+ move.w 12(a5),d0
+ bsr sim_a4000_extension_apply
+ rts
+sim_a4000_extension_apply:
+ move.w 14(a5),a0
+ adda.l a0,a0
+ adda.l 8(a5),a0
+ adda.l #$54,a0
+ cmp.w #50,-$15fa(a4)
+ beq .new
+ add.w d0,(a0)
+ rts
+.new:
+ movem.l d0-d2/a1-a2,-(sp)
+ move.l a0,a2
+ move.w d0,d2
+ move.l 8(a5),a1
+ bsr sim_a4000_car
+ move.w 14(a5),d0
+ add.w d0,d0
+ lea 24(a0,d0.w),a0
+ move.w d2,d1
+ move.w (a2),d0
+ bsr sim_extension_50
+ move.w d0,(a2)
+ move.l a2,a0
+ movem.l (sp)+,d0-d2/a1-a2
+ rts
+
+; $10030..$100D4: native bias moves toward zero by four units per call.
+; Private fractional state is per wheel and independent of extension/return.
+sim_a4000_suspension_bias:
+ cmp.w #50,-$15fa(a4)
+ bne sim_native_suspension_bias
+ movem.l d0-d2/a0-a2,-(sp)
+ move.l 8(a5),a1
+ bsr sim_a4000_car
+ move.w 14(a5),d0
+ add.w d0,d0
+ lea $6c(a1,d0.w),a2
+ lea 40(a0,d0.w),a0
+ move.w (a2),d0
+ beq .apply
+ lea sim_a4000_bias_calls(pc),a1
+ addq.l #1,(a1)
+.apply:
+ moveq #0,d1
+ moveq #4,d2
+ bsr sim_approach_50
+ move.w d0,(a2)
+ movem.l (sp)+,d0-d2/a0-a2
+ rts
+
+; $1011C..$10222: keep the native zero-clearance contact correction.
+; This is not a continuous return rate. From above the bias, retracting by D
+; returns old_extension+D to the wheel reconstruction. For level equal-wheel
+; contact this raises the body by D and next-step wheel clearance by 2*D.
+; Scaling D with dt changes each contact's rebound geometry, and therefore
+; the free-flight/contact sequence; it does not preserve a return speed.
+; Retain the native 128-unit correction/cap and asymmetric return at all rates.
+; Positive-clearance accumulation and bias decay remain time-scaled separately.
+; Endpoint tenths at private car+32 and reserved +34..39 are initialized and
+; replayed with the other per-car state; ABI10 includes the endpoint correction.
+sim_a4000_suspension_return:
+ bra sim_native_suspension_return
+
+; $F4BC..$F4CA: Normal has already taken its separate 80-unit branch.
+; Preserve A2500's 40; at 50 Hz change only this engine-state decrement to 16.
+sim_a4000_engine_decay:
+ move.l 12(a5),a0
+ adda.l #$22,a0
+ cmp.w #50,-$15fa(a4)
+ beq .new
+ sub.w #40,(a0)
+ rts
+.new:
+ movem.l d0/a1,-(sp)
+ lea sim_a4000_engine_calls(pc),a1
+ addq.l #1,(a1)
+ move.w (a0),d0
+ bsr sim_engine_decay_50
+ move.w d0,(a0)
+ movem.l (sp)+,d0/a1
+ rts
+
+; All nonzero C6 assignments. Other native users only test/decrement the byte;
+; zeroing sites remain valid. Preserve registers and incoming X like MOVE.B.
+sim_a4000_delay5:
+ movem.l d0-d2/a1,-(sp)
+ moveq #5,d0
+ lea sim_a4000_delay5_calls(pc),a1
+ bra sim_a4000_delay_store
+sim_a4000_delay10:
+ movem.l d0-d2/a1,-(sp)
+ moveq #10,d0
+ lea sim_a4000_delay10_calls(pc),a1
+ bra sim_a4000_delay_store
+sim_a4000_delay30:
+ movem.l d0-d2/a1,-(sp)
+ moveq #30,d0
+ lea sim_a4000_delay30_calls(pc),a1
+sim_a4000_delay_store:
+ moveq #0,d2
+ addx.b d2,d2
+ cmp.w #50,-$15fa(a4)
+ bne .store
+ addq.l #1,(a1)
+ bsr sim_duration_20_to_50
+.store:
+ lsr.b #1,d2
+ move.b d0,$c6(a0)
+ movem.l (sp)+,d0-d2/a1
+ rts
+
+; $F842..$F872: one through four wheels on surface type four. The native
+; caller copies the resulting +$2C speed to +$2A immediately after this block.
+sim_a4000_terrain:
+ cmp.w #50,-$15fa(a4)
+ bne sim_native_terrain
+ movem.l d0-d3/a0-a2,-(sp)
+ move.l 8(a5),a1
+ bsr sim_a4000_car
+ lea 48(a0),a0
+ move.w -2(a5),d3
+ subq.w #1,d3
+ add.w d3,d3
+ lea sim_terrain_coefficients(pc),a2
+ move.w (a2,d3.w),d2
+ lea -$7374(a4),a2
+ move.w (a2,d3.w),d1
+ lea $2c(a1),a2
+ move.w (a2),d0
+ bsr sim_terrain_drag_50
+ move.w d0,(a2)
+ add.w d3,d3
+ lea sim_a4000_terrain_calls(pc),a0
+ addq.l #1,(a0,d3.w)
+ movem.l (sp)+,d0-d3/a0-a2
+ rts
+; round(65536*k*(1-(1-1/k)^(2/5))), k = 256,192,128,64.
+sim_terrain_coefficients: dc.w 26245,26255,26276,26338
+
+; $FD64..$FD6A: original doubled absolute slip angle becomes local -2.
+; Both subsequent unsigned speed clamps must see the converted loss.
+; Car+$42 is a transient skid-demand angle, not persistent angular velocity:
+; $FA26 computes it only when demand exceeds grip, then $FD5C consumes it.
+; The no-skid $FA46 path clears +$C7, so its apparent +$42 decay at $FA58
+; cannot reach that consumer ($FD54 branches to $FE26). All grounded paths
+; clear +$42 at $FE2A before returning; airborne entry skips both decay and
+; consumption. Keep that decay native: only this actual speed loss needs dt.
+sim_a4000_skid_loss:
+ add.w d0,d0
+ cmp.w #50,-$15fa(a4)
+ bne .native
+ movem.l d1-d2/a0-a1,-(sp)
+ lea sim_a4000_skid_calls(pc),a1
+ addq.l #1,(a1)
+ move.l 8(a5),a1
+ bsr sim_a4000_car
+ lea 50(a0),a0
+ move.w $2a(a1),d1
+ move.w $2c(a1),d2
+ bsr sim_skid_loss_50
+ movem.l (sp)+,d1-d2/a0-a1
+.native:
+ move.w d0,-2(a5)
+ rts
+
+; $F7DA..$F7E2, executed for each car even when airborne. Invalidate the
+; shared angular displacement before either consumer, preserving the native
+; contact test. All physics paths leave +$3E as the nominal angular rate.
+sim_a4000_spin_begin:
+ move.l 8(a5),a0
+ cmp.w #50,-$15fa(a4)
+ bne .native
+ movem.l d0/a0-a1,-(sp)
+ move.l a0,a1
+ bsr sim_a4000_car
+ move.w #$8000,54(a0)
+ ; A sub-unit spin request cannot survive losing contact before spin starts.
+ tst.b $c1(a1)
+ bne .keep_filter
+ ; Only the player owns a heading fraction here; opponent+60 is braking.
+ move.l a0,d0
+ lea sim_a4000_private(pc),a0
+ cmpa.l d0,a0
+ move.l d0,a0
+ bne.s .not_player
+ clr.w 60(a0)
+.not_player:
+ tst.w $3e(a1)
+ bne .keep_filter
+ clr.l 56(a0)
+.keep_filter:
+ movem.l (sp)+,d0/a0-a1
+.native:
+ tst.b $c1(a0)
+ rts
+
+; Calculate once per car update, not once per consumer. Grounded slip uses
+; this first at $FD46; airborne cars can reach $C3C4 without that call. Zero
+; actual displacement is a valid cached result and must NOT rerun the divider.
+; Preserve all except D0 and N/Z/V/C, including X for the original ANDI site.
+sim_a4000_spin_step:
+ movem.l d1/a0-a1,-(sp)
+ moveq #0,d1
+ addx.w d1,d1
+ move.w d1,-(sp)
+ move.l 8(a5),a1
+ bsr sim_a4000_car
+ move.w 54(a0),d0
+ cmp.w #$8000,d0
+ bne .done
+ move.w $3e(a1),d0
+ beq .stopped
+ lea 52(a0),a0
+ bsr sim_spin_step_50
+ move.w d0,2(a0)
+ lea sim_a4000_spin_step_calls(pc),a1
+ addq.l #1,(a1)
+ bra .done
+.stopped:
+ clr.w 52(a0)
+ clr.w 54(a0)
+.done:
+ move.w (sp)+,d1
+ lsr.w #1,d1
+ movem.l (sp)+,d1/a0-a1
+ rts
+
+; $FD46..$FD4C: same step is subtracted from the travel/body slip angle.
+sim_a4000_spin_slip:
+ cmp.w #50,-$15fa(a4)
+ bne .native
+ bsr sim_a4000_spin_step
+ bra .apply
+.native:
+ move.w $3e(a1),d0
+.apply:
+ sub.w d0,(a0)
+ rts
+
+; $C3C4..$C3CC: a zero fractional step skips the actual rotation matrix.
+sim_a4000_spin_test:
+ cmp.w #50,-$15fa(a4)
+ bne .native
+ bsr sim_centroid_begin
+ bsr sim_a4000_spin_step
+ bra .mask
+.native:
+ move.w $3e(a0),d0
+.mask:
+ and.w #$3ff,d0
+ rts
+
+; $C3E0..$C3E6: use the SAME step, with the native matrix sign convention.
+sim_a4000_spin_rotate:
+ cmp.w #50,-$15fa(a4)
+ bne .native
+ bsr sim_a4000_spin_step
+ bra .negate
+.native:
+ move.w $3e(a0),d0
+.negate:
+ neg.w d0
+ rts
+
+; $FBEC..$FC0C and $FC2A..$FC4A have identical native ADD/halve blocks.
+; Command is the quotient already calculated by the native DIVS #14.
+sim_a4000_spin_filter:
+ cmp.w #50,-$15fa(a4)
+ bne .native
+ movem.l d1/a1,-(sp)
+ move.w d0,d1
+ move.l 8(a5),a1
+ bsr sim_a4000_car
+ lea 52(a0),a0
+ move.w $3e(a1),d0
+ bsr sim_spin_filter_50
+ move.w d1,2(a0)
+ lea sim_a4000_spin_filter_calls(pc),a0
+ addq.l #1,(a0)
+ movem.l (sp)+,d1/a1
+ move.l 8(a5),a0
+ adda.l #$3e,a0
+ move.w d0,(a0)
+ rts
+.native:
+ move.l 8(a5),a0
+ adda.l #$3e,a0
+ add.w d0,(a0)
+ move.l 8(a5),a0
+ adda.l #$3e,a0
+ move.w (a0),d0
+ ext.l d0
+ divs #2,d0
+ move.w d0,(a0)
+ rts
+
+; $FC10..$FC18 is reached only below the force threshold. If native nominal
+; spin is zero, discard any pending fractional request before its BEQ gate.
+sim_a4000_spin_inactive:
+ move.l 8(a5),a0
+ cmp.w #50,-$15fa(a4)
+ bne .native
+ tst.w $3e(a0)
+ bne .native
+ movem.l a0-a1,-(sp)
+ move.l a0,a1
+ bsr sim_a4000_car
+ clr.l 56(a0)
+ movem.l (sp)+,a0-a1
+.native:
+ tst.w $3e(a0)
+ rts
+
+; $FD2E..$FD36: gate the slip consumer on the same actual angle step as the
+; body matrix. A fractional filter can produce a step while nominal rate is 0.
+sim_a4000_spin_slip_test:
+ move.l 8(a5),a0
+ cmp.w #50,-$15fa(a4)
+ bne .native
+ movem.l d0,-(sp)
+ bsr sim_a4000_spin_step
+ tst.w d0
+ movem.l (sp)+,d0
+ rts
+.native:
+ tst.w $3e(a0)
+ rts
+
+; Keep BC48 target selection/avoidance/throttle at the full simulation rate.
+; Its +$CE counter indexes spatial waypoints: BD76/BFC0 pass it to109C2,
+; a deterministic geometry-only leaf, on distance/heading gates. It is not
+; a decision timer and consumes no RNG. Only the slew/braking rates need dt.
+; Native opponent slew is 8 units at20 Hz,16 at10 Hz. Approach at3.2 units
+; per50 Hz step, keeping the original target and exact arrival clamp.
+sim_a4000_opponent_steering:
+ cmp.w #50,-$15fa(a4)
+ bne sim_native_opponent_steering
+ movem.l d1-d2/a0,-(sp)
+ lea sim_a4000_opponent_steering_calls(pc),a0
+ addq.l #1,(a0)
+ lea sim_a4000_private+64(pc),a0
+ move.w -$83e(a4),d0
+ move.w -8(a5),d1
+ moveq #8,d2
+ bsr sim_approach_50
+ move.w d0,-$83e(a4)
+ movem.l (sp)+,d1-d2/a0
+ rts
+
+; Discard a recovery-braking remainder whenever the native brake branch is
+; inactive. Preserve X and replay the original CLR/TST flags and registers.
+sim_a4000_opponent_brake_gate:
+ cmp.w #50,-$15fa(a4)
+ bne.s .native
+ tst.b -$79e(a4)
+ beq.s .clear
+ tst.b -$795(a4)
+ bne.s .clear
+ tst.w -$828(a4)
+ bne.s .native
+.clear:
+ move.l a0,-(sp)
+ lea sim_a4000_private+64+60(pc),a0
+ clr.w (a0)
+ move.l (sp)+,a0
+.native:
+ clr.b -$3f(a5)
+ tst.b -$79e(a4)
+ rts
+
+; Native recovery brake is512 units at20 Hz,1024 at10 Hz. Preserve its
+; strict loss>speed slip-clear condition, including the equality case.
+sim_a4000_opponent_brake:
+ cmp.w #50,-$15fa(a4)
+ bne sim_native_opponent_brake
+ movem.l d1/a0,-(sp)
+ lea sim_a4000_opponent_brake_calls(pc),a0
+ addq.l #1,(a0)
+ lea sim_a4000_private+64+60(pc),a0
+ move.w -$832(a4),d0
+ bsr sim_opponent_brake_50
+ move.w d0,-$832(a4)
+ tst.w d1
+ beq.s .done
+ clr.w -$828(a4)
+.done:
+ movem.l (sp)+,d1/a0
+ rts
+
+; $FCBA..$FCD0 alternate nominal damping; cache the coupled actual rotation
+; exactly once for the later slip and body consumers, as with the half filter.
+sim_a4000_spin_alternate:
+ cmp.w #50,-$15fa(a4)
+ bne.s .native
+ movem.l d1/a1,-(sp)
+ move.l 8(a5),a1
+ bsr sim_a4000_car
+ lea 52(a0),a0
+ move.w $3e(a1),d0
+ bsr sim_spin_alternate_50
+ move.w d1,2(a0)
+ lea sim_a4000_spin_alternate_calls(pc),a0
+ addq.l #1,(a0)
+ movem.l (sp)+,d1/a1
+ move.l 8(a5),a0
+ move.w d0,$3e(a0)
+ rts
+.native:
+ move.l 8(a5),a0
+ move.w $3e(a0),d0
+ muls #15,d0
+ asr.w #4,d0
+ move.l 8(a5),a0
+ move.w d0,$3e(a0)
+ rts
+
+; $FCD0..$FCD8: stop retaining relaxation loss if a spin, zero slip or a
+; one-time signed/noncanonical transition supersedes repeated positive decay.
+; All operations preserve X; replay the original MOVEA/TST and its flags.
+sim_a4000_slip_gate:
+ move.l 8(a5),a0
+ cmp.w #50,-$15fa(a4)
+ bne.s .native
+ tst.w $3e(a0)
+ bne.s .clear
+ tst.w $36(a0)
+ ble.s .clear
+ cmp.w #1023,$36(a0)
+ bls.s .native
+.clear:
+ movem.l a0-a1,-(sp)
+ move.l a0,a1
+ bsr sim_a4000_car
+ clr.w 62(a0)
+ movem.l (sp)+,a0-a1
+.native:
+ tst.w $36(a0)
+ rts
+
+; $FCEE..$FD04: only the repeatedly positive branch is rate-converted.
+; Negative branch $FD06 and final native modulo1024 remain unchanged.
+sim_a4000_slip_relax:
+ cmp.w #50,-$15fa(a4)
+ bne.s .native
+ move.l a1,-(sp)
+ move.l 8(a5),a1
+ bsr sim_a4000_car
+ lea 62(a0),a0
+ move.w $36(a1),d0
+ bsr sim_slip_relax_50
+ lea sim_a4000_slip_relax_calls(pc),a0
+ addq.l #1,(a0)
+ move.l (sp)+,a1
+ move.l 8(a5),a0
+ move.w d0,$36(a0)
+ rts
+.native:
+ move.l 8(a5),a0
+ move.w $36(a0),d0
+ muls #15,d0
+ asr.w #4,d0
+ move.l 8(a5),a0
+ move.w d0,$36(a0)
+ rts
+
+; Contact code replaces slip rather than accumulating it. A replacement must
+; not inherit the previous angle's fractional relaxation. Preserve X/A0/D0.
+sim_a4000_slip_replaced:
+ cmp.w #50,-$15fa(a4)
+ bne.s .done
+ movem.l a0-a1,-(sp)
+ move.l a0,a1
+ bsr sim_a4000_car
+ clr.w 62(a0)
+ movem.l (sp)+,a0-a1
+.done:
+ rts
+sim_a4000_slip_impulse_fixed:
+ bsr sim_a4000_slip_replaced
+ move.w #$200,$36(a0)
+ rts
+sim_a4000_slip_impulse_dynamic:
+ bsr sim_a4000_slip_replaced
+ move.w -$80(a5),$36(a0)
+ rts
+
+; Whole $F974..$F9CA block. Only the player reaches this branch. D0 is
+; overwritten at $F9CA; retain the native local signed low-byte when neutral.
+sim_a4000_heading:
+ cmp.w #50,-$15fa(a4)
+ bne sim_native_heading
+ movem.l d1/a1,-(sp)
+ move.l 8(a5),a1
+ move.w $18(a1),d0
+ move.w $20(a1),d1
+ bne.s .kernel
+ ext.w d0
+ move.w d0,-2(a5)
+ move.w $18(a1),d0
+.kernel:
+ lea sim_a4000_private+60(pc),a0
+ bsr sim_heading_50
+ move.w d0,$18(a1)
+ lea sim_a4000_heading_calls(pc),a0
+ addq.l #1,(a0)
+ movem.l (sp)+,d1/a1
+ move.l 8(a5),a0
+ rts
+
+ IFD SIM_CONTACT_PROBE
+; Observe the native crossing-plane correction without changing its operands.
+; Record tick/wheel/velocity/forward distance/plane distance/reordered oldZ/newZ/mode,
+; then the old and candidate world XYZ vectors. Replay the original ADD flags.
+sim_contact_probe:
+ movem.l d0-d2/a0-a2,-(sp)
+ lea sim_contact_probe_count(pc),a1
+ move.l (a1),d1
+ addq.l #1,(a1)
+ cmp.l #32,d1
+ bhs.s .done
+ mulu #40,d1
+ lea sim_contact_probe_records(pc),a1
+ adda.l d1,a1
+ move.w -$940(a4),(a1)+
+ move.w d0,(a1)+
+ move.w $4c(a0,d0.l),(a1)+
+ move.w -6(a5),(a1)+
+ move.w -$72(a5),(a1)+
+ move.w -$5c(a5),(a1)+
+ move.w -$62(a5),(a1)+
+ move.w -$15fa(a4),(a1)+
+ move.l -$ea(a5),a2
+ move.l (a2)+,(a1)+
+ move.l (a2)+,(a1)+
+ move.l (a2)+,(a1)+
+ move.l -$e6(a5),a2
+ move.l (a2)+,(a1)+
+ move.l (a2)+,(a1)+
+ move.l (a2)+,(a1)+
+.done:
+ movem.l (sp)+,d0-d2/a0-a2
+ rts
+ even
+ dc.b "4DCONTACT"
+ even
+ dc.w 1,40
+sim_contact_probe_count: dc.l 0
+sim_contact_probe_records: dcb.b 32*40,0
+ ENDC
+
+; Transient per-wheel steps, scoped by $CB06 to each integration decision.
+; This also covers the $CE3A retry, which bypasses the wheel-loop entry. Cars run
+; sequentially; snapshots are between complete ticks. No replay state is held
+; here: every consumer follows a begin, including contact retries.
+sim_a4000_wheel_steps: dcb.w 8,0
+sim_a4000_wheel_reset:
+ cmp.w #50,-$15fa(a4)
+ bne.s .done
+ movem.l d0/a0,-(sp)
+ moveq #0,d0
+ move.b -3(a5),d0
+ mulu #2,d0
+ lea sim_a4000_wheel_steps(pc),a0
+ clr.w 8(a0,d0.w)
+ movem.l (sp)+,d0/a0
+.done:
+ rts
+
+; The later inverted-contact correction at $CB1C stays in native world units.
+; Its transformed192-unit vector is a collision correction, not a velocity:
+; scaling it to2/5 at50Hz changes the roof-contact result in the same update.
+; Keep it, the negative192 geometry adjustment and24-unit clearance gate intact.
+; SIM_FIXTURE_INVERTED_SCALE_TEST is the explicit failing negative control.
+; Whole original TST/BLE. The untaken path returns through the patch NOP.
+; Redirect the taken return to $CC2E and preserve the original flags/X/A0.
+sim_a4000_wheel_pass:
+ bsr sim_a4000_wheel_reset
+ tst.w $bc0(a4)
+ bgt.s .done
+ move.l a0,-(sp)
+ lea sim_a4000_prepare(pc),a0
+ adda.l #sim_game-sim_a4000_prepare,a0
+ move.l (a0),a0
+ adda.l #$cc2e,a0
+ move.l a0,4(sp)
+ move.l (sp)+,a0
+ tst.w $bc0(a4)
+.done:
+ rts
+
+; $CF9E: the contact ratio needs two distances measured over the SAME tick.
+; The ordered airborne pair supplies its exact applied vertical displacement.
+; The near-ground alternative does not run that pair; convert its nominal
+; velocity plus fraction without spending/changing either integration carry.
+; Preserve native word addition, including X and all ADD condition flags.
+sim_a4000_contact_distance:
+ IFD SIM_CONTACT_PROBE
+ bsr sim_contact_probe
+ ENDC
+ cmp.w #50,-$15fa(a4)
+ beq.s .new
+ move.w $4c(a0,d0.l),d0
+ add.w -6(a5),d0
+ rts
+.new:
+ movem.l d1-d3/a0-a1,-(sp)
+ move.w d0,d2
+ lea sim_a4000_wheel_steps(pc),a1
+ tst.w 8(a1,d2.w)
+ beq.s .velocity
+ move.w (a1,d2.w),d0
+ lea sim_a4000_contact_step_calls(pc),a1
+ addq.l #1,(a1)
+ bra.s .combine
+.velocity:
+ move.l a0,a1
+ bsr sim_a4000_car
+ move.w $4c(a1,d2.w),d0
+ muls #10,d0
+ add.w d2,d2
+ move.w 8(a0,d2.w),d1
+ ext.l d1
+ add.l d1,d1
+ add.l d1,d0
+ divs #25,d0
+ lea sim_a4000_contact_velocity_calls(pc),a1
+ addq.l #1,(a1)
+.combine:
+ and.l #$ffff,d0
+ movem.l (sp)+,d1-d3/a0-a1
+ add.w -6(a5),d0
+ rts
+
+; $D49E..$D4A6: heading reconstruction from final wheel geometry.
+; Keep native Normal/A2500 lookup. At50Hz retain the fractional CHANGE from
+; rebuilt pre-translation wheels. Anchoring to their native integer angle
+; removes matrix/lookup bias while retaining their already-applied spin.
+; The two appended signed Q8 remainders participate in reset and replay copies.
+sim_a4000_yaw:
+ cmp.w #50,-$15fa(a4)
+ beq .new
+ move.l 4(sp),-(sp)        ; original x,y arguments below our hook return
+ jsr -$7bae(a4)
+ addq.l #4,sp
+ and.w #$3ff,d0
+ rts
+.new:
+ movem.l d1-d7/a0-a3,-(sp)
+ lea sim_a4000_private+128(pc),a3
+ lea -$85e(a4),a0
+ cmpa.l 8(a5),a0
+ bne .player
+ addq.l #2,a3
+.player:
+ move.w -$72(a5),d0
+ move.w -$74(a5),d1
+ neg.w d1
+ move.w d0,d6
+ or.w d1,d6
+ beq .degenerate
+ bsr sim_yaw_atan_q8
+ move.l d0,d4
+ ; Body basis before translation/contact, with INITIAL suspension offsets
+ ; restored at C520. Raw old wheels bias heading on tilted/suspended cars.
+ ; This scratch still includes spin and has not been centered/de-rotated yet.
+ lea sim_tilt_wheels(pc),a0
+ move.w 12(a0),d0
+ add.w 18(a0),d0
+ sub.w (a0),d0
+ sub.w 6(a0),d0
+ move.w 16(a0),d1
+ add.w 22(a0),d1
+ sub.w 4(a0),d1
+ sub.w 10(a0),d1
+ neg.w d1
+ move.w d0,d6
+ or.w d1,d6
+ beq .degenerate
+ move.w d1,-(sp)
+ move.w d0,-(sp)
+ bsr sim_yaw_atan_q8
+ move.l d0,d5
+ jsr -$7bae(a4)           ; baseline native angle, including spin
+ addq.l #4,sp
+ ext.l d0
+ lsl.l #8,d0
+ sub.l d5,d4
+ add.l d4,d0
+ move.w (a3),d1
+ ext.l d1
+ add.l d1,d0
+ add.l #128,d0            ; nearest integer, signed centered residual
+ move.w d0,d1
+ and.w #255,d1
+ sub.w #128,d1
+ move.w d1,(a3)
+ lsr.l #8,d0
+ bra .done
+.degenerate:
+ ; Undefined horizontal axis: retain native behavior and discard stale debt.
+ clr.w (a3)
+ move.w -$74(a5),d0
+ neg.w d0
+ move.w d0,-(sp)
+ move.w -$72(a5),-(sp)
+ jsr -$7bae(a4)
+ addq.l #4,sp
+.done:
+ movem.l (sp)+,d1-d7/a0-a3
+ and.w #$3ff,d0
+ rts
+
+ include "simulation_centroid_hooks.s"
+
+ include "simulation_tilt.s"
