@@ -302,6 +302,33 @@ Expected gains are fields per frame of CPU time, before bus contention.
 - **C5 Draw path.** In `$11904` → `$1c29c` → `$1cb94` → `$05686`, remove repeated per-shape
   setup. Batch shape blits so C1's deferred wait overlaps the next shape's setup. Expected:
   most of the death frames' extra 1 field.
+
+  *Done*, first part (`PrinceOfPersiaFast.s`): the shape library's C routines between the
+  image draw and the blitter routine, in assembler with the same memory writes and results:
+  - the kid's image remap (`$0be6c`, a table lookup instead of a range chain), the image
+    address (`$1dd9a`, `$1dd14`), the header decode (`$1c802`) and the table index (`$1c694`);
+  - the tag parser (`$1c29c`), with the tables whose images go on in a second or third table;
+  - the clip (`$1c8d6`) and the draw (`$1cb94` with `$1cc8c`, `$1cdba`, `$1ce74`). The in-place
+    image flip (`$055ca`, `$0562c`), the scratch copy (`$05432`), tag 6 (`$055a6`) and the shape
+    blitter (`$05686`) are still the original code.
+
+  With C2–C4, tapes 3 and 4 without the pin:
+
+  | Tape | Work (mean fields) | On target |
+  |---|---|---|
+  | 1 | 3.20 → 3.02 | 260 → 273 of 301 |
+  | 3 | 4.00 → 3.82 | 295 → 298 of 355 |
+  | 4 | 4.17 → 3.94 | 250 → 257 of 357 |
+
+  The room change on tape 1 went from 34 and 38 to 30 and 33 fields. A4 is identical on
+  tapes 1 and 5.
+
+  Left: `$11904` itself (register arguments into the tag parser's core instead of a tag
+  list), calling the replaced routines directly instead of through their patched entries,
+  and the blit start. The blit start is C1's: each of the 5 plane blits per shape goes
+  through `$053d6`, which STOPs until the blitter interrupt (`$19f9a`, about 300 cycles a
+  blit). Before this step, in late frames on tape 1, that was 0.75 fields inclusive plus
+  0.42 in the interrupt (`tools/frame_profile.py`); this step has not been profiled yet.
 - **C6 Room change.** Apply C1, C3 and C5 to `$0aba0`, then deal with what B5 shows is left,
   such as redundant clears or a double full-room draw. Target G2.
 - **C7 Gate after each step.** Run all A5 routes for A3 and A4 and the C-step's own profile,
