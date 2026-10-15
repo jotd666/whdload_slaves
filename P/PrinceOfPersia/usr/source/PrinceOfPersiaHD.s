@@ -980,6 +980,11 @@ button_controls		dc.l	0
 	dc.l	WHDLTAG_MONITOR_GET
 monitor
 	dc.l	0
+	IFD	VERIFY
+	dc.l	WHDLTAG_CUSTOM4_GET
+verify_tape_number
+	dc.l	0
+	ENDC
 		dc.l	0
 
 joypad_state

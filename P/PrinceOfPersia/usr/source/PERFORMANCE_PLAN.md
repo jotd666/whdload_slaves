@@ -28,11 +28,24 @@ Sizes per frame, steady running / spike death (fields): work 3.72 / 5.41; full-s
   *Done.* `CHECK=1 tools/build.sh` builds both and compares the normal one with the shipped
   slave. `VERIFY` adds `PrinceOfPersiaVerify.s` (instruments, version 1 only, chained after
   `pl_v1`) and " (VERIFY)" in the name; the harness takes slave offsets from the vasm listing.
-- **A2 Frame-indexed input.** Add `F:N` to `route.py`: stop on the N-th execution of
-  `g:$1bd5a` (frame-wait end) with a counted breakpoint. Use it outside traces only; emulated
-  time stops while gdb holds the CPU. Rewrite the spikes route in game frames instead of fields.
-  Gate: two baseline boots give the same frame count to death and identical screenshots at
-  every key change.
+- **A2 Frame-indexed input.** An input tape in the VERIFY slave, indexed by gameplay step,
+  replaces host keys. It is better than counted breakpoints: those are very slow on this stub,
+  and only a tape gives other CPUs (G4) the same input on the same step.
+  *Done.* `CUSTOM4=n` plays tape n:
+  - Each control poll (`g:$1942c`, once per gameplay step) counts a step. The joystick reader
+    (`g:$1b8bc`) returns the tape's mask (1 up, 2 down, 4 left, 8 right, 16 fire).
+  - `TAPE_RESUME` is fire for the pause loop's button check (`g:$1958a`) only. It ends the two
+    pauses at the start (the title at step 1, then the level start at step 2) without the
+    controls seeing fire.
+  - The spikes route is tape 1 (`tape_spikes`), which needs no host input. It dies in the
+    spike pit by step 275.
+  - For screenshots at chosen steps, `verify_stop` and a breakpoint at `verify_stopped` stop
+    the CPU at the start of a step. Use them outside traces only.
+
+  Gate passed: two boots give identical screenshots at all 14 key-change steps from 2 to 300
+  (`tools/tape_run.py`, `tools/sameshots.py`). The stub leaves the screenshots' last two
+  columns unwritten, so those are ignored. Note for A4: `g:$1ba58` adds VHPOSR to the RNG seed
+  `g:$7cb6` at level start and on fire, so the seed depends on timing.
 - **A3 Frame-time counter (VERIFY).** The slave hooks the frame-wait entry and exit and the VBL
   handler, and keeps a per-frame log in slave memory: fields per frame, work in beam
   positions, and the blit count. gdb reads it once at the end, with no stop inside the window.
