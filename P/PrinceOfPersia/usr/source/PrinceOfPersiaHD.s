@@ -83,16 +83,8 @@ _expmem
 		
 ;============================================================================
 
-	IFD BARFLY
-	DOSCMD	"WDate  >T:date"
-	ENDC
-	
 DECL_VERSION:MACRO
-	dc.b	"4.4"
-	IFD BARFLY
-		dc.b	" "
-		INCBIN	"T:date"
-	ENDC
+	dc.b	"5.0b (17.10.2026)"
 	ENDM
 
 _name		dc.b	"Prince Of Persia"
@@ -134,7 +126,7 @@ MAX_LEVEL = $D
 BASE_ADDRESS = $7E800
 
 IGNORE_JOY_DIRECTIONS
-	include	ReadJoyPad.s
+	include	ReadJoypad.s
 	
 ;======================================================================
 start	;	A0 = resident loader

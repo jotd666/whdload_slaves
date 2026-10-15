@@ -15,7 +15,7 @@
  To install from a different drive than DF0: select installation mode Expert.
 
  The installed program requires 0.5 MB ChipMem and 1.0 MB OtherMem.
- It can be quit by pressing Num '*' (key can be changed with Tooltype "QuitKey=").
+ It can be quit by pressing Help (key can be changed with Tooltype "QuitKey=").
 
  If you have problems with this installation please try and get a newer
  version of this package from the WHDLoad WWW-Page. If that doesn't help try
@@ -28,6 +28,20 @@
 	http://www.whdload.de/
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
+
+ version 5.0b (17.10.2026) done by Vesa Halttunen:
+ - beta release: faster drawing, background restoration, room construction
+   and game logic, with polling blitter waits to reduce interrupt overhead
+ - enhancements support UK, US, German and French versions and are enabled
+   by default; set CUSTOM5=16 to use the original routines
+ - existing trainer, joypad and save-game options are unchanged
+ - memory requirements are unchanged: 0.5 MB ChipMem and 1.0 MB OtherMem
+ - A500 PAL gameplay benchmarks meet their frame targets on 95.4-100% of
+   measured frames across four replay routes; room changes can still pause
+ - 6,550 frame comparisons passed across UK, US, German and French PAL,
+   plus US native NTSC, with identical game state and displayed pixels
+ - 68040 and 68060 emulator checks passed; real A1200/040 testing is pending
+ - supplied slave is the normal build, without replay or timing instruments
 
  version 4.4 (05.08.2022) done by JOTD:
  - on US and german versions, saving/loading a game was broken

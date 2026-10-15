@@ -520,7 +520,7 @@ four routes, for 350/300/300/360 steps. Tape 3 opt 1 also matches opt 0 for
 records implementation constraints, profiles and matching digests.
 
 G1 is complete. G2 is accepted by the user at the C6 stopping point and closed;
-D1 and D2 are complete under the scopes recorded below; D3–D4 remain open. The G1/G2
+D1, D2 and D4 are complete under the scopes recorded below; D3 remains open. The G1/G2
 acceptance is for the pinned PAL benchmark routes; real hardware remains a separate gate.
 
 ## D. Validation and release
@@ -568,5 +568,24 @@ acceptance is for the pinned PAL benchmark routes; real hardware remains a separ
 - **D3 Real hardware.** The user accepted an A1200/040 test as sufficient for this
   gate. The latest enhanced preinstalled archive has been supplied; D3 remains
   open pending the hardware result.
-- **D4 Release.** Slave 4.5 with ReadMe history, the default-on decision recorded (no
-  option needed if G3 holds), and a contribution to JOTD following the playbook's §13.
+- **D4 Release.** Slave 5.0b (17.10.2026), as requested by the user, with
+  ReadMe history, the default-on decision recorded, and a contribution to JOTD
+  following the playbook's §13.
+
+  **Done (2026-10-16):** prepared the requested dated beta release and upstream
+  contribution from the `princeofpersia` branch. Enhancements are enabled by
+  default; `CUSTOM5=16` retains the original-routines off path. The ReadMe
+  records supported versions, unchanged requirements, measured gameplay,
+  remaining room-transition pauses and pending D3 hardware testing. Historical
+  credits and entries are preserved; the documented quit key now matches Help.
+
+  The portable vasm Makefile tracks every included module and builds normal
+  and VERIFY slaves byte-identically to the harness. A case-sensitive include
+  name was corrected. Fresh release-build A4 checks on UK 1b pass tapes 1/5
+  over 350/360 steps: **710 comparisons, zero state/pixel differences**.
+  D1/D2 provide the broader CPU/version validation; the release changes no
+  gameplay routines. The local UK 1b preinstalled LHA uses level-1 LH5 headers,
+  passes CRC testing and exact extraction/manifest checks, and contains the
+  normal slave without VERIFY instruments. Game data and icon bytes are
+  unchanged. No game data, ROM, WHDLoad binary or release archive is committed
+  or published. This is a beta contribution; D3 remains open.

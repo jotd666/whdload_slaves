@@ -833,3 +833,35 @@ version, in both state and pixels. This confirms that the ported oracle
 still detects a real rendering error. These runs use the same final
 VERIFY build as the acceptance matrix; reports are retained under
 `tmp/d2-gate-ntsc-delay` and `tmp/d2-gate-sabotage*` in the ignored harness.
+
+
+## D4: 5.0b beta release (17.10.2026)
+
+Prepared on 2026-10-16 with the release date explicitly requested by the user.
+Both the WHDLoad information string and `$VER` carry the fixed version/date;
+build dates no longer change the release identity. The normal build remains
+free of replay and timing instruments. Enhancements default on, with
+`CUSTOM5=16` selecting the original routines. D3 remains pending on A1200/040.
+
+The release Makefile accepts `VASM`, `WHDLOAD` and `NDK`, includes all module
+dependencies, and offers normal and `verify` targets. Rebuilding copied sources
+with this recipe reproduces both harness-built slaves byte for byte. The
+`ReadJoypad.s` include now uses the actual filename case.
+
+Normal slave: 39,232 bytes, SHA-256
+`2a3b2fe98209f9a43bbcbb6edc6cfa68e20a32b4e2f3cb550f88834ea5b84f37`.
+Fresh same-build A4 comparisons, opt 16 against opt 0, cover UK 1b tape 1
+for 350 steps and tape 5 for 360 steps, with zero state/pixel differences.
+The broader D1/D2 results above remain the CPU/version evidence; only release
+metadata, build configuration and documentation changed for D4.
+
+The ignored harness `dist/PrinceOfPersia_v5.0b_1823.lha` is the local preinstalled
+UK 1b hardware-test package (350,139 bytes), SHA-256
+`75ec5a322965d7af70a6d98a3dbe99242eaaccfb5ea9f7494c1e5164a8e6a823`.
+Level-1 LH5 archive CRCs pass; extraction reproduces all 13 staged files exactly.
+Compared with the prior local package, only the normal slave, ReadMe and
+Enhanced-ReadMe change. Icons, game data and all other members are byte-identical.
+`tmp/d4-package-report.json` records the full manifest and checksums;
+`tmp/d4-v5-t1-o{16,0}` and `tmp/d4-v5-t5-o{16,0}` hold the replay evidence.
+The preinstalled archive stays local; the contribution contains only source,
+build configuration and documentation changes within this game's directory.
