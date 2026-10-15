@@ -32,18 +32,24 @@ Sizes per frame, steady running / spike death (fields): work 3.72 / 5.41; full-s
   replaces host keys. It is better than counted breakpoints: those are very slow on this stub,
   and only a tape gives other CPUs (G4) the same input on the same step.
   *Done.* `CUSTOM4=n` plays tape n:
-  - Each control poll (`g:$1942c`, once per gameplay step) counts a step. The joystick reader
-    (`g:$1b8bc`) returns the tape's mask (1 up, 2 down, 4 left, 8 right, 16 fire).
-  - `TAPE_RESUME` is fire for the pause loop's button check (`g:$1958a`) only. It ends the two
-    pauses at the start (the title at step 1, then the level start at step 2) without the
-    controls seeing fire.
-  - The spikes route is tape 1 (`tape_spikes`), which needs no host input. It dies in the
-    spike pit by step 275.
-  - For screenshots at chosen steps, `verify_stop` and a breakpoint at `verify_stopped` stop
+  - **Steps:** a step is a control poll from gameplay (`g:$1942c` called through `g:$13de2`,
+    once per frame). The title, intro and interludes poll in busy loops, as often as time
+    allows, so they don't count. The joystick reader (`g:$1b8bc`) returns the tape's mask (1
+    up, 2 down, 4 left, 8 right, 16 fire).
+  - **Pauses and skips:** outside gameplay, `TAPE_SKIP` (or a level request) is fire, which
+    skips the title. `TAPE_RESUME` is fire for the pause loop's button check (`g:$1958a`)
+    only. It ends the pauses at the title and at step 1 without the controls seeing fire.
+  - **Level requests:** `TAPE_LEVEL+n` writes n to `$47ab8`, as the level skip does.
+  - **Live input:** a zero mask lets the game read the keyboard, so `tools/tape_from_route.py`
+    can turn a live keypad session into tape entries.
+  - **The spikes route** is tape 1 (`tape_spikes`), with no host input. It dies in the spike
+    pit by step 274.
+  - **Screenshots at chosen steps:** `verify_stop` and a breakpoint at `verify_stopped` stop
     the CPU at the start of a step. Use them outside traces only.
 
   Gate passed: two boots give identical screenshots at all 14 key-change steps from 2 to 300
-  (`tools/tape_run.py`, `tools/sameshots.py`). The stub leaves the screenshots' last two
+  (`tools/tape_run.py`, `tools/sameshots.py`; numbered before steps were limited to
+  gameplay, so one higher than now). The stub leaves the screenshots' last two
   columns unwritten, so those are ignored. Note for A4: `g:$1ba58` adds VHPOSR to the RNG seed
   `g:$7cb6` at level start and on fire, so the seed depends on timing.
 - **A3 Frame-time counter (VERIFY).** The slave hooks the frame-wait entry and exit and the VBL
@@ -70,34 +76,78 @@ Sizes per frame, steady running / spike death (fields): work 3.72 / 5.41; full-s
   published frame's bitplanes. Write both to a slave ring buffer and dump it at the end. Gate:
   two baseline runs match; a deliberate one-byte sabotage, such as skipping one shape blit,
   is detected.
-  *Done.* The bits of `CUSTOM5` select the probes:
-  - **1: state hash.** It covers chip `$1000`–`$80000` and the image's data parts
-    (`g:$1000`–`$5320`, `g:$1f7d0`–`$47800`). Left out: the stack below `$1000`, the VBL
-    countdown and display swap at `$49d10`–`$49d1f`, the two display buffers at `$53c2e`
-    and `$5d86e`, and the image's code. B1 can narrow this to named records later.
-  - **2: pixel hash.** It covers the 40,000-byte buffer in `$49d1c` at each frame-wait exit,
-    i.e. the frame the VBL has just shown.
-  - **How they run:** both hash at the frame-wait exit with interrupts off, by rol 5 / eor
-    over longwords. They cost about 60 fields per frame, so a hashed run measures
-    faithfulness, not time.
-  - **4: delay probe.** One extra VBL before every frame wait.
-  - **8: sabotage probe.** Skips one `g:$53d6` blit at step 150.
+  *Done, revised in A5.* The hashes are taken by the harness (`tools/state_run.py`). At every
+  step's frame-wait exit (`verify_wait_stopped`) it stops the emulator, reads memory, and
+  hashes the frame shown and the state.
+  - **Why not in the slave:** the first version hashed in the slave with interrupts off, and
+    took about 60 fields per frame. The game behaves differently with frames that long, so
+    those hashes measured a perturbed game.
+  - **State hash:** chip `$1000`–`$80000` plus the image's data parts (`g:$1000`–`$5320`,
+    `g:$1f7d0`–`$47800`).
+  - **Excluded from the state hash** (`EXCLUDE`):
+    - the stack below `$1000`;
+    - the VBL countdown and swap at `$49d10`–`$49d1f`;
+    - the two display buffers at `$53c2e`–`$674ad`;
+    - the image's code;
+    - real-time sound state: `$47420`–`$4743f`, the driver's channel records at
+      `$49dc0`–`$49e3f`, and the channel table at `g:$7080`–`$70bf`.
   - **Entropy pinned:** VERIFY adds 0 instead of VHPOSR to the RNG seed in `g:$1ba58`.
-    No other beam or timer reads feed game state; `g:$19610` only waits for line 0 during
-    hardware init.
-  - **Tools:** `tools/hash_run.py` runs a tape with options, and `tools/hash_cmp.py` compares
-    two runs step by step.
+    `g:$19610` only waits for line 0 during hardware init.
+  - **Probes**, selected by bits of `CUSTOM5`:
+    - 1: work delay, one extra VBL at each step's start, before the frame is published;
+    - 2: one extra VBL after publishing;
+    - 4: skip one `g:$53d6` blit at step 150. The hook is patched in only with this bit
+      (`PL_IFC5X`), because it costs 2 fields per room change.
+  - **Tools:** `tools/hash_cmp.py` compares two runs step by step.
 
-  Gate passed on the spikes tape, steps 0–339: the room changes, the death and "Press Button
-  to Continue" included.
+  Gate, spikes tape, steps 1–350:
   - **Two boots:** equal.
-  - **Delay probe:** with an extra field in every frame, all 340 steps are still equal, so
-    nothing hashed depends on timing.
-  - **Sabotage:** skipping the blit changes both hashes at step 150 and nowhere else.
+  - **Sabotage:** detected at step 150 in both hashes. It also changes the state again from
+    step 289, so the effect of the missing blit persists.
+  - **Delay after publishing:** equal.
+  - **Work delay: not equal.** The game keeps real-time state, see B7. On tapes 1 and 5 only
+    the state differs, never the pixels: the timer records at `$46ea6`–`$46eec` during the
+    level-start message (steps 11–48), and the pre-shifted kid shapes at `$26400` and
+    `$32000`, which are filled at other times. On tapes 3 and 4 the pixels differ too.
+    So G3 can't be bit-identical against the original as long as frame times differ. B7
+    must pin the game's view of time first.
 - **A5 Benchmark routes.** Besides the spikes route, add (a) the first guard fight in level 1,
   (b) a busy later level reached with the level-skip trainer option (CUSTOM1 bit 2), and
   (c) a stretch of standing still, the floor case. Record each route's baseline A3 histogram
   and A4 hashes in `docs/internals.md`.
+  *Done*, as VERIFY tapes (`CUSTOM4`). Steps count only gameplay polls (`g:$13de2`): the title,
+  intro and interludes poll in busy loops at whatever rate time allows. Later levels come from
+  the tape's `TAPE_LEVEL+n`, which writes the level-skip request `$47ab8` itself. Baselines are
+  recorded here instead of a separate `docs/internals.md`.
+
+  | Tape | Route | Through step |
+  |---|---|---|
+  | 1 | spikes (level 1) | 274 dies, 350 |
+  | 3 | level 2's first guard: run left from step 45 to 84, then fire, fire, up every 10 steps; fight from step 90, the kid dies at about step 218 | 290 |
+  | 4 | level 4 (palace): right from step 45 to 100, then left to 200, past an arcade guard, three room changes | 290 |
+  | 5 | idle in level 1's first room | 360 |
+
+  (a) uses level 2's guard, not level 1's: level 1's is far into the level, while level 2's is
+  one room from the start.
+
+  A3 baseline, steps 2–300, on `a500-1.5m` (`tools/timing_run.py`, `tools/frame_log.py`).
+  Tapes 3 and 4 include the interlude and the level load, logged at steps 10–11:
+
+  | Tape | Frames | Period histogram (fields × frames) | Mean period / work | Work > 4 |
+  |---|---|---|---|---|
+  | 1 | 301 | 4×200 5×46 6×42 7–10×11, room changes 32, 36 | 4.79 / 4.29 | 101 |
+  | 3 | 355 | 4×57 5×227 6×23 7–11×46, load 23, 45 | 5.55 / 4.99 | 270 |
+  | 4 | 357 | 4×151 5×109 6×20 7×48 9–10×24, load/room changes 23–42 | 5.62 / 5.03 | 177 |
+  | 5 | 299 | 4×296 5×1 6×2 | 4.02 / 3.45 | 3 |
+
+  A4 baseline hash digests (`tools/hash_cmp.py`, unchanged VERIFY build): tape 1
+  `343c39cbd12a`, 3 `6d5be796a068`, 4 `c111c939510d`, 5 `3808b037eb1d`. A changed slave
+  reproduces these only while B7 is still open if it does not change frame times, so for
+  now they guard VERIFY-only and timing-neutral changes.
+  - The VERIFY hooks add a little time (frame wait copy, VBL and blitter interrupt
+    counters). The shipped slave's keypad-route profile (`tmp/prof-a500`) remains the
+    absolute reference.
+  - The guard fight is the worst route: only 16% of its frames make 4 fields.
 
 ## B. Understanding (documented in `docs/internals.md`; no game change)
 
@@ -120,11 +170,19 @@ Sizes per frame, steady running / spike death (fields): work 3.72 / 5.41; full-s
 - **B6 Bus budget.** From the DMA records, the free chip-bus slots per frame on the A500,
   with code running from slow RAM, which shares the chip bus. This is the ceiling on what
   overlapping blits with CPU work (C1, C2) can win.
+- **B7 Real-time state.** Find what the game runs on real time rather than per step: the
+  copper and CIA-B interrupts post events (`g:$1d5b8`), the sound driver, timers and
+  animation. Under the A4 work delay these change state (timer records `$46ea6`, the shape
+  caches) and, on tapes 3 and 4, the guard and level-start behaviour (`g:$b882`). Then add a
+  VERIFY time pin that drives them from the step, so the game sees the same time per step
+  whatever the frame takes, and G3 can be checked bit for bit. Gate: under the pin, the work
+  delay leaves every route's hashes equal.
 
 ## C. Optimisations
 
 Each one is a slave patch for version 1 (UK; also used for 1b), switchable for A/B at first
-and then always on. Each must pass A4 (G3) on all routes, and is kept only if A3 shows a gain.
+and then always on. Each must pass A4 (G3, under B7's time pin) on all routes, and is kept
+only if A3 shows a gain.
 Expected gains are fields per frame of CPU time, before bus contention.
 
 - **C1 Deferred blitter waits.** Replace "start the blit, then STOP until the blitter

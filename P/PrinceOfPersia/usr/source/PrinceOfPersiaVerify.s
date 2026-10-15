@@ -9,6 +9,13 @@ GAME_ADDR:MACRO
 	add.l	#\1-$1000,\2
 	ENDM
 
+; CUSTOM5 bits (timing and sabotage probes for A4's faithfulness checks)
+VOPT_DELAY_WORK = 0			; an extra VBL at each gameplay step's start, before the frame
+					; is published: changes the frame times that the game sees
+VOPT_DELAY = 1				; an extra VBL before each frame wait, after publishing
+VOPT_SABOTAGE = 2			; skip one g:$53d6 blit at step SABOTAGE_STEP
+SABOTAGE_STEP = 150
+
 pl_verify_v1
 	PL_START
 	PL_P	$1942c,verify_poll	; control poll, once per gameplay step
@@ -19,18 +26,14 @@ pl_verify_v1
 	; RNG entropy: g:$1ba58 adds VHPOSR to the seed (level start, fire); add 0 instead
 	PL_W	$1ba5e,$7000		; moveq #0,d0
 	PL_NOP	$1ba60,4
-	PL_P	$53d6,verify_blit_start	; blit start + STOP wait (sabotage probe)
+	PL_IFC5X	VOPT_SABOTAGE		; patched only for the probe: it costs time on every blit
+	PL_P	$53d6,verify_blit_start	; blit start + STOP wait
+	PL_ENDIF
 	PL_END
 
-; CUSTOM5 bits
-VOPT_STATE = 0				; hash the game state at each frame-wait exit
-VOPT_PIXELS = 1				; hash the published frame's bitplanes there
-VOPT_DELAY = 2				; wait for an extra VBL before each frame wait (timing probe)
-VOPT_SABOTAGE = 3			; skip one g:$53d6 blit at step SABOTAGE_STEP (hash probe)
-SABOTAGE_STEP = 150
 
 VERIFY_FRAMES = 2048			; frame log entries
-VERIFY_ENTRY = 16			; bytes per entry
+VERIFY_ENTRY = 8			; bytes per entry
 
 ; The harness finds this block in memory by its marker and reads it at the end of a run.
 verify_block
@@ -41,6 +44,8 @@ verify_tape
 	dc.l	0			; current tape entry, 0 = not started
 verify_stop
 	dc.l	0			; the harness breaks at verify_stopped on this step
+verify_gameplay
+	dc.l	0			; -1 while the last control poll was a gameplay step
 verify_fields
 	dc.l	0			; VERTB interrupts
 verify_blits
@@ -60,12 +65,29 @@ verify_sabotaged
 ; Input tape (plan step A2). CUSTOM4=n plays tape n: the game's joystick reader
 ; returns the tape's mask for the current step instead of reading port 1, so input
 ; lands on the same gameplay step on every machine. CUSTOM4=0 reads the real
-; joystick. Masks are the reader's own: 1 up, 2 down, 4 left, 8 right, 16 fire;
-; TAPE_RESUME is fire for the pause loop only (g:$1958a, "press button"), so it ends a
-; pause without reaching the game's controls.
+; joystick. A step is a control poll from gameplay (g:$13de2, once per frame); the title,
+; intro and interludes poll in busy loops, as often as time allows, and don't count.
+; Masks are the reader's own: 1 up, 2 down, 4 left, 8 right, 16 fire, for gameplay polls.
+; Other polls get fire if the entry has TAPE_SKIP or TAPE_LEVEL, which skips the title and
+; the interludes. TAPE_RESUME is fire for the pause loop only (g:$1958a, "press button"),
+; so it ends a pause without reaching the controls. TAPE_LEVEL+n requests level n, as the
+; level skip does; hold it for one step.
 
-; replaces g:$1942c link a6,#0 / jsr g:$1b8bc
+; replaces g:$1942c link a6,#0 / jsr g:$1b8bc (a6 is g:$18df4's frame)
 verify_poll
+	lea	verify_gameplay(pc),a0
+	clr.l	(a0)
+	GAME_ADDR	$13e20,a1	; return address of the gameplay call of g:$18df4
+	cmp.l	4(a6),a1
+	bne.b	verify_run
+	st	(a0)
+	btst	#VOPT_DELAY_WORK,verify_options+3(pc)
+	beq.b	.nodelay
+	move.l	verify_fields(pc),d0
+.delay
+	cmp.l	verify_fields(pc),d0
+	beq.b	.delay
+.nodelay
 	lea	verify_steps(pc),a0
 	addq.l	#1,(a0)
 	move.l	(a0),d0
@@ -84,7 +106,7 @@ verify_joy
 	move.l	verify_tape(pc),d0
 	bne.b	.play
 	move.l	verify_tape_number(pc),d0
-	beq.b	.live
+	beq.w	.live
 	lea	verify_tapes(pc),a0
 	add.w	d0,d0
 	add.w	(-2,a0,d0.w),a0
@@ -102,6 +124,21 @@ verify_joy
 	move.l	a0,(a1)
 	moveq	#0,d0
 	move.w	(2,a0),d0
+	bclr	#TAPE_LEVEL_BIT,d0
+	beq.b	.nolevel
+	move.l	d0,$47ab8		; the level the main loop is to play, as the level skip sets it
+	moveq	#TAPE_SKIP,d0
+.nolevel
+	tst.l	verify_gameplay-verify_tape(a1)
+	bne.b	.gameplay
+	and.w	#TAPE_SKIP|TAPE_RESUME,d0
+	bclr	#TAPE_SKIP_BIT,d0
+	beq.b	.resume
+	or.w	#TAPE_FIRE,d0
+	bra.b	.resume
+.gameplay
+	and.w	#$1f|TAPE_RESUME,d0
+.resume
 	bclr	#TAPE_RESUME_BIT,d0
 	beq.b	.out
 	; resume is fire for the pause loop's button check only
@@ -124,36 +161,122 @@ TAPE_RIGHT = 8
 TAPE_FIRE = 16
 TAPE_RESUME_BIT = 5
 TAPE_RESUME = 1<<TAPE_RESUME_BIT
+TAPE_SKIP_BIT = 6
+TAPE_SKIP = 1<<TAPE_SKIP_BIT
+TAPE_LEVEL_BIT = 15
+TAPE_LEVEL = 1<<TAPE_LEVEL_BIT		; TAPE_LEVEL+n: go to level n, no input
 
 verify_tapes
 	dc.w	tape_spikes-verify_tapes
+	dc.w	tape_explore-verify_tapes
+	dc.w	tape_guard-verify_tapes
+	dc.w	tape_palace-verify_tapes
+	dc.w	tape_idle-verify_tapes
 
 ; Level 1 from the first gameplay step: run right, drop to the lower floor, stop on the
 ; loose plate and fall with it, run left, climb the ledge, run left into the spike pit.
-; Step 1 is the title, paused: fire skips the intro, and the game pauses again at step 2.
+; The title starts paused: resume and skip it. The game pauses again at step 1.
 tape_spikes
-	dc.w	0,0
-	dc.w	1,TAPE_FIRE|TAPE_RESUME
-	dc.w	2,TAPE_RESUME
-	dc.w	3,0
-	dc.w	66,TAPE_RIGHT
-	dc.w	80,0
-	dc.w	88,TAPE_RIGHT
-	dc.w	105,0
-	dc.w	125,TAPE_LEFT
-	dc.w	202,0
-	dc.w	205,TAPE_UP
-	dc.w	232,0
-	dc.w	234,TAPE_LEFT
-	dc.w	275,0
+	dc.w	0,TAPE_SKIP|TAPE_RESUME
+	dc.w	1,TAPE_RESUME
+	dc.w	2,0
+	dc.w	65,TAPE_RIGHT
+	dc.w	79,0
+	dc.w	87,TAPE_RIGHT
+	dc.w	104,0
+	dc.w	124,TAPE_LEFT
+	dc.w	201,0
+	dc.w	204,TAPE_UP
+	dc.w	231,0
+	dc.w	233,TAPE_LEFT
+	dc.w	274,0
+	dc.w	$ffff,0
+
+; Mapping aid: level EXPLORE_LEVEL from step 10, then no input (a zero mask lets the game
+; read the keyboard, so the harness can drive the keypad).
+	IFND	EXPLORE_LEVEL
+EXPLORE_LEVEL = 2
+	ENDC
+tape_explore
+	dc.w	0,TAPE_SKIP|TAPE_RESUME
+	dc.w	1,TAPE_RESUME
+	dc.w	2,0
+	dc.w	10,TAPE_LEVEL+EXPLORE_LEVEL
+	dc.w	11,TAPE_RESUME
+	dc.w	12,0
+	dc.w	$ffff,0
+
+; Level 2's first guard: run left into the next room, stop short of the guard, then
+; strike (fire) twice and block (up) once, every 10 steps. The fight runs from step 90
+; until the guard kills the kid at about step 218.
+tape_guard
+	dc.w	0,TAPE_SKIP|TAPE_RESUME
+	dc.w	1,TAPE_RESUME
+	dc.w	2,0
+	dc.w	10,TAPE_LEVEL+2
+	dc.w	11,TAPE_RESUME
+	dc.w	12,0
+	dc.w	45,TAPE_LEFT
+	dc.w	84,0
+	dc.w	92,TAPE_FIRE
+	dc.w	94,0
+	dc.w	102,TAPE_FIRE
+	dc.w	104,0
+	dc.w	112,TAPE_UP
+	dc.w	114,0
+	dc.w	122,TAPE_FIRE
+	dc.w	124,0
+	dc.w	132,TAPE_FIRE
+	dc.w	134,0
+	dc.w	142,TAPE_UP
+	dc.w	144,0
+	dc.w	152,TAPE_FIRE
+	dc.w	154,0
+	dc.w	162,TAPE_FIRE
+	dc.w	164,0
+	dc.w	172,TAPE_UP
+	dc.w	174,0
+	dc.w	182,TAPE_FIRE
+	dc.w	184,0
+	dc.w	192,TAPE_FIRE
+	dc.w	194,0
+	dc.w	202,TAPE_UP
+	dc.w	204,0
+	dc.w	212,TAPE_FIRE
+	dc.w	214,0
+	dc.w	222,TAPE_FIRE
+	dc.w	224,0
+	dc.w	232,TAPE_UP
+	dc.w	234,0
+	dc.w	$ffff,0
+
+; Level 4, the palace: run right into the arcade with a guard, then back left through two
+; rooms and down a level (three room changes by step 200). Timing only: the level start
+; takes a timing-dependent path (g:$b882), so its state is not comparable across timings.
+tape_palace
+	dc.w	0,TAPE_SKIP|TAPE_RESUME
+	dc.w	1,TAPE_RESUME
+	dc.w	2,0
+	dc.w	10,TAPE_LEVEL+4
+	dc.w	11,TAPE_RESUME
+	dc.w	12,0
+	dc.w	45,TAPE_RIGHT
+	dc.w	100,TAPE_LEFT
+	dc.w	200,0
+	dc.w	$ffff,0
+
+; The floor case: level 1's first room, no input.
+tape_idle
+	dc.w	0,TAPE_SKIP|TAPE_RESUME
+	dc.w	1,TAPE_RESUME
+	dc.w	2,0
 	dc.w	$ffff,0
 	even
 
 ;---------------------------------------------------------------------------
 ; Frame-time log (plan step A3). Time is in raster lines, fields*313 + VPOS. Each frame
-; wait exit appends (step, period, work, blits, state, pixels): lines since the previous
-; exit, lines of that spent before entering the wait, blitter interrupts since the previous
-; exit, and the A4 hashes (0 unless enabled by CUSTOM5).
+; wait exit appends (step, period, work, blits): lines since the previous exit, lines
+; of that spent before entering the wait, and blitter interrupts since the previous exit.
 ; The display swap is in the VBL that ends the wait, so period/313 is a whole number of
 ; fields up to the VBL handler's latency.
 
@@ -209,17 +332,23 @@ verify_wait
 	bsr	verify_time
 	move.l	d0,d2
 	lea	$49d18,a0
-.wait
+verify_wait_loop
 	tst.l	(a0)
-	bne.b	.wait
+	bne.b	verify_wait_loop
 verify_wait_end
+	move.l	verify_steps(pc),d0
+	cmp.l	verify_stop(pc),d0
+	bne.b	verify_wait_go
+verify_wait_stopped			; the harness's breakpoint for a step's frame-wait exit
+	nop
+verify_wait_go
 	bsr	verify_time
 	lea	verify_frames(pc),a1
 	move.l	(a1),d1
 	cmp.l	#VERIFY_FRAMES,d1
-	bhs.b	.full
+	bhs.b	verify_wait_full
 	addq.l	#1,(a1)
-	lsl.l	#4,d1
+	lsl.l	#3,d1
 	lea	verify_log(pc),a1
 	add.l	d1,a1
 	move.w	verify_steps+2(pc),(a1)+
@@ -231,8 +360,7 @@ verify_wait_end
 	move.l	verify_blits(pc),d1
 	sub.l	verify_last_blits(pc),d1
 	move.w	d1,(a1)+
-	bsr	verify_hashes
-.full
+verify_wait_full
 	lea	verify_last(pc),a1
 	move.l	d0,(a1)+
 	move.l	verify_blits(pc),(a1)
@@ -243,85 +371,15 @@ verify_wait_end
 
 
 ;---------------------------------------------------------------------------
-; Faithfulness probes (plan step A4). At each frame-wait exit, with interrupts off:
-; the state hash covers the game's data (verify_state_regions), the pixel hash the
-; frame the VBL has just published (the buffer in $49d1c). Hashes are rol 5 / eor over
-; longwords, so any single changed byte changes them. Both cost many fields per frame:
-; their runs measure faithfulness, not time.
-; < a1 log entry hash fields > a1 past them
-
-verify_hashes
-	movem.l	d0-d5/a0/a2,-(a7)
-	move.w	sr,-(a7)
-	move.w	#$2700,sr
-	moveq	#0,d0
-	btst	#VOPT_STATE,verify_options+3(pc)
-	beq.b	.nostate
-	lea	verify_state_regions(pc),a2
-.region
-	move.l	(a2)+,d1
-	beq.b	.nostate
-	move.l	d1,a0
-	move.l	(a2)+,d1
-	sub.l	a0,d1
-	bclr	#31,d1			; bit 31 of the start: original address in the image
-	beq.b	.abs
-	sub.l	#$80000000,a0
-	add.l	_reloc_base(pc),a0
-	sub.l	#$1000,a0
-.abs
-	bsr.b	verify_hash
-	bra.b	.region
-.nostate
-	move.l	d0,(a1)+
-	moveq	#0,d0
-	btst	#VOPT_PIXELS,verify_options+3(pc)
-	beq.b	.nopixels
-	move.l	$49d1c,a0
-	move.l	#40000,d1
-	bsr.b	verify_hash
-.nopixels
-	move.l	d0,(a1)+
-	move.w	(a7)+,sr
-	movem.l	(a7)+,d0-d5/a0/a2
-	rts
-
-; < a0 start, d1 length (multiple of 16), d0 hash > d0 hash (d1-d5/a0 trashed)
-verify_hash
-	lsr.l	#4,d1
-	subq.l	#1,d1
-.loop
-	movem.l	(a0)+,d2-d5
-	rol.l	#5,d0
-	eor.l	d2,d0
-	rol.l	#5,d0
-	eor.l	d3,d0
-	rol.l	#5,d0
-	eor.l	d4,d0
-	rol.l	#5,d0
-	eor.l	d5,d0
-	subq.l	#1,d1
-	bpl.b	.loop
-	rts
-
-; (start, end) pairs, 16-byte multiples; a start with bit 31 is an original image address.
-; Chip below $1000 holds the stack; $49d10-$49d1f the VBL countdown and the display swap;
-; $53c2e and $5d86e are the two display buffers (the pixel hash covers the shown one);
-; the image's code ($5320-$1f7d0) is left out so that patched code doesn't count.
-verify_state_regions
-	dc.l	$1000,$49d10
-	dc.l	$49d20,$53c20
-	dc.l	$674b0,$80000
-	dc.l	$80000000+$1000,$80000000+$5320
-	dc.l	$80000000+$1f7d0,$80000000+$47800
-	dc.l	0
+; Faithfulness probes (plan step A4). The harness hashes state and the published frame at
+; verify_wait_stopped, with emulated time stopped: in-slave hashing took ~60 fields per
+; frame, and the game itself behaves differently with frames that long. The probes here
+; change timing (VOPT_DELAY_WORK, VOPT_DELAY) or break one blit (VOPT_SABOTAGE).
 
 ; replaces g:$53d6 move.w sr,g:$53d4 (start a blit, then STOP until its interrupt)
 verify_blit_start
 	move.w	sr,-(a7)
 	move.l	a0,-(a7)
-	btst	#VOPT_SABOTAGE,verify_options+3(pc)
-	beq.b	.run
 	lea	verify_steps(pc),a0
 	cmp.l	#SABOTAGE_STEP,(a0)
 	bne.b	.run
