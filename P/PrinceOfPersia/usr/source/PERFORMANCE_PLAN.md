@@ -212,6 +212,17 @@ Sizes per frame, steady running / spike death (fields): work 3.72 / 5.41; full-s
 - **B6 Bus budget.** From the DMA records, the free chip-bus slots per frame on the A500,
   with code running from slow RAM, which shares the chip bus. This is the ceiling on what
   overlapping blits with CPU work (C1, C2) can win.
+  *Done* (`INTERNALS.md` B6, `tools/bus_budget.py`).
+  - **Slot shares:** 23.5–28% free (0.94 fields per 4-field frame on the spikes route),
+    CPU 32–35%, blitter 7–15%, bitplanes 28%.
+  - **Inside a blit:** almost nothing is free.
+  - **Blit beside the CPU:** it gets only the 29–31% of slots that are free while the CPU
+    runs, which is 0.40–0.50 of its own speed.
+  - **C1:** at most 0.11–0.20 fields per frame, plus about 0.1 of interrupt and wake-up
+    cost.
+  - **C2(a):** at most about 0.04, because only 0.07–0.09 fields of CPU work separate the
+    copy from its first reader.
+  - **C2(b):** up to the copy's 0.8 fields.
 - **B7 Real-time state.** Find what the game runs on real time rather than per step: the
   copper and CIA-B interrupts post events (`g:$1d5b8`), the sound driver, timers and
   animation. Under the A4 work delay these change state (timer records `$46ea6`, the shape
@@ -231,10 +242,12 @@ Expected gains are fields per frame of CPU time, before bus contention.
   interrupt" in `$053a2` and `$053d6` with "wait for the previous blit before touching the
   blitter, start, return". Add a wait wherever B2 found the CPU touching blit memory, and before
   the display swap. Turn off the per-blit blitter interrupt. Expected 0.3–0.5 of the 0.95
-  STOP fields, plus most of the per-blit interrupt cost.
+  STOP fields, plus most of the per-blit interrupt cost. (B6: at most 0.11–0.20 plus about
+  0.1 of interrupt cost, unless C5 reorders the work.)
 - **C2 The full-screen copy.** Depending on B1:
   - (a) Chain its six `$1000`-word blits from the blitter interrupt, so the 40 KB copy runs
-    behind the CPU until the first reader waits for it. Expected 0.3–0.5.
+    behind the CPU until the first reader waits for it. Expected 0.3–0.5. (B6: at most
+    about 0.04.)
   - (b) Copy only the regions that changed, or skip the copy when its source is unchanged.
     Expected up to 0.7.
 

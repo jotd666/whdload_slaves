@@ -301,3 +301,52 @@ level is already in memory. All of it is drawing (draw tables 66%) and building 
 - The blank-screen publish and wait (2 fields) is visible behaviour and stays.
 - To reach 16 fields, `draw_tables` has to go from 19–26 fields to about 8–14, and
   redraw_room's 5 fields have to shrink as well.
+
+## B6 Bus budget
+
+`tools/bus_budget.py` reads the DMA records of the B2 traces. Every slot (2 CPU cycles) has
+an owner. On the A500 the code and data are in slow RAM, which sits on the chip bus, so
+everything the CPU does costs chip slots.
+
+| Window | Free | CPU | Blitter | Bitplanes | Refresh, audio, copper |
+|---|---|---|---|---|---|
+| Tape 1, running | 23.5% | 31.7% | 14.8% | 28.1% | 1.9% |
+| Tape 1, spike death | 24.5% | 32.5% | 12.6% | 28.1% | 2.3% |
+| Tape 3, guard fight | 24.3% | 32.4% | 13.3% | 28.1% | 1.9% |
+| Tape 4, palace | 25.6% | 34.8% | 9.4% | 28.1% | 2.1% |
+| Tape 1, room change | 26.7% | 33.7% | 9.7% | 28.1% | 1.8% |
+| Tape 4, room change | 27.9% | 34.8% | 7.2% | 28.1% | 2.0% |
+
+Per 4-field frame on the spikes route, that is 0.94 fields' worth of free slots.
+
+**Inside a blit** (from the `BLTSIZE` write to the blit's last slot; 11–21% of all slots):
+- Free slots: 0.3–0.7%, or 5–7% in the room-change tile draws, which are small.
+- The blitter takes every slot the bitplanes leave.
+- The CPU sits in STOP and uses no slots. If it ran, it would get only the slots the blitter
+  yields: `BLTPRI` is off, so that is one slot after three denied cycles, and each one
+  lengthens the blit.
+
+**While the CPU runs outside blits:**
+- The CPU uses 39–40% of all slots: one access per 4 cycles, minus the bitplane cycles.
+- 29–31% of slots stay free.
+- A blit left running in parallel gets only these free slots, so it runs at 0.40–0.50 of its
+  own speed.
+
+**Ceilings for C1 and C2:**
+- **Contention changes the per-blit saving.** With the wait moved to the next blitter access,
+  a blit saves min(its length, 0.40–0.50 × the CPU time until the next blit), not the
+  uncontended min(length, gap) of B2.
+  - Over the windows that is 0.11–0.20 fields per 4-field frame, plus the per-blit
+    interrupt and STOP wake-up cost, which the profile puts at roughly 0.1.
+  - This is C1's ceiling unless C5 reorders work so that real CPU work sits between plane
+    blits.
+- **C2(a), the copy chained behind the CPU:**
+  - The 20,000-word A→D copy needs 40,000 blitter slots; running alone it takes about 0.8
+    fields.
+  - Beside the CPU it would take about 1.9 fields.
+  - The CPU time between the copy and the next blit, the first one that reads its result,
+    is only 0.07–0.09 fields, so the copy can hide behind at most about 0.04 fields of
+    work.
+  - Moving the copy earlier isn't possible: buffer 0 is final only after the frame's wipes
+    and back and fore tables, and those depend on this frame's logic.
+- **C2(b), copying less,** is the copy's real saving: up to its 0.8 fields per frame.
