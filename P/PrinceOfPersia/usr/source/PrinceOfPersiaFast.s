@@ -1,6 +1,6 @@
 ;*---------------------------------------------------------------------------
 ;  :Contents.	A500 speed-ups for all supported Prince of Persia versions.
-;		See PERFORMANCE_PLAN.md (part C) and INTERNALS.md.
+;		Performance analysis and development notes are kept locally.
 ;		CUSTOM5 bit OPT_ORIGINAL turns them all off, for A/B comparisons.
 ;---------------------------------------------------------------------------*
 
@@ -16,7 +16,7 @@ pl_fast_v1
 	PL_P	$053dc,fast_blit_saved	; continuation used by VERIFY's sabotage probe
 	VERSION_REF	1,4,VR_GAME_CODE
 	PL_W	$19ecc,$a028		; enable VERTB/PORTS/EXTER, without BLIT
-	; C3: tile lookup (INTERNALS.md B3)
+	; C3: tile lookup
 	VERSION_REF	2,4,VR_GAME_CODE
 	PL_P	$107d0,fast_get_tile_to_draw
 	VERSION_REF	3,4,VR_GAME_CODE
@@ -63,7 +63,7 @@ pl_fast_v1
 	PL_P	$131b0,fast_y_to_row
 	VERSION_REF	22,4,VR_GAME_CODE
 	PL_P	$13596,fast_collision_dimensions
-	; C2(b): restore only what changed instead of the full-screen copy (INTERNALS.md B1)
+	; C2(b): restore only what changed instead of the full-screen copy
 	PL_P	$05686,fast_shape
 	VERSION_REF	23,4,VR_GAME_CODE
 	PL_P	$199e0,fast_rect_fill
@@ -1081,7 +1081,7 @@ fast_get_right_wall_xpos
 ; onto the hidden display buffer (40,000 bytes). This keeps, for each display buffer, the
 ; parts that may differ from buffer 0 and copies only those: what was drawn into the display
 ; buffer since its last restore, and what changed in buffer 0. Every write to the three
-; buffers goes through the routines hooked here (INTERNALS.md B1, B2).
+; buffers goes through the routines hooked here.
 ;
 ; Each of 13 bands covers 16 lines (the last covers 8). A long holds one bit
 ; per 16-pixel word column. Zero is clean. Copies retain gaps between dirty runs.
@@ -1983,7 +1983,7 @@ fast_copy
 	rts
 
 ;---------------------------------------------------------------------------
-; C5 shape draw path (INTERNALS.md B4, B5). The image draw g:$11904 goes through a tag-list
+; C5 shape draw path. The image draw g:$11904 goes through a tag-list
 ; graphics library: g:$1c29c parses the tags, g:$1c694 picks the image, g:$1c8d6 clips and
 ; g:$1cb94 sets up the blits. These are the same routines with register code in place of
 ; the compiled C; their memory writes and results are the same.
