@@ -597,3 +597,88 @@ and `g:$053d6` at 0.54 / 1.31. With C1 polling, these became 1.04 / 2.78 and
 The faster trace contains 53 on-time and 13 overrunning frames instead of 50 and 14,
 so the group means are not a matched-frame comparison. Full-route timing and the
 same-build A4 results are recorded in `PERFORMANCE_PLAN.md`, C1 and C5.
+
+
+## G1 gameplay acceptance follow-up
+
+The final C2/C3/C4/C5 follow-up meets G1 on the four pinned PAL A500 benchmark
+routes. The gameplay windows and before/after counts are in `PERFORMANCE_PLAN.md`.
+The complete A3 log window (steps 2–300, including transitions and interlude) has
+mean work 2.005732/2.906385/2.829767/1.522989 fields and on-target counts
+295/301, 314/355, 327/357 and 299/299 for tapes 1/3/4/5. The interlude holds the
+input step at 14 and logs its own waits; it is not ordinary gameplay.
+
+### Rendering and restore
+
+- The ordinary frame wrapper (`$0ba56`) saves and restores DMAF_BLITHOG around
+  synchronous draws. Polling waits still complete before any subsequent blitter
+  register writes, CPU flips/copies or display swap; INTENA.BLIT stays disabled
+  and the existing double INTREQ.BLIT acknowledgement remains.
+- Each display buffer has 13 dirty bitsets, one bit per 16-pixel word column in a
+  16-line band; the last band is clipped to line 199. Restore copies consecutive
+  word runs, retaining clean gaps, and combines adjacent identical bands. A third
+  table tracks background writes during the current frame. Four-line bands cost
+  more in setup than they saved in DMA and were removed.
+- The first foreground pass draws into the background, which is then restored
+  into the display buffer. The second pass skips a blit only when intervening
+  writes cannot overlap it. Image setup, scratch and flip side effects remain on
+  the uncached path. Full-room rendering marks all buffers once.
+- A 64-entry, four-way foreground cache retains the eight-byte table entry,
+  20-byte clip state, eight-byte image header and 130-byte SHAPE state. Only
+  single-part, unclipped chip images without a custom mask qualify, in the
+  existing supported modes. Across frames, reuse is restricted to the terrain
+  image arena (`$674be`–`$7ffff`), excluding the mutable preshift/scratch images.
+  Full-room rendering clears it; pictures and background writes outside an
+  ordinary frame invalidate it before the next frame. Header changes and mode-3
+  colour changes miss. Restoring setup preserves unused tag-colour words.
+- The expanded positive-shift path at `$05908` uses five masked copies instead
+  of clear-plus-OR pairs. Ordinary image colour bits are covered by their mask;
+  custom masks and the mask-disabled tag retain the original path. The shared
+  blit entry remains instrumentable by VERIFY's deliberate sabotage hook.
+- The unclipped/unflipped clipping case uses a short path. Image lookups accept
+  registers, retain the kid-table remap for setup, and check multipart tables
+  directly. `$7fc1a` continues only when reached from `$7fc0c`, as before.
+  Resetting tags writes a zero register instead of CLR's 68000 memory read.
+- One- and two-word horizontal flips flatten the plane/row loop and unroll byte
+  swaps using the game's byte-reversal table. Zero two-word rows need no writes;
+  other widths use the original routine. No large reversal table is allocated.
+
+### Tile and collision work
+
+`$108c6` bypasses inactive ordinary and above-room tile draws only at their two
+known callers. It checks the original pending counters and always performs
+column 9, preserving each row's final lookup globals and the top-row y globals.
+The original loop's argument cleanup is preserved when bypassing the draw.
+
+`$12bea` and `$12c7c` normalize collision coordinates horizontally, then
+vertically, retaining every original global write and the room-zero wall result
+without changing tilepos. `$14e8c` looks up each tile once and derives both wall
+edges and collision flags. Reusing the loaded-room pointers removes redundant
+room-address calculation. Collision image dimensions and ordinary y-to-row
+coordinates have short paths with the original out-of-range fallback. The eight
+fixed character-record transfer helpers copy their disjoint 18-byte records
+with four longs and a word and retain the destination return value.
+
+### Final evidence
+
+Same final build, A4 opt 16 versus opt 0, with unchanged exclusions:
+
+| Tape | Steps | Matching digest |
+|---|---|---|
+| 1 | 1–350 | 9e6a78bbce12 |
+| 3 | 1–300 | eba440ce239b |
+| 4 | 1–300 | 9f41ae5335df |
+| 5 | 1–360 | a34a62a0d2f7 |
+
+Tape 3 opt 1 matches for 300 steps. The opt-4 probe differs only at step 150
+in both state and pixels, over 175 steps. A3 uses opt 0 and 4000 fields on each
+route. Gameplay mean work is 1.876701/2.432592/2.187286/1.522989 fields;
+maximum work is 4.980831/4.904153/3.814696/3.019169. No gameplay period exceeds
+its own 4/5-field target by more than one field.
+
+The final late-spikes profile (step 269, 12 fields) measures 4.981 fields for
+the worst frame. Inclusive costs include shape blitting `$05686` 0.995,
+blit start/wait `$053d6` 0.798, restore `$1975c` 0.289, foreground-cache entry
+0.644 and table-image core 1.863. These overlap and must not be added.
+The remaining work is below G1's ceiling, so optimisation stops here. G2 and
+the D1 machine matrix remain outside this acceptance.

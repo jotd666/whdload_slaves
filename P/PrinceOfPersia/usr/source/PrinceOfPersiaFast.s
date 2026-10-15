@@ -20,9 +20,27 @@ pl_fast_v1
 	PL_P	$108c6,fast_load_curr_and_left_tile
 	PL_P	$11b96,fast_get_room_address
 	; C4: logic hot spots
+	PL_P	$131f0,fast_record_131f0
+	PL_P	$1320e,fast_record_1320e
+	PL_P	$1322c,fast_record_1322c
+	PL_P	$1324a,fast_record_1324a
+	PL_P	$13268,fast_record_13268
+	PL_P	$1328a,fast_record_1328a
+	PL_P	$132ac,fast_record_132ac
+	PL_P	$132ce,fast_record_132ce
+
 	PL_P	$10942,fast_load_leftroom
 	PL_P	$1099a,fast_load_rowbelow
 	PL_P	$14fe6,fast_get_right_wall_xpos
+	PL_P	$0ba56,fast_draw_frame
+	PL_P	$116a2,fast_draw_table
+	PL_P	$05908,fast_shape_expand
+	PL_P	$055ca,fast_flip_horizontal
+	PL_P	$12bea,fast_get_tile
+	PL_P	$12c7c,fast_find_room
+	PL_P	$14e8c,fast_check_collisions
+	PL_P	$131b0,fast_y_to_row
+	PL_P	$13596,fast_collision_dimensions
 	; C2(b): restore only what changed instead of the full-screen copy (INTERNALS.md B1)
 	PL_P	$05686,fast_shape
 	PL_P	$199e0,fast_rect_fill
@@ -132,10 +150,10 @@ fast_add_layer
 	lsl.l	#2,d1
 	lea	$49aa8,a0
 	subq.l	#1,d0
-	move.l	d0,-(sp)
-	move.l	(a0,d1.l),-(sp)
-	bsr.w	fast_get_image
-	addq.l	#8,sp
+	move.l	(a0,d1.l),a0
+	move.l	d0,d1
+	move.l	a0,d0
+	bsr.w	fast_image_lookup
 	tst.l	d0
 	beq.b	.none
 	move.l	d0,a0
@@ -290,6 +308,49 @@ tile_to_draw
 
 ; load_curr_and_left_tile(), g:$108c6
 fast_load_curr_and_left_tile
+	; draw_room's ordinary row: a tile with no pending draw counters has no
+	; draw_tile side effects. Keep column 9 so the final lookup globals match.
+	move.l	_reloc_base(pc),d0
+	add.l	#$115ea-$1000,d0
+	cmp.l	(sp),d0
+	bne.b	.above
+	move.l	$49a1a,d1
+	cmp.l	#9,d1
+	beq.w	.load
+	move.l	$49a16,d0
+	lsl.l	#2,d0
+	move.l	_reloc_base(pc),a0
+	lea	($718a-$1000,a0),a0
+	add.l	(a0,d0.l),d1
+	lea	$47c40,a0
+	move.b	(a0,d1.l),d0
+	or.b	$1e(a0,d1.l),d0
+	or.b	$5a(a0,d1.l),d0
+	or.b	$78(a0,d1.l),d0
+	lea	$96(a0),a0
+	or.b	(a0,d1.l),d0
+	or.b	$1e(a0,d1.l),d0
+	or.b	$3c(a0,d1.l),d0
+	bne.w	.load
+	move.l	(sp),d0
+	add.l	#$115fa-$115ea,d0
+	move.l	d0,-(sp)		; leave one dummy argument for 115fc's stack cleanup
+	rts
+.above
+	add.l	#$11648-$115ea,d0
+	cmp.l	(sp),d0
+	bne.w	.load
+	move.l	$49a1a,d1
+	cmp.l	#9,d1
+	beq.w	.load
+	lea	$47d30,a0
+	tst.b	(a0,d1.l)
+	bne.w	.load
+	add.l	#$11656-$11648,d0
+	move.l	d0,-(sp)		; dummy argument for 11658's cleanup
+	rts
+
+.load
 	movem.l	d2-d3,-(sp)
 	move.l	$49a16,d2		; drawn_row
 	moveq	#20,d3			; tile_room0: wall, or floor on the bottom row
@@ -321,6 +382,9 @@ fast_load_curr_and_left_tile
 ; get_room_address(room), g:$11b96
 fast_get_room_address
 	move.l	4(sp),d1
+fast_get_room_address_reg
+	cmp.l	$47d54,d1
+	beq.b	.done
 	move.l	d1,$47d54		; loaded_room
 	beq.b	.done
 	move.l	d1,d0
@@ -338,6 +402,424 @@ fast_get_room_address
 .done
 	rts
 
+
+; The second foreground pass follows a restore of the background, which
+; already contains those same foreground shapes. Only redraw shapes touched
+; by intervening display writes. Keep all setup, flips and scratch side effects.
+fast_fore_pass
+	dc.w	0
+fast_frame_active
+	dc.w	0
+fast_cache_stale
+	dc.w	1
+fast_draw_table
+	move.l	d2,-(sp)
+	move.w	fast_fore_pass(pc),d2
+	lea	fast_fore_pass(pc),a0
+	clr.w	(a0)
+	move.l	_reloc_base(pc),d0
+	add.l	#$0bae6-$1000,d0
+	cmp.l	4(sp),d0
+	beq.b	.second
+	sub.l	#$0bae6-$0bab8,d0
+	cmp.l	4(sp),d0
+	bne.b	.call
+	move.w	#2,(a0)
+	bra.b	.call
+.second
+	move.w	#1,(a0)
+.call
+	move.l	8(sp),-(sp)
+	bsr.b	.original
+	addq.l	#4,sp
+	lea	fast_fore_pass(pc),a0
+	move.w	d2,(a0)
+	move.l	(sp)+,d2
+	rts
+.original
+	link	a6,#0
+	movem.l	d2-d5,-(sp)
+	move.l	_reloc_base(pc),a0
+	add.l	#$116aa-$1000,a0
+	jmp	(a0)
+
+; d0 destination, d1..d2 lines, d3..d4 words. Return Z when its dirty
+; words cannot overlap the shape. Inputs d1-d4 are preserved for fast_mark.
+fast_fore_touched
+	lea	fast_background_dirty(pc),a0
+	cmp.l	#BUF0,d0
+	beq.b	.buffer
+	lea	fast_dirty(pc),a0
+	cmp.l	#BUF1,d0
+	beq.b	.buffer
+	lea	BANDS*4(a0),a0
+	cmp.l	#BUF2,d0
+	bne.b	.yes
+.buffer
+	cmp.l	#19,d4
+	bhi.b	.yes
+	cmp.l	#199,d2
+	bhi.b	.yes
+	movem.l	d1-d4,-(sp)
+	lsl.w	#2,d3
+	addq.w	#1,d4
+	lsl.w	#2,d4
+	lea	fast_dirty_prefix(pc),a1
+	move.l	(a1,d3.w),d3
+	move.l	(a1,d4.w),d4
+	eor.l	d4,d3
+	lsr.w	#4,d1
+	lsr.w	#4,d2
+	sub.w	d1,d2
+	lsl.w	#2,d1
+	add.w	d1,a0
+.band
+	move.l	(a0)+,d0
+	and.l	d3,d0
+	bne.b	.out
+	dbf	d2,.band
+.out
+	movem.l	(sp)+,d1-d4
+	rts
+.yes
+	moveq	#1,d0
+	rts
+
+; Give synchronous frame blits priority, preserving the incoming DMA setting.
+fast_draw_frame
+	move.l	d2,-(sp)
+	lea	fast_cache_stale(pc),a0
+	tst.w	(a0)
+	beq.b	.cache_ready
+	clr.w	(a0)
+	lea	fast_fore_cache_data(pc),a0
+	moveq	#FC_COUNT-1,d0
+.invalidate
+	clr.l	(a0)
+	lea	FC_SIZE(a0),a0
+	dbf	d0,.invalidate
+.cache_ready
+	lea	fast_frame_active(pc),a0
+	move.w	#1,(a0)
+	lea	fast_background_dirty(pc),a0
+	moveq	#BANDS-1,d0
+.clear_dirty
+	clr.l	(a0)+
+	dbf	d0,.clear_dirty
+	move.w	_custom+dmaconr,d2
+	and.w	#DMAF_BLITHOG,d2
+	move.w	#DMAF_SETCLR!DMAF_BLITHOG,_custom+dmacon
+	bsr.b	.original
+	tst.w	d2
+	bne.b	.keep
+	move.w	#DMAF_BLITHOG,_custom+dmacon
+.keep
+	lea	fast_frame_active(pc),a0
+	clr.w	(a0)
+	move.l	(sp)+,d2
+	rts
+.original
+	link	a6,#-8
+	movem.l	d2/a2,-(sp)
+	move.l	_reloc_base(pc),a0
+	add.l	#$0ba5e-$1000,a0
+	jmp	(a0)
+
+; Common row-coordinate range: identical signed divide/remainder result.
+fast_y_to_row
+	move.l	4(sp),d0
+	add.l	#60,d0
+	cmp.l	#315,d0
+	bcc.b	.original
+	lea	.rows(pc),a0
+	move.b	(a0,d0.w),d0
+	ext.w	d0
+	ext.l	d0
+	rts
+.original
+	link	a6,#0
+	movem.l	d2-d3,-(sp)
+	move.l	_reloc_base(pc),a0
+	add.l	#$131b8-$1000,a0
+	jmp	(a0)
+.rows
+	dcb.b	63,-1
+	dcb.b	63,0
+	dcb.b	63,1
+	dcb.b	63,2
+	dcb.b	63,-1
+	even
+
+; Decode collision image dimensions without the compiled signed-divide scaffold.
+fast_collision_dimensions
+	link	a6,#0
+	movem.l	d2/a2,-(sp)
+	lea	$49b3e,a2
+	moveq	#0,d1
+	move.b	$49b5c,d1
+	cmp.b	#255,d1
+	beq.b	.none
+	moveq	#0,d0
+	move.b	$49b5e,d0
+	lsl.w	#2,d0
+	lea	$49aa8,a0
+	move.l	(a0,d0.w),d0
+	bsr.w	fast_image_lookup
+	tst.l	d0
+	beq.b	.none
+	move.l	d0,a0
+	moveq	#0,d2
+	move.w	4(a0),d2
+	and.w	#$3ff,d2
+	moveq	#0,d1
+	move.w	6(a0),d1
+	and.w	#$3ff,d1
+	bra.b	.dimensions
+.none
+	moveq	#0,d2
+	moveq	#0,d1
+.dimensions
+	move.l	d2,d0
+	addq.l	#1,d0
+	lsr.l	#1,d0
+	move.l	d0,$49b32
+	move.l	d1,$49b2e
+	move.l	_reloc_base(pc),a0
+	add.l	#$13620-$1000,a0
+	jmp	(a0)
+
+; Fixed, disjoint 18-byte character records; preserve memcpy's return value.
+fast_record_131f0
+	lea	$479b0,a1
+	lea	$4798c,a0
+	move.l	a0,d0
+	REPT	4
+	move.l	(a1)+,(a0)+
+	ENDR
+	move.w	(a1)+,(a0)+
+	rts
+fast_record_1320e
+	lea	$4798c,a1
+	lea	$479b0,a0
+	move.l	a0,d0
+	REPT	4
+	move.l	(a1)+,(a0)+
+	ENDR
+	move.w	(a1)+,(a0)+
+	rts
+fast_record_1322c
+	lea	$479c2,a1
+	lea	$4798c,a0
+	move.l	a0,d0
+	REPT	4
+	move.l	(a1)+,(a0)+
+	ENDR
+	move.w	(a1)+,(a0)+
+	rts
+fast_record_1324a
+	lea	$4798c,a1
+	lea	$479c2,a0
+	move.l	a0,d0
+	REPT	4
+	move.l	(a1)+,(a0)+
+	ENDR
+	move.w	(a1)+,(a0)+
+	rts
+fast_record_13268
+	bsr.w	fast_record_131f0
+	lea	$479c2,a1
+	lea	$4799e,a0
+	move.l	a0,d0
+	REPT	4
+	move.l	(a1)+,(a0)+
+	ENDR
+	move.w	(a1)+,(a0)+
+	rts
+fast_record_1328a
+	bsr.w	fast_record_1320e
+	lea	$4799e,a1
+	lea	$479c2,a0
+	move.l	a0,d0
+	REPT	4
+	move.l	(a1)+,(a0)+
+	ENDR
+	move.w	(a1)+,(a0)+
+	rts
+fast_record_132ac
+	bsr.w	fast_record_1322c
+	lea	$479b0,a1
+	lea	$4799e,a0
+	move.l	a0,d0
+	REPT	4
+	move.l	(a1)+,(a0)+
+	ENDR
+	move.w	(a1)+,(a0)+
+	rts
+fast_record_132ce
+	bsr.w	fast_record_1324a
+	lea	$4799e,a1
+	lea	$479b0,a0
+	move.l	a0,d0
+	REPT	4
+	move.l	(a1)+,(a0)+
+	ENDR
+	move.w	(a1)+,(a0)+
+	rts
+
+; Collision tile lookup. Keep all original globals, including tilepos when room=0.
+fast_get_tile
+	movem.l	d2/a2,-(sp)
+	lea	$49b74,a2
+	move.l	12(sp),(a2)
+	move.l	16(sp),4(a2)
+	move.l	20(sp),8(a2)
+fast_get_tile_body
+	bsr.w	fast_find_room
+	tst.l	d0
+	beq.b	.wall
+	move.l	d0,d1
+	bsr.w	fast_get_room_address_reg
+	move.l	8(a2),d0
+	lsl.l	#2,d0
+	move.l	_reloc_base(pc),a0
+	lea	($718a-$1000,a0),a0
+	move.l	(a0,d0.l),d0
+	add.l	4(a2),d0
+	move.b	d0,-2(a2)
+	and.l	#$ff,d0
+	move.l	$49a94,a0
+	move.b	(a0,d0.l),d0
+	and.l	#31,d0
+	bra.b	.store
+.wall
+	moveq	#20,d0
+.store
+	move.b	d0,-4(a2)
+	movem.l	(sp)+,d2/a2
+	rts
+
+fast_get_tile_regs
+	movem.l	d2/a2,-(sp)
+	lea	$49b74,a2
+	movem.l	d0-d2,(a2)
+	bra.w	fast_get_tile_body
+
+; check_collisions(row, room-array, flags-array), g:$14e8c. Look up the
+; tile once, derive both wall edges, and retain every original global write.
+fast_check_collisions
+	movem.l	d2-d7/a2-a3,-(sp)
+	movem.l	36(sp),d4-d6
+	move.b	$47995,d7
+	ext.w	d7
+	ext.l	d7
+	move.b	$49b88,d3
+	ext.w	d3
+	ext.l	d3
+	move.l	_reloc_base(pc),a2
+	move.l	d3,d0
+	addq.l	#5,d0
+	lea	($73ea-$1000,a2),a0
+	moveq	#0,d1
+	move.b	(a0,d0.l),d1
+	addq.l	#7,d1
+	move.l	d1,$49b0e
+	lea	$49b74,a3
+	bra.w	.test
+.column
+	move.l	d7,d0
+	move.l	d3,d1
+	move.l	d4,d2
+	bsr.w	fast_get_tile_regs
+	moveq	#0,d2
+	move.b	.types(pc,d0.w),d2
+	move.l	#255,d0
+	moveq	#0,d1
+	tst.w	d2
+	beq.b	.edges
+	lea	($73fe-$1000,a2),a0
+	move.b	(a0,d2.w),d0
+	ext.w	d0
+	ext.l	d0
+	add.l	$49b0e,d0
+	move.b	6(a0,d2.w),d1
+	ext.w	d1
+	ext.l	d1
+	neg.l	d1
+	add.l	$49b0e,d1
+	add.l	#13,d1
+.edges
+	moveq	#0,d2
+	cmp.l	$49b3a,d0
+	bge.b	.right
+	moveq	#15,d2
+.right
+	cmp.l	$49b36,d1
+	ble.b	.store
+	or.b	#$f0,d2
+.store
+	move.l	4(a3),a0
+	move.b	d2,(a0,d6.l)
+	move.b	3(a3),(a0,d5.l)
+	add.l	#14,$49b0e
+	addq.l	#1,d3
+.test
+	move.b	$49b8a,d0
+	ext.w	d0
+	ext.l	d0
+	cmp.l	d3,d0
+	bge.w	.column
+	movem.l	(sp)+,d2-d7/a2-a3
+	rts
+.types
+	dc.b	0,0,0,0,1,0,0,1,0,0,0,0,1,2,0,0
+	dc.b	0,0,3,0,4,0,0,0,0,0,0,0,0,0,0,0
+
+; Follow horizontal links first, then vertical, as the recursive original does.
+fast_find_room
+	lea	$49b74,a0
+.loop
+	move.l	4(a0),d0
+	cmp.l	#10,d0
+	bcs.b	.row
+	tst.l	d0
+	bpl.b	.right
+	bra.b	.left
+.row
+	move.l	8(a0),d0
+	cmp.l	#3,d0
+	bcs.b	.done
+	tst.l	d0
+	bmi.b	.up
+	bra.b	.down
+.done
+	move.l	(a0),d0
+	rts
+.left
+	add.l	#10,4(a0)
+	moveq	#0,d1
+	bra.b	.link
+.right
+	sub.l	#10,4(a0)
+	moveq	#1,d1
+	bra.b	.link
+.up
+	addq.l	#3,8(a0)
+	moveq	#2,d1
+	bra.b	.link
+.down
+	subq.l	#3,8(a0)
+	moveq	#3,d1
+.link
+	move.l	(a0),d0
+	beq.b	.loop
+	subq.l	#1,d0
+	lsl.l	#2,d0
+	add.l	d1,d0
+	lea	$4787e,a1
+	move.b	(a1,d0.l),d0
+	and.l	#$ff,d0
+	move.l	d0,(a0)
+	bra.b	.loop
 
 ;---------------------------------------------------------------------------
 ; C4 logic hot spots (draw_room's row loads, check_collisions).
@@ -459,27 +941,36 @@ fast_get_right_wall_xpos
 ; buffer since its last restore, and what changed in buffer 0. Every write to the three
 ; buffers goes through the routines hooked here (INTERNALS.md B1, B2).
 ;
-; A part is an 8-line band (25 per buffer) with a span of word columns: two bytes, first and
-; last column, $ff00 when clean.
+; Each of 13 bands covers 16 lines (the last covers 8). A long holds one bit
+; per 16-pixel word column. Zero is clean. Copies retain gaps between dirty runs.
+; A third table tracks changes to the background during the current frame.
 
 BUF0 = $49fee				; room background
 BUF1 = $53c2e				; display buffers
 BUF2 = $5d86e
 BUF_SIZE = 40000
 PLANE_SIZE = $1f40
-BANDS = 25
+BANDS = 13
 
 fast_dirty
-	dcb.w	BANDS,$0013		; buffer 1: all dirty until the first full copy
-	dcb.w	BANDS,$0013		; buffer 2
+	dcb.l	BANDS,$000fffff		; buffer 1: all dirty until the first full copy
+	dcb.l	BANDS,$000fffff		; buffer 2
+fast_background_dirty
+	dcb.l	BANDS,$000fffff
 
 fast_full_room
 	dc.w	0
 
 ; g:$0aba0's full-room draw_tables call. Buffer 0 is rebuilt in full; no
-; per-shape dirty spans are needed until the ordinary frame drawing resumes.
+; per-shape dirty marks are needed until the ordinary frame drawing resumes.
 fast_draw_room_tables
 	movem.l	d0-d4/a0-a1,-(sp)
+	lea	fast_fore_cache_data(pc),a0
+	moveq	#FC_COUNT-1,d0
+.clear_cache
+	clr.l	(a0)
+	lea	FC_SIZE(a0),a0
+	dbf	d0,.clear_cache
 	move.l	#BUF0,d0
 	bsr.w	fast_mark_all
 	lea	fast_full_room(pc),a0
@@ -527,8 +1018,8 @@ fast_mark
 	bgt.b	.out
 	cmp.l	d4,d3
 	bgt.b	.out
-	lsr.w	#3,d1			; bands
-	lsr.w	#3,d2
+	lsr.w	#4,d1			; bands
+	lsr.w	#4,d2
 	lea	fast_dirty(pc),a0
 	sub.l	#BUF0,d0
 	bcs.b	.out
@@ -537,34 +1028,50 @@ fast_mark
 	sub.l	#BUF_SIZE,d0
 	cmp.l	#BUF_SIZE,d0
 	bcs.b	.bands
-	lea	BANDS*2(a0),a0
+	lea	BANDS*4(a0),a0
 	sub.l	#BUF_SIZE,d0
 	cmp.l	#BUF_SIZE,d0
 	bcs.b	.bands
 .out
 	rts
 .both
-	bsr.b	.bands
-	lea	BANDS*2(a0),a0
-	; a0 the buffer's table; widens bands d1-d2 to columns d3-d4
+	move.w	fast_frame_active(pc),d0
+	bne.b	.in_frame
+	lea	fast_cache_stale(pc),a1
+	move.w	#1,(a1)
+.in_frame
+	bsr.b	.range
+.all_band
+	or.l	d3,(a1)
+	or.l	d3,BANDS*4(a1)
+	or.l	d3,BANDS*8(a1)
+	addq.l	#4,a1
+	dbf	d0,.all_band
+	rts
 .bands
+	bsr.b	.range
+.band
+	or.l	d3,(a1)+
+	dbf	d0,.band
+	rts
+.range
+	lsl.w	#2,d3
+	addq.w	#1,d4
+	lsl.w	#2,d4
+	lea	fast_dirty_prefix(pc),a1
+	move.l	(a1,d3.w),d3
+	move.l	(a1,d4.w),d4
+	eor.l	d4,d3
 	move.w	d1,d0
-	add.w	d0,d0
+	lsl.w	#2,d0
 	lea	(a0,d0.w),a1
 	move.w	d2,d0
 	sub.w	d1,d0
-.band
-	cmp.b	(a1),d3
-	bcc.b	.right
-	move.b	d3,(a1)
-.right
-	cmp.b	1(a1),d4
-	bls.b	.next
-	move.b	d4,1(a1)
-.next
-	addq.l	#2,a1
-	dbf	d0,.band
 	rts
+
+; Inclusive columns d3-d4 -> d3 bitmask. d4 and a1 are scratch.
+fast_dirty_prefix
+	dc.l	$0,$1,$3,$7,$f,$1f,$3f,$7f,$ff,$1ff,$3ff,$7ff,$fff,$1fff,$3fff,$7fff,$ffff,$1ffff,$3ffff,$7ffff,$fffff
 
 ; Mark the whole buffer that address d0 is in. Trashes d0-d4, a0-a1.
 fast_mark_all
@@ -601,6 +1108,16 @@ fast_shape
 .right
 	add.l	d3,d4
 	subq.l	#1,d4
+	move.w	fast_fore_pass(pc),d0
+	beq.b	.mark
+	cmp.w	#2,d0
+	beq.b	.mark
+	move.l	$674ba,d0
+	bsr.w	fast_fore_touched
+	bne.b	.mark
+	movem.l	(sp)+,d2-d4
+	rts
+.mark
 	move.l	$674ba,d0
 	bsr.w	fast_mark
 	movem.l	(sp)+,d2-d4
@@ -610,6 +1127,300 @@ fast_shape
 	move.l	_reloc_base(pc),a0
 	add.l	#$0568e-$1000,a0
 	jmp	(a0)
+
+; Narrow horizontal flips: flatten the plane/row loop and unroll byte pairs.
+; The original lookup table reverses each byte; all image planes include the mask.
+fast_flip_horizontal
+	move.l	8(sp),d0
+	subq.l	#1,d0
+	cmp.l	#1,d0
+	bhi.w	.original
+	movem.l	d2-d4/a2-a3,-(sp)
+	move.l	24(sp),a0
+	move.l	28(sp),d4
+	move.l	32(sp),d2
+	move.l	36(sp),d3
+	lea	$52f8,a2
+	moveq	#0,d0
+	move.b	(a2,d3.w),d0
+	addq.w	#1,d0
+	mulu.w	d0,d2
+	subq.l	#1,d2
+	lea	$51b8,a3
+	moveq	#0,d0
+	moveq	#0,d1
+	cmp.w	#1,d4
+	bne.b	.two
+.one
+	move.b	(a0),d0
+	move.b	1(a0),d1
+	move.b	(a3,d1.w),(a0)+
+	move.b	(a3,d0.w),(a0)+
+	dbf	d2,.one
+	bra.b	.out
+.two
+	lea	4(a0),a1
+.row
+	tst.l	(a0)
+	beq.b	.zero
+	move.b	(a0),d0
+	move.b	-(a1),d1
+	move.b	(a3,d1.w),(a0)+
+	move.b	(a3,d0.w),(a1)
+	move.b	(a0),d0
+	move.b	-(a1),d1
+	move.b	(a3,d1.w),(a0)+
+	move.b	(a3,d0.w),(a1)
+	addq.l	#2,a0
+	addq.l	#6,a1
+	dbf	d2,.row
+	bra.b	.out
+.zero
+	addq.l	#4,a0
+	addq.l	#4,a1
+	dbf	d2,.row
+.out
+	movem.l	(sp)+,d2-d4/a2-a3
+	rts
+.original
+	link	a6,#0
+	movem.l	d2-d7/a2-a4,-(sp)
+	move.l	_reloc_base(pc),a0
+	jmp	($055d2-$1000,a0)
+
+; Expanded right-shift: one masked copy instead of clear then OR.
+fast_shape_expand
+	tst.l	$6750a
+	bne.b	.original
+	tst.l	$674f6
+	bne.b	.original
+	moveq	#0,d5
+	moveq	#40,d0
+	sub.w	$67520,d0
+	sub.w	$67520,d0
+	move.l	#$fffe0000,d1
+	move.w	d0,d1
+	swap	d0
+	move.w	#-2,d0
+	move.l	d0,d2
+	move.l	#$ffff0000,d3
+	move.w	d7,d4
+	or.w	#$0fca,d4
+	swap	d4
+	move.w	d7,d4
+	move.w	$6750e,d0
+	lsl.w	#6,d0
+	or.w	$67520,d0
+	move.l	_reloc_base(pc),a0
+	jmp	($0581a-$1000,a0)
+.original
+	moveq	#0,d5
+	move.l	_reloc_base(pc),a0
+	jmp	($0590c-$1000,a0)
+
+; Reuse single-part foreground setup across passes. Across frames, only
+; immutable terrain images qualify; full-room drawing and background writes
+; outside a frame invalidate it. Keys include entry, clip and image header.
+; Clipped, scratch-backed and custom-mask shapes retain normal setup.
+FC_SIZE = 172
+FC_COUNT = 64
+fast_fore_cache_active
+	dc.l	0
+fast_fore_cache_parts
+	dc.w	0
+fast_fore_cache_next
+	dc.w	0
+fast_fore_cache_data
+	dcb.b	FC_SIZE*FC_COUNT,0
+
+; Called with the entry wrapper's saved registers still on the stack.
+fast_fore_cache_enter
+	lea	fast_fore_cache_active(pc),a0
+	clr.l	(a0)
+	move.w	fast_fore_pass(pc),d0
+	beq.w	.miss
+	cmp.l	#1,44(sp)
+	bne.w	.miss
+	move.l	48(sp),d1
+	cmp.l	#200,d1
+	bcc.w	.miss
+	move.l	d1,d7
+	lsl.l	#3,d1
+	lea	$483b8,a1
+	add.l	d1,a1
+	move.l	(a1),d1
+	move.l	4(a1),d0
+	eor.l	d0,d1
+	move.l	d1,d0
+	swap	d0
+	eor.w	d0,d1
+	move.w	d1,d0
+	lsr.w	#8,d0
+	eor.w	d0,d1
+	and.w	#FC_COUNT/4-1,d1
+	mulu.w	#FC_SIZE*4,d1
+	lea	fast_fore_cache_data(pc),a3
+	add.l	d1,a3
+	move.l	a3,a4
+	move.l	(a1),d2
+	move.l	4(a1),d3
+	moveq	#3,d1
+.find
+	tst.l	(a3)
+	beq.w	.miss_entry
+	cmp.l	4(a3),d2
+	bne.b	.next
+	cmp.l	8(a3),d3
+	beq.b	.reuse
+.next
+	lea	FC_SIZE(a3),a3
+	dbf	d1,.find
+	move.l	a4,a3
+	lea	fast_fore_cache_next(pc),a0
+	addq.w	#1,(a0)
+	move.w	(a0),d1
+	and.w	#3,d1
+	mulu.w	#FC_SIZE,d1
+	add.l	d1,a3
+	bra.w	.miss_entry
+.reuse
+	move.l	_reloc_base(pc),a0
+	lea	($7e42-$1000,a0),a0
+	lea	12(a3),a1
+	REPT	5
+	cmpm.l	(a0)+,(a1)+
+	bne.w	.miss_entry
+	ENDR
+	move.l	40(a3),a0
+	move.w	fast_fore_pass(pc),d0
+	cmp.w	#2,d0
+	bne.b	.header
+	cmp.l	#$674be,a0
+	bcs.w	.miss_entry
+	cmp.l	#$80000,a0
+	bcc.w	.miss_entry
+.header
+	move.l	(a0),d0
+	cmp.l	32(a3),d0
+	bne.w	.miss_entry
+	move.l	4(a0),d0
+	cmp.l	36(a3),d0
+	bne.w	.miss_entry
+	moveq	#0,d7
+	move.b	10(a3),d7
+	and.b	#$7f,d7
+	cmp.b	#3,d7
+	bne.b	.colour_ok
+	move.l	_reloc_base(pc),a0
+	move.w	($64c2-$1000,a0),d0
+	and.w	#31,d0
+	cmp.w	40+$67502-SHAPE(a3),d0
+	bne.w	.miss_entry
+.colour_ok
+	; Restore assigned fields, preserving whichever tag colours were unused.
+	move.w	$67502,d6
+	swap	d6
+	move.w	$67508,d6
+	lea	40(a3),a0
+	lea	SHAPE,a2
+	REPT	4
+	movem.l	(a0)+,d0-d5/a1/a4
+	movem.l	d0-d5/a1/a4,(a2)
+	lea	32(a2),a2
+	ENDR
+	move.w	(a0),(a2)
+	cmp.b	#9,d7
+	beq.b	.colour8
+	cmp.b	#64,d7
+	bcc.b	.colour8
+	move.w	d6,$67508
+.colour8
+	swap	d6
+	cmp.b	#3,d7
+	beq.b	.colour7
+	move.w	d6,$67502
+.colour7
+	move.w	fast_fore_pass(pc),-(sp)
+	lea	fast_fore_pass(pc),a0
+	move.w	#3,(a0)
+	bsr.w	fast_shape
+	lea	fast_fore_pass(pc),a0
+	move.w	(sp)+,(a0)
+	moveq	#1,d0
+	rts
+.miss_entry
+	move.w	fast_fore_pass(pc),d0
+	cmp.w	#2,d0
+	bne.b	.miss
+	clr.l	(a3)
+	lea	fast_fore_cache_active(pc),a0
+	move.l	a3,(a0)
+	clr.w	4(a0)
+.miss
+	moveq	#0,d0
+	rts
+
+fast_fore_cache_save
+	move.l	fast_fore_cache_active(pc),d1
+	beq.w	.out
+	move.l	d1,a3
+	tst.l	d0
+	beq.w	.out
+	move.w	fast_fore_cache_parts(pc),d1
+	cmp.w	#1,d1
+	bne.w	.out
+	lea	SHAPE,a0
+	tst.l	$674da-SHAPE(a0)
+	bne.w	.out
+	tst.l	$674e2-SHAPE(a0)
+	bne.w	.out
+	tst.l	$674e6-SHAPE(a0)
+	bne.w	.out
+	tst.l	$674f6-SHAPE(a0)
+	bne.w	.out
+	move.l	48(sp),d1
+	lsl.l	#3,d1
+	lea	$483b8,a0
+	add.l	d1,a0
+	moveq	#0,d1
+	move.b	6(a0),d1
+	and.b	#$7f,d1
+	beq.b	.mode
+	cmp.b	#2,d1
+	beq.b	.mode
+	cmp.b	#16,d1
+	beq.b	.mode
+	cmp.b	#3,d1
+	beq.b	.mode
+	cmp.b	#9,d1
+	beq.b	.mode
+	cmp.b	#64,d1
+	bcs.w	.out
+	cmp.b	#95,d1
+	bhi.w	.out
+.mode
+	move.l	(a0)+,4(a3)
+	move.l	(a0),8(a3)
+	move.l	_reloc_base(pc),a0
+	lea	($7e42-$1000,a0),a0
+	lea	12(a3),a1
+	moveq	#4,d1
+.clip
+	move.l	(a0)+,(a1)+
+	dbf	d1,.clip
+	move.l	SHAPE,a0
+	move.l	(a0)+,(a1)+
+	move.l	(a0),(a1)+
+	lea	SHAPE,a0
+	REPT	4
+	movem.l	(a0)+,d1-d7/a4
+	movem.l	d1-d7/a4,(a1)
+	lea	32(a1),a1
+	ENDR
+	move.w	(a0),(a1)
+	move.l	#1,(a3)
+.out
+	rts
 
 ; g:$1bec8(buffer, rect, colour): validate once, mark once, set the common
 ; geometry once for all five planes. Rectangles use exclusive right/bottom.
@@ -835,10 +1646,12 @@ fast_clear
 
 ; g:$1bf76: a picture into a buffer, partly by the CPU
 fast_picture
+	lea	fast_cache_stale(pc),a0
+	move.w	#1,(a0)
 	lea	fast_dirty(pc),a0
-	moveq	#BANDS*2-1,d0
+	moveq	#BANDS*3-1,d0
 .all
-	move.w	#$0013,(a0)+
+	move.l	#$000fffff,(a0)+
 	dbf	d0,.all
 	link	a6,#-4
 	movem.l	d2-d6/a2-a4,-(sp)
@@ -855,7 +1668,7 @@ fast_copy
 	cmp.l	#BUF0,8(sp)
 	bne.b	.other
 	lea	fast_dirty(pc),a0
-	lea	BANDS*2(a0),a1
+	lea	BANDS*4(a0),a1
 	move.l	12(sp),d0
 	cmp.l	#BUF1,d0
 	beq.b	.display
@@ -879,55 +1692,65 @@ fast_copy
 	beq.b	.restore
 	moveq	#BANDS-1,d0
 .all
-	move.w	#$0013,(a0)+
-	move.w	#$0013,(a1)+
+	move.l	#$000fffff,(a0)+
+	move.l	#$000fffff,(a1)+
 	dbf	d0,.all
-	lea	-BANDS*2(a0),a0
+	lea	-BANDS*4(a0),a0
 .restore
-	movem.l	d2-d7/a2-a3,-(sp)
-	move.l	12+32(sp),a3		; destination
+	movem.l	d2-d7/a2-a4,-(sp)
+	move.l	12+36(sp),a3		; destination
 	move.l	a0,a1
 	move.w	#INTF_BLIT,_custom+intena	; no blitter interrupts: the waits poll
 	moveq	#0,d2			; band
 .scan
 	cmp.w	#BANDS,d2
 	beq.w	.done
-	move.b	(a1),d3			; first column
-	cmp.b	1(a1),d3
-	bls.b	.group
-	addq.l	#2,a1
+	move.l	(a1),d6
+	bne.b	.group
+	addq.l	#4,a1
 	addq.w	#1,d2
 	bra.b	.scan
-.group					; dirty bands d5 to d2-1, columns d3 to d4
-	move.b	1(a1),d4
+.group
 	move.w	d2,d5
 .more
-	move.w	#$ff00,(a1)+
+	clr.l	(a1)+
 	addq.w	#1,d2
 	cmp.w	#BANDS,d2
-	beq.b	.blit
-	move.b	(a1),d6
-	cmp.b	1(a1),d6
-	bhi.b	.blit
-	cmp.b	d6,d3
-	bls.b	.left
-	move.b	d6,d3
+	beq.b	.bounds
+	cmp.l	(a1),d6
+	beq.b	.more
+.bounds
+	moveq	#0,d3
+	move.l	d6,d0
 .left
-	move.b	1(a1),d6
-	cmp.b	d6,d4
-	bcc.b	.more
-	move.b	d6,d4
-	bra.b	.more
+	lsr.l	#1,d0
+	bcs.b	.left_found
+	addq.w	#1,d3
+	bra.b	.left
+.left_found
+	move.w	d3,d4
+.right
+	btst	#0,d0
+	beq.b	.run_end
+	lsr.l	#1,d0
+	addq.w	#1,d4
+	bra.b	.right
+.run_end
+	move.l	d0,a4
 .blit
-	and.w	#$ff,d3
-	and.w	#$ff,d4
 	move.w	d5,d6
-	mulu	#8*40,d6
+	mulu	#16*40,d6
 	add.w	d3,d6
 	add.w	d3,d6			; offset in the plane
 	move.w	d2,d7
-	sub.w	d5,d7
-	lsl.w	#3,d7			; lines
+	lsl.w	#4,d7
+	cmp.w	#200,d7
+	bls.b	.height
+	move.w	#200,d7
+.height
+	move.w	d5,d0
+	lsl.w	#4,d0
+	sub.w	d0,d7			; lines
 	lsl.w	#6,d7
 	move.w	d4,d0
 	sub.w	d3,d0
@@ -953,12 +1776,16 @@ fast_copy
 	lea	PLANE_SIZE(a0),a0
 	lea	PLANE_SIZE(a2),a2
 	dbf	d0,.plane
-	bra.w	.scan
+	move.l	a4,d0
+	beq.w	.scan
+	move.w	d4,d3
+	addq.w	#1,d3
+	bra.w	.left
 .done
 	bsr.b	.waitblit
 	move.w	#INTF_BLIT,_custom+intreq
 	move.w	#INTF_BLIT,_custom+intreq	; also acknowledge on machines with delayed IRQ clear
-	movem.l	(sp)+,d2-d7/a2-a3
+	movem.l	(sp)+,d2-d7/a2-a4
 	rts
 .waitblit
 	btst	#DMAB_BLTDONE-8,_custom+dmaconr
@@ -1021,22 +1848,57 @@ fast_image_remap
 ; get_image(chtab, id), g:$1dd9a: the image's address, 0 for no table or an id out of range
 fast_get_image
 	move.l	4(sp),d0
+	move.l	8(sp),d1
+; d0 table, d1 image. The common path uses no argument copies or remap calls.
+fast_image_lookup
+	tst.l	d0
 	beq.b	.done
 	move.l	d0,a0
 	moveq	#0,d0
-	move.w	8(a0),d0		; image count
-	cmp.l	8(sp),d0
-	bhi.b	fast_get_image_checked
+	move.w	8(a0),d0
+	cmp.l	d1,d0
+	bls.b	.none
+	cmp.l	#142,d1
+	bhi.b	.lookup
+	cmp.l	#$7f928,a0
+	beq.b	.remap
+	cmp.l	#$7fa90,a0
+	beq.b	.remap
+.lookup
+	move.l	(a0),a1
+	move.l	8(a1),d0
+	add.l	10(a0),d0
+	move.l	d0,a0
+	lsl.l	#2,d1
+	move.l	(a0,d1.l),d1
+	add.l	d1,d1
+	add.l	d1,d0
+	rts
+.remap
+	move.l	d1,-(sp)
+	move.l	a0,-(sp)
+	bsr.w	fast_get_image_checked
+	addq.l	#8,sp
+	rts
+.none
 	moveq	#0,d0
 .done
 	rts
 
 ; get_image_checked(chtab, id), g:$1dd14: the same without the checks (the original asserts)
 fast_get_image_checked
+	cmp.l	#142,8(sp)
+	bhi.b	.remapped
+	cmp.l	#$7f928,4(sp)
+	beq.b	.remap
+	cmp.l	#$7fa90,4(sp)
+	bne.b	.remapped
+.remap
 	pea	8(sp)
 	pea	8(sp)
 	bsr.w	fast_image_remap
 	addq.l	#8,sp
+.remapped
 	move.l	4(sp),a1
 	move.l	(a1),a0
 	move.l	8(a0),d0
@@ -1185,6 +2047,10 @@ fast_draw_table_entry
 	cmp.l	#1,d0
 	bhi.b	.original
 	movem.l	d2-d7/a2-a4,-(sp)
+	bsr.w	fast_fore_cache_enter
+	tst.l	d0
+	bne.w	.cached
+	move.l	40(sp),d0
 	lea	$47d78,a1
 	tst.l	d0
 	beq.b	.table
@@ -1215,6 +2081,8 @@ fast_draw_table_entry
 	move.l	sp,a4
 	bsr.w	fast_table_image_core
 	addq.l	#4,sp
+	bsr.w	fast_fore_cache_save
+.cached
 	movem.l	(sp)+,d2-d7/a2-a4
 	rts
 .original
@@ -1235,11 +2103,48 @@ fast_draw_table_image
 	movem.l	(sp)+,d2-d7/a2-a4
 	rts
 
+; Retain a kid-table remap for the subsequent shape setup and part selection.
+; The original table's bounds check still precedes remapping.
+fast_table_image_lookup
+	move.l	d2,a0
+	moveq	#0,d0
+	move.w	8(a0),d0
+	cmp.l	d3,d0
+	bls.b	.none
+	cmp.l	#142,d3
+	bhi.b	.lookup
+	cmp.l	#$7f928,d2
+	beq.b	.kid
+	cmp.l	#$7fa90,d2
+	bne.b	.lookup
+.kid
+	move.l	d3,-(sp)
+	move.l	d2,-(sp)
+	pea	4(sp)
+	pea	4(sp)
+	bsr.w	fast_image_remap
+	addq.l	#8,sp
+	movem.l	(sp)+,d2-d3
+.lookup
+	move.l	d2,a1
+	move.l	(a1),a0
+	move.l	8(a0),d0
+	add.l	10(a1),d0
+	move.l	d0,a0
+	move.l	d3,d1
+	lsl.l	#2,d1
+	move.l	(a0,d1.l),d1
+	add.l	d1,d1
+	add.l	d1,d0
+	rts
+.none
+	moveq	#0,d0
+	rts
+
 ; d2-d6: table, image, x, y, mode; a4 points to the writable mode argument.
 fast_table_image_core
 	move.l	d6,d0
 	and.l	#~$80,d0
-	cmp.l	#0,d0
 	beq.b	.mode_ok
 	cmp.l	#2,d0
 	beq.b	.mode_ok
@@ -1259,10 +2164,7 @@ fast_table_image_core
 	move.l	d2,a0
 	cmp.b	#2,4(a0)
 	bcc.w	.orig
-	move.l	d3,-(sp)
-	move.l	d2,-(sp)
-	bsr.w	fast_get_image
-	addq.l	#8,sp
+	bsr.w	fast_table_image_lookup
 	tst.l	d0
 	beq.w	.out
 	move.l	d0,a1
@@ -1350,15 +2252,16 @@ fast_table_image_core
 fast_reset_tags
 	; clear the tags' state as g:$1c578 does
 	lea	$674de,a0
-	clr.l	4(a0)
-	clr.l	8(a0)
-	clr.l	12(a0)
-	clr.l	16(a0)
-	clr.l	20(a0)
-	clr.l	24(a0)
-	clr.l	32(a0)
-	clr.l	38(a0)
-	clr.l	44(a0)
+	moveq	#0,d0
+	move.l	d0,4(a0)
+	move.l	d0,8(a0)
+	move.l	d0,12(a0)
+	move.l	d0,16(a0)
+	move.l	d0,20(a0)
+	move.l	d0,24(a0)
+	move.l	d0,32(a0)
+	move.l	d0,38(a0)
+	move.l	d0,44(a0)
 	rts
 
 ; draw_shape(chtab, id, x, y, tag, args..., -1), g:$1c29c: sets the tags' state in
@@ -1448,6 +2351,13 @@ fast_draw_shape
 ; d2 table, d3 image, d4 x, d5 y; a3 optional first image; tags already set.
 ; Preserved by callers. Chained parts always use their own image lookup.
 fast_draw_shape_core
+	cmp.l	#142,d3
+	bhi.b	.remapped
+	cmp.l	#$7f928,d2
+	beq.b	.remap
+	cmp.l	#$7fa90,d2
+	bne.b	.remapped
+.remap
 	move.l	d3,-(sp)
 	move.l	d2,-(sp)
 	pea	4(sp)
@@ -1455,6 +2365,7 @@ fast_draw_shape_core
 	bsr.w	fast_image_remap
 	addq.l	#8,sp
 	movem.l	(sp)+,d2-d3
+.remapped
 	move.l	d2,a0
 	moveq	#0,d0
 	move.b	5(a0),d0
@@ -1463,8 +2374,10 @@ fast_draw_shape_core
 	sub.l	a3,a3			; retain get_frame's out-of-range diagnostics
 .first_valid
 	sub.l	a2,a2			; drawn
-	lea	.chain(pc),a4
+	sub.l	a4,a4			; first part
 .part
+	lea	fast_fore_cache_parts(pc),a0
+	addq.w	#1,(a0)
 	move.l	a3,d0
 	beq.b	.lookup
 	sub.l	a3,a3
@@ -1488,33 +2401,39 @@ fast_draw_shape_core
 	bsr.w	fast_draw
 	move.w	#1,a2
 .next
-	; the tables whose images go on in another (g:$1c35a-$1c476)
-	move.l	(a4)+,d0
-	beq.b	.done
-	cmp.l	d0,d2
+	; Eight first-part tables continue 14 bytes later; $7fc1a continues
+	; only when reached as the second part of $7fc0c.
+	cmp.l	#$7f706,d2
+	bcs.w	.done
+	cmp.l	#$7fc1a,d2
+	bhi.w	.done
+	cmp.l	#$7f706,d2
 	beq.b	.found
-	addq.l	#4,a4
-	bra.b	.next
-.found
-	move.l	(a4),d2
-	lea	.chain2(pc),a4		; only that one goes on to a third
-	bra.b	.part
+	cmp.l	#$7f738,d2
+	beq.b	.found
+	cmp.l	#$7f76a,d2
+	beq.b	.found
+	cmp.l	#$7fb44,d2
+	beq.b	.found
+	cmp.l	#$7fb76,d2
+	beq.b	.found
+	cmp.l	#$7fba8,d2
+	beq.b	.found
+	cmp.l	#$7fbda,d2
+	beq.b	.found
+	cmp.l	#$7fc0c,d2
+	beq.b	.found
+	cmp.l	#$7fc1a,d2
+	bne.b	.done
+	move.l	a4,d0
+	bne.b	.found
 .done
 	move.l	a2,d0
 	rts
-.chain
-	dc.l	$7f706,$7f714
-	dc.l	$7fb44,$7fb52
-	dc.l	$7fb76,$7fb84
-	dc.l	$7fba8,$7fbb6
-	dc.l	$7fbda,$7fbe8
-	dc.l	$7fc0c,$7fc1a
-	dc.l	$7f738,$7f746
-	dc.l	$7f76a,$7f778
-	dc.l	0
-.chain2
-	dc.l	$7fc1a,$7fc28
-	dc.l	0
+.found
+	add.l	#14,d2
+	move.w	#1,a4
+	bra.w	.part
 
 ; The loaded image and its blit state, from load_image's header to the plane pointers
 SHAPE = $674be
@@ -1524,6 +2443,56 @@ SHAPE = $674be
 ; position $674de-$674e1 and the lines and columns clipped off each edge $674e2-$674e9
 ; > d0 0 if nothing is left
 fast_clip
+	movem.l	d2-d3,-(sp)
+	lea	SHAPE,a0
+	move.l	$674ee-SHAPE(a0),d0
+	or.l	$674f2-SHAPE(a0),d0
+	bne.w	.general
+	move.l	_reloc_base(pc),a1
+	lea	($7e42-$1000,a1),a1
+	move.w	$674c6-SHAPE(a0),d0
+	beq.w	.general
+	subq.w	#1,d0
+	move.w	d0,d1
+	lsr.w	#1,d0
+	move.w	14(sp),d2
+	add.w	$674ea-SHAPE(a0),d2
+	sub.w	$674ca-SHAPE(a0),d2
+	sub.w	d0,d2
+	cmp.w	12(a1),d2
+	blt.w	.general
+	add.w	d2,d1
+	cmp.w	14(a1),d1
+	bgt.w	.general
+	move.w	$674c8-SHAPE(a0),d0
+	beq.b	.general
+	subq.w	#1,d0
+	move.w	d0,d1
+	lsr.w	#1,d0
+	move.w	18(sp),d3
+	add.w	$674ec-SHAPE(a0),d3
+	sub.w	$674cc-SHAPE(a0),d3
+	sub.w	d0,d3
+	cmp.w	18(a1),d3
+	blt.b	.general
+	add.w	d3,d1
+	cmp.w	16(a1),d1
+	bgt.b	.general
+	sub.w	12(a1),d2
+	add.w	(a1),d2
+	move.w	d2,$674de-SHAPE(a0)
+	move.w	6(a1),d0
+	subq.w	#1,d0
+	sub.w	d1,d0
+	add.w	18(a1),d0
+	move.w	d0,$674e0-SHAPE(a0)
+	clr.l	$674e2-SHAPE(a0)
+	clr.l	$674e6-SHAPE(a0)
+	moveq	#1,d0
+	movem.l	(sp)+,d2-d3
+	rts
+.general
+	movem.l	(sp)+,d2-d3
 	movem.l	d2-d6/a2,-(sp)
 	move.w	4+24+2(sp),d1		; x
 	move.w	8+24+2(sp),d3		; y

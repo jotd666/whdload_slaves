@@ -488,6 +488,39 @@ Expected gains are fields per frame of CPU time, before bus contention.
   and record the result in `INTERNALS.md`. Stop when G1 and G2 hold; don't optimise past
   the goal.
 
+### G1 gameplay acceptance
+
+*Done.* The C2/C3/C4/C5 follow-up in `PrinceOfPersiaFast.s` reaches G1 on all four
+PAL `a500-1.5m` routes. It reuses eligible foreground setup, avoids unchanged
+foreground blits and inactive tile lookups, tracks dirty word runs in 16-line
+bands, gives synchronous frame blits priority, and reduces collision, image,
+flip and character-copy overhead. All patches remain version-1-only and opt 16
+turns them off. No last-plane wait is deferred.
+
+A3 uses 4000 fields, opt 0 with B7's pin. Gameplay windows are steps 2–300 on
+1/5 and 16–300 on 3/4 (after the requested level/interlude); room-transition
+steps 123/243, 64, and 59/104/149 respectively belong to G2. Both log entries
+at each transition step are excluded. These same windows are used below for
+the C6 stopping-point baseline and the final build.
+
+| Tape | Gameplay mean work, before → after (fields) | On target, before → after | Final on target | Worst excess over own target |
+|---|---|---|---|---|
+| 1, spikes | 2.627 → 1.877 | 284 → 293 of 297 | 98.7% | 1 field |
+| 3, guard | 3.189 → 2.433 | 259 → 271 of 284 | 95.4% | 1 field |
+| 4, palace | 2.981 → 2.187 | 222 → 282 of 282 | 100% | 0 |
+| 5, climb | 2.061 → 1.523 | 299 → 299 of 299 | 100% | 0 |
+
+The final spike-death maximum is 4.981 fields of work (step 270), within the
+five-field ceiling. A4, same final build opt 16 versus 0: **0 differ** on all
+four routes, for 350/300/300/360 steps. Tape 3 opt 1 also matches opt 0 for
+300 steps. Tape 1 opt 4 differs only at step 150, in state and pixels, over
+175 steps. No hash exclusions or game frame targets changed. `INTERNALS.md`
+records implementation constraints, profiles and matching digests.
+
+G1 is complete. G2 remains deferred at the C6 stopping point; D1–D4 are still
+open. This acceptance is for the pinned PAL benchmark routes, not the machine
+matrix or real-hardware release gate.
+
 ## D. Validation and release
 
 - **D1 Machine matrix (G4).** `a500-1.5m`, A500 + 1 MB fast RAM, `a1200`, `a1200-fast`, and
