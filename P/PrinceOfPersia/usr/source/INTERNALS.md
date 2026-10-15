@@ -196,3 +196,54 @@ That is 40 × 2 + 4 × 10 + 2 × 3 = 126 lookups per frame; the profile counts 1
 - An assembler `get_tile_to_draw` with register arguments, called from patched `g:$108c6`
   and `g:$1099a`, can produce exactly the same bytes. Reusing the previous column's result
   roughly halves the lookups as well.
+
+## B4 Overrun frames
+
+`tools/frame_profile.py` traces a VERIFY tape and splits the trace into frames at the
+frame-wait exit. Per frame it keeps the period, the work and every routine's inclusive time.
+The runs cover tapes 1, 3, 4 and 5 from step 2: 1450, 1900, 2000 and 1300 fields.
+
+**The game's own frame time.**
+- Each frame, the loop calls `g:$1bc60` with 12, or 10 when the kid's sword is drawn
+  (`Kid.sword`, `$479bc` = 2). The call is at `g:$0a82a`.
+- `g:$1bc60` sets `g:$07aba = int(50 / fps + 0.5)`, which is 4 or 5 fields. These are
+  SDLPoP's `base_speed` and `fight_speed`.
+- So a frame is on time at 5 fields while the sword is out. On tape 3 that is from step 91
+  to the end; tapes 1, 4 and 5 stay at 4.
+
+**Level start.** On a later level, the first 52 steps run inside `g:$0ae38`, with its own
+frame loop at `g:$0b882`. This covers the level-start message.
+- These frames take 5–10 fields; their work averages 5.7.
+- `g:$1b666`, the palette fade, takes 2.6–2.75 fields per frame. It computes the colours with
+  the soft-float library (`g:$1efac`, `g:$1ed12`, `g:$1f0ca`; 0.7–0.8 fields).
+- The rest is an ordinary gameplay frame.
+
+**Gameplay frames.** Inclusive fields per frame, on-time frames against late ones:
+
+| Tape | On time | Late | Work | Draw tables `$116a2` | Shapes `$1c29c` | of which blits `$05686` | Logic `$1156a` | Copy `$094e4` | Interrupts |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 | 197 | 101 | 3.56 → 4.90 | 0.69 → 1.73 | 0.61 → 1.52 | 0.32 → 0.78 | 1.19 → 1.32 | 0.80 → 0.88 | 0.20 → 0.38 |
+| 3, sword out (target 5) | 172 | 40 | | 0.99 → 2.55 | 0.85 → 2.20 | 0.49 → 1.03 | | | |
+| 3, before the sword (target 4) | 28 | 8 | | | | | | | |
+| 4 | 107 | 138 | 3.58 → 5.13 | 0.70 → 1.85 | 0.61 → 1.62 | 0.33 → 0.79 | 1.14 → 1.43 | 0.77 → 0.89 | 0.18 → 0.36 |
+| 5 | 315 | 8 | 3.38 → 3.98 | 0.52 → 1.37 | 0.45 → 1.19 | | 0.97 → 1.66 (`draw_room`) | | |
+
+**What grows** is the drawing of the back and fore tables: `draw_table(0)` and
+`draw_table(1)` (`g:$1173e`), then the image draw `g:$11904` → `g:$1c29c` → `g:$1cb94`
+→ `g:$05686`.
+- These redraw animated and changed tiles, with their wipes: loose floors, spikes, gates, the
+  spike death, the room's edge.
+- The draw grows by 1.0–1.5 fields; about 40% of that is shape blits and their STOP waits.
+- In the guard fight, the mid table (`g:$117c4`, the two characters) grows as well, by about
+  0.4.
+- Logic grows 0.1–0.3. The guard's AI accounts for the growth on tape 3: `g:$11fcc`,
+  `g:$12bea`, `g:$0c248`.
+- The full-screen copy is the same in every frame. It grows only by the interrupts that land
+  inside it, and the interrupts grow with the extra field.
+
+**For C:**
+- A late frame does 1.3–1.6 fields more work than an on-time one, and an on-time frame
+  leaves only about 0.45 fields spare.
+- C5 (the draw path) is where late frames can be fixed. C2 and C3 take a fixed 0.5–0.8 off
+  every frame, which makes the room C5 needs.
+- The palette fade is a separate fix for the level-start frames.

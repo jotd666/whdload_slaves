@@ -10,7 +10,7 @@ Acceptance, on `a500-1.5m` (68000 7 MHz, 512 KB chip + 1.5 MB slow), PAL:
 
 | Id | Criterion |
 |---|---|
-| G1 | ≥ 95% of gameplay frames on every benchmark route take 4 fields; none takes more than 5 |
+| G1 | ≥ 95% of gameplay frames on every benchmark route take the game's own frame time (4 fields, or 5 while the kid's sword is drawn; B4); none takes more than one field longer |
 | G2 | Room changes take at most 16 fields (today 31–35) |
 | G3 | Game state at every frame and every published frame's pixels are identical to the original, with the same frame-indexed input |
 | G4 | No regression on A500 + fast RAM, A1200, 68030/040/060 (functional, caches on), NTSC |
@@ -185,6 +185,16 @@ Sizes per frame, steady running / spike death (fields): work 3.72 / 5.41; full-s
 - **B4 Overrun frames.** Give `profile_run.py` per-frame call trees, split at the frame marks.
   Compare 4-field frames with 5–9-field frames on every route, and list what grows: in the
   death, layer and tile draw double and the shape blits rise from 43 to 89.
+  *Done* (`INTERNALS.md` B4, `tools/frame_profile.py`). Two corrections:
+  - The game's frame time is 5 fields while the kid's sword is drawn (`g:$1bc60`, SDLPoP's
+    `fight_speed`). On tape 3 that is from step 91, so most of the guard route is on time:
+    172 of 212 sword-out frames make 5 fields. G1 now says so.
+  - Tapes 3 and 4 open with 52 level-start frames (`g:$0ae38`). There the palette fade
+    `g:$1b666` takes 2.6–2.75 fields per frame in soft float.
+
+  In late gameplay frames, what grows is drawing the back and fore tables, by 1.0–1.5
+  fields: `g:$1173e` → `g:$1c29c` → `g:$05686`. Logic grows by only 0.1–0.3, and the copy
+  stays the same.
 - **B5 Room change.** Break `g:$0aba0` down: `$0bafa` full-room tile draw (50%), `$0f3e2`
   (13%), and the parts that are loading or decompression rather than drawing.
 - **B6 Bus budget.** From the DMA records, the free chip-bus slots per frame on the A500,
