@@ -83,7 +83,7 @@ buffer showed two frames earlier.
 
 ## B2 Blitter users
 
-**Starting and waiting.**
+**Original starting and waiting.**
 - Only two routines write `BLTSIZE`: `g:$053a2` (C-callable, size on the stack) and
   `g:$053d6` (assembler, size in d0, SR saved in `g:$053d4`).
 - Both raise the IPL to 7 and set `$1a24`. They start the blit, then `STOP #$2000` until the
@@ -92,6 +92,21 @@ buffer showed two frames earlier.
   (`INTENA` `$a068` at `g:$19eca`) only for this.
 - The game has no `btst #6,$dff002` busy waits; the slave's commented-out `blitter_1` and
   `blitter_2` are the only ones.
+
+**C1 polling implementation.** With optimisations enabled, both start routines poll
+`DMACONR` until completion and acknowledge `INTF_BLIT` twice. The assembler entry
+preserves all registers and SR. Interrupt setup excludes `INTF_BLIT`, and the partial
+screen copy leaves it disabled. The original `$1a24` handshake is unused. Every blit
+still finishes before returning, including the final plane: all register writes, image
+flips, scratch CPU copies and display swaps retain their original ordering, so no new
+wait sites are needed. Overlapping the final plane with the next shape remains a possible
+separate optimisation.
+
+The optional VERIFY sabotage hook can still resume at `$053dc`, using the SR saved at
+`$053d4`; that continuation enters the polling start. The frame log's `blits` field counts
+interrupt acknowledgements, not starts, and is no longer a blit count with C1 enabled.
+Use DMA traces for counts. The whole level-3 handler can still acknowledge a request if
+a VBL arrives at blit completion, but the blit does not generate its own CPU interrupt.
 
 **Routines that set up blits:**
 
@@ -365,3 +380,10 @@ Before this change, tape 1 from step 250 over 300 traced fields had 50 on-time a
 5–9-field frames. Inclusive time in `g:$11904` was 1.25 / 3.24 fields per frame in those
 groups; `g:$053d6` was 0.55 / 1.30, and the whole level-3 handler was 0.33 / 0.60.
 The handler figures include VBL work, not just blitter interrupts.
+
+After completing C5, the same late window measured `g:$11904` at 1.21 / 3.15 fields
+and `g:$053d6` at 0.54 / 1.31. With C1 polling, these became 1.04 / 2.78 and
+0.38 / 0.95; the whole level-3 handler fell from 0.329 / 0.604 to 0.135 / 0.087.
+The faster trace contains 53 on-time and 13 overrunning frames instead of 50 and 14,
+so the group means are not a matched-frame comparison. Full-route timing and the
+same-build A4 results are recorded in `PERFORMANCE_PLAN.md`, C1 and C5.

@@ -10,6 +10,11 @@ pl_fast_v1
 	PL_START
 	PL_IFC5X	OPT_ORIGINAL
 	PL_ELSE
+	; C1: synchronous polling replaces STOP and the per-blit interrupt
+	PL_P	$053a2,fast_blit_c
+	PL_P	$053d6,fast_blit
+	PL_P	$053dc,fast_blit_saved	; continuation used by VERIFY's sabotage probe
+	PL_W	$19ecc,$a028		; enable VERTB/PORTS/EXTER, without BLIT
 	; C3: tile lookup (INTERNALS.md B3)
 	PL_P	$107d0,fast_get_tile_to_draw
 	PL_P	$108c6,fast_load_curr_and_left_tile
@@ -41,6 +46,40 @@ pl_fast_v1
 	ELSE
 	PL_END
 	ENDC
+
+;---------------------------------------------------------------------------
+; C1 blitter waits. Every blit is complete on return, so existing register writes,
+; in-place flips, scratch copies and display swaps keep their synchronous ordering.
+; Poll twice for the old Agnus busy-bit latency; clear BLIT without disturbing VERTB.
+; The original assembler entry preserves all registers and SR.
+fast_blit_c
+	move.l	4(sp),d0
+fast_blit
+	move.w	sr,-(sp)
+fast_blit_start
+	move.w	d0,_custom+bltsize
+	bsr.b	fast_blit_wait
+	move.w	(sp)+,sr
+	rts
+
+; VERIFY's optional sabotage entry saves SR at g:$053d4 and resumes at g:$053dc.
+; Keep that continuation valid with its original saved-SR contract.
+fast_blit_saved
+	move.w	sr,-(sp)
+	move.l	a0,-(sp)
+	move.l	_reloc_base(pc),a0
+	move.w	($053d4-$1000,a0),4(sp)
+	move.l	(sp)+,a0
+	bra.b	fast_blit_start
+
+fast_blit_wait
+	btst	#DMAB_BLTDONE-8,_custom+dmaconr
+.busy
+	btst	#DMAB_BLTDONE-8,_custom+dmaconr
+	bne.b	.busy
+	move.w	#INTF_BLIT,_custom+intreq
+	move.w	#INTF_BLIT,_custom+intreq
+	rts
 
 ;---------------------------------------------------------------------------
 ; C3 tile lookup. Same memory writes and results as the compiled C code
@@ -591,7 +630,7 @@ fast_copy
 .done
 	bsr.b	.waitblit
 	move.w	#INTF_BLIT,_custom+intreq
-	move.w	#INTF_SETCLR|INTF_BLIT,_custom+intena
+	move.w	#INTF_BLIT,_custom+intreq	; also acknowledge on machines with delayed IRQ clear
 	movem.l	(sp)+,d2-d7/a2-a3
 	rts
 .waitblit

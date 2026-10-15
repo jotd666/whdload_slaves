@@ -244,6 +244,32 @@ Expected gains are fields per frame of CPU time, before bus contention.
   the display swap. Turn off the per-blit blitter interrupt. Expected 0.3–0.5 of the 0.95
   STOP fields, plus most of the per-blit interrupt cost. (B6: at most 0.11–0.20 plus about
   0.1 of interrupt cost, unless C5 reorders the work.)
+  *Done*, synchronous polling (`PrinceOfPersiaFast.s`). Both `$053a2` and `$053d6`
+  start the blit, poll completion and clear `INTREQ.BLIT` twice. Interrupt setup and the
+  partial-copy exit leave `INTENA.BLIT` disabled. The `$053dc` continuation used by the
+  VERIFY sabotage probe also polls. SR and the assembler entry's registers are preserved.
+  The last plane still finishes before return: no pending blit reaches another register
+  write, in-place flip, scratch CPU copy or display swap. Deferring that final wait remains
+  a separate possible optimisation; this step removes the interrupt cost.
+
+  | Tape | Work (mean fields) | On target |
+  |---|---|---|
+  | 1 | 2.98 → 2.85 | 273 → 282 of 301 |
+  | 3 | 3.79 → 3.65 | 298 → 302 of 355 |
+  | 4 | 3.90 → 3.71 | 258 → 265 of 357 |
+
+  Tape 1 room changes: 29/32 → 27/30 fields. A4: 0 differ on tape 1 (300 steps) and
+  tape 5 (360), same build, opt 16 vs 0. Timing uses opt 0 for tape 1 and opt 8 for
+  tapes 3 and 4. The frame log's `blits` field now counts only incidental BLIT acknowledgements
+  during other level-3 interrupts; use DMA traces to count blits. G1/G2 are not yet met;
+  B7 and the D1 machine matrix remain open.
+
+  Late profile, tape 1 step 250 over 300 fields: `$11904` falls from 1.21/3.15 to
+  1.04/2.78 inclusive fields per on-time/5–9-field frame; `$053d6` from 0.54/1.31 to
+  0.38/0.95; the whole level-3 handler from 0.33/0.60 to 0.14/0.09. The faster run
+  contains 53/13 frames in those groups versus 50/14 before, so these are descriptive
+  profile means rather than matched-frame deltas. The sabotage probe (opt 4, 160 steps)
+  still detects both state and pixel corruption at step 150, with no earlier differences.
 - **C2 The full-screen copy.** Depending on B1:
   - (a) Chain its six `$1000`-word blits from the blitter interrupt, so the 40 KB copy runs
     behind the CPU until the first reader waits for it. Expected 0.3–0.5. (B6: at most
