@@ -281,6 +281,24 @@ Expected gains are fields per frame of CPU time, before bus contention.
   `$0f730`) and `$0c0ac` (`$14e8c`, `$12bea`), in the order B4 ranks them by growth in overrun
   frames. Compiled-C overhead (`link`, `movem`, reloaded stack arguments) is the target; the
   algorithms stay.
+
+  *Done*, first part (`PrinceOfPersiaFast.s`):
+  - `load_leftroom` (`$10942`) and `load_rowbelow` (`$1099a`) in assembler on C3's core;
+  - in `check_collisions` (`$14e8c`), `get_right_wall_xpos` (`$14fe6`) follows
+    `get_left_wall_xpos` with the same arguments and only register code between, so it reuses
+    that call's `get_tile` (`$12bea`) result instead of repeating it (`wall_type` writes
+    nothing).
+
+  With C2 and C3, tapes 3 and 4 without the pin:
+
+  | Tape | Work (mean fields) | On target |
+  |---|---|---|
+  | 1 | 3.45 → 3.20 | 239 → 260 of 301 |
+  | 3 | 4.19 → 4.00 | 293 → 295 of 355 |
+  | 4 | 4.37 → 4.17 | 239 → 250 of 357 |
+
+  A4 is identical on tapes 1 and 5. Left for later: `get_tile` itself and `draw_tile`'s
+  counter tests (about 0.04).
 - **C5 Draw path.** In `$11904` → `$1c29c` → `$1cb94` → `$05686`, remove repeated per-shape
   setup. Batch shape blits so C1's deferred wait overlaps the next shape's setup. Expected:
   most of the death frames' extra 1 field.

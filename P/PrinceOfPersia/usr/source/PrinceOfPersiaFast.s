@@ -14,6 +14,10 @@ pl_fast_v1
 	PL_P	$107d0,fast_get_tile_to_draw
 	PL_P	$108c6,fast_load_curr_and_left_tile
 	PL_P	$11b96,fast_get_room_address
+	; C4: logic hot spots
+	PL_P	$10942,fast_load_leftroom
+	PL_P	$1099a,fast_load_rowbelow
+	PL_P	$14fe6,fast_get_right_wall_xpos
 	; C2(b): restore only what changed instead of the full-screen copy (INTERNALS.md B1)
 	PL_P	$05686,fast_shape
 	PL_P	$199e0,fast_rect_fill
@@ -155,6 +159,120 @@ fast_get_room_address
 	lea	$473ae,a0
 	add.l	d0,a0
 	move.l	a0,$49a98		; curr_room_modif
+.done
+	rts
+
+
+;---------------------------------------------------------------------------
+; C4 logic hot spots (draw_room's row loads, check_collisions).
+
+; load_leftroom(), g:$10942: leftroom_[row] = the left room's column 9
+fast_load_leftroom
+	movem.l	d2-d3/a2,-(sp)
+	move.l	$47b1c,-(sp)		; room_L
+	bsr.w	fast_get_room_address
+	addq.l	#4,sp
+	lea	$499fc,a2		; leftroom_
+	moveq	#0,d2
+.row
+	move.l	$47b1c,d0
+	moveq	#9,d1
+	moveq	#20,d3
+	bsr.w	tile_to_draw
+	move.b	d0,(a2)+
+	move.b	d1,(a2)+
+	addq.l	#1,d2
+	moveq	#3,d0
+	cmp.l	d2,d0
+	bgt.b	.row
+	movem.l	(sp)+,d2-d3/a2
+	rts
+
+; load_rowbelow(), g:$1099a: row_below_left_[1..9] = columns 0-8 of the row below,
+; row_below_left_[0] = column 9 of the room to its left
+fast_load_rowbelow
+	movem.l	d2-d5/a2,-(sp)
+	moveq	#2,d0
+	cmp.l	$49a16,d0		; drawn_row
+	bne.b	.same
+	move.l	$47b28,d4		; room_B
+	move.l	$47b34,d5		; room_BL
+	moveq	#0,d2
+	bra.b	.rooms
+.same
+	move.l	$47b18,d4		; drawn_room
+	move.l	$47b1c,d5		; room_L
+	move.l	$49a16,d2
+	addq.l	#1,d2
+.rooms
+	move.l	d4,-(sp)
+	bsr.w	fast_get_room_address
+	addq.l	#4,sp
+	lea	$49a02+2,a2		; row_below_left_[1]
+	moveq	#0,d3			; tile_room0
+	moveq	#0,d1
+.column
+	move.l	d1,-(sp)
+	move.l	d4,d0
+	bsr.w	tile_to_draw
+	move.b	d0,(a2)+
+	move.b	d1,(a2)+
+	move.l	(sp)+,d1
+	addq.l	#1,d1
+	moveq	#9,d0
+	cmp.l	d1,d0
+	bgt.b	.column
+	move.l	d5,-(sp)
+	bsr.w	fast_get_room_address
+	addq.l	#4,sp
+	move.l	d5,d0
+	moveq	#9,d1
+	moveq	#20,d3
+	bsr.w	tile_to_draw
+	move.b	d0,$49a02
+	move.b	d1,$49a02+1
+	move.l	$47b18,-(sp)
+	bsr.w	fast_get_room_address
+	addq.l	#4,sp
+	movem.l	(sp)+,d2-d5/a2
+	rts
+
+; get_right_wall_xpos(room, column, row), g:$14fe6. check_collisions (g:$14e8c) calls it
+; at g:$14f24 right after get_left_wall_xpos (g:$14f8e) with the same arguments, and only
+; register code between: get_tile (g:$12bea) would redo the same writes and return the same
+; curr_tile2 ($49b70), so that call reuses it.
+fast_get_right_wall_xpos
+	move.l	_reloc_base(pc),d0
+	add.l	#$14f28-$1000,d0
+	cmp.l	(sp),d0
+	bne.b	.get_tile
+	moveq	#0,d0
+	move.b	$49b70,d0
+	bra.b	.wall
+.get_tile
+	move.l	12(sp),-(sp)
+	move.l	12(sp),-(sp)
+	move.l	12(sp),-(sp)
+	move.l	_reloc_base(pc),a0
+	add.l	#$12bea-$1000,a0
+	jsr	(a0)
+	lea	12(sp),sp
+.wall
+	move.l	d0,-(sp)
+	move.l	_reloc_base(pc),a0
+	add.l	#$13fc8-$1000,a0	; wall_type
+	jsr	(a0)
+	addq.l	#4,sp
+	tst.l	d0
+	beq.b	.done
+	move.l	_reloc_base(pc),a0
+	add.l	d0,a0
+	move.b	($7404-$1000,a0),d1
+	ext.w	d1
+	ext.l	d1
+	moveq	#13,d0
+	add.l	$49b0e,d0
+	sub.l	d1,d0
 .done
 	rts
 
