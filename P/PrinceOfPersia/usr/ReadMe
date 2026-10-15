@@ -40,7 +40,8 @@
    measured frames across four replay routes; room changes can still pause
  - 6,550 frame comparisons passed across UK, US, German and French PAL,
    plus US native NTSC, with identical game state and displayed pixels
- - 68040 and 68060 emulator checks passed; real A1200/040 testing is pending
+ - 68040 and 68060 emulator checks passed
+ - tested successfully on a real A1200/68040
  - supplied slave is the normal build, without replay or timing instruments
 
  version 4.4 (05.08.2022) done by JOTD:
