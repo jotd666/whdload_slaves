@@ -132,3 +132,67 @@ them, so:
 
 That is below the plan's 0.3–0.5. C1 gains more only if the blits are reordered to overlap
 real work, as C5 proposes.
+
+## B3 Tile lookup
+
+**What the code is.** The game logic and drawing are the DOS version's C code, compiled for
+the 68000. `g:$107d0` matches SDLPoP's `get_tile_to_draw` line for line, and its callers
+match `seg008.c`, so SDLPoP's names apply:
+
+| Address | SDLPoP | Address | SDLPoP |
+|---|---|---|---|
+| `g:$107d0` | `get_tile_to_draw` | `$47b18` | `drawn_room` |
+| `g:$108c6` | `load_curr_and_left_tile` | `$47b1c`, `$47b24` | `room_L`, `room_A` |
+| `g:$1099a` | `load_rowbelow` | `$47b28`, `$47b34` | `room_B`, `room_BL` |
+| `g:$10942` | `load_leftroom` | `$49a16`, `$49a1a` | `drawn_row`, `drawn_col` |
+| `g:$11b96` | `get_room_address` | `$47b60`/`$47b62` | `curr_tile`, `curr_modifier` |
+| `g:$11584` | `draw_room` | `$47b64`/`$47b66` | `tile_left`, `modifier_left` |
+| `g:$0f730` | `draw_tile` | `$49a02` | `row_below_left_[10]` |
+| `g:$0f838` | `draw_tile_aboveroom` | `$499fc` | `leftroom_[3]` |
+| `g:$0e514` | `get_doorlink_timer` | `$49a94`, `$49a98` | `curr_room_tiles`, `curr_room_modif` |
+
+**`g:$107d0(room, column, row, *tiletype, *modifier, tile_room0)`:**
+- **Arguments:** six longs on the stack. The result is returned in d0 and stored through
+  the two pointers.
+- **Normal case:** `tilepos = g:$0718a[row] + column`, where the table holds 0, 10, 20.
+  - `*tiletype = curr_room_tiles[tilepos] & $1f`
+  - `*modifier = curr_room_modif[tilepos]`
+- **Column -1:** reads the left room's cached column, `leftroom_[row]` (`$499fc`, filled by
+  `g:$10942`).
+- **Room 0:** returns `tile_room0` with modifier 0.
+- **Plates:** a closer (6) whose door-link timer is above 1 becomes stuck (5). An opener
+  (15) in the same state becomes floor (1) with modifier 0. The timer is
+  `doorlink2_ad[modifier] & $1f`, read through `$49aa0`.
+- **Room argument:** used only to test for room 0. The two array pointers come from the last
+  `g:$11b96(room)`: `$470de + (room-1)×30` and `$473ae + (room-1)×30`, the level's
+  24-room tile and modifier arrays.
+- **Side effects:** none besides the two output bytes. It reads the level arrays, `$499fc`,
+  the door-link table, and the row table `g:$0718a`.
+
+**Callers.** `draw_room` (`g:$11584`, from `g:$1156a`) runs every frame in this port. In the
+DOS game it runs only on a full redraw. Each run:
+- Visits the room's 30 tiles and the 10 of the bottom row of the room above.
+- For each, calls `load_curr_and_left_tile` (2 lookups: the tile and its left neighbour),
+  then `draw_tile` or `draw_tile_aboveroom`, which queue pieces on the draw lists that
+  `g:$0ba56` blits (B1).
+- Per row, `load_rowbelow` adds 10 lookups, and `load_leftroom` adds 3 twice.
+
+That is 40 × 2 + 4 × 10 + 2 × 3 = 126 lookups per frame; the profile counts 128.7.
+`g:$10610` (`g:$105b6`) makes the rest.
+
+**Cost per frame** (spikes route profile, own time):
+
+| Routine | Fields |
+|---|---|
+| `g:$107d0` | 0.49 |
+| `g:$108c6` | 0.17 |
+| `g:$11b96` | 0.14 (57.6 calls) |
+| `g:$1099a` | 0.06 |
+
+**For C3:**
+- Half of `load_curr_and_left_tile`'s lookups repeat work: `tile_left` at column c is
+  column c-1's `curr_tile`, except at column 0.
+- `get_room_address` recomputes two pointers that change only with the room.
+- An assembler `get_tile_to_draw` with register arguments, called from patched `g:$108c6`
+  and `g:$1099a`, can produce exactly the same bytes. Reusing the previous column's result
+  roughly halves the lookups as well.

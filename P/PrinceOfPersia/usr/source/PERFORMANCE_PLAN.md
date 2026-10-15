@@ -176,6 +176,12 @@ Sizes per frame, steady running / spike death (fields): work 3.72 / 5.41; full-s
 - **B3 Tile lookup.** `g:$107d0` (C, stack arguments, about 127 calls per frame): its inputs,
   outputs and side effects, the tables it reads (`$499fc`, `g:$7b18a`, `$49a94/98`), and its
   two callers, `$108c6` and `$1099a`.
+  *Done* (`INTERNALS.md` B3). It is SDLPoP's `get_tile_to_draw`: the logic and drawing are
+  the DOS C code, so SDLPoP's names apply, and the section maps the routines and variables.
+  Its only side effects are the two output bytes. The callers are `draw_room` (`g:$11584`),
+  which this port runs every frame over 40 tiles, `load_curr_and_left_tile` and
+  `load_rowbelow`, giving 126 lookups per frame. Half of them repeat the previous column's
+  lookup.
 - **B4 Overrun frames.** Give `profile_run.py` per-frame call trees, split at the frame marks.
   Compare 4-field frames with 5–9-field frames on every route, and list what grows: in the
   death, layer and tile draw double and the shape blits rise from 43 to 89.
