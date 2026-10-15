@@ -114,11 +114,11 @@ Sizes per frame, steady running / spike death (fields): work 3.72 / 5.41; full-s
 - **A5 Benchmark routes.** Besides the spikes route, add (a) the first guard fight in level 1,
   (b) a busy later level reached with the level-skip trainer option (CUSTOM1 bit 2), and
   (c) a stretch of standing still, the floor case. Record each route's baseline A3 histogram
-  and A4 hashes in `docs/internals.md`.
+  and A4 hashes in `INTERNALS.md`.
   *Done*, as VERIFY tapes (`CUSTOM4`). Steps count only gameplay polls (`g:$13de2`): the title,
   intro and interludes poll in busy loops at whatever rate time allows. Later levels come from
   the tape's `TAPE_LEVEL+n`, which writes the level-skip request `$47ab8` itself. Baselines are
-  recorded here instead of a separate `docs/internals.md`.
+  recorded in this plan instead.
 
   | Tape | Route | Through step |
   |---|---|---|
@@ -149,12 +149,19 @@ Sizes per frame, steady running / spike death (fields): work 3.72 / 5.41; full-s
     absolute reference.
   - The guard fight is the worst route: only 16% of its frames make 4 fields.
 
-## B. Understanding (documented in `docs/internals.md`; no game change)
+## B. Understanding (documented in `INTERNALS.md`; no game change)
 
 - **B1 Buffers.** Name the screen buffers behind `$674b2`, `$674ba` and `$49d1c` and the
   buffer-id lookup `g:$1c0f6`. Establish what `g:$1bd5e` copies (40,000 bytes, called from
   draw at `g:$0baca` after layers 0 and 1), from where to where, and which later code reads
   the destination.
+  *Done* (`INTERNALS.md` B1). Buffer 0 (`$49fee`) is the room background, and 1 and 2
+  (`$53c2e`, `$5d86e`) are the display pair. `$674b2` is the shown one and `$674ba` the draw
+  target. `$49d1c` is the buffer the VBL handler will show next. Each frame draws layers 0
+  and 1 into buffer 0, copies buffer 0 over the hidden display buffer (`g:$1bd5e(0, 4)`),
+  then draws the characters and layer 1 on top. Only blits read the copy's destination
+  before the publish. For C2(b), the dirty rectangles are the shape blits of two frames
+  earlier plus buffer 0's own changes.
 - **B2 Blitter users.** List every routine that writes blitter registers or waits for the
   blitter: `$053a2`, `$053d6`, the `$1a24` flag, `btst #6,$dff002`, `BLTSIZE` writes. For
   each, record whether the CPU touches a blit's source or destination before the next blit
@@ -209,7 +216,7 @@ Expected gains are fields per frame of CPU time, before bus contention.
 - **C6 Room change.** Apply C1, C3 and C5 to `$0aba0`, then deal with what B5 shows is left,
   such as redundant clears or a double full-room draw. Target G2.
 - **C7 Gate after each step.** Run all A5 routes for A3 and A4 and the C-step's own profile,
-  and record the result in `docs/internals.md`. Stop when G1 and G2 hold; don't optimise past
+  and record the result in `INTERNALS.md`. Stop when G1 and G2 hold; don't optimise past
   the goal.
 
 ## D. Validation and release
