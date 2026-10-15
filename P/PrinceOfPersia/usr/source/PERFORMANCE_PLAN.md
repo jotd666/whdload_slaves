@@ -91,6 +91,8 @@ Sizes per frame, steady running / spike death (fields): work 3.72 / 5.41; full-s
     - the image's code;
     - real-time sound state: `$47420`–`$4743f`, the driver's channel records at
       `$49dc0`–`$49e3f`, and the channel table at `g:$7080`–`$70bf`.
+  B7 below documents the current driver exclusions, including the MIDI track and synth
+  records; those are asynchronous sound state, not game timers.
   - **Entropy pinned:** VERIFY adds 0 instead of VHPOSR to the RNG seed in `g:$1ba58`.
     `g:$19610` only waits for line 0 during hardware init.
   - **Probes**, selected by bits of `CUSTOM5`:
@@ -109,8 +111,8 @@ Sizes per frame, steady running / spike death (fields): work 3.72 / 5.41; full-s
     the state differs, never the pixels: the timer records at `$46ea6`–`$46eec` during the
     level-start message (steps 11–48), and the pre-shifted kid shapes at `$26400` and
     `$32000`, which are filled at other times. On tapes 3 and 4 the pixels differ too.
-    So G3 can't be bit-identical against the original as long as frame times differ. B7
-    must pin the game's view of time first.
+    Without a time pin, G3 cannot be bit-identical when frame times differ. B7 below
+    now supplies the gameplay sound-completion pin; these were the unpinned results.
 - **A5 Benchmark routes.** Besides the spikes route, add (a) the first guard fight in level 1,
   (b) a busy later level reached with the level-skip trainer option (CUSTOM1 bit 2), and
   (c) a stretch of standing still, the floor case. Record each route's baseline A3 histogram
@@ -141,9 +143,8 @@ Sizes per frame, steady running / spike death (fields): work 3.72 / 5.41; full-s
   | 5 | 299 | 4×296 5×1 6×2 | 4.02 / 3.45 | 3 |
 
   A4 baseline hash digests (`tools/hash_cmp.py`, unchanged VERIFY build): tape 1
-  `343c39cbd12a`, 3 `6d5be796a068`, 4 `c111c939510d`, 5 `3808b037eb1d`. A changed slave
-  reproduces these only while B7 is still open if it does not change frame times, so for
-  now they guard VERIFY-only and timing-neutral changes.
+  `343c39cbd12a`, 3 `6d5be796a068`, 4 `c111c939510d`, 5 `3808b037eb1d`. These historical,
+  unpinned digests guard timing-neutral changes only. Use the same-build pinned comparisons and new digests in B7 for optimisation gates.
   - The VERIFY hooks add a little time (frame wait copy, VBL and blitter interrupt
     counters). The shipped slave's keypad-route profile (`tmp/prof-a500`) remains the
     absolute reference.
@@ -223,13 +224,49 @@ Sizes per frame, steady running / spike death (fields): work 3.72 / 5.41; full-s
   - **C2(a):** at most about 0.04, because only 0.07–0.09 fields of CPU work separate the
     copy from its first reader.
   - **C2(b):** up to the copy's 0.8 fields.
-- **B7 Real-time state.** Find what the game runs on real time rather than per step: the
-  copper and CIA-B interrupts post events (`g:$1d5b8`), the sound driver, timers and
-  animation. Under the A4 work delay these change state (timer records `$46ea6`, the shape
-  caches) and, on tapes 3 and 4, the guard and level-start behaviour (`g:$b882`). Then add a
-  VERIFY time pin that drives them from the step, so the game sees the same time per step
-  whatever the frame takes, and G3 can be checked bit for bit. Gate: under the pin, the work
-  delay leaves every route's hashes equal.
+- **B7 Real-time state.** Pin the game's view of time in VERIFY so changes in frame time
+  do not change the state or pixels at a given input step. Gate: an extra work VBL leaves
+  every benchmark route's hashes equal.
+
+  *Done*, gameplay sound-completion pin (`PrinceOfPersiaVerify.s`; details in
+  `INTERNALS.md`, B7). Frame waits advance a virtual PAL clock by the game's own target
+  (normally 4 fields, 5 with sword drawn). Sound completion is presented to gameplay on
+  that clock; the audio/MIDI driver still runs in real time. Non-gameplay sound polls use
+  the real driver state, because some interludes busy-wait without another frame wait.
+  This fixes the unfinished pin's stall at tape 3 step 15. `CUSTOM5` bit 3 (value 8)
+  disables the pin. Normal builds contain none of these hooks.
+
+  Same build on `a500-1.5m`, state **and** published pixels at every step:
+
+  | Tape | Steps | Work delay (0 vs 1) | Optimisations (0 vs 16) | Hash digest |
+  |---|---|---|---|---|
+  | 1, spikes | 1–350 | 0 differ | 0 differ | `22f46ef1e755` |
+  | 3, guard | 1–300 | 0 differ | 0 differ | `11274513ab5e` |
+  | 4, palace | 1–300 | 0 differ | 0 differ | `05dbbf82ed75` |
+  | 5, idle | 1–360 | 0 differ | 0 differ | `6c344ed4545c` |
+
+  Negative controls: without the pin, tape 3 opt 8 vs 9 differs at eight steps
+  (293–300), including pixels at step 293. With the pin, the skipped-blit probe
+  (opt 4 through step 160) differs only at step 150, in both state and pixels.
+
+  Fresh A3 baselines with the pin and optimisations enabled (opt 0, 4000 fields,
+  log steps 2–300):
+
+  | Tape | Mean work (fields) | On target |
+  |---|---|---|
+  | 1 | 2.85 | 282/301 |
+  | 3 | 3.66 | 302/355 |
+  | 4 | 3.72 | 265/357 |
+  | 5 | 2.08 | 299/299 |
+
+  Tape 1 room changes remain 27/30 fields. These are pinned correctness-route
+  baselines; earlier tape 3/4 timings used opt 8 and remain historical comparisons.
+
+  The hashes exclude only the documented asynchronous driver/display state, stack and
+  patched code; the sound request queue, shape caches and gameplay state remain checked.
+  Sound durations are measured from real driver completion, not a synthetic audio engine:
+  this establishes the B7 gate on the four PAL routes, not arbitrary duration boundaries
+  or other machines. D1 and new-route gates remain required.
 
 ## C. Optimisations
 
@@ -262,7 +299,7 @@ Expected gains are fields per frame of CPU time, before bus contention.
   tape 5 (360), same build, opt 16 vs 0. Timing uses opt 0 for tape 1 and opt 8 for
   tapes 3 and 4. The frame log's `blits` field now counts only incidental BLIT acknowledgements
   during other level-3 interrupts; use DMA traces to count blits. G1/G2 are not yet met;
-  B7 and the D1 machine matrix remain open.
+  B7 now passes its stated PAL route gate; the D1 machine matrix remains open.
 
   Late profile, tape 1 step 250 over 300 fields: `$11904` falls from 1.21/3.15 to
   1.04/2.78 inclusive fields per on-time/5–9-field frame; `$053d6` from 0.54/1.31 to

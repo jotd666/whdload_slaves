@@ -366,6 +366,54 @@ Per 4-field frame on the spikes route, that is 0.94 fields' worth of free slots.
     and back and fore tables, and those depend on this frame's logic.
 - **C2(b), copying less,** is the copy's real saving: up to its 0.8 fields per frame.
 
+## B7 Gameplay time pin (VERIFY only)
+
+After the existing RNG pin, the benchmark routes' remaining gameplay dependency on real
+elapsed time is `check_sound_playing` (`g:$08106`). `play_next_sound` (`g:$081a0`) gates the
+sound queue on it; the opening music holds the kid, and level/interlude code waits for it.
+Faster or delayed frames otherwise observe a sound ending at different input steps.
+The MIDI track records formerly described as game timers are driver state.
+
+The earlier hypothesis about interrupt-posted gameplay events was incorrect: the calls
+from the copper and unexpected CIA interrupt branches go to `g:$195b8`, the diagnostic
+formatter, not `g:$1d5b8` or a gameplay event queue. The regular CIA-A timer-B callback
+(`g:$1a6ac`) drives MIDI timing; VBL (`g:$1a0c2` → `$08f94`) updates synth envelopes, and
+level 4 (`g:$1b1fe`) services sample playback. The level-6 CIA callbacks are generic timer
+callbacks. The only direct beam-time reads found in game code are hardware startup and
+the already-pinned RNG; the game countdown is stepped by gameplay, not a new wall clock.
+
+`verify_snd_start` wraps `g:$0820c` and remembers the real start time. The interrupt wrappers
+record the elapsed raster lines when the MIDI song and all four audio channels become
+idle. An explicit game call of `stop_sounds` (`g:$080e2`) cancels the virtual sound at once;
+a driver stop records its natural end. The driver keeps playing normally.
+
+At each frame-wait exit, `verify_tick` adds `g:$7aba × 313` lines to a virtual clock. A sound
+gets its virtual base at the first exit following its start; gameplay sound polls compare
+the elapsed virtual time with the measured duration. An as-yet-unfinished real sound
+remains playing virtually. The base avoids treating setup time within the starting frame
+as a whole sound frame. This is intentionally a PAL test clock, not a replacement sound
+engine or an assertion that every audio-phase boundary is invariant on every machine.
+
+Non-gameplay polls return the driver's actual playing state. `verify_poll` already marks
+whether its caller is the gameplay input loop; interludes do not advance the input tape.
+This distinction is essential: tape 3's interlude at step 15 eventually waits in a tight
+sound loop with no frame publication. The unfinished pin froze its virtual clock there
+and never resumed gameplay. Both the guard and palace routes now complete with the pin.
+
+The A4 state exclusions used by the harness are half-open ranges: stack below `$1000`,
+saved interrupt SR `$1a22`–`$1a24`, MIDI player/tracks `$46e66`–`$46f42`, synth voices and
+programs `$46f4e`–`$470ce`, sound state `$47420`–`$47440`, VBL/swap `$49d10`–`$49d20`,
+channel records `$49dc0`–`$49e40`, display buffers `$53c2e`–`$674ae` (hashed separately),
+image code `g:$5320`–`$1f7d0`, and the channel table `g:$7080`–`$70c0`. In particular,
+`$46f42`–`$46f4e` (sound enable, queued sound, current sound) stays in the state hash, as do
+both pre-shifted shape caches. No exclusions were widened to pass B7.
+
+The frame log now has ten-byte entries `(step, period, work, blits, target)` so on-target
+counts use each frame's actual target, including sword-out frames. `CUSTOM5=8` restores
+real-time sound answers; `0` is pinned and optimised, `1` adds a work delay, and `16`
+selects the original drawing path under the same pin. The all-route results and new
+baseline digests are in `PERFORMANCE_PLAN.md`, B7. D1 must still test other CPUs and NTSC.
+
 ## C5 Register arguments in the draw path
 
 `g:$11904` now decodes the common drawing modes straight into the shape library's tag
