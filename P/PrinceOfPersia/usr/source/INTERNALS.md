@@ -680,5 +680,8 @@ The final late-spikes profile (step 269, 12 fields) measures 4.981 fields for
 the worst frame. Inclusive costs include shape blitting `$05686` 0.995,
 blit start/wait `$053d6` 0.798, restore `$1975c` 0.289, foreground-cache entry
 0.644 and table-image core 1.863. These overlap and must not be added.
-The remaining work is below G1's ceiling, so optimisation stops here. G2 and
-the D1 machine matrix remain outside this acceptance.
+The remaining work is below G1's ceiling, so optimisation stops here. On
+2026-10-15 the user accepted G2 at current room-transition performance and
+closed it, waiving the remaining original 16-field target. Earlier G2 open-status
+notes describe intermediate results; no new timing result is claimed. D1–D4
+remain open, including the machine matrix outside this gameplay acceptance.

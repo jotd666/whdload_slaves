@@ -11,7 +11,7 @@ Acceptance, on `a500-1.5m` (68000 7 MHz, 512 KB chip + 1.5 MB slow), PAL:
 | Id | Criterion |
 |---|---|
 | G1 | ≥ 95% of gameplay frames on every benchmark route take the game's own frame time (4 fields, or 5 while the kid's sword is drawn; B4); none takes more than one field longer |
-| G2 | Room changes take at most 16 fields (today 31–35) |
+| G2 | Accepted by the user on 2026-10-15 at current performance; closed. The original ≤16-field target is waived for the remaining transitions. |
 | G3 | Game state at every frame and every published frame's pixels are identical to the original, with the same frame-indexed input |
 | G4 | No regression on A500 + fast RAM, A1200, 68030/040/060 (functional, caches on), NTSC |
 
@@ -479,10 +479,12 @@ Expected gains are fields per frame of CPU time, before bus contention.
   15.51 to 15.19 fields. Mask-only and deferred-setup direct-image experiments were
   removed because they provided no net timing benefit. D1 remains unvalidated.
 
-  *Stopping point:* the validated C6 improvements are retained. Further room-change
-  optimisation is deferred; the 16-field G2 target remains unmet on tapes 1 and 4.
-  This closes the current C6 implementation work without claiming G2 acceptance.
-  Revisit the remaining shape/setup and room-table costs in a later performance pass.
+  *Accepted stopping point (2026-10-15):* the user accepts G2 at current
+  performance and closes further room-change optimisation. The last recorded
+  transition periods are 23/25 fields on tape 1, 16 on tape 3, and 26/23/20 on
+  tape 4. The original 16-field target remains unmet on tapes 1 and 4; acceptance
+  waives that remaining target rather than claiming a new timing result. C6 and
+  G2 are closed. Earlier open-status notes above describe intermediate results.
 
 - **C7 Gate after each step.** Run all A5 routes for A3 and A4 and the C-step's own profile,
   and record the result in `INTERNALS.md`. Stop when G1 and G2 hold; don't optimise past
@@ -517,8 +519,8 @@ four routes, for 350/300/300/360 steps. Tape 3 opt 1 also matches opt 0 for
 175 steps. No hash exclusions or game frame targets changed. `INTERNALS.md`
 records implementation constraints, profiles and matching digests.
 
-G1 is complete. G2 remains deferred at the C6 stopping point; D1–D4 are still
-open. This acceptance is for the pinned PAL benchmark routes, not the machine
+G1 is complete. G2 is accepted by the user at the C6 stopping point and closed;
+D1–D4 are still open. This acceptance is for the pinned PAL benchmark routes, not the machine
 matrix or real-hardware release gate.
 
 ## D. Validation and release
