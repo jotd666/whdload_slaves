@@ -252,6 +252,20 @@ Expected gains are fields per frame of CPU time, before bus contention.
     Expected up to 0.7.
 
   Pick (b) only if B1 shows the dirty regions are cheap to track exactly.
+
+  *Done*, (b) (`PrinceOfPersiaFast.s`). Each display buffer keeps 25 eight-line bands with a
+  span of word columns that may differ from buffer 0. The shape blitter (`$05686`, once per
+  shape from its geometry variables), the rectangle fill and copy (`$199e0`, `$19894`), the
+  clear (`$19802`), the copy (`$1975c`) and the picture draw (`$1bf76`) mark what they write;
+  the gameplay copy (`$094e4`) then blits only the dirty bands, polling instead of the STOP
+  wait. Copies outside the gameplay frame dirty everything first. Same builds, off and on
+  (tapes 3 and 4 without B7's pin):
+  - tape 1: work 4.04 → 3.45 fields mean, 232 → 239 of 301 on target (from 200 with neither);
+  - tape 3: work 5.00 → 4.19 with C3, 278 → 293 of 355 on target;
+  - tape 4: work 5.04 → 4.37 with C3, 178 → 239 of 357 on target;
+  - A4 identical on tapes 1 (300 steps) and 5 (360 steps) with C3;
+  - the room change got 1–2 fields slower (33 and 36 → 34 and 38), from marking every
+    redraw shape; C6 deals with it.
 - **C3 Tile lookup in assembler.** Register arguments and the same results as `$107d0`,
   called from patched `$108c6` and `$1099a`. Expected 0.49 → about 0.15.
 
