@@ -1022,8 +1022,6 @@ fast_draw_shape_core
 	bsr.w	fast_image_remap
 	addq.l	#8,sp
 	movem.l	(sp)+,d2-d3
-	move.l	_reloc_base(pc),a3
-	add.l	#$1c000-$1000,a3
 	sub.l	a2,a2			; drawn
 	lea	.chain(pc),a4
 .part
@@ -1032,11 +1030,11 @@ fast_draw_shape_core
 	bsr.w	fast_get_frame
 	move.l	d5,(sp)
 	move.l	d4,-(sp)
-	jsr	($8d6,a3)		; g:$1c8d6, clip
+	bsr.w	fast_clip
 	lea	12(sp),sp
 	tst.l	d0
 	beq.b	.next
-	jsr	($b94,a3)		; g:$1cb94, draw
+	bsr.w	fast_draw
 	move.w	#1,a2
 .next
 	; the tables whose images go on in another (g:$1c35a-$1c476)

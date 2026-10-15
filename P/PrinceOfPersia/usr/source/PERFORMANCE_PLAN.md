@@ -339,8 +339,12 @@ Expected gains are fields per frame of CPU time, before bus contention.
   inclusive fields in on-time / 5–9-field frames; `$053d6` at 0.55 / 1.30 and the whole
   level-3 interrupt handler at 0.33 / 0.60 (including VBL, not just blits).
 
-  Left: direct calls to clip/draw instead of their patched game entries. The blit start
-  belongs to C1: five plane blits per shape still STOP for their interrupts.
+  *Done*, direct calls: the shared core calls `fast_clip` and `fast_draw` directly,
+  removing the game-entry jumps and relocation-base setup. A4: 0 differ on tape 1 (300)
+  and tape 5 (360), same build, opt 16 vs 0. Mean work: tape 1 2.988 → 2.984 fields,
+  tape 3 3.800 → 3.795, tape 4 3.901 → 3.897. On-target counts remain 273/301,
+  298/355 and 258/357; tape 1 room changes remain 29 and 32 fields.
+  C5 is complete; the remaining blit-start work belongs to C1.
 - **C6 Room change.** Apply C1, C3 and C5 to `$0aba0`, then deal with what B5 shows is left,
   such as redundant clears or a double full-room draw. Target G2.
 - **C7 Gate after each step.** Run all A5 routes for A3 and A4 and the C-step's own profile,

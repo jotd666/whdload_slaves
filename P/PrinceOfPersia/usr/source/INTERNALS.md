@@ -355,7 +355,8 @@ Per 4-field frame on the spikes route, that is 0.94 fields' worth of free slots.
 
 `g:$11904` now decodes the common drawing modes straight into the shape library's tag
 state and passes table, image and position in d2–d5 to `fast_draw_shape_core`. The tag-list
-entry still serves other callers. Both entries use the same tag reset and draw core;
+entry still serves other callers. Both entries use the same tag reset and draw core, which calls `fast_clip` and
+`fast_draw` directly;
 unused tag colour words retain their original values. The wrapper preserves the original
 horizontal-flip adjustment, including clearing bit 7 in the caller's mode argument, and
 falls back to the original diagnostics for unusual modes or multidimensional tables.
