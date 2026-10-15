@@ -520,8 +520,8 @@ four routes, for 350/300/300/360 steps. Tape 3 opt 1 also matches opt 0 for
 records implementation constraints, profiles and matching digests.
 
 G1 is complete. G2 is accepted by the user at the C6 stopping point and closed;
-D1–D4 are still open. This acceptance is for the pinned PAL benchmark routes, not the machine
-matrix or real-hardware release gate.
+D1 is complete under the agreed scope recorded below; D2–D4 remain open. The G1/G2
+acceptance is for the pinned PAL benchmark routes; real hardware remains a separate gate.
 
 ## D. Validation and release
 
@@ -529,6 +529,20 @@ matrix or real-hardware release gate.
   `a1200-030`/`-040`/`-060` with the CACHE options. Deferred blitter waits must not race with
   data caches on chip memory. Also NTSC: 15 fps, so a budget of 3.33 PAL-field-equivalents per
   frame; report it separately.
+
+  **Done (2026-10-15):** the user narrowed the remaining acceptance to 68040 and
+  68060: if both pass, D1 is complete. Both passed with the unchanged G1 slave.
+  With WHDLoad `CACHE` (instruction cache enabled), each CPU passed all four A4
+  routes: tapes 1/3/4/5 over 350/300/300/360 steps, comparing the same build with
+  CUSTOM5=16 against 0. All 2,620 frame comparisons had zero state/pixel differences.
+  Separate unpinned, optimised `DCACHE` runs passed all four routes for 4,000
+  emulated fields each on both CPUs, also enabling `BRANCHCACHE` on the 060.
+  Cache registers were audited and final screenshots inspected. These additional
+  runs are functional checks, not A4 hash comparisons or hardware timing results.
+  Earlier full A4 runs also passed on A500-1.5m and stock A1200. The remaining
+  original matrix cells, including 030 and NTSC, are outside the agreed closure;
+  no validation is claimed for them. D1 is closed; D2–D4 remain open. See
+  `INTERNALS.md` for digests, cache settings and emulator constraints.
 - **D2 Other versions.** Versions 2 (US), 3 (German) and 4 (French) have different offsets
   (the slave's patch lists show a regular shift). They need the user's disk images to find
   and verify their offsets. Until then, keep the patches version-1-only.

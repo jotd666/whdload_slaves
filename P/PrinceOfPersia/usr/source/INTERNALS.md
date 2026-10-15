@@ -683,5 +683,53 @@ blit start/wait `$053d6` 0.798, restore `$1975c` 0.289, foreground-cache entry
 The remaining work is below G1's ceiling, so optimisation stops here. On
 2026-10-15 the user accepted G2 at current room-transition performance and
 closed it, waiving the remaining original 16-field target. Earlier G2 open-status
-notes describe intermediate results; no new timing result is claimed. D1–D4
-remain open, including the machine matrix outside this gameplay acceptance.
+notes describe intermediate results; no new timing result is claimed. D1 is
+closed under the scope below; D2–D4 remain open.
+
+
+## D1: 68040/68060 compatibility acceptance (2026-10-15)
+
+The user accepted completion of D1 once the remaining 040 and 060 checks passed.
+Both passed without slave changes. This supersedes earlier D1-open notes;
+uncompleted cells from the original matrix, including 030 and NTSC, are outside
+this agreed closure. Real-hardware validation remains D3.
+
+The unchanged G1 VERIFY build has SHA-256
+`86fdf99a9bbe1ca387b2e89aaddf8fa6cad06f13d0a359bdecd453efcb3f3105`.
+The `a1200-040` and `a1200-060` presets used 2 MB chip and 8 MB fast RAM.
+For A4, WHDLoad `CACHE` enabled the instruction cache and disabled the data cache:
+start/end audits reported CACR `$00008000` on both CPUs. Each pair compared
+CUSTOM5=16 against 0 with the time pin enabled, using the same build. Exact
+coverage of every step was checked in addition to the hash comparison.
+
+| Tape | Steps | 040 differences | 060 differences | Matching digest (both CPUs) |
+| --- | --- | --- | --- | --- |
+| 1 | 1–350 | 0 | 0 | `cb25a166bb19` |
+| 3 | 1–300 | 0 | 0 | `dae08411a42e` |
+| 4 | 1–300 | 0 | 0 | `eea30530ce24` |
+| 5 | 1–360 | 0 | 0 | `a8a8714545cd` |
+
+That is 1,310 complete frame comparisons per CPU, 2,620 total, with no state or
+pixel differences. Reports are retained in the ignored harness as
+`tmp/d1-final-040.json` and `tmp/d1-final-060.json`; CPU-specific rows are the
+final acceptance evidence. Earlier full A4 checks also passed on A500-1.5m and
+stock A1200.
+
+Separate functional runs enabled `DCACHE` on both CPUs and `BRANCHCACHE` on the
+060. All four tapes ran for 4,000 emulated fields each with CUSTOM5=8 (time pin
+off), without frame breakpoints or debugger writes to guest memory. End audits
+reported CACR `$80008000` on the 040 and `$80808000` on the 060, with data-cache
+emulation enabled. All eight runs completed successfully, advanced beyond the
+benchmark windows and produced final screenshots without visible corruption.
+These are functional smoke checks, not A4 comparisons with data caches enabled.
+Reports are `tmp/d1-timing-040.json` and `tmp/d1-timing-060.json` in the harness.
+
+The private emulator included AmigaXDev's `fsuae-mmu-write-cache.patch`, correcting
+ATC write-hit cache attributes so chip-memory writes do not falsely acquire
+copy-back behaviour. Its SHA-256 was
+`a1a58d86e98d7120cba70a60425bfa3ebd51b77c12e5b0b2846858a2bc68780b`.
+The MMU presets used asynchronous directory-drive service (`DETERMINISTIC=0`)
+to avoid a filesystem trap deadlock before game startup; the A4 tape, RNG and
+virtual clock remained pinned. These MMU-core runs establish functional
+compatibility, not hardware-calibrated 040/060 performance. No new frame-time
+claim is made.
