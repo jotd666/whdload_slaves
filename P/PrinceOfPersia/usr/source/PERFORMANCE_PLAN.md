@@ -323,12 +323,24 @@ Expected gains are fields per frame of CPU time, before bus contention.
   The room change on tape 1 went from 34 and 38 to 30 and 33 fields. A4 is identical on
   tapes 1 and 5.
 
-  Left: `$11904` itself (register arguments into the tag parser's core instead of a tag
-  list), calling the replaced routines directly instead of through their patched entries,
-  and the blit start. The blit start is C1's: each of the 5 plane blits per shape goes
-  through `$053d6`, which STOPs until the blitter interrupt (`$19f9a`, about 300 cycles a
-  blit). Before this step, in late frames on tape 1, that was 0.75 fields inclusive plus
-  0.42 in the interrupt (`tools/frame_profile.py`); this step has not been profiled yet.
+  *Done*, register-argument entry: `$11904` now sets the common drawing modes directly
+  and calls the shared `fast_draw_shape_core` with table, image and position in registers.
+  The general tag-list entry remains for other callers; unusual modes retain the original
+  diagnostics. A4: 0 differ on tape 1 (300 steps) and tape 5 (360), same build, opt 16 vs 0.
+
+  | Tape | Work (mean fields) | On target |
+  |---|---|---|
+  | 1 | 3.02 → 2.99 | 273 → 273 of 301 |
+  | 3 | 3.82 → 3.80 | 298 → 298 of 355 |
+  | 4 | 3.94 → 3.90 | 257 → 258 of 357 |
+
+  Tape 1's room changes are 29 and 32 fields. Tapes 3 and 4 use opt 8 (no time pin).
+  The pre-change late profile (step 250, 300 fields) measured `$11904` at 1.25 / 3.24
+  inclusive fields in on-time / 5–9-field frames; `$053d6` at 0.55 / 1.30 and the whole
+  level-3 interrupt handler at 0.33 / 0.60 (including VBL, not just blits).
+
+  Left: direct calls to clip/draw instead of their patched game entries. The blit start
+  belongs to C1: five plane blits per shape still STOP for their interrupts.
 - **C6 Room change.** Apply C1, C3 and C5 to `$0aba0`, then deal with what B5 shows is left,
   such as redundant clears or a double full-room draw. Target G2.
 - **C7 Gate after each step.** Run all A5 routes for A3 and A4 and the C-step's own profile,

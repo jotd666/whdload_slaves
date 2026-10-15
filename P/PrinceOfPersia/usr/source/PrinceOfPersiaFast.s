@@ -31,6 +31,7 @@ pl_fast_v1
 	PL_P	$1dd14,fast_get_image_checked
 	PL_P	$1c802,fast_load_image
 	PL_P	$1c694,fast_get_frame
+	PL_P	$11904,fast_draw_table_image
 	PL_P	$1c29c,fast_draw_shape
 	PL_P	$1c8d6,fast_clip
 	PL_P	$1cb94,fast_draw
@@ -808,6 +809,127 @@ fast_get_frame
 	add.l	#$1c69c-$1000,a0
 	jmp	(a0)
 
+; draw_table_image(table, image, x, y, mode), g:$11904. Decode its modes
+; directly into the tag state, then enter the shared draw core with registers.
+; Unusual/asserting modes retain the original diagnostics and library fallback.
+fast_draw_table_image
+	movem.l	d2-d7/a2-a4,-(sp)
+	movem.l	40(sp),d2-d6
+	move.l	d6,d0
+	and.l	#~$80,d0
+	cmp.l	#0,d0
+	beq.b	.mode_ok
+	cmp.l	#2,d0
+	beq.b	.mode_ok
+	cmp.l	#3,d0
+	beq.b	.mode_ok
+	cmp.l	#9,d0
+	beq.b	.mode_ok
+	cmp.l	#16,d0
+	beq.b	.mode_ok
+	cmp.l	#64,d0
+	blo.w	.orig
+	cmp.l	#95,d0
+	bhi.w	.orig
+.mode_ok
+	tst.l	d2
+	beq.w	.orig
+	move.l	d2,a0
+	cmp.b	#2,4(a0)
+	bcc.w	.orig
+	move.l	d3,-(sp)
+	move.l	d2,-(sp)
+	bsr.w	fast_get_image
+	addq.l	#8,sp
+	tst.l	d0
+	beq.w	.out
+	move.l	d0,a1
+	bsr.w	fast_reset_tags
+	moveq	#0,d0
+	move.w	4(a1),d0
+	and.w	#$3ff,d0
+	btst	#7,d6
+	beq.b	.unflipped
+	sub.l	d0,d4
+	move.l	#1,$674ee
+	and.l	#~$80,d6
+	move.l	d6,56(sp)		; original clears bit 7 in its caller's argument
+.unflipped
+	; (dimension-1)/2, with signed division rounding toward zero for zero
+	move.l	d0,d1
+	beq.b	.xhalf
+	subq.l	#1,d1
+	lsr.l	#1,d1
+.xhalf
+	add.l	d1,d4
+	moveq	#0,d0
+	move.w	6(a1),d0
+	and.w	#$3ff,d0
+	move.l	d0,d1
+	beq.b	.yhalf
+	subq.l	#1,d1
+	lsr.l	#1,d1
+.yhalf
+	sub.l	d5,d1
+	sub.l	d0,d1
+	add.l	#200,d1
+	move.l	d1,d5
+	cmp.l	#2,d6
+	beq.b	.nomask
+	cmp.l	#3,d6
+	beq.b	.mask
+	cmp.l	#9,d6
+	beq.b	.silhouette
+	cmp.l	#64,d6
+	blo.b	.draw
+	move.w	d6,d0
+	and.w	#31,d0
+	move.w	d0,$67508
+	bra.b	.silhouette
+.nomask
+	move.l	#1,$6750a
+	bra.b	.draw
+.mask
+	move.l	#1,$674fe
+	move.l	_reloc_base(pc),a0
+	move.w	($64c0-$1000+2,a0),d0
+	and.w	#31,d0
+	move.w	d0,$67502
+	bra.b	.draw
+.silhouette
+	; mode 9 explicitly supplies zero; the unused colour word otherwise survives
+	cmp.l	#9,d6
+	bne.b	.colour
+	clr.w	$67508
+.colour
+	move.l	#1,$67504
+.draw
+	bsr.w	fast_draw_shape_core
+.out
+	movem.l	(sp)+,d2-d7/a2-a4
+	rts
+.orig
+	movem.l	(sp)+,d2-d7/a2-a4
+	link	a6,#0
+	movem.l	d2-d7/a2-a3,-(sp)
+	move.l	_reloc_base(pc),a0
+	add.l	#$1190c-$1000,a0
+	jmp	(a0)
+
+fast_reset_tags
+	; clear the tags' state as g:$1c578 does
+	lea	$674de,a0
+	clr.l	4(a0)
+	clr.l	8(a0)
+	clr.l	12(a0)
+	clr.l	16(a0)
+	clr.l	20(a0)
+	clr.l	24(a0)
+	clr.l	32(a0)
+	clr.l	38(a0)
+	clr.l	44(a0)
+	rts
+
 ; draw_shape(chtab, id, x, y, tag, args..., -1), g:$1c29c: sets the tags' state in
 ; $674de-$6750d, clips (g:$1c8d6) and draws (g:$1cb94) the image, then the further parts of
 ; the images some tables split
@@ -821,17 +943,7 @@ fast_draw_shape
 	move.l	d2,a0
 	cmp.b	#2,4(a0)		; it passes one index whatever the table
 	bcc.w	.orig
-	; clear the tags' state as g:$1c578 does
-	lea	$674de,a0
-	clr.l	4(a0)
-	clr.l	8(a0)
-	clr.l	12(a0)
-	clr.l	16(a0)
-	clr.l	20(a0)
-	clr.l	24(a0)
-	clr.l	32(a0)
-	clr.l	38(a0)
-	clr.l	44(a0)
+	bsr.w	fast_reset_tags
 .tag
 	move.l	(a4)+,d0
 	moveq	#-1,d1
@@ -890,6 +1002,19 @@ fast_draw_shape
 	move.l	(a4)+,$6750a
 	bra.w	.tag
 .tags_done
+	bsr.w	fast_draw_shape_core
+	movem.l	(sp)+,d2-d5/a2-a4
+	rts
+.orig
+	movem.l	(sp)+,d2-d5/a2-a4
+	link	a6,#-8
+	movem.l	d2-d5/a2-a4,-(sp)
+	move.l	_reloc_base(pc),a0
+	add.l	#$1c2a4-$1000,a0
+	jmp	(a0)
+
+; d2 table, d3 image, d4 x, d5 y; tags already set. Preserved by callers.
+fast_draw_shape_core
 	move.l	d3,-(sp)
 	move.l	d2,-(sp)
 	pea	4(sp)
@@ -927,15 +1052,7 @@ fast_draw_shape
 	bra.b	.part
 .done
 	move.l	a2,d0
-	movem.l	(sp)+,d2-d5/a2-a4
 	rts
-.orig
-	movem.l	(sp)+,d2-d5/a2-a4
-	link	a6,#-8
-	movem.l	d2-d5/a2-a4,-(sp)
-	move.l	_reloc_base(pc),a0
-	add.l	#$1c2a4-$1000,a0
-	jmp	(a0)
 .chain
 	dc.l	$7f706,$7f714
 	dc.l	$7fb44,$7fb52

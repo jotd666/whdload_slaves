@@ -350,3 +350,17 @@ Per 4-field frame on the spikes route, that is 0.94 fields' worth of free slots.
   - Moving the copy earlier isn't possible: buffer 0 is final only after the frame's wipes
     and back and fore tables, and those depend on this frame's logic.
 - **C2(b), copying less,** is the copy's real saving: up to its 0.8 fields per frame.
+
+## C5 Register arguments in the draw path
+
+`g:$11904` now decodes the common drawing modes straight into the shape library's tag
+state and passes table, image and position in d2–d5 to `fast_draw_shape_core`. The tag-list
+entry still serves other callers. Both entries use the same tag reset and draw core;
+unused tag colour words retain their original values. The wrapper preserves the original
+horizontal-flip adjustment, including clearing bit 7 in the caller's mode argument, and
+falls back to the original diagnostics for unusual modes or multidimensional tables.
+
+Before this change, tape 1 from step 250 over 300 traced fields had 50 on-time and 14
+5–9-field frames. Inclusive time in `g:$11904` was 1.25 / 3.24 fields per frame in those
+groups; `g:$053d6` was 0.55 / 1.30, and the whole level-3 handler was 0.33 / 0.60.
+The handler figures include VBL work, not just blitter interrupts.
