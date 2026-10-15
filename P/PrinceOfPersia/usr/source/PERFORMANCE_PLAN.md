@@ -254,6 +254,15 @@ Expected gains are fields per frame of CPU time, before bus contention.
   Pick (b) only if B1 shows the dirty regions are cheap to track exactly.
 - **C3 Tile lookup in assembler.** Register arguments and the same results as `$107d0`,
   called from patched `$108c6` and `$1099a`. Expected 0.49 → about 0.15.
+
+  *Done* (`PrinceOfPersiaFast.s`). `get_tile_to_draw` (`$107d0`) is an assembler core with
+  register arguments behind a stack-argument entry for its other callers;
+  `load_curr_and_left_tile` (`$108c6`) calls the core directly; `get_room_address` (`$11b96`)
+  is rewritten too. Reusing the previous column's tile as `tile_left` is left out for now: it
+  needs proof that nothing between columns changes the room arrays. Tape 1, same build with `CUSTOM5` bit 4 (`OPT_ORIGINAL`) off and on:
+  - work 4.30 → 4.04 fields mean (median 3.74 → 3.49);
+  - 200 → 232 of 301 frames on target;
+  - A4 identical over 300 steps (state and pixels).
 - **C4 Logic hot spots.** Rewrite the self-time leaders of `$1156a` (`$11584`, `$108c6`,
   `$0f730`) and `$0c0ac` (`$14e8c`, `$12bea`), in the order B4 ranks them by growth in overrun
   frames. Compiled-C overhead (`link`, `movem`, reloaded stack arguments) is the target; the

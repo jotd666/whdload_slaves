@@ -515,11 +515,7 @@ pl_v1
 ;	PL_P	$53d6,blitter_2
 ;	PL_ENDIF
 	
-	IFD	VERIFY
-	PL_NEXT	pl_verify_v1
-	ELSE
-	PL_END
-	ENDC
+	PL_NEXT	pl_fast_v1
 
 
 pl_v2_ntsc
@@ -1047,6 +1043,7 @@ reloc_fr4:
 
 	even
 	
+	include	PrinceOfPersiaFast.s
 	IFD	VERIFY
 	include	PrinceOfPersiaVerify.s
 	ENDC
