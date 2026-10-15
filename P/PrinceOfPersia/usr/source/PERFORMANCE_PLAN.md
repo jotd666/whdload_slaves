@@ -166,6 +166,13 @@ Sizes per frame, steady running / spike death (fields): work 3.72 / 5.41; full-s
   blitter: `$053a2`, `$053d6`, the `$1a24` flag, `btst #6,$dff002`, `BLTSIZE` writes. For
   each, record whether the CPU touches a blit's source or destination before the next blit
   starts.
+  *Done* (`INTERNALS.md` B2). `g:$053a2` and `g:$053d6` are the only `BLTSIZE` writers, and
+  both STOP until the blitter interrupt clears `$1a24`. Seven routines set blits up. In
+  4,218 traced blits on four routes, including two room changes, the CPU never touched a
+  blit's destination, or wrote its sources, before the next blit started. So C1 needs a wait
+  only before blitter register writes and the swap. The same traces bound C1's own gain at
+  0.16–0.28 fields per frame plus the per-blit interrupt cost, because plane blits run back
+  to back.
 - **B3 Tile lookup.** `g:$107d0` (C, stack arguments, about 127 calls per frame): its inputs,
   outputs and side effects, the tables it reads (`$499fc`, `g:$7b18a`, `$49a94/98`), and its
   two callers, `$108c6` and `$1099a`.
