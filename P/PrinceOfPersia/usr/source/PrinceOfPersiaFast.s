@@ -41,6 +41,7 @@ pl_fast_v1
 	PL_P	$1c8d6,fast_clip
 	PL_P	$1cb94,fast_draw
 	; C6: the full-room draw invalidates both display buffers once
+	PL_P	$1bec8,fast_draw_rect
 	PL_PS	$0abfe,fast_draw_room_tables
 	PL_P	$10c9a,fast_add_back
 	PL_P	$10d52,fast_add_fore
@@ -482,9 +483,18 @@ fast_draw_room_tables
 	bsr.w	fast_mark_all
 	lea	fast_full_room(pc),a0
 	move.w	#1,(a0)
+	; All draws wait synchronously: give their blits priority over the polling
+	; CPU, and restore the incoming priority bit before ordinary drawing.
+	move.w	_custom+dmaconr,d2
+	and.w	#DMAF_BLITHOG,d2
+	move.w	#DMAF_SETCLR!DMAF_BLITHOG,_custom+dmacon
 	move.l	_reloc_base(pc),a0
 	add.l	#$0bafa-$1000,a0
 	jsr	(a0)
+	tst.w	d2
+	bne.b	.keep_hog
+	move.w	#DMAF_BLITHOG,_custom+dmacon
+.keep_hog
 	lea	fast_full_room(pc),a0
 	clr.w	(a0)
 	movem.l	(sp)+,d0-d4/a0-a1
@@ -598,6 +608,139 @@ fast_shape
 	movem.l	d2-d7/a2-a4,-(sp)
 	move.l	_reloc_base(pc),a0
 	add.l	#$0568e-$1000,a0
+	jmp	(a0)
+
+; g:$1bec8(buffer, rect, colour): validate once, mark once, set the common
+; geometry once for all five planes. Rectangles use exclusive right/bottom.
+; With A DMA disabled, BLTADAT=$ffff and the first/last masks supply A.
+; $0a clears (C & ~A); $fa sets (C | A). A true full-width fill needs only D.
+fast_draw_rect
+	movem.l	d2-d7/a2-a4,-(sp)
+	move.l	44(sp),a4
+	move.l	40(sp),d0
+	cmp.l	#4,d0
+	bhi.w	.original
+	move.w	(a4),d0
+	bmi.w	.original
+	move.w	2(a4),d1
+	bmi.w	.original
+	cmp.w	4(a4),d0
+	bge.w	.original
+	cmp.w	6(a4),d1
+	bge.w	.original
+	cmp.w	#320,4(a4)
+	bgt.w	.original
+	cmp.w	#200,6(a4)
+	bgt.w	.original
+	move.l	40(sp),d0
+	cmp.w	#3,d0
+	beq.b	.shown
+	cmp.w	#4,d0
+	beq.b	.target
+	lsl.w	#2,d0
+	move.l	_reloc_base(pc),a0
+	add.l	#$7d0a-$1000,a0
+	move.l	(a0,d0.w),d0
+	bra.b	.buffer
+.shown
+	move.l	$674b2,d0
+	bra.b	.buffer
+.target
+	move.l	$674ba,d0
+.buffer
+	move.l	d0,a3
+	move.w	fast_full_room(pc),d1
+	beq.b	.mark
+	cmp.l	#BUF0,a3
+	beq.b	.setup
+.mark
+	moveq	#0,d1
+	move.w	2(a4),d1
+	moveq	#0,d2
+	move.w	6(a4),d2
+	subq.w	#1,d2
+	moveq	#0,d3
+	move.w	(a4),d3
+	lsr.w	#4,d3
+	moveq	#0,d4
+	move.w	4(a4),d4
+	subq.w	#1,d4
+	lsr.w	#4,d4
+	bsr.w	fast_mark
+.setup
+	lea	_custom,a2
+	moveq	#0,d0
+	move.w	2(a4),d0
+	mulu.w	#40,d0
+	add.l	d0,a3
+	move.w	(a4),d0
+	move.w	d0,d2
+	lsr.w	#4,d2
+	add.w	d2,d2
+	add.w	d2,a3
+	lsr.w	#1,d2
+	moveq	#15,d1
+	and.w	d0,d1
+	moveq	#-1,d3
+	lsr.w	d1,d3
+	move.w	4(a4),d0
+	subq.w	#1,d0
+	move.w	d0,d4
+	lsr.w	#4,d4
+	sub.w	d2,d4
+	addq.w	#1,d4
+	moveq	#15,d1
+	and.w	d0,d1
+	moveq	#15,d0
+	sub.w	d1,d0
+	moveq	#-1,d2
+	lsl.w	d0,d2
+	move.w	d3,bltafwm(a2)
+	move.w	d2,bltalwm(a2)
+	moveq	#40,d0
+	sub.w	d4,d0
+	sub.w	d4,d0
+	move.w	d0,bltcmod(a2)
+	move.w	d0,bltdmod(a2)
+	clr.w	bltcon1(a2)
+	move.w	6(a4),d5
+	sub.w	2(a4),d5
+	lsl.w	#6,d5
+	or.w	d4,d5
+	move.w	#$030a,d2
+	move.w	#$03fa,d3
+	move.w	4(a4),d0
+	sub.w	(a4),d0
+	cmp.w	#320,d0
+	bne.b	.masked
+	move.w	#$0100,d2
+	move.w	#$01ff,d3
+.masked
+	move.l	48(sp),d7
+	moveq	#4,d6
+.plane
+	move.w	d2,d0
+	asr.l	#1,d7
+	bcc.b	.colour
+	move.w	d3,d0
+.colour
+	move.w	d0,bltcon0(a2)
+	move.w	#-1,bltadat(a2)
+	move.l	a3,bltcpt(a2)
+	move.l	a3,bltdpt(a2)
+	move.w	d5,d0
+	bsr.w	fast_blit
+	add.l	#PLANE_SIZE,a3
+	dbf	d6,.plane
+	move.l	d7,d0
+	movem.l	(sp)+,d2-d7/a2-a4
+	rts
+.original
+	movem.l	(sp)+,d2-d7/a2-a4
+	link	a6,#-8
+	movem.l	d2-d7/a2-a4,-(sp)
+	move.l	_reloc_base(pc),a0
+	add.l	#$1bed0-$1000,a0
 	jmp	(a0)
 
 ; g:$199e0(plane, x, y, width, height, ...): rectangle fill (draw_rect)

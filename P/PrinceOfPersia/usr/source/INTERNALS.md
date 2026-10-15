@@ -378,6 +378,67 @@ full-room draw_tables (6.67 in shape blits), 4.50 building the room tables, and
 or layer can be dropped without changing pixels/state. G1 and the D1 machine matrix
 also remain open.
 
+### C6 rectangle batching and scoped blitter priority
+
+The first pass's palace trace (tape 4, from step 56 over 100 fields) exposed
+9.70 inclusive fields in `$1bec8`: about 8.60 of that in its five per-plane `$199e0`
+calls. The new `fast_draw_rect` validates the rectangle and buffer selector, marks
+its span once (or skips marking buffer 0 during the already-dirty full-room draw),
+and sets the common blitter geometry once. It keeps five plane blits in order.
+
+With A DMA disabled and BLTADAT set to all ones, first/last word masks provide the
+rectangle's coverage. Minterm `$0a` computes `C & ~A` for a clear; `$fa` computes
+`C | A` for a set. Only C/D DMA is needed, including the one-word case where both
+masks apply. For exactly 320 pixels, D-only constants remain sufficient. Spanning
+20 words alone is not enough: rectangles starting or ending inside the edge words
+must retain their masks. Invalid selectors/rectangles retain the original diagnostics.
+
+BLITHOG is enabled only around `$0aba0`'s full-room `$0bafa` call and restored to its
+incoming value afterward. Each blit still completes synchronously and clears INTREQ;
+this changes bus arbitration during polling, without introducing pending blits at
+CPU accesses or display swaps. Display and audio DMA remain enabled. The D1 machine
+matrix remains necessary for the usual hardware/timing checks.
+
+| Inclusive profile, fields | First pass | Batched rectangles + priority |
+|---|---:|---:|
+| Palace redraw_screen | 32.70 | 26.13 |
+| Palace draw_tables | 22.81 | 15.51 |
+| Palace rectangle fills | 9.70 | 2.63 |
+| Dungeon redraw_screen | 23.31 | 22.46 |
+| Dungeon draw_tables | 14.33 | 13.70 |
+
+The traced palace frame rounds to 33 fields before and 27 afterward; the A3 whole-run
+baseline rounds the earlier frame to 34, so compare like capture methods. The route
+A3 results are in the plan. Intermediate tests separated the changes: single-pass
+fills alone reduced the longest palace transition to 32 fields; batching geometry
+and dirty tracking reduced it to 27. Priority then reduced dungeon transitions from
+24/26 to 23/25, while the palace's rounded transition periods stayed 27/23/21.
+
+Final same-build opt 16/0 A4 comparisons, with no added exclusions:
+
+| Tape | Steps | Matching digest |
+|---|---|---|
+| 1 | 1–350 | dea56a44be65 |
+| 3 | 1–300 | fa5358de5de1 |
+| 4 | 1–300 | 583960d4a4a2 |
+| 5 | 1–360 | 669a2d2e2c31 |
+
+Tape 3 with the added work delay (opt 1) matches opt 0 for all 300 steps as well,
+digest `fa5358de5de1`; the scoped priority change does not break B7's route check.
+
+An isolated emulator fixture calls this same `fast_draw_rect` from normal 68000
+code and compares all 40,000 destination bytes against an independent per-pixel
+oracle after each fill. All nine cases pass: full-screen clear/set, x=1..318 across
+all 20 words, a two-word edge crossing, an aligned word, an inset single word,
+bottom-right/top-left single pixels, and a large inset rectangle. Untouched pixels
+are included in each comparison. The fixture and its build remain in the ignored
+harness; the tested game build and its A4 exclusions are unchanged.
+
+C6/G2 remains open. The remaining room-transition periods are 23/25 (tape 1),
+17 (tape 3), and 27/23/21 (tape 4); none is at most 16. Full-room shape drawing and
+room-table construction remain the next targets. G1 is also not complete: although
+286/301 tape-1 frames are on target, some overruns still exceed one field.
+
 ## B6 Bus budget
 
 `tools/bus_budget.py` reads the DMA records of the B2 traces. Every slot (2 CPU cycles) has

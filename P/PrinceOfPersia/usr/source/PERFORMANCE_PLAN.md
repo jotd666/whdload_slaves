@@ -438,6 +438,28 @@ Expected gains are fields per frame of CPU time, before bus contention.
   **C6/G2 remains open:** none of the measured transitions yet reaches 16 fields.
   The full-room shape drawing and table construction need further work; no redundant
   full-room pass has been established safe to remove. See `INTERNALS.md` for the profile.
+  *Done*, rectangle batching: `$1bec8` now validates, marks and sets up a rectangle
+  once for its five planes. A constant A input plus edge masks clears or sets a partial
+  rectangle with one C/D blit per plane, replacing the old source reads and the second
+  pass for set bits. True full-width fills remain D-only. During the synchronous
+  full-room `draw_tables` call, BLITHOG gives the blitter priority over the polling CPU;
+  the previous priority bit is restored on return. No waits are deferred.
+
+  | Tape | Work (mean fields), first pass → now | On target, first pass → now |
+  |---|---|---|
+  | 1 | 2.797 → 2.772 | 283 → 286 of 301 |
+  | 3 | 3.61 → 3.595 | 302 → 302 of 355 |
+  | 4 | 3.640 → 3.562 | 265 → 266 of 357 |
+  | 5 | 2.07 → 2.065 | 299 → 299 of 299 |
+
+  Room changes are now **23/25 fields** on tape 1, **17** on tape 3, and
+  **27/23/21** on tape 4. All four same-build opt 16 vs 0 A4 gates still show 0 differ
+  (350/300/300/360 steps), and tape 3 opt 1 matches opt 0 for 300 steps.
+  A3 remains opt 0, 4000 fields, steps 2–300. The palace
+  transition's rectangle-fill profile falls from 9.70 to 2.63 fields. Nine direct
+  emulator edge-mask tests also pass against a per-pixel oracle. C6/G2 remains open;
+  these gains do not yet meet the 16-field limit. D1 remains unvalidated.
+
 - **C7 Gate after each step.** Run all A5 routes for A3 and A4 and the C-step's own profile,
   and record the result in `INTERNALS.md`. Stop when G1 and G2 hold; don't optimise past
   the goal.
