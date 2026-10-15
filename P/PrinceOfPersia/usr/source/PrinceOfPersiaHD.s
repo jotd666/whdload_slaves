@@ -203,6 +203,7 @@ start	;	A0 = resident loader
 .vok
 	lea	version(pc),a3
 	move.l	d1,(a3)
+	bsr.w	fix_version_addresses
 	
 	; set address for pause flag (not relocated)
 	lea		pause_address_table(pc),a1
@@ -574,7 +575,7 @@ pl_v2
 	PL_B	$19065,MAX_LEVEL
 
 	PL_ENDIF
-	PL_END
+	PL_NEXT	pl_fast_v1
 	
 ; german
 pl_v3_ntsc
@@ -633,7 +634,7 @@ pl_v3:
 	PL_ENDIF
 	
 
-	PL_END
+	PL_NEXT	pl_fast_v1
 
 ; version 4 - French version "Prince de Perse"
 
@@ -697,7 +698,7 @@ pl_v4:
 	PL_B $19093,MAX_LEVEL
 	PL_ENDIF
 
-	PL_END
+	PL_NEXT	pl_fast_v1
 
 
 	DEF_TRAINER		1,$47AD4
@@ -1043,10 +1044,12 @@ reloc_fr4:
 
 	even
 	
+	include	PrinceOfPersiaVersions.i
 	include	PrinceOfPersiaFast.s
 	IFD	VERIFY
 	include	PrinceOfPersiaVerify.s
 	ENDC
+	include	PrinceOfPersiaVersions.s
 	include	savegame.s
 	IFD	RELOC_ENABLED
 	even

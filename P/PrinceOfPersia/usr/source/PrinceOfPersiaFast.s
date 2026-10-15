@@ -1,5 +1,5 @@
 ;*---------------------------------------------------------------------------
-;  :Contents.	A500 speed-ups for Prince of Persia, version 1 (UK and 1b).
+;  :Contents.	A500 speed-ups for all supported Prince of Persia versions.
 ;		See PERFORMANCE_PLAN.md (part C) and INTERNALS.md.
 ;		CUSTOM5 bit OPT_ORIGINAL turns them all off, for A/B comparisons.
 ;---------------------------------------------------------------------------*
@@ -14,56 +14,98 @@ pl_fast_v1
 	PL_P	$053a2,fast_blit_c
 	PL_P	$053d6,fast_blit
 	PL_P	$053dc,fast_blit_saved	; continuation used by VERIFY's sabotage probe
+	VERSION_REF	1,4,VR_GAME_CODE
 	PL_W	$19ecc,$a028		; enable VERTB/PORTS/EXTER, without BLIT
 	; C3: tile lookup (INTERNALS.md B3)
+	VERSION_REF	2,4,VR_GAME_CODE
 	PL_P	$107d0,fast_get_tile_to_draw
+	VERSION_REF	3,4,VR_GAME_CODE
 	PL_P	$108c6,fast_load_curr_and_left_tile
+	VERSION_REF	4,4,VR_GAME_CODE
 	PL_P	$11b96,fast_get_room_address
 	; C4: logic hot spots
+	VERSION_REF	5,4,VR_GAME_CODE
 	PL_P	$131f0,fast_record_131f0
+	VERSION_REF	6,4,VR_GAME_CODE
 	PL_P	$1320e,fast_record_1320e
+	VERSION_REF	7,4,VR_GAME_CODE
 	PL_P	$1322c,fast_record_1322c
+	VERSION_REF	8,4,VR_GAME_CODE
 	PL_P	$1324a,fast_record_1324a
+	VERSION_REF	9,4,VR_GAME_CODE
 	PL_P	$13268,fast_record_13268
+	VERSION_REF	10,4,VR_GAME_CODE
 	PL_P	$1328a,fast_record_1328a
+	VERSION_REF	11,4,VR_GAME_CODE
 	PL_P	$132ac,fast_record_132ac
+	VERSION_REF	12,4,VR_GAME_CODE
 	PL_P	$132ce,fast_record_132ce
 
+	VERSION_REF	13,4,VR_GAME_CODE
 	PL_P	$10942,fast_load_leftroom
+	VERSION_REF	14,4,VR_GAME_CODE
 	PL_P	$1099a,fast_load_rowbelow
+	VERSION_REF	15,4,VR_GAME_CODE
 	PL_P	$14fe6,fast_get_right_wall_xpos
+	VERSION_REF	16,2,VR_EARLY_CODE
 	PL_P	$0ba56,fast_draw_frame
+	VERSION_REF	17,4,VR_GAME_CODE
 	PL_P	$116a2,fast_draw_table
 	PL_P	$05908,fast_shape_expand
 	PL_P	$055ca,fast_flip_horizontal
+	VERSION_REF	18,4,VR_GAME_CODE
 	PL_P	$12bea,fast_get_tile
+	VERSION_REF	19,4,VR_GAME_CODE
 	PL_P	$12c7c,fast_find_room
+	VERSION_REF	20,4,VR_GAME_CODE
 	PL_P	$14e8c,fast_check_collisions
+	VERSION_REF	21,4,VR_GAME_CODE
 	PL_P	$131b0,fast_y_to_row
+	VERSION_REF	22,4,VR_GAME_CODE
 	PL_P	$13596,fast_collision_dimensions
 	; C2(b): restore only what changed instead of the full-screen copy (INTERNALS.md B1)
 	PL_P	$05686,fast_shape
+	VERSION_REF	23,4,VR_GAME_CODE
 	PL_P	$199e0,fast_rect_fill
+	VERSION_REF	24,4,VR_GAME_CODE
 	PL_P	$19894,fast_rect_copy
+	VERSION_REF	25,4,VR_GAME_CODE
 	PL_P	$19802,fast_clear
+	VERSION_REF	26,4,VR_GAME_CODE
 	PL_P	$1975c,fast_copy
+	VERSION_REF	27,4,VR_GAME_CODE
 	PL_P	$1bf76,fast_picture
 	; C5: shape draw path
+	VERSION_REF	28,2,VR_EARLY_CODE
 	PL_P	$0be6c,fast_image_remap
+	VERSION_REF	29,4,VR_IMAGE_LOOKUP
 	PL_P	$1dd9a,fast_get_image
+	VERSION_REF	30,4,VR_IMAGE_LOOKUP
 	PL_P	$1dd14,fast_get_image_checked
+	VERSION_REF	31,4,VR_GAME_CODE
 	PL_P	$1c802,fast_load_image
+	VERSION_REF	32,4,VR_GAME_CODE
 	PL_P	$1c694,fast_get_frame
+	VERSION_REF	33,4,VR_GAME_CODE
 	PL_P	$11904,fast_draw_table_image
+	VERSION_REF	34,4,VR_GAME_CODE
 	PL_P	$1c29c,fast_draw_shape
+	VERSION_REF	35,4,VR_GAME_CODE
 	PL_P	$1c8d6,fast_clip
+	VERSION_REF	36,4,VR_GAME_CODE
 	PL_P	$1cb94,fast_draw
 	; C6: the full-room draw invalidates both display buffers once
+	VERSION_REF	37,4,VR_GAME_CODE
 	PL_P	$1173e,fast_draw_table_entry
+	VERSION_REF	38,4,VR_GAME_CODE
 	PL_P	$1bec8,fast_draw_rect
+	VERSION_REF	39,2,VR_EARLY_CODE
 	PL_PS	$0abfe,fast_draw_room_tables
+	VERSION_REF	40,4,VR_GAME_CODE
 	PL_P	$10c9a,fast_add_back
+	VERSION_REF	41,4,VR_GAME_CODE
 	PL_P	$10d52,fast_add_fore
+	VERSION_REF	42,4,VR_GAME_CODE
 	PL_P	$1b948,fast_random
 	PL_ENDIF
 	IFD	VERIFY
@@ -86,6 +128,7 @@ fast_random
 	movem.l	d2-d3,-(sp)
 	move.l	d0,d3
 	move.l	_reloc_base(pc),a0
+	VERSION_REF	43,2,VR_EARLY_DATA
 	lea	($7cb6-$1000,a0),a0
 	move.l	(a0),d0
 	move.l	d0,d2
@@ -123,17 +166,22 @@ fast_random
 	link	a6,#0
 	movem.l	d2-d3,-(sp)
 	move.l	_reloc_base(pc),a0
+	VERSION_REF	44,4,VR_GAME_CODE
 	add.l	#$1b950-$1000,a0
 	jmp	(a0)
 
 fast_add_back
 	movem.l	d2/a2-a3,-(sp)
+	VERSION_REF	45,4,VR_GLOBALS
 	lea	$47d64,a2
+	VERSION_REF	46,4,VR_GLOBALS
 	lea	$47d78,a3
 	bra.b	fast_add_layer
 fast_add_fore
 	movem.l	d2/a2-a3,-(sp)
+	VERSION_REF	47,4,VR_GLOBALS
 	lea	$47d68,a2
+	VERSION_REF	48,4,VR_GLOBALS
 	lea	$483b8,a3
 fast_add_layer
 	move.l	20(sp),d0		; image (1-based)
@@ -148,6 +196,7 @@ fast_add_layer
 	move.l	16(sp),d2		; table number
 	move.l	d2,d1
 	lsl.l	#2,d1
+	VERSION_REF	49,4,VR_GLOBALS
 	lea	$49aa8,a0
 	subq.l	#1,d0
 	move.l	(a0,d1.l),a0
@@ -180,9 +229,12 @@ fast_add_layer
 	movem.l	(sp)+,d2/a2-a3
 	rts
 .original
+	VERSION_REF	50,4,VR_GAME_CODE
 	move.l	#$10ca2-$1000,d0
+	VERSION_REF	51,4,VR_GLOBALS
 	cmp.l	#$47d64,a2
 	beq.b	.back
+	VERSION_REF	52,4,VR_GAME_CODE
 	move.l	#$10d5a-$1000,d0
 .back
 	movem.l	(sp)+,d2/a2-a3
@@ -252,6 +304,7 @@ tile_to_draw
 	; column -1: the left room's cached column, leftroom_[row] (g:$10942)
 	move.l	d2,d1
 	add.l	d1,d1
+	VERSION_REF	53,4,VR_GLOBALS
 	lea	$499fc,a0
 	add.l	d1,a0
 	move.b	(a0)+,d0
@@ -268,9 +321,11 @@ tile_to_draw
 	move.l	d0,a0
 	move.l	($718a-$1000,a0),a0
 	add.l	d1,a0
+	VERSION_REF	54,4,VR_GLOBALS
 	move.l	$49a94,d0		; curr_room_tiles
 	move.b	(a0,d0.l),d0
 	and.b	#$1f,d0
+	VERSION_REF	55,4,VR_GLOBALS
 	move.l	$49a98,d1		; curr_room_modif
 	move.b	(a0,d1.l),d1
 	bra.b	.plates
@@ -299,6 +354,7 @@ tile_to_draw
 	move.l	d2,-(sp)
 	moveq	#0,d2
 	move.b	d1,d2
+	VERSION_REF	56,4,VR_GLOBALS
 	move.l	$49aa0,a0
 	move.b	(a0,d2.l),d2
 	and.b	#$1f,d2
@@ -311,17 +367,21 @@ fast_load_curr_and_left_tile
 	; draw_room's ordinary row: a tile with no pending draw counters has no
 	; draw_tile side effects. Keep column 9 so the final lookup globals match.
 	move.l	_reloc_base(pc),d0
+	VERSION_REF	57,4,VR_GAME_CODE
 	add.l	#$115ea-$1000,d0
 	cmp.l	(sp),d0
 	bne.b	.above
+	VERSION_REF	58,4,VR_GLOBALS
 	move.l	$49a1a,d1
 	cmp.l	#9,d1
 	beq.w	.load
+	VERSION_REF	59,4,VR_GLOBALS
 	move.l	$49a16,d0
 	lsl.l	#2,d0
 	move.l	_reloc_base(pc),a0
 	lea	($718a-$1000,a0),a0
 	add.l	(a0,d0.l),d1
+	VERSION_REF	60,4,VR_GLOBALS
 	lea	$47c40,a0
 	move.b	(a0,d1.l),d0
 	or.b	$1e(a0,d1.l),d0
@@ -340,9 +400,11 @@ fast_load_curr_and_left_tile
 	add.l	#$11648-$115ea,d0
 	cmp.l	(sp),d0
 	bne.w	.load
+	VERSION_REF	61,4,VR_GLOBALS
 	move.l	$49a1a,d1
 	cmp.l	#9,d1
 	beq.w	.load
+	VERSION_REF	62,4,VR_GLOBALS
 	lea	$47d30,a0
 	tst.b	(a0,d1.l)
 	bne.w	.load
@@ -352,6 +414,7 @@ fast_load_curr_and_left_tile
 
 .load
 	movem.l	d2-d3,-(sp)
+	VERSION_REF	63,4,VR_GLOBALS
 	move.l	$49a16,d2		; drawn_row
 	moveq	#20,d3			; tile_room0: wall, or floor on the bottom row
 	moveq	#2,d0
@@ -359,22 +422,32 @@ fast_load_curr_and_left_tile
 	bne.b	.wall
 	moveq	#1,d3
 .wall
+	VERSION_REF	64,4,VR_GLOBALS
 	move.l	$47b18,d0		; drawn_room
+	VERSION_REF	65,4,VR_GLOBALS
 	move.l	$49a1a,d1		; drawn_col
 	bsr.w	tile_to_draw
+	VERSION_REF	66,4,VR_GLOBALS
 	move.b	d0,$47b60		; curr_tile
+	VERSION_REF	67,4,VR_GLOBALS
 	move.b	d1,$47b62		; curr_modifier
+	VERSION_REF	68,4,VR_GLOBALS
 	move.l	$47b18,d0
+	VERSION_REF	69,4,VR_GLOBALS
 	move.l	$49a1a,d1
 	subq.l	#1,d1
 	bsr.w	tile_to_draw
+	VERSION_REF	70,4,VR_GLOBALS
 	move.b	d0,$47b64		; tile_left
+	VERSION_REF	71,4,VR_GLOBALS
 	move.b	d1,$47b66		; modifier_left
+	VERSION_REF	72,4,VR_GLOBALS
 	move.l	$49a1a,d0
 	add.l	d0,d0
 	add.l	d0,d0
 	add.l	_reloc_base(pc),d0
 	move.l	d0,a0
+	VERSION_REF	73,6,VR_GLOBALS
 	move.l	($740a-$1000,a0),$49a1e	; draw_xh = g:$0740a[drawn_col]
 	movem.l	(sp)+,d2-d3
 	rts
@@ -383,8 +456,10 @@ fast_load_curr_and_left_tile
 fast_get_room_address
 	move.l	4(sp),d1
 fast_get_room_address_reg
+	VERSION_REF	74,4,VR_GLOBALS
 	cmp.l	$47d54,d1
 	beq.b	.done
+	VERSION_REF	75,4,VR_GLOBALS
 	move.l	d1,$47d54		; loaded_room
 	beq.b	.done
 	move.l	d1,d0
@@ -393,11 +468,15 @@ fast_get_room_address_reg
 	move.l	d0,a0
 	lsl.l	#4,d0
 	sub.l	a0,d0			; (room-1)*30
+	VERSION_REF	76,4,VR_GLOBALS
 	lea	$470de,a0
 	add.l	d0,a0
+	VERSION_REF	77,4,VR_GLOBALS
 	move.l	a0,$49a94		; curr_room_tiles
+	VERSION_REF	78,4,VR_GLOBALS
 	lea	$473ae,a0
 	add.l	d0,a0
+	VERSION_REF	79,4,VR_GLOBALS
 	move.l	a0,$49a98		; curr_room_modif
 .done
 	rts
@@ -418,6 +497,7 @@ fast_draw_table
 	lea	fast_fore_pass(pc),a0
 	clr.w	(a0)
 	move.l	_reloc_base(pc),d0
+	VERSION_REF	80,4,VR_EARLY_CODE
 	add.l	#$0bae6-$1000,d0
 	cmp.l	4(sp),d0
 	beq.b	.second
@@ -440,6 +520,7 @@ fast_draw_table
 	link	a6,#0
 	movem.l	d2-d5,-(sp)
 	move.l	_reloc_base(pc),a0
+	VERSION_REF	81,4,VR_GAME_CODE
 	add.l	#$116aa-$1000,a0
 	jmp	(a0)
 
@@ -447,12 +528,15 @@ fast_draw_table
 ; words cannot overlap the shape. Inputs d1-d4 are preserved for fast_mark.
 fast_fore_touched
 	lea	fast_background_dirty(pc),a0
+	VERSION_REF	82,4,VR_GLOBALS
 	cmp.l	#BUF0,d0
 	beq.b	.buffer
 	lea	fast_dirty(pc),a0
+	VERSION_REF	83,4,VR_GLOBALS
 	cmp.l	#BUF1,d0
 	beq.b	.buffer
 	lea	BANDS*4(a0),a0
+	VERSION_REF	84,4,VR_GLOBALS
 	cmp.l	#BUF2,d0
 	bne.b	.yes
 .buffer
@@ -522,6 +606,7 @@ fast_draw_frame
 	link	a6,#-8
 	movem.l	d2/a2,-(sp)
 	move.l	_reloc_base(pc),a0
+	VERSION_REF	85,4,VR_EARLY_CODE
 	add.l	#$0ba5e-$1000,a0
 	jmp	(a0)
 
@@ -540,6 +625,7 @@ fast_y_to_row
 	link	a6,#0
 	movem.l	d2-d3,-(sp)
 	move.l	_reloc_base(pc),a0
+	VERSION_REF	86,4,VR_GAME_CODE
 	add.l	#$131b8-$1000,a0
 	jmp	(a0)
 .rows
@@ -554,14 +640,18 @@ fast_y_to_row
 fast_collision_dimensions
 	link	a6,#0
 	movem.l	d2/a2,-(sp)
+	VERSION_REF	87,4,VR_GLOBALS
 	lea	$49b3e,a2
 	moveq	#0,d1
+	VERSION_REF	88,4,VR_GLOBALS
 	move.b	$49b5c,d1
 	cmp.b	#255,d1
 	beq.b	.none
 	moveq	#0,d0
+	VERSION_REF	89,4,VR_GLOBALS
 	move.b	$49b5e,d0
 	lsl.w	#2,d0
+	VERSION_REF	90,4,VR_GLOBALS
 	lea	$49aa8,a0
 	move.l	(a0,d0.w),d0
 	bsr.w	fast_image_lookup
@@ -582,15 +672,20 @@ fast_collision_dimensions
 	move.l	d2,d0
 	addq.l	#1,d0
 	lsr.l	#1,d0
+	VERSION_REF	91,4,VR_GLOBALS
 	move.l	d0,$49b32
+	VERSION_REF	92,4,VR_GLOBALS
 	move.l	d1,$49b2e
 	move.l	_reloc_base(pc),a0
+	VERSION_REF	93,4,VR_GAME_CODE
 	add.l	#$13620-$1000,a0
 	jmp	(a0)
 
 ; Fixed, disjoint 18-byte character records; preserve memcpy's return value.
 fast_record_131f0
+	VERSION_REF	94,4,VR_GLOBALS
 	lea	$479b0,a1
+	VERSION_REF	95,4,VR_GLOBALS
 	lea	$4798c,a0
 	move.l	a0,d0
 	REPT	4
@@ -599,7 +694,9 @@ fast_record_131f0
 	move.w	(a1)+,(a0)+
 	rts
 fast_record_1320e
+	VERSION_REF	96,4,VR_GLOBALS
 	lea	$4798c,a1
+	VERSION_REF	97,4,VR_GLOBALS
 	lea	$479b0,a0
 	move.l	a0,d0
 	REPT	4
@@ -608,7 +705,9 @@ fast_record_1320e
 	move.w	(a1)+,(a0)+
 	rts
 fast_record_1322c
+	VERSION_REF	98,4,VR_GLOBALS
 	lea	$479c2,a1
+	VERSION_REF	99,4,VR_GLOBALS
 	lea	$4798c,a0
 	move.l	a0,d0
 	REPT	4
@@ -617,7 +716,9 @@ fast_record_1322c
 	move.w	(a1)+,(a0)+
 	rts
 fast_record_1324a
+	VERSION_REF	100,4,VR_GLOBALS
 	lea	$4798c,a1
+	VERSION_REF	101,4,VR_GLOBALS
 	lea	$479c2,a0
 	move.l	a0,d0
 	REPT	4
@@ -627,7 +728,9 @@ fast_record_1324a
 	rts
 fast_record_13268
 	bsr.w	fast_record_131f0
+	VERSION_REF	102,4,VR_GLOBALS
 	lea	$479c2,a1
+	VERSION_REF	103,4,VR_GLOBALS
 	lea	$4799e,a0
 	move.l	a0,d0
 	REPT	4
@@ -637,7 +740,9 @@ fast_record_13268
 	rts
 fast_record_1328a
 	bsr.w	fast_record_1320e
+	VERSION_REF	104,4,VR_GLOBALS
 	lea	$4799e,a1
+	VERSION_REF	105,4,VR_GLOBALS
 	lea	$479c2,a0
 	move.l	a0,d0
 	REPT	4
@@ -647,7 +752,9 @@ fast_record_1328a
 	rts
 fast_record_132ac
 	bsr.w	fast_record_1322c
+	VERSION_REF	106,4,VR_GLOBALS
 	lea	$479b0,a1
+	VERSION_REF	107,4,VR_GLOBALS
 	lea	$4799e,a0
 	move.l	a0,d0
 	REPT	4
@@ -657,7 +764,9 @@ fast_record_132ac
 	rts
 fast_record_132ce
 	bsr.w	fast_record_1324a
+	VERSION_REF	108,4,VR_GLOBALS
 	lea	$4799e,a1
+	VERSION_REF	109,4,VR_GLOBALS
 	lea	$479b0,a0
 	move.l	a0,d0
 	REPT	4
@@ -669,6 +778,7 @@ fast_record_132ce
 ; Collision tile lookup. Keep all original globals, including tilepos when room=0.
 fast_get_tile
 	movem.l	d2/a2,-(sp)
+	VERSION_REF	110,4,VR_GLOBALS
 	lea	$49b74,a2
 	move.l	12(sp),(a2)
 	move.l	16(sp),4(a2)
@@ -687,6 +797,7 @@ fast_get_tile_body
 	add.l	4(a2),d0
 	move.b	d0,-2(a2)
 	and.l	#$ff,d0
+	VERSION_REF	111,4,VR_GLOBALS
 	move.l	$49a94,a0
 	move.b	(a0,d0.l),d0
 	and.l	#31,d0
@@ -700,6 +811,7 @@ fast_get_tile_body
 
 fast_get_tile_regs
 	movem.l	d2/a2,-(sp)
+	VERSION_REF	112,4,VR_GLOBALS
 	lea	$49b74,a2
 	movem.l	d0-d2,(a2)
 	bra.w	fast_get_tile_body
@@ -709,9 +821,11 @@ fast_get_tile_regs
 fast_check_collisions
 	movem.l	d2-d7/a2-a3,-(sp)
 	movem.l	36(sp),d4-d6
+	VERSION_REF	113,4,VR_GLOBALS
 	move.b	$47995,d7
 	ext.w	d7
 	ext.l	d7
+	VERSION_REF	114,4,VR_GLOBALS
 	move.b	$49b88,d3
 	ext.w	d3
 	ext.l	d3
@@ -722,7 +836,9 @@ fast_check_collisions
 	moveq	#0,d1
 	move.b	(a0,d0.l),d1
 	addq.l	#7,d1
+	VERSION_REF	115,4,VR_GLOBALS
 	move.l	d1,$49b0e
+	VERSION_REF	116,4,VR_GLOBALS
 	lea	$49b74,a3
 	bra.w	.test
 .column
@@ -740,19 +856,23 @@ fast_check_collisions
 	move.b	(a0,d2.w),d0
 	ext.w	d0
 	ext.l	d0
+	VERSION_REF	117,4,VR_GLOBALS
 	add.l	$49b0e,d0
 	move.b	6(a0,d2.w),d1
 	ext.w	d1
 	ext.l	d1
 	neg.l	d1
+	VERSION_REF	118,4,VR_GLOBALS
 	add.l	$49b0e,d1
 	add.l	#13,d1
 .edges
 	moveq	#0,d2
+	VERSION_REF	119,4,VR_GLOBALS
 	cmp.l	$49b3a,d0
 	bge.b	.right
 	moveq	#15,d2
 .right
+	VERSION_REF	120,4,VR_GLOBALS
 	cmp.l	$49b36,d1
 	ble.b	.store
 	or.b	#$f0,d2
@@ -760,9 +880,11 @@ fast_check_collisions
 	move.l	4(a3),a0
 	move.b	d2,(a0,d6.l)
 	move.b	3(a3),(a0,d5.l)
+	VERSION_REF	121,8,VR_GLOBALS
 	add.l	#14,$49b0e
 	addq.l	#1,d3
 .test
+	VERSION_REF	122,4,VR_GLOBALS
 	move.b	$49b8a,d0
 	ext.w	d0
 	ext.l	d0
@@ -776,6 +898,7 @@ fast_check_collisions
 
 ; Follow horizontal links first, then vertical, as the recursive original does.
 fast_find_room
+	VERSION_REF	123,4,VR_GLOBALS
 	lea	$49b74,a0
 .loop
 	move.l	4(a0),d0
@@ -815,6 +938,7 @@ fast_find_room
 	subq.l	#1,d0
 	lsl.l	#2,d0
 	add.l	d1,d0
+	VERSION_REF	124,4,VR_GLOBALS
 	lea	$4787e,a1
 	move.b	(a1,d0.l),d0
 	and.l	#$ff,d0
@@ -827,12 +951,15 @@ fast_find_room
 ; load_leftroom(), g:$10942: leftroom_[row] = the left room's column 9
 fast_load_leftroom
 	movem.l	d2-d3/a2,-(sp)
+	VERSION_REF	125,4,VR_GLOBALS
 	move.l	$47b1c,-(sp)		; room_L
 	bsr.w	fast_get_room_address
 	addq.l	#4,sp
+	VERSION_REF	126,4,VR_GLOBALS
 	lea	$499fc,a2		; leftroom_
 	moveq	#0,d2
 .row
+	VERSION_REF	127,4,VR_GLOBALS
 	move.l	$47b1c,d0
 	moveq	#9,d1
 	moveq	#20,d3
@@ -851,21 +978,28 @@ fast_load_leftroom
 fast_load_rowbelow
 	movem.l	d2-d5/a2,-(sp)
 	moveq	#2,d0
+	VERSION_REF	128,4,VR_GLOBALS
 	cmp.l	$49a16,d0		; drawn_row
 	bne.b	.same
+	VERSION_REF	129,4,VR_GLOBALS
 	move.l	$47b28,d4		; room_B
+	VERSION_REF	130,4,VR_GLOBALS
 	move.l	$47b34,d5		; room_BL
 	moveq	#0,d2
 	bra.b	.rooms
 .same
+	VERSION_REF	131,4,VR_GLOBALS
 	move.l	$47b18,d4		; drawn_room
+	VERSION_REF	132,4,VR_GLOBALS
 	move.l	$47b1c,d5		; room_L
+	VERSION_REF	133,4,VR_GLOBALS
 	move.l	$49a16,d2
 	addq.l	#1,d2
 .rooms
 	move.l	d4,-(sp)
 	bsr.w	fast_get_room_address
 	addq.l	#4,sp
+	VERSION_REF	134,4,VR_GLOBALS
 	lea	$49a02+2,a2		; row_below_left_[1]
 	moveq	#0,d3			; tile_room0
 	moveq	#0,d1
@@ -887,8 +1021,11 @@ fast_load_rowbelow
 	moveq	#9,d1
 	moveq	#20,d3
 	bsr.w	tile_to_draw
+	VERSION_REF	135,4,VR_GLOBALS
 	move.b	d0,$49a02
+	VERSION_REF	136,4,VR_GLOBALS
 	move.b	d1,$49a02+1
+	VERSION_REF	137,4,VR_GLOBALS
 	move.l	$47b18,-(sp)
 	bsr.w	fast_get_room_address
 	addq.l	#4,sp
@@ -901,10 +1038,12 @@ fast_load_rowbelow
 ; curr_tile2 ($49b70), so that call reuses it.
 fast_get_right_wall_xpos
 	move.l	_reloc_base(pc),d0
+	VERSION_REF	138,4,VR_GAME_CODE
 	add.l	#$14f28-$1000,d0
 	cmp.l	(sp),d0
 	bne.b	.get_tile
 	moveq	#0,d0
+	VERSION_REF	139,4,VR_GLOBALS
 	move.b	$49b70,d0
 	bra.b	.wall
 .get_tile
@@ -912,12 +1051,14 @@ fast_get_right_wall_xpos
 	move.l	12(sp),-(sp)
 	move.l	12(sp),-(sp)
 	move.l	_reloc_base(pc),a0
+	VERSION_REF	140,4,VR_GAME_CODE
 	add.l	#$12bea-$1000,a0
 	jsr	(a0)
 	lea	12(sp),sp
 .wall
 	move.l	d0,-(sp)
 	move.l	_reloc_base(pc),a0
+	VERSION_REF	141,4,VR_GAME_CODE
 	add.l	#$13fc8-$1000,a0	; wall_type
 	jsr	(a0)
 	addq.l	#4,sp
@@ -929,6 +1070,7 @@ fast_get_right_wall_xpos
 	ext.w	d1
 	ext.l	d1
 	moveq	#13,d0
+	VERSION_REF	142,4,VR_GLOBALS
 	add.l	$49b0e,d0
 	sub.l	d1,d0
 .done
@@ -971,6 +1113,7 @@ fast_draw_room_tables
 	clr.l	(a0)
 	lea	FC_SIZE(a0),a0
 	dbf	d0,.clear_cache
+	VERSION_REF	143,4,VR_GLOBALS
 	move.l	#BUF0,d0
 	bsr.w	fast_mark_all
 	lea	fast_full_room(pc),a0
@@ -981,6 +1124,7 @@ fast_draw_room_tables
 	and.w	#DMAF_BLITHOG,d2
 	move.w	#DMAF_SETCLR!DMAF_BLITHOG,_custom+dmacon
 	move.l	_reloc_base(pc),a0
+	VERSION_REF	144,4,VR_EARLY_CODE
 	add.l	#$0bafa-$1000,a0
 	jsr	(a0)
 	tst.w	d2
@@ -1021,6 +1165,7 @@ fast_mark
 	lsr.w	#4,d1			; bands
 	lsr.w	#4,d2
 	lea	fast_dirty(pc),a0
+	VERSION_REF	145,4,VR_GLOBALS
 	sub.l	#BUF0,d0
 	bcs.b	.out
 	cmp.l	#BUF_SIZE,d0
@@ -1089,18 +1234,25 @@ fast_shape
 	bne.w	.draw
 	movem.l	d2-d4,-(sp)
 	moveq	#0,d1
+	VERSION_REF	146,4,VR_GLOBALS
 	move.w	$67522,d1
 	moveq	#0,d2
+	VERSION_REF	147,4,VR_GLOBALS
 	move.w	$6750e,d2
 	add.l	d1,d2
 	subq.l	#1,d2
 	moveq	#0,d3
+	VERSION_REF	148,4,VR_GLOBALS
 	move.w	$67524,d3
 	moveq	#0,d4
+	VERSION_REF	149,4,VR_GLOBALS
 	move.w	$67520,d4
+	VERSION_REF	150,4,VR_GLOBALS
 	move.w	$67526,d0
+	VERSION_REF	151,4,VR_GLOBALS
 	cmp.w	$67516,d0
 	bge.b	.right
+	VERSION_REF	152,4,VR_GLOBALS
 	move.w	$67510,d0
 	cmp.w	d0,d4
 	beq.b	.right
@@ -1112,12 +1264,14 @@ fast_shape
 	beq.b	.mark
 	cmp.w	#2,d0
 	beq.b	.mark
+	VERSION_REF	153,4,VR_GLOBALS
 	move.l	$674ba,d0
 	bsr.w	fast_fore_touched
 	bne.b	.mark
 	movem.l	(sp)+,d2-d4
 	rts
 .mark
+	VERSION_REF	154,4,VR_GLOBALS
 	move.l	$674ba,d0
 	bsr.w	fast_mark
 	movem.l	(sp)+,d2-d4
@@ -1190,13 +1344,17 @@ fast_flip_horizontal
 
 ; Expanded right-shift: one masked copy instead of clear then OR.
 fast_shape_expand
+	VERSION_REF	155,4,VR_GLOBALS
 	tst.l	$6750a
 	bne.b	.original
+	VERSION_REF	156,4,VR_GLOBALS
 	tst.l	$674f6
 	bne.b	.original
 	moveq	#0,d5
 	moveq	#40,d0
+	VERSION_REF	157,4,VR_GLOBALS
 	sub.w	$67520,d0
+	VERSION_REF	158,4,VR_GLOBALS
 	sub.w	$67520,d0
 	move.l	#$fffe0000,d1
 	move.w	d0,d1
@@ -1208,8 +1366,10 @@ fast_shape_expand
 	or.w	#$0fca,d4
 	swap	d4
 	move.w	d7,d4
+	VERSION_REF	159,4,VR_GLOBALS
 	move.w	$6750e,d0
 	lsl.w	#6,d0
+	VERSION_REF	160,4,VR_GLOBALS
 	or.w	$67520,d0
 	move.l	_reloc_base(pc),a0
 	jmp	($0581a-$1000,a0)
@@ -1246,6 +1406,7 @@ fast_fore_cache_enter
 	bcc.w	.miss
 	move.l	d1,d7
 	lsl.l	#3,d1
+	VERSION_REF	161,4,VR_GLOBALS
 	lea	$483b8,a1
 	add.l	d1,a1
 	move.l	(a1),d1
@@ -1285,6 +1446,7 @@ fast_fore_cache_enter
 	bra.w	.miss_entry
 .reuse
 	move.l	_reloc_base(pc),a0
+	VERSION_REF	162,2,VR_EARLY_DATA
 	lea	($7e42-$1000,a0),a0
 	lea	12(a3),a1
 	REPT	5
@@ -1295,6 +1457,7 @@ fast_fore_cache_enter
 	move.w	fast_fore_pass(pc),d0
 	cmp.w	#2,d0
 	bne.b	.header
+	VERSION_REF	163,4,VR_GLOBALS
 	cmp.l	#$674be,a0
 	bcs.w	.miss_entry
 	cmp.l	#$80000,a0
@@ -1318,10 +1481,13 @@ fast_fore_cache_enter
 	bne.w	.miss_entry
 .colour_ok
 	; Restore assigned fields, preserving whichever tag colours were unused.
+	VERSION_REF	164,4,VR_GLOBALS
 	move.w	$67502,d6
 	swap	d6
+	VERSION_REF	165,4,VR_GLOBALS
 	move.w	$67508,d6
 	lea	40(a3),a0
+	VERSION_REF	166,4,VR_GLOBALS
 	lea	SHAPE,a2
 	REPT	4
 	movem.l	(a0)+,d0-d5/a1/a4
@@ -1333,11 +1499,13 @@ fast_fore_cache_enter
 	beq.b	.colour8
 	cmp.b	#64,d7
 	bcc.b	.colour8
+	VERSION_REF	167,4,VR_GLOBALS
 	move.w	d6,$67508
 .colour8
 	swap	d6
 	cmp.b	#3,d7
 	beq.b	.colour7
+	VERSION_REF	168,4,VR_GLOBALS
 	move.w	d6,$67502
 .colour7
 	move.w	fast_fore_pass(pc),-(sp)
@@ -1369,6 +1537,7 @@ fast_fore_cache_save
 	move.w	fast_fore_cache_parts(pc),d1
 	cmp.w	#1,d1
 	bne.w	.out
+	VERSION_REF	169,4,VR_GLOBALS
 	lea	SHAPE,a0
 	tst.l	$674da-SHAPE(a0)
 	bne.w	.out
@@ -1380,6 +1549,7 @@ fast_fore_cache_save
 	bne.w	.out
 	move.l	48(sp),d1
 	lsl.l	#3,d1
+	VERSION_REF	170,4,VR_GLOBALS
 	lea	$483b8,a0
 	add.l	d1,a0
 	moveq	#0,d1
@@ -1402,15 +1572,18 @@ fast_fore_cache_save
 	move.l	(a0)+,4(a3)
 	move.l	(a0),8(a3)
 	move.l	_reloc_base(pc),a0
+	VERSION_REF	171,2,VR_EARLY_DATA
 	lea	($7e42-$1000,a0),a0
 	lea	12(a3),a1
 	moveq	#4,d1
 .clip
 	move.l	(a0)+,(a1)+
 	dbf	d1,.clip
+	VERSION_REF	172,4,VR_GLOBALS
 	move.l	SHAPE,a0
 	move.l	(a0)+,(a1)+
 	move.l	(a0),(a1)+
+	VERSION_REF	173,4,VR_GLOBALS
 	lea	SHAPE,a0
 	REPT	4
 	movem.l	(a0)+,d1-d7/a4
@@ -1451,18 +1624,22 @@ fast_draw_rect
 	beq.b	.target
 	lsl.w	#2,d0
 	move.l	_reloc_base(pc),a0
+	VERSION_REF	174,4,VR_EARLY_DATA
 	add.l	#$7d0a-$1000,a0
 	move.l	(a0,d0.w),d0
 	bra.b	.buffer
 .shown
+	VERSION_REF	175,4,VR_GLOBALS
 	move.l	$674b2,d0
 	bra.b	.buffer
 .target
+	VERSION_REF	176,4,VR_GLOBALS
 	move.l	$674ba,d0
 .buffer
 	move.l	d0,a3
 	move.w	fast_full_room(pc),d1
 	beq.b	.mark
+	VERSION_REF	177,4,VR_GLOBALS
 	cmp.l	#BUF0,a3
 	beq.b	.setup
 .mark
@@ -1552,6 +1729,7 @@ fast_draw_rect
 	link	a6,#-8
 	movem.l	d2-d7/a2-a4,-(sp)
 	move.l	_reloc_base(pc),a0
+	VERSION_REF	178,4,VR_GAME_CODE
 	add.l	#$1bed0-$1000,a0
 	jmp	(a0)
 
@@ -1600,6 +1778,7 @@ fast_rect_fill
 	link	a6,#-4
 	movem.l	d2-d7,-(sp)
 	move.l	_reloc_base(pc),a0
+	VERSION_REF	179,4,VR_GAME_CODE
 	add.l	#$199e8-$1000,a0
 	jmp	(a0)
 
@@ -1612,6 +1791,7 @@ fast_rect_copy
 	link	a6,#-4
 	movem.l	d2-d7,-(sp)
 	move.l	_reloc_base(pc),a0
+	VERSION_REF	180,4,VR_GAME_CODE
 	add.l	#$1989c-$1000,a0
 	jmp	(a0)
 
@@ -1641,6 +1821,7 @@ fast_clear
 	link	a6,#0
 	movem.l	d2-d4,-(sp)
 	move.l	_reloc_base(pc),a0
+	VERSION_REF	181,4,VR_GAME_CODE
 	add.l	#$1980a-$1000,a0
 	jmp	(a0)
 
@@ -1656,6 +1837,7 @@ fast_picture
 	link	a6,#-4
 	movem.l	d2-d6/a2-a4,-(sp)
 	move.l	_reloc_base(pc),a0
+	VERSION_REF	182,4,VR_GAME_CODE
 	add.l	#$1bf7e-$1000,a0
 	jmp	(a0)
 
@@ -1665,14 +1847,17 @@ fast_picture
 fast_copy
 	cmp.l	#BUF_SIZE/2,4(sp)
 	bne.b	.other
+	VERSION_REF	183,4,VR_GLOBALS
 	cmp.l	#BUF0,8(sp)
 	bne.b	.other
 	lea	fast_dirty(pc),a0
 	lea	BANDS*4(a0),a1
 	move.l	12(sp),d0
+	VERSION_REF	184,4,VR_GLOBALS
 	cmp.l	#BUF1,d0
 	beq.b	.display
 	exg	a0,a1
+	VERSION_REF	185,4,VR_GLOBALS
 	cmp.l	#BUF2,d0
 	beq.b	.display
 .other
@@ -1683,10 +1868,12 @@ fast_copy
 	link	a6,#0
 	movem.l	d2-d5,-(sp)
 	move.l	_reloc_base(pc),a0
+	VERSION_REF	186,4,VR_GAME_CODE
 	add.l	#$19764-$1000,a0
 	jmp	(a0)
 .display				; a0 this buffer's table, a1 the other's
 	move.l	_reloc_base(pc),d0
+	VERSION_REF	187,4,VR_EARLY_CODE
 	add.l	#$094f4-$1000,d0	; return address of g:$094e4's call of g:$1bd5e
 	cmp.l	4(a6),d0		; a6 is g:$1bd5e's frame
 	beq.b	.restore
@@ -1759,6 +1946,7 @@ fast_copy
 	moveq	#20,d1
 	sub.w	d0,d1
 	add.w	d1,d1			; modulo
+	VERSION_REF	188,4,VR_GLOBALS
 	lea	BUF0,a0
 	add.l	d6,a0
 	lea	(a3,d6.l),a2
@@ -1805,8 +1993,10 @@ fast_copy
 fast_image_remap
 	move.l	4(sp),a1
 	moveq	#0,d0
+	VERSION_REF	189,4,VR_BOOT_TABLES
 	cmp.l	#$7f928,(a1)
 	beq.b	.kid
+	VERSION_REF	190,4,VR_BOOT_TABLES
 	cmp.l	#$7fa90,(a1)
 	bne.b	.done
 	moveq	#4,d0
@@ -1860,8 +2050,10 @@ fast_image_lookup
 	bls.b	.none
 	cmp.l	#142,d1
 	bhi.b	.lookup
+	VERSION_REF	191,4,VR_BOOT_TABLES
 	cmp.l	#$7f928,a0
 	beq.b	.remap
+	VERSION_REF	192,4,VR_BOOT_TABLES
 	cmp.l	#$7fa90,a0
 	beq.b	.remap
 .lookup
@@ -1889,8 +2081,10 @@ fast_image_lookup
 fast_get_image_checked
 	cmp.l	#142,8(sp)
 	bhi.b	.remapped
+	VERSION_REF	193,4,VR_BOOT_TABLES
 	cmp.l	#$7f928,4(sp)
 	beq.b	.remap
+	VERSION_REF	194,4,VR_BOOT_TABLES
 	cmp.l	#$7fa90,4(sp)
 	bne.b	.remapped
 .remap
@@ -1923,6 +2117,7 @@ fast_load_image
 ; d0 is that image; decode it without repeating the remap and table lookup.
 fast_load_image_header
 	move.l	d0,a0
+	VERSION_REF	195,4,VR_GLOBALS
 	lea	$674be,a1
 	move.l	a0,(a1)+		; $674be image
 	addq.l	#8,d0
@@ -1963,9 +2158,11 @@ fast_load_image_header
 	asr.l	#4,d0
 	addq.l	#1,d0
 	move.w	d0,(a1)+		; $674d6
+	VERSION_REF	196,4,VR_GLOBALS
 	mulu.w	$674c8,d0
 	move.w	d0,(a1)+		; $674d8 plane size
 	moveq	#0,d0
+	VERSION_REF	197,8,VR_GLOBALS
 	cmp.l	#$80000,$674c2
 	bcs.b	.chip
 	moveq	#1,d0
@@ -2037,6 +2234,7 @@ fast_get_frame
 	link	a6,#0
 	movem.l	d2-d5/a2-a3,-(sp)
 	move.l	_reloc_base(pc),a0
+	VERSION_REF	198,4,VR_GAME_CODE
 	add.l	#$1c69c-$1000,a0
 	jmp	(a0)
 
@@ -2051,9 +2249,11 @@ fast_draw_table_entry
 	tst.l	d0
 	bne.w	.cached
 	move.l	40(sp),d0
+	VERSION_REF	199,4,VR_GLOBALS
 	lea	$47d78,a1
 	tst.l	d0
 	beq.b	.table
+	VERSION_REF	200,4,VR_GLOBALS
 	lea	$483b8,a1
 .table
 	move.l	44(sp),d0
@@ -2062,6 +2262,7 @@ fast_draw_table_entry
 	moveq	#0,d0
 	move.b	4(a1),d0
 	lsl.w	#2,d0
+	VERSION_REF	201,4,VR_GLOBALS
 	lea	$49aa8,a0
 	move.l	(a0,d0.w),d2
 	moveq	#0,d3
@@ -2089,6 +2290,7 @@ fast_draw_table_entry
 	link	a6,#0
 	movem.l	d2-d4,-(sp)
 	move.l	_reloc_base(pc),a0
+	VERSION_REF	202,4,VR_GAME_CODE
 	add.l	#$11746-$1000,a0
 	jmp	(a0)
 
@@ -2113,8 +2315,10 @@ fast_table_image_lookup
 	bls.b	.none
 	cmp.l	#142,d3
 	bhi.b	.lookup
+	VERSION_REF	203,4,VR_BOOT_TABLES
 	cmp.l	#$7f928,d2
 	beq.b	.kid
+	VERSION_REF	204,4,VR_BOOT_TABLES
 	cmp.l	#$7fa90,d2
 	bne.b	.lookup
 .kid
@@ -2176,6 +2380,7 @@ fast_table_image_core
 	btst	#7,d6
 	beq.b	.unflipped
 	sub.l	d0,d4
+	VERSION_REF	205,8,VR_GLOBALS
 	move.l	#1,$674ee
 	and.l	#~$80,d6
 	move.l	d6,(a4)			; original clears bit 7 in its caller's argument
@@ -2209,24 +2414,30 @@ fast_table_image_core
 	blo.b	.draw
 	move.w	d6,d0
 	and.w	#31,d0
+	VERSION_REF	206,4,VR_GLOBALS
 	move.w	d0,$67508
 	bra.b	.silhouette
 .nomask
+	VERSION_REF	207,8,VR_GLOBALS
 	move.l	#1,$6750a
 	bra.b	.draw
 .mask
+	VERSION_REF	208,8,VR_GLOBALS
 	move.l	#1,$674fe
 	move.l	_reloc_base(pc),a0
 	move.w	($64c0-$1000+2,a0),d0
 	and.w	#31,d0
+	VERSION_REF	209,4,VR_GLOBALS
 	move.w	d0,$67502
 	bra.b	.draw
 .silhouette
 	; mode 9 explicitly supplies zero; the unused colour word otherwise survives
 	cmp.l	#9,d6
 	bne.b	.colour
+	VERSION_REF	210,4,VR_GLOBALS
 	clr.w	$67508
 .colour
+	VERSION_REF	211,8,VR_GLOBALS
 	move.l	#1,$67504
 .draw
 	bra.w	fast_draw_shape_core
@@ -2246,11 +2457,13 @@ fast_table_image_core
 	link	a6,#0
 	movem.l	d2-d7/a2-a3,-(sp)
 	move.l	_reloc_base(pc),a0
+	VERSION_REF	212,4,VR_GAME_CODE
 	add.l	#$1190c-$1000,a0
 	jmp	(a0)
 
 fast_reset_tags
 	; clear the tags' state as g:$1c578 does
+	VERSION_REF	213,4,VR_GLOBALS
 	lea	$674de,a0
 	moveq	#0,d0
 	move.l	d0,4(a0)
@@ -2292,47 +2505,62 @@ fast_draw_shape
 	dc.w	.t0-.tags,.t1-.tags,.t2-.tags,.t3-.tags,.t4-.tags
 	dc.w	.t5-.tags,.t6-.tags,.t7-.tags,.t8-.tags,.t9-.tags
 .t0
+	VERSION_REF	214,6,VR_GLOBALS
 	move.w	2(a4),$674ea
+	VERSION_REF	215,6,VR_GLOBALS
 	move.w	6(a4),$674ec
 	addq.l	#8,a4
 	bra.w	.tag
 .t1
+	VERSION_REF	216,6,VR_GLOBALS
 	move.w	2(a4),$674ea
 	addq.l	#4,a4
 	bra.w	.tag
 .t2
+	VERSION_REF	217,6,VR_GLOBALS
 	move.w	2(a4),$674ec
 	addq.l	#4,a4
 	bra.w	.tag
 .t3
+	VERSION_REF	218,4,VR_GLOBALS
 	move.l	(a4)+,$674ee
+	VERSION_REF	219,4,VR_GLOBALS
 	move.l	(a4)+,$674f2
 	bra.w	.tag
 .t4
+	VERSION_REF	220,4,VR_GLOBALS
 	move.l	(a4)+,$674ee
 	bra.w	.tag
 .t5
+	VERSION_REF	221,4,VR_GLOBALS
 	move.l	(a4)+,$674f2
 	bra.w	.tag
 .t6
+	VERSION_REF	222,4,VR_GLOBALS
 	move.l	(a4)+,$674f6
+	VERSION_REF	223,4,VR_GLOBALS
 	move.l	(a4)+,$674fa
 	bra.w	.tag
 .t7
+	VERSION_REF	224,4,VR_GLOBALS
 	move.l	(a4)+,$674fe
 	moveq	#31,d0
 	and.w	2(a4),d0
+	VERSION_REF	225,4,VR_GLOBALS
 	move.w	d0,$67502
 	addq.l	#4,a4
 	bra.w	.tag
 .t8
+	VERSION_REF	226,4,VR_GLOBALS
 	move.l	(a4)+,$67504
 	moveq	#31,d0
 	and.w	2(a4),d0
+	VERSION_REF	227,4,VR_GLOBALS
 	move.w	d0,$67508
 	addq.l	#4,a4
 	bra.w	.tag
 .t9
+	VERSION_REF	228,4,VR_GLOBALS
 	move.l	(a4)+,$6750a
 	bra.w	.tag
 .tags_done
@@ -2345,6 +2573,7 @@ fast_draw_shape
 	link	a6,#-8
 	movem.l	d2-d5/a2-a4,-(sp)
 	move.l	_reloc_base(pc),a0
+	VERSION_REF	229,4,VR_GAME_CODE
 	add.l	#$1c2a4-$1000,a0
 	jmp	(a0)
 
@@ -2353,8 +2582,10 @@ fast_draw_shape
 fast_draw_shape_core
 	cmp.l	#142,d3
 	bhi.b	.remapped
+	VERSION_REF	230,4,VR_BOOT_TABLES
 	cmp.l	#$7f928,d2
 	beq.b	.remap
+	VERSION_REF	231,4,VR_BOOT_TABLES
 	cmp.l	#$7fa90,d2
 	bne.b	.remapped
 .remap
@@ -2403,26 +2634,37 @@ fast_draw_shape_core
 .next
 	; Eight first-part tables continue 14 bytes later; $7fc1a continues
 	; only when reached as the second part of $7fc0c.
+	VERSION_REF	232,4,VR_BOOT_TABLES
 	cmp.l	#$7f706,d2
 	bcs.w	.done
+	VERSION_REF	233,4,VR_BOOT_TABLES
 	cmp.l	#$7fc1a,d2
 	bhi.w	.done
+	VERSION_REF	234,4,VR_BOOT_TABLES
 	cmp.l	#$7f706,d2
 	beq.b	.found
+	VERSION_REF	235,4,VR_BOOT_TABLES
 	cmp.l	#$7f738,d2
 	beq.b	.found
+	VERSION_REF	236,4,VR_BOOT_TABLES
 	cmp.l	#$7f76a,d2
 	beq.b	.found
+	VERSION_REF	237,4,VR_BOOT_TABLES
 	cmp.l	#$7fb44,d2
 	beq.b	.found
+	VERSION_REF	238,4,VR_BOOT_TABLES
 	cmp.l	#$7fb76,d2
 	beq.b	.found
+	VERSION_REF	239,4,VR_BOOT_TABLES
 	cmp.l	#$7fba8,d2
 	beq.b	.found
+	VERSION_REF	240,4,VR_BOOT_TABLES
 	cmp.l	#$7fbda,d2
 	beq.b	.found
+	VERSION_REF	241,4,VR_BOOT_TABLES
 	cmp.l	#$7fc0c,d2
 	beq.b	.found
+	VERSION_REF	242,4,VR_BOOT_TABLES
 	cmp.l	#$7fc1a,d2
 	bne.b	.done
 	move.l	a4,d0
@@ -2444,11 +2686,13 @@ SHAPE = $674be
 ; > d0 0 if nothing is left
 fast_clip
 	movem.l	d2-d3,-(sp)
+	VERSION_REF	243,4,VR_GLOBALS
 	lea	SHAPE,a0
 	move.l	$674ee-SHAPE(a0),d0
 	or.l	$674f2-SHAPE(a0),d0
 	bne.w	.general
 	move.l	_reloc_base(pc),a1
+	VERSION_REF	244,2,VR_EARLY_DATA
 	lea	($7e42-$1000,a1),a1
 	move.w	$674c6-SHAPE(a0),d0
 	beq.w	.general
@@ -2497,7 +2741,9 @@ fast_clip
 	move.w	4+24+2(sp),d1		; x
 	move.w	8+24+2(sp),d3		; y
 	move.l	_reloc_base(pc),a2
+	VERSION_REF	245,4,VR_EARLY_DATA
 	add.l	#$7e42-$1000,a2
+	VERSION_REF	246,4,VR_GLOBALS
 	lea	SHAPE,a0
 	move.w	14(a2),d0
 	cmp.w	12(a2),d0
@@ -2651,9 +2897,11 @@ fast_clip
 ; $1a28-$49c7 (g:$05432) when it is clipped, masked (tag 6) or outside chip memory
 fast_draw
 	movem.l	d2-d5/a2,-(sp)
+	VERSION_REF	247,4,VR_GLOBALS
 	lea	SHAPE,a0
 	bsr.w	.setup
 	bsr.w	.flip
+	VERSION_REF	248,4,VR_GLOBALS
 	lea	SHAPE,a0
 	tst.l	$674f6-SHAPE(a0)
 	bne.b	.scratch
@@ -2679,6 +2927,7 @@ fast_draw
 	bsr.w	.planes
 	move.l	_reloc_base(pc),a0
 	jsr	($05432-$1000,a0)
+	VERSION_REF	249,4,VR_GLOBALS
 	lea	SHAPE,a0
 	tst.l	$674f6-SHAPE(a0)
 	beq.b	.ptrs
@@ -2687,6 +2936,7 @@ fast_draw
 	jsr	($055a6-$1000,a0)
 	addq.l	#4,sp
 .ptrs
+	VERSION_REF	250,4,VR_GLOBALS
 	lea	$67528,a0
 	move.l	#$1a28,(a0)+
 	move.l	#$2218,(a0)+
@@ -2796,6 +3046,7 @@ fast_draw
 	move.l	d2,a0
 	jsr	(a0)
 	lea	16(sp),sp
+	VERSION_REF	251,4,VR_GLOBALS
 	lea	SHAPE,a0
 	move.l	(a0),a1
 	moveq	#1,d0
@@ -2814,6 +3065,7 @@ fast_draw
 	add.l	d0,d1
 	add.l	d0,d1
 	lea	$49c8,a1
+	VERSION_REF	252,4,VR_GLOBALS
 	lea	$67528,a2
 	moveq	#0,d5
 	move.w	$674d8-SHAPE(a0),d5
@@ -2851,6 +3103,7 @@ fast_draw
 	addq.l	#4,a2
 	dbf	d4,.present
 	move.l	d1,(a2)			; the mask follows the planes
+	VERSION_REF	253,4,VR_GLOBALS
 	lea	$67528,a2
 	move.w	$674d4-SHAPE(a0),d3
 	moveq	#5-1,d4
@@ -2866,6 +3119,7 @@ fast_draw
 .tag7
 	tst.l	$674fe-SHAPE(a0)
 	beq.b	.tag9
+	VERSION_REF	254,4,VR_GLOBALS
 	lea	$67528,a2
 	move.b	$67503-SHAPE(a0),d2
 	moveq	#5-1,d4
@@ -2879,6 +3133,7 @@ fast_draw
 .tag9
 	tst.l	$6750a-SHAPE(a0)
 	beq.b	.planes_done
+	VERSION_REF	255,4,VR_GLOBALS
 	move.l	a1,$6753c
 .planes_done
 	rts

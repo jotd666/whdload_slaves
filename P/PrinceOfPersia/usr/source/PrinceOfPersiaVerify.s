@@ -1,6 +1,6 @@
 ;*---------------------------------------------------------------------------
 ;  :Contents.	VERIFY-only measurement instruments for Prince of Persia,
-;		version 1 (UK) only. Not part of normal builds.
+;		all supported versions. Not part of normal builds.
 ;---------------------------------------------------------------------------*
 
 ; runtime address of original (patch list) address \1 in \2
@@ -19,24 +19,37 @@ SABOTAGE_STEP = 150
 
 pl_verify_v1
 	PL_START
+	VERSION_REF	256,4,VR_GAME_CODE
 	PL_P	$1942c,verify_poll	; control poll, once per gameplay step
+	VERSION_REF	257,4,VR_GAME_CODE
 	PL_P	$1b8bc,verify_joy	; joystick reader
+	VERSION_REF	258,4,VR_GAME_CODE
 	PL_PSS	$19fac,verify_vbl,2	; VERTB, replaces pl_v1's vbl_hook patch
+	VERSION_REF	259,4,VR_GAME_CODE
 	PL_PSS	$19fc4,verify_blit,2	; blitter interrupt acknowledge
+	VERSION_REF	260,4,VR_GAME_CODE
 	PL_P	$1bd46,verify_wait	; frame wait
 	; RNG entropy: g:$1ba58 adds VHPOSR to the seed (level start, fire); add 0 instead
+	VERSION_REF	261,4,VR_GAME_CODE
 	PL_W	$1ba5e,$7000		; moveq #0,d0
+	VERSION_REF	262,4,VR_GAME_CODE
 	PL_NOP	$1ba60,4
 	PL_IFC5X	VOPT_SABOTAGE		; patched only for the probe: it costs time on every blit
 	PL_P	$53d6,verify_blit_start	; blit start + STOP wait
 	PL_ENDIF
 	PL_IFC5X	VOPT_REALTIME
 	PL_ELSE
+	VERSION_REF	263,2,VR_EARLY_DATA
 	PL_P	$0820c,verify_snd_start	; play_sound_from_buffer
+	VERSION_REF	264,2,VR_EARLY_DATA
 	PL_P	$080e2,verify_snd_stop	; stop_sounds
+	VERSION_REF	265,2,VR_EARLY_DATA
 	PL_P	$08106,verify_snd_playing	; check_sound_playing
+	VERSION_REF	266,4,VR_GAME_CODE
 	PL_PS	$1a002,verify_audio	; level-4 handler's call of the audio interrupt code
+	VERSION_REF	267,4,VR_GAME_CODE
 	PL_PS	$19f8a,verify_ciaa_tb	; level-2 handler's CIA-A timer B callback (the MIDI player)
+	VERSION_REF	268,4,VR_GAME_CODE
 	PL_PS	$19fb4,verify_vbl_game	; level-3 handler's VERTB call of g:$1a0c2 (MIDI voices)
 	PL_ENDIF
 	PL_END
@@ -70,6 +83,8 @@ verify_log_at
 	dc.l	verify_log-verify_block	; offset of the frame log
 verify_sabotaged
 	dc.l	0			; set once the sabotage blit has been skipped
+verify_field_lines
+	dc.l	313			; PAL; startup selects 263 for NTSC
 verify_vclock
 	dc.l	0			; virtual time in lines: g:$7aba fields per frame wait
 verify_snd_flags
@@ -99,6 +114,7 @@ verify_snd_ret
 verify_poll
 	lea	verify_gameplay(pc),a0
 	clr.l	(a0)
+	VERSION_REF	269,8,VR_GAME_CODE
 	GAME_ADDR	$13e20,a1	; return address of the gameplay call of g:$18df4
 	cmp.l	4(a6),a1
 	bne.b	verify_run
@@ -120,6 +136,7 @@ verify_stopped
 verify_run
 	link	a6,#0
 	bsr.b	verify_joy
+	VERSION_REF	270,8,VR_GAME_CODE
 	GAME_ADDR	$19436,a0
 	jmp	(a0)
 
@@ -148,6 +165,7 @@ verify_joy
 	move.w	(2,a0),d0
 	bclr	#TAPE_LEVEL_BIT,d0
 	beq.b	.nolevel
+	VERSION_REF	271,4,VR_GLOBALS
 	move.l	d0,$47ab8		; the level the main loop is to play, as the level skip sets it
 	moveq	#TAPE_SKIP,d0
 .nolevel
@@ -164,6 +182,7 @@ verify_joy
 	bclr	#TAPE_RESUME_BIT,d0
 	beq.b	.out
 	; resume is fire for the pause loop's button check only
+	VERSION_REF	272,8,VR_GAME_CODE
 	GAME_ADDR	$195a8,a0
 	cmp.l	(a7),a0
 	bne.b	.out
@@ -173,6 +192,7 @@ verify_joy
 .live
 	link	a6,#0
 	movem.l	d2,-(sp)
+	VERSION_REF	273,8,VR_GAME_CODE
 	GAME_ADDR	$1b8c4,a0
 	jmp	(a0)
 
@@ -331,11 +351,11 @@ verify_time
 	and.l	#$1ff,d0
 	btst	#5,d1			; VERTB not yet taken: its field has started
 	beq.b	.counted
-	add.l	#313,d0
+	add.l	verify_field_lines(pc),d0
 .counted
 	move.l	d1,-(a7)
 	move.l	verify_fields(pc),d1
-	mulu	#313,d1
+	mulu	verify_field_lines+2(pc),d1
 	add.l	d1,d0
 	move.l	(a7)+,d1
 	move.w	(a7)+,sr
@@ -354,6 +374,7 @@ verify_wait
 .nodelay
 	bsr	verify_time
 	move.l	d0,d2
+	VERSION_REF	274,4,VR_GLOBALS
 	lea	$49d18,a0
 verify_wait_loop
 	tst.l	(a0)
@@ -383,6 +404,7 @@ verify_wait_go
 	move.l	verify_blits(pc),d1
 	sub.l	verify_last_blits(pc),d1
 	move.w	d1,(a1)+
+	VERSION_REF	275,8,VR_EARLY_DATA
 	GAME_ADDR	$7aba,a0
 	move.w	2(a0),(a1)+		; target
 verify_wait_full
@@ -392,6 +414,7 @@ verify_wait_full
 	bsr	verify_tick
 	movem.l	(a7)+,d0-d2/a1
 	clr.b	d0
+	VERSION_REF	276,4,VR_GLOBALS
 	lea	$49d18,a0
 	rts
 
@@ -413,16 +436,17 @@ verify_wait_full
 ; Outside gameplay, retain the real driver answer. Interludes can busy-wait for a sound
 ; without publishing another frame, so a frame-clock answer there would deadlock. The
 ; control-poll hook identifies these loops, including the level-2 interlude at step 15.
-; This is a PAL verification clock; sound-duration boundary cases and other machines
-; still need the D1 matrix. It does not make real-time driver memory deterministic.
+; The verification clock uses the selected PAL/NTSC field length. It does not
+; make real-time driver memory deterministic.
 ; stop_sounds called by the game (not from an interrupt) ends a sound at once. The
 ; driver itself still plays in real time; its state is excluded from the A4 hashes.
 
 ; at each frame-wait exit: advance virtual time; a sound started in the frame gets its base
 verify_tick
+	VERSION_REF	277,8,VR_EARLY_DATA
 	GAME_ADDR	$7aba,a0
 	move.l	(a0),d1
-	mulu	#313,d1
+	mulu	verify_field_lines+2(pc),d1
 	lea	verify_vclock(pc),a0
 	add.l	d1,(a0)
 	lea	verify_snd_flags(pc),a0
@@ -434,14 +458,19 @@ verify_tick
 
 ; > Z set if the driver is silent: no MIDI song and all four channels idle (as g:$08106)
 verify_snd_idle
+	VERSION_REF	278,4,VR_GLOBALS
 	tst.l	$46e7a
 	bne.b	.out
+	VERSION_REF	279,4,VR_GLOBALS
 	tst.w	$49dde
 	bne.b	.out
+	VERSION_REF	280,4,VR_GLOBALS
 	tst.w	$49df0
 	bne.b	.out
+	VERSION_REF	281,4,VR_GLOBALS
 	tst.w	$49e02
 	bne.b	.out
+	VERSION_REF	282,4,VR_GLOBALS
 	tst.w	$49e14
 .out
 	rts
@@ -456,6 +485,22 @@ verify_snd_ended
 	bpl.b	.out
 	bsr	verify_time
 	sub.l	verify_snd_t0(pc),d0
+	; Interrupt phase can move a measured end across an exact virtual field
+	; boundary (US/NTSC: 3944 versus 3953 lines, boundary 15*263=3945).
+	; Quantise NTSC to the nearest field; retain the accepted PAL clock.
+	; Real playback is untouched. Keep unusually long durations unrounded
+	; rather than overflowing the 68000's 16-bit DIVU quotient.
+	cmp.l	#$ffff00,d0
+	bhi.b	.store
+	move.l	verify_field_lines(pc),d1
+	cmp.w	#263,d1
+	bne.b	.store
+	lsr.l	#1,d1
+	add.l	d1,d0
+	divu.w	verify_field_lines+2(pc),d0
+	and.l	#$ffff,d0
+	mulu.w	verify_field_lines+2(pc),d0
+.store
 	lea	verify_snd_dur(pc),a0
 	move.l	d0,(a0)
 .out
@@ -477,6 +522,7 @@ verify_snd_start
 	move.l	a0,(a7)
 	link	a6,#-$20
 	movem.l	d2-d3/a2,-(sp)
+	VERSION_REF	283,8,VR_EARLY_DATA
 	GAME_ADDR	$08214,a0
 	jmp	(a0)
 verify_snd_started
@@ -505,6 +551,7 @@ verify_snd_stop
 .go
 	link	a6,#0
 	pea	1.w
+	VERSION_REF	284,8,VR_EARLY_DATA
 	GAME_ADDR	$080ea,a0
 	jmp	(a0)
 
@@ -545,12 +592,15 @@ verify_snd_playing
 ; replace the level-4 handler's jsr g:$1b1fe, the level-2 handler's jsr g:$1a6ac and the
 ; level-3 handler's jsr g:$1a0c2(pc) / nop (all saved d0-d1/a0-a1)
 verify_vbl_game
+	VERSION_REF	285,8,VR_GAME_CODE
 	GAME_ADDR	$1a0c2,a0
 	bra.b	verify_int
 verify_ciaa_tb
+	VERSION_REF	286,8,VR_GAME_CODE
 	GAME_ADDR	$1a6ac,a0
 	bra.b	verify_int
 verify_audio
+	VERSION_REF	287,8,VR_GAME_CODE
 	GAME_ADDR	$1b1fe,a0
 verify_int
 	jsr	(a0)

@@ -684,7 +684,7 @@ The remaining work is below G1's ceiling, so optimisation stops here. On
 2026-10-15 the user accepted G2 at current room-transition performance and
 closed it, waiving the remaining original 16-field target. Earlier G2 open-status
 notes describe intermediate results; no new timing result is claimed. D1 is
-closed under the scope below; D2–D4 remain open.
+closed under the scope below; D2 is complete as recorded below. D3–D4 remain open.
 
 
 ## D1: 68040/68060 compatibility acceptance (2026-10-15)
@@ -733,3 +733,103 @@ to avoid a filesystem trap deadlock before game startup; the A4 tape, RNG and
 virtual clock remained pinned. These MMU-core runs establish functional
 compatibility, not hardware-calibrated 040/060 performance. No new frame-time
 claim is made.
+
+
+## D2: other-version address port (2026-10-16)
+
+The supplied preinstalled archives provide US/NTSC (1407, version 2), German
+(0082, version 3) and French (2290, version 4). The existing UK fixture (1823)
+is UK 1b, detected as version 5; it shares the version-1 code layout. Disk CRC
+checks and the original version-specific slave patches remain in place.
+
+All versions now chain into the common fast patch list. A single startup pass
+adjusts explicitly marked operand words in that list, the fast routines and,
+in VERIFY builds, the replay instruments. `VERSION_REF` defines an operand
+location without emitting code or changing local-label scope. `VERSION_ENTRY`
+emits its location and address-group index. The original instructions retain
+UK addresses, and UK 1a/1b skip this pass. No per-shape version checks or extra
+calls were added. The subsequent `resload_Patch` flushes the CPU caches before
+any adjusted code runs.
+
+The offsets were checked against the actual game images, using instruction
+alignment and matching references, not extrapolated from one function:
+
+| Address group | US | German | French |
+| --- | ---: | ---: | ---: |
+| Early data and sound code | +4 | -46 | -4 |
+| Early game code | +4 | -40 | -4 |
+| Later game code | -50 | -40 | -4 |
+| Globals, shape state and screen buffers | -216 | -40 | -4 |
+| Boot-resident image tables | +4 | 0 | 0 |
+| Late image lookup routines | -44 | -40 | -4 |
+
+The US late image lookup functions have a separate six-byte difference; using
+the earlier code shift there overwrites the preceding routine's return path.
+The final port accounts for both lookup entries. All 53 function-hook entry
+opcodes were checked against the four images. Shape-field offsets are relative
+to the relocated shape base; differences between addresses in the same group
+remain unchanged.
+
+An independent assembly comparison located the changing operand words while
+requiring identical instruction and label layouts. The final static audit
+checked 255 unique words in the normal slave and 287 in VERIFY, including each
+emitted table entry and all three resulting values. Every completed replay
+also checks all 287 live operand words and the detected game version. When
+editing a tagged instruction or patch macro, recheck its operand byte offset;
+the table's symbol references track movement of the surrounding code, but an
+instruction encoding change can move the operand within that instruction.
+
+The A4 harness translates its existing state exclusions and display-pointer
+address to each version's globals. The categories excluded are unchanged;
+no new differences were hidden. Every pair uses the same frozen slave build,
+CUSTOM5=16 versus 0, and requires the full expected set of gameplay steps.
+Normal slave: 39,204 bytes, SHA-256
+`d298369dac07ffa1a5166c8fa84b6a035daa21b46bcde6901e5c9ba0aef0dd12`.
+VERIFY: 61,328 bytes, SHA-256
+`dc9394987b21bc1ec98c9c15f340dcf301a92b0709ce8e79aa5698984dc9c28a`.
+
+The final A500-1.5m acceptance passes all four routes on all four fixtures
+in PAL, plus the US fixture in native NTSC:
+
+| Version | Tape 1 (350) | Tape 3 (300) | Tape 4 (300) | Tape 5 (360) |
+| --- | --- | --- | --- | --- |
+| UK 1b | `6e0e5d6235ad` | `e843442f16b9` | `4d13dcbe56da` | `d57d07bac988` |
+| US PAL | `ad24af6f0f71` | `826284702175` | `0528eb6a5343` | `486cf6d46d68` |
+| German | `8093c590b543` | `29095be3effa` | `13dcf6175547` | `63a86c19b44b` |
+| French | `a899e4421dd9` | `3ae147ba2f13` | `21daebb45c68` | `bb425e2b15ad` |
+| US NTSC | `90634c47f341` | `3a8ca7db8820` | `a94f9d9de9f6` | `7db9d54e0889` |
+
+Entries are matching A4 digests, with zero state/pixel differences in every
+cell: 3,930 PAL comparisons for the added versions, 1,310 UK regression
+comparisons and 1,310 native NTSC comparisons (6,550 total). All 40 run
+artifacts contain the exact final VERIFY build and pass their live-address
+and monitor audits. Reports and address audits are retained in the ignored
+harness under `tmp/d2-gate-*`, with aggregate `tmp/d2-gate-report.json`;
+static and hook audits are also retained there. UK 1a shares the UK code
+layout but was not a separate runtime fixture. These are correctness checks,
+not new performance measurements.
+
+
+Native NTSC exposed a boundary in the VERIFY-only B7 clock on tape 3: the
+current-sound ID differed at steps 80–84, with identical pixels and no other
+unexcluded state difference. The same sample measured 3,944 and 3,953 raster
+lines in the two paths, on opposite sides of 15 NTSC fields (3,945 lines).
+The original PAL-only clock also used 313 lines per field on NTSC.
+
+The verifier now selects 313/263 lines from the monitor type and, on NTSC,
+rounds measured sound durations to the nearest field before comparing them
+with its virtual frame clock. PAL retains the previously accepted unrounded
+duration model; applying rounding there introduced a new sound boundary on
+the restart route, so that experiment was rejected. The rounding error is at most half a field;
+this is a verification time model, not a change to the normal game's sound driver.
+Durations above `$ffff00` lines retain their measured value to avoid a 68000
+DIVU quotient overflow. Current/queued sound state remains in the hashes.
+The normal slave is byte-for-byte unchanged by these verifier corrections.
+
+The final NTSC tape-3 work-delay probe (CUSTOM5=1) matches CUSTOM5=0
+for all 300 steps, digest `3a8ca7db8820`. The deliberate skipped-blit probe
+(CUSTOM5=4, tape 1, 175 steps) differs only at step 150 on each added
+version, in both state and pixels. This confirms that the ported oracle
+still detects a real rendering error. These runs use the same final
+VERIFY build as the acceptance matrix; reports are retained under
+`tmp/d2-gate-ntsc-delay` and `tmp/d2-gate-sabotage*` in the ignored harness.

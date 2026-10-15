@@ -520,7 +520,7 @@ four routes, for 350/300/300/360 steps. Tape 3 opt 1 also matches opt 0 for
 records implementation constraints, profiles and matching digests.
 
 G1 is complete. G2 is accepted by the user at the C6 stopping point and closed;
-D1 is complete under the agreed scope recorded below; D2–D4 remain open. The G1/G2
+D1 and D2 are complete under the scopes recorded below; D3–D4 remain open. The G1/G2
 acceptance is for the pinned PAL benchmark routes; real hardware remains a separate gate.
 
 ## D. Validation and release
@@ -541,12 +541,32 @@ acceptance is for the pinned PAL benchmark routes; real hardware remains a separ
   runs are functional checks, not A4 hash comparisons or hardware timing results.
   Earlier full A4 runs also passed on A500-1.5m and stock A1200. The remaining
   original matrix cells, including 030 and NTSC, are outside the agreed closure;
-  no validation is claimed for them. D1 is closed; D2–D4 remain open. See
+  no D1 validation is claimed for them. D1 is closed; D2 records the separate
+  version-port and NTSC checks below. See
   `INTERNALS.md` for digests, cache settings and emulator constraints.
-- **D2 Other versions.** Versions 2 (US), 3 (German) and 4 (French) have different offsets
-  (the slave's patch lists show a regular shift). They need the user's disk images to find
-  and verify their offsets. Until then, keep the patches version-1-only.
-- **D3 Real hardware.** A real A500 with 1.5 MB, plus an accelerated machine if one is
-  available, run by the user.
+- **D2 Other versions.** Port and validate the enhancements for versions 2 (US),
+  3 (German) and 4 (French), using their actual game data.
+
+  **Done (2026-10-16):** all three now use the common fast routines through a
+  one-time startup adjustment of explicitly tagged addresses. The port accounts
+  for six address groups, including the US late-image-lookup exception; there
+  is no added per-frame or per-shape dispatch. Static audits checked all 255
+  normal-slave and 287 VERIFY operands against all three versions; every replay
+  also audited the live addresses and detected version.
+
+  The final same-build A4 comparison, CUSTOM5=16 against 0, passed tapes 1/3/4/5
+  for 350/300/300/360 steps on UK 1b, US, German and French in PAL, plus US in
+  native NTSC: **6,550 frame comparisons, zero state/pixel differences**. No
+  hash-exclusion categories were added. UK 1a shares the UK code layout but was
+  not a separate runtime fixture. The verifier now uses the selected field
+  length and rounds NTSC sound durations to the nearest field to remove an
+  observed interrupt-phase boundary; the accepted PAL clock and normal game's
+  audio are unchanged. Native NTSC tape 3 also passes the 300-step work-delay
+  probe. Each added version detects the skipped-blit probe only at step 150,
+  in both state and pixels, over 175 steps. These establish correctness, not
+  new performance claims. `INTERNALS.md` records build hashes and digests.
+- **D3 Real hardware.** The user accepted an A1200/040 test as sufficient for this
+  gate. The latest enhanced preinstalled archive has been supplied; D3 remains
+  open pending the hardware result.
 - **D4 Release.** Slave 4.5 with ReadMe history, the default-on decision recorded (no
   option needed if G3 holds), and a contribution to JOTD following the playbook's §13.
