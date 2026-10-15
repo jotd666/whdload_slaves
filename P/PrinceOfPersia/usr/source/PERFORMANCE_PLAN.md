@@ -410,6 +410,34 @@ Expected gains are fields per frame of CPU time, before bus contention.
   C5 is complete; the remaining blit-start work belongs to C1.
 - **C6 Room change.** Apply C1, C3 and C5 to `$0aba0`, then deal with what B5 shows is left,
   such as redundant clears or a double full-room draw. Target G2.
+
+  *Done*, first pass (`PrinceOfPersiaFast.s`): C1/C3/C5 already cover the room path;
+  the remaining measured overhead is reduced by marking both display buffers dirty once
+  around the full-room `draw_tables`, filling full-width rectangles with D-only DMA,
+  rewriting the back/foreground table append routines (`$10c9a`, `$10d52`), simplifying
+  the unchanged RNG (`$1b948`), and reusing `$11904`'s first image lookup in the draw core.
+  The blank-screen publish/wait and every room layer remain. All blits stay synchronous.
+
+  | Tape | Work (mean fields), before → after | On target, before → after |
+  |---|---|---|
+  | 1 | 2.854 → 2.797 | 282 → 283 of 301 |
+  | 3 | 3.658 → 3.61 | 302 → 302 of 355 |
+  | 4 | 3.716 → 3.640 | 265 → 265 of 357 |
+  | 5 | 2.077 → 2.07 | 299 → 299 of 299 |
+
+  Room transitions: tape 1 steps 123/243, 27/30 → **24/26 fields**; tape 3 step 64,
+  19 → **17**; tape 4 steps 59/104/149, 37/33/26 → **34/30/23**. Step 15's interlude
+  and level-start frames are separate. A3 uses 4000 fields, steps 2–300, opt 0 on all
+  routes under B7's pin. A4, same final build opt 16 vs 0: **0 differ** on tapes
+  1 (350 steps), 3 (300), 4 (300), and 5 (360). Tape 3 opt 0 vs 1 also has 0 differ;
+  the opt 4 sabotage probe still detects only step 150 (state and pixels).
+
+  The first room's profile falls from 26.54 to 23.31 fields in `$0aba0`, with
+  `draw_tables` 16.39 → 14.33 and `redraw_room` 4.92 → 4.50. An unshifted-shape
+  experiment removing redundant source DMA passed A4 but increased work; it was removed.
+  **C6/G2 remains open:** none of the measured transitions yet reaches 16 fields.
+  The full-room shape drawing and table construction need further work; no redundant
+  full-room pass has been established safe to remove. See `INTERNALS.md` for the profile.
 - **C7 Gate after each step.** Run all A5 routes for A3 and A4 and the C-step's own profile,
   and record the result in `INTERNALS.md`. Stop when G1 and G2 hold; don't optimise past
   the goal.

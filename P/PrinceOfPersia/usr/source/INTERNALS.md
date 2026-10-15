@@ -317,6 +317,67 @@ level is already in memory. All of it is drawing (draw tables 66%) and building 
 - To reach 16 fields, `draw_tables` has to go from 19–26 fields to about 8–14, and
   redraw_room's 5 fields have to shrink as well.
 
+### C6 first pass: room-transition implementation
+
+The C1/C3/C5 replacements already run under `$0aba0`. A new matched tape-1 profile
+(start at step 120, 100 fields, PAL A500) shows the first room frame:
+
+| Part, inclusive fields | Before C6 | After |
+|---|---:|---:|
+| Whole frame | 27.00 | 24.00 |
+| `$0aba0`, redraw_screen | 26.54 | 23.31 |
+| `$0bafa`, draw_tables | 16.39 | 14.33 |
+| `$0f3e2`, redraw_room | 4.92 | 4.50 |
+| `$05686`, shape blitter including dirty tracking | 8.03 | 6.67 |
+| `$053d6`, blit start/wait | 5.02 | 4.79 |
+| `$199e0`, rectangle fill | 1.93 | 1.16 |
+| `$1b948`, random | 1.36 | 1.13 |
+
+These are nested totals and must not be added. The full-room dirty marker removes
+per-shape span work only while `$0aba0` calls `$0bafa`: buffer 0 is the drawing target
+there, and both display buffers are already wholly dirty. Ordinary frame tracking
+resumes before `$0ba56`. No draw is omitted and the blank-screen publish/wait remains.
+
+Full-width fills (`x=0`, width 320, stride 20 words, height 1–1024) use D-only DMA,
+minterm zero or one; the original uses old-plane reads even though no partial edge
+requires them. Other rectangles retain the original implementation. Synchronous waits
+still finish each blit and clear BLIT requests; no new outstanding-blit hazards arise.
+
+The two table append routines share register code while preserving all table bytes,
+counts, return values and overflow diagnostics. The RNG still advances
+`seed = seed * 0x343fd + 0x269ec3` modulo 2^32 and returns the upper word modulo
+`max+1` (or the upper word for max 65535). Two multiplies and word additions replace
+three multiplies; power-of-two ranges use a mask. Unusual ranges retain the original.
+The table renderer also supplies its already-looked-up first image to the shared draw
+core. It still remaps the table/id, decodes the header, clips, flips, updates scratch
+state and draws chained images normally; out-of-range cases retain get_frame's checks.
+
+Incremental tape-1 timings: dirty marking/full-width fills gave 25/28 fields;
+table construction/RNG gave 25/27; first-image reuse gave 24/26. An unshifted shape
+DMA specialization was pixel-correct but made the second transition's work about
+0.26 fields slower than the first stage, so it was removed.
+
+Final A4 uses the same build with opt 16 and opt 0, under B7's pin, with no added
+hash exclusions. All state and pixel comparisons pass:
+
+| Tape | Steps | Matching digest |
+|---|---|---|
+| 1 | 1–350 | fb50a430cecc |
+| 3 | 1–300 | c9744de68615 |
+| 4 | 1–300 | f3f71cce713c |
+| 5 | 1–360 | 39d7092fa1dd |
+
+The sabotage negative control (tape 1, opt 4, 160 steps) still detects exactly step
+150 in both state and pixels, with no earlier differences. Tape 3 with opt 1
+(work delay) also matches opt 0 for all 300 steps, digest `c9744de68615`.
+
+G2 is still open: room changes are 24/26 fields on tape 1, 17 on tape 3, and
+34/30/23 on tape 4. The remaining first-transition costs include 14.33 fields in
+full-room draw_tables (6.67 in shape blits), 4.50 building the room tables, and
+2.37 in the ordinary draw/copy pass. There is no proof that another full-room pass
+or layer can be dropped without changing pixels/state. G1 and the D1 machine matrix
+also remain open.
+
 ## B6 Bus budget
 
 `tools/bus_budget.py` reads the DMA records of the B2 traces. Every slot (2 CPU cycles) has

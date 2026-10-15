@@ -40,12 +40,137 @@ pl_fast_v1
 	PL_P	$1c29c,fast_draw_shape
 	PL_P	$1c8d6,fast_clip
 	PL_P	$1cb94,fast_draw
+	; C6: the full-room draw invalidates both display buffers once
+	PL_PS	$0abfe,fast_draw_room_tables
+	PL_P	$10c9a,fast_add_back
+	PL_P	$10d52,fast_add_fore
+	PL_P	$1b948,fast_random
 	PL_ENDIF
 	IFD	VERIFY
 	PL_NEXT	pl_verify_v1
 	ELSE
 	PL_END
 	ENDC
+
+;---------------------------------------------------------------------------
+; C6: room-decoration RNG and back/foreground table construction. Preserve the
+; generator, its seed writes, table bytes (including untouched padding), and the
+; original error paths. Small ranges avoid the compiled C division scaffolding.
+fast_random
+	move.l	4(sp),d0
+	cmp.l	#$ffff,d0
+	beq.b	.valid
+	cmp.l	#32766,d0
+	bhi.b	.original
+.valid
+	movem.l	d2-d3,-(sp)
+	move.l	d0,d3
+	move.l	_reloc_base(pc),a0
+	lea	($7cb6-$1000,a0),a0
+	move.l	(a0),d0
+	move.l	d0,d2
+	move.w	d0,d1
+	add.w	d1,d1
+	add.w	d0,d1			; low(seed)*3, only its low word contributes
+	mulu.w	#$43fd,d0
+	swap	d2
+	mulu.w	#$43fd,d2
+	add.w	d1,d2
+	swap	d2
+	clr.w	d2
+	add.l	d2,d0
+	add.l	#$269ec3,d0
+	move.l	d0,(a0)
+	swap	d0
+	and.l	#$ffff,d0
+	cmp.l	#$ffff,d3
+	beq.b	.out
+	move.w	d3,d1
+	addq.w	#1,d3
+	move.w	d3,d2
+	and.w	d1,d2
+	bne.b	.divide
+	and.w	d1,d0
+	bra.b	.out
+.divide
+	divu.w	d3,d0
+	clr.w	d0
+	swap	d0
+.out
+	movem.l	(sp)+,d2-d3
+	rts
+.original
+	link	a6,#0
+	movem.l	d2-d3,-(sp)
+	move.l	_reloc_base(pc),a0
+	add.l	#$1b950-$1000,a0
+	jmp	(a0)
+
+fast_add_back
+	movem.l	d2/a2-a3,-(sp)
+	lea	$47d64,a2
+	lea	$47d78,a3
+	bra.b	fast_add_layer
+fast_add_fore
+	movem.l	d2/a2-a3,-(sp)
+	lea	$47d68,a2
+	lea	$483b8,a3
+fast_add_layer
+	move.l	20(sp),d0		; image (1-based)
+	beq.b	.none
+	cmp.l	#256,d0
+	beq.b	.none
+	move.l	(a2),d1
+	cmp.l	#200,d1
+	bge.b	.original
+	lsl.l	#3,d1
+	add.l	d1,a3
+	move.l	16(sp),d2		; table number
+	move.l	d2,d1
+	lsl.l	#2,d1
+	lea	$49aa8,a0
+	subq.l	#1,d0
+	move.l	d0,-(sp)
+	move.l	(a0,d1.l),-(sp)
+	bsr.w	fast_get_image
+	addq.l	#8,sp
+	tst.l	d0
+	beq.b	.none
+	move.l	d0,a0
+	moveq	#0,d1
+	move.w	6(a0),d1
+	and.w	#$3ff,d1
+	move.b	27(sp),(a3)		; x in byte columns
+	move.b	31(sp),1(a3)		; x pixel offset
+	move.b	d2,4(a3)
+	move.l	20(sp),d0
+	subq.l	#1,d0
+	move.b	d0,5(a3)
+	move.l	32(sp),d0		; y minus height plus one
+	sub.l	d1,d0
+	addq.l	#1,d0
+	move.w	d0,2(a3)
+	move.b	39(sp),6(a3)
+	addq.l	#1,(a2)
+	moveq	#1,d0
+	bra.b	.out
+.none
+	moveq	#0,d0
+.out
+	movem.l	(sp)+,d2/a2-a3
+	rts
+.original
+	move.l	#$10ca2-$1000,d0
+	cmp.l	#$47d64,a2
+	beq.b	.back
+	move.l	#$10d5a-$1000,d0
+.back
+	movem.l	(sp)+,d2/a2-a3
+	link	a6,#0
+	movem.l	d2-d6/a2,-(sp)
+	move.l	_reloc_base(pc),a0
+	add.l	d0,a0
+	jmp	(a0)
 
 ;---------------------------------------------------------------------------
 ; C1 blitter waits. Every blit is complete on return, so existing register writes,
@@ -346,6 +471,25 @@ fast_dirty
 	dcb.w	BANDS,$0013		; buffer 1: all dirty until the first full copy
 	dcb.w	BANDS,$0013		; buffer 2
 
+fast_full_room
+	dc.w	0
+
+; g:$0aba0's full-room draw_tables call. Buffer 0 is rebuilt in full; no
+; per-shape dirty spans are needed until the ordinary frame drawing resumes.
+fast_draw_room_tables
+	movem.l	d0-d4/a0-a1,-(sp)
+	move.l	#BUF0,d0
+	bsr.w	fast_mark_all
+	lea	fast_full_room(pc),a0
+	move.w	#1,(a0)
+	move.l	_reloc_base(pc),a0
+	add.l	#$0bafa-$1000,a0
+	jsr	(a0)
+	lea	fast_full_room(pc),a0
+	clr.w	(a0)
+	movem.l	(sp)+,d0-d4/a0-a1
+	rts
+
 ; Mark lines d1-d2 and word columns d3-d4 (longs, inclusive, unclipped) as changed in the
 ; buffer that address d0 is in. Changes to buffer 0 dirty both display buffers.
 ; Trashes d0-d4, a0-a1.
@@ -423,6 +567,8 @@ fast_mark_all
 ; lines from $67522, $6750e of them; word columns from $67524, $67520 of them, or one more
 ; when the shift moves left ($67526 < $67516) and the source is narrower ($67510 != $67520).
 fast_shape
+	move.w	fast_full_room(pc),d0
+	bne.w	.draw
 	movem.l	d2-d4,-(sp)
 	moveq	#0,d1
 	move.w	$67522,d1
@@ -447,6 +593,7 @@ fast_shape
 	move.l	$674ba,d0
 	bsr.w	fast_mark
 	movem.l	(sp)+,d2-d4
+.draw
 	link	a6,#0
 	movem.l	d2-d7/a2-a4,-(sp)
 	move.l	_reloc_base(pc),a0
@@ -455,6 +602,42 @@ fast_shape
 
 ; g:$199e0(plane, x, y, width, height, ...): rectangle fill (draw_rect)
 fast_rect_fill
+	; A word-aligned full-width fill needs only D DMA. The original reads
+	; the old plane through A and B even when neither edge needs masking.
+	tst.l	8(sp)
+	bne.b	.original
+	cmp.l	#320,16(sp)
+	bne.b	.original
+	cmp.l	#20,24(sp)
+	bne.b	.original
+	move.l	20(sp),d0
+	beq.b	.original
+	cmp.l	#1024,d0
+	bhi.b	.original
+	movem.l	d2-d4,-(sp)
+	lea	16(sp),a0
+	bsr.w	fast_mark_rect
+	move.l	24(sp),d0		; y
+	move.l	d0,d1
+	lsl.l	#3,d0
+	lsl.l	#5,d1
+	add.l	d1,d0
+	add.l	16(sp),d0		; plane
+	move.l	d0,_custom+bltdpt
+	clr.w	_custom+bltdmod
+	move.l	#$01000000,d0
+	tst.l	40(sp)			; colour
+	beq.b	.clear
+	or.l	#$00ff0000,d0
+.clear
+	move.l	d0,_custom+bltcon0
+	move.l	32(sp),d0		; height
+	lsl.w	#6,d0
+	or.w	#20,d0
+	bsr.w	fast_blit
+	movem.l	(sp)+,d2-d4
+	rts
+.original
 	movem.l	d2-d4,-(sp)
 	lea	16(sp),a0
 	bsr.b	fast_mark_rect
@@ -730,6 +913,9 @@ fast_load_image
 	move.l	8(sp),-(sp)
 	bsr.b	fast_get_image_checked
 	addq.l	#8,sp
+; C6: the table renderer already looked up the first image for its dimensions.
+; d0 is that image; decode it without repeating the remap and table lookup.
+fast_load_image_header
 	move.l	d0,a0
 	lea	$674be,a1
 	move.l	a0,(a1)+		; $674be image
@@ -883,6 +1069,7 @@ fast_draw_table_image
 	tst.l	d0
 	beq.w	.out
 	move.l	d0,a1
+	move.l	d0,a3
 	bsr.w	fast_reset_tags
 	moveq	#0,d0
 	move.w	4(a1),d0
@@ -1041,6 +1228,7 @@ fast_draw_shape
 	move.l	(a4)+,$6750a
 	bra.w	.tag
 .tags_done
+	sub.l	a3,a3			; no preloaded first image from the tag-list entry
 	bsr.w	fast_draw_shape_core
 	movem.l	(sp)+,d2-d5/a2-a4
 	rts
@@ -1052,7 +1240,8 @@ fast_draw_shape
 	add.l	#$1c2a4-$1000,a0
 	jmp	(a0)
 
-; d2 table, d3 image, d4 x, d5 y; tags already set. Preserved by callers.
+; d2 table, d3 image, d4 x, d5 y; a3 optional first image; tags already set.
+; Preserved by callers. Chained parts always use their own image lookup.
 fast_draw_shape_core
 	move.l	d3,-(sp)
 	move.l	d2,-(sp)
@@ -1061,9 +1250,26 @@ fast_draw_shape_core
 	bsr.w	fast_image_remap
 	addq.l	#8,sp
 	movem.l	(sp)+,d2-d3
+	move.l	d2,a0
+	moveq	#0,d0
+	move.b	5(a0),d0
+	cmp.l	d0,d3
+	bcs.b	.first_valid
+	sub.l	a3,a3			; retain get_frame's out-of-range diagnostics
+.first_valid
 	sub.l	a2,a2			; drawn
 	lea	.chain(pc),a4
 .part
+	move.l	a3,d0
+	beq.b	.lookup
+	sub.l	a3,a3
+	bsr.w	fast_load_image_header
+	move.l	d5,-(sp)
+	move.l	d4,-(sp)
+	bsr.w	fast_clip
+	addq.l	#8,sp
+	bra.b	.clipped
+.lookup
 	move.l	d3,-(sp)
 	move.l	d2,-(sp)
 	bsr.w	fast_get_frame
@@ -1071,6 +1277,7 @@ fast_draw_shape_core
 	move.l	d4,-(sp)
 	bsr.w	fast_clip
 	lea	12(sp),sp
+.clipped
 	tst.l	d0
 	beq.b	.next
 	bsr.w	fast_draw
