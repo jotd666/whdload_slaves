@@ -34,7 +34,6 @@
    aimed at improving Amiga 500 performance
  - enhancements enabled by default for UK, US, German and French versions;
    set CUSTOM5=16 to use the original routines
- - tested in PAL/NTSC emulation and on a real A1200/68040
 
  version 4.4 (05.08.2022) done by JOTD:
  - on US and german versions, saving/loading a game was broken
