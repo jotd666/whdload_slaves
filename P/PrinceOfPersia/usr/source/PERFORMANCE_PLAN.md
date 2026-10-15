@@ -479,6 +479,11 @@ Expected gains are fields per frame of CPU time, before bus contention.
   15.51 to 15.19 fields. Mask-only and deferred-setup direct-image experiments were
   removed because they provided no net timing benefit. D1 remains unvalidated.
 
+  *Stopping point:* the validated C6 improvements are retained. Further room-change
+  optimisation is deferred; the 16-field G2 target remains unmet on tapes 1 and 4.
+  This closes the current C6 implementation work without claiming G2 acceptance.
+  Revisit the remaining shape/setup and room-table costs in a later performance pass.
+
 - **C7 Gate after each step.** Run all A5 routes for A3 and A4 and the C-step's own profile,
   and record the result in `INTERNALS.md`. Stop when G1 and G2 hold; don't optimise past
   the goal.
