@@ -13,7 +13,12 @@ pl_verify_v1
 	PL_START
 	PL_P	$1942c,verify_poll	; control poll, once per gameplay step
 	PL_P	$1b8bc,verify_joy	; joystick reader
+	PL_PSS	$19fac,verify_vbl,2	; VERTB, replaces pl_v1's vbl_hook patch
+	PL_PSS	$19fc4,verify_blit,2	; blitter interrupt acknowledge
+	PL_P	$1bd46,verify_wait	; frame wait
 	PL_END
+
+VERIFY_FRAMES = 2048			; frame log entries
 
 ; The harness finds this block in memory by its marker and reads it at the end of a run.
 verify_block
@@ -24,6 +29,18 @@ verify_tape
 	dc.l	0			; current tape entry, 0 = not started
 verify_stop
 	dc.l	0			; the harness breaks at verify_stopped on this step
+verify_fields
+	dc.l	0			; VERTB interrupts
+verify_blits
+	dc.l	0			; blitter interrupts (one per blit started by g:$53a2/$53d6)
+verify_frames
+	dc.l	0			; frame log entries written
+verify_last
+	dc.l	0			; time of the last frame-wait exit (lines)
+verify_last_blits
+	dc.l	0
+verify_log_at
+	dc.l	verify_log-verify_block	; offset of the frame log
 
 ;---------------------------------------------------------------------------
 ; Input tape (plan step A2). CUSTOM4=n plays tape n: the game's joystick reader
@@ -117,3 +134,89 @@ tape_spikes
 	dc.w	275,0
 	dc.w	$ffff,0
 	even
+
+;---------------------------------------------------------------------------
+; Frame-time log (plan step A3). Time is in raster lines, fields*313 + VPOS. Each frame
+; wait exit appends (step, period, work, blits): lines since the previous exit, lines
+; of that spent before entering the wait, and blitter interrupts since the previous exit.
+; The display swap is in the VBL that ends the wait, so period/313 is a whole number of
+; fields up to the VBL handler's latency.
+
+verify_vbl
+	move.l	a0,-(a7)
+	lea	verify_fields(pc),a0
+	addq.l	#1,(a0)
+	move.l	(a7)+,a0
+	bra	vbl_hook
+
+verify_blit
+	move.w	#$40,_custom+intreq	; original
+	move.l	a0,-(a7)
+	lea	verify_blits(pc),a0
+	addq.l	#1,(a0)
+	move.l	(a7)+,a0
+	rts
+
+; > d0 now in lines (d1 trashed)
+verify_time
+	move.w	sr,-(a7)
+	move.w	#$2700,sr
+.again
+	move.w	_custom+intreqr,d1
+	move.l	_custom+vposr,d0
+	cmp.w	_custom+intreqr,d1
+	bne.b	.again
+	lsr.l	#8,d0
+	and.l	#$1ff,d0
+	btst	#5,d1			; VERTB not yet taken: its field has started
+	beq.b	.counted
+	add.l	#313,d0
+.counted
+	move.l	d1,-(a7)
+	move.l	verify_fields(pc),d1
+	mulu	#313,d1
+	add.l	d1,d0
+	move.l	(a7)+,d1
+	move.w	(a7)+,sr
+	rts
+
+; replaces g:$1bd46: link a6,#0 / clr.b d0 / wait for the VBL to take the new frame /
+; unlk a6 / rts. Leaves d0 (low byte cleared) and a0 as the original does.
+verify_wait
+	movem.l	d0-d2/a1,-(a7)
+	bsr	verify_time
+	move.l	d0,d2
+	lea	$49d18,a0
+.wait
+	tst.l	(a0)
+	bne.b	.wait
+verify_wait_end
+	bsr	verify_time
+	lea	verify_frames(pc),a1
+	move.l	(a1),d1
+	cmp.l	#VERIFY_FRAMES,d1
+	bhs.b	.full
+	addq.l	#1,(a1)
+	lsl.l	#3,d1
+	lea	verify_log(pc),a1
+	add.l	d1,a1
+	move.w	verify_steps+2(pc),(a1)+
+	move.l	d0,d1
+	sub.l	verify_last(pc),d1
+	move.w	d1,(a1)+		; period
+	sub.l	verify_last(pc),d2
+	move.w	d2,(a1)+		; work
+	move.l	verify_blits(pc),d1
+	sub.l	verify_last_blits(pc),d1
+	move.w	d1,(a1)+
+.full
+	lea	verify_last(pc),a1
+	move.l	d0,(a1)+
+	move.l	verify_blits(pc),(a1)
+	movem.l	(a7)+,d0-d2/a1
+	clr.b	d0
+	lea	$49d18,a0
+	rts
+
+verify_log
+	ds.b	VERIFY_FRAMES*8

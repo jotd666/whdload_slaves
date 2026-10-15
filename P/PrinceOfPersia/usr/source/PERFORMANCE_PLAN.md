@@ -50,6 +50,20 @@ Sizes per frame, steady running / spike death (fields): work 3.72 / 5.41; full-s
   handler, and keeps a per-frame log in slave memory: fields per frame, work in beam
   positions, and the blit count. gdb reads it once at the end, with no stop inside the window.
   Gate: on the baseline its period histogram equals `tools/frames.py`'s exactly.
+  *Done.* The VERIFY slave replaces the frame wait `g:$1bd46` with a copy (`verify_wait`) and
+  counts VERTB and blitter interrupts. Time is in raster lines (fields × 313 + VPOS).
+  - **Log format:** each wait exit appends (step, period, work, blits) to `verify_log`, which
+    has 2048 entries.
+  - **Tools:** `profile_run.py` saves the block as `verify.bin` and marks the VERIFY wait and
+    poll. `tools/frame_log.py` summarises the log.
+  - **Gate passed:** `tools/check_frame_log.py`, on the spikes tape traced for 1700 fields,
+    matched all 304 frames that lie inside one chunk to the field. `frames.py` miscounts frames
+    that cross a chunk boundary, because a field runs untraced between chunks, so the log is
+    the reference from now on.
+  - **First figures (tape 1, from boot):** periods of 4 × 191, 5 × 46, 6 × 51, 7–10 × 12. The
+    room changes at steps 124 and 244 take 32 and 36 fields; the level start takes 57.
+  - **Hooks change timing:** the tape's screenshots stay the same apart from the torch flames.
+    Those come from the RNG, whose seed takes VHPOSR (A4).
 - **A4 Faithfulness probes (VERIFY).** At each frame-wait end, hash the game state: kid and
   guard character records, level and room buffers, timer, RNG, and the sound request queue
   once B1 has located them. At each display swap (`g:$1a0e6`, the buffer in `$49d1c`), hash the
