@@ -70,6 +70,30 @@ Sizes per frame, steady running / spike death (fields): work 3.72 / 5.41; full-s
   published frame's bitplanes. Write both to a slave ring buffer and dump it at the end. Gate:
   two baseline runs match; a deliberate one-byte sabotage, such as skipping one shape blit,
   is detected.
+  *Done.* The bits of `CUSTOM5` select the probes:
+  - **1: state hash.** It covers chip `$1000`–`$80000` and the image's data parts
+    (`g:$1000`–`$5320`, `g:$1f7d0`–`$47800`). Left out: the stack below `$1000`, the VBL
+    countdown and display swap at `$49d10`–`$49d1f`, the two display buffers at `$53c2e`
+    and `$5d86e`, and the image's code. B1 can narrow this to named records later.
+  - **2: pixel hash.** It covers the 40,000-byte buffer in `$49d1c` at each frame-wait exit,
+    i.e. the frame the VBL has just shown.
+  - **How they run:** both hash at the frame-wait exit with interrupts off, by rol 5 / eor
+    over longwords. They cost about 60 fields per frame, so a hashed run measures
+    faithfulness, not time.
+  - **4: delay probe.** One extra VBL before every frame wait.
+  - **8: sabotage probe.** Skips one `g:$53d6` blit at step 150.
+  - **Entropy pinned:** VERIFY adds 0 instead of VHPOSR to the RNG seed in `g:$1ba58`.
+    No other beam or timer reads feed game state; `g:$19610` only waits for line 0 during
+    hardware init.
+  - **Tools:** `tools/hash_run.py` runs a tape with options, and `tools/hash_cmp.py` compares
+    two runs step by step.
+
+  Gate passed on the spikes tape, steps 0–339: the room changes, the death and "Press Button
+  to Continue" included.
+  - **Two boots:** equal.
+  - **Delay probe:** with an extra field in every frame, all 340 steps are still equal, so
+    nothing hashed depends on timing.
+  - **Sabotage:** skipping the blit changes both hashes at step 150 and nowhere else.
 - **A5 Benchmark routes.** Besides the spikes route, add (a) the first guard fight in level 1,
   (b) a busy later level reached with the level-skip trainer option (CUSTOM1 bit 2), and
   (c) a stretch of standing still, the floor case. Record each route's baseline A3 histogram

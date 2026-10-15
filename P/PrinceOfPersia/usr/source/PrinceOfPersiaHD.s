@@ -984,6 +984,9 @@ monitor
 	dc.l	WHDLTAG_CUSTOM4_GET
 verify_tape_number
 	dc.l	0
+	dc.l	WHDLTAG_CUSTOM5_GET
+verify_options
+	dc.l	0
 	ENDC
 		dc.l	0
 
@@ -1052,6 +1055,10 @@ reloc_fr4:
 	even
 _reloc_table_address
 	ds.b	10000
+	ENDC
+	IFD	VERIFY
+verify_log
+	ds.b	VERIFY_FRAMES*VERIFY_ENTRY
 	ENDC
 	
 
