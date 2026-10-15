@@ -460,6 +460,25 @@ Expected gains are fields per frame of CPU time, before bus contention.
   emulator edge-mask tests also pass against a per-pixel oracle. C6/G2 remains open;
   these gains do not yet meet the 16-field limit. D1 remains unvalidated.
 
+  *Done*, table-entry decoding: `$1173e` decodes back/foreground entries directly
+  into the register interface shared with `$11904`, preserving signed coordinates,
+  mode writeback and the original fallback. The draw core is entered by a tail call.
+
+  | Tape | Work (mean fields), before → now | On target, before → now |
+  |---|---|---|
+  | 1 | 2.772 → 2.759 | 286 → 286 of 301 |
+  | 3 | 3.595 → 3.588 | 302 → 302 of 355 |
+  | 4 | 3.562 → 3.546 | 266 → 267 of 357 |
+  | 5 | 2.065 → 2.061 | 299 → 299 of 299 |
+
+  Transitions: tape 1 **23/25 fields**, tape 3 **16**, tape 4 **26/23/20**.
+  Tape 3 now meets G2; C6/G2 remains open on tapes 1 and 4. Same-build opt 16/0
+  A4 comparisons show **0 differ** for 350/300/300/360 steps. Tape 3 opt 1 matches
+  opt 0; sabotage still differs only at step 150, in state and pixels. A3 uses
+  4000 fields, steps 2–300, opt 0. The palace `draw_tables` profile falls from
+  15.51 to 15.19 fields. Mask-only and deferred-setup direct-image experiments were
+  removed because they provided no net timing benefit. D1 remains unvalidated.
+
 - **C7 Gate after each step.** Run all A5 routes for A3 and A4 and the C-step's own profile,
   and record the result in `INTERNALS.md`. Stop when G1 and G2 hold; don't optimise past
   the goal.

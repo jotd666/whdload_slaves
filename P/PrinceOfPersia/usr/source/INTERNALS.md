@@ -439,6 +439,46 @@ C6/G2 remains open. The remaining room-transition periods are 23/25 (tape 1),
 room-table construction remain the next targets. G1 is also not complete: although
 286/301 tape-1 frames are on target, some overruns still exceed one field.
 
+### C6 table-entry decoding
+
+`$1173e` now reads each eight-byte back/foreground record directly into the
+register arguments of `fast_table_image_core`. This removes the intermediate
+five-argument stack call and duplicate register saves around `$11904`. Byte x
+components remain signed, y remains a signed word, and image/mode bytes remain
+unsigned. The shared core receives a pointer to the writable mode argument, so
+bit 7 is cleared in the same caller argument as before; the table record is never
+modified. Unsupported table selectors and image modes retain the original paths.
+The existing shape core, clipping, in-place flips, scratch copies and blits are
+unchanged. The shared core tail-calls the shape core.
+
+Tape 4's first room profile (step 56, 100 fields) changes from 27.00 to 26.00
+fields overall, with `redraw_screen` 26.13 → 25.86 and `draw_tables` 15.51 → 15.19.
+The old inclusive `$11904` figure is no longer directly comparable: most entries
+now call the shared core without passing through that patched game entry.
+
+Final A4, same build opt 16 versus 0, without new exclusions:
+
+| Tape | Steps | Matching digest |
+|---|---|---|
+| 1 | 1–350 | 7084c9dbd4a0 |
+| 3 | 1–300 | bb237507644d |
+| 4 | 1–300 | 012bfa20aea2 |
+| 5 | 1–360 | 195ef5d547f8 |
+
+Tape 3 opt 1 also matches for 300 steps. Tape 1 opt 4 differs only at the deliberate
+step-150 sabotage, in both state and pixels, over 175 steps. A3's exact mean work
+is 2.759163/3.588381/3.545789/2.061440 fields for tapes 1/3/4/5, with
+286/302/267/299 frames on target. Transition periods are 23/25, 16, and 26/23/20
+fields on tapes 1, 3, and 4 respectively. Only tape 3 now meets G2; C6 remains open.
+
+Two alternatives were measured and removed. A tag-8 mask-only renderer passed
+A4 but gave no useful net gain. An aligned, unclipped direct-image path with
+last-setup replay passed the first 100 palace steps but increased transition
+periods to 28/24/22. Its eligibility checks and replay costs outweighed the saved
+setup. An audit of 231 palace draw operations found only 22 shapes and five
+rectangles whose changed bits were entirely overwritten later (including no-ops);
+this is not enough evidence to remove any draw or reach G2 by that approach.
+
 ## B6 Bus budget
 
 `tools/bus_budget.py` reads the DMA records of the B2 traces. Every slot (2 CPU cycles) has

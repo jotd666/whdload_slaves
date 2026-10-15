@@ -41,6 +41,7 @@ pl_fast_v1
 	PL_P	$1c8d6,fast_clip
 	PL_P	$1cb94,fast_draw
 	; C6: the full-room draw invalidates both display buffers once
+	PL_P	$1173e,fast_draw_table_entry
 	PL_P	$1bec8,fast_draw_rect
 	PL_PS	$0abfe,fast_draw_room_tables
 	PL_P	$10c9a,fast_add_back
@@ -1177,12 +1178,65 @@ fast_get_frame
 	add.l	#$1c69c-$1000,a0
 	jmp	(a0)
 
+; g:$1173e: decode a back/foreground record into the table renderer's
+; registers. Signed byte coordinates and the unsigned image/mode are unchanged.
+fast_draw_table_entry
+	move.l	4(sp),d0
+	cmp.l	#1,d0
+	bhi.b	.original
+	movem.l	d2-d7/a2-a4,-(sp)
+	lea	$47d78,a1
+	tst.l	d0
+	beq.b	.table
+	lea	$483b8,a1
+.table
+	move.l	44(sp),d0
+	lsl.l	#3,d0
+	add.l	d0,a1
+	moveq	#0,d0
+	move.b	4(a1),d0
+	lsl.w	#2,d0
+	lea	$49aa8,a0
+	move.l	(a0,d0.w),d2
+	moveq	#0,d3
+	move.b	5(a1),d3
+	move.b	(a1),d4
+	ext.w	d4
+	lsl.w	#3,d4
+	move.b	1(a1),d0
+	ext.w	d0
+	add.w	d0,d4
+	ext.l	d4
+	move.w	2(a1),d5
+	ext.l	d5
+	moveq	#0,d6
+	move.b	6(a1),d6
+	move.l	d6,-(sp)			; mode argument cleared by flipped draws
+	move.l	sp,a4
+	bsr.w	fast_table_image_core
+	addq.l	#4,sp
+	movem.l	(sp)+,d2-d7/a2-a4
+	rts
+.original
+	link	a6,#0
+	movem.l	d2-d4,-(sp)
+	move.l	_reloc_base(pc),a0
+	add.l	#$11746-$1000,a0
+	jmp	(a0)
+
 ; draw_table_image(table, image, x, y, mode), g:$11904. Decode its modes
 ; directly into the tag state, then enter the shared draw core with registers.
 ; Unusual/asserting modes retain the original diagnostics and library fallback.
 fast_draw_table_image
 	movem.l	d2-d7/a2-a4,-(sp)
 	movem.l	40(sp),d2-d6
+	lea	56(sp),a4
+	bsr.w	fast_table_image_core
+	movem.l	(sp)+,d2-d7/a2-a4
+	rts
+
+; d2-d6: table, image, x, y, mode; a4 points to the writable mode argument.
+fast_table_image_core
 	move.l	d6,d0
 	and.l	#~$80,d0
 	cmp.l	#0,d0
@@ -1222,7 +1276,7 @@ fast_draw_table_image
 	sub.l	d0,d4
 	move.l	#1,$674ee
 	and.l	#~$80,d6
-	move.l	d6,56(sp)		; original clears bit 7 in its caller's argument
+	move.l	d6,(a4)			; original clears bit 7 in its caller's argument
 .unflipped
 	; (dimension-1)/2, with signed division rounding toward zero for zero
 	move.l	d0,d1
@@ -1273,12 +1327,20 @@ fast_draw_table_image
 .colour
 	move.l	#1,$67504
 .draw
-	bsr.w	fast_draw_shape_core
+	bra.w	fast_draw_shape_core
 .out
-	movem.l	(sp)+,d2-d7/a2-a4
 	rts
 .orig
-	movem.l	(sp)+,d2-d7/a2-a4
+	move.l	d6,-(sp)
+	move.l	d5,-(sp)
+	move.l	d4,-(sp)
+	move.l	d3,-(sp)
+	move.l	d2,-(sp)
+	bsr.b	.original
+	move.l	16(sp),(a4)
+	lea	20(sp),sp
+	rts
+.original
 	link	a6,#0
 	movem.l	d2-d7/a2-a3,-(sp)
 	move.l	_reloc_base(pc),a0
