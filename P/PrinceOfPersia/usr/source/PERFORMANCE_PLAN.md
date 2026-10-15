@@ -197,6 +197,18 @@ Sizes per frame, steady running / spike death (fields): work 3.72 / 5.41; full-s
   stays the same.
 - **B5 Room change.** Break `g:$0aba0` down: `$0bafa` full-room tile draw (50%), `$0f3e2`
   (13%), and the parts that are loading or decompression rather than drawing.
+  *Done* (`INTERNALS.md` B5). There is no loading or decompression.
+  - `g:$0aba0` (redraw_screen, 29–38 fields of a 33–42-field frame) splits into:
+    - `g:$0bafa` `draw_tables` into buffer 0: 19–26 fields. Two thirds of that is per-shape
+      CPU work (clipping, the image lookup, plane pointers, plane blit setup), and a third is
+      STOP waits.
+    - `g:$0f3e2` redraw_room, which queues every tile's pieces: 5 fields.
+    - The ordinary frame: 4–5.6.
+    - Clears: 1.
+  - Before it, the frame clears and shows a blank buffer: 2.9 fields.
+
+  This also corrects two labels: B1's "layers" are SDLPoP's back, mid, fore and wipe tables,
+  and `g:$1bec8` is `draw_rect`.
 - **B6 Bus budget.** From the DMA records, the free chip-bus slots per frame on the A500,
   with code running from slow RAM, which shares the chip bus. This is the ceiling on what
   overlapping blits with CPU work (C1, C2) can win.

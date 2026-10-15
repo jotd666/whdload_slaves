@@ -39,16 +39,20 @@ The game draws into five 320×200×5 bitplane buffers. Each is 40,000 bytes: fiv
 1. `g:$094cc` makes the hidden display buffer the target.
 2. Logic runs: `g:$0c0ac` reads the controls, then `g:$1249e` and `g:$1156a`.
 3. `g:$0ba56` draws:
-   1. With buffer 0 as the target, it draws layers 0 and 1 from two draw lists: `$489f8`
-      (8-byte records tagged with a layer, via `g:$116fa`) and `$47d64[layer]` (via
-      `g:$116a2` → `g:$1173e`). These are room pieces that change, such as gates and
+   1. With buffer 0 as the target, it draws layers 0 and 1 from SDLPoP's draw tables
+      (B3, B5):
+      - the wipe table `$489f8`: 8-byte records tagged with a layer, drawn by
+        `draw_wipes` (`g:$116fa`) as `draw_rect` fills;
+      - the back (0) and fore (1) tables, with their counts in `$47d64[table]`, drawn by
+        `draw_table` (`g:$116a2`) → `draw_back_fore` (`g:$1173e`). These are room pieces that change, such as gates and
       loose floors. Nothing restores buffer 0 between frames, so these draws repaint their
       own area, and buffer 0 stays a clean picture of the room as it is now.
    2. The target goes back to the hidden display buffer.
    3. `g:$094e4` = `g:$1bd5e(0, 4)` copies buffer 0 onto it. This is the 40,000-byte copy:
       `g:$1975c` does it as A→D blits of `$1000` words.
-   4. Layer 3 (the characters, `g:$116a2(3)` → `g:$117c4`) is drawn on top, then layer 1
-      again, so those pieces end up in front of the characters.
+   4. The mid table (table 3: the characters and other moving objects, `g:$116a2(3)` →
+      `draw_mid` `g:$117c4`) is drawn on top. Then come the layer-1 wipes and the fore
+      table again, so those pieces end up in front of the characters.
 4. `g:$094f8` publishes, and `g:$0950c` waits for the swap.
 
 **What reads the copy's destination:**
@@ -98,7 +102,7 @@ buffer showed two frames earlier.
 | `g:$1975c` | `g:$1bd5e`, `g:$1bf76` | `$053a2` | A→D copy in `$1000`-word blits at `$197c0`/`$197dc`/`$197ea` | buffer by id |
 | `g:$19802` | `g:$1bd9a`, `g:$1bf76` | `$053a2` | D-only clear or fill at `$19852`/`$1986e`/`$1987c` | buffer by id |
 | `g:$19894` | rectangle copy `g:$1be18` ← `g:$09560` | `$053a2` | between buffers | buffer by id |
-| `g:$199e0` | image draw `g:$1bec8` (room tiles, 12 callers) | `$053a2` | per plane at `$19b22`/`$19b4e` | buffer by id, mostly 0 |
+| `g:$199e0` | `draw_rect` `g:$1bec8` (12 callers: wipes, room clears) | `$053a2` | rectangle fill per plane at `$19b22`/`$19b4e` | buffer by id, mostly 0 |
 | `g:$1960c` | start-up `g:$195f8` | `$053a2` | the first clear | |
 
 **CPU accesses to blit memory.** `tools/blit_touch.py` reads raw traces (`tools/trace_at.py`,
@@ -247,3 +251,53 @@ frame loop at `g:$0b882`. This covers the level-start message.
 - C5 (the draw path) is where late frames can be fixed. C2 and C3 take a fixed 0.5–0.8 off
   every frame, which makes the room C5 needs.
 - The palette fade is a separate fix for the level-start frames.
+
+## B5 Room change
+
+The room-change frame takes the `$470d2` branch of the frame loop. The measurements are
+from raw traces (`tools/trace_at.py`) at tape 1 step 122 and tape 4 step 58, timed by the PCs
+of the call sites.
+
+| Part | Tape 1 | Tape 4 |
+|---|---|---|
+| Frame logic up to the room check | 1.1 | 1.3 |
+| `g:$1bd9a(4, 0)`: clear the hidden buffer | 0.9 | 0.8 |
+| Publish that blank buffer and wait for it | 2.0 | 1.8 |
+| **`g:$0aba0`, redraw_screen:** | 29.0 | 37.7 |
+| — palace colours (`g:$0c6e0`, levels flagged in `g:$06350`) and `draw_rect(rect_top)` clearing buffer 0's room area (`g:$1bec8`) | ~1 | 1.2 |
+| — `g:$0f3e2`, redraw_room: `draw_room` in full-redraw mode (`g:$064c4` = 1, `g:$0f5e4`), with every tile's nine `draw_tile` parts queued (`g:$0f6be`), plus `g:$1249e`, `g:$132f0`, `g:$0e47e` | 4.9 | 5.0 |
+| — `g:$0bafa`, `draw_tables` into buffer 0: wipes 0, back, mid, wipes 1, fore | 19.0 | 25.9 |
+| — the ordinary frame: logic (`g:$1249e`, `g:$1156a`), then `g:$0ba56` | 4.0 | 5.6 |
+| **Whole frame** | 33 | 42 |
+
+All figures are in fields.
+
+The screen stays blank for the whole redraw: that blank buffer is what is shown.
+
+**Where `draw_tables` goes.** Tape 1 window, image draw `g:$1c29c`, 20.2 fields inclusive:
+
+| Routine | Share | What it does |
+|---|---|---|
+| `g:$05686` | 44% | Shape blits; STOP waits in `g:$053d6` are 34% |
+| `g:$1c694` → `g:$1c802`, `g:$1dd14` | 13% | Image table lookup |
+| `g:$1c29c` own | 9% | |
+| `g:$1c8d6` | 7% | Clip test |
+| `g:$1ce74` | 6.5% | Plane source pointers `$67528`–`$6753c`: per plane, the image data or the blank plane at `$49c8`, from the plane mask `$67509` |
+| `g:$1cc8c` | 5.7% | Clip setup |
+| `g:$05432` | 4% | The six scratch blits |
+
+**No loading or decompression.** The room change reads no disk and calls no unpacker: the
+level is already in memory. All of it is drawing (draw tables 66%) and building the tables
+(17%).
+
+**For C6:**
+- Most of the target is in `draw_tables`. Of that, two thirds is the CPU's per-shape work:
+  clipping, the table lookup, choosing the plane pointers, and setting up five plane blits
+  per shape. The
+  other third is blitter waits.
+- A full-room path can set up once per tile rather than per piece, so C5's setup removal
+  applies to it directly.
+- C1 helps the waits only a little (B6).
+- The blank-screen publish and wait (2 fields) is visible behaviour and stays.
+- To reach 16 fields, `draw_tables` has to go from 19–26 fields to about 8–14, and
+  redraw_room's 5 fields have to shrink as well.
