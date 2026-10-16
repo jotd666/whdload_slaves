@@ -84,9 +84,21 @@ _expmem
 ;============================================================================
 
 DECL_VERSION:MACRO
-	dc.b	"5.0b (17.10.2026)"
-	ENDM
+	dc.b	"5.1"
+	IFD BARFLY
+		dc.b	" "
+		INCBIN	"T:date"
+	ENDC
 
+	IFD	DATETIME
+		dc.b	" "
+		incbin	datetime
+	ENDC
+	ENDM
+	dc.b	"$VER: slave "
+	DECL_VERSION
+	dc.b	0
+	
 _name		dc.b	"Prince Of Persia"
     IFD CHIP_ONLY
     dc.b    " (DEBUG/CHIP MODE)"
@@ -111,6 +123,9 @@ _config
 		dc.b    "C2:X:second button jumps:0;"
 		dc.b    "C2:X:up disabled:1;"
 		dc.b    "C3:B:Save from any level;"
+	IFD	VERIFY
+		dc.b    "C5:X:Use original drawing routines;4"
+	ENDC
 		dc.b	0
 		
 		dc.b	"$VER: PrinceOfPersia "
