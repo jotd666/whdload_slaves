@@ -83,22 +83,17 @@ _expmem
 		
 ;============================================================================
 
-	IFD BARFLY
-	DOSCMD	"WDate  >T:date"
-	ENDC
-	
 DECL_VERSION:MACRO
-	dc.b	"4.4"
-	IFD BARFLY
-		dc.b	" "
-		INCBIN	"T:date"
-	ENDC
+	dc.b	"5.0b (17.10.2026)"
 	ENDM
 
 _name		dc.b	"Prince Of Persia"
     IFD CHIP_ONLY
     dc.b    " (DEBUG/CHIP MODE)"
     ENDC
+	IFD	VERIFY
+	dc.b	" (VERIFY)"
+	ENDC
     dc.b 0
 _copy		dc.b	"1990 Jordan Mechner/Broderbund",0
 _info		dc.b	"adapted & fixed by JOTD & Harry",10,10
@@ -131,7 +126,7 @@ MAX_LEVEL = $D
 BASE_ADDRESS = $7E800
 
 IGNORE_JOY_DIRECTIONS
-	include	ReadJoyPad.s
+	include	ReadJoypad.s
 	
 ;======================================================================
 start	;	A0 = resident loader
@@ -200,6 +195,7 @@ start	;	A0 = resident loader
 .vok
 	lea	version(pc),a3
 	move.l	d1,(a3)
+	bsr.w	fix_version_addresses
 	
 	; set address for pause flag (not relocated)
 	lea		pause_address_table(pc),a1
@@ -512,7 +508,7 @@ pl_v1
 ;	PL_P	$53d6,blitter_2
 ;	PL_ENDIF
 	
-	PL_END
+	PL_NEXT	pl_fast_v1
 
 
 pl_v2_ntsc
@@ -571,7 +567,7 @@ pl_v2
 	PL_B	$19065,MAX_LEVEL
 
 	PL_ENDIF
-	PL_END
+	PL_NEXT	pl_fast_v1
 	
 ; german
 pl_v3_ntsc
@@ -630,7 +626,7 @@ pl_v3:
 	PL_ENDIF
 	
 
-	PL_END
+	PL_NEXT	pl_fast_v1
 
 ; version 4 - French version "Prince de Perse"
 
@@ -694,7 +690,7 @@ pl_v4:
 	PL_B $19093,MAX_LEVEL
 	PL_ENDIF
 
-	PL_END
+	PL_NEXT	pl_fast_v1
 
 
 	DEF_TRAINER		1,$47AD4
@@ -973,6 +969,14 @@ button_controls		dc.l	0
 	dc.l	WHDLTAG_MONITOR_GET
 monitor
 	dc.l	0
+	IFD	VERIFY
+	dc.l	WHDLTAG_CUSTOM4_GET
+verify_tape_number
+	dc.l	0
+	dc.l	WHDLTAG_CUSTOM5_GET
+verify_options
+	dc.l	0
+	ENDC
 		dc.l	0
 
 joypad_state
@@ -1032,11 +1036,21 @@ reloc_fr4:
 
 	even
 	
+	include	PrinceOfPersiaVersions.i
+	include	PrinceOfPersiaFast.s
+	IFD	VERIFY
+	include	PrinceOfPersiaVerify.s
+	ENDC
+	include	PrinceOfPersiaVersions.s
 	include	savegame.s
 	IFD	RELOC_ENABLED
 	even
 _reloc_table_address
 	ds.b	10000
+	ENDC
+	IFD	VERIFY
+verify_log
+	ds.b	VERIFY_FRAMES*VERIFY_ENTRY
 	ENDC
 	
 
