@@ -29,7 +29,7 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
 
- version 5.0b (17.10.2026) done by Vesuri:
+ version 5.1 (17.10.2026) done by Vesuri:
  - faster drawing, background restoration, room construction and game logic,
    aimed at improving Amiga 500 performance
  - enhancements enabled by default for UK, US, German and French versions;

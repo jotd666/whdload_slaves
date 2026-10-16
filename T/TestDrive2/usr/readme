@@ -49,11 +49,13 @@ Thanks go to:
 
 History:
 
- version 2.0 (07.10.2026) done by Vesuri:
+ version 2.1 (08.10.2026) done by Vesuri:
  - fixed a startup black screen on 68040 caused by stale cached overlay
    calls (108868-byte duel): flush caches after loading/unloading overlays.
    Confirmed on an A1200/68040 at 40 MHz with MMU and 32 MB RAM. The fix
    applies with Enhanced framerate either on or off
+
+ version 2.0 (07.10.2026) done by Vesuri:
  - added the "Enhanced framerate" option (CUSTOM2), for the version of the game
    whose "duel" file is 108868 bytes long (the other version is unchanged):
    - the game logic runs at a fixed rate, independently of drawing: every 6
