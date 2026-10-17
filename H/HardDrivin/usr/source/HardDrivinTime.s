@@ -1,0 +1,897 @@
+; SPS 0126 elapsed-time foundation, enabled at runtime by CUSTOM1.
+; Optional VERIFY_TIME_DISPATCH feeds bounded elapsed intervals to the solver.
+; Without that flag, scalar/motion diagnostics continue to use a constant T.
+; The release feature set compiles these hooks; CUSTOM1 enables them at runtime.
+;
+; Nominal reference f0=50/8 native steps per second. Every PAL field therefore
+; contributes exactly $2000 in Q16.16; conversion has no rounding remainder.
+; Keep field debt in 32-bit field units, not a saturating Q16.16 total. The
+; bounded policy drains eight fields per substep; VERIFY_DISPATCH_CPU selects
+; a full-frame interval on pre-68020 CPUs.
+TIME_FIELDS_PER_STEP equ 8
+TIME_FIELD_Q16 equ $2000
+
+_time_install:
+	IFD VERIFY_PROJECTION_QUANTIZED_MATH
+	bsr _projection_quant_math_test
+	ENDC
+	IFD VERIFY_DISSIPATION_MATH
+	bsr _dissipation_math_test
+	ENDC
+	IFD VERIFY_TRAFFIC_ROUTE_MATH
+	IFND VERIFY_TIME_TRAFFIC
+	FAIL "VERIFY_TRAFFIC_ROUTE_MATH requires VERIFY_TIME_TRAFFIC"
+	ENDC
+	bsr _traffic_route_math_test
+	ENDC
+	IFD VERIFY_TRAFFIC_PHASE_MATH
+	IFND VERIFY_TIME_TRAFFIC
+	FAIL "VERIFY_TRAFFIC_PHASE_MATH requires VERIFY_TIME_TRAFFIC"
+	ENDC
+	bsr _traffic_phase_math_test
+	ENDC
+	IFD VERIFY_DISPATCH_CPU
+	IFND VERIFY_TIME_DISPATCH
+	FAIL "VERIFY_DISPATCH_CPU requires VERIFY_TIME_DISPATCH"
+	ENDC
+	ENDC
+	IFD VERIFY_TRAFFIC_SPEED_MATH
+	IFND VERIFY_TIME_TRAFFIC
+	FAIL "VERIFY_TRAFFIC_SPEED_MATH requires VERIFY_TIME_TRAFFIC"
+	ENDC
+	bsr _traffic_speed_math_test
+	ENDC
+	IFD VERIFY_ANGLE_WIDE_MATH
+	IFND VERIFY_TIME_MOTION
+	FAIL "VERIFY_ANGLE_WIDE_MATH requires VERIFY_TIME_MOTION"
+	ENDC
+	bsr _angle_wide_test
+	ENDC
+	IFD VERIFY_RAMP_WIDE_MATH
+	IFND VERIFY_TIME_SCALARS
+	FAIL "VERIFY_RAMP_WIDE_MATH requires VERIFY_TIME_SCALARS"
+	ENDC
+	bsr _ramp_wide_test
+	ENDC
+	IFD VERIFY_FALL_WIDE_MATH
+	IFND VERIFY_TIME_MOTION
+	FAIL "VERIFY_FALL_WIDE_MATH requires VERIFY_TIME_MOTION"
+	ENDC
+	bsr _motion_fall_wide_test
+	ENDC
+	IFD VERIFY_POSITION_WIDE_MATH
+	IFND VERIFY_TIME_MOTION
+	FAIL "VERIFY_POSITION_WIDE_MATH requires VERIFY_TIME_MOTION"
+	ENDC
+	bsr _motion_position_wide_test
+	bsr _projection_wide_test
+	ENDC
+	IFD VERIFY_DECAY_MATH
+	IFND VERIFY_TIME_SCALARS
+	FAIL "VERIFY_DECAY_MATH requires VERIFY_TIME_SCALARS"
+	ENDC
+	bsr _decay_math_test
+	ENDC
+	IFD VERIFY_PRESENTATION_MATH
+	bsr _presentation_math_test
+	ENDC
+	IFD VERIFY_TRAFFIC_MATH
+	bsr _traffic_math_test
+	ENDC
+	IFD VERIFY_PROJECTION_MATH
+	bsr _projection_math_test
+	ENDC
+	IFD VERIFY_CONTACT_MATH
+	bsr _contact_math_test
+	ENDC
+	IFD VERIFY_MOTION_MATH
+	bsr _motion_math_test
+	ENDC
+	IFD VERIFY_TIME_SCALAR_MATH
+	bsr _time_scalar_math_test
+	ENDC
+	IFD VERIFY_TIME_MATH
+	bsr _time_math_test
+	ENDC
+	cmpi.l #$11a4e,d0
+	bne.s .done
+	movem.l d0-d1/a0-a2,-(a7)
+	move.l _ct_ct1(pc),d0
+	beq.s .restore
+	movea.l a0,a1
+	lea _time_patches(pc),a0
+	movea.l _resload(pc),a2
+	jsr resload_Patch(a2)
+	IFD VERIFY_TIME_SCALARS
+	movea.l _code_start(pc),a1
+	lea _time_scalar_patches(pc),a0
+	movea.l _resload(pc),a2
+	jsr resload_Patch(a2)
+	IFD VERIFY_TIME_MOTION
+	bsr _motion_install
+	ENDC
+	IFD VERIFY_TIME_TRAFFIC
+	bsr _traffic_install
+	ENDC
+	IFD VERIFY_TIME_PRESENTATION
+	bsr _presentation_install
+	ENDC
+	IFD VERIFY_TIME_DISPATCH
+	bsr _dispatch_install
+	IFD VERIFY_DRIVETRAIN_REFERENCE
+	bsr _drivetrain_install
+	ENDC
+	ENDC
+	IFD VERIFY_TIME_REPLAY_TIMING
+	bsr _replay_install
+	IFD VERIFY_TIME_AUDIO
+	bsr _audio_install
+	ENDC
+	ENDC
+	IFD VERIFY_TIME_TIMELINES
+	bsr _timeline_install
+	ENDC
+	IFD VERIFY_TIME_ATTRACT
+	bsr _attract_install
+	ENDC
+	IFD VERIFY_TIME_PHANTOM
+	bsr _phantom_install
+	ENDC
+	ENDC
+.restore:
+	movem.l (a7)+,d0-d1/a0-a2
+.done:
+	rts
+
+_time_patches:
+	PL_START
+	; PERF_RANGE CUSTOM1 $00050 $0006: VBL elapsed fields, preserve incoming X
+	PL_PS $50,_time_vbl
+	; PERF_RANGE CUSTOM1 $10ed4 $0008: live-loop boundary and race exit
+	PL_P $10ed4,_time_outer
+	; PERF_RANGE CUSTOM1 $07c52 $0008: pause entry, native clock/audio calls
+	PL_PSS $7c52,_time_pause,2
+	; PERF_RANGE CUSTOM1 $07c64 $0006: pause exit, resume prior timing epoch
+	PL_PS $7c64,_time_resume
+	; PERF_RANGE CUSTOM1 $07770 $0008: options-menu suspension boundary
+	PL_PSS $7770,_time_options_suspend,2
+	; PERF_RANGE CUSTOM1 $077ac $0006: options-menu resume
+	PL_PS $77ac,_time_resume
+	; PERF_RANGE CUSTOM1 $10f52 $0008: replay call and frame publication
+	PL_PSS $10f52,_time_replay,2
+	PL_END
+
+; Enter after native interrupt register saves. A4 has not yet been loaded.
+; Saving/restoring CCR is essential: native lap ABCD consumes interrupted X.
+; MOVE from SR is legal here on all CPUs because this is the VBL interrupt.
+_time_vbl:
+	movea.l (a1),a4
+	move.w sr,-(a7)
+	move.l a0,-(a7)
+	IFD VERIFY_ATTRACT_PAUSE
+	lea _attract_input_state(pc),a0
+	addq.l #1,(a0)
+	ENDC
+	IFD VERIFY_TIME_REPLAY_TIMING
+	lea _replay_state(pc),a0
+	tst.b RP_PAUSED(a0)
+	bne.s .replay_paused
+	addq.l #1,RP_WALL(a0)
+.replay_paused:
+	ENDC
+	lea _time_state(pc),a0
+	tst.b TS_ACTIVE(a0)
+	beq.s .idle
+	addq.l #1,TS_FIELDS(a0)
+.idle:
+	movea.l (a7)+,a0
+	move.w (a7)+,ccr
+	tst.b -$6a14(a4)
+	rts
+
+; The diagnostic publishes elapsed fields and the first bounded T. Pending is
+; cumulative OBSERVED time, not a claim that physics has consumed that time.
+; Counters wrap modulo 2^32, including the subtraction at each pass boundary.
+_time_outer:
+	movem.l d0-d1/a0-a1,-(a7)
+	moveq #0,d1
+	roxl.b #1,d1
+	move.w d1,-(a7)
+	lea _time_state(pc),a0
+	tst.b -$522c(a4)
+	beq .leave
+	tst.b TS_ACTIVE(a0)
+	bne.s .measure
+	st TS_ACTIVE(a0)
+	IFD VERIFY_TIME_SCALARS
+	bsr _time_reset_scalars
+	ENDC
+	move.l TS_FIELDS(a0),TS_PREVIOUS(a0)
+.measure:
+	move.l TS_FIELDS(a0),d0
+	move.l d0,d1
+	sub.l TS_PREVIOUS(a0),d0
+	move.l d1,TS_PREVIOUS(a0)
+	move.l d0,TS_ELAPSED(a0)
+	add.l d0,TS_OBSERVED(a0)
+	addq.l #1,TS_PASSES(a0)
+	IFD VERIFY_TIME_DISPATCH
+	IFD VERIFY_DISPATCH_CPU
+	IFND VERIFY_DISPATCH_NATIVE
+	IFND VERIFY_DISPATCH_TEST_FIELDS
+	; Full-frame 68000 policy: publish the shared frame block in one pass.
+	move.w _dispatch_cpu_single(pc),d1
+	beq.s .bounded_dispatch
+	cmpi.l #65535,d0
+	bhi.s .bounded_dispatch
+	lea _dispatch_state(pc),a1
+	clr.l DS_PENDING(a1)
+	add.l d0,DS_CONSUMED(a1)
+	addq.l #1,DS_STEPS(a1)
+	move.l #1,DS_FRAME_STEPS(a1)
+	move.l d0,DS_FRAME_FIELDS(a1)
+	move.l d0,DS_OVERLAY_FIELDS(a1)
+	move.w #$ffff,DS_ACTIVE(a1)
+	lea _time_scalar_fields(pc),a1
+	move.w d0,(a1)
+	swap d0
+	lsr.l #3,d0
+	move.l d0,TS_T(a0)
+	lea _events_score_state(pc),a1
+	clr.b 2(a1)
+	clr.b 6(a1)
+	bra.s .dispatch_ready
+.bounded_dispatch:
+	ENDC
+	ENDC
+	ENDC
+	move.l d2,-(a7)
+	bsr _dispatch_begin_frame
+	move.l (a7)+,d2
+.dispatch_ready:
+	ENDC
+	IFD VERIFY_TIME_SCALARS
+	IFND VERIFY_TIME_DISPATCH
+	move.l d0,-(a7)
+	ENDC
+	bsr _time_prepare_constants
+	IFND VERIFY_TIME_DISPATCH
+	move.l (a7)+,d0
+	ENDC
+	ENDC
+	IFND VERIFY_TIME_DISPATCH
+	cmpi.l #TIME_FIELDS_PER_STEP,d0
+	bls.s .bounded
+	moveq #TIME_FIELDS_PER_STEP,d0
+.bounded:
+	moveq #13,d1
+	lsl.l d1,d0
+	move.l d0,TS_T(a0)
+	ENDC
+	movea.l _code_start(pc),a1
+	adda.l #$10edc,a1
+	bra.s .return
+.leave:
+	clr.b TS_ACTIVE(a0)
+	movea.l _code_start(pc),a1
+	adda.l #$10f5e,a1
+.return:
+	move.l a1,TS_RETURN(a0)
+	move.w (a7)+,d1
+	lsr.b #1,d1
+	movem.l (a7)+,d0-d1/a0-a1
+	; Reproduce native final TST flags; use a memory-indirect RTS trampoline.
+	move.l _time_state+TS_RETURN(pc),-(a7)
+	tst.b -$522c(a4)
+	rts
+
+	IFD VERIFY_TIME_SCALARS
+; Cache by actual scalar interval. Native engine endpoints temporarily use n=8,
+; off-road phase decay uses PH_DT, and a later dispatcher substep may differ.
+; Consumers compare their own n before using a coefficient; mismatches keep
+; the original tables. Initialize the sentinel interval65535 with exact values.
+FC_THROTTLE equ 4
+FC_SPIN equ 8
+FC_CONTACT equ 12
+FC_RATE equ 16
+_time_frame_constants:
+	dc.w 65535,0
+	dc.l 65536,65536,65536,8
+_time_prepare_constants:
+	moveq #0,d0
+	move.w _time_scalar_fields(pc),d0
+	cmp.w _time_frame_constants(pc),d0
+	beq .done
+	cmpi.w #32,d0
+	bhi.s .calculate
+	move.l a0,-(a7)
+	move.w d0,d1
+	lsl.w #4,d1
+	lea _time_constant_rows(pc),a0
+	adda.w d1,a0
+	lea _time_frame_constants+FC_THROTTLE(pc),a1
+	REPT 4
+	move.l (a0)+,(a1)+
+	ENDR
+	lea _time_frame_constants(pc),a1
+	move.w d0,(a1)
+	IFD VERIFY_TIME_MOTION
+	move.l FC_RATE(a1),d1
+	ELSE
+	move.l #8,FC_RATE(a1)
+	move.l FC_CONTACT(a1),d1
+	neg.l d1
+	addi.l #65536,d1
+	ENDC
+	movea.l (a7)+,a0
+	rts
+.calculate:
+	lea _time_frame_constants(pc),a1
+	move.w d0,d1
+	bsr _decay_throttle
+	move.l d1,FC_THROTTLE(a1)
+	move.w d0,d1
+	bsr _decay_spin
+	move.l d1,FC_SPIN(a1)
+	move.w d0,d1
+	bsr _decay_contact
+	move.l d1,FC_CONTACT(a1)
+	neg.l d1
+	addi.l #65536,d1
+	IFD VERIFY_TIME_MOTION
+	cmpi.w #8,d0
+	bls.s .short_rate
+	; Same independently rounded Gain/T as _contact_response's wide path.
+	move.l FC_CONTACT(a1),d1
+	lsl.l #3,d1
+	move.l d0,-(a7)
+	lsr.l #1,d0
+	add.l d0,d1
+	move.l (a7)+,d0
+	divu.w d0,d1
+	andi.l #$ffff,d1
+	bra.s .rate_ready
+.short_rate:
+	move.l a0,-(a7)
+	lea _contact_rate_gain(pc),a0
+	move.w d0,d1
+	add.w d1,d1
+	move.w (a0,d1.w),d1
+	andi.l #$ffff,d1
+	movea.l (a7)+,a0
+.rate_ready:
+	move.l d1,FC_RATE(a1)
+	ENDC
+	; Publish the key last: table routines must not read half-updated data.
+	move.w d0,(a1)
+.done:
+	rts
+; Exact existing Q16 coefficients for common intervals 0..32; wide intervals
+; keep the original calculation. Four consumed coefficients per row; unused arithmetic cache fields are omitted.
+_time_constant_rows:
+	dc.l 0,0,0,0
+	dc.l 1085,857,2315,18519
+	dc.l 2152,1704,4548,18192
+	dc.l 3201,2539,6702,17872
+	dc.l 4233,3363,8780,17560
+	dc.l 5247,4177,10785,17256
+	dc.l 6245,4979,12719,16958
+	dc.l 7227,5772,14584,16668
+	dc.l 8192,6554,16384,16384
+	dc.l 9141,7325,18120,16107
+	dc.l 10075,8087,19795,15836
+	dc.l 10993,8839,21411,15572
+	dc.l 11896,9580,22969,15313
+	dc.l 12784,10312,24473,15060
+	dc.l 13657,11035,25923,14813
+	dc.l 14515,11748,27322,14572
+	dc.l 15360,12452,28672,14336
+	dc.l 16191,13146,29974,14105
+	dc.l 17007,13832,31230,13880
+	dc.l 17811,14508,32442,13660
+	dc.l 18601,15176,33611,13444
+	dc.l 19378,15835,34738,13234
+	dc.l 20142,16485,35826,13028
+	dc.l 20893,17127,36876,12826
+	dc.l 21632,17760,37888,12629
+	dc.l 22359,18385,38865,12437
+	dc.l 23073,19002,39807,12248
+	dc.l 23776,19611,40715,12064
+	dc.l 24468,20212,41592,11883
+	dc.l 25147,20805,42438,11707
+	dc.l 25816,21390,43254,11534
+	dc.l 26473,21968,44041,11365
+	dc.l 27120,22538,44800,11200
+	ENDC
+
+_time_pause:
+	IFD VERIFY_TIME_REPLAY_TIMING
+	bsr _replay_pause
+	ENDC
+	move.l a0,-(a7)
+	lea _time_state(pc),a0
+	move.b TS_ACTIVE(a0),TS_SUSPENDED(a0)
+	clr.b TS_ACTIVE(a0)
+	movea.l (a7)+,a0
+	clr.b -$6a13(a4)
+	jsr -$7fd4(a4)
+	rts
+
+_time_options_suspend:
+	IFD VERIFY_TIME_REPLAY_TIMING
+	bsr _replay_pause
+	ENDC
+	move.l a0,-(a7)
+	lea _time_state(pc),a0
+	move.b TS_ACTIVE(a0),TS_SUSPENDED(a0)
+	clr.b TS_ACTIVE(a0)
+	movea.l (a7)+,a0
+	clr.b -$6a13(a4)
+	clr.b -1(a5)
+	rts
+
+_time_resume:
+	IFD VERIFY_TIME_REPLAY_TIMING
+	bsr _replay_resume
+	ENDC
+	move.l a0,-(a7)
+	lea _time_state(pc),a0
+	move.b TS_SUSPENDED(a0),TS_ACTIVE(a0)
+	movea.l (a7)+,a0
+	move.b #$ff,-$6a13(a4)
+	rts
+
+_time_replay:
+	tst.b -$5229(a4)
+	beq.s .submit
+	bsr _time_replay_call
+.submit:
+	jsr -$7fe6(a4)
+	rts
+
+; Shared by both gameplay loops; the caller owns frame submission.
+_time_replay_call:
+	; Suspend only if the native replay is actually requested. Ordinary frames
+	; must still account for their rendering and ready-buffer wait.
+	tst.b -$5229(a4)
+	beq.s .ordinary
+	movem.l d0/a0,-(a7)
+	lea _time_state(pc),a0
+	moveq #0,d0
+	move.b TS_ACTIVE(a0),d0
+	clr.b TS_ACTIVE(a0)
+	move.w d0,-(a7)
+	movea.l _code_start(pc),a0
+	adda.l #$10b08,a0
+	jsr (a0)
+	move.w (a7)+,d0
+	lea _time_state(pc),a0
+	move.b d0,TS_ACTIVE(a0)
+	IFD VERIFY_TIME_SCALARS
+	bsr _time_reset_scalars
+	ENDC
+	movem.l (a7)+,d0/a0
+.ordinary:
+	; Native 10B08 only saves registers, tests this byte and restores them.
+	; The test above already supplies exactly those flags (including X).
+.done:
+	rts
+
+; Published diagnostic block, retained in slave memory, never game globals.
+TS_FIELDS equ 0
+TS_PREVIOUS equ 4
+TS_ELAPSED equ 8
+TS_OBSERVED equ 12
+TS_PASSES equ 16
+TS_T equ 20
+TS_RETURN equ 24
+TS_ACTIVE equ 28
+TS_SUSPENDED equ 29
+	CNOP 0,4
+_time_signature: dc.b 'HDTIME01'
+_time_state: dcb.b 32,0
+
+; Exact signed integration in eighths of a native step. D0.W is a native
+; integer increment, D1.W is unsigned fields 0..65535, D2.L carry -7..7.
+; Return integer increment in D0.L and signed carry in D2.L; preserve D1.
+; Truncate toward zero, matching native signed divisions. The short-interval
+; path and longer intervals both return an exact signed-long quotient.
+; Eighths are an exact compact representation of the public Q16.16 fraction.
+_time_scale_word:
+	; A valid signed eighth remainder (-7..7) stays fractional at zero rate.
+	tst.w d0
+	bne.s .nonzero
+	moveq #0,d0
+	rts
+.nonzero:
+	; Native engine endpoints use n=8 with zero carry. This exact identity
+	; avoids both multiplication and division on the common scalar path.
+	cmpi.w #8,d1
+	bne.s .scaled
+	tst.l d2
+	bne.s .scaled
+	ext.l d0
+	rts
+.scaled:
+	cmpi.w #8,d1
+	bhi.s .wide
+	; For fields0..8 and carry[-7,7], the truncated quotient remains a
+	; signed word even at rate extrema. ASR plus signed remainder repair
+	; therefore matches DIVS exactly, without its variable division cost.
+	muls.w d1,d0
+	bra.s .product
+.wide:
+	bsr _time_multiply_fields
+.product:
+	add.l d2,d0
+	move.l d0,d2
+	asr.l #3,d0
+	andi.l #7,d2
+	tst.l d0
+	bpl.s .wide_done
+	tst.l d2
+	beq.s .wide_done
+	addq.l #1,d0
+	subq.l #8,d2
+.wide_done:
+	rts
+; Signed word rate times unsigned word fields, exact signed-long product.
+; The largest magnitude is 32768*65535, within the signed-long range.
+_time_multiply_fields:
+	tst.w d0
+	bmi.s .negative
+	mulu.w d1,d0
+	rts
+.negative:
+	neg.w d0
+	mulu.w d1,d0
+	neg.l d0
+	rts
+
+; Q16 companion for rates needing exponential retention between ramp updates.
+; D0.W: rate with magnitude <=16383; D1.W: fields 0..65535; D2.L: signed Q16
+; remainder -65535..65535. Return D0.L integer increment, D2.L remainder.
+; Long intervals split integer and fractional parts before Q16 conversion,
+; avoiding overflow of a full scaled Q16 intermediate.
+_time_scale_q16:
+	; A zero rate leaves only the normalized signed Q16 carry.
+	tst.w d0
+	bne.s .nonzero
+	move.l d2,d0
+	bra.s _time_split_q16
+.nonzero:
+	; Throttle ramps are exactly +/-2 units per native step. For every
+	; unsigned field count, fields*16384 plus a valid Q16 carry fits signed
+	; long (maximum magnitude1073790975), avoiding wide split/multiply work.
+	cmpi.w #2,d0
+	beq.s .ramp_up
+	cmpi.w #-2,d0
+	bne.s .general
+	moveq #0,d0
+	move.w d1,d0
+	swap d0
+	lsr.l #2,d0
+	neg.l d0
+	add.l d2,d0
+	bra.s _time_split_q16
+.ramp_up:
+	moveq #0,d0
+	move.w d1,d0
+	swap d0
+	lsr.l #2,d0
+	add.l d2,d0
+	bra.s _time_split_q16
+.general:
+	cmpi.w #8,d1
+	bhi.s _time_scale_q16_wide
+	muls.w d1,d0
+	lsl.l #8,d0
+	lsl.l #5,d0
+	add.l d2,d0
+_time_split_q16:
+	moveq #0,d2
+	move.w d0,d2
+	swap d0
+	ext.l d0
+	bpl.s .done
+	tst.l d2
+	beq.s .done
+	addq.l #1,d0
+	subi.l #$10000,d2
+.done:
+	rts
+
+; Floor-split the product in eighths, add its fractional part to the old
+; remainder, then normalize. Final negative results truncate toward zero.
+_time_scale_q16_wide:
+	move.l d3,-(a7)
+	bsr _time_multiply_fields
+	move.l d0,d3
+	asr.l #3,d0
+	andi.l #7,d3
+	lsl.l #8,d3
+	lsl.l #5,d3
+	add.l d3,d2
+	move.l d2,d3
+	swap d3
+	ext.l d3
+	add.l d3,d0
+	andi.l #$ffff,d2
+	tst.l d0
+	bpl.s .done
+	tst.l d2
+	beq.s .done
+	addq.l #1,d0
+	subi.l #$10000,d2
+.done:
+	move.l (a7)+,d3
+	rts
+
+; Exact signed-long times unsigned-word multiplication for wide integration.
+; D0.L value,D1.W fields -> D2.L:D0.L signed64 product; preserve other registers.
+_time_product_s32_u16:
+	; Exact zero product; common for grounded fall and angular rates.
+	tst.l d0
+	bne.s .multiply
+	moveq #0,d2
+	rts
+.multiply:
+	movem.l d3-d4,-(a7)
+	move.l d0,d3
+	andi.l #$ffff,d0
+	mulu.w d1,d0
+	move.l d0,d4
+	swap d3
+	move.w d3,d0
+	bsr _time_multiply_fields
+	move.l d0,d2
+	swap d2
+	ext.l d2
+	swap d0
+	clr.w d0
+	add.l d4,d0
+	moveq #0,d3
+	addx.l d3,d2
+	movem.l (a7)+,d3-d4
+	rts
+
+; D0 signed-long angular value -> native canonical range[-720,720].
+; Reduce unsigned magnitude in two word divisions, so even LONG_MIN is valid.
+; Preserve other registers. The two equivalent endpoints retain their sign.
+_time_normalize_angle:
+	; One wrap is sufficient for [-2160,2160], including signed +/-720
+	; endpoints. Keep the full-long reducer for large elapsed-time angles.
+	cmpi.l #720,d0
+	bgt.s .positive_bounded
+	cmpi.l #-720,d0
+	bge.s .bounded_done
+	cmpi.l #-2160,d0
+	blt.s .general
+	addi.l #1440,d0
+	rts
+.positive_bounded:
+	cmpi.l #2160,d0
+	bgt.s .general
+	subi.l #1440,d0
+.bounded_done:
+	rts
+.general:
+	movem.l d1-d2,-(a7)
+	move.l d0,d2
+	bpl.s .magnitude
+	neg.l d0
+.magnitude:
+	move.l d0,d1
+	swap d1
+	andi.l #$ffff,d1
+	divu.w #1440,d1
+	clr.w d1
+	andi.l #$ffff,d0
+	or.l d1,d0
+	divu.w #1440,d0
+	swap d0
+	andi.l #$ffff,d0
+	tst.l d2
+	bpl.s .normalize
+	neg.l d0
+.normalize:
+	cmpi.l #720,d0
+	ble.s .negative
+	subi.l #1440,d0
+.negative:
+	cmpi.l #-720,d0
+	bge.s .done
+	addi.l #1440,d0
+.done:
+	movem.l (a7)+,d1-d2
+	rts
+
+; Convert unsigned pending fields D0.L into one bounded step D1.L (Q16.16),
+; taken fields D2.L, and remaining pending fields D0.L. No saturating total
+; and no discarded fields, including a backlog exceeding Q16.16's range.
+_time_take_fields:
+	moveq #TIME_FIELDS_PER_STEP,d2
+	cmp.l d2,d0
+	bhi.s .take
+	move.l d0,d2
+.take:
+	sub.l d2,d0
+	move.l d2,d1
+	lsl.l #8,d1
+	lsl.l #5,d1
+	rts
+
+	IFD VERIFY_TIME_MATH
+; Boot-time arithmetic fixture; never changes any game state. The host reads
+; the output at the signature and compares every result with an independent
+; integer model. Inputs are enumerated here, not written through the debugger.
+_time_math_test:
+	movem.l d0-d7/a0-a2,-(a7)
+	lea _time_math_values(pc),a1
+	lea _time_math_results(pc),a2
+	moveq #8,d7
+.value:
+	move.w (a1)+,d4
+	moveq #0,d5
+.fields:
+	moveq #-7,d6
+.carry:
+	move.w d4,d0
+	move.w d5,d1
+	move.l d6,d2
+	bsr _time_scale_word
+	move.w d0,(a2)+
+	move.w d2,(a2)+
+	addq.l #1,d6
+	cmpi.w #7,d6
+	ble.s .carry
+	addq.w #1,d5
+	cmpi.w #8,d5
+	ble.s .fields
+	dbf d7,.value
+	lea _time_debt_values(pc),a1
+	lea _time_debt_results(pc),a2
+	moveq #10,d7
+.debt:
+	move.l (a1)+,d0
+	bsr _time_take_fields
+	move.l d0,(a2)+
+	move.l d1,(a2)+
+	move.l d2,(a2)+
+	dbf d7,.debt
+	lea _time_q16_values(pc),a1
+	lea _time_q16_results(pc),a2
+	moveq #6,d7
+.qvalue:
+	move.w (a1)+,d4
+	moveq #0,d5
+.qfields:
+	lea _time_q16_carries(pc),a0
+	moveq #6,d6
+.qcarry:
+	move.w d4,d0
+	move.w d5,d1
+	move.l (a0)+,d2
+	bsr _time_scale_q16
+	move.l d0,(a2)+
+	move.l d2,(a2)+
+	dbf d6,.qcarry
+	addq.w #1,d5
+	cmpi.w #8,d5
+	ble.s .qfields
+	dbf d7,.qvalue
+	bsr _time_wide_math_test
+	movem.l (a7)+,d0-d7/a0-a2
+	rts
+; Boundary cases for unsigned field counts and long quotients. This fixture
+; writes private memory only; it does not enable large intervals in gameplay.
+_time_wide_math_test:
+	lea _time_wide_results(pc),a2
+	moveq #0,d7
+.kind:
+	lea _time_wide_word_values(pc),a1
+	tst.w d7
+	beq.s .values
+	lea _time_wide_q16_values(pc),a1
+.values:
+	moveq #4,d6
+.value:
+	move.w (a1)+,d4
+	lea _time_wide_fields(pc),a0
+	moveq #9,d5
+.field:
+	move.w (a0)+,d1
+	moveq #-1,d3
+.carry:
+	move.w d4,d0
+	move.l d3,d2
+	tst.w d7
+	bne.s .q16
+	muls.w #7,d2
+	bsr _time_scale_word
+	bra.s .save
+.q16:
+	muls.w #32767,d2
+	add.l d2,d2
+	add.l d3,d2
+	bsr _time_scale_q16
+.save:
+	move.l d0,(a2)+
+	move.l d2,(a2)+
+	addq.l #1,d3
+	cmpi.w #1,d3
+	ble.s .carry
+	dbf d5,.field
+	dbf d6,.value
+	addq.w #1,d7
+	cmpi.w #2,d7
+	blo.s .kind
+	rts
+_time_wide_word_values: dc.w -32768,-1,0,1,32767
+_time_wide_q16_values: dc.w -16383,-1,0,1,16383
+_time_wide_fields: dc.w 0,1,7,8,9,15,31,255,32768,65535
+_time_wide_signature: dc.b 'HDWIDE01'
+_time_wide_results: dcb.l 2*5*10*3*2,0
+_time_math_values: dc.w -32768,-100,-3,-1,0,1,3,100,32767
+_time_math_signature: dc.b 'HDMATH01'
+_time_math_results: dcb.w 9*9*15*2,0
+_time_debt_values: dc.l 0,1,7,8,9,15,16,65535,524287,524288,$ffffffff
+_time_debt_signature: dc.b "HDDEBT01"
+_time_debt_results: dcb.l 11*3,0
+_time_q16_values: dc.w -16383,-2,-1,0,1,2,16383
+_time_q16_carries: dc.l -65535,-8192,-1,0,1,8192,65535
+_time_q16_signature: dc.b 'HDQ16001'
+_time_q16_results: dcb.l 7*9*7*2,0
+	ENDC
+
+	IFD VERIFY_TIME_SCALARS
+	INCLUDE "HardDrivinDecay.s"
+	INCLUDE "HardDrivinScalar.s"
+	ENDC
+
+	IFD VERIFY_TIME_MOTION
+	INCLUDE "HardDrivinContact.s"
+	INCLUDE "HardDrivinProjection.s"
+	INCLUDE "HardDrivinMotion.s"
+	ENDC
+
+	IFD VERIFY_TIME_TRAFFIC
+	INCLUDE "HardDrivinTraffic.s"
+	ENDC
+
+	IFD VERIFY_TIME_PRESENTATION
+	INCLUDE "HardDrivinPresentation.s"
+	ENDC
+
+	IFD VERIFY_TIME_DISPATCH
+	INCLUDE "HardDrivinDispatch.s"
+	ENDC
+
+	IFD VERIFY_TIME_REPLAY_TIMING
+	INCLUDE "HardDrivinReplay.s"
+	ENDC
+
+	IFD VERIFY_TIME_TIMELINES
+	INCLUDE "HardDrivinTimeline.s"
+	ENDC
+
+	IFD VERIFY_TIME_ATTRACT
+	INCLUDE "HardDrivinAttract.s"
+	ENDC
+
+	IFD VERIFY_TIME_PHANTOM
+	INCLUDE "HardDrivinPhantom.s"
+	ENDC
+
+	IFD VERIFY_TIME_AUDIO
+	INCLUDE "HardDrivinAudio.s"
+	ENDC
+
+	IFD VERIFY_DRIVETRAIN_REFERENCE
+	INCLUDE "HardDrivinDrivetrain.s"
+	ENDC
+
+	IFD VERIFY_DRIVETRAIN_PHASE
+	INCLUDE "HardDrivinTerrain.s"
+	INCLUDE "HardDrivinCheckpoint.s"
+	ENDC

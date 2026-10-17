@@ -1,0 +1,1010 @@
+; VERIFY_DRIVE only. SPS 0126 native input tape, indexed by PAL fields.
+; Build with -DVERIFY_DRIVE=1; mutually exclusive with VERIFY_ATTRACT.
+; Optional VERIFY_STEPINPUT replaces race input with a per-pass constant-input
+; coupling control. VERIFY_STEPINPUT_BRAKE selects its braking field. These
+; STEPINPUT_BRAKE_SPEED instead latches braking at a native speed threshold.
+; These are not the A/B tape; see GAME_TIME.md. STEPINPUT_STEER_AT holds X=320
+; until the chosen field, then uses STEPINPUT_X for a real skid diagnostic.
+; VERIFY_STEPINPUT_TAPE instead consumes the existing tape at virtual fields
+; 1,9,17,... per controls pass. It is a native-step compatibility diagnostic,
+; not the unchanged field-indexed A/B benchmark. Real clocks remain untouched.
+; INITIAL_THROTTLE + EXACT_THROTTLE is a separate physics probe: initialize
+; throttle once when native acceleration becomes eligible, then neutral input.
+; Calibrated on deterministic PAL A500/68000, 512K Chip + 1536K slow,
+; no Fast RAM, PRELOAD, CUSTOM2=0 and both host input ports disabled.
+; Other CPU/memory profiles need validation; field-indexed input does not
+; make the original frame-stepped physics independent of rendering speed.
+;
+; The title and first native race entry establish separate field epochs.
+; Race field 1 is the first VBL after native $10ecc initialization. The race
+; epoch continues across crashes/replays; recovery does not restart the tape.
+; Records: field.l, mouse X.w, mouse Y.w, buttons.w, decoded key.w.
+; Values hold until the next record; $ffffffff terminates without resetting.
+; X/Y are absolute native positions (0..639 / 0..399), not mouse deltas.
+; Buttons: 4 raises throttle, 1 lowers it, 5 brakes, 0 releases buttons.
+; Release alone does not reset throttle. Any held button can skip replay.
+; Absolute positions are published AFTER native VBL input accumulation.
+; Keys are delivered once through the native $01212 reader's return path.
+; A nonzero overflow byte invalidates a capture (unconsumed key overwritten).
+; No pose, velocity, gear, race flag or collision state is injected.
+;
+; Window boundaries are AFTER VBL publication at game $003f2, [first,end).
+; A: initial straight, first recovery waypoint at field 1198; no crash/replay.
+;    This pointer change is not a checkpoint time-bonus crossing.
+; B: recovered checkpoint -> stunt course -> jump -> collision -> full replay.
+;    Ramp lip at field 4364; airborne beyond it; crash 4553..4748;
+;    replay 4749..5504 (all 90 iterations); recovered by the end boundary.
+; The earlier approach crash/replay (2095..2917) is outside both windows.
+; Both windows require replaying the SAME tape from a fresh boot; do not
+; start B with a pose injection or reset the field counter at its boundary.
+; Sample fixture state, globals/clocks, front buffer and native swap events.
+; Generic state capture anchors the race at $10ed4, then samples at VBL ENTRY
+; ($00044) and at every physics return ($0cdb0, before RTS). Entry sample 0
+; precedes race field 1's input publication; do not equate it with the older
+; AFTER-publication window boundaries above. Retain both domains explicitly.
+; Capture the complete allocated globals hunk and trailing BSS, including the
+; RNG longword at a4-$6fc4 (native recurrence at $00a36). Compare hunk-relative
+; pointers after calibrating each build/profile; absolute addresses can differ.
+; Local capture/acceptance details and rebuild comparison: tmp/dev/docs/.
+;
+	IFND VERIFY_STEPINPUT_X
+VERIFY_STEPINPUT_X equ 320
+	ENDC
+	IFLT VERIFY_STEPINPUT_X
+	FAIL "VERIFY_STEPINPUT_X must be 0..639"
+	ENDC
+	IFGT VERIFY_STEPINPUT_X-639
+	FAIL "VERIFY_STEPINPUT_X must be 0..639"
+	ENDC
+
+VERIFY_DRIVE_A_FIRST equ 1
+VERIFY_DRIVE_A_END   equ 1251
+VERIFY_DRIVE_B_FIRST equ 3000
+VERIFY_DRIVE_B_END   equ 5600
+
+_verify_drive_title:
+	movem.l d1/a0-a1,-(a7)
+	lea _verify_drive_state(pc),a0
+	tst.w (a0)
+	bne.s .armed
+	lea _verify_drive_menu(pc),a1
+	move.l a1,8(a0)
+	move.w #1,(a0)
+.armed:
+	movem.l (a7)+,d1/a0-a1
+	jsr -$7f92(a4)
+	tst.l d0
+	rts
+
+_verify_drive_race:
+	jsr -$7ff2(a4)		; displaced native button reset
+	jsr -$7ff8(a4)		; displaced native mouse centring
+	movem.l d0/a0-a1,-(a7)
+	lea _verify_drive_state(pc),a0
+	cmpi.w #2,(a0)
+	beq.s .done
+	clr.w (a0)
+	clr.l 4(a0)
+	clr.w 18(a0)
+	IFD VERIFY_STEPINPUT_TAPE
+	lea _verify_step_tape_field(pc),a1
+	move.l #1,(a1)
+	ENDC
+	lea _verify_drive_tape(pc),a1
+	move.l a1,8(a0)
+	IFD VERIFY_STEPINPUT_MANUAL
+	lea _verify_manual_state(pc),a1
+	clr.w (a1)
+	clr.w 2(a1)
+	ENDC
+	IFD VERIFY_STEPINPUT_RAMP
+	lea _verify_step_ramp_count(pc),a1
+	clr.w (a1)
+	ENDC
+	IFD VERIFY_STEPINPUT_BRAKE_SPEED
+	lea _verify_speed_brake_state(pc),a1
+	clr.w (a1)
+	ENDC
+	IFD VERIFY_STEPINPUT_HOLD_THROTTLE
+	lea _verify_throttle_hold_state(pc),a1
+	clr.w (a1)
+	ENDC
+	move.w #2,(a0)
+.done:
+	movem.l (a7)+,d0/a0-a1
+	rts
+
+_verify_drive_vbl:
+	movem.l d0-d1/a0-a1,-(a7)
+	lea _verify_drive_state(pc),a0
+	tst.w (a0)
+	beq.s .done
+	addq.l #1,4(a0)
+	IFD VERIFY_STEPINPUT_TAPE
+	cmpi.w #2,(a0)
+	beq.s .publish
+	ENDC
+	IFD VERIFY_STEPINPUT
+	cmpi.w #2,(a0)
+	beq.s .constant
+	ENDC
+	movea.l 8(a0),a1
+	move.l 4(a0),d0
+.next:
+	cmp.l (a1),d0
+	bcs.s .publish
+	cmpi.l #-1,(a1)
+	beq.s .publish
+	move.l 4(a1),12(a0)
+	move.w 8(a1),16(a0)
+	move.w 10(a1),d1
+	beq.s .advance
+	tst.w 18(a0)
+	beq.s .key
+	st 2(a0)		; visible queue overrun: capture must reject
+.key:
+	move.w d1,18(a0)
+.advance:
+	lea 12(a1),a1
+	move.l a1,8(a0)
+	bra.s .next
+.publish:
+	move.l 12(a0),-$6a06(a4)
+	move.w 16(a0),-$6a0a(a4)
+	IFD VERIFY_STEPINPUT
+	bra.s .done
+.constant:
+	move.l #(VERIFY_STEPINPUT_X<<16)|200,-$6a06(a4)
+	IFD VERIFY_STEPINPUT_STEER_AT
+	bsr _verify_step_delayed_steering
+	ENDC
+	move.w #4,-$6a0a(a4)
+	IFD VERIFY_STEPINPUT_HOLD_THROTTLE
+	bsr _verify_throttle_hold_buttons
+	ENDC
+	IFD VERIFY_STEPINPUT_BRAKE
+	bsr _verify_step_brake_buttons
+	ENDC
+	IFD VERIFY_STEPINPUT_BRAKE_SPEED
+	bsr _verify_speed_brake_buttons
+	ENDC
+	IFD VERIFY_STEPINPUT_RAMP
+	bsr _verify_step_ramp_buttons
+	ENDC
+	ENDC
+.done:
+	IFD VERIFY_TIME_REPLAY
+	; Release the input latch during crash/replay so native playback is not skipped.
+	tst.b -$69fa(a4)
+	bne.s .release
+	tst.b -$5229(a4)
+	beq.s .released
+.release:
+	clr.w -$6a0a(a4)
+.released:
+	ENDC
+	IFD VERIFY_INSTRUCTIONS_HOLD
+	move.b _verify_instructions_hold_active(pc),d0
+	beq.s .instruction_ready
+	clr.w -$6a0a(a4)
+.instruction_ready:
+	ENDC
+	IFD VERIFY_RELEASE_FLOW
+	; Supply only mouse input after natural high-score qualification. Select
+	; A briefly, then the rightmost Done cell and click. No score is injected.
+	lea _verify_release_name_fields(pc),a1
+	move.w (a1),d0
+	beq.s .name_ready
+	addi.w #1,(a1)
+	move.l #200,-$6a06(a4)
+	clr.w -$6a0a(a4)
+	cmpi.w #30,d0
+	blo.s .name_ready
+	move.w #4,-$6a0a(a4)
+	cmpi.w #45,d0
+	blo.s .name_ready
+	move.w #639,-$6a06(a4)
+	clr.w -$6a0a(a4)
+	cmpi.w #60,d0
+	blo.s .name_ready
+	move.w #4,-$6a0a(a4)
+.name_ready:
+	ENDC
+	movem.l (a7)+,d0-d1/a0-a1
+	movea.l -$7036(a4),a0	; displaced instructions
+	lea $dff180,a1
+	rts
+
+_verify_drive_key:
+	move.l -4(a5),d0
+	move.l a0,-(a7)
+	lea _verify_drive_state(pc),a0
+	tst.l d0
+	bne.s .done
+	moveq #0,d0
+	move.w 18(a0),d0
+	clr.w 18(a0)
+.done:
+	IFD VERIFY_TIME_PAUSE
+	bsr _verify_time_pause_key
+	ENDC
+	IFD VERIFY_REPLAY_PAUSE
+	bsr _verify_replay_pause_key
+	ENDC
+	IFD VERIFY_TIMELINE_PAUSE
+	bsr _verify_timeline_pause_key
+	ENDC
+	IFD VERIFY_GHOST_POST_PAUSE
+	bsr _verify_ghost_post_pause_key
+	ENDC
+	IFD VERIFY_INSTRUCTIONS_PAUSE
+	bsr _verify_instructions_pause_key
+	ENDC
+	movea.l (a7)+,a0
+	tst.l d0
+	unlk a5
+	rts
+
+; Optional controlled coupling experiment, never the field-tape acceptance run.
+; X=320/Y=200 and button 4 are held after race entry; reassert at controls entry
+; because native controls clears its button latch. No dynamics, clocks or RNG
+; are injected except in the explicitly initialized throttle physics probe.
+; VBL publishes the same values, so mid-step VBL cannot steer it.
+	IFD VERIFY_STEPINPUT
+_verify_step_input:
+	IFD VERIFY_STEPINPUT_INITIAL_THROTTLE
+; Controlled initial condition, NOT an input-only or native-equivalence fixture.
+; Initialize once at controls entry, then keep buttons neutral through HOLD.
+; VBL never initializes dynamics, including before the first controls pass.
+	move.l a0,-(a7)
+	lea _verify_drive_state(pc),a0
+	cmpi.w #2,(a0)
+	bne.s .initialized
+	; Follow the native controls' acceleration eligibility, including GO.
+	tst.b -$5224(a4)
+	beq.s .initialized
+	tst.b -$69fa(a4)
+	bne.s .initialized
+	tst.b -$69fc(a4)
+	bne.s .initialized
+	tst.b -$6864(a4)
+	bne.s .initialized
+	lea _verify_throttle_hold_state(pc),a0
+	tst.w (a0)
+	bne.s .initialized
+	move.b #VERIFY_STEPINPUT_HOLD_THROTTLE,-$66e4(a4)
+	move.w #1,(a0)
+.initialized:
+	movea.l (a7)+,a0
+	ENDC
+	IFD VERIFY_STEPINPUT_RAMP
+	move.l a0,-(a7)
+	lea _verify_step_ramp_count(pc),a0
+	addq.w #1,(a0)
+	movea.l (a7)+,a0
+	ENDC
+	move.l #(VERIFY_STEPINPUT_X<<16)|200,-$6a06(a4)
+	IFD VERIFY_STEPINPUT_STEER_AT
+	bsr _verify_step_delayed_steering
+	ENDC
+	move.w #4,-$6a0a(a4)
+	IFD VERIFY_STEPINPUT_HOLD_THROTTLE
+	bsr _verify_throttle_hold_buttons
+	ENDC
+	IFD VERIFY_STEPINPUT_BRAKE
+	bsr _verify_step_brake_buttons
+	ENDC
+	IFD VERIFY_STEPINPUT_BRAKE_SPEED
+	bsr _verify_speed_brake_buttons
+	ENDC
+	IFD VERIFY_STEPINPUT_RAMP
+	bsr _verify_step_ramp_buttons
+	ENDC
+	IFD VERIFY_TIME_REPLAY
+	; The per-controls constant fixture must not undo the VBL replay release.
+	tst.b -$69fa(a4)
+	bne.s .replay_release
+	tst.b -$5229(a4)
+	beq.s .replay_ready
+.replay_release:
+	clr.w -$6a0a(a4)
+.replay_ready:
+	ENDC
+	jsr -$7f92(a4)		; displaced decoded-key reader
+	IFD VERIFY_STEPINPUT_MANUAL
+	bsr _verify_manual_key
+	ENDC
+	and.w #$ff,d0		; displaced mask, including its condition codes
+	rts
+	ENDC
+
+	IFD VERIFY_STEPINPUT_STEER_AT
+; Input-only diagnostic: accelerate straight, then apply the selected mouse X.
+; VBL and controls use the same race-field boundary. Never inject skid state.
+_verify_step_delayed_steering:
+	move.l a0,-(a7)
+	lea _verify_drive_state(pc),a0
+	cmpi.l #VERIFY_STEPINPUT_STEER_AT,4(a0)
+	bhs.s .done
+	move.w #320,-$6a06(a4)
+.done:
+	movea.l (a7)+,a0
+	rts
+	ENDC
+
+	IFD VERIFY_STEPINPUT_TAPE
+_verify_step_tape:
+	movem.l d0-d1/a0-a1,-(a7)
+	lea _verify_drive_state(pc),a0
+	cmpi.w #2,(a0)
+	bne.s .done
+	lea _verify_step_tape_field(pc),a1
+	move.l (a1),d0
+	addq.l #8,(a1)
+	movea.l 8(a0),a1
+.next:
+	cmp.l (a1),d0
+	bcs.s .publish
+	cmpi.l #-1,(a1)
+	beq.s .publish
+	move.l 4(a1),12(a0)
+	move.w 8(a1),16(a0)
+	move.w 10(a1),d1
+	beq.s .advance
+	tst.w 18(a0)
+	beq.s .key
+	st 2(a0)
+.key:
+	move.w d1,18(a0)
+.advance:
+	lea 12(a1),a1
+	move.l a1,8(a0)
+	bra.s .next
+.publish:
+	move.l 12(a0),-$6a06(a4)
+	move.w 16(a0),-$6a0a(a4)
+.done:
+	movem.l (a7)+,d0-d1/a0-a1
+	jsr -$7f92(a4)
+	and.w #$ff,d0
+	rts
+_verify_step_tape_signature: dc.b 'HDINTAPE'
+_verify_step_tape_field: dc.l 1
+	ENDC
+
+	; phase.w, overflow.b, reserved.b, field.l, next.l, X/Y.w, buttons/key.w
+_verify_drive_state:
+	dc.w 0,0
+	dc.l 0,0
+	dc.w 320,200,0,0
+_verify_drive_menu:
+	; Space exits the title; held clicks select automatic gears by default.
+	; VERIFY_STEPINPUT_MANUAL chooses the native manual menu item.
+	dc.l 1
+	dc.w 320,200,0,$20
+	IFD VERIFY_STEPINPUT
+	; The menu samples the cursor before checking buttons. Pre-position it
+	; before clicking so a VBL between those reads cannot select the old item.
+	dc.l 900
+	IFD VERIFY_STEPINPUT_MANUAL
+	dc.w 540,200,0,0
+	ELSE
+	dc.w 100,200,0,0
+	ENDC
+	ENDC
+	dc.l 1000
+	IFD VERIFY_STEPINPUT_MANUAL
+	dc.w 540,200,1,0
+	ELSE
+	dc.w 100,200,1,0
+	ENDC
+	dc.l 1050
+	IFD VERIFY_STEPINPUT_MANUAL
+	dc.w 540,200,0,0
+	ELSE
+	dc.w 100,200,0,0
+	ENDC
+	dc.l 1300
+	IFD VERIFY_STEPINPUT_MANUAL
+	dc.w 540,200,1,0
+	ELSE
+	dc.w 100,200,1,0
+	ENDC
+	dc.l 1350
+	dc.w 320,200,0,0
+	dc.l -1
+_verify_drive_tape:
+	; Initial straight: keep clear of oncoming traffic.
+	dc.l 1
+	dc.w 320,200,4,0
+	dc.l 8
+	dc.w 480,200,4,0
+	dc.l 161
+	dc.w 440,200,4,0
+	dc.l 177
+	dc.w 400,200,4,0
+	dc.l 193
+	dc.w 380,200,4,0
+	dc.l 209
+	dc.w 160,200,4,0
+	dc.l 249
+	dc.w 200,200,4,0
+	dc.l 265
+	dc.w 240,200,4,0
+	dc.l 273
+	dc.w 260,200,4,0
+	dc.l 289
+	dc.w 280,200,4,0
+	dc.l 305
+	dc.w 300,200,4,0
+	dc.l 337
+	dc.w 320,200,4,0
+	dc.l 385
+	dc.w 300,200,4,0
+	dc.l 401
+	dc.w 240,200,4,0
+	dc.l 409
+	dc.w 260,200,4,0
+	dc.l 417
+	dc.w 280,200,4,0
+	dc.l 433
+	dc.w 300,200,4,0
+	dc.l 465
+	dc.w 320,200,4,0
+	dc.l 489
+	dc.w 300,200,4,0
+	dc.l 513
+	dc.w 320,200,4,0
+	dc.l 569
+	dc.w 300,200,4,0
+	dc.l 577
+	dc.w 320,200,4,0
+	dc.l 782
+	dc.w 320,200,5,0
+	dc.l 1014
+	dc.w 300,200,5,0
+	dc.l 1030
+	dc.w 320,200,5,0
+	dc.l 1038
+	dc.w 300,200,5,0
+	dc.l 1054
+	dc.w 320,200,5,0
+	dc.l 1086
+	dc.w 320,200,0,0
+	dc.l 1094
+	dc.w 300,200,5,0
+	dc.l 1126
+	dc.w 400,200,5,0
+	dc.l 1134
+	dc.w 400,200,0,0
+	dc.l 1150
+	dc.w 400,200,5,0
+	dc.l 1174
+	dc.w 400,200,0,0
+	dc.l 1182
+	dc.w 400,200,5,0
+	dc.l 1198
+	dc.w 400,200,0,0
+	dc.l 1302
+	dc.w 400,200,5,0
+	dc.l 1310
+	dc.w 400,200,0,0
+	dc.l 1462
+	dc.w 400,200,4,0
+	dc.l 1510
+	dc.w 400,200,0,0
+	dc.l 1591
+	dc.w 420,200,0,0
+	dc.l 1864
+	dc.w 420,200,4,0
+	dc.l 1888
+	dc.w 420,200,0,0
+	dc.l 1904
+	dc.w 400,200,0,0
+	dc.l 1912
+	dc.w 400,200,5,0
+	dc.l 1928
+	dc.w 400,200,4,0
+	dc.l 1936
+	dc.w 420,200,4,0
+	dc.l 2048
+	dc.w 220,200,4,0
+	; Release for the first full replay and native checkpoint recovery.
+	dc.l 2096
+	dc.w 320,200,0,0
+	; Resume on the stunt course after native recovery.
+	dc.l 2929
+	dc.w 560,200,0,0
+	dc.l 3002
+	dc.w 560,200,4,0
+	dc.l 3122
+	dc.w 520,200,4,0
+	dc.l 3130
+	dc.w 500,200,4,0
+	dc.l 3146
+	dc.w 460,200,4,0
+	dc.l 3162
+	dc.w 440,200,0,0
+	dc.l 3178
+	dc.w 440,200,5,0
+	dc.l 3194
+	dc.w 420,200,5,0
+	dc.l 3202
+	dc.w 440,200,5,0
+	dc.l 3226
+	dc.w 420,200,0,0
+	dc.l 3250
+	dc.w 360,200,0,0
+	dc.l 3267
+	dc.w 320,200,0,0
+	dc.l 3283
+	dc.w 440,200,0,0
+	dc.l 3331
+	dc.w 360,200,0,0
+	dc.l 3347
+	dc.w 340,200,0,0
+	dc.l 3379
+	dc.w 320,200,0,0
+	dc.l 3411
+	dc.w 440,200,0,0
+	dc.l 3427
+	dc.w 440,200,4,0
+	dc.l 3443
+	dc.w 460,200,4,0
+	dc.l 3491
+	dc.w 400,200,0,0
+	dc.l 3507
+	dc.w 340,200,0,0
+	dc.l 3523
+	dc.w 440,200,0,0
+	dc.l 3555
+	dc.w 440,200,5,0
+	dc.l 3571
+	dc.w 440,200,0,0
+	dc.l 3587
+	dc.w 440,200,5,0
+	dc.l 3603
+	dc.w 360,200,0,0
+	dc.l 3619
+	dc.w 420,200,0,0
+	dc.l 3635
+	dc.w 360,200,0,0
+	dc.l 3651
+	dc.w 340,200,0,0
+	dc.l 3667
+	dc.w 320,200,0,0
+	dc.l 3715
+	dc.w 440,200,0,0
+	dc.l 3731
+	dc.w 360,200,0,0
+	dc.l 3747
+	dc.w 320,200,0,0
+	dc.l 3763
+	dc.w 320,200,5,0
+	dc.l 3779
+	dc.w 360,200,4,0
+	dc.l 3811
+	dc.w 320,200,4,0
+	dc.l 3827
+	dc.w 320,200,0,0
+	dc.l 3843
+	dc.w 360,200,4,0
+	dc.l 3859
+	dc.w 300,200,4,0
+	dc.l 3875
+	dc.w 340,200,4,0
+	dc.l 3891
+	dc.w 320,200,4,0
+	dc.l 3939
+	dc.w 380,200,4,0
+	dc.l 3955
+	dc.w 320,200,4,0
+	dc.l 3971
+	dc.w 380,200,4,0
+	dc.l 3987
+	dc.w 300,200,4,0
+	; Align with the narrow ramp, then hold straight through takeoff.
+	dc.l 4001
+	dc.w 380,200,4,0
+	dc.l 4097
+	dc.w 360,200,4,0
+	dc.l 4233
+	dc.w 320,200,4,0
+	; Release before replay begins; hold neutral through its completion.
+	dc.l 4595
+	dc.w 320,200,0,0
+	dc.l -1
+
+	IFD VERIFY_TIME_PAUSE
+; Enter and leave the real native pause path using two one-shot decoded spaces.
+; No mode flag, clock or car state is injected. The drive tape keeps advancing.
+_verify_time_pause_key:
+	tst.l d0
+	bne.s .done
+	cmpi.w #2,(a0)
+	bne.s .done
+	move.l a1,-(a7)
+	lea .phase(pc),a1
+	tst.b (a1)
+	bne.s .resume
+	cmpi.l #100,4(a0)
+	bcs.s .restore
+	move.b #1,(a1)
+	moveq #$20,d0
+	bra.s .restore
+.resume:
+	cmpi.b #1,(a1)
+	bne.s .restore
+	cmpi.l #200,4(a0)
+	bcs.s .restore
+	move.b #2,(a1)
+	moveq #$20,d0
+.restore:
+	movea.l (a7)+,a1
+.done:
+	rts
+.phase: dc.w 0
+	ENDC
+
+	IFD VERIFY_STEPINPUT_RAMP
+; Input-only arithmetic coverage: increase for 64 passes, decrease for 64,
+; then increase again. The VBL and controls hook publish the same held value.
+_verify_step_ramp_buttons:
+	move.l d0,-(a7)
+	move.w _verify_step_ramp_count(pc),d0
+	cmpi.w #64,d0
+	bls.s .done
+	cmpi.w #128,d0
+	bhi.s .done
+	move.w #1,-$6a0a(a4)
+.done:
+	move.l (a7)+,d0
+	rts
+_verify_step_ramp_count: dc.w 0
+	ENDC
+
+	IFD VERIFY_REPLAY_PAUSE
+; Input-only replay pause: one SPACE at age>=24, another40 input fields later.
+_verify_replay_pause_key:
+	tst.l d0
+	bne.s .done
+	tst.b -$5229(a4)
+	beq.s .done
+	movem.l d1/a1,-(a7)
+	lea .state(pc),a1
+	tst.w (a1)
+	bne.s .resume
+	move.l _replay_state+RP_AGE(pc),d1
+	cmpi.l #24,d1
+	blo.s .restore
+	move.w #1,(a1)
+	move.l 4(a0),d1
+	addi.l #40,d1
+	move.l d1,2(a1)
+	moveq #$20,d0
+	bra.s .restore
+.resume:
+	cmpi.w #1,(a1)
+	bne.s .restore
+	move.l 4(a0),d1
+	cmp.l 2(a1),d1
+	blo.s .restore
+	move.w #2,(a1)
+	moveq #$20,d0
+.restore:
+	movem.l (a7)+,d1/a1
+.done:
+	rts
+.state: dc.w 0
+	dc.l 0
+	ENDC
+
+	IFD VERIFY_STEPINPUT_BRAKE_SPEED
+; Input-only threshold diagnostic. Once native velocity reaches the requested
+; value, hold both buttons through the stop. The threshold can be overshot by
+; one update; the capture must report the actual speed when braking is consumed.
+_verify_speed_brake_buttons:
+	move.l a0,-(a7)
+	lea _verify_speed_brake_state(pc),a0
+	tst.w (a0)
+	bne.s .brake
+	cmpi.w #VERIFY_STEPINPUT_BRAKE_SPEED,-$66d8(a4)
+	blt.s .done
+	move.w #1,(a0)
+.brake:
+	move.w #5,-$6a0a(a4)
+.done:
+	movea.l (a7)+,a0
+	rts
+_verify_speed_brake_signature: dc.b 'HDBRAKE1'
+_verify_speed_brake_state: dc.w 0
+	ENDC
+
+	IFD VERIFY_STEPINPUT_BRAKE
+; Input-only braking diagnostic: hold throttle, then both buttons from the
+; requested race field onward. VBL and controls publish the same held input.
+; This is separate from the frozen VERIFY_DRIVE acceptance tape.
+_verify_step_brake_buttons:
+	move.l a0,-(a7)
+	lea _verify_drive_state(pc),a0
+	cmpi.l #VERIFY_STEPINPUT_BRAKE,4(a0)
+	blo.s .done
+	move.w #5,-$6a0a(a4)
+.done:
+	movea.l (a7)+,a0
+	rts
+	ENDC
+
+	IFD VERIFY_TIMELINE_PAUSE
+; Input-only GAME OVER pause: one SPACE at age>=24, another40 input fields later.
+_verify_timeline_pause_key:
+	tst.l d0
+	bne.s .done
+	movem.l d1/a1,-(a7)
+	lea _timeline_state(pc),a1
+	tst.b TL_ACTIVE(a1)
+	beq.s .restore
+	lea .state(pc),a1
+	tst.w (a1)
+	bne.s .resume
+	move.l _timeline_state+TL_AGE(pc),d1
+	cmpi.l #24,d1
+	blo.s .restore
+	move.w #1,(a1)
+	move.l 4(a0),d1
+	addi.l #40,d1
+	move.l d1,2(a1)
+	moveq #$20,d0
+	bra.s .restore
+.resume:
+	cmpi.w #1,(a1)
+	bne.s .restore
+	move.l 4(a0),d1
+	cmp.l 2(a1),d1
+	blo.s .restore
+	move.w #2,(a1)
+	moveq #$20,d0
+.restore:
+	movem.l (a7)+,d1/a1
+.done:
+	rts
+.state: dc.w 0
+	dc.l 0
+	ENDC
+
+	IFD VERIFY_GHOST_POST_PAUSE
+; Input-only post-race ghost pause: one SPACE at age>=24, another40 input fields later.
+_verify_ghost_post_pause_key:
+	tst.l d0
+	bne.s .done
+	movem.l d1/a1,-(a7)
+	lea _ghost_post_state(pc),a1
+	tst.b PG_ACTIVE(a1)
+	beq.s .restore
+	lea .state(pc),a1
+	tst.w (a1)
+	bne.s .resume
+	move.l _ghost_post_state+PG_AGE(pc),d1
+	cmpi.l #24,d1
+	blo.s .restore
+	move.w #1,(a1)
+	move.l 4(a0),d1
+	addi.l #40,d1
+	move.l d1,2(a1)
+	moveq #$20,d0
+	bra.s .restore
+.resume:
+	cmpi.w #1,(a1)
+	bne.s .restore
+	move.l 4(a0),d1
+	cmp.l 2(a1),d1
+	blo.s .restore
+	move.w #2,(a1)
+	moveq #$20,d0
+.restore:
+	movem.l (a7)+,d1/a1
+.done:
+	rts
+.state: dc.w 0
+	dc.l 0
+	ENDC
+
+	IFD VERIFY_PHANTOM_ENTRY
+; Deliberately bypass ordinary-race qualification for isolated loop validation.
+; The native challenge initializer sets all car, track, clock and mode state.
+; This is NOT the unchanged VERIFY_DRIVE qualification/handling acceptance tape.
+; On completion skip the original qualification branch and return to attract.
+_verify_phantom_continue:
+	IFD VERIFY_INSTRUCTIONS_HOLD
+	move.l _verify_drive_state+4(pc),d0
+	sub.l _verify_instructions_hold_start(pc),d0
+	cmpi.l #300,d0
+	bhs.s .release
+	moveq #0,d0
+	rts
+.release:
+	move.l a0,-(a7)
+	lea _verify_instructions_hold_active(pc),a0
+	clr.b (a0)
+	movea.l (a7)+,a0
+	moveq #$20,d0
+	rts
+	ENDC
+	jsr -$7f92(a4)
+	tst.l d0
+	bne.s .done
+	moveq #$20,d0
+.done:
+	tst.l d0
+	rts
+_verify_phantom_entry:
+	move.l a0,-(a7)
+	movea.l _code_start(pc),a0
+	adda.l #$116ee,a0
+	jsr (a0)
+	movea.l _code_start(pc),a0
+	adda.l #$11994,a0
+	move.l a0,4(a7)
+	movea.l (a7)+,a0
+	rts
+	ENDC
+
+	IFD VERIFY_GHOST_POST_ENTRY
+; Isolated post-race comparison: enter the real replay after the native recorder
+; has produced 48 samples. No history, pose, velocity or finish flag is injected.
+; This bypasses the natural finish transition and is NOT qualification coverage.
+_verify_ghost_post_entry:
+	jsr -$7fe6(a4)
+	movem.l d0-d1/a0-a1,-(a7)
+	moveq #0,d1
+	roxl.b #1,d1
+	move.w d1,-(a7)
+	movea.l _code_start(pc),a0
+	lea _verify_ghost_post_targets(pc),a1
+	move.l a0,4(a1)
+	addi.l #$118ae,4(a1)
+	move.l -$16dc(a4),d0
+	sub.l -$69bc(a4),d0
+	cmpi.l #48*12,d0
+	blo.s .continue
+	adda.l #$1100c,a0
+	move.l a0,(a1)
+	move.w (a7)+,d1
+	lsr.b #1,d1
+	movem.l (a7)+,d0-d1/a0-a1
+	move.l _verify_ghost_post_targets+4(pc),-(a7)
+	move.l _verify_ghost_post_targets(pc),-(a7)
+	rts
+.continue:
+	adda.l #$11894,a0
+	move.l a0,(a1)
+	move.w (a7)+,d1
+	lsr.b #1,d1
+	movem.l (a7)+,d0-d1/a0-a1
+	move.l _verify_ghost_post_targets(pc),-(a7)
+	rts
+_verify_ghost_post_targets: dc.l 0,0
+	ENDC
+
+	IFD VERIFY_INSTRUCTIONS_HOLD
+; Only input is changed: release buttons and dismiss after 300 VBL input fields.
+_verify_instructions_hold_begin:
+	move.l a0,-(a7)
+	lea _verify_instructions_hold_start(pc),a0
+	move.l _verify_drive_state+4(pc),(a0)
+	st _verify_instructions_hold_active-_verify_instructions_hold_start(a0)
+	clr.w -$6a0a(a4)
+	movea.l (a7)+,a0
+	addi.w #13,-$687c(a4)
+	rts
+_verify_instructions_hold_start: dc.l 0
+_verify_instructions_hold_active: dc.b 0,0
+	ENDC
+	IFD VERIFY_INSTRUCTIONS_PAUSE
+; Input-only instruction scrolling pause: one SPACE at age>=24, another40 input fields later.
+_verify_instructions_pause_key:
+	tst.l d0
+	bne.s .done
+	movem.l d1/a1,-(a7)
+	lea _instructions_state(pc),a1
+	tst.b IN_ACTIVE(a1)
+	beq.s .restore
+	lea .state(pc),a1
+	tst.w (a1)
+	bne.s .resume
+	move.l _instructions_state+IN_AGE(pc),d1
+	cmpi.l #24,d1
+	blo.s .restore
+	move.w #1,(a1)
+	move.l 4(a0),d1
+	addi.l #40,d1
+	move.l d1,2(a1)
+	moveq #$20,d0
+	bra.s .restore
+.resume:
+	cmpi.w #1,(a1)
+	bne.s .restore
+	move.l 4(a0),d1
+	cmp.l 2(a1),d1
+	blo.s .restore
+	move.w #2,(a1)
+	moveq #$20,d0
+.restore:
+	movem.l (a7)+,d1/a1
+.done:
+	rts
+.state: dc.w 0
+	dc.l 0
+	ENDC
+
+	IFD VERIFY_STEPINPUT_HOLD_THROTTLE
+; Release acceleration once the native throttle reaches the requested threshold.
+; Both input publishers call this; never write throttle or other dynamics.
+; A coarse update may overshoot: measurements must report the actual plateau.
+; EXACT_THROTTLE uses decrease input above target and latches only on equality.
+_verify_throttle_hold_buttons:
+	move.l a0,-(a7)
+	lea _verify_throttle_hold_state(pc),a0
+	tst.w (a0)
+	bne.s .hold
+	cmpi.b #VERIFY_STEPINPUT_HOLD_THROTTLE,-$66e4(a4)
+	bcs.s .done
+	IFD VERIFY_STEPINPUT_EXACT_THROTTLE
+	bhi.s .lower
+	ENDC
+	move.w #1,(a0)
+.hold:
+	clr.w -$6a0a(a4)
+.done:
+	movea.l (a7)+,a0
+	rts
+	IFD VERIFY_STEPINPUT_EXACT_THROTTLE
+.lower:
+	; Correct an overshoot using the game's normal decrease-throttle button.
+	; Never clamp the throttle state. A fixture that does not settle must fail
+	; the measurement's constant-throttle predicate, not fabricate a plateau.
+	move.w #1,-$6a0a(a4)
+	bra.s .done
+	ENDC
+	dc.b 'HDTHOLD1'
+_verify_throttle_hold_state: dc.w 0
+	ENDC
+
+	IFD VERIFY_STEPINPUT_MANUAL
+; Input-only: select manual in the menu and emit one decoded gear key at the
+; listed controls-pass boundaries. Per-pass keys permit native-step comparison.
+	dc.b 'HDMANIN1'
+_verify_manual_state: dc.w 0,0 ; controls passes, next record index
+_verify_manual_key:
+	movem.l d1/a0-a1,-(a7)
+	lea _verify_drive_state(pc),a0
+	cmpi.w #2,(a0)
+	bne.s .done
+	lea _verify_manual_state(pc),a0
+	move.w (a0),d1
+	addq.w #1,(a0)
+	tst.l d0
+	bne.s .done
+	move.w 2(a0),d1
+	lsl.w #2,d1
+	lea _verify_manual_keys(pc),a1
+	adda.w d1,a1
+	move.w (a0),d1
+	cmp.w (a1),d1
+	blo.s .done
+	cmpi.w #-1,(a1)
+	beq.s .done
+	moveq #0,d0
+	move.w 2(a1),d0
+	addq.w #1,2(a0)
+.done:
+	movem.l (a7)+,d1/a0-a1
+	rts
+_verify_manual_keys:
+	dc.w 1,'1',11,'2',21,'3',31,'4',41,'2'
+	dc.w 51,'n',61,'1',71,'4',81,'n',91,'1',-1,0
+	ENDC
+
+	IFD VERIFY_RELEASE_FLOW
+_verify_release_name_fields: dc.w 0
+	ENDC
