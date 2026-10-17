@@ -28,7 +28,9 @@
  or	aminet:dev/misc/whdload#?
  and	aminet:game/patch/
  
-
+ version 1.1 (17.10.2026):
+ - removed crash on game over
+ 
  version 1.0 (08.10.2026) done by JOTD:
  - source code included
  - VBR accesses removed

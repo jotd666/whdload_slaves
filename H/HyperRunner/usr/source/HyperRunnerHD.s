@@ -40,28 +40,26 @@ FASTMEMSIZE	= $0000
 	ELSE
 ;;BLACKSCREEN
 CHIPMEMSIZE	= $200000
-FASTMEMSIZE	= $400000
+FASTMEMSIZE	= $800000
 	ENDC
 
 NUMDRIVES	= 1
 WPDRIVES	= %0000
 
 ;DISKSONBOOT
-DOSASSIGN
-INITAGA
+;DOSASSIGN
+;INITAGA
 HDINIT
 ;IOCACHE		= 10000
 ;MEMFREE	= $200
 ;NEEDFPU
-;SETPATCH
+SETPATCH
 ;STACKSIZE = 10000
 BOOTDOS
-; enabling cache in chipmem seems important for this game
-; (c2p shit?). CACHE doesn't cut it...
-CACHECHIPDATA
+
 
 slv_Version	= 17
-slv_Flags	= WHDLF_NoError|WHDLF_Examine|WHDLF_ClearMem|WHDLF_ReqAGA
+slv_Flags	= WHDLF_NoError|WHDLF_Examine|WHDLF_Req68020|WHDLF_ReqAGA
 slv_keyexit	= $5D	; num '*'
 
 	include	whdload/kick31.s
@@ -74,7 +72,7 @@ slv_keyexit	= $5D	; num '*'
 	ENDC
 
 DECL_VERSION:MACRO
-	dc.b	"1.0"
+	dc.b	"1.1"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -195,14 +193,16 @@ pl_table:
 ; apply on SEGMENTS
 pl_main:
     PL_START
-	PL_L	$2c454,$4E714E71		; remove vbr write
-	PL_L	$2c4ee,$4E714E71		; remove vbr write
-	PL_L	$2c522,$4E714E71		; remove vbr write
+	PL_NOP	$2c454,4		; remove vbr write
+	PL_NOP	$2c4ee,4		; remove vbr write
+	PL_NOP	$2c522,4		; remove vbr write
 	
     PL_L	$2c49e,$7e004E71		; remove vbr read in D7
     PL_L	$2793e,$91C84E71		; remove vbr read in a0	
     PL_L	$2c44c,$74004E71	  	; remove vbr read in D2
     PL_NOP	$000fc,6	  			; remove akiko test
+	
+	PL_R	$2569e				; remove the use of pools, use only allocmem => avoids trap #0
 	PL_END
 
 
