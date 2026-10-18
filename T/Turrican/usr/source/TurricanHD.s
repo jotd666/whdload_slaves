@@ -53,6 +53,9 @@
 ;			 keyboard enabled during speech, improved quit/debug on 68000
 ;		03.02.16 v1 adapted
 ;		08.02.16 v2 adapted, finished
+;		10.10.26 Arise from Decay: Trainer improved, lives get subtracted after final boss
+;				 level select improved - now all levels selectable
+;				 added trainer for wheels and energy
 ;  :Requires.	-
 ;  :Copyright.	Public Domain
 ;  :Language.	68000 Assembler
@@ -65,9 +68,9 @@
 	INCLUDE	whdmacros.i
 
 	IFD	BARFLY
-	OUTPUT	"wart:tr/turrican/Turrican.Slave"
-	BOPT	O+				;enable optimizing
-	BOPT	OG+				;enable optimizing
+	OUTPUT	"hd2:util/dev/whdload/turrican_0092/Turrican.Slave"
+	BOPT    O+			    ;enable optimizing
+	BOPT    OG+			    ;enable optimizing
 	BOPT	ODd-				;disable mul optimizing
 	BOPT	ODe-				;disable mul optimizing
 	BOPT	w4-				;disable 64k warnings
@@ -110,12 +113,13 @@ _expmem		dc.l	exp_SIZEOF		;ws_ExpMem
 
 
 slv_config:
-        dc.b    "BW;"
-       dc.b    "C1:X:trainer infinite lives:0;"
-       dc.b    "C1:X:trainer infinite time and specials:1;"
-       dc.b    "C2:X:second button for jump:0;"
-	   dc.b    "C4:L:Start level:1,2,3,4;"			
-	   dc.b    "C5:L:Start sublevel:A,B,C;"			
+		dc.b    "BW;"
+	   dc.b    "C1:X:Infinite lives:0;"
+	   dc.b    "C1:X:Infinite time and specials:1;"
+	   dc.b    "C1:X:Infinite energy:2;"
+	   dc.b    "C1:X:Infinite wheels:3;"
+	   dc.b    "C2:X:second button for jump:0;"
+	   dc.b    "C4:L:Start level:1-1,1-2,1-3,2-1,2-2,2-3,3-1,3-2,3-3,4-1,4-2,5-1,5-2;"	  
 	   dc.b	0
 
 ;============================================================================
@@ -129,7 +133,7 @@ slv_config:
 	ENDC
 	
 DECL_VERSION:MACRO
-	dc.b	"2.1"
+	dc.b	"2.2"
 	IFD BARFLY
 		dc.b	" "
 		INCBIN	"T:date"
@@ -146,13 +150,14 @@ _copy		dc.b	"1990 Rainbow Arts/Innerprise",0
 _info		dc.b	"Installed by Wepl",10
 		dc.b	"Version "
 		DECL_VERSION
+		dc.b	10,"Trainer improved by Arise from Decay"
 		dc.b	0
 _dir		dc.b	"data",0
 _main		dc.b	"main",0
 _60000		dc.b	"60000",0
 _highsname	dc.b	"highs",0
 	EVEN
-    include ReadJoyPad.s
+	include ReadJoyPad.s
 
 ;============================================================================
 _start	;	A0 = resident loader
@@ -164,11 +169,11 @@ _start	;	A0 = resident loader
 		move.l	(_expmem,pc),a7
 		add.l	#exp_stackend,a7
 
-        bsr _detect_controller_types
+		bsr _detect_controller_types
 		pea	_int68(pc)
 		move.l	(a7)+,$68
-        
-        ;get tags
+		
+		;get tags
 		lea     (_tag,pc),a0
 		jsr     (resload_Control,a3)
 
@@ -203,7 +208,7 @@ _start	;	A0 = resident loader
 		lea	(a0),a2
 		jsr	(resload_DiskLoad,a3)
 
-        
+		
 		lea	_pl_5fe00(pc),a0
 		move.l	a2,a1
 		jsr	(resload_Patch,a3)
@@ -380,7 +385,7 @@ _picshow	movem.l	d0-d1/a0-a1,-(a7)
 		rts
 
 _100_v3		
-        lea	_pl_100_v3(pc),a5
+		lea	_pl_100_v3(pc),a5
 _100_v13	lea	$603ae,a2			;original
 _100_v123	lea	$100.W,a4
 
@@ -393,7 +398,7 @@ _100_v123	lea	$100.W,a4
 		lea	$1dc,a2
 		bsr	_fix_rnd
 
-        
+		
 		move.l	a5,a0
 		move.l	a4,a1
 		move.l	_resload(pc),a3
@@ -404,176 +409,174 @@ _100_v123	lea	$100.W,a4
 
    
 TEST_BUTTON:MACRO
-    btst    #JPB_BTN_\1,d1
-    beq.b   .nochange_\1
-    move.b  #\2,d3
-    btst    #JPB_BTN_\1,d0
-    bne.b   .pressed_\1
-    bset    #7,d3   ; released
+	btst    #JPB_BTN_\1,d1
+	beq.b   .nochange_\1
+	move.b  #\2,d3
+	btst    #JPB_BTN_\1,d0
+	bne.b   .pressed_\1
+	bset    #7,d3   ; released
 .pressed_\1
-    move.b  d3,(a1) ; store keycode
+	move.b  d3,(a1) ; store keycode
 .nochange_\1
-    ENDM
-    
+	ENDM
+	
 _vbl_hook
-        MOVE.W	_custom+intreqr,D0
-        btst    #5,d0
-        beq.b   .novbl
-        movem.l  d0/d1/d3/a0/a1,-(a7)
-        moveq.l #0,d3
-        
-        lea joy1(pc),a0
-        move.l  (a0),d1     ; get previous state
-        moveq	#1,d0
-        bsr	_read_joystick
-        cmp.l   d0,d1
-        beq.b   .nochange   ; cheap-o test just in case no input has changed
-        move.l  d0,(a0)     ; save previous state for next time
-        eor.l   d0,d1   ; D1: only changes have set bits
+		MOVE.W	_custom+intreqr,D0
+		btst    #5,d0
+		beq.b   .novbl
+		movem.l  d0/d1/d3/a0/a1,-(a7)
+		moveq.l #0,d3
+		
+		lea joy1(pc),a0
+		move.l  (a0),d1     ; get previous state
+		moveq	#1,d0
+		bsr	_read_joystick
+		cmp.l   d0,d1
+		beq.b   .nochange   ; cheap-o test just in case no input has changed
+		move.l  d0,(a0)     ; save previous state for next time
+		eor.l   d0,d1   ; D1: only changes have set bits
 
-        lea .rawkey(pc),a1
-        TEST_BUTTON PLAY,$19
-        TEST_BUTTON YEL,$64
+		lea .rawkey(pc),a1
+		TEST_BUTTON PLAY,$19
+		TEST_BUTTON YEL,$64
 
-        btst    #JPB_BTN_REVERSE,d0
-        beq.b   .noquit
-        TEST_BUTTON FORWARD,$45     ; rev+fwd: ESC
+		btst    #JPB_BTN_REVERSE,d0
+		beq.b   .noquit
+		TEST_BUTTON FORWARD,$45     ; rev+fwd: ESC
 
-        btst    #JPB_BTN_FORWARD,d0
-        beq.b   .noquit
+		btst    #JPB_BTN_FORWARD,d0
+		beq.b   .noquit
 
-        btst    #JPB_BTN_YEL,d0
-        bne     _exit
+		btst    #JPB_BTN_YEL,d0
+		bne     _exit
 .noquit
 .nochange    
-        tst.b   d3
-        movem.l  (a7)+,d0/d1/d3/a0/a1
-        bne.b   .keyboard
+		tst.b   d3
+		movem.l  (a7)+,d0/d1/d3/a0/a1
+		bne.b   .keyboard
 .novbl
-        ; return to original
-        rts
-        
+		; return to original
+		rts
+		
 .keyboard:
-        move.w  #$20,_custom+intreq
-        ; set stack so jumping to keyboard interrupt returns to code on RTE
-        move.l  (a7)+,d0
-        addq.l  #4,a7       ; pop stack
-        MOVEM.L	D0-D2/A0,-(A7)		;070da: 4cdf0107
-        move.l  _keyboard_plug(pc),-(a7)
-        move.b   .rawkey(pc),d0
-        rts
+		move.w  #$20,_custom+intreq
+		; set stack so jumping to keyboard interrupt returns to code on RTE
+		move.l  (a7)+,d0
+		addq.l  #4,a7       ; pop stack
+		MOVEM.L	D0-D2/A0,-(A7)		;070da: 4cdf0107
+		move.l  _keyboard_plug(pc),-(a7)
+		move.b   .rawkey(pc),d0
+		rts
 
 .rawkey
-        dc.w    0
-        
+		dc.w    0
+		
 read_joystick_up_jumps:
-        CLR.W	joytest(A6)			;032f2: 426e0036
-        MOVE.W	joy1dat(A6),D0		;032f6: 302e000c
-        RTS
-    
+		CLR.W	joytest(A6)			;032f2: 426e0036
+		MOVE.W	joy1dat(A6),D0		;032f6: 302e000c
+		RTS
+	
 read_joystick_button_jumps:
-        CLR.W	joytest(A6)			;032f2: 426e0036
-        MOVE.W	joy1dat(A6),D0		;032f6: 302e000c
-        movem.l D1/a0,-(a7)
-        
-        move.l  _start_level_address(pc),a0
-        cmp.l   #$00020000,(a0)      ; fly level 3.1: don't use second button
-        beq.b	.no_blue
-        cmp.l   #$00020002,(a0)      ; fly level 3.3: don't use second button
-        beq.b	.no_blue
-        
-        bclr	#8,d0
-        btst	#9,d0
-        beq.b	.noneed
-        bset	#8,d0	; xor 8 and 9 yields 0 cos bit9=1
+		CLR.W	joytest(A6)			;032f2: 426e0036
+		MOVE.W	joy1dat(A6),D0		;032f6: 302e000c
+		movem.l D1/a0,-(a7)
+		
+		move.l  _start_level_address(pc),a0
+		cmp.l   #$00020000,(a0)      ; fly level 3.1: don't use second button
+		beq.b	.no_blue
+		cmp.l   #$00020002,(a0)      ; fly level 3.3: don't use second button
+		beq.b	.no_blue
+		
+		bclr	#8,d0
+		btst	#9,d0
+		beq.b	.noneed
+		bset	#8,d0	; xor 8 and 9 yields 0 cos bit9=1
 .noneed
-        move.l  joy1(pc),d1
-        btst	#JPB_BTN_BLU,d1
-        beq.b	.no_blue
-        ; set UP because blue pressed
-        bclr	#8,d0
-        btst	#9,d0
-        bne.b	.no_blue
-        bset	#8,d0	; xor 8 and 9 yields 1 cos bit9=1
+		move.l  joy1(pc),d1
+		btst	#JPB_BTN_BLU,d1
+		beq.b	.no_blue
+		; set UP because blue pressed
+		bclr	#8,d0
+		btst	#9,d0
+		bne.b	.no_blue
+		bset	#8,d0	; xor 8 and 9 yields 1 cos bit9=1
 .no_blue:    
-        movem.l (a7)+,D1/a0
-        RTS
+		movem.l (a7)+,D1/a0
+		RTS
 
 _read_fire
-        move.l d0,-(a7)
-        move.l  joy1(pc),d0
-        not.l   d0
-        btst    #JPB_BTN_RED,d0
-        movem.l (a7)+,d0
-        rts 
+		move.l d0,-(a7)
+		move.l  joy1(pc),d0
+		not.l   d0
+		btst    #JPB_BTN_RED,d0
+		movem.l (a7)+,d0
+		rts 
 
 _read_fire_2_green
-        move.l d0,-(a7)
-        move.l  joy1(pc),d0
-        not.l   d0
-        btst    #JPB_BTN_GRN,d0
-        movem.l (a7)+,d0
-        rts 
-        
+		move.l d0,-(a7)
+		move.l  joy1(pc),d0
+		not.l   d0
+		btst    #JPB_BTN_GRN,d0
+		movem.l (a7)+,d0
+		rts 
+		
 _read_fire_2_blue
-        move.l d0,-(a7)
-        move.l  joy1(pc),d0
-        not.l   d0
-        btst    #JPB_BTN_BLU,d0
-        movem.l (a7)+,d0
-        rts 
-        
-    IFEQ    1
+		move.l d0,-(a7)
+		move.l  joy1(pc),d0
+		not.l   d0
+		btst    #JPB_BTN_BLU,d0
+		movem.l (a7)+,d0
+		rts 
+		
+	IFEQ    1
 _buttons
-        moveq	#$0000,d2		;input
-        bchg	#0,$bf			;toggle
-        bne	.set
-        movem.l d0/d1,-(a7)
-        move.l  joy1(pc),d0
-        not.l   d0
-        move.l  smart_bomb_bit(pc),d1
-        btst    d1,d0
-        movem.l (a7)+,d0/d1
-        seq	d2
-        cmp.b	$dd,d2
-        beq	.same
-        ext.w	d2
-        move.w	d2,$dc
+		moveq	#$0000,d2		;input
+		bchg	#0,$bf			;toggle
+		bne	.set
+		movem.l d0/d1,-(a7)
+		move.l  joy1(pc),d0
+		not.l   d0
+		move.l  smart_bomb_bit(pc),d1
+		btst    d1,d0
+		movem.l (a7)+,d0/d1
+		seq	d2
+		cmp.b	$dd,d2
+		beq	.same
+		ext.w	d2
+		move.w	d2,$dc
 .same
 .set
-        add.l	#$32b6-$3284-6,(a7)
-        rts   
-     ENDC
-     
+		add.l	#$32b6-$3284-6,(a7)
+		rts   
+	 ENDC
+	 
 _set_start_level:
-        move.l  _start_level(pc),d0
-        movem.l d0-d1/a0,-(a7)
-        move.l _start_level_address(pc),a0
-        move.w  d0,(a0)+        
-        move.l  _start_sublevel(pc),d1
-        cmp.w   #3,d1
-        bcc.b   .nosub
-        tst.w   d0
-        beq.b   .full
-        cmp.w   #2,d0
-        beq.b   .full
-        cmp.w   #3,d0
-        beq.b   .full
-        cmp.w   #2,d1
-        bcc.b   .nosub        
-.full        
-        move.w  d1,(a0)   ; start section
-.nosub
-        movem.l (a7)+,d0-d1/a0
-        rts
-        
+		movem.l d0/a0,-(a7)              
+		move.l  _start_level_address(pc),a0
+		move.l  _start_level(pc),d0
+		beq.s   .nolv			; no level selected from splash => level 1
+		cmp.w   #$C,d0
+		bhi.s   .nolv			; upper boundary
+		subq.l  #1,d0
+		lsl.w   #2,d0                    
+		lea     .levels(pc),a1
+		move.l  (a1,d0.w),d0
+		move.l  d0,(a0)
+.nolv
+		movem.l (a7)+,d0/a0
+		rts
+
+.levels:
+		dc.l    $00000001,$00000002,$00010000,$00010001
+		dc.l    $00010002,$00020000,$00020001,$00020002
+		dc.l    $00030000,$00030001,$00040000,$00040001		
+
 _pl_100_v123	PL_START
-        
 		PL_P	$8d0,_loadhighs
-        PL_IFC1
-        PL_ELSE
+		PL_IFC1
+		PL_ELSE
 		PL_P	$95a,_savehighs
-        PL_ENDIF
+		PL_ENDIF
 		PL_S	$bb8,6			;set sp
 		PL_S	$be4,6			;set sp
 		PL_PS	$c4c,_b31
@@ -586,9 +589,9 @@ _pl_100_v123	PL_START
 		PL_PS	$141c,_b9
 		PL_W	$147e,$6006		;blitwait
 
-        PL_PSS  $D8e-$100,_set_start_level,2
-	;	PL_W	$1838,4			;start level 0..4
-	;	PL_W	$183a,2			;start sublevel
+		PL_PSS  $D8e-$100,_set_start_level,2
+	   ;PL_W	$1838,4			;start level 0..4
+	   ;PL_W	$183a,1			;start sublevel
 						;LEV1 0..2
 						;LEV2 0..1
 						;LEV3 0..2
@@ -620,6 +623,7 @@ _pl_100_v123	PL_START
 	;	PL_W	$349c,$6006		;blitwait
 		PL_END
 
+
 _pl_100_v13	PL_START
 		PL_PS	$5520,_b10
 		PL_PS	$557e,_b10
@@ -642,28 +646,34 @@ _pl_100_v13	PL_START
 		PL_P	$6fde,_intack3  ; keyboard handshake
 		PL_PS	$74c6,_b9
 
-        PL_IFC1X    0
-        PL_W    $079ac+2-$100,0     ; sub 0 lives
-        PL_ENDIF
-        PL_IFC1X    1
-        PL_W    $07870+2-$100,0     ; sub 0 bombs, also time
-        PL_ENDIF
+		PL_IFC1X    0
+		PL_W    $079ac+2-$100,0     ; sub 0 lives
+		PL_ENDIF
+		PL_IFC1X    1
+		PL_W    $07870+2-$100,0     ; sub 0 bombs, also time
+		PL_ENDIF
+		PL_IFC1X	2
+		PL_NOP	$7762-$100,2		; infinite energy
+		PL_ENDIF
+		PL_IFC1X	3
+		PL_W	$7794+2-$100,0		; infinite wheels
+		PL_ENDIF
 
-        PL_PS   $06d66-$100,_vbl_hook
+		PL_PS   $06d66-$100,_vbl_hook
 
-        PL_IFC2X    0
-        PL_PSS  $44CC-$100,read_joystick_button_jumps,2
-        PL_PSS  $04524-$100,_read_fire_2_green,6
-        PL_PSS  $0453a-$100,_read_fire_2_green,6
-        PL_ELSE
-        PL_PSS  $04524-$100,_read_fire_2_blue,6
-        PL_PSS  $0453a-$100,_read_fire_2_blue,6
-        PL_PSS  $44CC-$100,read_joystick_up_jumps,2    
-        PL_ENDIF
+		PL_IFC2X    0
+		PL_PSS  $44CC-$100,read_joystick_button_jumps,2
+		PL_PSS  $04524-$100,_read_fire_2_green,6
+		PL_PSS  $0453a-$100,_read_fire_2_green,6
+		PL_ELSE
+		PL_PSS  $04524-$100,_read_fire_2_blue,6
+		PL_PSS  $0453a-$100,_read_fire_2_blue,6
+		PL_PSS  $44CC-$100,read_joystick_up_jumps,2    
+		PL_ENDIF
 
-        PL_PSS  $44F0-$100,_read_fire,2
-        PL_PSS  $4502-$100,_read_fire,2
-        
+		PL_PSS  $44F0-$100,_read_fire,2
+		PL_PSS  $4502-$100,_read_fire,2
+		
 		PL_NEXT	_pl_100_v123
 
 _pl_100_v3	PL_START
@@ -673,7 +683,7 @@ _pl_100_v3	PL_START
 		PL_P	$61c,_load_v3		;with cache
 		PL_P	$696,_load_v3		;plain
 
-        
+		
 		PL_NEXT	_pl_100_v13
 
 .level		add	#$4a8,a0	;source
@@ -833,7 +843,16 @@ _pl35		PL_START			;1b980, LEV5
 		PL_B	$37e2,$60		;beq -> bra
 		PL_B	$3a54,$60		;beq -> bra ('FUCK YOU')
 		PL_B	$471e,$60		;beq -> bra ('FUCK YOU')
+		PL_PS   $39d6,.noinflives
 		PL_END
+
+.noinflives
+		move.l a0,-(a7)
+		move.l _life_subtractvalue_address(pc),a0
+		move.w #$1,(a0)
+		move.l (a7)+,a0
+		jsr	$462
+		rts
 
 _pl13i		PL_START
 		PL_P	$113a,_intack10
@@ -1453,8 +1472,10 @@ _v1_v2
 		lea	_pl_60000_sps1838(pc),a0
 		cmp.w	#$59fe,d0
 		bne	_badver
-        lea _keyboard_plug(pc),a1
-        move.l  #$070b8,(a1)        ; set proper keyboard plug address
+		lea _keyboard_plug(pc),a1
+		move.l  #$070b8,(a1)        ; set proper keyboard plug address
+		lea _life_subtractvalue_address(pc),a1
+		move.l  #$79d0,(a1)			;set correct offset for lifesubtract value
 .patch		move.l	a2,a1
 		jsr	(resload_Patch,a3)
 
@@ -1465,11 +1486,11 @@ _pl_60000_sps92	PL_START
 		PL_PS	$3e,_ra
 		PL_PS	$70,_waitspeech
 		PL_ORW	$c0,INTF_PORTS
-        PL_IFBW
+		PL_IFBW
 		PL_PS	$d8,_picshow12_bw
-        PL_ELSE
+		PL_ELSE
 		PL_PS	$d8,_picshow12
-        PL_ENDIF
+		PL_ENDIF
 		PL_P	$104,_100_sps92
 		PL_PS	$17a,_waitdma
 		PL_ORW	$182,INTF_PORTS
@@ -1484,11 +1505,11 @@ _pl_60000_sps92	PL_START
 _pl_60000_sps1838	PL_START
 		PL_PS	$54,_waitspeech
 		PL_ORW	$a4,INTF_PORTS
-        PL_IFBW
+		PL_IFBW
 		PL_PS	$bc,_picshow12_bw
-        PL_ELSE
+		PL_ELSE
 		PL_PS	$bc,_picshow12
-        PL_ENDIF
+		PL_ENDIF
 		PL_P	$e8,_100_sps1838
 		PL_PS	$15e,_waitdma
 		PL_ORW	$166,INTF_PORTS
@@ -1513,7 +1534,7 @@ _picshow12_bw
 	bra.b	.loop
 .out
 _picshow12
-        clr.w	(a0)+
+		clr.w	(a0)+
 		dbf	d0,_picshow12
 		bra	_picshow
 
@@ -1528,35 +1549,39 @@ _pl_100_sps92	PL_START
 		PL_P	$61c,_load		;with cache
 		PL_P	$696,_load		;plain
 		PL_P	$af4,_pp20
-        
+		
 
-        
+		
 		PL_NEXT	_pl_100_v13
 
 _pl_100_sps1838	PL_START
+		PL_IFC1X    0
+		PL_W    $079ce+2-$100,0     ; sub 0 lives
+		PL_ENDIF
+		PL_IFC1X    1
+		PL_W    $07892+2-$100,0     ; sub 0 bombs
+		PL_ENDIF
+		PL_IFC1X	2
+		PL_NOP	$7784-$100,2		; infinite energy
+		PL_ENDIF
+		PL_IFC1X	3
+		PL_W	$77b8-$100,0		; infinite wheels
+		PL_ENDIF
+		PL_PS   $06d88-$100,_vbl_hook
 
-        PL_IFC1X    0
-        PL_W    $079ce+2-$100,0     ; sub 0 lives
-        PL_ENDIF
-        PL_IFC1X    1
-        PL_W    $07892+2-$100,0     ; sub 0 bombs
-        PL_ENDIF
+		PL_IFC2X    0
+		PL_PSS  $44CC-$100,read_joystick_button_jumps,2
+		PL_PSS  $04524-$100,_read_fire_2_green,6
+		PL_PSS  $0453a-$100,_read_fire_2_green,6
+		PL_ELSE
+		PL_PSS  $04524-$100,_read_fire_2_blue,6
+		PL_PSS  $0453a-$100,_read_fire_2_blue,6
+		PL_PSS  $44CC-$100,read_joystick_up_jumps,2    
+		PL_ENDIF
 
-        PL_PS   $06d88-$100,_vbl_hook
-
-        PL_IFC2X    0
-        PL_PSS  $44CC-$100,read_joystick_button_jumps,2
-        PL_PSS  $04524-$100,_read_fire_2_green,6
-        PL_PSS  $0453a-$100,_read_fire_2_green,6
-        PL_ELSE
-        PL_PSS  $04524-$100,_read_fire_2_blue,6
-        PL_PSS  $0453a-$100,_read_fire_2_blue,6
-        PL_PSS  $44CC-$100,read_joystick_up_jumps,2    
-        PL_ENDIF
-
-        PL_PSS  $44F0-$100,_read_fire,2
-        PL_PSS  $4502-$100,_read_fire,2
-        
+		PL_PSS  $44F0-$100,_read_fire,2
+		PL_PSS  $4502-$100,_read_fire,2
+		
 		PL_P	$61c,_load		;with cache
 		PL_P	$696,_load		;plain
 		PL_P	$af4,_pp20
@@ -1581,6 +1606,7 @@ _pl_100_sps1838	PL_START
 		PL_P	$7000,_intack3
 		PL_PS	$74e8,_b9
 		PL_NEXT	_pl_100_v123
+
 
 ;--------------------------------
 ; in:
@@ -1766,12 +1792,13 @@ _cdtv		lea	_main(pc),a0
 		move.l	a1,a4			;a4 = main
 		jsr	(resload_LoadFileDecrunch,a3)
 	
-        ; set variables
-        lea _keyboard_plug(pc),a1
-        move.l  #$06f5a,(a1)
-        lea _start_level_address(pc),a1
-        move.l  #$5b7a,(a1)
-       
+		; set variables
+		lea _keyboard_plug(pc),a1
+		move.l  #$06f5a,(a1)
+		lea _start_level_address(pc),a1
+		move.l  #$5b7a,(a1)
+		lea _life_subtractvalue_address(pc),a1
+		move.l  #$787e,(a1)			;set correct offset for livesubtract value
 		move.l	a4,a0
 		lea	(a0,d0.l),a1
 		lea	$19c,a2
@@ -1835,31 +1862,36 @@ _cdtv		lea	_main(pc),a0
 		PL_PS	$6e90,_chkkb
 		PL_P	$6ed0,_fixkb
 		PL_PS	$73d6,_b9
-        
-        PL_IFC1X    0
-        PL_W    $0787c+2-$c0,0     ; sub 0 lives
-        PL_ENDIF
-        PL_IFC1X    1
-        PL_W    $07740+2-$c0,0     ; sub 0 bombs, also time
-        PL_ENDIF
-        
-        PL_PS   $06c28-$c0,_vbl_hook
+		
+		PL_IFC1X    0
+		PL_W    $0787c+2-$c0,0     ; sub 0 lives
+		PL_ENDIF
+		PL_IFC1X    1
+		PL_W    $07740+2-$c0,0     ; sub 0 bombs, also time
+		PL_ENDIF
+		PL_IFC1X	2
+		PL_NOP	$7632-$c0,2		   ; infinite energy
+		PL_ENDIF
+		PL_IFC1X    3
+		PL_W	$7664+2-$c0,0      ; infinite wheels
+		PL_ENDIF
+		PL_PS   $06c28-$c0,_vbl_hook
 
-        PL_IFC2X    0
-        PL_PSS  $026d0-$c0,read_joystick_button_jumps,2
-        PL_PSS  $02728-$c0,_read_fire_2_green,6
-        PL_PSS  $0273e-$c0,_read_fire_2_green,6
-        PL_ELSE
-        PL_PSS  $02728-$c0,_read_fire_2_blue,6
-        PL_PSS  $0273e-$c0,_read_fire_2_blue,6
-        PL_PSS  $026d0-$c0,read_joystick_up_jumps,2    
-        PL_ENDIF
+		PL_IFC2X    0
+		PL_PSS  $026d0-$c0,read_joystick_button_jumps,2
+		PL_PSS  $02728-$c0,_read_fire_2_green,6
+		PL_PSS  $0273e-$c0,_read_fire_2_green,6
+		PL_ELSE
+		PL_PSS  $02728-$c0,_read_fire_2_blue,6
+		PL_PSS  $0273e-$c0,_read_fire_2_blue,6
+		PL_PSS  $026d0-$c0,read_joystick_up_jumps,2    
+		PL_ENDIF
 
-        PL_PSS  $02706-$c0,_read_fire,2
-        PL_PSS  $026f4-$c0,_read_fire,2
-        
-        PL_PSS  $04fce-$c0,_set_start_level,2
-        
+		PL_PSS  $02706-$c0,_read_fire,2
+		PL_PSS  $026f4-$c0,_read_fire,2
+		
+		PL_PSS  $04fce-$c0,_set_start_level,2
+		
 		PL_END
 
 .dmaon		move.l	#$7080+$c0,($80,a6)
@@ -1963,7 +1995,16 @@ _pl45		PL_START			;1b980
 		PL_PS	$100c,_b15
 		PL_PS	$343c,_b9
 		PL_P	$3464,_b24
+		PL_PS	$39ac,.noinflivescdtv
 		PL_END
+
+.noinflivescdtv
+		move.l a0,-(a7)
+		move.l _life_subtractvalue_address(pc),a0
+		move.w #$1,(a0)
+		move.l (a7)+,a0
+		jsr	$422
+		rts
 
 _pl4i		PL_START			;30000
 	;	PL_CW	$14
@@ -2299,16 +2340,18 @@ _end		move.l	(_resload,pc),-(a7)
 
 _tag		dc.l	WHDLTAG_CUSTOM4_GET
 _start_level	dc.l	0
-            dc.l	WHDLTAG_CUSTOM5_GET
+			dc.l	WHDLTAG_CUSTOM5_GET
 _start_sublevel	dc.l	0
 
 
 		dc.l	0
 
 _start_level_address
-    dc.l    $1938       ; SPS versions
+	dc.l    $1938       ; SPS versions
 _keyboard_plug:
-    dc.l    $07096      ; SPS98, also amigafun
+	dc.l    $07096      ; SPS98, also amigafun
+_life_subtractvalue_address
+	dc.l 	$79ae		; SPS98
 ;--------------------------------
 
 _resload	dc.l	0			;address of resident loader
