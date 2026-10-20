@@ -26,6 +26,10 @@ _phase_patches:
  ; PERF_RANGE VERIFY_DRIVETRAIN_PHASE $0b390 $0008: steering follows scalar phase eligibility
  PL_P $b390,_phase_steering_defer
  PL_NOP $b396,2
+ IFND VERIFY_DISPATCH_NATIVE
+ ; PERF_RANGE VERIFY_DRIVETRAIN_PHASE $0b3fc $0006: skid entry once per native step
+ PL_PS $b3fc,_phase_skid_gate
+ ENDC
  ; PERF_RANGE VERIFY_DRIVETRAIN_PHASE $122be $0006: exact shortened unsigned long division
  PL_P $122be,_phase_divide
  ; PERF_RANGE VERIFY_DRIVETRAIN_PHASE $0b904 $0008: incremental RPM before automatic gear decision
@@ -197,6 +201,26 @@ _phase_steering_body: dc.l 0
 ; Pending byte: 0 absent, -1 steering required, +1 neutral tail already done.
 ; The outer orientation entry resets it every frame.
 _phase_steering_pending: dc.w 0
+; Native steering tests skid entry once per eight-field step, so a brief
+; mouse peak at a higher frame rate must not get more chances. B3FC tests
+; the active skid; also take its half-rate path unless this steering call
+; starts a native step. D0 is free here.
+_phase_skid_gate:
+ tst.b -$50cf(a4)
+ bne.s .half
+ move.w _phase_skid_window(pc),d0
+ beq.s .half
+ move.l a0,-(a7)
+ lea _motion_state+MS_SKID_ENTRY(pc),a0
+ move.w d0,(a0)
+ movea.l (a7)+,a0
+ rts
+.half:
+ addi.l #$b444-$b402,(a7)
+ rts
+; Fields from the start of a native step to the end of the pass for the
+; current steering call; zero when the call does not start a step.
+_phase_skid_window: dc.w 0
 _phase_tail_ptr: dc.l 0
 _phase_manual_ptr: dc.l 0
 PH_VALID equ 0
@@ -333,6 +357,14 @@ _phase_frame:
  ; Keep publishing current MPH; a completed neutral tail is idempotent.
  move.b _phase_steering_pending(pc),d0
  bpl.s .orientation_ready
+ ; Only the chunk that starts an engine step may start a skid.
+ moveq #0,d0
+ tst.w PH_PHASE(a6)
+ bne.s .skid_window
+ move.w PH_LEFT(a6),d0
+.skid_window:
+ lea _phase_skid_window(pc),a0
+ move.w d0,(a0)
  lea _time_scalar_fields(pc),a0
  move.w PH_DT(a6),(a0)
  move.w PH_CURRENT_V(a6),-$66d8(a4)
@@ -414,6 +446,9 @@ _phase_frame:
  beq.s .orientation_done
  lea _phase_steering_pending(pc),a0
  clr.b (a0)
+ ; The rare fallback steers once for the whole pass; zero time cannot skid.
+ lea _phase_skid_window(pc),a0
+ move.w _time_scalar_fields(pc),(a0)
  bsr _phase_steering_call
 .orientation_done:
  clr.w PH_VALID(a6)

@@ -344,16 +344,28 @@ _motion_spin_decay:
 	lea _motion_state(pc),a0
 	move.w -$66e6(a4),d0
 	moveq #0,d1
+	moveq #0,d2
+	move.w _time_scalar_fields(pc),d2
 	cmp.w MS_SPIN_LAST(a0),d0
 	bne.s .new
 	move.l MS_SPIN_PHASE(a0),d1
-.new:
-	moveq #0,d2
-	move.w _time_scalar_fields(pc),d2
 	add.l d2,d1
+	bra.s .loop
+.new:
+	; Native B440 creates a skid spin and B62A decays it in the same step,
+	; so the undecayed rate never rotates the car. Count that step from the
+	; steering decision and hold spin rotation until the step completes.
+	move.w MS_SKID_ENTRY(a0),d1
+	bne.s .entry
+	move.l d2,d1
+.entry:
+	clr.w MS_SKID_ENTRY(a0)
+	tst.w d0
+	sne MS_SPIN_HOLD(a0)
 .loop:
 	cmpi.l #8,d1
 	blo.s .save
+	clr.b MS_SPIN_HOLD(a0)
 	tst.w d0
 	beq.s .zero
 	subq.l #8,d1
@@ -379,10 +391,14 @@ _motion_spin_rate:
 	movem.l d0-d7/a0-a2,-(a7)
 	move.w 48(a7),d4
 	moveq #0,d5
+	moveq #0,d3
 	lea _motion_state(pc),a0
 	cmp.w MS_SPIN_LAST(a0),d4
 	bne.s .new
 	move.l MS_SPIN_PHASE(a0),d5
+	tst.b -$50cf(a4)
+	beq.s .new
+	move.b MS_SPIN_HOLD(a0),d3
 .new:
 	moveq #0,d6
 	move.w _time_scalar_fields(pc),d6
@@ -398,15 +414,20 @@ _motion_spin_rate:
 	bls.s .chunk
 	move.l d6,d7
 .chunk:
+	; A new skid's entry step has no spin rotation (see _motion_spin_decay).
+	tst.b d3
+	bne.s .held
 	lea _time_scalar_fields(pc),a0
 	move.w d7,(a0)
 	move.w d4,-(a7)
 	bsr _motion_yaw_rate
+.held:
 	sub.l d7,d6
 	add.l d7,d5
 	cmpi.l #8,d5
 	bne.s .loop
 	moveq #0,d5
+	moveq #0,d3
 	muls.w #9,d4
 	ext.l d4
 	divs.w #10,d4
@@ -423,6 +444,8 @@ _motion_spin_reset:
 	move.l a0,-(a7)
 	lea _motion_state(pc),a0
 	clr.l MS_SPIN_PHASE(a0)
+	clr.b MS_SPIN_HOLD(a0)
+	clr.w MS_SKID_ENTRY(a0)
 	movea.l (a7)+,a0
 	rts
 
@@ -1043,16 +1066,21 @@ MS_ROLL equ 12
 MS_FALL_CARRY equ 18
 MS_FALL_LAST equ 20
 MS_RATE equ 22
+; Nonzero while a new skid's entry step holds spin rotation.
+MS_SPIN_HOLD equ 23
 MS_SPIN_PHASE equ 24
 MS_SPIN_LAST equ 28
 MS_FALL_ACCEL equ 30
+; Fields from the skid-entry steering decision to the end of its pass;
+; zero means the decision was at the start of the pass.
+MS_SKID_ENTRY equ 32
 _motion_pitch_function: dc.l 0
 _motion_yaw_function: dc.l 0
 _motion_position_continue: dc.l 0
 _motion_position_live_signature: dc.b 'HDPOSST1'
 _motion_position_state: dcb.b 20,0
 _motion_signature: dc.b 'HDMOTN01'
-_motion_state: dcb.b 32,0
+_motion_state: dcb.b 34,0
 
 	IFD VERIFY_MOTION_MATH
 ; Isolated arithmetic fixtures use private fake globals and restore every
